@@ -51,6 +51,8 @@ only when the work needs them.
   astronomy demo.
 - Astro 2203 (`astro-2203.html`) is its own course page holding only its subset, in schedule order (`INCLUDED` in
   `tools/courses.py`). A new demo used only in Astro 2203 needs a `MERGE_PLACE` entry.
+- PHYS 202 (`phys-202.html`, unlisted) lays out every Physics II demo and worksheet in the order of Steve's 14 lectures, then the
+  rest of the syllabus (`SAME_AS` in `tools/courses.py`). A new Physics II demo joins it by itself; place it with the unit sections.
 - A demo can sit in several courses (list each one in its `course`). `later` marks a demo in no course. Moving a demo is a map
   change only.
 - The home page shows Courses (only those in `LISTED`, currently Astro 2203), then OpenStax by section, then All demos by topic.

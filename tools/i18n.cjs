@@ -78,7 +78,7 @@ function serve(dir) {
     srv.listen(0, '127.0.0.1', () => res(srv));
   });
 }
-const urlOf = (pg) => pg === 'site' ? ['index.html', 'physics-1.html', 'physics-2.html', 'modern.html', 'astro.html', 'astro-2203.html', 'thermo.html', 'acoustics.html', 'medical-physics.html', 'openstax.html', 'notes/index.html']
+const urlOf = (pg) => pg === 'site' ? ['index.html', 'physics-1.html', 'physics-2.html', 'phys-202.html', 'modern.html', 'astro.html', 'astro-2203.html', 'thermo.html', 'acoustics.html', 'medical-physics.html', 'openstax.html', 'notes/index.html']
   .concat(fs.existsSync(path.join(ROOT, 'topics')) ? fs.readdirSync(path.join(ROOT, 'topics')).filter((f) => f.endsWith('.html')).map((f) => 'topics/' + f) : [])
   : pg.startsWith('demo/') ? ['demos/' + pg.slice(5) + '.html'] : pg.startsWith('ws/') ? ['curriculum/labs/students/' + pg.slice(3) + '.html'] : pg.startsWith('notes/') ? ['notes/' + pg.slice(6) + '.html'] : [];
 /* VDI18N.t('literal') in the page's own source */

@@ -1,0 +1,926 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="demos/lib/theme.js"></script>
+<title>PHYS 202 · Virtual Physics Demos</title>
+<meta name="description" content="PHYS 202: Charge, fields and Gauss’s law, potential, capacitors, current and circuits, and magnetism, in the order of the PHYS 202 lectures, then the rest of the course in the order of the syllabus: sources of magnetic fields, induction, AC circuits, Maxwell’s equations, and optics. The worksheets are the Physics II worksheets, written for a calculus based class. OpenStax University Physics Volume 2, and Volume 3 for optics.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #dde3ea;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --shadow: 0 1px 2px rgb(23 32 43 / 0.06), 0 8px 24px -12px rgb(23 32 43 / 0.25);
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18212c; --pos: #ff7660; --neg: #69a0ff; --equi: #e2b350; --accent: #69a0ff;
+    --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 10px 28px -12px rgb(0 0 0 / 0.7);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18212c; --pos: #ff7660; --neg: #69a0ff; --equi: #e2b350; --accent: #69a0ff;
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 10px 28px -12px rgb(0 0 0 / 0.7);
+  color-scheme: dark;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-padding-top: 76px; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 16px; line-height: 1.5; }
+[hidden] { display: none !important; }
+a { color: inherit; }
+.wrap { max-width: 1240px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* Header: graph paper, like the demo canvases */
+.hero {
+  border-bottom: 1px solid var(--line);
+  background-color: var(--canvas);
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 32px 32px;
+  background-position: -1px -1px;
+}
+.hero .wrap { position: relative; padding-top: 56px; padding-bottom: 44px; }
+.art { position: absolute; right: 16px; top: 50%; translate: 0 -50%; width: min(34%, 380px); height: auto; overflow: visible; }
+.art .orbit { fill: none; stroke: var(--muted); stroke-width: 1.5; }
+.art .axis { stroke: var(--line); stroke-width: 1.5; stroke-dasharray: 4 5; }
+.art .sweep { fill: color-mix(in srgb, var(--equi) 26%, transparent); stroke: var(--equi); stroke-width: 1.2; }
+.art .sun { fill: var(--equi); }
+.art .glow { fill: color-mix(in srgb, var(--equi) 22%, transparent); }
+.art .planet { fill: var(--neg); }
+.art .vel { stroke: var(--pos); stroke-width: 2.5; stroke-linecap: round; fill: none; }
+.art .head { fill: var(--pos); }
+.eyebrow { margin: 0 0 14px; font-family: var(--font-mono); font-size: 0.78rem; letter-spacing: 0.04em; color: var(--muted); }
+.eyebrow b { color: var(--accent); font-weight: 600; }
+h1 { margin: 0; font-size: clamp(2.1rem, 5vw, 3.2rem); line-height: 1.08; letter-spacing: -0.02em; text-wrap: balance; }
+.lede { margin: 14px 0 0; max-width: 56ch; font-size: 1.15rem; color: var(--muted); text-wrap: pretty; }
+.facts { display: flex; flex-wrap: wrap; gap: 8px 22px; margin: 22px 0 0; padding: 0; list-style: none; font-family: var(--font-mono); font-size: 0.82rem; color: var(--muted); }
+.facts li { display: flex; align-items: center; gap: 8px; }
+.facts li::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--dot, var(--accent)); }
+.facts li:nth-child(2) { --dot: var(--pos); }
+.facts li:nth-child(3) { --dot: var(--equi); }
+.facts a { color: var(--accent); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+.facts strong { color: var(--ink); font-weight: 600; }
+.hero:has(.art) .facts { max-width: calc(100% - min(34%, 380px) - 40px); }   /* the facts wrap before they reach the picture */
+.art-thumb { display: block; border-radius: 12px; overflow: hidden; border: 1px solid var(--line); background: var(--surface); text-decoration: none; box-shadow: 0 10px 30px rgb(0 0 0 / 0.25); }
+.art-thumb img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; }
+.art-thumb span { display: block; padding: 7px 12px; font-family: var(--font-mono); font-size: 0.78rem; color: var(--muted); }
+.art-thumb:hover span, .art-thumb:focus-visible span { color: var(--accent); }
+
+/* Toolbar: filter and subject links, stays on screen while scrolling */
+.tools {
+  position: sticky; top: 0; z-index: 5;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+.tools .wrap { display: flex; align-items: center; gap: 10px 18px; padding-top: 10px; padding-bottom: 10px; }
+.filter { position: relative; flex: 0 1 300px; min-width: 0; }
+.filter svg { position: absolute; left: 11px; top: 50%; translate: 0 -50%; width: 16px; height: 16px; color: var(--muted); pointer-events: none; }
+.filter input {
+  width: 100%; font: inherit; font-size: 0.95rem; color: var(--ink);
+  background: var(--surface); border: 1px solid var(--line); border-radius: 8px;
+  padding: 8px 34px 8px 34px;
+}
+.filter input::placeholder { color: var(--muted); }
+.filter input::-webkit-search-cancel-button { display: none; }
+.filter kbd {
+  position: absolute; right: 8px; top: 50%; translate: 0 -50%;
+  font-family: var(--font-mono); font-size: 0.72rem; color: var(--muted);
+  border: 1px solid var(--line); border-radius: 4px; padding: 0 5px; line-height: 1.5; pointer-events: none;
+}
+.filter input:not(:placeholder-shown) + kbd { display: none; }
+.clear {
+  position: absolute; right: 5px; top: 50%; translate: 0 -50%;
+  font: inherit; font-size: 0.8rem; font-weight: 700; color: var(--muted);
+  background: none; border: 0; border-radius: 5px; padding: 3px 7px; cursor: pointer;
+}
+.clear:hover { color: var(--ink); }
+.jump { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; min-width: 0; flex: 1 1 auto; }
+.jump a {
+  display: inline-flex; align-items: baseline; gap: 6px; white-space: nowrap;
+  font-size: 0.88rem; font-weight: 700; text-decoration: none; color: var(--ink);
+  padding: 5px 10px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface);
+}
+.jump a:hover { border-color: var(--accent); color: var(--accent); }
+.n { font-family: var(--font-mono); font-size: 0.75em; font-weight: 400; color: var(--muted); font-variant-numeric: tabular-nums; }
+.status { margin: 20px 0 -12px; font-family: var(--font-mono); font-size: 0.85rem; color: var(--muted); }
+.status:empty { display: none; }
+
+/* Subjects and cards */
+main { padding-top: 12px; padding-bottom: 48px; }
+.subject { padding-top: 36px; }
+.subject h2 {
+  display: flex; align-items: baseline; gap: 10px; margin: 0 0 16px;
+  font-size: 1.35rem; letter-spacing: -0.01em;
+}
+.subject h2::after { content: ""; flex: 1; align-self: center; height: 1px; background: var(--line); }
+.subject h2 .n { font-size: 0.8rem; }
+/* Click a subject heading to fold its cards away; the sections below move up. Remembered per browser. */
+.fold { all: unset; display: inline-flex; align-items: baseline; gap: 10px; cursor: pointer; border-radius: 6px; }
+.fold:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+.fold::before { content: ""; width: 0.5em; height: 0.5em; border-right: 2px solid var(--muted); border-bottom: 2px solid var(--muted);
+  transform: translateY(-0.15em) rotate(45deg); transition: transform 0.15s ease; align-self: center; }
+.fold:hover::before { border-color: var(--ink); }
+.subject.collapsed .fold::before { transform: rotate(-45deg); }
+.subject.collapsed .grid { display: none; }
+.subject.collapsed h2 { margin-bottom: 0; color: var(--muted); }
+.subject.collapsed { padding-top: 22px; }
+.searching .subject.collapsed .grid { display: grid; }
+.searching .subject.collapsed h2 { margin-bottom: 16px; color: inherit; }
+@media (prefers-reduced-motion: reduce) { .fold::before { transition: none; } }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 272px), 1fr)); gap: 18px; margin: 0; padding: 0; list-style: none; }
+.grid > li { display: flex; min-width: 0; }
+.card {
+  display: flex; flex-direction: column; width: 100%;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow: hidden;
+  text-decoration: none; color: inherit;
+  transition: border-color 0.15s, box-shadow 0.2s, translate 0.2s;
+}
+.thumb { display: block; aspect-ratio: 16 / 10; background: var(--canvas); border-bottom: 1px solid var(--line); overflow: hidden; }
+.thumb img { display: block; width: 100%; height: 100%; object-fit: cover; transition: scale 0.35s ease; }
+.body { display: flex; flex-direction: column; gap: 6px; padding: 14px 16px 16px; flex: 1; }
+.card h3 { margin: 0; font-size: 1.12rem; line-height: 1.25; }
+.card p { margin: 0; color: var(--muted); font-size: 0.93rem; text-wrap: pretty; }
+.tags { display: flex; flex-wrap: wrap; gap: 5px; margin: auto 0 0; padding: 8px 0 0; list-style: none; }
+.tags li {
+  font-family: var(--font-mono); font-size: 0.7rem; line-height: 1.4; color: var(--muted);
+  background: var(--canvas); border: 1px solid var(--line); border-radius: 5px; padding: 2px 6px;
+}
+.card:hover { border-color: var(--accent); box-shadow: var(--shadow); translate: 0 -2px; }
+.card:hover .thumb img { scale: 1.03; }
+.card:hover h3 { color: var(--accent); }
+.card:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-color: var(--accent); }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.filter input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
+.empty { margin: 48px 0 0; padding: 28px; text-align: center; color: var(--muted); border: 1px dashed var(--line); border-radius: 12px; }
+.empty button { font: inherit; font-weight: 700; color: var(--accent); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; }
+
+footer { border-top: 1px solid var(--line); margin-top: 24px; }
+footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; padding-top: 22px; padding-bottom: max(28px, env(safe-area-inset-bottom, 0px)); color: var(--muted); font-size: 0.9rem; }
+footer p { margin: 0; }
+footer a { color: var(--accent); text-underline-offset: 3px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .card, .thumb img { transition: none; }
+  .card:hover { translate: none; }
+  .card:hover .thumb img { scale: none; }
+}
+@media (max-width: 700px) {
+  html { scroll-padding-top: 116px; }
+  .hero .wrap { padding-top: 36px; padding-bottom: 30px; }
+  .art { display: none; }
+  .hero:has(.art) .facts { max-width: none; }
+  .lede { font-size: 1.05rem; }
+  .tools .wrap { flex-wrap: wrap; }
+  .filter { flex: 1 1 100%; }
+  .filter kbd { display: none; }
+  .jump { flex-basis: 100%; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin: 0 -16px; padding: 0 16px; }
+    .subject { padding-top: 28px; }
+}
+/* hero tools, top left above the eyebrow: What's new (whats-new.js) and the theme switch (demos/lib/theme.js fills data-vd-theme) */
+.hero-tools { position: relative; z-index: 2; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin: -28px 0 22px; }
+.newbtn { display: inline-flex; align-items: center; gap: 6px; min-height: 32px; padding: 4px 12px; font: inherit; font-size: 0.82rem; font-weight: 700;
+  color: var(--accent); background: var(--surface); border: 1px solid var(--line); border-radius: 999px; cursor: pointer; }
+.newbtn svg { width: 14px; height: 14px; fill: currentColor; flex: none; }
+.newbtn:hover { border-color: var(--accent); }
+.newbtn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+@media (max-width: 640px) { .hero-tools { margin: -16px 0 16px; } .newbtn { min-height: 36px; } }
+@media print { .hero-tools { display: none; } }
+
+/* course pages */
+.eyebrow a { color: var(--accent); font-weight: 600; text-underline-offset: 3px; }
+.jump a.opt { border-style: dashed; }
+.how { margin: 22px 0 0; max-width: 75ch; color: var(--muted); font-size: 0.92rem; }
+.unit { padding-top: 34px; }
+.unit h2 { display: flex; align-items: baseline; gap: 10px; margin: 0; font-size: 1.4rem; letter-spacing: -0.01em; }
+.unit h2::after { content: ""; flex: 1; align-self: center; height: 1px; background: var(--line); }
+.meta { display: flex; flex-wrap: wrap; gap: 4px 18px; margin: 4px 0 14px; font-family: var(--font-mono); font-size: 0.78rem; color: var(--muted); }
+.meta:empty { display: none; }
+.unote { margin: 4px 0 14px; max-width: 75ch; color: var(--muted); }
+.unit.optional { margin-top: 30px; padding: 24px 18px 18px; border: 1px dashed var(--line); border-radius: 14px; }
+.optnote { margin: 0 0 4px; font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--equi); }
+.list { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 520px), 1fr)); gap: 14px; margin: 0; padding: 0; list-style: none; }
+.item { display: grid; grid-template-columns: 1fr; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+.item .pic { display: block; border-bottom: 1px solid var(--line); }
+.item .thumb { border-bottom: 0; }
+.item .body { padding: 12px 14px 14px; gap: 5px; }
+.item h3 { margin: 0; font-size: 1.08rem; line-height: 1.25; }
+.item h3 a { text-decoration: none; }
+.item h3 a:hover { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+.item p { margin: 0; color: var(--muted); font-size: 0.9rem; text-wrap: pretty; }
+.kind { display: flex; flex-wrap: wrap; gap: 6px; }
+.role, .flag { font-family: var(--font-mono); font-size: 0.68rem; font-weight: 600; letter-spacing: 0.03em; text-transform: uppercase; border-radius: 5px; padding: 1px 6px; }
+.role-lab { background: var(--accent); color: var(--canvas); }
+.role-demo { border: 1px solid var(--line); color: var(--muted); }
+.flag { border: 1px dashed var(--equi); color: var(--equi); text-transform: none; letter-spacing: 0; }
+.secs { display: flex; flex-direction: column; gap: 2px; margin: 4px 0 0; padding: 0; list-style: none; font-size: 0.82rem; }
+.sec { font-family: var(--font-mono); font-size: 0.74rem; color: var(--accent); margin-right: 4px; }
+.links { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: auto !important; padding-top: 8px; font-size: 0.88rem; }
+.links a { color: var(--accent); font-weight: 700; text-underline-offset: 3px; min-height: 28px; display: inline-flex; align-items: center; }
+.links a.go { color: var(--canvas); background: var(--accent); border-radius: 7px; padding: 4px 12px; text-decoration: none; min-height: 36px; }
+.links a .req { margin-right: 6px; padding: 1px 7px; border: 1px solid currentColor; border-radius: 999px; font-size: 0.72rem; letter-spacing: 0.04em; text-transform: uppercase; }
+.also { grid-column: 1 / -1; color: var(--muted); font-size: 0.92rem; padding: 4px 2px; }
+.also a { font-weight: 700; }
+.also .where, .also .where a { font-weight: 400; }
+.item.coming { border-style: dashed; background: transparent; }
+.item.coming h3 { color: var(--muted); }
+.none { color: var(--muted); padding: 18px; border: 1px dashed var(--line); border-radius: 12px; }
+.gaps { margin-top: 12px; font-size: 0.9rem; }
+.gaps summary { cursor: pointer; color: var(--muted); font-weight: 700; min-height: 32px; display: flex; align-items: center; gap: 8px; }
+.gaps ul { margin: 6px 0 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 380px), 1fr)); gap: 3px 22px; }
+.gaps li { display: flex; align-items: baseline; gap: 4px; }
+.st { margin-left: auto; padding-left: 10px; white-space: nowrap; font-family: var(--font-mono); font-size: 0.7rem; color: var(--muted); }
+.st-needs-feature { color: var(--equi); }
+.topics { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+.topic { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; }
+.topic h3 { margin: 0 0 2px; font-size: 1.02rem; }
+.topic .unote { margin: 0 0 6px; font-size: 0.9rem; }
+.topic ul { margin: 0; padding-left: 18px; display: grid; gap: 3px; font-size: 0.92rem; }
+.topic a { color: var(--accent); font-weight: 700; text-underline-offset: 3px; }
+.topic a.ws { margin-left: 8px; font-weight: 400; }
+.topic .where, .topic .where a { color: var(--muted); font-weight: 400; font-size: 0.85rem; }
+.more { margin: 40px 0 0; color: var(--muted); }
+.more a { color: var(--accent); font-weight: 700; }
+@media (max-width: 700px) {
+  html { scroll-padding-top: 64px; }
+  .jump { flex-basis: 100%; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin: 0 -16px; padding: 0 16px; }
+  .gaps li { flex-wrap: wrap; }
+  .st { margin-left: 0; }
+}
+
+
+/* topic and textbook pages (tools/courses.py) */
+.jump a[aria-current] { background: var(--accent); border-color: var(--accent); color: var(--canvas); }
+.item .used { font-size: 0.84rem; }
+.item .used a { color: var(--accent); font-weight: 700; text-underline-offset: 3px; }
+.item .used .sec { margin-right: 0; }
+.ch { margin-top: 10px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
+.ch summary { cursor: pointer; padding: 10px 14px; font-weight: 700; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; min-height: 44px; }
+.ch .chn { font-family: var(--font-mono); font-size: 0.78rem; font-weight: 600; color: var(--accent); }
+.ch .n { margin-left: auto; font-family: var(--font-mono); font-size: 0.74rem; font-weight: 400; color: var(--muted); }
+.srows { margin: 0; padding: 0 14px 12px; list-style: none; display: grid; gap: 0; }
+.srows li { display: grid; grid-template-columns: 4.2em minmax(0, 16em) minmax(0, 1fr); gap: 2px 14px; padding: 7px 0; border-top: 1px solid var(--line); font-size: 0.9rem; align-items: baseline; }
+.srows li:target { background: var(--canvas); }
+.srows .stitle { display: flex; flex-wrap: wrap; gap: 2px 8px; align-items: baseline; }
+.srows .st { margin-left: 0; padding-left: 0; }
+.srows .sdemos a { color: var(--accent); font-weight: 700; text-underline-offset: 3px; }
+.srows .sdemos a.ws { font-weight: 400; }
+@media (max-width: 700px) {
+  .srows li { grid-template-columns: 3.6em minmax(0, 1fr); }
+  .srows .sdemos { grid-column: 2; }
+  .ch .n { margin-left: 0; flex-basis: 100%; }
+}
+
+
+/* site search (tools/courses.py) */
+.find { padding-top: 30px; }
+.find h2 { margin: 0 0 10px; font-size: 1.35rem; letter-spacing: -0.01em; }
+.find .filter { max-width: 620px; }
+.find .filter input { padding-top: 11px; padding-bottom: 11px; font-size: 1rem; }
+.hits { position: absolute; top: calc(100% + 6px); left: 0; z-index: 20; width: min(620px, calc(100vw - 32px)); max-height: min(70vh, 560px); overflow: auto;
+  overscroll-behavior: contain; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; box-shadow: var(--shadow); padding: 4px 6px 6px; }
+.find .hits { width: 100%; }
+.hits .hn { margin: 4px 8px 2px; font-family: var(--font-mono); font-size: 0.74rem; color: var(--muted); }
+.hits ul { margin: 0; padding: 0; list-style: none; }
+.hit { padding: 8px 8px 9px; border-radius: 7px; }
+.hit + .hit { border-top: 1px solid var(--line); }
+.hit:hover, .hit.on { background: var(--canvas); }
+.hit .ht { font-weight: 700; color: var(--ink); text-decoration: none; }
+.hit .ht:hover, .hit.on .ht { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+.hit .hk { margin-left: 6px; font-family: var(--font-mono); font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.03em; color: var(--muted); }
+.hit p { margin: 2px 0 0; font-size: 0.85rem; color: var(--muted); }
+.hit .hd { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.hit .hm { display: flex; flex-wrap: wrap; gap: 2px 12px; font-size: 0.8rem; }
+.hit .hm a { color: var(--accent); font-weight: 700; text-underline-offset: 3px; }
+.hit .hm a.tp { color: var(--ink); font-weight: 400; }
+.hit .hm .sec { margin: 0; }
+@media (hover: none) { .filter kbd { display: none; } .filter input { font-size: 16px; } }
+@media (max-width: 700px) {
+  .tools .wrap { flex-wrap: wrap; }
+  .tools .filter { flex: 1 1 100%; }
+  html:has(.tools .filter) { scroll-padding-top: 108px; }
+}
+
+</style>
+</head>
+<body>
+<!-- Generated by tools/courses.py from curriculum/textbook-map.json. Edit the map or the script, not this file. -->
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow"><a href="index.html">Virtual Physics Demos</a> · <b>Electricity and magnetism, lecture by lecture</b></p>
+    <h1>PHYS 202</h1>
+    <p class="lede">Charge, fields and Gauss’s law, potential, capacitors, current and circuits, and magnetism, in the order of the PHYS 202 lectures, then the rest of the course in the order of the syllabus: sources of magnetic fields, induction, AC circuits, Maxwell’s equations, and optics. The worksheets are the Physics II worksheets, written for a calculus based class. OpenStax University Physics Volume 2, and Volume 3 for optics.</p>
+    <ul class="facts"><li><span><strong>22</strong> units</span></li><li><span><strong>39</strong> demos and labs</span></li><li><span>Free textbook: <a href="https://openstax.org/details/books/university-physics-volume-1">University Physics Volume 1</a> · <a href="https://openstax.org/details/books/university-physics-volume-2">University Physics Volume 2</a> · <a href="https://openstax.org/details/books/university-physics-volume-3">University Physics Volume 3</a></span></li></ul>
+  </div>
+</header>
+<nav class="tools" aria-label="Sections">
+  <div class="wrap"><div class="filter" role="search"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M11 11l3.5 3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><input type="search" id="q" placeholder="Search all demos" aria-label="Search all demos by name, topic or textbook section" autocomplete="off" spellcheck="false" role="combobox" aria-autocomplete="list" aria-controls="hits" aria-expanded="false"><kbd>/</kbd><button type="button" class="clear" hidden aria-label="Clear search">✕</button><div class="hits" id="hits" hidden><p class="hn" aria-live="polite"></p><ul></ul></div></div><ul class="jump"><li><a href="#first-lab">First lab</a></li><li><a href="#lecture-1">1 · Charge</a></li><li><a href="#lecture-2">2 · Fields</a></li><li><a href="#lecture-3">3 · Distributions</a></li><li><a href="#lecture-4">4 · Dipoles</a></li><li><a href="#lecture-5">5 · Flux</a></li><li><a href="#lecture-6">6 · Gauss examples</a></li><li><a href="#lecture-7">7 · Potential</a></li><li><a href="#lecture-8">8 · Distributions</a></li><li><a href="#lecture-9">9 · Gradient</a></li><li><a href="#lecture-10">10 · Capacitors</a></li><li><a href="#lecture-11">11 · Capacitor circuits</a></li><li><a href="#lecture-12">12 · Resistors</a></li><li><a href="#lecture-13">13 · RC circuits</a></li><li><a href="#lecture-14">14 · Magnets 1</a></li><li><a href="#magnets-2">Magnets 2</a></li><li><a href="#magnetic-sources">Magnetic sources</a></li><li><a href="#induction">Induction</a></li><li><a href="#ac-circuits">AC circuits</a></li><li><a href="#maxwell-waves">EM waves</a></li><li><a href="#optics">Optics</a></li><li><a href="#wave-optics">Wave optics</a></li></ul></div>
+</nav>
+<main class="wrap">
+  <p class="how">Units follow the lectures, one per set of lecture notes, then the rest of the course in the order of the syllabus. Each card lists the Physics II worksheets. A demo can appear in more than one lecture: it has one card, in the first lecture that uses it, and later lectures link to it. Section numbers are volume:section in OpenStax University Physics, and sections with no activity yet are listed under each unit. Every demo here is also on the <a href="physics-2.html">Physics II</a> page, by topic. Looking for one subject? Every demo is also under <a href="index.html#topics">All demos by topic</a>.</p>
+  <section class="unit" id="first-lab" aria-labelledby="first-lab-h">
+    
+    <h2 id="first-lab-h">First lab: waves on a string</h2>
+    <p class="meta"><span>Vol 1 · Ch. 16</span><span>2 of 2 sections with an activity</span></p>
+    <ul class="list">
+      <li class="item">
+        <a class="pic" href="demos/standing-waves.html?course=phys-202" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/standing-waves-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/standing-waves-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-demo">Demo</span></p>
+          <h3><a href="demos/standing-waves.html?course=phys-202">Standing Waves</a></h3>
+          <p>Add two traveling waves into a standing wave, find the harmonics of a guitar string, drive it into resonance, pluck it and see which harmonics vanish, and hear two close tones beat.</p>
+          <ul class="secs" aria-label="Textbook sections"><li><span class="sec">1:16.3</span> Wave Speed on a Stretched String</li><li><span class="sec">1:16.6</span> Standing Waves and Resonance</li></ul>
+          <p class="links"><a class="go" href="demos/standing-waves.html?course=phys-202">Open demo</a> <a href="curriculum/labs/students/standing-waves.html">Worksheet: Standing Waves on a String</a> <a href="notes/standing-waves.html">Notes</a></p>
+        </div>
+      </li>
+      <li class="item">
+        <a class="pic" href="demos/string-density.html?course=phys-202" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/string-density-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/string-density-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-lab">Lab</span></p>
+          <h3><a href="demos/string-density.html?course=phys-202">Linear Density of a String</a></h3>
+          <p>Hang masses on a string driven by a vibrator, or sweep the driving frequency with a fixed mass, find the resonances and count the loops, then get the string's mass per meter from the slope of f against n or T against 1/n².</p>
+          <ul class="secs" aria-label="Textbook sections"><li><span class="sec">1:16.3</span> Wave Speed on a Stretched String</li><li><span class="sec">1:16.6</span> Standing Waves and Resonance</li></ul>
+          <p class="links"><a class="go" href="demos/string-density.html?course=phys-202">Open demo</a> <a href="curriculum/labs/students/string-density.html">Worksheet: Linear Density of a String</a> <a href="notes/string-density.html">Notes</a></p>
+        </div>
+      </li>
+    </ul>
+  </section>
+  <section class="unit" id="lecture-1" aria-labelledby="lecture-1-h">
+    
+    <h2 id="lecture-1-h">Lecture 1 · Electric charge</h2>
+    <p class="meta"><span>Vol 2 · Ch. 5</span><span>3 of 3 sections with an activity</span></p>
+    <p class="unote">The four forces and the elementary charge, conductors, insulators and semiconductors, charging by contact and by induction, conservation of charge, and Coulomb’s law with superposition of the forces from several charges.</p>
+    <ul class="list">
+      <li class="item">
+        <a class="pic" href="demos/induction.html?course=phys-202" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/induction-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/induction-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-demo">Demo</span></p>
+          <h3><a href="demos/induction.html?course=phys-202">Charging by Induction</a></h3>
+          <p>Charge two metal spheres without touching them: bring a charged rod near, separate the spheres or ground one, then take the rod away. Every mark on the spheres comes from an exact electrostatics solution.</p>
+          <ul class="secs" aria-label="Textbook sections"><li><span class="sec">2:5.1</span> Electric Charge</li><li><span class="sec">2:5.2</span> Conductors, Insulators, and Charging by Induction</li></ul>
+          <p class="links"><a class="go" href="demos/induction.html?course=phys-202">Open demo</a> <a href="curriculum/labs/students/induction.html">Worksheet 1: Charging by Induction</a> <a href="curriculum/labs/students/neutral-attraction.html">Worksheet 2: Attracting a Neutral Insulator</a> <a href="notes/induction.html">Notes</a></p>
+        </div>
+      </li>
+      <li class="item">
+        <a class="pic" href="demos/millikan.html?course=phys-202" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/millikan-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/millikan-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-demo">Demo</span></p>
+          <h3><a href="demos/millikan.html?course=phys-202">Millikan Oil Drop</a></h3>
+          <p>Spray oil drops between charged plates, time them falling and rising through the telescope, work out each drop's size and charge, and find that charge comes in whole numbers of e.</p>
+          <ul class="secs" aria-label="Textbook sections"><li><span class="sec">2:5.1</span> Electric Charge</li></ul>
+          <p class="links"><a class="go" href="demos/millikan.html?course=phys-202">Open demo</a> <a href="notes/millikan.html">Notes</a></p>
+        </div>
+      </li>
+      <li class="item">
+        <a class="pic" href="demos/force-lab.html?course=phys-202" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/force-lab-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/force-lab-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-demo">Demo</span></p>
+          <h3><a href="demos/force-lab.html?course=phys-202">Inverse Square Force Lab</a></h3>
+          <p>Two masses or two charges on a ruler: slide them apart, change their size, and read the equal and opposite forces. Record F at several distances and plot it against 1/r². Gravity, Coulomb, and Coulomb at the atomic scale.</p>
+          <ul class="secs" aria-label="Textbook sections"><li><span class="sec">2:5.3</span> Coulomb&#x27;s Law</li></ul>
+          <p class="links"><a class="go" href="demos/force-lab.html?course=phys-202">Open demo</a> <a href="notes/force-lab.html">Notes</a></p>
+        </div>
+      </li>
+      <li class="also">Also used in this unit: <a href="demos/coulomb-sandbox.html?course=phys-202">Coulomb Sandbox</a> <span class="where">(card under <a href="#lecture-2">Lecture 2 · Electric fields</a>; 2:5.3)</span></li>
+    </ul>
+  </section>
+  <section class="unit" id="lecture-2" aria-labelledby="lecture-2-h">
+    
+    <h2 id="lecture-2-h">Lecture 2 · Electric fields</h2>
+    <p class="meta"><span>Vol 2 · Ch. 5</span><span>1 of 1 sections with an activity</span></p>
+    <p class="unote">The field as force per charge, F = qE beside F = mg, finding a charge from a measured field, superposition of fields, and the charge densities λ, σ and ρ.</p>
+    <ul class="list">
+      <li class="item">
+        <a class="pic" href="demos/coulomb-sandbox.html?course=phys-202" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/coulomb-sandbox-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/coulomb-sandbox-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-lab">Lab</span></p>
+          <h3><a href="demos/coulomb-sandbox.html?course=phys-202">Coulomb Sandbox</a></h3>
+          <p>Drag point charges and watch the field lines, equipotentials and potential update live, as a 2D map or a rotatable 3D landscape.</p>
+          <ul class="secs" aria-label="Textbook sections"><li><span class="sec">2:5.4</span> Electric Field</li></ul>
+          <p class="links"><a class="go" href="demos/coulomb-sandbox.html?course=phys-202">Open demo</a> <a href="curriculum/labs/students/coulomb-sandbox.html">Worksheet: Electric Field and Potential</a> <a href="notes/coulomb-sandbox.html">Notes</a></p>
+        </div>
+      </li>
+    </ul>
+  </section>
+  <section class="unit" id="lecture-3" aria-labelledby="lecture-3-h">
+    
+    <h2 id="lecture-3-h">Lecture 3 · Fields of charge distributions</h2>
+    <p class="meta"><span>Vol 2 · Ch. 5</span><span>2 of 2 sections with an activity</span></p>
+    <p class="unote">Integrating over a line, an arc and a ring of charge, then two charged disks, which lead to the parallel plate capacitor.</p>
+    <ul class="list">
+      <li class="also">Also used in this unit: <a href="demos/coulomb-sandbox.html?course=phys-202">Coulomb Sandbox</a> <span class="where">(card under <a href="#lecture-2">Lecture 2 · Electric fields</a>; 2:5.5, 2:5.6)</span></li>
+    </ul>
+  </section>
+  <section class="unit" id="lecture-4" aria-labelledby="lecture-4-h">
+    
+    <h2 id="lecture-4-h">Lecture 4 · Dipoles</h2>
+    <p class="meta"><span>Vol 2 · Ch. 5</span><span>1 of 1 sections with an activity</span></p>
+    <p class="unote">The dipole field on its axis with the binomial approximation, the dipole moment p = qd, the torque p × E, and the work and potential energy of a dipole in a field.</p>
+    <ul class="list">
+      <li class="also">Also used in this unit: <a href="demos/coulomb-sandbox.html?course=phys-202">Coulomb Sandbox</a> <span class="where">(card under <a href="#lecture-2">Lecture 2 · Electric fields</a>; 2:5.7)</span></li>
+    </ul>
+  </section>
+  <section class="unit" id="lecture-5" aria-labelledby="lecture-5-h">
+    
+    <h2 id="lecture-5-h">Lecture 5 · Flux and Gauss’s law</h2>
+    <p class="meta"><span>Vol 2 · Ch. 6</span><span>2 of 2 sections with an activity</span></p>
+    <p class="unote">Flux through flat, curved and closed surfaces, and why the flux of a point charge through any closed surface is Q/ε₀.</p>
+    <ul class="list">
+      <li class="item">
+        <a class="pic" href="demos/gauss-law.html?course=phys-202" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/gauss-law-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/gauss-law-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-lab">Lab</span></p>
+          <h3><a href="demos/gauss-law.html?course=phys-202">Gauss&#x27;s Law</a></h3>
+          <p>Drag charges in and out of a Gaussian surface of any shape and watch the flux: Q<sub>enc</sub>/ε₀ from a real numerical surface integral, zero for charges outside. Then the sphere, line and plane derivations step by step.</p>
+          <ul class="secs" aria-label="Textbook sections"><li><span class="sec">2:6.1</span> Electric Flux</li><li><span class="sec">2:6.2</span> Explaining Gauss’s Law</li></ul>
+          <p class="links"><a class="go" href="demos/gauss-law.html?course=phys-202">Open demo</a> <a href="curriculum/labs/students/gauss-law.html">Worksheet: Gauss&#x27;s Law</a> <a href="notes/gauss-law.html">Notes</a></p>
+        </div>
+      </li>
+    </ul>
+  </section>
+  <section class="unit" id="lecture-6" aria-labelledby="lecture-6-h">
+    
+    <h2 id="lecture-6-h">Lecture 6 · Gauss’s law examples</h2>
+    <p class="meta"><span>Vol 2 · Ch. 6</span><span>2 of 2 sections with an activity</span></p>
+    <p class="unote">A long line of charge, a charged conducting wire inside and out, a conducting sphere, and the field inside a hollow conductor.</p>
+    <ul class="list">
+      <li class="also">Also used in this unit: <a href="demos/gauss-law.html?course=phys-202">Gauss&#x27;s Law</a> with <a href="curriculum/labs/students/gauss-law.html">Worksheet: Gauss&#x27;s Law</a> <span class="where">(card under <a href="#lecture-5">Lecture 5 · Flux and Gauss’s law</a>; 2:6.3, 2:6.4)</span> · <a href="demos/induction.html?course=phys-202">Charging by Induction</a> <span class="where">(card under <a href="#lecture-1">Lecture 1 · Electric charge</a>; 2:6.4)</span></li>
+    </ul>
+  </section>
+  <section class="unit" id="lecture-7" aria-labelledby="lecture-7-h">
+    
+    <h2 id="lecture-7-h">Lecture 7 · Voltage and potential</h2>
+    <p class="meta"><span>Vol 2 · Ch. 7</span><span>2 of 2 sections with an activity</span></p>
+    <p class="unote">Potential energy kQq/r, potential as a height above a reference point, and energy conservation for a charge accelerated through a potential difference.</p>
+    <ul class="list">
+      <li class="also">Also used in this unit: <a href="demos/coulomb-sandbox.html?course=phys-202">Coulomb Sandbox</a> with <a href="curriculum/labs/students/coulomb-sandbox.html">Worksheet: Electric Field and Potential</a> <span class="where">(card under <a href="#lecture-2">Lecture 2 · Electric fields</a>; 2:7.1, 2:7.2)</span></li>
+    </ul>
+  </section>
+  <section class="unit" id="lecture-8" aria-labelledby="lecture-8-h">
+    
+    <h2 id="lecture-8-h">Lecture 8 · Potential of charge distributions</h2>
+    <p class="meta"><span>Vol 2 · Ch. 7</span><span>1 of 1 sections with an activity</span></p>
+    <p class="unote">Adding the potentials of point charges, then the potential of a line of charge and of a ring.</p>
+    <ul class="list">
+      <li class="also">Also used in this unit: <a href="demos/coulomb-sandbox.html?course=phys-202">Coulomb Sandbox</a> <span class="where">(card under <a href="#lecture-2">Lecture 2 · Electric fields</a>; 2:7.3)</span></li>
+    </ul>
+  </section>
+  <section class="unit" id="lecture-9" aria-labelledby="lecture-9-h">
+    
+    <h2 id="lecture-9-h">Lecture 9 · The gradient operator</h2>
+    <p class="meta"><span>Vol 2 · Ch. 7</span><span>3 of 3 sections with an activity</span></p>
+    <p class="unote">Line integrals and conservative forces, ΔV as the line integral of −E, and E = −∇V in Cartesian, cylindrical and spherical coordinates, with equipotentials and conductors.</p>
+    <ul class="list">
+      <li class="item">
+        <a class="pic" href="demos/electrostatics-at-work.html?course=phys-202" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/electrostatics-at-work-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/electrostatics-at-work-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-demo">Demo</span></p>
+          <h3><a href="demos/electrostatics-at-work.html?course=phys-202">Electrostatics at Work</a></h3>
+          <p>A Van de Graaff dome charging until the air breaks down, an ink jet printer steering charged drops onto paper, a smokestack precipitator pulling charged dust out of a gas flow, and a shuffle across a rug that ends in a spark at the doorknob.</p>
+          <ul class="secs" aria-label="Textbook sections"><li><span class="sec">2:7.6</span> Applications of Electrostatics</li></ul>
+          <p class="links"><a class="go" href="demos/electrostatics-at-work.html?course=phys-202">Open demo</a> <a href="curriculum/labs/students/van-de-graaff.html">Worksheet 1: Van de Graaff Generator</a> <a href="curriculum/labs/students/ink-jet-printer.html">Worksheet 2: Ink Jet Printer</a> <a href="curriculum/labs/students/precipitator.html">Worksheet 3: Electrostatic Precipitator</a> <a href="notes/electrostatics-at-work.html">Notes</a></p>
+        </div>
+      </li>
+      <li class="also">Also used in this unit: <a href="demos/coulomb-sandbox.html?course=phys-202">Coulomb Sandbox</a> <span class="where">(card under <a href="#lecture-2">Lecture 2 · Electric fields</a>; 2:7.4, 2:7.5)</span></li>
+    </ul>
+  </section>
+  <section class="unit" id="lecture-10" aria-labelledby="lecture-10-h">
+    
+    <h2 id="lecture-10-h">Lecture 10 · Capacitors and capacitance</h2>
+    <p class="meta"><span>Vol 2 · Ch. 8</span><span>4 of 4 sections with an activity</span></p>
+    <p class="unote">Q = CV and C = ε₀A/d, the energy ½CV² and the energy density ½ε₀E², dielectrics and κ, and dielectric strength and breakdown.</p>
+    <ul class="list">
+      <li class="item">
+        <a class="pic" href="demos/capacitors.html?course=phys-202" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/capacitors-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/capacitors-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-lab">Lab</span></p>
+          <h3><a href="demos/capacitors.html?course=phys-202">Capacitors and Dielectrics</a></h3>
+          <p>Pull the plates apart and slide in a dielectric with the battery connected or not, and follow Q, V, E, C and the energy, including the work your hand does. Field lines come from a real solution with fringing at the edges.</p>
+          <ul class="secs" aria-label="Textbook sections"><li><span class="sec">2:8.1</span> Capacitors and Capacitance</li><li><span class="sec">2:8.3</span> Energy Stored in a Capacitor</li><li><span class="sec">2:8.4</span> Capacitor with a Dielectric</li><li><span class="sec">2:8.5</span> Molecular Model of a Dielectric</li></ul>
+          <p class="links"><a class="go" href="demos/capacitors.html?course=phys-202">Open demo</a> <a href="curriculum/labs/students/capacitors.html">Worksheet: Capacitance and Dielectrics</a> <a href="notes/capacitors.html">Notes</a></p>
+        </div>
+      </li>
+      <li class="also">Also used in this unit: <a href="demos/induction.html?course=phys-202">Charging by Induction</a> <span class="where">(card under <a href="#lecture-1">Lecture 1 · Electric charge</a>; 2:8.5)</span></li>
+    </ul>
+  </section>
+  <section class="unit" id="lecture-11" aria-labelledby="lecture-11-h">
+    
+    <h2 id="lecture-11-h">Lecture 11 · Capacitor circuits</h2>
+    <p class="meta"><span>Vol 2 · Ch. 8, 10</span><span>3 of 3 sections with an activity</span></p>
+    <p class="unote">Current as the rate of flow of charge, Kirchhoff’s rules, and capacitors in series, in parallel and in combination.</p>
+    <ul class="list">
+      <li class="item">
+        <a class="pic" href="demos/circuits.html?course=phys-202" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/circuits-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/circuits-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-lab">Lab</span></p>
+          <h3><a href="demos/circuits.html?course=phys-202">Circuits</a></h3>
+          <p>Build any circuit, from Ohm's law and voltage dividers to rectifiers and transistor amplifiers: batteries, bulbs, meters, capacitors, inductors, diodes, LEDs and junction transistors, in DC, in time or with AC.</p>
+          <ul class="secs" aria-label="Textbook sections"><li><span class="sec">2:10.1</span> Electromotive Force</li><li><span class="sec">2:10.3</span> Kirchhoff&#x27;s Rules</li></ul>
+          <p class="links"><a class="go" href="demos/circuits.html?course=phys-202">Open demo</a> <a href="curriculum/labs/students/dc-circuits.html">Worksheet 1: Kirchhoff&#x27;s Rules</a> <a href="curriculum/labs/students/rc-circuits.html">Worksheet 2: RC Time Constant</a> <a href="curriculum/labs/students/rlc-transients.html">Worksheet 3: RLC Oscillations</a> <a href="curriculum/labs/students/ac-circuits.html">Worksheet 4: AC Resonance</a> <a href="curriculum/labs/students/junction-transistor.html">Worksheet 5: A Real Diode and the Junction Transistor</a> <a href="curriculum/labs/students/ac-reactance.html">Worksheet 6: Reactance and Phase</a> <a href="curriculum/labs/students/ac-power.html">Worksheet 7: Power in an AC Circuit</a> <a href="notes/circuits.html">Notes</a></p>
+        </div>
+      </li>
+      <li class="also">Also used in this unit: <a href="demos/capacitors.html?course=phys-202">Capacitors and Dielectrics</a> <span class="where">(card under <a href="#lecture-10">Lecture 10 · Capacitors and capacitance</a>; 2:8.2)</span></li>
+    </ul>
+  </section>
+  <section class="unit" id="lecture-12" aria-labelledby="lecture-12-h">
+    
+    <h2 id="lecture-12-h">Lecture 12 · Resistors and resistivity</h2>
+    <p class="meta"><span>Vol 2 · Ch. 9–10</span><span>9 of 9 sections with an activity</span></p>
+    <p class="unote">Conventional current and the current density J = σE, Ohm’s law and R = ρL/A, how resistance changes with temperature, drift velocity in copper, power, and resistors in series and parallel.</p>
+    <ul class="list">
+      <li class="item">
+        <a class="pic" href="demos/resistivity.html?course=phys-202" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/resistivity-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/resistivity-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-lab">Lab</span></p>
+          <h3><a href="demos/resistivity.html?course=phys-202">Resistivity of a Wire</a></h3>
+          <p>Slide a clip along a wire, read the voltmeter and work out its resistance. Change length, thickness, metal and temperature, then fit your readings to find the resistivity and its temperature coefficient.</p>
+          <ul class="secs" aria-label="Textbook sections"><li><span class="sec">2:9.1</span> Electrical Current</li><li><span class="sec">2:9.2</span> Model of Conduction in Metals</li><li><span class="sec">2:9.3</span> Resistivity and Resistance</li><li><span class="sec">2:9.4</span> Ohm&#x27;s Law</li><li><span class="sec">2:9.6</span> Superconductors</li></ul>
+          <p class="links"><a class="go" href="demos/resistivity.html?course=phys-202">Open demo</a> <a href="curriculum/labs/students/resistivity.html">Worksheet 1: Resistivity</a> <a href="curriculum/labs/students/current-sheet.html">Worksheet 2: Current in a Sheet</a> <a href="notes/resistivity.html">Notes</a></p>
+        </div>
+      </li>
+      <li class="item">
+        <a class="pic" href="demos/household-wiring.html?course=phys-202" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/household-wiring-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/household-wiring-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-demo">Demo</span></p>
+          <h3><a href="demos/household-wiring.html?course=phys-202">Household Wiring and Electrical Safety</a></h3>
+          <p>A 120 V kitchen branch circuit with hot, neutral and ground wires: overload it, short it, or let a worn cord touch a metal case, and see when the breaker or the GFCI trips and what a person feels.</p>
+          <ul class="secs" aria-label="Textbook sections"><li><span class="sec">2:10.6</span> Household Wiring and Electrical Safety</li></ul>
+          <p class="links"><a class="go" href="demos/household-wiring.html?course=phys-202">Open demo</a> <a href="curriculum/labs/students/household-wiring.html">Worksheet: Household Wiring and Electrical Safety</a> <a href="notes/household-wiring.html">Notes</a></p>
+        </div>
+      </li>
+      <li class="also">Also used in this unit: <a href="demos/circuits.html?course=phys-202">Circuits</a> with <a href="curriculum/labs/students/dc-circuits.html">Worksheet: Kirchhoff&#x27;s Rules</a> <span class="where">(card under <a href="#lecture-11">Lecture 11 · Capacitor circuits</a>; 2:9.1, 2:9.4, 2:9.5, 2:10.2, 2:10.4)</span></li>
+    </ul>
+  </section>
+  <section class="unit" id="lecture-13" aria-labelledby="lecture-13-h">
+    
+    <h2 id="lecture-13-h">Lecture 13 · RC circuits</h2>
+    <p class="meta"><span>Vol 2 · Ch. 10</span><span>1 of 1 sections with an activity</span></p>
+    <p class="unote">The loop equation as a differential equation, Q(t) = Q_max(1 − e^(−t/RC)), and the time constant RC, when a capacitor reaches 63 % of its charge.</p>
+    <ul class="list">
+      <li class="also">Also used in this unit: <a href="demos/circuits.html?course=phys-202">Circuits</a> with <a href="curriculum/labs/students/rc-circuits.html">Worksheet: RC Time Constant</a> <span class="where">(card under <a href="#lecture-11">Lecture 11 · Capacitor circuits</a>; 2:10.5)</span></li>
+    </ul>
+  </section>
+  <section class="unit" id="lecture-14" aria-labelledby="lecture-14-h">
+    
+    <h2 id="lecture-14-h">Lecture 14 · Magnets, part 1</h2>
+    <p class="meta"><span>Vol 2 · Ch. 11</span><span>3 of 3 sections with an activity</span></p>
+    <p class="unote">Magnetic field lines beside electric ones, the force qv × B, teslas and gauss, and the circular and helical motion of a charge in a uniform field.</p>
+    <ul class="list">
+      <li class="item">
+        <a class="pic" href="demos/currents-fields.html?course=phys-202" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/currents-fields-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/currents-fields-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-demo">Demo</span></p>
+          <h3><a href="demos/currents-fields.html?course=phys-202">Magnetic Fields of Currents</a></h3>
+          <p>Drag wires and watch their fields add and the forces between them, test Ampère's law on any loop with a numerical integral, and bend the current into a loop or a solenoid computed exactly from Biot–Savart.</p>
+          <ul class="secs" aria-label="Textbook sections"><li><span class="sec">2:11.1</span> Magnetism and Its Historical Discoveries</li><li><span class="sec">2:11.2</span> Magnetic Fields and Lines</li></ul>
+          <p class="links"><a class="go" href="demos/currents-fields.html?course=phys-202">Open demo</a> <a href="curriculum/labs/students/magnets-oersted.html">Worksheet 1: Magnets and Oersted&#x27;s Compass</a> <a href="curriculum/labs/students/straight-wire-fields.html">Worksheet 2: Fields and Forces of Straight Wires</a> <a href="curriculum/labs/students/loops-solenoids.html">Worksheet 3: Fields of Loops and Solenoids</a> <a href="notes/currents-fields.html">Notes</a></p>
+        </div>
+      </li>
+      <li class="item">
+        <a class="pic" href="demos/magnetic-force.html?course=phys-202" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/magnetic-force-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/magnetic-force-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-lab">Lab</span></p>
+          <h3><a href="demos/magnetic-force.html?course=phys-202">Charges in Magnetic Fields</a></h3>
+          <p>Launch protons, electrons and alphas into a magnetic field and watch them circle at a period that doesn't depend on speed. Build a velocity selector, a mass spectrometer that separates neon isotopes, and a cyclotron.</p>
+          <ul class="secs" aria-label="Textbook sections"><li><span class="sec">2:11.2</span> Magnetic Fields and Lines</li><li><span class="sec">2:11.3</span> Motion of a Charged Particle in a Magnetic Field</li></ul>
+          <p class="links"><a class="go" href="demos/magnetic-force.html?course=phys-202">Open demo</a> <a href="curriculum/labs/students/magnetic-force.html">Worksheet: Particle Orbits and the Hall Effect</a> <a href="notes/magnetic-force.html">Notes</a></p>
+        </div>
+      </li>
+    </ul>
+  </section>
+  <section class="unit" id="magnets-2" aria-labelledby="magnets-2-h">
+    
+    <h2 id="magnets-2-h">Magnets, part 2: forces on currents and the Hall effect</h2>
+    <p class="meta"><span>Vol 2 · Ch. 11</span><span>4 of 4 sections with an activity</span></p>
+    <p class="unote">The rest of the course, in the order of the syllabus. The force on a wire, the torque on a current loop and its dipole moment, the Hall effect, and the applications of magnetic forces.</p>
+    <ul class="list">
+      <li class="item">
+        <a class="pic" href="demos/wire-force.html?course=phys-202" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/wire-force-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/wire-force-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-lab">Lab</span></p>
+          <h3><a href="demos/wire-force.html?course=phys-202">Force on a Current</a></h3>
+          <p>Weigh the force on a current carrying wire with a magnet on a balance and find B, then see the forces on a loop make a torque, and add a commutator to build a DC motor.</p>
+          <ul class="secs" aria-label="Textbook sections"><li><span class="sec">2:11.4</span> Magnetic Force on a Current-Carrying Conductor</li><li><span class="sec">2:11.5</span> Force and Torque on a Current Loop</li><li><span class="sec">2:11.7</span> Applications of Magnetic Forces and Fields</li></ul>
+          <p class="links"><a class="go" href="demos/wire-force.html?course=phys-202">Open demo</a> <a href="curriculum/labs/students/wire-force.html">Worksheet: Magnetic Force on a Wire</a> <a href="notes/wire-force.html">Notes</a></p>
+        </div>
+      </li>
+      <li class="also">Also used in this unit: <a href="demos/currents-fields.html?course=phys-202">Magnetic Fields of Currents</a> <span class="where">(card under <a href="#lecture-14">Lecture 14 · Magnets, part 1</a>; 2:11.4, 2:11.5)</span> · <a href="demos/magnetic-force.html?course=phys-202">Charges in Magnetic Fields</a> <span class="where">(card under <a href="#lecture-14">Lecture 14 · Magnets, part 1</a>; 2:11.6, 2:11.7)</span></li>
+    </ul>
+  </section>
+  <section class="unit" id="magnetic-sources" aria-labelledby="magnetic-sources-h">
+    
+    <h2 id="magnetic-sources-h">Sources of magnetic fields</h2>
+    <p class="meta"><span>Vol 2 · Ch. 12</span><span>7 of 7 sections with an activity</span></p>
+    <ul class="list">
+      <li class="item">
+        <a class="pic" href="demos/displacement-current.html?course=phys-202" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/displacement-current-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/displacement-current-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-demo">Demo</span></p>
+          <h3><a href="demos/displacement-current.html?course=phys-202">Displacement Current</a></h3>
+          <p>Charge a capacitor and move an Amperian loop along the wire and into the gap. Stretch its surface between the plates and see why Maxwell added ε₀ dΦE/dt to Ampère's law.</p>
+          <ul class="secs" aria-label="Textbook sections"><li><span class="sec">2:12.5</span> Ampère’s Law</li></ul>
+          <p class="links"><a class="go" href="demos/displacement-current.html?course=phys-202">Open demo</a> <a href="curriculum/labs/students/displacement-current.html">Worksheet: Displacement Current</a> <a href="notes/displacement-current.html">Notes</a></p>
+        </div>
+      </li>
+      <li class="item">
+        <a class="pic" href="demos/magnetism-in-matter.html?course=phys-202" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/magnetism-in-matter-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/magnetism-in-matter-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-demo">Demo</span></p>
+          <h3><a href="demos/magnetism-in-matter.html?course=phys-202">Magnetism in Matter</a></h3>
+          <p>Fill a long solenoid with aluminum, bismuth, liquid oxygen, water or iron and compare B with the coil's own field: tiny para and diamagnetic changes, the field needed to float water, and iron's hysteresis loop.</p>
+          <ul class="secs" aria-label="Textbook sections"><li><span class="sec">2:12.7</span> Magnetism in Matter</li></ul>
+          <p class="links"><a class="go" href="demos/magnetism-in-matter.html?course=phys-202">Open demo</a> <a href="curriculum/labs/students/magnetism-in-matter.html">Worksheet: Magnetism in Matter</a> <a href="notes/magnetism-in-matter.html">Notes</a></p>
+        </div>
+      </li>
+      <li class="also">Also used in this unit: <a href="demos/currents-fields.html?course=phys-202">Magnetic Fields of Currents</a> with <a href="curriculum/labs/students/straight-wire-fields.html">Worksheet: Fields and Forces of Straight Wires</a> with <a href="curriculum/labs/students/loops-solenoids.html">Worksheet: Fields of Loops and Solenoids</a> <span class="where">(card under <a href="#lecture-14">Lecture 14 · Magnets, part 1</a>; 2:12.1, 2:12.2, 2:12.3, 2:12.4, 2:12.5, 2:12.6)</span></li>
+    </ul>
+  </section>
+  <section class="unit" id="induction" aria-labelledby="induction-h">
+    
+    <h2 id="induction-h">Induction and inductance</h2>
+    <p class="meta"><span>Vol 2 · Ch. 13–14</span><span>13 of 13 sections with an activity</span></p>
+    <ul class="list">
+      <li class="item">
+        <a class="pic" href="demos/faraday.html?course=phys-202" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/faraday-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/faraday-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-lab">Lab</span></p>
+          <h3><a href="demos/faraday.html?course=phys-202">Faraday&#x27;s and Lenz&#x27;s Laws</a></h3>
+          <p>Push a magnet into a coil and watch the flux, EMF and current, with the coil pushing back. Move it fast or slow and the same total charge flows. Spin a generator coil and slide a bar along rails.</p>
+          <ul class="secs" aria-label="Textbook sections"><li><span class="sec">2:13.1</span> Faraday’s Law</li><li><span class="sec">2:13.2</span> Lenz&#x27;s Law</li><li><span class="sec">2:13.3</span> Motional Emf</li><li><span class="sec">2:13.6</span> Electric Generators and Back Emf</li><li><span class="sec">2:14.1</span> Mutual Inductance</li><li><span class="sec">2:14.2</span> Self-Inductance and Inductors</li><li><span class="sec">2:14.3</span> Energy in a Magnetic Field</li></ul>
+          <p class="links"><a class="go" href="demos/faraday.html?course=phys-202">Open demo</a> <a href="curriculum/labs/students/faraday.html">Worksheet: Faraday&#x27;s Law</a> <a href="notes/faraday.html">Notes</a></p>
+        </div>
+      </li>
+      <li class="item">
+        <a class="pic" href="demos/induction-at-work.html?course=phys-202" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/induction-at-work-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/induction-at-work-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-demo">Demo</span></p>
+          <h3><a href="demos/induction-at-work.html?course=phys-202">Induction at Work</a></h3>
+          <p>Three devices that run on Faraday's law: shake a magnet through a coil to charge a flashlight, draw with a magnetic pen on a grid of wires, and swipe a card's magnetic stripe past a reading head.</p>
+          <ul class="secs" aria-label="Textbook sections"><li><span class="sec">2:13.1</span> Faraday’s Law</li><li><span class="sec">2:13.2</span> Lenz&#x27;s Law</li><li><span class="sec">2:13.7</span> Applications of Electromagnetic Induction</li></ul>
+          <p class="links"><a class="go" href="demos/induction-at-work.html?course=phys-202">Open demo</a> <a href="curriculum/labs/students/induction-at-work.html">Worksheet: Induction at Work</a> <a href="notes/induction-at-work.html">Notes</a></p>
+        </div>
+      </li>
+      <li class="item">
+        <a class="pic" href="demos/induced-electric-field.html?course=phys-202" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/induced-electric-field-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/induced-electric-field-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-demo">Demo</span></p>
+          <h3><a href="demos/induced-electric-field.html?course=phys-202">Induced Electric Fields</a></h3>
+          <p>A long solenoid seen end on with a changing current: the electric field it induces circles the axis, inside and in the empty space outside. Drag a closed path and compare the circulation of E with the rate of change of flux.</p>
+          <ul class="secs" aria-label="Textbook sections"><li><span class="sec">2:13.4</span> Induced Electric Fields</li></ul>
+          <p class="links"><a class="go" href="demos/induced-electric-field.html?course=phys-202">Open demo</a> <a href="curriculum/labs/students/induced-electric-field.html">Worksheet: Induced Electric Fields</a> <a href="notes/induced-electric-field.html">Notes</a></p>
+        </div>
+      </li>
+      <li class="item">
+        <a class="pic" href="demos/eddy-currents.html?course=phys-202" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/eddy-currents-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/eddy-currents-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-demo">Demo</span></p>
+          <h3><a href="demos/eddy-currents.html?course=phys-202">Eddy Currents: Magnet in a Pipe</a></h3>
+          <p>Drop a strong magnet down copper, aluminum and plastic pipes side by side. Currents induced in the metal walls push back by Lenz's law, and the magnet drifts down at a slow terminal speed.</p>
+          <ul class="secs" aria-label="Textbook sections"><li><span class="sec">2:13.5</span> Eddy Currents</li></ul>
+          <p class="links"><a class="go" href="demos/eddy-currents.html?course=phys-202">Open demo</a> <a href="curriculum/labs/students/eddy-currents.html">Worksheet: Eddy Current Braking</a> <a href="notes/eddy-currents.html">Notes</a></p>
+        </div>
+      </li>
+      <li class="item">
+        <a class="pic" href="demos/transformers.html?course=phys-202" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/transformers-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/transformers-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-lab">Lab</span></p>
+          <h3><a href="demos/transformers.html?course=phys-202">Transformers</a></h3>
+          <p>Two coils on an iron core: change the turns and the load and watch V_S/V_P follow N_S/N_P on live traces, switch to a real core with leakage and winding resistance, then send power down a long line and see the I²R loss fall as 1/V².</p>
+          <ul class="secs" aria-label="Textbook sections"><li><span class="sec">2:14.1</span> Mutual Inductance</li></ul>
+          <p class="links"><a class="go" href="demos/transformers.html?course=phys-202">Open demo</a> <a href="curriculum/labs/students/transformers.html">Worksheet: Transformers and Power Lines</a> <a href="notes/transformers.html">Notes</a></p>
+        </div>
+      </li>
+      <li class="also">Also used in this unit: <a href="demos/circuits.html?course=phys-202">Circuits</a> with <a href="curriculum/labs/students/rlc-transients.html">Worksheet: RLC Oscillations</a> <span class="where">(card under <a href="#lecture-11">Lecture 11 · Capacitor circuits</a>; 2:14.2, 2:14.3, 2:14.4, 2:14.5, 2:14.6)</span></li>
+    </ul>
+  </section>
+  <section class="unit" id="ac-circuits" aria-labelledby="ac-circuits-h">
+    
+    <h2 id="ac-circuits-h">Alternating current circuits</h2>
+    <p class="meta"><span>Vol 2 · Ch. 15</span><span>6 of 6 sections with an activity</span></p>
+    <ul class="list">
+      <li class="also">Also used in this unit: <a href="demos/circuits.html?course=phys-202">Circuits</a> with <a href="curriculum/labs/students/ac-circuits.html">Worksheet: AC Resonance</a> with <a href="curriculum/labs/students/ac-reactance.html">Worksheet: Reactance and Phase</a> with <a href="curriculum/labs/students/ac-power.html">Worksheet: Power in an AC Circuit</a> <span class="where">(card under <a href="#lecture-11">Lecture 11 · Capacitor circuits</a>; 2:15.1, 2:15.2, 2:15.3, 2:15.4, 2:15.5)</span> · <a href="demos/transformers.html?course=phys-202">Transformers</a> <span class="where">(card under <a href="#induction">Induction and inductance</a>; 2:15.6)</span></li>
+    </ul>
+  </section>
+  <section class="unit" id="maxwell-waves" aria-labelledby="maxwell-waves-h">
+    
+    <h2 id="maxwell-waves-h">Maxwell’s equations and electromagnetic waves</h2>
+    <p class="meta"><span>Vol 2 · Ch. 16</span><span>5 of 5 sections with an activity</span></p>
+    <ul class="list">
+      <li class="item">
+        <a class="pic" href="demos/em-waves.html?course=phys-202" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/em-waves-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/em-waves-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-demo">Demo</span></p>
+          <h3><a href="demos/em-waves.html?course=phys-202">Electromagnetic Waves</a></h3>
+          <p>A plane wave in 3D with E, B and the Poynting vector, polarization from linear to circular, the energy and pressure of sunlight and a laser, the full spectrum, and a dipole antenna launching waves with exact field lines.</p>
+          <ul class="secs" aria-label="Textbook sections"><li><span class="sec">2:16.1</span> Maxwell’s Equations and Electromagnetic Waves</li><li><span class="sec">2:16.2</span> Plane Electromagnetic Waves</li><li><span class="sec">2:16.3</span> Energy Carried by Electromagnetic Waves</li><li><span class="sec">2:16.4</span> Momentum and Radiation Pressure</li><li><span class="sec">2:16.5</span> The Electromagnetic Spectrum</li></ul>
+          <p class="links"><a class="go" href="demos/em-waves.html?course=phys-202">Open demo</a> <a href="curriculum/labs/students/em-waves.html">Worksheet: Electromagnetic Waves: Fields, Intensity and Pressure</a> <a href="notes/em-waves.html">Notes</a></p>
+        </div>
+      </li>
+      <li class="also">Also used in this unit: <a href="demos/displacement-current.html?course=phys-202">Displacement Current</a> <span class="where">(card under <a href="#magnetic-sources">Sources of magnetic fields</a>; 2:16.1)</span></li>
+    </ul>
+  </section>
+  <section class="unit" id="optics" aria-labelledby="optics-h">
+    
+    <h2 id="optics-h">Light and geometric optics</h2>
+    <p class="meta"><span>Vol 3 · Ch. 1–2</span><span>15 of 15 sections with an activity</span></p>
+    <ul class="list">
+      <li class="item">
+        <a class="pic" href="demos/huygens.html?course=phys-202" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/huygens-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/huygens-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-demo">Demo</span></p>
+          <h3><a href="demos/huygens.html?course=phys-202">Huygens&#x27;s Principle</a></h3>
+          <p>Race light through water, glass and diamond to see v = c/n, then build new wavefronts from wavelets to explain reflection, refraction and Snell's law, total internal reflection, and the spreading of a wave through an opening.</p>
+          <ul class="secs" aria-label="Textbook sections"><li><span class="sec">3:1.1</span> The Propagation of Light</li><li><span class="sec">3:1.2</span> The Law of Reflection</li><li><span class="sec">3:1.3</span> Refraction</li><li><span class="sec">3:1.4</span> Total Internal Reflection</li><li><span class="sec">3:1.6</span> Huygens’s Principle</li></ul>
+          <p class="links"><a class="go" href="demos/huygens.html?course=phys-202">Open demo</a> <a href="curriculum/labs/students/huygens.html">Worksheet: Huygens&#x27;s Principle</a> <a href="notes/huygens.html">Notes</a></p>
+        </div>
+      </li>
+      <li class="item">
+        <a class="pic" href="demos/optics-bench.html?course=phys-202" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/optics-bench-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/optics-bench-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-demo">Demo</span></p>
+          <h3><a href="demos/optics-bench.html?course=phys-202">Optics Bench</a></h3>
+          <p>Drag lenses, mirrors, prisms and light sources. Rays bend and bounce live, and images form where they cross.</p>
+          <ul class="secs" aria-label="Textbook sections"><li><span class="sec">3:1.2</span> The Law of Reflection</li><li><span class="sec">3:1.3</span> Refraction</li><li><span class="sec">3:1.4</span> Total Internal Reflection</li><li><span class="sec">3:1.5</span> Dispersion</li><li><span class="sec">3:2.1</span> Images Formed by Plane Mirrors</li><li><span class="sec">3:2.2</span> Spherical Mirrors</li><li><span class="sec">3:2.3</span> Images Formed by Refraction</li><li><span class="sec">3:2.4</span> Thin Lenses</li><li><span class="sec">3:2.6</span> The Camera</li><li><span class="sec">3:2.7</span> The Simple Magnifier</li><li><span class="sec">3:2.8</span> Microscopes and Telescopes</li></ul>
+          <p class="links"><a class="go" href="demos/optics-bench.html?course=phys-202">Open demo</a> <a href="curriculum/labs/students/dispersion.html">Worksheet 1: Dispersion</a> <a href="curriculum/labs/students/mirrors-refraction.html">Worksheet 2: Mirrors and Refracting Surfaces</a> <a href="curriculum/labs/students/lenses-instruments.html">Worksheet 3: Lenses and Optical Instruments</a> <a href="notes/optics-bench.html">Notes</a></p>
+        </div>
+      </li>
+      <li class="item">
+        <a class="pic" href="demos/rainbows.html?course=phys-202" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/rainbows-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/rainbows-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-demo">Demo</span></p>
+          <h3><a href="demos/rainbows.html?course=phys-202">Rainbows</a></h3>
+          <p>Follow sunlight through a raindrop and find the ray of least deviation that makes the bow at 42°, then see the sky: the primary and the reversed secondary bow, Alexander's dark band, the Sun's height, and in 3D the cone of drops that makes your own rainbow.</p>
+          <ul class="secs" aria-label="Textbook sections"><li><span class="sec">3:1.5</span> Dispersion</li></ul>
+          <p class="links"><a class="go" href="demos/rainbows.html?course=phys-202">Open demo</a> <a href="notes/rainbows.html">Notes</a></p>
+        </div>
+      </li>
+      <li class="item">
+        <a class="pic" href="demos/ripple-tank.html?course=phys-202" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/ripple-tank-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/ripple-tank-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-lab">Lab</span></p>
+          <h3><a href="demos/ripple-tank.html?course=phys-202">Ripple Tank</a></h3>
+          <p>Make waves in a tank of water with dippers or a straight bar, draw your own walls and shallow plates, and watch waves spread through slits, interfere, reflect, refract and focus. Measure wavelength, speed and the angles of the quiet lines.</p>
+          <ul class="secs" aria-label="Textbook sections"><li><span class="sec">3:1.6</span> Huygens’s Principle</li></ul>
+          <p class="links"><a class="go" href="demos/ripple-tank.html?course=phys-202">Open demo</a> <a href="curriculum/labs/students/ripple-tank.html">Worksheet: Ripple Tank: Wavelength, Refraction and Interference</a> <a href="notes/ripple-tank.html">Notes</a></p>
+        </div>
+      </li>
+      <li class="item">
+        <a class="pic" href="demos/polarization.html?course=phys-202" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/polarization-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/polarization-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-demo">Demo</span></p>
+          <h3><a href="demos/polarization.html?course=phys-202">Polarization</a></h3>
+          <p>Send light through polarizers and wave plates and watch the electric field after each one: Malus's law, the three polarizer surprise, circular light from a quarter wave plate, and glare at Brewster's angle.</p>
+          <ul class="secs" aria-label="Textbook sections"><li><span class="sec">3:1.7</span> Polarization</li></ul>
+          <p class="links"><a class="go" href="demos/polarization.html?course=phys-202">Open demo</a> <a href="curriculum/labs/students/polarization.html">Worksheet: Polarization</a> <a href="notes/polarization.html">Notes</a></p>
+        </div>
+      </li>
+      <li class="item">
+        <a class="pic" href="demos/the-eye.html?course=phys-202" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/the-eye-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/the-eye-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-demo">Demo</span></p>
+          <h3><a href="demos/the-eye.html?course=phys-202">The Eye</a></h3>
+          <p>Watch the eye change its power to keep an image on the retina, find the near and far points of normal, nearsighted, farsighted and older eyes, and prescribe the glasses that correct them.</p>
+          <ul class="secs" aria-label="Textbook sections"><li><span class="sec">3:2.4</span> Thin Lenses</li><li><span class="sec">3:2.5</span> The Eye</li><li><span class="sec">3:2.6</span> The Camera</li></ul>
+          <p class="links"><a class="go" href="demos/the-eye.html?course=phys-202">Open demo</a> <a href="curriculum/labs/students/the-eye.html">Worksheet 1: The Eye</a> <a href="curriculum/labs/students/camera.html">Worksheet 2: The Camera</a> <a href="notes/the-eye.html">Notes</a></p>
+        </div>
+      </li>
+      <li class="item">
+        <a class="pic" href="demos/instrument-builder.html?course=phys-202" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/instrument-builder-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/instrument-builder-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-demo">Demo</span></p>
+          <h3><a href="demos/instrument-builder.html?course=phys-202">Build a Microscope or Telescope</a></h3>
+          <p>Put lenses and stops on a rail and look through them with an eye or a camera: find each image, the magnification, the exit pupil, the field of view and how bright the view is, for a magnifier, a microscope or a telescope of your own design.</p>
+          <ul class="secs" aria-label="Textbook sections"><li><span class="sec">3:2.4</span> Thin Lenses</li><li><span class="sec">3:2.7</span> The Simple Magnifier</li><li><span class="sec">3:2.8</span> Microscopes and Telescopes</li></ul>
+          <p class="links"><a class="go" href="demos/instrument-builder.html?course=phys-202">Open demo</a> <a href="notes/instrument-builder.html">Notes</a></p>
+        </div>
+      </li>
+      <li class="item">
+        <a class="pic" href="demos/color-vision.html?course=phys-202" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/color-vision-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/color-vision-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-demo">Demo</span></p>
+          <h3><a href="demos/color-vision.html?course=phys-202">Color Vision</a></h3>
+          <p>Mix red, green and blue lamps, compare a single wavelength, or put a filter in front of a white bulb, and watch the three cone signals that decide the color you see. Includes metamers and single photons.</p>
+          <ul class="secs" aria-label="Textbook sections"><li><span class="sec">3:2.5</span> The Eye</li></ul>
+          <p class="links"><a class="go" href="demos/color-vision.html?course=phys-202">Open demo</a> <a href="curriculum/labs/students/color-vision.html">Worksheet: Cones, Mixing and Filters</a> <a href="notes/color-vision.html">Notes</a></p>
+        </div>
+      </li>
+      <li class="item">
+        <a class="pic" href="demos/telescope-aberrations.html?course=phys-202" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/telescope-aberrations-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/telescope-aberrations-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-lab">Lab</span></p>
+          <h3><a href="demos/telescope-aberrations.html?course=phys-202">Telescope Aberrations</a></h3>
+          <p>Why a real telescope blurs a star, computed: the image is the diffraction pattern of the aperture with the wavefront error found by tracing real rays. Spherical and parabolic mirrors, coma off the axis, a pinched mirror, a single lens against an achromat, Hubble's 1990 flaw and its fix, and moving air with adaptive optics. Then a mystery telescope to diagnose and fix.</p>
+          <ul class="secs" aria-label="Textbook sections"><li><span class="sec">3:2.8</span> Microscopes and Telescopes</li></ul>
+          <p class="links"><a class="go" href="demos/telescope-aberrations.html?course=phys-202">Open demo</a> <a href="notes/telescope-aberrations.html">Notes</a></p>
+        </div>
+      </li>
+    </ul>
+  </section>
+  <section class="unit" id="wave-optics" aria-labelledby="wave-optics-h">
+    
+    <h2 id="wave-optics-h">Wave optics</h2>
+    <p class="meta"><span>Vol 3 · Ch. 3–4</span><span>12 of 12 sections with an activity</span></p>
+    <ul class="list">
+      <li class="item">
+        <a class="pic" href="demos/double-slit.html?course=phys-202" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/double-slit-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/double-slit-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-demo">Demo</span></p>
+          <h3><a href="demos/double-slit.html?course=phys-202">Double Slit, One Particle at a Time</a></h3>
+          <p>Fire photons, electrons or buckyballs through two slits one at a time. Single dots pile up into fringes, and a which slit detector washes them out.</p>
+          <ul class="secs" aria-label="Textbook sections"><li><span class="sec">3:3.1</span> Young&#x27;s Double-Slit Interference</li><li><span class="sec">3:3.2</span> Mathematics of Interference</li><li><span class="sec">3:4.1</span> Single-Slit Diffraction</li><li><span class="sec">3:4.3</span> Double-Slit Diffraction</li></ul>
+          <p class="links"><a class="go" href="demos/double-slit.html?course=phys-202">Open demo</a> <a href="curriculum/labs/students/double-slit.html">Worksheet: Young&#x27;s Double Slit</a> <a href="notes/double-slit.html">Notes</a></p>
+        </div>
+      </li>
+      <li class="item">
+        <a class="pic" href="demos/diffraction-grating.html?course=phys-202" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/diffraction-grating-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/diffraction-grating-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-demo">Demo</span></p>
+          <h3><a href="demos/diffraction-grating.html?course=phys-202">Diffraction Grating</a></h3>
+          <p>Shine lasers, an RGB module, white light or H, He, Ne, Hg and Na lamps through gratings from 100 to 1000 lines/mm, a CD or a DVD. See the orders land on the wall, overlapping rainbows and missing orders, then measure a spot with calipers to find the wavelength.</p>
+          <ul class="secs" aria-label="Textbook sections"><li><span class="sec">3:3.2</span> Mathematics of Interference</li><li><span class="sec">3:3.3</span> Multiple-Slit Interference</li><li><span class="sec">3:4.1</span> Single-Slit Diffraction</li><li><span class="sec">3:4.2</span> Intensity in Single-Slit Diffraction</li><li><span class="sec">3:4.3</span> Double-Slit Diffraction</li><li><span class="sec">3:4.4</span> Diffraction Gratings</li><li><span class="sec">3:4.5</span> Circular Apertures and Resolution</li></ul>
+          <p class="links"><a class="go" href="demos/diffraction-grating.html?course=phys-202">Open demo</a> <a href="curriculum/labs/students/diffraction-grating.html">Worksheet 1: Diffraction Grating</a> <a href="curriculum/labs/students/single-slit.html">Worksheet 2: Single Slit Diffraction</a> <a href="notes/diffraction-grating.html">Notes</a></p>
+        </div>
+      </li>
+      <li class="item">
+        <a class="pic" href="demos/thin-films.html?course=phys-202" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/thin-films-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/thin-films-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-demo">Demo</span></p>
+          <h3><a href="demos/thin-films.html?course=phys-202">Thin Film Interference</a></h3>
+          <p>See why soap bubbles and oil slicks are colored: two reflections from a thin film add or cancel, computed exactly with the reflected color of white light, plus the black film, air wedge fringes, Newton's rings and anti reflection coatings.</p>
+          <ul class="secs" aria-label="Textbook sections"><li><span class="sec">3:3.4</span> Interference in Thin Films</li></ul>
+          <p class="links"><a class="go" href="demos/thin-films.html?course=phys-202">Open demo</a> <a href="curriculum/labs/students/thin-films.html">Worksheet: Thin Film Interference</a> <a href="notes/thin-films.html">Notes</a></p>
+        </div>
+      </li>
+      <li class="item">
+        <a class="pic" href="demos/michelson.html?course=phys-202" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/michelson-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/michelson-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-lab">Lab</span></p>
+          <h3><a href="demos/michelson.html?course=phys-202">Michelson Interferometer</a></h3>
+          <p>Split a laser beam, send the halves to two mirrors and recombine them: count fringes as a micrometer moves one mirror to measure a wavelength, pump the air out of a gas cell to measure its index of refraction, and find equal paths with white light fringes.</p>
+          <ul class="secs" aria-label="Textbook sections"><li><span class="sec">3:3.5</span> The Michelson Interferometer</li></ul>
+          <p class="links"><a class="go" href="demos/michelson.html?course=phys-202">Open demo</a> <a href="curriculum/labs/students/michelson.html">Worksheet: Michelson Interferometer</a> <a href="notes/michelson.html">Notes</a></p>
+        </div>
+      </li>
+      <li class="item">
+        <a class="pic" href="demos/resolution.html?course=phys-202" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/resolution-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/resolution-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-lab">Lab</span></p>
+          <h3><a href="demos/resolution.html?course=phys-202">Circular Apertures and Resolution</a></h3>
+          <p>Light through a round hole makes an Airy pattern, computed exactly. Measure its first dark ring on a screen, then bring two point sources together until they blur into one: Rayleigh's criterion for an iris, the eye and a car's headlights, the Hubble telescope and a camera lens stopped down.</p>
+          <ul class="secs" aria-label="Textbook sections"><li><span class="sec">3:4.5</span> Circular Apertures and Resolution</li></ul>
+          <p class="links"><a class="go" href="demos/resolution.html?course=phys-202">Open demo</a> <a href="curriculum/labs/students/resolution.html">Worksheet: Circular Apertures and Resolution</a> <a href="notes/resolution.html">Notes</a></p>
+        </div>
+      </li>
+      <li class="item">
+        <a class="pic" href="demos/electron-diffraction.html?course=phys-202" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/electron-diffraction-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/electron-diffraction-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-demo">Demo</span></p>
+          <h3><a href="demos/electron-diffraction.html?course=phys-202">Electron Diffraction</a></h3>
+          <p>Fire electrons through graphite, measure the two rings on the tube's screen at several voltages, and find the lattice spacings from de Broglie's λ = h/p.</p>
+          <ul class="secs" aria-label="Textbook sections"><li><span class="sec">3:4.6</span> X-Ray Diffraction</li></ul>
+          <p class="links"><a class="go" href="demos/electron-diffraction.html?course=phys-202">Open demo</a> <a href="curriculum/labs/students/electron-diffraction.html">Worksheet 1: Electron Diffraction and de Broglie Waves</a> <a href="curriculum/labs/students/x-ray-diffraction.html">Worksheet 2: X-Ray Diffraction</a> <a href="notes/electron-diffraction.html">Notes</a></p>
+        </div>
+      </li>
+      <li class="item">
+        <a class="pic" href="demos/holography.html?course=phys-202" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/holography-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/holography-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-lab">Lab</span></p>
+          <h3><a href="demos/holography.html?course=phys-202">Holography</a></h3>
+          <p>Record the fringes a reference beam and an object's light make on a plate, measure their spacing under a microscope, then light the developed plate again and find the virtual image, the real image and the straight through beam, computed exactly; change the color and watch the images move.</p>
+          <ul class="secs" aria-label="Textbook sections"><li><span class="sec">3:4.7</span> Holography</li></ul>
+          <p class="links"><a class="go" href="demos/holography.html?course=phys-202">Open demo</a> <a href="curriculum/labs/students/holography.html">Worksheet: Holography: Fringes and Images</a> <a href="notes/holography.html">Notes</a></p>
+        </div>
+      </li>
+      <li class="also">Also used in this unit: <a href="demos/ripple-tank.html?course=phys-202">Ripple Tank</a> <span class="where">(card under <a href="#optics">Light and geometric optics</a>; 3:3.1, 3:3.2, 3:4.1)</span> · <a href="demos/telescope-aberrations.html?course=phys-202">Telescope Aberrations</a> <span class="where">(card under <a href="#optics">Light and geometric optics</a>; 3:4.5)</span></li>
+    </ul>
+  </section>
+  <p class="more"><a href="index.html">Back to the home page</a></p>
+</main>
+<footer>
+  <div class="wrap">
+    <p>© 2026 Steven Anderson. All rights reserved. Free to use for teaching and learning; see the <a href="LICENSE.html">terms of use</a>.</p>
+    <p><a href="https://github.com/PhysicsSteven/VirtualDemos">Source on GitHub</a></p>
+  </div>
+</footer>
+<script src="search.js" defer></script>
+</body>
+</html>

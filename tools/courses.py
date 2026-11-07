@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Build the site's index pages from curriculum/textbook-map.json, curriculum/catalog.json and curriculum/topics.json:
-the course pages (physics-1.html, physics-2.html, astro-2203.html and the acoustics, thermo, modern, astro and medical-physics
+the course pages (physics-1.html, physics-2.html, phys-202.html, astro-2203.html and the acoustics, thermo, modern, astro and medical-physics
 modules), one page per topic (topics/<id>.html), openstax.html (every textbook section with its demos), the home page below
 its hero (Courses, All demos by topic, OpenStax by section), search.js, 404.html, misc.html (a redirect) and demos/lib/nav.js.
 
@@ -34,6 +34,7 @@ BLURB = {
     'astro+2203': ('Sky, planets, stars and galaxies', 'The sky from Earth, gravitation and orbits, telescopes and light, how stars shine and age, galaxies and the expanding universe, and the planets and their surfaces, with the Astro 2203 schedule at the bottom and its introductory worksheets on every card. OpenStax University Physics Volume 1, chapter 13, and Volume 3, chapters 10 and 11, where they apply.'),
     'astro+incl': ('Sky, planets, stars and galaxies', 'Every astronomy demo on the site: the sky from Earth, gravitation and orbits, telescopes and light, how stars shine and age, galaxies and the expanding universe, and the planets and their surfaces. Each card lists the Astro 2203 introductory worksheets too. OpenStax University Physics Volume 1, chapter 13, and Volume 3, chapters 10 and 11, where they apply.'),
     'astro-2203': ('Solar system astronomy', 'From naked eye observations of the sky to the planets, their moons, the small bodies and planets around other stars, week by week through the Winter Quarter, with a review before each of the three tests and one required worksheet most weeks. The worksheets are written for an introductory class: algebra, ratios and short graphs.'),
+    'phys-202': ('Electricity and magnetism, lecture by lecture', 'Charge, fields and Gauss\u2019s law, potential, capacitors, current and circuits, and magnetism, in the order of the PHYS 202 lectures, then the rest of the course in the order of the syllabus: sources of magnetic fields, induction, AC circuits, Maxwell\u2019s equations, and optics. The worksheets are the Physics II worksheets, written for a calculus based class. OpenStax University Physics Volume 2, and Volume 3 for optics.'),
     'medical-physics': ('Radiation physics and proton therapy', 'For the junior and senior medical physics track, beside the radiation physics class and ahead of the seniors\u2019 lab at the proton therapy center: sources and decay, photon interactions, charged particles in matter, dosimetry, radiobiology, shielding, proton therapy and imaging. Calculus throughout; the upper level worksheets read cited data tables and carry uncertainties, and the other worksheets on each card work as warm ups.'),
 }
 # A course with no textbook (Astro 2203, 2026-10-25): its units list demos only, and its worksheets are its own intro level
@@ -63,6 +64,10 @@ NO_BOOK = {'astro-2203', 'medical-physics'}
 # Astronomy (general) holds every astronomy demo; Astro 2203 is the course's own page. Old links to the folded page's schedule
 # (astro.html#astro-2203, #a2203-<topic>) are sent to astro-2203.html by a line on the Astronomy page (OLD_ANCHORS).
 MERGED = {}
+# SAME_AS (PHYS 202, 2026-11-07): a course page that lays out another course's demos and worksheets in its own order. The course
+# (key) takes in every demo and activity of the other (value), and the other's worksheets count as its own (handout_courses).
+# It stays off the topic cards and search chips, where it would only repeat the other course's name.
+SAME_AS = {'phys-202': 'physics-2'}
 INCLUDED = {'astro-2203': 'astro'}
 MERGE_PLACE = {'units': 'sky', 'gyroscope': 'sky', 'rotation': 'gravitation',
                'instrument-builder': 'telescopes-light', 'optics-bench': 'telescopes-light', 'resolution': 'telescopes-light', 'telescope-aberrations': 'telescopes-light',
@@ -83,6 +88,10 @@ def load_map():
     target (see MERGED). Demos keep their own course list as '_course', which course_handouts uses to list both courses'
     worksheets on the target's cards."""
     m = json.loads(MAP.read_text())
+    for dst, src in SAME_AS.items():
+        for d in m['demos'] + m.get('activities', []):
+            if src in d['course'] and dst not in d['course']:
+                d['course'] = d['course'] + [dst]
     fold = {**MERGED, **INCLUDED}
     if not fold:
         return m
@@ -299,6 +308,7 @@ def handout_courses(h):
         for t in sorted(titles, key=len, reverse=True):   # longest first: Physics II before Physics I
             if re.search(re.escape(t) + r'(?!\w)', line):
                 out.add(titles[t]); line = line.replace(t, '')
+        out |= {c for c, src in SAME_AS.items() if src in out}
         _OWNERS[h] = out | {c for c, hs in COURSE_HANDOUTS.items() if h in hs}
     return _OWNERS[h]
 
@@ -492,6 +502,12 @@ def course_page(course, m, cards, notes):
         how = ('Units follow the weeks of the course, with each test where it falls. Each week\u2019s required worksheet is marked Required and '
                'comes first; it is the one you hand in. The other demos and worksheets are supplementary. A demo can appear in more than one '
                'week: it has one card, in the week that needs it most, and other weeks link to it.')
+    if cid in SAME_AS:
+        t = next(x['title'] for x in m['courses'] if x['id'] == SAME_AS[cid])
+        how = ('Units follow the lectures, one per set of lecture notes, then the rest of the course in the order of the syllabus. Each card lists the '
+               f'{esc(t)} worksheets. A demo can appear in more than one lecture: it has one card, in the first lecture that uses it, and later '
+               'lectures link to it. Section numbers are volume:section in OpenStax University Physics, and sections with no activity yet are '
+               f'listed under each unit. Every demo here is also on the <a href="{SAME_AS[cid]}.html">{esc(t)}</a> page, by topic.')
     if cid in INCLUDED:
         t = next(x['title'] for x in m['courses'] if x['id'] == INCLUDED[cid])
         how = (how or ('Units follow the course schedule, one per topic, with a review unit before each test. A demo can appear in more than one unit: '
@@ -587,7 +603,7 @@ def topic_card(name, demo, topic, where, cards, notes, ctitle):
     links += [f'<a href="curriculum/labs/students/{h}.html">{esc(handout_label(h, i if len(hs) > 1 else None))}</a>' for i, h in enumerate(hs, 1)]
     if name in notes:
         links.append(f'<a href="notes/{name}.html">Notes</a>')
-    used = [x for x in demo['course'] if x in ctitle]
+    used = [x for x in demo['course'] if x in ctitle and x not in SAME_AS]
     rows = []
     if used:
         rows.append('In ' + ' · '.join(f'<a href="{x}.html">{esc(ctitle[x])}</a>' for x in used))
@@ -1055,7 +1071,7 @@ def search_js(m, cards, t):
             hs = [h for h in d.get('handouts') or [] if exists(h)]
             on_demos.update(hs)
             items.append({'n': n, 't': plain(c['title']), 'd': plain(c['desc']), 'g': c.get('tags', []), 'k': 'Lab' if d.get('role') == 'lab' else 'Demo',
-                          'h': f'demos/{n}.html', 'c': [x for x in d.get('course', []) if x != 'later'], 'p': [x['id'] for _, x in where.get(n, [])],
+                          'h': f'demos/{n}.html', 'c': [x for x in d.get('course', []) if x != 'later' and x not in SAME_AS], 'p': [x['id'] for _, x in where.get(n, [])],
                           's': [[f'{s["vol"]}:{s["sec"]}', secs.get((s['vol'], s['sec']), s.get('title', ''))] for s in sorted(d.get('sections', []), key=sec_key)],
                           'w': [[f'curriculum/labs/students/{h}.html', handout_label(h, i if len(hs) > 1 else None)] for i, h in enumerate(hs, 1)]})
     for a in m.get('activities', []):
@@ -1063,7 +1079,7 @@ def search_js(m, cards, t):
             continue
         reading = a['kind'] != 'worksheet'
         items.append({'n': a['id'], 't': a['title'], 'd': a['description'], 'g': [], 'k': 'Reading' if reading else 'Worksheet',
-                      'h': a['url'].removesuffix('.md') + '.html', 'c': [x for x in a['course'] if x != 'later'], 'p': [],
+                      'h': a['url'].removesuffix('.md') + '.html', 'c': [x for x in a['course'] if x != 'later' and x not in SAME_AS], 'p': [],
                       's': [[f'{s["vol"]}:{s["sec"]}', secs.get((s['vol'], s['sec']), s.get('title', ''))] for s in sorted(a['sections'], key=sec_key)],
                       'w': [] if reading else [[a['url'].removesuffix('.md') + '.html', handout_label(a['id'])]]})
     courses = {c['id']: c['title'] for c in m['courses']}

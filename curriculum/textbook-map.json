@@ -972,6 +972,635 @@
       ]
     },
     {
+      "id": "phys-202",
+      "title": "PHYS 202",
+      "metadata": {},
+      "units": [
+        {
+          "id": "first-lab",
+          "title": "First lab: waves on a string",
+          "requirement": "required",
+          "sections": [
+            {
+              "vol": 1,
+              "sec": "16.3"
+            },
+            {
+              "vol": 1,
+              "sec": "16.6"
+            }
+          ],
+          "short": "First lab"
+        },
+        {
+          "id": "lecture-1",
+          "title": "Lecture 1 · Electric charge",
+          "short": "1 · Charge",
+          "requirement": "required",
+          "sections": [
+            {
+              "vol": 2,
+              "sec": "5.1"
+            },
+            {
+              "vol": 2,
+              "sec": "5.2"
+            },
+            {
+              "vol": 2,
+              "sec": "5.3"
+            }
+          ],
+          "note": "The four forces and the elementary charge, conductors, insulators and semiconductors, charging by contact and by induction, conservation of charge, and Coulomb’s law with superposition of the forces from several charges."
+        },
+        {
+          "id": "lecture-2",
+          "title": "Lecture 2 · Electric fields",
+          "short": "2 · Fields",
+          "requirement": "required",
+          "sections": [
+            {
+              "vol": 2,
+              "sec": "5.4"
+            }
+          ],
+          "note": "The field as force per charge, F = qE beside F = mg, finding a charge from a measured field, superposition of fields, and the charge densities λ, σ and ρ.",
+          "cards": [
+            "coulomb-sandbox"
+          ]
+        },
+        {
+          "id": "lecture-3",
+          "title": "Lecture 3 · Fields of charge distributions",
+          "short": "3 · Distributions",
+          "requirement": "required",
+          "sections": [
+            {
+              "vol": 2,
+              "sec": "5.5"
+            },
+            {
+              "vol": 2,
+              "sec": "5.6"
+            }
+          ],
+          "note": "Integrating over a line, an arc and a ring of charge, then two charged disks, which lead to the parallel plate capacitor."
+        },
+        {
+          "id": "lecture-4",
+          "title": "Lecture 4 · Dipoles",
+          "short": "4 · Dipoles",
+          "requirement": "required",
+          "sections": [
+            {
+              "vol": 2,
+              "sec": "5.7"
+            }
+          ],
+          "note": "The dipole field on its axis with the binomial approximation, the dipole moment p = qd, the torque p × E, and the work and potential energy of a dipole in a field."
+        },
+        {
+          "id": "lecture-5",
+          "title": "Lecture 5 · Flux and Gauss’s law",
+          "short": "5 · Flux",
+          "requirement": "required",
+          "sections": [
+            {
+              "vol": 2,
+              "sec": "6.1"
+            },
+            {
+              "vol": 2,
+              "sec": "6.2"
+            }
+          ],
+          "note": "Flux through flat, curved and closed surfaces, and why the flux of a point charge through any closed surface is Q/ε₀."
+        },
+        {
+          "id": "lecture-6",
+          "title": "Lecture 6 · Gauss’s law examples",
+          "short": "6 · Gauss examples",
+          "requirement": "required",
+          "sections": [
+            {
+              "vol": 2,
+              "sec": "6.3"
+            },
+            {
+              "vol": 2,
+              "sec": "6.4"
+            }
+          ],
+          "note": "A long line of charge, a charged conducting wire inside and out, a conducting sphere, and the field inside a hollow conductor.",
+          "worksheets": [
+            "gauss-law"
+          ]
+        },
+        {
+          "id": "lecture-7",
+          "title": "Lecture 7 · Voltage and potential",
+          "short": "7 · Potential",
+          "requirement": "required",
+          "sections": [
+            {
+              "vol": 2,
+              "sec": "7.1"
+            },
+            {
+              "vol": 2,
+              "sec": "7.2"
+            }
+          ],
+          "note": "Potential energy kQq/r, potential as a height above a reference point, and energy conservation for a charge accelerated through a potential difference.",
+          "worksheets": [
+            "coulomb-sandbox"
+          ]
+        },
+        {
+          "id": "lecture-8",
+          "title": "Lecture 8 · Potential of charge distributions",
+          "short": "8 · Distributions",
+          "requirement": "required",
+          "sections": [
+            {
+              "vol": 2,
+              "sec": "7.3"
+            }
+          ],
+          "note": "Adding the potentials of point charges, then the potential of a line of charge and of a ring."
+        },
+        {
+          "id": "lecture-9",
+          "title": "Lecture 9 · The gradient operator",
+          "short": "9 · Gradient",
+          "requirement": "required",
+          "sections": [
+            {
+              "vol": 2,
+              "sec": "7.4"
+            },
+            {
+              "vol": 2,
+              "sec": "7.5"
+            },
+            {
+              "vol": 2,
+              "sec": "7.6"
+            }
+          ],
+          "note": "Line integrals and conservative forces, ΔV as the line integral of −E, and E = −∇V in Cartesian, cylindrical and spherical coordinates, with equipotentials and conductors."
+        },
+        {
+          "id": "lecture-10",
+          "title": "Lecture 10 · Capacitors and capacitance",
+          "short": "10 · Capacitors",
+          "requirement": "required",
+          "sections": [
+            {
+              "vol": 2,
+              "sec": "8.1"
+            },
+            {
+              "vol": 2,
+              "sec": "8.3"
+            },
+            {
+              "vol": 2,
+              "sec": "8.4"
+            },
+            {
+              "vol": 2,
+              "sec": "8.5"
+            }
+          ],
+          "note": "Q = CV and C = ε₀A/d, the energy ½CV² and the energy density ½ε₀E², dielectrics and κ, and dielectric strength and breakdown."
+        },
+        {
+          "id": "lecture-11",
+          "title": "Lecture 11 · Capacitor circuits",
+          "short": "11 · Capacitor circuits",
+          "requirement": "required",
+          "sections": [
+            {
+              "vol": 2,
+              "sec": "8.2"
+            },
+            {
+              "vol": 2,
+              "sec": "10.1"
+            },
+            {
+              "vol": 2,
+              "sec": "10.3"
+            }
+          ],
+          "note": "Current as the rate of flow of charge, Kirchhoff’s rules, and capacitors in series, in parallel and in combination."
+        },
+        {
+          "id": "lecture-12",
+          "title": "Lecture 12 · Resistors and resistivity",
+          "short": "12 · Resistors",
+          "requirement": "required",
+          "sections": [
+            {
+              "vol": 2,
+              "sec": "9.1"
+            },
+            {
+              "vol": 2,
+              "sec": "9.2"
+            },
+            {
+              "vol": 2,
+              "sec": "9.3"
+            },
+            {
+              "vol": 2,
+              "sec": "9.4"
+            },
+            {
+              "vol": 2,
+              "sec": "9.5"
+            },
+            {
+              "vol": 2,
+              "sec": "9.6"
+            },
+            {
+              "vol": 2,
+              "sec": "10.2"
+            },
+            {
+              "vol": 2,
+              "sec": "10.4"
+            },
+            {
+              "vol": 2,
+              "sec": "10.6"
+            }
+          ],
+          "note": "Conventional current and the current density J = σE, Ohm’s law and R = ρL/A, how resistance changes with temperature, drift velocity in copper, power, and resistors in series and parallel.",
+          "worksheets": [
+            "dc-circuits"
+          ]
+        },
+        {
+          "id": "lecture-13",
+          "title": "Lecture 13 · RC circuits",
+          "short": "13 · RC circuits",
+          "requirement": "required",
+          "sections": [
+            {
+              "vol": 2,
+              "sec": "10.5"
+            }
+          ],
+          "note": "The loop equation as a differential equation, Q(t) = Q_max(1 − e^(−t/RC)), and the time constant RC, when a capacitor reaches 63 % of its charge.",
+          "worksheets": [
+            "rc-circuits"
+          ]
+        },
+        {
+          "id": "lecture-14",
+          "title": "Lecture 14 · Magnets, part 1",
+          "short": "14 · Magnets 1",
+          "requirement": "required",
+          "sections": [
+            {
+              "vol": 2,
+              "sec": "11.1"
+            },
+            {
+              "vol": 2,
+              "sec": "11.2"
+            },
+            {
+              "vol": 2,
+              "sec": "11.3"
+            }
+          ],
+          "note": "Magnetic field lines beside electric ones, the force qv × B, teslas and gauss, and the circular and helical motion of a charge in a uniform field."
+        },
+        {
+          "id": "magnets-2",
+          "title": "Magnets, part 2: forces on currents and the Hall effect",
+          "short": "Magnets 2",
+          "requirement": "required",
+          "sections": [
+            {
+              "vol": 2,
+              "sec": "11.4"
+            },
+            {
+              "vol": 2,
+              "sec": "11.5"
+            },
+            {
+              "vol": 2,
+              "sec": "11.6"
+            },
+            {
+              "vol": 2,
+              "sec": "11.7"
+            }
+          ],
+          "note": "The rest of the course, in the order of the syllabus. The force on a wire, the torque on a current loop and its dipole moment, the Hall effect, and the applications of magnetic forces."
+        },
+        {
+          "id": "magnetic-sources",
+          "title": "Sources of magnetic fields",
+          "requirement": "required",
+          "sections": [
+            {
+              "vol": 2,
+              "sec": "12.1"
+            },
+            {
+              "vol": 2,
+              "sec": "12.2"
+            },
+            {
+              "vol": 2,
+              "sec": "12.3"
+            },
+            {
+              "vol": 2,
+              "sec": "12.4"
+            },
+            {
+              "vol": 2,
+              "sec": "12.5"
+            },
+            {
+              "vol": 2,
+              "sec": "12.6"
+            },
+            {
+              "vol": 2,
+              "sec": "12.7"
+            }
+          ],
+          "worksheets": [
+            "straight-wire-fields",
+            "loops-solenoids"
+          ],
+          "short": "Magnetic sources"
+        },
+        {
+          "id": "induction",
+          "title": "Induction and inductance",
+          "requirement": "required",
+          "sections": [
+            {
+              "vol": 2,
+              "sec": "13.1"
+            },
+            {
+              "vol": 2,
+              "sec": "13.2"
+            },
+            {
+              "vol": 2,
+              "sec": "13.3"
+            },
+            {
+              "vol": 2,
+              "sec": "13.4"
+            },
+            {
+              "vol": 2,
+              "sec": "13.5"
+            },
+            {
+              "vol": 2,
+              "sec": "13.6"
+            },
+            {
+              "vol": 2,
+              "sec": "13.7"
+            },
+            {
+              "vol": 2,
+              "sec": "14.1"
+            },
+            {
+              "vol": 2,
+              "sec": "14.2"
+            },
+            {
+              "vol": 2,
+              "sec": "14.3"
+            },
+            {
+              "vol": 2,
+              "sec": "14.4"
+            },
+            {
+              "vol": 2,
+              "sec": "14.5"
+            },
+            {
+              "vol": 2,
+              "sec": "14.6"
+            }
+          ],
+          "worksheets": [
+            "rlc-transients"
+          ],
+          "short": "Induction"
+        },
+        {
+          "id": "ac-circuits",
+          "title": "Alternating current circuits",
+          "requirement": "required",
+          "sections": [
+            {
+              "vol": 2,
+              "sec": "15.1"
+            },
+            {
+              "vol": 2,
+              "sec": "15.2"
+            },
+            {
+              "vol": 2,
+              "sec": "15.3"
+            },
+            {
+              "vol": 2,
+              "sec": "15.4"
+            },
+            {
+              "vol": 2,
+              "sec": "15.5"
+            },
+            {
+              "vol": 2,
+              "sec": "15.6"
+            }
+          ],
+          "worksheets": [
+            "ac-circuits",
+            "ac-reactance",
+            "ac-power"
+          ],
+          "short": "AC circuits"
+        },
+        {
+          "id": "maxwell-waves",
+          "title": "Maxwell’s equations and electromagnetic waves",
+          "requirement": "required",
+          "sections": [
+            {
+              "vol": 2,
+              "sec": "16.1"
+            },
+            {
+              "vol": 2,
+              "sec": "16.2"
+            },
+            {
+              "vol": 2,
+              "sec": "16.3"
+            },
+            {
+              "vol": 2,
+              "sec": "16.4"
+            },
+            {
+              "vol": 2,
+              "sec": "16.5"
+            }
+          ],
+          "short": "EM waves"
+        },
+        {
+          "id": "optics",
+          "title": "Light and geometric optics",
+          "requirement": "required",
+          "sections": [
+            {
+              "vol": 3,
+              "sec": "1.1"
+            },
+            {
+              "vol": 3,
+              "sec": "1.2"
+            },
+            {
+              "vol": 3,
+              "sec": "1.3"
+            },
+            {
+              "vol": 3,
+              "sec": "1.4"
+            },
+            {
+              "vol": 3,
+              "sec": "1.5"
+            },
+            {
+              "vol": 3,
+              "sec": "1.6"
+            },
+            {
+              "vol": 3,
+              "sec": "1.7"
+            },
+            {
+              "vol": 3,
+              "sec": "2.1"
+            },
+            {
+              "vol": 3,
+              "sec": "2.2"
+            },
+            {
+              "vol": 3,
+              "sec": "2.3"
+            },
+            {
+              "vol": 3,
+              "sec": "2.4"
+            },
+            {
+              "vol": 3,
+              "sec": "2.5"
+            },
+            {
+              "vol": 3,
+              "sec": "2.6"
+            },
+            {
+              "vol": 3,
+              "sec": "2.7"
+            },
+            {
+              "vol": 3,
+              "sec": "2.8"
+            }
+          ],
+          "short": "Optics"
+        },
+        {
+          "id": "wave-optics",
+          "title": "Wave optics",
+          "requirement": "required",
+          "sections": [
+            {
+              "vol": 3,
+              "sec": "3.1"
+            },
+            {
+              "vol": 3,
+              "sec": "3.2"
+            },
+            {
+              "vol": 3,
+              "sec": "3.3"
+            },
+            {
+              "vol": 3,
+              "sec": "3.4"
+            },
+            {
+              "vol": 3,
+              "sec": "3.5"
+            },
+            {
+              "vol": 3,
+              "sec": "4.1"
+            },
+            {
+              "vol": 3,
+              "sec": "4.2"
+            },
+            {
+              "vol": 3,
+              "sec": "4.3"
+            },
+            {
+              "vol": 3,
+              "sec": "4.4"
+            },
+            {
+              "vol": 3,
+              "sec": "4.5"
+            },
+            {
+              "vol": 3,
+              "sec": "4.6"
+            },
+            {
+              "vol": 3,
+              "sec": "4.7"
+            }
+          ],
+          "short": "Wave optics"
+        }
+      ]
+    },
+    {
       "id": "acoustics",
       "title": "Acoustics",
       "metadata": {},
