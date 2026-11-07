@@ -1,3 +1,6 @@
+---
+title: Terms of use
+---
 # Terms of use
 
 Copyright © 2026 Steven Anderson. All rights reserved.
