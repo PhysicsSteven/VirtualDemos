@@ -685,6 +685,7 @@
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   VD.projector({ onChange: resize });
+  VD.howTo({ src: 'media/how-this-works/rotating-frames.mp4', poster: 'media/how-this-works/rotating-frames.jpg' });
   if (VD.fitStage) VD.fitStage($('stage'));   /* the stage grows to fit the Set up card on a short window or in Projector */
   tokens(); new ResizeObserver(resize).observe($('scene'));
   applyPreset('across'); resize();

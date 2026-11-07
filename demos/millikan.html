@@ -544,6 +544,7 @@
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   VD.setupCard($('setupCard'));
+  VD.howTo({ src: 'media/how-this-works/millikan.mp4', poster: 'media/how-this-works/millikan.jpg' });
   VD.projector({ onChange: resize });
   if (VD.split) split = VD.split(can, { key: 'mk', axis: () => (W < 620 ? null : 'x'), def: 0.4, min: 0.3, max: 0.6, label: 'Divider between the apparatus and the telescope', onChange: draw });
   if (VD.tools) VD.tools({ el: can, time: () => S.t });
