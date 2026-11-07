@@ -217,4 +217,19 @@ group('charging by rubbing: series order, equal and opposite charges, and the ai
   assert(A < 0 && Math.abs(A) > B, 'rubber and fur, farther apart in the series, charge faster than glass and silk');
   near(r.rubStroke(5e-9, Qm, 0), 5e-9, 0, 'same material: no change'); assert.equal(r.QE, 1.602176634e-19);
 });
+group('field lines: E = −∇V in the plane, normal to the metal, and a line from the rod ends on the grounded sphere', () => {
+  const f = core('induction', 'K,solve,fieldAt,traceLine,potentialAt');
+  const s = f.solve({ q0: 10 * nC, x0: -0.1, y0: 0.02, A, B, QA: 0, QB: 0, wire: false, gA: true, gB: false });
+  for (const [x, y] of [[-0.03, 0.08], [0.2, -0.05], [0.055, 0.1]]) {
+    const e = f.fieldAt(s.charges, x, y), h = 1e-6, gx = -(f.potentialAt(s.charges, x + h, y) - f.potentialAt(s.charges, x - h, y)) / (2 * h), gy = -(f.potentialAt(s.charges, x, y + h) - f.potentialAt(s.charges, x, y - h)) / (2 * h);
+    assert(Math.hypot(e[0] - gx, e[1] - gy) < 1e-5 * Math.hypot(...e), 'E = -grad V');
+  }
+  for (const [S, th] of [[A, 0.3], [A, 2.5], [B, 1.1], [B, -2]]) {
+    const x = S.c + S.r * 1.00001 * Math.cos(th), y = S.r * 1.00001 * Math.sin(th), e = f.fieldAt(s.charges, x, y), tang = -e[0] * Math.sin(th) + e[1] * Math.cos(th);
+    assert(Math.abs(tang) < 2e-3 * Math.hypot(...e), 'E normal to the metal');
+  }
+  const res = f.traceLine(s.charges, [{ id: 'A', ...A }, { id: 'B', ...B }], null, -0.1 + 0.004, 0.02, 1, { x0: -1, x1: 1, y0: -1, y1: 1 }, 0.0005);
+  assert.equal(res.end, 'A', 'the line from the tip straight at A ends on A');
+  const p = res.pts[res.pts.length - 1]; near(Math.hypot(p[0] - A.c, p[1]), A.r, 1e-12, 'ends on the surface');
+});
 console.log(`${n} induction test groups passed`);

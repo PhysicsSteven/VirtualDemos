@@ -103,8 +103,11 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <label class="check"><input type="checkbox" id="wire"><span>Spheres touching (connected), or joined by a thin wire</span></label>
         <label class="check"><input type="checkbox" id="gA"><span>Ground sphere A</span></label>
         <label class="check"><input type="checkbox" id="gB"><span>Ground sphere B</span></label>
+        <label class="check"><input type="checkbox" id="showLines" checked autocomplete="off"><span>Field lines</span></label>
+        <label class="check"><input type="checkbox" id="showEqui" autocomplete="off"><span>Equipotentials</span></label>
         <details class="more"><summary>More about this</summary>
           <p class="hint">Everything here can be done by hand on the picture: drag the rod anywhere (off the left edge puts it down), slide sphere A or B along the bench (push them together to touch), and drag the ground wand onto a sphere to ground it and off again to disconnect it. Arrow keys on the picture move the rod's tip by 1 mm (Shift: 1 cm).</p>
+          <p class="hint">Field lines and equipotentials are those of the exact solution, in the plane through the spheres' centers and the rod's tip: every charge of the solution lies in that plane, so the lines drawn there are true field lines. They leave the spheres where σ is positive and end where it is negative, always at right angles to the metal, which is itself an equipotential. Lines start in proportion to the charge, at the rod's tip and along each sphere's rim, but a flat slice cannot show a 3D field's strength by their spacing exactly. Blind hides both.</p>
         </details>
       </section>
 
@@ -262,6 +265,28 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   // the same in the plane of the drawing, at angle th from +x
   const sigma = (charges, S, th) => sigma3(charges, S, Math.cos(th), Math.sin(th), 0);
+  // E in the plane z = 0 (V/m). Every charge (rod tip and images) lies in that plane, so there E has no z part and the field lines
+  // drawn in the plane are true field lines.
+  function fieldAt(charges, x, y) {
+    let ex = 0, ey = 0;
+    for (const c of charges) { const dx = x - c.x, dy = y - (c.y || 0), r2 = dx * dx + dy * dy, k = K * c.q / (r2 * Math.sqrt(r2)); ex += k * dx; ey += k * dy; }
+    return [ex, ey];
+  }
+  // one field line from (x, y), along E (sgn 1) or against it (sgn −1), midpoint steps of h (m). It stops on a sphere's surface
+  // (spheres [{ id, c, r }]), within stop (m) of the rod's tip, outside box { x0, x1, y0, y1 }, or after n steps.
+  function traceLine(charges, spheres, tip, x, y, sgn, box, h, n = 3000, stop = 0.004) {
+    const pts = [[x, y]];
+    for (let i = 0; i < n; i++) {
+      let [ex, ey] = fieldAt(charges, x, y), m = Math.hypot(ex, ey); if (!(m > 0)) break;
+      const mx = x + sgn * 0.5 * h * ex / m, my = y + sgn * 0.5 * h * ey / m;
+      [ex, ey] = fieldAt(charges, mx, my); m = Math.hypot(ex, ey); if (!(m > 0)) break;
+      x += sgn * h * ex / m; y += sgn * h * ey / m; pts.push([x, y]);
+      for (const S of spheres) { const dx = x - S.c, d = Math.hypot(dx, y); if (d < S.r) { pts[pts.length - 1] = [S.c + S.r * dx / d, S.r * y / d]; return { pts, end: S.id }; } }
+      if (tip && Math.hypot(x - tip.x, y - tip.y) < stop) { pts.push([tip.x, tip.y]); return { pts, end: 'tip' }; }
+      if (x < box.x0 || x > box.x1 || y < box.y0 || y > box.y1) return { pts, end: null };
+    }
+    return { pts, end: null };
+  }
   function potentialAt(charges, x, y, z = 0) { let v = 0; for (const c of charges) v += K * c.q / Math.hypot(x - c.x, y - (c.y || 0), z); return v; }
   // the largest |σ| on sphere S around the circle in the drawing plane (n angles) and where it is; the field just outside is σ/ε0.
   // Every charge lies in this plane, so σ is mirror symmetric about it and its largest value is found on it in every case tried in the tests.
@@ -1176,6 +1201,98 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     return pts[pts.length - 1];
   }
   const bez = (a, b, c, d, n = 16) => { const o = []; for (let i = 0; i <= n; i++) { const t = i / n, u = 1 - t; o.push([u * u * u * a[0] + 3 * u * u * t * b[0] + 3 * u * t * t * c[0] + t * t * t * d[0], u * u * u * a[1] + 3 * u * u * t * b[1] + 3 * u * t * t * c[1] + t * t * t * d[1]]); } return o; };
+  /* ---- field lines and equipotentials of the exact solution, in the plane of the picture ---- */
+  const LINE_RIM = 4e-9, LINE_TIP = 1 * NC;   /* one line per 4e-9 C/m of σ along a sphere's rim (σ times rim length), one per nC at the tip */
+  let fieldKey = '', fieldCache = null;
+  function fieldLines(v, g) {
+    const sol = S.sol, qm = Math.max(1e-30, ...sol.charges.map((c) => Math.abs(c.q))), use = sol.charges.filter((c) => Math.abs(c.q) > 1e-9 * qm);
+    const sph = [{ id: 'A', ...g.A }, { id: 'B', ...g.B }];
+    const tip = g.x0 != null && S.q ? { x: g.x0, y: g.y0, q: S.q * NC } : null;
+    const box = { x0: v.x0 - 0.05, x1: v.x1 + 0.05, y0: Y_BENCH - 0.05, y1: v.yTop + 0.05 }, h = Math.max(0.0006, 2.5 / v.sc);
+    const lines = [], seeds = { pos: [], neg: [] };
+    if (tip) {
+      const n = Math.max(4, Math.min(24, Math.round(Math.abs(tip.q) / LINE_TIP))), r0 = 0.004;
+      for (let k = 0; k < n; k++) { const a = (k + 0.5) * 2 * Math.PI / n; (tip.q > 0 ? seeds.pos : seeds.neg).push({ x: tip.x + r0 * Math.cos(a), y: tip.y + r0 * Math.sin(a), from: 'tip' }); }
+    }
+    for (const Sp of sph) {
+      const N = 720, off = 1.0005;
+      for (const sg of [1, -1]) {
+        let acc = 0.5;
+        for (let i = 0; i < N; i++) {
+          const th = 2 * Math.PI * (i + 0.5) / N, sv = sigma(use, Sp, th) * sg; if (sv <= 0) { continue; }
+          acc += sv * Sp.r * 2 * Math.PI / N / LINE_RIM;
+          if (acc >= 1) { acc -= 1; (sg > 0 ? seeds.pos : seeds.neg).push({ x: Sp.c + Sp.r * off * Math.cos(th), y: Sp.r * off * Math.sin(th), from: Sp.id }); }
+        }
+      }
+    }
+    const arrive = [];
+    for (const sd of seeds.pos) {
+      const res = traceLine(use, sph, tip && tip.q < 0 ? tip : null, sd.x, sd.y, 1, box, h, 2500);
+      if (sd.from === 'tip') res.pts.unshift([tip.x, tip.y]);
+      lines.push(res.pts); if (res.end) arrive.push(res.pts[res.pts.length - 1]);
+    }
+    const gapMin = 0.6 * Math.max(0.006, h * 4);
+    for (const sd of seeds.neg) {   /* the negative charge that no line reached yet: lines that come in from far away */
+      if (arrive.some((p) => Math.hypot(p[0] - sd.x, p[1] - sd.y) < Math.max(gapMin, 0.012))) continue;
+      const res = traceLine(use, sph, tip && tip.q > 0 ? tip : null, sd.x, sd.y, -1, box, h, 2500);
+      if (sd.from === 'tip') res.pts.unshift([tip.x, tip.y]);
+      lines.push(res.pts.reverse());
+    }
+    return lines;
+  }
+  function equipotentials(v, g) {
+    const sol = S.sol, qm = Math.max(1e-30, ...sol.charges.map((c) => Math.abs(c.q))), use = sol.charges.filter((c) => Math.abs(c.q) > 1e-9 * qm);
+    const step = 6, nx = Math.ceil(W / step) + 1, ny = Math.ceil(v.benchPx / step) + 1, V = new Float64Array(nx * ny), vals = [];
+    for (let j = 0; j < ny; j++) for (let i = 0; i < nx; i++) {
+      const [x, y] = v.inv(i * step, j * step);
+      const inA = Math.hypot(x - g.A.c, y) < g.A.r, inB = Math.hypot(x - g.B.c, y) < g.B.r;
+      const val = inA ? sol.VA : inB ? sol.VB : potentialAt(use, x, y); V[j * nx + i] = val; if (!inA && !inB) vals.push(Math.abs(val));
+    }
+    vals.sort((a, b) => a - b);
+    const top = Math.max(Math.abs(sol.VA), Math.abs(sol.VB), vals[Math.floor(0.9 * (vals.length - 1))] || 0);
+    if (!(top > 1)) return { segs: [], dv: 0 };
+    const e = Math.pow(10, Math.floor(Math.log10(top / 8))), f0 = top / 8 / e, dv = (f0 <= 1 ? 1 : f0 <= 2 ? 2 : f0 <= 5 ? 5 : 10) * e;
+    const kmax = Math.ceil(1.15 * top / dv), segs = [], SEGT = [[], [[3, 0]], [[0, 1]], [[3, 1]], [[1, 2]], [[3, 0], [1, 2]], [[0, 2]], [[3, 2]], [[2, 3]], [[0, 2]], [[0, 1], [2, 3]], [[1, 2]], [[1, 3]], [[0, 1]], [[3, 0]], []];
+    for (let j = 0; j < ny - 1; j++) for (let i = 0; i < nx - 1; i++) {
+      const v0 = V[j * nx + i], v1 = V[j * nx + i + 1], v2 = V[(j + 1) * nx + i + 1], v3 = V[(j + 1) * nx + i];
+      const lo = Math.ceil(Math.min(v0, v1, v2, v3) / dv), hi = Math.floor(Math.max(v0, v1, v2, v3) / dv);
+      for (let k = Math.max(lo, -kmax); k <= Math.min(hi, kmax); k++) {
+        const L = k * dv, idx = (v0 > L ? 1 : 0) | (v1 > L ? 2 : 0) | (v2 > L ? 4 : 0) | (v3 > L ? 8 : 0);
+        const ed = (n) => n === 0 ? [i + (L - v0) / (v1 - v0), j] : n === 1 ? [i + 1, j + (L - v1) / (v2 - v1)] : n === 2 ? [i + 1 - (L - v2) / (v3 - v2), j + 1] : [i, j + 1 - (L - v3) / (v0 - v3)];
+        for (const [a, b] of SEGT[idx]) { const pa = ed(a), pb = ed(b); segs.push(pa[0] * step, pa[1] * step, pb[0] * step, pb[1] * step); }
+      }
+    }
+    return { segs, dv };
+  }
+  function drawField(v, g) {
+    const wantL = $('showLines').checked, wantE = $('showEqui').checked;
+    if (S.blind || !S.sol || (!wantL && !wantE)) return;
+    const p = ps(), key = [S.sol.QA, S.sol.QB, S.sol.VA, g.A.c, g.B.c, g.B.r, g.x0, g.y0, S.q, S.gap, v.sc, v.x0, W, H, wantL, wantE].join('|');
+    if (key !== fieldKey) { fieldKey = key; fieldCache = { lines: wantL ? fieldLines(v, g) : [], eq: wantE ? equipotentials(v, g) : { segs: [] } }; }
+    ctx.save(); ctx.beginPath(); ctx.rect(0, 0, W, v.benchPx); ctx.clip();
+    if (wantE && fieldCache.eq.segs.length) {
+      const sg = fieldCache.eq.segs; ctx.strokeStyle = T.equi; ctx.globalAlpha = 0.7; ctx.lineWidth = 1.1 * p; ctx.beginPath();
+      for (let i = 0; i < sg.length; i += 4) { ctx.moveTo(sg[i], sg[i + 1]); ctx.lineTo(sg[i + 2], sg[i + 3]); }
+      ctx.stroke(); ctx.globalAlpha = 1;
+      if (fieldCache.eq.dv) VG.label(ctx, `equipotentials every ${fieldCache.eq.dv >= 1000 ? f(fieldCache.eq.dv / 1000, fieldCache.eq.dv % 1000 ? 1 : 0) + ' kV' : f(fieldCache.eq.dv, 0) + ' V'}`, 12 * p, v.benchPx - 12 * p, { s: 10 * p, c: T.muted });
+    }
+    if (wantL) {
+      ctx.strokeStyle = T.field; ctx.fillStyle = T.field; ctx.globalAlpha = 0.75; ctx.lineWidth = 1.2 * p; ctx.lineJoin = 'round';
+      for (const pts of fieldCache.lines) {
+        if (pts.length < 2) continue;
+        ctx.beginPath(); pts.forEach((q, i) => (i ? ctx.lineTo(v.X(q[0]), v.Y(q[1])) : ctx.moveTo(v.X(q[0]), v.Y(q[1])))); ctx.stroke();
+        let L = 0; for (let i = 1; i < pts.length; i++) L += Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]);
+        if (L * v.sc < 40 * p) continue;
+        let acc = 0, tgt = Math.min(L / 2, 70 * p / v.sc);
+        for (let i = 1; i < pts.length; i++) {
+          acc += Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]);
+          if (acc >= tgt) { const x1 = v.X(pts[i - 1][0]), y1 = v.Y(pts[i - 1][1]), x2 = v.X(pts[i][0]), y2 = v.Y(pts[i][1]), a = Math.atan2(y2 - y1, x2 - x1), sz = 5.5 * p;
+            ctx.beginPath(); ctx.moveTo(x2 + Math.cos(a) * sz, y2 + Math.sin(a) * sz); ctx.lineTo(x2 + Math.cos(a + 2.5) * sz, y2 + Math.sin(a + 2.5) * sz); ctx.lineTo(x2 + Math.cos(a - 2.5) * sz, y2 + Math.sin(a - 2.5) * sz); ctx.closePath(); ctx.fill(); break; }
+        }
+      }
+    }
+    ctx.restore();
+  }
   function drawSpheres() {
     const p = ps(), v = sphView(), g = geomSI(), sol = S.sol, X = v.X, Y = v.Y, sc = v.sc, dk = VG.dark();
     VG.backdrop(ctx, W, H);
@@ -1205,6 +1322,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       ctx.save(); ctx.strokeStyle = '#3fa34d'; ctx.lineWidth = 2.2 * p; ctx.beginPath(); pts.forEach((q, i) => (i ? ctx.lineTo(q[0], q[1]) : ctx.moveTo(q[0], q[1]))); ctx.stroke(); ctx.restore();
       paths['g' + id] = [...pts, [X(Sp.c), Y(0)]];
     }
+    drawField(v, g);
     /* the spheres */
     const smax = Math.max(1e-30, ...[...S.shade.A.rim || [], ...S.shade.B.rim || []].map(Math.abs));
     for (const [id, Sp] of [['A', g.A], ['B', g.B]]) {
@@ -1583,6 +1701,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('tare').addEventListener('click', () => { compute(); S.tare = S.pol.F; update(); });
   window.__ind = { geom: () => geomSI(), moving: () => !!S.glide || !!S.dots.length, finish: () => { endGlide(); S.dots = []; for (const id of ['A', 'B']) { const sh = S.shade[id]; if (sh.cur) { sh.cur.set(sh.tgt); sh.rim.set(sh.rimT); } } S.cam = viewTarget(); draw(); }, get S() { return S; }, pickUp, dragTo: (px, py) => dragTo(px, py), grab: (px, py) => { S.drag = pickUp(px, py); return S.drag && S.drag.what; }, letGo };
   window.__pol = { set: (o) => { Object.assign(S, o); S.step = -1; update(); }, settle: () => { S.pv = pTarget(); update(); }, get S() { return S; } };
+  for (const id of ['showLines', 'showEqui']) $(id).addEventListener('change', () => { fieldKey = ''; draw(); });
   $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; $('blindTag').hidden = !S.blind; draw(); readouts(); });
   for (const b of document.querySelectorAll('#shapeChips button')) b.addEventListener('click', () => { S.shape = b.dataset.s; own(); update(); });
   $('sE0').addEventListener('input', (e) => { S.E0 = +e.target.value; own(); update(); });
