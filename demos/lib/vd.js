@@ -251,6 +251,14 @@
     }
     return { open: open, close: close };
   }
+  /* VD.nice(x[, rel]): a slider that moves in fine or logarithmic steps sticks to round values. x is returned as the nearest
+     number with two significant figures (0.75, 1.5, 300, 5.2) when it lies within rel (default 0.6 %) of it, and unchanged
+     otherwise, so a hand can land on the value a worksheet names while every value in between stays reachable (2026-11-07). */
+  VD.nice = function (x, rel) {
+    if (!(x > 0) || !isFinite(x)) return x;
+    var c = +x.toPrecision(2);
+    return Math.abs(x / c - 1) <= (rel == null ? 0.006 : rel) ? c : x;
+  };
   var typedKey = function (e) { return e.key.length === 1 && /[0-9.,\-−]/.test(e.key) && !e.ctrlKey && !e.metaKey && !e.altKey; };
 
   VD.typeIn = function (out, o) {

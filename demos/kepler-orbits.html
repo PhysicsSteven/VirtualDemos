@@ -833,15 +833,17 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
                hint: 'The most eccentric planet. Watch the wedges: thin and long near aphelion, short and wide near perihelion, yet all equal in area. The line on Mercury marks one spot on its surface: Mercury turns 3 times for every 2 orbits (58.65 days per turn, 87.97 days per orbit). The spot faces the Sun at this perihelion, faces away at the next, and faces the Sun again after two orbits, so one day from noon to noon on Mercury lasts 176 Earth days.' },
     halley:  { a: 17.8, e: 0.967, at: 'aph', spd: 9,
                hint: 'Launched at aphelion, 35 AU out, at under 1 km/s. It spends most of its 75 years far away and whips around the Sun in a few months.' },
-    /* asteroids and Pluto (Astro 2203, 2026-10-25): a and e from the JPL Small Body Database, osculating elements at epoch
-       JD 2461200.5 (Pluto: JD 2457588.5), rounded to 4 figures; launched at perihelion */
+    /* asteroids (Astro 2203, 2026-10-25): a and e from the JPL Small Body Database, osculating elements at epoch
+       JD 2461200.5, rounded to 4 figures; launched at perihelion. Pluto (2026-11-07): the J2000 mean elements of Standish
+       (JPL, Keplerian elements for approximate positions), a = 39.48211675 AU, e = 0.24882730, the same as Units, Scales
+       and Estimates and the PLANETS table above */
     vesta:   { a: 2.3614, e: 0.09020, at: 'peri', spd: 0.6,
                hint: 'The brightest asteroid, a leftover protoplanet in the inner asteroid belt between Mars and Jupiter. A nearly circular orbit.' },
     ceres:   { a: 2.7656, e: 0.07969, at: 'peri', spd: 0.75,
                hint: 'The largest body in the asteroid belt, a dwarf planet about 940 km across, found in 1801.' },
     apophis: { a: 0.9224, e: 0.1911, at: 'peri', spd: 0.15,
                hint: 'A near Earth asteroid about 340 m across. Its orbit crosses Earth\u2019s: it comes inside 1 AU at perihelion and goes outside it at aphelion.' },
-    pluto:   { a: 39.59, e: 0.2518, at: 'peri', spd: 30,
+    pluto:   { a: 39.48, e: 0.2488, at: 'peri', spd: 30,
                hint: 'A dwarf planet of the Kuiper belt. Near perihelion it comes closer to the Sun than Neptune (30 AU), though the two never meet.' },
     /* Alpha Centauri B seen from A (Astro 2203, 2026-10-26): Akeson et al. 2021, AJ 162, 14: P = 79.762 yr, a = 17.493"
        at parallax 750.81 mas = 23.299 AU, e = 0.51947, masses 1.0788 + 0.9092 = 1.988 M☉ (so a³/P² = 1.988, as Kepler's law

@@ -16,8 +16,8 @@ VDI18N.add('es', 'ws/intro-kepler', {
   "Las leyes de Kepler de Mercurio a Plutón",
 "<strong>Setups in the demo:</strong> Earth; Mars; Mercury; Halley’s comet; Vesta; Ceres; Apophis; Pluto; Binary star; Circular orbit; Escape; Sandbox.":
   "<strong>Configuraciones en la demo:</strong> Tierra; Marte; Mercurio; Cometa Halley; Vesta; Ceres; Apofis; Plutón; Estrella binaria; Órbita circular; Escape; Caja de arena.",
-"The view shows an object orbiting the Sun, drawn to scale, with its path traced behind it. Each setup starts the object on its real orbit: the planets and the comet from standard values, and Vesta, Ceres, Apophis and Pluto from their orbits in the JPL Small Body Database.":
-  "La vista muestra un objeto que orbita el Sol, dibujado a escala, con su camino trazado detrás. Cada configuración inicia el objeto en su órbita real: los planetas y el cometa con valores estándar, y Vesta, Ceres, Apofis y Plutón con sus órbitas de la JPL Small Body Database.",
+"The view shows an object orbiting the Sun, drawn to scale, with its path traced behind it. Each setup starts the object on its real orbit: the planets, Pluto and the comet from standard values, and Vesta, Ceres and Apophis from their orbits in the JPL Small Body Database.":
+  "La vista muestra un objeto que orbita el Sol, dibujado a escala, con su camino trazado detrás. Cada configuración inicia el objeto en su órbita real: los planetas, Plutón y el cometa con valores estándar, y Vesta, Ceres y Apofis con sus órbitas de la JPL Small Body Database.",
 "The timer runs on simulated time, so it only counts while the demo is playing. Reset puts the object back where it started, with the clock at zero.":
   "El cronómetro corre en tiempo simulado, así que solo cuenta mientras la demo está en marcha. Reiniciar regresa el objeto a donde empezó, con el reloj en cero.",
 "With Ruler on, click or drag in the view to place points {#} and {#}. The ruler gives each point’s distance from the Sun and the distance between the points. Zoom in (scroll, or the + and − keys) to place a point precisely.":
@@ -135,5 +135,7 @@ VDI18N.add('es', 'ws/intro-kepler', {
 "Perihelion distance, closest to the Sun":
   "Distancia en el perihelio, la más cercana al Sol",
 "Kepler Orbits":
-  "Órbitas de Kepler"
+  "Órbitas de Kepler",
+"The view shows an object orbiting the Sun, drawn to scale, with its path traced behind it. Each setup starts the object on its real orbit: the planets and the comet from standard values, and Vesta, Ceres, Apophis and Pluto from their orbits in the JPL Small Body Database.":
+  "La vista muestra un objeto que orbita el Sol, dibujado a escala, con su camino trazado detrás. Cada configuración inicia el objeto en su órbita real: los planetas y el cometa con valores estándar, y Vesta, Ceres, Apofis y Plutón con sus órbitas de la JPL Small Body Database."
 });

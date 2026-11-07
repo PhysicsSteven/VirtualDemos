@@ -729,10 +729,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const eEarth = () => { const E = PRESETS.earth; return eFor(tBare(E.L, E.d, E.a, E.sp), E.meas.v); };
   for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
   const num = (id, fn) => $(id).addEventListener('input', (e) => { fn(+e.target.value); changed(); });
-  num('sL', (v) => { S.L = Math.pow(10, v); if (S.star === 'Sun' || S.star === 'young Sun') S.star = 'Your star'; });
+  num('sL', (v) => { S.L = VD.nice(Math.pow(10, v)); if (S.star === 'Sun' || S.star === 'young Sun') S.star = 'Your star'; });
   num('sT', (v) => { S.T = v; if (S.star === 'Sun' || S.star === 'young Sun') S.star = 'Your star'; });
-  num('sD', (v) => { S.d = Math.pow(10, v); }); num('sA', (v) => { S.a = v; }); num('sE', (v) => { S.e = Math.pow(10, v); S.co2On = false; });
-  num('sCO2', (v) => { S.co2 = Math.round(Math.pow(10, v)); S.co2On = true; S.gh = true; S.e = eCO2(eEarth(), S.co2); }); num('sV', (v) => { S.v = Math.pow(10, v); });
+  num('sD', (v) => { S.d = VD.nice(Math.pow(10, v)); }); num('sA', (v) => { S.a = v; }); num('sE', (v) => { S.e = Math.pow(10, v); S.co2On = false; });
+  num('sCO2', (v) => { S.co2 = Math.round(Math.pow(10, v)); S.co2On = true; S.gh = true; S.e = eCO2(eEarth(), S.co2); }); num('sV', (v) => { S.v = VD.nice(Math.pow(10, v)); });
   /* the greenhouse switch keeps the setup's name: the reading records greenhouse on or off */
   $('chkGH').addEventListener('change', (e) => { S.gh = e.target.checked; sync(); redraw(); });
   $('chkSpread').addEventListener('change', (e) => { S.spread = e.target.checked; sync(); redraw(); });

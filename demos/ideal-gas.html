@@ -253,7 +253,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         </div>
         <div>
           <div class="slider-head"><label for="tIn">Temperature</label><output id="tOut" class="mono" for="tIn">300 K</output></div>
-          <input type="range" id="tIn" min="0" max="1000" step="1" value="895">
+          <input type="range" id="tIn" min="0" max="1000" step="0.1" value="895.4">
           <div class="slider-scale mono"><span>0.01 K</span><span>1 K</span><span>100 K</span><span>1000 K</span></div>
         </div>
         <div>
@@ -535,7 +535,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const T_LO = 0.01, T_HI = 1000; // temperature slider range, K (log scale)
   let psPerS = BASE_PS, playMode = 'fixed', Tsmooth = 300, clockTwoLines = false;
   const tFromSlider = (u) => T_LO * Math.pow(T_HI / T_LO, u / 1000);
-  const sliderFromT = (T) => Math.round(1000 * Math.log(Math.min(T_HI, Math.max(T_LO, T)) / T_LO) / Math.log(T_HI / T_LO));
+  const sliderFromT = (T) => Math.round(10000 * Math.log(Math.min(T_HI, Math.max(T_LO, T)) / T_LO) / Math.log(T_HI / T_LO)) / 10;
   function fmtK(T) {
     if (!(T > 0)) return '0 K';
     if (T >= 99.5) return Math.round(T) + ' K';
@@ -1456,7 +1456,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     last = performance.now();
   }
   playBtn.addEventListener('click', () => setRunning(!running));
-  $('reset').addEventListener('click', () => { if (two) { resetTwo(); return; } Tset = tFromSlider(+tIn.value); resetGas(); });
+  $('reset').addEventListener('click', () => { if (two) { resetTwo(); return; } Tset = VD.nice(tFromSlider(+tIn.value)); resetGas(); });
 
   const PRESETS = {
     relax:    { N: 150, T: 300, W: 50, mode: 'equal',
@@ -1488,7 +1488,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (!two) GS.m.fill(M);
     for (const b of document.querySelectorAll('#gasChips button')) b.setAttribute('aria-pressed', String(b.dataset.gas === k));
     if (!two) $('unitsGas').textContent = gasUnits();
-    if (restart) { Tset = tFromSlider(+tIn.value); setPresetUI(null); resetGas(); }
+    if (restart) { Tset = VD.nice(tFromSlider(+tIn.value)); setPresetUI(null); resetGas(); }
   }
   for (const b of document.querySelectorAll('#gasChips button')) b.addEventListener('click', () => setGas(b.dataset.gas, true));
   function applyPreset(name) {
@@ -1504,7 +1504,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   for (const b of document.querySelectorAll('[data-p]')) b.addEventListener('click', () => applyPreset(b.dataset.p));
   for (const b of document.querySelectorAll('#startSeg button')) b.addEventListener('click', () => {
-    mode = b.dataset.m; Tset = tFromSlider(+tIn.value); setModeUI(); setPresetUI(null); resetGas();
+    mode = b.dataset.m; Tset = VD.nice(tFromSlider(+tIn.value)); setModeUI(); setPresetUI(null); resetGas();
   });
 
   function updateRate() {
@@ -1548,7 +1548,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   tIn.addEventListener('pointerdown', () => { tDragging = true; });
   for (const ev of ['pointerup', 'pointercancel', 'change', 'blur']) tIn.addEventListener(ev, () => { tDragging = false; });
   tIn.addEventListener('input', () => {
-    Tset = tFromSlider(+tIn.value); tOut.textContent = fmtK(Tset);
+    Tset = VD.nice(tFromSlider(+tIn.value)); tOut.textContent = fmtK(Tset);
     scaleGroup(0, N, Tset); computeStats(); histFresh = true; updateHist(0); dirty = true; setPresetUI(null);
     Tsmooth = Math.max(stats.T, 1e-5);   /* a slider move is not physics: the playback follows it at once */
   });

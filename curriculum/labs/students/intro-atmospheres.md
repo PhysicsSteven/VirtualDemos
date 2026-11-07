@@ -45,7 +45,7 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**Part 1: hotter is faster.** Choose Relax to equilibrium, then Argon. Set the temperature to 100 K, choose Random (thermal) starting speeds, and let the gas run for a few seconds so the histogram settles onto the curve. Record a reading. Do the same at 300 K and 1000 K. The temperature moves in small steps, so near 300 K take the closest setting (it reads 299 K) and count it as 300 K. Send the three readings to the worksheet, then clear them.
+**Part 1: hotter is faster.** Choose Relax to equilibrium, then Argon. Set the temperature to 100 K, choose Random (thermal) starting speeds, and let the gas run for a few seconds so the histogram settles onto the curve. Record a reading. Do the same at 300 K and 1000 K. Send the three readings to the worksheet, then clear them.
 
 **Part 2: lighter is faster.** Set the temperature back to 300 K. Choose each gas in turn (hydrogen, helium, nitrogen, argon, carbon dioxide), let it settle for a few seconds, and record a reading. Watch the histogram spread out for the light gases. Send the five readings to the worksheet; they go into a second copy of the table.
 

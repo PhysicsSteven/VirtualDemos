@@ -10,7 +10,7 @@ Student worksheet · Astro 2203
 
 **Using the demo.**
 
-- The view shows an object orbiting the Sun, drawn to scale, with its path traced behind it. Each setup starts the object on its real orbit: the planets and the comet from standard values, and Vesta, Ceres, Apophis and Pluto from their orbits in the JPL Small Body Database.
+- The view shows an object orbiting the Sun, drawn to scale, with its path traced behind it. Each setup starts the object on its real orbit: the planets, Pluto and the comet from standard values, and Vesta, Ceres and Apophis from their orbits in the JPL Small Body Database.
 - The timer runs on simulated time, so it only counts while the demo is playing. Reset puts the object back where it started, with the clock at zero.
 - With Ruler on, click or drag in the view to place points 1 and 2. The ruler gives each point's distance from the Sun and the distance between the points. Zoom in (scroll, or the + and − keys) to place a point precisely.
 - Blind hides the demo's own values of the orbit's size, shape and period, so you measure them yourself. The timer and the ruler stay.
