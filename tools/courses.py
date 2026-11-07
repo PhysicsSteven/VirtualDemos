@@ -67,7 +67,8 @@ MERGED = {}
 # SAME_AS (PHYS 202, 2026-11-07): a course page that lays out another course's demos and worksheets in its own order. The course
 # (key) takes in every demo and activity of the other (value), and the other's worksheets count as its own (handout_courses).
 # It stays off the topic cards and search chips, where it would only repeat the other course's name.
-SAME_AS = {'phys-202': 'physics-2'}
+# The map names it: "same_as" on the course. Its sections keep the other course's `course` and `unit` fields.
+SAME_AS = {c['id']: c['same_as'] for c in json.loads(MAP.read_text())['courses'] if c.get('same_as')}
 INCLUDED = {'astro-2203': 'astro'}
 MERGE_PLACE = {'units': 'sky', 'gyroscope': 'sky', 'rotation': 'gravitation',
                'instrument-builder': 'telescopes-light', 'optics-bench': 'telescopes-light', 'resolution': 'telescopes-light', 'telescope-aberrations': 'telescopes-light',

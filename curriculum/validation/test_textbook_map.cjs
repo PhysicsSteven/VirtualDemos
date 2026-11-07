@@ -35,6 +35,13 @@ for (const s of map.sections) {
 }
 for (const c of map.courses) {
  assert(!('exam_boundaries' in c.metadata));
+ if (c.same_as) {   /* a course laid out in its own order over another course's sections (PHYS 202 over Physics II, 2026-11-07): each of them exactly once */
+  const src = map.courses.find(x => x.id === c.same_as); assert(src && !src.same_as);
+  const mine = c.units.flatMap(u => u.sections.map(key)), theirs = src.units.flatMap(u => u.sections.map(key));
+  assert.equal(new Set(mine).size, mine.length, `${c.id}: a section in two units`); assert.deepEqual([...mine].sort(), [...theirs].sort(), `${c.id}: sections differ from ${c.same_as}`);
+  for (const u of c.units) for (const id of [...(u.cards || []), ...(u.demos || [])]) assert(demos.get(id).course.includes(c.same_as));
+  continue;
+ }
  for (const u of c.units) for (const r of u.sections) { const s = sections.get(key(r)); assert(s); assert(s.course.includes(c.id)); assert.equal((s.unit_in || {})[c.id] || s.unit, u.id); }
  for (const u of c.units) for (const id of u.activities || []) { const a = activities.get(id); assert(a); assert(a.course.includes(c.id)); }   // unit.activities: standalone activities with no section here (Astro 2203)
  for (const u of c.units) for (const name of u.demos || []) { const d = demos.get(name); assert(d); assert(d.course.includes(c.id)); assert(!d.sections.some(r => c.units.some(v => v.sections.some(x => key(x) === key(r))))); }   // unit.demos: no section in this course (e-over-m's sections are Physics II)

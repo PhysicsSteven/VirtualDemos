@@ -974,6 +974,7 @@
     {
       "id": "phys-202",
       "title": "PHYS 202",
+      "same_as": "physics-2",
       "metadata": {},
       "units": [
         {
