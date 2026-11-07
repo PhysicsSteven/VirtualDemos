@@ -191,6 +191,36 @@ test('potential energy: pair sum, work qV to bring a charge in, bodies left out'
  const two=tri.slice(0,2),q3=tri[2];close(pe.potentialEnergy(tri)-pe.potentialEnergy(two),q3.q*1e-9*pe.potentialAt(two,q3.x,q3.y),1e-10,1e-18);
  assert.equal(pe.potentialEnergy([{x:0,y:0,q:1}]),0);assert.equal(pe.potentialEnergy([{x:0,y:0,q:1,kind:'rod',size:4,ang:0},{x:2,y:2,q:1}]),null);
 });
+test('arc of charge lying in the map: exact against brute force, center formula, full circle = ring, E = −∇V, the 1.2 mm layer',()=>{
+ const a=core('coulomb-sandbox','C_V,C_E,CORE_R,quad3,arcLocal,ringLocal,bodyAt,bodyDist,bodyLimits,lineProfile,bodyLine,potentialAt,fieldAt');
+ const A=a.CORE_R,brute=(R,sp,x,y)=>{const h=sp/2,N=4000;let s=[0,0,0];const f=(p,o)=>{const dx=x-R*Math.cos(p),dy=y-R*Math.sin(p),r=Math.hypot(dx,dy);
+  if(r>=A){const r3=r*r*r;o[0]=1/r;o[1]=dx/r3;o[2]=dy/r3;}else{o[0]=(3*A*A-r*r)/(2*A**3);o[1]=dx/A**3;o[2]=dy/A**3;}};
+  for(let i=0;i<N;i++){const I=a.quad3(f,-h+sp*i/N,-h+sp*(i+1)/N);s[0]+=I[0];s[1]+=I[1];s[2]+=I[2];}return [a.C_V*s[0]/sp,a.C_E*s[1]/sp,a.C_E*s[2]/sp];};
+ let seed=7;const rnd=()=>((seed=(seed*16807)%2147483647)/2147483647);
+ for(let k=0;k<160;k++){const R=.5+5*rnd(),sp=[Math.PI,2*Math.PI,Math.PI/3,1.3][k%4];const t=2*Math.PI*rnd(),rr=k%2?R+(rnd()-.5)*.5:R*(.05+3*rnd());
+  const x=rr*Math.cos(t),y=rr*Math.sin(t),e=a.arcLocal(R,sp,x,y),g=brute(R,sp,x,y),sc=Math.hypot(g[1],g[2]);
+  assert(Math.abs(e[0]-g[0])<=1e-7*Math.abs(g[0])&&Math.hypot(e[1]-g[1],e[2]-g[2])<=1e-7*sc,`arc R ${R} span ${sp} at (${x}, ${y})`);}
+ for(const sp of [Math.PI/6,Math.PI/2,Math.PI,3,2*Math.PI]){const R=3,e=a.arcLocal(R,sp,0,0);close(e[0],a.C_V/R,1e-12);close(-e[1],a.C_E*2*Math.sin(sp/2)/(R*R*sp),1e-10,1e-9);close(e[2],0,0,1e-9);}
+ for(const [rho] of [[.4],[1.3],[1.95],[2.1],[3.1],[7]]){const e=a.arcLocal(2,2*Math.PI,rho,0),r=a.ringLocal(2,rho,0);close(e[0],r[0],1e-11);close(e[1],r[1],1e-10,1e-7);}
+ const arc={kind:'arc',x:.4,y:-.3,q:-1.5,size:2.5,ang:120,span:200};
+ for(const [x,y] of [[0,0],[1.1,2.3],[-3,-1],[.4,-.3],[2.4,1.8],[-1.9,1.2]]){if(Math.abs(a.bodyDist(arc,x,y)-A)<.01)continue;const e=a.bodyAt(arc,x,y),h=1e-3,V=(X,Y)=>a.bodyAt(arc,X,Y)[0];
+  const gx=-(-V(x+2*h,y)+8*V(x+h,y)-8*V(x-h,y)+V(x-2*h,y))/(12*h*.01),gy=-(-V(x,y+2*h)+8*V(x,y+h)-8*V(x,y-h)+V(x,y-2*h))/(12*h*.01);
+  assert(Math.hypot(e[1]-gx,e[2]-gy)<=2e-6*Math.hypot(e[1],e[2])+1e-6,`arc E = -grad V at (${x}, ${y})`);}
+ const mid=[.4+2.5*Math.cos(120*Math.PI/180),-.3+2.5*Math.sin(120*Math.PI/180)],u=[Math.cos(120*Math.PI/180),Math.sin(120*Math.PI/180)];
+ const lo=a.bodyAt(arc,mid[0]+u[0]*(A-1e-9),mid[1]+u[1]*(A-1e-9)),hi=a.bodyAt(arc,mid[0]+u[0]*(A+1e-9),mid[1]+u[1]*(A+1e-9));
+ for(let i=0;i<3;i++)assert(Math.abs(lo[i]-hi[i])<=1e-6*Math.hypot(...hi),'arc continuity '+i);
+ assert(a.bodyAt(arc,...mid).every(Number.isFinite));
+ const L=a.bodyLimits({kind:'arc',x:0,y:0,q:2,size:3,ang:90,span:180},0,0);close(L.rows[0].E,a.C_E*2*2/(9*Math.PI),1e-12);close(L.E,L.rows[0].E,1e-9);
+});
+test('along a line: E_s from the field and −ΔV/Δs from V alone agree as Δs shrinks; the ring axis peak at z = R/√2',()=>{
+ const a=core('coulomb-sandbox','lineProfile,bodyLine,fieldAt,potentialAt,C_E');
+ const list=[{x:-3,y:0,q:2},{x:3,y:1,q:-1}],line={x:0,y:2,ux:1,uy:0};
+ const P1=a.lineProfile(list,line,-6,6,24,.5),P2=a.lineProfile(list,line,-6,6,24,.01);
+ let e1=0,e2=0;for(let i=0;i<P1.length;i++){e1=Math.max(e1,Math.abs(P1[i].grad-P1[i].Es));e2=Math.max(e2,Math.abs(P2[i].grad-P2[i].Es));close(P1[i].Es,a.fieldAt(list,P1[i].s,2)[0],1e-12);}
+ assert(e2<e1/500,`gradient error ${e1} then ${e2}`);
+ const ring={kind:'ring',x:0,y:0,q:2,size:2,ang:90},Lr=a.bodyLine(ring),P=a.lineProfile([ring],Lr,0,4,4000,.01);
+ let best=P[0];for(const q of P)if(q.Es>best.Es)best=q;close(best.s,2/Math.SQRT2,0,1.5e-3);close(best.Es,a.C_E*2*2/Math.SQRT2/(2+4)**1.5,1e-6);
+});
 if(process.argv.includes('--strict-core')){
  // Independent check at a point inside the core: the field must equal the numerical -dV/dx there.
  c.set([{x:0,y:0,q:1}]);const x=.05,h=1e-5,expected=-(c.potential(x+h,0)-c.potential(x-h,0))/(2*h*.01);

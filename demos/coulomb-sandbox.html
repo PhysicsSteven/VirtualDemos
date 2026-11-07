@@ -56,6 +56,10 @@
 .hint.core-note { color: var(--ink); border-left: 3px solid var(--accent); padding-left: 8px; }
 button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+canvas.prof { display: block; width: 100%; height: 230px; margin: 8px 0 6px; border: 1px solid var(--line); border-radius: 8px; background: var(--canvas); touch-action: pan-y; }
+.chips.small { align-items: center; }
+.chips.small button { padding: 2px 9px; font-size: 0.8rem; }
+#profRead { margin-top: 6px; white-space: pre-line; }
 .row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
 .row3 .btn { padding-inline: 4px; }
 table.lim td { padding: 4px 2px; }
@@ -130,7 +134,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   <header class="bar">
     <div>
       <h1>Coulomb Sandbox</h1>
-      <p>Drag the charges around, and drag the knob on a selected charge to change its value. Add a charged rod, ring or disk to compare with the textbook formulas. Switch to 3D to see the potential as a landscape of hills and wells.</p>
+      <p>Drag the charges around, and drag the knob on a selected charge to change its value. Add a charged rod, arc, ring or disk to compare with the textbook formulas, and graph V and E along a line. Switch to 3D to see the potential as a landscape of hills and wells.</p>
     </div>
     <div class="bar-right">
       <div class="units mono">1 grid square = 1 cm · q in nC · k = 8.99×10⁹ N·m²/C²</div>
@@ -171,6 +175,8 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
           <button type="button" data-p="rod" aria-pressed="false">Rod</button>
           <button type="button" data-p="ring" aria-pressed="false">Ring</button>
           <button type="button" data-p="disk" aria-pressed="false">Disk</button>
+          <button type="button" data-p="arc" aria-pressed="false">Arc</button>
+          <button type="button" data-p="flatring" aria-pressed="false">Ring in the map</button>
         </div>
       </section>
 
@@ -180,8 +186,9 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
           <button type="button" class="btn pos" id="addPos"><span class="dot"></span>Add +1 nC</button>
           <button type="button" class="btn neg" id="addNeg"><span class="dot"></span>Add −1 nC</button>
         </div>
-        <div class="row3">
+        <div class="row2">
           <button type="button" class="btn" id="addRod">Add rod</button>
+          <button type="button" class="btn" id="addArc">Add arc</button>
           <button type="button" class="btn" id="addRing">Add ring</button>
           <button type="button" class="btn" id="addDisk">Add disk</button>
         </div>
@@ -193,12 +200,16 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
             <input type="range" id="bodySize" min="1" max="16" step="0.5" value="6">
             <div class="slider-head"><label for="bodyAng" id="bodyAngLab">Direction</label><output id="bodyAngOut" class="mono" for="bodyAng">0°</output></div>
             <input type="range" id="bodyAng" min="0" max="165" step="15" value="0">
+            <div id="spanEd" hidden>
+              <div class="slider-head"><label for="bodySpan">Arc angle</label><output id="bodySpanOut" class="mono" for="bodySpan">180°</output></div>
+              <input type="range" id="bodySpan" min="15" max="360" step="15" value="180">
+            </div>
             <p class="hint mono" id="bodyDens"></p>
           </div>
           <div class="selfoot"><span id="selPos" class="mono"></span><button type="button" class="link" id="del">Remove</button></div>
         </div>
         <p class="hint" id="selHint">Click a charge to select it, or click the field and press Tab.</p>
-        <p class="hint" id="bodyHint" hidden>A rod lies in the map. A ring or disk stands perpendicular to the map with its axis (dotted) in the map, so you see it edge on: the map slices the ring at its two dots and the disk along the bar.</p>
+        <p class="hint" id="bodyHint" hidden>A rod or an arc lies in the map (an arc of 360° is a ring lying in the map). A ring or disk stands perpendicular to the map with its axis (dotted) in the map, so you see it edge on: the map slices the ring at its two dots and the disk along the bar.</p>
       </section>
 
       <section>
@@ -211,7 +222,26 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
         </dl>
         <p class="hint core-note" id="coreNote" hidden>The probe is inside a charge's 1.2 mm model ball. A true point charge has no finite V or E here; these values are for a uniformly charged ball.</p>
         <details class="more"><summary>More about this</summary><p class="hint">Hover over the field to read it anywhere; click or tap to place the probe, which stays there when the pointer leaves the map; or press P on the field and use the arrow keys. The probe sits on a 0.1 cm grid. Each charge is modeled as a uniformly charged ball 1.2 mm in radius, inside its drawn disc; outside the ball V and E are exact point charge values.</p></details>
-        <p class="hint" id="bodyModel" hidden>Model: a rod, ring or disk carries its charge Q spread uniformly, and V and E are the exact integrals of k dq/r: closed forms for the rod, and complete elliptic integrals for the ring and the disk off their axis (on the axis these reduce to the textbook formulas). Within 1.2 mm of a body its charge is treated as a line or sheet of uniformly charged balls 1.2 mm in radius, integrated numerically to 1 part in 10¹⁰.</p>
+        <p class="hint" id="bodyModel" hidden>Model: a rod, ring or disk carries its charge Q spread uniformly, and V and E are the exact integrals of k dq/r: closed forms for the rod, complete elliptic integrals for the ring and the disk off their axis (on the axis these reduce to the textbook formulas), and incomplete elliptic integrals for the arc. Within 1.2 mm of a body its charge is treated as a line or sheet of uniformly charged balls 1.2 mm in radius, integrated numerically to 1 part in 10¹⁰.</p>
+      </section>
+
+      <section id="profSec">
+        <h2>Along a line</h2>
+        <div class="chips" id="profLine" role="group" aria-label="Line">
+          <button type="button" data-l="x" aria-pressed="true" title="The horizontal line through the probe">Across (x)</button>
+          <button type="button" data-l="y" aria-pressed="false" title="The vertical line through the probe">Up (y)</button>
+          <button type="button" data-l="axis" aria-pressed="false" title="The axis of the selected rod, ring, disk or arc">Object’s axis</button>
+        </div>
+        <canvas id="prof" class="prof" role="img" aria-label="Graphs of the potential V and of the component of E along the line, against the distance s along it"></canvas>
+        <div class="chips small" id="profH" role="group" aria-label="Step for the slope of V">
+          <span class="hint">Step Δs for −ΔV/Δs</span>
+          <button type="button" data-h="1" aria-pressed="false">1 cm</button>
+          <button type="button" data-h="0.5" aria-pressed="true">0.5 cm</button>
+          <button type="button" data-h="0.1" aria-pressed="false">0.1 cm</button>
+        </div>
+        <p class="hint mono" id="profRead" aria-live="polite"></p>
+        <label class="check"><input type="checkbox" id="profShow" autocomplete="off">Show the line on the map</label>
+        <details class="more"><summary>More about this</summary><p class="hint">The top graph is V along the line and the bottom one is E<sub>s</sub>, the part of E along it (positive in the direction s grows). The dots are −ΔV/Δs, worked out from V alone with a central difference: −[V(s + Δs) − V(s − Δs)]/(2Δs). They sit on the E<sub>s</sub> curve where V changes smoothly over 2Δs and leave it near a charge, where a big step misses the curvature: E = −dV/ds is the limit as Δs shrinks. The object’s axis is the axis of a ring or disk, the line of symmetry of an arc and the perpendicular bisector of a rod, with s measured from the object’s center, so it is z in the textbook formulas. Graphs are cut off near a charge, where V and E grow without bound.</p></details>
       </section>
 
       <section>
@@ -298,13 +328,15 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
 (() => {
   // ==CORE START==
   // Pure physics and reading helpers, no DOM. Lengths in cm, charges in nC, V in volts, E in V/m.
-  const DEMO_VERSION = 'coulomb-sandbox@2026-10-23';
+  const DEMO_VERSION = 'coulomb-sandbox@2026-11-07';
   const C_V = 898.75517862;   // V·cm per nC   (k q / r), k = 8.9875517862×10⁹ N·m²/C² (CODATA 2022)
   const C_E = 89875.517862;   // V/m · cm² per nC (k q / r²)
   const CORE_R = 0.12, CORE_R3 = CORE_R ** 3;   // cm: each charge is a uniformly charged ball of this radius (always inside its drawn disc)
 
   // ---- continuous charge distributions (OpenStax University Physics Vol 2, section 5.5) ----
-  // A body is { kind: 'rod' | 'ring' | 'disk', x, y, q, size, ang } with total charge q (nC) spread uniformly, centered at (x, y) cm.
+  // A body is { kind: 'rod' | 'ring' | 'disk' | 'arc', x, y, q, size, ang } with total charge q (nC) spread uniformly, centered at (x, y) cm.
+  // arc: a circular arc of radius size (cm) lying in the map, centered on its center of curvature (x, y), its midpoint ang degrees
+  // from +x, spanning span degrees (up to 360, a ring lying in the map).
   // rod: a straight segment of length size (cm) lying in the map, pointing ang degrees from +x.
   // ring, disk: radius size (cm), standing perpendicular to the map with the axis in the map, pointing ang degrees from +x.
   // The map is then a slice through the axis: the ring crosses the map at two points, the disk along one diameter.
@@ -470,6 +502,81 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
       }, 0, Math.PI / 2);
     return [C_V * sig * 2 * I[0], C_E * sig * 2 * I[2], C_E * sig * 2 * I[1]];
   }
+  // Carlson's symmetric integrals RF and RD by duplication (Carlson 1995), for the incomplete elliptic integrals of an arc
+  function carlsonRF(x, y, z) {
+    for (let i = 0; i < 60; i++) {
+      const sx = Math.sqrt(x), sy = Math.sqrt(y), sz = Math.sqrt(z), lam = sx * (sy + sz) + sy * sz;
+      x = (x + lam) / 4; y = (y + lam) / 4; z = (z + lam) / 4;
+      const A = (x + y + z) / 3, dx = 1 - x / A, dy = 1 - y / A, dz = 1 - z / A;
+      if (Math.max(Math.abs(dx), Math.abs(dy), Math.abs(dz)) < 1e-4) {
+        const e2 = dx * dy - dz * dz, e3 = dx * dy * dz;
+        return (1 - e2 / 10 + e3 / 14 + e2 * e2 / 24 - 3 * e2 * e3 / 44) / Math.sqrt(A);
+      }
+    }
+    return NaN;
+  }
+  function carlsonRD(x, y, z) {
+    let sum = 0, fac = 1;
+    for (let i = 0; i < 60; i++) {
+      const sx = Math.sqrt(x), sy = Math.sqrt(y), sz = Math.sqrt(z), lam = sx * (sy + sz) + sy * sz;
+      sum += fac / (sz * (z + lam)); fac /= 4;
+      x = (x + lam) / 4; y = (y + lam) / 4; z = (z + lam) / 4;
+      const A = (x + y + 3 * z) / 5, dx = (A - x) / A, dy = (A - y) / A, dz = (A - z) / A;
+      if (Math.max(Math.abs(dx), Math.abs(dy), Math.abs(dz)) < 1e-4) {
+        const ea = dx * dy, eb = dz * dz, ec = ea - eb, ed = ea - 6 * eb, ee = ed + ec + ec;
+        return 3 * sum + fac * (1 + ed * (-3 / 14 + 9 / 88 * ed - 9 / 52 * dz * ee) + dz * (ee / 6 + dz * (-9 / 22 * ec + dz * 3 / 26 * ea))) / (A * Math.sqrt(A));
+      }
+    }
+    return NaN;
+  }
+  // incomplete elliptic integrals F(φ|m) and E(φ|m) for any real φ (m < 1), and Gi(φ|m) = ∫₀^φ (1 − m sin²t)^(−3/2) dt
+  function ellipInc(phi, m) {
+    const k = Math.round(phi / Math.PI), p = phi - k * Math.PI, sp = Math.sin(p), cp = Math.cos(p), d2 = 1 - m * sp * sp;
+    const rf = carlsonRF(cp * cp, d2, 1), rd = carlsonRD(cp * cp, d2, 1);
+    let F = sp * rf, E = sp * rf - (m / 3) * sp * sp * sp * rd;
+    if (k) { const K = carlsonRF(0, 1 - m, 1); F += 2 * k * K; E += 2 * k * (K - (m / 3) * carlsonRD(0, 1 - m, 1)); }
+    return { F, E, G: (E - m * sp * cp / Math.sqrt(d2)) / (1 - m) };
+  }
+  // arc of radius R (cm) and angle span (radians, up to 2π) lying in the map, centered on its center of curvature, its midpoint on +x.
+  // Probe at (x, y) in that frame: [V, Ex, Ey] in V and V/m for Q = 1 nC. Exact: with r² = ρ² + R² − 2ρR cos ψ (ψ from the probe's
+  // direction to the charge), ∫dψ/r and ∫dψ/r³ are incomplete elliptic integrals (Carlson RF and RD), the sideways part of E is
+  // (1/ρ)[1/r] between the ends, and the radial part is [(ρ² − R²)∫dψ/r³ + ∫dψ/r]/(2ρ). Within a of the wire, the ball stretch
+  // in closed form, as for the ring. Near the center or right on the arc's circle the outer pieces come from quadrature.
+  function arcLocal(R, span, x, y) {
+    const a = CORE_R, rho = Math.hypot(x, y), th = Math.atan2(y, x), S = rho * rho + R * R, h = span / 2;
+    if (rho < 0.02 * R) {   /* close to the center: straight quadrature in the arc's frame (every point at least R − ρ away) */
+      const I = quad3((p, o) => { const dx = x - R * Math.cos(p), dy = y - R * Math.sin(p), r = Math.hypot(dx, dy), r3 = r * r * r; o[0] = 1 / r; o[1] = dx / r3; o[2] = dy / r3; }, -h, h);
+      return [C_V * I[0] / span, C_E * I[1] / span, C_E * I[2] / span];
+    }
+    const D = R + rho, D3 = D * D * D, m = 4 * R * rho / (D * D), om = ((R - rho) / D) ** 2, num = om < 1e-6;
+    const rAt = (p) => Math.sqrt(Math.max(S - 2 * rho * R * Math.cos(p), 0));
+    let v = 0, er = 0, et = 0;
+    const outer = (p, q) => {   /* ψ from p to q, all of it at least a from the probe */
+      if (q <= p) return;
+      if (num) {
+        const I = quad3((t, o) => { const ct = Math.cos(t), r = rAt(t), r3 = r * r * r; o[0] = 1 / r; o[1] = (rho - R * ct) / r3; o[2] = -R * Math.sin(t) / r3; }, p, q);
+        v += I[0]; er += I[1]; et += I[2]; return;
+      }
+      const A = ellipInc((Math.PI - q) / 2, m), B = ellipInc((Math.PI - p) / 2, m);
+      const i1 = 2 * (B.F - A.F) / D, i3 = 2 * (B.G - A.G) / D3;
+      v += i1; er += ((rho * rho - R * R) * i3 + i1) / (2 * rho); et += (1 / rAt(q) - 1 / rAt(p)) / rho;
+    };
+    const ball = (p, q) => {   /* ψ from p to q inside the probe's ball: kq(3a² − r²)/(2a³) and kq r⃗/a³ */
+      v += ((3 * a * a - S) * (q - p) + 2 * rho * R * (Math.sin(q) - Math.sin(p))) / (2 * CORE_R3);
+      er += (rho * (q - p) - R * (Math.sin(q) - Math.sin(p))) / CORE_R3; et += R * (Math.cos(q) - Math.cos(p)) / CORE_R3;
+    };
+    const lo = -h - th, hi = h - th, c0 = (S - a * a) / (2 * rho * R);
+    if (c0 >= 1) outer(lo, hi);
+    else {   /* the probe's ball meets the circle in ψ within pc of 0 (mod 2π): split the arc there */
+      const pc = Math.acos(Math.max(-1, c0)), cuts = [];
+      for (let n = -2; n <= 2; n++) { const p = Math.max(lo, 2 * Math.PI * n - pc), q = Math.min(hi, 2 * Math.PI * n + pc); if (q > p) cuts.push([p, q]); }
+      let t = lo;
+      for (const [p, q] of cuts) { outer(t, p); ball(p, q); t = q; }
+      outer(t, hi);
+    }
+    const ct = Math.cos(th), st = Math.sin(th);
+    return [C_V * v / span, C_E * (er * ct - et * st) / span, C_E * (er * st + et * ct) / span];
+  }
   const bodyDir = (c) => { const r = c.ang * Math.PI / 180; return [Math.cos(r), Math.sin(r)]; };
   // the body's segment in the map: the rod itself, or the ring's or disk's diameter seen edge on
   function bodyEnds(c) {
@@ -483,6 +590,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     const [ca, sa] = bodyDir(c), [p1, p2] = bodyFrame(c, x, y);
     let V, E1, E2;
     if (c.kind === 'rod') [V, E1, E2] = rodLocal(c.size, p1, p2);
+    else if (c.kind === 'arc') [V, E1, E2] = arcLocal(c.size, c.span * Math.PI / 180, p1, p2);
     else { let Er; [V, Er, E1] = (c.kind === 'ring' ? ringLocal : diskLocal)(c.size, Math.abs(p2), p1); E2 = p2 < 0 ? -Er : Er; }
     return [c.q * V, c.q * (E1 * ca - E2 * sa), c.q * (E1 * sa + E2 * ca)];
   }
@@ -490,6 +598,11 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   function bodyDist(c, x, y) {
     const [p1, p2] = bodyFrame(c, x, y);
     if (c.kind === 'rod') return Math.hypot(Math.max(0, Math.abs(p1) - c.size / 2), p2);
+    if (c.kind === 'arc') {
+      const h = c.span * Math.PI / 360, t = Math.atan2(p2, p1);
+      if (Math.abs(t) <= h) return Math.abs(Math.hypot(p1, p2) - c.size);
+      return Math.min(Math.hypot(p1 - c.size * Math.cos(h), p2 - c.size * Math.sin(h)), Math.hypot(p1 - c.size * Math.cos(h), p2 + c.size * Math.sin(h)));
+    }
     const rho = Math.abs(p2);
     return c.kind === 'disk' && rho <= c.size ? Math.abs(p1) : Math.hypot(rho - c.size, p1);
   }
@@ -501,6 +614,9 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
       const d = Math.abs(p2);
       rows.push({ id: 'line', E: d > 0 ? 2 * C_E * Q / (R * d) : null });
       rows.push({ id: 'bisector', E: d > 0 ? C_E * Q / (d * Math.sqrt(d * d + R * R / 4)) : null });
+    } else if (c.kind === 'arc') {
+      const sp = c.span * Math.PI / 180, atC = Math.hypot(p1, p2) < 0.05;   /* the center formula holds only at the center */
+      rows.push({ id: 'arcCenter', E: atC ? C_E * Q * 2 * Math.sin(sp / 2) / (R * R * sp) : null });
     } else if (c.kind === 'ring') {
       rows.push({ id: 'ringAxis', E: C_E * Q * Math.abs(p1) / (p1 * p1 + R * R) ** 1.5 });
     } else {
@@ -587,7 +703,25 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     }
     return out;
   }
-  const chargeKey = (list) => list.map((c) => `${snap01(c.x)},${snap01(c.y)},${c.q}` + (c.kind ? `,${c.kind},${c.size},${c.ang}` : '')).join(';');
+  const chargeKey = (list) => list.map((c) => `${snap01(c.x)},${snap01(c.y)},${c.q}` + (c.kind ? `,${c.kind},${c.size},${c.ang}` + (c.kind === 'arc' ? `,${c.span}` : '') : '')).join(';');
+
+  // ---- along a line: V and the component of E along it, and −dV/ds from V alone ----
+  // line { x, y, ux, uy }: s = 0 at (x, y), unit direction (ux, uy). Samples from s0 to s1 (cm). grad is the central difference
+  // −[V(s + h) − V(s − h)]/(2h) in V/m with h in cm, which tends to E_s as h shrinks (E = −∇V, OpenStax Vol 2, 7.5).
+  function lineProfile(list, line, s0, s1, n, h) {
+    const out = [];
+    for (let i = 0; i <= n; i++) {
+      const t = s0 + (s1 - s0) * i / n, x = line.x + t * line.ux, y = line.y + t * line.uy, [ex, ey] = fieldAt(list, x, y);
+      const vp = potentialAt(list, x + h * line.ux, y + h * line.uy), vm = potentialAt(list, x - h * line.ux, y - h * line.uy);
+      out.push({ s: t, V: potentialAt(list, x, y), Es: ex * line.ux + ey * line.uy, grad: -(vp - vm) / (2 * h / 100) });
+    }
+    return out;
+  }
+  // the line a body's textbook formulas use: the rod's perpendicular bisector, the ring's or disk's axis, the arc's line of symmetry
+  function bodyLine(c) {
+    const [ca, sa] = bodyDir(c);
+    return c.kind === 'rod' ? { x: c.x, y: c.y, ux: -sa, uy: ca } : { x: c.x, y: c.y, ux: ca, uy: sa };
+  }
 
   // ---- CSV ----
   const csvCell = (v) => { const t = v === null || v === undefined ? '' : String(v); return /[",\n]/.test(t) ? '"' + t.replace(/"/g, '""') + '"' : t; };
@@ -608,7 +742,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
       '# rounding,positions to 0.001 m (the probe sits on a 0.1 cm grid); V to 1 V below 1 kV and 10 V from 1 kV; |E| to 1 V/m below 1 kV/m then 100 V/m below 100 kV/m then 1 kV/m below 1 MV/m then 10 kV/m; direction to 1 degree counterclockwise from +x'
     ];
     if (bodies) {
-      L.push('# model_bodies,charge Q spread uniformly; a rod lies in the plane along direction_deg from +x; a ring or disk stands perpendicular to the plane with its axis in the plane along axis_deg from +x so the plane slices it through the axis; V and E are the exact integrals of k dq/r (closed forms with complete elliptic integrals for the ring and disk; inside the 1.2 mm layer adaptive Gauss-Kronrod quadrature to 1e-10 relative); within 1.2 mm of a body its charge is a line or sheet of 1.2 mm uniformly charged balls');
+      L.push('# model_bodies,charge Q spread uniformly; a rod lies in the plane along direction_deg from +x; an arc of radius R_m lies in the plane centered on its center of curvature with its midpoint at direction_deg from +x and spanning span_deg (Carlson elliptic integrals); a ring or disk stands perpendicular to the plane with its axis in the plane along axis_deg from +x so the plane slices it through the axis; V and E are the exact integrals of k dq/r (closed forms with complete elliptic integrals for the ring and disk; inside the 1.2 mm layer adaptive Gauss-Kronrod quadrature to 1e-10 relative); within 1.2 mm of a body its charge is a line or sheet of 1.2 mm uniformly charged balls');
       L.push('# inside_charge_ball,1 also when the probe is within 1.2 mm of a rod or ring or disk');
     }
     configs.forEach((cf, i) => {
@@ -616,8 +750,8 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
       let jp = 0, jb = 0;
       cf.charges.forEach((c) => {
         if (!c.kind) { L.push(`# config ${i + 1} charge ${++jp},x_m,${tidy(c.x / 100)},y_m,${tidy(c.y / 100)},q_C,${tidy(c.q * 1e-9)}`); return; }
-        const rod = c.kind === 'rod';
-        L.push(`# config ${i + 1} body ${++jb},${c.kind},x_m,${tidy(c.x / 100)},y_m,${tidy(c.y / 100)},Q_C,${tidy(c.q * 1e-9)},${rod ? 'L_m' : 'R_m'},${tidy(c.size / 100)},${rod ? 'direction_deg' : 'axis_deg'},${tidy(c.ang)}`);
+        const rod = c.kind === 'rod', dirName = rod || c.kind === 'arc' ? 'direction_deg' : 'axis_deg';
+        L.push(`# config ${i + 1} body ${++jb},${c.kind},x_m,${tidy(c.x / 100)},y_m,${tidy(c.y / 100)},Q_C,${tidy(c.q * 1e-9)},${rod ? 'L_m' : 'R_m'},${tidy(c.size / 100)},${dirName},${tidy(c.ang)}` + (c.kind === 'arc' ? `,span_deg,${tidy(c.span)}` : ''));
       });
     });
     L.push('row,config,x_m,y_m,V_volts,E_V_per_m,E_direction_deg,inside_charge_ball');
@@ -644,7 +778,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   let baseDirty = true, overDirty = true, raf = 0;
 
   const mk = (x, y, q) => ({ id: nextId++, x, y, q });
-  const mkB = (kind, x, y, q, size, ang) => ({ id: nextId++, kind, x, y, q, size, ang });
+  const mkB = (kind, x, y, q, size, ang, span) => Object.assign({ id: nextId++, kind, x, y, q, size, ang }, kind === 'arc' ? { span: span || 180 } : {});
   const PRESETS = {
     dipole: () => [mk(-3, 0, 2), mk(3, 0, -2)],
     like:   () => [mk(-3, 0, 2), mk(3, 0, 2)],
@@ -653,9 +787,12 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     quad:   () => [mk(-2.5, 2.5, 2), mk(2.5, 2.5, -2), mk(2.5, -2.5, 2), mk(-2.5, -2.5, -2)],
     rod:    () => [mkB('rod', 0, 0, 2, 6, 0)],      /* the probe at (0, 2.5) sits on the rod's perpendicular bisector */
     ring:   () => [mkB('ring', 0, 0, 2, 2, 90)],    /* axis along y: the probe at (0, 2.5) is on the axis */
-    disk:   () => [mkB('disk', 0, 0, 2, 2, 90)]
+    disk:   () => [mkB('disk', 0, 0, 2, 2, 90)],
+    arc:    () => [mkB('arc', 0, 0, 2, 3, 90, 180)],      /* a half circle above its center; the probe starts at the center */
+    flatring: () => [mkB('arc', 0, 0, 2, 3, 90, 360)]   /* a ring lying in the map: E = 0 at its center, V = kQ/R */
   };
-  const KIND_NAME = { rod: 'Rod', ring: 'Ring', disk: 'Disk' };
+  const PRESET_PROBE = { arc: { x: 0, y: 0 }, flatring: { x: 0, y: 0 } };
+  const KIND_NAME = { rod: 'Rod', ring: 'Ring', disk: 'Disk', arc: 'Arc' };
 
   // ---------- helpers ----------
   const projScale = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.45 : 1);
@@ -746,7 +883,24 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   // ---- rods, rings and disks: where field lines start and end ----
   const bodyOff = () => Math.max(0.2, 8 / s);   /* cm: field lines start this far from a body's charge, outside its 1.2 mm model layer */
   // n start points off cm from a body: round the ring's two crossings of the map, or evenly round the outline of the rod or the disk's bar
+  // an arc's point at angle t (radians) from its middle, and its two ends
+  function arcPt(c, t, r) { const a = c.ang * Math.PI / 180 + t; return [c.x + (r || c.size) * Math.cos(a), c.y + (r || c.size) * Math.sin(a)]; }
   function bodySeeds(c, n, off) {
+    if (c.kind === 'arc') {   /* round the arc's outline: out along the outside, round an end, back along the inside, round the other end */
+      const h = c.span * Math.PI / 360, R = c.size, full = c.span >= 360, rin = Math.max(R - off, R / 2);
+      const Lo = 2 * h * (R + off), Li = 2 * h * rin, Lc = full ? 0 : Math.PI * off, per = Lo + Li + 2 * Lc, pts = [];
+      for (let k = 0; k < n; k++) {
+        let t = (k + 0.5) * per / n;
+        if (t < Lo) { pts.push(arcPt(c, -h + t / (R + off), R + off)); continue; }
+        t -= Lo;
+        if (t < Lc) { const e = arcPt(c, h), a0 = c.ang * Math.PI / 180 + h, a = a0 + t / off; pts.push([e[0] + off * Math.cos(a), e[1] + off * Math.sin(a)]); continue; }
+        t -= Lc;
+        if (t < Li) { pts.push(arcPt(c, h - t / rin, rin)); continue; }
+        t -= Li;
+        const e = arcPt(c, -h), a0 = c.ang * Math.PI / 180 - h + Math.PI, a = a0 + t / off; pts.push([e[0] + off * Math.cos(a), e[1] + off * Math.sin(a)]);
+      }
+      return pts;
+    }
     const [e1, e2] = bodyEnds(c), pts = [];
     if (c.kind === 'ring') {
       const n1 = Math.ceil(n / 2);
@@ -771,6 +925,10 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   }
   // the point of a body's charge in the map nearest (x, y): on the rod or the disk's bar, or the nearer crossing of the ring
   function nearestOn(c, x, y) {
+    if (c.kind === 'arc') {
+      const h = c.span * Math.PI / 360, [p1, p2] = bodyFrame(c, x, y), t = Math.atan2(p2, p1);
+      return arcPt(c, Math.max(-h, Math.min(h, t)));
+    }
     const [e1, e2] = bodyEnds(c);
     if (c.kind === 'ring') return Math.hypot(x - e1[0], y - e1[1]) < Math.hypot(x - e2[0], y - e2[1]) ? e1 : e2;
     const dx = e2[0] - e1[0], dy = e2[1] - e1[1], t = Math.max(0, Math.min(1, ((x - e1[0]) * dx + (y - e1[1]) * dy) / (dx * dx + dy * dy)));
@@ -896,6 +1054,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   // a rod: a bar in the map. A ring or disk, seen edge on: its dotted axis, the disk's bar or the ring's two crossings. Q on a label at the center.
   function drawBody(ctx, T, c) {
     const ps = projScale(), cs = chargeScale(), col = c.q > 0 ? T.pos : c.q < 0 ? T.neg : T.muted;
+    if (c.kind === 'arc') { drawArc(ctx, T, c, col, ps, cs); return; }
     const [e1, e2] = bodyEnds(c), [x1, y1] = toPx(e1[0], e1[1]), [x2, y2] = toPx(e2[0], e2[1]), [px, py] = toPx(c.x, c.y);
     const seg = (w, style, cap, alpha, dash) => {
       ctx.save(); ctx.lineWidth = w; ctx.strokeStyle = style; ctx.lineCap = cap; ctx.globalAlpha = alpha; if (dash) ctx.setLineDash(dash);
@@ -930,6 +1089,32 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     ctx.beginPath(); ctx.roundRect ? ctx.roundRect(px - tw / 2, py - th / 2, tw, th, 6 * cs) : ctx.rect(px - tw / 2, py - th / 2, tw, th);
     ctx.fillStyle = col; ctx.fill();
     ctx.fillStyle = T.onCharge; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(txt, px, py + 0.5);
+  }
+
+  // an arc lies in the map: drawn along its circle, a dotted line of symmetry through its middle, a small cross at its center, Q on a label at the center
+  function drawArc(ctx, T, c, col, ps, cs) {
+    const [px, py] = toPx(c.x, c.y), a = -c.ang * Math.PI / 180, h = c.span * Math.PI / 360, r = c.size * s, full = c.span >= 360;
+    const path = (w, style, alpha, dash) => {
+      ctx.save(); ctx.lineWidth = w; ctx.strokeStyle = style; ctx.lineCap = 'round'; ctx.globalAlpha = alpha; if (dash) ctx.setLineDash(dash);
+      ctx.beginPath(); ctx.arc(px, py, r, a - h, a + h); ctx.stroke(); ctx.restore();
+    };
+    if (!full) {
+      const [ax1, ay1] = toPx(...arcPt(c, Math.PI, 1.2)), [ax2, ay2] = toPx(...arcPt(c, 0, c.size + 1.2));
+      ctx.save(); ctx.strokeStyle = T.muted; ctx.lineWidth = 1.4 * ps; ctx.setLineDash([1.5 * ps, 4 * ps]); ctx.lineCap = 'round';
+      ctx.beginPath(); ctx.moveTo(ax1, ay1); ctx.lineTo(ax2, ay2); ctx.stroke(); ctx.restore();
+    }
+    ctx.save(); ctx.strokeStyle = T.muted; ctx.lineWidth = 1.4 * ps;
+    ctx.beginPath(); ctx.moveTo(px - 5 * ps, py); ctx.lineTo(px + 5 * ps, py); ctx.moveTo(px, py - 5 * ps); ctx.lineTo(px, py + 5 * ps); ctx.stroke(); ctx.restore();
+    if (c === sel) path(18 * ps, T.accent, 0.28);
+    path(9.5 * ps, T.canvas, 1); path(5.5 * ps, col, 1);
+    const txt = fmtQ(c.q), mx = px + Math.cos(a) * r, my = py + Math.sin(a) * r;
+    ctx.font = `600 ${12 * cs}px ${monoFont()}`;
+    const tw = ctx.measureText(txt).width + 12 * cs, th = 18 * cs, lx = mx, ly = my;   /* on the arc's middle, so the center stays free for the probe */
+    ctx.beginPath(); ctx.roundRect ? ctx.roundRect(lx - tw / 2 - 2 * ps, ly - th / 2 - 2 * ps, tw + 4 * ps, th + 4 * ps, 7 * cs) : ctx.rect(lx - tw / 2 - 2 * ps, ly - th / 2 - 2 * ps, tw + 4 * ps, th + 4 * ps);
+    ctx.fillStyle = T.canvas; ctx.fill();
+    ctx.beginPath(); ctx.roundRect ? ctx.roundRect(lx - tw / 2, ly - th / 2, tw, th, 6 * cs) : ctx.rect(lx - tw / 2, ly - th / 2, tw, th);
+    ctx.fillStyle = col; ctx.fill();
+    ctx.fillStyle = T.onCharge; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(txt, lx, ly + 0.5);
   }
 
   function drawCharges(ctx, T) {
@@ -1017,6 +1202,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     const ctx = octx, T = tokens();
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, W, H);
+    drawProfLine(ctx, T);
     if (probe && charges.some((c) => c.q)) drawProbe(ctx, T);
     drawKnob(ctx, T);
   }
@@ -1250,7 +1436,12 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
       let rr;
       if (c.kind) {   /* a body lies on the surface: a tube along the rod or the disk's bar, two beads where the ring crosses; a bead at the center to grab */
         const zAt = (x, y) => height(potential(x, y)), [e1, e2] = bodyEnds(c);
-        if (c.kind === 'ring') {
+        if (c.kind === 'arc') {
+          const pts = [], h = c.span * Math.PI / 360, n = Math.max(12, Math.round(c.span / 4));
+          for (let i = 0; i <= n; i++) { const [x, y] = arcPt(c, -h + 2 * h * i / n); pts.push(new THREE.Vector3(x, y, zAt(x, y) + 0.03)); }
+          const tube = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts, c.span >= 360), n * 2, 0.07 * chargeScale(), 8, c.span >= 360), mat);
+          tube.userData.c = c; tube.userData.own = true; G.spheres.add(tube);
+        } else if (c.kind === 'ring') {
           for (const e of [e1, e2]) { const d = new THREE.Mesh(G.sphGeo, mat); d.scale.setScalar(0.17 * chargeScale()); d.position.set(e[0], e[1], zAt(e[0], e[1])); d.userData.c = c; G.spheres.add(d); }
         } else {
           const pts = [];
@@ -1431,6 +1622,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   const CORE_TXT = {
     point: coreNote.textContent,
     rod: 'The probe is within 1.2 mm of the rod. A thin rod has no finite V or E on it; these values are for a line of uniformly charged balls 1.2 mm in radius.',
+    arc: 'The probe is within 1.2 mm of the arc. A thin arc has no finite V or E on its wire; these values are for a curve of uniformly charged balls 1.2 mm in radius.',
     ring: 'The probe is within 1.2 mm of the ring, where it crosses the map. A thin ring has no finite V or E on its wire; these values are for a loop of uniformly charged balls 1.2 mm in radius.',
     disk: 'The probe is within 1.2 mm of the disk. E jumps by σ/ε₀ across a thin disk and has no finite value at its rim; these values are for a sheet of uniformly charged balls 1.2 mm in radius.'
   };
@@ -1458,6 +1650,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   const LIM = {
     line: ['Infinite line, λ/(2πε₀r)', 'r from the rod’s line; the limit of a long rod'],
     bisector: ['Rod on its bisector, kQ/(r√(r² + L²/4))', 'exact on the perpendicular bisector'],
+    arcCenter: ['Arc at its center, 2kλ sin(θ/2)/R', 'exact at the center only (θ the arc angle)'],
     ringAxis: ['Ring on its axis, kQz/(z² + R²)³ᐟ²', 'exact on the axis'],
     diskAxis: ['Disk on its axis, 2πkσ(1 − z/√(z² + R²))', 'exact on the axis'],
     plane: ['Infinite plane, σ/(2ε₀)', 'the limit close to a wide disk'],
@@ -1474,6 +1667,8 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     const name = KIND_NAME[ref.kind] + (bodies.length > 1 ? ' ' + (bodies.indexOf(ref) + 1) : '');
     const what = ref.kind === 'rod'
       ? `${name}: Q = ${Q}, L = ${ref.size.toFixed(1)} cm, λ = Q/L. Probe ${f1(Math.abs(L.across))} cm from the rod’s line, ${f1(L.along)} cm along it from the center.`
+      : ref.kind === 'arc'
+      ? `${name}: Q = ${Q}, R = ${ref.size.toFixed(2)} cm, arc angle θ = ${ref.span}°, λ = Q/(Rθ). Probe ${f1(Math.hypot(L.along, L.across))} cm from the center${Math.hypot(L.along, L.across) < 0.05 ? ', where V = kQ/R = ' + fmtV(C_V * ref.q / ref.size) : ''}.`
       : `${name}: Q = ${Q}, R = ${ref.size.toFixed(2)} cm${ref.kind === 'disk' ? ', σ = Q/πR²' : ', λ = Q/2πR'}. Probe at z = ${f1(L.along)} cm along the axis, ${f1(Math.abs(L.across))} cm off it.`;
     const rows = [[`This ${ref.kind} alone (exact)`, '', L.E, true]].concat(L.rows.map((r) => [LIM[r.id][0], LIM[r.id][1], r.E, false]));
     const html = rows.map(([f, note, E, ex]) => {
@@ -1501,18 +1696,23 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     if (qLab.textContent !== qText) qLab.textContent = qText;
     if (bodyEd.hidden === isB) bodyEd.hidden = !isB;
     if (isB) {
-      const rod = sel.kind === 'rod', rng = rod ? ['1', '16', '0.5'] : ['0.5', '5', '0.25'];
+      const rod = sel.kind === 'rod', arc = sel.kind === 'arc', rng = rod ? ['1', '16', '0.5'] : arc ? ['1', '6', '0.25'] : ['0.5', '5', '0.25'];
       if (bodySize.min !== rng[0] || bodySize.max !== rng[1]) { bodySize.min = rng[0]; bodySize.max = rng[1]; bodySize.step = rng[2]; }
+      const amax = arc ? '345' : '165';
+      if (bodyAng.max !== amax) bodyAng.max = amax;
+      if ($('spanEd').hidden === arc) $('spanEd').hidden = !arc;
+      if (arc) { if (document.activeElement !== $('bodySpan')) $('bodySpan').value = sel.span; $('bodySpanOut').textContent = sel.span + '°'; }
       if (document.activeElement !== bodySize) bodySize.value = sel.size;
       if (document.activeElement !== bodyAng) bodyAng.value = sel.ang;
       $('bodySizeLab').textContent = rod ? 'Length L' : 'Radius R';
       $('bodySizeOut').textContent = (rod ? sel.size.toFixed(1) : sel.size.toFixed(2)) + ' cm';
-      $('bodyAngLab').textContent = rod ? 'Direction' : 'Axis direction';
+      $('bodyAngLab').textContent = rod ? 'Direction' : arc ? 'Direction of its middle' : 'Axis direction';
       $('bodyAngOut').textContent = sel.ang + '° from +x';
       $('bodyDens').textContent = minus(rod ? `λ = Q/L = ${(sel.q / sel.size).toFixed(3)} nC/cm`
+        : arc ? `λ = Q/(Rθ) = ${(sel.q / (sel.size * sel.span * Math.PI / 180)).toFixed(3)} nC/cm, θ = ${(sel.span * Math.PI / 180).toFixed(3)} rad`
         : sel.kind === 'ring' ? `λ = Q/2πR = ${(sel.q / (2 * Math.PI * sel.size)).toFixed(3)} nC/cm` : `σ = Q/πR² = ${(sel.q / (Math.PI * sel.size * sel.size)).toFixed(3)} nC/cm²`);
     }
-    for (const id of ['addPos', 'addNeg', 'addRod', 'addRing', 'addDisk']) $(id).disabled = charges.length >= MAX_CHARGES;
+    for (const id of ['addPos', 'addNeg', 'addRod', 'addArc', 'addRing', 'addDisk']) $(id).disabled = charges.length >= MAX_CHARGES;
   }
   function setPreset(name) {
     for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === name));
@@ -1589,8 +1789,103 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
         if (overDirty) { drawOver(); overDirty = false; }
       }
       if (mapDirty) { mapDirty = false; renderMap(); describe(); }
-      updateReadout(); updateSel(); updateTag();
+      updateReadout(); updateSel(); updateTag(); updateProfile();
     });
+  }
+
+  // ---------- along a line: V and E_s graphs, and −ΔV/Δs ----------
+  const profC = $('prof'), profRead = $('profRead');
+  let profLine = 'x', profH = 0.5, profKey = '';
+  function profBody() { const b = order().filter((c) => c.kind && c.q); return sel && sel.kind ? sel : b[0] || null; }
+  function currentLine() {
+    if (profLine === 'axis') { const b = profBody(); if (b) { const L = bodyLine(b); const r = Math.min(10, Math.max(6, (b.kind === 'rod' ? b.size / 2 : b.size) * 3)); return Object.assign(L, { s0: -r, s1: r, name: KIND_NAME[b.kind] + ' axis' }); } }
+    const bb = bounds();
+    if (profLine === 'y') return { x: probe.x, y: 0, ux: 0, uy: 1, s0: Math.max(-10, bb.y0), s1: Math.min(10, bb.y1), name: 'x = ' + probe.x.toFixed(1) + ' cm' };
+    return { x: 0, y: probe.y, ux: 1, uy: 0, s0: Math.max(-12, bb.x0), s1: Math.min(12, bb.x1), name: 'y = ' + probe.y.toFixed(1) + ' cm' };
+  }
+  function drawProfile() {
+    const T = tokens(), W2 = profC.clientWidth, H2 = profC.clientHeight;
+    if (!W2 || !H2) return;
+    const L = currentLine(), key = [chargeKey(charges), L.x, L.y, L.ux, L.uy, L.s0, L.s1, profH, probe.x, probe.y, W2, H2, blind, document.documentElement.getAttribute('data-theme')].join('|');
+    if (key === profKey) return;
+    profKey = key;
+    const d = window.devicePixelRatio || 1;
+    profC.width = Math.round(W2 * d); profC.height = Math.round(H2 * d);
+    const ctx = profC.getContext('2d'); ctx.setTransform(d, 0, 0, d, 0, 0); ctx.clearRect(0, 0, W2, H2);
+    const mono = monoFont(), padL = 58, padR = 8, top = 16, gap = 20, ph = (H2 - top - gap - 22) / 2;
+    const sp = (S) => padL + (S - L.s0) / (L.s1 - L.s0) * (W2 - padL - padR);
+    const sProbe = (probe.x - L.x) * L.ux + (probe.y - L.y) * L.uy, off = Math.abs(-(probe.x - L.x) * L.uy + (probe.y - L.y) * L.ux), onLine = off < 0.05;
+    ctx.font = `600 10.5px ${mono}`; ctx.textBaseline = 'middle';
+    if (!charges.some((c) => c.q) || blind) {
+      ctx.fillStyle = T.muted; ctx.textAlign = 'center'; ctx.fillText(blind ? 'Hidden in Blind' : 'No charges', W2 / 2, H2 / 2);
+      profRead.textContent = blind ? 'Hidden in Blind: work out −ΔV/Δs from your own probe readings.' : '';
+      return;
+    }
+    const n = 240, P = lineProfile(charges, L, L.s0, L.s1, n, profH);
+    const nearQ = (q) => { const x = L.x + q.s * L.ux, y = L.y + q.s * L.uy; return charges.some((c) => c.q && (c.kind ? bodyDist(c, x, y) : Math.hypot(x - c.x, y - c.y)) < 0.35); };
+    const span = (key2) => {   /* a scale that keeps the curve readable: ignore samples next to a charge, include the probe */
+      const v = P.filter((q) => !nearQ(q)).map((q) => Math.abs(q[key2])).sort((a, b) => a - b);
+      let m = v.length ? v[Math.floor(0.97 * (v.length - 1))] : 1;
+      if (onLine) { const pv = Math.abs(key2 === 'V' ? potential(probe.x, probe.y) : (() => { const [ex, ey] = field(probe.x, probe.y); return ex * L.ux + ey * L.uy; })()); m = Math.max(m, pv); }
+      return nice(m * 1.15 || 1);
+    };
+    const short = (v, u) => { const a = Math.abs(v), t = a >= 1e6 ? +(a / 1e6).toPrecision(3) + ' M' : a >= 1e3 ? +(a / 1e3).toPrecision(3) + ' k' : +a.toPrecision(3) + ' '; return (v < 0 ? '−' : '') + t + u; };
+    const panels = [{ k: 'V', y0: top, lab: 'V', fmt: (v) => short(v, 'V'), col: T.pos }, { k: 'Es', y0: top + ph + gap, lab: 'Eₛ', fmt: (v) => short(v, 'V/m'), col: T.field }];
+    for (const pn of panels) {
+      const m = span(pn.k), yv = (v) => pn.y0 + ph / 2 - Math.max(-1.08, Math.min(1.08, v / m)) * ph / 2;
+      ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.strokeRect(padL + 0.5, pn.y0 + 0.5, W2 - padL - padR - 1, ph - 1);
+      ctx.strokeStyle = T.gridStrong; ctx.beginPath(); ctx.moveTo(padL, yv(0)); ctx.lineTo(W2 - padR, yv(0)); ctx.stroke();
+      if (L.s0 < 0 && L.s1 > 0) { ctx.beginPath(); ctx.moveTo(sp(0), pn.y0); ctx.lineTo(sp(0), pn.y0 + ph); ctx.stroke(); }
+      ctx.fillStyle = T.muted; ctx.textAlign = 'right';
+      ctx.fillText(pn.fmt(m), padL - 4, pn.y0 + 6); ctx.fillText(pn.fmt(-m), padL - 4, pn.y0 + ph - 6);
+      ctx.textAlign = 'left'; ctx.fillStyle = pn.col; ctx.fillText(pn.lab, padL + 5, pn.y0 + 9);
+      ctx.save(); ctx.beginPath(); ctx.rect(padL, pn.y0, W2 - padL - padR, ph); ctx.clip();
+      ctx.strokeStyle = pn.col; ctx.lineWidth = 2; ctx.beginPath();
+      let pen = false;
+      for (const q of P) { if (nearQ(q)) { pen = false; continue; } const X = sp(q.s), Y = yv(q[pn.k]); pen ? ctx.lineTo(X, Y) : ctx.moveTo(X, Y); pen = true; }
+      ctx.stroke();
+      if (pn.k === 'Es') {   /* −ΔV/Δs dots every 0.5 cm or so */
+        ctx.fillStyle = T.equi;
+        const every = Math.max(1, Math.round(n * 0.5 / (L.s1 - L.s0)));
+        for (let i = 0; i <= n; i += every) { const q = P[i]; if (nearQ(q)) continue; ctx.beginPath(); ctx.arc(sp(q.s), yv(q.grad), 2.6, 0, 2 * Math.PI); ctx.fill(); }
+      }
+      if (onLine && sProbe >= L.s0 && sProbe <= L.s1) { ctx.strokeStyle = T.accent; ctx.lineWidth = 1.5; ctx.setLineDash([3, 3]); ctx.beginPath(); ctx.moveTo(sp(sProbe), pn.y0); ctx.lineTo(sp(sProbe), pn.y0 + ph); ctx.stroke(); }
+      ctx.restore();
+    }
+    ctx.fillStyle = T.muted; ctx.textAlign = 'center';
+    const tick = (L.s1 - L.s0) > 12 ? 5 : 2;
+    for (let t = Math.ceil(L.s0 / tick) * tick; t <= L.s1; t += tick) ctx.fillText(minus(String(t)), sp(t), H2 - 14);
+    ctx.fillText('s (cm) along ' + L.name, (padL + W2) / 2, H2 - 3);
+    if (!onLine) { profRead.textContent = `The probe is ${off.toFixed(1)} cm off this line.`; return; }
+    const [ex, ey] = field(probe.x, probe.y), Es = ex * L.ux + ey * L.uy;
+    const gr = -(potential(probe.x + profH * L.ux, probe.y + profH * L.uy) - potential(probe.x - profH * L.ux, probe.y - profH * L.uy)) / (2 * profH / 100);
+    profRead.textContent = minus(`At the probe, s = ${nz(+sProbe.toFixed(1)).toFixed(1)} cm:\nEₛ = ${fmtSigned(Es)}\n−ΔV/Δs = ${fmtSigned(gr)} (Δs = ${profH} cm)`);
+  }
+  function nice(m) { const e = Math.pow(10, Math.floor(Math.log10(m))), f = m / e; return (f <= 1 ? 1 : f <= 2 ? 2 : f <= 2.5 ? 2.5 : f <= 5 ? 5 : 10) * e; }
+  const fmtSigned = (v) => (v < 0 && roundE(-v) > 0 ? '−' : '') + fmtE(Math.abs(v));   /* no −0 */
+  for (const b of document.querySelectorAll('#profLine button')) b.addEventListener('click', () => {
+    profLine = b.dataset.l;
+    for (const o of document.querySelectorAll('#profLine button')) o.setAttribute('aria-pressed', String(o === b));
+    profKey = ''; markOver();
+  });
+  for (const b of document.querySelectorAll('#profH button')) b.addEventListener('click', () => {
+    profH = +b.dataset.h;
+    for (const o of document.querySelectorAll('#profH button')) o.setAttribute('aria-pressed', String(o === b));
+    profKey = ''; markOver();
+  });
+  $('profShow').addEventListener('change', markOver);
+  new ResizeObserver(() => { profKey = ''; schedule(); }).observe(profC);
+  function updateProfile() {
+    const axisBtn = document.querySelector('#profLine [data-l="axis"]'), hasB = !!profBody();
+    if (axisBtn.disabled === hasB) axisBtn.disabled = !hasB;
+    if (profLine === 'axis' && !hasB) { profLine = 'x'; for (const o of document.querySelectorAll('#profLine button')) o.setAttribute('aria-pressed', String(o.dataset.l === 'x')); }
+    drawProfile();
+  }
+  function drawProfLine(ctx, T) {   /* the graphed line on the map, when asked for */
+    if (!$('profShow').checked) return;
+    const L = currentLine(), ps = projScale(), [x1, y1] = toPx(L.x + L.s0 * L.ux, L.y + L.s0 * L.uy), [x2, y2] = toPx(L.x + L.s1 * L.ux, L.y + L.s1 * L.uy);
+    ctx.save(); ctx.strokeStyle = T.accent; ctx.globalAlpha = 0.75; ctx.lineWidth = 1.6 * ps; ctx.setLineDash([7 * ps, 5 * ps]);
+    ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke(); ctx.restore();
   }
 
   // ---------- 2D interaction ----------
@@ -1599,7 +1894,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   function hit(p) {
     for (let i = charges.length - 1; i >= 0; i--) {
       const c = charges[i];
-      if (c.kind) { const q = nearestOn(c, p.x, p.y); if (Math.min(Math.hypot(p.x - q[0], p.y - q[1]), Math.hypot(p.x - c.x, p.y - c.y)) * s <= 9 * projScale() + 3) return c; continue; }
+      if (c.kind) { const q = nearestOn(c, p.x, p.y); if (Math.min(Math.hypot(p.x - q[0], p.y - q[1]), c.kind === 'arc' ? Infinity : Math.hypot(p.x - c.x, p.y - c.y)) * s <= 9 * projScale() + 3) return c; continue; }
       if (Math.hypot(p.x - c.x, p.y - c.y) * s <= drawRadius(c) + 4 * projScale()) return c;
     }
     return null;
@@ -1713,8 +2008,9 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     else if (lk === 'p') selectCharge(sel ? null : (lastSel && charges.includes(lastSel) ? lastSel : order()[0]));
     else if (lk === 'c') capture();
     else if (lk === 'r' && sel && sel.kind) {
-      sel.ang = ((sel.ang + (e.shiftKey ? -15 : 15)) % 180 + 180) % 180; setPreset(null);
-      announce(`${KIND_NAME[sel.kind]} turned: ${sel.kind === 'rod' ? 'direction' : 'axis'} ${sel.ang} degrees from +x.`);
+      const per = sel.kind === 'arc' ? 360 : 180;
+      sel.ang = ((sel.ang + (e.shiftKey ? -15 : 15)) % per + per) % per; setPreset(null);
+      announce(`${KIND_NAME[sel.kind]} turned: ${sel.kind === 'rod' || sel.kind === 'arc' ? 'direction' : 'axis'} ${sel.ang} degrees from +x.`);
     }
     else if (view === '3d' && ORBIT_KEYS[lk]) {
       const [dt, dp, z] = ORBIT_KEYS[lk];
@@ -1758,7 +2054,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     const c = mk(Math.round(best.x * 2) / 2, Math.round(best.y * 2) / 2, q);
     charges.push(c); sel = c; setPreset(null); markBase();
   }
-  const BODY_NEW = { rod: [4, 0], ring: [1.5, 90], disk: [1.5, 90] };   /* size (cm) and direction (degrees) of a new body */
+  const BODY_NEW = { rod: [4, 0], ring: [1.5, 90], disk: [1.5, 90], arc: [2, 90] };   /* size (cm) and direction (degrees) of a new body */
   function addBody(kind) {
     if (charges.length >= MAX_CHARGES) return;
     const b = bounds();
@@ -1772,7 +2068,8 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     const [size, ang] = BODY_NEW[kind], c = mkB(kind, Math.round(best.x * 2) / 2, Math.round(best.y * 2) / 2, 2, size, ang);
     charges.push(c); sel = c; lastSel = c; setPreset(null); markBase();
   }
-  for (const k of ['rod', 'ring', 'disk']) $('add' + KIND_NAME[k]).addEventListener('click', () => addBody(k));
+  for (const k of ['rod', 'ring', 'disk', 'arc']) $('add' + KIND_NAME[k]).addEventListener('click', () => addBody(k));
+  $('bodySpan').addEventListener('input', () => { if (sel && sel.kind === 'arc') { sel.span = +$('bodySpan').value; setPreset(null); markBase(); } });
   bodySize.addEventListener('input', () => { if (sel && sel.kind) { sel.size = +bodySize.value; setPreset(null); markBase(); } });
   bodyAng.addEventListener('input', () => { if (sel && sel.kind) { sel.ang = +bodyAng.value; setPreset(null); markBase(); } });
   $('addPos').addEventListener('click', () => addCharge(1));
@@ -1782,7 +2079,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
 
   for (const b of document.querySelectorAll('#presets button')) {
     b.addEventListener('click', () => {
-      charges = PRESETS[b.dataset.p](); sel = null; probe = placed = { x: 0, y: 2.5 };
+      charges = PRESETS[b.dataset.p](); sel = null; probe = placed = Object.assign({ x: 0, y: 2.5 }, PRESET_PROBE[b.dataset.p]);
       setPreset(b.dataset.p); markBase();
     });
   }
@@ -1800,7 +2097,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   function configIndex() {
     const key = chargeKey(charges);
     let i = configs.findIndex((c) => c.key === key);
-    if (i < 0) { configs.push({ key, name: presetName(), charges: order().map((c) => Object.assign({ x: snap01(c.x), y: snap01(c.y), q: c.q }, c.kind ? { kind: c.kind, size: c.size, ang: c.ang } : {})) }); i = configs.length - 1; }
+    if (i < 0) { configs.push({ key, name: presetName(), charges: order().map((c) => Object.assign({ x: snap01(c.x), y: snap01(c.y), q: c.q }, c.kind ? Object.assign({ kind: c.kind, size: c.size, ang: c.ang }, c.kind === 'arc' ? { span: c.span } : {}) : {})) }); i = configs.length - 1; }
     return i + 1;
   }
   function capture() {
@@ -1904,6 +2201,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   function bodyText(c) {
     const q = minus(fmtQ(c.q)) + ' nC', at = posText(c.x, c.y);
     return c.kind === 'rod' ? `a rod of ${q}, ${c.size} cm long, centered at ${at}, pointing ${c.ang}° from +x`
+      : c.kind === 'arc' ? `an arc of ${q}, radius ${c.size} cm, spanning ${c.span}°, lying in the map, centered at ${at}, its middle ${c.ang}° from +x`
       : `a ${c.kind} of ${q}, radius ${c.size} cm, standing perpendicular to the map, centered at ${at}, axis ${c.ang}° from +x`;
   }
   let lastDesc = '';
@@ -1981,12 +2279,12 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   /* Copy link carries the charges and the probe as they are placed (VD.share.picture in demos/lib/vd.js) */
   if (window.VD && VD.share && VD.share.picture) VD.share.picture('q', {
     get: () => { const r = (v) => +(+v).toFixed(3);
-      return VD.share.pack({ c: charges.map((c) => (c.kind ? [r(c.x), r(c.y), r(c.q), c.kind, r(c.size), r(c.ang)] : [r(c.x), r(c.y), r(c.q)])), p: [r(probe.x), r(probe.y)] }); },
+      return VD.share.pack({ c: charges.map((c) => (c.kind ? [r(c.x), r(c.y), r(c.q), c.kind, r(c.size), r(c.ang)].concat(c.kind === 'arc' ? [r(c.span)] : []) : [r(c.x), r(c.y), r(c.q)])), p: [r(probe.x), r(probe.y)] }); },
     set: (str) => {
       const o = VD.share.unpack(str), ok = (v) => typeof v === 'number' && isFinite(v);
       if (!o || !Array.isArray(o.c)) return;
       const cs = o.c.filter((a) => Array.isArray(a) && ok(a[0]) && ok(a[1]) && ok(a[2]) && (a.length < 4 || (KIND_NAME[a[3]] && ok(a[4]) && ok(a[5]))));
-      nextId = 1; charges = cs.map((a) => (a.length > 3 ? mkB(a[3], a[0], a[1], a[2], a[4], a[5]) : mk(a[0], a[1], a[2])));
+      nextId = 1; charges = cs.map((a) => (a.length > 3 ? mkB(a[3], a[0], a[1], a[2], a[4], a[5], ok(a[6]) ? Math.min(360, Math.max(15, a[6])) : 180) : mk(a[0], a[1], a[2])));
       if (Array.isArray(o.p) && ok(o.p[0]) && ok(o.p[1])) probe = { x: o.p[0], y: o.p[1] };
       sel = null; setPreset(null); markBase();
     }
