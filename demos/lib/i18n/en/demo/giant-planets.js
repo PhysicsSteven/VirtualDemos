@@ -2,7 +2,8 @@
 VDI18N.add('en', 'demo/giant-planets', [
 "Mean density (g/cm³)",
 "water, {#}",
-"True sizes and tilts (the angle under each name is its axial tilt). Bands and colors are a painting.",
+"True sizes and tilts (the angle under each name is its axial tilt).",
+"Bands and colors are a painting.",
 "Giant Planets, Rings and Moons",
 "<a><span>←</span> <span>Building a Solar System</span></a><a><span>Rotation and Torque</span> <span>→</span></a>",
 "Jupiter, Saturn, Uranus and Neptune to scale, from NASA's data. See why Saturn would float, why rings lie close to their planets where a moon would be torn apart, how ring particles shear, and how Io, Europa and Ganymede keep step in a {#}:{#}:{#} rhythm whose tides heat Io.",
