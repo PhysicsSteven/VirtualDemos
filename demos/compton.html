@@ -714,7 +714,17 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const c = ctx, box = LY.scene, ps = PS; c.clearRect(box.x, box.y, box.w, box.h);
     const Q = render3(box, s), PC = photonColors(s), sd = S.side, a = sd * S.th;
     c.save(); c.beginPath(); c.rect(box.x, box.y, box.w, box.h); c.clip();
-    const lab = (txt, q, col, al, bl) => { c.font = `600 ${11 * ps}px ${T.mono}`; const hw = c.measureText(txt).width / 2 + 6; const x = Math.max(box.x + hw, Math.min(box.x + box.w - hw, q[0])); label(c, txt, x, q[1], col, al || 'center', bl || 'middle', true); };
+    /* labels step clear of the ones already placed (on a phone the scene is small and they would overlap):
+       a label that sits above its point moves up, any other moves down */
+    const placed = [];
+    const lab = (txt, q, col, al, bl) => {
+      c.font = `600 ${11 * ps}px ${T.mono}`; const hw = c.measureText(txt).width / 2 + 6, h = 16 * ps, up = bl === 'bottom';
+      const x = Math.max(box.x + hw, Math.min(box.x + box.w - hw, q[0])); let y = q[1];
+      const top = () => (up ? y - h : y - h / 2), hit = () => placed.some(r => x - hw < r.x1 && x + hw > r.x0 && top() < r.y1 && top() + h > r.y0);
+      for (let i = 0; i < 6 && hit(); i++) y += up ? -(h + 2) : h + 2;
+      placed.push({ x0: x - hw, x1: x + hw, y0: top(), y1: top() + h });
+      label(c, txt, x, y, col, al || 'center', bl || 'middle', true);
+    };
     lab('X-ray tube, Mo anode', Q([XT, 0, ZB + 0.19]), T.ink, 'center', 'bottom');
     lab('graphite', Q([0, -0.03, ZB + 0.03]), T.ink, 'center', 'bottom');
     lab(`θ = ${fmtDeg(S.th)}`, Q([0.13 * Math.cos(a / 2), 0.13 * Math.sin(a / 2), 0.004]), PC.cout);

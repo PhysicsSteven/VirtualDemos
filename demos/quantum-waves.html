@@ -1653,6 +1653,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.textAlign = 'right'; ctx.fillText('π', cx - r - 3, cy);
     if (W < 360) return;
     ctx.font = `${10.5 * ps}px ${T.mono}`; ctx.fillStyle = T.ink;
+    { const sg = document.querySelector('.wctl'), sr = sg && sg.getBoundingClientRect(), cr = ctx.canvas.getBoundingClientRect();   /* not under the 3D | Flat switch (a phone) */
+      if (sr && sr.width && cx - r - 16 * ps - ctx.measureText('phase of ψ').width < sr.right - cr.left + 6 * ps && cy < sr.bottom - cr.top + 4 * ps) return; }
     ctx.fillText('phase of ψ', cx - r - 16 * ps, cy);
   }
 

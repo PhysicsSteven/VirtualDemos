@@ -56,7 +56,7 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 :root[data-projector="on"] body { font-size: 1.25rem; }
 .bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
 .bar > div:first-child { flex: 1 1 380px; min-width: 0; }
-@media (min-width: 821px) { .bar .bar-right { max-width: 56%; flex-wrap: nowrap; justify-content: flex-end; } .bar-right .units { text-align: right; } :root[data-projector="on"] .bar .bar-right { max-width: 44%; } }
+@media (min-width: 821px) { .bar .bar-right { max-width: 56%; flex-wrap: wrap; justify-content: flex-end; }   /* wraps rather than spill over the title (2026-11-07) */ .bar-right .units { text-align: right; } :root[data-projector="on"] .bar .bar-right { max-width: 44%; } }
 .units .nw { white-space: nowrap; }
 .bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .units { color: var(--muted); font-size: 0.8rem; }

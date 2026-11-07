@@ -552,6 +552,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const st = G3.st; st.size(W, H);
     const isVel = S.view === 'vel'; G3.vel.visible = isVel; G3.en.visible = !isVel;
     if (isVel) {
+      st.theme(); /* theme first: render() reapplies the page background whenever the theme key changes */
       st.scene.background = new THREE.Color('#05080f'); st.scene.fog = null;
       const h = S.vel, t = h.t, v = rocketV(), u = probeU(), pg = gateTimes(u), rg = gateTimes(v), xr = MARK + v * t, xp = MARK + u * t;
       const lit = [(pg && Math.abs(t - pg.tA) < 0.25) || (rg && Math.abs(t - rg.tA) < 0.25), (pg && Math.abs(t - pg.tB) < 0.25) || (rg && Math.abs(t - rg.tB) < 0.25)];
