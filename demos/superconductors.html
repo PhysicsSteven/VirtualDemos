@@ -36,7 +36,7 @@
 .setup-card .fine { display: flex; gap: 6px; align-items: center; margin-top: 4px; }
 .setup-card .fine input[type="number"] { width: 90px; font: inherit; font-size: 0.85rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 3px 6px; }
 .setup-card .fine span { font-size: 0.8rem; color: var(--muted); }
-@media (min-width: 821px) { .stage { min-height: 700px; } }
+@media (min-width: 821px) { .bench > .stage { align-self: start; min-height: max(700px, 100%); } :root[data-projector="on"] .bench > .stage { min-height: max(440px, 100%); } }   /* the stage grows with its controls on a short window (a fixed height cut them off) and still fills a tall one */
 @media (max-width: 820px) { .scene { min-height: 0; height: 400px; flex: none; } .setup-card { position: static; width: auto; margin: 8px; } .plotbox { height: 210px; } }
 </style>
 <link rel="stylesheet" id="vd-look" href="lib/look.css">
