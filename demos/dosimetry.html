@@ -1075,7 +1075,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function sync() {
     $('sE').value = sliderFromE(S.E); $('oE').textContent = `${f(S.E, 3)} MeV`;
     ensureKernel(); const zm = zMax(); $('sZ').value = Math.min(1, S.z / zm); $('oZ').textContent = `${f(S.z, 3)} cm`;
-    $('selRange').value = S.range; $('selPhi').value = String(S.phi); $('chkMC').checked = S.mcOn;
+    $('selRange').value = S.range; $('selPhi').value = [...$('selPhi').options].find(x => +x.value === S.phi)?.value ?? '';  /* String(1e10) is '10000000000', not the option's '1e10' */ $('chkMC').checked = S.mcOn;
     for (const b of document.querySelectorAll('#boxKerma .chips button')) b.setAttribute('aria-pressed', String(Math.abs(+b.dataset.e - S.E) < 1e-6));
     $('selBeamC').value = S.beamC; $('boxPulse').hidden = S.beamC !== 'proton'; $('boxRate').hidden = S.beamC === 'proton';
     $('sDpp').value = S.dpp; $('oDpp').textContent = `${f(S.dpp, 1)} mGy`; $('sRate').value = S.rate; $('oRate').textContent = `${f(S.rate, 1)} Gy/min`;

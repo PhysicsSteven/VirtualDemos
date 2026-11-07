@@ -746,7 +746,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function fe3Labels() {
     const F = G3.fe, g = S.fe.g, zt = FZ0 + F.h + TW3 + 0.012;
     let q = at3([FX0 + F.w / 4, 0, zt], -12); tag('left half', q[0], q[1], { w: 400 }); q = at3([FX0 + 3 * F.w / 4, 0, zt], -12); tag('right half', q[0], q[1], { w: 400 });
-    q = at3([F.cx, 0, zt + (g.wall ? 0.02 : F.h * 0.86 + 0.03)], -12); tag(g.wall ? 'partition' : 'partition removed', q[0], q[1], { w: 700 });
+    const qL = q.slice(0); q = at3([F.cx, 0, zt + (g.wall ? 0.02 : F.h * 0.86 + 0.03)], -12);
+    /* a small picture (a phone) puts the three labels side by side in too little room: lift the partition label above the halves */
+    { const pp = proj(), pt = g.wall ? 'partition' : 'partition removed'; ctx.save(); ctx.font = `700 ${11 * pp}px ${T.ui}`; const wc = ctx.measureText(pt).width; ctx.font = `400 ${11 * pp}px ${T.ui}`; const wl = ctx.measureText('right half').width; ctx.restore();
+      if (Math.abs(q[0] - qL[0]) < (wc + wl) / 2 + 16 * pp) q[1] = Math.min(q[1], qL[1]) - 20 * pp; }
+    tag(g.wall ? 'partition' : 'partition removed', q[0], q[1], { w: 700 });
     q = at3([F.cx, -F.od / 2 - 0.02, 0], 14); tag(`${g.N} molecules; insulated box, no heat in or out`, q[0], q[1], { w: 400 });
   }
 

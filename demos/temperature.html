@@ -513,7 +513,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.save(); ctx.fillStyle = T.hot; ctx.shadowColor = T.hot; ctx.shadowBlur = 6 * p;
     for (const tb of eqFlow.dots) { const u = (e.t - tb) / travel, x = dir > 0 ? xa + u * (xb - xa) : xb - u * (xb - xa); ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fill(); }
     ctx.restore();
-    if (VG && Math.abs(st.P) > 1e-6) VG.label(ctx, `each dot carries ${fmtJ(eqFlow.Ep)} · ${eqFlow.sent} have left ${dir > 0 ? 'A' : 'B'}`, (xa + xb) / 2, y - br - 44 * p, { a: 'center', s: 10 * p, c: T.hot });
+    if (VG && Math.abs(st.P) > 1e-6) {
+      /* translated whole, then split at the dot when it is wider than the gap between the blocks (a phone) */
+      const s = `each dot carries ${fmtJ(eqFlow.Ep)} · ${eqFlow.sent} have left ${dir > 0 ? 'A' : 'B'}`, tr = window.VDI18N ? VDI18N.t(s) : s;
+      ctx.save(); ctx.font = `600 ${10 * p}px ${T.ui}`; const wide = ctx.measureText(tr).width > Math.abs(xb - xa) + 40 * p; ctx.restore();
+      const parts = wide ? tr.split(' · ') : [tr], y0 = y - br - 44 * p - (parts.length - 1) * 13 * p;
+      const draw = () => parts.forEach((t, i) => VG.label(ctx, t, (xa + xb) / 2, y0 + i * 13 * p, { a: 'center', s: 10 * p, c: T.hot }));
+      if (window.VDI18N) VDI18N.raw(draw); else draw();
+    }
   }
   /* Energy chunks: each block's thermal energy, counted from 0 °C (a choice: only changes matter), drawn as dots of one size. The two
      counts are rounded from C_A T_A and C_B T_B; their sum stays the same (to the rounding) because the box lets no heat in or out. */
