@@ -322,8 +322,8 @@ VDI18N.add('es', 'demo/seasons', {
   "reloj de sol {#}:{#}:{#}",
 "{#} Feb {#}":
   "{#} feb {#}",
-"Earth's real orbit is an ellipse and its axis is tilted, so the Sun's daily step against the stars is not the same all year. A sundial runs fast or slow against a clock by up to about {#} minutes, and solar days in December are about {#} seconds longer than in September.":
-  "La órbita real de la Tierra es una elipse y su eje está inclinado, así que el paso diario del Sol respecto a las estrellas no es igual todo el año. Un reloj de sol se adelanta o se atrasa respecto a un reloj hasta unos {#} minutos, y los días solares de diciembre son unos {#} segundos más largos que los de septiembre.",
+"Earth's real orbit is an ellipse and its axis is tilted, so the Sun's daily step against the stars is not the same all year. A sundial runs fast or slow against a clock by up to about {#} minutes, and solar days in December are about {#} seconds longer than {#} hours, while in September they are about {#} seconds shorter.":
+  "La órbita real de la Tierra es una elipse y su eje está inclinado, así que el paso diario del Sol respecto a las estrellas no es igual todo el año. Un reloj de sol se adelanta o se atrasa respecto a un reloj hasta unos {#} minutos, y los días solares de diciembre duran unos {#} segundos más de {#} horas, mientras que en septiembre duran unos {#} segundos menos.",
 "Earth's orbit and tilt":
   "Órbita e inclinación de la Tierra",
 "Date (noon UT)":
@@ -447,5 +447,7 @@ VDI18N.add('es', 'demo/seasons', {
 "{#} h {#} m <small>polar night</small>":
   "{#} h {#} min <small>noche polar</small>",
 "time {#} h ({#} days)":
-  "tiempo {#} h ({#} días)"
+  "tiempo {#} h ({#} días)",
+"Earth's real orbit is an ellipse and its axis is tilted, so the Sun's daily step against the stars is not the same all year. A sundial runs fast or slow against a clock by up to about {#} minutes, and solar days in December are about {#} seconds longer than in September.":
+  "La órbita real de la Tierra es una elipse y su eje está inclinado, así que el paso diario del Sol respecto a las estrellas no es igual todo el año. Un reloj de sol se adelanta o se atrasa respecto a un reloj hasta unos {#} minutos, y los días solares de diciembre son unos {#} segundos más largos que los de septiembre."
 });

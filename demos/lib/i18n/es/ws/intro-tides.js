@@ -42,8 +42,8 @@ VDI18N.add('es', 'ws/intro-tides', {
   "La mayoría de las costas tienen dos mareas altas al día, no una. Supón por qué el lado de la Tierra opuesto a la Luna también tiene marea alta.",
 "No hazards in the virtual lab. At a real beach, check the tide table before walking out on tidal flats: the water can come in faster than you can walk.":
   "No hay peligros en el laboratorio virtual. En una playa real, consulta la tabla de mareas antes de caminar por las planicies de marea: el agua puede llegar más rápido de lo que puedes caminar.",
-"<strong>Part {#}: pull and tidal pull.</strong> In the Pull on Earth view, record a reading with the Moon at {#}, {#} (today), {#} and {#} Earth radii. Send the readings to the worksheet.":
-  "<strong>Parte {#}: atracción y atracción de marea.</strong> En la vista Atracción sobre la Tierra, registra una lectura con la Luna a {#}, {#} (hoy), {#} y {#} radios terrestres. Envía las lecturas a la hoja de trabajo.",
+"<strong>Part {#}: pull and tidal pull.</strong> In the Pull on Earth view, record a reading with the Moon at {#} Earth radii, at today’s distance ({#} Earth radii, {#} km), and at {#} and {#} Earth radii. Send the readings to the worksheet.":
+  "<strong>Parte {#}: atracción y atracción de marea.</strong> En la vista Atracción sobre la Tierra, registra una lectura con la Luna a {#} radios terrestres, a la distancia de hoy ({#} radios terrestres, {#} km) y a {#} y {#} radios terrestres. Envía las lecturas a la hoja de trabajo.",
 "<strong>Part {#}: the Moon and the Sun.</strong> Put the Moon back at today’s distance and switch to the Ocean bulges view. Write down the height of the Moon’s tide and of the Sun’s tide in the notes. Include the Sun’s tide, then read the day’s range at new moon ({#} days), first quarter ({#} days), full moon ({#} days) and third quarter ({#} days), and fill in the second table.":
   "<strong>Parte {#}: la Luna y el Sol.</strong> Regresa la Luna a la distancia actual y cambia a la vista Abultamientos del océano. Anota en las notas la altura de la marea de la Luna y de la marea del Sol. Incluye la marea del Sol, luego lee el intervalo del día en luna nueva ({#} días), cuarto creciente ({#} días), luna llena ({#} días) y cuarto menguante ({#} días), y llena la segunda tabla.",
 "<strong>Part {#}: the timing.</strong> Leave out the Sun’s tide again, then find the times of three high tides in a row at the city and write them in the notes.":
@@ -106,6 +106,8 @@ VDI18N.add('es', 'ws/intro-tides', {
   "Respuestas del prelaboratorio, las dos tablas de datos con las alturas de las mareas y las horas de las mareas altas en las notas, las respuestas de las secciones de análisis e incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Tides":
   "Mareas",
+"<strong>Part {#}: pull and tidal pull.</strong> In the Pull on Earth view, record a reading with the Moon at {#}, {#} (today), {#} and {#} Earth radii. Send the readings to the worksheet.":
+  "<strong>Parte {#}: atracción y atracción de marea.</strong> En la vista Atracción sobre la Tierra, registra una lectura con la Luna a {#}, {#} (hoy), {#} y {#} radios terrestres. Envía las lecturas a la hoja de trabajo.",
 "<strong>Part {#}: the timing.</strong> With the Sun’s tide left out, find the times of three high tides in a row at the city and write them in the notes.":
   "<strong>Parte {#}: los tiempos.</strong> Sin la marea del Sol, encuentra las horas de tres mareas altas seguidas en la ciudad y escríbelas en las notas."
 });

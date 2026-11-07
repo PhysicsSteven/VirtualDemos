@@ -41,7 +41,7 @@ No hazards in the virtual lab. At a real beach, check the tide table before walk
 
 ## Procedure
 
-**Part 1: pull and tidal pull.** In the Pull on Earth view, record a reading with the Moon at 40, 60.34 (today), 80 and 120 Earth radii. Send the readings to the worksheet.
+**Part 1: pull and tidal pull.** In the Pull on Earth view, record a reading with the Moon at 40 Earth radii, at today's distance (60.34 Earth radii, 384,400 km), and at 80 and 120 Earth radii. Send the readings to the worksheet.
 
 **Part 2: the Moon and the Sun.** Put the Moon back at today's distance and switch to the Ocean bulges view. Write down the height of the Moon's tide and of the Sun's tide in the notes. Include the Sun's tide, then read the day's range at new moon (0 days), first quarter (7.38 days), full moon (14.77 days) and third quarter (22.15 days), and fill in the second table.
 

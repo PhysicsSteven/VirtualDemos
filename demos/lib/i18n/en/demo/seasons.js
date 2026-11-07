@@ -161,7 +161,7 @@ VDI18N.add('en', 'demo/seasons', [
 "clock {#}:{#}:{#}",
 "sundial {#}:{#}:{#}",
 "{#} Feb {#}",
-"Earth's real orbit is an ellipse and its axis is tilted, so the Sun's daily step against the stars is not the same all year. A sundial runs fast or slow against a clock by up to about {#} minutes, and solar days in December are about {#} seconds longer than in September.",
+"Earth's real orbit is an ellipse and its axis is tilted, so the Sun's daily step against the stars is not the same all year. A sundial runs fast or slow against a clock by up to about {#} minutes, and solar days in December are about {#} seconds longer than {#} hours, while in September they are about {#} seconds shorter.",
 "Earth's orbit and tilt",
 "Date (noon UT)",
 "Sundial against the clock",

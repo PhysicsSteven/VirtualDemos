@@ -65,7 +65,7 @@ No hazards in the virtual lab.
 
 1. Part 1: compare the distance from your ruler with the demo's distance for each star. Change each distance into light years (1 pc = 3.26 light years). Proxima Centauri is the nearest star to the Sun: how long does its light take to reach us?
 2. Part 2: fill in the last column, 1 ÷ d, for the eight readings of Part 1 and Part 2. Graph the parallax p (mas) against 1 ÷ d. Is it a straight line through the origin? What is its slope, and what does that number mean? (Hint: what parallax would a star at 1 pc have?)
-3. Part 3: the uncertainty in p stays the same while p shrinks as 1 ÷ d, so the uncertainty in the distance grows in step with the distance: ten times farther, ten times the uncertainty. For each instrument, use one of your readings to work out the distance at which its uncertainty is 10 %. That is how far each instrument can reach with good distances.
+3. Part 3: the uncertainty in p stays the same while p shrinks as 1 ÷ d, so the uncertainty in the distance grows in step with the distance: ten times farther, ten times the uncertainty. For each instrument, use one of your readings to work out the distance at which its uncertainty is 10 %. Ground's readings say not measurable, so for Ground use the distance uncertainty the demo shows at 100 pc. That is how far each instrument can reach with good distances.
 4. The Sun is about 8 kpc from the center of our galaxy, and the galaxy's disk is about 30 kpc across. Which instrument can measure parallax distances across a good part of the galaxy? Can any of them reach another galaxy, such as Andromeda, about 2.5 million light years (770 kpc) away? What does this tell you about why astronomers need the other rungs of the distance ladder?
 
 ## Uncertainty

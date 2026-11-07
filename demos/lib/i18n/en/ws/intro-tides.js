@@ -21,7 +21,7 @@ VDI18N.add('en', 'ws/intro-tides', [
 "The Sun pulls on Earth about {#} times harder than the Moon does. Guess: is the Sun’s tide bigger or smaller than the Moon’s?",
 "Most coasts have two high tides a day, not one. Guess why the side of Earth facing away from the Moon also has a high tide.",
 "No hazards in the virtual lab. At a real beach, check the tide table before walking out on tidal flats: the water can come in faster than you can walk.",
-"<strong>Part {#}: pull and tidal pull.</strong> In the Pull on Earth view, record a reading with the Moon at {#}, {#} (today), {#} and {#} Earth radii. Send the readings to the worksheet.",
+"<strong>Part {#}: pull and tidal pull.</strong> In the Pull on Earth view, record a reading with the Moon at {#} Earth radii, at today’s distance ({#} Earth radii, {#} km), and at {#} and {#} Earth radii. Send the readings to the worksheet.",
 "<strong>Part {#}: the Moon and the Sun.</strong> Put the Moon back at today’s distance and switch to the Ocean bulges view. Write down the height of the Moon’s tide and of the Sun’s tide in the notes. Include the Sun’s tide, then read the day’s range at new moon ({#} days), first quarter ({#} days), full moon ({#} days) and third quarter ({#} days), and fill in the second table.",
 "<strong>Part {#}: the timing.</strong> Leave out the Sun’s tide again, then find the times of three high tides in a row at the city and write them in the notes.",
 "<span>B</span>Moon’s distance (Earth radii)",

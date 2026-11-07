@@ -6,11 +6,11 @@ Student worksheet · Astro 2203
 <details class="about" markdown="1">
 <summary>About the demo</summary>
 
-**Setups in the demo:** Our solar nebula; Slow spin; Fast spin; No spin; Frost line, today's Sun; Frost line, bright young Sun; Minimum mass disk; Three times heavier disk; Gas gone early; Early planetesimal melts; Late planetesimal stays solid; Small planetesimal stays solid; Vesta sized.
+**Setups in the demo:** The whole story; Follow Earth; Follow Jupiter; Our solar nebula; Slow spin; Fast spin; No spin; Frost line, today's Sun; Frost line, bright young Sun; Minimum mass disk; Three times heavier disk; Gas gone early; Early planetesimal melts; Late planetesimal stays solid; Small planetesimal stays solid; Vesta sized.
 
 **Using the demo.**
 
-- The demo tells the story in four stages, chosen along the top of the picture: 1 Collapse, 2 Frost line, 3 Planets grow and 4 Iron cores. Each setup opens its own stage. Every stage has a 3D view (drag to turn it) and a Flat view with graphs.
+- The demo opens on The whole story, which plays every step for one cloud, from the collapse to the giant impact that made the Moon (Follow Earth and Follow Jupiter keep one planet's material in view). It records no readings. The four stages beside it along the top of the picture, 1 Collapse, 2 Frost line, 3 Planets grow and 4 Iron cores, are where you take readings. Each of the other setups opens its own stage. Every stage has a 3D view (drag to turn it) and a Flat view with graphs.
 - **Collapse.** A cloud of gas, shown as 1400 parcels, falls toward the young Sun at its center. One parcel at the cloud's edge, on its equator, is tracked with an orange ring. The readouts give its distance from the spin axis and how long it takes to go around once. The run ends when every parcel has landed in the disk or fallen onto the Sun; To the end skips ahead.
 - **Frost line.** The disk's temperature at each distance from the Sun, and the solids that can form there. Drag the orange probe (or use its slider) to read the temperature at a distance. The Sun's brightness can be changed.
 - **Planets grow.** 900 planetesimals spread through the disk join into bigger bodies over 100 million years. Brown bodies are rocky, blue ones are icy, and gold rings mark giant planets: cores that reached 10 Earth masses while the disk still had gas. The Flat view plots each body's mass against its distance, with today's planets as gray circles.
@@ -45,6 +45,8 @@ Follow the steps that turned a cloud of gas and dust into our solar system, and 
 No hazards in the virtual lab.
 
 ## Procedure
+
+The demo opens on The whole story. Watch it once to see where each part fits, then choose the setup each part names before you record.
 
 **Part 1: Collapse.** Choose Our solar nebula, let the collapse finish and record a reading of the tracked parcel. Repeat with Slow spin and with Fast spin (the same cloud turning once every 16 and every 2 million years). Then watch No spin and note what happens. Send the three readings to the worksheet and clear them.
 
