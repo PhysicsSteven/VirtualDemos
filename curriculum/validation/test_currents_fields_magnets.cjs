@@ -46,4 +46,20 @@ group('electromagnet: slow AC supply I₀ sin 2πft', () => {
   near(c.acCurrent(2, 0.5, 0.5), 2, 1e-12, 'peak a quarter period in'); assert(Math.abs(c.acCurrent(2, 0.5, 1)) < 1e-12); near(c.acCurrent(2, 0.5, 1.5), -2, 1e-12, 'reversed half a period later');
   near(c.coilI({ I: 3, It: -1 }), -1, 1e-12); near(c.coilI({ I: 3 }), 3, 1e-12); near(c.fieldI({ I: 3, It: -1, Ieff: -9 }), -9, 1e-12);
 });
+group('one helix: Biot–Savart along the wire matches the rings inside and circles like a straight wire outside', () => {
+  const h = core('currents-fields', 'MU0,helixPts,helixBAt,helixB,helixAround,finiteWireB,axisExact,traceLine3');
+  const sol = { N: 30, L: 24, R: 3, I: 5 }, H = h.helixPts(sol);
+  // in the middle the helix and the rings agree to 1 part in 10⁴ (the rings sit where the helix crosses each z_k)
+  near(h.helixBAt(H, 0, 0, 0)[2], h.axisExact(sol, 0), 1e-4, 'center');
+  // a single turn with no pitch is a loop: μ₀I/(2R)
+  near(h.helixB({ N: 1, L: 1e-9, R: 4, I: 5 }, 0, 0, 0)[2], h.MU0 * 5 / (2 * 0.04), 1e-9, 'one turn');
+  // outside, beside the middle, the average circling field is that of the wire's net current I along the coil, within 1 %
+  near(h.helixAround(H, 6, 48), h.finiteWireB(5, 24, 6), 0.01, 'circling field at 2R');
+  // reversing the current reverses everything
+  near(h.helixB({ ...sol, I: -5 }, 1, 0.5, 2)[0], -h.helixB(sol, 1, 0.5, 2)[0], 1e-12, 'reverse');
+  // a field line started on the axis stays near the axis inside the coil and leaves through the ends
+  const L = h.traceLine3((x, y, z) => h.helixBAt(H, x, y, z), [0, 0, 0], 0.3, 400, [12, 12, 21], null);
+  assert(L[0][2] < -20 && L[L.length - 1][2] > 20, 'leaves through both ends');
+  for (const p of L) if (Math.abs(p[2]) < 9) assert(Math.hypot(p[0], p[1]) < 0.1, 'near the axis: ' + p);
+});
 console.log(`${n} currents fields magnets test groups passed`);

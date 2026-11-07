@@ -1216,7 +1216,7 @@
     {
      "demo": "magnetic-force",
      "title": "Charges in Magnetic Fields",
-     "desc": "Launch protons, electrons and alphas into a magnetic field and watch them circle at a period that doesn't depend on speed. Build a velocity selector, a mass spectrometer that separates neon isotopes, and a cyclotron.",
+     "desc": "Launch protons, electrons and alphas into a magnetic field and watch them circle at a period that doesn't depend on speed. Build a velocity selector, a mass spectrometer that separates neon isotopes and a cyclotron, trap protons in a magnetic bottle, and watch the Hall voltage build up in a strip.",
      "tags": [
       "magnetic force",
       "cyclotron frequency",

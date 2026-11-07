@@ -174,4 +174,87 @@ test('Hall effect strip: V_H = IB/(nqt), sign from the carriers, balance of forc
   assert(H.HALL.nge.q === -1 && H.HALL.pge.q === 1 && H.HALL.cu.q === -1);
 });
 
+// ---- magnetic bottle ----
+const MB = core('magnetic-force', 'MU0,PARTICLES,QE,ellipKE,ringBrz,bottleB,bottleAxisB,bottleNI,bottleLine,bottleMirror,borisStep,bottleRun,magMoment,bottleLaunch');
+
+test('one ring: the elliptic integral field matches the axis formula, the far dipole field and a direct Biot–Savart sum', () => {
+  const a = 0.06, I = 1000;
+  for (const z of [0, 0.03, 0.1]) near(MB.ringBrz(a, I, 0, z)[1], MB.MU0 * I * a * a / (2 * Math.pow(a * a + z * z, 1.5)), 1e-12, 'axis');
+  // just off the axis the series branch and the elliptic branch agree
+  const s1 = MB.ringBrz(a, I, 1e-9, 0.04), s2 = MB.ringBrz(a, I, 2e-3, 0.04);
+  near(s1[1], MB.MU0 * I * a * a / (2 * Math.pow(a * a + 0.0016, 1.5)), 1e-9);
+  // direct sum of Idl × r̂/r² over 20,000 pieces of the ring at a general point
+  const bs = (r, z) => { let bx = 0, bz = 0; const n = 20000; for (let k = 0; k < n; k++) { const ph = 2 * Math.PI * (k + 0.5) / n, dl = 2 * Math.PI * a / n;
+    const lx = -Math.sin(ph) * dl, ly = Math.cos(ph) * dl, Rx = r - a * Math.cos(ph), Ry = -a * Math.sin(ph), Rz = z, R3 = Math.pow(Rx * Rx + Ry * Ry + Rz * Rz, 1.5);
+    bx += (ly * Rz - 0) / R3; bz += (lx * Ry - ly * Rx) / R3; } return [MB.MU0 * I / (4 * Math.PI) * bx, MB.MU0 * I / (4 * Math.PI) * bz]; };
+  for (const [r, z] of [[0.02, 0.03], [0.05, -0.01], [0.09, 0.07]]) { const e1 = MB.ringBrz(a, I, r, z), e2 = bs(r, z); near(e1[0], e2[0], 1e-6, 'Br'); near(e1[1], e2[1], 1e-6, 'Bz'); }
+  // far away it is a dipole, Bz = μ₀m/(2πz³) on the axis with m = Iπa²
+  near(MB.ringBrz(a, I, 0, 5)[1], MB.MU0 * I * Math.PI * a * a / (2 * Math.PI * 125), 3e-4);   /* (1 + a²/z²)^(−3/2) = 1 − 2.2 × 10⁻⁴ */
+});
+
+test('the bottle: ampere turns give the chosen B at the center, the field is symmetric, and the mirror ratio follows the axis', () => {
+  const a = 0.06, s = 0.2, NI = MB.bottleNI(a, s, 0.1), c = { a, s, NI };
+  near(MB.bottleB(c, 0, 0, 0)[2], 0.1, 1e-12);
+  near(MB.bottleAxisB(c, 0.1) / MB.bottleAxisB(c, 0), 3.7577, 1e-3, 'axis mirror ratio');   /* (1/a + a²/(a²+s²)^1.5)/(2a²/(a²+s²/4)^1.5) worked by hand */
+  const b1 = MB.bottleB(c, 0.02, 0.01, 0.05), b2 = MB.bottleB(c, 0.02, 0.01, -0.05);
+  near(b1[2], b2[2], 1e-12); near(b1[0], -b2[0], 1e-12);
+  const m = MB.bottleMirror(c, 0, 0, Math.PI / 4);
+  near(m.ratio, MB.bottleAxisB(c, 0.1) / 0.1, 2e-3, 'line on the axis');
+  near(Math.sin(m.lossCone) ** 2, 1 / m.ratio, 1e-12);
+});
+
+test('Boris steps keep the speed exactly and close a circle in a uniform field after one period', () => {
+  const p = MB.PARTICLES.p, st = { x: 0, y: 0, z: 0, vx: 1e5, vy: 0, vz: 2e4 }, B = [0, 0, 0.1], w = p.q * 0.1 / p.m, n = 2000, dt = 2 * Math.PI / w / n;
+  /* the Boris rotation angle is 2 atan(ω dt/2), so it closes after n steps at the angle-corrected period */
+  const dtc = 2 * Math.tan(Math.PI / n) / w;
+  for (let i = 0; i < n; i++) MB.borisStep(st, p.q / p.m, dtc, B);
+  near(Math.hypot(st.vx, st.vy, st.vz), Math.hypot(1e5, 2e4), 1e-13, 'speed');
+  near(st.vx, 1e5, 1e-9); assert(Math.abs(st.vy) < 1e-6 * 1e5);
+  assert(Math.abs(st.x) < 1e-6 * 0.0104 && Math.abs(st.y) < 1e-6 * 0.0104, `closes: ${st.x}, ${st.y}`);
+  near(st.z, 2e4 * n * dtc, 1e-12);
+  void dt;
+});
+
+test('a proton outside the loss cone is trapped and keeps μ; inside it escapes; with too weak a field μ breaks down', () => {
+  const p = MB.PARTICLES.p, a = 0.06, s = 0.2, mk = (B0) => ({ a, s, NI: MB.bottleNI(a, s, B0) }), c = mk(0.2);
+  const lc = MB.bottleMirror(c, 0, 0, 1).lossCone;
+  near(lc * 180 / Math.PI, 31.1, 0.01, 'loss cone on the axis');
+  const v = 1e5, muRange = (R, cc) => { let lo = Infinity, hi = 0; for (let i = 0; i < R.P.length; i += 5) { const q = R.P[i], B = MB.bottleB(cc, q[0], q[1], q[2]), mu = MB.magMoment(p.m, { vx: q[3], vy: q[4], vz: q[5] }, B) / R.mu0; lo = Math.min(lo, mu); hi = Math.max(hi, mu); } return [lo, hi]; };
+  // the Bottle preset: 0.2 T, 50°: Larmor radius 4 mm against a 6 cm coil
+  const R1 = MB.bottleRun(c, p, MB.bottleLaunch(c, 0, v, 50 * Math.PI / 180), 400000); R1.extend(40e-6);
+  assert(!R1.ended, 'trapped run ended: ' + R1.endTag); assert(R1.turns.length >= 15, 'bounces ' + R1.turns.length);
+  let vmax = 0, vmin = Infinity; for (const q of R1.P) { const sp = Math.hypot(q[3], q[4], q[5]); vmax = Math.max(vmax, sp); vmin = Math.min(vmin, sp); }
+  assert((vmax - vmin) / v < 1e-12, 'speed kept');
+  const [lo, hi] = muRange(R1, c); assert(lo > 0.97 && hi < 1.03, `μ kept within 3 %: ${lo} to ${hi}`);
+  // the turning points sit at the mirror points of the field line, where B = B0/sin²α
+  const mm = MB.bottleMirror(c, 0, 0, 50 * Math.PI / 180);
+  for (const tp of R1.turns.slice(0, 8)) near(Math.abs(tp.z), mm.zm[1], 0.015, 'mirror point');
+  // inside the loss cone it leaves through a coil
+  const R2 = MB.bottleRun(c, p, MB.bottleLaunch(c, 0, v, 20 * Math.PI / 180), 400000); R2.extend(40e-6);
+  assert(R2.ended && R2.endTag === 'escaped', 'inside the loss cone: ' + R2.endTag);
+  // at 0.05 T the orbit is 1.6 cm across against a 6 cm coil: μ is not kept, and the same 50° proton leaks out
+  const c3 = mk(0.05), R3 = MB.bottleRun(c3, p, MB.bottleLaunch(c3, 0, v, 50 * Math.PI / 180), 400000); R3.extend(40e-6);
+  assert(MB.bottleMirror(c3, 0, 0, 50 * Math.PI / 180).trapped, 'mirror theory says trapped');
+  assert(R3.ended && R3.endTag === 'escaped', 'nonadiabatic leak: ' + R3.endTag);
+});
+
+test('Hall build up: relaxation time ε/σ, Hall angle μB, sideways velocity vanishes in the steady state', () => {
+  const H = core('magnetic-force', 'QE,EPS0,HALL,hallSigma,hallTau,hallBuild,hallAngle,hallCarrierVel,hallVoltage');
+  // copper: σ = 1/ρ, so μ = 1/(ρne) = 4.38 × 10⁻³ m²/V·s
+  near(H.hallSigma(H.HALL.cu), 1 / 1.678e-8, 1e-12); near(H.HALL.cu.mu, 4.3816e-3, 1e-4);
+  // n-type germanium: σ = 10²¹ × e × 0.39 = 62.48 S/m, τ = 16 ε₀/σ = 2.267 ps
+  near(H.hallSigma(H.HALL.nge), 62.4849, 1e-5); near(H.hallTau(H.HALL.nge), 2.2672e-12, 1e-4);
+  near(H.hallAngle(0.39, 0.3) * 180 / Math.PI, 6.67327, 1e-5);   /* atan(0.117) */
+  near(H.hallBuild(1), 1 - Math.exp(-1), 1e-15);
+  for (const k of ['cu', 'nge', 'pge']) {
+    const M = H.HALL[k], I = 0.02, Bz = -0.3, t = 1e-3, v0 = H.hallCarrierVel(M, I, Bz, t, 0), v1 = H.hallCarrierVel(M, I, Bz, t, 1);
+    assert(Math.abs(v1[1]) < 1e-12 * Math.abs(v1[0]), 'no sideways drift in the steady state');
+    near(Math.abs(v0[1] / v0[0]), Math.tan(H.hallAngle(M.mu, Bz)), 1e-12, 'Hall angle at the start');
+    // the final field E_y = v_d B_z gives the Hall voltage V_top − V_bottom = −E_y w
+    near(-(v1[0] * Bz) * H.HALL.w, H.hallVoltage(I, Bz, M.n, M.q * H.QE, t), 1e-12);
+    // carriers are pushed toward the edge that ends up charged with their own sign: v_y and the final E_y force q E_y oppose
+    assert(Math.sign(v0[1]) === -Math.sign(M.q * v1[0] * Bz) || M.q * v1[0] * Bz === 0);
+  }
+});
+
 console.log(`${count} magnetic-force test groups passed`);

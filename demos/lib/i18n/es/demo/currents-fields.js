@@ -6,6 +6,8 @@ VDI18N.add('es', 'demo/currents-fields', {
   "Alambres largos y rectos, vistos de punta · cuadrícula {#} cm",
 "out":
   "sale",
+"in":
+  "entra",
 "Magnetic Fields of Currents":
   "Campos magnéticos de corrientes",
 "<a>Magnetic forces and fields</a>":
@@ -122,6 +124,14 @@ VDI18N.add('es', 'demo/currents-fields', {
   "Frecuencia de CA (ralentizada)",
 "Iron core in the coil":
   "Núcleo de hierro en la bobina",
+"<span>Winding in 3D</span>":
+  "<span>Devanado en 3D</span>",
+"Winding in the 3D view":
+  "Devanado en la vista 3D",
+"Separate rings":
+  "Anillos separados",
+"One helix":
+  "Una hélice",
 "Turns per length n = N/L":
   "Vueltas por unidad de longitud n = N/L",
 "{#} per m":
@@ -238,8 +248,12 @@ VDI18N.add('es', 'demo/currents-fields', {
   "z = {#} cm, ρ = {#} cm · {#}° desde +z",
 "B<sub>center</sub> = {#} µT <small>μ₀nI = {#} µT</small>":
   "B<sub>center</sub> = {#} µT <small>μ₀nI = {#} µT</small>",
+"Near half of each turn drawn faint · drag to turn the view":
+  "La mitad cercana de cada vuelta se dibuja tenue · arrastra para girar la vista",
 "One long straight wire with its current out of the page. The field lines are circles, counterclockwise by the right hand rule. B = μ₀I/({#}πr) falls off as {#}/r, so the circles spread apart farther out. Drag the probe to check.":
   "Un alambre largo y recto con su corriente saliendo de la página. Las líneas de campo son círculos, en sentido antihorario por la regla de la mano derecha. B = μ₀I/({#}πr) decae como {#}/r, así que los círculos se separan más lejos del alambre. Arrastra la sonda para comprobarlo.",
+"Drag to turn the view · move things in the flat view":
+  "Arrastra para girar la vista · mueve las cosas en la vista plana",
 "<span>Wire {#}</span><span>+{#} A</span><span>({#}, {#}) cm</span>":
   "<span>Alambre {#}</span><span>+{#} A</span><span>({#}, {#}) cm</span>",
 "Add a second wire to see a force.":
@@ -254,8 +268,6 @@ VDI18N.add('es', 'demo/currents-fields', {
   "{#} µN/m <span>repulsión</span>",
 "F/L = {#} µN/m <small>repel</small>":
   "F/L = {#} µN/m <small>repulsión</small>",
-"Drag to turn the view · move things in the flat view":
-  "Arrastra para girar la vista · mueve las cosas en la vista plana",
 "Around any closed loop, ∮B·dl = μ₀I<sub>enc</sub>. Two wires pass through this loop ({#} A out, {#} A in). Drag the loop over the third wire: B along the loop changes, ∮B·dl changes only when a wire crosses the loop.":
   "Alrededor de cualquier lazo cerrado, ∮B·dl = μ₀I<sub>enc</sub>. Dos alambres atraviesan este lazo ({#} A saliendo, {#} A entrando). Arrastra el lazo sobre el tercer alambre: B a lo largo del lazo cambia, pero ∮B·dl cambia solo cuando un alambre cruza el lazo.",
 "<span><i></i>Field line</span><span><i></i>|B|, stronger is darker</span><span><i></i>Compass, red end along B</span><span><i></i>Force on a wire, per meter</span><span><i></i><i></i>Loop: B along or against its direction</span><span><i></i>Grip: drag to move or resize</span>":
@@ -276,8 +288,6 @@ VDI18N.add('es', 'demo/currents-fields', {
   "∮B·dl = {#} µT·m <small>μ₀I<sub>enc</sub> = {#} µT·m</small>",
 "A circular loop seen edge on: at the top the current comes out of the page, at the bottom it goes in. Every field line threads the loop and closes around the outside. At the center B = μ₀I/(2R).":
   "Una espira circular vista de canto: arriba la corriente sale de la página, abajo entra. Cada línea de campo pasa a través de la espira y se cierra por fuera. En el centro B = μ₀I/(2R).",
-"Near half of each turn drawn faint · drag to turn the view":
-  "La mitad cercana de cada vuelta se dibuja tenue · arrastra para girar la vista",
 "{#} (one loop)":
   "{#} (una espira)",
 "With one turn the length L does not matter. Raise N to stack more turns along the length.":
@@ -322,6 +332,18 @@ VDI18N.add('es', 'demo/currents-fields', {
   "Fuente de CA: corriente ahora I₀ sen {#}πft",
 "B<sub>center</sub> = {#} mT <small>μ₀nI = {#} µT</small>":
   "B<sub>center</sub> = {#} mT <small>μ₀nI = {#} µT</small>",
+"Following field lines through the helix: {#} of {#}":
+  "Siguiendo líneas de campo a través de la hélice: {#} de {#}",
+"One helix of wire, near half cut away · drag to turn the view":
+  "Una hélice de alambre, con la mitad cercana recortada · arrastra para girar la vista",
+"One helix: B at the center, Biot–Savart along the wire":
+  "Una hélice: B en el centro, Biot–Savart a lo largo del alambre",
+"{#} mT <span>rings: {#} mT</span>":
+  "{#} mT <span>anillos: {#} mT</span>",
+"One helix: field circling the coil at ρ = 2R beside its middle, averaged round the circle":
+  "Una hélice: campo que rodea la bobina a ρ = 2R junto a su centro, promediado alrededor del círculo",
+"A straight wire as long as the coil carrying I, at the same distance: μ₀I/({#}πd) · L/√((L/{#})² + d²)":
+  "Un alambre recto tan largo como la bobina que lleva I, a la misma distancia: μ₀I/({#}πd) · L/√((L/{#})² + d²)",
 "top view, wire above the needle":
   "vista superior, alambre sobre la aguja",
 "Top view of a compass under a wire that runs north and south; the needle turns when current flows.":
@@ -350,6 +372,8 @@ VDI18N.add('es', 'demo/currents-fields', {
   "-{#} nT <span>exacto/ideal {#}</span>",
 "-{#} nT <span>{#} of the center</span>":
   "-{#} nT <span>{#} del centro</span>",
+"-{#} nT <span>rings: -{#} nT</span>":
+  "-{#} nT <span>anillos: -{#} nT</span>",
 "B<sub>center</sub> = -{#} nT <small>μ₀nI = -{#} nT</small>":
   "B<sub>center</sub> = -{#} nT <small>μ₀nI = -{#} nT</small>",
 "μ₀nI = -{#} µT":
@@ -362,6 +386,8 @@ VDI18N.add('es', 'demo/currents-fields', {
   "-{#} µT <span>exacto/ideal {#}</span>",
 "-{#} mT <span>{#} of the center</span>":
   "-{#} mT <span>{#} del centro</span>",
+"-{#} mT <span>rings: -{#} mT</span>":
+  "-{#} mT <span>anillos: -{#} mT</span>",
 "B<sub>center</sub> = -{#} mT <small>μ₀nI = -{#} µT</small>":
   "B<sub>center</sub> = -{#} mT <small>μ₀nI = -{#} µT</small>",
 "μ₀nI = -{#} mT":
@@ -378,6 +404,12 @@ VDI18N.add('es', 'demo/currents-fields', {
   "{#} nT <span>exacto/ideal {#}</span>",
 "{#} nT <span>{#} of the center</span>":
   "{#} nT <span>{#} del centro</span>",
+"{#} nT <span>rings: {#} nT</span>":
+  "{#} nT <span>anillos: {#} nT</span>",
 "B<sub>center</sub> = {#} nT <small>μ₀nI = {#} nT</small>":
-  "B<sub>center</sub> = {#} nT <small>μ₀nI = {#} nT</small>"
+  "B<sub>center</sub> = {#} nT <small>μ₀nI = {#} nT</small>",
+"{#} µT <span>rings: {#} µT</span>":
+  "{#} µT <span>anillos: {#} µT</span>",
+"Field lines followed through the helix's own field":
+  "Líneas de campo seguidas a través del propio campo de la hélice"
 });

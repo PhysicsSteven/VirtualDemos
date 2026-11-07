@@ -7,6 +7,7 @@
 <script src="lib/theme.js"></script>
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
 <style>
 /* projector on a short screen: the units line gives way so the lede fits on one or two lines */
 .rail details.plotfold > summary { cursor: pointer; font-size: 0.85rem; font-weight: 600; color: var(--accent); width: fit-content; }
@@ -72,6 +73,7 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 .count { margin-left: auto; font-size: 0.9rem; font-weight: 600; white-space: nowrap; }
 .count small { font-weight: 400; color: var(--muted); font-size: 0.8rem; }
 #can { touch-action: none; outline: none; }
+#gl3 { pointer-events: none; }
 #can:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
 button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .btn { font-weight: 700; }
@@ -147,7 +149,7 @@ details.hall[open] > summary { margin-bottom: 8px; }
   <header class="bar">
     <div>
       <h1>Charges in Magnetic Fields</h1>
-      <p>The magnetic force on a moving charge is always at right angles to its velocity, so it turns the charge without speeding it up. Add an electric field and build a velocity selector, a mass spectrometer and a cyclotron.</p>
+      <p>The magnetic force on a moving charge is always at right angles to its velocity, so it turns the charge without speeding it up. Add an electric field and build a velocity selector, a mass spectrometer and a cyclotron, trap protons in a magnetic bottle, and watch the Hall voltage build up in a strip.</p>
     </div>
     <div class="bar-right">
       <div class="units mono">SI units · e = 1.602 × 10⁻¹⁹ C · ⊗ into the page, ⊙ out of the page</div>
@@ -169,6 +171,7 @@ details.hall[open] > summary { margin-bottom: 8px; }
         <span class="count mono" id="count" aria-live="off"></span>
       </div>
       <div class="pane" id="pane">
+        <canvas id="gl3" aria-hidden="true" hidden></canvas>
         <canvas id="can" tabindex="0" aria-describedby="kbHelp" aria-label="A charged particle moving in magnetic and electric fields, with a plot. In the free setups, drag the arrow tip to set the launch velocity, drag the launch ring to move it, drag the edges of the field rectangle, drag the two ends of the ruler, drag empty space to pan and use the wheel to zoom. Keys: S picks what the arrow keys move (launch velocity, launch ring, ruler ends, rectangle edges, E direction), arrows move it and Shift moves it farther, M shows the ruler, T starts and stops the timer, C captures a reading, space plays or pauses, R restarts, F fits the view or fires, plus and minus zoom. In the 3D view, drag or use the arrow keys to turn the view."></canvas>
       </div>
       <p class="sr-only" id="kbHelp">With the free setups, the arrow keys first turn the launch velocity (left and right) and change its speed (up and down). Press S for the next item and Shift+S for the one before: the launch ring, ruler end A, ruler end B, each edge of the field rectangle and the E direction dial. Arrow keys move the selected item one screen pixel, Shift+arrow ten. M shows or hides the ruler, T starts or stops the timer, C captures a reading. In the velocity selector, mass spectrometer and cyclotron, up and down change the slit, the spread or the frequency, F fires 20 particles and C clears.</p>
@@ -186,6 +189,8 @@ details.hall[open] > summary { margin-bottom: 8px; }
           <button type="button" data-p="sel" aria-pressed="false">Velocity selector</button>
           <button type="button" data-p="spec" aria-pressed="false">Mass spectrometer</button>
           <button type="button" data-p="cyc" aria-pressed="false">Cyclotron</button>
+          <button type="button" data-p="bottle" aria-pressed="false">Magnetic bottle</button>
+          <button type="button" data-p="hall" aria-pressed="false">Hall effect</button>
         </div>
         <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
@@ -372,6 +377,38 @@ details.hall[open] > summary { margin-bottom: 8px; }
         </div>
       </section>
 
+      <section id="secBot" hidden>
+        <h2>Magnetic bottle</h2>
+        <div>
+          <div class="slider-head"><label for="bS">Coil spacing</label><output id="bSOut" class="mono" for="bS"></output></div>
+          <input type="range" id="bS" min="12" max="36" step="1" value="20">
+        </div>
+        <div>
+          <div class="slider-head"><label for="bB">Field at the center B<sub>0</sub></label><output id="bBOut" class="mono" for="bB"></output></div>
+          <input type="range" id="bB" min="0.02" max="0.6" step="0.01" value="0.2">
+        </div>
+        <div>
+          <div class="slider-head"><label for="bV">Speed v</label><output id="bVOut" class="mono" for="bV"></output></div>
+          <input type="range" id="bV" min="4" max="6" step="0.01" value="5">
+        </div>
+        <div>
+          <div class="slider-head"><label for="bA">Pitch angle α at the start</label><output id="bAOut" class="mono" for="bA"></output></div>
+          <input type="range" id="bA" min="5" max="90" step="1" value="50">
+        </div>
+        <div>
+          <div class="slider-head"><label for="bR">Start off the axis by ρ</label><output id="bROut" class="mono" for="bR"></output></div>
+          <input type="range" id="bR" min="0" max="3" step="0.1" value="0">
+        </div>
+        <div class="inline">
+          <span class="lab">View</span>
+          <div class="seg" role="group" aria-label="Bottle view">
+            <button type="button" id="bvSide" aria-pressed="false">Side</button>
+            <button type="button" id="bv3d" aria-pressed="true">3D</button>
+          </div>
+        </div>
+        <details class="more"><summary>More about this</summary><p class="hint">Two coils carry the same current the same way round. Between them the field is weaker than at the coils, so its lines pinch together at each end. A particle that spirals toward a coil is pushed back once its pitch angle reaches 90°, where B = B<sub>0</sub>/sin²α. Particles whose α is smaller than the loss cone angle reach the coil before that happens and escape. The run is computed step by step from the exact field of the two coils, with no mirror theory inside it, so the mirror readouts below are a prediction to test.</p></details>
+      </section>
+
       <section id="secRead">
         <h2>Readouts</h2>
         <dl class="readout" id="readFree">
@@ -403,6 +440,27 @@ details.hall[open] > summary { margin-bottom: 8px; }
             <div class="wide list" id="pSpdRow"><dt>Ion speed into the field √(2qV/m)</dt><dd id="pSpd">—</dd></div>
           </dl>
         </div>
+        <dl class="readout" id="readBot" hidden>
+          <div><dt>Coil current N I (each)</dt><dd id="bNI">—</dd></div>
+          <div><dt>B at the start</dt><dd id="bB0">—</dd></div>
+          <div id="bBmRow"><dt>Largest B on its field line</dt><dd id="bBm">—</dd></div>
+          <div id="bRmRow"><dt>Mirror ratio B<sub>max</sub>/B<sub>0</sub></dt><dd id="bRm">—</dd></div>
+          <div class="wide" id="bLcRow"><dt>Loss cone: escapes if sin²α &lt; B<sub>0</sub>/B<sub>max</sub>, α &lt;</dt><dd id="bLc">—</dd></div>
+          <div class="wide" id="bPredRow"><dt>Mirror theory says</dt><dd id="bPred">—</dd></div>
+          <div id="bRLRow"><dt>Orbit radius at the start mv⊥/|q|B</dt><dd id="bRL">—</dd></div>
+          <div id="bTgRow"><dt>Period of one turn 2πm/|q|B<sub>0</sub></dt><dd id="bTg">—</dd></div>
+          <div><dt>Turning points so far</dt><dd id="bNt">—</dd></div>
+          <div><dt>Bounce period, measured</dt><dd id="bTb">—</dd></div>
+          <div class="wide"><dt>Magnetic moment μ = mv⊥²/2B, now against the start</dt><dd id="bMu">—</dd></div>
+          <div class="wide"><dt>Speed now against the start</dt><dd id="bSp">—</dd></div>
+          <div class="wide" id="bEndRow" hidden><dt>Run</dt><dd id="bEnd">—</dd></div>
+        </dl>
+        <dl class="readout" id="readHall" hidden>
+          <div class="wide"><dt>Hall voltage now, V<sub>top</sub> − V<sub>bottom</sub></dt><dd id="hNow">—</dd></div>
+          <div class="wide" id="hTauRow"><dt>Build up time τ = ε/σ</dt><dd id="hTau">—</dd></div>
+          <div class="wide" id="hAngRow"><dt>Path angle before the edges charge, arctan μB</dt><dd id="hAng">—</dd></div>
+          <div class="wide"><dt>Time since the current started</dt><dd id="hT">—</dd></div>
+        </dl>
         <dl class="readout" id="readCyc" hidden>
           <div id="cFcRow"><dt>f<sub>c</sub> = qB/2πm</dt><dd id="cFc">—</dd></div>
           <div><dt>Gap voltage frequency</dt><dd id="cFrf">—</dd></div>
@@ -466,9 +524,9 @@ details.hall[open] > summary { margin-bottom: 8px; }
             <div class="slider-head"><label for="hT">Thickness t (along B)</label><output id="hTOut" class="mono" for="hT"></output></div>
             <input type="range" id="hT" min="0.05" max="2" step="0.05" value="1">
           </div>
-          <div class="hallbox"><canvas id="hallCan" role="img" aria-label="Top view of a strip 10 mm wide carrying current I to the right in a field B perpendicular to the page, with a voltmeter across its width reading the Hall voltage."></canvas></div>
+          <div class="hallbox" id="hallBoxWrap"><canvas id="hallCan" role="img" aria-label="Top view of a strip 10 mm wide carrying current I to the right in a field B perpendicular to the page, with a voltmeter across its width reading the Hall voltage."></canvas></div>
           <dl class="readout" id="hallOut"></dl>
-          <p class="hint" id="hallHint">The voltmeter reads V<sub>H</sub> = V<sub>top</sub> − V<sub>bottom</sub>. In the steady state the edge charge makes a field E<sub>H</sub> whose force qE<sub>H</sub> cancels qv<sub>d</sub> × B, so the carriers flow straight; V<sub>H</sub> = IB/(nqt), and its sign gives the sign of the carriers. The edge charge builds up in far less than a nanosecond, so only the steady state is drawn. The strip is 10 mm wide. One kind of carrier, free carrier model: copper has n = 8.49 × 10²⁸ m⁻³ (one electron per atom), whose measured Hall coefficient differs from this by tens of percent because its electrons are not free; the germanium samples use n = 1.0 × 10²¹ m⁻³, a typical value for doped teaching samples, not one particular crystal. The dots move at a speed chosen for the drawing; the true v<sub>d</sub> is in the readouts. Blind renames the strips and hides the carriers, their density and v<sub>d</sub>; the voltmeter stays.</p>
+          <p class="hint" id="hallHint">The voltmeter reads V<sub>H</sub> = V<sub>top</sub> − V<sub>bottom</sub>. In the steady state the edge charge makes a field E<sub>H</sub> whose force qE<sub>H</sub> cancels qv<sub>d</sub> × B, so the carriers flow straight; V<sub>H</sub> = IB/(nqt), and its sign gives the sign of the carriers. The edge charge builds up in far less than a nanosecond, so this drawing shows only the steady state; the Hall effect setup slows the build up down so you can watch it. The strip is 10 mm wide. One kind of carrier, free carrier model: copper has n = 8.49 × 10²⁸ m⁻³ (one electron per atom), whose measured Hall coefficient differs from this by tens of percent because its electrons are not free; the germanium samples use n = 1.0 × 10²¹ m⁻³, a typical value for doped teaching samples, not one particular crystal. The dots move at a speed chosen for the drawing; the true v<sub>d</sub> is in the readouts. Blind renames the strips and hides the carriers, their density and v<sub>d</sub>; the voltmeter stays.</p>
         </details>
       </section>
 
@@ -777,6 +835,115 @@ details.hall[open] > summary { margin-bottom: 8px; }
     return T;
   }
 
+  // ---- magnetic bottle (OpenStax Vol. 2 §11.4): two coaxial coils of radius a at z = ±s/2, each a thin ring carrying N I ----
+  // Each ring's field is the exact Biot–Savart result in complete elliptic integrals (Jackson, Classical Electrodynamics §5.5;
+  // the same closed form as in Magnetic Fields of Currents). The motion is integrated step by step with the Boris rotation,
+  // which turns v about B exactly, so the speed stays fixed to rounding error in any static B. Nothing here assumes the
+  // guiding center or mirror theory: the mirror readouts are computed beside the run to compare with it.
+  const MU0 = 1.25663706127e-6;      // N/A², CODATA 2022
+  // complete elliptic integrals K(m) and E(m), parameter m = k², by the arithmetic geometric mean
+  function ellipKE(m) {
+    if (m > 1 - 1e-15) m = 1 - 1e-15;
+    let a = 1, b = Math.sqrt(1 - m), s = m / 2, p = 0.5;
+    for (let i = 0; i < 40; i++) { const c = (a - b) / 2, an = (a + b) / 2; b = Math.sqrt(a * b); a = an; p *= 2; s += p * c * c; if (c < 1e-15 * a) break; }
+    const K = Math.PI / (2 * a);
+    return [K, K * (1 - s)];
+  }
+  // a ring of radius a (m) at z = 0 carrying I (A) counterclockwise about +z: [Br, Bz] in T at cylindrical (r, z)
+  function ringBrz(a, I, r, z) {
+    const d2 = (a + r) * (a + r) + z * z, q = (a - r) * (a - r) + z * z;
+    if (q === 0) return [NaN, NaN];
+    const m = 4 * a * r / d2;
+    if (m < 1e-7) { const w = a * a + z * z; return [3 * MU0 * I * a * a * r * z / (4 * Math.pow(w, 2.5)), MU0 * I * a * a / (2 * Math.pow(w, 1.5))]; }
+    const [K, E] = ellipKE(m), c = MU0 * I / (2 * Math.PI * Math.sqrt(d2));
+    return [c * z / r * (-K + (a * a + r * r + z * z) / q * E), c * (K + (a * a - r * r - z * z) / q * E)];
+  }
+  // the two coils together, c = { a, s, NI }: [Bx, By, Bz] at (x, y, z)
+  function bottleB(c, x, y, z) {
+    const r = Math.hypot(x, y);
+    const f1 = ringBrz(c.a, c.NI, r, z - c.s / 2), f2 = ringBrz(c.a, c.NI, r, z + c.s / 2), br = f1[0] + f2[0];
+    return r > 0 ? [br * x / r, br * y / r, f1[1] + f2[1]] : [0, 0, f1[1] + f2[1]];
+  }
+  // on the axis: μ₀NIa²/2 · Σ (a² + (z − z_c)²)^(−3/2)
+  const bottleAxisB = (c, z) => MU0 * c.NI * c.a * c.a / 2 * (Math.pow(c.a * c.a + (z - c.s / 2) ** 2, -1.5) + Math.pow(c.a * c.a + (z + c.s / 2) ** 2, -1.5));
+  const bottleNI = (a, s, B0) => B0 / bottleAxisB({ a, s, NI: 1 }, 0);    // the ampere turns that give B0 at the center
+  // follow the field line through (r0, z0) in a meridian plane (RK4 in arc length ds) until |z| > zEnd or it nears a coil wire.
+  // Returns the points [r, z, |B|] in order of increasing z.
+  function bottleLine(c, r0, z0, zEnd, ds) {
+    const dir = (r, z) => { const f1 = ringBrz(c.a, c.NI, r, z - c.s / 2), f2 = ringBrz(c.a, c.NI, r, z + c.s / 2), br = f1[0] + f2[0], bz = f1[1] + f2[1], b = Math.hypot(br, bz); return [br / b, bz / b, b]; };
+    const near = (r, z) => Math.min(Math.hypot(r - c.a, z - c.s / 2), Math.hypot(r - c.a, z + c.s / 2)) < 0.06 * c.a;
+    const run = (sg) => {
+      const out = []; let r = r0, z = z0;
+      for (let i = 0; i < 20000; i++) {
+        const k1 = dir(r, z), k2 = dir(r + sg * ds / 2 * k1[0], z + sg * ds / 2 * k1[1]), k3 = dir(r + sg * ds / 2 * k2[0], z + sg * ds / 2 * k2[1]), k4 = dir(r + sg * ds * k3[0], z + sg * ds * k3[1]);
+        r += sg * ds / 6 * (k1[0] + 2 * k2[0] + 2 * k3[0] + k4[0]); z += sg * ds / 6 * (k1[1] + 2 * k2[1] + 2 * k3[1] + k4[1]);
+        if (r < 0) r = -r;
+        if (!isFinite(r) || Math.abs(z) > zEnd || near(r, z)) break;
+        out.push([r, z, dir(r, z)[2]]);
+      }
+      return out;
+    };
+    const sgn = dir(r0, z0)[1] >= 0 ? 1 : -1;     // walk toward +z first
+    return [...run(-sgn).reverse(), [r0, z0, dir(r0, z0)[2]], ...run(sgn)];
+  }
+  // mirror theory for comparison: B at the start, the largest B on its field line between the coils, the loss cone,
+  // and where B reaches B_start / sin²α (the mirror points), from the traced line
+  function bottleMirror(c, r0, z0, alpha) {
+    const L = bottleLine(c, r0, z0, c.s / 2, c.a / 400), B0 = Math.hypot(...bottleB(c, r0, 0, z0));
+    let Bmax = 0; for (const q of L) Bmax = Math.max(Bmax, q[2]);
+    const Bm = B0 / Math.pow(Math.sin(alpha), 2), lc = Math.asin(Math.min(1, Math.sqrt(B0 / Bmax)));
+    let zm = [null, null];
+    for (let i = 1; i < L.length; i++) {
+      const a0 = L[i - 1], a1 = L[i];
+      if ((a0[2] - Bm) * (a1[2] - Bm) <= 0 && a1[2] !== a0[2]) { const zc = a0[1] + (a1[1] - a0[1]) * (Bm - a0[2]) / (a1[2] - a0[2]); if (zc < z0) zm[0] = zc; else if (zm[1] === null) zm[1] = zc; }
+    }
+    return { B0, Bmax, ratio: Bmax / B0, lossCone: lc, trapped: alpha > lc && alpha < Math.PI - lc, Bm, zm, line: L };
+  }
+  // one Boris step with E = 0: v turns about B by 2 atan(|q|B dt/2m), exactly preserving |v|
+  function borisStep(st, qm, dt, B) {
+    const tx = qm * B[0] * dt / 2, ty = qm * B[1] * dt / 2, tz = qm * B[2] * dt / 2, f = 2 / (1 + tx * tx + ty * ty + tz * tz);
+    const px = st.vx + (st.vy * tz - st.vz * ty), py = st.vy + (st.vz * tx - st.vx * tz), pz = st.vz + (st.vx * ty - st.vy * tx);
+    st.vx += (py * tz - pz * ty) * f; st.vy += (pz * tx - px * tz) * f; st.vz += (px * ty - py * tx) * f;
+    st.x += st.vx * dt; st.y += st.vy * dt; st.z += st.vz * dt;
+  }
+  // the run, extended on demand: steps of 0.04 rad of gyration in the local field. Records each step and the turning points
+  // (where v·B changes sign). Ends when the particle leaves past a coil (|z| > s/2 + 1.5a), touches a coil, or after maxSteps.
+  function bottleRun(c, part, s0, maxSteps) {
+    const qm = part.q / part.m, R = { c, part, t: [0], P: [[s0.x, s0.y, s0.z, s0.vx, s0.vy, s0.vz]], turns: [], ended: false, endTag: null, st: Object.assign({}, s0), T: 0, maxSteps: maxSteps || 400000 };
+    const B0 = bottleB(c, s0.x, s0.y, s0.z), v0 = Math.hypot(s0.vx, s0.vy, s0.vz);
+    R.mu0 = magMoment(part.m, s0, B0);
+    let lastPar = s0.vx * B0[0] + s0.vy * B0[1] + s0.vz * B0[2];
+    R.extend = (tEnd) => {
+      const st = R.st;
+      while (!R.ended && R.T < tEnd) {
+        const B = bottleB(c, st.x, st.y, st.z), b = Math.hypot(B[0], B[1], B[2]);
+        const dt = Math.min(0.04 / Math.abs(qm * b || 1e-30), c.a / (20 * v0));
+        borisStep(st, qm, dt, B); R.T += dt;
+        R.t.push(R.T); R.P.push([st.x, st.y, st.z, st.vx, st.vy, st.vz]);
+        const Bn = bottleB(c, st.x, st.y, st.z), par = st.vx * Bn[0] + st.vy * Bn[1] + st.vz * Bn[2];
+        if (par * lastPar < 0) R.turns.push({ t: R.T, z: st.z });
+        lastPar = par;
+        const r = Math.hypot(st.x, st.y);
+        if (Math.abs(st.z) > c.s / 2 + 1.5 * c.a) { R.ended = true; R.endTag = 'escaped'; }
+        else if (Math.min(Math.hypot(r - c.a, st.z - c.s / 2), Math.hypot(r - c.a, st.z + c.s / 2)) < 0.05 * c.a) { R.ended = true; R.endTag = 'coil'; }
+        else if (R.t.length >= R.maxSteps) { R.ended = true; R.endTag = 'limit'; }
+      }
+    };
+    // state at time t, between steps by linear interpolation (steps are 0.04 rad apart)
+    R.idx = (t) => { const a = R.t; let lo = 0, hi = a.length - 1; if (t >= a[hi]) return hi; while (hi - lo > 1) { const m = (lo + hi) >> 1; if (a[m] <= t) lo = m; else hi = m; } return lo; };
+    R.at = (t) => {
+      R.extend(t); const i = R.idx(t), j = Math.min(i + 1, R.t.length - 1), p = R.P[i], q = R.P[j], f = j > i ? Math.max(0, Math.min(1, (t - R.t[i]) / (R.t[j] - R.t[i]))) : 0;
+      return { x: p[0] + (q[0] - p[0]) * f, y: p[1] + (q[1] - p[1]) * f, z: p[2] + (q[2] - p[2]) * f, vx: p[3] + (q[3] - p[3]) * f, vy: p[4] + (q[4] - p[4]) * f, vz: p[5] + (q[5] - p[5]) * f };
+    };
+    return R;
+  }
+  // magnetic moment of the gyration, μ = m v⊥²/(2|B|) (an adiabatic invariant while B changes little over one turn)
+  function magMoment(m, s, B) { const b = Math.hypot(B[0], B[1], B[2]), vp = (s.vx * B[0] + s.vy * B[1] + s.vz * B[2]) / b, v2 = s.vx * s.vx + s.vy * s.vy + s.vz * s.vz; return m * Math.max(0, v2 - vp * vp) / (2 * b); }
+  // the launch: at (rho, 0, 0) with speed v at pitch angle alpha to the local B, the sideways part along +y
+  function bottleLaunch(c, rho, v, alpha) {
+    const B = bottleB(c, rho, 0, 0), b = Math.hypot(...B), bx = B[0] / b, bz = B[2] / b;
+    return { x: rho, y: 0, z: 0, vx: v * Math.cos(alpha) * bx, vy: v * Math.sin(alpha), vz: v * Math.cos(alpha) * bz };
+  }
   // ---- quantities named in the lab, and the measuring and fitting helpers (all pure) ----
   const frequency = (m, q, B) => 1 / period(m, q, B);
   const driftVelocity = (Ex, Ey, Bz) => ({ x: Ey / Bz, y: -Ex / Bz });   // E × B / B² for B = Bz along z, E in the page
@@ -815,19 +982,33 @@ details.hall[open] > summary { margin-bottom: 8px; }
   const csvText = (meta, header, rows) => [...meta.map((l) => '# ' + l), header.join(','), ...rows.map((r) => r.map(csvCell).join(','))].join('\n') + '\n';
   // Hall effect in a strip: current I along +x, B = Bz ẑ, voltage across the width (y).
   // Steady state: qE_H = −q v_d × B, so V_H = V(top, +y) − V(bottom) = −I Bz/(n q t), with q signed.
+  /* mu: mobility (m²/V·s). Copper: μ = 1/(ρne) with ρ = 1.678 × 10⁻⁸ Ω·m at 20 °C (CRC Handbook). Germanium at 300 K:
+     electrons 3900 and holes 1900 cm²/V·s, relative permittivity 16.0 (Sze and Ng, Physics of Semiconductor Devices, 3rd ed., Appendix G).
+     er: relative permittivity used for the edge charge build up (a metal has none of its own, so copper takes ε₀). */
+  const EPS0 = 8.8541878188e-12;   // F/m, CODATA 2022
   const HALL = { w: 0.010,
-    cu: { name: 'Copper', n: 8.49e28, q: -1 },        // 8.96 g/cm³, 63.55 g/mol, one conduction electron per atom
-    nge: { name: 'n-type germanium', n: 1.0e21, q: -1 },
-    pge: { name: 'p-type germanium', n: 1.0e21, q: 1 } };
+    cu: { name: 'Copper', n: 8.49e28, q: -1, mu: 1 / (1.678e-8 * 8.49e28 * QE), er: 1 },   // 8.96 g/cm³, 63.55 g/mol, one conduction electron per atom
+    nge: { name: 'n-type germanium', n: 1.0e21, q: -1, mu: 0.39, er: 16.0 },
+    pge: { name: 'p-type germanium', n: 1.0e21, q: 1, mu: 0.19, er: 16.0 } };
   const hallVoltage = (I, Bz, n, q, t) => -I * Bz / (n * q * t);
   const hallDrift = (I, n, q, w, t) => I / (n * Math.abs(q) * w * t);      // carrier speed; direction +x for q > 0, −x for q < 0
   const hallCoefficient = (n, q) => 1 / (n * q);
+  /* How the Hall field builds. Each carrier moves at its drift velocity v = μ_s(E + v × B), μ_s = ±μ with the carrier's sign
+     (inertia left out). With the current held fixed, v_x = v_d, and the sideways part is v_y = μ_s(E_y − v_d B_z). Carriers that
+     reach an edge stay there, and the two charged edges, treated as sheets, make dE_y/dt = −n q v_y/ε. So E_y relaxes to v_d B_z,
+     where v_y = 0, as E_y = v_d B_z (1 − e^(−t/τ)) with τ = ε/σ = ε/(n|q|μ), the dielectric relaxation time. */
+  const hallSigma = (M) => M.n * QE * M.mu;                                 // conductivity n|q|μ (S/m)
+  const hallTau = (M) => M.er * EPS0 / hallSigma(M);                        // ε/σ (s)
+  const hallBuild = (x) => 1 - Math.exp(-x);                                 // E_y(t)/E_y(∞) at t = xτ
+  const hallAngle = (mu, B) => Math.atan(mu * Math.abs(B));                  // angle of the carriers' path to the strip before the edges charge
+  /* the carriers' velocity (m/s) at a fraction f of the final Hall field: [v_x, v_y], current I along +x, B = Bz ẑ */
+  function hallCarrierVel(M, I, Bz, t, f) { const vd = I / (M.n * M.q * QE * HALL.w * t), Ey = f * vd * Bz, mus = Math.sign(M.q) * M.mu; return [vd, mus * (Ey - vd * Bz)]; }
   // ==CORE END==
 
   if (typeof document === 'undefined') {
     globalThis.MF = { QE, ME, MP, MD, MA, U, C, PARTICLES, ISOTOPES, ionMass, radius, period, specRadius, F12, advance, fieldsFor, gyroCenter, makeTraj, freeModel, selectorModel, selectorRun, selectorBand, specModel, specRun, cycModel, cycRun, cycSourceY,
       frequency, driftVelocity, selectorSpeed, cyclotronFrequency, cyclotronGain, cyclotronKmax, specLanding, niceStep, roundSig, rulerResolution, rulerReading, measuredPeriod, fitOrigin, fitLine, csvText,
-      HALL, hallVoltage, hallDrift, hallCoefficient };
+      HALL, hallVoltage, hallDrift, hallCoefficient, EPS0, hallSigma, hallTau, hallBuild, hallAngle, hallCarrierVel, MU0, ellipKE, ringBrz, bottleB, bottleAxisB, bottleNI, bottleLine, bottleMirror, borisStep, bottleRun, magMoment, bottleLaunch };
     return;
   }
 
@@ -850,12 +1031,15 @@ details.hall[open] > summary { margin-bottom: 8px; }
     drift: { mode: 'free', hint: 'A proton released at rest in crossed fields. E starts it moving, B turns it, and it traces a cycloid, stopping at each cusp. On average it drifts at E/B = 1.0 × 10⁵ m/s at right angles to both fields, whatever its charge or mass.', blind: 'A proton released at rest in crossed fields. Watch where it stops and where it goes on average. Does the drift depend on the charge or the mass? Try the electron.' },
     sel: { mode: 'sel', hint: 'Between the plates qE pushes down and qv × B pushes up. They cancel only for v = E/B, so only those protons go straight through the slit. Slower ones curve down, faster ones curve up. Narrow the slit to sharpen the selection.', blind: 'Between the plates qE pushes one way and qv × B the other. Fire particles and find which speeds reach the detector. Narrow the slit and compare.' },
     spec: { mode: 'spec', hint: 'Neon ions are accelerated through 1000 V and enter a 0.20 T field. Each turns a half circle of radius r = √(2mV/q)/B, so the heavier ²²Ne⁺ lands about 1 cm farther out than ²⁰Ne⁺. Try Equal numbers to see the rare ²¹Ne⁺ line.', blind: 'Neon ions are accelerated through 1000 V into a 0.20 T field and land on the detector plate. Read where each line peaks on the count plot and work out the masses.' },
+    bottle: { mode: 'bottle', hint: 'Two coils 20 cm apart make a field of 0.20 T at the center that grows toward each coil. A proton launched at 50° to B spirals toward a coil, slows along B, turns round where B = B₀/sin²α and comes back: it is trapped. Set α below the loss cone and it escapes through a coil. Make B₀ small and the orbit grows until μ is no longer kept: then even a particle outside the loss cone can leak out.', blind: 'Two coils make a field that grows toward each coil. Launch protons at different pitch angles and find which ones stay.' },
+    hall: { mode: 'hall', hint: 'A strip carries a steady current across a magnetic field. At first the carriers drift at an angle to the strip; they pile up on one edge, and the edge charge makes a sideways field that grows until it cancels qv × B. Then the carriers go straight and the voltmeter across the width reads the Hall voltage. Try germanium: its carriers turn by several degrees, while in copper the angle is far too small to see.', blind: 'A strip carries a current across a magnetic field. Watch the voltmeter across its width and find what sets its sign and size.' },
     cyc: { mode: 'cyc', hint: 'A proton spirals out in a 1.0 T field. Each time it crosses the gap the voltage has just flipped, so it gains qV = 100 keV. The time per half turn, πm/qB, does not depend on speed, so one fixed frequency keeps it in step all the way out.', blind: 'A proton spirals out in a 1.0 T field, crossing the gap twice each turn. Read its energy at each crossing and when it leaves. Move f / f_c off 1 and see what changes.' }
   };
 
   // ---------- state ----------
   const S = {
     mode: 'free', preset: 'circle', play: 0,
+    bot: { part: 'p', s: 20, B: 0.2, lv: 5, al: 50, rho: 0, view3d: true },
     f: { part: 'p', cq: 1, cm: 0, lv: 5, ang: 0, par: 0, view3d: false, bdir: -1, lb: -1, eon: false, le: 4, ea: 270, region: false,
       rect: { x0: 0, x1: 0.03, y0: -0.02, y1: 0.02 }, lx: 0, ly: 0, cmp: 'none', same: 'v', hand: false },
     sel: { part: 'p', V: 400, B: 0.1, w: 2, c: 2, sp: 30, rate: 12 },
@@ -872,7 +1056,7 @@ details.hall[open] > summary { margin-bottom: 8px; }
     if (k === 'c') { const m = Math.pow(10, S.f.cm) * U; return { name: 'Custom', short: 'q', q: S.f.cq * QE, m }; }
     return PARTICLES[k];
   }
-  const curPart = () => partOf(S.mode === 'free' ? S.f.part : S.mode === 'sel' ? S.sel.part : S.cyc.part);
+  const curPart = () => partOf(S.mode === 'free' ? S.f.part : S.mode === 'sel' ? S.sel.part : S.mode === 'bottle' ? S.bot.part : S.cyc.part);
   const chargeCol = (q) => (q > 0 ? T.pos : q < 0 ? T.neg : T.muted);
 
   // ---------- formatting ----------
@@ -1044,8 +1228,8 @@ details.hall[open] > summary { margin-bottom: 8px; }
   function layout(W, H) {
     const ps = projScale(), m = S.mode;
     const stacked = m === 'sel' || m === 'spec' || W < 700;
-    if (!stacked) { const sw = Math.round(W * (m === 'free' ? 0.72 : 0.6)); return { wide: true, scene: { x: 0, y: 0, w: sw, h: H }, plot: { x: sw, y: 0, w: W - sw, h: H } }; }
-    const sh = Math.round(H * (m === 'sel' ? 0.56 : m === 'spec' ? 0.62 : 0.68));
+    if (!stacked) { const sw = Math.round(W * (m === 'free' ? 0.72 : m === 'bottle' ? 0.66 : m === 'hall' ? 0.64 : 0.6)); return { wide: true, scene: { x: 0, y: 0, w: sw, h: H }, plot: { x: sw, y: 0, w: W - sw, h: H } }; }
+    const sh = Math.round(H * (m === 'sel' ? 0.56 : m === 'spec' ? 0.62 : m === 'bottle' || m === 'hall' ? 0.64 : 0.68));
     return { wide: false, scene: { x: 0, y: 0, w: W, h: sh }, plot: { x: 0, y: sh, w: W, h: H - sh } };
   }
   function resize() {
@@ -1276,14 +1460,17 @@ details.hall[open] > summary { margin-bottom: 8px; }
 
   // ---------- drawing ----------
   function drawAll() {
-    if (!T || !LY || (S.mode === 'free' && !main) || (S.mode === 'cyc' && !cyc)) return;
+    if (!T || !LY || (S.mode === 'free' && !main) || (S.mode === 'cyc' && !cyc) || (S.mode === 'bottle' && !bot)) return;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh);
     const s = LY.scene;
     ctx.save(); ctx.beginPath(); ctx.rect(s.x, s.y, s.w, s.h); ctx.clip(); labelClip = s;
+    if (!glWanted() || !GL.ok) glHide();
     if (S.mode === 'free') { if (S.f.view3d) draw3D(); else drawFree(); }
     else if (S.mode === 'sel') drawSel();
     else if (S.mode === 'spec') drawSpec();
+    else if (S.mode === 'bottle') drawBottle();
+    else if (S.mode === 'hall') drawHallStage();
     else drawCyc();
     ctx.restore();
     labelClip = LY.plot; drawPlot(); labelClip = null;
@@ -1514,6 +1701,8 @@ details.hall[open] > summary { margin-bottom: 8px; }
     const { g, P, sc, ce, se, ox } = proj3(), Rs = g.Rs, H = g.H, zt = H / 2, zb = -H / 2, zL = g.zL;
     vignette(c, s);
     const a = Rs * sc, b = Rs * se * sc, ecy = (z) => P(g.cx, g.cy, z)[1];
+    const useGL = glEnsure();
+    if (useGL) { c.clearRect(s.x, s.y, s.w, s.h); vignette(c, s); }
     // the winding: turns spaced so the wire reads as a coil at any tilt
     const nT = Math.max(12, Math.min(150, Math.round(H * ce * sc / (8 * ps)))), dz = H / nT;
     const wl = Math.max(1.2, Math.min(4.6 * ps, 0.95 * dz * ce * sc));
@@ -1537,6 +1726,7 @@ details.hall[open] > summary { margin-bottom: 8px; }
       }
       c.strokeStyle = shade(T.former, -0.4); c.lineWidth = 1; c.beginPath(); c.ellipse(ox, yc, a * 1.09, b * 1.09, 0, 0, 2 * Math.PI); c.stroke();
     };
+    if (!useGL) {
     flange(zb);
     wire(turns(zb, zt, false), T.dark ? 0.42 : 0.5);      // the inside of the far wall, in shadow
     // the clear former tube the wire is wound on
@@ -1558,6 +1748,7 @@ details.hall[open] > summary { margin-bottom: 8px; }
       }
       c.globalAlpha = 1;
     }
+    }
     // plates for E, parallel to B, with faint field lines between them
     let plates = [];
     if (E) {
@@ -1566,6 +1757,7 @@ details.hall[open] > summary { margin-bottom: 8px; }
       const hw = Math.min(Math.sqrt(Math.max(0, Rs * Rs - dP * dP)), Math.sqrt(Math.max(0, Rs * Rs - dM * dM))) * 0.9, hz = 0.4 * H;
       for (const [d, sign, colr] of [[dP, '+', T.pos], [dM, '−', T.neg]]) {
         const px0 = g.cx + d * ex, py0 = g.cy + d * ey;
+        (plates.geo = plates.geo || []).push({ x: px0, y: py0, hw, hz, nx, ny, colr });
         plates.push({ sign, colr, depth: P(px0, py0, 0)[2], q: [[-hw, -hz], [hw, -hz], [hw, hz], [-hw, hz]].map(([w, z]) => P(px0 + w * nx, py0 + w * ny, z)), mid: P(px0, py0, hz * 0.6) });
       }
       plates.sort((A, Bq) => A.depth - Bq.depth);
@@ -1574,7 +1766,7 @@ details.hall[open] > summary { margin-bottom: 8px; }
         c.globalAlpha = Math.min(1, al + 0.3); c.strokeStyle = pl.colr; c.lineWidth = 2 * ps; c.stroke(); c.globalAlpha = 1;
         label(c, pl.sign, pl.mid[0], pl.mid[1], pl.colr, 'center', 'middle', true, 13);
       };
-      drawPlate(plates[0], 0.2);
+      if (!useGL) drawPlate(plates[0], 0.2); else for (const pl of plates) label(c, pl.sign, pl.mid[0], pl.mid[1], pl.colr, 'center', 'middle', true, 13);
       plates.far = plates[0]; plates.near = plates[1]; plates.draw = drawPlate;
       c.globalAlpha = 0.45;
       for (const w of [-0.5, 0, 0.5]) for (const z of [-0.25, 0.05, 0.3]) {
@@ -1598,16 +1790,19 @@ details.hall[open] > summary { margin-bottom: 8px; }
       const tail = tr.sample(Math.max(0, simT - (Tq ? 3 * Tq : 1e9)), simT, ds, 4000).map((q) => P(q[0], q[1], q[2] + zL));
       const ghost = tr.sample(simT, simT + (Tq || tScale * 4), ds, 3000).map((q) => P(q[0], q[1], q[2] + zL));
       if (!LAB.blind) { c.strokeStyle = colr; c.globalAlpha = 0.4; c.lineWidth = 1.3 * ps; c.setLineDash([4, 4]); poly(c, ghost); c.stroke(); c.setLineDash([]); c.globalAlpha = 1; }
+      if (useGL) return;
       if (dash) { c.setLineDash(dash); glowStroke(c, () => poly(c, tail), colr, lw); c.setLineDash([]); }
       else fadeTrail(c, tail, (q) => q[0], (q) => q[1], colr, lw);
     };
     if (cmp) {
       const q = cmp.part, qc = S.f.cmp === '2v' ? col : chargeCol(q.q);
       path(cmp, freePeriod(q), qc, [7, 4], 2.2 * ps);
-      const cs = cmp.at(simT), cp = P(cs.x, cs.y, cs.z + zL); bead(c, cp[0], cp[1], qc, 4 * ps, '');
+      const cs = cmp.at(simT), cp = P(cs.x, cs.y, cs.z + zL); if (!useGL) bead(c, cp[0], cp[1], qc, 4 * ps, '');
     }
     path(main, Tp, col, null, 3 * ps);
     const pp = P(st.x, st.y, zc);
+    if (useGL) glFree(st, zc, plates);
+    else {
     bead(c, pp[0], pp[1], col, 6.5 * ps, p.q > 0 ? '+' : p.q < 0 ? '−' : '');
     if (plates.near) plates.draw(plates.near, 0.12);
     // the front of the winding near each end; the middle is cut away
@@ -1616,6 +1811,7 @@ details.hall[open] > summary { margin-bottom: 8px; }
     c.strokeStyle = T.copperLo; c.lineWidth = 1.4 * ps;
     for (const z of [zb + band, zt - band]) { c.beginPath(); c.ellipse(ox, ecy(z), a, b, 0, 0, Math.PI); c.stroke(); }
     flange(zt);
+    }
     // v, B and F at the particle
     const k = 1.5 * pxPerV() / sc;
     const tip = (vx, vy, vz, cap) => { const q = P(st.x + vx, st.y + vy, zc + vz); let dx = q[0] - pp[0], dy = q[1] - pp[1]; const L = Math.hypot(dx, dy); if (cap && L > cap) { dx *= cap / L; dy *= cap / L; } return [pp[0] + dx, pp[1] + dy, L]; };
@@ -1634,6 +1830,456 @@ details.hall[open] > summary { margin-bottom: 8px; }
       if (lx + tw < s.x + s.w - 6 * ps) label(c, 'solenoid, front cut away', lx, ecy(zt - 0.065 * H), T.muted, 'left', 'middle', false, 10); }
     label(c, `Looking ${Math.round(V3.el * 180 / Math.PI)}° down onto the page. Drag to turn the view.`, s.x + 12 * ps, s.y + s.h - 14 * ps, T.muted, 'left', 'middle', false, 10);
     drawStopwatch(c);
+  }
+  // ---------- WebGL under the canvas (three.js r128 through lib/vd3.js) ----------
+  // The 3D views are lit and shaded by WebGL. Its camera is orthographic and set from the same numbers as proj3 (and bproj
+  // for the bottle), so the words, arrows, ring and hand that the canvas still draws on top land on the right points.
+  // The scene is in units of the view radius Rs, with the view center at the origin, so float precision never matters.
+  // Without WebGL (or before three.js has loaded) the canvas draws the whole picture itself, as it always did.
+  const glCan = $('gl3');
+  const GL = { ok: false, tried: false, loading: false, on: false, r: null, scene: null, cam: null, key: '', grp: null, dyn: null, dark: null };
+  function glWanted() { return (S.mode === 'free' && S.f.view3d) || S.mode === 'bottle' || S.mode === 'hall'; }
+  function glEnsure() {
+    if (GL.ok || GL.tried || GL.loading || !window.VD3) return GL.ok;
+    GL.loading = true;
+    VD3.load((ok) => {
+      GL.loading = false; GL.tried = true;
+      if (ok) { try { glInit(); } catch (e) { GL.ok = false; } }
+      drawAll();
+    });
+    return false;
+  }
+  function glInit() {
+    const r = new THREE.WebGLRenderer({ canvas: glCan, antialias: true, alpha: false, preserveDrawingBuffer: true });
+    if (!r.getContext()) return;
+    r.localClippingEnabled = true;
+    r.setPixelRatio(Math.min(window.devicePixelRatio || 1, matchMedia('(pointer: coarse)').matches ? 1.5 : 2));
+    GL.r = r; GL.scene = new THREE.Scene();
+    GL.cam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.01, 100);
+    GL.hemi = new THREE.HemisphereLight(0xffffff, 0x445566, 0.75); GL.scene.add(GL.hemi);
+    GL.sun = new THREE.DirectionalLight(0xffffff, 0.9); GL.scene.add(GL.sun); GL.scene.add(GL.sun.target);
+    GL.fill = new THREE.DirectionalLight(0xffffff, 0.25); GL.scene.add(GL.fill); GL.scene.add(GL.fill.target);
+    GL.ok = true;
+  }
+  const col3 = (c) => new THREE.Color(c);
+  function glMat(c, o) { return new THREE.MeshStandardMaterial(Object.assign({ color: col3(c), roughness: 0.55, metalness: 0.1 }, o || {})); }
+  function glDisposeGroup(g) { if (!g) return; g.traverse((o) => { if (o.geometry) o.geometry.dispose(); if (o.material) (Array.isArray(o.material) ? o.material : [o.material]).forEach((m) => { if (m.map) m.map.dispose(); m.dispose(); }); }); GL.scene.remove(g); }
+  // a tube along a polyline that is rewritten each frame (parallel transport frames, so it never twists)
+  function glTube(nMax, radial, mat) {
+    const g = new THREE.BufferGeometry(), nv = nMax * radial;
+    const pos = new Float32Array(nv * 3), nor = new Float32Array(nv * 3), col = new Float32Array(nv * 3), idx = new Uint32Array((nMax - 1) * radial * 6);
+    let k = 0;
+    for (let i = 0; i < nMax - 1; i++) for (let j = 0; j < radial; j++) { const a = i * radial + j, b = i * radial + (j + 1) % radial; idx[k++] = a; idx[k++] = a + radial; idx[k++] = b; idx[k++] = b; idx[k++] = a + radial; idx[k++] = b + radial; }
+    g.setIndex(new THREE.BufferAttribute(idx, 1));
+    g.setAttribute('position', new THREE.BufferAttribute(pos, 3)); g.setAttribute('normal', new THREE.BufferAttribute(nor, 3)); g.setAttribute('color', new THREE.BufferAttribute(col, 3));
+    const m = new THREE.Mesh(g, mat); m.frustumCulled = false;
+    const cs = [], sn = []; for (let j = 0; j < radial; j++) { cs.push(Math.cos(2 * Math.PI * j / radial)); sn.push(Math.sin(2 * Math.PI * j / radial)); }
+    // pts: [[x, y, z], ...] in scene units; rad(i) the radius and rgb(i, out) the color at point i
+    m.set = (pts, rad, rgb) => {
+      const n = Math.min(pts.length, nMax); if (n < 2) { g.setDrawRange(0, 0); return; }
+      let nx = 0, ny = 0, nz = 0, c3 = [0, 0, 0];
+      for (let i = 0; i < n; i++) {
+        const a = pts[Math.max(0, i - 1)], b = pts[Math.min(n - 1, i + 1)];
+        let tx = b[0] - a[0], ty = b[1] - a[1], tz = b[2] - a[2]; const tl = Math.hypot(tx, ty, tz) || 1; tx /= tl; ty /= tl; tz /= tl;
+        if (i === 0) { if (Math.abs(tz) < 0.9) { nx = -ty; ny = tx; nz = 0; } else { nx = 0; ny = -tz; nz = ty; } }
+        const d = nx * tx + ny * ty + nz * tz; nx -= d * tx; ny -= d * ty; nz -= d * tz; const nl = Math.hypot(nx, ny, nz) || 1; nx /= nl; ny /= nl; nz /= nl;
+        const bx = ty * nz - tz * ny, by = tz * nx - tx * nz, bz = tx * ny - ty * nx, rr = rad(i); rgb(i, c3);
+        for (let j = 0; j < radial; j++) {
+          const ux = cs[j] * nx + sn[j] * bx, uy = cs[j] * ny + sn[j] * by, uz = cs[j] * nz + sn[j] * bz, o = (i * radial + j) * 3;
+          pos[o] = pts[i][0] + rr * ux; pos[o + 1] = pts[i][1] + rr * uy; pos[o + 2] = pts[i][2] + rr * uz;
+          nor[o] = ux; nor[o + 1] = uy; nor[o + 2] = uz; col[o] = c3[0]; col[o + 1] = c3[1]; col[o + 2] = c3[2];
+        }
+      }
+      g.setDrawRange(0, (n - 1) * radial * 6);
+      g.attributes.position.needsUpdate = g.attributes.normal.needsUpdate = g.attributes.color.needsUpdate = true;
+    };
+    return m;
+  }
+  // a soft round glow for a particle (a sprite that always faces the camera)
+  let glowTex = null;
+  function glGlow(c, size) {
+    if (!glowTex) { const cv = document.createElement('canvas'); cv.width = cv.height = 64; const g = cv.getContext('2d'), gr = g.createRadialGradient(32, 32, 0, 32, 32, 32);
+      gr.addColorStop(0, 'rgba(255,255,255,1)'); gr.addColorStop(0.25, 'rgba(255,255,255,0.55)'); gr.addColorStop(1, 'rgba(255,255,255,0)'); g.fillStyle = gr; g.fillRect(0, 0, 64, 64); glowTex = new THREE.CanvasTexture(cv); }
+    const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, color: col3(c), transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, opacity: T.dark ? 0.9 : 0.55 }));
+    sp.scale.set(size, size, 1); return sp;
+  }
+  function glBall(c, r) {
+    const g = new THREE.Group(), m = new THREE.Mesh(new THREE.SphereGeometry(r, 24, 16), glMat(c, { emissive: col3(c), emissiveIntensity: 0.45, roughness: 0.3 }));
+    g.add(m); const gl = glGlow(c, r * 7); g.add(gl); g.ball = m; g.glow = gl; return g;
+  }
+  // one arrowhead cone along +z of length h and radius w, base at z = 0
+  const glCone = (h, w, mat) => { const g = new THREE.ConeGeometry(w, h, 14); g.translate(0, h / 2, 0); g.rotateX(Math.PI / 2); return new THREE.Mesh(g, mat); };
+  // place the camera so that it matches a projection given by its unit vectors and frame (scene units)
+  function glCamera(az, el, view) {
+    const ca = Math.cos(az), sa = Math.sin(az), ce = Math.cos(el), se = Math.sin(el), c = GL.cam;
+    const D = new THREE.Vector3(-sa * ce, -ca * ce, se), U = new THREE.Vector3(sa * se, ca * se, ce);
+    c.position.copy(D.clone().multiplyScalar(30)); c.up.copy(U); c.lookAt(0, 0, 0);
+    c.left = view.l; c.right = view.r; c.top = view.t; c.bottom = view.b; c.near = 0.01; c.far = 60; c.updateProjectionMatrix();
+    GL.sun.position.set(-sa * 0.6 + 0.5, -ca * 0.6 - 0.3, 1.4).multiplyScalar(10); GL.fill.position.copy(D).multiplyScalar(10).add(new THREE.Vector3(0, 0, -6));
+    GL.D = D;
+  }
+  function glFrame() {
+    const s = LY.scene, pw = Math.round(s.w), ph = Math.round(s.h);
+    glCan.hidden = false; glCan.style.left = s.x + 'px'; glCan.style.top = s.y + 'px'; glCan.style.width = pw + 'px'; glCan.style.height = ph + 'px'; glCan.style.right = 'auto'; glCan.style.bottom = 'auto';
+    const sz = GL.r.getSize(new THREE.Vector2()); if (sz.x !== pw || sz.y !== ph) GL.r.setSize(pw, ph, false);
+    if (GL.dark !== T.dark || GL.bg !== T.canvas) {
+      GL.dark = T.dark; GL.bg = T.canvas; GL.r.setClearColor(col3(T.canvas), 1);
+      GL.hemi.intensity = T.dark ? 0.55 : 0.8; GL.sun.intensity = T.dark ? 0.85 : 0.75; GL.key = '';
+    }
+  }
+  function glHide() { if (glCan && !glCan.hidden) glCan.hidden = true; GL.on = false; }
+  function glRender() { GL.r.render(GL.scene, GL.cam); GL.on = true; }
+  function glGroup(key, build) { if (GL.key !== key) { glDisposeGroup(GL.grp); glDisposeGroup(GL.dyn); GL.grp = build(); GL.scene.add(GL.grp); GL.dyn = new THREE.Group(); GL.scene.add(GL.dyn); GL.key = key; GL.parts = {}; } return GL.parts; }
+  const tmpRGB = (c) => { const q = col3(c); return [q.r, q.g, q.b]; };
+
+  // the free setups in 3D: the solenoid, its field lines, the plates for E, the paths and the particles
+  function glFree(st, zc, plates) {
+    const g = G3, Rs = g.Rs, H = g.H / Rs, zt = H / 2, zb = -H / 2, zL = g.zL / Rs, B = Bz(), E = Emag();
+    const key = ['free', T.dark, T.canvas, g.Rs, g.H, g.cx, g.cy, B > 0 ? 1 : B < 0 ? -1 : 0, E ? S.f.ea : 'x', g.e0, g.e1, LAB.blind].join('|');
+    const P3 = glGroup(key, () => {
+      const grp = new THREE.Group();
+      // the front half of the middle of the coil is cut away by a plane through the axis that turns with the view
+      const band = 0.09 * H, clip = [new THREE.Plane(new THREE.Vector3(0, 1, 0), 0)];
+      /* the far wall seen from inside is in shadow, so the cut part is a darker copper */
+      const cmat = (cl) => glMat(cl ? mix(T.copper, T.canvas, T.dark ? 0.45 : 0.3) : T.copper, { metalness: 0.65, roughness: 0.32, clippingPlanes: cl ? clip : null, side: THREE.DoubleSide, emissive: col3(T.copperLo), emissiveIntensity: cl ? 0.05 : T.dark ? 0.25 : 0.05 });
+      // the winding: one helix of wire, built in three parts (the two end bands whole, the middle cut)
+      const nT = Math.max(16, Math.min(110, Math.round(H * 13))), wr = Math.min(0.022, 0.42 * (H - 0.04) / nT);
+      const helix = (z0, z1, cl) => {
+        const u0 = (z0 - zb - 0.02) / (H - 0.04), u1 = (z1 - zb - 0.02) / (H - 0.04), seg = Math.max(8, Math.round((u1 - u0) * nT * 48)), pts = [];
+        for (let i = 0; i <= seg; i++) { const u = u0 + (u1 - u0) * i / seg, th = 2 * Math.PI * nT * u; pts.push(new THREE.Vector3(Math.cos(th), Math.sin(th), zb + 0.02 + u * (H - 0.04))); }
+        grp.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), seg, wr, 7, false), cmat(cl)));
+      };
+      helix(zb + 0.02, zb + band, false); helix(zb + band, zt - band, true); helix(zt - band, zt - 0.02, false);
+      // the former the wire is wound on (cut the same way), and its two end flanges
+      const fmat = (cl) => glMat(T.former, { transparent: true, opacity: T.dark ? 0.1 : 0.16, side: THREE.DoubleSide, depthWrite: false, clippingPlanes: cl ? clip : null });
+      for (const [z0, z1, cl] of [[zb, zb + band, false], [zb + band, zt - band, true], [zt - band, zt, false]]) {
+        const former = new THREE.Mesh(new THREE.CylinderGeometry(0.975, 0.975, z1 - z0, 72, 1, true), fmat(cl)); former.rotation.x = Math.PI / 2; former.position.z = (z0 + z1) / 2; grp.add(former);
+      }
+      const sh = new THREE.Shape(); sh.absarc(0, 0, 1.1, 0, 2 * Math.PI, false); const hole = new THREE.Path(); hole.absarc(0, 0, 0.975, 0, 2 * Math.PI, true); sh.holes.push(hole);
+      const fl = new THREE.ExtrudeGeometry(sh, { depth: 0.045, bevelEnabled: false, curveSegments: 72 }), fm = glMat(T.former, { roughness: 0.75 });
+      for (const z of [zb - 0.045, zt]) { const m = new THREE.Mesh(fl, fm); m.position.z = z; grp.add(m); }
+      // field lines along the axis, with arrowheads; B = 0 leaves the coil empty
+      if (B) {
+        const lm = new THREE.LineBasicMaterial({ color: col3(T.bfield), transparent: true, opacity: T.dark ? 0.55 : 0.7 }), cm = new THREE.MeshBasicMaterial({ color: col3(T.bfield) });
+        const at = [[0, 0]]; for (let k = 0; k < 6; k++) at.push([0.42 * Math.cos(k * Math.PI / 3 + 0.3), 0.42 * Math.sin(k * Math.PI / 3 + 0.3)]); for (let k = 0; k < 12; k++) at.push([0.8 * Math.cos(k * Math.PI / 6), 0.8 * Math.sin(k * Math.PI / 6)]);
+        const nA = Math.max(2, Math.round(H / 1.1)), dir = B > 0 ? 1 : -1;
+        for (const [u, v] of at) {
+          const lg = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(u, v, zb - 0.07 * H), new THREE.Vector3(u, v, zt + 0.07 * H)]); grp.add(new THREE.Line(lg, lm));
+          for (let k = 0; k < nA; k++) { const c = glCone(0.06, 0.022, cm); c.position.set(u, v, zb + (k + 0.5) * H / nA - dir * 0.035); if (dir < 0) c.rotation.x = Math.PI; grp.add(c); }
+        }
+      }
+      // plates for E, parallel to B
+      if (plates && plates.geo) for (const pl of plates.geo) {
+        const m = new THREE.Mesh(new THREE.BoxGeometry(pl.hw * 2 / Rs, 0.02, pl.hz * 2 / Rs), glMat(T.steel, { transparent: true, opacity: 0.32, metalness: 0.5, roughness: 0.4, depthWrite: false }));
+        m.position.set(pl.x / Rs, pl.y / Rs, 0); m.rotation.z = Math.atan2(pl.ny, pl.nx); grp.add(m);
+        const e = new THREE.LineSegments(new THREE.EdgesGeometry(m.geometry), new THREE.LineBasicMaterial({ color: col3(pl.colr) })); e.position.copy(m.position); e.rotation.copy(m.rotation); grp.add(e);
+      }
+      return grp;
+    });
+    // the moving parts
+    const p = partOf(S.f.part), col = chargeCol(p.q), Tp = freePeriod(p), tw = (x, y, z) => [(x - g.cx) / Rs, (y - g.cy) / Rs, z / Rs + zL];
+    const trail = (name, tr, Tq, c, rad) => {
+      if (!P3[name]) { P3[name] = glTube(4200, 8, glMat('#ffffff', { vertexColors: true, roughness: 0.35, emissive: col3(c), emissiveIntensity: T.dark ? 0.55 : 0.25 })); GL.dyn.add(P3[name]); }
+      const pts = tr.sample(Math.max(0, simT - (Tq ? 3 * Tq : 1e9)), simT, 0.004 * Rs, 4000).map((q) => tw(q[0], q[1], q[2]));
+      const a = tmpRGB(T.canvas), b = tmpRGB(c), n = pts.length;
+      P3[name].set(pts, (i) => rad * (0.45 + 0.55 * i / Math.max(1, n - 1)), (i, o) => { const f = Math.pow(i / Math.max(1, n - 1), 0.8); o[0] = a[0] + (b[0] - a[0]) * f; o[1] = a[1] + (b[1] - a[1]) * f; o[2] = a[2] + (b[2] - a[2]) * f; });
+    };
+    if (cmp) { const qc = S.f.cmp === '2v' ? col : chargeCol(cmp.part.q); trail('tc', cmp, freePeriod(cmp.part), qc, 0.011);
+      if (!P3.bc) { P3.bc = glBall(qc, 0.028); GL.dyn.add(P3.bc); } const cs = cmp.at(simT); P3.bc.position.set(...tw(cs.x, cs.y, cs.z)); }
+    trail('tm', main, Tp, col, 0.016);
+    if (!P3.bm) { P3.bm = glBall(col, 0.045); GL.dyn.add(P3.bm); }
+    P3.bm.position.set(...tw(st.x, st.y, st.z));
+    // the view: orthographic, matching proj3 exactly
+    const { sc, ox } = proj3(), s = LY.scene, ps = projScale(), padT = 36 * ps, padB = 44 * ps, oy = s.y + padT + (s.h - padT - padB) / 2, k = sc * Rs;
+    glFrame();
+    glCamera(V3.az, V3.el, { l: (s.x - ox) / k, r: (s.x + s.w - ox) / k, t: (oy - s.y) / k, b: (oy - s.y - s.h) / k });
+    const D = GL.D, Dh = Math.hypot(D.x, D.y) || 1; GL.grp.traverse((o) => { if (o.material && o.material.clippingPlanes) o.material.clippingPlanes[0].normal.set(-D.x / Dh, -D.y / Dh, 0); });
+    glRender();
+  }
+  // ---------- the magnetic bottle ----------
+  const BOT_A = 0.06;                                  // coil radius (m)
+  const VB = { az: -0.42, el: 0.36, zoom: 1 };          // 3D view of the bottle
+  let bot = null, botM = null, botLines = null;
+  const botCfg = () => { const a = BOT_A, sp = S.bot.s / 100; return { a, s: sp, NI: bottleNI(a, sp, S.bot.B) }; };
+  const botV = () => Math.pow(10, S.bot.lv);
+  function buildBot() {
+    const c = botCfg(), p = partOf(S.bot.part), al = S.bot.al * Math.PI / 180, rho = S.bot.rho / 100;
+    bot = bottleRun(c, p, bottleLaunch(c, rho, botV(), al), 600000); bot.cfg = c;
+    botM = bottleMirror(c, rho, 0, al);
+    // field lines in a meridian plane, traced from the middle plane; drawn in the side view and turned about the axis in 3D
+    botLines = [0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9].map((f) => bottleLine(c, f * c.a, 0, c.s / 2 + 1.7 * c.a, c.a / 60));
+    tScale = 0.55 * c.s / botV();
+  }
+  const botUse3D = () => S.bot.view3d && GL.ok;
+  // world (x, y, z) in m to the screen: the axis z runs across, (X, Y, Z) = (z, x, y)/a, turned by az and tipped by el
+  function bproj() {
+    const s = LY.scene, ps = projScale(), c = bot.cfg, v = botUse3D() ? VB : { az: 0, el: 0, zoom: VB.zoom }, a = c.a;
+    const ca = Math.cos(v.az), sa = Math.sin(v.az), ce = Math.cos(v.el), se = Math.sin(v.el);
+    const hx = c.s / (2 * a) + 1.75, hz = 1.35, padX = 16 * ps, padT = 34 * ps, padB = 40 * ps;
+    const wW = hx * Math.abs(ca) + hz * Math.abs(sa), wH = hz * ce + (hx * Math.abs(sa) + hz * Math.abs(ca)) * se;
+    const k = Math.min((s.w - 2 * padX) / (2 * wW), (s.h - padT - padB) / (2 * wH)) * v.zoom;
+    const ox = s.x + s.w / 2, oy = s.y + padT + (s.h - padT - padB) / 2;
+    const P = (x, y, z) => { const X = z / a, Y = x / a, Z = y / a, xr = X * ca - Y * sa, yr = X * sa + Y * ca; return [ox + xr * k, oy - (yr * se + Z * ce) * k, -yr * ce + Z * se]; };
+    return { P, k, ox, oy, v, a, view: { l: (s.x - ox) / k, r: (s.x + s.w - ox) / k, t: (oy - s.y) / k, b: (oy - s.y - s.h) / k } };
+  }
+  function botTrailWindow() { return 3 * tScale; }
+  function drawBottle() {
+    const c = ctx, s = LY.scene, ps = projScale(), cf = bot.cfg, p = partOf(S.bot.part), col = chargeCol(p.q), pr = bproj(), P = pr.P, a = cf.a;
+    const st = bot.at(simT), use3 = botUse3D() && glEnsure();
+    if (use3) { c.clearRect(s.x, s.y, s.w, s.h); glBottle(st, pr); }
+    vignette(c, s);
+    if (!use3) {
+      // side view: field lines in the plane through the axis, the coils cut through, the path seen from the side
+      c.lineWidth = 1.1 * ps; c.strokeStyle = T.bfield; c.globalAlpha = 0.55;
+      for (const L of botLines) for (const sg of [1, -1]) { c.beginPath(); L.forEach((q, i) => { const m = P(0, sg * q[0], q[1]); i ? c.lineTo(m[0], m[1]) : c.moveTo(m[0], m[1]); }); c.stroke(); if (!L.length) continue;
+        const mid = L[Math.floor(L.length / 2)], m0 = P(0, sg * mid[0], mid[1]), m1 = P(0, sg * mid[0], mid[1] + 1e-3); const dx = m1[0] - m0[0], dy = m1[1] - m0[1], d = Math.hypot(dx, dy) || 1; c.globalAlpha = 0.8; head(c, m0[0], m0[1], dx / d, dy / d, 7 * ps, T.bfield); c.globalAlpha = 0.55; }
+      c.globalAlpha = 1;
+      for (const zc of [-cf.s / 2, cf.s / 2]) for (const sg of [1, -1]) {
+        const m = P(0, sg * a, zc), r = 0.09 * pr.k;
+        const g = c.createRadialGradient(m[0] - r * 0.3, m[1] - r * 0.3, r * 0.1, m[0], m[1], r); g.addColorStop(0, T.copperHi); g.addColorStop(0.6, T.copper); g.addColorStop(1, T.copperLo);
+        c.fillStyle = g; c.beginPath(); c.arc(m[0], m[1], r, 0, 7); c.fill();
+        c.strokeStyle = T.canvas; c.fillStyle = T.canvas; c.lineWidth = 1.6 * ps; const q = r * 0.45;
+        if (sg > 0) { c.beginPath(); c.arc(m[0], m[1], q * 0.35, 0, 7); c.fill(); }
+        else { c.beginPath(); c.moveTo(m[0] - q, m[1] - q); c.lineTo(m[0] + q, m[1] + q); c.moveTo(m[0] + q, m[1] - q); c.lineTo(m[0] - q, m[1] + q); c.stroke(); }
+      }
+      const tail = []; { const t0 = Math.max(0, simT - botTrailWindow()); bot.extend(simT); for (let i = bot.idx(t0); i <= bot.idx(simT); i++) { const q = bot.P[i]; tail.push(P(q[0], q[1], q[2])); } const e = P(st.x, st.y, st.z); tail.push(e); }
+      fadeTrail(c, tail, (q) => q[0], (q) => q[1], col, 2.4 * ps);
+      const e = P(st.x, st.y, st.z); bead(c, e[0], e[1], col, 6 * ps, p.q > 0 ? '+' : '−');
+    }
+    // the predicted mirror points: where B on the particle's field line reaches B0/sin²α
+    if (!LAB.blind && botM) for (const zm of botM.zm) if (zm !== null) {
+      c.strokeStyle = T.equi; c.lineWidth = 1.2 * ps; c.setLineDash([5, 4]); c.beginPath();
+      for (let i = 0; i <= 72; i++) { const ph = 2 * Math.PI * i / 72, m = P(0.75 * a * Math.cos(ph), 0.75 * a * Math.sin(ph), zm); i ? c.lineTo(m[0], m[1]) : c.moveTo(m[0], m[1]); }
+      c.stroke(); c.setLineDash([]);
+    }
+    if (!LAB.blind && botM && botM.zm[0] !== null) { const m = P(0, -0.75 * a, botM.zm[0]); label(c, 'predicted mirror point', m[0], m[1] + 12 * ps, T.equi, 'center', 'middle', false, 10); }
+    // v and B at the particle
+    const e = P(st.x, st.y, st.z), B = bottleB(cf, st.x, st.y, st.z), bm = Math.hypot(...B), vv = Math.hypot(st.vx, st.vy, st.vz), L = 0.55 * a;
+    const tip = (ux, uy, uz) => P(st.x + ux * L, st.y + uy * L, st.z + uz * L);
+    { const q = tip(st.vx / vv, st.vy / vv, st.vz / vv); arrow(c, e[0], e[1], q[0], q[1], T.ink, 2.2 * ps); label(c, 'v', q[0] + 6 * ps, q[1], T.ink, 'left', 'middle', true); }
+    { const q = tip(B[0] / bm * 0.8, B[1] / bm * 0.8, B[2] / bm * 0.8); arrow(c, e[0], e[1], q[0], q[1], T.bfield, 2.2 * ps); label(c, 'B', q[0] + 6 * ps, q[1], T.bfield, 'left', 'middle', true); }
+    for (const zc of [-cf.s / 2, cf.s / 2]) { const m = P(0, 1.22 * a, zc); label(c, 'coil', m[0], m[1] - 6 * ps, T.muted, 'center', 'bottom', false, 10); }
+    const narrow = s.w < 560 * ps;
+    label(c, narrow ? `B₀ = ${fmtB(S.bot.B)} · coils ${S.bot.s} cm apart` : `B₀ = ${fmtB(S.bot.B)} at the center · coils ${S.bot.s} cm apart, radius ${BOT_A * 100} cm`, s.x + 12 * ps, s.y + 16 * ps, T.muted, 'left', 'middle');
+    if (bot.ended && simT >= bot.t[bot.t.length - 1]) label(c, bot.endTag === 'escaped' ? 'Escaped through a coil' : bot.endTag === 'coil' ? 'Hit a coil' : 'Run ended', s.x + s.w / 2, s.y + 40 * ps, T.pos, 'center', 'middle', true, 13);
+    label(c, use3 ? 'Drag to turn the view.' : narrow ? 'Side view' : 'Side view: the plane through the axis.', s.x + 12 * ps, s.y + s.h - 14 * ps, T.muted, 'left', 'middle', false, 10);
+    drawStopwatch(c);
+  }
+  function glBottle(st, pr) {
+    const cf = bot.cfg, a = cf.a, p = partOf(S.bot.part), col = chargeCol(p.q), W = (x, y, z) => [z / a, x / a, y / a];
+    const key = ['bot', T.dark, T.canvas, cf.s, S.bot.B, S.bot.rho].join('|');
+    const P3 = glGroup(key, () => {
+      const grp = new THREE.Group(), cu = glMat(T.copper, { metalness: 0.65, roughness: 0.3, emissive: col3(T.copperLo), emissiveIntensity: T.dark ? 0.3 : 0.05 });
+      for (const zc of [-cf.s / 2, cf.s / 2]) {
+        const tor = new THREE.Mesh(new THREE.TorusGeometry(1, 0.09, 20, 96), cu); tor.rotation.y = Math.PI / 2; tor.position.x = zc / a; grp.add(tor);
+        // the winding shows as fine grooves: a few thin rings on the torus
+        const gr = glMat(T.copperLo, { metalness: 0.5, roughness: 0.5 });
+        for (const dx of [-0.06, -0.02, 0.02, 0.06]) { const r2 = new THREE.Mesh(new THREE.TorusGeometry(1 + 0.085 * Math.sqrt(1 - (dx / 0.09) ** 2), 0.006, 6, 96), gr); r2.rotation.y = Math.PI / 2; r2.position.x = zc / a + dx; grp.add(r2); }
+      }
+      const lm = new THREE.LineBasicMaterial({ color: col3(T.bfield), transparent: true, opacity: T.dark ? 0.42 : 0.55 }), cm = new THREE.MeshBasicMaterial({ color: col3(T.bfield) });
+      for (const L of botLines) {
+        const naz = L[0] && L[Math.floor(L.length / 2)][0] < 1e-6 ? 1 : 8;
+        for (let k = 0; k < naz; k++) {
+          const ph = 2 * Math.PI * k / naz + 0.2, pts = L.map((q) => new THREE.Vector3(...W(q[0] * Math.cos(ph), q[0] * Math.sin(ph), q[1])));
+          grp.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), lm));
+          if (k % 2) continue;
+          /* arrowheads out beyond the coils, where the lines spread */
+          for (const fr of [0.12, 0.88]) { const i = Math.floor(L.length * fr), q0 = L[i], q1 = L[Math.min(L.length - 1, i + 1)];
+            const v0 = new THREE.Vector3(...W(q0[0] * Math.cos(ph), q0[0] * Math.sin(ph), q0[1])), v1 = new THREE.Vector3(...W(q1[0] * Math.cos(ph), q1[0] * Math.sin(ph), q1[1]));
+            const cn = glCone(0.09, 0.035, cm); cn.position.copy(v0); cn.lookAt(v0.clone().add(v1.sub(v0).multiplyScalar(cf.NI >= 0 ? 1 : -1))); grp.add(cn); }
+        }
+      }
+      // a faint axis
+      grp.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-cf.s / (2 * a) - 1.7, 0, 0), new THREE.Vector3(cf.s / (2 * a) + 1.7, 0, 0)]), new THREE.LineDashedMaterial({ color: col3(T.muted), dashSize: 0.08, gapSize: 0.08, transparent: true, opacity: 0.6 })));
+      grp.children[grp.children.length - 1].computeLineDistances();
+      return grp;
+    });
+    if (!P3.tm) { P3.tm = glTube(6000, 8, glMat('#ffffff', { vertexColors: true, roughness: 0.35, emissive: col3(col), emissiveIntensity: T.dark ? 0.55 : 0.25 })); GL.dyn.add(P3.tm); }
+    const t0 = Math.max(0, simT - botTrailWindow()); bot.extend(simT);
+    const i0 = bot.idx(t0), i1 = bot.idx(simT), stp = Math.max(1, Math.ceil((i1 - i0) / 5800)), pts = [];
+    for (let i = i0; i <= i1; i += stp) { const q = bot.P[i]; pts.push(W(q[0], q[1], q[2])); }
+    pts.push(W(st.x, st.y, st.z));
+    const ca = tmpRGB(T.canvas), cb = tmpRGB(col), n = pts.length;
+    P3.tm.set(pts, (i) => 0.018 * (0.4 + 0.6 * i / Math.max(1, n - 1)), (i, o) => { const f = Math.pow(i / Math.max(1, n - 1), 0.7); for (let j = 0; j < 3; j++) o[j] = ca[j] + (cb[j] - ca[j]) * f; });
+    if (!P3.bm) { P3.bm = glBall(col, 0.05); GL.dyn.add(P3.bm); }
+    P3.bm.position.set(...W(st.x, st.y, st.z));
+    glFrame(); glCamera(VB.az, VB.el, pr.view); glRender();
+  }
+  function plotBottle(box) {
+    const cf = bot.cfg, zr = (cf.s / 2 + 1.5 * cf.a) * 100, tMax = Math.max(simT, 6 * tScale), tu = tMax > 2e-6 ? 1e6 : 1e9, un = tu === 1e6 ? 'µs' : 'ns';
+    plotTitle(box, 'Position along the axis against time');
+    const ax = axes(box, 0, tMax * tu, -zr, zr, tickFmt, tickFmt, `t (${un})`, 'z (cm)');
+    const fx = (t) => ax.Xp(t * tu), fy = (z) => ax.Yp(z * 100);
+    ctx.save(); ctx.beginPath(); ctx.rect(box.L, box.T, box.R - box.L, box.B - box.T); ctx.clip();
+    ctx.strokeStyle = T.copper; ctx.lineWidth = 1.2; ctx.setLineDash([3, 3]);
+    for (const zc of [-cf.s / 2, cf.s / 2]) { ctx.beginPath(); ctx.moveTo(box.L, fy(zc)); ctx.lineTo(box.R, fy(zc)); ctx.stroke(); }
+    if (!LAB.blind && botM) { ctx.strokeStyle = T.equi; for (const zm of botM.zm) if (zm !== null) { ctx.beginPath(); ctx.moveTo(box.L, fy(zm)); ctx.lineTo(box.R, fy(zm)); ctx.stroke(); } }
+    ctx.setLineDash([]);
+    bot.extend(simT);
+    const i1 = bot.idx(simT), stp = Math.max(1, Math.floor(i1 / 1500));
+    ctx.strokeStyle = chargeCol(partOf(S.bot.part).q); ctx.lineWidth = 1.8; ctx.beginPath();
+    for (let i = 0; i <= i1; i += stp) { const x = fx(bot.t[i]), y = fy(bot.P[i][2]); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }
+    const sn = bot.at(simT); ctx.lineTo(fx(simT), fy(sn.z)); ctx.stroke();
+    ctx.restore();
+    const ps = projScale();
+    label(ctx, 'coil', box.R - 4 * ps, fy(cf.s / 2) - 7 * ps, T.copper, 'right', 'middle', false, 10);
+    if (!LAB.blind && botM && botM.zm[1] !== null) label(ctx, 'mirror point, predicted', box.R - 4 * ps, fy(botM.zm[1]) + 8 * ps, T.equi, 'right', 'middle', false, 10);
+  }
+  function botBouncePeriod() {
+    const tp = bot.turns.filter((q) => q.t <= simT); if (tp.length < 3) return null;
+    return (tp[tp.length - 1].t - tp[tp.length % 2 ? 0 : 1].t) / Math.floor((tp.length - 1) / 2) ;
+  }
+  function botReadouts(full) {
+    const cf = bot.cfg, p = partOf(S.bot.part), al = S.bot.al * Math.PI / 180, v = botV();
+    let st, B;
+    if (full) {
+      $('bSOut').textContent = `${S.bot.s} cm`; $('bBOut').textContent = fmtB(S.bot.B); $('bVOut').textContent = `${fmtV(v)} · ${fmtK(0.5 * p.m * v * v)}`;
+      $('bAOut').textContent = `${S.bot.al}°`; $('bROut').textContent = `${S.bot.rho.toFixed(1)} cm`;
+      $('bNI').textContent = si(roundSig(cf.NI, 3), 'A', 3); $('bB0').textContent = fmtB(botM.B0); $('bBm').textContent = fmtB(botM.Bmax);
+      $('bRm').textContent = trim(botM.ratio.toPrecision(3)); $('bLc').textContent = `${(botM.lossCone * 180 / Math.PI).toFixed(1)}°`;
+      $('bPred').textContent = botM.trapped ? `trapped, turning round where B = B₀/sin²α = ${fmtB(botM.Bm)}` : 'it escapes through a coil';
+      $('bRL').textContent = fmtLen(radius(p.m, v * Math.sin(al), p.q, botM.B0)); $('bTg').textContent = si(period(p.m, p.q, botM.B0), 's', 3);
+      for (const id of ['bBmRow', 'bRmRow', 'bLcRow', 'bPredRow', 'bRLRow', 'bTgRow']) $(id).hidden = LAB.blind;
+    }
+    /* μ and the speed from the Boris step itself: the drawing's linear interpolation between steps cuts the corner of each 0.04 rad turn */
+    { bot.extend(simT); const q = bot.P[bot.idx(simT)]; st = { x: q[0], y: q[1], z: q[2], vx: q[3], vy: q[4], vz: q[5] }; B = bottleB(cf, st.x, st.y, st.z); }
+    const nt = bot.turns.filter((q) => q.t <= simT).length; $('bNt').textContent = nt;
+    const tb = botBouncePeriod(); $('bTb').textContent = tb ? si(tb, 's', 3) : 'after three turning points';
+    $('bMu').textContent = `${(magMoment(p.m, st, B) / bot.mu0).toFixed(3)} × the start`;
+    $('bSp').textContent = `${(Math.hypot(st.vx, st.vy, st.vz) / v).toFixed(12)} × the start`;
+    const ended = bot.ended && simT >= bot.t[bot.t.length - 1];
+    $('bEndRow').hidden = !ended; $('bEnd').textContent = ended ? (bot.endTag === 'escaped' ? 'escaped through a coil' : bot.endTag === 'coil' ? 'hit a coil' : 'stopped at the step limit') : '';
+  }
+
+  // ---------- the Hall effect on the stage ----------
+  const VH = { az: -0.5, el: 0.62, zoom: 1 };
+  const HALL_L = 3.2;                                  // strip length shown, in units of its 10 mm width
+  const hallCar = [];                                  // the carriers shown: [x, y, z] in units of the width
+  function hallSeed() { hallCar.length = 0; let sd = 12345; const rnd = () => (sd = (sd * 16807) % 2147483647) / 2147483647; for (let i = 0; i < 150; i++) hallCar.push([(rnd() - 0.5) * HALL_L, (rnd() - 0.5) * 0.9, rnd() - 0.5]); }
+  const hallFrac = () => hallBuild(HS.tt);
+  function hallStep(dt) {
+    /* the carriers move along their average velocity at this moment, at the true angle; the speed is a display rate */
+    if (!hallCar.length) hallSeed();
+    const M = HALL[HS.mat], Bz = HS.bz * HS.B, vv = HS.I > 0 ? hallCarrierVel(M, HS.I, Bz, HS.t, hallFrac()) : [0, 0], sp = Math.hypot(vv[0], vv[1]);
+    if (!sp) return;
+    const ux = vv[0] / sp, uy = vv[1] / sp, d = dt * 0.45;
+    for (const c of hallCar) {
+      c[0] += ux * d; c[1] += uy * d;
+      if (c[1] > 0.47 || c[1] < -0.47) { c[1] = (Math.random() - 0.5) * 0.9; c[0] = -Math.sign(ux) * HALL_L / 2; }   /* reached an edge: it stays there as edge charge; a new carrier comes in at the far end */
+      if (c[0] > HALL_L / 2) c[0] -= HALL_L; else if (c[0] < -HALL_L / 2) c[0] += HALL_L;
+    }
+  }
+  function hallProj() {
+    const s = LY.scene, ps = projScale(), v = VH, ca = Math.cos(v.az), sa = Math.sin(v.az), ce = Math.cos(v.el), se = Math.sin(v.el);
+    const hx = HALL_L / 2 + 0.6, hy = 1.6, hz = 1.15, padX = 16 * ps, padT = 34 * ps, padB = 40 * ps;
+    const wW = hx * Math.abs(ca) + hy * Math.abs(sa), wH = hz * ce + (hx * Math.abs(sa) + hy * Math.abs(ca)) * se;
+    const k = Math.min((s.w - 2 * padX) / (2 * wW), (s.h - padT - padB) / (2 * wH)) * v.zoom, ox = s.x + s.w / 2, oy = s.y + padT + (s.h - padT - padB) / 2;
+    const P = (X, Y, Z) => { const xr = X * ca - Y * sa, yr = X * sa + Y * ca; return [ox + xr * k, oy - (yr * se + Z * ce) * k, -yr * ce + Z * se]; };
+    return { P, k, view: { l: (s.x - ox) / k, r: (s.x + s.w - ox) / k, t: (oy - s.y) / k, b: (oy - s.y - s.h) / k } };
+  }
+  const hallT = () => HS.t / HALL.w;                   // thickness in units of the width
+  function drawHallStage() {
+    const c = ctx, s = LY.scene, ps = projScale(), M = HALL[HS.mat], pr = hallProj(), P = pr.P, f = hallFrac(), h = hallNums(), th = hallT();
+    const use3 = glEnsure();
+    if (use3) { c.clearRect(s.x, s.y, s.w, s.h); glHall(pr); }
+    vignette(c, s);
+    if (!use3) {
+      // without WebGL: the strip seen from above, as in the small picture beside the controls
+      label(c, 'The 3D view of the strip needs WebGL. Open "Hall effect in a strip" for the top view.', s.x + s.w / 2, s.y + s.h / 2, T.muted, 'center', 'middle', false, 12);
+    }
+    const on = HS.I > 0 && HS.B > 0;
+    // current and field
+    { const a0 = P(-HALL_L / 2 - 0.2, -0.75, 0), a1 = P(-HALL_L / 2 + 0.7, -0.75, 0); arrow(c, a0[0], a0[1], a1[0], a1[1], T.ink, 2.4 * ps); label(c, `I = ${si(HS.I, 'A', 3)}`, a1[0] + 6 * ps, a1[1] + 2 * ps, T.ink, 'left', 'middle', true); }
+    if (HS.B > 0) { const b0 = P(HALL_L / 2 - 0.15, 0.7, HS.bz < 0 ? 0.75 : -0.45), b1 = P(HALL_L / 2 - 0.15, 0.7, HS.bz < 0 ? 0.25 : 0.05); arrow(c, b0[0], b0[1], b1[0], b1[1], T.bfield, 2.4 * ps); label(c, `B = ${si(HS.B, 'T', 3)}`, b0[0] + 6 * ps, b0[1], T.bfield, 'left', 'middle', true); }
+    // edges
+    { const e1 = P(0.6, 0.5, th / 2), e2 = P(0.6, -0.5, th / 2); label(c, 'top edge', e1[0], e1[1] - 9 * ps, T.muted, 'center', 'middle', false, 10); label(c, 'bottom edge', e2[0], e2[1] + 11 * ps, T.muted, 'center', 'middle', false, 10); }
+    { const n1 = P(-1.1, -0.95, 1.25), n2 = P(-1.1, -0.95, -1.2), top = HS.bz < 0 ? 'N' : 'S';
+      label(c, top, n1[0], n1[1], top === 'N' ? T.pos : T.neg, 'center', 'middle', true, 13); label(c, top === 'N' ? 'S' : 'N', n2[0], n2[1], top === 'N' ? T.neg : T.pos, 'center', 'middle', true, 13); }
+    // the forces on one carrier, while the field builds
+    if (on && !LAB.blind) {
+      const q = M.q, vv = hallCarrierVel(M, HS.I, HS.bz * HS.B, HS.t, f), vx = vv[0], x0 = -0.75, o = P(x0, 0, th / 2 + 0.02), sc = 0.36;
+      const Fm = -q * Math.sign(vx) * HS.bz;                 /* sign of (q v × B)_y for v along x: q v_x (−B_z) */
+      const m1 = P(x0, Fm * sc, th / 2 + 0.02), m2 = P(x0, -Fm * sc * f, th / 2 + 0.02);
+      arrow(c, o[0], o[1], m1[0], m1[1], T.force, 2.4 * ps); label(c, 'qv × B', m1[0] + 6 * ps, m1[1], T.force, 'left', 'middle', true, 10);
+      if (f > 0.04) { arrow(c, o[0], o[1], m2[0], m2[1], T.equi, 2.4 * ps); label(c, 'qE', m2[0] + 6 * ps, m2[1], T.equi, 'left', 'middle', true, 10); }
+    }
+    // the voltmeter across the width
+    { const m = P(HALL_L / 2 + 0.25, 1.15, 0.35), w = 118 * ps, hh = 48 * ps, x = Math.min(s.x + s.w - w - 8 * ps, m[0] - w / 2), y = Math.max(s.y + 24 * ps, m[1] - hh);
+      c.fillStyle = T.surface; c.strokeStyle = T.ink; c.lineWidth = 1.5; c.fillRect(x, y, w, hh); c.strokeRect(x + 0.5, y + 0.5, w, hh);
+      c.fillStyle = T.muted; c.font = `${10 * ps}px ${T.ui}`; c.textAlign = 'center'; c.textBaseline = 'alphabetic'; c.fillText('V_top − V_bottom', x + w / 2, y + 15 * ps);
+      c.fillStyle = T.ink; c.font = `700 ${15 * ps}px ${T.mono}`; c.fillText(on ? si(roundSig(hallNow(), 3), 'V', 3) : '0 V', x + w / 2, y + 37 * ps);
+      HS.meterAt = [x + w / 2, y + hh]; }
+    const narrow = s.w < 560 * ps;
+    label(c, `${LAB.blind ? BLIND_NAMES[HS.mat] : M.name}${narrow ? '' : ' strip, 10 mm wide'}, ${si(HS.t, 'm', 3)} thick`, s.x + 12 * ps, s.y + 16 * ps, T.muted, 'left', 'middle');
+    label(c, narrow ? 'Drag to turn the view.' : 'Drag to turn the view. Carriers move at the true angle; their speed is not to scale.', s.x + 12 * ps, s.y + s.h - 14 * ps, T.muted, 'left', 'middle', false, 10);
+  }
+  // the reading now: the steady V_H times the build up fraction (exactly V_H once the transient is over)
+  const hallNow = () => { const h = hallNums(); return HS.tt > 30 ? h.V : h.V * hallFrac(); };
+  function glHall(pr) {
+    const M = HALL[HS.mat], th = hallT(), q = M.q, f = hallFrac();
+    const key = ['hall', T.dark, T.canvas, HS.mat, th, HS.bz, HS.B > 0, LAB.blind].join('|');
+    const P3 = glGroup(key, () => {
+      const grp = new THREE.Group();
+      const strip = new THREE.Mesh(new THREE.BoxGeometry(HALL_L, 1, th), glMat(HS.mat === 'cu' && !LAB.blind ? T.copper : T.steel, { metalness: HS.mat === 'cu' ? 0.6 : 0.3, roughness: 0.35, transparent: true, opacity: 0.55, depthWrite: false }));
+      grp.add(strip); grp.add(new THREE.LineSegments(new THREE.EdgesGeometry(strip.geometry), new THREE.LineBasicMaterial({ color: col3(T.ink), transparent: true, opacity: 0.5 })));
+      // pole pieces above and below: B points from the N face to the S face
+      const top = HS.bz < 0 ? 'N' : 'S';
+      for (const sg of [1, -1]) {
+        /* the upper pole piece is drawn see through, so the strip shows from above */
+        const pm = glMat(T.steel, { metalness: 0.55, roughness: 0.38, transparent: sg > 0, opacity: sg > 0 ? 0.16 : 1, depthWrite: sg < 0 });
+        const pc = new THREE.Mesh(new THREE.CylinderGeometry(1.25, 1.25, 0.5, 64), pm); pc.rotation.x = Math.PI / 2; pc.position.z = sg * (0.95 + 0.25); grp.add(pc);
+        const face = new THREE.Mesh(new THREE.CircleGeometry(1.25, 64), glMat((sg > 0) === (top === 'N') ? T.pos : T.neg, { roughness: 0.6, transparent: true, opacity: sg > 0 ? 0.18 : 0.5, depthWrite: false }));
+        face.position.z = sg * 0.949; if (sg > 0) face.rotation.x = Math.PI; grp.add(face);
+      }
+      if (HS.B > 0) {
+        const lm = new THREE.LineBasicMaterial({ color: col3(T.bfield), transparent: true, opacity: 0.45 }), cm = new THREE.MeshBasicMaterial({ color: col3(T.bfield) });
+        for (let i = -2; i <= 2; i++) for (let j = -2; j <= 2; j++) { if (i * i + j * j > 6) continue; const x = i * 0.42, y = j * 0.42;
+          grp.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(x, y, -0.93), new THREE.Vector3(x, y, 0.93)]), lm));
+          const cn = glCone(0.08, 0.03, cm); cn.position.set(x, y, HS.bz < 0 ? 0.55 : -0.55); if (HS.bz < 0) cn.rotation.x = Math.PI; grp.add(cn); }
+      }
+      // leads: current in and out along the strip, voltmeter leads from the two edges
+      const lead = glMat(T.copperLo, { roughness: 0.6 }), vlead = glMat(T.muted, { roughness: 0.6 });
+      for (const sg of [1, -1]) { const r = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 0.7, 12), lead); r.rotation.z = Math.PI / 2; r.position.set(sg * (HALL_L / 2 + 0.35), 0, 0); grp.add(r); }
+      for (const [y, h] of [[0.5, 0.55], [-0.5, 0.95]]) { const pts = [new THREE.Vector3(HALL_L / 2 - 0.3, y, th / 2), new THREE.Vector3(HALL_L / 2 - 0.3, y, h * 0.3 + 0.1), new THREE.Vector3(HALL_L / 2 + 0.25, 1.15, 0.35)];
+        grp.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 24, 0.018, 6), vlead)); }
+      return grp;
+    });
+    // carriers
+    if (!P3.car) { P3.car = new THREE.InstancedMesh(new THREE.SphereGeometry(0.035, 10, 8), glMat(q > 0 ? T.pos : T.neg, { emissive: col3(q > 0 ? T.pos : T.neg), emissiveIntensity: 0.4 }), 160); P3.car.frustumCulled = false; GL.dyn.add(P3.car); }
+    const m4 = new THREE.Matrix4(); let n = 0;
+    if (!LAB.blind && HS.I > 0) for (const c of hallCar) { m4.makeTranslation(c[0], c[1], c[2] * th * 0.8); P3.car.setMatrixAt(n++, m4); }
+    P3.car.count = n; P3.car.instanceMatrix.needsUpdate = true;
+    // edge charge: as many marks on each edge as the build up fraction says (out of 36)
+    if (!P3.ep) { for (const k of ['ep', 'en']) { P3[k] = new THREE.InstancedMesh(new THREE.BoxGeometry(0.05, 0.02, Math.max(0.01, th * 0.9)), glMat(k === 'ep' ? T.pos : T.neg, { emissive: col3(k === 'ep' ? T.pos : T.neg), emissiveIntensity: 0.5 }), 40); P3[k].frustumCulled = false; GL.dyn.add(P3[k]); } }
+    const on = HS.I > 0 && HS.B > 0 && !LAB.blind, ne = on ? Math.round(36 * f) : 0;
+    /* carriers are pushed to the edge on the side of q v × B; that edge takes the carriers' sign */
+    const vd = on ? hallCarrierVel(M, HS.I, HS.bz * HS.B, HS.t, 0) : [0, 0], pushY = Math.sign(vd[1]) || 1, posY = q > 0 ? pushY : -pushY;
+    for (const [k, y] of [['ep', posY * 0.505], ['en', -posY * 0.505]]) { for (let i = 0; i < ne; i++) { m4.makeTranslation(-HALL_L / 2 + 0.1 + (i + 0.5) * (HALL_L - 0.2) / 36, y, 0); P3[k].setMatrixAt(i, m4); } P3[k].count = ne; P3[k].instanceMatrix.needsUpdate = true; }
+    glFrame(); glCamera(VH.az, VH.el, pr.view); glRender();
+  }
+  function plotHall(box) {
+    const h = hallNums(), xMax = 8, a = Math.abs(h.V) || 1e-3, pw = a >= 1 ? 1 : a >= 1e-3 ? 1e-3 : a >= 1e-6 ? 1e-6 : 1e-9, un = { 1: 'V', 1e-3: 'mV', 1e-6: 'µV', 1e-9: 'nV' }[pw], V = h.V;
+    plotTitle(box, 'Hall voltage as the edges charge');
+    const lo = Math.min(0, V) * 1.15 / pw, hi = Math.max(0, V) * 1.15 / pw;
+    const ax = axes(box, 0, xMax, lo === hi ? -1 : lo, lo === hi ? 1 : hi, tickFmt, tickFmt, 't / τ', `V (${un})`);
+    const fx = (x) => ax.Xp(x), fy = (v) => ax.Yp(v / pw);
+    ctx.save(); ctx.beginPath(); ctx.rect(box.L, box.T, box.R - box.L, box.B - box.T); ctx.clip();
+    ctx.strokeStyle = T.muted; ctx.setLineDash([4, 4]); ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(box.L, fy(V)); ctx.lineTo(box.R, fy(V)); ctx.stroke(); ctx.setLineDash([]);
+    if (HS.I > 0 && HS.B > 0) {
+      const xn = Math.min(HS.tt, xMax); ctx.strokeStyle = T.accent; ctx.lineWidth = 2; ctx.beginPath();
+      for (let i = 0; i <= 200; i++) { const x = xn * i / 200, y = fy(V * hallBuild(x)); i ? ctx.lineTo(fx(x), y) : ctx.moveTo(fx(x), y); }
+      ctx.stroke(); bead(ctx, fx(xn), fy(V * hallBuild(xn)), T.accent, 4 * projScale(), '');
+    }
+    ctx.restore();
+    label(ctx, `V_H = ${si(roundSig(V, 3), 'V', 3)}`, box.R - 4 * projScale(), fy(V) - 8 * projScale(), T.muted, 'right', 'middle', false, 10);
+  }
+  function hallStageReadouts() {
+    const M = HALL[HS.mat], tau = hallTau(M);
+    $('hNow').textContent = HS.I > 0 && HS.B > 0 ? si(roundSig(hallNow(), 3), 'V', 3) : '0 V';
+    $('hTau').textContent = HS.mat === 'cu' ? `${sci(tau, 2)} s; in a metal the real settling takes about a collision time, 2.5 × 10⁻¹⁴ s` : si(tau, 's', 3);
+    $('hAng').textContent = `${(hallAngle(M.mu, HS.B) * 180 / Math.PI).toPrecision(3)}°`;
+    $('hTauRow').hidden = $('hAngRow').hidden = LAB.blind;
+    $('hT').textContent = `${trim(Math.min(HS.tt, 999).toFixed(2))} τ${HS.tt > 12 ? ', steady' : ''}`;
   }
   // the right hand rule as a flat hand: fingers along B, thumb along the part of v across B, palm toward qv × B for q > 0
   function drawHand(P, st, zc, B, p, sc, when) {
@@ -1968,7 +2614,7 @@ details.hall[open] > summary { margin-bottom: 8px; }
   function drawPlot() {
     const box = plotBox();
     if (box.R - box.L < 60 || box.B - box.T < 50) return;
-    if (S.mode === 'free') plotFree(box); else if (S.mode === 'sel') plotSel(box); else if (S.mode === 'spec') plotSpec(box); else plotCyc(box);
+    if (S.mode === 'free') plotFree(box); else if (S.mode === 'sel') plotSel(box); else if (S.mode === 'spec') plotSpec(box); else if (S.mode === 'bottle') plotBottle(box); else if (S.mode === 'hall') plotHall(box); else plotCyc(box);
   }
   function plotFree(box) {
     const c = ctx, ps = projScale(), p = partOf(S.f.part), Tp = freePeriod(p);
@@ -2061,7 +2707,8 @@ details.hall[open] > summary { margin-bottom: 8px; }
   function readouts() {
     const m = S.mode;
     $('readFree').hidden = m !== 'free'; $('readSel').hidden = m !== 'sel'; $('readSpec').hidden = m !== 'spec'; $('readCyc').hidden = m !== 'cyc';
-    if (m !== 'spec') { const pp = curPart(); $('rPart').textContent = `q = ${pp.q ? sci(pp.q, 4) : '0'} C, m = ${sci(pp.m, 4)} kg`; }
+    $('readBot').hidden = m !== 'bottle'; $('readHall').hidden = m !== 'hall';
+    if (m !== 'spec' && m !== 'hall') { const pp = curPart(); $('rPart').textContent = `q = ${pp.q ? sci(pp.q, 4) : '0'} C, m = ${sci(pp.m, 4)} kg`; }
     // in the free setups one second here is a quarter period, so Blind leaves out the time scale
     $('pbOut').textContent = `×${S.play >= 0 ? 2 ** S.play : '1/' + 2 ** -S.play}` + (LAB.blind ? '' : ` · 1 s here = ${si(tScale * 2 ** S.play, 's', 3)}`);
     const bl = LAB.blind;
@@ -2075,6 +2722,8 @@ details.hall[open] > summary { margin-bottom: 8px; }
       if (band) $('sBand').innerHTML = `${sci(band[0], 4)} to ${sci(band[1], 4)} m/s <span class="ok">±${(50 * (band[1] - band[0]) / v0).toPrecision(2)}% about E/B</span>`;
       else if ($('sBand').textContent !== '…') $('sBand').textContent = 'none: E/B is blocked';
     } else if (m === 'spec') specReadouts();
+    else if (m === 'bottle') botReadouts(true);
+    else if (m === 'hall') hallStageReadouts();
     else cycReadouts(true);
   }
   function freeReadouts(full) {
@@ -2150,6 +2799,8 @@ details.hall[open] > summary { margin-bottom: 8px; }
       $('sN').textContent = counts.fired; $('sP').textContent = counts.fired ? `${counts.pass} (${(100 * counts.pass / counts.fired).toFixed(1)}%)` : '0'; $('sH').textContent = counts.plate; $('sX').textContent = counts.slit;
     } else if (S.mode === 'spec') { $('count').innerHTML = `${hist.spec.length} <small>ions counted</small>`; specReadouts(); }
     else if (S.mode === 'free') { const p = partOf(S.f.part), Tp = freePeriod(p); $('count').innerHTML = `t = ${si(simT, 's')}${Tp && !LAB.blind ? ` <small>= ${(simT / Tp).toFixed(2)} T</small>` : ''}`; freeReadouts(false); }
+    else if (S.mode === 'bottle') { $('count').innerHTML = `t = ${si(simT, 's')}`; botReadouts(false); }
+    else if (S.mode === 'hall') { $('count').innerHTML = HS.I > 0 && HS.B > 0 ? `t = ${trim(Math.min(HS.tt, 999).toFixed(2))} <small>τ</small>` : '<small>no current or no field</small>'; hallStageReadouts(); }
     else { $('count').innerHTML = `t = ${si(simT, 's')}`; cycReadouts(false); }
     $('timerOut').textContent = timerText(); $('timerOut').classList.toggle('timer-run', LAB.tRun);
     const R = rulerNow(); $('rulerOut').textContent = R ? R.txt : S.mode === 'free' && S.f.view3d && LAB.ruler ? 'not in 3D' : 'off';
@@ -2159,15 +2810,17 @@ details.hall[open] > summary { margin-bottom: 8px; }
   const press = (sel, test) => { for (const b of document.querySelectorAll(sel)) b.setAttribute('aria-pressed', String(test(b))); };
   function syncUI() {
     const m = S.mode;
-    $('secPart').hidden = m === 'spec';
+    $('secPart').hidden = m === 'spec' || m === 'hall';
     $('secLaunch').hidden = m !== 'free'; $('secFields').hidden = m !== 'free';
-    $('secSel').hidden = m !== 'sel'; $('secSpec').hidden = m !== 'spec'; $('secCyc').hidden = m !== 'cyc';
+    $('secSel').hidden = m !== 'sel'; $('secSpec').hidden = m !== 'spec'; $('secCyc').hidden = m !== 'cyc'; $('secBot').hidden = m !== 'bottle';
     $('secMeasure').hidden = m !== 'free';
-    $('fit').hidden = m !== 'free'; $('fire').hidden = !(m === 'sel' || m === 'spec'); $('clear').hidden = !(m === 'sel' || m === 'spec');
-    const pk = m === 'free' ? S.f.part : m === 'sel' ? S.sel.part : S.cyc.part;
+    if (m === 'hall') $('hallDet').open = true;
+    $('hallBoxWrap').hidden = m === 'hall';
+    $('fit').hidden = !(m === 'free' || m === 'bottle' || m === 'hall'); $('fit').textContent = m === 'free' ? 'Fit view' : 'Reset view'; $('fire').hidden = !(m === 'sel' || m === 'spec'); $('clear').hidden = !(m === 'sel' || m === 'spec');
+    const pk = m === 'free' ? S.f.part : m === 'sel' ? S.sel.part : m === 'bottle' ? S.bot.part : S.cyc.part;
     for (const b of document.querySelectorAll('#parts button')) {
       const k = b.dataset.k;
-      b.hidden = (k === 'd' && m !== 'cyc') || (k === 'c' && m !== 'free') || (k === 'e' && m === 'cyc');
+      b.hidden = (k === 'd' && m !== 'cyc' && m !== 'bottle') || (k === 'c' && m !== 'free') || (k === 'e' && (m === 'cyc' || m === 'bottle'));
       b.setAttribute('aria-pressed', String(k === pk));
     }
     $('customRows').hidden = !(m === 'free' && S.f.part === 'c');
@@ -2176,6 +2829,7 @@ details.hall[open] > summary { margin-bottom: 8px; }
     $('sameRow').hidden = !(S.f.cmp === 'e' || S.f.cmp === 'p');
     $('sameV').setAttribute('aria-pressed', String(S.f.same === 'v')); $('sameK').setAttribute('aria-pressed', String(S.f.same === 'K'));
     $('lv').value = S.f.lv; $('ang').value = S.f.ang; $('par').value = S.f.par;
+    can.style.touchAction = orbitTouch() ? 'pan-y' : 'none';
     $('vTop').setAttribute('aria-pressed', String(!S.f.view3d)); $('v3d').setAttribute('aria-pressed', String(S.f.view3d));
     $('hand').checked = !!S.f.hand; $('hand').disabled = !S.f.view3d;
     $('bIn').setAttribute('aria-pressed', String(S.f.bdir === -1)); $('bOut').setAttribute('aria-pressed', String(S.f.bdir === 1)); $('bOff').setAttribute('aria-pressed', String(S.f.bdir === 0));
@@ -2190,6 +2844,8 @@ details.hall[open] > summary { margin-bottom: 8px; }
     $('mixNat').setAttribute('aria-pressed', String(S.spec.mix === 'nat')); $('mixEq').setAttribute('aria-pressed', String(S.spec.mix === 'eq'));
     $('pV').value = S.spec.V; $('pB').value = S.spec.B; $('pA').value = S.spec.al; $('pR').value = S.spec.rate;
     $('cB').value = S.cyc.B; $('cV').value = S.cyc.V; $('cG').value = S.cyc.g; $('cR').value = S.cyc.R; $('cF').value = S.cyc.det;
+    $('bS').value = S.bot.s; $('bB').value = S.bot.B; $('bV').value = S.bot.lv; $('bA').value = S.bot.al; $('bR').value = S.bot.rho;
+    $('bvSide').setAttribute('aria-pressed', String(!S.bot.view3d)); $('bv3d').setAttribute('aria-pressed', String(S.bot.view3d));
     $('pb').value = S.play;
     modelText();
   }
@@ -2199,6 +2855,8 @@ details.hall[open] > summary { margin-bottom: 8px; }
       free: 'Nonrelativistic, with uniform fields: B at right angles to the page and E in the page. The path is the exact solution, a circle in pure B and a cycloid or trochoid with E as well, evaluated at each frame, so |v| in pure B stays fixed to rounding error. In rectangle mode the field edges are sharp; real magnets have fringe fields. The particle does not radiate.',
       sel: 'Uniform crossed fields between the plates and none outside, with sharp edges. Nonrelativistic, exact motion. Each track is colored by its speed. Speeds are spread evenly over the range; a real source has a smoother spread.',
       spec: 'Ions start at rest at the top plate and fall through V in a uniform field, then move in uniform B below the slit; the edges are sharp. The slit passes ions heading within ± the spread angle of straight down. Ion mass = atomic mass − one electron mass. Nonrelativistic: v/c < 10⁻³.',
+      bottle: 'Each coil is a thin ring of radius 6 cm carrying N I, whose field is the exact Biot–Savart result in elliptic integrals; the two add. The motion is integrated step by step with the Boris rotation (0.04 rad of turning per step), which keeps the speed exact. Nonrelativistic, no collisions, no radiation, and no field from the particle itself. The mirror readouts come from tracing the field line through the start and are a prediction to compare with the run.',
+      hall: 'Steady state: V_H = −IB/(nqt). The build up: each carrier moves at its drift velocity μ(E + v × B), its inertia left out; carriers that reach an edge stay there, and the charged edges, treated as two sheets, make the sideways field grow as 1 − e^(−t/τ), τ = ε/σ. That is fair for germanium (collision time 0.3 ps against τ = 2.3 ps); in copper the real settling takes about one collision time. Carriers move at the true angle, but their speed and their thermal motion are not shown to scale.',
       cyc: 'Uniform B inside the dees and the gap, nothing outside R. The gap voltage is a square wave that flips at the frequency set below, so the field in the gap is steady while the particle crosses; with a sine wave the gain is qV sin φ. The source sits just below center so the late orbits are centered. Nonrelativistic motion: the readout shows how far that is off at K_max.'
     };
     $('modelHint').textContent = hints[m];
@@ -2206,6 +2864,8 @@ details.hall[open] > summary { margin-bottom: 8px; }
       free: '<span><i class="swatch pos"></i>Positive charge path (dashed: where it goes next)</span><span><i class="swatch neg"></i>Negative charge path</span><span><i class="swatch vel"></i>Velocity v</span><span><i class="swatch force"></i>Force F, shown as the change in v over 1/(2ω)</span><span><i class="swatch efield"></i>Electric field E</span><span><i class="sym">⊗</i>B into the page, ⊙ out of the page</span><span><i class="swatch bline"></i>B in the 3D view, inside a solenoid</span>',
       sel: '<span><i class="swatch grad"></i>Speed, slow to fast</span><span><i class="swatch efield"></i>Electric field E</span><span><i class="sym">⊗</i>B into the page</span>',
       spec: '<span><i class="swatch efield"></i>Accelerating field</span><span><i class="sym">⊗</i>B into the page</span><span><i class="swatch ghost"></i>Spread of directions leaving the slit</span>',
+      bottle: '<span><i class="swatch pos"></i>Particle path</span><span><i class="swatch bline"></i>Field lines</span><span><i class="swatch coil"></i>Coils</span><span><i class="swatch efield"></i>Predicted mirror points</span>',
+      hall: '<span><i class="swatch neg"></i>Negative carriers or edge charge</span><span><i class="swatch pos"></i>Positive carriers or edge charge</span><span><i class="swatch bline"></i>Field B</span><span><i class="swatch force"></i>qv × B on a carrier</span><span><i class="swatch efield"></i>qE from the edge charge</span>',
       cyc: '<span><i class="swatch pos"></i>Particle path</span><span><i class="swatch efield"></i>Gap field, reverses each half period</span><span><i class="sym">⊗</i>B into the page</span>'
     };
     $('key').innerHTML = keys[m];
@@ -2224,7 +2884,9 @@ details.hall[open] > summary { margin-bottom: 8px; }
       buildFree();
       if (fit) setFreeTimeScale();
       simT = 0;
-    } else if (S.mode === 'cyc') { buildCyc(); fixedView(); if (fit || true) tScale = 1 / cyc.cfg.fc; simT = 0; }
+    } else if (S.mode === 'bottle') { buildBot(); simT = 0; }
+    else if (S.mode === 'hall') { tScale = 1e-9; HS.tt = 0; hallSeed(); }
+    else if (S.mode === 'cyc') { buildCyc(); fixedView(); if (fit || true) tScale = 1 / cyc.cfg.fc; simT = 0; }
     else {
       fixedView();
       if (S.mode === 'sel') { tScale = SEL.L / (S.sel.c * 1e5) / 1.6; updBand(); }
@@ -2242,6 +2904,8 @@ details.hall[open] > summary { margin-bottom: 8px; }
     if (name === 'sel') Object.assign(S.sel, { part: 'p', V: 400, B: 0.1, w: 2, c: 2, sp: 30, rate: 12 });
     if (name === 'spec') Object.assign(S.spec, { el: 'ne', mix: 'nat', V: 1000, B: 0.2, al: 2, rate: 8 });
     if (name === 'cyc') Object.assign(S.cyc, { part: 'p', B: 1, V: 100, g: 1, R: 0.3, det: 1 });
+    if (name === 'bottle') { Object.assign(S.bot, { part: 'p', s: 20, B: 0.2, lv: 5, al: 50, rho: 0, view3d: true }); Object.assign(VB, { az: -0.42, el: 0.36, zoom: 1 }); }
+    if (name === 'hall') { Object.assign(HS, { mat: 'nge', I: 0.020, bz: -1, B: 0.3, t: 0.001 }); Object.assign(VH, { az: -0.5, el: 0.62, zoom: 1 }); syncHallInputs(); }
     markPreset(name);
     LY = layout(W, Hh);
     clearStreams();
@@ -2255,6 +2919,7 @@ details.hall[open] > summary { margin-bottom: 8px; }
     const k = b.dataset.k; custom();
     if (S.mode === 'free') { S.f.part = k; if (S.f.cmp === k) S.f.cmp = 'none'; if (S.f.region) defaultRect(); rebuild(true); }
     else if (S.mode === 'sel') { S.sel.part = k; clearStreams(); rebuild(true); }
+    else if (S.mode === 'bottle') { S.bot.part = k; rebuild(true); }
     else { S.cyc.part = k; rebuild(true); }
   });
   for (const b of document.querySelectorAll('#cmps button')) b.addEventListener('click', () => { S.f.cmp = b.dataset.c; if (S.f.cmp === S.f.part) S.f.cmp = 'none'; custom(); rebuild(true); });
@@ -2267,6 +2932,9 @@ details.hall[open] > summary { margin-bottom: 8px; }
   $('ang').addEventListener('input', (e) => { S.f.ang = +e.target.value; custom(); rebuild(false); });
   $('par').addEventListener('input', (e) => { S.f.par = +e.target.value; custom(); rebuild(false); });
   $('vTop').addEventListener('click', () => { S.f.view3d = false; custom(); rebuild(false); });
+  for (const [id, key] of [['bS', 's'], ['bB', 'B'], ['bV', 'lv'], ['bA', 'al'], ['bR', 'rho']]) $(id).addEventListener('input', (e) => { S.bot[key] = +e.target.value; custom(); rebuild(true); });
+  $('bvSide').addEventListener('click', () => { S.bot.view3d = false; syncUI(); drawAll(); });
+  $('bv3d').addEventListener('click', () => { S.bot.view3d = true; syncUI(); drawAll(); });
   $('v3d').addEventListener('click', () => { S.f.view3d = true; if (S.f.region) S.f.region = false; if (!S.f.par) S.f.par = 0.3; custom(); rebuild(false); });
   const setB = (d) => { S.f.bdir = d; custom(); rebuild(true); };
   $('bIn').addEventListener('click', () => setB(-1)); $('bOut').addEventListener('click', () => setB(1)); $('bOff').addEventListener('click', () => setB(0));
@@ -2292,8 +2960,11 @@ details.hall[open] > summary { margin-bottom: 8px; }
   const playBtn = $('play');
   function setPlaying(on) { playing = on; playBtn.textContent = on ? 'Pause' : 'Play'; playBtn.classList.toggle('primary', !on); }
   playBtn.addEventListener('click', () => setPlaying(!playing));
-  $('restart').addEventListener('click', () => { simT = 0; if (S.mode === 'sel' || S.mode === 'spec') streams = []; drawAll(); countText(); });
-  $('fit').addEventListener('click', () => { Object.assign(V3, { az: 0, el: EL0, zoom: 1 }); rebuild(true); });
+  $('restart').addEventListener('click', () => { simT = 0; HS.tt = 0; if (S.mode === 'sel' || S.mode === 'spec') streams = []; drawAll(); countText(); });
+  $('fit').addEventListener('click', () => {
+    if (S.mode === 'bottle') { Object.assign(VB, { az: -0.42, el: 0.36, zoom: 1 }); drawAll(); return; }
+    if (S.mode === 'hall') { Object.assign(VH, { az: -0.5, el: 0.62, zoom: 1 }); drawAll(); return; }
+    Object.assign(V3, { az: 0, el: EL0, zoom: 1 }); rebuild(true); });
   $('hand').addEventListener('change', (e) => { S.f.hand = e.target.checked; drawAll(); });
   $('fire').addEventListener('click', () => { for (let i = 0; i < 20; i++) { if (S.mode === 'sel') fireSel(); else fireSpec(); streams[streams.length - 1].born = simT - i * 0.02 * tScale; } if (!playing) setPlaying(true); });
   $('clear').addEventListener('click', () => { clearStreams(); countText(); readouts(); drawAll(); });
@@ -2562,7 +3233,7 @@ details.hall[open] > summary { margin-bottom: 8px; }
         dragFrame = true;
         requestAnimationFrame(() => {
           dragFrame = false; if (!drag || !dragQ) return;
-          if (drag.id === 'orbit') { V3.az = drag.az + (dragQ[0] - drag.x) * 0.008; V3.el = Math.max(4 * Math.PI / 180, Math.min(88 * Math.PI / 180, drag.el + (dragQ[1] - drag.y) * 0.008)); drawAll(); }
+          if (drag.id === 'orbit') { const O = orbitView(); O.az = drag.az + (dragQ[0] - drag.x) * 0.008; O.el = Math.max(drag.elMin, Math.min(88 * Math.PI / 180, drag.el + (dragQ[1] - drag.y) * 0.008)); drawAll(); }
           else if (drag.id === 'pan') { FVuser = true; FV.cx = drag.cx - (dragQ[0] - drag.x) / FV.sc; FV.cy = drag.cy + (dragQ[1] - drag.y) / FV.sc; drawAll(); }
           else { const h = dragHandles().find((k) => k.id === drag.id); if (h) h.set(dragQ[0], dragQ[1]); }
           dragQ = null;
@@ -2577,25 +3248,33 @@ details.hall[open] > summary { margin-bottom: 8px; }
     const r = can.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top;
     const h = handleAt(ev);
     if (h) drag = { id: h.id };
-    else if (S.mode === 'free' && S.f.view3d && inScene(x, y)) { drag = { id: 'orbit', x, y, az: V3.az, el: V3.el }; can.style.cursor = 'grabbing'; }
+    else if (orbitTouch() && inScene(x, y)) { if (ev.pointerType === 'touch') return; const O = orbitView(); drag = { id: 'orbit', x, y, az: O.az, el: O.el, elMin: S.mode === 'free' ? 4 * Math.PI / 180 : -40 * Math.PI / 180 }; can.style.cursor = 'grabbing'; }
     else if (S.mode === 'free' && inScene(x, y)) { drag = { id: 'pan', x, y, cx: FV.cx, cy: FV.cy }; can.style.cursor = 'grabbing'; }
     else return;
     hoverId = drag.id;
     try { can.setPointerCapture(ev.pointerId); } catch (_) {}
     ev.preventDefault();
   });
+  /* on a touch screen the 3D views turn and zoom with two fingers and one finger scrolls the page (VD3.touch) */
+  const orbitTouch = () => (S.mode === 'free' && S.f.view3d) || (S.mode === 'bottle' && S.bot.view3d) || S.mode === 'hall';
+  const orbitView = () => (S.mode === 'bottle' ? VB : S.mode === 'hall' ? VH : V3);
+  if (window.VD3 && VD3.touch) VD3.touch(can, { hint: false, grab: (e) => !orbitTouch() || !!handleAt(e), move: (dx, dy, k) => {
+    if (!orbitTouch()) return;
+    const O = orbitView(), lo = S.mode === 'free' ? 4 * Math.PI / 180 : -40 * Math.PI / 180;
+    O.az += dx * 0.008; O.el = Math.max(lo, Math.min(88 * Math.PI / 180, O.el + dy * 0.008)); O.zoom = Math.max(0.3, Math.min(6, O.zoom * k)); drawAll(); } });
   const endDrag = () => { drag = null; };
   can.addEventListener('pointerup', endDrag);
   can.addEventListener('pointercancel', endDrag);
   can.addEventListener('pointerleave', () => { if (!drag) hoverId = null; });
   function zoom(f, px, py) {
+    if (LY && (S.mode === 'bottle' || S.mode === 'hall')) { const O = orbitView(); O.zoom = Math.max(0.4, Math.min(5, O.zoom * f)); drawAll(); return; }
     if (S.mode !== 'free' || !LY) return;
     if (S.f.view3d) { V3.zoom = Math.max(0.3, Math.min(6, V3.zoom * f)); drawAll(); return; }
     const s = LY.scene; if (px === undefined) { px = s.x + s.w / 2; py = s.y + s.h / 2; }
     const x = wx(px), y = wy(py); FVuser = true; FV.sc *= f; FV.cx = x - (px - s.x - s.w / 2) / FV.sc; FV.cy = y + (py - s.y - s.h / 2) / FV.sc; drawAll();
   }
   can.addEventListener('wheel', (ev) => {
-    if (S.mode !== 'free') return;
+    if (S.mode !== 'free' && S.mode !== 'bottle' && S.mode !== 'hall') return;
     const r = can.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top; if (!inScene(x, y)) return;
     ev.preventDefault(); zoom(Math.exp(-ev.deltaY * 0.0015), x, y);
   }, { passive: false });
@@ -2635,10 +3314,10 @@ details.hall[open] > summary { margin-bottom: 8px; }
     if (S.mode === 'free' && (e.key === 'm' || e.key === 'M')) { setRuler(!LAB.ruler); $('kbLive').textContent = LAB.ruler ? 'Ruler shown' : 'Ruler hidden'; e.preventDefault(); return; }
     if (e.key === 't' || e.key === 'T') { setTimer(!LAB.tRun); $('kbLive').textContent = LAB.tRun ? 'Timer started' : `Timer stopped at ${timerText()}`; e.preventDefault(); return; }
     if (S.mode === 'free' && (e.key === 'c' || e.key === 'C')) { capture(); $('kbLive').textContent = $('labStatus').textContent; e.preventDefault(); return; }
-    if (S.mode === 'free' && S.f.view3d && e.key.startsWith('Arrow')) {
-      const d = 5 * big * Math.PI / 180;
-      if (e.key === 'ArrowLeft') V3.az -= d; else if (e.key === 'ArrowRight') V3.az += d;
-      else V3.el = Math.max(4 * Math.PI / 180, Math.min(88 * Math.PI / 180, V3.el + (e.key === 'ArrowUp' ? d : -d)));
+    if (orbitTouch() && e.key.startsWith('Arrow')) {
+      const d = 5 * big * Math.PI / 180, O = orbitView(), lo = S.mode === 'free' ? 4 * Math.PI / 180 : -40 * Math.PI / 180;
+      if (e.key === 'ArrowLeft') O.az -= d; else if (e.key === 'ArrowRight') O.az += d;
+      else O.el = Math.max(lo, Math.min(88 * Math.PI / 180, O.el + (e.key === 'ArrowUp' ? d : -d)));
       drawAll();
     }
     else if (S.mode === 'free' && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) { S.f.ang = ((S.f.ang + (e.key === 'ArrowLeft' ? 5 : -5) * big) % 360 + 360) % 360; custom(); rebuild(false); }
@@ -2692,6 +3371,11 @@ details.hall[open] > summary { margin-bottom: 8px; }
         const t1 = performance.now();
         for (; k > 0 && streams.length < 120; k--) { if (S.mode === 'sel') fireSel(); else fireSpec(); if (performance.now() - t1 > 8) { carry = 0; break; } }
         finishStreams();
+      } else if (S.mode === 'bottle') {
+        const tEnd = bot.ended ? bot.t[bot.t.length - 1] : Infinity;
+        if (simT > tEnd + 3 * tScale * 2 ** Math.max(0, S.play) || bot.t.length > 590000) simT = 0;   /* the end stays on screen 3 s at any playback speed */
+      } else if (S.mode === 'hall') {
+        HS.tt += dt * 2 ** S.play / 1.2; hallStep(dt * 2 ** S.play);
       } else if (S.mode === 'cyc') {
         const tMax = (cyc.ended ? cyc.endT : Infinity), turns = simT * cyc.cfg.fc;
         if (simT > tMax + 3 / cyc.cfg.fc || turns > CYC_MAX_TURNS) simT = 0;
@@ -2705,7 +3389,8 @@ details.hall[open] > summary { margin-bottom: 8px; }
     requestAnimationFrame(loop);
   }
   // ---------- Hall effect strip ----------
-  const HS = { mat: 'cu', I: 0.020, bz: -1, B: 0.3, t: 0.001, ph: 0 };
+  const HS = { mat: 'cu', I: 0.020, bz: -1, B: 0.3, t: 0.001, ph: 0, tt: 0 };
+  function syncHallInputs() { $('hI').value = HS.I * 1000; $('hB').value = HS.B; $('hT').value = HS.t * 1000; hallText(); }
   const hallCan = $('hallCan'), hctx = hallCan.getContext('2d');
   const BLIND_NAMES = { cu: 'Sample A', nge: 'Sample B', pge: 'Sample C' };
   function hallNums() {
@@ -2792,7 +3477,8 @@ details.hall[open] > summary { margin-bottom: 8px; }
     c.fillStyle = T.muted; c.font = `${fs * 0.85}px ${T.ui}`; c.textAlign = 'center'; c.fillText('V_top − V_bottom', mx + mw / 2, my + 15 * ps);
     c.fillStyle = T.ink; c.font = `700 ${fs * 1.3}px ${T.mono}`; c.fillText(si(roundSig(h.V, 3), 'V', 3), mx + mw / 2, my + 38 * ps);
   }
-  function hallChanged() { hallText(); drawHall(); }
+  /* a new setting starts the build up again from strips with no edge charge */
+  function hallChanged() { HS.tt = 0; hallText(); drawHall(); if (S.mode === 'hall') { readouts(); countText(); drawAll(); } }
   for (const b of document.querySelectorAll('#hallMat button')) b.addEventListener('click', () => { HS.mat = b.dataset.hm; hallChanged(); });
   $('hI').addEventListener('input', (e) => { HS.I = +e.target.value / 1000; hallChanged(); });
   $('hB').addEventListener('input', (e) => { HS.B = +e.target.value; hallChanged(); });
@@ -2803,8 +3489,8 @@ details.hall[open] > summary { margin-bottom: 8px; }
   $('labBlind').addEventListener('change', hallChanged);
   new MutationObserver(() => requestAnimationFrame(drawHall)).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'data-projector'] });
 
-  window.__mf = { get frameMs() { return frameMs; }, get S() { return S; }, get simT() { return simT; }, set simT(v) { simT = v; }, get counts() { return counts; }, get band() { return band; },
-    get cyc() { return cyc; }, get main() { return main; }, get tScale() { return tScale; }, get hist() { return hist; }, setPlaying, applyPreset, rebuild,
+  window.__mf = { get GL() { return GL; }, get frameMs() { return frameMs; }, get S() { return S; }, get simT() { return simT; }, set simT(v) { simT = v; }, get counts() { return counts; }, get band() { return band; },
+    get cyc() { return cyc; }, get bot() { return bot; }, get main() { return main; }, get tScale() { return tScale; }, get hist() { return hist; }, setPlaying, applyPreset, rebuild,
     handles() { return dragHandles().map((h) => ({ id: h.id, pt: h.pt, seg: h.seg })); }, get view() { return { ...view() }; },
     LAB, capture, csvNow, rulerNow, fitData, kbTarget, setTimer, setRuler, setReduce, get reduce() { return reduce; }, get playing() { return playing; } };
 

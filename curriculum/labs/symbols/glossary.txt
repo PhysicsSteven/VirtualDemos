@@ -1699,8 +1699,12 @@ T | Period of the circular motion | s
 V_H | Hall voltage | V
 I | Current in the strip | A
 t | Thickness of the strip | m
-V_top | Potential of the top edge of the strip | V
-V_bottom | Potential of the bottom edge of the strip | V
+mu | Magnetic moment of the circling charge, mv⊥²/(2B) | J/T
+alpha | Pitch angle between the velocity and the field | °
+B_0 | Field where the charge starts, the center of the bottle | T
+B_max | Largest field on the charge's path | T
+v_perp | Velocity component across the field | m/s
+v_parallel | Velocity component along the field | m/s
 B_z | Field component out of the page | T
 e | @
 

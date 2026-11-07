@@ -259,6 +259,8 @@ details.mag[open] { display: flex; flex-direction: column; gap: 10px; }
           <input type="range" id="sF" min="0.1" max="2" step="0.1">
         </div>
         <label class="check"><input type="checkbox" id="coreChk"> Iron core in the coil</label>
+        <div class="inline" id="windRow" style="margin-top:8px"><span class="lab">Winding in 3D</span>
+          <div class="seg" role="group" aria-label="Winding in the 3D view" id="windSeg"><button type="button" data-wind="rings" aria-pressed="true">Separate rings</button><button type="button" data-wind="helix" aria-pressed="false">One helix</button></div></div>
         <dl class="readout" id="sRead"></dl>
         <p class="hint" id="sideHint"></p>
         <details class="more"><summary>About the electromagnet</summary><p class="hint">With the iron core the coil becomes an electromagnet. The coil's field magnetizes the iron, and the iron's tiny atomic current loops line up and add their own field, the same shape as the coil's, many times stronger. How many times depends mostly on the core's shape: a long thin core works far better than a short fat one, because the poles at its ends push back on its magnetization less. On the AC supply the current, the field and every compass needle reverse each cycle. The supply is slowed to at most 2 Hz so the needles can follow; at 60 Hz a real needle cannot turn that fast and only buzzes. Model: the core is magnetized uniformly, as an ellipsoid of the same proportions would be (demagnetizing factor N<sub>d</sub>, Osborn 1945), with μ<sub>r</sub> = 1000 (chosen, soft iron) and saturation at M<sub>s</sub> = 1.71 × 10⁶ A/m (Kittel); hysteresis and the coil's inductance are left out. The iron is drawn inside the turns; its field comes from the surface current M around its side, which runs where the turns are.</p></details>
@@ -566,10 +568,61 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
      The wire's field at the needle is horizontal and points west for a northward current; the needle turns from north by θ = atan(B_w/B_E). */
   const oerstedB = (I, h) => MU0 * I / (2 * Math.PI * h);
   const oerstedAngle = (I, h, BE) => Math.atan2(oerstedB(I, h), BE);   /* radians, positive toward the west */
+  /* ---- the winding as one helix (3D view): a real coil is one wire wound N times round over the length L, so besides the
+     circulating current it carries I once along the coil. Its field is the Biot–Savart integral along that wire, done here by
+     Gauss–Legendre quadrature (6 points on each twelfth of a turn). The wire runs from (R, 0, −L/2) to (R, 0, +L/2), turning
+     counterclockwise about +z for I > 0, so the turns cross z_k at the same places as the rings; the leads are left out. */
+  const GL6X = [-0.932469514203152, -0.661209386466265, -0.238619186083197, 0.238619186083197, 0.661209386466265, 0.932469514203152];
+  const GL6W = [0.171324492379170, 0.360761573048139, 0.467913934572691, 0.467913934572691, 0.360761573048139, 0.171324492379170];
+  /* the quadrature points once per coil: position (cm) and weighted dl (cm) of each; then B at a point is one sum */
+  function helixPts(sol) {
+    const R = sol.R, L = sol.L, N = sol.N, npan = 12 * N, dph = TWO_PI / 12, kz = L / (TWO_PI * N), out = new Float64Array(npan * 36);
+    let o = 0;
+    for (let k = 0; k < npan; k++) {
+      const c0 = (k + 0.5) * dph;
+      for (let j = 0; j < 6; j++) {
+        const ph = c0 + 0.5 * dph * GL6X[j], w = 0.5 * dph * GL6W[j], cs = Math.cos(ph), sn = Math.sin(ph);
+        out[o++] = R * cs; out[o++] = R * sn; out[o++] = -L / 2 + kz * ph; out[o++] = -R * sn * w; out[o++] = R * cs * w; out[o++] = kz * w;
+      }
+    }
+    return { pts: out, I: fieldI(sol) };
+  }
+  function helixBAt(H, x, y, z) {   /* point in cm; returns [Bx, By, Bz] in T */
+    const q = H.pts; let bx = 0, by = 0, bz = 0;
+    for (let o = 0; o < q.length; o += 6) {
+      const rx = x - q[o], ry = y - q[o + 1], rz = z - q[o + 2], r2 = rx * rx + ry * ry + rz * rz, f = 1 / (r2 * Math.sqrt(r2));
+      bx += (q[o + 4] * rz - q[o + 5] * ry) * f; by += (q[o + 5] * rx - q[o + 3] * rz) * f; bz += (q[o + 3] * ry - q[o + 4] * rx) * f;
+    }
+    const s = MU0 * H.I / (4 * Math.PI) / CM;                           /* lengths in cm: (cm · cm)/cm³ = 1/cm */
+    return [bx * s, by * s, bz * s];
+  }
+  const helixB = (sol, x, y, z) => helixBAt(helixPts(sol), x, y, z);
+  /* the field circling the coil, averaged round a circle of radius d (cm) in its middle plane: (1/2πd)∮B·dl */
+  function helixAround(H, d, n) { let s = 0; for (let k = 0; k < n; k++) { const ph = TWO_PI * (k + 0.5) / n, b = helixBAt(H, d * Math.cos(ph), d * Math.sin(ph), 0); s += -b[0] * Math.sin(ph) + b[1] * Math.cos(ph); } return s / n; }
+  /* B of a straight wire of length L carrying I, at distance d from its middle: μ₀I/(4πd) · L/√((L/2)² + d²) (cm in, T out) */
+  const finiteWireB = (I, L, d) => MU0 * I / (4 * Math.PI * d * CM) * L / Math.hypot(L / 2, d);
+  /* a field line through p0 (cm), followed both ways with RK4 steps of ds cm along B̂ until it leaves the box |coords| < lim or
+     comes within rmin of the winding (where the quadrature would not hold); returns the points in order along B */
+  function traceLine3(Bf, p0, ds, maxSteps, lim, near) {
+    const dir = (p) => { const b = Bf(p[0], p[1], p[2]), m = Math.hypot(b[0], b[1], b[2]); return m > 0 && isFinite(m) ? [b[0] / m, b[1] / m, b[2] / m] : null; };
+    const run = (sg) => {
+      const out = []; let p = p0.slice();
+      for (let i = 0; i < maxSteps; i++) {
+        const k1 = dir(p); if (!k1) break;
+        const a = (q, k, h) => [q[0] + sg * h * k[0], q[1] + sg * h * k[1], q[2] + sg * h * k[2]];
+        const k2 = dir(a(p, k1, ds / 2)); if (!k2) break; const k3 = dir(a(p, k2, ds / 2)); if (!k3) break; const k4 = dir(a(p, k3, ds)); if (!k4) break;
+        p = [p[0] + sg * ds / 6 * (k1[0] + 2 * k2[0] + 2 * k3[0] + k4[0]), p[1] + sg * ds / 6 * (k1[1] + 2 * k2[1] + 2 * k3[1] + k4[1]), p[2] + sg * ds / 6 * (k1[2] + 2 * k2[2] + 2 * k3[2] + k4[2])];
+        if (Math.abs(p[0]) > lim[0] || Math.abs(p[1]) > lim[1] || Math.abs(p[2]) > lim[2] || (near && near(p))) break;
+        out.push(p);
+      }
+      return out;
+    };
+    return [...run(-1).reverse(), p0.slice(), ...run(1)];
+  }
   // ==CORE END==
 
   if (typeof document === 'undefined') {
-    globalThis.CF = { MU0, CM, wireB, wirePsi, wireForce, pairForce, integrate, breaks, loopPieces, circulation, insideLoop, loopDist, enclosedI,
+    globalThis.CF = { helixB, helixPts, helixBAt, helixAround, finiteWireB, traceLine3, MU0, CM, wireB, wirePsi, wireForce, pairForce, integrate, breaks, loopPieces, circulation, insideLoop, loopDist, enclosedI,
       ellipKE, ringField, solTurns, solField, axisExact, loopCenter, turnsPerM, idealSol, sheetAxis, poleB, poleForceX, oerstedB, oerstedAngle,
       coilI, fieldI, IRON_MU, IRON_MS, demagFactor, coreState, acCurrent };
     return;
@@ -603,7 +656,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     scene: 'wires', preset: 'par', wires: [], wsel: null, sel: null, amp: false,
     loop: { kind: 'circle', x: -1.5, y: 0, r: 4, w: 9, h: 7 }, ccw: true,
     probe: { x: 0, y: 3 }, sprobe: { z: 0, y: 1.2 },
-    sol: { N: 30, L: 24, R: 3, I: 5 }, fit: null, sup: 'dc', acF: 0.5, acT: 0, cs: null,
+    sol: { N: 30, L: 24, R: 3, I: 5 }, fit: null, sup: 'dc', acF: 0.5, acT: 0, cs: null, wind: 'rings',
     show: { lines: true, shade: true, compass: true, probe: true, force: true }
   };
   const wById = (id) => S.wires.find((w) => w.id === id);
@@ -1403,6 +1456,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       sh += `<div><dt>Core length/diameter L/2R</dt><dd>${(sol.L / (2 * sol.R)).toFixed(2)}</dd></div><div><dt>Demagnetizing factor N<sub>d</sub></dt><dd>${c.Nd.toFixed(4)}</dd></div>
         <div><dt>Coil's H at the center H₀</dt><dd>${Math.abs(c.H0) >= 1e4 ? (c.H0 / 1000).toPrecision(4) + ' kA/m' : c.H0.toPrecision(4) + ' A/m'}</dd></div><div><dt>Iron's magnetization M</dt><dd>${Math.abs(c.M) >= 1e4 ? (c.M / 1000).toPrecision(4) + ' kA/m' : c.M.toPrecision(4) + ' A/m'}</dd></div>
         <div class="wide big"><dt>Field with the core ÷ coil alone, 1 + ML/(NI)</dt><dd>${c.gain.toFixed(2)} <span class="ok">(μ<sub>r</sub> − 1)/(1 + (μ<sub>r</sub> − 1)N<sub>d</sub> = ${c.chi.toFixed(2)}${c.sat ? '; the iron is saturated' : ''}</span></dd></div>`; }
+    if (helixOn()) {
+      const H = helixNow(), bh = helixBAt(H, 0, 0, 0)[2], d = 2 * sol.R, ar = helixAround(H, d, 48), fw = finiteWireB(fieldI(sol), sol.L, d);
+      sh += `<div class="wide big"><dt>One helix: B at the center, Biot–Savart along the wire</dt><dd>${fmtB(bh, 4)} <span class="ok">rings: ${fmtB(bc, 4)}</span></dd></div>
+        <div class="wide"><dt>One helix: field circling the coil at ρ = 2R beside its middle, averaged round the circle</dt><dd>${fmtB(ar, 3)}</dd></div>
+        <div class="wide"><dt>A straight wire as long as the coil carrying I, at the same distance: μ₀I/(4πd) · L/√((L/2)² + d²)</dt><dd>${fmtB(fw, 3)}</dd></div>`;
+    }
     $('sRead').innerHTML = sh;
     // probe
     if (S.scene === 'wires') {
@@ -1553,12 +1612,15 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('sIs').addEventListener('change', () => { lastInput = 0; changed(); });
   function syncSupply() {
     for (const b of document.querySelectorAll('#supSeg button')) b.setAttribute('aria-pressed', String(b.dataset.sup === S.sup));
+    $('windRow').hidden = S.sol.N === 1;
+    for (const q of document.querySelectorAll('#windSeg button')) q.setAttribute('aria-pressed', String(q.dataset.wind === S.wind));
     $('fCtl').hidden = S.sup !== 'ac'; $('sF').value = S.acF; $('oF').textContent = `${S.acF.toFixed(1)} Hz`; $('coreChk').checked = !!S.sol.core;
     $('lIs').textContent = S.sup === 'ac' ? 'Peak current I₀' : 'Current I';
   }
   $('supSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-sup]'); if (!b) return; S.sup = b.dataset.sup; S.acT = 0; custom(); syncSupply(); changed(); });
   $('sF').addEventListener('input', (e) => { S.acF = +e.target.value; custom(); syncSupply(); changed(); });
   $('coreChk').addEventListener('change', (e) => { S.sol.core = e.target.checked; custom(); changed(); });
+  $('windSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-wind]'); if (!b) return; S.wind = b.dataset.wind; for (const q of document.querySelectorAll('#windSeg button')) q.setAttribute('aria-pressed', String(q === b)); changed(); if (S.wind === 'helix' && !G3.on) setView3('3d'); });
   for (const [id, k] of [['tLines', 'lines'], ['tShade', 'shade'], ['tCompass', 'compass'], ['tProbe', 'probe'], ['tForce', 'force']])
     $(id).addEventListener('change', (e) => { S.show[k] = e.target.checked; changed(); });
 
@@ -1770,6 +1832,35 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // Straight wires: the map is one slice across long wires, so faint copies of its lines above and below show that every slice is the same.
   // Loop and solenoid: the map is the plane through the axis; faint copies turned about the axis show that the field is the same in every such plane.
   // Drag to turn the view, wheel or pinch to zoom, double click to reset. Wires, probe and loop are moved in the flat view.
+  /* ---- the coil as one helix (3D view only): its field by Biot–Savart along the wire, and field lines followed through it in 3D ---- */
+  const helixOn = () => S.scene === 'side' && S.wind === 'helix' && S.sol.N > 1;
+  let helixCache = null, hjob = null;
+  function helixNow() { const sol = S.sol, k = [sol.N, sol.L, sol.R, fieldI(sol)].join(); if (!helixCache || helixCache.k !== k) helixCache = Object.assign(helixPts(sol), { k }); return helixCache; }
+  /* scene axes: X along the coil axis, then (Y, Z) = (x, y) across it (a cyclic relabeling, so the helix keeps its handedness) */
+  const hW = (p) => new THREE.Vector3(p[2], p[0], p[1]);
+  function startHelixJob() {
+    const sol = S.sol, R = sol.R, H = helixNow(), seeds = [[0, 0, 0]];
+    for (const f of [0.4, 0.75]) for (let k = 0; k < 3; k++) { const a = 2 * Math.PI * k / 3 + f; seeds.push([f * R * Math.cos(a), f * R * Math.sin(a), 0]); }
+    for (const f of [1.45, 2.3]) for (let k = 0; k < 4; k++) { const a = Math.PI * k / 2 + 0.4; seeds.push([f * R * Math.cos(a), f * R * Math.sin(a), 0]); }
+    const lim = [3.6 * R + 0.5, 3.6 * R + 0.5, sol.L / 2 + 3 * R], ds = Math.max(0.05, R / 10);
+    const near = (p) => Math.abs(Math.hypot(p[0], p[1]) - R) < 0.1 * R && Math.abs(p[2]) < sol.L / 2 + 0.1 * R;
+    hjob = { k: H.k, seeds, i: 0, H, lim, ds, near, max: Math.round(2.2 * (lim[2] + 4 * R) / ds) };
+  }
+  function runHelixJob() {
+    if (!hjob || !g3) return;
+    const t0 = performance.now(), Bf = (x, y, z) => helixBAt(hjob.H, x, y, z);
+    while (hjob.i < hjob.seeds.length && performance.now() - t0 < 14) {
+      const L = traceLine3(Bf, hjob.seeds[hjob.i++], hjob.ds, hjob.max, hjob.lim, hjob.near);
+      if (L.length > 3) {
+        const pts = L.filter((_, i) => i % 2 === 0).map(hW), tube = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), Math.min(600, pts.length * 2), Math.max(0.03, S.sol.R * 0.018), 6, false), g3.lineM);
+        g3.ghosts.add(tube);
+        /* arrowheads along the line, pointing along B */
+        for (const fr of [0.3, 0.7]) { const j = Math.floor(L.length * fr); if (j + 1 >= L.length) continue; const a = hW(L[j]), b = hW(L[j + 1]), cn = new THREE.Mesh(g3.headG, g3.lineM); cn.position.copy(a); cn.lookAt(b); g3.ghosts.add(cn); }
+      }
+      dirty = true;
+    }
+    if (hjob.i >= hjob.seeds.length) hjob = null;
+  }
   function init3D() {
     G3.tried = true;
     const r = VD3.renderer(); if (!r) return false;
@@ -1785,7 +1876,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const copperM = new THREE.MeshStandardMaterial({ roughness: 0.32, metalness: 0.45 }), outM = new THREE.MeshStandardMaterial({ roughness: 0.5 }), inM = new THREE.MeshStandardMaterial({ roughness: 0.5 });
     const nearM = new THREE.MeshStandardMaterial({ roughness: 0.32, metalness: 0.45, transparent: true, opacity: 0.45, depthWrite: false });
     const wires = new THREE.Group(), turns = new THREE.Group(); scene.add(wires, turns);
-    g3 = { r, el, scene, cam, hemi, sun, tex, sheet, sheetM, edgeM, ghostM, ghosts, copperM, nearM, outM, inM, wires, turns };
+    const lineM = new THREE.MeshStandardMaterial({ roughness: 0.4, emissiveIntensity: 0.35 }), headG = new THREE.ConeGeometry(0.12, 0.34, 12).translate(0, 0.17, 0).rotateX(Math.PI / 2);
+    g3 = { r, el, scene, cam, hemi, sun, tex, sheet, sheetM, edgeM, ghostM, ghosts, copperM, nearM, outM, inM, wires, turns, lineM, headG };
     can.addEventListener('wheel', (e) => { if (!G3.on) e.stopImmediatePropagation(); }, { passive: true });
     VD3.orbit(can, G3.o, () => { dirty = true; }, { grab: () => !G3.on, phMin: 0.15, phMax: 1.55, zMin: 0.5, zMax: 3, keys: false });
     can.addEventListener('pointerup', () => { if (!G3.on) can.style.cursor = ''; });
@@ -1794,7 +1886,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function theme3() {
     const g = g3, d = VD3.dark(), col = (s, fb) => { try { return new THREE.Color(s || fb); } catch (_) { return new THREE.Color(fb); } };
     g.scene.background = col(T.canvas, '#fbfcfd'); g.hemi.intensity = d ? 1.05 : 0.8; g.sun.intensity = d ? 0.95 : 0.75;
-    g.edgeM.color = col(T.gridStrong, '#c9d1db'); g.ghostM.color = col(T.bline, '#9aa7b8');
+    g.edgeM.color = col(T.gridStrong, '#c9d1db'); g.ghostM.color = col(T.bline, '#9aa7b8'); g.lineM.color = col(T.shade, '#2b60b5'); g.lineM.emissive = col(T.shade, '#2b60b5');
     g.copperM.color = g.nearM.color = col('#b87333', '#b87333'); g.outM.color = col(T.fout, '#1f8a5a'); g.inM.color = col(T.fin, '#7a4fc2');
   }
   function clear3(grp) { for (const o of grp.children.slice()) { grp.remove(o); if (o.geometry) o.geometry.dispose(); } }
@@ -1826,6 +1918,19 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       // the plane through the axis stands upright: z along x, the side view's y up
       g.sheet.position.set((V.x0 + V.x1) / 2, 0, (V.y0 + V.y1) / 2); g.sheet.rotation.set(Math.PI / 2, 0, 0);
       const fr = V.Hd / H; g.tex.repeat.set(1, fr); g.tex.offset.set(0, 1 - fr);
+      if (helixOn()) {
+        /* one helix of wire, and field lines followed through its own field (a few each frame until done) */
+        const sol = S.sol, n = sol.N * 48, pts = [];
+        for (let i = 0; i <= n; i++) { const ph = 2 * Math.PI * sol.N * i / n; pts.push(hW([sol.R * Math.cos(ph), sol.R * Math.sin(ph), -sol.L / 2 + sol.L * i / n])); }
+        /* the near half of the winding is cut away (by a plane through the axis that turns with the view), so the lines inside show */
+        if (!g.cutM) { g.r.localClippingEnabled = true; g.cutPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0); g.cutM = new THREE.MeshStandardMaterial({ roughness: 0.32, metalness: 0.45, side: THREE.DoubleSide, clippingPlanes: [g.cutPlane] }); }
+        g.cutM.color = g.copperM.color;
+        g.turns.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), n, Math.max(0.05, turnR() / V.s * 0.7), 8, false), g.cutM));
+        if (S.show.lines) startHelixJob(); else hjob = null;
+        g.sheetM.opacity = 0.35; g.tex.needsUpdate = true;
+        return;
+      }
+      hjob = null;
       if (S.show.lines) for (const a of [Math.PI / 3, 2 * Math.PI / 3]) ghostLines((z, y) => [z, -y * Math.sin(a), y * Math.cos(a)]);
       const sol = S.sol, tr = Math.max(0.06, turnR() / V.s * 0.8), ringG = new THREE.TorusGeometry(sol.R, tr, 12, 48, Math.PI).rotateY(Math.PI / 2), nearG = ringG.clone().rotateX(Math.PI);   /* far and near halves of a turn; the near half is drawn faint so the field inside shows */
       for (const zk of solTurns(sol)) { const m = new THREE.Mesh(ringG, g.copperM), n = new THREE.Mesh(nearG, g.nearM); m.position.x = n.position.x = zk; n.renderOrder = 3; g.turns.add(m, n); }
@@ -1841,10 +1946,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const g = g3, h = S.scene === 'wires' ? H : V.Hd;
     if (G3.w !== W || G3.h !== h) { G3.w = W; G3.h = h; g.r.setSize(W, Math.max(1, h)); g.cam.aspect = W / Math.max(1, h); g.cam.updateProjectionMatrix(); }
     const key = [T.canvas, T.bline, T.fout, T.fin].join(); if (G3.key !== key) { G3.key = key; theme3(); }
-    if (G3.lkey !== layerKey + (S.show.lines ? 1 : 0)) { G3.lkey = layerKey + (S.show.lines ? 1 : 0); build3(); }
+    if (G3.lkey !== layerKey + (S.show.lines ? 1 : 0) + S.wind) { G3.lkey = layerKey + (S.show.lines ? 1 : 0) + S.wind; build3(); }
     if (G3.scene !== S.scene) { G3.scene = S.scene; Object.assign(G3.o, S.scene === 'wires' ? { th: -1.25, ph: 0.98, zoom: 1 } : { th: -1.15, ph: 1.12, zoom: 1 }); }
     const ext = Math.max(V.x1 - V.x0, V.y1 - V.y0);
     VD3.place(g.cam, G3.o, new THREE.Vector3(0, 0, 0), (S.scene === 'wires' ? 1.4 : 1.05) * ext);
+    if (g.cutPlane) { const c = g.cam.position, m = Math.hypot(c.y, c.z) || 1; g.cutPlane.normal.set(0, -c.y / m, -c.z / m); }
     g.r.render(g.scene, g.cam);
     const tmp = new THREE.Vector3(), Q = (x, y, z) => { tmp.set(x, y, z).project(g.cam); return [(tmp.x + 1) / 2 * W, (1 - tmp.y) / 2 * h, tmp.z]; };
     // this canvas keeps the labels (and the axis plot under the side view) on top of the 3D picture
@@ -1860,7 +1966,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       label(ctx, sol.N === 1 ? `I = ${fmtI(+coilI(sol).toFixed(2)).replace('+', '')}, R = ${fmtCm(sol.R)}` : `N = ${sol.N}, L = ${fmtCm(sol.L)}, R = ${fmtCm(sol.R)}, I = ${fmtI(+coilI(sol).toFixed(2)).replace('+', '')}${sol.core ? ', iron core' : ''}`, q[0], q[1] + fs, { size: fs, fam: T.mono, color: T.ink, align: 'center' });
       plotMarker(ctx, sol, solTurns(sol));
     }
-    if (W >= 560) label(ctx, S.scene === 'wires' ? 'Drag to turn the view · move things in the flat view' : 'Near half of each turn drawn faint · drag to turn the view', W - 10, h - 10, { size: fsz(11), weight: 400, color: T.muted, align: 'right' });
+    if (helixOn()) label(ctx, hjob ? `Following field lines through the helix: ${hjob.i} of ${hjob.seeds.length}` : 'Field lines followed through the helix\'s own field', 10, 10 + fsz(11), { size: fsz(11), weight: 400, color: T.muted, align: 'left' });
+    if (W >= 560) label(ctx, S.scene === 'wires' ? 'Drag to turn the view · move things in the flat view' : helixOn() ? 'One helix of wire, near half cut away · drag to turn the view' : 'Near half of each turn drawn faint · drag to turn the view', W - 10, h - 10, { size: fsz(11), weight: 400, color: T.muted, align: 'right' });
   }
   function setView3(v) {
     if (v === '3d' && !G3.ok) {
@@ -1884,6 +1991,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (W && H) {
       if (S.sup === 'ac' && S.scene === 'side') { S.acT += dt; lastInput = now; changed(); }   /* the layer is rebuilt coarse while the current changes */
       if (dirty) { setupNeedles(); }
+      if (hjob && G3.on) runHelixJob();
       const wasMoving = needlesMoving;
       if (S.show.compass) stepNeedles(dt);
       const coarse = !layerFine && !drag && now - lastInput >= 260;

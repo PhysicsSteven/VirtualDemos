@@ -69,6 +69,8 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 <li>F = qv × B is always perpendicular to v: it turns a charge but never changes its speed, so it does no work.</li>
 <li>In uniform B a charge moving across the field circles with r = mv/|q|B and period T = 2πm/|q|B, which does not depend on speed. The sign of q sets the sense of rotation.</li>
 <li>In crossed E and B the forces balance only for v = E/B (velocity selector); with B alone, ions of equal charge and energy separate by mass.</li>
+<li>In a field that grows along its lines, the magnetic moment μ = mv⊥²/2B stays nearly constant, so a charge turns round where B = B₀/sin²α: a magnetic bottle traps charges outside its loss cone.</li>
+<li>In a Hall strip the carriers pile up on one edge until the sideways electric field cancels qv × B; the sign of the Hall voltage gives the sign of the carriers.</li>
 </ul>
 <h2>Before class</h2>
 <p>Students need the cross product, F = qv × B and centripetal acceleration. ⊗ is B into the page. Drag the arrow tip to set the launch velocity.</p>
@@ -81,6 +83,8 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 <li><strong>Mass spectrometer.</strong> Neon ions through 1000 V in 0.20 T land 20.36 cm (²⁰Ne⁺) and 21.35 cm (²²Ne⁺) from the slit. <strong>Equal numbers</strong> shows the rare ²¹Ne⁺.</li>
 <li><strong>Cyclotron.</strong> A proton gains 100 keV per gap crossing at a fixed f_c = 15.25 MHz. Move <strong>f / f_c</strong> off 1 to show it falling out of step.</li>
 <li><strong>Measuring r and T.</strong> In a free setup, tick <strong>Show ruler</strong> and drag its ends A and B across the circle (<strong>Ruler reads</strong> Diameter or Radius). Use <strong>Start timer</strong> and <strong>Stop timer</strong> over a few turns and set <strong>Turns timed</strong>. <strong>Capture reading</strong> stores what was read; <strong>Export to worksheet</strong> sends the rows to the student worksheet; the plot fits <strong>r against v</strong>, <strong>r against m/|q|</strong> or <strong>T against v</strong>. Tick <strong>Blind: hide predictions and answers</strong> in <strong>Lab</strong> so the r and T readouts, the r label, the circle's center and the dashed path ahead are hidden while students measure.</li>
+<li><strong>Magnetic bottle.</strong> Two coils 20 cm apart give 0.20 T at the center and 0.752 T at the coils on the axis, a mirror ratio of 3.76 and a loss cone of 31.1°. A proton at 1.0×10⁵ m/s launched at 50° spirals toward a coil, turns round and comes back. At 25° it escapes. Lower <strong>Field at the center B₀</strong> to 0.05 T and the μ readout wanders: protons near 35° to 40° leak out after several bounces (Q7).</li>
+<li><strong>Hall effect.</strong> Copper with 20 mA in 0.30 T. Choose <strong>n-type Ge</strong>: the carriers first drift at 6.7° to the strip, the edges charge, and the Hall voltage builds up to −37.4 mV over a few τ = ε/σ = 2.3 ps (Q8).</li>
 </ol>
 <h2>Questions</h2>
 <div class="q"><p><strong>Q1.</strong> Predict: a proton moves at right angles to a uniform magnetic field. Does its speed change? If its speed doubles, what happens to its radius and its period?</p></div>
@@ -94,17 +98,24 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 <div class="q"><p><strong>Q5.</strong> In <strong>Mass spectrometer</strong>, singly charged neon ions start from rest, are accelerated through 1000 V and enter 0.20 T. Taking masses of 20 u and 22 u (1 u = 1.661×10⁻²⁷ kg), find where each lands (2r from the slit) and the separation.</p></div>
 
 <div class="q"><p><strong>Q6.</strong> In <strong>Cyclotron</strong> (B = 1.0 T, dee radius 0.30 m), find the gap voltage frequency and the energy of a proton on an orbit of the dee radius, K = (qBR)²/2m, in MeV. Why might the energy it actually leaves with differ by up to one gap crossing? Why does one frequency work for every orbit, and why does it fail at high energy?</p></div>
+
+<div class="q"><p><strong>Q7.</strong> In <strong>Magnetic bottle</strong> the field is 0.20 T at the center and 0.752 T at the coils on the axis. Find the loss cone. Which of 25°, 35° and 50° stay trapped? Check, then lower B₀ to 0.05 T and launch at 35° and 40°. What changes, and why?</p></div>
+
+<div class="q"><p><strong>Q8.</strong> In <strong>Hall effect</strong>, n-type germanium (n = 1.0×10²¹ m⁻³, ε_r = 16, electron mobility 0.39 m²/(V·s)) 1.0 mm thick carries 20 mA in 0.30 T into the page. Find V_top − V_bottom, the conductivity σ = neμ and the build up time τ = ε/σ. Why does copper settle far faster?</p></div>
 <h2>Common misconceptions</h2>
 <ul>
 <li><strong>"The magnetic force speeds the particle up."</strong> F ⊥ v, so it does no work; only E changes the speed.</li>
 <li><strong>"The magnetic force points along B."</strong> It is perpendicular to both v and B.</li>
 <li><strong>"A faster particle takes longer to go around its bigger circle."</strong> Circumference and speed grow together; T is the same.</li>
 <li><strong>"Positive and negative charges drift opposite ways in crossed fields."</strong> The drift E × B/B² contains no q.</li>
+<li><strong>"A magnetic bottle pushes the charge back with a force along B."</strong> The force is still perpendicular to v; near a coil the field lines converge, so qv × B has a small component back toward the center. The speed never changes; v∥ turns into v⊥.</li>
 </ul>
 <h2>Physics behind the demo</h2>
 <ul>
 <li>Exact nonrelativistic motion in uniform fields (circle in pure B, cycloid or trochoid with E), so |v| in pure B stays fixed to rounding error. Speeds stop at 10⁷ m/s (v/c = 0.033). Field edges are sharp (no fringe fields), and the particle does not radiate.</li>
 <li>Spectrometer ions start at rest; ion mass = atomic mass − one electron. The cyclotron gap voltage is a square wave; the rail shows v/c and γ at K_max. (qBR)²/2m is the energy on a centered orbit of radius R: the proton actually leaves at 4.35 MeV against 4.31 MeV, because energy comes in 100 keV steps and the last orbit is slightly off center.</li>
+<li>The magnetic bottle's field is the exact Biot–Savart field of two thin rings (complete elliptic integrals), and the proton is stepped with the Boris method, at most 0.04 rad of gyration per step, which keeps the speed exact. The loss cone and the mirror prediction are the adiabatic (constant μ) theory for the start point's field line; the trajectory itself makes no such assumption, so near the loss cone and at low B₀ the two differ.</li>
+<li>The Hall effect setup grows the edge field as 1 − e^(−t/τ) with τ = ε/σ (dielectric relaxation), carriers moving at the drift velocity with mobility μ. In a metal τ = ε₀/σ is far shorter than a collision time (2.5×10⁻¹⁴ s in copper), so there the real settling takes about a collision time; the demo says so.</li>
 <li>The ruler reads to one screen pixel (zoom in for a finer reading) and the timer counts simulation time, so the scatter in captured r and T comes from the student's own reading. No noise is added.</li>
 </ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>. © 2026 Steven Anderson. All rights reserved; see the <a href="../LICENSE.html">terms of use</a>.</footer>
 </main>

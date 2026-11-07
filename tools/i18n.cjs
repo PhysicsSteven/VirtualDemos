@@ -32,7 +32,7 @@ const flag = (k) => { const i = args.indexOf(k); if (i < 0) return false; args.s
 
 /* ---------- catalog files ---------- */
 /* strings no language translates: numbers with SI symbols, single letters, symbols (they are left out of the catalogs) */
-const UNITS = new Set(('m s g kg mg μg mm cm km nm μm pm fm Å Hz kHz MHz GHz THz V kV mV MV μV A mA μA kA Ω kΩ MΩ W kW MW mW μW J kJ MJ eV keV MeV GeV TeV ' +
+const UNITS = new Set(('m s g kg mg μg mm cm km nm μm pm fm Å Hz kHz MHz GHz THz V kV mV MV μV A mA μA kA Ω kΩ MΩ W kW MW mW μW J kJ MJ meV eV keV MeV GeV TeV ' +
   'K Pa kPa MPa GPa hPa N kN mN T mT μT G nT C μC nC pC F μF nF pF H mH μH L mL dB dBA rad mrad sr mol cd lm lx Bq kBq MBq GBq Ci mCi Gy mGy cGy Sv mSv μSv ' +
   'AU au pc kpc Mpc ly px pt ms μs ns ps fs min h atm mbar u Da kDa amu cal kcal Wh kWh rpm psi lb ft mi mph c e x y z t E B M R P Q D S U X Y Z').split(' '));
 function trivial(k) {
@@ -143,7 +143,7 @@ async function leaks(list) {
             while ((n = tw.nextNode())) {
               const t = n.data.replace(/\s+/g, ' ').trim(), e = n.parentElement;
               /* unit symbols (rad/s, kPa, MeV, mol) read the same in every language: drop them before looking for words */
-              const words = t.replace(/\b(rad|mol|kHz|MHz|GHz|THz|keV|MeV|GeV|TeV|kPa|MPa|hPa|atm|mag|rpm|ppm|mph|Gyr|Myr|kcal|cal|lux|mSv|Bq|kWh|min)\b/g, '');
+              const words = t.replace(/\b(rad|mol|kHz|MHz|GHz|THz|meV|keV|MeV|GeV|TeV|kPa|MPa|hPa|atm|mag|rpm|ppm|mph|Gyr|Myr|kcal|cal|lux|mSv|Bq|kWh|min)\b/g, '');
               if (!/[A-Za-z]{3}/.test(words) || /[⟦⟧]/.test(t) || !e || e.closest('script,style,code,pre,kbd,samp,textarea,mjx-container,[translate="no"],.notranslate,[data-i18n-skip],.vd-lang') || !e.getClientRects().length) continue;
               if (/[⟦⟧]/.test(e.textContent)) continue;
               out.push(t.slice(0, 90));
