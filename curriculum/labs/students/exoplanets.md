@@ -31,7 +31,7 @@ Find a planet around another star from the two signals it makes: the dip in the 
 
 $$\delta \approx \left(\frac{R_p}{R_s}\right)^2.$$
 
-Because the middle of the star is brighter than its average, the drop at the middle of a central transit is a little more than this. Your first graph measures by how much. Use $$R_\oplus/R_\odot = 6.371\times10^6\ \text{m}/6.957\times10^8\ \text{m} = 0.009158$$.
+Because the middle of the star is brighter than its average, the drop at the middle of a central transit is a little more than this. Your first graph measures by how much. Use $$R_\oplus = 6.371\times10^6\ \text{m}$$ and $$R_\odot = 6.957\times10^8\ \text{m}$$, so $$R_\oplus/R_\odot = 0.009158$$.
 
 **Radial velocity.** Star and planet both orbit their center of mass (§9.6). For a circular orbit the star's speed along our line of sight swings between $$+K$$ and $$-K$$, with
 
