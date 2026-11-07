@@ -138,18 +138,19 @@ async function leaks(list) {
         try { await page.goto(base + u + (mode === 'qps' ? '?lang=qps' : ''), { waitUntil: 'load', timeout: 30000 }); } catch (e) { errs[mode].add(e.message); await page.close(); continue; }
         await page.waitForTimeout(400);
         const step = mode === 'en' ? async () => {} : async (p) => {
-          const r = await p.evaluate(() => {
+          const r = await p.evaluate((units) => {
+            const U = new Set(units);
             const out = [], tw = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT); let n;
             while ((n = tw.nextNode())) {
               const t = n.data.replace(/\s+/g, ' ').trim(), e = n.parentElement;
               /* unit symbols (rad/s, kPa, MeV, mol) read the same in every language: drop them before looking for words */
-              const words = t.replace(/\b(rad|mol|kHz|MHz|GHz|THz|meV|keV|MeV|GeV|TeV|kPa|MPa|hPa|atm|mag|rpm|ppm|mph|Gyr|Myr|kcal|cal|lux|mSv|Bq|kWh|min)\b/g, '');
+              const words = t.split(/[^A-Za-zÀ-ɏͰ-ϿЀ-ӿ]+/).filter((w) => w && !U.has(w)).join(' ');   /* the catalogs' UNITS list (mGy, kpc, mrad, kDa...) */
               if (!/[A-Za-z]{3}/.test(words) || /[⟦⟧]/.test(t) || !e || e.closest('script,style,code,pre,kbd,samp,textarea,mjx-container,[translate="no"],.notranslate,[data-i18n-skip],.vd-lang') || !e.getClientRects().length) continue;
               if (/[⟦⟧]/.test(e.textContent)) continue;
               out.push(t.slice(0, 90));
             }
             return { out, miss: Object.keys(window.__vdI18nMiss || {}) };
-          }).catch(() => ({ out: [], miss: [] }));
+          }, [...UNITS, 'mag', 'ppm', 'Gyr', 'Myr', 'lux']).catch(() => ({ out: [], miss: [] }));
           r.out.forEach((t) => shown.add(t)); r.miss.forEach((t) => miss.add(t));
         };
         await step(page);
