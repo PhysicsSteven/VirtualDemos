@@ -66,7 +66,7 @@ CSS = r"""
   --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
 * { box-sizing: border-box; }
 body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
-main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; overflow-wrap: break-word; }   /* a long file name breaks instead of pushing a phone sideways */
 a { color: var(--accent); }
 header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
 .kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
