@@ -44,9 +44,10 @@ for (const d of demos) {
   step(d, 'map', miss.length ? 'FAIL' : 'pass', miss.length ? 'missing from ' + miss.join(', ') : '');
   /* 3 */
   /* test_<demo>.cjs and test_<demo>_<part>.cjs, but not the tests of a longer demo name (test_pendulum_wave is pendulum-wave's) */
-  const stem = 'test_' + d.replace(/-/g, '_');
-  const tests = fs.readdirSync(path.join(ROOT, 'curriculum/validation')).filter((f) => /\.cjs$/.test(f) && (f === stem + '.cjs' || f.startsWith(stem + '_')))
-    .filter((f) => !fs.existsSync(path.join(ROOT, 'demos', f.slice(5, -4).replace(/_/g, '-') + '.html')) || f === stem + '.cjs')
+  /* (many tests keep the demo's hyphens, test_giant-planets.cjs, so both spellings count) */
+  const stem = 'test_' + d.replace(/-/g, '_'), stemH = 'test_' + d;
+  const tests = fs.readdirSync(path.join(ROOT, 'curriculum/validation')).filter((f) => /\.cjs$/.test(f) && (f === stem + '.cjs' || f === stemH + '.cjs' || f.startsWith(stem + '_') || (stemH !== stem && f.startsWith(stemH + '_'))))
+    .filter((f) => !fs.existsSync(path.join(ROOT, 'demos', f.slice(5, -4).replace(/_/g, '-') + '.html')) || f === stem + '.cjs' || f === stemH + '.cjs')
     .filter((f) => !/playwright|chromium/.test(fs.readFileSync(path.join(ROOT, 'curriculum/validation', f), 'utf8')));
   if (!tests.length) step(d, 'tests', 'warn', 'no Node test for this demo');
   for (const t of tests) { const r = run('node', ['curriculum/validation/' + t]); step(d, 'tests', r.ok ? 'pass' : 'FAIL', t + (r.ok ? '' : ': ' + tail(r.out))); }

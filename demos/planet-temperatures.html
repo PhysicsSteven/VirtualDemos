@@ -113,6 +113,7 @@
         </div>
         <label class="check"><input type="checkbox" id="chkGH" checked><span>Greenhouse</span></label>
         <div id="eBox"><div class="slider-head"><label for="sE" title="The share of the ground's heat radiation that escapes to space: 1 is no greenhouse">Escaping to space e</label><output id="oE" for="sE"></output></div><input type="range" id="sE" min="-2.5" max="0" step="0.0005"></div>
+        <div id="co2Box"><div class="slider-head"><label for="sCO2" title="Carbon dioxide in Earth's air, in parts per million by volume: today 420, before industry 278">CO₂ in Earth's air</label><output id="oCO2" for="sCO2"></output></div><input type="range" id="sCO2" min="2" max="3.301" step="0.001"></div>
         <div><div class="slider-head"><label for="sV">Escape speed</label><output id="oV" for="sV"></output></div><input type="range" id="sV" min="-0.5" max="2" step="0.001"></div>
       </div>
       <div class="pane bud" id="budPane">
@@ -137,6 +138,8 @@
           <button type="button" data-p="moon" aria-pressed="false">The Moon</button>
           <button type="button" data-p="mars" aria-pressed="false">Mars</button>
           <button type="button" data-p="young" aria-pressed="false">Earth under the young Sun</button>
+          <button type="button" data-p="preind" aria-pressed="false">Earth before industry</button>
+          <button type="button" data-p="co2x2" aria-pressed="false">Earth with doubled CO₂</button>
           <button type="button" data-p="proxima" aria-pressed="false">Proxima Centauri b</button>
           <button type="button" data-p="trappist" aria-pressed="false">TRAPPIST-1 e</button>
         </div>
@@ -255,6 +258,23 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function keeps(vesc, T, M) { return 6 * vrms(T, M) < vesc; }
   /* the young Sun (Gough 1981): t in billions of years since the Sun formed, t☉ = 4.57 */
   function youngSun(t) { return 1 / (1 + 0.4 * (1 - t / 4.57)); }
+  /* ---- The air's chemistry (2026-11-07). Each rocky world's measured air, from the NSSDCA fact sheets (surface pressure, surface
+     gravity, mean molecular weight and the gases by volume). The carbon dioxide above each square meter is (p / g) × x × 44.009 / μ.
+     Earth's carbon dioxide: the greenhouse number e above is matched to today's 288 K with 420 ppm (the fact sheet). Changing the CO₂
+     changes the heat radiation leaving at the top by the forcing ΔF = 5.35 ln(C / C₀) W/m² (Myhre et al. 1998, Geophys. Res. Lett. 25,
+     2715), so at today's 288 K the escaping share falls by ΔF / σT⁴: e(C) = e₀ − 5.35 ln(C / 420 ppm) / (σ (288 K)⁴). The warming that
+     follows is the response with no feedbacks: water vapor, melting ice and clouds change with the temperature and roughly triple it
+     (the IPCC 2021 best estimate for doubled CO₂ is 3 K, likely 2.5 to 4 K). The formula holds for CO₂ near today's, so the control
+     runs from 100 to 2000 ppm. */
+  const AIR = {
+    Venus: { p: 92, g: 8.87, mu: 43.45, co2: 0.965, gases: [['CO₂', 96.5, '%'], ['N₂', 3.5, '%'], ['SO₂', 150, 'ppm'], ['Ar', 70, 'ppm'], ['H₂O', 20, 'ppm']] },
+    Earth: { p: 1.014, g: 9.80, mu: 28.97, co2: 420e-6, gases: [['N₂', 78.08, '%'], ['O₂', 20.95, '%'], ['Ar', 0.934, '%'], ['H₂O', 'about 1', '%'], ['CO₂', 420, 'ppm'], ['CH₄', 1.94, 'ppm']] },
+    Mars: { p: 0.00636, g: 3.71, mu: 43.49, co2: 0.951, gases: [['CO₂', 95.1, '%'], ['N₂', 2.59, '%'], ['Ar', 1.94, '%'], ['O₂', 0.16, '%'], ['CO', 0.06, '%'], ['H₂O', 210, 'ppm']] },
+  };
+  const co2Column = (a) => a.p * 1e5 / a.g * a.co2 * 44.009 / a.mu;   /* kg of CO₂ above each m² */
+  const CO2_NOW = 420, CO2_PRE = 278, T_NOW = 288;   /* ppm (NSSDCA); ppm in 1750 (IPCC 2021, 278.3); K */
+  const co2Forcing = (C, C0) => 5.35 * Math.log(C / C0);
+  const eCO2 = (e0, C) => e0 - co2Forcing(C, CO2_NOW) / (SIGMA * Math.pow(T_NOW, 4));
   /* ---- the Galactic habitable zone (2026-10-31): a simplified model after Lineweaver, Fenner and Gibson 2004 (Science 303, 59), who
      traced four needs for complex life through the Milky Way's history: a star, enough heavy elements to build Earths, enough time
      for evolution, and no nearby supernova to sterilize the planet. Each ingredient here is a simple stand in, stated:
@@ -328,15 +348,19 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     moon: { body: 'Moon', star: 'Sun', L: 1, T: 5772, d: 1, a: 0.11, sp: 'sub', gh: false, e: 1, v: 2.38, col: '#a8a49c', meas: { lo: 95, hi: 390, text: '95 to 390 K at the equator' },
       hint: 'The Moon, 1 AU from the Sun, Bond albedo 0.11, no air. A lunar day lasts 29.5 Earth days, so the ground under a high Sun comes close to balance: about 382 K in the model against 390 K measured at the equator. At night it falls to 95 K: with no air nothing holds the heat.' },
     mars: { body: 'Mars', star: 'Sun', L: 1, T: 5772, d: INNER[3].d, a: 0.25, sp: 'whole', gh: true, e: 'match', v: 5.03, col: '#c0603a', meas: { v: 214, text: 'about 214 K, average' },
-      hint: 'Mars, 1.524 AU, Bond albedo 0.25. With no greenhouse the balance gives 210 K; the average surface is about 214 K. Its thin carbon dioxide air (6 mbar) adds only about 4 K.' },
+      hint: 'Mars, 1.524 AU, Bond albedo 0.25. With no greenhouse the balance gives 210 K; the average surface is about 214 K. Its thin carbon dioxide air (6 mbar) adds only about 4 K, yet above each square meter of Mars there is 25 times as much carbon dioxide as above Earth. With so little air pressing on them, CO₂ molecules absorb heat radiation only in narrow lines, and Mars has almost no water vapor, the gas that does most of the work on Earth.' },
     young: { body: 'Earth', star: 'young Sun', L: YOUNG_L, T: 5772, d: 1, a: 0.294, sp: 'whole', gh: true, e: 'earth', v: 11.186, col: '#3a78c0', meas: null,
       hint: 'Four billion years ago the Sun gave out about 74 % of its light today (L = 0.741 L☉, Gough 1981). Keep Earth\'s albedo and today\'s greenhouse and the planet comes out at 267 K, below freezing, yet rocks show liquid water then: the faint young Sun puzzle. A stronger greenhouse is the usual answer. The zone moves in with the dimmer Sun. The star\'s temperature is left at today\'s 5772 K (the zone edges depend mostly on L).' },
+    preind: { body: 'Earth', star: 'Sun', L: 1, T: 5772, d: 1, a: 0.294, sp: 'whole', gh: true, e: 'earth', co2: CO2_PRE, v: 11.186, col: '#3a78c0', meas: null,
+      hint: 'Earth with the 278 ppm of carbon dioxide its air held in 1750, against 420 ppm today. Less CO₂ lets more heat radiation out: the forcing is 5.35 ln(278/420) = −2.21 W/m², and with nothing else changing the planet comes out 0.66 K cooler. That is the response with no feedbacks; with water vapor, ice and clouds responding the real change is roughly three times larger. Measured warming from 1850 to 1900 to the decade 2011 to 2020 is 1.09 K (IPCC 2021), from all causes together.' },
+    co2x2: { body: 'Earth', star: 'Sun', L: 1, T: 5772, d: 1, a: 0.294, sp: 'whole', gh: true, e: 'earth', co2: 2 * CO2_PRE, v: 11.186, col: '#3a78c0', meas: null,
+      hint: 'Twice the 1750 carbon dioxide: 556 ppm. Against today\'s 420 ppm the forcing is 1.50 W/m², and the model warms by 0.45 K with no feedbacks; doubling from 278 ppm is 3.71 W/m² and 1.1 K. The IPCC (2021) puts the full warming for a doubling, with water vapor, ice and clouds responding, at about 3 K (likely 2.5 to 4 K): the feedbacks roughly triple it.' },
     proxima: { body: 'Proxima Centauri b', star: 'Proxima Centauri', L: Math.pow(10, -2.82), T: 2900, d: 0.04848, a: 0.294, sp: 'whole', gh: false, e: 1, v: 11.186, col: '#b87a5a', meas: null,
       hint: 'The nearest star to the Sun, a red dwarf with 0.15 % of the Sun\'s light (log L = −2.82, 2900 K), and its planet b, 0.0485 AU out, 20 times closer than Earth to the Sun. Its albedo, air and size are unknown: the setup borrows Earth\'s albedo and escape speed, with no greenhouse.' },
     trappist: { body: 'TRAPPIST-1 e', star: 'TRAPPIST-1', L: Math.pow(10, -3.26), T: 2566, d: 0.02925, a: 0.294, sp: 'whole', gh: false, e: 1, v: 11.186 * Math.sqrt(0.692 / 0.920), col: '#8a7aa8', meas: null,
       hint: 'TRAPPIST-1, a red dwarf with 0.055 % of the Sun\'s light (log L = −3.26, 2566 K), has seven Earth sized planets. Planet e, 0.0293 AU out, has 0.692 Earth masses and 0.920 Earth radii, so its escape speed is 9.70 km/s. Albedo borrowed from Earth, no greenhouse. The star is just below the 2600 K where the zone formulas start, so the edges use 2600 K.' },
   };
-  const S = { preset: 'earth', body: 'Earth', star: 'Sun', L: 1, T: 5772, d: 1, a: 0.294, sp: 'whole', gh: true, e: 0.6, v: 11.186, col: '#3a78c0', meas: null,
+  const S = { preset: 'earth', body: 'Earth', star: 'Sun', L: 1, T: 5772, d: 1, a: 0.294, sp: 'whole', gh: true, e: 0.6, v: 11.186, col: '#3a78c0', meas: null, co2: CO2_NOW, co2On: true,
     chart: 'temp', spread: false, orbits: true, run: true, blind: false, ang: 0.7 };
   const p0 = { L: 1, d: 1, a: 0.294 };
   const sysC = $('sys'), budC = $('bud'), chC = $('chart'), sctx = sysC.getContext('2d'), bctx = budC.getContext('2d'), cctx = chC.getContext('2d');
@@ -648,6 +672,18 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       + dd('Habitable zone, conservative', B ? hide : `${sig(z.rg, 3)} to ${sig(z.mg, 3)} AU`) + dd('optimistic', B ? hide : `${sig(z.rv, 3)} to ${sig(z.em, 3)} AU`)
       + dd(`At ${sig(S.d, 4)} AU the planet is`, B ? hide : ZONE[st.zone], 'wide note')
       + dd('Gases kept at the model temperature', B ? hide : (gs.kept.join(', ') || 'none'), 'wide note') + dd('lost to space', B ? hide : (gs.lost.join(', ') || 'none'), 'wide note');
+    const air = AIR[S.body];
+    if (air) {
+      const fmtG = (q) => `${q[0]} ${typeof q[1] === 'number' ? q[1].toLocaleString('en-US') : q[1]} ${q[2]}`;
+      h += dd(`${S.body}'s air (NASA)`, `${air.p >= 1 ? `${sig(air.p, 3)} bar` : `${sig(air.p * 1000, 3)} mbar`} at the surface: ${air.gases.map(fmtG).join(', ')}`, 'wide note')
+        + dd('CO₂ above each square meter', `${Math.round(co2Column(S.body === 'Earth' && S.co2On ? Object.assign({}, air, { co2: S.co2 * 1e-6 }) : air)).toLocaleString('en-US')} kg (Earth today: ${fx(co2Column(AIR.Earth), 1)} kg)`, 'wide note');
+    }
+    if (S.body === 'Earth' && S.gh && S.co2On) {
+      const F = co2Forcing(S.co2, CO2_NOW), dT = st.ts - tSurf(S.L, S.d, S.a, eEarth(), S.sp);
+      h += dd('CO₂', `${S.co2.toLocaleString('en-US')} ppm (today 420, in 1750 278)`, 'wide') + dd('Forcing against today', B ? hide : `${F >= 0 ? '+' : '−'}${fx(Math.abs(F), 2)} W/m²`)
+        + dd('Change, no feedbacks', B ? hide : `${dT >= 0 ? '+' : '−'}${fx(Math.abs(dT), 2)} K`)
+        + dd('Today\'s greenhouse', 'about half from water vapor, a quarter from clouds, a fifth from CO₂ (Schmidt et al. 2010)', 'wide note');
+    }
     if (S.T < 2600 || S.T > 7200) h += dd('Note', `The zone formulas hold from 2600 to 7200 K; the edges use ${S.T < 2600 ? 2600 : 7200} K.`, 'wide note');
     $('out').innerHTML = h;
   }
@@ -659,6 +695,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     set('L', lg(S.L), `${sig(S.L, 3)} L☉`); set('T', S.T, `${Math.round(S.T)} K`); set('D', lg(S.d), `${sig(S.d, 4)} AU`); set('A', S.a, fx(S.a, 3));
     set('E', lg(S.e), sig(S.e, 3)); set('V', lg(S.v), `${sig(S.v, 3)} km/s`);
     $('chkGH').checked = S.gh; $('eBox').style.opacity = S.gh ? 1 : 0.45; $('sE').disabled = !S.gh;
+    $('co2Box').hidden = S.body !== 'Earth'; $('sCO2').value = lg(S.co2); $('oCO2').textContent = S.co2On && S.gh ? `${S.co2.toLocaleString('en-US')} ppm` : '—';
     $('chkSpread').checked = S.spread; $('chkOrbits').checked = S.orbits;
     for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
     for (const b of document.querySelectorAll('#spreadSeg button')) b.setAttribute('aria-pressed', String(b.dataset.sp === S.sp));
@@ -671,15 +708,19 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (c.e === 'match') S.e = eFor(tBare(c.L, c.d, c.a, c.sp), c.meas.v);
     else if (c.e === 'earth') { const E = PRESETS.earth; S.e = eFor(tBare(E.L, E.d, E.a, E.sp), E.meas.v); }
     else S.e = c.e;
+    S.co2 = c.co2 || CO2_NOW; S.co2On = c.body === 'Earth' && c.gh; if (S.co2On) S.e = eCO2(eEarth(), S.co2);
     Object.assign(p0, { L: S.L, d: S.d, a: S.a });
     $('presetHint').textContent = c.hint; sync(); redraw();
   }
   const changed = () => { S.preset = 'custom'; sync(); redraw(); };
+  /* Earth's greenhouse number at today's CO₂ (matched to 288 K) */
+  const eEarth = () => { const E = PRESETS.earth; return eFor(tBare(E.L, E.d, E.a, E.sp), E.meas.v); };
   for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
   const num = (id, fn) => $(id).addEventListener('input', (e) => { fn(+e.target.value); changed(); });
   num('sL', (v) => { S.L = Math.pow(10, v); if (S.star === 'Sun' || S.star === 'young Sun') S.star = 'Your star'; });
   num('sT', (v) => { S.T = v; if (S.star === 'Sun' || S.star === 'young Sun') S.star = 'Your star'; });
-  num('sD', (v) => { S.d = Math.pow(10, v); }); num('sA', (v) => { S.a = v; }); num('sE', (v) => { S.e = Math.pow(10, v); }); num('sV', (v) => { S.v = Math.pow(10, v); });
+  num('sD', (v) => { S.d = Math.pow(10, v); }); num('sA', (v) => { S.a = v; }); num('sE', (v) => { S.e = Math.pow(10, v); S.co2On = false; });
+  num('sCO2', (v) => { S.co2 = Math.round(Math.pow(10, v)); S.co2On = true; S.gh = true; S.e = eCO2(eEarth(), S.co2); }); num('sV', (v) => { S.v = Math.pow(10, v); });
   /* the greenhouse switch keeps the setup's name: the reading records greenhouse on or off */
   $('chkGH').addEventListener('change', (e) => { S.gh = e.target.checked; sync(); redraw(); });
   $('chkSpread').addEventListener('change', (e) => { S.spread = e.target.checked; sync(); redraw(); });
@@ -695,7 +736,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   typed('oT', { get: () => S.T, set: (v) => { S.T = v; if (solarish()) S.star = 'Your star'; changed(); }, min: 2500, max: 7500, step: 1, unit: 'K', label: 'Star surface temperature' });
   typed('oD', { get: () => S.d, set: (v) => { S.d = v; changed(); }, min: 0.01, max: 50, step: 1e-4, unit: 'AU', label: 'Distance d', seed: () => sig(S.d, 4) });
   typed('oA', { get: () => S.a, set: (v) => { S.a = v; changed(); }, min: 0, max: 0.95, step: 0.001, label: 'Albedo a' });
-  typed('oE', { get: () => S.e, set: (v) => { S.e = v; changed(); }, min: 0.0032, max: 1, step: 1e-5, label: 'Escaping to space e', can: () => S.gh, seed: () => sig(S.e, 3) });
+  typed('oE', { get: () => S.e, set: (v) => { S.e = v; S.co2On = false; changed(); }, min: 0.0032, max: 1, step: 1e-5, label: 'Escaping to space e', can: () => S.gh, seed: () => sig(S.e, 3) });
   typed('oV', { get: () => S.v, set: (v) => { S.v = v; changed(); }, min: 0.32, max: 100, step: 0.01, unit: 'km/s', label: 'Escape speed' });
 
   /* ---------- drag the planet in or out ---------- */
@@ -904,11 +945,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const st = state(), z = st.z, gs = gasesNow(st.ts);
     return { body: S.preset === 'custom' ? `${S.body}, changed` : S.body, star: S.star, L_Lsun: sig(S.L, 4), Tstar_K: String(Math.round(S.T)), d_AU: sig(S.d, 4), inv_d2: sig(1 / (S.d * S.d), 4),
       S_W_m2: sig(st.Sx, 4), S_rel: sig(st.rel, 4), albedo: fx(S.a, 3), spread: SP_NAME[S.sp], greenhouse: S.gh ? 'on' : 'off', e: S.gh ? sig(S.e, 3) : '1',
-      T_bare_K: fx(st.tb, 1), T_surf_K: fx(st.ts, 1), T_meas_K: asSet() ? (S.meas.v ? String(S.meas.v) : `${S.meas.lo} to ${S.meas.hi}`) : '', warming_K: fx(st.ts - st.tb, 1),
+      ...(S.body === 'Earth' && S.gh && S.co2On && S.co2 !== CO2_NOW ? { co2_ppm: String(S.co2) } : {}), T_bare_K: fx(st.tb, 1), T_surf_K: fx(st.ts, 1), T_meas_K: asSet() ? (S.meas.v ? String(S.meas.v) : `${S.meas.lo} to ${S.meas.hi}`) : '', warming_K: fx(st.ts - st.tb, 1),
       hz_cons_AU: `${sig(z.rg, 3)} to ${sig(z.mg, 3)}`, hz_opt_AU: `${sig(z.rv, 3)} to ${sig(z.em, 3)}`, zone: ZSHORT[st.zone], vesc_kms: sig(S.v, 3), gases_kept: gs.kept.join(' ') || 'none' }; };
   $('about').textContent = 'Model: the planet absorbs the starlight on its disk that it does not reflect and radiates heat like a blackbody from the area that shares the heat. '
     + 'Approximations: one temperature for that whole area (real planets are warmer at the equator and on the day side); no heat from inside the planet (Jupiter gives out about as much again of its own); '
-    + 'the greenhouse is one number e, chosen to match a measured temperature, standing for the simple layer models; real air also carries heat up by convection, and clouds and ice change the albedo as the temperature changes, which the model holds fixed. '
+    + 'the greenhouse is one number e, chosen to match a measured temperature, standing for the simple layer models; Earth\'s CO₂ control changes e by the CO₂ forcing 5.35 ln(C/420 ppm) W/m² (Myhre et al. 1998) and gives the warming with no feedbacks (water vapor, ice and clouds roughly triple it); real air also carries heat up by convection, and clouds and ice change the albedo as the temperature changes, which the model holds fixed. '
     + 'Each planet sits at its average distance on a circle. Under the star assumes the star straight overhead and no heat carried into the ground or away. '
     + 'The habitable zone edges come from detailed climate models (Kopparapu et al. 2014), not from this balance: inside the zone a planet like Earth, with enough carbon dioxide and water, could keep liquid water at its surface. '
     + 'The air rule uses the model temperature at the ground; gas escapes from the top of an atmosphere, which can be much hotter (on Earth it is, which is why Earth loses hydrogen and helium), and the solar wind strips some air too, so the rule is a rough guide.';

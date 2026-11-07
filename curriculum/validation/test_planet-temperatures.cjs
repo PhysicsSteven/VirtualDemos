@@ -3,7 +3,7 @@
 // the greenhouse factor and its layer models, the Kopparapu et al. 2014 zone edges, and the rule for keeping an atmosphere.
 const assert = require('node:assert');
 const { core } = require('./demo_source.cjs');
-const c = core('planet-temperatures', 'SIGMA,LSUN,AU,KB,AMU,G,SPREAD,flux,tBare,tSurf,eFor,layers,seff,hzEdges,zoneOf,vrms,vEscape,keeps,youngSun,GHZ,ghzT,normCdf,snDose,feh,ghzFactors,ghzGrid');
+const c = core('planet-temperatures', 'SIGMA,LSUN,AU,KB,AMU,G,SPREAD,flux,tBare,tSurf,eFor,layers,seff,hzEdges,zoneOf,vrms,vEscape,keeps,youngSun,GHZ,ghzT,normCdf,snDose,feh,ghzFactors,ghzGrid,AIR,co2Column,CO2_NOW,CO2_PRE,T_NOW,co2Forcing,eCO2');
 
 let n = 0;
 const near = (a, b, tol, w) => assert(Math.abs(a - b) <= tol * Math.abs(b), `${w || ''}: expected ${b}, got ${a}`);
@@ -104,6 +104,20 @@ group('galactic habitable zone: the simplified Lineweaver, Fenner and Gibson 200
   assert(in68 / all >= 0.68 && in68 / all < 0.70, `68% set holds ${in68 / all}`);
   assert(G.z95.R[0] <= G.z68.R[0] && G.z95.R[1] >= G.z68.R[1], '68 inside 95'); assert(G.z68.R[0] < 8.2 && G.z68.R[1] > 8.2, 'Sun inside the zone');
   assert(G.share > 0 && G.share < 0.2 && G.older > 0.5 && G.older < 1, `share ${G.share}, older ${G.older}`);
+});
+
+group('The air: NASA columns of CO2 (Venus about 1,000,000 kg/m², Mars 25 times Earth\'s), Myhre forcing, no feedback warming of about 1.1 K per doubling', () => {
+  const A = c.AIR; near(c.co2Column(A.Venus), 1.0138e6, 1e-3, 'Venus'); near(c.co2Column(A.Earth), 6.60, 2e-3, 'Earth'); near(c.co2Column(A.Mars), 165.0, 2e-3, 'Mars');
+  near(c.co2Column(A.Mars) / c.co2Column(A.Earth), 25, 0.01, 'Mars over Earth');
+  for (const k in A) { const tot = A[k].gases.filter((g) => g[2] === '%' && typeof g[1] === 'number').reduce((s, g) => s + g[1], 0); assert(tot > 99 && tot < 100.5, `${k} adds to ${tot} %`); }
+  near(c.co2Forcing(2, 1), 3.708, 1e-3, '5.35 ln 2'); near(c.co2Forcing(c.CO2_NOW, c.CO2_PRE), 2.21, 3e-3, '1750 to today (IPCC 2021: 2.16 W/m² to 2019)');
+  const tb = c.tBare(1, 1, 0.294, 'whole'), e0 = c.eFor(tb, 288);
+  near(c.tSurf(1, 1, 0.294, c.eCO2(e0, c.CO2_NOW), 'whole'), 288, 1e-12, 'today matches 288 K');
+  const dT = c.tSurf(1, 1, 0.294, c.eCO2(e0, 2 * c.CO2_NOW), 'whole') - 288; near(dT, 1.12, 0.02, 'doubling, no feedbacks');
+  /* the same as the linear Planck response ΔF / (4 e σ T³) */
+  near(dT, c.co2Forcing(2, 1) / (4 * e0 * c.SIGMA * 288 ** 3), 0.01, 'linear response');
+  near(c.tSurf(1, 1, 0.294, c.eCO2(e0, c.CO2_PRE), 'whole') - 288, -0.66, 0.02, '1750');
+  near(c.tSurf(1, 1, 0.294, c.eCO2(e0, 2 * c.CO2_PRE), 'whole') - 288, 0.45, 0.03, '556 ppm');
 });
 
 console.log(`${n} groups passed`);

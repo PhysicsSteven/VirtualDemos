@@ -35,6 +35,8 @@
 .setup-card select { font: inherit; font-size: 0.86rem; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px; width: 100%; }
 .setup-card .pick { display: flex; flex-direction: column; gap: 4px; }
 .setup-card .pick label { font-size: 0.8rem; color: var(--muted); }
+.setup-card .pick.inline { flex-direction: row; align-items: center; gap: 8px; } .setup-card .pick.inline select { width: auto; flex: 1; }
+#boxClouds input[type=range] { margin-top: 1px; margin-bottom: 1px; }
 .setup-card .note { font-size: 0.76rem; color: var(--muted); margin: 0; }
 .setup-card .chips button { font-size: 0.8rem; padding: 3px 8px; }
 .mtable { width: 100%; border-collapse: collapse; font-size: 0.8rem; font-variant-numeric: tabular-nums; }
@@ -78,6 +80,7 @@
           <button type="button" data-mode="rings" aria-pressed="false">Rings</button>
           <button type="button" data-mode="moons" aria-pressed="false">Moons</button>
           <button type="button" data-mode="io" aria-pressed="false">Io's tides</button>
+          <button type="button" data-mode="clouds" aria-pressed="false">Clouds</button>
         </div>
         <div class="seg" role="group" aria-label="Perspective" id="dimSeg"><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
         <button type="button" class="btn sq" id="zOut" aria-label="Zoom out">−</button>
@@ -114,6 +117,12 @@
           <p class="note">Io's real orbit has e = 0.004, kept up by the pulls of Europa and Ganymede. With e = 0 the orbit is a circle and the tide never changes.</p>
           <label class="check"><input type="checkbox" id="chkExag" checked><span>Exaggerate the orbit's shape and Io's stretch</span></label>
         </div>
+        <div id="boxClouds" hidden>
+          <div><div class="slider-head"><label for="sClO" title="How much of this element the deep air holds, as water, compared with its share in the Sun">Oxygen (H₂O)</label><output id="oClO" class="mono" for="sClO"></output></div><input type="range" id="sClO" min="-1" max="2" step="0.01"></div>
+          <div><div class="slider-head"><label for="sClS" title="How much of this element the deep air holds, as hydrogen sulfide, compared with its share in the Sun">Sulfur (H₂S)</label><output id="oClS" class="mono" for="sClS"></output></div><input type="range" id="sClS" min="-1" max="2" step="0.01"></div>
+          <div><div class="slider-head"><label for="sClN" title="How much of this element the deep air holds, as ammonia, compared with its share in the Sun">Nitrogen (NH₃)</label><output id="oClN" class="mono" for="sClN"></output></div><input type="range" id="sClN" min="-1" max="2" step="0.01"></div>
+          <div><div class="slider-head"><label for="sClC" title="How much of this element the deep air holds, as methane, compared with its share in the Sun">Carbon (CH₄)</label><output id="oClC" class="mono" for="sClC"></output></div><input type="range" id="sClC" min="-1" max="2" step="0.01"></div>
+        </div>
       </div>
     </div>
 
@@ -138,6 +147,12 @@
           <button type="button" data-p="pluto" aria-pressed="false">Pluto and Charon</button>
           <button type="button" data-p="io" aria-pressed="false">Io's tides heat it</button>
           <button type="button" data-p="iocircle" aria-pressed="false">Io on a circle</button>
+          <button type="button" data-p="cloudsJupiter" aria-pressed="false">Jupiter's three cloud decks</button>
+          <button type="button" data-p="cloudsProbe" aria-pressed="false">Where the Galileo probe fell</button>
+          <button type="button" data-p="cloudsSaturn" aria-pressed="false">Saturn's clouds lie deeper</button>
+          <button type="button" data-p="cloudsUranus" aria-pressed="false">Uranus has no ammonia cloud</button>
+          <button type="button" data-p="cloudsNeptune" aria-pressed="false">Neptune's methane clouds</button>
+          <button type="button" data-p="cloudsWet" aria-pressed="false">A wetter Jupiter</button>
         </div>
         <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
@@ -179,7 +194,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
           <p class="hint" id="modelText"></p>
         </details>
         <details class="more"><summary>Where the numbers come from</summary>
-          <p class="hint">Planets, moons and rings: NASA's planetary, satellite and ring fact sheets (D. R. Williams, NSSDCA, Goddard Space Flight Center). Where the moons of Jupiter and Saturn start: JPL's mean orbital elements for noon on 1 January 2000 (ssd.jpl.nasa.gov). The Roche limit for a fluid moon: S. Chandrasekhar, Ellipsoidal Figures of Equilibrium (1969). Io's tidal response k₂/Q = 0.015 ± 0.003: V. Lainey and others, Nature 459, 957 (2009). Io's heat flow, more than 2.5 W/m²: G. J. Veeder and others, Journal of Geophysical Research 99, 17095 (1994). Earth's heat flow, 47 TW: J. H. Davies and D. R. Davies, Solid Earth 1, 5 (2010). Tidal heating and resonances: C. D. Murray and S. F. Dermott, Solar System Dynamics (1999).</p>
+          <p class="hint">Planets, moons and rings: NASA's planetary, satellite and ring fact sheets (D. R. Williams, NSSDCA, Goddard Space Flight Center). Where the moons of Jupiter and Saturn start: JPL's mean orbital elements for noon on 1 January 2000 (ssd.jpl.nasa.gov). The Roche limit for a fluid moon: S. Chandrasekhar, Ellipsoidal Figures of Equilibrium (1969). Io's tidal response k₂/Q = 0.015 ± 0.003: V. Lainey and others, Nature 459, 957 (2009). Io's heat flow, more than 2.5 W/m²: G. J. Veeder and others, Journal of Geophysical Research 99, 17095 (1994). Earth's heat flow, 47 TW: J. H. Davies and D. R. Davies, Solid Earth 1, 5 (2010). Tidal heating and resonances: C. D. Murray and S. F. Dermott, Solar System Dynamics (1999). Clouds: temperatures at 1 bar from the NSSDCA fact sheets; Jupiter's deep gases from the Galileo probe (von Zahn et al. 1998, J. Geophys. Res. 103, 22815; Wong et al. 2004, Icarus 171, 153) and Juno (Li et al. 2020, Nature Astronomy 4, 609); Saturn's from Atreya et al. 2003 (Planet. Space Sci. 51, 105); the Sun's from Asplund et al. 2009 (ARA&amp;A 47, 481); vapor pressures from Wagner and Pruss 1993, Murphy and Koop 2005 and Fray and Schmitt 2009; ammonium hydrosulfide from Lewis 1969 (Icarus 10, 365); hydrogen's heat capacity from Leachman et al. 2009.</p>
         </details>
         </div></details>
       </section>
@@ -425,6 +440,118 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       for (let j = i + 1; j < 4; j++) if (on[j]) E -= GAL_GM[i] * GAL_GM[j] / Math.hypot(x[j] - x[i], y[j] - y[i]); }
     return E;
   }
+  /* ---------- Clouds (2026-11-07): where each gas condenses, an equilibrium cloud condensation model ----------
+     The air below the clouds is a dry adiabat of hydrogen and helium, T(P) from d lnT / d lnP = R / c_p(T), started from the measured
+     temperature at 1 bar (NSSDCA). c_p of normal hydrogen (ortho and para frozen at 3 to 1) in the ideal gas limit, from the
+     Leachman et al. 2009 equation of state (J. Phys. Chem. Ref. Data 38, 721); helium 5/2 R. The heavier gases' heat capacity, the heat
+     their condensing releases (which makes the real profile cooler with depth) and the change in mean molar mass are left out.
+     Each gas keeps its deep mole fraction until it reaches its cloud base, where its partial pressure x P first equals its saturation
+     vapor pressure; above the base it holds x = p_sat / P and the rest has condensed. Ammonium hydrosulfide forms from two gases,
+     NH₃ + H₂S → NH₄SH (solid), where p(NH₃) p(H₂S) first reaches K(T), log₁₀ (K / atm²) = 14.82 − 4705 K / T (Lewis 1969, Icarus 10,
+     365, as used by Li, Ingersoll and Oyafuso 2018); it uses one molecule of each, so whichever gas is scarcer is used up and the other
+     is left to make its own cloud higher up: ammonia ice on Jupiter and Saturn, hydrogen sulfide ice on Uranus and Neptune.
+     Ammonia dissolving into the water droplets is left out.
+     Saturation vapor pressures: water over liquid, Wagner and Pruss 1993 (J. Phys. Chem. Ref. Data 22, 783, the IAPWS formula, 273.16 to
+     647.096 K); water over ice, Murphy and Koop 2005 (Q. J. R. Meteorol. Soc. 131, 1539, eq. 7); ammonia, hydrogen sulfide and methane ice,
+     the fits recommended by Fray and Schmitt 2009 (Planet. Space Sci. 57, 2053) as tabulated by Mousis et al. 2014 (A&A 570, A35, Table 3),
+     ln (p / bar) = Σ Aᵢ / Tⁱ. */
+  const R_GAS = 6.02214076e23 * 1.380649e-23;   /* J mol⁻¹ K⁻¹, N_A k (exact) */
+  /* c_p / R of normal hydrogen, ideal gas limit, from Leachman et al. 2009 (evaluated at 0.01 bar) */
+  const CP_H2 = [[60, 2.5183], [80, 2.5908], [100, 2.7150], [125, 2.8925], [150, 3.0532], [175, 3.1825], [200, 3.2810], [250, 3.4067],
+    [300, 3.4698], [400, 3.5105], [500, 3.5188], [600, 3.5277]];
+  function cpH2(T) { const t = CP_H2; if (T <= t[0][0]) return t[0][1]; for (let i = 1; i < t.length; i++) if (T <= t[i][0]) { const [a, ya] = t[i - 1], [b, yb] = t[i]; return ya + (yb - ya) * (T - a) / (b - a); } return t[t.length - 1][1]; }
+  const ATM = 1.01325;   /* bar */
+  const FS = { nh3: { A: [15.96, -3.537e3, -3.31e4, 1.742e6, -2.995e7], hi: 195.41 },
+    h2s: { lo: { A: [12.98, -2707], hi: 126.2 }, A: [8.933, -726, -3.504e5, 2.724e7, -8.582e8], hi: 187.57 },
+    ch4: { A: [10.51, -1110, -4341, 1.035e5, -7.91e5], hi: 90.68 } };
+  const fsP = (A, T) => Math.exp(A.reduce((s, a, i) => s + a / Math.pow(T, i), 0));
+  function waterLiquid(T) { const Tc = 647.096, pc = 220.64, t = 1 - T / Tc;
+    return pc * Math.exp(Tc / T * (-7.85951783 * t + 1.84408259 * Math.pow(t, 1.5) - 11.7866497 * t ** 3 + 22.6807411 * Math.pow(t, 3.5) - 15.9618719 * t ** 4 + 1.80122502 * Math.pow(t, 7.5))); }
+  const waterIce = (T) => 1e-5 * Math.exp(9.550426 - 5723.265 / T + 3.53068 * Math.log(T) - 0.00728332 * T);
+  /* saturation vapor pressure, bar; ok false where T is past the fit's range */
+  function pSat(g, T) {
+    if (g === 'h2o') return T >= 273.16 ? { p: waterLiquid(Math.min(T, 647.096)), ok: T <= 647.096 } : { p: waterIce(T), ok: T >= 110 };
+    /* the two hydrogen sulfide fits differ by 20 % where they meet (126.2 K, a change between solid forms), so ln p is blended across ±2 K */
+    if (g === 'h2s' && T < FS.h2s.lo.hi + 2) { const lo = Math.log(fsP(FS.h2s.lo.A, T)); if (T <= FS.h2s.lo.hi - 2) return { p: Math.exp(lo), ok: true };
+      const w = (T - FS.h2s.lo.hi + 2) / 4; return { p: Math.exp((1 - w) * lo + w * Math.log(fsP(FS.h2s.A, T))), ok: true }; }
+    const f = FS[g]; if (T <= f.hi) return { p: fsP(f.A, T), ok: true };
+    /* past the ice's range (the triple point): carried on with the slope at its end, and flagged */
+    const e = 1e-3, m = (Math.log(fsP(f.A, f.hi)) - Math.log(fsP(f.A, f.hi - e))) / (1 / (f.hi - e) - 1 / f.hi);
+    return { p: fsP(f.A, f.hi) * Math.exp(-m * (1 / T - 1 / f.hi)), ok: false };
+  }
+  const nh4shK = (T) => Math.pow(10, 14.82 - 4705 / T) * ATM * ATM;   /* bar² */
+  /* The Sun's photosphere, Asplund et al. 2009 (ARA&A 47, 481, Table 1): log ε of C, N, O, S; X/H₂ = 2 × 10^(log ε − 12) */
+  const SUN_LOGE = { c: 8.43, n: 7.83, o: 8.69, s: 7.12 };
+  const solarH2 = (el) => 2 * Math.pow(10, SUN_LOGE[el] - 12);
+  const GAS_EL = { ch4: 'c', nh3: 'n', h2o: 'o', h2s: 's' };
+  /* each giant: T at 1 bar (NSSDCA fact sheets); deep mixing ratios relative to H₂ (r), with where each comes from. Saturn's, Uranus's and
+     Neptune's water and hydrogen sulfide are not measured: they are set to the same multiple of the Sun as the planet's measured carbon,
+     the usual assumption. Uranus's and Neptune's ammonia is set to a tenth of that, because their microwave brightness needs much less
+     ammonia than hydrogen sulfide below the clouds (de Pater et al. 1991) and hydrogen sulfide gas has been seen above them (Irwin et al.
+     2018, 2019). */
+  const CLOUD_PL = {
+    jupiter: { T1: 165, he: 0.157, r: { ch4: 2.37e-3, nh3: 6.64e-4, h2s: 8.9e-5, h2o: null }, h2oX: 2.5e-3, bottom: 30,
+      src: { he: 'Galileo probe (von Zahn et al. 1998)', ch4: 'Galileo probe (Wong et al. 2004)', nh3: 'Galileo probe (Wong et al. 2004)', h2s: 'Galileo probe (Wong et al. 2004)', h2o: 'Juno, near the equator (Li et al. 2020)' } },
+    saturn: { T1: 134, he: 0.135, r: { ch4: 4.5e-3, nh3: 6e-4 }, bottom: 60,
+      src: { he: 'Voyager (Conrath and Gautier 2000), middle of 0.11 to 0.16', ch4: 'Atreya et al. 2003', nh3: 'Atreya et al. 2003', h2s: 'assumed: carbon\'s multiple of the Sun', h2o: 'assumed: carbon\'s multiple of the Sun' } },
+    uranus: { T1: 76, x: { h2: 0.825, he: 0.152, ch4: 0.023 }, nFrac: 0.1, bottom: 300,
+      src: { he: 'NSSDCA', ch4: 'NSSDCA', nh3: 'assumed: a tenth of carbon\'s multiple', h2s: 'assumed: carbon\'s multiple of the Sun', h2o: 'assumed: carbon\'s multiple of the Sun' } },
+    neptune: { T1: 72, x: { h2: 0.80, he: 0.19, ch4: 0.015 }, nFrac: 0.1, bottom: 300,
+      src: { he: 'NSSDCA', ch4: 'NSSDCA', nh3: 'assumed: a tenth of carbon\'s multiple', h2s: 'assumed: carbon\'s multiple of the Sun', h2o: 'assumed: carbon\'s multiple of the Sun' } },
+  };
+  const CLOUD_GASES = ['h2o', 'h2s', 'nh3', 'ch4'];
+  /* the planet's deep air: { he, r: { ch4, nh3, h2s, h2o } } relative to H₂, and each gas's multiple of the Sun */
+  function cloudAir(k) {
+    const d = CLOUD_PL[k], r = {}; let he;
+    if (d.x) { he = d.x.he / d.x.h2; r.ch4 = d.x.ch4 / d.x.h2; } else { he = d.he; Object.assign(r, d.r); }
+    const cx = r.ch4 / solarH2('c');
+    if (r.nh3 == null) r.nh3 = cx * (d.nFrac || 1) * solarH2('n');
+    if (r.h2s == null) r.h2s = cx * solarH2('s');
+    if (r.h2o == null) { if (d.h2oX) { const s = 1 + he + r.ch4 + r.nh3 + r.h2s; r.h2o = d.h2oX * s / (1 - d.h2oX); } else r.h2o = cx * solarH2('o'); }
+    const sun = {}; for (const g of CLOUD_GASES) sun[g] = r[g] / solarH2(GAS_EL[g]);
+    return { he, r, sun };
+  }
+  /* mole fractions of the whole gas from ratios to H₂ */
+  function moleFractions(he, r) { const s = 1 + he + CLOUD_GASES.reduce((a, g) => a + r[g], 0), x = { h2: 1 / s, he: he / s }; for (const g of CLOUD_GASES) x[g] = r[g] / s; return x; }
+  /* the dry adiabat: T at ln P = l1 from T0 at ln P = l0 (RK4 in ln P, steps of at most 0.002); xHe the helium mole fraction among H₂ and He */
+  function adiabatStep(T0, l0, l1, xHe) {
+    const cp = (T) => (1 - xHe) * cpH2(T) + xHe * 2.5, f = (T) => T / cp(T), n = Math.max(1, Math.ceil(Math.abs(l1 - l0) / 0.002)), h = (l1 - l0) / n; let T = T0;
+    for (let i = 0; i < n; i++) { const k1 = f(T), k2 = f(T + 0.5 * h * k1), k3 = f(T + 0.5 * h * k2), k4 = f(T + h * k3); T += h * (k1 + 2 * k2 + 2 * k3 + k4) / 6; }
+    return T;
+  }
+  const adiabatT = (T1, xHe, P) => adiabatStep(T1, 0, Math.log(P), xHe);
+  /* The model atmosphere from pBot up to pTop (bar), on n levels evenly spaced in ln P. air = { he, r } (ratios to H₂).
+     Returns levels [{ P, T, x: mole fractions of each gas, c: mole fraction condensed into each cloud per unit ln P }] from the bottom up,
+     and the cloud bases [{ k, P, T, ok }] (deepest first); ok is false where a base lies past its vapor pressure fit's range. */
+  const CLOUDS = ['h2o', 'nh4sh', 'nh3', 'h2s', 'ch4'];
+  function cloudModel(T1, air, pBot, pTop, n) {
+    const x0 = moleFractions(air.he, air.r), xHe = air.he / (1 + air.he), lev = [], bases = {}, cur = Object.assign({}, x0);
+    const lb = Math.log(pBot), lt = Math.log(pTop), dl = (lb - lt) / (n - 1);
+    let T = adiabatT(T1, xHe, pBot);
+    /* a cloud counts once it holds a real share of its gas: a gas the NH₄SH cloud has all but used up leaves only a haze, which is ignored */
+    const ice = (g, P, c) => { const s = pSat(g, T); if (cur[g] * P > s.p) { if (!bases[g] && cur[g] > 0.01 * x0[g]) bases[g] = { k: g, P, T, ok: s.ok }; c[g] = cur[g] - s.p / P; cur[g] = s.p / P; } };
+    for (let i = 0; i < n; i++) {
+      const lp = lb - dl * i, P = Math.exp(lp), c = { h2o: 0, nh4sh: 0, nh3: 0, h2s: 0, ch4: 0 };
+      if (i) T = adiabatStep(T, lp + dl, lp, xHe);
+      ice('h2o', P, c);
+      const K = nh4shK(T) / (P * P), a = cur.nh3, b = cur.h2s;
+      if (a * b > K) { if (!bases.nh4sh) bases.nh4sh = { k: 'nh4sh', P, T, ok: true }; const d = (a + b - Math.sqrt((a - b) * (a - b) + 4 * K)) / 2; c.nh4sh = d; cur.nh3 = a - d; cur.h2s = b - d; }
+      for (const g of ['nh3', 'h2s', 'ch4']) ice(g, P, c);
+      if (i) for (const k in c) c[k] /= dl; else for (const k in c) c[k] = 0;
+      lev.push({ P, T, x: Object.assign({}, cur), c });
+    }
+    return { lev, bases: CLOUDS.map((k) => bases[k]).filter(Boolean) };
+  }
+  /* molar masses, g/mol, from the IUPAC standard atomic weights */
+  const MOLAR = { h2: 2.016, he: 4.0026, ch4: 16.043, nh3: 17.031, h2s: 34.08, h2o: 18.015 };
+  const meanMolar = (x) => Object.keys(MOLAR).reduce((a, g) => a + (x[g] || 0) * MOLAR[g], 0);
+  /* height of each level above the 1 bar level (km), dz = (R T / μ g) d ln P, with the deep air's μ and one g (GM / R² at the mean
+     radius, the spin left out) */
+  function cloudHeights(lev, gAcc, mu) {
+    const z = [0]; for (let i = 1; i < lev.length; i++) z.push(z[i - 1] + R_GAS * 0.5 * (lev[i].T + lev[i - 1].T) / (mu * 1e-3 * gAcc) * Math.log(lev[i - 1].P / lev[i].P) / 1e3);
+    let j = lev.findIndex((l) => l.P <= 1); if (j < 1) j = 1; const t = Math.log(lev[j - 1].P) / Math.log(lev[j - 1].P / lev[j].P), z1 = z[j - 1] + (z[j] - z[j - 1]) * t;
+    return z.map((v) => v - z1);
+  }
   // ==CORE END==
   if (typeof document === 'undefined') return;
   const $ = (id) => document.getElementById(id);
@@ -434,7 +561,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const moonX = () => (S.planet === 'pluto' ? 1 : MOON_X);   /* Charon is big enough to draw to scale */
   const VIEW_RINGS = { jupiter: 3.4, saturn: 3.3, uranus: 4.0, neptune: 3.2 }, VIEW_MOONS = { jupiter: 28, saturn: 22, uranus: 24.5, neptune: 16, mars: 8.2, pluto: 16.5 };
   const CONJ = { jupiter: [[0, 1], [1, 2]], saturn: [[1, 3], [0, 2]], uranus: [], neptune: [], mars: [], pluto: [] };
-  const SPEED = { planets: 3600, rings: 3600, moons: 86400, io: 21600 };
+  const SPEED = { planets: 3600, rings: 3600, moons: 86400, io: 21600, clouds: 3600 };
   const PRESETS = {
     giants: { mode: 'planets', planet: 'jupiter', sel: 'jupiter', earth: true, hint: 'Jupiter, Saturn, Uranus and Neptune side by side at their true sizes, with Earth for scale, seen from a little above the plane of their orbits and each with its axis at its real tilt. The bars below compare their mean densities with water. Click a planet for its numbers.' },
     float: { mode: 'planets', planet: 'saturn', sel: 'saturn', earth: true, hint: 'Saturn has 95 times Earth\'s mass but 764 times its volume, so its mean density is 0.687 g/cm³, less than water\'s 1.00 g/cm³. It is the only planet that would float, if there were a tub big enough. It also turns in 10.7 hours, and the fast spin and low density make it the flattest planet: its equator is 9.8 % wider than its poles.' },
@@ -452,9 +579,15 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     pluto: { mode: 'moons', planet: 'pluto', moon: 0, conj: false, speed: 21600, run: true, hint: 'Pluto and its largest moon Charon, both to scale. Charon has 12 % of Pluto\'s mass (NASA: 1.586 × 10²¹ kg against 1.303 × 10²² kg), so the two go round a center of mass 2126 km from Pluto\'s center, outside Pluto itself, and are often called a double dwarf planet. Each keeps the same face toward the other, turning once every 6.39 days. Kepler\'s third law with Charon\'s orbit gives the mass of Pluto and Charon together, 1.462 × 10²² kg. Pluto has four more tiny moons, left out here.' },
     io: { mode: 'io', planet: 'jupiter', e: 0.004, exag: true, speed: 21600, run: true, hint: 'Io on its slightly oval orbit (e = 0.004, drawn 60 times more oval). Its distance from Jupiter changes by ±0.4 %, so the tide that stretches it changes by ±1.2 %, and the direction of Jupiter seen from Io rocks back and forth by ±0.46°. The flexing heats Io: with Io\'s measured k₂/Q this gives about 9 × 10¹³ W, close to the more than 1.0 × 10¹⁴ W Io sends out, which keeps hundreds of volcanoes going.' },
     iocircle: { mode: 'io', planet: 'jupiter', e: 0, exag: true, speed: 21600, run: true, hint: 'If Europa and Ganymede were taken away, Io\'s orbit would round off into a circle. Io would still be stretched toward Jupiter, but by the same amount all the time, so nothing would flex and the tidal heating would stop. The resonance keeps e = 0.004 pumped up.' },
+    cloudsJupiter: { mode: 'clouds', planet: 'jupiter', run: true, hint: 'Jupiter\'s air, from the depths up to 0.3 bar, with the gases the Galileo probe measured and the water Juno measured. Rising air cools, and each gas condenses where its pressure reaches what its ice or liquid can hold: water at 5.8 bar (286 K), then ammonium hydrosulfide, made when ammonia and hydrogen sulfide react, at 2.5 bar, then ammonia ice at 0.83 bar (155 K). The white ammonia deck is what we see from outside; the other two lie under it. Press Start to send a parcel of air up through them.' },
+    cloudsProbe: { mode: 'clouds', planet: 'jupiter', cm: { h2o: 0.5 }, run: true, hint: 'The Galileo probe fell into a hot spot, a clear, dry patch where air sinks, and measured only about half the Sun\'s share of oxygen as water even at 20 bar. With that little water the water cloud would start at 4.2 bar instead of 5.8 and hold far less. The probe saw only thin clouds. Juno later found Jupiter\'s deep air near the equator holds about three times the Sun\'s share: the dry spot is weather, not the planet. Compare with Jupiter\'s three cloud decks.' },
+    cloudsSaturn: { mode: 'clouds', planet: 'saturn', run: true, hint: 'Saturn is farther from the Sun and colder: 134 K at 1 bar against Jupiter\'s 165 K. Each gas reaches its condensing temperature deeper down, so the same three decks sit lower: ammonia ice at 1.6 bar, ammonium hydrosulfide at 5.4 bar and water at 16 bar, about 200 km below the 1 bar level. Saturn\'s lower gravity also stretches its air taller. Its water and sulfur are not measured: they are set to the same multiple of the Sun as its measured carbon.' },
+    cloudsUranus: { mode: 'clouds', planet: 'uranus', run: true, hint: 'In Uranus the deep air seems to hold more hydrogen sulfide than ammonia. Making ammonium hydrosulfide uses one molecule of each, so all the ammonia is used up at 37 bar and the hydrogen sulfide left over condenses as its own ice at 5.8 bar, where an ammonia cloud would be on Jupiter. Higher still, at 1.2 bar and 81 K, methane freezes into the clouds seen from Earth. Hydrogen sulfide gas was found above Uranus\'s clouds in 2018, which supports this picture. The water cloud lies around 220 bar, a rough number: that deep the gas is no longer ideal.' },
+    cloudsNeptune: { mode: 'clouds', planet: 'neptune', run: true, hint: 'Neptune is like Uranus: 72 K at 1 bar, methane ice clouds at 1.3 bar, hydrogen sulfide ice at 6.2 bar and ammonium hydrosulfide near 40 bar. Methane gas absorbs red light, which helps give both ice giants their blue color. Neptune\'s white methane clouds come and go with its weather; Voyager 2 saw them cast shadows on the deck below.' },
+    cloudsWet: { mode: 'clouds', planet: 'jupiter', cm: { h2o: 10 }, run: false, hint: 'What if Jupiter held ten times the Sun\'s share of oxygen? The water cloud base moves down from 5.8 bar to 7.7 bar (310 K), while the ammonia and ammonium hydrosulfide decks barely move. Juno\'s measured three times the Sun lies between this and the Galileo probe\'s dry spot. Try the Oxygen (H₂O) control to see how deep the water deck goes.' },
   };
   const S = { preset: 'giants', mode: 'planets', planet: 'saturn', sel: 'jupiter', earth: true, rho: 920, dist: 2.6, roche: true, res: false, conj: true, moon: 0,
-    e: 0.004, exag: true, nb: false, noEu: false, t: 0, run: false, speed: 3600, zoom: { planets: 0, rings: 0, moons: 0, io: 0 }, blind: false, stripe: null, piece: 1, slow: false };
+    e: 0.004, exag: true, nb: false, noEu: false, t: 0, run: false, speed: 3600, zoom: { planets: 0, rings: 0, moons: 0, io: 0, clouds: 0 }, blind: false, cm: null, lp: 0, stripe: null, piece: 1, slow: false };
   let W = 0, H = 0, dpr = 1, K = null, view3 = null, g3 = null;
   const P = (k) => PLANETS[k], f = (v, d) => (!isFinite(v) ? '—' : v.toFixed(d).replace('-', '−'));
   const fmt = (v, d) => (!isFinite(v) ? '—' : v.toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d }).replace(/,/g, ' ').replace('-', '−'));
@@ -745,13 +878,99 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     void base; void dirJ; void ang;
   }
 
+  /* ---------- Clouds: a column of the air, and how much of each gas is left at each pressure ---------- */
+  const CL_TOP = 0.3, CL_N = 800;
+  const CL_NAME = { h2o: 'Water', nh4sh: 'Ammonium hydrosulfide', nh3: 'Ammonia ice', h2s: 'Hydrogen sulfide ice', ch4: 'Methane ice' };
+  const CL_COL = { h2o: '#9cc8f0', nh4sh: '#c08a58', nh3: '#f4f0e4', h2s: '#e0d48c', ch4: '#9ce8ee' };
+  const GAS_NAME = { h2o: 'water', h2s: 'hydrogen sulfide', nh3: 'ammonia', ch4: 'methane' };
+  const GAS_COL = { h2o: '#2b9ac8', h2s: '#c9a227', nh3: '#8b6fd6', ch4: '#3aa070' };
+  const GAS_SLIDER = { h2o: 'sClO', h2s: 'sClS', nh3: 'sClN', ch4: 'sClC' }, GAS_OUT = { h2o: 'oClO', h2s: 'oClS', nh3: 'oClN', ch4: 'oClC' };
+  let CLC = null;
+  function clAir() { const a = cloudAir(S.planet); if (S.cm) for (const g in S.cm) { a.r[g] = S.cm[g] * solarH2(GAS_EL[g]); a.sun[g] = S.cm[g]; } return a; }
+  function clModel() {
+    const key = S.planet + JSON.stringify(S.cm); if (CLC && CLC.key === key) return CLC;
+    const d = CLOUD_PL[S.planet], air = clAir(), m = cloudModel(d.T1, air, d.bottom, CL_TOP, CL_N), x0 = moleFractions(air.he, air.r), mu = meanMolar(x0), p = P(S.planet);
+    const z = cloudHeights(m.lev, p.GM * 1e9 / Math.pow(p.Rm * 1e3, 2), mu), cmax = {};
+    for (const k of CLOUDS) cmax[k] = Math.max(1e-30, ...m.lev.map((l) => l.c[k]));
+    CLC = Object.assign({ key, d, air, x0, mu, z, cmax }, m); return CLC;
+  }
+  /* the level nearest ln P */
+  const clAt = (m, lp) => { const lb = Math.log(m.d.bottom), lt = Math.log(CL_TOP); return Math.max(0, Math.min(m.lev.length - 1, Math.round((lb - lp) / (lb - lt) * (m.lev.length - 1)))); };
+  const cm1 = (v, d) => (!isFinite(v) ? '—' : v.toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d }).replace('-', '−'));
+  const barTxt = (P) => `${P >= 10 ? cm1(P, 0) : P >= 1 ? f(P, 1) : f(P, 2)} bar`;
+  const ppmTxt = (x) => (x >= 0.01 ? `${f(100 * x, 2)} %` : x >= 1e-4 ? `${cm1(x * 1e6, 0)} ppm` : x >= 1e-6 ? `${f(x * 1e6, 1)} ppm` : `${sci(x, 1)}`);
+  function clLayout() {
+    const pp = proj(), sc = $('scene').getBoundingClientRect(), st = $('strip').getBoundingClientRect(), over = Math.max(0, st.bottom - sc.top);
+    const avail = W - cardW(), top = over + 30 * pp, bot = H - 40 * pp, x0 = 66 * pp, colW = Math.max(110, Math.min(300, avail * 0.38));
+    const gx0 = x0 + colW + 26 * pp, gx1 = avail - 16 * pp;
+    return { pp, top, bot, x0, colW, gx0, gx1, narrow: avail < 560 };
+  }
+  function drawClouds() {
+    const m = clModel(), L = clLayout(), pp = L.pp, lb = Math.log(m.d.bottom), lt = Math.log(CL_TOP);
+    const yP = (P) => L.top + (lt - Math.log(P)) / (lt - lb) * (L.bot - L.top);
+    const c = K[S.planet];
+    /* the column: lighter high up, darker and warmer deep down (colors are a painting) */
+    const gr = ctx.createLinearGradient(0, L.top, 0, L.bot); gr.addColorStop(0, shade(c[1], 0.25)); gr.addColorStop(0.5, c[0]); gr.addColorStop(1, shade(c[0], -0.6));
+    ctx.fillStyle = gr; ctx.fillRect(L.x0, L.top, L.colW, L.bot - L.top);
+    /* each cloud: shaded by how much condenses per step up (its own largest = full), with soft puffs near its base */
+    const n = m.lev.length;
+    for (const k of CLOUDS) {
+      const cm = m.cmax[k]; if (cm <= 1e-29) continue;
+      for (let i = 1; i < n; i++) { const a = m.lev[i].c[k] / cm; if (a < 0.01) continue;
+        const y0 = yP(m.lev[i].P), y1 = yP(m.lev[i - 1].P); ctx.globalAlpha = 0.78 * Math.pow(a, 0.75); ctx.fillStyle = CL_COL[k]; ctx.fillRect(L.x0, y0 - 0.5, L.colW, y1 - y0 + 1); }
+      const r = rng(S.planet.length * 131 + k.length * 17 + 7);
+      for (let q = 0; q < 46; q++) { const i = 1 + Math.floor(Math.pow(r(), 2.2) * (n - 1)), lv = m.lev[i]; if (!lv || lv.c[k] / cm < 0.05) { r(); r(); continue; }
+        const y = yP(lv.P), x = L.x0 + r() * L.colW, rad = (5 + 9 * r()) * pp; ctx.globalAlpha = 0.35 * Math.sqrt(lv.c[k] / cm); ctx.fillStyle = CL_COL[k];
+        ctx.beginPath(); ctx.ellipse(x, y, rad * 1.8, rad, 0, 0, 2 * Math.PI); ctx.fill(); }
+      ctx.globalAlpha = 1;
+    }
+    ctx.strokeStyle = K.line; ctx.lineWidth = 1; ctx.strokeRect(L.x0 + 0.5, L.top + 0.5, L.colW - 1, L.bot - L.top - 1);
+    /* pressure ticks, with the temperature there */
+    const ticks = [0.3, 0.5, 1, 2, 5, 10, 20, 50, 100, 200, 300].filter((P) => P >= CL_TOP && P <= m.d.bottom);
+    for (const P of ticks) { const y = yP(P), i = clAt(m, Math.log(P));
+      ctx.strokeStyle = K.grid; ctx.beginPath(); ctx.moveTo(L.x0 - 4 * pp, y); ctx.lineTo(L.x0, y); ctx.stroke();
+      label(barTxt(P), L.x0 - 6 * pp, y - 6 * pp, { a: 'right', col: K.ink, w: 500, size: 10, mono: true });
+      label(`${f(m.lev[i].T, 0)} K`, L.x0 - 6 * pp, y + 6 * pp, { a: 'right', col: K.muted, w: 400, size: 9.5, mono: true }); }
+    label('pressure · temperature', L.x0, L.top - 14 * pp, { col: K.muted, w: 500, size: 10 });
+    /* cloud bases: a dashed line across both panels and the cloud's name */
+    for (const b of m.bases) { const y = yP(b.P);
+      ctx.save(); ctx.setLineDash([5 * pp, 4 * pp]); ctx.strokeStyle = K.dark ? CL_COL[b.k] : shade(CL_COL[b.k], -0.45); ctx.lineWidth = 1.2 * pp; ctx.beginPath(); ctx.moveTo(L.x0, y); ctx.lineTo(L.gx1, y); ctx.stroke(); ctx.restore();
+      label(b.k === 'h2o' ? (b.T > 273.16 ? 'Water droplets' : 'Water ice') : b.k === 'nh4sh' && L.colW < 170 * pp ? 'NH₄SH' : CL_NAME[b.k], L.x0 + 6 * pp, y - 8 * pp, { col: '#10141a', halo: false, w: 700, size: 10.5 });
+      if (!S.blind && !L.narrow) label(`base ${barTxt(b.P)}`, L.gx1, y - 8 * pp, { a: 'right', col: K.muted, w: 400, size: 10, mono: true }); }
+    /* the gases: mole fraction against pressure (log scales) */
+    const xl = -8, xh = -1, xX = (x) => L.gx0 + (Math.log10(Math.max(x, 1e-12)) - xl) / (xh - xl) * (L.gx1 - L.gx0);
+    if (L.gx1 - L.gx0 > 80) {
+      ctx.strokeStyle = K.line; ctx.strokeRect(L.gx0 + 0.5, L.top + 0.5, L.gx1 - L.gx0 - 1, L.bot - L.top - 1);
+      for (let e = xl; e <= xh; e++) { const x = xX(Math.pow(10, e)); ctx.strokeStyle = K.grid; ctx.beginPath(); ctx.moveTo(x, L.top); ctx.lineTo(x, L.bot); ctx.stroke();
+        if ((e - xl) % (L.narrow ? 3 : 1) === 0) label(e === -6 ? '1 ppm' : e === -2 ? '1 %' : sci(Math.pow(10, e), 0).replace('1.0 × ', '').replace('1 × ', ''), x, L.bot + 12 * pp, { a: 'center', col: K.muted, w: 400, size: 9.5, mono: true }); }
+      label('share of the air (mole fraction)', L.gx0, L.top - 14 * pp, { col: K.muted, w: 500, size: 10 });
+      for (const g of CLOUD_GASES) { ctx.strokeStyle = GAS_COL[g]; ctx.lineWidth = 2 * pp; ctx.beginPath(); let on = false;
+        for (let i = 0; i < n; i += 2) { const lv = m.lev[i], x = lv.x[g]; if (x < 1e-8) { on = false; continue; } const X = xX(x), Y = yP(lv.P); if (on) ctx.lineTo(X, Y); else ctx.moveTo(X, Y); on = true; }
+        ctx.stroke(); }
+      /* legend */
+      const lx = L.gx0 + 6 * pp; let ly = L.bot - 12 * pp;
+      ctx.font = `700 ${10 * pp}px ${K.ui}`; const lw = Math.max(...CLOUD_GASES.map((g) => ctx.measureText(GAS_NAME[g]).width));
+      ctx.globalAlpha = 0.94; ctx.fillStyle = K.canvas; ctx.fillRect(lx - 4 * pp, ly - 14 * pp * 3 - 8 * pp, lw + 8 * pp, 14 * pp * 4 + 2 * pp); ctx.globalAlpha = 1;
+      for (const g of [...CLOUD_GASES].reverse()) { label(GAS_NAME[g], lx, ly, { col: GAS_COL[g], w: 700, size: 10 }); ly -= 14 * pp; }
+    }
+    /* the air parcel */
+    const i = clAt(m, S.lp), lv = m.lev[i], y = yP(lv.P), xc = L.x0 + L.colW * 0.5, now = CLOUDS.filter((k) => lv.c[k] > 0.02 * m.cmax[k]);
+    ctx.fillStyle = 'rgba(255,255,255,0.92)'; ctx.strokeStyle = K.accent; ctx.lineWidth = 2.5 * pp; ctx.beginPath(); ctx.arc(xc, y, 8 * pp, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
+    ctx.strokeStyle = K.accent; ctx.lineWidth = 1 * pp; ctx.setLineDash([2 * pp, 3 * pp]); ctx.beginPath(); ctx.moveTo(xc + 10 * pp, y); ctx.lineTo(L.gx1, y); ctx.stroke(); ctx.setLineDash([]);
+    const pt = `${barTxt(lv.P)}, ${f(lv.T, 0)} K${now.length ? `: ${now.map((k) => CL_NAME[k].toLowerCase()).join(', ')} forming` : ''}`;
+    ctx.font = `600 ${10.5 * pp}px ${K.ui}`; const ptw = ctx.measureText(pt).width;
+    label(pt, Math.max(4 * pp, Math.min(xc + 14 * pp, L.gx1 - ptw)), y + (lv.P > m.d.bottom * 0.7 ? -14 : 14) * pp, { col: K.ink, w: 600, size: 10.5 });
+    label(L.narrow ? 'Colors are a painting; bases and gas curves are computed' : 'Cloud thickness and colors are a painting; the bases and the gas curves are computed', 16 * pp, H - 8 * pp, { col: K.muted, halo: false, w: 400, size: 9.5 });
+  }
+
   function draw() {
     if (!K || !W) return;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    const on3 = view3 && view3.is3d() && g3;
+    const on3 = view3 && view3.is3d() && g3 && S.mode !== 'clouds';
+    if (g3) g3.S3.el.hidden = !on3;
     if (on3) { ctx.clearRect(0, 0, W, H); draw3(); return; }
     ctx.fillStyle = K.canvas; ctx.fillRect(0, 0, W, H);
-    if (S.mode === 'planets') drawPlanets(); else if (S.mode === 'rings') drawRings(); else if (S.mode === 'moons') drawMoons(); else drawIo();
+    if (S.mode === 'planets') drawPlanets(); else if (S.mode === 'rings') drawRings(); else if (S.mode === 'moons') drawMoons(); else if (S.mode === 'clouds') drawClouds(); else drawIo();
   }
 
   /* ---------- 3D ---------- */
@@ -906,6 +1125,16 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       if (nbOn()) { nbTo(S.t); const eMax = Math.max(...NBH.map((h) => h[1]));
         o.push(dd('Io\'s eccentricity now, computed', f(galEcc(NB, 0), 4)), dd('Largest so far', f(eMax, 4)), dd('Io measured', '0.0041'),
           dd('Europa', S.noEu ? 'taken away' : 'pulling on Io')); }
+    } else if (S.mode === 'clouds') {
+      const m = clModel(), i = clAt(m, S.lp), lv = m.lev[i], src = m.d.src;
+      o.push(dd('Planet', P(S.planet).name), dd('Temperature at 1 bar', `${m.d.T1} K, measured`), dd('Air parcel at', `${barTxt(lv.P)}, ${f(lv.T, 0)} K`),
+        dd('Parcel height', `${m.z[i] >= 0 ? `${cm1(m.z[i], 0)} km above` : `${cm1(-m.z[i], 0)} km below`} the 1 bar level`));
+      for (const k of CLOUDS) { const b = m.bases.find((q) => q.k === k), name = `${CL_NAME[k]} cloud base`;
+        if (!b) { if (k === 'nh3' || k === 'h2s') o.push(dd(name, `none: the ammonium hydrosulfide cloud uses up the ${GAS_NAME[k]}`, 'wide')); else if (k === 'ch4') o.push(dd(name, 'none: never cold enough above 0.3 bar', 'wide')); continue; }
+        const j = m.lev.findIndex((l) => l.P === b.P), rough = b.P > 100 ? ' (rough: the gas is far from ideal this deep)' : '', past = b.ok ? '' : ' (past the vapor pressure data)';
+        o.push(dd(name, S.blind ? hid : `${barTxt(b.P)}, ${f(b.T, 0)} K, ${m.z[j] >= 0 ? `${cm1(m.z[j], 0)} km up` : `${cm1(-m.z[j], 0)} km down`}${rough}${past}`, 'wide')); }
+      for (const g of CLOUD_GASES) o.push(dd(`Deep ${GAS_NAME[g]}`, `${ppmTxt(m.x0[g])}, ${f(m.air.sun[g], 1)} × the Sun · ${S.cm && S.cm[g] != null ? 'set by you' : src[g]}`, 'wide'));
+      o.push(dd('Helium', `${f(100 * m.x0.he, 1)} % · ${src.he}`, 'wide'), dd('Mean molar mass', `${f(m.mu, 3)} g/mol`));
     } else {
       const io = MOONS.jupiter[0], J = P('jupiter'), Ed = tidalHeat(IO_K2Q, J.M, io.R, io.a, io.P, S.e), A = 4 * Math.PI * Math.pow(io.R * 1e3, 2), sw = tideSwing(S.e), st = ioState();
       o.push(dd('Eccentricity e', f(S.e, 4)), dd('Distance now', `${fmt(st.r, 0)} km`), dd('Tidal heating', S.blind ? hid : `${sci(Ed, 2)} W`), dd('Per square meter', S.blind ? hid : `${f(Ed / A, 2)} W/m²`),
@@ -922,6 +1151,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   function clock() {
     const t = S.t, d = t / DAY;
+    if (S.mode === 'clouds') { const m = clModel(), lv = m.lev[clAt(m, S.lp)]; $('clock').textContent = `parcel at ${barTxt(lv.P)}`; return; }
     $('clock').textContent = S.mode === 'moons' && MOONS[S.planet][0].lam != null ? `1 Jan 2000 noon + ${f(d, 2)} d` : d >= 2 ? `t = ${f(d, 2)} days` : `t = ${f(t / HOUR, 2)} h` + (S.slow ? ' · running slower than chosen' : '');
   }
 
@@ -929,9 +1159,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function sync() {
     for (const b of document.querySelectorAll('#modeSeg button')) b.setAttribute('aria-pressed', String(b.dataset.mode === S.mode));
     for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
-    $('boxPlanets').hidden = S.mode !== 'planets'; $('boxRings').hidden = S.mode !== 'rings'; $('boxMoons').hidden = S.mode !== 'moons'; $('boxIo').hidden = S.mode !== 'io';
+    $('boxPlanets').hidden = S.mode !== 'planets'; $('boxRings').hidden = S.mode !== 'rings'; $('boxMoons').hidden = S.mode !== 'moons'; $('boxIo').hidden = S.mode !== 'io'; $('boxClouds').hidden = S.mode !== 'clouds'; $('planetBox').classList.toggle('inline', S.mode === 'clouds');
+    $('dimSeg').hidden = S.mode === 'clouds'; $('selSpeed').hidden = $('zIn').hidden = $('zOut').hidden = S.mode === 'clouds'; $('selSpeed').previousElementSibling.hidden = S.mode === 'clouds';
     $('planetBox').hidden = S.mode === 'io' || S.mode === 'planets'; $('moonsSec').hidden = S.mode !== 'moons';
-    $('cardTitle').textContent = { planets: 'The four giants', rings: 'Rings and a test moon', moons: 'Moons', io: 'Io\'s tides' }[S.mode];
+    $('cardTitle').textContent = { planets: 'The four giants', rings: 'Rings and a test moon', moons: 'Moons', io: 'Io\'s tides', clouds: 'Clouds' }[S.mode];
+    if (S.mode === 'clouds') { const a = clAir(); for (const g of CLOUD_GASES) { $(GAS_SLIDER[g]).value = Math.log10(a.sun[g]).toFixed(2); $(GAS_OUT[g]).textContent = `${f(a.sun[g], a.sun[g] < 10 ? 1 : 0)} × Sun`; } }
     for (const op of $('selPlanet').options) op.hidden = op.disabled = S.mode !== 'moons' && !GIANTS.includes(op.value);
     $('selPlanet').value = S.planet; $('chkEarth').checked = S.earth;
     $('sRho').value = S.rho; $('oRho').textContent = `${f(S.rho / 1000, 2)} g/cm³`; $('sDist').value = S.dist; $('oDist').textContent = `${f(S.dist, 2)} R`;
@@ -944,24 +1176,26 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('modelText').textContent = MODEL[S.mode];
   }
   const MODEL = {
+    clouds: 'An equilibrium cloud condensation model, the kind first worked out by Weidenschilling and Lewis (1973). Below the clouds the air follows a dry adiabat of hydrogen and helium, dT/T = (R/c_p) dP/P, from the measured temperature at 1 bar, with c_p of normal hydrogen from Leachman et al. (2009). Each gas keeps its deep share until its partial pressure x P reaches its saturation vapor pressure; above that base it keeps only what the vapor pressure allows and the rest is cloud. Ammonium hydrosulfide forms where p(NH₃) p(H₂S) reaches K, log₁₀(K/atm²) = 14.82 − 4705 K/T (Lewis 1969), using one molecule of each gas. Left out: the heat released by condensing (the real air is a little cooler deep down, so real bases sit somewhat deeper), ammonia dissolving in the water drops, rain carrying cloud down, the change in molar mass as gases condense, and gas that is not ideal (it matters below about 100 bar). Above about 0.1 bar the real air stops cooling (the tropopause), so the column stops at 0.3 bar. Heights use the deep air\'s mean molar mass and g = GM/R² at the mean radius. Jupiter\'s bases come out at 0.83, 2.5 and 5.8 bar, close to published models with the same gases (Li et al. 2018: 0.83, 2.4 and 7.6 bar with the heat of condensing included).',
     planets: 'Sizes, masses, densities, spins, flattening and tilts are NASA\'s. Each planet is drawn as an oblate spheroid with its equatorial and polar radii, seen from 12° above the plane of its orbit with its axis tipped toward the right. A planet of uniform density spun as fast would flatten by 5q/4, with q = ω²a³/GM its spin compared with its gravity at the equator; the real giants flatten less because their mass is packed toward the center. Bands, colors and the turning spot are a painting.',
     rings: 'Ring radii are NASA\'s; their brightness in the picture is a drawing choice. Every ring particle and moon goes round on a circle at its Kepler speed, ω = √(GM/r³), with the planet\'s bulge left out (it changes the periods by under 1 %). The test moon is a pile of 200 equal frictionless balls that bounce off each other with some loss and pull on each other by gravity, in Hill\'s frame moving with the moon; the planet\'s tide and the turning of the frame are taken to first order in the moon\'s size, and its pieces are placed along the orbit by their distance in that frame. Whether such a moon survives depends only on its distance in units of R(ρ_planet/ρ_moon)^(1/3), not on its size. This pile holds together for at least 8 orbits at 1.80 of those units and comes apart within 3 orbits at 1.78 or closer, between a rigid moon (1.44) and a fluid one (2.455, Chandrasekhar): a pile of touching balls resists being stretched a little, so it survives somewhat inside the fluid limit. A real moon\'s strength puts its breakup somewhere in that range. The density uses the volume inside the pile\'s outer surface. The 2:1 place with Mimas solves 2Ω − κ = 2n(Mimas) with Saturn\'s J₂ included and J₄ left out.',
     moons: 'Each moon goes round a fixed Kepler ellipse (a, e and its periapsis from NASA and JPL, the sidereal period from NASA) in its planet\'s equator plane: tilts of the orbits, the slow turning of the ellipses and the moons\' pulls on each other are left out, so the places drift from the real ones by about a degree in a few years. Jupiter\'s and Saturn\'s moons start where JPL\'s mean elements put them at noon on 1 January 2000; for real positions on a date use Stellarium or JPL Horizons. The planet\'s mass from a moon uses Kepler\'s third law, GM = 4π²a³/P², with the moon\'s own mass and the planet\'s bulge left out (together under 0.2 %). Charon is the exception: it has 12 % of Pluto\'s mass, so Pluto and Charon both circle their center of mass and Kepler\'s law gives their total mass. Mars and Pluto are drawn as round balls; Pluto\'s four small moons are left out. Pairs line up (conjunctions) where their mean longitudes agree. With Moons pull on each other (Jupiter only), the four big moons are computed step by step instead: each feels Jupiter, with its equatorial bulge, and the other three, from their JPL masses; they start on circles at their places of noon, 1 January 2000, in one plane. Left out there: the Sun, Jupiter\'s smaller bulge terms, tilts and tides, so the computed swing of Io\'s eccentricity never dies down as the real one did.',
     io: 'Io turns once per orbit at a steady rate, but on an oval orbit it speeds up and slows down, and its distance changes. The tide that stretches it goes as 1/r³, so it swings by ±3e over each orbit, and Jupiter seen from Io rocks back and forth by ±2e radians: the bulge moves through Io\'s rock and heats it. The heating is Ė = (21/2)(k₂/Q) G M² R⁵ n e²/a⁶ (Murray and Dermott 1999, eq. 4.192), for a moon locked to its planet, with Io\'s measured k₂/Q = 0.015 ± 0.003, so the answer carries that ±20 %. The heating goes as e², so e = 0 gives none. In the picture the orbit is drawn 60 times more oval and Io\'s stretch and sway are exaggerated; the readouts are not.',
   };
-  function setMode(m) { S.mode = m; if (m !== 'moons' && !GIANTS.includes(S.planet)) S.planet = 'saturn'; S.speed = SPEED[m]; if (m === 'rings' && !PL.st) pileReset(); if (m === 'rings') pileReset(); sync(); readouts(); clock(); draw(); }
+  function setMode(m) { S.mode = m; if (m !== 'moons' && !GIANTS.includes(S.planet)) S.planet = 'saturn'; if (m === 'clouds') S.lp = Math.log(CLOUD_PL[S.planet].bottom * 0.999); S.speed = SPEED[m]; if (m === 'rings' && !PL.st) pileReset(); if (m === 'rings') pileReset(); sync(); readouts(); clock(); draw(); }
   const custom = () => { S.preset = 'custom'; };
   function applyPreset(k) {
     const c = PRESETS[k]; S.preset = k; S.mode = c.mode; S.planet = c.planet || S.planet; if (c.sel) S.sel = c.sel; if (c.earth != null) S.earth = c.earth;
     if (c.rho) S.rho = c.rho; if (c.dist) S.dist = c.dist; if (c.roche != null) S.roche = c.roche; if (c.res != null) S.res = c.res; if (c.moon != null) S.moon = c.moon; if (c.conj != null) S.conj = c.conj;
     if (c.e != null) S.e = c.e; if (c.exag != null) S.exag = c.exag; S.nb = !!c.nb; S.noEu = false; NB = null; S.speed = c.speed || SPEED[c.mode]; S.zoom[c.mode] = c.zoom || 0; S.stripe = c.stripe ? 0 : null; S.t = 0;
+    S.cm = c.cm ? Object.assign({}, c.cm) : null; if (S.mode === 'clouds') S.lp = Math.log(CLOUD_PL[S.planet].bottom * 0.999);
     if (S.mode === 'rings') pileReset(); if (c.stripe) S.stripe = 0;
     $('presetHint').textContent = c.hint; setRun(!!c.run); sync(); readouts(); clock(); draw();
   }
   function setRun(on) { S.run = on; card.away(false); $('play').textContent = on ? 'Pause' : S.t > 0 ? 'Resume' : 'Start'; $('play').classList.toggle('attn', !on); }
   for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
   for (const b of document.querySelectorAll('#modeSeg button')) b.addEventListener('click', () => { custom(); setRun(false); S.t = 0; setMode(b.dataset.mode); });
-  $('selPlanet').addEventListener('change', (e) => { custom(); S.planet = e.target.value; S.moon = 0; if (S.mode === 'rings') pileReset(); S.t = 0; setRun(false); sync(); readouts(); clock(); draw(); });
+  $('selPlanet').addEventListener('change', (e) => { if (S.mode !== 'moons' && !GIANTS.includes(e.target.value)) { sync(); return; } custom(); S.planet = e.target.value; S.moon = 0; S.cm = null; if (S.mode === 'clouds') S.lp = Math.log(CLOUD_PL[S.planet].bottom * 0.999); if (S.mode === 'rings') pileReset(); S.t = 0; setRun(false); sync(); readouts(); clock(); draw(); });
   $('chkEarth').addEventListener('change', (e) => { custom(); S.earth = e.target.checked; if (!S.earth && S.sel === 'earth') S.sel = 'jupiter'; readouts(); draw(); });
   $('sRho').addEventListener('input', (e) => { custom(); S.rho = +e.target.value; pileReset(); setRun(false); sync(); readouts(); clock(); draw(); });
   for (const b of document.querySelectorAll('[data-rho]')) b.addEventListener('click', () => { custom(); S.rho = +b.dataset.rho; pileReset(); setRun(false); sync(); readouts(); clock(); draw(); });
@@ -978,8 +1212,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('sEcc').addEventListener('input', (e) => { custom(); S.e = +e.target.value; sync(); readouts(); draw(); });
   $('chkExag').addEventListener('change', (e) => { S.exag = e.target.checked; draw(); });
   $('selSpeed').addEventListener('change', (e) => { S.speed = +e.target.value; });
+  for (const g of CLOUD_GASES) $(GAS_SLIDER[g]).addEventListener('input', (e) => { custom(); S.cm = Object.assign({}, S.cm, { [g]: Math.pow(10, +e.target.value) }); sync(); readouts(); clock(); draw(); });
+
   $('play').addEventListener('click', () => setRun(!S.run));
-  $('restart').addEventListener('click', () => { S.t = 0; if (S.mode === 'rings') pileReset(); if (S.stripe != null) S.stripe = 0; setRun(false); readouts(); clock(); draw(); });
+  $('restart').addEventListener('click', () => { S.t = 0; if (S.mode === 'clouds') S.lp = Math.log(CLOUD_PL[S.planet].bottom * 0.999); if (S.mode === 'rings') pileReset(); if (S.stripe != null) S.stripe = 0; setRun(false); readouts(); clock(); draw(); });
   $('zIn').addEventListener('click', () => { S.zoom[S.mode] = Math.min(4, S.zoom[S.mode] + 1); draw(); });
   $('zOut').addEventListener('click', () => { S.zoom[S.mode] = Math.max(-3, S.zoom[S.mode] - 1); draw(); });
   $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; readouts(); draw(); });
@@ -991,14 +1227,17 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (S.mode === 'planets' && planetsHit) { let best = null, bd = 1e9; for (const k of planetsHit.show) { const o = planetsHit.pos[k], d = Math.hypot(x - o.cx, y - o.cy) / Math.max(12, P(k).Req * o.s); if (d < bd) { bd = d; best = k; } } if (best && bd < 2.2) { S.sel = best; readouts(); draw(); } }
     else if (S.mode === 'moons' && moonsHit) { let best = -1, bd = 1e9; MOONS[S.planet].forEach((m, i) => { if (nbGone(i)) return; const z = moonPos(m, i), d = Math.hypot(x - (moonsHit.cx + z.x * moonsHit.s), y - (moonsHit.cy - z.y * moonsHit.s)); if (d < bd) { bd = d; best = i; } });
       if (best >= 0 && bd < 30) { S.moon = best; sync(); readouts(); draw(); } }
+    else if (S.mode === 'clouds') { const L = clLayout(); if (x >= L.x0 - 10 && x <= L.gx1 && y >= L.top - 10 && y <= L.bot + 10) { dragging = 'cl'; setRun(false); clDrag(y); can.setPointerCapture(e.pointerId); e.preventDefault(); } }
     else if (S.mode === 'rings') { const o = ringsView(), th0 = moonAngle(), mx = o.cx + PL.a * o.s * Math.cos(th0), my = o.cy - PL.a * o.s * Math.sin(th0);
       if (Math.hypot(x - mx, y - my) < 24) { dragging = true; can.setPointerCapture(e.pointerId); e.preventDefault(); } }
   });
-  can.addEventListener('pointermove', (e) => { if (!dragging) return; const [x, y] = ptr(e), o = ringsView(), R = Math.hypot(x - o.cx, y - o.cy) / o.s / P(S.planet).Req;
+  function clDrag(y) { const L = clLayout(), lb = Math.log(CLOUD_PL[S.planet].bottom), t = Math.max(0, Math.min(1, (y - L.top) / (L.bot - L.top))); S.lp = Math.log(CL_TOP) + (lb - Math.log(CL_TOP)) * t; readouts(); clock(); draw(); }
+  can.addEventListener('pointermove', (e) => { if (dragging === 'cl') { clDrag(ptr(e)[1]); return; } if (!dragging) return; const [x, y] = ptr(e), o = ringsView(), R = Math.hypot(x - o.cx, y - o.cy) / o.s / P(S.planet).Req;
     S.dist = Math.round(Math.max(1.2, Math.min(4, R)) * 100) / 100; custom(); pileReset(); setRun(false); sync(); readouts(); clock(); draw(); });
   can.addEventListener('pointerup', () => { dragging = false; });
   can.addEventListener('keydown', (e) => {
     if (S.mode === 'rings' && (e.key === 'ArrowUp' || e.key === 'ArrowDown')) { S.dist = Math.max(1.2, Math.min(4, Math.round((S.dist + (e.key === 'ArrowUp' ? 0.05 : -0.05) * (e.shiftKey ? 4 : 1)) * 100) / 100)); custom(); pileReset(); setRun(false); sync(); readouts(); clock(); draw(); e.preventDefault(); }
+    else if (S.mode === 'clouds' && (e.key === 'ArrowUp' || e.key === 'ArrowDown')) { const lb = Math.log(CLOUD_PL[S.planet].bottom); S.lp = Math.max(Math.log(CL_TOP), Math.min(lb, S.lp + (e.key === 'ArrowUp' ? -0.05 : 0.05) * (e.shiftKey ? 4 : 1))); setRun(false); readouts(); clock(); draw(); e.preventDefault(); }
     else if (S.mode === 'moons' && (e.key === 'ArrowRight' || e.key === 'ArrowLeft')) { S.moon = (S.moon + (e.key === 'ArrowRight' ? 1 : -1) + MOONS[S.planet].length) % MOONS[S.planet].length; sync(); readouts(); draw(); e.preventDefault(); }
     else if (S.mode === 'planets' && (e.key === 'ArrowRight' || e.key === 'ArrowLeft')) { const ks = ORDER.filter((k) => k !== 'earth' || S.earth), i = ks.indexOf(S.sel); S.sel = ks[(i + (e.key === 'ArrowRight' ? 1 : -1) + ks.length) % ks.length]; readouts(); draw(); e.preventDefault(); }
   });
@@ -1012,7 +1251,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         const want = S.speed * dtr / PL.tau, cap = 60; let n = Math.round(want / PILE_DT); S.slow = n > cap; n = Math.min(n, cap);
         for (let i = 0; i < n; i++) pileStep(PL.st, PILE_DT, 0); S.t = PL.st.t * PL.tau;
         if (now - lastPiece > 300) { lastPiece = now; S.piece = largestPiece(PL.st); }
-      } else { S.t += S.speed * dtr; S.slow = false; }
+      } else if (S.mode === 'clouds') { const lb = Math.log(CLOUD_PL[S.planet].bottom), lt = Math.log(CL_TOP); S.lp -= (lb - lt) / 15 * dtr; S.t += dtr;
+        if (S.lp <= lt) { S.lp = lt; setRun(false); readouts(); clock(); } }
+      else { S.t += S.speed * dtr; S.slow = false; }
       draw(); if (now - lastOut > 250) { lastOut = now; readouts(); clock(); }
     }
     requestAnimationFrame(frame);
@@ -1027,7 +1268,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const qs = new URLSearchParams(location.search); applyPreset(PRESETS[qs.get('setup')] ? qs.get('setup') : 'giants');
   new ResizeObserver(resize).observe($('scene')); resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
-  view3 = VD3K.view({ seg: '#dimSeg', init: init3D, change: () => { if (g3) g3.S3.el.hidden = !(view3 && view3.is3d()); draw(); }, status: (m) => { $('presetHint').textContent = m; }, start: 'flat' });
+  view3 = VD3K.view({ seg: '#dimSeg', init: init3D, change: () => { if (g3) g3.S3.el.hidden = !(view3 && view3.is3d()) || S.mode === 'clouds'; draw(); }, status: (m) => { $('presetHint').textContent = m; }, start: 'flat' });
 
   /* readings for the worksheet: one row of the view on show */
   window.vdVersion = 'giant-planets@2026-10-25';
@@ -1041,13 +1282,17 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       return row; }
     if (S.mode === 'rings') { const p = P(S.planet);
       return { mode: 'Rings', object: `${f(S.rho / 1000, 2)} g/cm³ moon`, value: `${f(S.dist, 2)} R: ${f(100 * S.piece, 0)} %`, planet: p.name, rho_moon_gcc: f(S.rho / 1000, 2), d_Rp: f(S.dist, 2), roche_Rp: f(rocheLimit(p, S.rho, ROCHE_FLUID) / p.Req, 2), orbits: f(PL.Om * S.t / (2 * Math.PI), 2), piece_pct: f(100 * S.piece, 0) }; }
+    if (S.mode === 'clouds') { const m = clModel(), lv = m.lev[clAt(m, S.lp)], b = (k) => { const q = m.bases.find((x) => x.k === k); return q ? q.P.toPrecision(3) : ''; };
+      return { mode: 'Clouds', object: P(S.planet).name, value: m.bases.map((q) => `${CL_NAME[q.k]} ${barTxt(q.P)}`).join('; '), planet: P(S.planet).name, T1bar_K: m.d.T1,
+        O_sun: f(m.air.sun.h2o, 2), S_sun: f(m.air.sun.h2s, 2), N_sun: f(m.air.sun.nh3, 2), C_sun: f(m.air.sun.ch4, 2),
+        water_base_bar: b('h2o'), nh4sh_base_bar: b('nh4sh'), nh3_base_bar: b('nh3'), h2s_base_bar: b('h2s'), ch4_base_bar: b('ch4'), parcel_bar: lv.P.toPrecision(3), parcel_K: f(lv.T, 1) }; }
     const io = MOONS.jupiter[0], J = P('jupiter'), Ed = tidalHeat(IO_K2Q, J.M, io.R, io.a, io.P, S.e);
     return { mode: 'Io', object: 'Io', value: `e ${f(S.e, 4)}`, e: f(S.e, 4), heat_W: Ed ? Ed.toExponential(3) : '0', flux_W_m2: f(Ed / (4 * Math.PI * Math.pow(io.R * 1e3, 2)), 3) };
   };
   VD.tools({ el: can, strip: '#strip', stage: '#scene', time: () => S.t, timeUnit: 's',
     scale: () => (view3 && view3.is3d() ? null : S.mode === 'rings' ? { el: can, m: 1e3 / ringsView().s, unit: 'km' } : S.mode === 'moons' ? { el: can, m: 1e3 / moonsView().s, unit: 'km' } : S.mode === 'planets' && planetsHit ? { el: can, m: 1e3 / planetsHit.s, unit: 'km', area: [0, 0, W, planetsHit.top] } : null) });
   VD.howTo({ src: 'media/how-this-works/giant-planets.mp4', poster: 'media/how-this-works/giant-planets.jpg' });
-  window.__gp = { S, PL, applyPreset, setMode, setRun, sync, readouts, draw, pileReset, PRESETS, ringsView, moonsView, planetsLayout };
+  window.__gp = { S, PL, clModel, applyPreset, setMode, setRun, sync, readouts, draw, pileReset, PRESETS, ringsView, moonsView, planetsLayout };
   requestAnimationFrame(frame);
 })();
 </script>

@@ -2,7 +2,7 @@
 // Giant Planets, Rings and Moons: NASA data consistency, Roche limits, Kepler's third law, the resonances, the Mimas 2:1 place, Io's tidal heating and the rubble pile moon.
 const assert = require('node:assert');
 const { core } = require('./demo_source.cjs');
-const c = core('giant-planets', 'G,DAY,HOUR,PLANETS,GIANTS,MOONS,RING_MOONS,RINGS,ROCHE_FLUID,ROCHE_RIGID,rocheUnit,rocheLimit,rocheUnits,kepPeriod,gmFromOrbit,density,spinQ,uniformFlattening,ilr21,kepler21,moonAt,meanLon,laplaceAngle,IO_K2Q,tidalHeat,IO_FLUX_OBS,tideSwing,makePile,settlePile,pileAt,pileClone,pileStep,largestPiece,PILE_DT,PILE_N,PILE_SEED,GAL_GM,GAL_DT,galStart,galStep,galEcc,galEnergy');
+const c = core('giant-planets', 'G,DAY,HOUR,PLANETS,GIANTS,MOONS,RING_MOONS,RINGS,ROCHE_FLUID,ROCHE_RIGID,rocheUnit,rocheLimit,rocheUnits,kepPeriod,gmFromOrbit,density,spinQ,uniformFlattening,ilr21,kepler21,moonAt,meanLon,laplaceAngle,IO_K2Q,tidalHeat,IO_FLUX_OBS,tideSwing,makePile,settlePile,pileAt,pileClone,pileStep,largestPiece,PILE_DT,PILE_N,PILE_SEED,GAL_GM,GAL_DT,galStart,galStep,galEcc,galEnergy,pSat,nh4shK,solarH2,CLOUD_PL,cloudAir,moleFractions,adiabatT,cloudModel,cloudHeights,meanMolar,cpH2,CLOUDS');
 
 let n = 0;
 const near = (a, b, tol, w) => assert(Math.abs(a - b) <= tol * Math.abs(b), `${w || ''}: expected ${b}, got ${a}`);
@@ -98,6 +98,45 @@ group('Galilean moons pulling on each other: energy holds, periods match NASA, E
   const back = Math.min(...eAll.filter(([d]) => d > 380).map((q) => q[1])); assert(back < 0.0025, `Io's orbit rounds off again near day 440 (${back})`);
   const noE = c.galStart([1, 0, 1, 1]); let e2 = 0; while (noE.t < 300 * DAY) { c.galStep(noE); e2 = Math.max(e2, c.galEcc(noE, 0)); }
   assert(e2 < 0.001, `without Europa Io stays nearly round (${e2})`);
+});
+
+group('Clouds: vapor pressures hit their triple points and boiling point; the adiabat; NH4SH constant', () => {
+  near(c.pSat('h2o', 273.16).p, 0.00611657, 1e-5, 'water triple point (both fits)'); near(c.pSat('h2o', 273.159).p, 0.00611657, 1e-4, 'ice side');
+  near(c.pSat('h2o', 373.124).p, 1.01325, 1e-4, 'water boils at 1 atm (ITS-90 99.974 °C)');
+  near(c.pSat('nh3', 195.41).p, 0.06091, 0.01, 'ammonia triple point 6.091 kPa'); near(c.pSat('ch4', 90.68).p, 0.11696, 0.02, 'methane triple point 11.696 kPa');
+  near(c.pSat('h2s', 187.57).p, 0.2325, 0.01, 'hydrogen sulfide triple point 23.25 kPa');
+  assert(!c.pSat('nh3', 200).ok && c.pSat('nh3', 200).p > c.pSat('nh3', 195.41).p, 'past the ice fit: flagged, still rising');
+  near(c.nh4shK(250), Math.pow(10, 14.82 - 4705 / 250) * 1.01325 ** 2, 1e-12, 'Lewis 1969');
+  near(c.cpH2(300), 3.4698, 1e-6, 'normal H2 cp/R at 300 K'); near(c.solarH2('o'), 2 * 4.898e-4, 1e-3, 'solar O/H2');
+  /* Jupiter's adiabat from 165 K at 1 bar reaches about 425 K at 22 bar (the Galileo probe measured 427.7 K at 22 bar, Seiff et al. 1998) */
+  const a = c.cloudAir('jupiter'), xHe = a.he / (1 + a.he); near(c.adiabatT(165, xHe, 22), 425, 0.01, 'Jupiter 22 bar');
+  near(c.adiabatT(165, xHe, 1), 165, 1e-12, '1 bar');
+  const x = c.moleFractions(a.he, a.r); near(Object.values(x).reduce((s, v) => s + v, 0), 1, 1e-12, 'fractions sum to 1'); near(x.h2o, 2.5e-3, 1e-9, 'Juno water');
+});
+
+group('Clouds: Jupiter\'s three decks (Weidenschilling and Lewis style models: NH3 ~0.8, NH4SH ~2.3, H2O ~6 bar), Saturn deeper, the ice giants swap ammonia for H2S', () => {
+  const run = (k, cm) => { const a = c.cloudAir(k); if (cm) for (const g in cm) a.r[g] = cm[g] * c.solarH2({ h2o: 'o', h2s: 's', nh3: 'n', ch4: 'c' }[g]); const d = c.CLOUD_PL[k]; return c.cloudModel(d.T1, a, d.bottom, 0.3, 800); };
+  const base = (m, k) => (m.bases.find((b) => b.k === k) || {}).P;
+  const J = run('jupiter');
+  assert.strictEqual(J.bases.map((b) => b.k).join(), 'h2o,nh4sh,nh3', 'Jupiter: water, NH4SH, ammonia');
+  near(base(J, 'nh3'), 0.83, 0.03, 'NH3'); near(base(J, 'nh4sh'), 2.46, 0.03, 'NH4SH'); near(base(J, 'h2o'), 5.8, 0.03, 'H2O');
+  /* Wong et al. 2015's equilibrium model with the probe gases: NH4SH 2.32 bar, water 5.96 bar; Li et al. 2018 (moist adiabat): NH3 0.83 bar */
+  near(base(J, 'nh4sh'), 2.32, 0.08, 'vs Wong 2015'); near(base(J, 'h2o'), 5.96, 0.05, 'vs Wong 2015'); near(base(J, 'nh3'), 0.83, 0.02, 'vs Li 2018');
+  /* above a base the gas follows its vapor pressure; NH4SH takes one of each; mass is conserved */
+  for (const l of J.lev) { assert(l.x.nh3 <= J.lev[0].x.nh3 + 1e-15 && l.x.h2s <= J.lev[0].x.h2s + 1e-15, 'gases only decrease going up'); }
+  const top = J.lev[J.lev.length - 1]; assert(top.x.h2s < 1e-3 * J.lev[0].x.h2s, 'Jupiter\'s H2S is used up by NH4SH');
+  const dry = run('jupiter', { h2o: 0.5 }), wet = run('jupiter', { h2o: 10 });
+  assert(base(dry, 'h2o') < base(J, 'h2o') && base(wet, 'h2o') > base(J, 'h2o'), 'more water, deeper base'); near(base(dry, 'h2o'), 4.18, 0.03, 'probe'); near(base(wet, 'h2o'), 7.65, 0.03, 'wet');
+  near(base(wet, 'nh3'), base(J, 'nh3'), 0.01, 'ammonia deck barely moves');
+  const Sa = run('saturn'); assert(base(Sa, 'nh3') > base(J, 'nh3') && base(Sa, 'h2o') > base(J, 'h2o'), 'Saturn deeper');
+  near(base(Sa, 'nh3'), 1.58, 0.03, 'Saturn NH3'); near(base(Sa, 'nh4sh'), 5.37, 0.03, 'Saturn NH4SH'); near(base(Sa, 'h2o'), 16.1, 0.03, 'Saturn water');
+  for (const k of ['uranus', 'neptune']) { const U = run(k); assert(!base(U, 'nh3') && base(U, 'h2s') && base(U, 'ch4'), `${k}: H2S ice and methane, no ammonia cloud`); }
+  near(base(run('uranus'), 'ch4'), 1.18, 0.03, 'Uranus methane (observed near 1.2 bar)'); near(base(run('neptune'), 'ch4'), 1.27, 0.03, 'Neptune methane');
+  near(base(run('uranus'), 'h2s'), 5.77, 0.03, 'Uranus H2S'); near(base(run('neptune'), 'h2s'), 6.24, 0.03, 'Neptune H2S');
+  /* heights: hydrostatic, dz = (R T / μ g) d ln P; from 1 bar to 0.5 bar on Jupiter it is H ln 2 with H at the mean temperature (about 14 km) */
+  const a = c.cloudAir('jupiter'), mu = c.meanMolar(c.moleFractions(a.he, a.r)), m = c.cloudModel(165, a, 1, 0.5, 400), z = c.cloudHeights(m.lev, 24.79, mu);
+  const Tm = m.lev.reduce((s, l) => s + l.T, 0) / m.lev.length; near(z[z.length - 1], 8.31446261815324 * Tm / (mu * 1e-3 * 24.79) * Math.log(2) / 1e3, 3e-3, 'Jupiter 1 to 0.5 bar');
+  assert(z[z.length - 1] > 13 && z[z.length - 1] < 16, `about 14 km (${z[z.length - 1]})`);
 });
 
 console.log(`giant-planets: ${n} groups passed`);
