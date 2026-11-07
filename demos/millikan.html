@@ -7,6 +7,8 @@
 <script src="lib/theme.js"></script>
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
+<script src="lib/vd3kit.js"></script>
 <title>Millikan Oil Drop</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19,6 +21,7 @@
 .stage { position: relative; display: grid; grid-template-rows: auto minmax(500px, 1fr); min-height: 640px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); }
 .scene { position: relative; min-height: 0; }
+.scene canvas.mk3 { z-index: 0; }
 .scene canvas { position: absolute; inset: 0; display: block; width: 100%; height: 100%; outline: none; touch-action: pan-y; }
 .setup-card { position: absolute; z-index: 3; left: 12px; bottom: 12px; width: 250px; display: flex; flex-direction: column; gap: 8px; padding: 8px 10px;
   background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--line); border-radius: 8px; transition: opacity 0.35s ease, visibility 0.35s; }
@@ -65,6 +68,7 @@
           <button type="button" data-spd="4" aria-pressed="false">×4</button>
           <button type="button" data-spd="16" aria-pressed="false">×16</button>
         </div>
+        <div class="seg" role="group" aria-label="Perspective" id="dimSeg"><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
       </div>
       <div class="scene" id="scene">
         <canvas id="can" tabindex="0" role="img" aria-label="Left: the oil drop apparatus, two round metal plates with a small hole in the top one, a lamp lighting the gap and a telescope looking in. Right: the view through the telescope, oil drops as bright points against a scale of lines 0.5 mm apart. Below: a dot plot of the charges worked out so far. Tap a drop to follow it; N picks the next drop; Space starts or pauses."></canvas>
@@ -346,7 +350,7 @@
   function draw() {
     if (!T || !W) return;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
-    const Lo = layout(); drawApparatus(Lo.app); drawScope(Lo.scope); drawGraph(Lo.graph);
+    const Lo = layout(); if (use3()) draw3(Lo.app); else drawApparatus(Lo.app); drawScope(Lo.scope); drawGraph(Lo.graph);
     ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(Lo.graph.x, Lo.graph.y + 0.5); ctx.lineTo(Lo.graph.x + Lo.graph.w, Lo.graph.y + 0.5); ctx.stroke();
   }
   function metalBar(x, y, w, h) {
@@ -401,6 +405,87 @@
       ctx.fillStyle = '#c5ccd6'; ctx.font = `${10 * p}px ${T.sans}`; ctx.textAlign = 'left'; ctx.fillText(S.pol === 0 ? 'plates off' : S.pol > 0 ? 'top +' : 'top −', bx + 100 * p, by + 23 * p);
       ctx.fillStyle = T.muted; ctx.textAlign = 'center'; ctx.fillText(`plates ${f(MK_D * 1e3, 2)} mm apart, not to scale`, cx, by + bh + 14 * p);
     }
+    ctx.restore();
+  }
+  /* ---------- the 3D chamber ----------
+     A teaching apparatus like the one the numbers come from: two round brass plates 6 cm across (drawn) held 7.60 mm apart by a
+     clear spacer, a lamp lighting the gap from one side and the telescope looking in at a right angle. The gap and every drop's
+     height and sideways place are to scale (scene in meters, z up); the drops are drawn far larger than their 1 µm size so they show. */
+  const G3 = { o: { th: -0.42, ph: 1.535, zoom: 1 }, rect: '' };
+  let g3 = null, view3 = null;
+  const use3 = () => !!(g3 && view3 && view3.is3d());
+  const PR = 0.03, PT = 0.004, ZB = 0.05, ZC = ZB + MK_D / 2, ZT = ZB + MK_D;   /* plate radius and thickness, bottom plate top, gap center, top plate bottom */
+  function init3D() {
+    const S3 = VD3K.stage($('scene'), { before: can, shadow: 0.12, fov: 30, fogAt: [1.8, 3.6] }); if (!S3) return false;
+    S3.el.className = 'mk3';
+    const sc = S3.scene, M = (o, c) => VD3K.material(S3, o, c);
+    const brass = M({ roughness: 0.32, metalness: 0.85 }, ['#c9a24a', '#a8873c']), dark = M({ roughness: 0.55, metalness: 0.3 }, ['#56606b', '#3a424c']);
+    const black = M({ roughness: 0.6, metalness: 0.2 }, ['#2b3038', '#22262d']), steel = M({ roughness: 0.35, metalness: 0.75 }, ['#b9c0c8', '#77808a']);
+    sc.add(VD3K.bench(S3, { w: 0.6, d: 0.4 }), VD3K.backdrop(S3, { r: 0.3, h: 0.22, y: 0.06 }));
+    /* the stand and the plates: the top plate is a disk with the small hole the drops fall through */
+    const foot = new THREE.Mesh(new THREE.CylinderGeometry(0.042, 0.046, 0.006, 48).rotateX(Math.PI / 2), black); foot.position.z = 0.003; foot.castShadow = foot.receiveShadow = true;
+    sc.add(foot, VD3K.rod([0, 0, 0.006], [0, 0, ZB - PT], 0.008, steel));
+    const disk = (z0) => { const g = new THREE.CylinderGeometry(PR, PR, PT, 64); g.rotateX(Math.PI / 2); const m = new THREE.Mesh(g, brass); m.position.z = z0 + PT / 2; m.castShadow = m.receiveShadow = true; return m; };
+    sc.add(disk(ZB - PT));
+    const lathe = new THREE.LatheGeometry([new THREE.Vector2(0.0009, 0), new THREE.Vector2(PR, 0), new THREE.Vector2(PR, PT), new THREE.Vector2(0.0009, PT), new THREE.Vector2(0.0009, 0)], 64);
+    lathe.rotateX(Math.PI / 2); const top = new THREE.Mesh(lathe, brass); top.position.z = ZT; top.castShadow = true; sc.add(top);
+    const spacer = VD3K.glass(S3, { r: PR * 0.97, len: MK_D, axis: 'z', ends: false, opacity: 0.18 }); spacer.position.z = ZC; sc.add(spacer);
+    /* the atomizer: a nozzle over the hole and a rubber bulb */
+    sc.add(VD3K.rod([0, 0, ZT + PT + 0.003], [0, 0, ZT + PT + 0.03], 0.0025, steel), VD3K.rod([0, 0, ZT + PT + 0.03], [0.03, 0, ZT + PT + 0.03], 0.0025, steel));
+    const bulb = new THREE.Mesh(new THREE.SphereGeometry(0.011, 32, 16), M({ roughness: 0.7, metalness: 0 }, ['#3b5f9e', '#34548c'])); bulb.scale.set(1.5, 1, 1); bulb.position.set(0.048, 0, ZT + PT + 0.03); sc.add(bulb);
+    /* the lamp along -x, its beam lighting the gap */
+    const lamp = new THREE.Group(); lamp.add(VD3K.rod([-0.13, 0, ZC], [-0.07, 0, ZC], 0.012, black)); lamp.add(VD3K.rod([-0.1, 0, 0], [-0.1, 0, ZC - 0.012], 0.003, steel), VD3K.box(0.03, 0.03, 0.004, black, -0.1, 0, 0)); sc.add(lamp);
+    const beamG = new THREE.CylinderGeometry(0.0062, 0.0034, 0.07 + PR, 32, 1, true); beamG.rotateZ(Math.PI / 2);
+    const beamM = new THREE.MeshBasicMaterial({ color: 0xffd98a, transparent: true, opacity: 0.2, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide });
+    const beam = new THREE.Mesh(beamG, beamM); beam.position.set((PR - 0.07) / 2, 0, ZC); beam.renderOrder = 3; sc.add(beam);
+    const lens = new THREE.Mesh(new THREE.CircleGeometry(0.009, 32), new THREE.MeshBasicMaterial({ color: 0xffe2a0 })); lens.rotation.y = Math.PI / 2; lens.position.set(-0.0699, 0, ZC); sc.add(lens);
+    /* the telescope along -y, looking at the drops at a right angle to the beam */
+    sc.add(VD3K.rod([0, -PR - 0.004, ZC], [0, -0.1, ZC], 0.007, black), VD3K.rod([0, -0.1, ZC], [0, -0.12, ZC], 0.005, dark), VD3K.rod([0, -0.075, 0], [0, -0.075, ZC - 0.007], 0.003, steel), VD3K.box(0.03, 0.03, 0.004, black, 0, -0.075, 0));
+    /* the supply, showing the plate voltage */
+    const meter = VD3K.meter(S3, { w: 0.09, h: 0.055, label: 'plate supply' }); meter.position.set(0.11, 0.05, 0); meter.rotation.z = 0.75; sc.add(meter);
+    sc.add(VD3K.cable([0.09, 0.06, 0.02], [PR * 0.75, PR * 0.4, ZT + PT], { color: 0xb8382a, rad: 0.0012, sag: 0.03 }), VD3K.cable([0.1, 0.066, 0.012], [PR * 0.8, PR * 0.45, ZB - PT], { color: 0x23282f, rad: 0.0012, sag: 0.01 }));
+    /* the ionizing source, a small capsule at the side of the gap */
+    const ion = new THREE.Mesh(new THREE.SphereGeometry(0.0022, 16, 10), new THREE.MeshBasicMaterial({ color: 0xe0812b })); ion.position.set(-PR * 0.45, PR * 0.85, ZC); sc.add(ion);
+    /* drops, the followed drop's ring, the telescope's field of view and the field arrows */
+    const dots = VD3K.particles(S3, { n: 80, r: 0.00032, seg: 8 }); dots.material = new THREE.MeshBasicMaterial({ color: 0xffffff }); sc.add(dots);
+    const ring = VD3K.marker(S3, { r: 0.0007, color: '#2f7bd8' }); sc.add(ring);
+    const h = FOV / 2, fovG = new THREE.BufferGeometry().setFromPoints([[-h, -h], [h, -h], [h, h], [-h, h], [-h, -h]].map((q) => new THREE.Vector3(q[0], 0, ZC + q[1])));
+    const fov = new THREE.Line(fovG, new THREE.LineDashedMaterial({ color: 0x2f7bd8, dashSize: 0.0002, gapSize: 0.00015, transparent: true, opacity: 0.8 })); fov.computeLineDistances(); sc.add(fov);
+    const arrows = []; for (const x of [-0.016, -0.008, 0.008, 0.016]) { const a = new THREE.ArrowHelper(new THREE.Vector3(0, 0, -1), new THREE.Vector3(x, 0.012, ZT - 0.0008), MK_D - 0.0016, 0x8b95a3, 0.0016, 0.0011); sc.add(a); arrows.push(a); }
+    g3 = { S3, dots, ring, fov, arrows, ion, meter, beamM, key: '' };
+    S3.onTheme((dk) => { beamM.opacity = dk ? 0.24 : 0.18; });
+    const in3 = (e) => { if (!use3()) return false; const r = can.getBoundingClientRect(), b = layout().app, x = e.clientX - r.left, y = e.clientY - r.top; return x >= b.x && x <= b.x + b.w && y >= b.y && y <= b.y + b.h; };
+    VD3.orbit(can, G3.o, () => { if (use3()) draw(); }, { grab: (e) => !in3(e), phMin: 0.35, phMax: 1.62, zMin: 0.35, zMax: 3.5 });
+    can.style.cursor = '';
+    return true;
+  }
+  function render3(b) {
+    const g = g3, S3 = g.S3, el = S3.el, k = [b.x, b.y, b.w, b.h].join();
+    if (G3.rect !== k) { G3.rect = k; Object.assign(el.style, { left: b.x + 'px', top: b.y + 'px', width: b.w + 'px', height: b.h + 'px' }); }
+    S3.size(b.w, b.h); S3.theme();
+    const asp = b.w / Math.max(1, b.h); S3.place(G3.o, [-0.004, 0, ZC + 0.002], 0.095 * Math.max(1, 1.3 / asp));
+    let n = 0; S.drops.forEach((d, i) => { if (d.gone || n >= 80) return; g.dots.put(n++, d.x, 0, ZC + d.y, i === S.pick ? T.pick : T.drop); });
+    g.dots.show(n); g.dots.done();
+    const pk = S.drops[S.pick]; g.ring.visible = !!(pk && !pk.gone); if (g.ring.visible) { g.ring.at(pk.x, 0, ZC + pk.y); g.ring.material.color.set(T.pick); }
+    g.fov.material.color.set(T.pick);
+    const on = S.pol !== 0 && S.V > 0; g.arrows.forEach((a) => { a.visible = on; if (on) { a.setDirection(new THREE.Vector3(0, 0, S.pol > 0 ? -1 : 1)); a.position.z = S.pol > 0 ? ZT - 0.0008 : ZB + 0.0008; a.setColor(new THREE.Color(T.muted)); } });
+    g.ion.visible = !!S.ion; g.meter.set(`${S.pol === 0 ? 0 : S.V} V`);
+    S3.render();
+    return (q) => { const r = S3.project(q); return [b.x + r[0], b.y + r[1], r[2]]; };
+  }
+  function draw3(b) {
+    ctx.clearRect(b.x, b.y, b.w, b.h);
+    const Q = render3(b), p = proj();
+    ctx.save(); ctx.beginPath(); ctx.rect(b.x, b.y, b.w, b.h); ctx.clip(); ctx.font = `${11 * p}px ${T.sans}`; ctx.textBaseline = 'middle';
+    const lab = (t, q, col, al) => { let [x, y, z] = Q(q); if (!(z < 1) || x < b.x - 20 || x > b.x + b.w + 20 || y < b.y || y > b.y + b.h) return; const hw = ctx.measureText(t).width / 2 + 4; if (!al) x = Math.max(b.x + hw, Math.min(b.x + b.w - hw, x)); ctx.textAlign = al || 'center'; const w = ctx.measureText(t).width; ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.72; ctx.fillRect((al === 'left' ? x : al === 'right' ? x - w : x - w / 2) - 3, y - 8 * p, w + 6, 16 * p); ctx.globalAlpha = 1; ctx.fillStyle = col || T.muted; ctx.fillText(t, x, y); };
+    lab('lamp', [-0.11, 0, ZC + 0.02]); lab('telescope', [0, -0.1, ZC + 0.014]); lab('atomizer', [0.05, 0, ZT + PT + 0.047]);
+    if (S.pol !== 0 && S.V > 0) {
+      ctx.font = `700 ${14 * p}px ${T.sans}`;
+      lab(S.pol > 0 ? '+' : '−', [-0.012, -PR, ZT + PT / 2], S.pol > 0 ? T.plus : T.minus); lab(S.pol > 0 ? '−' : '+', [-0.012, -PR, ZB - PT / 2], S.pol > 0 ? T.minus : T.plus);
+      ctx.font = `${11 * p}px ${T.sans}`; lab('E', [-0.006, 0.012, ZC]);
+    }
+    if (S.ion) lab('ionizing source on', [-PR * 0.45, PR * 0.85, ZT + PT + 0.004], T.gate);
+    ctx.textAlign = 'center'; ctx.fillStyle = T.muted; ctx.fillText('gap and drop places to scale; drops enlarged', b.x + b.w / 2, b.y + b.h - 26 * p); ctx.fillText('dashed square: the telescope’s view', b.x + b.w / 2, b.y + b.h - 11 * p);
     ctx.restore();
   }
   function scopeGeom(b) { const p = proj(), R = Math.max(40, Math.min(b.w, b.h - 36 * p) / 2 - 12 * p); return { cx: b.x + b.w / 2, cy: b.y + b.h / 2 + 16 * p, R: R, k: (2 * R) / FOV }; }
@@ -551,8 +636,9 @@
   tokens(); new ResizeObserver(resize).observe($('scene'));
   const q = new URLSearchParams(location.search).get('setup');
   applyPreset(PRESETS[q] ? q : 'fall'); resize();
+  if (window.VD3K) view3 = VD3K.view({ seg: '#dimSeg', init: init3D, change: (on) => { if (g3) g3.S3.el.hidden = !on; draw(); }, status: say });
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
-  window.__mk = { S, applyPreset, step, record, recordHold, drawAll: () => { draw(); readouts(); renderRows(); }, rowCalc, air: () => air, setPick };
+  window.__mk = { S, G3, applyPreset, step, record, recordHold, drawAll: () => { draw(); readouts(); renderRows(); }, rowCalc, air: () => air, setPick };
   requestAnimationFrame(frame);
 })();
 </script>
