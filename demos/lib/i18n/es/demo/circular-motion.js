@@ -10,14 +10,10 @@ VDI18N.add('es', 'demo/circular-motion', {
   "DESDE ARRIBA",
 "net = {#} N":
   "neta = {#} N",
-"Arrow lengths to scale; the net force is drawn below the dot":
-  "Longitudes de las flechas a escala; la fuerza neta se dibuja debajo del punto",
+"Arrow lengths to scale; the net force is drawn on its own":
+  "Longitudes de las flechas a escala; la fuerza neta se dibuja aparte",
 "Circular Motion":
   "Movimiento circular",
-"<a>Kinematics</a>":
-  "<a>Cinemática</a>",
-"<a><span>←</span> <span>Ball Launched from a Moving Cart</span></a><a><span>Forces and Friction</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Pelota lanzada desde un carrito en movimiento</span></a><a><span>Fuerzas y fricción</span> <span>→</span></a>",
 "Moving in a circle at constant speed means accelerating toward the center, a = v²/r. Something real has to supply the force mv²/r: a string, friction, a tilted road, a wall, or the track and gravity together.":
   "Moverse en un círculo con rapidez constante significa acelerar hacia el centro, a = v²/r. Algo real tiene que proporcionar la fuerza mv²/r: una cuerda, la fricción, un camino inclinado, una pared, o la pista y la gravedad juntas.",
 "The moving object on its circle with velocity and acceleration arrows, beside its free body diagram. Space plays or pauses, C cuts the string or removes the force.":
@@ -60,6 +56,10 @@ VDI18N.add('es', 'demo/circular-motion', {
   "El rizo va a la mitad de la rapidez y los autos a un cuarto de la rapidez real, para que el movimiento sea fácil de seguir; todos los números son para el tiempo real. A ciegas oculta los tamaños de las fuerzas (flechas dibujadas de igual longitud), a = v²/r, los límites de rapidez y las predicciones de lo que pasa, y deja los ajustes y el movimiento.",
 "Motion seen from a turning frame, where the Coriolis and centrifugal forces appear: open <a>Rotating Frames</a>.":
   "El movimiento visto desde un marco que gira, donde aparecen las fuerzas de Coriolis y centrífuga: abre <a>Marcos de referencia en rotación</a>.",
+"<a>Kinematics</a>":
+  "<a>Cinemática</a>",
+"<a><span>←</span> <span>Ball Launched from a Moving Cart</span></a><a><span>Forces and Friction</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Pelota lanzada desde un carrito en movimiento</span></a><a><span>Fuerzas y fricción</span> <span>→</span></a>",
 "outcome":
   "resultado",
 "String cut: no horizontal force, so it moves in a straight line.":
@@ -80,8 +80,6 @@ VDI18N.add('es', 'demo/circular-motion', {
   "Fricción máxima μs mg",
 "Top speed √(μs g r)":
   "Rapidez máxima √(μs g r)",
-"The banked road in 3D: drag to turn the view":
-  "El camino peraltado en 3D: arrastra para girar la vista",
 "f (down the slope) = {#} N":
   "f (pendiente abajo) = {#} N",
 "Tilting the road lets the normal force lean toward the center. At the ideal speed √(rg tan θ) no friction is needed at all. Slower, friction points up the slope; faster, it points down. Outside the range, the car slips.":
@@ -195,5 +193,9 @@ VDI18N.add('es', 'demo/circular-motion', {
 "Cut away side view":
   "Vista lateral en corte",
 "Friction holds them up.":
-  "La fricción los sostiene."
+  "La fricción los sostiene.",
+"The banked road in 3D: drag to turn the view":
+  "El camino peraltado en 3D: arrastra para girar la vista",
+"Arrow lengths to scale; the net force is drawn below the dot":
+  "Longitudes de las flechas a escala; la fuerza neta se dibuja debajo del punto"
 });

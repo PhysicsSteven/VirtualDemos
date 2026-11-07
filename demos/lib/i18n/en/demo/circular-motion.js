@@ -5,10 +5,8 @@ VDI18N.add('en', 'demo/circular-motion', [
 "FREE BODY DIAGRAM,",
 "FROM ABOVE",
 "net = {#} N",
-"Arrow lengths to scale; the net force is drawn below the dot",
+"Arrow lengths to scale; the net force is drawn on its own",
 "Circular Motion",
-"<a>Kinematics</a>",
-"<a><span>←</span> <span>Ball Launched from a Moving Cart</span></a><a><span>Forces and Friction</span> <span>→</span></a>",
 "Moving in a circle at constant speed means accelerating toward the center, a = v²/r. Something real has to supply the force mv²/r: a string, friction, a tilted road, a wall, or the track and gravity together.",
 "The moving object on its circle with velocity and acceleration arrows, beside its free body diagram. Space plays or pauses, C cuts the string or removes the force.",
 "Cut the string",
@@ -30,6 +28,8 @@ VDI18N.add('en', 'demo/circular-motion', [
 "Period {#}πr/v",
 "The loop runs at half speed and the cars at a quarter of real speed, so the motion is easy to follow; every number is for real time. Blind hides the force sizes (arrows drawn equal length), a = v²/r, the speed limits and the predictions of what happens, leaving the settings and the motion.",
 "Motion seen from a turning frame, where the Coriolis and centrifugal forces appear: open <a>Rotating Frames</a>.",
+"<a>Kinematics</a>",
+"<a><span>←</span> <span>Ball Launched from a Moving Cart</span></a><a><span>Forces and Friction</span> <span>→</span></a>",
 "outcome",
 "String cut: no horizontal force, so it moves in a straight line.",
 "FREE BODY DIAGRAM, SEEN FROM BEHIND, CENTER TO THE LEFT",
@@ -40,7 +40,6 @@ VDI18N.add('en', 'demo/circular-motion', [
 "Needed mv²/r",
 "Most friction μs mg",
 "Top speed √(μs g r)",
-"The banked road in 3D: drag to turn the view",
 "f (down the slope) = {#} N",
 "Tilting the road lets the normal force lean toward the center. At the ideal speed √(rg tan θ) no friction is needed at all. Slower, friction points up the slope; faster, it points down. Outside the range, the car slips.",
 "Normal force N",
@@ -97,5 +96,6 @@ VDI18N.add('en', 'demo/circular-motion', [
 "When the floor drops",
 "riders stay up",
 "Cut away side view",
-"Friction holds them up."
+"Friction holds them up.",
+"The banked road in 3D: drag to turn the view"
 ]);

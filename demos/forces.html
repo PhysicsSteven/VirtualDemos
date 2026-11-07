@@ -375,6 +375,7 @@ table.rows input:focus { border-color: var(--accent); }
     $('muRows').hidden = up || !!S.mystery; $('mystery').closest('label').hidden = up; $('viewSeg').hidden = up;
     $('tComp').closest('label').hidden = up; $('timed').hidden = S.tackle;
     $('paneSeg').hidden = up;
+    if (S.rows) renderRows();   /* the readings table's second column: θ on the ramp, m₂ in Atwood's machine */
   }
   /* the second pane: the free body diagram, or the two surfaces magnified (no friction in Atwood's machine, so no close up there) */
   function setPane(v) {
@@ -893,7 +894,7 @@ table.rows input:focus { border-color: var(--accent); }
     const p = ps(), P = S.p, th = P.th * Math.PI / 180, fz = forces(S.p, S.v), bl = S.blind;
     ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.beginPath(); if (x0 > 0) { ctx.moveTo(x0, 12 * p); ctx.lineTo(x0, H - 12 * p); } else { ctx.moveTo(12 * p, y0); ctx.lineTo(W - 12 * p, y0); } ctx.stroke();
     ctx.fillStyle = T.muted; ctx.font = `700 ${11 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText(S.atwood ? 'FREE BODY DIAGRAM OF MASS m' : 'FREE BODY DIAGRAM OF THE BLOCK', x0 + 14 * p, y0 + 12 * p);
-    const cx = x0 + w / 2, cy = y0 + h / 2 + 10 * p, Rm = Math.min(w, h) * (S.atwood ? 0.3 : 0.36);   /* Atwood: both arrows vertical, so a little shorter to clear the title and the note */
+    const cx = x0 + w / 2, cy = y0 + h / 2 + 10 * p, Rm = Math.max(20 * p, Math.min(Math.min(w, h) * (S.atwood ? 0.3 : 0.36), h / 2 - 50 * p));   /* a short pane (a phone): vertical arrows and their labels clear the title and the note */   /* Atwood: both arrows vertical, so a little shorter to clear the title and the note */
     const items = [['W = mg', T.w, 0, -fz.W], ['N', T.n, -Math.sin(th) * fz.N, Math.cos(th) * fz.N]];
     const up = [Math.cos(th), Math.sin(th)];
     if (Math.abs(fz.f) > 1e-9) items.push([fz.kind === 'static' && !bl ? 'f (static)' : bl ? 'f' : 'f (kinetic)', T.fr, up[0] * fz.f, up[1] * fz.f, 1]);
@@ -1008,8 +1009,11 @@ table.rows input:focus { border-color: var(--accent); }
   });
   function renderRows() {
     const tb = $('rowsTbl').querySelector('tbody');
+    $('rowsTbl').querySelector('thead th:nth-child(2)').textContent = S.atwood ? 'm₂ (kg)' : 'θ (°)';
     tb.innerHTML = S.rows.length ? S.rows.map((r, i) => { const t = cellNum(r.t), a = isFinite(t) && t > 0 ? 2 * GATE_D / (t * t) : NaN;
-      return `<tr title="m ${r.m} kg, m2 ${r.m2} kg, F ${r.F} N at ${r.phi}°"><td>${i + 1}</td><td><input data-i="${i}" data-f="th" value="${r.th}" aria-label="theta, row ${i + 1}"></td><td><input data-i="${i}" data-f="t" value="${r.t}" aria-label="time, row ${i + 1}"></td><td>${isFinite(a) ? a.toFixed(3) : '—'}</td><td><button type="button" data-del="${i}" aria-label="Delete row ${i + 1}">×</button></td></tr>`; }).join('')
+      /* Atwood's machine has no angle to vary (the ramp stands at 90°), so its rows show m₂ in that column */
+      const c2 = r.atw ? `<input data-i="${i}" data-f="m2" value="${r.m2}" aria-label="m2, row ${i + 1}">${S.atwood ? '' : ' <span class="unit">kg</span>'}` : `<input data-i="${i}" data-f="th" value="${r.th}" aria-label="theta, row ${i + 1}">${S.atwood ? ' <span class="unit">°</span>' : ''}`;
+      return `<tr title="m ${r.m} kg, m2 ${r.m2} kg, F ${r.F} N at ${r.phi}°"><td>${i + 1}</td><td>${c2}</td><td><input data-i="${i}" data-f="t" value="${r.t}" aria-label="time, row ${i + 1}"></td><td>${isFinite(a) ? a.toFixed(3) : '—'}</td><td><button type="button" data-del="${i}" aria-label="Delete row ${i + 1}">×</button></td></tr>`; }).join('')
       : '<tr><td class="empty" colspan="5">No readings yet. Release at the top mark, then capture.</td></tr>';
     fit();
   }

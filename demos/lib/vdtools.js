@@ -34,6 +34,8 @@
     '.vdt-menu button[aria-pressed="true"]::before{background:currentColor;box-shadow:inset 0 0 0 2px var(--surface)}',
     '.vdt-menu button:disabled{color:var(--muted);cursor:default;background:none}',
     '.vdt-menu small{display:block;font-weight:400;color:var(--muted)}',
+    /* the site's button look at zero specificity, for a demo that turns the library's .btn style off (rocket, circular motion) */
+    ':where(.vdt-btn){font:inherit;font-size:.88rem;font-weight:700;color:var(--ink);background:var(--canvas);border:1px solid var(--line);border-radius:6px;padding:5px 10px;cursor:pointer}',
     '.vdt-btn[aria-expanded="true"]{border-color:var(--accent);color:var(--accent)}',
     '.vdt-float{position:absolute;z-index:6;top:8px;right:8px}',
     '.vdt-watch{position:absolute;z-index:50;display:flex;flex-direction:column;gap:6px;padding:8px 10px 10px;min-width:178px;background:color-mix(in srgb,var(--surface) 94%,transparent);border:1px solid var(--line);border-radius:10px;box-shadow:0 6px 18px rgba(0,0,0,.18);font:600 .8rem/1.2 var(--font-ui);color:var(--ink);touch-action:none;user-select:none;-webkit-user-select:none}',

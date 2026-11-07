@@ -257,7 +257,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       flameCore: g('--flame-core'), nose: g('--nose'), fin: g('--fin'), shadow: g('--shadow'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; }
   const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
 /* the divider between the pieces (VD.split, demos/lib/vd.js); a browser with an older cached vd.js keeps the default */
-const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, set() {} })))(can, { key: 'graphs', axis: () => 'x', def: () => (W > 640 ? (use3() ? Math.min(360 * ps(), W * 0.4) : Math.min(240 * ps(), W * 0.32)) : W * 0.5) / W, min: 0.2, max: 0.7, label: 'Divider between the rocket and the graphs', onChange: () => draw() });
+const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, set() {} })))(can, { key: 'graphs', axis: () => (W > 640 ? 'x' : null),   /* phones show no graphs, so no divider */ def: () => (W > 640 ? (use3() ? Math.min(360 * ps(), W * 0.4) : Math.min(240 * ps(), W * 0.32)) : W * 0.5) / W, min: 0.2, max: 0.7, label: 'Divider between the rocket and the graphs', onChange: () => draw() });
   const n0 = (v, d = 0) => (!isFinite(v) ? '∞' : (Math.abs(v) < 0.5 * 10 ** -d ? 0 : v).toLocaleString('en-US', { maximumFractionDigits: d, minimumFractionDigits: d })).replace('-', '−');
   const P = () => ({ md: S.p.md, mf: S.p.mf, mc: S.p.mc ?? 1000, mf1: S.p.mf1 ?? 7000, u: S.p.u, b: S.p.b, g: S.p.g ? G : 0 });
   const fly = (o) => (S.p.two ? stagedFlight({ ...P(), ...o }) : flight({ ...P(), ...o }));
@@ -389,7 +389,7 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
     if (!T || !W) return;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
     const p = ps(), F = fly(), q = F.at(S.t), bl = S.blind, wide = W > 640;
-    const colW = W * SPL.f(), top = 96 * p, bot = H - 30 * p;
+    const colW = wide ? W * SPL.f() : W, top = 96 * p, bot = H - 30 * p;   /* phones: the rocket takes the whole width */
     // altitude column: scale to the highest point reached (or the burnout height in space)
     const yMax = Math.max(100, isFinite(F.yTop) ? F.yTop : F.yBurnout * 1.05), Yp = (y) => bot - (bot - top) * Math.min(1, y / yMax);
     const rx = colW * 0.62, ry = Yp(q.y), rw = 18 * p, rh = 58 * p, fuelFrac = Math.max(0, ((S.p.two ? q.m2 : q.m) - S.p.md) / Math.max(1, S.p.mf));

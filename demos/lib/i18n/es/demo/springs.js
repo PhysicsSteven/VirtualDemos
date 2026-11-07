@@ -34,10 +34,8 @@ VDI18N.add('es', 'demo/springs', {
   "residuo (s²)",
 "No timed readings yet":
   "Aún no hay lecturas cronometradas",
-"E₀ − E − ∫bv² dt = {#} × {#}⁻¹⁷ J":
-  "E₀ − E − ∫bv² dt = {#} × {#}⁻¹⁷ J",
-"E₀ − E − ∫bv² dt = {#} × {#}⁻¹⁶ J":
-  "E₀ − E − ∫bv² dt = {#} × {#}⁻¹⁶ J",
+"E₀ − E − ∫bv² dt = −{#} × {#}⁻¹⁶ J":
+  "E₀ − E − ∫bv² dt = −{#} × {#}⁻¹⁶ J",
 "Springs and Oscillations":
   "Resortes y oscilaciones",
 "<a>Oscillations</a>":
@@ -326,24 +324,22 @@ VDI18N.add('es', 'demo/springs', {
   "Traza conservada",
 "Model: ideal massless springs that obey Hooke's law, a frictionless track, a damping force −bv on each block, g = {#} m/s². The curves are the exact solution of the linear equation of motion, not a step by step integration; two coupled blocks (equal masses; outer springs k₁ and k₂, middle spring k_c, the same damping b on each) move as the sum of their two normal modes, found exactly from the {#} × {#} stiffness matrix. Positions are drawn to scale; the block's size grows with its mass but is not to scale. The drawing never shows a spring pressed solid, and the model has no such limit.":
   "Modelo: resortes ideales sin masa que obedecen la ley de Hooke, un riel sin fricción, una fuerza de amortiguamiento −bv en cada bloque, g = {#} m/s². Las curvas son la solución exacta de la ecuación de movimiento lineal, no una integración paso a paso; dos bloques acoplados (masas iguales; resortes exteriores k₁ y k₂, resorte del medio k_c, el mismo amortiguamiento b en cada uno) se mueven como la suma de sus dos modos normales, hallados exactamente a partir de la matriz de rigidez de {#} × {#}. Las posiciones se dibujan a escala; el tamaño del bloque crece con su masa pero no está a escala. El dibujo nunca muestra un resorte comprimido por completo, y el modelo no tiene ese límite.",
-"E₀ − E − ∫bv² dt = −{#} × {#}⁻¹⁷ J":
-  "E₀ − E − ∫bv² dt = −{#} × {#}⁻¹⁷ J",
-"Phase plot of v (m/s) against x (m). Now −{#}, −{#}.":
-  "Gráfica de fase de v (m/s) en función de x (m). Ahora −{#}, −{#}.",
+"E₀ − E − ∫bv² dt = {#} × {#}⁻¹⁶ J":
+  "E₀ − E − ∫bv² dt = {#} × {#}⁻¹⁶ J",
 "no oil":
   "sin aceite",
+"E₀ − E − ∫bv² dt = {#} × {#}⁻¹⁷ J":
+  "E₀ − E − ∫bv² dt = {#} × {#}⁻¹⁷ J",
 "Chart: x against time":
   "Gráfica: x en función del tiempo",
 "x to scale, paper at {#} cm/s":
   "x a escala, papel a {#} cm/s",
 "Steel block to scale for {#} kg. Drag it to pull it; drag elsewhere to turn the view.":
   "Bloque de acero a escala para {#} kg. Arrástralo para jalarlo; arrastra en otro lugar para girar la vista.",
-"Phase plot of v (m/s) against x (m). Now −{#}, {#}.":
-  "Gráfica de fase de v (m/s) en función de x (m). Ahora −{#}, {#}.",
-"E₀ − E − ∫bv² dt = −{#} × {#}⁻¹⁶ J":
-  "E₀ − E − ∫bv² dt = −{#} × {#}⁻¹⁶ J",
-"Phase plot of v (m/s) against x (m). Now {#}, −{#}.":
-  "Gráfica de fase de v (m/s) en función de x (m). Ahora {#}, −{#}.",
+"Phase plot of v (m/s) against x (m). Now −{#}, −{#}.":
+  "Gráfica de fase de v (m/s) en función de x (m). Ahora −{#}, −{#}.",
+"E₀ − E − ∫bv² dt = −{#} × {#}⁻¹⁷ J":
+  "E₀ − E − ∫bv² dt = −{#} × {#}⁻¹⁷ J",
 "Energy bars":
   "Barras de energía",
 "Normal modes of the rig: each mode's frequency, its shape (how far and which way each block moves), and its amplitude in the motion now. Click a mode, or press its number ({#} for mode {#}), to start the rig in that mode alone.":
@@ -498,6 +494,12 @@ VDI18N.add('es', 'demo/springs', {
   "Solo el techo. Cuelga un resorte de él, cuelga un bloque en el gancho y construye a partir de ahí.",
 "Selected: the ceiling. Tap the drawing to pick something else.":
   "Seleccionado: el techo. Toca el dibujo para elegir otra cosa.",
+"Drag a spring from the tray to the ceiling.":
+  "Arrastra un resorte de la bandeja al techo.",
+"No blocks yet.":
+  "Aún no hay bloques.",
+"No blocks yet: a rig with blocks has one mode for each block.":
+  "Aún no hay bloques: un montaje con bloques tiene un modo por cada bloque.",
 "A block on a level track with a spring to each wall. Both springs start stretched, and when the block moves one pulls harder while the other pulls less, so the two act together: ω² = (k1 + k2)/m. Gravity plays no part.":
   "Un bloque en un riel nivelado con un resorte hacia cada pared. Ambos resortes empiezan estirados, y cuando el bloque se mueve uno jala más mientras el otro jala menos, así que los dos actúan juntos: ω² = (k1 + k2)/m. La gravedad no interviene.",
 "Add a spring to the right":
@@ -526,10 +528,6 @@ VDI18N.add('es', 'demo/springs', {
   "Seleccionado: la pared izquierda. Toca el dibujo para elegir otra cosa.",
 "Drag a spring from the tray to the left wall.":
   "Arrastra un resorte de la bandeja a la pared izquierda.",
-"No blocks yet.":
-  "Aún no hay bloques.",
-"No blocks yet: a rig with blocks has one mode for each block.":
-  "Aún no hay bloques: un montaje con bloques tiene un modo por cada bloque.",
 "{#} ({#} pucks)":
   "{#} ({#} discos)",
 "Nine {#} g pucks on an air table, each tied to its neighbors and the frame by {#} N/m springs stretched to {#} cm. Each puck moves in the plane, and the motion along x and the motion along y go on separately: each has nine normal modes, shown in the lower pane with their shapes and how much of the motion is in each now. Drag a puck and let go, or click a mode to start it alone.":
@@ -612,18 +610,24 @@ VDI18N.add('es', 'demo/springs', {
   "Aún no hay lecturas con fuerza impulsora",
 "dashed: predicted A(ω), current settings":
   "discontinua: A(ω) predicha, valores actuales",
+"Phase plot of v (m/s) against x (m). Now {#}, −{#}.":
+  "Gráfica de fase de v (m/s) en función de x (m). Ahora {#}, −{#}.",
+"Below rest (cm) against time (s)":
+  "Bajo el reposo (cm) contra el tiempo (s)",
 "Energy now, from the rig at rest":
   "Energía ahora, desde el montaje en reposo",
 "Springs, Σ½ke² above rest":
   "Resortes, Σ½ke² sobre el reposo",
 "Gravity, −Σmgu":
   "Gravedad, −Σmgu",
-"Drag a spring from the tray to the ceiling.":
-  "Arrastra un resorte de la bandeja al techo.",
+"Right of rest (cm) against time (s)":
+  "A la derecha del reposo (cm) contra el tiempo (s)",
 "m kg, row {#}":
   "m kg, fila {#}",
 "N, row {#}":
   "N, fila {#}",
 "t s, row {#}":
-  "t s, fila {#}"
+  "t s, fila {#}",
+"Phase plot of v (m/s) against x (m). Now −{#}, {#}.":
+  "Gráfica de fase de v (m/s) en función de x (m). Ahora −{#}, {#}."
 });

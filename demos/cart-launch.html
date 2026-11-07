@@ -548,7 +548,7 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
       vec(bPos.s, bPos.n, as * kaW, an * kaW, T.g, cam && Math.abs(cNow.a) > 1e-9 ? 'a|rel. to cart' : 'g', { lo: 16 });
       if (Math.abs(cNow.a) > 1e-9 && !cam) vec(cNow.s - HALF, (TOPN - MOUTH) / 2, cNow.a * kaW, 0, T.g, 'a|cart', { w: 2 });
     }
-    const capX = 14 * p, capY = (W > 620 ? 52 : 86) * p;
+    const capX = 14 * p, capY = barBottom() + 6 * p;
     ctx.fillStyle = T.muted; ctx.font = `${11 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
     ctx.fillText(cam ? 'seen from the cart: velocities relative to the cart' : 'seen from the ground', capX, capY);
     if (t > 0 && !hidden() && t >= L.t) {
@@ -595,7 +595,7 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
     const RAIL = 0.025, trA = cartAt(pp, -S.tPre).s - HALF - 0.3, trB = Math.max(cartAt(pp, tEnd()).s, ballAt(pp, tEnd()).s) + HALF + 0.3;
     const benchY = Math.min(ay(trA, -MOUTH - RAIL), ay(trB, -MOUTH - RAIL)) - (ph > 0 ? 0.03 : 0), floorYm = benchY - 0.9;
     const bxA = Math.min(ax(trA, -MOUTH), ax(trB, -MOUTH)) - 0.35, bxB = Math.max(ax(trA, -MOUTH), ax(trB, -MOUTH)) + 0.35;
-    if (use3()) { draw3D(p, pp, L, cNow, bNow, bPos, t, sceneBot + 10 * p, cam, sMin, sMax, nMin, nMax, { trA, trB, benchY, floorYm, bxA, bxB }); plot(48 * p, sceneBot + 32 * p, W - 64 * p, plotH - 40 * p); return; }
+    if (use3()) { draw3D(p, pp, L, cNow, bNow, bPos, t, sceneBot + 10 * p, cam, sMin, sMax, nMin, nMax, { trA, trB, benchY, floorYm, bxA, bxB }); plot(48 * p, sceneBot + 44 * p, W - 64 * p, plotH - 52 * p); return; }
     ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh);
     ctx.save(); ctx.beginPath(); ctx.rect(0, 0, W, sceneBot + 10 * p); ctx.clip();
     if (VG) VG.wall(ctx, 0, 0, W, GY(floorYm), { color: T.wall, tile: 0 }); else { ctx.fillStyle = T.wall; ctx.fillRect(0, 0, W, sceneBot + 10 * p); }
@@ -712,11 +712,11 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
     }
     // caption
     /* top left under the buttons: the instrument panel sits at the top right */
-    const capX = 14 * p, capY = 52 * p;
+    const capX = 14 * p, capY = barBottom() + 6 * p;
     ctx.fillStyle = T.muted; ctx.font = `${11 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
     ctx.fillText(cam ? 'seen from the cart: velocities relative to the cart' : 'seen from the ground', capX, capY);
     if (t > 0 && !hidden() && t >= L.t) { ctx.fillStyle = L.kind === 'caught' ? T.vy : T.g; ctx.font = `700 ${13 * p}px ${T.ui}`; ctx.fillText(L.kind === 'caught' ? 'Back in the launcher' : L.kind === 'cart' ? 'Missed the launcher' : 'Missed the cart', capX, capY + 16 * p); }
-    plot(48 * p, sceneBot + 32 * p, W - 64 * p, plotH - 40 * p);
+    plot(48 * p, sceneBot + 44 * p, W - 64 * p, plotH - 52 * p);
   }
   // cart drawn at track point (x, y) on the screen: body, wheels that turn as it rolls, a launcher tube on a bracket, and the trip lever;
   // sc is px per meter, pos the cart's position (for the wheel angle)
@@ -751,6 +751,9 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
     ctx.fillStyle = T.ink; ctx.fillRect(-tw / 2 - 1.5 * p, ym - 1.5 * p, tw + 3 * p, 3 * p);
     ctx.restore();
   }
+  /* the caption goes under the button strip, which wraps to two rows on a phone (and three with Tools in Spanish) */
+  function barBottom() { const b = document.querySelector('.viewbar'), c = can.getBoundingClientRect(); if (!b || !c.height) return 42 * ps();
+    return Math.max(...[...b.children].filter((e) => e.offsetParent).map((e) => e.getBoundingClientRect().bottom - c.top), 0); }
   function plot(x0, y0, w, h) {
     const p = ps(), pp = P(), tE = tEnd(), hist = S.hist;
     ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.strokeRect(x0, y0, w, h);

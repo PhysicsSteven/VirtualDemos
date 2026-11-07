@@ -9,6 +9,8 @@ VDI18N.add('en', 'demo/cavendish', [
 "×{#} · paused",
 "spot (cm)",
 "The Cavendish Experiment",
+"<a>Gravitation and orbital mechanics</a>",
+"<a><span>←</span> <span>Kepler's Laws</span></a><a><span>Gravity Near Earth</span> <span>→</span></a>",
 "Two small lead spheres on a beam hang from a thin fiber. Swing two large lead spheres up beside them and their gravity twists the fiber a few thousandths of a radian; a laser reflected from a mirror on the beam turns that into centimeters on a scale {#} m away. From the twist and the period of the swing, find G.",
 "spot on the scale in cm · time in s",
 "A torsion balance, in 3D or from the top: a beam with two small lead spheres hangs from a fiber inside a case, with two large lead spheres outside on a swivel frame. A laser beam reflects from a mirror on the beam to a scale. Space runs or pauses.",
@@ -36,8 +38,6 @@ VDI18N.add('en', 'demo/cavendish', [
 "G = π² r² l ΔS / (M T² L)",
 "Model: small spheres m = {#} g and large spheres M = {#} kg of lead ({#} {#} kg/m³), so their radii are {#} mm and {#} mm. The beam is 2l = {#} mm between the small spheres' centers and is taken as massless, with a massless mirror at its center. In A and B each large sphere's center is r = {#} mm from the nearer small sphere's center, square to the beam, with the beam untwisted. The torque is the exact sum over all four pairs of spheres (uniform spheres attract as points), including the pull of each large sphere on the far small sphere, and changes as the beam turns. The fiber's torsion constant gives an undamped period of {#} s; air damping makes the swing die away by a factor of e every {#} s. G = {#} {#} × {#}⁻¹¹ N·m²/kg² (CODATA {#}). The scale is L = {#} m from the mirror, and the spot sits at {#} cm + L tan {#}θ, read to {#} mm. The clock reads to {#} s. No noise, drift or seismic shaking is added.",
 "Blind hides the twist angle, the forces, the predicted resting positions and the value of G, leaving the clock and the spot.",
-"<a>Gravitation and orbital mechanics</a>",
-"<a><span>←</span> <span>Kepler's Laws</span></a><a><span>Gravity Near Earth</span> <span>→</span></a>",
 "to the scale, {#} m",
 "fiber",
 "3D, to scale · beam turn drawn ×{#} · drag a large sphere to swing it, elsewhere to turn",
@@ -48,6 +48,10 @@ VDI18N.add('en', 'demo/cavendish', [
 "away",
 "swinging to position B",
 "position B",
-"up the scale",
-"swinging to position A"
+"top view, to scale · beam turn drawn ×{#}",
+"drag a large sphere to swing it",
+"3D, to scale · beam turn drawn ×{#}",
+"drag a large sphere to swing it, elsewhere to turn",
+"swinging to position A",
+"up the scale"
 ]);

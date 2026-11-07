@@ -192,6 +192,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
 
   // ---------- drawing ----------
+  /* the caption at the foot of the picture, on two lines when one would run under the scale (a phone); returns the top line's y */
+  function caption(head, tail, right) { const p = ps(), one = `${head} · ${tail}`; ctx.font = `${9.5 * p}px ${T.ui}`;
+    if (ctx.measureText(one).width <= right - 16 * p) { txt(ctx, one, 12 * p, H - 14 * p, { s: 9.5, c: T.muted }); return H - 14 * p; }
+    txt(ctx, head, 12 * p, H - 27 * p, { s: 9.5, c: T.muted }); txt(ctx, tail, 12 * p, H - 14 * p, { s: 9.5, c: T.muted }); return H - 27 * p; }
   function txt(c, s, x, y, o = {}) { const p = ps(); c.fillStyle = o.c || T.ink; c.font = `${o.b ? '700 ' : ''}${(o.s || 11) * p}px ${o.m ? T.mono : T.ui}`; c.textAlign = o.a || 'left'; c.textBaseline = o.bl || 'middle'; c.fillText(s, x, y); }
   function arrow(x0, y0, x1, y1, col, w) { const p = ps(), a = Math.atan2(y1 - y0, x1 - x0), h = 7 * p;
     ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = w * p; ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1 - h * 0.6 * Math.cos(a), y1 - h * 0.6 * Math.sin(a)); ctx.stroke();
@@ -244,9 +248,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const rx = dx - 2 * dn * nx, ry = dy - 2 * dn * ny, oy = my + ry * (ex - mx) / rx;
     ctx.beginPath(); ctx.moveTo(lx, ly); ctx.lineTo(mx, my); ctx.lineTo(ex, oy); ctx.stroke(); ctx.globalAlpha = 1;
     VG.box(ctx, ex - 30 * p, ly - 6 * p, 26 * p, 12 * p, { color: '#2e353f', r: 3, shadow: false }); txt(ctx, 'laser', ex - 17 * p, ly + 15 * p, { a: 'center', s: 9, c: T.muted });
-    txt(ctx, 'top view, to scale · beam turn drawn ×20 · drag a large sphere to swing it', 12 * p, H - 14 * p, { s: 9.5, c: T.muted });
+    const capY = caption('top view, to scale · beam turn drawn ×20', 'drag a large sphere to swing it', wide ? W * 0.56 : W - 64 * p);
     if (DR.on) dragHint();
-    if (Fshow) txt(ctx, `pull on each small sphere: ${f(Fshow * 1e9, 2)} nN`, 12 * p, H - 30 * p, { s: 9.5, m: 1, c: T.force, b: 1 });
+    if (Fshow) txt(ctx, `pull on each small sphere: ${f(Fshow * 1e9, 2)} nN`, 12 * p, capY - 16 * p, { s: 9.5, m: 1, c: T.force, b: 1 });
     txt(ctx, 'A', X(largeSpheres(frameAngle('A'))[0][0]) + RL * sc + 6 * p, Y(largeSpheres(frameAngle('A'))[0][1]) - RL * sc, { s: 10, c: T.muted, b: 1 });
     txt(ctx, 'B', X(largeSpheres(frameAngle('B'))[1][0]) + RL * sc + 6 * p, Y(largeSpheres(frameAngle('B'))[1][1]) - RL * sc, { s: 10, c: T.muted, b: 1 });
     drawScale(wide ? pw + 40 * p : W - 58 * p, wide ? W - 16 * p : W - 6 * p, 60 * p, H - 30 * p, my);
@@ -392,8 +396,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     { const lq = Q(LASER[0] + 0.02, LASER[1], LASER[2] - 0.012); txt(ctx, 'laser', lq[0], lq[1] + 8 * p, { a: 'center', s: 9, c: T.muted }); }
     { const oq = Q(out[0], out[1], out[2]); if (oq[0] > 0 && oq[0] < W) txt(ctx, 'to the scale, 5.000 m', Math.min(oq[0], (wide ? pw : W - 70 * p) - 4 * p), oq[1] - 12 * p, { a: 'right', s: 9, c: T.laser, b: 1 }); }
     { const fq = Q(0, 0, 0.09); txt(ctx, 'fiber', fq[0] + 10 * p, fq[1], { s: 9, c: T.muted }); }
-    txt(ctx, '3D, to scale · beam turn drawn ×20 · drag a large sphere to swing it, elsewhere to turn', 12 * p, H - 14 * p, { s: 9.5, c: T.muted });
-    if (!S.blind && fl[0] > 1e-13) txt(ctx, `pull on each small sphere: ${f(fl[0] * 1e9, 2)} nN`, 12 * p, H - 30 * p, { s: 9.5, m: 1, c: T.force, b: 1 });
+    const capY = caption('3D, to scale · beam turn drawn ×20', 'drag a large sphere to swing it, elsewhere to turn', pw);
+    if (!S.blind && fl[0] > 1e-13) txt(ctx, `pull on each small sphere: ${f(fl[0] * 1e9, 2)} nN`, 12 * p, capY - 16 * p, { s: 9.5, m: 1, c: T.force, b: 1 });
     const myq = Q(0, 0, MIRROR_Z);
     drawScale(wide ? pw + 40 * p : W - 58 * p, wide ? W - 16 * p : W - 6 * p, 60 * p, H - 30 * p, myq[1]);
     drawChart();

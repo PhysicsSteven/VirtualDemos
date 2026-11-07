@@ -246,6 +246,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
 
   // ---------- drawing ----------
+  /* a force for the diagram: 0.1 N steps under 100 N, whole newtons with commas above (11,772 N, not 11772.0 N) */
+  const fN = (v) => (Math.abs(v) < 100 ? f(v, 1) : Math.round(v).toLocaleString('en-US'));
+  let lblBox = null;   /* [left, right] of the pane the arrow labels must stay in (the free body diagram) */
   function arrow(x0, y0, dx, dy, col, lw, lab, side) {
     const p = ps(), L = Math.hypot(dx, dy); if (L < 2) return;
     const x1 = x0 + dx, y1 = y0 + dy, ang = Math.atan2(dy, dx), hl = Math.min(12 * p, L * 0.5);
@@ -257,6 +260,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       let tx, ty, x0b;
       if (Math.abs(c) > 0.45) { tx = x1 + Math.sign(c) * 8 * p; ty = y1 + sn * 10 * p + (side || 0) * 12 * p; x0b = c < 0 ? tx - w : tx; }
       else { tx = x1; ty = y1 + Math.sign(sn) * 14 * p; x0b = tx - w / 2 + (side || 0) * (w / 2 + 8 * p); }   /* side moves a vertical arrow's label off the shaft */
+      if (lblBox) x0b = Math.max(lblBox[0] + 4 * p, Math.min(lblBox[1] - w - 4 * p, x0b));   /* keep the label inside its pane */
       ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.85; ctx.fillRect(x0b, ty - 8 * p, w, 16 * p); ctx.globalAlpha = 1; ctx.fillStyle = col; ctx.textAlign = 'left'; ctx.fillText(lab, x0b + 3 * p, ty); }
   }
   function draw() {
@@ -570,13 +574,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.stroke(); ctx.globalAlpha = 1;
   }
   function drawFBD(x0, y0, w, h, q) {
-    const p = ps(), bl = S.blind, cx = x0 + w * (S.preset === 'cone' || S.preset === 'rotor' ? 0.62 : 0.5), cy = y0 + h / 2 + 10 * p, Rm = Math.min(w, h) * 0.34, m = S.m;
+    const p = ps(), bl = S.blind, cx = x0 + w * (S.preset === 'loop' ? 0.5 : 0.62), cy = y0 + h / 2 + 10 * p, Rm = Math.min(w, h) * 0.34, m = S.m;
     ctx.fillStyle = T.muted; ctx.font = `700 ${11 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
     const view = S.preset === 'string' || S.preset === 'speed' ? 'FROM ABOVE' : S.preset === 'loop' ? 'SIDE VIEW' : S.preset === 'cone' || S.preset === 'rotor' ? 'SIDE VIEW, CENTER TO THE LEFT' : 'SEEN FROM BEHIND, CENTER TO THE LEFT';
     { /* in another language the heading and its two halves are translated whole first (a longer heading splits where English does not) */
       const I = window.VDI18N, tr = (t) => (I ? I.t(t) : t), full = tr(`FREE BODY DIAGRAM, ${view}`), head = tr('FREE BODY DIAGRAM,'), vw = tr(view);
       const draw = () => { if (ctx.measureText(full).width < w - 28 * p) ctx.fillText(full, x0 + 14 * p, y0 + 12 * p); else { ctx.fillText(head, x0 + 14 * p, y0 + 12 * p); ctx.fillText(vw, x0 + 14 * p, y0 + 26 * p); } };
       if (I) I.raw(draw); else draw(); }   /* two lines when narrow */
+    lblBox = [x0, x0 + w];
     let items = [];   // [label, color, fx (toward the center = −x on screen), fy (up +)]
     if (S.preset === 'string') items = S.cut ? [] : [['T', T.tn, -q.T, 0]];
     else if (S.preset === 'cone') { const th = S.b * Math.PI / 180; items = S.cut ? [['mg', T.w, 0, -m * G]] : [['mg', T.w, 0, -m * G], ['T', T.tn, -q.T * Math.sin(th), q.T * Math.cos(th)]]; }
@@ -593,14 +598,16 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     else if (!q.stalls) { const ph = S.ang; items = [['mg', T.w, 0, -m * G]]; if (q.N > 0) items.push(['N', T.n, -Math.sin(ph) * q.N, Math.cos(ph) * q.N]); }
     const big = Math.max(...items.map((i) => Math.hypot(i[2], i[3])), S.preset === 'speed' ? m * S.mu * G : S.preset === 'cone' ? q.T : S.preset === 'rotor' ? 0 : m * accel(S.v, S.r), 1e-9), k = Rm / big;
     const L = (fx, fy) => (bl ? [fx / (Math.hypot(fx, fy) || 1) * Rm * 0.6, fy / (Math.hypot(fx, fy) || 1) * Rm * 0.6] : [fx * k, fy * k]);
-    for (const [lab, col, fx, fy] of items) { const [dx, dy] = L(fx, fy); arrow(cx, cy, dx, -dy, col, 3.2 * p, bl ? lab : `${lab} = ${f(Math.hypot(fx, fy), 1)} N`, lab.startsWith('f') ? 1 : S.preset === 'loop' && lab === 'N' ? -1 : 0); }
+    for (const [lab, col, fx, fy] of items) { const [dx, dy] = L(fx, fy); arrow(cx, cy, dx, -dy, col, 3.2 * p, bl ? lab : `${lab} = ${fN(Math.hypot(fx, fy))} N`, lab.startsWith('f') ? 1 : S.preset === 'loop' && lab === 'N' ? -1 : 0); }
     // net force, toward the center (loop: also a tangential part)
     /* below the lowest arrow tip and its label, so the two never overlap; one force alone is its own net force */
     const low = Math.max(0, ...items.map((i) => -L(i[2], i[3])[1])), netY = cy + Math.max(56 * p, low + 34 * p);
-    if (!bl && items.length && !(S.preset === 'cone' && items.length < 2)) { const nx = items.reduce((s, i) => s + i[2], 0), ny = items.reduce((s, i) => s + i[3], 0); if (Math.hypot(nx, ny) > 1e-6) { const [dx, dy] = L(nx, ny); arrow(cx, netY, dx, -dy, T.net, 4.5 * p, `net = ${f(Math.hypot(nx, ny), 1)} N`, 1); } }
+    if (!bl && items.length && !(S.preset === 'cone' && items.length < 2)) { const nx = items.reduce((s, i) => s + i[2], 0), ny = items.reduce((s, i) => s + i[3], 0); if (Math.hypot(nx, ny) > 1e-6) { const [dx, dy] = L(nx, ny), up = Math.abs(ny) > Math.abs(nx);   /* a mostly vertical net force goes beside the dot, not on top of the other arrows */
+      arrow(up ? cx - 72 * p : cx, up ? cy : netY, dx, -dy, T.net, 4.5 * p, `net = ${fN(Math.hypot(nx, ny))} N`, up ? -1 : 1); } }
+    lblBox = null;
     ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(cx, cy, 5 * p, 0, 7); ctx.fill();
     ctx.fillStyle = T.muted; ctx.font = `${10.5 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
-    ctx.fillText(bl ? 'Blind: arrows show directions only' : 'Arrow lengths to scale; the net force is drawn below the dot', x0 + 14 * p, y0 + h - 10 * p);
+    ctx.fillText(bl ? 'Blind: arrows show directions only' : 'Arrow lengths to scale; the net force is drawn on its own', x0 + 14 * p, y0 + h - 10 * p);
   }
 
   // ---------- readouts ----------

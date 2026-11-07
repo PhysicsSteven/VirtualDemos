@@ -3501,7 +3501,8 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(rx, Y(0)); ctx.lineTo(rx, Y(yMax)); ctx.stroke();
     ctx.fillStyle = T.muted; ctx.font = `${9.5 * ps}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
     for (let k = 0; k * step <= yMax + 1e-9; k++) { const p = Y(k * step), big = k % 2 === 0; ctx.beginPath(); ctx.moveTo(rx, p); ctx.lineTo(rx - (big ? 6 : 3) * ps, p); ctx.stroke(); if (big) ctx.fillText(String(+(k * step * 100).toFixed(1)), rx - 8 * ps, p); }
-    ctx.save(); ctx.translate(rx - 40 * ps, Y(Math.min(yMax, 0.2) / 2)); ctx.rotate(-Math.PI / 2); ctx.textAlign = 'center'; ctx.fillText('cm below the ceiling', 0, 0); ctx.restore();
+    { const lab = 'cm below the ceiling', tw = ctx.measureText(lab).width;   /* centered on the ruler, never above the ceiling (the buttons sit there on a phone) */
+      ctx.save(); ctx.translate(rx - 40 * ps, Math.max((Y(0) + Y(yMax)) / 2, Y(0) + tw / 2 + 4 * ps)); ctx.rotate(-Math.PI / 2); ctx.textAlign = 'center'; ctx.fillText(lab, 0, 0); ctx.restore(); }
     // oil: a beaker around each block that has some, drawn first so the block sits in it
     for (const nd of SB.rig.nodes) {
       if (!(nd.m > 0 && nd.b > 0)) continue;
@@ -3805,7 +3806,9 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     for (const v of [-A, -A / 2, 0, A / 2, A]) { ctx.beginPath(); ctx.moveTo(L, Y(v)); ctx.lineTo(R, Y(v)); ctx.stroke(); ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillText(MIN(String(+(v * 100).toFixed(2))), L - 6 * ps, Y(v)); }
     for (let j = Math.ceil(t0 / tk - 1e-9); j * tk <= t1 + 1e-9; j++) { const k = j * tk; ctx.beginPath(); ctx.moveTo(X(k), Tp); ctx.lineTo(X(k), B); ctx.stroke(); ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(String(+k.toFixed(1)), X(k), B + 5 * ps); }
     ctx.fillStyle = T.ink; ctx.font = `600 ${11 * ps}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
-    ctx.fillText(sbHz() ? 'Each block right of its rest position (cm) against time (s)' : 'Each block below its rest position (cm) against time (s)', L, 16 * ps);
+    { let title = sbHz() ? 'Each block right of its rest position (cm) against time (s)' : 'Each block below its rest position (cm) against time (s)';
+      if (ctx.measureText(title).width > W - 8 * ps - L) title = sbHz() ? 'Right of rest (cm) against time (s)' : 'Below rest (cm) against time (s)';   /* a phone */
+      ctx.fillText(title, L, 16 * ps); }
     for (let i = 0; i < SB.md.n; i++) {
       ctx.strokeStyle = cols[i % 6]; ctx.lineWidth = 2 * ps; ctx.beginPath(); let on = false;
       for (const [tt, u] of SB.hist) { if (tt < t0 || u.length <= i) continue; const px = X(tt), py = Y(u[i]); if (!on) { ctx.moveTo(px, py); on = true; } else ctx.lineTo(px, py); }
