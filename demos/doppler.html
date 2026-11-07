@@ -383,6 +383,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
 
   const $ = (id) => document.getElementById(id);
+  /* the controls card sits under the button strip, which wraps to a second row (with Tools) on narrower screens */
+  { const ctl = document.querySelector('.stage-ctl'), card = $('card');
+    const cv = $('can'), place = () => { if (getComputedStyle(card).position !== 'absolute') { card.style.top = card.style.maxHeight = ''; return; }
+      const top = ctl.offsetTop + ctl.offsetHeight + 8; card.style.top = top + 'px';
+      card.style.maxHeight = `calc(100% - ${top + 12}px)`; };
+    if (ctl && card && window.ResizeObserver) { const ro = new ResizeObserver(place); ro.observe(ctl); if (cv) ro.observe(cv); } }
   const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
   const RAD = Math.PI / 180;
   const TIMES = [1 / 32, 1 / 16, 1 / 8, 1 / 4, 1 / 2, 1, 2, 4];
@@ -797,7 +803,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const ys = nice((ymax - ymin) / 4); ymin = Math.floor(ymin / ys + 1e-9) * ys; ymax = Math.ceil(ymax / ys - 1e-9) * ys;
     const Xt = (t) => box.L + (t - t0) / win * (box.R - box.L), Yf = (f) => box.B - (f - ymin) / (ymax - ymin) * (box.B - box.T);
     c.fillStyle = T.ink; c.font = `600 ${11.5 * ps}px ${T.mono}`; c.textAlign = 'left'; c.textBaseline = 'bottom';
-    c.fillText('What the observer hears: received frequency f′ against time', box.L - 52 * ps, box.T - 9 * ps);
+    c.fillText(c.measureText('What the observer hears: received frequency f′ against time').width > box.R - box.L + 52 * ps ? 'Received frequency f′ against time' : 'What the observer hears: received frequency f′ against time', box.L - 52 * ps, box.T - 9 * ps);   /* shorter on a phone */
     c.font = `${10.5 * ps}px ${T.mono}`; c.fillStyle = T.muted; c.textAlign = 'right'; c.textBaseline = 'middle';
     for (let f = ymin; f <= ymax + 1e-9; f += ys) { const y = Math.round(Yf(f)) + 0.5; c.strokeStyle = T.grid; c.lineWidth = 1; c.beginPath(); c.moveTo(box.L, y); c.lineTo(box.R, y); c.stroke(); c.fillText(trim(String(+f.toPrecision(6))), box.L - 5, y); }
     const ts = nice(win / 6), dec = Math.max(0, -Math.floor(Math.log10(ts) + 1e-9)); c.textAlign = 'center'; c.textBaseline = 'top';

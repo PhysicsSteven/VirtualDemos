@@ -267,7 +267,8 @@ table.rows input:focus { border-color: var(--accent); }
           ctx.font = `${9.5 * p}px ${T.ui}`; ctx.fillText(`${n * n} square${n > 1 ? 's' : ''}`, q.x, Math.max(P[2][1], P[3][1]) + 17 * p); });
         ctx.globalAlpha = 0.85; ctx.fillStyle = T.ink; ctx.font = `600 ${11 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
         if (W >= 600 * p) { const tyy = Math.max(Q[1].pts[2][1], Q[1].pts[3][1]) + 34 * p; if (tyy < gy - 14 * p) ctx.fillText('the same power through 1, 4 and 9 squares: I ∝ 1/r²', Q[1].x, tyy); }
-        else { ctx.textBaseline = 'bottom'; ctx.fillText('same power, 1, 4, 9 squares: I ∝ 1/r²', Math.min(W - 110 * p, Q[1].x + 20 * p), Math.min(...far.pts.map((c) => c[1])) - 6 * p); }
+        else { const tyy = Math.max(...Q.flatMap((q) => [q.pts[2][1], q.pts[3][1]])) + 34 * p, tw = ctx.measureText('same power, 1, 4, 9 squares: I ∝ 1/r²').width;   /* a phone: under the squares, clear of the sphere's label */
+          if (tyy < gy - 14 * p) ctx.fillText('same power, 1, 4, 9 squares: I ∝ 1/r²', Math.max(tw / 2 + 6 * p, Math.min(W - tw / 2 - 6 * p, Q[1].x)), tyy); }
         ctx.restore(); ctx.globalAlpha = 1;
       } }
     /* the sphere through the meter: the source's power is spread over its area 4πr² */

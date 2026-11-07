@@ -770,7 +770,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const P = 2 * S.nf * S.t * (g.tirTop ? 0 : Math.sqrt(Math.max(0, 1 - (S.n1 * Math.sin(S.th * DEG) / S.nf) ** 2)));
     if (g.tirTop) lab('Total internal reflection at the top surface: only an evanescent wave enters the film.', R.x + R.w - g.pad, R.y + R.h - 34 * ls, { align: 'right', size: 10.5, color: T.muted, font: 'ui' });
     else {
-      lab(`extra path 2n_f t cos θ_t = ${P.toFixed(0)} nm = ${(P / S.lam).toFixed(2)} λ₀`, R.x + R.w - g.pad, R.y + R.h - 36 * ls, { align: 'right', size: 11 });
+      lab(`extra path 2n_f t cos θ_t = ${P.toFixed(0)} nm = ${(P / S.lam).toFixed(2)} λ₀`, R.x + R.w - g.pad, R.y + R.h - (short ? 52 : 36) * ls, { align: 'right', size: 11 });   /* a phone: a line above the film note */
       if (g.tirBot) lab('total internal reflection at the bottom surface', R.x + R.w - g.pad, R.y + R.h - 16 * ls, { align: 'right', size: 10.5, color: T.muted, font: 'ui' });
     }
     c.restore();

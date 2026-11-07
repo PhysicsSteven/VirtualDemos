@@ -14,6 +14,8 @@ VDI18N.add('es', 'demo/doppler', {
   "f/({#} + M) de frente, alejándose",
 "Doppler Effect and Shock Waves":
   "Efecto Doppler y ondas de choque",
+"<a><span>←</span> <span>Timbre and Harmonics</span></a><a><span>Chladni Plates</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Timbre y armónicos</span></a><a><span>Placas de Chladni</span> <span>→</span></a>",
 "A moving source crowds its wavefronts ahead and stretches them behind, so the observer hears a different pitch. Faster than sound, the fronts pile into a Mach cone. For light, relativity adds time dilation.":
   "Una fuente en movimiento apiña sus frentes de onda por delante y los separa por detrás, así que el observador oye un tono distinto. Más rápido que el sonido, los frentes se acumulan en un cono de Mach. Para la luz, la relatividad agrega la dilatación del tiempo.",
 "sound: m, s, Hz, v = {#} m/s · light: light seconds, c = {#} {#} km/s":
@@ -122,8 +124,6 @@ VDI18N.add('es', 'demo/doppler', {
   "<span><i></i>Fuente</span> <span><i></i>Observador</span> <span><i></i>Crestas (frentes de onda)</span> <span><i></i>Trayectoria del sonido que llega ahora al observador</span> <span><i></i>Cono de Mach (choque)</span> <span><i></i>f′ recibida a lo largo del tiempo</span> <span><i></i>Segundo sonido dentro del cono, oído al revés</span>",
 "<span><i></i>Relativistic, approaching head on</span> <span><i></i>Relativistic, receding head on</span> <span><i></i>Classical moving source, {#}/({#} ∓ β)</span> <span><i></i>Transverse, {#}/γ</span>":
   "<span><i></i>Relativista, acercándose de frente</span> <span><i></i>Relativista, alejándose de frente</span> <span><i></i>Fuente en movimiento clásica, {#}/({#} ∓ β)</span> <span><i></i>Transversal, {#}/γ</span>",
-"<a><span>←</span> <span>Timbre and Harmonics</span></a><a><span>Chladni Plates</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Timbre y armónicos</span></a><a><span>Placas de Chladni</span> <span>→</span></a>",
 "ambulance · {#} m/s":
   "ambulancia · {#} m/s",
 "left from here, θ = {#}°":
@@ -202,6 +202,8 @@ VDI18N.add('es', 'demo/doppler', {
   "recibida < {#} nm · z = −{#}",
 "At {#} c, γ = {#}. Light that left the source while it moved straight across the line of sight (θ = {#}°) arrives with f′ = f/γ: λ goes from {#} to {#} nm from time dilation alone. Classical physics predicts no shift there.":
   "A {#} c, γ = {#}. La luz que salió de la fuente mientras esta se movía perpendicular a la línea de visión (θ = {#}°) llega con f′ = f/γ: λ pasa de {#} a {#} nm solo por la dilatación del tiempo. La física clásica no predice ningún corrimiento ahí.",
+"Received frequency f′ against time":
+  "Frecuencia recibida f′ contra el tiempo",
 "No sound reaches the observer yet: it is outside the Mach cone.":
   "Aún no llega sonido al observador: está fuera del cono de Mach.",
 "No sound has reached the observer yet.":

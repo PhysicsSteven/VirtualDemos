@@ -2,8 +2,10 @@
 VDI18N.add('en', 'demo/ripple-tank', [
 "distance along the line from A (mm)",
 "height (mm)",
-"water height along A → B now (solid) and the amplitude, averaged over the last two periods (dashed) · L = {#} mm",
+"height along A → B (solid), amplitude (dashed) · L = {#} mm",
+"bar",
 "{#} mm · tank {#} × {#} mm, beaches {#} mm wide",
+"water height along A → B now (solid) and the amplitude, averaged over the last two periods (dashed) · L = {#} mm",
 "Ripple Tank",
 "<a><span>←</span> <span>Rainbows</span></a><a><span>Polarization</span> <span>→</span></a>",
 "Make waves in a shallow tank of water with a dipper, two dippers or a straight bar. Draw your own walls and shallow plates, then watch waves spread through slits, interfere, reflect, bend and focus, and measure their wavelength, speed and angles.",

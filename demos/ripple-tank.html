@@ -694,7 +694,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (const sg of [1, -1]) { c.beginPath(); as.forEach((v, k) => { const x = Xp(k / N * L), y = Yp(sg * v); k ? c.lineTo(x, y) : c.moveTo(x, y); }); c.stroke(); }
     c.setLineDash([]); c.strokeStyle = K.accent; c.lineWidth = 2 * p; c.beginPath(); hs.forEach((v, k) => { const x = Xp(k / N * L), y = Yp(v); k ? c.lineTo(x, y) : c.moveTo(x, y); }); c.stroke();
     c.font = `${10.5 * p}px ${K.ui}`; c.textAlign = 'left'; c.textBaseline = 'middle'; c.fillStyle = K.muted;
-    c.fillText(`water height along A → B now (solid) and the amplitude, averaged over the last two periods (dashed) · L = ${f1(ln.L)} mm`, Lm, 12 * p);
+    { let t = `water height along A → B now (solid) and the amplitude, averaged over the last two periods (dashed) · L = ${f1(ln.L)} mm`;
+      if (c.measureText(t).width > PW - Lm - 6 * p) t = `height along A → B (solid), amplitude (dashed) · L = ${f1(ln.L)} mm`;   /* a phone */
+      c.fillText(t, Lm, 12 * p); }
   }
 
   /* ---------- the side view: a slice of the tank under the bar's plane waves, drawn to scale (the motion of the water MAG times larger) ---------- */

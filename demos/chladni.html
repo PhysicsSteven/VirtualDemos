@@ -1392,8 +1392,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       G.plate = { x: pad + (xd - 9 * ps - pad - s) / 2, y: (H - s) / 2, s };
       G.plot = { x: xd + 9 * ps, y: pad, w: W - xd - 9 * ps - pad, h: H - 2 * pad };
     } else {         // stacked: plate on top, plot below the divider
-      const yd = H * f, s = Math.max(40, Math.min(W - 2 * pad, yd - pad - pad / 2));
-      G.plate = { x: (W - s) / 2, y: pad + (yd - pad / 2 - pad - s) / 2, s };
+      const yd = H * f, note = S.view === '3d' ? 30 * ps : 0, s = Math.max(40, Math.min(W - 2 * pad, yd - pad - pad / 2 - note));   /* room under the 3D plate for its two line note */
+      G.plate = { x: (W - s) / 2, y: pad + (yd - pad / 2 - pad - note - s) / 2, s };
       G.plot = { x: pad, y: yd + pad / 2, w: W - 2 * pad, h: H - yd - pad / 2 - pad };
     }
     const p = G.plate; p.cx = p.x + p.s / 2; p.cy = p.y + p.s / 2; p.R = Math.max(p.s / 2 * 0.8, p.s / 2 - 24 * ps);
@@ -1667,7 +1667,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (S.view === 'sand' || !G3.ok) drawPlate(ps);
     if (S.view === '3d' && G3.ok) {
       c.font = `${11 * ps}px ${T.ui}`; c.textBaseline = 'alphabetic';
-      halo(c, G3.note || '', G.plate.x + 4, G.plate.y + G.plate.s + 12 * ps > H ? G.plate.y + G.plate.s - 4 : G.plate.y + G.plate.s + 12 * ps, 'left', T.muted, ps);
+      const yN = G.plate.y + G.plate.s + 12 * ps > H ? G.plate.y + G.plate.s - 4 : G.plate.y + G.plate.s + 12 * ps, I = window.VDI18N;
+      const note = I ? I.t(G3.note || '') : G3.note || '', cut = note.indexOf(', ');   /* translated whole, then split at its comma */
+      const draw = () => { if (cut > 0 && !wideP() && c.measureText(note).width > G.plate.s - 8) {   /* stacked and wider than the plate (a phone): two lines, in the room layout() keeps */
+        halo(c, note.slice(0, cut + 1), G.plate.x + 4, yN, 'left', T.muted, ps); halo(c, note.slice(cut + 2), G.plate.x + 4, yN + 15 * ps, 'left', T.muted, ps); }
+      else halo(c, note, G.plate.x + 4, yN, 'left', T.muted, ps); };
+      if (I && I.raw) I.raw(draw); else draw();
     }
     if (S.plot === 'law' && S.shape === 'circle') drawLaw(); else drawResponse();
   }
@@ -1901,11 +1906,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   function fmtBig(x) { return x >= 100 ? Math.round(x).toLocaleString('en-US') : x >= 10 ? x.toFixed(0) : x.toFixed(1); }
   function setView(v) {
-    S.view = v;
+    S.view = v; if (W && H) layout();   /* the 3D view keeps room for its note under the plate */
     if (v === '3d' && !G3.tried) { if (!init3D()) { $('nogl').hidden = false; } }
     if (G3.ok) G3.el.style.display = v === '3d' ? 'block' : 'none';
     if (!G3.ok) { $('nogl').hidden = v !== '3d'; if (v === '3d') glResizeNo(); }
-    syncControls(); dirty = true; glDirty = true;
+    if (G3.ok && W && H) glResize(); syncControls(); dirty = true; glDirty = true;
   }
   function glResizeNo() { const p = G.plate, n = $('nogl'); n.style.left = p.x + 'px'; n.style.top = p.y + 'px'; n.style.width = p.s + 'px'; n.style.height = p.s + 'px'; }
 

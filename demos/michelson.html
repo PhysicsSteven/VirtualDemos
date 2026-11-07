@@ -428,7 +428,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       c.fillStyle = 'rgba(170,205,225,0.45)'; c.strokeStyle = 'rgba(225,240,250,0.85)'; c.lineWidth = 1; c.beginPath(); c.rect(-half * k, -2.2 * k, 2 * half * k, 4.4 * k); c.fill(); c.stroke();
       if (coated) { c.strokeStyle = 'rgba(235,235,240,0.95)'; c.lineWidth = Math.max(1.5, 1.2 * k); c.beginPath(); c.moveTo(-half * k, -2.2 * k); c.lineTo(half * k, -2.2 * k); c.stroke(); } c.restore(); };
     plate(0, 0, 18, true); plate(26, 0, 14, false);
-    lab('beam splitter', X(-34), Y(30), 'center'); lab('compensator', X(30), Y(26), 'center');
+    { c.font = `${10.5 * p}px ${T.ui}`; const gap = X(30) - X(-34) - (c.measureText('beam splitter').width + c.measureText('compensator').width) / 2;
+      lab('beam splitter', X(-34), Y(30), 'center'); lab('compensator', X(30), gap < 8 * p ? Y(26) + 14 * p : Y(26), 'center'); }   /* a small drawing: the two labels on separate lines */
     /* M1 on its stage, the micrometer behind it */
     if (VG) { VG.box(c, X(m1x + 4), Y(-30), 26 * k, 60 * k, { color: '#4a5566', r: 3 * k }); VG.box(c, X(112), Y(-40), 70 * k, 80 * k, { color: '#3a4350', r: 4 * k, shadow: false }); VG.box(c, X(m1x + 4), Y(-30), 26 * k, 60 * k, { color: '#55627a', r: 3 * k, shadow: false }); }
     c.fillStyle = '#d9e2ec'; c.fillRect(X(m1x), Y(-16), 4 * k, 32 * k); c.fillStyle = 'rgba(255,255,255,0.75)'; c.fillRect(X(m1x), Y(-16), 1.2 * k, 32 * k);

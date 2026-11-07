@@ -4,10 +4,14 @@ VDI18N.add('es', 'demo/ripple-tank', {
   "distancia a lo largo de la línea desde A (mm)",
 "height (mm)":
   "altura (mm)",
-"water height along A → B now (solid) and the amplitude, averaged over the last two periods (dashed) · L = {#} mm":
-  "altura del agua a lo largo de A → B ahora (continua) y la amplitud, promediada en los últimos dos periodos (punteada) · L = {#} mm",
+"height along A → B (solid), amplitude (dashed) · L = {#} mm":
+  "altura a lo largo de A → B (continua), amplitud (punteada) · L = {#} mm",
+"bar":
+  "barra",
 "{#} mm · tank {#} × {#} mm, beaches {#} mm wide":
   "{#} mm · tanque de {#} × {#} mm, playas de {#} mm de ancho",
+"water height along A → B now (solid) and the amplitude, averaged over the last two periods (dashed) · L = {#} mm":
+  "altura del agua a lo largo de A → B ahora (continua) y la amplitud, promediada en los últimos dos periodos (punteada) · L = {#} mm",
 "Ripple Tank":
   "Tanque de ondas",
 "<a><span>←</span> <span>Rainbows</span></a><a><span>Polarization</span> <span>→</span></a>":
