@@ -1032,8 +1032,21 @@
         },
         {
           "id": "lecture-3",
-          "title": "Lecture 3 · Fields of charge distributions",
-          "short": "3 · Distributions",
+          "title": "Lecture 3 · Dipoles",
+          "short": "3 · Dipoles",
+          "requirement": "required",
+          "sections": [
+            {
+              "vol": 2,
+              "sec": "5.7"
+            }
+          ],
+          "note": "The dipole field on its axis with the binomial approximation, the dipole moment p = qd, the torque p × E, and the work and potential energy of a dipole in a field."
+        },
+        {
+          "id": "lecture-4",
+          "title": "Lecture 4 · Fields of charge distributions",
+          "short": "4 · Distributions",
           "requirement": "required",
           "sections": [
             {
@@ -1046,19 +1059,6 @@
             }
           ],
           "note": "Integrating over a line, an arc and a ring of charge, then two charged disks, which lead to the parallel plate capacitor."
-        },
-        {
-          "id": "lecture-4",
-          "title": "Lecture 4 · Dipoles",
-          "short": "4 · Dipoles",
-          "requirement": "required",
-          "sections": [
-            {
-              "vol": 2,
-              "sec": "5.7"
-            }
-          ],
-          "note": "The dipole field on its axis with the binomial approximation, the dipole moment p = qd, the torque p × E, and the work and potential energy of a dipole in a field."
         },
         {
           "id": "lecture-5",
