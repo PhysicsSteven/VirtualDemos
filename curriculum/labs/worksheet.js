@@ -171,7 +171,10 @@
        reading; the part columns here have names such as R_B_ohm and Q1_beta, which parts() does not match. */
     'junction-transistor': { demo: 'Circuits', cols: ['row', (r) => [r.setup, Object.keys(r).map((k) => /^(.+)_(ohm|emf_V|beta)$/.exec(k)).filter((x) => x && r[x[0]] !== '' && r[x[0]] != null)
       .map(([k, n, u]) => (u === 'beta' ? `${n} β = ${r[k]}` : u === 'ohm' ? `${n} = ${ohms(+r[k])}` : `${n} = ${r[k]} ${PART_UNIT[u]}`)).join(', ')].filter(Boolean).join(', '), 'I_A1_A', 'I_A2_A', pick(/^V_.+_V$/), null, null] },
-    capacitors: { demo: 'Capacitors and Dielectrics', cols: [(r) => [r.row, r.preset, r.battery && String(r.preset).indexOf(r.battery) < 0 ? r.battery : ''].filter(Boolean).join(', '), 'd_m', 'A_m2', 'insertion_fraction', 'C_F', 'Q_C', 'V_volts', 'U_J'] },
+    /* a series from the Spherical view goes to the Spheres table: Reading and material | a | b | C | V | Voltage at the last spark |
+       1/a − 1/b, a(b − a)/b and 1/C (typed) */
+    capacitors: { demo: 'Capacitors and Dielectrics', cols: [(r) => [r.row, r.preset, r.battery && String(r.preset).indexOf(r.battery) < 0 ? r.battery : ''].filter(Boolean).join(', '), 'd_m', 'A_m2', 'insertion_fraction', 'C_F', 'Q_C', 'V_volts', 'U_J'],
+      alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.geometry === 'spherical'), cols: [(r) => [r.row, r.material].filter(Boolean).join(', '), 'a_m', 'b_m', 'C_F', 'V_volts', 'V_last_spark_volts', null, null, null] }] },
     'coulomb-sandbox': { demo: 'Coulomb Sandbox', cols: [(r, h) => [r.row, h['config ' + r.config], h['config ' + r.config + ' charges']].filter(Boolean).join(', '),
       'x_m', 'y_m', null, 'V_volts', 'E_V_per_m', 'E_direction_deg'] },
     faraday: { demo: "Faraday's Law", cols: [(r) => [r.run ? 'run ' + r.run : '', FD_MODE[r.mode] || r.mode, r.N ? 'N = ' + r.N : '', r.R_ohm ? `R = ${sig(r.R_ohm)} Ω` : ''].filter(Boolean).join(', '),

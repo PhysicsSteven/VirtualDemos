@@ -134,5 +134,50 @@ test('molecular model (8.5): E = E0/κ, σb = (1 − 1/κ)σ, P/n, water alignme
  assert(b.shift<1e-15,'the cloud shift is far smaller than a nucleus');
  const z=c.dielectricInside('water',0);assert.equal(z.P,0);
 });
+test('spherical capacitor (Example 8.3, §8.1): C, Gauss field, limits, potential continuity, energy',()=>{
+ const a=.03,b=.06,s=c.sphereOf(a,b,1,1000);close(s.C,4*Math.PI*eps*a*b/(b-a));close(s.Q,s.C*1000);close(s.U,.5*s.C*1e6);
+ close(s.Ea,1000*b/(a*(b-a)));close(s.Ea*a*a,s.Eb*b*b);close(s.sigA*4*Math.PI*a*a,-s.sigB*4*Math.PI*b*b);
+ close(c.sphereOf(a,b,2.5,1000).C,2.5*s.C);close(c.sphereOf(a,b,2.5,1000).Ea,s.Ea);   // E(a) at fixed V is the same for any κ
+ close(c.sphereOf(a,1e6,1,1).C,4*Math.PI*eps*a,1e-7);                                  // b → ∞: the isolated sphere
+ const g=1e-5;close(c.sphereOf(a,a+g,1,1).C,eps*4*Math.PI*a*a/g,1e-3);                 // thin gap: the parallel plate value
+ for(const r of [a,.04,.05,b]){const f=c.sphereField(a,b,1,s.Q,r);close(f.E,s.Q/(4*Math.PI*eps*r*r));}
+ close(c.sphereField(a,b,1,s.Q,a).V,1000,1e-12);close(c.sphereField(a,b,1,s.Q,.01).V,1000,1e-12);assert.equal(c.sphereField(a,b,1,s.Q,.01).E,0);
+ assert.equal(c.sphereField(a,b,1,s.Q,.07).E,0);close(c.sphereField(a,b,1,s.Q,b).V,0,0,1e-9);
+ // −dV/dr = E, numerically
+ const h=1e-7,r=.045;close(-(c.sphereField(a,b,1,s.Q,r+h).V-c.sphereField(a,b,1,s.Q,r-h).V)/(2*h),c.sphereField(a,b,1,s.Q,r).E,1e-6);
+ // field energy ∫ ½ε₀E² 4πr² dr equals ½CV²
+ let W=0;const N=20000;for(let i=0;i<N;i++){const rr=a+(i+.5)*(b-a)/N;W+=.5*eps*c.sphereField(a,b,1,s.Q,rr).E**2*4*Math.PI*rr*rr*(b-a)/N;}close(W,s.U,1e-6);
+});
+test('breakdown voltage V_c = E_c a(b − a)/b is set by E(a) = E_c and is largest at a = b/2',()=>{
+ const b=.1,Ec=3e6;for(const a of [.02,.05,.07]){const Vc=c.sphereVc(a,b,Ec);close(c.sphereOf(a,b,1,Vc).Ea,Ec);}
+ close(c.sphereVc(.05,b,Ec),Ec*b/4);for(const a of [.02,.04,.049,.051,.06,.08])assert(c.sphereVc(a,b,Ec)<c.sphereVc(.05,b,Ec));
+});
+test('high voltage supply through R: exact exponential charging, spark period, energy ledger, puncture',()=>{
+ const C=c.sphereOf(.02,.04,1,1).C,R=100e9,tau=R*C,Vs=40000,Vc=c.sphereVc(.02,.04,3e6);
+ // charging with no breakdown matches V_s(1 − e^(−t/τ)) for any step size
+ for(const dt of [tau/7,tau,3*tau]){let st={V:0,punct:false},t=0;while(t<5*tau-1e-15){st=c.hvStep(st,{R,C,Vs,Vc:1e9,solid:false},dt);t+=dt;}close(st.V,Vs*(1-Math.exp(-t/tau)),1e-12);}
+ // relaxation oscillation: sparks every T = RC ln(V_s/(V_s − V_c)), the same with coarse or fine steps
+ const T=c.hvPeriod(R,C,Vs,Vc);close(T,tau*Math.log(Vs/(Vs-Vc)));
+ for(const dt of [T/13,2.7*T]){const L={Wsup:0,Hres:0,Wspark:0,n:0};let st={V:0,punct:false},times=[],t=0;
+  for(let i=0;i<Math.ceil(10*T/dt);i++){const r=c.hvStep(st,{R,C,Vs,Vc,solid:false},dt,L);r.sparks.forEach((x)=>times.push(t+x));st=r;t+=dt;}
+  for(let i=1;i<times.length;i++)close(times[i]-times[i-1],T,1e-9);close(times[0],T,1e-9);assert.equal(L.n,times.length);
+  close(L.Wspark,L.n*.5*C*Vc*Vc);close(L.Wsup,L.Hres+L.Wspark+.5*C*st.V*st.V,1e-9);}   // supply work = heat + sparks + stored
+ assert.equal(c.hvPeriod(R,C,Vc*.9,Vc),Infinity);
+ // a solid punctures at the first spark and then the resistor takes the whole V_s²/R
+ const L={Wsup:0,Hres:0,Wspark:0,n:0},r=c.hvStep({V:0,punct:false},{R,C,Vs,Vc,solid:true},T+1,L);
+ assert(r.punct);assert.equal(r.V,0);assert.equal(r.sparks.length,1);close(r.sparks[0],T,1e-9);close(L.Wsup,L.Hres+L.Wspark,1e-9);
+ const L2={Wsup:0,Hres:0,Wspark:0,n:0},r2=c.hvStep({V:0,punct:true},{R,C,Vs,Vc,solid:true},2,L2);assert(r2.punct);close(L2.Hres,Vs*Vs/R*2);close(L2.Wsup,L2.Hres);
+});
+test('sphere readings, CSV and fits: 1/C against 1/a − 1/b gives 1/(4πε₀κ); spark voltage against a(b − a)/b gives E_c',()=>{
+ const rows=[2,3,4,5,6,7].map((cm)=>c.sphereReading({preset:'Spherical capacitor',a:cm/100,b:.1,kap:1.0006,mat:'Air',V:10000,Vs:20000,Vspark:c.sphereVc(cm/100,.1,3e6),n:2}));
+ assert.equal(rows[0].a,'2.00');assert.equal(rows[0].geometry,'spherical');
+ let P=c.spherePoints(rows,'Sab'),f=c.fitLine(P.x,P.y);assert.equal(P.x.length,6);close(f.b,1/(4*Math.PI*eps*1.0006),5e-3);
+ P=c.spherePoints(rows,'Svc');f=c.fitLine(P.x,P.y);close(f.b,3e6,5e-3);assert(Math.abs(f.a)<3e6*.002*.01+20);
+ const csv=c.sphereCSV(rows,{version:'v',setup:'s',blind:false}),body=csv.trim().split('\n').filter((l)=>!l.startsWith('#'));
+ assert.deepEqual(body[0].split(','),['row',...c.SPH_COLS.map((x)=>x[0])]);assert.equal(body.length,7);assert(csv.includes('100 Gohm'));assert(csv.includes('simulated'));
+ const r1=Object.fromEntries(body[1].split(',').map((v,i)=>[body[0].split(',')[i],v]));assert.equal(r1.a_m,'0.02');assert.equal(r1.b_m,'0.1');
+ assert(!c.sphereCSV(rows,{version:'v',setup:'s',blind:true}).includes('eps0_F_per_m,'));
+ assert.equal(c.spherePoints([{a:'5',b:'4',C:'3',Vspark:''}],'Sab').x.length,0);
+});
 console.log('Qualitative fringe-field grid is not certified by these ideal-model checks.');
 console.log(`${n} capacitors test groups passed`);

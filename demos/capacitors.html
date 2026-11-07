@@ -7,6 +7,7 @@
 <script src="lib/theme.js"></script>
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script><script src="lib/vd3kit.js"></script>
 <style>.rail details.plotfold > summary { cursor: pointer; font-size: 0.85rem; font-weight: 600; color: var(--accent); width: fit-content; }
 .rail details.plotfold > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .rail details.plotfold[open] > summary { margin-bottom: 8px; }
@@ -77,6 +78,12 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 #tPane { grid-column: 1; grid-row: 2; border-top: 1px solid var(--line); padding: 10px 14px 12px; display: flex; flex-direction: column; gap: 6px; }
 #ePane { grid-column: 2; grid-row: 2; border-top: 1px solid var(--line); border-left: 1px solid var(--line); min-height: 220px; }
 #gPane { grid-column: 3; grid-row: 2; border-top: 1px solid var(--line); border-left: 1px solid var(--line); min-height: 220px; }
+#sTPane { grid-column: 1; grid-row: 2; border-top: 1px solid var(--line); padding: 10px 14px 12px; display: flex; flex-direction: column; gap: 6px; }
+#sRPane { grid-column: 2; grid-row: 2; border-top: 1px solid var(--line); border-left: 1px solid var(--line); min-height: 220px; }
+#sVPane { grid-column: 3; grid-row: 2; border-top: 1px solid var(--line); border-left: 1px solid var(--line); min-height: 220px; }
+#dCan.overlay { pointer-events: none; }
+#dPane canvas.s3 { outline: none; }
+#sTable td:nth-child(2) { white-space: normal; }
 #cbPane { grid-column: 1 / -1; grid-row: 2; border-top: 1px solid var(--line); padding: 10px 14px 12px; overflow-x: auto; }
 #dCan { touch-action: none; outline: none; }
 #dCan:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
@@ -162,6 +169,9 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   #tPane { grid-column: 1; grid-row: 2; }
   #ePane { grid-column: 1; grid-row: 3; border-left: 0; }
   #gPane { grid-column: 1; grid-row: 4; border-left: 0; }
+  #sTPane { grid-column: 1; grid-row: 2; }
+  #sRPane { grid-column: 1; grid-row: 3; border-left: 0; }
+  #sVPane { grid-column: 1; grid-row: 4; border-left: 0; }
   #cbPane { grid-row: 2; }
   .stage.combo { grid-template-rows: 420px auto; }
 }
@@ -221,8 +231,10 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
           <span class="blindtag" id="blindTag">Blind</span>
           <div class="seg" role="group" aria-label="View" id="viewSeg">
             <button type="button" data-v="single" aria-pressed="true">One capacitor</button>
+            <button type="button" data-v="sphere" aria-pressed="false">Spherical</button>
             <button type="button" data-v="combo" aria-pressed="false">Combinations</button>
           </div>
+          <div class="seg" role="group" aria-label="Perspective" id="dimSeg" hidden><button type="button" data-dim="3d" aria-pressed="true">3D</button><button type="button" data-dim="flat" aria-pressed="false">Flat</button></div>
         </div>
       </div>
       <div class="pane" id="tPane">
@@ -243,6 +255,20 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
           <button type="button" data-g="x" aria-pressed="false">against x</button>
         </div>
       </div>
+      <div class="pane spane" id="sTPane" hidden>
+        <p class="ptitle">Spherical capacitor <span id="sTag"></span></p>
+        <table class="chg" id="sTable" aria-live="off"></table>
+        <p class="modeline" id="sLine"></p>
+        <p class="kirch" id="sBook"></p>
+      </div>
+      <div class="pane spane" id="sRPane" hidden>
+        <canvas id="sRCan" role="img" aria-label="The field E and the potential V plotted against the distance r from the center of the spheres, with the inner and outer radii marked. Sample values are in the table that follows."></canvas>
+        <table class="sr" id="sRTab"><caption>Field and potential against r</caption><tbody></tbody></table>
+      </div>
+      <div class="pane spane" id="sVPane" hidden>
+        <canvas id="sVCan" role="img" aria-label="The voltage across the spheres against time, with the supply voltage and each spark marked."></canvas>
+        <table class="sr" id="sVTab"><caption>Voltage against time</caption><tbody></tbody></table>
+      </div>
       <div class="pane" id="cbPane" hidden>
         <p class="ptitle">Each capacitor <span id="cbTag"></span></p>
         <table class="chg cmb" id="cbTable"></table>
@@ -261,6 +287,9 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
           <button type="button" data-p="water" aria-pressed="false">Water dielectric</button>
           <button type="button" data-p="combo" aria-pressed="false">Series and parallel</button>
           <button type="button" data-p="energy" aria-pressed="false">Energy in the field</button>
+          <button type="button" data-p="sphere" aria-pressed="false">Spherical capacitor</button>
+          <button type="button" data-p="spark" aria-pressed="false">Sparks in air</button>
+          <button type="button" data-p="puncture" aria-pressed="false">Puncture a solid</button>
         </div>
         <p class="hint bh" id="presetHint"></p>
       </section>
@@ -325,12 +354,15 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
           <button type="button" class="btn" id="clearRows">Clear</button>
         </div>
         <p class="status" id="capStatus" aria-live="polite"></p>
-        <div class="twrap"><table class="rows" id="rowsTbl"><caption class="sr">Captured readings</caption><thead><tr><th scope="col">#</th><th scope="col">d cm</th><th scope="col">x/s %</th><th scope="col">C pF</th><th scope="col">Q nC</th><th scope="col">V (V)</th><th scope="col"><span class="sr">Delete</span></th></tr></thead><tbody></tbody></table></div>
+        <div class="twrap" id="rowsWrap"><table class="rows" id="rowsTbl"><caption class="sr">Captured readings</caption><thead><tr><th scope="col">#</th><th scope="col">d cm</th><th scope="col">x/s %</th><th scope="col">C pF</th><th scope="col">Q nC</th><th scope="col">V (V)</th><th scope="col"><span class="sr">Delete</span></th></tr></thead><tbody></tbody></table></div>
+        <div class="twrap" id="sRowsWrap" hidden><table class="rows" id="sRowsTbl"><caption class="sr">Captured readings of the spheres</caption><thead><tr><th scope="col">#</th><th scope="col">a cm</th><th scope="col">b cm</th><th scope="col">C pF</th><th scope="col">V (V)</th><th scope="col">spark V</th><th scope="col"><span class="sr">Delete</span></th></tr></thead><tbody></tbody></table></div>
         <details class="more"><summary>More about this</summary><p class="hint">Capture pauses the sweep and stores the settings and the values shown on screen, rounded as displayed: d, x/s, C, Q and V here, and also A, t, κ, the battery, E, U and the energies since Mark start in the CSV. Cells can be edited; rows stay through setup changes until Clear. Press C on the drawing to capture.</p></details>
         <div class="seg full" role="group" aria-label="Plot of the readings" id="fitSeg">
           <button type="button" data-k="Cd" aria-pressed="true">C vs 1/d</button>
           <button type="button" data-k="Cf" aria-pressed="false">C vs x/s</button>
           <button type="button" data-k="Vd" aria-pressed="false">V vs d</button>
+          <button type="button" data-k="Sab" aria-pressed="false" hidden>1/C vs 1/a − 1/b</button>
+          <button type="button" data-k="Svc" aria-pressed="false" hidden>Spark V vs a(b − a)/b</button>
         </div>
         <details class="plotfold"><summary>Plot and fit</summary><div class="foldbody">
         <div class="plotbox"><canvas id="fCan" role="img" aria-label="Plot of the captured readings with a least squares line and, below it, the residuals."></canvas></div>
@@ -374,6 +406,36 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
           <p class="hint">The energy density is u = ½κε₀E² (or ½E·D). In the ideal model the field is uniform in each region, so u times the volume of each region, summed, gives exactly ½CV².</p>
         </details>
         </div></details>
+      </section>
+
+      <section data-view="sphere" hidden>
+        <h2>Spheres and supply</h2>
+        <div class="ctl">
+          <div class="slider-head"><label for="sSa">Inner radius a</label><output id="oSa" class="mono" for="sSa"></output></div>
+          <input type="range" id="sSa" min="1" max="10" step="0.1">
+        </div>
+        <div class="ctl">
+          <div class="slider-head"><label for="sSb">Outer radius b</label><output id="oSb" class="mono" for="sSb"></output></div>
+          <input type="range" id="sSb" min="1.5" max="20" step="0.1">
+        </div>
+        <div class="ctl">
+          <div class="slider-head"><label for="sVs">Supply voltage V<sub>s</sub></label><output id="oVs" class="mono" for="sVs"></output></div>
+          <input type="range" id="sVs" min="0" max="100" step="0.5">
+        </div>
+        <div class="seg full" role="group" aria-label="Speed of time" id="sSpeed">
+          <button type="button" data-k="0.1" aria-pressed="false">Slowed 10×</button>
+          <button type="button" data-k="1" aria-pressed="true">Real time</button>
+          <button type="button" data-k="10" aria-pressed="false">10× faster</button>
+        </div>
+        <details class="more"><summary>More about this</summary><p class="hint">The supply charges the inner sphere through a 100 GΩ resistor and the outer sphere is joined to the supply's other terminal, so the voltage V across the spheres climbs toward V<sub>s</sub> with time constant τ = RC. The meter on the right reads V; the supply's own display reads V<sub>s</sub>. Keys on the picture: ↑ ↓ a, ← → b, + − V<sub>s</sub>, C captures a reading.</p></details>
+      </section>
+
+      <section data-view="sphere" hidden>
+        <h2>Between the spheres</h2>
+        <div class="chips small" id="sMats"></div>
+        <button type="button" class="btn" id="sFresh" hidden>Put in a fresh piece</button>
+        <dl class="readout" id="sMatBox"></dl>
+        <details class="more"><summary>The model and its formulas</summary><p class="hint">Gauss's law around the inner sphere: E(r) = Q/(4πε₀κr²) between the spheres and zero outside them, so V = Q/(4πε₀κ)(1/a − 1/b) and C = 4πε₀κab/(b − a). The field is strongest at the inner sphere, E(a) = Vb/(a(b − a)), whatever fills the gap. The gap breaks down when E(a) reaches the dielectric strength E<sub>c</sub> of the material (OpenStax Table 8.1, room temperature; where the book gives a range the low end is used). Real breakdown fields also depend on the gap, the surface and, for air, the pressure, humidity and the curvature of the electrode (Peek's law gives about 3.8 MV/m on a sphere 2 cm across rather than 3.0 MV/m), so treat E<sub>c</sub> as a typical value. A spark is taken to empty the capacitor completely and at once. A gas or a liquid insulates again after a spark; a solid is left with a burned channel that conducts. The insulating rods, the stand and the hole the rod passes through are left out of the field.</p></details>
       </section>
 
       <section data-view="combo" hidden>
@@ -762,11 +824,94 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     if (m.electrons) o.shift = p / (m.electrons * QE_MOL); /* shift of the whole electron cloud relative to the nuclei */
     return o;
   }
+
+  /* ---------- the spherical capacitor (OpenStax Vol 2 §8.1, Example 8.3) ----------
+     Two concentric metal spheres: inner radius a carries +Q, the outer shell's inner face at radius b carries −Q, and a material
+     of constant κ fills the gap. Gauss's law gives E(r) = Q/(4πε₀κr²) for a < r < b and zero elsewhere, so
+     V = Q/(4πε₀κ)(1/a − 1/b) and C = 4πε₀κ ab/(b − a). The field is strongest at the inner sphere: E(a) = Vb/(a(b − a)), the same
+     for any κ at a given V. The gap breaks down when E(a) reaches the material's dielectric strength E_c, so the largest voltage it
+     holds is V_c = E_c a(b − a)/b; at a fixed b that is largest for a = b/2, where V_c = E_c b/4. */
+  const K4 = 4 * Math.PI * EPS0;
+  function sphereOf(a, b, kap, V) {
+    const C = K4 * kap * a * b / (b - a), Q = C * V, k = Q / (K4 * kap);
+    return { C, Q, V, Ea: k / (a * a), Eb: k / (b * b), U: 0.5 * C * V * V, sigA: Q / (4 * Math.PI * a * a), sigB: -Q / (4 * Math.PI * b * b),
+      bound: 1 - 1 / kap, Ciso: K4 * a, Cpp: EPS0 * kap * 4 * Math.PI * a * a / (b - a) };
+  }
+  // the field and the potential (measured from the outer sphere) at radius r, for charge Q on the inner sphere
+  function sphereField(a, b, kap, Q, r) {
+    const k = Q / (K4 * kap);
+    if (r < a) return { E: 0, V: k * (1 / a - 1 / b) };
+    if (r > b) return { E: 0, V: 0 };
+    return { E: k / (r * r), V: k * (1 / r - 1 / b) };
+  }
+  const sphereVc = (a, b, Ec) => Ec * a * (b - a) / b;
+  /* The high voltage supply V_s charges the spheres through a series resistor R. Between sparks
+     V(t) = V_s + (V₀ − V_s)e^(−t/RC), exact for any step. When V reaches V_c the gap breaks down; the spark is taken to empty the
+     capacitor completely and at once (a real arc stops at a few hundred volts and lasts microseconds). A gas or a liquid then
+     insulates again and the cycle repeats with period T = RC ln(V_s/(V_s − V_c)); a solid is left with a burned channel that
+     conducts (punctured), so the spheres cannot charge again until a fresh piece goes in: the supply then drives V_s/R through the
+     resistor, which takes all of that power as heat (the channel's own resistance is taken as negligible).
+     Returns the new state and the times (within the step) of any sparks. ledger: supply work, resistor heat, spark energy. */
+  function hvStep(st, p, dt, L) {
+    const tau = p.R * p.C, sparks = [];
+    let V = st.V, left = dt, t = 0;
+    const charge = (V0, h) => { const V1 = p.Vs + (V0 - p.Vs) * Math.exp(-h / tau); if (L) { const dQ = p.C * (V1 - V0); L.Wsup += p.Vs * dQ; L.Hres += p.Vs * dQ - 0.5 * p.C * (V1 * V1 - V0 * V0); } return V1; };
+    if (st.punct) { if (L) { L.Wsup += p.Vs * p.Vs / p.R * dt; L.Hres += p.Vs * p.Vs / p.R * dt; } return { V: 0, punct: true, sparks }; }
+    let guard = 0;
+    while (left > 0 && guard++ < 100000) {
+      if (p.Vs > p.Vc && V < p.Vc) {
+        const tc = -tau * Math.log((p.Vs - p.Vc) / (p.Vs - V));          /* time to reach V_c from V */
+        if (tc <= left) {
+          charge(V, tc); t += tc; left -= tc;
+          if (L) { L.Wspark += 0.5 * p.C * p.Vc * p.Vc; L.n++; }
+          sparks.push(t); V = 0;
+          if (p.solid) { if (L) { L.Wsup += p.Vs * p.Vs / p.R * left; L.Hres += p.Vs * p.Vs / p.R * left; } return { V: 0, punct: true, sparks }; }
+          continue;
+        }
+      }
+      V = charge(V, left); left = 0;
+    }
+    return { V, punct: false, sparks };
+  }
+  const hvPeriod = (R, C, Vs, Vc) => (Vs > Vc ? R * C * Math.log(Vs / (Vs - Vc)) : Infinity);
+  // one captured reading of the spheres, as displayed (a, b in cm; C in pF; Q in nC; V and the last spark's voltage in volts)
+  function sphereReading(p) {
+    const s = sphereOf(p.a, p.b, p.kap, p.V), shown = (v, unit) => parseSI(fmtSI(v, unit), unit);
+    return { geometry: 'spherical', preset: p.preset, a: (p.a * 100).toFixed(2), b: (p.b * 100).toFixed(2), mat: p.mat, kap: p.blind ? '' : fmtK(p.kap),
+      Vs: tidy(shown(p.Vs, 'V')), C: tidy(shown(s.C, 'F') * 1e12), Q: tidy(shown(s.Q, 'C') * 1e9), V: tidy(shown(p.V, 'V')),
+      Ea: tidy(parseSI(fmtE(s.Ea), 'V/m')), U: tidy(shown(s.U, 'J')), Vspark: p.Vspark > 0 ? tidy(shown(p.Vspark, 'V')) : '', sparks: String(p.n || 0) };
+  }
+  const SPH_COLS = [['preset', 'preset'], ['geometry', 'geometry'], ['a_m', 'a', 1e-2], ['b_m', 'b', 1e-2], ['material', 'mat'], ['kappa', 'kap', 1],
+    ['V_supply_volts', 'Vs', 1], ['C_F', 'C', 1e-12], ['Q_C', 'Q', 1e-9], ['V_volts', 'V', 1], ['E_inner_V_per_m', 'Ea', 1], ['U_J', 'U', 1],
+    ['V_last_spark_volts', 'Vspark', 1], ['sparks', 'sparks']];
+  function sphereCSV(rows, meta) {
+    const L = ['# Capacitors and Dielectrics virtual apparatus, spherical capacitor: captured readings (simulated data)',
+      `# demo version,${csvCell(meta.version)}`, `# setup at export,${csvCell(meta.setup)}`,
+      meta.blind ? '# blind,on at export: the value of eps0 is not listed; kappa is blank in rows captured with Blind on' : `# eps0_F_per_m,${EPS0}`,
+      '# model,"concentric spheres, inner radius a, outer radius b, gap filled with a material of constant kappa: C = 4*pi*eps0*kappa*a*b/(b - a); E(r) = Q/(4*pi*eps0*kappa*r^2); breakdown when E(a) reaches the dielectric strength (OpenStax Table 8.1); charged through a 100 Gohm resistor; a spark empties the capacitor at once"',
+      '# rounding,"as displayed: C, Q, V, E, U and the spark voltage to 3 significant figures; a and b to 0.01 cm; edited cells exported as typed"',
+      '# noise,none: the values are the ideal model rounded as displayed (no seed)',
+      ['row', ...SPH_COLS.map((c) => c[0])].join(',')];
+    rows.forEach((r, i) => L.push([i + 1, ...SPH_COLS.map(([, k, f]) => csvCell(f ? scaleStr(r[k], f) : r[k]))].join(',')));
+    return L.join('\n') + '\n';
+  }
+  // plots of the sphere rows: 1/C against (1/a − 1/b) (slope 1/(4πε₀κ)), and the spark voltage against a(b − a)/b (slope E_c)
+  const SPH_FITS = {
+    Sab: { x: (q) => 100 / q.a - 100 / q.b, y: (q) => 1 / (q.C * 1e-12) },
+    Svc: { x: (q) => q.a / 100 * (q.b - q.a) / q.b, y: (q) => q.Vspark }
+  };
+  function spherePoints(rows, kind) {
+    const K = SPH_FITS[kind], out = { x: [], y: [], row: [] };
+    const num = (t) => { t = String(t == null ? '' : t).trim().replace(/−/g, '-'); return t === '' ? NaN : Number(t); };
+    rows.forEach((r, i) => { const q = { a: num(r.a), b: num(r.b), C: num(r.C), Vspark: num(r.Vspark) }, x = K.x(q), y = K.y(q); if (q.b > q.a && q.a > 0 && isFinite(x) && isFinite(y)) { out.x.push(x); out.y.push(y); out.row.push(i); } });
+    return out;
+  }
   // ==CORE END==
 
   if (typeof document === 'undefined') {
     globalThis.CAP = { EPS0, capOf, stateOf, newLedger, moveStep, batteryStep, connectStep, combo, makeField, setupField, relax, plateSites, eAt, traceLine, fieldLines,
-      fmtSI, fmtE, fmtK, parseSI, scaleStr, readingOf, readingsCSV, CSV_COLS, fitPoints, fitLine, fmtPM, MOLS, dielectricInside };
+      fmtSI, fmtE, fmtK, parseSI, scaleStr, readingOf, readingsCSV, CSV_COLS, fitPoints, fitLine, fmtPM, MOLS, dielectricInside,
+      sphereOf, sphereField, sphereVc, hvStep, hvPeriod, sphereReading, sphereCSV, SPH_COLS, spherePoints };
     return;
   }
 
@@ -776,13 +921,13 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   try { const m = sessionStorage.getItem('vd-capacitors-motion'); if (m) reduce = m === 'reduce'; } catch (_) {}
   const D_MIN = 0.5, D_MAX = 4, A_MIN = 25, A_MAX = 400, V_MIN = 10, V_MAX = 300;     // cm, cm², V
 
-  // ---------- materials, κ at 20 °C and low frequency ----------
+  // ---------- materials, κ at 20 °C and low frequency; Ec, the dielectric strength, from OpenStax Vol 2 Table 8.1 (low end of a range) ----------
   const MATS = [
     { id: 'vacuum', name: 'Vacuum', k: 1 },
-    { id: 'air', name: 'Air', k: 1.0006, note: 'dry air at 1 atm' },
-    { id: 'teflon', name: 'Teflon', k: 2.1 },
-    { id: 'paper', name: 'Paper', k: 3.7 },
-    { id: 'pyrex', name: 'Pyrex glass', k: 5.6 },
+    { id: 'air', name: 'Air', k: 1.0006, note: 'dry air at 1 atm', Ec: 3.0e6 },
+    { id: 'teflon', name: 'Teflon', k: 2.1, Ec: 60e6 },
+    { id: 'paper', name: 'Paper', k: 3.7, Ec: 16e6 },
+    { id: 'pyrex', name: 'Pyrex glass', k: 5.6, Ec: 14e6 },
     { id: 'water', name: 'Water', k: 80.1, note: 'pure water at 20 °C' }
   ];
   const E6 = [1, 1.5, 2.2, 3.3, 4.7, 6.8];
@@ -816,9 +961,9 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     qSym: 0, eLine: 0, qcSym: 0,
     blind: false, rows: [], fitKind: 'Cd', gMax: { C: 0, U: 0 }
   };
-  const FIT_FOR = { apartV: 'Cd', apartQ: 'Vd', slide: 'Cf', water: 'Cf', energy: 'Cd' };   // the plot each setup's lab part uses
+  const FIT_FOR = { apartV: 'Cd', apartQ: 'Vd', slide: 'Cf', water: 'Cf', energy: 'Cd', sphere: 'Sab', spark: 'Svc', puncture: 'Svc' };   // the plot each setup's lab part uses
   let running = !reduce, flowAcc = 0, flowShow = 0;
-  const cfg = () => PRESETS[S.preset];
+  const cfg = () => PRESETS[S.preset] || SPRE[S.preset];
   const cur = () => stateOf(S.g, S.mode, S.Vb, S.Q);
 
   // smallest 1, 2, 5 × 10ⁿ at or above x
@@ -924,7 +1069,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
       cans[k].style.width = r.width + 'px'; cans[k].style.height = r.height + 'px';
       dims[k] = [r.width, r.height];
     }
-    resizeFit();
+    resizeFit(); sResize();
     field = null;
     drawAll();
   }
@@ -1812,7 +1957,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   function drawAll() {
     if (!T || !S.start) return;
     { const c = $('dPane').querySelector('.stage-ctl'); ctlH = c.offsetTop + c.offsetHeight; }
-    if (S.view === 'single') { drawSingle(); drawEnergy(); drawGraph(); } else drawCombo();
+    if (S.view === 'single') { drawSingle(); drawEnergy(); drawGraph(); } else if (S.view === 'sphere') drawSphere(); else drawCombo();
     if (fitDirty) drawFit();
   }
 
@@ -1846,6 +1991,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   function updateReadouts() {
     if (!S.start) return;
     if (S.view === 'combo') { comboReadouts(); return; }
+    if (S.view === 'sphere') { sphereReadouts(); return; }
     const st = cur(), s0 = S.start, Lg = S.L, g = S.g;
     $('modeTag').textContent = S.mode === 'battery' ? '· battery connected' : '· isolated';
     $('chg').innerHTML = '<tr><th></th><th>start</th><th>now</th><th>change</th></tr>' +
@@ -1887,6 +2033,16 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
       ms.push(`<div><dt>Bound σ<sub>b</sub> = σ(1 − 1/κ)</dt><dd>${fmtSI(st.sigB, 'C/m²')}</dd></div>`);
     }
     if (!S.blind) ms.push(`<div class="wide"><dt>Attraction between the plates, ½V² |dC/dd|</dt><dd>${fmtSI(st.Fplate, 'N')}${g.f === 0 ? ' <span class="ok">= Q²/(2ε₀A)</span>' : ''}</dd></div>`);
+    /* breakdown: the gap is taken to hold air at 1 atm wherever the slab is not; water conducts first, so it has no E_c here */
+    if (!S.blind) {
+      const air = MATS.find((x) => x.id === 'air'), sm = MATS.find((x) => x.id === S.mat), reg = [];
+      if (g.f < 1) reg.push({ w: 'the empty part', E: st.Ee, Ec: air.Ec });
+      if (g.f > 0 && st.gap > 1e-9) reg.push({ w: 'the air gap', E: st.Ea, Ec: air.Ec });
+      if (g.f > 0 && sm && sm.Ec) reg.push({ w: 'the ' + sm.name.toLowerCase(), E: st.Ed, Ec: sm.Ec });
+      reg.forEach((r) => { r.x = r.E / r.Ec; });
+      const top = reg.sort((p, q) => q.x - p.x)[0];
+      if (top) ms.push(`<div class="wide"><dt>Closest to breakdown: ${top.w}, E/E<sub>c</sub></dt><dd>${sigStr(top.x * 100, 2)}% <span class="ok">it would break down near V = ${fmtSI(st.V / top.x, 'V')}</span></dd></div>`);
+    }
     $('meas').innerHTML = ms.join('');
     // energy in the field
     const fe = [];
@@ -1934,6 +2090,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   const presetName = (p) => { const b = document.querySelector(`#presets [data-p="${p}"]`); return b ? b.textContent.trim() : p; };
   const capStatus = (t) => { $('capStatus').textContent = t; };
   function captureReading() {
+    if (S.view === 'sphere') { sphereCapture(); return; }
     if (S.view !== 'single') { capStatus('Capture reads the one capacitor view. The combinations table above is the reading there.'); return; }
     if (running) setRunning(false);
     updateReadouts();
@@ -1984,14 +2141,18 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     const a = document.createElement('a'); a.href = '../curriculum/labs/students/' + ws + '.html'; a.target = ws + '-worksheet'; a.textContent = 'Open the worksheet';
     a.style.color = 'var(--accent)'; st.appendChild(a);
   }
-  $('exportCsv').addEventListener('click', () => { if (!S.rows.length) { capStatus('No readings to export yet.'); return; } const txt = csvText(); toWorksheet(txt, () => download('capacitors-readings.csv', txt)); });
-  $('clearRows').addEventListener('click', () => { wsSeries = Date.now(); S.rows = []; renderRows(); capStatus('Readings cleared.'); });
+  $('exportCsv').addEventListener('click', () => {
+    if (S.view === 'sphere') { if (!S.srows.length) { capStatus('No readings to export yet.'); return; } const t = sphereCSV(S.srows, { version: VERSION, setup: presetName(S.preset), blind: S.blind }); toWorksheet(t, () => download('capacitors-spheres-readings.csv', t), { csvName: 'capacitors-spheres-readings.csv' }); return; }
+    if (!S.rows.length) { capStatus('No readings to export yet.'); return; } const txt = csvText(); toWorksheet(txt, () => download('capacitors-readings.csv', txt)); });
+  $('clearRows').addEventListener('click', () => { wsSeries = Date.now(); if (S.view === 'sphere') { S.srows = []; renderSRows(); } else { S.rows = []; renderRows(); } capStatus('Readings cleared.'); });
 
   // the plot of the captured rows: SI values scaled to the axis units
   const FIT_AX = {
     Cd: { name: 'C against 1/d', xl: '1/d (1/m)', yl: 'C (pF)', sx: 1, sy: 1e12, bu: 'F·m', au: 'F', ru: 'pF' },
     Cf: { name: 'C against x/s', xl: 'x/s', yl: 'C (pF)', sx: 1, sy: 1e12, bu: 'F', au: 'F', ru: 'pF' },
-    Vd: { name: 'V against d', xl: 'd (cm)', yl: 'V (V)', sx: 100, sy: 1, bu: 'V/m', au: 'V', ru: 'V' }
+    Vd: { name: 'V against d', xl: 'd (cm)', yl: 'V (V)', sx: 100, sy: 1, bu: 'V/m', au: 'V', ru: 'V' },
+    Sab: { name: '1/C against 1/a − 1/b', xl: '1/a − 1/b (1/m)', yl: '1/C (1/pF)', sx: 1, sy: 1e-12, bu: 'm/F', au: '1/F', ru: '1/pF' },
+    Svc: { name: 'spark voltage against a(b − a)/b', xl: 'a(b − a)/b (cm)', yl: 'spark V (kV)', sx: 100, sy: 1e-3, bu: 'V/m', au: 'V', ru: 'kV' }
   };
   let fitDirty = true, fDims = [0, 0];
   const fCan = $('fCan'), fCtx = fCan.getContext('2d');
@@ -2000,7 +2161,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     fCan.width = Math.max(1, Math.round(r.width * dpr)); fCan.height = Math.max(1, Math.round(r.height * dpr));
     fDims = [r.width, r.height]; fitDirty = true;
   }
-  function fitNow() { const P = fitPoints(S.rows, S.fitKind); return { P, fit: fitLine(P.x, P.y) }; }
+  function fitNow() { const P = S.fitKind[0] === 'S' ? spherePoints(S.srows, S.fitKind) : fitPoints(S.rows, S.fitKind); return { P, fit: fitLine(P.x, P.y) }; }
   const shortNum = (v) => (isFinite(v) ? String(+v.toPrecision(4)).replace('-', '−') : '—');
   function drawFit() {
     fitDirty = false;
@@ -2056,6 +2217,11 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
         const Acm = sharedNum(P, 'A');
         html += isFinite(Acm) ? `<div class="wide"><dt>b/A, to compare with ε₀ = 8.8541878188 × 10⁻¹² F/m</dt><dd>${fmtPM(fit.b / (Acm * 1e-4), fit.seB / (Acm * 1e-4), 'F/m')}</dd></div>`
           : '<div class="wide"><dt>b/A</dt><dd class="ok">the rows have different A</dd></div>';
+      } else if (S.fitKind === 'Sab') {
+        const P2 = P.row.map((i) => S.srows[i].kap), one = P2.length && P2.every((k) => k && k === P2[0]);
+        html += `<div class="wide"><dt>1/(4πb)${one ? ', to compare with κε₀ = ' + sigStr(+P2[0] * EPS0 * 1e12, 5) + ' × 10⁻¹² F/m' : ', which is κε₀'}</dt><dd>${fmtPM(1 / (4 * Math.PI * fit.b), fit.seB / (4 * Math.PI * fit.b * fit.b), 'F/m')}</dd></div>`;
+      } else if (S.fitKind === 'Svc') {
+        html += `<div class="wide"><dt>The slope b is the field at the inner sphere when the gap breaks down: the dielectric strength</dt><dd>${fmtPM(fit.b, fit.seB, 'V/m')}</dd></div>`;
       } else if (S.fitKind === 'Cf') {
         html += `<div class="wide"><dt>1 + b/a, which is κ when the slab fills the gap (d = t)</dt><dd>${fit.a !== 0 ? sigStr(1 + fit.b / fit.a, 4) : '—'}</dd></div>`;
       } else {
@@ -2084,7 +2250,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     S.blind = !!on; $('labBlind').checked = S.blind;
     document.documentElement.setAttribute('data-blind', S.blind ? 'on' : 'off');
     S.gMax = { C: 0, U: 0 };
-    matChips(); updateReadouts(); updateFitOut(); molUpdate();
+    matChips(); sSync(); updateReadouts(); updateFitOut(); molUpdate();
     $('gCan').setAttribute('aria-label', S.blind ? 'The present capacitance and stored energy, marked against the plate separation or the insertion of the slab; the model curves are hidden in Blind mode. The present values are in the table that follows.'
       : 'Capacitance and stored energy plotted against the plate separation or the insertion of the slab, with the present state marked. Sample values are in the table that follows.');
   }
@@ -2114,10 +2280,16 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.v === v));
     for (const el of document.querySelectorAll('[data-view]')) el.hidden = el.dataset.view !== v;
     $('tPane').hidden = $('ePane').hidden = $('gPane').hidden = v !== 'single';
+    $('sTPane').hidden = $('sRPane').hidden = $('sVPane').hidden = v !== 'sphere';
     $('cbPane').hidden = v !== 'combo';
+    $('dimSeg').hidden = v !== 'sphere';
+    $('rowsWrap').hidden = v === 'sphere'; $('sRowsWrap').hidden = v !== 'sphere';
+    for (const b of document.querySelectorAll('#fitSeg button')) b.hidden = (b.dataset.k[0] === 'S') !== (v === 'sphere');
+    if (v === 'sphere' && !S.sphereSeen) { S.sphereSeen = true; let q = null; try { q = new URLSearchParams(location.search).get('view'); } catch (_) {} if (q !== 'flat' && window.VD3 && !VD3.lowPower()) setDim('3d'); }
+    dimChange(SP.dim === '3d' && !!S3);
     $('stage').classList.toggle('combo', v === 'combo');
     $('mark').hidden = v !== 'single';
-    $('play').disabled = v !== 'single' || !S.sweep;
+    $('play').disabled = v === 'combo' || (v === 'single' && !S.sweep);
     hoverId = null;
     updateReadouts();
     requestAnimationFrame(resize);
@@ -2129,6 +2301,12 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     const c = cfg();
     for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === name));
     $('presetHint').innerHTML = c.hint;
+    if (SPRE[name]) {
+      if (FIT_FOR[name] !== S.fitKind) { S.fitKind = FIT_FOR[name]; fitSegSync(); updateFitOut(); }
+      sphereApply(name); S.start = S.start || snapshot();
+      setView('sphere'); setRunning(!reduce);
+      return;
+    }
     if (c.view === 'combo') {
       S.cb = { top: c.top, n: c.n, C: c.C.slice(), V: c.V }; S.qcSym = 0;
       S.sweep = null; setRunning(false);
@@ -2155,7 +2333,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   // ---------- controls ----------
   for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
   for (const b of document.querySelectorAll('#modeSeg button')) b.addEventListener('click', () => setMode(b.dataset.m));
-  for (const b of document.querySelectorAll('#viewSeg button')) b.addEventListener('click', () => { if (b.dataset.v === S.view) return; if (b.dataset.v === 'combo') applyPreset('combo'); else applyPreset(S.lastSingle || 'apartV'); });
+  for (const b of document.querySelectorAll('#viewSeg button')) b.addEventListener('click', () => { if (b.dataset.v === S.view) return; if (b.dataset.v === 'combo') applyPreset('combo'); else if (b.dataset.v === 'sphere') applyPreset(S.lastSphere || 'sphere'); else applyPreset(S.lastSingle || 'apartV'); });
   for (const b of document.querySelectorAll('#gSeg button')) b.addEventListener('click', () => { S.graph = b.dataset.g; for (const c of document.querySelectorAll('#gSeg button')) c.setAttribute('aria-pressed', String(c.dataset.g === S.graph)); });
   $('mats').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) { stopSweep(); setMat(b.dataset.mat); } });
   $('sV').addEventListener('input', (e) => setVb(+e.target.value));
@@ -2174,11 +2352,11 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   $('sCV').addEventListener('input', (e) => { S.cb.V = +e.target.value; comboReadouts(); });
   const playBtn = $('play');
   function setRunning(r) {
-    if (r && (!S.sweep || S.view !== 'single')) r = false;
+    if (r && S.view !== 'sphere' && (!S.sweep || S.view !== 'single')) r = false;
     running = r; playBtn.textContent = r ? 'Pause' : 'Play'; playBtn.classList.toggle('primary', !r); last = performance.now();
   }
   playBtn.addEventListener('click', () => setRunning(!running));
-  function doReset() { applyPreset(S.preset); }
+  function doReset() { if (S.view === 'sphere') { sphereReset(); setRunning(!reduce); updateReadouts(); } else applyPreset(S.preset); }
   $('reset').addEventListener('click', doReset);
   $('mark').addEventListener('click', () => markStart(false));
 
@@ -2263,6 +2441,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   cans.d.addEventListener('pointerleave', () => { if (!drag) hoverId = null; });
   cans.d.addEventListener('keydown', (e) => {
     const k = e.key, big = e.shiftKey ? 5 : 1;
+    if (S.view === 'sphere') { if (sphereKey(k, big)) { updateReadouts(); e.preventDefault(); } return; }
     if (S.view === 'single') {
       if (k === 'ArrowUp' || k === 'ArrowDown') { setGeom({ d: (Math.round(S.g.d * 100 / 0.05) + (k === 'ArrowUp' ? big : -big)) * 0.05 / 100 }, true); S.graph = 'd'; graphSeg(); }
       else if (k === 'ArrowLeft' || k === 'ArrowRight') { setGeom({ f: (Math.round(S.g.f * 100) + (k === 'ArrowLeft' ? 5 : -5) * big) / 100 }, true); S.graph = 'x'; graphSeg(); }
@@ -2309,7 +2488,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   function loop(now) {
     const dt = Math.min(0.1, Math.max(0, (now - last) / 1000)); last = now;
     const t0 = performance.now();
-    if (running && dt > 0) stepSweep(dt);
+    if (running && dt > 0) { if (S.view === 'sphere') sphereStep(dt); else stepSweep(dt); }
     // charge flow indicator: dQ per second relative to the charge on the plates, smoothed
     const Qn = Math.max(1e-30, cur().Q);
     const target = dt > 0 ? flowAcc / Math.max(dt, 1e-3) / Qn * 3 : 0;
@@ -2321,7 +2500,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     requestAnimationFrame(loop);
   }
   window.__cap = {
-    get frameMs() { return frameMs; }, get S() { return S; }, get handles() { return handles; }, get running() { return running; },
+    get frameMs() { return frameMs; }, get SP() { return SP; }, get S() { return S; }, get handles() { return handles; }, get running() { return running; },
     get view() { return { ...VIEW }; },
     get field() { return field && { nx: field.nx, ny: field.ny, it: field.it, resid: field.resid, hp: field.hp }; }, get lines() { return lines; }, get lay() { return lay; }, get cbg() { return cbg; },
     setClean(v) { cleanShot = !!v; }, applyPreset, setRunning, setGeom, setMode, setVb, setMat, markStart, stepSweep,
@@ -2415,13 +2594,440 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     requestAnimationFrame(molLoop);
   })(molLast);
 
+  // ---------- the spherical capacitor: concentric spheres on a high voltage supply, in 3D (three.js) with a flat cross section ----------
+  /* κ and the dielectric strength E_c at room temperature from OpenStax University Physics Vol 2, Table 8.1; where the book gives a
+     range the low end is used. Air keeps the plates' κ. solid: the piece is ruined by a breakdown (punctured). */
+  const SMATS = [
+    { id: 'air', name: 'Air', k: MATS.find((m) => m.id === 'air').k, Ec: 3.0e6, solid: false, note: 'dry air at 1 atm' },
+    { id: 'oil', name: 'Silicone oil', k: 2.5, Ec: 10e6, solid: false, note: 'the book gives 10 to 15 MV/m' },
+    { id: 'teflon', name: 'Teflon', k: 2.1, Ec: 60e6, solid: true, note: 'the book gives 60 to 173 MV/m' },
+    { id: 'polystyrene', name: 'Polystyrene', k: 2.56, Ec: 19.7e6, solid: true },
+    { id: 'paper', name: 'Paper', k: 3.7, Ec: 16e6, solid: true },
+    { id: 'pyrex', name: 'Pyrex glass', k: 5.6, Ec: 14e6, solid: true },
+    { id: 'mica', name: 'Mica', k: 6.0, Ec: 118e6, solid: true }
+  ];
+  const R_HV = 100e9;                                                   /* the charging resistor, Ω */
+  const SA_MIN = 0.01, SA_MAX = 0.10, SB_MAX = 0.20, SGAP = 0.002, VS_MAX = 100e3;
+  const SPRE = {
+    sphere: { a: 3, b: 6, mat: 'air', Vs: 20, hint: 'A charged sphere inside a grounded shell. Every field line that leaves the + charge on the inner sphere ends on the − charge on the inside of the shell, so E(r) = Q/(4πε₀r²) between them and C = 4πε₀ab/(b − a). Press Play to watch the supply charge the spheres through its 100 GΩ resistor. Make b large and C approaches 4πε₀a, an isolated sphere; make the gap small and it approaches the parallel plate value ε₀(4πa²)/(b − a).' },
+    spark: { a: 2, b: 4, mat: 'air', Vs: 40, hint: 'The field is strongest at the surface of the inner sphere. When E(a) reaches 3.0 MV/m the air breaks down and a spark empties the capacitor; the air insulates again, the supply charges it again, and the sparks repeat with period T = RC ln(V<sub>s</sub>/(V<sub>s</sub> − V<sub>c</sub>)). Lower V<sub>s</sub> below V<sub>c</sub> and they stop. For a fixed outer sphere, an inner sphere half its size holds the most voltage.' },
+    puncture: { a: 1.5, b: 1.6, mat: 'paper', Vs: 40, hint: 'Paper fills a 1 mm gap. It holds about 16 MV/m, more than five times what air holds, but when it does break down the spark burns a channel through it that conducts. The supply can then no longer charge the spheres: its current runs straight through the channel. Put in a fresh piece to try again.' }
+  };
+  const SP = { a: 0.03, b: 0.06, mat: 'air', Vs: 20e3, V: 0, t: 0, punct: false, speed: 1, hist: [], sparkAt: [], lastV: 0, flash: 0, chan: null,
+    L: { Wsup: 0, Hres: 0, Wspark: 0, n: 0 }, qLine: 0, dim: '3d', dirty: true };
+  const smat = () => SMATS.find((m) => m.id === SP.mat);
+  const sCur = () => sphereOf(SP.a, SP.b, smat().k, SP.V);
+  const sVc = () => sphereVc(SP.a, SP.b, smat().Ec);
+  const sTau = () => R_HV * sCur().C;
+  const fmtKV = (v) => (Math.abs(v) >= 999.5 ? `${sigStr(v / 1000, 3)} kV` : `${sigStr(v, 3)} V`);
+  function sphereApply(name) {
+    const c = SPRE[name];
+    SP.a = c.a / 100; SP.b = c.b / 100; SP.mat = c.mat; SP.Vs = c.Vs * 1e3; S.lastSphere = name;
+    sphereReset();
+  }
+  function sphereReset() {
+    SP.V = 0; SP.t = 0; SP.punct = false; SP.hist = [[0, 0]]; SP.sparkAt = []; SP.lastV = 0; SP.flash = 0; SP.chan = null;
+    SP.L = { Wsup: 0, Hres: 0, Wspark: 0, n: 0 };
+    /* one field line for every qLine of Q/κ, set so the supply voltage of this setup gives about 60 lines */
+    const m = smat(); SP.qLine = sphereOf(SP.a, SP.b, m.k, Math.max(SP.Vs, 1e3)).Q / m.k / 60;
+    SP.dirty = true; sSync();
+  }
+  function sSet(patch, fromUser) {
+    const Q0 = 'a' in patch || 'b' in patch ? sCur().Q : null;
+    if ('a' in patch) SP.a = clamp(patch.a, SA_MIN, SA_MAX);
+    if ('b' in patch) SP.b = clamp(patch.b, 0.015, SB_MAX);
+    if ('a' in patch && SP.b < SP.a + SGAP) SP.b = Math.min(SB_MAX, SP.a + SGAP);
+    if (SP.b < SP.a + SGAP) SP.a = SP.b - SGAP;
+    SP.a = +SP.a.toFixed(4); SP.b = +SP.b.toFixed(4);
+    if ('Vs' in patch) SP.Vs = clamp(Math.round(patch.Vs / 500) * 500, 0, VS_MAX);
+    /* the spheres move far faster than the 100 GΩ resistor lets charge flow (τ = RC is a good fraction of a second), so Q stays and
+       V = Q/C jumps; then the supply pulls V back toward V_s */
+    if (Q0 !== null) SP.V = Q0 / sCur().C;
+    if (SP.V > sVc() && !SP.punct) sparkNow();
+    SP.dirty = true; sSync(); void fromUser;
+  }
+  function sSetMat(id) {
+    const Q0 = sCur().Q; SP.mat = id; SP.punct = false; SP.chan = null; SP.V = Q0 / sCur().C;   /* a new filling at fixed charge, as above */
+    if (SP.V > sVc()) sparkNow();
+    SP.dirty = true; sSync();
+  }
+  function sparkNow() {
+    const C = sCur().C; SP.L.Wspark += 0.5 * C * SP.V * SP.V; SP.L.n++; SP.lastV = SP.V; SP.sparkAt.push(SP.t); sparkVisual();
+    SP.V = 0; if (smat().solid) SP.punct = true;
+  }
+  let sparkSeed = 1;
+  function sparkVisual() {
+    SP.flash = 1;
+    /* a jagged path from the inner sphere to the shell, in the open wedge facing the viewer */
+    const rn = () => { sparkSeed = (sparkSeed * 16807) % 2147483647; return sparkSeed / 2147483647; };
+    const az = -Math.PI / 2 + (rn() - 0.5) * 0.9, el = (rn() - 0.5) * 1.1, pts = [];
+    const dir = [Math.cos(el) * Math.cos(az), Math.cos(el) * Math.sin(az), Math.sin(el)], n = 9;
+    for (let i = 0; i <= n; i++) {
+      const r = SP.a + (SP.b - SP.a) * i / n, j = i === 0 || i === n ? 0 : (SP.b - SP.a) * 0.12;
+      pts.push([dir[0] * r + (rn() - 0.5) * j, dir[1] * r + (rn() - 0.5) * j, dir[2] * r + (rn() - 0.5) * j]);
+    }
+    SP.spark = pts;
+    if (smat().solid) SP.chan = pts;
+  }
+  function sphereStep(dt) {
+    const m = smat(), C = sCur().C, h = dt * SP.speed;
+    const r = hvStep({ V: SP.V, punct: SP.punct }, { R: R_HV, C, Vs: SP.Vs, Vc: sVc(), solid: m.solid }, h, SP.L);
+    for (const ts of r.sparks) { SP.lastV = sVc(); SP.sparkAt.push(SP.t + ts); }
+    if (r.sparks.length) { sparkVisual(); if (r.punct) SP.chan = SP.spark; }
+    SP.V = r.V; SP.punct = r.punct; SP.t += h;
+    /* the trace keeps the peaks: a spark's voltage just before it, then zero */
+    for (const ts of r.sparks.slice(-40)) SP.hist.push([SP.t - h + ts, sVc()], [SP.t - h + ts, 0]);
+    SP.hist.push([SP.t, SP.V]);
+    const W = sWin(); while (SP.hist.length > 2 && SP.hist[1][0] < SP.t - W) SP.hist.shift();
+    if (SP.sparkAt.length > 200) SP.sparkAt.splice(0, SP.sparkAt.length - 200);
+    SP.flash = Math.max(0, SP.flash - dt * 6);
+  }
+  const sWin = () => clamp(6 * R_HV * sCur().C, 1, 20);
+  function sSync() {
+    const sy = (id, v) => { const el = $(id); if (document.activeElement !== el) el.value = v; };
+    sy('sSa', (SP.a * 100).toFixed(1)); sy('sSb', (SP.b * 100).toFixed(1)); sy('sVs', (SP.Vs / 1000).toFixed(1));
+    $('oSa').textContent = `${(SP.a * 100).toFixed(1)} cm`; $('oSb').textContent = `${(SP.b * 100).toFixed(1)} cm`; $('oVs').textContent = fmtKV(SP.Vs);
+    $('sMats').innerHTML = SMATS.map((m) => `<button type="button" data-smat="${m.id}" aria-pressed="${SP.mat === m.id}">${m.name}${S.blind ? '' : ' ' + fmtK(m.k)}</button>`).join('');
+    for (const b of document.querySelectorAll('#sSpeed button')) b.setAttribute('aria-pressed', String(+b.dataset.k === SP.speed));
+    $('sFresh').hidden = !SP.punct;
+  }
+  function sphereReadouts() {
+    const m = smat(), st = sCur(), Vc = sVc(), C = st.C, tau = R_HV * C, b = S.blind, pct = st.Ea / m.Ec * 100;
+    const row = (k, v) => `<tr><td>${k}</td><td>${v}</td></tr>`;
+    let h = '';
+    h += row(b ? 'Capacitance C' : 'C = 4πε₀κab/(b − a)', fmtC(C));
+    h += row('Voltage across the spheres V', fmtKV(st.V));
+    h += row('Charge Q = CV', fmtSI(st.Q, 'C'));
+    h += row('Field at the inner sphere E(a)', fmtE(st.Ea) + (b ? '' : ` <span class="ok">${pct < 0.1 ? pct.toFixed(3) : sigStr(pct, 2)}% of E<sub>c</sub></span>`));
+    h += row('Field at the outer sphere E(b)', fmtE(st.Eb));
+    h += row('Stored U = ½CV²', fmtSI(st.U, 'J'));
+    if (!b) h += row('Breakdown voltage V<sub>c</sub> = E<sub>c</sub>a(b − a)/b', fmtKV(Vc));
+    h += row('Time constant τ = RC', `${sigStr(tau, 3)} s`);
+    $('sTable').innerHTML = h;
+    $('sTag').textContent = `· t = ${SP.t.toFixed(2)} s${SP.speed < 1 ? ', slowed 10×' : SP.speed > 1 ? ', 10× faster' : ''}`;
+    const n = SP.L.n, ts = SP.sparkAt, Tm = ts.length >= 2 ? ts[ts.length - 1] - ts[ts.length - 2] : NaN, Tp = hvPeriod(R_HV, C, SP.Vs, Vc);
+    /* whole sentences go through VDI18N.t with their numbers as fields, because with the numbers in them they have too many forms to harvest */
+    const tr = (t, o) => (window.VDI18N ? VDI18N.t(t, o) : t.replace(/\{(\w+)\}/g, (x, k) => (o && k in o ? o[k] : x)));
+    let line;
+    if (SP.punct) line = tr("Punctured: the {m} broke down at {v} and a burned channel now conducts, so the supply's {i} runs straight through it. Put in a fresh piece.", { m: tr(m.name).toLowerCase(), v: fmtKV(SP.lastV), i: fmtSI(SP.Vs / R_HV, 'A') });
+    else if (n) line = (n === 1 ? tr('1 spark, at {v}.', { v: fmtKV(SP.lastV) }) : tr('{n} sparks, the last at {v}.', { n, v: fmtKV(SP.lastV) })) + (isFinite(Tm) ? ' ' + tr('Time between the last two: {t} s.', { t: sigStr(Tm, 3) }) : '') + (!b && isFinite(Tp) ? ' ' + tr('Predicted: {t} s.', { t: sigStr(Tp, 3) }) : '');
+    else line = !b && SP.Vs > Vc ? tr('The supply is above the breakdown voltage: the gap will break down at {v}.', { v: fmtKV(Vc) }) : tr('No spark yet. V climbs toward the supply voltage, {v}.', { v: fmtKV(SP.Vs) });
+    $('sLine').textContent = line;
+    const Lg = SP.L;
+    $('sBook').innerHTML = `<span class="eq">W<sub>${tr('supply')}</sub> = ΔU + ${tr('heat in R')} + ${tr('sparks')}</span><br>${fmtSI(Lg.Wsup, 'J')} = ${fmtSI(st.U, 'J')} + ${fmtSI(Lg.Hres, 'J')} + ${fmtSI(Lg.Wspark, 'J')}`;
+    // material box
+    const mb = [];
+    mb.push(`<div><dt>κ</dt><dd>${b ? '<span class="ok">hidden in Blind</span>' : fmtK(m.k)}</dd></div>`);
+    mb.push(`<div><dt>Dielectric strength E<sub>c</sub></dt><dd>${b ? '<span class="ok">hidden in Blind</span>' : fmtE(m.Ec)}</dd></div>`);
+    if (!b && m.note) mb.push(`<div class="wide"><dt>Note</dt><dd class="ok">${m.note}</dd></div>`);
+    if (!b) {
+      mb.push(`<div class="wide"><dt>Isolated sphere, b → ∞: 4πε₀a</dt><dd>${fmtC(st.Ciso)}</dd></div>`);
+      mb.push(`<div class="wide"><dt>Parallel plate estimate ε₀κ(4πa²)/(b − a)</dt><dd>${fmtC(st.Cpp)}</dd></div>`);
+      mb.push(`<div class="wide"><dt>Most the gap can hold at this b (a = b/2): E<sub>c</sub>b/4</dt><dd>${fmtKV(m.Ec * SP.b / 4)}</dd></div>`);
+    }
+    $('sMatBox').innerHTML = mb.join('');
+    $('sFresh').hidden = !SP.punct;
+    sTables(st);
+  }
+  function sTables(st) {
+    const m = smat(), rs = [SP.a, (SP.a + SP.b) / 2, SP.b].map((r) => ({ r, ...sphereField(SP.a, SP.b, m.k, st.Q, r) }));
+    $('sRTab').querySelector('tbody').innerHTML = rs.map((x) => `<tr><th scope="row">r = ${(x.r * 100).toFixed(2)} cm</th><td>E = ${fmtE(x.E)}</td><td>V = ${fmtKV(x.V)}</td></tr>`).join('');
+    $('sVTab').querySelector('tbody').innerHTML = `<tr><th scope="row">t = ${SP.t.toFixed(2)} s</th><td>V = ${fmtKV(SP.V)}</td><td>${SP.L.n} sparks</td></tr>`;
+  }
+
+  /* --- radial plots: E(r) above, V(r) below --- */
+  const sCans = { r: $('sRCan'), v: $('sVCan') }, sCtx = { r: sCans.r.getContext('2d'), v: sCans.v.getContext('2d') }, sDims = { r: [0, 0], v: [0, 0] };
+  function sResize() {
+    for (const k of ['r', 'v']) {
+      const r = sCans[k].parentElement.getBoundingClientRect();
+      sCans[k].width = Math.max(1, Math.round(r.width * dpr)); sCans[k].height = Math.max(1, Math.round(r.height * dpr)); sDims[k] = [r.width, r.height];
+    }
+  }
+  function yTicks(ctx, mx, Y, L, R, ps, unit) {
+    const f = PFX.find(([q]) => mx >= q * 0.9995) || PFX[PFX.length - 1], stp = nice(mx / f[0] / 3) * f[0];
+    ctx.font = `${9.5 * ps}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    for (let v = 0; v <= mx + 1e-30; v += stp) { const py = Math.round(Y(v)) + 0.5; ctx.strokeStyle = T.grid; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(L, py); ctx.lineTo(R, py); ctx.stroke(); ctx.fillStyle = T.muted; ctx.fillText(sigStr(v / f[0], 2), L - 4, py); }
+    return `${f[1]}${unit}`;
+  }
+  function drawRadial() {
+    const [W, H] = sDims.r; if (!W || !H) return;
+    const ctx = sCtx.r, ps = Math.min(projScale(), 1.3), m = smat(), st = sCur();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    const L = 50 * ps, R = W - 14 * ps, top = 30 * ps, bot = H - 30 * ps, gap = 22 * ps, h1 = (bot - top - gap) / 2, rMax = SP.b * 1.15;
+    const X = (r) => L + r / rMax * (R - L);
+    ctx.fillStyle = T.muted; ctx.font = `700 ${10.5 * ps}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+    ctx.fillText('AGAINST r', L - 36 * ps, 18 * ps);
+    /* E scale: the breakdown field when it is in reach, so a spark happens where the curve touches the dashed line */
+    const Vref = Math.max(SP.Vs, 1), Eref = sphereOf(SP.a, SP.b, m.k, Vref).Ea;
+    const Emax = ladderUp(Math.max(Eref, st.Ea, S.blind ? 0 : Math.min(m.Ec, Eref * 3)) * 1.1);
+    const Vmax = ladderUp(Math.max(Vref, st.V) * 1.1);
+    const boxes = [{ y0: top, y1: top + h1, mx: Emax, col: T.accent, lab: 'E', unit: 'V/m', f: (r) => sphereField(SP.a, SP.b, m.k, st.Q, r).E },
+      { y0: top + h1 + gap, y1: bot, mx: Vmax, col: T.capq, lab: 'V', unit: 'V', f: (r) => sphereField(SP.a, SP.b, m.k, st.Q, r).V }];
+    for (const bx of boxes) {
+      const Y = (v) => bx.y1 - v / bx.mx * (bx.y1 - bx.y0);
+      const u = yTicks(ctx, bx.mx, Y, L, R, ps, bx.unit);
+      ctx.fillStyle = T.diel; ctx.globalAlpha = 0.12; ctx.fillRect(X(SP.a), bx.y0, X(SP.b) - X(SP.a), bx.y1 - bx.y0); ctx.globalAlpha = 1;
+      ctx.save(); ctx.beginPath(); ctx.rect(L, bx.y0, R - L, bx.y1 - bx.y0); ctx.clip();
+      if (bx.lab === 'E' && !S.blind) { ctx.strokeStyle = T.pos; ctx.setLineDash([5, 4]); ctx.lineWidth = 1.4; const y = Y(m.Ec); ctx.beginPath(); ctx.moveTo(L, y); ctx.lineTo(R, y); ctx.stroke(); ctx.setLineDash([]); ctx.fillStyle = T.pos; ctx.textBaseline = 'bottom'; richText(ctx, `E_c of ${m.name.toLowerCase()}`, R - 4, y - 3, 9.5 * ps, 400, 'right'); }
+      ctx.strokeStyle = bx.col; ctx.lineWidth = 2 * ps; ctx.beginPath();
+      const N = 160; for (let i = 0; i <= N; i++) { const r = rMax * i / N, v = bx.f(r), px = X(r), py = Y(v); i ? ctx.lineTo(px, py) : ctx.moveTo(px, py); }
+      ctx.stroke(); ctx.restore();
+      ctx.fillStyle = bx.col; richText(ctx, `${bx.lab} (${u})`, L + 4, bx.y0 + 12 * ps, 10.5 * ps, 600, 'left');
+      ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.strokeRect(L + 0.5, bx.y0 + 0.5, R - L, bx.y1 - bx.y0);
+    }
+    ctx.fillStyle = T.muted; ctx.font = `${9.5 * ps}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    ctx.fillText('a', X(SP.a), bot + 4 * ps); ctx.fillText('b', X(SP.b), bot + 4 * ps); ctx.fillText('0', X(0), bot + 4 * ps);
+    ctx.textAlign = 'right'; ctx.fillText(`r (cm), b = ${(SP.b * 100).toFixed(1)}`, R, bot + 16 * ps);
+  }
+  function drawVt() {
+    const [W, H] = sDims.v; if (!W || !H) return;
+    const ctx = sCtx.v, ps = Math.min(projScale(), 1.3), Vc = sVc();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    const L = 50 * ps, R = W - 14 * ps, top = 30 * ps, bot = H - 30 * ps, Wt = sWin(), t1 = Math.max(SP.t, Wt), t0 = t1 - Wt;
+    ctx.fillStyle = T.muted; ctx.font = `700 ${10.5 * ps}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+    ctx.fillText('V ACROSS THE SPHERES', L - 36 * ps, 18 * ps);
+    const mx = ladderUp(Math.max(SP.Vs, S.blind ? 1 : Math.min(Vc, SP.Vs * 3), 1) * 1.1), Y = (v) => bot - v / mx * (bot - top), X = (t) => L + (t - t0) / Wt * (R - L);
+    const u = yTicks(ctx, mx, Y, L, R, ps, 'V');
+    ctx.save(); ctx.beginPath(); ctx.rect(L, top, R - L, bot - top); ctx.clip();
+    const hl = (v, col, lab) => { const y = Y(v); ctx.strokeStyle = col; ctx.setLineDash([5, 4]); ctx.lineWidth = 1.3; ctx.beginPath(); ctx.moveTo(L, y); ctx.lineTo(R, y); ctx.stroke(); ctx.setLineDash([]); ctx.fillStyle = col; ctx.textBaseline = 'bottom'; richText(ctx, lab, R - 4, y - 3, 9.5 * ps, 400, 'right'); };
+    hl(SP.Vs, T.muted, 'V_s, supply');
+    if (!S.blind && Vc < mx) hl(Vc, T.pos, 'V_c, breakdown');
+    for (const ts of SP.sparkAt) if (ts >= t0) { ctx.strokeStyle = T.equi; ctx.globalAlpha = 0.5; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(X(ts), top); ctx.lineTo(X(ts), bot); ctx.stroke(); ctx.globalAlpha = 1; }
+    ctx.strokeStyle = T.capq; ctx.lineWidth = 2 * ps; ctx.beginPath();
+    SP.hist.forEach(([t, v], i) => { const px = X(t), py = Y(v); i ? ctx.lineTo(px, py) : ctx.moveTo(px, py); });
+    ctx.stroke(); ctx.restore();
+    ctx.fillStyle = T.capq; richText(ctx, `V (${u})`, L + 4, top + 12 * ps, 10.5 * ps, 600, 'left');
+    ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.strokeRect(L + 0.5, top + 0.5, R - L, bot - top);
+    ctx.fillStyle = T.muted; ctx.font = `${9.5 * ps}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    const stp = nice(Wt / 4); for (let t = Math.ceil(t0 / stp) * stp; t <= t1 + 1e-9; t += stp) ctx.fillText(sigStr(t, 2), X(t), bot + 4 * ps);
+    ctx.textAlign = 'right'; ctx.fillText(`t (s)${SP.speed < 1 ? ', slowed 10×' : SP.speed > 1 ? ', 10× faster' : ''}`, R, bot + 16 * ps);
+  }
+
+  /* --- the flat view: a cross section through the center, drawn on the stage canvas --- */
+  const fib = (n, off) => { const out = []; const ga = Math.PI * (3 - Math.sqrt(5)); for (let i = 0; i < n; i++) { const z = 1 - 2 * (i + 0.5) / n, r = Math.sqrt(1 - z * z), p = i * ga + (off || 0); out.push([r * Math.cos(p), r * Math.sin(p), z]); } return out; };
+  const sCounts = () => { const m = smat(), st = sCur(), lines = Math.min(400, Math.round(Math.abs(st.Q) / m.k / SP.qLine)), free = Math.min(700, Math.round(Math.abs(st.Q) / SP.qLine)); return { lines, free, bound: Math.min(700, Math.round(free * (1 - 1 / m.k))) }; };
+  function drawSphereFlat(overlay) {
+    const [W, H] = dims.d, ctx = ctxs.d, ps = Math.min(projScale(), 1.2), m = smat(), st = sCur();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
+    if (overlay) { sLabels3D(ctx, W, H, ps); return; }
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    const top = ctlH + 8, cx = W / 2, cy = (top + H) / 2 + 6, Rpx = Math.min(W * 0.36, (H - top) * 0.44), k = Rpx / Math.max(SP.b, 0.06);
+    const ra = SP.a * k, rb = SP.b * k, th = 4;
+    /* the gap's material, the shell, the inner sphere */
+    ctx.fillStyle = m.id === 'air' ? rgba(T.canvas, 0) : rgba(T.diel, 0.22); ctx.beginPath(); ctx.arc(cx, cy, rb, 0, 2 * Math.PI); ctx.arc(cx, cy, ra, 0, 2 * Math.PI, true); ctx.fill();
+    ctx.lineWidth = th; ctx.strokeStyle = T.plate; ctx.beginPath(); ctx.arc(cx, cy, rb + th / 2, 0, 2 * Math.PI); ctx.stroke();
+    const gr = ctx.createRadialGradient(cx - ra * 0.35, cy - ra * 0.35, ra * 0.1, cx, cy, ra); gr.addColorStop(0, shade(T.alu, 0.35)); gr.addColorStop(1, shade(T.alu, -0.25));
+    ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(cx, cy, ra, 0, 2 * Math.PI); ctx.fill();
+    /* field lines in the plane: the cross section shows the lines that lie in it, n ∝ Q/κ */
+    const c = sCounts(), nl = Math.max(0, Math.round(c.lines / 3)), nq = Math.max(0, Math.round(c.free / 3)), nb = Math.round(nq * (1 - 1 / m.k));
+    if (S.layers.lines) {
+      ctx.strokeStyle = T.fline; ctx.lineWidth = 1.2;
+      for (let i = 0; i < nl; i++) { const an = 2 * Math.PI * (i + 0.5) / nl, ux = Math.cos(an), uy = Math.sin(an); ctx.beginPath(); ctx.moveTo(cx + ux * (ra + 3), cy + uy * (ra + 3)); ctx.lineTo(cx + ux * (rb - 3), cy + uy * (rb - 3)); ctx.stroke(); const rm = (ra + rb) / 2; arrow(ctx, cx + ux * (rm - 4), cy + uy * (rm - 4), cx + ux * (rm + 4), cy + uy * (rm + 4), T.fline, 1.2, 5); }
+    }
+    if (S.layers.charges) {
+      for (let i = 0; i < nq; i++) { const an = 2 * Math.PI * (i + 0.25) / nq; chargeSym(ctx, cx + Math.cos(an) * (ra - 6), cy + Math.sin(an) * (ra - 6), 4.2, 1, false); chargeSym(ctx, cx + Math.cos(an) * (rb + 1), cy + Math.sin(an) * (rb + 1), 4.2, -1, false); }
+    }
+    if (S.layers.bound && nb > 0) {
+      for (let i = 0; i < nb; i++) { const an = 2 * Math.PI * (i + 0.6) / nb; chargeSym(ctx, cx + Math.cos(an) * (ra + 7), cy + Math.sin(an) * (ra + 7), 3.6, -1, true); chargeSym(ctx, cx + Math.cos(an) * (rb - 8), cy + Math.sin(an) * (rb - 8), 3.6, 1, true); }
+    }
+    if (SP.chan) sparkPath(ctx, SP.chan.map((p) => [cx + p[0] * k, cy - p[2] * k]), false);
+    if (SP.flash > 0 && SP.spark) sparkPath(ctx, SP.spark.map((p) => [cx + p[0] * k, cy - p[2] * k]), true);
+    /* radii */
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 1; ctx.setLineDash([3, 3]);
+    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + ra * 0.7071, cy + ra * 0.7071); ctx.moveTo(cx, cy); ctx.lineTo(cx - rb * 0.7071, cy + rb * 0.7071); ctx.stroke(); ctx.setLineDash([]);
+    haloLabel(ctx, [`a = ${(SP.a * 100).toFixed(1)} cm`], cx + ra * 0.75 + 4, cy + ra * 0.75 + 4, 11 * ps, { ps, fam: T.mono, weight: 600 });
+    haloLabel(ctx, [`b = ${(SP.b * 100).toFixed(1)} cm`], cx - rb * 0.72 - 96 * ps, cy + rb * 0.72 + 4, 11 * ps, { ps, fam: T.mono, weight: 600 });
+    sLabels3D(ctx, W, H, ps, true);
+  }
+  function sparkPath(ctx, pts, hot) {
+    ctx.save(); ctx.lineJoin = 'round';
+    if (hot) { ctx.globalAlpha = Math.min(1, SP.flash * 1.4); ctx.strokeStyle = 'rgba(190,170,255,0.6)'; ctx.lineWidth = 7; ctx.beginPath(); pts.forEach((p, i) => (i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]))); ctx.stroke(); ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 2; }
+    else { ctx.strokeStyle = T.dark ? '#1b1410' : '#2a1d12'; ctx.lineWidth = 3; }
+    ctx.beginPath(); pts.forEach((p, i) => (i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]))); ctx.stroke(); ctx.restore();
+  }
+  // the words over the picture: the readout box (top right) and the key line
+  function sLabels3D(ctx, W, H, ps, flat) {
+    if (cleanShot) return;
+    const st = sCur(), m = smat(), narrow = W < 560;
+    const lines = [S.blind ? `C = ${fmtC(st.C)}` : `C = 4πε₀κab/(b − a) = ${fmtC(st.C)}`, `V = ${fmtKV(st.V)}   Q = ${fmtSI(st.Q, 'C')}`, `E(a) = ${fmtE(st.Ea)}`];
+    if (SP.punct) lines.push(`${m.name}: punctured`);
+    if (!narrow) haloLabel(ctx, lines, W - 8, ctlH + 6, 11.5 * ps, { ps, fam: T.mono, weight: 600, align: 'right' });   /* on a phone the table under the picture has them */
+    else if (SP.punct) haloLabel(ctx, [lines[lines.length - 1]], 8, ctlH + 6, 11.5 * ps, { ps, fam: T.mono, weight: 600 });
+    const c = sCounts();
+    const key = narrow ? (flat ? 'Cross section through the center.' : `Cut away. ${c.lines} field lines.`) : flat ? `Cross section through the center. Field lines in this plane only; each + stands for 3 of the ${c.free} on the sphere.`
+      : `Cut away to show the gap. ${c.lines} field lines, one for every ${fmtSI(SP.qLine * m.k, 'C', 2)} of free charge${m.k > 1.01 ? ' divided by κ' : ''}. Drag to turn.`;
+    ctx.font = `${10 * ps}px ${T.ui}`; ctx.fillStyle = T.muted; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+    ctx.fillText(key, 10, H - 8);
+  }
+
+  /* --- the 3D view --- */
+  let S3 = null, dimCtl = null;
+  const G3 = { o: { th: -Math.PI / 2 + 0.16, ph: 1.2, zoom: 1 }, objs: null, key: '' };
+  const WEDGE = 1.75;                                                   /* the cut away wedge, rad */
+  function init3D() {
+    if (!window.VD3K) return false;
+    S3 = VD3K.stage($('dPane'), { before: cans.d, fov: 32, near: 0.01, far: 12, shadow: 0.6 });
+    if (!S3) return false;
+    S3.el.classList.add('s3');
+    G3.sup = VD3K.meter(S3, { w: 0.15, h: 0.08, label: 'HV SUPPLY', sub: 'V_s', kind: 'lcd' }); S3.scene.add(G3.sup);
+    G3.vm = VD3K.meter(S3, { w: 0.15, h: 0.08, label: 'V ACROSS', sub: 'electrostatic voltmeter', kind: 'lcd' }); S3.scene.add(G3.vm);
+    G3.resLab = VD3K.label('100 GΩ', { size: 0.015, color: '#e3e8ef', bg: 'rgba(20,26,34,0.78)' }); S3.scene.add(G3.resLab);
+    S3.scene.add(VD3K.bench(S3, { w: 3, d: 2, y: 0.3 }));
+    VD3.orbit(S3.el, G3.o, () => {}, { phMin: 0.35, phMax: 1.5, zMin: 0.6, zMax: 2.6 });
+    return true;
+  }
+  const mat = (o) => new THREE.MeshStandardMaterial(o);
+  function build3D() {
+    const key = [SP.a, SP.b, SP.mat, T && T.dark].join('|'); if (key === G3.key) return; G3.key = key;
+    if (G3.objs) S3.dispose(G3.objs);
+    const g = new THREE.Group(), a = SP.a, b = SP.b, th = 0.003, z0 = b + 0.05, m = smat(), dk = VD3.dark();
+    G3.objs = g; G3.z0 = z0; S3.scene.add(g);
+    const metal = mat({ color: dk ? '#b8c0cb' : '#c3cad3', metalness: 0.45, roughness: 0.32, side: THREE.DoubleSide });
+    const ptfe = mat({ color: dk ? '#d8d6cf' : '#eeede8', roughness: 0.6 }), brass = mat({ color: '#c9a24a', metalness: 0.8, roughness: 0.3 });
+    /* a sphere with a wedge cut away, its gap toward −y (the viewer's side at the start) */
+    const cut = (r, mtl) => {
+      const geo = new THREE.SphereGeometry(r, 72, 48, WEDGE, 2 * Math.PI - WEDGE); const mesh = new THREE.Mesh(geo, mtl);
+      mesh.rotation.x = Math.PI / 2; const q = new THREE.Group(); q.add(mesh);
+      /* local gap center (phi = WEDGE/2) lies at world (−cos, −sin) after the turn: rotate it onto −y */
+      q.rotation.z = -Math.PI / 2 - Math.atan2(-Math.sin(WEDGE / 2), -Math.cos(WEDGE / 2)); return q;
+    };
+    const edges = (r0, r1, mtl) => {   /* the two cut faces: half annuli in vertical planes at the wedge's edges */
+      const q = new THREE.Group();
+      for (const s of [-1, 1]) { const ring = new THREE.Mesh(new THREE.RingGeometry(r0, r1, 64, 1, -Math.PI / 2, Math.PI), mtl); ring.rotation.x = Math.PI / 2; const w = new THREE.Group(); w.add(ring); w.rotation.z = -Math.PI / 2 + s * WEDGE / 2; q.add(w); }
+      return q;
+    };
+    const shell = cut(b + th, metal); shell.position.z = z0; g.add(shell);
+    const shellIn = cut(b, mat({ color: dk ? '#9aa3ae' : '#b3bcc6', metalness: 0.35, roughness: 0.45, side: THREE.BackSide })); shellIn.position.z = z0; g.add(shellIn);
+    const rim = edges(b, b + th, metal); rim.position.z = z0; g.add(rim);
+    const inner = new THREE.Mesh(new THREE.SphereGeometry(a, 64, 40), metal); inner.position.z = z0; inner.castShadow = true; g.add(inner);
+    if (m.id !== 'air') {
+      const tint = m.id === 'oil' ? '#e6d27a' : m.id === 'paper' ? '#efe7d2' : m.id === 'mica' ? '#b99a6b' : m.id === 'pyrex' ? '#a9d8d6' : '#eeede8';
+      const dm = mat({ color: tint, transparent: true, opacity: 0.32, roughness: 0.5, side: THREE.DoubleSide, depthWrite: false });
+      const fill = cut(b - 0.0004, dm); fill.position.z = z0; fill.renderOrder = 2; g.add(fill);
+      const face = edges(a, b - 0.0004, mat({ color: tint, transparent: true, opacity: 0.5, roughness: 0.6, side: THREE.DoubleSide, depthWrite: false })); face.position.z = z0; face.renderOrder = 2; g.add(face);
+    }
+    /* the stand, the rod that holds the inner sphere, its terminal */
+    g.add(VD3K.rod([0, 0, 0], [0, 0, z0 - b - th], 0.012, ptfe));
+    g.add(VD3K.box(0.12, 0.12, 0.012, mat({ color: dk ? '#1a1d22' : '#3b414b', roughness: 0.7 }), 0, 0, 0));
+    g.add(VD3K.rod([0, 0, z0 + a * 0.9], [0, 0, z0 + b + 0.08], 0.0045, ptfe));
+    const term = new THREE.Mesh(new THREE.SphereGeometry(0.008, 24, 16), brass); term.position.set(0, 0, z0 + b + 0.085); g.add(term);
+    /* supply, resistor, meter and leads */
+    const xs = -(b + 0.2), xm = b + 0.19, yb = 0.14;
+    const sup = VD3K.box(0.16, 0.12, 0.09, mat({ color: dk ? '#2a2e35' : '#3a414b', roughness: 0.6 }), xs, yb, 0); g.add(sup);
+    G3.sup.position.set(xs, yb - 0.065, 0.13); G3.vm.position.set(xm, yb, 0.04);
+    const rA = [xs + 0.04, 0.02, 0.12], rB = [-0.06, 0, z0 + b + 0.085];
+    const res = VD3K.rod([xs + 0.05, 0.02, 0.20], [-0.12, 0.01, z0 + b + 0.06], 0.009, mat({ color: '#2d3a6a', roughness: 0.45 })); g.add(res);
+    g.add(VD3K.cable(rA, [xs + 0.05, 0.02, 0.20], { sag: 0.01, color: 0xc23f2c }));
+    g.add(VD3K.cable([-0.12, 0.01, z0 + b + 0.06], [0, 0, z0 + b + 0.09], { sag: 0.0, color: 0xc23f2c, via: [rB] }));
+    g.add(VD3K.cable([xs + 0.06, -0.02, 0.05], [b + th, 0, z0], { sag: 0.05, color: 0x23282f, via: [[0.0, -0.08, 0.004], [b * 0.7, -0.03, 0.004]] }));
+    g.add(VD3K.cable([b + th, 0.0, z0 - 0.02], [xm - 0.06, 0.02, 0.05], { sag: 0.04, color: 0x23282f }));
+    g.add(VD3K.cable([0.0, 0.004, z0 + b + 0.09], [xm, 0.02, 0.09], { sag: 0.12, color: 0xc23f2c }));
+    G3.resLab.position.set((xs - 0.12) / 2 + 0.02, -0.04, (0.20 + z0 + b) / 2 + 0.06);
+    /* charges, bound charges, field lines */
+    const pos = VD3.dark() ? '#ff7660' : '#c23f2c', neg = VD3.dark() ? '#69a0ff' : '#2b60b5';
+    G3.qp = VD3K.particles(S3, { n: 700, r: 0.0022, color: pos, emissive: pos }); G3.qn = VD3K.particles(S3, { n: 700, r: 0.0022, color: neg, emissive: neg });
+    G3.bp = VD3K.particles(S3, { n: 700, r: 0.0016, color: pos }); G3.bn = VD3K.particles(S3, { n: 700, r: 0.0016, color: neg });
+    for (const p of [G3.qp, G3.qn, G3.bp, G3.bn]) { p.position.z = z0; g.add(p); }
+    const fl = new THREE.InstancedMesh(new THREE.CylinderGeometry(0.0007, 0.0007, 1, 6), mat({ color: dk ? '#aab4c2' : '#66727f', roughness: 0.6 }), 400);
+    const fh = new THREE.InstancedMesh(new THREE.ConeGeometry(0.0028, 0.008, 10), mat({ color: dk ? '#aab4c2' : '#66727f', roughness: 0.6 }), 400);
+    fl.count = fh.count = 0; fl.position.z = fh.position.z = z0; fl.frustumCulled = fh.frustumCulled = false; g.add(fl, fh); G3.fl = fl; G3.fh = fh;
+    G3.spk = null; G3.chan = null; G3.counts = '';
+    G3.light = new THREE.PointLight(0xc8b8ff, 0, 0.8); G3.light.position.set(0, -(a + b) / 2, z0); g.add(G3.light);
+  }
+  function place3D() {
+    const c = sCounts(), key = [c.lines, c.free, c.bound, S.layers.lines, S.layers.charges, S.layers.bound, G3.key].join('|');
+    if (key === G3.counts) return; G3.counts = key;
+    const a = SP.a, b = SP.b, M4 = new THREE.Matrix4(), q = new THREE.Quaternion(), yAx = new THREE.Vector3(0, 1, 0), v = new THREE.Vector3(), sc = new THREE.Vector3(1, 1, 1);
+    const put = (pp, n, r, off) => { const d = fib(n, off); d.forEach((u, i) => pp.put(i, u[0] * r, u[1] * r, u[2] * r)); pp.show(n); pp.done(); };
+    put(G3.qp, S.layers.charges ? c.free : 0, a * 1.012, 0); put(G3.qn, S.layers.charges ? c.free : 0, b * 0.988, 0.3);
+    put(G3.bn, S.layers.bound ? c.bound : 0, a + 0.0045, 1.1); put(G3.bp, S.layers.bound ? c.bound : 0, b - 0.0045, 1.7);
+    const n = S.layers.lines ? c.lines : 0, d = fib(n, 0.6), r0 = a + 0.006, r1 = b - 0.006, len = Math.max(0.001, r1 - r0);
+    d.forEach((u, i) => {
+      v.set(u[0], u[1], u[2]); q.setFromUnitVectors(yAx, v);
+      sc.set(1, len, 1); M4.compose(v.clone().multiplyScalar((r0 + r1) / 2), q, sc); G3.fl.setMatrixAt(i, M4);
+      sc.set(1, 1, 1); M4.compose(v.clone().multiplyScalar((r0 + r1) / 2), q, sc); G3.fh.setMatrixAt(i, M4);
+    });
+    G3.fl.count = G3.fh.count = n; G3.fl.instanceMatrix.needsUpdate = true; G3.fh.instanceMatrix.needsUpdate = true;
+  }
+  const tube = (pts, rad, m) => new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts.map((p) => new THREE.Vector3(p[0], p[1], p[2] + G3.z0)), false, 'catmullrom', 0), 40, rad, 6, false), m);
+  function draw3D() {
+    if (!S3) return;
+    const [W, H] = dims.d; S3.size(W, H);
+    build3D(); place3D();
+    const st = sCur();
+    G3.sup.set(fmtKV(SP.Vs)); G3.vm.set(fmtKV(st.V));
+    /* the spark and the burned channel */
+    if (G3.spk && (SP.flash <= 0 || G3.spkSrc !== SP.spark)) { S3.dispose(G3.spk); G3.spk = null; }
+    if (SP.flash > 0 && SP.spark && !G3.spk) { G3.spk = tube(SP.spark, 0.0012, new THREE.MeshBasicMaterial({ color: '#f4efff' })); G3.spkSrc = SP.spark; G3.objs.add(G3.spk); }
+    G3.light.intensity = reduce ? 0 : SP.flash * 3;
+    if (G3.chan && G3.chanSrc !== SP.chan) { S3.dispose(G3.chan); G3.chan = null; }
+    if (SP.chan && !G3.chan) { G3.chan = tube(SP.chan, 0.0016, mat({ color: '#1b1410', roughness: 0.9 })); G3.chanSrc = SP.chan; G3.objs.add(G3.chan); }
+    /* frame the apparatus: its width (supply to meter) and its height (bench to the terminal), whichever needs the camera further back */
+    const asp = W / Math.max(1, H), tv = Math.tan(16 * Math.PI / 180), hw = SP.b + 0.32, hh = (2 * SP.b + 0.15) / 2;
+    const dist = 1.05 * Math.max(hw / (tv * asp), hh / tv) + SP.b * 0.5;
+    S3.place(G3.o, [0, 0.02, hh], dist);
+    S3.render();
+  }
+  function setDim(v) { if (dimCtl) dimCtl.set(v); }
+  function dimChange(on3d) {
+    SP.dim = on3d ? '3d' : 'flat';
+    if (S3) S3.el.style.display = on3d && S.view === 'sphere' ? '' : 'none';
+    cans.d.classList.toggle('overlay', on3d && S.view === 'sphere');
+  }
+  function drawSphere() {
+    if (SP.dim === '3d' && S3) { draw3D(); drawSphereFlat(true); }
+    else drawSphereFlat(false);
+    drawRadial(); drawVt();
+  }
+  /* --- controls --- */
+  $('sSa').addEventListener('input', (e) => sSet({ a: +e.target.value / 100 }, true));
+  $('sSb').addEventListener('input', (e) => sSet({ b: +e.target.value / 100 }, true));
+  $('sVs').addEventListener('input', (e) => sSet({ Vs: +e.target.value * 1000 }, true));
+  $('sMats').addEventListener('click', (e) => { const b = e.target.closest('[data-smat]'); if (b) sSetMat(b.dataset.smat); });
+  $('sFresh').addEventListener('click', () => { SP.punct = false; SP.chan = null; SP.dirty = true; sSync(); $('live').textContent = `A fresh piece of ${smat().name.toLowerCase()} is in the gap.`; });
+  $('sSpeed').addEventListener('click', (e) => { const b = e.target.closest('[data-k]'); if (b) { SP.speed = +b.dataset.k; sSync(); } });
+  function sphereKey(k, big) {
+    if (k === 'ArrowUp' || k === 'ArrowDown') sSet({ a: SP.a + (k === 'ArrowUp' ? 0.001 : -0.001) * big });
+    else if (k === 'ArrowLeft' || k === 'ArrowRight') sSet({ b: SP.b + (k === 'ArrowRight' ? 0.001 : -0.001) * big });
+    else if (k === '+' || k === '=') sSet({ Vs: SP.Vs + 500 * big });
+    else if (k === '-' || k === '_') sSet({ Vs: SP.Vs - 500 * big });
+    else if (k === ' ') setRunning(!running);
+    else if (k === 'r' || k === 'R') doReset();
+    else if (k === 'c' || k === 'C') captureReading();
+    else return false;
+    return true;
+  }
+  /* --- readings --- */
+  S.srows = [];
+  function sphereCapture() {
+    if (running) setRunning(false);
+    const m = smat();
+    const r = sphereReading({ a: SP.a, b: SP.b, kap: m.k, V: SP.V, Vs: SP.Vs, Vspark: SP.L.n ? SP.lastV : 0, n: SP.L.n, mat: m.name, blind: S.blind, preset: presetName(S.preset) });
+    S.srows.push(r); renderSRows();
+    capStatus(`Reading ${S.srows.length} captured: a = ${r.a} cm, b = ${r.b} cm, C = ${r.C} pF, V = ${r.V} V${r.Vspark ? `, last spark at ${r.Vspark} V` : ''}.`);
+  }
+  function renderSRows() {
+    const tb = $('sRowsTbl').querySelector('tbody');
+    if (!S.srows.length) tb.innerHTML = '<tr><td class="empty" colspan="7">No readings yet. Set up the spheres, then press Capture reading.</td></tr>';
+    else tb.innerHTML = S.srows.map((r, i) => {
+      const inp = (f, lab) => `<td><input class="w-${f}" aria-label="${lab}, row ${i + 1}" data-i="${i}" data-f="${f}" value="${esc(r[f])}" inputmode="decimal" spellcheck="false"></td>`;
+      const tip = `${r.preset}; ${r.mat}${r.kap ? ` κ = ${r.kap}` : ''}; V supply = ${r.Vs} V; Q = ${r.Q} nC, E(a) = ${r.Ea} V/m, U = ${r.U} J, sparks ${r.sparks}`;
+      return `<tr title="${esc(tip)}"><td class="n">${i + 1}</td>${inp('a', 'Inner radius a, cm')}${inp('b', 'Outer radius b, cm')}${inp('C', 'Capacitance C, pF')}${inp('V', 'Voltage V, volts')}${inp('Vspark', 'Voltage at the last spark, volts')}<td><button type="button" data-del="${i}" aria-label="Delete row ${i + 1}">×</button></td></tr>`;
+    }).join('');
+    updateFitOut();
+  }
+  $('sRowsTbl').addEventListener('change', (ev) => { const t = ev.target; if (t.dataset && t.dataset.f && S.srows[+t.dataset.i]) { S.srows[+t.dataset.i][t.dataset.f] = t.value.trim(); updateFitOut(); } });
+  $('sRowsTbl').addEventListener('click', (ev) => { const b = ev.target.closest('button[data-del]'); if (!b) return; const i = +b.dataset.del; S.srows.splice(i, 1); renderSRows(); capStatus(`Row ${i + 1} deleted.`); });
+  dimCtl = VD3K.view({ seg: '#dimSeg', init: init3D, change: (on) => { dimChange(on); drawAll(); }, status: (t) => capStatus(t), start: 'flat' });
+
   tokens();
   const ro = new ResizeObserver(resize);
   for (const k of ['d', 'e', 'g']) ro.observe(panes[k]);
+  ro.observe($('sRPane')); ro.observe($('sVPane'));
   ro.observe(fCan.parentElement);
   $('tMotion').checked = reduce;
   document.documentElement.setAttribute('data-blind', 'off');
-  renderRows();
+  renderRows(); renderSRows();
   applyPreset('apartV');
   molUpdate();
   VD.howTo({ src: 'media/how-this-works/capacitors.mp4', poster: 'media/how-this-works/capacitors.jpg' });

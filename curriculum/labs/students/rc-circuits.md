@@ -62,6 +62,8 @@ For a real circuit, turn off the supply before changing connections. Check the c
 
 **Energy.** For one charging run, record source work, stored capacitor energy and resistor heat at four times. Compare their sum. Then compare a slow charge with the fast discharge of a camera flash circuit.
 
+**Watching the loop rule.** Reset the RC charging circuit, switch modes to the Potential view, and play it slowly. Watch the step across the capacitor grow while the slope of the resistor flattens, and note what stays the same at every instant.
+
 **Using the virtual apparatus.** Work in time with predictions and answers hidden, starting from the RC charging circuit, and set $$R$$ and $$C$$ to the values you need. Reset before each charging run and pause when you read values. Read the circuit at the times you choose, by stepping a fixed $$\Delta t$$ or by placing the time cursor on the scope, and record a reading at each; the worksheet gets the cursor readings and energies in the Data table, with the part values in its notes. For a whole trace, put the voltage and current on the scope and save the whole run as a CSV; the file holds only the visible scope window, so check that it covers the part of the run you need. Record the energy since $$t = 0$$ readings separately from the CSV. The flip mid way circuit switches during charging, and the camera flash circuit has separate charging and discharge resistances.
 
 ## Data
@@ -82,6 +84,7 @@ Use a separate copy for each run. Write $$\varepsilon$$, $$R$$, $$C$$ and the sw
 4. For discharge, plot $$\ln(V_C/V_{C0})$$ against time since switching. Compare its time constant with charging.
 5. Check $$W - U_C - H$$ at each energy reading. If using CSV, also estimate heat from the area under $$I^2 R$$ against time.
 6. In the flash run, calculate the stored energy and initial discharge power from the voltage just before the switch. Do not assume the capacitor has reached the full battery voltage.
+7. Using one of your readings, show that the battery's rise equals the drop across the resistor plus the step across the capacitor, $$\varepsilon = IR + V_C$$, and describe how the Potential view shows this at the start, at $$t = \tau$$ and near the end of charging.
 
 ## Uncertainty
 
@@ -93,6 +96,7 @@ Use the spacing between nearby time samples to estimate uncertainty in the 63.2%
 2. Why does a larger resistor change the charging time but not the final stored energy?
 3. Where does the capacitor's energy go during discharge?
 4. Why does the same stored energy give much higher power in a fast discharge?
+5. In the Capacitors and Dielectrics demo, the Sparks in air setup charges two spheres through a 100 GΩ resistor until the air breaks down at $$V_c$$, which empties them, and then the charging starts again. Use $$V_C = \varepsilon(1 - e^{-t/RC})$$ to show that the sparks repeat every $$T = RC\ln\big(\varepsilon/(\varepsilon - V_c)\big)$$. What happens when $$\varepsilon < V_c$$?
 
 ## What to hand in
 

@@ -56,6 +56,8 @@ Switch off a real supply before rewiring. Begin with its current limit set low. 
 
 **A multiloop circuit.** Choose a bridge circuit. Label the nodes and current arrows. Use measured currents to test two independent junctions and measured voltage changes to test two loops. Change one resistance and repeat. Include a drawing that defines every sign.
 
+**The loop rule as a landscape.** Open the Wheatstone bridge and switch modes to the Potential view, which raises every point of the circuit to its potential above the board (0 V). Turn the view so you can see each loop. Note where the circuit climbs and where it descends, and read the node potentials. Unbalance the bridge by changing one resistor and watch how the heights of the two midpoints and the current through the galvanometer change.
+
 **Using the virtual apparatus.** Work in DC with predictions and answers hidden, starting from the series bulbs, parallel bulbs, voltage divider and Wheatstone bridge circuits. The bulbs here are fixed resistors. Set each part's value, connect each ammeter in series with the part you measure and each voltmeter across it, and keep a copy of the schematic. To put an ammeter in a current path, first delete a short wire in that path and place the ammeter across the gap. To measure a voltage, connect the voltmeter beside the part with two short leads, one to each end: a part dropped on top of other parts replaces them, so a voltmeter laid straight across a bulb's two ends takes the bulb out of the circuit. Record a reading after each change and send the readings to the worksheet before you change circuits; each meter of each reading becomes a row of the Data table, with the part values. Check your own sums first, then compare them with the demo's junction rule and loop rule checks.
 
 ## Data
@@ -74,6 +76,7 @@ Add rows as needed. For the voltage divider, fill in the divider ratio $$R_2/(R_
 2. Plot $$V_{\rm out}$$ against $$R_2/(R_1+R_2)$$. Infer the source voltage from the slope.
 3. Calculate the signed current residual at each chosen junction and voltage residual around each loop.
 4. Sum resistor powers and compare with source power. Explain which readings are independent and which are derived from the same model.
+5. From the Potential view of the bridge, list the rises and drops around each of your two loops. Use them to explain the loop rule as a statement about height: why must every closed path return to the height it started at? Why does no current flow through the galvanometer when the bridge is balanced?
 
 ## Uncertainty
 
@@ -85,6 +88,7 @@ Use meter resolution and component tolerances for a real bench. For the virtual 
 2. Why can parallel branches carry different currents at the same voltage?
 3. What does a negative solved current mean?
 4. Why does connecting a load across a divider generally change its output voltage?
+5. In the Potential view, wires are level and resistors slope. What would a wire with a little resistance look like, and why do the thick wires in a real circuit come close to level?
 
 ## What to hand in
 
