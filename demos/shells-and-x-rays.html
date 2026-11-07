@@ -926,7 +926,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('sAbs').value = S.xr.abs; $('oAbs').textContent = `${f(S.xr.abs, 1)} mm`;
     for (const b of document.querySelectorAll('#axisSeg button')) b.setAttribute('aria-pressed', String(b.dataset.a === S.xr.axis));
     $('newTarget').hidden = S.xr.target !== 'mystery'; $('mysRow').hidden = S.xr.target !== 'mystery' && !S.xr.lastMys;
-    $('tNote').textContent = S.xr.lastMys ? `The last mystery target was ${byZ(S.xr.lastMys)[2].toLowerCase()} (Z = ${S.xr.lastMys}).` : '';
+    $('tNote').textContent = S.xr.lastMys ? (typeof VDI18N === 'object' ? VDI18N.t('The last mystery target was {el} (Z = {z}).', { el: VDI18N.t(byZ(S.xr.lastMys)[2]).toLowerCase(), z: S.xr.lastMys }) : `The last mystery target was ${byZ(S.xr.lastMys)[2].toLowerCase()} (Z = ${S.xr.lastMys}).`) : '';
     for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
     $('zDown').hidden = $('zUp').hidden = S.view !== 'shells';
     $('baCtl').hidden = S.view !== 'build'; $('fillRow').hidden = S.view === 'build'; $('stage').classList.toggle('build', S.view === 'build');

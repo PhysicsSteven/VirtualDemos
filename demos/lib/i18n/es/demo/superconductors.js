@@ -28,8 +28,8 @@ VDI18N.add('es', 'demo/superconductors', {
   "Superconductores y el efecto Meissner",
 "<a>Condensed matter physics</a>":
   "<a>Física de la materia condensada</a>",
-"<a><span>←</span> <span>Circuits</span></a><a><span>Gamma Spectroscopy</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Circuitos</span></a><a><span>Espectroscopía gamma</span> <span>→</span></a>",
+"<a><span>←</span> <span>Circuits</span></a><a><span>Superconducting Levitation and Flux Pinning</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Circuitos</span></a><a><span>Levitación superconductora y anclaje de flujo</span> <span>→</span></a>",
 "Cool a metal sphere below its critical temperature in a magnetic field and the field is pushed out of it. Find the field that destroys superconductivity at each temperature.":
   "Enfría una esfera de metal por debajo de su temperatura crítica en un campo magnético y el campo es expulsado de ella. Encuentra el campo que destruye la superconductividad a cada temperatura.",
 "T in K · B in mT · moment in mA·m²":
@@ -148,6 +148,14 @@ VDI18N.add('es', 'demo/superconductors', {
   "aluminio",
 "zero resistance: holding the flux it had":
   "resistencia cero: conserva el flujo que tenía",
+"Zinc (Zn)":
+  "Zinc (Zn)",
+"The last mystery metal was {metal}.":
+  "El último metal misterioso era {metal}.",
+"The last mystery metal was zinc (Zn).":
+  "El último metal misterioso era zinc (Zn).",
+"<a><span>←</span> <span>Circuits</span></a><a><span>Gamma Spectroscopy</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Circuitos</span></a><a><span>Espectroscopía gamma</span> <span>→</span></a>",
 "The last mystery metal was indium (in).":
   "El último metal misterioso era indio (in)."
 });

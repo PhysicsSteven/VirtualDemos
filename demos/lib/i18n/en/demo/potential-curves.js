@@ -1,5 +1,6 @@
 /* English strings of demo/potential-curves, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'demo/potential-curves', [
+"of the energy scale",
 "Energy (J)",
 "forbidden",
 "stable",
@@ -76,15 +77,14 @@ VDI18N.add('en', 'demo/potential-curves', [
 "Model: An ideal spring obeying Hooke's law for any stretch, and no friction. Time steps: velocity Verlet with Δt = {#}×{#}⁻⁴ s.",
 "Energy check: simulated K + U minus E",
 "−{#}×{#}⁻⁹ <span>of the energy scale</span>",
-"−{#}×{#}⁻⁸ <span>of the energy scale</span>",
 "3D: the real system above the energy diagram, moving with the simulation. Drag to turn, scroll to zoom, double click to reset the view.",
 "energy",
 "A glider on an air track, pulled by an ideal spring; to scale, x on the rule in cm. Drag the glider to set x; drag elsewhere to turn.",
 "A glider on an air track, pulled by an ideal spring; to scale, x on the rule in cm.",
-"glider, m = {#} kg",
 "spring, k = {#} N/m",
 "air supply",
-"−{#}×{#}⁻¹⁰ <span>of the energy scale</span>",
+"−{#}×{#}⁻⁸ <span>of the energy scale</span>",
+"glider, m = {#} kg",
 "{#} <span>of the energy scale</span>",
 "Period of the orbit against total energy for this well, from E = {#} J to {#} J. The dashed line is the small oscillation period T₀ = {#} s. Show data table in the rail lists the points.",
 "Released from rest on the first hill, the car speeds up where U is low and crawls over the tops. The flat station is neutral: a car at rest there stays put. Lower E below the middle hilltop and the car is trapped on one side.",
@@ -129,6 +129,7 @@ VDI18N.add('en', 'demo/potential-curves', [
 "E = −{#} meV",
 "separation r of the two atoms",
 "E (meV)",
+"−{#}×{#}⁻¹¹ <span>of the energy scale</span>",
 "Small swings take {#}π√(L/g). Bigger swings take longer; the exact period is {#}√(L/g)·K(sin(θ₀/{#})). Raise E above 2mgL and the pendulum goes over the top and keeps turning.",
 "Release point θ",
 "θ in rad · U, E in J · t in s · g = {#} m/s²",
@@ -150,10 +151,9 @@ VDI18N.add('en', 'demo/potential-curves', [
 "Phase space: v against x, one curve per energy, with the gold separatrix at hilltop energies. At E = {#} J a closed loop between {#} m and {#} m. Show data table in the rail lists the speed on this orbit.",
 "Illustration: the ball is drawn on the curve at the particle's position. A real ball on a hill shaped like U would turn around at the same points, but part of its motion is vertical, so it takes a different time. The exact motion is the particle on the line.",
 "Ball on a track: an illustration. The exact motion is the particle below.",
+"−{#}×{#}⁻¹⁰ <span>of the energy scale</span>",
 "{#}×{#}⁻⁹ <span>of the energy scale</span>",
-"{#}×{#}⁻⁸ <span>of the energy scale</span>",
-"−{#}×{#}⁻¹¹ <span>of the energy scale</span>",
+"{#}×{#}⁻¹⁰ <span>of the energy scale</span>",
 "ball: illustration only",
-"Illustration: a ball on a track shaped like U(x), heights in proportion to U, not to scale. The exact motion is the particle on the diagram.",
-"{#}×{#}⁻¹⁰ <span>of the energy scale</span>"
+"Illustration: a ball on a track shaped like U(x), heights in proportion to U, not to scale. The exact motion is the particle on the diagram."
 ]);

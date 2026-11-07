@@ -220,6 +220,8 @@ VDI18N.add('es', 'demo/temperature', {
   "Aire exterior, viento de {#} km/h ({#} m²·°C/W)",
 "Probe position":
   "Posición de la sonda",
+"{#} mm in":
+  "{#} mm hacia adentro",
 "The energy chain":
   "La cadena de energía",
 "<span>An energy chain: a source, a converter and a user</span>":
@@ -530,12 +532,18 @@ VDI18N.add('es', 'demo/temperature', {
   "Un ciclista hace girar un generador que enciende un foco fluorescente compacto. Cada estación transmite solo parte de lo que recibe: el cuerpo convierte cerca del {#}% de la energía de los alimentos en trabajo, el generador el {#}% del trabajo en electricidad, el foco el {#}% de eso en luz. Solo el {#}% de la energía de los alimentos termina como luz; el resto calienta al ciclista, al generador y al foco. Prueba el Sol sobre una celda solar, o un calentador en lugar del foco.",
 "The energy chain has no worksheet readings: read the numbers from the Readouts.":
   "La cadena de energía no tiene lecturas para la hoja de trabajo: lee los números en Lecturas en pantalla.",
-"The last mystery block was lead.":
-  "El último bloque misterioso era de plomo.",
+"The last mystery block was {mat}.":
+  "El último bloque misterioso era de {mat}.",
+"The last mystery block was silver.":
+  "El último bloque misterioso era de plata.",
 "Last mystery bath was {#} °C.":
   "El último baño misterioso estaba a {#} °C.",
+"The last mystery rod was {mat}.":
+  "La última varilla misteriosa era de {mat}.",
 "The last mystery rod was aluminum.":
   "La última varilla misteriosa era de aluminio.",
 "Light bulb (CFL)":
-  "Foco (CFL)"
+  "Foco (CFL)",
+"The last mystery block was lead.":
+  "El último bloque misterioso era de plomo."
 });

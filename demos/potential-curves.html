@@ -1338,7 +1338,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     $('rV').textContent = minus(sci(st.v * un.vf, 3)) + ' ' + un.v;
     $('rF').textContent = minus(sci(F * un.Ff, 3)) + ' ' + un.F;
     const v = curView(), drift = (K + U - S.E) / (v.u1 - v.u0);
-    $('rDrift').innerHTML = `${minus(sci(drift, 2))} <span class="sub">of the energy scale</span>`;
+    $('rDrift').innerHTML = `${minus(sci(drift, 2))} <span class="sub">${typeof VDI18N === 'object' ? VDI18N.t('of the energy scale') : 'of the energy scale'}</span>`;
     if (!full) {
       $('rTm').innerHTML = measText();
       return;

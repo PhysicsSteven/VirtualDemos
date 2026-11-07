@@ -1,5 +1,7 @@
 /* demo/potential-curves in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/potential-curves', {
+"of the energy scale":
+  "de la escala de energía",
 "Energy (J)":
   "Energía (J)",
 "forbidden":
@@ -152,8 +154,6 @@ VDI18N.add('es', 'demo/potential-curves', {
   "Verificación de la energía: K + U simulada menos E",
 "−{#}×{#}⁻⁹ <span>of the energy scale</span>":
   "−{#}×{#}⁻⁹ <span>de la escala de energía</span>",
-"−{#}×{#}⁻⁸ <span>of the energy scale</span>":
-  "−{#}×{#}⁻⁸ <span>de la escala de energía</span>",
 "3D: the real system above the energy diagram, moving with the simulation. Drag to turn, scroll to zoom, double click to reset the view.":
   "3D: el sistema real sobre el diagrama de energía, moviéndose con la simulación. Arrastra para girar, desplaza para hacer zoom, doble clic para restablecer la vista.",
 "energy":
@@ -162,14 +162,14 @@ VDI18N.add('es', 'demo/potential-curves', {
   "Un deslizador en un riel de aire, jalado por un resorte ideal; a escala, x en la regla en cm. Arrastra el deslizador para fijar x; arrastra en otro lugar para girar.",
 "A glider on an air track, pulled by an ideal spring; to scale, x on the rule in cm.":
   "Un deslizador en un riel de aire, jalado por un resorte ideal; a escala, x en la regla en cm.",
-"glider, m = {#} kg":
-  "deslizador, m = {#} kg",
 "spring, k = {#} N/m":
   "resorte, k = {#} N/m",
 "air supply":
   "suministro de aire",
-"−{#}×{#}⁻¹⁰ <span>of the energy scale</span>":
-  "−{#}×{#}⁻¹⁰ <span>de la escala de energía</span>",
+"−{#}×{#}⁻⁸ <span>of the energy scale</span>":
+  "−{#}×{#}⁻⁸ <span>de la escala de energía</span>",
+"glider, m = {#} kg":
+  "deslizador, m = {#} kg",
 "{#} <span>of the energy scale</span>":
   "{#} <span>de la escala de energía</span>",
 "Period of the orbit against total energy for this well, from E = {#} J to {#} J. The dashed line is the small oscillation period T₀ = {#} s. Show data table in the rail lists the points.":
@@ -258,6 +258,8 @@ VDI18N.add('es', 'demo/potential-curves', {
   "separación r de los dos átomos",
 "E (meV)":
   "E (meV)",
+"−{#}×{#}⁻¹¹ <span>of the energy scale</span>":
+  "−{#}×{#}⁻¹¹ <span>de la escala de energía</span>",
 "Small swings take {#}π√(L/g). Bigger swings take longer; the exact period is {#}√(L/g)·K(sin(θ₀/{#})). Raise E above 2mgL and the pendulum goes over the top and keeps turning.":
   "Las oscilaciones pequeñas tardan {#}π√(L/g). Las oscilaciones más grandes tardan más; el periodo exacto es {#}√(L/g)·K(sen(θ₀/{#})). Sube E por encima de 2mgL y el péndulo pasa por arriba y sigue girando.",
 "Release point θ":
@@ -300,16 +302,16 @@ VDI18N.add('es', 'demo/potential-curves', {
   "Ilustración: la esfera se dibuja sobre la curva en la posición de la partícula. Una esfera real en una colina con la forma de U daría la vuelta en los mismos puntos, pero parte de su movimiento es vertical, así que tarda un tiempo distinto. El movimiento exacto es el de la partícula sobre la línea.",
 "Ball on a track: an illustration. The exact motion is the particle below.":
   "Esfera en un riel: una ilustración. El movimiento exacto es el de la partícula de abajo.",
+"−{#}×{#}⁻¹⁰ <span>of the energy scale</span>":
+  "−{#}×{#}⁻¹⁰ <span>de la escala de energía</span>",
 "{#}×{#}⁻⁹ <span>of the energy scale</span>":
   "{#}×{#}⁻⁹ <span>de la escala de energía</span>",
-"{#}×{#}⁻⁸ <span>of the energy scale</span>":
-  "{#}×{#}⁻⁸ <span>de la escala de energía</span>",
-"−{#}×{#}⁻¹¹ <span>of the energy scale</span>":
-  "−{#}×{#}⁻¹¹ <span>de la escala de energía</span>",
+"{#}×{#}⁻¹⁰ <span>of the energy scale</span>":
+  "{#}×{#}⁻¹⁰ <span>de la escala de energía</span>",
 "ball: illustration only":
   "esfera: solo ilustración",
 "Illustration: a ball on a track shaped like U(x), heights in proportion to U, not to scale. The exact motion is the particle on the diagram.":
   "Ilustración: una esfera en un riel con la forma de U(x), alturas en proporción a U, no a escala. El movimiento exacto es el de la partícula en el diagrama.",
-"{#}×{#}⁻¹⁰ <span>of the energy scale</span>":
-  "{#}×{#}⁻¹⁰ <span>de la escala de energía</span>"
+"{#}×{#}⁻⁸ <span>of the energy scale</span>":
+  "{#}×{#}⁻⁸ <span>de la escala de energía</span>"
 });

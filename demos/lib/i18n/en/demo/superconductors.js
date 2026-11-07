@@ -14,7 +14,7 @@ VDI18N.add('en', 'demo/superconductors', [
 "field starts to get in, ({#}/{#})Bc",
 "Superconductors and the Meissner Effect",
 "<a>Condensed matter physics</a>",
-"<a><span>←</span> <span>Circuits</span></a><a><span>Gamma Spectroscopy</span> <span>→</span></a>",
+"<a><span>←</span> <span>Circuits</span></a><a><span>Superconducting Levitation and Flux Pinning</span> <span>→</span></a>",
 "Cool a metal sphere below its critical temperature in a magnetic field and the field is pushed out of it. Find the field that destroys superconductivity at each temperature.",
 "T in K · B in mT · moment in mA·m²",
 "A metal sphere in a cryostat inside a solenoid, with the magnetic field lines around and through it, a Hall probe at its equator and a magnetometer.",
@@ -74,5 +74,7 @@ VDI18N.add('en', 'demo/superconductors', [
 "mercury",
 "aluminum",
 "zero resistance: holding the flux it had",
-"The last mystery metal was indium (in)."
+"Zinc (Zn)",
+"The last mystery metal was {metal}.",
+"The last mystery metal was zinc (Zn)."
 ]);

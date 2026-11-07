@@ -110,6 +110,7 @@ VDI18N.add('en', 'demo/temperature', [
 "Air on the outside",
 "Outdoor air, {#} km/h wind ({#} m²·°C/W)",
 "Probe position",
+"{#} mm in",
 "The energy chain",
 "<span>An energy chain: a source, a converter and a user</span>",
 "Cyclist",
@@ -265,8 +266,10 @@ VDI18N.add('en', 'demo/temperature', [
 "The same hot aluminum and cool water, with each block's thermal energy drawn as dots of one size (counted from {#} °C). Start it and watch dots leave A, travel through the bar and pile up in B: the total stays the same, because the box lets no energy in or out. Thermal energy is not temperature: when they agree in temperature, the water holds more dots per kilogram than the aluminum.",
 "A cyclist turns a generator that lights a compact fluorescent bulb. Each station passes on only part of what it gets: the body turns about {#}% of its food energy into work, the generator {#}% of the work into electricity, the bulb {#}% of that into light. Only {#}% of the food energy ends up as light; the rest warms the rider, the generator and the bulb. Try the Sun on a solar cell, or a heater instead of the bulb.",
 "The energy chain has no worksheet readings: read the numbers from the Readouts.",
-"The last mystery block was lead.",
+"The last mystery block was {mat}.",
+"The last mystery block was silver.",
 "Last mystery bath was {#} °C.",
+"The last mystery rod was {mat}.",
 "The last mystery rod was aluminum.",
 "Light bulb (CFL)"
 ]);

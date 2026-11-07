@@ -433,7 +433,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (!is) S.frozen = null; else if (!was) S.frozen = S.B;
   }
   function setB(b) { S.B = Math.round(Math.max(0, Math.min(100, b)) * 100) / 100; }
-  function newMystery() { let k; do { k = MYSTERY_POOL[Math.floor(Math.random() * MYSTERY_POOL.length)]; } while (k === S.mys); if (S.mysN) $('presetHint').textContent = `The last mystery metal was ${METALS[S.mys].name.toLowerCase()}.`; S.mys = k; S.mysN++; }
+  const lowerFirst = (s) => s.charAt(0).toLowerCase() + s.slice(1);   /* 'Lead (Pb)' reads 'lead (Pb)' in a sentence; the symbol keeps its capital */
+  function newMystery() { let k; do { k = MYSTERY_POOL[Math.floor(Math.random() * MYSTERY_POOL.length)]; } while (k === S.mys); if (S.mysN) $('presetHint').textContent = (typeof VDI18N === 'object' ? VDI18N.t('The last mystery metal was {metal}.', { metal: lowerFirst(typeof VDI18N === 'object' ? VDI18N.t(METALS[S.mys].name) : METALS[S.mys].name) }) : 'The last mystery metal was {metal}.'.replace('{metal}', lowerFirst(typeof VDI18N === 'object' ? VDI18N.t(METALS[S.mys].name) : METALS[S.mys].name))); S.mys = k; S.mysN++; }
   function applyPreset(k) {
     const c = PRESETS[k]; S.preset = k; Object.assign(S, { m: c.m, model: c.model, T: c.T, B: c.B, frozen: c.frozen });
     if (k === 'mystery') newMystery();
