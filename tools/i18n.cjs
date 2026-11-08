@@ -10,7 +10,8 @@
                                              showing (never harvested), page errors that only the test language has; -v also
                                              lists lookups that missed (canvas text, attributes, pieces of runs)
    node tools/i18n.cjs common     move strings found on many pages into en/common.js (run after harvesting every page), with
-                                  every VDI18N.t('...') literal in demos/lib/*.js and curriculum/labs/*.js
+                                  every VDI18N.t('...') literal in demos/lib/*.js and curriculum/labs/*.js and every row of
+                                  demos/lib/shortcuts.js (the ? dialog); run it again after changing shortcuts.js
    node tools/i18n.cjs index      write the LANGS block of i18n.js from the language folders (run after adding a catalog)
    node tools/i18n.cjs check      every translation against its English: same tags, same {#} and {name}, nothing stale; coverage
    node tools/i18n.cjs todo es demo/pendulum   the English strings of a page with no translation yet, as JSON to fill in
@@ -108,6 +109,12 @@ async function clickThrough(page, step) {
   await page.waitForTimeout(700); await step(page);
   await page.evaluate(() => { const p = document.querySelector('#play, #playBtn, .btn.primary'); if (p) p.click(); }).catch(() => {});
   await page.waitForTimeout(150); await step(page);
+  /* the Keyboard shortcuts dialog (vd.js VD.help), with the demo's own list from demos/lib/shortcuts.js */
+  if (await page.evaluate(() => { if (!window.VD || !VD.help || !document.getElementById('vdHelp')) return false; VD.help.open(); return true; }).catch(() => false)) {
+    await page.waitForFunction(() => window.VD_SHORTCUTS, null, { timeout: 3000 }).catch(() => {});
+    await page.waitForTimeout(150); await step(page);
+    await page.evaluate(() => { const d = document.querySelector('dialog.vd-help'); if (d) d.close(); }).catch(() => {});
+  }
 }
 async function browserFor(br) {
   const ctx = await br.newContext({ viewport: { width: 1280, height: 800 }, acceptDownloads: true });
@@ -219,6 +226,9 @@ function makeCommon() {
     const src = fs.readFileSync(path.join(ROOT, d, f), 'utf8'), re = /VDI18N\.t\(\s*(['"`])((?:\\.|(?!\1).)*)\1/g; let m;
     while ((m = re.exec(src))) add.push(m[2].replace(/\\(['"`\\])/g, '$1').replace(/\s+/g, ' ').trim());
   }
+  /* the demos' own keyboard shortcuts (demos/lib/shortcuts.js, shown in the ? dialog of every demo): what each key does, and where */
+  const box = {}; new Function('window', fs.readFileSync(path.join(ROOT, 'demos/lib/shortcuts.js'), 'utf8'))(box);
+  for (const rows of Object.values(box.VD_SHORTCUTS || {})) for (const r of rows) { add.push(r[1]); if (r[2]) add.push(r[2]); }
   const all = [...new Set(old.concat(add))];
   writeCat('en', 'common', all, 'English strings shared by many pages (framework, theme, nav), from tools/i18n.cjs common');
   const set = new Set(all);

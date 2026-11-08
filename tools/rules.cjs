@@ -155,6 +155,16 @@ rule('harvest', 'Every demo has its English strings harvested (demos/lib/i18n/en
   + 'A redirect page needs none.', 'demos/*.html', () => DEMOS.filter((d) => !fs.existsSync(path.join(ROOT, 'demos/lib/i18n/en/demo', d + '.js'))
     && !/http-equiv="refresh"/.test(read('demos/' + d + '.html'))).map((d) => ['demos/' + d + '.html', 0, '', 'no harvest: tools/i18n.cjs harvest ' + d]));
 
+rule('shortcuts-list', 'Every demo that handles keys in its own code has a list in demos/lib/shortcuts.js (the ? dialog, vd.js VD.help; '
+  + 'an empty list when it has no keys beyond the shared ones), and every list names a demo that exists.', 'demos/*.html, demos/lib/shortcuts.js', () => {
+  const src = read('demos/lib/shortcuts.js'), box = {}; new Function('window', src)(box);
+  const map = box.VD_SHORTCUTS || {}, have = new Set(DEMOS), bad = [];
+  for (const d of DEMOS) if (/addEventListener\(\s*['"]key(down|up)['"]|onkeydown/.test(read('demos/' + d + '.html')) && !(d in map))
+    bad.push(['demos/' + d + '.html', 0, '', 'handles keys but has no list in demos/lib/shortcuts.js']);
+  for (const d of Object.keys(map)) if (!have.has(d)) bad.push(['demos/lib/shortcuts.js', 0, d, 'no demo named ' + d]);
+  return bad;
+});
+
 const NO_VIDEO = { 'intro-stellarium-sky': 'uses Stellarium, no demo of ours to film (2026-10-30)' };
 rule('howto-video', 'Every worksheet has its How this works video: demos/media/how-this-works/<slug>.mp4, or a HOWTO_VIDEO entry in '
   + 'curriculum/labs/worksheet.js naming the demo\'s video.', 'curriculum/labs/students, worksheet.js', () => {

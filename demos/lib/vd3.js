@@ -121,6 +121,7 @@
       o.th -= dx * 0.008; o.ph = clamp(o.ph - dy * 0.006, phMin, phMax); o.zoom = clamp(o.zoom * k, zMin, zMax); onChange(); } });
     var reset = function () { o.th = home.th; o.ph = home.ph; o.zoom = home.zoom; onChange(); };
     el.addEventListener('dblclick', reset);
+    if (opt.keys !== false) el.setAttribute('data-vd-orbit', '');   /* the ? dialog (VD.help) lists the 3D keys where this is on the page */
     if (opt.keys !== false) el.addEventListener('keydown', function (e) {
       if (e.key === ',' || e.key === '.') o.th += e.key === ',' ? 0.12 : -0.12;
       else if (e.key === '-' || e.key === '=' || e.key === '+') o.zoom = clamp(o.zoom * (e.key === '-' ? 0.9 : 1.1), zMin, zMax);
