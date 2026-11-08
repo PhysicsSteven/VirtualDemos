@@ -12,6 +12,8 @@ VDI18N.add('es', 'ws/molecular-bonds', {
   "Separación R (nm)",
 "Ionic and Covalent Bonds | VirtualDemos":
   "Enlaces iónicos y covalentes | VirtualDemos",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
 "Ionic and Covalent Bonds":
   "Enlaces iónicos y covalentes",
 "<strong>Setups in the demo:</strong> NaCl molecule; Pull the ions apart (these two use the Ionic bond view); H₂ bond; H₂ spins parallel (the Covalent bond view); H₂⁺ bonding orbital; H₂⁺ antibonding orbital (the H₂⁺ orbitals view, Part {#} of this worksheet); HCl levels (the Energy levels view); HCl band; Two isotopes; Hot gas (the HCl spectrum worksheet).":
@@ -100,8 +102,8 @@ VDI18N.add('es', 'ws/molecular-bonds', {
   "Compara las profundidades del pozo para \\(n = 19\\), \\(n = 9\\) y sin repulsión. Explica por qué el mínimo se queda en {#} nm pero la profundidad cambia, y qué les pasa a los iones sin repulsión.",
 "Use the zero crossing you found to say at what separation it first pays for the electron to jump from sodium to chlorine, and compare it with Before the lab {#}.":
   "Usa el cruce por cero que encontraste para decir a qué separación conviene por primera vez que el electrón salte del sodio al cloro, y compáralo con Antes del laboratorio {#}.",
-"Plot \\(U\\) against \\(r\\) for H₂. Find \\(r_e\\) and \\(D_e\\) and compare them with the values in §{#} ({#} nm and {#} eV). The measured dissociation energy is \\(D_0 = 4.478\\) eV; what zero point energy does that imply?":
-  "Grafica \\(U\\) en función de \\(r\\) para el H₂. Encuentra \\(r_e\\) y \\(D_e\\) y compáralos con los valores de la §{#} ({#} nm y {#} eV). La energía de disociación medida es \\(D_0 = 4.478\\) eV; ¿qué energía de punto cero implica eso?",
+"Plot \\(U\\) against \\(r\\) for H₂. Find \\(r_e\\) and \\(D_e\\). Compare \\(r_e\\) with the {#} nm of §{#}. The {#} eV quoted there is close to the energy to break the bond, which starts from the lowest vibrational level, not from the bottom of the well, so expect your well depth \\(D_e\\) to come out larger. The measured dissociation energy is \\(D_0 = 4.478\\) eV; what zero point energy does that imply?":
+  "Grafica \\(U\\) en función de \\(r\\) para el H₂. Encuentra \\(r_e\\) y \\(D_e\\). Compara \\(r_e\\) con los {#} nm de la §{#}. Los {#} eV que se citan ahí están cerca de la energía para romper el enlace, que parte del nivel vibracional más bajo, no del fondo del pozo, así que espera que tu profundidad del pozo \\(D_e\\) salga mayor. La energía de disociación medida es \\(D_0 = 4.478\\) eV; ¿qué energía de punto cero implica eso?",
 "Make a small table of bond length and well depth for H₂, HCl, N₂ and Cl₂ from your readings. Is a shorter bond always a stronger one?":
   "Haz una pequeña tabla de longitud de enlace y profundidad del pozo para H₂, HCl, N₂ y Cl₂ con tus lecturas. ¿Un enlace más corto es siempre más fuerte?",
 "Plot U against R for both H₂⁺ orbitals (Table {#}). Find the bond length and well depth the LCAO model gives, and compare them with the measured \\(r_e = 0.1052\\) nm and \\(D_e = 2.793\\) eV. Is the model’s bond too long or too short, too weak or too strong?":
@@ -153,5 +155,7 @@ VDI18N.add('es', 'ws/molecular-bonds', {
 "Bond length":
   "Longitud de enlace",
 "Molecules: Bonds and Spectra (Ionic and Covalent bond)":
-  "Moléculas: enlaces y espectros (Enlace iónico y covalente)"
+  "Moléculas: enlaces y espectros (Enlace iónico y covalente)",
+"Plot \\(U\\) against \\(r\\) for H₂. Find \\(r_e\\) and \\(D_e\\) and compare them with the values in §{#} ({#} nm and {#} eV). The measured dissociation energy is \\(D_0 = 4.478\\) eV; what zero point energy does that imply?":
+  "Grafica \\(U\\) en función de \\(r\\) para el H₂. Encuentra \\(r_e\\) y \\(D_e\\) y compáralos con los valores de la §{#} ({#} nm y {#} eV). La energía de disociación medida es \\(D_0 = 4.478\\) eV; ¿qué energía de punto cero implica eso?"
 });

@@ -2,6 +2,8 @@
 VDI18N.add('es', 'ws/quantum-coin', {
 "Angle (°)":
   "Ángulo (°)",
+"Phase φ (°)":
+  "Fase φ (°)",
 "Measured N":
   "N medidos",
 "Heads or up":
@@ -24,6 +26,8 @@ VDI18N.add('es', 'ws/quantum-coin', {
   "Fracciones predichas",
 "Quantum Coin Toss: Superposition and Measurement | VirtualDemos":
   "Volado cuántico: superposición y medición | VirtualDemos",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
 "Quantum Coin Toss: Superposition and Measurement":
   "Volado cuántico: superposición y medición",
 "<strong>Setups in the demo:</strong> Fair coins; Three to one; Same odds, other phase; Spin along x, measured along z; Magnet tilted {#}°; Measure the same atom again; z then z; z then x; z, x, then z again.":
@@ -76,16 +80,20 @@ VDI18N.add('es', 'ws/quantum-coin', {
   "Tabla {#}. Monedas e imanes individuales.",
 "<span>C</span>Angle (°)":
   "<span>C</span>Ángulo (°)",
-"<span>D</span>Measured N":
-  "<span>D</span>N medidos",
-"<span>E</span>Heads or up":
-  "<span>E</span>Águila o arriba",
-"<span>F</span>Fraction up":
-  "<span>F</span>Fracción arriba",
-"<span>G</span>cos²(angle/{#})":
-  "<span>G</span>cos²(ángulo/{#})",
+"<span>D</span>Phase φ (°)":
+  "<span>D</span>Fase φ (°)",
+"<span>E</span>Measured N":
+  "<span>E</span>N medidos",
+"<span>F</span>Heads or up":
+  "<span>F</span>Águila o arriba",
+"<span>G</span>Fraction up":
+  "<span>G</span>Fracción arriba",
+"<span>H</span>cos²(angle/{#})":
+  "<span>H</span>cos²(ángulo/{#})",
 "Angle (°), row {#}":
   "Ángulo (°), fila {#}",
+"Phase φ (°), row {#}":
+  "Fase φ (°), fila {#}",
 "Measured N, row {#}":
   "N medidos, fila {#}",
 "Heads or up, row {#}":
@@ -167,5 +175,13 @@ VDI18N.add('es', 'ws/quantum-coin', {
 "Angle of the state from the up (heads) pole of the Bloch sphere":
   "Ángulo del estado respecto al polo de arriba (águila) de la esfera de Bloch",
 "Quantum Coin Toss":
-  "Volado cuántico"
+  "Volado cuántico",
+"<span>D</span>Measured N":
+  "<span>D</span>N medidos",
+"<span>E</span>Heads or up":
+  "<span>E</span>Águila o arriba",
+"<span>F</span>Fraction up":
+  "<span>F</span>Fracción arriba",
+"<span>G</span>cos²(angle/{#})":
+  "<span>G</span>cos²(ángulo/{#})"
 });

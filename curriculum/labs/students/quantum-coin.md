@@ -66,11 +66,11 @@ No hazards in the virtual lab.
 
 Table 1. Coins and single magnets.
 
-| Reading | Setup | Angle (°) | Measured N | Heads or up | Fraction up | cos²(angle/2) |
-|---|---|---|---|---|---|---|
-| | | | | | | |
-| | | | | | | |
-| | | | | | | |
+| Reading | Setup | Angle (°) | Phase φ (°) | Measured N | Heads or up | Fraction up | cos²(angle/2) |
+|---|---|---|---|---|---|---|---|
+| | | | | | | | |
+| | | | | | | | |
+| | | | | | | | |
 
 Table 2. Magnets in a row.
 

@@ -8,6 +8,8 @@ VDI18N.add('es', 'ws/radioactive-decay', {
   "ln(N/N₀)",
 "Measuring a Half Life | VirtualDemos":
   "Medición de una vida media | VirtualDemos",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
 "Measuring a Half Life":
   "Medición de una vida media",
 "<strong>Setups in the demo:</strong> Coin flip nuclei; Carbon {#} dating; Iodine {#} (these three have one unstable kind of nucleus, the subject of this worksheet); Two step chain; Short daughter, long parent (the Parent and Daughter worksheet).":
@@ -88,8 +90,8 @@ VDI18N.add('es', 'ws/radioactive-decay', {
   "Usa tu \\(\\lambda\\) para encontrar la actividad de los {#} {#} núcleos al inicio, en decaimientos por día. Compruébala con el número que decayó en los primeros {#} d.",
 "Find the mean of the ages at decay of the nuclei you followed, and compare with the mean life \\(\\tau = 1/\\lambda\\).":
   "Encuentra la media de las edades al decaer de los núcleos que seguiste, y compárala con la vida promedio \\(\\tau = 1/\\lambda\\).",
-"Use the standard error of the slope to give \\(T_{1/2}\\) with its uncertainty for both sample sizes. Compare the two relative uncertainties. Does their ratio match the \\(1/\\sqrt{N_0}\\) you would expect?":
-  "Usa el error estándar de la pendiente para dar \\(T_{1/2}\\) con su incertidumbre para ambos tamaños de muestra. Compara las dos incertidumbres relativas. ¿Su razón concuerda con el \\(1/\\sqrt{N_0}\\) que esperarías?",
+"Use the standard error of the slope to give \\(T_{1/2}\\) with its uncertainty for both sample sizes. These counts all come from one sample, so each count depends on the ones before it: the standard error of the fit understates the real uncertainty, and your \\(T_{1/2}\\) may sit several standard errors from the accepted value. Compare the two relative uncertainties. Does their ratio match the \\(1/\\sqrt{N_0}\\) you would expect?":
+  "Usa el error estándar de la pendiente para dar \\(T_{1/2}\\) con su incertidumbre para ambos tamaños de muestra. Todos estos conteos vienen de una sola muestra, así que cada conteo depende de los anteriores: el error estándar del ajuste subestima la incertidumbre real, y tu \\(T_{1/2}\\) puede quedar a varios errores estándar del valor aceptado. Compara las dos incertidumbres relativas. ¿Su razón concuerda con el \\(1/\\sqrt{N_0}\\) que esperarías?",
 "A nucleus has already survived three half lives. What is the chance it decays within the next half life? Explain.":
   "Un núcleo ya sobrevivió tres vidas medias. ¿Cuál es la probabilidad de que decaiga dentro de la siguiente vida media? Explica.",
 "Why doesn’t the number left fall exactly to half in each half life?":
@@ -121,5 +123,7 @@ VDI18N.add('es', 'ws/radioactive-decay', {
 "Mean life":
   "Vida media",
 "Radioactive Decay":
-  "Desintegración radiactiva"
+  "Desintegración radiactiva",
+"Use the standard error of the slope to give \\(T_{1/2}\\) with its uncertainty for both sample sizes. Compare the two relative uncertainties. Does their ratio match the \\(1/\\sqrt{N_0}\\) you would expect?":
+  "Usa el error estándar de la pendiente para dar \\(T_{1/2}\\) con su incertidumbre para ambos tamaños de muestra. Compara las dos incertidumbres relativas. ¿Su razón concuerda con el \\(1/\\sqrt{N_0}\\) que esperarías?"
 });

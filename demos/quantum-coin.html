@@ -438,13 +438,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   window.vdReadingRow = () => {
     if (S.mode === 'coin') {
       const Nc = S.cc[0] + S.cc[1]; if (!Nc) return 'Toss and measure some coins first.';
-      return [{ setup: `ordinary coin, chance of heads ${S.pc.toFixed(2)}`, angle_deg: '', N: Nc, up: S.cc[0] },
-        { setup: `quantum coin, θ = ${S.tq}°, φ = ${S.fq}°`, angle_deg: S.tq, N: S.qc[0] + S.qc[1], up: S.qc[0] }];
+      return [{ setup: `ordinary coin, chance of heads ${S.pc.toFixed(2)}`, angle_deg: '', phi_deg: '', N: Nc, up: S.cc[0] },
+        { setup: `quantum coin, θ = ${S.tq}°, φ = ${S.fq}°`, angle_deg: S.tq, phi_deg: S.fq, N: S.qc[0] + S.qc[1], up: S.qc[0] }];
     }
     if (S.mode === 'spin') {
       const N = S.sp[0] + S.sp[1]; if (!N) return 'Measure some atoms first.';
       const s = qcVec(S.ts, S.fs), n = axis(), g = Math.acos(Math.max(-1, Math.min(1, s[0] * n[0] + s[1] * n[1] + s[2] * n[2]))) / QC_D;
-      return { setup: `spin θ = ${S.ts}°, φ = ${S.fs}°; magnet tilt ${S.ta}°, turn ${S.fa}°` + (S.fresh ? '' : '; the same atom each time'), angle_deg: g.toFixed(1), N, up: S.sp[0] };
+      return { setup: `spin θ = ${S.ts}°, φ = ${S.fs}°; magnet tilt ${S.ta}°, turn ${S.fa}°` + (S.fresh ? '' : '; the same atom each time'), angle_deg: g.toFixed(1), phi_deg: S.fs, N, up: S.sp[0] };
     }
     if (!S.sgc.N) return 'Send some atoms through first.';
     const m = mags(), kp = { up: 'up beam', down: 'down beam', both: 'both beams' };

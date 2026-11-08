@@ -14,6 +14,8 @@ VDI18N.add('es', 'ws/uncertainty-principle', {
   "Δx² (nm²)",
 "The Uncertainty Principle and a Spreading Packet | VirtualDemos":
   "El principio de incertidumbre y un paquete que se dispersa | VirtualDemos",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
 "The Uncertainty Principle and a Spreading Packet":
   "El principio de incertidumbre y un paquete que se dispersa",
 "<strong>Setups in the demo:</strong> Free particle (this worksheet); Step and Barrier (the tunneling worksheet); Square well, Oscillator and Double well (the energy levels worksheet).":
@@ -98,8 +100,8 @@ VDI18N.add('es', 'ws/uncertainty-principle', {
   "¿Cambia Δp a medida que el paquete se dispersa? Explica por qué no.",
 "Describe what Measure x did to the packet. Compare Δx and Δp just after the measurement with their values before it.":
   "Describe lo que Medir x le hizo al paquete. Compara Δx y Δp justo después de la medición con sus valores antes de ella.",
-"The demo computes Δx and Δp from ψ on a {#} pm grid. Its momentum comes from differences between neighboring points (a fourth order formula, so the grid error is about (k dx)⁴/{#}, a few parts in {#}⁵ here); compare your Δp at launch with \\(\\hbar c/2\\sigma\\) and say how large the remaining difference is. Say also why recording too late, once the packet reaches the absorbing edge, would spoil Δx.":
-  "La demo calcula Δx y Δp a partir de ψ en una cuadrícula de {#} pm. Su momento viene de diferencias entre puntos vecinos (una fórmula de cuarto orden, así que el error de la cuadrícula es de unos (k dx)⁴/{#}, unas pocas partes en {#}⁵ aquí); compara tu Δp al lanzarlo con \\(\\hbar c/2\\sigma\\) y di qué tan grande es la diferencia que queda. Di también por qué registrar demasiado tarde, una vez que el paquete llega al borde absorbente, arruinaría Δx.",
+"The demo computes Δx and Δp from ψ on a {#} pm grid. Its momentum comes from differences between neighboring points (a fourth order formula, so the grid error is about (k dx)⁴/{#}, a few parts in {#}⁵ here); compare your Δp at launch with \\(\\hbar c/2\\sigma\\) and say how large the remaining difference is. The grid also slows the spreading a little: on it the packet’s spread of speeds comes out about {#} % low, so expect your \\(\\Delta x^2\\) slope about {#} % below \\((\\hbar/2m\\sigma)^2\\) and \\(\\hbar^2/2m\\) about {#} % low. Say also why recording too late, once the packet reaches the absorbing edge, would spoil Δx.":
+  "La demo calcula Δx y Δp a partir de ψ en una cuadrícula de {#} pm. Su momento viene de diferencias entre puntos vecinos (una fórmula de cuarto orden, así que el error de la cuadrícula es de unos (k dx)⁴/{#}, unas pocas partes en {#}⁵ aquí); compara tu Δp al lanzarlo con \\(\\hbar c/2\\sigma\\) y di qué tan grande es la diferencia que queda. La cuadrícula también frena un poco la dispersión: en ella, la dispersión de velocidades del paquete sale alrededor de {#} % baja, así que espera que tu pendiente de \\(\\Delta x^2\\) quede alrededor de {#} % por debajo de \\((\\hbar/2m\\sigma)^2\\) y que \\(\\hbar^2/2m\\) salga alrededor de {#} % baja. Di también por qué registrar demasiado tarde, una vez que el paquete llega al borde absorbente, arruinaría Δx.",
 "If you know an electron’s position to within {#} nm, how well can you know its momentum, in eV/c? What spread of kinetic energy does that suggest for an electron in an atom?":
   "Si conoces la posición de un electrón con una precisión de {#} nm, ¿qué tan bien puedes conocer su momento, en eV/c? ¿Qué dispersión de energía cinética sugiere eso para un electrón en un átomo?",
 "Why does a narrower packet spread faster?":
@@ -131,5 +133,7 @@ VDI18N.add('es', 'ws/uncertainty-principle', {
 "Starting center of the packet":
   "Centro inicial del paquete",
 "Quantum Wave Packets (free particle)":
-  "Paquetes de ondas cuánticos (partícula libre)"
+  "Paquetes de ondas cuánticos (partícula libre)",
+"The demo computes Δx and Δp from ψ on a {#} pm grid. Its momentum comes from differences between neighboring points (a fourth order formula, so the grid error is about (k dx)⁴/{#}, a few parts in {#}⁵ here); compare your Δp at launch with \\(\\hbar c/2\\sigma\\) and say how large the remaining difference is. Say also why recording too late, once the packet reaches the absorbing edge, would spoil Δx.":
+  "La demo calcula Δx y Δp a partir de ψ en una cuadrícula de {#} pm. Su momento viene de diferencias entre puntos vecinos (una fórmula de cuarto orden, así que el error de la cuadrícula es de unos (k dx)⁴/{#}, unas pocas partes en {#}⁵ aquí); compara tu Δp al lanzarlo con \\(\\hbar c/2\\sigma\\) y di qué tan grande es la diferencia que queda. Di también por qué registrar demasiado tarde, una vez que el paquete llega al borde absorbente, arruinaría Δx."
 });

@@ -302,16 +302,16 @@ VDI18N.add('es', 'demo/solids', {
   "InSb {#}",
 "InAs {#}":
   "InAs {#}",
-"Ge {#}":
-  "Ge {#}",
+"Ge {#} (diode: {#})":
+  "Ge {#} (diodo: {#})",
 "GaSb {#}":
   "GaSb {#}",
-"Si {#}":
-  "Si {#}",
+"Si {#} (diode: {#})":
+  "Si {#} (diodo: {#})",
 "InP {#}":
   "InP {#}",
-"GaAs {#}":
-  "GaAs {#}",
+"GaAs {#} (diode: {#})":
+  "GaAs {#} (diodo: {#})",
 "GaP {#}":
   "GaP {#}",
 "C (diamond) {#}":
@@ -558,6 +558,8 @@ VDI18N.add('es', 'demo/solids', {
   "Un LED emite luz cuando los electrones caen a través de la banda prohibida, así que la energía del fotón es aproximadamente E_g. Prueba cada material y lee la longitud de onda; luego elige Cualquier banda prohibida y encuentra las brechas que dan rojo, verde y azul.",
 "The spectrometer reading goes in the LED table of the worksheet: write it down by hand.":
   "La lectura del espectrómetro va en la tabla de LED de la hoja de trabajo: anótala a mano.",
+"Close":
+  "Cerrar",
 "Germanium and gallium arsenide are pure (intrinsic) here.":
   "Aquí el germanio y el arseniuro de galio son puros (intrínsecos).",
 "peak {#} nm: infrared (invisible)":
@@ -589,5 +591,11 @@ VDI18N.add('es', 'demo/solids', {
 "{#} levels":
   "{#} niveles",
 "Re ψ, band {#}, k = {#} π/a, E = {#} eV":
-  "Re ψ, banda {#}, k = {#} π/a, E = {#} eV"
+  "Re ψ, banda {#}, k = {#} π/a, E = {#} eV",
+"Ge {#}":
+  "Ge {#}",
+"Si {#}":
+  "Si {#}",
+"GaAs {#}":
+  "GaAs {#}"
 });

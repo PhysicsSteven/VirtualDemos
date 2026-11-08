@@ -18,6 +18,8 @@ VDI18N.add('es', 'ws/critical-mass', {
   "ln N, k = {#}",
 "Chain Reactions and the Critical Size | VirtualDemos":
   "Reacciones en cadena y el tamaño crítico | VirtualDemos",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
 "Chain Reactions and the Critical Size":
   "Reacciones en cadena y el tamaño crítico",
 "<strong>Setups in the demo:</strong> Bare ²³⁵U sphere; Generations (these two use the Chain reaction view, the subject of this worksheet); Rutherford {#}; Fission of ²³⁵U (the Nuclear Reactions worksheet); The Sun’s core; D–T reactor (the Fusion worksheet); ¹³⁷Cs source; ⁹⁹ᵐTc patient (the Radiation Dose worksheet).":
@@ -26,8 +28,8 @@ VDI18N.add('es', 'ws/critical-mass', {
   "La vista Reacción en cadena tiene dos modelos. <strong>Generaciones con factor k:</strong> cada neutrón causa una fisión con probabilidad \\(k/\\bar\\nu\\), y cada fisión libera un número aleatorio \\(\\nu\\) de neutrones, \\(\\bar\\nu = 2.44\\) en promedio para neutrones lentos en ²³⁵U. La imagen es el árbol genealógico de los primeros neutrones de cada generación; las gráficas muestran los neutrones de cada generación y la fracción de fisiones que dan cada \\(\\nu\\).",
 "<strong>Sphere of metal:</strong> a bare sphere of pure ²³⁵U or ²³⁹Pu of radius \\(R\\). The demo follows thousands of fast neutrons one at a time: each travels a random distance, then either causes a fission (its new neutrons start the next generation) or bounces off in a random direction, until it causes a fission or escapes through the surface. This is a simulation of a simplified teaching model; the About text gives its numbers. The picture shows chains as they happen, with the same rules: a source fires a neutron in every {#} s, and each fission splits a nucleus and sends out new neutrons that go on to strike other nuclei. It is one sample of a chain, not the measurement. The 3D switch shows it inside a see through sphere that you can turn; the flat view shows it from the side.":
   "<strong>Esfera de metal:</strong> una esfera desnuda de ²³⁵U o ²³⁹Pu puros de radio \\(R\\). La demo sigue a miles de neutrones rápidos, uno a la vez: cada uno recorre una distancia aleatoria y luego causa una fisión (sus neutrones nuevos inician la siguiente generación) o rebota en una dirección aleatoria, hasta que causa una fisión o escapa por la superficie. Esta es una simulación de un modelo didáctico simplificado; el texto Acerca de da sus números. La imagen muestra cadenas mientras ocurren, con las mismas reglas: una fuente dispara un neutrón cada {#} s, y cada fisión divide un núcleo y emite neutrones nuevos que van a chocar con otros núcleos. Es una muestra de una cadena, no la medición. El interruptor 3D la muestra dentro de una esfera transparente que puedes girar; la vista plana la muestra de lado.",
-"\\(k\\) for a generation is the number of new neutrons divided by the number followed. Start runs it, One generation steps it, Start over begins a new run. The meters show \\(k\\) for this generation, its mean over the generations after the fifth, and the share of neutrons that leaked out.":
-  "\\(k\\) para una generación es el número de neutrones nuevos dividido entre el número seguido. Comenzar la corre, Una generación avanza un paso, Empezar de nuevo inicia una corrida nueva. Los medidores muestran \\(k\\) para esta generación, su media sobre las generaciones posteriores a la quinta y la fracción de neutrones que se fugaron.",
+"\\(k\\) for a generation is the number of new neutrons divided by the number followed. Play runs it, One generation steps it, Reset begins a new run. The meters show \\(k\\) for this generation, its mean over the generations after the fifth, and the share of neutrons that leaked out.":
+  "\\(k\\) para una generación es el número de neutrones nuevos dividido entre el número seguido. Iniciar la corre, Una generación avanza un paso, Reiniciar inicia una corrida nueva. Los medidores muestran \\(k\\) para esta generación, su media sobre las generaciones posteriores a la quinta y la fracción de neutrones que se fugaron.",
 "Record reading (Sphere model) stores the material, \\(R\\), the mass, the generations run, the mean \\(k\\) with its uncertainty, and the share leaked. Export to worksheet sends the readings to the Data table below; Clear starts a new series, which goes into a new copy of the table. In the Generations model, read the numbers from the meters and the graph.":
   "Registrar lectura (modelo Esfera) guarda el material, \\(R\\), la masa, las generaciones corridas, la \\(k\\) media con su incertidumbre y la fracción fugada. Exportar a la hoja envía las lecturas a la tabla de datos de abajo; Borrar empieza una serie nueva, que va a una copia nueva de la tabla. En el modelo Generaciones, lee los números en los medidores y en la gráfica.",
 "Blind hides the model’s constants, the theory curves and the result of a full calculation.":
@@ -104,8 +106,8 @@ VDI18N.add('es', 'ws/critical-mass', {
   "Grafica \\(k\\) en función de \\(R\\) para el ²³⁵U. Encuentra el radio crítico \\(R_c\\) donde \\(k = 1\\) interpolando entre las dos lecturas a cada lado, y la masa crítica \\(M_c\\).",
 "Do the same for ²³⁹Pu. Which needs less metal, and why?":
   "Haz lo mismo para el ²³⁹Pu. ¿Cuál necesita menos metal, y por qué?",
-"At the critical radius, compare the share of neutrons that leaked with \\(1 - 1/\\bar\\nu\\) from Before the lab question {#}.":
-  "En el radio crítico, compara la fracción de neutrones que se fugaron con \\(1 - 1/\\bar\\nu\\) de la pregunta {#} de Antes del laboratorio.",
+"At the critical radius, compare the share of neutrons that leaked with \\(1 - 1/\\bar\\nu\\) from Before the lab question {#}. For ²³⁹Pu the sphere model’s \\(\\bar\\nu\\) is {#}.":
+  "En el radio crítico, compara la fracción de neutrones que se fugaron con \\(1 - 1/\\bar\\nu\\) de la pregunta {#} de Antes del laboratorio. Para el ²³⁹Pu, la \\(\\bar\\nu\\) del modelo de la esfera es {#}.",
 "A full calculation (MCNP6, quoted by M. B. Chadwick, {#}) gives bare critical masses of {#} kg for ²³⁵U and {#} kg for ²³⁹Pu. Like the demo, it takes ²³⁹Pu at {#} g/cm³; handbook α plutonium is {#} g/cm³, which would lower every plutonium critical mass here by about {#}%, since the critical mass scales as {#}/ρ². Compare your values and suggest which simplifications of the model matter.":
   "Un cálculo completo (MCNP6, citado por M. B. Chadwick, {#}) da masas críticas desnudas de {#} kg para el ²³⁵U y {#} kg para el ²³⁹Pu. Como la demo, toma el ²³⁹Pu a {#} g/cm³; el plutonio α de los manuales tiene {#} g/cm³, lo que bajaría aquí cada masa crítica de plutonio en aproximadamente {#}%, ya que la masa crítica escala como {#}/ρ². Compara tus valores y sugiere qué simplificaciones del modelo importan.",
 "Use the uncertainty in \\(k\\) near the crossing and the slope \\(dk/dR\\) of your graph to estimate the uncertainty in \\(R_c\\), and from it the uncertainty in \\(M_c\\) (note that \\(M \\propto R^3\\)).":
@@ -147,5 +149,9 @@ VDI18N.add('es', 'ws/critical-mass', {
 "Number of neutrons one fission releases":
   "Número de neutrones que libera una fisión",
 "Nuclear Reactions, Fission and Fusion (Chain reaction)":
-  "Reacciones nucleares, fisión y fusión (Reacción en cadena)"
+  "Reacciones nucleares, fisión y fusión (Reacción en cadena)",
+"\\(k\\) for a generation is the number of new neutrons divided by the number followed. Start runs it, One generation steps it, Start over begins a new run. The meters show \\(k\\) for this generation, its mean over the generations after the fifth, and the share of neutrons that leaked out.":
+  "\\(k\\) para una generación es el número de neutrones nuevos dividido entre el número seguido. Comenzar la corre, Una generación avanza un paso, Empezar de nuevo inicia una corrida nueva. Los medidores muestran \\(k\\) para esta generación, su media sobre las generaciones posteriores a la quinta y la fracción de neutrones que se fugaron.",
+"At the critical radius, compare the share of neutrons that leaked with \\(1 - 1/\\bar\\nu\\) from Before the lab question {#}.":
+  "En el radio crítico, compara la fracción de neutrones que se fugaron con \\(1 - 1/\\bar\\nu\\) de la pregunta {#} de Antes del laboratorio."
 });

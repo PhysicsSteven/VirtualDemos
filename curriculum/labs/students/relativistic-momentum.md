@@ -60,11 +60,11 @@ None for the virtual apparatus. Real accelerating fields of megavolts per meter 
 
 ## Data
 
-| Reading | Time $$t$$ (ns) | Distance $$x$$ (m) | Speed $$v$$ (c) | $$\gamma$$ | $$\gamma v$$ (c) |
-|---|---|---|---|---|---|
-| | | | | | |
-| | | | | | |
-| | | | | | |
+| Reading | Particle | Field $$E$$ (MV/m) | Time $$t$$ (ns) | Distance $$x$$ (m) | Speed $$v$$ (c) | $$\gamma$$ | $$\gamma v$$ (c) |
+|---|---|---|---|---|---|---|---|
+| | | | | | | | |
+| | | | | | | | |
+| | | | | | | | |
 
 ## Analysis
 

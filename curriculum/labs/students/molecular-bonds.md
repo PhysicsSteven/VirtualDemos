@@ -88,7 +88,7 @@ Fill in R/a₀, with the Bohr radius a₀ = 0.05292 nm.
 3. From the reading at 0.236 nm, find the exclusion principle energy $$U_\mathrm{ex}(r_0) = U - \Delta E + ke^2/r_0$$. What fraction of the Coulomb energy is it?
 4. Compare the depths of the well for $$n = 19$$, $$n = 9$$ and with no repulsion. Explain why the minimum stays at 0.236 nm but the depth changes, and what happens to the ions with no repulsion.
 5. Use the zero crossing you found to say at what separation it first pays for the electron to jump from sodium to chlorine, and compare it with Before the lab 3.
-6. Plot $$U$$ against $$r$$ for H₂. Find $$r_e$$ and $$D_e$$ and compare them with the values in §9.1 (0.074 nm and 4.52 eV). The measured dissociation energy is $$D_0 = 4.478$$ eV; what zero point energy does that imply?
+6. Plot $$U$$ against $$r$$ for H₂. Find $$r_e$$ and $$D_e$$. Compare $$r_e$$ with the 0.074 nm of §9.1. The 4.52 eV quoted there is close to the energy to break the bond, which starts from the lowest vibrational level, not from the bottom of the well, so expect your well depth $$D_e$$ to come out larger. The measured dissociation energy is $$D_0 = 4.478$$ eV; what zero point energy does that imply?
 7. Make a small table of bond length and well depth for H₂, HCl, N₂ and Cl₂ from your readings. Is a shorter bond always a stronger one?
 8. Plot U against R for both H₂⁺ orbitals (Table 2). Find the bond length and well depth the LCAO model gives, and compare them with the measured $$r_e = 0.1052$$ nm and $$D_e = 2.793$$ eV. Is the model's bond too long or too short, too weak or too strong?
 9. Compare H₂⁺ with H₂: one shared electron against two. Which bond is longer, and which is stronger? Explain.

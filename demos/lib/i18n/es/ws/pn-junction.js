@@ -14,6 +14,8 @@ VDI18N.add('es', 'ws/pn-junction', {
   "Banda prohibida de la Tabla {#} (eV)",
 "The pn Junction Diode and LEDs | VirtualDemos":
   "El diodo de unión pn y los LED | VirtualDemos",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
 "The pn Junction Diode and LEDs":
   "El diodo de unión pn y los LED",
 "<strong>Setups in the demo:</strong> Diode; LED colors (these two use the Junction view, the subject of this worksheet); Rock salt; Cesium chloride (the Lattice energy worksheet); Levels become bands; Filling the bands (the Energy bands worksheet); Pure silicon; n type silicon (the Doping worksheet).":
@@ -88,8 +90,8 @@ VDI18N.add('es', 'ws/pn-junction', {
   "Banda prohibida de la Tabla {#} (eV), fila {#}",
 "Plot \\(I\\) against \\(V\\) for {#} K, forward and reverse. Describe the curve. What is the current in reverse bias, and how does it compare with \\(I_0\\)?":
   "Grafica \\(I\\) en función de \\(V\\) para {#} K, directa e inversa. Describe la curva. ¿Cuál es la corriente en polarización inversa, y cómo se compara con \\(I_0\\)?",
-"Fill in the \\(\\ln(I/1\\ \\text{A})\\) column for the forward readings. For each temperature, plot \\(\\ln I\\) against \\(V\\) for the forward readings and fit a straight line. From each slope, find \\(e/k\\) (slope × T). Compare with the accepted \\(e/k = 11\\,605\\) K/V.":
-  "Llena la columna \\(\\ln(I/1\\ \\text{A})\\) para las lecturas directas. Para cada temperatura, grafica \\(\\ln I\\) en función de \\(V\\) para las lecturas directas y ajusta una recta. A partir de cada pendiente, encuentra \\(e/k\\) (pendiente × T). Compara con el valor aceptado \\(e/k = 11\\,605\\) K/V.",
+"Check the \\(\\ln(I/1\\ \\text{A})\\) column for a few forward readings (Export fills it in). For each temperature, plot \\(\\ln I\\) against \\(V\\) for the forward readings and fit a straight line. From each slope, find \\(e/k\\) (slope × T). Compare with the accepted \\(e/k = 11\\,605\\) K/V.":
+  "Comprueba la columna \\(\\ln(I/1\\ \\text{A})\\) en algunas lecturas directas (Exportar la llena). Para cada temperatura, grafica \\(\\ln I\\) en función de \\(V\\) para las lecturas directas y ajusta una recta. A partir de cada pendiente, encuentra \\(e/k\\) (pendiente × T). Compara con el valor aceptado \\(e/k = 11\\,605\\) K/V.",
 "From the intercept at {#} K, find \\(I_0\\) and compare it with the setting.":
   "A partir de la ordenada al origen a {#} K, encuentra \\(I_0\\) y compárala con el valor fijado.",
 "How does \\(I_0\\), from the intercepts, change between {#} K and {#} K? Why does it change so much more than the slope?":
@@ -123,5 +125,7 @@ VDI18N.add('es', 'ws/pn-junction', {
 "Intrinsic carrier density":
   "Densidad intrínseca de portadores",
 "Crystals, Bands and Semiconductors (Junction)":
-  "Cristales, bandas y semiconductores (Unión)"
+  "Cristales, bandas y semiconductores (Unión)",
+"Fill in the \\(\\ln(I/1\\ \\text{A})\\) column for the forward readings. For each temperature, plot \\(\\ln I\\) against \\(V\\) for the forward readings and fit a straight line. From each slope, find \\(e/k\\) (slope × T). Compare with the accepted \\(e/k = 11\\,605\\) K/V.":
+  "Llena la columna \\(\\ln(I/1\\ \\text{A})\\) para las lecturas directas. Para cada temperatura, grafica \\(\\ln I\\) en función de \\(V\\) para las lecturas directas y ajusta una recta. A partir de cada pendiente, encuentra \\(e/k\\) (pendiente × T). Compara con el valor aceptado \\(e/k = 11\\,605\\) K/V."
 });

@@ -75,7 +75,7 @@ No hazards in the virtual lab.
 ## Analysis
 
 1. Plot $$I$$ against $$V$$ for 300 K, forward and reverse. Describe the curve. What is the current in reverse bias, and how does it compare with $$I_0$$?
-2. Fill in the $$\ln(I/1\ \text{A})$$ column for the forward readings. For each temperature, plot $$\ln I$$ against $$V$$ for the forward readings and fit a straight line. From each slope, find $$e/k$$ (slope × T). Compare with the accepted $$e/k = 11\,605$$ K/V.
+2. Check the $$\ln(I/1\ \text{A})$$ column for a few forward readings (Export fills it in). For each temperature, plot $$\ln I$$ against $$V$$ for the forward readings and fit a straight line. From each slope, find $$e/k$$ (slope × T). Compare with the accepted $$e/k = 11\,605$$ K/V.
 3. From the intercept at 300 K, find $$I_0$$ and compare it with the setting.
 4. How does $$I_0$$, from the intercepts, change between 250 K and 350 K? Why does it change so much more than the slope?
 5. Complete the LED table. How well does the photon energy match the band gap?

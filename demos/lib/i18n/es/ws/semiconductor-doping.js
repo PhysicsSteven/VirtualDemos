@@ -10,6 +10,8 @@ VDI18N.add('es', 'ws/semiconductor-doping', {
   "ln n − {#} ln T",
 "Carriers in Pure and Doped Silicon | VirtualDemos":
   "Portadores en silicio puro y dopado | VirtualDemos",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
 "Carriers in Pure and Doped Silicon":
   "Portadores en silicio puro y dopado",
 "<strong>Setups in the demo:</strong> Pure silicon; n type silicon (these two use the Doping view, the subject of this worksheet); Rock salt; Cesium chloride (the Lattice energy worksheet); Levels become bands; Filling the bands (the Energy bands worksheet); Diode; LED colors (the pn junction worksheet).":
@@ -52,8 +54,8 @@ VDI18N.add('es', 'ws/semiconductor-doping', {
   "<strong>Silicio puro.</strong> Elige Silicio puro. Registra lecturas de {#} K a {#} K en pasos de {#} K.",
 "<strong>n type silicon.</strong> Export, clear the readings and pick n type silicon (phosphorus at {#}¹⁵ cm⁻³). Record readings at {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} and {#} K.":
   "<strong>Silicio tipo n.</strong> Exporta, borra las lecturas y elige Silicio tipo n (fósforo a {#}¹⁵ cm⁻³). Registra lecturas a {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} y {#} K.",
-"<strong>p type silicon.</strong> Export and clear the readings. Turn the phosphorus down to its lowest setting ({#}¹¹ cm⁻³, too few to matter here), add boron at {#}¹⁶ cm⁻³ and record readings at {#}, {#} and {#} K.":
-  "<strong>Silicio tipo p.</strong> Exporta y borra las lecturas. Baja el fósforo a su ajuste mínimo ({#}¹¹ cm⁻³, muy poco para importar aquí), añade boro a {#}¹⁶ cm⁻³ y registra lecturas a {#}, {#} y {#} K.",
+"<strong>p type silicon.</strong> Export and clear the readings. Turn the phosphorus down to none, add boron at {#}¹⁶ cm⁻³ and record readings at {#}, {#} and {#} K.":
+  "<strong>Silicio tipo p.</strong> Exporta y borra las lecturas. Quita todo el fósforo, añade boro a {#}¹⁶ cm⁻³ y registra lecturas a {#}, {#} y {#} K.",
 "<span>B</span>Sample":
   "<span>B</span>Muestra",
 "<span>C</span>Temperature \\(T\\) (K)":
@@ -121,5 +123,7 @@ VDI18N.add('es', 'ws/semiconductor-doping', {
 "Density of holes":
   "Densidad de huecos",
 "Crystals, Bands and Semiconductors (Doping)":
-  "Cristales, bandas y semiconductores (Dopaje)"
+  "Cristales, bandas y semiconductores (Dopaje)",
+"<strong>p type silicon.</strong> Export and clear the readings. Turn the phosphorus down to its lowest setting ({#}¹¹ cm⁻³, too few to matter here), add boron at {#}¹⁶ cm⁻³ and record readings at {#}, {#} and {#} K.":
+  "<strong>Silicio tipo p.</strong> Exporta y borra las lecturas. Baja el fósforo a su ajuste mínimo ({#}¹¹ cm⁻³, muy poco para importar aquí), añade boro a {#}¹⁶ cm⁻³ y registra lecturas a {#}, {#} y {#} K."
 });

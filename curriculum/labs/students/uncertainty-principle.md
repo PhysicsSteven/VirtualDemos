@@ -78,7 +78,7 @@ Fill in the last three columns yourself where you need them.
 
 ## Uncertainty
 
-The demo computes Δx and Δp from ψ on a 25 pm grid. Its momentum comes from differences between neighboring points (a fourth order formula, so the grid error is about (k dx)⁴/30, a few parts in 10⁵ here); compare your Δp at launch with $$\hbar c/2\sigma$$ and say how large the remaining difference is. Say also why recording too late, once the packet reaches the absorbing edge, would spoil Δx.
+The demo computes Δx and Δp from ψ on a 25 pm grid. Its momentum comes from differences between neighboring points (a fourth order formula, so the grid error is about (k dx)⁴/30, a few parts in 10⁵ here); compare your Δp at launch with $$\hbar c/2\sigma$$ and say how large the remaining difference is. The grid also slows the spreading a little: on it the packet's spread of speeds comes out about 0.5 % low, so expect your $$\Delta x^2$$ slope about 1 % below $$(\hbar/2m\sigma)^2$$ and $$\hbar^2/2m$$ about 0.6 % low. Say also why recording too late, once the packet reaches the absorbing edge, would spoil Δx.
 
 ## Questions
 

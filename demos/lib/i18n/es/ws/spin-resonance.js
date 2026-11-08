@@ -16,6 +16,8 @@ VDI18N.add('es', 'ws/spin-resonance', {
   "Campo total B (mT)",
 "Spin Resonance | VirtualDemos":
   "Resonancia de espín | VirtualDemos",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
 "Spin Resonance":
   "Resonancia de espín",
 "<strong>Setups in the demo:</strong> ESR on DPPH; ESR reference (the empty phial, with the DPPH trace held for comparison); PSR glycerine; Polystyrene vs glycerine; Fluorine in PTFE; Out of tune (the proton peak lies outside the scan until the frequency is tuned).":
@@ -138,12 +140,12 @@ VDI18N.add('es', 'ws/spin-resonance', {
   "Convierte cada lectura a campo de barrido. FAST tiene una rampa de {#} ms; SLOW tiene una rampa de {#} s, y el papel del registrador avanza a {#} mm/s. El barrido completo es de {#} mT para ESR y de {#} mT para la resonancia nuclear. Compara el voltaje de CH1 y el barrido lento con las lecturas de tiempo en MID.",
 "Plot the ESR field against frequency in Hz. Fit a line and find \\(g\\) from its slope. Is the intercept zero within its uncertainty, as a stray field free magnet would give?":
   "Grafica el campo de ESR en función de la frecuencia en Hz. Ajusta una recta y encuentra \\(g\\) a partir de su pendiente. ¿Es la ordenada al origen cero dentro de su incertidumbre, como daría un imán sin campos parásitos?",
-"For each nuclear reading, correct the permanent field for temperature and add the scan field. Fit hydrogen and fluorine separately to find their \\(\\Gamma\\) values.":
-  "Para cada lectura nuclear, corrige el campo permanente por temperatura y suma el campo de barrido. Ajusta por separado el hidrógeno y el flúor para encontrar sus valores de \\(\\Gamma\\).",
+"For each nuclear reading, correct the permanent field for temperature and add the scan field. For hydrogen and for fluorine, find \\(\\Gamma = \\nu/B\\) for each reading and average them. One band spans less than {#} % in frequency, so a fitted line with a free intercept fixes the slope only to {#} or {#} %, while the ratio is far better.":
+  "Para cada lectura nuclear, corrige el campo permanente por temperatura y suma el campo de barrido. Para el hidrógeno y para el flúor, encuentra \\(\\Gamma = \\nu/B\\) para cada lectura y promédialas. Una banda abarca menos de {#} % en frecuencia, así que una recta ajustada con ordenada libre fija la pendiente solo a {#} o {#} %, mientras que la razón es mucho mejor.",
 "Compare line widths above the signal baseline. Record the sensitivity setting when comparing peak heights.":
   "Compara los anchos de línea por encima de la línea base de la señal. Anota el ajuste de sensibilidad cuando compares alturas de pico.",
-"Estimate how far you could move a cursor while still calling it the peak center. Convert that interval to a field uncertainty. Include the scan calibration, the thermometer and the uncertainty in the permanent field if it is given. Repeated cursor placements help estimate reading scatter, but they do not remove an error shared by every field reading. Use your slope uncertainty to estimate the uncertainty in \\(g\\) or \\(\\Gamma\\).":
-  "Estima cuánto podrías mover un cursor y seguir considerándolo el centro del pico. Convierte ese intervalo en una incertidumbre del campo. Incluye la calibración del barrido, el termómetro y la incertidumbre del campo permanente si se da. Colocar el cursor varias veces ayuda a estimar la dispersión de las lecturas, pero no elimina un error común a todas las lecturas de campo. Usa la incertidumbre de tu pendiente para estimar la incertidumbre de \\(g\\) o \\(\\Gamma\\).",
+"Estimate how far you could move a cursor while still calling it the peak center. Convert that interval to a field uncertainty. Include the scan calibration, the thermometer and the uncertainty in the permanent field if it is given. Repeated cursor placements help estimate reading scatter, but they do not remove an error shared by every field reading. Use your slope uncertainty to estimate the uncertainty in \\(g\\), and the spread of your \\(\\nu/B\\) values for \\(\\Gamma\\).":
+  "Estima cuánto podrías mover un cursor y seguir considerándolo el centro del pico. Convierte ese intervalo en una incertidumbre del campo. Incluye la calibración del barrido, el termómetro y la incertidumbre del campo permanente si se da. Colocar el cursor varias veces ayuda a estimar la dispersión de las lecturas, pero no elimina un error común a todas las lecturas de campo. Usa la incertidumbre de tu pendiente para estimar la incertidumbre de \\(g\\), y la dispersión de tus valores de \\(\\nu/B\\) para \\(\\Gamma\\).",
 "Why does peak position tell you \\(g\\), while peak height does not?":
   "¿Por qué la posición del pico te dice \\(g\\), mientras que la altura del pico no?",
 "Why can glycerine and polystyrene have different widths but the same proton resonance relation?":
@@ -152,8 +154,8 @@ VDI18N.add('es', 'ws/spin-resonance', {
   "¿Cómo afectaría un campo magnético parásito constante a la gráfica de ESR?",
 "Why does temperature matter more when measuring the small scan field on top of a large permanent field?":
   "¿Por qué la temperatura importa más al medir el pequeño campo de barrido encima de un gran campo permanente?",
-"Prelab answers, the data table copies, the field calculations and the slow sweep check, what the empty phial and water showed, the three fitted graphs, \\(g\\) and the two \\(\\Gamma\\) values with uncertainty, and answers to the questions. Identify simulated data, and give the virtual seed.":
-  "Respuestas del prelaboratorio, las copias de la tabla de datos, los cálculos del campo y la comprobación con el barrido lento, lo que mostraron el frasco vacío y el agua, las tres gráficas ajustadas, \\(g\\) y los dos valores de \\(\\Gamma\\) con su incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados y da la semilla virtual.",
+"Prelab answers, the data table copies, the field calculations and the slow sweep check, what the empty phial and water showed, the ESR graph, \\(g\\) and the two \\(\\Gamma\\) values with uncertainty, and answers to the questions. Identify simulated data, and give the virtual seed.":
+  "Respuestas del prelaboratorio, las copias de la tabla de datos, los cálculos del campo y la comprobación con el barrido lento, lo que mostraron el frasco vacío y el agua, la gráfica de ESR, \\(g\\) y los dos valores de \\(\\Gamma\\) con su incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados y da la semilla virtual.",
 "Field at the sample":
   "Campo en la muestra",
 "Field of the Zeeman magnet at {#} °C":
@@ -193,5 +195,11 @@ VDI18N.add('es', 'ws/spin-resonance', {
 "Thermometer reading":
   "Lectura del termómetro",
 "Time of the peak after the ramp starts":
-  "Tiempo del pico después de que empieza la rampa"
+  "Tiempo del pico después de que empieza la rampa",
+"For each nuclear reading, correct the permanent field for temperature and add the scan field. Fit hydrogen and fluorine separately to find their \\(\\Gamma\\) values.":
+  "Para cada lectura nuclear, corrige el campo permanente por temperatura y suma el campo de barrido. Ajusta por separado el hidrógeno y el flúor para encontrar sus valores de \\(\\Gamma\\).",
+"Estimate how far you could move a cursor while still calling it the peak center. Convert that interval to a field uncertainty. Include the scan calibration, the thermometer and the uncertainty in the permanent field if it is given. Repeated cursor placements help estimate reading scatter, but they do not remove an error shared by every field reading. Use your slope uncertainty to estimate the uncertainty in \\(g\\) or \\(\\Gamma\\).":
+  "Estima cuánto podrías mover un cursor y seguir considerándolo el centro del pico. Convierte ese intervalo en una incertidumbre del campo. Incluye la calibración del barrido, el termómetro y la incertidumbre del campo permanente si se da. Colocar el cursor varias veces ayuda a estimar la dispersión de las lecturas, pero no elimina un error común a todas las lecturas de campo. Usa la incertidumbre de tu pendiente para estimar la incertidumbre de \\(g\\) o \\(\\Gamma\\).",
+"Prelab answers, the data table copies, the field calculations and the slow sweep check, what the empty phial and water showed, the three fitted graphs, \\(g\\) and the two \\(\\Gamma\\) values with uncertainty, and answers to the questions. Identify simulated data, and give the virtual seed.":
+  "Respuestas del prelaboratorio, las copias de la tabla de datos, los cálculos del campo y la comprobación con el barrido lento, lo que mostraron el frasco vacío y el agua, las tres gráficas ajustadas, \\(g\\) y los dos valores de \\(\\Gamma\\) con su incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados y da la semilla virtual."
 });

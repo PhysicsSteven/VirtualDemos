@@ -45,7 +45,7 @@ VDI18N.add('en', 'ws/radioactive-decay', [
 "Do the same for {#} nuclei. How do the points scatter about the line compared with {#} {#} nuclei?",
 "Use your \\(\\lambda\\) to find the activity of the {#} {#} nuclei at the start, in decays per day. Check it against the number that decayed in the first {#} d.",
 "Find the mean of the ages at decay of the nuclei you followed, and compare with the mean life \\(\\tau = 1/\\lambda\\).",
-"Use the standard error of the slope to give \\(T_{1/2}\\) with its uncertainty for both sample sizes. Compare the two relative uncertainties. Does their ratio match the \\(1/\\sqrt{N_0}\\) you would expect?",
+"Use the standard error of the slope to give \\(T_{1/2}\\) with its uncertainty for both sample sizes. These counts all come from one sample, so each count depends on the ones before it: the standard error of the fit understates the real uncertainty, and your \\(T_{1/2}\\) may sit several standard errors from the accepted value. Compare the two relative uncertainties. Does their ratio match the \\(1/\\sqrt{N_0}\\) you would expect?",
 "A nucleus has already survived three half lives. What is the chance it decays within the next half life? Explain.",
 "Why doesn’t the number left fall exactly to half in each half life?",
 "A piece of wood has {#}% of the carbon {#} of living wood. How old is it? (Carbon {#} half life {#} yr.) Try the Carbon {#} dating setup’s task to check yourself.",

@@ -100,12 +100,12 @@ Add rows for all frequencies and repeat readings. Record the seed and the scan c
 
 1. Convert each reading to scan field. FAST has a 40 ms ramp; SLOW has a 25 s ramp, and the chart paper moves at 5 mm/s. Full scan is 3.67 mT for ESR and 3.20 mT for nuclear resonance. Compare the CH1 voltage and the slow sweep with the time readings on MID.
 2. Plot the ESR field against frequency in Hz. Fit a line and find $$g$$ from its slope. Is the intercept zero within its uncertainty, as a stray field free magnet would give?
-3. For each nuclear reading, correct the permanent field for temperature and add the scan field. Fit hydrogen and fluorine separately to find their $$\Gamma$$ values.
+3. For each nuclear reading, correct the permanent field for temperature and add the scan field. For hydrogen and for fluorine, find $$\Gamma = \nu/B$$ for each reading and average them. One band spans less than 1 % in frequency, so a fitted line with a free intercept fixes the slope only to 1 or 2 %, while the ratio is far better.
 4. Compare line widths above the signal baseline. Record the sensitivity setting when comparing peak heights.
 
 ## Uncertainty
 
-Estimate how far you could move a cursor while still calling it the peak center. Convert that interval to a field uncertainty. Include the scan calibration, the thermometer and the uncertainty in the permanent field if it is given. Repeated cursor placements help estimate reading scatter, but they do not remove an error shared by every field reading. Use your slope uncertainty to estimate the uncertainty in $$g$$ or $$\Gamma$$.
+Estimate how far you could move a cursor while still calling it the peak center. Convert that interval to a field uncertainty. Include the scan calibration, the thermometer and the uncertainty in the permanent field if it is given. Repeated cursor placements help estimate reading scatter, but they do not remove an error shared by every field reading. Use your slope uncertainty to estimate the uncertainty in $$g$$, and the spread of your $$\nu/B$$ values for $$\Gamma$$.
 
 ## Questions
 
@@ -116,4 +116,4 @@ Estimate how far you could move a cursor while still calling it the peak center.
 
 ## What to hand in
 
-Prelab answers, the data table copies, the field calculations and the slow sweep check, what the empty phial and water showed, the three fitted graphs, $$g$$ and the two $$\Gamma$$ values with uncertainty, and answers to the questions. Identify simulated data, and give the virtual seed.
+Prelab answers, the data table copies, the field calculations and the slow sweep check, what the empty phial and water showed, the ESR graph, $$g$$ and the two $$\Gamma$$ values with uncertainty, and answers to the questions. Identify simulated data, and give the virtual seed.

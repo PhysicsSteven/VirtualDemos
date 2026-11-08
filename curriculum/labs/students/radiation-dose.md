@@ -72,7 +72,7 @@ Fill in the last two columns yourself, with the dose rate in µSv/h.
 
 ## Uncertainty
 
-The meter shows three significant figures. How well does that fix the slope in Analysis 2? Use the spread of your points about the straight line to estimate the uncertainty in the half value layer.
+The meter shows four significant figures. How well does that fix the slope in Analysis 2? Use the spread of your points about the straight line to estimate the uncertainty in the half value layer.
 
 ## Questions
 

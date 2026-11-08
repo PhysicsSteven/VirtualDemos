@@ -384,8 +384,8 @@
   Object.assign(FROM_DEMO, {
     /* Reading | Launch speed u′ (c) | Probe time A to B Δt (s) | Ground speed u (c) | u − u′ (c) | 1 − uu′/c² */
     'velocity-addition': { demo: 'Velocity, Momentum and Energy Near c (Adding velocities)', cols: ['row', 'u_prime_c', 'probe_dt_s', null, null, null] },
-    /* Reading | Time t (ns) | Distance x (m) | Speed v (c) | γ | γv (c) */
-    'relativistic-momentum': { demo: 'Velocity, Momentum and Energy Near c (Steady force)', cols: ['row', 't_ns', 'x_m', 'v_c', null, null] },
+    /* Reading | Particle | Field E (MV/m) | Time t (ns) | Distance x (m) | Speed v (c) | γ | γv (c) */
+    'relativistic-momentum': { demo: 'Velocity, Momentum and Energy Near c (Steady force)', cols: ['row', 'particle', 'E_MV_m', 't_ns', 'x_m', 'v_c', null, null] },
     /* Reading | Voltage V (MV) | Flight time t (ns) | Bend radius r (cm) | Speed v (c) | v² (c²) | γ | pc (MeV) */
     'relativistic-energy': { demo: 'Velocity, Momentum and Energy Near c (Electron flight)', cols: ['row', 'V_MV', 't_ns', 'r_cm', null, null, null, null] },
     /* Reading | Metal | Wavelength λ (nm) | Frequency f (10¹⁴ Hz) | Stopping voltage V₀ (V) | Meter at V₀ (nA) */
@@ -843,9 +843,9 @@
     'color-vision': { demo: 'Color Vision', cols: ['row', 'light', 'lambda_nm', 'L', 'M', 'S', 'Y'] },
     /* Reading | Rows n | Chance p | Balls N | Sample mean of k | Sample standard deviation s | s² (typed) | np(1 − p) (typed) */
     'galton-board': { demo: 'Galton Board', cols: ['row', 'n', 'p', 'N', 'mean', 'sd', null, null] },
-    /* Table 1: Reading | Setup | Angle (°) | Measured N | Heads or up | Fraction up (typed) | cos²(angle/2) (typed);
+    /* Table 1: Reading | Setup | Angle (°) | Phase φ (°) | Measured N | Heads or up | Fraction up (typed) | cos²(angle/2) (typed);
        Table 2, magnets in a row: Reading | Magnets | Atoms N | Up at the end | Down at the end | Blocked | Predicted fractions (typed) */
-    'quantum-coin': { demo: 'Quantum Coin Toss', cols: ['row', 'setup', 'angle_deg', 'N', 'up', null, null],
+    'quantum-coin': { demo: 'Quantum Coin Toss', cols: ['row', 'setup', 'angle_deg', 'phi_deg', 'N', 'up', null, null],
       alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.view === 'sg'), cols: ['row', 'setup', 'N', 'up', 'down', 'blocked', null] }] },
   });
   /* Worksheets with a live graph under each copy of the first data table. The student chooses which column goes on each axis; the

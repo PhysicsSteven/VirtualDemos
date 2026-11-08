@@ -14,6 +14,8 @@ VDI18N.add('es', 'ws/radiation-dose', {
   "ln(tasa de dosis)",
 "Radiation Dose: Distance and Shielding | VirtualDemos":
   "Dosis de radiación: distancia y blindaje | VirtualDemos",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
 "Radiation Dose: Distance and Shielding":
   "Dosis de radiación: distancia y blindaje",
 "<strong>Setups in the demo:</strong> ¹³⁷Cs source; ⁹⁹ᵐTc patient (these two use the Dose view, the subject of this worksheet); Rutherford {#}; Fission of ²³⁵U (the Nuclear Reactions worksheet); Bare ²³⁵U sphere; Generations (the Critical Size worksheet); The Sun’s core; D–T reactor (the Fusion worksheet).":
@@ -94,8 +96,8 @@ VDI18N.add('es', 'ws/radiation-dose', {
   "Haz lo mismo para el concreto. Divide cada \\(\\mu\\) entre la densidad (plomo {#} g/cm³, concreto {#} g/cm³) para obtener el coeficiente de atenuación másico \\(\\mu/\\rho\\). ¿Cuál detiene más fotones por gramo, y cuál por centímetro?",
 "For the ⁹⁹ᵐTc patient, compare the {#} hour dose at {#} m with the annual background of {#} mSv. How many days of background is it?":
   "Para el paciente con ⁹⁹ᵐTc, compara la dosis en {#} horas a {#} m con el fondo anual de {#} mSv. ¿A cuántos días de fondo equivale?",
-"The meter shows three significant figures. How well does that fix the slope in Analysis {#}? Use the spread of your points about the straight line to estimate the uncertainty in the half value layer.":
-  "El medidor muestra tres cifras significativas. ¿Qué tan bien fija eso la pendiente del Análisis {#}? Usa la dispersión de tus puntos alrededor de la recta para estimar la incertidumbre de la capa hemirreductora.",
+"The meter shows four significant figures. How well does that fix the slope in Analysis {#}? Use the spread of your points about the straight line to estimate the uncertainty in the half value layer.":
+  "El medidor muestra cuatro cifras significativas. ¿Qué tan bien fija eso la pendiente del Análisis {#}? Usa la dispersión de tus puntos alrededor de la recta para estimar la incertidumbre de la capa hemirreductora.",
 "A worker can halve their dose by stepping back from {#} m to how far? By adding how much lead?":
   "Un trabajador puede reducir su dosis a la mitad alejándose de {#} m a ¿qué distancia? ¿Agregando cuánto plomo?",
 "The model counts only photons that pass straight through the shield. In a real thick shield, photons scattered by the shield also reach the meter. Would the real dose rate be higher or lower than the model’s?":
@@ -121,5 +123,7 @@ VDI18N.add('es', 'ws/radiation-dose', {
 "Half value layer":
   "Capa hemirreductora",
 "Nuclear Reactions, Fission and Fusion (Dose)":
-  "Reacciones nucleares, fisión y fusión (Dosis)"
+  "Reacciones nucleares, fisión y fusión (Dosis)",
+"The meter shows three significant figures. How well does that fix the slope in Analysis {#}? Use the spread of your points about the straight line to estimate the uncertainty in the half value layer.":
+  "El medidor muestra tres cifras significativas. ¿Qué tan bien fija eso la pendiente del Análisis {#}? Usa la dispersión de tus puntos alrededor de la recta para estimar la incertidumbre de la capa hemirreductora."
 });

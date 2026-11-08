@@ -1,5 +1,9 @@
 /* ws/relativistic-momentum in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'ws/relativistic-momentum', {
+"Particle":
+  "Partícula",
+"Field E (MV/m)":
+  "Campo E (MV/m)",
 "Time t (ns)":
   "Tiempo t (ns)",
 "Distance x (m)":
@@ -8,6 +12,8 @@ VDI18N.add('es', 'ws/relativistic-momentum', {
   "Rapidez v (c)",
 "Momentum Under a Steady Force | VirtualDemos":
   "El momento bajo una fuerza constante | VirtualDemos",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
 "Momentum Under a Steady Force":
   "El momento bajo una fuerza constante",
 "<strong>Setups in the demo:</strong> Electron, steady force (the Steady force view, the subject of this worksheet); Rocket fires a probe, Rocket fires light and Mystery rocket (the velocity worksheet); Bertozzi’s electrons and Mystery particle (the energy worksheet).":
@@ -54,16 +60,24 @@ VDI18N.add('es', 'ws/relativistic-momentum', {
   "<strong>Protón.</strong> Borra las lecturas, elige el protón y un campo de {#} MV/m, y haz lo mismo, registrando al menos doce tiempos repartidos a lo largo de toda la corrida. Envía esta corrida a una copia nueva de la tabla.",
 "<strong>Your choice.</strong> Clear the readings and repeat for the alpha particle or the muon, at a field of your choice. Send this run to a third copy of the table.":
   "<strong>Tu elección.</strong> Borra las lecturas y repite para la partícula alfa o el muon, con un campo de tu elección. Envía esta corrida a una tercera copia de la tabla.",
-"<span>B</span>Time \\(t\\) (ns)":
-  "<span>B</span>Tiempo \\(t\\) (ns)",
-"<span>C</span>Distance \\(x\\) (m)":
-  "<span>C</span>Distancia \\(x\\) (m)",
-"<span>D</span>Speed \\(v\\) (c)":
-  "<span>D</span>Rapidez \\(v\\) (c)",
-"<span>E</span>\\(\\gamma\\)":
-  "<span>E</span>\\(\\gamma\\)",
-"<span>F</span>\\(\\gamma v\\) (c)":
-  "<span>F</span>\\(\\gamma v\\) (c)",
+"<span>B</span>Particle":
+  "<span>B</span>Partícula",
+"<span>C</span>Field \\(E\\) (MV/m)":
+  "<span>C</span>Campo \\(E\\) (MV/m)",
+"<span>D</span>Time \\(t\\) (ns)":
+  "<span>D</span>Tiempo \\(t\\) (ns)",
+"<span>E</span>Distance \\(x\\) (m)":
+  "<span>E</span>Distancia \\(x\\) (m)",
+"<span>F</span>Speed \\(v\\) (c)":
+  "<span>F</span>Rapidez \\(v\\) (c)",
+"<span>G</span>\\(\\gamma\\)":
+  "<span>G</span>\\(\\gamma\\)",
+"<span>H</span>\\(\\gamma v\\) (c)":
+  "<span>H</span>\\(\\gamma v\\) (c)",
+"Particle, row {#}":
+  "Partícula, fila {#}",
+"Field E (MV/m), row {#}":
+  "Campo E (MV/m), fila {#}",
 "Time t (ns), row {#}":
   "Tiempo t (ns), fila {#}",
 "Distance x (m), row {#}":
@@ -111,5 +125,15 @@ VDI18N.add('es', 'ws/relativistic-momentum', {
 "Distance traveled":
   "Distancia recorrida",
 "Velocity, Momentum and Energy Near c (Steady force)":
-  "Velocidad, momento y energía cerca de c (Fuerza constante)"
+  "Velocidad, momento y energía cerca de c (Fuerza constante)",
+"<span>B</span>Time \\(t\\) (ns)":
+  "<span>B</span>Tiempo \\(t\\) (ns)",
+"<span>C</span>Distance \\(x\\) (m)":
+  "<span>C</span>Distancia \\(x\\) (m)",
+"<span>D</span>Speed \\(v\\) (c)":
+  "<span>D</span>Rapidez \\(v\\) (c)",
+"<span>E</span>\\(\\gamma\\)":
+  "<span>E</span>\\(\\gamma\\)",
+"<span>F</span>\\(\\gamma v\\) (c)":
+  "<span>F</span>\\(\\gamma v\\) (c)"
 });

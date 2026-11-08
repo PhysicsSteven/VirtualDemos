@@ -330,7 +330,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (let k = 0; k < 100; k++) { const m = (lo + hi) / 2; if (count(m) < Z) lo = m; else hi = m; }
     return { metal: true, gap: 0, EF: (lo + hi) / 2, B };
   }
-  /* real band gaps at 300 K, OpenStax Table 9.4 (eV) */
+  /* real band gaps at 300 K, OpenStax Table 9.4 (eV); where MATS (the diode and carrier views) uses a slightly different value, the label says so */
   const GAPS = [['InSb', 0.16], ['InAs', 0.35], ['Ge', 0.67], ['GaSb', 0.69], ['Si', 1.14], ['InP', 1.35], ['GaAs', 1.43], ['GaP', 2.26], ['C (diamond)', 5.48]];
 
   /* ---------- carriers in a semiconductor (§9.6) ---------- */
@@ -614,7 +614,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const G = GAPS, gmax = 6;
     const A2 = axes(c, x0, T2, half, ph, [0, gmax], [-0.5, G.length + (S.blind ? 0 : 1) - 0.5], 'band gap (eV)', '');
     c.font = `${9.5 * p}px ${T.mono}`; c.textBaseline = 'middle';
-    G.forEach(([nm, g], i) => { const y = A2.Y(i), xe = A2.X(g), txt = `${nm} ${f(g, 2)}`, inside = xe + c.measureText(txt).width + 6 > x0 + half; c.fillStyle = T.muted; c.fillRect(A2.X(0), y - 5 * p, xe - A2.X(0), 10 * p); c.fillStyle = inside ? T.canvas : T.ink; c.textAlign = inside ? 'right' : 'left'; c.fillText(txt, inside ? xe - 4 : xe + 4, y); });
+    G.forEach(([nm, g], i) => { const y = A2.Y(i), xe = A2.X(g), mg = MATS[nm] && MATS[nm].Eg !== g ? MATS[nm].Eg : null, txt = `${nm} ${f(g, 2)}` + (mg != null ? ` (diode: ${f(mg, 2)})` : ''), inside = xe + c.measureText(txt).width + 6 > x0 + half; c.fillStyle = T.muted; c.fillRect(A2.X(0), y - 5 * p, xe - A2.X(0), 10 * p); c.fillStyle = inside ? T.canvas : T.ink; c.textAlign = inside ? 'right' : 'left'; c.fillText(txt, inside ? xe - 4 : xe + 4, y); });
     if (!S.blind) { const fb = bandFill(b.d, b.Z), y = A2.Y(G.length), g = fb.metal ? 0 : Math.min(gmax, fb.gap); c.fillStyle = T.gold; c.fillRect(A2.X(0), y - 5 * p, Math.max(2, A2.X(g) - A2.X(0)), 10 * p); c.fillStyle = T.ink; c.textAlign = 'left'; c.fillText(fb.metal ? 'model chain: no gap (metal)' : `model chain ${f(fb.gap, 2)}`, A2.X(g) + 4, y); }
     c.fillStyle = T.muted; c.textAlign = 'right'; c.textBaseline = 'bottom'; c.fillText('kT at 300 K = 0.026 eV', x0 + half - 2, T2 + ph - 3);
   }

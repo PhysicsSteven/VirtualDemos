@@ -56,7 +56,7 @@ No hazards in the virtual lab.
 
 **n type silicon.** Export, clear the readings and pick n type silicon (phosphorus at 10¹⁵ cm⁻³). Record readings at 30, 40, 50, 60, 80, 100, 150, 200, 300, 400, 500, 550, 600, 650, 700 and 800 K.
 
-**p type silicon.** Export and clear the readings. Turn the phosphorus down to its lowest setting (10¹¹ cm⁻³, too few to matter here), add boron at 10¹⁶ cm⁻³ and record readings at 200, 300 and 400 K.
+**p type silicon.** Export and clear the readings. Turn the phosphorus down to none, add boron at 10¹⁶ cm⁻³ and record readings at 200, 300 and 400 K.
 
 ## Data
 

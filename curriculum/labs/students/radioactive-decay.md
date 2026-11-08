@@ -80,7 +80,7 @@ The time unit is in the Setup column. Fill in $$N/N_0$$ and its natural log for 
 
 ## Uncertainty
 
-Use the standard error of the slope to give $$T_{1/2}$$ with its uncertainty for both sample sizes. Compare the two relative uncertainties. Does their ratio match the $$1/\sqrt{N_0}$$ you would expect?
+Use the standard error of the slope to give $$T_{1/2}$$ with its uncertainty for both sample sizes. These counts all come from one sample, so each count depends on the ones before it: the standard error of the fit understates the real uncertainty, and your $$T_{1/2}$$ may sit several standard errors from the accepted value. Compare the two relative uncertainties. Does their ratio match the $$1/\sqrt{N_0}$$ you would expect?
 
 ## Questions
 

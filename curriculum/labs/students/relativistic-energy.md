@@ -70,9 +70,9 @@ None for the virtual apparatus. Real electron beams of MeV energies produce X-ra
 ## Analysis
 
 1. Graph $$v^2$$ against $$V$$ for the electrons. Does it follow Newton's straight line $$v^2/c^2 = 2K/mc^2$$ at the lowest voltages? What happens above about 0.1 MV?
-2. Graph $$\gamma$$ against $$V$$ for the electrons. Find $$mc^2$$ from the slope and compare with 0.511 MeV. Is the intercept 1?
+2. Graph $$\gamma$$ against $$V$$ for the electrons, using only the readings with $$\gamma$$ below 4: above that, the 0.01 ns timer cannot pin down $$\gamma$$ (see Uncertainty). Find $$mc^2$$ from the slope and compare with 0.511 MeV. Is the intercept 1?
 3. For three electron readings (low, middle and high voltage), find $$E = K + mc^2$$ and check $$E^2 - (pc)^2$$ against $$(mc^2)^2$$.
-4. Find the mystery particle's rest energy two ways: from the slope of $$\gamma$$ against $$V$$, and from the magnet alone, since $$(pc)^2 = K^2 + 2Kmc^2$$ gives $$mc^2 = \big((pc)^2 - K^2\big)/(2K)$$ for each reading. Which particle is it?
+4. Find the mystery particle's rest energy two ways: from the slope of $$\gamma$$ against $$V$$ (again with $$\gamma$$ below 4), and from the magnet alone, since $$(pc)^2 = K^2 + 2Kmc^2$$ gives $$mc^2 = \big((pc)^2 - K^2\big)/(2K)$$ for each reading. Which particle is it?
 5. Bertozzi's fastest electrons had 15 MeV. Predict their flight time over 8.4 m and compare with your 10 and 20 MV readings.
 
 ## Uncertainty

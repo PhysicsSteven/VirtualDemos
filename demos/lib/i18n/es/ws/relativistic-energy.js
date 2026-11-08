@@ -10,6 +10,8 @@ VDI18N.add('es', 'ws/relativistic-energy', {
   "Rapidez v (c)",
 "Bertozzi’s Electrons: Kinetic Energy Near c | VirtualDemos":
   "Los electrones de Bertozzi: energía cinética cerca de c | VirtualDemos",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
 "Bertozzi’s Electrons: Kinetic Energy Near c":
   "Los electrones de Bertozzi: energía cinética cerca de c",
 "<strong>Setups in the demo:</strong> Bertozzi’s electrons; Mystery particle (these two use the Electron flight view, the subject of this worksheet); Rocket fires a probe, Rocket fires light and Mystery rocket (the velocity worksheet); Electron, steady force (the momentum worksheet).":
@@ -84,12 +86,12 @@ VDI18N.add('es', 'ws/relativistic-energy', {
   "pc (MeV), fila {#}",
 "Graph \\(v^2\\) against \\(V\\) for the electrons. Does it follow Newton’s straight line \\(v^2/c^2 = 2K/mc^2\\) at the lowest voltages? What happens above about {#} MV?":
   "Grafica \\(v^2\\) en función de \\(V\\) para los electrones. ¿Sigue la recta de Newton \\(v^2/c^2 = 2K/mc^2\\) con los voltajes más bajos? ¿Qué pasa por encima de unos {#} MV?",
-"Graph \\(\\gamma\\) against \\(V\\) for the electrons. Find \\(mc^2\\) from the slope and compare with {#} MeV. Is the intercept {#}?":
-  "Grafica \\(\\gamma\\) en función de \\(V\\) para los electrones. Encuentra \\(mc^2\\) a partir de la pendiente y compárala con {#} MeV. ¿Es la ordenada al origen {#}?",
+"Graph \\(\\gamma\\) against \\(V\\) for the electrons, using only the readings with \\(\\gamma\\) below {#}: above that, the {#} ns timer cannot pin down \\(\\gamma\\) (see Uncertainty). Find \\(mc^2\\) from the slope and compare with {#} MeV. Is the intercept {#}?":
+  "Grafica \\(\\gamma\\) en función de \\(V\\) para los electrones, usando solo las lecturas con \\(\\gamma\\) menor que {#}: por encima de eso, el cronómetro de {#} ns no puede fijar \\(\\gamma\\) (ve Incertidumbre). Encuentra \\(mc^2\\) a partir de la pendiente y compárala con {#} MeV. ¿Es la ordenada al origen {#}?",
 "For three electron readings (low, middle and high voltage), find \\(E = K + mc^2\\) and check \\(E^2 - (pc)^2\\) against \\((mc^2)^2\\).":
   "Para tres lecturas de electrones (voltaje bajo, medio y alto), encuentra \\(E = K + mc^2\\) y compara \\(E^2 - (pc)^2\\) con \\((mc^2)^2\\).",
-"Find the mystery particle’s rest energy two ways: from the slope of \\(\\gamma\\) against \\(V\\), and from the magnet alone, since \\((pc)^2 = K^2 + 2Kmc^2\\) gives \\(mc^2 = \\big((pc)^2 - K^2\\big)/(2K)\\) for each reading. Which particle is it?":
-  "Encuentra la energía en reposo de la partícula misteriosa de dos maneras: a partir de la pendiente de \\(\\gamma\\) en función de \\(V\\), y solo con el imán, ya que \\((pc)^2 = K^2 + 2Kmc^2\\) da \\(mc^2 = \\big((pc)^2 - K^2\\big)/(2K)\\) para cada lectura. ¿Qué partícula es?",
+"Find the mystery particle’s rest energy two ways: from the slope of \\(\\gamma\\) against \\(V\\) (again with \\(\\gamma\\) below {#}), and from the magnet alone, since \\((pc)^2 = K^2 + 2Kmc^2\\) gives \\(mc^2 = \\big((pc)^2 - K^2\\big)/(2K)\\) for each reading. Which particle is it?":
+  "Encuentra la energía en reposo de la partícula misteriosa de dos maneras: a partir de la pendiente de \\(\\gamma\\) en función de \\(V\\) (de nuevo con \\(\\gamma\\) menor que {#}), y solo con el imán, ya que \\((pc)^2 = K^2 + 2Kmc^2\\) da \\(mc^2 = \\big((pc)^2 - K^2\\big)/(2K)\\) para cada lectura. ¿Qué partícula es?",
 "Bertozzi’s fastest electrons had {#} MeV. Predict their flight time over {#} m and compare with your {#} and {#} MV readings.":
   "Los electrones más rápidos de Bertozzi tenían {#} MeV. Predice su tiempo de vuelo en {#} m y compáralo con tus lecturas de {#} y {#} MV.",
 "The timer reads to {#} ns. For the {#} MV electrons, find how much an error of {#} ns changes \\(v\\) and then \\(\\gamma\\), and explain why the time of flight is a poor way to find \\(\\gamma\\) for the fastest particles, while the bend radius is still good.":
@@ -123,5 +125,9 @@ VDI18N.add('es', 'ws/relativistic-energy', {
 "Flight time":
   "Tiempo de vuelo",
 "Velocity, Momentum and Energy Near c (Electron flight)":
-  "Velocidad, momento y energía cerca de c (Vuelo de electrones)"
+  "Velocidad, momento y energía cerca de c (Vuelo de electrones)",
+"Graph \\(\\gamma\\) against \\(V\\) for the electrons. Find \\(mc^2\\) from the slope and compare with {#} MeV. Is the intercept {#}?":
+  "Grafica \\(\\gamma\\) en función de \\(V\\) para los electrones. Encuentra \\(mc^2\\) a partir de la pendiente y compárala con {#} MeV. ¿Es la ordenada al origen {#}?",
+"Find the mystery particle’s rest energy two ways: from the slope of \\(\\gamma\\) against \\(V\\), and from the magnet alone, since \\((pc)^2 = K^2 + 2Kmc^2\\) gives \\(mc^2 = \\big((pc)^2 - K^2\\big)/(2K)\\) for each reading. Which particle is it?":
+  "Encuentra la energía en reposo de la partícula misteriosa de dos maneras: a partir de la pendiente de \\(\\gamma\\) en función de \\(V\\), y solo con el imán, ya que \\((pc)^2 = K^2 + 2Kmc^2\\) da \\(mc^2 = \\big((pc)^2 - K^2\\big)/(2K)\\) para cada lectura. ¿Qué partícula es?"
 });
