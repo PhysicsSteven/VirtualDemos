@@ -2053,7 +2053,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     }
     fe.push(`<div><dt>Sum of u × volume</dt><dd>${fmtSI(st.Ufield, 'J', 5)}</dd></div><div><dt>½CV²</dt><dd>${fmtSI(st.U, 'J', 5)}</dd></div>`);
     $('fieldE').innerHTML = fe.join('');
-    $('fieldEq').textContent = `difference ${fmtSci(st.Ufield - st.U)} J`;
+    { const d = fmtSci(st.Ufield - st.U); $('fieldEq').textContent = window.VDI18N ? VDI18N.t('difference {d} J', { d }) : `difference ${d} J`; }
     // key
     $('keyQ').textContent = `Free charge, each symbol ${fmtSI(S.qSym, 'C', 2)}`;
     $('keyE').textContent = `Field line; lines are 1 cm apart where E = ${fmtE(S.eLine)}`;

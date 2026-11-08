@@ -306,6 +306,8 @@ VDI18N.add('es', 'demo/magnetic-force', {
   "Voltaje Hall V<sub>top</sub> − V<sub>bottom</sub>",
 "-{#} pV":
   "-{#} pV",
+"−{#} pV":
+  "−{#} pV",
 "Carriers":
   "Portadores",
 "electrons, q = −e":
@@ -524,6 +526,8 @@ VDI18N.add('es', 'demo/magnetic-force', {
   "V (nV)",
 "V_H = -{#} pV":
   "V_H = -{#} pV",
+"V_H = −{#} pV":
+  "V_H = −{#} pV",
 "{#} × {#}⁻¹⁹ s; in a metal the real settling takes about a collision time, {#} × {#}⁻¹⁴ s":
   "{#} × {#}⁻¹⁹ s; en un metal el asentamiento real dura alrededor de un tiempo entre colisiones, {#} × {#}⁻¹⁴ s",
 "p-type germanium strip, {#} mm wide, {#} mm thick":

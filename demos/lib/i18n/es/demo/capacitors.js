@@ -648,6 +648,12 @@ VDI18N.add('es', 'demo/capacitors', {
   "{#} chispa, a {v}.",
 "Predicted: {t} s.":
   "Predicción: {t} s.",
+"difference {d} J":
+  "diferencia {d} J",
+"{n} sparks, the last at {v}.":
+  "{n} chispas, la última a {v}.",
+"Time between the last two: {t} s.":
+  "Tiempo entre las dos últimas: {t} s.",
 "{#} spark, at {#} kV. Predicted: {#} s.":
   "{#} chispa, a {#} kV. Predicción: {#} s.",
 "<span>W<sub>supply</sub> = ΔU + heat in R + sparks</span><br>{#} mJ = {#} mJ + {#} mJ + {#} mJ":

@@ -835,7 +835,7 @@ details.hall[open] > summary { margin-bottom: 8px; }
     return T;
   }
 
-  // ---- magnetic bottle (OpenStax Vol. 2 §11.4): two coaxial coils of radius a at z = ±s/2, each a thin ring carrying N I ----
+  // ---- magnetic bottle (OpenStax Vol. 2 §11.3): two coaxial coils of radius a at z = ±s/2, each a thin ring carrying N I ----
   // Each ring's field is the exact Biot–Savart result in complete elliptic integrals (Jackson, Classical Electrodynamics §5.5;
   // the same closed form as in Magnetic Fields of Currents). The motion is integrated step by step with the Boris rotation,
   // which turns v about B exactly, so the speed stays fixed to rounding error in any static B. Nothing here assumes the
@@ -1079,7 +1079,7 @@ details.hall[open] > summary { margin-bottom: 8px; }
     const a = Math.abs(v); let best = PFX[0];
     for (const p of PFX) if (a >= Math.pow(10, p[0]) * 0.9995) best = p;
     const x = v / Math.pow(10, best[0]);
-    return `${trim(x.toPrecision(d))} ${best[1]}${unit}`;
+    return `${trim(x.toPrecision(d)).replace('-', '−')} ${best[1]}${unit}`;
   }
   function fmtLen(m, d = 3) { const a = Math.abs(m); if (a >= 0.01 && a < 1) return `${trim((m * 100).toPrecision(d))} cm`; return si(m, 'm', d); }
   const fmtV = (v, d = 3) => `${sci(v, d)} m/s`;
