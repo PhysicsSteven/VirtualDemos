@@ -103,4 +103,14 @@ group('a virtual entrance pupil behind the stop: lens f = 5 cm, then a 1 cm stop
   near(pu.stop.z, 2, 0); near(pu.en.z, 10 / 3, 1e-9); near(pu.en.D, 1 / 0.6, 1e-9);
 });
 
+group('an eyepiece field stop (25° apparent field) makes the true field shrink as the eyepiece gets shorter: true field ≈ 25°/M', () => {
+  const D25 = (f) => 2 * f * Math.tan(12.5 * Math.PI / 180), deg = (t) => 2 * Math.atan(t) * 180 / Math.PI;
+  for (const fe of [5, 4, 2.5]) {
+    const els = [lens(0, 50, 5), stop(50, D25(fe)), lens(50 + fe, fe, 2.5)];
+    const zV = c.pupils(els.concat([stop(1e9, 0.7)]), MOON).ex.z, hf = c.halfField(els, MOON, zV, 0.7);
+    near(deg(hf.field), 2 * Math.atan(D25(fe) / 2 / 50) * 180 / Math.PI, 0.002, 'true field set by the stop, f₂ = ' + fe);
+    near(deg(hf.field) * 50 / fe, 25, 0.02, 'apparent field 25°, f₂ = ' + fe);
+  }
+});
+
 console.log(`${n} groups passed`);

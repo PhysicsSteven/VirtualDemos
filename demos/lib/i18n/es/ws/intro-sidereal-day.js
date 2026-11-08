@@ -20,6 +20,8 @@ VDI18N.add('es', 'ws/intro-sidereal-day', {
   "Declinación del Sol (°)",
 "Sidereal Days, Solar Days and Sundials | VirtualDemos":
   "Días sidéreos, días solares y relojes de sol | VirtualDemos",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
 "Sidereal Days, Solar Days and Sundials":
   "Días sidéreos, días solares y relojes de sol",
 "<strong>Setups in the demo:</strong> Toy planet, {#} days a year; Toy planet, {#} days a year; Always faces the Sun; Earth; Mars; Mercury; Venus; Jupiter; The Moon; Earth: sundial and clock; The ellipse alone (no tilt); The tilt alone (circular orbit); A much more stretched orbit.":
@@ -116,8 +118,8 @@ VDI18N.add('es', 'ws/intro-sidereal-day', {
   "Venus gira al revés. ¿Su día solar es más largo o más corto que su día sidéreo de {#} días? Usa la imagen para explicar por qué girar al revés acorta el día solar.",
 "In Part {#}, on which of your dates is the sundial furthest ahead of the clock, and on which is it furthest behind? By how many minutes?":
   "En la Parte {#}, ¿en cuál de tus fechas va el reloj de sol más adelantado respecto al reloj, y en cuál más atrasado? ¿Por cuántos minutos?",
-"In Part {#}, on which date was the solar day longest, and on which was it shortest? Are any of the solar days more than half a minute away from {#} hours?":
-  "En la Parte {#}, ¿en qué fecha fue más largo el día solar y en cuál fue más corto? ¿Alguno de los días solares se aleja más de medio minuto de {#} horas?",
+"In Part {#}, on which date was the solar day longest, and on which was it shortest? How far is the longest solar day from {#} hours, in seconds?":
+  "En la Parte {#}, ¿en qué fecha fue más largo el día solar y en cuál fue más corto? ¿Qué tan lejos está el día solar más largo de {#} horas, en segundos?",
 "In Part {#}, add the ellipse alone reading and the tilt alone reading for {#} February. Compare the sum with your Part {#} reading on that date. Do the same for {#} November. Which cause is bigger on each date?":
   "En la Parte {#}, suma la lectura de solo la elipse y la de solo la inclinación para el {#} de febrero. Compara la suma con tu lectura de la Parte {#} en esa fecha. Haz lo mismo para el {#} de noviembre. ¿Qué causa es mayor en cada fecha?",
 "The demo computes the days from the planets’ measured rotation and orbit periods, so a repeated reading gives the same numbers. The top view is not to scale. Your solar day in Analysis {#} comes from dividing two readings. If the time readout were rounded to the nearest hour, how far off could Earth’s solar day be after one solar day? After ten solar days? Why does counting many days give a better answer?":
@@ -133,5 +135,7 @@ VDI18N.add('es', 'ws/intro-sidereal-day', {
 "Prelab answers, the table copies, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, las copias de las tablas, las respuestas de las secciones de análisis e incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Reasons for Seasons":
-  "Las causas de las estaciones"
+  "Las causas de las estaciones",
+"In Part {#}, on which date was the solar day longest, and on which was it shortest? Are any of the solar days more than half a minute away from {#} hours?":
+  "En la Parte {#}, ¿en qué fecha fue más largo el día solar y en cuál fue más corto? ¿Alguno de los días solares se aleja más de medio minuto de {#} horas?"
 });

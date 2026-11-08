@@ -87,7 +87,7 @@ No hazards in the virtual lab.
 2. From your graph, what core share of the volume gives Mars's measured mean density, 3934 kg/m³? What core radius did you record at that share? Compare it with the radius the InSight seismometer found, 1830 km.
 3. In Part 1, what happened to C/MR² as the core grew? With no core it is 0.4: why?
 4. For the five worlds in Part 2, which has the largest share of its mass in its core, and which the smallest? Rank them.
-5. How close is each model C/MR² to the measured one? For Earth if it were rock all through, how far is the model's mean density from the measured 5514 kg/m³?
+5. How close is each model C/MR² to the measured one? For Earth if it were rock all through, how far is the model's mean density (your answer to Before the lab 1) from the measured 5514 kg/m³?
 6. In Part 3, compare the mean surface speed of your three Earth readings with those for Venus and Mars. On which planet does the surface move?
 7. In Part 3, which setup gets the most heat out of its top, and which has the hottest mantle? Explain the link between the two.
 8. In Part 4, divide the root below by the crust thickness for the continent. Compare with your answer to Before the lab 3.
@@ -96,7 +96,7 @@ No hazards in the virtual lab.
 
 ## Uncertainty
 
-The layers and the floating crust are computed from formulas, so a repeated reading gives the same numbers; their uncertainty is in what the model leaves out. The convection changes from moment to moment: your three readings of each setup show how much. For each Part 3 setup, give the range of the surface speed (the largest minus the smallest of your three readings). Is the difference between Earth and Venus bigger than these ranges?
+The layers and the floating crust are computed from formulas, so a repeated reading gives the same numbers; their uncertainty is in what the model leaves out. The convection changes from moment to moment: your three readings of each setup show how much. For each Part 3 setup, give the range of the surface speed (the largest minus the smallest of your three readings). Compare the smallest of your Earth readings with the largest of your Venus readings: is Earth's surface faster than Venus's even allowing for the spread?
 
 ## Questions
 

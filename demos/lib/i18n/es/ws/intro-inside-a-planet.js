@@ -34,6 +34,8 @@ VDI18N.add('es', 'ws/intro-inside-a-planet', {
   "Raíz debajo (km)",
 "Inside a Planet | VirtualDemos":
   "El interior de un planeta | VirtualDemos",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
 "Inside a Planet":
   "El interior de un planeta",
 "<strong>Setups in the demo:</strong> Layers: Earth: core and mantle; Earth if it were rock all through; Mercury: a huge core; Venus; Mars; Moon: a tiny core. Convection: Earth: moving plates; Venus: one stiff lid; Venus: a lid that holds, then breaks; Mars: plumes that stay put; Rock equally runny hot or cold; Heated only from inside; Benchmark: one steady roll. Floating crust: Continent and ocean floor; A high plateau with a deep root; A stretched, thin continent.":
@@ -154,8 +156,8 @@ VDI18N.add('es', 'ws/intro-inside-a-planet', {
   "En la Parte {#}, ¿qué le pasó a C/MR² conforme creció el núcleo? Sin núcleo vale {#}: ¿por qué?",
 "For the five worlds in Part {#}, which has the largest share of its mass in its core, and which the smallest? Rank them.":
   "De los cinco mundos de la Parte {#}, ¿cuál tiene la mayor fracción de su masa en el núcleo y cuál la menor? Ordénalos.",
-"How close is each model C/MR² to the measured one? For Earth if it were rock all through, how far is the model’s mean density from the measured {#} kg/m³?":
-  "¿Qué tan cerca está cada C/MR² del modelo del medido? Para La Tierra si fuera roca de principio a fin, ¿qué tan lejos está la densidad media del modelo de los {#} kg/m³ medidos?",
+"How close is each model C/MR² to the measured one? For Earth if it were rock all through, how far is the model’s mean density (your answer to Before the lab {#}) from the measured {#} kg/m³?":
+  "¿Qué tan cerca está cada C/MR² del modelo del medido? Para la Tierra si fuera roca por completo, ¿qué tan lejos está la densidad media del modelo (tu respuesta a Antes del laboratorio {#}) de los {#} kg/m³ medidos?",
 "In Part {#}, compare the mean surface speed of your three Earth readings with those for Venus and Mars. On which planet does the surface move?":
   "En la Parte {#}, compara la rapidez media de la superficie de tus tres lecturas de la Tierra con las de Venus y Marte. ¿En qué planeta se mueve la superficie?",
 "In Part {#}, which setup gets the most heat out of its top, and which has the hottest mantle? Explain the link between the two.":
@@ -166,8 +168,8 @@ VDI18N.add('es', 'ws/intro-inside-a-planet', {
   "Según tus lecturas de la Parte {#}, ¿cuánto más alto queda el continente por cada {#} km adicionales de corteza?",
 "By how many km does the average continent ({#} km thick) stand higher than the ocean floor ({#} km thick)? Earth’s average land is {#} km above sea level and its average sea floor {#} km below it. Compare.":
   "¿Cuántos km más alto queda el continente promedio ({#} km de espesor) que el fondo oceánico ({#} km de espesor)? La tierra firme promedio de la Tierra está {#} km sobre el nivel del mar y su fondo marino promedio {#} km por debajo. Compara.",
-"The layers and the floating crust are computed from formulas, so a repeated reading gives the same numbers; their uncertainty is in what the model leaves out. The convection changes from moment to moment: your three readings of each setup show how much. For each Part {#} setup, give the range of the surface speed (the largest minus the smallest of your three readings). Is the difference between Earth and Venus bigger than these ranges?":
-  "Las capas y la corteza flotante se calculan con fórmulas, así que una lectura repetida da los mismos números; su incertidumbre está en lo que deja fuera el modelo. La convección cambia de un momento a otro: tus tres lecturas de cada configuración muestran cuánto. Para cada configuración de la Parte {#}, da el intervalo de la rapidez de la superficie (la mayor menos la menor de tus tres lecturas). ¿La diferencia entre la Tierra y Venus es mayor que estos intervalos?",
+"The layers and the floating crust are computed from formulas, so a repeated reading gives the same numbers; their uncertainty is in what the model leaves out. The convection changes from moment to moment: your three readings of each setup show how much. For each Part {#} setup, give the range of the surface speed (the largest minus the smallest of your three readings). Compare the smallest of your Earth readings with the largest of your Venus readings: is Earth’s surface faster than Venus’s even allowing for the spread?":
+  "Las capas y la corteza flotante se calculan con fórmulas, así que una lectura repetida da los mismos números; su incertidumbre está en lo que el modelo deja fuera. La convección cambia de un momento a otro: tus tres lecturas de cada configuración muestran cuánto. Para cada configuración de la Parte {#}, da el rango de la velocidad de la superficie (la mayor menos la menor de tus tres lecturas). Compara la menor de tus lecturas de la Tierra con la mayor de tus lecturas de Venus: ¿es la superficie de la Tierra más rápida que la de Venus aun tomando en cuenta la dispersión?",
 "Explain in your own words how scientists can tell a planet has an iron core without ever seeing inside it.":
   "Explica con tus propias palabras cómo pueden saber los científicos que un planeta tiene un núcleo de hierro sin ver nunca su interior.",
 "The Moon has a C/MR² of {#}, very close to {#}. What does that say about the Moon? How might the giant impact that formed the Moon explain it?":
@@ -181,5 +183,9 @@ VDI18N.add('es', 'ws/intro-inside-a-planet', {
 "Why are mountains like the Himalayas and the Tibetan Plateau underlain by very thick crust? Use Part {#}.":
   "¿Por qué debajo de montañas como el Himalaya y la meseta del Tíbet hay una corteza muy gruesa? Usa la Parte {#}.",
 "Prelab answers, the four data tables, your graph from Analysis {#}, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.":
-  "Respuestas del prelaboratorio, las cuatro tablas de datos, tu gráfica del Análisis {#}, las respuestas de las secciones de análisis e incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados."
+  "Respuestas del prelaboratorio, las cuatro tablas de datos, tu gráfica del Análisis {#}, las respuestas de las secciones de análisis e incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
+"How close is each model C/MR² to the measured one? For Earth if it were rock all through, how far is the model’s mean density from the measured {#} kg/m³?":
+  "¿Qué tan cerca está cada C/MR² del modelo del medido? Para La Tierra si fuera roca de principio a fin, ¿qué tan lejos está la densidad media del modelo de los {#} kg/m³ medidos?",
+"The layers and the floating crust are computed from formulas, so a repeated reading gives the same numbers; their uncertainty is in what the model leaves out. The convection changes from moment to moment: your three readings of each setup show how much. For each Part {#} setup, give the range of the surface speed (the largest minus the smallest of your three readings). Is the difference between Earth and Venus bigger than these ranges?":
+  "Las capas y la corteza flotante se calculan con fórmulas, así que una lectura repetida da los mismos números; su incertidumbre está en lo que deja fuera el modelo. La convección cambia de un momento a otro: tus tres lecturas de cada configuración muestran cuánto. Para cada configuración de la Parte {#}, da el intervalo de la rapidez de la superficie (la mayor menos la menor de tus tres lecturas). ¿La diferencia entre la Tierra y Venus es mayor que estos intervalos?"
 });

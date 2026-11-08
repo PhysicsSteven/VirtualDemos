@@ -28,6 +28,8 @@ VDI18N.add('es', 'ws/intro-mars-ages', {
   "Tapa fría (km)",
 "Dating the Surface of Mars | VirtualDemos":
   "Fechar la superficie de Marte | VirtualDemos",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
 "Dating the Surface of Mars":
   "Fechar la superficie de Marte",
 "<strong>Setups in the demo:</strong> Count craters: Southern highlands, Northern plains, Tharsis lava plains, Olympus Mons caldera (Mars), five lunar surfaces and a Mystery surface. Make a crater: Meteor Crater, Tycho, Copernicus, Chicxulub, Mead, Orientale, Caloris, Hellas, a {#} m asteroid. Cooling: Just formed, When the lunar maria erupted, Today.":
@@ -60,8 +62,8 @@ VDI18N.add('es', 'ws/intro-mars-ages', {
   "Si una superficie de Marte tiene menos cráteres por km² que los mares lunares (unos {#} cráteres de más de {#} km de ancho por km²), ¿es más antigua o más joven que los mares?",
 "<strong>Part {#}: dating Mars.</strong> In Count craters, choose each Martian surface in turn: Southern highlands, Northern plains, Tharsis lava plains and Olympus Mons caldera. Keep the size to count that the setup chooses. Mark every crater at least as wide as the purple circle whose center lies inside the square, then record a reading. Send the four readings to the worksheet, then clear them.":
   "<strong>Parte {#}: fechar Marte.</strong> En Contar cráteres, elige una por una cada superficie marciana: Tierras altas del sur, Llanuras del norte, Llanuras de lava de Tharsis y Caldera del Olympus Mons. Conserva el tamaño mínimo de conteo que elige la configuración. Marca cada cráter al menos tan ancho como el círculo morado cuyo centro esté dentro del cuadro, y luego registra una lectura. Envía las cuatro lecturas a la hoja de trabajo y luego bórralas.",
-"<strong>Part {#}: the same asteroid on Mars and the Moon.</strong> In Make a crater, drop a dense rock asteroid {#} km across coming in at {#}° on Mars at {#} km/s, on Mars at {#} km/s, and on the Moon at {#} km/s, and record each crater once it has formed. Send the readings to the worksheet, then clear them.":
-  "<strong>Parte {#}: el mismo asteroide en Marte y en la Luna.</strong> En Hacer un cráter, suelta un asteroide de roca densa de {#} km de diámetro que llega a {#}° sobre Marte a {#} km/s, sobre Marte a {#} km/s y sobre la Luna a {#} km/s, y registra cada cráter una vez que se haya formado. Envía las lecturas a la hoja de trabajo y luego bórralas.",
+"<strong>Part {#}: the same asteroid on Mars and the Moon.</strong> In Make a crater, drop a dense rock asteroid ({#} kg/m³) {#} km across coming in at {#}° on Mars at {#} km/s, on Mars at {#} km/s, and on the Moon at {#} km/s, and record each crater once it has formed. Send the readings to the worksheet, then clear them.":
+  "<strong>Parte {#}: el mismo asteroide en Marte y en la Luna.</strong> En Hacer un cráter, suelta un asteroide de roca densa ({#} kg/m³) de {#} km de diámetro que llega a {#}° sobre Marte a {#} km/s, sobre Marte a {#} km/s y sobre la Luna a {#} km/s, y registra cada cráter cuando se haya formado. Envía las lecturas a la hoja de trabajo y luego bórralas.",
 "<strong>Part {#}: Mars cooling.</strong> In Cooling, set the time to {#}, {#}, {#} and {#} billion years after the planets formed and record a reading at each. Send them to the worksheet.":
   "<strong>Parte {#}: el enfriamiento de Marte.</strong> En Enfriamiento, fija el tiempo en {#}, {#}, {#} y {#} mil millones de años después de que se formaron los planetas y registra una lectura en cada uno. Envíalas a la hoja de trabajo.",
 "<span>B</span>Surface":
@@ -154,6 +156,8 @@ VDI18N.add('es', 'ws/intro-mars-ages', {
   "Respuestas previas al laboratorio, las tres tablas, las respuestas de las secciones de análisis e incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Craters, Cooling and Surface Ages":
   "Cráteres, enfriamiento y edades de superficies",
+"<strong>Part {#}: the same asteroid on Mars and the Moon.</strong> In Make a crater, drop a dense rock asteroid {#} km across coming in at {#}° on Mars at {#} km/s, on Mars at {#} km/s, and on the Moon at {#} km/s, and record each crater once it has formed. Send the readings to the worksheet, then clear them.":
+  "<strong>Parte {#}: el mismo asteroide en Marte y en la Luna.</strong> En Hacer un cráter, suelta un asteroide de roca densa de {#} km de diámetro que llega a {#}° sobre Marte a {#} km/s, sobre Marte a {#} km/s y sobre la Luna a {#} km/s, y registra cada cráter una vez que se haya formado. Envía las lecturas a la hoja de trabajo y luego bórralas.",
 "From Part {#}, how much bigger is the crater on Mars at {#} km/s than on the Moon at {#} km/s? Explain using gravity. Then compare Mars at {#} km/s with the Moon at {#} km/s: which effect wins?":
   "Según la Parte {#}, ¿cuánto más grande es el cráter en Marte a {#} km/s que en la Luna a {#} km/s? Explícalo usando la gravedad. Luego compara Marte a {#} km/s con la Luna a {#} km/s: ¿qué efecto gana?"
 });

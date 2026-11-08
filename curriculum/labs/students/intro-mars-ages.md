@@ -46,7 +46,7 @@ No hazards in the virtual lab.
 
 **Part 1: dating Mars.** In Count craters, choose each Martian surface in turn: Southern highlands, Northern plains, Tharsis lava plains and Olympus Mons caldera. Keep the size to count that the setup chooses. Mark every crater at least as wide as the purple circle whose center lies inside the square, then record a reading. Send the four readings to the worksheet, then clear them.
 
-**Part 2: the same asteroid on Mars and the Moon.** In Make a crater, drop a dense rock asteroid 1 km across coming in at 45° on Mars at 10 km/s, on Mars at 18 km/s, and on the Moon at 18 km/s, and record each crater once it has formed. Send the readings to the worksheet, then clear them.
+**Part 2: the same asteroid on Mars and the Moon.** In Make a crater, drop a dense rock asteroid (3000 kg/m³) 1 km across coming in at 45° on Mars at 10 km/s, on Mars at 18 km/s, and on the Moon at 18 km/s, and record each crater once it has formed. Send the readings to the worksheet, then clear them.
 
 **Part 3: Mars cooling.** In Cooling, set the time to 0.5, 1.0, 2.0 and 4.5 billion years after the planets formed and record a reading at each. Send them to the worksheet.
 

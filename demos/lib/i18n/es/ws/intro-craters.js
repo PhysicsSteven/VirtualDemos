@@ -28,6 +28,8 @@ VDI18N.add('es', 'ws/intro-craters', {
   "Tapa fría (km)",
 "Craters and the Ages of the Moon’s Surface | VirtualDemos":
   "Los cráteres y las edades de la superficie de la Luna | VirtualDemos",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
 "Craters and the Ages of the Moon’s Surface":
   "Los cráteres y las edades de la superficie de la Luna",
 "<strong>Setups in the demo:</strong> Make a crater: Meteor Crater, Tycho, Copernicus, Chicxulub, Mead, Orientale, Caloris, Hellas, a {#} m asteroid. Count craters: lunar highlands, Mare Tranquillitatis, Alphonsus floor, Copernicus floor, Tycho floor, four Martian surfaces and a Mystery surface. Cooling: Just formed, When the lunar maria erupted, Today.":
@@ -134,8 +136,8 @@ VDI18N.add('es', 'ws/intro-craters', {
   "¿Aproximadamente con qué tamaño de cráter cambió la forma de un cuenco simple a un cráter con fondo plano y pico central?",
 "Compare the {#} km asteroid on the Moon and on Earth. Which crater is bigger, and by how many times? Explain why, using gravity.":
   "Compara el asteroide de {#} km en la Luna y en la Tierra. ¿Qué cráter es más grande, y cuántas veces? Explica por qué usando la gravedad.",
-"For each surface in Part {#}, check the craters per km²: divide your count N by the area. Put the five surfaces in order from youngest to oldest.":
-  "Para cada superficie de la Parte {#}, comprueba los cráteres por km²: divide tu conteo N entre el área. Ordena las cinco superficies de la más joven a la más vieja.",
+"For each surface in Part {#}, work out the craters per km²: divide your count N by the area. The setups count craters down to different sizes, so these numbers cannot be compared from one surface to the next. Put the five surfaces in order from youngest to oldest using the age from the clock.":
+  "Para cada superficie de la Parte {#}, calcula los cráteres por km²: divide tu conteo N entre el área. Las configuraciones cuentan cráteres hasta tamaños distintos, así que estos números no se pueden comparar de una superficie a otra. Ordena las cinco superficies de la más joven a la más vieja usando la edad del reloj.",
 "The maria are dark lava plains that fill huge old basins. Using your ages, did the lava come before or after the highlands formed? About how long after?":
   "Los mares son llanuras oscuras de lava que llenan enormes cuencas antiguas. Según tus edades, ¿la lava llegó antes o después de que se formaran las tierras altas? ¿Aproximadamente cuánto tiempo después?",
 "Copernicus and Tycho are bright, rayed craters. What do your ages say about how long the rays on the Moon last?":
@@ -157,5 +159,7 @@ VDI18N.add('es', 'ws/intro-craters', {
 "Prelab answers, the three tables, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, las tres tablas, las respuestas de las secciones de análisis e incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Craters, Cooling and Surface Ages":
-  "Cráteres, enfriamiento y edades de las superficies"
+  "Cráteres, enfriamiento y edades de las superficies",
+"For each surface in Part {#}, check the craters per km²: divide your count N by the area. Put the five surfaces in order from youngest to oldest.":
+  "Para cada superficie de la Parte {#}, comprueba los cráteres por km²: divide tu conteo N entre el área. Ordena las cinco superficies de la más joven a la más vieja."
 });

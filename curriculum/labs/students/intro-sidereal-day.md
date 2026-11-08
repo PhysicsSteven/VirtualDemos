@@ -78,7 +78,7 @@ A positive sundial reading means the sundial is ahead of the clock; a negative o
 5. Mercury turned 3 times against the stars in one of its solar days. How many of Mercury's years (88 days each) is one solar day on Mercury?
 6. Venus spins backward. Is its solar day longer or shorter than its sidereal day of 243 days? Use the picture to explain why spinning backward makes the solar day shorter.
 7. In Part 3, on which of your dates is the sundial furthest ahead of the clock, and on which is it furthest behind? By how many minutes?
-8. In Part 3, on which date was the solar day longest, and on which was it shortest? Are any of the solar days more than half a minute away from 24 hours?
+8. In Part 3, on which date was the solar day longest, and on which was it shortest? How far is the longest solar day from 24 hours, in seconds?
 9. In Part 4, add the ellipse alone reading and the tilt alone reading for 11 February. Compare the sum with your Part 3 reading on that date. Do the same for 3 November. Which cause is bigger on each date?
 
 ## Uncertainty

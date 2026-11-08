@@ -44,7 +44,7 @@ Find out the main ways a telescope can blur a star, what causes each one, how to
 ## Before the lab
 
 1. Using 1.22 λ/D, what is the size of a perfect 200 mm (0.200 m) telescope's star image in green light (550 nm = 0.000 000 550 m), in seconds of arc?
-2. Spherical aberration gets weaker as a mirror is made "slower" (a larger focal ratio N, so the mirror is longer for its width). The wavefront error grows as 1/N³. How many times bigger is it at f/8 than at f/12?
+2. Spherical aberration gets weaker as a mirror is made "slower" (a larger focal ratio N, so the mirror is longer for its width). For mirrors of f/8 and slower, the wavefront error grows as 1/N³ (faster mirrors pick up extra, higher order error). How many times bigger is it at f/8 than at f/12?
 3. Predict: if the blur comes from the air and not from the telescope, would a bigger telescope give a smaller star image?
 
 ## Safety

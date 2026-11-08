@@ -75,7 +75,7 @@ No hazards in the virtual lab.
 1. For each Moon crater in Part 1, divide the crater diameter by the asteroid diameter. Does the ratio stay the same as the asteroid gets bigger? Compare with your guess in Before the lab 1.
 2. At about what crater size did the shape change from a simple bowl to a crater with a flat floor and a central peak?
 3. Compare the 1 km asteroid on the Moon and on Earth. Which crater is bigger, and by how many times? Explain why, using gravity.
-4. For each surface in Part 2, check the craters per km²: divide your count N by the area. Put the five surfaces in order from youngest to oldest.
+4. For each surface in Part 2, work out the craters per km²: divide your count N by the area. The setups count craters down to different sizes, so these numbers cannot be compared from one surface to the next. Put the five surfaces in order from youngest to oldest using the age from the clock.
 5. The maria are dark lava plains that fill huge old basins. Using your ages, did the lava come before or after the highlands formed? About how long after?
 6. Copernicus and Tycho are bright, rayed craters. What do your ages say about how long the rays on the Moon last?
 7. Show the right count on the Highlands and compare its set age with the age from your count. Which is larger? Explain the difference using saturation.

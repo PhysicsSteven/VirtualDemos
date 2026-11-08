@@ -16,6 +16,8 @@ VDI18N.add('es', 'ws/intro-telescope', {
   "Campo real (°)",
 "Building a Telescope | VirtualDemos":
   "Construir un telescopio | VirtualDemos",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
 "Building a Telescope":
   "Construir un telescopio",
 "<strong>Setups in the demo:</strong> Magnifier; Compound microscope; Keplerian telescope; Galilean telescope; Terrestrial telescope; Start from scratch.":
@@ -26,6 +28,8 @@ VDI18N.add('es', 'ws/intro-telescope', {
   "Haz clic en una lente para cambiar su distancia focal, su diámetro o su lugar en el riel; haz clic en el ojo para cambiar el tamaño de su pupila o su lugar. “Ponerlo en la pupila de salida” mueve el ojo al punto por donde pasa toda la luz que sale del ocular.",
 "The readouts give the angular magnification M (how many times bigger things look; a minus sign means the view is upside down), the exit pupil (the width of the beam that leaves the eyepiece), the apparent field of view, the image brightness and <strong>Light from a star</strong>: how many times more light from a star reaches the eye through the telescope than reaches the bare eye.":
   "Las lecturas dan el aumento angular M (cuántas veces más grandes se ven las cosas; un signo menos significa que la vista está de cabeza), la pupila de salida (el ancho del haz que sale del ocular), el campo de visión aparente, el brillo de la imagen y <strong>Luz de una estrella</strong>: cuántas veces más luz de una estrella llega al ojo a través del telescopio que al ojo desnudo.",
+"The telescope’s eyepiece carries a <strong>field stop</strong>, a ring at its focal point that frames the view, sized for a {#}° apparent field. It moves and shrinks with the eyepiece, so a shorter eyepiece shows a smaller piece of sky, as in a real telescope.":
+  "El ocular del telescopio lleva un <strong>diafragma de campo</strong>, un anillo en su punto focal que enmarca la vista, del tamaño para un campo aparente de {#}°. Se mueve y se encoge con el ocular, así que un ocular más corto muestra un pedazo de cielo más pequeño, como en un telescopio real.",
 "The lenses are ideal thin lenses, with one color of light and no blur from diffraction (its limit is quoted under Light and field). Real lenses split colors, as the Lenses, Mirrors and Color worksheet shows.":
   "Las lentes son lentes delgadas ideales, con un solo color de luz y sin desenfoque por difracción (su límite se da en Luz y campo). Las lentes reales separan los colores, como muestra la hoja de trabajo Lentes, espejos y color.",
 "Record reading stores the focal lengths, the objective’s diameter and every readout. Export to worksheet sends the readings to the Data table below; Clear starts a new series, which goes into a new copy of the table.":
@@ -84,8 +88,8 @@ VDI18N.add('es', 'ws/intro-telescope', {
   "Llena D² para la Parte {#} (el diámetro multiplicado por sí mismo).",
 "For each reading in Part {#}, divide f₁ by f₂ and compare the result with the magnification M the demo measured. (Ignore the minus sign: it only means the view is upside down.)":
   "Para cada lectura de la Parte {#}, divide f₁ entre f₂ y compara el resultado con el aumento M que midió la demo. (Ignora el signo menos: solo significa que la vista está de cabeza.)",
-"The full Moon is {#}° across. How big does it look through the telescope with the {#} cm eyepiece? The true field is the piece of sky you can see at once: does the whole Moon fit in the view with each eyepiece?":
-  "La Luna llena mide {#}° de diámetro. ¿Qué tan grande se ve a través del telescopio con el ocular de {#} cm? El campo real es el pedazo de cielo que puedes ver a la vez: ¿cabe toda la Luna en la vista con cada ocular?",
+"The full Moon is {#}° across. How big does it look through the telescope with the {#} cm eyepiece? The true field is the piece of sky you can see at once: does the whole Moon fit in the view with each eyepiece? How does the true field change as the eyepiece gets shorter?":
+  "La Luna llena mide {#}° de ancho. ¿Qué tan grande se ve por el telescopio con el ocular de {#} cm? El campo real es el pedazo de cielo que puedes ver a la vez: ¿cabe toda la Luna en la vista con cada ocular? ¿Cómo cambia el campo real cuando el ocular es más corto?",
 "Graph the light from a star against D² for Part {#}. Is it a straight line through the origin? What does that tell you about how the light gathered depends on the diameter?":
   "Grafica la luz de una estrella en función de D² para la Parte {#}. ¿Es una recta que pasa por el origen? ¿Qué te dice eso sobre cómo depende del diámetro la luz reunida?",
 "Divide {#} by the slope of your graph and take the square root. Compare the result with the diameter of the eye’s pupil, {#} cm. Why does the pupil’s size appear here?":
@@ -113,5 +117,7 @@ VDI18N.add('es', 'ws/intro-telescope', {
 "Focal length of the eyepiece":
   "Distancia focal del ocular",
 "Build a Microscope or Telescope":
-  "Construye un microscopio o un telescopio"
+  "Construye un microscopio o un telescopio",
+"The full Moon is {#}° across. How big does it look through the telescope with the {#} cm eyepiece? The true field is the piece of sky you can see at once: does the whole Moon fit in the view with each eyepiece?":
+  "La Luna llena mide {#}° de diámetro. ¿Qué tan grande se ve a través del telescopio con el ocular de {#} cm? El campo real es el pedazo de cielo que puedes ver a la vez: ¿cabe toda la Luna en la vista con cada ocular?"
 });

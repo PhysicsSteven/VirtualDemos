@@ -6,6 +6,8 @@ VDI18N.add('es', 'ws/intro-spectra', {
   "Ion",
 "Fingerprints of the Elements | VirtualDemos":
   "Huellas digitales de los elementos | VirtualDemos",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
 "Fingerprints of the Elements":
   "Huellas digitales de los elementos",
 "<strong>Modes in the demo:</strong> Explore (one element), Compare (two elements, one above the other), Mystery (an unknown gas mixture or a star), Hydrogen in stars (how a star’s temperature sets the strength of its hydrogen lines) and Atom models (how models of the atom explain the lines).":
@@ -46,8 +48,8 @@ VDI18N.add('es', 'ws/intro-spectra', {
   "<strong>Parte {#}. Líneas brillantes y líneas oscuras.</strong> Con hidrógeno como espectro de emisión, registra una lectura de cada una de las cuatro líneas visibles más brillantes (roja, verde azulada, azul y violeta). Luego cambia a absorción y registra las mismas cuatro líneas, ahora oscuras. Envía las lecturas a la hoja de trabajo y luego bórralas.",
 "<strong>Part {#}. A fingerprint.</strong> Choose sodium as an emission spectrum and record a reading of each of its two brightest yellow lines. Then choose neon and record a reading of its brightest line. Send the readings to the worksheet, then clear them.":
   "<strong>Parte {#}. Una huella digital.</strong> Elige sodio como espectro de emisión y registra una lectura de cada una de sus dos líneas amarillas más brillantes. Luego elige neón y registra una lectura de su línea más brillante. Envía las lecturas a la hoja de trabajo y luego bórralas.",
-"<strong>Part {#}. A mystery star.</strong> Choose Mystery mode and A star. Find four of the darkest lines in the star’s spectrum and record a reading of each, then send the readings to the worksheet. Now find which elements made them: click elements in the periodic table to add them to your guess, which appears in the bottom strip, until every dark line in the star matches a line of your guess. Check your answer, and write down which elements you found.":
-  "<strong>Parte {#}. Una estrella misteriosa.</strong> Elige el modo Misterio y Una estrella. Encuentra cuatro de las líneas más oscuras del espectro de la estrella y registra una lectura de cada una, y luego envía las lecturas a la hoja de trabajo. Ahora descubre qué elementos las produjeron: haz clic en elementos de la tabla periódica para agregarlos a tu suposición, que aparece en la franja de abajo, hasta que cada línea oscura de la estrella coincida con una línea de tu suposición. Comprueba tu respuesta y anota qué elementos encontraste.",
+"<strong>Part {#}. A mystery star.</strong> Choose Mystery mode and A star. Find four dark lines in the star’s spectrum and record a reading of each, then send the readings to the worksheet. Now find which elements made them: click elements in the periodic table to add them to your guess, which appears in the bottom strip, until every dark line in the star matches a line of your guess. Check your answer, and write down which elements you found.":
+  "<strong>Parte {#}. Una estrella misteriosa.</strong> Elige el modo Misterio y Una estrella. Encuentra cuatro líneas oscuras en el espectro de la estrella y registra una lectura de cada una, y luego envía las lecturas a la hoja de trabajo. Ahora descubre qué elementos las produjeron: haz clic en elementos de la tabla periódica para agregarlos a tu suposición, que aparece en la franja de abajo, hasta que cada línea oscura de la estrella coincida con una línea de tu suposición. Comprueba tu respuesta y anota qué elementos encontraste.",
 "<span>B</span>Source":
   "<span>B</span>Fuente",
 "<span>C</span>Wavelength (nm)":
@@ -88,6 +90,8 @@ VDI18N.add('es', 'ws/intro-spectra', {
   "Encabezado de la columna E",
 "Spectra Explorer":
   "Explorador de espectros",
+"<strong>Part {#}. A mystery star.</strong> Choose Mystery mode and A star. Find four of the darkest lines in the star’s spectrum and record a reading of each, then send the readings to the worksheet. Now find which elements made them: click elements in the periodic table to add them to your guess, which appears in the bottom strip, until every dark line in the star matches a line of your guess. Check your answer, and write down which elements you found.":
+  "<strong>Parte {#}. Una estrella misteriosa.</strong> Elige el modo Misterio y Una estrella. Encuentra cuatro de las líneas más oscuras del espectro de la estrella y registra una lectura de cada una, y luego envía las lecturas a la hoja de trabajo. Ahora descubre qué elementos las produjeron: haz clic en elementos de la tabla periódica para agregarlos a tu suposición, que aparece en la franja de abajo, hasta que cada línea oscura de la estrella coincida con una línea de tu suposición. Comprueba tu respuesta y anota qué elementos encontraste.",
 "<strong>Modes in the demo:</strong> Explore (one element), Compare (two elements, one above the other) and Mystery (an unknown gas mixture or a star).":
   "<strong>Modos en la demo:</strong> Explorar (un elemento), Comparar (dos elementos, uno encima del otro) y Misterio (una mezcla de gases desconocida o una estrella)."
 });

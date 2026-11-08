@@ -1306,7 +1306,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   for (const b of document.querySelectorAll('#systems button')) b.addEventListener('click', () => { custom(); S.view = S.view === 'free' || S.view === 'follow' ? 'whole' : S.view; setMu(SYS[b.dataset.s].mu, b.dataset.s); });
   $('mu').addEventListener('input', (e) => {
     custom();
-    let mu = Math.pow(10, +e.target.value), sys = 'custom';
+    let mu = VD.nice(Math.pow(10, +e.target.value)), sys = 'custom'; /* VD.nice: lands on 0.03, not 0.0299916 */
     for (const k of Object.keys(SYS)) if (Math.abs(Math.log10(SYS[k].mu) - +e.target.value) < 0.0008) { mu = SYS[k].mu; sys = k; }
     setMu(Math.min(0.5, mu), sys);
   });

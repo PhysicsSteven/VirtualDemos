@@ -46,7 +46,7 @@ No hazards in the virtual lab. In the real sky, never look at the Sun without pr
 
 ## Procedure
 
-**A month of phases.** Choose New moon. Record a reading at 0, 3.69, 7.38, 11.07, 14.77, 18.46, 22.15 and 25.84 days since new moon, eight evenly spaced points through the month. Send the readings to the worksheet, then clear them.
+**A month of phases.** Choose New moon. Record a reading at 0, 3.69, 7.38, 11.07, 14.77, 18.46, 22.15 and 25.84 days since new moon, eight evenly spaced points through the month. (Full moon itself falls at 14.765 days, so the 14.77 day reading is a few minutes past full: its angle reads a little over 180°.) Send the readings to the worksheet, then clear them.
 
 **New moons, full moons and eclipses.** Choose Eclipse season, which starts at a new moon with the eclipse view on. Record a reading. Step to the next full moon and record a reading, then to the next new moon and record, and so on, until you have 14 readings. Send them to the worksheet.
 

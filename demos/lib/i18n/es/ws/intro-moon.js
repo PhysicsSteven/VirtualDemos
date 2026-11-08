@@ -18,6 +18,8 @@ VDI18N.add('es', 'ws/intro-moon', {
   "Eclipse",
 "Phases of the Moon and Eclipse Seasons | VirtualDemos":
   "Fases de la Luna y temporadas de eclipses | VirtualDemos",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
 "Phases of the Moon and Eclipse Seasons":
   "Fases de la Luna y temporadas de eclipses",
 "<strong>Setups in the demo:</strong> New moon; First quarter; Full moon; Waning crescent; Eclipse season; Sidereal vs synodic.":
@@ -54,8 +56,8 @@ VDI18N.add('es', 'ws/intro-moon', {
   "Si la órbita de la Luna no estuviera nada inclinada, ¿con qué frecuencia habría un eclipse de Sol?",
 "No hazards in the virtual lab. In the real sky, never look at the Sun without proper eclipse glasses, even during an eclipse.":
   "No hay peligros en el laboratorio virtual. En el cielo real, nunca mires el Sol sin lentes adecuados para eclipses, ni siquiera durante un eclipse.",
-"<strong>A month of phases.</strong> Choose New moon. Record a reading at {#}, {#}, {#}, {#}, {#}, {#}, {#} and {#} days since new moon, eight evenly spaced points through the month. Send the readings to the worksheet, then clear them.":
-  "<strong>Un mes de fases.</strong> Elige Luna nueva. Registra una lectura a los {#}, {#}, {#}, {#}, {#}, {#}, {#} y {#} días desde la luna nueva, ocho puntos igualmente espaciados a lo largo del mes. Envía las lecturas a la hoja de trabajo y luego bórralas.",
+"<strong>A month of phases.</strong> Choose New moon. Record a reading at {#}, {#}, {#}, {#}, {#}, {#}, {#} and {#} days since new moon, eight evenly spaced points through the month. (Full moon itself falls at {#} days, so the {#} day reading is a few minutes past full: its angle reads a little over {#}°.) Send the readings to the worksheet, then clear them.":
+  "<strong>Un mes de fases.</strong> Elige Luna nueva. Registra una lectura a {#}, {#}, {#}, {#}, {#}, {#}, {#} y {#} días desde la luna nueva, ocho puntos igualmente espaciados a lo largo del mes. (La luna llena misma cae a los {#} días, así que la lectura de {#} días es unos minutos después de la llena: su ángulo marca un poco más de {#}°.) Envía las lecturas a la hoja de trabajo y luego bórralas.",
 "<strong>New moons, full moons and eclipses.</strong> Choose Eclipse season, which starts at a new moon with the eclipse view on. Record a reading. Step to the next full moon and record a reading, then to the next new moon and record, and so on, until you have {#} readings. Send them to the worksheet.":
   "<strong>Lunas nuevas, lunas llenas y eclipses.</strong> Elige Temporada de eclipses, que empieza en una luna nueva con la vista de eclipses activa. Registra una lectura. Avanza a la siguiente luna llena y registra una lectura, luego a la siguiente luna nueva y registra, y así sucesivamente, hasta que tengas {#} lecturas. Envíalas a la hoja de trabajo.",
 "<span>B</span>Time from start (d)":
@@ -122,6 +124,8 @@ VDI18N.add('es', 'ws/intro-moon', {
   "Respuestas del prelaboratorio, las dos copias de la tabla, las respuestas de las secciones de análisis e incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Moon Phases":
   "Fases de la Luna",
+"<strong>A month of phases.</strong> Choose New moon. Record a reading at {#}, {#}, {#}, {#}, {#}, {#}, {#} and {#} days since new moon, eight evenly spaced points through the month. Send the readings to the worksheet, then clear them.":
+  "<strong>Un mes de fases.</strong> Elige Luna nueva. Registra una lectura a los {#}, {#}, {#}, {#}, {#}, {#}, {#} y {#} días desde la luna nueva, ocho puntos igualmente espaciados a lo largo del mes. Envía las lecturas a la hoja de trabajo y luego bórralas.",
 "<strong>Eclipses.</strong> A solar eclipse happens when the Moon passes in front of the Sun, which can only happen at new moon. A lunar eclipse happens when the Moon passes through Earth’s shadow, which can only happen at full moon. The Moon’s orbit is tilted about {#}° to Earth’s orbit, so at most new and full moons the Moon passes a little above or below the Sun or Earth’s shadow. An eclipse can only happen when a new or full moon comes near one of the nodes, the two places where the Moon crosses the plane of Earth’s orbit. In the demo, a solar eclipse is possible when the Moon is less than {#}° above or below that plane at new moon, and a lunar eclipse when it is less than {#}° from it at full moon.":
   "<strong>Eclipses.</strong> Un eclipse de Sol ocurre cuando la Luna pasa frente al Sol, lo que solo puede ocurrir en luna nueva. Un eclipse de Luna ocurre cuando la Luna pasa por la sombra de la Tierra, lo que solo puede ocurrir en luna llena. La órbita de la Luna está inclinada unos {#}° respecto a la órbita de la Tierra, así que en la mayoría de las lunas nuevas y llenas la Luna pasa un poco por encima o por debajo del Sol o de la sombra de la Tierra. Un eclipse solo puede ocurrir cuando una luna nueva o llena llega cerca de uno de los nodos, los dos lugares donde la Luna cruza el plano de la órbita de la Tierra. En la demo, un eclipse de Sol es posible cuando la Luna está a menos de {#}° por encima o por debajo de ese plano en luna nueva, y un eclipse de Luna cuando está a menos de {#}° de él en luna llena."
 });

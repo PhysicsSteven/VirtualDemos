@@ -958,7 +958,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const ev = S.lastEv && Math.abs(S.lastEv.jd - S.jd) < 1e-6 ? KIND_NAME[S.lastEv.kind].toLowerCase() : '';
     const real = S.model !== 'kepler' ? Math.abs(wrap(q.lam - look('kepler', k, S.jd).lam)) : 0;
     return { date: iso(S.jd), days: (S.jd - first).toFixed(1), planet: EL[k].name, model: MODEL_NAME[S.model], lambda_deg: q.lam.toFixed(2), beta_deg: q.beta.toFixed(2),
-      motion: Math.abs(rt) < 0.004 ? 'stationary' : rt > 0 ? 'east (direct)' : 'west (retrograde)', rate_deg_day: rt.toFixed(3), elong_deg: q.elong.toFixed(1),
+      motion: Math.abs(rt) < 0.004 ? 'stationary' : rt > 0 ? 'east (direct)' : 'west (retrograde)', rate_deg_day: rt.toFixed(3), elong_deg: (q.elong <= -179.95 ? 180 : q.elong).toFixed(1), /* opposition reads +180.0, not −180.0 */
       dist_AU: q.d != null ? q.d.toFixed(3) : '', lit_pct: (q.lit * 100).toFixed(1), size_arcsec: q.size != null ? q.size.toFixed(1) : '', size_rel: q.rel.toFixed(2),
       phase: phaseName(q.lit, q.alpha), event: ev, constellation: constellationAt(q.lam, q.beta), off_real_deg: S.model !== 'kepler' ? real.toFixed(2) : '', jd: S.jd.toFixed(4) };
   };

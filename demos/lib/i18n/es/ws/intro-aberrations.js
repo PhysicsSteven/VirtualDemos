@@ -40,6 +40,8 @@ VDI18N.add('es', 'ws/intro-aberrations', {
   "Razón de Strehl después de corregir",
 "Fixing a Blurry Telescope: Aberrations and Seeing | VirtualDemos":
   "Cómo arreglar un telescopio borroso: aberraciones y seeing | VirtualDemos",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
 "Fixing a Blurry Telescope: Aberrations and Seeing":
   "Cómo arreglar un telescopio borroso: aberraciones y seeing",
 "<strong>Setups in the demo:</strong> Through moving air; Perfect telescope; Out of focus; Spherical mirror; Star off center: coma; Pinched mirror: astigmatism; Single lens: color; Achromatic lens; Hubble in {#}; Hubble fixed ({#}); Adaptive optics; Mystery telescope. This worksheet opens on Spherical mirror.":
@@ -82,8 +84,8 @@ VDI18N.add('es', 'ws/intro-aberrations', {
   "<strong>Aire en movimiento.</strong> El aire a distintas temperaturas desvía la luz en cantidades distintas. En una noche típica, el aire frente al telescopio solo se mantiene uniforme en parches de unos {#} cm de ancho; ese tamaño se llama r₀. La luz de mayor longitud de onda ve parches más grandes: r₀ crece con la longitud de onda, así que la luz infrarroja se difumina mucho menos que la visible.",
 "Using {#} λ/D, what is the size of a perfect {#} mm ({#} m) telescope’s star image in green light ({#} nm = {#} {#} {#} m), in seconds of arc?":
   "Usando {#} λ/D, ¿cuál es el tamaño de la imagen de una estrella en un telescopio perfecto de {#} mm ({#} m) con luz verde ({#} nm = {#} {#} {#} m), en segundos de arco?",
-"Spherical aberration gets weaker as a mirror is made “slower” (a larger focal ratio N, so the mirror is longer for its width). The wavefront error grows as {#}/N³. How many times bigger is it at f/{#} than at f/{#}?":
-  "La aberración esférica se debilita al hacer un espejo “más lento” (una razón focal N mayor, así que el telescopio es más largo para su ancho). El error del frente de onda crece como {#}/N³. ¿Cuántas veces mayor es a f/{#} que a f/{#}?",
+"Spherical aberration gets weaker as a mirror is made “slower” (a larger focal ratio N, so the mirror is longer for its width). For mirrors of f/{#} and slower, the wavefront error grows as {#}/N³ (faster mirrors pick up extra, higher order error). How many times bigger is it at f/{#} than at f/{#}?":
+  "La aberración esférica se debilita cuando un espejo se hace más “lento” (una razón focal N mayor, así que el espejo es más largo para su ancho). Para espejos de f/{#} y más lentos, el error del frente de onda crece como {#}/N³ (los espejos más rápidos suman un error extra, de orden superior). ¿Cuántas veces mayor es a f/{#} que a f/{#}?",
 "Predict: if the blur comes from the air and not from the telescope, would a bigger telescope give a smaller star image?":
   "Predice: si el difuminado viene del aire y no del telescopio, ¿un telescopio más grande daría una imagen de la estrella más pequeña?",
 "<strong>Part {#}. Mirror shape.</strong> With the spherical mirror at f/{#}, move the camera’s focus until the star is as sharp as it gets (the highest Strehl ratio), and record a reading. Do the same at f/{#} and f/{#}. Then make the f/{#} mirror a parabola, put the camera back at the focus ({#} mm) and record a reading. Finally record a reading of Hubble in {#} and of Hubble fixed ({#}). Send the readings to the worksheet, then clear them.":
@@ -213,5 +215,7 @@ VDI18N.add('es', 'ws/intro-aberrations', {
 "Prelab answers, the five tables and the graph, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.":
   "Respuestas previas al laboratorio, las cinco tablas y la gráfica, las respuestas de las secciones de análisis e incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Telescope Aberrations":
-  "Aberraciones de telescopios"
+  "Aberraciones de telescopios",
+"Spherical aberration gets weaker as a mirror is made “slower” (a larger focal ratio N, so the mirror is longer for its width). The wavefront error grows as {#}/N³. How many times bigger is it at f/{#} than at f/{#}?":
+  "La aberración esférica se debilita al hacer un espejo “más lento” (una razón focal N mayor, así que el telescopio es más largo para su ancho). El error del frente de onda crece como {#}/N³. ¿Cuántas veces mayor es a f/{#} que a f/{#}?"
 });

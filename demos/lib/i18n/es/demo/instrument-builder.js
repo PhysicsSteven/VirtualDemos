@@ -212,8 +212,10 @@ VDI18N.add('es', 'demo/instrument-builder', {
   "NA {#}: detalles separados {#} µm (lo fija la pupila del ojo)",
 "← light from the Moon":
   "← luz de la Luna",
-"A {#} cm objective, {#} cm across, and a {#} cm eyepiece, {#} cm apart (f₁ + f₂): parallel light from the Moon leaves parallel and M = −f₁/f₂ = −{#}, upside down. The exit pupil is the objective's image, {#} mm across, {#} cm behind the eyepiece.":
-  "Un objetivo de {#} cm, de {#} cm de diámetro, y un ocular de {#} cm, separados {#} cm (f₁ + f₂): la luz paralela de la Luna sale paralela y M = −f₁/f₂ = −{#}, invertida. La pupila de salida es la imagen del objetivo, de {#} mm de diámetro, {#} cm detrás del ocular.",
+"the Moon (far away)":
+  "la Luna (lejos)",
+"A {#} cm objective, {#} cm across, and a {#} cm eyepiece, {#} cm apart (f₁ + f₂): parallel light from the Moon leaves parallel and M = −f₁/f₂ = −{#}, upside down. The exit pupil is the objective's image, {#} mm across, {#} cm behind the eyepiece. The eyepiece's field stop, at its focal point, gives a {#}° apparent field: the true field is about {#}°/{#} = {#}°, and a shorter eyepiece (its stop smaller) shows less sky.":
+  "Un objetivo de {#} cm, de {#} cm de ancho, y un ocular de {#} cm, separados {#} cm (f₁ + f₂): la luz paralela de la Luna sale paralela y M = −f₁/f₂ = −{#}, de cabeza. La pupila de salida es la imagen del objetivo, de {#} mm de ancho, {#} cm detrás del ocular. El diafragma de campo del ocular, en su punto focal, da un campo aparente de {#}°: el campo real es de unos {#}°/{#} = {#}°, y un ocular más corto (con un diafragma más pequeño) muestra menos cielo.",
 "True field":
   "Campo real",
 "{#} × the bare eye":
@@ -238,6 +240,8 @@ VDI18N.add('es', 'demo/instrument-builder', {
   "← luz de un letrero lejano",
 "Erector":
   "Inversora",
+"the sign (far away)":
+  "el letrero (lejos)",
 "A Keplerian telescope with a {#} cm erecting lens between: it takes the objective's image {#} cm in front of it (2f) to a copy the same size, turned over, {#} cm behind it (m = −{#}). The eyepiece views that copy, so M = (−f₁/f₃)(m₂) = +{#}: the sign reads the right way up. The price is {#} cm of extra length.":
   "Un telescopio kepleriano con una lente inversora de {#} cm en medio: toma la imagen del objetivo a {#} cm delante de ella (2f) y forma una copia del mismo tamaño, volteada, {#} cm detrás de ella (m = −{#}). El ocular mira esa copia, así que M = (−f₁/f₃)(m₂) = +{#}: el letrero se lee derecho. El precio son {#} cm de longitud adicional.",
 "Erector <span>f {#}</span>":
@@ -280,6 +284,8 @@ VDI18N.add('es', 'demo/instrument-builder', {
   "Sin él, la misma lente",
 "Add a lens first.":
   "Primero agrega una lente.",
+"Close":
+  "Cerrar",
 "Lens {#}":
   "Lente {#}",
 "Lens {#} <span>f {#}</span>":
@@ -306,10 +312,8 @@ VDI18N.add('es', 'demo/instrument-builder', {
   "Diafragma {#}: posición z",
 "{#}″ (arcseconds), entrance pupil D = {#} mm":
   "{#}″ (segundos de arco), pupila de entrada D = {#} mm",
-"the Moon (far away)":
-  "la Luna (lejos)",
-"the sign (far away)":
-  "el letrero (lejos)",
 "An instrument built by hand and shared by a link. Press a preset to start again from a ready made one.":
-  "Un instrumento armado a mano y compartido con un enlace. Pulsa una configuración predefinida para empezar de nuevo desde una ya hecha."
+  "Un instrumento armado a mano y compartido con un enlace. Pulsa una configuración predefinida para empezar de nuevo desde una ya hecha.",
+"A {#} cm objective, {#} cm across, and a {#} cm eyepiece, {#} cm apart (f₁ + f₂): parallel light from the Moon leaves parallel and M = −f₁/f₂ = −{#}, upside down. The exit pupil is the objective's image, {#} mm across, {#} cm behind the eyepiece.":
+  "Un objetivo de {#} cm, de {#} cm de diámetro, y un ocular de {#} cm, separados {#} cm (f₁ + f₂): la luz paralela de la Luna sale paralela y M = −f₁/f₂ = −{#}, invertida. La pupila de salida es la imagen del objetivo, de {#} mm de diámetro, {#} cm detrás del ocular."
 });

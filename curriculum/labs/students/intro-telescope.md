@@ -13,6 +13,7 @@ Student worksheet · Astro 2203
 - The rail is drawn to scale from the side, in centimeters. Light from the object (here the Moon, far away) passes through the lenses into the eye, and every ray is traced. Two small pictures show what the eye sees through the instrument and what it would see without it, at the same scale.
 - Click a lens to change its focal length, its diameter or its place on the rail; click the eye to change the size of its pupil or its place. "Put it at the exit pupil" moves the eye to the spot where all the light leaving the eyepiece passes through.
 - The readouts give the angular magnification M (how many times bigger things look; a minus sign means the view is upside down), the exit pupil (the width of the beam that leaves the eyepiece), the apparent field of view, the image brightness and **Light from a star**: how many times more light from a star reaches the eye through the telescope than reaches the bare eye.
+- The telescope's eyepiece carries a **field stop**, a ring at its focal point that frames the view, sized for a 25° apparent field. It moves and shrinks with the eyepiece, so a shorter eyepiece shows a smaller piece of sky, as in a real telescope.
 - The lenses are ideal thin lenses, with one color of light and no blur from diffraction (its limit is quoted under Light and field). Real lenses split colors, as the Lenses, Mirrors and Color worksheet shows.
 - Record reading stores the focal lengths, the objective's diameter and every readout. Export to worksheet sends the readings to the Data table below; Clear starts a new series, which goes into a new copy of the table.
 
@@ -59,7 +60,7 @@ Fill in D² for Part 2 (the diameter times itself).
 ## Analysis
 
 1. For each reading in Part 1, divide f₁ by f₂ and compare the result with the magnification M the demo measured. (Ignore the minus sign: it only means the view is upside down.)
-2. The full Moon is 0.518° across. How big does it look through the telescope with the 2.5 cm eyepiece? The true field is the piece of sky you can see at once: does the whole Moon fit in the view with each eyepiece?
+2. The full Moon is 0.518° across. How big does it look through the telescope with the 2.5 cm eyepiece? The true field is the piece of sky you can see at once: does the whole Moon fit in the view with each eyepiece? How does the true field change as the eyepiece gets shorter?
 3. Graph the light from a star against D² for Part 2. Is it a straight line through the origin? What does that tell you about how the light gathered depends on the diameter?
 4. Divide 1 by the slope of your graph and take the square root. Compare the result with the diameter of the eye's pupil, 0.7 cm. Why does the pupil's size appear here?
 5. Using your data, how many times more light does the 6 cm objective gather than the 3 cm one? Compare with your answer to Before the lab 3.

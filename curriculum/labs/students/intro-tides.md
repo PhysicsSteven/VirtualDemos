@@ -66,7 +66,7 @@ No hazards in the virtual lab. At a real beach, check the tide table before walk
 
 ## Analysis
 
-1. From Part 1, divide the pull at 40 Earth radii by the pull at 80 Earth radii. Do the same for the tidal pull on the near side, and on the far side. The distance doubled; how many times weaker did each get? Compare with Before the lab 1.
+1. From Part 1, divide the pull at 40 Earth radii by the pull at 80 Earth radii. Do the same for the tidal pull on the near side, and on the far side. The distance doubled; how many times weaker did each get? The near side and far side give slightly different answers, because one side is a little closer to the Moon and the other a little farther: average the two. Compare with Before the lab 1.
 2. At today's distance, how many times bigger is the Moon's pull on Earth's center than its tidal pull on the near side? The tidal pull is tiny. Why can it still move whole oceans?
 3. Compare the near side and far side tidal pulls in each reading. What does this tell you about the size of the two bulges, and so about the number of high tides each day?
 4. From Part 2, divide the Sun's tide by the Moon's tide. Was your guess in Before the lab 2 right? Explain how the Sun can pull harder yet raise a smaller tide.

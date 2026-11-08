@@ -1,6 +1,11 @@
 /* English strings of notes/states-of-matter, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'notes/states-of-matter', [
 "States of Matter: teaching notes",
+"Site",
+"Virtual Physics Demos",
+"Library",
+"<a>Demos</a><a>OpenStax</a><a>Notes</a>",
+"<a><b>For a class</b> Courses</a>",
 "States of Matter",
 "Thermodynamics; intro physics (heat, phase changes, latent heat)",
 "Temperature measures the average kinetic energy of the particles. During a phase change the temperature holds still, so the heat must go somewhere else: into the bonds (potential energy) and into pushing back the surroundings.",
@@ -9,7 +14,7 @@ VDI18N.add('en', 'notes/states-of-matter', [
 "With a steady heater, Q = Pt, so a heating curve of temperature against time is also a curve against heat. Slopes give specific heats (dT/dt = P/mc); plateau lengths give latent heats (Q = mL).",
 "A higher pressure raises the boiling temperature.",
 "Students should know Q = mcΔT and the idea of temperature as average kinetic energy. The demo has two views. <strong>Atoms</strong> is a molecular dynamics simulation of {#} argon atoms under a piston with a heater in the floor; <strong>Beaker</strong> is an ideal heating curve for water or ethanol on a hot plate and a balance. Setups: <strong>Heat a crystal</strong>, <strong>Higher pressure</strong>, <strong>Cool a vapor</strong> (Atoms) and <strong>Ice to steam</strong>, <strong>Boil ethanol</strong> (Beaker). On a slow computer choose <strong>Flat</strong> instead of <strong>3D</strong>. For a lab style run, tick <strong>Blind</strong> to hide the heating curve and the energy split.",
-"<strong>Ice to steam</strong> (Beaker). Ask Q1, then press <strong>Start</strong> at the fastest speed. Point to the thermometer stuck at {#} °C while the cubes shrink, and the balance falling only once it boils. Then compare the two balances once it boils: the open beaker's reading falls, the covered one's stays at {#} g (Q7).",
+"<strong>Ice to steam</strong> (Beaker). Ask Q1, then press <strong>Play</strong> at the fastest speed. Point to the thermometer stuck at {#} °C while the cubes shrink, and the balance falling only once it boils. Then compare the two balances once it boils: the open beaker's reading falls, the covered one's stays at {#} g (Q7).",
 "Read the curve. Ask Q2 about the two slopes and Q3 about the plateau lengths, then check with the timer.",
 "<strong>Heat a crystal</strong> (Atoms). Leave <strong>Show bonds</strong> on and color the atoms by <strong>Phase</strong>. Start it and let the class watch the crystal pattern break up while the temperature holds near {#} K. Ask Q4.",
 "Keep going to boiling. Watch <em>Where the heat went</em>: on the plateaus the bond energy bar grows and the kinetic energy bar does not. Ask Q5. The sample may overheat briefly before the first vapor forms, then settle back: a real effect (superheating).",

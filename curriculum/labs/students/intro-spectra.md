@@ -50,7 +50,7 @@ No hazards in the virtual lab. A real spectrum tube runs on several thousand vol
 
 **Part 3. A fingerprint.** Choose sodium as an emission spectrum and record a reading of each of its two brightest yellow lines. Then choose neon and record a reading of its brightest line. Send the readings to the worksheet, then clear them.
 
-**Part 4. A mystery star.** Choose Mystery mode and A star. Find four of the darkest lines in the star's spectrum and record a reading of each, then send the readings to the worksheet. Now find which elements made them: click elements in the periodic table to add them to your guess, which appears in the bottom strip, until every dark line in the star matches a line of your guess. Check your answer, and write down which elements you found.
+**Part 4. A mystery star.** Choose Mystery mode and A star. Find four dark lines in the star's spectrum and record a reading of each, then send the readings to the worksheet. Now find which elements made them: click elements in the periodic table to add them to your guess, which appears in the bottom strip, until every dark line in the star matches a line of your guess. Check your answer, and write down which elements you found.
 
 ## Data
 

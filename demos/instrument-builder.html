@@ -428,7 +428,21 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const MAX_PARTS = 7;
   let nextId = 1;
   const lens = (name, z, f, D) => ({ id: nextId++, kind: 'lens', name, z, f, D });
-  const stop = (name, z, D) => ({ id: nextId++, kind: 'stop', name, z, D });
+  const stop = (name, z, D, more) => Object.assign({ id: nextId++, kind: 'stop', name, z, D }, more);
+  /* An eyepiece's field stop: a ring at the eyepiece's front focal point, part of the eyepiece, whose width sets the apparent
+     field. Sized here for a 25° apparent field (diameter 2 f tan 12.5°), close to what this 2.5 cm wide, 5 cm lens shows without
+     one. A shorter eyepiece has a smaller stop, so the true field (about the apparent field ÷ M) shrinks as M grows, as in a real
+     telescope. The stop follows its eyepiece (place and size) until the stop itself is moved or resized. */
+  const EP_FIELD = 25, epStop = (ep) => stop('Field stop', ep.z - ep.f, 2 * ep.f * Math.tan(EP_FIELD / 2 * Math.PI / 180), { of: ep.id });
+  function syncStops() {
+    for (const s of S.els) {
+      if (s.of == null) continue;
+      const ep = S.els.find((e) => e.id === s.of), moved = s.was && (s.z !== s.was[0] || s.D !== s.was[1]);
+      if (!ep || ep.kind !== 'lens' || ep.f <= 0 || moved) { delete s.of; delete s.was; continue; }
+      s.z = Math.round((ep.z - ep.f) * 100) / 100; s.D = Math.round(2 * ep.f * Math.tan(EP_FIELD / 2 * Math.PI / 180) * 1000) / 1000;
+      s.was = [s.z, s.D];
+    }
+  }
   /* microscope: object 1.76 cm from a 1.6 cm objective puts its image 17.6 cm away (tube length 16 cm) */
   const MIC_DO = 1 / (1 / 1.6 - 1 / 17.6);
   const PRESETS = {
@@ -437,8 +451,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     microscope: { obj: { kind: 'near', tex: 'slide', z: -MIC_DO, h: 0.05 },
       parts: () => [lens('Objective', 0, 1.6, 0.8), stop('Field stop', 17.6, 1.8), lens('Eyepiece', 20.1, 2.5, 2.4)], eye: 'pupil', view: 'eye',
       hint: 'A 1.6 cm objective and a 2.5 cm eyepiece with a 16 cm tube length. The object (a 0.5 mm letter on a 0.1 mm grid) sits 1.76 cm from the objective, which makes a real image 17.6/1.76 = 10 times bigger, upside down, at the eyepiece\'s focal point. The eyepiece magnifies it 25/2.5 = 10 times more: M = −100. The field stop at that image gives the view its sharp round edge.' },
-    kepler: { obj: { kind: 'far', tex: 'moon', a: MOON_A }, parts: () => [lens('Objective', 0, 50, 5), lens('Eyepiece', 55, 5, 2.5)], eye: 'pupil', view: 'eye',
-      hint: 'A 50 cm objective, 5 cm across, and a 5 cm eyepiece, 55 cm apart (f₁ + f₂): parallel light from the Moon leaves parallel and M = −f₁/f₂ = −10, upside down. The exit pupil is the objective\'s image, 5.0 mm across, 5.5 cm behind the eyepiece.' },
+    kepler: { obj: { kind: 'far', tex: 'moon', a: MOON_A }, parts: () => { const ep = lens('Eyepiece', 55, 5, 2.5); return [lens('Objective', 0, 50, 5), epStop(ep), ep]; }, eye: 'pupil', view: 'eye',
+      hint: 'A 50 cm objective, 5 cm across, and a 5 cm eyepiece, 55 cm apart (f₁ + f₂): parallel light from the Moon leaves parallel and M = −f₁/f₂ = −10, upside down. The exit pupil is the objective\'s image, 5.0 mm across, 5.5 cm behind the eyepiece. The eyepiece\'s field stop, at its focal point, gives a 25° apparent field: the true field is about 25°/10 = 2.5°, and a shorter eyepiece (its stop smaller) shows less sky.' },
     galileo: { obj: { kind: 'far', tex: 'moon', a: MOON_A }, parts: () => [lens('Objective', 0, 50, 5), lens('Eyepiece', 40, -10, 2)], eye: 1, view: 'eye',
       hint: 'A 50 cm objective and a −10 cm eyepiece, 40 cm apart (f₁ + f₂ with f₂ < 0): M = −f₁/f₂ = +5, upright, and short. Its exit pupil is virtual, inside the tube, so the eye cannot reach it: the eye\'s own pupil limits the field, which is why Galileo\'s telescope saw so little sky at once.' },
     terrestrial: { obj: { kind: 'far', tex: 'sign', a: Math.tan(0.6 * Math.PI / 180) },
@@ -943,7 +957,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   let pending = 0;
   function update(o = {}) {
-    clampAll(); compute(!!o.fast);
+    syncStops(); clampAll(); compute(!!o.fast);
     if (!view.user && !o.keepView) fit();
     readouts(); if (!o.noEditor) editor(); draw(); draw3();
     cancelAnimationFrame(pending); pending = requestAnimationFrame(() => drawViews(!!o.fast));

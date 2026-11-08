@@ -1921,7 +1921,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     S.par.rulerSet = onImages;
   }
   $('starChips').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) setStar(b.dataset.s); });
-  $('dist').addEventListener('input', () => { S.par.star = 'custom'; S.par.d = Math.pow(10, +$('dist').value); resetRuler(false); changed(); });
+  $('dist').addEventListener('input', () => { S.par.star = 'custom'; S.par.d = VD.nice(Math.pow(10, +$('dist').value)); resetRuler(false); changed(); });
   $('instSeg').addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; S.par.inst = b.dataset.i; resetRuler(false); changed(); });
 
   function buildCepChips() {

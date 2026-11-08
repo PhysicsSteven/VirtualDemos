@@ -14,6 +14,8 @@ VDI18N.add('es', 'ws/intro-tides', {
   "Intervalo del día (m)",
 "Tides: Two Bulges, the Moon and the Sun | VirtualDemos":
   "Mareas: dos abultamientos, la Luna y el Sol | VirtualDemos",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
 "Tides: Two Bulges, the Moon and the Sun":
   "Mareas: dos abultamientos, la Luna y el Sol",
 "<strong>Setups in the demo:</strong> Total pull vs tidal pull; Two bulges; A day at the beach; Spring and neap; Moon closer ({#}/d³); Sun vs Moon.":
@@ -82,8 +84,8 @@ VDI18N.add('es', 'ws/intro-tides', {
   "Luna llena",
 "Third quarter":
   "Cuarto menguante",
-"From Part {#}, divide the pull at {#} Earth radii by the pull at {#} Earth radii. Do the same for the tidal pull on the near side, and on the far side. The distance doubled; how many times weaker did each get? Compare with Before the lab {#}.":
-  "Según la Parte {#}, divide la atracción a {#} radios terrestres entre la atracción a {#} radios terrestres. Haz lo mismo con la atracción de marea en el lado cercano y en el lado lejano. La distancia se duplicó; ¿cuántas veces más débil se volvió cada una? Compara con Antes del laboratorio {#}.",
+"From Part {#}, divide the pull at {#} Earth radii by the pull at {#} Earth radii. Do the same for the tidal pull on the near side, and on the far side. The distance doubled; how many times weaker did each get? The near side and far side give slightly different answers, because one side is a little closer to the Moon and the other a little farther: average the two. Compare with Before the lab {#}.":
+  "Según la Parte {#}, divide la atracción a {#} radios terrestres entre la atracción a {#} radios terrestres. Haz lo mismo con la atracción de marea en el lado cercano y en el lado lejano. La distancia se duplicó; ¿cuántas veces más débil se volvió cada una? El lado cercano y el lado lejano dan respuestas un poco distintas, porque un lado está un poco más cerca de la Luna y el otro un poco más lejos: promedia las dos. Compara con Antes del laboratorio {#}.",
 "At today’s distance, how many times bigger is the Moon’s pull on Earth’s center than its tidal pull on the near side? The tidal pull is tiny. Why can it still move whole oceans?":
   "A la distancia actual, ¿cuántas veces más grande es la atracción de la Luna en el centro de la Tierra que su atracción de marea en el lado cercano? La atracción de marea es diminuta. ¿Por qué aun así puede mover océanos enteros?",
 "Compare the near side and far side tidal pulls in each reading. What does this tell you about the size of the two bulges, and so about the number of high tides each day?":
@@ -106,6 +108,8 @@ VDI18N.add('es', 'ws/intro-tides', {
   "Respuestas del prelaboratorio, las dos tablas de datos con las alturas de las mareas y las horas de las mareas altas en las notas, las respuestas de las secciones de análisis e incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Tides":
   "Mareas",
+"From Part {#}, divide the pull at {#} Earth radii by the pull at {#} Earth radii. Do the same for the tidal pull on the near side, and on the far side. The distance doubled; how many times weaker did each get? Compare with Before the lab {#}.":
+  "Según la Parte {#}, divide la atracción a {#} radios terrestres entre la atracción a {#} radios terrestres. Haz lo mismo con la atracción de marea en el lado cercano y en el lado lejano. La distancia se duplicó; ¿cuántas veces más débil se volvió cada una? Compara con Antes del laboratorio {#}.",
 "<strong>Part {#}: pull and tidal pull.</strong> In the Pull on Earth view, record a reading with the Moon at {#}, {#} (today), {#} and {#} Earth radii. Send the readings to the worksheet.":
   "<strong>Parte {#}: atracción y atracción de marea.</strong> En la vista Atracción sobre la Tierra, registra una lectura con la Luna a {#}, {#} (hoy), {#} y {#} radios terrestres. Envía las lecturas a la hoja de trabajo.",
 "<strong>Part {#}: the timing.</strong> With the Sun’s tide left out, find the times of three high tides in a row at the city and write them in the notes.":
