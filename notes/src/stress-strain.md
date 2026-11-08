@@ -44,6 +44,6 @@ Students should know Hooke's law for springs. The wire is 2.000 m long; a dial g
 ## Physics behind the demo
 
 - Engineering stress and strain (original area and length). Curve: straight to the yield stress σ_y with slope Y; then smooth hardening to the tensile strength σ_u, reached at strain ε_u, held until fracture at ε_f. Unloading and reloading below the current flow stress are elastic with slope Y.
-- Typical values: mild steel Y 200 GPa, σ_y 250 MPa, σ_u 400 MPa; annealed copper 120 GPa, 70 MPa, 220 MPa; an aluminum alloy 70 GPa, 270 MPa, 310 MPa. Real samples vary with composition and treatment.
+- Typical values: mild steel Y 200 GPa, σ_y 250 MPa, σ_u 400 MPa; annealed copper 110 GPa, 70 MPa, 220 MPa; an aluminum alloy 70 GPa, 270 MPa, 310 MPa. Real samples vary with composition and treatment.
 - Ignored: necking, rate effects and creep, temperature, and the wire's own weight. The load is applied slowly (no dynamic overshoot).
 - The dial gauge reads to 0.001 mm with no noise; scatter in a fit comes only from rounding.

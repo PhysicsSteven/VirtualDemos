@@ -382,9 +382,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
      different temperatures heat flows through the gas from the warm walls to the cold ones; with wallT = 0 a wall is a perfect
      mirror, as before. */
   const KB = 1.380649e-23;        /* J/K, exact (SI 2019) */
-  const M_AR = 6.63e-26;          /* kg, argon, the Gas in a Box setups */
+  const M_AR = 39.948 * 1.66053906892e-27;   /* kg, argon: standard atomic weight 39.948 (IUPAC) times u (CODATA 2022), 6.6335e-26 */
   /* the molecule's mass, chosen on the Gas card (Astro 2203's atmospheres worksheet, 2026-10-26): masses in u from the IUPAC
-     standard atomic weights (H 1.008, He 4.0026, C 12.011, N 14.007, O 15.999); argon keeps the setups' 6.63e-26 kg. Every gas is
+     standard atomic weights (H 1.008, He 4.0026, C 12.011, N 14.007, O 15.999); argon is 39.948 (6.6335e-26 kg). Every gas is
      the same 0.5 nm hard disk: only the mass changes */
   const GASES = { h2: ['hydrogen', 2.016], he: ['helium', 4.0026], n2: ['nitrogen', 28.014], ar: ['argon', null], co2: ['carbon dioxide', 44.009] };
   let gasKey = 'ar', M = M_AR;

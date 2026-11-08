@@ -576,6 +576,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
   const KPC = 1000 * PC, L_PERSON = 2, LETHAL = 100 * G0, V_PERP = 2e5;
   const OBJ = {
+    /* Sgr A*: M = 4.297e6 M☉ and R₀ = 8277 pc, GRAVITY Collaboration 2022 (A&A 657, L12), rounded */
     sgr: { name: 'Sagittarius A*', M: 4.3e6, D: 8.28 * KPC, Dtxt: '8.28 kpc', eht: 'EHT 2022 ring: 51.8 ± 2.3 µas' },
     m87: { name: 'M87*', M: 6.5e9, D: 16.8e3 * KPC, Dtxt: '16.8 Mpc', eht: 'EHT 2019 ring: 42 ± 3 µas' }
   };

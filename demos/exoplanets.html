@@ -520,7 +520,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // ==CORE START==
   const DEG = Math.PI / 180, TAU = 2 * Math.PI;
   // constants (SI)
-  const GM_SUN = 1.32712440018e20, GM_EARTH = 3.986004418e14, GM_JUP = 1.26686534e17, G = 6.6743e-11;
+  const GM_SUN = 1.32712440018e20, GM_EARTH = 3.986004418e14 /* WGS 84 (constants.js GMearthWGS) */, GM_JUP = 1.26686534e17, G = 6.6743e-11;
   const AU = 1.495978707e11, R_SUN = 6.957e8, R_EARTH = 6.371e6, R_JUP = 7.1492e7;
   const DAY = 86400, YEAR = 365.25 * DAY;
   const MJ = GM_JUP / GM_EARTH;          // Earth masses per Jupiter mass, 317.8

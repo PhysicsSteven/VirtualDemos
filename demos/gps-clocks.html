@@ -141,7 +141,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // ==CORE START==
   /* c exact (SI); GM, mean radius and spin rate of Earth from the IERS 2010 conventions; orbit radii below: GPS 26,560 km
      (GPS interface specification IS-GPS-200, semimajor axis), geostationary 42,164 km (from GM and the sidereal day) */
-  const C = 299792458, GM = 3.986004418e14, RE = 6.371e6, WE = 7.2921159e-5, DAY = 86400, GPS_VERSION = 'gps-clocks@2026-10-22';
+  const C = 299792458, GM = 3.986004418e14 /* WGS 84, as GPS uses (constants.js GMearthWGS) */, RE = 6.371e6, WE = 7.2921159e-5, DAY = 86400, GPS_VERSION = 'gps-clocks@2026-10-22';
   // rate of a clock relative to coordinate time, minus 1, computed without cancellation: √(1 − x) − 1 = −x/(1 + √(1 − x))
   const rateM1 = (x) => -x / (1 + Math.sqrt(1 - x));
   const xGrav = (r) => 2 * GM / (r * C * C), xSpeed = (v) => (v * v) / (C * C);

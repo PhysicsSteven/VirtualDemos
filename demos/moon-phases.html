@@ -328,7 +328,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const P_SID = 27.321662;          // sidereal month
   const YEAR = 365.256363;          // sidereal year
   const P_NODE = 18.6129 * 365.25;  // regression of the nodes, days
-  const EC_YEAR = 1 / (1 / YEAR + 1 / P_NODE); // eclipse year, 346.62 d
+  const EC_YEAR = 1 / (1 / 365.24219 + 1 / P_NODE); // eclipse year, 346.620 d (Meeus 346.620075): the Sun's motion against the
+                                                     // equinox (tropical year), since the node period is measured from the equinox too
   const INC = 5.145;                // orbit tilt to the ecliptic
   // angular sizes at the Moon's distance, seen from Earth's center (degrees)
   const R_EARTH_DEG = 0.951;        // Earth's radius (lunar parallax)

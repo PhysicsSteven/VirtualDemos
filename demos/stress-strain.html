@@ -194,7 +194,7 @@ table.rows input:focus { border-color: var(--accent); }
   // typical properties: Young's modulus Y (Pa), yield stress sy, tensile strength su (Pa), strain at the tensile strength eu and at fracture ef
   const MATS = {
     steel: { name: 'Mild steel', Y: 200e9, sy: 250e6, su: 400e6, eu: 0.15, ef: 0.25 },
-    copper: { name: 'Copper (annealed)', Y: 120e9, sy: 70e6, su: 220e6, eu: 0.3, ef: 0.45 },
+    copper: { name: 'Copper (annealed)', Y: 110e9,   /* Y from OpenStax Vol 1 Table 12.1, as in the shear and bulk tables */ sy: 70e6, su: 220e6, eu: 0.3, ef: 0.45 },
     aluminium: { name: 'Aluminum alloy', Y: 70e9, sy: 270e6, su: 310e6, eu: 0.08, ef: 0.12 },
     mystery: { name: 'Mystery metal', Y: 110e9, sy: 300e6, su: 420e6, eu: 0.12, ef: 0.2 }   // a titanium-like alloy; kept hidden
   };
@@ -281,7 +281,7 @@ table.rows input:focus { border-color: var(--accent); }
   const $ = (id) => document.getElementById(id);
   const HINT = {
     steel: 'Mild steel: Y about 200 GPa, yield about 250 MPa, strength about 400 MPa. Stiff and strong; it stretches a lot before it breaks.',
-    copper: 'Annealed copper: Y about 120 GPa but it yields early, about 70 MPa, then hardens a long way. Bend a copper wire and it stays bent.',
+    copper: 'Annealed copper: Y about 110 GPa but it yields early, about 70 MPa, then hardens a long way. Bend a copper wire and it stays bent.',
     aluminium: 'An aluminum alloy: Y about 70 GPa, so it stretches almost three times as much as steel under the same stress, but it breaks soon after it yields.',
     mystery: 'An unknown metal. Find its Young\'s modulus from your readings, then load it until it yields. Its properties stay hidden.'
   };

@@ -397,10 +397,6 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const waveSpeed = (T, mu) => Math.sqrt(T / mu);
   const stringFreq = (n, L, T, mu) => n * Math.sqrt(T / mu) / (2 * L);
   const soundSpeed = (Tc) => 331.3 * Math.sqrt(1 + Tc / 273.15);
-  // acoustic length: L plus 0.6 r at each open end when the end correction is on
-  const pipeLeff = (kind, L, r, endc) => (endc ? L + (kind === 'oo' ? 2 : 1) * 0.6 * r : L);
-  // open–open: f = n v / 2L (all n); open–closed: f = n v / 4L (odd n only)
-  const pipeFreq = (kind, n, v, Leff) => (kind === 'oo' ? n * v / (2 * Leff) : n * v / (4 * Leff));
 
   // Σ_{n=1}^{N} c[n] sin(nθ), with sin(nθ) from the Chebyshev recurrence
   function sineSeries(c, N, th) {
@@ -526,54 +522,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const pulsePass = (f1, f2, v, xL, xR) => (xR - xL + v / (2 * Math.min(f1, f2))) / v;
   const beatEnvelope = (t, A1, A2, f1, f2) => Math.sqrt(Math.max(0, A1 * A1 + A2 * A2 + 2 * A1 * A2 * Math.cos(TAU * (f2 - f1) * t)));
 
-  // ---------- acoustic levitation ----------
-  // Plane standing wave above a rigid reflector at z = 0: p = p₀ cos(kz) cos(ωt). The linearized Euler equation
-  // ρ₀ ∂v/∂t = −∂p/∂z gives v = (p₀/ρ₀c) sin(kz) sin(ωt), zero at the reflector.
-  const G_N = 9.81, P_ATM = 101325, M_AIR = 0.0289647, R_GAS = 8.31446261815324;
-  const airDensity = (Tc) => P_ATM * M_AIR / (R_GAS * (Tc + 273.15));                 // ideal gas, dry air at 1 atm
-  const airViscosity = (Tc) => { const Tk = Tc + 273.15; return 1.716e-5 * Math.pow(Tk / 273.15, 1.5) * (273.15 + 110.4) / (Tk + 110.4); };   // Sutherland
-  // f₁ = 1 − κ_p/κ₀ = 1 − ρ₀c²/K_p (K_p = ρ_p c_p² for a fluid), f₂ = 2(ρ_p − ρ₀)/(2ρ_p + ρ₀), Φ = f₁/3 + f₂/2
-  function gorkovCoeffs(rho0, c0, rhop, Kp) { const f1 = 1 - rho0 * c0 * c0 / Kp, f2 = 2 * (rhop - rho0) / (2 * rhop + rho0); return { f1, f2, Phi: f1 / 3 + f2 / 2 }; }
-  // time averages ⟨p²⟩ and ⟨v²⟩ in the standing wave
-  const levP2 = (z, p0, k) => 0.5 * p0 * p0 * Math.cos(k * z) ** 2;
-  const levV2 = (z, p0, k, rho0, c0) => 0.5 * (p0 / (rho0 * c0)) ** 2 * Math.sin(k * z) ** 2;
-  // Gor'kov potential of a small sphere (a ≪ λ): U = 2πa³ [ f₁⟨p²⟩/(3ρ₀c²) − f₂ ρ₀⟨v²⟩/2 ]
-  const gorkovU = (a, p2, v2, rho0, c0, f1, f2) => 2 * PI * a ** 3 * (f1 * p2 / (3 * rho0 * c0 * c0) - f2 * rho0 * v2 / 2);
-  const levU = (z, a, p0, k, rho0, c0, f1, f2) => gorkovU(a, levP2(z, p0, k), levV2(z, p0, k, rho0, c0), rho0, c0, f1, f2);
-  // F = −dU/dz = F_max sin(2kz), F_max = 4πΦ k a³ E₀ with E₀ = p₀²/(4ρ₀c²)
-  const levFmax = (a, p0, k, rho0, c0, Phi) => 4 * PI * Phi * k * a ** 3 * p0 * p0 / (4 * rho0 * c0 * c0);
-  const levForce = (z, a, p0, k, rho0, c0, Phi) => levFmax(a, p0, k, rho0, c0, Phi) * Math.sin(2 * k * z);
-  // weight less buoyancy
-  const beadWeight = (a, rhop, rho0) => (rhop - rho0) * 4 / 3 * PI * a ** 3 * G_N;
-  // nodes at kz = π/2 + mπ; with weight W the trap sits below each node by asin(W/F_max)/2k ≈ W/K₀, K₀ = 2k F_max
-  const levNodes = (k, Hgap) => { const out = []; for (let m = 0; (m + 0.5) * PI / k < Hgap; m++) out.push((m + 0.5) * PI / k); return out; };
-  const trapOffset = (W, Fmax, k) => (Fmax > W ? Math.asin(W / Fmax) / (2 * k) : NaN);
-  const trapStiffness = (W, Fmax, k) => (Fmax > W ? 2 * k * Math.sqrt(Fmax * Fmax - W * W) : 0);
-  // F_max/W = 3Φ k p₀² / (4ρ₀c²(ρ_p − ρ₀)g), so the threshold p₀ does not depend on a
-  const levPmin = (rho0, c0, rhop, Phi, k) => Math.sqrt(4 * rho0 * c0 * c0 * (rhop - rho0) * G_N / (3 * Phi * k));
-  // cavity response: |p| relative to resonance for a small loss δ per pass, 1 at H = nλ/2
-  const cavityGain = (kH, delta) => Math.sinh(delta) / Math.sqrt(Math.sin(kH) ** 2 + Math.sinh(delta) ** 2);
-  // drag of air on a sphere, Schiller–Naumann: C_D = (24/Re)(1 + 0.15 Re^0.687), Stokes 6πμau when Re → 0
-  function beadDrag(u, a, rho0, mu) {
-    const s = Math.abs(u); if (s === 0) return 0;
-    const Re = 2 * a * rho0 * s / mu;
-    return -Math.sign(u) * 6 * PI * mu * a * s * (1 + 0.15 * Math.pow(Re, 0.687));
-  }
-  // one step of (m + ½ρ₀V) dv/dt = F_max sin 2kz − W + drag, semi implicit Euler; reflector at z = 0, transducer face at z = H
-  function stepBead(b, dt, P) {
-    const F = P.Fmax * Math.sin(2 * P.k * b.z) - P.W + beadDrag(b.v, P.a, P.rho0, P.mu);
-    b.v += dt * F / P.m; b.z += dt * b.v;
-    if (b.z < P.a) { b.z = P.a; if (b.v < 0) b.v = 0; }
-    if (b.z > P.gap - P.a) { b.z = P.gap - P.a; if (b.v > 0) b.v = 0; }
-  }
+  const G_N = 9.81;   /* m/s², for m = T/g in the hanging mass label */
   // ==CORE END==
 
   if (typeof document === 'undefined') {
-    globalThis.SWV = { PI, TAU, WAVE_V, DRIVE_F0, DRIVE_XD, DRIVE_M, PLUCK_N, waveSpeed, stringFreq, soundSpeed, pipeLeff, pipeFreq,
-      sineSeries, cosineSeries, pluckCoeffs, triangle, modalEnergy, fieldEnergy, makeDriven, steadyG, setOmega, drivenQ, retarget,
-      restDriven, stepDriven, steadyAmp, resonanceCurve, waveSum, waveEnvelope, beatEnvelope, pulseHump, twoPulses, pulsePass,
-      G_N, airDensity, airViscosity, gorkovCoeffs, levP2, levV2, gorkovU, levU, levFmax, levForce, beadWeight, levNodes, trapOffset,
-      trapStiffness, levPmin, cavityGain, beadDrag, stepBead };
+    globalThis.SWV = { PI, TAU, WAVE_V, DRIVE_F0, DRIVE_XD, DRIVE_M, PLUCK_N, waveSpeed, stringFreq, soundSpeed, sineSeries, cosineSeries,
+      pluckCoeffs, triangle, modalEnergy, fieldEnergy, makeDriven, steadyG, setOmega, drivenQ, retarget, restDriven, stepDriven,
+      steadyAmp, resonanceCurve, waveSum, waveEnvelope, beatEnvelope, pulseHump, twoPulses, pulsePass, G_N };
     return;
   }
 
