@@ -42,57 +42,50 @@
   color-scheme: dark;
 }
 *, *::before, *::after { box-sizing: border-box; }
-html { scroll-padding-top: 76px; }
+html { scroll-padding-top: 130px; }
 body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 16px; line-height: 1.5; }
 [hidden] { display: none !important; }
 a { color: inherit; }
 .wrap { max-width: 1240px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
-/* Header: graph paper, like the demo canvases */
-.hero {
-  border-bottom: 1px solid var(--line);
-  background-color: var(--canvas);
-  background-image:
-    linear-gradient(var(--grid) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
-  background-size: 32px 32px;
-  background-position: -1px -1px;
-}
-.hero .wrap { position: relative; padding-top: 56px; padding-bottom: 44px; }
-.art { position: absolute; right: 16px; top: 50%; translate: 0 -50%; width: min(34%, 380px); height: auto; overflow: visible; }
-.art .orbit { fill: none; stroke: var(--muted); stroke-width: 1.5; }
-.art .axis { stroke: var(--line); stroke-width: 1.5; stroke-dasharray: 4 5; }
-.art .sweep { fill: color-mix(in srgb, var(--equi) 26%, transparent); stroke: var(--equi); stroke-width: 1.2; }
-.art .sun { fill: var(--equi); }
-.art .glow { fill: color-mix(in srgb, var(--equi) 22%, transparent); }
-.art .planet { fill: var(--neg); }
-.art .vel { stroke: var(--pos); stroke-width: 2.5; stroke-linecap: round; fill: none; }
-.art .head { fill: var(--pos); }
-.eyebrow { margin: 0 0 14px; font-family: var(--font-mono); font-size: 0.78rem; letter-spacing: 0.04em; color: var(--muted); }
-.eyebrow b { color: var(--accent); font-weight: 600; }
-h1 { margin: 0; font-size: clamp(2.1rem, 5vw, 3.2rem); line-height: 1.08; letter-spacing: -0.02em; text-wrap: balance; }
-.lede { margin: 14px 0 0; max-width: 56ch; font-size: 1.15rem; color: var(--muted); text-wrap: pretty; }
-.facts { display: flex; flex-wrap: wrap; gap: 8px 22px; margin: 22px 0 0; padding: 0; list-style: none; font-family: var(--font-mono); font-size: 0.82rem; color: var(--muted); }
+/* The opening page of the notebook (parchment redesign, 2026-11-08; tokens, textures and fonts in demos/lib/paper.css) */
+.hero .wrap { position: relative; padding-top: 40px; padding-bottom: 26px; }
+.lhero .wrap { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 40px; align-items: center; }
+.phead .wrap { padding-top: 34px; padding-bottom: 18px; }
+.eyebrow { margin: 0 0 10px; }
+h1 { margin: 0; font-size: clamp(2.1rem, 5vw, 3.1rem); line-height: 1.05; text-wrap: balance; }
+.lede { margin: 12px 0 0; max-width: 58ch; font-size: 1.2rem; text-wrap: pretty; }
+.facts { display: flex; flex-wrap: wrap; gap: 6px 22px; margin: 18px 0 0; padding: 0; list-style: none; font-size: 0.95rem; }
 .facts li { display: flex; align-items: center; gap: 8px; }
-.facts li::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--dot, var(--accent)); }
-.facts li:nth-child(2) { --dot: var(--pos); }
-.facts li:nth-child(3) { --dot: var(--equi); }
-.facts a { color: var(--accent); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
-.facts strong { color: var(--ink); font-weight: 600; }
-.hero:has(.art) .facts { max-width: calc(100% - min(34%, 380px) - 40px); }   /* the facts wrap before they reach the picture */
-.art-thumb { display: block; border-radius: 12px; overflow: hidden; border: 1px solid var(--line); background: var(--surface); text-decoration: none; box-shadow: 0 10px 30px rgb(0 0 0 / 0.25); }
-.art-thumb img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; }
-.art-thumb span { display: block; padding: 7px 12px; font-family: var(--font-mono); font-size: 0.78rem; color: var(--muted); }
-.art-thumb:hover span, .art-thumb:focus-visible span { color: var(--accent); }
+.facts li::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
+.facts a { color: var(--link); text-decoration: underline; text-underline-offset: 3px; }
+.facts strong { color: var(--ink); font-size: 0.9rem; }
+/* the card pasted beside the opening: how to teach with the site, with one demo's photograph */
+.teach { position: relative; padding: 18px 20px 20px; rotate: 0.6deg; }
+.teach h3 { margin: 0 0 8px; font-size: 1.25rem; }
+.teach ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; font-size: 0.95rem; }
+.teach li { padding-left: 22px; text-indent: -22px; }
+.teach li::before { content: "—"; color: var(--accent); margin-right: 8px; }
+.teach a { color: var(--link); text-decoration: none; border-bottom: 1px solid var(--line2); }
+.art-thumb { display: block; margin: 0 0 14px; text-decoration: none; color: inherit; }
+.art-thumb img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; border: 1px solid var(--line2); border-radius: 3px; box-shadow: inset 0 0 0 3px var(--paper3); }
+.art-thumb span { display: block; padding: 6px 2px 0; text-align: center; font: 1.1rem var(--hand); color: var(--accent); }
+.art-thumb:hover span, .art-thumb:focus-visible span { text-decoration: underline; }
+/* the course strip at the foot of the library: the second layer */
+.course-strip { position: relative; margin: 54px 0 0; padding: 24px 26px; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 24px; align-items: center; rotate: -0.3deg; }
+.course-strip .hand.tilt { position: absolute; right: 26px; top: -14px; font-size: 1.3rem; }
+.course-strip h2 { margin: 0 0 6px; font-size: 1.7rem; }
+.course-strip p { margin: 0; color: var(--ink2); max-width: 70ch; }
+.course-strip .cta { display: grid; gap: 8px; }
+.adds { margin: 14px 0 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+.adds li { display: grid; grid-template-columns: 30px 1fr; gap: 10px; font-size: 1rem; }
+.adds li b { font: 1.3rem var(--hand); color: var(--accent); font-weight: 500; }
+.adds li span { color: var(--ink2); }
+.adds li span strong { color: var(--ink); font-weight: 600; }
 
 /* Toolbar: filter and subject links, stays on screen while scrolling */
-.tools {
-  position: sticky; top: 0; z-index: 5;
-  background: color-mix(in srgb, var(--bg) 88%, transparent);
-  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--line);
-}
+.tools { position: sticky; top: 58px; z-index: 5; }
 .tools .wrap { display: flex; align-items: center; gap: 10px 18px; padding-top: 10px; padding-bottom: 10px; }
 .filter { position: relative; flex: 0 1 300px; min-width: 0; }
 .filter svg { position: absolute; left: 11px; top: 50%; translate: 0 -50%; width: 16px; height: 16px; color: var(--muted); pointer-events: none; }
@@ -127,6 +120,12 @@ h1 { margin: 0; font-size: clamp(2.1rem, 5vw, 3.2rem); line-height: 1.08; letter
 .status:empty { display: none; }
 
 /* Subjects and cards */
+.fam { padding-top: 34px; }
+.fam h2 { display: flex; align-items: baseline; gap: 12px; margin: 0 0 8px; font-size: 1.7rem; }
+.fam h2 .n { font-size: 0.8rem; }
+.fam h2::after { content: ""; flex: 1; align-self: center; height: 1px; background: var(--line2); opacity: 0.6; }
+.fam .tlinks { margin: 0 0 16px; }
+.card .ws { margin-top: auto; padding-top: 6px; font-size: 1.05rem; color: var(--ink2); }
 main { padding-top: 12px; padding-bottom: 48px; }
 .subject { padding-top: 36px; }
 .subject h2 {
@@ -156,11 +155,11 @@ main { padding-top: 12px; padding-bottom: 48px; }
   text-decoration: none; color: inherit;
   transition: border-color 0.15s, box-shadow 0.2s, translate 0.2s;
 }
-.thumb { display: block; aspect-ratio: 16 / 10; background: var(--canvas); border-bottom: 1px solid var(--line); overflow: hidden; }
+.thumb { display: block; aspect-ratio: 16 / 10; background: var(--canvas); overflow: hidden; }
 .thumb img { display: block; width: 100%; height: 100%; object-fit: cover; transition: scale 0.35s ease; }
 .body { display: flex; flex-direction: column; gap: 6px; padding: 14px 16px 16px; flex: 1; }
-.card h3 { margin: 0; font-size: 1.12rem; line-height: 1.25; }
-.card p { margin: 0; color: var(--muted); font-size: 0.93rem; text-wrap: pretty; }
+.card h3 { margin: 0; font-size: 1.3rem; line-height: 1.15; }
+.card p { margin: 0; color: var(--muted); font-size: 0.92rem; text-wrap: pretty; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .tags { display: flex; flex-wrap: wrap; gap: 5px; margin: auto 0 0; padding: 8px 0 0; list-style: none; }
 .tags li {
   font-family: var(--font-mono); font-size: 0.7rem; line-height: 1.4; color: var(--muted);
@@ -186,10 +185,11 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
   .card:hover .thumb img { scale: none; }
 }
 @media (max-width: 700px) {
-  html { scroll-padding-top: 116px; }
-  .hero .wrap { padding-top: 36px; padding-bottom: 30px; }
-  .art { display: none; }
-  .hero:has(.art) .facts { max-width: none; }
+  html { scroll-padding-top: 160px; }
+  .hero .wrap { padding-top: 26px; padding-bottom: 20px; }
+  .lhero .wrap { grid-template-columns: 1fr; gap: 22px; }
+  .teach { rotate: 0; }
+  .course-strip { grid-template-columns: 1fr; }
   .lede { font-size: 1.05rem; }
   .tools .wrap { flex-wrap: wrap; }
   .filter { flex: 1 1 100%; }
@@ -197,8 +197,6 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
   .jump { flex-basis: 100%; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin: 0 -16px; padding: 0 16px; }
     .subject { padding-top: 28px; }
 }
-/* hero tools, top left above the eyebrow: What's new (whats-new.js) and the theme switch (demos/lib/theme.js fills data-vd-theme) */
-.hero-tools { position: relative; z-index: 2; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin: -28px 0 22px; }
 .newbtn { display: inline-flex; align-items: center; gap: 6px; min-height: 32px; padding: 4px 12px; font: inherit; font-size: 0.82rem; font-weight: 700;
   color: var(--accent); background: var(--surface); border: 1px solid var(--line); border-radius: 999px; cursor: pointer; }
 .newbtn svg { width: 14px; height: 14px; fill: currentColor; flex: none; }
@@ -300,6 +298,41 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
 }
 
 
+/* course tiles (tools/courses.py) */
+.courses { padding-top: 30px; }
+.courses h2 { margin: 0 0 14px; font-size: 1.35rem; letter-spacing: -0.01em; }
+.ctiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); gap: 18px; margin: 0; padding: 0; list-style: none; }
+.ctile { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: auto auto; height: 100%; text-decoration: none; color: inherit;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; transition: border-color 0.15s, box-shadow 0.2s, translate 0.2s; }
+.ctile .mosaic { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-bottom: 1px solid var(--line); background: var(--canvas); }
+.ctile .mosaic { height: 92px; overflow: hidden; }
+.ctile .mosaic .thumb { border-bottom: 0; height: 92px; aspect-ratio: auto; }
+.ctile .mosaic .thumb img { height: 92px; }
+.ctile .cbody { grid-column: 1 / -1; padding: 14px 18px 18px; }
+.ctile h3 { margin: 0; font-size: 1.45rem; }
+.ctile .sub { margin: 2px 0 6px; font-family: var(--font-mono); font-size: 0.8rem; color: var(--accent); }
+.ctile p { margin: 0; color: var(--muted); font-size: 0.93rem; }
+.ctile:hover { border-color: var(--accent); box-shadow: var(--shadow); translate: 0 -2px; }
+.ctile:hover h3 { color: var(--accent); }
+.ctile:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+.allnote { margin: -6px 0 14px; color: var(--muted); font-size: 0.92rem; }
+.fams { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 270px), 1fr)); gap: 18px; margin: 0; padding: 0; list-style: none; }
+.fam { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; scroll-margin-top: 20px; }
+.fam .mosaic { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); height: 72px; overflow: hidden; border-bottom: 1px solid var(--line); background: var(--canvas); }
+.fam .mosaic .thumb { border-bottom: 0; height: 72px; aspect-ratio: auto; }
+.fam .mosaic .thumb img { height: 72px; }
+.fam .fbody { padding: 12px 16px 16px; }
+.fam h3 { margin: 0; font-size: 1.25rem; }
+.fam .sub { margin: 2px 0 10px; font-family: var(--font-mono); font-size: 0.78rem; color: var(--accent); }
+.tlinks { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.tlinks a { display: inline-flex; align-items: center; gap: 6px; min-height: 34px; padding: 4px 11px; border: 1px solid var(--line); border-radius: 999px;
+  background: var(--canvas); color: var(--ink); font-size: 0.88rem; font-weight: 700; text-decoration: none; }
+.tlinks a .n { font-family: var(--font-mono); font-size: 0.7rem; font-weight: 400; color: var(--muted); }
+.tlinks a:hover { border-color: var(--accent); color: var(--accent); }
+.tlinks a:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { .ctile { transition: none; } .ctile:hover { translate: none; } }
+
+
 /* site search (tools/courses.py) */
 .find { padding-top: 30px; }
 .find h2 { margin: 0 0 10px; font-size: 1.35rem; letter-spacing: -0.01em; }
@@ -330,19 +363,27 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
 }
 
 </style>
+<link rel="stylesheet" href="demos/lib/paper.css">
 </head>
-<body>
+<body class="site">
 <!-- Generated by tools/courses.py from curriculum/textbook-map.json. Edit the map or the script, not this file. -->
-<header class="hero">
+<header class="top" aria-label="Site">
+  <a class="brand" href="index.html"><svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><ellipse cx="16" cy="16" rx="13" ry="6" fill="none" stroke="currentColor" stroke-width="1.8" transform="rotate(-30 16 16)"/><ellipse cx="16" cy="16" rx="13" ry="6" fill="none" stroke="currentColor" stroke-width="1.8" transform="rotate(30 16 16)"/><circle cx="16" cy="16" r="2.6" fill="currentColor"/></svg>Virtual Physics Demos</a>
+  <nav class="tabs" aria-label="Library"><a class="tab" href="index.html#topics" aria-current="page">Demos</a><a class="tab" href="openstax.html">OpenStax</a><a class="tab" href="notes/index.html">Notes</a></nav>
+  <div class="filter hfind" role="search"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M11 11l3.5 3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><input type="search" id="q" placeholder="Search all demos" aria-label="Search all demos by name, topic or textbook section" autocomplete="off" spellcheck="false" role="combobox" aria-autocomplete="list" aria-controls="hits" aria-expanded="false"><kbd>/</kbd><button type="button" class="clear" hidden aria-label="Clear search">✕</button><div class="hits" id="hits" hidden><p class="hn" aria-live="polite"></p><ul></ul></div></div>
+  <span data-vd-theme></span>
+  <a class="courses" href="courses.html"><b>For a class</b> Courses</a>
+</header>
+<header class="hero phead">
   <div class="wrap">
-    <p class="eyebrow"><a href="index.html">Virtual Physics Demos</a> · <b>Modern physics</b></p>
+    <p class="eyebrow"><b>Modern physics</b></p>
     <h1>Nuclear and particle physics</h1>
     <p class="lede">Decay, binding energy, fission and fusion, gamma spectra, quarks.</p>
     <ul class="facts"><li><span><strong>6</strong> demos</span></li><li><span><strong>16</strong> worksheets</span></li><li><span>OpenStax Vol 3 · Ch. 5–7, 10–11</span></li></ul>
   </div>
 </header>
 <nav class="tools" aria-label="Sections">
-  <div class="wrap"><div class="filter" role="search"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M11 11l3.5 3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><input type="search" id="q" placeholder="Search all demos" aria-label="Search all demos by name, topic or textbook section" autocomplete="off" spellcheck="false" role="combobox" aria-autocomplete="list" aria-controls="hits" aria-expanded="false"><kbd>/</kbd><button type="button" class="clear" hidden aria-label="Clear search">✕</button><div class="hits" id="hits" hidden><p class="hn" aria-live="polite"></p><ul></ul></div></div><ul class="jump"><li><a href="topics/relativity.html">Relativity</a></li><li><a href="topics/quantum.html">Photons and quanta</a></li><li><a href="topics/atoms-solids.html">Atoms, molecules and solids</a></li><li><a href="topics/nuclear-particles.html" aria-current="page">Nuclear and particle physics</a></li></ul></div>
+  <div class="wrap"><ul class="jump"><li><a href="topics/relativity.html">Relativity</a></li><li><a href="topics/quantum.html">Photons and quanta</a></li><li><a href="topics/atoms-solids.html">Atoms, molecules and solids</a></li><li><a href="topics/nuclear-particles.html" aria-current="page">Nuclear and particle physics</a></li></ul></div>
 </nav>
 <main class="wrap">
   <p class="how">Every demo on this subject, from every course and module, with all of its worksheets. Opened from here, a demo steps through this topic with its previous and next links. The other topics in Modern physics are in the bar above; the <a href="index.html#topics">home page</a> lists them all.</p>
@@ -415,7 +456,7 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
 <footer>
   <div class="wrap">
     <p>© 2026 Steven Anderson. All rights reserved. Free to use for teaching and learning; see the <a href="LICENSE.html">terms of use</a>.</p>
-    <p><a href="https://github.com/PhysicsSteven/VirtualDemos">Source on GitHub</a></p>
+    <p><a href="index.html#topics">All demos</a> · <a href="openstax.html">OpenStax by section</a> · <a href="courses.html">Courses</a> · <a href="notes/index.html">Teaching notes</a> · <a href="https://github.com/PhysicsSteven/VirtualDemos">Source on GitHub</a></p>
   </div>
 </footer>
 <script src="search.js" defer></script>

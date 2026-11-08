@@ -56,3 +56,5 @@
   .markdown-body a.ws-open-demo:focus-visible { outline: 3px solid var(--hd-accent, #0969da); outline-offset: 3px; }
 }
 </style>
+<!-- The parchment look (2026-11-08): demos/lib/paper.css last in the head so its tokens win: it restyles the worksheet on screen as a ruled parchment page; print.css still prints black on white. -->
+<link rel="stylesheet" id="vd-paper" href="{{ '/demos/lib/paper.css' | relative_url }}" media="screen">

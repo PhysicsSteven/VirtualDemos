@@ -1,8 +1,9 @@
-/* Theme switch for the whole site: Light, Dark or Browser default (follows prefers-color-scheme).
+/* Theme switch for the whole site: Day, Night or Browser default (follows prefers-color-scheme). The stored values stay
+   'light' and 'dark' (Day is the light theme, Night the dark one), so every page's [data-theme] rules still apply.
    Load it first in <head>, as a plain blocking script, before any stylesheet or other script:
      <script src="lib/theme.js"></script>
    It reads the saved choice (localStorage 'vd-theme': 'light', 'dark' or 'auto' for Browser default; nothing saved
-   means Dark, the site default for a first visit, Steve 2026-10-25) and sets
+   means Day, the parchment look by daylight, the site default since the 2026-11-08 redesign; it was Dark from 2026-10-25) and sets
    data-theme on <html> before the page paints, so pages do not flash. Every page already styles itself from
    :root tokens with a dark @media block guarded by :not([data-theme="light"]) and a [data-theme="dark"] block.
 
@@ -21,7 +22,7 @@
   'use strict';
   if (window.VDTheme) return;
   var KEY = 'vd-theme', root = document.documentElement;
-  var read = function () { var v = null; try { v = localStorage.getItem(KEY); } catch (_) {} return v === 'light' || v === 'dark' ? v : v === 'auto' ? '' : 'dark'; };
+  var read = function () { var v = null; try { v = localStorage.getItem(KEY); } catch (_) {} return v === 'light' || v === 'dark' ? v : v === 'auto' ? '' : 'light'; };
   var mode = read();
   if (mode) root.setAttribute('data-theme', mode);
 
@@ -116,7 +117,7 @@
     mo.observe(root, { childList: true, subtree: true });
   }
 
-  var LABELS = [['', 'Browser default'], ['light', 'Light'], ['dark', 'Dark']];
+  var LABELS = [['', 'Browser default'], ['light', 'Day'], ['dark', 'Night']];
   var selects = [];
   function apply(v, save) {
     v = v === 'light' || v === 'dark' ? v : '';
@@ -175,7 +176,7 @@
   function make(cls) {
     var lab = document.createElement('label');
     lab.className = 'vd-theme' + (cls ? ' ' + cls : '');
-    lab.title = 'Theme for every page of the site: Light, Dark, or whatever your browser or system is set to';
+    lab.title = 'Theme for every page of the site: Day, Night, or whatever your browser or system is set to';
     lab.innerHTML = ICON;
     var sel = document.createElement('select');
     sel.setAttribute('aria-label', 'Theme');

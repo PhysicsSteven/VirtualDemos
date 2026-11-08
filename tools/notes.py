@@ -112,6 +112,14 @@ FONTS = ('<link rel="preconnect" href="https://fonts.googleapis.com">\n'
 
 # the site theme switch (demos/lib/theme.js); not on answer keys, which live outside the site
 THEME = '<script src="../demos/lib/theme.js"></script>\n'
+# the parchment look (2026-11-08): the skin last in <head>, a body class for its notes rules, and the site's header band
+PAPER = '<link rel="stylesheet" id="vd-paper" href="../demos/lib/paper.css">\n'
+TOP = ('<header class="top" aria-label="Site"><a class="brand" href="../index.html"><svg class="mark" viewBox="0 0 32 32" aria-hidden="true">'
+       '<ellipse cx="16" cy="16" rx="13" ry="6" fill="none" stroke="currentColor" stroke-width="1.8" transform="rotate(-30 16 16)"/>'
+       '<ellipse cx="16" cy="16" rx="13" ry="6" fill="none" stroke="currentColor" stroke-width="1.8" transform="rotate(30 16 16)"/><circle cx="16" cy="16" r="2.6" fill="currentColor"/></svg>'
+       'Virtual Physics Demos</a><nav class="tabs" aria-label="Library"><a class="tab" href="../index.html#topics">Demos</a><a class="tab" href="../openstax.html">OpenStax</a>'
+       '<a class="tab" href="index.html" aria-current="page">Notes</a></nav><span class="hfind"></span><span data-vd-theme></span>'
+       '<a class="courses" href="../courses.html"><b>For a class</b> Courses</a></header>\n')
 
 
 def page(title, body, robots=""):
@@ -123,9 +131,9 @@ def page(title, body, robots=""):
 {"" if robots else THEME}{robots}<title>{html.escape(title)}</title>
 {FONTS}
 {MATHJAX if robots else ""}<style>{CSS}</style>
-</head>
-<body>
-<main>
+{"" if robots else PAPER}</head>
+<body{"" if robots else " class=\"notes\""}>
+{"" if robots else TOP}<main>
 {body}
 </main>
 </body>
