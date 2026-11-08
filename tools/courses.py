@@ -695,10 +695,18 @@ def openstax_page(m, cards, notes):
     how = ('Every section of OpenStax University Physics with the demos that serve it, chapter by chapter. Open a chapter to see its sections; '
            'search for a section number such as 3.2 to jump straight to its demos. Section numbers match the book.')
     page = page_shell('OpenStax University Physics', 'By textbook section', 'The free OpenStax textbook, section by section, with the demos for each.',
-                      facts, ''.join(jump), '\n'.join(vols), how)
+                      facts, ''.join(jump), ALL_CH + '\n'.join(vols), how)
     # a link to a chapter or section (#v1-ch3, #s1-3-2) opens its chapter
     return page.replace('<script src="search.js" defer></script>', '<script src="search.js" defer></script>\n' + OPEN_HASH, 1)
 
+
+# Open or close every chapter at once (Steve, 2026-11-08: "I love this idea"), for a TA scanning the whole book.
+ALL_CH = ('  <p class="allch"><button type="button" id="allCh" aria-pressed="false">Open every chapter</button></p>\n'
+          "<script>/* tools/courses.py: open or close every chapter */ (function () { var b = document.getElementById('allCh'); if (!b) return; "
+          "var ds = function () { return [].slice.call(document.querySelectorAll('details.ch')); }; "
+          "function sync() { var all = ds().every(function (d) { return d.open; }); b.textContent = all ? 'Close every chapter' : 'Open every chapter'; b.setAttribute('aria-pressed', all ? 'true' : 'false'); } "
+          "b.addEventListener('click', function () { var open = !ds().every(function (d) { return d.open; }); ds().forEach(function (d) { d.open = open; }); sync(); }); "
+          "ds().forEach(function (d) { d.addEventListener('toggle', sync); }); })();</script>\n")
 
 OPEN_HASH = ("<script>/* open the chapter a link points into (#v1-ch3, #s1-3-2) */ (function () { function go() { var e = location.hash.length > 1 && "
              "document.getElementById(decodeURIComponent(location.hash.slice(1))); if (!e) return; var d = e.closest('details'); if (d) { d.open = true; e.scrollIntoView(); } } "
@@ -710,6 +718,11 @@ TOPIC_CSS = '''
 .item .used { font-size: 0.84rem; }
 .item .used a { color: var(--accent); font-weight: 700; text-underline-offset: 3px; }
 .item .used .sec { margin-right: 0; }
+.allch { margin: 16px 0 0; }
+.allch button { min-height: 36px; padding: 6px 14px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); color: var(--accent);
+  font: inherit; font-size: 0.9rem; font-weight: 700; cursor: pointer; }
+.allch button:hover { border-color: var(--accent); }
+.allch button:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 .ch { margin-top: 10px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
 .ch summary { cursor: pointer; padding: 10px 14px; font-weight: 700; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; min-height: 44px; }
 .ch .chn { font-family: var(--font-mono); font-size: 0.78rem; font-weight: 600; color: var(--accent); }

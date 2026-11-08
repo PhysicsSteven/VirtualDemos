@@ -1,8 +1,7 @@
 /* What's new: the popup on the home page (Steve, 2026-10-25).
-   The first time someone opens the home page after an entry is added, a popup lists what changed since their last visit.
-   It closes with ✕, Esc or a click outside, and remembers the newest entry seen in localStorage (vd-whats-new). Someone
-   with nothing remembered (a first visit, or a cleared browser) sees only entries from the last 14 days. The "What's new"
-   button at the top of the home page (and the footer link) opens it again with every entry.
+   It opens only when someone presses the "What's new" button at the top of the home page or the footer link there
+   (Steve, 2026-11-08: never by itself), lists every entry, and closes with ✕, Esc or a click outside. It still notes the
+   newest entry seen in localStorage (vd-whats-new).
 
    TO ADD AN ENTRY: put it at the TOP of the list below, newest first. Write for students and TAs in plain language: what
    they can now do and where, not how it was built. Leave out fixes nobody would notice and anything from the answer keys.
@@ -219,7 +218,7 @@ window.VD_WHATS_NEW = [
 ];
 
 (() => {
-  const ALL = window.VD_WHATS_NEW || [], KEY = 'vd-whats-new', FRESH_DAYS = 14, MAX = 6;
+  const ALL = window.VD_WHATS_NEW || [], KEY = 'vd-whats-new';
   if (!ALL.length) return;
   const get = () => { try { return localStorage.getItem(KEY); } catch (_) { return null; } };
   const put = () => { try { localStorage.setItem(KEY, ALL[0].id); } catch (_) {} };
@@ -263,13 +262,9 @@ window.VD_WHATS_NEW = [
     put();
   };
 
-  const seen = get(), at = ALL.findIndex((e) => e.id === seen);
-  let items;
-  if (at >= 0) items = ALL.slice(0, at);
-  else { const cut = Date.now() - FRESH_DAYS * 864e5; items = ALL.filter((e) => new Date(e.date + 'T23:59:59').getTime() >= cut); }
   const go = () => {
     document.querySelectorAll('[data-whats-new]').forEach((a) => a.addEventListener('click', (e) => { e.preventDefault(); open(ALL); }));   /* the button and footer link show every entry */
-    if (items.length) open(items.slice(0, MAX)); else put();
+    /* Steve, 2026-11-08: the list opens only from the button (or the footer link), never by itself */
   };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
 })();

@@ -276,6 +276,11 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
 .item .used { font-size: 0.84rem; }
 .item .used a { color: var(--accent); font-weight: 700; text-underline-offset: 3px; }
 .item .used .sec { margin-right: 0; }
+.allch { margin: 16px 0 0; }
+.allch button { min-height: 36px; padding: 6px 14px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); color: var(--accent);
+  font: inherit; font-size: 0.9rem; font-weight: 700; cursor: pointer; }
+.allch button:hover { border-color: var(--accent); }
+.allch button:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 .ch { margin-top: 10px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
 .ch summary { cursor: pointer; padding: 10px 14px; font-weight: 700; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; min-height: 44px; }
 .ch .chn { font-family: var(--font-mono); font-size: 0.78rem; font-weight: 600; color: var(--accent); }
@@ -340,6 +345,8 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
 </nav>
 <main class="wrap">
   <p class="how">Every section of OpenStax University Physics with the demos that serve it, chapter by chapter. Open a chapter to see its sections; search for a section number such as 3.2 to jump straight to its demos. Section numbers match the book.</p>
+  <p class="allch"><button type="button" id="allCh" aria-pressed="false">Open every chapter</button></p>
+<script>/* tools/courses.py: open or close every chapter */ (function () { var b = document.getElementById('allCh'); if (!b) return; var ds = function () { return [].slice.call(document.querySelectorAll('details.ch')); }; function sync() { var all = ds().every(function (d) { return d.open; }); b.textContent = all ? 'Close every chapter' : 'Open every chapter'; b.setAttribute('aria-pressed', all ? 'true' : 'false'); } b.addEventListener('click', function () { var open = !ds().every(function (d) { return d.open; }); ds().forEach(function (d) { d.open = open; }); sync(); }); ds().forEach(function (d) { d.addEventListener('toggle', sync); }); })();</script>
   <section class="unit" id="vol-1" aria-labelledby="vol-1-h">
     <h2 id="vol-1-h">Volume 1: Mechanics, waves and sound</h2>
     <p class="meta"><span>Ch. 1–17</span><span>99 sections</span><span>99 with an activity</span><span><a href="https://openstax.org/details/books/university-physics-volume-1">Free textbook: University Physics Volume 1</a></span></p>
