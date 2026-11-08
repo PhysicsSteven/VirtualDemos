@@ -50,5 +50,5 @@ Students need v = fλ, the speed of sound in different media, and the Doppler fo
 
 - Media: speeds and impedances from OpenStax College Physics §17.7 (table of the ultrasound properties of various media); bone varies from 5.7 to 7.8 × 10⁶ kg/(m²·s), and 7.8 × 10⁶ is chosen. A fluid filled cyst is taken as water. 1540 m/s is the book's soft tissue value.
 - Pulses are plane waves with a Gaussian envelope, three cycles at half height (chosen). One echo per boundary, at t = Σ 2dᵢ/cᵢ, with amplitude r times (1 − rᵢ²) for every boundary above (down and back). The screen shows the coherent sum of the echoes: its envelope at 0 to 200 μs, the radio frequency trace when zoomed.
-- Left out: multiple echoes, absorption in tissue (real scanners raise the gain with depth), beam spreading and speckle. Gel couples with no echo.
+- Left out: multiple echoes, beam spreading and speckle, and absorption in tissue unless Absorption is switched on (real scanners raise the gain with depth). Gel couples with no echo.
 - Doppler: f = f₀(c + u)/(c − u), u = v cos θ, c = 1570 m/s in blood (exact for the two step process). The spectrum is taken over a 20 ms window (chosen), so each speed gives a sinc² line about 50 Hz wide. Laminar flow v(r) = v_max(1 − r²/R²) gives equal amounts of blood at every speed from 0 to v_max (checked in the tests). Simulated data with no noise.

@@ -335,7 +335,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
 
   /* ---- Cooling: a hot metal sphere hanging in room air loses heat by convection and by radiation ----
-     The sphere is lumped (one temperature throughout: its Biot number hD/(6k) stays below 0.001 for these metals), so
+     The sphere is lumped (one temperature throughout: its Biot number hD/(6k) stays below 0.004 for these metals, fan on), so
        mc dT/dt = −hA(T − T_air) − εσA(T⁴ − T_air⁴),  A = πD², m = ρπD³/6,
      with the room's walls at the air temperature. The film coefficient h comes from the Nusselt number Nu = hD/k_air:
        still air, natural convection (S. W. Churchill 1983, as given in Incropera et al., Fundamentals of Heat and Mass Transfer):

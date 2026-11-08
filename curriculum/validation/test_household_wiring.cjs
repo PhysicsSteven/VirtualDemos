@@ -37,7 +37,7 @@ group('no ground: OpenStax 0.6 mA dry and 12 mA wet; the breaker never sees it, 
   assert.equal(c.breakerAction(wet.Ihot, 15), 'hold'); assert(!c.gfciTrips(dry.leak)); assert(c.gfciTrips(wet.leak));
   assert(/harmless/.test(c.shockEffect(dry.Ibody)) === false && /sensation/.test(c.shockEffect(dry.Ibody)), '0.6 mA is below sensation');
   assert(/let go/.test(c.shockEffect(wet.Ibody)));
-  assert(/death/.test(c.shockEffect(0.31))); assert(/harmless/.test(c.shockEffect(3e-3)));
+  assert(/fatal/.test(c.shockEffect(0.31))); assert(/harmless/.test(c.shockEffect(3e-3)));
   const none = c.solveCircuit({ ...base, loads: ['toaster'], fault: 'case', touch: false, ground: false }); assert(Math.abs(none.leak) < 1e-12, 'no path: no leak');
 });
 console.log(`${n} household wiring test groups passed`);

@@ -354,7 +354,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const E = () => mod(360 * S.T / P_SYN, 360);                       // elongation, east of Sun
   const phiN = () => mod(S.phiN0 - 360 * S.T / EC_YEAR, 360);        // ascending node, from Sun line
   const dayOf = () => mod(S.T, P_SYN);
-  const litFrac = (e) => (1 - Math.cos(rad(e))) / 2;
+  const litFrac = (e, b) => (1 - Math.cos(rad(e)) * Math.cos(rad(b || 0))) / 2;   // b: ecliptic latitude, when the eclipse view tracks it
   const beta = (e, pn) => INC * Math.sin(rad(e - pn));
 
   function phaseName(e) {
@@ -1079,7 +1079,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function updatePanel() {
     const e = E(), d = dayOf();
     R_.phase.textContent = phaseName(e);
-    R_.frac.textContent = (100 * litFrac(e)).toFixed(1) + ' %';
+    R_.frac.textContent = (100 * litFrac(e, S.eclipse ? beta(e, phiN()) : 0)).toFixed(1) + ' %';
     R_.day.textContent = d.toFixed(2) + ' d';
     R_.elong.textContent = fmtElong(e);
     R_.rise.textContent = fmtHM(riseH(e));
@@ -1351,7 +1351,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   window.vdReadingRow = () => {
     const e = E(), pn = phiN(), signed = pn > 180 ? pn - 360 : pn;
     const w = (x, n, dp) => { const v = +x.toFixed(dp); return (v >= n ? v - n : v).toFixed(dp); }; /* 29.531 d is 0 d, 24:00 is 0:00 */
-    return { t_d: S.T.toFixed(3), days: w(dayOf(), +P_SYN.toFixed(3), 3), E_deg: w(e, 360, 2), lit_pct: (100 * litFrac(e)).toFixed(2),
+    return { t_d: S.T.toFixed(3), days: w(dayOf(), +P_SYN.toFixed(3), 3), E_deg: w(e, 360, 2), lit_pct: (100 * litFrac(e, S.eclipse ? beta(e, pn) : 0)).toFixed(2),
       rise_h: w(riseH(e), 24, 3), transit_h: w(transitH(e), 24, 3), set_h: w(setH(e), 24, 3),
       node_deg: S.eclipse ? signed.toFixed(2) : '', node_dist_deg: S.eclipse ? nodeDist().toFixed(2) : '', beta_deg: S.eclipse ? beta(e, pn).toFixed(3) : '',
       eclipse: S.eclipse ? eclipseState().text : '' };

@@ -240,8 +240,8 @@ VDI18N.add('es', 'demo/quantum-waves', {
   "<span><i></i>Energía potencial V(x)</span> <span><i></i>Energía media ⟨E⟩, banda ±ΔE</span> <span><i></i>Niveles de energía (los elegidos en negritas)</span> <span><i></i>Re ψ</span> <span><i></i>Im ψ</span> <span><i></i>Histograma de posiciones medidas</span>",
 "Color shows the phase of ψ, as on the color wheel: a packet moving right winds through the colors in one order, one moving left in the other order, and a standing wave has blocks of one color that flip by half a turn at each node.":
   "El color muestra la fase de ψ, como en la rueda de colores: un paquete que se mueve a la derecha recorre los colores en un orden, uno que se mueve a la izquierda en el orden contrario, y una onda estacionaria tiene bloques de un solo color que cambian media vuelta en cada nodo.",
-"Model: Crank–Nicolson time steps on {#} grid points, Δx = {#} pm. Probability that reaches the absorbing layers beyond the view is removed and counted in R or T. Energy levels come from diagonalizing the same finite difference Hamiltonian.":
-  "Modelo: pasos de tiempo de Crank–Nicolson en {#} puntos de malla, Δx = {#} pm. La probabilidad que llega a las capas absorbentes más allá de la vista se quita y se cuenta en R o T. Los niveles de energía se obtienen diagonalizando el mismo hamiltoniano de diferencias finitas.",
+"Model: Crank–Nicolson time steps on {#} grid points, Δx = {#} pm. Probability that reaches the absorbing layers beyond the view is removed and counted in R or T. Energy levels come from diagonalizing the same finite difference Hamiltonian. The grid makes a packet's kinetic energy and speed read low by (kΔx)²/{#} and (kΔx)²/{#}, under {#} % and {#} % at the top of the energy slider; ⟨E⟩ is the energy the grid conserves.":
+  "Modelo: pasos de tiempo de Crank–Nicolson en {#} puntos de malla, Δx = {#} pm. La probabilidad que llega a las capas absorbentes más allá de la vista se quita y se cuenta en R o T. Los niveles de energía se obtienen diagonalizando el mismo hamiltoniano de diferencias finitas. La malla hace que la energía cinética y la rapidez de un paquete se lean bajas en (kΔx)²/{#} y (kΔx)²/{#}, menos de {#} % y {#} % en el tope del deslizador de energía; ⟨E⟩ es la energía que la malla conserva.",
 "ψ in 3D: Re ψ up, Im ψ toward you, color is the phase":
   "ψ en 3D: Re ψ hacia arriba, Im ψ hacia ti, el color es la fase",
 "|ψ| is the distance from the axis · gray wall: V(x) · x from −{#} to {#} nm · drag to turn":
@@ -300,8 +300,8 @@ VDI18N.add('es', 'demo/quantum-waves', {
   "Ancho de la caja L",
 "V = {#} inside, infinite walls at x = ±L/{#}. You can also drag the edges of the potential on the energy diagram.":
   "V = {#} dentro, paredes infinitas en x = ±L/{#}. También puedes arrastrar los bordes del potencial en el diagrama de energía.",
-"Model: Crank–Nicolson time steps on {#} grid points, Δx = {#} pm. ψ = {#} at the edges of the grid. Energy levels come from diagonalizing the same finite difference Hamiltonian.":
-  "Modelo: pasos de tiempo de Crank–Nicolson en {#} puntos de malla, Δx = {#} pm. ψ = {#} en los bordes de la malla. Los niveles de energía se obtienen diagonalizando el mismo hamiltoniano de diferencias finitas.",
+"Model: Crank–Nicolson time steps on {#} grid points, Δx = {#} pm. ψ = {#} at the edges of the grid. Energy levels come from diagonalizing the same finite difference Hamiltonian. The grid makes a packet's kinetic energy and speed read low by (kΔx)²/{#} and (kΔx)²/{#}, under {#} % and {#} % at the top of the energy slider; ⟨E⟩ is the energy the grid conserves.":
+  "Modelo: pasos de tiempo de Crank–Nicolson en {#} puntos de malla, Δx = {#} pm. ψ = {#} en los bordes de la malla. Los niveles de energía se obtienen diagonalizando el mismo hamiltoniano de diferencias finitas. La malla hace que la energía cinética y la rapidez de un paquete se lean bajas en (kΔx)²/{#} y (kΔx)²/{#}, menos de {#} % y {#} % en el tope del deslizador de energía; ⟨E⟩ es la energía que la malla conserva.",
 "Level n = {#}, {#} eV":
   "Nivel n = {#}, {#} eV",
 "E numeric":

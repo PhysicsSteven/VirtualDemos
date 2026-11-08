@@ -44,7 +44,7 @@ Students should know magnetic flux and Ampère's law. The demo shows a slab of Y
 
 - London model: each vortex's field is (Φ0/2πλ²)K0(r/λ), and two vortices repel with force per length f0·K1(r/λ), f0 = Φ0²/(2πμ0λ³). The penetration depth λ = 141.5 nm is YBCO's in plane value at low temperature (Harshman et al., Phys. Rev. B 39, 851, 1989). The cores (a few nanometers) are much smaller than λ.
 - Vortices move against a drag proportional to speed (no inertia), so time is shown only as a rate. Forces are cut off smoothly at 5λ.
-- The applied field enters at the faces so that the field just inside each face equals the applied field (the Bean model's boundary condition). Left out: the lower critical field, the surface barrier, demagnetizing effects, thermal activation (flux creep) and temperature.
+- The applied field enters and leaves at the faces so that the field just inside each face equals the applied field (the Bean model's boundary condition); a vortex that a pin holds stays. Left out: the lower critical field, the surface barrier, demagnetizing effects, thermal activation (flux creep) and temperature.
 - Pins are random wells 0.2λ across with a set largest pull. Their strength and density are model choices, not measured values for YBCO.
 
 ## Going further

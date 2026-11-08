@@ -2782,7 +2782,7 @@ details.hall[open] > summary { margin-bottom: 8px; }
       $('cFOut').textContent = S.cyc.det === 1 ? '1 (tuned)' : S.cyc.det.toFixed(3);
       $('cFc').textContent = si(cfg.fc, 'Hz', 4); $('cFrf').textContent = si(cfg.fRF, 'Hz', 4);
       const Kmax = (p.q * cfg.B * cfg.R) ** 2 / (2 * p.m), g = 1 + Kmax / (p.m * C * C), vc = Math.sqrt(1 - 1 / (g * g));
-      $('cKmax').innerHTML = `${fmtK(Kmax, 4)} <span class="ok">about ${Math.round(Kmax / (2 * qV))} turns at 2qV per turn</span>`;
+      $('cKmax').innerHTML = Kmax > 0.1 * p.m * C * C ? `${fmtK(Kmax, 4)} <span class="ok">nonrelativistic formula, not valid here: K<sub>max</sub> is more than a tenth of mc² (see v/c and γ below)</span>` : `${fmtK(Kmax, 4)} <span class="ok">about ${Math.round(Kmax / (2 * qV))} turns at 2qV per turn</span>`;
       $('cRel').innerHTML = `v/c = ${vc.toFixed(3)}, γ = ${g.toFixed(4)} <span class="ok">the true cyclotron frequency there is f<sub>c</sub>/γ, ${((1 - 1 / g) * 100).toPrecision(2)}% lower</span>`;
     }
     const st = cycAt(simT), K = 0.5 * p.m * (st.vx ** 2 + st.vy ** 2);

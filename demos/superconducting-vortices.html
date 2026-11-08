@@ -134,6 +134,9 @@
      (a wall CUT thick). New vortices enter at the faces; one pushed across a face leaves. */
   const CUT = 5, KT = 4000, KTAB = new Float64Array(KT + 1);
   for (let i = 0; i <= KT; i++) { const r = Math.max(1e-3, i * CUT / KT); KTAB[i] = besselK1(r) - besselK1(CUT); }
+  const K0TAB = new Float64Array(KT + 1);
+  for (let i = 0; i <= KT; i++) K0TAB[i] = besselK0(Math.max(1e-3, i * CUT / KT));
+  function k0c(r) { if (r >= CUT) return 0; if (r < 0.02) return besselK0(r); const u = r / CUT * KT, i = u | 0, f = u - i; return K0TAB[i] * (1 - f) + K0TAB[i + 1] * f; }
   function k1c(r) { if (r >= CUT) return 0; if (r < 0.02) return besselK1(r) - besselK1(CUT); const u = r / CUT * KT, i = u | 0, f = u - i; return KTAB[i] * (1 - f) + KTAB[i + 1] * f; }
   function rng(seed) { let s = seed >>> 0 || 1; return () => { s ^= s << 13; s >>>= 0; s ^= s >> 17; s ^= s << 5; s >>>= 0; return s / 4294967296; }; }
   /* o: { Wx, Ly, np (pins per λ²), rp (pin radius, λ), fp (largest pin force, f0), seed } */
@@ -188,16 +191,28 @@
     /* leaving: a vortex pushed across a face is gone */
     const keep = []; for (let i = 0; i < n; i++) if (st.x[i] > 0 && st.x[i] < Wx) keep.push(i);
     if (keep.length < n) { st.leave += n - keep.length; st.x = keep.map((i) => st.x[i]); st.y = keep.map((i) => st.y[i]); }
-    /* entering: the field at each face equals the applied field (the Bean boundary condition; the lower critical field and the
-       surface barrier are left out), so while the band one lattice spacing deep holds fewer vortices than Ba asks for, one comes in,
-       at the emptiest place along the face */
-    if (st.Ba > 1e-9) { const a0 = Math.sqrt(2 / (Math.sqrt(3) * st.Ba)), want = st.Ba * a0 * Ly;
-      for (const left of [true, false]) { const xe = left ? 0.02 : Wx - 0.02;
+    /* entering and leaving: the field just inside each face equals the applied field (the Bean boundary condition; the lower
+       critical field and the surface barrier are left out). The field is read 0.3 λ inside the face, averaged along it, from
+       the vortices themselves (those within 5 λ, so the sum for a uniform density ρ reads ρ(1 − 5 K1(5)) and Ba is scaled the same
+       way; the sum is kept up to date as vortices enter and leave). While it reads low, a vortex comes in at the emptiest place along the face; while it reads high, the free vortex
+       nearest the face (within 3 λ; a pinned one stays, that is the pins' job) goes out. Each entry or exit changes the reading by
+       about e^(−0.3)/(2 Ly), so the dead band is half of that. Before 2026-11-08 only entries happened, by a count in the band one
+       spacing deep, and a slab with no pins overfilled by 7 % and kept 20 mT at zero field. */
+    { const NS = 8, D = 0.3, c5 = 1 - CUT * besselK1(CUT), target = c5 * st.Ba, tol = Math.exp(-D) / (4 * Ly), { rp, fp } = st.o;
+      /* contribution of one vortex at (x, y) to the mean of the field over the NS sample points down the face at xf */
+      const share = (x, y, xf) => { const dx = x - xf; if (dx > CUT || dx < -CUT) return 0; let b = 0;
+        for (let k = 0; k < NS; k++) { let dy = y - (k + 0.5) * Ly / NS; dy -= Ly * Math.round(dy / Ly); const r2 = dx * dx + dy * dy; if (r2 < CUT * CUT) b += k0c(Math.max(0.02, Math.sqrt(r2))); } return b / (2 * Math.PI * NS); };
+      const pinned = (i) => { if (!(fp > 0)) return false; for (let k = 0; k < st.px.length; k++) { const dx = st.x[i] - st.px[k]; if (dx > rp || dx < -rp) continue; let dy = st.y[i] - st.py[k]; dy -= Ly * Math.round(dy / Ly); if (dx * dx + dy * dy < rp * rp) return true; } return false; };
+      for (const left of [true, false]) { const xe = left ? 0.02 : Wx - 0.02, xf = left ? D : Wx - D;
+        let b = 0; for (let i = 0; i < st.x.length; i++) b += share(st.x[i], st.y[i], xf); for (let i = 0; i < st.wx.length; i++) b += share(st.wx[i], st.wy[i], xf);
         for (let tries = 0; tries < 3; tries++) {
-          const band = []; for (let i = 0; i < st.x.length; i++) if (left ? st.x[i] < a0 : st.x[i] > Wx - a0) band.push(i);
-          if (band.length > want - 0.5) break;
-          let best = 0, bestD = -1; for (let k = 0; k < 16; k++) { const yy = st.rnd() * Ly; let d = 1e9; for (const i of band) { const dx = st.x[i] - xe; let dy = st.y[i] - yy; dy -= Ly * Math.round(dy / Ly); d = Math.min(d, dx * dx + dy * dy); } if (d > bestD) { bestD = d; best = yy; } }
-          st.x.push(xe); st.y.push(best); st.enter++; } } }
+          if (b < target - tol) {
+            let best = 0, bestD = -1; for (let k = 0; k < 16; k++) { const yy = st.rnd() * Ly; let d = 1e9; for (let i = 0; i < st.x.length; i++) { const dx = st.x[i] - xe; if (dx > 3 || dx < -3) continue; let dy = st.y[i] - yy; dy -= Ly * Math.round(dy / Ly); d = Math.min(d, dx * dx + dy * dy); } if (d > bestD) { bestD = d; best = yy; } }
+            st.x.push(xe); st.y.push(best); st.enter++; b += share(xe, best, xf);
+          } else if (b > target + tol) {
+            let best = -1, bestD = 3; for (let i = 0; i < st.x.length; i++) { const d = left ? st.x[i] : Wx - st.x[i]; if (d < bestD && !pinned(i)) { bestD = d; best = i; } }
+            if (best < 0) break; b -= share(st.x[best], st.y[best], xf); st.x.splice(best, 1); st.y.splice(best, 1); st.leave++;
+          } else break; } } }
     st.t += dt; return dt;
   }
   /* vortex density (Φ0/λ², the average field) in nb bins across the strip */
@@ -379,7 +394,7 @@
 
   $('about1').textContent = 'The model: a slab of YBCO with the field along its c axis, seen end on. Each vortex is a line of field carrying exactly one flux quantum, Φ0 = h/2e = 2.0678 × 10⁻¹⁵ Wb, surrounded by circulating supercurrents that die away over the penetration depth λ = 141.5 nm (Harshman et al., Phys. Rev. B 39, 851, 1989, muon spin rotation). The core, a few nanometers across, is far smaller than λ, so the London equations hold: a vortex\'s field is (Φ0/2πλ²)K0(r/λ) and two vortices repel each other with a force per meter of length f0·K1(r/λ), where f0 = Φ0²/(2πμ0λ³) = 1.9 × 10⁻⁴ N/m. The field map adds up every vortex\'s field.';
   $('about2').textContent = 'Motion: vortices move through the material against a drag proportional to their speed (no inertia), so each moves along the total force on it: the push of its neighbors, the pull of the defects and nothing else. Time is shown only as a rate, because the drag coefficient is not computed. Forces are cut off smoothly at 5λ, where they have fallen to under 1 % of the push between nearest neighbors.';
-  $('about3').textContent = 'The faces: outside the slab the applied field is a fixed lattice of vortices at its density, standing for the field there. Vortices come in at a face whenever the strip just inside it holds fewer than the applied field asks for, and leave when pushed across a face, so the field at each face equals the applied field: the Bean model\'s boundary condition. The lower critical field, the surface barrier and the slab\'s demagnetizing effects are left out. The view repeats above and below.';
+  $('about3').textContent = 'The faces: outside the slab the applied field is a fixed lattice of vortices at its density, standing for the field there. Vortices come in at a face whenever the strip just inside it holds fewer than the applied field asks for, and leave when pushed across a face or when that strip holds more than the applied field asks for (a pinned vortex stays), so the field at each face equals the applied field: the Bean model\'s boundary condition. The lower critical field, the surface barrier and the slab\'s demagnetizing effects are left out. The view repeats above and below.';
   $('about4').textContent = 'Defects: point defects (oxygen vacancies, for instance) where a vortex\'s energy is lower, modeled as wells 0.2λ across that pull a vortex toward their center with a force up to the pin strength, in units of f0. Their positions are random. The current density from the slopes is |dB/dx|/μ0 from straight line fits to the outer third of the profile on each side (Ampère\'s law). Temperature is not computed: λ is its low temperature value and vortices do not jump out of pins by thermal activation (no flux creep).';
 
   window.__vx = { S, applyPreset, advance, profile, beanSlope, BU };
