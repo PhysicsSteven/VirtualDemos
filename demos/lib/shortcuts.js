@@ -510,7 +510,11 @@ window.VD_SHORTCUTS = {
     [", .", "Step the time cursor back or forward (Shift for 10 steps)", "on the picture or a graph"],
     ["Home End", "Jump the time cursor to the start or end", "on the picture or a graph"],
     ["C", "Capture a reading", "on the picture or a graph"],
-    ["Esc", "Clear the time cursor", "on the picture or a graph"]
+    ["Esc", "Clear the time cursor", "on the picture or a graph"],
+    ["← →", "Newton's cannon: lower or raise the launch speed by 0.1 km/s (Shift for 1 km/s)", "on the picture"],
+    ["↑ ↓", "Newton's cannon: raise or lower the launch angle (Shift for 5 degrees)", "on the picture"],
+    ["Page Up Page Down", "Newton's cannon: raise or lower the mountain (Shift for 100 km)", "on the picture"],
+    ["Enter", "Newton's cannon: fire", "on the picture"]
   ],
   "quantum-coin": [
     ["Space", "Measure one coin", "on the picture"]

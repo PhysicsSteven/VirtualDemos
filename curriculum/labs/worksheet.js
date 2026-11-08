@@ -870,6 +870,7 @@
   GRAPH_EVERY_TABLE.push('mp-radiobiology');
   GRAPH_EVERY_TABLE.push('mp-technetium-generator', 'mp-x-ray-filtration', 'mp-ultrasound-attenuation');
   GRAPH_EVERY_TABLE.push('mp-charged-particles', 'mp-bragg-peak', 'mp-proton-qa', 'mp-shielding-rooms', 'mp-ct-range');
+  GRAPH_EVERY_TABLE.push('capacitors');   /* the Spheres table graphs 1/C against 1/a − 1/b, then the spark voltage against a(b − a)/b (Analysis 7 and 8) */
   /* the kinds of fit a graph offers: [value saved in axes.fit, menu text]. '' and 'quad' are worked out below; the rest by WSF.fit */
   const FIT_KINDS = [['', VDI18N.t('straight line')], ['quad', VDI18N.t('quadratic') + ', y = a + bx + cx²'], ['power', VDI18N.t('power law') + ', y = A·xⁿ'],
     ['exp', VDI18N.t('exponential') + ', y = C + A·e^(−x/τ)'], ['rise', VDI18N.t('rising exponential') + ', y = C + A·(1 − e^(−x/τ))'], ['log', VDI18N.t('logarithm') + ', y = a + b·ln x'],

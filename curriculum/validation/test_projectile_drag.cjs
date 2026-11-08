@@ -203,4 +203,52 @@ test('monkey and hunter with air: drag also slows the ball\'s fall, so it drops 
   const vac = ball({ v: 40, h: 0, drag: false }); vac.th = p.th; const qv = M.monkeyMeet(shot(vac).pts, shot(vac).T, 40, 20);
   assert(q.t > qv.t, 'later with drag');
 });
+// Newton's cannon: inverse square gravity on a round Earth (ncOrbit, ncFly, ncAt, ncFlat)
+const N = require('./demo_source.cjs').core('projectile-drag', 'NC_GM,NC_R,ncCirc,ncEsc,ncOrbit,ncFly,ncAt,ncFlat');
+test("Newton's cannon: constants equal constants.js, and 7.91 km/s and 11.19 km/s at the ground", () => {
+  const C = require('../../demos/lib/constants.js');
+  const V = C.VDC || C;
+  assert.equal(N.NC_GM, (V.GMearth && V.GMearth[0] !== undefined ? V.GMearth[0] : V.GMearth));
+  assert.equal(N.NC_R, (V.RearthMean && V.RearthMean[0] !== undefined ? V.RearthMean[0] : V.RearthMean));
+  near(N.ncCirc(N.NC_R), 7909.79, 1e-6); near(N.ncEsc(N.NC_R), 11186.13, 1e-6);
+  near(N.ncEsc(N.NC_R + 2e5) / N.ncCirc(N.NC_R + 2e5), Math.SQRT2, 1e-14);
+});
+test("Newton's cannon: a circular orbit stays at one height and closes after 2π√(r³/GM)", () => {
+  const h = 200e3, r = N.NC_R + h, v = N.ncCirc(r), f = N.ncFly(h, v, 0);
+  assert.equal(f.end, 'orbits'); near(f.tEnd, 2 * Math.PI * Math.sqrt(r ** 3 / N.NC_GM), 1e-12, 'period');
+  for (const p of f.pts) assert(Math.abs(Math.hypot(p[1], p[2]) - r) < 1e-3, 'radius within 1 mm');
+  assert(f.close < 1e-3, `closes to ${f.close} m`); assert(Math.abs(f.dE) < 1e-12, `energy ${f.dE}`);
+});
+test("Newton's cannon: ellipses keep energy, close, and reach the apogee the conic predicts; halving the step changes nothing", () => {
+  for (const v of [8500, 9000, 10000, 10500]) for (const th of [0, 20]) {
+    const f = N.ncFly(200e3, v, th), o = f.o;
+    assert.equal(f.end, th === 0 ? 'orbits' : f.end);
+    if (f.end !== 'orbits') continue;
+    assert(Math.abs(f.dE) < 1e-11, `energy ${f.dE}`); assert(f.close < 0.05, `v ${v} th ${th} closes to ${f.close} m`);
+    near(f.maxR, o.ra, 1e-6, 'apogee'); near(f.phi, 2 * Math.PI, 1e-6, 'one full turn');
+  }
+  const a = N.ncFly(200e3, 7000, 0, 1), b = N.ncFly(200e3, 7000, 0, 0.5);
+  near(a.land.arc, b.land.arc, 1e-8, 'landing point with dt 1 s and 0.5 s');
+});
+test("Newton's cannon: slow shots land, the circle orbits, past escape speed it leaves; the flat limit agrees for a short shot", () => {
+  const h = 200e3, vc = N.ncCirc(N.NC_R + h), ve = N.ncEsc(N.NC_R + h);
+  let last = 0;
+  for (const v of [1000, 3000, 6000, 7000, 7600]) {
+    const f = N.ncFly(h, v, 0); assert.equal(f.end, 'lands'); assert(f.land.arc > last, 'farther each time'); last = f.land.arc;
+    near(Math.hypot(f.land.x, f.land.y), N.NC_R, 1e-9, 'lands on the ground');
+    /* energy at landing: ½v² − GM/R equals the launch value (speed from the Hermite cubic of the last step) */
+    near(0.5 * f.land.v ** 2 - N.NC_GM / N.NC_R, 0.5 * v * v - N.NC_GM / (N.NC_R + h), 1e-7, 'energy at landing');
+    assert(f.land.arc > N.ncFlat(h, v, 0), 'the curve of Earth adds range');
+  }
+  /* fired level from r = R + h, the ellipse just grazes the ground (perigee R) at v = √(2GM R / (r (R + r))) */
+  const r = N.NC_R + h, vg = Math.sqrt(2 * N.NC_GM * N.NC_R / (r * (N.NC_R + r)));
+  near(N.ncOrbit(h, vg, 0).rp, N.NC_R, 1e-12, 'grazing perigee'); assert(vg < vc);
+  assert.equal(N.ncOrbit(h, vg * 0.999, 0).kind, 'lands'); assert.equal(N.ncOrbit(h, vg * 1.001, 0).kind, 'orbits');
+  assert.equal(N.ncFly(h, vg * 0.999, 0).end, 'lands'); assert.equal(N.ncFly(h, vg * 1.001, 0).end, 'orbits');
+  assert.equal(N.ncOrbit(h, ve * 0.999, 0).kind, 'orbits'); assert.equal(N.ncOrbit(h, ve * 1.001, 0).kind, 'escapes');
+  assert.equal(N.ncFly(h, 11500, 0).end, 'leaves');
+  /* a 1 km high cannon at 50 m/s: g = GM/r² differs from the flat page's 9.81 by 0.1 %, and the range by about that */
+  const s = N.ncFly(1000, 50, 0, 0.01); near(s.land.arc, N.ncFlat(1000, 50, 0), 3e-3, 'short shot ≈ flat ground');
+  const q = N.ncAt(s.pts, s.tEnd / 2); assert(q[1] < N.NC_R + 1000 && q[1] > N.NC_R, 'interpolated point between');
+});
 console.log(`${count} projectile-drag test groups passed`);
