@@ -242,7 +242,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const mv = moving(), st = now(), y = Math.round(st.y / FLOOR);
     card.away(mv && !S.paused);
     for (const b of document.querySelectorAll('#trips button')) { const t = b.dataset.to; b.disabled = mv || (t === '10' || t === '+1' ? y >= TOP : y <= 0); }
-    $('snap').disabled = !mv || S.snapped; $('snap').style.opacity = $('snap').disabled ? 0.45 : 1; $('pause').textContent = S.paused ? 'Resume' : 'Pause';
+    $('snap').disabled = !mv || S.snapped; $('snap').style.opacity = $('snap').disabled ? 0.45 : 1; $('pause').textContent = S.paused ? 'Play' : 'Pause';
     $('sM').value = S.m; $('oM').textContent = `${S.m} kg`; $('sA').value = S.a; $('oA').textContent = `${S.a.toFixed(1)} m/s²`; $('sV').value = S.vmax; $('oV').textContent = `${S.vmax.toFixed(1)} m/s`;
     $('sJ').value = S.J; $('sJ').disabled = S.instant; $('oJ').textContent = S.instant ? 'instant' : `${S.J.toFixed(1)} m/s³`; $('instant').checked = S.instant;
   }

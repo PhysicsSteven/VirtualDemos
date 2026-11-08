@@ -2493,11 +2493,11 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   }
   function actLabel() {
     let txt = 'Push';
-    if (S.scene === 'torque') txt = TQ.run ? 'Pause' : (TQ.sw && TQ.t > 0 && TQ.t < TQ.sw.tEnd) ? 'Resume' : 'Push';
-    else if (S.scene === 'roll') { const e = rollEnd(); txt = RO.run ? 'Pause' : RO.t > 0 && RO.t < e ? 'Resume' : RO.t >= e ? 'Race again' : 'Race'; }
-    else if (S.scene === 'floor') { flRun(); txt = FL.run ? 'Pause' : FL.t > 0 && FL.t < FL.tEnd ? 'Resume' : FL.t >= FL.tEnd ? 'Launch again' : 'Launch'; }
-    else if (S.scene === 'yoyo') { const e = yoNow().T; txt = YO.run ? 'Pause' : YO.t > 0 && YO.t < e ? 'Resume' : YO.t >= e ? 'Drop again' : 'Drop'; }
-    else if (S.scene === 'hit') { const e = htEnd().tEnd, go = htDiskOn() ? 'Drop' : 'Go'; txt = HT.run ? 'Pause' : HT.t > 0 && HT.t < e ? 'Resume' : HT.t >= e ? go + ' again' : go; }
+    if (S.scene === 'torque') txt = TQ.run ? 'Pause' : (TQ.sw && TQ.t > 0 && TQ.t < TQ.sw.tEnd) ? 'Play' : 'Push';
+    else if (S.scene === 'roll') { const e = rollEnd(); txt = RO.run ? 'Pause' : RO.t > 0 && RO.t < e ? 'Play' : RO.t >= e ? 'Race again' : 'Race'; }
+    else if (S.scene === 'floor') { flRun(); txt = FL.run ? 'Pause' : FL.t > 0 && FL.t < FL.tEnd ? 'Play' : FL.t >= FL.tEnd ? 'Launch again' : 'Launch'; }
+    else if (S.scene === 'yoyo') { const e = yoNow().T; txt = YO.run ? 'Pause' : YO.t > 0 && YO.t < e ? 'Play' : YO.t >= e ? 'Drop again' : 'Drop'; }
+    else if (S.scene === 'hit') { const e = htEnd().tEnd, go = htDiskOn() ? 'Drop' : 'Go'; txt = HT.run ? 'Pause' : HT.t > 0 && HT.t < e ? 'Play' : HT.t >= e ? go + ' again' : go; }
     else if (S.scene === 'spin') txt = SP.run ? 'Pause' : 'Play';
     else txt = SE.held ? 'Release' : 'Hold level';
     setText('act', txt);

@@ -238,7 +238,7 @@ VDI18N.add('en', 'demo/faraday', [
 "Average force on the secondary",
 "{#} mN <span>apart</span>",
 "All readouts are values at the displayed time, not averages. The run CSV adds the exact averages over each step.",
-"Restart source",
+"Reset source",
 "Open switch",
 "Blind is on: the steady state predictions (amplitudes, phases, impedances, ratios, τ) are hidden. Measure them from the traces.",
 "Two coaxial coils: the primary is driven by an AC source, the secondary is closed through a switch and a load resistor. Drag the secondary along the axis, its top to change its radius, the load resistor up or down to change R_L, and click the switch. Now: source {#} V at {#} Hz, {#} and {#} turns, secondary radius {#} cm, {#} cm from the primary, R_L = {#} mΩ, switch closed. Keys: left and right arrows move the secondary, up and down arrows change its radius, plus and minus change R_L, S opens or closes the switch, G restarts the source, space plays or pauses, R resets.",

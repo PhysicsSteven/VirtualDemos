@@ -578,7 +578,7 @@ table.rows input:focus { border-color: var(--accent); }
     else { capStatus(`Mystery liquid off: it was η = ${S.myst.eta.toFixed(3)} Pa·s.`); S.myst = null; }
     edit();
   });
-  function setRun(on) { S.run = on; $('tray').classList.toggle('away', on); $('tray').inert = on; $('go').textContent = on ? 'Pause' : S.t > 0 && !S.done ? 'Resume' : 'Drop the ball'; $('go').classList.toggle('attn', !on); }
+  function setRun(on) { S.run = on; $('tray').classList.toggle('away', on); $('tray').inert = on; $('go').textContent = on ? 'Pause' : S.t > 0 && !S.done ? 'Play' : 'Drop the ball'; $('go').classList.toggle('attn', !on); }
   $('go').addEventListener('click', () => {
     if (S.done || (!S.run && S.t === 0)) { reset(); if (reduce) { S.t = S.gate.t2; S.t1 = S.gate.t1; S.done = true; const vt = terminal(dm(), rhoB(), FL(), S.D); S.s = { x: up() ? MARK1 - (LTUBE - dm() / 2) : MARK2, v: vt }; draw(); readouts(); return; } }
     setRun(!S.run);

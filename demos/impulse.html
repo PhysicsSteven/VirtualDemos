@@ -258,7 +258,7 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
   $('speedSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-s]'); if (b) { S.speed = +b.dataset.s; sync(); } });
   $('sM').addEventListener('input', (e) => { S.m = +e.target.value; edit(); });
   $('sV').addEventListener('input', (e) => { S.v0 = +e.target.value; edit(); });
-  function setRun(on) { S.run = on; $('instr').classList.toggle('away', on); $('instr').inert = on; $('go').textContent = on ? 'Pause' : S.t > 0 && !S.done ? 'Resume' : 'Launch the cart'; $('go').classList.toggle('attn', !on); }
+  function setRun(on) { S.run = on; $('instr').classList.toggle('away', on); $('instr').inert = on; $('go').textContent = on ? 'Pause' : S.t > 0 && !S.done ? 'Play' : 'Launch the cart'; $('go').classList.toggle('attn', !on); }
   $('go').addEventListener('click', () => { if (S.done) reset(); if (reduce) { S.t = tEnd(); S.done = true; draw(); readouts(); return; } setRun(!S.run); });
   $('back').addEventListener('click', reset);
   can.addEventListener('keydown', (e) => { if (e.key === ' ') { $('go').click(); e.preventDefault(); } });

@@ -29,7 +29,7 @@ Students should know v = fλ and what a wavefront is. Each ring is one crest, ce
 
 **Q2.** A 700 Hz siren moves at 30 m/s; sound travels at 343.2 m/s. Find the frequency heard by an observer at rest directly ahead and directly behind. Then find what a listener moving at 30 m/s hears from a siren at rest, approaching and receding. Compare the two pairs.
 
-**Q3.** Explain why, for sound, it matters whether the source or the observer moves, at the same relative speed. Check with **Source at rest, observer moving**: note f′ early on. Then set the observer's **Speed v_o/v** to 0, give the source **Mach number v_s/v** 0.25 with **Direction** 180° (toward the observer), press **Restart** and compare. Why does this difference disappear for light?
+**Q3.** Explain why, for sound, it matters whether the source or the observer moves, at the same relative speed. Check with **Source at rest, observer moving**: note f′ early on. Then set the observer's **Speed v_o/v** to 0, give the source **Mach number v_s/v** 0.25 with **Direction** 180° (toward the observer), press **Reset** and compare. Why does this difference disappear for light?
 
 **Q4.** A jet flies level at Mach 2 at an altitude of 10.0 km; take the speed of sound as 343.2 m/s everywhere. What is the cone's half angle? How far past you is the jet, and how long after it was overhead, when you hear the boom?
 

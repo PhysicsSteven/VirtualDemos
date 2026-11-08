@@ -1306,7 +1306,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     if (m === 'magnet') h = '<button type="button" class="btn" data-a="in">Push in</button><button type="button" class="btn" data-a="out">Pull out</button><button type="button" class="btn" data-a="thr">Push through</button><button type="button" class="btn" data-a="flip">Flip</button>';
     else if (m === 'gen') h = `<button type="button" class="btn" data-a="motor" aria-pressed="${W.motor}">Motor ${W.motor ? 'on' : 'off'}</button>`;
     else if (m === 'self') h = '<button type="button" class="btn" data-a="up">Ramp up</button><button type="button" class="btn" data-a="down">Ramp down</button><button type="button" class="btn" data-a="on">Switch on</button><button type="button" class="btn" data-a="off">Switch off</button>';
-    else if (m === 'coils') h = `<button type="button" class="btn" data-a="restart">Restart source</button><button type="button" class="btn" data-a="sw">${S.coils.closed ? 'Open switch' : 'Close switch'}</button>`;
+    else if (m === 'coils') h = `<button type="button" class="btn" data-a="restart">Reset source</button><button type="button" class="btn" data-a="sw">${S.coils.closed ? 'Open switch' : 'Close switch'}</button>`;
     else h = '<button type="button" class="btn" data-a="pull">Pull at v</button><button type="button" class="btn" data-a="coast">Push and let go</button>';
     $('acts').innerHTML = h;
     for (const b of $('acts').querySelectorAll('button')) b.addEventListener('click', () => doAct(b.dataset.a));

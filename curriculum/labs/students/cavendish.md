@@ -12,7 +12,7 @@ Textbook: OpenStax *University Physics*, Vol. 1, §13.1 (Newton's law of univers
 
 - The picture is a top view of a torsion balance, to scale except that the beam's turn is drawn 20 times larger. Two small lead spheres on a light beam hang from a thin fiber inside a glass case. Two large lead spheres sit outside the case on a frame that swivels to position A, position B, or away from the beam.
 - A laser beside the scale shines on a mirror at the center of the beam, and the reflected spot lands on a scale 5.000 m away, shown magnified on the right. The strip chart below records the spot against time.
-- The clock shows the real time of the experiment; ×10 and ×100 only make the wait shorter. One button runs the experiment until the spot reaches its next turning point and stops there. Start over puts the balance back, settled with the spheres in A, at t = 0.
+- The clock shows the real time of the experiment; ×10 and ×100 only make the wait shorter. One button runs the experiment until the spot reaches its next turning point and stops there. Reset puts the balance back, settled with the spheres in A, at t = 0.
 - Record reading stores the position of the spheres, the time and the spot; Export to worksheet sends the readings here. Blind hides the twist, the forces, the resting positions and G.
 
 **What the demo models.**

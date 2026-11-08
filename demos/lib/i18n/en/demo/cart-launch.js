@@ -10,7 +10,7 @@ VDI18N.add('en', 'demo/cart-launch', [
 "SI units · g = {#} m/s² · no air resistance",
 "A cart on a track fires a ball straight up; the ball's path, velocity and acceleration arrows when switched on, strobe images, and a graph of position along the track against time for the cart and the ball.",
 "Time controls",
-"Predict: where will the ball land? Then press Resume.",
+"Predict: where will the ball land? Then press Play.",
 "Divider between the track and the graph",
 "Apparatus controls",
 "Set up the launch. Drag, or use the arrow keys, to move this card; double click to put it back",

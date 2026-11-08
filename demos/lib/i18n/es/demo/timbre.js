@@ -156,8 +156,8 @@ VDI18N.add('es', 'demo/timbre', {
   "v_g / v_p en el centro",
 "Width now":
   "Ancho ahora",
-"Start the packet again":
-  "Iniciar el paquete de nuevo",
+"Reset the packet":
+  "Reiniciar el paquete",
 "A sound wave carries the waveform through the air at v = {#} m/s (air at {#} °C), so time and position trade places: x = v t, the period T₁ becomes the wavelength λ₁ = v/f₁ and each harmonic has kₙ = n k₁. Position plots a snapshot of the wave moving to the right, y(x) = s(t − x/v), so its shape is the time trace mirrored: the part that left the source first is farthest away. It moves slowed, like the ladder, so f₁ is drawn at {#} Hz; the oscilloscope in the 3D view always shows time.":
   "Una onda sonora lleva la forma de onda por el aire a v = {#} m/s (aire a {#} °C), así que el tiempo y la posición intercambian papeles: x = v t, el periodo T₁ se vuelve la longitud de onda λ₁ = v/f₁ y cada armónico tiene kₙ = n k₁. Posición grafica una instantánea de la onda que se mueve hacia la derecha, y(x) = s(t − x/v), así que su forma es la traza temporal reflejada: la parte que salió primero de la fuente es la que está más lejos. Se mueve ralentizada, como la escalera, de modo que f₁ se dibuja a {#} Hz; el osciloscopio de la vista 3D siempre muestra el tiempo.",
 "A wave packet is a bump made of many harmonics: amplitudes aₙ = exp(−(n − n₀)²/({#}σ²)), all with a crest at the same place. A wider spread of harmonics Δk gives a narrower packet Δx. Here Δk is the RMS spread of kₙ weighted by aₙ² and Δx is the RMS width of the squared envelope. For a Gaussian with nothing cut off, Δx Δk = {#}/{#}, the smallest possible; with only harmonics {#} to {#} the product rises above {#}/{#} once the packet reaches past either end. The packet repeats every λ₁ because it is built from harmonics of f₁; the same rule, with momentum p = ħk, is the Heisenberg uncertainty principle.":

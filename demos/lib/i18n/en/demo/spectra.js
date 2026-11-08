@@ -347,7 +347,7 @@ VDI18N.add('en', 'demo/spectra', [
 "Lamp wavelength λ",
 "White light: every photon a random color from {#} to {#} nm",
 "Plum pudding radius R",
-"Start the atoms again",
+"Reset the atoms",
 "Clear the spectra",
 "Photons sent",
 "The same photons, at the same moments, go into all six atoms. Only the quantum atoms (Bohr, de Broglie, Schrödinger) give hydrogen's real lines, and they absorb a photon only when its energy matches a jump between two levels, E = −{#} eV/n² (levels up to n = {#} here). Thomson's electron has one natural frequency, so it answers one color, set by the size of the pudding. The classical planetary atom radiates as its electron circles, spirals in and collapses in {#} ps, giving a smear of every color rather than lines. Bohr's and de Broglie's atoms share the same levels: Bohr postulated them, de Broglie explained them as standing electron waves. Bohr's model says nothing about which way down an electron goes, so here each lower level is equally likely. Schrödinger's atom adds the angular momentum l, the rule that a photon changes l by one, and the rate of each jump, so its lines come out with their real relative strengths, and an electron that lands in 2s is stuck (it lives {#} s, against {#} ns for 2p).",

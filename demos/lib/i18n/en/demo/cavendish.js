@@ -25,7 +25,7 @@ VDI18N.add('en', 'demo/cavendish', [
 "Away",
 "Position B",
 "Swinging the frame takes {#} s. In A and B each large sphere sits beside a small one, on opposite sides, so both pull the beam the same way round.",
-"Start over: settled at A, t = {#}",
+"Reset: settled at A, t = {#}",
 "Faster playback only shortens the wait; the clock always shows the real time of the experiment. Run to the next turning point stops the clock where the spot stops and turns back. Space on the picture runs or pauses.",
 "Clock t",
 "Spot on the scale",

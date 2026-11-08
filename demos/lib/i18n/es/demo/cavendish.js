@@ -50,8 +50,8 @@ VDI18N.add('es', 'demo/cavendish', {
   "Posición B",
 "Swinging the frame takes {#} s. In A and B each large sphere sits beside a small one, on opposite sides, so both pull the beam the same way round.":
   "Girar el marco tarda {#} s. En A y en B, cada esfera grande queda junto a una pequeña, en lados opuestos, así que ambas jalan la barra en el mismo sentido de giro.",
-"Start over: settled at A, t = {#}":
-  "Volver a empezar: asentada en A, t = {#}",
+"Reset: settled at A, t = {#}":
+  "Reiniciar: asentada en A, t = {#}",
 "Faster playback only shortens the wait; the clock always shows the real time of the experiment. Run to the next turning point stops the clock where the spot stops and turns back. Space on the picture runs or pauses.":
   "La reproducción más rápida solo acorta la espera; el reloj siempre muestra el tiempo real del experimento. Avanzar al siguiente punto de retorno detiene el reloj donde el punto se detiene y regresa. Espacio sobre la imagen corre o pausa.",
 "Clock t":

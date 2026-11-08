@@ -1815,7 +1815,7 @@ table.rows button:hover { color: var(--pos); }
     for (const id of ['play', 'reset', 'tclock']) $(id).hidden = !dyn;
     $('stage').classList.toggle('cols', sc === 'buoy');
     $('timeSec').hidden = !dyn;
-    $('reset').textContent = sc === 'buoy' ? 'Drop again' : 'Restart';
+    $('reset').textContent = sc === 'buoy' ? 'Drop again' : 'Reset';
     $('lForces').hidden = sc !== 'buoy'; $('lGhost').hidden = sc !== 'buoy'; $('lCmp').hidden = sc !== 'torr';
     $('keyBox').innerHTML = KEYS[sc].map(([c, txt]) => `<span><i class="swatch" style="border-color: var(${c})${c === '--muted' ? '; border-top-style: dashed' : ''}"></i>${txt.replace(/_(\w+)/g, '<sub>$1</sub>')}</span>`).join('');
     S.sel = 0;

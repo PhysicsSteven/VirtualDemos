@@ -41,7 +41,7 @@ require('./lib.cjs')({ demo: 'elevator', title: 'Elevator: Apparent Weight' }, a
   await r.secs(2.2);
   state.arrow = null; state.zoom = null;
 
-  state.caption = 'Resume and record each stage of the ride, then send the table to the worksheet';
+  state.caption = 'Play and record each stage of the ride, then send the table to the worksheet';
   const ex = await r.box('.vd-readings .vd-export');
   await r.moveTo(ex[0] + ex[2] / 2, ex[1] + ex[3] / 2 + 4, 0.8);
   state.arrow = { rect: ex };

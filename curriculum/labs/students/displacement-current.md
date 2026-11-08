@@ -12,7 +12,7 @@ Textbook: OpenStax *University Physics*, Vol. 2, §§12.5 and 16.1. Access for f
 
 **Using the demo.**
 
-- A battery charges a parallel plate capacitor (circular plates 5.0 cm in radius, 2.0 mm apart, $$C = 34.8$$ pF) through a resistor and a long straight wire. Charge starts and pauses the charging; Start over empties the capacitor. Time runs about $$10^5$$ times slower than real, and the clock shows the time in the experiment.
+- A battery charges a parallel plate capacitor (circular plates 5.0 cm in radius, 2.0 mm apart, $$C = 34.8$$ pF) through a resistor and a long straight wire. Charge starts and pauses the charging; Reset empties the capacitor. Time runs about $$10^5$$ times slower than real, and the clock shows the time in the experiment.
 - An Amperian loop circles the axis. Drag it sideways to move it along the wire or into the gap between the plates, and up or down to change its radius (or use the arrow keys and the radius slider). Its surface is either a flat disk or a bag that reaches into the gap without the wire passing through it.
 - Readouts give the circuit current, the charge, the field $$E$$ between the plates, the conduction and displacement currents through the loop's surface, $$B$$ on the loop and $$\oint\vec B\cdot d\vec l = 2\pi rB$$. A plot shows $$B$$ against distance from the axis at that moment.
 - The plates are ideal: the field between them is uniform and fringing is ignored. The fields are tiny (picotesla to nanotesla) because the currents are microamperes.

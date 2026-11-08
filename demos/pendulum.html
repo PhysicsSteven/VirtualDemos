@@ -1023,7 +1023,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (const b of document.querySelectorAll('[data-plot]')) b.addEventListener('click', () => { S.plot = b.dataset.plot; sync(); fit(); });
     /* the Set up card fades while the pendulum swings and comes back on Pause; its title drags it anywhere over the picture */
     const card = VD.setupCard($('rack'));
-    function setRun(on) { S.run = on; card.away(on); $('go').textContent = on ? 'Pause' : S.t > 0 ? 'Resume' : 'Release'; $('go').classList.toggle('attn', !on); }
+    function setRun(on) { S.run = on; card.away(on); $('go').textContent = on ? 'Pause' : S.t > 0 ? 'Play' : 'Release'; $('go').classList.toggle('attn', !on); }
     $('go').addEventListener('click', () => setRun(!S.run));
     $('hold').addEventListener('click', () => { release(); setRun(false); draw(); readouts(); });
     let last = performance.now();

@@ -30,8 +30,8 @@ VDI18N.add('es', 'ws/big-bang-helium', {
   "La vista Helio sigue una muestra simulada de {#} neutrones y protones desde una centésima de segundo hasta unas horas después del Big Bang. Cada punto es un nucleón: rojo para un protón, gris para un neutrón, dorado para uno ligado en helio {#}.",
 "Until freeze out the neutrons and protons turn into each other fast enough to stay in equilibrium. You set the freeze out temperature \\(kT_f\\), the neutron lifetime \\(\\tau\\), and the time \\(t_D\\) from which deuterium survives and helium forms.":
   "Hasta el congelamiento, los neutrones y los protones se convierten unos en otros lo bastante rápido para seguir en equilibrio. Tú fijas la temperatura de congelamiento \\(kT_f\\), la vida media del neutrón \\(\\tau\\) y el tiempo \\(t_D\\) a partir del cual sobrevive el deuterio y se forma el helio.",
-"Play runs the clock (or set the time with its slider). The meters show the time, \\(kT\\) and the counts. Start over runs a new random sample.":
-  "Iniciar hace avanzar el reloj (o fija el tiempo con su deslizador). Los medidores muestran el tiempo, \\(kT\\) y los conteos. Empezar de nuevo corre una nueva muestra aleatoria.",
+"Play runs the clock (or set the time with its slider). The meters show the time, \\(kT\\) and the counts. Reset runs a new random sample.":
+  "Iniciar hace avanzar el reloj (o fija el tiempo con su deslizador). Los medidores muestran el tiempo, \\(kT\\) y los conteos. Reiniciar corre una nueva muestra aleatoria.",
 "The graph shows the neutron share \\(n/(n + p)\\) of the sample against time.":
   "La gráfica muestra la fracción de neutrones \\(n/(n + p)\\) de la muestra en función del tiempo.",
 "Record reading works once the clock is past \\(t_D\\). It stores the three settings, the number of neutrons at freeze out, the number still there at \\(t_D\\), and the number of helium nuclei made. Export to worksheet sends the readings to the Data table below; Clear starts a new series, which goes into a new copy of the table.":
@@ -62,8 +62,8 @@ VDI18N.add('es', 'ws/big-bang-helium', {
   "Usa tus respuestas para encontrar \\(n/p\\) en {#} s y la fracción de masa de helio \\(Y\\).",
 "If every neutron had ended up in helium straight away (no decay), what would \\(Y\\) be?":
   "Si cada neutrón hubiera terminado en helio de inmediato (sin decaimiento), ¿cuánto valdría \\(Y\\)?",
-"<strong>The standard run.</strong> Start with the First three minutes setup (\\(kT_f\\) = {#} MeV, \\(\\tau\\) = {#} s, \\(t_D\\) = {#} s). Play it past \\(t_D\\) and record a reading. Press Start over for a new random sample and repeat until you have five readings.":
-  "<strong>La corrida estándar.</strong> Empieza con la configuración Primeros tres minutos (\\(kT_f\\) = {#} MeV, \\(\\tau\\) = {#} s, \\(t_D\\) = {#} s). Hazla avanzar más allá de \\(t_D\\) y registra una lectura. Pulsa Empezar de nuevo para una nueva muestra aleatoria y repite hasta tener cinco lecturas.",
+"<strong>The standard run.</strong> Start with the First three minutes setup (\\(kT_f\\) = {#} MeV, \\(\\tau\\) = {#} s, \\(t_D\\) = {#} s). Play it past \\(t_D\\) and record a reading. Press Reset for a new random sample and repeat until you have five readings.":
+  "<strong>La corrida estándar.</strong> Empieza con la configuración Primeros tres minutos (\\(kT_f\\) = {#} MeV, \\(\\tau\\) = {#} s, \\(t_D\\) = {#} s). Hazla avanzar más allá de \\(t_D\\) y registra una lectura. Pulsa Reiniciar para una nueva muestra aleatoria y repite hasta tener cinco lecturas.",
 "<strong>Freeze out.</strong> Clear the readings. Record a reading for \\(kT_f\\) from {#} MeV to {#} MeV in steps of {#} MeV, with the other two settings as in the standard run.":
   "<strong>Congelamiento.</strong> Borra las lecturas. Registra una lectura para \\(kT_f\\) de {#} MeV a {#} MeV en pasos de {#} MeV, con los otros dos ajustes como en la corrida estándar.",
 "<strong>Neutron lifetime.</strong> Clear the readings and set \\(kT_f\\) back to {#} MeV. Record readings for \\(\\tau\\) = {#}, {#}, {#}, {#}, {#} and {#} s.":

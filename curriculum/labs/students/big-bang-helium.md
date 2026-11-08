@@ -54,7 +54,7 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**The standard run.** Start with the First three minutes setup ($$kT_f$$ = 0.80 MeV, $$\tau$$ = 878.4 s, $$t_D$$ = 180 s). Play it past $$t_D$$ and record a reading. Press Start over for a new random sample and repeat until you have five readings.
+**The standard run.** Start with the First three minutes setup ($$kT_f$$ = 0.80 MeV, $$\tau$$ = 878.4 s, $$t_D$$ = 180 s). Play it past $$t_D$$ and record a reading. Press Reset for a new random sample and repeat until you have five readings.
 
 **Freeze out.** Clear the readings. Record a reading for $$kT_f$$ from 0.50 MeV to 1.20 MeV in steps of 0.10 MeV, with the other two settings as in the standard run.
 

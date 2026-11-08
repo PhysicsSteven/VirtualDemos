@@ -21,7 +21,7 @@ require('./lib.cjs')({ demo: 'cavendish', title: 'The Cavendish Experiment' }, a
   state.caption = 'Sample readings: the resting spot in A, then the first turning point after swinging to B';
   await r.secs(3.2);
 
-  state.caption = 'Start settled in A at t = 0: press Start over, and read the spot';
+  state.caption = 'Start settled in A at t = 0: press Reset, and read the spot';
   await r.click('#restart');
   await r.tick(4);
   state.zoom = [can[0] + 290, can[1] + 50, 660, 371.25];   /* the laser, the scale and the spot */

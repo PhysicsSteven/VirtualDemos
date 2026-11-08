@@ -694,7 +694,7 @@ VDI18N.add('es', 'demo/spectra', {
   "Luz blanca: cada fotón de un color al azar de {#} a {#} nm",
 "Plum pudding radius R":
   "Radio del budín de pasas R",
-"Start the atoms again":
+"Reset the atoms":
   "Reiniciar los átomos",
 "Clear the spectra":
   "Borrar los espectros",

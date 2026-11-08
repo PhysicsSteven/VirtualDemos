@@ -470,7 +470,7 @@ VDI18N.add('es', 'demo/faraday', {
   "{#} mN <span>de repulsión</span>",
 "All readouts are values at the displayed time, not averages. The run CSV adds the exact averages over each step.":
   "Todas las lecturas son valores en el tiempo mostrado, no promedios. El CSV de la corrida agrega los promedios exactos sobre cada paso.",
-"Restart source":
+"Reset source":
   "Reiniciar la fuente",
 "Open switch":
   "Abrir el interruptor",

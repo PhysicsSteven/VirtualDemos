@@ -1890,7 +1890,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const nShow = S.planet ? sdPerYear(S.P.rot, S.P.orb).sid : S.n; $('sdN').value = Math.min(30, Math.max(1, Math.round(nShow)));
     $('sdNOut').textContent = S.planet ? f(nShow, nShow > 100 ? 2 : 3) : String(S.n); $('sdRetro').checked = S.P.rot < 0; $('sdZoom').checked = S.zoom; $('sdTrail').checked = S.trail;
     $('sdDate').value = S.date; $('sdDateOut').textContent = dateName(S.date); $('sdE').value = S.e; $('sdEOut').textContent = f(S.e, 4); $('sdTilt').value = S.tilt; $('sdTiltOut').textContent = `${f(S.tilt, 2)}°`; $('sdParts').checked = S.parts;
-    $('sdPlay').textContent = S.run ? 'Pause' : S.t > 0 ? 'Resume' : 'Play'; $('sdPlay').classList.toggle('attn', !S.run && S.t === 0);
+    $('sdPlay').textContent = S.run ? 'Pause' : S.t > 0 ? 'Play' : 'Play'; $('sdPlay').classList.toggle('attn', !S.run && S.t === 0);
     const locked = !isFinite(sdSolar(S.P.rot, S.P.orb)); $('sdStepSol').disabled = locked;
   }
   const card = VD.setupCard($('sdCard'));

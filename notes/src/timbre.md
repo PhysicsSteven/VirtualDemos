@@ -26,7 +26,7 @@ Students should know frequency, period and the harmonics of a string or pipe. Br
 7. **Inharmonic partials**. Set **by Δf** to 1.5 Hz on harmonic 3: the trace drifts and the tone throbs (Q6). Press **Back to exact harmonics**, then raise **Stiffness B** to about 0.01 for a clangy tone like a bell.
 8. Finish on the piano: play C3 and read harmonic 3 and 5 in the table against the G4 and E5 keys (Q7).
 9. **Wave packet.** The waveform is plotted against position: a sound wave carries it at 343.2 m/s, so T₁ becomes λ₁ = v/f₁. Widen the **Packet spread σ** and the packet narrows: Δx · Δk stays near 1/2.
-10. **Medium for the packet.** Press **Deep water**: the crests (marked v_p) run forward through the packet, appearing at its back and vanishing at its front, while the envelope (v_g) moves at half their speed and slowly spreads. Then **Bar or particle**: now the crests slip backward through the envelope. **Start the packet again** to compare from the same start (Q8).
+10. **Medium for the packet.** Press **Deep water**: the crests (marked v_p) run forward through the packet, appearing at its back and vanishing at its front, while the envelope (v_g) moves at half their speed and slowly spreads. Then **Bar or particle**: now the crests slip backward through the envelope. **Reset the packet** to compare from the same start (Q8).
 11. **Vowels.** Pick **ah · hod**, then **ee · heed** and **oo · who'd**, with sound on: the dashed envelope in the spectrum peaks at the formants F1, F2, F3 and the harmonics under it change, while the pitch stays A3. Then drag f₁ down an octave and back: the harmonics slide under the same envelope and the vowel stays the same (Q9).
 
 ## Questions
