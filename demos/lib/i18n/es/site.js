@@ -18,8 +18,8 @@ VDI18N.add('es', 'site', {
   "<a><b>Para una clase</b> Cursos</a>",
 "<b>Free · open in any browser · nothing to install</b>":
   "<b>Gratis · se abre en cualquier navegador · no hay nada que instalar</b>",
-"A notebook of <span>interactive demonstrations</span> for introductory physics and astronomy":
-  "Un cuaderno de <span>demostraciones interactivas</span> para física y astronomía introductorias",
+"Interactive demonstrations for introductory physics and astronomy":
+  "Demostraciones interactivas para física y astronomía introductorias",
 "Every demo is a real simulation with exact physics. Open one on the projector, hand students the worksheet that goes with it, and work from your own readings.":
   "Cada demo es una simulación real con física exacta. Abre una en el proyector, entrega a tus estudiantes la hoja de trabajo que la acompaña y trabaja con tus propias lecturas.",
 "<span><strong>{#}</strong> demos</span>":

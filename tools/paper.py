@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""Link the parchment skin (demos/lib/paper.css) into every demo, last in <head> so its tokens win over the demo's own
-<style>. The redesign of 2026-11-08 (Steve: the site as an old notebook on faded parchment, demo first) keeps every
+"""Link the site skin (demos/lib/paper.css, the lab look) into every demo, last in <head> so its tokens win over the demo's own
+<style>. The skin (parchment on 2026-11-08, then the lab look the same day, Steve's direction B) keeps every
 canvas and 3D scene as it is: paper.css only restyles the page around the instrument (title, rail, buttons, the stage's
 mount). The site pages get the file from tools/courses.py, the notes from tools/notes.py, the worksheets from
 _includes/head-custom.html.

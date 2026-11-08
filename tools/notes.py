@@ -112,7 +112,7 @@ FONTS = ('<link rel="preconnect" href="https://fonts.googleapis.com">\n'
 
 # the site theme switch (demos/lib/theme.js); not on answer keys, which live outside the site
 THEME = '<script src="../demos/lib/theme.js"></script>\n'
-# the parchment look (2026-11-08): the skin last in <head>, a body class for its notes rules, and the site's header band
+# the lab look (2026-11-08): the skin last in <head>, a body class for its notes rules, and the site's header band
 PAPER = '<link rel="stylesheet" id="vd-paper" href="../demos/lib/paper.css">\n'
 TOP = ('<header class="top" aria-label="Site"><a class="brand" href="../index.html"><svg class="mark" viewBox="0 0 32 32" aria-hidden="true">'
        '<ellipse cx="16" cy="16" rx="13" ry="6" fill="none" stroke="currentColor" stroke-width="1.8" transform="rotate(-30 16 16)"/>'

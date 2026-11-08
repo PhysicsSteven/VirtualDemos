@@ -9,7 +9,7 @@ VDI18N.add('en', 'site', [
 "What’s new",
 "<a><b>For a class</b> Courses</a>",
 "<b>Free · open in any browser · nothing to install</b>",
-"A notebook of <span>interactive demonstrations</span> for introductory physics and astronomy",
+"Interactive demonstrations for introductory physics and astronomy",
 "Every demo is a real simulation with exact physics. Open one on the projector, hand students the worksheet that goes with it, and work from your own readings.",
 "<span><strong>{#}</strong> demos</span>",
 "<span><strong>{#}+</strong> setups</span>",
