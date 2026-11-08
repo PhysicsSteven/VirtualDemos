@@ -1,0 +1,17 @@
+/* The warm lab look (Steve 2026-11-08, direction C "Warm lab", which replaced the cool lab look B the same evening and the
+   parchment before it): a dark walnut header band like an instrument faceplate, flat ivory bench panels, an amber signal color,
+   IBM Plex Sans for reading and IBM Plex Mono for small labels and numbers. The demos' own drawing colors are warm to match. No textures, filters or tilted pieces: pictures of the demos show as they are.
+   One file for every page type, linked last in <head> after a page's own styles, so its tokens win:
+     home, course, topic, OpenStax and 404 pages (tools/courses.py), the teaching notes (tools/notes.py),
+     every demo (tools/paper.py links it; the stage and its canvases keep their own drawing),
+     the worksheets (_includes/head-custom.html; print stays black on white, curriculum/labs/print.css).
+   Night is the default (Steve 2026-11-08); Day is the same bench with the lights up. theme.js keeps the stored values 'light' and 'dark'.
+   The old token names (--bg, --surface, --canvas, --ink, --muted, --line, --accent, --hd-*) are redefined in every theme block,
+   so every rule that already reads them takes the palette, and a page's own older dark block never wins. The parchment's names
+   (--desk, --paper, --paper2, --paper3, --ink2, --line2, --old, --hand, --serif, --mottle, ...) stay defined, mapped to the
+   flat palette and the sans, because page styles still read them. New names: --band* (the header band), --sans, --mono.
+   Contrast (WCAG AA or better): ink on panel 17:1 (Day) and 14:1 (Night), faded ink 7.6:1 and 6.9:1, amber 6.2:1 and 8.1:1
+   (5.0:1 on the darkest panel), white on the amber button 6.3:1. tools/genpaper.py --check holds every text token to 4.5:1 on
+   every panel in all four combinations (2026-11-08 contrast pass). */
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap");
+

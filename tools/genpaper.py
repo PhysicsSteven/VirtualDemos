@@ -1,0 +1,119 @@
+"""Writes demos/lib/paper.css, the site skin, from tools/paper-src/ (head.css, lab.css, rest.css) and the palettes below.
+   python3 tools/genpaper.py           writes demos/lib/paper.css
+   python3 tools/genpaper.py --check   exits 1 when paper.css differs from what this would write
+   Change colors here, never in paper.css. Every text color must keep WCAG AA (4.5:1) on each panel color of its block
+   (paper, paper2, paper3, desk), checked by --check as well."""
+import sys, os
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+SRC = os.path.join(ROOT, 'tools', 'paper-src')
+OUT = os.path.join(ROOT, 'demos', 'lib', 'paper.css')
+LIGHT = dict(desk='#f3efe8', paper='#fffdf9', paper2='#faf7f2', paper3='#ebe4d8', ink='#1d1812', ink2='#5b5144', line='#ded5c6', line2='#c2b49c',
+  rule='rgb(40 25 5 / 0.08)', accent='#8f5000', **{'accent-ink': '#ffffff'}, red='#a8381d', ok='#3f6b2a', link='#8f5000', stain='transparent',
+  grid='#ebe3d6', **{'grid-strong': '#d5c9b5'}, pos='#ad3522', neg='#2b60b5', equi='#765a08', field='#2a2118', **{'on-charge': '#ffffff'},
+  band='#241d15', **{'band-ink': '#f4ead8', 'band-ink2': '#c4b398', 'band-line': '#3a3024', 'band-accent': '#e8a440', 'band-field': '#2f261c', 'band-hover': '#30271d',
+  'thumb-bg': '#15110c', 'hero-bg': 'linear-gradient(#fffdf9, #f6f1e9)',
+  'shadow': '0 1px 2px rgb(40 25 5 / 0.08), 0 8px 24px -12px rgb(40 25 5 / 0.25)', 'shadow-s': '0 1px 2px rgb(40 25 5 / 0.06)',
+  'hd-code': 'rgb(40 25 5 / 0.06)', 'hd-warn': '#765a08', 'hd-grid': '#ebe3d6', 'hd-dot': '#c23f2c'})
+DARK = dict(desk='#14110d', paper='#1f1a14', paper2='#1a1611', paper3='#2b241b', ink='#f0e5d1', ink2='#b3a286', line='#322a20', line2='#4a3e2f',
+  rule='rgb(240 229 209 / 0.08)', accent='#e8a440', **{'accent-ink': '#1a1206'}, red='#e07a5a', ok='#9cc27f', link='#e8a440', stain='transparent',
+  grid='#282017', **{'grid-strong': '#3a3024'}, pos='#ff7660', neg='#69a0ff', equi='#e2b350', field='#efe3cf', **{'on-charge': '#14110d'},
+  band='#0e0c09', **{'band-ink': '#f0e5d1', 'band-ink2': '#a8977b', 'band-line': '#2a231a', 'band-accent': '#e8a440', 'band-field': '#1f1a14', 'band-hover': '#231d16',
+  'thumb-bg': '#0d0b08', 'hero-bg': 'linear-gradient(#1c1712, #14110d)',
+  'shadow': '0 1px 2px rgb(0 0 0 / 0.5), 0 10px 28px -12px rgb(0 0 0 / 0.8)', 'shadow-s': '0 1px 2px rgb(0 0 0 / 0.35)',
+  'hd-code': 'rgb(240 229 209 / 0.08)', 'hd-warn': '#e2b350', 'hd-grid': '#282017', 'hd-dot': '#ff7660'})
+LAB_LIGHT = {
+  'desk': '#eef1f4', 'paper': '#ffffff', 'paper2': '#f7f9fa', 'paper3': '#e6eaee', 'ink': '#15191e', 'ink2': '#4f5964', 'line': '#d6dce2',
+  'line2': '#b3bcc6', 'rule': 'rgb(16 24 32 / 0.08)', 'accent': '#0b6e7a', 'accent-ink': '#ffffff', 'red': '#b42318', 'ok': '#286b2b',
+  'link': '#0b6e7a', 'stain': 'transparent', 'grid': '#e3e8ec', 'grid-strong': '#cfd7e1', 'pos': '#b23a28', 'neg': '#2b60b5',
+  'equi': '#7f5b09', 'field': '#1d2836', 'on-charge': '#ffffff', 'band': '#1b2128', 'band-ink': '#f2f5f7', 'band-ink2': '#b4bec8',
+  'band-line': '#2c343d', 'band-accent': '#4cc9d6', 'band-field': '#242b33', 'band-hover': '#2a323b', 'thumb-bg': '#0f1418',
+  'hero-bg': 'linear-gradient(#ffffff, #f4f6f8)', 'shadow': '0 1px 2px rgb(16 24 32 / 0.08), 0 8px 24px -12px rgb(16 24 32 / 0.25)',
+  'shadow-s': '0 1px 2px rgb(16 24 32 / 0.06)', 'hd-code': 'rgb(16 24 32 / 0.06)', 'hd-warn': '#7f5b09', 'hd-grid': '#e3e8ec',
+  'hd-dot': '#c23f2c',}
+LAB_DARK = {
+  'desk': '#0e1216', 'paper': '#161b21', 'paper2': '#12171c', 'paper3': '#20272f', 'ink': '#e8edf1', 'ink2': '#9aa6b2', 'line': '#262e37',
+  'line2': '#3a4450', 'rule': 'rgb(232 237 241 / 0.08)', 'accent': '#4cc9d6', 'accent-ink': '#061417', 'red': '#f07167', 'ok': '#7bc47f',
+  'link': '#4cc9d6', 'stain': 'transparent', 'grid': '#1c232a', 'grid-strong': '#2a333d', 'pos': '#ff7660', 'neg': '#69a0ff',
+  'equi': '#e2b350', 'field': '#dfe6ef', 'on-charge': '#0d1218', 'band': '#0a0d10', 'band-ink': '#e8edf1', 'band-ink2': '#9aa6b2',
+  'band-line': '#222a32', 'band-accent': '#4cc9d6', 'band-field': '#161b21', 'band-hover': '#1a2027', 'thumb-bg': '#0a0d10',
+  'hero-bg': 'linear-gradient(#141a20, #0e1216)', 'shadow': '0 1px 2px rgb(0 0 0 / 0.5), 0 10px 28px -12px rgb(0 0 0 / 0.8)',
+  'shadow-s': '0 1px 2px rgb(0 0 0 / 0.35)', 'hd-code': 'rgb(232 237 241 / 0.08)', 'hd-warn': '#e2b350', 'hd-grid': '#1c232a',
+  'hd-dot': '#ff7660',}
+# the names every page already reads, as aliases of the palette (repeated in each block so a page's own dark block never wins)
+ALIAS = {'bg': 'var(--desk)', 'surface': 'var(--paper)', 'canvas': 'var(--paper2)', 'relief': 'var(--paper3)', 'muted': 'var(--ink2)', 'tag': 'var(--paper3)',
+  'hd-bg': 'var(--paper)', 'hd-ink': 'var(--ink)', 'hd-muted': 'var(--ink2)', 'hd-line': 'var(--line)', 'hd-line2': 'var(--line2)', 'hd-surface': 'var(--paper2)',
+  'hd-row': 'var(--paper2)', 'hd-field': 'var(--paper2)', 'hd-hover': 'var(--paper3)', 'hd-link': 'var(--link)', 'hd-accent': 'var(--accent)',
+  'hd-hand': 'var(--paper2)', 'hd-hand-line': 'var(--line2)', 'hd-left': 'var(--paper3)', 'hd-left-line': 'var(--accent)'}
+def block(d, scheme):
+    items = list(d.items()) + list(ALIAS.items())
+    lines, cur = [], ''
+    for k, v in items:
+        s = f'--{k}: {v}; '
+        if len(cur) + len(s) > 150: lines.append(cur.rstrip()); cur = ''
+        cur += s
+    lines.append(cur.rstrip())
+    return '\n'.join('  ' + l for l in lines) + f'\n  color-scheme: {scheme};'
+def lab(d):
+    lines, cur = [], ''
+    for k, v in d.items():
+        s = f'--{k}: {v}; '
+        if len(cur) + len(s) > 150: lines.append(cur.rstrip()); cur = ''
+        cur += s
+    lines.append(cur.rstrip())
+    return lines
+def lum(h):
+    c = [int(h[k:k + 2], 16) / 255 for k in (1, 3, 5)]
+    c = [x / 12.92 if x <= 0.03928 else ((x + 0.055) / 1.055) ** 2.4 for x in c]
+    return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]
+def ratio(a, b):
+    A, B = lum(a), lum(b)
+    return (max(A, B) + 0.05) / (min(A, B) + 0.05)
+TEXT = ['ink', 'ink2', 'accent', 'link', 'red', 'ok', 'equi', 'hd-warn', 'pos', 'neg']
+PANELS = ['paper', 'paper2', 'paper3', 'desk']
+def contrast_problems():
+    bad = []
+    for name, d in [('Warm lab Day', LIGHT), ('Warm lab Night', DARK), ('Lab Day', {**LIGHT, **LAB_LIGHT}), ('Lab Night', {**DARK, **LAB_DARK})]:
+        for f in TEXT:
+            for b in PANELS:
+                r = ratio(d[f], d[b])
+                if r < 4.5: bad.append(f'{name}: --{f} on --{b} is {r:.2f}:1')
+        for f in ['band-ink', 'band-ink2', 'band-accent']:
+            for b in ['band', 'band-field', 'band-hover']:
+                r = ratio(d[f], d[b])
+                if r < 4.5: bad.append(f'{name}: --{f} on --{b} is {r:.2f}:1')
+        r = ratio(d['accent-ink'], d['accent'])
+        if r < 4.5: bad.append(f'{name}: --accent-ink on --accent is {r:.2f}:1')
+    return bad
+def build():
+    rd = lambda n: open(os.path.join(SRC, n)).read()
+    L, D = lab(LAB_LIGHT), lab(LAB_DARK)
+    labcss = rd('lab.css') + ':root[data-vd-look="lab"] {\n' + ''.join('  ' + l + '\n' for l in L) + '}\n' + \
+        '@media (prefers-color-scheme: dark) {\n  :root[data-vd-look="lab"]:not([data-theme="light"]) {\n' + ''.join('  ' + l + '\n' for l in D) + '  }\n}\n' + \
+        ':root[data-vd-look="lab"][data-theme="dark"] {\n' + ''.join('  ' + l + '\n' for l in D) + '}\n'
+    return rd('head.css') + f""":root, :root[data-theme="light"] {{
+  --sans: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif; --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --font-ui: var(--sans); --font-mono: var(--mono);
+  /* the parchment's names, kept so older page styles that read them get the new faces and flat surfaces */
+  --old: var(--sans); --oldsc: var(--sans); --hand: var(--sans); --serif: var(--sans);
+  --mottle: none; --grain: none; --underline: none; --corners: 8px; --corners-s: 6px; --r: 8px; --r-s: 6px;
+{block(LIGHT, 'light')}
+}}
+@media (prefers-color-scheme: dark) {{
+  :root:not([data-theme="light"]) {{
+{block(DARK, 'dark')}
+  }}
+}}
+:root[data-theme="dark"] {{
+{block(DARK, 'dark')}
+}}
+""" + labcss + rd('rest.css')
+if __name__ == '__main__':
+    out = build()
+    bad = contrast_problems()
+    if '--check' in sys.argv:
+        cur = open(OUT).read()
+        if cur != out: print('genpaper: demos/lib/paper.css is not what tools/genpaper.py writes; run python3 tools/genpaper.py'); sys.exit(1)
+        if bad: print('genpaper: text below 4.5:1:\n  ' + '\n  '.join(bad)); sys.exit(1)
+        print('genpaper: paper.css up to date, every text token 4.5:1 or better'); sys.exit(0)
+    open(OUT, 'w').write(out)
+    print('genpaper: wrote demos/lib/paper.css' + ('' if not bad else '; text below 4.5:1:\n  ' + '\n  '.join(bad)))

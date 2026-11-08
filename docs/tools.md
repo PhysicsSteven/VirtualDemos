@@ -8,6 +8,9 @@ Moved from CLAUDE.md on 2026-11-01. Only the TeacherKeys path and the last check
 - `python3 tools/canvas.py` (Canvas course import files, IMS Common Cartridge 1.3, one per course, in `_build/canvas/`, from the map and
   catalog like the course pages; rerun after a map, catalog or handout change; `tools/canvas_check.rb` runs Canvas's own import code on one).
 - `python3 tools/theme.py` (links the theme switch on any page that lacks it; `--check`).
+- `python3 tools/genpaper.py` writes the site skin `demos/lib/paper.css` from `tools/paper-src/` (head.css, lab.css, rest.css) and the four
+  palettes in the script (Warm lab and Lab, each Day and Night). Change colors and skin rules there, never in paper.css. `--check` (run by
+  rules.cjs) also fails when any text token is under 4.5:1 on any panel color.
 - `python3 tools/paper.py` (links the site skin `demos/lib/paper.css` last in every demo's head; `--check`). The skin holds the site's tokens and fonts for every page type; the site pages get it from `courses.py`, the notes from `notes.py`, the worksheets from `_includes/head-custom.html`.
 - `python3 tools/qr.py <demo>`, `python3 tools/reset.py <demo>` (Reset all button), `python3 tools/thumbs.py <demo>` (add an OVERRIDES entry for a good thumbnail state).
 - New demo checklist: demo file, tests, notes source + key answer, `curriculum/catalog.json`, `curriculum/textbook-map.json`

@@ -65,6 +65,7 @@ VDI18N.add('en', 'demo/resolution', [
 "Numbers: the textbook's Example {#}, Hubble ({#} m mirror, {#} nm), with the stars at the Andromeda galaxy's measured distance, {#} million light years (Li et al. {#}; the textbook uses {#} million), and its Chapter {#} Problem {#} on the eye ({#} mm pupil, {#} nm, headlights {#} m apart); {#} ly = {#} × {#}¹⁵ m. Real eyes do worse than diffraction allows: normal ({#}/{#}) acuity is about one minute of arc, {#} µrad, because of aberrations and the spacing of the receptors on the retina. The cursor reads to {#}/{#} of the view, and I/I₀ is the intensity there relative to the central peak of one source alone.",
 "Near the hole and A disk (Fresnel diffraction): a plane wave of unit intensity on a round hole or an opaque disk, the field on the screen from the Fresnel (paraxial) form of the Kirchhoff integral with the obliquity factor taken as {#} (Hecht, Optics, section {#}; Goodman, Introduction to Fourier Optics, section {#}): U(r) = −2iφ e^(ikr²/2L) ∫₀¹ J₀(kaur/L) e^(iφu²) u du with φ = πN_F and N_F = a²/λL, a = D/{#}, computed by Simpson's rule; the disk is the open beam minus the hole (Babinet). On the axis the neglected phase is under {#} rad for every setting here, and the readouts compare the result with the exact Rayleigh–Sommerfeld value, {#} + z²/R² − {#}(z/R) cos k(R − z) for the hole and z²/R² for the disk, R = √(L² + a²). The edge of the hole or disk is taken as perfectly sharp and the beam as perfectly even; a real beam is Gaussian and must be several times wider than D. The picture is scaled to its brightest point; the graph is in units of the open beam. The zone picture is to scale: zone n ends at radius √(nλL + (nλ/{#})²).",
 "3D view: the same intensities drawn as a landscape over the detector, height I/I₀ (the scale post), glow the picture's brightness; each source makes one peak, and two sources closer than about {#} λ/D merge into one (the dip midway first appears at {#} λ/D, Sparrow's limit). At the Rayleigh limit the brightness midway between two equal sources is {#} % of the peaks, a dip {#} % deep (computed from [2J₁(x)/x]²; the textbook rounds {#} to {#}). The orange line is the cursor, the bright line along the sources is the graph below, the dashed circles are the first dark rings. The aperture beside the detector is drawn larger or smaller with D on a log scale and is not to scale with the pattern. Drag to turn, scroll or pinch to zoom, double click to go back.",
+"laser {#} nm",
 "cursor",
 "two point sources",
 "Δθ = {#} µrad (drawn much larger)",
@@ -165,5 +166,8 @@ VDI18N.add('en', 'demo/resolution', [
 "Fresnel zones",
 "I/I₀ (I₀: the beam with nothing in it)",
 "I/I₀ (I₀: one source's peak)",
-"{#}: <span>not resolved</span>"
+"dip {#} % below the peaks",
+"{#}: <span>not resolved</span>",
+"no dip: one peak",
+"{#}× exposure: the peaks are cut off"
 ]);

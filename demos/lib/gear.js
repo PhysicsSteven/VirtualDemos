@@ -96,17 +96,18 @@ window.VDGear = (function () {
     ctx.strokeStyle = '#5e564c'; ctx.lineWidth = Math.max(1, r * 0.08); ctx.beginPath(); ctx.arc(cx, cy, r * 0.95, 0, 7); ctx.stroke();
     g = ctx.createRadialGradient(cx - r * 0.1, cy - r * 0.12, 0, cx, cy, r * 0.3); g.addColorStop(0, '#9c958b'); g.addColorStop(1, '#38332c'); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx, cy, r * 0.3, 0, 7); ctx.fill();
   }
-  /* quiet annotation: small, muted, never bold; o.c overrides the color */
+  /* quiet annotation: small, muted, never bold; o.c overrides the color. Full strength by default (was 0.9 until the 2026-11-08
+     contrast pass): the faded ink is already the quiet color, and at 0.9 it fell under 4.5:1 on the bench grays. */
   function label(ctx, s, x, y, o = {}) {
     const cs = getComputedStyle(document.documentElement), muted = o.c || cs.getPropertyValue('--muted').trim() || '#73695c';
-    ctx.save(); ctx.fillStyle = muted; ctx.globalAlpha = o.alpha == null ? 0.9 : o.alpha;
+    ctx.save(); ctx.fillStyle = muted; ctx.globalAlpha = o.alpha == null ? 1 : o.alpha;
     ctx.font = `${o.w || 400} ${o.s || 10.5}px ${o.m ? cs.getPropertyValue('--font-mono') : cs.getPropertyValue('--font-ui')}`;
     ctx.textAlign = o.a || 'left'; ctx.textBaseline = o.bl || 'middle'; ctx.fillText(s, x, y); ctx.restore();
   }
   /* a small engraved name plate on an instrument */
   function plate(ctx, s, cx, cy, o = {}) {
     ctx.save(); ctx.font = `700 ${o.s || 8}px ${getComputedStyle(document.documentElement).getPropertyValue('--font-ui')}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    ctx.fillStyle = 'rgba(0,0,0,0.35)'; ctx.fillText(s.toUpperCase(), cx, cy + 0.8); ctx.fillStyle = o.c || 'rgba(230,236,243,0.78)'; ctx.fillText(s.toUpperCase(), cx, cy); ctx.restore();
+    ctx.fillStyle = 'rgba(0,0,0,0.35)'; ctx.fillText(s.toUpperCase(), cx, cy + 0.8); ctx.fillStyle = o.c || 'rgba(230,236,243,0.9)'; ctx.fillText(s.toUpperCase(), cx, cy); ctx.restore();
   }
   /* a cable from (x1, y1) to (x2, y2), sagging */
   function cable(ctx, x1, y1, x2, y2, sag, o = {}) {

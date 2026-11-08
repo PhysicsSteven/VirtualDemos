@@ -1,0 +1,5 @@
+/* The Lab look (Steve 2026-11-08, chosen in Preferences, Look: Lab): direction B's cool palette, a graphite band, white
+   panels on a cool gray and a teal signal color, over the same page structure and type. theme.js sets data-vd-look="lab" on
+   <html> from localStorage 'vd-look'; nothing saved is Warm lab, the blocks above. Only the page around each demo changes:
+   the demos' own drawing colors stay warm. Contrast (WCAG AA or better): ink on panel 17:1, faded ink 7:1, teal 5.6:1 (Day)
+   and 9:1 (Night). Each block redefines only the palette; the names mapped to it above (--bg, --surface, --hd-*) follow. */

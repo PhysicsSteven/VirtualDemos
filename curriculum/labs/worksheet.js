@@ -1818,7 +1818,7 @@ details.ws-help p, details.ws-help ul { margin: 6px 0; } details.ws-help code { 
   });
   if (prog.tasks.length) {
     const strip = el('section', { class: 'ws ws-progress tex2jax_ignore', 'aria-label': VDI18N.t('Your progress'), 'data-i18n-skip': SKIP });
-    const bar = el('i'), barBox = el('span', { class: 'ws-progress-bar', role: 'progressbar', 'aria-valuemin': 0, 'aria-valuemax': 100, 'aria-valuenow': 0 }, [bar]);
+    const bar = el('i'), barBox = el('span', { class: 'ws-progress-bar', role: 'progressbar', 'aria-label': VDI18N.t('Your progress'), 'aria-valuemin': 0, 'aria-valuemax': 100, 'aria-valuenow': 0 }, [bar]);
     const nOut = el('span', { class: 'ws-progress-n' });
     const missing = el('div', { class: 'ws-progress-missing', hidden: true });
     const handin = el('button', { type: 'button', class: 'ws-btn ws-handin', 'aria-expanded': 'false', on: { click: () => { missing.hidden = !missing.hidden; handin.setAttribute('aria-expanded', String(!missing.hidden)); } } });

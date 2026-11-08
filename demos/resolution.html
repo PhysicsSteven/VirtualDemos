@@ -812,7 +812,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function tube(pts, r, mat) { const m = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), Math.max(8, pts.length * 2), r, 6, false), mat); return m; }
   function init3() {
     S3 = VD3K.stage($('pane'), { fov: 32, near: 0.05, far: 80, fogAt: null }); if (!S3) return false;
-    const el = S3.el; el.removeAttribute('aria-hidden'); el.setAttribute('role', 'img'); el.tabIndex = 0;
+    const el = S3.el; el.removeAttribute('aria-hidden'); el.setAttribute('role', 'img'); el.setAttribute('aria-label', 'The pattern as a landscape: height is brightness'); el.tabIndex = 0;
     const G = G3 = { grp: new THREE.Group() }; S3.scene.add(G.grp);
     /* the detector: a dark plate under the surface */
     const plate = new THREE.Mesh(new THREE.BoxGeometry(2.14, 2.14, 0.05), new THREE.MeshStandardMaterial({ color: 0x2a241c, roughness: 0.55, metalness: 0.35 }));

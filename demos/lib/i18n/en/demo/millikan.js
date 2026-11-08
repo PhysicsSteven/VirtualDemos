@@ -9,6 +9,8 @@ VDI18N.add('en', 'demo/millikan', [
 "Charges worked out, |q| ({#}⁻¹⁹ C); dashed lines at {#}, {#}, {#} ... × e",
 "Record a drop falling and then with the plates on to put a dot here.",
 "Millikan Oil Drop",
+"<a>Charge and electric fields</a>",
+"<a><span>←</span> <span>Charging by Induction</span></a><a><span>Coulomb Sandbox</span> <span>→</span></a>",
 "Spray tiny drops of oil between two charged plates and watch them through a telescope. Time a drop falling with the plates off, then rising or falling with them on: air drag tells you how big it is, and the field tells you its charge. Charge comes in whole numbers of one smallest amount, e.",
 "Time controls",
 "Run for a moment and pause again",
@@ -65,8 +67,6 @@ VDI18N.add('en', 'demo/millikan', [
 "plates off: {#}πηr v_f / C = m′g, m′ = ({#}/{#})πr³(ρ − ρ_air) plates on: qE = m′g + {#}πηr v_E / C so q = {#}πηr (v_f + v_E) / (C E)",
 "C = {#} + (λ/r)[{#} + {#} exp(−{#} r/λ)] E = V/d held still: q = m′g d / V",
 "Model: each drop is a sphere of oil, density ρ ({#} kg/m³ for the light mineral oil used in teaching apparatus, as PASCO's Millikan manual gives; Millikan used clock oil), falling through still air between two flat plates d = {#} mm apart, a spacing typical of teaching apparatus (measure your own with a micrometer). The field between the plates is uniform, E = V/d, and points from the + plate to the − plate. A drop this small reaches its terminal speed in about {#} µs (its mass times C over {#}πηr), so it always moves at the speed where the forces balance: weight less buoyancy, the electric force qE and air drag. Drag is Stokes's law {#}πηrv divided by the Cunningham slip correction C, because a drop not much bigger than the mean free path of the air molecules slips through the gaps between them; C is the fit of Allen and Raabe ({#}) to Millikan's own oil drop data, with λ = {#} nm at {#} °C and {#} kPa, scaled to other temperatures and pressures as λ ∝ (T/p)({#} + S/T)⁻¹. Air: viscosity from Sutherland's law (η = {#} × {#}⁻⁵ Pa·s at {#} °C, S = {#} K, White, Viscous Fluid Flow), density from the ideal gas law (molar mass {#} g/mol), g = {#} m/s². Each drop also jiggles by Brownian motion, a random step of standard deviation √(2D Δt) in each direction with D = k_B T C/({#}πηr) (Einstein {#}): that is why repeated times of one drop differ. The sprayed drops are simulated: radii drawn at random from {#} to {#} µm and charges of {#} to {#} e, mostly negative (spraying charges drops by friction). The ionizing source changes a drop's charge by one e at a time at random, about once every {#} s. The telescope shows a field of view {#} mm across round the middle of the gap, with lines every {#} mm; a real telescope turns the picture upside down, here it is shown upright. The apparatus picture on the left is not to scale: the drops are far too small to see without the telescope. Your own timing (the stopwatch) carries your reaction time; the orange lines time the drop exactly as it crosses them. Left out: the drops evaporating, the field's fringe near the hole and the plate edges, convection currents in the air, and the drops' charge images in the plates.",
-"<a>Charge and electric fields</a>",
-"<a><span>←</span> <span>Charging by Induction</span></a><a><span>Coulomb Sandbox</span> <span>→</span></a>",
 "plate supply",
 "gap and drop places to scale; drops enlarged",
 "dashed square: the telescope’s view",
@@ -80,5 +80,6 @@ VDI18N.add('en', 'demo/millikan', [
 "The ionizing source makes ions in the air, and now and then a drop picks one up: its speed with the plates on jumps. Start a new row for the same drop and time it again. The change in charge is always a whole number of e, which is Millikan's strongest evidence.",
 "Time several drops, each falling and then with the plates on. The dot plot below the telescope gathers their charges: they bunch at {#}, {#}, {#} ... times one value, e = {#} × {#}⁻¹⁹ C.",
 "At {#} kPa the mean free path of the air is more than twice as long, so the drops slip through it and fall faster than Stokes's law says. Work out the charges with and without the slip correction (Lab) and see which bunch at whole numbers of e.",
-"One small drop, radius {#} µm: it falls only about {#} µm/s and jiggles as air molecules knock it about (Brownian motion). Time it over {#} mm several times and see how the times scatter."
+"One small drop, radius {#} µm: it falls only about {#} µm/s and jiggles as air molecules knock it about (Brownian motion). Time it over {#} mm several times and see how the times scatter.",
+"Close"
 ]);
