@@ -11,8 +11,10 @@ VDI18N.add('en', 'demo/terminal-velocity', [
 "Jump from a plane and the air pushes back harder the faster you fall, until the drag balances your weight and the speed stops growing. Change your body position, open the parachute, jump where the air is thin, or drop stacks of coffee filters, and measure the terminal speed.",
 "SI units · down is positive",
 "A skydiver falling through the sky, or coffee filters falling in a lab, in 3D or from the side, with arrows for the weight and the drag. Space runs or pauses.",
+"Time controls",
 "Jump",
 "Step {#} s",
+"<span>Playback speed</span>",
 "Body position",
 "Spread eagle",
 "Head first",
@@ -54,6 +56,8 @@ VDI18N.add('en', 'demo/terminal-velocity', [
 "Coffee filter: {#} g, {#} cm across the top, C = {#} on that circle (Boyle and Pantaleone, \"The added mass of a falling coffee filter\", arXiv:{#}, {#}, who measured {#} m/s for one filter). Stacked filters nest, so n of them have n times the mass and the same area. The motion detector under them reads the height above its face.",
 "The motion is integrated with fourth order Runge–Kutta in steps of at most {#} ms and a hundredth of v_T/g; from rest in uniform air it agrees with the exact v = v_T tanh(gt/v_T) to better than {#} part in {#}⁹. Readings: t to {#} s, distances to {#} m, altitude to {#} m, v to {#} m/s and a to {#} m/s². No noise is added.",
 "Blind hides the terminal speed, the drag force and the weight, the drag area, the air density, the largest deceleration, the force arrows and the terminal speed line on the graph, leaving the clock, the height, v and a.",
+"3D, to scale · streaks: the air moving past in {#} s · drag to turn",
+"drag {#} N",
 "altitude {#} m · head first",
 "head first, {#} kg",
 "head first",
@@ -77,6 +81,6 @@ VDI18N.add('en', 'demo/terminal-velocity', [
 "Four filters nested together: four times the weight on the same area, so the terminal speed doubles, to {#} m/s.",
 "Mass m, {#} filters",
 "Close",
-"drag {#} mN",
-"Landed at t = {#} s, at {#} m/s."
+"3D, to scale · drag to turn",
+"drag {#} mN"
 ]);

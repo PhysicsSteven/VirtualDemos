@@ -36,8 +36,16 @@ VDI18N.add('es', 'demo/collisions', {
   "Unidades SI · p = mv · e = (v₂′ − v₁′)/(u₁ − u₂)",
 "Collision scene. Drag the round grips on the velocity arrows to set velocities, drag a cart or puck to move its start, and drag the small square grips to change masses, the stored energy or a bumper's stiffness, and drag a photogate's grip to move it along the track. Keys: {#} and {#} pick a body, left and right arrows change its velocity, up and down arrows change e (with Blind on, they step through the bumpers), space plays or pauses, R replays, C captures a reading. Every drag also has a slider in the rail, including Gate A position and Gate B position. In the Ballistic pendulum scene: a side view of a gun firing a bullet into a wood block hung on two parallel rods, with a protractor and a height scale whose markers stay at the highest point; left and right arrows change the bullet speed, up and down arrows the block mass.":
   "Escena de colisión. Arrastra los controles redondos de las flechas de velocidad para fijar las velocidades, arrastra un carrito o un disco para mover su inicio, arrastra los controles cuadrados pequeños para cambiar masas, la energía almacenada o la rigidez de un amortiguador, y arrastra el control de una fotocompuerta para moverla a lo largo del riel. Teclas: {#} y {#} eligen un cuerpo, las flechas izquierda y derecha cambian su velocidad, las flechas arriba y abajo cambian e (con A ciegas activado, recorren los amortiguadores), espacio inicia o pausa, R repite, C registra una lectura. Cada arrastre tiene también un deslizador en el panel, incluidos Posición de la compuerta A y Posición de la compuerta B. En la escena Péndulo balístico: una vista lateral de un arma que dispara una bala a un bloque de madera colgado de dos varillas paralelas, con un transportador y una escala de altura cuyas marcas se quedan en el punto más alto; las flechas izquierda y derecha cambian la rapidez de la bala, arriba y abajo la masa del bloque.",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
 "Replay":
   "Repetir",
+"<span>Playback rate</span>":
+  "<span>Ritmo de reproducción</span>",
 "Blind is on: predictions and answers are hidden":
   "A ciegas está activado: las predicciones y respuestas están ocultas",
 "Momentum and kinetic energy of each body before and after the collision, as bars.":
@@ -226,6 +234,8 @@ VDI18N.add('es', 'demo/collisions', {
   "p después (kg·m/s)",
 "residual (kg·m/s)":
   "residuo (kg·m/s)",
+"slow motion ×{#}":
+  "cámara lenta ×{#}",
 "line of centers":
   "línea de centros",
 "Momentum vectors, tip to tail":
@@ -270,8 +280,6 @@ VDI18N.add('es', 'demo/collisions', {
   "<span>Un rifle de {#} kg que dispara una bala de {#} g a {#} m/s retrocede a {#} m/s. La bala lleva el {#}% de los {#} J.</span>",
 "v₁ = V − (m₂/M)v_rel, v₂ = V + (m₁/M)v_rel, with E = ½μv_rel², v_rel = {#} m/s.":
   "v₁ = V − (m₂/M)v_rel, v₂ = V + (m₁/M)v_rel, con E = ½μv_rel², v_rel = {#} m/s.",
-"slow motion ×{#}":
-  "cámara lenta ×{#}",
 "Velocity of each ball now (m/s)":
   "Velocidad de cada esfera ahora (m/s)",
 "Total momentum now: {#} kg·m/s":

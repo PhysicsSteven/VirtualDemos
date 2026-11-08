@@ -24,6 +24,8 @@ VDI18N.add('es', 'demo/ultrasound', {
   "d = ct/{#} · Δf ≈ 2f₀v cos θ / c",
 "On the left, a transducer on the skin above layers of tissue, or above a blood vessel; on the right, the scanner's screen: echo amplitude against time, or the Doppler spectrum. Drag on the screen to move the cursor; on the picture, left and right arrows move the cursor (with Shift, ten times as far); space starts or stops the scanner.":
   "A la izquierda, un transductor sobre la piel encima de capas de tejido, o encima de un vaso sanguíneo; a la derecha, la pantalla del ecógrafo: amplitud del eco en función del tiempo, o el espectro Doppler. Arrastra sobre la pantalla para mover el cursor; sobre la imagen, las flechas izquierda y derecha mueven el cursor (con Shift, diez veces más lejos); espacio enciende o apaga el ecógrafo.",
+"Time controls":
+  "Controles de tiempo",
 "Set up (fades while the scanner runs). Drag, or use the arrow keys, to move this card; double click to put it back":
   "Preparar (se desvanece mientras el ecógrafo funciona). Arrastra, o usa las flechas, para mover esta tarjeta; doble clic la regresa a su lugar",
 "Set up (fades while the scanner runs)":
@@ -100,8 +102,6 @@ VDI18N.add('es', 'demo/ultrasound', {
   "Ecos: frontera, profundidad real, tiempo, parte de la presión devuelta",
 "fat to muscle: {#} cm, {#} μs, r = {#}<br>muscle to bone: {#} cm, {#} μs, r = {#}<br>bone to muscle: {#} cm, {#} μs, r = -{#}":
   "grasa a músculo: {#} cm, {#} μs, r = {#}<br>músculo a hueso: {#} cm, {#} μs, r = {#}<br>hueso a músculo: {#} cm, {#} μs, r = -{#}",
-"Record reading":
-  "Registrar esta lectura",
 "No readings yet. Start the scanner, place the cursor, then record.":
   "Aún no hay lecturas. Enciende el ecógrafo, coloca el cursor y luego registra.",
 "Record stores the setup and the cursor: an echo time in μs, or a Doppler shift in Hz. Put the cursor on the start of an echo, or on the peak (or the top edge) of the spectrum.":
@@ -217,5 +217,7 @@ VDI18N.add('es', 'demo/ultrasound', {
 "Drag the screen for the cursor; drag elsewhere to turn.":
   "Arrastra la pantalla para el cursor; arrastra en otro lugar para girar.",
 "Shift of the fastest blood":
-  "Corrimiento de la sangre más rápida"
+  "Corrimiento de la sangre más rápida",
+"Record reading":
+  "Registrar esta lectura"
 });

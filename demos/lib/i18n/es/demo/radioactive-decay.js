@@ -30,14 +30,18 @@ VDI18N.add('es', 'demo/radioactive-decay', {
   "t en pasos, min, h, d, años, Myr o Gyr según la configuración · λ = ln {#} / T½",
 "Tray of nuclei. Parent nuclei are large balls, daughters slightly smaller balls in a second color, stable end products small gray balls. Each decay flashes and sends a short alpha or beta track out of the nucleus; the Geiger counter below counts every decay. Click a nucleus to follow it. Keys: arrows move the followed nucleus, space plays or pauses, S takes one step, R resets.":
   "Bandeja de núcleos. Los núcleos madre son esferas grandes, las hijas esferas un poco más pequeñas de un segundo color, y los productos finales estables esferas grises pequeñas. Cada desintegración destella y lanza una traza corta alfa o beta fuera del núcleo; el contador Geiger de abajo cuenta cada desintegración. Haz clic en un núcleo para seguirlo. Teclas: las flechas mueven el núcleo seguido, espacio inicia o pausa, S da un paso, R reinicia.",
+"Time controls":
+  "Controles de tiempo",
+"Step":
+  "Paso",
+"<span>Speed</span>":
+  "<span>Rapidez</span>",
 "Many nuclei":
   "Muchos núcleos",
 "Alpha decay":
   "Desintegración α",
 "Beta decay":
   "Desintegración β",
-"Step":
-  "Paso",
 "t = {#} steps":
   "t = {#} pasos",
 "Elute the generator now (the same as Elute now under Parent and daughter)":
@@ -56,6 +60,8 @@ VDI18N.add('es', 'demo/radioactive-decay', {
   "Un núcleo de cerca. Desintegración alfa: el núcleo con su partícula alfa rebotando dentro, la energía potencial en función de la distancia con la barrera de Coulomb que la alfa atraviesa por efecto túnel, y una gráfica de Geiger–Nuttall de la vida media contra Z entre la raíz cuadrada de Q para veinte emisores alfa, medida y según el modelo. Desintegración beta: el núcleo emitiendo un electrón y un antineutrino, la parte de la energía que se lleva cada uno, y un histograma de las energías de los electrones que se va formando junto al espectro permitido. Teclas: izquierda y derecha eligen el núcleo anterior o el siguiente, espacio inicia el reloj o produce una desintegración.",
 "Watch it decay":
   "Obsérvalo desintegrarse",
+"<span>Rate</span>":
+  "<span>Ritmo</span>",
 "Decays a second":
   "Desintegraciones por segundo",
 "Divider between the tray and the graphs":
@@ -218,6 +224,10 @@ VDI18N.add('es', 'demo/radioactive-decay', {
   "Datación de la cuadrícula a partir de su conteo",
 "N₀ is the carbon {#} a living sample has. The method assumes the atmospheric carbon {#} level was the same in the past; real dates are corrected with a calibration curve.":
   "N₀ es el carbono {#} que tiene una muestra viva. El método supone que el nivel de carbono {#} en la atmósfera era el mismo en el pasado; las fechas reales se corrigen con una curva de calibración.",
+"parents":
+  "madres",
+"daughters":
+  "hijas",
 "±{#}σ band":
   "Banda de ±{#}σ",
 "Half lives":
@@ -228,10 +238,10 @@ VDI18N.add('es', 'demo/radioactive-decay', {
   "<span><i></i>Esta muestra</span> <span><i></i>Esperado, N₀e<sup>−λt</sup> o Bateman</span> <span><i></i>Esperado ±{#}σ</span> <span><i></i>Corridas anteriores, mismos ajustes</span> <span><i></i>Desintegraciones contadas en cada intervalo de tiempo</span> <span><i></i>Vidas medias completas</span> <span><i></i>Edad al desintegrarse de un núcleo seguido</span>",
 "Model: each step of length Δt, every nucleus draws one random number and changes with the exact probability for that time, p = {#} − e<sup>−λΔt</sup>. For a chain the step uses the Bateman probabilities, so a parent can even pass through the daughter within one step. The sample therefore follows the expected curves at any step size.":
   "Modelo: en cada paso de duración Δt, cada núcleo saca un número aleatorio y cambia con la probabilidad exacta para ese tiempo, p = {#} − e<sup>−λΔt</sup>. Para una cadena el paso usa las probabilidades de Bateman, así que una madre puede incluso pasar por la hija dentro de un solo paso. Por eso la muestra sigue las curvas esperadas con cualquier tamaño de paso.",
-"parents":
-  "madres",
-"daughters":
-  "hijas",
+"t = {#} step":
+  "t = {#} paso",
+"{#}% <span>of {#}; expected {#}%</span>":
+  "{#}% <span>de {#}; esperado {#}%</span>",
 "¹⁴⁶Sm":
   "¹⁴⁶Sm",
 "¹⁴⁸Gd":
@@ -384,6 +394,8 @@ VDI18N.add('es', 'demo/radioactive-decay', {
   "{#} ± {#} años es la evaluación actual (NUBASE2020). Muchos libros de texto todavía dan el valor anterior de {#} años (la vida media de Cambridge); los laboratorios de radiocarbono todavía reportan las edades con los {#} años de Libby por convención y luego las calibran. También puedes arrastrar el marcador de T½ en la gráfica de N(t).",
 "A piece of charcoal has <b>{#}%</b> of the carbon {#} a living sample has. How old is it?":
   "Un trozo de carbón tiene <b>{#}%</b> del carbono {#} que tiene una muestra viva. ¿Qué edad tiene?",
+"{#} yr ± {#} yr <span>true age {#} yr</span>":
+  "{#} años ± {#} años <span>edad real {#} años</span>",
 "Iodine {#} treats thyroid disease and is a fallout product. After {#} half lives, about {#} days, the activity has dropped to {#}/{#} of its start.":
   "El yodo {#} trata enfermedades de la tiroides y es un producto de la lluvia radiactiva. Después de {#} vidas medias, unos {#} días, la actividad ha bajado a {#}/{#} de la inicial.",
 "<i></i>¹³¹Xe":
@@ -550,8 +562,6 @@ VDI18N.add('es', 'demo/radioactive-decay', {
   "{#} <span>con Δt = {#} Myr</span>",
 "²⁶Al: {#} × {#}⁵ yr, β⁺ decay ({#}%) and electron capture to stable ²⁶Mg. Meteorites show ²⁶Al/²⁷Al = {#} × {#}⁻⁵ when the first solids formed. You can also drag the T½ marker on the N(t) plot.":
   "²⁶Al: {#} × {#}⁵ años, desintegración β⁺ ({#}%) y captura electrónica a ²⁶Mg estable. Los meteoritos muestran ²⁶Al/²⁷Al = {#} × {#}⁻⁵ cuando se formaron los primeros sólidos. También puedes arrastrar la marca T½ en la gráfica de N(t).",
-"{#}% <span>of {#}; expected {#}%</span>":
-  "{#}% <span>de {#}; esperado {#}%</span>",
 "²⁶Al {#}":
   "²⁶Al {#}",
 "²⁶Mg {#}":
@@ -564,8 +574,6 @@ VDI18N.add('es', 'demo/radioactive-decay', {
   "intervalo = {#} Myr",
 "Potential energy of the alpha":
   "Energía potencial de la alfa",
-"{#} yr ± {#} yr <span>true age {#} yr</span>":
-  "{#} años ± {#} años <span>edad real {#} años</span>",
 "parent gone":
   "la madre se acabó",
 "t in steps, yr, d or h by setup · λ = ln {#} / T½":
@@ -589,7 +597,5 @@ VDI18N.add('es', 'demo/radioactive-decay', {
 "⁹⁹Mo decays":
   "desintegraciones de ⁹⁹Mo",
 "⁹⁹ᵐTc decays":
-  "desintegraciones de ⁹⁹ᵐTc",
-"t = {#} step":
-  "t = {#} paso"
+  "desintegraciones de ⁹⁹ᵐTc"
 });

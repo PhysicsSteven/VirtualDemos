@@ -22,10 +22,14 @@ VDI18N.add('es', 'demo/terminal-velocity', {
   "Unidades SI · hacia abajo es positivo",
 "A skydiver falling through the sky, or coffee filters falling in a lab, in 3D or from the side, with arrows for the weight and the drag. Space runs or pauses.":
   "Un paracaidista que cae por el cielo, o filtros de café que caen en un laboratorio, en 3D o de lado, con flechas para el peso y el arrastre. Espacio corre o pausa.",
+"Time controls":
+  "Controles de tiempo",
 "Jump":
   "Saltar",
 "Step {#} s":
   "Paso {#} s",
+"<span>Playback speed</span>":
+  "<span>Rapidez de reproducción</span>",
 "Body position":
   "Posición del cuerpo",
 "Spread eagle":
@@ -108,6 +112,10 @@ VDI18N.add('es', 'demo/terminal-velocity', {
   "El movimiento se integra con Runge–Kutta de cuarto orden en pasos de a lo más {#} ms y una centésima de v_T/g; desde el reposo en aire uniforme coincide con la solución exacta v = v_T tanh(gt/v_T) a mejor que {#} parte en {#}⁹. Lecturas: t a {#} s, distancias a {#} m, altitud a {#} m, v a {#} m/s y a a {#} m/s². No se agrega ruido.",
 "Blind hides the terminal speed, the drag force and the weight, the drag area, the air density, the largest deceleration, the force arrows and the terminal speed line on the graph, leaving the clock, the height, v and a.":
   "A ciegas oculta la rapidez terminal, la fuerza de arrastre y el peso, el área de arrastre, la densidad del aire, la mayor desaceleración, las flechas de fuerza y la línea de rapidez terminal en la gráfica, y deja el reloj, la altura, v y a.",
+"3D, to scale · streaks: the air moving past in {#} s · drag to turn":
+  "3D, a escala · estelas: el aire que pasa en {#} s · arrastra para girar",
+"drag {#} N":
+  "arrastre {#} N",
 "altitude {#} m · head first":
   "altitud {#} m · de cabeza",
 "head first, {#} kg":
@@ -152,16 +160,12 @@ VDI18N.add('es', 'demo/terminal-velocity', {
   "Cuatro filtros encajados: cuatro veces el peso sobre la misma área, así que la rapidez terminal se duplica, a {#} m/s.",
 "Mass m, {#} filters":
   "Masa m, {#} filtros",
+"3D, to scale · drag to turn":
+  "3D, a escala · arrastra para girar",
 "drag {#} mN":
   "arrastre {#} mN",
 "Landed at t = {#} s, at {#} m/s.":
   "Aterrizó en t = {#} s, a {#} m/s.",
 "Model: the drag is ½ρCAv² against the motion, with a constant drag coefficient C (OpenStax University Physics Vol. {#}, §{#}). Buoyancy and the air carried along with the body are left out, and the fall is straight down (a real exit also carries the plane's forward speed). g = {#} m/s² everywhere. Uniform air has the textbook's ρ = {#} kg/m³; air that thins with height follows the International Standard Atmosphere below {#} km (U.S. Standard Atmosphere {#}: {#} K and {#} {#} Pa at the ground, cooling {#} K per km), so ρ is {#} kg/m³ at the ground and {#} kg/m³ at {#} km.":
-  "Modelo: el arrastre es ½ρCAv² en contra del movimiento, con un coeficiente de arrastre C constante (OpenStax University Physics Vol. {#}, §{#}). Se omiten el empuje de flotación y el aire arrastrado junto con el cuerpo, y la caída es vertical (una salida real también lleva la rapidez horizontal del avión). g = {#} m/s² en todas partes. El aire uniforme tiene la ρ = {#} kg/m³ del libro; el aire que se enrarece con la altura sigue la Atmósfera Estándar Internacional por debajo de {#} km (U.S. Standard Atmosphere {#}: {#} K y {#} {#} Pa en el suelo, enfriándose {#} K por km), así que ρ es {#} kg/m³ en el suelo y {#} kg/m³ a {#} km.",
-"3D, to scale · streaks: the air moving past in {#} s · drag to turn":
-  "3D, a escala · estelas: el aire que pasa en {#} s · arrastra para girar",
-"drag {#} N":
-  "arrastre {#} N",
-"3D, to scale · drag to turn":
-  "3D, a escala · arrastra para girar"
+  "Modelo: el arrastre es ½ρCAv² en contra del movimiento, con un coeficiente de arrastre C constante (OpenStax University Physics Vol. {#}, §{#}). Se omiten el empuje de flotación y el aire arrastrado junto con el cuerpo, y la caída es vertical (una salida real también lleva la rapidez horizontal del avión). g = {#} m/s² en todas partes. El aire uniforme tiene la ρ = {#} kg/m³ del libro; el aire que se enrarece con la altura sigue la Atmósfera Estándar Internacional por debajo de {#} km (U.S. Standard Atmosphere {#}: {#} K y {#} {#} Pa en el suelo, enfriándose {#} K por km), así que ρ es {#} kg/m³ en el suelo y {#} kg/m³ a {#} km."
 });

@@ -13,6 +13,7 @@ VDI18N.add('en', 'demo/gps-clocks', [
 "General relativity: clocks higher in a gravitational field run faster. Special relativity: moving clocks run slower. A GPS satellite's clock gains about {#} microseconds a day on a clock on the ground; uncorrected, positions would drift by kilometers a day.",
 "c = {#} m/s · GM = {#} × {#}¹⁴ m³/s²",
 "Earth with a satellite in a circular orbit, two clocks showing the time difference built up so far, and a graph of how much a clock at each orbit radius gains or loses per day.",
+"Time controls",
 "Run the clocks",
 "Set both to zero",
 "Divider between the orbit and the graph",
@@ -42,11 +43,15 @@ VDI18N.add('en', 'demo/gps-clocks', [
 "dτ/dt = √({#} − 2GM/(rc²) − v²/c²)",
 "Blind hides the rates and the gain per day, leaving r, v and the clocks' accumulated difference.",
 "Model: Earth is a nonrotating spherical mass (Schwarzschild field); each clock's rate relative to coordinate time is √({#} − 2GM/(rc²) − v²/c²), with v its speed in the nonrotating frame. The ground clock sits on a sphere of radius {#} km, at rest or carried round at the equator once per sidereal day. Earth's flattening and the Sun and Moon are left out. The clocks run {#} simulated hour per second.",
+"ground clock",
+"second clock",
+"drag to turn, wheel to zoom",
 "Gravity",
 "Net",
 "second clock: {#} h + {#} μs",
 "{#} ps/day",
 "−{#} ps/day",
 "second clock: {#} h − {#} ps",
-"second clock: {#} h − {#} μs"
+"second clock: {#} h − {#} μs",
+"Close"
 ]);

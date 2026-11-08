@@ -28,14 +28,16 @@ VDI18N.add('es', 'demo/springs', {
   "Resorte, ½kx²",
 "Total":
   "Total",
-"E₀ − E − ∫bv² dt = {#} J":
-  "E₀ − E − ∫bv² dt = {#} J",
+"E₀ − E − ∫bv² dt = −{#} × {#}⁻¹⁷ J":
+  "E₀ − E − ∫bv² dt = −{#} × {#}⁻¹⁷ J",
 "residual (s²)":
   "residuo (s²)",
 "No timed readings yet":
   "Aún no hay lecturas cronometradas",
-"E₀ − E − ∫bv² dt = −{#} × {#}⁻¹⁶ J":
-  "E₀ − E − ∫bv² dt = −{#} × {#}⁻¹⁶ J",
+"E₀ − E − ∫bv² dt = {#} J":
+  "E₀ − E − ∫bv² dt = {#} J",
+"E₀ − E − ∫bv² dt = {#} × {#}⁻¹⁷ J":
+  "E₀ − E − ∫bv² dt = {#} × {#}⁻¹⁷ J",
 "Springs and Oscillations":
   "Resortes y oscilaciones",
 "<a>Oscillations</a>":
@@ -48,6 +50,12 @@ VDI18N.add('es', 'demo/springs', {
   "Unidades SI · x en cm, desde el equilibrio · F = −kx",
 "Mass and spring drawing. Drag a block to pull it from equilibrium and let go; moving the pointer as you let go gives it a starting velocity. Drag the small grips to change the spring constant, the mass, the damping (the oil) and, when driven, the drive force. Keys: left and right arrows (up and down when hanging) move the block {#} cm and release it from rest, shift with the arrows moves block {#}, the square brackets [ and ] give the block a push of {#} cm/s backward or forward from where it is, page up and page down change k, space plays or pauses, R resets, W starts or stops the stopwatch, C captures a reading.":
   "Dibujo de la masa y el resorte. Arrastra un bloque para sacarlo del equilibrio y suéltalo; mover el puntero al soltar le da una velocidad inicial. Arrastra los agarres pequeños para cambiar la constante del resorte, la masa, el amortiguamiento (el aceite) y, si hay fuerza impulsora, la fuerza impulsora. Teclas: las flechas izquierda y derecha (arriba y abajo cuando cuelga) mueven el bloque {#} cm y lo sueltan desde el reposo, Shift con las flechas mueve el bloque {#}, los corchetes [ y ] dan al bloque un empujón de {#} cm/s hacia atrás o hacia adelante desde donde está, Re Pág y Av Pág cambian k, espacio inicia o pausa, R reinicia, W inicia o detiene el cronómetro, C registra una lectura.",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
 "Put every block at rest where it hangs":
   "Deja cada bloque en reposo donde cuelga",
 "Settle":
@@ -324,12 +332,8 @@ VDI18N.add('es', 'demo/springs', {
   "Traza conservada",
 "Model: ideal massless springs that obey Hooke's law, a frictionless track, a damping force −bv on each block, g = {#} m/s². The curves are the exact solution of the linear equation of motion, not a step by step integration; two coupled blocks (equal masses; outer springs k₁ and k₂, middle spring k_c, the same damping b on each) move as the sum of their two normal modes, found exactly from the {#} × {#} stiffness matrix. Positions are drawn to scale; the block's size grows with its mass but is not to scale. The drawing never shows a spring pressed solid, and the model has no such limit.":
   "Modelo: resortes ideales sin masa que obedecen la ley de Hooke, un riel sin fricción, una fuerza de amortiguamiento −bv en cada bloque, g = {#} m/s². Las curvas son la solución exacta de la ecuación de movimiento lineal, no una integración paso a paso; dos bloques acoplados (masas iguales; resortes exteriores k₁ y k₂, resorte del medio k_c, el mismo amortiguamiento b en cada uno) se mueven como la suma de sus dos modos normales, hallados exactamente a partir de la matriz de rigidez de {#} × {#}. Las posiciones se dibujan a escala; el tamaño del bloque crece con su masa pero no está a escala. El dibujo nunca muestra un resorte comprimido por completo, y el modelo no tiene ese límite.",
-"E₀ − E − ∫bv² dt = {#} × {#}⁻¹⁶ J":
-  "E₀ − E − ∫bv² dt = {#} × {#}⁻¹⁶ J",
 "no oil":
   "sin aceite",
-"E₀ − E − ∫bv² dt = {#} × {#}⁻¹⁷ J":
-  "E₀ − E − ∫bv² dt = {#} × {#}⁻¹⁷ J",
 "Chart: x against time":
   "Gráfica: x en función del tiempo",
 "x to scale, paper at {#} cm/s":
@@ -338,8 +342,12 @@ VDI18N.add('es', 'demo/springs', {
   "Bloque de acero a escala para {#} kg. Arrástralo para jalarlo; arrastra en otro lugar para girar la vista.",
 "Phase plot of v (m/s) against x (m). Now −{#}, −{#}.":
   "Gráfica de fase de v (m/s) en función de x (m). Ahora −{#}, −{#}.",
-"E₀ − E − ∫bv² dt = −{#} × {#}⁻¹⁷ J":
-  "E₀ − E − ∫bv² dt = −{#} × {#}⁻¹⁷ J",
+"E₀ − E − ∫bv² dt = −{#} × {#}⁻¹⁶ J":
+  "E₀ − E − ∫bv² dt = −{#} × {#}⁻¹⁶ J",
+"E₀ − E − ∫bv² dt = {#} × {#}⁻¹⁶ J":
+  "E₀ − E − ∫bv² dt = {#} × {#}⁻¹⁶ J",
+"Phase plot of v (m/s) against x (m). Now {#}, −{#}.":
+  "Gráfica de fase de v (m/s) en función de x (m). Ahora {#}, −{#}.",
 "Energy bars":
   "Barras de energía",
 "Normal modes of the rig: each mode's frequency, its shape (how far and which way each block moves), and its amplitude in the motion now. Click a mode, or press its number ({#} for mode {#}), to start the rig in that mode alone.":
@@ -610,8 +618,6 @@ VDI18N.add('es', 'demo/springs', {
   "Aún no hay lecturas con fuerza impulsora",
 "dashed: predicted A(ω), current settings":
   "discontinua: A(ω) predicha, valores actuales",
-"Phase plot of v (m/s) against x (m). Now {#}, −{#}.":
-  "Gráfica de fase de v (m/s) en función de x (m). Ahora {#}, −{#}.",
 "Below rest (cm) against time (s)":
   "Bajo el reposo (cm) contra el tiempo (s)",
 "Energy now, from the rig at rest":

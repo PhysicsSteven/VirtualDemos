@@ -4,9 +4,12 @@ VDI18N.add('en', 'demo/eddy-currents', [
 "speed (m/s)",
 "plastic pipe: free fall, off the top of the scale",
 "Eddy Currents: Magnet in a Pipe",
+"<a>Induction and inductance</a>",
+"<a><span>←</span> <span>Induced Electric Fields</span></a><a><span>Transformers</span> <span>→</span></a>",
 "Drop the same strong magnet down a copper pipe, an aluminum pipe and a plastic pipe. In the metal pipes the moving magnet's changing flux drives currents around the wall, and by Lenz's law those currents push back: the magnet drifts down at a slow, steady speed.",
 "pipes {#} m long · g = {#} m/s²",
 "Three vertical pipes, in 3D (drag to turn) or flat, cut open to show the falling magnets and the induced currents in their walls, with a graph of speed against time. Space drops or pauses, R starts over.",
+"Time controls",
 "Drop all three",
 "Set up the magnet and pipes. Drag, or use the arrow keys, to move this card; double click to put it back",
 "Set up the magnet and pipes",
@@ -27,10 +30,9 @@ VDI18N.add('en', 'demo/eddy-currents', [
 "M dv/dt = Mg − kv · k = {#} μ₀² m² σ w / ({#} a⁴) · v<sub>T</sub> = Mg/k",
 "Blind hides the drag constant, the terminal speed and the predicted fall times and the heat, leaving the clock and the timer for each pipe. Time how long each magnet takes and work out its steady speed.",
 "Model: the magnet as a point dipole on the pipe's axis and a thin walled pipe (w much less than a), which gives a drag force in proportion to speed with the constant k above (Levin and coworkers, Am. J. Phys. {#}). A real magnet that nearly fills the pipe falls at the same order of speed but not exactly this one. The magnet does not touch the wall; air drag is ignored. Conductivity follows ρ = ρ₂₀[{#} + α(T − {#} °C)] down to −{#} °C; below that the resistivity is taken as a straight line in T to the measured value at −{#} °C ({#} times the {#} °C value for copper, {#} for aluminum). The cold ratio depends on how pure the metal is: the cold stage in Resistivity shows how ({#} for copper with a residual resistance ratio of {#}).",
-"<a>Induction and inductance</a>",
-"<a><span>←</span> <span>Induced Electric Fields</span></a><a><span>Transformers</span> <span>→</span></a>",
 "Widths of the pipes and magnets drawn {#} times larger; lengths to scale. Drag to turn.",
 "Rings: the current in the wall, brighter where it is larger, dots turning its way.",
 "Pipe",
-"Drop the magnets and let them reach the bottom of the metal pipes first: each pipe's timer stops when its magnet does."
+"Drop the magnets and let them reach the bottom of the metal pipes first: each pipe's timer stops when its magnet does.",
+"Close"
 ]);

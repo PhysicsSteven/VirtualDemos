@@ -228,6 +228,8 @@ VDI18N.add('en', 'demo/collisions', [
 "Fit of kinetic energy lost against ½μ(u₁ − u₂)²",
 "x = ½μ(u₁ − u₂)² with μ = m₁m₂/(m₁ + m₂), the kinetic energy of motion relative to the center of mass; y = the kinetic energy lost. For rows with one bumper the slope is {#} − e². The fit is a least squares line y = a + bx with equal weights, through your captured rows only; rows with a blank cell are left out. The standard errors come from the scatter of the rows about the line, which here is only the timer and display rounding.",
 "Plot of kinetic energy lost against ½μ(u₁ − u₂)², x: ½μ(u₁ − u₂)² (J), y: K before − K after (J), for {#} captured rows; the residuals are in a strip below. Show data table lists the points.",
+"Close",
+"Pick body {#} or body {#} (1D track, 2D table, and other setups with two bodies)",
 "Track, gliders, flags and gates to scale; rule in cm. Drag to turn; drag a grip to change a value.",
 "Table and pucks to scale; dashed: the paths. Drag to turn; drag a grip to change a value.",
 "To scale: {#} cm balls on {#} cm strings. Drag to turn; drag a grip to change a value.",

@@ -24,6 +24,12 @@ VDI18N.add('es', 'demo/magnetic-force', {
   "La fuerza magnética sobre una carga en movimiento siempre es perpendicular a su velocidad, así que desvía la carga sin acelerarla. Agrega un campo eléctrico y construye un selector de velocidades, un espectrómetro de masas y un ciclotrón, atrapa protones en una botella magnética y observa cómo se forma el voltaje Hall en una tira.",
 "SI units · e = {#} × {#}⁻¹⁹ C · ⊗ into the page, ⊙ out of the page":
   "Unidades SI · e = {#} × {#}⁻¹⁹ C · ⊗ hacia dentro de la página, ⊙ hacia fuera de la página",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
 "Fit view":
   "Ajustar la vista",
 "Fire {#}":
@@ -304,8 +310,6 @@ VDI18N.add('es', 'demo/magnetic-force', {
   "Vista superior de una tira de {#} mm de ancho que lleva una corriente I hacia la derecha en un campo B perpendicular a la página, con un voltímetro a lo ancho que mide el voltaje Hall.",
 "Hall voltage V<sub>top</sub> − V<sub>bottom</sub>":
   "Voltaje Hall V<sub>top</sub> − V<sub>bottom</sub>",
-"-{#} pV":
-  "-{#} pV",
 "−{#} pV":
   "−{#} pV",
 "Carriers":
@@ -324,8 +328,6 @@ VDI18N.add('es', 'demo/magnetic-force', {
   "Coeficiente Hall R<sub>H</sub> = {#}/(nq)",
 "The voltmeter reads V<sub>H</sub> = V<sub>top</sub> − V<sub>bottom</sub>. In the steady state the edge charge makes a field E<sub>H</sub> whose force qE<sub>H</sub> cancels qv<sub>d</sub> × B, so the carriers flow straight; V<sub>H</sub> = IB/(nqt), and its sign gives the sign of the carriers. The edge charge builds up in far less than a nanosecond, so this drawing shows only the steady state; the Hall effect setup slows the build up down so you can watch it. The strip is {#} mm wide. One kind of carrier, free carrier model: copper has n = {#} × {#}²⁸ m⁻³ (one electron per atom), whose measured Hall coefficient differs from this by tens of percent because its electrons are not free; the germanium samples use n = {#} × {#}²¹ m⁻³, a typical value for doped teaching samples, not one particular crystal. The dots move at a speed chosen for the drawing; the true v<sub>d</sub> is in the readouts. Blind renames the strips and hides the carriers, their density and v<sub>d</sub>; the voltmeter stays.":
   "El voltímetro mide V<sub>H</sub> = V<sub>top</sub> − V<sub>bottom</sub>. En el estado estacionario la carga en los bordes crea un campo E<sub>H</sub> cuya fuerza qE<sub>H</sub> cancela qv<sub>d</sub> × B, así que los portadores fluyen en línea recta; V<sub>H</sub> = IB/(nqt), y su signo da el signo de los portadores. La carga de los bordes se acumula en mucho menos de un nanosegundo, así que este dibujo muestra solo el estado estacionario; la configuración Efecto Hall hace más lenta la acumulación para que puedas observarla. La tira mide {#} mm de ancho. Un solo tipo de portador, modelo de portadores libres: el cobre tiene n = {#} × {#}²⁸ m⁻³ (un electrón por átomo), y su coeficiente Hall medido difiere de este en decenas de por ciento porque sus electrones no son libres; las muestras de germanio usan n = {#} × {#}²¹ m⁻³, un valor típico de muestras dopadas para enseñanza, no el de un cristal en particular. Los puntos se mueven a una rapidez elegida para el dibujo; la v<sub>d</sub> real está en las lecturas. A ciegas cambia el nombre de las tiras y oculta los portadores, su densidad y v<sub>d</sub>; el voltímetro se mantiene.",
-"Record reading stores what you read: the particle, the settings as displayed (q, m, v, B, E), your ruler reading and your timer reading divided by the turns timed. It never stores the model's r or T. Cells can be edited; rows stay through setup changes until Clear.":
-  "Registrar lectura guarda lo que lees: la partícula, la configuración tal como se muestra (q, m, v, B, E), tu lectura de la regla y tu lectura del cronómetro dividida entre las vueltas cronometradas. Nunca guarda la r ni el T del modelo. Las celdas se pueden editar; las filas se mantienen al cambiar de configuración hasta Borrar.",
 "What to plot":
   "Qué graficar",
 "r against v":
@@ -476,20 +478,30 @@ VDI18N.add('es', 'demo/magnetic-force', {
   "{#} MeV <span>unas {#} vueltas a 2qV por vuelta</span>",
 "v/c = {#}, γ = {#} <span>the true cyclotron frequency there is f<sub>c</sub>/γ, {#}% lower</span>":
   "v/c = {#}, γ = {#} <span>la frecuencia de ciclotrón real ahí es f<sub>c</sub>/γ, {#}% menor</span>",
+"{#} keV <span>from the source to the gap edge: {#} qV</span>":
+  "{#} keV <span>de la fuente al borde del hueco: {#} qV</span>",
 "predicted mirror point":
   "punto de espejo predicho",
 "coil":
   "bobina",
 "B₀ = {#} mT at the center · coils {#} cm apart, radius {#} cm":
   "B₀ = {#} mT en el centro · bobinas a {#} cm entre sí, radio {#} cm",
-"Side view: the plane through the axis.":
-  "Vista lateral: el plano que pasa por el eje.",
+"Drag to turn the view.":
+  "Arrastra para girar la vista.",
 "Position along the axis against time":
   "Posición a lo largo del eje contra el tiempo",
 "mirror point, predicted":
   "punto de espejo, predicho",
 "Two coils {#} cm apart make a field of {#} T at the center that grows toward each coil. A proton launched at {#}° to B spirals toward a coil, slows along B, turns round where B = B₀/sin²α and comes back: it is trapped. Set α below the loss cone and it escapes through a coil. Make B₀ small and the orbit grows until μ is no longer kept: then even a particle outside the loss cone can leak out.":
   "Dos bobinas a {#} cm entre sí producen un campo de {#} T en el centro que crece hacia cada bobina. Un protón lanzado a {#}° de B avanza en espiral hacia una bobina, se frena a lo largo de B, da la vuelta donde B = B₀/sin²α y regresa: queda atrapado. Pon α por debajo del cono de pérdida y escapa por una bobina. Haz B₀ pequeño y la órbita crece hasta que μ ya no se conserva: entonces incluso una partícula fuera del cono de pérdida puede escaparse.",
+"Result":
+  "Resultado",
+"Turning points":
+  "Puntos de retorno",
+"Bounce period (s)":
+  "Periodo de rebote (s)",
+"μ against the start":
+  "μ comparado con el inicio",
 "Each coil is a thin ring of radius {#} cm carrying N I, whose field is the exact Biot–Savart result in elliptic integrals; the two add. The motion is integrated step by step with the Boris rotation ({#} rad of turning per step), which keeps the speed exact. Nonrelativistic, no collisions, no radiation, and no field from the particle itself. The mirror readouts come from tracing the field line through the start and are a prediction to compare with the run.":
   "Cada bobina es un anillo delgado de radio {#} cm que lleva N I, cuyo campo es el resultado exacto de Biot–Savart en integrales elípticas; los dos se suman. El movimiento se integra paso a paso con la rotación de Boris ({#} rad de giro por paso), que conserva la rapidez exactamente. No relativista, sin colisiones, sin radiación y sin el campo de la propia partícula. Las lecturas del espejo vienen de seguir la línea de campo que pasa por el inicio y son una predicción para comparar con la trayectoria.",
 "<span><i></i>Particle path</span><span><i></i>Field lines</span><span><i></i>Coils</span><span><i></i>Predicted mirror points</span>":
@@ -500,8 +512,6 @@ VDI18N.add('es', 'demo/magnetic-force', {
   "después de tres puntos de retorno",
 "{#} × the start":
   "{#} × el inicio",
-"The 3D view of the strip needs WebGL. Open \"Hall effect in a strip\" for the top view.":
-  "La vista 3D de la tira necesita WebGL. Abre \"Efecto Hall en una tira\" para la vista desde arriba.",
 "top edge":
   "borde superior",
 "bottom edge":
@@ -524,8 +534,6 @@ VDI18N.add('es', 'demo/magnetic-force', {
   "Tira de cobre, {#} mm de ancho, {#} mm de grosor",
 "V (nV)":
   "V (nV)",
-"V_H = -{#} pV":
-  "V_H = -{#} pV",
 "V_H = −{#} pV":
   "V_H = −{#} pV",
 "{#} × {#}⁻¹⁹ s; in a metal the real settling takes about a collision time, {#} × {#}⁻¹⁴ s":
@@ -536,22 +544,20 @@ VDI18N.add('es', 'demo/magnetic-force', {
   "huecos, q = +e",
 "Record two or more readings with ruler values, changing the particle (Custom sets q and m).":
   "Registra dos o más lecturas con valores de la regla, cambiando la partícula (Personalizada fija q y m).",
-"Plot of r against m/|q| from your readings, {#} points, with a least squares line with an intercept, and a strip of residuals underneath. Show data table lists the points.":
-  "Gráfica de r en función de m/|q| con tus lecturas, {#} puntos, con una recta de mínimos cuadrados con ordenada al origen y una franja de residuos debajo. Mostrar la tabla de datos lista los puntos.",
 "Record two or more readings with timer values, changing the speed.":
   "Registra dos o más lecturas con valores del cronómetro, cambiando la rapidez.",
-"Plot of T against v⊥ from your readings, {#} points, with a least squares line with an intercept, and a strip of residuals underneath. Show data table lists the points.":
-  "Gráfica de T en función de v⊥ con tus lecturas, {#} puntos, con una recta de mínimos cuadrados con ordenada al origen y una franja de residuos debajo. Mostrar la tabla de datos lista los puntos.",
+"{#} τ, steady":
+  "{#} τ, estacionario",
 "Stop timer":
   "Detener el cronómetro",
-"Readings work in the free setups: Circular motion, Electron vs proton and E × B drift.":
-  "Las lecturas funcionan en las configuraciones libres: Movimiento circular, Electrón contra protón y Deriva E × B.",
+"Row {#} captured while the edges were still charging: wait until the voltage stops changing.":
+  "Fila {#} registrada mientras los bordes aún se cargaban: espera a que el voltaje deje de cambiar.",
 "p-type germanium, {#} mm thick":
   "Germanio tipo p, {#} mm de grosor",
-"Drag to turn the view.":
-  "Arrastra para girar la vista.",
 "timer {#} ns":
   "cronómetro {#} ns",
+"Plot of T against v⊥ from your readings, {#} points, with a least squares line with an intercept, and a strip of residuals underneath. Show data table lists the points.":
+  "Gráfica de T en función de v⊥ con tus lecturas, {#} puntos, con una recta de mínimos cuadrados con ordenada al origen y una franja de residuos debajo. Mostrar la tabla de datos lista los puntos.",
 "B out of the page, {#} mT":
   "B hacia fuera de la página, {#} mT",
 "timer {#} µs":
@@ -560,16 +566,28 @@ VDI18N.add('es', 'demo/magnetic-force', {
   "{#} × {#}⁵ a {#} × {#}⁵ m/s <span>±{#}% alrededor de E/B</span>",
 "B₀ = {#} mT · coils {#} cm apart":
   "B₀ = {#} mT · bobinas a {#} cm entre sí",
-"Side view":
-  "Vista lateral",
 "n-type germanium, {#} mm thick":
   "Germanio tipo n, {#} mm de grosor",
 "Copper, {#} mm thick":
   "Cobre, {#} mm de grosor",
-"{#} τ, steady":
-  "{#} τ, estacionario",
-"{#} keV <span>from the source to the gap edge: {#} qV</span>":
-  "{#} keV <span>de la fuente al borde del hueco: {#} qV</span>",
+"{#} keV <span>= {#} qV</span>":
+  "{#} keV <span>= {#} qV</span>",
+"-{#} pV":
+  "-{#} pV",
+"Record reading stores what you read: the particle, the settings as displayed (q, m, v, B, E), your ruler reading and your timer reading divided by the turns timed. It never stores the model's r or T. Cells can be edited; rows stay through setup changes until Clear.":
+  "Registrar lectura guarda lo que lees: la partícula, la configuración tal como se muestra (q, m, v, B, E), tu lectura de la regla y tu lectura del cronómetro dividida entre las vueltas cronometradas. Nunca guarda la r ni el T del modelo. Las celdas se pueden editar; las filas se mantienen al cambiar de configuración hasta Borrar.",
+"Side view: the plane through the axis.":
+  "Vista lateral: el plano que pasa por el eje.",
+"The 3D view of the strip needs WebGL. Open \"Hall effect in a strip\" for the top view.":
+  "La vista 3D de la tira necesita WebGL. Abre \"Efecto Hall en una tira\" para la vista desde arriba.",
+"V_H = -{#} pV":
+  "V_H = -{#} pV",
+"Plot of r against m/|q| from your readings, {#} points, with a least squares line with an intercept, and a strip of residuals underneath. Show data table lists the points.":
+  "Gráfica de r en función de m/|q| con tus lecturas, {#} puntos, con una recta de mínimos cuadrados con ordenada al origen y una franja de residuos debajo. Mostrar la tabla de datos lista los puntos.",
+"Readings work in the free setups: Circular motion, Electron vs proton and E × B drift.":
+  "Las lecturas funcionan en las configuraciones libres: Movimiento circular, Electrón contra protón y Deriva E × B.",
+"Side view":
+  "Vista lateral",
 "K (meV)":
   "K (meV)",
 "×{#} · {#} s here = {#} ps":
@@ -580,8 +598,6 @@ VDI18N.add('es', 'demo/magnetic-force', {
   "{#} GeV <span>fórmula no relativista, no válida aquí: K<sub>max</sub> supera la décima parte de mc² (ver v/c y γ abajo)</span>",
 "{#} MeV <span>nonrelativistic formula, not valid here: K<sub>max</sub> is more than a tenth of mc² (see v/c and γ below)</span>":
   "{#} MeV <span>fórmula no relativista, no válida aquí: K<sub>max</sub> supera la décima parte de mc² (ver v/c y γ abajo)</span>",
-"{#} keV <span>= {#} qV</span>":
-  "{#} keV <span>= {#} qV</span>",
 "{#} meV":
   "{#} meV",
 "+{#} meV":
@@ -596,14 +612,6 @@ VDI18N.add('es', 'demo/magnetic-force', {
   "chocó con una bobina",
 "stopped at the step limit":
   "se detuvo en el límite de pasos",
-"Result":
-  "Resultado",
-"Turning points":
-  "Puntos de retorno",
-"Bounce period (s)":
-  "Periodo de rebote (s)",
-"μ against the start":
-  "μ comparado con el inicio",
 "I (A)":
   "I (A)",
 "B<sub>z</sub> (T)":
@@ -622,8 +630,6 @@ VDI18N.add('es', 'demo/magnetic-force', {
   "Fila {#} registrada.",
 "Row {#} captured with no bounce period yet (it needs three turning points).":
   "Fila {#} registrada todavía sin periodo de rebote (se necesitan tres puntos de retorno).",
-"Row {#} captured while the edges were still charging: wait until the voltage stops changing.":
-  "Fila {#} registrada mientras los bordes aún se cargaban: espera a que el voltaje deje de cambiar.",
 "Readings work in the free setups (Circular motion, Electron vs proton and E × B drift), the Magnetic bottle and the Hall effect.":
   "Las lecturas funcionan en las configuraciones libres (Movimiento circular, Electrón contra protón y Deriva E × B), la Botella magnética y el Efecto Hall.",
 "No rows to export yet.":
