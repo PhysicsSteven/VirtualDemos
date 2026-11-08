@@ -623,7 +623,7 @@ VDI18N.add('en', 'common', [
 "Preferences",
 "Preferences: theme, language, Reduce motion, Larger text and Projector, for every page",
 "Saved in this browser for every page of the site.",
-"Dark, Light, or whatever your browser or system is set to.",
+"Day, Night, or whatever your browser or system is set to.",
 "Language",
 "The page reloads in the language you pick.",
 "Demos open paused, and pictures skip their animations.",
@@ -1278,5 +1278,9 @@ VDI18N.add('en', 'common', [
 "Turn crystallization on or off",
 "Turn latent heat on or off (needs crystallization)",
 "Switch between a helium and a carbon and oxygen core",
-"Show or hide the simulated population"
+"Show or hide the simulated population",
+"Look",
+"Warm lab",
+"Warm lab (walnut and amber) or Lab (graphite and teal), for the page around each demo. The pictures keep their colors.",
+"Preferences: theme, look, language, Reduce motion, Larger text and Projector, for every page"
 ]);

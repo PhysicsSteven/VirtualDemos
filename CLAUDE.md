@@ -62,7 +62,8 @@ only when the work needs them.
 
 ## Demos
 - Each demo is one HTML file on the shared library `demos/lib/` (read `demos/lib/README.md`). The look of the whole site (tokens,
-  fonts, the header band) is `demos/lib/paper.css`, the warm lab look of 2026-11-08 (direction C): a walnut band, ivory panels, amber accents. The
+  fonts, the header band) is `demos/lib/paper.css`, the warm lab look of 2026-11-08 (direction C): a walnut band, ivory panels, amber accents. Preferences offers a second Look, Lab (graphite
+  band, white panels, teal; `data-vd-look="lab"` from localStorage `vd-look`, its palette blocks in paper.css), for the page skin only. The
   demos draw in warm grays too; blues stay only where they mean something (negative charge, cold, sky, water, stars, spectra). A new demo gets the link from `python3 tools/paper.py`. Shared styles and behavior go in
   the library, never pasted into a demo. A new 3D view uses `demos/lib/vd3kit.js`. The only outside libraries are three.js r128
   from cdnjs (only where it is already used) and Google Fonts.

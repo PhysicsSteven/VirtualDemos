@@ -1246,8 +1246,8 @@ VDI18N.add('es', 'common', {
   "Preferencias: tema, idioma, Reducir movimiento, Texto más grande y Proyector, para todas las páginas",
 "Saved in this browser for every page of the site.":
   "Se guardan en este navegador para todas las páginas del sitio.",
-"Dark, Light, or whatever your browser or system is set to.":
-  "Oscuro, Claro o el que tenga tu navegador o sistema.",
+"Day, Night, or whatever your browser or system is set to.":
+  "Día, Noche o el que tenga tu navegador o sistema.",
 "Language":
   "Idioma",
 "The page reloads in the language you pick.":
@@ -2559,5 +2559,13 @@ VDI18N.add('es', 'common', {
 "Show or hide the simulated population":
   "Mostrar u ocultar la población simulada",
 "Close":
-  "Cerrar"
+  "Cerrar",
+"Look":
+  "Aspecto",
+"Warm lab":
+  "Laboratorio cálido",
+"Warm lab (walnut and amber) or Lab (graphite and teal), for the page around each demo. The pictures keep their colors.":
+  "Laboratorio cálido (nogal y ámbar) o Laboratorio (grafito y verde azulado), para la página alrededor de cada demostración. Las imágenes conservan sus colores.",
+"Preferences: theme, look, language, Reduce motion, Larger text and Projector, for every page":
+  "Preferencias: tema, aspecto, idioma, Reducir movimiento, Texto más grande y Proyector, para todas las páginas"
 });
