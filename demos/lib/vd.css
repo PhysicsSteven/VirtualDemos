@@ -233,3 +233,24 @@
   :where(:root:not([data-vd-off~="touch-targets"])) details.plotfold > summary { padding-block: 7px; }
   :where(:root:not([data-vd-off~="touch-targets"])) .vd-crumbs a { display: inline-flex; align-items: center; min-height: 32px; }
 }
+
+
+/* Header icon buttons (Preferences, the keyboard shortcuts help) and the Preferences dialog (vd.js, 2026-11-08) */
+.proj.vd-icon { display: inline-flex; align-items: center; justify-content: center; width: 30px; min-width: 30px; padding: 4px; }
+.proj.vd-icon svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.3; stroke-linecap: round; stroke-linejoin: round; }
+@media (max-width: 640px) { .proj.vd-icon { width: 36px; min-height: 36px; } }
+dialog.vd-prefs { width: min(440px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); overflow: auto; box-sizing: border-box; margin: auto; padding: 18px 20px 16px; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 12px; box-shadow: 0 18px 50px rgba(0, 0, 0, 0.35); font-family: var(--font-ui); font-size: 0.95rem; line-height: 1.4; }
+dialog.vd-prefs::backdrop { background: rgba(0, 0, 0, 0.45); }
+.vd-prefs h2 { margin: 0 0 2px; font-size: 1.15rem; }
+.vd-prefs .vd-prefs-sub { margin: 0 0 12px; color: var(--muted); font-size: 0.85rem; }
+.vd-prefs .vd-prefs-row { display: grid; grid-template-columns: 1fr auto; gap: 2px 14px; align-items: center; padding: 10px 0; border-top: 1px solid var(--line); }
+.vd-prefs .vd-prefs-row > .vd-prefs-name { font-weight: 700; }
+.vd-prefs .vd-prefs-row > .vd-prefs-why { grid-column: 1 / -1; color: var(--muted); font-size: 0.82rem; }
+.vd-prefs .vd-prefs-row input[type="checkbox"] { width: 20px; height: 20px; margin: 0; accent-color: var(--accent); cursor: pointer; }
+.vd-prefs .vd-prefs-row select { font: inherit; font-weight: 700; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px; min-height: 32px; max-width: 13em; cursor: pointer; }
+.vd-prefs .seg { justify-self: end; }
+.vd-prefs .vd-prefs-foot { display: flex; justify-content: flex-end; padding-top: 12px; border-top: 1px solid var(--line); }
+.vd-prefs .vd-prefs-foot button { font: inherit; font-weight: 700; color: var(--canvas); background: var(--accent); border: 0; border-radius: 6px; padding: 7px 18px; min-height: 36px; cursor: pointer; }
+.vd-prefs :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+@media print { .vd-icon, dialog.vd-prefs { display: none !important; } }
+.vd-prefs .vd-lang-draft { margin-left: 6px; font-size: 0.7rem; font-weight: 700; padding: 1px 5px; border-radius: 4px; border: 1px solid currentColor; color: var(--muted); }

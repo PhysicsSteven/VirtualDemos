@@ -1234,5 +1234,29 @@ VDI18N.add('es', 'common', {
   "Check this one: no number here matches what your table gives for this step": "Revisa esta: ningún número de aquí coincide con lo que da tu tabla en este paso",
   "The same arithmetic on your own table gives this number too.": "La misma aritmética sobre tu propia tabla también da este número.",
   "Redo this step from your table. Nothing is shown: the check only says whether the number follows from your data.": "Vuelve a hacer este paso a partir de tu tabla. No se muestra nada: la revisión solo dice si el número sale de tus datos.",
-  "Check this cell: it does not follow from the other cells of its row.": "Revisa esta celda: no sale de las otras celdas de su fila."
+  "Check this cell: it does not follow from the other cells of its row.": "Revisa esta celda: no sale de las otras celdas de su fila.",
+"Preferences":
+  "Preferencias",
+"Preferences: theme, language, Reduce motion, Larger text and Projector, for every page":
+  "Preferencias: tema, idioma, Reducir movimiento, Texto más grande y Proyector, para todas las páginas",
+"Saved in this browser for every page of the site.":
+  "Se guardan en este navegador para todas las páginas del sitio.",
+"Dark, Light, or whatever your browser or system is set to.":
+  "Oscuro, Claro o el que tenga tu navegador o sistema.",
+"Language":
+  "Idioma",
+"The page reloads in the language you pick.":
+  "La página se vuelve a cargar en el idioma que elijas.",
+"Demos open paused, and pictures skip their animations.":
+  "Las demostraciones abren en pausa y las imágenes se saltan sus animaciones.",
+"On in your device settings, so every demo opens still.":
+  "Está activado en la configuración de tu dispositivo, así que cada demostración abre sin movimiento.",
+"Larger text":
+  "Texto más grande",
+"Text in the controls, readings and handouts is one eighth larger.":
+  "El texto de los controles, las lecturas y las guías es un octavo más grande.",
+"Larger type and thicker lines in the picture, for a room screen. Remembered across demos.":
+  "Letra más grande y líneas más gruesas en la imagen, para la pantalla de un salón. Se recuerda en todas las demostraciones.",
+"Done":
+  "Listo"
 });
