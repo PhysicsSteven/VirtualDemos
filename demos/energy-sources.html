@@ -118,6 +118,9 @@ table.rows input:focus { border-color: var(--accent); }
   const G = 9.81, KWH = 3.6e6, MEV = 1.602176634e-13, NA = 6.02214076e23, ES_VERSION = 'energy-sources@2026-10-22';
   const uranium = 200 * MEV * NA / 0.235;   // J per kg of U-235 fissioned, 200 MeV each
   // [name, J per kg, kind]; kind 'heat' burns or fissions (needs a heat engine for electricity), 'elec' delivers it directly
+  /* energy per kilogram, J/kg. Fuels are rounded typical higher heating values (Engineering ToolBox, 'Fuels: higher and lower
+     calorific values'; US DOE Alternative Fuels Data Center fuel properties); food from the Atwater factors 9 and 4 kcal/g;
+     TNT 4.184 MJ/kg by definition; lithium ion cells about 200 Wh/kg (typical of current cells) */
   const SOURCES = [['Uranium 235 (fissioned)', uranium, 'heat', 'nuc'], ['Natural gas', 55e6, 'heat', 'fuel'], ['Gasoline', 46e6, 'heat', 'fuel'], ['Food fat', 37.7e6, 'heat', 'fuel'], ['Coal', 27e6, 'heat', 'fuel'], ['Dry wood', 18e6, 'heat', 'fuel'], ['Sugar', 16.7e6, 'heat', 'fuel'], ['TNT', 4.184e6, 'heat', 'fuel'], ['Lithium ion battery', 0.7e6, 'elec', 'store']];
   // mass of a source needed to deliver E joules (as electricity with heat engine efficiency eta, or as heat)
   function massNeeded(E, perKg, kind, elec, eta) { return E / (perKg * (elec && kind === 'heat' ? eta : 1)); }

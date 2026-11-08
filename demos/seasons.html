@@ -1502,6 +1502,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function sdWrap(a) { a = (a + 180) % 360; if (a < 0) a += 360; return a - 180; }
   /* the Sun on day n of 2026 (n = 0 is 1 January, 0 h UT; fractions allowed), for eccentricity e and tilt eps (degrees):
      mean longitude L, true longitude lam, right ascension ra, declination dec (degrees) and the equation of time in minutes */
+  /* low precision solar position (Astronomical Almanac, section C, 'Low precision formulas for the Sun'; Meeus, Astronomical
+     Algorithms, ch. 25), with the obliquity and eccentricity free so the demo can change them */
   function sdSun(n, e, eps) {
     var d = n + 9496.5, rad = Math.PI / 180;
     var L = 280.460 + 0.9856474 * d, g = 357.528 + 0.9856003 * d, perigee = L - g;

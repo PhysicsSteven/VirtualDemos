@@ -36,7 +36,7 @@ Students need the idea of a spectrum and the order of the visible colors; wavele
 
 **Q5.** In the Sun preset, turn on **Rayleigh-Jeans**. At what wavelengths do the two curves agree, and where do they disagree? What would the classical law predict for the total power, and what assumption did Planck add to fix it?
 
-**Q6.** The cosmic background was released when the universe was about 1100 times smaller and hotter than today (it is 2.725 K now). What were its temperature and peak wavelength then? Set that temperature in the demo. What would that light have looked like to a human eye?
+**Q6.** The cosmic background was released when the universe was about 1100 times smaller and hotter than today (it is 2.7255 K now). What were its temperature and peak wavelength then? Set that temperature in the demo. What would that light have looked like to a human eye?
 
 ## Common misconceptions
 

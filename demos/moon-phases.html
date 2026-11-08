@@ -321,6 +321,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 <script>
 (() => {
   // ---------- constants (days, degrees) ----------
+  // periods, tilt and angular sizes: NASA Moon fact sheet (nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html) and Meeus,
+  // Astronomical Algorithms (2nd ed.), ch. 47 to 54; the umbra and penumbra radii are mean values at the Moon's distance
   const P_SYN = 29.530589;          // synodic month
   const P_SID = 27.321662;          // sidereal month
   const YEAR = 365.256363;          // sidereal year

@@ -590,6 +590,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     lj: {
       units: { x: 'nm', U: 'meV', t: 'ps', v: 'm/s', vf: 1000, F: 'pN', Ff: 1e-3 * EV / 1e-9 * 1e12, xs: 'r', vs: 'v', Fs: 'F', Fname: 'Force F = −dU/dr', m: 'μ', w: 'rad/ps' },
       view: () => ({ x0: 0.28, x1: 0.95, u0: -13, u1: 5 }), rate: 0.5,
+      /* Rahman 1964 (Phys. Rev. 136, A405): ε/k = 120 K = 10.4 meV, σ = 3.4 Å, the same values as States of Matter */
       params: { eps: 10.4, sig: 0.34 }, start: { x: 0.36, dir: 1 },
       sliders: [['eps', 'Well depth ε', 2, 12, 0.1, 'meV'], ['sig', 'Size σ', 0.28, 0.42, 0.002, 'nm']],
       formula: () => 'U = 4ε[(σ/r)¹² − (σ/r)⁶]',

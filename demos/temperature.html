@@ -354,6 +354,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     nu: [1.13479e-5, 1.34785e-5, 1.57497e-5, 1.81556e-5, 2.06908e-5, 2.33506e-5, 2.61308e-5],
     Pr: [0.714711, 0.710551, 0.707064, 0.704193, 0.701902, 0.700158, 0.698932] };
   function air(Tk, q) { const a = AIR.T, i = Math.max(0, Math.min(a.length - 2, Math.floor((Tk - a[0]) / 25))), u = (Tk - a[i]) / 25; return AIR[q][i] + (AIR[q][i + 1] - AIR[q][i]) * u; }
+  /* OpenStax Table 14.1 (aluminum 2700, copper 8920 kg/m³); 7800 is a typical steel density (the table's iron is 7860) */
   const SPHERES = { aluminum: { name: 'Aluminum', rho: 2700 }, copper: { name: 'Copper', rho: 8920 }, steel: { name: 'Iron, steel', rho: 7800 } };
   const SURFACES = { polished: { name: 'Polished (ε = 0.05)', e: 0.05 }, black: { name: 'Black paint (ε = 0.95)', e: 0.95 } };
   /* film coefficient and the pieces of it; T and Ta in °C, D in m, U in m/s */

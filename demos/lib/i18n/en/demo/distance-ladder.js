@@ -18,8 +18,6 @@ VDI18N.add('en', 'demo/distance-ladder', [
 "now",
 "ruler: {#}″",
 "field {#}″ wide · dashed circles: ±σ = {#} mas (Hipparcos)",
-"<a>Particle physics and cosmology</a>",
-"<a><span>←</span> <span>Charges in Magnetic Fields</span></a><a><span>The Big Bang and the Early Universe</span> <span>→</span></a>",
 "No single method measures every distance. Each rung reaches farther, and each is calibrated by the rung below it.",
 "<span>pc</span> · <span>kpc</span> · <span>Mpc</span> · <span>″ and mas</span> · <span>km/s</span> · <span>{#} pc = {#} AU = {#} ly</span>",
 "Rung of the ladder",
@@ -158,8 +156,8 @@ VDI18N.add('en', 'demo/distance-ladder', [
 "An error in a low rung carries up to every rung above it. That is why so much effort goes into parallaxes of nearby Cepheids.",
 "The ringed dots are your current measurements from each rung. Click a bar to open that rung.",
 "Earth on a circular orbit of exactly {#} AU, the star in the plane of the orbit, placed so that January and July are the extremes of its shift; then the shift is 2p. A real star off the plane traces a small ellipse instead. The top view is not to scale: a star {#} pc away would sit {#} orbit radii from the Sun. The photos zoom so the shift fills the frame; the dashed circles show the instrument’s position uncertainty.",
-"drag Earth along its orbit; drag elsewhere to turn",
-"EARTH’S ORBIT IN 3D, NOT TO SCALE",
+"<a>Particle physics and cosmology</a>",
+"<a><span>←</span> <span>Charges in Magnetic Fields</span></a><a><span>The Big Bang and the Early Universe</span> <span>→</span></a>",
 "p (mas)",
 "early March",
 "mid March",
@@ -267,7 +265,6 @@ VDI18N.add('en', 'demo/distance-ladder', [
 "Galaxy {#} (Cepheids)",
 "nearby star",
 "field {#}″ wide · dashed circles: ±σ = {#} µas (Gaia)",
-"late March",
 "K5–K9 V stars: mean M = {#}, spread {#} ({#} stars)",
 "TARGET: HIP {#}, K5 V (A REAL STAR)",
 "MYSTERY CLUSTER (SIMULATED) ON THE NEARBY MAIN SEQUENCE: DRAG THE CLUSTER UP OR DOWN",
@@ -282,5 +279,5 @@ VDI18N.add('en', 'demo/distance-ladder', [
 "SN D, {#} d before peak",
 "click the peak of the light curve",
 "calibrates",
-"early April"
+"late March"
 ]);

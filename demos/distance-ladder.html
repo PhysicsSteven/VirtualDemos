@@ -696,6 +696,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const minus = (s) => String(s).replace(/-/g, '−');
 
   // ---------- state ----------
+  /* parallaxes in arcseconds, Hipparcos (van Leeuwen 2007): Proxima 0.7685, Sirius 0.3792, Vega 0.1302 */
   const STARS = {
     proxima: { name: 'Proxima Centauri', p: 0.768 },
     sirius: { name: 'Sirius', p: 0.379 },
@@ -915,6 +916,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     { key: 'sn', name: 'Type Ia supernovae', lo: 3e6, a: 6e6, b: 2e9, hi: 6e9, note: 'calibrated in galaxies that also have Cepheids' },
     { key: 'hub', name: "Hubble's law", lo: 1e7, a: 3e7, b: 4e8, hi: 1e10, note: 'v = H₀d at small z; farther needs a cosmological model' },
   ];
+  /* distances in parsecs: Proxima and Vega from the Hipparcos parallaxes above; Pleiades 136 pc (Gaia DR2, Gaia Collaboration
+     2018); Galactic center 8.2 kpc (GRAVITY Collaboration 2019); LMC 49.6 kpc (Pietrzyński et al. 2019); M31 760 kpc
+     (Riess et al. 2012); Virgo 16.5 Mpc (Mei et al. 2007); Coma 100 Mpc (Carter et al. 2008) */
   const LANDMARKS = [['Proxima Cen', 1.30], ['Vega', 7.68], ['Pleiades', 136], ['Galactic center', 8.2e3], ['LMC', 4.96e4], ['M31', 7.6e5], ['Virgo cluster', 1.65e7], ['Coma cluster', 1.0e8]];
   function currentMarks() {
     const m = { par: S.par.d };

@@ -267,7 +267,7 @@ VDI18N.add('en', 'demo/temperature', [
 "A cyclist turns a generator that lights a compact fluorescent bulb. Each station passes on only part of what it gets: the body turns about {#}% of its food energy into work, the generator {#}% of the work into electricity, the bulb {#}% of that into light. Only {#}% of the food energy ends up as light; the rest warms the rider, the generator and the bulb. Try the Sun on a solar cell, or a heater instead of the bulb.",
 "The energy chain has no worksheet readings: read the numbers from the Readouts.",
 "The last mystery block was {mat}.",
-"The last mystery block was silver.",
+"The last mystery block was gold.",
 "Last mystery bath was {#} °C.",
 "The last mystery rod was {mat}.",
 "The last mystery rod was aluminum.",

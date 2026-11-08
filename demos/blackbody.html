@@ -512,9 +512,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     human:  { T: 305,   hint: 'Your skin surface at about 305 K peaks near 9.5 μm, deep in the infrared. Thermal cameras see this glow; your eyes do not. The visible share readout shows how little reaches the visible band: about 2 × 10⁻²¹ % of the power, far below even the log axis.' },
     bulb:   { T: 2800,  hint: 'A tungsten filament at 2800 K peaks near 1 μm, just past red. Only about 8% of its power lands in the visible band; the rest is heat.' },
     sun:    { T: 5772, R: 1, hint: 'The Sun at 5772 K peaks near 500 nm, right in the visible band, and about 44% of its power is visible light. Its color is close to white, not yellow.' },
+    /* stars: Betelgeuse 3600 K, 760 R☉ (Joyce et al. 2020, ApJ 902, 63); Rigel 12,100 K, 78.9 R☉ (Przybilla et al. 2010,
+       A&A 517, A38); Sirius A 9940 K (Adelman 2004); CMB 2.7255 K (Fixsen 2009, ApJ 707, 916), as in Early Universe */
     betel:  { T: 3600, R: 760, hint: 'Betelgeuse is a red supergiant: cooler than the Sun, so each square meter emits about 15% as much, but 760 times wider, so it outshines the Sun nearly 90,000 times.' },
     rigel:  { T: 12100, R: 78.9, hint: 'Rigel is a blue supergiant at 12,100 K. Most of its output is ultraviolet, and the visible part tilts toward blue. Slide T down to about 9940 K for Sirius A: its peak is still in the ultraviolet, near 290 nm, but the visible part is nearly flat, so it looks white.' },
-    cmb:    { T: 2.725, hint: 'The cosmic microwave background is the most perfect blackbody known, at 2.725 K. Its peak sits near 1 mm, in microwaves. The slider stops at 300 K, so this preset is a special case.' }
+    cmb:    { T: 2.7255, hint: 'The cosmic microwave background is the most perfect blackbody known, at 2.7255 K. Its peak sits near 1 mm, in microwaves. The slider stops at 300 K, so this preset is a special case.' }
   };
   const S = { T: 5772, R: 1, star: true, xMode: 'lin', yMode: 'lin', rj: false, band: true, eye: false, lock: false, view: 'spec' };
   let pins = [];
@@ -545,7 +547,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     return trim((+v.toPrecision(sig)).toString()) + ' ' + u;
   }
   function fmtT(T) {
-    if (T < 10) return T.toFixed(3) + ' K';
+    if (T < 10) return T.toFixed(4) + ' K';   /* enough for the microwave background, 2.7255 K */
     return Math.round(T).toLocaleString('en-US') + ' K';
   }
   const fmtR = (R) => (R < 10 ? trim(R.toPrecision(3)) : Math.round(R).toLocaleString('en-US')) + ' R☉';
