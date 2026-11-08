@@ -40,10 +40,24 @@ VDI18N.add('es', 'demo/moon-phases', {
   "Puesta del Sol",
 "Moon Phases":
   "Fases de la Luna",
+"<a>The sky from Earth</a>":
+  "<a>El cielo desde la Tierra</a>",
+"<a><span>←</span> <span>Reasons for Seasons</span></a><a><span>Retrograde Motion and World Models</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Las causas de las estaciones</span></a><a><span>Movimiento retrógrado y modelos del mundo</span> <span>→</span></a>",
 "Sunlight always lights half the Moon. The phase is how much of that lit half faces Earth. Drag the Moon around its orbit.":
   "La luz del Sol siempre ilumina la mitad de la Luna. La fase es cuánto de esa mitad iluminada mira hacia la Tierra. Arrastra la Luna alrededor de su órbita.",
 "synodic month {#} d · sidereal {#} d · orbit tilt {#}° · nodes {#} yr":
   "mes sinódico {#} d · sidéreo {#} d · inclinación de la órbita {#}° · nodos {#} años",
+"Time controls":
+  "Controles de tiempo",
+"Back one day":
+  "Un día atrás",
+"{#} day":
+  "{#} día",
+"Forward one day":
+  "Un día adelante",
+"<span>Speed</span>":
+  "<span>Rapidez</span>",
 "Animation speed":
   "Velocidad de la animación",
 "<span>days/s</span>":
@@ -134,30 +148,20 @@ VDI18N.add('es', 'demo/moon-phases', {
   "para una décima.",
 "plays or pauses.":
   "inicia o pausa.",
-"<a>The sky from Earth</a>":
-  "<a>El cielo desde la Tierra</a>",
-"<a><span>←</span> <span>Reasons for Seasons</span></a><a><span>Retrograde Motion and World Models</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Las causas de las estaciones</span></a><a><span>Movimiento retrógrado y modelos del mundo</span> <span>→</span></a>",
-"Not to scale · blue dot: you, {#}:{#}":
-  "No a escala · punto azul: tú, {#}:{#}",
 "days":
   "días",
 "lit (%)":
   "iluminada (%)",
 "eclipse":
   "eclipse",
+"Day {#} of {#} · First quarter":
+  "Día {#} de {#} · Cuarto creciente",
+"First quarter, {#}% lit":
+  "Cuarto creciente, {#}% iluminada",
 "Day {#} of {#} · Waxing gibbous":
   "Día {#} de {#} · Gibosa creciente",
 "Waxing gibbous, {#}% lit":
   "Gibosa creciente, {#}% iluminada",
-"Day {#} of {#} · Waning gibbous":
-  "Día {#} de {#} · Gibosa menguante",
-"Waning gibbous, {#}% lit":
-  "Gibosa menguante, {#}% iluminada",
-"Moon below horizon":
-  "Luna bajo el horizonte",
-"{#}° west":
-  "{#}° al oeste",
 "New moon: the lit half faces away from Earth. The Moon is up with the Sun all day and lost in its glare.":
   "Luna nueva: la mitad iluminada mira en dirección contraria a la Tierra. La Luna está arriba junto con el Sol todo el día y se pierde en su resplandor.",
 "Day {#} of {#} · New moon":
@@ -168,10 +172,6 @@ VDI18N.add('es', 'demo/moon-phases', {
   "Día",
 "First quarter: {#}° east of the Sun. We see half of the lit half, so {#}% lit, on the right. It rises near noon and is high in the south at sunset.":
   "Cuarto creciente: {#}° al este del Sol. Vemos la mitad de la mitad iluminada, así que está {#}% iluminada, del lado derecho. Sale cerca del mediodía y está alta en el sur a la puesta del Sol.",
-"Day {#} of {#} · First quarter":
-  "Día {#} de {#} · Cuarto creciente",
-"First quarter, {#}% lit":
-  "Cuarto creciente, {#}% iluminada",
 "Full moon: opposite the Sun, so the whole lit half faces us. It rises at sunset, is highest at midnight, and sets at sunrise. It usually passes just above or below Earth's shadow.":
   "Luna llena: opuesta al Sol, así que toda la mitad iluminada mira hacia nosotros. Sale a la puesta del Sol, está en lo más alto a medianoche y se pone a la salida del Sol. Por lo general pasa justo por encima o por debajo de la sombra de la Tierra.",
 "Day {#} of {#} · Full moon":
@@ -186,6 +186,8 @@ VDI18N.add('es', 'demo/moon-phases', {
   "Día {#} de {#} · Menguante",
 "Waning crescent, {#}% lit":
   "Menguante, {#}% iluminada",
+"{#}° west":
+  "{#}° al oeste",
 "Hide tilted orbit and nodes":
   "Ocultar la órbita inclinada y los nodos",
 "The line of nodes points almost at the Sun, so this new moon crosses the ecliptic: a solar eclipse is possible. Press Next full for a lunar eclipse, then keep stepping to watch the season end and the next one arrive about {#} days later.":
@@ -222,6 +224,14 @@ VDI18N.add('es', 'demo/moon-phases', {
   "Alrededor del Sol",
 "Earth moved {#}°":
   "La Tierra avanzó {#}°",
+"Moon below horizon":
+  "Luna bajo el horizonte",
+"Day {#} of {#} · Waning gibbous":
+  "Día {#} de {#} · Gibosa menguante",
+"Waning gibbous, {#}% lit":
+  "Gibosa menguante, {#}% iluminada",
 "N. Hemisphere, facing S":
-  "Hemisferio N, mirando al S"
+  "Hemisferio N, mirando al S",
+"Not to scale · blue dot: you, {#}:{#}":
+  "No a escala · punto azul: tú, {#}:{#}"
 });

@@ -7,6 +7,7 @@
 <script src="lib/theme.js"></script>
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
 <script src="lib/vd3.js"></script>
 <script src="lib/vd3kit.js"></script>
 <style>
@@ -1231,6 +1232,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   // ---------- controls ----------
   $('play').addEventListener('click', () => setPlaying(!S.playing));
+  /* the shared control panel (demos/lib/vdpanel.js): Play, Step a day back or forward, Reset and Speed in one group */
+  const dayStep = (d) => () => { S.T += d; setPreset(null); requestDraw(); };
+  if (window.VD && VD.panel) VD.panel({ speed: '#speed', step: [
+    { back: true, label: '1 day', title: 'Back one day', run: dayStep(-1) },
+    { label: '1 day', title: 'Forward one day', run: dayStep(1) }] });
   for (const b of document.querySelectorAll('#speed button')) {
     b.addEventListener('click', () => {
       S.speed = +b.dataset.s;

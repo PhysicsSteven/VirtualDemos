@@ -48,6 +48,16 @@ VDI18N.add('es', 'demo/kepler-orbits', {
   "UA · año · M<sub>sun</sub> · G = {#}π² UA³/(M<sub>sun</sub>·año²) · {#} UA/año = {#} km/s",
 "Orbit view. Drag the arrow tip to set the launch velocity, drag the hollow launch marker to move the launch point, drag empty space to pan, scroll to zoom. With Ruler on, click or drag to place ruler points {#} and {#}. Keys: the arrow keys move the arrow tip (launch velocity) (Shift for small steps); M switches what they move; {#} and {#} pick a ruler point; plus and minus zoom; space plays or pauses; F fits the view.":
   "Vista de la órbita. Arrastra la punta de la flecha para fijar la velocidad de lanzamiento, arrastra el marcador hueco para mover el punto de lanzamiento, arrastra el espacio vacío para desplazar la vista, desplaza la rueda para acercar. Con Regla activada, haz clic o arrastra para colocar los puntos {#} y {#} de la regla. Teclas: las flechas mueven la punta de la flecha (velocidad de lanzamiento) (Shift para pasos pequeños); M cambia lo que mueven; {#} y {#} eligen un punto de la regla; más y menos acercan o alejan; espacio inicia o pausa; F ajusta la vista.",
+"Time controls":
+  "Controles de tiempo",
+"Forward one frame at this time speed":
+  "Un cuadro adelante a esta rapidez del tiempo",
+"Step":
+  "Paso",
+"Time speed":
+  "Rapidez del tiempo",
+"{#} yr/s":
+  "{#} años/s",
 "Kepler's third law: orbital period against semi major axis on log scales, with the planets of the solar system and the current orbit. Show data table in the Lab section lists the plotted values.":
   "Tercera ley de Kepler: periodo orbital en función del semieje mayor en escalas logarítmicas, con los planetas del sistema solar y la órbita actual. Mostrar la tabla de datos, en la sección Laboratorio, lista los valores graficados.",
 "Divider between the orbit and the third law chart":
@@ -222,10 +232,6 @@ VDI18N.add('es', 'demo/kepler-orbits', {
   "Tus lecturas",
 "Time and star":
   "Tiempo y estrella",
-"Time speed":
-  "Rapidez del tiempo",
-"{#} yr/s":
-  "{#} años/s",
 "Star mass M":
   "Masa de la estrella M",
 "{#} M<sub>sun</sub>":
@@ -308,16 +314,12 @@ VDI18N.add('es', 'demo/kepler-orbits', {
   "<span><i></i>Trayectoria orbital predicha a partir de r y v</span> <span><i></i>Estela del planeta integrado</span> <span><i></i>Rapidez circular en el punto de lanzamiento</span> <span><i></i>Rapidez de escape en el punto de lanzamiento</span> <span><i></i>Segundo planeta</span> <span><i></i>P² = a³/M en la gráfica</span>",
 "The star is held fixed and the planet's mass is neglected, so P² = a³/M exactly (a in AU, P in years, M in solar masses). Two planets do not pull on each other. The motion is integrated with velocity Verlet using a time symmetric step that shrinks near the star. A planet that comes within {#} AU (one solar radius) hits the star.":
   "La estrella se mantiene fija y se desprecia la masa del planeta, así que P² = a³/M exactamente (a en UA, P en años, M en masas solares). Los dos planetas no se atraen entre sí. El movimiento se integra con Verlet de velocidades usando un paso simétrico en el tiempo que se reduce cerca de la estrella. Un planeta que llega a menos de {#} UA (un radio solar) choca con la estrella.",
-"Drag the arrow tip to launch; drag elsewhere to turn.":
-  "Arrastra la punta de la flecha para lanzar; arrastra en otra parte para girar.",
-"Grid squares {#} AU. Star and planets drawn far larger than to scale.":
-  "Cuadros de la cuadrícula de {#} UA. Estrella y planetas dibujados mucho más grandes que a escala.",
-"Energy bars, in MJ/kg: Kinetic {#}, Potential −{#}, Total −{#}.":
-  "Barras de energía, en MJ/kg: Cinética {#}, Potencial −{#}, Total −{#}.",
 "Nearly a circle: e = {#}, so the empty focus sits almost on top of the Sun. Earth is only {#}% closer at perihelion, in early January.":
   "Casi un círculo: e = {#}, así que el foco vacío queda casi encima del Sol. La Tierra está solo un {#}% más cerca en el perihelio, a principios de enero.",
 "e = {#} is enough to pull the foci apart. Mars moves ({#} + e)/({#} − e) = {#} times faster at perihelion than at aphelion.":
   "e = {#} basta para separar los focos. Marte se mueve ({#} + e)/({#} − e) = {#} veces más rápido en el perihelio que en el afelio.",
+"Energy bars, in MJ/kg: Kinetic {#}, Potential −{#}, Total −{#}.":
+  "Barras de energía, en MJ/kg: Cinética {#}, Potencial −{#}, Total −{#}.",
 "Launched at aphelion, {#} AU out, at under {#} km/s. It spends most of its {#} years far away and whips around the Sun in a few months.":
   "Lanzado en el afelio, a {#} UA, a menos de {#} km/s. Pasa la mayor parte de sus {#} años lejos y da la vuelta al Sol a toda velocidad en unos pocos meses.",
 "The brightest asteroid, a leftover protoplanet in the inner asteroid belt between Mars and Jupiter. A nearly circular orbit.":
@@ -380,10 +382,10 @@ VDI18N.add('es', 'demo/kepler-orbits', {
   "Se necesitan dos cuerpos o más",
 "The target is {#}° ahead of you on the same circle. Try a forward burn first and watch: you rise into a bigger, slower orbit and fall behind. Then Reset and burn backward instead: the smaller orbit is quicker. With {#} km/s backward your orbit takes {#}/{#} of a year, so after one lap, back at its farthest point, you meet the target: coast there and burn {#} km/s forward to match its speed.":
   "El objetivo está {#}° delante de ti en el mismo círculo. Prueba primero un impulso hacia adelante y observa: subes a una órbita más grande y más lenta y te quedas atrás. Luego Reiniciar e impulsa hacia atrás: la órbita más pequeña es más rápida. Con {#} km/s hacia atrás tu órbita tarda {#}/{#} de año, así que tras una vuelta, de regreso en su punto más lejano, te encuentras con el objetivo: avanza sin motor hasta ahí e impulsa {#} km/s hacia adelante para igualar su rapidez.",
-"closest approach in {#} yr":
-  "máximo acercamiento en {#} años",
 "Ship":
   "Nave",
+"closest approach in {#} yr":
+  "máximo acercamiento en {#} años",
 "Ship, {#}×{#}⁻²⁶ M<sub>sun</sub>":
   "Nave, {#}×{#}⁻²⁶ M<sub>sun</sub>",
 "Distance to the target":
@@ -507,5 +509,9 @@ VDI18N.add('es', 'demo/kepler-orbits', {
 "Third law chart: period against semi major axis (log scales), line P² = a³/M for M = {#} M<sub>sun</sub>":
   "Gráfica de la tercera ley: periodo en función del semieje mayor (escalas logarítmicas), recta P² = a³/M para M = {#} M<sub>sun</sub>",
 "body":
-  "cuerpo"
+  "cuerpo",
+"Drag the arrow tip to launch; drag elsewhere to turn.":
+  "Arrastra la punta de la flecha para lanzar; arrastra en otra parte para girar.",
+"Grid squares {#} AU. Star and planets drawn far larger than to scale.":
+  "Cuadros de la cuadrícula de {#} UA. Estrella y planetas dibujados mucho más grandes que a escala."
 });
