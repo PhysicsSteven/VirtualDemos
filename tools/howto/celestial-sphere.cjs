@@ -10,7 +10,7 @@ require('./lib.cjs')({ demo: 'celestial-sphere', title: 'The Sky and the Celesti
   state.caption = 'Sample reading: Polaris seen from Ruston on a winter evening';
   await r.secs(3.0);
 
-  state.caption = 'Choose the setup A winter night at Ruston: January 15, 2026, 8:00 pm';
+  state.caption = 'Choose the setup A winter night at Ruston: January 15, 2027, 8:00 pm';
   await r.click('#presets [data-p="tonight"]');
   state.arrow = { rect: await r.box('#clock') };
   await r.secs(1.6);

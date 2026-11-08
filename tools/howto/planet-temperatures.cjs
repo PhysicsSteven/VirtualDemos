@@ -20,7 +20,7 @@ require('./lib.cjs')({ demo: 'planet-temperatures', title: 'Planet Temperatures 
   r.check.gh = await p.evaluate(() => document.getElementById('chkGH').checked);
   await r.secs(0.8);
 
-  state.caption = 'Set the distance: click the distance on the card and type 0.5';
+  state.caption = 'Set the distance on the card to 0.5 AU';
   await into('#oD');
   await r.click('#oD'); await p.keyboard.press('Control+A'); await r.tick(2);
   for (const ch of '0.5') { await p.keyboard.type(ch); await r.tick(3); }

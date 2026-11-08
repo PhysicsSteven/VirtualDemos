@@ -2,7 +2,7 @@
 
 Each demo can have a short video (30 s or less) of one sample measurement, opened from the "How this works" button that
 `VD.howTo({ src, poster })` puts under the handout button. The video adds to the worksheet steps; it never replaces them.
-Videos are dark theme only (Steve, 2026-10-25).
+Videos are dark theme only (Steve, 2026-10-25): `lib.cjs` saves the Night theme before the page loads, since Day is the site default.
 
 Rules for a video:
 - One real run of the demo, nothing staged or edited in: every number on screen comes from the demo. Pick the sample from

@@ -14,7 +14,7 @@ require('./lib.cjs')({ demo: 'inside-a-planet', title: 'Inside a Planet' }, asyn
   await r.click('[data-p="mars2"]');
   await r.secs(0.8);
 
-  state.caption = 'Set the core radius: click the radius on the card and type 0';
+  state.caption = 'Set the core radius on the card to 0 km';
   await into('#oCore');
   await r.click('#oCore'); await p.keyboard.press('Control+A'); await r.tick(2);
   await p.keyboard.type('0'); await r.tick(3);

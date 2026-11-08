@@ -25,6 +25,8 @@ module.exports = async function record(o, steps) {
   const p = await b.newPage({ viewport: { width: W, height: H }, deviceScaleFactor: DSF, colorScheme: 'dark' });
   p.on('pageerror', e => { if (!/setPointerCapture/.test(e.message)) console.log('ERR', e.message); });
   await p.route('**/three.min.js', r => r.fulfill({ path: process.env.VD_THREE, contentType: 'application/javascript' }));
+  /* videos are dark theme only (Steve 2026-10-25): the site opens in Day since the parchment redesign, so pick Night */
+  await p.addInitScript(() => { try { localStorage.setItem('vd-theme', 'dark'); } catch (_) {} });
   await p.clock.install({ time: new Date('2026-01-01T00:00:00Z') }); await p.clock.pauseAt(new Date('2026-01-01T00:00:05Z'));
   await p.goto(URL);
   await p.addStyleTag({ content: '#vdTools { visibility: hidden !important; }' });   /* the measuring tools never appear; hidden, not removed, so the layout is the live one */
