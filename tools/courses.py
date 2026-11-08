@@ -726,6 +726,28 @@ ALL_CH = ('  <p class="allch"><button type="button" id="allCh" aria-pressed="fal
           "b.addEventListener('click', function () { var open = !ds().every(function (d) { return d.open; }); ds().forEach(function (d) { d.open = open; }); sync(); }); "
           "ds().forEach(function (d) { d.addEventListener('toggle', sync); }); })();</script>\n")
 
+# The same for the subjects on the home page (Steve, 2026-11-08), which start closed.
+ALL_SUBJ = ('  <p class="allch"><button type="button" id="allSubj" aria-pressed="false">Open every subject</button></p>'   # same line: main() drops the first newline then <script>
+            "<script>/* tools/courses.py: open or close every subject */ (function () { var b = document.getElementById('allSubj'); if (!b) return; "
+            "var ds = function () { return [].slice.call(document.querySelectorAll('details.famd')); }; "
+            "function sync() { var all = ds().every(function (d) { return d.open; }); b.textContent = all ? 'Close every subject' : 'Open every subject'; b.setAttribute('aria-pressed', all ? 'true' : 'false'); } "
+            "b.addEventListener('click', function () { var open = !ds().every(function (d) { return d.open; }); ds().forEach(function (d) { d.open = open; }); sync(); }); "
+            "document.addEventListener('toggle', function (e) { if (e.target.matches && e.target.matches('details.famd')) sync(); }, true); })();</script>\n")
+
+# Home page subjects: a link to one (the subject bar, #mechanics) opens it, and the subjects a visitor opened stay open for the
+# rest of the visit (sessionStorage vd-fam-open), so the Back button from a demo comes back to the same view. Search opens the
+# subjects with matches itself (search.js).
+FAM_OPEN = ("<script>/* tools/courses.py: open the subject a link points to; keep opened subjects open for this visit */ (function () { "
+            "var K = 'vd-fam-open', ds = [].slice.call(document.querySelectorAll('details.famd')); if (!ds.length) return; "
+            "var keep = []; try { keep = JSON.parse(sessionStorage.getItem(K) || '[]'); } catch (e) {} "
+            "ds.forEach(function (d) { if (keep.indexOf(d.parentNode.id) >= 0) d.open = true; }); "
+            "function save() { try { sessionStorage.setItem(K, JSON.stringify(ds.filter(function (d) { return d.open && !d.hasAttribute('data-q'); }).map(function (d) { return d.parentNode.id; }))); } catch (e) {} } "
+            "ds.forEach(function (d) { d.addEventListener('toggle', function () { setTimeout(save); }); }); "
+            "function go() { var e = location.hash.length > 1 && document.getElementById(decodeURIComponent(location.hash.slice(1))); if (!e) return; "
+            "var d = e.closest('details.famd') || (e.querySelector && e.querySelector(':scope > details.famd')); if (d && !d.open) { d.open = true; e.scrollIntoView(); } } "
+            "document.addEventListener('click', function (ev) { var a = ev.target.closest && ev.target.closest('a[href^=\"#\"]'); if (a && a.getAttribute('href') === location.hash) go(); }); "
+            "addEventListener('hashchange', go); go(); })();</script>")
+
 OPEN_HASH = ("<script>/* open the chapter a link points into (#v1-ch3, #s1-3-2) */ (function () { function go() { var e = location.hash.length > 1 && "
              "document.getElementById(decodeURIComponent(location.hash.slice(1))); if (!e) return; var d = e.closest('details'); if (d) { d.open = true; e.scrollIntoView(); } } "
              "addEventListener('hashchange', go); if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go(); })();</script>")
@@ -963,12 +985,15 @@ def tiles(m, cards, t):
         names = list(dict.fromkeys(d for x in f['topics'] for d in x['demos'] if d in cards))
         jump.append(f'<li><a href="#{f["id"]}">{esc(f["title"])} <span class="n">{len(names)}</span></a></li>')
         links = ''.join(f'<li><a href="topics/{x["id"]}.html">{esc(x["title"])} <span class="n">{len(x["demos"])}</span></a></li>' for x in f['topics'])
+        # each subject folds shut (Steve, 2026-11-08: the open list "scrolls through all the demos laboriously"), closed at first
         fams.append(f'''<section class="wrap fam" id="{f['id']}" aria-labelledby="{f['id']}-h">
-  <h2 id="{f['id']}-h">{esc(f['title'])} <span class="n">{len(names)} demos · {len(f['topics'])} topic{"s" if len(f['topics']) != 1 else ""}</span></h2>
+  <details class="famd">
+  <summary><h2 id="{f['id']}-h">{esc(f['title'])} <span class="n">{len(names)} demos · {len(f['topics'])} topic{"s" if len(f['topics']) != 1 else ""}</span></h2></summary>
   <ul class="tlinks" aria-label="Topics in {esc(f['title'])}">{links}</ul>
   <ul class="grid">
 {chr(10).join(demo_card(d, cards[d], m_demos.get(d)) for d in names)}
   </ul>
+  </details>
 </section>''')
     vols = []
     for v in (1, 2, 3):
@@ -987,8 +1012,8 @@ def tiles(m, cards, t):
 <section class="wrap find" id="topics" aria-labelledby="find-h">
   <h2 id="find-h">Find a demo</h2>
   {SEARCH_BOX}
-  <p class="allnote">Every demo on the site, by subject. A demo can be under more than one topic; each is listed once per subject.</p>
-</section>
+  <p class="allnote">Every demo on the site, by subject. Open a subject to see its demos. A demo can be under more than one topic; each is listed once per subject.</p>
+{ALL_SUBJ}</section>
 {chr(10).join(fams)}
 <section class="wrap courses" id="openstax" aria-labelledby="openstax-h">
   <h2 id="openstax-h">OpenStax University Physics by section</h2>
@@ -1004,7 +1029,7 @@ def tiles(m, cards, t):
     <div class="cta"><a class="pbtn primary" href="courses.html">See the courses</a>{clinks}</div>
   </div>
 </section>
-<script src="search.js" defer></script>
+<script src="search.js" defer></script> {FAM_OPEN}
 {TILE_END}{SPY}'''
 
 
@@ -1142,7 +1167,7 @@ SEARCH_JS = r'''/* Site search. Generated by tools/courses.py from curriculum/ca
   const render = () => {
     const words = norm(q.value.replace(/§/g, ' ')).trim().split(' ').filter(Boolean);
     clear.hidden = !q.value;
-    if (!words.length) { hits = []; show(false); return; }
+    if (!words.length) { hits = []; show(false); openFams(); return; }
     hits = ITEMS.map((it) => { let t = 0; for (const w of words) { const s = score(it, w); if (!s) return null; t += s; } return [t, it]; })
       .filter(Boolean).sort((a, b) => b[0] - a[0] || a[1].t.localeCompare(b[1].t)).map((x) => x[1]);
     on = -1;
@@ -1153,6 +1178,19 @@ SEARCH_JS = r'''/* Site search. Generated by tools/courses.py from curriculum/ca
       + it.w.map(([h, l]) => `<a href="${h}">${esc(l)}</a>`).join('')
       + (it.s.length ? `<span>${it.s.slice(0, 4).map(([id]) => `<span class="sec">${id}</span>`).join(' ')}${it.s.length > 4 ? ' …' : ''}</span>` : '') + '</p></li>').join('');
     show(true);
+    openFams();
+  };
+  /* home page: the closed subjects that hold a match open while the search is on (marked data-q), and close again when it is cleared */
+  const fams = [...document.querySelectorAll('details.famd')];
+  fams.forEach((d) => d.addEventListener('toggle', () => { if (d.dataset.qset !== String(d.open)) delete d.dataset.q; }));   /* a visitor's own click keeps it */
+  const flip = (d, open) => { if (d.open !== open) { d.dataset.qset = String(open); d.open = open; } };
+  const openFams = () => {
+    const want = new Set(hits.map((it) => it.h));
+    for (const d of fams) {
+      const has = [...d.querySelectorAll('a.card')].some((a) => want.has(a.getAttribute('href')));
+      if (has && !d.open) { d.dataset.q = '1'; flip(d, true); }
+      else if (!has && d.dataset.q) { delete d.dataset.q; flip(d, false); }
+    }
   };
   const mark = (i) => {
     const li = list.children; if (!li.length) return;

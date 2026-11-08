@@ -124,6 +124,24 @@ h1 { margin: 0; font-size: clamp(2.1rem, 5vw, 3.1rem); line-height: 1.05; text-w
 .fam h2 .n { font-size: 0.8rem; }
 .fam h2::after { content: ""; flex: 1; align-self: center; height: 1px; background: var(--line2); opacity: 0.6; }
 .fam .tlinks { margin: 0 0 16px; }
+/* each subject folds shut (tools/courses.py); the heading is the switch, with a turning mark before it */
+.famd > summary { list-style: none; cursor: pointer; border-radius: 8px; }
+.famd > summary::-webkit-details-marker { display: none; }
+.famd > summary h2 { margin: 0; padding: 6px 0; }
+.famd > summary h2::before { content: ""; flex: none; align-self: center; width: 0.42em; height: 0.42em; margin: 0 0.1em 0 0.08em;
+  border-right: 2px solid var(--accent); border-bottom: 2px solid var(--accent); transform: rotate(-45deg); transition: transform 0.15s; }
+.famd[open] > summary h2::before { transform: rotate(45deg); }
+.famd > summary:hover h2 { color: var(--accent); }
+.famd > summary:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+.famd[open] > summary { margin-bottom: 8px; }
+section.fam:has(> .famd) { padding-top: 6px; padding-bottom: 6px; margin-top: 12px; scroll-margin-top: 64px; }
+section.fam:has(> .famd[open]) { padding-bottom: 20px; }
+.allch { margin: 0; }
+.allch button { min-height: 36px; padding: 6px 14px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); color: var(--accent);
+  font: inherit; font-size: 0.9rem; font-weight: 700; cursor: pointer; }
+.allch button:hover { border-color: var(--accent); }
+.allch button:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { .famd > summary h2::before { transition: none; } }
 .card .ws { margin-top: auto; padding-top: 6px; font-size: 1.05rem; color: var(--ink2); }
 main { padding-top: 12px; padding-bottom: 48px; }
 .subject { padding-top: 36px; }
@@ -313,10 +331,12 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
 <section class="wrap find" id="topics" aria-labelledby="find-h">
   <h2 id="find-h">Find a demo</h2>
   <div class="filter" role="search"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M11 11l3.5 3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><input type="search" id="q" placeholder="Search all demos" aria-label="Search all demos by name, topic or textbook section" autocomplete="off" spellcheck="false" role="combobox" aria-autocomplete="list" aria-controls="hits" aria-expanded="false"><kbd>/</kbd><button type="button" class="clear" hidden aria-label="Clear search">✕</button><div class="hits" id="hits" hidden><p class="hn" aria-live="polite"></p><ul></ul></div></div>
-  <p class="allnote">Every demo on the site, by subject. A demo can be under more than one topic; each is listed once per subject.</p>
+  <p class="allnote">Every demo on the site, by subject. Open a subject to see its demos. A demo can be under more than one topic; each is listed once per subject.</p>
+  <p class="allch"><button type="button" id="allSubj" aria-pressed="false">Open every subject</button></p><script>/* tools/courses.py: open or close every subject */ (function () { var b = document.getElementById('allSubj'); if (!b) return; var ds = function () { return [].slice.call(document.querySelectorAll('details.famd')); }; function sync() { var all = ds().every(function (d) { return d.open; }); b.textContent = all ? 'Close every subject' : 'Open every subject'; b.setAttribute('aria-pressed', all ? 'true' : 'false'); } b.addEventListener('click', function () { var open = !ds().every(function (d) { return d.open; }); ds().forEach(function (d) { d.open = open; }); sync(); }); document.addEventListener('toggle', function (e) { if (e.target.matches && e.target.matches('details.famd')) sync(); }, true); })();</script>
 </section>
 <section class="wrap fam" id="mechanics" aria-labelledby="mechanics-h">
-  <h2 id="mechanics-h">Mechanics <span class="n">34 demos · 7 topics</span></h2>
+  <details class="famd">
+  <summary><h2 id="mechanics-h">Mechanics <span class="n">34 demos · 7 topics</span></h2></summary>
   <ul class="tlinks" aria-label="Topics in Mechanics"><li><a href="topics/kinematics.html">Kinematics <span class="n">6</span></a></li><li><a href="topics/forces.html">Forces and Newton&#x27;s laws <span class="n">6</span></a></li><li><a href="topics/energy-momentum.html">Energy and momentum <span class="n">7</span></a></li><li><a href="topics/rotation.html">Rotation <span class="n">3</span></a></li><li><a href="topics/equilibrium.html">Equilibrium and materials <span class="n">3</span></a></li><li><a href="topics/gravitation.html">Gravitation and orbits <span class="n">8</span></a></li><li><a href="topics/fluids.html">Fluids <span class="n">4</span></a></li></ul>
   <ul class="grid">
     <li><a class="card" href="demos/units.html"><picture class="thumb"><source srcset="thumbs/units-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/units-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><span class="body"><h3>Units, Scales and Estimates</h3><p>The first week toolkit: zoom through 42 powers of ten from the observable universe to a proton, exact unit conversions, dimensional analysis, significant figures and Fermi estimates.</p><span class="ws hand">3 worksheets</span></span></a></li>
@@ -354,9 +374,11 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
     <li><a class="card" href="demos/fluids.html"><picture class="thumb"><source srcset="thumbs/fluids-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/fluids-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><span class="body"><h3>Fluids: Pressure, Buoyancy and Flow</h3><p>Drag a pressure probe down a tank, drop blocks that float or sink, weigh one in an overflow can like Archimedes, see an iceberg float 89% under, watch a Venturi tube trade pressure for speed, and aim Torricelli's jet.</p><span class="ws hand">1 worksheet</span></span></a></li>
     <li><a class="card" href="demos/viscometer.html"><picture class="thumb"><source srcset="thumbs/viscometer-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/viscometer-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><span class="body"><h3>Falling Ball Viscometer</h3><p>Time balls falling through glycerol, oil or water and measure viscosity with Stokes' law. Then find where it fails: tube walls and fast, high Reynolds number flow.</p><span class="ws hand">2 worksheets</span></span></a></li>
   </ul>
+  </details>
 </section>
 <section class="wrap fam" id="waves-heat" aria-labelledby="waves-heat-h">
-  <h2 id="waves-heat-h">Waves and heat <span class="n">29 demos · 3 topics</span></h2>
+  <details class="famd">
+  <summary><h2 id="waves-heat-h">Waves and heat <span class="n">29 demos · 3 topics</span></h2></summary>
   <ul class="tlinks" aria-label="Topics in Waves and heat"><li><a href="topics/oscillations-waves.html">Oscillations and waves <span class="n">7</span></a></li><li><a href="topics/sound.html">Sound and acoustics <span class="n">12</span></a></li><li><a href="topics/heat.html">Heat and thermodynamics <span class="n">11</span></a></li></ul>
   <ul class="grid">
     <li><a class="card" href="demos/springs.html"><picture class="thumb"><source srcset="thumbs/springs-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/springs-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><span class="body"><h3>Springs and Oscillations</h3><p>Pull a mass on a spring and let go: simple harmonic motion, a period that ignores the amplitude, three kinds of damping, a driven oscillator sweeping through resonance, and two coupled masses trading energy in beats.</p><span class="ws hand">2 worksheets</span></span></a></li>
@@ -389,9 +411,11 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
     <li><a class="card" href="demos/superfluid-helium.html"><picture class="thumb"><source srcset="thumbs/superfluid-helium-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/superfluid-helium-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><span class="body"><h3>Superfluid Helium</h3><p>Pump liquid helium below 2.1768 K and its boiling stops; then the fountain effect, a film that creeps out of a beaker, and the spinning disk experiment that measures how much of the liquid is superfluid. From measured properties of helium.</p></span></a></li>
     <li><a class="card" href="demos/bose-einstein.html"><picture class="thumb"><source srcset="thumbs/bose-einstein-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/bose-einstein-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><span class="body"><h3>Bose–Einstein Condensation</h3><p>Cool a gas of atoms in a box from 1 µK toward absolute zero: each atom's wave packet grows to the thermal de Broglie wavelength, the packets overlap, and the atoms pile into one shared ground state. Exact Bose–Einstein occupations of the box levels, an energy ladder, the phase of the wavefunction as color, the velocity picture of 1995 and the condensate fraction curve.</p></span></a></li>
   </ul>
+  </details>
 </section>
 <section class="wrap fam" id="em" aria-labelledby="em-h">
-  <h2 id="em-h">Electricity and magnetism <span class="n">25 demos · 4 topics</span></h2>
+  <details class="famd">
+  <summary><h2 id="em-h">Electricity and magnetism <span class="n">25 demos · 4 topics</span></h2></summary>
   <ul class="tlinks" aria-label="Topics in Electricity and magnetism"><li><a href="topics/charges-fields.html">Charges and fields <span class="n">7</span></a></li><li><a href="topics/circuits.html">Circuits <span class="n">5</span></a></li><li><a href="topics/magnetism.html">Magnetism <span class="n">8</span></a></li><li><a href="topics/induction-em-waves.html">Induction and EM waves <span class="n">7</span></a></li></ul>
   <ul class="grid">
     <li><a class="card" href="demos/induction.html"><picture class="thumb"><source srcset="thumbs/induction-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/induction-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><span class="body"><h3>Charging by Induction</h3><p>Charge two metal spheres without touching them: bring a charged rod near, separate the spheres or ground one, then take the rod away. Every mark on the spheres comes from an exact electrostatics solution.</p><span class="ws hand">2 worksheets</span></span></a></li>
@@ -420,9 +444,11 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
     <li><a class="card" href="demos/displacement-current.html"><picture class="thumb"><source srcset="thumbs/displacement-current-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/displacement-current-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><span class="body"><h3>Displacement Current</h3><p>Charge a capacitor and move an Amperian loop along the wire and into the gap. Stretch its surface between the plates and see why Maxwell added ε₀ dΦE/dt to Ampère's law.</p><span class="ws hand">1 worksheet</span></span></a></li>
     <li><a class="card" href="demos/em-waves.html"><picture class="thumb"><source srcset="thumbs/em-waves-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/em-waves-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><span class="body"><h3>Electromagnetic Waves</h3><p>A plane wave in 3D with E, B and the Poynting vector, polarization from linear to circular, the energy and pressure of sunlight and a laser, the full spectrum, and a dipole antenna launching waves with exact field lines.</p><span class="ws hand">2 worksheets</span></span></a></li>
   </ul>
+  </details>
 </section>
 <section class="wrap fam" id="light" aria-labelledby="light-h">
-  <h2 id="light-h">Light <span class="n">16 demos · 2 topics</span></h2>
+  <details class="famd">
+  <summary><h2 id="light-h">Light <span class="n">16 demos · 2 topics</span></h2></summary>
   <ul class="tlinks" aria-label="Topics in Light"><li><a href="topics/optics.html">Optics <span class="n">8</span></a></li><li><a href="topics/wave-optics.html">Interference and diffraction <span class="n">8</span></a></li></ul>
   <ul class="grid">
     <li><a class="card" href="demos/optics-bench.html"><picture class="thumb"><source srcset="thumbs/optics-bench-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/optics-bench-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><span class="body"><h3>Optics Bench</h3><p>Drag lenses, mirrors, prisms and light sources. Rays bend and bounce live, and images form where they cross.</p><span class="ws hand">4 worksheets</span></span></a></li>
@@ -442,9 +468,11 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
     <li><a class="card" href="demos/holography.html"><picture class="thumb"><source srcset="thumbs/holography-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/holography-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><span class="body"><h3>Holography</h3><p>Record the fringes a reference beam and an object's light make on a plate, measure their spacing under a microscope, then light the developed plate again and find the virtual image, the real image and the straight through beam, computed exactly; change the color and watch the images move.</p><span class="ws hand">1 worksheet</span></span></a></li>
     <li><a class="card" href="demos/ripple-tank.html"><picture class="thumb"><source srcset="thumbs/ripple-tank-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/ripple-tank-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><span class="body"><h3>Ripple Tank</h3><p>Make waves in a tank of water with dippers or a straight bar, draw your own walls and shallow plates, and watch waves spread through slits, interfere, reflect, refract and focus. Measure wavelength, speed and the angles of the quiet lines.</p><span class="ws hand">1 worksheet</span></span></a></li>
   </ul>
+  </details>
 </section>
 <section class="wrap fam" id="modern-physics" aria-labelledby="modern-physics-h">
-  <h2 id="modern-physics-h">Modern physics <span class="n">33 demos · 4 topics</span></h2>
+  <details class="famd">
+  <summary><h2 id="modern-physics-h">Modern physics <span class="n">33 demos · 4 topics</span></h2></summary>
   <ul class="tlinks" aria-label="Topics in Modern physics"><li><a href="topics/relativity.html">Relativity <span class="n">5</span></a></li><li><a href="topics/quantum.html">Photons and quanta <span class="n">9</span></a></li><li><a href="topics/atoms-solids.html">Atoms, molecules and solids <span class="n">13</span></a></li><li><a href="topics/nuclear-particles.html">Nuclear and particle physics <span class="n">6</span></a></li></ul>
   <ul class="grid">
     <li><a class="card" href="demos/spacetime.html"><picture class="thumb"><source srcset="thumbs/spacetime-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/spacetime-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><span class="body"><h3>Spacetime Diagrams</h3><p>Place events on a Minkowski diagram and change observers. Light cones stay at 45° while simultaneity, clocks and lengths change, through the train, the rod and the twin paradox.</p><span class="ws hand">1 worksheet</span></span></a></li>
@@ -481,9 +509,11 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
     <li><a class="card" href="demos/gamma-spectroscopy.html"><picture class="thumb"><source srcset="thumbs/gamma-spectroscopy-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/gamma-spectroscopy-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><span class="body"><h3>Gamma Spectroscopy</h3><p>A virtual NaI(Tl) spectrometer in a lead castle: set the high voltage and gain, acquire Cs-137, Co-60, Na-22 or Ba-133 spectra on a multichannel analyzer, mark peaks, calibrate, measure resolution and lead attenuation, and identify an unknown source.</p><span class="ws hand">2 worksheets</span></span></a></li>
     <li><a class="card" href="demos/particles.html"><picture class="thumb"><source srcset="thumbs/particles-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/particles-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><span class="body"><h3>Particles, Quarks and Conservation Laws</h3><p>The Standard Model and its particles with PDG 2024 data; test decays and collisions against the conservation laws and name the force that drives them; build hadrons from colored quarks and predict the Ω⁻; then fit tracks in a bubble chamber and weigh a K⁰ or Λ⁰ from its decay.</p><span class="ws hand">3 worksheets</span></span></a></li>
   </ul>
+  </details>
 </section>
 <section class="wrap fam" id="astronomy" aria-labelledby="astronomy-h">
-  <h2 id="astronomy-h">Astronomy <span class="n">27 demos · 5 topics</span></h2>
+  <details class="famd">
+  <summary><h2 id="astronomy-h">Astronomy <span class="n">27 demos · 5 topics</span></h2></summary>
   <ul class="tlinks" aria-label="Topics in Astronomy"><li><a href="topics/sky.html">The sky <span class="n">6</span></a></li><li><a href="topics/telescopes-light.html">Telescopes and light <span class="n">7</span></a></li><li><a href="topics/planets.html">Planets and the solar system <span class="n">7</span></a></li><li><a href="topics/stars.html">Stars <span class="n">6</span></a></li><li><a href="topics/galaxies-cosmology.html">Galaxies and cosmology <span class="n">5</span></a></li></ul>
   <ul class="grid">
     <li><a class="card" href="demos/seasons.html"><picture class="thumb"><source srcset="thumbs/seasons-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/seasons-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><span class="body"><h3>Reasons for Seasons</h3><p>Earth's tilted axis, the Sun's path across your sky, day length and sunlight through the year, and why distance from the Sun is not the reason.</p><span class="ws hand">3 worksheets</span></span></a></li>
@@ -514,9 +544,11 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
     <li><a class="card" href="demos/rotation-curves.html"><picture class="thumb"><source srcset="thumbs/rotation-curves-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/rotation-curves-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><span class="body"><h3>Galaxy Rotation Curves</h3><p>Stars far from a galaxy's center orbit as fast as those near it, though the visible matter says they should slow down. Build the curve from a bulge, disk, gas and a dark matter halo, measure it with Doppler shifts, and compare the Milky Way and NGC 3198.</p><span class="ws hand">1 worksheet</span></span></a></li>
     <li><a class="card" href="demos/early-universe.html"><picture class="thumb"><source srcset="thumbs/early-universe-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/early-universe-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><span class="body"><h3>The Big Bang and the Early Universe</h3><p>Watch every galaxy move away from every other as space stretches and time the distances to find Hubble's law and the age of the universe. Follow the temperature from the first instant to today, make the helium of the first three minutes, and stretch the glow of decoupling into the 2.7 K microwave background.</p><span class="ws hand">3 worksheets</span></span></a></li>
   </ul>
+  </details>
 </section>
 <section class="wrap fam" id="medical-beyond" aria-labelledby="medical-beyond-h">
-  <h2 id="medical-beyond-h">Medical physics and beyond <span class="n">11 demos · 2 topics</span></h2>
+  <details class="famd">
+  <summary><h2 id="medical-beyond-h">Medical physics and beyond <span class="n">11 demos · 2 topics</span></h2></summary>
   <ul class="tlinks" aria-label="Topics in Medical physics and beyond"><li><a href="topics/medical.html">Radiation in medicine <span class="n">9</span></a></li><li><a href="topics/chemistry-biology.html">Chemistry and biology <span class="n">2</span></a></li></ul>
   <ul class="grid">
     <li><a class="card" href="demos/photon-interactions.html"><picture class="thumb"><source srcset="thumbs/photon-interactions-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/photon-interactions-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><span class="body"><h3>Photon Interactions in Matter</h3><p>How X-rays and gamma rays are stopped: the NIST coefficients of any element or tissue from 1 keV to 100 MeV split into coherent, Compton, photoelectric and pair, where each one wins, a Monte Carlo beam through a slab for buildup, and beam hardening with half value layers.</p><span class="ws hand">1 worksheet</span></span></a></li>
@@ -531,6 +563,7 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
     <li><a class="card" href="demos/bz-reaction.html"><picture class="thumb"><source srcset="thumbs/bz-reaction-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/bz-reaction-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><span class="body"><h3>Belousov–Zhabotinsky Reaction</h3><p>A chemical clock: a stirred beaker oscillates on a limit cycle, an unstirred dish carries target and spiral waves, and a flow reactor goes through period doubling to chaos.</p></span></a></li>
     <li><a class="card" href="demos/dna.html"><picture class="thumb"><source srcset="thumbs/dna-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/dna-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><span class="body"><h3>DNA in 3D</h3><p>Build a DNA double helix atom by atom from any sequence or a random one: B and A forms, ball and stick, space filling or cartoon, hydrogen bonds, the two grooves, and a PDB export.</p></span></a></li>
   </ul>
+  </details>
 </section>
 <section class="wrap courses" id="openstax" aria-labelledby="openstax-h">
   <h2 id="openstax-h">OpenStax University Physics by section</h2>
@@ -557,7 +590,7 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
     <div class="cta"><a class="pbtn primary" href="courses.html">See the courses</a><a class="pbtn" href="astro-2203.html">Astro 2203</a></div>
   </div>
 </section>
-<script src="search.js" defer></script>
+<script src="search.js" defer></script> <script>/* tools/courses.py: open the subject a link points to; keep opened subjects open for this visit */ (function () { var K = 'vd-fam-open', ds = [].slice.call(document.querySelectorAll('details.famd')); if (!ds.length) return; var keep = []; try { keep = JSON.parse(sessionStorage.getItem(K) || '[]'); } catch (e) {} ds.forEach(function (d) { if (keep.indexOf(d.parentNode.id) >= 0) d.open = true; }); function save() { try { sessionStorage.setItem(K, JSON.stringify(ds.filter(function (d) { return d.open && !d.hasAttribute('data-q'); }).map(function (d) { return d.parentNode.id; }))); } catch (e) {} } ds.forEach(function (d) { d.addEventListener('toggle', function () { setTimeout(save); }); }); function go() { var e = location.hash.length > 1 && document.getElementById(decodeURIComponent(location.hash.slice(1))); if (!e) return; var d = e.closest('details.famd') || (e.querySelector && e.querySelector(':scope > details.famd')); if (d && !d.open) { d.open = true; e.scrollIntoView(); } } document.addEventListener('click', function (ev) { var a = ev.target.closest && ev.target.closest('a[href^="#"]'); if (a && a.getAttribute('href') === location.hash) go(); }); addEventListener('hashchange', go); go(); })();</script>
 <!-- COURSES END --><script>/* tools/courses.py: mark the unit on screen in the section bar */ (function () { var bar = document.querySelector('.jump'); if (!bar) return; var cu = bar.querySelector('a[aria-current]'); if (cu && bar.scrollWidth > bar.clientWidth) bar.scrollLeft = cu.offsetLeft - bar.clientWidth / 2 + cu.offsetWidth / 2; if (!window.IntersectionObserver) return; var links = [].slice.call(bar.querySelectorAll('a[href^="#"]')), on = {}, cur = null; var secs = links.map(function (a) { return document.getElementById(a.getAttribute('href').slice(1)); }); if (!links.length) return; function mark() { var best = null; secs.forEach(function (s, i) { if (s && on[s.id]) best = best === null ? i : best; }); if (best === null || best === cur) return; if (cur !== null) links[cur].classList.remove('here'); cur = best; var a = links[cur]; a.classList.add('here'); if (bar.scrollWidth > bar.clientWidth) bar.scrollTo({ left: a.offsetLeft - bar.clientWidth / 2 + a.offsetWidth / 2, behavior: 'auto' }); } var io = new IntersectionObserver(function (es) { es.forEach(function (e) { on[e.target.id] = e.isIntersecting; }); mark(); }, { rootMargin: '-35% 0px -60% 0px' }); secs.forEach(function (s) { if (s) io.observe(s); }); })();</script>
 
 <footer>

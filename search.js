@@ -25,7 +25,7 @@
   const render = () => {
     const words = norm(q.value.replace(/§/g, ' ')).trim().split(' ').filter(Boolean);
     clear.hidden = !q.value;
-    if (!words.length) { hits = []; show(false); return; }
+    if (!words.length) { hits = []; show(false); openFams(); return; }
     hits = ITEMS.map((it) => { let t = 0; for (const w of words) { const s = score(it, w); if (!s) return null; t += s; } return [t, it]; })
       .filter(Boolean).sort((a, b) => b[0] - a[0] || a[1].t.localeCompare(b[1].t)).map((x) => x[1]);
     on = -1;
@@ -36,6 +36,19 @@
       + it.w.map(([h, l]) => `<a href="${h}">${esc(l)}</a>`).join('')
       + (it.s.length ? `<span>${it.s.slice(0, 4).map(([id]) => `<span class="sec">${id}</span>`).join(' ')}${it.s.length > 4 ? ' …' : ''}</span>` : '') + '</p></li>').join('');
     show(true);
+    openFams();
+  };
+  /* home page: the closed subjects that hold a match open while the search is on (marked data-q), and close again when it is cleared */
+  const fams = [...document.querySelectorAll('details.famd')];
+  fams.forEach((d) => d.addEventListener('toggle', () => { if (d.dataset.qset !== String(d.open)) delete d.dataset.q; }));   /* a visitor's own click keeps it */
+  const flip = (d, open) => { if (d.open !== open) { d.dataset.qset = String(open); d.open = open; } };
+  const openFams = () => {
+    const want = new Set(hits.map((it) => it.h));
+    for (const d of fams) {
+      const has = [...d.querySelectorAll('a.card')].some((a) => want.has(a.getAttribute('href')));
+      if (has && !d.open) { d.dataset.q = '1'; flip(d, true); }
+      else if (!has && d.dataset.q) { delete d.dataset.q; flip(d, false); }
+    }
   };
   const mark = (i) => {
     const li = list.children; if (!li.length) return;
