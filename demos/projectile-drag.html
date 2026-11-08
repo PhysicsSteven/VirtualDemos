@@ -7,6 +7,7 @@
 <script src="lib/theme.js"></script>
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
 <script src="lib/vd3.js"></script>
 <script src="lib/vd3kit.js"></script>
 <style>
@@ -44,6 +45,9 @@
   --c1: #2a78d6; --c2: #eb6834; --c3: #1baf7a; --c4: #eda100; --c5: #e87ba4; --c6: #008300; --c7: #6250d6; --c8: #e34948;
   /* scenery */
   --sky-top: #cfe2f4; --sky-bot: #f4f8fc; --hill: #c9dcc4; --turf: #6fa35a; --earth: #e6dfd0;
+  /* Newton's cannon */
+  --nc-space: #dfe8f2; --nc-star: rgba(23, 32, 43, 0); --nc-ocean: #3f7fbf; --nc-ocean-limb: #1f4f86; --nc-land: #6f9a58; --nc-air: rgba(80, 150, 230, 0.35);
+  --nc-rock: #7d6a58; --nc-snow: #f7f9fb; --nc-vel: #2b60b5; --nc-grav: #c23f2c;
   --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 }
@@ -54,6 +58,8 @@
     --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
     --c1: #3987e5; --c2: #d95926; --c3: #199e70; --c4: #c98500; --c5: #d55181; --c6: #008300; --c7: #9085e9; --c8: #e66767;
     --sky-top: #0a1320; --sky-bot: #172433; --hill: #1c2f29; --turf: #3d6a33; --earth: #25221c;
+    --nc-space: #05080d; --nc-star: rgba(220, 230, 245, 0.75); --nc-ocean: #2c6aa8; --nc-ocean-limb: #0f2c4f; --nc-land: #4f7a3d; --nc-air: rgba(110, 170, 255, 0.4);
+    --nc-rock: #8a7764; --nc-snow: #e8edf3; --nc-vel: #69a0ff; --nc-grav: #ff7660;
   }
 }
 :root[data-theme="dark"] {
@@ -62,6 +68,8 @@
   --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
   --c1: #3987e5; --c2: #d95926; --c3: #199e70; --c4: #c98500; --c5: #d55181; --c6: #008300; --c7: #9085e9; --c8: #e66767;
   --sky-top: #0a1320; --sky-bot: #172433; --hill: #1c2f29; --turf: #3d6a33; --earth: #25221c;
+  --nc-space: #05080d; --nc-star: rgba(220, 230, 245, 0.75); --nc-ocean: #2c6aa8; --nc-ocean-limb: #0f2c4f; --nc-land: #4f7a3d; --nc-air: rgba(110, 170, 255, 0.4);
+  --nc-rock: #8a7764; --nc-snow: #e8edf3; --nc-vel: #69a0ff; --nc-grav: #ff7660;
 }
 :root[data-projector="on"] { font-size: 125%; }
 
@@ -181,6 +189,23 @@ table.rows .empty td { color: var(--muted); font-style: italic; }
   :root[data-projector="on"] .pane.main { min-height: 340px; }
 }
 </style>
+<style>
+/* Newton's cannon mode: one pane for the whole picture, the rail shows only its own sections */
+.stage > .pane.nc { grid-row: 1 / -1; border-top: 0; background: var(--nc-space); }
+.bench.nc .rail > section:not(.ncs) { display: none; }
+.bench:not(.nc) .rail > section.ncs { display: none; }
+#ncView { cursor: default; }
+.ncscale { position: absolute; left: 10px; bottom: 8px; margin: 0; z-index: 2; font-size: 0.78rem; font-weight: 700; color: var(--ink); background: color-mix(in srgb, var(--canvas) 80%, transparent); border-radius: 6px; padding: 2px 7px; }
+.ncscale:empty { display: none; }
+.nccap { position: absolute; right: 10px; bottom: 8px; max-width: 50%; margin: 0; z-index: 2; text-align: right; font-size: 0.76rem; color: var(--ink); background: color-mix(in srgb, var(--canvas) 70%, transparent); border-radius: 6px; padding: 2px 7px; }
+#ncClock { min-width: 8.5em; }
+#ncPk.nck { font-family: var(--font-ui); font-size: 1rem; font-weight: 700; }
+body[data-nc] #unitsG, body[data-nc] #unitsF, body:not([data-nc]) #ncUnits { display: none; }
+.swatch.ncv { border-color: var(--nc-vel); border-top-width: 2px; }
+.swatch.ncg { border-color: var(--nc-grav); border-top-width: 2px; }
+@media (max-width: 820px) { .stage > .pane.nc { height: min(78vh, 118vw); min-height: 380px; } }
+@media (max-width: 620px) { .nccap { display: none; } }
+</style>
 <link rel="stylesheet" id="vd-look" href="lib/look.css">
 <script id="vd-gear" src="lib/gear.js"></script>
 </head>
@@ -189,10 +214,11 @@ table.rows .empty td { color: var(--muted); font-style: italic; }
   <header class="bar">
     <div>
       <h1>Projectile Range</h1>
-      <p>Launch balls with and without air resistance and compare them side by side. Drag bends the path, and it matters more for light balls than for heavy ones of the same size.</p>
+      <p id="flatLede">Launch balls with and without air resistance and compare them side by side. Drag bends the path, and it matters more for light balls than for heavy ones of the same size.</p>
+      <p id="ncLede" hidden>Newton's cannon: fire a ball sideways from a mountain on a round Earth. Faster shots land farther around the curve, until the ground curves away as fast as the ball falls and it never lands: it orbits, falling forever.</p>
     </div>
     <div class="bar-right">
-      <div class="units mono">SI units<span id="unitsG"> · g = 9.81 m/s²</span> · F = ½ρC<sub>d</sub>Av²</div>
+      <div class="units mono">SI units<span id="unitsG"> · g = 9.81 m/s²</span><span id="unitsF"> · F = ½ρC<sub>d</sub>Av²</span><span id="ncUnits"> · g = GM/r²</span></div>
       <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
       <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
       <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/projectile-drag.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/projectile-drag.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM11 2h2v1h-2zM14 2h1v1h-1zM18 2h3v1h-3zM22 2h2v1h-2zM25 2h1v1h-1zM30 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM11 3h1v1h-1zM14 3h4v1h-4zM20 3h2v1h-2zM23 3h2v1h-2zM26 3h2v1h-2zM29 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h1v1h-1zM12 4h2v1h-2zM15 4h3v1h-3zM21 4h3v1h-3zM25 4h1v1h-1zM28 4h3v1h-3zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h3v1h-3zM16 5h1v1h-1zM18 5h2v1h-2zM21 5h1v1h-1zM24 5h2v1h-2zM27 5h4v1h-4zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h2v1h-2zM13 6h1v1h-1zM16 6h1v1h-1zM18 6h1v1h-1zM21 6h2v1h-2zM25 6h1v1h-1zM27 6h2v1h-2zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h2v1h-2zM16 7h1v1h-1zM20 7h1v1h-1zM23 7h1v1h-1zM29 7h2v1h-2zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h4v1h-4zM15 9h2v1h-2zM18 9h1v1h-1zM21 9h3v1h-3zM26 9h1v1h-1zM28 9h1v1h-1zM2 10h1v1h-1zM4 10h5v1h-5zM11 10h2v1h-2zM20 10h1v1h-1zM22 10h1v1h-1zM24 10h7v1h-7zM32 10h5v1h-5zM3 11h1v1h-1zM5 11h2v1h-2zM9 11h2v1h-2zM13 11h2v1h-2zM16 11h3v1h-3zM24 11h3v1h-3zM30 11h2v1h-2zM33 11h1v1h-1zM36 11h2v1h-2zM2 12h5v1h-5zM8 12h5v1h-5zM19 12h2v1h-2zM22 12h2v1h-2zM28 12h3v1h-3zM32 12h3v1h-3zM36 12h3v1h-3zM3 13h1v1h-1zM6 13h2v1h-2zM9 13h2v1h-2zM12 13h3v1h-3zM18 13h1v1h-1zM20 13h1v1h-1zM23 13h1v1h-1zM25 13h1v1h-1zM32 13h3v1h-3zM38 13h1v1h-1zM2 14h1v1h-1zM6 14h3v1h-3zM12 14h2v1h-2zM19 14h1v1h-1zM22 14h1v1h-1zM24 14h1v1h-1zM26 14h13v1h-13zM4 15h2v1h-2zM7 15h1v1h-1zM9 15h3v1h-3zM14 15h3v1h-3zM18 15h2v1h-2zM22 15h4v1h-4zM27 15h1v1h-1zM30 15h1v1h-1zM33 15h1v1h-1zM2 16h1v1h-1zM4 16h1v1h-1zM7 16h4v1h-4zM14 16h6v1h-6zM22 16h3v1h-3zM28 16h3v1h-3zM32 16h4v1h-4zM38 16h1v1h-1zM5 17h1v1h-1zM7 17h1v1h-1zM9 17h1v1h-1zM15 17h9v1h-9zM25 17h1v1h-1zM32 17h3v1h-3zM37 17h1v1h-1zM2 18h4v1h-4zM8 18h2v1h-2zM16 18h3v1h-3zM21 18h1v1h-1zM24 18h1v1h-1zM26 18h4v1h-4zM31 18h2v1h-2zM34 18h1v1h-1zM36 18h1v1h-1zM38 18h1v1h-1zM2 19h1v1h-1zM4 19h1v1h-1zM7 19h1v1h-1zM9 19h1v1h-1zM13 19h2v1h-2zM17 19h1v1h-1zM20 19h1v1h-1zM22 19h2v1h-2zM25 19h1v1h-1zM30 19h2v1h-2zM37 19h1v1h-1zM3 20h1v1h-1zM8 20h1v1h-1zM11 20h4v1h-4zM16 20h3v1h-3zM21 20h1v1h-1zM23 20h2v1h-2zM28 20h3v1h-3zM33 20h3v1h-3zM37 20h2v1h-2zM2 21h1v1h-1zM6 21h1v1h-1zM10 21h1v1h-1zM12 21h3v1h-3zM17 21h1v1h-1zM20 21h5v1h-5zM26 21h1v1h-1zM28 21h3v1h-3zM32 21h1v1h-1zM38 21h1v1h-1zM3 22h1v1h-1zM6 22h4v1h-4zM11 22h1v1h-1zM13 22h1v1h-1zM15 22h1v1h-1zM17 22h1v1h-1zM19 22h1v1h-1zM21 22h1v1h-1zM24 22h1v1h-1zM26 22h4v1h-4zM31 22h2v1h-2zM34 22h3v1h-3zM2 23h5v1h-5zM9 23h2v1h-2zM12 23h2v1h-2zM15 23h2v1h-2zM18 23h1v1h-1zM21 23h1v1h-1zM25 23h1v1h-1zM28 23h1v1h-1zM30 23h2v1h-2zM35 23h1v1h-1zM37 23h1v1h-1zM3 24h1v1h-1zM5 24h1v1h-1zM8 24h1v1h-1zM10 24h2v1h-2zM15 24h1v1h-1zM17 24h1v1h-1zM20 24h1v1h-1zM22 24h3v1h-3zM26 24h1v1h-1zM28 24h3v1h-3zM32 24h4v1h-4zM37 24h2v1h-2zM3 25h1v1h-1zM10 25h2v1h-2zM14 25h1v1h-1zM17 25h2v1h-2zM21 25h5v1h-5zM28 25h2v1h-2zM33 25h2v1h-2zM37 25h1v1h-1zM3 26h1v1h-1zM5 26h1v1h-1zM8 26h1v1h-1zM13 26h5v1h-5zM20 26h3v1h-3zM24 26h4v1h-4zM31 26h4v1h-4zM36 26h2v1h-2zM2 27h3v1h-3zM11 27h1v1h-1zM13 27h1v1h-1zM15 27h4v1h-4zM23 27h1v1h-1zM25 27h1v1h-1zM30 27h1v1h-1zM33 27h1v1h-1zM2 28h1v1h-1zM7 28h2v1h-2zM10 28h2v1h-2zM14 28h1v1h-1zM16 28h1v1h-1zM22 28h1v1h-1zM26 28h4v1h-4zM33 28h2v1h-2zM37 28h2v1h-2zM2 29h1v1h-1zM4 29h2v1h-2zM7 29h1v1h-1zM9 29h5v1h-5zM15 29h1v1h-1zM18 29h1v1h-1zM23 29h1v1h-1zM25 29h2v1h-2zM31 29h4v1h-4zM37 29h1v1h-1zM2 30h1v1h-1zM5 30h5v1h-5zM12 30h1v1h-1zM15 30h1v1h-1zM19 30h1v1h-1zM26 30h3v1h-3zM30 30h9v1h-9zM10 31h1v1h-1zM14 31h2v1h-2zM17 31h6v1h-6zM25 31h3v1h-3zM29 31h2v1h-2zM34 31h2v1h-2zM2 32h7v1h-7zM11 32h4v1h-4zM16 32h2v1h-2zM19 32h1v1h-1zM22 32h3v1h-3zM26 32h1v1h-1zM28 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM36 32h3v1h-3zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h2v1h-2zM13 33h1v1h-1zM15 33h6v1h-6zM23 33h1v1h-1zM25 33h1v1h-1zM28 33h1v1h-1zM30 33h1v1h-1zM34 33h2v1h-2zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h1v1h-1zM12 34h1v1h-1zM14 34h3v1h-3zM18 34h1v1h-1zM21 34h1v1h-1zM23 34h1v1h-1zM25 34h1v1h-1zM27 34h8v1h-8zM36 34h2v1h-2zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h1v1h-1zM13 35h5v1h-5zM20 35h1v1h-1zM22 35h1v1h-1zM25 35h1v1h-1zM30 35h3v1h-3zM34 35h1v1h-1zM36 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM10 36h1v1h-1zM15 36h1v1h-1zM17 36h2v1h-2zM20 36h2v1h-2zM24 36h1v1h-1zM26 36h1v1h-1zM28 36h2v1h-2zM31 36h1v1h-1zM37 36h2v1h-2zM2 37h1v1h-1zM8 37h1v1h-1zM13 37h5v1h-5zM21 37h3v1h-3zM28 37h4v1h-4zM34 37h1v1h-1zM38 37h1v1h-1zM2 38h7v1h-7zM10 38h1v1h-1zM12 38h1v1h-1zM16 38h2v1h-2zM19 38h1v1h-1zM21 38h1v1h-1zM24 38h1v1h-1zM26 38h3v1h-3zM31 38h1v1h-1zM34 38h5v1h-5z"/></svg></button><!-- /vd-qr -->
@@ -203,7 +229,8 @@ table.rows .empty td { color: var(--muted); font-style: italic; }
     <div class="stage" id="stage">
       <div class="pane main">
         <canvas id="view" tabindex="0" role="application" aria-label="Flight view. Drag anywhere to aim the launcher, drag the arrow tip to set speed and angle, drag the round hub up or down to set the launch height. Keys: arrow keys change the launch angle (Shift for 5 degrees), Page Up and Page Down change the launch height (Shift for 1 m), Enter launches, comma and period move the time cursor one dot earlier or later, Home and End jump to launch and landing, Escape hides the cursor, C captures a reading."></canvas>
-        <div class="viewbar">
+        <div class="viewbar" id="flatBar">
+          <div class="seg" id="modeSeg" role="group" aria-label="Mode"><button type="button" data-mode="flat" aria-pressed="true">Flat ground</button><button type="button" data-mode="cannon" aria-pressed="false">Newton's cannon</button></div>
           <span class="blindtag" id="blindTag" hidden>Blind</span>
           <div class="seg" id="tsSeg" role="group" aria-label="Time scale">
             <button type="button" data-ts="0.25" aria-pressed="false">0.25×</button>
@@ -223,10 +250,122 @@ table.rows .empty td { color: var(--muted); font-style: italic; }
       <div class="pane chart">
         <canvas id="chart" tabindex="0" role="application" aria-label="Graphs of horizontal position, height and speed against time for every shot, and range against launch angle. Point at a time graph to preview a time, click to set the time cursor there. Drag across the range graph to set the launch angle. The same keys as the flight view work here."></canvas>
       </div>
+      <div class="pane nc" id="ncPane" hidden>
+        <canvas id="ncView" tabindex="0" role="application" aria-label="Newton's cannon: Earth to scale with a mountain and a cannon on top, and the path of every shot. Keys: left and right arrows change the launch speed, up and down the launch angle, Page Up and Page Down the mountain height, Enter fires."></canvas>
+        <div class="viewbar" id="ncBar">
+          <button type="button" class="btn" id="ncPlay" data-vd-key="play" title="Run or pause the clock of every shot">Play</button>
+          <button type="button" class="btn" id="ncReset" data-vd-key="reset" title="Clear every shot and set the clock back to zero">Reset</button>
+          <div class="seg" id="ncSpeed" role="group" aria-label="Speed">
+            <button type="button" data-ncs="100" aria-pressed="false">100×</button>
+            <button type="button" data-ncs="300" aria-pressed="true">300×</button>
+            <button type="button" data-ncs="1000" aria-pressed="false">1,000×</button>
+            <button type="button" data-ncs="3000" aria-pressed="false">3,000×</button>
+          </div>
+          <span class="mono" id="ncClock">t = 0 s</span>
+          <button type="button" class="btn primary" id="ncFire">Fire</button>
+        </div>
+        <p class="ncscale mono" id="ncScale" aria-hidden="true"></p>
+        <p class="nccap" id="ncCap">Earth, the mountain and the paths are to scale; the ball, the cannon and the arrows are not.</p>
+      </div>
     </div>
 
     <aside class="rail">
       <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/projectile-drag.html" target="projectile-drag-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
+      <section class="ncs" id="secNc">
+        <h2>Newton's cannon</h2>
+        <div class="chips" id="ncPresets">
+          <button type="button" data-nc="arc" aria-pressed="false">Short arc</button>
+          <button type="button" data-nc="far" aria-pressed="false">Farther around</button>
+          <button type="button" data-nc="near" aria-pressed="false">Almost around</button>
+          <button type="button" data-nc="circle" aria-pressed="false">Circular orbit</button>
+          <button type="button" data-nc="ellipse" aria-pressed="false">Ellipse</button>
+          <button type="button" data-nc="escape" aria-pressed="false">Escape</button>
+        </div>
+        <div class="btnrow"><button type="button" class="btn" id="ncSeries" title="Clear the shots and fire one of each setup above at once, from the slowest to the fastest">Fire the whole series</button></div>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="ncHint"></p></details>
+      </section>
+
+      <section class="ncs">
+        <h2>Launch</h2>
+        <div>
+          <div class="slider-head"><label for="ncV">Launch speed v₀</label><output id="ncVOut" class="mono" for="ncV"></output></div>
+          <input type="range" id="ncV" min="0.5" max="12" step="0.01" value="6">
+        </div>
+        <div>
+          <div class="slider-head"><label for="ncH">Mountain height</label><output id="ncHOut" class="mono" for="ncH"></output></div>
+          <input type="range" id="ncH" min="10" max="1000" step="10" value="200">
+        </div>
+        <div>
+          <div class="slider-head"><label for="ncTh">Launch angle above level</label><output id="ncThOut" class="mono" for="ncTh"></output></div>
+          <input type="range" id="ncTh" min="0" max="60" step="1" value="0">
+        </div>
+        <p class="hint" id="ncAirNote" hidden>The mountain top is inside the air here. This model leaves drag out, so a real ball would slow down and land sooner.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Newton's cannon fires level, at 0°. On the picture, <kbd>←</kbd> and <kbd>→</kbd> change the speed by 0.1 km/s (with <kbd>Shift</kbd>, 1 km/s), <kbd>↑</kbd> and <kbd>↓</kbd> the angle, <kbd>Page Up</kbd> and <kbd>Page Down</kbd> the mountain height, and <kbd>Enter</kbd> fires.</p>
+        </details>
+      </section>
+
+      <section class="ncs" id="secNcShots">
+        <div class="shots-head"><h2>Shots</h2><span id="ncCount" class="mono"></span></div>
+        <ol class="shots" id="ncList" aria-label="Shots on the picture"></ol>
+        <dl class="readout" id="ncLive">
+          <div><dt>Time since launch</dt><dd id="ncLt">—</dd></div>
+          <div><dt>Height above the ground</dt><dd id="ncLy">—</dd></div>
+          <div><dt>Speed</dt><dd id="ncLv">—</dd></div>
+          <div><dt>Distance around Earth</dt><dd id="ncLs">—</dd></div>
+        </dl>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">The readings are for the selected shot (the newest unless you click another). Distance around Earth is measured along the ground under the ball, from the foot of the mountain. Up to 8 shots; the oldest drops off.</p>
+        </details>
+      </section>
+
+      <section class="ncs" id="secNcPred">
+        <details class="fold" open><summary>Prediction for these settings</summary><div class="foldbody">
+        <dl class="readout">
+          <div class="wide"><dt>What the ball will do</dt><dd id="ncPk" class="nck">—</dd></div>
+          <div><dt>Circular orbit speed here, √(GM/r)</dt><dd id="ncPc">—</dd></div>
+          <div><dt>Escape speed here, √(2GM/r)</dt><dd id="ncPe">—</dd></div>
+          <div><dt>Lowest point above the ground</dt><dd id="ncPp">—</dd></div>
+          <div><dt>Highest point above the ground</dt><dd id="ncPa">—</dd></div>
+          <div><dt>Time for one orbit</dt><dd id="ncPT">—</dd></div>
+          <div><dt>Eccentricity e</dt><dd id="ncPx">—</dd></div>
+          <div class="wide"><dt>Flat ground with g = 9.81 m/s², same shot</dt><dd id="ncPf">—</dd></div>
+        </dl>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">From the speed and height at launch: the energy per kilogram ½v² − GM/r and the angular momentum fix the ellipse (or the open path) the ball follows. It lands when the lowest point of that ellipse is below the ground. The flat ground line is the same shot in the rest of this page's model, where the ground is flat and g is the same everywhere.</p>
+        </details>
+        </div></details>
+      </section>
+
+      <section class="ncs">
+        <details class="fold"><summary>Why it never lands</summary><div class="foldbody">
+          <p class="hint" id="ncWhy"></p>
+        </div></details>
+      </section>
+
+      <section class="ncs">
+        <details class="fold"><summary>Layers</summary><div class="foldbody">
+        <div class="toggles">
+          <label class="wide"><input type="checkbox" id="ncArrows" checked>Velocity and gravity arrows</label>
+          <label class="wide"><input type="checkbox" id="ncAir" checked>Edge of the air, 100 km</label>
+          <label class="wide"><input type="checkbox" id="ncNext" checked>Next shot</label>
+        </div>
+        </div></details>
+      </section>
+
+      <section class="ncs">
+        <details class="fold"><summary>Key</summary><div class="foldbody">
+        <div class="key">
+          <span><i class="swatch shots"></i>Shots, numbered, one color each</span>
+          <span><i class="swatch next"></i>Next shot with the current settings</span>
+          <span><i class="swatch ncv"></i>Velocity of the selected ball</span>
+          <span><i class="swatch ncg"></i>Gravity on it, always toward Earth's center</span>
+        </div>
+        <details class="more"><summary>The model</summary>
+          <p class="hint" id="ncModel"></p>
+        </details>
+        </div></details>
+      </section>
       <section>
         <h2>Projectile</h2>
         <div class="chips" id="presets">
@@ -719,6 +858,94 @@ table.rows .empty td { color: var(--muted); font-style: italic; }
     const dRdV = (rangeOf({ ...p, v: p.v + hV }, p.th) - rangeOf({ ...p, v: p.v - hV }, p.th)) / (2 * hV);
     return { R0, dRdTh, dRdV, sd: Math.hypot(dRdTh * sdTh * DEG, dRdV * sdV * p.v) };
   }
+  /* ---- Newton's cannon: a ball fired from a mountain top on a round Earth ----
+     Gravity is inverse square toward Earth's center, a = −GM r̂ / r². Earth is a sphere that does not turn and has no air,
+     and the frame is centered on Earth and does not rotate. The mountain top is at (0, R + h); x points along the ground
+     the way the cannon faces and y straight up. */
+  const NC_GM = 3.986004e14;       /* m³/s², Earth's GM (IAU 2015 B3; demos/lib/constants.js GMearth) */
+  const NC_R = 6.3710088e6;        /* m, Earth's mean radius (IUGG; constants.js RearthMean) */
+  const NC_AIR = 100e3;            /* m, the Kármán line, the usual boundary of space (FAI); drawn only, drag is left out */
+  const NC_RMAX = 15 * NC_R;       /* a path that escapes is followed out to 15 Earth radii */
+  const NC_TMAX = 4 * 86400;       /* s, the longest path followed */
+  const ncCirc = (r) => Math.sqrt(NC_GM / r);          /* circular orbit speed at radius r */
+  const ncEsc = (r) => Math.sqrt(2 * NC_GM / r);       /* escape speed at radius r */
+  /* the conic the ball follows, from the energy and angular momentum per kilogram at launch */
+  function ncOrbit(h, v, thDeg) {
+    const r = NC_R + h, vr = v * Math.sin(thDeg * DEG), vt = v * Math.cos(thDeg * DEG);
+    const E = 0.5 * v * v - NC_GM / r, L = r * vt;
+    const e = Math.sqrt(Math.max(0, 1 + 2 * E * L * L / (NC_GM * NC_GM)));
+    const p = L * L / NC_GM;                                    /* semi-latus rectum */
+    const rp = p / (1 + e), ra = e < 1 ? p / (1 - e) : Infinity;
+    const a = E < 0 ? -NC_GM / (2 * E) : Infinity;
+    const T = E < 0 ? 2 * Math.PI * Math.sqrt(a * a * a / NC_GM) : Infinity;
+    /* E ≥ 0 with the ball leaving the ground or moving outward: it never comes back. Otherwise it lands when the closest
+       point of its ellipse is below the ground. */
+    const kind = E >= 0 && vr >= 0 ? 'escapes' : rp < NC_R ? 'lands' : 'orbits';
+    return { r, E, L, e, rp, ra, a, T, kind, vc: ncCirc(r), ve: ncEsc(r) };
+  }
+  /* Yoshida's fourth order symplectic integrator (drift, kick, drift, kick, drift, kick, drift): energy errors stay bounded
+     and orbits close on themselves instead of spiraling. */
+  const NC_W1 = 1 / (2 - Math.cbrt(2)), NC_W0 = -Math.cbrt(2) * NC_W1;
+  const NC_C = [NC_W1 / 2, (NC_W0 + NC_W1) / 2, (NC_W0 + NC_W1) / 2, NC_W1 / 2], NC_D = [NC_W1, NC_W0, NC_W1];
+  function ncStep(s, dt) {
+    for (let i = 0; i < 4; i++) {
+      s[0] += NC_C[i] * dt * s[2]; s[1] += NC_C[i] * dt * s[3];
+      if (i < 3) { const r2 = s[0] * s[0] + s[1] * s[1], k = -NC_GM * NC_D[i] * dt / (r2 * Math.sqrt(r2)); s[2] += k * s[0]; s[3] += k * s[1]; }
+    }
+  }
+  const ncEnergy = (s) => 0.5 * (s[2] * s[2] + s[3] * s[3]) - NC_GM / Math.hypot(s[0], s[1]);
+  /* fly one shot: steps of dt (1 s) until it lands, closes one full orbit (the last step is cut to end on the period), or
+     escapes past 15 Earth radii. The landing point is found by bisection on the cubic Hermite interpolant of the last step.
+     Points are kept every 0.25° of travel around Earth, every 0.3 % change of distance or every 120 steps, each with its
+     velocity, so ncAt can interpolate between them. */
+  function ncFly(h, v, thDeg, dt) {
+    dt = dt || 1;
+    const o = ncOrbit(h, v, thDeg), s = [0, NC_R + h, v * Math.cos(thDeg * DEG), v * Math.sin(thDeg * DEG)];
+    const E0 = ncEnergy(s), tEnd = o.kind === 'orbits' ? o.T : NC_TMAX;
+    const pts = [[0, s[0], s[1], s[2], s[3]]];
+    let t = 0, phi = 0, lastPhi = 0, lastR = s[1], since = 0, end = 'time', land = null, maxR = s[1];
+    while (t < tEnd) {
+      const h1 = Math.min(dt, tEnd - t), p0 = s.slice();
+      ncStep(s, h1); t += h1;
+      const r = Math.hypot(s[0], s[1]);
+      phi += Math.atan2(p0[0] * s[1] - p0[1] * s[0], p0[0] * s[0] + p0[1] * s[1]) * -1;   /* clockwise travel, radians */
+      if (r > maxR) maxR = r;
+      if (r < NC_R) {
+        /* bisect for |r| = R on the Hermite cubic through the two ends of the step */
+        let lo = 0, hi = 1, q = null;
+        const at = (u) => [herm(p0[0], p0[2], s[0], s[2], u, h1), herm(p0[1], p0[3], s[1], s[3], u, h1)];
+        for (let k = 0; k < 60; k++) { const m = 0.5 * (lo + hi); q = at(m); if (Math.hypot(q[0], q[1]) < NC_R) hi = m; else lo = m; }
+        const u = 0.5 * (lo + hi); q = at(u);
+        const tl = t - h1 + u * h1, ph = phi - Math.atan2(q[0] * s[1] - q[1] * s[0], q[0] * s[0] + q[1] * s[1]) * -1;
+        const u2 = u * u, dh = (q0, m0, q1, m1) => (6 * u2 - 6 * u) * (q0 - q1) / h1 + (3 * u2 - 4 * u + 1) * m0 + (3 * u2 - 2 * u) * m1;
+        const vv = [dh(p0[0], p0[2], s[0], s[2]), dh(p0[1], p0[3], s[1], s[3])];   /* velocity from the same cubic */
+        pts.push([tl, q[0], q[1], vv[0], vv[1]]);
+        land = { t: tl, x: q[0], y: q[1], phi: ph, arc: NC_R * ph, v: Math.hypot(vv[0], vv[1]) };
+        end = 'lands'; t = tl; break;
+      }
+      since++;
+      if (Math.abs(phi - lastPhi) > 0.25 * DEG || Math.abs(r - lastR) > 0.003 * lastR || since >= 120 || t >= tEnd) {
+        pts.push([t, s[0], s[1], s[2], s[3]]); lastPhi = phi; lastR = r; since = 0;
+      }
+      if (r > NC_RMAX) { end = 'leaves'; break; }
+    }
+    if (end === 'time' && o.kind === 'orbits') end = 'orbits';
+    const last = pts[pts.length - 1];
+    return { pts, o, end, land, tEnd: last[0], phi, maxR, dE: end === 'lands' ? 0 : (ncEnergy(s) - E0) / Math.abs(E0),
+      close: end === 'orbits' ? Math.hypot(s[0], s[1] - (NC_R + h)) : null };
+  }
+  /* position and velocity at time t, by cubic Hermite interpolation between the kept points */
+  function ncAt(pts, t) {
+    if (t <= pts[0][0]) return pts[0].slice(1);
+    const n = pts.length; if (t >= pts[n - 1][0]) return pts[n - 1].slice(1);
+    let lo = 0, hi = n - 1;
+    while (hi - lo > 1) { const m = (lo + hi) >> 1; if (pts[m][0] <= t) lo = m; else hi = m; }
+    const a = pts[lo], b = pts[hi], hh = b[0] - a[0], u = (t - a[0]) / hh;
+    const dh = (p0, m0, p1, m1) => { const u2 = u * u; return (6 * u2 - 6 * u) * p0 / hh + (3 * u2 - 4 * u + 1) * m0 + (-6 * u2 + 6 * u) * p1 / hh + (3 * u2 - 2 * u) * m1; };
+    return [herm(a[1], a[3], b[1], b[3], u, hh), herm(a[2], a[4], b[2], b[4], u, hh), dh(a[1], a[3], b[1], b[3]), dh(a[2], a[4], b[2], b[4])];
+  }
+  /* the same shot on flat ground with a constant g (the rest of this page): x = v cos θ (v sin θ + √(v² sin²θ + 2gh)) / g */
+  function ncFlat(h, v, thDeg) { const c = Math.cos(thDeg * DEG), s = Math.sin(thDeg * DEG); return v * c * (v * s + Math.sqrt(v * v * s * s + 2 * G * h)) / G; }
   // ==CORE END==
 
   const $ = (id) => document.getElementById(id);
@@ -2129,6 +2356,7 @@ table.rows .empty td { color: var(--muted); font-style: italic; }
     for (const id of ['secPred', 'secVt', 'unitsG', 'airG']) $(id).hidden = on;
     for (const id of ['tVac', 'tPrev', 'tAcc', 'tForce']) $(id).disabled = on;
     $('layersBlind').hidden = !on;
+    $('secNcPred').hidden = on; $('ncNext').disabled = on; try { ncDraw(); } catch (_) {}
     status(on ? 'Blind on: g, the predicted paths, ranges and angles and the terminal speed are hidden.' : 'Blind off.');
     renderList(); fitAndPlot(); resize();
   }
@@ -2717,6 +2945,366 @@ table.rows .empty td { color: var(--muted); font-style: italic; }
   try { if (matchMedia('(pointer: coarse)').matches) $('cap3d').textContent = VD3.turnText($('cap3d').textContent); } catch (_) {}
   $('follow3').addEventListener('click', () => { follow3 = !follow3; $('follow3').setAttribute('aria-pressed', String(follow3)); schedule(); });
   window.__projectile3 = { view: view3, o3, get on() { return on3d; }, get F3() { return F3; } };
+
+  // ---------- Newton's cannon: the same page on a round Earth ----------
+  /* a cannon on a mountain fires sideways; inverse square gravity (ncFly in the core) bends the path round the planet. The
+     mode has its own pane, strip and rail sections; the flat ground shots, readings and keys are left as they were. */
+  const ncCan = $('ncView'), ncPane = $('ncPane'), bench = document.querySelector('.bench');
+  const NC = { on: false, h: 200e3, v: 6000, th: 0, shots: [], n: 1, clock: 0, playing: false, speed: 300, sel: null,
+    arrows: true, air: true, next: true, prev: null, prevKey: '', cam: null, aim: null, raf: 0, last: 0, W: 0, H: 0 };
+  const NC_MAX = 8;
+  /* the setups, in m/s; the circular orbit uses √(GM/r) at the mountain top, to the slider's 0.01 km/s */
+  const NC_SET = { arc: 3000, far: 7000, near: 7600, circle: null, ellipse: 9000, escape: 11500 };
+  const NC_HINTS = {
+    arc: 'Slow: the ball falls to the ground before the curve of Earth matters much, much like a shot on flat ground.',
+    far: 'Faster: the ground curves away under the ball while it falls, so it lands farther than it would on flat ground.',
+    near: 'Faster still: the ball lands a long way round, on the far side of the curve.',
+    circle: 'The circular orbit speed for this mountain: the ground curves away exactly as fast as the ball falls, so the ball keeps falling and never lands.',
+    ellipse: 'Faster than a circular orbit: the ball climbs away on an ellipse and comes back to the mountain top once each orbit.',
+    escape: 'Faster than the escape speed: the ball slows as it climbs but never stops and never comes back.'
+  };
+  const ncSetV = (k) => k === 'circle' ? Math.round(ncCirc(NC_R + NC.h) / 10) * 10 : NC_SET[k];
+  const ncFmtKm = (m) => { const k = m / 1000; return (Math.abs(k) >= 100 ? Math.round(k).toLocaleString('en-US') : k.toFixed(Math.abs(k) >= 10 ? 0 : 1)) + ' km'; };
+  const ncFmtV = (v) => (v / 1000).toFixed(2) + ' km/s';
+  function ncFmtT(t) {
+    if (!isFinite(t)) return '—';
+    if (t < 60) return `${Math.floor(t)} s`;
+    if (t < 3600) { const m = Math.floor(t / 60), s = Math.floor(t - 60 * m); return `${m} min ${String(s).padStart(2, '0')} s`; }
+    if (t < 86400 * 2) { const h = Math.floor(t / 3600), m = Math.floor((t - 3600 * h) / 60); return `${h} h ${String(m).padStart(2, '0')} min`; }
+    return `${(t / 86400).toFixed(1)} days`;
+  }
+  const ncFmtPeriod = (T) => !isFinite(T) ? '—' : T < 3 * 3600 ? `${(T / 60).toFixed(1)} min` : T < 3 * 86400 ? `${(T / 3600).toFixed(1)} h` : `${(T / 86400).toFixed(1)} days`;
+  function ncTok() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    const t = { space: g('--nc-space'), star: g('--nc-star'), ocean: g('--nc-ocean'), limb: g('--nc-ocean-limb'), land: g('--nc-land'), air: g('--nc-air'),
+      rock: g('--nc-rock'), snow: g('--nc-snow'), vel: g('--nc-vel'), grav: g('--nc-grav'), ink: g('--ink'), muted: g('--muted'), canvas: g('--canvas'), c: [] };
+    for (let i = 1; i <= 8; i++) t.c.push(g('--c' + i));
+    return t;
+  }
+  let NT = null;
+
+  /* ---- the shots ---- */
+  const ncKey = () => [NC.h, NC.v, NC.th].join('|');
+  function ncPreview() {
+    const k = ncKey(); if (k !== NC.prevKey) { NC.prevKey = k; NC.prev = ncFly(NC.h, NC.v, NC.th); }
+    return NC.prev;
+  }
+  function ncFree() { for (let i = 0; i < NC_MAX; i++) if (!NC.shots.some((s) => s.slot === i)) return i; return 0; }
+  function ncAdd(h, v, th) {
+    const f = ncKey() === [h, v, th].join('|') ? ncPreview() : ncFly(h, v, th);
+    if (NC.shots.length >= NC_MAX) NC.shots.shift();
+    const s = { id: NC.n, n: NC.n++, slot: ncFree(), h, v, th, f, t0: NC.clock };
+    NC.shots.push(s); NC.sel = s.id;
+    return s;
+  }
+  const ncShot = (id) => NC.shots.find((s) => s.id === id) || null;
+  const ncSel = () => ncShot(NC.sel) || NC.shots[NC.shots.length - 1] || null;
+  /* how long the shot has flown; a closed orbit goes round again and again */
+  const ncAge = (s) => Math.max(0, NC.clock - s.t0);
+  function ncTime(s) {
+    const a = ncAge(s);
+    if (s.f.end === 'orbits') return a % s.f.tEnd;
+    return Math.min(a, s.f.tEnd);
+  }
+  const ncLaps = (s) => s.f.end === 'orbits' ? Math.floor(ncAge(s) / s.f.tEnd) : 0;
+  const ncMoving = (s) => s.f.end === 'orbits' || ncAge(s) < s.f.tEnd;
+  function ncFire() {
+    if (reduce) { const s = ncAdd(NC.h, NC.v, NC.th); s.t0 = NC.clock - s.f.tEnd; }   /* Reduce motion: the whole path at once */
+    else { ncAdd(NC.h, NC.v, NC.th); ncPlay(true); }
+    ncList(); ncDraw();
+  }
+  function ncSeries() {
+    NC.shots = []; NC.n = 1; NC.clock = 0;
+    for (const k of Object.keys(NC_SET)) {
+      const s = ncAdd(NC.h, ncSetV(k), 0);
+      if (reduce) s.t0 = NC.clock - s.f.tEnd;
+    }
+    NC.sel = NC.shots[NC.shots.length - 1].id;
+    if (!reduce) ncPlay(true);
+    ncList(); ncDraw();
+  }
+  function ncResetRun() { NC.shots = []; NC.n = 1; NC.clock = 0; NC.sel = null; ncPlay(false); ncList(); ncDraw(); }
+  function ncPlay(on) {
+    NC.playing = on; $('ncPlay').textContent = on ? 'Pause' : 'Play';
+    if (on) ncLoop();
+  }
+  function ncAdvance(dt) { NC.clock += dt; ncLive(); ncDraw(); }
+
+  /* ---- controls ---- */
+  function ncSync() {
+    $('ncV').value = (NC.v / 1000).toFixed(2); $('ncH').value = String(NC.h / 1000); $('ncTh').value = String(NC.th);
+    $('ncVOut').textContent = ncFmtV(NC.v); $('ncHOut').textContent = `${Math.round(NC.h / 1000).toLocaleString('en-US')} km`; $('ncThOut').textContent = `${NC.th}°`;
+    $('ncAirNote').hidden = NC.h >= NC_AIR;
+    let on = null;
+    for (const b of document.querySelectorAll('#ncPresets [data-nc]')) {
+      const hit = NC.th === 0 && Math.abs(ncSetV(b.dataset.nc) - NC.v) < 0.5; b.setAttribute('aria-pressed', String(hit)); if (hit) on = b.dataset.nc;
+    }
+    $('ncHint').textContent = on ? NC_HINTS[on] : 'Your own settings. Press a setup above to start from one of the classic shots.';
+    ncPredict(); ncDraw();
+  }
+  function ncPredict() {
+    const o = ncOrbit(NC.h, NC.v, NC.th), f = ncPreview();
+    $('ncPc').textContent = ncFmtV(o.vc); $('ncPe').textContent = ncFmtV(o.ve);
+    $('ncPk').textContent = o.kind === 'lands' ? `Lands ${ncFmtKm(f.land ? f.land.arc : 0)} around Earth` : o.kind === 'orbits' ? 'Orbits: it falls forever and never lands' : 'Escapes: it never comes back';
+    $('ncPp').textContent = o.kind === 'lands' ? 'below the ground' : ncFmtKm(o.rp - NC_R);
+    $('ncPa').textContent = o.kind === 'escapes' ? 'none, it keeps going' : ncFmtKm(Math.max(o.ra, NC_R + NC.h) - NC_R);
+    $('ncPT').textContent = o.kind === 'orbits' ? ncFmtPeriod(o.T) : o.kind === 'lands' ? `lands after ${ncFmtT(f.land ? f.land.t : 0)}` : '—';
+    $('ncPx').textContent = o.e.toFixed(3);
+    $('ncPf').textContent = `lands ${ncFmtKm(ncFlat(NC.h, NC.v, NC.th))} away`;
+  }
+  function ncList() {
+    const ul = $('ncList'); ul.innerHTML = '';
+    $('ncCount').textContent = NC.shots.length ? `${NC.shots.length} of ${NC_MAX}` : '';
+    if (!NC.shots.length) { const p = document.createElement('li'); p.className = 'shots-empty'; p.textContent = 'No shots yet. Press Fire.'; ul.appendChild(p); }
+    const sel = ncSel();
+    for (const s of NC.shots) {
+      const li = document.createElement('li'); li.className = 'shot' + (sel && s.id === sel.id ? ' sel' : '');
+      const col = NT ? NT.c[s.slot % 8] : '#888'; li.style.setProperty('--shot', col); li.style.setProperty('--badge-ink', badgeInk(col));
+      const what = s.f.end === 'lands' ? `lands ${ncFmtKm(s.f.land.arc)} around` : s.f.end === 'orbits' ? `orbits every ${ncFmtPeriod(s.f.tEnd)}` : 'escapes';
+      li.innerHTML = `<button type="button" class="shot-main" aria-label="Shot ${s.n}: select it and load its settings"><span class="badge">${s.n}</span><span class="shot-body">` +
+        `<span class="pl"><span>v₀ <b>${ncFmtV(s.v)}</b></span><span>h ${ncFmtKm(s.h)}</span>${s.th ? `<span>θ ${s.th}°</span>` : ''}</span><span class="res"><span>${what}</span></span></span></button>`;
+      li.querySelector('button').addEventListener('click', () => { NC.sel = s.id; NC.h = s.h; NC.v = s.v; NC.th = s.th; ncSync(); ncList(); ncLive(); });
+      ul.appendChild(li);
+    }
+    ncLive();
+  }
+  function ncLive() {
+    const s = ncSel();
+    $('ncClock').textContent = `t = ${ncFmtT(s ? ncAge(s) : 0)}`;
+    if (!s) { for (const id of ['ncLt', 'ncLy', 'ncLv', 'ncLs']) $(id).textContent = '—'; return; }
+    const t = ncTime(s), q = ncAt(s.f.pts, t), r = Math.hypot(q[0], q[1]);
+    const lap = ncLaps(s);
+    $('ncLt').textContent = ncFmtT(ncAge(s)) + (lap ? ` (${lap} time${lap > 1 ? 's' : ''} round)` : '');
+    $('ncLy').textContent = ncFmtKm(r - NC_R);
+    $('ncLv').textContent = ncFmtV(Math.hypot(q[2], q[3]));
+    /* along the ground: the angle from the mountain, clockwise, times R (a closed orbit adds a full turn each time round) */
+    let phi = Math.atan2(q[0], q[1]); if (phi < 0) phi += 2 * Math.PI;
+    if (s.f.end === 'lands' && t >= s.f.tEnd) phi = s.f.land.phi;
+    else if (s.f.end !== 'orbits' && s.f.phi > Math.PI && t > s.f.tEnd / 2 && phi < Math.PI / 2) phi += 2 * Math.PI;
+    $('ncLs').textContent = ncFmtKm(NC_R * (phi + 2 * Math.PI * lap));
+  }
+  function ncTexts() {
+    const R = NC_R, vc = ncCirc(R), d = vc * 1, drop = R - Math.sqrt(R * R - d * d), g0 = NC_GM / (R * R), fall = 0.5 * g0;
+    $('ncWhy').textContent = `The ball is falling toward Earth's center the whole time, at any speed. What changes is the ground underneath it. ` +
+      `Earth's surface curves down by ${drop.toFixed(2)} m over a level distance of ${(d / 1000).toFixed(2)} km. A ball moving sideways at ${(vc / 1000).toFixed(2)} km/s covers that distance in one second, ` +
+      `and in that second it falls ½gt² = ${fall.toFixed(2)} m (g = GM/R² = ${g0.toFixed(2)} m/s² at the ground). It falls exactly as fast as the ground curves away, so it never gets any closer: it is in orbit. ` +
+      `Slower, it falls faster than the ground curves away and lands. Faster, it climbs away from the ground on an ellipse, and at ${(ncEsc(R) / 1000).toFixed(2)} km/s, the escape speed at the ground, it never comes back. ` +
+      `From the top of a mountain r is larger, so both speeds are a little lower there: v = √(GM/r) for a circle and √2 times that to escape.`;
+    $('ncModel').textContent = `Gravity pulls toward Earth's center with g = GM/r², GM = ${(NC_GM / 1e14).toFixed(6)} × 10¹⁴ m³/s², and Earth is a sphere of mean radius ${Math.round(R / 1000).toLocaleString('en-US')} km. ` +
+      `Approximations: no air drag at any height (a real ball below about 100 km would slow down and land sooner), Earth does not spin, and Earth's pull is the same as if all its mass sat at its center. ` +
+      `The path is found with Yoshida's fourth order symplectic method in steps of 1 s, so the energy stays fixed and a closed orbit comes back to the mountain top to well under a meter; the landing point is interpolated within the last step. ` +
+      `The ball, the cannon and the arrows are drawn larger than to scale. No real mountain is anywhere near this tall: this is Newton's thought experiment. In a real orbit the ball would come back and hit the mountain from behind; here it passes through it.`;
+  }
+
+  /* ---- the picture ---- */
+  let ncDpr = 1;
+  function ncResize() {
+    if (!NC.on) return;
+    ncDpr = window.devicePixelRatio || 1;
+    const r = ncPane.getBoundingClientRect(); NC.W = r.width; NC.H = r.height;
+    ncCan.width = Math.round(r.width * ncDpr); ncCan.height = Math.round(r.height * ncDpr);
+    ncCan.style.width = r.width + 'px'; ncCan.style.height = r.height + 'px';
+    NC.cam = null; ncDraw();
+  }
+  /* the camera frames the mountain top and every path on the picture (and the next shot), easing to it */
+  function ncTarget() {
+    const W = NC.W, H = NC.H, top = NC_R + NC.h, m = Math.max(3 * NC.h, 1500e3);
+    let x0 = -m, x1 = m, y0 = top - 0.7 * m, y1 = top + 0.35 * m;
+    /* what is drawn so far, out to rMax: an escaping ball pulls the view out with it until Earth is small, then leaves */
+    const take = (pts, tLim, rMax) => { for (const p of pts) { if (p[0] > tLim) break; if (p[1] * p[1] + p[2] * p[2] > rMax * rMax) continue;
+      if (p[1] < x0) x0 = p[1]; if (p[1] > x1) x1 = p[1]; if (p[2] < y0) y0 = p[2]; if (p[2] > y1) y1 = p[2]; } };
+    for (const s of NC.shots) take(s.f.pts, ncLaps(s) > 0 ? Infinity : ncTime(s), 5 * NC_R);
+    if (NC.next && !LAB.blind) take(ncPreview().pts, Infinity, 3 * NC_R);
+    const barH = narrow() ? 96 : 56, foot = 34;
+    const k = Math.min((W - 40) / (x1 - x0), (H - barH - foot - 20) / (y1 - y0));
+    return { cx: (x0 + x1) / 2, cy: (y0 + y1) / 2, k, oy: (barH - foot) / 2 };
+  }
+  function ncCam() {
+    const t = ncTarget(), now = performance.now();
+    if (!NC.cam || reduce) { NC.cam = Object.assign({}, t); NC.aim = now; return false; }
+    const dt = Math.min(0.1, (now - (NC.aim || now)) / 1000); NC.aim = now;
+    const a = 1 - Math.exp(-dt / 0.35), c = NC.cam;
+    c.cx += (t.cx - c.cx) * a; c.cy += (t.cy - c.cy) * a; c.oy = t.oy;
+    c.k = Math.exp(Math.log(c.k) + (Math.log(t.k) - Math.log(c.k)) * a);
+    const still = Math.abs(Math.log(t.k / c.k)) < 1e-3 && Math.hypot(t.cx - c.cx, t.cy - c.cy) * c.k < 0.3;
+    if (still) Object.assign(c, t);
+    return !still;
+  }
+  function ncDraw() { if (NC.on && !NC.raf) NC.raf = requestAnimationFrame(ncFrame); }
+  function ncLoop() { NC.last = 0; ncDraw(); }
+  function ncFrame(now) {
+    NC.raf = 0; if (!NC.on) return;
+    if (NC.playing) {
+      if (NC.last) NC.clock += Math.min(0.1, (now - NC.last) / 1000) * NC.speed;
+      NC.last = now;
+      if (!NC.shots.some(ncMoving)) ncPlay(false);
+      ncLive();
+    } else NC.last = 0;
+    const easing = ncCam();
+    ncRender();
+    if (NC.playing || easing) NC.raf = requestAnimationFrame(ncFrame);
+  }
+  const ncStars = (() => { const r = mulberry32(17); const a = []; for (let i = 0; i < 160; i++) a.push([r(), r(), 0.4 + r() * 1.1, 0.3 + 0.7 * r()]); return a; })();
+  function ncRender() {
+    const ctx = ncCan.getContext('2d'), W = NC.W, H = NC.H, c = NC.cam; if (!c || !W) return;
+    if (!NT) NT = ncTok();
+    ctx.setTransform(ncDpr, 0, 0, ncDpr, 0, 0);
+    const X = (x) => W / 2 + (x - c.cx) * c.k, Y = (y) => H / 2 + c.oy - (y - c.cy) * c.k;
+    ctx.fillStyle = NT.space; ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = NT.star;
+    for (const s of ncStars) { ctx.globalAlpha = s[3]; ctx.fillRect(s[0] * W, s[1] * H, s[2], s[2]); }
+    ctx.globalAlpha = 1;
+    const ex = X(0), ey = Y(0), er = NC_R * c.k;
+    /* the air, to scale: a glow from the ground to 100 km */
+    if (NC.air) {
+      const ar = (NC_R + NC_AIR) * c.k, gr = ctx.createRadialGradient(ex, ey, er, ex, ey, ar);
+      gr.addColorStop(0, NT.air); gr.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(ex, ey, ar, 0, 2 * Math.PI); ctx.fill();
+    }
+    /* Earth */
+    const eg = ctx.createRadialGradient(ex - 0.3 * er, ey - 0.35 * er, er * 0.05, ex, ey, er);
+    eg.addColorStop(0, NT.ocean); eg.addColorStop(1, NT.limb);
+    ctx.fillStyle = eg; ctx.beginPath(); ctx.arc(ex, ey, er, 0, 2 * Math.PI); ctx.fill();
+    /* the land the mountain stands on: a band of ground either side of it */
+    ctx.fillStyle = NT.land; ctx.beginPath();
+    const la = Math.max(0.12, (2.2 * NC.h + 300e3) / NC_R);
+    ctx.arc(ex, ey, er, -Math.PI / 2 - la, -Math.PI / 2 + la); ctx.arc(ex, ey, Math.max(0, er - Math.max(2, 0.004 * er)), -Math.PI / 2 + la, -Math.PI / 2 - la, true); ctx.fill();
+    /* the mountain, to scale: a jagged peak whose sides follow the curve of the ground */
+    const wA = (1.3 * NC.h + 20e3) / NC_R, prof = (u) => Math.pow(1 - Math.abs(u), 1.25) * (1 + 0.05 * Math.sin(u * 23) * (1 - Math.abs(u)));
+    const mp = (u, f) => { const a = u * wA, r = NC_R + NC.h * f; return [X(r * Math.sin(a)), Y(r * Math.cos(a))]; };
+    ctx.fillStyle = NT.rock; ctx.beginPath();
+    for (let i = 0; i <= 80; i++) { const u = -1 + i / 40, p = mp(u, prof(u)); if (i) ctx.lineTo(p[0], p[1]); else ctx.moveTo(p[0], p[1]); }
+    for (let i = 80; i >= 0; i--) { const u = -1 + i / 40, p = mp(u, -0.02); ctx.lineTo(p[0], p[1]); }
+    ctx.fill();
+    ctx.fillStyle = NT.snow; ctx.beginPath();
+    { let first = true; for (let i = 0; i <= 80; i++) { const u = -1 + i / 40, f = prof(u); if (f < 0.72) continue; const p = mp(u, f); if (first) { ctx.moveTo(p[0], p[1]); first = false; } else ctx.lineTo(p[0], p[1]); }
+      for (let i = 80; i >= 0; i--) { const u = -1 + i / 40, f = prof(u); if (f < 0.72) continue; const p = mp(u, Math.max(0.72, f - 0.1 - 0.04 * Math.sin(u * 40))); ctx.lineTo(p[0], p[1]); } }
+    ctx.fill();
+    /* the edge of the air, labeled when it is far enough above the ground to see */
+    if (NC.air && NC_AIR * c.k > 8) {
+      ctx.save(); ctx.strokeStyle = NT.air; ctx.lineWidth = 1; ctx.setLineDash([4, 5]);
+      ctx.beginPath(); ctx.arc(ex, ey, (NC_R + NC_AIR) * c.k, 0, 2 * Math.PI); ctx.stroke(); ctx.restore();
+      const ang = -Math.PI / 2 - Math.min(0.6, (3.2 * NC.h + 260e3) / NC_R), rr = (NC_R + NC_AIR) * c.k + 4;
+      const lx = ex + rr * Math.cos(ang), ly = ey + rr * Math.sin(ang);
+      if (lx > 20 && lx < W - 20 && ly > 60 && ly < H - 30) {
+        ctx.font = `600 ${12}px ${getComputedStyle(document.body).fontFamily}`; ctx.fillStyle = NT.muted; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom';
+        ctx.fillText('Edge of the air, 100 km', lx, ly);
+      }
+    }
+    const ui = getComputedStyle(document.body).fontFamily, mono = getComputedStyle($('ncClock')).fontFamily;
+    /* the next shot, dashed */
+    const trace = (pts, tLim) => {
+      ctx.beginPath(); let started = false;
+      for (const p of pts) { if (p[0] > tLim) break; const x = X(p[1]), y = Y(p[2]); if (started) ctx.lineTo(x, y); else { ctx.moveTo(x, y); started = true; } }
+      if (tLim < pts[pts.length - 1][0]) { const q = ncAt(pts, tLim); ctx.lineTo(X(q[0]), Y(q[1])); }
+      ctx.stroke();
+    };
+    if (NC.next && !LAB.blind) {
+      const f = ncPreview();
+      ctx.save(); ctx.strokeStyle = NT.ink; ctx.globalAlpha = 0.55; ctx.lineWidth = 1.5; ctx.setLineDash([6, 6]); trace(f.pts, Infinity); ctx.restore();
+    }
+    /* the shots: each path as far as the ball has flown (a closed orbit stays drawn once it has gone round) */
+    const sel = ncSel();
+    for (const s of NC.shots) {
+      const col = NT.c[s.slot % 8], t = ncTime(s), full = ncLaps(s) > 0;
+      ctx.save(); ctx.strokeStyle = col; ctx.lineWidth = sel && s.id === sel.id ? 3 : 2.2; ctx.lineJoin = 'round';
+      trace(s.f.pts, full ? Infinity : t); ctx.restore();
+    }
+    for (const s of NC.shots) {
+      const col = NT.c[s.slot % 8], t = ncTime(s), q = ncAt(s.f.pts, t), bx = X(q[0]), by = Y(q[1]);
+      const landed = s.f.end === 'lands' && t >= s.f.tEnd;
+      if (landed) {
+        ctx.save(); ctx.strokeStyle = col; ctx.lineWidth = 2;
+        for (let i = 0; i < 6; i++) { const a = i * Math.PI / 3; ctx.beginPath(); ctx.moveTo(bx + 3 * Math.cos(a), by + 3 * Math.sin(a)); ctx.lineTo(bx + 8 * Math.cos(a), by + 8 * Math.sin(a)); ctx.stroke(); }
+        ctx.restore();
+      }
+      if (s.f.end === 'leaves' && t >= s.f.tEnd) continue;
+      ctx.beginPath(); ctx.arc(bx, by, 5, 0, 2 * Math.PI); ctx.fillStyle = col; ctx.fill(); ctx.lineWidth = 1.5; ctx.strokeStyle = NT.ink; ctx.stroke();
+      /* the number of the shot beside its ball */
+      ctx.font = `700 11px ${mono}`; ctx.fillStyle = NT.ink; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+      ctx.fillText(String(s.n), bx + 8, by - 9);
+      if (NC.arrows && sel && s.id === sel.id && !landed) ncArrows(ctx, bx, by, q);
+    }
+    /* the cannon on the summit, tilted to the launch angle (drawn larger than to scale) */
+    const cx = X(0), cy = Y(NC_R + NC.h), a = -NC.th * DEG, L = 22;
+    ctx.save(); ctx.translate(cx, cy); ctx.strokeStyle = NT.ink; ctx.lineWidth = 1;
+    ctx.save(); ctx.translate(0, -7); ctx.rotate(a); ctx.fillStyle = '#2f3540';
+    ctx.beginPath(); ctx.moveTo(-8, -4.5); ctx.lineTo(L, -3); ctx.lineTo(L, 3); ctx.lineTo(-8, 4.5); ctx.arc(-8, 0, 4.5, Math.PI / 2, -Math.PI / 2); ctx.closePath(); ctx.fill(); ctx.stroke();
+    ctx.fillRect(L - 2, -4, 3, 8); ctx.restore();
+    ctx.fillStyle = '#7a4f2a'; ctx.beginPath(); ctx.arc(-1, -4, 5, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
+    ctx.restore();
+    /* labels: the landing distance of each landed shot */
+    ctx.font = `600 12px ${ui}`; ctx.textBaseline = 'top';
+    const boxes = [];   /* a label that would cover one already drawn is left out (the shot list has every number) */
+    for (const s of NC.shots.slice().reverse()) {
+      if (s.f.end !== 'lands' || ncTime(s) < s.f.tEnd) continue;
+      const q = s.f.land, bx = X(q.x), by = Y(q.y); if (bx < 0 || bx > W || by < 0 || by > H) continue;
+      const txt = ncFmtKm(q.arc), w = ctx.measureText(txt).width, right = bx > W - 90, lx = right ? bx - 8 - w : bx + 8, ly = by + 6;
+      if (boxes.some((b) => lx < b[0] + b[2] + 4 && lx + w + 4 > b[0] && ly < b[1] + 16 && ly + 16 > b[1])) continue;
+      boxes.push([lx, ly, w]);
+      ctx.fillStyle = NT.c[s.slot % 8]; ctx.textAlign = 'left'; ctx.fillText(txt, lx, ly);
+    }
+    ncScaleBar();
+  }
+  function ncArrows(ctx, bx, by, q) {
+    const v = Math.hypot(q[2], q[3]), r = Math.hypot(q[0], q[1]), g = NC_GM / (r * r);
+    const lv = 40 * v / ncCirc(NC_R), lg = 30 * g / (NC_GM / (NC_R * NC_R));
+    const ux = q[2] / v, uy = -q[3] / v, gx = -q[0] / r, gy = q[1] / r;
+    arrow(ctx, bx, by, bx + ux * lv, by + uy * lv, NT.vel, 2.2, null, 1);
+    arrow(ctx, bx, by, bx + gx * lg, by + gy * lg, NT.grav, 2.2, null, 1);
+  }
+  function ncScaleBar() {
+    const c = NC.cam, want = 120 / c.k, p = Math.pow(10, Math.floor(Math.log10(want))), m = [1, 2, 5, 10].map((f) => f * p).filter((x) => x <= want).pop() || p;
+    const px = m * c.k;
+    const el = $('ncScale'); el.textContent = ncFmtKm(m); el.style.borderTop = `3px solid ${NT.ink}`; el.style.minWidth = Math.round(px) + 'px'; el.style.boxSizing = 'border-box';
+  }
+
+  /* ---- switching modes ---- */
+  function ncMode(on) {
+    NC.on = on;
+    bench.classList.toggle('nc', on); document.body.toggleAttribute('data-nc', on);
+    for (const b of document.querySelectorAll('#modeSeg [data-mode]')) b.setAttribute('aria-pressed', String((b.dataset.mode === 'cannon') === on));
+    view.parentElement.hidden = on; chart.parentElement.hidden = on; ncPane.hidden = !on;
+    $('flatLede').hidden = on; $('ncLede').hidden = !on;
+    const seg = $('modeSeg');
+    if (on) $('ncBar').appendChild(seg); else $('flatBar').insertBefore(seg, $('flatBar').firstChild);
+    if (on) { NT = ncTok(); NC.cam = null; requestAnimationFrame(() => { ncResize(); ncList(); ncSync(); }); }
+    else { ncPlay(false); requestAnimationFrame(() => { resize(); fitAndPlot(); }); }
+  }
+  for (const b of document.querySelectorAll('#modeSeg [data-mode]')) b.addEventListener('click', () => { if ((b.dataset.mode === 'cannon') !== NC.on) ncMode(!NC.on); });
+  $('ncFire').addEventListener('click', ncFire);
+  $('ncSeries').addEventListener('click', ncSeries);
+  $('ncReset').addEventListener('click', ncResetRun);
+  $('ncPlay').addEventListener('click', () => {
+    if (NC.playing) ncPlay(false);
+    else if (!NC.shots.some(ncMoving)) ncFire();   /* nothing in flight: Play fires, so the first press always does something */
+    else ncPlay(true);
+  });
+  for (const b of document.querySelectorAll('#ncSpeed [data-ncs]')) b.addEventListener('click', () => {
+    NC.speed = +b.dataset.ncs; for (const o of document.querySelectorAll('#ncSpeed [data-ncs]')) o.setAttribute('aria-pressed', String(o === b));
+  });
+  for (const b of document.querySelectorAll('#ncPresets [data-nc]')) b.addEventListener('click', () => { NC.v = ncSetV(b.dataset.nc); NC.th = 0; ncSync(); });
+  $('ncV').addEventListener('input', (e) => { NC.v = Math.round(+e.target.value * 100) * 10; ncSync(); });
+  $('ncH').addEventListener('input', (e) => { NC.h = Math.round(+e.target.value) * 1000; ncSync(); });
+  $('ncTh').addEventListener('input', (e) => { NC.th = Math.round(+e.target.value); ncSync(); });
+  for (const [id, k] of [['ncArrows', 'arrows'], ['ncAir', 'air'], ['ncNext', 'next']]) $(id).addEventListener('change', (e) => { NC[k] = e.target.checked; ncDraw(); });
+  ncCan.addEventListener('keydown', (e) => {
+    const big = e.shiftKey;
+    if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') NC.v = Math.min(12000, Math.max(500, NC.v + (e.key === 'ArrowRight' ? 1 : -1) * (big ? 1000 : 100)));
+    else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') NC.th = Math.min(60, Math.max(0, NC.th + (e.key === 'ArrowUp' ? 1 : -1) * (big ? 5 : 1)));
+    else if (e.key === 'PageUp' || e.key === 'PageDown') NC.h = Math.min(1000e3, Math.max(10e3, NC.h + (e.key === 'PageUp' ? 1 : -1) * (big ? 100e3 : 10e3)));
+    else if (e.key === 'Enter') { ncFire(); e.preventDefault(); return; }
+    else return;
+    e.preventDefault(); ncSync();
+  });
+  new ResizeObserver(ncResize).observe(ncPane);
+  const ncRetheme = () => { NT = ncTok(); ncList(); ncDraw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', ncRetheme); } catch (_) {}
+  new MutationObserver(ncRetheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  if (window.VD && VD.panel) VD.panel({ play: '#ncPlay', reset: '#ncReset', speed: '#ncSpeed', clock: '#ncClock', bar: '#ncBar',
+    step: { run: () => ncAdvance(60), label: 'Step', title: 'Move every shot one minute further along' } });
+  ncTexts(); ncSync();
+  window.__newtonCannon = { NC, ncMode, ncFire, ncSeries, ncAdvance, ncResetRun, ncSel, ncTime };
 
   // ---------- boot ----------
   syncSliders(); syncAirChips(); presetHint(); renderList(); renderTable();

@@ -30,10 +30,18 @@ VDI18N.add('es', 'demo/projectile-drag', {
   "<a><span>←</span> <span>Gráficas de movimiento</span></a><a><span>Pelota lanzada desde un carrito en movimiento</span> <span>→</span></a>",
 "Launch balls with and without air resistance and compare them side by side. Drag bends the path, and it matters more for light balls than for heavy ones of the same size.":
   "Lanza pelotas con y sin resistencia del aire y compáralas lado a lado. El arrastre curva la trayectoria, y afecta más a las pelotas ligeras que a las pesadas del mismo tamaño.",
+"Newton's cannon: fire a ball sideways from a mountain on a round Earth. Faster shots land farther around the curve, until the ground curves away as fast as the ball falls and it never lands: it orbits, falling forever.":
+  "El cañón de Newton: dispara una bala de lado desde una montaña sobre una Tierra redonda. Los disparos más rápidos caen más lejos alrededor de la curva, hasta que el suelo se curva tan rápido como cae la bala y nunca aterriza: está en órbita, cayendo para siempre.",
 "· F = ½ρC<sub>d</sub>Av²":
   "· F = ½ρC<sub>d</sub>Av²",
+"· g = GM/r²":
+  "· g = GM/r²",
 "Flight view. Drag anywhere to aim the launcher, drag the arrow tip to set speed and angle, drag the round hub up or down to set the launch height. Keys: arrow keys change the launch angle (Shift for {#} degrees), Page Up and Page Down change the launch height (Shift for {#} m), Enter launches, comma and period move the time cursor one dot earlier or later, Home and End jump to launch and landing, Escape hides the cursor, C captures a reading.":
   "Vista del vuelo. Arrastra en cualquier parte para apuntar el lanzador, arrastra la punta de la flecha para fijar la rapidez y el ángulo, arrastra el eje redondo hacia arriba o hacia abajo para fijar la altura de lanzamiento. Teclas: las flechas cambian el ángulo de lanzamiento (Shift para {#} grados), Re Pág y Av Pág cambian la altura de lanzamiento (Shift para {#} m), Enter lanza, coma y punto mueven el cursor de tiempo un punto antes o después, Inicio y Fin saltan al lanzamiento y al aterrizaje, Escape oculta el cursor, C registra una lectura.",
+"Flat ground":
+  "Suelo plano",
+"Newton's cannon":
+  "Cañón de Newton",
 "Time scale":
   "Escala de tiempo",
 "Fly every shot again from the same start time, so they race":
@@ -48,8 +56,114 @@ VDI18N.add('es', 'demo/projectile-drag', {
   "Arrastra la punta de la flecha para apuntar, el eje del lanzador para subirlo, arrastra en otra parte para girar, usa la rueda para hacer zoom.",
 "Graphs of horizontal position, height and speed against time for every shot, and range against launch angle. Point at a time graph to preview a time, click to set the time cursor there. Drag across the range graph to set the launch angle. The same keys as the flight view work here.":
   "Gráficas de la posición horizontal, la altura y la rapidez en función del tiempo para cada tiro, y del alcance en función del ángulo de lanzamiento. Señala una gráfica de tiempo para ver un instante, haz clic para poner ahí el cursor de tiempo. Arrastra sobre la gráfica de alcance para fijar el ángulo de lanzamiento. Aquí funcionan las mismas teclas que en la vista del vuelo.",
+"Newton's cannon: Earth to scale with a mountain and a cannon on top, and the path of every shot. Keys: left and right arrows change the launch speed, up and down the launch angle, Page Up and Page Down the mountain height, Enter fires.":
+  "Cañón de Newton: la Tierra a escala con una montaña y un cañón en la cima, y la trayectoria de cada disparo. Teclas: las flechas izquierda y derecha cambian la rapidez de lanzamiento, arriba y abajo el ángulo, Re Pág y Av Pág la altura de la montaña, Enter dispara.",
+"Time controls":
+  "Controles de tiempo",
+"Run or pause the clock of every shot":
+  "Corre o pausa el reloj de todos los disparos",
+"Move every shot one minute further along":
+  "Avanza cada disparo un minuto",
+"Step":
+  "Paso",
+"Clear every shot and set the clock back to zero":
+  "Borra todos los disparos y regresa el reloj a cero",
+"<span>Speed</span>":
+  "<span>Velocidad</span>",
+"Earth, the mountain and the paths are to scale; the ball, the cannon and the arrows are not.":
+  "La Tierra, la montaña y las trayectorias están a escala; la bala, el cañón y las flechas no.",
 "Divider between the flight and the graph":
   "Divisor entre el vuelo y la gráfica",
+"Short arc":
+  "Arco corto",
+"Farther around":
+  "Más lejos",
+"Almost around":
+  "Casi la vuelta",
+"Circular orbit":
+  "Órbita circular",
+"Ellipse":
+  "Elipse",
+"Escape":
+  "Escape",
+"Clear the shots and fire one of each setup above at once, from the slowest to the fastest":
+  "Borra los disparos y dispara a la vez uno de cada configuración de arriba, del más lento al más rápido",
+"Fire the whole series":
+  "Disparar toda la serie",
+"Your own settings. Press a setup above to start from one of the classic shots.":
+  "Tus propios valores. Presiona una configuración de arriba para empezar con uno de los disparos clásicos.",
+"Launch speed v₀":
+  "Rapidez de lanzamiento v₀",
+"Mountain height":
+  "Altura de la montaña",
+"Launch angle above level":
+  "Ángulo de lanzamiento sobre la horizontal",
+"The mountain top is inside the air here. This model leaves drag out, so a real ball would slow down and land sooner.":
+  "Aquí la cima de la montaña está dentro del aire. Este modelo no incluye el arrastre, así que una bala real se frenaría y caería antes.",
+"Newton's cannon fires level, at {#}°. On the picture,":
+  "El cañón de Newton dispara horizontal, a {#}°. En la imagen,",
+"change the speed by {#} km/s (with":
+  "cambian la rapidez en {#} km/s (con",
+"the angle,":
+  "el ángulo,",
+"the mountain height, and":
+  "la altura de la montaña, y",
+"fires.":
+  "dispara.",
+"Shots":
+  "Tiros",
+"Shots on the picture":
+  "Disparos en la imagen",
+"Time since launch":
+  "Tiempo desde el lanzamiento",
+"Height above the ground":
+  "Altura sobre el suelo",
+"Distance around Earth":
+  "Distancia alrededor de la Tierra",
+"The readings are for the selected shot (the newest unless you click another). Distance around Earth is measured along the ground under the ball, from the foot of the mountain. Up to {#} shots; the oldest drops off.":
+  "Las lecturas son del disparo seleccionado (el más reciente, a menos que hagas clic en otro). La distancia alrededor de la Tierra se mide por el suelo bajo la bala, desde el pie de la montaña. Hasta {#} disparos; el más antiguo se quita.",
+"Prediction for these settings":
+  "Predicción con estos valores",
+"What the ball will do":
+  "Qué hará la bala",
+"Lands {#} km around Earth":
+  "Cae a {#} km alrededor de la Tierra",
+"Circular orbit speed here, √(GM/r)":
+  "Rapidez de órbita circular aquí, √(GM/r)",
+"Escape speed here, √(2GM/r)":
+  "Rapidez de escape aquí, √(2GM/r)",
+"Lowest point above the ground":
+  "Punto más bajo sobre el suelo",
+"below the ground":
+  "bajo el suelo",
+"Highest point above the ground":
+  "Punto más alto sobre el suelo",
+"Time for one orbit":
+  "Tiempo de una órbita",
+"lands after {#} min {#} s":
+  "cae después de {#} min {#} s",
+"Flat ground with g = {#} m/s², same shot":
+  "Suelo plano con g = {#} m/s², mismo disparo",
+"lands {#} km away":
+  "cae a {#} km",
+"From the speed and height at launch: the energy per kilogram ½v² − GM/r and the angular momentum fix the ellipse (or the open path) the ball follows. It lands when the lowest point of that ellipse is below the ground. The flat ground line is the same shot in the rest of this page's model, where the ground is flat and g is the same everywhere.":
+  "A partir de la rapidez y la altura al lanzar: la energía por kilogramo ½v² − GM/r y el momento angular fijan la elipse (o la trayectoria abierta) que sigue la bala. Cae cuando el punto más bajo de esa elipse queda bajo el suelo. La línea de suelo plano es el mismo disparo con el modelo del resto de esta página, donde el suelo es plano y g es igual en todas partes.",
+"Why it never lands":
+  "Por qué nunca cae al suelo",
+"The ball is falling toward Earth's center the whole time, at any speed. What changes is the ground underneath it. Earth's surface curves down by {#} m over a level distance of {#} km. A ball moving sideways at {#} km/s covers that distance in one second, and in that second it falls ½gt² = {#} m (g = GM/R² = {#} m/s² at the ground). It falls exactly as fast as the ground curves away, so it never gets any closer: it is in orbit. Slower, it falls faster than the ground curves away and lands. Faster, it climbs away from the ground on an ellipse, and at {#} km/s, the escape speed at the ground, it never comes back. From the top of a mountain r is larger, so both speeds are a little lower there: v = √(GM/r) for a circle and √{#} times that to escape.":
+  "La bala cae hacia el centro de la Tierra todo el tiempo, a cualquier rapidez. Lo que cambia es el suelo debajo de ella. La superficie de la Tierra baja {#} m en una distancia horizontal de {#} km. Una bala que se mueve de lado a {#} km/s recorre esa distancia en un segundo, y en ese segundo cae ½gt² = {#} m (g = GM/R² = {#} m/s² en el suelo). Cae exactamente tan rápido como el suelo se curva, así que nunca se acerca: está en órbita. Más lenta, cae más rápido de lo que el suelo se curva y llega al suelo. Más rápida, se aleja del suelo en una elipse, y a {#} km/s, la rapidez de escape en el suelo, nunca regresa. Desde la cima de una montaña r es mayor, así que ambas rapideces son un poco menores ahí: v = √(GM/r) para un círculo y √{#} veces eso para escapar.",
+"Velocity and gravity arrows":
+  "Flechas de velocidad y gravedad",
+"Edge of the air, {#} km":
+  "Límite del aire, {#} km",
+"Next shot":
+  "Siguiente tiro",
+"<span><i></i>Shots, numbered, one color each</span> <span><i></i>Next shot with the current settings</span> <span><i></i>Velocity of the selected ball</span> <span><i></i>Gravity on it, always toward Earth's center</span>":
+  "<span><i></i>Disparos, numerados, un color cada uno</span> <span><i></i>Siguiente disparo con los valores actuales</span> <span><i></i>Velocidad de la bala seleccionada</span> <span><i></i>Gravedad sobre ella, siempre hacia el centro de la Tierra</span>",
+"The model":
+  "El modelo",
+"Gravity pulls toward Earth's center with g = GM/r², GM = {#} × {#}¹⁴ m³/s², and Earth is a sphere of mean radius {#} km. Approximations: no air drag at any height (a real ball below about {#} km would slow down and land sooner), Earth does not spin, and Earth's pull is the same as if all its mass sat at its center. The path is found with Yoshida's fourth order symplectic method in steps of {#} s, so the energy stays fixed and a closed orbit comes back to the mountain top to well under a meter; the landing point is interpolated within the last step. The ball, the cannon and the arrows are drawn larger than to scale. No real mountain is anywhere near this tall: this is Newton's thought experiment. In a real orbit the ball would come back and hit the mountain from behind; here it passes through it.":
+  "La gravedad jala hacia el centro de la Tierra con g = GM/r², GM = {#} × {#}¹⁴ m³/s², y la Tierra es una esfera de radio medio {#} km. Aproximaciones: sin arrastre del aire a ninguna altura (una bala real por debajo de unos {#} km se frenaría y caería antes), la Tierra no gira, y su atracción es la misma que si toda su masa estuviera en su centro. La trayectoria se calcula con el método simpléctico de cuarto orden de Yoshida en pasos de {#} s, así que la energía se conserva y una órbita cerrada regresa a la cima de la montaña con mucho menos de un metro de diferencia; el punto de caída se interpola dentro del último paso. La bala, el cañón y las flechas se dibujan más grandes que a escala. Ninguna montaña real es tan alta: es el experimento mental de Newton. En una órbita real la bala regresaría y chocaría con la montaña por detrás; aquí la atraviesa.",
 "Projectile":
   "Proyectil",
 "Baseball":
@@ -76,8 +190,6 @@ VDI18N.add('es', 'demo/projectile-drag', {
   "Ángulo",
 "Each button fires a set of shots that differ in one setting only, starting from the current settings, and races them. The set replaces the shots on screen.":
   "Cada botón dispara un conjunto de tiros que difieren en un solo ajuste, a partir de la configuración actual, y los pone a competir. El conjunto reemplaza los tiros en pantalla.",
-"Shots":
-  "Tiros",
 "{#} of {#}":
   "{#} de {#}",
 "Shots on screen":
@@ -90,8 +202,6 @@ VDI18N.add('es', 'demo/projectile-drag', {
   "Quitar el tiro {#}",
 "R range, H highest point, T flight time. Settings that differ between shots are in bold. Click a shot to load its settings into the controls. Up to {#} shots; the oldest drops off.":
   "R alcance, H punto más alto, T tiempo de vuelo. Los ajustes que difieren entre tiros están en negritas. Haz clic en un tiro para cargar su configuración en los controles. Hasta {#} tiros; el más antiguo se elimina.",
-"Launch speed v₀":
-  "Rapidez de lanzamiento v₀",
 "Launch angle θ":
   "Ángulo de lanzamiento θ",
 "Launch height":
@@ -252,8 +362,6 @@ VDI18N.add('es', 'demo/projectile-drag', {
   "Vector velocidad",
 "Time dots":
   "Puntos de tiempo",
-"Next shot":
-  "Siguiente tiro",
 "Weight and drag arrows (3D)":
   "Flechas de peso y arrastre (3D)",
 "Graph of drag acceleration":
@@ -302,10 +410,38 @@ VDI18N.add('es', 'demo/projectile-drag', {
   "Haz unos cuantos lanzamientos para empezar el histograma",
 "The monkey is drawn in the Flat view.":
   "El mono se dibuja en la vista Plano.",
+"No shots yet. Press Fire.":
+  "Aún no hay disparos. Presiona Disparar.",
 "No shots yet. Press Launch, or pick a Compare set.":
   "Aún no hay tiros. Pulsa Lanzar, o elige un conjunto de Comparar.",
+"Balls {#}× real size; distances to scale":
+  "Pelotas {#}× su tamaño real; distancias a escala",
 "<span>Stopwatch<small>No clock in this view</small></span>":
   "<span>Cronómetro<small>No hay reloj en esta vista</small></span>",
+"<span>Ruler<small>No true length scale in this view</small></span>":
+  "<span>Regla<small>Esta vista no tiene escala real de longitud</small></span>",
+"Shot {#}: select it and load its settings":
+  "Disparo {#}: selecciónalo y carga sus valores",
+"<span>{#}</span><span><span><span>v₀ <b>{#} km/s</b></span><span>h {#} km</span></span><span><span>lands {#} km around</span></span></span>":
+  "<span>{#}</span><span><span><span>v₀ <b>{#} km/s</b></span><span>h {#} km</span></span><span><span>cae a {#} km alrededor</span></span></span>",
+"Slow: the ball falls to the ground before the curve of Earth matters much, much like a shot on flat ground.":
+  "Lento: la bala cae al suelo antes de que la curva de la Tierra importe mucho, casi como un disparo en suelo plano.",
+"Faster: the ground curves away under the ball while it falls, so it lands farther than it would on flat ground.":
+  "Más rápido: el suelo se curva bajo la bala mientras cae, así que llega más lejos que en suelo plano.",
+"Faster still: the ball lands a long way round, on the far side of the curve.":
+  "Aún más rápido: la bala cae muy lejos, del otro lado de la curva.",
+"The circular orbit speed for this mountain: the ground curves away exactly as fast as the ball falls, so the ball keeps falling and never lands.":
+  "La rapidez de órbita circular para esta montaña: el suelo se curva exactamente tan rápido como cae la bala, así que sigue cayendo y nunca llega al suelo.",
+"Orbits: it falls forever and never lands":
+  "Órbita: cae para siempre y nunca llega al suelo",
+"Faster than a circular orbit: the ball climbs away on an ellipse and comes back to the mountain top once each orbit.":
+  "Más rápido que una órbita circular: la bala se aleja en una elipse y regresa a la cima de la montaña una vez en cada órbita.",
+"Faster than the escape speed: the ball slows as it climbs but never stops and never comes back.":
+  "Más rápido que la rapidez de escape: la bala se frena al subir, pero nunca se detiene ni regresa.",
+"Escapes: it never comes back":
+  "Escapa: nunca regresa",
+"none, it keeps going":
+  "ninguno, sigue de largo",
 "Very light for its size. The terminal speed is far below v₀, so drag rules the whole flight.":
   "Muy ligera para su tamaño. La rapidez terminal está muy por debajo de v₀, así que el arrastre domina todo el vuelo.",
 "Dense and heavy: v₀ is well below the terminal speed and the path is close to the vacuum parabola.":
@@ -350,22 +486,34 @@ VDI18N.add('es', 'demo/projectile-drag', {
   "La misma pelota a {#}°, {#}°, {#}°, {#}° y {#}°. En el vacío {#}° y {#}° aterrizan juntas, y también {#}° y {#}°. Con arrastre no.",
 "<span>{#}</span><span><span>Baseball</span><span><span>{#} g</span><span>{#} cm</span><span>Cd {#}</span><span>ρ {#}</span></span><span><span>{#} m/s</span><span><b>{#}°</b></span><span>h {#} m</span></span><span><span>R {#} m</span><span>H {#} m</span><span>T {#} s</span></span><span><span>impact {#} m/s</span><span>vₜ {#} m/s</span></span></span>":
   "<span>{#}</span><span><span>Pelota de béisbol</span><span><span>{#} g</span><span>{#} cm</span><span>Cd {#}</span><span>ρ {#}</span></span><span><span>{#} m/s</span><span><b>{#}°</b></span><span>h {#} m</span></span><span><span>R {#} m</span><span>H {#} m</span><span>T {#} s</span></span><span><span>impacto {#} m/s</span><span>vₜ {#} m/s</span></span></span>",
-"sin {#}θ":
-  "sin {#}θ",
 "Capture the range of shots at two or more angles (three give error bars), same speed, from the ground, with Air resistance Off.":
   "Captura el alcance de tiros a dos o más ángulos (tres dan barras de error), con la misma rapidez, desde el suelo, con Resistencia del aire Desactivada.",
-"Plot of R against sin {#}θ from your readings, {#} points, with a least squares line with slope and intercept, and a strip of residuals underneath. Show data table lists the points.":
-  "Gráfica de R en función de sin {#}θ con tus lecturas, {#} puntos, con una recta de mínimos cuadrados con pendiente y ordenada al origen, y una franja de residuos debajo. Mostrar la tabla de datos lista los puntos.",
+"sin {#}θ":
+  "sin {#}θ",
 "Air resistance is off, so the path is the vacuum parabola, and the mass and size of the ball no longer matter.":
   "La resistencia del aire está desactivada, así que la trayectoria es la parábola en el vacío, y la masa y el tamaño de la pelota ya no importan.",
 "<span>{#}</span><span><span>Baseball</span><span><span>{#} g</span><span>{#} cm</span><span>Cd {#}</span><span><b>ρ {#}</b></span></span><span><span>{#} m/s</span><span><b>{#}°</b></span><span>h {#} m</span></span><span><span>R {#} m</span><span>H {#} m</span><span>T {#} s</span></span><span><span>impact {#} m/s</span><span>vₜ {#} m/s</span></span></span>":
   "<span>{#}</span><span><span>Pelota de béisbol</span><span><span>{#} g</span><span>{#} cm</span><span>Cd {#}</span><span><b>ρ {#}</b></span></span><span><span>{#} m/s</span><span><b>{#}°</b></span><span>h {#} m</span></span><span><span>R {#} m</span><span>H {#} m</span><span>T {#} s</span></span><span><span>impacto {#} m/s</span><span>vₜ {#} m/s</span></span></span>",
 "<span>{#}</span><span><span>Baseball</span><span><span>{#} g</span><span>{#} cm</span><span>Cd {#}</span><span><b>drag off</b></span></span><span><span>{#} m/s</span><span><b>{#}°</b></span><span>h {#} m</span></span><span><span>R {#} m</span><span>H {#} m</span><span>T {#} s</span></span><span><span>impact {#} m/s</span><span>vₜ ∞</span></span></span>":
   "<span>{#}</span><span><span>Pelota de béisbol</span><span><span>{#} g</span><span>{#} cm</span><span>Cd {#}</span><span><b>sin arrastre</b></span></span><span><span>{#} m/s</span><span><b>{#}°</b></span><span>h {#} m</span></span><span><span>R {#} m</span><span>H {#} m</span><span>T {#} s</span></span><span><span>impacto {#} m/s</span><span>vₜ ∞</span></span></span>",
-"Energy bars, in J: Kinetic {#}, Potential {#}, To drag {#}×{#}^-{#}, Total {#}.":
-  "Barras de energía, en J: Cinética {#}, Potencial {#}, Al arrastre {#}×{#}^-{#}, Total {#}.",
-"Balls {#}× real size; distances to scale":
-  "Pelotas {#}× su tamaño real; distancias a escala",
+"Close":
+  "Cerrar",
+"Lower or raise the launch angle (Shift for {#} degrees)":
+  "Baja o sube el ángulo de lanzamiento (Shift para {#} grados)",
+"Step the time cursor back or forward (Shift for {#} steps)":
+  "Mueve el cursor de tiempo atrás o adelante (Shift para {#} pasos)",
+"Newton's cannon: lower or raise the launch speed by {#} km/s (Shift for {#} km/s)":
+  "Cañón de Newton: baja o sube la rapidez de lanzamiento en {#} km/s (Shift para {#} km/s)",
+"Newton's cannon: raise or lower the launch angle (Shift for {#} degrees)":
+  "Cañón de Newton: sube o baja el ángulo de lanzamiento (Shift para {#} grados)",
+"Newton's cannon: raise or lower the mountain (Shift for {#} km)":
+  "Cañón de Newton: sube o baja la montaña (Shift para {#} km)",
+"Newton's cannon: fire":
+  "Cañón de Newton: disparar",
+"<span>{#}</span><span><span><span>v₀ <b>{#} km/s</b></span><span>h {#} km</span></span><span><span>escapes</span></span></span>":
+  "<span>{#}</span><span><span><span>v₀ <b>{#} km/s</b></span><span>h {#} km</span></span><span><span>escapa</span></span></span>",
+"Plot of R against sin {#}θ from your readings, {#} points, with a least squares line with slope and intercept, and a strip of residuals underneath. Show data table lists the points.":
+  "Gráfica de R en función de sin {#}θ con tus lecturas, {#} puntos, con una recta de mínimos cuadrados con pendiente y ordenada al origen, y una franja de residuos debajo. Mostrar la tabla de datos lista los puntos.",
 "No drag, so the path is the vacuum parabola.":
   "Sin arrastre, así que la trayectoria es la parábola en el vacío.",
 "<span>{#}</span><span><span><span><b>{#} g</b></span><span>{#} cm</span><span>Cd {#}</span><span>ρ {#}</span></span><span><span>{#} m/s</span><span>{#}°</span><span>h {#} m</span></span><span><span>R {#} m</span><span>H {#} m</span><span>T {#} s</span></span><span><span>impact {#} m/s</span><span>vₜ ∞</span></span></span>":
@@ -379,5 +527,15 @@ VDI18N.add('es', 'demo/projectile-drag', {
 "<span>{#}</span><span><span>Baseball</span><span><span>{#} g</span><span>{#} cm</span><span><b>Cd {#}</b></span><span>ρ {#}</span></span><span><span>{#} m/s</span><span>{#}°</span><span>h {#} m</span></span><span><span>R {#} m</span><span>H {#} m</span><span>T {#} s</span></span><span><span>impact {#} m/s</span><span>vₜ ∞</span></span></span>":
   "<span>{#}</span><span><span>Pelota de béisbol</span><span><span>{#} g</span><span>{#} cm</span><span><b>Cd {#}</b></span><span>ρ {#}</span></span><span><span>{#} m/s</span><span>{#}°</span><span>h {#} m</span></span><span><span>R {#} m</span><span>H {#} m</span><span>T {#} s</span></span><span><span>impacto {#} m/s</span><span>vₜ ∞</span></span></span>",
 "<span>{#}</span><span><span>Baseball</span><span><span>{#} g</span><span>{#} cm</span><span>Cd {#}</span><span>ρ {#}</span></span><span><span>{#} m/s</span><span><b>{#}°</b></span><span>h {#} m</span></span><span><span>R {#} m</span><span>H {#} m</span><span>T {#} s</span></span><span><span>impact {#} m/s</span><span>vₜ ∞</span></span></span>":
-  "<span>{#}</span><span><span>Pelota de béisbol</span><span><span>{#} g</span><span>{#} cm</span><span>Cd {#}</span><span>ρ {#}</span></span><span><span>{#} m/s</span><span><b>{#}°</b></span><span>h {#} m</span></span><span><span>R {#} m</span><span>H {#} m</span><span>T {#} s</span></span><span><span>impacto {#} m/s</span><span>vₜ ∞</span></span></span>"
+  "<span>{#}</span><span><span>Pelota de béisbol</span><span><span>{#} g</span><span>{#} cm</span><span>Cd {#}</span><span>ρ {#}</span></span><span><span>{#} m/s</span><span><b>{#}°</b></span><span>h {#} m</span></span><span><span>R {#} m</span><span>H {#} m</span><span>T {#} s</span></span><span><span>impacto {#} m/s</span><span>vₜ ∞</span></span></span>",
+"<span>{#}</span><span><span><span>v₀ <b>{#} km/s</b></span><span>h {#} km</span></span><span><span>orbits every {#} min</span></span></span>":
+  "<span>{#}</span><span><span><span>v₀ <b>{#} km/s</b></span><span>h {#} km</span></span><span><span>órbita cada {#} min</span></span></span>",
+"{#} h {#} min ({#} time round)":
+  "{#} h {#} min ({#} vuelta)",
+"t = {#} days":
+  "t = {#} días",
+"{#} days ({#} times round)":
+  "{#} días ({#} vueltas)",
+"Energy bars, in J: Kinetic {#}, Potential {#}, To drag {#}×{#}^-{#}, Total {#}.":
+  "Barras de energía, en J: Cinética {#}, Potencial {#}, Al arrastre {#}×{#}^-{#}, Total {#}."
 });
