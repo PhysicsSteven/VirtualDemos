@@ -224,3 +224,12 @@
 .vd-split-marks i { position: absolute; width: 0; border-left: 1px dashed color-mix(in srgb, var(--accent) 70%, transparent); }
 .vd-split-marks i.y { height: 0; border-left: 0; border-top: 1px dashed color-mix(in srgb, var(--accent) 70%, transparent); }
 @media print { .vd-split, .vd-split-marks { display: none; } }
+/* touch-targets (QoL sweep, 2026-11-08): on a touch screen the small folds in the sidebar (More about this, About this setup,
+   the section folds, Plot and fit) and the course links above the title are easy to miss with a finger; give them at least 32 px to land on.
+   Only for a coarse pointer, so mouse layouts are unchanged. */
+@media (pointer: coarse) {
+  :where(:root:not([data-vd-off~="touch-targets"])) .rail details.more > summary { padding-block: 7px; }
+  :where(:root:not([data-vd-off~="touch-targets"])) .rail details.fold > summary { min-height: 36px; }
+  :where(:root:not([data-vd-off~="touch-targets"])) details.plotfold > summary { padding-block: 7px; }
+  :where(:root:not([data-vd-off~="touch-targets"])) .vd-crumbs a { display: inline-flex; align-items: center; min-height: 32px; }
+}

@@ -1309,6 +1309,21 @@
     'mp-proton-qa': 'proton-qa', 'mp-shielding-barrier': 'shielding-barrier', 'mp-shielding-rooms': 'shielding-rooms',
     'mp-technetium-generator': 'technetium-generator', 'mp-ultrasound-attenuation': 'ultrasound-attenuation',
     'relative-motion': 'cart-launch', 'static-equilibrium': 'equilibrium' };
+  /* QoL sweep (2026-11-08): the theme's site title ("VirtualDemos", a second h1 above the worksheet's own) becomes a plain link
+     with the site's name, so the worksheet title is the page's only h1; and on a worksheet the link to its demo is a button, the
+     first thing a student needs. Screen only: print.css still prints the link spelled out. */
+  (function siteTitle() {
+    const a = document.querySelector('.markdown-body > h1:first-child > a[href]');
+    if (!a || a.closest('h1').nextElementSibling === null) return;
+    const p = document.createElement('p'); p.className = 'ws-site';
+    const l = document.createElement('a'); l.href = a.getAttribute('href'); l.textContent = 'Virtual Physics Demos';
+    p.appendChild(l); a.closest('h1').replaceWith(p);
+  })();
+  if (m) (function openDemo() {
+    const md = document.querySelector('.markdown-body') || document.body;
+    const link = [...md.querySelectorAll('a[href*="/demos/"]')].find((a) => /virtual apparatus|open the demo/i.test(a.textContent));
+    if (link) link.classList.add('ws-open-demo');
+  })();
   if (m) (function howTo(slug) {
     const root = location.pathname.slice(0, location.pathname.indexOf('/curriculum/labs/students/'));
     const v = root + '/demos/media/how-this-works/' + (HOWTO_VIDEO[slug] || slug), md = document.querySelector('.markdown-body') || document.body;

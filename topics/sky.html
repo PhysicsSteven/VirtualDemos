@@ -216,6 +216,9 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
 .unit h2::after { content: ""; flex: 1; align-self: center; height: 1px; background: var(--line); }
 .meta { display: flex; flex-wrap: wrap; gap: 4px 18px; margin: 4px 0 14px; font-family: var(--font-mono); font-size: 0.78rem; color: var(--muted); }
 .meta:empty { display: none; }
+.meta a { color: var(--accent); font-weight: 600; text-underline-offset: 3px; }
+.item:not(:has(> .pic)) { align-self: start; }
+.jump a.here { border-color: var(--accent); color: var(--accent); }
 .unote { margin: 4px 0 14px; max-width: 75ch; color: var(--muted); }
 .unit.optional { margin-top: 30px; padding: 24px 18px 18px; border: 1px dashed var(--line); border-radius: 14px; }
 .optnote { margin: 0 0 4px; font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--equi); }
@@ -411,5 +414,6 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
   </div>
 </footer>
 <script src="search.js" defer></script>
+<script>/* tools/courses.py: mark the unit on screen in the section bar */ (function () { var bar = document.querySelector('.jump'); if (!bar) return; var cu = bar.querySelector('a[aria-current]'); if (cu && bar.scrollWidth > bar.clientWidth) bar.scrollLeft = cu.offsetLeft - bar.clientWidth / 2 + cu.offsetWidth / 2; if (!window.IntersectionObserver) return; var links = [].slice.call(bar.querySelectorAll('a[href^="#"]')), on = {}, cur = null; var secs = links.map(function (a) { return document.getElementById(a.getAttribute('href').slice(1)); }); if (!links.length) return; function mark() { var best = null; secs.forEach(function (s, i) { if (s && on[s.id]) best = best === null ? i : best; }); if (best === null || best === cur) return; if (cur !== null) links[cur].classList.remove('here'); cur = best; var a = links[cur]; a.classList.add('here'); if (bar.scrollWidth > bar.clientWidth) bar.scrollTo({ left: a.offsetLeft - bar.clientWidth / 2 + a.offsetWidth / 2, behavior: 'auto' }); } var io = new IntersectionObserver(function (es) { es.forEach(function (e) { on[e.target.id] = e.isIntersecting; }); mark(); }, { rootMargin: '-35% 0px -60% 0px' }); secs.forEach(function (s) { if (s) io.observe(s); }); })();</script>
 </body>
 </html>

@@ -216,6 +216,9 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
 .unit h2::after { content: ""; flex: 1; align-self: center; height: 1px; background: var(--line); }
 .meta { display: flex; flex-wrap: wrap; gap: 4px 18px; margin: 4px 0 14px; font-family: var(--font-mono); font-size: 0.78rem; color: var(--muted); }
 .meta:empty { display: none; }
+.meta a { color: var(--accent); font-weight: 600; text-underline-offset: 3px; }
+.item:not(:has(> .pic)) { align-self: start; }
+.jump a.here { border-color: var(--accent); color: var(--accent); }
 .unote { margin: 4px 0 14px; max-width: 75ch; color: var(--muted); }
 .unit.optional { margin-top: 30px; padding: 24px 18px 18px; border: 1px dashed var(--line); border-radius: 14px; }
 .optnote { margin: 0 0 4px; font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--equi); }

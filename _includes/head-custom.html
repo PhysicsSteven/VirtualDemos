@@ -42,3 +42,16 @@
 <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script>
 <!-- MathJax does not line break; on a narrow phone a wide display scrolls sideways inside its own box instead of widening the page. -->
 <style>mjx-container[display="true"] { overflow-x: auto; overflow-y: hidden; max-width: 100%; }</style>
+<!-- QoL sweep (2026-11-08): the site name above a handout (worksheet.js turns the theme's second h1 into this line) and the
+     link to the demo as a clear button, on screen only. -->
+<style>
+@media screen {
+  .markdown-body > p.ws-site { margin: 0 0 12px; font-size: 0.95em; font-weight: 600; }
+  .markdown-body > p.ws-site a { color: var(--hd-link, #0366d6); }
+  .markdown-body a.ws-open-demo { display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 6px 16px; border-radius: 8px;
+    background: var(--hd-accent, #0969da); color: var(--hd-bg, #fff); font-weight: 700; text-decoration: none; }
+  .markdown-body a.ws-open-demo::after { content: "\2192"; }
+  .markdown-body a.ws-open-demo:hover { filter: brightness(1.08); text-decoration: none; }
+  .markdown-body a.ws-open-demo:focus-visible { outline: 3px solid var(--hd-accent, #0969da); outline-offset: 3px; }
+}
+</style>

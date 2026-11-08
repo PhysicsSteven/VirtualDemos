@@ -349,15 +349,21 @@ def handout_label(h, i=None):
 
 
 def course_label(cid, h, i=None):
-    """handout_label, marked (warm up) where a WARM_UPS course borrows another course's worksheet."""
-    return handout_label(h, i) + (' (warm up)' if cid in WARM_UPS and cid not in handout_courses(h) else '')
+    """handout_label, marked (warm up) where a WARM_UPS course borrows another course's worksheet. On the page of the course a
+    worksheet title names in parentheses ("... (Astro 2203)"), the name is left off: the page already says which course it is
+    (QoL sweep, 2026-11-08)."""
+    out = handout_label(h, i)
+    if cid in TITLE and out.endswith(f' ({TITLE[cid]})'):
+        out = out[:-len(f' ({TITLE[cid]})')]
+    return out + (' (warm up)' if cid in WARM_UPS and cid not in handout_courses(h) else '')
 
 
 def unit_dates(cid, u):
     """A course week's class days and its required worksheet (unit 'dates', 'required'; Astro 2203, 2026-10-26), for the meta row."""
     out = f'<span>{esc(u["dates"])}</span>' if u.get('dates') else ''
     if u.get('required'):
-        out += f'<span>Required: {esc(course_label(cid, u["required"]))}</span>'
+        out += (f'<span>Required: <a href="curriculum/labs/students/{u["required"]}.html">'
+                f'{esc(course_label(cid, u["required"]))}</a></span>')
     elif u.get('dates') and not u.get('review'):
         out += '<span>No required worksheet</span>'
     return out
@@ -389,13 +395,13 @@ def card(name, demo, unit_secs, cards, notes, cid=None, required=None):
       </li>'''
 
 
-def activity_card(activity, unit_secs):
+def activity_card(activity, unit_secs, cid=None):
     """Standalone worksheet or reading (GPT's renderer patch, 2026-10-22): no demo or thumbnail."""
     secs = sorted([s for s in activity['sections'] if (s['vol'], s['sec']) in unit_secs], key=sec_key)
     chips = ''.join(f'<li><span class="sec">{s["vol"]}:{s["sec"]}</span> {esc(s["title"])}</li>' for s in secs)
     href = activity['url'].removesuffix('.md') + '.html'
     role = 'Worksheet' if activity['kind'] == 'worksheet' else 'Reading and data activity'
-    label = handout_label(activity['id']) if activity['kind'] == 'worksheet' else f'Reading: {HANDOUT_TOPIC[activity["id"]]}'
+    label = course_label(cid, activity['id']) if activity['kind'] == 'worksheet' else f'Reading: {HANDOUT_TOPIC[activity["id"]]}'
     return f'''      <li class="item">
         <div class="body" style="grid-column: 1 / -1">
           <p class="kind"><span class="role">{role}</span></p>
@@ -440,7 +446,7 @@ def course_page(course, m, cards, notes):
         fresh = [n for n in names if home[n] is u]
         seen = [n for n in names if home[n] is not u]
         items = [card(n, demos[n], ukeys, cards, notes, cid, u.get('required')) for n in fresh]
-        items.extend(activity_card(activities[a], ukeys) for a in activity_names)
+        items.extend(activity_card(activities[a], ukeys, cid) for a in activity_names)
         if seen:
             def where(n):
                 refs = ', '.join(f'{s["vol"]}:{s["sec"]}' for s in sorted([x for x in demos[n]['sections'] if (x['vol'], x['sec']) in ukeys], key=sec_key))
@@ -769,9 +775,23 @@ def page_shell(title, sub, lede, facts, jump, body, how, base=False, back=('inde
   </div>
 </footer>
 <script src="search.js" defer></script>
+{SPY}
 </body>
 </html>
 '''
+
+
+# The section bar marks the unit or week on screen as the page scrolls, and on a phone keeps that chip in view in the bar
+# (QoL sweep, 2026-11-08). Only #links in the bar take part; on a topic page the bar scrolls to show the topic you are on.
+SPY = ("<script>/* tools/courses.py: mark the unit on screen in the section bar */ (function () { var bar = document.querySelector('.jump'); "
+       "if (!bar) return; var cu = bar.querySelector('a[aria-current]'); if (cu && bar.scrollWidth > bar.clientWidth) bar.scrollLeft = cu.offsetLeft - bar.clientWidth / 2 + cu.offsetWidth / 2; "
+       "if (!window.IntersectionObserver) return; var links = [].slice.call(bar.querySelectorAll('a[href^=\"#\"]')), on = {}, cur = null; "
+       "var secs = links.map(function (a) { return document.getElementById(a.getAttribute('href').slice(1)); }); if (!links.length) return; "
+       "function mark() { var best = null; secs.forEach(function (s, i) { if (s && on[s.id]) best = best === null ? i : best; }); if (best === null || best === cur) return; "
+       "if (cur !== null) links[cur].classList.remove('here'); cur = best; var a = links[cur]; a.classList.add('here'); "
+       "if (bar.scrollWidth > bar.clientWidth) bar.scrollTo({ left: a.offsetLeft - bar.clientWidth / 2 + a.offsetWidth / 2, behavior: 'auto' }); } "
+       "var io = new IntersectionObserver(function (es) { es.forEach(function (e) { on[e.target.id] = e.isIntersecting; }); mark(); }, { rootMargin: '-35% 0px -60% 0px' }); "
+       "secs.forEach(function (s) { if (s) io.observe(s); }); })();</script>")
 
 
 def shared_css():
@@ -790,6 +810,9 @@ COURSE_CSS = '''
 .unit h2::after { content: ""; flex: 1; align-self: center; height: 1px; background: var(--line); }
 .meta { display: flex; flex-wrap: wrap; gap: 4px 18px; margin: 4px 0 14px; font-family: var(--font-mono); font-size: 0.78rem; color: var(--muted); }
 .meta:empty { display: none; }
+.meta a { color: var(--accent); font-weight: 600; text-underline-offset: 3px; }
+.item:not(:has(> .pic)) { align-self: start; }
+.jump a.here { border-color: var(--accent); color: var(--accent); }
 .unote { margin: 4px 0 14px; max-width: 75ch; color: var(--muted); }
 .unit.optional { margin-top: 30px; padding: 24px 18px 18px; border: 1px dashed var(--line); border-radius: 14px; }
 .optnote { margin: 0 0 4px; font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--equi); }
