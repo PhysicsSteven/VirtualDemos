@@ -22,7 +22,7 @@ group('equilibrium: heat lost by A equals heat gained by B at every time; ΔT de
 });
 group('gas thermometer: P ∝ absolute temperature, zero at −273.15 °C; fixed points; reading back gives the bath', () => {
   const n = 0.02, P0 = c.gasP(n, 0), P100 = c.gasP(n, 99.974);
-  near(P0, 0.02 * 8.314462618 * 273.15 / 1e-3, 1e-12, 'P at ice point');
+  near(P0, 0.02 * 8.31446261815324 * 273.15 / 1e-3, 1e-12, 'P at ice point');
   const slope = (P100 - P0) / 99.974; near(-P0 / slope, -273.15, 1e-9, 'extrapolated zero');
   near(c.gasT(c.gasP(n, 37.2), n), 37.2, 1e-12, 'inverse'); near(c.BATHS.ln2.T, -195.795, 1e-9, 'LN2');
   near(c.follow(20, 0, 12), 20 * Math.exp(-1), 1e-12, 'time constant 12 s');

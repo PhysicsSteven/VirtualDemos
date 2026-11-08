@@ -5873,9 +5873,11 @@
       "requirement": "module",
       "status": "usable",
       "demos": [
-        "ideal-gas"
+        "ideal-gas",
+        "bose-einstein"
       ],
-      "unit": "kinetic-theory"
+      "unit": "kinetic-theory",
+      "note": "Bose–Einstein Condensation (2026-11-08, Claude, beyond the book): the Bose–Einstein distribution for atoms in a box, the quantum counterpart of the Maxwell–Boltzmann speeds of this section; packets of the thermal de Broglie wavelength overlapping into a condensate; no worksheet."
     },
     {
       "vol": 2,
@@ -6942,9 +6944,10 @@
       "requirement": "module",
       "status": "usable",
       "demos": [
-        "resistivity"
+        "resistivity",
+        "bose-einstein"
       ],
-      "note": "Volume 3 mapping (2026-10-24, Claude). Resistivity of a wire: free electron density, drift speed and Fermi speed (Inside the wire).",
+      "note": "Volume 3 mapping (2026-10-24, Claude). Resistivity of a wire: free electron density, drift speed and Fermi speed (Inside the wire). Bose–Einstein Condensation (2026-11-08, Claude, beyond the book): the Bose–Einstein distribution for atoms in a box, the quantum counterpart of the Fermi–Dirac distribution of this section; packets of the thermal de Broglie wavelength overlapping into a condensate; no worksheet.",
       "unit": "condensed-matter"
     },
     {
@@ -11062,6 +11065,31 @@
       "note": "New 2026-11-05 (Claude). Helium 4 from Donnelly and Barenghi 1998 (ITS-90 vapor pressure, entropy, heat capacity, latent heat, density, normal fluid fraction). Pump down through the lambda point, fountain effect h = (1/g)∫S dT, Rollin film transfer at 7.5e-5 cm³/s per cm, Andronikashvili's torsion pendulum. Steve: no worksheet yet. Helium 3 experiment added 2026-11-05: phase diagram from the PLTS-2000 melting curve and Greywall's superfluid line, Pomeranchuk cooling through the A and B transitions.",
       "title": "Superfluid Helium",
       "url": "demos/superfluid-helium.html"
+    },
+    {
+      "demo": "bose-einstein",
+      "course": [
+        "modern",
+        "thermo"
+      ],
+      "sections": [
+        {
+          "vol": 3,
+          "sec": "9.4",
+          "title": "Free Electron Model of Metals"
+        },
+        {
+          "vol": 2,
+          "sec": "2.4",
+          "title": "Distribution of Molecular Speeds"
+        }
+      ],
+      "role": "lab",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "New 2026-11-08 (Claude, at Steve's request after a Veritasium video on Bose–Einstein condensation). An ideal Bose gas of N atoms in a two dimensional box: exact Bose–Einstein occupations of the box levels (chemical potential solved for N), thermal atoms drawn as minimum uncertainty packets of the thermal de Broglie wavelength that overlap and drop into the shared ground state as the gas cools; energy ladder, thermometer, phase as color, the velocity distribution picture of 1995, and the condensate fraction curve. Atoms: Rb 87, Na 23, Li 7, H, He 4 (AME2020 masses). No worksheet yet.",
+      "title": "Bose–Einstein Condensation",
+      "url": "demos/bose-einstein.html"
     },
     {
       "demo": "stress-strain",

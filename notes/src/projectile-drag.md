@@ -22,7 +22,7 @@ For a measurement lab, the **Measure** section sets the **Dot interval** (Auto, 
 1. **Baseball, Air resistance Off.** Ask for the range of a ball thrown at 40 m/s and 45° (Q2), then launch. The two paths coincide at 163 m. Point out the velocity vector at the top: horizontal, not zero.
 2. **Air resistance On.** Ask Q1 first. Launch: the range drops to 94.7 m, the peak is lower and closer to the landing point, and the time dots bunch up on the steep way down. The rail shows v_t = 39.3 m/s, about the same as v₀.
 3. **Best angle.** Drag across the range chart. The solid curve peaks at 40.9°, the dashed one at 45°. Ask why (Q3).
-4. **Ping pong ball and Cannonball.** Same question for each: how big is drag here? Compare v₀/v_t (2.34 and 0.41) with how far the solid path falls short of the dashed one (Q4).
+4. **Ping pong ball and Cannonball.** Same question for each: how big is drag here? Compare v₀/v_t (2.29 and 0.40) with how far the solid path falls short of the dashed one (Q4).
 5. **Shot put.** Drag hardly matters (v₀/v_t = 0.09), yet the best angle is 42.4° in vacuum, because the ball leaves the hand 2 m up (Q5).
 6. **Denver** (if time allows). Switch the air from **Sea level** to **Denver** with the baseball and predict the change before launching (Q6).
 7. **Many launches.** Open **Many launches** with the baseball at 40 m/s and 45°, an angle spread of 1° and a speed spread of 1%, and fire 1000. With air resistance Off the histogram centers on 163 m with a spread of about 3.2 m, as the first order estimate 2σ_v R = 3.26 m predicts (the angle spread barely matters at 45°, only pulling the mean down slightly). With air On the mean is 94.8 m and the spread about 1.2 m. Ask why the angle spread matters so much more at 30°.
@@ -36,7 +36,7 @@ For a measurement lab, the **Measure** section sets the **Dot interval** (Auto, 
 
 **Q3.** With drag on, the best angle for the baseball is about 41°, not 45°. Give a physical explanation of why drag favors a lower angle. Then use the range chart to check whether this holds for every preset launched from the ground.
 
-**Q4.** Show that at the moment of launch the drag force divided by the weight is (v₀/v_t)². Find this ratio for the ping pong ball (v₀ = 20 m/s, v_t = 8.6 m/s) and for the cannonball (v₀ = 50 m/s, v_t = 122.7 m/s). Which one should be affected more by air, and does the demo agree?
+**Q4.** Show that at the moment of launch the drag force divided by the weight is (v₀/v_t)². Find this ratio for the ping pong ball (v₀ = 20 m/s, v_t = 8.7 m/s) and for the cannonball (v₀ = 50 m/s, v_t = 125.4 m/s). Which one should be affected more by air, and does the demo agree?
 
 **Q5.** The shot put leaves the hand 2.0 m above the ground at 14 m/s. In vacuum, the best angle satisfies tan θ = v₀/√(v₀² + 2gh). Find it, and explain in words why launching from above the ground lowers the best angle even with no air at all.
 

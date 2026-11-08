@@ -255,7 +255,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
      (ITS-90, at 1 atm): ice point 0.00 °C, triple point of water 0.01 °C (273.16 K), water boils at 99.974 °C, nitrogen boils at
      77.355 K, solid carbon dioxide sublimes at −78.464 °C. Water's density between 0 and 40 °C from M. Tanaka et al., Metrologia
      38, 301 (2001). Air film resistances on a wall from the ASHRAE Handbook, Fundamentals. */
-  const C0 = 273.15, R_GAS = 8.314462618;
+  const C0 = 273.15, R_GAS = 8.31446261815324;
   const cToF = (c) => 9 / 5 * c + 32, fToC = (F) => 5 / 9 * (F - 32), cToK = (c) => c + C0, kToC = (K) => K - C0;
 
   /* ---- Equilibrium: two bodies joined by a conducting bar inside a perfectly insulated box ----
@@ -336,7 +336,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
 
   /* ---- Cooling: a hot metal sphere hanging in room air loses heat by convection and by radiation ----
-     The sphere is lumped (one temperature throughout: its Biot number hD/(6k) stays below 0.001 for these metals), so
+     The sphere is lumped (one temperature throughout: its Biot number hD/(6k) stays below 0.004 for these metals, fan on), so
        mc dT/dt = −hA(T − T_air) − εσA(T⁴ − T_air⁴),  A = πD², m = ρπD³/6,
      with the room's walls at the air temperature. The film coefficient h comes from the Nusselt number Nu = hD/k_air:
        still air, natural convection (S. W. Churchill 1983, as given in Incropera et al., Fundamentals of Heat and Mass Transfer):

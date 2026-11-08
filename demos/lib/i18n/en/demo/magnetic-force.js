@@ -236,6 +236,8 @@ VDI18N.add('en', 'demo/magnetic-force', [
 "<span><i></i>Particle path</span><span><i></i>Gap field, reverses each half period</span><span><i>⊗</i>B into the page</span>",
 "{#} (tuned)",
 "{#} MeV <span>about {#} turns at 2qV per turn</span>",
+"{#} GeV <span>nonrelativistic formula, not valid here: K<sub>max</sub> is more than a tenth of mc² (see v/c and γ below)</span>",
+"{#} MeV <span>nonrelativistic formula, not valid here: K<sub>max</sub> is more than a tenth of mc² (see v/c and γ below)</span>",
 "v/c = {#}, γ = {#} <span>the true cyclotron frequency there is f<sub>c</sub>/γ, {#}% lower</span>",
 "{#} keV <span>from the source to the gap edge: {#} qV</span>",
 "predicted mirror point",

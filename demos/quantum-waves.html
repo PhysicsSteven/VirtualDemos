@@ -1887,7 +1887,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('scatSec').hidden = !(c.kind === 'scatter' && PIECES[S.preset]);
     $('modelHint').textContent = `Model: Crank–Nicolson time steps on ${sim.N} grid points, Δx = ${(sim.dx * 1000).toFixed(sim.dx < 0.01 ? 1 : 0)} pm. ` +
       (c.kind === 'scatter' ? 'Probability that reaches the absorbing layers beyond the view is removed and counted in R or T.' : 'ψ = 0 at the edges of the grid.') +
-      ' Energy levels come from diagonalizing the same finite difference Hamiltonian.';
+      ' Energy levels come from diagonalizing the same finite difference Hamiltonian. The grid makes a packet\'s kinetic energy and speed read low by (kΔx)²/12 and (kΔx)²/6, under 0.5 % and 1 % at the top of the energy slider; ⟨E⟩ is the energy the grid conserves.';
   }
   function packetOuts() {
     const pk = S.packet;

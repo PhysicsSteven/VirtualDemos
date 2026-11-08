@@ -332,7 +332,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const P = [];
   function def(o) { P.push(Object.assign({ Q: 0, spin: 0, B: 0, Le: 0, Lm: 0, Lt: 0, n: {}, anti: null, self: false, quarks: '', decay: '', note: '' }, o)); }
   /* leptons */
-  def({ id: 'e-', html: 'e<sup>−</sup>', txt: 'e⁻', name: 'electron', cls: 'lepton', gen: 1, m: 0.51099895, Q: -1, spin: 0.5, Le: 1, tau: Infinity, anti: 'e+', ahtml: 'e<sup>+</sup>', atxt: 'e⁺', aname: 'positron', decay: 'stable' });
+  def({ id: 'e-', html: 'e<sup>−</sup>', txt: 'e⁻', name: 'electron', cls: 'lepton', gen: 1, m: 0.51099895069, Q: -1, spin: 0.5, Le: 1, tau: Infinity, anti: 'e+', ahtml: 'e<sup>+</sup>', atxt: 'e⁺', aname: 'positron', decay: 'stable' });
   def({ id: 'nue', html: 'ν<sub>e</sub>', txt: 'ν_e', name: 'electron neutrino', cls: 'lepton', gen: 1, m: 0, mNote: '< 0.8 eV', spin: 0.5, Le: 1, tau: Infinity, anti: 'nuebar', aname: 'electron antineutrino', decay: 'stable' });
   def({ id: 'mu-', html: 'μ<sup>−</sup>', txt: 'μ⁻', name: 'muon', cls: 'lepton', gen: 2, m: 105.6583755, Q: -1, spin: 0.5, Lm: 1, tau: 2.1969811e-6, anti: 'mu+', ahtml: 'μ<sup>+</sup>', atxt: 'μ⁺', aname: 'antimuon', decay: 'e⁻ ν̄_e ν_μ (≈ 100%)' });
   def({ id: 'numu', html: 'ν<sub>μ</sub>', txt: 'ν_μ', name: 'muon neutrino', cls: 'lepton', gen: 2, m: 0, mNote: '< 0.8 eV', spin: 0.5, Lm: 1, tau: Infinity, anti: 'numubar', aname: 'muon antineutrino', decay: 'stable' });
@@ -359,7 +359,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   def({ id: 'phi', html: 'φ', txt: 'φ', name: 'phi', cls: 'meson', m: 1019.461, spin: 1, quarks: 's s̄', tau: HBAR / 4.249, width: 4.249, self: true, decay: 'K⁺ K⁻ (49.1%), K⁰_L K⁰_S (33.9%)', table: false });
   def({ id: 'D0', html: 'D<sup>0</sup>', txt: 'D⁰', name: 'D meson', cls: 'meson', m: 1864.84, n: { c: 1, u: -1 }, quarks: 'c ū', tau: 4.103e-13, anti: 'D0bar', ahtml: 'D̄<sup>0</sup>', atxt: 'D̄⁰', aquarks: 'c̄ u', decay: 'K⁻ + anything (54.7%)' });
   def({ id: 'D+', html: 'D<sup>+</sup>', txt: 'D⁺', name: 'charged D meson', cls: 'meson', m: 1869.66, Q: 1, n: { c: 1, d: -1 }, quarks: 'c d̄', tau: 1.033e-12, anti: 'D-', ahtml: 'D<sup>−</sup>', atxt: 'D⁻', aquarks: 'c̄ d', decay: 'K⁻ + anything (25.7%)', table: false });
-  def({ id: 'Ds+', html: 'D<sub>s</sub><sup>+</sup>', txt: 'D_s⁺', name: 'strange D meson', cls: 'meson', m: 1968.35, Q: 1, n: { c: 1, s: -1 }, quarks: 'c s̄', tau: 5.012e-13, anti: 'Ds-', ahtml: 'D<sub>s</sub><sup>−</sup>', atxt: 'D_s⁻', aquarks: 'c̄ s', decay: 'many', table: false });
+  def({ id: 'Ds+', html: 'D<sub>s</sub><sup>+</sup>', txt: 'D_s⁺', name: 'strange D meson', cls: 'meson', m: 1968.35, Q: 1, n: { c: 1, s: -1 }, quarks: 'c s̄', tau: 5.04e-13, anti: 'Ds-', ahtml: 'D<sub>s</sub><sup>−</sup>', atxt: 'D_s⁻', aquarks: 'c̄ s', decay: 'many', table: false });
   def({ id: 'Dst0', html: 'D*<sup>0</sup>', txt: 'D*⁰', name: 'D star', cls: 'meson', m: 2006.85, spin: 1, n: { c: 1, u: -1 }, quarks: 'c ū', tau: null, anti: 'Dst0bar', ahtml: 'D̄*<sup>0</sup>', atxt: 'D̄*⁰', aquarks: 'c̄ u', decay: 'D⁰ π⁰ (64.7%), D⁰ γ (35.3%)', table: false });
   def({ id: 'Dst+', html: 'D*<sup>+</sup>', txt: 'D*⁺', name: 'charged D star', cls: 'meson', m: 2010.26, Q: 1, spin: 1, n: { c: 1, d: -1 }, quarks: 'c d̄', tau: HBAR / 0.0834, width: 0.0834, anti: 'Dst-', ahtml: 'D*<sup>−</sup>', atxt: 'D*⁻', aquarks: 'c̄ d', decay: 'D⁰ π⁺ (67.7%)', table: false });
   def({ id: 'etac', html: 'η<sub>c</sub>', txt: 'η_c', name: 'charmed eta', cls: 'meson', m: 2984.1, quarks: 'c c̄', tau: HBAR / 30.5, width: 30.5, self: true, decay: 'hadrons', table: false });
@@ -572,7 +572,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
      plane of the picture (no dip angle), the production and decay angles are chosen uniformly in that plane, energy loss and
      multiple scattering in the hydrogen are left out (tracks are circles), and a track is drawn for at most one turn. */
   const DET = { R: 50, mpi: 139.57039, mpi0: 134.9768, mp: 938.27208943, mK: 497.611, mL: 1115.683,
-    ctauKS: 8.954e-11 * C_CM, ctauL: 2.617e-10 * C_CM, brKS: 0.692, brL: 0.641, fKS: 0.5 };
+    ctauKS: 8.954e-11 * C_CM, ctauL: 2.617e-10 * C_CM, brKS: 0.692, brL: 0.639, fKS: 0.5 };
   /* two body decay momentum in the parent's rest frame */
   function p2(M, m1, m2) { const a = (M * M - (m1 + m2) * (m1 + m2)) * (M * M - (m1 - m2) * (m1 - m2)); return a > 0 ? Math.sqrt(a) / (2 * M) : 0; }
   /* boost a four vector [E, px, py] from the frame moving with velocity (bx, by) (units of c) to the lab */

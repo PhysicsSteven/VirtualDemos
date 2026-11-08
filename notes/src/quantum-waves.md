@@ -52,7 +52,7 @@ Students should know the de Broglie relation p = h/λ, E = p²/2m for a free par
 
 ## Physics behind the demo
 
-- The time dependent Schrödinger equation for an electron in one dimension, solved with Crank–Nicolson steps on a uniform grid (25 pm spacing in the scattering setups).
+- The time dependent Schrödinger equation for an electron in one dimension, solved with Crank–Nicolson steps on a uniform grid (25 pm spacing in the scattering setups). The grid makes a packet's kinetic energy and speed low by (kΔx)²/12 and (kΔx)²/6, under 0.5 % and 1 % at the top of the energy slider; ⟨E⟩ is the energy the grid conserves.
 - Scattering setups have absorbing layers just beyond the view; probability absorbed there is counted in R or T, so **Total probability** stays 1. All other readouts (⟨x⟩, Δx, ⟨p⟩, Δp, ⟨E⟩) use only the part still on the grid.
 - The launched packet is ψ ∝ exp(−(x − x₀)²/4σ² + ik₀x), with Δx = σ and Δp = ħ/2σ at launch. **Plane wave T(E₀)** comes from transfer matrices (for the single barrier, T = [1 + V₀² sinh²(κa)/4E(V₀ − E)]⁻¹); **T averaged over packet** averages T(E) over the packet's spread of k.
 - Wells have hard walls at the edges of the grid. Their levels come from diagonalizing the same finite difference Hamiltonian, which is why the infinite well and oscillator tables agree with n²π²ħ²/2mL² and (n + ½)ħω to three or four decimals rather than exactly.

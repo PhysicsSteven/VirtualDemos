@@ -246,7 +246,7 @@ VDI18N.add('en', 'demo/solar-system-formation', [
 "Contact. The shock heats the rock (hot material glows). Theia is smeared along Earth's surface, and most of it, iron core and all, is flung on ahead in a long arm.",
 "Earth's gravity pulls the arm back: Theia's iron swings around Earth and falls back in.",
 "Theia's iron is back inside Earth, sinking toward its core. Flung rock swings around Earth: much falls back, and what stays on orbits that no longer dip into the planet becomes a disk around Earth, mostly rock. Inside the Roche limit (dashed), Earth's tides pull clumps apart; a moon can gather only outside it.",
-"{h} hours after contact: a disk of {md} Moon masses circles Earth ({th} % of it from Theia, {fe} % iron), and {me} Moon masses escaped. Within about a year the disk gathers into a moon (drawn, not simulated): with this disk's mass and spin, about {mm} Moon masses (the formula of Ida, Canup and Stewart 1997).",
+"{h} hours after contact: a disk of {md} Moon masses circles Earth ({th} % of it from Theia, {fe} % iron), and {me} Moon masses escaped. Within about a year the disk gathers into a moon (drawn, not simulated): with this disk's mass and spin, at most about {mm} Moon masses (the formula of Ida, Canup and Stewart 1997, leaving out the mass lost while the moon gathers; their runs kept a tenth to a half of the disk).",
 "The real Moon's rocks match Earth's isotopes almost exactly, yet here the disk comes mostly from Theia: a puzzle still being worked on.",
 "young Earth",
 "Theia",

@@ -18,7 +18,7 @@ Textbook: OpenStax *University Physics*, Vol. 1, §§11.2–11.4. Access for fre
 
 **What the demo models.**
 
-- A rigid wheel of mass $$M = 0.500\ \text{kg}$$ and radius $$R = 0.060\ \text{m}$$ on a massless axle, a frictionless pivot, and a spin about the axle that stays constant. Solid disk $$I_s = \tfrac12 MR^2$$; the wheel with its mass near the rim $$I_s = 0.905\,MR^2$$; about a diameter, $$I_s/2$$. $$g = 9.81\ \text{m/s}^2$$.
+- A rigid wheel of mass $$M = 0.500\ \text{kg}$$ and radius $$R = 0.060\ \text{m}$$ on a massless axle, a pivot without friction (Friction at the pivot stays at zero in this worksheet), and a spin about the axle that stays constant. Solid disk $$I_s = \tfrac12 MR^2$$; the wheel with its mass near the rim $$I_s = 0.905\,MR^2$$; about a diameter, $$I_s/2$$. $$g = 9.81\ \text{m/s}^2$$.
 - The motion is computed from the exact equations of a heavy symmetric top, so the dip and the wobble (nutation) after a release from rest are real, not added. There is no noise; the only rounding is the gate's 0.01 s.
 
 </details>

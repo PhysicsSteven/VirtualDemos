@@ -1973,7 +1973,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const font = (px, w) => `${w || 400} ${px * ps()}px ${T.ui}`;
 
   /* ---------- formatting ---------- */
-  const YR = 365.2422 * 86400;
+  const YR = 31557600;   /* s, Julian year (VDC.yr) */
   function fmtDur(s) {
     if (!(s > 0)) return '0 s';
     const u = [[1e-9, 'ns', 1e-9], [1e-6, 'μs', 1e-6], [1e-3, 'ms', 1e-3], [1, 's', 1], [60, 'min', 60], [3600, 'h', 3600], [86400, 'd', 86400], [YR, 'yr', YR], [1e3 * YR, 'kyr', 1e3 * YR], [1e6 * YR, 'Myr', 1e6 * YR], [1e9 * YR, 'Gyr', 1e9 * YR]];

@@ -299,7 +299,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 (() => {
   // ==CORE START==
   // SI inside: P in Pa, V in m³, T in K, energies in J, entropy in J/K.
-  const R = 8.314462618;            // J/(mol K), exact in SI since 2019
+  const R = 8.31446261815324;            // J/(mol K), exact in SI since 2019
   const Pref = 1e5, Tref = 300;     // reference state for S and the anchor of the standard cycles
   // Each process is a straight line in (x, y) = (ln V, ln P):  y + k x = c, with k = 0, 1, γ, or the vertical line x = c.
   const kOf = (t, g) => (t === 'P' ? 0 : t === 'T' ? 1 : t === 'S' ? g : Infinity);

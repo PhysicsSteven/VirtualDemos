@@ -26,6 +26,7 @@ window.VD_SHORTCUTS = {
     ["V", "Switch to the next view", "on the picture"],
     ["G", "Switch the source between a galaxy and a disk (Lensing)", "on the picture"]
   ],
+  "bose-einstein": [],
   "blackbody": [
     ["↑ ← ↓ →", "Raise the temperature (↑ ←) or lower it (↓ →) (Shift for bigger steps)", "on the spectrum chart"]
   ],

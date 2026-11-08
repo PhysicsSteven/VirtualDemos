@@ -111,7 +111,7 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 </ul>
 <h2>Physics behind the demo</h2>
 <ul>
-<li>The time dependent Schrödinger equation for an electron in one dimension, solved with Crank–Nicolson steps on a uniform grid (25 pm spacing in the scattering setups).</li>
+<li>The time dependent Schrödinger equation for an electron in one dimension, solved with Crank–Nicolson steps on a uniform grid (25 pm spacing in the scattering setups). The grid makes a packet's kinetic energy and speed low by (kΔx)²/12 and (kΔx)²/6, under 0.5 % and 1 % at the top of the energy slider; ⟨E⟩ is the energy the grid conserves.</li>
 <li>Scattering setups have absorbing layers just beyond the view; probability absorbed there is counted in R or T, so <strong>Total probability</strong> stays 1. All other readouts (⟨x⟩, Δx, ⟨p⟩, Δp, ⟨E⟩) use only the part still on the grid.</li>
 <li>The launched packet is ψ ∝ exp(−(x − x₀)²/4σ² + ik₀x), with Δx = σ and Δp = ħ/2σ at launch. <strong>Plane wave T(E₀)</strong> comes from transfer matrices (for the single barrier, T = [1 + V₀² sinh²(κa)/4E(V₀ − E)]⁻¹); <strong>T averaged over packet</strong> averages T(E) over the packet's spread of k.</li>
 <li>Wells have hard walls at the edges of the grid. Their levels come from diagonalizing the same finite difference Hamiltonian, which is why the infinite well and oscillator tables agree with n²π²ħ²/2mL² and (n + ½)ħω to three or four decimals rather than exactly.</li>

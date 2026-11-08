@@ -576,6 +576,10 @@ VDI18N.add('es', 'demo/magnetic-force', {
   "×{#} · {#} s aquí = {#} ps",
 "{#} GeV <span>about {#} turns at 2qV per turn</span>":
   "{#} GeV <span>unas {#} vueltas a 2qV por vuelta</span>",
+"{#} GeV <span>nonrelativistic formula, not valid here: K<sub>max</sub> is more than a tenth of mc² (see v/c and γ below)</span>":
+  "{#} GeV <span>fórmula no relativista, no válida aquí: K<sub>max</sub> supera la décima parte de mc² (ver v/c y γ abajo)</span>",
+"{#} MeV <span>nonrelativistic formula, not valid here: K<sub>max</sub> is more than a tenth of mc² (see v/c and γ below)</span>":
+  "{#} MeV <span>fórmula no relativista, no válida aquí: K<sub>max</sub> supera la décima parte de mc² (ver v/c y γ abajo)</span>",
 "{#} keV <span>= {#} qV</span>":
   "{#} keV <span>= {#} qV</span>",
 "{#} meV":
