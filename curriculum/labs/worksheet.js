@@ -1310,6 +1310,8 @@
     'mp-proton-qa': 'proton-qa', 'mp-shielding-barrier': 'shielding-barrier', 'mp-shielding-rooms': 'shielding-rooms',
     'mp-technetium-generator': 'technetium-generator', 'mp-ultrasound-attenuation': 'ultrasound-attenuation',
     'relative-motion': 'cart-launch', 'static-equilibrium': 'equilibrium' };
+  /* worksheets with no How this works video (tools/rules.cjs NO_VIDEO): no probe, so the console shows no missing file */
+  const NO_HOWTO = new Set(['intro-stellarium-sky']);
   /* QoL sweep (2026-11-08): the theme's site title ("VirtualDemos", a second h1 above the worksheet's own) becomes a plain link
      with the site's name, so the worksheet title is the page's only h1; and on a worksheet the link to its demo is a button, the
      first thing a student needs. Screen only: print.css still prints the link spelled out. */
@@ -1334,10 +1336,11 @@
     const d = document.createElement('details'); d.className = 'ws-howto'; d.id = 'wsHowTo';
     d.innerHTML = '<summary>How this works: a short video of one sample reading in the demo</summary>' +
       '<video controls playsinline muted preload="none"></video><p>One sample reading. The procedure below has the full steps.</p>';
-    const vid = d.querySelector('video'); vid.poster = v + '.jpg';
+    const vid = d.querySelector('video');
     d.addEventListener('toggle', () => { if (d.open) { if (!vid.getAttribute('src')) vid.src = v + '.mp4'; } else vid.pause(); });
     /* only where the video is there (a worksheet without a demo, such as the Stellarium one, has none) */
-    fetch(v + '.jpg', { method: 'HEAD' }).then((r) => { if (r.ok && !document.getElementById('wsHowTo')) after.insertAdjacentElement('afterend', d); }).catch(() => {});
+    if (NO_HOWTO.has(slug)) return;
+    fetch(v + '.jpg', { method: 'HEAD' }).then((r) => { if (r.ok && !document.getElementById('wsHowTo')) { vid.poster = v + '.jpg'; after.insertAdjacentElement('afterend', d); } }).catch(() => {});
     const st = document.createElement('style');
     st.textContent = 'details.ws-howto { margin: 12px 0; padding: 8px 12px; border: 1px solid var(--hd-line, #d0d7de); border-radius: 8px; }' +
       ' details.ws-howto > summary { cursor: pointer; font-weight: 700; } details.ws-howto[open] > summary { margin-bottom: 8px; }' +

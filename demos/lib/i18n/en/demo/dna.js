@@ -107,6 +107,7 @@ VDI18N.add('en', 'demo/dna', [
 "B-DNA and A-DNA · {#} bp · GCGGCGCCGCGGCCGCGGCG",
 "<span><i></i>strand {#}</span><span><i></i>strand {#}</span><span><i></i>hydrogen bond</span>",
 "Your sequence",
+"Close",
 "<span><i></i>strand {#}</span><span><i></i>strand {#}</span>",
 "B-DNA and A-DNA · {#} bp · CGCGAATTCGCG"
 ]);

@@ -1193,7 +1193,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 
   // ---------- sizing, theme, projector ----------
   function resize() {
-    dpr = window.devicePixelRatio || 1;
+    dpr = Math.min(2, window.devicePixelRatio || 1);   /* the 3D view draws at most 2 pixels per CSS pixel, like demos/lib/vd3.js */
     const r = stage.getBoundingClientRect(); W = Math.max(1, r.width); H = Math.max(1, r.height);
     ov.width = Math.round(W * dpr); ov.height = Math.round(H * dpr); ov.style.width = W + 'px'; ov.style.height = H + 'px';
     if (G.ready) {

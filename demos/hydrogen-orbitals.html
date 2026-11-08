@@ -1989,7 +1989,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   // ---------- sizing, theme, projector ----------
   function resize() {
-    dpr = window.devicePixelRatio || 1;
+    dpr = Math.min(2, window.devicePixelRatio || 1);   /* the 3D view draws at most 2 pixels per CSS pixel, like demos/lib/vd3.js */
     const v = vPane.getBoundingClientRect(), r = rPane.getBoundingClientRect();
     VW = v.width; VH = v.height; RW = r.width; RH = r.height;
     sliceCan.width = Math.max(1, Math.round(VW * dpr)); sliceCan.height = Math.max(1, Math.round(VH * dpr));

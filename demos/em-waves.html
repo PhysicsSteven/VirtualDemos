@@ -679,7 +679,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     return { wide: W >= 640, main, side, strip: { x: 0, y: top, w: W, h: sh } };
   }
   function resize() {
-    dpr = window.devicePixelRatio || 1;
+    dpr = Math.min(2, window.devicePixelRatio || 1);   /* the 3D view draws at most 2 pixels per CSS pixel, like demos/lib/vd3.js */
     const r = pane.getBoundingClientRect(); W = r.width; H = r.height;
     can.width = Math.max(1, Math.round(W * dpr)); can.height = Math.max(1, Math.round(H * dpr));
     can.style.width = W + 'px'; can.style.height = H + 'px';

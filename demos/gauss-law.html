@@ -773,7 +773,7 @@ table.rows .empty td { color: var(--muted); font-family: var(--font-ui); white-s
   const dims = { d: [0, 0], p: [0, 0] };
   const view = { s: 20, cx: 0, cy: 0, x0: -10, x1: 10, y0: -10, y1: 10 };
   function resize() {
-    dpr = window.devicePixelRatio || 1;
+    dpr = Math.min(2, window.devicePixelRatio || 1);   /* the 3D view draws at most 2 pixels per CSS pixel, like demos/lib/vd3.js */
     for (const k of ['d', 'p']) {
       const r = panes[k].getBoundingClientRect();
       cans[k].width = Math.max(1, Math.round(r.width * dpr)); cans[k].height = Math.max(1, Math.round(r.height * dpr));

@@ -274,7 +274,7 @@
   };
   var earthWait = null;
   K.earth = function (S, o, cb) {
-    var go = function () { var E = window.VD_EARTH; cb(K.planet(S, Object.assign({ tex: E.day, night: o && o.night ? E.night : null }, o || {}))); };
+    var go = function () { var E = window.VD_EARTH; cb(K.planet(S, Object.assign({ tex: E.day }, o || {}, { night: o && o.night ? E.night : null })));   /* night: true asks for the night lights image (it once loaded a file named true) */ };
     if (window.VD_EARTH) { go(); return; }
     if (earthWait) { earthWait.push(go); return; } earthWait = [go];
     var s = document.createElement('script'); s.src = SRC ? SRC.replace(/vd3kit\.js(\?.*)?$/, 'earth.js') : 'lib/earth.js';

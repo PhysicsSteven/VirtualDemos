@@ -1011,7 +1011,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   // ---------- sizing ----------
   function resize() {
     const r = stage.getBoundingClientRect();
-    W = r.width; H = r.height; dpr = window.devicePixelRatio || 1;
+    W = r.width; H = r.height; dpr = Math.min(2, window.devicePixelRatio || 1);   /* the 3D view draws at most 2 pixels per CSS pixel, like demos/lib/vd3.js */
     for (const c of [base, over]) {
       c.width = Math.round(W * dpr); c.height = Math.round(H * dpr);
       c.style.width = W + 'px'; c.style.height = H + 'px';
