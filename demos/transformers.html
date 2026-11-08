@@ -244,7 +244,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     return `${(v / 10 ** b[0]).toPrecision(d).replace('-', '−')} ${b[1]}${u}`;
   }
   const ohms = (r) => (isFinite(r) ? si(r, 'Ω', 3).replace(/\.0+ /, ' ').replace(/(\.\d*?)0+ /, '$1 ') : 'none (open)');
-  const plainNum = (v, d = 4) => (isFinite(v) ? (+v.toPrecision(d)).toLocaleString('en-US').replace(/,/g, ' ') : '—');
+  const plainNum = (v, d = 4) => (isFinite(v) ? (+v.toPrecision(d)).toLocaleString('en-US') : '—');
   function tokens() {
     const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
     T = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'), accent: g('--accent'),

@@ -48,7 +48,7 @@ No hazards in the virtual lab. A real fast wheel stores a lot of energy: keep fi
 
 **No spin.** Use the solid disk with the axle level. Release it with no spin and watch what happens. No reading is needed.
 
-**Changing the spin.** Keep the solid disk with the axle level and d = 0.10 m, and start it precessing at the steady rate. Measure the time for one turn around the post at 1000, 2000, 3000, 4000, 5000 and 6000 rpm. Wait for the gate to show a time at each spin before you capture it. Send these readings to the worksheet, then clear them.
+**Changing the spin.** Keep the solid disk with the axle level and d = 0.10 m, and start it precessing at the steady rate. Measure the time for one turn around the post at 1000, 2000, 3000, 4000, 5000 and 6000 rpm. Wait for the gate to show a time at each spin before you record it. Send these readings to the worksheet, then clear them.
 
 **Changing the lever arm.** At 3000 rpm, still with a steady start, measure the time for one turn at d = 0.05 m, 0.10 m and 0.20 m. Send these readings to the worksheet.
 

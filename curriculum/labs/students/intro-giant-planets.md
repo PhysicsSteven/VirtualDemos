@@ -51,7 +51,7 @@ No hazards in the virtual lab.
 
 **Part 2: the four giants.** In the Planets view, record a reading for each of Jupiter, Saturn, Uranus and Neptune, and for Earth. Send the readings to the worksheet, then clear them.
 
-**Part 3: tearing a moon apart.** In the Rings view, choose Saturn and give the test moon the density of solid ice, 0.92 g/cm³. Put it at 3.0 Saturn radii, start the clock and let it make 3 orbits. Pause and record a reading. Start again and repeat with the moon at 2.0, 1.6, 1.5 and 1.4 Saturn radii. Then make the moon rock, 3.0 g/cm³, put it at 1.5 Saturn radii and record a reading after 3 orbits. Send the readings to the worksheet, then clear them.
+**Part 3: tearing a moon apart.** In the Rings view, choose Saturn and give the test moon the density of solid ice, 0.92 g/cm³. Put it at 3.0 Saturn radii, start the clock and let it make 3 orbits. Pause and record a reading. Reset, then repeat with the moon at 2.0, 1.6, 1.5 and 1.4 Saturn radii. Then make the moon rock, 3.0 g/cm³, put it at 1.5 Saturn radii and record a reading after 3 orbits. Send the readings to the worksheet, then clear them.
 
 **Part 4: Io's tidal heating.** In the Io view, record a reading with Io's orbit at eccentricity 0, 0.002, 0.004 (Io's real value), 0.006 and 0.008. Send the readings to the worksheet.
 

@@ -82,7 +82,7 @@ VDI18N.add('en', 'demo/transformers', [
 "Delivered",
 "Voltage in the houses",
 "R as aluminum wire",
-"{#} {#} km of a pair of {#} cm wires",
+"{#} km of a pair of {#} cm wires",
 "i_P peak {#} A",
 "i_S peak {#} mA",
 "The same idea backwards: ten times the turns gives ten times the voltage, {#} V, and the primary current is ten times the secondary current. A transformer raises voltage only by lowering current.",
@@ -97,5 +97,6 @@ VDI18N.add('en', 'demo/transformers', [
 "R<sub>P</sub> {#} Ω, R<sub>S</sub> {#} mΩ; L<sub>P</sub> {#} H, L<sub>S</sub> {#} mH",
 "OpenStax Example {#} again: {#} kW sent at {#} kV down a {#} Ω line is {#} A and loses ({#} A)²({#} Ω) = {#} W. Send it at {#} V instead and the line would need {#} A and lose {#} MW, more than the power sent. Then try a long line at {#} kV.",
 "loss (W)",
+"Close",
 "two cycles, each trace to its own peak"
 ]);

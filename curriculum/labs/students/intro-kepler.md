@@ -61,7 +61,7 @@ No hazards in the virtual lab.
 - Choose the setup, pause the demo and reset it.
 - Place ruler point 1 on the perihelion, the point of the orbit closest to the Sun, and point 2 on the aphelion, the farthest point. Each setup except Halley's comet starts the object at its perihelion; the comet starts at its aphelion. Zoom in on each end of the orbit to place the points exactly on the path.
 - Time one full orbit: zero the timer, start it, play the demo, and pause when the object is back where it started. Then stop the timer.
-- Capture the reading.
+- Record a reading.
 
 Send all eight readings to the worksheet.
 
