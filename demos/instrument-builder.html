@@ -147,8 +147,8 @@ table.chain td { text-align: right; padding: 3px 4px; border-top: 1px solid var(
           <button type="button" class="btn" id="addLens">Add a lens</button>
           <button type="button" class="btn" id="addStop">Add a stop</button>
         </div>
-        <div class="elist" id="elist" role="group" aria-label="Parts on the rail"></div>
-        <div id="edLens">
+        <div class="elist" id="elist" role="group" aria-label="Parts on the rail" data-vd-noshare></div>
+        <div id="edLens" data-vd-noshare>
           <div class="slider-head"><label for="sZ" id="sZL">Position z</label><output id="oZ" for="sZ"></output></div>
           <input type="range" id="sZ" min="-30" max="150" step="0.01">
           <div id="edF">
@@ -1291,6 +1291,27 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   VD.projector({ onChange: resize });
   VD.tools({ el: can, scale: () => (view3 && view3.is3d() ? null : 0.01 / view.s) });
   /* How this works: a short video of one sample reading from the worksheet, made by tools/howto/ */
+  /* Copy link carries an instrument you built or changed (VD.share.picture in demos/lib/vd.js): every lens and stop with its name,
+     place, focal length and diameter, the object, and where the eye or camera stands. One still as its preset rides as the switch. */
+  if (window.VD && VD.share && VD.share.picture) VD.share.picture('i', {
+    get: () => {
+      if (S.preset !== 'custom') return '';
+      return VD.share.pack({ e: S.els.map((e) => (e.kind === 'lens' ? [e.name, e.z, e.D, e.f] : [e.name, e.z, e.D])), o: S.obj, v: S.zV });
+    },
+    set: (str) => {
+      const o = VD.share.unpack(str), ok = (v) => typeof v === 'number' && isFinite(v);
+      if (!o || !Array.isArray(o.e) || !o.o || typeof o.o !== 'object' || !ok(o.v)) return;
+      const ob = o.o, tex = { slide: 1, sign: 1, moon: 1 };
+      if (!(ob.kind === 'near' && ok(ob.z) && ok(ob.h) && ob.h > 0) && !(ob.kind === 'far' && ok(ob.a))) return;
+      S.els = o.e.filter((r) => Array.isArray(r) && typeof r[0] === 'string' && ok(r[1]) && ok(r[2]) && r[2] > 0 && (r.length < 4 || (ok(r[3]) && r[3] !== 0))).slice(0, MAX_PARTS)
+        .map((r) => (r.length > 3 ? lens(r[0], r[1], r[3], r[2]) : stop(r[0], r[1], r[2])));
+      S.obj = ob.kind === 'near' ? { kind: 'near', tex: 'slide', z: ob.z, h: Math.min(2, ob.h) } : { kind: 'far', tex: tex[ob.tex] && ob.tex !== 'slide' ? ob.tex : 'sign', a: ob.a };
+      S.zV = o.v; S.sel = null; view.user = false;
+      $('presetHint').textContent = window.VDI18N ? VDI18N.t('An instrument built by hand and shared by a link. Press a preset to start again from a ready made one.') : 'An instrument built by hand and shared by a link. Press a preset to start again from a ready made one.';
+      changed();
+    }
+  });
+  window.__ib = { S, addPart, applyPreset, changed };   /* for the tests */
   VD.howTo({ src: 'media/how-this-works/intro-telescope.mp4', poster: 'media/how-this-works/intro-telescope.jpg' });
   tokens(); new ResizeObserver(resize).observe($('pane'));
   let first = 'microscope'; try { const q = new URLSearchParams(location.search).get('setup'); if (q && PRESETS[q]) first = q; } catch (_) {}

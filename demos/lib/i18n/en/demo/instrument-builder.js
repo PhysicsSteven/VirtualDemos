@@ -153,5 +153,6 @@ VDI18N.add('en', 'demo/instrument-builder', [
 "Stop {#}",
 "Stop {#}: position z",
 "{#}″ (arcseconds), entrance pupil D = {#} mm",
-"the Moon (far away)"
+"the Moon (far away)",
+"An instrument built by hand and shared by a link. Press a preset to start again from a ready made one."
 ]);

@@ -251,7 +251,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
           <label><input type="checkbox" id="sbLabK" checked>Spring constants</label>
           <label><input type="checkbox" id="sbLabT" checked>Tension in each spring</label>
         </div>
-        <details class="more" id="sbBtns"><summary>Build with buttons instead</summary>
+        <details class="more" id="sbBtns" data-vd-noshare><summary>Build with buttons instead</summary>
         <p class="status" id="sbSel" aria-live="polite"></p>
         <div class="btnrow">
           <button type="button" class="btn" id="sbAdd">Hang a spring below</button>
@@ -3251,6 +3251,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     if (SB.md.n && B.pull) { const z = SB.z.slice(); z[SB.md.n - 1] = B.pull; sbStart(z); }
     /* the falling slinky opens hanging at rest, paused, with the top about to be let go: Play lets go */
     if (B.slinky) { SB.armed = true; setRunning(false); }
+    SB.sig = sbSig();   /* Copy link leaves out a rig that is still as loaded: its chip carries it */
     sbUi();
   }
   // a change to the rig: rebuild the model; the blocks keep their places (or start at rest where they hang)
@@ -4350,6 +4351,39 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     if (now - lastRead > 120) { if (sweep) { syncSliders(); staticText(); } updateReadouts(); lastRead = now; }
     requestAnimationFrame(loop);
   }
+  /* Copy link carries a rig built or changed in the Sandbox (VD.share.picture in demos/lib/vd.js): every block (mass, oil), bar,
+     hook, wall and spring (k, which hooks it joins, its side offset), the shaker, and the start the blocks are let go from. A rig
+     still as its chip loaded it rides as the chip; the grids on the air table ride only as their chips. */
+  function sbSig() {
+    if (!SB.rig) return '';
+    const r6 = (v) => Math.round(v * 1e6) / 1e6;
+    return JSON.stringify({ r: SB.rig, d: SB.drive, z: (SB.ic || []).slice(0, SB.md ? 2 * SB.md.n : 0).map(r6) });   /* the shaker's phase is left out: each start has it at the top of a swing */
+  }
+  if (window.VD && VD.share && VD.share.picture) VD.share.picture('sb', {
+    get: () => {
+      if (!sbOn() || SB.grid || !SB.rig) return '';
+      const now = sbSig();
+      return now === SB.sig ? '' : VD.share.pack(JSON.parse(now));
+    },
+    set: (str) => {
+      const o = VD.share.unpack(str), ok = (v) => typeof v === 'number' && isFinite(v);
+      if (!o || !o.r || !Array.isArray(o.r.nodes) || !Array.isArray(o.r.springs)) return;
+      const nodes = o.r.nodes.filter((nd) => nd && ok(nd.id) && ok(nd.m) && nd.m >= 0), ids = new Set(nodes.map((nd) => nd.id));
+      if (!nodes.some((nd) => nd.id === 0 && nd.fixed) || ids.size !== nodes.length) return;
+      const springs = o.r.springs.filter((q) => q && ok(q.id) && ids.has(q.a) && ids.has(q.b) && ok(q.k) && q.k > 0 && ok(q.x)).slice(0, sbMaxSprings);
+      if (!sbOn()) setSys('sandbox');
+      if (SB.grid) gdLeave();
+      SB.rig = { nodes: nodes.map((nd) => Object.assign({}, nd)), springs: springs.map((q) => Object.assign({}, q)) };
+      if (o.r.hz) SB.rig.hz = true;
+      SB.drive = o.d && ok(o.d.A) && ok(o.d.w) ? { A: o.d.A, w: o.d.w } : null;
+      SB.nextId = 1 + Math.max(0, ...nodes.map((nd) => nd.id), ...springs.map((q) => q.id));
+      SB.sel = ['n', 0]; SB.join = null; SB.scale = null; SB.held = null; SB.drag = null;
+      for (const b of document.querySelectorAll(SB_CHIPS)) b.setAttribute('aria-pressed', 'false');
+      sbRebuild(true);
+      if (Array.isArray(o.z) && o.z.length === 2 * SB.md.n && o.z.every(ok)) sbStart(o.z.concat(SB.z.slice(2 * SB.md.n)));
+      SB.sig = ''; sbUi(); drawAll();
+    }
+  });
   window.__sp = {
     get frameMs() { return frameMs; }, get t() { return t; }, get S() { return S; }, get segs() { return segs; }, get running() { return running; },
     get handles() { return cHandles; }, get rGeom() { return rGeom; }, get book() { return book; }, get amp() { return amp; }, get sweepPts() { return sweepPts; },

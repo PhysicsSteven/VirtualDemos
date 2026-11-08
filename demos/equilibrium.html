@@ -1008,6 +1008,25 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   /* How this works: a short video of one sample reading (made by tools/howto/) */
+  /* Copy link carries a beam built in the Sandbox (VD.share.picture in demos/lib/vd.js): where each support stands and each mass
+     hangs. The beam's length and mass ride as its sliders, a ready made rig as a switch; the link opens with the posts holding it. */
+  if (window.VD && VD.share && VD.share.picture) VD.share.picture('sb', {
+    get: () => {
+      if (S.preset !== 'sandbox') return '';
+      const r = (x) => Math.round(x * 1000) / 1000;
+      return VD.share.pack({ s: SBE.sup.map((q) => r(q.x)), l: SBE.loads.map((q) => [q.m, r(q.x)]) });
+    },
+    set: (str) => {
+      const o = VD.share.unpack(str), ok = (v) => typeof v === 'number' && isFinite(v);
+      if (!o || !Array.isArray(o.s) || !Array.isArray(o.l)) return;
+      if (S.preset !== 'sandbox') applyPreset('sandbox');
+      SBE.sup = o.s.filter(ok).slice(0, 2).map((x) => ({ id: SBE.nid++, x: sbeSnap(x) }));
+      SBE.loads = o.l.filter((q) => Array.isArray(q) && ok(q[0]) && q[0] > 0 && ok(q[1])).slice(0, SBE_MAXLOADS).map(([m, x]) => ({ id: SBE.nid++, m, x: sbeSnap(x) }));
+      Object.assign(SBE, { held: true, sel: null, drag: null, ang: 0, dy: 0, piv: null });
+      sbeGoLabel(); sync(); draw(); readouts();
+    }
+  });
+  window.__eq = { S, SBE, sbeAddPart, sbeRemove, applyPreset, draw, readouts };   /* for the tests */
   VD.howTo({ src: 'media/how-this-works/equilibrium.mp4', poster: 'media/how-this-works/equilibrium.jpg' });
   VD.projector({ onChange: resize });
   tokens(); new ResizeObserver(resize).observe(stage); applyPreset('seesaw'); resize();

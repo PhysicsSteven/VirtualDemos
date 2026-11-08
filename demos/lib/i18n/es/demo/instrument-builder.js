@@ -309,5 +309,7 @@ VDI18N.add('es', 'demo/instrument-builder', {
 "the Moon (far away)":
   "la Luna (lejos)",
 "the sign (far away)":
-  "el letrero (lejos)"
+  "el letrero (lejos)",
+"An instrument built by hand and shared by a link. Press a preset to start again from a ready made one.":
+  "Un instrumento armado a mano y compartido con un enlace. Pulsa una configuración predefinida para empezar de nuevo desde una ya hecha."
 });

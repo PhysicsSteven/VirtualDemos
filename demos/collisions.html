@@ -1887,11 +1887,11 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   function setMode(m, keepRate) {
     const was = S.mode; S.mode = m;
     /* the Sandbox is flat only, has its own rigs and Reset (not Replay), and no photogates or presets */
+    if (m === 'sandbox' && !SBC.st) sbcLoad('three');   /* before the switch to flat below, which redraws */
     if (FLATM[m] && !FLATM[was]) { SBC.dimWas = G3.on && !!G3.S ? '3d' : null; if (SBC.dimWas) document.querySelector('#viewSeg [data-dim=flat]').click(); }
     $('viewSeg').hidden = !!FLATM[m]; $('presets').hidden = m === 'sandbox'; $('sbcRigs').hidden = m !== 'sandbox';
     $('bpBtns').hidden = m !== 'ballistic';
     $('reset').textContent = m === 'sandbox' ? 'Reset' : 'Replay';
-    if (m === 'sandbox' && !SBC.st) sbcLoad('three');
     if (m !== 'sandbox' && was === 'sandbox') { SBC.drag = null; held = false; }
     if (!FLATM[m] && FLATM[was] && SBC.dimWas) { SBC.dimWas = null; document.querySelector('#viewSeg [data-dim="3d"]').click(); }
     for (const b of document.querySelectorAll('#modeSeg button')) b.setAttribute('aria-pressed', String(b.dataset.m === m));
@@ -3412,6 +3412,28 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   new ResizeObserver(() => fitResize()).observe(fCan.parentElement);
   applyPreset('elastic');
   VD3K.view({ seg: '#viewSeg', init: init3, change: view3, status: (m) => { $('live').textContent = m; capStatus(m); } });
+  /* Copy link carries a row of carts built in the Sandbox (VD.share.picture in demos/lib/vd.js): the start of the run, each cart's
+     mass, place, velocity and velcro, the carts glued together at the start, and e. The ready made row chip rides as a switch. */
+  if (window.VD && VD.share && VD.share.picture) VD.share.picture('sb', {
+    get: () => {
+      if (!sbcOn() || !SBC.st0) return '';
+      const cs = SBC.st0.carts, r = (v, k) => Math.round(v * k) / k, ix = (id) => cs.findIndex((c) => c.id === id);
+      return VD.share.pack({ e: r(SBC.st0.e, 100), c: cs.map((c) => [c.m, r(c.x, 1e4), r(c.v, 1e3), c.velcro ? 1 : 0]), g: SBC.st0.glue.map(([a, b]) => [ix(a), ix(b)]).filter((g) => g[0] >= 0 && g[1] >= 0) });
+    },
+    set: (str) => {
+      const o = VD.share.unpack(str), ok = (v) => typeof v === 'number' && isFinite(v);
+      if (!o || !Array.isArray(o.c) || !ok(o.e)) return;
+      if (!sbcOn()) document.querySelector('#modeSeg [data-m="sandbox"]').click();
+      if (!SBC.st) sbcLoad(SBC.rig);
+      SBC.nextId = 1;
+      const carts = o.c.filter((q) => Array.isArray(q) && ok(q[0]) && q[0] > 0 && ok(q[1]) && ok(q[2])).slice(0, SBC_MAX)
+        .map((q) => ({ id: SBC.nextId++, m: q[0], L: cartLen(q[0]), x: clamp(q[1], SBC_X0, SBC_X1), v: clamp(q[2], -2, 2), velcro: !!q[3] }));
+      const glue = (Array.isArray(o.g) ? o.g : []).filter((g) => Array.isArray(g) && carts[g[0]] && carts[g[1]]).map((g) => [carts[g[0]].id, carts[g[1]].id]);
+      SBC.st = { carts, glue, e: clamp(o.e, 0, 1), X0: SBC_X0, X1: SBC_X1 };
+      SBC.sel = carts.length ? carts[0].id : null; SBC.drag = null;
+      sbcCommit(); drawAll();
+    }
+  });
   /* How this works: a 20 s video of one elastic run timed by the photogates (made by tools/howto/) */
   VD.howTo({ src: 'media/how-this-works/collisions.mp4', poster: 'media/how-this-works/collisions.jpg' });
   if (new URLSearchParams(location.search).get('scene') === 'ballistic') applyPreset('ballistic');   /* ?scene=ballistic opens the Ballistic pendulum */

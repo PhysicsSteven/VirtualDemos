@@ -794,6 +794,24 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   /* How this works: one video per worksheet; the Astro 2203 one (intro-kepler) when the demo was opened from that worksheet (?ws=) or from
      the Astro 2203 course page (?course=astro-2203, which VD.ws reads too) (made by tools/howto/) */
   const howVid = () => (VD.ws('kepler-orbits') === 'intro-kepler' ? 'intro-kepler' : 'kepler-orbits');
+  /* Copy link carries a system built in the Sandbox (VD.share.picture in demos/lib/vd.js): each body's kind, place (AU) and velocity
+     (AU/yr) at the start Reset goes back to, at full precision so a chaotic system runs the same, the selected body and the zoom.
+     The ready made system and what the view follows ride as switches. */
+  if (window.VD && VD.share && VD.share.picture) VD.share.picture('sb', {
+    get: () => {
+      if (!SBK.on || !SBK.start) return '';
+      const ps = tokens().ps, z = VT.s > 0 ? Math.min(W - 40 * ps, H - 120 * ps) / VT.s : 0;
+      return VD.share.pack({ b: SBK.start.map((q) => [q.kind, q.x, q.y, q.vx, q.vy]), s: SBK.start.findIndex((q) => q.id === SBK.sel), z: Math.round(z * 1000) / 1000 });
+    },
+    set: (str) => {
+      const o = VD.share.unpack(str), ok = (v) => typeof v === 'number' && isFinite(v);
+      if (!o || !Array.isArray(o.b)) return;
+      if (!SBK.on) loadPreset('sandbox');
+      const bs = o.b.filter((q) => Array.isArray(q) && SBK_KIND[q[0]] && [1, 2, 3, 4].every((i) => ok(q[i]))).slice(0, SBK_MAX).map((q) => sbkMake(q[0], q[1], q[2], q[3], q[4]));
+      SBK.st = { t: 0, bs }; SBK.sel = bs[o.s] ? bs[o.s].id : null; SBK.drag = null;
+      sbkCommit(); sbkFit(true, ok(o.z) && o.z > 0 ? o.z : 0); sbkPlay(false);
+    }
+  });
   VD.howTo({ src: () => `media/how-this-works/${howVid()}.mp4`, poster: () => `media/how-this-works/${howVid()}.jpg`,
     title: () => (howVid() === 'intro-kepler' ? "How this works: Kepler's Laws from Mercury to Pluto" : "How this works: Kepler's Third Law") });
   VD.tools({ el: $('view'), strip: '.viewbar', time: () => S.t, timeUnit: 'yr' });

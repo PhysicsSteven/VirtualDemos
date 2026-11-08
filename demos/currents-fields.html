@@ -2159,6 +2159,26 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   /* How this works: a short video of one sample reading from the worksheet the controls are on (the same choice as the
      Readings section's): Magnets and Oersted's compass open, Straight wires, or Loop and solenoid; made by tools/howto/ */
   const HOW_TITLE = { 'magnets-oersted': 'Magnets and Oersted\'s Compass', 'straight-wire-fields': 'Fields and Forces of Straight Wires', 'loops-solenoids': 'Fields of Loops and Solenoids' };
+  /* Copy link carries wires placed or moved in the Straight wires view (VD.share.picture in demos/lib/vd.js): each wire's place and
+     current, the probe, and the Ampère loop with its shape and direction. Wires still as a preset ride as the preset's switch. */
+  if (window.VD && VD.share && VD.share.picture) VD.share.picture('w', {
+    get: () => {
+      if (S.scene !== 'wires' || S.preset) return '';
+      return VD.share.pack({ w: S.wires.map((w) => [w.x, w.y, w.I]), p: [S.probe.x, S.probe.y], a: S.amp ? 1 : 0, l: S.loop, c: S.ccw ? 1 : 0 });
+    },
+    set: (str) => {
+      const o = VD.share.unpack(str), ok = (v) => typeof v === 'number' && isFinite(v);
+      if (!o || !Array.isArray(o.w) || !Array.isArray(o.p) || !o.p.every(ok)) return;
+      const ws = o.w.filter((w) => Array.isArray(w) && w.every(ok)).slice(0, 6);
+      if (!ws.length) return;
+      if (S.scene !== 'wires') applyPreset('par');
+      S.wires = ws.map(([x, y, I]) => mkW(x, y, I)); S.wsel = S.wires[0].id; S.sel = null;
+      S.probe = { x: o.p[0], y: o.p[1] }; S.amp = !!o.a; S.ccw = o.c !== 0;
+      const l = o.l;
+      if (l && (l.kind === 'circle' || l.kind === 'rect') && ['x', 'y', 'r', 'w', 'h'].every((k) => ok(l[k]))) S.loop = { kind: l.kind, x: l.x, y: l.y, r: l.r, w: l.w, h: l.h };
+      markPreset(null); syncScene(); setView(); keepInView(); needlesKey = ''; changed();
+    }
+  });
   VD.howTo({ src: () => `media/how-this-works/${wsNow()}.mp4`, poster: () => `media/how-this-works/${wsNow()}.jpg`, title: () => `How this works: ${HOW_TITLE[wsNow()]}` });
 
   tokens();

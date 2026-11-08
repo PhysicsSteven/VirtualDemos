@@ -626,6 +626,27 @@ table.rows input:focus { border-color: var(--accent); }
   const p0 = new URLSearchParams(location.search).get('setup'); applyPreset(PRESETS[p0] ? p0 : 'basic'); renderRows(); resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   let last = performance.now(), acc = 0;
+  /* Copy link carries speakers placed in the Sandbox (VD.share.picture in demos/lib/vd.js): each speaker's place and wiring, and where
+     the microphone stands. The frequency and the rest ride as their controls, a ready made layout as a switch. */
+  if (window.VD && VD.share && VD.share.picture) VD.share.picture('sb', {
+    get: () => {
+      if (!S.sand) return '';
+      const r = (v) => Math.round(v * 1000) / 1000;
+      return VD.share.pack({ s: S.spk.map((q) => [r(q.x), r(q.y), q.ph]), m: [r(S.mx), r(S.my)] });
+    },
+    set: (str) => {
+      const o = VD.share.unpack(str), ok = (v) => typeof v === 'number' && isFinite(v);
+      if (!o || !Array.isArray(o.s) || !Array.isArray(o.m) || !o.m.every(ok)) return;
+      if (!S.sand) applyPreset('sandbox');
+      S.spk = o.s.filter((q) => Array.isArray(q) && ok(q[0]) && ok(q[1]) && ok(q[2])).slice(0, SBS_MAX)
+        .map(([x, y, ph]) => ({ id: S.snid++, x: Math.min(ROOM_X, Math.max(0, x)), y: Math.min(ROOM_Y / 2, Math.max(-ROOM_Y / 2, y)), ph }));
+      S.ssel = null; S.sdrag = null; GEO.field = null;
+      S.mx = o.m[0]; S.my = o.m[1]; clampMic();
+      const same = SBS_RIGS[S.srig] && JSON.stringify(SBS_RIGS[S.srig]) === JSON.stringify(S.spk.map((q) => [q.x, q.y, q.ph]));
+      if (!same) S.srig = '';
+      S.preset = 'sandbox'; upd();
+    }
+  });
   VD.howTo({ src: 'media/how-this-works/two-speaker.mp4', poster: 'media/how-this-works/two-speaker.jpg' });
   (function loop(now) { const dt = Math.min(0.05, ((now || last) - last) / 1000); last = now || last; acc += dt; if (acc > 1 / 30) { tick(acc); acc = 0; } requestAnimationFrame(loop); })();
 })();

@@ -195,7 +195,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" class="btn" data-add="screen"><span class="dot card"></span>Screen</button>
           <button type="button" class="btn" data-add="surf"><span class="dot glass"></span>Refracting surface</button>
         </div>
-        <div class="sel" id="selEditor" hidden>
+        <div class="sel" id="selEditor" hidden data-vd-noshare>
           <div class="selhead"><span>Selected</span><output id="selName" class="mono"></output></div>
           <div class="sel" id="selFields"></div>
           <div class="selfoot"><span id="selPos" class="mono"></span><button type="button" class="link" id="del">Remove</button></div>
@@ -2789,6 +2789,33 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   cv.addEventListener('keydown', (e) => { if (!fermat) return; const st = e.shiftKey ? 0.1 : 0.5, d = { ArrowLeft: -st, ArrowRight: st }[e.key]; if (d == null) return;
     e.stopImmediatePropagation(); e.preventDefault(); fermat.x = Math.max(-18, Math.min(18, +(fermat.x + d).toFixed(1))); schedule(); }, true);
   window.__ob.fermat = () => fermat && Object.assign({}, fermat, fmGeom());
+
+  /* Copy link carries a bench you built or changed (VD.share.picture in demos/lib/vd.js): each item's kind, place and the values
+     that differ from a new item's, the ray table or the bench, and the frame the view fits. A bench that is still a preset rides
+     in the link as the preset's switch. */
+  const benchCode = (list) => list.map((it) => {
+    const d = Object.assign({ rot: 0 }, DEFAULTS[it.kind]()), x = {};
+    for (const k of Object.keys(it)) if (!['id', 'kind', 'x', 'y'].includes(k) && JSON.stringify(it[k]) !== JSON.stringify(d[k])) x[k] = it[k];
+    return Object.keys(x).length ? [it.kind, it.x, it.y, x] : [it.kind, it.x, it.y];
+  });
+  if (window.VD && VD.share && VD.share.picture) VD.share.picture('b', {
+    get: () => {
+      if (fermat) return '';
+      const now = JSON.stringify(benchCode(items)), on = document.querySelector('#presets [aria-pressed="true"]'), p = on && on.dataset.p;
+      if (p && PRESETS[p] && JSON.stringify(benchCode(PRESETS[p]())) === now) return '';
+      return VD.share.pack({ i: JSON.parse(now), s: scene === 'table' ? 1 : 0, f: frame });
+    },
+    set: (str) => {
+      const o = VD.share.unpack(str), ok = (v) => typeof v === 'number' && isFinite(v);
+      if (!o || !Array.isArray(o.i)) return;
+      const list = o.i.filter((r) => Array.isArray(r) && DEFAULTS[r[0]] && ok(r[1]) && ok(r[2])).slice(0, MAX_ITEMS)
+        .map((r) => mk(r[0], r[1], r[2], r[3] && typeof r[3] === 'object' ? JSON.parse(JSON.stringify(r[3])) : {}));
+      items = list; sel = null; drag = null; fermat = null; setPreset(null); setScene(null);
+      if (o.s === 1) scene = 'table';
+      if (Array.isArray(o.f) && o.f.length === 4 && o.f.every(ok) && o.f[2] > 0 && o.f[3] > 0) frame = o.f.slice();
+      resize();
+    }
+  });
 
   // ---------- boot ----------
   items = PRESETS.converging();
