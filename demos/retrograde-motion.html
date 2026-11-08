@@ -7,6 +7,7 @@
 <script src="lib/theme.js"></script>
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
 <script src="lib/vd3.js"></script>
 <script src="lib/vd3kit.js"></script>
 <title>Retrograde Motion and World Models</title>
@@ -808,6 +809,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function setRun(on) { S.run = on; $('play').textContent = on ? 'Pause' : 'Play'; $('play').classList.toggle('attn', !on); card.away(false); }
   function stepDays(n) { setRun(false); S.jd = clamp(S.jd + n, VALID[0], VALID[1]); if (S.jd < S.t0 || S.jd > S.t1) { ensure(); if (S.follow) frameSky(); } dirty3 = true; redraw(); }
   $('play').addEventListener('click', () => setRun(!S.run));
+  /* the shared control panel (demos/lib/vdpanel.js): Play, a day back or forward, Speed and the date in one group */
+  if (window.VD && VD.panel) VD.panel({ speed: '#speedSeg', steps: ['#back', '#fwd'], clock: '#clock' });
   $('back').addEventListener('click', (e) => stepDays(e.shiftKey ? -10 : -1));
   $('fwd').addEventListener('click', (e) => stepDays(e.shiftKey ? 10 : 1));
   for (const b of document.querySelectorAll('#speedSeg button')) b.addEventListener('click', () => { S.speed = +b.dataset.s; syncControls(); });

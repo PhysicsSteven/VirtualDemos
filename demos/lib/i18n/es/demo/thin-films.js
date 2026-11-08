@@ -28,6 +28,12 @@ VDI18N.add('es', 'demo/thin-films', {
   "La luz se refleja en ambas superficies de una película delgada. Las dos reflexiones se suman o se cancelan según el camino extra dentro de la película y según qué superficies invierten la onda, y la luz blanca regresa coloreada.",
 "extra path 2n<sub>f</sub>t cos θ<sub>t</sub> · π shift going to higher n · λ in nm":
   "camino extra 2n<sub>f</sub>t cos θ<sub>t</sub> · desfase π al pasar a mayor n · λ en nm",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
 "Rays":
   "Rayos",
 "Soap film":
@@ -200,12 +206,6 @@ VDI18N.add('es', 'demo/thin-films', {
   "arriba {#} nm",
 "bottom {#} nm":
   "abajo {#} nm",
-"Thickness at the probe":
-  "Espesor en la sonda",
-"Depth of the probe, {#} at the top":
-  "Profundidad de la sonda, {#} arriba",
-"{#}% of the height":
-  "{#}% de la altura",
 "Media set to an air gap between glass ({#} | {#} | {#}), light at normal incidence: the classic air wedge. Change them in Film and media if you like.":
   "Medios fijados en una capa de aire entre vidrio ({#} | {#} | {#}), luz a incidencia normal: la clásica cuña de aire. Cámbialos en Película y medios si quieres.",
 "{#} glass":
@@ -230,10 +230,6 @@ VDI18N.add('es', 'demo/thin-films', {
   "Anillos de Newton, luz blanca, ganancia {#}×",
 "side view, gap exaggerated":
   "vista lateral, separación exagerada",
-"Rings at r = √(mλ₀R/n_f cos θ_t), m = {#}, {#}, {#}":
-  "Anillos en r = √(mλ₀R/n_f cos θ_t), m = {#}, {#}, {#}",
-"Gap at the probe":
-  "Separación en la sonda",
 "microscope":
   "microscopio",
 "white lamp":
@@ -246,18 +242,22 @@ VDI18N.add('es', 'demo/thin-films', {
   "Curvatura de la lente dibujada {#} veces más profunda; los anillos en la placa están a escala. Arrastra el anillo en la vista del microscopio; arrastra en otro lugar para girar.",
 "Through the microscope, {#} mm across":
   "A través del microscopio, {#} mm de ancho",
+"Rings at r = √(mλ₀R/n_f cos θ_t), m = {#}, {#}, {#}":
+  "Anillos en r = √(mλ₀R/n_f cos θ_t), m = {#}, {#}, {#}",
+"Gap at the probe":
+  "Separación en la sonda",
 "A vertical soap film drains: thin at the top, thicker below. Each band is a thickness where some colors add and others cancel. The bands creep down and spread as the film thins, and the black film at the top grows. Where the film is thicker than about {#} µm, many orders overlap and the colors fade to pale pinks and greens.":
   "Una película de jabón vertical escurre: delgada arriba, más gruesa abajo. Cada banda es un espesor donde algunos colores se suman y otros se cancelan. Las bandas bajan lentamente y se separan al adelgazarse la película, y la película negra de arriba crece. Donde la película es más gruesa que unos {#} µm, muchos órdenes se superponen y los colores se desvanecen en rosas y verdes pálidos.",
-"{#} cycles <span>destructive</span>":
-  "{#} ciclos <span>destructiva</span>",
-"none in {#} to {#} nm":
-  "ninguna entre {#} y {#} nm",
 "A film {#} nm thick, far thinner than λ. The extra path is only {#} λ, so the half cycle flip at the top surface leaves the two reflections almost exactly opposite: they cancel at every color and the film looks black, just before a bubble bursts.":
   "Una película de {#} nm de espesor, mucho más delgada que λ. El camino extra es solo {#} λ, así que la inversión de medio ciclo en la superficie superior deja las dos reflexiones casi exactamente opuestas: se cancelan en todos los colores y la película se ve negra, justo antes de que una burbuja reviente.",
 "θ₁ = {#}° (drawn at {#}°)":
   "θ₁ = {#}° (dibujado a {#}°)",
 "{#} + {#}: amplitude {#}, destructive":
   "{#} + {#}: amplitud {#}, destructiva",
+"-{#} cycles <span>destructive</span>":
+  "-{#} ciclos <span>destructiva</span>",
+"none in {#} to {#} nm":
+  "ninguna entre {#} y {#} nm",
 "An air wedge between glass slides in sodium yellow light ({#} nm). The edge where the slides touch is dark: there the gap is zero and only the bottom reflection (air to glass) flips. Each next dark fringe is λ/{#} = {#} nm more gap. Switch the light to white to see the colors, which fade after a few fringes.":
   "Una cuña de aire entre portaobjetos de vidrio en luz amarilla de sodio ({#} nm). El borde donde se tocan los portaobjetos es oscuro: ahí la separación es cero y solo la reflexión inferior (de aire a vidrio) se invierte. Cada franja oscura siguiente es λ/{#} = {#} nm más de separación. Cambia la luz a blanca para ver los colores, que se desvanecen después de unas pocas franjas.",
 "Wedge seen from above, λ₀ = {#} nm":
@@ -270,6 +270,8 @@ VDI18N.add('es', 'demo/thin-films', {
   "Un cuarto de onda de MgF₂ ({#} nm) sobre vidrio. Ambas reflexiones se invierten, así que solo cuenta el camino: media onda a {#} nm, y se cancelan. R baja de {#}% (vidrio desnudo, punteado) a {#}% en el verde, y sube hacia los extremos del espectro, por eso las lentes con recubrimiento se ven ligeramente moradas.",
 "{#} MgF₂":
   "{#} MgF₂",
+"{#} cycles <span>destructive</span>":
+  "{#} ciclos <span>destructiva</span>",
 "Both reflections flip, so the flips cancel: bright when 2n_f t cos θ_t = mλ, dark when it is (m + ½)λ.":
   "Ambas reflexiones se invierten, así que las inversiones se cancelan: brillante cuando 2n_f t cos θ_t = mλ, oscura cuando es (m + ½)λ.",
 "{#}% <span>less than with no film</span>":
@@ -296,12 +298,16 @@ VDI18N.add('es', 'demo/thin-films', {
   "Película de jabón vertical en luz de λ₀ = {#} nm",
 "-{#} cycles <span>constructive</span>":
   "-{#} ciclos <span>constructiva</span>",
+"Thickness at the probe":
+  "Espesor en la sonda",
+"Depth of the probe, {#} at the top":
+  "Profundidad de la sonda, {#} arriba",
+"{#}% of the height":
+  "{#}% de la altura",
 "-{#} cycles <span>mostly constructive</span>":
   "-{#} ciclos <span>mayormente constructiva</span>",
 "Newton's rings, λ₀ = {#} nm":
   "Anillos de Newton, λ₀ = {#} nm",
 "Curvature drawn {#}× deeper. Drag the ring at the right.":
-  "Curvatura dibujada {#}× más profunda. Arrastra el anillo de la derecha.",
-"-{#} cycles <span>destructive</span>":
-  "-{#} ciclos <span>destructiva</span>"
+  "Curvatura dibujada {#}× más profunda. Arrastra el anillo de la derecha."
 });

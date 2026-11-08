@@ -7,6 +7,7 @@
 <script src="lib/theme.js"></script>
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
 <title>Temperature and Heat</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -71,8 +72,8 @@
           <button type="button" data-v="cv" aria-pressed="false">Cooling</button>
           <button type="button" data-v="ch" aria-pressed="false" title="Energy chain">Chain</button>
         </div>
-        <button type="button" class="spin attn" id="go">Start</button>
-        <button type="button" class="btn" id="restart">Start over</button>
+        <button type="button" class="spin attn" id="go">Play</button>
+        <button type="button" class="btn" id="restart">Reset</button>
         <div class="seg" role="group" aria-label="Simulation speed" id="speedSeg">
           <button type="button" data-s="1" aria-pressed="false">1×</button>
           <button type="button" data-s="10" aria-pressed="true">10×</button>
@@ -1004,7 +1005,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if ($('vdHowTo')) $('vdHowTo').hidden = v === 'ch';     /* no worksheet, so no video, for the energy chain */
     setRun(false); sync(); redraw();
   }
-  function setRun(on) { if (isStatic()) on = false; S.run = on; const t = S.view === 'eq' ? S.eq.t : S.view === 'cv' ? S.cv.t : S.view === 'ch' ? S.ch.t : S.th.t; $('go').textContent = on ? 'Pause' : t > 0 ? 'Resume' : 'Start'; $('go').classList.toggle('attn', !on); }
+  function setRun(on) { if (isStatic()) on = false; S.run = on; const t = S.view === 'eq' ? S.eq.t : S.view === 'cv' ? S.cv.t : S.view === 'ch' ? S.ch.t : S.th.t; $('go').textContent = on ? 'Pause' : t > 0 ? 'Play' : 'Play'; $('go').classList.toggle('attn', !on); }
   function applyPreset(k) { const c = PRESETS[k]; S.preset = k; if (c.view === 'eq') S.chunks = false; $('presetHint').textContent = c.hint; c.set(); if (k === 'mystery') newMystery(true); setView(c.view); }
   const lowerFirst = (s) => s.charAt(0).toLowerCase() + s.slice(1);   /* 'Glass (Pyrex)' reads 'glass (Pyrex)' in a sentence */
   function newMystery(quiet) { const e = S.eq; let k; do { k = MYSTERY_POOL[Math.floor(rnd() * MYSTERY_POOL.length)]; } while (k === e.mys && MYSTERY_POOL.length > 1); if (!quiet && e.mysN) $('presetHint').textContent = (typeof VDI18N === 'object' ? VDI18N.t('The last mystery block was {mat}.', { mat: lowerFirst(typeof VDI18N === 'object' ? VDI18N.t(SPECIFIC[e.mys].name) : SPECIFIC[e.mys].name) }) : 'The last mystery block was {mat}.'.replace('{mat}', lowerFirst(typeof VDI18N === 'object' ? VDI18N.t(SPECIFIC[e.mys].name) : SPECIFIC[e.mys].name))); e.mys = k; e.mysN++; e.t = 0; e.hist = []; }
@@ -1142,5 +1143,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 </script>
 <script>/* dividers between the panes (VD.splitPanes in demos/lib/vd.js); a browser with an older cached vd.js keeps the panes as they are */
 (function () { if (!window.VD || !VD.splitPanes) return; var q = function (s) { return document.querySelector(s); }; VD.splitPanes(q("#pane"), q(".curvebox"), { key: 'curve', label: 'Divider between the thermometers and the graph' }); })();</script>
+<script>/* the shared control panel (demos/lib/vdpanel.js): the time controls in one group at the left of the strip */
+if (window.VD && VD.panel) VD.panel({ play: '#go', reset: '#restart', speed: '#speedSeg', clock: '#clock', step: true });</script>
 </body>
 </html>

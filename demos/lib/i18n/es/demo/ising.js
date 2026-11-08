@@ -20,10 +20,14 @@ VDI18N.add('es', 'demo/ising', {
   "Espines en una red cuadrada, cada uno favorece la dirección de sus vecinos. Enfría a través de T<sub>c</sub> y el orden aparece solo; en T<sub>c</sub>, dominios de todos los tamaños.",
 "J = {#}, k<sub>B</sub> = {#} · T in J/k<sub>B</sub> · h in J · time in sweeps":
   "J = {#}, k<sub>B</sub> = {#} · T en J/k<sub>B</sub> · h en J · tiempo en barridos",
+"Time controls":
+  "Controles de tiempo",
 "One sweep":
   "Un barrido",
 "Step":
   "Paso",
+"{#} sweeps/s":
+  "{#} barridos/s",
 "Reset the spins":
   "Reiniciar los espines",
 "Every spin up":
@@ -120,8 +124,6 @@ VDI18N.add('es', 'demo/ising', {
   "Wolff necesita h = {#}; elegirlo fija h en {#}",
 "Wolff":
   "Wolff",
-"{#} sweeps/s":
-  "{#} barridos/s",
 "Random seed":
   "Semilla aleatoria",
 "Metropolis: flip if the energy drops; otherwise flip with probability e<sup>−ΔE/T</sup>. The standard single spin rule.":

@@ -14,12 +14,18 @@ VDI18N.add('es', 'demo/rocket', {
   "t (s) · línea vertical discontinua: fin de la combustión",
 "Rocket Propulsion":
   "Propulsión de cohetes",
+"<a>Momentum and collisions</a>":
+  "<a>Momento y colisiones</a>",
+"<a><span>←</span> <span>Center of Mass</span></a><a><span>Rotation and Torque</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Centro de masa</span></a><a><span>Rotación y torca</span> <span>→</span></a>",
 "A rocket pushes on its exhaust and the exhaust pushes back. As fuel burns the rocket gets lighter, so the same thrust gives more and more acceleration, and the speed it gains is Δv = u ln(m₀/m).":
   "Un cohete empuja sus gases de escape y los gases lo empujan de vuelta. Al quemarse el combustible el cohete se vuelve más ligero, así que el mismo empuje da cada vez más aceleración, y la rapidez que gana es Δv = u ln(m₀/m).",
 "g = {#} m/s², constant · no air":
   "g = {#} m/s², constante · sin aire",
 "A rocket rising with its exhaust, beside graphs of its speed and mass against time. Space launches or pauses, R starts over.":
   "Un cohete que sube con sus gases de escape, junto a gráficas de su rapidez y su masa en función del tiempo. Espacio lanza o pausa, R vuelve a empezar.",
+"Time controls":
+  "Controles de tiempo",
 "Divider between the rocket and the graphs":
   "Divisor entre el cohete y las gráficas",
 "Set up the rocket. Drag, or use the arrow keys, to move this card; double click to put it back":
@@ -84,10 +90,6 @@ VDI18N.add('es', 'demo/rocket', {
   "Perdida por la gravedad",
 "Blind hides the rocket equation prediction, the final speed and height and the dashed predicted curves, leaving the clock, the settings, the mass and the thrust. The animation is sped up so a whole flight takes about {#} s; the clock shows real time.":
   "A ciegas oculta la predicción de la ecuación del cohete, la rapidez y la altura finales y las curvas predichas discontinuas, y deja el reloj, los ajustes, la masa y el empuje. La animación va acelerada para que un vuelo completo dure unos {#} s; el reloj muestra el tiempo real.",
-"<a>Momentum and collisions</a>":
-  "<a>Momento y colisiones</a>",
-"<a><span>←</span> <span>Center of Mass</span></a><a><span>Rotation and Torque</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Centro de masa</span></a><a><span>Rotación y torca</span> <span>→</span></a>",
 "fuel (kg)":
   "combustible (kg)",
 "burn (kg/s)":

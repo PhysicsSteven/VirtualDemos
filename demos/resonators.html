@@ -7,6 +7,7 @@
 <script src="lib/theme.js"></script>
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
 <style>/* folded rail sections: secondary options behind their heading (layout redesign, as in springs) */
 .rail details.more > p + p { margin-top: 6px; }
 </style>
@@ -1761,5 +1762,7 @@ table.rows button { font: inherit; font-size: 0.8rem; background: none; border: 
   VD.howTo({ src: 'media/how-this-works/resonators.mp4', poster: 'media/how-this-works/resonators.jpg' });
 })();
 </script>
+<script>/* the shared control panel (demos/lib/vdpanel.js): the time controls in one group at the left of the strip */
+if (window.VD && VD.panel) VD.panel({ reset: false, clock: '#clock', step: true });</script>
 </body>
 </html>

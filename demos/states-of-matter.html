@@ -7,6 +7,7 @@
 <script src="lib/theme.js"></script>
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
 <script src="lib/vd3.js"></script>
 <title>States of Matter</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -69,8 +70,8 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
           <button type="button" data-v="atoms" aria-pressed="true">Atoms</button>
           <button type="button" data-v="beaker" aria-pressed="false">Beaker</button>
         </div>
-        <button type="button" class="spin attn" id="go">Start</button>
-        <button type="button" class="btn" id="restart">Start over</button>
+        <button type="button" class="spin attn" id="go">Play</button>
+        <button type="button" class="btn" id="restart">Reset</button>
         <div class="seg" role="group" aria-label="Simulation speed" id="speedSeg">
           <button type="button" data-s="1" aria-pressed="false">1×</button>
           <button type="button" data-s="2" aria-pressed="false">2×</button>
@@ -911,7 +912,7 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
   }
 
   // ---------- controls ----------
-  function setRun(on) { S.run = on; $('go').textContent = on ? 'Pause' : (S.view === 'atoms' ? S.md.t > 0 : S.bk.t > 0) ? 'Resume' : 'Start'; $('go').classList.toggle('attn', !on); redraw(); }
+  function setRun(on) { S.run = on; $('go').textContent = on ? 'Pause' : (S.view === 'atoms' ? S.md.t > 0 : S.bk.t > 0) ? 'Play' : 'Play'; $('go').classList.toggle('attn', !on); redraw(); }
   function setView(v) {
     S.view = v; for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.v === v));
     $('cardAtoms').hidden = v !== 'atoms'; $('cardBeaker').hidden = v !== 'beaker'; $('dimSeg').hidden = v !== 'atoms';
@@ -1036,5 +1037,7 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
 </script>
 <script>/* dividers between the panes (VD.splitPanes in demos/lib/vd.js); a browser with an older cached vd.js keeps the panes as they are */
 (function () { if (!window.VD || !VD.splitPanes) return; var q = function (s) { return document.querySelector(s); }; VD.splitPanes(q("#pane"), q(".curvebox"), { key: 'curve', label: 'Divider between the sample and the heating curve' }); })();</script>
+<script>/* the shared control panel (demos/lib/vdpanel.js): the time controls in one group at the left of the strip */
+if (window.VD && VD.panel) VD.panel({ play: '#go', reset: '#restart', speed: '#speedSeg', clock: '#clock', step: true });</script>
 </body>
 </html>

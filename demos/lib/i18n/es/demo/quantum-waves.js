@@ -16,8 +16,12 @@ VDI18N.add('es', 'demo/quantum-waves', {
   "x en nm · E en eV · t en fs · ħ²/2m = {#} eV·nm²",
 "Energy diagram: the potential V(x), the mean energy of the electron, and energy levels. Keys: left and right arrows move the launch point, up and down change the launch energy, digits pick energy levels, space plays or pauses, M measures position.":
   "Diagrama de energía: el potencial V(x), la energía media del electrón y los niveles de energía. Teclas: las flechas izquierda y derecha mueven el punto de lanzamiento, arriba y abajo cambian la energía de lanzamiento, los dígitos eligen niveles de energía, espacio inicia o pausa, M mide la posición.",
+"Time controls":
+  "Controles de tiempo",
 "Step":
   "Escalón",
+"<span>Speed</span>":
+  "<span>Rapidez</span>",
 "Wave function: probability density |ψ|² filled and colored by the phase of ψ.":
   "Función de onda: densidad de probabilidad |ψ|² rellena y coloreada según la fase de ψ.",
 "Perspective of the wave function":

@@ -22,10 +22,18 @@ VDI18N.add('es', 'demo/resonances', {
   "Cuando un asteroide da exactamente tres vueltas alrededor del Sol por cada vuelta de Júpiter, Júpiter lo jala en los mismos lugares una y otra vez y su órbita se alarga hasta cruzar la de Marte. Observa los empujones junto a los conteos reales de asteroides, mira cómo el mismo tipo de sincronía mantiene a Plutón a salvo de Neptuno, y encuentra a Neptuno por su atracción sobre Urano como lo hizo Le Verrier en {#}.",
 "distances in AU · time in years":
   "distancias en UA · tiempo en años",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
 "Put the bodies back where this setup starts them":
   "Regresa los cuerpos a donde los pone esta configuración al inicio",
 "{#} yr per s":
   "{#} años por s",
+"t = {#} yr":
+  "t = {#} años",
 "Frame of the picture":
   "Marco de la imagen",
 "Seen from the stars: the planet goes round":
@@ -36,8 +44,6 @@ VDI18N.add('es', 'demo/resonances', {
   "Girando con el planeta, así que el planeta se queda quieto y se ve el patrón de los empujones",
 "Turns with the planet":
   "Gira con el planeta",
-"t = {#} yr":
-  "t = {#} años",
 "The solar system seen from above the plane of the planets: the Sun, the planet that does the pulling, and the small bodies it pulls on, with the orbit of the body being followed and orange marks where the planet has passed it.":
   "El sistema solar visto desde arriba del plano de los planetas: el Sol, el planeta que jala y los cuerpos pequeños sobre los que jala, con la órbita del cuerpo que se sigue y marcas naranjas donde el planeta lo ha rebasado.",
 "Start an asteroid. Drag, or use the arrow keys, to move this card; double click to put it back":

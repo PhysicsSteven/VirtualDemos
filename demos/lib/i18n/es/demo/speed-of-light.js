@@ -50,6 +50,14 @@ VDI18N.add('es', 'demo/speed-of-light', {
   "Un banco virtual de espejo giratorio, a la manera de Foucault. Haz girar el espejo, observa cómo la imagen que regresa se desliza en el microscopio de medición, lee el micrómetro y obtén c a partir del desplazamiento.",
 "D, B, A in m · Δs′ in mm · Δs′ = 4AD²ω / c(D + B)":
   "D, B, A en m · Δs′ en mm · Δs′ = 4AD²ω / c(D + B)",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
+"Replay pulse":
+  "Repetir el pulso",
 "The continuous beam and the image in the microscope":
   "El haz continuo y la imagen en el microscopio",
 "Normal":
@@ -62,8 +70,6 @@ VDI18N.add('es', 'demo/speed-of-light', {
   "Sentido de rotación",
 "CCW":
   "CCW",
-"Replay pulse":
-  "Repetir el pulso",
 "CW <small>{#} rev/s · D {#} m</small>":
   "CW <small>{#} rev/s · D {#} m</small>",
 "The rotating mirror bench in 3D: laser, lens L1, beam splitter and microscope, lens L2, rotating mirror MR with its speed control, and the far mirror MF. Drag to turn, scroll to zoom. Drag L1 or L2 along the rail, MF along the beam, the speed knob up or down, or the micrometer thimble up or down. Keys: up and down change the speed, left and right change D, page up and page down change B, C reverses the motor, V switches the view, space pauses.":

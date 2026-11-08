@@ -23,7 +23,7 @@ require('./lib.cjs')({ demo: 'rocket', title: 'Rocket Propulsion' }, async (r) =
   state.caption = 'Launch. The engine burns for 5.0 s, then the rocket coasts';
   await r.click('#go');
   await r.moveTo(660, 600, 0.6);
-  for (let i = 0; i < 400 && (await r.text('#go')) !== 'Resume'; i++) await r.tick();
+  for (let i = 0; i < 400 && (await r.text('#go')) !== 'Play'; i++) await r.tick();
   await r.secs(0.4);
 
   state.caption = 'Read the speed at burnout: u ln(m₀/m_dry) = 1,733 m/s';

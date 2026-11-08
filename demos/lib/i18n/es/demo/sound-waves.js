@@ -20,14 +20,18 @@ VDI18N.add('es', 'demo/sound-waves', {
   "v = √(γRT/M) · Δp_max = ρvω s_max",
 "Sound wave view: a tube of air drawn as dots that swing left and right, with graphs of displacement and pressure along the tube below. Time of flight view: a clap at the left, two microphones on a bench, and the two microphone traces with the timer. In 3D: a glass tube of air on a lab bench with the loudspeaker, signal generator and a probe microphone, or the clapper, two microphones and the recorder on a bench. Race view: lanes of different materials, all struck at the start at the same instant, with a person for scale; the board lists each lane's speed and arrival time. Space pauses; in the time of flight view, C claps; in the race view, Space strikes.":
   "Vista de onda sonora: un tubo de aire dibujado como puntos que oscilan a izquierda y derecha, con gráficas del desplazamiento y la presión a lo largo del tubo abajo. Vista de tiempo de vuelo: una palmada a la izquierda, dos micrófonos en una mesa, y las dos trazas de los micrófonos con el cronómetro. En 3D: un tubo de vidrio con aire en una mesa de laboratorio con la bocina, el generador de señales y un micrófono sonda, o el aplaudidor, dos micrófonos y la grabadora en una mesa. Vista de carrera: carriles de distintos materiales, todos golpeados al inicio en el mismo instante, con una persona como escala; el tablero lista la rapidez y el tiempo de llegada de cada carril. Espacio pausa; en la vista de tiempo de vuelo, C da una palmada; en la vista de carrera, Espacio golpea.",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
 "Sound wave":
   "Onda sonora",
 "Time of flight":
   "Tiempo de vuelo",
 "Race":
   "Carrera",
-"3D or flat":
-  "3D o plano",
 "At the start":
   "Al inicio",
 "Whole course":
@@ -36,6 +40,8 @@ VDI18N.add('es', 'demo/sound-waves', {
   "Palmada",
 "Strike":
   "Golpear",
+"3D or flat":
+  "3D o plano",
 "Drag microphone A":
   "Arrastra el micrófono A",
 "Clap to microphone A":
@@ -274,6 +280,14 @@ VDI18N.add('es', 'demo/sound-waves', {
   "El sonido en el aire cuando llega el primer pulso",
 "{#} m of the {#} km":
   "{#} m de los {#} km",
+"finish, {#} km":
+  "meta, {#} km",
+"listener":
+  "oyente",
+"Racing…":
+  "Corriendo…",
+"{#} m/s <span>Evident</span><br><span>arrived at {#} ms</span>":
+  "{#} m/s <span>Evident</span><br><span>llegó a los {#} ms</span>",
 "gas":
   "gas",
 "liquid":
@@ -282,10 +296,8 @@ VDI18N.add('es', 'demo/sound-waves', {
   "sólido",
 "a {#} m person is {#} px tall at this scale (shown enlarged)":
   "una persona de {#} m mide {#} px de alto a esta escala (mostrada ampliada)",
-"Racing…":
-  "Corriendo…",
-"{#} m/s <span>Evident</span><br><span>arrived at {#} ms</span>":
-  "{#} m/s <span>Evident</span><br><span>llegó a los {#} ms</span>",
+"{#} m/s <span>Engineering ToolBox</span><br><span>arrived at {#} ms</span>":
+  "{#} m/s <span>Engineering ToolBox</span><br><span>llegó a los {#} ms</span>",
 "{#} m of the {#} m":
   "{#} m de los {#} m",
 "{#} m/s <span>{#} °C, textbook Table {#}</span><br><span>L/v = {#} s</span>":
@@ -400,26 +412,20 @@ VDI18N.add('es', 'demo/sound-waves', {
   "Carril {#}: Material misterioso",
 "<span>hidden: mystery</span><br><span>strike to time it</span>":
   "<span>oculto: misterio</span><br><span>golpea para cronometrarlo</span>",
-"{#} m/s <span>Engineering ToolBox</span><br><span>arrived at {#} ms</span>":
-  "{#} m/s <span>Engineering ToolBox</span><br><span>llegó a los {#} ms</span>",
 "The last mystery material was {name}, v = {v} m/s. A new one is in its lane.":
   "El último material misterioso era {name}, v = {v} m/s. Hay uno nuevo en su carril.",
-"The last mystery material was glycerin, v = {#} m/s. A new one is in its lane.":
-  "El último material misterioso era glicerina, v = {#} m/s. Hay uno nuevo en su carril.",
 "A new unknown gas fills the room.":
   "Un nuevo gas desconocido llena el cuarto.",
 "a {#} m person is {#} px tall":
   "una persona de {#} m mide {#} px de alto",
 "at this scale (shown enlarged)":
   "a esta escala (mostrada ampliada)",
-"finish, {#} km":
-  "meta, {#} km",
-"listener":
-  "oyente",
 "<span>hidden: mystery</span><br><span>on its way</span>":
   "<span>oculto: misterio</span><br><span>en camino</span>",
-"<span>hidden: mystery</span><br><span>arrived at {#} ms</span>":
-  "<span>oculto: misterio</span><br><span>llegó a los {#} ms</span>",
 "The unknown gas had v = {#} m/s at {#} °C (γ = {#}, M = {#} g/mol).":
-  "El gas desconocido tenía v = {#} m/s a {#} °C (γ = {#}, M = {#} g/mol)."
+  "El gas desconocido tenía v = {#} m/s a {#} °C (γ = {#}, M = {#} g/mol).",
+"The last mystery material was glycerin, v = {#} m/s. A new one is in its lane.":
+  "El último material misterioso era glicerina, v = {#} m/s. Hay uno nuevo en su carril.",
+"<span>hidden: mystery</span><br><span>arrived at {#} ms</span>":
+  "<span>oculto: misterio</span><br><span>llegó a los {#} ms</span>"
 });

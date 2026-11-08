@@ -20,6 +20,14 @@ VDI18N.add('es', 'demo/potential-curves', {
   "Lee el movimiento en la gráfica de U(x). La distancia entre la línea de energía y la curva es la energía cinética, la partícula da la vuelta donde se encuentran, y la pendiente la empuja cuesta abajo.",
 "x in m · U, E in J · t in s":
   "x en m · U, E en J · t en s",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
+"<span>Speed</span>":
+  "<span>Rapidez</span>",
 "The real system in 3D, moving with the simulation.":
   "El sistema real en 3D, moviéndose con la simulación.",
 "Energy diagram: the potential energy U(x), the total energy E as a dashed line, and the particle on the x axis below. Pointer: drag the energy line, the particle or the round grips on the curve. Keys: up and down arrows change E, left and right arrows move the starting point, shift for bigger steps, space plays or pauses, R resets. The round grips on the curve do the same as the sliders under Potential energy. In Draw your own, a digit key picks a control point, the arrows then move it, and Escape returns the arrows to E and the start.":
@@ -162,14 +170,16 @@ VDI18N.add('es', 'demo/potential-curves', {
   "Un deslizador en un riel de aire, jalado por un resorte ideal; a escala, x en la regla en cm. Arrastra el deslizador para fijar x; arrastra en otro lugar para girar.",
 "A glider on an air track, pulled by an ideal spring; to scale, x on the rule in cm.":
   "Un deslizador en un riel de aire, jalado por un resorte ideal; a escala, x en la regla en cm.",
+"−{#}×{#}⁻⁸ <span>of the energy scale</span>":
+  "−{#}×{#}⁻⁸ <span>de la escala de energía</span>",
 "spring, k = {#} N/m":
   "resorte, k = {#} N/m",
 "air supply":
   "suministro de aire",
-"−{#}×{#}⁻⁸ <span>of the energy scale</span>":
-  "−{#}×{#}⁻⁸ <span>de la escala de energía</span>",
 "glider, m = {#} kg":
   "deslizador, m = {#} kg",
+"−{#}×{#}⁻¹⁰ <span>of the energy scale</span>":
+  "−{#}×{#}⁻¹⁰ <span>de la escala de energía</span>",
 "{#} <span>of the energy scale</span>":
   "{#} <span>de la escala de energía</span>",
 "Period of the orbit against total energy for this well, from E = {#} J to {#} J. The dashed line is the small oscillation period T₀ = {#} s. Show data table in the rail lists the points.":
@@ -218,10 +228,10 @@ VDI18N.add('es', 'demo/potential-curves', {
   "Espacio fase: v en función de x, una curva por energía, con la separatriz dorada en las energías de las cimas. Con E = {#} J un lazo cerrado entre −{#} m y −{#} m. Mostrar la tabla de datos, en el panel, lista la rapidez en esta órbita.",
 "Period of the orbit against total energy for this well, from E = {#} J to {#} J. The dashed line is the small oscillation period T₀ = {#} s; above E = {#} J the particle escapes. Show data table in the rail lists the points.":
   "Periodo de la órbita en función de la energía total para este pozo, de E = {#} J a {#} J. La línea discontinua es el periodo de oscilaciones pequeñas T₀ = {#} s; por encima de E = {#} J la partícula escapa. Mostrar la tabla de datos, en el panel, lista los puntos.",
+"−{#}×{#}⁻¹¹ <span>of the energy scale</span>":
+  "−{#}×{#}⁻¹¹ <span>de la escala de energía</span>",
 "Two argon atoms; x is their separation r. With E < {#} they vibrate between turning points: a bound molecule. With E > {#} nothing turns them around, and the molecule breaks apart. The bond length is the minimum at r₀ = {#}^({#}/{#})σ, the dissociation energy is ε.":
   "Dos átomos de argón; x es su separación r. Con E < {#} vibran entre puntos de retorno: una molécula ligada. Con E > {#} nada los hace regresar, y la molécula se disocia. La longitud de enlace es el mínimo en r₀ = {#}^({#}/{#})σ, la energía de disociación es ε.",
-"−{#} meV":
-  "−{#} meV",
 "Release point r":
   "Punto de liberación r",
 "r in nm · U, E in meV · t in ps":
@@ -230,8 +240,6 @@ VDI18N.add('es', 'demo/potential-curves', {
   "Fuerza F = −dU/dr",
 "Well depth ε":
   "Profundidad del pozo ε",
-"{#} meV":
-  "{#} meV",
 "Size σ":
   "Tamaño σ",
 "Drag the bottom of the well to change the bond length and depth.":
@@ -244,22 +252,14 @@ VDI18N.add('es', 'demo/potential-curves', {
   "{#} rad/ps en r = {#} nm",
 "ω₀ = √(U″/μ) at the bottom of the well":
   "ω₀ = √(U″/μ) en el fondo del pozo",
-"U (meV)":
-  "U (meV)",
 "Phase space: v against r, one curve per energy, with the gold separatrix at hilltop energies. At E = −{#} meV a closed loop between {#} nm and {#} nm. Show data table in the rail lists the speed on this orbit.":
   "Espacio fase: v en función de r, una curva por energía, con la separatriz dorada en las energías de las cimas. Con E = −{#} meV un lazo cerrado entre {#} nm y {#} nm. Mostrar la tabla de datos, en el panel, lista la rapidez en esta órbita.",
 "Period of the orbit against total energy for this well, from E = {#} meV to {#} meV. The dashed line is the small oscillation period T₀ = {#} ps. Show data table in the rail lists the points.":
   "Periodo de la órbita en función de la energía total para este pozo, de E = {#} meV a {#} meV. La línea discontinua es el periodo de oscilaciones pequeñas T₀ = {#} ps. Mostrar la tabla de datos, en el panel, lista los puntos.",
 "Energy (meV)":
   "Energía (meV)",
-"E = −{#} meV":
-  "E = −{#} meV",
 "separation r of the two atoms":
   "separación r de los dos átomos",
-"E (meV)":
-  "E (meV)",
-"−{#}×{#}⁻¹¹ <span>of the energy scale</span>":
-  "−{#}×{#}⁻¹¹ <span>de la escala de energía</span>",
 "Small swings take {#}π√(L/g). Bigger swings take longer; the exact period is {#}√(L/g)·K(sin(θ₀/{#})). Raise E above 2mgL and the pendulum goes over the top and keeps turning.":
   "Las oscilaciones pequeñas tardan {#}π√(L/g). Las oscilaciones más grandes tardan más; el periodo exacto es {#}√(L/g)·K(sen(θ₀/{#})). Sube E por encima de 2mgL y el péndulo pasa por arriba y sigue girando.",
 "Release point θ":
@@ -286,8 +286,6 @@ VDI18N.add('es', 'demo/potential-curves', {
   "Periodo de la órbita en función de la energía total para este pozo, de E = −{#} J a {#} J. La línea discontinua es el periodo de oscilaciones pequeñas T₀ = {#} s; por encima de E = {#} J la partícula escapa. Mostrar la tabla de datos, en el panel, lista los puntos.",
 "angle θ of the pendulum":
   "ángulo θ del péndulo",
-"dθ/dt":
-  "dθ/dt",
 "Drag the points to shape U(x), then predict the motion before you press Play. Each minimum gets a stable mark and its own small oscillation period.":
   "Arrastra los puntos para dar forma a U(x), luego predice el movimiento antes de pulsar Iniciar. Cada mínimo recibe una marca de estable y su propio periodo de oscilaciones pequeñas.",
 "U(x): a natural cubic spline through the points":
@@ -302,8 +300,6 @@ VDI18N.add('es', 'demo/potential-curves', {
   "Ilustración: la esfera se dibuja sobre la curva en la posición de la partícula. Una esfera real en una colina con la forma de U daría la vuelta en los mismos puntos, pero parte de su movimiento es vertical, así que tarda un tiempo distinto. El movimiento exacto es el de la partícula sobre la línea.",
 "Ball on a track: an illustration. The exact motion is the particle below.":
   "Esfera en un riel: una ilustración. El movimiento exacto es el de la partícula de abajo.",
-"−{#}×{#}⁻¹⁰ <span>of the energy scale</span>":
-  "−{#}×{#}⁻¹⁰ <span>de la escala de energía</span>",
 "{#}×{#}⁻⁹ <span>of the energy scale</span>":
   "{#}×{#}⁻⁹ <span>de la escala de energía</span>",
 "{#}×{#}⁻¹⁰ <span>of the energy scale</span>":
@@ -312,6 +308,18 @@ VDI18N.add('es', 'demo/potential-curves', {
   "esfera: solo ilustración",
 "Illustration: a ball on a track shaped like U(x), heights in proportion to U, not to scale. The exact motion is the particle on the diagram.":
   "Ilustración: una esfera en un riel con la forma de U(x), alturas en proporción a U, no a escala. El movimiento exacto es el de la partícula en el diagrama.",
+"dθ/dt":
+  "dθ/dt",
+"−{#} meV":
+  "−{#} meV",
+"{#} meV":
+  "{#} meV",
+"U (meV)":
+  "U (meV)",
+"E = −{#} meV":
+  "E = −{#} meV",
+"E (meV)":
+  "E (meV)",
 "{#}×{#}⁻⁸ <span>of the energy scale</span>":
   "{#}×{#}⁻⁸ <span>de la escala de energía</span>"
 });

@@ -20,6 +20,8 @@ VDI18N.add('es', 'demo/superconducting-levitation', {
   "Levitación superconductora y anclaje de flujo",
 "A magnet floats above a superconductor cooled in liquid nitrogen. Cool the superconductor with the magnet already near it and the magnet is pinned: it floats, and it can even hang underneath. Watch the currents in the superconductor and the field lines.":
   "Un imán flota sobre un superconductor enfriado con nitrógeno líquido. Si enfrías el superconductor con el imán ya cerca, el imán queda anclado: flota e incluso puede quedar colgado por debajo. Observa las corrientes en el superconductor y las líneas de campo.",
+"Time controls":
+  "Controles de tiempo",
 "Let go":
   "Soltar",
 "Let the puck warm up":
@@ -108,14 +110,14 @@ VDI18N.add('es', 'demo/superconducting-levitation', {
   "Aproximaciones: el imán permanece sobre el eje y en posición vertical (se omiten el movimiento lateral y la inclinación, así que no se muestra la estabilidad lateral del anclaje); jc no depende del campo (el modelo de Bean); se omiten el deslizamiento del flujo, la estructura granular del disco y el campo crítico inferior; no hay resistencia del aire, así que sin ningún anillo en jc un imán que rebota sigue rebotando. El enfriamiento y el calentamiento ocurren al instante. Duplicar el número de anillos en cada dirección cambia las fuerzas en menos de {#} %.",
 "Values: NdFeB magnet density {#} g/cm³ and remanence {#} T (sintered grade N42; makers give {#} to {#} T). jc = {#} × {#}⁸ A/m² ({#}⁴ A/cm²) is typical of melt textured YBCO at {#} K in low fields; real pucks range from about {#}⁷ to over {#}⁹ A/m². g = {#} m/s². YBCO's critical temperature: {#} K in its discovery report (Wu et al., Phys. Rev. Lett. {#}, {#}, {#}); liquid nitrogen boils at {#} K at one atmosphere.":
   "Valores: densidad del imán de NdFeB {#} g/cm³ y remanencia {#} T (grado sinterizado N42; los fabricantes dan de {#} a {#} T). jc = {#} × {#}⁸ A/m² ({#}⁴ A/cm²) es típica del YBCO texturizado por fusión a {#} K en campos bajos; los discos reales van de unos {#}⁷ a más de {#}⁹ A/m². g = {#} m/s². Temperatura crítica del YBCO: {#} K en su informe de descubrimiento (Wu et al., Phys. Rev. Lett. {#}, {#}, {#}); el nitrógeno líquido hierve a {#} K a una atmósfera.",
-"positive: pushes the magnet away; negative: pulls it toward the puck":
-  "positiva: aleja el imán; negativa: lo jala hacia el disco",
-"pull needed to hold its weight":
-  "jalón necesario para sostener su peso",
 "YBCO puck at {#} K, in liquid nitrogen":
   "Disco de YBCO a {#} K, en nitrógeno líquido",
 "field lines in the plane facing you":
   "líneas de campo en el plano que ves de frente",
+"positive: pushes the magnet away; negative: pulls it toward the puck":
+  "positiva: aleja el imán; negativa: lo jala hacia el disco",
+"pull needed to hold its weight":
+  "jalón necesario para sostener su peso",
 "The same zero field cooled puck. Lower the magnet slowly with the hand slider (or drag it, or use the arrow keys) and watch the force on the graph grow as the gap shrinks. Where the force equals the weight, let go: the magnet stays where you left it, floating.":
   "El mismo disco enfriado sin campo. Baja el imán despacio con el control deslizante de la mano (o arrástralo, o usa las teclas de flecha) y observa cómo crece la fuerza en la gráfica al disminuir la separación. Donde la fuerza sea igual al peso, suéltalo: el imán se queda donde lo dejaste, flotando.",
 "The same drop as the first setup, onto a puck with a tenth of the critical current density ({#}⁷ A/m²). Near the bottom of each bounce some rings reach jc (outlined), flux moves, and energy is lost, so the bounces die away and the magnet settles. Compare the energy lost with the first setup, where it stays zero.":

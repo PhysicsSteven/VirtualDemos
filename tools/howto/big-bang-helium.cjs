@@ -44,7 +44,7 @@ require('./lib.cjs')({ demo: 'early-universe', title: 'The Big Bang and the Earl
   await r.secs(2.2);
   state.arrow = null;
 
-  state.caption = 'Press Start over and repeat for five readings in all, then send them to the worksheet';
+  state.caption = 'Press Reset and repeat for five readings in all, then send them to the worksheet';
   const ex = await r.box('.vd-readings .vd-export');
   await r.moveTo(ex[0] + ex[2] / 2, ex[1] + ex[3] / 2 + 4, 0.8);
   state.arrow = { rect: ex };

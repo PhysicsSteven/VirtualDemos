@@ -7,6 +7,7 @@
 <script src="lib/theme.js"></script>
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
 <script src="lib/vd3.js"></script>
 <script src="lib/vd3kit.js"></script>
 <title>Craters, Cooling and Surface Ages</title>
@@ -821,6 +822,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('sT').addEventListener('input', (e) => { S.t = +e.target.value; S.run = false; if (PRESETS[S.preset] && PRESETS[S.preset].mode === 'cool') S.preset = 'custom'; sync(); redraw(); });
   $('selStart').addEventListener('change', (e) => { S.T0 = +e.target.value; sync(); redraw(); });
   $('selPlot').addEventListener('change', (e) => { S.plot = e.target.value; redraw(); });
+  /* the shared control panel (demos/lib/vdpanel.js): the time controls in one group at the left of the strip */
+  if (window.VD && VD.panel) VD.panel({ clock: '#clock' });
   $('play').addEventListener('click', () => {
     if (S.mode === 'impact') { if (!S.run) drop(); return; }
     if (S.mode === 'cool') { if (S.run) S.run = false; else { if (S.t >= 4.5) S.t = 0; S.run = true; } sync(); }

@@ -11,6 +11,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
 <script src="lib/vd3.js"></script>
 <style>
 /* Layout: the picture on the left, the rail on the right; stacks on phones. */
@@ -106,7 +107,7 @@ select { font: inherit; font-size: 0.88rem; color: var(--ink); background: var(-
           <button type="button" data-v="boundary" aria-pressed="false">Boundary</button>
           <button type="button" data-v="opening" aria-pressed="false">Opening</button>
         </div>
-        <div class="btnrow"><button type="button" class="btn primary" id="playBtn">Pause</button><button type="button" class="btn" id="restartBtn">Restart</button></div>
+        <div class="btnrow"><button type="button" class="btn primary" id="playBtn">Pause</button><button type="button" class="btn" id="restartBtn">Reset</button></div>
       </section>
 
       <section id="secRace">
@@ -571,5 +572,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   (function loop(now) { const dt = Math.min(0.05, ((now || last) - last) / 1000); last = now || last; acc += dt; if (acc > 1 / 30) { tick(acc); acc = 0; } requestAnimationFrame(loop); })();
 })();
 </script>
+<script>/* the shared control panel (demos/lib/vdpanel.js): the time controls in one group at the left of the strip */
+if (window.VD && VD.panel) VD.panel({ play: '#playBtn', reset: '#restartBtn', make: '#stage', end: ['#dimSeg'], step: true });</script>
 </body>
 </html>

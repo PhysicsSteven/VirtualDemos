@@ -7,6 +7,7 @@
 <script src="lib/theme.js"></script>
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
 <style>
 /* projector on a short screen: the units line gives way so the lede fits on one or two lines */
 input[type="number"], select { max-width:100%; width:100%; padding:.45rem; color:var(--ink); background:var(--canvas); border:1px solid var(--line); border-radius:5px; font:inherit; }
@@ -3114,5 +3115,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 </script>
 <script>/* dividers between the panes (VD.splitPanes in demos/lib/vd.js); a browser with an older cached vd.js keeps the panes as they are */
 (function () { if (!window.VD || !VD.splitPanes) return; var q = function (s) { return document.querySelector(s); }; VD.splitPanes(q("#sPane"), q("#pPane"), { key: 'plot', label: 'Divider between the coil and the graph' }); })();</script>
+<script>/* the shared control panel (demos/lib/vdpanel.js): the time controls in one group at the left of the strip */
+if (window.VD && VD.panel) VD.panel({ speed: '#rateSeg', clock: '#tclock', step: true });</script>
 </body>
 </html>

@@ -14,6 +14,12 @@ VDI18N.add('es', 'demo/lagrange-points', {
   "Dos cuerpos giran alrededor de su centro de masa. En el marco que gira con ellos, la gravedad y el efecto centrífugo se equilibran en cinco puntos. Suelta una partícula de prueba y ve a dónde puede ir.",
 "lengths in a · time in P · μ = m₂/(m₁ + m₂) · G(m₁ + m₂) = {#}":
   "longitudes en a · tiempo en P · μ = m₂/(m₁ + m₂) · G(m₁ + m₂) = {#}",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
 "Frame":
   "Marco",
 "Rotating frame":
@@ -184,6 +190,8 @@ VDI18N.add('es', 'demo/lagrange-points', {
   "<b>Centrado en el Sol</b>: ejes fijos respecto a las estrellas, el Sol fijo en el centro, Júpiter en su círculo de radio a. Estrictamente el Sol gira alrededor del centro de masa a μa = {#} km, así que este marco acelera un poco y no es del todo inercial. Los caminos siguen siendo exactos: el mismo movimiento que en el marco en rotación, transformado punto por punto. Los puntos de Lagrange se mueven junto con Júpiter. A velocidades del tiempo altas Júpiter se dibuja como un trazo borroso a lo largo de su órbita en vez de saltar, y un enjambre conserva solo la última media órbita de sus estelas.",
 "Launch speed relative to Sun":
   "Rapidez de lanzamiento respecto al Sol",
+"drag to throw, click to drop":
+  "arrastra para lanzar, haz clic para soltar",
 "Moon's orbit":
   "Órbita de la Luna",
 "L1 · SOHO":
@@ -316,6 +324,8 @@ VDI18N.add('es', 'demo/lagrange-points', {
   "Partículas en reposo a {#}⁻⁵ a de L1, a cada lado, y a {#}⁻³ a de L4. L1 es un punto silla: la desviación crece por un factor e cada {#}/λ, en la lectura de arriba, y cae una hacia cada masa. Con μ = {#}, por encima del {#} de Routh, incluso L4 es inestable: esa partícula también se aleja en espiral.",
 "Two body estimate about m₁, ignoring m₂":
   "Estimación de dos cuerpos alrededor de m₁, ignorando m₂",
+"{#} × {#}⁻¹⁶ <span>after {#} P</span>":
+  "{#} × {#}⁻¹⁶ <span>tras {#} P</span>",
 "{#} a from m₂, speed {#} × {#}⁻⁵ a·n in the rotating frame":
   "{#} a de m₂, rapidez {#} × {#}⁻⁵ a·n en el marco en rotación",
 "L4 · {#} TK7":
@@ -340,8 +350,8 @@ VDI18N.add('es', 'demo/lagrange-points', {
   "<b>Centrado en m₁</b>: ejes fijos respecto a las estrellas, m₁ fijo en el centro, m₂ en su círculo de radio a. Estrictamente m₁ gira alrededor del centro de masa a μa = {#} a, así que este marco acelera un poco y no es del todo inercial. Los caminos siguen siendo exactos: el mismo movimiento que en el marco en rotación, transformado punto por punto. Los puntos de Lagrange se mueven junto con m₂. A velocidades del tiempo altas m₂ se dibuja como un trazo borroso a lo largo de su órbita en vez de saltar, y un enjambre conserva solo la última media órbita de sus estelas.",
 "Launch speed relative to m₁":
   "Rapidez de lanzamiento respecto a m₁",
-"drag to throw, click to drop":
-  "arrastra para lanzar, haz clic para soltar",
+"{#} × {#}⁻¹⁶ <span>after {#} P = {#} d</span>":
+  "{#} × {#}⁻¹⁶ <span>después de {#} P = {#} d</span>",
 "{#} × {#}⁻¹⁴ <span>after {#} P = {#} d</span>":
   "{#} × {#}⁻¹⁴ <span>después de {#} P = {#} d</span>",
 "{#} km from Moon, speed {#} km/s in the rotating frame":
@@ -352,14 +362,10 @@ VDI18N.add('es', 'demo/lagrange-points', {
   "t = {#} <small>P</small> · {#} yr",
 "{#} <span>after {#} P = {#} yr</span>":
   "{#} <span>después de {#} P = {#} años</span>",
-"{#} × {#}⁻¹⁶ <span>after {#} P</span>":
-  "{#} × {#}⁻¹⁶ <span>tras {#} P</span>",
 "body sizes made up":
   "tamaños de los cuerpos inventados",
 "{#} × {#}⁻¹⁶ <span>after {#} P = {#} yr</span>":
   "{#} × {#}⁻¹⁶ <span>después de {#} P = {#} años</span>",
 "{#} × {#}⁻¹³ <span>after {#} P = {#} d</span>":
-  "{#} × {#}⁻¹³ <span>después de {#} P = {#} d</span>",
-"{#} × {#}⁻¹⁶ <span>after {#} P = {#} d</span>":
-  "{#} × {#}⁻¹⁶ <span>después de {#} P = {#} d</span>"
+  "{#} × {#}⁻¹³ <span>después de {#} P = {#} d</span>"
 });

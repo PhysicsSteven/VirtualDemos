@@ -26,8 +26,16 @@ VDI18N.add('es', 'demo/fluids', {
   "Unidades SI · P = P₀ + ρgh · F_B = ρ_f V_sub g · P + ½ρv² + ρgy = const",
 "Fluid apparatus. Drag the probe, the block, the spring scale, the water surface, the pipe throat or the hole in the tank. Keys: arrows move or change the selected part, space plays or pauses, R starts again.":
   "Aparato de fluidos. Arrastra la sonda, el bloque, el dinamómetro, la superficie del agua, la garganta del tubo o el orificio del tanque. Teclas: las flechas mueven o cambian la parte elegida, espacio inicia o pausa, R empieza de nuevo.",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
 "Drop again":
   "Soltar de nuevo",
+"<span>Playback rate</span>":
+  "<span>Ritmo de reproducción</span>",
 "Cavitation: pressure would fall below vapor pressure; model invalid":
   "Cavitación: la presión bajaría por debajo de la presión de vapor; el modelo no es válido",
 "Graph for the current scene: pressure against depth, forces on the vessels, column heights, forces on the block, pressure along the pipe, or jet range against hole depth. Show data table in the Lab section lists the plotted values.":
@@ -220,6 +228,8 @@ VDI18N.add('es', 'demo/fluids', {
   "El tanque, el bloque y el vaso están a escala. Arrastra para girar, desplaza para acercar, doble clic para volver; arrastra un agarre para cambiar un valor.",
 "level up {#} mm = V":
   "el nivel sube {#} mm = V",
+"slow motion ×{#}":
+  "cámara lenta ×{#}",
 "depth (m)":
   "profundidad (m)",
 "absolute pressure":
@@ -382,8 +392,6 @@ VDI18N.add('es', 'demo/fluids', {
   "Registrar lectura guarda v₁, el flujómetro y ambos tubos verticales. Mantén D₁ y D₂ fijos: el ajuste usa las lecturas con el tubo y la garganta actuales, Δh = h₁ − h₂ en función de v₁², con ordenada al origen.",
 "steady flow":
   "flujo estacionario",
-"slow motion ×{#}":
-  "cámara lenta ×{#}",
 "v = √(2gh) = {#} m/s":
   "v = √(2gh) = {#} m/s",
 "dashed: holes at H/{#}, H/{#} and 3H/{#}":

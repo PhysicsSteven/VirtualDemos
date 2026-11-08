@@ -24,6 +24,8 @@ VDI18N.add('es', 'demo/bragg-peak', {
   "Un haz de protones deposita la mayor parte de su dosis justo antes de detenerse. Mueve el pico con la energía del haz, míralo en agua, músculo, grasa y hueso, apila capas de energía en un pico de Bragg extendido que cubra un blanco, y compáralo con un haz clínico de fotones de {#} MV.",
 "depth in cm · E in MeV":
   "profundidad en cm · E en MeV",
+"Time controls":
+  "Controles de tiempo",
 "Beam on":
   "Haz encendido",
 "What the picture shows":

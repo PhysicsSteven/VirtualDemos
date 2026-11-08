@@ -12,14 +12,20 @@ VDI18N.add('es', 'demo/viscometer', {
   "t = {#} s desde que se soltó",
 "Falling Ball Viscometer":
   "Viscosímetro de esfera que cae",
+"<a><span>←</span> <span>Terminal Velocity</span></a><a><span>Potential Energy Curves</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Velocidad terminal</span></a><a><span>Curvas de energía potencial</span> <span>→</span></a>",
 "Drop a ball into a tall tube of liquid. It quickly reaches a terminal speed, where weight balances buoyancy and drag. Time it between two marks and use Stokes' law to measure the liquid's viscosity, then find where Stokes' law stops working.":
   "Deja caer una esfera en un tubo alto de líquido. Pronto alcanza una rapidez terminal, en la que el peso equilibra el empuje y el arrastre. Mide el tiempo entre dos marcas y usa la ley de Stokes para medir la viscosidad del líquido; luego encuentra dónde deja de funcionar la ley de Stokes.",
 "marks {#} m apart · {#} °C · g = {#} m/s²":
   "marcas separadas {#} m · {#} °C · g = {#} m/s²",
 "A tall glass tube of liquid with two timing marks {#} m apart and a ball falling through it, with the gate timer. Space drops the ball, R takes it out.":
   "Un tubo de vidrio alto con líquido, dos marcas de tiempo separadas {#} m y una esfera que cae por él, con el cronómetro de compuertas. Espacio deja caer la esfera, R la saca.",
+"Time controls":
+  "Controles de tiempo",
 "Drop the ball":
   "Soltar la esfera",
+"<span>Speed</span>":
+  "<span>Rapidez</span>",
 "Take it out":
   "Sacarla",
 "Start collecting":
@@ -124,16 +130,14 @@ VDI18N.add('es', 'demo/viscometer', {
   "Flujo en una tubería: una tubería de vidrio lisa y horizontal alimentada por un tanque de carga constante; la válvula de salida fija el caudal ({#} a {#} mL/s en la tubería de {#} mm, {#} a {#} mL/s en la de {#} mm). Dos tomas separadas {#} m, lo bastante lejos corriente abajo para que el flujo esté completamente desarrollado (la tubería antes de ellas se dibuja acortada), alimentan un manómetro diferencial ({#} Pa) y dos tubos manométricos. La caída de presión es la de Darcy–Weisbach ΔP = f (L/D) ρv²/{#} con f = {#}/N_R por debajo de N_R = {#} (exactamente la ley de Poiseuille, ΔP = {#}ηLQ/(πr⁴)) y la f = {#} N_R^(−{#}/{#}) de Blasius para una tubería lisa por encima de N_R = {#}; entre ellas, el intervalo que OpenStax llama inestable, f se interpola en ejes logarítmicos. Agua: η = {#} mPa·s a {#} °C y {#} mPa·s a {#} °C (OpenStax Tabla {#}), ρ = {#} y {#} kg/m³ (CRC Handbook). El líquido misterioso es una mezcla de agua y glicerol con su propia η oculta. La trayectoria del colorante se dibuja para mostrar el tipo de flujo (recta en flujo laminar, en bocanadas en el intervalo inestable, mezclada a lo ancho de la tubería cuando es turbulento) y desacelerada; los remolinos son ilustrativos, y el caudal y la caída de presión salen solo de las fórmulas.",
 "Model: drag F = {#}πηrv × K(d/D) × C_D N_R/{#}, with the standard drag curve of Clift, Grace and Weber (Oseen's {#} + 3N_R/{#} below N_R = {#}) and Haberman and Sayre's wall factor K for a sphere on the axis of a tube in slow flow (the K you apply). At higher N_R the walls matter less: the factor is weakened following Di Felice ({#}), whose fit covers N_R up to about {#}. The ball's motion includes buoyancy and the added mass ½ρ_f V. Densities in kg/m³: steel {#}, glass {#}, nylon {#}. Liquids at {#} °C: glycerol {#} and η = {#} Pa·s; castor oil {#} and {#} Pa·s; motor oil (typical SAE {#}) {#} and {#} Pa·s; water {#} and {#} mPa·s.":
   "Modelo: arrastre F = {#}πηrv × K(d/D) × C_D N_R/{#}, con la curva de arrastre estándar de Clift, Grace y Weber ({#} + 3N_R/{#} de Oseen por debajo de N_R = {#}) y el factor de pared K de Haberman y Sayre para una esfera en el eje de un tubo en flujo lento (la K que aplicas). A N_R mayores las paredes importan menos: el factor se debilita según Di Felice ({#}), cuyo ajuste cubre N_R hasta aproximadamente {#}. El movimiento de la esfera incluye el empuje y la masa agregada ½ρ_f V. Densidades en kg/m³: acero {#}, vidrio {#}, nailon {#}. Líquidos a {#} °C: glicerol {#} y η = {#} Pa·s; aceite de ricino {#} y {#} Pa·s; aceite de motor (SAE {#} típico) {#} y {#} Pa·s; agua {#} y {#} mPa·s.",
-"<a><span>←</span> <span>Terminal Velocity</span></a><a><span>Potential Energy Curves</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Velocidad terminal</span></a><a><span>Curvas de energía potencial</span> <span>→</span></a>",
 "tube {#} mm wide, ball {#} mm, to scale":
   "tubo de {#} mm de ancho, esfera de {#} mm, a escala",
+"t = {#} s since release, shown ×{#}":
+  "t = {#} s desde que se soltó, mostrado ×{#}",
 "Water, {#} °C: ρ = {#} kg/m³, η = {#} mPa·s. Fully open, the valve passes {#} mL/s through the {#} mm pipe.":
   "Agua, {#} °C: ρ = {#} kg/m³, η = {#} mPa·s. Totalmente abierta, la válvula deja pasar {#} mL/s por la tubería de {#} mm.",
 "Stop collecting":
   "Dejar de recolectar",
-"t = {#} s since release, shown ×{#}":
-  "t = {#} s desde que se soltó, mostrado ×{#}",
 "Glass ball, d = {#} mm":
   "Esfera de vidrio, d = {#} mm",
 "lighter than the liquid: it rises":

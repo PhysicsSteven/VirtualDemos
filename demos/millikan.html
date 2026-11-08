@@ -7,6 +7,7 @@
 <script src="lib/theme.js"></script>
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
 <script src="lib/vd3.js"></script>
 <script src="lib/vd3kit.js"></script>
 <title>Millikan Oil Drop</title>
@@ -56,7 +57,7 @@
   <main class="bench">
     <div class="stage" id="stage">
       <div class="stage-ctl">
-        <button type="button" class="spin attn" id="play">Start</button>
+        <button type="button" class="spin attn" id="play">Play</button>
         <button type="button" class="btn" id="spray">Spray drops</button>
         <div class="seg" role="group" aria-label="Plates" id="polSeg">
           <button type="button" data-pol="0" aria-pressed="true">Plates off</button>
@@ -554,7 +555,7 @@
     for (const b of document.querySelectorAll('#gateSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.l === S.L));
     for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
   }
-  function setRun(on) { S.run = on; $('play').textContent = on ? 'Pause' : S.t > 0 ? 'Resume' : 'Start'; $('play').classList.toggle('attn', !on); }
+  function setRun(on) { S.run = on; $('play').textContent = on ? 'Pause' : S.t > 0 ? 'Play' : 'Play'; $('play').classList.toggle('attn', !on); }
   function applyPreset(k) {
     const c = PRESETS[k]; S.preset = k; Object.assign(S, { pol: c.pol, V: c.V, T: c.T, p: c.p, L: c.L, auto: c.auto, ion: c.ion, spd: c.spd, t: 0, drops: [], pick: -1, last: null, gate: null });
     S.rnd = mkRng(c.seed); S.sw = { on: false, t: 0 }; $('swGo').textContent = 'Start stopwatch';
@@ -643,5 +644,7 @@
   requestAnimationFrame(frame);
 })();
 </script>
+<script>/* the shared control panel (demos/lib/vdpanel.js): the time controls in one group at the left of the strip */
+if (window.VD && VD.panel) VD.panel({ reset: false, speed: '#spdSeg', step: true });</script>
 </body>
 </html>

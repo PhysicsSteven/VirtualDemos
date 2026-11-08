@@ -8,14 +8,22 @@ VDI18N.add('es', 'demo/impulse', {
   "se muestran {#} ms",
 "Impulse and Momentum":
   "Impulso y momento",
+"<a>Momentum and collisions</a>":
+  "<a>Momento y colisiones</a>",
+"<a><span>←</span> <span>Collisions and Momentum</span></a><a><span>Center of Mass</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Colisiones y momento</span></a><a><span>Centro de masa</span> <span>→</span></a>",
 "A cart rolls into a bumper on a force sensor and bounces back. The area under the force against time graph is the impulse, and it equals the cart's change of momentum. A soft bumper gives the same impulse with a smaller force over a longer time.":
   "Un carrito rueda hacia un tope montado en un sensor de fuerza y rebota. El área bajo la gráfica de fuerza en función del tiempo es el impulso, y es igual al cambio de momento del carrito. Un tope blando da el mismo impulso con una fuerza menor durante un tiempo más largo.",
 "frictionless track · sensor to {#} N":
   "riel sin fricción · sensor con resolución de {#} N",
 "A cart on a track rolling into a bumper on a force sensor, and below it the force sensor reading against time with the area shaded. Space launches the cart.":
   "Un carrito sobre un riel que rueda hacia un tope montado en un sensor de fuerza, y debajo la lectura del sensor de fuerza en función del tiempo con el área sombreada. Espacio lanza el carrito.",
+"Time controls":
+  "Controles de tiempo",
 "Launch the cart":
   "Lanzar el carrito",
+"<span>Speed</span>":
+  "<span>Rapidez</span>",
 "Put it back":
   "Regresarlo",
 "Divider between the cart and the force graph":
@@ -76,10 +84,6 @@ VDI18N.add('es', 'demo/impulse', {
   "A ciegas oculta el área, el cambio de momento y la fuerza máxima, y deja la gráfica, las velocidades y los ajustes.",
 "Model: a frictionless cart; the bumper pushes with F = kx while it is compressed, then unloads along a steeper line so the cart leaves with e times its speed (e is the coefficient of restitution). Each phase is simple harmonic, so F(t) is exact. Stiff spring k = {#} N/m, e = {#}; soft spring k = {#} N/m, e = {#}; clay k = {#} N/m, e = {#}. The sensor reads the force to {#} N at the chosen sample rate.":
   "Modelo: un carrito sin fricción; el tope empuja con F = kx mientras está comprimido, y luego se descarga a lo largo de una recta más inclinada para que el carrito salga con e veces su rapidez (e es el coeficiente de restitución). Cada fase es armónica simple, así que F(t) es exacta. Resorte rígido k = {#} N/m, e = {#}; resorte blando k = {#} N/m, e = {#}; plastilina k = {#} N/m, e = {#}. El sensor lee la fuerza con resolución de {#} N a la frecuencia de muestreo elegida.",
-"<a>Momentum and collisions</a>":
-  "<a>Momento y colisiones</a>",
-"<a><span>←</span> <span>Collisions and Momentum</span></a><a><span>Center of Mass</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Colisiones y momento</span></a><a><span>Centro de masa</span> <span>→</span></a>",
 "drag to turn, wheel to zoom":
   "arrastra para girar, rueda para acercar",
 "A soft spring: a long, low force. Same bounciness as the stiff one.":

@@ -16,10 +16,20 @@ VDI18N.add('es', 'demo/energy-track', {
   "Total",
 "Energy on a Track":
   "Energía en una pista",
+"<a><span>←</span> <span>Granular Flow: Sorting and Landslides</span></a><a><span>Rotating Frames</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Flujo granular: segregación y deslizamientos</span></a><a><span>Marcos de referencia en rotación</span> <span>→</span></a>",
 "Shape a track, let a skater go, and watch kinetic, potential and thermal energy trade places while the total stays fixed. Add friction, loops and jumps; see where the skater leaves the track.":
   "Dale forma a una pista, suelta a un patinador y observa cómo la energía cinética, la potencial y la térmica intercambian lugares mientras el total se mantiene fijo. Agrega fricción, rizos y saltos; observa dónde se sale el patinador de la pista.",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
 "Return skater":
   "Regresar al patinador",
+"<span>Speed</span>":
+  "<span>Rapidez</span>",
 "The skate park: a track with round grips at its points, the skater, the ground and two walls {#} m apart. Drag the skater anywhere and let go; drag a grip to reshape the track; drag a new point from the tray onto the track, or a grip onto the bin to remove it; drag the U = {#} tab on the left to move the zero of potential energy. Space plays or pauses.":
   "El parque de patinaje: una pista con agarraderas redondas en sus puntos, el patinador, el suelo y dos paredes separadas {#} m. Arrastra al patinador a cualquier lugar y suéltalo; arrastra una agarradera para cambiar la forma de la pista; arrastra un punto nuevo desde la bandeja a la pista, o una agarradera al bote de basura para quitarla; arrastra la pestaña U = {#} de la izquierda para mover el cero de la energía potencial. Espacio inicia o pausa.",
 "Energy against time for the last {#} s: kinetic, potential, thermal and total.":
@@ -88,8 +98,6 @@ VDI18N.add('es', 'demo/energy-track', {
   "E<sub>th</sub> crece en μN Δs mientras se desliza",
 "Model: the skater is a point mass that slides (no rolling, no air drag). The track is a smooth curve through its points (a natural cubic spline). On the track the motion is found in steps of {#} ms (fourth order Runge–Kutta) and the speed is then set from the energy balance, so K + U + E<sub>th</sub> equals the starting total at every step. Kinetic friction is μN against the motion; at rest the same μ holds the skater on a slope where tanθ ≤ μ. The track pushes but cannot pull: where it would have to pull (N &lt; {#}) the skater leaves it, unless Stick to the track is on. In the air the path is the exact parabola. Landing on the track keeps the speed along the track and turns the speed across it into thermal energy (a perfectly inelastic bump); landing on the ground does the same with the downward speed, and the walls stop the skater. g: Earth {#} m/s², and the Moon {#}, Mars {#} and Jupiter {#} m/s² from the NASA Planetary Fact Sheet.":
   "Modelo: el patinador es una masa puntual que se desliza (sin rodar, sin arrastre del aire). La pista es una curva suave que pasa por sus puntos (un spline cúbico natural). Sobre la pista, el movimiento se calcula en pasos de {#} ms (Runge–Kutta de cuarto orden) y luego la rapidez se fija a partir del balance de energía, así que K + U + E<sub>th</sub> es igual al total inicial en cada paso. La fricción cinética es μN en contra del movimiento; en reposo, la misma μ sostiene al patinador en una pendiente donde tanθ ≤ μ. La pista empuja pero no puede jalar: donde tendría que jalar (N &lt; {#}) el patinador se sale, a menos que Pegado a la pista esté activado. En el aire la trayectoria es la parábola exacta. Al caer sobre la pista se conserva la rapidez a lo largo de la pista y la rapidez perpendicular a ella se convierte en energía térmica (un golpe perfectamente inelástico); al caer al suelo pasa lo mismo con la rapidez hacia abajo, y las paredes detienen al patinador. g: Tierra {#} m/s², y Luna {#}, Marte {#} y Júpiter {#} m/s² según la NASA Planetary Fact Sheet.",
-"<a><span>←</span> <span>Granular Flow: Sorting and Landslides</span></a><a><span>Rotating Frames</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Flujo granular: segregación y deslizamientos</span></a><a><span>Marcos de referencia en rotación</span> <span>→</span></a>",
 "Kinetic":
   "Cinética",
 "Potential":

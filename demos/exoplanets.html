@@ -7,6 +7,7 @@
 <script src="lib/theme.js"></script>
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
 <script src="lib/vd3.js"></script>
 <script src="lib/vd3kit.js"></script>
 <style>
@@ -1398,6 +1399,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('tModel').addEventListener('change', (e) => { if (!hidden()) showModel = e.target.checked; schedule(); });
   function setPlaying(p) { playing = p; $('play').textContent = p ? 'Pause' : 'Play'; last = null; schedule(); }
   $('play').addEventListener('click', () => setPlaying(!playing));
+  /* the shared control panel (demos/lib/vdpanel.js): the time controls in one group at the left of the strip */
+  if (window.VD && VD.panel) VD.panel({ speed: '#speedSeg', step: true });
   $('reset').addEventListener('click', () => { tau = 0; schedule(); });
 
   // time scrubbing

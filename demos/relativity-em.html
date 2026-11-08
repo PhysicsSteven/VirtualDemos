@@ -11,6 +11,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
 <script src="lib/vd3.js"></script>
 <script src="lib/vd3kit.js"></script>
 <style>
@@ -2004,5 +2005,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   window.__relem = { S, freezeBoost: (fr) => { S.frame = 'charge'; syncControls(); boost.active = true; boost.rate = 0; boost.phi = fr * Math.atanh(targetF()); dirty = true; }, pause: () => { if (playing) togglePlay(); }, setTau: (fr) => { ensureRun(); RUN.tau = fr * RUN.tauEnd; RUN.hold = 0; dirty = true; }, run: () => RUN, applyPreset, setFrame, wp, frame: () => fCur, boosting: () => boost.active, frameMs: () => frameMs, handles: () => handles.map((h) => ({ id: h.id, x: h.s[0], y: h.s[1] })), core: { wireForce, wireInFrame, boostFields, movingCharge } };
 })();
 </script>
+<script>/* the shared control panel (demos/lib/vdpanel.js): the time controls in one group at the left of the strip */
+if (window.VD && VD.panel) VD.panel({ reset: false, step: true });</script>
 </body>
 </html>

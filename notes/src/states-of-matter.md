@@ -17,7 +17,7 @@ Students should know Q = mcΔT and the idea of temperature as average kinetic en
 
 ## Running it in class
 
-1. **Ice to steam** (Beaker). Ask Q1, then press **Start** at the fastest speed. Point to the thermometer stuck at 0 °C while the cubes shrink, and the balance falling only once it boils. Then compare the two balances once it boils: the open beaker's reading falls, the covered one's stays at 200 g (Q7).
+1. **Ice to steam** (Beaker). Ask Q1, then press **Play** at the fastest speed. Point to the thermometer stuck at 0 °C while the cubes shrink, and the balance falling only once it boils. Then compare the two balances once it boils: the open beaker's reading falls, the covered one's stays at 200 g (Q7).
 2. Read the curve. Ask Q2 about the two slopes and Q3 about the plateau lengths, then check with the timer.
 3. **Heat a crystal** (Atoms). Leave **Show bonds** on and color the atoms by **Phase**. Start it and let the class watch the crystal pattern break up while the temperature holds near 66 K. Ask Q4.
 4. Keep going to boiling. Watch *Where the heat went*: on the plateaus the bond energy bar grows and the kinetic energy bar does not. Ask Q5. The sample may overheat briefly before the first vapor forms, then settle back: a real effect (superheating).

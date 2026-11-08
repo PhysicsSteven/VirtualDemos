@@ -11,6 +11,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
 <script src="lib/vd3.js"></script>
 <style>
 /* Layout: the 3D optics bench across the top of the stage, the measuring microscope and the top view below it; instrument rail on the right; stacks on phones. */
@@ -1395,5 +1396,7 @@ table.rows tr.sim td { background: color-mix(in srgb, var(--equi) 9%, transparen
 </script>
 <script>/* dividers between the panes (VD.splitPanes in demos/lib/vd.js); a browser with an older cached vd.js keeps the panes as they are */
 (function () { if (!window.VD || !VD.splitPanes) return; var q = function (s) { return document.querySelector(s); }; VD.splitPanes(q("#p3d"), q("#pEye"), { key: 'bench', label: 'Divider between the bench and the two views' }); VD.splitPanes(q("#pEye"), q("#pTop"), { key: 'views', label: 'Divider between the eyepiece and the top view' }); })();</script>
+<script>/* the shared control panel (demos/lib/vdpanel.js): the time controls in one group at the left of the strip */
+if (window.VD && VD.panel) VD.panel({ reset: '#replay', step: true });</script>
 </body>
 </html>

@@ -20,6 +20,12 @@ VDI18N.add('es', 'demo/induced-electric-field', {
   "<a><span>←</span> <span>Inducción en acción</span></a><a><span>Corrientes de Foucault: imán en un tubo</span> <span>→</span></a>",
 "A long solenoid seen end on. While its current changes, the changing magnetic flux makes an electric field that circles the solenoid, inside it and in the empty space outside. Move a closed path around and compare the work per charge around it, ∮E·dl, with −dΦ/dt.":
   "Un solenoide largo visto de punta. Mientras su corriente cambia, el flujo magnético cambiante produce un campo eléctrico que rodea al solenoide, dentro de él y en el espacio vacío de afuera. Mueve una trayectoria cerrada y compara el trabajo por unidad de carga a su alrededor, ∮E·dl, con −dΦ/dt.",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
 "The end of a long solenoid, its magnetic field shown as dots or crosses, arrows for the induced electric field circling it, and a closed path that can be dragged or moved with the arrow keys. Plots of the current against time and of the electric field against distance from the axis.":
   "El extremo de un solenoide largo, con su campo magnético mostrado como puntos o cruces, flechas para el campo eléctrico inducido que lo rodea, y una trayectoria cerrada que se puede arrastrar o mover con las flechas. Gráficas de la corriente en función del tiempo y del campo eléctrico en función de la distancia al eje.",
 "Divider between the field and the graphs":

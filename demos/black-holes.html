@@ -11,6 +11,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
 <style>
 /* Layout: one canvas in the stage. Left: the lensed sky, the ray traced view or the radial diagram; right: plots. Instrument rail on the right; stacks on phones. */
 :root {
@@ -1822,5 +1823,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   requestAnimationFrame(loop);
 })();
 </script>
+<script>/* the shared control panel (demos/lib/vdpanel.js): the time controls in one group at the left of the strip */
+if (window.VD && VD.panel) VD.panel({ step: true });</script>
 </body>
 </html>

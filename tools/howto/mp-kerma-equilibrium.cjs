@@ -16,7 +16,7 @@ require('./lib.cjs')({ demo: 'dosimetry', title: 'Dosimetry: Kerma, Equilibrium 
   await r.click('[data-p="co60"]');
   await r.secs(0.8);
 
-  state.caption = 'Press Start and let it run past 2 million histories, then pause';
+  state.caption = 'Press Play and let it run past 2 million histories, then pause';
   await r.click('#play');
   const ck = await r.box('#clock');
   state.arrow = { rect: ck };

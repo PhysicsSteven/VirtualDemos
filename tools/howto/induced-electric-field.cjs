@@ -14,7 +14,7 @@ require('./lib.cjs')({ demo: 'induced-electric-field', title: 'Induced Electric 
   await r.secs(2.4);
   state.arrow = null;
 
-  state.caption = 'Pause, then Restart to stand at t = 0';
+  state.caption = 'Pause, then Reset to stand at t = 0';
   await r.scrollRail('#playBtn');
   await r.click('#playBtn');
   await r.tick(6);

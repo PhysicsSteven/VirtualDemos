@@ -44,6 +44,14 @@ VDI18N.add('es', 'demo/hr-diagram', {
   "Dónde se ubica una estrella en el diagrama de Hertzsprung Russell, y el camino que sigue desde su nacimiento hasta enana blanca o supernova.",
 "L in L<sub>sun</sub> · R in R<sub>sun</sub> · L = {#}πR²σT⁴ · T<sub>sun</sub> = {#} K · R<sub>E</sub> = R<sub>sun</sub>/{#}":
   "L en L<sub>sun</sub> · R en R<sub>sun</sub> · L = {#}πR²σT⁴ · T<sub>sun</sub> = {#} K · R<sub>E</sub> = R<sub>sun</sub>/{#}",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
+"<span>Speed</span>":
+  "<span>Rapidez</span>",
 "{#} Gyr <small>age</small>":
   "{#} mil millones de años <small>edad</small>",
 "Hertzsprung Russell diagram. Drag the star along its track to change its age. Left and right arrow keys change the age, up and down change the mass, space plays or pauses.":

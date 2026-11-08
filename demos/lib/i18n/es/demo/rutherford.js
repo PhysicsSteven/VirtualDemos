@@ -20,6 +20,12 @@ VDI18N.add('es', 'demo/rutherford', {
   "Dispara partículas alfa contra una lámina de oro. Unas cuantas rebotan directo hacia atrás, algo que el átomo de pudín de pasas de Thomson no puede hacer: la carga positiva debe estar en un núcleo diminuto.",
 "lengths in fm = {#}⁻¹⁵ m · K in MeV · e²/{#}πε₀ = {#} MeV·fm":
   "longitudes en fm = {#}⁻¹⁵ m · K en MeV · e²/{#}πε₀ = {#} MeV·fm",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
 "What to fire":
   "Qué disparar",
 "One alpha":

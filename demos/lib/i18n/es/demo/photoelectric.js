@@ -42,8 +42,6 @@ VDI18N.add('es', 'demo/photoelectric', {
   "Corriente I (nA) en función del voltaje",
 "collector voltage V (volts)":
   "voltaje del colector V (volts)",
-"phototube":
-  "fototubo",
 "Photoelectric Effect":
   "Efecto fotoeléctrico",
 "<a>Photons and matter waves</a>":
@@ -56,6 +54,12 @@ VDI18N.add('es', 'demo/photoelectric', {
   "<span>E = hf = hc/λ</span> · <span>hc = {#} eV·nm</span> · <span>K<sub>max</sub> = hf − φ</span>",
 "Photoelectric apparatus on a lab bench: a lamp and monochromator shine light through the glass of an evacuated phototube onto its curved metal cathode (the emitter), and electrons travel to the central anode wire (the collector). A voltage supply with a reversing switch sets the collector voltage, and a picoammeter reads the current. Drag the knobs to change the wavelength, the light power and the voltage, and click the reversing switch to change the sign of V. Keys: left and right change the wavelength, up and down the voltage (shift for bigger steps), page up and page down the light power, R flips the reversing switch, space pauses.":
   "Aparato fotoeléctrico sobre una mesa de laboratorio: una lámpara y un monocromador hacen pasar luz por el vidrio de un fototubo al vacío hacia su cátodo metálico curvo (el emisor), y los electrones viajan al alambre central del ánodo (el colector). Una fuente de voltaje con un interruptor inversor fija el voltaje del colector, y un picoamperímetro lee la corriente. Arrastra las perillas para cambiar la longitud de onda, la potencia de la luz y el voltaje, y haz clic en el interruptor inversor para cambiar el signo de V. Teclas: izquierda y derecha cambian la longitud de onda, arriba y abajo el voltaje (Shift para pasos más grandes), Re Pág y Av Pág la potencia de la luz, R invierte el interruptor, espacio pausa.",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
 "Charts: maximum kinetic energy against frequency, and current against collector voltage.":
   "Gráficas: energía cinética máxima en función de la frecuencia, y corriente en función del voltaje del colector.",
 "Divider between the apparatus and the graphs":
@@ -134,6 +138,8 @@ VDI18N.add('es', 'demo/photoelectric', {
   "Recta teórica y respuestas",
 "Model: each absorbed photon frees at most one electron, with a kinetic energy spread evenly between {#} and K<sub>max</sub>. One electron per thousand photons (quantum efficiency {#}%). Electron speeds on screen are slowed enormously; the fastest real ones move at hundreds of km/s.":
   "Modelo: cada fotón absorbido libera a lo más un electrón, con una energía cinética repartida uniformemente entre {#} y K<sub>max</sub>. Un electrón por cada mil fotones (eficiencia cuántica de {#}%). Las rapideces de los electrones en pantalla están enormemente reducidas; los más rápidos reales se mueven a cientos de km/s.",
+"phototube":
+  "fototubo",
 "phototube drawn {#} times its size · electrons slowed enormously · drag to turn, a knob to set it":
   "fototubo dibujado {#} veces su tamaño · electrones enormemente más lentos · arrastra para girar, una perilla para ajustarla",
 "Full power red light and not a single electron. Each {#} nm photon has only {#} eV, below sodium's work function. Turning up the brightness sends more weak photons, not stronger ones.":

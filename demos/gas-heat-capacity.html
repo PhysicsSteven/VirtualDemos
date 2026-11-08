@@ -7,6 +7,7 @@
 <script src="lib/theme.js"></script>
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
 <script src="lib/vd3.js"></script>
 <script src="lib/vd3kit.js"></script>
 <title>Heat Capacities of Gases</title>
@@ -71,8 +72,8 @@
           <button type="button" data-v="ru" aria-pressed="false">Rüchardt's ball</button>
           <button type="button" data-v="mol" aria-pressed="false">Watch the molecules</button>
         </div>
-        <button type="button" class="spin attn" id="go">Start</button>
-        <button type="button" class="btn" id="restart">Start over</button>
+        <button type="button" class="spin attn" id="go">Play</button>
+        <button type="button" class="btn" id="restart">Reset</button>
         <div class="seg" role="group" aria-label="Simulation speed" id="speedSeg">
           <button type="button" data-s="1" aria-pressed="true">1×</button>
           <button type="button" data-s="5" aria-pressed="false">5×</button>
@@ -731,7 +732,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     window.vdShowCols = SHOW[v]; if (!(window.vdRows && window.vdRows().length)) window.dispatchEvent(new Event('load'));
     setRun(false); sync(); redraw();
   }
-  function setRun(on) { S.run = on; const t = S.view === 'heat' ? S.heat.t : S.view === 'mol' ? molPs() : S.ru.t; $('go').textContent = on ? 'Pause' : t > 0 ? 'Resume' : 'Start'; $('go').classList.toggle('attn', !on); }
+  function setRun(on) { S.run = on; const t = S.view === 'heat' ? S.heat.t : S.view === 'mol' ? molPs() : S.ru.t; $('go').textContent = on ? 'Pause' : t > 0 ? 'Play' : 'Play'; $('go').classList.toggle('attn', !on); }
   function applyPreset(k) { const c = PRESETS[k]; S.preset = k; $('presetHint').textContent = c.hint; c.set(); setView(c.view); }
   const heatChanged = () => { S.preset = 'custom'; S.heat.Q = 0; S.heat.t = 0; setRun(false); sync(); redraw(); };
   function drop() { Object.assign(S.ru, { t: 0, dropped: true, swings: [], lastCross: null, lastPeriod: null }); setRun(true); }
@@ -825,5 +826,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 </script>
 <script>/* dividers between the panes (VD.splitPanes in demos/lib/vd.js); a browser with an older cached vd.js keeps the panes as they are */
 (function () { if (!window.VD || !VD.splitPanes) return; var q = function (s) { return document.querySelector(s); }; VD.splitPanes(q("#pane"), q(".curvebox"), { key: 'curve', label: 'Divider between the apparatus and the graph' }); })();</script>
+<script>/* the shared control panel (demos/lib/vdpanel.js): the time controls in one group at the left of the strip */
+if (window.VD && VD.panel) VD.panel({ play: '#go', reset: '#restart', speed: '#speedSeg', clock: '#clock', step: true });</script>
 </body>
 </html>

@@ -28,6 +28,10 @@ VDI18N.add('es', 'demo/cavendish', {
   "punto sobre la escala en cm · tiempo en s",
 "A torsion balance, in 3D or from the top: a beam with two small lead spheres hangs from a fiber inside a case, with two large lead spheres outside on a swivel frame. A laser beam reflects from a mirror on the beam to a scale. Space runs or pauses.":
   "Una balanza de torsión, en 3D o desde arriba: una barra con dos esferas pequeñas de plomo cuelga de una fibra dentro de una caja, con dos esferas grandes de plomo afuera en un marco giratorio. Un haz láser se refleja en un espejo de la barra hacia una escala. Espacio corre o pausa.",
+"Time controls":
+  "Controles de tiempo",
+"<span>Playback speed</span>":
+  "<span>Rapidez de reproducción</span>",
 "Run to the next turning point":
   "Avanzar al siguiente punto de retorno",
 "Strip chart of the spot's position on the scale against time":
@@ -90,8 +94,6 @@ VDI18N.add('es', 'demo/cavendish', {
   "girando a retiradas",
 "down the scale":
   "bajando por la escala",
-"away":
-  "retiradas",
 "swinging to position B":
   "girando a la posición B",
 "position B":
@@ -106,6 +108,8 @@ VDI18N.add('es', 'demo/cavendish', {
   "arrastra una esfera grande para girarla, en otro lugar para rotar la vista",
 "swinging to position A":
   "girando a la posición A",
+"away":
+  "retiradas",
 "up the scale":
   "subiendo por la escala"
 });

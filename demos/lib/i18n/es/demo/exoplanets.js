@@ -24,6 +24,14 @@ VDI18N.add('es', 'demo/exoplanets', {
   "Un planeta atenúa su estrella cuando pasa por delante y la jala de un lado a otro mientras orbita. Observa ambas señales a la vez.",
 "AU · M<sub>sun</sub> · R<sub>sun</sub> · M<sub>E</sub> · R<sub>E</sub> · ppm · m/s":
   "UA · M<sub>sun</sub> · R<sub>sun</sub> · M<sub>E</sub> · R<sub>E</sub> · ppm · m/s",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
+"<span>Speed</span>":
+  "<span>Rapidez</span>",
 "Animation speed":
   "Velocidad de la animación",
 "What orbits the star":
@@ -224,8 +232,8 @@ VDI18N.add('es', 'demo/exoplanets', {
   "la estrella {#} delante aquí",
 "star {#} behind here":
   "la estrella {#} detrás aquí",
-"sizes to scale":
-  "tamaños a escala",
+"stars and orbit to scale · drag to turn":
+  "estrellas y órbita a escala · arrastra para girar",
 "stars to scale":
   "estrellas a escala",
 "Relative brightness":
@@ -240,6 +248,8 @@ VDI18N.add('es', 'demo/exoplanets', {
   "{#} UA = {#} R<sub>sun</sub>",
 "both, with flat bottoms":
   "ambos, con fondo plano",
+"sizes to scale":
+  "tamaños a escala",
 "From far away, Earth dims the Sun by {#} ppm for {#} hours once a year and moves it at only {#} cm/s. Add a little noise and both signals disappear.":
   "Desde muy lejos, la Tierra atenúa al Sol {#} ppm durante {#} horas una vez al año y lo mueve a solo {#} cm/s. Añade un poco de ruido y ambas señales desaparecen.",
 "Jupiter swings the Sun at about {#} m/s, easy for a good spectrograph if you wait {#} years. Its {#}% transit lines up for only about {#}% of random viewers.":
@@ -294,10 +304,8 @@ VDI18N.add('es', 'demo/exoplanets', {
   "Revelado: M₁ = {m1} M☉, R₁ = {r1} R☉, T₁ = {t1} K; M₂ = {m2} M☉, R₂ = {r2} R☉, T₂ = {t2} K; a = {a} UA, i = {i}°, γ = {g} km/s.",
 "Revealed: M₁ = {#} M<sub>sun</sub>, R₁ = {#} R<sub>sun</sub>, T₁ = {#} K; M₂ = {#} M<sub>sun</sub>, R₂ = {#} R<sub>sun</sub>, T₂ = {#} K; a = {#} AU, i = {#}°, γ = {#} km/s.":
   "Revelado: M₁ = {#} M<sub>sun</sub>, R₁ = {#} R<sub>sun</sub>, T₁ = {#} K; M₂ = {#} M<sub>sun</sub>, R₂ = {#} R<sub>sun</sub>, T₂ = {#} K; a = {#} UA, i = {#}°, γ = {#} km/s.",
-"To Earth, {#}° up":
-  "Hacia la Tierra, {#}° arriba",
-"stars and orbit to scale · drag to turn":
-  "estrellas y órbita a escala · arrastra para girar",
 "time from mid transit":
-  "tiempo desde la mitad del tránsito"
+  "tiempo desde la mitad del tránsito",
+"To Earth, {#}° up":
+  "Hacia la Tierra, {#}° arriba"
 });

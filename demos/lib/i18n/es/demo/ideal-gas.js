@@ -24,6 +24,12 @@ VDI18N.add('es', 'demo/ideal-gas', {
   "· altura de la caja {#} nm · {#} s en pantalla =",
 "Gas in a box. Drag the right wall to compress or expand the gas. Arrow keys move the wall, space plays or pauses. Click a molecule to follow it.":
   "Gas en una caja. Arrastra la pared derecha para comprimir o expandir el gas. Las flechas del teclado mueven la pared, espacio inicia o pausa. Haz clic en una molécula para seguirla.",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
 "Divider":
   "Divisor",
 "Divider closed":
@@ -270,12 +276,12 @@ VDI18N.add('es', 'demo/ideal-gas', {
   "gas A",
 "gas B":
   "gas B",
+"{#} molecules of helium mass ({#} u) on the left, nothing on the right, and a hole {#} nm wide, smaller than the distance a molecule travels between collisions (about {#} nm here). Open the hole and count how fast the gas leaks through. Then make gas A argon ({#} u) and repeat: Graham's law says the rate goes as {#}/√m.":
+  "{#} moléculas con la masa del helio ({#} u) a la izquierda, nada a la derecha, y un orificio de {#} nm de ancho, más pequeño que la distancia que recorre una molécula entre choques (cerca de {#} nm aquí). Abre el orificio y cuenta qué tan rápido se escapa el gas. Luego haz que el gas A sea argón ({#} u) y repite: la ley de Graham dice que la tasa va como {#}/√m.",
 "closed":
   "cerrado",
 "divider closed":
   "divisor cerrado",
-"{#} molecules of helium mass ({#} u) on the left, nothing on the right, and a hole {#} nm wide, smaller than the distance a molecule travels between collisions (about {#} nm here). Open the hole and count how fast the gas leaks through. Then make gas A argon ({#} u) and repeat: Graham's law says the rate goes as {#}/√m.":
-  "{#} moléculas con la masa del helio ({#} u) a la izquierda, nada a la derecha, y un orificio de {#} nm de ancho, más pequeño que la distancia que recorre una molécula entre choques (cerca de {#} nm aquí). Abre el orificio y cuenta qué tan rápido se escapa el gas. Luego haz que el gas A sea argón ({#} u) y repite: la ley de Graham dice que la tasa va como {#}/√m.",
 "Hot argon ({#} K) on the left and cold argon ({#} K) on the right. Remove the divider: the gases mix, and collisions bring both sides to one temperature.":
   "Argón caliente ({#} K) a la izquierda y argón frío ({#} K) a la derecha. Quita el divisor: los gases se mezclan, y los choques llevan a ambos lados a una sola temperatura.",
 "Q from the piston":
@@ -290,10 +296,10 @@ VDI18N.add('es', 'demo/ideal-gas', {
   "orificio, {#} nm",
 "time since the divider opened (ps)":
   "tiempo desde que se abrió el divisor (ps)",
-"removed":
-  "quitado",
 "t = {#} ps since opening":
   "t = {#} ps desde la apertura",
+"removed":
+  "quitado",
 "A curve at {#} K":
   "Curva de A a {#} K",
 "B curve at {#} K":

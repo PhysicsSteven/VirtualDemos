@@ -14,6 +14,14 @@ VDI18N.add('es', 'demo/resonators', {
   "¿Qué fija el tono de un instrumento? El tamaño de su resonador y la rapidez de la onda dentro de él. Encuentra la rapidez del sonido con un tubo de resonancia, pulsa una cuerda para ver qué armónicos recibe y sopla sobre una botella cuya nota sigue a su volumen, no a su altura.",
 "f in Hz · c in m/s · lengths in cm or m · tension in N · μ in g/m":
   "f en Hz · c en m/s · longitudes en cm o m · tensión en N · μ en g/m",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
+"L = {#} cm <small>level -{#} dB</small>":
+  "L = {#} cm <small>nivel -{#} dB</small>",
 "Resonator":
   "Resonador",
 "Pipes":
@@ -36,8 +44,6 @@ VDI18N.add('es', 'demo/resonators', {
   "Pulsar",
 "Bow":
   "Arco",
-"L = {#} cm <small>level -{#} dB</small>":
-  "L = {#} cm <small>nivel -{#} dB</small>",
 "Resonator drawing. Resonance tube: drag the water surface or use up and down (shift for {#} cm steps), Enter captures a reading. Pipe: drag the right end of the pipe or use left and right, up and down change the mode. String: drag the pluck grip to pull the string and let go to pluck; left and right move the pluck point, Enter plucks. Bottle: drag the water surface or use up and down, Enter starts or stops blowing. Space pauses.":
   "Dibujo del resonador. Tubo de resonancia: arrastra la superficie del agua o usa arriba y abajo (Shift para pasos de {#} cm), Enter registra una lectura. Tubo: arrastra el extremo derecho del tubo o usa izquierda y derecha; arriba y abajo cambian el modo. Cuerda: arrastra la agarradera para jalar la cuerda y suéltala para pulsarla; izquierda y derecha mueven el punto de pulsación, Enter pulsa. Botella: arrastra la superficie del agua o usa arriba y abajo, Enter empieza o deja de soplar. Espacio pausa.",
 "The resonance tube":

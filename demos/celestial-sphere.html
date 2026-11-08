@@ -7,6 +7,7 @@
 <script src="lib/theme.js"></script>
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
 <title>The Sky and the Celestial Sphere</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1196,6 +1197,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   /* ---------- controls ---------- */
   for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
   $('play').addEventListener('click', () => setRun(!S.run));
+  /* the shared control panel (demos/lib/vdpanel.js): Play, Step one hour (the +1 h button), Reset, Speed and the clock in one group */
+  if (window.VD && VD.panel) VD.panel({ speed: '#speedSeg', clock: '#clock', step: { label: '1 h', title: 'Forward one hour', run: () => document.querySelector('[data-step="1h"]').click() } });
   $('antiGo').addEventListener('click', goAntipode);
   $('reset').addEventListener('click', () => { if (presetAt != null && S.preset !== 'custom') { applyPreset(S.preset); } else { setRun(false); S.jd = presetAt != null ? presetAt : S.jd; syncSliders(); dirty = true; } });
   $('nowBtn').addEventListener('click', () => { setRun(false); S.jd = Date.now() / 86400000 + 2440587.5; custom(); syncSliders(); dirty = true; readouts(true); });

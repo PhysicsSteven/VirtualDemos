@@ -34,14 +34,18 @@ VDI18N.add('es', 'demo/relativistic-motion', {
   "Dispara una sonda desde un cohete rápido y mídela entre dos balizas: las velocidades no simplemente se suman. Empuja una partícula con una fuerza constante y observa cómo su momento crece sin límite mientras su rapidez se acerca poco a poco a c. Acelera electrones con millones de volts y mide su tiempo de vuelo, como lo hizo Bertozzi en {#}.",
 "speeds in units of c · times in s":
   "rapideces en unidades de c · tiempos en s",
+"Time controls":
+  "Controles de tiempo",
+"Step":
+  "Paso",
+"<span>Speed</span>":
+  "<span>Rapidez</span>",
 "Adding velocities":
   "Suma de velocidades",
 "Steady force":
   "Fuerza constante",
 "Electron flight":
   "Vuelo de electrones",
-"Step":
-  "Paso",
 "A rocket in space passes a launch mark and fires a probe forward; two beacons {#} light seconds apart time the probe and the rocket. Space launches or pauses.":
   "Un cohete en el espacio pasa una marca de lanzamiento y dispara una sonda hacia adelante; dos balizas separadas {#} segundos luz miden el tiempo de la sonda y del cohete. Espacio lanza o pausa.",
 "Graph of the ground speed against the launch speed, with the Galilean sum for comparison.":

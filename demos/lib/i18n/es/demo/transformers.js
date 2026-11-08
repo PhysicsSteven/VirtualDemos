@@ -28,12 +28,18 @@ VDI18N.add('es', 'demo/transformers', {
   "Dos bobinas en un mismo núcleo de hierro: la corriente alterna en el primario produce un flujo variable, y el flujo produce un voltaje en el secundario. Cambia las espiras, conéctale una carga, hazlo real, y luego envía potencia por una línea larga.",
 "rms values · SI units":
   "valores rms · unidades SI",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
+"slowed: one cycle of {#} Hz every {#} s":
+  "ralentizado: un ciclo de {#} Hz cada {#} s",
 "Transformer":
   "Transformador",
 "Power line":
   "Línea de transmisión",
-"slowed: one cycle of {#} Hz every {#} s":
-  "ralentizado: un ciclo de {#} Hz cada {#} s",
 "An AC source drives the primary coil of an iron core transformer; the secondary coil feeds a load resistor. Space pauses or plays the animation.":
   "Una fuente de CA alimenta la bobina primaria de un transformador con núcleo de hierro; la bobina secundaria alimenta un resistor de carga. Espacio pausa o inicia la animación.",
 "Oscilloscope traces of the primary and secondary voltages and currents.":

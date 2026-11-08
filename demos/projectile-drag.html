@@ -3322,5 +3322,7 @@ body[data-nc] #unitsG, body[data-nc] #unitsF, body:not([data-nc]) #ncUnits { dis
 </script>
 <script>/* dividers between the panes (VD.splitPanes in demos/lib/vd.js); a browser with an older cached vd.js keeps the panes as they are */
 (function () { if (!window.VD || !VD.splitPanes) return; var q = function (s) { return document.querySelector(s); }; VD.splitPanes(q(".stage > .pane"), q(".stage > .pane + .pane"), { key: 'chart', label: 'Divider between the flight and the graph' }); })();</script>
+<script>/* the shared control panel (demos/lib/vdpanel.js): the time controls in one group at the left of the strip */
+if (window.VD && VD.panel) VD.panel({ play: '#launch', reset: '#replay', speed: '#tsSeg' });</script>
 </body>
 </html>

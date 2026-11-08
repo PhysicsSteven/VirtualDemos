@@ -78,6 +78,12 @@ VDI18N.add('es', 'demo/telescope-aberrations', {
   "Un telescopio perfecto convierte una estrella en un diminuto disco de Airy. Uno real la difumina: la forma del espejo, una estrella lejos del centro, una lente que desvía los colores de manera distinta o el aire en movimiento encima. Cada difuminado deja su propia huella. Averigua qué está mal y luego corrígelo.",
 "angles in ″ (arcseconds)":
   "ángulos en ″ (segundos de arco)",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
 "<span>Zoom</span>":
   "<span>Zoom</span>",
 "Zoom":
@@ -366,6 +372,8 @@ VDI18N.add('es', 'demo/telescope-aberrations', {
   "Si la cámara solo estuviera desenfocada, algún enfoque haría nítida la estrella. ¿Hay alguno?",
 "Right. Now pick the fix, and focus again for the sharpest star.":
   "Correcto. Ahora elige la corrección y vuelve a enfocar para tener la estrella más nítida.",
+"Done. Now focus again for the sharpest star.":
+  "Listo. Ahora vuelve a enfocar para tener la estrella más nítida.",
 "Done, but did it help? The cause may be somewhere else.":
   "Listo, pero ¿ayudó? La causa puede estar en otra parte.",
 "This telescope has no lens to replace: it uses a mirror.":
@@ -384,26 +392,24 @@ VDI18N.add('es', 'demo/telescope-aberrations', {
   "Tapa el borde de la abertura (usa solo el centro). ¿Qué difuminado se reduce mucho cuando solo se usa el centro del espejo o de la lente?",
 "The answer":
   "La respuesta",
-"The answer: The mirror is pinched by its clamps (astigmatism) ({#} nm)":
-  "La respuesta: Las sujeciones presionan el espejo (astigmatismo) ({#} nm)",
-"Done. Now focus again for the sharpest star.":
-  "Listo. Ahora vuelve a enfocar para tener la estrella más nítida.",
+"The answer: Moving air above the telescope (seeing) (r₀ {#} cm)":
+  "La respuesta: Aire en movimiento sobre el telescopio (seeing) (r₀ {#} cm)",
+"This telescope has no mirror: it is a lens telescope.":
+  "Este telescopio no tiene espejo: es un telescopio de lente.",
+"The answer: The camera is not at the focus (+{#} mm)":
+  "La respuesta: La cámara no está en el foco (+{#} mm)",
 "Solved":
   "Resuelto",
 "Press New mystery for another telescope.":
   "Presiona Nuevo misterio para otro telescopio.",
 "Solved: Strehl ratio {#}. Press New mystery for another telescope.":
   "Resuelto: razón de Strehl {#}. Presiona Nuevo misterio para otro telescopio.",
-"This telescope has no mirror: it is a lens telescope.":
-  "Este telescopio no tiene espejo: es un telescopio de lente.",
-"The answer: The camera is not at the focus (+{#} mm)":
-  "La respuesta: La cámara no está en el foco (+{#} mm)",
 "The answer: The mirror is a sphere, not a parabola (spherical aberration) (f/{#})":
   "La respuesta: El espejo es una esfera, no una parábola (aberración esférica) (f/{#})",
 "The answer: The star is far from the center of the view (coma) (f/{#}, {#}′)":
   "La respuesta: La estrella está lejos del centro del campo (coma) (f/{#}, {#}′)",
+"The answer: The mirror is pinched by its clamps (astigmatism) ({#} nm)":
+  "La respuesta: Las sujeciones presionan el espejo (astigmatismo) ({#} nm)",
 "The answer: The lens focuses each color at a different place (chromatic aberration)":
-  "La respuesta: La lente enfoca cada color en un lugar distinto (aberración cromática)",
-"The answer: Moving air above the telescope (seeing) (r₀ {#} cm)":
-  "La respuesta: Aire en movimiento sobre el telescopio (seeing) (r₀ {#} cm)"
+  "La respuesta: La lente enfoca cada color en un lugar distinto (aberración cromática)"
 });

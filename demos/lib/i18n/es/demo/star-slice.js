@@ -2,16 +2,20 @@
 VDI18N.add('es', 'demo/star-slice', {
 "Star Slice":
   "Corte de una estrella",
-"<a>Nuclear physics</a>":
-  "<a>Física nuclear</a>",
-"<a><span>←</span> <span>Sources of Energy</span></a><a><span>Particles, Quarks and Conservation Laws</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Fuentes de energía</span></a><a><span>Partículas, quarks y leyes de conservación</span> <span>→</span></a>",
 "A real star cut in half. Composition, temperature, convection and burning at every radius, played back from MESA stellar evolution profiles.":
   "Una estrella real cortada a la mitad. Composición, temperatura, convección y combustión en cada radio, reproducidas a partir de perfiles de evolución estelar de MESA.",
 "<span>R☉ = {#}×{#}⁵ km</span> · <span>R<sub>E</sub> = R☉/{#}</span> · <span>M☉</span> · <span>L☉</span> · <span>ε in erg g⁻¹ s⁻¹</span>":
   "<span>R☉ = {#}×{#}⁵ km</span> · <span>R<sub>E</sub> = R☉/{#}</span> · <span>M☉</span> · <span>L☉</span> · <span>ε en erg g⁻¹ s⁻¹</span>",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
 "Back to the first saved moment":
   "Volver al primer momento guardado",
+"<span>Speed</span>":
+  "<span>Rapidez</span>",
 "Color by":
   "Colorear por",
 "Glow":
@@ -154,6 +158,16 @@ VDI18N.add('es', 'demo/star-slice', {
   "Notas sobre los datos",
 "Line of evidence: every number and every layer color on this page comes from the MESA profiles; the convective motion, element textures, granulation, sparkle and glow pulse are illustrative, and so are the 3D halo and the background stars and Milky Way.":
   "Origen de cada dato: cada número y cada color de capa en esta página viene de los perfiles de MESA; el movimiento convectivo, las texturas de los elementos, la granulación, los destellos y el pulso del brillo son ilustrativos, al igual que el halo 3D y las estrellas y la Vía Láctea del fondo.",
+"The star in 3D with a wedge cut away. The cut faces show the chosen quantity. Drag to rotate, scroll or pinch to zoom, hover or tap a cut face to probe it, double click to reset. Arrow keys rotate, plus and minus zoom, Page Up and Page Down step through the moments.":
+  "La estrella en 3D con una cuña recortada. Las caras del corte muestran la cantidad elegida. Arrastra para girar, desplaza o pellizca para acercar, pasa el cursor o toca una cara del corte para sondearla, doble clic para restablecer. Las flechas giran, más y menos acercan o alejan, Re Pág y Av Pág recorren los momentos.",
+"Drag to rotate · Scroll or pinch to zoom · Hover or tap any part of the star to name it and probe it · Double click to reset · Arrow keys rotate, Page Up and Page Down step moments.":
+  "Arrastra para girar · Desplaza o pellizca para acercar · Pasa el cursor o toca cualquier parte de la estrella para nombrarla y sondearla · Doble clic para restablecer · Las flechas giran, Re Pág y Av Pág recorren los momentos.",
+"In 3D, zoom moves the camera in on the cut faces (the faces stay to scale with linear radius). Log radius stretches the inner layers on the cut faces only; the sphere keeps the star's true outline, so the faces are then not to scale. Hold scale keeps the sphere's size fixed while you step through moments. Cut angle sets the wedge that is removed.":
+  "En 3D, el acercamiento mueve la cámara hacia las caras del corte (las caras se mantienen a escala con radio lineal). Radio logarítmico estira las capas internas solo en las caras del corte; la esfera conserva el contorno verdadero de la estrella, así que entonces las caras no están a escala. Mantener escala fija el tamaño de la esfera mientras recorres los momentos. Ángulo del corte fija la cuña que se quita.",
+"<a>Nuclear physics</a>":
+  "<a>Física nuclear</a>",
+"<a><span>←</span> <span>Sources of Energy</span></a><a><span>Particles, Quarks and Conservation Laws</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Fuentes de energía</span></a><a><span>Partículas, quarks y leyes de conservación</span> <span>→</span></a>",
 "Largest radius":
   "Radio máximo",
 "Deepest convective envelope":
@@ -216,10 +230,6 @@ VDI18N.add('es', 'demo/star-slice', {
   "Brillo marca las zonas con ε<sub>nuc</sub> por encima de {#} erg g⁻¹ s⁻¹ y por encima de {#}⁻⁴ del pico del momento. Las partes de cada canal usan las columnas pp, cno y tri_alpha de MESA; cualquier resto son otras reacciones.<br><span><i></i>Combustión de H</span><span><i></i>Combustión de He</span><span><i></i>otras reacciones</span>",
 "{#} solar masses":
   "{#} masas solares",
-"r in R☉":
-  "r en R☉",
-"Earth, to scale":
-  "La Tierra, a escala",
 "Mg":
   "Mg",
 "Ne":
@@ -230,6 +240,10 @@ VDI18N.add('es', 'demo/star-slice', {
   "log Teff (K)",
 "HR diagram · log L (L☉)":
   "Diagrama HR · log L (L☉)",
+"Cut faces: linear radius, to scale":
+  "Caras del corte: radio lineal, a escala",
+"Glow: blackbody color at the local T":
+  "Brillo: color de cuerpo negro a la T local",
 "Pre main sequence <small>inferred</small> <small>· MESA stage: start</small>":
   "Presecuencia principal <small>inferida</small> <small>· etapa de MESA: start</small>",
 "{#} yr <small>age</small>":
@@ -240,24 +254,18 @@ VDI18N.add('es', 'demo/star-slice', {
   "Envoltura convectiva desde m = {#} M☉ (r = {#} R☉) hasta la superficie",
 "No burning region (no reaction family reaches {#} erg g⁻¹ s⁻¹); peak ε_nuc {#}×{#}⁻⁴ erg g⁻¹ s⁻¹":
   "No hay región de combustión (ninguna familia de reacciones llega a {#} erg g⁻¹ s⁻¹); pico de ε_nuc {#}×{#}⁻⁴ erg g⁻¹ s⁻¹",
-"edge {#} R☉ · {#} R":
-  "borde {#} R☉ · {#} R",
-"View edge {#} R☉ · {#}×{#}⁶ km · linear radius, to scale":
-  "Borde de la vista {#} R☉ · {#}×{#}⁶ km · radio lineal, a escala",
-"The star in 3D with a wedge cut away. The cut faces show the chosen quantity. Drag to rotate, scroll or pinch to zoom, hover or tap a cut face to probe it, double click to reset. Arrow keys rotate, plus and minus zoom, Page Up and Page Down step through the moments.":
-  "La estrella en 3D con una cuña recortada. Las caras del corte muestran la cantidad elegida. Arrastra para girar, desplaza o pellizca para acercar, pasa el cursor o toca una cara del corte para sondearla, doble clic para restablecer. Las flechas giran, más y menos acercan o alejan, Re Pág y Av Pág recorren los momentos.",
-"Drag to rotate · Scroll or pinch to zoom · Hover or tap any part of the star to name it and probe it · Double click to reset · Arrow keys rotate, Page Up and Page Down step moments.":
-  "Arrastra para girar · Desplaza o pellizca para acercar · Pasa el cursor o toca cualquier parte de la estrella para nombrarla y sondearla · Doble clic para restablecer · Las flechas giran, Re Pág y Av Pág recorren los momentos.",
-"In 3D, zoom moves the camera in on the cut faces (the faces stay to scale with linear radius). Log radius stretches the inner layers on the cut faces only; the sphere keeps the star's true outline, so the faces are then not to scale. Hold scale keeps the sphere's size fixed while you step through moments. Cut angle sets the wedge that is removed.":
-  "En 3D, el acercamiento mueve la cámara hacia las caras del corte (las caras se mantienen a escala con radio lineal). Radio logarítmico estira las capas internas solo en las caras del corte; la esfera conserva el contorno verdadero de la estrella, así que entonces las caras no están a escala. Mantener escala fija el tamaño de la esfera mientras recorres los momentos. Ángulo del corte fija la cuña que se quita.",
-"Cut faces: linear radius, to scale":
-  "Caras del corte: radio lineal, a escala",
-"Glow: blackbody color at the local T":
-  "Brillo: color de cuerpo negro a la T local",
 "3D camera {#}×":
   "Cámara 3D {#}×",
 "Star radius {#} R☉ · {#}×{#}⁶ km · cut faces: linear radius, to scale":
   "Radio de la estrella {#} R☉ · {#}×{#}⁶ km · caras del corte: radio lineal, a escala",
+"r in R☉":
+  "r en R☉",
+"Earth, to scale":
+  "La Tierra, a escala",
+"edge {#} R☉ · {#} R":
+  "borde {#} R☉ · {#} R",
+"View edge {#} R☉ · {#}×{#}⁶ km · linear radius, to scale":
+  "Borde de la vista {#} R☉ · {#}×{#}⁶ km · radio lineal, a escala",
 "He (⁴He)":
   "He (⁴He)",
 "Ne (²⁰Ne + ²²Ne)":

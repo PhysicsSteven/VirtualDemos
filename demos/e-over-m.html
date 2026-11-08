@@ -11,6 +11,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
 <script src="lib/vd3.js"></script>
 <style>
 /* Layout: the apparatus in 3D in a darkened room across the top of the stage, the view through the front coil onto the mirrored scale below it; instrument rail on the right; stacks on phones. */
@@ -1185,5 +1186,7 @@ table.rows tr.sim td.n { color: var(--equi); }
 </script>
 <script>/* dividers between the panes (VD.splitPanes in demos/lib/vd.js); a browser with an older cached vd.js keeps the panes as they are */
 (function () { if (!window.VD || !VD.splitPanes) return; var q = function (s) { return document.querySelector(s); }; VD.splitPanes(q("#p3d"), q("#pScale"), { key: 'scale', label: 'Divider between the tube and the scale' }); })();</script>
+<script>/* the shared control panel (demos/lib/vdpanel.js): the time controls in one group at the left of the strip */
+if (window.VD && VD.panel) VD.panel({ reset: false, step: true });</script>
 </body>
 </html>

@@ -48,12 +48,18 @@ VDI18N.add('es', 'demo/franck-hertz', {
   "Los electrones que atraviesan vapor de mercurio solo pueden darle a un átomo una cantidad fija de energía, {#} eV, así que la corriente del colector cae cada {#} V. Barre U, marca los picos, mide el espaciamiento.",
 "U in V · I in nA · energies in eV · λ = {#} nm / E(eV)":
   "U en V · I en nA · energías en eV · λ = {#} nm / E(eV)",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
+"New sweep":
+  "Nuevo barrido",
 "Gas in the tube":
   "Gas en el tubo",
 "Neon":
   "Neón",
-"New sweep":
-  "Nuevo barrido",
 "Mark peaks":
   "Marcar picos",
 "U {#} <small>V</small> · I -{#} <small>nA</small>":
@@ -162,14 +168,14 @@ VDI18N.add('es', 'demo/franck-hertz', {
   "I colector",
 "electrometer":
   "electrómetro",
+"{#} nA":
+  "{#} nA",
 "Tetrode tube with mercury vapor, in its oven":
   "Tubo tetrodo con vapor de mercurio, en su horno",
 "Peak n":
   "Pico n",
 "Oven (°C)":
   "Horno (°C)",
-"{#} nA":
-  "{#} nA",
 "U {#} <small>V</small> · I {#} <small>nA</small>":
   "U {#} <small>V</small> · I {#} <small>nA</small>",
 "Your own setup. Pick a setup above to return to a known one.":

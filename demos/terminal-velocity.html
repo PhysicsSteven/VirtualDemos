@@ -7,6 +7,7 @@
 <script src="lib/theme.js"></script>
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
 <script src="lib/vd3.js"></script>
 <title>Terminal Velocity</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -67,7 +68,7 @@
     <div class="stage" id="stage">
       <div class="scene" id="scene">
         <canvas id="can" tabindex="0" role="img" aria-label="A skydiver falling through the sky, or coffee filters falling in a lab, in 3D or from the side, with arrows for the weight and the drag. Space runs or pauses."></canvas>
-        <div class="viewbar"><button type="button" class="spin attn" id="go">Jump</button><button type="button" class="spin" id="step">Step 1 s</button><button type="button" class="spin" id="restart">Start over</button><div class="seg" role="group" aria-label="View" id="viewSeg"><button type="button" data-view="3d" aria-pressed="false">3D</button><button type="button" data-view="flat" aria-pressed="true">Flat</button></div></div>
+        <div class="viewbar"><button type="button" class="spin attn" id="go">Jump</button><button type="button" class="spin" id="step">Step 1 s</button><button type="button" class="spin" id="restart">Reset</button><div class="seg" role="group" aria-label="View" id="viewSeg"><button type="button" data-view="3d" aria-pressed="false">3D</button><button type="button" data-view="flat" aria-pressed="true">Flat</button></div></div>
         <div class="actbar" id="actbar"><div class="seg" role="group" aria-label="Body position" id="posSeg"><button type="button" data-pos="spread" aria-pressed="true">Spread eagle</button><button type="button" data-pos="head" aria-pressed="false">Head first</button></div><button type="button" class="spin" id="pull">Pull</button></div>
         <div class="setup-card" id="setupCard" role="group" aria-label="Set up the fall">
           <span class="card-title" id="cardTitle">Set up, then jump</span>
@@ -680,7 +681,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const stp = STEP[S.kind]; document.querySelectorAll('#stepSeg button').forEach((b, i) => { b.textContent = `${stp[i]} s`; b.setAttribute('aria-pressed', String(i === S.stepK)); }); $('step').textContent = `Step ${stp[S.stepK]} s`; $('cardTitle').textContent = sky ? 'Set up, then jump' : 'Set up, then drop';
   }
   const card = VD.setupCard($('setupCard'));
-  function setRun(on) { S.run = on; card.away(on); $('go').textContent = on ? 'Pause' : S.s.t > 0 && !S.landed ? 'Resume' : S.kind === 'sky' ? 'Jump' : 'Drop'; $('go').classList.toggle('attn', !on); }
+  function setRun(on) { S.run = on; card.away(on); $('go').textContent = on ? 'Pause' : S.s.t > 0 && !S.landed ? 'Play' : S.kind === 'sky' ? 'Jump' : 'Drop'; $('go').classList.toggle('attn', !on); }
   const all = () => { sync(); draw(); readouts(); };
   function applyPreset(k) {
     const c = PRESETS[k]; S.preset = k; S.kind = c.kind;
@@ -742,5 +743,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 </script>
 <script>/* dividers between the panes (VD.splitPanes in demos/lib/vd.js); a browser with an older cached vd.js keeps the panes as they are */
 (function () { if (!window.VD || !VD.splitPanes) return; var q = function (s) { return document.querySelector(s); }; VD.splitPanes(q("#scene"), q(".plotbox"), { key: 'chart', label: 'Divider between the fall and the graph' }); })();</script>
+<script>/* the shared control panel (demos/lib/vdpanel.js): the time controls in one group at the left of the strip */
+if (window.VD && VD.panel) VD.panel({ play: '#go', reset: '#restart', speed: '#spdSeg', steps: ['#step'] });</script>
 </body>
 </html>

@@ -22,6 +22,12 @@ VDI18N.add('es', 'demo/timbre', {
   "Un tono musical estable es una suma de armónicos en múltiplos enteros de su fundamental. Da forma al espectro barra por barra y escúchalo: la mezcla de armónicos fija el color del tono, el periodo de repetición fija la altura, y las fases casi no importan.",
 "f in Hz · T in ms · level in dB = {#} log₁₀(a/a_ref) · A4 = {#} Hz":
   "f en Hz · T en ms · nivel en dB = {#} log₁₀(a/a_ref) · A4 = {#} Hz",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
 "Ladder shows":
   "La escalera muestra",
 "Open pipe":

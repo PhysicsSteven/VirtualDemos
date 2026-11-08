@@ -7,6 +7,7 @@
 <script src="lib/theme.js"></script>
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
 <script src="lib/vd3.js"></script>
 <script src="lib/vd3kit.js"></script>
 <title>Dosimetry: Kerma, Equilibrium and the Ion Chamber</title>
@@ -23,7 +24,7 @@
 .stage-ctl .clock { margin-left: auto; font-size: 0.8rem; color: var(--muted); }
 .scene { position: relative; flex: 1 1 auto; min-height: 600px; }
 .scene canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; touch-action: pan-y; }
-.setup-card { position: absolute; z-index: 3; right: 14px; top: 14px; width: 270px; display: flex; flex-direction: column; gap: 8px; padding: 8px 10px;
+.setup-card { position: absolute; z-index: 3; right: 14px; top: 62px; width: 270px; display: flex; flex-direction: column; gap: 8px; padding: 8px 10px;
   background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--line); border-radius: 8px; transition: opacity 0.35s ease, visibility 0.35s; }
 .setup-card .card-title { font-size: 0.72rem; font-weight: 700; color: var(--muted); }
 .setup-card.away { opacity: 0; visibility: hidden; }
@@ -74,8 +75,8 @@
   <main class="bench">
     <div class="stage" id="stage">
       <div class="stage-ctl" id="strip">
-        <button type="button" class="spin attn" id="play">Start</button>
-        <button type="button" class="btn" id="restart" title="Clear the histories and start counting again">Start again</button>
+        <button type="button" class="spin attn" id="play">Play</button>
+        <button type="button" class="btn" id="restart" title="Clear the histories and start counting again">Reset</button>
         <div class="seg" role="group" aria-label="What the picture shows" id="viewSeg">
           <button type="button" data-view="kerma" aria-pressed="true">Kerma and dose</button>
           <button type="button" data-view="chamber" aria-pressed="false">Ion chamber</button>
@@ -1036,7 +1037,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   /* ---------- views, presets and controls ---------- */
   const card = VD.setupCard($('setupCard'));
-  function setRun(on) { S.run = on && S.view === 'kerma'; card.away(S.run); $('play').textContent = S.run ? 'Pause' : MC && MC.n ? 'Resume' : 'Start'; $('play').classList.toggle('attn', !S.run); }
+  function setRun(on) { S.run = on && S.view === 'kerma'; card.away(S.run); $('play').textContent = S.run ? 'Pause' : MC && MC.n ? 'Play' : 'Play'; $('play').classList.toggle('attn', !S.run); }
   function setView(v) {
     S.view = v;
     for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.view === v));
@@ -1212,5 +1213,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   requestAnimationFrame(frame);
 })();
 </script>
+<script>/* the shared control panel (demos/lib/vdpanel.js): the time controls in one group at the left of the strip */
+if (window.VD && VD.panel) VD.panel({ reset: '#restart', clock: '#clock', step: true });</script>
 </body>
 </html>

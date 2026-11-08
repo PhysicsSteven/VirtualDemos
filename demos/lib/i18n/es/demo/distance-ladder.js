@@ -36,14 +36,16 @@ VDI18N.add('es', 'demo/distance-ladder', {
   "regla: {#}″",
 "field {#}″ wide · dashed circles: ±σ = {#} mas (Hipparcos)":
   "campo de {#}″ de ancho · círculos punteados: ±σ = {#} mas (Hipparcos)",
-"<a>Particle physics and cosmology</a>":
-  "<a>Física de partículas y cosmología</a>",
-"<a><span>←</span> <span>Charges in Magnetic Fields</span></a><a><span>The Big Bang and the Early Universe</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Cargas en campos magnéticos</span></a><a><span>El Big Bang y el universo temprano</span> <span>→</span></a>",
 "No single method measures every distance. Each rung reaches farther, and each is calibrated by the rung below it.":
   "Ningún método mide todas las distancias. Cada peldaño llega más lejos, y cada uno se calibra con el peldaño de abajo.",
 "<span>pc</span> · <span>kpc</span> · <span>Mpc</span> · <span>″ and mas</span> · <span>km/s</span> · <span>{#} pc = {#} AU = {#} ly</span>":
   "<span>pc</span> · <span>kpc</span> · <span>Mpc</span> · <span>″ y mas</span> · <span>km/s</span> · <span>{#} pc = {#} UA = {#} a. l.</span>",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
 "Rung of the ladder":
   "Peldaño de la escalera",
 "{#} Parallax":
@@ -316,14 +318,18 @@ VDI18N.add('es', 'demo/distance-ladder', {
   "Los puntos con anillo son tus mediciones actuales de cada peldaño. Haz clic en una barra para abrir ese peldaño.",
 "Earth on a circular orbit of exactly {#} AU, the star in the plane of the orbit, placed so that January and July are the extremes of its shift; then the shift is 2p. A real star off the plane traces a small ellipse instead. The top view is not to scale: a star {#} pc away would sit {#} orbit radii from the Sun. The photos zoom so the shift fills the frame; the dashed circles show the instrument’s position uncertainty.":
   "La Tierra en una órbita circular de exactamente {#} UA, la estrella en el plano de la órbita, colocada de modo que enero y julio sean los extremos de su desplazamiento; entonces el desplazamiento es 2p. Una estrella real fuera del plano traza en cambio una pequeña elipse. La vista superior no está a escala: una estrella a {#} pc estaría a {#} radios orbitales del Sol. Las fotos se amplían para que el desplazamiento llene el cuadro; los círculos punteados muestran la incertidumbre de posición del instrumento.",
-"EARTH’S ORBIT IN 3D, NOT TO SCALE":
-  "LA ÓRBITA DE LA TIERRA EN 3D, NO A ESCALA",
+"<a>Particle physics and cosmology</a>":
+  "<a>Física de partículas y cosmología</a>",
+"<a><span>←</span> <span>Charges in Magnetic Fields</span></a><a><span>The Big Bang and the Early Universe</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Cargas en campos magnéticos</span></a><a><span>El Big Bang y el universo temprano</span> <span>→</span></a>",
 "drag Earth along its orbit; drag elsewhere to turn":
   "arrastra la Tierra a lo largo de su órbita; arrastra en otro lugar para girar",
-"early March":
-  "principios de marzo",
+"EARTH’S ORBIT IN 3D, NOT TO SCALE":
+  "LA ÓRBITA DE LA TIERRA EN 3D, NO A ESCALA",
 "p (mas)":
   "p (mas)",
+"early March":
+  "principios de marzo",
 "mid March":
   "mediados de marzo",
 "Spectroscopic parallax (calibrated by rung {#})":
@@ -402,6 +408,8 @@ VDI18N.add('es', 'demo/distance-ladder', {
   "Imágenes CCD simuladas de las cefeidas simuladas de la GNM del peldaño {#}: imágenes estelares gaussianas con el seeing de cada noche, nube delgada, un cielo uniforme, ruido de fotones y de lectura. Las imágenes reales también necesitan correcciones de bias, de corriente oscura y de campo plano, que se dan por hechas.",
 "±{#} mag":
   "±{#} mag",
+"SIMULATED CCD FRAME, LMC FIELD, NIGHT {#}: DRAG THE TWO APERTURES":
+  "IMAGEN CCD SIMULADA, CAMPO DE LA GNM, NOCHE {#}: ARRASTRA LAS DOS APERTURAS",
 "Cepheid aperture":
   "apertura de la cefeida",
 "comparison aperture":
@@ -552,8 +560,6 @@ VDI18N.add('es', 'demo/distance-ladder', {
   "área ×{#}",
 "flux ×{#} · {#} mag fainter":
   "flujo ×{#} · {#} mag más débil",
-"SIMULATED CCD FRAME, LMC FIELD, NIGHT {#}: DRAG THE TWO APERTURES":
-  "IMAGEN CCD SIMULADA, CAMPO DE LA GNM, NOCHE {#}: ARRASTRA LAS DOS APERTURAS",
 "YOUR PHOTOMETRY OF C5: RECORDED READINGS":
   "TU FOTOMETRÍA DE C5: LECTURAS REGISTRADAS",
 "HOST GALAXY OF SN D (DRAWING)":

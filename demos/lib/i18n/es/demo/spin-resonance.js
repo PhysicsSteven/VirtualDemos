@@ -80,6 +80,12 @@ VDI18N.add('es', 'demo/spin-resonance', {
   "Un banco virtual de resonancia de espín electrónico y protónico. Sintoniza la sonda, barre el campo, encuentra el pico de absorción en el osciloscopio, y mide g para el DPPH y las razones giromagnéticas del ¹H y del ¹⁹F.",
 "B in mT · ν in MHz · hν = gμ<sub>B</sub>B · ν = (γ/{#}π)B":
   "B en mT · ν en MHz · hν = gμ<sub>B</sub>B · ν = (γ/{#}π)B",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
 "Experiment":
   "Experimento",
 "Electron probe between the scan coils with pole face rings":

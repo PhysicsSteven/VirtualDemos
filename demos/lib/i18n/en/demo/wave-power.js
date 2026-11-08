@@ -10,6 +10,7 @@ VDI18N.add('en', 'demo/wave-power', [
 "<a><span>←</span> <span>Ripple Tank</span></a><a><span>Two Speaker Interference</span> <span>→</span></a>",
 "A vibrator sends waves along a stretched string into an absorber, which takes their energy so that none comes back. Change the amplitude and the frequency, read the power meter, and find how the power a wave carries depends on each.",
 "A string on a lab table, from a vibrator on the left to an absorber with a power meter on the right, then over a pulley to a hanger of slotted masses. Left and right arrows change the driver frequency by {#} Hz (with Shift, {#} Hz); up and down change the amplitude by {#} mm; space starts or stops the vibrator.",
+"Time controls",
 "Start the vibrator",
 "Send one pulse",
 "Drop on the hanger",
@@ -97,7 +98,6 @@ VDI18N.add('en', 'demo/wave-power', [
 "The blade rises and comes back once, sending a single upward pulse {#} m long (v/f) down the string. Send one pulse with the end clamped (Fixed end): it comes back upside down. Then choose Free end (a ring that slides on a smooth rod): it comes back upright. Too soft and Too stiff send back half as tall a pulse, upright and upside down; Matched sends back nothing. The held blade is a fixed end too, so the pulse flips each time it gets back to the vibrator.",
 "With a free or a fixed end nothing takes the energy out, so a steady wave would pile up without limit at a resonance: send one pulse instead, or choose an absorber.",
 "A new unknown string is on the apparatus.",
-"{#}: too steep for the linear model, lower A or f",
 "hanger {#} g + {#} g = {#} g",
 "Start the vibrator first: the meter reads nothing while it is stopped.",
 "The unknown string had μ = {#} g/m."

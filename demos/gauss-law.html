@@ -11,6 +11,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
 <script src="lib/vd3.js"></script>
 <style>
 /* Layout: the z = 0 slice through a Gaussian surface and its charges (plus an E(r) plot in symmetry mode) on the left; instrument rail on the right; stacks on phones. */
@@ -3050,5 +3051,7 @@ void main() {
   requestAnimationFrame(loop);
 })();
 </script>
+<script>/* the shared control panel (demos/lib/vdpanel.js): the time controls in one group at the left of the strip */
+if (window.VD && VD.panel) VD.panel({ reset: false, step: true });</script>
 </body>
 </html>

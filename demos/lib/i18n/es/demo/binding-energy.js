@@ -24,6 +24,12 @@ VDI18N.add('es', 'demo/binding-energy', {
   "¿Qué tan fuertemente se mantiene unido cada núcleo? Las masas medidas dan la energía de enlace por nucleón. Tiene su máximo cerca del hierro y el níquel, así que tanto fusionar núcleos ligeros como dividir núcleos pesados libera energía.",
 "masses: AME2020 · energies in MeV · {#} u = {#} MeV/c²":
   "masas: AME2020 · energías en MeV · {#} u = {#} MeV/c²",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
 "Curve":
   "Curva",
 "Liquid drop":
@@ -228,6 +234,12 @@ VDI18N.add('es', 'demo/binding-energy', {
   "valle de la gota líquida",
 "<span><i></i>Liquid drop valley of stability</span><span>Shaded rows and columns: magic Z and N. Gray cells: half life not listed.</span>":
   "<span><i></i>Valle de estabilidad de la gota líquida</span><span>Filas y columnas sombreadas: Z y N mágicos. Celdas grises: semivida no listada.</span>",
+"neutron number N →":
+  "número de neutrones N →",
+"proton number Z →":
+  "número de protones Z →",
+"{#} MeV per nucleon":
+  "{#} MeV por nucleón",
 "{#} protons, {#} neutrons, A = {#}":
   "{#} protones, {#} neutrones, A = {#}",
 "β⁺ decay or electron capture · half life {#} minutes":
@@ -366,12 +378,6 @@ VDI18N.add('es', 'demo/binding-energy', {
   "{#} minutos",
 "<span><i></i>Stable</span><span><i></i>β⁻ decay</span><span><i></i>β⁺ decay or electron capture</span><span><i></i>α decay</span><span><i></i>Spontaneous fission</span><span><i></i>Gives off a proton or neutron; faint: not bound at all</span><span><i></i>Decay mode not known</span><span>Outlined: not in NUBASE2020. Arrows: the main decay path.</span>":
   "<span><i></i>Estable</span><span><i></i>Decaimiento β⁻</span><span><i></i>Decaimiento β⁺ o captura electrónica</span><span><i></i>Decaimiento α</span><span><i></i>Fisión espontánea</span><span><i></i>Emite un protón o un neutrón; tenue: nada ligado</span><span><i></i>Modo de decaimiento desconocido</span><span>Remarcados: no están en NUBASE2020. Flechas: la ruta de decaimiento principal.</span>",
-"neutron number N →":
-  "número de neutrones N →",
-"proton number Z →":
-  "número de protones Z →",
-"{#} MeV per nucleon":
-  "{#} MeV por nucleón",
 "⁵⁸Fe":
   "⁵⁸Fe",
 "⁶⁰Ni":

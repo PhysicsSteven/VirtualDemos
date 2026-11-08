@@ -31,7 +31,7 @@ require('./lib.cjs')({ demo: 'millikan', title: 'Millikan Oil Drop' }, async (r)
   r.check.drop = await p.evaluate(() => { const S = window.__mk.S, d = S.drops[S.pick]; return { id: d.id, n: d.n, r_um: +(d.r * 1e6).toFixed(4) }; });
 
   state.zoom = null;
-  state.caption = 'Turn the plates off and press Start. The orange lines time its fall (shown at ×4)';
+  state.caption = 'Turn the plates off and press Play. The orange lines time its fall (shown at ×4)';
   await r.click('#polSeg [data-pol="0"]');
   await r.click('#play');
   state.zoom = await scope();

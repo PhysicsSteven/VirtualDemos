@@ -30,6 +30,16 @@ VDI18N.add('es', 'demo/faraday', {
   "Unidades SI · EMF = −N dΦ<sub>B</sub>/dt · I = EMF/R",
 "Bar magnet and coil with field lines, connected to a galvanometer and a resistor. Drag the magnet along the axis, the grip on top of the coil to change its radius, and the resistor up or down to change R. Now: coil of {#} turns, radius {#} cm, R = {#} Ω, magnet B_r = {#} T, its center at z = −{#} cm, move speed {#} m/s. Keys: left and right arrows move the magnet, F flips it, P pushes it in, O pulls it out, T pushes it through, up and down arrows change the coil radius, plus and minus change R, space plays or pauses, R resets.":
   "Imán de barra y bobina con líneas de campo, conectada a un galvanómetro y a un resistor. Arrastra el imán a lo largo del eje, el agarre sobre la bobina para cambiar su radio, y el resistor hacia arriba o abajo para cambiar R. Ahora: bobina de {#} espiras, radio {#} cm, R = {#} Ω, imán con B_r = {#} T, su centro en z = −{#} cm, rapidez de movimiento {#} m/s. Teclas: las flechas izquierda y derecha mueven el imán, F lo invierte, P lo mete, O lo saca, T lo pasa a través, las flechas arriba y abajo cambian el radio de la bobina, más y menos cambian R, espacio inicia o pausa, R reinicia.",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
+"<span>Playback rate</span>":
+  "<span>Ritmo de reproducción</span>",
+"Real time":
+  "Tiempo real",
 "Push in":
   "Meter",
 "Pull out":
@@ -66,8 +76,6 @@ VDI18N.add('es', 'demo/faraday', {
   "Rapidez del imán v",
 "<span>Playback</span>":
   "<span>Reproducción</span>",
-"Real time":
-  "Tiempo real",
 "Drag the magnet along the axis, or use Push in, Pull out, Push through and Flip. Drag the top of the coil to change its radius and the resistor to change R.":
   "Arrastra el imán a lo largo del eje, o usa Meter, Sacar, Pasar a través e Invertir. Arrastra la parte superior de la bobina para cambiar su radio y el resistor para cambiar R.",
 "Coil and magnet":
@@ -194,20 +202,24 @@ VDI18N.add('es', 'demo/faraday', {
   "<i></i>Campo de la corriente inducida (solo la forma)",
 "Magnet: a cylinder {#} cm long and {#} cm across, uniformly magnetized along its axis (M = B<sub>r</sub>/μ₀), which is exactly a finite solenoid. Its field and the flux through the coil are computed from the exact field of current rings (complete elliptic integrals) integrated along the magnet; for the flip, the flux of the tilted magnet is ∫M·B<sub>coil</sub> dV/I by reciprocity. All N turns are taken to sit at one place (a short coil). On the drawing the winding is spread over a short former, one drawn loop for every {#} turns (at least one). The coil's self inductance is neglected, which is fine when L/R is much shorter than the move. The magnet moves as you or the buttons move it: the force from the induced current is shown but does not slow your drag. Field lines are drawn at equal steps of flux, {#} µWb apart, so the number threading the coil follows Φ<sub>B</sub>; count the darker lines in the plane of the page. The fainter lines are the same field in two other planes through the axis.":
   "Imán: un cilindro de {#} cm de largo y {#} cm de diámetro, magnetizado uniformemente a lo largo de su eje (M = B<sub>r</sub>/μ₀), lo cual es exactamente un solenoide finito. Su campo y el flujo a través de la bobina se calculan a partir del campo exacto de espiras de corriente (integrales elípticas completas) integrado a lo largo del imán; para la inversión, el flujo del imán inclinado es ∫M·B<sub>bobina</sub> dV/I por reciprocidad. Se toma que las N espiras están en un mismo lugar (una bobina corta). En el dibujo el devanado se reparte sobre un carrete corto, con una espira dibujada por cada {#} espiras (al menos una). Se desprecia la autoinductancia de la bobina, lo cual es razonable cuando L/R es mucho más corto que el movimiento. El imán se mueve como tú o los botones lo muevan: la fuerza de la corriente inducida se muestra pero no frena tu arrastre. Las líneas de campo se dibujan a pasos iguales de flujo, separadas {#} µWb, así que el número que atraviesa la bobina sigue a Φ<sub>B</sub>; cuenta las líneas más oscuras en el plano de la página. Las líneas más tenues son el mismo campo en otros dos planos que pasan por el eje.",
-"−{#} pV":
-  "−{#} pV",
 "force on magnet {#} µN":
   "fuerza sobre el imán {#} µN",
-"ind":
-  "ind",
-"−{#} mWb":
-  "−{#} mWb",
+"−{#} µWb":
+  "−{#} µWb",
 "{#} nJ":
   "{#} nJ",
 "Φ<sub>B</sub> is increasing, so the induced current runs clockwise seen from the right and its own field inside the coil points −z, against the change. The coil's left face acts as a north pole, facing the magnet's north pole: it repels the approaching magnet.":
   "Φ<sub>B</sub> está aumentando, así que la corriente inducida circula en sentido horario visto desde la derecha y su propio campo dentro de la bobina apunta hacia −z, en contra del cambio. La cara izquierda de la bobina actúa como un polo norte, frente al polo norte del imán: repele al imán que se acerca.",
+"ind":
+  "ind",
+"−{#} mWb":
+  "−{#} mWb",
 "force on magnet {#} mN":
   "fuerza sobre el imán {#} mN",
+"Too close to the coil to turn":
+  "Demasiado cerca de la bobina para girar",
+"slow motion ×{#}":
+  "cámara lenta ×{#}",
 "The flux rises as the magnet enters and falls as it leaves, so the EMF has two lobes of opposite sign: the coil repels the magnet on the way in and pulls it back on the way out. Starting and ending far away, ΔΦ<sub>B</sub> = {#}, so the net charge is zero.":
   "El flujo sube cuando el imán entra y baja cuando sale, así que la EMF tiene dos lóbulos de signo opuesto: la bobina repele al imán a la entrada y lo jala de regreso a la salida. Empezando y terminando lejos, ΔΦ<sub>B</sub> = {#}, así que la carga neta es cero.",
 "Kept trace (press Keep trace)":
@@ -222,8 +234,6 @@ VDI18N.add('es', 'demo/faraday', {
   "volteando de extremo a extremo",
 "turning":
   "girando",
-"Too close to the coil to turn":
-  "Demasiado cerca de la bobina para girar",
 "A coil turning in a uniform field has Φ<sub>B</sub> = BA cos ωt, so its EMF is NBAω sin ωt: alternating current. The EMF peaks when the coil is edge on to the field, where the flux is zero but changing fastest. Stop the motor and turn the crank yourself.":
   "Una bobina que gira en un campo uniforme tiene Φ<sub>B</sub> = BA cos ωt, así que su EMF es NBAω sin ωt: corriente alterna. La EMF es máxima cuando la bobina está de canto respecto al campo, donde el flujo es cero pero cambia más rápido. Detén el motor y gira la manivela tú mismo.",
 "Angular speed ω":
@@ -270,8 +280,6 @@ VDI18N.add('es', 'demo/faraday', {
   "vista superior · θ = {#}°",
 "motor on":
   "motor encendido",
-"Φ<sub>B</sub> is decreasing; the current's own field opposes that, and the force on the coil's sides makes a torque against the rotation. The crank (or motor) must supply power τω = I²R = {#} µW.":
-  "Φ<sub>B</sub> está disminuyendo; el propio campo de la corriente se opone a eso, y la fuerza sobre los lados de la bobina produce una torca en contra de la rotación. La manivela (o el motor) debe suministrar una potencia τω = I²R = {#} µW.",
 "Pulling the bar sweeps out area, so the flux grows at the rate BLv. The current in the bar feels a force ILB that opposes the motion: the power you supply, Fv, equals the heat I²R. Push and let go to see the bar braked to rest.":
   "Jalar la barra barre área, así que el flujo crece a razón de BLv. La corriente en la barra siente una fuerza ILB que se opone al movimiento: la potencia que suministras, Fv, es igual al calor I²R. Empuja y suelta para ver cómo la barra se frena hasta detenerse.",
 "Speed of the bar v":
@@ -470,8 +478,6 @@ VDI18N.add('es', 'demo/faraday', {
   "A ciegas está activado: las predicciones del estado estacionario (amplitudes, fases, impedancias, cocientes, τ) están ocultas. Mídelas a partir de las trazas.",
 "Two coaxial coils: the primary is driven by an AC source, the secondary is closed through a switch and a load resistor. Drag the secondary along the axis, its top to change its radius, the load resistor up or down to change R_L, and click the switch. Now: source {#} V at {#} Hz, {#} and {#} turns, secondary radius {#} cm, {#} cm from the primary, R_L = {#} mΩ, switch closed. Keys: left and right arrows move the secondary, up and down arrows change its radius, plus and minus change R_L, S opens or closes the switch, G restarts the source, space plays or pauses, R resets.":
   "Dos bobinas coaxiales: el primario es alimentado por una fuente de CA, el secundario está cerrado a través de un interruptor y un resistor de carga. Arrastra el secundario a lo largo del eje, su parte superior para cambiar su radio, el resistor de carga hacia arriba o abajo para cambiar R_L, y haz clic en el interruptor. Ahora: fuente de {#} V a {#} Hz, {#} y {#} espiras, radio del secundario {#} cm, a {#} cm del primario, R_L = {#} mΩ, interruptor cerrado. Teclas: las flechas izquierda y derecha mueven el secundario, las flechas arriba y abajo cambian su radio, más y menos cambian R_L, S abre o cierra el interruptor, G reinicia la fuente, espacio inicia o pausa, R reinicia.",
-"slow motion ×{#}":
-  "cámara lenta ×{#}",
 "I<sub>{#}</sub> is passing through zero: at this instant Φ<sub>{#}</sub> is at a turning point.":
   "I<sub>{#}</sub> está pasando por cero: en este instante Φ<sub>{#}</sub> está en un punto de retorno.",
 ", flux per secondary turn (nWb)":
@@ -624,26 +630,18 @@ VDI18N.add('es', 'demo/faraday', {
   "ε = −L dI/dt = −{#} mV",
 "dI/dt > {#}: ε < {#} opposes the rise":
   "dI/dt > {#}: ε < {#} se opone al aumento",
-"U = ½LI² = {#} nJ":
-  "U = ½LI² = {#} nJ",
-"{#} nWb":
-  "{#} nWb",
-"−{#} µWb":
-  "−{#} µWb",
-"I is increasing (dI/dt > {#}), so ε = −L dI/dt is negative: the back EMF points against the positive direction and opposes the increase. Here |I| is growing, so ε pushes against the current: the source must work at the rate LI dI/dt = {#} µW, and the energy goes into the field.":
-  "I está aumentando (dI/dt > {#}), así que ε = −L dI/dt es negativa: la fuerza contraelectromotriz apunta en contra del sentido positivo y se opone al aumento. Aquí |I| está creciendo, así que ε empuja en contra de la corriente: la fuente debe trabajar a razón de LI dI/dt = {#} µW, y la energía va al campo.",
-"A coil (a solenoid seen from the side, or a toroid seen from above) driven by a current source on the bench. Drag the right end of the solenoid to change its length and the grip on top to change its radius; for the toroid drag its outer or inner edge. Now: solenoid of {#} turns, length {#} cm, radius {#} cm, core relative permeability {#}, waveform Ramp and hold, current {#} mA, back EMF −{#} mV. Keys: up arrow ramps the current up, down arrow ramps it down, O switches it on, X switches it off, left and right arrows change the length (toroid: the outer radius), space plays or pauses, R resets.":
-  "Una bobina (un solenoide visto de lado, o un toroide visto desde arriba) alimentada por una fuente de corriente en la mesa. Arrastra el extremo derecho del solenoide para cambiar su longitud y el agarre de arriba para cambiar su radio; para el toroide arrastra su borde exterior o interior. Ahora: solenoide de {#} espiras, longitud {#} cm, radio {#} cm, permeabilidad relativa del núcleo {#}, forma de onda Rampa y mantener, corriente {#} mA, fuerza contraelectromotriz −{#} mV. Teclas: la flecha arriba sube la corriente en rampa, la flecha abajo la baja, O la enciende, X la apaga, las flechas izquierda y derecha cambian la longitud (toroide: el radio exterior), espacio inicia o pausa, R reinicia.",
-"outside: weak, taken as zero":
-  "fuera: débil, tomado como cero",
 "U = ½LI² = {#} µJ":
   "U = ½LI² = {#} µJ",
+"outside: weak, taken as zero":
+  "fuera: débil, tomado como cero",
+"= {#} µWb, B = {#} mT":
+  "= {#} µWb, B = {#} mT",
 "{#} mC":
   "{#} mC",
 "I is increasing (dI/dt > {#}), so ε = −L dI/dt is negative: the back EMF points against the positive direction and opposes the increase. Here |I| is growing, so ε pushes against the current: the source must work at the rate LI dI/dt = {#} mW, and the energy goes into the field.":
   "I está aumentando (dI/dt > {#}), así que ε = −L dI/dt es negativa: la fuerza contraelectromotriz apunta en contra del sentido positivo y se opone al aumento. Aquí |I| está creciendo, así que ε empuja en contra de la corriente: la fuente debe trabajar a razón de LI dI/dt = {#} mW, y la energía va al campo.",
-"= {#} µWb, B = {#} mT":
-  "= {#} µWb, B = {#} mT",
+"A coil (a solenoid seen from the side, or a toroid seen from above) driven by a current source on the bench. Drag the right end of the solenoid to change its length and the grip on top to change its radius; for the toroid drag its outer or inner edge. Now: solenoid of {#} turns, length {#} cm, radius {#} cm, core relative permeability {#}, waveform Ramp and hold, current {#} mA, back EMF −{#} mV. Keys: up arrow ramps the current up, down arrow ramps it down, O switches it on, X switches it off, left and right arrows change the length (toroid: the outer radius), space plays or pauses, R resets.":
+  "Una bobina (un solenoide visto de lado, o un toroide visto desde arriba) alimentada por una fuente de corriente en la mesa. Arrastra el extremo derecho del solenoide para cambiar su longitud y el agarre de arriba para cambiar su radio; para el toroide arrastra su borde exterior o interior. Ahora: solenoide de {#} espiras, longitud {#} cm, radio {#} cm, permeabilidad relativa del núcleo {#}, forma de onda Rampa y mantener, corriente {#} mA, fuerza contraelectromotriz −{#} mV. Teclas: la flecha arriba sube la corriente en rampa, la flecha abajo la baja, O la enciende, X la apaga, las flechas izquierda y derecha cambian la longitud (toroide: el radio exterior), espacio inicia o pausa, R reinicia.",
 "= {#} mWb, B = {#} mT":
   "= {#} mWb, B = {#} mT",
 "I, current from the source (A)":
@@ -652,6 +650,8 @@ VDI18N.add('es', 'demo/faraday', {
   "U = ½LI², energía almacenada (mJ)",
 "U = ½LI² = {#} mJ":
   "U = ½LI² = {#} mJ",
+"{#} nWb":
+  "{#} nWb",
 "A coil (a solenoid seen from the side, or a toroid seen from above) driven by a current source on the bench. Drag the right end of the solenoid to change its length and the grip on top to change its radius; for the toroid drag its outer or inner edge. Now: solenoid of {#} turns, length {#} cm, radius {#} cm, core relative permeability {#}, waveform Ramp and hold, current {#} A, back EMF −{#} mV. Keys: up arrow ramps the current up, down arrow ramps it down, O switches it on, X switches it off, left and right arrows change the length (toroid: the outer radius), space plays or pauses, R resets.":
   "Una bobina (un solenoide visto de lado, o un toroide visto desde arriba) alimentada por una fuente de corriente en la mesa. Arrastra el extremo derecho del solenoide para cambiar su longitud y el agarre de arriba para cambiar su radio; para el toroide arrastra su borde exterior o interior. Ahora: solenoide de {#} espiras, longitud {#} cm, radio {#} cm, permeabilidad relativa del núcleo {#}, forma de onda Rampa y mantener, corriente {#} A, fuerza contraelectromotriz −{#} mV. Teclas: la flecha arriba sube la corriente en rampa, la flecha abajo la baja, O la enciende, X la apaga, las flechas izquierda y derecha cambian la longitud (toroide: el radio exterior), espacio inicia o pausa, R reinicia.",
 "Advanced {#} steps of {#} ms and paused.":
@@ -664,8 +664,6 @@ VDI18N.add('es', 'demo/faraday', {
   "Se exportaron {#} muestras; las cantidades de intervalo corresponden al punto medio del intervalo. Las corridas guardan como máximo {#} muestras.",
 "U (mJ)":
   "U (mJ)",
-"{#} points from {#} s to {#} s, every 6th sample ({#} ms apart) plus the last. ε is an interval average; I and U are values at t.":
-  "{#} puntos de {#} s a {#} s, una de cada 6 muestras (separadas {#} ms) más la última. ε es un promedio de intervalo; I y U son valores en t.",
 "Kept trace: kept, aligned to the start of this move":
   "Traza guardada: guardada, alineada con el inicio de este movimiento",
 "Φ₂ (Wb)":
@@ -679,5 +677,15 @@ VDI18N.add('es', 'demo/faraday', {
 "Solenoid: N = {#}, air core":
   "Solenoide: N = {#}, núcleo de aire",
 "{#} points from {#} s to {#} s. ε is an interval average; I and U are values at t. Refreshes twice a second while running.":
-  "{#} puntos de {#} s a {#} s. ε es un promedio de intervalo; I y U son valores en t. Se actualiza dos veces por segundo mientras corre."
+  "{#} puntos de {#} s a {#} s. ε es un promedio de intervalo; I y U son valores en t. Se actualiza dos veces por segundo mientras corre.",
+"−{#} pV":
+  "−{#} pV",
+"Φ<sub>B</sub> is decreasing; the current's own field opposes that, and the force on the coil's sides makes a torque against the rotation. The crank (or motor) must supply power τω = I²R = {#} µW.":
+  "Φ<sub>B</sub> está disminuyendo; el propio campo de la corriente se opone a eso, y la fuerza sobre los lados de la bobina produce una torca en contra de la rotación. La manivela (o el motor) debe suministrar una potencia τω = I²R = {#} µW.",
+"U = ½LI² = {#} nJ":
+  "U = ½LI² = {#} nJ",
+"I is increasing (dI/dt > {#}), so ε = −L dI/dt is negative: the back EMF points against the positive direction and opposes the increase. Here |I| is growing, so ε pushes against the current: the source must work at the rate LI dI/dt = {#} µW, and the energy goes into the field.":
+  "I está aumentando (dI/dt > {#}), así que ε = −L dI/dt es negativa: la fuerza contraelectromotriz apunta en contra del sentido positivo y se opone al aumento. Aquí |I| está creciendo, así que ε empuja en contra de la corriente: la fuente debe trabajar a razón de LI dI/dt = {#} µW, y la energía va al campo.",
+"{#} points from {#} s to {#} s, every 6th sample ({#} ms apart) plus the last. ε is an interval average; I and U are values at t.":
+  "{#} puntos de {#} s a {#} s, una de cada 6 muestras (separadas {#} ms) más la última. ε es un promedio de intervalo; I y U son valores en t."
 });

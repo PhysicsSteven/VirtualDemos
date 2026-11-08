@@ -28,6 +28,14 @@ VDI18N.add('es', 'demo/temperature', {
   "Pon en contacto un bloque caliente y uno frío y observa cómo llegan a una misma temperatura. Calibra un termómetro de gas, mide cómo se dilatan los sólidos y los líquidos, y sigue el calor a través de una pared.",
 "T in °C · mass in kg · time in s":
   "T en °C · masa en kg · tiempo en s",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
+"<span>Speed</span>":
+  "<span>Rapidez</span>",
 "Equilibrium":
   "Equilibrio",
 "Thermometer":
@@ -534,16 +542,16 @@ VDI18N.add('es', 'demo/temperature', {
   "La cadena de energía no tiene lecturas para la hoja de trabajo: lee los números en Lecturas en pantalla.",
 "The last mystery block was {mat}.":
   "El último bloque misterioso era de {mat}.",
-"The last mystery block was silver.":
-  "El último bloque misterioso era de plata.",
 "Last mystery bath was {#} °C.":
   "El último baño misterioso estaba a {#} °C.",
 "The last mystery rod was {mat}.":
   "La última varilla misteriosa era de {mat}.",
-"The last mystery rod was aluminum.":
-  "La última varilla misteriosa era de aluminio.",
 "Light bulb (CFL)":
   "Foco (CFL)",
+"The last mystery block was silver.":
+  "El último bloque misterioso era de plata.",
+"The last mystery rod was aluminum.":
+  "La última varilla misteriosa era de aluminio.",
 "The last mystery block was lead.":
   "El último bloque misterioso era de plomo."
 });

@@ -48,6 +48,12 @@ VDI18N.add('es', 'demo/em-waves', {
   "Campos eléctricos y magnéticos que se sostienen mutuamente y viajan a c. E y B se mantienen en ángulo recto entre sí y con la dirección de propagación, y alcanzan su máximo juntos. Cambia la polarización, lee la energía que transporta una onda y observa cómo una antena dipolar lanza una. En un plano, coloca alambres y metal y observa cómo las ondas se reflejan, interfieren y se dispersan.",
 "SI · c = {#}/√(μ₀ε₀) · B₀ = E₀/c · I = ½cε₀E₀²":
   "SI · c = {#}/√(μ₀ε₀) · B₀ = E₀/c · I = ½cε₀E₀²",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
 "What to show":
   "Qué mostrar",
 "Plane wave":

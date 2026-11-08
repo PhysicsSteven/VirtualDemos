@@ -20,12 +20,20 @@ VDI18N.add('es', 'demo/ripple-tank', {
   "Haz ondas en un tanque de agua poco profunda con un punzón, dos punzones o una barra recta. Dibuja tus propias paredes y placas poco profundas, y observa cómo las ondas se dispersan a través de rendijas, interfieren, se reflejan, se desvían y se enfocan, y mide su longitud de onda, su rapidez y sus ángulos.",
 "lengths in mm · f in Hz":
   "longitudes en mm · f en Hz",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
 "Still water: start the waves again from the beginning":
   "Agua quieta: empieza las ondas de nuevo desde el principio",
 "Still the water":
   "Calmar el agua",
 "slow motion {#}/{#}":
   "cámara lenta {#}/{#}",
+"t = {#} s · slow motion {#}/{#}":
+  "t = {#} s · cámara lenta {#}/{#}",
 "What the picture shows":
   "Qué muestra la imagen",
 "The amplitude of the waves at each place, averaged over the last two periods: quiet (nodal) lines show dark":
@@ -36,8 +44,6 @@ VDI18N.add('es', 'demo/ripple-tank', {
   "Un corte lateral del agua bajo una onda plana: cómo se mueve el agua misma, desde la superficie hasta el fondo",
 "Side view":
   "Vista lateral",
-"t = {#} s · slow motion {#}/{#}":
-  "t = {#} s · cámara lenta {#}/{#}",
 "A ripple tank seen from above: the water's surface, the wave makers, walls and shallow plates, and a measuring line from A to B. Arrow keys move end B of the line (Shift: {#} mm); press A or B to choose which end moves.":
   "Un tanque de ondas visto desde arriba: la superficie del agua, los generadores de ondas, las paredes y placas poco profundas, y una línea de medición de A a B. Las flechas mueven el extremo B de la línea (Shift: {#} mm); pulsa A o B para elegir qué extremo se mueve.",
 "Drawing in the tank":
@@ -168,6 +174,8 @@ VDI18N.add('es', 'demo/ripple-tank', {
   "Promedio acumulado en",
 "{#} periods":
   "{#} periodos",
+"amp. B (mm)":
+  "amp. B (mm)",
 "<span>Blind: hide the wavelengths, speeds and predicted angles</span>":
   "<span>A ciegas: oculta las longitudes de onda, las rapideces y los ángulos predichos</span>",
 "ω² = (g k + σk³/ρ) tanh(k d), λ = {#}π/k, c = f λ":
@@ -180,8 +188,6 @@ VDI18N.add('es', 'demo/ripple-tank', {
   "vista lateral, a una profundidad s: semiancho a = A cosh k(d − s)/sinh kd, semialtura b = A sinh k(d − s)/sinh kd, b/a = tanh k(d − s)",
 "Model: the small wave equation for the water's surface on a grid of {#} mm squares ({#} × {#}), stepped with leapfrog in time and an isotropic nine point Laplacian, with the grid's own dispersion taken out at the source frequency so the wavelengths are exact to better than {#} %. The speed in each place is the phase speed of ripples at that frequency and depth, from ω² = (gk + σk³/ρ) tanh(kd) with g = {#} m/s² and water at {#} °C (σ = {#} mN/m, ρ = {#} kg/m³). Viscous damping {#}νk² (ν = {#} mm²/s) is included; friction with the tank's floor in very shallow water is left out. Walls reflect the whole wave; the beaches are a ramp of damping that reflects about {#} to {#} % of the amplitude. The bar adds to the water rather than holding it, set so its plane waves are {#} mm in amplitude, and waves coming back pass under it into the beach behind it; a dipper holds the water it touches at {#} mm. Each place has one speed, which is exact for one frequency, so the demo makes only steady waves, never a pulse. Two things follow from that and are only approximate: the waves carry their energy at the phase speed instead of the group speed, so the slow viscous fall of the amplitude with distance is off by their ratio ({#} to {#} over the demo's range), and where the depth changes, how much of a wave is reflected and how its height changes are the model's, while the wavelengths and directions are exact. The amplitude view and readouts average over the last two periods, so they settle a few periods after the waves arrive. If this device cannot keep up with the chosen speed, time runs slower, as the clock says.":
   "Modelo: la ecuación de ondas pequeñas para la superficie del agua en una malla de cuadros de {#} mm ({#} × {#}), integrada con salto de rana en el tiempo y un laplaciano isotrópico de nueve puntos, con la dispersión propia de la malla eliminada a la frecuencia de la fuente para que las longitudes de onda sean exactas a mejor que {#} %. La rapidez en cada lugar es la rapidez de fase de las ondas en el agua a esa frecuencia y profundidad, de ω² = (gk + σk³/ρ) tanh(kd) con g = {#} m/s² y agua a {#} °C (σ = {#} mN/m, ρ = {#} kg/m³). Se incluye el amortiguamiento viscoso {#}νk² (ν = {#} mm²/s); se omite la fricción con el fondo del tanque en agua muy poco profunda. Las paredes reflejan toda la onda; las playas son una rampa de amortiguamiento que refleja de {#} a {#} % de la amplitud. La barra le suma al agua en lugar de sujetarla, ajustada para que sus ondas planas tengan {#} mm de amplitud, y las ondas que regresan pasan por debajo de ella hacia la playa de atrás; un punzón mantiene el agua que toca en {#} mm. Cada lugar tiene una sola rapidez, exacta para una frecuencia, así que la demo solo hace ondas continuas, nunca un pulso. De eso se siguen dos cosas que solo son aproximadas: las ondas llevan su energía a la rapidez de fase en lugar de la rapidez de grupo, así que la lenta caída viscosa de la amplitud con la distancia está desviada por su cociente ({#} a {#} en el intervalo de la demo), y donde cambia la profundidad, cuánto de una onda se refleja y cómo cambia su altura son del modelo, mientras que las longitudes de onda y las direcciones son exactas. La vista de amplitud y las lecturas promedian sobre los últimos dos periodos, así que se estabilizan unos periodos después de que llegan las ondas. Si este dispositivo no puede seguir la rapidez elegida, el tiempo corre más lento, como indica el reloj.",
-"amp. B (mm)":
-  "amp. B (mm)",
 "wave travels →":
   "la onda viaja →",
 "floor, {#} mm down":

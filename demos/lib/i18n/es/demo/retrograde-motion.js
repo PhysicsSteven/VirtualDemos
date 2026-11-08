@@ -28,8 +28,6 @@ VDI18N.add('es', 'demo/retrograde-motion', {
   "Visto desde arriba del Polo Norte.",
 "Distances to scale; stars only give directions.":
   "Distancias a escala; las estrellas solo dan direcciones.",
-"ecliptic (the Sun's path)":
-  "eclíptica (el camino del Sol)",
 "CANCER":
   "CÁNCER",
 "GEMINI":
@@ -50,6 +48,8 @@ VDI18N.add('es', 'demo/retrograde-motion', {
   "oposición {#} ene",
 "stationary Feb {#}":
   "estacionario {#} feb",
+"ecliptic (the Sun's path)":
+  "eclíptica (el camino del Sol)",
 "◀ EAST":
   "◀ ESTE",
 "WEST ▶":
@@ -68,18 +68,20 @@ VDI18N.add('es', 'demo/retrograde-motion', {
   "Observa desde arriba cómo la Tierra rebasa a Marte mientras Marte traza un rizo contra las estrellas. Luego crea el mismo cielo con los epiciclos de Ptolomeo y los círculos de Copérnico, y haz la prueba de Galileo: las fases de Venus.",
 "dates in UTC · angles in degrees · distances in AU":
   "fechas en UTC · ángulos en grados · distancias en UA",
+"Time controls":
+  "Controles de tiempo",
 "Back one day (Shift: ten days)":
   "Retroceder un día (Shift: diez días)",
 "Back one day":
   "Retroceder un día",
-"◀ {#} day":
-  "◀ {#} día",
+"{#} day":
+  "{#} día",
 "Forward one day (Shift: ten days)":
   "Avanzar un día (Shift: diez días)",
 "Forward one day":
   "Avanzar un día",
-"{#} day ▶":
-  "{#} día ▶",
+"<span>Speed</span>":
+  "<span>Rapidez</span>",
 "Days per second":
   "Días por segundo",
 "<span>days/s</span>":
@@ -453,5 +455,9 @@ VDI18N.add('es', 'demo/retrograde-motion', {
 "SCULPTOR":
   "ESCULTOR",
 "TELESCOPIUM":
-  "TELESCOPIO"
+  "TELESCOPIO",
+"◀ {#} day":
+  "◀ {#} día",
+"{#} day ▶":
+  "{#} día ▶"
 });

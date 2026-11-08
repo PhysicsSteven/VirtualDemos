@@ -50,6 +50,14 @@ VDI18N.add('es', 'demo/white-dwarf-cooling', {
   "Una enana blanca ya no tiene combustible. Brilla dejando escapar el calor almacenado en sus iones, se apaga durante miles de millones de años y se congela en un cristal del centro hacia afuera.",
 "M in M<sub>sun</sub> · L in L<sub>sun</sub> · ages in yr · T<sub>c</sub> = core temperature · Γ<sub>m</sub> = {#}":
   "M en M<sub>sun</sub> · L en L<sub>sun</sub> · edades en años · T<sub>c</sub> = temperatura del núcleo · Γ<sub>m</sub> = {#}",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
+"<span>Speed</span>":
+  "<span>Rapidez</span>",
 "Clock speed":
   "Velocidad del reloj",
 "Slow":

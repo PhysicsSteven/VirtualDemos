@@ -34,6 +34,12 @@ VDI18N.add('es', 'demo/electron-diffraction', {
   "Un tubo de difracción de electrones virtual. Los electrones atraviesan una película delgada de grafito y llegan a la pantalla en dos anillos. Mide los diámetros de los anillos a varios voltajes y encuentra los espaciados del grafito a partir de λ = h/p.",
 "V in kV · D, L, R in mm · λ in pm · d in nm · 2d sin θ = λ":
   "V en kV · D, L, R en mm · λ en pm · d en nm · 2d sin θ = λ",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
 "What goes through the crystal":
   "Qué atraviesa el cristal",
 "The electron diffraction tube":

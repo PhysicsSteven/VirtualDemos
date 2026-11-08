@@ -7,6 +7,7 @@
 <script src="lib/theme.js"></script>
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
 <script src="lib/vd3.js"></script>
 <script src="lib/vd3kit.js"></script>
 <style>
@@ -1706,5 +1707,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   requestAnimationFrame(loop);
 })();
 </script>
+<script>/* the shared control panel (demos/lib/vdpanel.js): the time controls in one group at the left of the strip */
+if (window.VD && VD.panel) VD.panel({ reset: '#restart', speed: '#speeds', step: true });</script>
 </body>
 </html>

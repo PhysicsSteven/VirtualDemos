@@ -19,7 +19,7 @@ require('./lib.cjs')({ demo: 'entropy', title: 'Einstein Solids' }, async (r) =>
   state.arrow = { rect: await r.box('#presets [data-p="esSmall"]') };
   await r.secs(1.6);
 
-  state.caption = 'Set the speed to 100× and press Start';
+  state.caption = 'Set the speed to 100× and press Play';
   await r.click('#speedSeg [data-s="100"]');
   state.arrow = { rect: await r.box('#speedSeg') };
   await r.secs(0.5);

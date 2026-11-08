@@ -30,6 +30,12 @@ VDI18N.add('es', 'demo/compton', {
   "Un fotón rebota en un electrón libre y sale con una longitud de onda mayor. El corrimiento depende solo del ángulo, como debe ser si la luz transporta cantidad de movimiento en paquetes, como una partícula.",
 "<span>E = hc/λ</span> · <span>hc = {#} keV·pm</span> · <span>m<sub>e</sub>c² = {#} keV</span> · <span>λ<sub>C</sub> = h/m<sub>e</sub>c = {#} pm</span>":
   "<span>E = hc/λ</span> · <span>hc = {#} keV·pm</span> · <span>m<sub>e</sub>c² = {#} keV</span> · <span>λ<sub>C</sub> = h/m<sub>e</sub>c = {#} pm</span>",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
 "Sample photons":
   "Muestrear fotones",
 "Plot":

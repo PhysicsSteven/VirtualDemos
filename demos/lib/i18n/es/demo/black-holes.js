@@ -30,6 +30,12 @@ VDI18N.add('es', 'demo/black-holes', {
   "La masa curva la luz. Desliza una galaxia de fondo detrás de una lente para formar un anillo de Einstein, observa un evento de microlente, traza rayos alrededor de la sombra de un agujero negro, y mira lo que la gravedad les hace a los relojes, a la luz y a una persona cerca del horizonte.",
 "<span>r<sub>s</sub> = 2GM/c²</span> · <span>θ<sub>E</sub>² = 2r<sub>s</sub> D<sub>LS</sub>/(D<sub>L</sub>D<sub>S</sub>)</span> · <span>M<sub>sun</sub> = {#} × {#}³⁰ kg</span>":
   "<span>r<sub>s</sub> = 2GM/c²</span> · <span>θ<sub>E</sub>² = 2r<sub>s</sub> D<sub>LS</sub>/(D<sub>L</sub>D<sub>S</sub>)</span> · <span>M<sub>sol</sub> = {#} × {#}³⁰ kg</span>",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
 "Lensing":
   "Lente",
 "Ray traced":

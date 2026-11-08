@@ -36,6 +36,8 @@ VDI18N.add('es', 'demo/ct-range', {
   "Un plan con protones lee sus poderes de frenado en una tomografía. Calibra un tomógrafo con un maniquí de materiales conocidos, convierte números CT en poderes de frenado como lo hizo Schneider en {#}, pon a prueba la curva con un tejido misterioso en un haz de protones, y ve cómo los errores que quedan fijan los márgenes alrededor de cada blanco.",
 "CT numbers in HU · depths in cm · range errors in mm":
   "Números CT en HU · profundidades en cm · errores de alcance en mm",
+"Time controls":
+  "Controles de tiempo",
 "Which step":
   "Qué paso",
 "Scan the phantom":

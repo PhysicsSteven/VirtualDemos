@@ -18,7 +18,7 @@ Textbook: OpenStax *University Physics*, Vol. 2, §§4.1 and 4.7. Access for fre
 - The graphs show the count on the left against time, and the share of time spent at each count. The dots on the second graph are the share of all left or right arrangements that put n on the left; Blind hides them.
 - This is a picture of the idea: the disks are far bigger and fewer than real molecules, and time runs on the model's own clock. The speed buttons run it 1, 10 or 100 times faster.
 - Record reading stores the share of time at every count, one row per count, for the run so far. Export to worksheet sends the readings to the Data table below; Clear starts a new series, which goes into a new copy of the table.
-- Start over puts the partition back with a fresh arrangement.
+- Reset puts the partition back with a fresh arrangement.
 
 </details>
 
@@ -77,7 +77,7 @@ Record N and the time counted for each copy of the table. Fill in the last two c
 
 ## Uncertainty
 
-The shares come from a run of finite length, so they scatter about the predicted values. Start over with four molecules and record a reading after 200 s. Compare its scatter about the predicted shares with that of your 2000 s run; how does it change? Then watch a stretch of 300 s, count roughly how many separate times all four molecules gathered on the left, and use that count $$k$$ to estimate the relative uncertainty $$1/\sqrt{k}$$ of the share of time all four were on the left. How would the uncertainty change over the whole 2000 s?
+The shares come from a run of finite length, so they scatter about the predicted values. Reset with four molecules and record a reading after 200 s. Compare its scatter about the predicted shares with that of your 2000 s run; how does it change? Then watch a stretch of 300 s, count roughly how many separate times all four molecules gathered on the left, and use that count $$k$$ to estimate the relative uncertainty $$1/\sqrt{k}$$ of the share of time all four were on the left. How would the uncertainty change over the whole 2000 s?
 
 ## Questions
 

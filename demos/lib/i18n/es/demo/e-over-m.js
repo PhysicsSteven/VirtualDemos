@@ -26,6 +26,12 @@ VDI18N.add('es', 'demo/e-over-m', {
   "Los electrones de un cañón de {#} a {#} V se curvan en un círculo brillante en el campo de un par de bobinas de Helmholtz. Lee el radio en la escala de espejo sin paralaje y mide la razón carga a masa del electrón.",
 "r in cm · B in mT · e/m = 2V/(B²r²) · B = ({#}/{#})<sup>{#}/{#}</sup>μ₀NI/a":
   "r en cm · B en mT · e/m = 2V/(B²r²) · B = ({#}/{#})<sup>{#}/{#}</sup>μ₀NI/a",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
 "Put the camera back in front of the coils":
   "Volver a poner la cámara frente a las bobinas",
 "Reset view":

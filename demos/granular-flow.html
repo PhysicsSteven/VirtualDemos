@@ -7,6 +7,7 @@
 <script src="lib/theme.js"></script>
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
 <title>Granular Flow: Sorting and Landslides</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -66,7 +67,7 @@ select { font: inherit; font-size: 0.86rem; color: var(--ink); background: var(-
   <main class="bench">
     <div class="stage" id="stage">
       <div class="stage-ctl" id="strip">
-        <button type="button" class="btn attn" id="go">Start</button>
+        <button type="button" class="btn attn" id="go">Play</button>
         <button type="button" class="btn" id="flip" hidden>Flip the frame</button>
         <button type="button" class="btn" id="reset">Refill</button>
         <label class="sp" for="speed">Speed <select id="speed"><option value="1">Real time</option><option value="0.5">½ slow motion</option><option value="0.25">¼ slow motion</option><option value="0.1">1/10 slow motion</option></select></label>
@@ -731,7 +732,7 @@ select { font: inherit; font-size: 0.86rem; color: var(--ink); background: var(-
   }
   function syncChips() { for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset)); }
   function setRun(on) { S.run = on; card.away(on); S.rate = 1; S.wallStart = performance.now(); S.simStart = S.set ? S.set.s.t : 0;
-    const s = S.set && S.set.s; $('go').textContent = on ? 'Pause' : s && s.t > 0 ? 'Resume' : S.mode === 'slide' ? 'Open the gate' : S.mode === 'frame' ? 'Flip and run' : 'Start';
+    const s = S.set && S.set.s; $('go').textContent = on ? 'Pause' : s && s.t > 0 ? 'Play' : S.mode === 'slide' ? 'Open the gate' : S.mode === 'frame' ? 'Flip and run' : 'Play';
     $('go').classList.toggle('attn', !on); }
   function applyPreset(key) { const c = PRESETS[key];
     Object.assign(S, { preset: key, mode: c.mode, start: c.start, kinds: c.kinds.map((k) => Object.assign({}, k)) });
@@ -798,5 +799,7 @@ select { font: inherit; font-size: 0.86rem; color: var(--ink); background: var(-
   requestAnimationFrame(frame);
 })();
 </script>
+<script>/* the shared control panel (demos/lib/vdpanel.js): the time controls in one group at the left of the strip */
+if (window.VD && VD.panel) VD.panel({ play: '#go', speed: '#speed', step: true });</script>
 </body>
 </html>

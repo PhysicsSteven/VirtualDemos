@@ -26,16 +26,18 @@ VDI18N.add('es', 'demo/charged-particles', {
   "Envía protones, partículas alfa o iones de carbono al agua, pasando antes, si quieres, por una placa de hueso, pulmón, plástico o metal. Observa cómo cada traza se frena, se dispersa y se detiene, mira cómo el pico de Bragg se forma a partir de las trazas, y compara el poder de frenado y el alcance de Bethe con las tablas NIST PSTAR.",
 "depth in cm · E in MeV":
   "profundidad en cm · E en MeV",
+"Time controls":
+  "Controles de tiempo",
 "Fire":
   "Disparar",
-"Clear the tracks and the dose they built up":
-  "Borrar las trazas y la dosis que acumularon",
-"Clear tracks":
-  "Borrar trazas",
 "Rate":
   "Tasa",
 "{#} tracks/s":
   "{#} trazas/s",
+"Clear the tracks and the dose they built up":
+  "Borrar las trazas y la dosis que acumularon",
+"Clear tracks":
+  "Borrar trazas",
 "What the picture shows":
   "Qué muestra la imagen",
 "Beam in water":

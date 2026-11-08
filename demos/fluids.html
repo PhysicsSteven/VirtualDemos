@@ -7,6 +7,7 @@
 <script src="lib/theme.js"></script>
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
 <script src="lib/vd3.js"></script>
 <script src="lib/vd3kit.js"></script>
 <style>
@@ -1926,6 +1927,8 @@ table.rows button:hover { color: var(--pos); }
   let last = performance.now();
   function setRunning(r) { running = r; playBtn.textContent = r ? 'Pause' : 'Play'; playBtn.classList.toggle('primary', !r); last = performance.now(); }
   playBtn.addEventListener('click', () => setRunning(!running));
+  /* the shared control panel (demos/lib/vdpanel.js): the time controls in one group at the left of the strip */
+  if (window.VD && VD.panel) VD.panel({ clock: '#tclock', speed: '#rateSeg', step: true });
   function restart() {
     if (S.scene === 'buoy') { const q = S.P.buoy; if (!q.scale) { bs = null; buoyReset(false); } }
     if (S.scene === 'venturi') seedParts();

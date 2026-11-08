@@ -22,12 +22,20 @@ VDI18N.add('es', 'demo/spacetime', {
   "Inicia para correrlo · íconos no a escala, comprimidos por {#}/γ a lo largo de x",
 "Spacetime Diagrams":
   "Diagramas de espaciotiempo",
+"<span><a><span>Speed of Light</span> <span>→</span></a></span>":
+  "<span><a><span>La rapidez de la luz</span> <span>→</span></a></span>",
 "Place events in time and space, then change observers. Light stays at {#}° for everyone; clocks, lengths and simultaneity do not.":
   "Coloca eventos en el tiempo y el espacio y luego cambia de observador. La luz se mantiene a {#}° para todos; los relojes, las longitudes y la simultaneidad no.",
 "<span>c = {#}</span> · <span>ct in years, x in light years</span> · <span>γ = {#}/√({#} − β²)</span> · <span>t′ = γ(t − βx), x′ = γ(x − βt)</span>":
   "<span>c = {#}</span> · <span>ct en años, x en años luz</span> · <span>γ = {#}/√({#} − β²)</span> · <span>t′ = γ(t − βx), x′ = γ(x − βt)</span>",
 "Spacetime diagram, ct up and x across. Click empty space to add an event, drag events to move them, drag empty space to pan, scroll or pinch to zoom. Arrow keys move the selected event, square brackets switch events, Delete removes one, space plays or pauses.":
   "Diagrama de espaciotiempo, ct hacia arriba y x a lo ancho. Haz clic en un espacio vacío para agregar un evento, arrastra los eventos para moverlos, arrastra el espacio vacío para desplazar la vista, usa la rueda o pellizca para hacer zoom. Las flechas mueven el evento seleccionado, los corchetes cambian de evento, Supr quita uno, espacio inicia o pausa.",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
 "Fit view":
   "Ajustar la vista",
 "Diagram view":
@@ -144,6 +152,8 @@ VDI18N.add('es', 'demo/spacetime', {
   "Longitud de la varilla en S, S′",
 "Each tick on a worldline is one year on that clock, so wider spacing means a slower clock in this frame. The twin flies out at β and back at −β, turning around halfway through the trip.":
   "Cada marca en una línea de universo es un año en ese reloj, así que un espaciamiento mayor significa un reloj más lento en este marco. El gemelo sale a β y regresa a −β, dando la vuelta a la mitad del viaje.",
+"ct′":
+  "ct′",
 "Light cones":
   "Conos de luz",
 "Hyperbolas":
@@ -182,10 +192,6 @@ VDI18N.add('es', 'demo/spacetime', {
   "inicia.",
 "Model: exact special relativity in one space dimension with c = {#}, so light covers one light year per year. All coordinates come from the Lorentz transformation. The twin's turnaround is treated as instantaneous.":
   "Modelo: relatividad especial exacta en una dimensión espacial con c = {#}, así que la luz recorre un año luz por año. Todas las coordenadas vienen de la transformación de Lorentz. La vuelta del gemelo se trata como instantánea.",
-"<span><a><span>Speed of Light</span> <span>→</span></a></span>":
-  "<span><a><span>La rapidez de la luz</span> <span>→</span></a></span>",
-"ct′":
-  "ct′",
 "Drawn in S′: its axes are square, S is tilted · grid and numbers in S":
   "Dibujado en S′: sus ejes son perpendiculares, S está inclinado · cuadrícula y números en S",
 "The world at ct′ = {#} yr, as S′ sees it":
@@ -242,12 +248,6 @@ VDI18N.add('es', 'demo/spacetime', {
   "La franja sombreada es la hoja de universo de una varilla de {#} al de largo en su propio marco, que se mueve a {#}c. Marca ambos extremos al mismo tiempo de S (azul) y mide {#} al. Márcalos al mismo tiempo de S′ (rojo) y mide {#}. Una longitud es una distancia entre eventos simultáneos, y los marcos no coinciden en qué eventos son simultáneos.",
 "none selected":
   "ninguno seleccionado",
-"{#} ly in S":
-  "{#} al en S",
-"{#} ly in S′":
-  "{#} al en S′",
-"rod, {#} ly long":
-  "varilla, {#} al de largo",
 "The traveler leaves at {#}c and turns around at T, {#} years after leaving by the home clock. Home ages {#} years, the traveler {#}. The purple lines are the traveler's lines of simultaneity, one per traveler year. At the turnaround they swing across the home worldline, skipping {#} years of home time. The turn breaks the symmetry.":
   "El viajero sale a {#}c y da la vuelta en T, {#} años después de salir según el reloj de casa. En casa pasan {#} años, para el viajero {#}. Las líneas moradas son las líneas de simultaneidad del viajero, una por cada año del viajero. En la vuelta barren la línea de universo de casa, saltándose {#} años del tiempo de casa. La vuelta rompe la simetría.",
 "Event T at ct {#}, x {#}":
@@ -296,6 +296,12 @@ VDI18N.add('es', 'demo/spacetime', {
   "Inicia para correrlo · íconos comprimidos por {#}/γ a lo largo de x",
 "Drawn in S′: its axes are square, S is tilted":
   "Dibujado en S′: sus ejes son perpendiculares, S está inclinado",
+"{#} ly in S":
+  "{#} al en S",
+"{#} ly in S′":
+  "{#} al en S′",
+"rod, {#} ly long":
+  "varilla, {#} al de largo",
 "now, ct = {#} yr":
   "ahora, ct = {#} años"
 });

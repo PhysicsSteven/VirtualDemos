@@ -14,7 +14,7 @@ Textbook: OpenStax *University Physics*, Vol. 3, §11.7. Access for free at http
 
 - The Helium view follows a simulated sample of 2000 neutrons and protons from a hundredth of a second to a few hours after the Big Bang. Each dot is one nucleon: red for a proton, gray for a neutron, gold for one bound in helium 4.
 - Until freeze out the neutrons and protons turn into each other fast enough to stay in equilibrium. You set the freeze out temperature $$kT_f$$, the neutron lifetime $$\tau$$, and the time $$t_D$$ from which deuterium survives and helium forms.
-- Play runs the clock (or set the time with its slider). The meters show the time, $$kT$$ and the counts. Start over runs a new random sample.
+- Play runs the clock (or set the time with its slider). The meters show the time, $$kT$$ and the counts. Reset runs a new random sample.
 - The graph shows the neutron share $$n/(n + p)$$ of the sample against time.
 - Record reading works once the clock is past $$t_D$$. It stores the three settings, the number of neutrons at freeze out, the number still there at $$t_D$$, and the number of helium nuclei made. Export to worksheet sends the readings to the Data table below; Clear starts a new series, which goes into a new copy of the table.
 - Blind hides the predicted ratios and helium fraction and the theory curves.

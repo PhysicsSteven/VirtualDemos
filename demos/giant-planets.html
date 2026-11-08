@@ -7,6 +7,7 @@
 <script src="lib/theme.js"></script>
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
 <script src="lib/vd3.js"></script>
 <script src="lib/vd3kit.js"></script>
 <title>Giant Planets, Rings and Moons</title>
@@ -72,8 +73,8 @@
   <main class="bench">
     <div class="stage" id="stage">
       <div class="stage-ctl" id="strip">
-        <button type="button" class="spin attn" id="play">Start</button>
-        <button type="button" class="btn" id="restart" title="Put the clock back to the start and the test moon back together">Start again</button>
+        <button type="button" class="spin attn" id="play">Play</button>
+        <button type="button" class="btn" id="restart" title="Put the clock back to the start and the test moon back together">Reset</button>
         <label class="lbl" for="selSpeed">Time</label>
         <select id="selSpeed"><option value="600">10 minutes a second</option><option value="3600" selected>1 hour a second</option><option value="21600">6 hours a second</option><option value="86400">1 day a second</option><option value="345600">4 days a second</option></select>
         <div class="seg" role="group" aria-label="What the picture shows" id="modeSeg">
@@ -1199,7 +1200,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (S.mode === 'rings') pileReset(); if (c.stripe) S.stripe = 0;
     $('presetHint').textContent = c.hint; setRun(!!c.run); sync(); readouts(); clock(); draw();
   }
-  function setRun(on) { S.run = on; card.away(false); $('play').textContent = on ? 'Pause' : S.t > 0 ? 'Resume' : 'Start'; $('play').classList.toggle('attn', !on); }
+  function setRun(on) { S.run = on; card.away(false); $('play').textContent = on ? 'Pause' : 'Play'; $('play').classList.toggle('attn', !on); }
   for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
   for (const b of document.querySelectorAll('#modeSeg button')) b.addEventListener('click', () => { custom(); setRun(false); S.t = 0; setMode(b.dataset.mode); });
   $('selPlanet').addEventListener('change', (e) => { if (S.mode !== 'moons' && !GIANTS.includes(e.target.value)) { sync(); return; } custom(); S.planet = e.target.value; S.moon = 0; S.cm = null; if (S.mode === 'clouds') S.lp = Math.log(CLOUD_PL[S.planet].bottom * 0.999); if (S.mode === 'rings') pileReset(); S.t = 0; setRun(false); sync(); readouts(); clock(); draw(); });
@@ -1222,6 +1223,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   for (const g of CLOUD_GASES) $(GAS_SLIDER[g]).addEventListener('input', (e) => { custom(); S.cm = Object.assign({}, S.cm, { [g]: Math.pow(10, +e.target.value) }); sync(); readouts(); clock(); draw(); });
 
   $('play').addEventListener('click', () => setRun(!S.run));
+  /* the shared control panel (demos/lib/vdpanel.js): the time controls in one group at the left of the strip */
+  if (window.VD && VD.panel) VD.panel({ reset: '#restart', speed: '#selSpeed', step: true });
+  /* the panel's strip can take a second row in Projector: keep the set up card whole */
+  if (window.VD && VD.fitStage) VD.fitStage();
   $('restart').addEventListener('click', () => { S.t = 0; if (S.mode === 'clouds') S.lp = Math.log(CLOUD_PL[S.planet].bottom * 0.999); if (S.mode === 'rings') pileReset(); if (S.stripe != null) S.stripe = 0; setRun(false); readouts(); clock(); draw(); });
   $('zIn').addEventListener('click', () => { S.zoom[S.mode] = Math.min(4, S.zoom[S.mode] + 1); draw(); });
   $('zOut').addEventListener('click', () => { S.zoom[S.mode] = Math.max(-3, S.zoom[S.mode] - 1); draw(); });

@@ -66,6 +66,12 @@ VDI18N.add('es', 'demo/lasers', {
   "Un fotón puede hacer que un átomo excitado emita una copia exacta de sí mismo. Pon suficientes átomos excitados entre dos espejos y las copias se multiplican hasta formar un haz láser, pero solo cuando el nivel superior tiene más átomos que el inferior.",
 "<span>E = hν</span> · <span>N₂/N₁ = e<sup>−hν/kT</sup></span> · <span>A₂₁/B₂₁ = {#}πhν³/c³</span> · <span>N<sub>th</sub> = {#}/(Kτ<sub>c</sub>)</span>":
   "<span>E = hν</span> · <span>N₂/N₁ = e<sup>−hν/kT</sup></span> · <span>A₂₁/B₂₁ = {#}πhν³/c³</span> · <span>N<sub>th</sub> = {#}/(Kτ<sub>c</sub>)</span>",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
 "Switch on again":
   "Volver a encender",
 "Processes":
@@ -230,16 +236,16 @@ VDI18N.add('es', 'demo/lasers', {
   "a escala: espejos separados {#} cm, barra de {#} cm de largo, haz de {#} mm de radio; los fotones dibujados siguen log q",
 "{#} nm diodes":
   "diodos de {#} nm",
-"{#} × {#}⁻¹¹ W out, {#} nm (infrared, drawn red)":
-  "{#} × {#}⁻¹¹ W de salida, {#} nm (infrarrojo, dibujado en rojo)",
+"{#} × {#}⁻¹⁰ W out, {#} nm (infrared, drawn red)":
+  "{#} × {#}⁻¹⁰ W de salida, {#} nm (infrarrojo, dibujado en rojo)",
 "pump W = {#} W_th":
   "bombeo W = {#} W_th",
 "medium":
   "medio",
 "P_abs (W)":
   "P_abs (W)",
-"{#} × {#}⁻¹⁰ W out, {#} nm (infrared, drawn red)":
-  "{#} × {#}⁻¹⁰ W de salida, {#} nm (infrarrojo, dibujado en rojo)",
+"{#} ms per second":
+  "{#} ms por segundo",
 "Absorption":
   "Absorción",
 "rate B₁₂ ρ(ν) N₁":
@@ -366,8 +372,6 @@ VDI18N.add('es', 'demo/lasers', {
   "dN/dt = W<sub>p</sub>(N<sub>t</sub> − N) − (N + N<sub>t</sub>)/τ − 2K N q<br>dq/dt = K N q − q/τ<sub>c</sub> + β N₂/τ<br>N = N₂ − N₁, N₂ = (N<sub>t</sub> + N)/{#}",
 "N is the inversion and q the number of photons in the cavity mode. K = σc/(AL) = {#} × {#}⁻⁹ s⁻¹, from the cross section σ = {#} × {#}⁻²⁰ cm², mode area A and cavity length L. τ<sub>c</sub> = t<sub>rt</sub>/(−ln R − ln {#}), with t<sub>rt</sub> = 2L/c = {#} ns. Above threshold, setting both derivatives to zero gives N = N<sub>th</sub> exactly and q growing in proportion to the pump. f<sub>R</sub> = √(ω₀² − γ²/{#})/{#}π with ω₀² = 2K q₀/τ<sub>c</sub>, γ = W<sub>p</sub> + {#}/τ + 2K q₀.":
   "N es la inversión y q el número de fotones en el modo de la cavidad. K = σc/(AL) = {#} × {#}⁻⁹ s⁻¹, a partir de la sección eficaz σ = {#} × {#}⁻²⁰ cm², el área del modo A y la longitud de la cavidad L. τ<sub>c</sub> = t<sub>rt</sub>/(−ln R − ln {#}), con t<sub>rt</sub> = 2L/c = {#} ns. Por encima del umbral, igualar ambas derivadas a cero da exactamente N = N<sub>th</sub> y q creciendo en proporción al bombeo. f<sub>R</sub> = √(ω₀² − γ²/{#})/{#}π con ω₀² = 2K q₀/τ<sub>c</sub>, γ = W<sub>p</sub> + {#}/τ + 2K q₀.",
-"{#} ms per second":
-  "{#} ms por segundo",
 "A {#} cm He–Ne cavity has modes every c/2L = {#} MHz; the Doppler broadened gain is about {#} GHz wide, so about three modes lase. Drag the comb (a change of L by a fraction of a wavelength, as when the tube warms up) and watch modes hop in and out.":
   "Una cavidad de He–Ne de {#} cm tiene modos cada c/2L = {#} MHz; la ganancia ensanchada por Doppler mide unos {#} GHz de ancho, así que emiten unos tres modos. Arrastra el peine (un cambio de L de una fracción de longitud de onda, como cuando el tubo se calienta) y observa cómo los modos entran y salen.",
 "The near infrared Nd:YAG line, {#} eV per photon.":
@@ -381,5 +385,7 @@ VDI18N.add('es', 'demo/lasers', {
 "t = {#} ms · window {#} ms":
   "t = {#} ms · ventana {#} ms",
 "t = {#} ms <small>since switch on</small>":
-  "t = {#} ms <small>desde el encendido</small>"
+  "t = {#} ms <small>desde el encendido</small>",
+"{#} × {#}⁻¹¹ W out, {#} nm (infrared, drawn red)":
+  "{#} × {#}⁻¹¹ W de salida, {#} nm (infrarrojo, dibujado en rojo)"
 });

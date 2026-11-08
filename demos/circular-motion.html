@@ -11,6 +11,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
 <script src="lib/vd3.js"></script>
 <style>
 /* Layout: the moving object and its free body diagram on the left; the instrument rail on the right. */
@@ -83,7 +84,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <div class="seg" role="group" aria-label="View" id="viewSeg" hidden><button type="button" data-view="3d" aria-pressed="false">3D</button><button type="button" data-view="flat" aria-pressed="true">Flat</button></div>
         <button type="button" class="spin" id="play">Pause</button>
         <button type="button" class="spin" id="cut">Cut the string</button>
-        <button type="button" class="spin" id="again">Start over</button>
+        <button type="button" class="spin" id="again">Reset</button>
       </div>
       <span class="blindtag" id="blindTag" hidden>Blind</span>
     </div>
@@ -744,5 +745,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   requestAnimationFrame(frame);
 })();
 </script>
+<script>/* the shared control panel (demos/lib/vdpanel.js): the time controls in one group at the left of the strip */
+if (window.VD && VD.panel) VD.panel({ reset: '#again', step: true });</script>
 </body>
 </html>

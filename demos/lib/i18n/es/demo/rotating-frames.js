@@ -14,12 +14,14 @@ VDI18N.add('es', 'demo/rotating-frames', {
   "Rueda una pelota a través de un carrusel que gira y obsérvala dos veces: desde la sala va en línea recta, desde la plataforma se curva, empujada por las fuerzas de Coriolis y centrífuga que solo siente quien va subido. Luego pasa a la Tierra, que también es una plataforma giratoria: la oscilación de un péndulo de Foucault gira una vez en un día sideral dividido entre el seno de la latitud.",
 "SI units, degrees":
   "Unidades SI, grados",
+"Time controls":
+  "Controles de tiempo",
+"Roll the ball":
+  "Rodar la pelota",
 "Turntable":
   "Plataforma giratoria",
 "Foucault pendulum":
   "Péndulo de Foucault",
-"Roll the ball":
-  "Rodar la pelota",
 "A turntable seen from above, once from the room and once riding it, with a ball rolled across it and the path it traces in each. In the Foucault view, the floor under a long pendulum seen from above, with the swing and how far its plane has turned. Arrow keys change the turntable's speed or the latitude; Space plays.":
   "Una plataforma giratoria vista desde arriba, una vez desde la sala y otra subido en ella, con una pelota rodada a través de ella y la trayectoria que traza en cada una. En la vista de Foucault, el piso bajo un péndulo largo visto desde arriba, con la oscilación y cuánto ha girado su plano. Las flechas cambian la rapidez de la plataforma o la latitud; Espacio inicia.",
 "Divider between the room view and the turntable view":

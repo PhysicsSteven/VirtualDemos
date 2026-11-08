@@ -18,6 +18,8 @@ VDI18N.add('es', 'demo/cart-launch', {
   "Unidades SI · g = {#} m/s² · sin resistencia del aire",
 "A cart on a track fires a ball straight up; the ball's path, velocity and acceleration arrows when switched on, strobe images, and a graph of position along the track against time for the cart and the ball.":
   "Un carrito en una pista dispara una pelota hacia arriba; la trayectoria de la pelota, flechas de velocidad y aceleración al activarlas, imágenes estroboscópicas y una gráfica de la posición a lo largo de la pista en función del tiempo para el carrito y la pelota.",
+"Time controls":
+  "Controles de tiempo",
 "Predict: where will the ball land? Then press Resume.":
   "Predice: ¿dónde caerá la pelota? Luego pulsa Continuar.",
 "Divider between the track and the graph":

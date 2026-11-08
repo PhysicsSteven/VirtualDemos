@@ -38,7 +38,7 @@ require('./lib.cjs')({ demo: 'temperature', title: 'Thermal Equilibrium' }, asyn
   r.check.row = await p.evaluate(() => [...document.querySelectorAll('.vd-readings tbody tr td')].map(td => td.textContent));
   state.arrow = null; state.zoom = null;
 
-  state.caption = 'Press Start. Heat flows through the bar and the two temperatures draw together';
+  state.caption = 'Press Play. Heat flows through the bar and the two temperatures draw together';
   await scrollWin(Math.max(0, await p.evaluate(() => scrollY + document.querySelector('#stage').getBoundingClientRect().top - 8)), 0.5);   /* the strip with Start back in view */
   await r.click('#go');
   const c2 = await r.box('#can');   /* the page has scrolled down to the table */

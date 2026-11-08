@@ -26,8 +26,16 @@ VDI18N.add('es', 'demo/gyroscope', {
   "rueda {#} kg, radio {#} cm · g = {#} m/s²",
 "A spinning wheel on a horizontal axle whose far end rests on a pivot at the top of a post, drawn in perspective, with arrows for the angular momentum and the torque, and below it a trace of the axle's tilt against time. Space releases or holds, R puts it back.":
   "Una rueda que gira sobre un eje horizontal cuyo extremo lejano descansa sobre un pivote en lo alto de un poste, dibujada en perspectiva, con flechas para el momento angular y la torca, y debajo una traza de la inclinación del eje en función del tiempo. Espacio suelta o sujeta, R la regresa.",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
 "Put back":
   "Regresar",
+"<span>Speed</span>":
+  "<span>Rapidez</span>",
 "Run the clock at a tenth of real time, so the quick wobble of a fast wheel can be followed by eye":
   "Corre el reloj a una décima del tiempo real, para que el bamboleo rápido de una rueda veloz pueda seguirse a simple vista",
 "Slow motion":
@@ -156,6 +164,8 @@ VDI18N.add('es', 'demo/gyroscope', {
   "nivel",
 "Hold":
   "Sujetar",
+"wheel {#} turns/s: a blur to the eye":
+  "rueda {#} vueltas/s: borrosa a la vista",
 "slow motion: wheel {#} turns/s, shown at {#}":
   "cámara lenta: rueda {#} vueltas/s, mostrada a {#}",
 "Less spin, less angular momentum: the same torque turns it faster, and the dip (down to {#}° below level) and the wobble are large. At the top of each wobble the axle stops for an instant (a cusp). The average rate is now {#}% below Mgd/(I_s ω_s): the simple formula needs fast spin.":
@@ -186,8 +196,6 @@ VDI18N.add('es', 'demo/gyroscope', {
   "−{#} mN·m (frena la precesión)",
 "(Slow motion shows it turn)":
   "(Cámara lenta la muestra girar)",
-"wheel {#} turns/s: a blur to the eye":
-  "rueda {#} vueltas/s: borrosa a la vista",
 "strobe {#} flashes/s · wheel {#} turns/s":
   "estroboscopio {#} destellos/s · rueda {#} vueltas/s"
 });

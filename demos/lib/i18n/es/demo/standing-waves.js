@@ -18,6 +18,14 @@ VDI18N.add('es', 'demo/standing-waves', {
   "Dos ondas que viajan en direcciones opuestas se suman para formar una onda estacionaria. Encuentra los armónicos de una cuerda de guitarra, llévala a la resonancia, púlsala y escucha batidos.",
 "x in m · f in Hz · v = fλ · string v = √(T/μ)":
   "x en m · f en Hz · v = fλ · cuerda v = √(T/μ)",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
+"<span>Speed</span>":
+  "<span>Rapidez</span>",
 "Two waves":
   "Dos ondas",
 "Beats":

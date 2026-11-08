@@ -30,6 +30,16 @@ VDI18N.add('es', 'demo/early-universe', {
   "Observa cómo cada galaxia se aleja de todas las demás mientras el espacio se estira, y encuentra la edad del universo a partir de qué tan rápido lo hace. Sigue la temperatura hacia atrás hasta los primeros segundos, forma el helio de los primeros tres minutos y mira cómo el brillo del universo joven se enfría hasta convertirse en el fondo de microondas de hoy.",
 "distances in Mpc · time in Gyr":
   "distancias en Mpc · tiempo en miles de millones de años",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
+"<span>Speed</span>":
+  "<span>Rapidez</span>",
+"t = {#} Gyr from today":
+  "t = {#} mil millones de años desde hoy",
 "Expansion":
   "Expansión",
 "Thermal history":
@@ -40,8 +50,6 @@ VDI18N.add('es', 'demo/early-universe', {
   "Fondo de microondas",
 "Perspective of the expansion view":
   "Perspectiva de la vista de expansión",
-"t = {#} Gyr from today":
-  "t = {#} mil millones de años desde hoy",
 "A patch of the universe full of galaxies, drawn to a fixed ruler in megaparsecs. Click a galaxy to watch from it. Space plays or pauses.":
   "Una región del universo llena de galaxias, dibujada con una regla fija en megapársecs. Haz clic en una galaxia para observar desde ella. Espacio inicia o pausa.",
 "The graph for the view.":
@@ -198,8 +206,6 @@ VDI18N.add('es', 'demo/early-universe', {
   "{#} × {#}⁵ años",
 "kT":
   "kT",
-"{#} meV":
-  "{#} meV",
 "g* (energy)":
   "g* (energía)",
 "Era (the book's times)":
@@ -349,5 +355,7 @@ VDI18N.add('es', 'demo/early-universe', {
 "NEUTRONS":
   "NEUTRONS",
 "HELIUM {#}":
-  "HELIUM {#}"
+  "HELIUM {#}",
+"{#} meV":
+  "{#} meV"
 });

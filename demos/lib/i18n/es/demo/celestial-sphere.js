@@ -26,8 +26,6 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "Saiph",
 "Menkar":
   "Menkar",
-"Aries":
-  "Aries",
 "Pisces":
   "Piscis",
 "Zenith":
@@ -50,6 +48,12 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "Las estrellas como una esfera vista desde fuera, cortada por tu horizonte, junto al cielo que ves desde el suelo. Gira la Tierra durante una noche, un mes, un año o miles de años y ve por qué el cielo se mueve como lo hace, o coloca las estrellas de una constelación a sus distancias reales.",
 "RA in hours · angles in degrees · standard time, no daylight saving":
   "AR en horas · ángulos en grados · hora estándar, sin horario de verano",
+"Time controls":
+  "Controles de tiempo",
+"Forward one hour":
+  "Una hora adelante",
+"<span>Speed</span>":
+  "<span>Rapidez</span>",
 "One day each second, at the same clock time every night":
   "Un día por segundo, a la misma hora del reloj cada noche",
 "{#} day/s":
@@ -58,12 +62,12 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "{#} años por segundo, en la misma fecha y hora del reloj",
 "{#} yr/s":
   "{#} años/s",
+"Jan {#}, {#} · {#}:{#}":
+  "{#} ene {#} · {#}:{#}",
 "Set the date and time to now":
   "Poner la fecha y la hora actuales",
 "Now":
   "Ahora",
-"Jan {#}, {#} · {#}:{#}":
-  "{#} ene {#} · {#}:{#}",
 "The celestial sphere seen from outside: the stars on a sphere around the observer, the horizon plane cutting it, the celestial poles and equator, the ecliptic with the Sun, and the Moon. Drag to turn the view, wheel to zoom.":
   "La esfera celeste vista desde fuera: las estrellas sobre una esfera alrededor del observador, el plano del horizonte que la corta, los polos y el ecuador celestes, la eclíptica con el Sol, y la Luna. Arrastra para girar la vista, usa la rueda para acercar.",
 "The stars of one constellation placed at their real distances from the Sun, in light years. Drag to turn the view, wheel to zoom; comma and period turn and minus and equals zoom when the picture has the focus. Click a star to select it.":
@@ -120,6 +124,8 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "Todas las demás",
 "Aquarius":
   "Acuario",
+"Aries":
+  "Aries",
 "Auriga":
   "Auriga",
 "Cancer":
@@ -480,8 +486,8 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "Tiempo sidéreo local",
 "Sun altitude":
   "Altura del Sol",
-"{#}% lit, down":
-  "{#}% iluminada, abajo",
+"{#}% lit, up":
+  "{#}% iluminada, arriba",
 "North celestial pole altitude":
   "Altura del polo norte celeste",
 "Tilt of Earth’s axis ε":
@@ -514,6 +520,8 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "+{#}°, arriba",
 "Moon there":
   "Luna allá",
+"−{#}°, down":
+  "−{#}°, abajo",
 "Polaris there":
   "Polaris allá",
 "altitude −{#}°, azimuth {#}° <small>N</small>":
@@ -586,10 +594,14 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "Dubhe · {#} a. l.",
 "Alkaid · {#} ly":
   "Alkaid · {#} a. l.",
+"Mizar · {#} ly":
+  "Mizar · {#} a. l.",
 "Merak · {#} ly":
   "Merak · {#} a. l.",
 "Phecda · {#} ly":
   "Phecda · {#} a. l.",
+"Megrez · {#} ly":
+  "Megrez · {#} a. l.",
 "{#} light years":
   "{#} años luz",
 "From the side: the Sun on the left, the stars at their distances. Dot sizes show how bright each star would look from here.":
@@ -610,8 +622,6 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "Deneb",
 "Elnath":
   "Elnath",
-"Hamal":
-  "Hamal",
 "Polaris":
   "Polaris",
 "Alpheratz":
@@ -638,12 +648,14 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "Vega",
 "Achernar":
   "Achernar",
+"Hadar":
+  "Hadar",
 "Altair":
   "Altair",
 "Spica":
   "Espiga",
-"Mimosa":
-  "Mimosa",
+"Acrux":
+  "Acrux",
 "Regulus":
   "Régulo",
 "Bellatrix":
@@ -684,6 +696,8 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "En el Polo Norte el polo norte celeste está justo encima y el ecuador celeste está a lo largo del horizonte. Cada estrella gira paralela al horizonte: nada sale ni se pone. El Sol, al sur del ecuador de septiembre a marzo, se queda abajo todo el invierno.",
 "Arcturus":
   "Arturo",
+"Hamal":
+  "Hamal",
 "Rasalhague":
   "Rasalhague",
 "Denebola":
@@ -696,8 +710,6 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "Mintaka <small>δ Ori</small>",
 "Rises and sets":
   "Sale y se pone",
-"−{#}°, down":
-  "−{#}°, abajo",
 "Mintaka there":
   "Mintaka allá",
 "altitude −{#}°, azimuth {#}° <small>W</small>":
@@ -718,6 +730,8 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "{#} abr {#}, {#}:{#} <small>UTC+{#}</small>",
 "{#}:{#} <small>Apr {#}</small>":
   "{#}:{#} <small>{#} abr</small>",
+"{#}% lit, down":
+  "{#}% iluminada, abajo",
 "Apr {#}, {#}:{#} <small>UTC−{#}</small>":
   "{#} abr, {#}:{#} <small>UTC−{#}</small>",
 "Acrux there":
@@ -728,8 +742,8 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "Desde Sídney, a {#}° S, el polo sur celeste está a {#}° sobre el horizonte sur, sin ninguna estrella brillante cerca. La Cruz del Sur (Crux) y las punteras Rigil Kentaurus y Hadar giran a su alrededor y nunca se ponen; Polaris nunca sale.",
 "Rigil Kentaurus":
   "Rigil Kentaurus",
-"Hadar":
-  "Hadar",
+"Mimosa":
+  "Mimosa",
 "Gacrux":
   "Gacrux",
 "Shaula":
@@ -808,8 +822,6 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "{#}° <small>NO</small>",
 "Jun {#}, {#}, {#}:{#} <small>UTC+{#}</small>":
   "{#} jun {#}, {#}:{#} <small>UTC+{#}</small>",
-"{#}% lit, up":
-  "{#}% iluminada, arriba",
 "Jun {#}, {#}:{#} <small>UTC−{#}</small>":
   "{#} jun, {#}:{#} <small>UTC−{#}</small>",
 "altitude −{#}°, azimuth {#}° <small>NE</small>":
@@ -830,8 +842,6 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "altura −{#}°, azimut {#}° <small>ESE</small>",
 "The sky at the same clock time every evening, one day each second, starting two days after the new Moon of January {#}, {#}. The Moon moves about {#}° east among the stars each day, waxes to full in about two weeks and comes back to the same stars after {#} days. Its path stays within {#}° of the ecliptic and crosses it at two nodes.":
   "El cielo a la misma hora del reloj cada tarde, un día por segundo, empezando dos días después de la luna nueva del {#} de enero de {#}. La Luna se mueve cerca de {#}° hacia el este entre las estrellas cada día, crece hasta llena en unas dos semanas y vuelve a las mismas estrellas después de {#} días. Su camino se mantiene a menos de {#}° de la eclíptica y la cruza en dos nodos.",
-"Acrux":
-  "Acrux",
 "Apr {#}, {#}, {#}:{#} <small>UTC−{#}</small>":
   "{#} abr {#}, {#}:{#} <small>UTC−{#}</small>",
 "Partial solar eclipse from here: {#}% of the Sun’s width covered":
@@ -916,10 +926,16 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "Rigel · {#} a. l.",
 "Betelgeuse · {#} ly":
   "Betelgeuse · {#} a. l.",
+"Bellatrix · {#} ly":
+  "Bellatrix · {#} a. l.",
 "Alnilam · {#} ly":
   "Alnilam · {#} a. l.",
+"Alnitak · {#} ly":
+  "Alnitak · {#} a. l.",
 "Saiph · {#} ly":
   "Saiph · {#} a. l.",
+"Mintaka · {#} ly":
+  "Mintaka · {#} a. l.",
 "λ Ori · {#} ly":
   "λ Ori · {#} a. l.",
 "Schedar <small>α Cas</small>":
@@ -940,6 +956,8 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "Caph · {#} a. l.",
 "γ Cas · {#} ly":
   "γ Cas · {#} a. l.",
+"δ Cas · {#} ly":
+  "δ Cas · {#} a. l.",
 "ε Cas · {#} ly":
   "ε Cas · {#} a. l.",
 "Mimosa <small>β Cru</small>":
@@ -990,6 +1008,14 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "Denebola · {#} a. l.",
 "Zosma · {#} ly":
   "Zosma · {#} a. l.",
+"Algieba · {#} ly":
+  "Algieba · {#} a. l.",
+"ε Leo · {#} ly":
+  "ε Leo · {#} a. l.",
+"θ Leo · {#} ly":
+  "θ Leo · {#} a. l.",
+"ζ Leo · {#} ly":
+  "ζ Leo · {#} a. l.",
 "η Leo · {#} ly":
   "η Leo · {#} a. l.",
 "μ Leo · {#} ly":
@@ -1036,10 +1062,24 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "ε Sco · {#} a. l.",
 "Dschubba · {#} ly":
   "Dschubba · {#} a. l.",
+"κ Sco · {#} ly":
+  "κ Sco · {#} a. l.",
 "β¹ Sco · {#} ly":
   "β¹ Sco · {#} a. l.",
+"τ Sco · {#} ly":
+  "τ Sco · {#} a. l.",
+"σ Sco · {#} ly":
+  "σ Sco · {#} a. l.",
+"π Sco · {#} ly":
+  "π Sco · {#} a. l.",
 "ι¹ Sco · {#} ly":
   "ι¹ Sco · {#} a. l.",
+"μ¹ Sco · {#} ly":
+  "μ¹ Sco · {#} a. l.",
+"η Sco · {#} ly":
+  "η Sco · {#} a. l.",
+"ζ² Sco · {#} ly":
+  "ζ² Sco · {#} a. l.",
 "ζ¹ Lyr":
   "ζ¹ Lyr",
 "Sheliak":
@@ -1054,8 +1094,12 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "Vega · {#} a. l.",
 "Sulafat · {#} ly":
   "Sulafat · {#} a. l.",
+"Sheliak · {#} ly":
+  "Sheliak · {#} a. l.",
 "δ² Lyr · {#} ly":
   "δ² Lyr · {#} a. l.",
+"ζ¹ Lyr · {#} ly":
+  "ζ¹ Lyr · {#} a. l.",
 "Deneb <small>α Cyg</small>":
   "Deneb <small>α Cyg</small>",
 "Deneb there":
@@ -1074,8 +1118,12 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "Sadr · {#} a. l.",
 "ε Cyg · {#} ly":
   "ε Cyg · {#} a. l.",
+"δ Cyg · {#} ly":
+  "δ Cyg · {#} a. l.",
 "Albireo · {#} ly":
   "Albireo · {#} a. l.",
+"η Cyg · {#} ly":
+  "η Cyg · {#} a. l.",
 "Aldebaran <small>α Tau</small>":
   "Aldebarán <small>α Tau</small>",
 "Aldebaran there":
@@ -1098,8 +1146,14 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "Elnath · {#} a. l.",
 "ζ Tau · {#} ly":
   "ζ Tau · {#} a. l.",
+"θ² Tau · {#} ly":
+  "θ² Tau · {#} a. l.",
 "ε Tau · {#} ly":
   "ε Tau · {#} a. l.",
+"γ Tau · {#} ly":
+  "γ Tau · {#} a. l.",
+"δ¹ Tau · {#} ly":
+  "δ¹ Tau · {#} a. l.",
 "Sirius <small>α CMa</small>":
   "Sirio <small>α CMa</small>",
 "Sirius there":
@@ -1120,6 +1174,10 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "Adhara · {#} a. l.",
 "δ CMa · {#} ly":
   "δ CMa · {#} a. l.",
+"β CMa · {#} ly":
+  "β CMa · {#} a. l.",
+"η CMa · {#} ly":
+  "η CMa · {#} a. l.",
 "Pollux <small>β Gem</small>":
   "Pólux <small>β Gem</small>",
 "Pollux there":
@@ -1152,8 +1210,14 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "μ Gem · {#} a. l.",
 "ε Gem · {#} ly":
   "ε Gem · {#} a. l.",
+"η Gem · {#} ly":
+  "η Gem · {#} a. l.",
 "δ Gem · {#} ly":
   "δ Gem · {#} a. l.",
+"ζ Gem · {#} ly":
+  "ζ Gem · {#} a. l.",
+"τ Gem · {#} ly":
+  "τ Gem · {#} a. l.",
 "Kaus Australis <small>ε Sgr</small>":
   "Kaus Australis <small>ε Sgr</small>",
 "Kaus Australis there":
@@ -1184,6 +1248,10 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "δ Sgr · {#} a. l.",
 "λ Sgr · {#} ly":
   "λ Sgr · {#} a. l.",
+"γ² Sgr · {#} ly":
+  "γ² Sgr · {#} a. l.",
+"φ Sgr · {#} ly":
+  "φ Sgr · {#} a. l.",
 "τ Sgr · {#} ly":
   "τ Sgr · {#} a. l.",
 "Alpheratz <small>α And</small>":
@@ -1204,8 +1272,14 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "Alpheratz · {#} a. l.",
 "Enif · {#} ly":
   "Enif · {#} a. l.",
+"Scheat · {#} ly":
+  "Scheat · {#} a. l.",
 "Markab · {#} ly":
   "Markab · {#} a. l.",
+"Algenib · {#} ly":
+  "Algenib · {#} a. l.",
+"ζ Peg · {#} ly":
+  "ζ Peg · {#} a. l.",
 "θ Peg · {#} ly":
   "θ Peg · {#} a. l.",
 "δ And":
@@ -1216,6 +1290,8 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "Mirach · {#} a. l.",
 "Almach · {#} ly":
   "Almach · {#} a. l.",
+"δ And · {#} ly":
+  "δ And · {#} a. l.",
 "One star has no measured distance and is left out of the picture.":
   "Una estrella no tiene distancia medida y se deja fuera de la imagen.",
 "Arcturus <small>α Boo</small>":
@@ -1242,10 +1318,14 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "Boyero: las {#} estrellas de la figura están a entre {#} y {#} años luz. Solo parecen un grupo porque están casi en la misma dirección vistas desde aquí. Una estrella no tiene distancia medida y se deja fuera de la imagen. Las distancias provienen de paralajes medidos por el satélite Hipparcos; cuanto más lejos está una estrella, menor es su paralaje, así que las distancias más grandes son las menos seguras. M es la magnitud absoluta, qué tan brillante se vería la estrella a {#} pársecs ({#} años luz), sin tomar en cuenta el polvo.",
 "Arcturus · {#} ly":
   "Arturo · {#} a. l.",
+"η Boo · {#} ly":
+  "η Boo · {#} a. l.",
 "γ Boo · {#} ly":
   "γ Boo · {#} a. l.",
 "δ Boo · {#} ly":
   "δ Boo · {#} a. l.",
+"β Boo · {#} ly":
+  "β Boo · {#} a. l.",
 "ρ Boo · {#} ly":
   "ρ Boo · {#} a. l.",
 "Altair <small>α Aql</small>":
@@ -1266,6 +1346,8 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "Águila: las {#} estrellas de la figura están a entre {#} y {#} años luz. Solo parecen un grupo porque están casi en la misma dirección vistas desde aquí. Las distancias provienen de paralajes medidos por el satélite Hipparcos; cuanto más lejos está una estrella, menor es su paralaje, así que las distancias más grandes son las menos seguras. M es la magnitud absoluta, qué tan brillante se vería la estrella a {#} pársecs ({#} años luz), sin tomar en cuenta el polvo.",
 "Altair · {#} ly":
   "Altair · {#} a. l.",
+"γ Aql · {#} ly":
+  "γ Aql · {#} a. l.",
 "ζ Aql · {#} ly":
   "ζ Aql · {#} a. l.",
 "δ Aql · {#} ly":
@@ -1308,6 +1390,12 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "λ Aqr · {#} a. l.",
 "ε Aqr · {#} ly":
   "ε Aqr · {#} a. l.",
+"γ Aqr · {#} ly":
+  "γ Aqr · {#} a. l.",
+"η Aqr · {#} ly":
+  "η Aqr · {#} a. l.",
+"θ Aqr · {#} ly":
+  "θ Aqr · {#} a. l.",
 "Hamal <small>α Ari</small>":
   "Hamal <small>α Ari</small>",
 "Hamal there":
@@ -1338,6 +1426,8 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "Auriga: las {#} estrellas de la figura están a entre {#} y {#} años luz. Solo parecen un grupo porque están casi en la misma dirección vistas desde aquí. Las distancias provienen de paralajes medidos por el satélite Hipparcos; cuanto más lejos está una estrella, menor es su paralaje, así que las distancias más grandes son las menos seguras. M es la magnitud absoluta, qué tan brillante se vería la estrella a {#} pársecs ({#} años luz), sin tomar en cuenta el polvo.",
 "Capella · {#} ly":
   "Capella · {#} a. l.",
+"Menkalinan · {#} ly":
+  "Menkalinan · {#} a. l.",
 "θ Aur · {#} ly":
   "θ Aur · {#} a. l.",
 "ι Aur · {#} ly":
@@ -1412,10 +1502,16 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "β Cap · {#} a. l.",
 "Algedi · {#} ly":
   "Algedi · {#} a. l.",
+"γ Cap · {#} ly":
+  "γ Cap · {#} a. l.",
 "ζ Cap · {#} ly":
   "ζ Cap · {#} a. l.",
+"θ Cap · {#} ly":
+  "θ Cap · {#} a. l.",
 "ω Cap · {#} ly":
   "ω Cap · {#} a. l.",
+"ψ Cap · {#} ly":
+  "ψ Cap · {#} a. l.",
 "Rigil Kentaurus <small>α¹ Cen</small>":
   "Rigil Kentaurus <small>α¹ Cen</small>",
 "Rigil Kentaurus there":
@@ -1506,16 +1602,26 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "Eltanin · {#} a. l.",
 "η Dra · {#} ly":
   "η Dra · {#} a. l.",
+"Rastaban · {#} ly":
+  "Rastaban · {#} a. l.",
 "δ Dra · {#} ly":
   "δ Dra · {#} a. l.",
 "ζ Dra · {#} ly":
   "ζ Dra · {#} a. l.",
+"ι Dra · {#} ly":
+  "ι Dra · {#} a. l.",
 "Thuban · {#} ly":
   "Thuban · {#} a. l.",
+"ξ Dra · {#} ly":
+  "ξ Dra · {#} a. l.",
 "λ Dra · {#} ly":
   "λ Dra · {#} a. l.",
 "κ Dra · {#} ly":
   "κ Dra · {#} a. l.",
+"θ Dra · {#} ly":
+  "θ Dra · {#} a. l.",
+"ν² Dra · {#} ly":
+  "ν² Dra · {#} a. l.",
 "Zubeneschamali <small>β Lib</small>":
   "Zubeneschamali <small>β Lib</small>",
 "Zubeneschamali there":
@@ -1568,6 +1674,8 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "β Oph · {#} a. l.",
 "κ Oph · {#} ly":
   "κ Oph · {#} a. l.",
+"ε Oph · {#} ly":
+  "ε Oph · {#} a. l.",
 "Mirfak <small>α Per</small>":
   "Mirfak <small>α Per</small>",
 "Mirfak there":
@@ -1588,6 +1696,8 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "Algol · {#} a. l.",
 "ζ Per · {#} ly":
   "ζ Per · {#} a. l.",
+"ε Per · {#} ly":
+  "ε Per · {#} a. l.",
 "γ Per · {#} ly":
   "γ Per · {#} a. l.",
 "δ Per · {#} ly":
@@ -1628,10 +1738,22 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "γ Psc · {#} a. l.",
 "ω Psc · {#} ly":
   "ω Psc · {#} a. l.",
+"ι Psc · {#} ly":
+  "ι Psc · {#} a. l.",
 "ο Psc · {#} ly":
   "ο Psc · {#} a. l.",
+"ε Psc · {#} ly":
+  "ε Psc · {#} a. l.",
+"θ Psc · {#} ly":
+  "θ Psc · {#} a. l.",
+"δ Psc · {#} ly":
+  "δ Psc · {#} a. l.",
 "ν Psc · {#} ly":
   "ν Psc · {#} a. l.",
+"λ Psc · {#} ly":
+  "λ Psc · {#} a. l.",
+"κ Psc · {#} ly":
+  "κ Psc · {#} a. l.",
 "δ UMi":
   "δ UMi",
 "ε UMi":
@@ -1656,6 +1778,8 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "ζ UMi · {#} a. l.",
 "δ UMi · {#} ly":
   "δ UMi · {#} a. l.",
+"η UMi · {#} ly":
+  "η UMi · {#} a. l.",
 "Spica <small>α Vir</small>":
   "Espiga <small>α Vir</small>",
 "Spica there":
@@ -1682,6 +1806,8 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "β Vir · {#} a. l.",
 "γ Vir · {#} ly":
   "γ Vir · {#} a. l.",
+"η Vir · {#} ly":
+  "η Vir · {#} a. l.",
 "altitude −{#}°, azimuth {#}° <small>NW</small>":
   "altura −{#}°, azimut {#}° <small>NO</small>",
 "{#}° <small>NE</small>":
@@ -1872,8 +1998,6 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "Megrez <small>δ UMa</small>",
 "Megrez there":
   "Megrez allá",
-"Megrez · {#} ly":
-  "Megrez · {#} a. l.",
 "Menkalinan <small>β Aur</small>":
   "Menkalinan <small>β Aur</small>",
 "Menkalinan there":
@@ -1900,8 +2024,6 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "Mizar <small>ζ UMa</small>",
 "Mizar there":
   "Mizar allá",
-"Mizar · {#} ly":
-  "Mizar · {#} a. l.",
 "Nunki <small>σ Sgr</small>":
   "Nunki <small>σ Sgr</small>",
 "Nunki there":
@@ -1976,12 +2098,6 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "λ Ori (con clic)",
 "λ Ori there":
   "λ Ori allá",
-"Bellatrix · {#} ly":
-  "Bellatrix · {#} a. l.",
-"Alnitak · {#} ly":
-  "Alnitak · {#} a. l.",
-"Mintaka · {#} ly":
-  "Mintaka · {#} a. l.",
 "ε Cas (clicked)":
   "ε Cas (con clic)",
 "ε Cas there":
@@ -1990,8 +2106,6 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "δ Cas (con clic)",
 "δ Cas there":
   "δ Cas allá",
-"δ Cas · {#} ly":
-  "δ Cas · {#} a. l.",
 "γ Cas (clicked)":
   "γ Cas (con clic)",
 "γ Cas there":
@@ -2004,10 +2118,6 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "ε Leo (con clic)",
 "ε Leo there":
   "ε Leo allá",
-"ε Leo · {#} ly":
-  "ε Leo · {#} a. l.",
-"Algieba · {#} ly":
-  "Algieba · {#} a. l.",
 "μ Leo (clicked)":
   "μ Leo (con clic)",
 "μ Leo there":
@@ -2016,8 +2126,6 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "ζ Leo (con clic)",
 "ζ Leo there":
   "ζ Leo allá",
-"ζ Leo · {#} ly":
-  "ζ Leo · {#} a. l.",
 "η Leo (clicked)":
   "η Leo (con clic)",
 "η Leo there":
@@ -2026,8 +2134,6 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "θ Leo (con clic)",
 "θ Leo there":
   "θ Leo allá",
-"θ Leo · {#} ly":
-  "θ Leo · {#} a. l.",
 "β¹ Sco (clicked)":
   "β¹ Sco (con clic)",
 "β¹ Sco there":
@@ -2036,20 +2142,14 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "π Sco (con clic)",
 "π Sco there":
   "π Sco allá",
-"π Sco · {#} ly":
-  "π Sco · {#} a. l.",
 "σ Sco (clicked)":
   "σ Sco (con clic)",
 "σ Sco there":
   "σ Sco allá",
-"σ Sco · {#} ly":
-  "σ Sco · {#} a. l.",
 "τ Sco (clicked)":
   "τ Sco (con clic)",
 "τ Sco there":
   "τ Sco allá",
-"τ Sco · {#} ly":
-  "τ Sco · {#} a. l.",
 "ε Sco (clicked)":
   "ε Sco (con clic)",
 "ε Sco there":
@@ -2058,20 +2158,14 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "μ¹ Sco (con clic)",
 "μ¹ Sco there":
   "μ¹ Sco allá",
-"μ¹ Sco · {#} ly":
-  "μ¹ Sco · {#} a. l.",
 "ζ² Sco (clicked)":
   "ζ² Sco (con clic)",
 "ζ² Sco there":
   "ζ² Sco allá",
-"ζ² Sco · {#} ly":
-  "ζ² Sco · {#} a. l.",
 "η Sco (clicked)":
   "η Sco (con clic)",
 "η Sco there":
   "η Sco allá",
-"η Sco · {#} ly":
-  "η Sco · {#} a. l.",
 "θ Sco (clicked)":
   "θ Sco (con clic)",
 "θ Sco there":
@@ -2084,16 +2178,10 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "κ Sco (con clic)",
 "κ Sco there":
   "κ Sco allá",
-"κ Sco · {#} ly":
-  "κ Sco · {#} a. l.",
 "ζ¹ Lyr (clicked)":
   "ζ¹ Lyr (con clic)",
 "ζ¹ Lyr there":
   "ζ¹ Lyr allá",
-"ζ¹ Lyr · {#} ly":
-  "ζ¹ Lyr · {#} a. l.",
-"Sheliak · {#} ly":
-  "Sheliak · {#} a. l.",
 "δ² Lyr (clicked)":
   "δ² Lyr (con clic)",
 "δ² Lyr there":
@@ -2102,14 +2190,10 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "η Cyg (con clic)",
 "η Cyg there":
   "η Cyg allá",
-"η Cyg · {#} ly":
-  "η Cyg · {#} a. l.",
 "δ Cyg (clicked)":
   "δ Cyg (con clic)",
 "δ Cyg there":
   "δ Cyg allá",
-"δ Cyg · {#} ly":
-  "δ Cyg · {#} a. l.",
 "ε Cyg (clicked)":
   "ε Cyg (con clic)",
 "ε Cyg there":
@@ -2122,16 +2206,10 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "δ¹ Tau (con clic)",
 "δ¹ Tau there":
   "δ¹ Tau allá",
-"δ¹ Tau · {#} ly":
-  "δ¹ Tau · {#} a. l.",
-"θ² Tau · {#} ly":
-  "θ² Tau · {#} a. l.",
 "γ Tau (clicked)":
   "γ Tau (con clic)",
 "γ Tau there":
   "γ Tau allá",
-"γ Tau · {#} ly":
-  "γ Tau · {#} a. l.",
 "θ² Tau (clicked)":
   "θ² Tau (con clic)",
 "θ² Tau there":
@@ -2144,8 +2222,6 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "β CMa (con clic)",
 "β CMa there":
   "β CMa allá",
-"β CMa · {#} ly":
-  "β CMa · {#} a. l.",
 "δ CMa (clicked)":
   "δ CMa (con clic)",
 "δ CMa there":
@@ -2154,14 +2230,10 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "η CMa (con clic)",
 "η CMa there":
   "η CMa allá",
-"η CMa · {#} ly":
-  "η CMa · {#} a. l.",
 "τ Gem (clicked)":
   "τ Gem (con clic)",
 "τ Gem there":
   "τ Gem allá",
-"τ Gem · {#} ly":
-  "τ Gem · {#} a. l.",
 "ε Gem (clicked)":
   "ε Gem (con clic)",
 "ε Gem there":
@@ -2174,8 +2246,6 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "η Gem (con clic)",
 "η Gem there":
   "η Gem allá",
-"η Gem · {#} ly":
-  "η Gem · {#} a. l.",
 "δ Gem (clicked)":
   "δ Gem (con clic)",
 "δ Gem there":
@@ -2184,8 +2254,6 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "ζ Gem (con clic)",
 "ζ Gem there":
   "ζ Gem allá",
-"ζ Gem · {#} ly":
-  "ζ Gem · {#} a. l.",
 "γ Gem (clicked)":
   "γ Gem (con clic)",
 "γ Gem there":
@@ -2194,8 +2262,6 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "γ² Sgr (con clic)",
 "γ² Sgr there":
   "γ² Sgr allá",
-"γ² Sgr · {#} ly":
-  "γ² Sgr · {#} a. l.",
 "δ Sgr (clicked)":
   "δ Sgr (con clic)",
 "δ Sgr there":
@@ -2208,8 +2274,6 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "φ Sgr (con clic)",
 "φ Sgr there":
   "φ Sgr allá",
-"φ Sgr · {#} ly":
-  "φ Sgr · {#} a. l.",
 "τ Sgr (clicked)":
   "τ Sgr (con clic)",
 "τ Sgr there":
@@ -2218,16 +2282,10 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "ζ Sgr (con clic)",
 "ζ Sgr there":
   "ζ Sgr allá",
-"Scheat · {#} ly":
-  "Scheat · {#} a. l.",
-"Algenib · {#} ly":
-  "Algenib · {#} a. l.",
 "ζ Peg (clicked)":
   "ζ Peg (con clic)",
 "ζ Peg there":
   "ζ Peg allá",
-"ζ Peg · {#} ly":
-  "ζ Peg · {#} a. l.",
 "θ Peg (clicked)":
   "θ Peg (con clic)",
 "θ Peg there":
@@ -2236,8 +2294,6 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "δ And (con clic)",
 "δ And there":
   "δ And allá",
-"δ And · {#} ly":
-  "δ And · {#} a. l.",
 "δ Boo (clicked)":
   "δ Boo (con clic)",
 "δ Boo there":
@@ -2246,8 +2302,6 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "β Boo (con clic)",
 "β Boo there":
   "β Boo allá",
-"β Boo · {#} ly":
-  "β Boo · {#} a. l.",
 "γ Boo (clicked)":
   "γ Boo (con clic)",
 "γ Boo there":
@@ -2260,14 +2314,10 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "η Boo (con clic)",
 "η Boo there":
   "η Boo allá",
-"η Boo · {#} ly":
-  "η Boo · {#} a. l.",
 "γ Aql (clicked)":
   "γ Aql (con clic)",
 "γ Aql there":
   "γ Aql allá",
-"γ Aql · {#} ly":
-  "γ Aql · {#} a. l.",
 "β Aql (clicked)":
   "β Aql (con clic)",
 "β Aql there":
@@ -2292,20 +2342,14 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "γ Aqr (con clic)",
 "γ Aqr there":
   "γ Aqr allá",
-"γ Aqr · {#} ly":
-  "γ Aqr · {#} a. l.",
 "η Aqr (clicked)":
   "η Aqr (con clic)",
 "η Aqr there":
   "η Aqr allá",
-"η Aqr · {#} ly":
-  "η Aqr · {#} a. l.",
 "θ Aqr (clicked)":
   "θ Aqr (con clic)",
 "θ Aqr there":
   "θ Aqr allá",
-"θ Aqr · {#} ly":
-  "θ Aqr · {#} a. l.",
 "λ Aqr (clicked)":
   "λ Aqr (con clic)",
 "λ Aqr there":
@@ -2318,8 +2362,6 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "γ² Ari (con clic)",
 "γ² Ari there":
   "γ² Ari allá",
-"Menkalinan · {#} ly":
-  "Menkalinan · {#} a. l.",
 "θ Aur (clicked)":
   "θ Aur (con clic)",
 "θ Aur there":
@@ -2356,8 +2398,6 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "ψ Cap (con clic)",
 "ψ Cap there":
   "ψ Cap allá",
-"ψ Cap · {#} ly":
-  "ψ Cap · {#} a. l.",
 "ω Cap (clicked)":
   "ω Cap (con clic)",
 "ω Cap there":
@@ -2370,14 +2410,10 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "γ Cap (con clic)",
 "γ Cap there":
   "γ Cap allá",
-"γ Cap · {#} ly":
-  "γ Cap · {#} a. l.",
 "θ Cap (clicked)":
   "θ Cap (con clic)",
 "θ Cap there":
   "θ Cap allá",
-"θ Cap · {#} ly":
-  "θ Cap · {#} a. l.",
 "β Cep (clicked)":
   "β Cep (con clic)",
 "β Cep there":
@@ -2414,18 +2450,10 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "ι Dra (con clic)",
 "ι Dra there":
   "ι Dra allá",
-"ι Dra · {#} ly":
-  "ι Dra · {#} a. l.",
-"ξ Dra · {#} ly":
-  "ξ Dra · {#} a. l.",
 "θ Dra (clicked)":
   "θ Dra (con clic)",
 "θ Dra there":
   "θ Dra allá",
-"θ Dra · {#} ly":
-  "θ Dra · {#} a. l.",
-"Rastaban · {#} ly":
-  "Rastaban · {#} a. l.",
 "η Dra (clicked)":
   "η Dra (con clic)",
 "η Dra there":
@@ -2446,8 +2474,6 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "ν² Dra (con clic)",
 "ν² Dra there":
   "ν² Dra allá",
-"ν² Dra · {#} ly":
-  "ν² Dra · {#} a. l.",
 "γ Lib (clicked)":
   "γ Lib (con clic)",
 "γ Lib there":
@@ -2468,8 +2494,6 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "ε Oph (con clic)",
 "ε Oph there":
   "ε Oph allá",
-"ε Oph · {#} ly":
-  "ε Oph · {#} a. l.",
 "ζ Oph (clicked)":
   "ζ Oph (con clic)",
 "ζ Oph there":
@@ -2494,8 +2518,6 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "ε Per (con clic)",
 "ε Per there":
   "ε Per allá",
-"ε Per · {#} ly":
-  "ε Per · {#} a. l.",
 "ζ Per (clicked)":
   "ζ Per (con clic)",
 "ζ Per there":
@@ -2512,14 +2534,10 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "ε Psc (con clic)",
 "ε Psc there":
   "ε Psc allá",
-"ε Psc · {#} ly":
-  "ε Psc · {#} a. l.",
 "δ Psc (clicked)":
   "δ Psc (con clic)",
 "δ Psc there":
   "δ Psc allá",
-"δ Psc · {#} ly":
-  "δ Psc · {#} a. l.",
 "ω Psc (clicked)":
   "ω Psc (con clic)",
 "ω Psc there":
@@ -2528,16 +2546,10 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "ι Psc (con clic)",
 "ι Psc there":
   "ι Psc allá",
-"ι Psc · {#} ly":
-  "ι Psc · {#} a. l.",
-"λ Psc · {#} ly":
-  "λ Psc · {#} a. l.",
 "θ Psc (clicked)":
   "θ Psc (con clic)",
 "θ Psc there":
   "θ Psc allá",
-"θ Psc · {#} ly":
-  "θ Psc · {#} a. l.",
 "γ Psc (clicked)":
   "γ Psc (con clic)",
 "γ Psc there":
@@ -2546,8 +2558,6 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "κ Psc (con clic)",
 "κ Psc there":
   "κ Psc allá",
-"κ Psc · {#} ly":
-  "κ Psc · {#} a. l.",
 "λ Psc (clicked)":
   "λ Psc (con clic)",
 "λ Psc there":
@@ -2572,8 +2582,6 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "η UMi (con clic)",
 "η UMi there":
   "η UMi allá",
-"η UMi · {#} ly":
-  "η UMi · {#} a. l.",
 "γ Vir (clicked)":
   "γ Vir (con clic)",
 "γ Vir there":
@@ -2590,8 +2598,6 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "η Vir (con clic)",
 "η Vir there":
   "η Vir allá",
-"η Vir · {#} ly":
-  "η Vir · {#} a. l.",
 "β Vir (clicked)":
   "β Vir (con clic)",
 "β Vir there":

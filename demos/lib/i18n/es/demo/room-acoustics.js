@@ -22,18 +22,22 @@ VDI18N.add('es', 'demo/room-acoustics', {
   "c = {#} m/s, aire a {#} °C",
 "Plan view of a room with a loudspeaker and a microphone on its center line, and under it a graph: the decay of a clap, or the sound level against distance. Drag the microphone to change its distance r from the speaker. Left and right arrows move it by {#} m (with Shift, {#} m); C claps.":
   "Vista en planta de una sala con un altavoz y un micrófono sobre su línea central, y debajo una gráfica: el decaimiento de un aplauso, o el nivel sonoro en función de la distancia. Arrastra el micrófono para cambiar su distancia r al altavoz. Las flechas izquierda y derecha lo mueven {#} m (con Shift, {#} m); C aplaude.",
-"3D room":
-  "Sala en 3D",
-"Plan":
-  "Planta",
+"Time controls":
+  "Controles de tiempo",
+"Clap":
+  "Aplaudir",
+"<span>Speed</span>":
+  "<span>Rapidez</span>",
 "Clap speed":
   "Rapidez del aplauso",
 "Slow motion":
   "Cámara lenta",
 "Real time":
   "Tiempo real",
-"Clap":
-  "Aplaudir",
+"3D room":
+  "Sala en 3D",
+"Plan":
+  "Planta",
 "Set up the room":
   "Prepara la sala",
 "<span>Set up</span>":
@@ -172,14 +176,14 @@ VDI18N.add('es', 'demo/room-acoustics', {
   "arrastra para girar · arrastra el micrófono para cambiar r",
 "The room in 3D, with the loudspeaker and the microphone on its center line. Drag the microphone to change r; drag elsewhere to turn the view, scroll or pinch to zoom, double click to reset the view. Left and right arrows move the microphone by {#} m (with Shift, {#} m), comma and period turn the view, C claps.":
   "La sala en 3D, con el altavoz y el micrófono sobre su línea central. Arrastra el micrófono para cambiar r; arrastra en otro lugar para girar la vista, usa la rueda o pellizca para hacer zoom, doble clic para restablecer la vista. Las flechas izquierda y derecha mueven el micrófono {#} m (con Shift, {#} m), coma y punto giran la vista, C aplaude.",
-"real time, t = {#} ms":
-  "tiempo real, t = {#} ms",
 "T = {#} s (measured, T20)":
   "T = {#} s (medido, T20)",
 "bars: energy every {#} ms · blue: Schroeder · dashed: fit":
   "barras: energía cada {#} ms · azul: Schroeder · punteada: ajuste",
 "Stop":
   "Detener",
+"real time, t = {#} ms":
+  "tiempo real, t = {#} ms",
 "Melamine foam, wedge shaped tile [ceiling_melamine_foam]":
   "Espuma de melamina, placa en forma de cuña [ceiling_melamine_foam]",
 "free space between the wedge tips {#} × {#} × {#} m":

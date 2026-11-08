@@ -7,6 +7,7 @@
 <script src="lib/theme.js"></script>
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
 <script src="lib/vd3.js"></script>
 <script src="lib/vd3kit.js"></script>
 <title>Orbital Resonances</title>
@@ -67,8 +68,8 @@
   <main class="bench">
     <div class="stage" id="stage">
       <div class="stage-ctl" id="strip">
-        <button type="button" class="spin attn" id="play">Start</button>
-        <button type="button" class="btn" id="reset" title="Put the bodies back where this setup starts them">Start over</button>
+        <button type="button" class="spin attn" id="play">Play</button>
+        <button type="button" class="btn" id="reset" title="Put the bodies back where this setup starts them">Reset</button>
         <label class="lbl" for="selSpeed">Speed</label>
         <select id="selSpeed"><option value="1">1</option><option value="10" selected>10</option><option value="100">100</option></select>
         <div class="seg" role="group" aria-label="Frame of the picture" id="frameSeg"><button type="button" data-frame="fixed" aria-pressed="true" title="Seen from the stars: the planet goes round">Fixed stars</button><button type="button" data-frame="rot" aria-pressed="false" title="Turning with the planet, so the planet stays put and the pattern of the kicks shows">Turns with the planet</button></div>
@@ -756,7 +757,9 @@ onmessage = (e) => { const d = e.data;
   $('selSpeed').addEventListener('change', (e) => { S.speed = +e.target.value; });
   $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; sync(); redraw(); });
   const card = VD.setupCard($('setupCard'));
-  function setRun(on) { S.run = on; kwAsked = 0; card.away(false); $('play').textContent = on ? 'Pause' : (S.scene === 'neptune' ? S.year > 1690 : sys && sys.t > 0) ? 'Resume' : 'Start'; $('play').classList.toggle('attn', !on); }
+  function setRun(on) { S.run = on; kwAsked = 0; card.away(false); $('play').textContent = on ? 'Pause' : 'Play'; $('play').classList.toggle('attn', !on); }
+  /* the shared control panel (demos/lib/vdpanel.js): the time controls in one group at the left of the strip */
+  if (window.VD && VD.panel) VD.panel({ speed: '#selSpeed', clock: '#clock', step: true });
   $('play').addEventListener('click', () => {
     if (!S.run && S.scene !== 'neptune' && sys && !many && sys.gone[0]) { build(); }
     if (!S.run && kwMode && sys.t >= KW_END - 1e-6) build();

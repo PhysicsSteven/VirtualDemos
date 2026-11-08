@@ -11,6 +11,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
 <script src="lib/vd3.js"></script>
 <style>
 /* Layout: a charging capacitor with an Amperian loop above a plot of B against r; the instrument rail on the right. */
@@ -77,7 +78,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       <canvas id="can" tabindex="0" role="application" aria-label="Side view of a wire, a parallel plate capacitor and an Amperian loop, above a plot of the magnetic field against distance from the axis. Drag the loop sideways to move it along the wire and up or down to change its radius. Arrow keys do the same. Space charges or pauses, R starts over with the capacitor empty."></canvas>
       <div class="viewbar">
         <button type="button" class="spin attn" id="go">Charge</button>
-        <button type="button" class="spin" id="reset">Start over</button>
+        <button type="button" class="spin" id="reset">Reset</button>
       </div>
       <div class="clock" id="clock">t = 0 µs</div>
       <div class="seg dimseg" role="group" aria-label="Perspective" id="dimSeg"><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
@@ -478,5 +479,7 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
   requestAnimationFrame(frame);
 })();
 </script>
+<script>/* the shared control panel (demos/lib/vdpanel.js): the time controls in one group at the left of the strip */
+if (window.VD && VD.panel) VD.panel({ play: '#go' });</script>
 </body>
 </html>

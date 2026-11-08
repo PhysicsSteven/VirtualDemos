@@ -22,12 +22,14 @@ VDI18N.add('es', 'demo/superfluid-helium', {
   "líquido restante (escala derecha)",
 "Superfluid Helium":
   "Helio superfluido",
-"<a>Temperature and heat</a>":
-  "<a>Temperatura y calor</a>",
-"<a><span>←</span> <span>States of Matter</span></a><a><span>Blackbody Radiation</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Estados de la materia</span></a><a><span>Radiación de cuerpo negro</span> <span>→</span></a>",
 "Below {#} K liquid helium becomes a superfluid: it stops boiling, flows through powder no gas could pass, climbs out of its beaker as a thin film, and part of it refuses to turn with a spinning stack of disks. Four experiments with helium {#} and one with helium {#}, computed from measured properties of helium.":
   "Por debajo de {#} K el helio líquido se vuelve superfluido: deja de hervir, fluye a través de polvo por el que ningún gas podría pasar, trepa fuera de su vaso como una película delgada y una parte de él se niega a girar con una pila de discos que gira. Cuatro experimentos con helio {#} y uno con helio {#}, calculados a partir de propiedades medidas del helio.",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
 "Experiment":
   "Experimento",
 "Pump down":
@@ -144,6 +146,10 @@ VDI18N.add('es', 'demo/superfluid-helium', {
   "Discos giratorios: según Andronikashvili ({#}), el péndulo de este demo tiene {#} discos de aluminio ({#} g/cm³) de {#} mm de diámetro y {#} µm de grosor, separados {#} mm, en una fibra cuya constante de torsión hace que la pila vacía oscile con un periodo de {#} s. Se toma el fluido normal entre los discos como si se moviera con ellos (las separaciones son mucho más estrechas que la profundidad a la que la viscosidad arrastra el líquido con esta oscilación lenta), y el superfluido como si no se moviera; así el periodo es {#}π√((I_disks + (ρn/ρ) I_He)/κ), con I_He = {#} I_disks a {#} K y escalado con la densidad. Se omiten el vástago y el espejo de la fibra, el helio fuera de la pila y el amortiguamiento de la oscilación. Cada periodo registrado da ρn/ρ = [(P/{#} s)² − {#}] I_disks / I_He.",
 "Helium {#}: the melting pressure is the PLTS-{#} equation (BIPM {#}; Rusby et al., J. Low Temp. Phys. {#}, {#}, {#}), which also fixes the superfluid A transition at {#} mK and {#} MPa and the A to B transition at {#} mK and {#} MPa. The superfluid boundary at lower pressures is Greywall's (Phys. Rev. B {#}, {#}, {#}) as fitted in Halperin and Varoquaux, converted to PLTS-{#}; the A to B line is drawn straight from the polycritical point ({#} bar, {#} mK) to the melting curve. Cooling by freezing: the solid's nuclear spins are disordered, S = R ln {#} per mole; the liquid is a Fermi liquid with S = γT, γ/R = {#} per kelvin (Greywall's values up to {#} bar, extended in a straight line to the melting pressure). Entropy balance for {#} mol: n[({#} − x)γ dT + (R ln {#} − γT) dx] = Q dt/T. Left out: the drop in the liquid's entropy below the superfluid transition, the ordering of the solid near {#} mK, and heat from the friction of squeezing. When squeezing stops (at {#} % solid) the solid share is held fixed, and the model holds the temperature at {#} mK at the lowest, since below it the solid's spins begin to order ({#} mK) and its entropy is no longer R ln {#}.":
   "Helio {#}: la presión de fusión es la ecuación PLTS-{#} (BIPM {#}; Rusby et al., J. Low Temp. Phys. {#}, {#}, {#}), que también fija la transición superfluida A en {#} mK y {#} MPa y la transición de A a B en {#} mK y {#} MPa. La frontera superfluida a presiones menores es la de Greywall (Phys. Rev. B {#}, {#}, {#}) como se ajusta en Halperin y Varoquaux, convertida a PLTS-{#}; la línea de A a B se dibuja recta desde el punto policrítico ({#} bar, {#} mK) hasta la curva de fusión. Enfriamiento por congelación: los espines nucleares del sólido están desordenados, S = R ln {#} por mol; el líquido es un líquido de Fermi con S = γT, γ/R = {#} por kelvin (valores de Greywall hasta {#} bar, extendidos en línea recta hasta la presión de fusión). Balance de entropía para {#} mol: n[({#} − x)γ dT + (R ln {#} − γT) dx] = Q dt/T. Se omiten: la caída de la entropía del líquido por debajo de la transición superfluida, el ordenamiento del sólido cerca de {#} mK y el calor de la fricción de la compresión. Cuando la compresión se detiene (con {#} % de sólido) la fracción de sólido se mantiene fija, y el modelo mantiene la temperatura en {#} mK como mínimo, porque por debajo de ella los espines del sólido empiezan a ordenarse ({#} mK) y su entropía ya no es R ln {#}.",
+"<a>Temperature and heat</a>":
+  "<a>Temperatura y calor</a>",
+"<a><span>←</span> <span>States of Matter</span></a><a><span>Blackbody Radiation</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Estados de la materia</span></a><a><span>Radiación de cuerpo negro</span> <span>→</span></a>",
 "fine powder: only superfluid passes":
   "polvo fino: solo pasa el superfluido",
 "heater: {#} mK warmer inside":

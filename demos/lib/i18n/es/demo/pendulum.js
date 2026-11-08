@@ -16,6 +16,8 @@ VDI18N.add('es', 'demo/pendulum', {
   "fotocompuerta abajo, {#} s",
 "A pendulum with a photogate at the bottom of its swing, and a trace of the angle against time. Drag the bob to set the release angle and the length. Space releases or holds, left and right arrows change the release angle θ₀ by {#}°, up and down change the length L by {#} m (with Shift, {#} m).":
   "Un péndulo con una fotocompuerta en el punto más bajo de su oscilación, y una traza del ángulo en función del tiempo. Arrastra la lenteja para fijar el ángulo de liberación y la longitud. Espacio suelta o detiene, las flechas izquierda y derecha cambian el ángulo de liberación θ₀ en {#}°, arriba y abajo cambian la longitud L en {#} m (con Shift, {#} m).",
+"Time controls":
+  "Controles de tiempo",
 "Hold at release angle":
   "Detener en el ángulo de liberación",
 "<span>Whole </span>pendulum":
@@ -56,12 +58,18 @@ VDI18N.add('es', 'demo/pendulum', {
   "Masa {#} kg",
 "Pendulum drawing. Drag a bob to set its angle and let go; moving the pointer as you let go gives it a starting speed. Drag the grip in the middle of a rod to change its length; the length sliders in the rail do the same. Keys: left and right arrows turn the upper rod by {#} degree and release from rest, shift with the arrows turns the lower rod, space plays or pauses, R resets. To start with a speed from the keyboard, use the lower plot.":
   "Dibujo del péndulo. Arrastra una lenteja para fijar su ángulo y suéltala; mover el puntero al soltar le da una rapidez inicial. Arrastra el agarre en el centro de una varilla para cambiar su longitud; los deslizadores de longitud del panel hacen lo mismo. Teclas: las flechas izquierda y derecha giran la varilla superior {#} grado y la sueltan desde el reposo, Shift con las flechas gira la varilla inferior, espacio inicia o pausa, R reinicia. Para empezar con una rapidez desde el teclado, usa la gráfica inferior.",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
 "Angles θ₁ and θ₂ against time over the last {#} seconds. Show data table in the rail lists the points.":
   "Ángulos θ₁ y θ₂ en función del tiempo durante los últimos {#} segundos. Mostrar la tabla de datos, en el panel, lista los puntos.",
 "Angle path: θ₂ against θ₁ over the last {#} seconds, with the two normal mode directions as gold lines. Show data table in the rail lists the points.":
   "Trayectoria angular: θ₂ en función de θ₁ durante los últimos {#} segundos, con las dos direcciones de los modos normales como líneas doradas. Mostrar la tabla de datos, en el panel, lista los puntos.",
 "A row of pendulums of slowly changing length hung from one bar, drawn at an angle. All are let go together from the same angle; space plays or pauses, R starts again, left and right arrows step the time by one second.":
   "Una fila de péndulos de longitud que cambia poco a poco, colgados de una barra, dibujada en ángulo. Todos se sueltan juntos desde el mismo ángulo; espacio inicia o pausa, R vuelve a empezar, las flechas izquierda y derecha avanzan o retroceden el tiempo un segundo.",
+"<span>Speed</span>":
+  "<span>Rapidez</span>",
 "The row seen from above: each bob's sideways position against its place in the row.":
   "La fila vista desde arriba: la posición lateral de cada lenteja en función de su lugar en la fila.",
 "<a>Worksheet {#}: Measuring g</a>":
@@ -432,10 +440,10 @@ VDI18N.add('es', 'demo/pendulum', {
   "{#} × {#}⁻¹⁴ <span>de E</span>",
 "{#} × {#}⁻¹³ <span>of E</span>":
   "{#} × {#}⁻¹³ <span>de E</span>",
+"{#} × {#}⁻¹² <span>of E</span>":
+  "{#} × {#}⁻¹² <span>de E</span>",
 "arrows move the cross, Enter starts there":
   "las flechas mueven la cruz, Enter empieza ahí",
-"Hide data table":
-  "Ocultar la tabla de datos",
 "Period ÷ small angle period against release angle: exact 2K(sin(θ₀/{#}))/π, and the series {#} + θ₀²/{#} + {#}θ₀⁴/{#}. This start goes over the top, so it has no release angle.":
   "Periodo ÷ periodo de ángulo pequeño en función del ángulo de liberación: exacto 2K(sin(θ₀/{#}))/π, y la serie {#} + θ₀²/{#} + {#}θ₀⁴/{#}. Este inicio da la vuelta por encima de la cima, así que no tiene ángulo de liberación.",
 "T/T₀ exact":
@@ -458,8 +466,6 @@ VDI18N.add('es', 'demo/pendulum', {
   "copia más lejana",
 "nearby orbit, renormalized":
   "órbita cercana, renormalizada",
-"{#} × {#}⁻¹⁶ <span>of E</span>":
-  "{#} × {#}⁻¹⁶ <span>de E</span>",
 "λ ≈ {#} s⁻¹ (estimate)":
   "λ ≈ {#} s⁻¹ (estimación)",
 "<span><i></i>θ₁, upper rod</span><span><i></i>θ₂, lower rod; trail of the lower bob</span><span><i></i>Copies, violet (copy {#}) to red (last)</span><span><i></i>Normal mode directions θ₂ = (shape) θ₁</span>":
@@ -488,8 +494,6 @@ VDI18N.add('es', 'demo/pendulum', {
   "Reducir movimiento está desactivado.",
 "fast forward ×{#}":
   "avance rápido ×{#}",
-"{#} × {#}⁻¹² <span>of E</span>":
-  "{#} × {#}⁻¹² <span>de E</span>",
 "not periodic":
   "no periódico",
 "hidden in Blind: work it out":
@@ -499,5 +503,9 @@ VDI18N.add('es', 'demo/pendulum', {
 "slowed to keep up":
   "más lento para no atrasarse",
 "moving start":
-  "inicio en movimiento"
+  "inicio en movimiento",
+"Hide data table":
+  "Ocultar la tabla de datos",
+"{#} × {#}⁻¹⁶ <span>of E</span>":
+  "{#} × {#}⁻¹⁶ <span>de E</span>"
 });

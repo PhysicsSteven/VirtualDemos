@@ -7,6 +7,7 @@
 <script src="lib/theme.js"></script>
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
 <script src="lib/vd3.js"></script>
 <style>.rail details.more > p + p { margin-top: 6px; }
 /* folded rail sections: secondary options behind their heading (layout redesign) */
@@ -1095,5 +1096,7 @@ table.rows input:focus { border-color: var(--accent); }
   requestAnimationFrame(frame);
 })();
 </script>
+<script>/* the shared control panel (demos/lib/vdpanel.js): the time controls in one group at the left of the strip */
+if (window.VD && VD.panel) VD.panel({ play: '#go', reset: false });</script>
 </body>
 </html>

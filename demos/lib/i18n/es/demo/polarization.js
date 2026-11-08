@@ -32,6 +32,12 @@ VDI18N.add('es', 'demo/polarization', {
   "Haz pasar luz por polarizadores y láminas de onda y observa el campo eléctrico después de cada uno. La ley de Malus, la sorpresa de los tres polarizadores, luz circular a partir de una lámina de cuarto de onda, y polarización por reflexión en el ángulo de Brewster.",
 "angles from the vertical, counterclockwise facing the beam · intensity as I/I₀":
   "ángulos desde la vertical, en sentido antihorario de frente al haz · intensidad como I/I₀",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
 "Polarizer bench":
   "Banco de polarizadores",
 "Reflection":

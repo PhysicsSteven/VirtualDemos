@@ -7,6 +7,7 @@
 <script src="lib/theme.js"></script>
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
 <script src="lib/vd3.js"></script>
 <script src="lib/vd3kit.js"></script>
 <title>Velocity, Momentum and Energy Near c</title>
@@ -69,7 +70,7 @@
           <button type="button" data-v="en" aria-pressed="false">Electron flight</button>
         </div>
         <button type="button" class="spin attn" id="go">Launch</button>
-        <button type="button" class="btn" id="restart">Start over</button>
+        <button type="button" class="btn" id="restart">Reset</button>
         <button type="button" class="btn" id="step" hidden>Step</button>
         <div class="seg" role="group" aria-label="Simulation speed" id="speedSeg">
           <button type="button" data-s="1" aria-pressed="true">1×</button>
@@ -607,7 +608,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     mysteryParticle: { view: 'en', hint: 'An unknown particle with a charge of magnitude e. Time its flight and measure its bend radius at several voltages, then find its rest energy mc² and say what it is.', set: () => { Object.assign(S.en, { mystery: true, vi: 14, B: 0.5, shots: 0, t: 0 }); newPart(true); } } };
   function newRocket(quiet) { const h = S.vel; let v; do { v = Math.round((0.30 + 0.60 * Math.random()) * 1000) / 1000; } while (Math.abs(v - h.mv) < 0.05); if (!quiet && h.mystery) h.lastMys = h.mv; h.mv = v; h.t = 0; }
   function newPart(quiet) { const e = S.en; let k; do { k = MYSTERY_POOL[Math.floor(Math.random() * MYSTERY_POOL.length)]; } while (k === e.mys); if (!quiet) e.lastMys = e.mys; e.mys = k; e.shots = 0; }
-  const GO = { vel: 'Launch', mom: 'Start', en: 'Fire a bunch' };
+  const GO = { vel: 'Launch', mom: 'Play', en: 'Fire a bunch' };
   function setView(v) {
     S.view = v; for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.v === v));
     $('cardVel').hidden = v !== 'vel'; $('cardMom').hidden = v !== 'mom'; $('cardEn').hidden = v !== 'en'; $('speedSeg').hidden = v === 'en'; $('step').hidden = v !== 'mom';
@@ -622,8 +623,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   function setRun(on) {
     S.run = on; const g = $('go');
-    if (S.view === 'vel') g.textContent = on ? 'Pause' : S.vel.t > 0 && !S.vel.done ? 'Resume' : 'Launch';
-    else if (S.view === 'mom') g.textContent = on ? 'Pause' : S.mom.t > 0 && S.mom.t < momEnd() ? 'Resume' : 'Start';
+    if (S.view === 'vel') g.textContent = on ? 'Pause' : S.vel.t > 0 && !S.vel.done ? 'Play' : 'Launch';
+    else if (S.view === 'mom') g.textContent = on ? 'Pause' : S.mom.t > 0 && S.mom.t < momEnd() ? 'Play' : 'Play';
     else g.textContent = GO.en;
     g.classList.toggle('attn', !on);
   }
@@ -717,5 +718,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 </script>
 <script>/* dividers between the panes (VD.splitPanes in demos/lib/vd.js); a browser with an older cached vd.js keeps the panes as they are */
 (function () { if (!window.VD || !VD.splitPanes) return; var q = function (s) { return document.querySelector(s); }; VD.splitPanes(q("#pane"), q(".curvebox"), { key: 'curve', label: 'Divider between the picture and the graph' }); })();</script>
+<script>/* the shared control panel (demos/lib/vdpanel.js): the time controls in one group at the left of the strip */
+if (window.VD && VD.panel) VD.panel({ play: '#go', reset: '#restart', speed: '#speedSeg', steps: ['#step'], clock: '#clock' });</script>
 </body>
 </html>

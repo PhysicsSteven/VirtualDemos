@@ -16,14 +16,14 @@ VDI18N.add('es', 'demo/forces', {
   "Las longitudes de las flechas están a escala",
 "Forces and Friction":
   "Fuerzas y fricción",
-"<a><span>←</span> <span>Circular Motion</span></a><a><span>Elevator: Apparent Weight</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Movimiento circular</span></a><a><span>Elevador: peso aparente</span> <span>→</span></a>",
 "A block on a ramp you can tilt, push, and tie to a hanging mass. The free body diagram shows every force on the block; their sum gives its acceleration through F = ma.":
   "Un bloque en una rampa que puedes inclinar, empujar y atar a una masa colgante. El diagrama de cuerpo libre muestra cada fuerza sobre el bloque; su suma da su aceleración mediante F = ma.",
 "g = {#} m/s² · ramp {#} m long":
   "g = {#} m/s² · rampa de {#} m de largo",
 "A block on a ramp with its free body diagram. Space releases or holds the block, R puts it back, T releases it at the top mark for the timer. Up and down arrows tilt the ramp by half a degree.":
   "Un bloque en una rampa con su diagrama de cuerpo libre. Espacio suelta o sujeta el bloque, R lo regresa a su lugar, T lo suelta en la marca superior para el cronómetro. Las flechas arriba y abajo inclinan la rampa medio grado.",
+"Time controls":
+  "Controles de tiempo",
 "Put back":
   "Regresar",
 "Release at the top mark":
@@ -164,6 +164,8 @@ VDI18N.add('es', 'demo/forces', {
   "Al deslizarse hacia abajo sin empuje ni masa colgante, a = g sin θ − μk g cos θ, así que a/cos θ = g tan θ − μk g: una recta con pendiente g y ordenada al origen −μk g. El ajuste usa solo filas con F = {#} y m₂ = {#}.",
 "Blind hides every force size, the acceleration, the friction type, the slip angle, the arrows' lengths (all drawn the same size) and μk from the fit. The timer, the settings and the force directions stay.":
   "A ciegas oculta el tamaño de cada fuerza, la aceleración, el tipo de fricción, el ángulo de deslizamiento, las longitudes de las flechas (todas dibujadas del mismo tamaño) y μk del ajuste. El cronómetro, los ajustes y las direcciones de las fuerzas se quedan.",
+"<a><span>←</span> <span>Circular Motion</span></a><a><span>Elevator: Apparent Weight</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Movimiento circular</span></a><a><span>Elevador: peso aparente</span> <span>→</span></a>",
 "Hold":
   "Sujetar",
 "Sliding to the right":

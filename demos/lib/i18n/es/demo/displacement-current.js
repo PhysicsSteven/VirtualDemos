@@ -20,6 +20,8 @@ VDI18N.add('es', 'demo/displacement-current', {
   "placas de {#} cm de radio, separadas {#} mm · C = {#} pF",
 "Side view of a wire, a parallel plate capacitor and an Amperian loop, above a plot of the magnetic field against distance from the axis. Drag the loop sideways to move it along the wire and up or down to change its radius. Arrow keys do the same. Space charges or pauses, R starts over with the capacitor empty.":
   "Vista lateral de un cable, un capacitor de placas paralelas y una espira amperiana, sobre una gráfica del campo magnético en función de la distancia al eje. Arrastra la espira hacia los lados para moverla a lo largo del cable y hacia arriba o abajo para cambiar su radio. Las flechas hacen lo mismo. Espacio carga o pausa, R empieza de nuevo con el capacitor vacío.",
+"Time controls":
+  "Controles de tiempo",
 "t = {#} µs · τ = RC = {#} µs":
   "t = {#} µs · τ = RC = {#} µs",
 "Divider between the capacitor and the graph":

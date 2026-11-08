@@ -54,14 +54,18 @@ VDI18N.add('es', 'demo/gamma-spectroscopy', {
   "Espectroscopía gamma",
 "<a>Nuclear physics</a>":
   "<a>Física nuclear</a>",
-"<a><span>←</span> <span>Superconductors and the Meissner Effect</span></a><a><span>Nuclear Reactions, Fission and Fusion</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Superconductores y el efecto Meissner</span></a><a><span>Reacciones nucleares, fisión y fusión</span> <span>→</span></a>",
 "A virtual NaI(Tl) scintillation spectrometer, set up like ORTEC Experiment {#} (SPA38 detector, EASY-MCA-2K). Every pulse is simulated from physics: Monte Carlo photon transport in the crystal, detector resolution, the electronics and counting statistics. Acquire, mark peaks, calibrate, and measure.":
   "Un espectrómetro virtual de centelleo de NaI(Tl), preparado como el Experimento {#} de ORTEC (detector SPA38, EASY-MCA-2K). Cada pulso se simula a partir de la física: transporte Monte Carlo de fotones en el cristal, resolución del detector, la electrónica y la estadística de conteo. Adquiere, marca picos, calibra y mide.",
 "E in keV · d in cm · times in s · m<sub>e</sub>c² = {#} keV":
   "E en keV · d en cm · tiempos en s · m<sub>e</sub>c² = {#} keV",
+"Time controls":
+  "Controles de tiempo",
 "Stop":
   "Detener",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
 "Vertical scale":
   "Escala vertical",
 "Lin":
@@ -434,6 +438,8 @@ VDI18N.add('es', 'demo/gamma-spectroscopy', {
   "{#} ± {#} canales",
 "calibrate first":
   "calibra primero",
+"Cursor ch {#} counts {#}k":
+  "Cursor canal {#} cuentas {#}k",
 "NaI(Tl) {#}″ × {#}″":
   "NaI(Tl) {#}″ × {#}″",
 "{#} V (over {#} V)":
@@ -494,10 +500,10 @@ VDI18N.add('es', 'demo/gamma-spectroscopy', {
   "ln(tasa neta / s⁻¹)",
 "tantalum, mass thickness (g/cm²)":
   "tantalio, espesor másico (g/cm²)",
-"Cursor ch {#} counts {#}k":
-  "Cursor canal {#} cuentas {#}k",
 "log₁₀ d (cm)":
   "log₁₀ d (cm)",
 "log₁₀ net rate":
-  "log₁₀ tasa neta"
+  "log₁₀ tasa neta",
+"<a><span>←</span> <span>Superconductors and the Meissner Effect</span></a><a><span>Nuclear Reactions, Fission and Fusion</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Superconductores y el efecto Meissner</span></a><a><span>Reacciones nucleares, fisión y fusión</span> <span>→</span></a>"
 });

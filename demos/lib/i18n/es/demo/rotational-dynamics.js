@@ -6,12 +6,18 @@ VDI18N.add('es', 'demo/rotational-dynamics', {
   "cronómetro: {#} s",
 "Rotational Dynamics":
   "Dinámica de rotación",
+"<a>Rotation and angular momentum</a>":
+  "<a>Rotación y momento angular</a>",
+"<a><span>←</span> <span>Rotation and Torque</span></a><a><span>Pendulums</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Rotación y torca</span></a><a><span>Péndulos</span> <span>→</span></a>",
 "A hanging mass unwinds a string from a spool and spins a turntable. The string's torque gives the table an angular acceleration α = τ/I. Time the fall, work out α, and measure the moment of inertia of what you put on the table.":
   "Una masa colgante desenrolla una cuerda de un carrete y hace girar una plataforma giratoria. La torca de la cuerda le da a la plataforma una aceleración angular α = τ/I. Mide el tiempo de la caída, calcula α y mide el momento de inercia de lo que pongas sobre la plataforma.",
 "drop {#} m · g = {#} m/s²":
   "caída {#} m · g = {#} m/s²",
 "A turntable with whatever sits on it and the hanging mass falling as the string unwinds from the spool: in the flat view the table from above and the mass from the side, in the 3D view a lab bench with light gates {#} m apart, a timer and a screen drawing ω against time. Space releases, R winds the string back up, the up arrow hangs a {#} g mass and the down arrow takes off the last mass.":
   "Una plataforma giratoria con lo que tenga encima y la masa colgante que cae mientras la cuerda se desenrolla del carrete: en la vista plana, la plataforma desde arriba y la masa de lado; en la vista 3D, una mesa de laboratorio con fotocompuertas separadas {#} m, un cronómetro y una pantalla que dibuja ω en función del tiempo. Espacio suelta, R vuelve a enrollar la cuerda, la flecha arriba cuelga una masa de {#} g y la flecha abajo quita la última masa.",
+"Time controls":
+  "Controles de tiempo",
 "Wind it back up":
   "Volver a enrollar",
 "Hanging mass m: click a slotted mass to hang it. Drag, or use the arrow keys, to move this card; double click to put it back":
@@ -106,10 +112,6 @@ VDI18N.add('es', 'demo/rotational-dynamics', {
   "compuerta de parada",
 "spool r = {#} cm":
   "carrete r = {#} cm",
-"<a>Rotation and angular momentum</a>":
-  "<a>Rotación y momento angular</a>",
-"<a><span>←</span> <span>Rotation and Torque</span></a><a><span>Pendulums</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Rotación y torca</span></a><a><span>Péndulos</span> <span>→</span></a>",
 "A solid disk, {#} kg and {#} cm in radius: I = ½MR².":
   "Un disco sólido de {#} kg y {#} cm de radio: I = ½MR².",
 "Record at least two drops (different m or r) with this load: disk.":

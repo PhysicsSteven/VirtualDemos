@@ -30,10 +30,22 @@ VDI18N.add('es', 'demo/entropy', {
   "puntos: C(N, n)/{#}^N",
 "Entropy and the Second Law":
   "Entropía y la segunda ley",
+"<a>The second law of thermodynamics</a>":
+  "<a>La segunda ley de la termodinámica</a>",
+"<a><span>←</span> <span>Heat Engine Cycles</span></a><a><span>Galton Board</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Ciclos de máquinas térmicas</span></a><a><span>Tablero de Galton</span> <span>→</span></a>",
 "Pull the partition and a gas fills the box, and it never gathers back by itself. Let two solids share energy and heat flows from hot to cold. Both happen because there are far more ways to be spread out. Then test engines and refrigerators against the second law.":
   "Quita la partición y un gas llena la caja, y nunca se vuelve a juntar por sí solo. Deja que dos sólidos compartan energía y el calor fluye de lo caliente a lo frío. Ambas cosas pasan porque hay muchísimas más maneras de estar repartido. Luego pon a prueba motores y refrigeradores frente a la segunda ley.",
 "model gas · time on the model's clock":
   "gas modelo · tiempo en el reloj del modelo",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
+"<span>Speed</span>":
+  "<span>Rapidez</span>",
 "Free expansion":
   "Expansión libre",
 "Einstein solids":
@@ -148,10 +160,6 @@ VDI18N.add('es', 'demo/entropy', {
   "Sólidos de Einstein (más allá del libro): cada sólido es un conjunto de osciladores cuánticos idénticos, y cada uno tiene un número entero de cuantos de energía ε. Un sólido de N osciladores con q cuantos puede acomodarlos de Ω = C(q + N − {#}, q) maneras, y S = k ln Ω de Boltzmann da su entropía (Schroeder, An Introduction to Thermal Physics, §{#} a §{#}). En cada paso la demo elige dos osciladores al azar y pasa un cuanto del primero al segundo si el primero tiene uno; a la larga todos los arreglos son igualmente probables. La temperatura sale de {#}/T = dS/dU, calculada sobre un cuanto a cada lado. Un sólido sin energía tiene exactamente un arreglo, así que S = {#}: la tercera ley (§{#}).",
 "Second law: a device runs one complete cycle between two reservoirs so large that their temperatures do not change. The first law fixes the third energy from the two you set. The device ends where it started, so only the reservoirs change entropy, by +Q/T for heat they gain and −Q/T for heat they lose (§{#}). A process is allowed if the total is zero (reversible) or positive. The Kelvin and Clausius statements (§{#}) are the special cases with no heat to the cold reservoir or no work. Pairing the device with a Carnot device between the same reservoirs (§{#}, §{#}) shows that any engine better than Carnot could be made into a perfect engine, and any refrigerator better than Carnot into a perfect refrigerator.":
   "Segunda ley: un dispositivo hace un ciclo completo entre dos depósitos tan grandes que sus temperaturas no cambian. La primera ley fija la tercera energía a partir de las dos que pones. El dispositivo termina donde empezó, así que solo los depósitos cambian de entropía, en +Q/T por el calor que ganan y −Q/T por el calor que pierden (§{#}). Un proceso está permitido si el total es cero (reversible) o positivo. Los enunciados de Kelvin y de Clausius (§{#}) son los casos especiales sin calor al depósito frío o sin trabajo. Combinar el dispositivo con un dispositivo de Carnot entre los mismos depósitos (§{#}, §{#}) muestra que cualquier motor mejor que el de Carnot podría convertirse en un motor perfecto, y cualquier refrigerador mejor que el de Carnot en un refrigerador perfecto.",
-"<a>The second law of thermodynamics</a>":
-  "<a>La segunda ley de la termodinámica</a>",
-"<a><span>←</span> <span>Heat Engine Cycles</span></a><a><span>Galton Board</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Ciclos de máquinas térmicas</span></a><a><span>Tablero de Galton</span> <span>→</span></a>",
 "on the left now":
   "a la izquierda ahora",
 "time all on the left":
@@ -314,8 +322,8 @@ VDI18N.add('es', 'demo/entropy', {
   "Un refrigerador que mueve {#} J de un congelador a {#} K a una habitación a {#} K sin ningún trabajo. El enunciado de Clausius dice que no existe tal refrigerador.",
 "refrigerator":
   "refrigerador",
-"Start over puts the partition back.":
-  "Empezar de nuevo vuelve a poner la partición.",
+"Reset puts the partition back.":
+  "Reiniciar vuelve a poner la partición.",
 "ΔS hot":
   "ΔS caliente",
 "ΔS cold":
@@ -329,5 +337,7 @@ VDI18N.add('es', 'demo/entropy', {
 "fridge":
   "refrigerador",
 "Drag to turn, double click to go back. Arrow widths in proportion to the energy; not to scale.":
-  "Arrastra para girar, doble clic para regresar. Anchos de flecha proporcionales a la energía; no a escala."
+  "Arrastra para girar, doble clic para regresar. Anchos de flecha proporcionales a la energía; no a escala.",
+"Start over puts the partition back.":
+  "Empezar de nuevo vuelve a poner la partición."
 });

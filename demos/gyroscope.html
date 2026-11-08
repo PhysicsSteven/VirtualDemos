@@ -7,6 +7,7 @@
 <script src="lib/theme.js"></script>
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
 <script src="lib/vd3.js"></script>
 <script src="lib/vd3kit.js"></script>
 <style>.bench { position: relative; }
@@ -707,6 +708,8 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
   const card = VD.setupCard($('setupCard'), { within: '#stage' });
   function setRun(on) { S.run = on; $('sB').disabled = on; $('push').disabled = on; $('go').textContent = on ? 'Hold' : 'Release'; $('go').classList.toggle('attn', !on); }
   $('go').addEventListener('click', () => { if (S.fell) reset(); setRun(!S.run); });
+  /* the shared control panel (demos/lib/vdpanel.js): the time controls in one group at the left of the strip */
+  if (window.VD && VD.panel) VD.panel({ play: '#go', reset: '#back', speed: '#slowmo', end: ['#viewSeg'], step: true });
   $('back').addEventListener('click', reset);
   $('slowmo').addEventListener('click', () => { S.slow = !S.slow; $('slowmo').setAttribute('aria-pressed', String(S.slow)); draw(); });
   can.addEventListener('keydown', (e) => { if (e.key === ' ') $('go').click(); else if (e.key === 'r' || e.key === 'R') reset(); else return; e.preventDefault(); });

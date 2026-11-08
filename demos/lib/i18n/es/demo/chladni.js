@@ -22,6 +22,12 @@ VDI18N.add('es', 'demo/chladni', {
   "Excita una placa metálica delgada en una de sus frecuencias de resonancia y la arena espolvoreada sobre ella salta de las partes que se mueven y se asienta en las líneas que se quedan quietas. Barre la excitación, observa el pico de la respuesta en cada modo y compara una placa cuadrada con una circular. Cambia a un parche y escucha por qué un tambor no tiene una altura clara.",
 "f in Hz · λ² = ω ℓ² √(ρh/D) · |a| in g = {#} m/s²":
   "f en Hz · λ² = ω ℓ² √(ρh/D) · |a| en g = {#} m/s²",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
 "Sprinkle fresh sand":
   "Espolvorear arena nueva",
 "Sand":
@@ -242,10 +248,6 @@ VDI18N.add('es', 'demo/chladni', {
   "({#}, {#}) en {#} Hz, f/f₁ = {#} (j = {#}, un cero de J₀). Desafinado en −{#} Hz; ancho f/Q = {#} Hz. {#} diámetros nodales y {#} círculos nodales además del aro.",
 "A drumhead, circle, {#} cm across: Mylar film {#} mm thick (chosen, a common head thickness; polyester film density {#} kg/m³), so σ = {#} g/m². Every frequency goes as √(T/σ) over the size, and the ratios between modes never change: the zeros j of the Bessel functions, {#}, {#}, {#}, {#}, …":
   "Un parche circular de {#} cm de diámetro: película de Mylar de {#} mm de espesor (elegido, un espesor común de parche; densidad de la película de poliéster {#} kg/m³), así que σ = {#} g/m². Toda frecuencia va como √(T/σ) entre el tamaño, y las razones entre modos nunca cambian: los ceros j de las funciones de Bessel, {#}, {#}, {#}, {#}, …",
-"({#}, {#}) at {#} Hz, f/f₁ = {#} (√(m² + n²) = {#}). Detuned by −{#} Hz; width f/Q = {#} Hz. {#} nodal diameters and {#} nodal circles besides the hoop.":
-  "({#}, {#}) en {#} Hz, f/f₁ = {#} (√(m² + n²) = {#}). Desafinado en −{#} Hz; ancho f/Q = {#} Hz. {#} diámetros nodales y {#} círculos nodales además del aro.",
-"A drumhead, circle, {#} cm across: Mylar film {#} mm thick (chosen, a common head thickness; polyester film density {#} kg/m³), so σ = {#} g/m². Every frequency goes as √(T/σ) over the size, and the ratios between modes never change: √(m² + n²): √{#}, √{#}, √{#}, √{#}, …":
-  "Un parche circular de {#} cm de diámetro: película de Mylar de {#} mm de espesor (elegido, un espesor común de parche; densidad de la película de poliéster {#} kg/m³), así que σ = {#} g/m². Toda frecuencia va como √(T/σ) entre el tamaño, y las razones entre modos nunca cambian: √(m² + n²): √{#}, √{#}, √{#}, √{#}, …",
 "NaN Hz":
   "NaN Hz",
 "f = NaN Hz":
@@ -256,6 +258,8 @@ VDI18N.add('es', 'demo/chladni', {
   "c = √(T/σ) = {#} m/s, longitud de onda c/f = NaN cm",
 "{#} <small>µm</small>, NaN <small>g</small>":
   "{#} <small>µm</small>, NaN <small>g</small>",
+"A drumhead, circle, {#} cm across: Mylar film {#} mm thick (chosen, a common head thickness; polyester film density {#} kg/m³), so σ = {#} g/m². Every frequency goes as √(T/σ) over the size, and the ratios between modes never change: √(m² + n²): √{#}, √{#}, √{#}, √{#}, …":
+  "Un parche circular de {#} cm de diámetro: película de Mylar de {#} mm de espesor (elegido, un espesor común de parche; densidad de la película de poliéster {#} kg/m³), así que σ = {#} g/m². Toda frecuencia va como √(T/σ) entre el tamaño, y las razones entre modos nunca cambian: √(m² + n²): √{#}, √{#}, √{#}, √{#}, …",
 "3D: displacement exaggerated about NaN×, motion slowed from NaN Hz to one cycle per second.":
   "3D: desplazamiento exagerado unas NaN×, movimiento ralentizado de NaN Hz a un ciclo por segundo.",
 "NaN <small>µm</small>, NaN <small>g</small>":
@@ -332,6 +336,8 @@ VDI18N.add('es', 'demo/chladni', {
   "{#} Hz, sobre todo el modo {#} (modo de barra libre en {#} Hz; la masa móvil de {#} g del excitador sobre el poste lo desplaza). Desafinado en +{#} Hz; ancho f/Q = {#} Hz. {#} nodos a lo largo de la barra; f/f₁ = {#}, βL = {#}; simétrico respecto al centro.",
 "Bar, {#} × {#} cm · steel {#} mm · free ends":
   "Barra, {#} × {#} cm · acero {#} mm · extremos libres",
+"({#}, {#}) at {#} Hz, f/f₁ = {#} (√(m² + n²) = {#}). Detuned by −{#} Hz; width f/Q = {#} Hz. {#} nodal diameters and {#} nodal circles besides the hoop.":
+  "({#}, {#}) en {#} Hz, f/f₁ = {#} (√(m² + n²) = {#}). Desafinado en −{#} Hz; ancho f/Q = {#} Hz. {#} diámetros nodales y {#} círculos nodales además del aro.",
 "Drumhead · T = {#} N/m":
   "Parche · T = {#} N/m"
 });

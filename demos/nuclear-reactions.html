@@ -7,6 +7,7 @@
 <script src="lib/theme.js"></script>
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
 <script src="lib/vd3.js"></script>
 <script src="lib/vd3kit.js"></script>
 <title>Nuclear Reactions, Fission and Fusion</title>
@@ -75,7 +76,7 @@
         </div>
         <button type="button" class="spin attn" id="go">Fire</button>
         <button type="button" class="btn" id="step">One generation</button>
-        <button type="button" class="btn" id="restart">Start over</button>
+        <button type="button" class="btn" id="restart">Reset</button>
         <div class="seg" role="group" aria-label="Simulation speed" id="speedSeg">
           <button type="button" data-s="1" aria-pressed="true">1×</button>
           <button type="button" data-s="10" aria-pressed="false">10×</button>
@@ -1334,7 +1335,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     rxRuth: { view: 'rx', hint: 'Rutherford (1919) fired α particles from radium C′ (7.69 MeV) into nitrogen and found protons coming out: the first artificial nuclear reaction, ¹⁴N(α,p)¹⁷O. The products weigh more than the reactants, so the reaction takes in energy (Q < 0) and needs a minimum projectile energy. Lower K to find it.', set: () => { pickRx('ruth'); } },
     rxFission: { view: 'rx', hint: 'A slow neutron splits ²³⁵U into ¹⁴¹Ba, ⁹²Kr and three neutrons (OpenStax §10.5). About 0.19 u goes missing, so some 173 MeV is released, mostly as kinetic energy of the two fragments. Try the other splits in the Famous reactions list.', set: () => { pickRx('u235a'); } },
     chSphere: { view: 'ch', hint: 'A bare sphere of ²³⁵U metal, 8 cm in radius (about 40 kg). Neutrons are followed one at a time: some cause fissions, the rest escape through the surface. Run it, then change the radius and find where k = 1: the critical size.', set: () => { Object.assign(S.ch, { mode: 'sph', mat: 'u235', R: 8, N: 4000 }); } },
-    chGen: { view: 'ch', hint: 'A hundred neutrons, each causing a fission with probability k/ν̄. With k = 1.05 the numbers grow by 5% a generation on average, but chance makes each run different: Start over gives a new run. Try k below, at and above 1.', set: () => { Object.assign(S.ch, { mode: 'gen', k: 1.05, N0: 100 }); } },
+    chGen: { view: 'ch', hint: 'A hundred neutrons, each causing a fission with probability k/ν̄. With k = 1.05 the numbers grow by 5% a generation on average, but chance makes each run different: Reset gives a new run. Try k below, at and above 1.', set: () => { Object.assign(S.ch, { mode: 'gen', k: 1.05, N0: 100 }); } },
     fuSun: { view: 'fu', hint: 'Protons at the temperature of the Sun\'s core, 1.57 × 10⁷ K. kT is only 1.35 keV, far below the 600 keV barrier, yet the Gamow peak near 6 keV lets a few tunnel through. Each proton waits billions of years to fuse.', set: () => { Object.assign(S.fu, { pair: 'pp', lgT: Math.log10(1.57e7) }); } },
     fuDT: { view: 'fu', hint: 'Deuterium and tritium at 1.5 × 10⁸ K, about ten times hotter than the Sun\'s core. D–T has the lowest barrier and a large reaction rate, which is why fusion reactors use it.', set: () => { Object.assign(S.fu, { pair: 'dt', lgT: Math.log10(1.5e8) }); } },
     doCs: { view: 'do', hint: 'A 1 GBq ¹³⁷Cs source (0.662 MeV γ rays) and a dose rate meter at 1 m. Step back and watch the inverse square law, then add lead and find the thickness that halves the dose rate.', set: () => { Object.assign(S.do, { src: 'cs137', lgA: 9, r: 1, sh: 'none', x: 0, ti: 2, beam: 'narrow' }); } },
@@ -1352,7 +1353,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     setRun(false); sync(); redraw();
   }
   function setRun(on) { S.run = on; if (S.view === 'rx') { $('go').textContent = 'Fire'; $('go').classList.add('attn'); return; }
-    const started = S.ch.mode === 'sph' ? CHN.gen > 0 : CHN.g.sizes.length > 1; $('go').textContent = on ? 'Pause' : started ? 'Resume' : 'Start'; $('go').classList.toggle('attn', !on); }
+    const started = S.ch.mode === 'sph' ? CHN.gen > 0 : CHN.g.sizes.length > 1; $('go').textContent = on ? 'Pause' : started ? 'Play' : 'Play'; $('go').classList.toggle('attn', !on); }
   function applyPreset(k) { const c = PRESETS[k]; S.preset = k; $('presetHint').textContent = c.hint; c.set(); if (c.view === 'ch') chNew(); if (c.view === 'rx') S.rx.t = 1.5; setView(c.view); }
   const rxChanged = (keepPick) => { S.preset = 'custom'; if (!keepPick) S.rx.pick = 'custom'; S.rx.t = 0; sync(); redraw(); };
   const chChanged = () => { S.preset = 'custom'; chNew(); setRun(false); sync(); redraw(); };
@@ -1473,5 +1474,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 </script>
 <script>/* dividers between the panes (VD.splitPanes in demos/lib/vd.js); a browser with an older cached vd.js keeps the panes as they are */
 (function () { if (!window.VD || !VD.splitPanes) return; var q = function (s) { return document.querySelector(s); }; VD.splitPanes(q("#pane"), q(".curvebox"), { key: 'curve', label: 'Divider between the picture and the graph' }); })();</script>
+<script>/* the shared control panel (demos/lib/vdpanel.js): the time controls in one group at the left of the strip */
+if (window.VD && VD.panel) VD.panel({ play: '#go', reset: '#restart', speed: '#speedSeg', clock: '#clock' });</script>
 </body>
 </html>

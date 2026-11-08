@@ -14,6 +14,24 @@ VDI18N.add('es', 'demo/solar-system-formation', {
   "Mira cómo una nube de gas y polvo que gira lentamente se derrumba en el Sol joven y un disco que gira, y síguela hasta los planetas. La historia completa recorre cada paso con una sola nube y se acerca desde la escala de la nube hasta la de los planetas; Seguir mantiene a la vista el material de un planeta. Las cuatro etapas son laboratorios de cada paso: el colapso, la línea de hielo, cómo crecen los planetesimales y cómo los primeros se funden para que su hierro se hunda en un núcleo.",
 "AU · years · Earth masses":
   "UA · años · masas terrestres",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
+"Put this stage back to its beginning":
+  "Regresa esta etapa a su inicio",
+"slow":
+  "lento",
+"normal":
+  "normal",
+"fast":
+  "rápido",
+"fastest":
+  "lo más rápido",
+"t = {#} yr":
+  "t = {#} años",
 "Stage of the story":
   "Etapa de la historia",
 "The whole story":
@@ -26,22 +44,10 @@ VDI18N.add('es', 'demo/solar-system-formation', {
   "{#} Los planetas crecen",
 "{#} Iron cores":
   "{#} Núcleos de hierro",
-"Put this stage back to its beginning":
-  "Regresa esta etapa a su inicio",
 "Run this stage to its end at once":
   "Lleva esta etapa a su final de una vez",
 "To the end":
   "Al final",
-"slow":
-  "lento",
-"normal":
-  "normal",
-"fast":
-  "rápido",
-"fastest":
-  "lo más rápido",
-"t = {#} yr":
-  "t = {#} años",
 "The forming solar system. In the frost line stage, the left and right arrow keys move the probe in or out (Shift for bigger steps).":
   "El sistema solar en formación. En la etapa de la línea de congelación, las flechas izquierda y derecha mueven la sonda hacia dentro o hacia fuera (Shift para pasos más grandes).",
 "Set up the cloud, the disk and the planetesimals":
@@ -456,6 +462,10 @@ VDI18N.add('es', 'demo/solar-system-formation', {
   "{t} millones de años después de que se fue el gas, quedan {n} planetas rocosos. El más grande tiene {m} masas terrestres a {a} UA (la Tierra: {#} a {#} UA; Venus: {#} a {#} UA). Esta es la corrida {k} de {runs}, la más parecida a nuestros planetas: cada corrida termina distinta, porque los choques dependen de diferencias diminutas en las órbitas.",
 "Venus today":
   "Venus hoy",
+"Mercury today":
+  "Mercurio hoy",
+"Mars today":
+  "Marte hoy",
 "young Earth":
   "la Tierra joven",
 "Theia":
@@ -516,8 +526,6 @@ VDI18N.add('es', 'demo/solar-system-formation', {
   "la Tierra mientras crece: {#} masas terrestres",
 "{#} Earth masses, a = {#} AU, e = {#}":
   "{#} masas terrestres, a = {#} UA, e = {#}",
-"Mars today":
-  "Marte hoy",
 "This run's {name} took its last giant impact {t} million years after the gas cleared: {mi} Earth masses hit at {v} km/s.":
   "En esta corrida, {name} recibió su último impacto gigante {t} millones de años después de que se fue el gas: {mi} masas terrestres chocaron a {v} km/s.",
 "Earth today":
@@ -592,8 +600,6 @@ VDI18N.add('es', 'demo/solar-system-formation', {
   "1 segundo ≈ {t} mil años",
 "1 second ≈ {t} million yr":
   "1 segundo ≈ {t} millones de años",
-"Mercury today":
-  "Mercurio hoy",
 "Loading the Moon-forming impact…":
   "Cargando el impacto que formó la Luna…",
 "Theia, a body about the size of Mars ({mi} Earth masses), falls toward the young Earth ({mt} Earth masses). They will meet {ang}° from head on, as fast as falling together from far away makes them: the standard Moon-forming impact (Canup and Asphaug 2001). Each of the {n} particles feels every other's gravity and its neighbors' pressure.":

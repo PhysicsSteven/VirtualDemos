@@ -22,6 +22,12 @@ VDI18N.add('es', 'demo/superconducting-vortices', {
   "<a><span>←</span> <span>Levitación superconductora y anclaje de flujo</span></a><a><span>Espectroscopía gamma</span> <span>→</span></a>",
 "A magnetic field gets into a type II superconductor only as whirlpools of current, each carrying exactly one flux quantum, h/2e. With nothing to hold them they form a perfect triangular lattice; defects in the material pin them, so the field piles up at the faces and stays trapped when it is taken away.":
   "Un campo magnético entra en un superconductor de tipo II solo como remolinos de corriente, cada uno con exactamente un cuanto de flujo, h/2e. Si nada los sujeta, forman una red triangular perfecta; los defectos del material los anclan, así que el campo se acumula en las caras y queda atrapado cuando se retira.",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
 "<span>Speed</span>":
   "<span>Rapidez</span>",
 "<span>Graph</span>":

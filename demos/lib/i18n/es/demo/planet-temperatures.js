@@ -46,14 +46,16 @@ VDI18N.add('es', 'demo/planet-temperatures', {
   "<a><span>←</span> <span>Encontrar exoplanetas</span></a><a><span>Resonancias orbitales</span> <span>→</span></a>",
 "Sunlight spreads out as it travels, so a planet's share falls as one over the distance squared. Balance the sunlight a planet absorbs against the heat it radiates to find its temperature, add a greenhouse to match Venus, Earth and Mars, and move the star's habitable zone.":
   "La luz solar se dispersa al viajar, así que la parte que recibe un planeta disminuye como uno sobre la distancia al cuadrado. Equilibra la luz solar que absorbe un planeta con el calor que radia para hallar su temperatura, añade un efecto invernadero para reproducir Venus, la Tierra y Marte, y mueve la zona habitable de la estrella.",
+"Time controls":
+  "Controles de tiempo",
+"Start or stop the planet going round (the picture only: nothing depends on where it is on its orbit)":
+  "Inicia o detén el giro del planeta (solo la imagen: nada depende de dónde esté en su órbita)",
 "Scale":
   "Escala",
 "Star system":
   "Sistema estelar",
 "Galaxy":
   "Galaxia",
-"Start or stop the planet going round (the picture only: nothing depends on where it is on its orbit)":
-  "Inicia o detén el giro del planeta (solo la imagen: nada depende de dónde esté en su órbita)",
 "Chart":
   "Gráfica",
 "Temperature and distance":
@@ -208,6 +210,8 @@ VDI18N.add('es', 'demo/planet-temperatures', {
   "He, CH₄, H₂O, N₂, O₂, CO₂",
 "lost to space":
   "perdidos al espacio",
+"CO₂":
+  "CO₂",
 "<span>Blind: hide the model's temperatures, the zone and which gases stay</span>":
   "<span>A ciegas: ocultar las temperaturas del modelo, la zona y qué gases se quedan</span>",
 "absorbed per m² = S ({#} − a) / f, f = {#} (whole planet), {#} (day side), {#} (under the star)":
@@ -222,8 +226,6 @@ VDI18N.add('es', 'demo/planet-temperatures', {
   "bordes de la zona habitable: d = √(L / S_eff), S_eff = S₀ + aT⋆ + bT⋆² + cT⋆³ + dT⋆⁴, T⋆ = T_star − {#} K",
 "air kept for billions of years if {#} v_rms < v_esc, v_rms = √(3kT/m)":
   "el aire se conserva miles de millones de años si {#} v_rms < v_esc, v_rms = √(3kT/m)",
-"Model: the planet absorbs the starlight on its disk that it does not reflect and radiates heat like a blackbody from the area that shares the heat. Approximations: one temperature for that whole area (real planets are warmer at the equator and on the day side); no heat from inside the planet (Jupiter gives out about as much again of its own); the greenhouse is one number e, chosen to match a measured temperature, standing for the simple layer models; real air also carries heat up by convection, and clouds and ice change the albedo as the temperature changes, which the model holds fixed. Each planet sits at its average distance on a circle. Under the star assumes the star straight overhead and no heat carried into the ground or away. The habitable zone edges come from detailed climate models (Kopparapu et al. {#}), not from this balance: inside the zone a planet like Earth, with enough carbon dioxide and water, could keep liquid water at its surface. The air rule uses the model temperature at the ground; gas escapes from the top of an atmosphere, which can be much hotter (on Earth it is, which is why Earth loses hydrogen and helium), and the solar wind strips some air too, so the rule is a rough guide.":
-  "Modelo: el planeta absorbe la luz estelar sobre su disco que no refleja y radia calor como un cuerpo negro desde el área que reparte el calor. Aproximaciones: una sola temperatura para toda esa área (los planetas reales son más cálidos en el ecuador y en el lado de día); sin calor interno del planeta (Júpiter emite de suyo casi otro tanto); el efecto invernadero es un solo número e, elegido para reproducir una temperatura medida, que representa los modelos sencillos de capas; el aire real también sube calor por convección, y las nubes y el hielo cambian el albedo al cambiar la temperatura, lo que el modelo mantiene fijo. Cada planeta está a su distancia media en un círculo. Bajo la estrella supone la estrella justo encima y que no se lleva calor al suelo ni a ninguna parte. Los bordes de la zona habitable vienen de modelos climáticos detallados (Kopparapu y colaboradores {#}), no de este balance: dentro de la zona un planeta como la Tierra, con suficiente dióxido de carbono y agua, podría mantener agua líquida en su superficie. La regla del aire usa la temperatura del modelo en el suelo; el gas escapa desde la parte alta de una atmósfera, que puede estar mucho más caliente (en la Tierra lo está, y por eso la Tierra pierde hidrógeno y helio), y el viento solar también arranca algo de aire, así que la regla es una guía aproximada.",
 "Where the numbers come from":
   "De dónde vienen los números",
 "L☉ = {#} × {#}²⁶ W, the nominal solar luminosity (IAU {#} Resolution B3); {#} AU = {#} × {#}¹¹ m (IAU {#} Resolution B2).":
@@ -300,8 +302,6 @@ VDI18N.add('es', 'demo/planet-temperatures', {
   "Venus, {#} UA, albedo de Bond {#}: sus nubes reflejan la mayor parte de la luz solar, así que sin efecto invernadero sería más fría que la Tierra ({#} K). Su superficie está a {#} K. El ajuste de efecto invernadero que la reproduce deja escapar solo cerca del {#} % de la radiación térmica del suelo, como si unas {#} capas de aire atraparan cada una toda la radiación: {#} bar de dióxido de carbono.",
 "The Moon, {#} AU from the Sun, Bond albedo {#}, no air. A lunar day lasts {#} Earth days, so the ground under a high Sun comes close to balance: about {#} K in the model against {#} K measured at the equator. At night it falls to {#} K: with no air nothing holds the heat.":
   "La Luna, a {#} UA del Sol, albedo de Bond {#}, sin aire. Un día lunar dura {#} días terrestres, así que el suelo bajo un Sol alto se acerca al equilibrio: unos {#} K en el modelo contra {#} K medidos en el ecuador. De noche baja a {#} K: sin aire nada retiene el calor.",
-"Mars, {#} AU, Bond albedo {#}. With no greenhouse the balance gives {#} K; the average surface is about {#} K. Its thin carbon dioxide air ({#} mbar) adds only about {#} K.":
-  "Marte, {#} UA, albedo de Bond {#}. Sin efecto invernadero el balance da {#} K; la superficie promedio está a unos {#} K. Su delgado aire de dióxido de carbono ({#} mbar) añade solo unos {#} K.",
 "Four billion years ago the Sun gave out about {#} % of its light today (L = {#} L☉, Gough {#}). Keep Earth's albedo and today's greenhouse and the planet comes out at {#} K, below freezing, yet rocks show liquid water then: the faint young Sun puzzle. A stronger greenhouse is the usual answer. The zone moves in with the dimmer Sun. The star's temperature is left at today's {#} K (the zone edges depend mostly on L).":
   "Hace cuatro mil millones de años el Sol emitía cerca del {#} % de su luz actual (L = {#} L☉, Gough {#}). Con el albedo de la Tierra y el efecto invernadero actual el planeta sale a {#} K, bajo el punto de congelación, y aun así las rocas muestran agua líquida en esa época: el problema del Sol joven débil. Un efecto invernadero más fuerte es la respuesta habitual. La zona se acerca con el Sol más tenue. La temperatura de la estrella se deja en los {#} K actuales (los bordes de la zona dependen sobre todo de L).",
 "The nearest star to the Sun, a red dwarf with {#} % of the Sun's light (log L = −{#}, {#} K), and its planet b, {#} AU out, {#} times closer than Earth to the Sun. Its albedo, air and size are unknown: the setup borrows Earth's albedo and escape speed, with no greenhouse.":
@@ -342,8 +342,6 @@ VDI18N.add('es', 'demo/planet-temperatures', {
   "rapidez (km/s, escala logarítmica)",
 "CH₄":
   "CH₄",
-"CO₂":
-  "CO₂",
 "Titan":
   "Titán",
 "TRAPPIST-{#} e in the model":
@@ -355,5 +353,9 @@ VDI18N.add('es', 'demo/planet-temperatures', {
 "Note":
   "Nota",
 "The zone formulas hold from {#} to {#} K; the edges use {#} K.":
-  "Las fórmulas de la zona valen de {#} a {#} K; los bordes usan {#} K."
+  "Las fórmulas de la zona valen de {#} a {#} K; los bordes usan {#} K.",
+"Model: the planet absorbs the starlight on its disk that it does not reflect and radiates heat like a blackbody from the area that shares the heat. Approximations: one temperature for that whole area (real planets are warmer at the equator and on the day side); no heat from inside the planet (Jupiter gives out about as much again of its own); the greenhouse is one number e, chosen to match a measured temperature, standing for the simple layer models; real air also carries heat up by convection, and clouds and ice change the albedo as the temperature changes, which the model holds fixed. Each planet sits at its average distance on a circle. Under the star assumes the star straight overhead and no heat carried into the ground or away. The habitable zone edges come from detailed climate models (Kopparapu et al. {#}), not from this balance: inside the zone a planet like Earth, with enough carbon dioxide and water, could keep liquid water at its surface. The air rule uses the model temperature at the ground; gas escapes from the top of an atmosphere, which can be much hotter (on Earth it is, which is why Earth loses hydrogen and helium), and the solar wind strips some air too, so the rule is a rough guide.":
+  "Modelo: el planeta absorbe la luz estelar sobre su disco que no refleja y radia calor como un cuerpo negro desde el área que reparte el calor. Aproximaciones: una sola temperatura para toda esa área (los planetas reales son más cálidos en el ecuador y en el lado de día); sin calor interno del planeta (Júpiter emite de suyo casi otro tanto); el efecto invernadero es un solo número e, elegido para reproducir una temperatura medida, que representa los modelos sencillos de capas; el aire real también sube calor por convección, y las nubes y el hielo cambian el albedo al cambiar la temperatura, lo que el modelo mantiene fijo. Cada planeta está a su distancia media en un círculo. Bajo la estrella supone la estrella justo encima y que no se lleva calor al suelo ni a ninguna parte. Los bordes de la zona habitable vienen de modelos climáticos detallados (Kopparapu y colaboradores {#}), no de este balance: dentro de la zona un planeta como la Tierra, con suficiente dióxido de carbono y agua, podría mantener agua líquida en su superficie. La regla del aire usa la temperatura del modelo en el suelo; el gas escapa desde la parte alta de una atmósfera, que puede estar mucho más caliente (en la Tierra lo está, y por eso la Tierra pierde hidrógeno y helio), y el viento solar también arranca algo de aire, así que la regla es una guía aproximada.",
+"Mars, {#} AU, Bond albedo {#}. With no greenhouse the balance gives {#} K; the average surface is about {#} K. Its thin carbon dioxide air ({#} mbar) adds only about {#} K.":
+  "Marte, {#} UA, albedo de Bond {#}. Sin efecto invernadero el balance da {#} K; la superficie promedio está a unos {#} K. Su delgado aire de dióxido de carbono ({#} mbar) añade solo unos {#} K."
 });

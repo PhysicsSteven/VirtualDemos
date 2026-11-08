@@ -16,6 +16,12 @@ VDI18N.add('es', 'demo/acoustic-levitation', {
   "Dos cuencos de bocinas de ultrasonido de {#} kHz producen una onda sonora estacionaria que sostiene cuentas pequeñas justo debajo de sus nodos de presión. Desplaza la fase del cuenco superior y las trampas se deslizan a lo largo del eje, llevando las cuentas.",
 "mm · {#} kHz, λ = {#} mm at {#} °C · kPa":
   "mm · {#} kHz, λ = {#} mm a {#} °C · kPa",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
 "3D field":
   "Campo 3D",
 "Trap pockets":
@@ -198,6 +204,8 @@ VDI18N.add('es', 'demo/acoustic-levitation', {
   "+{#}°, trampas +{#} mm",
 "Your own setup. Pick a setup above to start again.":
   "Tu propia configuración. Elige una configuración de arriba para empezar de nuevo.",
+"Holds water: push up to {#} × its weight":
+  "Sostiene agua: empuja hacia arriba hasta {#} × su peso",
 "width {#} µJ":
   "ancho {#} µJ",
 "No trap: the bead falls":
@@ -216,8 +224,6 @@ VDI18N.add('es', 'demo/acoustic-levitation', {
   "La fase del cuenco superior barre de un lado a otro. Cada {#}° mueve las trampas un espaciado entre trampas, y las cuentas las acompañan: pinzas acústicas.",
 "A water droplet is {#} times denser than foam. It still floats at {#} V, but sits further below its node, and its trap is shallower for its weight.":
   "Una gota de agua es {#} veces más densa que la espuma. Todavía flota a {#} V, pero queda más abajo de su nodo, y su trampa es menos profunda para su peso.",
-"Holds water: push up to {#} × its weight":
-  "Sostiene agua: empuja hacia arriba hasta {#} × su peso",
 "With one emitter the phase only shifts the timing of the whole field; the reflected wave shifts with it, so the traps stay put.":
   "Con un solo emisor la fase solo desplaza la sincronía de todo el campo; la onda reflejada se desplaza con ella, así que las trampas no se mueven.",
 "The 3D grid has {#} × {#} × {#} points {#} mm apart, x and y within ±{#} mm, between the reflector and the emitter, outside its near field. Each point holds the full source sum the slice uses, for each bowl at unit drive; drive and phase are applied when drawing, and the colors between points are interpolated linearly. Time runs {#} {#} times slower than real: one {#} µs cycle takes {#} s. Opacity and color strength grow as |p|^{#}, a display choice so the weaker waves near the bowls still show. Trap pockets are the surfaces where Gor'kov's U for this bead equals the level, on a finer grid of {#} × {#} × {#} points {#} mm apart near the axis. Gravity is not part of them: it adds Wz, which pulls each trap below its pocket's center and, when it wins, drops the bead (see the trap table).":

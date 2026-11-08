@@ -16,12 +16,14 @@ VDI18N.add('es', 'demo/rainbows', {
   "Sigue un rayo de luz solar hacia el interior de una gota de lluvia, alrededor de la parte de atrás y de vuelta hacia afuera, y mira por qué la luz que sale de la gota se acumula cerca de {#}° del punto justo opuesto al Sol. Luego sal al aire libre: el arcoíris primario, el secundario más tenue con sus colores invertidos, la banda oscura entre ellos, y el cono de gotas que forma tu propio arcoíris.",
 "degrees, nm":
   "grados, nm",
+"Time controls":
+  "Controles de tiempo",
+"Sweep the ray":
+  "Barrer el rayo",
 "One drop":
   "Una gota",
 "The sky":
   "El cielo",
-"Sweep the ray":
-  "Barrer el rayo",
 "A raindrop with a ray of sunlight entering, reflecting inside and leaving toward an observer, and a graph of how much the ray is turned against where it enters. In the sky view, a rain shower with the primary and secondary rainbows around the point opposite the Sun. Arrow keys move the ray or the Sun; Space plays.":
   "Una gota de lluvia con un rayo de luz solar que entra, se refleja dentro y sale hacia un observador, y una gráfica de cuánto gira el rayo en función de dónde entra. En la vista del cielo, un chubasco con los arcoíris primario y secundario alrededor del punto opuesto al Sol. Las flechas mueven el rayo o el Sol; Espacio inicia.",
 "Divider between the drop and its graph":

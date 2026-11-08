@@ -7,6 +7,7 @@
 <script src="lib/theme.js"></script>
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
 <script src="lib/vd3.js"></script>
 <script src="lib/vd3kit.js"></script>
 <style>
@@ -2642,5 +2643,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 <script>/* dividers between the panes (VD.splitPanes in demos/lib/vd.js); a browser with an older cached vd.js keeps the panes as they are */
 (function () { if (!window.VD || !VD.splitPanes) return; var q = function (s) { return document.querySelector(s); }; VD.splitPanes(q("#ePane"), q("#wPane"), { key: 'wave', label: 'Divider between the energy picture and the wave function' });
   VD.splitPanes(q("#q2Pic"), q("#q2LevBox"), { key: 'wells2d', label: 'Divider between the 2D picture and the energy levels' }); })();</script>
+<script>/* the shared control panel (demos/lib/vdpanel.js): the time controls in one group at the left of the strip */
+if (window.VD && VD.panel) { VD.panel({ steps: ['#stepBtn'], speed: '#speedSeg', clock: '#tclock' }); VD.panel({ play: '#play2', steps: ['#step2'], reset: '#reset2', speed: '#speed2', clock: '#tclock2' }); }</script>
 </body>
 </html>

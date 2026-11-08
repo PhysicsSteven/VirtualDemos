@@ -22,6 +22,12 @@ VDI18N.add('es', 'demo/huygens', {
   "<a><span>←</span> <span>Ondas electromagnéticas</span></a><a><span>Banco óptico</span> <span>→</span></a>",
 "Light is slower in matter, v = c/n. Race light through water, glass and diamond, then use Huygens's wavelets to see why that slowing bends a wave at a boundary, how a mirror reflects it, and how a wave spreads through an opening.":
   "La luz es más lenta en la materia, v = c/n. Haz competir la luz a través del agua, el vidrio y el diamante, y luego usa las ondículas de Huygens para ver por qué ese frenado desvía una onda en una frontera, cómo la refleja un espejo y cómo se dispersa una onda a través de una abertura.",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
 "Depending on the view: light pulses racing along lanes of different materials; a wavefront building the next one from wavelets; a plane wave meeting a boundary with wavelets from the boundary; or a wave passing through an opening in a wall.":
   "Según la vista: pulsos de luz que compiten por carriles de distintos materiales; un frente de onda que construye el siguiente a partir de ondículas; una onda plana que llega a una frontera, con ondículas desde la frontera; o una onda que pasa por una abertura en una pared.",
 "Light in matter: a race":

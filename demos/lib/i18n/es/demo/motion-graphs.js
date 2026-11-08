@@ -4,10 +4,20 @@ VDI18N.add('es', 'demo/motion-graphs', {
   "resid.",
 "Motion Graphs":
   "Gráficas de movimiento",
+"<a>Kinematics</a>":
+  "<a>Cinemática</a>",
+"<a><span>←</span> <span>Vectors and Relative Motion</span></a><a><span>Projectile Range</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Vectores y movimiento relativo</span></a><a><span>Alcance de proyectiles</span> <span>→</span></a>",
 "A cart moves along a straight track. Its position, velocity and acceleration are graphed against time: each graph is the slope of the one above, and the area under each is the change in the one above.":
   "Un carrito se mueve por un riel recto. Su posición, velocidad y aceleración se grafican en función del tiempo: cada gráfica es la pendiente de la de arriba, y el área bajo cada una es el cambio de la de arriba.",
 "A cart on a track above graphs of position, velocity and acceleration against time. Drag on a graph, or press the left and right arrow keys, to move the time marker. Space plays or pauses, R starts over. In Walk the graph, drag the cart or hold the left and right arrow keys during a run to move it.":
   "Un carrito en un riel sobre gráficas de posición, velocidad y aceleración en función del tiempo. Arrastra sobre una gráfica, o pulsa las flechas izquierda y derecha, para mover el marcador de tiempo. Espacio inicia o pausa, R empieza de nuevo. En Recorre la gráfica, arrastra el carrito o mantén pulsadas las flechas izquierda y derecha durante una corrida para moverlo.",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
 "Constant velocity":
   "Velocidad constante",
 "Speeding up":
@@ -136,10 +146,6 @@ VDI18N.add('es', 'demo/motion-graphs', {
   "El ajuste es x = x₀ + v₀t + ½at² por mínimos cuadrados con tus filas, para una etapa de aceleración constante. Captura filas de una sola etapa.",
 "Blind hides the velocity and acceleration graphs, their readouts, the tangent lines, the areas, the stage settings and the a and v₀ from your fit, leaving the position graph, as from a motion detector. Work out v and a from it.":
   "A ciegas oculta las gráficas de velocidad y aceleración, sus lecturas, las rectas tangentes, las áreas, los ajustes de las etapas y la a y la v₀ de tu ajuste, y deja la gráfica de posición, como la de un detector de movimiento. Calcula v y a a partir de ella.",
-"<a>Kinematics</a>":
-  "<a>Cinemática</a>",
-"<a><span>←</span> <span>Vectors and Relative Motion</span></a><a><span>Projectile Range</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Vectores y movimiento relativo</span></a><a><span>Alcance de proyectiles</span> <span>→</span></a>",
 "Constant a = {#} m/s²: v grows as a straight line and x curves upward as a parabola. The tangent to x gets steeper; its slope is the v at that moment.":
   "a constante = {#} m/s²: v crece como una recta y x se curva hacia arriba como una parábola. La tangente a x se vuelve más empinada; su pendiente es la v en ese momento.",
 "The acceleration is negative the whole time, yet the cart first moves forward. It stops at t = {#} s (v = {#}, the top of the x parabola) and comes back. a is not zero at the turning point.":

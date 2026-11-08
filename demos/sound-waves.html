@@ -7,6 +7,7 @@
 <script src="lib/theme.js"></script>
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
 <script src="lib/vd3.js"></script>
 <script src="lib/vd3kit.js"></script>
 <style>.rail details.more > p + p { margin-top: 6px; }
@@ -1351,5 +1352,7 @@ details.more[open] summary { margin-bottom: 6px; }
   (function loop(now) { const dt = Math.min(0.05, ((now || last) - last) / 1000); last = now || last; acc += dt; if (acc > 1 / 40) { tick(acc); acc = 0; } requestAnimationFrame(loop); })();
 })();
 </script>
+<script>/* the shared control panel (demos/lib/vdpanel.js): the time controls in one group at the left of the strip */
+if (window.VD && VD.panel) VD.panel({ reset: false, step: true });</script>
 </body>
 </html>

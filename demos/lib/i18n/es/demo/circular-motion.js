@@ -14,10 +14,20 @@ VDI18N.add('es', 'demo/circular-motion', {
   "Longitudes de las flechas a escala; la fuerza neta se dibuja aparte",
 "Circular Motion":
   "Movimiento circular",
+"<a>Kinematics</a>":
+  "<a>Cinemática</a>",
+"<a><span>←</span> <span>Ball Launched from a Moving Cart</span></a><a><span>Forces and Friction</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Pelota lanzada desde un carrito en movimiento</span></a><a><span>Fuerzas y fricción</span> <span>→</span></a>",
 "Moving in a circle at constant speed means accelerating toward the center, a = v²/r. Something real has to supply the force mv²/r: a string, friction, a tilted road, a wall, or the track and gravity together.":
   "Moverse en un círculo con rapidez constante significa acelerar hacia el centro, a = v²/r. Algo real tiene que proporcionar la fuerza mv²/r: una cuerda, la fricción, un camino inclinado, una pared, o la pista y la gravedad juntas.",
 "The moving object on its circle with velocity and acceleration arrows, beside its free body diagram. Space plays or pauses, C cuts the string or removes the force.":
   "El objeto en movimiento sobre su círculo con flechas de velocidad y aceleración, junto a su diagrama de cuerpo libre. Espacio inicia o pausa, C corta la cuerda o quita la fuerza.",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
 "Cut the string":
   "Cortar la cuerda",
 "Divider between the motion and the free body diagram":
@@ -56,10 +66,6 @@ VDI18N.add('es', 'demo/circular-motion', {
   "El rizo va a la mitad de la rapidez y los autos a un cuarto de la rapidez real, para que el movimiento sea fácil de seguir; todos los números son para el tiempo real. A ciegas oculta los tamaños de las fuerzas (flechas dibujadas de igual longitud), a = v²/r, los límites de rapidez y las predicciones de lo que pasa, y deja los ajustes y el movimiento.",
 "Motion seen from a turning frame, where the Coriolis and centrifugal forces appear: open <a>Rotating Frames</a>.":
   "El movimiento visto desde un marco que gira, donde aparecen las fuerzas de Coriolis y centrífuga: abre <a>Marcos de referencia en rotación</a>.",
-"<a>Kinematics</a>":
-  "<a>Cinemática</a>",
-"<a><span>←</span> <span>Ball Launched from a Moving Cart</span></a><a><span>Forces and Friction</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Pelota lanzada desde un carrito en movimiento</span></a><a><span>Fuerzas y fricción</span> <span>→</span></a>",
 "outcome":
   "resultado",
 "String cut: no horizontal force, so it moves in a straight line.":

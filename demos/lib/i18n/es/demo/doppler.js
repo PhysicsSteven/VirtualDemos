@@ -20,12 +20,16 @@ VDI18N.add('es', 'demo/doppler', {
   "Una fuente en movimiento apiña sus frentes de onda por delante y los separa por detrás, así que el observador oye un tono distinto. Más rápido que el sonido, los frentes se acumulan en un cono de Mach. Para la luz, la relatividad agrega la dilatación del tiempo.",
 "sound: m, s, Hz, v = {#} m/s · light: light seconds, c = {#} {#} km/s":
   "sonido: m, s, Hz, v = {#} m/s · luz: segundos luz, c = {#} {#} km/s",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
 "Kind of wave":
   "Tipo de onda",
 "Sound":
   "Sonido",
-"3D or flat":
-  "3D o plano",
 "Whole view":
   "Vista completa",
 "Follow source":
@@ -34,6 +38,8 @@ VDI18N.add('es', 'demo/doppler', {
   "Ojo del observador",
 "t = {#} s <small>· time ×{#}</small>":
   "t = {#} s <small>· tiempo ×{#}</small>",
+"3D or flat":
+  "3D o plano",
 "Wavefronts spreading from a moving source, with an observer. Below, the frequency the observer receives over time; for light, a plot of received over emitted frequency against speed, and the spectrum. Drag the source or the observer to move them, and drag the round grip at the tip of an arrow to set that velocity. Keys: arrows move the selected object, N selects the other object, plus and minus change its speed, brackets turn its direction, space plays or pauses, R restarts, L switches between sound and light.":
   "Frentes de onda que se extienden desde una fuente en movimiento, con un observador. Abajo, la frecuencia que recibe el observador a lo largo del tiempo; para la luz, una gráfica de la frecuencia recibida entre la emitida en función de la rapidez, y el espectro. Arrastra la fuente o el observador para moverlos, y arrastra el agarre redondo en la punta de una flecha para fijar esa velocidad. Teclas: las flechas mueven el objeto seleccionado, N selecciona el otro objeto, más y menos cambian su rapidez, los corchetes giran su dirección, espacio inicia o pausa, R reinicia, L cambia entre sonido y luz.",
 "Source and observer":

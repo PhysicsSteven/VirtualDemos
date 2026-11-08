@@ -6,8 +6,12 @@ VDI18N.add('es', 'demo/granular-flow', {
   "<a><span>←</span> <span>Laboratorio de fuerza de inverso del cuadrado</span></a><a><span>Energía en una pista</span> <span>→</span></a>",
 "Mix sand of different sizes, then turn it, shake it, shear it or let it slide. The grains sort themselves: the small ones fall through the gaps between the big ones, and the big ones ride to the top and to the front.":
   "Mezcla arena de distintos tamaños y luego hazla girar, agítala, cizállala o déjala deslizarse. Los granos se separan solos: los pequeños caen por los huecos entre los grandes, y los grandes suben arriba y al frente.",
-"Flip the frame":
-  "Voltear el marco",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
 "Refill":
   "Rellenar",
 "Real time":
@@ -18,6 +22,8 @@ VDI18N.add('es', 'demo/granular-flow', {
   "Cámara lenta ¼",
 "{#}/{#} slow motion":
   "Cámara lenta {#}/{#}",
+"Flip the frame":
+  "Voltear el marco",
 "Beads of sand in the apparatus, colored by kind. Space starts or pauses.":
   "Cuentas de arena en el aparato, coloreadas por tipo. Espacio inicia o pausa.",
 "Set up the apparatus":

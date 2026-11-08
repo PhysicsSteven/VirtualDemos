@@ -38,6 +38,8 @@ VDI18N.add('es', 'demo/proton-qa', {
   "Haz el control de calidad matutino de una máquina de protones con barrido de haz fino (pencil beam scanning) modelada según la IBA Proteus ONE: salida, alcance, posición de los spots y tamaño de los spots contra sus tolerancias. Luego sigue una máquina mientras deriva a lo largo de semanas, y verifica el plan de un paciente con un arreglo 2D de cámaras y análisis gamma.",
 "E in MeV · R90 in cm · spots in mm":
   "E en MeV · R90 en cm · spots en mm",
+"Time controls":
+  "Controles de tiempo",
 "Run QA":
   "Hacer el control",
 "Which QA":
@@ -364,8 +366,6 @@ VDI18N.add('es', 'demo/proton-qa', {
   "midiendo",
 "Gamma":
   "Gamma",
-"Plan: Disc, {#} cm across, {#} to {#} cm deep":
-  "Plan: Disco, {#} cm de diámetro, de {#} a {#} cm de profundidad",
 "patient plan":
   "plan del paciente",
 "Measured":
@@ -381,5 +381,7 @@ VDI18N.add('es', 'demo/proton-qa', {
 "Roughly to scale; beam drawn as a line.":
   "Más o menos a escala; el haz se dibuja como una línea.",
 "Drag to turn.":
-  "Arrastra para girar."
+  "Arrastra para girar.",
+"Plan: Disc, {#} cm across, {#} to {#} cm deep":
+  "Plan: Disco, {#} cm de diámetro, de {#} a {#} cm de profundidad"
 });

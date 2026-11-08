@@ -20,6 +20,8 @@ VDI18N.add('es', 'demo/wave-power', {
   "Un vibrador envía ondas a lo largo de una cuerda tensa hacia un absorbedor, que toma su energía para que nada regrese. Cambia la amplitud y la frecuencia, lee el medidor de potencia y encuentra cómo depende de cada una la potencia que lleva una onda.",
 "A string on a lab table, from a vibrator on the left to an absorber with a power meter on the right, then over a pulley to a hanger of slotted masses. Left and right arrows change the driver frequency by {#} Hz (with Shift, {#} Hz); up and down change the amplitude by {#} mm; space starts or stops the vibrator.":
   "Una cuerda sobre una mesa de laboratorio, desde un vibrador a la izquierda hasta un absorbedor con un medidor de potencia a la derecha, y luego sobre una polea hasta un portapesas con masas ranuradas. Las flechas izquierda y derecha cambian la frecuencia del excitador en {#} Hz (con Shift, {#} Hz); arriba y abajo cambian la amplitud en {#} mm; espacio enciende o apaga el vibrador.",
+"Time controls":
+  "Controles de tiempo",
 "Start the vibrator":
   "Encender el vibrador",
 "Send one pulse":
@@ -194,12 +196,12 @@ VDI18N.add('es', 'demo/wave-power', {
   "Con un extremo libre o fijo nada saca la energía, así que una onda continua se acumularía sin límite en una resonancia: envía un pulso en su lugar, o elige un absorbedor.",
 "A new unknown string is on the apparatus.":
   "Hay una nueva cuerda desconocida en el aparato.",
-"{#}: too steep for the linear model, lower A or f":
-  "{#}: demasiado empinada para el modelo lineal, baja A o f",
 "hanger {#} g + {#} g = {#} g":
   "portapesas {#} g + {#} g = {#} g",
 "Start the vibrator first: the meter reads nothing while it is stopped.":
   "Primero enciende el vibrador: el medidor no lee nada mientras está apagado.",
 "The unknown string had μ = {#} g/m.":
-  "La cuerda desconocida tenía μ = {#} g/m."
+  "La cuerda desconocida tenía μ = {#} g/m.",
+"{#}: too steep for the linear model, lower A or f":
+  "{#}: demasiado empinada para el modelo lineal, baja A o f"
 });

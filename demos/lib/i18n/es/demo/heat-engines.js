@@ -40,8 +40,14 @@ VDI18N.add('es', 'demo/heat-engines', {
   "<a>La primera ley de la termodinámica</a>",
 "An ideal gas in a cylinder goes around a closed loop on the PV diagram. The area inside the loop is the net work per cycle, and no engine can beat the Carnot efficiency set by its hottest and coldest temperatures.":
   "Un gas ideal en un cilindro recorre un ciclo cerrado en el diagrama PV. El área dentro del ciclo es el trabajo neto por ciclo, y ninguna máquina puede superar la eficiencia de Carnot que fijan sus temperaturas más caliente y más fría.",
-"Next leg":
-  "Siguiente tramo",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
+"<span>Speed</span>":
+  "<span>Rapidez</span>",
 "Animation speed":
   "Velocidad de la animación",
 "Slow":
@@ -50,10 +56,12 @@ VDI18N.add('es', 'demo/heat-engines', {
   "Normal",
 "Fast":
   "Rápida",
-"Cylinder picture":
-  "Imagen del cilindro",
+"Next leg":
+  "Siguiente tramo",
 "Leg {#}→{#}: isothermal expansion at {#} K <small>· touching the hot reservoir</small>":
   "Tramo {#}→{#}: expansión isotérmica a {#} K <small>· en contacto con el depósito caliente</small>",
+"Cylinder picture":
+  "Imagen del cilindro",
 "PV diagram of the cycle with the piston cylinder under it, the T–S diagram, and the energy flow per cycle. Drag a corner of the cycle, or the grip in the middle of a leg, to reshape it. Keys: {#} to {#} pick a corner, arrow keys move it, space plays or pauses, N goes to the next leg, R runs the cycle the other way.":
   "Diagrama PV del ciclo con el cilindro y el pistón debajo, el diagrama T–S y el flujo de energía por ciclo. Arrastra una esquina del ciclo, o el asa en medio de un tramo, para cambiar su forma. Teclas: {#} a {#} eligen una esquina, las flechas la mueven, espacio inicia o pausa, N pasa al siguiente tramo, R recorre el ciclo en sentido contrario.",
 "Divider between the PV diagram and the TS diagram":

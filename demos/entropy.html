@@ -7,6 +7,7 @@
 <script src="lib/theme.js"></script>
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
 <script src="lib/vd3.js"></script>
 <script src="lib/vd3kit.js"></script>
 <title>Entropy and the Second Law</title>
@@ -68,8 +69,8 @@
           <button type="button" data-v="sl" aria-pressed="false">Second law</button>
         </div>
         <div class="seg" role="group" aria-label="Perspective" id="dimSeg"><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
-        <button type="button" class="spin attn" id="go">Start</button>
-        <button type="button" class="btn" id="restart">Start over</button>
+        <button type="button" class="spin attn" id="go">Play</button>
+        <button type="button" class="btn" id="restart">Reset</button>
         <div class="seg" role="group" aria-label="Simulation speed" id="speedSeg">
           <button type="button" data-s="1" aria-pressed="true">1×</button>
           <button type="button" data-s="10" aria-pressed="false">10×</button>
@@ -540,7 +541,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function sync() {
     const e = S.es, d = S.sl;
     $('sN').value = N_CHOICES.indexOf(S.fe.N); $('oN').textContent = S.fe.N;
-    $('pull').disabled = !S.fe.g.wall; $('pullNote').textContent = S.fe.g.wall ? 'All the molecules start on the left.' : 'Start over puts the partition back.';
+    $('pull').disabled = !S.fe.g.wall; $('pullNote').textContent = S.fe.g.wall ? 'All the molecules start on the left.' : 'Reset puts the partition back.';
     $('sNA').value = e.NA; $('oNA').textContent = e.NA; $('sNB').value = e.NB; $('oNB').textContent = e.NB; $('sQ').value = e.q; $('oQ').textContent = e.q;
     for (const b of document.querySelectorAll('#startSeg button')) b.setAttribute('aria-pressed', String(b.dataset.st === e.start));
     for (const b of document.querySelectorAll('#devSeg button')) b.setAttribute('aria-pressed', String(b.dataset.d === d.mode));
@@ -573,7 +574,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     home3(v);
     setRun(false); sync(); redraw();
   }
-  function setRun(on) { S.run = on; const started = S.view === 'fe' ? S.fe.g.t > 0 : S.view === 'es' ? S.es.s.steps > 0 : false; $('go').textContent = on ? 'Pause' : started ? 'Resume' : 'Start'; $('go').classList.toggle('attn', !on); }
+  function setRun(on) { S.run = on; const started = S.view === 'fe' ? S.fe.g.t > 0 : S.view === 'es' ? S.es.s.steps > 0 : false; $('go').textContent = on ? 'Pause' : started ? 'Play' : 'Play'; $('go').classList.toggle('attn', !on); }
   function applyPreset(k) { const c = PRESETS[k]; S.preset = k; $('presetHint').textContent = c.hint; c.set(); setView(c.view); }
   function pull() { const g = S.fe.g; if (!g.wall) return; g.wall = false; g.trace = [[0, leftCount(g)]]; setRun(true); sync(); }
   const feChanged = () => { S.preset = 'custom'; newGas(); setRun(false); sync(); redraw(); };
@@ -930,5 +931,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 </script>
 <script>/* dividers between the panes (VD.splitPanes in demos/lib/vd.js); a browser with an older cached vd.js keeps the panes as they are */
 (function () { if (!window.VD || !VD.splitPanes) return; var q = function (s) { return document.querySelector(s); }; VD.splitPanes(q("#pane"), q(".curvebox"), { key: 'curve', label: 'Divider between the boxes and the graph' }); })();</script>
+<script>/* the shared control panel (demos/lib/vdpanel.js): the time controls in one group at the left of the strip */
+if (window.VD && VD.panel) VD.panel({ play: '#go', reset: '#restart', speed: '#speedSeg', clock: '#clock', step: true });</script>
 </body>
 </html>

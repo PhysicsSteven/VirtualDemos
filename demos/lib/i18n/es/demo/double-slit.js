@@ -24,16 +24,18 @@ VDI18N.add('es', 'demo/double-slit', {
   "a lo largo de las rendijas →",
 "Hits per bin":
   "Impactos por intervalo",
-"Fire some particles":
-  "Dispara algunas partículas",
 "Double Slit, One Particle at a Time":
   "Doble rendija, una partícula a la vez",
-"<a><span>←</span> <span>Color Vision</span></a><a><span>Diffraction Grating</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Visión del color</span></a><a><span>Rejilla de difracción</span> <span>→</span></a>",
 "Send photons, electrons or C₆₀ molecules through two slits one at a time. Each one lands at a single point; only the pile of many points shows the interference pattern.":
   "Envía fotones, electrones o moléculas de C₆₀ a través de dos rendijas, una a la vez. Cada una llega a un solo punto; solo la acumulación de muchos puntos muestra el patrón de interferencia.",
 "λ = h/p · Δy ≈ λL/d · envelope zero at sin θ = λ/a":
   "λ = h/p · Δy ≈ λL/d · cero de la envolvente en sen θ = λ/a",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
 "Fire {#}":
   "Disparar {#}",
 "Switch between the bench in perspective and the top view":
@@ -186,6 +188,8 @@ VDI18N.add('es', 'demo/double-slit', {
   "Filtro ND",
 "Photon counting camera":
   "Cámara de conteo de fotones",
+"Fire some particles":
+  "Dispara algunas partículas",
 "C₆₀ at {#} m/s, λ = {#} pm. Arndt and colleagues used a grating with a {#} nm period; two slits with that spacing put the peaks in the same places, and many slits would only sharpen them. With d = 2a the second order falls on an envelope zero and is missing. The real beam had a wide spread of speeds that blurred the side peaks; here every molecule has the same speed.":
   "C₆₀ a {#} m/s, λ = {#} pm. Arndt y sus colegas usaron una rejilla con un periodo de {#} nm; dos rendijas con esa separación ponen los picos en los mismos lugares, y muchas rendijas solo los harían más nítidos. Con d = 2a el segundo orden cae sobre un cero de la envolvente y falta. El haz real tenía una gran dispersión de rapideces que difuminaba los picos laterales; aquí todas las moléculas tienen la misma rapidez.",
 "Molecule speed v":
@@ -211,5 +215,7 @@ VDI18N.add('es', 'demo/double-slit', {
 "Your own setup. Pick a preset to return to a known experiment.":
   "Tu propia configuración. Elige una predefinida para volver a un experimento conocido.",
 "Turn on the cursors (Measure) and put them on two fringes first.":
-  "Activa primero los cursores (Medir) y ponlos sobre dos franjas."
+  "Activa primero los cursores (Medir) y ponlos sobre dos franjas.",
+"<a><span>←</span> <span>Color Vision</span></a><a><span>Diffraction Grating</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Visión del color</span></a><a><span>Rejilla de difracción</span> <span>→</span></a>"
 });

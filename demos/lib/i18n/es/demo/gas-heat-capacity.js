@@ -20,6 +20,14 @@ VDI18N.add('es', 'demo/gas-heat-capacity', {
   "<a><span>←</span> <span>Gas en una caja</span></a><a><span>Ciclos de máquinas térmicas</span> <span>→</span></a>",
 "Heat a gas with its piston locked, then with it free to rise. The same heat warms it less when it can push the piston: some goes into work. Measure C<sub>V</sub>, C<sub>P</sub> and their ratio γ, and find γ again from a ball bouncing on a cushion of gas.":
   "Calienta un gas con su pistón bloqueado y luego con el pistón libre para subir. El mismo calor lo calienta menos cuando puede empujar el pistón: una parte se convierte en trabajo. Mide C<sub>V</sub>, C<sub>P</sub> y su razón γ, y encuentra γ otra vez con una esfera que rebota sobre un cojín de gas.",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
+"<span>Speed</span>":
+  "<span>Rapidez</span>",
 "Heat a gas":
   "Calentar un gas",
 "Rüchardt's ball":
@@ -272,20 +280,20 @@ VDI18N.add('es', 'demo/gas-heat-capacity', {
   "Usa dos dedos para girar, desplaza para acercar. Átomos simulados donde la simulación los tiene, dibujados al {#}% de su tamaño.",
 "rotation {#} K":
   "rotación {#} K",
-"argon":
-  "argón",
+"carbon dioxide":
+  "dióxido de carbono",
 "The last mystery gas was {gas}.":
   "El último gas misterioso fue {gas}.",
-"The last mystery gas was argon.":
-  "El último gas misterioso fue argón.",
+"The last mystery gas was carbon dioxide.":
+  "El último gas misterioso fue dióxido de carbono.",
 "carbon monoxide":
   "monóxido de carbono",
 "The last mystery gas was carbon monoxide.":
   "El último gas misterioso fue monóxido de carbono.",
-"hydrogen sulfide":
-  "sulfuro de hidrógeno",
-"The last mystery gas was hydrogen sulfide.":
-  "El último gas misterioso fue sulfuro de hidrógeno.",
+"nitrogen":
+  "nitrógeno",
+"The last mystery gas was nitrogen.":
+  "El último gas misterioso fue nitrógeno.",
 "nitrous oxide":
   "óxido nitroso",
 "The last mystery gas was nitrous oxide.":
@@ -294,22 +302,22 @@ VDI18N.add('es', 'demo/gas-heat-capacity', {
   "helio",
 "The last mystery gas was helium.":
   "El último gas misterioso fue helio.",
-"oxygen":
-  "oxígeno",
-"The last mystery gas was oxygen.":
-  "El último gas misterioso fue oxígeno.",
-"nitrogen":
-  "nitrógeno",
-"The last mystery gas was nitrogen.":
-  "El último gas misterioso fue nitrógeno.",
 "neon":
   "neón",
 "The last mystery gas was neon.":
   "El último gas misterioso fue neón.",
-"carbon dioxide":
-  "dióxido de carbono",
-"The last mystery gas was carbon dioxide.":
-  "El último gas misterioso fue dióxido de carbono.",
+"oxygen":
+  "oxígeno",
+"The last mystery gas was oxygen.":
+  "El último gas misterioso fue oxígeno.",
+"argon":
+  "argón",
+"The last mystery gas was argon.":
+  "El último gas misterioso fue argón.",
+"hydrogen sulfide":
+  "sulfuro de hidrógeno",
+"The last mystery gas was hydrogen sulfide.":
+  "El último gas misterioso fue sulfuro de hidrógeno.",
 "hydrogen":
   "hidrógeno",
 "The last mystery gas was hydrogen.":

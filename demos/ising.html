@@ -11,6 +11,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
 <style>
 /* Layout: the spin lattice with its thermometer and field bar on the left of the stage, live plots on the right;
    instrument rail on the right; stacks on phones. Spins are amber (up) and navy (down). */
@@ -1452,5 +1453,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
 </script>
 <script>/* dividers between the panes (VD.splitPanes in demos/lib/vd.js); a browser with an older cached vd.js keeps the panes as they are */
 (function () { if (!window.VD || !VD.splitPanes) return; var q = function (s) { return document.querySelector(s); }; VD.splitPanes(q("#pLat"), q("#pPlot"), { key: 'plot', label: 'Divider between the lattice and the graph' }); })();</script>
+<script>/* the shared control panel (demos/lib/vdpanel.js): the time controls in one group at the left of the strip */
+if (window.VD && VD.panel) VD.panel({ reset: false, speed: '#spIn', steps: ['#step'] });</script>
 </body>
 </html>

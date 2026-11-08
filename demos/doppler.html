@@ -7,6 +7,7 @@
 <script src="lib/theme.js"></script>
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
 <script src="lib/vd3.js"></script>
 <style>
 /* projector on a short screen: the units line gives way so the lede fits on one or two lines */
@@ -145,7 +146,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <div class="seg" role="group" aria-label="3D or flat" id="dimSeg"><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
         <div class="seg" role="group" aria-label="Camera" id="camSeg" hidden><button type="button" data-cam="all" aria-pressed="true">Whole view</button><button type="button" data-cam="src" aria-pressed="false">Follow source</button><button type="button" data-cam="obs" aria-pressed="false">Observer's eye</button></div>
         <button type="button" class="btn" id="play">Pause</button>
-        <button type="button" class="btn" id="restart">Restart</button>
+        <button type="button" class="btn" id="restart">Reset</button>
         <button type="button" class="btn" id="audio" aria-pressed="false">Sound off</button>
         <span class="count mono" id="count" aria-live="off"></span>
       </div>
@@ -1597,5 +1598,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   requestAnimationFrame(loop);
 })();
 </script>
+<script>/* the shared control panel (demos/lib/vdpanel.js): the time controls in one group at the left of the strip */
+if (window.VD && VD.panel) VD.panel({ reset: '#restart', speed: '#tsp', step: true });</script>
 </body>
 </html>

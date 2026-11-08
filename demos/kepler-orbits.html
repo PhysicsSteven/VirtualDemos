@@ -1872,7 +1872,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   $('fit').addEventListener('click', () => { if (S.sand) sbkFit(false); else fitView(false, true); });
   /* the shared control panel (demos/lib/vdpanel.js): Play, Step one frame (a sixtieth of a second at the time speed), Reset,
      and the Time speed slider moved up from the rail */
-  if (window.VD && VD.panel) VD.panel({ speed: '#spd', step: { title: 'Forward one frame at this time speed', run: () => {
+  if (window.VD && VD.panel) VD.panel({ span: true, speed: '#spd', step: { title: 'Forward one frame at this time speed', run: () => {
     if (S.sand) return; if (S.A.done) return; stepSim(S.speed / 60); schedule(); } } });
 
   // ---------- presets ----------

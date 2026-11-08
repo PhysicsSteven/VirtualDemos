@@ -6,12 +6,20 @@ VDI18N.add('es', 'demo/elevator', {
   "velocidad, hacia arriba + (m/s)",
 "Elevator: Apparent Weight":
   "Elevador: peso aparente",
+"<a><span>←</span> <span>Forces and Friction</span></a><a><span>Inverse Square Force Lab</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Fuerzas y fricción</span></a><a><span>Laboratorio de fuerza de inverso del cuadrado</span> <span>→</span></a>",
 "Stand on a bathroom scale in an elevator. The scale reads the normal force N, not your weight mg. It reads more while the elevator speeds up going up, less while it speeds up going down, and exactly mg at any constant speed.":
   "Párate en una báscula de baño dentro de un elevador. La báscula marca la fuerza normal N, no tu peso mg. Marca más mientras el elevador acelera al subir, menos mientras acelera al bajar, y exactamente mg a cualquier velocidad constante.",
 "floors {#} m apart · g = {#} m/s²":
   "pisos separados {#} m · g = {#} m/s²",
 "An elevator shaft with the car, a person standing on a scale with the normal force and weight arrows, and graphs of the scale reading and the velocity against time.":
   "Un cubo de elevador con la cabina, una persona de pie sobre una báscula con las flechas de la fuerza normal y del peso, y gráficas de la lectura de la báscula y de la velocidad en función del tiempo.",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
 "Cable snaps":
   "Se rompe el cable",
 "Divider between the elevator and the graphs":
@@ -70,8 +78,6 @@ VDI18N.add('es', 'demo/elevator', {
   "A ciegas oculta la lectura de la báscula, la flecha de N y la gráfica de la báscula, para que el grupo prediga primero cada etapa del viaje.",
 "Model: the car's acceleration ramps up to ±a at the chosen jerk (rate of change of acceleration), holds, and ramps back to zero, so the scale reading changes gradually as in a real elevator; tick “Instant starts and stops” for the textbook model, where the acceleration and the scale reading jump. The scale is massless and reads instantly, in kilograms as N/g. Cable snaps: free fall for up to one second (less if the car is too near the pit to stop at g after a full second), then the safety brakes stop the car at a constant deceleration of at least g, more if needed to stop above the pit.":
   "Modelo: la aceleración de la cabina sube hasta ±a con la sobreaceleración elegida (tasa de cambio de la aceleración), se mantiene y baja de nuevo a cero, así que la lectura de la báscula cambia gradualmente como en un elevador real; marca “Arranques y frenados instantáneos” para el modelo del libro de texto, donde la aceleración y la lectura de la báscula saltan. La báscula no tiene masa y marca al instante, en kilogramos como N/g. Se rompe el cable: caída libre hasta por un segundo (menos si la cabina está demasiado cerca del foso para detenerse con g después de un segundo completo), luego los frenos de seguridad detienen la cabina con una desaceleración constante de al menos g, mayor si hace falta para detenerse antes del foso.",
-"<a><span>←</span> <span>Forces and Friction</span></a><a><span>Inverse Square Force Lab</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Fuerzas y fricción</span></a><a><span>Laboratorio de fuerza de inverso del cuadrado</span> <span>→</span></a>",
 "floor {#}":
   "piso {#}",
 "stage":

@@ -11,6 +11,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
 <script src="lib/vd3.js"></script>
 <style>
 /* Layout: a 3D lab bench across the top of the stage, the oscilloscope and the chart recorder below it; instrument rail on the right; stacks on phones. */
@@ -1555,5 +1556,7 @@ table.rows td.b { font-size: 0.76rem; }
   requestAnimationFrame(loop);
 })();
 </script>
+<script>/* the shared control panel (demos/lib/vdpanel.js): the time controls in one group at the left of the strip */
+if (window.VD && VD.panel) VD.panel({ reset: false, step: true });</script>
 </body>
 </html>

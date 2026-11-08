@@ -7,6 +7,7 @@
 <script src="lib/theme.js"></script>
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
 <script src="lib/vd3.js"></script>
 <script src="lib/vd3kit.js"></script>
 <script>/* the Air column and Levitation views moved to their own demos (2026-10-24): old links to them open Resonators or Acoustic Levitation */ (function () { var q = location.search + location.hash; if (/[?&#](view|v)=lev\b|#lev(itation)?\b/i.test(q)) location.replace('acoustic-levitation.html'); else if (/[?&#](view|v)=pipe\b|#pipe\b|[?&#]p(reset)?=closed\b/i.test(q)) location.replace('resonators.html'); })();</script>
@@ -1952,5 +1953,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   requestAnimationFrame(loop);
 })();
 </script>
+<script>/* the shared control panel (demos/lib/vdpanel.js): the time controls in one group at the left of the strip */
+if (window.VD && VD.panel) VD.panel({ speed: '#speedSeg', clock: '#clock', step: true });</script>
 </body>
 </html>

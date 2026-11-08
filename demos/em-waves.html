@@ -7,6 +7,7 @@
 <script src="lib/theme.js"></script>
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
 <script src="lib/vd3.js"></script>
 <style>
 /* projector on a short screen: the units line gives way so the lede fits on one or two lines */
@@ -1505,6 +1506,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const playBtn = $('play');
   function setPlaying(on) { playing = on; playBtn.textContent = on ? 'Pause' : 'Play'; playBtn.classList.toggle('primary', !on); }
   playBtn.addEventListener('click', () => setPlaying(!playing));
+  /* the shared control panel (demos/lib/vdpanel.js): the time controls in one group at the left of the strip */
+  if (window.VD && VD.panel) VD.panel({ step: true });
   function resetView() { if (S.mode === 'guide') { GV.th = -Math.PI / 2 - 0.55; GV.ph = 1.15; GV.zoom = 1; draw(); return; } view.th = -Math.PI / 2 - 0.42; view.ph = 1.2; view.zoom = 1; draw(); }
   $('resetView').addEventListener('click', resetView);
 

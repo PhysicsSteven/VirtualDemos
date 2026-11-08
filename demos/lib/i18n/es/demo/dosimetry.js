@@ -26,8 +26,16 @@ VDI18N.add('es', 'demo/dosimetry', {
   "Los fotones entregan su energía a los electrones, y los electrones la llevan más adentro antes de dejarla como dosis: observa cómo la kerma y la dosis absorbida se separan en la acumulación y corren juntas más allá de ella. Luego recolecta los iones en una cámara Farmer y calibra un haz de protones como lo hace una calibración TRS-{#}, una corrección a la vez.",
 "Gy · nC · cm of water":
   "Gy · nC · cm de agua",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
 "Clear the histories and start counting again":
   "Borrar las historias y empezar a contar de nuevo",
+"{#} histories":
+  "{#} historias",
 "What the picture shows":
   "Qué muestra la imagen",
 "Kerma and dose":
@@ -36,8 +44,6 @@ VDI18N.add('es', 'demo/dosimetry', {
   "Cámara de ionización",
 "Calibration":
   "Calibración",
-"{#} histories":
-  "{#} historias",
 "A photon beam entering water, the electrons it sets moving, and the collision kerma and absorbed dose against depth. Drag in the picture or the graph to move the depth probe.":
   "Un haz de fotones que entra al agua, los electrones que pone en movimiento, y la kerma de colisión y la dosis absorbida en función de la profundidad. Arrastra en la imagen o en la gráfica para mover la sonda de profundidad.",
 "Set up the beam and the measurement":

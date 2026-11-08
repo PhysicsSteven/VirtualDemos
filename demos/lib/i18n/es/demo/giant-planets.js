@@ -16,6 +16,12 @@ VDI18N.add('es', 'demo/giant-planets', {
   "Júpiter, Saturno, Urano y Neptuno a escala, con los datos de la NASA. Descubre por qué Saturno flotaría, por qué los anillos están cerca de sus planetas, donde una luna sería despedazada, cómo se cizallan las partículas de los anillos y cómo Ío, Europa y Ganímedes mantienen el paso en un ritmo {#}:{#}:{#} cuyas mareas calientan a Ío.",
 "km · days · g/cm³":
   "km · días · g/cm³",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
 "Put the clock back to the start and the test moon back together":
   "Regresa el reloj al inicio y vuelve a armar la luna de prueba",
 "{#} minutes a second":
@@ -168,8 +174,6 @@ VDI18N.add('es', 'demo/giant-planets', {
   "Los tamaños, masas, densidades, giros, achatamientos e inclinaciones son de la NASA. Cada planeta se dibuja como un esferoide achatado con sus radios ecuatorial y polar, visto desde {#}° arriba del plano de su órbita con su eje inclinado hacia la derecha. Un planeta de densidad uniforme que girara igual de rápido se achataría 5q/{#}, con q = ω²a³/GM, su giro comparado con su gravedad en el ecuador; los gigantes reales se achatan menos porque su masa está concentrada hacia el centro. Las bandas, los colores y la mancha que gira son una ilustración.",
 "Where the numbers come from":
   "De dónde vienen los números",
-"Planets, moons and rings: NASA's planetary, satellite and ring fact sheets (D. R. Williams, NSSDCA, Goddard Space Flight Center). Where the moons of Jupiter and Saturn start: JPL's mean orbital elements for noon on {#} January {#} (ssd.jpl.nasa.gov). The Roche limit for a fluid moon: S. Chandrasekhar, Ellipsoidal Figures of Equilibrium ({#}). Io's tidal response k₂/Q = {#} ± {#}: V. Lainey and others, Nature {#}, {#} ({#}). Io's heat flow, more than {#} W/m²: G. J. Veeder and others, Journal of Geophysical Research {#}, {#} ({#}). Earth's heat flow, {#} TW: J. H. Davies and D. R. Davies, Solid Earth {#}, {#} ({#}). Tidal heating and resonances: C. D. Murray and S. F. Dermott, Solar System Dynamics ({#}).":
-  "Planetas, lunas y anillos: hojas de datos planetarios, de satélites y de anillos de la NASA (D. R. Williams, NSSDCA, Goddard Space Flight Center). Dónde empiezan las lunas de Júpiter y Saturno: elementos orbitales medios del JPL para el mediodía del {#} de enero de {#} (ssd.jpl.nasa.gov). El límite de Roche para una luna fluida: S. Chandrasekhar, Ellipsoidal Figures of Equilibrium ({#}). Respuesta de marea de Ío k₂/Q = {#} ± {#}: V. Lainey y colaboradores, Nature {#}, {#} ({#}). Flujo de calor de Ío, más de {#} W/m²: G. J. Veeder y colaboradores, Journal of Geophysical Research {#}, {#} ({#}). Flujo de calor de la Tierra, {#} TW: J. H. Davies y D. R. Davies, Solid Earth {#}, {#} ({#}). Calentamiento por marea y resonancias: C. D. Murray y S. F. Dermott, Solar System Dynamics ({#}).",
 "view":
   "vista",
 "object":
@@ -452,6 +456,8 @@ VDI18N.add('es', 'demo/giant-planets', {
   "Órbitas de Marte a escala, lunas dibujadas {#} veces más grandes",
 "Pluto's orbits to scale, moons to scale too":
   "Órbitas de Plutón a escala, lunas también a escala",
+"Planets, moons and rings: NASA's planetary, satellite and ring fact sheets (D. R. Williams, NSSDCA, Goddard Space Flight Center). Where the moons of Jupiter and Saturn start: JPL's mean orbital elements for noon on {#} January {#} (ssd.jpl.nasa.gov). The Roche limit for a fluid moon: S. Chandrasekhar, Ellipsoidal Figures of Equilibrium ({#}). Io's tidal response k₂/Q = {#} ± {#}: V. Lainey and others, Nature {#}, {#} ({#}). Io's heat flow, more than {#} W/m²: G. J. Veeder and others, Journal of Geophysical Research {#}, {#} ({#}). Earth's heat flow, {#} TW: J. H. Davies and D. R. Davies, Solid Earth {#}, {#} ({#}). Tidal heating and resonances: C. D. Murray and S. F. Dermott, Solar System Dynamics ({#}).":
+  "Planetas, lunas y anillos: hojas de datos planetarios, de satélites y de anillos de la NASA (D. R. Williams, NSSDCA, Goddard Space Flight Center). Dónde empiezan las lunas de Júpiter y Saturno: elementos orbitales medios del JPL para el mediodía del {#} de enero de {#} (ssd.jpl.nasa.gov). El límite de Roche para una luna fluida: S. Chandrasekhar, Ellipsoidal Figures of Equilibrium ({#}). Respuesta de marea de Ío k₂/Q = {#} ± {#}: V. Lainey y colaboradores, Nature {#}, {#} ({#}). Flujo de calor de Ío, más de {#} W/m²: G. J. Veeder y colaboradores, Journal of Geophysical Research {#}, {#} ({#}). Flujo de calor de la Tierra, {#} TW: J. H. Davies y D. R. Davies, Solid Earth {#}, {#} ({#}). Calentamiento por marea y resonancias: C. D. Murray y S. F. Dermott, Solar System Dynamics ({#}).",
 "True sizes and tilts (the angle under each name is its axial tilt). Bands and colors are a painting.":
   "Tamaños e inclinaciones reales (el ángulo bajo cada nombre es su inclinación axial). Las bandas y los colores son una ilustración.",
 "Io drawn {#} times larger; its orbit and stretch exaggerated":

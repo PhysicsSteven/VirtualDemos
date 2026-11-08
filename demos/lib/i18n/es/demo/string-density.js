@@ -12,6 +12,12 @@ VDI18N.add('es', 'demo/string-density', {
   "Una cuerda va de un vibrador, pasando por una polea, a una masa colgante. Cuelga masas a una frecuencia fija, o barre la frecuencia con una masa fija, encuentra las resonancias y cuenta los vientres. Una recta a través de tus lecturas da la masa por metro de la cuerda, μ.",
 "A string on a lab table, from a vibrator on the left to a pulley at the table's edge on the right, with a hanger of slotted masses below the pulley. A meter rule runs under the string. Left and right arrows change the driver frequency by {#} Hz (with Shift, {#} Hz); up adds a {#} g mass, down takes off the last mass; space pauses.":
   "Una cuerda sobre una mesa de laboratorio, de un vibrador a la izquierda a una polea en el borde de la mesa a la derecha, con un portapesas con pesas ranuradas debajo de la polea. Una regla de un metro corre bajo la cuerda. Las flechas izquierda y derecha cambian la frecuencia del excitador en {#} Hz (con Shift, {#} Hz); arriba agrega una pesa de {#} g, abajo quita la última pesa; espacio pausa.",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
 "Drag the vibrator to change L":
   "Arrastra el vibrador para cambiar L",
 "Length L, vibrator to pulley":

@@ -12,12 +12,14 @@ VDI18N.add('es', 'demo/galton-board', {
   "Las bolas caen a través de filas de clavos y rebotan a la izquierda o a la derecha en cada uno. Una sola bola es impredecible; miles se acumulan en la distribución binomial y, con muchas filas, en una curva de campana.",
 "counts":
   "conteos",
-"Drop {#}":
-  "Soltar {#}",
+"Time controls":
+  "Controles de tiempo",
 "Stream":
   "Flujo continuo",
 "Empty the bins":
   "Vaciar las casillas",
+"Drop {#}":
+  "Soltar {#}",
 "A board of pegs in a triangle with bins underneath. Balls fall through the pegs into the bins, and the bins fill into a histogram. Space drops one ball.":
   "Un tablero de clavos en forma de triángulo con casillas debajo. Las bolas caen entre los clavos hasta las casillas, y las casillas se llenan formando un histograma. Espacio suelta una bola.",
 "Divider between the pegs and the bins":

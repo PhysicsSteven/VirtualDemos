@@ -12,7 +12,7 @@ time: 10 to 20 minutes
 
 ## Before class
 
-Students should know what friction, a terminal speed and a coefficient of restitution are. **Start** runs the chosen setup (in the landslide it lifts the gate, in the sand picture it flips the frame); **Refill** puts the sand back. The card sets the apparatus and its drive (turning rate, shaking, lid speed, slope angle, liquid) and how the sand starts. The **Sand** panel sets up to five kinds of grain: number, diameter, size spread, color, roughness (friction μ), shape and material; changing the sand refills the apparatus. The graph tracks where each kind sits. **Blind** in **Lab** hides the predicted critical rate and settling speeds.
+Students should know what friction, a terminal speed and a coefficient of restitution are. **Play** runs the chosen setup (in the landslide it lifts the gate, in the sand picture it flips the frame); **Refill** puts the sand back. The card sets the apparatus and its drive (turning rate, shaking, lid speed, slope angle, liquid) and how the sand starts. The **Sand** panel sets up to five kinds of grain: number, diameter, size spread, color, roughness (friction μ), shape and material; changing the sand refills the apparatus. The graph tracks where each kind sits. **Blind** in **Lab** hides the predicted critical rate and settling speeds.
 
 ## Running it in class
 

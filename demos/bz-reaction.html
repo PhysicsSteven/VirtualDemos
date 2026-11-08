@@ -11,6 +11,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
 <script src="lib/vd3.js"></script>
 <style>
 /* Layout: the vessel (beaker, dish or flow reactor) on the left; two plots stacked on the right; instrument rail on the right; stacks on narrow screens. */
@@ -2172,5 +2173,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 </script>
 <script>/* dividers between the panes (VD.splitPanes in demos/lib/vd.js); a browser with an older cached vd.js keeps the panes as they are */
 (function () { if (!window.VD || !VD.splitPanes) return; var q = function (s) { return document.querySelector(s); }; VD.splitPanes(q("#paneA"), q("#paneB"), { key: 'dish', label: 'Divider between the dish and the graphs' }); VD.splitPanes(q("#paneB"), q("#paneC"), { key: 'plots', label: 'Divider between the two graphs' }); })();</script>
+<script>/* the shared control panel (demos/lib/vdpanel.js): the time controls in one group at the left of the strip */
+if (window.VD && VD.panel) VD.panel({ speed: '#sRate', clock: '#tclock', step: true });</script>
 </body>
 </html>

@@ -7,6 +7,7 @@
 <script src="lib/theme.js"></script>
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
 <script src="lib/vd3.js"></script>
 <style>/* in scene setup controls fade away while the run plays and come back on pause or reset */
 #instr { transition: opacity 0.35s ease, visibility 0.35s; }
@@ -85,7 +86,7 @@ table.rows input:focus { border-color: var(--accent); }
 .instr.compact .vdknob { width: 34px; height: 34px; }
 .instr.compact .vdknob::before { top: 3px; height: 10px; transform-origin: 50% 14px; }
 .bench { position: relative; }
-.instr { left: 490px; top: 8px; }
+.instr { left: 490px; top: 56px; }   /* under the control panel, which now reaches past 490 px */
 /* too narrow for the panel beside the viewbar and the Tools button: it drops below them, over the empty track */
 @media (min-width: 821px) and (max-width: 1100px) { .instr { left: 240px; top: 52px; } }
 /* the viewbar wraps before it reaches the Tools button; where it wraps to two rows the panel sits below both */
@@ -587,5 +588,7 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
   (function loop(now) { const dt = Math.min(0.05, ((now || last) - last) / 1000); last = now || last; tick(dt); requestAnimationFrame(loop); })();
 })();
 </script>
+<script>/* the shared control panel (demos/lib/vdpanel.js): the time controls in one group at the left of the strip */
+if (window.VD && VD.panel) VD.panel({ play: '#go', reset: false, speed: '#speedSeg' });</script>
 </body>
 </html>

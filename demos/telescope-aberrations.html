@@ -7,6 +7,7 @@
 <script src="lib/theme.js"></script>
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
 <title>Telescope Aberrations</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -937,6 +938,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('starTest').addEventListener('change', (e) => { S.test = e.target.checked; if (!S.test) { TEST = null; draw(); } else dirty = true; });
   $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; draw(); readouts(); });
   $('play').addEventListener('click', () => { S.run = !S.run; sync(); });
+  /* the shared control panel (demos/lib/vdpanel.js): the time controls in one group at the left of the strip */
+  if (window.VD && VD.panel) VD.panel({ step: true });
   cans.can.addEventListener('keydown', (e) => { if (e.key === ' ') { $('play').click(); e.preventDefault(); } });
 
   /* ---------- the clock: only the air moves ---------- */

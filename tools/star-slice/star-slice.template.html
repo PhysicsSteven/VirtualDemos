@@ -7,6 +7,7 @@
 <script src="lib/theme.js"></script>
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
 <style>:root { box-sizing: border-box; } /* the html element, which vd.css only sizes this way along with root-2 */
 :root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
 [hidden] { display: none !important; }
@@ -3786,5 +3787,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(markAll);
 })();
 </script>
+<script>/* the shared control panel (demos/lib/vdpanel.js): the time controls in one group at the left of the strip */
+if (window.VD && VD.panel) VD.panel({ reset: '#restart', speed: '#speeds', step: true });</script>
 </body>
 </html>

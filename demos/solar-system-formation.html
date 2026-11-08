@@ -7,6 +7,7 @@
 <script src="lib/theme.js"></script>
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
 <script src="lib/vd3.js"></script>
 <script src="lib/vd3kit.js"></script>
 <title>Building a Solar System</title>
@@ -71,8 +72,8 @@
           <button type="button" data-st="planets" aria-pressed="false">3 Planets grow</button>
           <button type="button" data-st="melt" aria-pressed="false">4 Iron cores</button>
         </div>
-        <button type="button" class="spin attn" id="play">Start</button>
-        <button type="button" class="btn" id="restart" title="Put this stage back to its beginning">Start over</button>
+        <button type="button" class="spin attn" id="play">Play</button>
+        <button type="button" class="btn" id="restart" title="Put this stage back to its beginning">Reset</button>
         <button type="button" class="btn" id="skip" title="Run this stage to its end at once">To the end</button>
         <label class="lbl" for="selSpeed">Speed</label>
         <select id="selSpeed"><option value="0.5">slow</option><option value="1" selected>normal</option><option value="2">fast</option><option value="4">fastest</option></select>
@@ -1323,7 +1324,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const card = VD.setupCard($('setupCard'));
   function finished() { return S.st === 'story' ? SY.done : S.st === 'collapse' ? CL.done : S.st === 'planets' ? GR.done : S.st === 'melt' ? ML.done : true; }
   function setRun(on) { S.run = on && S.st !== 'disk'; card.away(S.run); const started = S.st === 'story' ? SY.started : S.st === 'collapse' ? CL.C.t > 0 : S.st === 'planets' ? GR.t > 1e3 : ML.t > S.tf;
-    $('play').textContent = S.run ? 'Pause' : finished() ? 'Done' : started ? 'Resume' : 'Start'; $('play').classList.toggle('attn', !S.run && !finished()); }
+    $('play').textContent = S.run ? 'Pause' : finished() ? 'Done' : 'Play'; $('play').classList.toggle('attn', !S.run && !finished()); }
   function resetStage(st) { if (st === 'story') { SY.follow = S.follow; resetStory(); } else if (st === 'collapse') resetCollapse(); else if (st === 'planets') resetGrowth(); else if (st === 'melt') resetMelt(); }
   function goStage(st, keep) { S.st = st; if (!keep) S.run = false; dirty3 = true; if (g3) g3.key = ''; sync(); setRun(false); redraw(); }
   function applyPreset(k, opening) {
@@ -1341,6 +1342,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   onSlider('sF', (v) => { S.f = v; }, 'planets'); onSlider('sGas', (v) => { S.gas = v; }, 'planets');
   onSlider('sRad', (v) => { S.R = radOf(v); }, 'melt'); onSlider('sTf', (v) => { S.tf = v; }, 'melt');
   $('play').addEventListener('click', () => { if (finished()) return; setRun(!S.run); });
+  /* the shared control panel (demos/lib/vdpanel.js): the time controls in one group at the left of the strip */
+  if (window.VD && VD.panel) VD.panel({ reset: '#restart', speed: '#selSpeed', clock: '#clock', step: true });
   $('restart').addEventListener('click', () => { resetStage(S.st); setRun(false); redraw(); });
   $('skip').addEventListener('click', () => { toEnd(); setRun(false); redraw(); });
   $('selSpeed').addEventListener('change', (e) => { S.speed = +e.target.value; });

@@ -7,6 +7,7 @@
 <script src="lib/theme.js"></script>
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
 <script src="lib/vd3.js"></script>
 <script src="lib/vd3kit.js"></script>
 <title>Rotating Frames</title>
@@ -60,7 +61,7 @@
           <button type="button" data-dim="flat" aria-pressed="true">Flat</button>
         </div>
         <button type="button" class="spin attn" id="play">Roll the ball</button>
-        <button type="button" class="proj" id="again">Start again</button>
+        <button type="button" class="proj" id="again">Reset</button>
       </div>
       <div class="scene" id="scene">
         <canvas id="can" tabindex="0" role="img" aria-label="A turntable seen from above, once from the room and once riding it, with a ball rolled across it and the path it traces in each. In the Foucault view, the floor under a long pendulum seen from above, with the swing and how far its plane has turned. Arrow keys change the turntable's speed or the latitude; Space plays."></canvas>
@@ -695,5 +696,7 @@
   window.__rf = { S, applyPreset, drawAll, sync, ballAt, fou, turnedNow, setPlay, run: (t) => { S.t = t; sync(); drawAll(); }, view: () => v3 };
 })();
 </script>
+<script>/* the shared control panel (demos/lib/vdpanel.js): the time controls in one group at the left of the strip */
+if (window.VD && VD.panel) VD.panel({ reset: '#again' });</script>
 </body>
 </html>

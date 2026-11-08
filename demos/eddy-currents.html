@@ -7,6 +7,7 @@
 <script src="lib/theme.js"></script>
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
 <script src="lib/vd3.js"></script>
 <style>.bench { position: relative; }
 /* the Set up card on the picture: it fades away while the run plays and comes back on pause or when the run ends */
@@ -95,7 +96,7 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
   <main class="bench">
     <div class="stage" id="stage">
       <canvas id="can" tabindex="0" role="img" aria-label="Three vertical pipes, in 3D (drag to turn) or flat, cut open to show the falling magnets and the induced currents in their walls, with a graph of speed against time. Space drops or pauses, R starts over."></canvas>
-      <div class="viewbar"><button type="button" class="spin attn" id="drop">Drop all three</button><button type="button" class="spin" id="again">Start over</button></div>
+      <div class="viewbar"><button type="button" class="spin attn" id="drop">Drop all three</button><button type="button" class="spin" id="again">Reset</button></div>
       <div class="clock" id="clock">t = 0.00 s</div>
       <div class="seg dimseg" role="group" aria-label="Perspective" id="dimSeg"><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
       <span class="blindtag" id="blindTag" hidden>Blind</span>
@@ -318,7 +319,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('sW').addEventListener('input', (e) => { S.w = +e.target.value; restart(); });
   $('sT').addEventListener('input', (e) => { S.T = +e.target.value; restart(); });
   $('tCur').addEventListener('change', (e) => { S.cur = e.target.checked; draw(); });
-  $('drop').addEventListener('click', () => { if (!S.run && S.t >= Math.max(...tFall())) S.t = 0; S.run = !S.run; $('drop').textContent = S.run ? 'Pause' : S.t > 0 ? 'Resume' : 'Drop all three'; });
+  $('drop').addEventListener('click', () => { if (!S.run && S.t >= Math.max(...tFall())) S.t = 0; S.run = !S.run; $('drop').textContent = S.run ? 'Pause' : S.t > 0 ? 'Play' : 'Drop all three'; });
   $('again').addEventListener('click', restart);
   can.addEventListener('keydown', (e) => { if (e.key === ' ') $('drop').click(); else if (e.key === 'r' || e.key === 'R') restart(); else return; e.preventDefault(); });
   const card = VD.setupCard($('setupCard'), { within: '#stage' });
@@ -464,5 +465,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   window.__ed = { S, restart, sync, draw, readouts, tFall };   /* for the worksheet key capture: set S.t and redraw */
 })();
 </script>
+<script>/* the shared control panel (demos/lib/vdpanel.js): the time controls in one group at the left of the strip */
+if (window.VD && VD.panel) VD.panel({ play: '#drop', reset: '#again' });</script>
 </body>
 </html>

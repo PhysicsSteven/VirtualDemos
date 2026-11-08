@@ -7,6 +7,7 @@
 <script src="lib/theme.js"></script>
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
 <script src="lib/vd3.js"></script>
 <style>.bench { position: relative; }
 /* the Set up card on the picture: it fades away while the run plays and comes back on pause or when the run ends */
@@ -81,7 +82,7 @@
       <canvas id="can" tabindex="0" role="img" aria-label="A rocket rising with its exhaust, beside graphs of its speed and mass against time. Space launches or pauses, R starts over."></canvas>
       <div class="viewbar">
         <button type="button" class="spin attn" id="go">Launch</button>
-        <button type="button" class="spin" id="again">Start over</button>
+        <button type="button" class="spin" id="again">Reset</button>
         <div class="seg" role="group" aria-label="View" id="viewSeg"><button type="button" data-view="3d" aria-pressed="false">3D</button><button type="button" data-view="flat" aria-pressed="true">Flat</button></div>
       </div>
       <span class="blindtag" id="blindTag" hidden>Blind</span>
@@ -541,7 +542,7 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
   function applyPreset(k) { S.preset = k; S.p = { ...PRESETS[k] }; $('presetHint').textContent = PRESETS[k].hint; mark(); restart(); }
   for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
   const card = VD.setupCard($('setupCard'), { within: '#stage' });
-  function setRun(on) { S.run = on; card.away(on); $('go').textContent = on ? 'Pause' : S.t > 0 ? 'Resume' : 'Launch'; $('go').classList.toggle('attn', !on); }
+  function setRun(on) { S.run = on; card.away(on); $('go').textContent = on ? 'Pause' : S.t > 0 ? 'Play' : 'Launch'; $('go').classList.toggle('attn', !on); }
   $('go').addEventListener('click', () => { const F = fly(); if (!S.run && S.t >= endTime(F)) S.t = 0; setRun(!S.run); });
   $('again').addEventListener('click', restart);
   const endTime = (F) => Math.max(F.tb * 1.15, isFinite(F.tTop) ? Math.min(F.tTop * 1.05, F.tb * 6) : F.tb * 1.15, 1);
@@ -582,5 +583,7 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
   requestAnimationFrame(frame);
 })();
 </script>
+<script>/* the shared control panel (demos/lib/vdpanel.js): the time controls in one group at the left of the strip */
+if (window.VD && VD.panel) VD.panel({ play: '#go', reset: '#again' });</script>
 </body>
 </html>

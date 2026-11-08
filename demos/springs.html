@@ -7,6 +7,7 @@
 <script src="lib/theme.js"></script>
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
 <script src="lib/vd3.js"></script>
 <script src="lib/vd3kit.js"></script>
 <style>
@@ -4418,5 +4419,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
 </script>
 <script>/* dividers between the panes (VD.splitPanes in demos/lib/vd.js); a browser with an older cached vd.js keeps the panes as they are */
 (function () { if (!window.VD || !VD.splitPanes) return; var q = function (s) { return document.querySelector(s); }; VD.splitPanes(q("#cPane"), q("#ePane"), { key: 'energy', label: 'Divider between the springs and the energy bars' }); VD.splitPanes(q("#cPane"), q("#pPane"), { key: 'plot', label: 'Divider between the springs and the graph' }); })();</script>
+<script>/* the shared control panel (demos/lib/vdpanel.js): the time controls in one group at the left of the strip */
+if (window.VD && VD.panel) VD.panel({ speed: '#sRate', clock: '#tclock', step: true });</script>
 </body>
 </html>

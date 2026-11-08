@@ -10,7 +10,7 @@ Textbook: OpenStax *University Physics*, Vol. 2, §13.4. Access for free at http
 
 **Setups in the demo:** Example 13.8, path outside; Path inside; Path off to the side; Path around part of it; Steady current; Alternating current.
 
-**Using the demo.** The end of a long solenoid seen along its axis, with a closed circular path around or beside it. Solenoid current chooses how the current changes (decaying, ramp up, alternating or steady) and sets $$I_0$$, the decay constant or rate, the turns per meter and the solenoid's radius; Pause, Play and Restart control time. Closed path sets the path's radius and the distance of its center from the axis (or drag it); the path is followed counterclockwise, with $$B$$ out of the page positive. Readouts give the time, the current, $$B$$ and $$dB/dt$$ inside, the flux through the path and $$-d\Phi/dt$$, the circulation $$\oint\vec E\cdot d\vec l$$ added up around the path, and $$E$$ on a centered path. Blind hides the field arrows and plot, $$E$$ and the circulation.
+**Using the demo.** The end of a long solenoid seen along its axis, with a closed circular path around or beside it. Solenoid current chooses how the current changes (decaying, ramp up, alternating or steady) and sets $$I_0$$, the decay constant or rate, the turns per meter and the solenoid's radius; Play, Pause, Step and Reset control time. Closed path sets the path's radius and the distance of its center from the axis (or drag it); the path is followed counterclockwise, with $$B$$ out of the page positive. Readouts give the time, the current, $$B$$ and $$dB/dt$$ inside, the flux through the path and $$-d\Phi/dt$$, the circulation $$\oint\vec E\cdot d\vec l$$ added up around the path, and $$E$$ on a centered path. Blind hides the field arrows and plot, $$E$$ and the circulation.
 
 **What the demo models.** An ideal long solenoid: $$B = \mu_0 nI$$ inside and zero outside, with the current changing slowly enough that $$B$$ is uniform inside at each instant. By symmetry the induced field circles the axis, with $$E = (r/2)\lvert dB/dt\rvert$$ inside and $$E = (R^2/2r)\lvert dB/dt\rvert$$ outside. The circulation is added up numerically in 720 pieces around the path, independently of the flux. Simulated data.
 
@@ -51,7 +51,7 @@ A real solenoid switched off suddenly can induce a large voltage across its own 
 
 **Part 3: how fast the current changes.** With a centered 6.0 cm path at $$t = 0$$, measure $$E$$ for decay constants of 20, 50, 100, 200, 500 and 2000 per second. Then measure with a steady current.
 
-**Using the virtual apparatus.** The decay constant moves in steps on a log scale, so 50 and 500 per second come out as 50.1 and 501; record the value the demo shows. Pause, then Restart to stand at $$t = 0$$; while paused you can move the path freely. Send each part to the worksheet before clearing, so each part gets its own copy of the Data table.
+**Using the virtual apparatus.** The decay constant moves in steps on a log scale, so 50 and 500 per second come out as 50.1 and 501; record the value the demo shows. Pause, then Reset to stand at $$t = 0$$; while paused you can move the path freely. Send each part to the worksheet before clearing, so each part gets its own copy of the Data table.
 
 ## Data
 

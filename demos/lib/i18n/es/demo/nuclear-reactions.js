@@ -40,6 +40,12 @@ VDI18N.add('es', 'demo/nuclear-reactions', {
   "Arma una reacción nuclear, balancéala y pésala: la masa que falta sale como energía. Luego deja que los neutrones de fisión se multipliquen en una esfera de uranio hasta que se vuelva crítica, ve por qué la fusión necesita el calor de una estrella y el efecto túnel cuántico, y mide la dosis de una fuente gamma al alejarte y agregar blindaje.",
 "masses: AME2020 · energies in MeV":
   "masas: AME2020 · energías en MeV",
+"Time controls":
+  "Controles de tiempo",
+"Fire":
+  "Disparar",
+"<span>Speed</span>":
+  "<span>Rapidez</span>",
 "Reactions":
   "Reacciones",
 "Chain reaction":
@@ -48,8 +54,6 @@ VDI18N.add('es', 'demo/nuclear-reactions', {
   "Fusión",
 "Dose":
   "Dosis",
-"Fire":
-  "Disparar",
 "One generation":
   "Una generación",
 "A scattering chamber: a projectile hits a target nucleus and the products fly apart; a detector sits at angle θ. Space fires.":
@@ -544,12 +548,6 @@ VDI18N.add('es', 'demo/nuclear-reactions', {
   "generación {#}",
 "{#} fired in, {#} fissions, longest chain {#} generations · {#} neutron in flight":
   "{#} disparados, {#} fisiones, cadena más larga {#} generaciones · {#} neutrón en vuelo",
-"DOSE RATE":
-  "TASA DE DOSIS",
-"²³⁵U metal, {#} kg, R = {#} cm":
-  "²³⁵U metálico, {#} kg, R = {#} cm",
-"a neutron fired in every {#} s · red: the nucleus each neutron will strike · orange: fission fragments · drag to turn":
-  "se dispara un neutrón cada {#} s · rojo: el núcleo con el que chocará cada neutrón · naranja: fragmentos de fisión · arrastra para girar",
 "separation of the two nuclei r (fm)":
   "separación de los dos núcleos r (fm)",
 "potential energy U (both axes logarithmic)":
@@ -612,6 +610,8 @@ VDI18N.add('es', 'demo/nuclear-reactions', {
   "Tiempo medio para que un protón se fusione, densidad del núcleo solar",
 "{#} × {#}⁹ years":
   "{#} × {#}⁹ años",
+"DOSE RATE":
+  "TASA DE DOSIS",
 "¹³⁷Cs, {#} GBq":
   "¹³⁷Cs, {#} GBq",
 "DOSE RATE METER":
@@ -726,8 +726,8 @@ VDI18N.add('es', 'demo/nuclear-reactions', {
   "{#} fisiones, ν medio —",
 "dots: Terrell, ν̄ = {#}":
   "puntos: Terrell, ν̄ = {#}",
-"A hundred neutrons, each causing a fission with probability k/ν̄. With k = {#} the numbers grow by {#}% a generation on average, but chance makes each run different: Start over gives a new run. Try k below, at and above {#}.":
-  "Cien neutrones, cada uno causa una fisión con probabilidad k/ν̄. Con k = {#} los números crecen en promedio un {#}% por generación, pero el azar hace que cada corrida sea distinta: Empezar de nuevo da una corrida nueva. Prueba k por debajo de {#}, igual y por encima.",
+"A hundred neutrons, each causing a fission with probability k/ν̄. With k = {#} the numbers grow by {#}% a generation on average, but chance makes each run different: Reset gives a new run. Try k below, at and above {#}.":
+  "Cien neutrones, cada uno causa una fisión con probabilidad k/ν̄. Con k = {#} los números crecen en promedio un {#}% por generación, pero el azar hace que cada corrida sea distinta: Reiniciar da una corrida nueva. Prueba k por debajo de {#}, igual y por encima.",
 "Generation":
   "Generación",
 "Neutrons now":
@@ -1317,5 +1317,11 @@ VDI18N.add('es', 'demo/nuclear-reactions', {
 "To scale. Photons slowed down; a few of those":
   "A escala. Fotones más lentos; se dibujan unos cuantos de los",
 "heading for the meter drawn. Drag to turn.":
-  "que van hacia el medidor. Arrastra para girar."
+  "que van hacia el medidor. Arrastra para girar.",
+"²³⁵U metal, {#} kg, R = {#} cm":
+  "²³⁵U metálico, {#} kg, R = {#} cm",
+"a neutron fired in every {#} s · red: the nucleus each neutron will strike · orange: fission fragments · drag to turn":
+  "se dispara un neutrón cada {#} s · rojo: el núcleo con el que chocará cada neutrón · naranja: fragmentos de fisión · arrastra para girar",
+"A hundred neutrons, each causing a fission with probability k/ν̄. With k = {#} the numbers grow by {#}% a generation on average, but chance makes each run different: Start over gives a new run. Try k below, at and above {#}.":
+  "Cien neutrones, cada uno causa una fisión con probabilidad k/ν̄. Con k = {#} los números crecen en promedio un {#}% por generación, pero el azar hace que cada corrida sea distinta: Empezar de nuevo da una corrida nueva. Prueba k por debajo de {#}, igual y por encima."
 });

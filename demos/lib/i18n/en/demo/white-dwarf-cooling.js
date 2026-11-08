@@ -25,6 +25,10 @@ VDI18N.add('en', 'demo/white-dwarf-cooling', [
 "<a><span>←</span> <span>Stellar Evolution</span></a><a><span>Cosmic Distance Ladder</span> <span>→</span></a>",
 "A white dwarf has no fuel left. It shines by leaking the heat stored in its ions, fades for billions of years, and freezes into a crystal from the center out.",
 "M in M<sub>sun</sub> · L in L<sub>sun</sub> · ages in yr · T<sub>c</sub> = core temperature · Γ<sub>m</sub> = {#}",
+"Time controls",
+"Run for a moment and pause again",
+"Step",
+"<span>Speed</span>",
 "Clock speed",
 "Slow",
 "Normal",
@@ -134,5 +138,6 @@ VDI18N.add('en', 'demo/white-dwarf-cooling', [
 "L &lt; {#} × {#}⁻⁴ L<sub>sun</sub>",
 "{#} Myr · {#} × {#}⁷ K",
 "{#} Myr · {#} L",
+"{#} Myr · {#} × {#}⁻¹ L",
 "{#} × {#}⁻¹ L<sub>sun</sub>"
 ]);

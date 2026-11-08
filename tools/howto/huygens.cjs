@@ -19,7 +19,7 @@ require('./lib.cjs')({ demo: 'huygens', title: "Huygens's Principle" }, async (r
   await r.secs(1.6);
   state.arrow = null;
 
-  state.caption = 'Restart the race: the slower the light in a lane, the later its pulse finishes';
+  state.caption = 'Reset the race: the slower the light in a lane, the later its pulse finishes';
   await r.click('#restartBtn');
   await r.moveTo(can[0] + can[2] * 0.7, can[1] + can[2] * 0.5, 0.5);
   state.zoom = [can[0] + 40, can[1] + 40, can[2] - 80, (can[2] - 80) * 9 / 16];

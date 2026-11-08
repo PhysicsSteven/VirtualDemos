@@ -11,6 +11,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
 <script src="lib/vd3.js"></script>
 <script src="lib/vd3kit.js"></script>
 <style>
@@ -945,5 +946,7 @@ table.rows input:focus { border-color: var(--accent); }
   (function loop(now) { const dt = Math.min(0.05, ((now || last) - last) / 1000); last = now || last; acc += dt; if (acc > 1 / 30) { tick(acc); acc = 0; } requestAnimationFrame(loop); })();
 })();
 </script>
+<script>/* the shared control panel (demos/lib/vdpanel.js): the time controls in one group at the left of the strip */
+if (window.VD && VD.panel) VD.panel({ play: '#run', reset: false });</script>
 </body>
 </html>

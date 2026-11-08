@@ -7,6 +7,7 @@
 <script src="lib/theme.js"></script>
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
 <script src="lib/vd3.js"></script>
 <script src="lib/vd3kit.js"></script>
 <script src="lib/nubase.js"></script>
@@ -214,7 +215,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <div class="stage-ctl" id="oneCtl">
           <button type="button" class="btn primary" id="oneGo" data-vd-key="play">Watch it decay</button>
           <button type="button" class="btn" id="oneRun" hidden aria-pressed="false">Run</button>
-          <button type="button" class="btn" id="oneReset" data-vd-key="reset">Start again</button>
+          <button type="button" class="btn" id="oneReset" data-vd-key="reset">Reset</button>
           <div class="seg" role="group" aria-label="Decays a second" id="oneRate" hidden><button type="button" data-r="2" aria-pressed="true">2/s</button><button type="button" data-r="20" aria-pressed="false">20/s</button><button type="button" data-r="200" aria-pressed="false">200/s</button></div>
           <span class="tclock mono" id="oneClock"></span>
         </div>
@@ -1790,6 +1791,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     running = r; playBtn.textContent = r ? 'Pause' : 'Play'; playBtn.classList.toggle('primary', !r); last = performance.now(); acc = 0;
   }
   playBtn.addEventListener('click', () => setRunning(!running));
+  /* the shared control panel (demos/lib/vdpanel.js): the time controls in one group at the left of the strip */
+  if (window.VD && VD.panel) { VD.panel({ speed: '#speedSeg', steps: ['#stepBtn'] }); VD.panel({ play: '#oneGo', reset: '#oneReset', speed: '#oneRate', speedLabel: 'Rate', bar: '#oneCtl' }); }
   $('stepBtn').addEventListener('click', () => { setRunning(false); doStep(); });
   function doStep() {
     let alive = 0; for (let i = 0; i < nSp(); i++) alive += sim.counts[i];

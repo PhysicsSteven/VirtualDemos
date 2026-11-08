@@ -42,14 +42,24 @@ VDI18N.add('es', 'demo/rotation-curves', {
   "Las estrellas y el gas lejos del centro de una galaxia orbitan casi tan rápido como los que están cerca de él. La materia visible por sí sola predice que deberían frenarse, como los planetas: la atracción adicional viene de un halo de materia oscura.",
 "r in kpc · v in km/s · M in M<sub>sun</sub> · G = {#} × {#}⁻⁶ kpc (km/s)²/M<sub>sun</sub> · {#} kpc/(km/s) = {#} Myr":
   "r en kpc · v en km/s · M en M<sub>sol</sub> · G = {#} × {#}⁻⁶ kpc (km/s)²/M<sub>sol</sub> · {#} kpc/(km/s) = {#} millones de años",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
+"Time speed":
+  "Velocidad del tiempo",
+"{#} Myr per second":
+  "{#} millones de años por segundo",
+"t = {#} <small>Myr</small>":
+  "t = {#} <small>millones de años</small>",
 "Galaxy view":
   "Vista de la galaxia",
 "Face on":
   "De frente",
 "Edge on, Doppler":
   "De canto, Doppler",
-"t = {#} <small>Myr</small>":
-  "t = {#} <small>millones de años</small>",
 "Left: a galaxy drawn from the mass model, face on with tracer stars and their speeds, or edge on with a spectrograph slit and the spectrum it records. Right: the rotation curve, orbital speed against radius, with each mass component, the prediction of the visible matter alone, and measured points. Drag the dashed ring or the vertical line to choose a radius; drag the round handles on the component curves to change their mass and size. Keys: left and right move the radius, up and down change the halo density, space plays or pauses, V switches the view, H turns the halo on or off, R resets the clock.":
   "Izquierda: una galaxia generada a partir del modelo de masa, de frente con estrellas trazadoras y sus rapideces, o de canto con una rendija de espectrógrafo y el espectro que registra. Derecha: la curva de rotación, rapidez orbital en función del radio, con cada componente de masa, la predicción de la materia visible sola y los puntos medidos. Arrastra el anillo punteado o la línea vertical para elegir un radio; arrastra las manijas redondas de las curvas de las componentes para cambiar su masa y tamaño. Teclas: izquierda y derecha mueven el radio, arriba y abajo cambian la densidad del halo, espacio inicia o pausa, V cambia la vista, H activa o desactiva el halo, R reinicia el reloj.",
 "Divider between the galaxy and the graph":
@@ -168,10 +178,6 @@ VDI18N.add('es', 'demo/rotation-curves', {
   "Corrimiento del borde de la línea en +r",
 "Speed from the shift":
   "Rapidez a partir del corrimiento",
-"Time speed":
-  "Velocidad del tiempo",
-"{#} Myr per second":
-  "{#} millones de años por segundo",
 "The spiral arms are a pattern that turns slowly at one rate; the stars move through it at their own orbital speeds and brighten while they cross an arm.":
   "Los brazos espirales son un patrón que gira lentamente a un solo ritmo; las estrellas se mueven a través de él con sus propias rapideces orbitales y se abrillantan mientras cruzan un brazo.",
 "Key and model":
@@ -236,6 +242,8 @@ VDI18N.add('es', 'demo/rotation-curves', {
   "{#} M<sub>sol</sub> <small>(G = {#} AU (km/s)²/M<sub>sol</sub>)</small>",
 "{#} yr = {#} days":
   "{#} años = {#} días",
+"t = {#} <small>yr</small>":
+  "t = {#} <small>años</small>",
 "Stars and gas of a Milky Way like galaxy, nothing else. Their curve peaks near {#} kpc and then falls, heading for Kepler's r^−{#}/{#}. The measured speeds (circles) stay near {#} to {#} km/s out to {#} kpc.":
   "Estrellas y gas de una galaxia parecida a la Vía Láctea, nada más. Su curva es máxima cerca de {#} kpc y luego cae, en camino a la r^−{#}/{#} de Kepler. Las rapideces medidas (círculos) se mantienen cerca de {#} a {#} km/s hasta {#} kpc.",
 "{#}% <small>halo off</small>":
@@ -269,7 +277,5 @@ VDI18N.add('es', 'demo/rotation-curves', {
 "<small>Hα gas ends at {#} kpc</small>":
   "<small>el gas Hα termina a {#} kpc</small>",
 "Hα light comes from gas lit by young stars, so it fades beyond about four disk scale lengths (drawn to there). Switch to {#} cm to follow the neutral hydrogen much farther out, where the dark matter dominates.":
-  "La luz Hα viene del gas iluminado por estrellas jóvenes, así que se desvanece más allá de unas cuatro longitudes de escala del disco (dibujado hasta ahí). Cambia a {#} cm para seguir el hidrógeno neutro mucho más lejos, donde domina la materia oscura.",
-"t = {#} <small>yr</small>":
-  "t = {#} <small>años</small>"
+  "La luz Hα viene del gas iluminado por estrellas jóvenes, así que se desvanece más allá de unas cuatro longitudes de escala del disco (dibujado hasta ahí). Cambia a {#} cm para seguir el hidrógeno neutro mucho más lejos, donde domina la materia oscura."
 });

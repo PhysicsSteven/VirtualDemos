@@ -12,6 +12,7 @@ VDI18N.add('en', 'demo/bragg-peak', [
 "<a><span>←</span> <span>Nuclear Reactions, Fission and Fusion</span></a><a><span>Proton Therapy QA</span> <span>→</span></a>",
 "A proton beam puts most of its dose down just before it stops. Move the peak with the beam energy, see it in water, muscle, fat and bone, stack energy layers into a spread out Bragg peak that covers a target, and compare it with a clinical {#} MV photon beam.",
 "depth in cm · E in MeV",
+"Time controls",
 "Beam on",
 "What the picture shows",
 "One energy",
