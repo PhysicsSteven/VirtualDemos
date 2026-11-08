@@ -43,6 +43,7 @@
     --grid: #3a2f22; --pos: #d9735a; --neg: #7f9fc4; --equi: #d2a24a; --field: #dcc9a5; --on-charge: #1a1408;
     --shadow: 0 1px 2px rgb(0 0 0 / 0.4), 0 10px 28px -12px rgb(0 0 0 / 0.8);
     --hd-code: rgb(220 201 165 / 0.1); --hd-warn: #d2a24a; --hd-grid: #3a2f22; --hd-dot: #d9735a;
+    --bg: var(--desk); --surface: var(--paper); --canvas: var(--paper2); --relief: var(--paper3); --muted: var(--ink2); --grid-strong: var(--line2); --tag: var(--paper3);
   --hd-bg: var(--paper); --hd-ink: var(--ink); --hd-muted: var(--ink2); --hd-line: var(--line); --hd-line2: var(--line2); --hd-surface: var(--paper2); --hd-row: var(--paper2);
   --hd-field: var(--paper2); --hd-hover: var(--paper3); --hd-link: var(--link); --hd-accent: var(--accent); --hd-hand: var(--paper2); --hd-hand-line: var(--line2); --hd-left: var(--paper3); --hd-left-line: var(--accent);
       color-scheme: dark;
@@ -55,6 +56,7 @@
   --grid: #3a2f22; --pos: #d9735a; --neg: #7f9fc4; --equi: #d2a24a; --field: #dcc9a5; --on-charge: #1a1408;
   --shadow: 0 1px 2px rgb(0 0 0 / 0.4), 0 10px 28px -12px rgb(0 0 0 / 0.8);
   --hd-code: rgb(220 201 165 / 0.1); --hd-warn: #d2a24a; --hd-grid: #3a2f22; --hd-dot: #d9735a;
+  --bg: var(--desk); --surface: var(--paper); --canvas: var(--paper2); --relief: var(--paper3); --muted: var(--ink2); --grid-strong: var(--line2); --tag: var(--paper3);
   --hd-bg: var(--paper); --hd-ink: var(--ink); --hd-muted: var(--ink2); --hd-line: var(--line); --hd-line2: var(--line2); --hd-surface: var(--paper2); --hd-row: var(--paper2);
   --hd-field: var(--paper2); --hd-hover: var(--paper3); --hd-link: var(--link); --hd-accent: var(--accent); --hd-hand: var(--paper2); --hd-hand-line: var(--line2); --hd-left: var(--paper3); --hd-left-line: var(--accent);
     color-scheme: dark;
