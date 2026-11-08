@@ -3,7 +3,7 @@
    Load it first in <head>, as a plain blocking script, before any stylesheet or other script:
      <script src="lib/theme.js"></script>
    It reads the saved choice (localStorage 'vd-theme': 'light', 'dark' or 'auto' for Browser default; nothing saved
-   means Day, the parchment look by daylight, the site default since the 2026-11-08 redesign; it was Dark from 2026-10-25) and sets
+   means Day, the lab look with the lights up, the site default since the 2026-11-08 redesign; it was Dark from 2026-10-25) and sets
    data-theme on <html> before the page paints, so pages do not flash. Every page already styles itself from
    :root tokens with a dark @media block guarded by :not([data-theme="light"]) and a [data-theme="dark"] block.
 

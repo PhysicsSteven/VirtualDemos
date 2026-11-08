@@ -81,8 +81,8 @@ BLURB['astro'] = (BLURB['astro+2203'] if MERGED.get('astro-2203') == 'astro' els
                   else BLURB['astro'])
 MODULES = {'acoustics', 'thermo', 'modern', 'astro'}   # modules follow the textbook chapters, not a course schedule
 TILE_START, TILE_END = '<!-- COURSES START (tools/courses.py) -->', '<!-- COURSES END -->'
-# The parchment look (Steve 2026-11-08, redesign direction D): one skin file, linked last so its tokens win, and one header band
-# on every site page. demos/lib/paper.css holds the tokens, textures and fonts; tools/paper.py links it into the demos.
+# The lab look (Steve 2026-11-08, direction B, instrument panel): one skin file, linked last so its tokens win, and one header band
+# on every site page. demos/lib/paper.css holds the tokens and fonts; tools/paper.py links it into the demos.
 PAPER_LINK = '<link rel="stylesheet" href="demos/lib/paper.css">'
 MARK = ('<svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><ellipse cx="16" cy="16" rx="13" ry="6" fill="none" stroke="currentColor" stroke-width="1.8" transform="rotate(-30 16 16)"/>'
         '<ellipse cx="16" cy="16" rx="13" ry="6" fill="none" stroke="currentColor" stroke-width="1.8" transform="rotate(30 16 16)"/><circle cx="16" cy="16" r="2.6" fill="currentColor"/></svg>')
