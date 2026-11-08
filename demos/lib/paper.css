@@ -43,7 +43,9 @@
     --grid: #3a2f22; --pos: #d9735a; --neg: #7f9fc4; --equi: #d2a24a; --field: #dcc9a5; --on-charge: #1a1408;
     --shadow: 0 1px 2px rgb(0 0 0 / 0.4), 0 10px 28px -12px rgb(0 0 0 / 0.8);
     --hd-code: rgb(220 201 165 / 0.1); --hd-warn: #d2a24a; --hd-grid: #3a2f22; --hd-dot: #d9735a;
-    color-scheme: dark;
+  --hd-bg: var(--paper); --hd-ink: var(--ink); --hd-muted: var(--ink2); --hd-line: var(--line); --hd-line2: var(--line2); --hd-surface: var(--paper2); --hd-row: var(--paper2);
+  --hd-field: var(--paper2); --hd-hover: var(--paper3); --hd-link: var(--link); --hd-accent: var(--accent); --hd-hand: var(--paper2); --hd-hand-line: var(--line2); --hd-left: var(--paper3); --hd-left-line: var(--accent);
+      color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
@@ -53,7 +55,9 @@
   --grid: #3a2f22; --pos: #d9735a; --neg: #7f9fc4; --equi: #d2a24a; --field: #dcc9a5; --on-charge: #1a1408;
   --shadow: 0 1px 2px rgb(0 0 0 / 0.4), 0 10px 28px -12px rgb(0 0 0 / 0.8);
   --hd-code: rgb(220 201 165 / 0.1); --hd-warn: #d2a24a; --hd-grid: #3a2f22; --hd-dot: #d9735a;
-  color-scheme: dark;
+  --hd-bg: var(--paper); --hd-ink: var(--ink); --hd-muted: var(--ink2); --hd-line: var(--line); --hd-line2: var(--line2); --hd-surface: var(--paper2); --hd-row: var(--paper2);
+  --hd-field: var(--paper2); --hd-hover: var(--paper3); --hd-link: var(--link); --hd-accent: var(--accent); --hd-hand: var(--paper2); --hd-hand-line: var(--line2); --hd-left: var(--paper3); --hd-left-line: var(--accent);
+    color-scheme: dark;
 }
 
 /* the desk and the paper grain, on every page */
@@ -223,7 +227,8 @@ body.site .more a, body.site .how a { color: var(--link); }
   .markdown-body p.ws-site { font: 0.72rem/1.6 var(--oldsc); letter-spacing: 0.14em; color: var(--accent); }
   .markdown-body p.ws-site a { color: var(--accent); text-decoration: none; }
   .markdown-body a.ws-open-demo, .markdown-body .ws-btn, .markdown-body button { font-family: var(--old); border-radius: var(--corners-s); }
-  .markdown-body a.ws-open-demo { background: var(--accent); color: var(--accent-ink); }
+  .markdown-body a.ws-open-demo, .markdown-body .ws-btn.ws-main { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+  .markdown-body .ws-btn.ws-main:hover { background: var(--accent); filter: brightness(1.08); }
   .markdown-body table th { font: 1rem var(--old); border-top: 2px solid var(--ink); border-bottom: 1px solid var(--line2); border-left: 0; border-right: 0; background: none; }
   .markdown-body table td { border-left: 0; border-right: 0; border-bottom: 1px solid var(--line); background: none; }
   .markdown-body table tr, .markdown-body table tr:nth-child(2n) { background: none; border-top: 0; }
