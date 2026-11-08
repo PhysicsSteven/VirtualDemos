@@ -36,7 +36,7 @@
      track(o, rng)         one Monte Carlo history: { pts: [[z, x, E]], end, absorbed } in cm, for drawing and for range histograms */
 (function (g) {
   'use strict';
-  const K = 0.307075, ME = 0.51099895, MU = 931.49410372;
+  const K = 0.307075, ME = 0.51099895069, MU = 931.49410372;
   /* NIST PSTAR/ESTAR material data: density (g/cm³), I (eV), and Z/A worked out from the composition by weight with the standard
      atomic weights; X0 radiation length (g/cm²): the PDG value for water, air, PMMA and the elements, and for the tissues
      the elements' PDG values combined by weight (1/X₀ = Σ wᵢ/X₀ᵢ) */

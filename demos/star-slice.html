@@ -671,7 +671,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       for (let i = 0; i < D.msStart; i++) {
         const mo = ms[i];
         // a run that starts on the main sequence: nuclear burning already supplies the luminosity
-        const lnuc = mo.eps ? mo.mass.reduce((s, m, j) => s + Math.max(0, mo.eps[j] || 0) * (m - (j ? mo.mass[j - 1] : 0)), 0) * 0.5196 : null;
+        const lnuc = mo.eps ? mo.mass.reduce((s, m, j) => s + Math.max(0, mo.eps[j] || 0) * (m - (j ? mo.mass[j - 1] : 0)), 0) * (1.98841e33 / 3.828e33) : null;   /* erg/s per M☉ to L☉, IAU values */
         if (mo.stage === 'Core hydrogen burning' && !(lnuc != null && mo.L > 0 && lnuc > 0.6 * mo.L)) mo.stage = 'Pre main sequence';
       }
     }

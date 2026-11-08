@@ -254,7 +254,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
      (ITS-90, at 1 atm): ice point 0.00 °C, triple point of water 0.01 °C (273.16 K), water boils at 99.974 °C, nitrogen boils at
      77.355 K, solid carbon dioxide sublimes at −78.464 °C. Water's density between 0 and 40 °C from M. Tanaka et al., Metrologia
      38, 301 (2001). Air film resistances on a wall from the ASHRAE Handbook, Fundamentals. */
-  const C0 = 273.15, R_GAS = 8.314462618;
+  const C0 = 273.15, R_GAS = 8.31446261815324;
   const cToF = (c) => 9 / 5 * c + 32, fToC = (F) => 5 / 9 * (F - 32), cToK = (c) => c + C0, kToC = (K) => K - C0;
 
   /* ---- Equilibrium: two bodies joined by a conducting bar inside a perfectly insulated box ----

@@ -528,7 +528,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // ---------- acoustic levitation ----------
   // Plane standing wave above a rigid reflector at z = 0: p = p₀ cos(kz) cos(ωt). The linearized Euler equation
   // ρ₀ ∂v/∂t = −∂p/∂z gives v = (p₀/ρ₀c) sin(kz) sin(ωt), zero at the reflector.
-  const G_N = 9.81, P_ATM = 101325, M_AIR = 0.0289647, R_GAS = 8.314462618;
+  const G_N = 9.81, P_ATM = 101325, M_AIR = 0.0289647, R_GAS = 8.31446261815324;
   const airDensity = (Tc) => P_ATM * M_AIR / (R_GAS * (Tc + 273.15));                 // ideal gas, dry air at 1 atm
   const airViscosity = (Tc) => { const Tk = Tc + 273.15; return 1.716e-5 * Math.pow(Tk / 273.15, 1.5) * (273.15 + 110.4) / (Tk + 110.4); };   // Sutherland
   // f₁ = 1 − κ_p/κ₀ = 1 − ρ₀c²/K_p (K_p = ρ_p c_p² for a fluid), f₂ = 2(ρ_p − ρ₀)/(2ρ_p + ρ₀), Φ = f₁/3 + f₂/2
