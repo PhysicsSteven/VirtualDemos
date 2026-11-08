@@ -30,7 +30,7 @@ require('./lib.cjs')({ demo: 'induction', title: 'Charging by Induction', query:
   state.caption = 'Sample reading: charge sphere A by grounding, with a +10 nC rod 1.0 cm away';
   await r.secs(3.0);
 
-  state.caption = 'Set the rod tip distance to 1.0 cm (the rod is already +10 nC), then press Start over';
+  state.caption = 'Set the rod tip distance to 1.0 cm (the rod is already +10 nC), then press Reset';
   r.check.q = await r.text('#oQ');
   await r.scrollRail('#sQ');
   await slide('#sD', 1, 0.3);
@@ -72,7 +72,7 @@ require('./lib.cjs')({ demo: 'induction', title: 'Charging by Induction', query:
   await r.secs(2.2);
   state.arrow = null; state.zoom = null;
 
-  state.caption = 'Start over at each distance, then send the table to the worksheet';
+  state.caption = 'Reset at each distance, then send the table to the worksheet';
   const ex = await r.box('.vd-readings .vd-export');
   await r.moveTo(ex[0] + ex[2] / 2, ex[1] + ex[3] / 2 + 4, 0.8);
   state.arrow = { rect: ex };

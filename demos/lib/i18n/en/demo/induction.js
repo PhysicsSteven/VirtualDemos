@@ -158,7 +158,7 @@ VDI18N.add('en', 'demo/induction', [
 "Dipole term alone",
 "F ÷ dipole term",
 "Taken off by Tare",
-"Your own arrangement. Press Start over for the steps.",
+"Your own arrangement. Press Reset for the steps.",
 "Teflon ball, {#} cm radius · side view to scale · molecules drawn huge",
 "Nylon ball, {#} cm radius · side view to scale · molecules drawn huge",
 "Pyrex glass ball, {#} cm radius · side view to scale · molecules drawn huge",

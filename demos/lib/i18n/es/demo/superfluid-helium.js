@@ -92,8 +92,8 @@ VDI18N.add('es', 'demo/superfluid-helium', {
   "Compresión: fracción congelada por hora",
 "{#} nW":
   "{#} nW",
-"Start again at {#} mK":
-  "Empezar de nuevo a {#} mK",
+"Reset to {#} mK":
+  "Reiniciar a {#} mK",
 "Pump down through the lambda point":
   "Bombeo a través del punto lambda",
 "A bigger pump":

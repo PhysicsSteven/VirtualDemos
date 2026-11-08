@@ -181,6 +181,7 @@ VDI18N.add('en', 'demo/proton-qa', [
 "{#} % <span>fail</span>",
 "Spots {#} % larger in air, in an L shaped target. At {#} cm the spots have already spread by multiple scattering, so the error in air is diluted, and the plane passes even at {#} %/{#} mm. The daily spot size check catches this fault; patient QA in one plane does not.",
 "Plan: L shape, {#} × {#} cm, {#} to {#} cm deep",
+"Plan: Disc, {#} cm across, {#} to {#} cm deep",
 "measuring",
 "Gamma",
 "patient plan",

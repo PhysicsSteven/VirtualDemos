@@ -46,7 +46,7 @@ VDI18N.add('en', 'demo/superfluid-helium', [
 "<span>Helium {#}: {#} mol of liquid in a cell squeezed by a bellows, starting at {#} mK on the melting curve</span>",
 "Squeeze: share frozen per hour",
 "{#} nW",
-"Start again at {#} mK",
+"Reset to {#} mK",
 "Pump down through the lambda point",
 "A bigger pump",
 "Fountain: a column",

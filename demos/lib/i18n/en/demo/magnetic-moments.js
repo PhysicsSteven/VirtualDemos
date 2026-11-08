@@ -99,7 +99,6 @@ VDI18N.add('en', 'demo/magnetic-moments', [
 "atoms",
 "dB/dz (T/m)",
 "cursor (mm)",
-"Start the beam",
 "Atoms",
 "Silver, Ag, ²S₁/₂",
 "Mass M",

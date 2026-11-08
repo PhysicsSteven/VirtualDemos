@@ -68,7 +68,7 @@
   <main class="bench">
     <div class="stage" id="stage">
       <div class="stage-ctl" id="strip">
-        <button type="button" class="spin attn" id="play">Start</button>
+        <button type="button" class="spin attn" id="play">Play</button>
         <button type="button" class="btn" id="restart" title="Still water: start the waves again from the beginning">Still the water</button>
         <label class="lbl" for="selSpeed" style="font-size:0.8rem;color:var(--muted)">Time</label>
         <select id="selSpeed"><option value="0.125">slow motion 1/8</option><option value="0.25" selected>slow motion 1/4</option><option value="0.5">slow motion 1/2</option><option value="1">real time</option></select>
@@ -831,7 +831,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     can.className = S.tool === 'move' ? 'tool-move' : 'tool-draw';
   }
   VD.setupCard($('setupCard'));
-  function setRun(on) { S.run = on; $('play').textContent = on ? 'Pause' : T.t > 0 ? 'Resume' : 'Start'; $('play').classList.toggle('attn', !on); }
+  function setRun(on) { S.run = on; $('play').textContent = on ? 'Pause' : 'Play'; $('play').classList.toggle('attn', !on); }
   function applyPreset(k) {
     const c = PRESETS[k]; S.preset = k;
     Object.assign(S, { src: c.src, f: c.f, deep: c.deep, plate: c.plate, geo: c.geo ? Object.assign({}, c.geo) : null, strokes: [], tool: c.tool || 'move', pred: false });

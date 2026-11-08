@@ -198,8 +198,6 @@ VDI18N.add('es', 'demo/magnetic-moments', {
   "dB/dz (T/m)",
 "cursor (mm)":
   "cursor (mm)",
-"Start the beam":
-  "Iniciar el haz",
 "Atoms":
   "Átomos",
 "Silver, Ag, ²S₁/₂":

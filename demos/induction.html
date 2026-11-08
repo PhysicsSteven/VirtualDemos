@@ -75,7 +75,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     <div class="stage" id="stage">
       <canvas id="can" tabindex="0" role="img" aria-label="Two metal spheres on insulating stands, a charged rod on the left and a ground connection. The plus and minus marks around each sphere show its surface charge density: darker marks mean more charge per area."></canvas>
       <div class="rodcard" id="rodCard" role="group" aria-label="Charged rod"><span>Rod</span><button type="button" id="rodGlass" aria-pressed="false" title="A glass rod rubbed with silk: it is left positive">Glass +</button><button type="button" id="rodRubber" aria-pressed="false" title="A hard rubber rod rubbed with fur: it is left negative">Rubber −</button><button type="button" id="rodAway" title="Carry the rod far away">Put down</button></div>
-      <div class="stepbar"><p id="stepText"></p><button type="button" class="spin attn" id="next">Next step</button><button type="button" class="spin" id="restart">Start over</button></div>
+      <div class="stepbar"><p id="stepText"></p><button type="button" class="spin attn" id="next">Next step</button><button type="button" class="spin" id="restart">Reset</button></div>
       <span class="blindtag" id="blindTag" hidden>Blind</span>
     </div>
 
@@ -1618,7 +1618,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('sE0').value = S.E0; $('oE0').textContent = `${S.E0} N/C`; $('sLam').value = S.lam; $('oLam').textContent = S.lam ? `${f(S.lam, 1)} nC/m` : 'off';
     $('sLd').value = S.ld; $('oLd').textContent = `${f(S.ld, 1)} cm`; $('sLd').disabled = !S.lam; $('sLc').value = S.lamC; $('oLc').textContent = `${f(S.lamC, 1)} nC/m`;
     for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
-    const st = STEPS[S.preset]; $('stepText').textContent = S.step >= 0 ? `Step ${S.step + 1} of ${st.length}: ${st[S.step][0]}` : 'Your own arrangement. Press Start over for the steps.';
+    const st = STEPS[S.preset]; $('stepText').textContent = S.step >= 0 ? `Step ${S.step + 1} of ${st.length}: ${st[S.step][0]}` : 'Your own arrangement. Press Reset for the steps.';
     $('next').disabled = S.step < 0 || S.step >= st.length - 1; $('next').classList.toggle('attn', !$('next').disabled);
   }
   function update() { compute(); sync(); draw(); readouts(); if (S.preset === 'polar' && S.pv !== pTarget()) pKick(); }

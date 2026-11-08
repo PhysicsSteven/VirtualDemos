@@ -316,8 +316,8 @@ VDI18N.add('es', 'demo/induction', {
   "F ÷ término dipolar",
 "Taken off by Tare":
   "Restado por Tarar",
-"Your own arrangement. Press Start over for the steps.":
-  "Tu propio arreglo. Pulsa Empezar de nuevo para los pasos.",
+"Your own arrangement. Press Reset for the steps.":
+  "Tu propio arreglo. Pulsa Reiniciar para los pasos.",
 "Teflon ball, {#} cm radius · side view to scale · molecules drawn huge":
   "Esfera de teflón, {#} cm de radio · vista lateral a escala · moléculas dibujadas enormes",
 "Nylon ball, {#} cm radius · side view to scale · molecules drawn huge":
