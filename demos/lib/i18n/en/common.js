@@ -601,5 +601,19 @@ VDI18N.add('en', 'common', [
 "Log scales",
 "Log scales on both axes",
 "Log scales need numbers greater than zero in both columns. Turn off Log scales to draw these points.",
-"Rows left off the log scales and out of the fit, because a column holds zero or less: {n}."
+"Rows left off the log scales and out of the fit, because a column holds zero or less: {n}.",
+"Your progress",
+"{d} of {m} rows",
+"{name}: {n} more rows to fill in",
+"{d} of {m}",
+"{name}: not answered yet",
+"{name}: {n} of {m} unanswered",
+"✓ answered",
+"✓ complete",
+"{done} of {total} filled in · {pct} %",
+"✓ Ready to hand in",
+"Ready to hand in?",
+"Still to do before you hand in:",
+"Everything is filled in.",
+"Use Print or save as PDF, and say in your answers which data are simulated."
 ]);

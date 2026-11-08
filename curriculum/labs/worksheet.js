@@ -1398,6 +1398,32 @@ details.about[open] > summary { margin-bottom: 8px; }
   border-radius: 5px; padding: 5px 7px; box-sizing: border-box; width: 100%; }
 .ws input.ws-f:focus, .ws-panel input:focus, .ws textarea.ws-f:focus { outline: 2px solid var(--hd-accent, #0969da); outline-offset: 0; border-color: var(--hd-accent, #0969da); }
 .ws-btns { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0; }
+/* Progress strip (Steve, 2026-11-08): how much of the worksheet is filled in, section by section, and what is still to do */
+.ws-progress { position: sticky; top: 0; z-index: 20; margin: 0 0 16px; padding: 10px 14px; border: 1px solid var(--hd-line2, #d0d7de); border-radius: 10px;
+  background: color-mix(in srgb, var(--hd-bg, #fff) 94%, transparent); backdrop-filter: blur(6px); font-size: 14px; }
+.ws-progress-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.ws-progress-title { font-weight: 700; }
+.ws-progress-bar { flex: 1 1 180px; height: 10px; border-radius: 5px; background: var(--hd-line, #eaecef); overflow: hidden; }
+.ws-progress-bar > i { display: block; height: 100%; width: 0; border-radius: 5px; background: var(--hd-accent, #0969da); transition: width 0.3s; }
+@media (prefers-reduced-motion: reduce) { .ws-progress-bar > i { transition: none; } }
+.ws-progress-n { color: var(--hd-muted, #57606a); white-space: nowrap; }
+.ws-progress-tasks { display: flex; gap: 6px 14px; flex-wrap: wrap; margin: 8px 0 0 !important; padding: 0 !important; list-style: none; }
+.ws-progress-tasks li { display: flex; align-items: center; gap: 6px; color: var(--hd-muted, #57606a); margin: 0; }
+.ws-progress-tasks li a { color: inherit; text-decoration: none; }
+.ws-progress-tasks li.done { color: var(--hd-ink, #1f2328); }
+.ws-progress-tasks li.done a { text-decoration: line-through; text-decoration-color: var(--hd-muted, #57606a); }
+.ws-progress-ring { width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--hd-line2, #8c959f); box-sizing: border-box; display: inline-grid; place-items: center; font-size: 11px; line-height: 1; flex: none; }
+.ws-progress-tasks li.done .ws-progress-ring { background: #1a7f37; border-color: #1a7f37; color: #fff; }
+.ws-progress-tasks li.part .ws-progress-ring { border-color: var(--hd-accent, #0969da); background: conic-gradient(var(--hd-accent, #0969da) var(--p), transparent 0); }
+.ws-progress .ws-handin { margin-left: auto; }
+.ws-progress .ws-handin.ready { border-color: #1a7f37; color: #1a7f37; font-weight: 700; }
+.ws-progress-missing { margin: 8px 0 0; padding: 8px 12px; border-left: 3px solid #bf8700; background: color-mix(in srgb, #bf8700 10%, transparent); border-radius: 6px; }
+.ws-progress-missing ul { margin: 4px 0 0 !important; padding-left: 18px; }
+.ws-progress-missing li { margin: 2px 0; }
+.ws-tick { display: block; text-align: right; font-size: 12px; font-weight: 700; color: #1a7f37; margin: -6px 0 6px; }
+.markdown-body h2 .ws-h2tag { font-size: 0.55em; font-weight: 600; vertical-align: middle; margin-left: 10px; color: var(--hd-muted, #57606a); }
+.markdown-body h2 .ws-h2tag.done { color: #1a7f37; }
+@media (max-width: 600px) { .ws-progress-tasks { gap: 4px 10px; font-size: 13px; } .ws-progress .ws-handin { margin-left: 0; } }
 .ws-btn { font: inherit; font-size: 14px; padding: 5px 11px; border-radius: 6px; border: 1px solid var(--hd-line2, #8c959f); background: var(--hd-field, #fff); color: var(--hd-ink, #1f2328); cursor: pointer; }
 .ws-btn:hover { background: var(--hd-hover, #eef1f4); } .ws-btn:focus-visible { outline: 2px solid var(--hd-accent, #0969da); outline-offset: 1px; }
 .ws-btn.ws-main { background: #1f6feb; border-color: #1f6feb; color: #fff; } .ws-btn.ws-main:hover { background: #1a5fd0; }
@@ -1437,7 +1463,7 @@ details.ws-help { margin: 10px 0 2px; font-size: 0.9em; } details.ws-help > summ
 details.ws-help p, details.ws-help ul { margin: 6px 0; } details.ws-help code { font-size: 0.95em; }
 @media print { .ws-colname, .ws-bar, details.ws-help { display: none !important; } }
 @media print {
-  .ws-btns, .ws-btn, .ws-status, .ws-note, .ws-noprint { display: none !important; }
+  .ws-btns, .ws-btn, .ws-status, .ws-note, .ws-noprint, .ws-progress, .ws-tick, .ws-h2tag { display: none !important; }
   .ws-panel { border: 0; background: none; padding: 0; margin: 8px 0 14px; }
   .ws-panel h2 { display: none; }
   .ws-who { grid-template-columns: 1fr 1fr; gap: 10px 24px; }
@@ -1462,7 +1488,8 @@ details.ws-help p, details.ws-help ul { margin: 6px 0; } details.ws-help code { 
 
   /* ---------- a field that saves and prints ---------- */
   let saveTimer = 0, plotFrame = 0;
-  const changed = () => { clearTimeout(saveTimer); saveTimer = setTimeout(save, 300); setStatus(VDI18N.t('Saving…')); replot(); };
+  const changed = () => { clearTimeout(saveTimer); saveTimer = setTimeout(save, 300); setStatus(VDI18N.t('Saving…')); replot(); progress(); };
+  let progress = () => {};   /* set once the answer boxes exist (the progress strip below) */
   function field(kind, label, cls) {
     const f = kind === 'area' ? el('textarea', { class: 'ws-f ' + (cls || ''), rows: 2, 'aria-label': label, spellcheck: 'true' })
       : el('input', { class: 'ws-f ' + (cls || ''), type: 'text', 'aria-label': label, autocomplete: 'off' });
@@ -1767,6 +1794,77 @@ details.ws-help p, details.ws-help ul { margin: 6px 0; } details.ws-help code { 
     }
   });
 
+  /* ---------- progress strip (Steve, 2026-11-08) ----------
+     A strip under the student panel that stays in view while the page scrolls: a bar and "N of M filled in", a task list with
+     one ring per section (filling as its boxes are filled, a check when all are), a tag on each section heading, a small
+     "answered" mark under each filled answer box, and "Ready to hand in?", which lists what is still empty. It only counts
+     whether a box has something in it; it never judges an answer. A data table counts the rows the handout printed (what the
+     procedure asks for); rows a student adds are extra. Left out of printouts. */
+  const prog = { tasks: [] };
+  sections.forEach((s) => {
+    const name = plain(s.h);   /* read now, before the heading gets its tag */
+    if (ANSWER_LISTS.test(s.id)) prog.tasks.push({ s, name, fields: () => answers.filter((a) => a.key.indexOf(s.id + '-') === 0).map((a) => a.f) });
+    else if (ONE_BOX.test(s.id)) prog.tasks.push({ s, name, fields: () => answers.filter((a) => a.key === s.id).map((a) => a.f) });
+    else { const Ts = tables.filter((T) => s.nodes.indexOf(T.first) >= 0); if (Ts.length) prog.tasks.push({ s, name, tables: Ts }); }
+  });
+  if (prog.tasks.length) {
+    const strip = el('section', { class: 'ws ws-progress tex2jax_ignore', 'aria-label': VDI18N.t('Your progress'), 'data-i18n-skip': SKIP });
+    const bar = el('i'), barBox = el('span', { class: 'ws-progress-bar', role: 'progressbar', 'aria-valuemin': 0, 'aria-valuemax': 100, 'aria-valuenow': 0 }, [bar]);
+    const nOut = el('span', { class: 'ws-progress-n' });
+    const missing = el('div', { class: 'ws-progress-missing', hidden: true });
+    const handin = el('button', { type: 'button', class: 'ws-btn ws-handin', 'aria-expanded': 'false', on: { click: () => { missing.hidden = !missing.hidden; handin.setAttribute('aria-expanded', String(!missing.hidden)); } } });
+    const list = el('ul', { class: 'ws-progress-tasks' });
+    strip.appendChild(el('div', { class: 'ws-progress-head' }, [el('span', { class: 'ws-progress-title', text: VDI18N.t('Your progress') }), barBox, nOut, handin]));
+    strip.appendChild(list); strip.appendChild(missing);
+    panel.insertAdjacentElement('afterend', strip);
+    const filled = (f) => !!f && !blank(f.value);
+    progress = () => {
+      let total = 0, done = 0; const miss = [];
+      list.textContent = '';
+      prog.tasks.forEach((t) => {
+        const name = VDI18N.t(t.name);
+        let m = 0, d = 0, label = '';
+        if (t.tables) {
+          t.tables.forEach((T) => {
+            const need = T.tpl.length, runs = T.runs.filter((R) => !R.removed);
+            const got = runs.reduce((n, R) => n + R.rows.filter((row) => row.cells.some(filled)).length, 0);
+            m += need; d += Math.min(got, need);
+          });
+          label = d < m ? VDI18N.t('{d} of {m} rows', { d, m }) : '';
+          if (d < m) miss.push(VDI18N.t('{name}: {n} more rows to fill in', { name, n: m - d }));
+        } else {
+          const fs = t.fields();
+          m = fs.length; d = fs.filter(filled).length;
+          label = m > 1 && d < m ? VDI18N.t('{d} of {m}', { d, m }) : '';
+          if (d < m) miss.push(m === 1 ? VDI18N.t('{name}: not answered yet', { name }) : VDI18N.t('{name}: {n} of {m} unanswered', { name, n: m - d, m }));
+          fs.forEach((f) => {
+            const box = f.closest('.ws-answer'); if (!box) return;
+            let tick = box.nextElementSibling && box.nextElementSibling.classList.contains('ws-tick') ? box.nextElementSibling : null;
+            if (filled(f) && !tick) box.insertAdjacentElement('afterend', el('span', { class: 'ws-tick', 'aria-hidden': 'true', text: VDI18N.t('✓ answered') }));
+            else if (!filled(f) && tick) tick.remove();
+          });
+        }
+        total += m; done += d;
+        let tag = t.s.h.querySelector('.ws-h2tag');
+        if (!tag) { tag = el('span', { class: 'ws-h2tag', 'data-i18n-skip': SKIP }); t.s.h.appendChild(tag); }
+        tag.textContent = !m ? '' : d === m ? VDI18N.t('✓ complete') : label;
+        tag.classList.toggle('done', m > 0 && d === m);
+        const li = el('li', { class: m && d === m ? 'done' : d ? 'part' : '' }, [el('span', { class: 'ws-progress-ring', 'aria-hidden': 'true', text: m && d === m ? '✓' : '' }),
+          el('a', { href: '#' + t.s.id, text: name }), label ? el('span', { class: 'ws-progress-n', text: label }) : null]);
+        li.style.setProperty('--p', m ? Math.round(100 * d / m) + '%' : '0%');
+        list.appendChild(li);
+      });
+      const pct = total ? Math.round(100 * done / total) : 0, ready = total > 0 && done === total;
+      bar.style.width = pct + '%'; barBox.setAttribute('aria-valuenow', pct);
+      nOut.textContent = VDI18N.t('{done} of {total} filled in · {pct} %', { done, total, pct });
+      handin.textContent = ready ? VDI18N.t('✓ Ready to hand in') : VDI18N.t('Ready to hand in?');
+      handin.classList.toggle('ready', ready);
+      missing.textContent = '';
+      if (miss.length) { missing.appendChild(el('strong', { text: VDI18N.t('Still to do before you hand in:') })); missing.appendChild(el('ul', {}, miss.map((x) => el('li', { text: x })))); }
+      else { missing.appendChild(el('strong', { text: VDI18N.t('Everything is filled in.') })); missing.appendChild(document.createTextNode(' ' + VDI18N.t('Use Print or save as PDF, and say in your answers which data are simulated.'))); }
+    };
+  }
+
   /* Export buttons again at the end of the worksheet. */
   const lastSec = sections[sections.length - 1];
   const endBox = el('section', { class: 'ws ws-panel ws-noprint tex2jax_ignore', 'aria-label': 'Save and export' }, [el('h2', { text: 'Save and export' })]);
@@ -1883,7 +1981,7 @@ details.ws-help p, details.ws-help ul { margin: 6px 0; } details.ws-help code { 
       if (!S || !S.worksheet) { alert(VDI18N.t('That file is not a worksheet save file.')); return; }
       if (S.worksheet !== SLUG && !confirm(VDI18N.t('That file is for a different worksheet ("{title}"). Open it here anyway?', { title: S.title || S.worksheet }))) return;
       if (!confirm(VDI18N.t('Replace what is on this page with the saved file?'))) return;
-      reset(); apply(S); save(); replot(); setStatus(VDI18N.t('Opened {file}.', { file: file.name }));
+      reset(); apply(S); save(); replot(); progress(); setStatus(VDI18N.t('Opened {file}.', { file: file.name }));
     }, () => alert(VDI18N.t('The file could not be read.')));
   }
   function reset() {
@@ -1896,7 +1994,7 @@ details.ws-help p, details.ws-help ul { margin: 6px 0; } details.ws-help code { 
     tables.forEach((T) => T.runs.forEach((R) => { R.source = null; setAxes(R, null); }));
     tables.forEach((T) => T.runs.forEach((R) => { R.rows.forEach((r) => r.cells.forEach((f) => f && f.wsSet(''))); R.notes.wsSet(''); }));
     try { localStorage.removeItem(KEY); } catch (_) {}
-    setStatus(VDI18N.t('Cleared.')); checkHand(); replot();
+    setStatus(VDI18N.t('Cleared.')); checkHand(); replot(); progress();
   }
 
   /* ---------- graphs ---------- */
@@ -2179,7 +2277,7 @@ details.ws-help p, details.ws-help ul { margin: 6px 0; } details.ws-help code { 
     });
     for (let i = h.rows.length; i < R.rows.length; i++) get.forEach((g, c) => { if (g && R.rows[i].cells[c]) R.rows[i].cells[c].wsSet(''); });
     if (h.note && R.notes.value.indexOf(h.note) < 0) R.notes.wsSet(R.notes.value ? R.notes.value + '\n' + h.note : h.note);
-    received = h.sent; handBox.hidden = true; save(); replot();
+    received = h.sent; handBox.hidden = true; save(); replot(); progress();
     setStatus(/^The /.test(MAP.demo) ? VDI18N.t('{n} readings from {demo} demo are in your table.', { n: h.rows.length, demo: VDI18N.t(MAP.demo) }) : VDI18N.t('{n} readings from the {demo} demo are in your table.', { n: h.rows.length, demo: VDI18N.t(MAP.demo) }));
     (R.wrap || R.table).scrollIntoView({ block: 'nearest' });
   }
@@ -2191,7 +2289,7 @@ details.ws-help p, details.ws-help ul { margin: 6px 0; } details.ws-help code { 
   if (stored) { apply(stored); setStatus(VDI18N.t('Your work from {when} is back.', { when: new Date(stored.saved).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' }) })); }
   else if (!storageOK) setStatus(VDI18N.t('This browser is blocking storage (a private window?), so nothing is saved as you type. Use Save to a file.'), true);
   else setStatus(VDI18N.t('Nothing typed yet. Your work saves in this browser as you type.'));
-  checkHand(); replot();
+  checkHand(); replot(); progress();
   window.addEventListener('pagehide', () => { if (saveTimer) save(); });
   window.addEventListener('beforeprint', () => document.querySelectorAll('.ws textarea.ws-f').forEach((t) => { t.wsPrint.textContent = t.value; }));
 })();

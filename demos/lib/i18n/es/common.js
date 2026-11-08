@@ -1203,5 +1203,33 @@ VDI18N.add('es', 'common', {
 "Log scales need numbers greater than zero in both columns. Turn off Log scales to draw these points.":
   "Las escalas logarítmicas necesitan números mayores que cero en ambas columnas. Desactiva Escalas logarítmicas para dibujar estos puntos.",
 "Rows left off the log scales and out of the fit, because a column holds zero or less: {n}.":
-  "Filas que quedan fuera de las escalas logarítmicas y del ajuste porque una columna tiene cero o menos: {n}."
+  "Filas que quedan fuera de las escalas logarítmicas y del ajuste porque una columna tiene cero o menos: {n}.",
+"Your progress":
+  "Tu avance",
+"{d} of {m} rows":
+  "{d} de {m} filas",
+"{name}: {n} more rows to fill in":
+  "{name}: faltan {n} filas por llenar",
+"{d} of {m}":
+  "{d} de {m}",
+"{name}: not answered yet":
+  "{name}: aún sin responder",
+"{name}: {n} of {m} unanswered":
+  "{name}: {n} de {m} sin responder",
+"✓ answered":
+  "✓ respondida",
+"✓ complete":
+  "✓ completa",
+"{done} of {total} filled in · {pct} %":
+  "{done} de {total} llenados · {pct} %",
+"✓ Ready to hand in":
+  "✓ Lista para entregar",
+"Ready to hand in?":
+  "¿Lista para entregar?",
+"Still to do before you hand in:":
+  "Pendiente antes de entregar:",
+"Everything is filled in.":
+  "Todo está llenado.",
+"Use Print or save as PDF, and say in your answers which data are simulated.":
+  "Usa Imprimir o guardar como PDF, y di en tus respuestas qué datos son simulados."
 });
