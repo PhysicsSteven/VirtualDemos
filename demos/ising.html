@@ -272,7 +272,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
         <dl class="readout" id="result"></dl>
         <p class="note" id="resNote" hidden></p>
         <div class="btnrow">
-          <button type="button" class="btn" id="capture" disabled>Capture reading</button>
+          <button type="button" class="btn" id="capture" disabled>Record reading</button>
           <button type="button" class="btn" id="toWs">Export to worksheet</button>
           <button type="button" class="btn" id="export">Export CSV</button>
           <button type="button" class="btn" id="clear">Clear</button>
@@ -801,7 +801,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     const on = !!meas;
     $('measure').disabled = on; $('scan').disabled = on; $('stopM').hidden = !on; $('prog').hidden = !on;
     $('capture').disabled = !S.result || S.captured;
-    $('capture').textContent = S.result && S.captured ? 'Captured' : 'Capture reading';
+    $('capture').textContent = S.result && S.captured ? 'Captured' : 'Record reading';
     progressUI();
   }
   function progressUI() {
@@ -1175,7 +1175,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     if (showEx) item((a, b) => { ctx.strokeStyle = T.ink; ctx.lineWidth = 1.6 * ps; ctx.beginPath(); ctx.moveTo(a, b); ctx.lineTo(a + 18 * ps, b); ctx.stroke(); }, narrow ? 'Onsager' : 'Onsager, infinite');
     if (!rows.length) {
       ctx.font = `${12 * ps}px ${T.ui}`; ctx.fillStyle = T.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      const b = box(0); haloText(ctx, 'No readings yet: Measure, then Capture, or Scan T', W / 2, b.y + b.h + gy / 2);
+      const b = box(0); haloText(ctx, 'No readings yet: Measure, then Record reading, or Scan T', W / 2, b.y + b.h + gy / 2);
     }
   }
   function drawLoop(ctx, W, H, ps) {

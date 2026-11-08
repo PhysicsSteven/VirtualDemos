@@ -24,8 +24,8 @@ VDI18N.add('es', 'ws/intro-kepler', {
   "Con la Regla activa, haz clic o arrastra en la vista para colocar los puntos {#} y {#}. La regla da la distancia de cada punto al Sol y la distancia entre los puntos. Acerca la vista (con la rueda, o las teclas + y −) para colocar un punto con precisión.",
 "Blind hides the demo’s own values of the orbit’s size, shape and period, so you measure them yourself. The timer and the ruler stay.":
   "A ciegas oculta los valores propios de la demo del tamaño, la forma y el periodo de la órbita, para que los midas tú. El cronómetro y la regla se quedan.",
-"Capture reading stores the timer and both ruler distances with the name of the setup. Export to worksheet sends the readings to the Data table below.":
-  "Capturar lectura guarda el cronómetro y las dos distancias de la regla con el nombre de la configuración. Exportar a la hoja envía las lecturas a la tabla de datos de abajo.",
+"Record reading stores the timer and both ruler distances with the name of the setup. Export to worksheet sends the readings to the Data table below.":
+  "Registrar lectura guarda el cronómetro y las dos distancias de la regla con el nombre de la configuración. Exportar a la hoja envía las lecturas a la tabla de datos de abajo.",
 "The Sun is held fixed and each object feels only the Sun’s gravity, so the planets do not pull on each other.":
   "El Sol se mantiene fijo y cada objeto siente solo la gravedad del Sol, así que los planetas no se atraen entre sí.",
 "The Sandbox is for exploring on your own: drag stars, planets and moons from the tray into space. Unlike the other setups, nothing is held fixed: every body pulls on every other. Each starts on a circular orbit around the body that pulls on it hardest; drag the tip of its arrow to change its velocity, and watch the energy of the whole system as it runs. The Sandbox records no readings.":

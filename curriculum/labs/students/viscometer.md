@@ -10,7 +10,7 @@ Textbook: OpenStax *University Physics*, Vol. 1, §§6.4 and 14.7. Access for fr
 
 **Using the demo.**
 
-- Capture stores the liquid, ball, tube and the gate time between the marks (0.01 s); $$v = (0.200\ \text{m})/t$$. Stokes' law predicts $$v \propto d^2$$, so plot $$v$$ against $$d^2$$ for one liquid, ball and tube: $$\eta = (\rho_b - \rho_f)g/(18\times\text{slope})$$. The fit uses the rows that match the current settings.
+- Record reading stores the liquid, ball, tube and the gate time between the marks (0.01 s); $$v = (0.200\ \text{m})/t$$. Stokes' law predicts $$v \propto d^2$$, so plot $$v$$ against $$d^2$$ for one liquid, ball and tube: $$\eta = (\rho_b - \rho_f)g/(18\times\text{slope})$$. The fit uses the rows that match the current settings.
 - Blind hides $$\eta$$, the Stokes prediction, the Reynolds number and the fitted $$\eta$$, leaving the timer and the densities. The Mystery liquid always hides its $$\eta$$.
 
 **What the demo models.**

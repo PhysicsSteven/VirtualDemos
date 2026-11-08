@@ -107,7 +107,7 @@ VDI18N.add('es', 'demo/circuits', {
 "Energy bars: work done by the sources, energy stored in capacitors and inductors, and heat in each resistor since t = {#}.":
   "Barras de energía: trabajo hecho por las fuentes, energía almacenada en capacitores e inductores, y calor en cada resistor desde t = {#}.",
 "Oscilloscope: the chosen voltages on the left scale and currents on the right scale, against time. In time mode a time cursor reads every channel at one instant: click or drag on the trace to place it, or use the keys: left and right arrows move it by a hundredth of the window, Shift with an arrow by one division, Home to the start of the window, End to the present time, Escape removes it, C captures a reading at the cursor.":
-  "Osciloscopio: los voltajes elegidos en la escala izquierda y las corrientes en la escala derecha, en función del tiempo. En el modo en el tiempo, un cursor de tiempo lee todos los canales en un mismo instante: haz clic o arrastra sobre la traza para colocarlo, o usa las teclas: las flechas izquierda y derecha lo mueven una centésima de la ventana, Shift con una flecha una división, Inicio al principio de la ventana, Fin al tiempo presente, Escape lo quita, C captura una lectura en el cursor.",
+  "Osciloscopio: los voltajes elegidos en la escala izquierda y las corrientes en la escala derecha, en función del tiempo. En el modo en el tiempo, un cursor de tiempo lee todos los canales en un mismo instante: haz clic o arrastra sobre la traza para colocarlo, o usa las teclas: las flechas izquierda y derecha lo mueven una centésima de la ventana, Shift con una flecha una división, Inicio al principio de la ventana, Fin al tiempo presente, Escape lo quita, C registra una lectura en el cursor.",
 "Resonance curve: rms current from the AC source against frequency on a log scale. Drag the f marker, or use the left and right arrows, to change the frequency.":
   "Curva de resonancia: corriente rms de la fuente de CA en función de la frecuencia en escala logarítmica. Arrastra el marcador f, o usa las flechas izquierda y derecha, para cambiar la frecuencia.",
 "Impedance triangle: the resistance R and reactance X that the source sees, the impedance Z and the phase angle.":
@@ -228,10 +228,10 @@ VDI18N.add('es', 'demo/circuits', {
   "{#}% <span>del máximo</span>",
 "V = IR: {#} V = {#} mA × {#} Ω":
   "V = IR: {#} V = {#} mA × {#} Ω",
-"No readings yet. Press Capture reading to store the meter readings.":
-  "Aún no hay lecturas. Pulsa Capturar lectura para guardar las lecturas de los medidores.",
-"Capture stores every meter reading as the meters show it ({#} significant figures) with the part values and switch positions. The table shows four meters; the CSV has all. DC keeps its own table.":
-  "Capturar guarda cada lectura de los medidores tal como la muestran ({#} cifras significativas) con los valores de los componentes y las posiciones de los interruptores. La tabla muestra cuatro medidores; el CSV los tiene todos. CD tiene su propia tabla.",
+"No readings yet. Press Record reading to store the meter readings.":
+  "Aún no hay lecturas. Pulsa Registrar lectura para guardar las lecturas de los medidores.",
+"Record reading stores every meter reading as the meters show it ({#} significant figures) with the part values and switch positions. The table shows four meters; the CSV has all. DC keeps its own table.":
+  "Registrar lectura guarda cada lectura de los medidores tal como la muestran ({#} cifras significativas) con los valores de los componentes y las posiciones de los interruptores. La tabla muestra cuatro medidores; el CSV los tiene todos. CD tiene su propia tabla.",
 "Automatic: the plot window plays in about {#} s":
   "Automático: la ventana de la gráfica se reproduce en unos {#} s",
 "Fit last change":
@@ -254,10 +254,10 @@ VDI18N.add('es', 'demo/circuits', {
   "Cursor de tiempo",
 "Click or drag on the scope to place the cursor, or focus the scope and use the arrow keys. It reads each channel at that instant, exactly: between stored samples the circuit equations are solved to the cursor time.":
   "Haz clic o arrastra sobre el osciloscopio para colocar el cursor, o enfoca el osciloscopio y usa las flechas. Lee cada canal en ese instante, de forma exacta: entre las muestras guardadas se resuelven las ecuaciones del circuito hasta el tiempo del cursor.",
-"No readings yet. Place the time cursor, then press Capture reading.":
-  "Aún no hay lecturas. Coloca el cursor de tiempo y luego pulsa Capturar lectura.",
-"Capture stores the Time cursor reading as shown (no cursor: one is put at the present time). The table shows t and three channels; the CSV adds the energies and part values. In time keeps its own table.":
-  "Capturar guarda la lectura del cursor de tiempo tal como se muestra (sin cursor: se pone uno en el tiempo presente). La tabla muestra t y tres canales; el CSV agrega las energías y los valores de los componentes. En el tiempo tiene su propia tabla.",
+"No readings yet. Place the time cursor, then press Record reading.":
+  "Aún no hay lecturas. Coloca el cursor de tiempo y luego pulsa Registrar lectura.",
+"Record reading stores the Time cursor reading as shown (no cursor: one is put at the present time). The table shows t and three channels; the CSV adds the energies and part values. In time keeps its own table.":
+  "Registrar lectura guarda la lectura del cursor de tiempo tal como se muestra (sin cursor: se pone uno en el tiempo presente). La tabla muestra t y tres canales; el CSV agrega las energías y los valores de los componentes. En el tiempo tiene su propia tabla.",
 "Natural response":
   "Respuesta natural",
 "Blind: the time constants, frequencies, damping ratio and regime are hidden. Measure them from the scope with the time cursor.":
@@ -296,10 +296,10 @@ VDI18N.add('es', 'demo/circuits', {
   "Lecturas de la respuesta en frecuencia",
 "I<sub>rms</sub> (mA)":
   "I<sub>rms</sub> (mA)",
-"No readings yet. Set a frequency, then press Capture reading.":
-  "Aún no hay lecturas. Fija una frecuencia y luego pulsa Capturar lectura.",
-"Capture stores the readings at the current frequency, rounded as the panel above shows them. The table shows four; the CSV also has V<sub>{#}</sub>, |Z|, the part values and the rms voltage across each part. Rows can be edited or deleted.":
-  "Capturar guarda las lecturas a la frecuencia actual, redondeadas como las muestra el panel de arriba. La tabla muestra cuatro; el CSV también tiene V<sub>{#}</sub>, |Z|, los valores de los componentes y el voltaje rms en cada componente. Las filas se pueden editar o eliminar.",
+"No readings yet. Set a frequency, then press Record reading.":
+  "Aún no hay lecturas. Fija una frecuencia y luego pulsa Registrar lectura.",
+"Record reading stores the readings at the current frequency, rounded as the panel above shows them. The table shows four; the CSV also has V<sub>{#}</sub>, |Z|, the part values and the rms voltage across each part. Rows can be edited or deleted.":
+  "Registrar lectura guarda las lecturas a la frecuencia actual, redondeadas como las muestra el panel de arriba. La tabla muestra cuatro; el CSV también tiene V<sub>{#}</sub>, |Z|, los valores de los componentes y el voltaje rms en cada componente. Las filas se pueden editar o eliminar.",
 "Oscilloscope":
   "Osciloscopio",
 "Add the voltage phasors tip to tail":

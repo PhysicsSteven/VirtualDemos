@@ -13,7 +13,7 @@ Textbook: OpenStax *University Physics*, Vol. 1, §§5.3, 5.4, 5.6, 6.1 and 10.7
 **Using the demo.**
 
 - Two masses hang from one string over a pulley: m on the left, m₂ on the right. The string does not stretch and has no mass; the pulley has no mass and no friction. Each mass can be set from 1 to 20 kg (m) or up to 10 kg (m₂) in steps of 0.5 kg.
-- **Release at the top mark** starts the masses from rest and times a run of 1.000 m (to 0.001 s). Capture stores m, m₂ and that time; $$a = 2d/t^2$$ is worked out from your time.
+- **Release at the top mark** starts the masses from rest and times a run of 1.000 m (to 0.001 s). Record reading stores m, m₂ and that time; $$a = 2d/t^2$$ is worked out from your time.
 - The readouts give the tension and the acceleration. Blind hides every force size and the acceleration; the timer, the masses and the force directions stay.
 - The demo uses $$g = 9.81\ \mathrm{m/s^2}$$. Your job is to measure it.
 

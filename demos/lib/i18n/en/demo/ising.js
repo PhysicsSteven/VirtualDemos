@@ -90,7 +90,7 @@ VDI18N.add('en', 'demo/ising', [
 "heat capacity c",
 "susceptibility χ",
 "Onsager",
-"No readings yet: Measure, then Capture, or Scan T",
+"No readings yet: Measure, then Record reading, or Scan T",
 "field h",
 "magnetization m against field h · T = {#}, L = {#}, {#} per sweep",
 "Turn on Sweep h, or pick Hysteresis",

@@ -106,12 +106,12 @@ VDI18N.add('es', 'demo/stress-strain', {
   "esfuerzo σ = F/A · deformación ε = ΔL/L · Y = σ/ε (elástico)",
 "No readings yet. Set a load, then capture.":
   "Aún no hay lecturas. Fija una carga y luego captura.",
-"Capture stores the hanging mass and the dial gauge reading (to {#} mm), with the wire's diameter. The fit is a straight line of the load F = mg against ΔL; Y = slope × L / A. Use only loads below the yield point. The fit uses the rows from the wire now hanging; New wire starts afresh (the CSV keeps every row).":
-  "Capturar guarda la masa colgante y la lectura del comparador de carátula (con resolución de {#} mm), con el diámetro del alambre. El ajuste es una recta de la carga F = mg en función de ΔL; Y = pendiente × L / A. Usa solo cargas por debajo del punto de fluencia. El ajuste usa las filas del alambre que cuelga ahora; Alambre nuevo empieza de cero (el CSV conserva todas las filas).",
+"Record reading stores the hanging mass and the dial gauge reading (to {#} mm), with the wire's diameter. The fit is a straight line of the load F = mg against ΔL; Y = slope × L / A. Use only loads below the yield point. The fit uses the rows from the wire now hanging; New wire starts afresh (the CSV keeps every row).":
+  "Registrar lectura guarda la masa colgante y la lectura del comparador de carátula (con resolución de {#} mm), con el diámetro del alambre. El ajuste es una recta de la carga F = mg en función de ΔL; Y = pendiente × L / A. Usa solo cargas por debajo del punto de fluencia. El ajuste usa las filas del alambre que cuelga ahora; Alambre nuevo empieza de cero (el CSV conserva todas las filas).",
 "Load against extension (or force against displacement or strain) for the captured rows, with a least squares line and residuals.":
   "Carga en función del alargamiento (o fuerza en función del desplazamiento o de la deformación) para las filas capturadas, con una recta por mínimos cuadrados y residuos.",
-"Capture at least two rows on this wire (Mild steel, d = {#} mm). The fit uses only rows from the wire now hanging; New wire starts a new fit.":
-  "Captura al menos dos filas con este alambre (Acero dulce, d = {#} mm). El ajuste usa solo filas del alambre que cuelga ahora; Alambre nuevo empieza un ajuste nuevo.",
+"Record at least two rows on this wire (Mild steel, d = {#} mm). The fit uses only rows from the wire now hanging; New wire starts a new fit.":
+  "Registra al menos dos filas con este alambre (Acero dulce, d = {#} mm). El ajuste usa solo filas del alambre que cuelga ahora; Alambre nuevo empieza un ajuste nuevo.",
 "Plotted points":
   "Puntos graficados",
 "fit (N)":
@@ -164,12 +164,12 @@ VDI18N.add('es', 'demo/stress-strain', {
   "Gira el tornillo para empujar la placa superior hacia un lado; la celda de carga lee la fuerza y el sensor de desplazamiento lee cuánto se mueve la placa superior (con resolución de {#} µm). Las flechas arriba y abajo sobre la imagen cambian la fuerza {#} kN (Shift: {#} kN).",
 "shear stress F/A · shear strain Δx/L · S = (F/A)/(Δx/L)":
   "esfuerzo de corte F/A · deformación de corte Δx/L · S = (F/A)/(Δx/L)",
-"Capture stores the force and the top plate displacement for the block now in the press. The fit is a straight line of F against Δx for the rows from this block; S = slope × L / A.":
-  "Capturar guarda la fuerza y el desplazamiento de la placa superior para el bloque que está ahora en la prensa. El ajuste es una recta de F en función de Δx para las filas de este bloque; S = pendiente × L / A.",
+"Record reading stores the force and the top plate displacement for the block now in the press. The fit is a straight line of F against Δx for the rows from this block; S = slope × L / A.":
+  "Registrar lectura guarda la fuerza y el desplazamiento de la placa superior para el bloque que está ahora en la prensa. El ajuste es una recta de F en función de Δx para las filas de este bloque; S = pendiente × L / A.",
 "Shear press: turn the screw":
   "Prensa de corte: gira el tornillo",
-"Capture at least two rows with Aluminum in the press. The fit uses only rows from the sample now loaded.":
-  "Captura al menos dos filas con Aluminio en la prensa. El ajuste usa solo filas de la muestra cargada ahora.",
+"Record at least two rows with Aluminum in the press. The fit uses only rows from the sample now loaded.":
+  "Registra al menos dos filas con Aluminio en la prensa. El ajuste usa solo filas de la muestra cargada ahora.",
 "Force F (load cell)":
   "Fuerza F (celda de carga)",
 "Top plate moves Δx":
@@ -218,12 +218,12 @@ VDI18N.add('es', 'demo/stress-strain', {
   "La prensa empuja el pistón dentro de la celda sellada; la celda de carga lee la fuerza. Para un líquido, el comparador de carátula lee cuánto se mueve el pistón (con resolución de {#} mm); para un cubo metálico en aceite, la galga extensométrica en su cara lee el cambio de longitud de la arista por unidad de longitud (con resolución de {#} microdeformaciones). Las flechas arriba y abajo cambian la fuerza {#} kN (Shift: {#} kN).",
 "Δp = F/A · ΔV/V₀ = −Δx/h₀ (liquid) or ({#} + Δa/a₀)³ − {#} ≈ {#} Δa/a₀ (cube) · B = −Δp/(ΔV/V₀)":
   "Δp = F/A · ΔV/V₀ = −Δx/h₀ (líquido) o ({#} + Δa/a₀)³ − {#} ≈ {#} Δa/a₀ (cubo) · B = −Δp/(ΔV/V₀)",
-"Capture stores the force and the piston or strain gauge reading for the sample now in the cell. The fit is a straight line of F against the reading for the rows from this sample: B = slope × h₀ / A for a liquid, and B ≈ slope / (3A) per unit strain for the cube.":
-  "Capturar guarda la fuerza y la lectura del pistón o de la galga extensométrica para la muestra que está ahora en la celda. El ajuste es una recta de F en función de la lectura para las filas de esta muestra: B = pendiente × h₀ / A para un líquido, y B ≈ pendiente / (3A) por unidad de deformación para el cubo.",
+"Record reading stores the force and the piston or strain gauge reading for the sample now in the cell. The fit is a straight line of F against the reading for the rows from this sample: B = slope × h₀ / A for a liquid, and B ≈ slope / (3A) per unit strain for the cube.":
+  "Registrar lectura guarda la fuerza y la lectura del pistón o de la galga extensométrica para la muestra que está ahora en la celda. El ajuste es una recta de F en función de la lectura para las filas de esta muestra: B = pendiente × h₀ / A para un líquido, y B ≈ pendiente / (3A) por unidad de deformación para el cubo.",
 "Press on the cell piston":
   "Presionar el pistón de la celda",
-"Capture at least two rows with Water in the cell. The fit uses only rows from the sample now loaded.":
-  "Captura al menos dos filas con Agua en la celda. El ajuste usa solo filas de la muestra cargada ahora.",
+"Record at least two rows with Water in the cell. The fit uses only rows from the sample now loaded.":
+  "Registra al menos dos filas con Agua en la celda. El ajuste usa solo filas de la muestra cargada ahora.",
 "Piston moves Δx":
   "El pistón se mueve Δx",
 "Piston area A":
@@ -246,8 +246,8 @@ VDI18N.add('es', 'demo/stress-strain', {
   "Agua, volumétrica",
 "Row {#} captured.":
   "Fila {#} capturada.",
-"Capture at least two rows on this wire (Mystery metal, d = {#} mm). The fit uses only rows from the wire now hanging; New wire starts a new fit.":
-  "Captura al menos dos filas con este alambre (Metal misterioso, d = {#} mm). El ajuste usa solo filas del alambre que cuelga ahora; Alambre nuevo empieza un ajuste nuevo.",
+"Record at least two rows on this wire (Mystery metal, d = {#} mm). The fit uses only rows from the wire now hanging; New wire starts a new fit.":
+  "Registra al menos dos filas con este alambre (Metal misterioso, d = {#} mm). El ajuste usa solo filas del alambre que cuelga ahora; Alambre nuevo empieza un ajuste nuevo.",
 "Stress, strain, Y, yield and strength":
   "Esfuerzo, deformación, Y, fluencia y resistencia",
 "hidden: work them out":

@@ -10,7 +10,7 @@ VDI18N.add('en', 'ws/gauss-law', [
 "Electric Flux and Gauss’s Law | VirtualDemos",
 "Electric Flux and Gauss’s Law",
 "<strong>Setups in the demo:</strong> Charge inside; Charge outside; Dipole inside; Uniform sphere; Line of charge; Plane of charge.",
-"Capture freezes the surface, the charges and the numerical flux in a row (flux in N·m²/C). The CSV holds every row in SI units, with the closest charge distance and the quadrature status.",
+"Record reading freezes the surface, the charges and the numerical flux in a row (flux in N·m²/C). The CSV holds every row in SI units, with the closest charge distance and the quadrature status.",
 "3D view: the whole closed surface, with its area elements drawn as tiles. Field lines leave each charge evenly in all directions, three times as many per nC as set above, so lines out minus lines in follows \\(Q_{\\text{enc}}\\). Drag empty space to turn the view.",
 "3D view: charge dots inside the Gaussian surface are bright, the rest faint. With flux patches on, the caps of the line’s cylinder and the side of the pillbox stay gray: \\(\\mathbf{E}\\) runs along them, so \\(\\mathbf{E}\\cdot d\\mathbf{A} = 0\\).",
 "Model: point charges in empty space, all in the plane \\(z = 0\\), which is the slice you see. Their field lines in that plane stay in the plane, so the drawn lines are exact field lines. Lines are drawn in proportion to charge, but in a slice the spacing of lines does not show the field strength the way it does in 3D. The surface color fades where \\(\\mathbf{E}\\cdot\\hat{\\mathbf{n}}\\) is small. Arrows on the surface show the direction of \\(\\mathbf{E}\\); their length grows with \\(E\\) and levels off for strong fields.",

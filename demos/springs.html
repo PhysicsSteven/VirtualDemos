@@ -289,14 +289,14 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
         <h2>Readings</h2>
         <div class="inline"><label for="sbNosc">Oscillations counted, N</label><input type="number" class="num" id="sbNosc" min="1" max="200" step="1" value="10"></div>
         <div class="btnrow">
-          <button type="button" class="btn primary" id="sbCapture">Capture reading</button>
+          <button type="button" class="btn primary" id="sbCapture">Record reading</button>
           <button type="button" class="btn" id="sbExport">Export to worksheet</button>
           <button type="button" class="btn" id="sbClear">Clear</button>
         </div>
         <p class="status" id="sbCapStatus" aria-live="polite"></p>
         <div class="twrap"><table class="rows" id="sbRowsTbl"><caption class="sr">Captured readings of the normal modes</caption><thead></thead><tbody></tbody></table></div>
         <label class="check"><input type="checkbox" id="sbBlind">Blind: hide the mode frequencies</label>
-        <details class="more"><summary>More about this</summary><p class="hint">For the Normal modes worksheet, between two walls and on the air table. Start one mode alone by clicking it in the lower pane, press Stopwatch (or W on the drawing) as a block or puck passes a mark you choose, count N full oscillations and press it again as it passes the same mark going the same way. Capture stores the rig, the mode you started (or "a mix" after you pulled a block yourself), your N and the stopwatch time t, as displayed; T = t/N. Starting a mode sets the stopwatch back to 0.00 s. Blind hides each mode's frequency in the lower pane, in the readouts and in what is read aloud; the shapes, the shares and the stopwatch stay. Export to worksheet sends the readings to the Normal modes worksheet; Clear starts a new series, which goes to a new copy of the table there.</p></details>
+        <details class="more"><summary>More about this</summary><p class="hint">For the Normal modes worksheet, between two walls and on the air table. Start one mode alone by clicking it in the lower pane, press Stopwatch (or W on the drawing) as a block or puck passes a mark you choose, count N full oscillations and press it again as it passes the same mark going the same way. Record reading stores the rig, the mode you started (or "a mix" after you pulled a block yourself), your N and the stopwatch time t, as displayed; T = t/N. Starting a mode sets the stopwatch back to 0.00 s. Blind hides each mode's frequency in the lower pane, in the readouts and in what is read aloud; the shapes, the shares and the stopwatch stay. Export to worksheet sends the readings to the Normal modes worksheet; Clear starts a new series, which goes to a new copy of the table there.</p></details>
       </section>
 
       <section class="nosb">
@@ -407,13 +407,13 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
       <section class="nosb">
         <h2>Readings</h2>
         <div class="btnrow">
-          <button type="button" class="btn primary" id="capture">Capture reading</button>
+          <button type="button" class="btn primary" id="capture">Record reading</button>
           <button type="button" class="btn" id="exportCsv">Export to worksheet</button>
           <button type="button" class="btn" id="clearRows">Clear</button>
         </div>
         <p class="status" id="capStatus" aria-live="polite"></p>
         <div class="twrap"><table class="rows" id="rowsTbl"><caption class="sr">Captured readings</caption><thead></thead><tbody></tbody></table></div>
-        <details class="more"><summary>More about this</summary><p class="hint">Capture stores what is on screen, rounded as displayed: the stopwatch time, your N, the ruler peak (or, when driven, the amplitude of the last drive cycle) and the settings m, k, b, F₀ and ω. T = t/N. Cells can be edited; rows stay through setup changes until Clear.</p></details>
+        <details class="more"><summary>More about this</summary><p class="hint">Record reading stores what is on screen, rounded as displayed: the stopwatch time, your N, the ruler peak (or, when driven, the amplitude of the last drive cycle) and the settings m, k, b, F₀ and ω. T = t/N. Cells can be edited; rows stay through setup changes until Clear.</p></details>
         <div class="seg full" role="group" aria-label="Plot of the readings" id="fitSeg">
           <button type="button" data-k="T2m" aria-pressed="true">T² against m</button>
           <button type="button" data-k="Aw" aria-pressed="false">A against ω</button>
@@ -2754,7 +2754,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     const cols = VIEW_COLS[S.fitKind];
     $('rowsTbl').querySelector('thead').innerHTML = `<tr><th scope="col">#</th>${cols.map((c) => `<th scope="col">${c[1]}</th>`).join('')}<th scope="col"><span class="sr">Delete</span></th></tr>`;
     const tb = $('rowsTbl').querySelector('tbody');
-    if (!S.rows.length) { tb.innerHTML = `<tr><td class="empty" colspan="${cols.length + 2}">No readings yet. Time N oscillations, then press Capture reading.</td></tr>`; updateFitOut(); return; }
+    if (!S.rows.length) { tb.innerHTML = `<tr><td class="empty" colspan="${cols.length + 2}">No readings yet. Time N oscillations, then press Record reading.</td></tr>`; updateFitOut(); return; }
     tb.innerHTML = S.rows.map((r, i) => {
       const tds = cols.map(([f, lab, w]) => {
         if (f === '=T') { const T = rowPeriod(r); return `<td class="b">${isFinite(T) ? sig(T, 4) : '—'}</td>`; }
@@ -2876,7 +2876,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     ctx.restore();
     ctx.fillStyle = T.accent; for (let i = 0; i < rs.length; i++) { ctx.beginPath(); ctx.arc(X(xs[i]), Yr(rs[i]), 3 * ps, 0, 2 * Math.PI); ctx.fill(); }
     ctx.fillStyle = T.muted; ctx.font = `${11 * ps}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    if (lin && xs.length < 2) ctx.fillText(xs.length ? 'Capture another mass to fit a line' : 'No timed readings yet', (L + R) / 2, (top + bot) / 2);
+    if (lin && xs.length < 2) ctx.fillText(xs.length ? 'Record another mass to fit a line' : 'No timed readings yet', (L + R) / 2, (top + bot) / 2);
     else if (!lin && !xs.length) ctx.fillText('No driven readings yet', (L + R) / 2, (top + bot) / 2);
     if (showCurve) { ctx.font = `${10 * ps}px ${T.ui}`; ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.fillText('dashed: predicted A(ω), current settings', R - 4, top + 4); }
   }
@@ -2895,7 +2895,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
           html += `<div class="wide"><dt>k = 4π²/b</dt><dd>${fit.b > 0 ? fmtPM(kk.k, kk.se, 'N/m') : '—'}</dd></div>`;
           html += isFinite(ks) ? `<div class="wide"><dt>k set on the spring</dt><dd>${ks.toFixed(1)} N/m</dd></div>` : '<div class="wide"><dt>k set on the spring</dt><dd class="ok">the rows have different k</dd></div>';
         }
-      } else html = `<div class="wide"><dt>Fit of T² against m</dt><dd class="ok">${P.x.length ? 'needs 2 or more rows with different m' : 'time N oscillations and capture, at several masses'}</dd></div>`;
+      } else html = `<div class="wide"><dt>Fit of T² against m</dt><dd class="ok">${P.x.length ? 'needs 2 or more rows with different m' : 'time N oscillations and record, at several masses'}</dd></div>`;
     } else if (P.x.length) {
       let j = 0; for (let i = 1; i < P.y.length; i++) if (P.y[i] > P.y[j]) j = i;
       html += `<div class="wide"><dt>Largest A in the rows</dt><dd>${cm(P.y[j], 2)} at ω = ${fx(P.x[j], 2)} rad/s</dd></div>`;
@@ -4298,7 +4298,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   function nmRender() {
     $('sbRowsTbl').querySelector('thead').innerHTML = '<tr><th scope="col">#</th><th scope="col">Mode</th><th scope="col">N</th><th scope="col">t s</th><th scope="col">T s</th><th scope="col"><span class="sr">Delete</span></th></tr>';
     const tb = $('sbRowsTbl').querySelector('tbody');
-    if (!nmRows.length) { tb.innerHTML = '<tr><td class="empty" colspan="6">No readings yet. Start a mode, time N oscillations, then press Capture reading.</td></tr>'; return; }
+    if (!nmRows.length) { tb.innerHTML = '<tr><td class="empty" colspan="6">No readings yet. Start a mode, time N oscillations, then press Record reading.</td></tr>'; return; }
     tb.innerHTML = nmRows.map((r, i) => `<tr title="${r.rig}"><td class="n">${i + 1}</td><td>${r.mode}</td><td>${r.N_osc}</td><td>${r.t_s}</td><td class="b">${r.T_s || '—'}</td><td><button type="button" data-del="${i}" aria-label="Delete row ${i + 1}">×</button></td></tr>`).join('');
   }
   $('sbRowsTbl').addEventListener('click', (ev) => { const b = ev.target.closest('button[data-del]'); if (!b) return; const i = +b.dataset.del; nmRows.splice(i, 1); nmRender(); nmStatus(`Row ${i + 1} deleted.`); });

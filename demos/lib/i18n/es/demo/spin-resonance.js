@@ -124,7 +124,7 @@ VDI18N.add('es', 'demo/spin-resonance', {
   "Flúor en PTFE",
 "Out of tune":
   "Fuera de sintonía",
-"DPPH on MID with SENS just below the threshold: a clear peak on CH2. Put cursor A at the start of the ramp and B on the peak, capture, then repeat on LO and HI. Each range needs SENS set again.":
+"DPPH on MID with SENS just below the threshold: a clear peak on CH2. Put cursor A at the start of the ramp and B on the peak, record, then repeat on LO and HI. Each range needs SENS set again.":
   "DPPH en MID con SENS justo por debajo del umbral: un pico claro en CH2. Pon el cursor A al inicio de la rampa y B en el pico, captura, y luego repite en LO y HI. Cada intervalo necesita ajustar SENS otra vez.",
 "Sample in the probe":
   "Muestra en la sonda",
@@ -210,11 +210,11 @@ VDI18N.add('es', 'demo/spin-resonance', {
   "Exportar tabla en CSV",
 "Meter kHz":
   "kHz del medidor",
-"Capture stores the meter reading and your own cursor or ruler measurement, never the true field. You can edit both. B<sub>max</sub> = {#} mT for ESR, {#} mT for the PSR scan.":
-  "Capturar guarda la lectura del medidor y tu propia medición con el cursor o la regla, nunca el campo real. Puedes editar ambas. B<sub>max</sub> = {#} mT para ESR, {#} mT para el barrido de PSR.",
+"Record reading stores the meter reading and your own cursor or ruler measurement, never the true field. You can edit both. B<sub>max</sub> = {#} mT for ESR, {#} mT for the PSR scan.":
+  "Registrar lectura guarda la lectura del medidor y tu propia medición con el cursor o la regla, nunca el campo real. Puedes editar ambas. B<sub>max</sub> = {#} mT para ESR, {#} mT para el barrido de PSR.",
 "Plot of B against frequency from your readings, with a least squares line, slope and intercept.":
   "Gráfica de B en función de la frecuencia a partir de tus lecturas, con una recta de mínimos cuadrados, pendiente y ordenada al origen.",
-"Capture readings at LO, MID and HI (two or more points fit a line)":
+"Record readings at LO, MID and HI (two or more points fit a line)":
   "Captura lecturas en LO, MID y HI (dos o más puntos se ajustan a una recta)",
 "<span><i></i>Your ESR readings, least squares line (slope and intercept)</span>":
   "<span><i></i>Tus lecturas de ESR, recta de mínimos cuadrados (pendiente y ordenada al origen)</span>",
@@ -254,7 +254,7 @@ VDI18N.add('es', 'demo/spin-resonance', {
   "tapa azul",
 "<span></span>PTFE":
   "<span></span>PTFE",
-"Capture readings for glycerine and PTFE":
+"Record readings for glycerine and PTFE":
   "Captura lecturas para la glicerina y el PTFE",
 "<span><i></i>¹H readings</span><span><i></i>¹⁹F readings (PTFE)</span>":
   "<span><i></i>Lecturas de ¹H</span><span><i></i>Lecturas de ¹⁹F (PTFE)</span>",
@@ -282,7 +282,7 @@ VDI18N.add('es', 'demo/spin-resonance', {
   "El poliestireno es un sólido: los dipolos fijos de los protones vecinos ensanchan la resonancia, así que el pico es más ancho y más bajo que la traza de glicerina retenida en la pantalla.",
 "Green cap: a polystyrene rod. A solid, so the proton line is broadened.":
   "Tapa verde: una varilla de poliestireno. Un sólido, así que la línea del protón se ensancha.",
-"PTFE has fluorine and no hydrogen. ¹⁹F resonates at {#} MHz per tesla, about {#}% below the proton, so switch to LO, find the peak, and capture it as a second line on the plot.":
+"PTFE has fluorine and no hydrogen. ¹⁹F resonates at {#} MHz per tesla, about {#}% below the proton, so switch to LO, find the peak, and record it as a second line on the plot.":
   "El PTFE tiene flúor y no tiene hidrógeno. El ¹⁹F resuena a {#} MHz por tesla, alrededor del {#}% por debajo del protón, así que cambia a LO, encuentra el pico y captúralo como una segunda recta en la gráfica.",
 "Blue cap: a PTFE rod. Fluorine, no hydrogen: the line sits at a lower frequency.":
   "Tapa azul: una varilla de PTFE. Flúor, sin hidrógeno: la línea queda a una frecuencia más baja.",

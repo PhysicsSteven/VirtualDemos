@@ -349,14 +349,14 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
       <section>
         <h2>Readings</h2>
         <div class="btnrow">
-          <button type="button" class="btn primary" id="capture">Capture reading</button>
+          <button type="button" class="btn primary" id="capture">Record reading</button>
           <button type="button" class="btn" id="exportCsv">Export to worksheet</button>
           <button type="button" class="btn" id="clearRows">Clear</button>
         </div>
         <p class="status" id="capStatus" aria-live="polite"></p>
         <div class="twrap" id="rowsWrap"><table class="rows" id="rowsTbl"><caption class="sr">Captured readings</caption><thead><tr><th scope="col">#</th><th scope="col">d cm</th><th scope="col">x/s %</th><th scope="col">C pF</th><th scope="col">Q nC</th><th scope="col">V (V)</th><th scope="col"><span class="sr">Delete</span></th></tr></thead><tbody></tbody></table></div>
         <div class="twrap" id="sRowsWrap" hidden><table class="rows" id="sRowsTbl"><caption class="sr">Captured readings of the spheres</caption><thead><tr><th scope="col">#</th><th scope="col">a cm</th><th scope="col">b cm</th><th scope="col">C pF</th><th scope="col">V (V)</th><th scope="col">spark V</th><th scope="col"><span class="sr">Delete</span></th></tr></thead><tbody></tbody></table></div>
-        <details class="more"><summary>More about this</summary><p class="hint">Capture pauses the sweep and stores the settings and the values shown on screen, rounded as displayed: d, x/s, C, Q and V here, and also A, t, κ, the battery, E, U and the energies since Mark start in the CSV. Cells can be edited; rows stay through setup changes until Clear. Press C on the drawing to capture.</p></details>
+        <details class="more"><summary>More about this</summary><p class="hint">Record reading pauses the sweep and stores the settings and the values shown on screen, rounded as displayed: d, x/s, C, Q and V here, and also A, t, κ, the battery, E, U and the energies since Mark start in the CSV. Cells can be edited; rows stay through setup changes until Clear. Press C on the drawing to capture.</p></details>
         <div class="seg full" role="group" aria-label="Plot of the readings" id="fitSeg">
           <button type="button" data-k="Cd" aria-pressed="true">C vs 1/d</button>
           <button type="button" data-k="Cf" aria-pressed="false">C vs x/s</button>
@@ -2091,7 +2091,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   const capStatus = (t) => { $('capStatus').textContent = t; };
   function captureReading() {
     if (S.view === 'sphere') { sphereCapture(); return; }
-    if (S.view !== 'single') { capStatus('Capture reads the one capacitor view. The combinations table above is the reading there.'); return; }
+    if (S.view !== 'single') { capStatus('Record reading reads the one capacitor view. The combinations table above is the reading there.'); return; }
     if (running) setRunning(false);
     updateReadouts();
     const m = MATS.find((x) => x.id === S.mat);
@@ -2102,7 +2102,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   const esc = (t) => String(t).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
   function renderRows() {
     const tb = $('rowsTbl').querySelector('tbody');
-    if (!S.rows.length) tb.innerHTML = '<tr><td class="empty" colspan="7">No readings yet. Set up a state, then press Capture reading.</td></tr>';
+    if (!S.rows.length) tb.innerHTML = '<tr><td class="empty" colspan="7">No readings yet. Set up a state, then press Record reading.</td></tr>';
     else tb.innerHTML = S.rows.map((r, i) => {
       const inp = (f, lab) => `<td><input class="w-${f}" aria-label="${lab}, row ${i + 1}" data-i="${i}" data-f="${f}" value="${esc(r[f])}" inputmode="decimal" spellcheck="false"></td>`;
       const tip = `${r.preset}; battery ${r.battery}, Vb = ${r.Vb} V; A = ${r.A} cm², t = ${r.t} cm, ${r.mat}${r.kap ? ` κ = ${r.kap}` : ''}; E = ${r.E} V/m, U = ${r.U} J, ΔU = ${r.dU} J, W hand = ${r.Wh} J, W battery = ${r.Wb} J, heat = ${r.H} J`;
@@ -2202,7 +2202,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     ctx.fillStyle = T.ink; for (let i = 0; i < xs.length; i++) { ctx.beginPath(); ctx.arc(X(xs[i]), Y(ys[i]), 3.6, 0, 2 * Math.PI); ctx.fill(); }
     ctx.restore();
     ctx.fillStyle = T.accent; for (let i = 0; i < rs.length; i++) { ctx.beginPath(); ctx.arc(X(xs[i]), Yr(rs[i]), 3, 0, 2 * Math.PI); ctx.fill(); }
-    if (xs.length < 2) { ctx.fillStyle = T.muted; ctx.font = `11px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(xs.length ? 'Capture another row to fit a line' : 'No readings yet', (L + R) / 2, (top + bot) / 2); }
+    if (xs.length < 2) { ctx.fillStyle = T.muted; ctx.font = `11px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(xs.length ? 'Record another row to fit a line' : 'No readings yet', (L + R) / 2, (top + bot) / 2); }
   }
   function sharedNum(P, key) { const v = P.row.map((i) => Number(String(S.rows[i][key]).replace(/−/g, '-'))); return v.length && v.every((x) => isFinite(x) && x === v[0]) ? v[0] : NaN; }
   function updateFitOut() {
@@ -2229,7 +2229,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
         html += isFinite(Acm) && isFinite(Qn) ? `<div class="wide"><dt>Q/(A b), to compare with ε₀ = 8.8541878188 × 10⁻¹² F/m</dt><dd>${fmtPM(Qn * 1e-9 / (Acm * 1e-4 * fit.b), Qn * 1e-9 * fit.seB / (Acm * 1e-4 * fit.b * fit.b), 'F/m')}</dd></div>`
           : '<div class="wide"><dt>Q/(A b)</dt><dd class="ok">needs rows with one Q and one A (isolated plates)</dd></div>';
       }
-    } else html = `<div class="wide"><dt>Fit of ${A.name}</dt><dd class="ok">${P.x.length ? 'needs 2 or more rows with different x' : 'capture readings first'}</dd></div>`;
+    } else html = `<div class="wide"><dt>Fit of ${A.name}</dt><dd class="ok">${P.x.length ? 'needs 2 or more rows with different x' : 'record readings first'}</dd></div>`;
     $('fitOut').innerHTML = html;
     // data table of the plotted points
     $('fitTbl').querySelector('thead').innerHTML = `<tr><th scope="col">#</th><th scope="col">${A.xl}</th><th scope="col">${A.yl}</th><th scope="col">fit</th><th scope="col">residual</th></tr>`;
@@ -3008,7 +3008,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   }
   function renderSRows() {
     const tb = $('sRowsTbl').querySelector('tbody');
-    if (!S.srows.length) tb.innerHTML = '<tr><td class="empty" colspan="7">No readings yet. Set up the spheres, then press Capture reading.</td></tr>';
+    if (!S.srows.length) tb.innerHTML = '<tr><td class="empty" colspan="7">No readings yet. Set up the spheres, then press Record reading.</td></tr>';
     else tb.innerHTML = S.srows.map((r, i) => {
       const inp = (f, lab) => `<td><input class="w-${f}" aria-label="${lab}, row ${i + 1}" data-i="${i}" data-f="${f}" value="${esc(r[f])}" inputmode="decimal" spellcheck="false"></td>`;
       const tip = `${r.preset}; ${r.mat}${r.kap ? ` κ = ${r.kap}` : ''}; V supply = ${r.Vs} V; Q = ${r.Q} nC, E(a) = ${r.Ea} V/m, U = ${r.U} J, sparks ${r.sparks}`;

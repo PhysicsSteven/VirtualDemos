@@ -57,7 +57,7 @@ VDI18N.add('es', 'demo/capacitors', {
 "SI units<span> · C = κε₀A/d · ε₀ = {#} × {#}⁻¹² F/m</span>":
   "Unidades SI<span> · C = κε₀A/d · ε₀ = {#} × {#}⁻¹² F/m</span>",
 "A demonstration parallel plate capacitor on a bench, seen in 3D: square aluminum plates on insulating posts, a scale for the separation d, a dielectric slab, a DC supply used as the battery, a knife switch and an electrometer reading V. Drag the grip on the top plate to change the separation d, the grip on the right end of the top plate to change the plate area A, the dielectric slab sideways to slide it in or out, and the supply up or down to change the battery voltage. Click the switch to connect or disconnect the battery. Drag empty space to turn the view. Keys: up and down arrows change d, left and right arrows slide the slab, page up and page down change A, plus and minus change the battery voltage, M connects or disconnects, C captures a reading, square brackets turn the view, curly brackets tilt it, V resets the view, space plays or pauses, R resets.":
-  "Un capacitor de placas paralelas de demostración sobre una mesa, visto en 3D: placas cuadradas de aluminio sobre soportes aislantes, una escala para la separación d, una placa dieléctrica, una fuente de CD usada como batería, un interruptor de cuchilla y un electrómetro que mide V. Arrastra el agarre de la placa superior para cambiar la separación d, el agarre del extremo derecho de la placa superior para cambiar el área A de las placas, la placa dieléctrica hacia los lados para meterla o sacarla, y la fuente hacia arriba o hacia abajo para cambiar el voltaje de la batería. Haz clic en el interruptor para conectar o desconectar la batería. Arrastra un espacio vacío para girar la vista. Teclas: las flechas arriba y abajo cambian d, las flechas izquierda y derecha deslizan la placa dieléctrica, Re Pág y Av Pág cambian A, más y menos cambian el voltaje de la batería, M conecta o desconecta, C captura una lectura, los corchetes giran la vista, las llaves la inclinan, V restablece la vista, espacio inicia o pausa, R reinicia.",
+  "Un capacitor de placas paralelas de demostración sobre una mesa, visto en 3D: placas cuadradas de aluminio sobre soportes aislantes, una escala para la separación d, una placa dieléctrica, una fuente de CD usada como batería, un interruptor de cuchilla y un electrómetro que mide V. Arrastra el agarre de la placa superior para cambiar la separación d, el agarre del extremo derecho de la placa superior para cambiar el área A de las placas, la placa dieléctrica hacia los lados para meterla o sacarla, y la fuente hacia arriba o hacia abajo para cambiar el voltaje de la batería. Haz clic en el interruptor para conectar o desconectar la batería. Arrastra un espacio vacío para girar la vista. Teclas: las flechas arriba y abajo cambian d, las flechas izquierda y derecha deslizan la placa dieléctrica, Re Pág y Av Pág cambian A, más y menos cambian el voltaje de la batería, M conecta o desconecta, C registra una lectura, los corchetes giran la vista, las llaves la inclinan, V restablece la vista, espacio inicia o pausa, R reinicia.",
 "Mark start":
   "Marcar inicio",
 "One capacitor":
@@ -216,15 +216,15 @@ VDI18N.add('es', 'demo/capacitors', {
   "Más cerca de la ruptura dieléctrica: la parte vacía, E/E<sub>c</sub>",
 "{#}% <span>it would break down near V = {#} kV</span>":
   "{#}% <span>habría ruptura dieléctrica cerca de V = {#} kV</span>",
-"No readings yet. Set up a state, then press Capture reading.":
-  "Aún no hay lecturas. Prepara un estado y luego pulsa Capturar lectura.",
+"No readings yet. Set up a state, then press Record reading.":
+  "Aún no hay lecturas. Prepara un estado y luego pulsa Registrar lectura.",
 "Captured readings of the spheres":
   "Lecturas capturadas de las esferas",
 "spark V":
   "V de chispa",
-"No readings yet. Set up the spheres, then press Capture reading.":
-  "Aún no hay lecturas. Arma las esferas y luego presiona Capturar lectura.",
-"Capture pauses the sweep and stores the settings and the values shown on screen, rounded as displayed: d, x/s, C, Q and V here, and also A, t, κ, the battery, E, U and the energies since Mark start in the CSV. Cells can be edited; rows stay through setup changes until Clear. Press C on the drawing to capture.":
+"No readings yet. Set up the spheres, then press Record reading.":
+  "Aún no hay lecturas. Arma las esferas y luego presiona Registrar lectura.",
+"Record reading pauses the sweep and stores the settings and the values shown on screen, rounded as displayed: d, x/s, C, Q and V here, and also A, t, κ, the battery, E, U and the energies since Mark start in the CSV. Cells can be edited; rows stay through setup changes until Clear. Press C on the drawing to capture.":
   "Capturar pausa el barrido y guarda la configuración y los valores mostrados en pantalla, redondeados como se muestran: aquí d, x/s, C, Q y V, y en el CSV también A, t, κ, la batería, E, U y las energías desde Marcar inicio. Las celdas se pueden editar; las filas se conservan al cambiar la configuración hasta que pulses Borrar. Pulsa C sobre el dibujo para capturar.",
 "Plot of the readings":
   "Gráfica de las lecturas",
@@ -242,7 +242,7 @@ VDI18N.add('es', 'demo/capacitors', {
   "Gráfica de C contra {#}/d para {#} filas capturadas; los residuos están en una franja abajo. Mostrar la tabla de datos lista los puntos.",
 "Fit of C against {#}/d":
   "Ajuste de C contra {#}/d",
-"capture readings first":
+"record readings first":
   "captura lecturas primero",
 "Plotted readings, fitted line and residuals":
   "Lecturas graficadas, recta ajustada y residuos",
@@ -309,7 +309,7 @@ VDI18N.add('es', 'demo/capacitors', {
 "{#}× faster":
   "{#}× más rápido",
 "The supply charges the inner sphere through a {#} GΩ resistor and the outer sphere is joined to the supply's other terminal, so the voltage V across the spheres climbs toward V<sub>s</sub> with time constant τ = RC. The meter on the right reads V; the supply's own display reads V<sub>s</sub>. Keys on the picture: ↑ ↓ a, ← → b, + − V<sub>s</sub>, C captures a reading.":
-  "La fuente carga la esfera interior a través de un resistor de {#} GΩ y la esfera exterior está unida a la otra terminal de la fuente, así que el voltaje V entre las esferas sube hacia V<sub>s</sub> con constante de tiempo τ = RC. El medidor de la derecha indica V; la pantalla de la propia fuente indica V<sub>s</sub>. Teclas sobre la imagen: ↑ ↓ a, ← → b, + − V<sub>s</sub>, C captura una lectura.",
+  "La fuente carga la esfera interior a través de un resistor de {#} GΩ y la esfera exterior está unida a la otra terminal de la fuente, así que el voltaje V entre las esferas sube hacia V<sub>s</sub> con constante de tiempo τ = RC. El medidor de la derecha indica V; la pantalla de la propia fuente indica V<sub>s</sub>. Teclas sobre la imagen: ↑ ↓ a, ← → b, + − V<sub>s</sub>, C registra una lectura.",
 "Between the spheres":
   "Entre las esferas",
 "Put in a fresh piece":

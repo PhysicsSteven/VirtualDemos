@@ -154,14 +154,14 @@ table.rows input:focus { border-color: var(--accent); }
       <section>
         <h2>Readings</h2>
         <div class="btnrow">
-          <button type="button" class="btn primary" id="capture">Capture reading</button>
+          <button type="button" class="btn primary" id="capture">Record reading</button>
           <button type="button" class="btn" id="exportCsv">Export to worksheet</button>
           <button type="button" class="btn" id="clearRows">Clear</button>
         </div>
         <p class="status" id="capStatus" aria-live="polite"></p>
         <div class="twrap"><table class="rows" id="rowsTbl"><caption class="sr">Captured readings</caption><thead><tr><th>#</th><th id="th1">m (kg)</th><th id="th2">ΔL (mm)</th><th><span class="sr">Delete</span></th></tr></thead><tbody></tbody></table></div>
         <details class="more"><summary>More about this</summary>
-          <p class="hint" id="capHow">Capture stores the hanging mass and the dial gauge reading (to 0.001 mm), with the wire's diameter. The fit is a straight line of the load F = mg against ΔL; Y = slope × L / A. Use only loads below the yield point. The fit uses the rows from the wire now hanging; New wire starts afresh (the CSV keeps every row).</p>
+          <p class="hint" id="capHow">Record reading stores the hanging mass and the dial gauge reading (to 0.001 mm), with the wire's diameter. The fit is a straight line of the load F = mg against ΔL; Y = slope × L / A. Use only loads below the yield point. The fit uses the rows from the wire now hanging; New wire starts afresh (the CSV keeps every row).</p>
         </details>
         <details class="plotfold"><summary>Plot and fit</summary><div class="foldbody">
         <div class="plotbox"><canvas id="fitCan" role="img" aria-label="Load against extension (or force against displacement or strain) for the captured rows, with a least squares line and residuals."></canvas></div>
@@ -615,7 +615,7 @@ table.rows input:focus { border-color: var(--accent); }
     const pts = rows.map((r) => [cellNum(r.dL), cellNum(r.m) * G]).filter(([a, b]) => isFinite(a) && isFinite(b));
     const F = pts.length >= 2 ? fitLine(pts.map((q) => q[0] / 1000), pts.map((q) => q[1])) : null;
     let h;
-    if (!F) h = `<div class="wide"><dt>Fit</dt><dd class="ok">Capture at least two rows on this wire (${MATS[S.mat].name}, d = ${f(S.d, 2)} mm). The fit uses only rows from the wire now hanging; New wire starts a new fit.</dd></div>`;
+    if (!F) h = `<div class="wide"><dt>Fit</dt><dd class="ok">Record at least two rows on this wire (${MATS[S.mat].name}, d = ${f(S.d, 2)} mm). The fit uses only rows from the wire now hanging; New wire starts a new fit.</dd></div>`;
     else {
       const A = area(S.d), Y = F.b * LEN / A, sY = F.seB * LEN / A;
       h = `<div><dt>Slope F/ΔL</dt><dd>${f(F.b / 1000, 2)}${isFinite(F.seB) ? ` ± ${f(F.seB / 1000, 2)}` : ''} N/mm</dd></div><div><dt>Intercept</dt><dd>${f(F.a, 2)} N</dd></div>`;
@@ -691,10 +691,10 @@ table.rows input:focus { border-color: var(--accent); }
       $('sbHow').textContent = t === 'shear' ? 'Turn the screw to push the top plate sideways; the load cell reads the force and the displacement sensor reads how far the top plate moves (to 0.1 µm). Up and down arrows on the picture change the force by 0.5 kN (Shift: 5 kN).'
         : 'The press pushes the piston into the sealed cell; the load cell reads the force. For a liquid the dial gauge reads how far the piston moves (to 0.001 mm); for a metal cube in oil the strain gauge on its face reads the change in edge length per length (to 0.1 microstrain). Up and down arrows change the force by 0.5 kN (Shift: 5 kN).';
       $('sbFormula').textContent = t === 'shear' ? 'shear stress F/A · shear strain Δx/L · S = (F/A)/(Δx/L)' : 'Δp = F/A · ΔV/V₀ = −Δx/h₀ (liquid) or (1 + Δa/a₀)³ − 1 ≈ 3 Δa/a₀ (cube) · B = −Δp/(ΔV/V₀)';
-      $('capHow').textContent = t === 'shear' ? 'Capture stores the force and the top plate displacement for the block now in the press. The fit is a straight line of F against Δx for the rows from this block; S = slope × L / A.'
-        : 'Capture stores the force and the piston or strain gauge reading for the sample now in the cell. The fit is a straight line of F against the reading for the rows from this sample: B = slope × h₀ / A for a liquid, and B ≈ slope / (3A) per unit strain for the cube.';
+      $('capHow').textContent = t === 'shear' ? 'Record reading stores the force and the top plate displacement for the block now in the press. The fit is a straight line of F against Δx for the rows from this block; S = slope × L / A.'
+        : 'Record reading stores the force and the piston or strain gauge reading for the sample now in the cell. The fit is a straight line of F against the reading for the rows from this sample: B = slope × h₀ / A for a liquid, and B ≈ slope / (3A) per unit strain for the cube.';
       $('sF').value = 0; $('oF').textContent = '0.00 kN'; $('pressTitle').textContent = t === 'shear' ? 'Shear press: turn the screw' : 'Press on the cell piston';
-    } else $('capHow').textContent = 'Capture stores the hanging mass and the dial gauge reading (to 0.001 mm), with the wire\'s diameter. The fit is a straight line of the load F = mg against ΔL; Y = slope × L / A. Use only loads below the yield point. The fit uses the rows from the wire now hanging; New wire starts afresh (the CSV keeps every row).';
+    } else $('capHow').textContent = 'Record reading stores the hanging mass and the dial gauge reading (to 0.001 mm), with the wire\'s diameter. The fit is a straight line of the load F = mg against ΔL; Y = slope × L / A. Use only loads below the yield point. The fit uses the rows from the wire now hanging; New wire starts afresh (the CSV keeps every row).';
     resize(); readouts(); renderRows();
   }
   function readoutsSB() {
@@ -729,7 +729,7 @@ table.rows input:focus { border-color: var(--accent); }
     const xl = mode === 'shear' ? 'Δx (µm)' : mode === 'liquid' ? 'Δx (mm)' : '−Δa/a₀ (µε)';
     $('ft1').textContent = xl; $('ft2').textContent = 'F (N)';
     let h;
-    if (!Fi) h = `<div class="wide"><dt>Fit</dt><dd class="ok">Capture at least two rows with ${SB_MATS[k].name} in the ${S.test === 'shear' ? 'press' : 'cell'}. The fit uses only rows from the sample now loaded.</dd></div>`;
+    if (!Fi) h = `<div class="wide"><dt>Fit</dt><dd class="ok">Record at least two rows with ${SB_MATS[k].name} in the ${S.test === 'shear' ? 'press' : 'cell'}. The fit uses only rows from the sample now loaded.</dd></div>`;
     else {
       const mod = mode === 'shear' ? Fi.b * SH_L / SH_A : mode === 'liquid' ? Fi.b * CELL_H / CELL_A : Fi.b / (3 * CELL_A), se = mod * Fi.seB / Fi.b;
       const sl = mode === 'shear' ? `${f(Fi.b / 1e6, 2)}${isFinite(Fi.seB) ? ` ± ${f(Fi.seB / 1e6, 2)}` : ''} N/µm` : mode === 'liquid' ? `${f(Fi.b / 1000, 2)}${isFinite(Fi.seB) ? ` ± ${f(Fi.seB / 1000, 2)}` : ''} N/mm` : `${f(Fi.b / 1e6, 2)}${isFinite(Fi.seB) ? ` ± ${f(Fi.seB / 1e6, 2)}` : ''} N/µε`;

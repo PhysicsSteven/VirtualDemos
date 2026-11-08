@@ -5,7 +5,7 @@ VDI18N.add('en', 'ws/rotational-dynamics', [
 "Measuring Rotational Inertia with a Falling Mass",
 "Textbook: OpenStax <em>University Physics</em>, Vol. {#}, §§{#} and {#}–{#}. Access for free at https://openstax.org/details/books/university-physics-volume-{#}.",
 "Set the <strong>Hanging mass m</strong> with the slotted masses beside the pulley (on the picture, the up arrow hangs {#} g and the down arrow takes off the last mass).",
-"Capture stores \\(m\\), \\(r\\), what is on the table and the timer reading for the {#} m drop ({#} s). From each row: \\(a = 2h/t^2\\), \\(\\alpha = a/r\\), and the string’s torque \\(\\tau = m(g - a)r\\). Plotting \\(\\tau\\) against \\(\\alpha\\) for one load gives a line: slope \\(I\\), intercept the friction torque.",
+"Record reading stores \\(m\\), \\(r\\), what is on the table and the timer reading for the {#} m drop ({#} s). From each row: \\(a = 2h/t^2\\), \\(\\alpha = a/r\\), and the string’s torque \\(\\tau = m(g - a)r\\). Plotting \\(\\tau\\) against \\(\\alpha\\) for one load gives a line: slope \\(I\\), intercept the friction torque.",
 "Blind hides moments of inertia, the predicted motion, the energies and I from the fit, leaving the timer, the masses and the settings. The Mystery object always hides its I.",
 "\\(mg - T = ma\\); \\(Tr - \\tau_f = I\\alpha\\); \\(a = \\alpha r\\)",
 "Model: a rigid turntable on its axle, a massless string that does not slip on the spool, a massless frictionless pulley, and, when switched on, a constant friction torque at the bearing. Turntable \\(I_0 = 2.00\\times10^{-3}\\ \\text{kg}\\,\\text{m}^2\\). Disk {#} kg, radius {#} cm; ring {#} kg, radii {#} and {#} cm; two {#} kg masses (small cylinders, {#} cm radius).",

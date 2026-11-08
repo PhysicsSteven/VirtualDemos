@@ -10,7 +10,7 @@ VDI18N.add('en', 'ws/heating-curve', [
 "A covered beaker stands beside the open one: the same sample on the same hot plate, with a lid. Its vapor condenses on the lid and runs back, so its balance keeps reading the whole mass. The lid passes the heat on to the room, which the model leaves out, so the covered sample stays at the boiling point. You can hide it.",
 "The specific heats and latent heats are the textbook’s (Tables {#} and {#}), so your results can be checked against them.",
 "The speed buttons run the clock {#}, {#} or {#} times faster than real time. The timer always shows the time in the experiment, so the speed does not change your results.",
-"Capture reading stores the time, temperature and balance reading shown. Export to worksheet sends the readings to the Data table below; Clear starts a new series, which goes into a new copy of the table.",
+"Record reading stores the time, temperature and balance reading shown. Export to worksheet sends the readings to the Data table below; Clear starts a new series, which goes into a new copy of the table.",
 "Changing the substance, mass, heater power or starting temperature starts the run again from the beginning.",
 "Blind hides the heating curve under the picture, so you can make your own graph first.",
 "Measure the specific heats of ice and water and the latent heats of fusion and vaporization of water from a heating curve.",

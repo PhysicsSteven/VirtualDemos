@@ -9,7 +9,7 @@ VDI18N.add('en', 'ws/speed-of-light', [
 "\\(D\\) runs from {#} to {#} m and \\(B\\) from {#} to {#} m. The bench keeps S focused on MF, so it sets \\(A\\) from \\(1/f_2 = 1/A + 1/(D + B)\\) and shows it.",
 "The motor turns clockwise (CW) or counterclockwise (CCW) at up to {#} rev/s. Its speed meter jitters by about {#}%, like a real one.",
 "You turn the micrometer in steps of {#} or {#} mm to put the crosshair on the middle of the spot. The spot jitters by about {#} µm. The rest position of the spot and both jitters come from the bench seed (Instrument fold); share the seed so a class works on the same bench.",
-"Capture reading stores the direction, the speed meter reading, your micrometer reading, \\(D\\) and \\(B\\). Export to worksheet sends the readings to the Data table below; Clear starts a new series, which goes into a new copy of the table.",
+"Record reading stores the direction, the speed meter reading, your micrometer reading, \\(D\\) and \\(B\\). Export to worksheet sends the readings to the Data table below; Clear starts a new series, which goes into a new copy of the table.",
 "Blind (Instrument fold) hides the true shift, the flight time, the mirror’s turn, the value of \\(c\\) from the demo’s own fit and the accepted value.",
 "The light travels at \\(c\\); air would slow it by {#}%, far below what this method can resolve.",
 "Measure the speed of light by timing a round trip of {#} m with a mirror that turns about a thousand times a second.",

@@ -362,14 +362,14 @@ table.rows .empty td { color: var(--muted); font-style: italic; }
       <section id="secReadings">
         <h2>Readings</h2>
         <div class="btnrow">
-          <button type="button" class="btn primary" id="capture">Capture reading</button>
+          <button type="button" class="btn primary" id="capture">Record reading</button>
           <button type="button" class="btn" id="expCsv">Export to worksheet</button>
           <button type="button" class="btn" id="clearRows">Clear</button>
         </div>
         <p class="hint status" id="labStatus" aria-live="polite"></p>
         <div class="twrap"><table class="rows" id="tbl"><caption class="sr-only">Captured readings: launch angle, cursor time, height and range</caption><thead><tr><th>#</th><th>θ (°)</th><th>t (s)</th><th>y (m)</th><th>R (m)</th><th><span class="sr-only">Delete</span></th></tr></thead><tbody></tbody></table></div>
         <details class="more"><summary>More about this</summary>
-          <p class="hint">Capture stores what you read for the selected shot: its settings as displayed, the cursor's t, x and y, and its range R. Cells can be edited; rows stay through preset changes until Clear. The CSV also has x and every setting.</p>
+          <p class="hint">Record reading stores what you read for the selected shot: its settings as displayed, the cursor's t, x and y, and its range R. Cells can be edited; rows stay through preset changes until Clear. The CSV also has x and every setting.</p>
         </details>
         <div class="seg" id="plotSeg" role="group" aria-label="What to plot">
           <button type="button" data-plot="yt" aria-pressed="true">y against t</button>

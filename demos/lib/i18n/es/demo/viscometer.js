@@ -114,10 +114,10 @@ VDI18N.add('es', 'demo/viscometer', {
   "Aún no hay lecturas. Deja caer una esfera, deja que pase ambas marcas, captura.",
 "Terminal speed against diameter squared for the captured rows, with a least squares line (slope and intercept) and its residuals.":
   "Rapidez terminal en función del diámetro al cuadrado para las filas capturadas, con una recta de mínimos cuadrados (pendiente y ordenada al origen) y sus residuos.",
-"Capture at least two ball sizes with this liquid, ball and tube.":
-  "Captura al menos dos tamaños de esfera con este líquido, esta esfera y este tubo.",
-"Capture stores the liquid, ball, tube and the gate time between the marks ({#} s); v = {#} m / t. Stokes' law predicts v ∝ d², so plot v against d² for one liquid, ball and tube: η = (ρ_b − ρ_f) g / ({#} × slope). The fit uses the rows that match the current settings.":
-  "Capturar guarda el líquido, la esfera, el tubo y el tiempo de las compuertas entre las marcas ({#} s); v = {#} m / t. La ley de Stokes predice v ∝ d², así que grafica v en función de d² para un mismo líquido, esfera y tubo: η = (ρ_b − ρ_f) g / ({#} × pendiente). El ajuste usa las filas que coinciden con los ajustes actuales.",
+"Record at least two ball sizes with this liquid, ball and tube.":
+  "Registra al menos dos tamaños de esfera con este líquido, esta esfera y este tubo.",
+"Record reading stores the liquid, ball, tube and the gate time between the marks ({#} s); v = {#} m / t. Stokes' law predicts v ∝ d², so plot v against d² for one liquid, ball and tube: η = (ρ_b − ρ_f) g / ({#} × slope). The fit uses the rows that match the current settings.":
+  "Registrar lectura guarda el líquido, la esfera, el tubo y el tiempo de las compuertas entre las marcas ({#} s); v = {#} m / t. La ley de Stokes predice v ∝ d², así que grafica v en función de d² para un mismo líquido, esfera y tubo: η = (ρ_b − ρ_f) g / ({#} × pendiente). El ajuste usa las filas que coinciden con los ajustes actuales.",
 "Blind hides η, the Stokes prediction, the Reynolds number and the fitted η, leaving the timer and the densities. The Mystery liquid always hides its η. In Flow in a pipe, Blind hides the flow rate, speed, Reynolds number, regime and η, leaving the cylinder, the stopwatch and the pressure gauge.":
   "A ciegas oculta η, la predicción de Stokes, el número de Reynolds y la η ajustada, y deja el cronómetro y las densidades. El líquido misterioso siempre oculta su η. En Flujo en una tubería, A ciegas oculta el caudal, la rapidez, el número de Reynolds, el régimen y η, y deja la probeta, el cronómetro y el manómetro.",
 "Flow in a pipe: a smooth horizontal glass pipe fed from a constant head tank; the outlet valve sets the flow rate ({#} to {#} mL/s in the {#} mm pipe, {#} to {#} mL/s in the {#} mm pipe). Two taps {#} m apart, far enough downstream that the flow is fully developed (the pipe before them is drawn shortened), feed a differential pressure gauge ({#} Pa) and two manometer tubes. The pressure drop is the Darcy–Weisbach ΔP = f (L/D) ρv²/{#} with f = {#}/N_R below N_R = {#} (exactly Poiseuille's law, ΔP = {#}ηLQ/(πr⁴)) and Blasius's f = {#} N_R^(−{#}/{#}) for a smooth pipe above N_R = {#}; between them, the range OpenStax calls unstable, f is interpolated on logarithmic axes. Water: η = {#} mPa·s at {#} °C and {#} mPa·s at {#} °C (OpenStax Table {#}), ρ = {#} and {#} kg/m³ (CRC Handbook). The Mystery liquid is a water and glycerol mix with its own hidden η. The dye's path is drawn to show the kind of flow (straight in laminar flow, puffs in the unstable range, mixed across the pipe when turbulent) and slowed down; the eddies are illustrative, and the flow rate and pressure drop come only from the formulas.":
@@ -170,14 +170,14 @@ VDI18N.add('es', 'demo/viscometer', {
   "tomas separadas {#} m · probeta de {#} mL · g = {#} m/s²",
 "Poiseuille: Q = ΔP πr⁴/({#}ηL) · Reynolds number N_R = ρvD/η · turbulent: ΔP = f (L/D) ρv²/{#}":
   "Poiseuille: Q = ΔP πr⁴/({#}ηL) · número de Reynolds N_R = ρvD/η · turbulento: ΔP = f (L/D) ρv²/{#}",
-"Capture stores the cylinder volume ({#} mL), the stopwatch time ({#} s), the pressure gauge ({#} Pa) and what the dye is doing, with the liquid, pipe and valve setting. The fit uses the rows for this liquid and pipe: the slope of log ΔP against log Q for the three lowest and the three highest flows, and η from the slope of a least squares line (with an intercept) of ΔP against Q for the three lowest.":
-  "Capturar guarda el volumen de la probeta ({#} mL), el tiempo del cronómetro ({#} s), el manómetro ({#} Pa) y lo que hace el colorante, junto con el líquido, la tubería y la apertura de la válvula. El ajuste usa las filas de este líquido y esta tubería: la pendiente de log ΔP en función de log Q para los tres caudales más bajos y los tres más altos, y η a partir de la pendiente de una recta de mínimos cuadrados (con ordenada al origen) de ΔP en función de Q para los tres más bajos.",
+"Record reading stores the cylinder volume ({#} mL), the stopwatch time ({#} s), the pressure gauge ({#} Pa) and what the dye is doing, with the liquid, pipe and valve setting. The fit uses the rows for this liquid and pipe: the slope of log ΔP against log Q for the three lowest and the three highest flows, and η from the slope of a least squares line (with an intercept) of ΔP against Q for the three lowest.":
+  "Registrar lectura guarda el volumen de la probeta ({#} mL), el tiempo del cronómetro ({#} s), el manómetro ({#} Pa) y lo que hace el colorante, junto con el líquido, la tubería y la apertura de la válvula. El ajuste usa las filas de este líquido y esta tubería: la pendiente de log ΔP en función de log Q para los tres caudales más bajos y los tres más altos, y η a partir de la pendiente de una recta de mínimos cuadrados (con ordenada al origen) de ΔP en función de Q para los tres más bajos.",
 "ΔP (Pa)":
   "ΔP (Pa)",
 "No readings yet. Collect water for a while, stop, then capture.":
   "Aún no hay lecturas. Recolecta agua durante un rato, detente y luego captura.",
-"Capture at least three flows with this liquid and pipe.":
-  "Captura al menos tres caudales con este líquido y esta tubería.",
+"Record at least three flows with this liquid and pipe.":
+  "Registra al menos tres caudales con este líquido y esta tubería.",
 "Pipe inside diameter":
   "Diámetro interior de la tubería",
 "Cylinder":

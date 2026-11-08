@@ -135,7 +135,7 @@ table.rows input:focus { border-color: var(--accent); }
       <section>
         <h2>Readings</h2>
         <div class="btnrow">
-          <button type="button" class="btn primary" id="capture">Capture reading</button>
+          <button type="button" class="btn primary" id="capture">Record reading</button>
           <button type="button" class="btn" id="exportCsv">Export to worksheet</button>
           <button type="button" class="btn" id="clearRows">Clear</button>
         </div>
@@ -144,7 +144,7 @@ table.rows input:focus { border-color: var(--accent); }
         <details class="plotfold"><summary>Plot and fit</summary><div class="foldbody">
         <div class="plotbox"><canvas id="fitCan" role="img" aria-label="Precession rate against one over the spin rate for the captured rows, with a least squares line and residuals."></canvas></div>
         <dl class="readout" id="fitOut"></dl>
-        <details class="more"><summary>More about this</summary><p class="hint">A gate at the front of the post times each full turn of the axle round the post, to 0.01 s. Capture stores the spin, d and the last full turn's period P. Plot Ω = 2π/P against 1/ω_s for one d: the slope is Mgd/I_s.</p></details>
+        <details class="more"><summary>More about this</summary><p class="hint">A gate at the front of the post times each full turn of the axle round the post, to 0.01 s. Record reading stores the spin, d and the last full turn's period P. Plot Ω = 2π/P against 1/ω_s for one d: the slope is Mgd/I_s.</p></details>
         </div></details>
       </section>
 
@@ -775,7 +775,7 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
     const pts = S.rows.filter((r) => r.wheel === wheelKey() && Math.abs(cellNum(r.d) - S.d) < 1e-9).map((r) => { const rpm = cellNum(r.rpm), P = cellNum(r.P); return rpm > 0 && P > 0 ? [60 / (2 * Math.PI * rpm), 2 * Math.PI / P] : null; }).filter(Boolean);
     const F = pts.length >= 2 ? fitLine(pts.map((q) => q[0]), pts.map((q) => q[1])) : null;
     let h;
-    if (!F) h = `<div class="wide"><dt>Fit</dt><dd class="ok">Capture at least two spin rates with this wheel at d = ${f(S.d * 100, 0)} cm.</dd></div>`;
+    if (!F) h = `<div class="wide"><dt>Fit</dt><dd class="ok">Record at least two spin rates with this wheel at d = ${f(S.d * 100, 0)} cm.</dd></div>`;
     else {
       h = `<div><dt>Slope Mgd/I_s</dt><dd>${f(F.b, 3)} s⁻²</dd></div><div><dt>Intercept</dt><dd>${f(F.a, 4)} rad/s</dd></div>`;
       const Is = MW * G * S.d / F.b;

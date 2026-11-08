@@ -249,7 +249,7 @@ table.rows tr.sim td.n { color: var(--equi); }
       <section>
         <h2>Readings</h2>
         <div class="btnrow">
-          <button type="button" class="btn primary" id="capture">Capture reading</button>
+          <button type="button" class="btn primary" id="capture">Record reading</button>
           <button type="button" class="btn" id="expWs">Export to worksheet</button>
           <button type="button" class="btn" id="expTab">Export CSV</button>
           <button type="button" class="btn" id="clearTab">Clear</button>
@@ -257,7 +257,7 @@ table.rows tr.sim td.n { color: var(--equi); }
         <p class="hint" id="wsStatus" aria-live="polite"></p>
         <div class="twrap"><table class="rows" id="tbl"><thead><tr><th>#</th><th>V</th><th>I (A)</th><th>r L cm</th><th>r R cm</th><th>e/m</th><th><span hidden>Delete</span></th></tr></thead><tbody></tbody></table></div>
         <details class="more"><summary>More about this</summary>
-          <p class="hint">Capture stores the meter readings and your two pointer readings, never the true radius. You can edit them. e/m is per row in 10¹¹ C/kg with r = (r L + r R)/2. Rows marked with an asterisk were filled by the procedure (simulated readings).</p>
+          <p class="hint">Record reading stores the meter readings and your two pointer readings, never the true radius. You can edit them. e/m is per row in 10¹¹ C/kg with r = (r L + r R)/2. Rows marked with an asterisk were filled by the procedure (simulated readings).</p>
         </details>
         <div class="plotbox"><canvas id="plot" role="img" aria-label="Plot of 2V against (B r) squared from your readings, with a least squares line, slope and intercept. The slope is e/m."></canvas></div>
         <dl class="readout" id="fitOut"></dl>
@@ -678,7 +678,7 @@ table.rows tr.sim td.n { color: var(--equi); }
       html += `<div class="wide"><dt>Intercept of the line (V)</dt><dd>${(isFinite(f.sa) ? `${f.a.toFixed(1)} ± ${f.sa.toFixed(1)}` : f.a.toFixed(1)).replace('-', '−')}</dd></div>`;
       html += `<div class="wide"><dt>Mean of the rows ± standard deviation</dt><dd>${pm(mean, sd)}</dd></div>`;
       if (!S.blind) html += `<div class="wide"><dt>Accepted (CODATA): 1.75882 × 10¹¹ C/kg</dt><dd>${f.k >= EM ? '+' : '−'}${Math.abs((f.k / EM - 1) * 100).toFixed(2)}% from the slope</dd></div>`;
-    } else html += '<div class="wide"><dt>Fit</dt><dd class="ok">Capture two or more readings at different voltages and currents</dd></div>';
+    } else html += '<div class="wide"><dt>Fit</dt><dd class="ok">Record two or more readings at different voltages and currents</dd></div>';
     dl.innerHTML = html;
     drawPlot(F);
   }

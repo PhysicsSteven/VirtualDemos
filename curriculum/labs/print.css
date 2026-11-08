@@ -8,7 +8,7 @@
   body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   .markdown-body { font-size: 10.5pt; line-height: 1.45; max-width: none !important; margin: 0 !important; padding: 0 !important; }
   .markdown-body, .markdown-body * { color: #000 !important; background-color: transparent !important; box-shadow: none !important; text-shadow: none !important; }
-  .markdown-body > h1:first-child, .footer, .anchorjs-link, .sym-tip, .sym-hint { display: none !important; }
+  .markdown-body > h1:first-child, .markdown-body > p.ws-site, .footer, .anchorjs-link, .sym-tip, .sym-hint { display: none !important; }
 
   /* headings stay with the text under them; equations, figures and table rows are not split across pages */
   .markdown-body h1, .markdown-body h2, .markdown-body h3, .markdown-body h4 { break-after: avoid; page-break-after: avoid; break-inside: avoid; }

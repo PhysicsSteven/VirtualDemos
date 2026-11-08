@@ -21,7 +21,7 @@ VDI18N.add('es', 'demo/coulomb-sandbox', {
 "Spin":
   "Girar",
 "Keys: Tab or ] selects the next charge, Shift+Tab or [ the previous one. Arrow keys move the selected charge {#} cm, Shift+arrow {#} cm. + and − change its charge by {#} nC. Delete removes it. P switches between the probe and the last selected charge (Escape also switches to the probe); with the probe selected, arrow keys move it {#} cm, Shift+arrow {#} cm. R turns a selected rod, ring or disk by {#}° (Shift+R the other way). C captures a reading. In the 3D landscape, A and D rotate the view, W and S tilt it, Z and X zoom in and out, {#} resets it.":
-  "Teclas: Tab o ] selecciona la siguiente carga, Shift+Tab o [ la anterior. Las flechas mueven la carga seleccionada {#} cm, Shift+flecha {#} cm. + y − cambian su carga en {#} nC. Supr la quita. P cambia entre la sonda y la última carga seleccionada (Escape también cambia a la sonda); con la sonda seleccionada, las flechas la mueven {#} cm, Shift+flecha {#} cm. R gira una varilla, un anillo o un disco seleccionado {#}° (Shift+R en el otro sentido). C captura una lectura. En el paisaje 3D, A y D rotan la vista, W y S la inclinan, Z y X acercan y alejan, {#} la restablece.",
+  "Teclas: Tab o ] selecciona la siguiente carga, Shift+Tab o [ la anterior. Las flechas mueven la carga seleccionada {#} cm, Shift+flecha {#} cm. + y − cambian su carga en {#} nC. Supr la quita. P cambia entre la sonda y la última carga seleccionada (Escape también cambia a la sonda); con la sonda seleccionada, las flechas la mueven {#} cm, Shift+flecha {#} cm. R gira una varilla, un anillo o un disco seleccionado {#}° (Shift+R en el otro sentido). C registra una lectura. En el paisaje 3D, A y D rotan la vista, W y S la inclinan, Z y X acercan y alejan, {#} la restablece.",
 "Dipole":
   "Dipolo",
 "Like pair":
@@ -132,8 +132,8 @@ VDI18N.add('es', 'demo/coulomb-sandbox', {
   "Dirección de E, grados desde +x",
 "Dir °":
   "Dir °",
-"Capture stores the probe position and the values shown above, rounded as displayed, with the charges that produced them (listed in the CSV header). Cells can be edited; rows stay through setup changes until Clear. Press C on the field to capture.":
-  "Capturar guarda la posición de la sonda y los valores mostrados arriba, redondeados como se muestran, con las cargas que los produjeron (listadas en el encabezado del CSV). Las celdas se pueden editar; las filas se mantienen al cambiar de configuración hasta que pulses Borrar. Pulsa C sobre el campo para capturar.",
+"Record reading stores the probe position and the values shown above, rounded as displayed, with the charges that produced them (listed in the CSV header). Cells can be edited; rows stay through setup changes until Clear. Press C on the field to capture.":
+  "Registrar lectura guarda la posición de la sonda y los valores mostrados arriba, redondeados como se muestran, con las cargas que los produjeron (listadas en el encabezado del CSV). Las celdas se pueden editar; las filas se mantienen al cambiar de configuración hasta que pulses Borrar. Pulsa C sobre el campo para capturar.",
 "Blind hides the field lines, the equipotentials, the potential shading, the 3D landscape, the field map data table and the potential energy readouts. The charges, the grid and the probe stay, so students map the field from probe readings.":
   "A ciegas oculta las líneas de campo, las equipotenciales, el sombreado del potencial, el paisaje 3D, la tabla de datos del mapa del campo y las lecturas de energía potencial. Las cargas, la cuadrícula y la sonda se quedan, para que los estudiantes mapeen el campo con lecturas de la sonda.",
 "Potential shading":

@@ -50,7 +50,7 @@ VDI18N.add('en', 'demo/ultrasound', [
 "Cursor",
 "Echoes: boundary, true depth, time, part of the pressure sent back",
 "fat to muscle: {#} cm, {#} μs, r = {#}<br>muscle to bone: {#} cm, {#} μs, r = {#}<br>bone to muscle: {#} cm, {#} μs, r = -{#}",
-"Record this reading",
+"Record reading",
 "No readings yet. Start the scanner, place the cursor, then record.",
 "Record stores the setup and the cursor: an echo time in μs, or a Doppler shift in Hz. Put the cursor on the start of an echo, or on the peak (or the top edge) of the spectrum.",
 "<span>Blind: hide the depths, speeds and predictions</span>",

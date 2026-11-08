@@ -272,7 +272,7 @@ table.rows td.b { font-size: 0.76rem; }
       <section>
         <h2>Readings</h2>
         <div class="btnrow">
-          <button type="button" class="btn primary" id="capture">Capture reading</button>
+          <button type="button" class="btn primary" id="capture">Record reading</button>
           <button type="button" class="btn" id="expWs">Export to worksheet</button>
           <button type="button" class="btn" id="expTab">Export table CSV</button>
           <button type="button" class="btn" id="clearTab">Clear</button>
@@ -280,7 +280,7 @@ table.rows td.b { font-size: 0.76rem; }
         <p class="note" id="capNote" hidden></p>
         <div class="twrap"><table class="rows" id="tbl"><thead><tr><th>Sample</th><th>Meter kHz</th><th>Reading</th><th>B mT</th><th><span hidden>Delete</span></th></tr></thead><tbody></tbody></table></div>
         <details class="more"><summary>More about this</summary>
-          <p class="hint">Capture stores the meter reading and your own cursor or ruler measurement, never the true field. You can edit both. B<sub>max</sub> = 3.67 mT for ESR, 3.2 mT for the PSR scan.</p>
+          <p class="hint">Record reading stores the meter reading and your own cursor or ruler measurement, never the true field. You can edit both. B<sub>max</sub> = 3.67 mT for ESR, 3.2 mT for the PSR scan.</p>
         </details>
         <div class="plotbox"><canvas id="plot" role="img" aria-label="Plot of B against frequency from your readings, with a least squares line, slope and intercept."></canvas></div>
         <dl class="readout" id="fitOut"></dl>
@@ -880,7 +880,7 @@ table.rows td.b { font-size: 0.76rem; }
         html += `<div class="wide"><dt>Intercept c</dt><dd>${pm(f.c * 1e3, f.sc * 1e3, 4)} mT</dd></div>`;
         html += `<div class="wide big"><dt>g = h/(μ<sub>B</sub>k)</dt><dd>${pm(g, eg, 4)}</dd></div>`;
         if (!S.blind) html += `<div class="wide"><dt>Accepted for DPPH</dt><dd>2.0036</dd></div>`;
-      } else html += `<div class="wide"><dt>Fit</dt><dd class="ok">Capture readings at LO, MID and HI (two or more points fit a line)</dd></div>`;
+      } else html += `<div class="wide"><dt>Fit</dt><dd class="ok">Record readings at LO, MID and HI (two or more points fit a line)</dd></div>`;
     } else {
       for (const [g, lab, acc, accg] of [['H', '¹H', '42.577', '5.586'], ['F', '¹⁹F', '40.078', '5.258']]) {
         const f = F[g].fit; if (!f) continue;
@@ -889,7 +889,7 @@ table.rows td.b { font-size: 0.76rem; }
         html += `<div class="wide"><dt>${lab}: B = kν + c, slope k and intercept c</dt><dd>${pm(f.k * 1e9, f.se * 1e9, 5)} mT/MHz, ${pm(f.c * 1e3, f.sc * 1e3, 2)} mT</dd></div>`;
         if (!S.blind) html += `<div class="wide"><dt>Accepted ${lab}: ${acc} MHz/T, g<sub>I</sub> ${accg}</dt><dd></dd></div>`;
       }
-      if (!html) html = `<div class="wide"><dt>Fit</dt><dd class="ok">Capture readings for glycerine and PTFE</dd></div>`;
+      if (!html) html = `<div class="wide"><dt>Fit</dt><dd class="ok">Record readings for glycerine and PTFE</dd></div>`;
     }
     dl.innerHTML = html;
     $('plotKey').innerHTML = S.cfg === 'esr' ? '<span><i class="swatch dotE"></i>Your ESR readings, least squares line (slope and intercept)</span>'
@@ -1455,7 +1455,7 @@ table.rows td.b { font-size: 0.76rem; }
 
   // ---------- presets ----------
   const PRESETS = {
-    esr: { hint: 'DPPH on MID with SENS just below the threshold: a clear peak on CH2. Put cursor A at the start of the ramp and B on the peak, capture, then repeat on LO and HI. Each range needs SENS set again.',
+    esr: { hint: 'DPPH on MID with SENS just below the threshold: a clear peak on CH2. Put cursor A at the start of the ramp and B on the peak, record, then repeat on LO and HI. Each range needs SENS set again.',
       apply() { S.cfg = 'esr'; S.sampleBy.esr = 'dpph'; S.range = 'MID'; S.sweep = 'fast'; S.sens.esr = r2(0.955 * inst.thr.esr.MID); } },
     ref: { hint: 'The empty black phial gives no peak, so the DPPH signal (held as a dim trace) comes from the unpaired electrons in the sample, not from the glass or the coil.',
       pre() { PRESETS.esr.apply(); }, apply() { this.pre(); S.sampleBy.esr = 'black'; } },
@@ -1463,7 +1463,7 @@ table.rows td.b { font-size: 0.76rem; }
       apply() { S.cfg = 'psr'; S.sampleBy.psr = 'gly'; S.range = 'MID'; S.sweep = 'fast'; S.sens.psr = r2(0.955 * inst.thr.psr.MID); S.dial = dialFor('MID', GAMMA_H * (zeemanField(inst.B20, S.temp) + 0.45 * BMAX.psr)); } },
     poly: { hint: 'Polystyrene is a solid: the fixed neighboring proton dipoles spread the resonance, so the peak is wider and lower than the glycerine trace held on the screen.',
       pre() { PRESETS.gly.apply(); }, apply() { this.pre(); S.sampleBy.psr = 'poly'; } },
-    ptfe: { hint: 'PTFE has fluorine and no hydrogen. ¹⁹F resonates at 40.08 MHz per tesla, about 6% below the proton, so switch to LO, find the peak, and capture it as a second line on the plot.',
+    ptfe: { hint: 'PTFE has fluorine and no hydrogen. ¹⁹F resonates at 40.08 MHz per tesla, about 6% below the proton, so switch to LO, find the peak, and record it as a second line on the plot.',
       apply() { S.cfg = 'psr'; S.sampleBy.psr = 'ptfe'; S.range = 'LO'; S.sweep = 'fast'; S.sens.psr = r2(0.955 * inst.thr.psr.LO); S.dial = dialFor('LO', GAMMA_F * (zeemanField(inst.B20, S.temp) + 0.55 * BMAX.psr)); } },
     tune: { hint: 'No peak: the resonance is outside the 1% sweep. Turn FREQ slowly while you watch CH2 until the peak moves onto the ramp. Then check SENS.',
       apply() { S.cfg = 'psr'; S.sampleBy.psr = 'gly'; S.range = 'MID'; S.sweep = 'fast'; S.sens.psr = r2(0.955 * inst.thr.psr.MID); S.dial = dialFor('MID', GAMMA_H * (zeemanField(inst.B20, S.temp) - 1.1 * BMAX.psr)); } },

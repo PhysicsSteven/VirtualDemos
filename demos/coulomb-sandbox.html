@@ -263,13 +263,13 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
       <section>
         <h2>Readings</h2>
         <div class="btnrow">
-          <button type="button" class="btn primary" id="capture">Capture reading</button>
+          <button type="button" class="btn primary" id="capture">Record reading</button>
           <button type="button" class="btn" id="exportCsv">Export to worksheet</button>
           <button type="button" class="btn" id="clearRows">Clear</button>
         </div>
         <p class="status" id="capStatus" aria-live="polite"></p>
         <div class="twrap" id="rowsWrap" hidden><table class="rows" id="rowsTbl"><caption class="sr-only">Captured probe readings</caption><thead><tr><th scope="col">#</th><th scope="col">x cm</th><th scope="col">y cm</th><th scope="col">V (V)</th><th scope="col">|E| (V/m)</th><th scope="col" title="E direction, degrees from +x">Dir °</th><th scope="col"><span class="sr-only">Delete</span></th></tr></thead><tbody></tbody></table></div>
-        <details class="more"><summary>More about this</summary><p class="hint">Capture stores the probe position and the values shown above, rounded as displayed, with the charges that produced them (listed in the CSV header). Cells can be edited; rows stay through setup changes until Clear. Press C on the field to capture.</p></details>
+        <details class="more"><summary>More about this</summary><p class="hint">Record reading stores the probe position and the values shown above, rounded as displayed, with the charges that produced them (listed in the CSV header). Cells can be edited; rows stay through setup changes until Clear. Press C on the field to capture.</p></details>
       </section>
 
       <section>
@@ -2162,7 +2162,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     }
   }
   $('exportCsv').addEventListener('click', () => {
-    if (!rows.length) { status('Capture a reading first.'); return; }
+    if (!rows.length) { status('Record a reading first.'); return; }
     const txt = readingsCsv(rows, configs); toWorksheet(txt, () => download('coulomb-sandbox-readings.csv', txt), { shape: wsCharges });
   });
   $('clearRows').addEventListener('click', () => { wsSeries = Date.now(); rows = []; configs = []; renderRows(); status('Readings cleared.'); });

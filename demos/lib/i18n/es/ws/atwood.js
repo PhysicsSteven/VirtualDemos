@@ -14,8 +14,8 @@ VDI18N.add('es', 'ws/atwood', {
   "<strong>Configuraciones en la demo:</strong> Máquina de Atwood (la hoja de trabajo abre la demo en ella). Las otras configuraciones pertenecen a la hoja de trabajo de fricción.",
 "Two masses hang from one string over a pulley: m on the left, m₂ on the right. The string does not stretch and has no mass; the pulley has no mass and no friction. Each mass can be set from {#} to {#} kg (m) or up to {#} kg (m₂) in steps of {#} kg.":
   "Dos masas cuelgan de una misma cuerda que pasa por una polea: m a la izquierda, m₂ a la derecha. La cuerda no se estira y no tiene masa; la polea no tiene masa ni fricción. Cada masa se puede fijar de {#} a {#} kg (m) o hasta {#} kg (m₂) en pasos de {#} kg.",
-"<strong>Release at the top mark</strong> starts the masses from rest and times a run of {#} m (to {#} s). Capture stores m, m₂ and that time; \\(a = 2d/t^2\\) is worked out from your time.":
-  "<strong>Soltar en la marca superior</strong> pone en marcha las masas desde el reposo y mide el tiempo de un recorrido de {#} m (a {#} s). Capturar guarda m, m₂ y ese tiempo; \\(a = 2d/t^2\\) se calcula a partir de tu tiempo.",
+"<strong>Release at the top mark</strong> starts the masses from rest and times a run of {#} m (to {#} s). Record reading stores m, m₂ and that time; \\(a = 2d/t^2\\) is worked out from your time.":
+  "<strong>Soltar en la marca superior</strong> pone en marcha las masas desde el reposo y mide el tiempo de un recorrido de {#} m (a {#} s). Registrar lectura guarda m, m₂ y ese tiempo; \\(a = 2d/t^2\\) se calcula a partir de tu tiempo.",
 "The readouts give the tension and the acceleration. Blind hides every force size and the acceleration; the timer, the masses and the force directions stay.":
   "Las lecturas dan la tensión y la aceleración. A ciegas oculta la magnitud de cada fuerza y la aceleración; el cronómetro, las masas y las direcciones de las fuerzas permanecen.",
 "The demo uses \\(g = 9.81\\ \\mathrm{m/s^2}\\). Your job is to measure it.":

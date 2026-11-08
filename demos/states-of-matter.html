@@ -159,7 +159,7 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
       <section>
         <h2>Readings</h2>
         <div class="btnrow">
-          <button type="button" class="btn primary" id="capture">Capture reading</button>
+          <button type="button" class="btn primary" id="capture">Record reading</button>
           <button type="button" class="btn" id="exportCsv">Export to worksheet</button>
           <button type="button" class="btn" id="clearRows">Clear</button>
         </div>
@@ -999,7 +999,7 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
     const v = S.view, rows = S.rows[v], tb = $('rowsTbl').querySelector('tbody');
     $('rowsTbl').querySelector('thead').innerHTML = `<tr>${COLS[v].map((c) => `<th>${c}</th>`).join('')}<th><span class="sr">Delete</span></th></tr>`;
     tb.innerHTML = rows.length ? rows.map((r, i) => `<tr><td>${i + 1}</td>${(v === 'atoms' ? [r.Q, r.T, r.U, `${r.s} · ${r.l} · ${r.v}`] : [r.t, r.T, r.m]).map((c) => `<td class="mono">${c}</td>`).join('')}<td><button type="button" data-del="${i}" aria-label="Delete row ${i + 1}">×</button></td></tr>`).join('')
-      : `<tr><td class="empty" colspan="${COLS[v].length + 1}">No readings yet. Start the run and capture a reading every so often.</td></tr>`;
+      : `<tr><td class="empty" colspan="${COLS[v].length + 1}">No readings yet. Start the run and record a reading every so often.</td></tr>`;
   }
   $('rowsTbl').addEventListener('click', (e) => { const b = e.target.closest('[data-del]'); if (b) { S.rows[S.view].splice(+b.dataset.del, 1); renderRows(); } });
 

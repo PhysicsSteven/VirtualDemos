@@ -147,14 +147,14 @@ table.rows input:focus { border-color: var(--accent); }
       <section id="secRead">
         <h2>Readings</h2>
         <div class="btnrow">
-          <button type="button" class="btn primary" id="capture">Capture reading</button>
+          <button type="button" class="btn primary" id="capture">Record reading</button>
           <button type="button" class="btn" id="exportCsv">Export to worksheet</button>
           <button type="button" class="btn" id="clearRows">Clear</button>
         </div>
         <p class="status" id="capStatus" aria-live="polite"></p>
         <div class="twrap"><table class="rows" id="rowsTbl"><caption class="sr">Captured readings</caption><thead><tr><th>#</th><th>I (A)</th><th>Δm (g)</th><th><span class="sr">Delete</span></th></tr></thead><tbody></tbody></table></div>
         <details class="more"><summary>More about this</summary>
-          <p class="hint">The balance was zeroed with no current, so it reads the magnet's apparent change in mass Δm = F/g (to 0.01 g). Capture stores I, L and the reading; the fit is F = Δm g against I, |slope| = BL sin θ.</p>
+          <p class="hint">The balance was zeroed with no current, so it reads the magnet's apparent change in mass Δm = F/g (to 0.01 g). Record reading stores I, L and the reading; the fit is F = Δm g against I, |slope| = BL sin θ.</p>
         </details>
         <details class="plotfold"><summary>Plot and fit</summary><div class="foldbody">
         <div class="plotbox"><canvas id="fitCan" role="img" aria-label="Force against current for the captured rows, with a least squares line and residuals."></canvas></div>
@@ -395,7 +395,7 @@ table.rows input:focus { border-color: var(--accent); }
     const pts = rows.map((r) => [cellNum(r.I), cellNum(r.dm) * G / 1000]).filter(([a, b]) => isFinite(a) && isFinite(b));
     const F = pts.length >= 2 ? fitLine(pts.map((q) => q[0]), pts.map((q) => q[1])) : null;
     let h;
-    if (!F) h = `<div class="wide"><dt>Fit</dt><dd class="ok">Capture at least two currents with L = ${f(S.L, 1)} cm and θ = ${S.th}°.</dd></div>`;
+    if (!F) h = `<div class="wide"><dt>Fit</dt><dd class="ok">Record at least two currents with L = ${f(S.L, 1)} cm and θ = ${S.th}°.</dd></div>`;
     else { const s = Math.sin(S.th * Math.PI / 180), B = Math.abs(F.b) / (S.L / 100 * s), sB = F.seB / (S.L / 100 * s);
       h = `<div><dt>Slope F/I</dt><dd>${f(F.b * 1000, 3)}${isFinite(F.seB) ? ` ± ${f(F.seB * 1000, 3)}` : ''} mN/A</dd></div><div><dt>Intercept</dt><dd>${f(F.a * 1000, 3)} mN</dd></div>`;
       h += hideB() ? `<div class="wide"><dt>B = |slope| / (L sin θ)</dt><dd class="ok">${S.blind ? 'hidden in Blind' : 'hidden for the Mystery magnet'}: work it out</dd></div>` : `<div class="wide"><dt>B = |slope| / (L sin θ)</dt><dd>${f(B, 3)}${isFinite(sB) ? ` ± ${f(sB, 3)}` : ''} T</dd></div>`; }

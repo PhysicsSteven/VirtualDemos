@@ -150,16 +150,16 @@ VDI18N.add('es', 'demo/forces', {
   "Aún no hay lecturas. Suelta en la marca superior y luego captura.",
 "a / cos θ against tan θ for the captured rows, with a least squares line and residuals.":
   "a / cos θ en función de tan θ para las filas capturadas, con una recta de mínimos cuadrados y residuos.",
-"Capture at least two rows from sliding down the ramp at different angles, with F = {#} and no hanging mass.":
-  "Captura al menos dos filas deslizándose rampa abajo a ángulos distintos, con F = {#} y sin masa colgante.",
+"Record at least two rows from sliding down the ramp at different angles, with F = {#} and no hanging mass.":
+  "Registra al menos dos filas deslizándose rampa abajo a ángulos distintos, con F = {#} y sin masa colgante.",
 "Plotted points":
   "Puntos graficados",
 "a/cos θ":
   "a/cos θ",
 "resid.":
   "resid.",
-"Use <b>Release at the top mark</b>: the timer reads the time for the block to slide {#} m from rest (to {#} s). Capture stores θ, m, m₂, F and that time; a = 2d/t² is worked out from your time.":
-  "Usa <b>Soltar en la marca superior</b>: el cronómetro lee el tiempo que tarda el bloque en deslizarse {#} m desde el reposo (con resolución de {#} s). Capturar guarda θ, m, m₂, F y ese tiempo; a = 2d/t² se calcula a partir de tu tiempo.",
+"Use <b>Release at the top mark</b>: the timer reads the time for the block to slide {#} m from rest (to {#} s). Record reading stores θ, m, m₂, F and that time; a = 2d/t² is worked out from your time.":
+  "Usa <b>Soltar en la marca superior</b>: el cronómetro lee el tiempo que tarda el bloque en deslizarse {#} m desde el reposo (con resolución de {#} s). Registrar lectura guarda θ, m, m₂, F y ese tiempo; a = 2d/t² se calcula a partir de tu tiempo.",
 "Sliding down with no push or hanging mass, a = g sin θ − μk g cos θ, so a/cos θ = g tan θ − μk g: a straight line with slope g and intercept −μk g. The fit uses only rows with F = {#} and m₂ = {#}.":
   "Al deslizarse hacia abajo sin empuje ni masa colgante, a = g sin θ − μk g cos θ, así que a/cos θ = g tan θ − μk g: una recta con pendiente g y ordenada al origen −μk g. El ajuste usa solo filas con F = {#} y m₂ = {#}.",
 "Blind hides every force size, the acceleration, the friction type, the slip angle, the arrows' lengths (all drawn the same size) and μk from the fit. The timer, the settings and the force directions stay.":

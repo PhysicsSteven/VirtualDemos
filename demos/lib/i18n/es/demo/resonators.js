@@ -39,7 +39,7 @@ VDI18N.add('es', 'demo/resonators', {
 "L = {#} cm <small>level -{#} dB</small>":
   "L = {#} cm <small>nivel -{#} dB</small>",
 "Resonator drawing. Resonance tube: drag the water surface or use up and down (shift for {#} cm steps), Enter captures a reading. Pipe: drag the right end of the pipe or use left and right, up and down change the mode. String: drag the pluck grip to pull the string and let go to pluck; left and right move the pluck point, Enter plucks. Bottle: drag the water surface or use up and down, Enter starts or stops blowing. Space pauses.":
-  "Dibujo del resonador. Tubo de resonancia: arrastra la superficie del agua o usa arriba y abajo (Shift para pasos de {#} cm), Enter captura una lectura. Tubo: arrastra el extremo derecho del tubo o usa izquierda y derecha; arriba y abajo cambian el modo. Cuerda: arrastra la agarradera para jalar la cuerda y suéltala para pulsarla; izquierda y derecha mueven el punto de pulsación, Enter pulsa. Botella: arrastra la superficie del agua o usa arriba y abajo, Enter empieza o deja de soplar. Espacio pausa.",
+  "Dibujo del resonador. Tubo de resonancia: arrastra la superficie del agua o usa arriba y abajo (Shift para pasos de {#} cm), Enter registra una lectura. Tubo: arrastra el extremo derecho del tubo o usa izquierda y derecha; arriba y abajo cambian el modo. Cuerda: arrastra la agarradera para jalar la cuerda y suéltala para pulsarla; izquierda y derecha mueven el punto de pulsación, Enter pulsa. Botella: arrastra la superficie del agua o usa arriba y abajo, Enter empieza o deja de soplar. Espacio pausa.",
 "The resonance tube":
   "El tubo de resonancia",
 "<span>The resonance tube and the source</span>":
@@ -170,8 +170,8 @@ VDI18N.add('es', 'demo/resonators', {
   "L leída",
 "Δ to k−{#}":
   "Δ a k−{#}",
-"Capture stores the water position you chose, as read on the scale, never the true resonance. Reading the meniscus adds a small simulated scatter (σ = {#} mm, fixed by the seed). k counts the resonances from the top at each frequency; edit it if you skipped one. You can edit L too.":
-  "Capturar guarda la posición del agua que elegiste, tal como se lee en la escala, nunca la resonancia verdadera. Leer el menisco agrega una pequeña dispersión simulada (σ = {#} mm, fijada por la semilla). k cuenta las resonancias desde el borde a cada frecuencia; edítalo si te saltaste una. También puedes editar L.",
+"Record reading stores the water position you chose, as read on the scale, never the true resonance. Reading the meniscus adds a small simulated scatter (σ = {#} mm, fixed by the seed). k counts the resonances from the top at each frequency; edit it if you skipped one. You can edit L too.":
+  "Registrar lectura guarda la posición del agua que elegiste, tal como se lee en la escala, nunca la resonancia verdadera. Leer el menisco agrega una pequeña dispersión simulada (σ = {#} mm, fijada por la semilla). k cuenta las resonancias desde el borde a cada frecuencia; edítalo si te saltaste una. También puedes editar L.",
 "Plot of the resonance positions L against (2k − {#})/4f, with a least squares line: its slope is c and its intercept is minus the end correction.":
   "Gráfica de las posiciones de resonancia L en función de (2k − {#})/4f, con una recta de mínimos cuadrados: su pendiente es c y su ordenada al origen es menos la corrección de extremo.",
 "<span><i></i>Your readings: L = c·(2k − {#})/4f − ΔL</span>":

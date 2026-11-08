@@ -47,7 +47,7 @@ VDI18N.add('es', 'demo/springs', {
 "SI units · x in cm, from equilibrium · F = −kx":
   "Unidades SI · x en cm, desde el equilibrio · F = −kx",
 "Mass and spring drawing. Drag a block to pull it from equilibrium and let go; moving the pointer as you let go gives it a starting velocity. Drag the small grips to change the spring constant, the mass, the damping (the oil) and, when driven, the drive force. Keys: left and right arrows (up and down when hanging) move the block {#} cm and release it from rest, shift with the arrows moves block {#}, the square brackets [ and ] give the block a push of {#} cm/s backward or forward from where it is, page up and page down change k, space plays or pauses, R resets, W starts or stops the stopwatch, C captures a reading.":
-  "Dibujo de la masa y el resorte. Arrastra un bloque para sacarlo del equilibrio y suéltalo; mover el puntero al soltar le da una velocidad inicial. Arrastra los agarres pequeños para cambiar la constante del resorte, la masa, el amortiguamiento (el aceite) y, si hay fuerza impulsora, la fuerza impulsora. Teclas: las flechas izquierda y derecha (arriba y abajo cuando cuelga) mueven el bloque {#} cm y lo sueltan desde el reposo, Shift con las flechas mueve el bloque {#}, los corchetes [ y ] dan al bloque un empujón de {#} cm/s hacia atrás o hacia adelante desde donde está, Re Pág y Av Pág cambian k, espacio inicia o pausa, R reinicia, W inicia o detiene el cronómetro, C captura una lectura.",
+  "Dibujo de la masa y el resorte. Arrastra un bloque para sacarlo del equilibrio y suéltalo; mover el puntero al soltar le da una velocidad inicial. Arrastra los agarres pequeños para cambiar la constante del resorte, la masa, el amortiguamiento (el aceite) y, si hay fuerza impulsora, la fuerza impulsora. Teclas: las flechas izquierda y derecha (arriba y abajo cuando cuelga) mueven el bloque {#} cm y lo sueltan desde el reposo, Shift con las flechas mueve el bloque {#}, los corchetes [ y ] dan al bloque un empujón de {#} cm/s hacia atrás o hacia adelante desde donde está, Re Pág y Av Pág cambian k, espacio inicia o pausa, R reinicia, W inicia o detiene el cronómetro, C registra una lectura.",
 "Put every block at rest where it hangs":
   "Deja cada bloque en reposo donde cuelga",
 "Settle":
@@ -176,12 +176,12 @@ VDI18N.add('es', 'demo/springs', {
   "Oscilaciones contadas, N",
 "Captured readings of the normal modes":
   "Lecturas capturadas de los modos normales",
-"No readings yet. Start a mode, time N oscillations, then press Capture reading.":
-  "Aún no hay lecturas. Inicia un modo, cronometra N oscilaciones y luego pulsa Capturar lectura.",
+"No readings yet. Start a mode, time N oscillations, then press Record reading.":
+  "Aún no hay lecturas. Inicia un modo, cronometra N oscilaciones y luego pulsa Registrar lectura.",
 "Blind: hide the mode frequencies":
   "A ciegas: ocultar las frecuencias de los modos",
-"For the Normal modes worksheet, between two walls and on the air table. Start one mode alone by clicking it in the lower pane, press Stopwatch (or W on the drawing) as a block or puck passes a mark you choose, count N full oscillations and press it again as it passes the same mark going the same way. Capture stores the rig, the mode you started (or \"a mix\" after you pulled a block yourself), your N and the stopwatch time t, as displayed; T = t/N. Starting a mode sets the stopwatch back to {#} s. Blind hides each mode's frequency in the lower pane, in the readouts and in what is read aloud; the shapes, the shares and the stopwatch stay. Export to worksheet sends the readings to the Normal modes worksheet; Clear starts a new series, which goes to a new copy of the table there.":
-  "Para la hoja de trabajo de Modos normales, entre dos paredes y en la mesa de aire. Inicia un modo solo haciendo clic en él en el panel inferior, pulsa Cronómetro (o W en el dibujo) cuando un bloque o disco pase por una marca que elijas, cuenta N oscilaciones completas y vuelve a pulsarlo cuando pase por la misma marca en el mismo sentido. Capturar guarda el montaje, el modo que iniciaste (o \"una mezcla\" si jalaste un bloque tú mismo), tu N y el tiempo t del cronómetro, tal como se muestran; T = t/N. Iniciar un modo regresa el cronómetro a {#} s. A ciegas oculta la frecuencia de cada modo en el panel inferior, en las lecturas en pantalla y en lo que se lee en voz alta; las formas, las proporciones y el cronómetro se quedan. Exportar a la hoja envía las lecturas a la hoja de trabajo de Modos normales; Borrar inicia una nueva serie, que va a una nueva copia de la tabla allí.",
+"For the Normal modes worksheet, between two walls and on the air table. Start one mode alone by clicking it in the lower pane, press Stopwatch (or W on the drawing) as a block or puck passes a mark you choose, count N full oscillations and press it again as it passes the same mark going the same way. Record reading stores the rig, the mode you started (or \"a mix\" after you pulled a block yourself), your N and the stopwatch time t, as displayed; T = t/N. Starting a mode sets the stopwatch back to {#} s. Blind hides each mode's frequency in the lower pane, in the readouts and in what is read aloud; the shapes, the shares and the stopwatch stay. Export to worksheet sends the readings to the Normal modes worksheet; Clear starts a new series, which goes to a new copy of the table there.":
+  "Para la hoja de trabajo de Modos normales, entre dos paredes y en la mesa de aire. Inicia un modo solo haciendo clic en él en el panel inferior, pulsa Cronómetro (o W en el dibujo) cuando un bloque o disco pase por una marca que elijas, cuenta N oscilaciones completas y vuelve a pulsarlo cuando pase por la misma marca en el mismo sentido. Registrar lectura guarda el montaje, el modo que iniciaste (o \"una mezcla\" si jalaste un bloque tú mismo), tu N y el tiempo t del cronómetro, tal como se muestran; T = t/N. Iniciar un modo regresa el cronómetro a {#} s. A ciegas oculta la frecuencia de cada modo en el panel inferior, en las lecturas en pantalla y en lo que se lee en voz alta; las formas, las proporciones y el cronómetro se quedan. Exportar a la hoja envía las lecturas a la hoja de trabajo de Modos normales; Borrar inicia una nueva serie, que va a una nueva copia de la tabla allí.",
 "Spring and mass":
   "Resorte y masa",
 "Period T = {#}π√(m/k)":
@@ -272,10 +272,10 @@ VDI18N.add('es', 'demo/springs', {
   "Pico en la regla |x|",
 "Press Stopwatch (or W on the drawing) as the block passes a mark you choose, count N full oscillations, and press it again as the block passes the same mark going the same way. The stopwatch runs on simulation time, so slow motion makes timing easier, but your own reaction time still counts. It reads to {#} s. The gold ticks on the ruler hold the largest |x| since Reset peak.":
   "Pulsa Cronómetro (o W en el dibujo) cuando el bloque pase por una marca que elijas, cuenta N oscilaciones completas y vuelve a pulsarlo cuando el bloque pase por la misma marca en el mismo sentido. El cronómetro corre en tiempo de simulación, así que la cámara lenta facilita medir, pero tu propio tiempo de reacción sigue contando. Mide hasta {#} s. Las marcas doradas de la regla guardan el mayor |x| desde Reiniciar el pico.",
-"No readings yet. Time N oscillations, then press Capture reading.":
-  "Aún no hay lecturas. Cronometra N oscilaciones y luego pulsa Capturar lectura.",
-"Capture stores what is on screen, rounded as displayed: the stopwatch time, your N, the ruler peak (or, when driven, the amplitude of the last drive cycle) and the settings m, k, b, F₀ and ω. T = t/N. Cells can be edited; rows stay through setup changes until Clear.":
-  "Capturar guarda lo que está en pantalla, redondeado como se muestra: el tiempo del cronómetro, tu N, el pico en la regla (o, con fuerza impulsora, la amplitud del último ciclo) y los valores de m, k, b, F₀ y ω. T = t/N. Las celdas se pueden editar; las filas se quedan al cambiar la configuración hasta que pulses Borrar.",
+"No readings yet. Time N oscillations, then press Record reading.":
+  "Aún no hay lecturas. Cronometra N oscilaciones y luego pulsa Registrar lectura.",
+"Record reading stores what is on screen, rounded as displayed: the stopwatch time, your N, the ruler peak (or, when driven, the amplitude of the last drive cycle) and the settings m, k, b, F₀ and ω. T = t/N. Cells can be edited; rows stay through setup changes until Clear.":
+  "Registrar lectura guarda lo que está en pantalla, redondeado como se muestra: el tiempo del cronómetro, tu N, el pico en la regla (o, con fuerza impulsora, la amplitud del último ciclo) y los valores de m, k, b, F₀ y ω. T = t/N. Las celdas se pueden editar; las filas se quedan al cambiar la configuración hasta que pulses Borrar.",
 "Plot of the readings":
   "Gráfica de las lecturas",
 "T² against m":
@@ -286,7 +286,7 @@ VDI18N.add('es', 'demo/springs', {
   "Gráfica de T² en función de m para {#} filas capturadas; los residuos están en una franja abajo. Mostrar la tabla de datos lista los puntos.",
 "Fit of T² against m":
   "Ajuste de T² en función de m",
-"time N oscillations and capture, at several masses":
+"time N oscillations and record, at several masses":
   "cronometra N oscilaciones y captura, con varias masas",
 "Plotted readings":
   "Lecturas graficadas",

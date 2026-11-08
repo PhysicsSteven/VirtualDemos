@@ -158,7 +158,7 @@ group('Astro 2203 presets (JPL SBDB elements to 4 figures, Pluto from the Standi
   assert(el('apophis').q < 1 && el('apophis').Q > 1, 'Apophis crosses Earth\u2019s orbit'); assert(el('pluto').q < 30.07, 'Pluto perihelion inside Neptune\u2019s orbit');
 });
 
-group('CSV and number helpers used by Capture reading', () => {
+group('CSV and number helpers used by Record reading', () => {
   assert.strictEqual(K.csvCell('a,b'), '"a,b"'); assert.strictEqual(K.csvCell('plain'), 'plain'); assert.strictEqual(K.num('−0.5'), -0.5); assert(Number.isNaN(K.num('')));
   assert.strictEqual(K.buildCSV(['note'], ['a', 'b'], [[1, 2]]), '# note\na,b\n1,2\n');
 });

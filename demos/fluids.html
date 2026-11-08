@@ -266,7 +266,7 @@ table.rows button:hover { color: var(--pos); }
       <section id="readSec">
         <h2>Readings</h2>
         <div class="btnrow">
-          <button type="button" class="btn primary" id="capture">Capture reading</button>
+          <button type="button" class="btn primary" id="capture">Record reading</button>
           <button type="button" class="btn" id="expCsv">Export to worksheet</button>
           <button type="button" class="btn" id="clearRows">Clear</button>
         </div>
@@ -592,7 +592,7 @@ table.rows button:hover { color: var(--pos); }
     float: 'Let the block settle, then compare how far its bottom sits below the surface with its height. Try other materials and liquids.',
     iceberg: 'Ice in seawater: once the block is still, how much of it is under the surface? Turn on the spring scale to measure forces.',
     mystery: 'Weigh each mystery block in air, then lower it all the way into the full overflow can and read the water in the beaker. Work out the density and name the metal.',
-    weigh: 'Lower the aluminum block into the full overflow can in steps. At each step capture the spring scale and the depth ruler, then plot the buoyant force (scale reading in air minus scale reading) against the submerged volume.',
+    weigh: 'Lower the aluminum block into the full overflow can in steps. At each step record the spring scale and the depth ruler, then plot the buoyant force (scale reading in air minus scale reading) against the submerged volume.',
     venturi: 'Change the inlet speed v₁ and capture the flow meter and both standpipes each time, keeping the pipe and the throat fixed. Plot the drop h₁ − h₂ against v₁².',
     torr: 'Move the hole and watch where the jet lands. Which hole depth throws the water farthest?'
   };
@@ -2071,7 +2071,7 @@ table.rows button:hover { color: var(--pos); }
       if (I.cav) { capStat('No reading: the throat would cavitate, so the ideal model is invalid there. Lower v₁ or widen the throat.'); return; }
       if (I.empty) { capStat('No reading: the throat standpipe is empty because the pressure there is below air pressure. Lower v₁ or raise h₁.'); return; }
       row = { kind: 'venturi', ...base, cells: { v1: I.v1, Q: I.Q, h1: I.h1, h2: I.h2, D1: I.D1, D2: I.D2 } };
-    } else { capStat('Capture works in the Depth, Buoyancy and Venturi scenes.'); return; }
+    } else { capStat('Record reading works in the Depth, Buoyancy and Venturi scenes.'); return; }
     rows.push(row); renderRows();
     const n = rows.filter((r) => r.kind === row.kind).length;
     const msg = row.kind === 'depth' ? `Reading ${n} captured: h = ${I.h} m, P = ${I.P} kPa.`
@@ -2092,7 +2092,7 @@ table.rows button:hover { color: var(--pos); }
       tb.tHead.innerHTML = `<tr><th>#</th>${cols.map((c) => `<th>${c[1]}</th>`).join('')}<th><span class="sr">Delete</span></th></tr>`;
       $('tblCap').textContent = `Captured ${KIND_NAME[kind]} readings`;
       const mine = rows.map((r, i) => [r, i]).filter(([r]) => r.kind === kind);
-      if (!mine.length) tb.tBodies[0].innerHTML = `<tr><td class="empty" colspan="${cols.length + 2}">No ${KIND_NAME[kind]} readings yet. Set up, then press Capture reading.</td></tr>`;
+      if (!mine.length) tb.tBodies[0].innerHTML = `<tr><td class="empty" colspan="${cols.length + 2}">No ${KIND_NAME[kind]} readings yet. Set up, then press Record reading.</td></tr>`;
       else tb.tBodies[0].innerHTML = mine.map(([r, i], j) => {
         const dv = derived(r);
         return `<tr title="${escH(LIQ[r.liq].name + (r.preset ? ', ' + r.preset : ''))}"><td class="n">${j + 1}</td>${cols.map(([k, , aria, ed]) => ed
@@ -2103,10 +2103,10 @@ table.rows button:hover { color: var(--pos); }
     $('readHint').textContent = READ_HINT[kind || 'none'] + (kind && others ? ` ${others} reading${others > 1 ? 's' : ''} from other scenes are kept for the CSV.` : '');
   }
   const READ_HINT = {
-    depth: 'Capture stores the depth ruler and the pressure gauge as displayed, in the mode shown. The fit uses the readings for the present liquid and pressure mode: P = intercept + slope·h.',
-    buoy: 'Turn on Spring scale. Capture stores the depth ruler d, the spring scale T and the scale reading in air W. The table works out V_sub = L²·d (at most L³) and F_B = W − T; the fit is F_B = intercept + slope·V_sub.',
-    venturi: 'Capture stores v₁, the flow meter and both standpipes. Keep D₁ and D₂ fixed: the fit uses the readings with the present pipe and throat, Δh = h₁ − h₂ against v₁², with intercept.',
-    none: 'Capture works in the Depth, Buoyancy and Venturi scenes. Rows from every scene stay until Clear, and all of them go into the CSV.'
+    depth: 'Record reading stores the depth ruler and the pressure gauge as displayed, in the mode shown. The fit uses the readings for the present liquid and pressure mode: P = intercept + slope·h.',
+    buoy: 'Turn on Spring scale. Record reading stores the depth ruler d, the spring scale T and the scale reading in air W. The table works out V_sub = L²·d (at most L³) and F_B = W − T; the fit is F_B = intercept + slope·V_sub.',
+    venturi: 'Record reading stores v₁, the flow meter and both standpipes. Keep D₁ and D₂ fixed: the fit uses the readings with the present pipe and throat, Δh = h₁ − h₂ against v₁², with intercept.',
+    none: 'Record reading works in the Depth, Buoyancy and Venturi scenes. Rows from every scene stay until Clear, and all of them go into the CSV.'
   };
   $('tbl').addEventListener('input', (e) => {
     const t = e.target; if (!t.dataset || t.dataset.k === undefined) return;
@@ -2255,7 +2255,7 @@ table.rows button:hover { color: var(--pos); }
     ctx.restore();
     ctx.fillStyle = T.neg;
     for (let i = 0; i < xs.length; i++) { ctx.beginPath(); ctx.arc(A.X(xs[i]), A.Y(ys[i]), 4.5 * ps, 0, 2 * Math.PI); ctx.fill(); }
-    if (!f) labelBox(ctx, xs.length ? 'Capture another reading to fit a line.' : 'No readings for this fit yet: press Capture reading.', (L + R) / 2, (top + mainBot) / 2, 'center', T.muted, 11.5 * ls, 700);
+    if (!f) labelBox(ctx, xs.length ? 'Record another reading to fit a line.' : 'No readings for this fit yet: press Record reading.', (L + R) / 2, (top + mainBot) / 2, 'center', T.muted, 11.5 * ls, 700);
     else labelBox(ctx, S.blind ? 'dots: your readings; line: least squares fit' : 'dots: your readings; line: least squares fit; dashed: model', R - 6 * ls, mainBot - 8 * ls, 'right', T.muted, 10.5 * ls);
     // residual strip
     // residual axis: ±1.3 times the largest residual, but not narrower than 1% of the plotted y range (an exact fit shows a flat strip)

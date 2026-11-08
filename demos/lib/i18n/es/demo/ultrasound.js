@@ -100,7 +100,7 @@ VDI18N.add('es', 'demo/ultrasound', {
   "Ecos: frontera, profundidad real, tiempo, parte de la presión devuelta",
 "fat to muscle: {#} cm, {#} μs, r = {#}<br>muscle to bone: {#} cm, {#} μs, r = {#}<br>bone to muscle: {#} cm, {#} μs, r = -{#}":
   "grasa a músculo: {#} cm, {#} μs, r = {#}<br>músculo a hueso: {#} cm, {#} μs, r = {#}<br>hueso a músculo: {#} cm, {#} μs, r = -{#}",
-"Record this reading":
+"Record reading":
   "Registrar esta lectura",
 "No readings yet. Start the scanner, place the cursor, then record.":
   "Aún no hay lecturas. Enciende el ecógrafo, coloca el cursor y luego registra.",

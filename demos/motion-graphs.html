@@ -194,7 +194,7 @@ table.rows input:focus { border-color: var(--accent); }
       <section>
         <h2>Readings</h2>
         <div class="btnrow">
-          <button type="button" class="btn primary" id="capture">Capture reading</button>
+          <button type="button" class="btn primary" id="capture">Record reading</button>
           <button type="button" class="btn" id="exportCsv">Export to worksheet</button>
           <button type="button" class="btn" id="clearRows">Clear</button>
         </div>
@@ -206,7 +206,7 @@ table.rows input:focus { border-color: var(--accent); }
         <button type="button" class="btn" id="fitTblBtn" aria-expanded="false" aria-controls="fitWrap">Show data table</button>
         <div class="twrap" id="fitWrap" hidden><table class="rows" id="fitTbl"><caption class="sr">Plotted readings with fitted values</caption><thead><tr><th>t (s)</th><th>x (m)</th><th>fit (m)</th><th>residual (m)</th></tr></thead><tbody></tbody></table></div>
         <details class="more"><summary>More about this</summary>
-          <p class="hint">Capture stores the time and position shown at the marker (t to 0.01 s, x to 0.01 m). Cells can be edited.</p>
+          <p class="hint">Record reading stores the time and position shown at the marker (t to 0.01 s, x to 0.01 m). Cells can be edited.</p>
           <p class="hint">The fit is x = x₀ + v₀t + ½at² by least squares over your rows, for one stage of constant acceleration. Capture rows from one stage only.</p>
         </details>
         </div></details>
@@ -976,7 +976,7 @@ table.rows input:focus { border-color: var(--accent); }
   function renderRows() {
     const tb = $('rowsTbl').querySelector('tbody');
     tb.innerHTML = S.rows.length ? S.rows.map((r, i) => `<tr><td>${i + 1}</td><td><input data-i="${i}" data-f="t" value="${r.t}" aria-label="t, row ${i + 1}"></td><td><input data-i="${i}" data-f="x" value="${r.x}" aria-label="x, row ${i + 1}"></td><td><button type="button" data-del="${i}" aria-label="Delete row ${i + 1}">×</button></td></tr>`).join('')
-      : '<tr><td class="empty" colspan="4">No readings yet. Move the time marker and press Capture reading.</td></tr>';
+      : '<tr><td class="empty" colspan="4">No readings yet. Move the time marker and press Record reading.</td></tr>';
     fit();
   }
   $('rowsTbl').addEventListener('change', (e) => { const el = e.target; if (el.dataset.f) { S.rows[+el.dataset.i][el.dataset.f] = el.value.trim(); fit(); } });
@@ -987,14 +987,14 @@ table.rows input:focus { border-color: var(--accent); }
     const pts = S.rows.map((r) => [cellNum(r.t), cellNum(r.x)]).filter(([a, b]) => isFinite(a) && isFinite(b));
     const F = pts.length >= 3 ? quadFit(pts.map((q) => q[0]), pts.map((q) => q[1])) : null;
     let h = '';
-    if (!F) h = `<div class="wide"><dt>Fit</dt><dd class="ok">Capture at least three rows${pts.length >= 3 ? ' at different times' : ''}.</dd></div>`;
+    if (!F) h = `<div class="wide"><dt>Fit</dt><dd class="ok">Record at least three rows${pts.length >= 3 ? ' at different times' : ''}.</dd></div>`;
     else {
       const pm = (v, e, u) => `${fx(v, 3)}${isFinite(e) ? ` ± ${fx(e, 3)}` : ''} ${u}`;
       h += `<div class="wide"><dt>x₀ (intercept)</dt><dd>${pm(F.c[0], F.se[0], 'm')}</dd></div>`;
       if (S.blind) h += '<div class="wide"><dt>v₀ and a from the fit</dt><dd class="ok">hidden in Blind: read them from c₁ and c₂ yourself</dd></div>';
       h += `<div><dt>c₁ (m/s)</dt><dd>${pm(F.c[1], F.se[1], '')}</dd></div><div><dt>c₂ (m/s²)</dt><dd>${pm(F.c[2], F.se[2], '')}</dd></div>`;
       if (!S.blind) h += `<div class="wide"><dt>So v₀ = c₁ and a = 2c₂</dt><dd>${pm(F.c[1], F.se[1], 'm/s')}, ${pm(2 * F.c[2], 2 * F.se[2], 'm/s²')}</dd></div>`;
-      if (F.n === 3) h += '<div class="wide"><dt>Uncertainty</dt><dd class="ok">Three points fit exactly; capture more for error bars.</dd></div>';
+      if (F.n === 3) h += '<div class="wide"><dt>Uncertainty</dt><dd class="ok">Three points fit exactly; record more for error bars.</dd></div>';
     }
     $('fitOut').innerHTML = h;
     $('fitTbl').querySelector('tbody').innerHTML = pts.map(([t, x], i) => `<tr><td>${t}</td><td>${x}</td><td>${F ? fx(F.c[0] + F.c[1] * t + F.c[2] * t * t, 3) : '—'}</td><td>${F ? fx(F.res[i], 3) : '—'}</td></tr>`).join('');

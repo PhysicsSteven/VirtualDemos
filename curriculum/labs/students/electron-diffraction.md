@@ -15,7 +15,7 @@ Textbook: OpenStax *University Physics*, Vol. 3, §6.5 (and §4.6). Access for f
 - A teaching electron diffraction tube: an electron gun, a thin film of graphite crystals at the end of the anode, and a fluorescent screen on the inside of a glass bulb. You set the accelerating voltage (2 to 5 kV) and read it on the kV meter, which jitters by a few volts like a real one.
 - Two rings appear. Ruler lays a flexible ruler on the glass through the central spot; it reads the arc across a ring to 0.5 mm. Caliper holds a vernier caliper in front of the screen; it reads the straight chord to 0.1 mm. Pick the ring (inner $$D_1$$ or outer $$D_2$$) and drag the two marks or jaws onto the middle of the glowing band on each side.
 - A bar magnet can be held near the neck of the tube, with either pole facing it.
-- Capture reading stores the meter reading and your $$D_1$$ and $$D_2$$, with the tool. Export to worksheet sends the readings, and the wavelength $$\lambda$$ worked out from each meter reading, to the Data table below; Clear starts a new series, which goes into a new copy of the table. Blind hides the accepted spacings, the true ring positions and the angles. Tube seed fixes the small simulated imperfections, so a class can share one tube.
+- Record reading stores the meter reading and your $$D_1$$ and $$D_2$$, with the tool. Export to worksheet sends the readings, and the wavelength $$\lambda$$ worked out from each meter reading, to the Data table below; Clear starts a new series, which goes into a new copy of the table. Blind hides the accepted spacings, the true ring positions and the angles. Tube seed fixes the small simulated imperfections, so a class can share one tube.
 - The X-rays button turns the demo into an X-ray spectrometer, used in the X-Ray Diffraction worksheet.
 
 **What the demo models.** The tube follows the maker's data sheet of a common teaching tube: graphite spacings 0.213 nm and 0.123 nm, graphite to screen $$L = 125$$ mm, bulb radius $$R = 65$$ mm. The wavelength is $$\lambda = h/p$$ with the relativistic momentum, and each ring is where the cone of electrons Bragg reflected at $$2\theta$$ meets the spherical screen, found exactly. The ring widths and brightness, the small tilt and slow wander of the beam, the meter jitter and the magnet's effect are modeled, not computed from first principles. Simulated data.
@@ -57,9 +57,9 @@ A real tube runs at several kilovolts and has a thin, evacuated glass bulb. Chan
 
 ## Procedure
 
-**Part 1: ring diameters with the ruler.** Write down the tube seed and turn on Blind. Keep the magnet away. Using the ruler, measure both ring diameters at 2.50, 3.00, 3.50, 4.00, 4.50 and 5.00 kV, putting each mark on the middle of the glowing band, and capture a reading at each voltage. Send the six readings to the worksheet.
+**Part 1: ring diameters with the ruler.** Write down the tube seed and turn on Blind. Keep the magnet away. Using the ruler, measure both ring diameters at 2.50, 3.00, 3.50, 4.00, 4.50 and 5.00 kV, putting each mark on the middle of the glowing band, and record a reading at each voltage. Send the six readings to the worksheet.
 
-**Part 2: the caliper.** Clear the readings. Measure both rings with the caliper at 2.50, 3.50 and 5.00 kV and capture a reading at each. Send them; they go into a new copy of the table.
+**Part 2: the caliper.** Clear the readings. Measure both rings with the caliper at 2.50, 3.50 and 5.00 kV and record a reading at each. Send them; they go into a new copy of the table.
 
 **Part 3: the magnet.** At 4.00 kV bring the magnet to 40 mm from the neck with the N pole facing it, then turn it to the S pole, then try 4.00 kV against 2.50 kV. Describe what happens to the pattern each time, and take the magnet away before measuring again.
 

@@ -33,7 +33,7 @@ VDI18N.add('es', 'demo/projectile-drag', {
 "· F = ½ρC<sub>d</sub>Av²":
   "· F = ½ρC<sub>d</sub>Av²",
 "Flight view. Drag anywhere to aim the launcher, drag the arrow tip to set speed and angle, drag the round hub up or down to set the launch height. Keys: arrow keys change the launch angle (Shift for {#} degrees), Page Up and Page Down change the launch height (Shift for {#} m), Enter launches, comma and period move the time cursor one dot earlier or later, Home and End jump to launch and landing, Escape hides the cursor, C captures a reading.":
-  "Vista del vuelo. Arrastra en cualquier parte para apuntar el lanzador, arrastra la punta de la flecha para fijar la rapidez y el ángulo, arrastra el eje redondo hacia arriba o hacia abajo para fijar la altura de lanzamiento. Teclas: las flechas cambian el ángulo de lanzamiento (Shift para {#} grados), Re Pág y Av Pág cambian la altura de lanzamiento (Shift para {#} m), Enter lanza, coma y punto mueven el cursor de tiempo un punto antes o después, Inicio y Fin saltan al lanzamiento y al aterrizaje, Escape oculta el cursor, C captura una lectura.",
+  "Vista del vuelo. Arrastra en cualquier parte para apuntar el lanzador, arrastra la punta de la flecha para fijar la rapidez y el ángulo, arrastra el eje redondo hacia arriba o hacia abajo para fijar la altura de lanzamiento. Teclas: las flechas cambian el ángulo de lanzamiento (Shift para {#} grados), Re Pág y Av Pág cambian la altura de lanzamiento (Shift para {#} m), Enter lanza, coma y punto mueven el cursor de tiempo un punto antes o después, Inicio y Fin saltan al lanzamiento y al aterrizaje, Escape oculta el cursor, C registra una lectura.",
 "Time scale":
   "Escala de tiempo",
 "Fly every shot again from the same start time, so they race":
@@ -174,8 +174,8 @@ VDI18N.add('es', 'demo/projectile-drag', {
   "El tiro seleccionado en el instante mostrado: energía cinética ½mv², energía potencial gravitacional mgy (cero en el suelo) y la energía que el arrastre se ha llevado hasta ahora, que es la energía del lanzamiento menos las otras dos. Sin arrastre esa barra se queda en cero y el total nunca cambia; con arrastre el total tampoco cambia, porque la energía perdida se cuenta.",
 "Captured readings: launch angle, cursor time, height and range":
   "Lecturas capturadas: ángulo de lanzamiento, tiempo del cursor, altura y alcance",
-"Capture stores what you read for the selected shot: its settings as displayed, the cursor's t, x and y, and its range R. Cells can be edited; rows stay through preset changes until Clear. The CSV also has x and every setting.":
-  "Capturar guarda lo que lees para el tiro seleccionado: su configuración tal como se muestra, t, x y y del cursor, y su alcance R. Las celdas se pueden editar; las filas se mantienen al cambiar de configuración predefinida hasta que pulses Borrar. El CSV también tiene x y cada ajuste.",
+"Record reading stores what you read for the selected shot: its settings as displayed, the cursor's t, x and y, and its range R. Cells can be edited; rows stay through preset changes until Clear. The CSV also has x and every setting.":
+  "Registrar lectura guarda lo que lees para el tiro seleccionado: su configuración tal como se muestra, t, x y y del cursor, y su alcance R. Las celdas se pueden editar; las filas se mantienen al cambiar de configuración predefinida hasta que pulses Borrar. El CSV también tiene x y cada ajuste.",
 "What to plot":
   "Qué graficar",
 "y against t":

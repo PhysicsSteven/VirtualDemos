@@ -228,7 +228,7 @@ table.rows input:focus { border-color: var(--accent); }
       <section>
         <h2>Readings</h2>
         <div class="btnrow">
-          <button type="button" class="btn primary" id="capture">Capture reading</button>
+          <button type="button" class="btn primary" id="capture">Record reading</button>
           <button type="button" class="btn" id="exportCsv">Export to worksheet</button>
           <button type="button" class="btn" id="clearRows">Clear</button>
         </div>
@@ -246,7 +246,7 @@ table.rows input:focus { border-color: var(--accent); }
         <button type="button" class="btn" id="fitTblBtn" aria-expanded="false" aria-controls="fitWrap">Show data table</button>
         <div class="twrap" id="fitWrap" hidden><table class="rows" id="fitTbl"><caption class="sr">Plotted points</caption><thead><tr><th>x</th><th>R (Ω)</th><th>fit</th><th>resid.</th></tr></thead><tbody></tbody></table></div>
         <details class="more"><summary>More about this</summary>
-          <p class="hint">Capture stores L, the meter readings (V to 4 significant figures, I as set to 3), the gauge and the temperature. R against L uses rows at one temperature and gauge: ρ = slope × A. R against T uses rows at one length and gauge: α = slope / R(20 °C).</p>
+          <p class="hint">Record reading stores L, the meter readings (V to 4 significant figures, I as set to 3), the gauge and the temperature. R against L uses rows at one temperature and gauge: ρ = slope × A. R against T uses rows at one length and gauge: α = slope / R(20 °C).</p>
         </details>
         </div></details>
       </section>
@@ -1285,7 +1285,7 @@ table.rows input:focus { border-color: var(--accent); }
     const pts = rows.map((r) => [cellNum(S.plot === 'RL' ? r.L : r.T), cellNum(r.V) / cellNum(r.I)]).filter(([a, b]) => isFinite(a) && isFinite(b));
     const F = pts.length >= 2 ? fitLine(pts.map((q) => q[0]), pts.map((q) => q[1])) : null, A = area(d());
     let h;
-    if (!F) h = `<div class="wide"><dt>Fit</dt><dd class="ok">${S.plot === 'RL' ? `Capture at least two lengths of this wire at ${S.T} °C.` : `Capture at least two temperatures of this wire at L = ${S.L.toFixed(3)} m.`}</dd></div>`;
+    if (!F) h = `<div class="wide"><dt>Fit</dt><dd class="ok">${S.plot === 'RL' ? `Record at least two lengths of this wire at ${S.T} °C.` : `Record at least two temperatures of this wire at L = ${S.L.toFixed(3)} m.`}</dd></div>`;
     else {
       const pm = (v, e, n) => `${sci(v, n)}${isFinite(e) ? ` ± ${sci(e, 2)}` : ''}`;
       h = `<div><dt>Slope</dt><dd>${pm(F.b, F.seB, 4)} ${S.plot === 'RL' ? 'Ω/m' : 'Ω/K'}</dd></div><div><dt>Intercept</dt><dd>${pm(F.a, F.seA, 4)} Ω</dd></div>`;

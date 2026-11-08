@@ -318,7 +318,7 @@ table.rows input:focus { border-color: var(--accent); }
       <section>
         <h2>Readings</h2>
         <div class="btnrow">
-          <button type="button" class="btn primary" id="capture">Capture reading</button>
+          <button type="button" class="btn primary" id="capture">Record reading</button>
           <button type="button" class="btn" id="exportCsv">Export to worksheet</button>
           <button type="button" class="btn" id="clearRows">Clear</button>
         </div>
@@ -751,9 +751,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const $ = (id) => document.getElementById(id);
     let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
     const PRESETS = {
-      simple: { rod: false, L: 1.0, A: 8, m: 0.2, g: 9.81, hint: 'A 1.00 m pendulum on Earth, released at 8°. Its period is 2.006 s, and a "seconds pendulum" (one second per swing) is very nearly 1 m long. Change L and capture a reading at each length to measure g.' },
+      simple: { rod: false, L: 1.0, A: 8, m: 0.2, g: 9.81, hint: 'A 1.00 m pendulum on Earth, released at 8°. Its period is 2.006 s, and a "seconds pendulum" (one second per swing) is very nearly 1 m long. Change L and record a reading at each length to measure g.' },
       mass: { rod: false, L: 1.0, A: 8, m: 2.0, g: 9.81, hint: 'A heavy bob: change the mass from 2 kg to 50 g and watch the period. Gravity pulls harder on a heavier bob, but it also has more inertia, and the two cancel exactly.' },
-      big: { rod: false, L: 1.0, A: 90, m: 0.2, g: 9.81, hint: 'Released at 90°, the period is 18% longer than 2π√(L/g). The small angle formula assumes sin θ ≈ θ; capture T at several angles and plot T against θ₀ to see how large swings depart from it.' },
+      big: { rod: false, L: 1.0, A: 90, m: 0.2, g: 9.81, hint: 'Released at 90°, the period is 18% longer than 2π√(L/g). The small angle formula assumes sin θ ≈ θ; record T at several angles and plot T against θ₀ to see how large swings depart from it.' },
       rod: { rod: true, L: 1.0, A: 8, m: 0.5, g: 9.81, hint: 'A uniform 1.00 m rod swinging from one end has a shorter period than a 1.00 m simple pendulum: its mass is spread along it. It swings like a simple pendulum 2L/3 long: T = 2π√(2L/3g).' },
       moon: { rod: false, L: 1.0, A: 8, m: 0.2, g: 1.62, hint: 'The same pendulum on the Moon, where g = 1.62 m/s²: the period grows by √(9.81/1.62) = 2.46. Try the Mystery planet and measure its g.' }
     };
@@ -1100,7 +1100,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       if (S.plot === 'TL') {
         pts = S.rows.filter((r) => r.type === 'bob' && +r.A <= 10 && r.gKey === S.gKey).map((r) => [cellNum(r.L), cellNum(r.T) ** 2]).filter(([a, b]) => isFinite(a) && isFinite(b));
         F = pts.length >= 2 ? fitLine(pts.map((q) => q[0]), pts.map((q) => q[1])) : null;
-        if (!F) h = '<div class="wide"><dt>Fit</dt><dd class="ok">Capture at least two lengths with a bob, θ₀ ≤ 10°, on this planet.</dd></div>';
+        if (!F) h = '<div class="wide"><dt>Fit</dt><dd class="ok">Record at least two lengths with a bob, θ₀ ≤ 10°, on this planet.</dd></div>';
         else { const g = 4 * Math.PI ** 2 / F.b, sg = g * F.seB / F.b;
           h = `<div><dt>Slope (s²/m)</dt><dd>${f(F.b, 4)}${isFinite(F.seB) ? ` ± ${f(F.seB, 4)}` : ''}</dd></div><div><dt>Intercept (s²)</dt><dd>${f(F.a, 4)}</dd></div>`;
           h += hideG() ? `<div class="wide"><dt>g = 4π²/slope</dt><dd class="ok">${S.blind ? (typeof VDI18N === 'object' ? VDI18N.t('hidden in Blind: work it out') : 'hidden in Blind: work it out') : (typeof VDI18N === 'object' ? VDI18N.t('hidden for the Mystery planet: work it out') : 'hidden for the Mystery planet: work it out')}</dd></div>` : `<div class="wide"><dt>g = 4π²/slope</dt><dd>${f(g, 3)}${isFinite(sg) ? ` ± ${f(sg, 3)}` : ''} m/s²</dd></div>`; }

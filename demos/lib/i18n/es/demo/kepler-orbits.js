@@ -218,10 +218,10 @@ VDI18N.add('es', 'demo/kepler-orbits', {
   "T años",
 "ruler AU":
   "regla UA",
-"No readings yet. Time an orbit, place the ruler points, then press Capture reading.":
-  "Aún no hay lecturas. Mide el tiempo de una órbita, coloca los puntos de la regla y luego pulsa Capturar lectura.",
-"Capture stores the timer and the ruler as displayed, with the star mass and the launch. The a column starts as half the ruler distance, which is the semi major axis when the points sit on perihelion and aphelion; edit it if you measured another way. The fit is a least squares line T² = slope·a³ + intercept, using the rows with the present star mass; the intercept should come out near zero.":
-  "Capturar guarda el cronómetro y la regla tal como se muestran, con la masa de la estrella y el lanzamiento. La columna a empieza como la mitad de la distancia de la regla, que es el semieje mayor cuando los puntos están en el perihelio y el afelio; edítala si mediste de otra forma. El ajuste es una recta de mínimos cuadrados T² = pendiente·a³ + ordenada al origen, usando las filas con la masa de la estrella actual; la ordenada al origen debería salir cerca de cero.",
+"No readings yet. Time an orbit, place the ruler points, then press Record reading.":
+  "Aún no hay lecturas. Mide el tiempo de una órbita, coloca los puntos de la regla y luego pulsa Registrar lectura.",
+"Record reading stores the timer and the ruler as displayed, with the star mass and the launch. The a column starts as half the ruler distance, which is the semi major axis when the points sit on perihelion and aphelion; edit it if you measured another way. The fit is a least squares line T² = slope·a³ + intercept, using the rows with the present star mass; the intercept should come out near zero.":
+  "Registrar lectura guarda el cronómetro y la regla tal como se muestran, con la masa de la estrella y el lanzamiento. La columna a empieza como la mitad de la distancia de la regla, que es el semieje mayor cuando los puntos están en el perihelio y el afelio; edítala si mediste de otra forma. El ajuste es una recta de mínimos cuadrados T² = pendiente·a³ + ordenada al origen, usando las filas con la masa de la estrella actual; la ordenada al origen debería salir cerca de cero.",
 "Blind hides a, e, the period P and P measured, the energy, Δt per wedge and ½·h·Δt, the second planet's a and P, the distances on the orbit drawing and the third law chart. The timer, the ruler, the clock and the launch readouts stay.":
   "A ciegas oculta a, e, el periodo P y el P medido, la energía, Δt por cuña y ½·h·Δt, a y P del segundo planeta, las distancias en el dibujo de la órbita y la gráfica de la tercera ley. El cronómetro, la regla, el reloj y las lecturas del lanzamiento se quedan.",
 "Chart shows":

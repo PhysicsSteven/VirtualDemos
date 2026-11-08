@@ -250,7 +250,7 @@ table.rows tr.sim td { background: color-mix(in srgb, var(--equi) 9%, transparen
       <section>
         <h2>Readings</h2>
         <div class="btnrow">
-          <button type="button" class="btn primary" id="capture">Capture reading</button>
+          <button type="button" class="btn primary" id="capture">Record reading</button>
           <button type="button" class="btn" id="expTab">Export to worksheet</button>
           <button type="button" class="btn" id="clearTab">Clear</button>
         </div>
@@ -259,7 +259,7 @@ table.rows tr.sim td { background: color-mix(in srgb, var(--equi) 9%, transparen
         <div class="twrap"><table class="rows" id="tbl"><thead><tr><th>#</th><th>Dir</th><th>Meter rev/s</th><th>Micrometer</th><th><span hidden>Delete</span></th></tr></thead><tbody></tbody></table></div>
         <div>
         <details class="more"><summary>More about this</summary>
-          <p class="hint">Capture stores the direction, the speed meter reading and your micrometer reading, never the true shift. You can edit them. The fit uses rows taken at the bench's current D and B.</p>
+          <p class="hint">Record reading stores the direction, the speed meter reading and your micrometer reading, never the true shift. You can edit them. The fit uses rows taken at the bench's current D and B.</p>
           <p class="hint" style="margin-bottom:4px">Your measured distances, used for c (filled from the bench; edit to use your own tape measure values):</p>
         </details>
           <div class="dist">
@@ -893,7 +893,7 @@ table.rows tr.sim td { background: color-mix(in srgb, var(--equi) 9%, transparen
         html += `<div class="wide"><dt>Accepted c = 299 792 458 m/s (exact)</dt><dd>yours ${diff >= 0 ? '+' : '−'}${Math.abs(diff).toFixed(2)} %${isFinite(z) ? `, ${z.toFixed(1)} σ` : ''}</dd></div>`;
       }
       if (f.n === 2) html += `<div class="wide"><dt>Uncertainty</dt><dd class="ok">Needs three or more readings</dd></div>`;
-    } else html += `<div class="wide"><dt>Fit</dt><dd class="ok">Capture at rest, then at several speeds in both directions</dd></div>`;
+    } else html += `<div class="wide"><dt>Fit</dt><dd class="ok">Record at rest, then at several speeds in both directions</dd></div>`;
     dl.innerHTML = html;
     drawPlot(F);
   }
@@ -1312,7 +1312,7 @@ table.rows tr.sim td { background: color-mix(in srgb, var(--equi) 9%, transparen
   // ---------- presets ----------
   const restMic = () => Math.round(inst.rest * 1000) / 1000;
   const PRESETS = {
-    rest: { hint: 'The mirror is still, so the light comes straight back to S. Turn the micrometer until the crosshair sits on the middle of the spot and capture: every shift is measured from this rest reading.',
+    rest: { hint: 'The mirror is still, so the light comes straight back to S. Turn the micrometer until the crosshair sits on the middle of the spot and record: every shift is measured from this rest reading.',
       apply() { S.revs = 0; S.dir = 1; S.D = 12; S.B = 0.5; S.view = 'normal'; S.mic = restMic() - 0.15; } },
     spin: { hint: 'The mirror turns while the light is away, so the returning image lands beside the rest position: the crosshair is still at the rest reading. Follow the spot with the micrometer and capture.',
       apply() { S.revs = 1000; S.dir = 1; S.D = 12; S.B = 0.5; S.view = 'normal'; S.mic = restMic(); } },

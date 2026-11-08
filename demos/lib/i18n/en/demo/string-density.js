@@ -48,7 +48,7 @@ VDI18N.add('en', 'demo/string-density', [
 "The largest amplitude on the string at each frequency or mass you have tried.",
 "Clear the trace",
 "Each frequency you try adds a point: the largest amplitude on the string. The peaks are the resonances.",
-"Record this reading",
+"Record reading",
 "No readings yet. Find a resonance, then record.",
 "What to plot",
 "f against n",

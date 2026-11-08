@@ -13,7 +13,7 @@ Student worksheet · Astro 2203
 - A wheel spins on a light axle. One end of the axle rests in a cup on top of a post, so the wheel hangs out to the side with nothing under it. Set the spin rate (in revolutions per minute, rpm), the distance d from the post to the wheel's center and the axle's tilt, then release it.
 - Instead of falling, a spinning wheel swings slowly around the post. This slow turning of the axle is called precession. A gate on the floor times each full turn around the post, to 0.01 s; it needs two passes, so the first time appears after the second turn.
 - The wheel can be released from rest (it dips and wobbles first) or started at exactly the steady rate (no dip, no wobble). Arrows can show the angular momentum L (the spin, pointing along the axle), the torque (the twist from the wheel's weight) and the change in L.
-- Capture reading stores the wheel, the start, the tilt, the spin, d and the last time for a full turn around the post. Export to worksheet sends the captured readings to the Data table below; Clear starts a new series, which goes into a new copy of the table.
+- Record reading stores the wheel, the start, the tilt, the spin, d and the last time for a full turn around the post. Export to worksheet sends the captured readings to the Data table below; Clear starts a new series, which goes into a new copy of the table.
 - The wheel has a mass of 0.500 kg and a radius of 0.060 m. The pivot has no friction and the spin stays constant, so the readings repeat exactly.
 
 </details>

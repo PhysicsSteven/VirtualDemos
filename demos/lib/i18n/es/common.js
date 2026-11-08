@@ -156,8 +156,6 @@ VDI18N.add('es', 'common', {
   "<a>Física II</a>",
 "Blind":
   "A ciegas",
-"Capture reading":
-  "Capturar lectura",
 "Captured readings":
   "Lecturas capturadas",
 "Plot and fit":

@@ -110,12 +110,12 @@ VDI18N.add('es', 'demo/e-over-m', {
   "Mueve el ojo hasta que el haz cubra su propio reflejo, y luego pon el indicador sobre el haz. Haz el lado izquierdo, luego mueve el ojo y haz el lado derecho.",
 "Export CSV":
   "Exportar CSV",
-"Capture stores the meter readings and your two pointer readings, never the true radius. You can edit them. e/m is per row in {#}¹¹ C/kg with r = (r L + r R)/{#}. Rows marked with an asterisk were filled by the procedure (simulated readings).":
-  "Capturar guarda las lecturas de los medidores y tus dos lecturas con los indicadores, nunca el radio verdadero. Puedes editarlas. e/m va por fila en {#}¹¹ C/kg con r = (r L + r R)/{#}. Las filas marcadas con asterisco las llenó el procedimiento (lecturas simuladas).",
+"Record reading stores the meter readings and your two pointer readings, never the true radius. You can edit them. e/m is per row in {#}¹¹ C/kg with r = (r L + r R)/{#}. Rows marked with an asterisk were filled by the procedure (simulated readings).":
+  "Registrar lectura guarda las lecturas de los medidores y tus dos lecturas con los indicadores, nunca el radio verdadero. Puedes editarlas. e/m va por fila en {#}¹¹ C/kg con r = (r L + r R)/{#}. Las filas marcadas con asterisco las llenó el procedimiento (lecturas simuladas).",
 "Plot of 2V against (B r) squared from your readings, with a least squares line, slope and intercept. The slope is e/m.":
   "Gráfica de 2V en función de (B r) al cuadrado a partir de tus lecturas, con una recta por mínimos cuadrados, pendiente y ordenada al origen. La pendiente es e/m.",
-"Capture two or more readings at different voltages and currents":
-  "Captura dos o más lecturas a distintos voltajes y corrientes",
+"Record two or more readings at different voltages and currents":
+  "Registra dos o más lecturas a distintos voltajes y corrientes",
 "<span><i></i>Your readings</span> <span><i></i>Procedure readings (simulated)</span>":
   "<span><i></i>Tus lecturas</span> <span><i></i>Lecturas del procedimiento (simuladas)</span>",
 "Instrument seed":

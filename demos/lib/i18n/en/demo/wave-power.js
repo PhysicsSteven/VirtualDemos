@@ -63,7 +63,7 @@ VDI18N.add('en', 'demo/wave-power', [
 "{#} mJ/m",
 "Part of each wave sent back by the absorber",
 "Largest slope of the string, kA",
-"Record this reading",
+"Record reading",
 "No readings yet. With the vibrator running, record a reading.",
 "<span>Plot P against</span>",
 "What to plot the power against",

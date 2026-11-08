@@ -279,14 +279,14 @@ table.rows .empty td { color: var(--muted); font-family: var(--font-ui); white-s
       <section data-mode="flux">
         <h2>Readings</h2>
         <div class="btnrow">
-          <button type="button" class="btn primary" id="capture">Capture reading</button>
+          <button type="button" class="btn primary" id="capture">Record reading</button>
           <button type="button" class="btn" id="expTab">Export to worksheet</button>
           <button type="button" class="btn" id="clearTab">Clear</button>
         </div>
         <label class="check"><input type="checkbox" id="tPred" checked><span>Show predicted flux Q<sub>enc</sub>/ε₀</span></label>
         <div class="twrap"><table class="rows" id="tbl"><caption class="sr">Captured flux readings: surface, enclosed charge, numerical flux and, when shown, the predicted flux Q_enc/ε₀ in N·m²/C</caption><thead><tr><th>#</th><th>Surface</th><th class="b">Q<sub>enc</sub> nC</th><th class="b">∮E·dA</th><th class="b pred">Q<sub>enc</sub>/ε₀</th></tr></thead><tbody></tbody></table></div>
         <p class="hint" id="capMsg" role="status" hidden></p>
-        <details class="more"><summary>More about this</summary><p class="hint">Capture freezes the surface, the charges and the numerical flux in a row (flux in N·m²/C). The CSV holds every row in SI units, with the closest charge distance and the quadrature status.</p></details>
+        <details class="more"><summary>More about this</summary><p class="hint">Record reading freezes the surface, the charges and the numerical flux in a row (flux in N·m²/C). The CSV holds every row in SI units, with the closest charge distance and the quadrature status.</p></details>
       </section>
 
       <section data-mode="flux">
@@ -1885,7 +1885,7 @@ table.rows .empty td { color: var(--muted); font-family: var(--font-ui); white-s
     const a = document.createElement('a'); a.href = '../curriculum/labs/students/' + ws + '.html'; a.target = ws + '-worksheet'; a.textContent = 'Open the worksheet';
     a.style.color = 'var(--accent)'; st.appendChild(a);
   }
-  $('expTab').addEventListener('click', () => { if (!rows.length) { capStatus('Capture a reading first.'); return; } const txt = csvRows(); toWorksheet(txt, () => download('gauss-law-flux.csv', txt)); });
+  $('expTab').addEventListener('click', () => { if (!rows.length) { capStatus('Record a reading first.'); return; } const txt = csvRows(); toWorksheet(txt, () => download('gauss-law-flux.csv', txt)); });
   $('clearTab').addEventListener('click', () => { wsSeries = Date.now(); rows.length = 0; renderRows(); capStatus('Readings cleared.'); });
   $('tPred').addEventListener('change', () => { renderRows(); updateReadouts(); });
   renderRows();

@@ -20,7 +20,7 @@ VDI18N.add('es', 'ws/gauss-law', {
   "Flujo eléctrico y ley de Gauss",
 "<strong>Setups in the demo:</strong> Charge inside; Charge outside; Dipole inside; Uniform sphere; Line of charge; Plane of charge.":
   "<strong>Configuraciones en la demo:</strong> Carga adentro; Carga afuera; Dipolo adentro; Esfera uniforme; Línea de carga; Plano de carga.",
-"Capture freezes the surface, the charges and the numerical flux in a row (flux in N·m²/C). The CSV holds every row in SI units, with the closest charge distance and the quadrature status.":
+"Record reading freezes the surface, the charges and the numerical flux in a row (flux in N·m²/C). The CSV holds every row in SI units, with the closest charge distance and the quadrature status.":
   "Capturar congela la superficie, las cargas y el flujo numérico en una fila (flujo en N·m²/C). El CSV contiene todas las filas en unidades SI, con la distancia de la carga más cercana y el estado de la cuadratura.",
 "3D view: the whole closed surface, with its area elements drawn as tiles. Field lines leave each charge evenly in all directions, three times as many per nC as set above, so lines out minus lines in follows \\(Q_{\\text{enc}}\\). Drag empty space to turn the view.":
   "Vista 3D: toda la superficie cerrada, con sus elementos de área dibujados como mosaicos. Las líneas de campo salen de cada carga de manera uniforme en todas direcciones, tres veces más por nC que arriba, así que las líneas que salen menos las que entran siguen a \\(Q_{\\text{enc}}\\). Arrastra en el espacio vacío para girar la vista.",

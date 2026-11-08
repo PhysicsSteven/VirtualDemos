@@ -7,7 +7,7 @@ VDI18N.add('en', 'ws/pipe-flow', [
 "Flow in a Pipe: Poiseuille’s Law and Turbulence",
 "Choose Flow in a pipe under Experiment. Pick the liquid and the pipe, and set the flow with the outlet valve under the picture (up and down arrows on the picture change it by {#}%, Shift by {#}%).",
 "Start collecting swings the outlet over the measuring cylinder and starts the stopwatch; Stop collecting stops both. Empty the cylinder before the next reading. The stopwatch runs faster with ×{#} or ×{#}, but its reading is always the real time.",
-"Capture stores the cylinder volume (to {#} mL), the stopwatch time (to {#} s), the pressure gauge (to {#} Pa) and what the dye is doing, with the liquid, pipe and valve setting.",
+"Record reading stores the cylinder volume (to {#} mL), the stopwatch time (to {#} s), the pressure gauge (to {#} Pa) and what the dye is doing, with the liquid, pipe and valve setting.",
 "Blind hides the flow rate, speed, Reynolds number, regime and viscosity, leaving the cylinder, the stopwatch and the pressure gauge. The Mystery liquid keeps its viscosity hidden; choosing it again draws a new one.",
 "Steady, fully developed flow in a smooth horizontal glass pipe, with taps {#} m apart far enough downstream of the inlet that the flow profile no longer changes.",
 "Pressure drop from the Darcy–Weisbach equation \\(\\Delta P = f\\,(L/D)\\,\\rho v^2/2\\), with \\(f = 64/N_R\\) below \\(N_R = 2000\\) (exactly Poiseuille’s law) and the smooth pipe friction factor of Blasius, \\(f = 0.3164\\,N_R^{-1/4}\\), above \\(N_R = 3000\\). Between the two, where real flow flickers between laminar and turbulent, \\(f\\) is interpolated.",

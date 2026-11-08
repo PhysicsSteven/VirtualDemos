@@ -165,7 +165,7 @@ table.rows input:focus { border-color: var(--accent); }
       <section>
         <h2>Readings</h2>
         <div class="btnrow">
-          <button type="button" class="btn primary" id="capture">Capture reading</button>
+          <button type="button" class="btn primary" id="capture">Record reading</button>
           <button type="button" class="btn" id="exportCsv">Export to worksheet</button>
           <button type="button" class="btn" id="clearRows">Clear</button>
         </div>
@@ -175,7 +175,7 @@ table.rows input:focus { border-color: var(--accent); }
         <div class="plotbox"><canvas id="fitCan" role="img" aria-label="Terminal speed against diameter squared for the captured rows, with a least squares line (slope and intercept) and its residuals."></canvas></div>
         <dl class="readout" id="fitOut"></dl>
         <details class="more"><summary>More about this</summary>
-          <p class="hint" id="capHow">Capture stores the liquid, ball, tube and the gate time between the marks (0.01 s); v = 0.200 m / t. Stokes' law predicts v ∝ d², so plot v against d² for one liquid, ball and tube: η = (ρ_b − ρ_f) g / (18 × slope). The fit uses the rows that match the current settings.</p>
+          <p class="hint" id="capHow">Record reading stores the liquid, ball, tube and the gate time between the marks (0.01 s); v = 0.200 m / t. Stokes' law predicts v ∝ d², so plot v against d² for one liquid, ball and tube: η = (ρ_b − ρ_f) g / (18 × slope). The fit uses the rows that match the current settings.</p>
         </details>
         </div></details>
       </section>
@@ -658,7 +658,7 @@ table.rows input:focus { border-color: var(--accent); }
     const pts = S.rows.filter((r) => r.key === key()).map((r) => { const d = cellNum(r.d), t = cellNum(r.t); return d > 0 && t > 0 ? [(d / 1000) ** 2, 0.2 / t] : null; }).filter(Boolean).sort((a, b) => a[0] - b[0]);
     const F = pts.length >= 2 ? fitLine(pts.map((q) => q[0]), pts.map((q) => q[1])) : null;
     let h;
-    if (!F) h = `<div class="wide"><dt>Fit</dt><dd class="ok">Capture at least two ball sizes with this liquid, ball and tube.</dd></div>`;
+    if (!F) h = `<div class="wide"><dt>Fit</dt><dd class="ok">Record at least two ball sizes with this liquid, ball and tube.</dd></div>`;
     else {
       const eta = Math.abs(rhoB() - FL().rho) * G / (18 * F.b);
       h = `<div class="wide"><dt>Slope of v against d² (least squares line, ${F.n} points)</dt><dd>${g3(F.b)}${isFinite(F.seB) ? ` ± ${g3(F.seB)}` : ''} m⁻¹s⁻¹</dd></div>`;
@@ -704,8 +704,8 @@ table.rows input:focus { border-color: var(--accent); }
     $('viewSeg').hidden = pipe;
     $('lede').textContent = LEDE[x]; $('unitsLine').textContent = UNITS[x];
     $('formula').textContent = pipe ? 'Poiseuille: Q = ΔP πr⁴/(8ηL) · Reynolds number N_R = ρvD/η · turbulent: ΔP = f (L/D) ρv²/2' : 'Stokes: F = 6πηrv · v_t = 2(ρ_b − ρ_f)g r²/(9η)';
-    $('capHow').textContent = pipe ? 'Capture stores the cylinder volume (1 mL), the stopwatch time (0.01 s), the pressure gauge (0.1 Pa) and what the dye is doing, with the liquid, pipe and valve setting. The fit uses the rows for this liquid and pipe: the slope of log ΔP against log Q for the three lowest and the three highest flows, and η from the slope of a least squares line (with an intercept) of ΔP against Q for the three lowest.'
-      : 'Capture stores the liquid, ball, tube and the gate time between the marks (0.01 s); v = 0.200 m / t. Stokes\' law predicts v ∝ d², so plot v against d² for one liquid, ball and tube: η = (ρ_b − ρ_f) g / (18 × slope). The fit uses the rows that match the current settings.';
+    $('capHow').textContent = pipe ? 'Record reading stores the cylinder volume (1 mL), the stopwatch time (0.01 s), the pressure gauge (0.1 Pa) and what the dye is doing, with the liquid, pipe and valve setting. The fit uses the rows for this liquid and pipe: the slope of log ΔP against log Q for the three lowest and the three highest flows, and η from the slope of a least squares line (with an intercept) of ΔP against Q for the three lowest.'
+      : 'Record reading stores the liquid, ball, tube and the gate time between the marks (0.01 s); v = 0.200 m / t. Stokes\' law predicts v ∝ d², so plot v against d² for one liquid, ball and tube: η = (ρ_b − ρ_f) g / (18 × slope). The fit uses the rows that match the current settings.';
     if (pipe) { S.run = false; pSync(); }
     renderRows(); draw(); readouts();
   }
@@ -854,7 +854,7 @@ table.rows input:focus { border-color: var(--accent); }
   function pFit() {
     const pts = P.rows.filter((r) => r.key === `${P.liq}|${P.D}`).map((r) => { const V = cellNum(r.V), t = cellNum(r.t), dp = cellNum(r.dP); return V > 0 && t > 0 && dp > 0 ? [V / t * 1e-6, dp] : null; }).filter(Boolean).sort((a, b) => a[0] - b[0]);
     let h;
-    if (pts.length < 3) h = '<div class="wide"><dt>Fit</dt><dd class="ok">Capture at least three flows with this liquid and pipe.</dd></div>';
+    if (pts.length < 3) h = '<div class="wide"><dt>Fit</dt><dd class="ok">Record at least three flows with this liquid and pipe.</dd></div>';
     else {
       const lo = pts.slice(0, 3), hi = pts.slice(-3), ll = (a) => fitLine(a.map((q) => Math.log(q[0])), a.map((q) => Math.log(q[1])));
       const nLo = ll(lo), nHi = ll(hi), F0 = fitLine(lo.map((q) => q[0]), lo.map((q) => q[1])), eta = F0 ? F0.b * Math.PI * (P.D / 2) ** 4 / (8 * PIPE_L) : NaN;

@@ -126,7 +126,7 @@ VDI18N.add('es', 'demo/wave-power', {
   "Parte de cada onda que regresa el absorbedor",
 "Largest slope of the string, kA":
   "Pendiente máxima de la cuerda, kA",
-"Record this reading":
+"Record reading":
   "Registrar esta lectura",
 "No readings yet. With the vibrator running, record a reading.":
   "Aún no hay lecturas. Con el vibrador encendido, registra una lectura.",

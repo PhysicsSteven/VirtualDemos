@@ -17,7 +17,7 @@ Students should know standing waves on a string and the relation c = fλ. The de
 
 ## Running it in class
 
-1. **Resonance tube, find c**. Ask Q1 first. With sound on, drag the water surface slowly down (or use the arrow keys): the tone swells at each resonance and the swept level traces out on the plot. Press **Capture reading** at each loudest point.
+1. **Resonance tube, find c**. Ask Q1 first. With sound on, drag the water surface slowly down (or use the arrow keys): the tone swells at each resonance and the swept level traces out on the plot. Press **Record reading** at each loudest point.
 2. Fit the readings. The **Readings** plot of L against (2k − 1)/4f gives c from the slope and the end correction from the intercept. Use Q2, then change **Source frequency f** (the fork chips) and add readings at a second frequency: the points stay on one line. Ask Q3 and move **Air temperature** to check.
 3. **Open vs closed pipe**. Play **All modes**, then switch to **Open pipe**: the closed pipe sounds hollow and lower. Compare the rows of **Allowed frequencies**, click a mode to see its patterns, and ask Q4.
 4. **Pluck at the middle**. Point out the crosses: every even harmonic is exactly zero. Ask Q5 as a prediction, then press **L/3** and pluck again.

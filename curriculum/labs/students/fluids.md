@@ -17,7 +17,7 @@ Textbook: OpenStax *University Physics*, Vol. 1, §§14.1–14.6. Access for fre
 - Flow: drag the grip on the throat wall to narrow or widen it, the grip on the inlet wall for $$D_1$$, the round grip on the arrow for the inlet speed and the first standpipe's level for the inlet pressure.
 - Mystery blocks: five lettered metal cubes whose size and density are hidden. Weigh one on the spring scale, lower it into the full overflow can and read the water caught in the beaker (to 1 cm³).
 - Two liquids (in the Barometer scene): pour a lighter liquid into one arm of a U tube of water or mercury and read the heights of both liquids above the interface. The mystery oil's density is hidden.
-- Capture reading stores the current readings; Export to worksheet sends them here. Blind hides the model graph, the formula line, the force arrows, the computed pressures and $$\Delta h$$ and the worked numbers in the hints; the instruments stay.
+- Record reading stores the current readings; Export to worksheet sends them here. Blind hides the model graph, the formula line, the force arrows, the computed pressures and $$\Delta h$$ and the worked numbers in the hints; the instruments stay.
 
 **What the demo models.**
 

@@ -120,18 +120,18 @@ VDI18N.add('es', 'demo/motion-graphs', {
   "<span>Sombrear el área de {#} a t</span>",
 "<span>Motion diagram: the cart every {#} s</span>":
   "<span>Diagrama de movimiento: el carrito cada {#} s</span>",
-"No readings yet. Move the time marker and press Capture reading.":
-  "Aún no hay lecturas. Mueve el marcador de tiempo y pulsa Capturar lectura.",
+"No readings yet. Move the time marker and press Record reading.":
+  "Aún no hay lecturas. Mueve el marcador de tiempo y pulsa Registrar lectura.",
 "Captured x against t with a least squares parabola and a strip of residuals.":
   "x capturada en función de t con una parábola por mínimos cuadrados y una franja de residuos.",
-"Capture at least three rows.":
-  "Captura al menos tres filas.",
+"Record at least three rows.":
+  "Registra al menos tres filas.",
 "Plotted readings with fitted values":
   "Lecturas graficadas con valores ajustados",
 "fit (m)":
   "ajuste (m)",
-"Capture stores the time and position shown at the marker (t to {#} s, x to {#} m). Cells can be edited.":
-  "Capturar guarda el tiempo y la posición que se muestran en el marcador (t con resolución de {#} s, x con resolución de {#} m). Las celdas se pueden editar.",
+"Record reading stores the time and position shown at the marker (t to {#} s, x to {#} m). Cells can be edited.":
+  "Registrar lectura guarda el tiempo y la posición que se muestran en el marcador (t con resolución de {#} s, x con resolución de {#} m). Las celdas se pueden editar.",
 "The fit is x = x₀ + v₀t + ½at² by least squares over your rows, for one stage of constant acceleration. Capture rows from one stage only.":
   "El ajuste es x = x₀ + v₀t + ½at² por mínimos cuadrados con tus filas, para una etapa de aceleración constante. Captura filas de una sola etapa.",
 "Blind hides the velocity and acceleration graphs, their readouts, the tangent lines, the areas, the stage settings and the a and v₀ from your fit, leaving the position graph, as from a motion detector. Work out v and a from it.":

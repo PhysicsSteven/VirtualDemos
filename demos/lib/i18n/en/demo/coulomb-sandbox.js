@@ -66,7 +66,7 @@ VDI18N.add('en', 'demo/coulomb-sandbox', [
 "Captured probe readings",
 "E direction, degrees from +x",
 "Dir °",
-"Capture stores the probe position and the values shown above, rounded as displayed, with the charges that produced them (listed in the CSV header). Cells can be edited; rows stay through setup changes until Clear. Press C on the field to capture.",
+"Record reading stores the probe position and the values shown above, rounded as displayed, with the charges that produced them (listed in the CSV header). Cells can be edited; rows stay through setup changes until Clear. Press C on the field to capture.",
 "Blind hides the field lines, the equipotentials, the potential shading, the 3D landscape, the field map data table and the potential energy readouts. The charges, the grid and the probe stay, so students map the field from probe readings.",
 "Potential shading",
 "Equipotentials",

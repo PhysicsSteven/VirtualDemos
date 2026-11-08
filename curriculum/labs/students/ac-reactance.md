@@ -15,7 +15,7 @@ Textbook: OpenStax *University Physics*, Vol. 2, §§15.1 and 15.2. Access for f
 - AC mode shows the steady state: the response to a sine wave source $$v = V_0\sin(2\pi f t)$$ after the switch on transient has died away. The parts and meters are ideal, and the circuit is solved exactly with complex impedances.
 - Meters read rms values. The readout under Source and frequency gives the peak current $$I_0$$, the rms current, the impedance $$\lvert Z\rvert = V_0/I_0$$ the source sees and the phase $$\phi$$ of the source voltage ahead of its current (positive when the current lags).
 - The oscilloscope shows the voltage and current traces with their phasors beside them, turning at the source frequency. Under Graphs, Reactance plots $$\lvert Z\rvert$$ and the reactance of each capacitor and inductor against frequency on logarithmic scales, and Power in time plots $$p = vi$$.
-- Capture reading under Frequency response readings stores the frequency, the source's peak and rms voltage, the rms current, the phase, $$\lvert Z\rvert$$, the average power, the part values and the rms voltage across each part, as the panel shows them. Export to worksheet sends them to the Data table below; Clear starts a new series, which goes into a new copy of the table.
+- Record reading under Frequency response readings stores the frequency, the source's peak and rms voltage, the rms current, the phase, $$\lvert Z\rvert$$, the average power, the part values and the rms voltage across each part, as the panel shows them. Export to worksheet sends them to the Data table below; Clear starts a new series, which goes into a new copy of the table.
 - Blind hides the reactance formulas, the model curves and the predictions; the meters and readouts still read.
 
 </details>

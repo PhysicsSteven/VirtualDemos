@@ -8,7 +8,7 @@ VDI18N.add('en', 'ws/stress-strain', [
 "Finding the Elastic Properties of a Wire | VirtualDemos",
 "Finding the Elastic Properties of a Wire",
 "Hang slotted masses from the tray under the wire; up and down arrows on the picture add or take off {#} kg (Shift: {#} kg).",
-"Capture stores the hanging mass and the dial gauge reading (to {#} mm), with the wire’s diameter. The fit is a straight line of the load \\(F = mg\\) against \\(\\Delta L\\); \\(Y = \\text{slope}\\times L/A\\). Use only loads below the yield point. The fit uses the rows from the wire now hanging; New wire starts afresh (the CSV keeps every row).",
+"Record reading stores the hanging mass and the dial gauge reading (to {#} mm), with the wire’s diameter. The fit is a straight line of the load \\(F = mg\\) against \\(\\Delta L\\); \\(Y = \\text{slope}\\times L/A\\). Use only loads below the yield point. The fit uses the rows from the wire now hanging; New wire starts afresh (the CSV keeps every row).",
 "Blind hides Young’s modulus, the yield and breaking stresses, the stress and strain readouts, the material curve and Y from the fit, leaving the load, the diameter and the dial gauge. The Mystery metal is always blind about its own properties.",
 "Stress \\(\\sigma = F/A\\); strain \\(\\varepsilon = \\Delta L/L\\); \\(Y = \\sigma/\\varepsilon\\) (elastic)",
 "Model: an idealized stress against strain curve: straight to the yield stress, then hardening up to the tensile strength, breaking at the fracture strain; unloading follows a line parallel to the elastic one, leaving a permanent stretch. Values are typical for each metal; real samples vary. Necking, creep and the wire’s own weight are ignored.",

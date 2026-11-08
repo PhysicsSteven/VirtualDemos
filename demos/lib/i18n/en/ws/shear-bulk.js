@@ -9,7 +9,7 @@ VDI18N.add('en', 'ws/shear-bulk', [
 "Choose the Shear or Bulk test at the top of the panel. A slider under the picture sets the force on the load cell; up and down arrows on the picture change it by {#} kN (Shift: {#} kN).",
 "Shear: a {#} cm cube is bonded between two steel plates. The base is held and the top plate is pushed sideways; a displacement sensor reads how far the top plate moves, to {#} µm.",
 "Bulk: a press pushes a piston into a sealed steel cell with a {#} cm bore. A liquid fills the cell {#} cm deep, and a dial gauge reads how far the piston moves, to {#} mm. A metal sample is a {#} cm cube sitting in oil inside the cell, with a strain gauge on one face that reads the change in its edge length per unit length, to {#} microstrain (µε, one part in a million).",
-"Capture stores the force and the reading; the fit in the panel is a straight line of force against the reading for the sample now loaded.",
+"Record reading stores the force and the reading; the fit in the panel is a straight line of force against the reading for the sample now loaded.",
 "Blind hides the moduli, the stress and strain readouts and the material line, leaving the load cell and the displacement or strain readings. The Mystery metal and the Mystery liquid keep their moduli hidden.",
 "Linear elastic samples with the shear and bulk moduli of OpenStax Vol. {#}, Table {#} (approximate values). The Mystery metal is the same alloy as in the tension test.",
 "The block shears uniformly; bending of the block and give in the plates are ignored. The cell’s walls are rigid, and the pressure rise in the cell is the piston force over the piston area.",

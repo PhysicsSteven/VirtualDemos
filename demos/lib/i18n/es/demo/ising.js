@@ -180,7 +180,7 @@ VDI18N.add('es', 'demo/ising', {
   "susceptibilidad χ",
 "Onsager":
   "Onsager",
-"No readings yet: Measure, then Capture, or Scan T":
+"No readings yet: Measure, then Record reading, or Scan T":
   "Aún no hay lecturas: Medir y luego Capturar, o Barrer T",
 "field h":
   "campo h",

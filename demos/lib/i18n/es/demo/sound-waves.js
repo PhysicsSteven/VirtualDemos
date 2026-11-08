@@ -156,7 +156,7 @@ VDI18N.add('es', 'demo/sound-waves', {
   "Nivel sonoro β",
 "<span>Δp is largest where s passes through zero: the pressure wave is {#}° (a quarter wavelength) behind the displacement.</span>":
   "<span>Δp es máximo donde s pasa por cero: la onda de presión va {#}° (un cuarto de longitud de onda) detrás del desplazamiento.</span>",
-"Record this reading":
+"Record reading":
   "Registrar esta lectura",
 "No readings yet. Clap, then record.":
   "Aún no hay lecturas. Da una palmada y luego registra.",

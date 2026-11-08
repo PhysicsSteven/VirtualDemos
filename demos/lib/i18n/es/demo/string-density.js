@@ -96,7 +96,7 @@ VDI18N.add('es', 'demo/string-density', {
   "Borrar la traza",
 "Each frequency you try adds a point: the largest amplitude on the string. The peaks are the resonances.":
   "Cada frecuencia que pruebas agrega un punto: la mayor amplitud en la cuerda. Los picos son las resonancias.",
-"Record this reading":
+"Record reading":
   "Registrar esta lectura",
 "No readings yet. Find a resonance, then record.":
   "Aún no hay lecturas. Encuentra una resonancia y luego registra.",

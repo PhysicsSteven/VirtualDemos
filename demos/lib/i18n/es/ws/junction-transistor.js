@@ -28,8 +28,8 @@ VDI18N.add('es', 'ws/junction-transistor', {
   "Los LED usan voltajes directos de catálogo a {#} mA (rojo {#} V, verde {#} V, azul {#} V), con un factor de idealidad supuesto de {#} y sin resistencia en serie.",
 "The circuit is solved exactly for the diode and transistor equations (Newton’s method, to better than {#}⁻¹⁰ V). Meters are ideal.":
   "El circuito se resuelve exactamente para las ecuaciones del diodo y del transistor (método de Newton, a mejor que {#}⁻¹⁰ V). Los medidores son ideales.",
-"Capture reading under Readings stores what every meter shows, to {#} significant figures, with the part values. Export to worksheet sends a DC series that contains a diode or a transistor to this worksheet; Clear starts a new series, which goes into a new copy of the table.":
-  "Capturar lectura, en Lecturas, guarda lo que muestra cada medidor, con {#} cifras significativas, junto con los valores de las piezas. Exportar a la hoja envía a esta hoja de trabajo una serie de CD que contenga un diodo o un transistor; Borrar empieza una nueva serie, que va a una nueva copia de la tabla.",
+"Record reading under Readings stores what every meter shows, to {#} significant figures, with the part values. Export to worksheet sends a DC series that contains a diode or a transistor to this worksheet; Clear starts a new series, which goes into a new copy of the table.":
+  "Registrar lectura, en Lecturas, guarda lo que muestra cada medidor, con {#} cifras significativas, junto con los valores de las piezas. Exportar a la hoja envía a esta hoja de trabajo una serie de CD que contenga un diodo o un transistor; Borrar empieza una nueva serie, que va a una nueva copia de la tabla.",
 "Blind hides the transistor’s base and collector currents and its region of operation; the meters still read.":
   "A ciegas oculta las corrientes de base y de colector del transistor y su región de operación; los medidores siguen leyendo.",
 "Measure the current–voltage law of a real silicon diode and find how far it is from the ideal diode, then measure the current gain of a junction transistor and watch it change from an amplifier into a switch.":

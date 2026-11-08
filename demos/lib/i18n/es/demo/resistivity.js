@@ -224,14 +224,14 @@ VDI18N.add('es', 'demo/resistivity', {
   "R en función de T",
 "The captured readings with a least squares line and residuals.":
   "Las lecturas capturadas con una recta de mínimos cuadrados y residuos.",
-"Capture at least two lengths of this wire at {#} °C.":
-  "Captura al menos dos longitudes de este alambre a {#} °C.",
+"Record at least two lengths of this wire at {#} °C.":
+  "Registra al menos dos longitudes de este alambre a {#} °C.",
 "Plotted points":
   "Puntos graficados",
 "resid.":
   "resid.",
-"Capture stores L, the meter readings (V to {#} significant figures, I as set to {#}), the gauge and the temperature. R against L uses rows at one temperature and gauge: ρ = slope × A. R against T uses rows at one length and gauge: α = slope / R({#} °C).":
-  "Capturar guarda L, las lecturas de los medidores (V con {#} cifras significativas, I tal como se fijó a {#}), el calibre y la temperatura. R en función de L usa filas a una sola temperatura y calibre: ρ = pendiente × A. R en función de T usa filas a una sola longitud y calibre: α = pendiente / R({#} °C).",
+"Record reading stores L, the meter readings (V to {#} significant figures, I as set to {#}), the gauge and the temperature. R against L uses rows at one temperature and gauge: ρ = slope × A. R against T uses rows at one length and gauge: α = slope / R({#} °C).":
+  "Registrar lectura guarda L, las lecturas de los medidores (V con {#} cifras significativas, I tal como se fijó a {#}), el calibre y la temperatura. R en función de L usa filas a una sola temperatura y calibre: ρ = pendiente × A. R en función de T usa filas a una sola longitud y calibre: α = pendiente / R({#} °C).",
 "Blind hides ρ, α, the wire's resistance per meter, and ρ and α from the fits, leaving the meters, the rule and the settings. The Mystery wire always hides its own values. Inside the wire, Blind also hides J, v_d, the transit time, I/e, the expected count and the collision time; the count, the drift so far and the real time stay, so v_d can be measured. In the Wire view, Blind hides the drift speed, the expected dot rate and the slope E of the potential (the Mystery wire hides E too).":
   "A ciegas oculta ρ, α, la resistencia por metro del alambre, y ρ y α de los ajustes, y deja los medidores, la regla y los ajustes. El Alambre misterioso siempre oculta sus propios valores. En Dentro del alambre, A ciegas también oculta J, v_d, el tiempo de tránsito, I/e, la cuenta esperada y el tiempo entre colisiones; la cuenta, la deriva hasta ahora y el tiempo real se mantienen, para que v_d se pueda medir. En la vista Alambre, A ciegas oculta la velocidad de deriva, el ritmo esperado de puntos y la pendiente E del potencial (el Alambre misterioso también oculta E).",
 "Model: R = ρL/A with ρ linear in temperature; the voltmeter is ideal (four wire, so the clips and leads add nothing) and the current is set by a constant current supply. Resistivities are handbook values at {#} °C; real alloys vary by a few percent.":
@@ -332,8 +332,8 @@ VDI18N.add('es', 'demo/resistivity', {
   "no se usa",
 "YBCO (yttrium barium copper oxide), the {#} ceramic: superconducting below {#} K, above the {#} K of liquid nitrogen.":
   "YBCO (óxido de itrio, bario y cobre), la cerámica de {#}: superconductora por debajo de {#} K, por encima de los {#} K del nitrógeno líquido.",
-"Capture at least two temperatures of this wire at L = {#} m.":
-  "Captura al menos dos temperaturas de este alambre con L = {#} m.",
+"Record at least two temperatures of this wire at L = {#} m.":
+  "Registra al menos dos temperaturas de este alambre con L = {#} m.",
 "YBCO ceramic, cooling":
   "Cerámica YBCO, enfriándose",
 "Stop cooling":

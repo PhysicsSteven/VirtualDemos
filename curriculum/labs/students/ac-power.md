@@ -17,7 +17,7 @@ Textbook: OpenStax *University Physics*, Vol. 2, §§15.1 and 15.4. Access for f
 - In Power factor the load is a 10 Ω resistor in series with a 50 mH inductor, a simple model of a motor or other coil. Ammeter A1 reads the current from the source and A2 the current into the load. Closing switch S1 connects capacitor C1 across the load.
 - Meters read rms values. The readout under Source and frequency gives the phase $$\phi$$ of the source voltage ahead of its current (positive when the current lags), the power factor and the average power the source delivers.
 - Under Graphs, Power in time plots $$p = vi$$ into the selected part over two periods, with its average; with nothing selected it plots the power out of the source. Power, in the same place, plots the average power against frequency.
-- Capture reading stores the frequency, the source's peak and rms voltage, the rms source current, the phase, $$\lvert Z\rvert$$, the average power, every part value and the switch position, as the panel shows them. Export to worksheet sends them to the Data table below; Clear starts a new series, which goes into a new copy of the table.
+- Record reading stores the frequency, the source's peak and rms voltage, the rms source current, the phase, $$\lvert Z\rvert$$, the average power, every part value and the switch position, as the panel shows them. Export to worksheet sends them to the Data table below; Clear starts a new series, which goes into a new copy of the table.
 - Blind hides the predictions in the setup notes; the meters and readouts still read.
 
 </details>

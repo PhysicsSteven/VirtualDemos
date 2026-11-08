@@ -78,7 +78,6 @@ VDI18N.add('en', 'common', [
 "No readings yet",
 "<a>Physics II</a>",
 "Blind",
-"Capture reading",
 "Captured readings",
 "Plot and fit",
 "Show data table",

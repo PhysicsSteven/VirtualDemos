@@ -13,7 +13,7 @@ Textbook: OpenStax *University Physics*, Vol. 1, §12.3. Access for free at http
 - Choose the Shear or Bulk test at the top of the panel. A slider under the picture sets the force on the load cell; up and down arrows on the picture change it by 0.5 kN (Shift: 5 kN).
 - Shear: a 5.00 cm cube is bonded between two steel plates. The base is held and the top plate is pushed sideways; a displacement sensor reads how far the top plate moves, to 0.1 µm.
 - Bulk: a press pushes a piston into a sealed steel cell with a 4.00 cm bore. A liquid fills the cell 10.00 cm deep, and a dial gauge reads how far the piston moves, to 0.001 mm. A metal sample is a 2.000 cm cube sitting in oil inside the cell, with a strain gauge on one face that reads the change in its edge length per unit length, to 0.1 microstrain (µε, one part in a million).
-- Capture stores the force and the reading; the fit in the panel is a straight line of force against the reading for the sample now loaded.
+- Record reading stores the force and the reading; the fit in the panel is a straight line of force against the reading for the sample now loaded.
 - Blind hides the moduli, the stress and strain readouts and the material line, leaving the load cell and the displacement or strain readings. The Mystery metal and the Mystery liquid keep their moduli hidden.
 
 **What the demo models.**

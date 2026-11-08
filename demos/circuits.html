@@ -344,13 +344,13 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
 
       <section data-for="dc">
         <h2>Readings</h2>
-        <button type="button" class="btn primary" id="captureD">Capture reading</button>
+        <button type="button" class="btn primary" id="captureD">Record reading</button>
         <div class="row2">
           <button type="button" class="btn" id="expD">Export to worksheet</button>
           <button type="button" class="btn" id="clearD">Clear</button>
         </div>
         <div class="twrap"><table class="rows" id="tblD"><thead></thead><tbody></tbody></table></div>
-        <details class="more"><summary>More about this</summary><p class="hint" id="tblDHint">Capture stores every meter reading as the meters show it (3 significant figures) with the part values and switch positions. The table shows four meters; the CSV has all. DC keeps its own table.</p></details>
+        <details class="more"><summary>More about this</summary><p class="hint" id="tblDHint">Record reading stores every meter reading as the meters show it (3 significant figures) with the part values and switch positions. The table shows four meters; the CSV has all. DC keeps its own table.</p></details>
         <p class="hint" aria-live="polite" id="statD"></p>
       </section>
 
@@ -388,13 +388,13 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
 
       <section data-for="time">
         <h2>Readings</h2>
-        <button type="button" class="btn primary" id="captureT">Capture reading</button>
+        <button type="button" class="btn primary" id="captureT">Record reading</button>
         <div class="row2">
           <button type="button" class="btn" id="expT">Export to worksheet</button>
           <button type="button" class="btn" id="clearT">Clear</button>
         </div>
         <div class="twrap"><table class="rows" id="tblT"><thead></thead><tbody></tbody></table></div>
-        <details class="more"><summary>More about this</summary><p class="hint" id="tblTHint">Capture stores the Time cursor reading as shown (no cursor: one is put at the present time). The table shows t and three channels; the CSV adds the energies and part values. In time keeps its own table.</p></details>
+        <details class="more"><summary>More about this</summary><p class="hint" id="tblTHint">Record reading stores the Time cursor reading as shown (no cursor: one is put at the present time). The table shows t and three channels; the CSV adds the energies and part values. In time keeps its own table.</p></details>
         <p class="hint" aria-live="polite" id="statT"></p>
       </section>
 
@@ -443,14 +443,14 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
 
       <section data-for="ac">
         <h2>Frequency response readings</h2>
-        <button type="button" class="btn primary" id="capture">Capture reading</button>
+        <button type="button" class="btn primary" id="capture">Record reading</button>
         <div class="row2">
           <button type="button" class="btn" id="expTab">Export to worksheet</button>
           <button type="button" class="btn" id="clearTab">Clear</button>
         </div>
         <p class="hint" aria-live="polite" id="statTab" hidden></p>
         <div class="twrap"><table class="rows" id="tbl"><thead><tr><th>#</th><th>f (Hz)</th><th>I<sub>rms</sub> (mA)</th><th>φ (°)</th><th>P (W)</th><th><span class="sr">Delete</span></th></tr></thead><tbody></tbody></table></div>
-        <details class="more"><summary>More about this</summary><p class="hint" id="tblHint">Capture stores the readings at the current frequency, rounded as the panel above shows them. The table shows four; the CSV also has V<sub>0</sub>, |Z|, the part values and the rms voltage across each part. Rows can be edited or deleted.</p></details>
+        <details class="more"><summary>More about this</summary><p class="hint" id="tblHint">Record reading stores the readings at the current frequency, rounded as the panel above shows them. The table shows four; the CSV also has V<sub>0</sub>, |Z|, the part values and the rms voltage across each part. Rows can be edited or deleted.</p></details>
       </section>
 
       <section data-for="time ac">
@@ -3985,7 +3985,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     c.strokeStyle = T.ink; c.lineWidth = 1.4;
     for (const [f, I] of pts) { const x = X(f), y = Y(I), q = 3.2 * Math.min(ps, 1.3); if (x < x0 - 1 || x > x1 + 1 || y < y0 - 1) continue; c.strokeRect(x - q, y - q, 2 * q, 2 * q); }
     if (pts.length || S.blind) {
-      const q = 3.2 * Math.min(ps, 1.3), lab = pts.length ? 'your readings' : 'Blind: capture readings to plot them here';
+      const q = 3.2 * Math.min(ps, 1.3), lab = pts.length ? 'your readings' : 'Blind: record readings to plot them here';
       c.font = `400 ${fs * 0.88}px ${T.ui}`; const lw = c.measureText(lab).width, lx = x1 - lw - 6, ly = y0 + 10 + (pts.length && !S.blind && reso.peak && reso.peak.bw ? fs * 1.6 : 0);
       haloBox(c, lx - 2 * q - 10, ly - fs * 0.65, lw + 2 * q + 14, fs * 1.3, withA(T.surface, 0.85));
       if (pts.length) c.strokeRect(lx - 2 * q - 6, ly - q, 2 * q, 2 * q);
@@ -4120,7 +4120,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     for (const [f, v] of pts) { const x = X(f), y = Y(v), q = 3.2 * Math.min(ps, 1.3); if (x < x0 - 1 || x > x1 + 1) continue; c.strokeRect(x - q, y - q, 2 * q, 2 * q); }
     c.restore();
     if (pts.length || blind) {
-      const q = 3.2 * Math.min(ps, 1.3), lab = pts.length ? 'your readings' + (kind === 'X' ? ', |Z|' : '') : 'Blind: capture readings to plot them here';
+      const q = 3.2 * Math.min(ps, 1.3), lab = pts.length ? 'your readings' + (kind === 'X' ? ', |Z|' : '') : 'Blind: record readings to plot them here';
       c.font = `400 ${fs * 0.88}px ${T.ui}`; const lw = c.measureText(lab).width, lx = x1 - lw - 6, ly = y1 - 12 - (kind === 'X' ? 0 : 0);
       haloBox(c, lx - 2 * q - 10, ly - fs * 0.65, lw + 2 * q + 14, fs * 1.3, withA(T.surface, 0.85));
       c.strokeStyle = T.ink; if (pts.length) c.strokeRect(lx - 2 * q - 6, ly - q, 2 * q, 2 * q);
@@ -5288,8 +5288,8 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
   const stat = (id, msg) => { $(id).textContent = msg; };
   const timeKeys = () => ['t_s', ...unionKeys(readT, (r) => Object.keys(r.cells).filter((k) => colInfo.has(k) && k !== 't_s' && !/_J$/.test(k))).slice(0, 3)];
   const dcKeys = () => unionKeys(readD, (r) => Object.keys(r.cells)).slice(0, 4);
-  function renderT() { renderLab('tblT', readT, timeKeys(), 'No readings yet. Place the time cursor, then press Capture reading.'); }
-  function renderD() { renderLab('tblD', readD, dcKeys(), 'No readings yet. Press Capture reading to store the meter readings.'); }
+  function renderT() { renderLab('tblT', readT, timeKeys(), 'No readings yet. Place the time cursor, then press Record reading.'); }
+  function renderD() { renderLab('tblD', readD, dcKeys(), 'No readings yet. Press Record reading to store the meter readings.'); }
   function captureTime() {
     if (S.mode !== 'time' || !run || !run.sys || !run.sys.ok || !run.x) { stat('statT', 'Nothing to read: the circuit cannot run.'); return; }
     if (!cursor) setCursor(run.t, 'any');
@@ -5541,7 +5541,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
   }
   function renderRows() {
     const tb = $('tbl').querySelector('tbody');
-    if (!readings.length) { tb.innerHTML = '<tr><td class="empty" colspan="6">No readings yet. Set a frequency, then press Capture reading.</td></tr>'; return; }
+    if (!readings.length) { tb.innerHTML = '<tr><td class="empty" colspan="6">No readings yet. Set a frequency, then press Record reading.</td></tr>'; return; }
     const esc = (t) => String(t).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
     tb.innerHTML = readings.map((r, i) => {
       const inp = (f, lab, cls) => `<td><input${cls ? ` class="${cls}"` : ''} aria-label="${lab}, row ${i + 1}" data-i="${i}" data-f="${f}" value="${esc(r[f])}" inputmode="decimal" spellcheck="false"></td>`;

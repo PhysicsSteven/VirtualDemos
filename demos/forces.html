@@ -180,7 +180,7 @@ table.rows input:focus { border-color: var(--accent); }
       <section>
         <h2>Readings</h2>
         <div class="btnrow">
-          <button type="button" class="btn primary" id="capture">Capture reading</button>
+          <button type="button" class="btn primary" id="capture">Record reading</button>
           <button type="button" class="btn" id="exportCsv">Export to worksheet</button>
           <button type="button" class="btn" id="clearRows">Clear</button>
         </div>
@@ -192,7 +192,7 @@ table.rows input:focus { border-color: var(--accent); }
         <button type="button" class="btn" id="fitTblBtn" aria-expanded="false" aria-controls="fitWrap">Show data table</button>
         <div class="twrap" id="fitWrap" hidden><table class="rows" id="fitTbl"><caption class="sr">Plotted points</caption><thead><tr><th>tan θ</th><th>a/cos θ</th><th>fit</th><th>resid.</th></tr></thead><tbody></tbody></table></div>
         <details class="more"><summary>More about this</summary>
-          <p class="hint">Use <b>Release at the top mark</b>: the timer reads the time for the block to slide 1.000 m from rest (to 0.001 s). Capture stores θ, m, m₂, F and that time; a = 2d/t² is worked out from your time.</p>
+          <p class="hint">Use <b>Release at the top mark</b>: the timer reads the time for the block to slide 1.000 m from rest (to 0.001 s). Record reading stores θ, m, m₂, F and that time; a = 2d/t² is worked out from your time.</p>
           <p class="hint">Sliding down with no push or hanging mass, a = g sin θ − μk g cos θ, so a/cos θ = g tan θ − μk g: a straight line with slope g and intercept −μk g. The fit uses only rows with F = 0 and m₂ = 0.</p>
         </details>
         </div></details>
@@ -1029,7 +1029,7 @@ table.rows input:focus { border-color: var(--accent); }
   function fit() {
     const pts = fitPoints(), F = pts.length >= 2 ? fitLine(pts.map((q) => q[0]), pts.map((q) => q[1])) : null;
     let h;
-    if (!F) h = '<div class="wide"><dt>Fit</dt><dd class="ok">Capture at least two rows from sliding down the ramp at different angles, with F = 0 and no hanging mass.</dd></div>';
+    if (!F) h = '<div class="wide"><dt>Fit</dt><dd class="ok">Record at least two rows from sliding down the ramp at different angles, with F = 0 and no hanging mass.</dd></div>';
     else {
       const pm = (v, e, d) => `${f(v, d)}${isFinite(e) ? ` ± ${f(e, d)}` : ''}`;
       h = `<div><dt>Slope (m/s²)</dt><dd>${pm(F.b, F.seB, 3)}</dd></div><div><dt>Intercept (m/s²)</dt><dd>${pm(F.a, F.seA, 3)}</dd></div>`;

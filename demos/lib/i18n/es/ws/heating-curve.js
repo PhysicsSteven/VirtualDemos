@@ -20,8 +20,8 @@ VDI18N.add('es', 'ws/heating-curve', {
   "Los calores específicos y los calores latentes son los del libro de texto (Tablas {#} y {#}), así que tus resultados pueden compararse con ellos.",
 "The speed buttons run the clock {#}, {#} or {#} times faster than real time. The timer always shows the time in the experiment, so the speed does not change your results.":
   "Los botones de rapidez hacen correr el reloj {#}, {#} o {#} veces más rápido que el tiempo real. El cronómetro siempre muestra el tiempo del experimento, así que la rapidez no cambia tus resultados.",
-"Capture reading stores the time, temperature and balance reading shown. Export to worksheet sends the readings to the Data table below; Clear starts a new series, which goes into a new copy of the table.":
-  "Capturar lectura guarda el tiempo, la temperatura y la lectura de la balanza mostrados. Exportar a la hoja envía las lecturas a la tabla de datos de abajo; Borrar empieza una nueva serie, que va a una nueva copia de la tabla.",
+"Record reading stores the time, temperature and balance reading shown. Export to worksheet sends the readings to the Data table below; Clear starts a new series, which goes into a new copy of the table.":
+  "Registrar lectura guarda el tiempo, la temperatura y la lectura de la balanza mostrados. Exportar a la hoja envía las lecturas a la tabla de datos de abajo; Borrar empieza una nueva serie, que va a una nueva copia de la tabla.",
 "Changing the substance, mass, heater power or starting temperature starts the run again from the beginning.":
   "Cambiar la sustancia, la masa, la potencia del calentador o la temperatura inicial reinicia la corrida desde el principio.",
 "Blind hides the heating curve under the picture, so you can make your own graph first.":

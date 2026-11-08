@@ -1,5 +1,5 @@
 // How this works: Spin Resonance, worksheet "Spin Resonance". The first reading: DPPH in the electron probe on MID (bench seed
-// 4127), Blind on, cursor A at the start of the CH1 ramp and B at the center of the CH2 peak, then Capture reading. The cursors
+// 4127), Blind on, cursor A at the start of the CH1 ramp and B at the center of the CH2 peak, then Record reading. The cursors
 // are found from the trace the way the key's capture finds them (the ramp extended back to 0 V; the middle of the peak above half
 // height), then placed on the 0.05 ms step the cursors move in at 5 ms/div. Expected: hν = gμ_B B with g = 2.0036 gives
 // B = 2.1849 mT at 61.27 MHz; the key's MID readings are 23.84 and 23.80 ms, B 2.1873 and 2.1837 mT.

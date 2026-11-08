@@ -14,7 +14,7 @@ Textbook: OpenStax *University Physics*, Vol. 1, §§3.1–3.6. Access for free 
 
 - Three stages, each with a constant acceleration for a set time. Set a stage's time to 0 to skip it.
 - Press Start run, then drag the cart (or hold ← and →, with Shift to go faster) so its graph follows the dashed target for 10 s. The velocity and acceleration are worked out from the position samples, the way a motion detector does it, so quick jerks show up as spikes.
-- Move the time marker by dragging on a graph, or with the left and right arrow keys on the picture (0.1 s a press, 1 s with Shift). **Capture reading** stores the time and position shown at the marker (t to 0.01 s, x to 0.01 m). Cells can be edited.
+- Move the time marker by dragging on a graph, or with the left and right arrow keys on the picture (0.1 s a press, 1 s with Shift). **Record reading** stores the time and position shown at the marker (t to 0.01 s, x to 0.01 m). Cells can be edited.
 - **Plot and fit** fits $$x = c_0 + c_1 t + c_2 t^2$$ by least squares over your rows and shows the residuals, for one stage of constant acceleration. Capture rows from one stage only. The worksheet's graph fits the same quadratic to position against $$t$$ (choose a quadratic fit), with all three coefficients and their uncertainties and the residuals, or a straight line to your estimated slopes against $$t$$, whose slope is $$a$$. Fit each run in the worksheet.
 - Blind hides the velocity and acceleration graphs, their readouts, the tangent lines, the areas, the stage settings and the $$a$$ and $$v_0$$ from your fit, leaving the position graph, as from a motion detector. Work out $$v$$ and $$a$$ from it.
 
@@ -48,7 +48,7 @@ With a real detector, clear the walking area and protect the cart from leaving t
 
 **Several stages.** Make a run that speeds up, cruises and slows to rest. Before revealing the velocity graph, sketch it from the position graph. Measure the displacement in each stage. Compare their sum with the signed area under velocity. Do not fit one parabola across all three stages.
 
-**Free fall.** Toss a ball vertically, or use the virtual setup. Capture at least eight points from launch to just before landing, with points on both sides of the highest point. Fit height against time. Infer $$g$$, initial upward speed, time to the highest point and maximum height. Treat the motion after landing separately.
+**Free fall.** Toss a ball vertically, or use the virtual setup. Record at least eight points from launch to just before landing, with points on both sides of the highest point. Fit height against time. Infer $$g$$, initial upward speed, time to the highest point and maximum height. Treat the motion after landing separately.
 
 **Graph matching.** Walk in front of a real detector, or move the virtual cart, to match a target position graph. Describe the required direction and speed before starting. Repeat the same target once; then try a velocity target. Explain the difference between matching a height on a position graph and matching a height on a velocity graph.
 

@@ -146,8 +146,8 @@ VDI18N.add('es', 'demo/electron-diffraction', {
   "Exportar CSV",
 "Meter kV":
   "kV del medidor",
-"Capture stores the kV meter reading and your own D₁ and D₂ from the marks, never the true values. You can edit them. Each row keeps the tool it was read with.":
-  "Capturar guarda la lectura del medidor de kV y tus propios D₁ y D₂ a partir de las marcas, nunca los valores reales. Puedes editarlos. Cada fila conserva la herramienta con la que se leyó.",
+"Record reading stores the kV meter reading and your own D₁ and D₂ from the marks, never the true values. You can edit them. Each row keeps the tool it was read with.":
+  "Registrar lectura guarda la lectura del medidor de kV y tus propios D₁ y D₂ a partir de las marcas, nunca los valores reales. Puedes editarlos. Cada fila conserva la herramienta con la que se leyó.",
 "<span>Formula for d</span>":
   "<span>Fórmula para d</span>",
 "Formula for d":

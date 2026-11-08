@@ -82,10 +82,10 @@ VDI18N.add('es', 'demo/rotational-dynamics', {
   "Aún no hay lecturas. Suelta, deja que caiga, captura.",
 "String torque against angular acceleration for the captured rows, with a least squares line and residuals.":
   "Torca de la cuerda en función de la aceleración angular para las filas capturadas, con una recta de mínimos cuadrados y residuos.",
-"Capture at least two drops (different m or r) with this load: none.":
-  "Captura al menos dos caídas (con m o r distintos) con esta carga: ninguna.",
-"Capture stores m, r, what is on the table and the timer reading for the {#} m drop ({#} s). From each row: a = 2h/t², α = a/r, and the string's torque τ = m(g − a)r. Plotting τ against α for one load gives a line: slope I, intercept the friction torque.":
-  "Capturar guarda m, r, lo que hay sobre la plataforma y la lectura del cronómetro para la caída de {#} m ({#} s). De cada fila: a = 2h/t², α = a/r, y la torca de la cuerda τ = m(g − a)r. Graficar τ en función de α para una carga da una recta: pendiente I, ordenada al origen la torca de fricción.",
+"Record at least two drops (different m or r) with this load: none.":
+  "Registra al menos dos caídas (con m o r distintos) con esta carga: ninguna.",
+"Record reading stores m, r, what is on the table and the timer reading for the {#} m drop ({#} s). From each row: a = 2h/t², α = a/r, and the string's torque τ = m(g − a)r. Plotting τ against α for one load gives a line: slope I, intercept the friction torque.":
+  "Registrar lectura guarda m, r, lo que hay sobre la plataforma y la lectura del cronómetro para la caída de {#} m ({#} s). De cada fila: a = 2h/t², α = a/r, y la torca de la cuerda τ = m(g − a)r. Graficar τ en función de α para una carga da una recta: pendiente I, ordenada al origen la torca de fricción.",
 "3D view: drag to turn it, scroll or pinch to zoom, double click to reset. The camera follows the hanging mass down. The timer starts as the mass leaves the start gate and stops when the bottom of the hanger reaches the stop gate, {#} m lower; the screen behind the turntable draws ω against time for the same run. The turntable, spool, loads, slotted masses and the drop are to scale; the string is drawn thicker than a real thread. Flat shows the older drawing; both show the same motion.":
   "Vista 3D: arrastra para girarla, desplaza o pellizca para acercar, doble clic para restablecer. La cámara sigue a la masa colgante hacia abajo. El cronómetro arranca cuando la masa sale de la compuerta de inicio y se detiene cuando la parte inferior del portamasas llega a la compuerta de parada, {#} m más abajo; la pantalla detrás de la plataforma dibuja ω en función del tiempo para la misma corrida. La plataforma, el carrete, las cargas, las masas ranuradas y la caída están a escala; la cuerda se dibuja más gruesa que un hilo real. Plano muestra el dibujo anterior; ambos muestran el mismo movimiento.",
 "Blind hides moments of inertia, the predicted motion, the energies and I from the fit, leaving the timer, the masses and the settings. The Mystery object always hides its I.":
@@ -112,24 +112,24 @@ VDI18N.add('es', 'demo/rotational-dynamics', {
   "<a><span>←</span> <span>Rotación y torca</span></a><a><span>Péndulos</span> <span>→</span></a>",
 "A solid disk, {#} kg and {#} cm in radius: I = ½MR².":
   "Un disco sólido de {#} kg y {#} cm de radio: I = ½MR².",
-"Capture at least two drops (different m or r) with this load: disk.":
-  "Captura al menos dos caídas (con m o r distintos) con esta carga: disco.",
+"Record at least two drops (different m or r) with this load: disk.":
+  "Registra al menos dos caídas (con m o r distintos) con esta carga: disco.",
 "A ring with the same mass and outer radius as the disk, but its mass far from the axis: I = ½M(R₁² + R₂²), nearly twice the disk.":
   "Un anillo con la misma masa y el mismo radio exterior que el disco, pero con su masa lejos del eje: I = ½M(R₁² + R₂²), casi el doble que el disco.",
-"Capture at least two drops (different m or r) with this load: ring.":
-  "Captura al menos dos caídas (con m o r distintos) con esta carga: anillo.",
+"Record at least two drops (different m or r) with this load: ring.":
+  "Registra al menos dos caídas (con m o r distintos) con esta carga: anillo.",
 "Two {#} kg masses at equal distances from the axis: I grows as d². Slide them out and time the drop again.":
   "Dos masas de {#} kg a distancias iguales del eje: I crece como d². Deslízalas hacia afuera y vuelve a medir el tiempo de la caída.",
-"Capture at least two drops (different m or r) with this load: pair at {#} cm.":
-  "Captura al menos dos caídas (con m o r distintos) con esta carga: par a {#} cm.",
+"Record at least two drops (different m or r) with this load: pair at {#} cm.":
+  "Registra al menos dos caídas (con m o r distintos) con esta carga: par a {#} cm.",
 "An unknown object. Measure the table with and without it and subtract.":
   "Un objeto desconocido. Mide la plataforma con él y sin él, y resta.",
 "I, accelerations, tension and energy":
   "I, aceleraciones, tensión y energía",
 "hidden: work them out from your timings":
   "ocultos: calcúlalos a partir de tus tiempos",
-"Capture at least two drops (different m or r) with this load: mystery.":
-  "Captura al menos dos caídas (con m o r distintos) con esta carga: misterio.",
+"Record at least two drops (different m or r) with this load: mystery.":
+  "Registra al menos dos caídas (con m o r distintos) con esta carga: misterio.",
 "Release and let the mass fall the full {#} m first.":
   "Suelta primero y deja que la masa caiga los {#} m completos.",
 "hanger {#} g + {#} g + {#} g = {#} g":

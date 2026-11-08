@@ -140,7 +140,7 @@ table.rows input:focus { border-color: var(--accent); }
       <section>
         <h2>Readings</h2>
         <div class="btnrow">
-          <button type="button" class="btn primary" id="capture">Capture reading</button>
+          <button type="button" class="btn primary" id="capture">Record reading</button>
           <button type="button" class="btn" id="exportCsv">Export to worksheet</button>
           <button type="button" class="btn" id="clearRows">Clear</button>
         </div>
@@ -150,7 +150,7 @@ table.rows input:focus { border-color: var(--accent); }
         <div class="plotbox"><canvas id="fitCan" role="img" aria-label="String torque against angular acceleration for the captured rows, with a least squares line and residuals."></canvas></div>
         <dl class="readout" id="fitOut"></dl>
         <details class="more"><summary>More about this</summary>
-          <p class="hint">Capture stores m, r, what is on the table and the timer reading for the 0.500 m drop (0.001 s). From each row: a = 2h/t², α = a/r, and the string's torque τ = m(g − a)r. Plotting τ against α for one load gives a line: slope I, intercept the friction torque.</p>
+          <p class="hint">Record reading stores m, r, what is on the table and the timer reading for the 0.500 m drop (0.001 s). From each row: a = 2h/t², α = a/r, and the string's torque τ = m(g − a)r. Plotting τ against α for one load gives a line: slope I, intercept the friction torque.</p>
         </details>
         </div></details>
       </section>
@@ -655,7 +655,7 @@ table.rows input:focus { border-color: var(--accent); }
     const key = loadKey(), pts = S.rows.filter((r) => r.load === key).map((r) => { const m = cellNum(r.m), rr = cellNum(r.r), t = cellNum(r.t); if (!(m > 0 && rr > 0 && t > 0)) return null; const q = fromRow(m, rr, t); return [q.alpha, q.tau]; }).filter(Boolean);
     const F = pts.length >= 2 ? fitLine(pts.map((q) => q[0]), pts.map((q) => q[1])) : null;
     let h;
-    if (!F) h = `<div class="wide"><dt>Fit</dt><dd class="ok">Capture at least two drops (different m or r) with this load: ${key}.</dd></div>`;
+    if (!F) h = `<div class="wide"><dt>Fit</dt><dd class="ok">Record at least two drops (different m or r) with this load: ${key}.</dd></div>`;
     else { h = `<div><dt>Intercept: friction torque</dt><dd>${sci(F.a, 2)} N·m</dd></div>`;
       h += hidden() ? `<div class="wide"><dt>Slope = I of the table and load</dt><dd class="ok">${S.blind ? 'hidden in Blind' : 'hidden for the Mystery object'}: read it from the slope</dd></div>` : `<div class="wide"><dt>Slope = I of the table and load</dt><dd>${sci(F.b, 4)}${isFinite(F.seB) ? ` ± ${sci(F.seB, 2)}` : ''} kg·m²</dd></div>`; }
     $('fitOut').innerHTML = h; drawFit(pts, F);

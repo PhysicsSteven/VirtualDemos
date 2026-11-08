@@ -12,7 +12,7 @@ Textbook: OpenStax *University Physics*, Vol. 1, §14.7. Access for free at http
 
 - Choose Flow in a pipe under Experiment. Pick the liquid and the pipe, and set the flow with the outlet valve under the picture (up and down arrows on the picture change it by 1%, Shift by 10%).
 - Start collecting swings the outlet over the measuring cylinder and starts the stopwatch; Stop collecting stops both. Empty the cylinder before the next reading. The stopwatch runs faster with ×10 or ×100, but its reading is always the real time.
-- Capture stores the cylinder volume (to 1 mL), the stopwatch time (to 0.01 s), the pressure gauge (to 0.1 Pa) and what the dye is doing, with the liquid, pipe and valve setting.
+- Record reading stores the cylinder volume (to 1 mL), the stopwatch time (to 0.01 s), the pressure gauge (to 0.1 Pa) and what the dye is doing, with the liquid, pipe and valve setting.
 - Blind hides the flow rate, speed, Reynolds number, regime and viscosity, leaving the cylinder, the stopwatch and the pressure gauge. The Mystery liquid keeps its viscosity hidden; choosing it again draws a new one.
 
 **What the demo models.**

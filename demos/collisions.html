@@ -266,14 +266,14 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
       <section>
         <h2>Readings</h2>
         <div class="btnrow">
-          <button type="button" class="btn primary" id="capture">Capture reading</button>
+          <button type="button" class="btn primary" id="capture">Record reading</button>
           <button type="button" class="btn" id="exportCsv">Export to worksheet</button>
           <button type="button" class="btn" id="clearRows">Clear</button>
         </div>
         <p class="status" id="capStatus" aria-live="polite"></p>
         <div class="twrap"><table class="rows" id="rowsTbl"><caption class="sr">Captured readings: the velocities before (u) and after (v′) from the photogates, in m/s; the masses are in each row's tooltip</caption><thead><tr><th scope="col">#</th><th scope="col">u₁</th><th scope="col">u₂</th><th scope="col">v₁′</th><th scope="col">v₂′</th><th scope="col"><span class="sr">Delete</span></th></tr></thead><tbody></tbody></table></div>
         <details class="more"><summary>More about this</summary>
-          <p class="hint">Capture stores one finished run: the masses as displayed (in the capture message, the row's tooltip and the CSV) and each cart's velocity before (u) and after (v′) the collision from the gate readings, in m/s, signed +x to the right. Cells can be edited; rows stay through setup changes until Clear. Press C on the drawing to capture.</p>
+          <p class="hint">Record reading stores one finished run: the masses as displayed (in the capture message, the row's tooltip and the CSV) and each cart's velocity before (u) and after (v′) the collision from the gate readings, in m/s, signed +x to the right. Cells can be edited; rows stay through setup changes until Clear. Press C on the drawing to capture.</p>
         </details>
         <div class="seg full" role="group" aria-label="Plot of the readings" id="fitSeg">
           <button type="button" data-k="p" aria-pressed="true">p′ vs p</button>
@@ -2069,11 +2069,11 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   const presetName = (p) => { const b = document.querySelector(`#presets [data-p="${p}"]`); return b ? b.textContent.trim() : 'custom'; };
   const capStatus = (msg) => { $('capStatus').textContent = msg; };
   function captureReading() {
-    if (!hasGates()) { capStatus(S.mode === 'ballistic' ? 'Capture reads the photogates, on the 1D track and in the Explosion scene. Here, read the rise h from the scale beside the block.' : 'Capture reads the photogates, on the 1D track and in the Explosion scene.'); return; }
+    if (!hasGates()) { capStatus(S.mode === 'ballistic' ? 'Record reading reads the photogates, on the 1D track and in the Explosion scene. Here, read the rise h from the scale beside the block.' : 'Record reading reads the photogates, on the 1D track and in the Explosion scene.'); return; }
     if (held) return;
     if (S.mode === 'track' && !isFinite(run.tc)) { capStatus('Not captured: the carts never collide in this setup.'); return; }
     if (S.mode === 'explode' && !(P().E > 0)) { capStatus('Not captured: with no stored energy the pieces never separate.'); return; }
-    if (!runDone) { capStatus('Not captured yet: let the run play to the end so every cart has passed its gates, then capture (Play, or Space on the drawing).'); return; }
+    if (!runDone) { capStatus('Not captured yet: let the run play to the end so every cart has passed its gates, then record (Play, or Space on the drawing).'); return; }
     if (running) setRunning(false);
     const p = P(), m1 = p.m1, m2 = p.m2;
     const vals = { u1: gateValue(0, 'u'), u2: gateValue(1, 'u'), v1: gateValue(0, 'v'), v2: gateValue(1, 'v') };
@@ -2090,7 +2090,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   const esc = (x) => String(x).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
   function renderRows() {
     const tb = $('rowsTbl').querySelector('tbody');
-    if (!S.rows.length) tb.innerHTML = '<tr><td class="empty" colspan="6">No readings yet. Let a collision run to the end, then press Capture reading.</td></tr>';
+    if (!S.rows.length) tb.innerHTML = '<tr><td class="empty" colspan="6">No readings yet. Let a collision run to the end, then press Record reading.</td></tr>';
     else tb.innerHTML = S.rows.map((r, i) => {
       const inp = (f, lab) => `<td><input aria-label="${lab}, row ${i + 1}" data-i="${i}" data-f="${f}" value="${esc(MIN(r[f]))}" inputmode="decimal" spellcheck="false"></td>`;
       const tip = `m₁ = ${r.m1} kg, m₂ = ${r.m2} kg; ${r.scene}, ${r.preset}${r.bumper ? `, bumper ${r.bumper}` : ''}${r.e ? `, e = ${r.e}` : ''}; gates at ${r.gA} m and ${r.gB} m${r.notes ? '; ' + r.notes : ''}`;
@@ -2192,7 +2192,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     ctx.fillStyle = T.ink; for (let i = 0; i < xs.length; i++) { ctx.beginPath(); ctx.arc(X(xs[i]), Y(ys[i]), 3.6, 0, 2 * Math.PI); ctx.fill(); }
     ctx.restore();
     ctx.fillStyle = T.accent; for (let i = 0; i < rs.length; i++) { ctx.beginPath(); ctx.arc(X(xs[i]), Yr(rs[i]), 3, 0, 2 * Math.PI); ctx.fill(); }
-    if (xs.length < 2) { ctx.fillStyle = T.muted; ctx.font = `11px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(xs.length ? 'Capture another row to fit a line' : 'No readings yet', (L + R) / 2, (top + bot) / 2); }
+    if (xs.length < 2) { ctx.fillStyle = T.muted; ctx.font = `11px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(xs.length ? 'Record another row to fit a line' : 'No readings yet', (L + R) / 2, (top + bot) / 2); }
   }
   function updateFitOut() {
     const A = FIT_AX[S.fitKind], { P: Pp, fit } = fitNow();
@@ -2205,7 +2205,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
         const es = Pp.row.map((i) => S.rows[i].e), same = es.length && es.every((x) => x !== '' && x === es[0]);
         if (same) html += `<div class="wide"><dt>e set for these rows, to compare</dt><dd>${S.fitKind === 'e' ? `e = ${es[0]}` : `1 − e² = ${fx(1 - (+es[0]) ** 2, 4)}`}</dd></div>`;
       }
-    } else html = `<div class="wide"><dt>Fit of ${A.name}</dt><dd class="ok">${Pp.x.length ? 'needs 2 or more rows with different x' : 'capture readings first'}</dd></div>`;
+    } else html = `<div class="wide"><dt>Fit of ${A.name}</dt><dd class="ok">${Pp.x.length ? 'needs 2 or more rows with different x' : 'record readings first'}</dd></div>`;
     $('fitOut').innerHTML = html;
     $('fitHint').textContent = `${A.hint} The fit is a least squares line y = a + bx with equal weights, through your captured rows only; rows with a blank cell are left out. The standard errors come from the scatter of the rows about the line, which here is only the timer and display rounding.`;
     $('fitTbl').querySelector('thead').innerHTML = `<tr><th scope="col">#</th><th scope="col">x</th><th scope="col">y</th><th scope="col">fit</th><th scope="col">residual</th></tr>`;

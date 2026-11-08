@@ -12,7 +12,7 @@ VDI18N.add('en', 'ws/intro-kepler', [
 "The timer runs on simulated time, so it only counts while the demo is playing. Reset puts the object back where it started, with the clock at zero.",
 "With Ruler on, click or drag in the view to place points {#} and {#}. The ruler gives each point’s distance from the Sun and the distance between the points. Zoom in (scroll, or the + and − keys) to place a point precisely.",
 "Blind hides the demo’s own values of the orbit’s size, shape and period, so you measure them yourself. The timer and the ruler stay.",
-"Capture reading stores the timer and both ruler distances with the name of the setup. Export to worksheet sends the readings to the Data table below.",
+"Record reading stores the timer and both ruler distances with the name of the setup. Export to worksheet sends the readings to the Data table below.",
 "The Sun is held fixed and each object feels only the Sun’s gravity, so the planets do not pull on each other.",
 "The Sandbox is for exploring on your own: drag stars, planets and moons from the tray into space. Unlike the other setups, nothing is held fixed: every body pulls on every other. Each starts on a circular orbit around the body that pulls on it hardest; drag the tip of its arrow to change its velocity, and watch the energy of the whole system as it runs. The Sandbox records no readings.",
 "Measure the orbits of planets, asteroids, a comet and a dwarf planet, and test Kepler’s three laws of planetary motion with them.",

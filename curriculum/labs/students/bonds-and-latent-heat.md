@@ -21,7 +21,7 @@ Textbook: OpenStax *University Physics*, Vol. 2, §1.5, with §§2.2–2.3 for t
 - Color atoms by Speed shows each atom's speed; by Phase shows the solid, liquid and vapor atoms. Show bonds draws a line between atoms closer than 0.51 nm. The flat view shows a slice 0.5 nm thick through the middle of the sample; the 3D view shows every atom and can be turned and zoomed.
 - The heater power slider sets how fast heat goes in. A slower heater gives flatter plateaus but a longer run. Cool takes heat out instead.
 - Real argon melts at 83.8 K and boils at 87.3 K at 1 atm. The setups use 17 atm so that the vapor stays near the sample (at 1 atm it would need more than ten times the room), and a liquid boils hotter at a higher pressure, so the sample boils well above 87.3 K. At lower pressures the picture squeezes heights above 4 nm, marked by a dashed line, so the piston stays in view; Column height gives the true height. The sample is also only a few nanometers thick, and each atom feels only the atoms within 0.85 nm of it, so it is held together less firmly than a flask of argon: it melts below 83.8 K and its latent heats are smaller. A small sample can also overheat for a moment before the first vapor forms, then settle back; real liquids do this too (superheating).
-- Capture reading stores the readings shown. Export to worksheet sends them to the Data table below; Clear starts a new series, which goes into a new copy of the table.
+- Record reading stores the readings shown. Export to worksheet sends them to the Data table below; Clear starts a new series, which goes into a new copy of the table.
 - Blind hides the heating curve and the energy split.
 
 </details>
@@ -51,9 +51,9 @@ The molar heat capacity is $$C = dQ/dT$$. For a classical solid, each atom vibra
 
 ## Procedure
 
-**Crystal to vapor.** Start with the Heat a crystal setup and run it until the sample is all vapor. Capture a reading about every 0.2 kJ/mol of heat added, and more often while the temperature holds still. You may pause to capture. Watch the bonds and the phase shares as you go, and note what the atoms look like on each part of the curve.
+**Crystal to vapor.** Start with the Heat a crystal setup and run it until the sample is all vapor. Record a reading about every 0.2 kJ/mol of heat added, and more often while the temperature holds still. You may pause to capture. Watch the bonds and the phase shares as you go, and note what the atoms look like on each part of the curve.
 
-**Higher pressure.** Repeat with the Higher pressure setup (28 atm). Capture readings across the boiling plateau, and send them to the worksheet as a second copy of the table.
+**Higher pressure.** Repeat with the Higher pressure setup (28 atm). Record readings across the boiling plateau, and send them to the worksheet as a second copy of the table.
 
 **Cooling.** Run Cool a vapor and watch the vapor condense on the cold floor. Note the temperature while it condenses, and whether the liquid freezes.
 

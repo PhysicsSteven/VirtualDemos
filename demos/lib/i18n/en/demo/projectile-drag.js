@@ -87,7 +87,7 @@ VDI18N.add('en', 'demo/projectile-drag', [
 "Energy bars",
 "The selected shot at the time shown: kinetic energy ½mv², gravitational potential energy mgy (zero at the ground), and the energy drag has taken so far, which is the launch energy minus the other two. Without drag that bar stays at zero and the total never changes; with drag the total still never changes, because the lost energy is counted.",
 "Captured readings: launch angle, cursor time, height and range",
-"Capture stores what you read for the selected shot: its settings as displayed, the cursor's t, x and y, and its range R. Cells can be edited; rows stay through preset changes until Clear. The CSV also has x and every setting.",
+"Record reading stores what you read for the selected shot: its settings as displayed, the cursor's t, x and y, and its range R. Cells can be edited; rows stay through preset changes until Clear. The CSV also has x and every setting.",
 "What to plot",
 "y against t",
 "R against sin {#}θ",

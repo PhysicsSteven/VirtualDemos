@@ -255,7 +255,7 @@ table.rows tr.sim td.n { color: var(--pos); }
       <section class="e-only">
         <h2>Readings</h2>
         <div class="btnrow">
-          <button type="button" class="btn primary" id="capture">Capture reading</button>
+          <button type="button" class="btn primary" id="capture">Record reading</button>
           <button type="button" class="btn" id="expWs">Export to worksheet</button>
           <button type="button" class="btn" id="expTab">Export CSV</button>
           <button type="button" class="btn" id="clearTab">Clear</button>
@@ -264,7 +264,7 @@ table.rows tr.sim td.n { color: var(--pos); }
         <p class="note" id="simNote" hidden></p>
         <div class="twrap"><table class="rows" id="tbl"><thead><tr><th>#</th><th>Meter kV</th><th>D₁ mm</th><th>D₂ mm</th><th><span hidden>Delete</span></th></tr></thead><tbody></tbody></table></div>
         <details class="more"><summary>More about this</summary>
-          <p class="hint">Capture stores the kV meter reading and your own D₁ and D₂ from the marks, never the true values. You can edit them. Each row keeps the tool it was read with.</p>
+          <p class="hint">Record reading stores the kV meter reading and your own D₁ and D₂ from the marks, never the true values. You can edit them. Each row keeps the tool it was read with.</p>
         </details>
         <div class="inline">
           <span class="lab">Formula for d</span>
@@ -1590,7 +1590,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   window.vdVersion = 'electron-diffraction@2026-10-24';
   window.vdShowCols = [['tube', 'Tube'], ['crystal', 'Crystal'], ['theta_deg', 'θ (°)'], ['rate_per_s', 'Rate (1/s)']];
   window.vdReadingRow = () => (X.on ? { tube: X.tube, crystal: X.xtal, theta_deg: X.th.toFixed(2), two_theta_deg: (2 * X.th).toFixed(2), rate_per_s: xRateNow(), tube_kV: XRAY.kV }
-    : 'Switch to X-rays to record a reading here; electron readings use Capture reading.');
+    : 'Switch to X-rays to record a reading here; electron readings use Record reading.');
 
   // ---------- electron readings to the worksheet (electron-diffraction), like the shared section's Export to worksheet ----------
   let edSeries = 0;

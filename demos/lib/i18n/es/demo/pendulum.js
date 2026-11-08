@@ -86,8 +86,8 @@ VDI18N.add('es', 'demo/pendulum', {
   "Varilla oscilante",
 "On the Moon":
   "En la Luna",
-"A {#} m pendulum on Earth, released at {#}°. Its period is {#} s, and a \"seconds pendulum\" (one second per swing) is very nearly {#} m long. Change L and capture a reading at each length to measure g.":
-  "Un péndulo de {#} m en la Tierra, soltado a {#}°. Su periodo es {#} s, y un \"péndulo de segundos\" (un segundo por oscilación) mide casi exactamente {#} m. Cambia L y captura una lectura en cada longitud para medir g.",
+"A {#} m pendulum on Earth, released at {#}°. Its period is {#} s, and a \"seconds pendulum\" (one second per swing) is very nearly {#} m long. Change L and record a reading at each length to measure g.":
+  "Un péndulo de {#} m en la Tierra, soltado a {#}°. Su periodo es {#} s, y un \"péndulo de segundos\" (un segundo por oscilación) mide casi exactamente {#} m. Cambia L y registra una lectura en cada longitud para medir g.",
 "Phase portrait":
   "Retrato de fase",
 "Almost straight up":
@@ -134,8 +134,8 @@ VDI18N.add('es', 'demo/pendulum', {
   "T en función de θ₀",
 "The captured readings with a least squares line and residuals.":
   "Las lecturas capturadas con una recta de mínimos cuadrados y los residuos.",
-"Capture at least two lengths with a bob, θ₀ ≤ {#}°, on this planet.":
-  "Captura al menos dos longitudes con una lenteja, θ₀ ≤ {#}°, en este planeta.",
+"Record at least two lengths with a bob, θ₀ ≤ {#}°, on this planet.":
+  "Registra al menos dos longitudes con una lenteja, θ₀ ≤ {#}°, en este planeta.",
 "T₀ = {#}π√(L/g) · rod: {#}π√(2L/3g) · exact: T = T₀ · ({#}/π) K(sin(θ₀/{#}))":
   "T₀ = {#}π√(L/g) · varilla: {#}π√(2L/3g) · exacto: T = T₀ · ({#}/π) K(sin(θ₀/{#}))",
 "Model: a point bob on a massless, inextensible string (or a thin uniform rod). A string can only pull, so the bob on a string is released from at most {#}° (above horizontal it would go slack and fall); the rod can start from up to {#}° about a frictionless pivot, integrated exactly enough (fourth order Runge–Kutta, {#} ms steps) that the photogate's {#} s readings are reliable. Air drag, when on, is a small force in proportion to speed with the same drag constant ({#} kg/s) for every bob, so a heavier bob dies away more slowly. The photogate times every second pass of the bottom.":
@@ -340,7 +340,7 @@ VDI18N.add('es', 'demo/pendulum', {
   "Desde arriba: posición lateral de cada lenteja (cm) en función de su lugar en la fila",
 "A heavy bob: change the mass from {#} kg to {#} g and watch the period. Gravity pulls harder on a heavier bob, but it also has more inertia, and the two cancel exactly.":
   "Una lenteja pesada: cambia la masa de {#} kg a {#} g y observa el periodo. La gravedad tira con más fuerza de una lenteja más pesada, pero esta también tiene más inercia, y los dos efectos se cancelan exactamente.",
-"Released at {#}°, the period is {#}% longer than {#}π√(L/g). The small angle formula assumes sin θ ≈ θ; capture T at several angles and plot T against θ₀ to see how large swings depart from it.":
+"Released at {#}°, the period is {#}% longer than {#}π√(L/g). The small angle formula assumes sin θ ≈ θ; record T at several angles and plot T against θ₀ to see how large swings depart from it.":
   "Soltado a {#}°, el periodo es {#}% más largo que {#}π√(L/g). La fórmula de ángulo pequeño supone sin θ ≈ θ; captura T a varios ángulos y grafica T en función de θ₀ para ver cómo se apartan de ella las oscilaciones grandes.",
 "A uniform {#} m rod swinging from one end has a shorter period than a {#} m simple pendulum: its mass is spread along it. It swings like a simple pendulum 2L/{#} long: T = {#}π√(2L/3g).":
   "Una varilla uniforme de {#} m que oscila desde un extremo tiene un periodo más corto que un péndulo simple de {#} m: su masa está repartida a lo largo de ella. Oscila como un péndulo simple de longitud 2L/{#}: T = {#}π√(2L/3g).",

@@ -533,13 +533,13 @@ details.hall[open] > summary { margin-bottom: 8px; }
       <section id="secReadings">
         <h2>Readings</h2>
         <div class="btnrow">
-          <button type="button" class="btn primary" id="capture">Capture reading</button>
+          <button type="button" class="btn primary" id="capture">Record reading</button>
           <button type="button" class="btn" id="expCsv">Export to worksheet</button>
           <button type="button" class="btn" id="clearRows">Clear</button>
         </div>
         <p class="hint status" id="labStatus" aria-live="polite"></p>
         <div class="twrap"><table class="rows" id="tbl"><thead><tr><th>#</th><th>Particle</th><th>v⊥ (m/s)</th><th>r (m)</th><th>T (s)</th><th><span class="sr-only">Delete</span></th></tr></thead><tbody></tbody></table></div>
-        <details class="more"><summary>More about this</summary><p class="hint">Capture stores what you read: the particle, the settings as displayed (q, m, v, B, E), your ruler reading and your timer reading divided by the turns timed. It never stores the model's r or T. Cells can be edited; rows stay through setup changes until Clear. In the Magnetic bottle, Capture stores the pitch angle, B₀, whether the proton escaped, the turning points, the measured bounce period and μ against the start, as shown; in the Hall effect it stores the sample, I, B<sub>z</sub>, t and the voltmeter reading. Each of the three keeps its own rows, and Export sends the rows of the setup on screen.</p></details>
+        <details class="more"><summary>More about this</summary><p class="hint">Record reading stores what you read: the particle, the settings as displayed (q, m, v, B, E), your ruler reading and your timer reading divided by the turns timed. It never stores the model's r or T. Cells can be edited; rows stay through setup changes until Clear. In the Magnetic bottle, Record reading stores the pitch angle, B₀, whether the proton escaped, the turning points, the measured bounce period and μ against the start, as shown; in the Hall effect it stores the sample, I, B<sub>z</sub>, t and the voltmeter reading. Each of the three keeps its own rows, and Export sends the rows of the setup on screen.</p></details>
         <details class="plotfold"><summary>Plot and fit</summary><div class="foldbody">
         <div class="inline">
           <span class="lab">Plot</span>
@@ -3096,7 +3096,7 @@ details.hall[open] > summary { margin-bottom: 8px; }
       } else if (LAB.plot === 'Tv' && !LAB.blind && same(F.pts, 'B') && same(F.pts, 'particle') && first.B > 0) {
         html += `<div class="wide"><dt>Model: slope 0, intercept 2πm/(|q|B)</dt><dd>${sci(2 * Math.PI * first.m / (Math.abs(first.q) * first.B), 3)} s</dd></div>`;
       } else if (F.pts.length > 1 && LAB.plot !== 'Tv') html += `<div class="wide"><dt>Note</dt><dd class="ok">The rows differ in ${LAB.plot === 'rv' ? 'particle or B' : 'v or B'}, so the slope mixes settings.</dd></div>`;
-    } else html += `<div class="wide"><dt>Fit</dt><dd class="ok">${P.origin ? 'Capture a reading with a ruler value' : P.y === 'T' ? 'Capture two or more readings with timer values' : 'Capture two or more readings with ruler values'}${LAB.plot === 'rmq' ? ', changing the particle (Custom sets q and m)' : ', changing the speed'}.</dd></div>`;
+    } else html += `<div class="wide"><dt>Fit</dt><dd class="ok">${P.origin ? 'Record a reading with a ruler value' : P.y === 'T' ? 'Record two or more readings with timer values' : 'Record two or more readings with ruler values'}${LAB.plot === 'rmq' ? ', changing the particle (Custom sets q and m)' : ', changing the speed'}.</dd></div>`;
     dl.innerHTML = html;
     drawFitPlot(F);
     dataTable(F);

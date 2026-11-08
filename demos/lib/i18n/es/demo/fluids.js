@@ -192,10 +192,10 @@ VDI18N.add('es', 'demo/fluids', {
   "Lecturas de Flotación capturadas",
 "V<sub>sub</sub> cm³":
   "V<sub>sub</sub> cm³",
-"No Buoyancy readings yet. Set up, then press Capture reading.":
-  "Aún no hay lecturas de Flotación. Prepara y luego pulsa Capturar lectura.",
-"Turn on Spring scale. Capture stores the depth ruler d, the spring scale T and the scale reading in air W. The table works out V_sub = L²·d (at most L³) and F_B = W − T; the fit is F_B = intercept + slope·V_sub.":
-  "Activa Dinamómetro. Capturar guarda la regla de profundidad d, el dinamómetro T y la lectura del dinamómetro en el aire W. La tabla calcula V_sub = L²·d (como máximo L³) y F_B = W − T; el ajuste es F_B = ordenada al origen + pendiente·V_sub.",
+"No Buoyancy readings yet. Set up, then press Record reading.":
+  "Aún no hay lecturas de Flotación. Prepara y luego pulsa Registrar lectura.",
+"Turn on Spring scale. Record reading stores the depth ruler d, the spring scale T and the scale reading in air W. The table works out V_sub = L²·d (at most L³) and F_B = W − T; the fit is F_B = intercept + slope·V_sub.":
+  "Activa Dinamómetro. Registrar lectura guarda la regla de profundidad d, el dinamómetro T y la lectura del dinamómetro en el aire W. La tabla calcula V_sub = L²·d (como máximo L³) y F_B = W − T; el ajuste es F_B = ordenada al origen + pendiente·V_sub.",
 "Blind hides the model graph, the formula line, the force arrows, the buoyant force, ρgh, the throat speed v₂, the computed pressures and Δh, the jet speed and the worked numbers in the hints. The instruments stay: pressure gauge, depth ruler, spring scale, flow meter, standpipes and the splash mark.":
   "A ciegas oculta la gráfica del modelo, la línea de la fórmula, las flechas de fuerza, la fuerza de flotación, ρgh, la rapidez en la garganta v₂, las presiones calculadas y Δh, la rapidez del chorro y los números resueltos en las pistas. Los instrumentos se quedan: manómetro, regla de profundidad, dinamómetro, flujómetro, tubos verticales y la marca de salpicadura.",
 "<span>Graph shows</span>":
@@ -270,10 +270,10 @@ VDI18N.add('es', 'demo/fluids', {
   "modo",
 "Captured Depth readings":
   "Lecturas de Profundidad capturadas",
-"No Depth readings yet. Set up, then press Capture reading.":
-  "Aún no hay lecturas de Profundidad. Prepara y luego pulsa Capturar lectura.",
-"Capture stores the depth ruler and the pressure gauge as displayed, in the mode shown. The fit uses the readings for the present liquid and pressure mode: P = intercept + slope·h.":
-  "Capturar guarda la regla de profundidad y el manómetro tal como se muestran, en el modo mostrado. El ajuste usa las lecturas del líquido y del modo de presión actuales: P = ordenada al origen + pendiente·h.",
+"No Depth readings yet. Set up, then press Record reading.":
+  "Aún no hay lecturas de Profundidad. Prepara y luego pulsa Registrar lectura.",
+"Record reading stores the depth ruler and the pressure gauge as displayed, in the mode shown. The fit uses the readings for the present liquid and pressure mode: P = intercept + slope·h.":
+  "Registrar lectura guarda la regla de profundidad y el manómetro tal como se muestran, en el modo mostrado. El ajuste usa las lecturas del líquido y del modo de presión actuales: P = ordenada al origen + pendiente·h.",
 "Straight":
   "Recto",
 "Flared":
@@ -308,7 +308,7 @@ VDI18N.add('es', 'demo/fluids', {
   "Líquido en el inclinado",
 "F = ρgh·A = {#} Pa × {#} cm². The flared walls hold up the extra liquid; the narrowing walls push down on it.":
   "F = ρgh·A = {#} Pa × {#} cm². Las paredes ensanchadas sostienen el líquido extra; las paredes que se angostan empujan hacia abajo sobre él.",
-"Capture works in the Depth, Buoyancy and Venturi scenes. Rows from every scene stay until Clear, and all of them go into the CSV.":
+"Record reading works in the Depth, Buoyancy and Venturi scenes. Rows from every scene stay until Clear, and all of them go into the CSV.":
   "Capturar funciona en las escenas Profundidad, Flotación y Venturi. Las filas de todas las escenas se quedan hasta Borrar, y todas van al CSV.",
 "vacuum, P ≈ {#}":
   "vacío, P ≈ {#}",
@@ -376,10 +376,10 @@ VDI18N.add('es', 'demo/fluids', {
   "Δh",
 "Captured Venturi readings":
   "Lecturas de Venturi capturadas",
-"No Venturi readings yet. Set up, then press Capture reading.":
-  "Aún no hay lecturas de Venturi. Prepara y luego pulsa Capturar lectura.",
-"Capture stores v₁, the flow meter and both standpipes. Keep D₁ and D₂ fixed: the fit uses the readings with the present pipe and throat, Δh = h₁ − h₂ against v₁², with intercept.":
-  "Capturar guarda v₁, el flujómetro y ambos tubos verticales. Mantén D₁ y D₂ fijos: el ajuste usa las lecturas con el tubo y la garganta actuales, Δh = h₁ − h₂ en función de v₁², con ordenada al origen.",
+"No Venturi readings yet. Set up, then press Record reading.":
+  "Aún no hay lecturas de Venturi. Prepara y luego pulsa Registrar lectura.",
+"Record reading stores v₁, the flow meter and both standpipes. Keep D₁ and D₂ fixed: the fit uses the readings with the present pipe and throat, Δh = h₁ − h₂ against v₁², with intercept.":
+  "Registrar lectura guarda v₁, el flujómetro y ambos tubos verticales. Mantén D₁ y D₂ fijos: el ajuste usa las lecturas con el tubo y la garganta actuales, Δh = h₁ − h₂ en función de v₁², con ordenada al origen.",
 "steady flow":
   "flujo estacionario",
 "slow motion ×{#}":
@@ -460,8 +460,8 @@ VDI18N.add('es', 'demo/fluids', {
   "{#} de {#} lecturas de Flotación usadas (este líquido). modelo: pendiente ρ_f g = {#} N/m³, por el origen",
 "buoyant force (N)":
   "fuerza de flotación (N)",
-"No readings for this fit yet: press Capture reading.":
-  "Aún no hay lecturas para este ajuste: pulsa Capturar lectura.",
+"No readings for this fit yet: press Record reading.":
+  "Aún no hay lecturas para este ajuste: pulsa Registrar lectura.",
 "submerged volume (cm³)":
   "volumen sumergido (cm³)",
 "residual (N)":
@@ -482,7 +482,7 @@ VDI18N.add('es', 'demo/fluids', {
   "Las lecturas y los ajustes funcionan en las escenas Profundidad, Flotación y Venturi.",
 "Choose a metal first.":
   "Primero elige un metal.",
-"Capture works in the Depth, Buoyancy and Venturi scenes.":
+"Record reading works in the Depth, Buoyancy and Venturi scenes.":
   "Capturar funciona en las escenas Profundidad, Flotación y Venturi.",
 "No readings fit for this scene.":
   "No hay ajuste de lecturas para esta escena.",

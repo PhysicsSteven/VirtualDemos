@@ -85,7 +85,7 @@ VDI18N.add('en', 'demo/resonators', [
 "Export CSV",
 "L read",
 "Δ to k−{#}",
-"Capture stores the water position you chose, as read on the scale, never the true resonance. Reading the meniscus adds a small simulated scatter (σ = {#} mm, fixed by the seed). k counts the resonances from the top at each frequency; edit it if you skipped one. You can edit L too.",
+"Record reading stores the water position you chose, as read on the scale, never the true resonance. Reading the meniscus adds a small simulated scatter (σ = {#} mm, fixed by the seed). k counts the resonances from the top at each frequency; edit it if you skipped one. You can edit L too.",
 "Plot of the resonance positions L against (2k − {#})/4f, with a least squares line: its slope is c and its intercept is minus the end correction.",
 "<span><i></i>Your readings: L = c·(2k − {#})/4f − ΔL</span>",
 "Reading seed",

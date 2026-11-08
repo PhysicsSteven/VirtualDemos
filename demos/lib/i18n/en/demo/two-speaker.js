@@ -53,7 +53,7 @@ VDI18N.add('en', 'demo/two-speaker', [
 "Sound level against the microphone's sideways position along the walk line.",
 "Clear the trace",
 "Each walk draws the level against the sideways position y along the walk line. Dips are the quiet lines; stop the walk, put the microphone in a dip and record it.",
-"Record this reading",
+"Record reading",
 "No readings yet. Put the microphone somewhere, then record.",
 "Record stores the frequency, the separation, the microphone's place (x from the speakers' wall, y sideways from the middle), the tape distances r₁ and r₂ from each speaker, and the sound level.",
 "What the floor shows",

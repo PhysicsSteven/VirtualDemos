@@ -61,7 +61,7 @@ VDI18N.add('en', 'demo/gauss-law', [
 "Captured flux readings: surface, enclosed charge, numerical flux and, when shown, the predicted flux Q_enc/ε₀ in N·m²/C",
 "Q<sub>enc</sub> nC",
 "∮E·dA",
-"Capture freezes the surface, the charges and the numerical flux in a row (flux in N·m²/C). The CSV holds every row in SI units, with the closest charge distance and the quadrature status.",
+"Record reading freezes the surface, the charges and the numerical flux in a row (flux in N·m²/C). The CSV holds every row in SI units, with the closest charge distance and the quadrature status.",
 "Field lines",
 "E on surface",
 "Crossings",

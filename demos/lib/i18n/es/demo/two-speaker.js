@@ -106,7 +106,7 @@ VDI18N.add('es', 'demo/two-speaker', {
   "Borrar la traza",
 "Each walk draws the level against the sideways position y along the walk line. Dips are the quiet lines; stop the walk, put the microphone in a dip and record it.":
   "Cada recorrido dibuja el nivel en función de la posición lateral y a lo largo de la línea de recorrido. Los mínimos son las líneas silenciosas; detén el recorrido, pon el micrófono en un mínimo y regístralo.",
-"Record this reading":
+"Record reading":
   "Registrar esta lectura",
 "No readings yet. Put the microphone somewhere, then record.":
   "Aún no hay lecturas. Pon el micrófono en algún lugar y luego registra.",

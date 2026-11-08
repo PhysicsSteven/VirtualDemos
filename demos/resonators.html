@@ -354,7 +354,7 @@ table.rows button { font: inherit; font-size: 0.8rem; background: none; border: 
       <section data-show="tube">
         <h2>Readings</h2>
         <div class="btnrow">
-          <button type="button" class="btn primary" id="capture">Capture reading</button>
+          <button type="button" class="btn primary" id="capture">Record reading</button>
           <button type="button" class="btn" id="toWs">Export to worksheet</button>
           <button type="button" class="btn" id="expTab">Export CSV</button>
           <button type="button" class="btn" id="clearTab">Clear</button>
@@ -362,7 +362,7 @@ table.rows button { font: inherit; font-size: 0.8rem; background: none; border: 
         <p class="hint" id="capStatus" role="status"></p>
         <div class="twrap"><table class="rows" id="tbl"><thead><tr><th>#</th><th>f Hz</th><th>k</th><th>L read</th><th>Δ to k−1</th><th><span hidden>Delete</span></th></tr></thead><tbody></tbody></table></div>
         <details class="more"><summary>More about this</summary>
-          <p class="hint">Capture stores the water position you chose, as read on the scale, never the true resonance. Reading the meniscus adds a small simulated scatter (σ = 1.5 mm, fixed by the seed). k counts the resonances from the top at each frequency; edit it if you skipped one. You can edit L too.</p>
+          <p class="hint">Record reading stores the water position you chose, as read on the scale, never the true resonance. Reading the meniscus adds a small simulated scatter (σ = 1.5 mm, fixed by the seed). k counts the resonances from the top at each frequency; edit it if you skipped one. You can edit L too.</p>
         </details>
         <div class="plotbox"><canvas id="plot" role="img" aria-label="Plot of the resonance positions L against (2k − 1)/4f, with a least squares line: its slope is c and its intercept is minus the end correction."></canvas></div>
         <dl class="readout" id="fitOut"></dl>
@@ -1423,7 +1423,7 @@ table.rows button { font: inherit; font-size: 0.8rem; background: none; border: 
       const a = S.tdia / 2;
       html += `<div class="wide"><dt>End correction ΔL / a (a = ${(a * 100).toFixed(2)} cm)</dt><dd>${(fit.dL / a).toFixed(2)}</dd></div>`;
       if (!S.blind) html += `<div class="wide"><dt>Expected at ${S.tc.toFixed(1)} °C</dt><dd>${D.c.toFixed(1)} m/s · ΔL = ${(END_OPEN * a * 100).toFixed(2)} cm</dd></div>`;
-    } else html += `<div class="wide"><dt>Fit</dt><dd class="ok">${R.length ? 'Capture a second resonance to fit a line.' : 'Find a resonance, then Capture reading.'}</dd></div>`;
+    } else html += `<div class="wide"><dt>Fit</dt><dd class="ok">${R.length ? 'Capture a second resonance to fit a line.' : 'Find a resonance, then Record reading.'}</dd></div>`;
     dl.innerHTML = html;
   }
   function csvTable() {
@@ -1442,7 +1442,7 @@ table.rows button { font: inherit; font-size: 0.8rem; background: none; border: 
   let wsSeries = Date.now();
   const capStatus = (m) => { $('capStatus').textContent = m; };
   $('toWs').addEventListener('click', () => {
-    if (!S.rows.length) { capStatus('No readings to export yet. Find a resonance and press Capture reading.'); return; }
+    if (!S.rows.length) { capStatus('No readings to export yet. Find a resonance and press Record reading.'); return; }
     const txt = csvTable(), lines = txt.trim().split('\n'), data = lines.filter((l) => l[0] !== '#'), meta = {};
     lines.filter((l) => l[0] === '#').forEach((l) => { const c = l.replace(/^#\s*/, '').split(','); if (c.length > 1) meta[c[0]] = c[1]; });
     const r0 = S.rows[0], same = S.rows.every((r) => r.tc === r0.tc && r.dia === r0.dia);

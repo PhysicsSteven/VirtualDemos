@@ -66,12 +66,12 @@ VDI18N.add('es', 'demo/wire-force', {
   "Δm (g)",
 "No readings yet. Set a current, then capture.":
   "Aún no hay lecturas. Fija una corriente y luego captura.",
-"The balance was zeroed with no current, so it reads the magnet's apparent change in mass Δm = F/g (to {#} g). Capture stores I, L and the reading; the fit is F = Δm g against I, |slope| = BL sin θ.":
-  "La balanza se puso en cero sin corriente, así que lee el cambio aparente de masa del imán Δm = F/g (a {#} g). Capturar guarda I, L y la lectura; el ajuste es F = Δm g en función de I, |pendiente| = BL sin θ.",
+"The balance was zeroed with no current, so it reads the magnet's apparent change in mass Δm = F/g (to {#} g). Record reading stores I, L and the reading; the fit is F = Δm g against I, |slope| = BL sin θ.":
+  "La balanza se puso en cero sin corriente, así que lee el cambio aparente de masa del imán Δm = F/g (a {#} g). Registrar lectura guarda I, L y la lectura; el ajuste es F = Δm g en función de I, |pendiente| = BL sin θ.",
 "Force against current for the captured rows, with a least squares line and residuals.":
   "Fuerza en función de la corriente para las filas capturadas, con una recta de mínimos cuadrados y residuos.",
-"Capture at least two currents with L = {#} cm and θ = {#}°.":
-  "Captura al menos dos corrientes con L = {#} cm y θ = {#}°.",
+"Record at least two currents with L = {#} cm and θ = {#}°.":
+  "Registra al menos dos corrientes con L = {#} cm y θ = {#}°.",
 "Blind hides the predicted force, torque and B from the fit, and draws arrows equal length. The balance reading, the meters and the settings stay.":
   "A ciegas oculta la fuerza predicha, la torca y la B del ajuste, y dibuja las flechas de igual longitud. La lectura de la balanza, los medidores y los ajustes se quedan.",
 "Model: uniform field between the poles and zero outside (no fringing); the balance sees the reaction force on the magnet, which equals the force on the wire (Newton's third law). The loop is rectangular, {#} cm by {#} cm, mass {#} g, with a little friction at its axle; the supply holds the current fixed, so back emf is ignored (a real motor's speed is limited mainly by back emf). The loop is shown {#} times slower than real, the motor about {#} times slower; the rotation rate readout is real.":

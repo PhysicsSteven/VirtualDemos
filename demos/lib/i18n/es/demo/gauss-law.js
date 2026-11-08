@@ -122,7 +122,7 @@ VDI18N.add('es', 'demo/gauss-law', {
   "Q<sub>enc</sub> nC",
 "∮E·dA":
   "∮E·dA",
-"Capture freezes the surface, the charges and the numerical flux in a row (flux in N·m²/C). The CSV holds every row in SI units, with the closest charge distance and the quadrature status.":
+"Record reading freezes the surface, the charges and the numerical flux in a row (flux in N·m²/C). The CSV holds every row in SI units, with the closest charge distance and the quadrature status.":
   "Capturar congela en una fila la superficie, las cargas y el flujo numérico (flujo en N·m²/C). El CSV contiene cada fila en unidades SI, con la distancia de la carga más cercana y el estado de la cuadratura.",
 "Field lines":
   "Líneas de campo",

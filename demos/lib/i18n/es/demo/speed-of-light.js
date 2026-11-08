@@ -148,16 +148,16 @@ VDI18N.add('es', 'demo/speed-of-light', {
   "rev/s del medidor",
 "Micrometer":
   "Micrómetro",
-"Capture stores the direction, the speed meter reading and your micrometer reading, never the true shift. You can edit them. The fit uses rows taken at the bench's current D and B.":
-  "Capturar guarda el sentido, la lectura del medidor de velocidad y tu lectura del micrómetro, nunca el desplazamiento real. Puedes editarlos. El ajuste usa las filas tomadas con los D y B actuales del banco.",
+"Record reading stores the direction, the speed meter reading and your micrometer reading, never the true shift. You can edit them. The fit uses rows taken at the bench's current D and B.":
+  "Registrar lectura guarda el sentido, la lectura del medidor de velocidad y tu lectura del micrómetro, nunca el desplazamiento real. Puedes editarlos. El ajuste usa las filas tomadas con los D y B actuales del banco.",
 "Your measured distances, used for c (filled from the bench; edit to use your own tape measure values):":
   "Tus distancias medidas, usadas para c (tomadas del banco; edítalas para usar tus propios valores medidos con cinta):",
 "Plot of micrometer reading against signed speed meter reading, CW positive, with a least squares line.":
   "Gráfica de la lectura del micrómetro en función de la lectura con signo del medidor de velocidad, CW positivo, con una recta de mínimos cuadrados.",
 "<span><i></i>CW</span><span><i></i>CCW</span><span><i></i>At rest</span><span><i></i>Least squares line, slope k</span>":
   "<span><i></i>CW</span><span><i></i>CCW</span><span><i></i>En reposo</span><span><i></i>Recta de mínimos cuadrados, pendiente k</span>",
-"Capture at rest, then at several speeds in both directions":
-  "Captura en reposo, y luego a varias velocidades en ambos sentidos",
+"Record at rest, then at several speeds in both directions":
+  "Registra en reposo, y luego a varias velocidades en ambos sentidos",
 "Bench seed":
   "Semilla del banco",
 "Blind: hide the true shift, Δt, Δθ and the accepted c":
@@ -188,7 +188,7 @@ VDI18N.add('es', 'demo/speed-of-light', {
   "ángulos dibujados ×{#}, tiempo ralentizado {#} × {#}⁷",
 "CCW <small>{#} rev/s · D {#} m</small>":
   "CCW <small>{#} rev/s · D {#} m</small>",
-"The mirror is still, so the light comes straight back to S. Turn the micrometer until the crosshair sits on the middle of the spot and capture: every shift is measured from this rest reading.":
+"The mirror is still, so the light comes straight back to S. Turn the micrometer until the crosshair sits on the middle of the spot and record: every shift is measured from this rest reading.":
   "El espejo está quieto, así que la luz regresa directo a S. Gira el micrómetro hasta que la retícula quede en el centro de la mancha y captura: cada desplazamiento se mide desde esta lectura de reposo.",
 "at rest <small>D {#} m</small>":
   "en reposo <small>D {#} m</small>",

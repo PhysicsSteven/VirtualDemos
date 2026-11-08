@@ -130,10 +130,10 @@ VDI18N.add('es', 'demo/gyroscope', {
   "Aún no hay lecturas. Suelta, deja que la compuerta mida una vuelta, captura.",
 "Precession rate against one over the spin rate for the captured rows, with a least squares line and residuals.":
   "Rapidez de precesión en función de uno sobre la rapidez de giro para las filas capturadas, con una recta de mínimos cuadrados y residuos.",
-"Capture at least two spin rates with this wheel at d = {#} cm.":
-  "Captura al menos dos rapideces de giro con esta rueda a d = {#} cm.",
-"A gate at the front of the post times each full turn of the axle round the post, to {#} s. Capture stores the spin, d and the last full turn's period P. Plot Ω = {#}π/P against {#}/ω_s for one d: the slope is Mgd/I_s.":
-  "Una compuerta al frente del poste mide cada vuelta completa del eje alrededor del poste, con resolución de {#} s. Capturar guarda el giro, d y el periodo P de la última vuelta completa. Grafica Ω = {#}π/P en función de {#}/ω_s para una sola d: la pendiente es Mgd/I_s.",
+"Record at least two spin rates with this wheel at d = {#} cm.":
+  "Registra al menos dos rapideces de giro con esta rueda a d = {#} cm.",
+"A gate at the front of the post times each full turn of the axle round the post, to {#} s. Record reading stores the spin, d and the last full turn's period P. Plot Ω = {#}π/P against {#}/ω_s for one d: the slope is Mgd/I_s.":
+  "Una compuerta al frente del poste mide cada vuelta completa del eje alrededor del poste, con resolución de {#} s. Registrar lectura guarda el giro, d y el periodo P de la última vuelta completa. Grafica Ω = {#}π/P en función de {#}/ω_s para una sola d: la pendiente es Mgd/I_s.",
 "3D view: drag to turn it, scroll or pinch to zoom, double click to reset. Flat shows the fixed oblique drawing; both show the same simulated motion.":
   "Vista 3D: arrastra para girarla, desplaza o pellizca para acercar, doble clic para restablecer. Plano muestra el dibujo oblicuo fijo; ambos muestran el mismo movimiento simulado.",
 "In 3D, Bench looks across the bench, Ride along turns the camera round the post with the axle so the wobble stands out, and From above looks down on the precession. The gold line traces the end of the axle over the last {#} s and the red one the tip of the L arrow, so the wobble (nutation) shows as loops or cusps along the circle; the strip marks each pass of the gate with a small triangle, and the gate's lamp lights as the axle passes. Strobe shows the wheel lit by a flashing lamp whose rate is {#} flashes a second below the wheel's turns per second, so its marks seem to creep round once every {#} s instead of blurring (the rates are shown beside it).":

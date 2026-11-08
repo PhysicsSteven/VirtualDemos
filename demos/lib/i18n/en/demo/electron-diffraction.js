@@ -73,7 +73,7 @@ VDI18N.add('en', 'demo/electron-diffraction', [
 "Show the true ring positions (instructor check)",
 "Export CSV",
 "Meter kV",
-"Capture stores the kV meter reading and your own D₁ and D₂ from the marks, never the true values. You can edit them. Each row keeps the tool it was read with.",
+"Record reading stores the kV meter reading and your own D₁ and D₂ from the marks, never the true values. You can edit them. Each row keeps the tool it was read with.",
 "<span>Formula for d</span>",
 "Formula for d",
 "Invert the exact geometry of the spherical screen",

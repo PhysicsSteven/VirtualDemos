@@ -78,7 +78,7 @@ VDI18N.add('en', 'demo/sound-waves', [
 "Intensity I = Δp_max²/({#}ρv)",
 "Sound level β",
 "<span>Δp is largest where s passes through zero: the pressure wave is {#}° (a quarter wavelength) behind the displacement.</span>",
-"Record this reading",
+"Record reading",
 "No readings yet. Clap, then record.",
 "Δt against d for the recorded readings, with a least squares line and its residuals.",
 "<span>Record at least two readings at different d.</span>",

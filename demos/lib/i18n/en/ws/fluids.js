@@ -21,7 +21,7 @@ VDI18N.add('en', 'ws/fluids', [
 "Flow: drag the grip on the throat wall to narrow or widen it, the grip on the inlet wall for \\(D_1\\), the round grip on the arrow for the inlet speed and the first standpipe’s level for the inlet pressure.",
 "Mystery blocks: five lettered metal cubes whose size and density are hidden. Weigh one on the spring scale, lower it into the full overflow can and read the water caught in the beaker (to {#} cm³).",
 "Two liquids (in the Barometer scene): pour a lighter liquid into one arm of a U tube of water or mercury and read the heights of both liquids above the interface. The mystery oil’s density is hidden.",
-"Capture reading stores the current readings; Export to worksheet sends them here. Blind hides the model graph, the formula line, the force arrows, the computed pressures and \\(\\Delta h\\) and the worked numbers in the hints; the instruments stay.",
+"Record reading stores the current readings; Export to worksheet sends them here. Blind hides the model graph, the formula line, the force arrows, the computed pressures and \\(\\Delta h\\) and the worked numbers in the hints; the instruments stay.",
 "\\(g = 9.81\\ \\text{m/s}^2\\) and standard air pressure \\(P_0 = 101.325\\ \\text{kPa}\\) on every free surface. Liquids: water {#}, oil {#}, seawater {#} and mercury {#} {#} kg/m³, all incompressible.",
 "Pressure: a liquid at rest, \\(P = P_0 + \\rho g d\\); the gauge reads to {#} Pa.",
 "Buoyancy: a cube in a tank {#} cm by {#} cm, pushed up by \\(\\rho_f V_{\\rm sub} g\\), with a small linear drag so it settles; the spring scale reads the string tension.",

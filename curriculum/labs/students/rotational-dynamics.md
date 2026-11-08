@@ -11,7 +11,7 @@ Textbook: OpenStax *University Physics*, Vol. 1, §§10.2 and 10.5–10.8. Acces
 **Using the demo.**
 
 - Set the **Hanging mass m** with the slotted masses beside the pulley (on the picture, the up arrow hangs 5 g and the down arrow takes off the last mass).
-- Capture stores $$m$$, $$r$$, what is on the table and the timer reading for the 0.500 m drop (0.001 s). From each row: $$a = 2h/t^2$$, $$\alpha = a/r$$, and the string's torque $$\tau = m(g - a)r$$. Plotting $$\tau$$ against $$\alpha$$ for one load gives a line: slope $$I$$, intercept the friction torque.
+- Record reading stores $$m$$, $$r$$, what is on the table and the timer reading for the 0.500 m drop (0.001 s). From each row: $$a = 2h/t^2$$, $$\alpha = a/r$$, and the string's torque $$\tau = m(g - a)r$$. Plotting $$\tau$$ against $$\alpha$$ for one load gives a line: slope $$I$$, intercept the friction torque.
 - Blind hides moments of inertia, the predicted motion, the energies and I from the fit, leaving the timer, the masses and the settings. The Mystery object always hides its I.
 
 **What the demo models.**

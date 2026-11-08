@@ -7,7 +7,7 @@ VDI18N.add('en', 'ws/atwood', [
 "Textbook: OpenStax <em>University Physics</em>, Vol. {#}, §§{#}, {#}, {#}, {#} and {#}. Access for free at https://openstax.org/details/books/university-physics-volume-{#}.",
 "<strong>Setups in the demo:</strong> Atwood’s machine (the worksheet opens the demo in it). The other setups belong to the friction worksheet.",
 "Two masses hang from one string over a pulley: m on the left, m₂ on the right. The string does not stretch and has no mass; the pulley has no mass and no friction. Each mass can be set from {#} to {#} kg (m) or up to {#} kg (m₂) in steps of {#} kg.",
-"<strong>Release at the top mark</strong> starts the masses from rest and times a run of {#} m (to {#} s). Capture stores m, m₂ and that time; \\(a = 2d/t^2\\) is worked out from your time.",
+"<strong>Release at the top mark</strong> starts the masses from rest and times a run of {#} m (to {#} s). Record reading stores m, m₂ and that time; \\(a = 2d/t^2\\) is worked out from your time.",
 "The readouts give the tension and the acceleration. Blind hides every force size and the acceleration; the timer, the masses and the force directions stay.",
 "The demo uses \\(g = 9.81\\ \\mathrm{m/s^2}\\). Your job is to measure it.",
 "Measure the acceleration due to gravity with an Atwood’s machine, test how the acceleration depends on the difference and the sum of the two masses, and check the tension in the string.",
