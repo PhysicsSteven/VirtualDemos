@@ -28,13 +28,13 @@
 /* Layout: the tube with its timing marks on the left; the rail on the right. */
 /* Layout: lab bench. The gas box and speed histogram fill the left, a narrow instrument rail sits on the right; stacks on phones. */
 
-:root { --fluid: #e9c46a; --glass: #9aa6b6; --ball: #4a5563; --mark: #b0452f; }
-:root { --bench: #cdb89a; --bench-edge: #a8916f; --grain: rgba(90, 60, 30, 0.12); --stand: #8b95a3; --stand-dark: #5d6774; --glass-fill: rgba(170, 190, 210, 0.16); --glass-hi: rgba(255, 255, 255, 0.75);
-  --liq-glycerol: #dfe8ea; --liq-castor: #f3e3a0; --liq-oil: #d9a441; --liq-water: #cfe4f5; --ball-hi: #ffffff; --ball-glass: #a9c9cf; --ball-nylon: #e8e2d4; --wall: #eef2f6; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --fluid: #8a6d1f; --glass: #56606e; --ball: #c3cad4; --mark: #ff8a70; --bench: #3b3226; --bench-edge: #2a231a; --grain: rgba(255, 220, 170, 0.06); --stand: #6c7684; --stand-dark: #4a525e; --glass-fill: rgba(150, 175, 205, 0.10); --glass-hi: rgba(220, 235, 255, 0.16);
-  --liq-glycerol: #3a4a50; --liq-castor: #6e6127; --liq-oil: #8a5a18; --liq-water: #24425e; --ball-hi: #ffffff; --ball-glass: #5f8c94; --ball-nylon: #b8b0a0; --wall: #121922; } }
-:root[data-theme="dark"] { --fluid: #8a6d1f; --glass: #56606e; --ball: #c3cad4; --mark: #ff8a70; --bench: #3b3226; --bench-edge: #2a231a; --grain: rgba(255, 220, 170, 0.06); --stand: #6c7684; --stand-dark: #4a525e; --glass-fill: rgba(150, 175, 205, 0.10); --glass-hi: rgba(220, 235, 255, 0.16);
-  --liq-glycerol: #3a4a50; --liq-castor: #6e6127; --liq-oil: #8a5a18; --liq-water: #24425e; --ball-hi: #ffffff; --ball-glass: #5f8c94; --ball-nylon: #b8b0a0; --wall: #121922; }
+:root { --fluid: #e9c46a; --glass: #9aa6b6; --ball: #61584c; --mark: #b0452f; }
+:root { --bench: #cdb89a; --bench-edge: #a8916f; --grain: rgba(90, 60, 30, 0.12); --stand: #a1988d; --stand-dark: #726a5f; --glass-fill: rgba(170, 190, 210, 0.16); --glass-hi: rgba(255, 255, 255, 0.75);
+  --liq-glycerol: #e9e5e0; --liq-castor: #f3e3a0; --liq-oil: #d9a441; --liq-water: #cfe4f5; --ball-hi: #ffffff; --ball-glass: #a9c9cf; --ball-nylon: #e8e2d4; --wall: #f5f2ef; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --fluid: #8a6d1f; --glass: #56606e; --ball: #d3ccc4; --mark: #ff8a70; --bench: #3b3226; --bench-edge: #2a231a; --grain: rgba(255, 220, 170, 0.06); --stand: #82796e; --stand-dark: #5d554c; --glass-fill: rgba(150, 175, 205, 0.10); --glass-hi: rgba(220, 235, 255, 0.16);
+  --liq-glycerol: #4e463c; --liq-castor: #6e6127; --liq-oil: #8a5a18; --liq-water: #24425e; --ball-hi: #ffffff; --ball-glass: #5f8c94; --ball-nylon: #b8b0a0; --wall: #211b13; } }
+:root[data-theme="dark"] { --fluid: #8a6d1f; --glass: #56606e; --ball: #d3ccc4; --mark: #ff8a70; --bench: #3b3226; --bench-edge: #2a231a; --grain: rgba(255, 220, 170, 0.06); --stand: #82796e; --stand-dark: #5d554c; --glass-fill: rgba(150, 175, 205, 0.10); --glass-hi: rgba(220, 235, 255, 0.16);
+  --liq-glycerol: #4e463c; --liq-castor: #6e6127; --liq-oil: #8a5a18; --liq-water: #24425e; --ball-hi: #ffffff; --ball-glass: #5f8c94; --ball-nylon: #b8b0a0; --wall: #211b13; }
 :root[data-projector="on"] { font-size: 125%; }
 .bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; }
 .bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 12px; }
@@ -62,7 +62,7 @@ table.rows input:focus { border-color: var(--accent); }
 #valveTray input { width: 100%; }
 .balls { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 3px; }
 .balls button { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 2px; min-width: 26px; padding: 2px 1px; background: none; border: 1px solid transparent; border-radius: 5px; cursor: pointer; font: 600 0.62rem/1 var(--font-mono); color: var(--muted); }
-.balls button i { display: block; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fff, var(--ballc, #8a949f) 65%); }
+.balls button i { display: block; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fff, var(--ballc, #9d968c) 65%); }
 .balls button[aria-pressed="true"] { border-color: var(--accent); color: var(--ink); }
 .balls button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 .masslist { font-family: var(--font-mono); font-size: 0.78rem; color: var(--muted); }
@@ -441,7 +441,7 @@ table.rows input:focus { border-color: var(--accent); }
     const benchM = M({ roughness: 0.8 }), bench = mesh(new THREE.BoxGeometry(2.4, 1.0, 0.04), benchM, false, true); bench.position.set(0, 0.2, -0.02);
     const wallM = M({ roughness: 0.95 }), wall = mesh(new THREE.PlaneGeometry(2.4, 1.4), wallM, false, true); wall.rotation.x = Math.PI / 2; wall.position.set(0, 0.45, 0.7);
     const standM = M({ roughness: 0.5, metalness: 0.5 }), darkM = M({ roughness: 0.55, metalness: 0.5 });
-    const glassM = new THREE.MeshPhysicalMaterial({ color: 0xdff1fb, transparent: true, opacity: 0.22, roughness: 0.05, metalness: 0, depthWrite: false, side: THREE.DoubleSide });
+    const glassM = new THREE.MeshPhysicalMaterial({ color: 0xf3eee7, transparent: true, opacity: 0.22, roughness: 0.05, metalness: 0, depthWrite: false, side: THREE.DoubleSide });
     const liqM = new THREE.MeshStandardMaterial({ transparent: true, opacity: 0.55, roughness: 0.2, depthWrite: false });
     const tubeG = new THREE.Group(), stand = new THREE.Group(), beaker = new THREE.Group();
     const markM = new THREE.MeshBasicMaterial(), gateM = M({ roughness: 0.5 }), ledOff = new THREE.MeshBasicMaterial({ color: 0x5a2420 }), ledOn = new THREE.MeshBasicMaterial({ color: 0xff3b2f });
@@ -491,8 +491,8 @@ table.rows input:focus { border-color: var(--accent); }
   }
   function theme3() {
     const g = g3d, dk = VD3.dark();
-    g.scene.background = col3(T.wall, '#eef1f4'); g.benchM.color = col3(T.bench, '#c8a67a'); g.wallM.color = col3(T.wall, '#eef1f4'); g.standM.color = col3(T.stand, '#a3acb6'); g.darkM.color = col3(T.standDark, '#5f6873');
-    g.markM.color = col3(T.mark, '#c23f2c'); g.gateM.color = col3(dk ? '#2b323b' : '#3a424c', '#3a424c');
+    g.scene.background = col3(T.wall, '#f4f1ee'); g.benchM.color = col3(T.bench, '#c8a67a'); g.wallM.color = col3(T.wall, '#f4f1ee'); g.standM.color = col3(T.stand, '#b5aea4'); g.darkM.color = col3(T.standDark, '#726a60');
+    g.markM.color = col3(T.mark, '#c23f2c'); g.gateM.color = col3(dk ? '#3a342c' : '#4b443b', '#4b443b');
     const c = g.rc.getContext('2d'); c.fillStyle = dk ? '#d8d2bf' : '#f6f1df'; c.fillRect(0, 0, 64, 1024); c.fillStyle = '#2a2a2a'; c.strokeStyle = '#2a2a2a';
     for (let k = 0; k <= 46; k++) { const y = 1024 * (0.005 + k / 100) / 0.47, L = k % 10 === 0 ? 30 : k % 5 === 0 ? 20 : 11; c.lineWidth = k % 10 === 0 ? 3 : 2; c.beginPath(); c.moveTo(0, y); c.lineTo(L, y); c.stroke(); if (k % 10 === 0) { c.font = '700 18px monospace'; c.textAlign = 'right'; c.textBaseline = 'middle'; c.fillText(String(k), 62, y); } }
     g.rulerT.needsUpdate = true;
@@ -570,7 +570,7 @@ table.rows input:focus { border-color: var(--accent); }
   $('tubeSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-t]'); if (b) { S.D = +b.dataset.t; edit(); } });
   $('speedSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-s]'); if (b) { S.speed = +b.dataset.s; sync(); draw(); } });
   /* the box of balls: every diameter from 1.0 to 10.0 mm in 0.5 mm steps, drawn at 2.4 px per mm */
-  const BALLC = { steel: '#8a949f', glass: '#9cc7c9', nylon: '#e9e2cf' };
+  const BALLC = { steel: '#9d968c', glass: '#9cc7c9', nylon: '#e9e2cf' };
   $('ballBox').innerHTML = Array.from({ length: 19 }, (_, i) => 1 + i / 2).map((d) => `<button type="button" data-d="${d}" aria-label="Ball diameter d ${d.toFixed(1)} mm" aria-pressed="false"><i style="width:${(d * 2.4).toFixed(1)}px;height:${(d * 2.4).toFixed(1)}px"></i>${d % 1 ? '' : d}</button>`).join('');
   $('ballBox').addEventListener('click', (e) => { const b = e.target.closest('[data-d]'); if (b) { S.d = +b.dataset.d; edit(); } });
   $('mystery').addEventListener('change', (e) => {
@@ -748,7 +748,7 @@ table.rows input:focus { border-color: var(--accent); }
   }
   function drawPipe() {
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh);
-    const p = ps(), q = pNow(), wide = W >= 640, benchY = Hh - 14 * p, liqC = P.liq === 'mystery' ? T.fluid : (VG.dark() ? '#3d6f9c' : '#8ec3ec');
+    const p = ps(), q = pNow(), wide = W >= 640, benchY = Hh - 14 * p, liqC = P.liq === 'mystery' ? T.fluid : (VG.dark() ? '#8f714a' : '#8ec3ec');
     ctx.fillStyle = T.wall; ctx.fillRect(0, 0, W, benchY); ctx.fillStyle = T.bench; ctx.fillRect(0, benchY, W, Hh - benchY); ctx.fillStyle = T.benchEdge; ctx.fillRect(0, benchY, W, 2 * p);
     const trayOn = getComputedStyle($('valveTray')).position === 'absolute', trayH = trayOn ? $('valveTray').offsetHeight + 34 : 0;
     const pipeY = Math.round(Math.min(benchY - trayH - 120 * p, Hh * 0.6)), pd = P.D * 2200 * p, tankW = wide ? 92 * p : 64 * p;
@@ -788,7 +788,7 @@ table.rows input:focus { border-color: var(--accent); }
       VG.label(ctx, 'Δh', (x1 + x2) / 2, yT - (h1 + h2) / 2 * mpx, { a: 'center', c: T.mark, w: 700, s: 11 * p }); }
     const gy = yB + 36 * p, gx = (x1 + x2) / 2;
     ctx.strokeStyle = T.standDark; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.moveTo(x1, yB); ctx.lineTo(x1, gy + 12 * p); ctx.lineTo(gx - 50 * p, gy + 12 * p); ctx.moveTo(x2, yB); ctx.lineTo(x2, gy + 12 * p); ctx.lineTo(gx + 50 * p, gy + 12 * p); ctx.stroke();
-    VG.box(ctx, gx - 52 * p, gy, 104 * p, 40 * p, { color: '#2e353f', r: 5 });
+    VG.box(ctx, gx - 52 * p, gy, 104 * p, 40 * p, { color: '#3e372f', r: 5 });
     VG.lcd(ctx, gx - 46 * p, gy + 5 * p, 92 * p, 20 * p, `${q.dPr.toFixed(1)} Pa`);
     VG.plate(ctx, 'ΔP gauge', gx, gy + 33 * p, { s: 7 * p });
     const bL = X(0.36), bR = X(0.74), by = yT - 14 * p - pd * 0;

@@ -801,7 +801,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       ctx.stroke(); ctx.restore();
       if (nbGone(i)) return;   /* Europa taken away: its orbit stays as a faint line, the moon is gone */
       const z = moonPos(m, i), x = ox + sk * z.x * o.s, y = oy - sk * z.y * o.s, r = Math.max(2.5 * pp, m.R * X * o.s);
-      ctx.fillStyle = m.rho == null ? K.moon : m.rho > 2800 ? '#c9a24a' : m.rho > 1400 ? '#a99f8f' : '#d6dde6'; ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.fill();
+      ctx.fillStyle = m.rho == null ? K.moon : m.rho > 2800 ? '#c9a24a' : m.rho > 1400 ? '#a99f8f' : '#e5dfd7'; ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.fill();
       ctx.strokeStyle = i === S.moon ? K.sel : shade('#5b6573', 0); ctx.lineWidth = (i === S.moon ? 2.5 : 1) * pp; ctx.stroke();
       label(m.name, x + r + 4, y - r - 2, { col: i === S.moon ? K.sel : K.ink, w: i === S.moon ? 700 : 600, size: 11 });
     });
@@ -943,7 +943,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* cloud bases: a dashed line across both panels and the cloud's name */
     for (const b of m.bases) { const y = yP(b.P);
       ctx.save(); ctx.setLineDash([5 * pp, 4 * pp]); ctx.strokeStyle = K.dark ? CL_COL[b.k] : shade(CL_COL[b.k], -0.45); ctx.lineWidth = 1.2 * pp; ctx.beginPath(); ctx.moveTo(L.x0, y); ctx.lineTo(L.gx1, y); ctx.stroke(); ctx.restore();
-      label(b.k === 'h2o' ? (b.T > 273.16 ? 'Water droplets' : 'Water ice') : b.k === 'nh4sh' && L.colW < 170 * pp ? 'NH₄SH' : CL_NAME[b.k], L.x0 + 6 * pp, y - 8 * pp, { col: '#10141a', halo: false, w: 700, size: 10.5 });
+      label(b.k === 'h2o' ? (b.T > 273.16 ? 'Water droplets' : 'Water ice') : b.k === 'nh4sh' && L.colW < 170 * pp ? 'NH₄SH' : CL_NAME[b.k], L.x0 + 6 * pp, y - 8 * pp, { col: '#191611', halo: false, w: 700, size: 10.5 });
       if (!S.blind && !L.narrow) label(`base ${barTxt(b.P)}`, L.gx1, y - 8 * pp, { a: 'right', col: K.muted, w: 400, size: 10, mono: true }); }
     /* the gases: mole fraction against pressure (log scales) */
     const xl = -8, xh = -1, xX = (x) => L.gx0 + (Math.log10(Math.max(x, 1e-12)) - xl) / (xh - xl) * (L.gx1 - L.gx0);
@@ -1030,12 +1030,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const wid = (k) => 2 * (k === 'saturn' ? RINGS.saturn[4][2] : P(k).Req) / U; const total = show.reduce((s, k) => s + wid(k), 0) + 0.22 * (show.length - 1);
       x = -total / 2; for (const k of show) { const pl = makePlanet3(S3, k, P(k).Req / U); pl.position.set(x + wid(k) / 2, 0, 0); grp.add(pl); b.pl[k] = pl;
         if (k === 'saturn') { const rm = ringMesh('saturn', U, 140000); pl.add(rm); }
-        const lab = VD3K.label(P(k).name, { size: 0.16, color: '#e3e8ef' }); lab.position.set(x + wid(k) / 2, 0, -1.75); grp.add(lab); x += wid(k) + 0.22; }
+        const lab = VD3K.label(P(k).name, { size: 0.16, color: '#eeeae4' }); lab.position.set(x + wid(k) / 2, 0, -1.75); grp.add(lab); x += wid(k) + 0.22; }
       b.target = [0, 0, -0.2]; b.dist = Math.max(4.2, total * 1.9);
     } else if (S.mode === 'rings') {
       const p = P(S.planet), R = p.Req, out = Math.min(VIEW_RINGS[S.planet], Math.max(...RINGS[S.planet].map((r) => r[2])) / R) * R; b.pl = makePlanet3(S3, S.planet, 1); b.pl.rotation.y = 0; grp.add(b.pl);
       grp.add(ringMesh(S.planet, R, out));
-      b.rm = RING_MOONS[S.planet].map((m) => { const s = new THREE.Mesh(new THREE.SphereGeometry(Math.max(0.012, m.R / R), 16, 10), new THREE.MeshStandardMaterial({ color: 0xb9c0c8, roughness: 0.9 })); grp.add(s); return s; });
+      b.rm = RING_MOONS[S.planet].map((m) => { const s = new THREE.Mesh(new THREE.SphereGeometry(Math.max(0.012, m.R / R), 16, 10), new THREE.MeshStandardMaterial({ color: 0xc7c1ba, roughness: 0.9 })); grp.add(s); return s; });
       b.roche = [ROCHE_FLUID, ROCHE_RIGID].map((c, i) => { const l = VD3K.ring(1, { color: i ? '#c4a5ff' : '#fb923c', dashed: true, opacity: 0.9, seg: 192 }); grp.add(l); return l; });
       b.res = VD3K.ring(1, { color: '#69a0ff', dashed: true, opacity: 0.9, seg: 192 }); grp.add(b.res);
       const g = new THREE.BufferGeometry(); b.debrisPos = new Float32Array(3 * PILE_N); g.setAttribute('position', new THREE.BufferAttribute(b.debrisPos, 3));
@@ -1047,14 +1047,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const p = P(S.planet), R = p.Req; b.pl = makePlanet3(S3, S.planet, 1); grp.add(b.pl);
       const big = RINGS[S.planet].filter((r) => r[3] > 0.3); if (big.length) grp.add(ringMesh(S.planet, R, Math.max(...big.map((r) => r[2]))));
       const q = baryQ(S.planet);
-      b.moons = MOONS[S.planet].map((m, i) => { const s = new THREE.Mesh(new THREE.SphereGeometry(m.R * moonX() / R, 24, 16), new THREE.MeshStandardMaterial({ color: m.rho == null ? 0xb9c0c8 : m.rho > 2800 ? 0xd9b45a : m.rho > 1400 ? 0xb3a996 : 0xe3e9f0, roughness: 0.85 }));
+      b.moons = MOONS[S.planet].map((m, i) => { const s = new THREE.Mesh(new THREE.SphereGeometry(m.R * moonX() / R, 24, 16), new THREE.MeshStandardMaterial({ color: m.rho == null ? 0xc7c1ba : m.rho > 2800 ? 0xd9b45a : m.rho > 1400 ? 0xb3a996 : 0xefeae4, roughness: 0.85 }));
         const sk = m.M ? 1 - q : 1, pts = []; for (let n = 0; n <= 180; n++) { const z = moonAt(m, n / 180 * Math.abs(m.P) * DAY, i); pts.push(new THREE.Vector3(sk * z.x / R, sk * z.y / R, 0)); }
-        const ln = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineBasicMaterial({ color: 0x7d8796, transparent: true, opacity: 0.7 }));
+        const ln = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineBasicMaterial({ color: 0x948b7f, transparent: true, opacity: 0.7 }));
         const lab = VD3K.label(m.name, { size: VIEW_MOONS[S.planet] * 0.06, color: '#e3e8ef' }); grp.add(s, ln, lab); return { s, ln, lab }; });
       b.target = [0, 0, 0]; b.dist = VIEW_MOONS[S.planet] * 3.4;
     } else {
       b.pl = makePlanet3(S3, 'jupiter', 1); grp.add(b.pl);
-      b.orbit = new THREE.Line(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({ color: 0x7d8796 })); grp.add(b.orbit); b.orbitE = -1;
+      b.orbit = new THREE.Line(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({ color: 0x948b7f })); grp.add(b.orbit); b.orbitE = -1;
       const io = new THREE.Mesh(new THREE.SphereGeometry(0.42, 48, 32), new THREE.MeshStandardMaterial({ color: 0xe2c158, roughness: 0.8, emissive: new THREE.Color(0xe8501f), emissiveIntensity: 0 }));
       const mark = new THREE.Mesh(new THREE.ConeGeometry(0.06, 0.12, 12), new THREE.MeshStandardMaterial({ color: 0x5b4a2a })); mark.rotation.z = -Math.PI / 2; mark.position.set(0.44, 0, 0);
       b.ioBody = new THREE.Group(); b.ioShape = new THREE.Group(); b.ioShape.add(io); b.ioBody.add(mark); b.io = new THREE.Group(); b.io.add(b.ioShape, b.ioBody); grp.add(b.io); b.ioMat = io.material;
@@ -1095,10 +1095,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     S3.render();
     /* words over the picture */
     const pp = proj();
-    if (S.mode === 'rings') label(`${P(S.planet).name}'s rings to scale; ring brightness is a drawing choice; the test moon's pieces drawn larger than their size`, 16 * pp, H - 16 * pp, { col: '#c3cbd6', halo: false, w: 400, size: 10 });
-    if (S.mode === 'moons') label(moonX() === 1 ? 'Orbits and moons to scale, round the center of mass' : `Orbits to scale; moons drawn ${moonX()} times larger`, 16 * pp, H - 16 * pp, { col: '#c3cbd6', halo: false, w: 400, size: 10 });
-    if (S.mode === 'planets') label('True sizes and tilts; bands and colors are a painting', 16 * pp, H - 16 * pp, { col: '#c3cbd6', halo: false, w: 400, size: 10 });
-    if (S.mode === 'io') label(`Io drawn ${f(0.42 * P('jupiter').Req / MOONS.jupiter[0].R, 0)} times larger; ${S.exag ? 'its orbit and stretch exaggerated' : 'orbit to scale'}`, 16 * pp, H - 16 * pp, { col: '#c3cbd6', halo: false, w: 400, size: 10 });
+    if (S.mode === 'rings') label(`${P(S.planet).name}'s rings to scale; ring brightness is a drawing choice; the test moon's pieces drawn larger than their size`, 16 * pp, H - 16 * pp, { col: '#d5cec4', halo: false, w: 400, size: 10 });
+    if (S.mode === 'moons') label(moonX() === 1 ? 'Orbits and moons to scale, round the center of mass' : `Orbits to scale; moons drawn ${moonX()} times larger`, 16 * pp, H - 16 * pp, { col: '#d5cec4', halo: false, w: 400, size: 10 });
+    if (S.mode === 'planets') label('True sizes and tilts; bands and colors are a painting', 16 * pp, H - 16 * pp, { col: '#d5cec4', halo: false, w: 400, size: 10 });
+    if (S.mode === 'io') label(`Io drawn ${f(0.42 * P('jupiter').Req / MOONS.jupiter[0].R, 0)} times larger; ${S.exag ? 'its orbit and stretch exaggerated' : 'orbit to scale'}`, 16 * pp, H - 16 * pp, { col: '#d5cec4', halo: false, w: 400, size: 10 });
   }
 
   /* ---------- readouts ---------- */

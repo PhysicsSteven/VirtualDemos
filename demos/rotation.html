@@ -20,20 +20,20 @@
 <style>
 /* Layout: the scene fills the top of the stage, two small charts sit under it, the instrument rail is on the right; stacks on phones. */
 :root {
-  --bg: #e9edf2;
-  --surface: #f8fafc;
-  --canvas: #fcfdfe;
-  --relief: #dfe5ec;
-  --ink: #17202b;
-  --muted: #5a6575;
-  --line: #d3d9e2;
-  --grid: #e6ebf1;
-  --grid-strong: #cfd7e1;
+  --bg: #f1eeea;
+  --surface: #fcfaf8;
+  --canvas: #fefdfc;
+  --relief: #ebe6e0;
+  --ink: #2a2219;
+  --muted: #73695c;
+  --line: #e1dbd4;
+  --grid: #f0ece7;
+  --grid-strong: #e0d9d0;
   --pos: #c23f2c;
   --neg: #2b60b5;
-  --field: #1d2836;
+  --field: #342b1f;
   --equi: #a7740b;
-  --accent: #2b60b5;
+  --accent: #c4811c;
   --on-charge: #ffffff;
   --teal: #1d8270;
   --violet: #7a4cb0;
@@ -42,15 +42,15 @@
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
-    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-    --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; --teal: #4fcfae; --violet: #b897f0; color-scheme: dark;
+    --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --relief: #40372c; --ink: #eeeae4; --muted: #b0a698;
+    --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+    --field: #eee8e0; --equi: #e2b350; --accent: #fbc26d; --on-charge: #17130e; --teal: #4fcfae; --violet: #b897f0; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
-  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-  --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; --teal: #4fcfae; --violet: #b897f0; color-scheme: dark;
+  --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --relief: #40372c; --ink: #eeeae4; --muted: #b0a698;
+  --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+  --field: #eee8e0; --equi: #e2b350; --accent: #fbc26d; --on-charge: #17130e; --teal: #4fcfae; --violet: #b897f0; color-scheme: dark;
 }
 :root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
@@ -1203,10 +1203,10 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     const e2 = o.pivot === 'free' ? [q.rc[0] + ca * L / 2, q.rc[1] + sa * L / 2] : [ca * rbx, sa * rbx];
     const rw = Math.max(3 * ps, HTK.hw * sc);
     ctx.save(); ctx.shadowColor = 'rgba(0,0,0,0.25)'; ctx.shadowBlur = 6 * ps; ctx.shadowOffsetY = 2 * ps;
-    if (window.VDGear) window.VDGear.rod(ctx, X(e1[0]), Y(e1[1]), X(e2[0]), Y(e2[1]), rw, { color: '#9aa4b0' });
+    if (window.VDGear) window.VDGear.rod(ctx, X(e1[0]), Y(e1[1]), X(e2[0]), Y(e2[1]), rw, { color: '#aea69c' });
     else { ctx.strokeStyle = T.muted; ctx.lineWidth = 2 * rw; ctx.beginPath(); ctx.moveTo(X(e1[0]), Y(e1[1])); ctx.lineTo(X(e2[0]), Y(e2[1])); ctx.stroke(); }
     ctx.restore();
-    ctx.fillStyle = '#7d8794'; for (const e of [e1, e2]) { ctx.beginPath(); ctx.arc(X(e[0]), Y(e[1]), rw, 0, 2 * Math.PI); ctx.fill(); }
+    ctx.fillStyle = '#928a7f'; for (const e of [e1, e2]) { ctx.beginPath(); ctx.arc(X(e[0]), Y(e[1]), rw, 0, 2 * Math.PI); ctx.fill(); }
     ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(X(q.rc[0]), Y(q.rc[1]), 2.5 * ps, 0, 2 * Math.PI); ctx.fill();
     if (o.pivot !== 'free') {
       ctx.fillStyle = T.line; ctx.beginPath(); ctx.arc(X(0), Y(0), 9 * ps, 0, 2 * Math.PI); ctx.fill();
@@ -1260,7 +1260,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     const cx = (W - insetW) / 2, cy = (top + bot) / 2, r1 = HT.R1 * sc, r2 = HT.R2 * sc;
     // bottom disk: a dark turntable with spokes and a marker, turned by θ₁ (counterclockwise positive, so screen angle −θ)
     if (window.VDGear) window.VDGear.shadow(ctx, cx, cy + r1 * 0.9, r1 * 0.95, r1 * 0.12, 0.6);
-    const g1 = ctx.createRadialGradient(cx - r1 * 0.3, cy - r1 * 0.35, r1 * 0.1, cx, cy, r1); g1.addColorStop(0, '#6c7784'); g1.addColorStop(1, '#3a434e');
+    const g1 = ctx.createRadialGradient(cx - r1 * 0.3, cy - r1 * 0.35, r1 * 0.1, cx, cy, r1); g1.addColorStop(0, '#82796e'); g1.addColorStop(1, '#4c453c');
     ctx.fillStyle = g1; ctx.beginPath(); ctx.arc(cx, cy, r1, 0, 2 * Math.PI); ctx.fill();
     ctx.strokeStyle = 'rgba(255,255,255,0.18)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(cx, cy, r1 * 0.97, 0, 2 * Math.PI); ctx.stroke();
     ctx.save(); ctx.translate(cx, cy); ctx.rotate(-q.th1);
@@ -1292,8 +1292,8 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       ctx.fillStyle = T.canvas; ctx.strokeStyle = T.line; ctx.lineWidth = 1; roundRectV(ctx, ix, iy, iw, ih, 6 * ps); ctx.fill(); ctx.stroke();
       label(ctx, 'side view', ix + 8 * ps, iy + 12 * ps, T.muted, 'left', 'middle', 10, 400);
       const by = iy + ih - 18 * ps;
-      ctx.fillStyle = '#7d8794'; ctx.fillRect(mx - 3 * ps, by + 6 * ps, 6 * ps, 12 * ps);
-      ctx.fillStyle = '#4b5561'; ctx.fillRect(mx - HT.R1 * k, by, 2 * HT.R1 * k, 6 * ps);
+      ctx.fillStyle = '#928a7f'; ctx.fillRect(mx - 3 * ps, by + 6 * ps, 6 * ps, 12 * ps);
+      ctx.fillStyle = '#5f574d'; ctx.fillRect(mx - HT.R1 * k, by, 2 * HT.R1 * k, 6 * ps);
       const ty = dropped ? by - 6 * ps : by - 30 * ps;
       ctx.fillStyle = '#c0915a'; ctx.fillRect(mx - HT.R2 * k, ty, 2 * HT.R2 * k, 6 * ps);
       if (!dropped) { ctx.strokeStyle = T.muted; ctx.setLineDash([2 * ps, 3 * ps]); ctx.beginPath(); ctx.moveTo(mx, ty + 8 * ps); ctx.lineTo(mx, by - 2 * ps); ctx.stroke(); ctx.setLineDash([]); }
@@ -1613,7 +1613,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       const hw = Math.max(9 * ps, Math.min(20 * ps, 0.035 * s)), ring = hw * 1.25;
       ctx.fillStyle = T.relief; ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5 * ps;
       ctx.beginPath(); ctx.moveTo(ring * 0.8, -hw / 2); ctx.lineTo(TQ.L * s - hw / 2, -hw / 2);
-      { const mg = ctx.createLinearGradient(0, -ring, 0, ring); mg.addColorStop(0, '#e3e8ee'); mg.addColorStop(0.45, '#a9b3be'); mg.addColorStop(1, '#6f7a86'); ctx.fillStyle = mg; }   // chrome steel
+      { const mg = ctx.createLinearGradient(0, -ring, 0, ring); mg.addColorStop(0, '#ede9e4'); mg.addColorStop(0.45, '#bcb5ab'); mg.addColorStop(1, '#847c71'); ctx.fillStyle = mg; }   // chrome steel
       ctx.arc(TQ.L * s - hw / 2, 0, hw / 2, -Math.PI / 2, Math.PI / 2); ctx.lineTo(ring * 0.8, hw / 2); ctx.closePath(); ctx.fill(); ctx.stroke();
       ctx.beginPath(); ctx.arc(0, 0, ring, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
       // hex bolt head
@@ -2665,7 +2665,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     const boardM = M({ roughness: 0.75 }), railM = M({ roughness: 0.5, metalness: 0.4 }), legM = M({ roughness: 0.6 }), lineM = M({ roughness: 0.6 });
     const ramp = new THREE.Group(), objs = new THREE.Group();
     /* a stripe texture so rolling shows on a ball */
-    const stc = document.createElement('canvas'); stc.width = 256; stc.height = 128; const sx = stc.getContext('2d'); sx.fillStyle = '#ffffff'; sx.fillRect(0, 0, 256, 128); sx.fillStyle = '#d0d4da'; for (let i = 0; i < 4; i++) sx.fillRect(i * 64, 0, 32, 128);
+    const stc = document.createElement('canvas'); stc.width = 256; stc.height = 128; const sx = stc.getContext('2d'); sx.fillStyle = '#ffffff'; sx.fillRect(0, 0, 256, 128); sx.fillStyle = '#d9d6d1'; for (let i = 0; i < 4; i++) sx.fillRect(i * 64, 0, 32, 128);
     const stripeT = new THREE.CanvasTexture(stc);
     const rollG = new THREE.Group(); rollG.add(ramp, objs);
     const tqG = new THREE.Group(), tqFix = new THREE.Group(), tqBody = new THREE.Group(); tqG.add(tqFix, tqBody);
@@ -2696,16 +2696,16 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   }
   function theme3() {
     const g = g3, dk = VD3.dark();
-    g.scene.background = col3(T.canvas, '#ffffff'); g.floorM.color = col3(dk ? '#2a2620' : '#e2ddd3', '#e2ddd3'); g.wallM.color = col3(dk ? '#1c222b' : '#eef1f5', '#eef1f5');
-    g.boardM.color = col3(dk ? '#6e5a42' : '#c9a97c', '#c9a97c'); g.railM.color = col3(dk ? '#8b95a3' : '#9aa6b6', '#9aa6b6'); g.legM.color = col3(dk ? '#4a3c2c' : '#8a6d4a', '#8a6d4a'); g.lineM.color = col3(T.ink, '#17202b');
+    g.scene.background = col3(T.canvas, '#ffffff'); g.floorM.color = col3(dk ? '#2a2620' : '#e2ddd3', '#e2ddd3'); g.wallM.color = col3(dk ? '#2a241d' : '#f4f2ef', '#f4f2ef');
+    g.boardM.color = col3(dk ? '#6e5a42' : '#c9a97c', '#c9a97c'); g.railM.color = col3(dk ? '#a1988d' : '#b4aa9c', '#b4aa9c'); g.legM.color = col3(dk ? '#4a3c2c' : '#8a6d4a', '#8a6d4a'); g.lineM.color = col3(T.ink, '#2a2219');
     g.hemi.intensity = dk ? 0.5 : 0.62; g.sun.intensity = dk ? 0.75 : 0.85; g.sig = '';
-    g.doorM.color = col3(dk ? '#9a7650' : '#c49a63', '#c49a63'); g.steelM.color = col3('#9aa3ad', '#9aa3ad'); g.chromeM.color = col3('#d5dbe2', '#d5dbe2'); g.plateM.color = col3(dk ? '#59626d' : '#b9c1cb', '#b9c1cb');
-    g.wallTqM.color = col3(dk ? '#3a4250' : '#e9e4da', '#e9e4da'); g.iceM.color = col3(dk ? '#3c5a70' : '#e4f1fa', '#e4f1fa'); g.suitM.color = col3(dk ? '#6a7fc4' : '#3d56a6', '#3d56a6');
-    g.bootM.color = col3('#f2f2f2', '#f2f2f2'); g.skinM.color = col3('#e2b393', '#e2b393'); g.hairM.color = col3('#4a3426', '#4a3426'); g.massM.color = col3(T.pos, '#c23f2c'); g.tableM.color = col3(dk ? '#5a6370' : '#c8ced6', '#c8ced6');
-    g.fulcM.color = col3(dk ? '#5b6573' : '#9aa4b1', '#9aa4b1'); g.postM.color = col3(dk ? '#4a5260' : '#b8bfc9', '#b8bfc9');
+    g.doorM.color = col3(dk ? '#9a7650' : '#c49a63', '#c49a63'); g.steelM.color = col3('#aca59b', '#aca59b'); g.chromeM.color = col3('#e1dcd6', '#e1dcd6'); g.plateM.color = col3(dk ? '#6b645a' : '#cac3ba', '#cac3ba');
+    g.wallTqM.color = col3(dk ? '#4e463c' : '#e9e4da', '#e9e4da'); g.iceM.color = col3(dk ? '#6c5940' : '#f4f0ea', '#f4f0ea'); g.suitM.color = col3(dk ? '#b89b76' : '#3d56a6', '#3d56a6');
+    g.bootM.color = col3('#f2f2f2', '#f2f2f2'); g.skinM.color = col3('#e2b393', '#e2b393'); g.hairM.color = col3('#4a3426', '#4a3426'); g.massM.color = col3(T.pos, '#c23f2c'); g.tableM.color = col3(dk ? '#6e665c' : '#d5d0c9', '#d5d0c9');
+    g.fulcM.color = col3(dk ? '#71685d' : '#afa79c', '#afa79c'); g.postM.color = col3(dk ? '#5e564c' : '#c8c1b9', '#c8c1b9');
     [T.pos, T.neg, T.equi].forEach((c, i) => { g.blockM[i].color = col3(c, '#888888'); g.blockTopM[i].color = col3(c, '#888888'); });
-    g.accentTopM.color = col3(T.accent, '#2a64c8'); g.negTopM.color = col3(T.neg, '#2a64c8'); g.posTopM.color = col3(T.pos, '#c23f2c'); g.equiLineM.color = col3(T.equi, '#a7740b');
-    g.loaM.color = col3(T.muted, '#5d6a7c'); g.rightM.color = col3(T.equi, '#a7740b'); g.ghostM.color = col3(T.neg, '#2a64c8'); g.refM.color = col3(T.muted, '#5d6a7c');
+    g.accentTopM.color = col3(T.accent, '#d48b1e'); g.negTopM.color = col3(T.neg, '#2a64c8'); g.posTopM.color = col3(T.pos, '#c23f2c'); g.equiLineM.color = col3(T.equi, '#a7740b');
+    g.loaM.color = col3(T.muted, '#7a6e5f'); g.rightM.color = col3(T.equi, '#a7740b'); g.ghostM.color = col3(T.neg, '#2a64c8'); g.refM.color = col3(T.muted, '#7a6e5f');
     g.tqSig = g.spSig = g.seSig = '';
   }
   const laneW = () => Math.max(0.14, 2.4 * Math.max(...RO.lanes.map((o) => o.R)) + 0.06);

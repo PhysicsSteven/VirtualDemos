@@ -15,7 +15,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
 /* only what this demo needs beyond demos/lib/vd.css: the floor plan, the rooms in 3D and the transmission graph */
-:root { --ray: #c2410c; --pass: #15803d; --fail: #b91c1c; --lead: #4f6fa8; --conc: #b8a98a; --steel: #57534e; --gyp: #e7e2d6; --bpe: #0f766e; --grid: rgba(60, 70, 85, 0.13); }
+:root { --ray: #c2410c; --pass: #15803d; --fail: #b91c1c; --lead: #a18156; --conc: #b8a98a; --steel: #57534e; --gyp: #e7e2d6; --bpe: #0f766e; --grid: rgba(60, 70, 85, 0.13); }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --ray: #fb923c; --pass: #4ade80; --fail: #f87171; --lead: #8fb0e8; --conc: #c8b893; --steel: #a8a29e; --gyp: #e5e0d3; --bpe: #2dd4bf; --grid: rgba(200, 210, 225, 0.12); } }
 :root[data-theme="dark"] { --ray: #fb923c; --pass: #4ade80; --fail: #f87171; --lead: #8fb0e8; --conc: #c8b893; --steel: #a8a29e; --gyp: #e5e0d3; --bpe: #2dd4bf; --grid: rgba(200, 210, 225, 0.12); }
 .stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
@@ -332,7 +332,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const lin = S.view === 'linac', span = L.a + Math.max(L.tx, L.tPri) + (lin ? 2.8 : 1.6), sc = Math.min((fw - 40 * p) / (2 * span + 0.6), (H - 70 * p) / (2 * (L.a + Math.max(L.tSec, L.tOther) + (lin ? 3.4 : 0.8)))), cx = fw / 2 - 0.3 * sc, cy = H / 2 + 8 * p;
     const X = (x) => cx + x * sc, Y = (y) => cy - y * sc, minT = (t) => Math.max(t * sc, 3 * p);
     /* the floor of the room */
-    ctx.fillStyle = d ? '#1c2229' : '#eef0f3'; ctx.fillRect(X(-L.a), Y(L.a), 2 * L.a * sc, 2 * L.a * sc);
+    ctx.fillStyle = d ? '#28231d' : '#f3f1ee'; ctx.fillRect(X(-L.a), Y(L.a), 2 * L.a * sc, 2 * L.a * sc);
     ctx.strokeStyle = d ? 'rgba(255,255,255,0.05)' : 'rgba(30,40,55,0.06)'; ctx.lineWidth = 1;
     for (let g = -Math.floor(L.a); g <= L.a; g++) { ctx.beginPath(); ctx.moveTo(X(g), Y(L.a)); ctx.lineTo(X(g), Y(-L.a)); ctx.stroke(); ctx.beginPath(); ctx.moveTo(X(-L.a), Y(g)); ctx.lineTo(X(L.a), Y(g)); ctx.stroke(); }
     const wall = (x0, y0, x1, y1, m, hl) => { const xa = Math.min(X(x0), X(x1)), ya = Math.min(Y(y0), Y(y1)), w = Math.max(Math.abs(X(x1) - X(x0)), 3 * p), h = Math.max(Math.abs(Y(y1) - Y(y0)), 3 * p);
@@ -348,23 +348,23 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const mz = 2, iw = Math.max(ts * 0.55, 0.6);
       wall(-L.a + 2.2, -L.a - iw, L.a + ts, -L.a, S.mat, false); wall(-L.a - ts, -L.a - iw - mz - ts, L.a + ts, -L.a - iw - mz, S.mat, false);
       wall(L.a, -L.a - iw - mz, L.a + ts, -L.a - iw, S.mat, false);
-      ctx.fillStyle = d ? '#1c2229' : '#eef0f3'; ctx.fillRect(X(-L.a), Y(-L.a - iw), (2 * L.a + 0.001) * sc, mz * sc);
+      ctx.fillStyle = d ? '#28231d' : '#f3f1ee'; ctx.fillRect(X(-L.a), Y(-L.a - iw), (2 * L.a + 0.001) * sc, mz * sc);
       /* the door at the −x end of the maze */
-      const dx = -L.a - ts, dw = Math.max(0.25, (S.bpe + S.pb) / 100); ctx.fillStyle = S.bar === 'door' ? T.bpe : (d ? '#4b5563' : '#9aa3ae'); ctx.fillRect(X(dx) - dw * sc, Y(-L.a - iw), dw * sc, mz * sc);
+      const dx = -L.a - ts, dw = Math.max(0.25, (S.bpe + S.pb) / 100); ctx.fillStyle = S.bar === 'door' ? T.bpe : (d ? '#61584d' : '#aca59b'); ctx.fillRect(X(dx) - dw * sc, Y(-L.a - iw), dw * sc, mz * sc);
       if (S.bar === 'door') { ctx.strokeStyle = T.accent; ctx.lineWidth = 2 * p; ctx.strokeRect(X(dx) - dw * sc, Y(-L.a - iw), dw * sc, mz * sc); }
       G.label(ctx, 'maze', X(0), Y(-L.a - iw - mz / 2), { a: 'center', s: 10 * p });
       G.label(ctx, 'door', X(dx) - dw * sc - 4 * p, Y(-L.a - iw - mz / 2), { a: 'right', s: 10 * p });
       /* the linac: gantry and couch */
-      ctx.fillStyle = d ? '#5c6673' : '#8d97a3'; ctx.fillRect(X(-0.4), Y(1.9), 0.8 * sc, 1.2 * sc); ctx.fillStyle = d ? '#c3c9d1' : '#e5e7eb'; ctx.fillRect(X(-0.28), Y(0.6), 0.56 * sc, 2.4 * sc);
+      ctx.fillStyle = d ? '#71695e' : '#a1998f'; ctx.fillRect(X(-0.4), Y(1.9), 0.8 * sc, 1.2 * sc); ctx.fillStyle = d ? '#d0cbc4' : '#ebe8e5'; ctx.fillRect(X(-0.28), Y(0.6), 0.56 * sc, 2.4 * sc);
       G.label(ctx, `linac, ${S.mv} MV`, X(0.5), Y(1.5), { s: 10 * p });
     } else {
       wall(L.a, -L.a - tO, L.a + tX, L.a + tO, L.m, true); wall(-L.a - tO, -L.a - tO, -L.a, L.a + tO, L.m, false);
       wall(-L.a - tO, L.a, L.a + tX, L.a + tO, L.m, false); wall(-L.a - tO, -L.a - tO, L.a + tX, -L.a, L.m, false);
-      if (ct) { /* the CT gantry and table */ ctx.fillStyle = d ? '#c3c9d1' : '#dfe3e8'; ctx.strokeStyle = d ? '#6b7786' : '#9aa3ae'; ctx.lineWidth = 1.5 * p;
-        ctx.beginPath(); ctx.roundRect(X(-0.45), Y(1.0), 0.9 * sc, 2.0 * sc, 0.2 * sc); ctx.fill(); ctx.stroke(); ctx.fillStyle = d ? '#5c6673' : '#b0b8c2'; ctx.fillRect(X(-0.25), Y(-0.6), 0.5 * sc, 2.3 * sc);
+      if (ct) { /* the CT gantry and table */ ctx.fillStyle = d ? '#d0cbc4' : '#e7e4e0'; ctx.strokeStyle = d ? '#847a6d' : '#aca59b'; ctx.lineWidth = 1.5 * p;
+        ctx.beginPath(); ctx.roundRect(X(-0.45), Y(1.0), 0.9 * sc, 2.0 * sc, 0.2 * sc); ctx.fill(); ctx.stroke(); ctx.fillStyle = d ? '#71695e' : '#c1bab1'; ctx.fillRect(X(-0.25), Y(-0.6), 0.5 * sc, 2.3 * sc);
         G.label(ctx, `CT scanner, ${S.kv} kV`, X(0.6), Y(0.9), { s: 10 * p }); }
-      else { /* the proton gantry: a drum about 10 m long seen from above, the couch at isocenter */ ctx.fillStyle = d ? '#3b4553' : '#c3c9d1'; ctx.beginPath(); ctx.roundRect(X(-2), Y(L.a * 0.9), 4 * sc, L.a * 0.75 * sc, 0.3 * sc); ctx.fill();
-        ctx.fillStyle = d ? '#c3c9d1' : '#e5e7eb'; ctx.fillRect(X(-0.28), Y(0.2), 0.56 * sc, 2.2 * sc); G.label(ctx, 'proton gantry', X(0), Y(L.a * 0.55), { a: 'center', s: 10 * p }); }
+      else { /* the proton gantry: a drum about 10 m long seen from above, the couch at isocenter */ ctx.fillStyle = d ? '#51483d' : '#d0cbc4'; ctx.beginPath(); ctx.roundRect(X(-2), Y(L.a * 0.9), 4 * sc, L.a * 0.75 * sc, 0.3 * sc); ctx.fill();
+        ctx.fillStyle = d ? '#d0cbc4' : '#ebe8e5'; ctx.fillRect(X(-0.28), Y(0.2), 0.56 * sc, 2.2 * sc); G.label(ctx, 'proton gantry', X(0), Y(L.a * 0.55), { a: 'center', s: 10 * p }); }
     }
     /* the radiation: from the source through the chosen wall to the person 0.3 m beyond it */
     const tx = S.view === 'linac' && S.bar === 'door' ? null : L.tx, px = tx == null ? -L.a - L.tSec - 0.9 : L.a + tx + 0.3, py = tx == null ? -L.a - 0.3 - 1 : 0;
@@ -408,9 +408,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const st = VD3K.stage($('scene'), { before: can, shadow: 9, fov: 32, far: 120, fogAt: [2.2, 4.5] }); if (!st) return false;
     st.el.hidden = true; st.sun.position.set(6, -9, 16); st.sun.shadow.bias = -0.0006;
     const K = VD3K, M = (o, c) => K.material(st, o, c);
-    const floor = new THREE.Mesh(new THREE.PlaneGeometry(80, 80), M({ roughness: 0.95 }, ['#c9ced5', '#20262d'])); floor.receiveShadow = true; st.scene.add(floor);
-    const mats = { lead: M({ roughness: 0.5, metalness: 0.35 }, ['#8a96a6', '#6b7686']), steel: M({ roughness: 0.4, metalness: 0.55 }, ['#5b6878', '#4a5666']), concrete: M({ roughness: 0.95 }, ['#cfc4ab', '#8f866f']),
-      gypsum: M({ roughness: 0.9 }, ['#f1eee6', '#bdb8ac']), bpe: M({ roughness: 0.6 }, ['#14857a', '#1c9d90']), hl: M({ roughness: 0.6, emissive: '#000000' }, ['#e2e8f0', '#334155']) };
+    const floor = new THREE.Mesh(new THREE.PlaneGeometry(80, 80), M({ roughness: 0.95 }, ['#d4d0ca', '#2c2721'])); floor.receiveShadow = true; st.scene.add(floor);
+    const mats = { lead: M({ roughness: 0.5, metalness: 0.35 }, ['#a49a8c', '#847a6d']), steel: M({ roughness: 0.4, metalness: 0.55 }, ['#766b5d', '#645a4c']), concrete: M({ roughness: 0.95 }, ['#cfc4ab', '#8f866f']),
+      gypsum: M({ roughness: 0.9 }, ['#f1eee6', '#bdb8ac']), bpe: M({ roughness: 0.6 }, ['#14857a', '#1c9d90']), hl: M({ roughness: 0.6, emissive: '#000000' }, ['#efeae3', '#524636']) };
     const room = new THREE.Group(); st.scene.add(room);
     const rayM = new THREE.LineDashedMaterial({ dashSize: 0.25, gapSize: 0.18, transparent: true, depthTest: false }); const ray = new THREE.Line(new THREE.BufferGeometry(), rayM); ray.renderOrder = 9; st.scene.add(ray);
     const person = new THREE.Group(), pM = M({ roughness: 0.6 }, ['#2563eb', '#60a5fa']); person.add(K.rod([0, 0, 0], [0, 0, 1.35], 0.18, pM)); const head = new THREE.Mesh(new THREE.SphereGeometry(0.15, 20, 14), pM); head.position.z = 1.55; head.castShadow = true; person.add(head); st.scene.add(person);
@@ -433,8 +433,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       if (!(S.mat === 'gypsum' || S.mat === 'concrete')) box(a + 0.16, -a - 0.16, a + 0.16 + t, a + 0.16, 0, h, S.mat);
       box(-a - 0.16, -a - 0.16, -a, a + 0.16, 0, h, 'gypsum'); box(-a, a, a, a + 0.16, 0, h, 'gypsum'); box(-a, -a - 0.16, a, -a, 0, 1.0, 'gypsum');
       /* the scanner: a gantry with its bore, the table */
-      const gan = new THREE.Mesh(new THREE.TorusGeometry(0.62, 0.32, 20, 48), K.material(st, { roughness: 0.5 }, ['#e5e7eb', '#9aa3ae'])); gan.rotation.y = Math.PI / 2; gan.rotation.x = 0; gan.position.set(0, 0.3, 1.05); gan.rotation.set(Math.PI / 2, 0, 0); add(gan);
-      add(K.box(0.6, 2.4, 0.08, K.material(st, { roughness: 0.5 }, ['#d1d5db', '#6b7280']), 0, -0.9, 0.85)); add(K.box(0.35, 1.2, 0.85, K.material(st, { roughness: 0.6 }, ['#9ca3af', '#4b5563']), 0, -1.2, 0));
+      const gan = new THREE.Mesh(new THREE.TorusGeometry(0.62, 0.32, 20, 48), K.material(st, { roughness: 0.5 }, ['#ebe8e5', '#aca59b'])); gan.rotation.y = Math.PI / 2; gan.rotation.x = 0; gan.position.set(0, 0.3, 1.05); gan.rotation.set(Math.PI / 2, 0, 0); add(gan);
+      add(K.box(0.6, 2.4, 0.08, K.material(st, { roughness: 0.5 }, ['#dad7d2', '#7e776d']), 0, -0.9, 0.85)); add(K.box(0.35, 1.2, 0.85, K.material(st, { roughness: 0.6 }, ['#aea79d', '#61584d']), 0, -1.2, 0));
     } else if (lin) {
       const tp = L.tPri, ts = L.tSec, band = 2.6, iw = Math.max(ts * 0.55, 0.6), mz = 2, m = S.mat;
       box(a, -a - iw - mz - ts, a + ts, a + ts, 0, h, m); box(a + ts, -band / 2, a + tp, band / 2, 0, h, m);
@@ -442,14 +442,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       box(-a, a, a, a + ts, 0, h, m); box(-a + 2.2, -a - iw, a, -a, 0, h, m); box(-a, -a - iw - mz - ts, a, -a - iw - mz, 0, h * 0.5, m);
       const dw = Math.max(0.05, (S.bpe + S.pb) / 100); box(-a - ts - dw, -a - iw - mz, -a - ts, -a - iw, 0, 2.3, S.bar === 'door' ? 'bpe' : 'steel');
       /* the linac: a gantry stand, the arm and head over the couch */
-      const gm = K.material(st, { roughness: 0.45, metalness: 0.15 }, ['#e5e7eb', '#6b7684']); add(K.box(1.0, 1.0, 2.6, gm, 0, 1.9, 0)); add(K.box(0.7, 1.5, 0.5, gm, 0, 0.9, 2.1));
-      add(K.box(0.55, 0.55, 0.55, gm, 0, 0, 1.75)); add(K.box(0.55, 2.2, 0.06, K.material(st, { roughness: 0.5 }, ['#d1d5db', '#6b7280']), 0, -1.1, 0.95)); add(K.box(0.3, 0.4, 0.95, gm, 0, -1.6, 0));
+      const gm = K.material(st, { roughness: 0.45, metalness: 0.15 }, ['#ebe8e5', '#82796d']); add(K.box(1.0, 1.0, 2.6, gm, 0, 1.9, 0)); add(K.box(0.7, 1.5, 0.5, gm, 0, 0.9, 2.1));
+      add(K.box(0.55, 0.55, 0.55, gm, 0, 0, 1.75)); add(K.box(0.55, 2.2, 0.06, K.material(st, { roughness: 0.5 }, ['#dad7d2', '#7e776d']), 0, -1.1, 0.95)); add(K.box(0.3, 0.4, 0.95, gm, 0, -1.6, 0));
     } else {
       const t = L.tx; box(a, -a - t, a + t, a + t, 0, h, 'concrete'); box(-a - t, -a - t, -a, a + t, 0, h, 'concrete'); box(-a, a, a, a + t, 0, h, 'concrete'); box(-a, -a - t, a, -a, 0, h * 0.35, 'concrete');
       /* the gantry: a drum around the couch, its axis along y, and the nozzle */
-      const dm = K.material(st, { roughness: 0.55, metalness: 0.15, side: THREE.DoubleSide }, ['#d6dbe1', '#3b4553']);
+      const dm = K.material(st, { roughness: 0.55, metalness: 0.15, side: THREE.DoubleSide }, ['#e0dcd7', '#51483d']);
       const rd = Math.min(2, a * 0.5), drum = new THREE.Mesh(new THREE.CylinderGeometry(rd, rd, 1.2, 48, 1, true), dm); drum.position.set(0, 1.4, rd + 0.1); add(drum);
-      add(K.box(0.5, 0.5, 0.9, K.material(st, { roughness: 0.45, metalness: 0.3 }, ['#566273', '#4a5563']), 0, 1.0, 2.2)); add(K.box(0.55, 2.2, 0.06, K.material(st, { roughness: 0.5 }, ['#d1d5db', '#6b7280']), 0, -0.6, 1.0));
+      add(K.box(0.5, 0.5, 0.9, K.material(st, { roughness: 0.45, metalness: 0.3 }, ['#716658', '#61584c']), 0, 1.0, 2.2)); add(K.box(0.55, 2.2, 0.06, K.material(st, { roughness: 0.5 }, ['#dad7d2', '#7e776d']), 0, -0.6, 1.0));
     }
   }
   function draw3() {

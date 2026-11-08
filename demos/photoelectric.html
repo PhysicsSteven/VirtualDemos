@@ -20,34 +20,34 @@
 <style>
 /* Layout: lab bench. Apparatus on top, two measurement charts below, instrument rail on the right; stacks on phones. */
 :root {
-  --bg: #e9edf2;
-  --surface: #f8fafc;
-  --canvas: #fcfdfe;
-  --ink: #17202b;
-  --muted: #5a6575;
-  --line: #d3d9e2;
-  --grid: #e6ebf1;
-  --grid-strong: #cfd7e1;
+  --bg: #f1eeea;
+  --surface: #fcfaf8;
+  --canvas: #fefdfc;
+  --ink: #2a2219;
+  --muted: #73695c;
+  --line: #e1dbd4;
+  --grid: #f0ece7;
+  --grid-strong: #e0d9d0;
   --pos: #c23f2c;
   --neg: #2b60b5;
-  --field: #1d2836;
+  --field: #342b1f;
   --equi: #a7740b;
-  --accent: #2b60b5;
-  --metal: #9aa6b4;
+  --accent: #c4811c;
+  --metal: #b2a89c;
   --on-charge: #ffffff;
   --bench: #cdbb9c;
   --bench-dk: #a99678;
-  --alu: #cfd6de;
-  --alu-dk: #8f99a5;
-  --case: #e4e8ed;
-  --case-dk: #c4cbd4;
-  --case-edge: #9aa4b0;
-  --lamp: #535c69;
-  --lamp-dk: #272c34;
+  --alu: #ddd7d0;
+  --alu-dk: #a39b91;
+  --case: #ece9e5;
+  --case-dk: #d3cdc5;
+  --case-edge: #aea69c;
+  --lamp: #675f55;
+  --lamp-dk: #332e28;
   --face: #f4f0e2;
   --lcd: #b7c6ab;
   --lcd-ink: #172015;
-  --coax: #26292e;
+  --coax: #2d2a27;
   --paper: #f7faf5;
   --paper-minor: #e5eee2;
   --paper-major: #c6dac1;
@@ -56,17 +56,17 @@
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
-    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-    --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --metal: #6b7786; --on-charge: #0d1218;
-    --bench: #4a3f30; --bench-dk: #362d22; --alu: #a3adb9; --alu-dk: #6b7581; --case: #323a46; --case-dk: #222831; --case-edge: #4a5462; --lamp: #3d4550; --lamp-dk: #1b1f26; --face: #e6e1cf; --lcd: #8da084; --lcd-ink: #0f150e; --coax: #0c0e11; --paper: #0f1714; --paper-minor: #16211c; --paper-major: #233429; color-scheme: dark;
+    --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
+    --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+    --field: #eee8e0; --equi: #e2b350; --accent: #fbc26d; --metal: #847a6d; --on-charge: #17130e;
+    --bench: #4a3f30; --bench-dk: #362d22; --alu: #b7afa5; --alu-dk: #7f776d; --case: #443d34; --case-dk: #302a23; --case-edge: #60574c; --lamp: #4f483e; --lamp-dk: #25211c; --face: #e6e1cf; --lcd: #8da084; --lcd-ink: #0f150e; --coax: #110f0c; --paper: #0f1714; --paper-minor: #16211c; --paper-major: #233429; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
-  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-  --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --metal: #6b7786; --on-charge: #0d1218;
-    --bench: #4a3f30; --bench-dk: #362d22; --alu: #a3adb9; --alu-dk: #6b7581; --case: #323a46; --case-dk: #222831; --case-edge: #4a5462; --lamp: #3d4550; --lamp-dk: #1b1f26; --face: #e6e1cf; --lcd: #8da084; --lcd-ink: #0f150e; --coax: #0c0e11; --paper: #0f1714; --paper-minor: #16211c; --paper-major: #233429; color-scheme: dark;
+  --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
+  --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+  --field: #eee8e0; --equi: #e2b350; --accent: #fbc26d; --metal: #847a6d; --on-charge: #17130e;
+    --bench: #4a3f30; --bench-dk: #362d22; --alu: #b7afa5; --alu-dk: #7f776d; --case: #443d34; --case-dk: #302a23; --case-edge: #60574c; --lamp: #4f483e; --lamp-dk: #25211c; --face: #e6e1cf; --lcd: #8da084; --lcd-ink: #0f150e; --coax: #110f0c; --paper: #0f1714; --paper-minor: #16211c; --paper-major: #233429; color-scheme: dark;
 }
 :root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
@@ -328,7 +328,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   const labScale = () => projOn() ? Math.max(1.05, Math.min(1.3, Math.min(AW / 700, AH / 330))) : 1;
   const TH = 1.2, KDEP = 0.3;          // cathode half angle (rad) and the oblique depth factor of the drawing
   const HG = [365, 405, 436, 546, 577];
-  const COAT = { Cs: '#d3ad4e', K: '#b7bec7', Na: '#cdd2d6', Ca: '#c3c6bc', Zn: '#9daab6', Cu: '#c47b4b', Pt: '#d6d7d3' };
+  const COAT = { Cs: '#d3ad4e', K: '#c6c0b8', Na: '#d5d2ce', Ca: '#c3c6bc', Zn: '#b4ab9f', Cu: '#c47b4b', Pt: '#d6d7d3' };
   function lay() {
     const ps = labScale(), narrow = AW < 640;
     const benchY = AH - Math.round((narrow ? 14 : 20) * Math.min(1.2, ps));
@@ -435,13 +435,13 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   function knob(c, x, y, r, frac, hot, ps, lab) {
     c.fillStyle = 'rgba(0,0,0,0.25)'; c.beginPath(); c.arc(x + 1.5, y + 2.5, r, 0, 7); c.fill();
     const g = c.createRadialGradient(x - r * 0.35, y - r * 0.35, r * 0.1, x, y, r);
-    g.addColorStop(0, '#5b6574'); g.addColorStop(1, '#1d2229');
+    g.addColorStop(0, '#72695d'); g.addColorStop(1, '#28241e');
     c.fillStyle = g; c.beginPath(); c.arc(x, y, r, 0, 7); c.fill();
     // knurled rim
     c.strokeStyle = 'rgba(255,255,255,0.12)'; c.lineWidth = 1;
     for (let k = 0; k < 24; k++) { const a = k * Math.PI / 12; c.beginPath(); c.moveTo(x + Math.cos(a) * r * 0.82, y + Math.sin(a) * r * 0.82); c.lineTo(x + Math.cos(a) * r * 0.98, y + Math.sin(a) * r * 0.98); c.stroke(); }
     const a = Math.PI * (0.75 + 1.5 * frac);
-    c.strokeStyle = '#f2f4f7'; c.lineWidth = 2 * ps; c.lineCap = 'round';
+    c.strokeStyle = '#f7f5f2'; c.lineWidth = 2 * ps; c.lineCap = 'round';
     c.beginPath(); c.moveTo(x + Math.cos(a) * r * 0.2, y + Math.sin(a) * r * 0.2); c.lineTo(x + Math.cos(a) * r * 0.78, y + Math.sin(a) * r * 0.78); c.stroke(); c.lineCap = 'butt';
     // grip ring: always visible, brighter when hovered or dragged
     if (hot) { c.fillStyle = T.accent; c.globalAlpha = 0.18; c.beginPath(); c.arc(x, y, r + 7 * ps, 0, 7); c.fill(); c.globalAlpha = 1; }
@@ -488,11 +488,11 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const posts = { a: [sp.x + sp.w - 46 * Math.min(ps, 1.15), sp.y + sp.h - 20 * Math.min(ps, 1.15)], k: [sp.x + sp.w - 22 * Math.min(ps, 1.15), sp.y + sp.h - 20 * Math.min(ps, 1.15)] };
     if (L.narrow) {
       cable(c, [t.cx, capY, t.cx + t.w * 0.7, capY - 6, AW - 4, L.shelfY - 20, inX, inY + 30], T.coax, ps);
-      cable(c, [t.cx + 6, t.foot - 4, t.cx + 30, t.foot + 30, posts.k[0] - 10, sp.y - 10, posts.k[0], posts.k[1]], '#1d1f23', ps);
+      cable(c, [t.cx + 6, t.foot - 4, t.cx + 30, t.foot + 30, posts.k[0] - 10, sp.y - 10, posts.k[0], posts.k[1]], '#23201d', ps);
       cable(c, [pk.x + pk.w - 8, pk.y + pk.h - 12, pk.x + pk.w + 6, pk.y + pk.h + 6, posts.a[0] - 12, posts.a[1] + 14, posts.a[0], posts.a[1]], '#c2362b', ps);
     } else {
       cable(c, [t.cx, capY, t.cx + t.w * 0.5, capY - 26, pk.x - 30, inY + 40, inX, inY], T.coax, ps);
-      cable(c, [t.cx + t.w * 0.2, t.foot - t.baseH * 0.5, t.cx + t.w * 1.2, t.foot - 2, sp.x - 10, posts.k[1] + 30, posts.k[0], posts.k[1]], '#1d1f23', ps);
+      cable(c, [t.cx + t.w * 0.2, t.foot - t.baseH * 0.5, t.cx + t.w * 1.2, t.foot - 2, sp.x - 10, posts.k[1] + 30, posts.k[0], posts.k[1]], '#23201d', ps);
       cable(c, [inX - 34 * Math.min(ps, 1.15), inY, inX - 50, inY + 60, posts.a[0] - 10, posts.a[1] - 40, posts.a[0], posts.a[1]], '#c2362b', ps);
     }
 
@@ -513,7 +513,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     post(c, s.lx + s.lw / 2, ly1, ry, ps); post(c, s.mx + s.mw / 2, my1, ry, ps);
     for (const x of [s.lx + s.lw / 2, s.mx + s.mw / 2]) { c.fillStyle = T.aluDk; rr(c, x - 12 * ps, ry - 6, 24 * ps, 7, 2); c.fill(); }
     // power cord
-    c.strokeStyle = '#1d1f23'; c.lineWidth = 2.6; c.beginPath(); c.moveTo(s.lx + 6, ly1 - 10); c.bezierCurveTo(s.lx - 10, ly1 + 10, s.lx - 6, ry - 6, s.lx + 2, ry); c.stroke();
+    c.strokeStyle = '#23201d'; c.lineWidth = 2.6; c.beginPath(); c.moveTo(s.lx + 6, ly1 - 10); c.bezierCurveTo(s.lx - 10, ly1 + 10, s.lx - 6, ry - 6, s.lx + 2, ry); c.stroke();
     // lamp housing with cooling vents and chimney
     const g = c.createLinearGradient(s.lx, 0, s.lx + s.lw, 0); g.addColorStop(0, T.lampDk); g.addColorStop(0.4, T.lamp); g.addColorStop(1, T.lampDk);
     c.fillStyle = g; rr(c, s.lx + s.lw * 0.25, ly0 - s.hb * 0.12, s.lw * 0.5, s.hb * 0.14, 2); c.fill();
@@ -521,7 +521,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const glow = on ? 0.25 + 0.6 * S.pow / 100 : 0;
     for (let i = 0; i < 4; i++) {
       const vy = ly0 + s.hb * (0.1 + i * 0.075);
-      c.fillStyle = '#0d0f12'; rr(c, s.lx + s.lw * 0.18, vy, s.lw * 0.64, Math.max(2, s.hb * 0.035), 1.5); c.fill();
+      c.fillStyle = '#12100d'; rr(c, s.lx + s.lw * 0.18, vy, s.lw * 0.64, Math.max(2, s.hb * 0.035), 1.5); c.fill();
       if (on) { c.fillStyle = `rgba(235, 240, 255, ${glow})`; rr(c, s.lx + s.lw * 0.2, vy + 0.5, s.lw * 0.6, Math.max(1, s.hb * 0.035 - 1.5), 1); c.fill(); }
     }
     // pilot lamp
@@ -541,9 +541,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     // wavelength counter (white drum digits) and the wavelength knob
     const cw = Math.min(s.mw * 0.62, 70 * ps), chh = Math.max(13, Math.min(s.mh * 0.24, 20 * ps));
     const cx0 = s.mx + s.mw * 0.5 - cw / 2, cy0 = my0 + Math.max(6, s.mh * 0.1);
-    c.fillStyle = '#0e1013'; rr(c, cx0 - 2, cy0 - 2, cw + 4, chh + 4, 3); c.fill();
+    c.fillStyle = '#13110e'; rr(c, cx0 - 2, cy0 - 2, cw + 4, chh + 4, 3); c.fill();
     c.fillStyle = '#f4f1e8'; c.fillRect(cx0, cy0, cw, chh);
-    c.fillStyle = '#16181c'; c.font = `600 ${Math.min(chh * 0.78, cw / 4.6)}px ${T.mono}`; c.textAlign = 'center'; c.textBaseline = 'middle';
+    c.fillStyle = '#1c1916'; c.font = `600 ${Math.min(chh * 0.78, cw / 4.6)}px ${T.mono}`; c.textAlign = 'center'; c.textBaseline = 'middle';
     c.fillText(String(Math.round(S.lam)).padStart(3, '0') + ' nm', cx0 + cw / 2, cy0 + chh / 2 + 0.5);
     c.strokeStyle = 'rgba(0,0,0,0.25)'; c.lineWidth = 1; c.beginPath(); c.moveTo(cx0, cy0 + chh / 2); c.lineTo(cx0 + cw, cy0 + chh / 2); c.globalAlpha = 0.4; c.stroke(); c.globalAlpha = 1;
     const kr = Math.max(8, Math.min(s.mh * 0.2, s.mw * 0.16, 17 * ps));
@@ -577,7 +577,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   function drawTube(c, L, t, s, ps) {
     const tw = t.w, x0 = t.cx - tw / 2, x1 = t.cx + tw / 2, gTop = t.top, gBot = t.gBot, dark = T.dark;
     // base and socket
-    const bg = c.createLinearGradient(x0, 0, x1, 0); bg.addColorStop(0, '#1c1d20'); bg.addColorStop(0.4, '#3d3f45'); bg.addColorStop(1, '#141518');
+    const bg = c.createLinearGradient(x0, 0, x1, 0); bg.addColorStop(0, '#201e1c'); bg.addColorStop(0.4, '#44413e'); bg.addColorStop(1, '#181614');
     c.fillStyle = 'rgba(0,0,0,0.2)'; c.beginPath(); c.ellipse(t.cx + 4, t.foot - 1, tw * 0.62, 4, 0, 0, 7); c.fill();
     c.fillStyle = T.aluDk; rr(c, t.cx - tw * 0.55, t.foot - 7, tw * 1.1, 7, 2); c.fill();
     c.fillStyle = bg; rr(c, t.cx - tw * 0.4, gBot - 2, tw * 0.8, t.foot - 7 - gBot + 2, 3); c.fill();
@@ -589,7 +589,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     c.fillStyle = dark ? 'rgba(170, 200, 230, 0.12)' : 'rgba(150, 180, 210, 0.28)';
     c.beginPath(); c.moveTo(t.cx - tw * 0.18, gBot + 2); c.lineTo(t.cx - tw * 0.08, gBot - tw * 0.3); c.lineTo(t.cx + tw * 0.08, gBot - tw * 0.3); c.lineTo(t.cx + tw * 0.18, gBot + 2); c.closePath(); c.fill();
     const [fbx, fby] = cathPt(t, -TH, 1), [bbx, bby] = cathPt(t, TH, 1);
-    c.strokeStyle = '#8b939d'; c.lineWidth = 1.2;
+    c.strokeStyle = '#9c958c'; c.lineWidth = 1.2;
     c.beginPath(); c.moveTo(t.cx + tw * 0.04, gBot - tw * 0.28); c.lineTo(fbx, fby); c.moveTo(t.cx + tw * 0.06, gBot - tw * 0.28); c.lineTo(bbx, bby); c.stroke();
     // getter flash: a silvery patch inside the dome
     const gg = c.createRadialGradient(t.cx + tw * 0.2, gTop + tw * 0.2, 1, t.cx + tw * 0.2, gTop + tw * 0.22, tw * 0.22);
@@ -598,7 +598,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     // cathode: a half cylinder coated with the metal, its hollow facing the light
     const N = 28, top = [], bot = [];
     for (let i = 0; i <= N; i++) { const th = -TH + 2 * TH * i / N; top.push(cathPt(t, th, -0.03)); bot.push(cathPt(t, th, 1.03)); }
-    const coat = COAT[S.metal] || '#c0c4c8';
+    const coat = COAT[S.metal] || '#c7c4c1';
     const cg = c.createLinearGradient(t.ax + t.R * Math.cos(TH), 0, t.ax + t.R, 0);
     cg.addColorStop(0, shade(coat, dark ? -0.45 : -0.3)); cg.addColorStop(0.7, coat); cg.addColorStop(1, shade(coat, dark ? -0.15 : 0.12));
     const H2 = N / 2;
@@ -656,7 +656,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       c.beginPath(); c.arc(cx_ + (axp - cx_) * f, cy_ + (ayp - cy_) * f, er, 0, 7); c.fill();
     }
     // anode wire, its lead to the top cap, and glints where electrons land
-    const ag = c.createLinearGradient(t.ax - 2, 0, t.ax + 2, 0); ag.addColorStop(0, '#6b7581'); ag.addColorStop(0.5, '#e3e7ec'); ag.addColorStop(1, '#6b7581');
+    const ag = c.createLinearGradient(t.ax - 2, 0, t.ax + 2, 0); ag.addColorStop(0, '#7f776d'); ag.addColorStop(0.5, '#ebe8e4'); ag.addColorStop(1, '#7f776d');
     c.strokeStyle = ag; c.lineWidth = Math.max(2, 2.4 * ps);
     c.beginPath(); c.moveTo(t.ax, gBot - tw * 0.28); c.lineTo(t.ax, t.zTop - 4); c.quadraticCurveTo(t.ax, gTop + tw * 0.18, t.cx, gTop + 1); c.stroke();
     for (const gl of glints) { const [gx, gy] = anodePt(t, gl.zf); c.fillStyle = `rgba(150, 200, 255, ${0.7 * gl.a})`; c.beginPath(); c.arc(gx, gy, 2 + 3 * (1 - gl.a), 0, 7); c.fill(); }
@@ -675,7 +675,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const nm = METALS.find((m) => m[0] === S.metal)[1];
     {
       const by_ = (gBot + t.foot - 7) / 2 + 2, bw = tw * 0.8 - 8;
-      c.font = `600 ${10 * ps}px ${T.mono}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillStyle = '#c9ced6';
+      c.font = `600 ${10 * ps}px ${T.mono}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillStyle = '#d5d0ca';
       const nmT = c.measureText('evacuated phototube').width <= bw ? 'evacuated phototube' : 'phototube';
       c.font = `600 ${Math.min(10 * ps, bw / (nmT.length * 0.62))}px ${T.mono}`; c.fillText(nmT, t.cx, by_);
     }
@@ -702,13 +702,13 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const lhN = Math.max(20, Math.min(30 * q, b.h * 0.2));
     const mw = side ? b.w * 0.56 : b.w - 24, mh = side ? b.h - 40 * q : b.h - 26 * q - lhN - 18;
     const mx = b.x + 12, my = b.y + 26 * q;
-    c.fillStyle = '#16181c'; rr(c, mx - 2, my - 2, mw + 4, mh + 4, 5); c.fill();
+    c.fillStyle = '#1c1916'; rr(c, mx - 2, my - 2, mw + 4, mh + 4, 5); c.fill();
     c.fillStyle = T.face; rr(c, mx, my, mw, mh, 4); c.fill();
     const pvx = mx + mw / 2, pvy = my + mh * 0.96, rad = Math.min(mw * 0.48, mh * 0.82), a0 = -Math.PI * 0.78, a1 = -Math.PI * 0.22;
     const fs = meterFS;
     c.save(); rr(c, mx, my, mw, mh, 4); c.clip();
     c.strokeStyle = 'rgba(140,150,160,0.55)'; c.lineWidth = Math.max(2, rad * 0.05); c.beginPath(); c.arc(pvx, pvy, rad * 0.8, a0, a1); c.stroke();
-    c.strokeStyle = '#1b1d21'; c.fillStyle = '#1b1d21'; c.lineWidth = 1;
+    c.strokeStyle = '#211e1b'; c.fillStyle = '#211e1b'; c.lineWidth = 1;
     const major = fs === 3 ? 0.5 : fs / 5, nMin = fs === 3 ? 5 : 4;
     for (let v = 0; v <= fs + 1e-9; v += major / nMin) {
       const a = a0 + (a1 - a0) * v / fs, isMaj = Math.abs(v / major - Math.round(v / major)) < 1e-6;
@@ -724,22 +724,22 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     c.font = `600 ${Math.max(8, rad * 0.12)}px ${T.mono}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('nA', pvx, pvy - rad * 0.42);
     const na = a0 + (a1 - a0) * Math.max(-0.02, Math.min(1.03, needle));
     c.strokeStyle = '#c2362b'; c.lineWidth = 1.6; c.beginPath(); c.moveTo(pvx, pvy); c.lineTo(pvx + Math.cos(na) * rad * 0.98, pvy + Math.sin(na) * rad * 0.98); c.stroke();
-    c.fillStyle = '#1b1d21'; c.beginPath(); c.arc(pvx, pvy, Math.max(3, rad * 0.06), 0, 7); c.fill();
+    c.fillStyle = '#211e1b'; c.beginPath(); c.arc(pvx, pvy, Math.max(3, rad * 0.06), 0, 7); c.fill();
     c.restore();
     // LCD readout, range, input connector
     const lx = side ? mx + mw + 14 : mx, lw = side ? b.x + b.w - lx - 14 : mw - 30 * q;
     const lh = side ? Math.max(20, Math.min(34 * q, b.h * 0.26)) : lhN;
     const ly = side ? my + 4 : my + mh + 8;
-    c.fillStyle = '#16181c'; rr(c, lx - 2, ly - 2, lw + 4, lh + 4, 4); c.fill();
+    c.fillStyle = '#1c1916'; rr(c, lx - 2, ly - 2, lw + 4, lh + 4, 4); c.fill();
     c.fillStyle = T.lcd; rr(c, lx, ly, lw, lh, 3); c.fill();
     c.fillStyle = T.lcdInk; c.font = `600 ${Math.min(lh * 0.62, lw / 6.2)}px ${T.mono}`; c.textAlign = 'right'; c.textBaseline = 'middle';
     c.fillText(fmtI(current(S.V)), lx + lw - 8, ly + lh / 2 + 1);
     c.fillStyle = T.muted; c.font = `600 ${Math.max(8, 9 * q)}px ${T.mono}`; c.textAlign = 'left'; c.textBaseline = 'top';
     if (side) { c.fillText(`RANGE ${fs} nA`, lx, ly + lh + 7 * q); c.fillText('AUTO', lx, ly + lh + 21 * q); }
-    else { c.fillStyle = '#5a5f66'; c.font = `600 ${Math.max(7.5, 8 * q)}px ${T.mono}`; c.textAlign = 'left'; c.textBaseline = 'top'; c.fillText(`${fs} nA FS`, mx + 5, my + 4); }
+    else { c.fillStyle = '#65615b'; c.font = `600 ${Math.max(7.5, 8 * q)}px ${T.mono}`; c.textAlign = 'left'; c.textBaseline = 'top'; c.fillText(`${fs} nA FS`, mx + 5, my + 4); }
     // BNC input
     const bx = b.x + b.w - (side ? 26 : 22) * q, by = side ? b.y + b.h - 20 * q : ly + lh / 2;
-    c.fillStyle = T.aluDk; c.beginPath(); c.arc(bx, by, 8 * q, 0, 7); c.fill(); c.fillStyle = T.alu; c.beginPath(); c.arc(bx, by, 5 * q, 0, 7); c.fill(); c.fillStyle = '#1b1d21'; c.beginPath(); c.arc(bx, by, 2 * q, 0, 7); c.fill();
+    c.fillStyle = T.aluDk; c.beginPath(); c.arc(bx, by, 8 * q, 0, 7); c.fill(); c.fillStyle = T.alu; c.beginPath(); c.arc(bx, by, 5 * q, 0, 7); c.fill(); c.fillStyle = '#211e1b'; c.beginPath(); c.arc(bx, by, 2 * q, 0, 7); c.fill();
     if (b.w > 220) { c.fillStyle = T.muted; c.font = `${Math.max(7.5, 8.5 * q)}px ${T.mono}`; c.textAlign = 'right'; c.textBaseline = 'middle'; c.fillText('INPUT', bx - 13 * q, by); }
   }
 
@@ -749,7 +749,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     // LED display of V (collector relative to emitter)
     const dw = narrow ? b.w - 24 : Math.min(b.w * 0.38, 180 * q), dh = Math.max(20, Math.min(34 * q, b.h * 0.24));
     const dx = b.x + 12, dy = b.y + 28 * q;
-    c.fillStyle = '#0b0c0e'; rr(c, dx - 2, dy - 2, dw + 4, dh + 4, 4); c.fill();
+    c.fillStyle = '#0e0d0b'; rr(c, dx - 2, dy - 2, dw + 4, dh + 4, 4); c.fill();
     c.fillStyle = '#1a0806'; rr(c, dx, dy, dw, dh, 3); c.fill();
     c.fillStyle = '#ff4a2e'; c.font = `600 ${Math.min(dh * 0.66, dw / 5.6)}px ${T.mono}`; c.textAlign = 'right'; c.textBaseline = 'middle';
     c.shadowColor = 'rgba(255, 74, 46, 0.6)'; c.shadowBlur = 6;
@@ -765,12 +765,12 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     knob(c, kx, ky, kr, Math.abs(S.V) / 6, hot('volt'), q, narrow ? '' : 'VOLTAGE');
     knobs.push({ id: 'volt', x: kx, y: ky, r: kr });
     const swx = narrow ? b.x + b.w * 0.55 : swR, swy = ky, swh = Math.max(16, kr * 1.1);
-    c.fillStyle = '#16181c'; rr(c, swx - 7 * q, swy - swh / 2, 14 * q, swh, 4); c.fill();
+    c.fillStyle = '#1c1916'; rr(c, swx - 7 * q, swy - swh / 2, 14 * q, swh, 4); c.fill();
     const up = (S.V !== 0 ? S.V > 0 : pol > 0);
     const hs = hot('rev');
-    c.strokeStyle = hs ? T.accent : '#c9ced5'; c.lineWidth = 4 * q; c.lineCap = 'round';
+    c.strokeStyle = hs ? T.accent : '#d4d0ca'; c.lineWidth = 4 * q; c.lineCap = 'round';
     c.beginPath(); c.moveTo(swx, swy); c.lineTo(swx, swy + (up ? -1 : 1) * swh * 0.95); c.stroke(); c.lineCap = 'butt';
-    c.fillStyle = hs ? T.accent : '#e3e7ec'; c.beginPath(); c.arc(swx, swy + (up ? -1 : 1) * swh * 0.95, 3.6 * q, 0, 7); c.fill();
+    c.fillStyle = hs ? T.accent : '#ebe8e4'; c.beginPath(); c.arc(swx, swy + (up ? -1 : 1) * swh * 0.95, 3.6 * q, 0, 7); c.fill();
     c.strokeStyle = T.accent; c.lineWidth = (hs ? 2.4 : 1.2) * q; c.globalAlpha = hs ? 1 : 0.8; rr(c, swx - 12 * q, swy - swh * 1.25, 24 * q, swh * 2.5, 6); c.stroke(); c.globalAlpha = 1;
     knobs.push({ id: 'rev', x: swx, y: swy, r: Math.max(14 * q, swh * 1.1), sw: true });
     c.fillStyle = T.ink; c.font = `600 ${Math.max(7.5, 8.5 * q)}px ${T.mono}`; c.textAlign = 'left'; c.textBaseline = 'middle';
@@ -778,7 +778,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     c.fillStyle = up ? T.muted : T.ink; c.fillText(narrow ? '−' : '− retard', swx + 15 * q, swy + swh * 0.8);
     if (!narrow && b.h > 120) { c.fillStyle = T.muted; c.textAlign = 'center'; c.textBaseline = 'top'; c.fillText('REVERSING', swx, swy + swh * 1.35); }
     // output binding posts
-    for (const [k, col, txt] of [['a', '#c2362b', 'A'], ['k', '#202226', 'K']]) {
+    for (const [k, col, txt] of [['a', '#c2362b', 'A'], ['k', '#262320', 'K']]) {
       const [x, y] = posts[k];
       c.fillStyle = col; c.beginPath(); c.arc(x, y, 7 * q, 0, 7); c.fill(); c.fillStyle = 'rgba(255,255,255,0.35)'; c.beginPath(); c.arc(x - 2 * q, y - 2 * q, 2.4 * q, 0, 7); c.fill();
       c.fillStyle = T.muted; c.font = `600 ${Math.max(7.5, 8.5 * q)}px ${T.mono}`; c.textAlign = 'center'; c.textBaseline = 'bottom'; c.fillText(txt, x, y - 9 * q);
@@ -1207,10 +1207,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const mesh = (geo, m, cast = true) => { const x = new THREE.Mesh(geo, m); x.castShadow = cast; x.receiveShadow = true; return x; };
     const cyl = (r, h, m, seg = 24) => mesh(new THREE.CylinderGeometry(r, r, h, seg), m);
     sc.add(VD3K.bench(S3, { w: 3.2, d: 2, y: 0.3 }), VD3K.backdrop(S3, { r: 1.4, h: 1, y: -0.62 }));
-    const alu = M({ roughness: 0.35, metalness: 0.7 }, ['#c9d0d8', '#8a949f']), aluDk = M({ roughness: 0.45, metalness: 0.6 }, ['#8f99a5', '#5d6670']);
-    const lampM = M({ roughness: 0.55, metalness: 0.3 }, ['#4b535e', '#3a414b']), caseM = M({ roughness: 0.6, metalness: 0.1 }, ['#e1e5ea', '#363e4a']);
-    const black = M({ roughness: 0.5, metalness: 0.2 }, ['#1c1e22', '#16181b']), knobM = M({ roughness: 0.4, metalness: 0.35 }, ['#2c323b', '#2a3039']);
-    const white = new THREE.MeshBasicMaterial({ color: 0xf2f4f7 });
+    const alu = M({ roughness: 0.35, metalness: 0.7 }, ['#d7d1ca', '#9d968c']), aluDk = M({ roughness: 0.45, metalness: 0.6 }, ['#a39b91', '#6f685e']);
+    const lampM = M({ roughness: 0.55, metalness: 0.3 }, ['#5d564c', '#4a433b']), caseM = M({ roughness: 0.6, metalness: 0.1 }, ['#e9e6e2', '#484138']);
+    const black = M({ roughness: 0.5, metalness: 0.2 }, ['#221f1c', '#1b1916']), knobM = M({ roughness: 0.4, metalness: 0.35 }, ['#3a342d', '#38322b']);
+    const white = new THREE.MeshBasicMaterial({ color: 0xf7f5f2 });
     const g = { S3 };
 
     /* optical rail, carriers and posts */
@@ -1219,10 +1219,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     /* lamp housing: vents that glow with the light power, a chimney, a pilot lamp and the power knob */
     const LZ = ZW - 0.06;
     post(LX, LZ); sc.add(VD3K.box(LW, LD, LH, lampM, LX, 0, LZ), VD3K.box(LW * 0.5, LD * 0.5, 0.02, lampM, LX, 0, LZ + LH));
-    g.vent = new THREE.MeshBasicMaterial({ color: 0x0d0f12 });
+    g.vent = new THREE.MeshBasicMaterial({ color: 0x12100d });
     for (let i = 0; i < 4; i++) { const v = mesh(new THREE.BoxGeometry(LW * 0.62, 0.002, 0.005), g.vent, false); v.position.set(LX, -LD / 2 - 0.0008, LZ + LH - 0.02 - i * 0.012); sc.add(v); }
     g.pilot = new THREE.MeshBasicMaterial({ color: 0x4a3a1c }); const pl = mesh(new THREE.SphereGeometry(0.0035, 12, 8), g.pilot, false); pl.position.set(LX - LW * 0.3, -LD / 2, LZ + 0.016); sc.add(pl);
-    sc.add(VD3K.cable([LX + 0.02, LD / 2, LZ + 0.02], [LX + 0.05, 0.25, 0], { color: 0x1d1f23, sag: 0.03 }));
+    sc.add(VD3K.cable([LX + 0.02, LD / 2, LZ + 0.02], [LX + 0.05, 0.25, 0], { color: 0x23201d, sag: 0.03 }));
     /* coupling tube and monochromator, with a counter that shows the wavelength, the wavelength knob, the exit snout and filter holder */
     const MZ = ZW - MH / 2;
     post(MX, MZ); sc.add(VD3K.box(MW, MD, MH, caseM, MX, 0, MZ));
@@ -1249,15 +1249,15 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const sock = cyl(0.025, 0.044, black, 32); sock.rotation.x = Math.PI / 2; sock.position.set(0, 0, 0.006 + 0.022); tube.add(sock);
     for (let i = 0; i < 4; i++) { const a = i * Math.PI / 2 + Math.PI / 4, k = cyl(0.0026, 0.004, alu, 10); k.rotation.x = Math.PI / 2; k.position.set(0.0256 * Math.cos(a), 0.0256 * Math.sin(a), 0.03); tube.add(k); }
     const glass = VD3K.glass(S3, { r: 0.022, len: 0.1, axis: 'z', opacity: 0.14 }); glass.position.z = 0.099; tube.add(glass);
-    const stem = mesh(new THREE.CylinderGeometry(0.0045, 0.009, 0.014, 20), M({ roughness: 0.2, metalness: 0, transparent: true, opacity: 0.45 }, ['#bcd2e2', '#7f9cb2']), false); stem.rotation.x = Math.PI / 2; stem.position.set(0, 0, 0.056); tube.add(stem);
-    const getter = mesh(new THREE.SphereGeometry(0.0215, 24, 10, -0.6, 1.5, 0.15, 0.7), M({ roughness: 0.25, metalness: 0.9, transparent: true, opacity: 0.55, side: THREE.DoubleSide }, ['#8a919b', '#a9b0b9']), false);
+    const stem = mesh(new THREE.CylinderGeometry(0.0045, 0.009, 0.014, 20), M({ roughness: 0.2, metalness: 0, transparent: true, opacity: 0.45 }, ['#ded1c0', '#ae9b83']), false); stem.rotation.x = Math.PI / 2; stem.position.set(0, 0, 0.056); tube.add(stem);
+    const getter = mesh(new THREE.SphereGeometry(0.0215, 24, 10, -0.6, 1.5, 0.15, 0.7), M({ roughness: 0.25, metalness: 0.9, transparent: true, opacity: 0.55, side: THREE.DoubleSide }, ['#9a938b', '#b8b2aa']), false);
     getter.rotation.x = Math.PI / 2; getter.position.z = 0.149; tube.add(getter);
     const cg = new THREE.CylinderGeometry(RC, RC, ZT - ZL, 40, 1, true, Math.PI / 2 - TH + YAW, 2 * TH); cg.rotateX(Math.PI / 2); cg.translate(AX, 0, (ZT + ZL) / 2);
     g.coat = new THREE.MeshStandardMaterial({ roughness: 0.38, metalness: 0.55, side: THREE.DoubleSide, emissive: 0x000000 }); tube.add(mesh(cg, g.coat, false));
-    const wire = M({ roughness: 0.3, metalness: 0.85 }, ['#aab3bd', '#c3cad2']);
+    const wire = M({ roughness: 0.3, metalness: 0.85 }, ['#bcb5ab', '#d1cbc4']);
     for (const s of [-1, 1]) tube.add(VD3K.rod([0.002 * s, 0, 0.06], cath0(s * TH, 1.06), 0.0007, wire));
     tube.add(VD3K.rod([0, 0, 0.06], [AX, 0, ZL - 0.004], 0.0007, wire));
-    g.anodeM = new THREE.MeshStandardMaterial({ roughness: 0.25, metalness: 0.85, color: 0xd6dbe1, emissive: 0x000000 });
+    g.anodeM = new THREE.MeshStandardMaterial({ roughness: 0.25, metalness: 0.85, color: 0xe0dcd7, emissive: 0x000000 });
     tube.add(VD3K.rod([AX, 0, ZL - 0.004], [AX, 0, 0.142], 0.0011, g.anodeM), VD3K.rod([AX, 0, 0.142], [0, 0, 0.17], 0.0009, wire));
     const cap = cyl(0.005, 0.009, alu, 20); cap.rotation.x = Math.PI / 2; cap.position.z = 0.1745; tube.add(cap);
 
@@ -1303,11 +1303,11 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const pr = faceAt(g.pico, FW - 3 - 60, 3 + (FH - 9) - 14, 0.004);
     const fr = (p, dy, dz) => [p[0], p[1] + dy, p[2] + dz];
     if (narrow) {
-      cb.add(VD3K.cable([0, 0, 0.18 * TS], bnc, { color: 0x26292e, rad: 0.0028, via: [[0.01, -0.02, 0.24], [0.02, -0.2, 0.2], fr(bnc, -0.03, 0.01)] }));
-      cb.add(VD3K.cable([0.03, -0.035, 0.03], pk, { color: 0x1d1f23, rad: 0.0026, via: [[0.03, -0.1, 0.004], fr(pk, -0.05, -0.04)] }));
+      cb.add(VD3K.cable([0, 0, 0.18 * TS], bnc, { color: 0x2d2a27, rad: 0.0028, via: [[0.01, -0.02, 0.24], [0.02, -0.2, 0.2], fr(bnc, -0.03, 0.01)] }));
+      cb.add(VD3K.cable([0.03, -0.035, 0.03], pk, { color: 0x23201d, rad: 0.0026, via: [[0.03, -0.1, 0.004], fr(pk, -0.05, -0.04)] }));
     } else {
-      cb.add(VD3K.cable([0, 0, 0.18 * TS], bnc, { color: 0x26292e, rad: 0.0028, via: [[0.012, 0, 0.235], [0.12, -0.05, 0.25], fr(bnc, -0.04, 0.02)] }));
-      cb.add(VD3K.cable([0.03, -0.035, 0.03], pk, { color: 0x1d1f23, rad: 0.0026, via: [[0.07, -0.1, 0.004], fr(pk, -0.05, -0.05)] }));
+      cb.add(VD3K.cable([0, 0, 0.18 * TS], bnc, { color: 0x2d2a27, rad: 0.0028, via: [[0.012, 0, 0.235], [0.12, -0.05, 0.25], fr(bnc, -0.04, 0.02)] }));
+      cb.add(VD3K.cable([0.03, -0.035, 0.03], pk, { color: 0x23201d, rad: 0.0026, via: [[0.07, -0.1, 0.004], fr(pk, -0.05, -0.05)] }));
     }
     cb.add(VD3K.cable(pr, pa, { color: 0xc2362b, rad: 0.0024, via: [fr(pr, -0.03, -0.01), fr(pa, -0.04, 0.02)] }));
   }
@@ -1327,14 +1327,14 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     g.beam.visible = on; g.beamM.color.copy(col); g.beamM.opacity = (uv || ir ? 0.05 : 0.07) + (uv || ir ? 0.1 : 0.26) * S.pow / 100;
     const hg = HG.includes(Math.round(S.lam)) && S.lam === Math.round(S.lam);
     g.filter.visible = hg; if (hg) g.filterM.color.set(uv ? '#3a2b4d' : lightCol(S.lam));
-    g.coat.color.set(COAT[S.metal] || '#c0c4c8');
+    g.coat.color.set(COAT[S.metal] || '#c7c4c1');
     g.coat.emissive.copy(col).multiplyScalar(on ? (uv || ir ? 0.05 : 0.16) * (0.3 + 0.7 * S.pow / 100) : 0);
     const gl = on ? 0.25 + 0.6 * S.pow / 100 : 0; g.vent.color.setRGB(0.05 + 0.87 * gl, 0.06 + 0.88 * gl, 0.07 + 0.93 * gl);
     g.pilot.color.set(on ? '#ffb02e' : '#4a3a1c');
     /* the wavelength counter */
     const ck = Math.round(S.lam) + '|' + T.mono;
-    if (g.cnt.key !== ck) { g.cnt.key = ck; const c = g.cnt.cv.getContext('2d'); c.fillStyle = '#0e1013'; c.fillRect(0, 0, 256, 72); c.fillStyle = '#f4f1e8'; c.fillRect(8, 8, 240, 56);
-      c.fillStyle = '#16181c'; c.font = `600 40px ${T.mono}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(String(Math.round(S.lam)).padStart(3, '0') + ' nm', 128, 38);
+    if (g.cnt.key !== ck) { g.cnt.key = ck; const c = g.cnt.cv.getContext('2d'); c.fillStyle = '#13110e'; c.fillRect(0, 0, 256, 72); c.fillStyle = '#f4f1e8'; c.fillRect(8, 8, 240, 56);
+      c.fillStyle = '#1c1916'; c.font = `600 40px ${T.mono}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(String(Math.round(S.lam)).padStart(3, '0') + ' nm', 128, 38);
       c.fillStyle = 'rgba(0,0,0,0.12)'; c.fillRect(8, 35, 240, 2); g.cnt.tex.needsUpdate = true; }
     /* knobs: the same angle as the flat drawing, π(0.75 + 1.5 f) measured with y down */
     g.kLam.rotation.y = Math.PI * (0.75 + 1.5 * (S.lam - 100) / 700); g.kPow.rotation.y = Math.PI * (0.75 + 1.5 * S.pow / 100);

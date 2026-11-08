@@ -47,9 +47,9 @@ table.rows input:focus { border-color: var(--accent); }
 .chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
 @media (max-width: 820px) { .chips button { min-height: 36px; } }
 .readout dd.warn { color: var(--pos); }
-:root { --m1: #f2f5f9; --m2: #dce8f4; --front: #2b60b5; --refl: #a7740b; --trans: #c23f2c; --wavelet: #8a95a3; --mirror: #59626d; --lane: #e6ebf1; --pulse: #e0a12c; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --m1: #10161e; --m2: #172636; --front: #69a0ff; --refl: #e2b350; --trans: #ff7660; --wavelet: #7d8899; --mirror: #8a939e; --lane: #18202a; --pulse: #f0b44a; } }
-:root[data-theme="dark"] { --m1: #10161e; --m2: #172636; --front: #69a0ff; --refl: #e2b350; --trans: #ff7660; --wavelet: #7d8899; --mirror: #8a939e; --lane: #18202a; --pulse: #f0b44a; }
+:root { --m1: #f8f6f3; --m2: #efe9e1; --front: #2b60b5; --refl: #a7740b; --trans: #c23f2c; --wavelet: #8a95a3; --mirror: #6b645a; --lane: #f0ece7; --pulse: #e0a12c; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --m1: #1d1811; --m2: #33281a; --front: #69a0ff; --refl: #e2b350; --trans: #ff7660; --wavelet: #7d8899; --mirror: #9c958b; --lane: #292219; --pulse: #f0b44a; } }
+:root[data-theme="dark"] { --m1: #1d1811; --m2: #33281a; --front: #69a0ff; --refl: #e2b350; --trans: #ff7660; --wavelet: #7d8899; --mirror: #9c958b; --lane: #292219; --pulse: #f0b44a; }
 select { font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px; max-width: 100%; }
 @media (max-width: 820px) { select { min-height: 36px; } }
 /* folded rail sections: secondary options behind their heading (layout redesign) */
@@ -436,16 +436,16 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     scene.add(hemi, sun, sun.target);
     const mesh = (g, m, cast) => { const x = new THREE.Mesh(g, m); x.castShadow = cast !== false; x.receiveShadow = true; return x; };
     /* the optical table: a steel top with a grid of tapped holes */
-    const hc = document.createElement('canvas'); hc.width = hc.height = 32; const hx = hc.getContext('2d'); hx.fillStyle = '#ffffff'; hx.fillRect(0, 0, 32, 32); hx.fillStyle = '#9aa1aa'; hx.beginPath(); hx.arc(16, 16, 4.5, 0, 7); hx.fill();
+    const hc = document.createElement('canvas'); hc.width = hc.height = 32; const hx = hc.getContext('2d'); hx.fillStyle = '#ffffff'; hx.fillRect(0, 0, 32, 32); hx.fillStyle = '#a9a39b'; hx.beginPath(); hx.arc(16, 16, 4.5, 0, 7); hx.fill();
     const tex = new THREE.CanvasTexture(hc); tex.wrapS = tex.wrapT = THREE.RepeatWrapping; tex.repeat.set(1.7 / 0.025, 1.3 / 0.025); tex.anisotropy = 4;
     const tableM = Ms({ map: tex, roughness: 0.55, metalness: 0.25 }), table = mesh(new THREE.BoxGeometry(1.7, 1.3, 0.05), tableM, false); table.position.set(0.5, 0, -0.025);
     const floorM = Ms({ roughness: 0.9 }), floor = mesh(new THREE.PlaneGeometry(40, 40), floorM, false); floor.position.z = -0.75;
-    const darkM = Ms({ roughness: 0.45, metalness: 0.3, color: 0x2a3038 }), postM = Ms({ roughness: 0.35, metalness: 0.4, color: 0x8d96a1 });
+    const darkM = Ms({ roughness: 0.45, metalness: 0.3, color: 0x37322b }), postM = Ms({ roughness: 0.35, metalness: 0.4, color: 0xa0988e });
     scene.add(table, floor);
     /* the materials */
     const glass = (color, opacity) => new THREE.MeshPhongMaterial({ color, transparent: true, opacity, shininess: 110, specular: 0xffffff, depthWrite: false, side: THREE.DoubleSide });
     const edges = (geo, color, op) => new THREE.LineSegments(new THREE.EdgesGeometry(geo), new THREE.LineBasicMaterial({ color, transparent: true, opacity: op }));
-    const LOOK = { water: [0x58a8e0, 0.32, 0x8fc4ea], ethanol: [0xd9e9f2, 0.2, 0xb8cfdc], crown: [0xcfeee2, 0.38, 0x8fcfb6], zircon: [0xf0dca8, 0.48, 0xd8b968], diamond: [0xf2f8ff, 0.55, 0xffffff] };
+    const LOOK = { water: [0x58a8e0, 0.32, 0x8fc4ea], ethanol: [0xd9e9f2, 0.2, 0xb8cfdc], crown: [0xcfeee2, 0.38, 0x8fcfb6], zircon: [0xf0dca8, 0.48, 0xd8b968], diamond: [0xfbf9f6, 0.55, 0xffffff] };
     const lanes = [], leds = [];
     LANES.forEach((k, i) => {
       const y = LANE_Y(i), grp = new THREE.Group(); grp.position.y = y;
@@ -458,14 +458,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       } else if (k === 'air') {   /* open air: two irises mark the lane */
         for (const x of [0, 1]) { const iris = mesh(new THREE.TorusGeometry(0.026, 0.006, 10, 32).rotateY(Math.PI / 2), darkM); iris.position.set(x, 0, ZC); grp.add(iris); }
       } else if (k === 'water' || k === 'ethanol') {   /* a glass tank, liquid inside */
-        const bg = new THREE.BoxGeometry(1.0, 0.07, 0.07), tank = mesh(bg, glass(0xeef4fa, 0.16), false); tank.position.set(0.5, 0, ZC + 0.002); grp.add(tank, edges(bg, 0xaec2d4, 0.8).translateX(0.5).translateZ(ZC + 0.002));
+        const bg = new THREE.BoxGeometry(1.0, 0.07, 0.07), tank = mesh(bg, glass(0xeef4fa, 0.16), false); tank.position.set(0.5, 0, ZC + 0.002); grp.add(tank, edges(bg, 0xd1c3b1, 0.8).translateX(0.5).translateZ(ZC + 0.002));
         const lg = new THREE.BoxGeometry(0.992, 0.064, 0.058), liq = mesh(lg, glass(LOOK[k][0], LOOK[k][1]), false); liq.position.set(0.5, 0, ZC - 0.003); grp.add(liq);
       } else {   /* a polished bar */
         const bg = new THREE.BoxGeometry(1.0, 0.06, 0.06), bar = mesh(bg, glass(LOOK[k][0], LOOK[k][1]), false); bar.position.set(0.5, 0, ZC); grp.add(bar, edges(bg, LOOK[k][2], 0.9).translateX(0.5).translateZ(ZC));
       }
       /* the detector at the finish and its lamp */
       const det = mesh(new THREE.CylinderGeometry(0.02, 0.02, 0.03, 24).rotateZ(Math.PI / 2), darkM); det.position.set(1.06, 0, ZC); grp.add(det);
-      const ledM = new THREE.MeshStandardMaterial({ color: 0x3a3f46, emissive: 0x000000, roughness: 0.4 }), led = mesh(new THREE.SphereGeometry(0.008, 16, 12), ledM, false); led.position.set(1.06, 0, ZC + 0.028); grp.add(led); leds.push(ledM);
+      const ledM = new THREE.MeshStandardMaterial({ color: 0x45413b, emissive: 0x000000, roughness: 0.4 }), led = mesh(new THREE.SphereGeometry(0.008, 16, 12), ledM, false); led.position.set(1.06, 0, ZC + 0.028); grp.add(led); leds.push(ledM);
       /* the pulse: a ribbon that follows the wave, and a glow */
       const rg = new THREE.PlaneGeometry(1, 1, NSEG, 1), pm = new THREE.MeshBasicMaterial({ side: THREE.DoubleSide, transparent: true, opacity: 0.95 }), ribbon = new THREE.Mesh(rg, pm); ribbon.frustumCulled = false; grp.add(ribbon);
       lanes.push({ grp, ribbon, pm });
@@ -473,7 +473,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     });
     /* the source and the detector rail */
     const src = mesh(new THREE.BoxGeometry(0.12, 0.98, 0.1), darkM); src.position.set(-0.09, 0, 0.05);
-    const srcFace = mesh(new THREE.BoxGeometry(0.004, 0.94, 0.07), Ms({ color: 0x1a1d22, roughness: 0.3 }), false); srcFace.position.set(-0.029, 0, 0.05);
+    const srcFace = mesh(new THREE.BoxGeometry(0.004, 0.94, 0.07), Ms({ color: 0x211e1b, roughness: 0.3 }), false); srcFace.position.set(-0.029, 0, 0.05);
     const detRail = mesh(new THREE.BoxGeometry(0.05, 0.98, 0.02), postM); detRail.position.set(1.06, 0, 0.01);
     scene.add(src, srcFace, detRail);
     const gc = document.createElement('canvas'); gc.width = gc.height = 64; const gx = gc.getContext('2d'), gg = gx.createRadialGradient(32, 32, 0, 32, 32, 32); gg.addColorStop(0, 'rgba(255,255,255,1)'); gg.addColorStop(0.3, 'rgba(255,255,255,0.45)'); gg.addColorStop(1, 'rgba(255,255,255,0)'); gx.fillStyle = gg; gx.fillRect(0, 0, 64, 64);
@@ -487,10 +487,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   const col3 = (s, fb) => { try { return new THREE.Color(s || fb); } catch (_) { return new THREE.Color(fb); } };
   function theme3() {
-    const g = g3, dk = VD3.dark(), bg = col3(T.canvas, '#fbfcfd');
+    const g = g3, dk = VD3.dark(), bg = col3(T.canvas, '#fdfcfb');
     g.scene.background = bg; g.scene.fog = new THREE.Fog(bg, 3, 8);
-    g.hemi.intensity = dk ? 0.95 : 0.85; g.sun.intensity = dk ? 0.7 : 0.6; g.hemi.groundColor = col3(dk ? '#1c222a' : '#8c8a84', '#8c8a84');
-    g.floorM.color = col3(dk ? '#1a2029' : '#d9dde3', '#d9dde3'); g.tableM.color = col3(dk ? '#59616c' : '#b8bfc8', '#b8bfc8');
+    g.hemi.intensity = dk ? 0.95 : 0.85; g.sun.intensity = dk ? 0.7 : 0.6; g.hemi.groundColor = col3(dk ? '#29241d' : '#8c8a84', '#8c8a84');
+    g.floorM.color = col3(dk ? '#28221b' : '#e2dfda', '#e2dfda'); g.tableM.color = col3(dk ? '#6b645a' : '#c7c1b9', '#c7c1b9');
     const pc = col3(T.pulse, '#e0a12c'); for (const L of g.lanes) { L.pm.color = pc; L.glowM.color = pc; }
   }
   function render3() {
@@ -512,8 +512,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         pos.setXYZ(j, x, 0, zz + 0.0022); pos.setXYZ(j + NSEG + 1, x, 0, zz - 0.0022);
       }
       pos.needsUpdate = true; L.glow.position.set(Math.max(0, xe), 0, ZC);
-      g.leds[i].color = frac >= 1 ? pc : col3('#3a3f46', '#3a3f46'); g.leds[i].emissive = frac >= 1 ? pc : col3('#000000', '#000000');
-      L.apM.color = t > 0 && t < tv * 0.08 ? pc : col3('#0d0f12', '#0d0f12');
+      g.leds[i].color = frac >= 1 ? pc : col3('#45413b', '#45413b'); g.leds[i].emissive = frac >= 1 ? pc : col3('#000000', '#000000');
+      L.apM.color = t > 0 && t < tv * 0.08 ? pc : col3('#12100d', '#12100d');
     });
     g.scene.updateMatrixWorld(); g.r.render(g.scene, g.cam);
     const tmp = new THREE.Vector3();

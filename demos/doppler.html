@@ -29,18 +29,18 @@
 <style>
 /* Layout: one canvas with the wavefront view on top and a strip below (what the observer hears, or for light the f′/f plot and the spectrum); instrument rail on the right; stacks on phones. */
 :root {
-  --bg: #e9edf2;
-  --surface: #f8fafc;
-  --canvas: #fcfdfe;
-  --ink: #17202b;
-  --muted: #5a6575;
-  --line: #d3d9e2;
-  --grid: #e6ebf1;
-  --grid-strong: #cfd7e1;
+  --bg: #f1eeea;
+  --surface: #fcfaf8;
+  --canvas: #fefdfc;
+  --ink: #2a2219;
+  --muted: #73695c;
+  --line: #e1dbd4;
+  --grid: #f0ece7;
+  --grid-strong: #e0d9d0;
   --pos: #c23f2c;
   --neg: #2b60b5;
   --equi: #a7740b;
-  --accent: #2b60b5;
+  --accent: #c4811c;
   --wave: #3f5b78;
   --obs: #17855f;
   --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
@@ -48,15 +48,15 @@
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
-    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-    --equi: #e2b350; --accent: #69a0ff; --wave: #9fb7d2; --obs: #4fd1a0; color-scheme: dark;
+    --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
+    --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+    --equi: #e2b350; --accent: #fbc26d; --wave: #9fb7d2; --obs: #4fd1a0; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
-  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-  --equi: #e2b350; --accent: #69a0ff; --wave: #9fb7d2; --obs: #4fd1a0; color-scheme: dark;
+  --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
+  --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+  --equi: #e2b350; --accent: #fbc26d; --wave: #9fb7d2; --obs: #4fd1a0; color-scheme: dark;
 }
 :root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
@@ -1140,14 +1140,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const trunks = new THREE.InstancedMesh(trunkG, trunkM, NT), crowns = new THREE.InstancedMesh(crownG, crownM, NT * 2);
     scene.add(trunks, crowns);
     // the source: an ambulance (Street) or a jet (Sky); the observer: a person, or a car when moving
-    const amb = new THREE.Group(), white = M({ color: 0xf4f5f7, roughness: 0.4 }), red = M({ color: 0xc8312a, roughness: 0.5 }), glass = M({ color: 0x223040, roughness: 0.15, metalness: 0.3 }), tyre = M({ color: 0x1b1d20, roughness: 0.9 });
+    const amb = new THREE.Group(), white = M({ color: 0xf7f6f4, roughness: 0.4 }), red = M({ color: 0xc8312a, roughness: 0.5 }), glass = M({ color: 0x3e3324, roughness: 0.15, metalness: 0.3 }), tyre = M({ color: 0x201e1b, roughness: 0.9 });
     const bx = (w, d, h, m, x, y, z) => { const b = new THREE.Mesh(new THREE.BoxGeometry(w, d, h), m); b.position.set(x, y, z); return b; };
     amb.add(bx(4.1, 2.3, 2.6, white, -0.9, 0, 1.75), bx(1.9, 2.2, 1.9, white, 2.05, 0, 1.4), bx(0.08, 1.9, 0.8, glass, 3.0, 0, 1.95),
       bx(4.12, 2.32, 0.28, red, -0.9, 0, 1.55), bx(0.5, 1.4, 0.18, red, 1.3, 0, 3.12));
     const lampR = new THREE.MeshBasicMaterial({ color: 0xff2a2a }), lampB = new THREE.MeshBasicMaterial({ color: 0x2f6dff });
     const lr = bx(0.3, 0.55, 0.22, lampR, 1.6, -0.4, 3.2), lb = bx(0.3, 0.55, 0.22, lampB, 1.6, 0.4, 3.2); amb.add(lr, lb);
     for (const [x, y] of [[-2.3, -1.05], [-2.3, 1.05], [1.9, -1.05], [1.9, 1.05]]) { const w = new THREE.Mesh(new THREE.CylinderGeometry(0.45, 0.45, 0.3, 16), tyre); w.position.set(x, y, 0.45); amb.add(w); }
-    const jet = new THREE.Group(), steel = M({ color: 0x9aa4b0, roughness: 0.35, metalness: 0.6 }), dark = M({ color: 0x39424d, roughness: 0.5, metalness: 0.4 });
+    const jet = new THREE.Group(), steel = M({ color: 0xaea69c, roughness: 0.35, metalness: 0.6 }), dark = M({ color: 0x4c443b, roughness: 0.5, metalness: 0.4 });
     { const fus = new THREE.Mesh(new THREE.CylinderGeometry(0.75, 0.6, 12, 20).rotateZ(-Math.PI / 2), steel); fus.position.x = -1; jet.add(fus);
       const nose = new THREE.Mesh(new THREE.ConeGeometry(0.75, 4, 20).rotateZ(-Math.PI / 2), steel); nose.position.x = 7; jet.add(nose);
       const wingS = new THREE.Shape(); wingS.moveTo(2.5, 0); wingS.lineTo(-4.5, 5.2); wingS.lineTo(-5.6, 5.2); wingS.lineTo(-5.6, -5.2); wingS.lineTo(-4.5, -5.2); wingS.closePath();
@@ -1158,7 +1158,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const noz = new THREE.Mesh(new THREE.CylinderGeometry(0.6, 0.5, 0.6, 16).rotateZ(-Math.PI / 2), dark); noz.position.x = -7.3; jet.add(noz); }
     const flame = new THREE.Mesh(new THREE.ConeGeometry(0.45, 3, 12).rotateZ(Math.PI / 2), new THREE.MeshBasicMaterial({ color: 0xffa040, transparent: true, opacity: 0.75, depthWrite: false }));
     flame.position.x = -9.1; jet.add(flame);
-    const person = new THREE.Group(), skin = M({ color: 0xd9a77e }), shirt = M({ color: 0x17855f }), pants = M({ color: 0x2c3440 });
+    const person = new THREE.Group(), skin = M({ color: 0xd9a77e }), shirt = M({ color: 0x17855f }), pants = M({ color: 0x3f372d });
     { const legs = new THREE.Mesh(new THREE.CylinderGeometry(0.17, 0.15, 0.85, 10).rotateX(Math.PI / 2), pants); legs.position.z = 0.43; legs.scale.set(1.6, 1, 1);
       const body = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.17, 0.62, 12).rotateX(Math.PI / 2), shirt); body.position.z = 1.17; body.scale.set(1.5, 1, 1);
       const head = new THREE.Mesh(new THREE.SphereGeometry(0.12, 16, 12), skin); head.position.z = 1.63; person.add(legs, body, head); }
@@ -1240,13 +1240,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     let sd = 3; const rn = () => { sd = (sd * 16807) % 2147483647; return sd / 2147483647; };
     for (let i = 0; i < 2600; i++) { c.fillStyle = `rgba(${d ? '120,150,110' : '60,90,50'},${0.05 + 0.08 * rn()})`; c.fillRect(rn() * 256, rn() * 256, 2 + 3 * rn(), 2 + 3 * rn()); }
     g.gTex.needsUpdate = true;
-    c = g.rCv.getContext('2d'); c.fillStyle = d ? '#2b2f35' : '#5f646b'; c.fillRect(0, 0, 64, 256);
-    c.fillStyle = d ? '#c9ccd1' : '#f2f2ee'; c.fillRect(0, 10, 64, 6); c.fillRect(0, 240, 64, 6);
+    c = g.rCv.getContext('2d'); c.fillStyle = d ? '#34312c' : '#6a6660'; c.fillRect(0, 0, 64, 256);
+    c.fillStyle = d ? '#d0cdca' : '#f2f2ee'; c.fillRect(0, 10, 64, 6); c.fillRect(0, 240, 64, 6);
     c.fillStyle = '#e7c34a'; c.fillRect(0, 124, 30, 8);
     g.rTex.needsUpdate = true; g.rTex.repeat.set(12000 / 9, 1);
     g.shellM.uniforms.uCol.value = col(T.wave, '#3f5b78'); g.shellM.uniforms.uK.value = d ? 1.2 : 1.6;
     g.obsRingM.color = col(T.obs, '#17855f'); g.paint.color = col(T.obs, '#17855f'); g.shirt.color = col(T.obs, '#17855f');
-    g.emitM.color = col(T.muted, '#5a6575'); g.losM.color = col(T.ink, '#17202b');
+    g.emitM.color = col(T.muted, '#73695c'); g.losM.color = col(T.ink, '#2a2219');
     g.coneM.color = col(T.pos, '#c23f2c'); g.coneEdgeM.color = col(T.pos, '#c23f2c'); g.boomM.color = col(T.pos, '#c23f2c');
     g.aS.userData.m.color = col(T.pos, '#c23f2c'); g.aO.userData.m.color = col(T.obs, '#17855f');
     g.ringBase = sky.clone(); g.ringCol = col(T.wave, '#3f5b78');

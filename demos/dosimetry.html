@@ -602,11 +602,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.fillStyle = T.water2; ctx.globalAlpha = 0.8; ctx.fillRect(x0 - 30 * p, cy - R - 26 * p, x1 - x0 + 30 * p, 2 * R + 52 * p); ctx.globalAlpha = 1;
     text('water', x1 - 6 * p, cy - R - 14 * p, { a: 'right', s: 11 * p, c: T.water });
     /* wall (graphite inside a PMMA sleeve), domed tip at the left */
-    ctx.fillStyle = '#3a3f46'; ctx.beginPath(); ctx.moveTo(xr, cy - R - 6 * p); ctx.lineTo(xl + R, cy - R - 6 * p); ctx.arc(xl + R, cy, R + 6 * p, -Math.PI / 2, Math.PI / 2, true); ctx.lineTo(xr, cy + R + 6 * p); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = '#45413b'; ctx.beginPath(); ctx.moveTo(xr, cy - R - 6 * p); ctx.lineTo(xl + R, cy - R - 6 * p); ctx.arc(xl + R, cy, R + 6 * p, -Math.PI / 2, Math.PI / 2, true); ctx.lineTo(xr, cy + R + 6 * p); ctx.closePath(); ctx.fill();
     ctx.fillStyle = T.canvas; ctx.beginPath(); ctx.moveTo(xr, cy - R); ctx.lineTo(xl + R, cy - R); ctx.arc(xl + R, cy, R, -Math.PI / 2, Math.PI / 2, true); ctx.lineTo(xr, cy + R); ctx.closePath(); ctx.fill();
     VDGear.box(ctx, xr, cy - R - 10 * p, 70 * p, 2 * R + 20 * p, { shadow: false });
     text('stem', xr + 35 * p, cy + R + 22 * p, { a: 'center', s: 10.5 * p });
-    const eb = Math.max(2, R * 0.18); VDGear.rod(ctx, xl + R * 0.6, cy, xr + 10 * p, cy, eb, { color: '#b8c0ca' });
+    const eb = Math.max(2, R * 0.18); VDGear.rod(ctx, xl + R * 0.6, cy, xr + 10 * p, cy, eb, { color: '#c9c2b9' });
     const sign = S.pol > 0 ? '+' : '−';
     text(`central electrode ${sign}${S.V} V`, xl + L * 0.55, cy - eb - 10 * p, { a: 'center', s: 10.5 * p, c: T.ink });
     text('air cavity, 0.6 cm³', xl + R * 1.2, cy + R - 10 * p, { s: 10.5 * p });
@@ -666,7 +666,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.save(); ctx.translate(tx0 - 36 * p, (ty0 + ty1) / 2); ctx.rotate(-Math.PI / 2); ctx.textAlign = 'center'; ctx.font = `${11 * p}px ${T.ui}`; ctx.fillText('depth in water (g/cm²)', 0, 0); ctx.restore();
     /* the beam from above */
     const bx = (tx0 + tx1) / 2, bw = co ? (tx1 - tx0) * 0.5 : (tx1 - tx0) * 0.42, on = !!S.deliver;
-    VDGear.box(ctx, bx - bw * 0.6, 40 * p, bw * 1.2, 70 * p, { color: co ? '#4a5563' : '#5b6575' });
+    VDGear.box(ctx, bx - bw * 0.6, 40 * p, bw * 1.2, 70 * p, { color: co ? '#61584c' : '#73695d' });
     VDGear.plate(ctx, co ? 'cobalt 60 unit' : 'scanning nozzle', bx, 75 * p, { s: 8.5 * p });
     ctx.save(); ctx.globalAlpha = on ? 0.32 : 0.08; ctx.fillStyle = T.beam;
     const bottom = co ? ty1 : Math.min(ty1, ty0 + b.Rp * pxcm);
@@ -675,8 +675,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       text(narrow ? `R_p ${f(b.Rp, 2)}` : `R_p ≈ ${f(b.Rp, 2)} g/cm² (PSTAR CSDA range)`, tx1 - 4 * p, yr - 9 * p, { a: 'right', s: 10.5 * p, c: T.photon }); }
     /* the chamber at z_ref, drawn across the beam */
     const yc = ty0 + b.zref * pxcm, cl = 23 * 0.1 * pxcm * 1.0, cr = Math.max(3, 0.305 * pxcm);
-    ctx.fillStyle = '#3a3f46'; ctx.beginPath(); ctx.roundRect(bx - cl / 2, yc - cr, cl, 2 * cr, cr); ctx.fill();
-    VDGear.rod(ctx, bx + cl / 2, yc, tx1 + 30 * p, yc, Math.max(1.5, cr * 0.5), { color: '#7d8894' });
+    ctx.fillStyle = '#45413b'; ctx.beginPath(); ctx.roundRect(bx - cl / 2, yc - cr, cl, 2 * cr, cr); ctx.fill();
+    VDGear.rod(ctx, bx + cl / 2, yc, tx1 + 30 * p, yc, Math.max(1.5, cr * 0.5), { color: '#928a7f' });
     ctx.strokeStyle = T.accent; ctx.setLineDash([3, 3]); ctx.beginPath(); ctx.moveTo(tx0, yc); ctx.lineTo(bx - cl / 2 - 4, yc); ctx.stroke(); ctx.setLineDash([]);
     text(`z_ref = ${b.zref} g/cm²`, tx0 + 6 * p, yc - 10 * p, { s: 10.5 * p, c: T.accent, m: true });
     /* electrometer, thermometer, barometer (smaller on a phone) */
@@ -691,12 +691,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     VDGear.lcd(ctx, ex + 10 * q, ey + 24 * q, ew - 20 * q, 34 * q, shown);
     VDGear.lcd(ctx, ex + 10 * q, ey + 66 * q, ew - 20 * q, 26 * q, `${S.polc > 0 ? '+' : '−'}${S.Vc} V`, { color: '#ffd38a' });
     const thx = ex, thy = ey + 140 * q;
-    VDGear.box(ctx, thx, thy, ew, 64 * q, { color: '#4b5563' }); VDGear.plate(ctx, 'thermometer in the water', thx + ew / 2, thy + 11 * q, { s: 7.5 * q });
+    VDGear.box(ctx, thx, thy, ew, 64 * q, { color: '#61584d' }); VDGear.plate(ctx, 'thermometer in the water', thx + ew / 2, thy + 11 * q, { s: 7.5 * q });
     VDGear.lcd(ctx, thx + 10 * q, thy + 22 * q, ew - 20 * q, 32 * q, `${f(S.room.T, 1)} °C`);
-    VDGear.cable(ctx, thx, thy + 40 * q, tx1 - 30 * p, ty0 + 60 * p, 40 * q, { w: 2, color: '#6b7280' });
-    ctx.strokeStyle = '#9aa4b0'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(tx1 - 30 * p, ty0 - 14 * p); ctx.lineTo(tx1 - 30 * p, ty0 + 60 * p); ctx.stroke();
+    VDGear.cable(ctx, thx, thy + 40 * q, tx1 - 30 * p, ty0 + 60 * p, 40 * q, { w: 2, color: '#7e776d' });
+    ctx.strokeStyle = '#aea69c'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(tx1 - 30 * p, ty0 - 14 * p); ctx.lineTo(tx1 - 30 * p, ty0 + 60 * p); ctx.stroke();
     const bay = thy + 90 * q;
-    VDGear.box(ctx, thx, bay, ew, 64 * q, { color: '#4b5563' }); VDGear.plate(ctx, 'barometer', thx + ew / 2, bay + 11 * q, { s: 7.5 * q });
+    VDGear.box(ctx, thx, bay, ew, 64 * q, { color: '#61584d' }); VDGear.plate(ctx, 'barometer', thx + ew / 2, bay + 11 * q, { s: 7.5 * q });
     VDGear.lcd(ctx, thx + 10 * q, bay + 22 * q, ew - 20 * q, 32 * q, `${f(S.room.P, 2)} kPa`);
     text(co ? (narrow ? '10 cm × 10 cm, 100 cm from the source' : 'Field 10 cm × 10 cm, 100 cm from the source to the chamber') : 'Scanned layer, 10 cm × 10 cm', tx0, ty1 + 22 * p, { s: 11 * p });
     if (S.mystery) text('Mystery machine: its output has drifted', tx0, ty1 + 40 * p, { s: 11 * p, c: T.neg, w: 700 });
@@ -730,12 +730,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const glassM = M({ transparent: true, opacity: 0.13, roughness: 0.08, metalness: 0.1, side: DS, depthWrite: false }, ['#cfe3f0', '#9fc4dc']);
     const waterM = new THREE.MeshStandardMaterial({ transparent: true, opacity: 0.32, roughness: 0.15, metalness: 0, depthWrite: false, side: DS });
     const blockM = new THREE.MeshStandardMaterial({ transparent: true, opacity: 0.16, roughness: 0.1, metalness: 0, depthWrite: false, side: DS });
-    const steel = M({ roughness: 0.35, metalness: 0.7 }, ['#b9c0c8', '#77808a']), dark = M({ roughness: 0.55, metalness: 0.25 }, ['#56606b', '#3a424c']);
-    const lead = M({ roughness: 0.7, metalness: 0.3 }, ['#6e7378', '#4c5156']), head = M({ roughness: 0.5, metalness: 0.2 }, ['#6b7787', '#4f5a68']);
+    const steel = M({ roughness: 0.35, metalness: 0.7 }, ['#c7c1ba', '#898278']), dark = M({ roughness: 0.55, metalness: 0.25 }, ['#696258', '#4b443b']);
+    const lead = M({ roughness: 0.7, metalness: 0.3 }, ['#77746f', '#55524d']), head = M({ roughness: 0.5, metalness: 0.2 }, ['#857b6d', '#665d51']);
     const lineM = new THREE.LineBasicMaterial({ transparent: true, opacity: 0.55 }), accLineM = new THREE.LineBasicMaterial({ transparent: true, opacity: 0.9 });
     const photonM = basic({ opacity: 0.12 }), arrowM = basic({ opacity: 0.85 }), accM = basic({ opacity: 0.2, side: DS });
-    S3.onTheme(() => { waterM.color.copy(tok('--water', '#2f7fc1')); blockM.color.copy(tok('--water', '#2f7fc1')); lineM.color.copy(tok('--muted', '#5a6575'));
-      accLineM.color.copy(tok('--accent', '#2b60b5')); photonM.color.copy(tok('--photon', '#c2410c')); arrowM.color.copy(tok('--photon', '#c2410c')); accM.color.copy(tok('--accent', '#2b60b5')); });
+    S3.onTheme(() => { waterM.color.copy(tok('--water', '#2f7fc1')); blockM.color.copy(tok('--water', '#2f7fc1')); lineM.color.copy(tok('--muted', '#73695c'));
+      accLineM.color.copy(tok('--accent', '#c4811c')); photonM.color.copy(tok('--photon', '#c2410c')); arrowM.color.copy(tok('--photon', '#c2410c')); accM.color.copy(tok('--accent', '#c4811c')); });
     sc.add(VD3K.bench(S3, { w: 6, d: 5, y: 0.6 }), VD3K.backdrop(S3, { r: 2.4, h: 3.2, y: -0.1, arc: Math.PI * 1.15 }));
     const ROD = new THREE.CylinderGeometry(1, 1, 1, 8, 1, true), UP = new THREE.Vector3(0, 1, 0), _q = new THREE.Quaternion(), _v = new THREE.Vector3(), _p = new THREE.Vector3(), _s = new THREE.Vector3(), _m = new THREE.Matrix4();
     const rods = (n) => { const m = new THREE.InstancedMesh(ROD, new THREE.MeshBasicMaterial({ color: 0xffffff }), n), c = new THREE.Color(1, 1, 1); for (let i = 0; i < n; i++) m.setColorAt(i, c); m.count = 0; m.frustumCulled = false; return m; };
@@ -749,9 +749,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       GK.add(VD3K.box(t.len, t.w, t.h, glassM, cx, 0, 0.001)); GK.add(at(edges(t.len, t.w, t.h, lineM), cx, 0, t.h / 2));
       const wat = new THREE.Mesh(new THREE.BoxGeometry(t.len - 0.008, t.w - 0.008, t.water - 0.004), waterM); wat.position.set(cx, 0, t.water / 2 + 0.002); wat.renderOrder = 1; GK.add(wat);
       /* the source head on its yoke, the collimator open toward the water */
-      const paint = M({ roughness: 0.45, metalness: 0.2 }, ['#c9d0d8', '#7d8794']);
+      const paint = M({ roughness: 0.45, metalness: 0.2 }, ['#d7d1ca', '#928a7f']);
       GK.add(VD3K.rod([-0.6, 0, t.zb], [-0.42, 0, t.zb], 0.1, paint), VD3K.rod([-0.42, 0, t.zb], [-0.38, 0, t.zb], 0.085, lead));
-      const hole = new THREE.Mesh(new THREE.PlaneGeometry(0.1, 0.1), new THREE.MeshBasicMaterial({ color: 0x0b0d10 })); hole.rotation.y = Math.PI / 2; hole.position.set(-0.3795, 0, t.zb); GK.add(hole);
+      const hole = new THREE.Mesh(new THREE.PlaneGeometry(0.1, 0.1), new THREE.MeshBasicMaterial({ color: 0x100e0b })); hole.rotation.y = Math.PI / 2; hole.position.set(-0.3795, 0, t.zb); GK.add(hole);
       GK.add(VD3K.rod([-0.51, 0, 0], [-0.51, 0, t.zb - 0.09], 0.02, steel), VD3K.box(0.22, 0.22, 0.014, dark, -0.51, 0, 0));
       /* the beam: rays in air, then in the water in pieces whose brightness follows e^(−μx) */
       const slices = []; for (let i = 0; i < 6; i++) slices.push(basic({ opacity: 0.5 }));
@@ -781,15 +781,15 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const wat = new THREE.Mesh(new THREE.BoxGeometry(0.27, 0.1, 0.196), waterM); wat.position.set(-0.005, 0.05, 0.1); wat.renderOrder = 1; GC.add(wat);
       GC.add(at(edges(0.27, 0.1, 0.2, lineM), -0.005, 0.05, 0.1));
       const ch = new THREE.Group(); ch.position.set(0, 0, zc); ch.rotation.z = -Math.PI / 2; GC.add(ch);   /* built along y, turned to lie along x: tip at −x, stem at +x */
-      const outer = M({ roughness: 0.5, metalness: 0.05, side: DS }, ['#5a6270', '#4a525e']), graphite = M({ roughness: 0.9, metalness: 0.1, side: DS }, ['#2b2e33', '#25282c']);
+      const outer = M({ roughness: 0.5, metalness: 0.05, side: DS }, ['#6e665c', '#5d554c']), graphite = M({ roughness: 0.9, metalness: 0.1, side: DS }, ['#322f2c', '#2b2926']);
       ch.add(new THREE.Mesh(new THREE.CylinderGeometry(c.Ro, c.Ro, L, 48, 1, true, Math.PI, Math.PI), outer));
       ch.add(new THREE.Mesh(new THREE.CylinderGeometry(c.R, c.R, L, 48, 1, true, Math.PI, Math.PI), graphite));
       for (const [r, m] of [[c.Ro, outer], [c.R, graphite]]) { const d = new THREE.Mesh(new THREE.SphereGeometry(r, 32, 12, -Math.PI / 2, Math.PI, Math.PI / 2, Math.PI / 2), m); d.position.y = -L / 2; ch.add(d); }
       for (const s of [-1, 1]) { const lip = new THREE.Mesh(new THREE.BoxGeometry(c.Ro - c.R, L, 0.0006), outer); lip.position.set(0, 0, s * (c.R + c.Ro) / 2); lip.rotation.y = Math.PI / 2; lip.position.set(0, 0, s * (c.R + c.Ro) / 2); ch.add(lip); }
-      const alu = M({ roughness: 0.3, metalness: 0.85 }, ['#c9cfd6', '#9aa3ad']);
+      const alu = M({ roughness: 0.3, metalness: 0.85 }, ['#d5d0ca', '#aca59b']);
       GC.add(VD3K.rod([-L / 2 + 0.008, 0, zc], [L / 2 + 0.01, 0, zc], c.rb, alu));
       GC.add(VD3K.rod([L / 2, 0, zc], [L / 2 + 0.1, 0, zc], c.Ro * 0.75, outer), VD3K.rod([L / 2 + 0.1, 0, zc], [L / 2 + 0.125, 0, zc], c.Ro * 0.6, steel));
-      GC.add(VD3K.cable([L / 2 + 0.125, 0, zc], [0.29, -0.03, 0.03], { color: 0x23282f, rad: 0.003, sag: 0.05 }));
+      GC.add(VD3K.cable([L / 2 + 0.125, 0, zc], [0.29, -0.03, 0.03], { color: 0x2e2a24, rad: 0.003, sag: 0.05 }));
       GC.add(VD3K.box(0.04, 0.05, zc - c.Ro, dark, L / 2 + 0.06, 0, 0)); }
     const elec = VD3K.meter(S3, { label: 'ELECTROMETER', sub: 'charge, nC' }); elec.position.x = 0.3; elec.position.y = -0.06; GC.add(elec);
     const bias = VD3K.meter(S3, { label: 'BIAS', sub: 'chamber voltage', w: 0.12 }); bias.position.x = 0.3; bias.position.y = 0.09; GC.add(bias);
@@ -807,13 +807,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       /* the chamber holder: a rod from the rim down to the stem */
       GL.add(VD3K.box(0.06, 0.04, 0.02, dark, 0.14, 0, t.h)); }
     const calCh = new THREE.Group(); GL.add(calCh);
-    { const r = CAV.a + 0.0005, L = 0.023, chM = M({ roughness: 0.5, metalness: 0.05 }, ['#3d434c', '#353a42']);
+    { const r = CAV.a + 0.0005, L = 0.023, chM = M({ roughness: 0.5, metalness: 0.05 }, ['#4b453e', '#413c36']);
       calCh.add(VD3K.rod([-L / 2, 0, 0], [L / 2, 0, 0], r, chM), VD3K.rod([L / 2, 0, 0], [0.14, 0, 0], r * 0.8, chM));
       const tip = new THREE.Mesh(new THREE.SphereGeometry(r, 16, 10), chM); tip.position.x = -L / 2; calCh.add(tip); }
     const calHold = VD3K.rod([0, 0, 0], [0, 0, 1], 0.004, steel); GL.add(calHold);
     const calCable = new THREE.Group(); GL.add(calCable);
     const nozP = new THREE.Group(), nozC = new THREE.Group();
-    { const n = CT.nz, paint = M({ roughness: 0.45, metalness: 0.2 }, ['#c9d0d8', '#7d8794']);
+    { const n = CT.nz, paint = M({ roughness: 0.45, metalness: 0.2 }, ['#d7d1ca', '#928a7f']);
       nozP.add(VD3K.rod([0, 0, n + 0.05], [0, 0, n + 0.3], 0.09, paint), VD3K.rod([0, 0, n + 0.3], [0, 0, n + 0.34], 0.11, dark), VD3K.box(0.15, 0.15, 0.05, dark, 0, 0, n));
       nozC.add(VD3K.box(0.34, 0.3, 0.24, paint, 0, 0, n + 0.06), VD3K.box(0.18, 0.18, 0.06, lead, 0, 0, n)); }
     GL.add(nozP, nozC);
@@ -825,7 +825,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const cTh = VD3K.meter(S3, { label: 'THERMOMETER', sub: 'in the water', w: 0.15 }); cTh.position.x = 0.39; cTh.position.y = 0.13; cTh.position.z += 0.1;
     const cBa = VD3K.meter(S3, { label: 'BAROMETER', sub: 'room', w: 0.15 }); cBa.position.x = 0.59; cBa.position.y = 0.13; cBa.position.z += 0.1;
     GL.add(cElec, cBias, cTh, cBa, VD3K.box(0.44, 0.12, 0.1, dark, 0.49, 0.14, 0));
-    GL.add(VD3K.rod([-0.15, 0.13, CT.h + 0.01], [-0.15, 0.13, CT.zs - 0.1], 0.003, steel), VD3K.cable([-0.15, 0.13, CT.h + 0.01], [0.39, 0.15, 0.13], { color: 0x6b7280, rad: 0.002, via: [[-0.1, 0.2, CT.h + 0.08], [0.25, 0.17, 0.2]] }));
+    GL.add(VD3K.rod([-0.15, 0.13, CT.h + 0.01], [-0.15, 0.13, CT.zs - 0.1], 0.003, steel), VD3K.cable([-0.15, 0.13, CT.h + 0.01], [0.39, 0.15, 0.13], { color: 0x7e776d, rad: 0.002, via: [[-0.1, 0.2, CT.h + 0.08], [0.25, 0.17, 0.2]] }));
     sc.add(GL);
     S3.onTheme(() => { rpLine.material.color.copy(tok('--photon', '#c2410c')); fieldM.color.copy(tok('--beam', '#f59e0b')); beamC.material.color.copy(tok('--beam', '#f59e0b')); spot.material.color.copy(tok('--beam', '#f59e0b')); flash.material.color.copy(tok('--beam', '#f59e0b')); });
 
@@ -937,7 +937,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* the chamber at z_ref, its holder and cable */
     g.calCh.position.set(0, 0, zr); g.calHold.scale.set(1, t.h - zr, 1); g.calHold.position.set(0.14, 0, (zr + t.h) / 2);
     const ck = String(zr); if (g.calCableKey !== ck) { g.calCableKey = ck; while (g.calCable.children.length) g.S3.dispose(g.calCable.children[0]);
-      g.calCable.add(VD3K.cable([0.14, 0, t.h], [0.39, -0.08, 0.03], { color: 0x23282f, rad: 0.0025, via: [[0.17, -0.02, t.h + 0.07], [0.3, -0.06, 0.1]] })); }
+      g.calCable.add(VD3K.cable([0.14, 0, t.h], [0.39, -0.08, 0.03], { color: 0x2e2a24, rad: 0.0025, via: [[0.17, -0.02, t.h + 0.07], [0.3, -0.06, 0.1]] })); }
     /* the field: 10 cm × 10 cm, down to R_p for protons, through the tank for cobalt */
     const bottom = co ? 0.005 : t.zs - cb.Rp / 100, top = co ? t.nz : t.zs;
     g.field.scale.set(1, 1, top - bottom); g.field.position.set(0, 0, (top + bottom) / 2); g.fieldM.opacity = co ? (on ? 0.2 : 0.05) : (on ? 0.07 : 0.04);

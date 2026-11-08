@@ -14,9 +14,9 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
 /* only what this demo needs beyond demos/lib/vd.css: the energy colours, the park and the graph under it, the Set up card */
-:root { --ek: #2b60b5; --eu: #2f8f5b; --eth: #c4552d; --etot: #17202b; --track: #6b4f2a; --rail: #8d97a6; --sky: #eef4fb; --skater: #7a3fb0; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --ek: #69a0ff; --eu: #5fd08f; --eth: #ff8a5c; --etot: #e3e8ef; --track: #c99c5e; --rail: #7d8898; --sky: #121b26; --skater: #c08cf0; } }
-:root[data-theme="dark"] { --ek: #69a0ff; --eu: #5fd08f; --eth: #ff8a5c; --etot: #e3e8ef; --track: #c99c5e; --rail: #7d8898; --sky: #121b26; --skater: #c08cf0; }
+:root { --ek: #2b60b5; --eu: #2f8f5b; --eth: #c4552d; --etot: #2a2219; --track: #6b4f2a; --rail: #a49b8f; --sky: #eef4fb; --skater: #7a3fb0; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --ek: #69a0ff; --eu: #5fd08f; --eth: #ff8a5c; --etot: #eeeae4; --track: #c99c5e; --rail: #968c7f; --sky: #121b26; --skater: #c08cf0; } }
+:root[data-theme="dark"] { --ek: #69a0ff; --eu: #5fd08f; --eth: #ff8a5c; --etot: #eeeae4; --track: #c99c5e; --rail: #968c7f; --sky: #121b26; --skater: #c08cf0; }
 .stage { position: relative; display: grid; grid-template-rows: auto minmax(360px, 1fr) 170px; min-height: 640px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); }
 .stage-ctl .tclock { margin-left: auto; font-size: 0.82rem; color: var(--muted); }

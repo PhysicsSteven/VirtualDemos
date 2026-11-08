@@ -16,10 +16,10 @@
 /* Layout: the scene on the left; the rail on the right. */
 /* Layout: lab bench. The gas box and speed histogram fill the left, a narrow instrument rail sits on the right; stacks on phones. */
 
-:root { --m1: #2b60b5; --m2: #b0452f; --m3: #1f8a5a; --m4: #a7740b; --cm: #17202b; --water: #9cc3e6; --boat: #8a6d4a; }
-:root { --plate: #d6dce4; --plate-grid: #aab4c1; --plate-hi: #eef1f5; --brush: #c8d0da; --bolt: #8f99a7; --night-top: #c3cce2; --night-bottom: #eceef5; --star: #ffffff; --skyline: #b4bdcf; --window-lit: #f0d38a; --spark: #e9a22f; --sky-top: #d9e6f2; --sky-bottom: #f3f6fa; --shore: #bccbb2; --tree: #a2b897; --water-deep: #82b2dc; --ripple: #e3effa; --dock: #ab8f6a; --hull-rim: #6b5236; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --m1: #69a0ff; --m2: #ff8a70; --m3: #4cd08f; --m4: #e2b350; --cm: #e7ecf3; --water: #24425e; --boat: #a8876a; --plate: #222a34; --plate-hi: #2d3642; --brush: #27303b; --plate-grid: #46525f; --bolt: #6f7a89; --night-top: #070c18; --night-bottom: #141c2b; --star: #e8eefc; --skyline: #1c2434; --window-lit: #8a7333; --spark: #ffd27a; --sky-top: #0c1420; --sky-bottom: #152030; --shore: #1e2a22; --tree: #243529; --water-deep: #1a3550; --ripple: #3d6488; --dock: #6e5a42; --hull-rim: #c4a382; } }
-:root[data-theme="dark"] { --m1: #69a0ff; --m2: #ff8a70; --m3: #4cd08f; --m4: #e2b350; --cm: #e7ecf3; --water: #24425e; --boat: #a8876a; --plate: #222a34; --plate-hi: #2d3642; --brush: #27303b; --plate-grid: #46525f; --bolt: #6f7a89; --night-top: #070c18; --night-bottom: #141c2b; --star: #e8eefc; --skyline: #1c2434; --window-lit: #8a7333; --spark: #ffd27a; --sky-top: #0c1420; --sky-bottom: #152030; --shore: #1e2a22; --tree: #243529; --water-deep: #1a3550; --ripple: #3d6488; --dock: #6e5a42; --hull-rim: #c4a382; }
+:root { --m1: #2b60b5; --m2: #b0452f; --m3: #1f8a5a; --m4: #a7740b; --cm: #2a2219; --water: #9cc3e6; --boat: #8a6d4a; }
+:root { --plate: #e3ded7; --plate-grid: #bfb7ac; --plate-hi: #f4f2ef; --brush: #d9d2c9; --bolt: #a59c91; --night-top: #e0d4c5; --night-bottom: #f4f1ed; --star: #ffffff; --skyline: #b4bdcf; --window-lit: #f0d38a; --spark: #e9a22f; --sky-top: #d9e6f2; --sky-bottom: #f3f6fa; --shore: #bccbb2; --tree: #a2b897; --water-deep: #82b2dc; --ripple: #f4efe9; --dock: #ab8f6a; --hull-rim: #6b5236; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --m1: #69a0ff; --m2: #ff8a70; --m3: #4cd08f; --m4: #e2b350; --cm: #f2eee8; --water: #24425e; --boat: #a8876a; --plate: #332c23; --plate-hi: #40392f; --brush: #3a3228; --plate-grid: #5d5448; --bolt: #877d71; --night-top: #14100b; --night-bottom: #292116; --star: #e8eefc; --skyline: #1c2434; --window-lit: #8a7333; --spark: #ffd27a; --sky-top: #0c1420; --sky-bottom: #152030; --shore: #1e2a22; --tree: #243529; --water-deep: #1a3550; --ripple: #826743; --dock: #6e5a42; --hull-rim: #c4a382; } }
+:root[data-theme="dark"] { --m1: #69a0ff; --m2: #ff8a70; --m3: #4cd08f; --m4: #e2b350; --cm: #f2eee8; --water: #24425e; --boat: #a8876a; --plate: #332c23; --plate-hi: #40392f; --brush: #3a3228; --plate-grid: #5d5448; --bolt: #877d71; --night-top: #14100b; --night-bottom: #292116; --star: #e8eefc; --skyline: #1c2434; --window-lit: #8a7333; --spark: #ffd27a; --sky-top: #0c1420; --sky-bottom: #152030; --shore: #1e2a22; --tree: #243529; --water-deep: #1a3550; --ripple: #826743; --dock: #6e5a42; --hull-rim: #c4a382; }
 :root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
 body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
@@ -303,11 +303,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const plate = new THREE.Mesh(new THREE.BoxGeometry(1.0, 0.6, 0.006), [edgeM, edgeM, edgeM, edgeM, plateM, edgeM]); plate.position.z = -0.003; plate.receiveShadow = true; plate.castShadow = true;
     const masses = [], massMs = [0, 1, 2, 3].map(() => M({ roughness: 0.4, metalness: 0.3 }));
     for (let i = 0; i < 4; i++) { const c = mesh(upZ(new THREE.CylinderGeometry(0.5, 0.5, 1, 40)), massMs[i]); ps3.add(c); masses.push(c); }
-    const selM = new THREE.MeshBasicMaterial({ color: 0x17202b }), sel = new THREE.Mesh(new THREE.TorusGeometry(1, 0.06, 8, 48), selM); ps3.add(sel);
-    const cmM = new THREE.MeshBasicMaterial({ color: 0x17202b }), cm = new THREE.Group();
+    const selM = new THREE.MeshBasicMaterial({ color: 0x2a2219 }), sel = new THREE.Mesh(new THREE.TorusGeometry(1, 0.06, 8, 48), selM); ps3.add(sel);
+    const cmM = new THREE.MeshBasicMaterial({ color: 0x2a2219 }), cm = new THREE.Group();
     cm.add(new THREE.Mesh(new THREE.TorusGeometry(0.022, 0.003, 8, 32), cmM), new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.004, 0.002), cmM), new THREE.Mesh(new THREE.BoxGeometry(0.004, 0.06, 0.002), cmM));
     const pole = new THREE.Mesh(upZ(new THREE.CylinderGeometry(0.0025, 0.0025, 0.22, 8)), cmM); pole.position.z = 0.11; const ball = new THREE.Mesh(new THREE.SphereGeometry(0.009, 16, 12), cmM); ball.position.z = 0.22; cm.add(pole, ball);
-    const lineM = new THREE.LineDashedMaterial({ color: 0x17202b, dashSize: 0.012, gapSize: 0.01, transparent: true, opacity: 0.7 }), spokes = [];
+    const lineM = new THREE.LineDashedMaterial({ color: 0x2a2219, dashSize: 0.012, gapSize: 0.01, transparent: true, opacity: 0.7 }), spokes = [];
     for (let i = 0; i < 4; i++) { const g = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3(1, 0, 0)]), ln = new THREE.Line(g, lineM); ps3.add(ln); spokes.push(ln); }
     ps3.add(table, floor, plate, cm);
     /* the lake scene */
@@ -332,13 +332,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (const x of [-1.2, 1.2]) { const s = mesh(new THREE.BoxGeometry(0.28, 1.0, 0.04), rimM); s.position.set(x, 0, 0.2); boat.add(s); }
     boat.add(hull, inner, floorB);
     /* the person: legs that swing while walking, body, arms and head, 1.75 m tall */
-    const skinM = M({ roughness: 0.7, color: 0xd9a98a }), shirtM = M({ roughness: 0.8 }), pantsM = M({ roughness: 0.8, color: 0x3a4250 }), person = new THREE.Group(), legs = [];
+    const skinM = M({ roughness: 0.7, color: 0xd9a98a }), shirtM = M({ roughness: 0.8 }), pantsM = M({ roughness: 0.8, color: 0x4e463c }), person = new THREE.Group(), legs = [];
     for (const y of [-0.1, 0.1]) { const lg = new THREE.Group(), l = mesh(upZ(new THREE.CylinderGeometry(0.07, 0.06, 0.85, 10)), pantsM); l.position.z = -0.425; lg.add(l); lg.position.set(0, y, 0.85); person.add(lg); legs.push(lg); }
     const torso = mesh(upZ(new THREE.CylinderGeometry(0.17, 0.15, 0.62, 14)), shirtM); torso.position.z = 1.16;
     const head = mesh(new THREE.SphereGeometry(0.12, 16, 12), skinM); head.position.z = 1.62;
     for (const y of [-0.22, 0.22]) { const a = mesh(upZ(new THREE.CylinderGeometry(0.045, 0.04, 0.6, 8)), shirtM); a.position.set(0, y, 1.13); person.add(a); }
     person.add(torso, head); person.position.z = -0.06;
-    const bcmM = new THREE.MeshBasicMaterial({ color: 0x17202b }), bcm = new THREE.Group(), bpole = new THREE.Mesh(upZ(new THREE.CylinderGeometry(0.02, 0.02, 2.6, 8)), bcmM); bpole.position.z = 1.3;
+    const bcmM = new THREE.MeshBasicMaterial({ color: 0x2a2219 }), bcm = new THREE.Group(), bpole = new THREE.Mesh(upZ(new THREE.CylinderGeometry(0.02, 0.02, 2.6, 8)), bcmM); bpole.position.z = 1.3;
     const bball = new THREE.Mesh(new THREE.SphereGeometry(0.09, 16, 12), bcmM); bball.position.z = 2.6; bcm.add(bpole, bball);
     bs3.add(water, shore, trees, dock, post, buoys, boat, person, bcm);
     const cam = new THREE.PerspectiveCamera(32, 1, 0.02, 600);
@@ -367,11 +367,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   function theme3() {
     const g = g3, dk = VD3.dark();
-    g.ps3.background = col3(T.canvas, '#ffffff'); g.tableM.color = col3(dk ? '#3a3229' : '#e6dccb', '#e6dccb'); g.floorM.color = col3(dk ? '#161b22' : '#e4e7eb', '#e4e7eb'); g.edgeM.color = col3(dk ? '#56606e' : '#aab4c1', '#aab4c1');
-    COLS().forEach((c, i) => { g.massMs[i].color = col3(c, '#2b60b5'); }); g.selM.color = g.cmM.color = col3(T.ink, '#17202b'); g.lineM.color = col3(T.cm, '#17202b'); paintGrid(dk);
+    g.ps3.background = col3(T.canvas, '#ffffff'); g.tableM.color = col3(dk ? '#3a3229' : '#e6dccb', '#e6dccb'); g.floorM.color = col3(dk ? '#211d17' : '#eae8e5', '#eae8e5'); g.edgeM.color = col3(dk ? '#6c6358' : '#bfb7ac', '#bfb7ac');
+    COLS().forEach((c, i) => { g.massMs[i].color = col3(c, '#2b60b5'); }); g.selM.color = g.cmM.color = col3(T.ink, '#2a2219'); g.lineM.color = col3(T.cm, '#2a2219'); paintGrid(dk);
     g.bs3.background = col3(T.skyBottom, '#f3f6fa'); g.bs3.fog = new THREE.Fog(col3(T.skyBottom, '#f3f6fa'), 40, 160); g.waterM.color = col3(T.water, '#9cc3e6'); g.shoreM.color = col3(T.shore, '#bccbb2'); g.treeM.color = col3(T.tree, '#a2b897');
-    g.dockM.color = col3(T.dock, '#ab8f6a'); g.postM.color = col3(T.muted, '#6b7686'); g.hullM.color = col3(T.boat, '#8a6d4a'); g.rimM.color = col3(T.hullRim, '#6b5236'); g.inM.color = col3(T.boat, '#8a6d4a').multiplyScalar(0.8);
-    g.shirtM.color = col3(T.m1, '#2b60b5'); g.bcmM.color = col3(T.cm, '#17202b');
+    g.dockM.color = col3(T.dock, '#ab8f6a'); g.postM.color = col3(T.muted, '#847a6d'); g.hullM.color = col3(T.boat, '#8a6d4a'); g.rimM.color = col3(T.hullRim, '#6b5236'); g.inM.color = col3(T.boat, '#8a6d4a').multiplyScalar(0.8);
+    g.shirtM.color = col3(T.m1, '#2b60b5'); g.bcmM.color = col3(T.cm, '#2a2219');
     for (const L of [g.pl, g.bl]) { L.hemi.intensity = dk ? 0.5 : 0.62; L.sun.intensity = dk ? 0.7 : 0.85; }
   }
   /* renders the 3D picture over the whole stage and draws the labels on the 2D canvas */

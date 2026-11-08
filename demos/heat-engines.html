@@ -20,34 +20,34 @@
 <style>
 /* Layout: one canvas. Left: the PV diagram with the cylinder under it, the piston lined up with the volume axis. Right: the T–S diagram and the energy flow. Instrument rail on the right; stacks on phones. */
 :root {
-  --bg: #e9edf2;
-  --surface: #f8fafc;
-  --canvas: #fcfdfe;
-  --ink: #17202b;
-  --muted: #5a6575;
-  --line: #d3d9e2;
-  --grid: #e6ebf1;
-  --grid-strong: #cfd7e1;
+  --bg: #f1eeea;
+  --surface: #fcfaf8;
+  --canvas: #fefdfc;
+  --ink: #2a2219;
+  --muted: #73695c;
+  --line: #e1dbd4;
+  --grid: #f0ece7;
+  --grid-strong: #e0d9d0;
   --pos: #c23f2c;
   --neg: #2b60b5;
   --equi: #a7740b;
-  --accent: #2b60b5;
+  --accent: #c4811c;
   --work: #17855f;
-  --steel: #8b96a5;
+  --steel: #a3998d;
   --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
-    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-    --equi: #e2b350; --accent: #69a0ff; --work: #4fd1a0; --steel: #6b7686; color-scheme: dark;
+    --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
+    --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+    --equi: #e2b350; --accent: #fbc26d; --work: #4fd1a0; --steel: #847a6d; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
-  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-  --equi: #e2b350; --accent: #69a0ff; --work: #4fd1a0; --steel: #6b7686; color-scheme: dark;
+  --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
+  --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+  --equi: #e2b350; --accent: #fbc26d; --work: #4fd1a0; --steel: #847a6d; color-scheme: dark;
 }
 :root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
@@ -1084,7 +1084,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (!S) return false;
     S.el.classList.add('cyl3'); S.el.hidden = true;
     const cam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.01, 20);
-    const steel = VD3K.material(S, { roughness: 0.4, metalness: 0.35 }, ['#b4bcc6', '#8a939e']);
+    const steel = VD3K.material(S, { roughness: 0.4, metalness: 0.35 }, ['#c5beb5', '#9c958b']);
     const glass = VD3K.glass(S, { r: R3, len: 1.065, axis: 'x', ends: false, opacity: 0.18 }); glass.position.set(0.5175, 0, 0);
     const head = VD3K.rod([-0.035, 0, 0], [-0.012, 0, 0], R3 * 1.12, steel);
     const gasM = new THREE.MeshStandardMaterial({ color: '#c06040', transparent: true, opacity: 0.42, roughness: 0.8, depthWrite: false });
@@ -1094,7 +1094,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     rod.geometry.translate(0, 0.5, 0); rod.position.set(0, 0, 0);
     const stops = new THREE.Group();
     for (const dx of [-0.014, 0.022]) for (const zz of [1, -1]) { const b = new THREE.Mesh(new THREE.BoxGeometry(0.012, 0.03, 0.03), steel); b.position.set(dx, 0, zz * (R3 + 0.01)); stops.add(b); }
-    const mol = VD3K.particles(S, { n: MOL.length, r: 0.0055, color: '#30363e' });
+    const mol = VD3K.particles(S, { n: MOL.length, r: 0.0055, color: '#3d3831' });
     const blockM = new THREE.MeshStandardMaterial({ color: '#c2401f', roughness: 0.7 });
     const block = new THREE.Mesh(new THREE.BoxGeometry(1.1, 0.13, 0.04), blockM); block.position.set(0.5, 0, -R3 - 0.025); block.receiveShadow = true;
     const arrows = [];
@@ -1127,7 +1127,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     g.stops.visible = L.t === 'V'; g.stops.position.x = xp;
     g.mol.visible = !!S.mol;
     if (g.mol.visible) {
-      const pad = 0.012, mc = VD3.dark() ? '#c9d2dc' : '#30363e';
+      const pad = 0.012, mc = VD3.dark() ? '#dbd4ca' : '#3d3831';
       MOL.forEach((m, i) => { const yy = Math.sin(i * 2.1) * R3 * 0.6, zz = (m.v - 0.5) * 2 * R3 * 0.75 * Math.sqrt(1 - (yy / R3) ** 2); g.mol.put(i, pad + m.u * Math.max(0, xp - 2 * pad), yy, zz, mc); });
       g.mol.show(MOL.length); g.mol.done();
     }
@@ -1138,7 +1138,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     else if (L.regen) { col = T.equi; txt = L.Q > 0 ? 'regenerator hands its stored heat back' : 'regenerator soaks up heat'; g.blockM.color.set('#b98a2a'); g.blockM.emissive.set('#5a3a00'); }
     else if (L.side > 0) { col = T.pos; txt = `hot reservoir${L.t === 'T' ? ' at ' + fT(L.T1) : ''}: heat flows ${L.Q > 0 ? 'into' : 'out of'} the gas`; g.blockM.color.set('#d0532a'); g.blockM.emissive.set('#ff4a10'); g.blockM.emissiveIntensity = 0.32 + 0.06 * Math.sin(performance.now() / 300); }
     else if (L.side < 0) { col = T.neg; txt = `cold reservoir${L.t === 'T' ? ' at ' + fT(L.T1) : ''}: heat flows ${L.Q > 0 ? 'into' : 'out of'} the gas`; g.blockM.color.set('#8fbaf0'); g.blockM.emissive.set('#1d4fa0'); g.blockM.emissiveIntensity = 0.3; }
-    else { g.blockM.color.set('#8a939e'); g.blockM.emissive.set('#000000'); }
+    else { g.blockM.color.set('#9c958b'); g.blockM.emissive.set('#000000'); }
     /* heat arrows through the cylinder floor, thicker for a larger share of the biggest |Q| or |W| in the cycle */
     const showQ = !insul && Math.abs(L.Q) > tiny, n = xp > 0.35 ? 3 : xp > 0.15 ? 2 : 1, t = performance.now() / 1000;
     const frac = showQ ? Math.min(1, Math.abs(L.Q) / sum.scale) : 0, rad = 0.0025 + 0.0075 * Math.sqrt(frac), up = L.Q > 0;

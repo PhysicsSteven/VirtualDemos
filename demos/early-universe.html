@@ -16,9 +16,9 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
 /* only what this demo needs beyond demos/lib/vd.css */
-:root { --lcdm: #2b6fc4; --matter: #c0562b; --empty: #2f8a4e; --desit: #8a4fc4; --hot: #d2452b; --neutron: #5d6b7e; --helium: #c99a12; --theory: #6a4fc4; --data: #1f2937; --band: rgba(43, 111, 196, 0.07); }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --lcdm: #69a8ff; --matter: #ff9a6c; --empty: #66d38c; --desit: #c4a0ff; --hot: #ff7a5c; --neutron: #a9b6c8; --helium: #ffd257; --theory: #a991ff; --data: #e6edf5; --band: rgba(105, 168, 255, 0.09); } }
-:root[data-theme="dark"] { --lcdm: #69a8ff; --matter: #ff9a6c; --empty: #66d38c; --desit: #c4a0ff; --hot: #ff7a5c; --neutron: #a9b6c8; --helium: #ffd257; --theory: #a991ff; --data: #e6edf5; --band: rgba(105, 168, 255, 0.09); }
+:root { --lcdm: #2b6fc4; --matter: #c0562b; --empty: #2f8a4e; --desit: #8a4fc4; --hot: #d2452b; --neutron: #7c6f5f; --helium: #c99a12; --theory: #6a4fc4; --data: #352c21; --band: rgba(43, 111, 196, 0.07); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --lcdm: #69a8ff; --matter: #ff9a6c; --empty: #66d38c; --desit: #c4a0ff; --hot: #ff7a5c; --neutron: #c6baab; --helium: #ffd257; --theory: #a991ff; --data: #f3eee8; --band: rgba(105, 168, 255, 0.09); } }
+:root[data-theme="dark"] { --lcdm: #69a8ff; --matter: #ff9a6c; --empty: #66d38c; --desit: #c4a0ff; --hot: #ff7a5c; --neutron: #c6baab; --helium: #ffd257; --theory: #a991ff; --data: #f3eee8; --band: rgba(105, 168, 255, 0.09); }
 .stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
 .stage-ctl .count { margin-left: auto; font-size: 0.82rem; color: var(--muted); }
@@ -467,7 +467,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const before = () => aNow() <= 0;
   function space(x, y, w, h) {
     const g = ctx.createRadialGradient(x + w * 0.5, y + h * 0.45, 0, x + w * 0.5, y + h * 0.45, Math.max(w, h) * 0.8);
-    g.addColorStop(0, '#111a2e'); g.addColorStop(1, '#04060c'); ctx.fillStyle = g; ctx.fillRect(x, y, w, h);
+    g.addColorStop(0, '#2a2115'); g.addColorStop(1, '#0b0805'); ctx.fillStyle = g; ctx.fillRect(x, y, w, h);
     for (let k = 0; k < 160; k++) { const sx = hash2(k, 7, 11) * w, sy = hash2(k, 9, 13) * h, b = hash2(k, 3, 17); ctx.fillStyle = `rgba(220,230,255,${0.15 + 0.4 * b})`; ctx.fillRect(x + sx, y + sy, b > 0.85 ? 1.6 : 1, b > 0.85 ? 1.6 : 1); }
   }
   function drawGalaxy(x, y, g, r, dim) {
@@ -483,8 +483,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     space(0, 0, W, H);
     const pxPerMpc = Math.min(W, H) * 0.5 / (W < 560 ? 300 : 230), cx = W * (W < 560 ? 0.5 : 0.42), cy = H * 0.5;
     exGeom = { pxPerMpc, cx, cy, a };
-    if (a <= 0) { txt(ctx, `Before the Big Bang of the ${MODEL_NAME[S.ex.model]} model`, W / 2, H / 2, { c: '#dbe6f5', a: 'center', s: 13, ui: true, w: 700 });
-      txt(ctx, `This model is only ${f(X().age, 2)} billion years old.`, W / 2, H / 2 + 22 * p, { c: '#b9c6d8', a: 'center', s: 11, ui: true }); return; }
+    if (a <= 0) { txt(ctx, `Before the Big Bang of the ${MODEL_NAME[S.ex.model]} model`, W / 2, H / 2, { c: '#efe9e1', a: 'center', s: 13, ui: true, w: 700 });
+      txt(ctx, `This model is only ${f(X().age, 2)} billion years old.`, W / 2, H / 2 + 22 * p, { c: '#d6cabb', a: 'center', s: 11, ui: true }); return; }
     const sc = a * pxPerMpc, halfX = (W / 2 + 40) / sc, halfY = (H / 2 + 40) / sc;
     const i0 = Math.floor((h0.x - (cx + 40) / sc) / CELL) - 1, i1 = Math.ceil((h0.x + (W - cx + 40) / sc) / CELL) + 1, j0 = Math.floor((h0.y - halfY) / CELL) - 1, j1 = Math.ceil((h0.y + halfY) / CELL) + 1;
     const count = (i1 - i0 + 1) * (j1 - j0 + 1), stride = Math.max(1, Math.ceil(Math.sqrt(count / 2600)));
@@ -507,22 +507,22 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     MARKED.forEach(([nm, i, j]) => { const g = galaxyAt(i, j), [x, y] = scr(g); if (x < -10 || x > W + 10 || y < -10 || y > H + 10) return;
       if (showV) arrowTo(x, y, x + (x - cx) * fac, y + (y - cy) * fac, '#ffc878');
       ctx.strokeStyle = '#8fd0ff'; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.arc(x, y, 9 * p, 0, 7); ctx.stroke();
-      txt(ctx, nm, x + 11 * p, y - 10 * p, { c: '#cfe9ff', s: 12, w: 700, ui: true }); });
+      txt(ctx, nm, x + 11 * p, y - 10 * p, { c: '#efe8df', s: 12, w: 700, ui: true }); });
     /* home */
     drawGalaxy(cx, cy, h0, r * 1.3, false);
     ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.arc(cx, cy, 11 * p, 0, 7); ctx.stroke(); ctx.beginPath(); ctx.arc(cx, cy, 15 * p, 0, 7); ctx.stroke();
     txt(ctx, S.ex.home[0] === 0 && S.ex.home[1] === 0 ? 'home: the Milky Way' : 'home: the galaxy you chose', cx, cy + 26 * p, { c: '#ffffff', a: 'center', s: 10.5, ui: true, w: 700 });
     /* ruler: 100 Mpc, proper */
     const rl = 100 * pxPerMpc, rx = 16 * p, ry = H - 22 * p;
-    ctx.strokeStyle = '#dbe6f5'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(rx, ry); ctx.lineTo(rx + rl, ry); ctx.moveTo(rx, ry - 5); ctx.lineTo(rx, ry + 5); ctx.moveTo(rx + rl, ry - 5); ctx.lineTo(rx + rl, ry + 5); ctx.stroke();
-    txt(ctx, '100 Mpc', rx + rl / 2, ry - 10 * p, { c: '#dbe6f5', a: 'center', s: 10.5 });
-    if (stride > 1) txt(ctx, `showing 1 galaxy in ${stride * stride}`, rx + rl + 14 * p, ry, { c: '#9fb0c6', s: 9.5 });
+    ctx.strokeStyle = '#efe9e1'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(rx, ry); ctx.lineTo(rx + rl, ry); ctx.moveTo(rx, ry - 5); ctx.lineTo(rx, ry + 5); ctx.moveTo(rx + rl, ry - 5); ctx.lineTo(rx + rl, ry + 5); ctx.stroke();
+    txt(ctx, '100 Mpc', rx + rl / 2, ry - 10 * p, { c: '#efe9e1', a: 'center', s: 10.5 });
+    if (stride > 1) txt(ctx, `showing 1 galaxy in ${stride * stride}`, rx + rl + 14 * p, ry, { c: '#c3b5a2', s: 9.5 });
     if (early) txt(ctx, 'z > 20: before the first galaxies; the dots mark where the matter is', W / 2, 18 * p, { c: '#ffd9a0', a: 'center', s: 10.5, ui: true });
     if (showV) txt(ctx, 'arrows: distance moved in 2 Gyr at today\'s speed', W - 12 * p, H - 22 * p, { c: '#ffc878', a: 'right', s: 9.5, ui: true });
     /* the survey: distances from home to A to E (Mpc) */
     const narrow = W < 560, pw = (narrow ? 150 : 178) * p, ph = (narrow ? 104 : 140) * p, px = W - pw - 10 * p, py = 10 * p;
     if (VG) VG.panel(ctx, px, py, pw, ph, { fill: 'rgba(8,12,22,0.82)', r: 8 });
-    txt(ctx, `${MODEL_NAME[S.ex.model]}  t = ${f(S.ex.tau, 2)} Gyr`, px + 10 * p, py + 13 * p, { c: '#dbe6f5', s: narrow ? 9.5 : 10.5, w: 700 });
+    txt(ctx, `${MODEL_NAME[S.ex.model]}  t = ${f(S.ex.tau, 2)} Gyr`, px + 10 * p, py + 13 * p, { c: '#efe9e1', s: narrow ? 9.5 : 10.5, w: 700 });
     MARKED.forEach(([nm, i, j], k) => { const d = properDist(a, galaxyAt(i, j), h0), y = py + (narrow ? 30 : 34) * p + k * (narrow ? 15 : 20) * p;
       txt(ctx, `${nm}`, px + 12 * p, y, { c: '#8fd0ff', s: narrow ? 10 : 11, w: 700 }); txt(ctx, `${f(d, 2)} Mpc`, px + pw - 10 * p, y, { c: '#8ef0b0', s: narrow ? 10 : 11.5, a: 'right', w: 600 }); });
   }
@@ -626,15 +626,15 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const p = proj(), by = Math.round(H * 0.9);
     if (VG) { VG.wall(ctx, 0, 0, W, by); VG.bench(ctx, 0, by, W, 14, Math.max(14, H - by - 2)); } else { ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H); }
     const narrow = W < 560, bw = narrow ? W - 40 * p : Math.min(W * 0.58, (by - 50 * p) * 1.5), bh = Math.min(by - (narrow ? 120 : 50) * p, bw / 1.5), bx = narrow ? 20 * p : W * 0.05, byy = 22 * p;
-    if (VG) VG.box(ctx, bx - 10 * p, byy - 10 * p, bw + 20 * p, bh + 20 * p, { color: dark() ? '#3a4552' : '#56616f', r: 8 });
-    ctx.fillStyle = '#0b1018'; ctx.fillRect(bx, byy, bw, bh);
-    const ts = bbnT(), kinds = nucleonKinds(ts), rad = Math.max(1.6, Math.min(3.2, Math.sqrt(bw * bh / 2000) * 0.32)) * p, col = ['#e8384f', '#9fb0c6', '#ffd84a'];
+    if (VG) VG.box(ctx, bx - 10 * p, byy - 10 * p, bw + 20 * p, bh + 20 * p, { color: dark() ? '#50473c' : '#6d6458', r: 8 });
+    ctx.fillStyle = '#17120c'; ctx.fillRect(bx, byy, bw, bh);
+    const ts = bbnT(), kinds = nucleonKinds(ts), rad = Math.max(1.6, Math.min(3.2, Math.sqrt(bw * bh / 2000) * 0.32)) * p, col = ['#e8384f', '#c3b5a2', '#ffd84a'];
     for (let i = 0; i < NUC.N; i++) { const jx = reduce ? 0 : Math.sin(jig * 3 + i) * 1.2, jy = reduce ? 0 : Math.cos(jig * 2.6 + i * 1.7) * 1.2;
       ctx.fillStyle = col[kinds[i]]; ctx.beginPath(); ctx.arc(bx + rad + SPOT[i][0] * (bw - 2 * rad) + jx, byy + rad + SPOT[i][1] * (bh - 2 * rad) + jy, rad, 0, 7); ctx.fill(); }
     const c = sampleCount(NUC, bbnOpt(), K, ts), kT = kTeV(tempAt(K, ts)) * 1e-6;
     const key = [['proton', col[0]], ['neutron', col[1]], ['in helium 4', col[2]]]; let kx = bx;
     key.forEach(([s, cc]) => { ctx.fillStyle = cc; ctx.beginPath(); ctx.arc(kx + 5, byy + bh + 22 * p, 4 * p, 0, 7); ctx.fill(); if (VG) VG.label(ctx, s, kx + 13 * p, byy + bh + 22 * p, { s: 10.5 * p }); kx += 100 * p; });
-    const lcdBox = (x, y, w, h, text, name) => { if (VG) { VG.box(ctx, x - 6, y - 6, w + 12, h + 22, { color: dark() ? '#2b3440' : '#34404e', r: 6 }); VG.lcd(ctx, x, y, w, h, text); VG.plate(ctx, name, x + w / 2, y + h + 8, { s: 8 * p }); } };
+    const lcdBox = (x, y, w, h, text, name) => { if (VG) { VG.box(ctx, x - 6, y - 6, w + 12, h + 22, { color: dark() ? '#3e372d' : '#4c4236', r: 6 }); VG.lcd(ctx, x, y, w, h, text); VG.plate(ctx, name, x + w / 2, y + h + 8, { s: 8 * p }); } };
     if (narrow) { const mw = (W - 60 * p) / 3, y = byy + bh + 42 * p;
       lcdBox(20 * p, y, mw - 8 * p, 24 * p, ts < 100 ? `${f(ts, 2)} s` : `${f(ts, 0)} s`, 'time'); lcdBox(20 * p + mw + 6 * p, y, mw - 8 * p, 24 * p, `${c.n}`, 'neutrons'); lcdBox(20 * p + 2 * mw + 12 * p, y, mw - 8 * p, 24 * p, `${c.He}`, 'helium 4'); return; }
     const mx = Math.min(W - 150 * p, bx + bw + 40 * p), mw = 120 * p, mh = 28 * p;
@@ -886,7 +886,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     E3.mat = new THREE.PointsMaterial({ size: 15, map: glowTex(), vertexColors: true, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending });
     E3.pts = new THREE.Points(new THREE.BufferGeometry(), E3.mat); E3.g.add(E3.pts);
     E3.arr = new THREE.LineSegments(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({ color: '#ffc878', transparent: true, opacity: 0.5 })); E3.g.add(E3.arr);
-    E3.ruler = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-50, -0.8 * RV3, 0), new THREE.Vector3(50, -0.8 * RV3, 0)]), new THREE.LineBasicMaterial({ color: '#dbe6f5' }));
+    E3.ruler = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-50, -0.8 * RV3, 0), new THREE.Vector3(50, -0.8 * RV3, 0)]), new THREE.LineBasicMaterial({ color: '#efe9e1' }));
     S3.scene.add(E3.ruler);
     VD3.orbit(can, E3.o, redraw, { grab: () => !(E3.on && S.view === 'ex'), phMin: 0.1, phMax: 2.9, zMin: 0.5, zMax: 2.5, keys: true });
     can.addEventListener('pointerdown', (e) => { E3.down = [e.clientX, e.clientY]; });
@@ -934,21 +934,21 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const g = galaxyAt(i, j), X0 = (g.x - h0.x) * a, Y0 = (g.y - h0.y) * a, [x, y, d] = pr(X0, Y0, 0); if (d > 1 || x < -10 || x > W + 10 || y < -10 || y > H + 10) return;
       if (showV) { const [x2, y2] = pr(X0 * (1 + fac), Y0 * (1 + fac), 0); ctx.strokeStyle = '#ffc878'; ctx.lineWidth = 1.6 * p; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x2, y2); ctx.stroke(); ctx.fillStyle = '#ffc878'; ctx.beginPath(); ctx.arc(x2, y2, 2.4 * p, 0, 7); ctx.fill(); }
       ctx.strokeStyle = '#8fd0ff'; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.arc(x, y, 9 * p, 0, 7); ctx.stroke();
-      txt(ctx, nm, x + 11 * p, y - 10 * p, { c: '#cfe9ff', s: 12, w: 700, ui: true });
+      txt(ctx, nm, x + 11 * p, y - 10 * p, { c: '#efe8df', s: 12, w: 700, ui: true });
     });
     const [cx, cy] = pr(0, 0, 0);
     ctx.fillStyle = 'rgba(255,240,220,0.9)'; ctx.beginPath(); ctx.arc(cx, cy, 3 * p, 0, 7); ctx.fill();
     ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.arc(cx, cy, 11 * p, 0, 7); ctx.stroke(); ctx.beginPath(); ctx.arc(cx, cy, 15 * p, 0, 7); ctx.stroke();
     txt(ctx, S.ex.home[0] === 0 && S.ex.home[1] === 0 ? 'home: the Milky Way' : 'home: the galaxy you chose', cx, cy + 26 * p, { c: '#ffffff', a: 'center', s: 10.5, ui: true, w: 700 });
     const [rx, ry] = pr(0, -0.8 * RV3, 0);
-    txt(ctx, '100 Mpc', rx, ry + 12 * p, { c: '#dbe6f5', a: 'center', s: 10.5 });
+    txt(ctx, '100 Mpc', rx, ry + 12 * p, { c: '#efe9e1', a: 'center', s: 10.5 });
     if (early) txt(ctx, 'z > 20: before the first galaxies; the dots mark where the matter is', W / 2, 18 * p, { c: '#ffd9a0', a: 'center', s: 10.5, ui: true });
     if (showV) txt(ctx, 'arrows: distance moved in 2 Gyr at today\'s speed', W - 12 * p, H - 22 * p, { c: '#ffc878', a: 'right', s: 9.5, ui: true });
-    txt(ctx, W < 560 ? 'drag to turn' : 'drag to turn · click a galaxy in the middle layer to watch from it', 12 * p, H - 8 * p, { c: '#9fb0c6', s: 9.5, ui: true, b: 'bottom' });
+    txt(ctx, W < 560 ? 'drag to turn' : 'drag to turn · click a galaxy in the middle layer to watch from it', 12 * p, H - 8 * p, { c: '#c3b5a2', s: 9.5, ui: true, b: 'bottom' });
     // the survey: distances from home to A to E (Mpc), as in the flat view
     const narrow = W < 560, pw = (narrow ? 150 : 178) * p, ph = (narrow ? 104 : 140) * p, px = W - pw - 10 * p, py = 10 * p;
     if (VG) VG.panel(ctx, px, py, pw, ph, { fill: 'rgba(8,12,22,0.82)', r: 8 });
-    txt(ctx, `${MODEL_NAME[S.ex.model]}  t = ${f(S.ex.tau, 2)} Gyr`, px + 10 * p, py + 13 * p, { c: '#dbe6f5', s: narrow ? 9.5 : 10.5, w: 700 });
+    txt(ctx, `${MODEL_NAME[S.ex.model]}  t = ${f(S.ex.tau, 2)} Gyr`, px + 10 * p, py + 13 * p, { c: '#efe9e1', s: narrow ? 9.5 : 10.5, w: 700 });
     MARKED.forEach(([nm, i, j], k) => { const d = properDist(a, galaxyAt(i, j), h0), y = py + (narrow ? 30 : 34) * p + k * (narrow ? 15 : 20) * p;
       txt(ctx, `${nm}`, px + 12 * p, y, { c: '#8fd0ff', s: narrow ? 10 : 11, w: 700 }); txt(ctx, `${f(d, 2)} Mpc`, px + pw - 10 * p, y, { c: '#8ef0b0', s: narrow ? 10 : 11.5, a: 'right', w: 600 }); });
     exGeom = { a, pxPerMpc: 1, cx, cy, stride: 1 };

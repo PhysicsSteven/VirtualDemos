@@ -17,11 +17,11 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
 /* only what this demo needs beyond demos/lib/vd.css: the tank, the tracks, the graphs and the strip */
-:root { --water: #d7ebf6; --water-edge: #8fb9d3; --slab: #e9dcc0; --slab-edge: #a8916a; --nozzle: #59636e; --dose: #c2410c; --model: #1d4ed8;
+:root { --water: #d7ebf6; --water-edge: #8fb9d3; --slab: #e9dcc0; --slab-edge: #a8916a; --nozzle: #6c655b; --dose: #c2410c; --model: #1d4ed8;
   --pstar: #b91c1c; --det: #7c3aed; --grid: rgba(60, 70, 85, 0.13); --fit: #15803d; --elec: #a16207; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --water: #10283a; --water-edge: #2f5f80; --slab: #3b3326; --slab-edge: #8a7552; --nozzle: #9aa6b6;
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --water: #10283a; --water-edge: #2f5f80; --slab: #3b3326; --slab-edge: #8a7552; --nozzle: #b4aa9c;
   --dose: #fb923c; --model: #7cb0ff; --pstar: #ff7a7a; --det: #c4a5ff; --grid: rgba(200, 210, 225, 0.12); --fit: #4ade80; --elec: #facc15; } }
-:root[data-theme="dark"] { --water: #10283a; --water-edge: #2f5f80; --slab: #3b3326; --slab-edge: #8a7552; --nozzle: #9aa6b6;
+:root[data-theme="dark"] { --water: #10283a; --water-edge: #2f5f80; --slab: #3b3326; --slab-edge: #8a7552; --nozzle: #b4aa9c;
   --dose: #fb923c; --model: #7cb0ff; --pstar: #ff7a7a; --det: #c4a5ff; --grid: rgba(200, 210, 225, 0.12); --fit: #4ade80; --elec: #facc15; }
 .stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
@@ -266,8 +266,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const proj = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.25 : 1);
   function tankBox() { const p = proj(), cardW = W > 820 && $('setupCard').style.display !== 'none' ? 300 : 0, x0 = 96 * p, x1 = Math.max(x0 + 160, W - cardW - 30 * p), y0 = Math.min(78 * p, H * 0.2), y1 = H - 62 * p; return { x0, x1, y0, y1, p }; }
   /* how a slab looks: picture only */
-  const SLAB_LOOK = { bone: ['#efe4c8', '#cdb98f'], lung: ['#eab9b5', '#c98a86'], adipose: ['#f3dfa0', '#d6bb6c'], muscle: ['#c9605e', '#9a3f3e'], pmma: ['#d9eef6', '#a9cddd'],
-    graphite: ['#4a4f57', '#2c3036'], aluminum: ['#d3d9e0', '#9aa4b0'], copper: ['#d99060', '#a35f33'], lead: ['#8c939c', '#5b626b'] };
+  const SLAB_LOOK = { bone: ['#efe4c8', '#cdb98f'], lung: ['#eab9b5', '#c98a86'], adipose: ['#f3dfa0', '#d6bb6c'], muscle: ['#c9605e', '#9a3f3e'], pmma: ['#efe9e0', '#d6c6b0'],
+    graphite: ['#56514b', '#35322d'], aluminum: ['#dfdad4', '#aea69c'], copper: ['#d99060', '#a35f33'], lead: ['#9b958d', '#6a645c'] };
   function drawTank() {
     const G = window.VDGear, d = dark(), b = tankBox(), p = b.p, sx = (b.x1 - b.x0) / S.zmax, cy = (b.y0 + b.y1) / 2, ky = sx * (S.wide ? 5 : 1), tSlab = S.slab === 'none' ? 0 : S.t;
     const wall = 5 * p, lip = 12 * p, top = b.y0 - lip, benchY = b.y1 + wall + 26 * p;
@@ -276,9 +276,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* the depth rule: a steel strip on the bench in front of the tank */
     G.shadow(ctx, (b.x0 + b.x1) / 2, benchY - 2 * p, (b.x1 - b.x0) * 0.55, 4 * p, 0.7);
     const ry = b.y1 + wall + 4 * p, rh = 17 * p, rg = ctx.createLinearGradient(0, ry, 0, ry + rh);
-    rg.addColorStop(0, d ? '#7b8592' : '#e4e8ed'); rg.addColorStop(1, d ? '#4c5560' : '#b7bfc9');
+    rg.addColorStop(0, d ? '#90887d' : '#ece9e5'); rg.addColorStop(1, d ? '#5e574e' : '#c8c1b8');
     ctx.fillStyle = rg; ctx.beginPath(); ctx.roundRect(b.x0 - 34 * p, ry, b.x1 - b.x0 + 40 * p, rh, 2 * p); ctx.fill();
-    const rink = d ? '#0e1319' : '#1f2833'; ctx.strokeStyle = rink; ctx.fillStyle = rink; ctx.lineWidth = 1; ctx.font = `600 ${10 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+    const rink = d ? '#18140f' : '#322a21'; ctx.strokeStyle = rink; ctx.fillStyle = rink; ctx.lineWidth = 1; ctx.font = `600 ${10 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
     const ticks = niceTicks(0, S.zmax, 8), st = ticks.length > 1 ? ticks[1] - ticks[0] : S.zmax;
     for (let v = 0; v <= S.zmax + 1e-9; v += st / 5) { const x = b.x0 + v * sx; ctx.beginPath(); ctx.moveTo(x, ry); ctx.lineTo(x, ry + 3 * p); ctx.stroke(); }
     for (const v of ticks) { const x = b.x0 + v * sx; ctx.beginPath(); ctx.moveTo(x, ry); ctx.lineTo(x, ry + 6 * p); ctx.stroke(); ctx.fillText(tickLabel(v), x, ry + rh - 0.5 * p); }
@@ -308,9 +308,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.fillStyle = d ? 'rgba(255,255,255,0.12)' : 'rgba(255,255,255,0.7)'; ctx.fillRect(b.x1 + 1, top + 2, 1.2 * p, b.y1 - top);
     /* the treatment nozzle */
     const nh = Math.min(70 * p, (b.y1 - b.y0) * 0.45), nx1 = b.x0 - 16 * p;
-    G.box(ctx, -12 * p, cy - nh / 2, nx1 + 12 * p, nh, { color: d ? '#4a5563' : '#566273', r: 6 * p, shadow: false });
-    G.box(ctx, nx1 - 4 * p, cy - nh * 0.28, 12 * p, nh * 0.56, { color: d ? '#6b7786' : '#7b8796', r: 3 * p, shadow: false });
-    ctx.fillStyle = d ? '#9fb7d0' : '#d7e3ef'; ctx.fillRect(nx1 + 7 * p, cy - 7 * p, 1.5 * p, 14 * p);
+    G.box(ctx, -12 * p, cy - nh / 2, nx1 + 12 * p, nh, { color: d ? '#61584c' : '#716658', r: 6 * p, shadow: false });
+    G.box(ctx, nx1 - 4 * p, cy - nh * 0.28, 12 * p, nh * 0.56, { color: d ? '#847a6d' : '#948a7d', r: 3 * p, shadow: false });
+    ctx.fillStyle = d ? '#ccbaa3' : '#ece4da'; ctx.fillRect(nx1 + 7 * p, cy - 7 * p, 1.5 * p, 14 * p);
     G.plate(ctx, 'nozzle', (nx1 - 12 * p) / 2, cy - nh / 2 + 10 * p, { s: 7.5 * p });
     G.label(ctx, P().name, (nx1 - 12 * p) / 2, cy + nh / 2 + 10 * p, { a: 'center', s: 10.5 * p, c: T.muted });
     ctx.strokeStyle = d ? 'rgba(140,190,255,0.35)' : 'rgba(40,90,170,0.3)'; ctx.lineWidth = 1.2 * p; ctx.setLineDash([3 * p, 3 * p]); ctx.beginPath(); ctx.moveTo(nx1 + 9 * p, cy); ctx.lineTo(b.x0, cy); ctx.stroke(); ctx.setLineDash([]);
@@ -331,17 +331,17 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* the Bragg peak chamber: a flat disk across the beam (seen edge on), 8.4 cm across, held from the scanning carriage */
     const xd = b.x0 + S.z * sx, ch = Math.min((b.y1 - b.y0) * 0.8, 8.4 * ky), cw = Math.max(7 * p, Math.min(1 * sx, 14 * p)), cg = ctx.createLinearGradient(xd - cw / 2, 0, xd + cw / 2, 0);
     ctx.strokeStyle = T.det; ctx.lineWidth = 1 * p; ctx.setLineDash([3 * p, 4 * p]); ctx.globalAlpha = 0.7; ctx.beginPath(); ctx.moveTo(xd, b.y0); ctx.lineTo(xd, b.y1); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
-    const railY = top - 8 * p; G.rod(ctx, b.x0 - 10 * p, railY, b.x1 + wall + 10 * p, railY, 3.2 * p, { color: '#a9b2bd' });
-    for (const x of [b.x0 - 10 * p, b.x1 + wall + 6 * p]) G.box(ctx, x - 4 * p, railY - 6 * p, 8 * p, top - railY + 6 * p, { color: '#5f6b7a', r: 2 * p, shadow: false });
-    G.rod(ctx, xd, railY + 4 * p, xd, cy - ch / 2, 2.2 * p, { color: '#b8c0ca' });
-    G.box(ctx, xd - 15 * p, railY - 9 * p, 30 * p, 16 * p, { color: d ? '#6a4fb0' : '#5b3fa6', r: 3 * p, shadow: false });
-    cg.addColorStop(0, G.mix(d ? '#c4b2f2' : '#8a6fd1', '#ffffff', 0.25)); cg.addColorStop(0.5, d ? '#9b82e0' : '#6b4fc0'); cg.addColorStop(1, d ? '#5d47a0' : '#43308a');
+    const railY = top - 8 * p; G.rod(ctx, b.x0 - 10 * p, railY, b.x1 + wall + 10 * p, railY, 3.2 * p, { color: '#bbb4aa' });
+    for (const x of [b.x0 - 10 * p, b.x1 + wall + 6 * p]) G.box(ctx, x - 4 * p, railY - 6 * p, 8 * p, top - railY + 6 * p, { color: '#786e61', r: 2 * p, shadow: false });
+    G.rod(ctx, xd, railY + 4 * p, xd, cy - ch / 2, 2.2 * p, { color: '#c9c2b9' });
+    G.box(ctx, xd - 15 * p, railY - 9 * p, 30 * p, 16 * p, { color: d ? '#a88557' : '#97774e', r: 3 * p, shadow: false });
+    cg.addColorStop(0, G.mix(d ? '#c4b2f2' : '#8a6fd1', '#ffffff', 0.25)); cg.addColorStop(0.5, d ? '#9b82e0' : '#6b4fc0'); cg.addColorStop(1, d ? '#98784f' : '#43308a');
     ctx.globalAlpha = 0.78; ctx.fillStyle = cg; ctx.beginPath(); ctx.roundRect(xd - cw / 2, cy - ch / 2, cw, ch, cw / 2.5); ctx.fill(); ctx.globalAlpha = 1;
     ctx.strokeStyle = 'rgba(255,255,255,0.35)'; ctx.lineWidth = 1; ctx.stroke();
     /* the electrometer, cabled to the chamber */
     const ew = 128 * p, eh = Math.min(46 * p, b.y0 - 18 * p), ex = 8 * p, ey = 6 * p;
-    G.cable(ctx, ex + ew, ey + eh * 0.6, xd - 15 * p, railY - 2 * p, 16 * p, { w: 2.2 * p, color: d ? '#0b0f14' : '#2a3038' });
-    G.box(ctx, ex, ey, ew, eh, { color: d ? '#333c47' : '#3b4552', r: 5 * p });
+    G.cable(ctx, ex + ew, ey + eh * 0.6, xd - 15 * p, railY - 2 * p, 16 * p, { w: 2.2 * p, color: d ? '#13100c' : '#37322b' });
+    G.box(ctx, ex, ey, ew, eh, { color: d ? '#463e34' : '#50483d', r: 5 * p });
     G.plate(ctx, 'electrometer', ex + ew / 2, ey + 7 * p, { s: 6.5 * p });
     const dpct = 100 * doseAt(S.D, S.z) / pk.d; G.lcd(ctx, ex + 7 * p, ey + 13 * p, ew - 14 * p, eh - 19 * p, `${f(dpct, 1)} %`);
     G.label(ctx, `z = ${lenTxt(S.z)}`, xd + (xd > b.x1 - 110 * p ? -6 : 6) * p, top + lip / 2 + 1, { a: xd > b.x1 - 110 * p ? 'right' : 'left', s: 11 * p, w: 600, m: true, c: T.ink, alpha: 1 });
@@ -371,7 +371,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     st.el.hidden = true; st.sun.shadow.bias = -0.0005;
     const K = VD3K, M = (o, c) => K.material(st, o, c), sc = st.scene, add = (...a) => { sc.add(...a); return a[0]; };
     sc.add(K.bench(st, { w: 4, d: 3, y: 0.5 }), K.backdrop(st, { r: 1.8, h: 1.4, y: -0.2 }));
-    const steel = M({ roughness: 0.35, metalness: 0.6 }, ['#a3acb7', '#6f7884']), base = M({ roughness: 0.55, metalness: 0.25 }, ['#7d8794', '#323a45']);
+    const steel = M({ roughness: 0.35, metalness: 0.6 }, ['#b6aea4', '#827b71']), base = M({ roughness: 0.55, metalness: 0.25 }, ['#928a7f', '#443d33']);
     /* the tank: a plinth, glass walls, the water */
     add(K.box(TL + 0.05, TW + 0.05, TB, base, X0 + TL / 2, 0, 0)).castShadow = false;   /* its shadow on the bench, seen through the water, came out in steps */
     const water = new THREE.Mesh(new THREE.BoxGeometry(TL - 0.006, TW - 0.006, WZ1 - WZ0), new THREE.MeshStandardMaterial({ transparent: true, roughness: 0.15, metalness: 0, depthWrite: false }));
@@ -379,20 +379,20 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const glassM = M({ transparent: true, opacity: 0.13, roughness: 0.05, metalness: 0.1, side: THREE.DoubleSide, depthWrite: false }, ['#cfe3f0', '#9fc4dc']);
     const tank = new THREE.Mesh(new THREE.BoxGeometry(TL, TW, TH), glassM); tank.position.set(X0 + TL / 2, 0, TB + TH / 2); tank.renderOrder = 6; sc.add(tank);
     const edges = new THREE.LineSegments(new THREE.EdgesGeometry(tank.geometry), new THREE.LineBasicMaterial({ transparent: true, opacity: 0.8 })); edges.position.copy(tank.position); sc.add(edges);
-    st.onTheme((dk) => { water.material.color.set(dk ? '#1f5478' : '#a9d6f0'); water.material.opacity = dk ? 0.5 : 0.42; edges.material.color.set(dk ? '#6d9cc0' : '#5f87a6'); });
+    st.onTheme((dk) => { water.material.color.set(dk ? '#1f5478' : '#a9d6f0'); water.material.opacity = dk ? 0.5 : 0.42; edges.material.color.set(dk ? '#b89b75' : '#a18764'); });
     /* the slab before the water (scaled to its thickness on each change) */
     const slab = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshStandardMaterial({ roughness: 0.6, metalness: 0 })); slab.renderOrder = 2; slab.castShadow = true; sc.add(slab);
     /* the nozzle: a housing on a pedestal, a snout and its exit window, the beam in air drawn dashed */
-    const nozM = M({ roughness: 0.5, metalness: 0.25 }, ['#9aa6b5', '#5a6575']), snM = M({ roughness: 0.4, metalness: 0.45 }, ['#7b8796', '#6b7786']);
+    const nozM = M({ roughness: 0.5, metalness: 0.25 }, ['#b3a99c', '#73695c']), snM = M({ roughness: 0.4, metalness: 0.45 }, ['#948a7d', '#847a6d']);
     add(K.box(0.12, 0.12, ZC - 0.1, base, X0 - 0.21, 0, 0)); add(K.box(0.2, 0.18, 0.2, nozM, X0 - 0.21, 0, ZC - 0.1));
-    add(K.rod([X0 - 0.111, 0, ZC], [X0 - 0.045, 0, ZC], 0.034, snM)); add(K.rod([X0 - 0.046, 0, ZC], [X0 - 0.043, 0, ZC], 0.02, M({ roughness: 0.3, metalness: 0.2 }, ['#d7e3ef', '#9fb7d0'])));
+    add(K.rod([X0 - 0.111, 0, ZC], [X0 - 0.045, 0, ZC], 0.034, snM)); add(K.rod([X0 - 0.046, 0, ZC], [X0 - 0.043, 0, ZC], 0.02, M({ roughness: 0.3, metalness: 0.2 }, ['#ece4da', '#ccbaa3'])));
     const air = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(X0 - 0.043, 0, ZC), new THREE.Vector3(X0, 0, ZC)]), new THREE.LineDashedMaterial({ dashSize: 0.004, gapSize: 0.004, transparent: true, opacity: 0.6 }));
     air.computeLineDistances(); sc.add(air); st.onTheme((dk) => air.material.color.set(dk ? '#8cbeff' : '#285aaa'));
     /* the scanning carriage: a rail on two posts over the tank, a carriage, its stem and the chamber (a disk across the beam) */
     for (const x of [X0 - 0.02, X0 + TL + 0.02]) add(K.rod([x, 0, TB], [x, 0, RZ], 0.005, base));
     add(K.rod([X0 - 0.03, 0, RZ], [X0 + TL + 0.03, 0, RZ], 0.0055, steel));
     const det = M({ roughness: 0.4, metalness: 0.15 }, ['#6b4fc0', '#9b82e0']), carriage = new THREE.Group(); sc.add(carriage);
-    carriage.add(K.box(0.05, 0.045, 0.03, M({ roughness: 0.5, metalness: 0.2 }, ['#5b3fa6', '#6a4fb0']), 0, 0, RZ - 0.014));
+    carriage.add(K.box(0.05, 0.045, 0.03, M({ roughness: 0.5, metalness: 0.2 }, ['#97774e', '#a88557']), 0, 0, RZ - 0.014));
     const stem = new THREE.Mesh(new THREE.CylinderGeometry(0.0032, 0.0032, 1, 12).rotateX(Math.PI / 2), steel); carriage.add(stem);
     const cham = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 1, 48).rotateZ(Math.PI / 2), det); cham.position.z = ZC; carriage.add(cham);
     /* the electrometer in front of the nozzle, its cable to the rail, and a lead along the rail to the carriage */

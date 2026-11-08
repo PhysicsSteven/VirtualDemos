@@ -13,9 +13,9 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
 /* only what this demo needs beyond demos/lib/vd.css */
-:root { --ray-a: #c98a00; --ray-b: #0f8fa8; --img: #c2410c; --pupil: #2f8a3a; --sel: #2b60b5; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --ray-a: #ffc94a; --ray-b: #4fd8f0; --img: #ff8a50; --pupil: #6bdc7a; --sel: #69a0ff; } }
-:root[data-theme="dark"] { --ray-a: #ffc94a; --ray-b: #4fd8f0; --img: #ff8a50; --pupil: #6bdc7a; --sel: #69a0ff; }
+:root { --ray-a: #c98a00; --ray-b: #0f8fa8; --img: #c2410c; --pupil: #2f8a3a; --sel: #c4811c; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --ray-a: #ffc94a; --ray-b: #4fd8f0; --img: #ff8a50; --pupil: #6bdc7a; --sel: #fbc26d; } }
+:root[data-theme="dark"] { --ray-a: #ffc94a; --ray-b: #4fd8f0; --img: #ff8a50; --pupil: #6bdc7a; --sel: #fbc26d; }
 .stage { position: relative; display: flex; flex-direction: column; min-height: 560px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
 .stage-ctl { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
 .stage-ctl .seg { flex-wrap: wrap; }
@@ -586,7 +586,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function scaleBar(cv, Wx, label) {
     const g = cv.getContext('2d'), k = window.devicePixelRatio || 1, w = cv.width, h = cv.height;
     g.save(); g.font = `${10 * k}px ${T.mono}`; g.fillStyle = 'rgba(0,0,0,0.55)'; const tw = g.measureText(label).width;
-    g.fillRect(4 * k, h - 18 * k, tw + 8 * k, 14 * k); g.fillStyle = '#e8edf3'; g.textBaseline = 'middle'; g.fillText(label, 8 * k, h - 11 * k); g.restore();
+    g.fillRect(4 * k, h - 18 * k, tw + 8 * k, 14 * k); g.fillStyle = '#f2eee9'; g.textBaseline = 'middle'; g.fillText(label, 8 * k, h - 11 * k); g.restore();
   }
   function drawViews(fast) {
     const m = model, obj = m.obj, cam = S.viewer === 'camera';
@@ -732,12 +732,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function drawRail() {
     const ps = proj(), y = railY(), h = 22 * ps, G = window.VDGear;
     if (G && G.bench) G.bench(ctx, 0, y + h + 8 * ps, W, 6 * ps, H - y - h, {});
-    const g = ctx.createLinearGradient(0, y, 0, y + h); g.addColorStop(0, T.dark ? '#5d6670' : '#c9d0d8'); g.addColorStop(0.5, T.dark ? '#3a4149' : '#9aa4af'); g.addColorStop(1, T.dark ? '#262b31' : '#7d8792');
+    const g = ctx.createLinearGradient(0, y, 0, y + h); g.addColorStop(0, T.dark ? '#6f685e' : '#d7d1ca'); g.addColorStop(0.5, T.dark ? '#48423b' : '#ada69c'); g.addColorStop(1, T.dark ? '#302c27' : '#90897f');
     ctx.fillStyle = g; ctx.fillRect(0, y, W, h);
     ctx.fillStyle = 'rgba(255,255,255,0.25)'; ctx.fillRect(0, y, W, 1);
     /* the scale along the rail: 1 cm ticks, labels every 5 or 10 cm */
     const step = view.s >= 6 ? 1 : view.s >= 2 ? 5 : 10, lab = view.s * 5 >= 40 * ps ? 5 : view.s * 10 >= 40 * ps ? 10 : 50;
-    ctx.strokeStyle = T.dark ? '#d8dee6' : '#1d242c'; ctx.fillStyle = ctx.strokeStyle; ctx.lineWidth = 1; ctx.beginPath();
+    ctx.strokeStyle = T.dark ? '#e5e0d9' : '#2b251e'; ctx.fillStyle = ctx.strokeStyle; ctx.lineWidth = 1; ctx.beginPath();
     for (let z = Math.ceil(Zof(0) / step) * step; z <= Zof(W); z += step) {
       const x = Math.round(X(z)) + 0.5, big = Math.abs(z % lab) < 1e-9; ctx.moveTo(x, y + 1); ctx.lineTo(x, y + (big ? 9 : 5) * ps);
     }
@@ -747,10 +747,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function post(z, top) {                       /* a post from the rail up to a part, on a carrier */
     const ps = proj(), x = X(z), y = railY(), w = 6 * ps;
     if (top > y - 4) return;
-    const g = ctx.createLinearGradient(x - w / 2, 0, x + w / 2, 0); g.addColorStop(0, '#4a5058'); g.addColorStop(0.4, '#d5dae0'); g.addColorStop(1, '#30353b');
+    const g = ctx.createLinearGradient(x - w / 2, 0, x + w / 2, 0); g.addColorStop(0, '#57524b'); g.addColorStop(0.4, '#dfdbd6'); g.addColorStop(1, '#3a3631');
     ctx.fillStyle = g; ctx.fillRect(x - w / 2, top, w, y - top);
-    ctx.fillStyle = T.dark ? '#22272d' : '#3d434c'; ctx.fillRect(x - 11 * ps, y - 7 * ps, 22 * ps, 7 * ps);
-    ctx.fillStyle = '#f2f4f7'; ctx.beginPath(); ctx.moveTo(x, y + 2 * ps); ctx.lineTo(x - 3 * ps, y - 2); ctx.lineTo(x + 3 * ps, y - 2); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = T.dark ? '#2c2823' : '#4b453e'; ctx.fillRect(x - 11 * ps, y - 7 * ps, 22 * ps, 7 * ps);
+    ctx.fillStyle = '#f7f5f2'; ctx.beginPath(); ctx.moveTo(x, y + 2 * ps); ctx.lineTo(x - 3 * ps, y - 2); ctx.lineTo(x + 3 * ps, y - 2); ctx.closePath(); ctx.fill();
   }
   function drawLens(e, selected) {
     const ps = proj(), x = X(e.z), r = e.D / 2 * view.s, t0 = Math.max(2 * ps, Math.min(0.16 * r, 9 * ps)), conv = e.f > 0;
@@ -762,7 +762,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const g = ctx.createLinearGradient(x - t0, 0, x + t0, 0); g.addColorStop(0, 'rgba(150,200,240,0.30)'); g.addColorStop(0.5, 'rgba(210,235,255,0.45)'); g.addColorStop(1, 'rgba(120,170,220,0.30)');
     ctx.fillStyle = g; ctx.fill(); ctx.strokeStyle = selected ? T.sel : (T.dark ? 'rgba(190,220,250,0.75)' : 'rgba(60,110,160,0.75)'); ctx.lineWidth = (selected ? 2 : 1.2) * ps; ctx.stroke();
     /* the mount: clamps at the rim */
-    ctx.fillStyle = T.dark ? '#2a3038' : '#3d434c';
+    ctx.fillStyle = T.dark ? '#37322b' : '#4b453e';
     for (const sg of [-1, 1]) ctx.fillRect(x - t0 - 3 * ps, view.cy + sg * r - (sg > 0 ? 0 : 5 * ps), 2 * t0 + 6 * ps, 5 * ps);
     /* thin lens mark */
     ctx.globalAlpha = 0.55; ctx.strokeStyle = T.ink; ctx.lineWidth = 1 * ps; ctx.setLineDash([3 * ps, 3 * ps]); ctx.beginPath(); ctx.moveTo(x, view.cy - r); ctx.lineTo(x, view.cy + r); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
@@ -777,7 +777,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   function drawStop(e, selected) {
     const ps = proj(), x = X(e.z), r = e.D / 2 * view.s, ext = Math.max(10 * ps, 0.6 * view.s);
-    ctx.fillStyle = T.dark ? '#0b0e12' : '#1f252c';
+    ctx.fillStyle = T.dark ? '#110f0c' : '#2b2620';
     ctx.fillRect(x - 2.5 * ps, view.cy - r - ext, 5 * ps, ext); ctx.fillRect(x - 2.5 * ps, view.cy + r, 5 * ps, ext);
     if (selected) { ctx.strokeStyle = T.sel; ctx.lineWidth = 2 * ps; ctx.strokeRect(x - 4 * ps, view.cy - r - ext, 8 * ps, 2 * r + 2 * ext); }
     tag(e.name, x, view.cy - r - ext - 10 * ps, selected ? T.sel : T.muted, { size: 10 });
@@ -787,7 +787,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (o.kind === 'near') {
       const x = X(o.z), top = Y(o.h);
       /* the lamp and slide holder behind the object */
-      ctx.fillStyle = T.dark ? '#2b3139' : '#46505b'; ctx.fillRect(x - 26 * ps, view.cy - 14 * ps, 18 * ps, 28 * ps);
+      ctx.fillStyle = T.dark ? '#38332c' : '#595248'; ctx.fillRect(x - 26 * ps, view.cy - 14 * ps, 18 * ps, 28 * ps);
       const lg = ctx.createRadialGradient(x - 8 * ps, view.cy, 0, x - 8 * ps, view.cy, 30 * ps); lg.addColorStop(0, 'rgba(255,236,190,0.55)'); lg.addColorStop(1, 'rgba(255,236,190,0)');
       ctx.fillStyle = lg; ctx.fillRect(x - 40 * ps, view.cy - 30 * ps, 60 * ps, 60 * ps);
       ctx.fillStyle = 'rgba(200,225,245,0.35)'; ctx.fillRect(x - 1.5 * ps, view.cy - 18 * ps, 3 * ps, 36 * ps);
@@ -800,7 +800,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
   }
   function drawViewer(selected) {
-    const ps = proj(), x = X(S.zV), s = view.s, col = selected ? T.sel : (T.dark ? '#cfd6de' : '#3b4450');
+    const ps = proj(), x = X(S.zV), s = view.s, col = selected ? T.sel : (T.dark ? '#ddd7d0' : '#4e473d');
     if (S.viewer === 'eye') {
       const R = 1.2 * s, cxp = x + 1.0 * s;     /* an eyeball 2.4 cm across: cornea at the front, retina 1.80 cm behind the lens */
       ctx.save(); ctx.beginPath(); ctx.arc(cxp, view.cy, R, 0, 7);
@@ -818,7 +818,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       ctx.fillStyle = T.dark ? 'rgba(45,52,60,0.85)' : 'rgba(60,68,78,0.85)';
       ctx.fillRect(x - 0.4 * s - 6 * ps, view.cy - (CAM.f / F_NUMBERS[S.Ni]) / 2 * s - 6 * ps, 0.4 * s + 6 * ps, (CAM.f / F_NUMBERS[S.Ni]) * s + 12 * ps);
       ctx.strokeStyle = col; ctx.lineWidth = 1.3 * ps; ctx.strokeRect(x, view.cy - bh / 2, bodyW, bh);
-      ctx.fillStyle = '#1a1e24'; ctx.fillRect(X(S.zV + ds) - 2 * ps, view.cy - CAM.h / 2 * s, 4 * ps, CAM.h * s);
+      ctx.fillStyle = '#23201b'; ctx.fillRect(X(S.zV + ds) - 2 * ps, view.cy - CAM.h / 2 * s, 4 * ps, CAM.h * s);
       tag('camera', x + bodyW / 2, view.cy + bh / 2 + 12 * ps, selected ? T.sel : T.muted, { size: 10 });
       tag('sensor', X(S.zV + ds) + 6 * ps, view.cy - CAM.h / 2 * s - 8 * ps, T.muted, { size: 9, align: 'left' });
     }
@@ -1080,12 +1080,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const pane = $('pane'), S3 = VD3K.stage(pane, { before: can, shadow: 0.6, fov: 30, fogAt: [2.2, 4.5] }); if (!S3) return false;
     const M = (o, c) => VD3K.material(S3, o, c), sc = S3.scene;
     sc.add(VD3K.bench(S3, { w: 6, d: 3, y: 0.3 }), VD3K.backdrop(S3, { r: 2.2, h: 1.4, y: -0.6 }));
-    const mats = { rail: M({ roughness: 0.42, metalness: 0.2 }, ['#c9d0d8', '#7d8792']), dark: M({ roughness: 0.5, metalness: 0.3 }, ['#4a525c', '#3a414a']),
-      steel: M({ roughness: 0.28, metalness: 0.6 }, ['#d5dbe2', '#aab3bd']), glass: new THREE.MeshPhysicalMaterial({ color: 0xcfe6f7, transparent: true, opacity: 0.32, roughness: 0.05, metalness: 0, side: THREE.DoubleSide, depthWrite: false }),
-      black: M({ roughness: 0.7, metalness: 0.1 }, ['#1b1f24', '#111418']), white: M({ roughness: 0.4, metalness: 0 }, ['#f2f2ee', '#d8d8d2']),
-      anod: M({ roughness: 0.42, metalness: 0.35, side: THREE.DoubleSide }, ['#23272d', '#1a1d22']), tube: M({ roughness: 0.35, metalness: 0.1, side: THREE.DoubleSide }, ['#eef0ee', '#c9cdd2']),
-      inner: M({ roughness: 0.95, metalness: 0, side: THREE.DoubleSide }, ['#0d0f12', '#0a0b0d']), brass: M({ roughness: 0.35, metalness: 0.7 }, ['#c9a45a', '#a8874a']),
-      car: M({ roughness: 0.5, metalness: 0.2 }, ['#6a7480', '#4a535e']), knob: M({ roughness: 0.8, metalness: 0 }, ['#2b2f35', '#202328']),
+    const mats = { rail: M({ roughness: 0.42, metalness: 0.2 }, ['#d7d1ca', '#90897f']), dark: M({ roughness: 0.5, metalness: 0.3 }, ['#5b544b', '#49433b']),
+      steel: M({ roughness: 0.28, metalness: 0.6 }, ['#e1dcd6', '#bcb5ab']), glass: new THREE.MeshPhysicalMaterial({ color: 0xcfe6f7, transparent: true, opacity: 0.32, roughness: 0.05, metalness: 0, side: THREE.DoubleSide, depthWrite: false }),
+      black: M({ roughness: 0.7, metalness: 0.1 }, ['#23201c', '#171512']), white: M({ roughness: 0.4, metalness: 0 }, ['#f2f2ee', '#d8d8d2']),
+      anod: M({ roughness: 0.42, metalness: 0.35, side: THREE.DoubleSide }, ['#2c2924', '#211e1b']), tube: M({ roughness: 0.35, metalness: 0.1, side: THREE.DoubleSide }, ['#eef0ee', '#d1ceca']),
+      inner: M({ roughness: 0.95, metalness: 0, side: THREE.DoubleSide }, ['#12100d', '#0d0c0a']), brass: M({ roughness: 0.35, metalness: 0.7 }, ['#c9a45a', '#a8874a']),
+      car: M({ roughness: 0.5, metalness: 0.2 }, ['#7e766c', '#5d554c']), knob: M({ roughness: 0.8, metalness: 0 }, ['#34312c', '#272421']),
       iris: M({ roughness: 0.6, metalness: 0 }, ['#3f7fb0', '#3f7fb0']), slide: new THREE.MeshBasicMaterial({ color: 0xffffff }) };
     const group = new THREE.Group(); sc.add(group);
     const rays = new THREE.LineSegments(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, opacity: 0.9, depthWrite: false }));
@@ -1250,7 +1250,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const cone = new THREE.Mesh(new THREE.ConeGeometry(Math.max(0.0015, Math.abs(h) * 0.12), Math.abs(h) * 0.15 + 0.001, 16), mat);
       cone.rotation.x = h > 0 ? Math.PI / 2 : -Math.PI / 2; cone.position.set(x, 0, AXH + h * 0.925); g.add(cone);
     });
-    const lsz = Math.max(0.012, (z1 - z0) * CM * 0.028), lc = T.dark ? '#e3e8ef' : '#17202b';
+    const lsz = Math.max(0.012, (z1 - z0) * CM * 0.028), lc = T.dark ? '#eeeae4' : '#2a2219';
     tags.push([S.viewer === 'eye' ? 'eye' : 'camera', xv + 0.01, AXH + 0.03]);
     if (o.kind === 'near') tags.push(['object', o.z * CM, AXH + 0.045]);
     for (const [t, x, z] of tags) { const L = VD3K.label(t, { size: lsz, color: lc }); L.position.set(x, 0, z + lsz); g.add(L); }

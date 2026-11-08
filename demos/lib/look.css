@@ -7,20 +7,20 @@
   --look-edge: color-mix(in srgb, var(--line) 75%, transparent);
   --look-quiet: color-mix(in srgb, var(--muted) 95%, var(--surface)); /* 95%: at least 4.5:1 on surface and page background in both themes (WCAG AA) */
   --look-glass: color-mix(in srgb, var(--surface) 84%, transparent);
-  --inst-top: #4a5665; --inst-bot: #333c48; --inst-rim: #1f262f; --inst-ink: #e6ebf1; --inst-quiet: #b9c3cf;
+  --inst-top: #63594c; --inst-bot: #463f35; --inst-rim: #2e2820; --inst-ink: #f0ece7; --inst-quiet: #cdc5bb;
   --look-lcd-bg: #0a1810; --look-lcd-ink: #8ef0b0;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --look-shadow: 0 1px 2px rgba(0, 0, 0, 0.45), 0 8px 26px rgba(0, 0, 0, 0.32);
     --look-lift: 0 1px 2px rgba(0, 0, 0, 0.55), 0 12px 32px rgba(0, 0, 0, 0.45);
-    --inst-top: #36414f; --inst-bot: #252d38; --inst-rim: #0d1218;
+    --inst-top: #4d4438; --inst-bot: #373026; --inst-rim: #17130e;
   }
 }
 :root[data-theme="dark"] {
   --look-shadow: 0 1px 2px rgba(0, 0, 0, 0.45), 0 8px 26px rgba(0, 0, 0, 0.32);
   --look-lift: 0 1px 2px rgba(0, 0, 0, 0.55), 0 12px 32px rgba(0, 0, 0, 0.45);
-  --inst-top: #36414f; --inst-bot: #252d38; --inst-rim: #0d1218;
+  --inst-top: #4d4438; --inst-bot: #373026; --inst-rim: #17130e;
 }
 body { background: radial-gradient(1400px 700px at 15% -20%, color-mix(in srgb, var(--accent) 6%, var(--bg)), var(--bg) 65%) var(--bg); background-attachment: fixed; }
 .bar h1 { letter-spacing: -0.015em; }
@@ -45,8 +45,8 @@ body { background: radial-gradient(1400px 700px at 15% -20%, color-mix(in srgb, 
 .gen { background: linear-gradient(180deg, var(--inst-top), var(--inst-bot)); border: 1px solid var(--inst-rim); color: var(--inst-ink);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.10), 0 1px 0 rgba(0, 0, 0, 0.3), 0 6px 16px rgba(10, 15, 22, 0.25); }
 .gen-lcd { background: var(--look-lcd-bg); color: var(--look-lcd-ink); box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6), 0 1px 0 rgba(255, 255, 255, 0.08); text-shadow: 0 0 6px color-mix(in srgb, var(--look-lcd-ink) 45%, transparent); }
-.knob { background: radial-gradient(circle at 36% 30%, #a3adb9, #5a6573 55%, #3a434f 80%, #2b323c);
-  box-shadow: 0 0 0 3px #1c222b, 0 0 0 4px rgba(255, 255, 255, 0.06), 0 3px 6px rgba(0, 0, 0, 0.55); }
+.knob { background: radial-gradient(circle at 36% 30%, #b7afa5, #71685c 55%, #4d463c 80%, #3b342c);
+  box-shadow: 0 0 0 3px #2a241d, 0 0 0 4px rgba(255, 255, 255, 0.06), 0 3px 6px rgba(0, 0, 0, 0.55); }
 /* shelf-card: the controls of the apparatus on the shelf under the picture (added 2026-10-24; a new class, so no page changes
    until it uses it). Used while a run goes on, so it never fades. Children: .card-title, then slider blocks, segs and chips. */
 .shelf-card { align-self: stretch; flex: 1 1 520px; display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); align-content: start; gap: 6px 16px;

@@ -95,7 +95,7 @@
     S.onTheme = function (fn) { S.fns.push(fn); if (S.key) fn(VD3.dark()); return fn; };
     S.fog = function (n, f) { S.fogNF = [n, f]; if (scene.fog) { scene.fog.near = n; scene.fog.far = f; } else S.key = ''; };
     S.theme = function (force) {
-      var dk = VD3.dark(), bgs = css('--canvas') || css('--bg') || (dk ? '#121820' : '#fbfcfd'), k = dk + '|' + bgs + '|' + css('--accent');
+      var dk = VD3.dark(), bgs = css('--canvas') || css('--bg') || (dk ? '#1f1a13' : '#fdfcfb'), k = dk + '|' + bgs + '|' + css('--accent');
       if (!force && k === S.key) return; S.key = k;
       var bg = (opt.sky ? null : K.token('--canvas', dk ? '#121820' : '#fbfcfd'));
       if (opt.sky) bg = new THREE.Color(opt.sky); scene.background = bg;
@@ -126,7 +126,7 @@
   K.backdrop = function (S, o) {
     o = o || {}; var r = o.r || 2.4, h = o.h || 1.6, arc = o.arc || Math.PI * 0.7;
     var g = new THREE.CylinderGeometry(r, r, h, 48, 1, true, -arc / 2, arc); g.rotateX(Math.PI / 2); g.translate(0, 0, h / 2);
-    var m = themed(S, { roughness: 1, metalness: 0, side: THREE.BackSide }, ['#e9edf2', '#18202a']), wall = new THREE.Mesh(g, m);
+    var m = themed(S, { roughness: 1, metalness: 0, side: THREE.BackSide }, ['#f1eeea', '#292219']), wall = new THREE.Mesh(g, m);
     wall.rotation.z = Math.PI; wall.position.set(o.x || 0, o.y || 0, 0); wall.receiveShadow = true; return wall;
   };
   K.box = function (w, d, h, mat, x, y, z) { var b = new THREE.Mesh(new THREE.BoxGeometry(w, d, h), mat); b.position.set(x || 0, y || 0, (z || 0) + h / 2); b.castShadow = true; b.receiveShadow = true; return b; };
@@ -140,14 +140,14 @@
     if (o.via) o.via.forEach(function (q) { pts.push(V(q)); });
     else { var span = a.distanceTo(b), sag = o.sag == null ? 0.25 * span : o.sag; for (var i = 1; i < 4; i++) { var t = i / 4, p = new THREE.Vector3().lerpVectors(a, b, t); p.z = Math.max(o.floor || 0.003, p.z - sag * 4 * t * (1 - t)); pts.push(p); } }
     pts.push(b);
-    var mat = o.mat || std({ roughness: 0.6, color: o.color || 0x23282f }), c = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 48, o.rad || 0.0022, 8, false), mat);
+    var mat = o.mat || std({ roughness: 0.6, color: o.color || 0x2e2a24 }), c = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 48, o.rad || 0.0022, 8, false), mat);
     c.castShadow = true; return c;
   };
   var canvasTex = function (S, w, h) { var cv = document.createElement('canvas'); cv.width = w; cv.height = h; var t = new THREE.CanvasTexture(cv); t.anisotropy = S.r.capabilities.getMaxAnisotropy(); return { cv: cv, tex: t }; };
   var FONT = '"Atkinson Hyperlegible", system-ui, sans-serif', MONO = '"JetBrains Mono", ui-monospace, monospace';
   K.meter = function (S, o) {
     o = o || {}; var w = o.w || 0.16, h = o.h || 0.095, kind = o.kind || 'lcd', T = canvasTex(S, 512, Math.round(512 * h / w)), cw = 512, ch = T.cv.height;
-    var body = themed(S, { roughness: 0.55, metalness: 0.1 }, ['#2f3a46', '#2a333e']), face = new THREE.MeshStandardMaterial({ map: T.tex, roughness: 0.5, metalness: 0.05 });
+    var body = themed(S, { roughness: 0.55, metalness: 0.1 }, ['#443c31', '#3d352b']), face = new THREE.MeshStandardMaterial({ map: T.tex, roughness: 0.5, metalness: 0.05 });
     var g = new THREE.Group(), box = new THREE.Mesh(new THREE.BoxGeometry(w, 0.035, h), body), pl = new THREE.Mesh(new THREE.PlaneGeometry(w * 0.94, h * 0.93), face);
     box.castShadow = true; pl.rotation.x = Math.PI / 2; pl.position.y = -0.0181; g.add(box, pl); g.rotation.x = o.tilt == null ? -0.55 : o.tilt; g.position.z = h / 2;
     var last = null, c = T.cv.getContext('2d');
@@ -157,7 +157,7 @@
       if (o.sub) { c.font = '22px ' + FONT; c.fillStyle = 'rgba(230,236,243,0.6)'; c.fillText(o.sub, cw / 2, ch * 0.82); }
     };
     g.set = function (a, b) {
-      var k = a + '|' + b; if (k === last) return; last = k; c.fillStyle = '#2f3a46'; c.fillRect(0, 0, cw, ch);
+      var k = a + '|' + b; if (k === last) return; last = k; c.fillStyle = '#443c31'; c.fillRect(0, 0, cw, ch);
       if (kind === 'needle') {
         var cx = cw / 2, cy = ch * 0.58, R = ch * 0.44; c.fillStyle = '#f3efe4'; c.beginPath(); c.roundRect(24, 18, cw - 48, ch * 0.5, 8); c.fill();
         c.strokeStyle = '#3a3a3a'; c.lineWidth = 2; c.beginPath(); c.arc(cx, cy, R, Math.PI * 1.2, Math.PI * 1.8); c.stroke();
@@ -175,13 +175,13 @@
   };
   K.ruler = function (S, o) {
     o = o || {}; var len = o.len || 1, w = o.w || 0.036, from = o.from || 0, to = o.to == null ? len * 100 : o.to, unit = o.unit || 'cm', step = o.step || (to - from) / 100;
-    var T = canvasTex(S, 2048, Math.round(2048 * w / len) || 64), side = themed(S, { roughness: 0.4, metalness: 0.5 }, o.wood ? ['#c9a46a', '#6b5434'] : ['#b9c1ca', '#59626e']);
+    var T = canvasTex(S, 2048, Math.round(2048 * w / len) || 64), side = themed(S, { roughness: 0.4, metalness: 0.5 }, o.wood ? ['#c9a46a', '#6b5434'] : ['#c9c2ba', '#6c655b']);
     var top = std({ map: T.tex, roughness: 0.45, metalness: o.wood ? 0 : 0.25 }), rule = new THREE.Mesh(new THREE.BoxGeometry(len, w, 0.003), [side, side, side, side, top, side]);
     rule.position.set(len / 2, 0, 0.0015); rule.receiveShadow = true;
     S.onTheme(function (dk) {
       var c = T.cv.getContext('2d'), W = T.cv.width, H = T.cv.height, n = Math.round((to - from) / step);
-      c.fillStyle = o.wood ? (dk ? '#4d4630' : '#f1e3b5') : (dk ? '#59626e' : '#e4e8ec'); c.fillRect(0, 0, W, H);
-      c.fillStyle = dk ? '#e9edf2' : '#1f262f'; c.font = '600 ' + Math.round(H * 0.3) + 'px ' + MONO; c.textAlign = 'center'; c.textBaseline = 'bottom';
+      c.fillStyle = o.wood ? (dk ? '#4d4630' : '#f1e3b5') : (dk ? '#6c655b' : '#ebe8e5'); c.fillRect(0, 0, W, H);
+      c.fillStyle = dk ? '#f1eeea' : '#2e2820'; c.font = '600 ' + Math.round(H * 0.3) + 'px ' + MONO; c.textAlign = 'center'; c.textBaseline = 'bottom';
       for (var i = 0; i <= n; i++) { var x = i / n * W, big = i % 10 === 0, mid = i % 5 === 0; c.fillRect(clamp(x - (big ? 1.4 : 0.8), 0, W - 3), 0, big ? 2.8 : 1.6, H * (big ? 0.42 : mid ? 0.3 : 0.18)); if (big && i > 0 && i < n) c.fillText(String(+(from + i * step).toPrecision(6)), x, H - 4); }
       c.textAlign = 'right'; c.fillText(unit, W - 6, H - 4); T.tex.needsUpdate = true;
     });
@@ -203,7 +203,7 @@
       if (t === last) return; last = t; var f = (o.weight || 600) + ' ' + H * 0.62 + 'px ' + (o.font || FONT); c.font = f;
       var w = Math.ceil(c.measureText(t).width) + (o.bg ? 28 : 8); cv.width = w; cv.height = H; c.font = f; c.textBaseline = 'middle';
       if (o.bg) { c.fillStyle = o.bg; c.beginPath(); c.roundRect(0, 4, w, H - 8, 10); c.fill(); }
-      c.fillStyle = o.color || '#1f262f'; c.fillText(t, o.bg ? 14 : 4, H / 2 + 2); tex.needsUpdate = true;
+      c.fillStyle = o.color || '#2e2820'; c.fillText(t, o.bg ? 14 : 4, H / 2 + 2); tex.needsUpdate = true;
       var s = o.size || 0.03; sp.scale.set(s * w / H, s, 1);
     };
     sp.set(String(text)); sp.renderOrder = 5; return sp;
@@ -264,7 +264,7 @@
     return g;
   };
   K.planet = function (S, o) {
-    o = o || {}; var m = std({ roughness: 0.9, metalness: 0, color: o.tex ? 0xffffff : (o.color || '#6d8fb3') });
+    o = o || {}; var m = std({ roughness: 0.9, metalness: 0, color: o.tex ? 0xffffff : (o.color || '#ae9472') });
     if (o.tex) new THREE.TextureLoader().load(o.tex, function (t) { m.map = t; m.needsUpdate = true; });
     if (o.night) new THREE.TextureLoader().load(o.night, function (t) { m.emissiveMap = t; m.emissive = new THREE.Color(o.nightLevel || 0.7, o.nightLevel || 0.7, o.nightLevel || 0.7); m.needsUpdate = true; });
     var ball = new THREE.Mesh(new THREE.SphereGeometry(o.r || 1, o.seg || 64, Math.round((o.seg || 64) / 2)), m);
@@ -282,8 +282,8 @@
   };
   K.ring = function (r, o) {
     o = o || {}; var n = o.seg || 128, pts = []; for (var i = 0; i <= n; i++) pts.push(new THREE.Vector3(r * Math.cos(i / n * 2 * Math.PI), r * Math.sin(i / n * 2 * Math.PI), 0));
-    var g = new THREE.BufferGeometry().setFromPoints(pts), m = o.dashed ? new THREE.LineDashedMaterial({ color: o.color || '#8090a0', dashSize: r * 0.04, gapSize: r * 0.03, transparent: true, opacity: o.opacity || 0.7 })
-      : new THREE.LineBasicMaterial({ color: o.color || '#8090a0', transparent: true, opacity: o.opacity || 0.7 });
+    var g = new THREE.BufferGeometry().setFromPoints(pts), m = o.dashed ? new THREE.LineDashedMaterial({ color: o.color || '#9e9282', dashSize: r * 0.04, gapSize: r * 0.03, transparent: true, opacity: o.opacity || 0.7 })
+      : new THREE.LineBasicMaterial({ color: o.color || '#9e9282', transparent: true, opacity: o.opacity || 0.7 });
     var l = new THREE.Line(g, m); if (o.dashed) l.computeLineDistances(); return l;
   };
 })();

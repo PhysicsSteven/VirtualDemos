@@ -16,9 +16,9 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
 /* only what this demo needs beyond demos/lib/vd.css */
-:root { --cond: #e8c64a; --therm: #3b8fe0; --merc: #d95c3c; --floor: #e7ecf3; --floor-edge: #8d99a8; --touch: #2a9d8f; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --cond: #ffd95a; --therm: #5fb0ff; --merc: #ff7a5c; --floor: #141b26; --floor-edge: #4a5868; --touch: #4fd1c0; } }
-:root[data-theme="dark"] { --cond: #ffd95a; --therm: #5fb0ff; --merc: #ff7a5c; --floor: #141b26; --floor-edge: #4a5868; --touch: #4fd1c0; }
+:root { --cond: #e8c64a; --therm: #3b8fe0; --merc: #d95c3c; --floor: #f2eee8; --floor-edge: #a69c8f; --touch: #2a9d8f; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --cond: #ffd95a; --therm: #5fb0ff; --merc: #ff7a5c; --floor: #251e15; --floor-edge: #665b4c; --touch: #4fd1c0; } }
+:root[data-theme="dark"] { --cond: #ffd95a; --therm: #5fb0ff; --merc: #ff7a5c; --floor: #251e15; --floor-edge: #665b4c; --touch: #4fd1c0; }
 .stage { position: relative; display: flex; flex-direction: column; min-height: min-content; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
 :root[data-projector="on"] .stage { min-height: min-content; }
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
@@ -436,7 +436,7 @@
     const { x, y, s, p } = boxFrame(), L = side();
     const img = imageOf('box', GP, (i, j, c) => colorAt(j * GP + i, c)); blit(img, x, y, s, s);
     /* hot packets smaller than a cell: dots */
-    if (blend < 1) { ctx.globalAlpha = 1 - blend; const r = Math.max(2.2 * p, O.sigma / L * s * 2); ctx.fillStyle = S.color === 'density' ? (T.dark ? '#dff0ff' : '#1d4f8f') : T.ink;
+    if (blend < 1) { ctx.globalAlpha = 1 - blend; const r = Math.max(2.2 * p, O.sigma / L * s * 2); ctx.fillStyle = S.color === 'density' ? (T.dark ? '#f4f0ea' : '#1d4f8f') : T.ink;
       for (let i = 0; i < S.N; i++) { if (lvl[i] === 0) continue; ctx.beginPath(); ctx.arc(x + AT.x[i] * s, y + s - AT.y[i] * s, r, 0, 7); ctx.fill(); } ctx.globalAlpha = 1; }
     ctx.strokeStyle = T.floor_edge; ctx.lineWidth = 1.5 * p; ctx.strokeRect(x, y, s, s);
     ctx.fillStyle = T.muted; ctx.font = `${11 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(`box ${f(S.L, 1)} µm on a side, seen from above`, x + s / 2, y + s + 6 * p);
@@ -514,9 +514,9 @@
     const S3 = VD3K.stage($('pane'), { before: can, fov: 28, near: 0.05, far: 60 }); if (!S3) return false;
     S3.el.classList.add('sc3');
     const sc = S3.scene;
-    const floorM = VD3K.material(S3, { roughness: 0.9, metalness: 0 }, ['#e7ecf3', '#141b26']);
+    const floorM = VD3K.material(S3, { roughness: 0.9, metalness: 0 }, ['#f2eee8', '#251e15']);
     const floor = new THREE.Mesh(new THREE.PlaneGeometry(2.3, 2.3), floorM); floor.position.z = -0.004; sc.add(floor);
-    const edgeM = new THREE.LineBasicMaterial({ color: '#8d99a8' }); S3.onTheme((dk) => edgeM.color.set(dk ? '#6f7f92' : '#8d99a8'));
+    const edgeM = new THREE.LineBasicMaterial({ color: '#a69c8f' }); S3.onTheme((dk) => edgeM.color.set(dk ? '#8f8272' : '#a69c8f'));
     const eg = new THREE.BufferGeometry(); eg.setAttribute('position', new THREE.Float32BufferAttribute([-1, -1, 0, 1, -1, 0, 1, -1, 0, 1, 1, 0, 1, 1, 0, -1, 1, 0, -1, 1, 0, -1, -1, 0], 3)); sc.add(new THREE.LineSegments(eg, edgeM));
     /* the surface: a grid of GP × GP vertices with vertex colors */
     const mk = (n) => { const g = new THREE.BufferGeometry(), idx = [];
@@ -524,8 +524,8 @@
       for (let j = 0; j < n - 1; j++) for (let i = 0; i < n - 1; i++) { const a = j * n + i, b = a + 1, c = a + n, d = c + 1; idx.push(a, b, d, a, d, c); } g.setIndex(idx); return g; };
     const surfM = new THREE.MeshStandardMaterial({ vertexColors: true, side: THREE.DoubleSide, roughness: 0.55, metalness: 0.05, flatShading: false });
     const surf = new THREE.Mesh(mk(GP), surfM), vsurf = new THREE.Mesh(mk(VP), surfM); surf.frustumCulled = vsurf.frustumCulled = false; sc.add(surf, vsurf);
-    const balls = VD3K.particles(S3, { n: NMAX, r: 0.012, color: '#dff0ff', seg: 10 }); balls.material.transparent = true; sc.add(balls);
-    S3.onTheme((dk) => { balls.material.color.set(dk ? '#dff0ff' : '#1d4f8f'); });
+    const balls = VD3K.particles(S3, { n: NMAX, r: 0.012, color: '#f4f0ea', seg: 10 }); balls.material.transparent = true; sc.add(balls);
+    S3.onTheme((dk) => { balls.material.color.set(dk ? '#f4f0ea' : '#1d4f8f'); });
     g3 = { S3, surf, vsurf, balls }; M3 = new THREE.Matrix4();
     VD3.orbit(can, G3.o, () => { if (use3()) draw(); }, { grab: () => !use3(), phMin: 0.25, phMax: 1.45, zMin: 0.6, zMax: 2.5 });
     can.style.touchAction = 'pan-y';

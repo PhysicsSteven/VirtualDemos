@@ -16,11 +16,11 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
 /* only what this demo needs beyond demos/lib/vd.css */
-:root { --field: #2b60b5; --puck: #3a4049; --puck-edge: #20242a; --magnet: #aab3bd; --magnet-n: #c0392b; --magnet-s: #2b60b5; --ln2: rgba(150, 196, 236, 0.35); --ln2-edge: #6f9cc8;
+:root { --field: #2b60b5; --puck: #48423b; --puck-edge: #292621; --magnet: #bcb5ab; --magnet-n: #c0392b; --magnet-s: #2b60b5; --ln2: rgba(150, 196, 236, 0.35); --ln2-edge: #bba07c;
   --cur-a: #d2452b; --cur-b: #2b7bd2; --hand: #a7740b; --foam: #e9e4d8; --foam-edge: #b9b1a0; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --field: #69a0ff; --puck: #4a515c; --puck-edge: #8a939f; --magnet: #c3cbd4; --magnet-n: #ff7a5c; --magnet-s: #69a0ff;
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --field: #69a0ff; --puck: #5b544b; --puck-edge: #9d968c; --magnet: #d3ccc4; --magnet-n: #ff7a5c; --magnet-s: #69a0ff;
   --ln2: rgba(110, 160, 220, 0.25); --ln2-edge: #7fb0e0; --cur-a: #ff7a5c; --cur-b: #5fb0ff; --hand: #e2b350; --foam: #3b3a36; --foam-edge: #6b675e; } }
-:root[data-theme="dark"] { --field: #69a0ff; --puck: #4a515c; --puck-edge: #8a939f; --magnet: #c3cbd4; --magnet-n: #ff7a5c; --magnet-s: #69a0ff;
+:root[data-theme="dark"] { --field: #69a0ff; --puck: #5b544b; --puck-edge: #9d968c; --magnet: #d3ccc4; --magnet-n: #ff7a5c; --magnet-s: #69a0ff;
   --ln2: rgba(110, 160, 220, 0.25); --ln2-edge: #7fb0e0; --cur-a: #ff7a5c; --cur-b: #5fb0ff; --hand: #e2b350; --foam: #3b3a36; --foam-edge: #6b675e; }
 .stage { position: relative; display: flex; flex-direction: column; min-height: min-content; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
 :root[data-projector="on"] .stage { min-height: min-content; }
@@ -465,8 +465,8 @@
     S3.el.classList.add('sc3');
     const sc = S3.scene, M = (o, c) => VD3K.material(S3, o, c), mesh = (geo, m, cast) => { const x = new THREE.Mesh(geo, m); x.castShadow = !!cast; x.receiveShadow = true; return x; };
     sc.add(VD3K.bench(S3, { w: 2.4, d: 1.6, y: 0.3 }), VD3K.backdrop(S3, { r: 0.9, h: 0.9, y: -0.3 }));
-    const foam = M({ roughness: 0.95, metalness: 0 }, ['#efe9dc', '#5b574e']), puckM = M({ roughness: 0.55, metalness: 0.25 }, ['#2e3238', '#3c424b']);
-    const magM = new THREE.MeshStandardMaterial({ roughness: 0.3, metalness: 0.45, color: '#dfe5ec' }), nM = new THREE.MeshStandardMaterial({ roughness: 0.4, metalness: 0.3, color: '#c0392b' });
+    const foam = M({ roughness: 0.95, metalness: 0 }, ['#efe9dc', '#5b574e']), puckM = M({ roughness: 0.55, metalness: 0.25 }, ['#37342f', '#4a443d']);
+    const magM = new THREE.MeshStandardMaterial({ roughness: 0.3, metalness: 0.45, color: '#ebe6e0' }), nM = new THREE.MeshStandardMaterial({ roughness: 0.4, metalness: 0.3, color: '#c0392b' });
     const ln2M = new THREE.MeshStandardMaterial({ color: '#a9cdee', roughness: 0.05, metalness: 0, transparent: true, opacity: 0.35, depthWrite: false });
     const app = new THREE.Group(); sc.add(app);
     const cyl = (r, h, m, seg) => { const c = mesh(new THREE.CylinderGeometry(r, r, h, seg || 48), m, true); c.rotation.x = Math.PI / 2; return c; };
@@ -491,7 +491,7 @@
     } else {
       const holder = g.cyl(R + 0.012, 0.016, g.foam); holder.position.z = pz + Hp + 0.008; g.app.add(holder);
       const puck = g.cyl(R, Hp, g.puckM); puck.position.z = pz + Hp / 2; g.app.add(puck);
-      const steel = g.M({ roughness: 0.35, metalness: 0.6 }, ['#b9c0c8', '#7d8690']);
+      const steel = g.M({ roughness: 0.35, metalness: 0.6 }, ['#c7c1ba', '#8f887e']);
       g.app.add(VD3K.rod([0, R * 0.5, pz + Hp + 0.016], [0, R + 0.25, pz + Hp + 0.016], 0.008, steel), VD3K.rod([0, R + 0.25, 0], [0, R + 0.25, pz + Hp + 0.03], 0.01, steel));
       g.ln2 = null;
     }

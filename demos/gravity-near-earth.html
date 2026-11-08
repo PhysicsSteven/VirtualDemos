@@ -16,10 +16,10 @@
 /* Layout: Earth with the test mass and its forces on the left, the g against height graph on the right; the rail on the right. */
 /* Layout: lab bench. The gas box and speed histogram fill the left, a narrow instrument rail sits on the right; stacks on phones. */
 
-:root { --earth: #6b8fb8; --land: #7fa36a; --mass: #4a5563; --gv: #b0452f; --cv: #a7740b; --ev: #2b60b5; }
-:root { --star: rgba(70, 90, 125, 0.45); --atmo: rgba(120, 175, 235, 0.45); --atmo-clear: rgba(120, 175, 235, 0); --ocean-deep: #4a6f99; --ice: #eef3f8; --moon: #b9bcc2; --moon-dark: #8e939b; --mars: #c97a52; --mars-dark: #9b5537; --icon: #5a6575; --shade: rgba(10, 20, 40, 0.35); }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --earth: #3d5a7a; --land: #4f6e44; --mass: #c3cad4; --gv: #ff8a70; --cv: #e2b350; --ev: #69a0ff; --star: rgba(225, 235, 255, 0.85); --atmo: rgba(110, 170, 255, 0.40); --atmo-clear: rgba(110, 170, 255, 0); --ocean-deep: #263c56; --ice: #c9d3de; --moon: #8a8e95; --moon-dark: #62666d; --mars: #9a5638; --mars-dark: #6e3a24; --icon: #aab5c4; --shade: rgba(0, 0, 0, 0.45); } }
-:root[data-theme="dark"] { --earth: #3d5a7a; --land: #4f6e44; --mass: #c3cad4; --gv: #ff8a70; --cv: #e2b350; --ev: #69a0ff; --star: rgba(225, 235, 255, 0.85); --atmo: rgba(110, 170, 255, 0.40); --atmo-clear: rgba(110, 170, 255, 0); --ocean-deep: #263c56; --ice: #c9d3de; --moon: #8a8e95; --moon-dark: #62666d; --mars: #9a5638; --mars-dark: #6e3a24; --icon: #aab5c4; --shade: rgba(0, 0, 0, 0.45); }
+:root { --earth: #6b8fb8; --land: #7fa36a; --mass: #61584c; --gv: #b0452f; --cv: #a7740b; --ev: #2b60b5; }
+:root { --star: rgba(70, 90, 125, 0.45); --atmo: rgba(120, 175, 235, 0.45); --atmo-clear: rgba(120, 175, 235, 0); --ocean-deep: #4a6f99; --ice: #eef3f8; --moon: #b9bcc2; --moon-dark: #8e939b; --mars: #c97a52; --mars-dark: #9b5537; --icon: #73695c; --shade: rgba(10, 20, 40, 0.35); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --earth: #3d5a7a; --land: #4f6e44; --mass: #d3ccc4; --gv: #ff8a70; --cv: #e2b350; --ev: #69a0ff; --star: rgba(225, 235, 255, 0.85); --atmo: rgba(110, 170, 255, 0.40); --atmo-clear: rgba(110, 170, 255, 0); --ocean-deep: #263c56; --ice: #c9d3de; --moon: #8a8e95; --moon-dark: #62666d; --mars: #9a5638; --mars-dark: #6e3a24; --icon: #c2b8ac; --shade: rgba(0, 0, 0, 0.45); } }
+:root[data-theme="dark"] { --earth: #3d5a7a; --land: #4f6e44; --mass: #d3ccc4; --gv: #ff8a70; --cv: #e2b350; --ev: #69a0ff; --star: rgba(225, 235, 255, 0.85); --atmo: rgba(110, 170, 255, 0.40); --atmo-clear: rgba(110, 170, 255, 0); --ocean-deep: #263c56; --ice: #c9d3de; --moon: #8a8e95; --moon-dark: #62666d; --mars: #9a5638; --mars-dark: #6e3a24; --icon: #c2b8ac; --shade: rgba(0, 0, 0, 0.45); }
 :root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
 body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
@@ -283,7 +283,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   let g3 = null, rect3 = { x: 0, y: 0, w: 0, h: 0 }, spin3 = 0, spinLast = 0;
   const use3 = () => !!(G3.on && g3);
   const col3 = (s, fb) => { try { return new THREE.Color(s || fb); } catch (_) { return new THREE.Color(fb); } };
-  const LIT = { gv: '#ff8a70', cv: '#e2b350', ink: '#e8eefc', muted: 'rgba(232,238,252,0.7)' };   /* label colors on the dark sky */
+  const LIT = { gv: '#ff8a70', cv: '#e2b350', ink: '#f6f3ee', muted: 'rgba(232,238,252,0.7)' };   /* label colors on the dark sky */
   function init3D() {
     G3.tried = true;
     const rd = VD3.renderer(); if (!rd) return false;
@@ -293,19 +293,19 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const tc = document.createElement('canvas'); tc.width = 2048; tc.height = 1024; const tex = new THREE.CanvasTexture(tc); tex.anisotropy = 4;
     const planetM = M({ map: tex, roughness: 0.9 }), planet3 = new THREE.Mesh(new THREE.SphereGeometry(1, 72, 48).rotateX(Math.PI / 2), planetM);
     const atmoM = new THREE.MeshBasicMaterial({ color: 0x6eaaff, transparent: true, opacity: 0.16, side: THREE.BackSide, depthWrite: false }), atmo = new THREE.Mesh(new THREE.SphereGeometry(1.035, 48, 32), atmoM);
-    const axisM = new THREE.LineDashedMaterial({ color: 0x9fb0c6, dashSize: 0.05, gapSize: 0.04 }), axis = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, 0, -1.35), new THREE.Vector3(0, 0, 1.35)]), axisM); axis.computeLineDistances();
+    const axisM = new THREE.LineDashedMaterial({ color: 0xc3b5a2, dashSize: 0.05, gapSize: 0.04 }), axis = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, 0, -1.35), new THREE.Vector3(0, 0, 1.35)]), axisM); axis.computeLineDistances();
     const pathM = new THREE.LineDashedMaterial({ color: 0xe2b350, dashSize: 0.04, gapSize: 0.03, transparent: true, opacity: 0.8 }), pp = [];
     for (let i = 0; i <= 200; i++) { const a = i / 200 * 2 * Math.PI; pp.push(new THREE.Vector3(Math.cos(a), Math.sin(a), 0)); }
     const path = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pp), pathM); path.computeLineDistances();
-    const stalkM = new THREE.LineBasicMaterial({ color: 0x9fb0c6, transparent: true, opacity: 0.8 }), stalk = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3(1, 0, 0)]), stalkM);
+    const stalkM = new THREE.LineBasicMaterial({ color: 0xc3b5a2, transparent: true, opacity: 0.8 }), stalk = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3(1, 0, 0)]), stalkM);
     /* the mass on its spring scale; the group's x axis is the effective up */
-    const rig = new THREE.Group(), massM = M({ roughness: 0.35, metalness: 0.6 }), scaleM = M({ roughness: 0.5, color: 0xd8dde4 });
+    const rig = new THREE.Group(), massM = M({ roughness: 0.35, metalness: 0.6 }), scaleM = M({ roughness: 0.5, color: 0xe3dfd9 });
     const mass = new THREE.Mesh(new THREE.SphereGeometry(0.5, 20, 14), massM), hook = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 1, 6).rotateZ(Math.PI / 2).translate(0.5, 0, 0), scaleM);
     const body = new THREE.Mesh(new THREE.BoxGeometry(1.1, 0.5, 0.35), scaleM); hook.scale.set(0.9, 1, 1); body.position.x = 1.35; rig.add(mass, hook, body);
     const arrow = (c) => new THREE.ArrowHelper(new THREE.Vector3(1, 0, 0), new THREE.Vector3(), 1, c, 0.2, 0.1), gArrow = arrow(0xff8a70), cArrow = arrow(0xe2b350);
     for (const a of [gArrow, cArrow]) { a.renderOrder = 5; a.traverse((m) => { if (m.material) { m.material.depthTest = false; m.material.transparent = true; } }); }
     const sg = new THREE.BufferGeometry(), sp = []; for (const [a, b] of STARS.concat(STARS.map(([x, y]) => [y, x]))) { const u = a * 2 - 1, ang = b * 6.283, r = Math.sqrt(1 - u * u); sp.push(r * Math.cos(ang) * 200, r * Math.sin(ang) * 200, u * 200); }
-    sg.setAttribute('position', new THREE.Float32BufferAttribute(sp, 3)); const stars3 = new THREE.Points(sg, new THREE.PointsMaterial({ size: 1.6, sizeAttenuation: false, color: 0xe8eefc }));
+    sg.setAttribute('position', new THREE.Float32BufferAttribute(sp, 3)); const stars3 = new THREE.Points(sg, new THREE.PointsMaterial({ size: 1.6, sizeAttenuation: false, color: 0xf6f3ee }));
     scene.add(planet3, atmo, axis, path, stalk, rig, gArrow, cArrow, stars3);
     g3 = { rd, el, scene, cam, sun, tc, tex, planetM, planet3, atmo, atmoM, axis, path, stalk, rig, massM, gArrow, cArrow, body: '' };
     can.addEventListener('wheel', (e) => { if (!use3() || !in3(e)) e.stopImmediatePropagation(); }, { passive: true });
@@ -369,7 +369,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const g = g3, dk = VD3.dark(), W0 = Math.max(1, Math.round(w)), H0 = Math.max(1, Math.round(h)), b = B();
     rect3 = { x: x0, y: y0, w: W0, h: H0 }; g.el.hidden = false; Object.assign(g.el.style, { left: x0 + 'px', top: y0 + 'px', width: W0 + 'px', height: H0 + 'px' });
     if (G3.w !== W0 || G3.h !== H0) { G3.w = W0; G3.h = H0; g.rd.setSize(W0, H0); g.cam.aspect = W0 / H0; g.cam.updateProjectionMatrix(); }
-    const key = [T.canvas, T.land, dk, S.body].join(); if (G3.key !== key) { G3.key = key; g.scene.background = col3(dk ? '#050a14' : '#0d1626', '#0d1626'); paintPlanet(); g.atmo.visible = S.body === 'earth'; }
+    const key = [T.canvas, T.land, dk, S.body].join(); if (G3.key !== key) { G3.key = key; g.scene.background = col3(dk ? '#100d08' : '#221b11', '#221b11'); paintPlanet(); g.atmo.visible = S.body === 'earth'; }
     const now = performance.now() / 1000; if (S.spin && !reduce) spin3 += Math.min(0.1, Math.max(0, now - spinLast)) * 2 * Math.PI / 40; spinLast = now;
     const la = lat(), r = (b.R + S.h) / b.R, rv = Math.max(1.25, r), ph = spin3, cl = Math.cos(la), sl = Math.sin(la);
     g.planet3.rotation.z = ph;

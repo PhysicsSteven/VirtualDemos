@@ -20,35 +20,35 @@
 <style>
 /* Layout: the stage holds the main view (rays and waves, soap film, wedge or Newton's rings) above the reflectance spectrum; instrument rail on the right; stacks on phones. */
 :root {
-  --bg: #e9edf2;
-  --surface: #f8fafc;
-  --canvas: #fcfdfe;
-  --ink: #17202b;
-  --muted: #5a6575;
-  --line: #d3d9e2;
-  --grid: #e6ebf1;
-  --grid-strong: #cfd7e1;
+  --bg: #f1eeea;
+  --surface: #fcfaf8;
+  --canvas: #fefdfc;
+  --ink: #2a2219;
+  --muted: #73695c;
+  --line: #e1dbd4;
+  --grid: #f0ece7;
+  --grid-strong: #e0d9d0;
   --pos: #c23f2c;
   --neg: #2b60b5;
   --equi: #a7740b;
-  --accent: #2b60b5;
-  --film: #4f9fb8;
-  --med: #8796ab;
-  --frame: #4a5566;
+  --accent: #c4811c;
+  --film: #ab895c;
+  --med: #a89b8a;
+  --frame: #645a4c;
   --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
-    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-    --equi: #e2b350; --accent: #69a0ff; --film: #4fa9c4; --med: #7d8ba0; --frame: #8693a5; color-scheme: dark;
+    --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
+    --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+    --equi: #e2b350; --accent: #fbc26d; --film: #4fa9c4; --med: #9d9080; --frame: #a39788; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
-  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-  --equi: #e2b350; --accent: #69a0ff; --film: #4fa9c4; --med: #7d8ba0; --frame: #8693a5; color-scheme: dark;
+  --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
+  --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+  --equi: #e2b350; --accent: #fbc26d; --film: #4fa9c4; --med: #9d9080; --frame: #a39788; color-scheme: dark;
 }
 :root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
@@ -884,7 +884,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const band = h * Math.pow(Math.max(0, (40 - S.soap.ttop) / (S.soap.tbot - S.soap.ttop)), 1 / S.soap.p);
       if (band >= 20 * ls) {
         c.fillRect(g.fx + g.fw / 2 - tw / 2 - 5, g.top + 7 * ls, tw + 10, 17 * ls);
-        c.fillStyle = '#e3e8ef'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(txt, g.fx + g.fw / 2, g.top + 15.5 * ls);
+        c.fillStyle = '#eeeae4'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(txt, g.fx + g.fw / 2, g.top + 15.5 * ls);
       } else lab(`${txt} at the top`, g.fx + g.fw / 2, g.top - 10 * ls, { align: 'center', size: 10.5, font: 'ui' });
     }
     }
@@ -1023,8 +1023,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       ox.putImageData(im, 0, 0); newtonImg = oc; newtonKey = key;
     }
     if (g.d3) {   /* the eyepiece: a dark field stop round the image */
-      c.fillStyle = '#0b0d10'; c.beginPath(); c.arc(g.cx, g.cy, g.rad + 9 * ls, 0, 2 * Math.PI); c.fill();
-      c.strokeStyle = '#59626e'; c.lineWidth = 3 * ls; c.beginPath(); c.arc(g.cx, g.cy, g.rad + 9 * ls, 0, 2 * Math.PI); c.stroke();
+      c.fillStyle = '#100e0b'; c.beginPath(); c.arc(g.cx, g.cy, g.rad + 9 * ls, 0, 2 * Math.PI); c.fill();
+      c.strokeStyle = '#6c655b'; c.lineWidth = 3 * ls; c.beginPath(); c.arc(g.cx, g.cy, g.rad + 9 * ls, 0, 2 * Math.PI); c.stroke();
       lab(`Through the microscope, ${2 * NEWTON_RMAX} mm across`, g.cx, g.cy - g.rad - 22 * ls, { align: 'center', size: 10.5, font: 'ui', bold: true });
     }
     c.drawImage(newtonImg, g.cx - g.rad, g.cy - g.rad, g.size, g.size);
@@ -1095,21 +1095,21 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const mesh = (geo, m, cast, recv) => { const x = new THREE.Mesh(geo, m); x.castShadow = !!cast; x.receiveShadow = !!recv; return x; };
     // the room: floor, a painted wall with a skirting board, and a lab bench (worktop on a cabinet)
     const FLOOR = -0.88;
-    const floor = mesh(new THREE.PlaneGeometry(14, 14), mat({ roughness: 0.95 }, ['#c9cfd6', '#151b23']), false, true); floor.position.z = FLOOR;
+    const floor = mesh(new THREE.PlaneGeometry(14, 14), mat({ roughness: 0.95 }, ['#d5d0ca', '#221d16']), false, true); floor.position.z = FLOOR;
     const wallCv = document.createElement('canvas'); wallCv.width = 16; wallCv.height = 256; const wallTex = new THREE.CanvasTexture(wallCv);
     const wall = new THREE.Mesh(new THREE.PlaneGeometry(14, 4), new THREE.MeshBasicMaterial({ map: wallTex })); wall.rotation.x = Math.PI / 2; wall.position.set(0, 0.62, FLOOR + 2);
-    st.onTheme((dk) => { const c = wallCv.getContext('2d'), gr = c.createLinearGradient(0, 0, 0, 256); gr.addColorStop(0, dk ? '#0f141b' : '#d3dae3'); gr.addColorStop(0.6, dk ? '#17202a' : '#e7ebf0'); gr.addColorStop(1, dk ? '#131a23' : '#dfe4ea'); c.fillStyle = gr; c.fillRect(0, 0, 16, 256); c.fillStyle = dk ? '#232c38' : '#c0c8d2'; c.fillRect(0, 170, 16, 4); wallTex.needsUpdate = true; });
+    st.onTheme((dk) => { const c = wallCv.getContext('2d'), gr = c.createLinearGradient(0, 0, 0, 256); gr.addColorStop(0, dk ? '#1a1610' : '#e2dcd4'); gr.addColorStop(0.6, dk ? '#292218' : '#efece8'); gr.addColorStop(1, dk ? '#221c14' : '#e9e5e0'); c.fillStyle = gr; c.fillRect(0, 0, 16, 256); c.fillStyle = dk ? '#362f25' : '#d1cac1'; c.fillRect(0, 170, 16, 4); wallTex.needsUpdate = true; });
     const topM = mat({ roughness: 0.78 }, ['#d6c4a4', '#3b3229']), edgeM = mat({ roughness: 0.7 }, ['#a88b64', '#4a3d2e']);
     const top = mesh(new THREE.BoxGeometry(2.4, 0.95, 0.04), [edgeM, edgeM, edgeM, edgeM, topM, edgeM], true, true); top.position.set(0, 0.12, -0.02);
-    const cabM = mat({ roughness: 0.6, metalness: 0.15 }, ['#68747f', '#2f3843']);
-    scene.add(floor, wall, K.box(14, 0.02, 0.1, mat({ roughness: 0.7 }, ['#b9c0c8', '#252e39']), 0, 0.61, FLOOR), top,
-      K.box(2.3, 0.85, -0.04 - FLOOR - 0.08, cabM, 0, 0.13, FLOOR + 0.08), K.box(2.2, 0.8, 0.08, mat({ roughness: 0.8 }, ['#3b434d', '#12171d']), 0, 0.14, FLOOR));
+    const cabM = mat({ roughness: 0.6, metalness: 0.15 }, ['#7d756a', '#423a30']);
+    scene.add(floor, wall, K.box(14, 0.02, 0.1, mat({ roughness: 0.7 }, ['#c7c1ba', '#383026']), 0, 0.61, FLOOR), top,
+      K.box(2.3, 0.85, -0.04 - FLOOR - 0.08, cabM, 0, 0.13, FLOOR + 0.08), K.box(2.2, 0.8, 0.08, mat({ roughness: 0.8 }, ['#4c453c', '#1c1813']), 0, 0.14, FLOOR));
     // shared materials
-    const steelM = mat({ roughness: 0.3, metalness: 0.75 }, ['#c3cad2', '#8d97a2']), blackM = M({ color: 0x22272e, roughness: 0.45, metalness: 0.3 });
-    const velvetM = M({ color: 0x050607, roughness: 1, metalness: 0 }), caseM = mat({ roughness: 0.45, metalness: 0.25 }, ['#3d4753', '#36404b']);
+    const steelM = mat({ roughness: 0.3, metalness: 0.75 }, ['#d1cbc4', '#a0998f']), blackM = M({ color: 0x2d2923, roughness: 0.45, metalness: 0.3 });
+    const velvetM = M({ color: 0x070605, roughness: 1, metalness: 0 }), caseM = mat({ roughness: 0.45, metalness: 0.25 }, ['#51493f', '#494238']);
     const glassM = (op) => mat({ transparent: true, opacity: op, roughness: 0.06, metalness: 0.1, side: THREE.DoubleSide, depthWrite: false }, ['#cfe6f2', '#a9cfe2']);
     const accM = new THREE.MeshBasicMaterial({ color: 0x2b60b5 }), lampM = new THREE.MeshBasicMaterial({ color: 0xffffff });
-    st.onTheme(() => { accM.color = new THREE.Color(T.accent || '#2b60b5'); });
+    st.onTheme(() => { accM.color = new THREE.Color(T.accent || '#c4811c'); });
     g3 = { st, K, mat, M, mesh, steelM, blackM, velvetM, caseM, glassM, accM, lampM, rc: new THREE.Raycaster(), v2: new THREE.Vector2(), wa: 0, groups: {}, probeSeg: null, keys: {} };
     // a lamp housing whose window faces +x (lamp light is the light the film is lit by: white D65, or λ₀ alone)
     const lamp = (x, y, z, w, h, d, rot) => {
@@ -1157,7 +1157,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     gr.add(K.box(0.15, 0.004, 0.2, g.velvetM, 0, 0.07, 0.06), K.box(0.16, 0.04, 0.012, g.blackM, 0, 0.07, 0), K.box(0.15, 0.0005, 0.2, g.blackM, 0, 0.0725, 0.06));
     // a dish of soap solution under the frame
     const dish = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.046, 0.022, 48, 1, true).rotateX(Math.PI / 2), g.glassM(0.28)); dish.position.set(0, 0, 0.011); dish.renderOrder = 2;
-    const liq = new THREE.Mesh(new THREE.CircleGeometry(0.047, 48), g.mat({ roughness: 0.1, metalness: 0.2, transparent: true, opacity: 0.8 }, ['#cfe0e8', '#4f6874'])); liq.position.z = 0.014;
+    const liq = new THREE.Mesh(new THREE.CircleGeometry(0.047, 48), g.mat({ roughness: 0.1, metalness: 0.2, transparent: true, opacity: 0.8 }, ['#e6ddd1', '#716452'])); liq.position.z = 0.014;
     const base = new THREE.Mesh(new THREE.CircleGeometry(0.046, 48), g.glassM(0.4)); base.position.z = 0.0008;
     gr.add(dish, liq, base);
     // a light box in front and to the left, facing the film
@@ -1179,7 +1179,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const up = slide(0.22); up.position.set(L / 2, 0, SLT / 2); g.wTop.add(up);
     g.wedgeTex = filmTex(2048, 2); g.wedgeTex.t.minFilter = THREE.LinearFilter;
     const fr = new THREE.Mesh(new THREE.PlaneGeometry(L, SLW * 0.999), new THREE.MeshBasicMaterial({ map: g.wedgeTex.t })); fr.position.set(L / 2, 0, 0.00003); g.wTop.add(fr);
-    g.spacer = new THREE.Mesh(new THREE.BoxGeometry(0.003, SLW, 1), g.mat({ roughness: 0.4, metalness: 0.3 }, ['#d9dde2', '#a6adb6'])); gr.add(g.spacer);
+    g.spacer = new THREE.Mesh(new THREE.BoxGeometry(0.003, SLW, 1), g.mat({ roughness: 0.4, metalness: 0.3 }, ['#e1deda', '#b5afa7'])); gr.add(g.spacer);
     // a millimeter rule along the front edge, 0 at the touching edge
     const rule = K.ruler(g.st, { len: L, from: 0, to: WEDGE_L, unit: 'mm', step: 1, w: 0.009 }), rg = new THREE.Group(); rg.add(rule); rg.position.set(0, -SLW / 2 - 0.007, 0.002); gr.add(rg);
     // the lamp behind, and a glass plate at 45° above the slides that sends its light straight down
@@ -1199,7 +1199,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     g.lensM = g.glassM(0.26); g.lens = null;
     const cp = []; for (let i = 0; i < 96; i++) cp.push(new THREE.Vector3(Math.cos(i / 96 * 2 * Math.PI), Math.sin(i / 96 * 2 * Math.PI), 0));
     g.nRing = new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(cp), new THREE.LineBasicMaterial({ color: 0x2b60b5 })); g.nRing.position.z = PLZ + 0.00008; gr.add(g.nRing);
-    g.st.onTheme(() => { g.nRing.material.color = new THREE.Color(T.accent || '#2b60b5'); });
+    g.st.onTheme(() => { g.nRing.material.color = new THREE.Color(T.accent || '#c4811c'); });
     // the microscope: a pillar at the back, an arm, the tube with its objective, eyepiece and focus knob
     const tz0 = 0.075, tz1 = 0.2;
     gr.add(K.box(0.06, 0.05, 0.01, g.caseM, 0, 0.085, 0), K.rod([0, 0.085, 0.01], [0, 0.085, 0.24], 0.008, g.steelM));

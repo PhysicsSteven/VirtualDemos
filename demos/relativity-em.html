@@ -17,37 +17,37 @@
 <style>
 /* Layout: a 3D stage (wire, point charge or field calculator) over a strip that tells the current frame's story; instrument rail on the right; stacks on phones. */
 :root {
-  --bg: #e9edf2;
-  --surface: #f8fafc;
-  --canvas: #fcfdfe;
-  --ink: #17202b;
-  --muted: #5a6575;
-  --line: #d3d9e2;
-  --grid: #e6ebf1;
-  --grid-strong: #cfd7e1;
+  --bg: #f1eeea;
+  --surface: #fcfaf8;
+  --canvas: #fefdfc;
+  --ink: #2a2219;
+  --muted: #73695c;
+  --line: #e1dbd4;
+  --grid: #f0ece7;
+  --grid-strong: #e0d9d0;
   --pos: #c23f2c;
   --neg: #2b60b5;
   --equi: #a7740b;
-  --accent: #2b60b5;
+  --accent: #c4811c;
   --bfield: #7a45b8;
   --efield: #b35818;
   --force: #16815c;
   --frame: #0f7c8c;
-  --wire: #8b97a6;
+  --wire: #a49a8d;
   --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
-    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-    --equi: #e2b350; --accent: #69a0ff; --bfield: #bb94ff; --efield: #f59152; --force: #4fd1a0; --frame: #4cc3d4; --wire: #6d7a8b; color-scheme: dark;
+    --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
+    --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+    --equi: #e2b350; --accent: #fbc26d; --bfield: #bb94ff; --efield: #f59152; --force: #4fd1a0; --frame: #4cc3d4; --wire: #897e6f; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
-  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-  --equi: #e2b350; --accent: #69a0ff; --bfield: #bb94ff; --efield: #f59152; --force: #4fd1a0; --frame: #4cc3d4; --wire: #6d7a8b; color-scheme: dark;
+  --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
+  --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+  --equi: #e2b350; --accent: #fbc26d; --bfield: #bb94ff; --efield: #f59152; --force: #4fd1a0; --frame: #4cc3d4; --wire: #897e6f; color-scheme: dark;
 }
 :root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
@@ -1167,7 +1167,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       cyl: new THREE.CylinderGeometry(1, 1, 1, 14), cone: new THREE.ConeGeometry(1, 1, 18), sph: new THREE.SphereGeometry(1, 20, 14),
       mats: [], arrows: [] });
     buildRoom(); buildWire(); buildPoint(); buildXform(); buildMagnet();
-    KS.onTheme(() => { if (!G.on3d) { KS.hemi.intensity = 0.85; KS.sun.intensity = 0.6; KS.hemi.groundColor.set(0x6f7a88); } });
+    KS.onTheme(() => { if (!G.on3d) { KS.hemi.intensity = 0.85; KS.sun.intensity = 0.6; KS.hemi.groundColor.set(0x867d71); } });
     G.W.q.castShadow = true;   /* the ions and electrons sit inside the copper, whose shadow already covers theirs */
     bind3D(el);
     return true;
@@ -1206,9 +1206,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const KS = G.KS, R = G.room = new THREE.Group(); G.scene.add(R);
     const wood = VD3K.material(KS, { roughness: 0.8, metalness: 0 }, ['#c9b391', '#3b3229']);
     const edge = VD3K.material(KS, { roughness: 0.7, metalness: 0 }, ['#a88d66', '#2c251e']);
-    const wall = VD3K.material(KS, { roughness: 1, metalness: 0 }, ['#e3e8ee', '#18202a']);
-    KS.onTheme((dk) => { wall.emissive.set(dk ? '#0e141b' : '#6d7682'); });   /* the wall faces away from the sun: lift it a little */
-    const skirt = VD3K.material(KS, { roughness: 0.9, metalness: 0 }, ['#c3cad3', '#222b36']);
+    const wall = VD3K.material(KS, { roughness: 1, metalness: 0 }, ['#ede9e4', '#292219']);
+    KS.onTheme((dk) => { wall.emissive.set(dk ? '#1a150f' : '#80796f'); });   /* the wall faces away from the sun: lift it a little */
+    const skirt = VD3K.material(KS, { roughness: 0.9, metalness: 0 }, ['#d2ccc4', '#342d24']);
     R.top = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), [edge, edge, edge, edge, wood, edge]); R.top.receiveShadow = true;
     R.wall = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), wall); R.wall.rotation.x = Math.PI / 2; R.wall.receiveShadow = true;
     R.skirt = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), skirt);
@@ -1249,7 +1249,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function buildPosts(g) {
     const KS = G.KS, n = 140;
     const ceramic = VD3K.material(KS, { roughness: 0.35, metalness: 0 }, ['#f2efe8', '#cfcac0']);
-    const steel = VD3K.material(KS, { roughness: 0.4, metalness: 0.6 }, ['#8e98a3', '#6c7682']);
+    const steel = VD3K.material(KS, { roughness: 0.4, metalness: 0.6 }, ['#a19a90', '#80786e']);
     const stem = new THREE.InstancedMesh(new THREE.CylinderGeometry(0.16, 0.22, 1, 20).rotateX(Math.PI / 2).translate(0, 0, 0.5), ceramic, n);
     const arm = new THREE.InstancedMesh(new THREE.BoxGeometry(1, 1, 1), steel, n);
     const foot = new THREE.InstancedMesh(new THREE.CylinderGeometry(0.42, 0.46, 0.14, 24).rotateX(Math.PI / 2), steel, n);

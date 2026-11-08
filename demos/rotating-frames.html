@@ -16,9 +16,9 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
 /* only what this demo needs beyond demos/lib/vd.css: its colors, the picture and the Set up card's place */
-:root { --table: #d9cdb6; --tableLine: #a8977a; --ball: #c0392b; --cor: #1f6fd1; --cen: #2e8b57; --fric: #9a5bd0; --room: #6b7787; --trail: #d9822b; --floor: #e8e2d6; --brass: #b08a3e; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --table: #3b3428; --tableLine: #6e604a; --ball: #ff6b5a; --cor: #6aa8ff; --cen: #5fd18f; --fric: #c99bff; --room: #9aa6b6; --trail: #ffae5c; --floor: #262420; --brass: #d8b45a; } }
-:root[data-theme="dark"] { --table: #3b3428; --tableLine: #6e604a; --ball: #ff6b5a; --cor: #6aa8ff; --cen: #5fd18f; --fric: #c99bff; --room: #9aa6b6; --trail: #ffae5c; --floor: #262420; --brass: #d8b45a; }
+:root { --table: #d9cdb6; --tableLine: #a8977a; --ball: #c0392b; --cor: #1f6fd1; --cen: #2e8b57; --fric: #9a5bd0; --room: #857b6d; --trail: #d9822b; --floor: #e8e2d6; --brass: #b08a3e; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --table: #3b3428; --tableLine: #6e604a; --ball: #ff6b5a; --cor: #6aa8ff; --cen: #5fd18f; --fric: #c99bff; --room: #b4aa9c; --trail: #ffae5c; --floor: #262420; --brass: #d8b45a; } }
+:root[data-theme="dark"] { --table: #3b3428; --tableLine: #6e604a; --ball: #ff6b5a; --cor: #6aa8ff; --cen: #5fd18f; --fric: #c99bff; --room: #b4aa9c; --trail: #ffae5c; --floor: #262420; --brass: #d8b45a; }
 .stage { position: relative; display: grid; grid-template-rows: auto minmax(480px, 1fr); min-height: 620px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); }
 .scene { position: relative; min-height: 0; }
@@ -497,7 +497,7 @@
     const sc = S3.scene, M = (o, c) => VD3K.material(S3, o, c);
     /* --- the turntable room --- */
     const tg = new THREE.Group(); sc.add(tg);
-    const floor = new THREE.Mesh(new THREE.PlaneGeometry(14, 14), M({ roughness: 0.95 }, ['#cfd3d8', '#22272e'])); floor.receiveShadow = true; tg.add(floor);
+    const floor = new THREE.Mesh(new THREE.PlaneGeometry(14, 14), M({ roughness: 0.95 }, ['#d7d4d0', '#2d2923'])); floor.receiveShadow = true; tg.add(floor);
     const disc = new THREE.Group(); tg.add(disc);
     const top = new THREE.Mesh(new THREE.CylinderGeometry(TR, TR, 0.12, 96), M({ roughness: 0.7 }, ['#d9cdb6', '#5a4e3c'])); top.rotation.x = Math.PI / 2; top.position.z = 0.06; top.receiveShadow = true; top.castShadow = true; disc.add(top);
     const lm = new THREE.LineBasicMaterial({ color: '#8a7a5e' });
@@ -507,10 +507,10 @@
     const fig = (col) => { const g = new THREE.Group(), m = new THREE.MeshStandardMaterial({ color: col, roughness: 0.8 }), sk = new THREE.MeshStandardMaterial({ color: '#c99a78', roughness: 0.7 });
       const b = new THREE.Mesh(new THREE.CylinderGeometry(0.17, 0.14, 1.2, 14), m); b.rotation.x = Math.PI / 2; b.position.z = 0.6; b.castShadow = true;
       const h = new THREE.Mesh(new THREE.SphereGeometry(0.12, 16, 12), sk); h.position.z = 1.34; h.castShadow = true; g.add(b, h); return g; };
-    const rider = fig('#2e8b57'), thrower = fig('#56657a'); disc.add(rider); tg.add(thrower);
+    const rider = fig('#2e8b57'), thrower = fig('#776a59'); disc.add(rider); tg.add(thrower);
     const door = new THREE.Mesh(new THREE.BoxGeometry(1.0, 0.08, 2.1), M({ roughness: 0.8 }, ['#8a6a4a', '#5c4632'])); door.position.set(0, TR * 1.9, 1.05); tg.add(door);
     const ballM = new THREE.Mesh(new THREE.SphereGeometry(0.09, 24, 16), new THREE.MeshStandardMaterial({ color: '#c0392b', roughness: 0.4 })); ballM.castShadow = true; tg.add(ballM);
-    const NT = 1501, trailRoom = new THREE.Line(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({ color: '#7d8898' })), trailTab = new THREE.Line(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({ color: '#d9822b' }));
+    const NT = 1501, trailRoom = new THREE.Line(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({ color: '#968c7f' })), trailTab = new THREE.Line(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({ color: '#d9822b' }));
     trailRoom.geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(NT * 3), 3)); trailTab.geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(NT * 3), 3));
     tg.add(trailRoom); disc.add(trailTab); trailRoom.frustumCulled = trailTab.frustumCulled = false;
     const arC = new THREE.ArrowHelper(new THREE.Vector3(1, 0, 0), new THREE.Vector3(), 1, 0x1f6fd1, 0.12, 0.08), arF = new THREE.ArrowHelper(new THREE.Vector3(1, 0, 0), new THREE.Vector3(), 1, 0x2e8b57, 0.12, 0.08), arR = new THREE.ArrowHelper(new THREE.Vector3(1, 0, 0), new THREE.Vector3(), 1, 0x9a5bd0, 0.12, 0.08);
@@ -521,13 +521,13 @@
     const rail = new THREE.Mesh(new THREE.TorusGeometry(4.6, 0.05, 8, 96), M({ metalness: 0.6, roughness: 0.35 }, ['#9b8350', '#b8995a'])); rail.position.z = 0.9; fg.add(rail);
     for (let j = 0; j < 16; j++) { const a = j * Math.PI / 8, post = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.9, 8), rail.material); post.rotation.x = Math.PI / 2; post.position.set(4.6 * Math.cos(a), 4.6 * Math.sin(a), 0.45); fg.add(post); }
     const sector = new THREE.Mesh(new THREE.BufferGeometry(), new THREE.MeshBasicMaterial({ color: '#d9822b', transparent: true, opacity: 0.25, side: THREE.DoubleSide })); sector.position.z = 0.01; fg.add(sector);
-    const plane0 = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3()]), new THREE.LineDashedMaterial({ color: '#8a8f99', dashSize: 0.2, gapSize: 0.15 })); plane0.position.z = 0.015; fg.add(plane0);
+    const plane0 = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3()]), new THREE.LineDashedMaterial({ color: '#98928b', dashSize: 0.2, gapSize: 0.15 })); plane0.position.z = 0.015; fg.add(plane0);
     const planeN = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3()]), new THREE.LineBasicMaterial({ color: '#e8e2d6' })); planeN.position.z = 0.016; fg.add(planeN);
     const NPEG = 48, pegs = []; for (let j = 0; j < NPEG; j++) { const pg = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.16, 8), M({ metalness: 0.5, roughness: 0.4 }, ['#b08a3e', '#d8b45a'])); pg.castShadow = true; fg.add(pg); pegs.push(pg); }
     const bob = new THREE.Mesh(new THREE.SphereGeometry(0.17, 32, 20), new THREE.MeshStandardMaterial({ color: '#c9a656', metalness: 0.75, roughness: 0.3 })); bob.castShadow = true; fg.add(bob);
-    const wire = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3()]), new THREE.LineBasicMaterial({ color: '#9aa3ad' })); fg.add(wire);
+    const wire = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3()]), new THREE.LineBasicMaterial({ color: '#aca59b' })); fg.add(wire);
     const NF = 1201, ftrail = new THREE.Line(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({ color: '#d9822b' })); ftrail.geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(NF * 3), 3)); ftrail.frustumCulled = false; ftrail.position.z = 0.02; fg.add(ftrail);
-    const lab = (t) => VD3K.label(t, { size: 0.45, color: '#e6ebf2', bg: 'rgba(20,24,30,0.6)' });
+    const lab = (t) => VD3K.label(t, { size: 0.45, color: '#f1ede7', bg: 'rgba(20,24,30,0.6)' });
     const cps = [['N', 0, 1], ['E', 1, 0], ['S', 0, -1], ['W', -1, 0]].map(([t, x, y]) => { const l = lab(t); l.position.set(x * 5.3, y * 5.3, 0.4); fg.add(l); return l; });
     const o = { th: -Math.PI / 2 - 0.55, ph: 0.85, zoom: 1 };
     S3.orbit(S3.el, o, () => {}, { zMin: 0.4, zMax: 2.5, phMin: 0.05, phMax: 1.45 }); S3.el.tabIndex = 0;

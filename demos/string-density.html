@@ -49,9 +49,9 @@ table.rows input:focus { border-color: var(--accent); }
 .chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
 @media (max-width: 820px) { .chips button { min-height: 36px; } }
 .readout dd.warn { color: var(--pos); }
-:root { --wood: #d8bf98; --wood-line: #c3a77c; --metal: #9aa4b0; --metal-hi: #c9d0d9; --string: #b4532a; --env: rgba(180, 83, 42, 0.18); --brass: #b98f2e; --box: #3b4656; --rule: #f1e3b5; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --wood: #5b4a33; --wood-line: #6d5a3f; --metal: #7d8793; --metal-hi: #a3adb9; --string: #f08a55; --env: rgba(240, 138, 85, 0.20); --brass: #d6ad4a; --box: #2c3542; --rule: #4d4630; } }
-:root[data-theme="dark"] { --wood: #5b4a33; --wood-line: #6d5a3f; --metal: #7d8793; --metal-hi: #a3adb9; --string: #f08a55; --env: rgba(240, 138, 85, 0.20); --brass: #d6ad4a; --box: #2c3542; --rule: #4d4630; }
+:root { --wood: #d8bf98; --wood-line: #c3a77c; --metal: #aea69c; --metal-hi: #d8d2ca; --string: #b4532a; --env: rgba(180, 83, 42, 0.18); --brass: #b98f2e; --box: #544a3d; --rule: #f1e3b5; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --wood: #5b4a33; --wood-line: #6d5a3f; --metal: #91897f; --metal-hi: #b7afa5; --string: #f08a55; --env: rgba(240, 138, 85, 0.20); --brass: #d6ad4a; --box: #40382e; --rule: #4d4630; } }
+:root[data-theme="dark"] { --wood: #5b4a33; --wood-line: #6d5a3f; --metal: #91897f; --metal-hi: #b7afa5; --string: #f08a55; --env: rgba(240, 138, 85, 0.20); --brass: #d6ad4a; --box: #40382e; --rule: #4d4630; }
 .fine { display: flex; gap: 6px; flex-wrap: wrap; }
 .fine .btn { padding: 3px 9px; font-family: var(--font-mono); font-size: 0.82rem; }
 .readout dd .ok { font-family: var(--font-ui); font-size: 0.85rem; font-weight: 400; color: var(--muted); }
@@ -61,30 +61,30 @@ table.rows input:focus { border-color: var(--accent); }
 .scene { position: absolute; inset: 0; }
 .shelf { position: absolute; left: 12px; bottom: 12px; right: 190px; z-index: 2; display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px; pointer-events: none; }
 .shelf > * { pointer-events: auto; }
-.gen { background: var(--box); color: #e3e8ef; border-radius: 10px; padding: 10px 12px; display: flex; flex-direction: column; gap: 8px; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.25); }
+.gen { background: var(--box); color: #eeeae4; border-radius: 10px; padding: 10px 12px; display: flex; flex-direction: column; gap: 8px; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.25); }
 .gen-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-.gen-title { font-size: 0.78rem; font-weight: 700; color: #c9d0d9; }
+.gen-title { font-size: 0.78rem; font-weight: 700; color: #d8d2ca; }
 .gen-lcd { font-family: var(--font-mono); font-weight: 600; font-size: 1.35rem; color: #7ee0a0; background: #0b1a12; border-radius: 5px; padding: 2px 10px; min-width: 7.2ch; text-align: right; font-variant-numeric: tabular-nums; }
 .gen-knobs { display: flex; align-items: center; gap: 12px; }
-.knobwrap { display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 0.72rem; color: #c9d0d9; }
+.knobwrap { display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 0.72rem; color: #d8d2ca; }
 .knob { position: relative; width: 52px; height: 52px; border-radius: 50%; cursor: grab; touch-action: none;
-  background: radial-gradient(circle at 38% 32%, #8b96a4, #4a5462 62%, #39414d); box-shadow: 0 0 0 3px #232a34, 0 2px 4px rgba(0, 0, 0, 0.5); }
+  background: radial-gradient(circle at 38% 32%, #a2998d, #60574c 62%, #4c443b); box-shadow: 0 0 0 3px #332c24, 0 2px 4px rgba(0, 0, 0, 0.5); }
 .knob:active { cursor: grabbing; }
-.knob-mark { position: absolute; left: 50%; top: 5px; width: 3px; height: 15px; margin-left: -1.5px; border-radius: 2px; background: #f1f4f8; transform-origin: 50% 21px; }
+.knob-mark { position: absolute; left: 50%; top: 5px; width: 3px; height: 15px; margin-left: -1.5px; border-radius: 2px; background: #f7f5f2; transform-origin: 50% 21px; }
 .knob:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
 .gen .fine { display: grid; grid-template-columns: auto auto; gap: 4px; }
-.gen .fine .btn { background: #39414d; color: #e3e8ef; border-color: #4a5462; }
+.gen .fine .btn { background: #4c443b; color: #eeeae4; border-color: #60574c; }
 .tray { background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; display: flex; flex-direction: column; gap: 8px; min-width: 0; flex: 1 1 300px; max-width: 600px; }
 .tray-title { font-size: 0.78rem; font-weight: 700; color: var(--muted); }
 .pieces { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 6px; }
 .pieces button { --w: 40px; --h: 14px; position: relative; width: var(--w); height: var(--h); min-height: 0; padding: 0; border: 0; border-radius: 3px; cursor: grab; touch-action: none;
-  font: 700 0.7rem/1 var(--font-mono); color: #17202b; background: linear-gradient(#c9d0d9, #9aa4b0); box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.18); }
+  font: 700 0.7rem/1 var(--font-mono); color: #2a2219; background: linear-gradient(#d8d2ca, #aea69c); box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.18); }
 .pieces button.brass { background: linear-gradient(#e2c26a, #b98f2e); }
 .pieces button span { position: relative; z-index: 1; }
 .tray-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; }
 .tray-foot .masslist { flex: 1 1 100%; }
 .vhandle { position: absolute; z-index: 2; border-radius: 6px; cursor: ew-resize; touch-action: none; display: flex; align-items: flex-end; justify-content: center; }
-.vhandle .grip { font-size: 0.8rem; color: #c9d0d9; line-height: 1; padding-bottom: 4px; pointer-events: none; }
+.vhandle .grip { font-size: 0.8rem; color: #d8d2ca; line-height: 1; padding-bottom: 4px; pointer-events: none; }
 .vhandle:hover, .vhandle.drag { box-shadow: 0 0 0 2px var(--accent); }
 .vhandle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .ghost { position: fixed; z-index: 50; pointer-events: none; transform: translate(-50%, -50%); opacity: 0.85; }
@@ -619,13 +619,13 @@ table.rows input:focus { border-color: var(--accent); }
     /* pulley on a rod clamped to the table's edge */
     const metalM = Ms({ roughness: 0.35, metalness: 0.5 }), hiM = Ms({ roughness: 0.3, metalness: 0.6 });
     const rod = new THREE.Mesh(new THREE.CylinderGeometry(0.005, 0.005, SH - PR + 0.04, 16).rotateX(Math.PI / 2), metalM); rod.position.set(0, 0.03, (SH - PR - 0.04) / 2);
-    const clampB = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.05, 0.06), Ms({ color: 0x3b4656, roughness: 0.5 })); clampB.position.set(0.003, 0.03, -0.02);
+    const clampB = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.05, 0.06), Ms({ color: 0x544a3d, roughness: 0.5 })); clampB.position.set(0.003, 0.03, -0.02);
     const wheel = new THREE.Mesh(alongY(new THREE.CylinderGeometry(PR, PR, 0.01, 40)), hiM); wheel.position.set(0, 0, SH - PR);
     const axle = new THREE.Mesh(alongY(new THREE.CylinderGeometry(0.004, 0.004, 0.06, 12)), metalM); axle.position.set(0, 0.025, SH - PR);
     /* vibrator: a box on the table with its blade rising to the string */
-    const vib3 = new THREE.Group(), boxM = Ms({ color: 0x3b4656, roughness: 0.45 });   /* about the size of a lab string vibrator */
+    const vib3 = new THREE.Group(), boxM = Ms({ color: 0x544a3d, roughness: 0.45 });   /* about the size of a lab string vibrator */
     const body = new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.08, 0.075), boxM); body.position.set(-0.012, 0, 0.0375);
-    const plate = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.06, 0.002), Ms({ color: 0x9aa4b0, roughness: 0.4, metalness: 0.4 })); plate.position.set(-0.012, -0.0405, 0.04); plate.rotation.x = Math.PI / 2;
+    const plate = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.06, 0.002), Ms({ color: 0xaea69c, roughness: 0.4, metalness: 0.4 })); plate.position.set(-0.012, -0.0405, 0.04); plate.rotation.x = Math.PI / 2;
     const blade = new THREE.Mesh(new THREE.BoxGeometry(0.004, 0.012, 1), hiM); vib3.add(body, plate, blade);
     /* the string: the vibrating part, the blur band a real eye sees, and the part over the pulley down to the hanger */
     const strM = Ms({ roughness: 0.5 }), sGeo = tube3(N3, 0.0018, 6), str = new THREE.Mesh(sGeo, strM);
@@ -637,7 +637,7 @@ table.rows input:focus { border-color: var(--accent); }
     const hook = new THREE.Mesh(new THREE.TorusGeometry(0.006, 0.0012, 8, 20, Math.PI * 1.5).rotateX(Math.PI / 2).rotateY(Math.PI / 2), metalM); hook.position.set(PR, 0, Z_HOOK + 0.004);
     const hanger = new THREE.Group(); hanger.position.set(PR, 0, Z_HOOK);
     sc.add(table, rule, rod, clampB, wheel, axle, vib3, str, env, down, hook, hanger);
-    g3 = { r, el, sc, cam, hemi, woodM, ruleCan, ruleTex, rule, vib3, blade, strM, sGeo, envM, envPos, envGeo, hanger, metalM, steelM: Ms({ color: 0xa9b1bb, roughness: 0.35, metalness: 0.55 }), brassM: Ms({ color: 0xc9a040, roughness: 0.35, metalness: 0.55 }), xs: new Float32Array(N3 + 1), zs: new Float32Array(N3 + 1), stack: [0, 0], base: 0 };
+    g3 = { r, el, sc, cam, hemi, woodM, ruleCan, ruleTex, rule, vib3, blade, strM, sGeo, envM, envPos, envGeo, hanger, metalM, steelM: Ms({ color: 0xbab3aa, roughness: 0.35, metalness: 0.55 }), brassM: Ms({ color: 0xc9a040, roughness: 0.35, metalness: 0.55 }), xs: new Float32Array(N3 + 1), zs: new Float32Array(N3 + 1), stack: [0, 0], base: 0 };
     VD3.orbit(can, G3.o, () => { if (use3()) draw(); }, { grab: (e) => !use3() || onStack(e), phMin: 0.7, phMax: 1.5, zMin: 0.7, zMax: 3, keys: false });
     return true;
   }
@@ -662,8 +662,8 @@ table.rows input:focus { border-color: var(--accent); }
   function draw3() {
     const g = g3, p = ps(), narrow = W < 620, overlay = getComputedStyle(shelf).position === 'absolute', shelfR = shelf.getBoundingClientRect(), cr = can.getBoundingClientRect();
     if (G3.w !== W || G3.h !== Hh) { G3.w = W; G3.h = Hh; g.r.setSize(W, Hh); }
-    const key = [T.canvas, T.wood, T.string, T.env].join(); if (G3.key !== key) { G3.key = key; G3.rkey = ''; const dk = VD3.dark(); g.sc.background = col3(T.canvas, '#fbfcfd');
-      g.hemi.groundColor = col3(dk ? '#1c222a' : '#8c8a84', '#8c8a84'); g.woodM.color = col3(T.wood, '#d8bf98'); g.strM.color = g.envM.color = col3(T.string, '#b4532a'); }
+    const key = [T.canvas, T.wood, T.string, T.env].join(); if (G3.key !== key) { G3.key = key; G3.rkey = ''; const dk = VD3.dark(); g.sc.background = col3(T.canvas, '#fdfcfb');
+      g.hemi.groundColor = col3(dk ? '#29241d' : '#8c8a84', '#8c8a84'); g.woodM.color = col3(T.wood, '#d8bf98'); g.strM.color = g.envM.color = col3(T.string, '#b4532a'); }
     const rk = S.L.toFixed(3) + VD3.dark(); if (G3.rkey !== rk) { G3.rkey = rk; rule3(); }
     const mk = S.masses.join(); if (G3.mkey !== mk) { G3.mkey = mk; hanger3(); }
     /* the camera follows the string's length, but holds still while the vibrator is being dragged */

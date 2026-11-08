@@ -3,7 +3,7 @@
    Load it first in <head>, as a plain blocking script, before any stylesheet or other script:
      <script src="lib/theme.js"></script>
    It reads the saved choice (localStorage 'vd-theme': 'light', 'dark' or 'auto' for Browser default; nothing saved
-   means Day, the lab look with the lights up, the site default since the 2026-11-08 redesign; it was Dark from 2026-10-25) and sets
+   means Day, the warm lab look with the lights up, the site default since the 2026-11-08 redesign; it was Dark from 2026-10-25) and sets
    data-theme on <html> before the page paints, so pages do not flash. Every page already styles itself from
    :root tokens with a dark @media block guarded by :not([data-theme="light"]) and a [data-theme="dark"] block.
 
@@ -153,10 +153,10 @@
   });
 
   /* the switch */
-  var CSS = '.vd-theme{display:inline-flex;align-items:center;gap:5px;margin:0;font:inherit;font-size:.82rem;font-weight:700;color:var(--muted,#5a6575);white-space:nowrap}'
+  var CSS = '.vd-theme{display:inline-flex;align-items:center;gap:5px;margin:0;font:inherit;font-size:.82rem;font-weight:700;color:var(--muted,#73695c);white-space:nowrap}'
     + '.vd-theme svg{width:14px;height:14px;flex:none;fill:currentColor}'
-    + '.vd-theme select{font:inherit;font-weight:700;color:inherit;background:var(--surface,#f8fafc);border:1px solid var(--line,#d3d9e2);border-radius:6px;padding:4px 6px;cursor:pointer;max-width:11em}'
-    + '.vd-theme select:focus-visible{outline:2px solid var(--accent,#2b60b5);outline-offset:1px}'
+    + '.vd-theme select{font:inherit;font-weight:700;color:inherit;background:var(--surface,#fcfaf8);border:1px solid var(--line,#e1dbd4);border-radius:6px;padding:4px 6px;cursor:pointer;max-width:11em}'
+    + '.vd-theme select:focus-visible{outline:2px solid var(--accent,#c4811c);outline-offset:1px}'
     + '.vd-theme-hero{position:absolute;top:14px;right:0;z-index:2}'
     + '.vd-theme-doc{float:right;margin:0 8px 8px 12px}'
     + '@media (max-width:640px){.vd-theme select{min-height:36px}.vd-theme-hero{position:static;display:flex;justify-content:flex-end;margin:-20px 0 10px}.markdown-body>.vd-theme-doc{float:none;display:flex;justify-content:flex-end;margin:0 0 4px}}'

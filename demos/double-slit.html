@@ -18,36 +18,36 @@
 <style>
 /* Layout: one canvas with the apparatus (in perspective on a darkened bench, or seen from above), the detector screen seen face on, and a histogram of hits, all sharing the screen coordinate y; instrument rail on the right; stacks on phones. */
 :root {
-  --bg: #e9edf2;
-  --surface: #f8fafc;
-  --canvas: #fcfdfe;
-  --ink: #17202b;
-  --muted: #5a6575;
-  --line: #d3d9e2;
-  --grid: #e6ebf1;
-  --grid-strong: #cfd7e1;
+  --bg: #f1eeea;
+  --surface: #fcfaf8;
+  --canvas: #fefdfc;
+  --ink: #2a2219;
+  --muted: #73695c;
+  --line: #e1dbd4;
+  --grid: #f0ece7;
+  --grid-strong: #e0d9d0;
   --pos: #c23f2c;
   --neg: #2b60b5;
   --equi: #a7740b;
-  --accent: #2b60b5;
-  --wall: #4a5566;
-  --scr: #0a0f15;
-  --scr-edge: #2a3442;
-  --lab: #0d1218;
+  --accent: #c4811c;
+  --wall: #645a4c;
+  --scr: #14100b;
+  --scr-edge: #40372c;
+  --lab: #17130e;
   --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
-    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-    --equi: #e2b350; --accent: #69a0ff; --wall: #8693a5; --scr: #05080c; --scr-edge: #344052; --lab: #080b10; color-scheme: dark;
+    --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
+    --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+    --equi: #e2b350; --accent: #fbc26d; --wall: #a39788; --scr: #0b0906; --scr-edge: #504536; --lab: #0f0c09; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
-  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-  --equi: #e2b350; --accent: #69a0ff; --wall: #8693a5; --scr: #05080c; --scr-edge: #344052; --lab: #080b10; color-scheme: dark;
+  --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
+  --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+  --equi: #e2b350; --accent: #fbc26d; --wall: #a39788; --scr: #0b0906; --scr-edge: #504536; --lab: #0f0c09; color-scheme: dark;
 }
 :root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
@@ -738,7 +738,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const g = (n) => cs.getPropertyValue(n).trim();
     T = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'),
       gridStrong: g('--grid-strong'), pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), accent: g('--accent'),
-      wall: g('--wall'), scr: g('--scr'), lab: g('--lab') || '#0d1218', scrEdge: g('--scr-edge'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' };
+      wall: g('--wall'), scr: g('--scr'), lab: g('--lab') || '#17130e', scrEdge: g('--scr-edge'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' };
   }
   function lamRGB(l) {
     if (l < 380 || l > 750) return [196, 201, 209];
@@ -825,7 +825,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   let view3d = new URLSearchParams(location.search).get('view') !== 'flat', v3 = null;   /* ?view=flat opens the flat view, as on the other 3D demos */
   const cam = { yaw: 0.95, pitch: 0.5, user: false };
   const B3 = { xs: -2.05, xnd: -1.35, xl: 2.55, hp: 1.45, zp: 0.52, th: 0.07, zsl: 0.36, hs: 1.55, floor: -2.1 };
-  const LAB = { ink: '#e6ebf1', muted: '#a3afbe', halo: 'rgba(6,9,13,0.78)' };
+  const LAB = { ink: '#f0ece7', muted: '#bcb2a5', halo: 'rgba(6,9,13,0.78)' };
   const clampCam = () => { cam.yaw = Math.max(0.3, Math.min(1.25, cam.yaw)); cam.pitch = Math.max(0.06, Math.min(0.75, cam.pitch)); };
   function labBox() {
     const A = LY.app, ps = projScale();
@@ -876,10 +876,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // an optical post from an object down to the table (or the floor of the vacuum chamber)
   function post3(P, x, yTop, z = 0) {
     const base = []; for (let i = 0; i < 20; i++) { const f = 2 * Math.PI * i / 20; base.push(P(x + 0.17 * Math.cos(f), B3.floor, z + 0.17 * Math.sin(f))); }
-    pPoly(base); ctx.fillStyle = '#20262e'; ctx.fill();
+    pPoly(base); ctx.fillStyle = '#2d2821'; ctx.fill();
     const a = P(x, yTop, z), b = P(x, B3.floor, z), w = Math.max(2, 0.085 * a[2]);
     const gr = ctx.createLinearGradient(a[0] - w / 2, 0, a[0] + w / 2, 0);
-    gr.addColorStop(0, '#3a414b'); gr.addColorStop(0.45, '#a9b2bd'); gr.addColorStop(1, '#3f4650');
+    gr.addColorStop(0, '#4a433b'); gr.addColorStop(0.45, '#bbb4aa'); gr.addColorStop(1, '#4f4840');
     ctx.strokeStyle = gr; ctx.lineWidth = w; ctx.lineCap = 'butt'; ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke();
   }
   // set the canvas transform so that (u, v) drawn on the canvas lands at o + u·U + v·V in the world (affine, for small patches)
@@ -902,10 +902,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function drawTable3D(P) {
     const x0 = -3.9, x1 = 3.3, z0 = -1.8, z1 = 1.8, y = B3.floor, t = 0.2;
     const a = P(x0, y, z1), b = P(x1, y, z0), gr = ctx.createLinearGradient(a[0], a[1], b[0], b[1]);
-    gr.addColorStop(0, '#2b323b'); gr.addColorStop(1, '#171b21');
+    gr.addColorStop(0, '#3a342c'); gr.addColorStop(1, '#201d18');
     quad(P, [x0, y, z0], [x1, y, z0], [x1, y, z1], [x0, y, z1], gr);
-    quad(P, [x0, y, z1], [x1, y, z1], [x1, y - t, z1], [x0, y - t, z1], '#101318');
-    quad(P, [x0, y, z0], [x0, y, z1], [x0, y - t, z1], [x0, y - t, z0], '#0c0f13');
+    quad(P, [x0, y, z1], [x1, y, z1], [x1, y - t, z1], [x0, y - t, z1], '#171411');
+    quad(P, [x0, y, z0], [x0, y, z1], [x0, y - t, z1], [x0, y - t, z0], '#12100d');
     // tapped holes on a 25 mm style grid
     ctx.fillStyle = 'rgba(0,0,0,0.6)'; ctx.beginPath();
     const fl = Math.max(0.25, Math.sin(cam.pitch + 0.12));
@@ -936,10 +936,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const x = B3.xl, hs = B3.hs, fr = 0.1, dep = S.kind === 'photon' ? 0.6 : 0.14;
     const Y0 = -hs - fr, Y1 = hs + fr, Z0 = -zs - fr, Z1 = zs + fr;
     post3(P, x + dep / 2, Y0);
-    quad(P, [x, Y1, Z0], [x + dep, Y1, Z0], [x + dep, Y1, Z1], [x, Y1, Z1], '#59626e');
-    quad(P, [x, Y1, Z1], [x + dep, Y1, Z1], [x + dep, Y0, Z1], [x, Y0, Z1], '#232930');
+    quad(P, [x, Y1, Z0], [x + dep, Y1, Z0], [x + dep, Y1, Z1], [x, Y1, Z1], '#6c655b');
+    quad(P, [x, Y1, Z1], [x + dep, Y1, Z1], [x + dep, Y0, Z1], [x, Y0, Z1], '#2f2a24');
     const a = P(x, Y1, Z0), b = P(x, Y0, Z1), gr = ctx.createLinearGradient(a[0], a[1], b[0], b[1]);
-    gr.addColorStop(0, '#5f6874'); gr.addColorStop(0.5, '#363d46'); gr.addColorStop(1, '#4b535e');
+    gr.addColorStop(0, '#726b61'); gr.addColorStop(0.5, '#453f37'); gr.addColorStop(1, '#5d564c');
     quad(P, [x, Y1, Z0], [x, Y1, Z1], [x, Y0, Z1], [x, Y0, Z0], gr);
     // the detector surface with the grains, mapped onto the plane in small patches
     renderDots();
@@ -970,15 +970,15 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function drawPlate3D(P, slits, ps) {
     const th = B3.th, hp = B3.hp, zp = B3.zp, zl = B3.zsl, xf = -th;
     post3(P, -th / 2, -hp);
-    quad(P, [xf, hp, -zp], [0, hp, -zp], [0, hp, zp], [xf, hp, zp], '#8d96a2');
-    quad(P, [xf, hp, zp], [0, hp, zp], [0, -hp, zp], [xf, -hp, zp], '#2a3038');
+    quad(P, [xf, hp, -zp], [0, hp, -zp], [0, hp, zp], [xf, hp, zp], '#a0998f');
+    quad(P, [xf, hp, zp], [0, hp, zp], [0, -hp, zp], [xf, -hp, zp], '#37322b');
     // front face with the two slots cut through it
     ctx.beginPath();
     const rect = (y0, y1, z0, z1) => { const pts = [P(xf, y1, z0), P(xf, y1, z1), P(xf, y0, z1), P(xf, y0, z0)]; ctx.moveTo(pts[0][0], pts[0][1]); for (let i = 1; i < 4; i++) ctx.lineTo(pts[i][0], pts[i][1]); ctx.closePath(); };
     rect(-hp, hp, -zp, zp);
     for (const sl of slits) rect(sl.lo, sl.hi, -zl, zl);
     const a = P(xf, hp, -zp), b = P(xf, -hp, zp), gr = ctx.createLinearGradient(a[0], a[1], b[0], b[1]);
-    gr.addColorStop(0, '#6b7480'); gr.addColorStop(0.45, '#3e454e'); gr.addColorStop(0.7, '#4a515b'); gr.addColorStop(1, '#2f353d');
+    gr.addColorStop(0, '#7e776d'); gr.addColorStop(0.45, '#4d473f'); gr.addColorStop(0.7, '#5a534b'); gr.addColorStop(1, '#3c3730');
     ctx.fillStyle = gr; ctx.fill('evenodd');
     // fine machining marks on the face
     ctx.save(); ctx.clip('evenodd');
@@ -1004,7 +1004,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.save();
     roundRect(box.x, box.y, box.w, box.h, 8 * ps); ctx.clip();
     const bg = ctx.createLinearGradient(0, box.y, 0, box.y + box.h);
-    bg.addColorStop(0, '#141a22'); bg.addColorStop(1, T.lab);
+    bg.addColorStop(0, '#211c15'); bg.addColorStop(1, T.lab);
     ctx.fillStyle = bg; ctx.fillRect(box.x, box.y, box.w, box.h);
     if (vac) drawTube3D(P, false); else drawTable3D(P);
     // a measuring tape on the table from the slits to the screen: L, not to scale
@@ -1061,7 +1061,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       if (S.det && fl > 0.02 && open) { pPoly(pts); ctx.fillStyle = rgb(sl.i === 1 ? S1 : S2, 0.75 * fl); ctx.fill(); }
       if (!open) {
         const e = 0.05, sp = [P(xf - 0.012, sl.hi + e, -zl - e), P(xf - 0.012, sl.hi + e, zl + e), P(xf - 0.012, sl.lo - e, zl + e), P(xf - 0.012, sl.lo - e, -zl - e)];
-        pPoly(sp); ctx.fillStyle = '#23282f'; ctx.fill(); ctx.strokeStyle = '#ff7660'; ctx.lineWidth = 1.5 * ps; ctx.stroke();
+        pPoly(sp); ctx.fillStyle = '#2e2a24'; ctx.fill(); ctx.strokeStyle = '#ff7660'; ctx.lineWidth = 1.5 * ps; ctx.stroke();
         ctx.beginPath(); ctx.moveTo(sp[0][0], sp[0][1]); ctx.lineTo(sp[2][0], sp[2][1]); ctx.moveTo(sp[1][0], sp[1][1]); ctx.lineTo(sp[3][0], sp[3][1]); ctx.stroke();
       }
       if (hot) { pPoly(pts); ctx.strokeStyle = rgb(hexRGB('#69a0ff'), 0.95); ctx.lineWidth = 2.5 * ps; ctx.stroke(); }
@@ -1078,10 +1078,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (S.det) for (const sl of slits) {
       const zc = (sl.i === 1 ? 1 : -1) * (zl + 0.12), hb = 0.065, x0 = xf - 0.13, fl = slitFlash[sl.i - 1], col = sl.i === 1 ? S1 : S2;
       const cb = P(x0 + 0.06, sl.c - hb, zc), cf = P(x0 - 0.25, B3.floor, zc + 0.15 * (sl.i === 1 ? 1 : -1));
-      ctx.strokeStyle = '#0b0d10'; ctx.lineWidth = Math.max(1.2, 0.025 * cb[2]); ctx.beginPath(); ctx.moveTo(cb[0], cb[1]); ctx.quadraticCurveTo(cb[0], cf[1], cf[0], cf[1]); ctx.stroke();
-      quad(P, [x0, sl.c + hb, zc - hb], [xf, sl.c + hb, zc - hb], [xf, sl.c + hb, zc + hb], [x0, sl.c + hb, zc + hb], '#76808c');
-      quad(P, [x0, sl.c + hb, zc + hb], [xf, sl.c + hb, zc + hb], [xf, sl.c - hb, zc + hb], [x0, sl.c - hb, zc + hb], '#1c2127');
-      quad(P, [x0, sl.c + hb, zc - hb], [x0, sl.c + hb, zc + hb], [x0, sl.c - hb, zc + hb], [x0, sl.c - hb, zc - hb], '#353c45', 'rgba(255,255,255,0.12)', 1);
+      ctx.strokeStyle = '#100e0b'; ctx.lineWidth = Math.max(1.2, 0.025 * cb[2]); ctx.beginPath(); ctx.moveTo(cb[0], cb[1]); ctx.quadraticCurveTo(cb[0], cf[1], cf[0], cf[1]); ctx.stroke();
+      quad(P, [x0, sl.c + hb, zc - hb], [xf, sl.c + hb, zc - hb], [xf, sl.c + hb, zc + hb], [x0, sl.c + hb, zc + hb], '#8a8278');
+      quad(P, [x0, sl.c + hb, zc + hb], [xf, sl.c + hb, zc + hb], [xf, sl.c - hb, zc + hb], [x0, sl.c - hb, zc + hb], '#26221d');
+      quad(P, [x0, sl.c + hb, zc - hb], [x0, sl.c + hb, zc + hb], [x0, sl.c - hb, zc + hb], [x0, sl.c - hb, zc - hb], '#443e36', 'rgba(255,255,255,0.12)', 1);
       const lp = P(x0 - 0.002, sl.c, zc), lr = Math.max(1.6 * ps, 0.028 * lp[2]);
       if (fl > 0.02) { ctx.globalCompositeOperation = 'lighter'; const rr = lr * (2.5 + 4 * fl); ctx.globalAlpha = fl; ctx.drawImage(glowSprite(col), lp[0] - rr, lp[1] - rr, 2 * rr, 2 * rr); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over'; }
       ctx.fillStyle = rgb(col, 0.4 + 0.6 * Math.min(1, fl * 1.5)); ctx.beginPath(); ctx.arc(lp[0], lp[1], lr, 0, 2 * Math.PI); ctx.fill();
@@ -1113,22 +1113,22 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       // neutral density filter that dims the laser to about one photon at a time in the apparatus
       post3(P, B3.xnd, -0.26);
       const nd = circX(P, B3.xnd, 0.26, 32);
-      pPoly(nd); ctx.fillStyle = 'rgba(38,42,50,0.82)'; ctx.fill(); ctx.strokeStyle = '#97a0ab'; ctx.lineWidth = 1.6 * ps; ctx.stroke();
+      pPoly(nd); ctx.fillStyle = 'rgba(38,42,50,0.82)'; ctx.fill(); ctx.strokeStyle = '#aaa298'; ctx.lineWidth = 1.6 * ps; ctx.stroke();
       ctx.save(); planeXf(P, [B3.xnd - 0.002, 0, 0], [0, 0, 0.26], [0, 0.26, 0]); ctx.fillStyle = 'rgba(255,255,255,0.07)'; ctx.beginPath(); ctx.ellipse(-0.25, -0.3, 0.35, 0.18, -0.6, 0, 2 * Math.PI); ctx.fill(); ctx.restore();
       beamSeg(xsrc, B3.xnd, 0.14, 0.85);
       post3(P, xsrc - 0.5, -0.2);
-      cylX(P, xsrc - 1.0, xsrc - 0.06, 0.2, ['#7d8692', '#3c434c', '#1d2126', '#121417'], '#1a1e23');
-      cylX(P, xsrc - 0.06, xsrc, 0.13, ['#c3cad3', '#7b8490', '#3d444d'], null);
+      cylX(P, xsrc - 1.0, xsrc - 0.06, 0.2, ['#90897f', '#4b453d', '#25221e', '#171512'], '#221f1b');
+      cylX(P, xsrc - 0.06, xsrc, 0.13, ['#d2ccc4', '#8e877d', '#4c463e'], null);
       // yellow laser warning label on the side of the head
       quad(P, [xsrc - 0.62, 0.07, 0.2], [xsrc - 0.42, 0.07, 0.2], [xsrc - 0.42, -0.07, 0.2], [xsrc - 0.62, -0.07, 0.2], '#e3bd25');
-      const cp = P(xsrc - 1.0, 0, 0); ctx.fillStyle = '#0b0d10'; ctx.beginPath(); ctx.arc(cp[0], cp[1], 0.05 * cp[2], 0, 2 * Math.PI); ctx.fill();
+      const cp = P(xsrc - 1.0, 0, 0); ctx.fillStyle = '#100e0b'; ctx.beginPath(); ctx.arc(cp[0], cp[1], 0.05 * cp[2], 0, 2 * Math.PI); ctx.fill();
     } else if (S.kind === 'electron') {
       post3(P, xsrc - 0.5, -0.28);
       // cable to the high voltage supply
       const hc = P(xsrc - 1.18, 0, 0), hf = P(xsrc - 1.7, B3.floor, 0.35);
-      ctx.strokeStyle = '#08090b'; ctx.lineWidth = Math.max(2, 0.06 * hc[2]); ctx.beginPath(); ctx.moveTo(hc[0], hc[1]); ctx.quadraticCurveTo(hf[0], hc[1], hf[0], hf[1]); ctx.stroke();
-      cylX(P, xsrc - 0.9, xsrc - 0.1, 0.24, ['#a7b0bb', '#e6eaef', '#7a838e', '#363c44'], '#8a939e');
-      cylX(P, xsrc - 0.1, xsrc, 0.31, ['#b9c1ca', '#e9edf1', '#6d7681', '#30363d'], null);
+      ctx.strokeStyle = '#0b0a08'; ctx.lineWidth = Math.max(2, 0.06 * hc[2]); ctx.beginPath(); ctx.moveTo(hc[0], hc[1]); ctx.quadraticCurveTo(hf[0], hc[1], hf[0], hf[1]); ctx.stroke();
+      cylX(P, xsrc - 0.9, xsrc - 0.1, 0.24, ['#bab2a8', '#eeebe7', '#8c857c', '#433e37'], '#9c958b');
+      cylX(P, xsrc - 0.1, xsrc, 0.31, ['#c9c2ba', '#f0edea', '#80786e', '#3c3731'], null);
       const cap = cylX(P, xsrc - 1.15, xsrc - 0.9, 0.15, ['#e4ddcf', '#f6f2ea', '#bdb5a5', '#6f695d'], '#d9d1c1');
       // the hot filament, seen through the back of the gun
       const fc = P(xsrc - 1.152, 0, 0), gr = ctx.createRadialGradient(fc[0], fc[1], 0, fc[0], fc[1], 0.13 * fc[2]);
@@ -1147,7 +1147,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         for (let i = 0; i <= 28; i++) { const f2 = 2 * Math.PI * i / 28, p = P(x, 0.275 * Math.sin(f2), 0.275 * Math.cos(f2)); if (p[3] >= c) { on ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]); on = true; } else on = false; }
         ctx.stroke();
       }
-      cylX(P, xsrc - 0.14, xsrc, 0.08, ['#c3cad3', '#7b8490', '#3d444d'], null);
+      cylX(P, xsrc - 0.14, xsrc, 0.08, ['#d2ccc4', '#8e877d', '#4c463e'], null);
     }
     if (vac) drawTube3D(P, true);
     // labels, each on a dark halo
@@ -1313,7 +1313,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     // barrier with slits
     const bx = g.xb - g.thick / 2, btop = g.cy - g.half - 6 * ps, bbot = g.cy + g.half + 6 * ps;
-    { const gr = ctx.createLinearGradient(bx, 0, bx + g.thick, 0); gr.addColorStop(0, T.wall); gr.addColorStop(0.4, '#8f99a6'); gr.addColorStop(1, T.wall); ctx.fillStyle = gr; }
+    { const gr = ctx.createLinearGradient(bx, 0, bx + g.thick, 0); gr.addColorStop(0, T.wall); gr.addColorStop(0.4, '#a49c91'); gr.addColorStop(1, T.wall); ctx.fillStyle = gr; }
     const s1 = g.slits[0], s2 = g.slits[1];
     ctx.fillRect(bx, btop, g.thick, s1.top - btop);
     ctx.fillRect(bx, s1.bot, g.thick, s2.top - s1.bot);
@@ -1340,7 +1340,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         if (fl > 0.02) {
           const rr = (6 + 8 * fl) * ps; ctx.globalAlpha = fl; ctx.drawImage(glowSprite(cr), dx - rr, sl.c - rr, 2 * rr, 2 * rr); ctx.globalAlpha = 1;
         }
-        ctx.fillStyle = '#2d333b'; ctx.strokeStyle = col; ctx.lineWidth = 1.4 * ps;
+        ctx.fillStyle = '#3a352e'; ctx.strokeStyle = col; ctx.lineWidth = 1.4 * ps;
         roundRect(dx - 5 * ps, sl.c - 5 * ps, 10 * ps, 10 * ps, 2 * ps); ctx.fill(); ctx.stroke();
         ctx.fillStyle = rgb(cr, 0.45 + 0.55 * Math.min(1, 1.5 * fl)); ctx.beginPath(); ctx.arc(dx, sl.c, 2.4 * ps, 0, 2 * Math.PI); ctx.fill();
       }
@@ -1414,14 +1414,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const x = g.srcX, w = g.srcW, cy = g.cy, vg = (y0, y1, cols) => { const gr = ctx.createLinearGradient(0, y0, 0, y1); cols.forEach((c, i) => gr.addColorStop(i / (cols.length - 1), c)); return gr; };
     if (S.kind === 'photon') {
       const bh = Math.min(sh * 0.62, 24 * ps), bw = w * 0.8;
-      ctx.fillStyle = vg(cy - bh / 2, cy + bh / 2, ['#6c7480', '#2d333b', '#16191d']); roundRect(x, cy - bh / 2, bw, bh, 3 * ps); ctx.fill();
+      ctx.fillStyle = vg(cy - bh / 2, cy + bh / 2, ['#7e776e', '#3a352e', '#1c1a17']); roundRect(x, cy - bh / 2, bw, bh, 3 * ps); ctx.fill();
       ctx.fillStyle = '#e3bd25'; ctx.fillRect(x + bw * 0.45, cy - bh / 2 + 2 * ps, bw * 0.18, bh * 0.3);
-      ctx.fillStyle = vg(cy - bh / 3, cy + bh / 3, ['#c3cad3', '#6d7681']); ctx.fillRect(x + bw, cy - bh * 0.3, w * 0.08, bh * 0.6);
+      ctx.fillStyle = vg(cy - bh / 3, cy + bh / 3, ['#d2ccc4', '#80786e']); ctx.fillRect(x + bw, cy - bh * 0.3, w * 0.08, bh * 0.6);
       ctx.fillStyle = 'rgba(52,56,64,0.85)'; ctx.fillRect(x + w - 6 * ps, sy, 2.5 * ps, sh);
-      ctx.strokeStyle = '#97a0ab'; ctx.lineWidth = 1; ctx.strokeRect(x + w - 6 * ps, sy, 2.5 * ps, sh);
+      ctx.strokeStyle = '#aaa298'; ctx.lineWidth = 1; ctx.strokeRect(x + w - 6 * ps, sy, 2.5 * ps, sh);
     } else if (S.kind === 'electron') {
       const bh = Math.min(sh * 0.8, 34 * ps);
-      ctx.fillStyle = vg(cy - bh / 2, cy + bh / 2, ['#e6eaef', '#a7b0bb', '#5a636e']); roundRect(x + w * 0.16, cy - bh / 2, w * 0.84, bh, 4 * ps); ctx.fill();
+      ctx.fillStyle = vg(cy - bh / 2, cy + bh / 2, ['#eeebe7', '#bab2a8', '#6d655c']); roundRect(x + w * 0.16, cy - bh / 2, w * 0.84, bh, 4 * ps); ctx.fill();
       ctx.fillStyle = vg(cy - bh / 3, cy + bh / 3, ['#f6f2ea', '#bdb5a5']); ctx.fillRect(x, cy - bh * 0.28, w * 0.16, bh * 0.56);
       const gr = ctx.createRadialGradient(x + w * 0.2, cy, 0, x + w * 0.2, cy, 9 * ps);
       gr.addColorStop(0, 'rgba(255,236,190,1)'); gr.addColorStop(0.35, 'rgba(255,150,60,0.8)'); gr.addColorStop(1, 'rgba(255,120,40,0)');
@@ -1432,7 +1432,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       ctx.strokeStyle = 'rgba(255,112,52,0.85)'; ctx.lineWidth = 1.4 * ps; ctx.beginPath();
       for (let k = 1; k < 8; k++) { const xx = x + w * 0.86 * k / 8; ctx.moveTo(xx, cy - bh / 2 + 1); ctx.lineTo(xx, cy + bh / 2 - 1); }
       ctx.stroke();
-      ctx.fillStyle = '#9aa3ae'; ctx.fillRect(x + w * 0.86, cy - 3 * ps, w * 0.14, 6 * ps);
+      ctx.fillStyle = '#aca59b'; ctx.fillRect(x + w * 0.86, cy - 3 * ps, w * 0.14, 6 * ps);
     }
   }
   function roundRect(x, y, w, h, r) { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
@@ -1514,8 +1514,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.strokeStyle = T.scrEdge; ctx.lineWidth = 2; roundRect(s.x + 1, s.y + 1, s.w - 2, s.h - 2, 4 * ps); ctx.stroke();
     ctx.strokeStyle = 'rgba(255,255,255,0.07)'; ctx.lineWidth = 1; roundRect(s.x + 2.5, s.y + 2.5, s.w - 5, s.h - 5, 3 * ps); ctx.stroke();
     for (const [sx, sy] of [[s.x + 6 * ps, s.y + 6 * ps], [s.x + s.w - 6 * ps, s.y + 6 * ps], [s.x + 6 * ps, s.y + s.h - 6 * ps], [s.x + s.w - 6 * ps, s.y + s.h - 6 * ps]]) {
-      ctx.fillStyle = '#5c6672'; ctx.beginPath(); ctx.arc(sx, sy, 2.2 * ps, 0, 2 * Math.PI); ctx.fill();
-      ctx.strokeStyle = '#1b2027'; ctx.lineWidth = 0.8 * ps; ctx.beginPath(); ctx.moveTo(sx - 1.4 * ps, sy); ctx.lineTo(sx + 1.4 * ps, sy); ctx.stroke();
+      ctx.fillStyle = '#70685e'; ctx.beginPath(); ctx.arc(sx, sy, 2.2 * ps, 0, 2 * Math.PI); ctx.fill();
+      ctx.strokeStyle = '#26221c'; ctx.lineWidth = 0.8 * ps; ctx.beginPath(); ctx.moveTo(sx - 1.4 * ps, sy); ctx.lineTo(sx + 1.4 * ps, sy); ctx.stroke();
     }
     // y axis
     const tk = yTicks();
@@ -1527,7 +1527,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     label(`y (${tk.u})`, s.x - 7 * ps, s.y + s.h + 8 * ps, T.muted, 'right', 'top', 10.5, T.mono);
     label('along the slits →', s.x + s.w / 2, s.y + s.h + 8 * ps, T.muted, 'center', 'top', 10.5);
-    if (!S.open[0] && !S.open[1]) label('No particle gets through', s.x + s.w / 2, s.y + s.h / 2, '#c8ccd2', 'center', 'middle', 12);
+    if (!S.open[0] && !S.open[1]) label('No particle gets through', s.x + s.w / 2, s.y + s.h / 2, '#d1cec9', 'center', 'middle', 12);
   }
 
   function drawHist(ps) {

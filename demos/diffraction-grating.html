@@ -17,45 +17,45 @@
 <style>
 /* Layout: lab bench. One canvas on the left (intensity plot, the wall face on, the bench from above), the rail on the right; stacks on phones. */
 :root {
-  --bg: #e9edf2;
-  --surface: #f8fafc;
-  --canvas: #fcfdfe;
-  --relief: #dfe5ec;
-  --ink: #17202b;
-  --muted: #5a6575;
-  --line: #d3d9e2;
-  --grid: #e6ebf1;
-  --grid-strong: #cfd7e1;
+  --bg: #f1eeea;
+  --surface: #fcfaf8;
+  --canvas: #fefdfc;
+  --relief: #ebe6e0;
+  --ink: #2a2219;
+  --muted: #73695c;
+  --line: #e1dbd4;
+  --grid: #f0ece7;
+  --grid-strong: #e0d9d0;
   --pos: #c23f2c;
   --neg: #2b60b5;
-  --field: #1d2836;
+  --field: #342b1f;
   --equi: #a7740b;
-  --accent: #2b60b5;
+  --accent: #c4811c;
   --on-charge: #ffffff;
   --good: #2f8a46;
-  --lab-bg: #1c232c; --lab-bg2: #2a3440; --lab-table: #232a32; --lab-ink: #eef2f7; --lab-muted: #b4bfcc;
+  --lab-bg: #2b251d; --lab-bg2: #3e362c; --lab-table: #312b24; --lab-ink: #f6f3ef; --lab-muted: #cac1b6;
   --lab-grid: rgba(255, 255, 255, 0.045); --lab-grid-strong: rgba(255, 255, 255, 0.1); --lab-halo: rgba(16, 21, 28, 0.82);
-  --lab-accent: #8fbaff; --lab-gold: #f2c25a; --lab-wall: #4a525c; --lab-wall2: #3a4149; --lab-scope: #0c1116;
+  --lab-accent: #fcd292; --lab-gold: #f2c25a; --lab-wall: #5b544b; --lab-wall2: #48423b; --lab-scope: #15120d;
   --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
-    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-    --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark; --good: #5fcf7a;
-    --lab-bg: #07090d; --lab-bg2: #121821; --lab-table: #161b21; --lab-ink: #e3e8ef; --lab-muted: #a3afbf;
+    --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --relief: #40372c; --ink: #eeeae4; --muted: #b0a698;
+    --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+    --field: #eee8e0; --equi: #e2b350; --accent: #fbc26d; --on-charge: #17130e; color-scheme: dark; --good: #5fcf7a;
+    --lab-bg: #0d0a07; --lab-bg2: #201a13; --lab-table: #201c17; --lab-ink: #eeeae4; --lab-muted: #bdb3a5;
     --lab-grid: rgba(255, 255, 255, 0.035); --lab-grid-strong: rgba(255, 255, 255, 0.075); --lab-halo: rgba(7, 10, 14, 0.82);
-    --lab-accent: #82b0ff; --lab-gold: #e8b84e; --lab-wall: #3c434b; --lab-wall2: #2d333a; --lab-scope: #080b0f;
+    --lab-accent: #fccc85; --lab-gold: #e8b84e; --lab-wall: #4a443d; --lab-wall2: #39342e; --lab-scope: #0e0c09;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
-  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-  --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark; --good: #5fcf7a;
-  --lab-bg: #07090d; --lab-bg2: #121821; --lab-table: #161b21; --lab-ink: #e3e8ef; --lab-muted: #a3afbf;
+  --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --relief: #40372c; --ink: #eeeae4; --muted: #b0a698;
+  --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+  --field: #eee8e0; --equi: #e2b350; --accent: #fbc26d; --on-charge: #17130e; color-scheme: dark; --good: #5fcf7a;
+  --lab-bg: #0d0a07; --lab-bg2: #201a13; --lab-table: #201c17; --lab-ink: #eeeae4; --lab-muted: #bdb3a5;
   --lab-grid: rgba(255, 255, 255, 0.035); --lab-grid-strong: rgba(255, 255, 255, 0.075); --lab-halo: rgba(7, 10, 14, 0.82);
-  --lab-accent: #82b0ff; --lab-gold: #e8b84e; --lab-wall: #3c434b; --lab-wall2: #2d333a; --lab-scope: #080b0f;
+  --lab-accent: #fccc85; --lab-gold: #e8b84e; --lab-wall: #4a443d; --lab-wall2: #39342e; --lab-scope: #0e0c09;
 }
 :root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
@@ -1113,7 +1113,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.strokeStyle = 'rgba(255, 255, 255, 0.09)'; ctx.lineWidth = 1; ctx.beginPath();
     for (let xx = -20; xx < W + 20; xx += 8 * ps) { ctx.moveTo(xx, G.yS); ctx.lineTo(xx + (G.yS - top), top); }
     ctx.stroke(); ctx.restore();
-    ctx.fillStyle = '#cfd5dc'; ctx.globalAlpha = 0.5; ctx.fillRect(0, G.yS - 1.5, W, 1.5); ctx.globalAlpha = 1;
+    ctx.fillStyle = '#dbd6d0'; ctx.globalAlpha = 0.5; ctx.fillRect(0, G.yS - 1.5, W, 1.5); ctx.globalAlpha = 1;
     // meter stick on the table, from the wall to past the grating
     const msw = 13 * ps, msx = cx - 56 * ps - msw, msEnd = G.yG + 26 * ps;
     const mg = ctx.createLinearGradient(msx, 0, msx + msw, 0);
@@ -1170,24 +1170,24 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.fillStyle = 'rgba(0, 0, 0, 0.35)'; rrect(cx - 26 * ps + 4 * ps, y0 + 4 * ps, 52 * ps, G.laserPx, 6 * ps); ctx.fill();
     if (body === 'hene') {
       const w = 24 * ps, g = ctx.createLinearGradient(cx - w / 2, 0, cx + w / 2, 0);
-      g.addColorStop(0, '#5b636d'); g.addColorStop(0.35, '#e1e5ea'); g.addColorStop(0.6, '#9aa3ad'); g.addColorStop(1, '#3d434b');
+      g.addColorStop(0, '#6c655c'); g.addColorStop(0.35, '#e9e6e2'); g.addColorStop(0.6, '#aca59b'); g.addColorStop(1, '#4a453e');
       ctx.fillStyle = g; rrect(cx - w / 2, y0 + 6 * ps, w, G.laserPx - 6 * ps, 5 * ps); ctx.fill();
-      ctx.fillStyle = '#1d2126'; rrect(cx - w * 0.36, y0, w * 0.72, 9 * ps, 2 * ps); ctx.fill();          // output aperture cap
+      ctx.fillStyle = '#25221e'; rrect(cx - w * 0.36, y0, w * 0.72, 9 * ps, 2 * ps); ctx.fill();          // output aperture cap
       ctx.fillStyle = '#e9c43a'; ctx.fillRect(cx - w / 2 + 3 * ps, y0 + G.laserPx * 0.45, w - 6 * ps, 11 * ps);  // warning label
       ctx.fillStyle = '#111'; ctx.font = `700 ${7 * ps}px ` + monoFont(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
       ctx.fillText('LASER', cx, y0 + G.laserPx * 0.45 + 5.5 * ps);
-      ctx.fillStyle = '#2a2f36'; ctx.fillRect(cx - 4 * ps, yb - 3 * ps, 8 * ps, 6 * ps);                     // power cable
+      ctx.fillStyle = '#35312b'; ctx.fillRect(cx - 4 * ps, yb - 3 * ps, 8 * ps, 6 * ps);                     // power cable
     } else if (body === 'pen') {
       const w = 15 * ps, len = G.laserPx * 0.62, g = ctx.createLinearGradient(cx - w / 2, 0, cx + w / 2, 0);
-      g.addColorStop(0, '#30353c'); g.addColorStop(0.4, '#8c949e'); g.addColorStop(1, '#22262b');
-      ctx.fillStyle = '#2b3036'; rrect(cx - 13 * ps, y0 + len * 0.35, 26 * ps, 12 * ps, 3 * ps); ctx.fill();   // clamp
+      g.addColorStop(0, '#3b3731'); g.addColorStop(0.4, '#9d968d'); g.addColorStop(1, '#2a2723');
+      ctx.fillStyle = '#35312c'; rrect(cx - 13 * ps, y0 + len * 0.35, 26 * ps, 12 * ps, 3 * ps); ctx.fill();   // clamp
       ctx.fillStyle = g; rrect(cx - w / 2, y0 + 3 * ps, w, len, 4 * ps); ctx.fill();
-      ctx.fillStyle = '#15181c'; rrect(cx - w * 0.38, y0, w * 0.76, 6 * ps, 2 * ps); ctx.fill();
+      ctx.fillStyle = '#1b1916'; rrect(cx - w * 0.38, y0, w * 0.76, 6 * ps, 2 * ps); ctx.fill();
       ctx.fillStyle = 'rgba(255, 255, 255, 0.25)'; ctx.fillRect(cx - w / 2 + 2 * ps, y0 + 8 * ps, 1.5 * ps, len - 12 * ps);
     } else if (body === 'box') {
       const w = 40 * ps, len = G.laserPx * 0.7;
       const g = ctx.createLinearGradient(cx - w / 2, 0, cx + w / 2, 0);
-      g.addColorStop(0, '#262b31'); g.addColorStop(0.5, '#4a525c'); g.addColorStop(1, '#1e2227');
+      g.addColorStop(0, '#302c27'); g.addColorStop(0.5, '#5b544b'); g.addColorStop(1, '#26231f');
       ctx.fillStyle = g; rrect(cx - w / 2, y0 + 2 * ps, w, len, 4 * ps); ctx.fill();
       ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)'; ctx.lineWidth = 1; ctx.stroke();
       ctx.fillStyle = '#111'; rrect(cx - 5 * ps, y0, 10 * ps, 5 * ps, 2 * ps); ctx.fill();
@@ -1197,11 +1197,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     } else {
       // lamp housing with a slit, and a lens tube that makes the beam parallel
       const w = 44 * ps, hh = G.laserPx * 0.55, tube = G.laserPx * 0.4, tw = 16 * ps;
-      ctx.fillStyle = '#2c3239'; rrect(cx - tw / 2, y0, tw, tube, 3 * ps); ctx.fill();
+      ctx.fillStyle = '#38332d'; rrect(cx - tw / 2, y0, tw, tube, 3 * ps); ctx.fill();
       ctx.fillStyle = 'rgba(190, 225, 255, 0.5)'; ctx.fillRect(cx - tw / 2 + 2 * ps, y0 + 1, tw - 4 * ps, 2.5 * ps);   // lens
       const hy = y0 + tube;
       const g = ctx.createLinearGradient(cx - w / 2, 0, cx + w / 2, 0);
-      g.addColorStop(0, '#20252b'); g.addColorStop(0.5, '#414952'); g.addColorStop(1, '#1b1f24');
+      g.addColorStop(0, '#2a2621'); g.addColorStop(0.5, '#514a42'); g.addColorStop(1, '#23201c');
       ctx.fillStyle = g; rrect(cx - w / 2, hy, w, hh, 5 * ps); ctx.fill();
       ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)'; ctx.lineWidth = 1; ctx.stroke();
       ctx.save(); ctx.globalCompositeOperation = 'lighter';
@@ -1235,7 +1235,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const film = half * 0.62, sh = ctx.createLinearGradient(-film, 0, film, 0);
     ['#7b5cff', '#3f8cff', '#2cd0c9', '#57d66a', '#f2d03a', '#ff8a3a', '#ff4a6a'].forEach((c, i) => sh.addColorStop(i / 6, c));
     if (PH.single) {                                             // single slit: a blackened slide with one slit in the middle
-      ctx.fillStyle = '#15181c'; ctx.fillRect(-film, -2 * ps, 2 * film, 4 * ps);
+      ctx.fillStyle = '#1b1916'; ctx.fillRect(-film, -2 * ps, 2 * film, 4 * ps);
       ctx.fillStyle = 'rgba(255, 255, 255, 0.12)'; ctx.fillRect(-film, -2 * ps, 2 * film, 0.8 * ps);
     } else {
       ctx.globalAlpha = 0.5; ctx.fillStyle = sh; ctx.fillRect(-film, -2 * ps, 2 * film, 4 * ps); ctx.globalAlpha = 1;

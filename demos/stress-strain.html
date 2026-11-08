@@ -22,9 +22,9 @@
 <style>
 /* Layout: the loaded wire on the left, its stress against strain curve on the right of the stage; the rail on the right. */
 /* Layout: lab bench. The gas box and speed histogram fill the left, a narrow instrument rail sits on the right; stacks on phones. */
-:root { --wire: #8a6a3c; --scol: #2b60b5; --plast: #b0452f; --mass: #6b7787; --wall: #eff2f5; --wall-line: #e0e5eb; --floor: #d9dde3; --beam: #7b8794; --beam-dark: #56616d; --metal: #a3acb6; --metal-dark: #5f6873; --metal-hi: #eef1f4; --gauge-face: #fbfcfd; --gauge-tick: #2a333e; --needle: #c23f2c; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --wire: #d0a868; --scol: #69a0ff; --plast: #ff8a70; --mass: #9aa6b6; --wall: #141b24; --wall-line: #1b242f; --floor: #1d252f; --beam: #4f5a67; --beam-dark: #343d48; --metal: #6c7784; --metal-dark: #3a434e; --metal-hi: #c9d1db; --gauge-face: #c3cbd4; --gauge-tick: #1d252f; --needle: #c8402b; } }
-:root[data-theme="dark"] { --wire: #d0a868; --scol: #69a0ff; --plast: #ff8a70; --mass: #9aa6b6; --wall: #141b24; --wall-line: #1b242f; --floor: #1d252f; --beam: #4f5a67; --beam-dark: #343d48; --metal: #6c7784; --metal-dark: #3a434e; --metal-hi: #c9d1db; --gauge-face: #c3cbd4; --gauge-tick: #1d252f; --needle: #c8402b; }
+:root { --wire: #8a6a3c; --scol: #2b60b5; --plast: #b0452f; --mass: #857b6d; --wall: #f5f2ef; --wall-line: #eae6e1; --floor: #e2dfda; --beam: #7b8794; --beam-dark: #56616d; --metal: #b5aea4; --metal-dark: #726a60; --metal-hi: #f4f1ee; --gauge-face: #fdfcfb; --gauge-tick: #3d352b; --needle: #c23f2c; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --wire: #d0a868; --scol: #69a0ff; --plast: #ff8a70; --mass: #b4aa9c; --wall: #231d15; --wall-line: #2e261c; --floor: #2e271e; --beam: #4f5a67; --beam-dark: #343d48; --metal: #82796e; --metal-dark: #4c453c; --metal-hi: #dad3ca; --gauge-face: #d3ccc4; --gauge-tick: #2e271e; --needle: #c8402b; } }
+:root[data-theme="dark"] { --wire: #d0a868; --scol: #69a0ff; --plast: #ff8a70; --mass: #b4aa9c; --wall: #231d15; --wall-line: #2e261c; --floor: #2e271e; --beam: #4f5a67; --beam-dark: #343d48; --metal: #82796e; --metal-dark: #4c453c; --metal-hi: #dad3ca; --gauge-face: #d3ccc4; --gauge-tick: #2e271e; --needle: #c8402b; }
 :root[data-projector="on"] { font-size: 125%; }
 .bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; }
 .bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 12px; }
@@ -46,7 +46,7 @@ table.rows input:focus { border-color: var(--accent); }
 .tray { position: absolute; left: 10px; bottom: 10px; z-index: 2; display: flex; flex-direction: column; gap: 6px; padding: 8px 10px; background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--line); border-radius: 10px; }
 .tray-title { font-size: 0.74rem; font-weight: 700; color: var(--muted); }
 .pieces { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 5px; }
-.pieces button { --w: 40px; --h: 14px; width: var(--w); height: var(--h); padding: 0; border: 0; border-radius: 3px; cursor: pointer; font: 700 0.66rem/1 var(--font-mono); color: #17202b; background: linear-gradient(#c9d0d9, #9aa4b0); box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.18); }
+.pieces button { --w: 40px; --h: 14px; width: var(--w); height: var(--h); padding: 0; border: 0; border-radius: 3px; cursor: pointer; font: 700 0.66rem/1 var(--font-mono); color: #2a2219; background: linear-gradient(#d8d2ca, #aea69c); box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.18); }
 .pieces button.brass { background: linear-gradient(#e2c26a, #b98f2e); }
 .pieces button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .tray-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; }
@@ -444,8 +444,8 @@ table.rows input:focus { border-color: var(--accent); }
     c.fillStyle = T.wall; c.fillRect(0, 0, 512, 512); c.strokeStyle = T.wallLine; c.lineWidth = 3;
     for (let r = 0; r < 8; r++) { const y = r * 64; c.beginPath(); c.moveTo(0, y); c.lineTo(512, y); for (let x = (r % 2) * 64; x < 512; x += 128) { c.moveTo(x, y); c.lineTo(x, y + 64); } c.stroke(); }
     g.wallT.needsUpdate = true;
-    g.scene.background = col3(T.wall, '#eff2f5'); g.floorM.color = col3(T.floor, '#d9dde3'); g.beamM.color = col3(T.beam, '#7b8794'); g.metalM.color = col3(T.metal, '#a3acb6'); g.darkM.color = col3(T.metalDark, '#5f6873');
-    g.wireM.color = col3(T.wire, '#8a6a3c'); g.massM.color = col3(T.mass, '#6b7787'); g.brassM.color = col3('#c9a24a', '#c9a24a');
+    g.scene.background = col3(T.wall, '#f5f2ef'); g.floorM.color = col3(T.floor, '#e2dfda'); g.beamM.color = col3(T.beam, '#7b8794'); g.metalM.color = col3(T.metal, '#b5aea4'); g.darkM.color = col3(T.metalDark, '#726a60');
+    g.wireM.color = col3(T.wire, '#8a6a3c'); g.massM.color = col3(T.mass, '#857b6d'); g.brassM.color = col3('#c9a24a', '#c9a24a');
     g.hemi.intensity = dk ? 0.5 : 0.7; g.sun.intensity = dk ? 0.6 : 0.75; g.hsig = '';
   }
   function dialFace(dLmm) {
@@ -651,8 +651,8 @@ table.rows input:focus { border-color: var(--accent); }
     bulk: 'Squeeze a liquid, or a metal cube in oil, from every side at once. The pressure rise Δp over the fraction of volume lost, −ΔV/V₀, is the bulk modulus B. Liquids give way far more than metals.'
   };
   const SB_UNITS = { tension: $('unitsLine').textContent, shear: 'block 5.00 cm cube · top face 25.00 cm²', bulk: `cell bore 4.00 cm · piston ${(CELL_A * 1e4).toFixed(2)} cm² · liquid 10.00 cm deep · cube 2.000 cm` };
-  const SB_COLOR = { aluminium: '#c3cad3', brass: '#d2ad52', copper: '#c7774a', steel: '#8d9aab', lead: '#7d8590', glass: '#b9dde6', granite: '#9b9590', mystery: '#9a93ad',
-    water: '#5aa0e0', ethanol: '#a9cfe8', acetone: '#c4dbe9', glycerin: '#e3cf8f', mercury: '#b8c0c8', mysteryLiquid: '#6fc2b0' };
+  const SB_COLOR = { aluminium: '#d2ccc4', brass: '#d2ad52', copper: '#c7774a', steel: '#a99e8f', lead: '#8f887e', glass: '#b9dde6', granite: '#9b9590', mystery: '#9a93ad',
+    water: '#5aa0e0', ethanol: '#a9cfe8', acetone: '#c4dbe9', glycerin: '#e3cf8f', mercury: '#c7c1b9', mysteryLiquid: '#6fc2b0' };
   const sbM = () => SB_MATS[S.sbMat[S.test]];
   const sbHidden = () => S.blind || !!sbM().hidden;
   const sbMode = () => (S.test === 'shear' ? 'shear' : sbM().liquid ? 'liquid' : 'solid');
@@ -777,9 +777,9 @@ table.rows input:focus { border-color: var(--accent); }
     const k = S.sbMat.shear, bs = Math.max(70 * p, Math.min(ww * 0.4, (by - 170 * p) * 0.72)), pl = 12 * p;
     const sx = (q.dx * 1e-6) * EX_SH * bs / SH_L, x0 = cx - bs / 2 + 10 * p, yb = by - pl, yt = yb - bs;
     // base plate bolted to the bench, with a stop on its right that holds the block's base
-    VG.box(ctx, x0 - 34 * p, yb, bs + 88 * p, pl, { color: '#6b7684', r: 2 });
+    VG.box(ctx, x0 - 34 * p, yb, bs + 88 * p, pl, { color: '#82796d', r: 2 });
     for (const bx of [x0 - 24 * p, x0 + bs + 44 * p]) VG.screw(ctx, bx, yb + pl / 2, 3.2 * p);
-    VG.box(ctx, x0 + bs, yb - 18 * p, 14 * p, 18 * p, { color: '#56616d', r: 2, shadow: false });
+    VG.box(ctx, x0 + bs, yb - 18 * p, 14 * p, 18 * p, { color: '#6b6358', r: 2, shadow: false });
     // the block: a parallelogram, with a grid that shows each small square turning into a rhombus
     const P = (u, v) => [x0 + u * bs + v * sx, yb - v * bs];
     ctx.save(); ctx.beginPath(); ctx.moveTo(...P(0, 0)); ctx.lineTo(...P(1, 0)); ctx.lineTo(...P(1, 1)); ctx.lineTo(...P(0, 1)); ctx.closePath();
@@ -793,27 +793,27 @@ table.rows input:focus { border-color: var(--accent); }
     // the original outline, dashed, so the lean shows against it
     ctx.setLineDash([4 * p, 3 * p]); ctx.strokeStyle = T.muted; ctx.strokeRect(x0, yt, bs, bs); ctx.setLineDash([]);
     // top plate riding on the block
-    VG.box(ctx, x0 - 6 * p + sx, yt - pl, bs + 12 * p, pl, { color: '#6b7684', r: 2, shadow: false });
+    VG.box(ctx, x0 - 6 * p + sx, yt - pl, bs + 12 * p, pl, { color: '#82796d', r: 2, shadow: false });
     // the screw jack on the left: a post, a load cell and a screw with a handwheel
     const jy = yt - pl / 2, lcW = 34 * p, postX = Math.max(14 * p, x0 - 120 * p);
-    VG.box(ctx, postX - 8 * p, jy - 16 * p, 16 * p, by - jy + 16 * p, { color: '#4b5562', r: 2 });
-    VG.rod(ctx, postX + 8 * p, jy, x0 - 6 * p + sx - lcW, jy, 3.5 * p, { color: '#b8c0ca' });
+    VG.box(ctx, postX - 8 * p, jy - 16 * p, 16 * p, by - jy + 16 * p, { color: '#60584d', r: 2 });
+    VG.rod(ctx, postX + 8 * p, jy, x0 - 6 * p + sx - lcW, jy, 3.5 * p, { color: '#c9c2b9' });
     VG.box(ctx, x0 - 6 * p + sx - lcW, jy - 11 * p, lcW, 22 * p, { color: '#2f6fb0', r: 3, shadow: false });
     VG.plate(ctx, 'load cell', x0 - 6 * p + sx - lcW / 2, jy + 16 * p, { s: 7 * p, c: T.muted });
-    ctx.fillStyle = '#4b5562'; ctx.beginPath(); ctx.ellipse(postX - 12 * p, jy, 4 * p, 15 * p, 0, 0, 7); ctx.fill();
+    ctx.fillStyle = '#60584d'; ctx.beginPath(); ctx.ellipse(postX - 12 * p, jy, 4 * p, 15 * p, 0, 0, 7); ctx.fill();
     VG.lcd(ctx, postX - 10 * p, jy - 58 * p, 86 * p, 22 * p, `${f(q.F / 1000, 2)} kN`);
     // displacement sensor on the right, its probe on the top plate
     const sxp = x0 + bs + 6 * p + sx, ex = Math.min(ww - 30 * p, x0 + bs + 110 * p);
-    VG.box(ctx, ex - 4 * p, jy - 14 * p, 12 * p, by - jy + 14 * p, { color: '#4b5562', r: 2 });
-    VG.box(ctx, ex - 40 * p, jy - 7 * p, 36 * p, 14 * p, { color: '#39424d', r: 3, shadow: false });
-    VG.rod(ctx, sxp, jy, ex - 40 * p, jy, 1.8 * p, { color: '#d9dee5' });
+    VG.box(ctx, ex - 4 * p, jy - 14 * p, 12 * p, by - jy + 14 * p, { color: '#60584d', r: 2 });
+    VG.box(ctx, ex - 40 * p, jy - 7 * p, 36 * p, 14 * p, { color: '#4c443b', r: 3, shadow: false });
+    VG.rod(ctx, sxp, jy, ex - 40 * p, jy, 1.8 * p, { color: '#e4e0da' });
     VG.lcd(ctx, ex - 82 * p, jy - 58 * p, 94 * p, 22 * p, `${f(q.dx, 1)} µm`);
     VG.label(ctx, ww > 480 ? 'displacement sensor' : 'sensor', ex - 22 * p, jy + 16 * p, { a: 'center', s: 9.5 * p });
     // forces: F on the top plate, and the equal and opposite push of the stop on the base
     if (q.F > 0) { const aL = 18 * p + 46 * p * q.F / SH_FMAX; arrow(x0 + bs * 0.2 + sx, yt - pl - 12 * p, x0 + bs * 0.2 + sx + aL, yt - pl - 12 * p, T.pl, 3 * p); arrow(x0 + bs * 0.8, yb + pl + 12 * p, x0 + bs * 0.8 - aL, yb + pl + 12 * p, T.pl, 3 * p);
       VG.label(ctx, 'F', x0 + bs * 0.2 + sx + aL + 6 * p, yt - pl - 12 * p, { c: T.pl, w: 700, s: 12 * p }); VG.label(ctx, '−F', x0 + bs * 0.8 - aL - 18 * p, yb + pl + 12 * p, { c: T.pl, w: 700, s: 12 * p }); }
     VG.label(ctx, `L = 5.00 cm`, x0 - 8 * p, yb - bs / 2, { a: 'right', s: 10 * p });
-    VG.label(ctx, m.hidden ? '?' : m.name, x0 + bs / 2 + sx / 2, yb - bs / 2, { a: 'center', s: 11 * p, w: 700, c: '#1d2733' });
+    VG.label(ctx, m.hidden ? '?' : m.name, x0 + bs / 2 + sx / 2, yb - bs / 2, { a: 'center', s: 11 * p, w: 700, c: '#31291f' });
   }
   function drawCell(p, cx, by, ww, q, m, mode) {
     const k = S.sbMat.bulk, liquid = mode === 'liquid', bw = Math.max(60 * p, Math.min(ww * 0.24, 120 * p)), wt = bw * 0.42, ow = bw + 2 * wt;
@@ -821,11 +821,11 @@ table.rows input:focus { border-color: var(--accent); }
     const squeeze = liquid ? (q.pdx / 1000 / CELL_H) * EX_LIQ : 0, pistY = colTop0 + hcol * squeeze;
     const xL = cx - ow / 2, xi = cx - bw / 2;
     // press frame: two columns and a crosshead
-    for (const px of [xL - 26 * p, xL + ow + 14 * p]) VG.rod(ctx, px + 6 * p, by, px + 6 * p, crossY, 6 * p, { color: '#9aa4b0' });
-    VG.box(ctx, xL - 40 * p, crossY - 22 * p, ow + 80 * p, 22 * p, { color: '#4b5562', r: 3 });
-    VG.box(ctx, cx - 18 * p, crossY, 36 * p, 18 * p, { color: '#39424d', r: 2, shadow: false });
+    for (const px of [xL - 26 * p, xL + ow + 14 * p]) VG.rod(ctx, px + 6 * p, by, px + 6 * p, crossY, 6 * p, { color: '#aea69c' });
+    VG.box(ctx, xL - 40 * p, crossY - 22 * p, ow + 80 * p, 22 * p, { color: '#60584d', r: 3 });
+    VG.box(ctx, cx - 18 * p, crossY, 36 * p, 18 * p, { color: '#4c443b', r: 2, shadow: false });
     // cell body (cut away to show the bore)
-    VG.box(ctx, xL, cellTop, ow, bot - cellTop + 14 * p, { color: '#5d6875', r: 4 });
+    VG.box(ctx, xL, cellTop, ow, bot - cellTop + 14 * p, { color: '#736a5f', r: 4 });
     const fill = liquid ? SB_COLOR[k] : '#d8b866';
     ctx.fillStyle = T.canvas; ctx.fillRect(xi, cellTop, bw, bot - cellTop);
     ctx.save(); ctx.globalAlpha = liquid ? (k === 'mercury' ? 0.95 : 0.7) : 0.45; ctx.fillStyle = fill; ctx.fillRect(xi, pistY, bw, bot - pistY); ctx.restore();
@@ -841,15 +841,15 @@ table.rows input:focus { border-color: var(--accent); }
       if (q.F > 0) { const aL = 6 * p + 16 * p * q.F / BULK_FMAX; for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) { const ex = ccx + dx * (a / 2 + 2 * p), ey = ccy + dy * (a / 2 + 2 * p); arrow(ex + dx * aL, ey + dy * aL, ex, ey, T.pl, 2 * p); } }
       // strain indicator on the bench
       const sx0 = Math.min(ww - 110 * p, xL + ow + 40 * p);
-      VG.box(ctx, sx0, by - 48 * p, 100 * p, 48 * p, { color: '#2e353f', r: 5 });
+      VG.box(ctx, sx0, by - 48 * p, 100 * p, 48 * p, { color: '#3e372f', r: 5 });
       VG.lcd(ctx, sx0 + 6 * p, by - 42 * p, 88 * p, 22 * p, `${f(q.ue, 1)} µε`);
       VG.plate(ctx, 'strain indicator', sx0 + 50 * p, by - 10 * p, { s: 7 * p });
       VG.cable(ctx, xi + bw + wt + 30 * p, colTop0 + 6 * p, sx0 + 4 * p, by - 30 * p, 30 * p, { w: 1.6 * p, color: '#a33' });
-      VG.label(ctx, m.hidden ? '?' : m.name, ccx, ccy - a0 / 2 - 22 * p, { a: 'center', bl: 'bottom', s: 10 * p, w: 700, c: '#1d2733' });
+      VG.label(ctx, m.hidden ? '?' : m.name, ccx, ccy - a0 / 2 - 22 * p, { a: 'center', bl: 'bottom', s: 10 * p, w: 700, c: '#31291f' });
     }
     // piston and rod up to the load cell under the crosshead
-    VG.box(ctx, xi + 1, pistY - 16 * p, bw - 2, 16 * p, { color: '#8b96a3', r: 2, shadow: false });
-    VG.rod(ctx, cx, pistY - 16 * p, cx, crossY + 48 * p, 7 * p, { color: '#b8c0ca' });
+    VG.box(ctx, xi + 1, pistY - 16 * p, bw - 2, 16 * p, { color: '#a1988d', r: 2, shadow: false });
+    VG.rod(ctx, cx, pistY - 16 * p, cx, crossY + 48 * p, 7 * p, { color: '#c9c2b9' });
     VG.box(ctx, cx - 20 * p, crossY + 18 * p, 40 * p, 30 * p, { color: '#2f6fb0', r: 3, shadow: false });
     const lx = Math.max(4 * p, xL - 96 * p); VG.lcd(ctx, lx, crossY + 22 * p, 82 * p, 22 * p, `${f(q.F / 1000, 2)} kN`);
     VG.label(ctx, 'load cell', lx + 41 * p, crossY + 54 * p, { a: 'center', s: 9.5 * p });
@@ -857,14 +857,14 @@ table.rows input:focus { border-color: var(--accent); }
     if (q.F > 0) { const aL = 4 * p + 12 * p * q.F / BULK_FMAX; for (let i = 1; i <= 3; i++) { const yy = pistY + (bot - pistY) * i / 4; arrow(xi + 6 * p, yy, xi + 6 * p - aL, yy, T.pl, 1.6 * p); arrow(xi + bw - 6 * p, yy, xi + bw - 6 * p + aL, yy, T.pl, 1.6 * p); } }
     if (liquid) {   // dial gauge on the right column, its plunger on a collar of the piston rod
       const gx = Math.min(ww - 52 * p, xL + ow + 64 * p), gy = crossY + 70 * p, collarY = pistY - 40 * p;
-      VG.rod(ctx, cx, collarY, gx, collarY, 2 * p, { color: '#9aa4b0' });
-      VG.rod(ctx, gx, gy + 18 * p, gx, collarY, 1.6 * p, { color: '#e3e7ec' });
+      VG.rod(ctx, cx, collarY, gx, collarY, 2 * p, { color: '#aea69c' });
+      VG.rod(ctx, gx, gy + 18 * p, gx, collarY, 1.6 * p, { color: '#ebe8e4' });
       ctx.fillStyle = T.metal; ctx.beginPath(); ctx.arc(gx, gy, 20 * p, 0, 7); ctx.fill(); ctx.fillStyle = T.gaugeFace; ctx.beginPath(); ctx.arc(gx, gy, 17 * p, 0, 7); ctx.fill();
       const am = -Math.PI / 2 + 2 * Math.PI * (q.pdx % 1); ctx.strokeStyle = T.needle; ctx.lineWidth = 1.6 * p; ctx.beginPath(); ctx.moveTo(gx, gy); ctx.lineTo(gx + 15 * p * Math.cos(am), gy + 15 * p * Math.sin(am)); ctx.stroke();
       VG.lcd(ctx, gx - 46 * p, gy - 50 * p, 92 * p, 22 * p, `${f(q.pdx, 3)} mm`);
       if (ww > 480) VG.label(ctx, 'h₀ = 10.00 cm', xi - wt - 6 * p, (colTop0 + bot) / 2, { a: 'right', s: 10 * p });
     }
-    VG.label(ctx, liquid ? (m.hidden ? 'mystery liquid' : m.name) : 'oil', cx, pistY + 6 * p, { a: 'center', bl: 'top', s: 10 * p, w: 700, c: '#1d2733' });
+    VG.label(ctx, liquid ? (m.hidden ? 'mystery liquid' : m.name) : 'oil', cx, pistY + 6 * p, { a: 'center', bl: 'top', s: 10 * p, w: 700, c: '#31291f' });
   }
   function sbGraph(p, wide, colW, colH, q, m) {
     const gx0 = wide ? colW + 58 * p : 58 * p, gx1 = W - 16 * p, gy0 = wide ? 64 * p : colH + 30 * p, gy1 = H - 40 * p, mode = q.mode;

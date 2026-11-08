@@ -20,18 +20,18 @@
 <style>
 /* Layout: one canvas with four linked panels (waveform, spectrum, harmonic ladder, harmonic bars); instrument rail on the right; stacks on phones. */
 :root {
-  --bg: #e9edf2;
-  --surface: #f8fafc;
-  --canvas: #fcfdfe;
-  --ink: #17202b;
-  --muted: #5a6575;
-  --line: #d3d9e2;
-  --grid: #e6ebf1;
-  --grid-strong: #cfd7e1;
+  --bg: #f1eeea;
+  --surface: #fcfaf8;
+  --canvas: #fefdfc;
+  --ink: #2a2219;
+  --muted: #73695c;
+  --line: #e1dbd4;
+  --grid: #f0ece7;
+  --grid-strong: #e0d9d0;
   --pos: #c23f2c;
   --neg: #2b60b5;
   --equi: #a7740b;
-  --accent: #2b60b5;
+  --accent: #c4811c;
   --warm: #fdfaf5;
   --wood: #f3eadc;
   --wood-edge: #d6c3a5;
@@ -45,16 +45,16 @@
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
-    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-    --equi: #e2b350; --accent: #69a0ff; --warm: #13120f; --wood: #221c15; --wood-edge: #4b3f30;
+    --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
+    --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+    --equi: #e2b350; --accent: #fbc26d; --warm: #13120f; --wood: #221c15; --wood-edge: #4b3f30;
     --ivory: #ddd5c6; --ebony: #0b0a08; --brass: #e2b350; --hue-l: 66%; --hue-s: 70%; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
-  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-  --equi: #e2b350; --accent: #69a0ff; --warm: #13120f; --wood: #221c15; --wood-edge: #4b3f30;
+  --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
+  --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+  --equi: #e2b350; --accent: #fbc26d; --warm: #13120f; --wood: #221c15; --wood-edge: #4b3f30;
   --ivory: #ddd5c6; --ebony: #0b0a08; --brass: #e2b350; --hue-l: 66%; --hue-s: 70%; color-scheme: dark;
 }
 :root[data-projector="on"] { font-size: 125%; }
@@ -1243,7 +1243,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   const in3 = (e) => !!(on3d() && G && G.pic && e.offsetY < G.pic.h);
   const SCR = { w: 640, h: 400, s: 2 }, SCR_LS = 2.1;   /* each screen's drawing size (CSS px) and its pixel scale */
   const SCREEN_T = { warm: '#07130e', ink: '#86f5b0', muted: '#74a98c', line: '#1d3a2e', grid: '#12291f', gridStrong: '#27503e', wood: '#07130e', woodEdge: '#27503e',
-    brass: '#f0c75e', pos: '#ff8f74', accent: '#8cc4ff', hl: '64%', hs: '80%', mono: '"JetBrains Mono", ui-monospace, monospace' };
+    brass: '#f0c75e', pos: '#ff8f74', accent: '#fcd08f', hl: '64%', hs: '80%', mono: '"JetBrains Mono", ui-monospace, monospace' };
   const v3 = (x, y, z) => new THREE.Vector3(x, y, z);
 
   function init3() {
@@ -1257,31 +1257,31 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     // the room: a tiled floor, a painted wall with a skirting board, a lab bench with a wooden top on steel legs
     const flT = tex(256, 256); flT.t.wrapS = flT.t.wrapT = THREE.RepeatWrapping; flT.t.repeat.set(12, 8);
     const floor = new THREE.Mesh(new THREE.PlaneGeometry(12, 8), new THREE.MeshStandardMaterial({ map: flT.t, roughness: 0.8 })); floor.position.set(0, -2.6, -0.9); floor.receiveShadow = true; sc.add(floor);
-    const wallM = M({ roughness: 0.95 }, ['#dfe5ec', '#252d37']), wall = new THREE.Mesh(new THREE.PlaneGeometry(12, 4), wallM);
+    const wallM = M({ roughness: 0.95 }, ['#ebe6e0', '#362f26']), wall = new THREE.Mesh(new THREE.PlaneGeometry(12, 4), wallM);
     wall.rotation.x = PI / 2; wall.position.set(0, 0.62, 1.1); wall.receiveShadow = true; sc.add(wall);
-    sc.add(VD3K.box(12, 0.02, 0.12, M({ roughness: 0.5 }, ['#f4f2ec', '#39414c']), 0, 0.6, -0.9));
+    sc.add(VD3K.box(12, 0.02, 0.12, M({ roughness: 0.5 }, ['#f4f2ec', '#4b443a']), 0, 0.6, -0.9));
     const topT = tex(1024, 256), topM = new THREE.MeshStandardMaterial({ map: topT.t, roughness: 0.55 });
     const edgeM = M({ roughness: 0.6 }, ['#8a6a45', '#4a3a28']);
     const top = new THREE.Mesh(new THREE.BoxGeometry(2.6, 1.05, 0.04), [edgeM, edgeM, edgeM, edgeM, topM, edgeM]); top.position.set(0, 0.06, -0.02); top.receiveShadow = true; top.castShadow = true; sc.add(top);
-    const steel = M({ roughness: 0.35, metalness: 0.6 }, ['#aab3be', '#7a8490']), dark = M({ roughness: 0.5, metalness: 0.25 }, ['#2e3640', '#262d36']);
+    const steel = M({ roughness: 0.35, metalness: 0.6 }, ['#bcb5ab', '#8e867c']), dark = M({ roughness: 0.5, metalness: 0.25 }, ['#3f382f', '#352f27']);
     for (const [x, y] of [[-1.22, -0.4], [1.22, -0.4], [-1.22, 0.52], [1.22, 0.52]]) sc.add(VD3K.box(0.05, 0.05, 0.86, steel, x, y, -0.9));
     sc.add(VD3K.box(2.5, 0.03, 0.08, steel, 0, 0.54, -0.86));
     // a framed poster on the wall: the instrument the spectrum is like, as a label only
     const poT = tex(1024, 640), poster = new THREE.Mesh(new THREE.PlaneGeometry(0.62, 0.3875), new THREE.MeshStandardMaterial({ map: poT.t, roughness: 0.7 }));
     poster.rotation.x = PI / 2; poster.position.set(0, 0.6, 0.3); sc.add(poster);
-    const frM = M({ roughness: 0.4, metalness: 0.3 }, ['#3a3f46', '#9aa3ae']);
+    const frM = M({ roughness: 0.4, metalness: 0.3 }, ['#45413b', '#aca59b']);
     for (const [w, h, x, z] of [[0.66, 0.02, 0, 0.5], [0.66, 0.02, 0, 0.1], [0.02, 0.42, -0.32, 0.3], [0.02, 0.42, 0.32, 0.3]]) { const f = new THREE.Mesh(new THREE.BoxGeometry(w, 0.02, h), frM); f.position.set(x, 0.6, z); f.castShadow = true; sc.add(f); }
     // two bench instruments: a case, a screen drawn from the flat view, knobs, a name plate
-    const knobM = M({ roughness: 0.4, metalness: 0.2 }, ['#c9ced5', '#a9b0b9']);
+    const knobM = M({ roughness: 0.4, metalness: 0.2 }, ['#d4d0ca', '#b8b2aa']);
     const inst = (x, name) => {
       const g = new THREE.Group(), cw = 0.5, ch = 0.32, cd = 0.32, sw = 0.39;
       const body = VD3K.box(cw, cd, ch, dark, 0, 0, 0); g.add(body);
-      const bez = VD3K.box(cw - 0.02, 0.006, ch - 0.02, M({ roughness: 0.6 }, ['#1b2027', '#1b2027']), 0, -cd / 2 - 0.003, 0.01); bez.castShadow = false; g.add(bez);
+      const bez = VD3K.box(cw - 0.02, 0.006, ch - 0.02, M({ roughness: 0.6 }, ['#26221c', '#26221c']), 0, -cd / 2 - 0.003, 0.01); bez.castShadow = false; g.add(bez);
       const T2 = tex(Math.round(SCR.w * SCR.s), Math.round(SCR.h * SCR.s));
       const scr = new THREE.Mesh(new THREE.PlaneGeometry(sw, sw * SCR.h / SCR.w), new THREE.MeshBasicMaterial({ map: T2.t, toneMapped: false }));
       scr.rotation.x = PI / 2; scr.position.set(-0.04, -cd / 2 - 0.0075, ch / 2 + 0.025); g.add(scr);
       for (let k = 0; k < 3; k++) { const kn = new THREE.Mesh(new THREE.CylinderGeometry(0.013, 0.015, 0.018, 24), knobM); kn.position.set(0.205, -cd / 2 - 0.012, ch - 0.06 - k * 0.07); kn.castShadow = true; g.add(kn); }
-      const plT = tex(512, 64); plT.c.fillStyle = '#1b2027'; plT.c.fillRect(0, 0, 512, 64); plT.c.fillStyle = '#d7dde5'; plT.c.font = '700 34px "Atkinson Hyperlegible", system-ui, sans-serif'; plT.c.textBaseline = 'middle'; plT.c.fillText(name, 10, 34); plT.t.needsUpdate = true;
+      const plT = tex(512, 64); plT.c.fillStyle = '#26221c'; plT.c.fillRect(0, 0, 512, 64); plT.c.fillStyle = '#e4dfd8'; plT.c.font = '700 34px "Atkinson Hyperlegible", system-ui, sans-serif'; plT.c.textBaseline = 'middle'; plT.c.fillText(name, 10, 34); plT.t.needsUpdate = true;
       const pl = new THREE.Mesh(new THREE.PlaneGeometry(0.3, 0.0375), new THREE.MeshBasicMaterial({ map: plT.t, toneMapped: false })); pl.rotation.x = PI / 2; pl.position.set(-0.04, -cd / 2 - 0.0075, 0.022); g.add(pl);
       g.position.set(x, 0.26, 0); g.rotation.z = x < 0 ? -0.16 : 0.16; sc.add(g);
       return { g, T: T2, scr, sw, sh: sw * SCR.h / SCR.w };
@@ -1296,7 +1296,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     /* tall bridges hold the string ZS above the box, so the magnified motion has room */
     for (const x of [XA, XB]) { mono.add(VD3K.box(0.02, 0.09, 0.07, brM, x, YI, 0.07)); const b = new THREE.Mesh(new THREE.CylinderGeometry(0.006, 0.006, 0.09, 12), brM); b.position.set(x, YI, ZS - 0.006); b.castShadow = true; mono.add(b); }
     for (const x of [XA - 0.045, XB + 0.045]) { const pg = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.008, 0.06, 16), steel); pg.rotation.x = PI / 2; pg.position.set(x, YI, 0.1); pg.castShadow = true; mono.add(pg); }
-    const strM = M({ roughness: 0.3, metalness: 0.35, emissive: 0x222222 }, ['#d8dde4', '#e4e9ef']);
+    const strM = M({ roughness: 0.3, metalness: 0.35, emissive: 0x222222 }, ['#e3dfd9', '#eeeae5']);
     const str = tubeMesh3(NSTR, 8, strM); str.castShadow = true; mono.add(str);
     const ends = [XA - 0.045, XA, XB, XB + 0.045].map((x) => v3(x, YI, x < XA || x > XB ? 0.1 : ZS));
     mono.add(VD3K.rod(ends[0], ends[1], 0.0016, strM), VD3K.rod(ends[2], ends[3], 0.0016, strM));
@@ -1309,7 +1309,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const pipe = new THREE.Group(); sc.add(pipe);
     const ZP = 0.1, RP = 0.045;
     const tube = VD3K.glass(St, { r: RP, len: LEN, axis: 'x', ends: false, opacity: 0.2 }); tube.position.set(0, YI, ZP); pipe.add(tube);
-    const rimM = M({ roughness: 0.3, metalness: 0.1, transparent: true, opacity: 0.55 }, ['#a9c6da', '#7fa8c4']);
+    const rimM = M({ roughness: 0.3, metalness: 0.1, transparent: true, opacity: 0.55 }, ['#d5c4ae', '#bfa584']);
     for (const x of [XA, XB]) { const r = new THREE.Mesh(new THREE.TorusGeometry(RP, 0.0025, 8, 48), rimM); r.rotation.y = PI / 2; r.position.set(x, YI, ZP); pipe.add(r); }
     for (const x of [XA + 0.12, XB - 0.12]) { pipe.add(VD3K.box(0.03, 0.1, ZP - RP, dark, x, YI, 0)); }
     const stop = new THREE.Mesh(new THREE.CylinderGeometry(RP + 0.004, RP + 0.004, 0.025, 40), M({ roughness: 0.8 }, ['#7a4b2c', '#5d3a23'])); stop.rotation.z = PI / 2; stop.position.set(XA - 0.0125, YI, ZP); stop.castShadow = true; pipe.add(stop);
@@ -1321,19 +1321,19 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const mic = new THREE.Group(); sc.add(mic);
     mic.add(VD3K.box(0.08, 0.08, 0.012, dark, 0.66, YI - 0.02, 0), VD3K.rod([0.66, YI - 0.02, 0.012], [0.66, YI - 0.02, 0.15], 0.005, steel));
     const mh = new THREE.Mesh(new THREE.CylinderGeometry(0.014, 0.011, 0.07, 24), dark); mh.rotation.z = PI / 2; mh.position.set(0.635, YI - 0.02, 0.15); mh.castShadow = true; mic.add(mh);
-    const grill = new THREE.Mesh(new THREE.SphereGeometry(0.016, 24, 16), M({ roughness: 0.5, metalness: 0.5 }, ['#6d7680', '#9aa3ae'])); grill.position.set(0.595, YI - 0.02, 0.15); mic.add(grill);
+    const grill = new THREE.Mesh(new THREE.SphereGeometry(0.016, 24, 16), M({ roughness: 0.5, metalness: 0.5 }, ['#7f786e', '#aca59b'])); grill.position.set(0.595, YI - 0.02, 0.15); mic.add(grill);
     mic.add(VD3K.cable([0.68, YI - 0.02, 0.006], [0.6, 0.12, 0.03], { sag: 0.02, rad: 0.004, via: [[0.78, YI + 0.05, 0.004], [0.74, 0.08, 0.004]] }));
     mic.add(VD3K.cable([0.68, YI - 0.02, 0.006], [-0.5, 0.12, 0.03], { rad: 0.004, via: [[0.8, YI + 0.12, 0.004], [0.3, 0.06, 0.004], [-0.3, 0.07, 0.004]] }));
     g3 = { St, el, band, bandM, flT, topT, poT, woodT, scope, anal, mono, str, ghosts, pipe, air, curve, base, stop, tube, wallM };
     St.onTheme((dk) => {
-      let c = flT.c; c.fillStyle = dk ? '#2b3038' : '#c9ced4'; c.fillRect(0, 0, 256, 256);
+      let c = flT.c; c.fillStyle = dk ? '#37322c' : '#d3cfca'; c.fillRect(0, 0, 256, 256);
       c.fillStyle = dk ? 'rgba(255,255,255,0.03)' : 'rgba(255,255,255,0.25)'; c.fillRect(0, 0, 128, 128); c.fillRect(128, 128, 128, 128);
       c.strokeStyle = dk ? 'rgba(0,0,0,0.5)' : 'rgba(80,90,100,0.35)'; c.lineWidth = 2; c.strokeRect(1, 1, 126, 126); c.strokeRect(129, 1, 126, 126); c.strokeRect(1, 129, 126, 126); c.strokeRect(129, 129, 126, 126); flT.t.needsUpdate = true;
       const grain = (T2, base, w, h, n) => { const c2 = T2.c; c2.fillStyle = base; c2.fillRect(0, 0, w, h);
         for (let i = 0; i < n; i++) { const y = (i * 37.3) % h, a = 0.04 + 0.05 * ((i * 7) % 5) / 5; c2.strokeStyle = `rgba(${dk ? '0,0,0' : '90,55,25'},${a})`; c2.lineWidth = 1 + (i % 3); c2.beginPath(); c2.moveTo(0, y); c2.bezierCurveTo(w * 0.3, y + 6, w * 0.6, y - 6, w, y + 3); c2.stroke(); }
         T2.t.needsUpdate = true; };
       grain(topT, dk ? '#4a3c2c' : '#c8a678', 1024, 256, 60); grain(woodT, dk ? '#5a4128' : '#b98a55', 512, 128, 30);
-      g3.curve.material.color = VD3K.token('--accent', '#2b60b5'); g3.bandM.color = VD3K.token('--accent', '#2b60b5'); g3.base.material.color = VD3K.token('--muted', '#5a6575');
+      g3.curve.material.color = VD3K.token('--accent', '#c4811c'); g3.bandM.color = VD3K.token('--accent', '#c4811c'); g3.base.material.color = VD3K.token('--muted', '#73695c');
       V3.poster = '';
     });
     can.addEventListener('wheel', (e) => { if (!in3(e)) e.stopImmediatePropagation(); }, { passive: true });   /* the wheel zooms only over the picture */
@@ -1401,18 +1401,18 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     c.fillStyle = '#2a2722'; c.strokeStyle = '#2a2722'; c.lineWidth = 6; c.lineCap = 'round'; c.lineJoin = 'round';
     const cy = 445, id = P.k;   /* the name across the top, where it stays in view; the sketch under it */
     const tubeH = (x0, x1, r0, r1, col) => { c.fillStyle = col; c.beginPath(); c.moveTo(x0, cy - r0); c.lineTo(x1, cy - r1); c.lineTo(x1, cy + r1); c.lineTo(x0, cy + r0); c.closePath(); c.fill(); };
-    if (id === 'flute') { tubeH(120, 900, 16, 16, '#9aa1aa'); c.fillStyle = '#2a2722'; c.beginPath(); c.ellipse(220, cy, 12, 8, 0, 0, TAU); c.fill(); for (let k = 0; k < 9; k++) { c.fillStyle = '#c4c9cf'; c.beginPath(); c.arc(420 + k * 50, cy, 13, 0, TAU); c.fill(); c.strokeStyle = '#6b727b'; c.lineWidth = 3; c.stroke(); } }
+    if (id === 'flute') { tubeH(120, 900, 16, 16, '#a9a39b'); c.fillStyle = '#2a2722'; c.beginPath(); c.ellipse(220, cy, 12, 8, 0, 0, TAU); c.fill(); for (let k = 0; k < 9; k++) { c.fillStyle = '#cecac5'; c.beginPath(); c.arc(420 + k * 50, cy, 13, 0, TAU); c.fill(); c.strokeStyle = '#7a746c'; c.lineWidth = 3; c.stroke(); } }
     else if (id === 'clarinet' || id === 'oboe') {
       const ob = id === 'oboe'; tubeH(150, 790, ob ? 12 : 18, ob ? 22 : 24, '#1f1c19'); c.beginPath(); c.moveTo(790, cy - (ob ? 22 : 24)); c.quadraticCurveTo(850, cy - 30, 890, cy - (ob ? 46 : 70)); c.lineTo(890, cy + (ob ? 46 : 70)); c.quadraticCurveTo(850, cy + 30, 790, cy + (ob ? 22 : 24)); c.fill();
       if (ob) { c.fillStyle = '#b48a4f'; c.beginPath(); c.moveTo(150, cy - 8); c.lineTo(100, cy - 4); c.lineTo(100, cy + 4); c.lineTo(150, cy + 8); c.fill(); }
       else { c.fillStyle = '#2e2b27'; c.beginPath(); c.moveTo(150, cy - 18); c.lineTo(90, cy - 8); c.lineTo(90, cy + 10); c.lineTo(150, cy + 18); c.fill(); }
-      for (let k = 0; k < 7; k++) { c.fillStyle = '#c0c4c9'; c.beginPath(); c.arc(330 + k * 62, cy, 9, 0, TAU); c.fill(); }
+      for (let k = 0; k < 7; k++) { c.fillStyle = '#c8c5c1'; c.beginPath(); c.arc(330 + k * 62, cy, 9, 0, TAU); c.fill(); }
     } else if (id === 'trumpet') {
       c.strokeStyle = '#b8902f'; c.lineWidth = 16; c.beginPath(); c.moveTo(140, cy); c.lineTo(700, cy); c.stroke();
       c.beginPath(); c.moveTo(330, cy); c.lineTo(330, cy + 70); c.lineTo(640, cy + 70); c.quadraticCurveTo(700, cy + 70, 700, cy); c.stroke();
       for (let k = 0; k < 3; k++) { c.fillStyle = '#b8902f'; c.fillRect(420 + k * 46, cy - 60, 26, 140); c.fillStyle = '#d9b860'; c.fillRect(424 + k * 46, cy - 80, 18, 22); }
       c.fillStyle = '#c99d36'; c.beginPath(); c.moveTo(700, cy - 9); c.quadraticCurveTo(820, cy - 14, 900, cy - 90); c.lineTo(900, cy + 90); c.quadraticCurveTo(820, cy + 14, 700, cy + 9); c.fill();
-      c.fillStyle = '#9b9ea3'; c.fillRect(110, cy - 12, 34, 24);
+      c.fillStyle = '#a29f9c'; c.fillRect(110, cy - 12, 34, 24);
     } else if (id === 'bowed') {
       c.save(); c.translate(470, cy); c.fillStyle = '#9c5a24';
       const bout = (s) => { c.beginPath(); c.moveTo(-250, 0); c.bezierCurveTo(-250, -s * 130, -120, -s * 125, -70, -s * 95); c.bezierCurveTo(-40, -s * 70, 30, -s * 70, 60, -s * 95); c.bezierCurveTo(120, -s * 130, 230, -s * 115, 230, 0); c.closePath(); c.fill(); };

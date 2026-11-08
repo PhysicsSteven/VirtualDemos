@@ -18,39 +18,39 @@
 <style>
 /* Layout: lab bench. The main view (pull arrows or ocean bulges) sits over a plot strip; a narrow instrument rail sits on the right; stacks on phones. */
 :root {
-  --bg: #e9edf2;
-  --surface: #f8fafc;
-  --canvas: #fcfdfe;
-  --relief: #dfe5ec;
-  --ink: #17202b;
-  --muted: #5a6575;
-  --line: #d3d9e2;
-  --grid: #e6ebf1;
-  --grid-strong: #cfd7e1;
+  --bg: #f1eeea;
+  --surface: #fcfaf8;
+  --canvas: #fefdfc;
+  --relief: #ebe6e0;
+  --ink: #2a2219;
+  --muted: #73695c;
+  --line: #e1dbd4;
+  --grid: #f0ece7;
+  --grid-strong: #e0d9d0;
   --pos: #c23f2c;
   --neg: #2b60b5;
-  --field: #1d2836;
+  --field: #342b1f;
   --equi: #a7740b;
-  --accent: #2b60b5;
+  --accent: #c4811c;
   --on-charge: #ffffff;
   --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
-  --earth: #c9d8c0; --earth-night: #8fa38a; --ocean: #4f8fd6; --lit: #f1e8c8; --unlit: #4a5462;
+  --earth: #c9d8c0; --earth-night: #8fa38a; --ocean: #4f8fd6; --lit: #f1e8c8; --unlit: #60574c;
   --canvas-scale: 1;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
-    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-    --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
-    --earth: #3b4a3c; --earth-night: #232d25; --ocean: #3a78c4; --lit: #f2ead0; --unlit: #2a3441;
+    --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --relief: #40372c; --ink: #eeeae4; --muted: #b0a698;
+    --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+    --field: #eee8e0; --equi: #e2b350; --accent: #fbc26d; --on-charge: #17130e; color-scheme: dark;
+    --earth: #3b4a3c; --earth-night: #232d25; --ocean: #3a78c4; --lit: #f2ead0; --unlit: #3f372c;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
-  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-  --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
-  --earth: #3b4a3c; --earth-night: #232d25; --ocean: #3a78c4; --lit: #f2ead0; --unlit: #2a3441;
+  --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --relief: #40372c; --ink: #eeeae4; --muted: #b0a698;
+  --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+  --field: #eee8e0; --equi: #e2b350; --accent: #fbc26d; --on-charge: #17130e; color-scheme: dark;
+  --earth: #3b4a3c; --earth-night: #232d25; --ocean: #3a78c4; --lit: #f2ead0; --unlit: #3f372c;
 }
 :root[data-projector="on"] { font-size: 125%; --canvas-scale: 1.45; }
 html, body { height: 100%; }
@@ -830,14 +830,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   function theme3() {
     const g = g3, dk = VD3.dark();
-    g.scene.background = col3(T.canvas, '#fcfdfe');
-    g.gridM.color = col3(T.ink, '#1d2836'); g.earthPM.color = col3(T.ocean, '#4f8fd6'); g.dotM.color = col3(T.ink, '#1d2836');
-    g.mTot.color = col3(T.field, '#1d2836'); g.mTid.color = col3(T.pos, '#c23f2c'); g.cenM.color = col3(T.accent, '#2a64c8'); g.cenDot.material.color = col3(T.accent, '#2a64c8');
-    g.moonM.color = col3(T.lit, '#f1e8c8'); g.lineM.color = col3(T.muted, '#5d6a7c');
+    g.scene.background = col3(T.canvas, '#fefdfc');
+    g.gridM.color = col3(T.ink, '#342b1f'); g.earthPM.color = col3(T.ocean, '#4f8fd6'); g.dotM.color = col3(T.ink, '#342b1f');
+    g.mTot.color = col3(T.field, '#342b1f'); g.mTid.color = col3(T.pos, '#c23f2c'); g.cenM.color = col3(T.accent, '#2a64c8'); g.cenDot.material.color = col3(T.accent, '#d48b1e');
+    g.moonM.color = col3(T.lit, '#f1e8c8'); g.lineM.color = col3(T.muted, '#7a6e5f');
     g.earthBM.color = col3(T.earth, '#c9d8c0'); g.oceanM.color = col3(T.ocean, '#4f8fd6'); g.oceanM.opacity = dk ? 0.62 : 0.45;
     g.eqM.color = col3(T.ocean, '#4f8fd6'); g.seaM.color = col3(T.muted, '#5d6a7c');
-    g.eachMM.color = col3(T.pos, '#c23f2c'); g.eachSM.color = col3(T.equi, '#a7740b'); g.cityM.color = col3(T.accent, '#2a64c8');
-    g.orbitM.color = col3(T.muted, '#5d6a7c'); g.rayM.color = col3(T.equi, '#a7740b'); g.rayM.emissive = col3(T.equi, '#a7740b'); g.spinM.color = col3(T.ink, '#1d2836');
+    g.eachMM.color = col3(T.pos, '#c23f2c'); g.eachSM.color = col3(T.equi, '#a7740b'); g.cityM.color = col3(T.accent, '#d48b1e');
+    g.orbitM.color = col3(T.muted, '#7a6e5f'); g.rayM.color = col3(T.equi, '#a7740b'); g.rayM.emissive = col3(T.equi, '#a7740b'); g.spinM.color = col3(T.ink, '#1d2836');
     g.amb.intensity = dk ? 0.4 : 0.72; g.sun.intensity = dk ? 0.85 : 0.6;
   }
   /* sizes the renderer to the main pane, frames the spheres [x, y, z, r] below the caption as seen from the angles in o, renders, and sets P3 */

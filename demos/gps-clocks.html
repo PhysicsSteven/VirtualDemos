@@ -17,10 +17,10 @@
 /* Layout: Earth, the orbit and the two clocks on the left, the rate against radius graph on the right; the rail on the right. */
 /* Layout: lab bench. The gas box and speed histogram fill the left, a narrow instrument rail sits on the right; stacks on phones. */
 
-:root { --earth: #6b8fb8; --sat: #4a5563; --grav: #2b60b5; --speed: #b0452f; --net: #1f8a5a; }
+:root { --earth: #6b8fb8; --sat: #61584c; --grav: #2b60b5; --speed: #b0452f; --net: #1f8a5a; }
 :root { --star: rgba(70, 90, 125, 0.45); --land: #7fa36a; --ocean-deep: #4a6f99; --ice: #eef3f8; --atmo: rgba(120, 175, 235, 0.45); --atmo-clear: rgba(120, 175, 235, 0); --panel: #2f5d9e; --panel-line: rgba(255, 255, 255, 0.35); --dial: #ffffff; --shade: rgba(10, 20, 40, 0.3); }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --earth: #3d5a7a; --sat: #c3cad4; --grav: #69a0ff; --speed: #ff8a70; --net: #4cd08f; --star: rgba(225, 235, 255, 0.85); --land: #4f6e44; --ocean-deep: #263c56; --ice: #c9d3de; --atmo: rgba(110, 170, 255, 0.40); --atmo-clear: rgba(110, 170, 255, 0); --panel: #3d6fb8; --panel-line: rgba(255, 255, 255, 0.25); --dial: #1b2430; --shade: rgba(0, 0, 0, 0.45); } }
-:root[data-theme="dark"] { --earth: #3d5a7a; --sat: #c3cad4; --grav: #69a0ff; --speed: #ff8a70; --net: #4cd08f; --star: rgba(225, 235, 255, 0.85); --land: #4f6e44; --ocean-deep: #263c56; --ice: #c9d3de; --atmo: rgba(110, 170, 255, 0.40); --atmo-clear: rgba(110, 170, 255, 0); --panel: #3d6fb8; --panel-line: rgba(255, 255, 255, 0.25); --dial: #1b2430; --shade: rgba(0, 0, 0, 0.45); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --earth: #3d5a7a; --sat: #d3ccc4; --grav: #69a0ff; --speed: #ff8a70; --net: #4cd08f; --star: rgba(225, 235, 255, 0.85); --land: #4f6e44; --ocean-deep: #263c56; --ice: #c9d3de; --atmo: rgba(110, 170, 255, 0.40); --atmo-clear: rgba(110, 170, 255, 0); --panel: #3d6fb8; --panel-line: rgba(255, 255, 255, 0.25); --dial: #2e271d; --shade: rgba(0, 0, 0, 0.45); } }
+:root[data-theme="dark"] { --earth: #3d5a7a; --sat: #d3ccc4; --grav: #69a0ff; --speed: #ff8a70; --net: #4cd08f; --star: rgba(225, 235, 255, 0.85); --land: #4f6e44; --ocean-deep: #263c56; --ice: #c9d3de; --atmo: rgba(110, 170, 255, 0.40); --atmo-clear: rgba(110, 170, 255, 0); --panel: #3d6fb8; --panel-line: rgba(255, 255, 255, 0.25); --dial: #2e271d; --shade: rgba(0, 0, 0, 0.45); }
 :root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
 body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
@@ -296,14 +296,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const earthM = M({ map: landT, roughness: 0.85, metalness: 0 }), earth = new THREE.Mesh(upZ(new THREE.SphereGeometry(1, 72, 48)), earthM);
     const atmoM = new THREE.MeshBasicMaterial({ color: 0x6eaaff, transparent: true, opacity: 0.16, side: THREE.BackSide, depthWrite: false }), atmo = new THREE.Mesh(new THREE.SphereGeometry(1.035, 48, 32), atmoM);
     /* the ground clock: a marker on the equator that turns with Earth */
-    const gcM = new THREE.MeshBasicMaterial({ color: 0x17202b }), gclock = new THREE.Group(), gdot = new THREE.Mesh(new THREE.SphereGeometry(1, 16, 12), gcM); gclock.add(gdot);
+    const gcM = new THREE.MeshBasicMaterial({ color: 0x2a2219 }), gclock = new THREE.Group(), gdot = new THREE.Mesh(new THREE.SphereGeometry(1, 16, 12), gcM); gclock.add(gdot);
     const towerM = M({ roughness: 0.5, metalness: 0.4 }), tower = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 1, 8).rotateZ(Math.PI / 2).translate(0.5, 0, 0), towerM);
     /* the orbit: a dashed circle of radius r */
     const ringM = new THREE.LineDashedMaterial({ dashSize: 0.06, gapSize: 0.05, transparent: true, opacity: 0.75 }), pts = [];
     for (let i = 0; i <= 256; i++) { const a = i / 256 * 2 * Math.PI; pts.push(new THREE.Vector3(Math.cos(a), Math.sin(a), 0)); }
     const ring = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), ringM); ring.computeLineDistances();
     /* the satellite: body, two solar panels and a dish toward Earth */
-    const sat = new THREE.Group(), bodyM = M({ roughness: 0.4, metalness: 0.6 }), panM = M({ roughness: 0.35, metalness: 0.3, emissive: 0x0a1630 });
+    const sat = new THREE.Group(), bodyM = M({ roughness: 0.4, metalness: 0.6 }), panM = M({ roughness: 0.35, metalness: 0.3, emissive: 0x261e14 });
     sat.add(new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), bodyM));
     for (const s of [-1, 1]) { const pn = new THREE.Mesh(new THREE.BoxGeometry(0.7, 2.2, 0.05), panM); pn.position.set(0, s * 1.75, 0); sat.add(pn); const arm = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.8, 0.08), bodyM); arm.position.set(0, s * 0.7, 0); sat.add(arm); }
     const dish = new THREE.Mesh(new THREE.ConeGeometry(0.4, 0.3, 16, 1, true).rotateZ(Math.PI / 2), bodyM); dish.position.x = -0.65; sat.add(dish);
@@ -328,9 +328,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   function theme3() {
     const g = g3, dk = VD3.dark();
-    g.scene.background = col3(dk ? '#050a14' : '#0d1626', '#0d1626'); paintLand();
-    g.gcM.color = col3('#ffd27a', '#ffd27a'); g.towerM.color = col3(T.sat, '#c3cad4'); g.ringM.color = col3(dk ? '#9fb0c6' : '#b8c6d8', '#b8c6d8');
-    g.bodyM.color = col3('#c9ced6', '#c9ced6'); g.panM.color = col3(T.panel, '#2f5ea8'); g.starM.color = col3('#e8eefc', '#e8eefc');
+    g.scene.background = col3(dk ? '#100d08' : '#221b11', '#221b11'); paintLand();
+    g.gcM.color = col3('#ffd27a', '#ffd27a'); g.towerM.color = col3(T.sat, '#d3ccc4'); g.ringM.color = col3(dk ? '#c3b5a2' : '#d6caba', '#d6caba');
+    g.bodyM.color = col3('#d5d0ca', '#d5d0ca'); g.panM.color = col3(T.panel, '#2f5ea8'); g.starM.color = col3('#e8eefc', '#e8eefc');
   }
   /* draws the 3D picture into (x0, y0, w, h); returns a projector from Earth radii to this canvas */
   function draw3(x0, y0, w, h, gth, th, K) {
@@ -375,7 +375,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const Q = draw3(0, 0, pw, h3, gth, th, K), r = S.r / RE, lab = (q, t, col) => { ctx.fillStyle = col; ctx.font = `700 ${11 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillText(t, q[0], q[1] - 8 * p); };
       { const q = Q(Math.cos(gth), Math.sin(gth), -0.04); ctx.fillStyle = '#ffd27a'; ctx.font = `700 ${11 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText('ground clock', q[0], q[1] + 8 * p); }
       const top = S.mode === 'orbit' ? Q(r * Math.cos(th), r * Math.sin(th), 0.08 * Math.max(r, 1.6)) : Q((1 + Math.max(r - 1, 0.06)) * Math.cos(gth), (1 + Math.max(r - 1, 0.06)) * Math.sin(gth), 0.04);
-      lab(top, 'second clock', '#e8eefc');
+      lab(top, 'second clock', '#f6f3ee');
       ctx.fillStyle = 'rgba(232,238,252,0.7)'; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText('drag to turn, wheel to zoom', pw / 2, h3 - 20 * p);
       ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.86; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(10 * p, 46 * p, Math.min(pw - 20 * p, 360 * p), 54 * p, 8 * p) : ctx.rect(10 * p, 46 * p, Math.min(pw - 20 * p, 360 * p), 54 * p); ctx.fill(); ctx.globalAlpha = 1;
     } else {

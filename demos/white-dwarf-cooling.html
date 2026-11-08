@@ -31,36 +31,36 @@
 /* Layout: one canvas with the cooling curve (top left), a slice through the star with its coupling profile (bottom left)
    and a schematic Gaia HR diagram (right); instrument rail on the right; everything stacks on phones. */
 :root {
-  --bg: #e9edf2;
-  --surface: #f8fafc;
-  --canvas: #fcfdfe;
-  --ink: #17202b;
-  --muted: #5a6575;
-  --line: #d3d9e2;
-  --grid: #e6ebf1;
-  --grid-strong: #cfd7e1;
+  --bg: #f1eeea;
+  --surface: #fcfaf8;
+  --canvas: #fefdfc;
+  --ink: #2a2219;
+  --muted: #73695c;
+  --line: #e1dbd4;
+  --grid: #f0ece7;
+  --grid-strong: #e0d9d0;
   --pos: #c23f2c;
   --neg: #2b60b5;
   --equi: #a7740b;
-  --accent: #2b60b5;
+  --accent: #c4811c;
   --liquid: #c8641c;
   --solid: #137f9e;
-  --track: #8d97a6;
-  --dot: #46566b;
+  --track: #a49b8f;
+  --dot: #685b49;
   --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
-    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-    --equi: #e2b350; --accent: #69a0ff; --liquid: #f39a52; --solid: #4fc6e6; --track: #5f6b7c; --dot: #a9b6c7; color-scheme: dark;
+    --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
+    --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+    --equi: #e2b350; --accent: #fbc26d; --liquid: #f39a52; --solid: #4fc6e6; --track: #7a6f61; --dot: #c5baab; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
-  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-  --equi: #e2b350; --accent: #69a0ff; --liquid: #f39a52; --solid: #4fc6e6; --track: #5f6b7c; --dot: #a9b6c7; color-scheme: dark;
+  --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
+  --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+  --equi: #e2b350; --accent: #fbc26d; --liquid: #f39a52; --solid: #4fc6e6; --track: #7a6f61; --dot: #c5baab; color-scheme: dark;
 }
 :root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
@@ -980,10 +980,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const rs = fsFrac * h;
     if (rs > 0.5) {
       c.save(); c.beginPath(); c.arc(h, h, rs, 0, 2 * Math.PI); c.fillStyle = T.solid; c.globalAlpha = 0.85; c.fill(); c.globalAlpha = 1; c.clip();
-      const a = 13; c.fillStyle = '#e8f6ff'; c.globalAlpha = 0.7;
+      const a = 13; c.fillStyle = '#f7f4f0'; c.globalAlpha = 0.7;
       for (let row = -30; row <= 30; row++) { const y = h + row * a * 0.866, off = row % 2 ? a / 2 : 0; for (let x = off - a; x < n + a; x += a) { c.beginPath(); c.arc(x, y, 2.2, 0, 2 * Math.PI); c.fill(); } }
       c.restore();
-      if (fsFrac < 0.999) { c.strokeStyle = '#e8f6ff'; c.lineWidth = 4; c.beginPath(); c.arc(h, h, rs, 0, 2 * Math.PI); c.stroke(); }
+      if (fsFrac < 0.999) { c.strokeStyle = '#f7f4f0'; c.lineWidth = 4; c.beginPath(); c.arc(h, h, rs, 0, 2 * Math.PI); c.stroke(); }
     }
     W3.tex.needsUpdate = true; void comp;
   }

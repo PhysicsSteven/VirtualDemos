@@ -17,11 +17,11 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
 /* only what this demo needs beyond demos/lib/vd.css: the phantom, the dose wash, the graph and the strip */
-:root { --water: #d7ebf6; --water-edge: #8fb9d3; --proton: #c2410c; --photon: #0f766e; --layer: #64748b; --det: #7c3aed; --target: #be123c;
+:root { --water: #d7ebf6; --water-edge: #8fb9d3; --proton: #c2410c; --photon: #0f766e; --layer: #887a67; --det: #7c3aed; --target: #be123c;
   --grid: rgba(60, 70, 85, 0.13); }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --water: #10283a; --water-edge: #2f5f80; --proton: #fb923c; --photon: #5eead4; --layer: #94a3b8;
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --water: #10283a; --water-edge: #2f5f80; --proton: #fb923c; --photon: #5eead4; --layer: #b5a897;
   --det: #c4a5ff; --target: #fb7185; --grid: rgba(200, 210, 225, 0.12); } }
-:root[data-theme="dark"] { --water: #10283a; --water-edge: #2f5f80; --proton: #fb923c; --photon: #5eead4; --layer: #94a3b8;
+:root[data-theme="dark"] { --water: #10283a; --water-edge: #2f5f80; --proton: #fb923c; --photon: #5eead4; --layer: #b5a897;
   --det: #c4a5ff; --target: #fb7185; --grid: rgba(200, 210, 225, 0.12); }
 .stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
@@ -335,9 +335,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* the depth rule */
     G.shadow(ctx, (b.x0 + b.x1) / 2, benchY - 2 * p, (b.x1 - b.x0) * 0.55, 4 * p, 0.7);
     const ry = b.y1 + wall + 4 * p, rh = 17 * p, rg = ctx.createLinearGradient(0, ry, 0, ry + rh);
-    rg.addColorStop(0, d ? '#7b8592' : '#e4e8ed'); rg.addColorStop(1, d ? '#4c5560' : '#b7bfc9');
+    rg.addColorStop(0, d ? '#90887d' : '#ece9e5'); rg.addColorStop(1, d ? '#5e574e' : '#c8c1b8');
     ctx.fillStyle = rg; ctx.beginPath(); ctx.roundRect(b.x0 - 34 * p, ry, b.x1 - b.x0 + 40 * p, rh, 2 * p); ctx.fill();
-    const rink = d ? '#0e1319' : '#1f2833'; ctx.strokeStyle = rink; ctx.fillStyle = rink; ctx.lineWidth = 1; ctx.font = `600 ${10 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+    const rink = d ? '#18140f' : '#322a21'; ctx.strokeStyle = rink; ctx.fillStyle = rink; ctx.lineWidth = 1; ctx.font = `600 ${10 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
     const ticks = niceTicks(0, S.zmax, 8), st = ticks.length > 1 ? ticks[1] - ticks[0] : S.zmax;
     for (let v = 0; v <= S.zmax + 1e-9; v += st / 5) { const x = b.x0 + v * sx; ctx.beginPath(); ctx.moveTo(x, ry); ctx.lineTo(x, ry + 3 * p); ctx.stroke(); }
     for (const v of ticks) { const x = b.x0 + v * sx; ctx.beginPath(); ctx.moveTo(x, ry); ctx.lineTo(x, ry + 6 * p); ctx.stroke(); ctx.fillText(String(v), x, ry + rh - 0.5 * p); }
@@ -379,32 +379,32 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* the nozzle (protons) or the linac head's collimator (photons) */
     const photons = S.view === 'compare' && S.show === 'photons', nh = Math.min(84 * p, (b.y1 - b.y0) * 0.55), nx1 = b.x0 - 16 * p;
     G.box(ctx, -12 * p, cy - nh / 2, nx1 + 12 * p, nh, { color: photons ? (d ? '#5b6170' : '#6b7280') : (d ? '#4a5563' : '#566273'), r: 6 * p, shadow: false });
-    G.box(ctx, nx1 - 4 * p, cy - nh * 0.32, 12 * p, nh * 0.64, { color: d ? '#6b7786' : '#7b8796', r: 3 * p, shadow: false });
-    ctx.fillStyle = d ? '#9fb7d0' : '#d7e3ef'; ctx.fillRect(nx1 + 7 * p, cy - 5 * ky, 1.5 * p, 10 * ky);
+    G.box(ctx, nx1 - 4 * p, cy - nh * 0.32, 12 * p, nh * 0.64, { color: d ? '#847a6d' : '#948a7d', r: 3 * p, shadow: false });
+    ctx.fillStyle = d ? '#ccbaa3' : '#ece4da'; ctx.fillRect(nx1 + 7 * p, cy - 5 * ky, 1.5 * p, 10 * ky);
     G.plate(ctx, photons ? 'linac' : 'nozzle', (nx1 - 12 * p) / 2, cy - nh / 2 + 10 * p, { s: 7.5 * p });
     G.label(ctx, photons ? '6 MV photons' : S.view === 'pristine' ? `protons, ${sig(S.e, 4)} MeV` : `protons, ${S.L.length} layers`, 6 * p, cy + nh / 2 + 10 * p, { s: 10.5 * p, c: T.ink, alpha: 0.9 });
     /* the Bragg peak chamber on its scanning carriage, and the electrometer */
     const xd = b.x0 + S.z * sx, ch = Math.min((b.y1 - b.y0) * 0.8, 8.4 * ky), cw = Math.max(7 * p, Math.min(1 * sx, 14 * p)), cg = ctx.createLinearGradient(xd - cw / 2, 0, xd + cw / 2, 0);
     ctx.strokeStyle = T.det; ctx.lineWidth = 1 * p; ctx.setLineDash([3 * p, 4 * p]); ctx.globalAlpha = 0.7; ctx.beginPath(); ctx.moveTo(xd, b.y0); ctx.lineTo(xd, b.y1); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
-    const railY = top - 8 * p; G.rod(ctx, b.x0 - 10 * p, railY, b.x1 + wall + 10 * p, railY, 3.2 * p, { color: '#a9b2bd' });
-    for (const x of [b.x0 - 10 * p, b.x1 + wall + 6 * p]) G.box(ctx, x - 4 * p, railY - 6 * p, 8 * p, top - railY + 6 * p, { color: '#5f6b7a', r: 2 * p, shadow: false });
-    G.rod(ctx, xd, railY + 4 * p, xd, cy - ch / 2, 2.2 * p, { color: '#b8c0ca' });
-    G.box(ctx, xd - 15 * p, railY - 9 * p, 30 * p, 16 * p, { color: d ? '#6a4fb0' : '#5b3fa6', r: 3 * p, shadow: false });
-    cg.addColorStop(0, G.mix(d ? '#c4b2f2' : '#8a6fd1', '#ffffff', 0.25)); cg.addColorStop(0.5, d ? '#9b82e0' : '#6b4fc0'); cg.addColorStop(1, d ? '#5d47a0' : '#43308a');
+    const railY = top - 8 * p; G.rod(ctx, b.x0 - 10 * p, railY, b.x1 + wall + 10 * p, railY, 3.2 * p, { color: '#bbb4aa' });
+    for (const x of [b.x0 - 10 * p, b.x1 + wall + 6 * p]) G.box(ctx, x - 4 * p, railY - 6 * p, 8 * p, top - railY + 6 * p, { color: '#786e61', r: 2 * p, shadow: false });
+    G.rod(ctx, xd, railY + 4 * p, xd, cy - ch / 2, 2.2 * p, { color: '#c9c2b9' });
+    G.box(ctx, xd - 15 * p, railY - 9 * p, 30 * p, 16 * p, { color: d ? '#a88557' : '#97774e', r: 3 * p, shadow: false });
+    cg.addColorStop(0, G.mix(d ? '#c4b2f2' : '#8a6fd1', '#ffffff', 0.25)); cg.addColorStop(0.5, d ? '#9b82e0' : '#6b4fc0'); cg.addColorStop(1, d ? '#98784f' : '#43308a');
     ctx.globalAlpha = 0.72; ctx.fillStyle = cg; ctx.beginPath(); ctx.roundRect(xd - cw / 2, cy - ch / 2, cw, ch, cw / 2.5); ctx.fill(); ctx.globalAlpha = 1;
     ctx.strokeStyle = 'rgba(255,255,255,0.35)'; ctx.lineWidth = 1; ctx.stroke();
     const ew = 128 * p, eh = Math.min(46 * p, b.y0 - 18 * p), ex = 8 * p, ey = 6 * p;
-    G.cable(ctx, ex + ew, ey + eh * 0.6, xd - 15 * p, railY - 2 * p, 16 * p, { w: 2.2 * p, color: d ? '#0b0f14' : '#2a3038' });
-    G.box(ctx, ex, ey, ew, eh, { color: d ? '#333c47' : '#3b4552', r: 5 * p });
+    G.cable(ctx, ex + ew, ey + eh * 0.6, xd - 15 * p, railY - 2 * p, 16 * p, { w: 2.2 * p, color: d ? '#13100c' : '#37322b' });
+    G.box(ctx, ex, ey, ew, eh, { color: d ? '#463e34' : '#50483d', r: 5 * p });
     G.plate(ctx, 'electrometer', ex + ew / 2, ey + 7 * p, { s: 6.5 * p });
     G.lcd(ctx, ex + 7 * p, ey + 13 * p, ew - 14 * p, eh - 19 * p, `${f(detDose(tankCurve()), 1)} %`);
     G.label(ctx, `z = ${lenTxt(S.z)}`, xd + (xd > b.x1 - 110 * p ? -6 : 6) * p, top + lip / 2 + 1, { a: xd > b.x1 - 110 * p ? 'right' : 'left', s: 11 * p, w: 600, m: true, c: T.ink, alpha: 1 });
     G.label(ctx, ky < sx * 0.99 ? `sideways squeezed ×${f(ky / sx, 2)}` : 'to scale', b.x1 + wall, Math.max(ey + eh / 2, railY - 18 * p), { a: 'right', s: 10 * p });
-    if (tissue) G.label(ctx, M().name, b.x0 + 6 * p, b.y0 + 12 * p, { s: 10.5 * p, c: d ? '#f1f5f9' : '#1f2937', w: 700, alpha: 1 });
+    if (tissue) G.label(ctx, M().name, b.x0 + 6 * p, b.y0 + 12 * p, { s: 10.5 * p, c: d ? '#f8f5f2' : '#352c21', w: 700, alpha: 1 });
     /* the wash key */
     const kx = b.x0 + 10 * p, kw = Math.min(150 * p, (b.x1 - b.x0) * 0.35), ky0 = b.y1 - 16 * p;
     for (let i = 0; i < 60; i++) { const c = washColor(0.1 + 1.1 * i / 59); ctx.fillStyle = `rgb(${c})`; ctx.fillRect(kx + i * kw / 60, ky0, kw / 60 + 0.5, 7 * p); }
-    G.label(ctx, S.view === 'pristine' ? 'dose: 10 → 100 % of the peak, then more' : 'dose: 10 → 100 % of the target dose → 120 %', kx, ky0 - 7 * p, { s: 10 * p, c: d ? '#f1f5f9' : '#1f2937', alpha: 0.9 });
+    G.label(ctx, S.view === 'pristine' ? 'dose: 10 → 100 % of the peak, then more' : 'dose: 10 → 100 % of the target dose → 120 %', kx, ky0 - 7 * p, { s: 10 * p, c: d ? '#f8f5f2' : '#352c21', alpha: 0.9 });
   }
   function niceTicks(a, b, n) { const span = b - a, raw = span / n, mag = Math.pow(10, Math.floor(Math.log10(raw))), st = [1, 2, 5, 10].map((k) => k * mag).find((k) => span / k <= n) || 10 * mag; const out = []; for (let v = Math.ceil(a / st) * st; v <= b + 1e-9; v += st) out.push(+v.toPrecision(10)); return out; }
 
@@ -581,11 +581,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       S3.el.style.zIndex = '0'; can.style.zIndex = '1';
       const sc = S3.scene, g = G3 = {};
       sc.add(VD3K.bench(S3, { w: 3, d: 2, y: 0.25 }), VD3K.backdrop(S3, { r: 1.25, y: 0.1 }));
-      const glassM = VD3K.material(S3, { transparent: true, opacity: 0.16, roughness: 0.1, metalness: 0.1, depthWrite: false, side: THREE.DoubleSide }, ['#b9d3e6', '#7fa6c2']);
+      const glassM = VD3K.material(S3, { transparent: true, opacity: 0.16, roughness: 0.1, metalness: 0.1, depthWrite: false, side: THREE.DoubleSide }, ['#b9d3e6', '#bda484']);
       const waterM = VD3K.material(S3, { transparent: true, opacity: 0.34, roughness: 0.2, metalness: 0, depthWrite: false }, ['#7fb6dc', '#2c6a96']);
       g.tank = VD3K.box(0.372, 0.13, 0.135, glassM, 0, 0, 0); g.water = VD3K.box(0.36, 0.118, 0.118, waterM, 0, 0, 0.004); g.tank.castShadow = false; g.water.castShadow = false;
       sc.add(g.tank, g.water);
-      const steel = VD3K.material(S3, { roughness: 0.4, metalness: 0.55 }, ['#8d97a3', '#5d6773']), dark = VD3K.material(S3, { roughness: 0.6, metalness: 0.2 }, ['#4c5866', '#3a4450']);
+      const steel = VD3K.material(S3, { roughness: 0.4, metalness: 0.55 }, ['#a1998f', '#71695f']), dark = VD3K.material(S3, { roughness: 0.6, metalness: 0.2 }, ['#645a4e', '#4e463c']);
       g.nozzle = VD3K.box(0.11, 0.12, 0.11, dark, -0.265, 0, 0.01); const snout = VD3K.rod([-0.21, 0, 0.065], [-0.188, 0, 0.065], 0.022, steel); sc.add(g.nozzle, snout);
       const ped = VD3K.box(0.11, 0.12, 0.01, steel, -0.265, 0, 0); sc.add(ped);
       g.rule = VD3K.ruler(S3, { len: 0.36, to: 10, unit: 'cm', step: 0.1 }); g.rule.position.set(-0.18, -0.085, 0); sc.add(g.rule);
@@ -605,7 +605,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       g.p = new THREE.Mesh(new THREE.SphereGeometry(0.014, 32, 16), new THREE.MeshStandardMaterial({ color: '#ff8a3d', emissive: '#c2410c', emissiveIntensity: 0.9, roughness: 0.3 })); g.p.position.set(...WC); sc.add(g.p);
       g.pe = new THREE.Mesh(new THREE.SphereGeometry(0.0045, 16, 10), new THREE.MeshStandardMaterial({ color: '#7ea2ff', emissive: '#2b60b5', emissiveIntensity: 0.6 })); sc.add(g.pe);
       const lg2 = new THREE.BufferGeometry(); lg2.setAttribute('position', new THREE.BufferAttribute(new Float32Array(12), 3));
-      g.link = new THREE.LineSegments(lg2, new THREE.LineDashedMaterial({ color: '#8090a0', dashSize: 0.008, gapSize: 0.006, transparent: true, opacity: 0.8 })); g.link.frustumCulled = false; sc.add(g.link);
+      g.link = new THREE.LineSegments(lg2, new THREE.LineDashedMaterial({ color: '#9e9282', dashSize: 0.008, gapSize: 0.006, transparent: true, opacity: 0.8 })); g.link.frustumCulled = false; sc.add(g.link);
       g.mT = VD3K.meter(S3, { label: 'ENERGY LEFT', w: 0.15, h: 0.085 }); g.mT.position.set(-0.3, -0.15, 0); g.mT.rotation.z = -0.2; sc.add(g.mT);
       g.mV = VD3K.meter(S3, { label: 'SPEED', sub: 'of the proton', w: 0.15, h: 0.085 }); g.mV.position.set(0.3, -0.15, 0); g.mV.rotation.z = 0.2; sc.add(g.mV);
       S3.orbit(S3.el, o, () => { dirty = true; }, { zMin: 0.5, zMax: 2.5 });
@@ -625,7 +625,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       if (g.rule.userData.zmax !== st.zmax) { S3.scene.remove(g.rule); g.rule = VD3K.ruler(S3, { len: 0.36, to: st.zmax, unit: 'cm', step: st.zmax / 100 }); g.rule.position.set(-0.18, -0.085, 0); g.rule.userData.zmax = st.zmax; S3.scene.add(g.rule); S3.theme(true); }
       g.reach.scale.set(Math.max(1e-4, RD * lg(st.w.bmax)), 1, Math.max(1e-4, RD * lg(st.w.bmax)));
       g.bmin.scale.set(Math.max(1e-4, RD * lg(st.w.bmin)), 1, Math.max(1e-4, RD * lg(st.w.bmin)));
-      const grey = new THREE.Color(VD3.dark() ? '#4d5663' : '#c3cad3'), cold = new THREE.Color('#a8b4c4');
+      const grey = new THREE.Color(VD3.dark() ? '#61594f' : '#d2ccc4'), cold = new THREE.Color('#a8b4c4');
       let n = 0, na = 0;
       for (const e of es) {
         const cp = Math.cos(e.ph), sp = Math.sin(e.ph), P3 = (dx, dr) => { const rr = RD * (lg(e.b) - dr); return [WC[0] + e.x * sxw + dx * RD, WC[1] + rr * cp, WC[2] + rr * sp]; };
@@ -679,7 +679,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       for (const e of es) {
         const s = Math.cos(e.ph) >= 0 ? 1 : -1, ru = hh * 0.92, P2 = (dx, dr) => [X(e.x) + dx * ru, Y(lg(e.b) - dr, s)];
         let wob = 0; if (!e.kept && e.b > st.w.bmax) wob = 0.06 * Math.pow(e.b, 3) / Math.pow(e.x * e.x + e.b * e.b, 1.5) * (q || 0.3);
-        const K = Math.hypot(e.k, e.kl), [x, y] = P2(e.dx, e.dr + wob), col = e.kept && e.x <= 0 ? heatCss(eT(K)) : e.out ? (d ? '#5d6775' : '#c3cad3') : '#a8b4c4';
+        const K = Math.hypot(e.k, e.kl), [x, y] = P2(e.dx, e.dr + wob), col = e.kept && e.x <= 0 ? heatCss(eT(K)) : e.out ? (d ? '#736a5f' : '#d2ccc4') : '#c2b8aa';
         if (e.kept && e.x <= 0) { const a = Math.max(0, 1 - e.age / 2.4);
           if (a > 0.02) { ctx.strokeStyle = col; ctx.lineWidth = 1.5 * p; ctx.globalAlpha = 0.45 * a; ctx.beginPath(); e.tr.forEach(([tx, tr], i) => { const [px, py] = P2(tx, tr); i ? ctx.lineTo(px, py) : ctx.moveTo(px, py); }); ctx.lineTo(x, y); ctx.stroke();
             const L = Math.min(0.9, 0.09 * K), [ex, ey] = P2(e.dx + e.kl / K * L, e.dr + e.k / K * L); ctx.globalAlpha = a; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(ex, ey); ctx.stroke(); ctx.globalAlpha = 1; } }
@@ -692,7 +692,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       pill(ctx, st.stopped ? 'stopped: a hydrogen atom' : q ? 'proton' : 'proton carrying an electron', pxc + 12 * p, cy - 18 * p, { c: T.proton });
       /* the tank strip */
       const ty0 = wy1 + 22 * p, ty1 = H - 34 * p, tcy = (ty0 + ty1) / 2, X2 = (z) => x0 + 50 * p + z / st.zmax * (x1 - x0 - 60 * p);
-      Gr.box(ctx, x0, tcy - 14 * p, 44 * p, 28 * p, { color: d ? '#4a5563' : '#566273', r: 4 * p, shadow: false });
+      Gr.box(ctx, x0, tcy - 14 * p, 44 * p, 28 * p, { color: d ? '#61584c' : '#716658', r: 4 * p, shadow: false });
       ctx.fillStyle = Gr.mix(T.water, d ? '#000' : '#5a9cc4', 0.2); ctx.fillRect(X2(0), ty0, X2(st.zmax) - X2(0), ty1 - ty0);
       for (let i = 0; i < 240; i++) { const c = st.curve[i], c2 = st.curve[i + 1]; if (c.z > st.z) break; ctx.fillStyle = heatCss(Math.log(c.Sl / st.Sl0) / Math.log(st.SlMax / st.Sl0)); ctx.fillRect(X2(c.z), tcy - 2 * p, X2(c2.z) - X2(c.z) + 0.7, 4 * p); }
       ctx.fillStyle = '#ffb066'; ctx.beginPath(); ctx.arc(X2(st.z), tcy, 4.5 * p, 0, 7); ctx.fill();

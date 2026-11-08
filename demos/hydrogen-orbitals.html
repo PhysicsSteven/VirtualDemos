@@ -18,18 +18,18 @@
 <style>
 /* Layout: the orbital (3D point cloud or a 2D slice) on top, the radial distribution below it; instrument rail on the right; stacks on phones. */
 :root {
-  --bg: #e9edf2;
-  --surface: #f8fafc;
-  --canvas: #fcfdfe;
-  --ink: #17202b;
-  --muted: #5a6575;
-  --line: #d3d9e2;
-  --grid: #e6ebf1;
-  --grid-strong: #cfd7e1;
+  --bg: #f1eeea;
+  --surface: #fcfaf8;
+  --canvas: #fefdfc;
+  --ink: #2a2219;
+  --muted: #73695c;
+  --line: #e1dbd4;
+  --grid: #f0ece7;
+  --grid-strong: #e0d9d0;
   --pos: #c23f2c;
   --neg: #2b60b5;
   --equi: #a7740b;
-  --accent: #2b60b5;
+  --accent: #c4811c;
   --cloud-bg: #0b111a;
   --cloud-ink: #e6ecf3;
   --cloud-muted: #93a0b2;
@@ -39,16 +39,16 @@
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
-    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-    --equi: #e2b350; --accent: #69a0ff; --cloud-bg: #070b11; --cloud-ink: #e6ecf3; --cloud-muted: #93a0b2;
+    --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
+    --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+    --equi: #e2b350; --accent: #fbc26d; --cloud-bg: #070b11; --cloud-ink: #e6ecf3; --cloud-muted: #93a0b2;
     --cloud-line: #263040; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
-  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-  --equi: #e2b350; --accent: #69a0ff; --cloud-bg: #070b11; --cloud-ink: #e6ecf3; --cloud-muted: #93a0b2;
+  --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
+  --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+  --equi: #e2b350; --accent: #fbc26d; --cloud-bg: #070b11; --cloud-ink: #e6ecf3; --cloud-muted: #93a0b2;
   --cloud-line: #263040; color-scheme: dark;
 }
 :root[data-projector="on"] { font-size: 125%; }
@@ -952,15 +952,15 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const n = nx * ny;
       return { nx, ny, data, tex, g, mesh, a: new Float32Array(n), ai: new Float32Array(n), b: null, bi: null, gz: new Float32Array(n), inside: new Uint8ClampedArray(n) };
     });
-    const nodeLines = new THREE.LineSegments(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({ color: 0xe6ecf3, transparent: true, opacity: 0.7, depthTest: false }));
+    const nodeLines = new THREE.LineSegments(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({ color: 0xf2ede7, transparent: true, opacity: 0.7, depthTest: false }));
     nodeLines.renderOrder = 2; nodeLines.frustumCulled = false; nodeLines.visible = false; top.add(nodeLines);
-    const rims = new THREE.LineSegments(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({ color: 0x8796ab, transparent: true, opacity: 0.25, depthTest: false }));
+    const rims = new THREE.LineSegments(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({ color: 0xa89b8a, transparent: true, opacity: 0.25, depthTest: false }));
     rims.renderOrder = 2; rims.frustumCulled = false; rims.visible = false; top.add(rims);
 
     // unit axes, scaled with the view
     const ag = new THREE.BufferGeometry();
     ag.setAttribute('position', new THREE.Float32BufferAttribute([-1, 0, 0, 1, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, -1, 0, 0, 1], 3));
-    const axes = new THREE.LineSegments(ag, new THREE.LineBasicMaterial({ color: 0x6a7a90, transparent: true, opacity: 0.5, depthTest: false }));
+    const axes = new THREE.LineSegments(ag, new THREE.LineBasicMaterial({ color: 0x8d7f6d, transparent: true, opacity: 0.5, depthTest: false }));
     axes.renderOrder = 3; top.add(axes);
 
     // shell of radius r (from hovering the radial plot): three great circles

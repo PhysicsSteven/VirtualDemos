@@ -16,37 +16,37 @@
 /* Layout: the spin lattice with its thermometer and field bar on the left of the stage, live plots on the right;
    instrument rail on the right; stacks on phones. Spins are amber (up) and navy (down). */
 :root {
-  --bg: #e9edf2;
-  --surface: #f8fafc;
-  --canvas: #fcfdfe;
-  --ink: #17202b;
-  --muted: #5a6575;
-  --line: #d3d9e2;
-  --grid: #e6ebf1;
-  --grid-strong: #cfd7e1;
+  --bg: #f1eeea;
+  --surface: #fcfaf8;
+  --canvas: #fefdfc;
+  --ink: #2a2219;
+  --muted: #73695c;
+  --line: #e1dbd4;
+  --grid: #f0ece7;
+  --grid-strong: #e0d9d0;
   --pos: #c23f2c;
   --neg: #2b60b5;
   --equi: #a7740b;
-  --accent: #2b60b5;
-  --up: #f2b134; --down: #1e3557; --clu: #1fae96; --frame: #c9d1dc;
-  --l32: #7b5fb8; --l64: #2b60b5; --l128: #c23f2c; --l256: #2d8a5f;
+  --accent: #c4811c;
+  --up: #f2b134; --down: #1e3557; --clu: #1fae96; --frame: #dbd4ca;
+  --l32: #b09067; --l64: #2b60b5; --l128: #c23f2c; --l256: #2d8a5f;
   --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
-    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-    --equi: #e2b350; --accent: #69a0ff;
-    --up: #f0b445; --down: #2a4a7c; --clu: #3fd1b6; --frame: #33404f;
+    --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
+    --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+    --equi: #e2b350; --accent: #fbc26d;
+    --up: #f0b445; --down: #2a4a7c; --clu: #3fd1b6; --frame: #4d4335;
     --l32: #b39cf0; --l64: #69a0ff; --l128: #ff7660; --l256: #5cc98f; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
-  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-  --equi: #e2b350; --accent: #69a0ff;
-  --up: #f0b445; --down: #2a4a7c; --clu: #3fd1b6; --frame: #33404f;
+  --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
+  --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+  --equi: #e2b350; --accent: #fbc26d;
+  --up: #f0b445; --down: #2a4a7c; --clu: #3fd1b6; --frame: #4d4335;
   --l32: #b39cf0; --l64: #69a0ff; --l128: #ff7660; --l256: #5cc98f; color-scheme: dark;
 }
 :root[data-projector="on"] { font-size: 125%; }
@@ -952,7 +952,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     }
     ctx.restore();
     ctx.save();
-    ctx.strokeStyle = '#3a4554'; ctx.lineWidth = 4 * ps; ctx.beginPath(); ctx.arc(cxp, cyp, r, 0, 2 * Math.PI); ctx.stroke();
+    ctx.strokeStyle = '#52483c'; ctx.lineWidth = 4 * ps; ctx.beginPath(); ctx.arc(cxp, cyp, r, 0, 2 * Math.PI); ctx.stroke();
     ctx.strokeStyle = 'rgba(255,255,255,0.5)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(cxp, cyp, r - 2.5 * ps, Math.PI * 1.05, Math.PI * 1.6); ctx.stroke();
     ctx.restore();
   }

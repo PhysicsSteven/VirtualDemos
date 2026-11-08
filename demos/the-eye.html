@@ -48,9 +48,9 @@ table.rows input:focus { border-color: var(--accent); }
 .chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
 @media (max-width: 820px) { .chips button { min-height: 36px; } }
 .readout dd.warn { color: var(--pos); }
-:root { --eyeball: #f4f1ec; --sclera: #c9cfd8; --lensc: #9cc3e6; --retina: #c23f2c; --ray: #b8692e; --glass: #6f9fd8; --np: #2f9a52; --fp: #a7740b; --virt: #8a95a3; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --eyeball: #1c232d; --sclera: #3a4656; --lensc: #3d6a94; --retina: #ff7660; --ray: #f0b44a; --glass: #69a0ff; --np: #4cc07f; --fp: #e2b350; --virt: #7d8899; } }
-:root[data-theme="dark"] { --eyeball: #1c232d; --sclera: #3a4656; --lensc: #3d6a94; --retina: #ff7660; --ray: #f0b44a; --glass: #69a0ff; --np: #4cc07f; --fp: #e2b350; --virt: #7d8899; }
+:root { --eyeball: #f4f1ec; --sclera: #d7d1ca; --lensc: #9cc3e6; --retina: #c23f2c; --ray: #b8692e; --glass: #6f9fd8; --np: #2f9a52; --fp: #a7740b; --virt: #a1988c; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --eyeball: #2c251d; --sclera: #544a3c; --lensc: #8a6d47; --retina: #ff7660; --ray: #f0b44a; --glass: #69a0ff; --np: #4cc07f; --fp: #e2b350; --virt: #978d7f; } }
+:root[data-theme="dark"] { --eyeball: #2c251d; --sclera: #544a3c; --lensc: #8a6d47; --retina: #ff7660; --ray: #f0b44a; --glass: #69a0ff; --np: #4cc07f; --fp: #e2b350; --virt: #978d7f; }
 </style>
 <link rel="stylesheet" id="vd-look" href="lib/look.css">
 <script id="vd-gear" src="lib/gear.js"></script>
@@ -391,7 +391,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       }
       if (w > 420) txt(acc > 0.5 ? 'ciliary muscle: contracted' : 'ciliary muscle: relaxed', xL, cy - yw - 12 * p, { a: 'center', s: 9, c: T.muted }); }
     /* lens: thickness grows with the power in use */
-    { const ir = ctx.createLinearGradient(0, cy - 0.0058 * k, 0, cy + 0.0058 * k); ir.addColorStop(0, '#4a6b8a'); ir.addColorStop(0.5, '#6f8fae'); ir.addColorStop(1, '#4a6b8a');   // the iris, from the pupil's edge outward: it stops rays outside the pupil
+    { const ir = ctx.createLinearGradient(0, cy - 0.0058 * k, 0, cy + 0.0058 * k); ir.addColorStop(0, '#856e4f'); ir.addColorStop(0.5, '#a99274'); ir.addColorStop(1, '#856e4f');   // the iris, from the pupil's edge outward: it stops rays outside the pupil
       ctx.fillStyle = ir; ctx.fillRect(xL - 3 * p, cy - 0.0058 * k, 2.5 * p, 0.0058 * k - PUPIL / 2 * k); ctx.fillRect(xL - 3 * p, cy + PUPIL / 2 * k, 2.5 * p, 0.0058 * k - PUPIL / 2 * k); }
     const lw = (6 + 10 * Math.max(0, Math.min(1, (st.Pt - 50) / 15))) * p; ctx.fillStyle = T.lensc; ctx.beginPath(); ctx.ellipse(xL, cy, lw, 0.0045 * k, 0, 0, 7); ctx.fill(); txt('lens', xL, cy + 0.0045 * k + 12 * p, { a: 'center', s: 10, c: T.muted });
     /* glasses */
@@ -464,7 +464,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       txt('in focus', (xa + xb) / 2, y - 18 * p, { a: 'center', s: 9, c: T.np, b: 1 });
     }
     /* the camera */
-    const cx = x1 + 2 * p; VG.box(ctx, cx - 9 * p, y - 7 * p, 18 * p, 14 * p, { color: '#2e353f', r: 3, shadow: false }); ctx.fillStyle = '#5b6370'; ctx.beginPath(); ctx.arc(cx - 9 * p, y, 4 * p, 0, 7); ctx.fill();
+    const cx = x1 + 2 * p; VG.box(ctx, cx - 9 * p, y - 7 * p, 18 * p, 14 * p, { color: '#3e372f', r: 3, shadow: false }); ctx.fillStyle = '#6e675d'; ctx.beginPath(); ctx.arc(cx - 9 * p, y, 4 * p, 0, 7); ctx.fill();
     txt('camera', cx, y - 18 * p, { a: 'center', s: 9, c: T.muted });
     const xo = X(S.dc); ctx.strokeStyle = T.ink; ctx.fillStyle = T.ink; ctx.lineWidth = 2.5 * p; ctx.beginPath(); ctx.moveTo(xo, y); ctx.lineTo(xo, y - 30 * p); ctx.stroke(); ctx.beginPath(); ctx.moveTo(xo, y - 36 * p); ctx.lineTo(xo - 5 * p, y - 28 * p); ctx.lineTo(xo + 5 * p, y - 28 * p); ctx.fill();
     txt(`object, ${fmtD(S.dc)}`, Math.max(x0 + 40 * p, Math.min(x1 - 60 * p, xo)), y - 46 * p, { a: 'center', s: 10, b: 1 });
@@ -478,9 +478,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     g.fillStyle = '#6f9a5a'; g.fillRect(0, h * 0.78, w, h * 0.22);
     /* a Siemens star: fine detail at its center shows blur first */
     const sx = w * 0.32, sy = h * 0.46, R = h * 0.34; g.fillStyle = '#f4f4f0'; g.beginPath(); g.arc(sx, sy, R * 1.04, 0, 7); g.fill();
-    g.fillStyle = '#1d232b'; for (let i = 0; i < 18; i++) { const a0 = i * Math.PI / 9; g.beginPath(); g.moveTo(sx, sy); g.arc(sx, sy, R, a0, a0 + Math.PI / 18); g.closePath(); g.fill(); }
+    g.fillStyle = '#2a251e'; for (let i = 0; i < 18; i++) { const a0 = i * Math.PI / 9; g.beginPath(); g.moveTo(sx, sy); g.arc(sx, sy, R, a0, a0 + Math.PI / 18); g.closePath(); g.fill(); }
     /* a block of text and bars */
-    g.fillStyle = '#f4f4f0'; g.fillRect(w * 0.62, h * 0.16, w * 0.32, h * 0.58); g.fillStyle = '#1d232b';
+    g.fillStyle = '#f4f4f0'; g.fillRect(w * 0.62, h * 0.16, w * 0.32, h * 0.58); g.fillStyle = '#2a251e';
     g.font = `700 ${Math.round(h * 0.16)}px Atkinson Hyperlegible, sans-serif`; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('f/N', w * 0.78, h * 0.3);
     for (let i = 0; i < 7; i++) g.fillRect(w * 0.65 + i * w * 0.04, h * 0.45, w * 0.02, h * 0.24);
     scene = c; sceneKey = key; return c;
@@ -490,10 +490,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const span = c.dsMin * 1.18 + (S.cam === 'phone' ? 0.0003 : 0.007), k = Math.min((wide ? w * 0.5 : w * 0.8) / span, hc * 0.62 / Math.max(A * 1.6, c.sensorW * 0.5));
     const xL = x0 + (wide ? 70 : 60) * p, xS = xL + S.ds * k, hb = Math.max(A * 0.8, c.sensorW * 0.36) * k;
     /* body and barrel (pictures only) */
-    ctx.save(); ctx.globalAlpha = 0.45; VG.box(ctx, xS - 0.2 * f * k, cy - hb - 10 * p, 0.2 * f * k + 26 * p, 2 * hb + 20 * p, { color: '#2e353f', r: 6, shadow: false }); ctx.restore();
-    ctx.fillStyle = VG.dark() ? '#3a4552' : '#4a5563'; ctx.fillRect(xL - 6 * p, cy - A / 2 * k - 12 * p, xS - 0.2 * f * k - xL + 6 * p, 6 * p); ctx.fillRect(xL - 6 * p, cy + A / 2 * k + 6 * p, xS - 0.2 * f * k - xL + 6 * p, 6 * p);
+    ctx.save(); ctx.globalAlpha = 0.45; VG.box(ctx, xS - 0.2 * f * k, cy - hb - 10 * p, 0.2 * f * k + 26 * p, 2 * hb + 20 * p, { color: '#3e372f', r: 6, shadow: false }); ctx.restore();
+    ctx.fillStyle = VG.dark() ? '#50473c' : '#61584c'; ctx.fillRect(xL - 6 * p, cy - A / 2 * k - 12 * p, xS - 0.2 * f * k - xL + 6 * p, 6 * p); ctx.fillRect(xL - 6 * p, cy + A / 2 * k + 6 * p, xS - 0.2 * f * k - xL + 6 * p, 6 * p);
     /* aperture blades and the lens */
-    ctx.fillStyle = '#1d232b'; ctx.fillRect(xL - 2 * p, cy - A / 2 * k - 10 * p, 4 * p, 10 * p); ctx.fillRect(xL - 2 * p, cy + A / 2 * k, 4 * p, 10 * p);
+    ctx.fillStyle = '#2a251e'; ctx.fillRect(xL - 2 * p, cy - A / 2 * k - 10 * p, 4 * p, 10 * p); ctx.fillRect(xL - 2 * p, cy + A / 2 * k, 4 * p, 10 * p);
     ctx.fillStyle = T.lensc; ctx.globalAlpha = 0.8; ctx.beginPath(); ctx.ellipse(xL, cy, 6 * p, A / 2 * k, 0, 0, 7); ctx.fill(); ctx.globalAlpha = 1;
     txt(`lens f = ${(f * 1000).toFixed(f < 0.01 ? 2 : 0)} mm`, x0 + 8 * p, cy - A / 2 * k - 22 * p, { s: 10, b: 1 });
     txt(`aperture f/${S.N}: ${(A * 1000).toFixed(A < 0.005 ? 2 : 1)} mm`, x0 + 8 * p, cy + A / 2 * k + 24 * p, { s: 9, c: T.muted });
@@ -521,7 +521,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const cw = Math.min(110 * p, pw * 0.36), cxp = px0 + pw - cw - 6 * p, cyp = py0 + ph - cw - 6 * p, Rs = 0.34 * (c.sensorW / c.pix) * 2 / 3, sg = q.px / 2.4;
     ctx.save(); ctx.beginPath(); ctx.rect(cxp, cyp, cw, cw); ctx.clip(); ctx.fillStyle = '#f4f4f0'; ctx.fillRect(cxp, cyp, cw, cw);
     if (sg > 0.15) ctx.filter = `blur(${Math.min(40, sg).toFixed(2)}px)`;
-    ctx.fillStyle = '#1d232b'; const ox = cxp + cw / 2, oy = cyp + cw / 2;
+    ctx.fillStyle = '#2a251e'; const ox = cxp + cw / 2, oy = cyp + cw / 2;
     for (let i = 0; i < 18; i++) { const a0 = i * Math.PI / 9; ctx.beginPath(); ctx.moveTo(ox, oy); ctx.arc(ox, oy, Math.min(Rs, 3 * cw), a0, a0 + Math.PI / 18); ctx.closePath(); ctx.fill(); }
     ctx.restore(); ctx.filter = 'none'; ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5; ctx.strokeRect(cxp, cyp, cw, cw);
     ctx.fillStyle = 'rgba(20,24,30,0.75)'; ctx.fillRect(cxp, cyp, 50 * p, 15 * p); txt('1:1 crop', cxp + 5 * p, cyp + 8 * p, { s: 9, b: 1, c: '#ffffff' });

@@ -18,18 +18,18 @@
 <style>
 /* Layout: the double helix in 3D on a dark stage; instrument rail on the right; stacks on phones. */
 :root {
-  --bg: #e9edf2;
-  --surface: #f8fafc;
-  --canvas: #fcfdfe;
-  --ink: #17202b;
-  --muted: #5a6575;
-  --line: #d3d9e2;
-  --grid: #e6ebf1;
-  --grid-strong: #cfd7e1;
+  --bg: #f1eeea;
+  --surface: #fcfaf8;
+  --canvas: #fefdfc;
+  --ink: #2a2219;
+  --muted: #73695c;
+  --line: #e1dbd4;
+  --grid: #f0ece7;
+  --grid-strong: #e0d9d0;
   --pos: #c23f2c;
   --neg: #2b60b5;
   --equi: #a7740b;
-  --accent: #2b60b5;
+  --accent: #c4811c;
   --cloud-bg: #0b111a;
   --cloud-ink: #e6ecf3;
   --cloud-muted: #93a0b2;
@@ -39,16 +39,16 @@
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
-    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-    --equi: #e2b350; --accent: #69a0ff; --cloud-bg: #070b11; --cloud-ink: #e6ecf3; --cloud-muted: #93a0b2;
+    --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
+    --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+    --equi: #e2b350; --accent: #fbc26d; --cloud-bg: #070b11; --cloud-ink: #e6ecf3; --cloud-muted: #93a0b2;
     --cloud-line: #263040; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
-  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-  --equi: #e2b350; --accent: #69a0ff; --cloud-bg: #070b11; --cloud-ink: #e6ecf3; --cloud-muted: #93a0b2;
+  --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
+  --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+  --equi: #e2b350; --accent: #fbc26d; --cloud-bg: #070b11; --cloud-ink: #e6ecf3; --cloud-muted: #93a0b2;
   --cloud-line: #263040; color-scheme: dark;
 }
 :root[data-projector="on"] { font-size: 125%; }
@@ -534,10 +534,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   const projOn = () => document.documentElement.getAttribute('data-projector') === 'on';
 
   // colors on the dark stage
-  const EL_COL = { C: 0xa9b2bd, N: 0x5b86ff, O: 0xff5a4e, P: 0xffa133 };
+  const EL_COL = { C: 0xbbb4aa, N: 0x5b86ff, O: 0xff5a4e, P: 0xffa133 };
   const BASE_COL = { A: 0xff6f59, T: 0x5c97ff, G: 0x52c973, C: 0xf2cd3c };
   const STRAND_COL = { A: 0xff8a66, B: 0x6fb0ff };
-  const BB_GREY = 0x8a94a3;
+  const BB_GREY = 0xa1988c;
   const HB_COL = 0xffd166, MINOR_COL = 0xffc04d, MAJOR_COL = 0x7fd0ff;
 
   const S = {
@@ -565,7 +565,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const cam = new THREE.PerspectiveCamera(30, 1, 0.5, 4000);
     cam.up.set(0, 0, 1);
     scene.add(cam);
-    scene.add(new THREE.HemisphereLight(0xdfe8ff, 0x2a3240, 0.75));
+    scene.add(new THREE.HemisphereLight(0xf4f0ea, 0x3e362c, 0.75));
     const key = new THREE.DirectionalLight(0xffffff, 0.75); key.position.set(-0.4, 0.6, 1); cam.add(key);
     const fill = new THREE.DirectionalLight(0xffffff, 0.2); fill.position.set(0.6, -0.3, 0.4); cam.add(fill);
     const world = new THREE.Group(); scene.add(world);
@@ -699,7 +699,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     m.calMajor = band(m.gr.majorS, MAJOR_COL);
     const half = (m.n - 1) * m.rise / 2 + 6;
     const axg = new THREE.BufferGeometry(); axg.setAttribute('position', new THREE.Float32BufferAttribute([0, 0, -half, 0, 0, half], 3));
-    const axl = new THREE.LineSegments(axg, new THREE.LineDashedMaterial({ color: 0xcfd8e6, dashSize: 1.2, gapSize: 0.8, transparent: true, opacity: 0.85, depthTest: false }));
+    const axl = new THREE.LineSegments(axg, new THREE.LineDashedMaterial({ color: 0xe4dcd1, dashSize: 1.2, gapSize: 0.8, transparent: true, opacity: 0.85, depthTest: false }));
     axl.computeLineDistances(); axl.renderOrder = 4; inner.add(axl); m.mAx = axl;
     m.half = half;
   }
@@ -711,7 +711,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   }
   function dimmed(hexv, on) {
     const c = new THREE.Color(hexv);
-    if (on) c.lerp(new THREE.Color(0x0b111a), 0.72);
+    if (on) c.lerp(new THREE.Color(0x18130d), 0.72);
     return c;
   }
   function applyLook() {
@@ -846,7 +846,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         for (const ch of ['A', 'B']) {
           const first = ch === 'A' ? 1 : m.n + 1, last = ch === 'A' ? m.n : 2 * m.n;
           const p5 = toScreen(m, m.index.get(ch + first + ":O5'")), p3 = toScreen(m, m.index.get(ch + last + ":O3'"));
-          const col = css(S.color === 'strand' ? STRAND_COL[ch] : 0xe6ecf3);
+          const col = css(S.color === 'strand' ? STRAND_COL[ch] : 0xf2ede7);
           // push labels outward from the middle of the molecule along the axis direction on screen
           const mid = toScreen(m, { x: 0, y: 0, z: 0 });
           for (const [p, t] of [[p5, "5′"], [p3, "3′"]]) {
@@ -866,7 +866,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       }
       if (models.length > 1 && !G.clipOn) {
         const e = toScreen(m, { x: 0, y: 0, z: -m.half });
-        label(ctx, FORMS[m.form].name, Math.max(40, e.x - 40), e.y, '#e6ecf3', { bold: true, size: 14 });
+        label(ctx, FORMS[m.form].name, Math.max(40, e.x - 40), e.y, '#f2ede7', { bold: true, size: 14 });
       }
     }
     if (hoverHb) {

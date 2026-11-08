@@ -20,32 +20,32 @@
 <style>
 /* Layout: a spectroscope bench. Spectrum strips and the periodic table stacked on the left, a narrow rail of facts and controls on the right; stacks on phones. The strips are always dark, like looking through a real spectroscope. */
 :root {
-  --bg: #e9edf2;
-  --surface: #f8fafc;
-  --canvas: #fcfdfe;
-  --ink: #17202b;
-  --muted: #5a6575;
-  --line: #d3d9e2;
-  --grid: #e6ebf1;
-  --grid-strong: #cfd7e1;
+  --bg: #f1eeea;
+  --surface: #fcfaf8;
+  --canvas: #fefdfc;
+  --ink: #2a2219;
+  --muted: #73695c;
+  --line: #e1dbd4;
+  --grid: #f0ece7;
+  --grid-strong: #e0d9d0;
   --pos: #c23f2c;
   --neg: #2b60b5;
   --equi: #a7740b;
-  --accent: #2b60b5;
+  --accent: #c4811c;
   --good: #2f7d4a;
-  --scope: #05070b;
-  --scope-ink: #c9d2de;
-  --rig-bg: #1c232d;
-  --rig-bg2: #10151c;
-  --rig-bench: #22272e;
-  --rig-bench-hi: #3a414a;
-  --rig-ink: #d3dbe5;
+  --scope: #0b0805;
+  --scope-ink: #dcd5cb;
+  --rig-bg: #2c251d;
+  --rig-bg2: #1b1711;
+  --rig-bench: #2d2923;
+  --rig-bench-hi: #49433b;
+  --rig-ink: #e4ddd4;
   --rig-halo: rgba(12, 16, 22, 0.82);
   --cat-alkali: #d0573f;
   --cat-alkaline: #d98a2b;
-  --cat-transition: #5f7fa8;
+  --cat-transition: #a38864;
   --cat-post: #6f8f72;
-  --cat-metalloid: #8b7bb5;
+  --cat-metalloid: #b19b7f;
   --cat-nonmetal: #3f9a8a;
   --cat-halogen: #b5a42f;
   --cat-noble: #b55a9a;
@@ -56,17 +56,17 @@
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
-    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-    --equi: #e2b350; --accent: #69a0ff; --good: #5fc27f; --scope: #020305; --scope-ink: #aab5c3;
-    --rig-bg: #0c1016; --rig-bg2: #06080c; --rig-bench: #15191e; --rig-bench-hi: #262c34; --rig-ink: #b9c3cf; --rig-halo: rgba(6, 8, 12, 0.85); color-scheme: dark;
+    --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
+    --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+    --equi: #e2b350; --accent: #fbc26d; --good: #5fc27f; --scope: #050402; --scope-ink: #c1b8ac;
+    --rig-bg: #15120d; --rig-bg2: #0c0906; --rig-bench: #1d1a16; --rig-bench-hi: #332e27; --rig-ink: #cdc5bb; --rig-halo: rgba(6, 8, 12, 0.85); color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
-  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-  --equi: #e2b350; --accent: #69a0ff; --good: #5fc27f; --scope: #020305; --scope-ink: #aab5c3;
-    --rig-bg: #0c1016; --rig-bg2: #06080c; --rig-bench: #15191e; --rig-bench-hi: #262c34; --rig-ink: #b9c3cf; --rig-halo: rgba(6, 8, 12, 0.85); color-scheme: dark;
+  --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
+  --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+  --equi: #e2b350; --accent: #fbc26d; --good: #5fc27f; --scope: #050402; --scope-ink: #c1b8ac;
+    --rig-bg: #15120d; --rig-bg2: #0c0906; --rig-bench: #1d1a16; --rig-bench-hi: #332e27; --rig-ink: #cdc5bb; --rig-halo: rgba(6, 8, 12, 0.85); color-scheme: dark;
 }
 :root[data-projector="on"] { font-size: 125%; }
 :root[data-projector="on"] body { font-size: 1.2rem; }
@@ -860,7 +860,7 @@ function airFromVac(vnm) {
     vg.addColorStop(0, 'rgba(0,0,0,0.42)'); vg.addColorStop(0.16, 'rgba(0,0,0,0)'); vg.addColorStop(0.86, 'rgba(0,0,0,0)'); vg.addColorStop(1, 'rgba(0,0,0,0.42)');
     ctx.fillStyle = vg; ctx.fillRect(0, 0, W, Hs);
     // scale band: faint ticks every 10 nm and numbers every 100 nm, like the scale window of a hand spectroscope
-    ctx.fillStyle = '#05070a'; ctx.fillRect(0, Hs, W, sh);
+    ctx.fillStyle = '#0a0805'; ctx.fillRect(0, Hs, W, sh);
     ctx.fillStyle = 'rgba(255,255,255,0.07)'; ctx.fillRect(0, Hs, W, 1);
     ctx.font = `${Math.round(sh * 0.6)}px ${mono()}`; ctx.textBaseline = 'bottom'; ctx.textAlign = 'center';
     for (let v = Math.ceil(l0 / 10) * 10; v <= l1; v += 10) {
@@ -885,7 +885,7 @@ function airFromVac(vnm) {
         if (x < 0 || x > W) continue;
         rows[row].push([x - tw / 2, x + tw / 2]);
         const y = 4 * lps + bh / 2 + row * (bh + 2);
-        haloText(ctx, lt, x, y, 'center', '#f3f6fa', 'rgba(5,7,11,0.78)', 4);
+        haloText(ctx, lt, x, y, 'center', '#f9f7f4', 'rgba(5,7,11,0.78)', 4);
       }
     }
     // marked line
@@ -1220,7 +1220,7 @@ function airFromVac(vnm) {
   function rrect(c, x, y, w, h, r) { c.beginPath(); c.moveTo(x + r, y); c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r); c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath(); }
   function grad(c, x0, y0, x1, y1, stops) { const g = c.createLinearGradient(x0, y0, x1, y1); stops.forEach((st, i) => g.addColorStop(i / (stops.length - 1), st)); return g; }
   function radial(c, x, y, r, col, a) { const g = c.createRadialGradient(x, y, 0, x, y, r); g.addColorStop(0, rgba(col, a)); g.addColorStop(1, rgba(col, 0)); c.fillStyle = g; c.fillRect(x - r, y - r, 2 * r, 2 * r); }
-  const METAL_V = ['#d0d6dd', '#959da6', '#5f666e'];
+  const METAL_V = ['#dcd7d1', '#a59e96', '#6d6760'];
 
   // spectrum tube geometry (design units): caps, bulbs holding the electrodes, tapers, and the narrow capillary between
   const TUBE = { y0: 26, y1: 140, cap: 5, bulb: 18, bulbR: 7, taper: 6, capR: 2.1 };
@@ -1246,9 +1246,9 @@ function airFromVac(vnm) {
     c.fillStyle = col ? rgba(col, 0.5) : 'rgba(205,220,235,0.07)';
     taper(yB, yC, yB); c.fill(); taper(yD, yE, yE); c.fill();
     // electrodes: a wire and a small metal cylinder in each bulb
-    c.strokeStyle = '#9aa1a9'; c.lineWidth = 0.7;
+    c.strokeStyle = '#a8a29b'; c.lineWidth = 0.7;
     c.beginPath(); c.moveTo(cx, yA); c.lineTo(cx, yA + 6); c.moveTo(cx, yF); c.lineTo(cx, yF - 6); c.stroke();
-    c.fillStyle = grad(c, cx - 2.4, 0, cx + 2.4, 0, ['#5d636b', '#aab1b9', '#5d636b']);
+    c.fillStyle = grad(c, cx - 2.4, 0, cx + 2.4, 0, ['#6a655e', '#b8b2ab', '#6a655e']);
     c.fillRect(cx - 2.4, yA + 6, 4.8, 8); c.fillRect(cx - 2.4, yF - 14, 4.8, 8);
     if (col) {
       c.save(); c.globalCompositeOperation = 'lighter';
@@ -1267,7 +1267,7 @@ function airFromVac(vnm) {
     c.strokeStyle = 'rgba(255,255,255,0.32)'; c.lineWidth = 1;
     c.beginPath(); c.moveTo(cx - t.bulbR + 2.2, yA + 4); c.lineTo(cx - t.bulbR + 2.2, yB - 4); c.moveTo(cx - t.bulbR + 2.2, yE + 4); c.lineTo(cx - t.bulbR + 2.2, yF - 4); c.stroke();
     // metal end caps
-    c.fillStyle = grad(c, cx - 5, 0, cx + 5, 0, ['#6a7179', '#d4dae0', '#7b828a']);
+    c.fillStyle = grad(c, cx - 5, 0, cx + 5, 0, ['#78726b', '#dfdbd5', '#89837c']);
     c.fillRect(cx - 5, t.y0, 10, t.cap); c.fillRect(cx - 5, yF, 10, t.cap);
   }
   // high voltage supply with the tube clamped between a top arm and a socket on the case
@@ -1279,30 +1279,30 @@ function airFromVac(vnm) {
     c.strokeStyle = 'rgba(255,150,130,0.35)'; c.lineWidth = 0.9; c.beginPath(); c.moveTo(x + 103.2, 150); c.bezierCurveTo(x + 119, 116, x + 113, 52, x + 92.4, 21.6); c.stroke();
     c.lineCap = 'butt';
     // insulating post and top arm
-    c.fillStyle = grad(c, x + 82, 0, x + 94, 0, ['#121417', '#3b4047', '#1a1d21']); c.fillRect(x + 82, 18, 12, 134);
+    c.fillStyle = grad(c, x + 82, 0, x + 94, 0, ['#171512', '#46423c', '#201e1b']); c.fillRect(x + 82, 18, 12, 134);
     c.fillStyle = grad(c, 0, 13, 0, 26, METAL_V); rrect(c, x + 44, 13, 54, 13, 2.5); c.fill();
     // socket on the case
-    c.fillStyle = grad(c, 0, 137, 0, 151, ['#30353c', '#16191d']); rrect(c, cx - 11, 137, 22, 14, 2); c.fill();
+    c.fillStyle = grad(c, 0, 137, 0, 151, ['#3b3731', '#1c1a17']); rrect(c, cx - 11, 137, 22, 14, 2); c.fill();
     drawTube(c, cx, it.col);
     // case
-    c.fillStyle = grad(c, 0, 150, 0, BENCH, ['#4b535d', '#2b3036']); rrect(c, x, 150, 120, BENCH - 150, 3); c.fill();
+    c.fillStyle = grad(c, 0, 150, 0, BENCH, ['#5c554c', '#35312c']); rrect(c, x, 150, 120, BENCH - 150, 3); c.fill();
     c.fillStyle = 'rgba(255,255,255,0.14)'; c.fillRect(x + 2, 150.5, 116, 1.2);
-    c.fillStyle = '#1f2328'; rrect(c, x + 6, 156, 108, 39, 2); c.fill();
+    c.fillStyle = '#272420'; rrect(c, x + 6, 156, 108, 39, 2); c.fill();
     // label tag with the gas, a high voltage stripe and the rating
     c.fillStyle = '#e6dec6'; rrect(c, x + 12, 160, 36, 15, 1.5); c.fill();
     c.fillStyle = '#23211d'; c.font = `700 10px ${mono()}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(it.tag, x + 30, 168);
-    c.save(); rrect(c, x + 12, 180, 36, 9, 1); c.clip(); c.fillStyle = '#e5c22c'; c.fillRect(x + 12, 180, 36, 9); c.fillStyle = '#18181a';
+    c.save(); rrect(c, x + 12, 180, 36, 9, 1); c.clip(); c.fillStyle = '#e5c22c'; c.fillRect(x + 12, 180, 36, 9); c.fillStyle = '#1a1918';
     for (let k = -10; k < 44; k += 6) { c.beginPath(); c.moveTo(x + 12 + k, 189); c.lineTo(x + 15 + k, 189); c.lineTo(x + 24 + k, 180); c.lineTo(x + 21 + k, 180); c.closePath(); c.fill(); }
     c.restore();
-    c.fillStyle = '#b4bcc6'; c.font = `600 7.5px ${mono()}`; c.textAlign = 'left'; c.fillText('5000 V', x + 54, 185);
+    c.fillStyle = '#c5beb5'; c.font = `600 7.5px ${mono()}`; c.textAlign = 'left'; c.fillText('5000 V', x + 54, 185);
     // toggle switch (on) and pilot lamp
-    c.fillStyle = '#8d959e'; c.beginPath(); c.arc(x + 84, 167, 4, 0, 2 * Math.PI); c.fill();
-    c.strokeStyle = '#dfe4ea'; c.lineWidth = 2; c.lineCap = 'round'; c.beginPath(); c.moveTo(x + 84, 167); c.lineTo(x + 87, 160); c.stroke(); c.lineCap = 'butt';
+    c.fillStyle = '#9d968e'; c.beginPath(); c.arc(x + 84, 167, 4, 0, 2 * Math.PI); c.fill();
+    c.strokeStyle = '#e9e5e0'; c.lineWidth = 2; c.lineCap = 'round'; c.beginPath(); c.moveTo(x + 84, 167); c.lineTo(x + 87, 160); c.stroke(); c.lineCap = 'butt';
     radial(c, x + 102, 167, 10, [255, 80, 50], 0.5);
     c.fillStyle = '#ff5b3d'; c.beginPath(); c.arc(x + 102, 167, 3.6, 0, 2 * Math.PI); c.fill();
     c.fillStyle = 'rgba(255,230,220,0.85)'; c.beginPath(); c.arc(x + 101, 166, 1.2, 0, 2 * Math.PI); c.fill();
     // contact spring under the top arm
-    c.strokeStyle = '#c3c9cf'; c.lineWidth = 0.8; c.beginPath();
+    c.strokeStyle = '#cecac4'; c.lineWidth = 0.8; c.beginPath();
     for (let k = 0; k < 4; k++) { c.moveTo(cx - 4, 26 + k * 0.1); c.lineTo(cx + 4, 26 + k * 0.1 - 0.01); }
     c.stroke();
   }
@@ -1310,15 +1310,15 @@ function airFromVac(vnm) {
   function drawLamp(c, x) {
     const bx = x + 30, by = CY - 2;
     c.fillStyle = 'rgba(0,0,0,0.35)'; c.beginPath(); c.ellipse(bx, BENCH - 1, 22, 3.5, 0, 0, 2 * Math.PI); c.fill();
-    c.fillStyle = grad(c, bx - 2.5, 0, bx + 2.5, 0, ['#5f666e', '#c6ccd3', '#5f666e']); c.fillRect(bx - 2.5, CY + 26, 5, BENCH - CY - 27);
-    c.fillStyle = grad(c, 0, BENCH - 7, 0, BENCH, ['#4b535d', '#22262b']); rrect(c, bx - 20, BENCH - 7, 40, 7, 2); c.fill();
+    c.fillStyle = grad(c, bx - 2.5, 0, bx + 2.5, 0, ['#6d6760', '#d2cdc7', '#6d6760']); c.fillRect(bx - 2.5, CY + 26, 5, BENCH - CY - 27);
+    c.fillStyle = grad(c, 0, BENCH - 7, 0, BENCH, ['#5c554c', '#2a2723']); rrect(c, bx - 20, BENCH - 7, 40, 7, 2); c.fill();
     c.fillStyle = grad(c, bx - 8, 0, bx + 8, 0, ['#7a5f2c', '#e2c47c', '#8a6c33']); c.fillRect(bx - 8, CY + 12, 16, 15);
     c.strokeStyle = 'rgba(60,40,10,0.6)'; c.lineWidth = 0.8; c.beginPath(); for (let k = 0; k < 4; k++) { c.moveTo(bx - 8, CY + 14.5 + k * 3.4); c.lineTo(bx + 8, CY + 13 + k * 3.4); } c.stroke();
     c.save(); c.globalCompositeOperation = 'lighter'; radial(c, bx, by, 48, LAMP, 0.55); c.restore();
     c.fillStyle = 'rgba(255,240,220,0.16)'; c.beginPath(); c.arc(bx, by, 16, 0, 2 * Math.PI); c.fill();
     c.beginPath(); c.moveTo(bx - 7, by + 14); c.lineTo(bx - 6.5, CY + 12); c.lineTo(bx + 6.5, CY + 12); c.lineTo(bx + 7, by + 14); c.closePath(); c.fill();
     c.strokeStyle = 'rgba(255,244,228,0.55)'; c.lineWidth = 0.8; c.beginPath(); c.arc(bx, by, 16, 0, 2 * Math.PI); c.stroke();
-    c.strokeStyle = '#c9ccd0'; c.lineWidth = 0.6; c.beginPath(); c.moveTo(bx - 3, CY + 12); c.lineTo(bx - 7, by); c.moveTo(bx + 3, CY + 12); c.lineTo(bx + 7, by); c.stroke();
+    c.strokeStyle = '#cfcdca'; c.lineWidth = 0.6; c.beginPath(); c.moveTo(bx - 3, CY + 12); c.lineTo(bx - 7, by); c.moveTo(bx + 3, CY + 12); c.lineTo(bx + 7, by); c.stroke();
     c.strokeStyle = '#fff7ea'; c.lineWidth = 1.6; c.beginPath();
     for (let k = 0; k <= 8; k++) { const xx = bx - 7 + k * 1.75, yy = by + (k % 2 ? -2.2 : 2.2); k ? c.lineTo(xx, yy) : c.moveTo(xx, yy); }
     c.stroke();
@@ -1340,8 +1340,8 @@ function airFromVac(vnm) {
   }
   function drawCellStand(c, x, yTop) {
     for (const px of [x + 18, x + 86]) {
-      c.fillStyle = grad(c, px - 2, 0, px + 2, 0, ['#5f666e', '#c6ccd3', '#5f666e']); c.fillRect(px - 2, yTop, 4, BENCH - yTop - 6);
-      c.fillStyle = grad(c, 0, BENCH - 6, 0, BENCH, ['#4b535d', '#22262b']); rrect(c, px - 9, BENCH - 6, 18, 6, 2); c.fill();
+      c.fillStyle = grad(c, px - 2, 0, px + 2, 0, ['#6d6760', '#d2cdc7', '#6d6760']); c.fillRect(px - 2, yTop, 4, BENCH - yTop - 6);
+      c.fillStyle = grad(c, 0, BENCH - 6, 0, BENCH, ['#5c554c', '#2a2723']); rrect(c, px - 9, BENCH - 6, 18, 6, 2); c.fill();
     }
   }
   // hand diffraction grating spectroscope: slit at the front, grating near the eyepiece, a small scale window on top
@@ -1350,17 +1350,17 @@ function airFromVac(vnm) {
     if (mounted) {
       const xr = sx + L * 0.55;
       c.fillStyle = 'rgba(0,0,0,0.35)'; c.beginPath(); c.ellipse(xr, BENCH - 1, 20, 3.2, 0, 0, 2 * Math.PI); c.fill();
-      c.fillStyle = grad(c, xr - 2.5, 0, xr + 2.5, 0, ['#5f666e', '#c6ccd3', '#5f666e']); c.fillRect(xr - 2.5, CY + r, 5, BENCH - CY - r - 6);
-      c.fillStyle = grad(c, 0, BENCH - 6, 0, BENCH, ['#4b535d', '#22262b']); rrect(c, xr - 16, BENCH - 6, 32, 6, 2); c.fill();
+      c.fillStyle = grad(c, xr - 2.5, 0, xr + 2.5, 0, ['#6d6760', '#d2cdc7', '#6d6760']); c.fillRect(xr - 2.5, CY + r, 5, BENCH - CY - r - 6);
+      c.fillStyle = grad(c, 0, BENCH - 6, 0, BENCH, ['#5c554c', '#2a2723']); rrect(c, xr - 16, BENCH - 6, 32, 6, 2); c.fill();
     }
-    c.fillStyle = grad(c, 0, CY - r, 0, CY + r, ['#555d66', '#2b3036', '#15181c']); rrect(c, sx, CY - r, L, 2 * r, 2); c.fill();
+    c.fillStyle = grad(c, 0, CY - r, 0, CY + r, ['#655e56', '#35312c', '#1b1916']); rrect(c, sx, CY - r, L, 2 * r, 2); c.fill();
     c.fillStyle = 'rgba(255,255,255,0.13)'; c.fillRect(sx + 2, CY - r + 2.5, L - 4, 1.2);
     if (mounted) { const xr = sx + L * 0.55; c.fillStyle = grad(c, 0, CY - r - 1.5, 0, CY + r + 1.5, METAL_V); c.fillRect(xr - 5, CY - r - 1.5, 10, 2 * r + 3); }
     c.fillStyle = grad(c, 0, CY - r - 1.5, 0, CY + r + 1.5, METAL_V); rrect(c, sx - 5, CY - r - 1.5, 6.5, 2 * r + 3, 1.5); c.fill();
-    c.fillStyle = '#030405'; c.fillRect(sx - 5.6, CY - 5, 1.3, 10);
+    c.fillStyle = '#050403'; c.fillRect(sx - 5.6, CY - 5, 1.3, 10);
     c.fillStyle = 'rgba(228,234,242,0.82)'; rrect(c, sx + 14, CY - r - 0.8, 22, 3.6, 1); c.fill();
     c.fillStyle = grad(c, 0, CY - r - 1.5, 0, CY + r + 1.5, METAL_V); rrect(c, sx + L - 46, CY - r - 1.5, 15, 2 * r + 3, 2); c.fill();
-    c.fillStyle = grad(c, 0, CY - r - 3, 0, CY + r + 3, ['#2a2d31', '#0d0e10', '#060607']); rrect(c, sx + L, CY - r - 3, 14, 2 * r + 6, 5); c.fill();
+    c.fillStyle = grad(c, 0, CY - r - 3, 0, CY + r + 3, ['#302e2b', '#100f0d', '#070706']); rrect(c, sx + L, CY - r - 3, 14, 2 * r + 6, 5); c.fill();
   }
 
   function rigScene() {
@@ -1449,9 +1449,9 @@ function airFromVac(vnm) {
       c.fillStyle = g; c.beginPath(); c.arc(46, CY, 54, 0, 2 * Math.PI); c.fill();
       c.fillStyle = 'rgba(255,236,210,0.07)'; c.beginPath(); c.moveTo(70, CY - 40); c.lineTo(122, CY - 16); c.lineTo(122, CY + 16); c.lineTo(70, CY + 40); c.closePath(); c.fill();
       // telescope on a pier, the spectroscope at its focus
-      c.strokeStyle = '#3a4048'; c.lineWidth = 3; c.beginPath(); c.moveTo(165, CY + 14); c.lineTo(165, 186); c.moveTo(165, 186); c.lineTo(145, 214); c.moveTo(165, 186); c.lineTo(185, 214); c.stroke();
-      c.fillStyle = grad(c, 0, CY - 15, 0, CY + 15, ['#e5e9ee', '#a9b0b9', '#6f7781']); rrect(c, 124, CY - 15, sx - 124, 30, 3); c.fill();
-      c.fillStyle = grad(c, 0, CY - 17, 0, CY + 17, ['#3a4048', '#1d2126', '#0d0f12']); rrect(c, 120, CY - 17, 22, 34, 3); c.fill();
+      c.strokeStyle = '#47423b'; c.lineWidth = 3; c.beginPath(); c.moveTo(165, CY + 14); c.lineTo(165, 186); c.moveTo(165, 186); c.lineTo(145, 214); c.moveTo(165, 186); c.lineTo(185, 214); c.stroke();
+      c.fillStyle = grad(c, 0, CY - 15, 0, CY + 15, ['#edeae6', '#b8b2aa', '#807970']); rrect(c, 124, CY - 15, sx - 124, 30, 3); c.fill();
+      c.fillStyle = grad(c, 0, CY - 17, 0, CY + 17, ['#47423b', '#25221e', '#12100d']); rrect(c, 120, CY - 17, 22, 34, 3); c.fill();
       lab(46, CY + 70, 'star'); lab(165, CY - 28, 'telescope');
     }
     drawScope(c, sx, Ls, !star);
@@ -1819,7 +1819,7 @@ function airFromVac(vnm) {
     if (Math.abs(parseFloat(cv.style.height || 0) - Hc) > 0.5) cv.style.height = Hc + 'px';
     const [ctx, W] = fit(cv);
     ctx.clearRect(0, 0, W, Hc);
-    const ink = tok('--ink'), muted = tok('--muted'), line = tok('--line'), accent = tok('--accent'), gold = tok('--equi'), scope = tok('--scope') || '#05070a';
+    const ink = tok('--ink'), muted = tok('--muted'), line = tok('--line'), accent = tok('--accent'), gold = tok('--equi'), scope = tok('--scope') || '#0a0805';
     const dark = document.documentElement.getAttribute('data-theme') === 'dark' || (document.documentElement.getAttribute('data-theme') !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches);
     const fs = 11 * ps, mf = mono();
     amGeo = { cols };
@@ -1839,7 +1839,7 @@ function airFromVac(vnm) {
       const P = (x, y) => [cx + x * R, cy + y * R];
       /* the atom */
       if (a.m === 'ball') {
-        const g = ctx.createRadialGradient(cx - 0.1 * R, cy - 0.1 * R, 0.03 * R, cx, cy, 0.3 * R); g.addColorStop(0, '#d9dde3'); g.addColorStop(1, '#5d6673');
+        const g = ctx.createRadialGradient(cx - 0.1 * R, cy - 0.1 * R, 0.03 * R, cx, cy, 0.3 * R); g.addColorStop(0, '#e2dfda'); g.addColorStop(1, '#71695f');
         ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx, cy, 0.3 * R, 0, 6.283); ctx.fill();
       } else if (a.m === 'pud') {
         const rr = Math.min(0.92, 0.25 + 0.67 * (AM.R - 0.02) / 0.28) * R;

@@ -23,9 +23,9 @@
 <style>
 /* Layout: a wire on a meter rule with a sliding contact, a supply, ammeter and voltmeter on the left; the rail on the right. */
 /* Layout: lab bench. The gas box and speed histogram fill the left, a narrow instrument rail sits on the right; stacks on phones. */
-:root { --wire: #b06a2c; --meter: #f2f4f7; --clip: #2b60b5; --ecol: #6f4bb3; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --wire: #e0955a; --meter: #1c2430; --clip: #69a0ff; --ecol: #b49bff; } }
-:root[data-theme="dark"] { --wire: #e0955a; --meter: #1c2430; --clip: #69a0ff; --ecol: #b49bff; }
+:root { --wire: #b06a2c; --meter: #f7f5f2; --clip: #2b60b5; --ecol: #a88456; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --wire: #e0955a; --meter: #2e271e; --clip: #69a0ff; --ecol: #b49bff; } }
+:root[data-theme="dark"] { --wire: #e0955a; --meter: #2e271e; --clip: #69a0ff; --ecol: #b49bff; }
 :root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
 body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
@@ -60,14 +60,14 @@ table.rows input:focus { border-color: var(--accent); }
 @media (max-width: 520px) { .dimseg { top: 48px; } }
 @media (min-width: 821px) { :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 350px; } :root[data-projector="on"] .stage { min-height: 420px; } }
 /* the supply: knobs for the current and the wire's temperature, over the supply in the picture */
-.supply { position: absolute; left: 50%; bottom: 8px; transform: translateX(-50%); z-index: 2; display: flex; align-items: center; gap: 14px; padding: 6px 12px; border-radius: 10px; background: #2c3542; color: #e3e8ef; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.25); }
+.supply { position: absolute; left: 50%; bottom: 8px; transform: translateX(-50%); z-index: 2; display: flex; align-items: center; gap: 14px; padding: 6px 12px; border-radius: 10px; background: #40382e; color: #eeeae4; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.25); }
 .stage[data-view="cold"] .supply, .stage[data-view="inside"] .supply, .stage[data-view="sheet"] .supply { display: none; }
 @media (max-width: 520px) { .supply { gap: 8px; padding: 6px 8px; } .sup-title { display: none; } .knob { width: 38px; height: 38px; } .knob-mark { transform-origin: 50% 15px; height: 11px; } .sup-lcd { font-size: 0.85rem; } }
-.sup-title { font-size: 0.75rem; font-weight: 700; color: #c9d0d9; }
+.sup-title { font-size: 0.75rem; font-weight: 700; color: #d8d2ca; }
 .knobwrap { display: flex; align-items: center; gap: 8px; }
 .knob { position: relative; width: 44px; height: 44px; border-radius: 50%; cursor: grab; touch-action: none; flex: none;
-  background: radial-gradient(circle at 38% 32%, #8b96a4, #4a5462 62%, #39414d); box-shadow: 0 0 0 3px #232a34, 0 2px 4px rgba(0, 0, 0, 0.5); }
-.knob-mark { position: absolute; left: 50%; top: 4px; width: 3px; height: 13px; margin-left: -1.5px; border-radius: 2px; background: #f1f4f8; transform-origin: 50% 18px; }
+  background: radial-gradient(circle at 38% 32%, #a2998d, #60574c 62%, #4c443b); box-shadow: 0 0 0 3px #332c24, 0 2px 4px rgba(0, 0, 0, 0.5); }
+.knob-mark { position: absolute; left: 50%; top: 4px; width: 3px; height: 13px; margin-left: -1.5px; border-radius: 2px; background: #f7f5f2; transform-origin: 50% 18px; }
 .knob:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
 .sup-lcd { font-family: var(--font-mono); font-weight: 600; font-size: 0.95rem; color: #7ee0a0; background: #0b1a12; border-radius: 4px; padding: 2px 6px; min-width: 6ch; text-align: right; white-space: nowrap; }
 @media (max-width: 820px) {
@@ -532,24 +532,24 @@ table.rows input:focus { border-color: var(--accent); }
       const right = Lx < W - 150 * p; dropBracket(right ? Lx + 12 * p : Lx - 12 * p, Y(V0), Y(VL), p, right);
     }
     /* the rule */
-    const rg = ctx.createLinearGradient(0, yW + 6 * p, 0, yW + 32 * p); rg.addColorStop(0, VG.dark() ? '#596372' : '#e9edf1'); rg.addColorStop(1, VG.dark() ? '#3d4550' : '#c9d0d8');
+    const rg = ctx.createLinearGradient(0, yW + 6 * p, 0, yW + 32 * p); rg.addColorStop(0, VG.dark() ? '#70675b' : '#f0edea'); rg.addColorStop(1, VG.dark() ? '#4f483e' : '#d7d1ca');
     ctx.fillStyle = rg; ctx.fillRect(x0 - 10 * p, yW + 6 * p, sc + 20 * p, 26 * p); ctx.strokeStyle = 'rgba(0,0,0,0.25)'; ctx.lineWidth = 1; ctx.strokeRect(x0 - 10 * p + 0.5, yW + 6 * p + 0.5, sc + 20 * p - 1, 26 * p - 1);
-    ctx.fillStyle = VG.dark() ? '#e3e8ef' : '#2a313b'; ctx.font = `${9.5 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    ctx.fillStyle = VG.dark() ? '#eeeae4' : '#3a332b'; ctx.font = `${9.5 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
     const every = narrow ? 20 : 10;
     for (let i = 0; i <= 100; i++) { const h = i % 10 === 0 ? 11 : i % 5 === 0 ? 7 : 4; if (narrow && i % 5) continue; ctx.fillRect(X(i / 100) - 0.5, yW + 6 * p, 1, h * p); if (i % every === 0) ctx.fillText(`${i}`, X(i / 100), yW + 19 * p); }
     ctx.textAlign = 'left'; ctx.fillText('cm', x1 + 12 * p, yW + 19 * p);
     /* terminal posts at the ends, the supply leads from them, the wire */
     const pa = X(WIRE_A) - 6 * p, pb = X(WIRE_B) + 6 * p;
-    VG.cable(ctx, pa, yW + 4 * p, W / 2 - 70 * p, H - 30 * p, 40 * p, { color: '#b8382a', w: 3 * p }); VG.cable(ctx, pb, yW + 4 * p, W / 2 + 70 * p, H - 30 * p, 40 * p, { color: '#20262e', w: 3 * p });
+    VG.cable(ctx, pa, yW + 4 * p, W / 2 - 70 * p, H - 30 * p, 40 * p, { color: '#b8382a', w: 3 * p }); VG.cable(ctx, pb, yW + 4 * p, W / 2 + 70 * p, H - 30 * p, 40 * p, { color: '#2d2821', w: 3 * p });
     for (const x of [pa, pb]) { VG.rod(ctx, x, yW - 9 * p, x, yW + 8 * p, 4.5 * p, { color: '#c9a24a' }); VG.screw(ctx, x, yW - 9 * p, 4 * p); }
     VG.rod(ctx, X(WIRE_A), yW, X(WIRE_B), yW, (0.55 + d() * 2.2) * p, { color: T.wire });
     arrowH(X(0.03), X(0.03) + 34 * p, yW - 12 * p, T.pos, p); txt('I', X(0.03) + 40 * p, yW - 12 * p, { c: T.pos, w: 700, s: 11 });
     /* the voltmeter and its leads to the clips */
     const dw = 150 * p, dh = 60 * p, dmx = Math.max(10 * p, Math.min(W - 10 * p - dw, (X(0) + Lx) / 2 - dw / 2)), dmy = yW - 116 * p;
-    VG.cable(ctx, dmx + dw * 0.3, dmy + dh, X(0), yW - 14 * p, 26 * p, { color: '#b8382a', w: 2.4 * p }); VG.cable(ctx, dmx + dw * 0.7, dmy + dh, Lx, yW - 14 * p, 26 * p, { color: '#20262e', w: 2.4 * p });
-    VG.box(ctx, dmx, dmy, dw, dh, { color: '#2f3a46' }); VG.lcd(ctx, dmx + 10 * p, dmy + 9 * p, dw - 20 * p, 28 * p, `${vShown()} V`);
+    VG.cable(ctx, dmx + dw * 0.3, dmy + dh, X(0), yW - 14 * p, 26 * p, { color: '#b8382a', w: 2.4 * p }); VG.cable(ctx, dmx + dw * 0.7, dmy + dh, Lx, yW - 14 * p, 26 * p, { color: '#2d2821', w: 2.4 * p });
+    VG.box(ctx, dmx, dmy, dw, dh, { color: '#443c31' }); VG.lcd(ctx, dmx + 10 * p, dmy + 9 * p, dw - 20 * p, 28 * p, `${vShown()} V`);
     VG.plate(ctx, 'voltmeter', dmx + dw / 2, dmy + dh - 12 * p, { s: 8 * p });
-    for (const [f, c] of [[0.3, '#b8382a'], [0.7, '#20262e']]) { ctx.fillStyle = c; ctx.beginPath(); ctx.arc(dmx + dw * f, dmy + dh - 2 * p, 3.5 * p, 0, 7); ctx.fill(); }
+    for (const [f, c] of [[0.3, '#b8382a'], [0.7, '#2d2821']]) { ctx.fillStyle = c; ctx.beginPath(); ctx.arc(dmx + dw * f, dmy + dh - 2 * p, 3.5 * p, 0, 7); ctx.fill(); }
     /* clips */
     const clip = (x) => { VG.box(ctx, x - 6 * p, yW - 17 * p, 12 * p, 21 * p, { color: '#2b60b5', r: 3 * p, shadow: false }); ctx.fillStyle = 'rgba(255,255,255,0.5)'; ctx.fillRect(x - 0.6 * p, yW - 3 * p, 1.2 * p, 7 * p); };
     clip(X(0)); clip(Lx);
@@ -611,7 +611,7 @@ table.rows input:focus { border-color: var(--accent); }
     const wireM = Ms({ roughness: 0.32, metalness: 0.75 }), wire = mesh(alongX(1, WIRE_B - WIRE_A, 20), wireM, true); wire.position.set((WIRE_A + WIRE_B) / 2, 0, ZW);
     const brassM = Ms({ roughness: 0.3, metalness: 0.8, color: 0xc9a24a }), posts = [WIRE_A - 0.01, WIRE_B + 0.01].map((x) => { const m = mesh(upZ(0.0065, 0.024), brassM, true); m.position.set(x, 0, 0.012); return m; });
     /* clips: a body over the wire and a knife edge that touches it */
-    const clipM = Ms({ roughness: 0.35, metalness: 0.45 }), edgeM = Ms({ roughness: 0.25, metalness: 0.9, color: 0xd8dde3 });
+    const clipM = Ms({ roughness: 0.35, metalness: 0.45 }), edgeM = Ms({ roughness: 0.25, metalness: 0.9, color: 0xe2ded9 });
     const mkClip = () => { const g = new THREE.Group(), b = mesh(new THREE.BoxGeometry(0.012, 0.024, 0.012), clipM, true), e = mesh(new THREE.BoxGeometry(0.002, 0.026, 0.006), edgeM, true), s = mesh(upZ(0.0035, 0.008), clipM, true);
       b.position.z = ZW + 0.009; e.position.z = ZW + 0.002; s.position.set(0, -0.006, ZW + 0.019); g.add(b, e, s); return g; };
     const clipA = mkClip(), clipB = mkClip();
@@ -642,7 +642,7 @@ table.rows input:focus { border-color: var(--accent); }
     const zoomLM = new THREE.LineDashedMaterial({ dashSize: 0.012, gapSize: 0.01, transparent: true, opacity: 0.5 }), zoom = new THREE.LineSegments(lineG(4), zoomLM);
     const markM = Ms({ roughness: 0.4, emissive: 0x000000 }), mark = mesh(new THREE.TorusGeometry(1, 0.25, 8, 32).rotateY(Math.PI / 2), markM); mark.position.set(0.5, 0, ZW);
     /* leads: built as tubes when L changes */
-    const redM = Ms({ roughness: 0.6, color: 0xb8382a }), blackM = Ms({ roughness: 0.6, color: 0x23282f });
+    const redM = Ms({ roughness: 0.6, color: 0xb8382a }), blackM = Ms({ roughness: 0.6, color: 0x2e2a24 });
     const leads = new THREE.Group();
     scene.add(bench, rule, wire, ...posts, clipA, clipB, dm, wall, wallEdge, wallTicks, wallScale, ghosts, tipA, tipB, mag, zoom, mark, leads);
     g3 = { r, el, scene, cam, hemi, sun, benchM, ruleCv, ruleTex, ruleTopM, ruleSideM, wireM, wire, clipM, clipA, clipB, dm, dmBodyM, dmCv, dmTex, wallG, wallM, wall, wallEdge, edgeLM, wallTicks, tickLM, wallScale, ghosts, scaleLM, dotM2, tipA, tipB,
@@ -656,17 +656,17 @@ table.rows input:focus { border-color: var(--accent); }
   const col3 = (s, fb) => { try { return new THREE.Color(s || fb); } catch (_) { return new THREE.Color(fb); } };
   function theme3() {
     const g = g3, dk = VD3.dark();
-    const bg = col3(T.canvas, '#fbfcfd'); g.scene.background = bg; g.scene.fog = new THREE.Fog(bg, 2.2, 4.5);
+    const bg = col3(T.canvas, '#fdfcfb'); g.scene.background = bg; g.scene.fog = new THREE.Fog(bg, 2.2, 4.5);
     g.hemi.intensity = dk ? 0.95 : 0.62; g.sun.intensity = dk ? 0.85 : 0.6; g.hemi.groundColor = col3(dk ? '#2a241d' : '#8c7a60', '#8c7a60');
-    g.benchM.color = col3(dk ? '#3a3229' : '#cdbb9d', '#cdbb9d'); g.ruleSideM.color = col3(dk ? '#59626e' : '#b9c1ca', '#b9c1ca');
-    g.wireM.color = col3(T.wire, '#b06a2c'); g.clipM.color = col3('#2b60b5', '#2b60b5'); g.dmBodyM.color = col3('#2f3a46', '#2f3a46');
-    g.wallM.color = col3(T.accent, '#2b60b5'); g.edgeLM.color = col3(T.accent, '#2b60b5'); g.tickLM.color = col3(T.clip, '#2b60b5'); g.scaleLM.color = col3(T.muted, '#5a6575'); g.dotM2.color = col3(T.clip, '#2b60b5');
-    g.shellM.color = col3(T.wire, '#b06a2c'); g.capM.color = col3(T.wire, '#b06a2c'); g.capM.emissive = col3(T.wire, '#b06a2c').multiplyScalar(0.35); g.farM.color = col3(T.wire, '#b06a2c'); g.gaugeLM.color = col3(T.muted, '#5a6575');
-    g.ringM.color = col3(T.accent, '#2b60b5'); g.dotM.color = col3(T.neg, '#2b60b5'); g.dotM.emissive = col3(T.neg, '#2b60b5').multiplyScalar(0.35);
-    g.zoomLM.color = col3(T.muted, '#5a6575'); g.markM.color = col3(T.accent, '#2b60b5');
+    g.benchM.color = col3(dk ? '#3a3229' : '#cdbb9d', '#cdbb9d'); g.ruleSideM.color = col3(dk ? '#6c655b' : '#c9c2ba', '#c9c2ba');
+    g.wireM.color = col3(T.wire, '#b06a2c'); g.clipM.color = col3('#2b60b5', '#2b60b5'); g.dmBodyM.color = col3('#443c31', '#443c31');
+    g.wallM.color = col3(T.accent, '#c4811c'); g.edgeLM.color = col3(T.accent, '#c4811c'); g.tickLM.color = col3(T.clip, '#2b60b5'); g.scaleLM.color = col3(T.muted, '#73695c'); g.dotM2.color = col3(T.clip, '#2b60b5');
+    g.shellM.color = col3(T.wire, '#b06a2c'); g.capM.color = col3(T.wire, '#b06a2c'); g.capM.emissive = col3(T.wire, '#b06a2c').multiplyScalar(0.35); g.farM.color = col3(T.wire, '#b06a2c'); g.gaugeLM.color = col3(T.muted, '#73695c');
+    g.ringM.color = col3(T.accent, '#c4811c'); g.dotM.color = col3(T.neg, '#2b60b5'); g.dotM.emissive = col3(T.neg, '#2b60b5').multiplyScalar(0.35);
+    g.zoomLM.color = col3(T.muted, '#73695c'); g.markM.color = col3(T.accent, '#c4811c');
     /* the printed scale on the rule */
     const c = g.ruleCv.getContext('2d'), w = 2048, h = 72, X = (l) => (l + 0.03) / 1.06 * w;
-    c.fillStyle = dk ? '#59626e' : '#e4e8ec'; c.fillRect(0, 0, w, h); c.fillStyle = dk ? '#e9edf2' : '#1f262f'; c.font = '600 22px "JetBrains Mono", monospace'; c.textAlign = 'center'; c.textBaseline = 'bottom';
+    c.fillStyle = dk ? '#6c655b' : '#ebe8e5'; c.fillRect(0, 0, w, h); c.fillStyle = dk ? '#f1eeea' : '#2e2820'; c.font = '600 22px "JetBrains Mono", monospace'; c.textAlign = 'center'; c.textBaseline = 'bottom';
     for (let i = 0; i <= 1000; i++) { const tall = i % 100 === 0 ? 30 : i % 50 === 0 ? 22 : i % 10 === 0 ? 15 : 7; if (i % 10 && i % 2) continue; c.fillRect(X(i / 1000) - (i % 100 ? 0.8 : 1.4), 0, i % 100 ? 1.6 : 2.8, tall); if (i % 100 === 0) c.fillText(`${i / 10}`, X(i / 1000), h - 4); }
     c.textAlign = 'left'; c.fillText('cm', X(1.004), h - 4); g.ruleTex.needsUpdate = true;
     g.lcd = ''; G3.leads = ''; G3.wall = '';
@@ -686,11 +686,11 @@ table.rows input:focus { border-color: var(--accent); }
   }
   function lcd3() {
     const t = `${vShown()} V`; if (g3.lcd === t) return; g3.lcd = t;
-    const c = g3.dmCv.getContext('2d'), w = 512, h = 300; c.fillStyle = '#2f3a46'; c.fillRect(0, 0, w, h);
+    const c = g3.dmCv.getContext('2d'), w = 512, h = 300; c.fillStyle = '#443c31'; c.fillRect(0, 0, w, h);
     VG.lcd(c, 28, 28, w - 56, 120, t, { font: '600 80px "JetBrains Mono", ui-monospace, monospace' });
     c.fillStyle = 'rgba(230,236,243,0.8)'; c.font = '700 30px "Atkinson Hyperlegible", sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('VOLTMETER', w / 2, 196);
     c.font = '22px "Atkinson Hyperlegible", sans-serif'; c.fillStyle = 'rgba(230,236,243,0.6)'; c.fillText('across the clips', w / 2, 232);
-    for (const [f, k] of [[0.3, '#b8382a'], [0.7, '#15191e']]) { c.fillStyle = k; c.beginPath(); c.arc(w * f, 272, 16, 0, 7); c.fill(); }
+    for (const [f, k] of [[0.3, '#b8382a'], [0.7, '#1d1a16']]) { c.fillStyle = k; c.beginPath(); c.arc(w * f, 272, 16, 0, 7); c.fill(); }
     g3.dmTex.needsUpdate = true;
   }
   function wall3() {
@@ -717,7 +717,7 @@ table.rows input:focus { border-color: var(--accent); }
     magEnsure();
     const R = d() * 1e-3 * MAG / 2; g.shell.scale.set(1, R, R); g.cap.scale.setScalar(R); g.far.scale.setScalar(R); g.ring.scale.setScalar(R * 1.06);
     g.gaugeRings.forEach((l, i) => { l.visible = i !== S.g; });
-    g.ringM.emissive = col3(T.accent, '#2b60b5').multiplyScalar(0.15 + 0.6 * MG.flash);
+    g.ringM.emissive = col3(T.accent, '#c4811c').multiplyScalar(0.15 + 0.6 * MG.flash);
     const n = Math.min(MG.N, 900); for (let i = 0; i < n; i++) { g.mat4.makeTranslation(-MLEN / 2 + magPos(i) * MLEN, MG.r[i] * R * 0.96 * Math.cos(MG.th[i]), MG.r[i] * R * 0.96 * Math.sin(MG.th[i])); g.dots.setMatrixAt(i, g.mat4); }
     g.dots.count = n; g.dots.instanceMatrix.needsUpdate = true;
     const zp = g.zoom.geometry.attributes.position; zp.array.set([0.5 - MLEN / 2, 0, ZM - R, 0.5 - 0.00125, 0, ZW, 0.5 + MLEN / 2, 0, ZM - R, 0.5 + 0.00125, 0, ZW]); zp.needsUpdate = true; g.zoom.geometry.computeBoundingSphere(); g.zoom.computeLineDistances();
@@ -1029,7 +1029,7 @@ table.rows input:focus { border-color: var(--accent); }
     SH.geo = { x0, y0, sc };
     const X = (xc) => x0 + xc * sc, Y = (yc) => y0 + yc * sc, V = SH.sol.V, fix = SH.fix, c = SH.c, dark = VG && VG.dark ? VG.dark() : false;
     /* the board under the sheet */
-    ctx.fillStyle = dark ? '#151a21' : '#d9dde2'; ctx.fillRect(x0 - 8 * p, y0 - 8 * p, 24 * sc + 16 * p, 16 * sc + 16 * p);
+    ctx.fillStyle = dark ? '#201c16' : '#e1deda'; ctx.fillRect(x0 - 8 * p, y0 - 8 * p, 24 * sc + 16 * p, 16 * sc + 16 * p);
     /* the sheet, tinted by potential: blue at 0 V, red at V0 */
     const im = ctx.createImageData(SH_NX, SH_NY), lo = [70, 120, 220], hi = [220, 70, 60], paper = dark ? [52, 56, 64] : [236, 233, 226];
     for (let i = 0; i < SH_NX * SH_NY; i++) { const o = 4 * i;
@@ -1061,7 +1061,7 @@ table.rows input:focus { border-color: var(--accent); }
     }
     /* the electrodes, drawn smooth over their cells (the solver uses the cells), and their labels */
     for (const e of SH.shapes) {
-      const g = ctx.createLinearGradient(0, Y(0), 0, Y(16)); g.addColorStop(0, '#d7dce2'); g.addColorStop(1, '#8e98a4'); ctx.fillStyle = g; ctx.strokeStyle = 'rgba(0,0,0,0.45)'; ctx.lineWidth = 1;
+      const g = ctx.createLinearGradient(0, Y(0), 0, Y(16)); g.addColorStop(0, '#e1ddd8'); g.addColorStop(1, '#a29a90'); ctx.fillStyle = g; ctx.strokeStyle = 'rgba(0,0,0,0.45)'; ctx.lineWidth = 1;
       ctx.beginPath(); if (e.k === 'disk') ctx.arc(X(e.cx * 0.25), Y(e.cy * 0.25), (e.r + 0.5) * 0.25 * sc, 0, 2 * Math.PI); else ctx.rect(X(e.x0 * 0.25), Y(e.y0 * 0.25), (e.x1 - e.x0 + 1) * 0.25 * sc, (e.y1 - e.y0 + 1) * 0.25 * sc); ctx.fill(); ctx.stroke();
       const bx = X((e.x0 + e.x1 + 1) * 0.125), lx = e.k === 'disk' ? X(e.cx * 0.25) : bx + (bx < X(12) ? 34 : -34) * p, ly = e.k === 'disk' ? Y((e.cy - e.r) * 0.25) - 6 * p : e.y0 > 0 ? Y(e.y0 * 0.25) - 4 * p : Y(0) + 24 * p, t = e.v === 1 ? `+${SH.V0} V` : '0 V';
       ctx.save(); ctx.font = `700 ${11 * p}px ${T.mono}`; const tw = ctx.measureText(t).width + 10 * p; ctx.fillStyle = e.v === 1 ? '#b8322a' : '#2f5fb8'; ctx.fillRect(lx - tw / 2, ly - 16 * p, tw, 16 * p);
@@ -1073,7 +1073,7 @@ table.rows input:focus { border-color: var(--accent); }
     ctx.save(); ctx.strokeStyle = T.ink; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.arc(qx, qy, 6 * p, 0, 2 * Math.PI); ctx.moveTo(qx - 10 * p, qy); ctx.lineTo(qx + 10 * p, qy); ctx.moveTo(qx, qy - 10 * p); ctx.lineTo(qx, qy + 10 * p); ctx.stroke(); ctx.restore();
     const lab = isFinite(vp) ? `${vp.toFixed(3)} V` : 'no contact';
     ctx.save(); ctx.font = `700 ${12 * p}px ${T.mono}`; const tw = ctx.measureText(lab).width + 12 * p, bx = Math.min(W - tw - 4, qx + 12 * p), by = Math.max(4, qy - 30 * p);
-    ctx.fillStyle = '#1f2630'; ctx.fillRect(bx, by, tw, 20 * p); ctx.fillStyle = '#9ff5c0'; ctx.textBaseline = 'middle'; ctx.fillText(lab, bx + 6 * p, by + 10 * p); ctx.restore();
+    ctx.fillStyle = '#2f2820'; ctx.fillRect(bx, by, tw, 20 * p); ctx.fillStyle = '#9ff5c0'; ctx.textBaseline = 'middle'; ctx.fillText(lab, bx + 6 * p, by + 10 * p); ctx.restore();
   }
   let shOff = null;
   function shSheetCanvas() { if (!shOff) { shOff = document.createElement('canvas'); shOff.width = SH_NX; shOff.height = SH_NY; } return shOff; }

@@ -16,36 +16,36 @@
 <style>
 /* Layout: the z = 0 slice through a Gaussian surface and its charges (plus an E(r) plot in symmetry mode) on the left; instrument rail on the right; stacks on phones. */
 :root {
-  --bg: #e9edf2;
-  --surface: #f8fafc;
-  --canvas: #fcfdfe;
-  --ink: #17202b;
-  --muted: #5a6575;
-  --line: #d3d9e2;
-  --grid: #e6ebf1;
-  --grid-strong: #cfd7e1;
+  --bg: #f1eeea;
+  --surface: #fcfaf8;
+  --canvas: #fefdfc;
+  --ink: #2a2219;
+  --muted: #73695c;
+  --line: #e1dbd4;
+  --grid: #f0ece7;
+  --grid-strong: #e0d9d0;
   --pos: #c23f2c;
   --neg: #2b60b5;
   --equi: #a7740b;
-  --accent: #2b60b5;
+  --accent: #c4811c;
   --fout: #17855f;
   --fin: #7a45c0;
-  --fline: #66727f;
+  --fline: #7d7468;
   --on-charge: #ffffff;
   --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
-    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-    --equi: #e2b350; --accent: #69a0ff; --fout: #4fd1a0; --fin: #b48cff; --fline: #7d8a9a; --on-charge: #10161e; color-scheme: dark;
+    --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
+    --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+    --equi: #e2b350; --accent: #fbc26d; --fout: #4fd1a0; --fin: #b48cff; --fline: #988d7f; --on-charge: #1d1811; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
-  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-  --equi: #e2b350; --accent: #69a0ff; --fout: #4fd1a0; --fin: #b48cff; --fline: #7d8a9a; --on-charge: #10161e; color-scheme: dark;
+  --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
+  --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+  --equi: #e2b350; --accent: #fbc26d; --fout: #4fd1a0; --fin: #b48cff; --fline: #988d7f; --on-charge: #1d1811; color-scheme: dark;
 }
 :root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
@@ -2234,7 +2234,7 @@ void main() {
     try { renderer = new THREE.WebGLRenderer({ canvas: gCan, antialias: true }); } catch (_) { G3.failed = true; return false; }
     const scene = new THREE.Scene(), cam = new THREE.PerspectiveCamera(32, 1, 1, 800);
     cam.up.set(0, 0, 1);
-    const hemi = new THREE.HemisphereLight(0xffffff, 0x5d6878, 0.85); hemi.position.set(0, 0, 1);
+    const hemi = new THREE.HemisphereLight(0xffffff, 0x766c5f, 0.85); hemi.position.set(0, 0, 1);
     const sun = new THREE.DirectionalLight(0xffffff, 0.75); sun.position.set(-12, -16, 26);
     scene.add(hemi, sun);
     const fatMats = [];
@@ -2288,7 +2288,7 @@ void main() {
     }
     for (const [m, hex] of [[M.beadP, T.pos], [M.beadN, T.neg], [M.beadZ, T.muted]]) { set(m, hex); m.emissive.set(hex); m.emissiveIntensity = dark ? 0.45 : 0.18; }
     set(M.glowP, T.pos); set(M.glowN, T.neg); M.glowP.opacity = M.glowN.opacity = dark ? 0.75 : 0.5;
-    set(M.metal, dark ? '#a4afbc' : '#9aa5b2'); M.metal.emissive.set(dark ? '#1a2029' : '#000000');
+    set(M.metal, dark ? '#bab1a6' : '#b0a79c'); M.metal.emissive.set(dark ? '#28221b' : '#000000');
   }
   // a parametric patch f(s, t) over [s0, s1] × [t0, t1], inset a little so neighboring area elements read as tiles
   function tile(f, s0, s1, t0, t1, m) {

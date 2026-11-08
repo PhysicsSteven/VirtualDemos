@@ -20,41 +20,41 @@
 <style>
 /* Layout: lab bench. Orbit, Earth closeup, sky and a year chart fill the left, a narrow instrument rail sits on the right; stacks on phones. */
 :root {
-  --bg: #e9edf2;
-  --surface: #f8fafc;
-  --canvas: #fcfdfe;
-  --relief: #dfe5ec;
-  --ink: #17202b;
-  --muted: #5a6575;
-  --line: #d3d9e2;
-  --grid: #e6ebf1;
-  --grid-strong: #cfd7e1;
+  --bg: #f1eeea;
+  --surface: #fcfaf8;
+  --canvas: #fefdfc;
+  --relief: #ebe6e0;
+  --ink: #2a2219;
+  --muted: #73695c;
+  --line: #e1dbd4;
+  --grid: #f0ece7;
+  --grid-strong: #e0d9d0;
   --pos: #c23f2c;
   --neg: #2b60b5;
-  --field: #1d2836;
+  --field: #342b1f;
   --equi: #a7740b;
-  --accent: #2b60b5;
+  --accent: #c4811c;
   --on-charge: #ffffff;
   --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
   --sun: #e09a12;
   --day: #d3e3f2;
-  --night: #3a4656;
+  --night: #544a3c;
   --canvas-scale: 1;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
-    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-    --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
-    --sun: #f5c451; --day: #3f6488; --night: #1a222d;
+    --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --relief: #40372c; --ink: #eeeae4; --muted: #b0a698;
+    --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+    --field: #eee8e0; --equi: #e2b350; --accent: #fbc26d; --on-charge: #17130e; color-scheme: dark;
+    --sun: #f5c451; --day: #836844; --night: #2c251b;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
-  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-  --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
-  --sun: #f5c451; --day: #3f6488; --night: #1a222d;
+  --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --relief: #40372c; --ink: #eeeae4; --muted: #b0a698;
+  --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+  --field: #eee8e0; --equi: #e2b350; --accent: #fbc26d; --on-charge: #17130e; color-scheme: dark;
+  --sun: #f5c451; --day: #836844; --night: #2c251b;
 }
 :root[data-projector="on"] { font-size: 125%; --canvas-scale: 1.5; }
 html, body { height: 100%; }
@@ -99,7 +99,7 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 .viewbar { position: absolute; top: 10px; right: 10px; z-index: 2; display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
 /* the 3D orbit sits under the orbit canvas, which keeps the labels and takes every pointer */
 .pane.orbit canvas.vd3d { pointer-events: none; }
-.pane.orbit.space { background: #04060b; }
+.pane.orbit.space { background: #0a0805; }
 .seg { display: inline-flex; align-items: center; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
 .seg button {
   font: inherit; font-size: 0.86rem; font-weight: 700; color: var(--muted); background: none; border: 0;
@@ -170,8 +170,8 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
 
 /* Sidereal and solar days, Sundial and clock (2026-10-31): one scene in place of the four seasons panes */
 :root { --sd-sun: #f2a516; --sd-star: #2b60b5; --sd-sunline: #c27a00; --sd-planet: #2f7fd0; --sd-eot: #2b60b5; --sd-ell: #b2441f; --sd-tilt: #2e8a57; --sd-chart: #ffffff; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --sd-sun: #ffc24a; --sd-star: #8fb6ff; --sd-sunline: #ffc24a; --sd-planet: #5aa7ff; --sd-eot: #8fb6ff; --sd-ell: #ff8a5c; --sd-tilt: #6fd39a; --sd-chart: #10151d; } }
-:root[data-theme="dark"] { --sd-sun: #ffc24a; --sd-star: #8fb6ff; --sd-sunline: #ffc24a; --sd-planet: #5aa7ff; --sd-eot: #8fb6ff; --sd-ell: #ff8a5c; --sd-tilt: #6fd39a; --sd-chart: #10151d; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --sd-sun: #ffc24a; --sd-star: #8fb6ff; --sd-sunline: #ffc24a; --sd-planet: #5aa7ff; --sd-eot: #8fb6ff; --sd-ell: #ff8a5c; --sd-tilt: #6fd39a; --sd-chart: #1c1711; } }
+:root[data-theme="dark"] { --sd-sun: #ffc24a; --sd-star: #8fb6ff; --sd-sunline: #ffc24a; --sd-planet: #5aa7ff; --sd-eot: #8fb6ff; --sd-ell: #ff8a5c; --sd-tilt: #6fd39a; --sd-chart: #1c1711; }
 .pane.sdpane { grid-area: sd; display: none; }
 .stage canvas#sdCan { touch-action: pan-y; width: 100%; height: 100%; }
 .stage.sdmode { grid-template-areas: "ctl ctl" "sd sd" "sd sd" "sd sd"; }
@@ -665,7 +665,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // a picture choice), and the blue ring is the observer's latitude circle: the lit share of that ring is the day length.
   // Sun and Earth are drawn far larger than to scale; the orbit and its dates are the model's.
   const OBS_LON = -92.6 * DEG, ER3 = 0.1, SUN3 = 0.12;
-  const SPACE = { canvas: 'rgba(5,8,14,0.78)', ink: '#e3e8ef', muted: '#9aa7b8', relief: '#2a3442', gridStrong: '#3a4656', pos: '#ff7660', accent: '#69a0ff', sun: '#f5c451' };
+  const SPACE = { canvas: 'rgba(5,8,14,0.78)', ink: '#eeeae4', muted: '#b6ab9c', relief: '#40372c', gridStrong: '#544a3c', pos: '#ff7660', accent: '#fbc26d', sun: '#f5c451' };
   const T3 = { S: null, on: false, cam: 'orbit', earth: null, tiltG: null, spinG: null, ring: null, pin: null, ghosts: [], ghostMat: null, exag: null, line: null, disc: null, follow: null, tries: 0, sub: null, axis: null };
   // Whole orbit: today's Earth drawn larger than the faded season Earths, so its axis, latitude ring and the point under the Sun read
   const BIG3 = 1.6;
@@ -680,7 +680,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     sc.add(new THREE.PointLight(0xffffff, 2.1, 0));
     S3.onTheme(() => { S3.hemi.intensity = 0.14; S3.sun.intensity = 0; });
     T3.tiltG = new THREE.Group(); sc.add(T3.tiltG);
-    const axisM = new THREE.MeshBasicMaterial({ color: '#d9e2ee' });
+    const axisM = new THREE.MeshBasicMaterial({ color: '#ece5db' });
     T3.axis = VD3K.rod([0, 0, -1.45 * ER3], [0, 0, 1.45 * ER3], ER3 * 0.022, axisM); T3.tiltG.add(T3.axis);
     // the subsolar point: where the Sun is straight overhead, on the side of Earth facing the Sun
     T3.sub = new THREE.Mesh(new THREE.SphereGeometry(ER3 * 0.1, 16, 12), new THREE.MeshBasicMaterial({ color: '#ffd27a' })); sc.add(T3.sub);
@@ -705,9 +705,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (T3.line) { T3.S.dispose(T3.line); T3.S.dispose(T3.disc); }
     const pts = [];
     for (let i = 0; i <= 240; i++) { const h = helioNu(2 * Math.PI * i / 240); pts.push(new THREE.Vector3(h[0], h[1], h[2])); }
-    T3.line = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineBasicMaterial({ color: '#7d8da3', transparent: true, opacity: 0.85 }));
+    T3.line = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineBasicMaterial({ color: '#a09280', transparent: true, opacity: 0.85 }));
     const shape = new THREE.Shape(pts.map((v) => new THREE.Vector2(v.x, v.y)));
-    T3.disc = new THREE.Mesh(new THREE.ShapeGeometry(shape, 1), new THREE.MeshBasicMaterial({ color: '#8fa6c8', transparent: true, opacity: 0.07, depthWrite: false, side: THREE.DoubleSide }));
+    T3.disc = new THREE.Mesh(new THREE.ShapeGeometry(shape, 1), new THREE.MeshBasicMaterial({ color: '#c4af93', transparent: true, opacity: 0.07, depthWrite: false, side: THREE.DoubleSide }));
     sc.add(T3.disc, T3.line); T3.exag = layers.exag;
   }
   function render3D() {
@@ -1581,8 +1581,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     return { p, R, cx, cy, pr: Math.max(16, Math.min(34 * p, R * 0.17)) };
   }
   function drawSpace() {
-    const g = ctx.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#05070d'); g.addColorStop(1, '#0b1020'); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
-    for (const [x, y, b] of starsBg) { ctx.globalAlpha = 0.25 + 0.55 * b; ctx.fillStyle = '#dfe8ff'; ctx.fillRect(x * W, y * H, b > 0.85 ? 2 : 1, b > 0.85 ? 2 : 1); }
+    const g = ctx.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#0c0906'); g.addColorStop(1, '#1c160f'); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+    for (const [x, y, b] of starsBg) { ctx.globalAlpha = 0.25 + 0.55 * b; ctx.fillStyle = '#f4f0ea'; ctx.fillRect(x * W, y * H, b > 0.85 ? 2 : 1, b > 0.85 ? 2 : 1); }
     ctx.globalAlpha = 1;
   }
   function arrowHead(x, y, ang, s) { ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x - s * Math.cos(ang - 0.4), y - s * Math.sin(ang - 0.4)); ctx.lineTo(x - s * Math.cos(ang + 0.4), y - s * Math.sin(ang + 0.4)); ctx.closePath(); ctx.fill(); }
@@ -1654,7 +1654,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.fillStyle = 'rgba(255,240,210,0.85)'; ctx.font = `${11 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText('Sun', G.cx, G.cy + sr + 4 * p);
     /* the distant star, straight up the screen, far beyond the edge */
     const stx = Math.max(250 * p, G.cx - G.R * 0.55), sty = 18 * p;
-    ctx.fillStyle = '#cfe0ff'; ctx.beginPath();
+    ctx.fillStyle = '#efe8df'; ctx.beginPath();
     for (let k = 0; k < 8; k++) { const rr = k % 2 ? 2.2 * p : 8 * p, aa = k * Math.PI / 4; k ? ctx.lineTo(stx + rr * Math.cos(aa), sty + rr * Math.sin(aa)) : ctx.moveTo(stx + rr, sty); }
     ctx.closePath(); ctx.fill();
     ctx.fillStyle = 'rgba(207,224,255,0.9)'; ctx.font = `${11 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText('distant star', stx + 12 * p, sty);
@@ -1683,7 +1683,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* counters, top left */
     const L = 14 * p; let y = 14 * p; ctx.textAlign = 'left'; ctx.font = `${12 * p}px ${T.mono}`; ctx.textBaseline = 'top';
     const line = (txt, col) => { ctx.fillStyle = col; ctx.fillText(txt, L, y); y += 17 * p; };
-    line(`time  ${hms(S.t)}`, '#e6eeff');
+    line(`time  ${hms(S.t)}`, '#f6f3ee');
     line(`turns against the star  ${c.sid}`, '#9cc0ff');
     line(`noons (faces the Sun)   ${isFinite(sol) ? c.sol : 0}`, T.sunline);
     line(`orbits  ${f(S.t / P.orb, 3)}`, 'rgba(230,238,255,0.7)');
@@ -1821,7 +1821,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       ctx.strokeStyle = ctx.fillStyle; ctx.lineWidth = 4.5 * p; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(q0[0], q0[1]); ctx.lineTo(q2[0], q2[1]); ctx.stroke(); ctx.lineCap = 'butt';
       ctx.restore();
     }
-    { const q0 = Pt([0, 0, 0]), q1 = Pt([0, L, 0]), q2 = Pt(tip); ctx.fillStyle = dark ? 'rgba(185,195,207,0.8)' : 'rgba(125,135,148,0.8)'; ctx.strokeStyle = dark ? '#e3e8ef' : '#3d4652'; ctx.lineWidth = 1 * p;
+    { const q0 = Pt([0, 0, 0]), q1 = Pt([0, L, 0]), q2 = Pt(tip); ctx.fillStyle = dark ? 'rgba(185,195,207,0.8)' : 'rgba(125,135,148,0.8)'; ctx.strokeStyle = dark ? '#eeeae4' : '#50493f'; ctx.lineWidth = 1 * p;
       ctx.beginPath(); ctx.moveTo(q0[0], q0[1]); ctx.lineTo(q1[0], q1[1]); ctx.lineTo(q2[0], q2[1]); ctx.closePath(); ctx.fill(); ctx.stroke(); }
     ctx.fillStyle = T.muted; ctx.font = `${9.5 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; { const nq = Pt([0, 1.22, 0]); ctx.fillText('N', nq[0], nq[1] - 6 * p); }
     /* the clock face: the minute hands of the clock (at 12) and of the sundial, 6° a minute */
@@ -1832,7 +1832,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (side) { fr = Math.min((w - dw) / 2 - 10 * p, (h - 60 * p) / 2 - 14 * p); fcx = x0 + dw + (w - dw) / 2; fcy = y0 + 40 * p + fr + 6 * p; }
     else { fr = Math.min(26 * p, (w - 20 * p) / 6); fcx = x0 + 14 * p + fr; fcy = y0 + h - 12 * p - fr; }
     if (fr > 12) {
-      ctx.fillStyle = dark ? '#0b1020' : '#ffffff'; ctx.strokeStyle = T.line; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.arc(fcx, fcy, fr, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = dark ? '#1c160f' : '#ffffff'; ctx.strokeStyle = T.line; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.arc(fcx, fcy, fr, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
       ctx.strokeStyle = T.muted; for (let k = 0; k < 12; k++) { const a = k * Math.PI / 6; ctx.lineWidth = (k % 3 ? 1 : 1.8) * p; ctx.beginPath(); ctx.moveTo(fcx + Math.sin(a) * fr * 0.84, fcy - Math.cos(a) * fr * 0.84); ctx.lineTo(fcx + Math.sin(a) * fr * 0.96, fcy - Math.cos(a) * fr * 0.96); ctx.stroke(); }
       const hand = (ang, len, col, wd) => { ctx.strokeStyle = col; ctx.lineWidth = wd; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(fcx, fcy); ctx.lineTo(fcx + Math.sin(ang) * len, fcy - Math.cos(ang) * len); ctx.stroke(); ctx.lineCap = 'butt'; };
       hand(0, fr * 0.55, T.muted, 3 * p);   /* hour hand at 12 */

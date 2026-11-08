@@ -21,38 +21,38 @@
 <style>
 /* Layout: a 3D levitator (or a flat slice through its axis) on the left, the trap potential along the axis beside it; instrument rail on the right; stacks on phones. */
 :root {
-  --bg: #e9edf2;
-  --surface: #f8fafc;
-  --canvas: #fcfdfe;
-  --ink: #17202b;
-  --muted: #5a6575;
-  --line: #d3d9e2;
-  --grid: #e6ebf1;
-  --grid-strong: #cfd7e1;
+  --bg: #f1eeea;
+  --surface: #fcfaf8;
+  --canvas: #fefdfc;
+  --ink: #2a2219;
+  --muted: #73695c;
+  --line: #e1dbd4;
+  --grid: #f0ece7;
+  --grid-strong: #e0d9d0;
   --pos: #c23f2c;
   --neg: #2b60b5;
   --equi: #a7740b;
-  --accent: #2b60b5;
-  --heat0: #fcfdfe; --heat1: #f3d58a; --heat2: #e08a35; --heat3: #a8361f; --heat4: #3d0f0a;
-  --bowl: #8d99a8; --can: #c3c8ce; --mesh: #2a2e33; --bead: #f4f1ea; --water: #4aa3df; --steel: #8e979f; --mic: #a7740b; --pocket: #23897d;
+  --accent: #c4811c;
+  --heat0: #fefdfc; --heat1: #f3d58a; --heat2: #e08a35; --heat3: #a8361f; --heat4: #3d0f0a;
+  --bowl: #a69c8f; --can: #cdc9c4; --mesh: #322f2b; --bead: #f4f1ea; --water: #4aa3df; --steel: #9e978f; --mic: #a7740b; --pocket: #23897d;
   --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
-    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-    --equi: #e2b350; --accent: #69a0ff;
-    --heat0: #10161e; --heat1: #3f1b12; --heat2: #94381f; --heat3: #e3832f; --heat4: #fbe7a6;
-    --bowl: #5d6878; --can: #9aa1a9; --mesh: #1a1d21; --bead: #f4f1ea; --water: #6dbcf0; --steel: #a9b2ba; --mic: #e2b350; --pocket: #4cc3b4; color-scheme: dark;
+    --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
+    --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+    --equi: #e2b350; --accent: #fbc26d;
+    --heat0: #1d1811; --heat1: #3f1b12; --heat2: #94381f; --heat3: #e3832f; --heat4: #fbe7a6;
+    --bowl: #766c5f; --can: #a8a29b; --mesh: #201e1b; --bead: #f4f1ea; --water: #6dbcf0; --steel: #b9b2aa; --mic: #e2b350; --pocket: #4cc3b4; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
-  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-  --equi: #e2b350; --accent: #69a0ff;
-  --heat0: #10161e; --heat1: #3f1b12; --heat2: #94381f; --heat3: #e3832f; --heat4: #fbe7a6;
-  --bowl: #5d6878; --can: #9aa1a9; --mesh: #1a1d21; --bead: #f4f1ea; --water: #6dbcf0; --steel: #a9b2ba; --mic: #e2b350; --pocket: #4cc3b4; color-scheme: dark;
+  --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
+  --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+  --equi: #e2b350; --accent: #fbc26d;
+  --heat0: #1d1811; --heat1: #3f1b12; --heat2: #94381f; --heat3: #e3832f; --heat4: #fbe7a6;
+  --bowl: #766c5f; --can: #a8a29b; --mesh: #201e1b; --bead: #f4f1ea; --water: #6dbcf0; --steel: #b9b2aa; --mic: #e2b350; --pocket: #4cc3b4; color-scheme: dark;
 }
 :root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
@@ -126,11 +126,11 @@ table.traps tr.held td { color: var(--accent); font-weight: 600; }
 .stage { grid-template-rows: auto minmax(0, 1fr) auto; }
 .shelf { display: flex; flex-wrap: wrap; align-items: stretch; gap: 12px; padding: 10px; border-top: 1px solid var(--line); }
 .gen.drv { flex: 1 1 300px; max-width: 460px; border-radius: 10px; padding: 10px 12px; display: flex; flex-direction: column; gap: 6px; }
-.gen-title { font-size: 0.78rem; font-weight: 700; color: var(--inst-quiet, #c9d0d9); }
-.gen.drv .slider-head label, .gen.drv .slider-head output { font-size: 0.8rem; color: var(--inst-ink, #e3e8ef); }
+.gen-title { font-size: 0.78rem; font-weight: 700; color: var(--inst-quiet, #d8d2ca); }
+.gen.drv .slider-head label, .gen.drv .slider-head output { font-size: 0.8rem; color: var(--inst-ink, #eeeae4); }
 .gen.drv input[type="range"] { accent-color: #8ef0b0; }
-.gen.drv .btn { background: #39414d; color: #e3e8ef; border-color: #4a5462; font-size: 0.8rem; padding: 4px 10px; }
-.gen.drv .hint { color: var(--inst-quiet, #b9c3cf); font-size: 0.78rem; margin: 0; }
+.gen.drv .btn { background: #4c443b; color: #eeeae4; border-color: #60574c; font-size: 0.8rem; padding: 4px 10px; }
+.gen.drv .hint { color: var(--inst-quiet, #cdc5bb); font-size: 0.78rem; margin: 0; }
 .setup-card { flex: 1 1 300px; display: flex; flex-direction: column; gap: 6px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--look-glass, var(--surface)); }
 .setup-card .card-title { font-size: 0.78rem; font-weight: 700; color: var(--muted); }
 .setup-card .chips button, .setup-card .btn { font-size: 0.78rem; padding: 3px 8px; }
@@ -951,7 +951,7 @@ table.traps tr.held td { color: var(--accent); font-weight: 600; }
     el.setAttribute('aria-label', 'The levitator in 3D with a colored slice through its axis. Drag to turn, scroll to zoom. Drag a trap ring up or down to move the traps (this sets the phase of the top bowl), drag the gold microphone on the slice, click a ring or the axis to drop a bead. Keys: up and down move the traps, left and right change the drive, comma and period turn the view, space pauses, B adds a bead, F fills the traps, C clears, S sweeps the phase.');
     $('viewBox').insertBefore(el, $('flat'));
     const scene = new THREE.Scene(), cam = new THREE.PerspectiveCamera(30, 1, 1, 4000); cam.up.set(0, 0, 1);
-    scene.add(new THREE.HemisphereLight(0xffffff, 0x666a70, 0.85));
+    scene.add(new THREE.HemisphereLight(0xffffff, 0x6f6c67, 0.85));
     const sun = new THREE.DirectionalLight(0xffffff, 0.6); sun.position.set(-60, -120, 160); scene.add(sun);
     const fill = new THREE.DirectionalLight(0xffffff, 0.25); fill.position.set(90, 40, -40); scene.add(fill);
     const std = (r = 0.6, m = 0) => new THREE.MeshStandardMaterial({ color: 0x888888, roughness: r, metalness: m, side: THREE.DoubleSide });
@@ -1005,7 +1005,7 @@ table.traps tr.held td { color: var(--accent); font-weight: 600; }
     const mic = new THREE.Group(); scene.add(mic);
     // a small stick microphone: the center of its head is where |p| is sampled; the handle points down and out
     const micMat = new THREE.MeshBasicMaterial({ color: 0xa7740b, transparent: true, opacity: 1, depthWrite: false, depthTest: false });
-    const micDark = new THREE.MeshBasicMaterial({ color: 0x2a2e33, transparent: true, opacity: 1, depthWrite: false, depthTest: false });
+    const micDark = new THREE.MeshBasicMaterial({ color: 0x322f2b, transparent: true, opacity: 1, depthWrite: false, depthTest: false });
     { const d = new THREE.Vector3(0.55, 0, -0.835).normalize(), up = new THREE.Vector3(0, 1, 0);
       const head = new THREE.Mesh(new THREE.SphereGeometry(1.5, 24, 16), micMat);
       const band = new THREE.Mesh(new THREE.TorusGeometry(1.52, 0.2, 8, 36), micDark); band.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), d);
@@ -1041,13 +1041,13 @@ table.traps tr.held td { color: var(--accent); font-weight: 600; }
   function retheme3D() {
     if (!G.ready) return;
     { const c = document.createElement('canvas'); c.width = 4; c.height = 256; const x = c.getContext('2d'), g = x.createLinearGradient(0, 0, 0, 256);
-      g.addColorStop(0, T.dark ? '#0f151d' : '#e9edf2'); g.addColorStop(0.65, T.dark ? '#18202a' : '#f8f9fb'); g.addColorStop(1, T.dark ? '#121820' : '#eceff3');
+      g.addColorStop(0, T.dark ? '#1c1710' : '#f1eeea'); g.addColorStop(0.65, T.dark ? '#292219' : '#fbfaf8'); g.addColorStop(1, T.dark ? '#1f1a13' : '#f2f0ed');
       x.fillStyle = g; x.fillRect(0, 0, 4, 256); if (G.bgTex) G.bgTex.dispose(); G.bgTex = new THREE.CanvasTexture(c); G.scene.background = G.bgTex; }
-    G.scene.fog = new THREE.Fog(T.dark ? 0x141b25 : 0xf3f5f8, 700, 1900);
+    G.scene.fog = new THREE.Fog(T.dark ? 0x241d15 : 0xf8f6f3, 700, 1900);
     G.mats.bench.color = hex(T.dark ? '#3a342e' : '#c9bfb1');
     G.mats.bowl.color = hex(T.bowl); G.mats.can.color = hex(T.can); G.mats.mesh.color = hex(T.mesh);
-    G.mats.frame.color = hex(T.dark ? '#59636f' : '#aab3bd'); G.mats.refl.color = hex(T.dark ? '#7d8691' : '#c3cad2');
-    G.ringMat.color = hex(T.accent); G.ringHot.color = hex(T.accent); G.micMat.color = hex(T.mic); G.micDark.color = hex(T.dark ? '#0d1218' : T.mesh);
+    G.mats.frame.color = hex(T.dark ? '#6d655b' : '#bcb5ab'); G.mats.refl.color = hex(T.dark ? '#90887e' : '#d1cbc4');
+    G.ringMat.color = hex(T.accent); G.ringHot.color = hex(T.accent); G.micMat.color = hex(T.mic); G.micDark.color = hex(T.dark ? '#17130e' : T.mesh);
     G.pockMat.color = hex(T.pocket);
     if (G.vol) { const u = G.vol.material.uniforms; u.uPos.value.set(T.pos); u.uNeg.value.set(T.neg); u.uH1.value.set(T.heat1); u.uH2.value.set(T.heat2); u.uH3.value.set(T.heat3); u.uH4.value.set(T.heat4); }
     G.axis.material.color = hex(T.muted);

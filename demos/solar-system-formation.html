@@ -512,9 +512,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const titles = ['Seen edge on (the spin axis is up)', 'Seen from above'];
     for (let b = 0; b < 2; b++) {
       const [x0, y0] = boxes[b], cx = x0 + pw / 2, cy = y0 + ph / 2, s = Math.min(pw, ph) / 2 / R;
-      ctx.fillStyle = K.dark ? '#05070c' : '#0b1020'; ctx.fillRect(x0, y0, pw, ph);
+      ctx.fillStyle = K.dark ? '#0b0906' : '#1c160f'; ctx.fillRect(x0, y0, pw, ph);
       frame2(x0, y0, pw, ph, '');
-      label(ctx, titles[b], x0 + 10 * p, y0 + 14 * p, { col: '#c9d3e0', s: 11, w: 700, halo: false });
+      label(ctx, titles[b], x0 + 10 * p, y0 + 14 * p, { col: '#ded6cb', s: 11, w: 700, halo: false });
       for (let i = 1; i < C.n; i++) {
         const st = C.st[i]; if (st === 2) continue; const k = 3 * i, u = C.p[k], v = b ? C.p[k + 1] : C.p[k + 2];
         const X = cx + u * s, Y = cy - v * s; if (X < x0 || X > x0 + pw || Y < y0 || Y > y0 + ph) continue;
@@ -525,8 +525,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       if (C.st[0] !== 2) { const X = cx + C.p[0] * s, Y = cy - (b ? C.p[1] : C.p[2]) * s;
         ctx.strokeStyle = K.probe; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.arc(X, Y, 6 * p, 0, 2 * Math.PI); ctx.stroke(); ctx.fillStyle = K.probe; ctx.beginPath(); ctx.arc(X, Y, 2.2 * p, 0, 2 * Math.PI); ctx.fill(); }
       /* scale bar */
-      const bar = niceLen(R * 0.5), bl = bar * s; ctx.strokeStyle = '#c9d3e0'; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(x0 + 12 * p, y0 + ph - 14 * p); ctx.lineTo(x0 + 12 * p + bl, y0 + ph - 14 * p); ctx.stroke();
-      label(ctx, `${fmtAU(bar)}`, x0 + 12 * p + bl / 2, y0 + ph - 24 * p, { a: 'center', col: '#c9d3e0', s: 10.5, halo: false });
+      const bar = niceLen(R * 0.5), bl = bar * s; ctx.strokeStyle = '#ded6cb'; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(x0 + 12 * p, y0 + ph - 14 * p); ctx.lineTo(x0 + 12 * p + bl, y0 + ph - 14 * p); ctx.stroke();
+      label(ctx, `${fmtAU(bar)}`, x0 + 12 * p + bl / 2, y0 + ph - 24 * p, { a: 'center', col: '#ded6cb', s: 10.5, halo: false });
     }
   }
   const niceLen = (r) => { const q = Math.pow(10, Math.floor(Math.log10(r))), m = r / q; return (m < 1.5 ? 1 : m < 3.5 ? 2 : m < 7.5 ? 5 : 10) * q; };
@@ -622,7 +622,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const p = P(), run = ML.run, i = meltAt(run, ML.t), prof = run.prof[i], n = prof.length, phone = W < 640;
     const cr = phone ? Math.min(W * 0.26, H * 0.2) : Math.min(H * 0.3, W * 0.17), cx = (phone ? W / 2 : 30 * p + cr), cy = phone ? 28 * p + cr : H / 2 - 20 * p;
     for (let k = n - 1; k >= 0; k--) { ctx.fillStyle = rgb(heatRGB(prof[k])); ctx.beginPath(); ctx.arc(cx, cy, cr * (k + 1) / n, 0, 2 * Math.PI); ctx.fill(); }
-    const core = coreRadius(run, i); if (core > 0) { ctx.fillStyle = '#6f7884'; ctx.strokeStyle = '#d6dde6'; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.arc(cx, cy, cr * core, 0, 2 * Math.PI); ctx.fill(); ctx.stroke(); label(ctx, 'iron core', cx, cy, { a: 'center', col: '#ffffff', s: 10.5, w: 700, haloCol: '#3a4049' }); }
+    const core = coreRadius(run, i); if (core > 0) { ctx.fillStyle = '#827b71'; ctx.strokeStyle = '#e5dfd7'; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.arc(cx, cy, cr * core, 0, 2 * Math.PI); ctx.fill(); ctx.stroke(); label(ctx, 'iron core', cx, cy, { a: 'center', col: '#ffffff', s: 10.5, w: 700, haloCol: '#48423b' }); }
     ctx.strokeStyle = K.line; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(cx, cy, cr, 0, 2 * Math.PI); ctx.stroke();
     label(ctx, `R = ${sig(S.R, 3)} km, cut through the middle`, cx, cy + cr + 16 * p, { a: 'center', col: K.muted, s: 10.5 });
     /* the center's temperature against time */
@@ -689,7 +689,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const fcv = document.createElement('canvas'); fcv.width = fcv.height = 384; const ftex = new THREE.CanvasTexture(fcv);
     const fm = new THREE.MeshStandardMaterial({ map: ftex, roughness: 0.9, side: THREE.DoubleSide, emissive: 0xffffff, emissiveMap: ftex, emissiveIntensity: 0.55 });
     for (const ph of [ps0, ps0 + 1.5 * Math.PI]) { const f = new THREE.Mesh(new THREE.CircleGeometry(0.999, 72, -Math.PI / 2, Math.PI), fm); f.rotation.y = Math.PI + ph; const w = new THREE.Group(); w.add(f); w.rotation.x = Math.PI / 2; gM.add(w); }
-    const coreM = new THREE.Mesh(new THREE.SphereGeometry(1, 48, 32, ps0, 1.5 * Math.PI), new THREE.MeshStandardMaterial({ color: '#a3acb8', roughness: 0.4, metalness: 0.35, side: THREE.DoubleSide })); coreM.rotation.x = Math.PI / 2; gM.add(coreM);
+    const coreM = new THREE.Mesh(new THREE.SphereGeometry(1, 48, 32, ps0, 1.5 * Math.PI), new THREE.MeshStandardMaterial({ color: '#b6afa5', roughness: 0.4, metalness: 0.35, side: THREE.DoubleSide })); coreM.rotation.x = Math.PI / 2; gM.add(coreM);
     S3.orbit(can, G3.o, () => { dirty3 = true; SY.userTurned = true; }, { zMin: 0.35, zMax: 4, grab: (e) => (S.st === 'disk' && grabProbe3(e)) });
     g3 = { S3, sun, gC, parts, mark, gD, disk, dcv, dtex, rings, probe, pring, gB, bodies, halos, gM, fcv, ftex, coreM, shell, key: '' };
     initStory3(g3);
@@ -708,7 +708,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function paintFace(prof, core) {
     const c = g3.fcv.getContext('2d'), n = g3.fcv.width, h = n / 2, m = prof.length; c.clearRect(0, 0, n, n);
     for (let k = m - 1; k >= 0; k--) { c.fillStyle = rgb(heatRGB(prof[k])); c.beginPath(); c.arc(h, h, h * (k + 1) / m, 0, 2 * Math.PI); c.fill(); }
-    if (core > 0) { c.fillStyle = '#7d8693'; c.beginPath(); c.arc(h, h, h * core, 0, 2 * Math.PI); c.fill(); }
+    if (core > 0) { c.fillStyle = '#91897f'; c.beginPath(); c.arc(h, h, h * core, 0, 2 * Math.PI); c.fill(); }
     g3.ftex.needsUpdate = true;
   }
   function draw3() {
@@ -738,7 +738,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     S3.place(G3.o, target, S3.fit(dist, 1.3)); S3.render();
     /* words drawn over the picture */
     ctx.clearRect(0, 0, W, H);
-    const pr = (q) => S3.project(q), halo = '#04060b', lc = '#dbe4ef';
+    const pr = (q) => S3.project(q), halo = '#0a0805', lc = '#ede6dd';
     if (S.st === 'collapse') {
       const C = CL.C; if (C.st[0] !== 2) { const q = pr([C.p[0] / CL.view, C.p[1] / CL.view, C.p[2] / CL.view]); label(ctx, 'tracked parcel', q[0] + 12 * p, q[1] - 10 * p, { col: '#fb923c', haloCol: halo, w: 700 }); }
       label(ctx, `picture ${fmtAU(2 * CL.view)} across · drag to turn`, 14 * p, H - 18 * p, { col: lc, haloCol: halo, s: 10.5, w: 400 });
@@ -751,20 +751,20 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     } else {
       const run = ML.run, i = meltAt(run, ML.t), q = pr([0, 0, 1.12]);
       label(ctx, `R = ${sig(S.R, 3)} km · center ${grp(run.Tc[i])} K`, q[0], q[1] - 6 * p, { a: 'center', col: lc, haloCol: halo, w: 700 });
-      if (g.coreM.visible) { const c = pr([0, 0, 0]); label(ctx, 'iron core', c[0], c[1], { a: 'center', col: '#ffffff', haloCol: '#2a2f36', w: 700 }); }
+      if (g.coreM.visible) { const c = pr([0, 0, 0]); label(ctx, 'iron core', c[0], c[1], { a: 'center', col: '#ffffff', haloCol: '#35312b', w: 700 }); }
       label(ctx, 'a quarter cut away · inside colored by temperature · drag to turn', 14 * p, H - 18 * p, { col: lc, haloCol: halo, s: 10.5, w: 400 });
       meltMini();
     }
   }
   function timeBar3() { const p = P(); ctx.save(); ctx.fillStyle = 'rgba(4,6,11,0.55)'; ctx.fillRect(8 * p, 6 * p, Math.min(W - 16 * p, 540 * p), 46 * p); ctx.restore();
-    const k0 = K; K = Object.assign({}, K, { muted: '#b8c2d0', line: '#3a4656', canvas: '#04060b' }); timeBar(20 * p, 30 * p, Math.min(W - 40 * p, 500 * p), GR.t, S.gas); K = k0; }
+    const k0 = K; K = Object.assign({}, K, { muted: '#cec5ba', line: '#544a3c', canvas: '#0a0805' }); timeBar(20 * p, 30 * p, Math.min(W - 40 * p, 500 * p), GR.t, S.gas); K = k0; }
   function meltMini() {   /* a small graph of the center's temperature in the 3D view */
     const p = P(), run = ML.run, i = meltAt(run, ML.t), w = Math.min(260 * p, W * 0.4), h = 110 * p, x = 12 * p, y = 12 * p;
     ctx.fillStyle = 'rgba(4,6,11,0.6)'; ctx.fillRect(x, y, w, h); const X = (t) => x + 8 * p + t / T_MELT_END * (w - 16 * p), Y = (T) => y + h - 16 * p - (T - 100) / 2000 * (h - 30 * p);
     ctx.strokeStyle = '#fb923c'; ctx.setLineDash([4, 3]); ctx.beginPath(); ctx.moveTo(X(0), Y(MELT.Tcore)); ctx.lineTo(X(T_MELT_END), Y(MELT.Tcore)); ctx.stroke(); ctx.setLineDash([]);
     ctx.strokeStyle = '#7ea2ff'; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(X(0), Y(MELT.Tsurf)); ctx.lineTo(X(S.tf), Y(MELT.Tsurf)); for (let k = 0; k <= i; k++) ctx.lineTo(X(run.t[k]), Y(run.Tc[k])); ctx.stroke();
-    label(ctx, 'center temperature, 0 to 20 Myr', x + 8 * p, y + 10 * p, { col: '#dbe4ef', haloCol: '#04060b', s: 10, w: 600 });
-    label(ctx, 'iron sinks 1822 K', x + w - 8 * p, Y(MELT.Tcore) - 8 * p, { a: 'right', col: '#fb923c', haloCol: '#04060b', s: 9.5, w: 400 });
+    label(ctx, 'center temperature, 0 to 20 Myr', x + 8 * p, y + 10 * p, { col: '#ede6dd', haloCol: '#0a0805', s: 10, w: 600 });
+    label(ctx, 'iron sinks 1822 K', x + w - 8 * p, Y(MELT.Tcore) - 8 * p, { a: 'right', col: '#fb923c', haloCol: '#0a0805', s: 9.5, w: 400 });
   }
   const gasLeft = () => (GR.t <= S.gas * 1e6 ? Math.min(1, (S.gas * 1e6 - GR.t) / (0.2 * S.gas * 1e6) + 0.15) : 0);
   function drawBodies3() {
@@ -1003,14 +1003,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const disk = new THREE.Mesh(new THREE.CircleGeometry(1, 180), new THREE.MeshBasicMaterial({ map: dtex, transparent: true, depthWrite: false, side: THREE.DoubleSide, fog: false, blending: THREE.AdditiveBlending }));
     gS.add(disk);
     const frost = VD3K.ring(1, { color: '#8cc8ff', opacity: 0.9, seg: 200 }); gS.add(frost);
-    const today = {}; for (const [n, a] of PLANETS) { const r = VD3K.ring(1, { color: '#9aa8ba', dashed: true, opacity: 0.35, seg: 200 }); today[n] = r; gS.add(r); }
+    const today = {}; for (const [n, a] of PLANETS) { const r = VD3K.ring(1, { color: '#b8ac9c', dashed: true, opacity: 0.35, seg: 200 }); today[n] = r; gS.add(r); }
     const bodies = new THREE.InstancedMesh(new THREE.SphereGeometry(1, 16, 12), new THREE.MeshStandardMaterial({ roughness: 0.7, metalness: 0.05, color: 0xffffff }), 2 * N_START);
     bodies.frustumCulled = false; { const c0 = new THREE.Color('#ffffff'); for (let i = 0; i < 2 * N_START; i++) bodies.setColorAt(i, c0); } bodies.count = 0; gS.add(bodies);
     const halos = []; for (let i = 0; i < 6; i++) { const h = new THREE.Mesh(new THREE.SphereGeometry(1, 24, 16), new THREE.MeshStandardMaterial({ color: '#f0c27a', transparent: true, opacity: 0.32, roughness: 0.9, depthWrite: false })); h.visible = false; halos.push(h); gS.add(h); }
     const mark = VD3K.marker(S3, { r: 0.03, color: '#5eead4' }); gS.add(mark);
     /* chapter 4: an ellipse for each body's orbit, and flashes for the impacts */
     const orbits = []; for (let i = 0; i < 26; i++) { const og = new THREE.BufferGeometry(); og.setAttribute('position', new THREE.BufferAttribute(new Float32Array(3 * 128), 3));
-      const l = new THREE.LineLoop(og, new THREE.LineBasicMaterial({ color: '#9aa8ba', transparent: true, opacity: 0.4, depthWrite: false, fog: false })); l.frustumCulled = false; l.visible = false; orbits.push(l); gS.add(l); }
+      const l = new THREE.LineLoop(og, new THREE.LineBasicMaterial({ color: '#b8ac9c', transparent: true, opacity: 0.4, depthWrite: false, fog: false })); l.frustumCulled = false; l.visible = false; orbits.push(l); gS.add(l); }
     const flashes = []; for (let i = 0; i < 4; i++) { const f = new THREE.Sprite(new THREE.SpriteMaterial({ map: dot, color: '#ffb36b', transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, fog: false })); f.visible = false; flashes.push(f); gS.add(f); }
     /* chapter 5: the impact's particles, and the Moon drawn at the end */
     const mgeo = new THREE.BufferGeometry(); mgeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(3 * 8000), 3)); mgeo.setAttribute('color', new THREE.BufferAttribute(new Float32Array(3 * 8000), 3));
@@ -1172,7 +1172,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function wrapText(c, t, w) { const words = t.split(' '), L = []; let line = ''; for (const wd of words) { const tr = line ? line + ' ' + wd : wd; if (c.measureText(tr).width > w && line) { L.push(line); line = wd; } else line = tr; } if (line) L.push(line); return L; }
   function storyOverlay(S3) {
     ctx.clearRect(0, 0, W, H);
-    const p = P(), c = CHAPTERS[SY.ch].k, halo = '#04060b', lc = '#dbe4ef', Rv = SY.view, s = 1 / Rv, pr = (q) => S3.project(q), phone = storyPhone();
+    const p = P(), c = CHAPTERS[SY.ch].k, halo = '#0a0805', lc = '#ede6dd', Rv = SY.view, s = 1 / Rv, pr = (q) => S3.project(q), phone = storyPhone();
     /* labels that would sit on top of one placed before them are left out (the first ones placed matter most) */
     const placed = [], tag = (t, x, y, o) => { ctx.save(); ctx.font = `${o.w || 600} ${(o.s || 11.5) * p}px ${K.ui}`; const w = ctx.measureText(t).width, hh = (o.s || 11.5) * p * 1.3; ctx.restore();
       const x0 = o.a === 'center' ? x - w / 2 : o.a === 'right' ? x - w : x, box = [x0 - 3 * p, y - hh / 2, w + 6 * p, hh];

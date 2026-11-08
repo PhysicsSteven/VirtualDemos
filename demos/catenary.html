@@ -17,36 +17,36 @@
 <style>
 /* Layout: the chain or arch across the top of the stage, the free body diagram of a chosen piece and the tension against sag graph below it; instrument rail on the right; stacks on narrow screens. */
 :root {
-  --bg: #e9edf2;
-  --surface: #f8fafc;
-  --canvas: #fcfdfe;
-  --ink: #17202b;
-  --muted: #5a6575;
-  --line: #d3d9e2;
-  --grid: #e6ebf1;
-  --grid-strong: #cfd7e1;
+  --bg: #f1eeea;
+  --surface: #fcfaf8;
+  --canvas: #fefdfc;
+  --ink: #2a2219;
+  --muted: #73695c;
+  --line: #e1dbd4;
+  --grid: #f0ece7;
+  --grid-strong: #e0d9d0;
   --pos: #c23f2c;
   --neg: #2b60b5;
   --equi: #a7740b;
-  --accent: #2b60b5;
-  --wire: #3b4655;
-  --block: #cdd6e1;
+  --accent: #c4811c;
+  --wire: #53493d;
+  --block: #dfd8cf;
   --wcol: #1d8a5a;
   --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
-    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-    --equi: #e2b350; --accent: #69a0ff; --wire: #aab4c2; --block: #2c3a4c; --wcol: #4cc38a;
+    --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
+    --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+    --equi: #e2b350; --accent: #fbc26d; --wire: #c0b7ac; --block: #4a3e2e; --wcol: #4cc38a;
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
-  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-  --equi: #e2b350; --accent: #69a0ff; --wire: #aab4c2; --block: #2c3a4c; --wcol: #4cc38a;
+  --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
+  --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+  --equi: #e2b350; --accent: #fbc26d; --wire: #c0b7ac; --block: #4a3e2e; --wcol: #4cc38a;
   color-scheme: dark;
 }
 :root[data-projector="on"] { font-size: 125%; }
@@ -605,10 +605,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     } else {
       ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1 * ps;
       ctx.setLineDash([4 * ps, 4 * ps]); ctx.beginPath(); ctx.moveTo(0, 24 * ps); ctx.lineTo(W, 24 * ps); ctx.stroke(); ctx.setLineDash([]);
-      if (VG) VG.box(ctx, 0, 0, W, 24 * ps, { color: VG.dark() ? '#3a4552' : '#5a6676', r: 0, shadow: false });   // the ceiling beam
+      if (VG) VG.box(ctx, 0, 0, W, 24 * ps, { color: VG.dark() ? '#50473c' : '#746a5c', r: 0, shadow: false });   // the ceiling beam
       for (const p of [pA, pB]) {   // a steel hanger rod with an eye at its foot
-        if (VG) { VG.rod(ctx, p[0], 22 * ps, p[0], p[1] - 4 * ps, 2.2 * ps, { color: '#a9b2bd' }); VG.screw(ctx, p[0], 15 * ps, 4 * ps);
-          ctx.strokeStyle = '#7f8995'; ctx.lineWidth = 2 * ps; ctx.beginPath(); ctx.arc(p[0], p[1], 4 * ps, 0, 7); ctx.stroke(); }
+        if (VG) { VG.rod(ctx, p[0], 22 * ps, p[0], p[1] - 4 * ps, 2.2 * ps, { color: '#bbb4aa' }); VG.screw(ctx, p[0], 15 * ps, 4 * ps);
+          ctx.strokeStyle = '#938b81'; ctx.lineWidth = 2 * ps; ctx.beginPath(); ctx.arc(p[0], p[1], 4 * ps, 0, 7); ctx.stroke(); }
         else { ctx.strokeStyle = T.wire; ctx.lineWidth = 3 * ps; ctx.beginPath(); ctx.moveTo(p[0], 24 * ps); ctx.lineTo(p[0], p[1]); ctx.stroke(); }
       }
     }

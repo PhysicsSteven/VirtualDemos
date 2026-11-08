@@ -16,9 +16,9 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
 /* only what this demo needs beyond demos/lib/vd.css: the picture, the strip, the Set up card, the graph and the marks */
-:root { --mark: #c2410c; --gauge: #7c3aed; --hot: #e0602a; --lid: #8a8f98; --curve-moon: #6b7787; --curve-mars: #c2622d; --curve-earth: #2b60b5; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --mark: #fb923c; --gauge: #c4a5ff; --hot: #ff8a50; --lid: #9aa3ad; --curve-moon: #b6c0cc; --curve-mars: #f08a52; --curve-earth: #69a0ff; } }
-:root[data-theme="dark"] { --mark: #fb923c; --gauge: #c4a5ff; --hot: #ff8a50; --lid: #9aa3ad; --curve-moon: #b6c0cc; --curve-mars: #f08a52; --curve-earth: #69a0ff; }
+:root { --mark: #c2410c; --gauge: #7c3aed; --hot: #e0602a; --lid: #97928b; --curve-moon: #6b7787; --curve-mars: #c2622d; --curve-earth: #2b60b5; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --mark: #fb923c; --gauge: #c4a5ff; --hot: #ff8a50; --lid: #aca59b; --curve-moon: #b6c0cc; --curve-mars: #f08a52; --curve-earth: #69a0ff; } }
+:root[data-theme="dark"] { --mark: #fb923c; --gauge: #c4a5ff; --hot: #ff8a50; --lid: #aca59b; --curve-moon: #b6c0cc; --curve-mars: #f08a52; --curve-earth: #69a0ff; }
 .stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
 .stage-ctl .clock { margin-left: auto; font-size: 0.8rem; color: var(--muted); }
@@ -494,7 +494,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   /* ---------- the flat pictures ---------- */
   let field = { x: 0, y: 0, s: 1 };   /* where the counting field is on the canvas: px per km */
   function label(c, t, x, y, o) { o = o || {}; const p = proj(); c.font = `${o.w || 600} ${(o.s || 11.5) * p}px ${K.ui}`; c.textAlign = o.a || 'left'; c.textBaseline = o.b || 'middle';
-    const lightHalo = o.halo === 'light' || (o.halo == null && !K.dark); if (o.halo !== false) { c.lineJoin = 'round'; c.lineWidth = 3 * p; c.strokeStyle = lightHalo ? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.6)'; c.strokeText(t, x, y); } c.fillStyle = o.col || (lightHalo ? '#17202b' : K.ink); c.fillText(t, x, y); }
+    const lightHalo = o.halo === 'light' || (o.halo == null && !K.dark); if (o.halo !== false) { c.lineJoin = 'round'; c.lineWidth = 3 * p; c.strokeStyle = lightHalo ? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.6)'; c.strokeText(t, x, y); } c.fillStyle = o.col || (lightHalo ? '#2a2219' : K.ink); c.fillText(t, x, y); }
   /* the note under the 3D picture, on a dark band so it reads over a bright surface, kept clear of the size grip and split onto two
      lines where it would run past the edge (phones) */
   function caption(c, t) {
@@ -502,7 +502,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     let lines = [t]; if (c.measureText(t).width > W - 30 * p) { const a = t.split(' · '), k = Math.ceil(a.length / 2); lines = [a.slice(0, k).join(' · '), a.slice(k).join(' · ')]; }
     const lh = 14 * p, w = Math.max(...lines.map((l) => c.measureText(l).width)), y0 = H - 26 * p - (lines.length - 1) * lh;
     c.fillStyle = 'rgba(8,12,18,0.62)'; c.beginPath(); c.roundRect(6 * p, y0 - 9 * p, w + 12 * p, lines.length * lh + 4 * p, 5 * p); c.fill();
-    c.fillStyle = '#d6dde6'; c.textAlign = 'left'; c.textBaseline = 'middle'; lines.forEach((l, i) => c.fillText(l, 12 * p, y0 + i * lh));
+    c.fillStyle = '#e5dfd7'; c.textAlign = 'left'; c.textBaseline = 'middle'; lines.forEach((l, i) => c.fillText(l, 12 * p, y0 + i * lh));
     c.restore();
   }
   function scaleBar(c, x, y, pxPerKm, maxPx) {
@@ -726,7 +726,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         o.g.position.set(x, 0, 0); o.g.scale.setScalar(r);
         const key = `${Math.round(row.T)}|${Math.round(lid * 1e4)}`;
         if (key !== o.key) { o.key = key; const c = o.cv.getContext('2d'), m = 256; c.clearRect(0, 0, 512, 512);
-          c.fillStyle = '#8f949b'; c.beginPath(); c.arc(m, m, m, 0, 2 * Math.PI); c.fill();
+          c.fillStyle = '#9a9690'; c.beginPath(); c.arc(m, m, m, 0, 2 * Math.PI); c.fill();
           c.fillStyle = tempColor(row.T); c.beginPath(); c.arc(m, m, m * Math.max(0, 1 - lid / r), 0, 2 * Math.PI); c.fill();
           c.fillStyle = '#6b5440'; c.beginPath(); c.arc(m, m, m * P.Rc / P.R, 0, 2 * Math.PI); c.fill(); o.tex.needsUpdate = true; }
         x += r + 0.18; }

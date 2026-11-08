@@ -23,44 +23,44 @@
 <style>
 /* Layout: one canvas with the apparatus (left or top) and a plot (right or bottom); instrument rail on the right; stacks on phones. */
 :root {
-  --bg: #e9edf2;
-  --surface: #f8fafc;
-  --canvas: #fcfdfe;
-  --ink: #17202b;
-  --muted: #5a6575;
-  --line: #d3d9e2;
-  --grid: #e6ebf1;
-  --grid-strong: #cfd7e1;
+  --bg: #f1eeea;
+  --surface: #fcfaf8;
+  --canvas: #fefdfc;
+  --ink: #2a2219;
+  --muted: #73695c;
+  --line: #e1dbd4;
+  --grid: #f0ece7;
+  --grid-strong: #e0d9d0;
   --pos: #c23f2c;
   --neg: #2b60b5;
   --equi: #a7740b;
-  --accent: #2b60b5;
+  --accent: #c4811c;
   --force: #7a3fc0;
   --iso1: #17855f;
   --bfield: #13808f;
   --copper: #b8692e; --copper-hi: #f2b37a; --copper-lo: #6e3412;
-  --steel: #9aa5b3; --steel-hi: #eef2f6; --steel-lo: #5b6573;
-  --pole: #cfd6df; --pole-ink: #8e9aab; --former: #d9c9a3; --film: #efe7d2; --film-ink: #2a2118;
+  --steel: #b1a89c; --steel-hi: #f5f2ef; --steel-lo: #71685d;
+  --pole: #ded8d0; --pole-ink: #a99e90; --former: #d9c9a3; --film: #efe7d2; --film-ink: #2a2118;
   --phosphor: #2f9e5a; --hand: #e2bd98; --hand-ink: #8a5d3b;
   --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
-    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-    --equi: #e2b350; --accent: #69a0ff; --force: #c49bff; --iso1: #4fd1a0; --bfield: #4cc4d4;
-    --copper: #c4773a; --copper-hi: #f6c08c; --copper-lo: #5e2b0e; --steel: #7f8a99; --steel-hi: #dfe5ec; --steel-lo: #3f4753;
-    --pole: #1c2531; --pole-ink: #3b4859; --former: #8c7b58; --film: #d6ccb2; --film-ink: #1d1812;
+    --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
+    --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+    --equi: #e2b350; --accent: #fbc26d; --force: #c49bff; --iso1: #4fd1a0; --bfield: #4cc4d4;
+    --copper: #c4773a; --copper-hi: #f6c08c; --copper-lo: #5e2b0e; --steel: #978d81; --steel-hi: #ebe6e0; --steel-lo: #524a40;
+    --pole: #2f281e; --pole-ink: #574c3d; --former: #8c7b58; --film: #d6ccb2; --film-ink: #1d1812;
     --phosphor: #5fe08a; --hand: #c99d78; --hand-ink: #6b4429; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
-  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-  --equi: #e2b350; --accent: #69a0ff; --force: #c49bff; --iso1: #4fd1a0; --bfield: #4cc4d4;
-    --copper: #c4773a; --copper-hi: #f6c08c; --copper-lo: #5e2b0e; --steel: #7f8a99; --steel-hi: #dfe5ec; --steel-lo: #3f4753;
-    --pole: #1c2531; --pole-ink: #3b4859; --former: #8c7b58; --film: #d6ccb2; --film-ink: #1d1812;
+  --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
+  --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+  --equi: #e2b350; --accent: #fbc26d; --force: #c49bff; --iso1: #4fd1a0; --bfield: #4cc4d4;
+    --copper: #c4773a; --copper-hi: #f6c08c; --copper-lo: #5e2b0e; --steel: #978d81; --steel-hi: #ebe6e0; --steel-lo: #524a40;
+    --pole: #2f281e; --pole-ink: #574c3d; --former: #8c7b58; --film: #d6ccb2; --film-ink: #1d1812;
     --phosphor: #5fe08a; --hand: #c99d78; --hand-ink: #6b4429; color-scheme: dark;
 }
 :root[data-projector="on"] { font-size: 125%; }
@@ -1636,9 +1636,9 @@ details.hall[open] > summary { margin-bottom: 8px; }
     if (!(LAB.tRun || LAB.tEl > 0) || !LY) return;
     const s = LY.scene, ps = projScale(), txt = `timer ${timerText()}`;
     c.font = `600 ${12 * ps}px ${T.mono}`; const w = c.measureText(txt).width + 26 * ps, h = 22 * ps, x = s.x + s.w - w - 10 * ps, y = s.y + s.h - h - 10 * ps;
-    c.fillStyle = T.dark ? '#05070a' : '#1f242b'; rrect(c, x, y, w, h, 4 * ps); c.fill();
+    c.fillStyle = T.dark ? '#0a0805' : '#2a2620'; rrect(c, x, y, w, h, 4 * ps); c.fill();
     c.fillStyle = LAB.tRun ? T.pos : 'rgba(255,255,255,0.25)'; c.beginPath(); c.arc(x + 10 * ps, y + h / 2, 3.5 * ps, 0, 2 * Math.PI); c.fill();
-    c.fillStyle = '#e6edf3'; c.textAlign = 'left'; c.textBaseline = 'middle'; c.fillText(txt, x + 19 * ps, y + h / 2 + 0.5);
+    c.fillStyle = '#f2ede7'; c.textAlign = 'left'; c.textBaseline = 'middle'; c.fillText(txt, x + 19 * ps, y + h / 2 + 0.5);
   }
   const KB_NAMES = { v0: 'launch velocity', launch: 'launch ring', rulA: 'ruler end A', rulB: 'ruler end B', rL: 'left edge', rR: 'right edge', rT: 'top edge', rB: 'bottom edge', edial: 'E direction' };
   function drawKbTarget(c) {
@@ -1858,7 +1858,7 @@ details.hall[open] > summary { margin-bottom: 8px; }
     r.setPixelRatio(Math.min(window.devicePixelRatio || 1, matchMedia('(pointer: coarse)').matches ? 1.5 : 2));
     GL.r = r; GL.scene = new THREE.Scene();
     GL.cam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.01, 100);
-    GL.hemi = new THREE.HemisphereLight(0xffffff, 0x445566, 0.75); GL.scene.add(GL.hemi);
+    GL.hemi = new THREE.HemisphereLight(0xffffff, 0x635747, 0.75); GL.scene.add(GL.hemi);
     GL.sun = new THREE.DirectionalLight(0xffffff, 0.9); GL.scene.add(GL.sun); GL.scene.add(GL.sun.target);
     GL.fill = new THREE.DirectionalLight(0xffffff, 0.25); GL.scene.add(GL.fill); GL.scene.add(GL.fill.target);
     GL.ok = true;
@@ -2343,7 +2343,7 @@ details.hall[open] > summary { margin-bottom: 8px; }
     // the source: a small gun on a cable, glowing at its muzzle
     const sx = X(SEL.x0), sy = Y(0), gw = 34 * ps, gh = 18 * ps;
     c.save(); c.lineCap = 'round';
-    c.strokeStyle = T.dark ? '#05070a' : '#262a31'; c.lineWidth = 4 * ps; c.beginPath(); c.moveTo(sx - gw, sy); c.bezierCurveTo(sx - gw - 30 * ps, sy, sx - gw - 10 * ps, sy + 46 * ps, s.x - 4, sy + 52 * ps); c.stroke();
+    c.strokeStyle = T.dark ? '#0a0805' : '#302c27'; c.lineWidth = 4 * ps; c.beginPath(); c.moveTo(sx - gw, sy); c.bezierCurveTo(sx - gw - 30 * ps, sy, sx - gw - 10 * ps, sy + 46 * ps, s.x - 4, sy + 52 * ps); c.stroke();
     c.restore();
     rrect(c, sx - gw, sy - gh / 2, gw - 5 * ps, gh, 3 * ps); c.fillStyle = barGrad(c, 0, sy - gh / 2, 0, sy + gh / 2, T.steel, T.steelHi, T.steelLo); c.fill(); c.strokeStyle = T.steelLo; c.lineWidth = 1; c.stroke();
     c.fillStyle = T.steelLo; c.fillRect(sx - 6 * ps, sy - 5 * ps, 6 * ps, 10 * ps);
@@ -2358,7 +2358,7 @@ details.hall[open] > summary { margin-bottom: 8px; }
     for (const hd of dragHandles()) grip(c, hd.pt[0], hd.pt[1], isHot(hd.id));
     // detector: a phosphor screen in a dark case; it glows where particles have struck
     const xd = X(SEL.xd), dT = Y(h * 1.2), dB = Y(-h * 1.2), dw = 12 * ps;
-    rrect(c, xd, dT - 3 * ps, dw, dB - dT + 6 * ps, 2 * ps); c.fillStyle = T.dark ? '#07090c' : '#2b3038'; c.fill();
+    rrect(c, xd, dT - 3 * ps, dw, dB - dT + 6 * ps, 2 * ps); c.fillStyle = T.dark ? '#0c0a07' : '#37322c'; c.fill();
     c.fillStyle = rgba(T.phosphor, T.dark ? 0.22 : 0.3); c.fillRect(xd, dT, 3 * ps, dB - dT);
     c.save(); if (T.dark) c.globalCompositeOperation = 'lighter'; c.fillStyle = rgba(T.phosphor, 0.28);
     for (const q of doneTracks) if (q.tag === 'pass') { const y = Y(q.tr.endS.y); c.fillRect(xd - 1 * ps, y - 2 * ps, 5 * ps, 4 * ps); }
@@ -2532,11 +2532,11 @@ details.hall[open] > summary { margin-bottom: 8px; }
       c.fillStyle = T.copperLo; c.beginPath(); c.arc(ex, ey, 3.2 * ps, 0, 2 * Math.PI); c.fill();
     };
     lead(-Math.PI * 0.62, T.dark ? '#d0493b' : '#b8372b', bx + 18 * ps);
-    lead(-Math.PI * 0.3, T.dark ? '#5d636d' : '#2f343b', bx + 34 * ps);
+    lead(-Math.PI * 0.3, T.dark ? '#6c665e' : '#3a3630', bx + 34 * ps);
     rrect(c, bx, by, bw, bh, 5 * ps);
     c.save(); c.shadowColor = T.dark ? 'rgba(0,0,0,0.6)' : 'rgba(20,30,50,0.3)'; c.shadowBlur = 8 * ps; c.shadowOffsetY = 3 * ps;
-    c.fillStyle = T.dark ? '#0b0d10' : '#2a2e35'; c.fill(); c.restore();
-    c.strokeStyle = T.dark ? '#3a424e' : '#14171b'; c.lineWidth = 1.2; c.stroke();
+    c.fillStyle = T.dark ? '#100e0b' : '#34302b'; c.fill(); c.restore();
+    c.strokeStyle = T.dark ? '#4c453c' : '#1a1815'; c.lineWidth = 1.2; c.stroke();
     rrect(c, x0 - 4 * ps, y0 - 4 * ps, w + 8 * ps, h + 8 * ps, 3 * ps); c.fillStyle = '#0c1410'; c.fill();
     const span = 2 * Tr, t0 = simT - span * 0.75, Xt = (t) => x0 + (t - t0) / span * w;
     c.strokeStyle = 'rgba(160,200,170,0.18)'; c.lineWidth = 1; c.beginPath(); c.moveTo(x0, y0 + h / 2); c.lineTo(x0 + w, y0 + h / 2); c.stroke();
@@ -2549,7 +2549,7 @@ details.hall[open] > summary { margin-bottom: 8px; }
     for (const e of cyc.log) if (e.t > t0 && e.t < simT) { c.fillStyle = dot; c.beginPath(); c.arc(Xt(e.t), y0 + h / 2, 3 * ps, 0, 2 * Math.PI); c.fill(); }
     c.strokeStyle = 'rgba(230,240,235,0.8)'; c.lineWidth = 1 * ps; c.beginPath(); c.moveTo(Xt(simT), y0 - 2 * ps); c.lineTo(Xt(simT), y0 + h + 2 * ps); c.stroke();
     { const cap = 'gap voltage; dots: leaving the gap'; c.font = `${10 * ps}px ${T.mono}`; const fsz = Math.min(10 * ps, 10 * ps * (w - 26 * ps) / c.measureText(cap).width);
-      c.fillStyle = '#c9d1db'; c.font = `${fsz}px ${T.mono}`; c.textAlign = 'left'; c.textBaseline = 'bottom'; c.fillText(cap, x0 - 2 * ps, y0 - 7 * ps); }
+      c.fillStyle = '#dad3ca'; c.font = `${fsz}px ${T.mono}`; c.textAlign = 'left'; c.textBaseline = 'bottom'; c.fillText(cap, x0 - 2 * ps, y0 - 7 * ps); }
     // lamps: which dee is positive now (left lamp D₁, right lamp D₂)
     for (const [i, on, colr] of [[0, pol > 0, T.pos], [1, pol < 0, T.pos]]) { const lx = bx + bw - 26 * ps + i * 12 * ps, ly = by + 9 * ps; c.fillStyle = on ? colr : 'rgba(255,255,255,0.12)'; c.beginPath(); c.arc(lx, ly, 3 * ps, 0, 2 * Math.PI); c.fill(); }
     label(c, 'oscillator', bx + bw - 2 * ps, by - 10 * ps, T.muted, 'right', 'middle', false, 10);

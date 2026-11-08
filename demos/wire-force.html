@@ -22,7 +22,7 @@
 <style>
 /* Layout: the magnet and the wire or loop on the left; the rail on the right. */
 /* Layout: lab bench. The gas box and speed histogram fill the left, a narrow instrument rail sits on the right; stacks on phones. */
-:root { --north: #b0452f; --south: #2b60b5; --wire: #b06a2c; --bf: #2f7d4f; --force: #6f4bb3; --mu: #a7740b; }
+:root { --north: #b0452f; --south: #2b60b5; --wire: #b06a2c; --bf: #2f7d4f; --force: #a88456; --mu: #a7740b; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --north: #ff8a70; --south: #69a0ff; --wire: #e0955a; --bf: #5fcf8a; --force: #b49bff; --mu: #e2b350; } }
 :root[data-theme="dark"] { --north: #ff8a70; --south: #69a0ff; --wire: #e0955a; --bf: #5fcf8a; --force: #b49bff; --mu: #e2b350; }
 :root[data-projector="on"] { font-size: 125%; }
@@ -50,19 +50,19 @@ table.rows input:focus { border-color: var(--accent); }
 .plotbox { position: relative; height: 180px; }
 @media (min-width: 821px) { :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 350px; } :root[data-projector="on"] .stage { min-height: 440px; } }
 /* vd-knobs: an instrument panel in the picture; each range input inside it is shown as a knob (layout redesign) */
-.instr { position: absolute; z-index: 2; display: flex; flex-wrap: wrap; align-items: flex-start; gap: 10px 14px; padding: 8px 12px; border-radius: 10px; background: #2c3542; color: #e3e8ef; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.25); }
+.instr { position: absolute; z-index: 2; display: flex; flex-wrap: wrap; align-items: flex-start; gap: 10px 14px; padding: 8px 12px; border-radius: 10px; background: #40382e; color: #eeeae4; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.25); }
 /* in the light theme the panel is a brushed aluminum faceplate, so it belongs on a light wall; knobs and green readouts stay dark like a real instrument's */
-:root:not([data-theme="dark"]) .instr { background: linear-gradient(180deg, #f1f4f7, #d9dfe6); color: #1d252f; border: 1px solid #b9c2cc; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 2px 6px rgba(20, 30, 45, 0.18); }
-:root:not([data-theme="dark"]) .instr .kctl label, :root:not([data-theme="dark"]) .instr .kctl .klab { color: #3a4552; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .instr { background: #2c3542; color: #e3e8ef; border: 0; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.25); } :root:not([data-theme="light"]) .instr .kctl label, :root:not([data-theme="light"]) .instr .kctl .klab { color: #c9d0d9; } }
+:root:not([data-theme="dark"]) .instr { background: linear-gradient(180deg, #f7f4f1, #e5e0da); color: #2e271e; border: 1px solid #cbc4ba; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 2px 6px rgba(20, 30, 45, 0.18); }
+:root:not([data-theme="dark"]) .instr .kctl label, :root:not([data-theme="dark"]) .instr .kctl .klab { color: #50473c; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .instr { background: #40382e; color: #eeeae4; border: 0; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.25); } :root:not([data-theme="light"]) .instr .kctl label, :root:not([data-theme="light"]) .instr .kctl .klab { color: #d8d2ca; } }
 .instr > [hidden] { display: none !important; }
 .instr .kctl { display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 84px; }
-.instr .kctl label, .instr .kctl .klab { font-size: 0.72rem; font-weight: 700; color: #c9d0d9; text-align: center; max-width: 120px; line-height: 1.2; min-height: 2.4em; display: flex; align-items: flex-end; justify-content: center; }
+.instr .kctl label, .instr .kctl .klab { font-size: 0.72rem; font-weight: 700; color: #d8d2ca; text-align: center; max-width: 120px; line-height: 1.2; min-height: 2.4em; display: flex; align-items: flex-end; justify-content: center; }
 .instr .kctl output { font-family: var(--font-mono); font-weight: 600; font-size: 0.9rem; color: #7ee0a0; background: #0b1a12; border-radius: 4px; padding: 1px 6px; white-space: nowrap; }
 .instr input[type="range"] { display: none; }
 .vdknob { position: relative; width: 44px; height: 44px; border-radius: 50%; cursor: grab; touch-action: none; flex: none;
-  background: radial-gradient(circle at 38% 32%, #8b96a4, #4a5462 62%, #39414d); box-shadow: 0 0 0 3px #232a34, 0 2px 4px rgba(0, 0, 0, 0.5); }
-.vdknob::before { content: ""; position: absolute; left: 50%; top: 4px; width: 3px; height: 13px; margin-left: -1.5px; border-radius: 2px; background: #f1f4f8; transform: rotate(var(--a, 0deg)); transform-origin: 50% 18px; }
+  background: radial-gradient(circle at 38% 32%, #a2998d, #60574c 62%, #4c443b); box-shadow: 0 0 0 3px #332c24, 0 2px 4px rgba(0, 0, 0, 0.5); }
+.vdknob::before { content: ""; position: absolute; left: 50%; top: 4px; width: 3px; height: 13px; margin-left: -1.5px; border-radius: 2px; background: #f7f5f2; transform: rotate(var(--a, 0deg)); transform-origin: 50% 18px; }
 .vdknob:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
 .scene { position: absolute; inset: 0; }
 .dimseg { position: absolute; top: 10px; right: 10px; z-index: 3; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12); }
@@ -443,14 +443,14 @@ table.rows input:focus { border-color: var(--accent); }
     const rod = (a, b, rad, m, n) => { const A = new THREE.Vector3(...a), B = new THREE.Vector3(...b), len = A.distanceTo(B), g = new THREE.CylinderGeometry(rad, rad, len, n || 16); const c = mesh(g, m); c.position.copy(A).add(B).multiplyScalar(0.5); c.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), B.clone().sub(A).normalize()); return c; };
     const benchM = Ms({ roughness: 0.85 }), bench = mesh(new THREE.PlaneGeometry(4, 3), benchM, false); bench.position.set(0, 0.3, 0);
     /* the balance: a body with a stainless pan and a display on its front; in the loop setups a plain wooden block of the same height */
-    const balM = Ms({ roughness: 0.5, metalness: 0.1 }), panM = Ms({ roughness: 0.25, metalness: 0.85, color: 0xd5dade });
+    const balM = Ms({ roughness: 0.5, metalness: 0.1 }), panM = Ms({ roughness: 0.25, metalness: 0.85, color: 0xdddad6 });
     const lcdCv = document.createElement('canvas'); lcdCv.width = 512; lcdCv.height = 160; const lcdTex = new THREE.CanvasTexture(lcdCv);
     const balance = new THREE.Group();
     balance.add(box(0.26, 0.26, BAL_H, balM, 0, 0.01, BAL_H / 2), box(0.21, 0.21, 0.006, panM, 0, 0.0, BAL_H + 0.003));
     /* the balance's display unit stands on the bench to the left, on a cable, so it is never hidden behind the magnet */
     const disp = new THREE.Group(), face = new THREE.Mesh(new THREE.PlaneGeometry(0.15, 0.047), new THREE.MeshStandardMaterial({ map: lcdTex, roughness: 0.4 }));
     disp.add(box(0.17, 0.03, 0.065, balM, 0, 0, 0)); face.rotation.x = Math.PI / 2; face.position.set(0, -0.0155, 0.004); disp.add(face); disp.rotation.x = -0.5; disp.position.set(-0.235, 0.075, 0.04); disp.rotation.z = 0.6; balance.add(disp);
-    balance.add(tube3([[-0.13, 0.03, 0.01], [-0.16, 0.035, 0.004], [-0.2, 0.06, 0.004], [-0.222, 0.07, 0.02]], Ms({ roughness: 0.6, color: 0x2a2f36 }), 0.0018));
+    balance.add(tube3([[-0.13, 0.03, 0.01], [-0.16, 0.035, 0.004], [-0.2, 0.06, 0.004], [-0.222, 0.07, 0.02]], Ms({ roughness: 0.6, color: 0x35312b }), 0.0018));
     const woodM = Ms({ roughness: 0.75 }), plinth = box(0.24, 0.16, BAL_H + 0.006, woodM, 0, 0, (BAL_H + 0.006) / 2);
     /* the magnet: a steel yoke and two pole pieces, painted red (N) and blue (S) */
     const steelM = Ms({ roughness: 0.45, metalness: 0.35 }), nM = Ms({ roughness: 0.45, metalness: 0.2 }), sM = Ms({ roughness: 0.45, metalness: 0.2 });
@@ -462,16 +462,16 @@ table.rows input:focus { border-color: var(--accent); }
       const l = mesh(new THREE.CylinderGeometry(0.0006, 0.0006, GAP - 0.004, 6), fieldM, false); l.rotation.z = Math.PI / 2; l.position.set(0, y, z);
       const h = mesh(new THREE.ConeGeometry(0.0022, 0.007, 10), fieldM, false); h.rotation.z = -Math.PI / 2; h.position.set(0.012, y, z); field.add(l, h); }
     /* the stand that holds the wire's holder (balance) or the loop's axle */
-    const standM = Ms({ roughness: 0.35, metalness: 0.7, color: 0x9aa3ad }), baseM = Ms({ roughness: 0.6, metalness: 0.3, color: 0x3a4250 });
+    const standM = Ms({ roughness: 0.35, metalness: 0.7, color: 0xaca59b }), baseM = Ms({ roughness: 0.6, metalness: 0.3, color: 0x4e463c });
     const stand = new THREE.Group(); stand.add(box(0.12, 0.08, 0.012, baseM, 0, 0.27, 0.006), rod([0, 0.27, 0.012], [0, 0.27, ZHOLD + 0.06], 0.006, standM), rod([0, 0.27, ZHOLD + 0.03], [0, 0, ZHOLD + 0.03], 0.0045, standM), box(0.022, 0.022, 0.022, baseM, 0, 0.27, ZHOLD + 0.03));
     /* the hanging wire: holder, two leads down, the piece across the gap; rotated by θ about z */
-    const cuM = Ms({ roughness: 0.3, metalness: 0.8 }), holdM = Ms({ roughness: 0.3, metalness: 0, transparent: true, opacity: 0.85, color: 0xe9eef3 }), hang = new THREE.Group();
+    const cuM = Ms({ roughness: 0.3, metalness: 0.8 }), holdM = Ms({ roughness: 0.3, metalness: 0, transparent: true, opacity: 0.85, color: 0xf2efea }), hang = new THREE.Group();
     /* the coil on its axle, with the commutator and brushes for the motor */
     const coilM = Ms({ roughness: 0.35, metalness: 0.7 }), coil = new THREE.Group(), loopG = new THREE.Group();
     const a = LOOP.a, t = 0.004;
     coil.add(box(t, t, a + t, coilM, 0, a / 2, 0), box(t, t, a + t, coilM, 0, -a / 2, 0), box(t, a + t, t, coilM, 0, 0, a / 2), box(t, a + t, t, coilM, 0, 0, -a / 2));
     coil.position.z = ZC;
-    const axleM = Ms({ roughness: 0.3, metalness: 0.85, color: 0xc7ccd2 }), brassM = Ms({ roughness: 0.3, metalness: 0.85, color: 0xc9a24a }), carbonM = Ms({ roughness: 0.8, color: 0x2a2d31 });
+    const axleM = Ms({ roughness: 0.3, metalness: 0.85, color: 0xd1cdc8 }), brassM = Ms({ roughness: 0.3, metalness: 0.85, color: 0xc9a24a }), carbonM = Ms({ roughness: 0.8, color: 0x302e2b });
     const axle = rod([0, 0, z0 + YOKE + 0.004], [0, 0, ZHOLD + 0.03], 0.0018, axleM), comm = new THREE.Group();
     for (const s of [0, Math.PI]) { const g = new THREE.CylinderGeometry(0.006, 0.006, 0.01, 20, 1, false, s + 0.15, Math.PI - 0.3); g.rotateX(Math.PI / 2); const m = mesh(g, brassM); m.position.z = ZC - a / 2 - 0.016; comm.add(m); }
     const brushes = new THREE.Group(); for (const sx of [-1, 1]) brushes.add(box(0.008, 0.004, 0.008, carbonM, sx * 0.0098, 0, ZC - a / 2 - 0.016));
@@ -479,12 +479,12 @@ table.rows input:focus { border-color: var(--accent); }
     /* arrows: force on the wire and its reaction on the magnet (balance), forces on the coil's sides and μ (loop) */
     const arrowM = (c) => Ms({ roughness: 0.4, color: c, emissive: c, emissiveIntensity: 0.15 });
     const mkArrow = (m) => { const g = new THREE.Group(), s = mesh(new THREE.CylinderGeometry(0.0022, 0.0022, 1, 12), m), h = mesh(new THREE.ConeGeometry(0.0062, 0.016, 16), m); g.add(s, h); g.userData = { s, h }; return g; };
-    const forceM = arrowM(0x6f4bb3), muM = arrowM(0xa7740b), fW = mkArrow(forceM), fMag = mkArrow(forceM), fS1 = mkArrow(forceM), fS2 = mkArrow(forceM), muA = mkArrow(muM);
+    const forceM = arrowM(0xa88456), muM = arrowM(0xa7740b), fW = mkArrow(forceM), fMag = mkArrow(forceM), fS1 = mkArrow(forceM), fS2 = mkArrow(forceM), muA = mkArrow(muM);
     /* the angle between the wire and B: an arc in the plane of the gap's middle */
     const arcM = new THREE.LineBasicMaterial({ transparent: true, opacity: 0.85 }), arc = new THREE.Line(new THREE.BufferGeometry().setFromPoints(Array.from({ length: 41 }, () => new THREE.Vector3())), arcM);
     /* dots moving with the conventional current (direction only, not to scale) */
     const dotM = Ms({ roughness: 0.3, emissive: 0x000000 }), dots = new THREE.InstancedMesh(new THREE.SphereGeometry(0.0024, 10, 8), dotM, 80); dots.frustumCulled = false;
-    const redM = Ms({ roughness: 0.6, color: 0xb8382a }), blackM = Ms({ roughness: 0.6, color: 0x23282f }), leads = new THREE.Group();
+    const redM = Ms({ roughness: 0.6, color: 0xb8382a }), blackM = Ms({ roughness: 0.6, color: 0x2e2a24 }), leads = new THREE.Group();
     scene.add(bench, balance, plinth, magnet, field, stand, hang, loopG, fW, fMag, fS1, fS2, muA, arc, dots, leads);
     g3 = { r, el, scene, cam, hemi, sun, benchM, balM, lcdCv, lcdTex, balance, plinth, woodM, nM, sM, steelM, fieldM, field, stand, hang, cuM, holdM, coil, coilM, loopG, comm, brushes, forceM, muM, fW, fMag, fS1, fS2, muA, arc, arcM, dots, dotM, redM, blackM, leads, mesh, box, rod, mat4: new THREE.Matrix4(), path: [] };
     can.addEventListener('wheel', (e) => { if (!use3()) e.stopImmediatePropagation(); }, { passive: true });
@@ -494,14 +494,14 @@ table.rows input:focus { border-color: var(--accent); }
   }
   const col3 = (s, fb) => { try { return new THREE.Color(s || fb); } catch (_) { return new THREE.Color(fb); } };
   function theme3() {
-    const g = g3, dk = VD3.dark(), bg = col3(T.canvas, '#fbfcfd');
+    const g = g3, dk = VD3.dark(), bg = col3(T.canvas, '#fdfcfb');
     g.scene.background = bg; g.scene.fog = new THREE.Fog(bg, 1.4, 3.2);
     g.hemi.intensity = dk ? 0.95 : 0.62; g.sun.intensity = dk ? 0.85 : 0.62; g.hemi.groundColor = col3(dk ? '#2a241d' : '#8c7a60', '#8c7a60');
-    g.benchM.color = col3(dk ? '#3a3229' : '#cdbb9d', '#cdbb9d'); g.balM.color = col3(dk ? '#424b57' : '#e7eaee', '#e7eaee'); g.woodM.color = col3(dk ? '#6b5338' : '#b98d5c', '#b98d5c');
-    g.nM.color = col3(T.N, '#b0452f'); g.sM.color = col3(T.S, '#2b60b5'); g.steelM.color = col3(dk ? '#6d7680' : '#8d969f', '#8d969f');
+    g.benchM.color = col3(dk ? '#3a3229' : '#cdbb9d', '#cdbb9d'); g.balM.color = col3(dk ? '#554e44' : '#edebe8', '#edebe8'); g.woodM.color = col3(dk ? '#6b5338' : '#b98d5c', '#b98d5c');
+    g.nM.color = col3(T.N, '#b0452f'); g.sM.color = col3(T.S, '#2b60b5'); g.steelM.color = col3(dk ? '#7f786e' : '#9e978e', '#9e978e');
     g.fieldM.color = col3(T.b, '#2f7d4f'); g.cuM.color = col3(T.wire, '#b06a2c'); g.coilM.color = col3(T.wire, '#b06a2c');
-    g.forceM.color = col3(T.force, '#6f4bb3'); g.forceM.emissive = col3(T.force, '#6f4bb3'); g.muM.color = col3(T.mu, '#a7740b'); g.muM.emissive = col3(T.mu, '#a7740b');
-    g.arcM.color = col3(T.ink, '#1d252f'); g.dotM.color = col3(dk ? '#ffe9a8' : '#fff4c8', '#fff4c8'); g.dotM.emissive = col3('#ffcc55', '#ffcc55').multiplyScalar(dk ? 0.6 : 0.35);
+    g.forceM.color = col3(T.force, '#a88456'); g.forceM.emissive = col3(T.force, '#a88456'); g.muM.color = col3(T.mu, '#a7740b'); g.muM.emissive = col3(T.mu, '#a7740b');
+    g.arcM.color = col3(T.ink, '#2e271e'); g.dotM.color = col3(dk ? '#ffe9a8' : '#fff4c8', '#fff4c8'); g.dotM.emissive = col3('#ffcc55', '#ffcc55').multiplyScalar(dk ? 0.6 : 0.35);
     G3.lcd = ''; G3.built = '';
   }
   function tube3(pts, m, rad) { const cv = new THREE.CatmullRomCurve3(pts.map((q) => new THREE.Vector3(...q))); const t = new THREE.Mesh(new THREE.TubeGeometry(cv, 40, rad || 0.0022, 8, false), m); t.castShadow = true; return t; }
@@ -535,7 +535,7 @@ table.rows input:focus { border-color: var(--accent); }
   }
   function lcd3() {
     const t = isLoop() ? '' : `${dmShown().replace('-', '−')} g`; if (G3.lcd === t) return; G3.lcd = t;
-    const c = g3.lcdCv.getContext('2d'), w = 512, h = 160; c.fillStyle = '#2f3a46'; c.fillRect(0, 0, w, h);
+    const c = g3.lcdCv.getContext('2d'), w = 512, h = 160; c.fillStyle = '#443c31'; c.fillRect(0, 0, w, h);
     if (window.VDGear) window.VDGear.lcd(c, 18, 16, w - 150, h - 32, t, { font: '600 76px "JetBrains Mono", ui-monospace, monospace' });
     else { c.fillStyle = '#0b1a12'; c.fillRect(18, 16, w - 150, h - 32); c.fillStyle = '#7ee0a0'; c.font = '600 76px monospace'; c.textAlign = 'right'; c.textBaseline = 'middle'; c.fillText(t, w - 150, h / 2); }
     c.fillStyle = 'rgba(230,236,243,0.85)'; c.font = '700 26px "Atkinson Hyperlegible", sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('TARE', w - 66, 56); c.font = '20px "Atkinson Hyperlegible", sans-serif'; c.fillStyle = 'rgba(230,236,243,0.6)'; c.fillText('0.01 g', w - 66, 100);

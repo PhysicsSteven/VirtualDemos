@@ -23,45 +23,45 @@ input[type="number"], select { max-width:100%; width:100%; padding:.45rem; color
 <style>
 /* Layout: the apparatus (magnet and coil, generator, or rails) on the left, flux, EMF and current against time on the right; instrument rail on the right; stacks on narrow screens. */
 :root {
-  --bg: #e9edf2;
-  --surface: #f8fafc;
-  --canvas: #fcfdfe;
-  --ink: #17202b;
-  --muted: #5a6575;
-  --line: #d3d9e2;
-  --grid: #e6ebf1;
-  --grid-strong: #cfd7e1;
+  --bg: #f1eeea;
+  --surface: #fcfaf8;
+  --canvas: #fefdfc;
+  --ink: #2a2219;
+  --muted: #73695c;
+  --line: #e1dbd4;
+  --grid: #f0ece7;
+  --grid-strong: #e0d9d0;
   --pos: #c23f2c;
   --neg: #2b60b5;
   --equi: #96680a;
-  --accent: #2b60b5;
+  --accent: #c4811c;
   --flux: #7a45c0;
   --emf: #1b8054;
   --drive: #0e7c8a;
-  --wire: #3b4655;
+  --wire: #53493d;
   --copper: #b8692e; --copper-hi: #f2b37a; --copper-lo: #6e3412;
-  --steel: #9aa5b3; --steel-hi: #eef2f6; --steel-lo: #5b6573;
+  --steel: #b1a89c; --steel-hi: #f5f2ef; --steel-lo: #71685d;
   --former: #d9c9a3; --bench: #d8c3a0; --bench-lo: #b99d74;
-  --meter-case: #2a2e35; --meter-face: #f7f1e1; --meter-ink: #2b2620;
+  --meter-case: #34302b; --meter-face: #f7f1e1; --meter-ink: #2b2620;
   --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
-    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-    --equi: #e2b350; --accent: #69a0ff; --flux: #b48cff; --emf: #4cc38a; --drive: #3cc4d4; --wire: #aab4c2;
-    --copper: #c4773a; --copper-hi: #f6c08c; --copper-lo: #5e2b0e; --steel: #7f8a99; --steel-hi: #dfe5ec; --steel-lo: #3f4753;
-    --former: #8c7b58; --bench: #3a2f24; --bench-lo: #261e16; --meter-case: #0b0d10; --meter-face: #e9e1cc; --meter-ink: #2b2620;
+    --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
+    --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+    --equi: #e2b350; --accent: #fbc26d; --flux: #b48cff; --emf: #4cc38a; --drive: #3cc4d4; --wire: #c0b7ac;
+    --copper: #c4773a; --copper-hi: #f6c08c; --copper-lo: #5e2b0e; --steel: #978d81; --steel-hi: #ebe6e0; --steel-lo: #524a40;
+    --former: #8c7b58; --bench: #3a2f24; --bench-lo: #261e16; --meter-case: #100e0b; --meter-face: #e9e1cc; --meter-ink: #2b2620;
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
-  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-  --equi: #e2b350; --accent: #69a0ff; --flux: #b48cff; --emf: #4cc38a; --drive: #3cc4d4; --wire: #aab4c2;
-    --copper: #c4773a; --copper-hi: #f6c08c; --copper-lo: #5e2b0e; --steel: #7f8a99; --steel-hi: #dfe5ec; --steel-lo: #3f4753;
-    --former: #8c7b58; --bench: #3a2f24; --bench-lo: #261e16; --meter-case: #0b0d10; --meter-face: #e9e1cc; --meter-ink: #2b2620;
+  --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
+  --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+  --equi: #e2b350; --accent: #fbc26d; --flux: #b48cff; --emf: #4cc38a; --drive: #3cc4d4; --wire: #c0b7ac;
+    --copper: #c4773a; --copper-hi: #f6c08c; --copper-lo: #5e2b0e; --steel: #978d81; --steel-hi: #ebe6e0; --steel-lo: #524a40;
+    --former: #8c7b58; --bench: #3a2f24; --bench-lo: #261e16; --meter-case: #100e0b; --meter-face: #e9e1cc; --meter-ink: #2b2620;
   color-scheme: dark;
 }
 :root[data-projector="on"] { font-size: 125%; }
@@ -1614,7 +1614,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     g.addColorStop(0.48, 'rgba(255,255,255,0.04)'); g.addColorStop(0.82, 'rgba(0,0,0,0.14)'); g.addColorStop(1, 'rgba(0,0,0,0.38)');
     return g;
   }
-  const leadCol = (red) => (red ? (T.dark ? '#d0493b' : '#b8372b') : (T.dark ? '#5d636d' : '#2f343b'));
+  const leadCol = (red) => (red ? (T.dark ? '#d0493b' : '#b8372b') : (T.dark ? '#6c665e' : '#3a3630'));
   // a plastic insulated lead along a polyline: dark rim, colored body, a soft highlight
   function insulated(ctx, pts, col, w) {
     ctx.save(); ctx.lineJoin = 'round'; ctx.lineCap = 'round';
@@ -1629,7 +1629,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   function resBands(R) {
     let e = Math.floor(Math.log10(R) + 1e-9) - 1, d = Math.round(R / Math.pow(10, e));
     if (d >= 100) { d = Math.round(d / 10); e++; }
-    return [BANDS[Math.floor(d / 10)], BANDS[d % 10], e >= 0 ? BANDS[e] : e === -1 ? '#c9a227' : '#b9bec6', '#c9a227'];
+    return [BANDS[Math.floor(d / 10)], BANDS[d % 10], e >= 0 ? BANDS[e] : e === -1 ? '#c9a227' : '#c5c0ba', '#c9a227'];
   }
   // a through hole resistor between two points, its bands showing R
   function drawResistor(ctx, x0, y0, x1, y1, R, hot, sc) {
@@ -1714,14 +1714,14 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const gg = ctx.createLinearGradient(fx, fy, fx + fw * 0.6, fy + fh); gg.addColorStop(0, 'rgba(255,255,255,0.0)'); gg.addColorStop(0.35, 'rgba(255,255,255,0.32)'); gg.addColorStop(0.5, 'rgba(255,255,255,0.0)');
     ctx.fillStyle = gg; ctx.fillRect(fx, fy, fw, fh);
     ctx.restore();
-    const gp = ctx.createRadialGradient(pcx - 1, pcy - 1, 0, pcx, pcy, 4.5 * sc); gp.addColorStop(0, '#9aa3ad'); gp.addColorStop(1, '#22262b');
+    const gp = ctx.createRadialGradient(pcx - 1, pcy - 1, 0, pcx, pcy, 4.5 * sc); gp.addColorStop(0, '#aca59b'); gp.addColorStop(1, '#2a2723');
     ctx.fillStyle = gp; ctx.beginPath(); ctx.arc(pcx, pcy, 4 * sc, 0, 2 * Math.PI); ctx.fill();
     // binding posts on the lower strip: black (−) on the left, red (+) on the right
     const py = top + mh - 9 * sc, pl = [x0 + 15 * sc, py], prt = [x0 + mw - 15 * sc, py];
     for (const [q, col] of [[pl, '#2a2a2a'], [prt, '#c0392b']]) {
       const g = ctx.createRadialGradient(q[0] - 1.5 * sc, q[1] - 1.5 * sc, 0, q[0], q[1], 5.5 * sc); g.addColorStop(0, shade(col, 0.5)); g.addColorStop(1, shade(col, -0.3));
       ctx.fillStyle = g; ctx.beginPath(); ctx.arc(q[0], q[1], 5.2 * sc, 0, 2 * Math.PI); ctx.fill();
-      ctx.fillStyle = '#c9ced6'; ctx.beginPath(); ctx.arc(q[0], q[1], 1.6 * sc, 0, 2 * Math.PI); ctx.fill();
+      ctx.fillStyle = '#d5d0ca'; ctx.beginPath(); ctx.arc(q[0], q[1], 1.6 * sc, 0, 2 * Math.PI); ctx.fill();
     }
     ctx.fillStyle = 'rgba(255,255,255,0.75)'; ctx.font = `700 ${10 * sc}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     ctx.fillText('−', pl[0] + 13 * sc, py); ctx.fillText('+', prt[0] - 13 * sc, py);
@@ -1741,7 +1741,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     insulated(ctx, [[xA, yA], [xA, posts.plus[1]], [posts.plus[0], posts.plus[1]]], leadCol(true), lw);
     insulated(ctx, [[posts.neg[0], posts.neg[1]], [xL, posts.neg[1]], [xL, yLow], [xR, yLow], [xR, yBus], [xr1, yBus]], leadCol(false), lw);
     insulated(ctx, [[xr0, yBus], [xB, yBus], [xB, yB]], leadCol(false), lw);
-    for (const q of [posts.plus, posts.neg]) { ctx.fillStyle = '#c9ced6'; ctx.beginPath(); ctx.arc(q[0], q[1], 2.2 * sc, 0, 2 * Math.PI); ctx.fill(); }
+    for (const q of [posts.plus, posts.neg]) { ctx.fillStyle = '#d5d0ca'; ctx.beginPath(); ctx.arc(q[0], q[1], 2.2 * sc, 0, 2 * Math.PI); ctx.fill(); }
     // resistor
     const hot = isHot('res');
     drawResistor(ctx, xr0, yBus, xr1, yBus, Rnow(), hot, sc);
@@ -2003,7 +2003,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     }
     const b1 = pr(0.014, -0.118, 0), b2 = pr(0.014, -0.14, 0);
     for (const b of [b1, b2]) {
-      const g = ctx.createLinearGradient(0, b[1] - 3.5 * sc, 0, b[1] + 3.5 * sc); g.addColorStop(0, '#5b5d62'); g.addColorStop(1, '#1e1f22');
+      const g = ctx.createLinearGradient(0, b[1] - 3.5 * sc, 0, b[1] + 3.5 * sc); g.addColorStop(0, '#615f5c'); g.addColorStop(1, '#22201e');
       ctx.fillStyle = g; ctx.fillRect(b[0], b[1] - 3.5 * sc, 11 * sc, 7 * sc);
     }
     // the coil: a square bundle of N enamelled copper turns
@@ -2041,7 +2041,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     // crank on top of the shaft: a steel arm and a black knob
     { const c0 = pr(0, yTop + 0.035, 0), c1 = pr(0.03 * Math.cos(th + 1.2), yTop + 0.035, 0.03 * Math.sin(th + 1.2));
       rod(ctx, c0, c1, 3.2 * ps, T.steel, T.steelHi, T.steelLo);
-      const g = ctx.createRadialGradient(c1[0] - 1.5 * sc, c1[1] - 1.5 * sc, 0, c1[0], c1[1], 5 * sc); g.addColorStop(0, '#70737a'); g.addColorStop(1, '#16171a');
+      const g = ctx.createRadialGradient(c1[0] - 1.5 * sc, c1[1] - 1.5 * sc, 0, c1[0], c1[1], 5 * sc); g.addColorStop(0, '#797671'); g.addColorStop(1, '#1a1816');
       ctx.fillStyle = g; ctx.beginPath(); ctx.arc(c1[0], c1[1], 4.5 * sc, 0, 2 * Math.PI); ctx.fill(); }
     ctx.fillStyle = T.ink; ctx.textBaseline = 'alphabetic';
     label(ctx, `N = ${S.gen.N} turns, A = ${S.gen.A} cm²`, 12 * sc, top + 16 * sc, fs * 0.92, 700, 'left', T.ink);
@@ -2099,7 +2099,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     for (const sg of [-1, 1]) {
       const yy = Y(sg * L / 2), hh = 3.4 * ps;
       ctx.fillStyle = cylGrad(ctx, 0, yy - hh, 0, yy + hh, T.copper, T.copperHi, T.copperLo); ctx.fillRect(X(0), yy - hh, X(RAIL_END + 0.03) - X(0), 2 * hh);
-      const g = ctx.createLinearGradient(0, yy - 6 * sc, 0, yy + 6 * sc); g.addColorStop(0, '#4a4c50'); g.addColorStop(1, '#141517');
+      const g = ctx.createLinearGradient(0, yy - 6 * sc, 0, yy + 6 * sc); g.addColorStop(0, '#504d4a'); g.addColorStop(1, '#171614');
       ctx.fillStyle = g; roundRect(ctx, X(RAIL_END + 0.03), yy - 6 * sc, 7 * sc, 12 * sc, 2 * sc); ctx.fill();
     }
     const hotR = isHot('res');
@@ -2297,14 +2297,14 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   // a knife switch between (x0, y) and (x1, y): hinge on the left, jaw on the right
   function drawKnife(ctx, x0, x1, y, closed, hot, sc, ps) {
     const L = x1 - x0;
-    ctx.fillStyle = T.dark ? '#59616d' : '#3a3f47'; roundRect(ctx, x0 - 4 * sc, y + 2 * sc, L + 8 * sc, 9 * sc, 3 * sc); ctx.fill();
+    ctx.fillStyle = T.dark ? '#6b645a' : '#46413b'; roundRect(ctx, x0 - 4 * sc, y + 2 * sc, L + 8 * sc, 9 * sc, 3 * sc); ctx.fill();
     if (hot) { ctx.fillStyle = T.accent; ctx.globalAlpha = 0.28; roundRect(ctx, x0 - 8 * sc, y - L * 0.6 - 4 * sc, L + 16 * sc, L * 0.6 + 20 * sc, 7 * sc); ctx.fill(); ctx.globalAlpha = 1; }
     for (const x of [x0 + 4 * sc, x1 - 4 * sc]) { ctx.fillStyle = T.copperLo; ctx.fillRect(x - 3 * sc, y - 5 * sc, 6 * sc, 8 * sc); ctx.fillStyle = T.copper; ctx.fillRect(x - 2 * sc, y - 5 * sc, 4 * sc, 7 * sc); }
     const ang = closed ? 0 : -0.62, bl = L - 8 * sc, hx = x0 + 4 * sc, hy = y - 2 * sc, ex = hx + bl * Math.cos(ang), ey = hy + bl * Math.sin(ang);
     rod(ctx, [hx, hy], [ex, ey], 3.4 * ps, T.copper, T.copperHi, T.copperLo);
     const kx = hx + (bl + 7 * sc) * Math.cos(ang), ky = hy + (bl + 7 * sc) * Math.sin(ang) - 5 * sc;
-    ctx.strokeStyle = '#16171a'; ctx.lineWidth = 2.4 * ps; ctx.beginPath(); ctx.moveTo(ex, ey); ctx.lineTo(kx, ky); ctx.stroke();
-    ctx.fillStyle = hot ? T.accent : '#16171a'; ctx.beginPath(); ctx.arc(kx, ky, 3.6 * sc, 0, 2 * Math.PI); ctx.fill();
+    ctx.strokeStyle = '#1a1816'; ctx.lineWidth = 2.4 * ps; ctx.beginPath(); ctx.moveTo(ex, ey); ctx.lineTo(kx, ky); ctx.stroke();
+    ctx.fillStyle = hot ? T.accent : '#1a1816'; ctx.beginPath(); ctx.arc(kx, ky, 3.6 * sc, 0, 2 * Math.PI); ctx.fill();
   }
   function drawCoilsScene(ctx, W0, H0) {
     const ps = projScale(), sc = Math.min(ps, 1.25), top = ctlH + 4, bandH = 118 * sc, fieldH = H0 - bandH - top, labH = 58 * sc;

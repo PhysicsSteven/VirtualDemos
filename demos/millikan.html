@@ -16,9 +16,9 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
 /* only what this demo needs beyond demos/lib/vd.css: the bench colors, the eyepiece (dark in both themes, as it is through a real telescope) */
-:root { --metal: #8c96a3; --metalHi: #d5dbe3; --metalLo: #545d69; --plastic: #c9d8e6; --beam: #ffd98a; --drop: #fff4d6; --pick: #2f7bd8; --gate: #e0812b; --plus: #c8412f; --minus: #2b60b5; --box: #2c333d; --lcd: #9fe3a8; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --metal: #79838f; --metalHi: #b9c1cc; --metalLo: #3d444e; --plastic: #4a5868; --beam: #ffcf6b; --pick: #6ea8ff; --gate: #f0a050; --plus: #f07a66; --minus: #6ea0ff; --box: #1b2028; } }
-:root[data-theme="dark"] { --metal: #79838f; --metalHi: #b9c1cc; --metalLo: #3d444e; --plastic: #4a5868; --beam: #ffcf6b; --pick: #6ea8ff; --gate: #f0a050; --plus: #f07a66; --minus: #6ea0ff; --box: #1b2028; }
+:root { --metal: #a1998e; --metalHi: #e2ddd6; --metalLo: #676056; --plastic: #e4d9cb; --beam: #ffd98a; --drop: #fff4d6; --pick: #e09627; --gate: #e0812b; --plus: #c8412f; --minus: #2b60b5; --box: #3c352d; --lcd: #9fe3a8; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --metal: #8d857b; --metalHi: #cbc4ba; --metalLo: #4d463e; --plastic: #665b4c; --beam: #ffcf6b; --pick: #fbc472; --gate: #f0a050; --plus: #f07a66; --minus: #6ea0ff; --box: #27221c; } }
+:root[data-theme="dark"] { --metal: #8d857b; --metalHi: #cbc4ba; --metalLo: #4d463e; --plastic: #665b4c; --beam: #ffcf6b; --pick: #fbc472; --gate: #f0a050; --plus: #f07a66; --minus: #6ea0ff; --box: #27221c; }
 .stage { position: relative; display: grid; grid-template-rows: auto minmax(500px, 1fr); min-height: 640px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); }
 .scene { position: relative; min-height: 0; }
@@ -404,7 +404,7 @@
       ctx.fillStyle = T.box; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(bx, by, bw, bh, 6) : ctx.rect(bx, by, bw, bh); ctx.fill();
       ctx.fillStyle = '#0d1a12'; ctx.fillRect(bx + 10 * p, by + 10 * p, 82 * p, 26 * p);
       ctx.fillStyle = T.lcd; ctx.font = `${15 * p}px ${T.mono}`; ctx.textAlign = 'right'; ctx.fillText(`${S.pol === 0 ? 0 : S.V} V`, bx + 88 * p, by + 23 * p);
-      ctx.fillStyle = '#c5ccd6'; ctx.font = `${10 * p}px ${T.sans}`; ctx.textAlign = 'left'; ctx.fillText(S.pol === 0 ? 'plates off' : S.pol > 0 ? 'top +' : 'top −', bx + 100 * p, by + 23 * p);
+      ctx.fillStyle = '#d5cec6'; ctx.font = `${10 * p}px ${T.sans}`; ctx.textAlign = 'left'; ctx.fillText(S.pol === 0 ? 'plates off' : S.pol > 0 ? 'top +' : 'top −', bx + 100 * p, by + 23 * p);
       ctx.fillStyle = T.muted; ctx.textAlign = 'center'; ctx.fillText(`plates ${f(MK_D * 1e3, 2)} mm apart, not to scale`, cx, by + bh + 14 * p);
     }
     ctx.restore();
@@ -421,8 +421,8 @@
     const S3 = VD3K.stage($('scene'), { before: can, shadow: 0.12, fov: 30, fogAt: [1.8, 3.6] }); if (!S3) return false;
     S3.el.className = 'mk3';
     const sc = S3.scene, M = (o, c) => VD3K.material(S3, o, c);
-    const brass = M({ roughness: 0.32, metalness: 0.85 }, ['#c9a24a', '#a8873c']), dark = M({ roughness: 0.55, metalness: 0.3 }, ['#56606b', '#3a424c']);
-    const black = M({ roughness: 0.6, metalness: 0.2 }, ['#2b3038', '#22262d']), steel = M({ roughness: 0.35, metalness: 0.75 }, ['#b9c0c8', '#77808a']);
+    const brass = M({ roughness: 0.32, metalness: 0.85 }, ['#c9a24a', '#a8873c']), dark = M({ roughness: 0.55, metalness: 0.3 }, ['#696258', '#4b443b']);
+    const black = M({ roughness: 0.6, metalness: 0.2 }, ['#37322c', '#2c2823']), steel = M({ roughness: 0.35, metalness: 0.75 }, ['#c7c1ba', '#898278']);
     sc.add(VD3K.bench(S3, { w: 0.6, d: 0.4 }), VD3K.backdrop(S3, { r: 0.3, h: 0.22, y: 0.06 }));
     /* the stand and the plates: the top plate is a disk with the small hole the drops fall through */
     const foot = new THREE.Mesh(new THREE.CylinderGeometry(0.042, 0.046, 0.006, 48).rotateX(Math.PI / 2), black); foot.position.z = 0.003; foot.castShadow = foot.receiveShadow = true;
@@ -445,7 +445,7 @@
     sc.add(VD3K.rod([0, -PR - 0.004, ZC], [0, -0.1, ZC], 0.007, black), VD3K.rod([0, -0.1, ZC], [0, -0.12, ZC], 0.005, dark), VD3K.rod([0, -0.075, 0], [0, -0.075, ZC - 0.007], 0.003, steel), VD3K.box(0.03, 0.03, 0.004, black, 0, -0.075, 0));
     /* the supply, showing the plate voltage */
     const meter = VD3K.meter(S3, { w: 0.09, h: 0.055, label: 'plate supply' }); meter.position.set(0.11, 0.05, 0); meter.rotation.z = 0.75; sc.add(meter);
-    sc.add(VD3K.cable([0.09, 0.06, 0.02], [PR * 0.75, PR * 0.4, ZT + PT], { color: 0xb8382a, rad: 0.0012, sag: 0.03 }), VD3K.cable([0.1, 0.066, 0.012], [PR * 0.8, PR * 0.45, ZB - PT], { color: 0x23282f, rad: 0.0012, sag: 0.01 }));
+    sc.add(VD3K.cable([0.09, 0.06, 0.02], [PR * 0.75, PR * 0.4, ZT + PT], { color: 0xb8382a, rad: 0.0012, sag: 0.03 }), VD3K.cable([0.1, 0.066, 0.012], [PR * 0.8, PR * 0.45, ZB - PT], { color: 0x2e2a24, rad: 0.0012, sag: 0.01 }));
     /* the ionizing source, a small capsule at the side of the gap */
     const ion = new THREE.Mesh(new THREE.SphereGeometry(0.0022, 16, 10), new THREE.MeshBasicMaterial({ color: 0xe0812b })); ion.position.set(-PR * 0.45, PR * 0.85, ZC); sc.add(ion);
     /* drops, the followed drop's ring, the telescope's field of view and the field arrows */
@@ -453,7 +453,7 @@
     const ring = VD3K.marker(S3, { r: 0.0007, color: '#2f7bd8' }); sc.add(ring);
     const h = FOV / 2, fovG = new THREE.BufferGeometry().setFromPoints([[-h, -h], [h, -h], [h, h], [-h, h], [-h, -h]].map((q) => new THREE.Vector3(q[0], 0, ZC + q[1])));
     const fov = new THREE.Line(fovG, new THREE.LineDashedMaterial({ color: 0x2f7bd8, dashSize: 0.0002, gapSize: 0.00015, transparent: true, opacity: 0.8 })); fov.computeLineDistances(); sc.add(fov);
-    const arrows = []; for (const x of [-0.016, -0.008, 0.008, 0.016]) { const a = new THREE.ArrowHelper(new THREE.Vector3(0, 0, -1), new THREE.Vector3(x, 0.012, ZT - 0.0008), MK_D - 0.0016, 0x8b95a3, 0.0016, 0.0011); sc.add(a); arrows.push(a); }
+    const arrows = []; for (const x of [-0.016, -0.008, 0.008, 0.016]) { const a = new THREE.ArrowHelper(new THREE.Vector3(0, 0, -1), new THREE.Vector3(x, 0.012, ZT - 0.0008), MK_D - 0.0016, 0xa1988d, 0.0016, 0.0011); sc.add(a); arrows.push(a); }
     g3 = { S3, dots, ring, fov, arrows, ion, meter, beamM, key: '' };
     S3.onTheme((dk) => { beamM.opacity = dk ? 0.24 : 0.18; });
     const in3 = (e) => { if (!use3()) return false; const r = can.getBoundingClientRect(), b = layout().app, x = e.clientX - r.left, y = e.clientY - r.top; return x >= b.x && x <= b.x + b.w && y >= b.y && y <= b.y + b.h; };
@@ -494,9 +494,9 @@
   function drawScope(b) {
     const p = proj(), g = scopeGeom(b);
     ctx.save();
-    ctx.fillStyle = '#05070a'; ctx.beginPath(); ctx.arc(g.cx, g.cy, g.R + 6 * p, 0, 7); ctx.fill();
+    ctx.fillStyle = '#0a0805'; ctx.beginPath(); ctx.arc(g.cx, g.cy, g.R + 6 * p, 0, 7); ctx.fill();
     ctx.beginPath(); ctx.arc(g.cx, g.cy, g.R, 0, 7); ctx.clip();
-    const glow = ctx.createRadialGradient(g.cx, g.cy, 0, g.cx, g.cy, g.R); glow.addColorStop(0, '#141a22'); glow.addColorStop(1, '#07090c'); ctx.fillStyle = glow; ctx.fillRect(g.cx - g.R, g.cy - g.R, 2 * g.R, 2 * g.R);
+    const glow = ctx.createRadialGradient(g.cx, g.cy, 0, g.cx, g.cy, g.R); glow.addColorStop(0, '#211c15'); glow.addColorStop(1, '#0c0a07'); ctx.fillStyle = glow; ctx.fillRect(g.cx - g.R, g.cy - g.R, 2 * g.R, 2 * g.R);
     /* reticle: lines every 0.5 mm, ticks every 0.1 mm on the middle line */
     ctx.strokeStyle = 'rgba(190,205,225,0.45)'; ctx.lineWidth = 1; ctx.fillStyle = 'rgba(190,205,225,0.7)'; ctx.font = `${10 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
     for (let m = -3; m <= 3; m++) { const y = g.cy - m * 0.5e-3 * g.k; ctx.beginPath(); ctx.moveTo(g.cx - g.R, y); ctx.lineTo(g.cx + g.R, y); ctx.stroke(); }

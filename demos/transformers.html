@@ -259,7 +259,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.fillText(s, x, y); ctx.restore();
   }
   function meter(x, y, w, h, text, name, col) {
-    if (VG) { VG.box(ctx, x - 5, y - 5, w + 10, h + 20, { color: dark() ? '#2b3440' : '#34404e', r: 6 }); VG.lcd(ctx, x, y, w, h, text, col ? { color: col } : {}); VG.plate(ctx, name, x + w / 2, y + h + 8, { s: 8 * proj() }); }
+    if (VG) { VG.box(ctx, x - 5, y - 5, w + 10, h + 20, { color: dark() ? '#3e372d' : '#4c4236', r: 6 }); VG.lcd(ctx, x, y, w, h, text, col ? { color: col } : {}); VG.plate(ctx, name, x + w / 2, y + h + 8, { s: 8 * proj() }); }
     else txt(`${name}: ${text}`, x, y + h / 2, { m: true });
   }
   function arrow(x1, y1, x2, y2, w, col, alpha = 1) {
@@ -305,7 +305,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* core: a square frame of laminated steel standing on the bench */
     const narrow = W < 560, cw = Math.min(W * (narrow ? 0.38 : 0.34), 330 * p), chh = Math.min(by - 100 * p, cw * 0.95), cx0 = W / 2 - cw / 2, cy0 = by - chh - 6, limb = cw * 0.17;
     if (VG) VG.shadow(ctx, W / 2, by, cw * 0.62, 7);
-    const steel = dark() ? '#4c5664' : '#5d6878';
+    const steel = dark() ? '#62594e' : '#766c5f';
     const fillSteel = (x, y, ww, hh, vertical) => {
       const g = vertical ? ctx.createLinearGradient(x, 0, x + ww, 0) : ctx.createLinearGradient(0, y, 0, y + hh);
       g.addColorStop(0, VG ? VG.mix(steel, '#ffffff', 0.25) : steel); g.addColorStop(0.5, steel); g.addColorStop(1, VG ? VG.mix(steel, '#000000', 0.35) : steel);
@@ -350,16 +350,16 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const botS = [[lcx, by - 20 * p], [lcx, by - 12 * p], [xr + ex + 10 * p, by - 12 * p], [xr + ex, y1 - 4]];
     wire(topS, T.is, isFinite(tr.RL) ? shS : null); wire(botS, T.is, isFinite(tr.RL) ? shS : null);
     /* the AC source: a generator case with a sine on its face */
-    if (VG) { VG.box(ctx, srcX, srcY, srcW, 62 * p, { color: dark() ? '#36414f' : '#3f4a58', r: 7 }); VG.plate(ctx, 'AC source', srcX + srcW / 2, srcY + 54 * p, { s: 8 * p }); }
+    if (VG) { VG.box(ctx, srcX, srcY, srcW, 62 * p, { color: dark() ? '#4d4438' : '#564d41', r: 7 }); VG.plate(ctx, 'AC source', srcX + srcW / 2, srcY + 54 * p, { s: 8 * p }); }
     else { ctx.fillStyle = T.line; ctx.fillRect(srcX, srcY, srcW, 62 * p); }
     ctx.save(); ctx.strokeStyle = '#8ef0b0'; ctx.lineWidth = 2 * p; ctx.beginPath();
     for (let i = 0; i <= 40; i++) { const u = i / 40, xx = srcX + srcW * 0.2 + srcW * 0.6 * u, yy = srcY + 26 * p - 12 * p * Math.sin(2 * Math.PI * u * 1.5 + (reduce ? 0 : -w * tt)); i ? ctx.lineTo(xx, yy) : ctx.moveTo(xx, yy); }
     ctx.stroke(); ctx.restore();
-    for (const dx of [-18, 18]) { ctx.fillStyle = dx < 0 ? '#c2412d' : '#1b1f25'; ctx.beginPath(); ctx.arc(srcX + srcW / 2 + dx * p, srcY + 2 * p, 4.5 * p, 0, 7); ctx.fill(); }
+    for (const dx of [-18, 18]) { ctx.fillStyle = dx < 0 ? '#c2412d' : '#24211c'; ctx.beginPath(); ctx.arc(srcX + srcW / 2 + dx * p, srcY + 2 * p, 4.5 * p, 0, 7); ctx.fill(); }
     /* the load: a ceramic power resistor on two posts, glowing with the power it takes */
     if (isFinite(tr.RL)) {
       const ry = by - 104 * p, rh = 84 * p, rw = Math.min(30 * p, ldW * 0.5);
-      if (VG) { VG.rod(ctx, lcx, by - 12 * p, lcx, ry + rh, 2.5 * p, { color: '#b8c0ca' }); VG.shadow(ctx, lcx, by, rw, 4); }
+      if (VG) { VG.rod(ctx, lcx, by - 12 * p, lcx, ry + rh, 2.5 * p, { color: '#c9c2b9' }); VG.shadow(ctx, lcx, by, rw, 4); }
       const g = ctx.createLinearGradient(lcx - rw / 2, 0, lcx + rw / 2, 0); g.addColorStop(0, '#a99f8a'); g.addColorStop(0.35, '#efe8d8'); g.addColorStop(1, '#8b826e');
       ctx.fillStyle = g; ctx.beginPath(); ctx.roundRect(lcx - rw / 2, ry, rw, rh, 5); ctx.fill();
       ctx.strokeStyle = 'rgba(80,60,40,0.35)'; ctx.lineWidth = 1; for (let i = 1; i < 7; i++) { ctx.beginPath(); ctx.moveTo(lcx - rw / 2 + 2, ry + rh * i / 7); ctx.lineTo(lcx + rw / 2 - 2, ry + rh * i / 7); ctx.stroke(); }
@@ -388,7 +388,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const narrow = W < 560, gy = hz + (H - hz) * 0.55;
     /* power station: building, chimney with a puff */
     const sx = 10 * p, sw = Math.min(120 * p, W * 0.17);
-    if (VG) { VG.box(ctx, sx, gy - 70 * p, sw, 70 * p, { color: dark() ? '#4a4f57' : '#8a8f97', r: 3 }); VG.box(ctx, sx + sw * 0.62, gy - 120 * p, sw * 0.18, 52 * p, { color: dark() ? '#5b5f66' : '#a2a6ad', r: 2, shadow: false }); }
+    if (VG) { VG.box(ctx, sx, gy - 70 * p, sw, 70 * p, { color: dark() ? '#56514b' : '#96918b', r: 3 }); VG.box(ctx, sx + sw * 0.62, gy - 120 * p, sw * 0.18, 52 * p, { color: dark() ? '#65615c' : '#aca8a3', r: 2, shadow: false }); }
     ctx.fillStyle = dark() ? 'rgba(200,210,225,0.18)' : 'rgba(255,255,255,0.75)'; for (let i = 0; i < 3; i++) { ctx.beginPath(); ctx.arc(sx + sw * 0.71 + i * 9 * p, gy - 128 * p - i * 10 * p, (7 + i * 3) * p, 0, 7); ctx.fill(); }
     txt('power station', sx + sw / 2, gy + 8 * p, { a: 'center', bl: 'top', s: 10.5, c: T.ink });
     txt('12 kV', sx + sw / 2, gy - 40 * p, { a: 'center', s: 11, c: '#ffffff', m: true });
@@ -406,7 +406,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const n = narrow ? 3 : 5, tx = (i) => xUp + 30 * p + (xDown - xUp - 60 * p) * (i + 0.5) / n, th = Math.min(120 * p, (gy - 30) * 0.7), armY = gy - th;
     const glow = L.ok ? Math.min(1, Math.sqrt(L.frac) * 1.5) : 1;
     for (let i = 0; i < n; i++) {
-      const x = tx(i); ctx.save(); ctx.strokeStyle = dark() ? '#9aa6b6' : '#5a6575'; ctx.lineWidth = 1.6 * p;
+      const x = tx(i); ctx.save(); ctx.strokeStyle = dark() ? '#b4aa9c' : '#73695c'; ctx.lineWidth = 1.6 * p;
       ctx.beginPath(); ctx.moveTo(x - 14 * p, gy); ctx.lineTo(x - 3 * p, armY); ctx.lineTo(x + 3 * p, armY); ctx.lineTo(x + 14 * p, gy);
       for (let k = 1; k < 5; k++) { const yy = gy - th * k / 5, hw = 14 * p - 11 * p * k / 5, yn = gy - th * (k - 1) / 5, hn = 14 * p - 11 * p * (k - 1) / 5; ctx.moveTo(x - hn, yn); ctx.lineTo(x + hw, yy); ctx.moveTo(x + hn, yn); ctx.lineTo(x - hw, yy); }
       ctx.moveTo(x - 20 * p, armY); ctx.lineTo(x + 20 * p, armY); ctx.stroke(); ctx.restore();
@@ -416,7 +416,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const pts = [[xUp + d * 0.5 * p, gy - 52 * p]]; for (let i = 0; i < n; i++) pts.push([tx(i) + d * p, armY]); pts.push([xDown + d * 0.5 * p, gy - 52 * p]);
       for (let i = 1; i < pts.length; i++) {
         const [x1, y1] = pts[i - 1], [x2, y2] = pts[i], sag = 14 * p;
-        ctx.save(); ctx.strokeStyle = dark() ? '#c8ced6' : '#30363e'; ctx.lineWidth = 1.8 * p; ctx.beginPath(); ctx.moveTo(x1, y1); ctx.quadraticCurveTo((x1 + x2) / 2, (y1 + y2) / 2 + 2 * sag, x2, y2); ctx.stroke();
+        ctx.save(); ctx.strokeStyle = dark() ? '#d5d0c9' : '#3d3831'; ctx.lineWidth = 1.8 * p; ctx.beginPath(); ctx.moveTo(x1, y1); ctx.quadraticCurveTo((x1 + x2) / 2, (y1 + y2) / 2 + 2 * sag, x2, y2); ctx.stroke();
         if (glow > 0.01) { ctx.globalAlpha = glow; ctx.strokeStyle = T.heat; ctx.shadowColor = T.heat; ctx.shadowBlur = 10 * p * glow; ctx.lineWidth = (1.6 + 2.5 * glow) * p; ctx.stroke(); }
         ctx.restore();
       }
@@ -425,7 +425,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const hx0 = xDown + 26 * p, nh = Math.max(1, Math.floor((W - hx0 - 6 * p) / (34 * p))), bright = L.ok ? Math.max(0, (L.Vhouse / V_HOUSE) ** 2) : 0;
     for (let i = 0; i < nh; i++) {
       const x = hx0 + i * 34 * p, y = gy - (i % 2 ? 4 : 0) * p, hw = 26 * p, hh = 22 * p;
-      ctx.fillStyle = dark() ? '#4b4f58' : '#e6dccb'; ctx.fillRect(x, y - hh, hw, hh);
+      ctx.fillStyle = dark() ? '#57524c' : '#e6dccb'; ctx.fillRect(x, y - hh, hw, hh);
       ctx.fillStyle = dark() ? '#7a3f35' : '#b5523f'; ctx.beginPath(); ctx.moveTo(x - 3 * p, y - hh); ctx.lineTo(x + hw / 2, y - hh - 14 * p); ctx.lineTo(x + hw + 3 * p, y - hh); ctx.fill();
       ctx.save(); ctx.fillStyle = `rgba(255,214,110,${0.15 + 0.85 * bright})`; if (bright > 0.2) { ctx.shadowColor = '#ffd66e'; ctx.shadowBlur = 8 * p * bright; }
       ctx.fillRect(x + 4 * p, y - hh + 6 * p, 7 * p, 7 * p); ctx.fillRect(x + hw - 11 * p, y - hh + 6 * p, 7 * p, 7 * p); ctx.restore();

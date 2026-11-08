@@ -22,53 +22,53 @@
 <style>
 /* Layout: the apparatus across the top of the stage, a graph for the current scene below it; instrument rail on the right; stacks on narrow screens. */
 :root {
-  --bg: #e9edf2;
-  --surface: #f8fafc;
-  --canvas: #fcfdfe;
-  --ink: #17202b;
-  --muted: #5a6575;
-  --line: #d3d9e2;
-  --grid: #e6ebf1;
-  --grid-strong: #cfd7e1;
+  --bg: #f1eeea;
+  --surface: #fcfaf8;
+  --canvas: #fefdfc;
+  --ink: #2a2219;
+  --muted: #73695c;
+  --line: #e1dbd4;
+  --grid: #f0ece7;
+  --grid-strong: #e0d9d0;
   --pos: #c23f2c;
   --neg: #2b60b5;
   --equi: #a7740b;
-  --accent: #2b60b5;
+  --accent: #c4811c;
   --xcol: #7a45c0;
   --vcol: #1d8a5a;
   --acol: #c0601a;
-  --wire: #3b4655;
-  --block: #cdd6e1;
+  --wire: #53493d;
+  --block: #dfd8cf;
   --liq-water: #3f8fd8;
   --liq-sea: #23879a;
   --liq-oil: #cf9a1e;
   --liq-myst: #8a56c2;
-  --liq-hg: #8e98a4;
+  --liq-hg: #a29a90;
   --cork: #c9a77a;
   --wood: #b07a43;
   --ice: #bfe3f3;
-  --metal: #aab4bf;
-  --lead: #6f7782;
+  --metal: #bdb6ac;
+  --lead: #817a70;
   --liq-alpha: 0.30;
   --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
-    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-    --equi: #e2b350; --accent: #69a0ff; --xcol: #b48cff; --vcol: #4cc38a; --acol: #ff9a52; --wire: #aab4c2;
-    --block: #2c3a4c; --liq-water: #4a9ff0; --liq-sea: #3fb2c0; --liq-oil: #e8b94a; --liq-myst: #b48cf0; --liq-hg: #b8c0ca;
-    --cork: #a8865a; --wood: #9a6a3a; --ice: #8fc3da; --metal: #7f8a97; --lead: #59616c; --liq-alpha: 0.34;
+    --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
+    --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+    --equi: #e2b350; --accent: #fbc26d; --xcol: #b48cff; --vcol: #4cc38a; --acol: #ff9a52; --wire: #c0b7ac;
+    --block: #4a3e2e; --liq-water: #4a9ff0; --liq-sea: #3fb2c0; --liq-oil: #e8b94a; --liq-myst: #b48cf0; --liq-hg: #c9c2b9;
+    --cork: #a8865a; --wood: #9a6a3a; --ice: #8fc3da; --metal: #958c81; --lead: #6b645a; --liq-alpha: 0.34;
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
-  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-  --equi: #e2b350; --accent: #69a0ff; --xcol: #b48cff; --vcol: #4cc38a; --acol: #ff9a52; --wire: #aab4c2;
-  --block: #2c3a4c; --liq-water: #4a9ff0; --liq-sea: #3fb2c0; --liq-oil: #e8b94a; --liq-myst: #b48cf0; --liq-hg: #b8c0ca;
-  --cork: #a8865a; --wood: #9a6a3a; --ice: #8fc3da; --metal: #7f8a97; --lead: #59616c; --liq-alpha: 0.34;
+  --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
+  --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+  --equi: #e2b350; --accent: #fbc26d; --xcol: #b48cff; --vcol: #4cc38a; --acol: #ff9a52; --wire: #c0b7ac;
+  --block: #4a3e2e; --liq-water: #4a9ff0; --liq-sea: #3fb2c0; --liq-oil: #e8b94a; --liq-myst: #b48cf0; --liq-hg: #c9c2b9;
+  --cork: #a8865a; --wood: #9a6a3a; --ice: #8fc3da; --metal: #958c81; --lead: #6b645a; --liq-alpha: 0.34;
   color-scheme: dark;
 }
 :root[data-projector="on"] { font-size: 125%; }
@@ -845,7 +845,7 @@ table.rows button:hover { color: var(--pos); }
   function dial(ctx, cx, cy, r, val, max, unit, ls, col) {
     const ps = projScale(), a0 = Math.PI * 0.75, sweep = Math.PI * 1.5, ang = (v) => a0 + clamp(v / max, 0, 1.02) * sweep;
     if (window.VDGear) {   /* a chromed bezel and a slightly domed face */
-      const bz = ctx.createLinearGradient(cx - r, cy - r, cx + r, cy + r); bz.addColorStop(0, '#eef1f4'); bz.addColorStop(0.5, '#9aa4b0'); bz.addColorStop(1, '#5c6674');
+      const bz = ctx.createLinearGradient(cx - r, cy - r, cx + r, cy + r); bz.addColorStop(0, '#f4f1ee'); bz.addColorStop(0.5, '#aea69c'); bz.addColorStop(1, '#72695e');
       ctx.save(); ctx.shadowColor = 'rgba(0,0,0,0.25)'; ctx.shadowBlur = 6 * ps; ctx.shadowOffsetY = 2 * ps; ctx.fillStyle = bz; ctx.beginPath(); ctx.arc(cx, cy, r + 3.5 * ps, 0, 2 * Math.PI); ctx.fill(); ctx.restore(); }
     ctx.fillStyle = T.canvas; ctx.strokeStyle = T.wire; ctx.lineWidth = 2 * ps;
     ctx.beginPath(); ctx.arc(cx, cy, r, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
@@ -2419,7 +2419,7 @@ table.rows button:hover { color: var(--pos); }
     const fill = new THREE.DirectionalLight(0xffffff, 0.38); fill.position.set(0.6, -3, 1.1); V.scene.add(fill);   /* a soft front light, so faces turned to the viewer (rules, dials) read */
     // a soft studio environment, so glass, liquid and metal catch highlights (pictures only)
     const cv = document.createElement('canvas'); cv.width = 256; cv.height = 128; const c = cv.getContext('2d');
-    const gr = c.createLinearGradient(0, 0, 0, 128); gr.addColorStop(0, '#f4f7fa'); gr.addColorStop(0.5, '#a9b3bd'); gr.addColorStop(1, '#5f574c');
+    const gr = c.createLinearGradient(0, 0, 0, 128); gr.addColorStop(0, '#faf7f4'); gr.addColorStop(0.5, '#bbb4aa'); gr.addColorStop(1, '#5f574c');
     c.fillStyle = gr; c.fillRect(0, 0, 256, 128);
     for (const [x, y, w, h] of [[30, 18, 50, 22], [150, 14, 70, 16], [96, 52, 18, 40], [210, 56, 26, 36]]) { c.fillStyle = 'rgba(255,255,255,0.95)'; c.fillRect(x, y, w, h); }
     const et = new THREE.CanvasTexture(cv); et.mapping = THREE.EquirectangularReflectionMapping;
@@ -2441,19 +2441,19 @@ table.rows button:hover { color: var(--pos); }
       const g = new THREE.Group(), V = G3.S;
       g.add(VD3K.bench(V, { w: 7, d: 5, y: 1.2 }));
       const wall = VD3K.backdrop(V, { r: 2.5, h: 3.4, arc: Math.PI * 1.5 }); wall.position.y = 0.7; g.add(wall);
-      V.onTheme((dk) => wall.material.emissive.set(dk ? '#0c1117' : '#6a7078'));   /* the wall lit a little from within, so it reads as a pale backdrop */
+      V.onTheme((dk) => wall.material.emissive.set(dk ? '#16120d' : '#77726b'));   /* the wall lit a little from within, so it reads as a pale backdrop */
       return g;
     },
     glassM() {
-      return VDK.mat({ transparent: true, opacity: 0.17, roughness: 0.04, metalness: 0.05, side: THREE.DoubleSide, depthWrite: false, envMap: G3.env, envMapIntensity: 1.4 }, ['#e6f2f8', '#b8d2e2']);
+      return VDK.mat({ transparent: true, opacity: 0.17, roughness: 0.04, metalness: 0.05, side: THREE.DoubleSide, depthWrite: false, envMap: G3.env, envMapIntensity: 1.4 }, ['#f4f0ea', '#ddcfbd']);
     },
-    edgeM() { const m = new THREE.LineBasicMaterial({ transparent: true, opacity: 0.6 }); G3.S.onTheme((dk) => m.color.set(dk ? '#9db7cb' : '#6d879c')); return m; },
+    edgeM() { const m = new THREE.LineBasicMaterial({ transparent: true, opacity: 0.6 }); G3.S.onTheme((dk) => m.color.set(dk ? '#c8b7a0' : '#988771')); return m; },
     // an open glass tank: inner x in ±w/2, y in ±d/2, z from 0 to h (setH changes the wall height); the base is t thick below z = 0
     tank(w, d, h, t) {
       const g = new THREE.Group(), m = VDK.glassM(), walls = new THREE.Group(), em = VDK.edgeM();
       const unit = (ww, dd, x, y) => { const b = VDK.mesh(new THREE.BoxGeometry(ww, dd, 1).translate(0, 0, 0.5), m); b.position.set(x, y, 0); b.renderOrder = 3; walls.add(b); };
       unit(w + 2 * t, t, 0, -d / 2 - t / 2); unit(w + 2 * t, t, 0, d / 2 + t / 2); unit(t, d, -w / 2 - t / 2, 0); unit(t, d, w / 2 + t / 2, 0);
-      const base = VDK.mesh(new THREE.BoxGeometry(w + 2 * t, d + 2 * t, t), VDK.mat({ transparent: true, opacity: 0.32, roughness: 0.05, depthWrite: false, envMap: G3.env }, ['#cfe6ee', '#9cbccc']), false, true);
+      const base = VDK.mesh(new THREE.BoxGeometry(w + 2 * t, d + 2 * t, t), VDK.mat({ transparent: true, opacity: 0.32, roughness: 0.05, depthWrite: false, envMap: G3.env }, ['#cfe6ee', '#c8b7a0']), false, true);
       base.position.z = -t / 2; base.renderOrder = 3;
       const eg = new THREE.EdgesGeometry(new THREE.BoxGeometry(w + 2 * t, d + 2 * t, 1).translate(0, 0, 0.5)), edges = new THREE.LineSegments(eg, em);
       const ig = new THREE.EdgesGeometry(new THREE.BoxGeometry(w, d, 1).translate(0, 0, 0.5)), inner = new THREE.LineSegments(ig, em);
@@ -2480,7 +2480,7 @@ table.rows button:hover { color: var(--pos); }
       };
       return g;
     },
-    dashed(col) { const m = new THREE.LineDashedMaterial({ color: col || '#5a6575', dashSize: 0.015, gapSize: 0.01, transparent: true, opacity: 0.9 }); const l = new THREE.Line(new THREE.BufferGeometry(), m); l.renderOrder = 6;
+    dashed(col) { const m = new THREE.LineDashedMaterial({ color: col || '#73695c', dashSize: 0.015, gapSize: 0.01, transparent: true, opacity: 0.9 }); const l = new THREE.Line(new THREE.BufferGeometry(), m); l.renderOrder = 6;
       l.pts = (pts) => { l.geometry.dispose(); l.geometry = new THREE.BufferGeometry().setFromPoints(pts.map((q) => new THREE.Vector3(q[0], q[1], q[2]))); l.computeLineDistances(); }; return l; },
     // a vertical rule: printed from..to, 0 at its foot, face toward the viewer (−y); down: the numbers grow downward from the top
     vrule(o, down) {
@@ -2593,10 +2593,10 @@ table.rows button:hover { color: var(--pos); }
         }
         m = VDK.std({ map: T2.t, roughness: key === 'cork' ? 0.95 : 0.62, metalness: 0 });
       } else if (key === 'ice') m = VDK.std({ color: '#9fd2ea', transparent: true, opacity: 0.9, roughness: 0.28, metalness: 0.02, envMap: G3.env, envMapIntensity: 0.7 });   /* frosted, so the block shows against the seawater in both themes */
-      else if (key === 'al') m = VDK.std({ color: '#cfd4da', metalness: 0.72, roughness: 0.3, envMap: G3.env });
-      else if (key === 'steel') m = VDK.std({ color: '#9ca3ab', metalness: 0.8, roughness: 0.36, envMap: G3.env });
-      else if (key === 'lead') m = VDK.std({ color: '#70757e', metalness: 0.42, roughness: 0.58, envMap: G3.env });
-      else if (key === 'myst') m = VDK.std({ color: '#7f8fa3', roughness: 0.55, metalness: 0.1 });     /* painted, so the color gives nothing away */
+      else if (key === 'al') m = VDK.std({ color: '#d9d5d0', metalness: 0.72, roughness: 0.3, envMap: G3.env });
+      else if (key === 'steel') m = VDK.std({ color: '#aaa49d', metalness: 0.8, roughness: 0.36, envMap: G3.env });
+      else if (key === 'lead') m = VDK.std({ color: '#7d7871', metalness: 0.42, roughness: 0.58, envMap: G3.env });
+      else if (key === 'myst') m = VDK.std({ color: '#a09382', roughness: 0.55, metalness: 0.1 });     /* painted, so the color gives nothing away */
       else m = VDK.std({ color: '#888', roughness: 0.6, metalness: 0.1 });
       void V; return (mats[key] = m);
     }
@@ -2608,12 +2608,12 @@ table.rows button:hover { color: var(--pos); }
       ghost = VDK.dashed(); g.add(ghost);
       rule = VDK.vrule({ len: 0.5, to: 50, unit: 'cm' }); rule.position.set(-TANK.W / 2 + 0.03, -TANK.D / 2 - GT - 0.002, 0); g.add(rule);
       // the stand: base on the bench behind the tank, a rod, a boss and an arm out over the tank
-      const steel = VDK.mat({ roughness: 0.32, metalness: 0.6, envMap: G3.env }, ['#b9c1ca', '#7d8792']), dark = VDK.mat({ roughness: 0.5, metalness: 0.3 }, ['#3b434d', '#2a3038']);
+      const steel = VDK.mat({ roughness: 0.32, metalness: 0.6, envMap: G3.env }, ['#c9c2ba', '#90897f']), dark = VDK.mat({ roughness: 0.5, metalness: 0.3 }, ['#4c453c', '#37322b']);
       stand = new THREE.Group(); g.add(stand);
       const sx = -TANK.W / 2 - 0.1, sy = TANK.D / 2 + 0.1;
       stand.add(VD3K.box(0.2, 0.14, 0.016, dark, sx, sy, -TB), VD3K.rod([sx, sy, -TB], [sx, sy, 1.02], 0.007, steel));
       boss = VD3K.box(0.04, 0.04, 0.04, dark, sx, sy, 0); arm = VD3K.rod([sx, sy, 0], [0, 0, 0], 0.005, steel); stand.add(boss, arm);
-      const cordM = VDK.std({ color: '#2c2f33', roughness: 0.8 });
+      const cordM = VDK.std({ color: '#32302d', roughness: 0.8 });
       cord = VDK.mesh(new THREE.CylinderGeometry(0.0012, 0.0012, 1, 6).rotateX(Math.PI / 2).translate(0, 0, 0.5), cordM); stand.add(cord);
       // the spring balance: a body with a printed newton scale and a red pointer, a ring on top, a hook below; the hook is its origin
       bal = new THREE.Group(); stand.add(bal);
@@ -2630,7 +2630,7 @@ table.rows button:hover { color: var(--pos); }
       const gl = VDK.glassM(); spout.add(VD3K.rod([TANK.W / 2, 0, TANK.spout - 0.004], [TANK.W / 2 + 0.11, 0, TANK.spout - 0.034], 0.011, gl));
       scaleBase = new THREE.Group(); g.add(scaleBase);
       const bx = TANK.W / 2 + 0.14 + BEAKER.W / 2;
-      scaleBase.add(VD3K.box(BEAKER.W + 0.04, BEAKER.D + 0.04, 0.06 - 0.006 + TB, VDK.mat({ roughness: 0.4, metalness: 0.2 }, ['#e3e7ec', '#4a5562']), bx, 0, -TB));
+      scaleBase.add(VD3K.box(BEAKER.W + 0.04, BEAKER.D + 0.04, 0.06 - 0.006 + TB, VDK.mat({ roughness: 0.4, metalness: 0.2 }, ['#ebe8e4', '#60574c']), bx, 0, -TB));
       beaker = VDK.tank(BEAKER.W, BEAKER.D, BEAKER.H, 0.005); beaker.position.set(bx, 0, 0.06); scaleBase.add(beaker);
       bliq = VDK.liqBox(); bliq.position.set(bx, 0, 0.06); scaleBase.add(bliq);
       stream = VDK.mesh(new THREE.CylinderGeometry(0.004, 0.003, 1, 10).rotateX(Math.PI / 2).translate(0, 0, -0.5), LQ.jet); g.add(stream);
@@ -2663,11 +2663,11 @@ table.rows button:hover { color: var(--pos); }
         const Tmax = nice(b.W * 1.05) * Math.ceil(b.W * 1.05 / nice(b.W * 1.05)), key = `${Tmax}|${fx(b.T, 2)}|${VD3.dark()}`;
         if (balTex.key !== key) {
           balTex.key = key; const c = balTex.c, Wc = 160, Hc = 640, g0 = 70, g1 = 600, st = nice(Tmax / 5);
-          c.fillStyle = '#f6f2e6'; c.fillRect(0, 0, Wc, Hc); c.fillStyle = '#20262d'; c.font = '700 34px ' + T.ui; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('N', Wc / 2, 34);
-          c.strokeStyle = '#20262d'; c.lineWidth = 3; c.font = '600 26px ' + T.mono; c.textAlign = 'right';
+          c.fillStyle = '#f6f2e6'; c.fillRect(0, 0, Wc, Hc); c.fillStyle = '#2c2721'; c.font = '700 34px ' + T.ui; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('N', Wc / 2, 34);
+          c.strokeStyle = '#2c2721'; c.lineWidth = 3; c.font = '600 26px ' + T.mono; c.textAlign = 'right';
           for (let v = 0; v <= Tmax + 1e-9; v += st / 2) { const yy = g0 + (g1 - g0) * v / Tmax, maj = Math.abs(v / st - Math.round(v / st)) < 1e-6; c.beginPath(); c.moveTo(Wc - 10, yy); c.lineTo(Wc - (maj ? 46 : 30), yy); c.stroke(); if (maj) c.fillText(fx(v, st < 1 ? 1 : 0), Wc - 54, yy); }
           const yp = g0 + (g1 - g0) * clamp(b.T / Tmax, 0, 1);
-          c.strokeStyle = '#8d96a0'; c.lineWidth = 4; c.beginPath(); c.moveTo(34, g0 - 20); for (let i = 1; i <= 16; i++) c.lineTo(i % 2 ? 22 : 46, g0 - 20 + (yp - g0 + 20) * i / 16); c.stroke();
+          c.strokeStyle = '#9f988e'; c.lineWidth = 4; c.beginPath(); c.moveTo(34, g0 - 20); for (let i = 1; i <= 16; i++) c.lineTo(i % 2 ? 22 : 46, g0 - 20 + (yp - g0 + 20) * i / 16); c.stroke();
           c.fillStyle = '#c23f2c'; c.fillRect(12, yp - 4, Wc - 22, 8); balTex.t.needsUpdate = true;
         }
         handles3.push({ id: 'scale', v: q.zh, lo: zhMin(q), hi: zhMax(), at: (v) => [q.xb + 0.035 + g.position.x, -0.012, v + 0.12 + TB],
@@ -2743,11 +2743,11 @@ table.rows button:hover { color: var(--pos); }
       const V = G3.S; g = new THREE.Group(); V.scene.add(g); g.position.z = 0.014;
       tank = VDK.tank(WD, DD, HN + 0.04, GT); g.add(tank);
       liq = VDK.liqBox(); g.add(liq);
-      const steel = VDK.mat({ roughness: 0.3, metalness: 0.65, envMap: G3.env }, ['#c3cad2', '#88929c']), dark = VDK.mat({ roughness: 0.5, metalness: 0.3 }, ['#3b434d', '#2a3038']);
+      const steel = VDK.mat({ roughness: 0.3, metalness: 0.65, envMap: G3.env }, ['#d1cbc4', '#9b9389']), dark = VDK.mat({ roughness: 0.5, metalness: 0.3 }, ['#4c453c', '#37322b']);
       probe = new THREE.Group(); g.add(probe);
       probe.add(VDK.mesh(new THREE.CylinderGeometry(0.022, 0.022, 0.03, 32).rotateX(Math.PI / 2), steel, true));
       const mem = VDK.mesh(new THREE.CircleGeometry(0.019, 32), VDK.std({ color: '#2b60b5', roughness: 0.4 })); mem.position.z = -0.0151; mem.rotation.x = Math.PI; probe.add(mem);
-      tube = VDK.mesh(new THREE.BufferGeometry(), VDK.std({ color: '#2a2d31', roughness: 0.7 }), true); g.add(tube);
+      tube = VDK.mesh(new THREE.BufferGeometry(), VDK.std({ color: '#302e2b', roughness: 0.7 }), true); g.add(tube);
       // the dial gauge on a short post right of the tank
       gauge = new THREE.Group(); g.add(gauge); gauge.position.set(WD / 2 + 0.26, 0, 0.78);
       gauge.add(VD3K.rod([0, 0.03, -0.12], [0, 0.03, -0.8], 0.012, steel), VD3K.box(0.16, 0.16, 0.012, dark, 0, 0.03, -0.8 - 0.014));
@@ -2824,7 +2824,7 @@ table.rows button:hover { color: var(--pos); }
         const lq = VDK.mesh(new THREE.BufferGeometry(), LQ.side); lq.renderOrder = 1; lq.position.set(cx, 0, 0.02); g.add(lq); liqs.push(lq);
         xc += ext[i][1] - ext[i][0] + gap;
       });
-      plate = VD3K.box(totW + 0.16, 0.42, 0.02, VDK.mat({ roughness: 0.4, metalness: 0.3, envMap: G3.env }, ['#c9d0d8', '#4d5864']), 0, 0.05, 0); g.add(plate);
+      plate = VD3K.box(totW + 0.16, 0.42, 0.02, VDK.mat({ roughness: 0.4, metalness: 0.3, envMap: G3.env }, ['#d7d1ca', '#625a4f']), 0, 0.05, 0); g.add(plate);
       g.totW = totW;
       line = VDK.dashed(); g.add(line);
       built = true;
@@ -2859,7 +2859,7 @@ table.rows button:hover { color: var(--pos); }
     const HB = 1.0;
     function build() {
       const V = G3.S; g = new THREE.Group(); V.scene.add(g);
-      const glass = VDK.glassM(), steel = VDK.mat({ roughness: 0.3, metalness: 0.6, envMap: G3.env }, ['#b9c1ca', '#7d8792']), dark = VDK.mat({ roughness: 0.5, metalness: 0.3 }, ['#3b434d', '#2a3038']);
+      const glass = VDK.glassM(), steel = VDK.mat({ roughness: 0.3, metalness: 0.6, envMap: G3.env }, ['#c9c2ba', '#90897f']), dark = VDK.mat({ roughness: 0.5, metalness: 0.3 }, ['#4c453c', '#37322b']);
       gb = new THREE.Group(); g.add(gb);
       dish = VDK.mesh(VDK.lathe([[0.15, 0], [0.16, 0.09]], 64, false), glass); dish.renderOrder = 3; gb.add(dish);
       gb.add(VDK.mesh(new THREE.CircleGeometry(0.15, 64), glass));
@@ -2966,7 +2966,7 @@ table.rows button:hover { color: var(--pos); }
     const rad = (x, q) => pipeD(x, q) / 2 * EX;
     function build() {
       const V = G3.S; g = new THREE.Group(); V.scene.add(g); g.position.x = XO;
-      const glass = VDK.glassM(), steel = VDK.mat({ roughness: 0.3, metalness: 0.65, envMap: G3.env }, ['#b9c1ca', '#7d8792']), dark = VDK.mat({ roughness: 0.5, metalness: 0.3 }, ['#3b434d', '#2a3038']);
+      const glass = VDK.glassM(), steel = VDK.mat({ roughness: 0.3, metalness: 0.65, envMap: G3.env }, ['#c9c2ba', '#90897f']), dark = VDK.mat({ roughness: 0.5, metalness: 0.3 }, ['#4c453c', '#37322b']);
       pipe = VDK.mesh(new THREE.BufferGeometry(), glass); pipe.renderOrder = 3; g.add(pipe);
       pliq = VDK.mesh(new THREE.BufferGeometry(), LQ.side); pliq.renderOrder = 1; g.add(pliq);
       PIPE.taps.forEach((xt) => {
@@ -2977,7 +2977,7 @@ table.rows button:hover { color: var(--pos); }
       });
       for (const x of [0.2, 1.4]) g.add(VD3K.box(0.08, 0.1, ZC - 0.06, dark, x, 0, 0), VD3K.box(0.1, 0.12, 0.012, steel, x, 0, 0));
       for (const x of [0, PIPE.L]) { const fl = VDK.mesh(new THREE.CylinderGeometry(0.075, 0.075, 0.018, 40).rotateZ(Math.PI / 2), steel, true); fl.position.set(x, 0, ZC); g.add(fl); }
-      const hose = VDK.std({ color: '#2b3036', roughness: 0.75 });
+      const hose = VDK.std({ color: '#35312c', roughness: 0.75 });
       g.add(VD3K.cable([-0.01, 0, ZC], [-0.42, -0.25, 0.02], { via: [[-0.12, 0, ZC], [-0.25, -0.05, 0.1]], mat: hose, rad: 0.022 }));
       g.add(VD3K.cable([PIPE.L + 0.01, 0, ZC], [PIPE.L + 0.4, 0.2, 0.02], { via: [[PIPE.L + 0.12, 0, ZC], [PIPE.L + 0.25, 0.08, 0.08]], mat: hose, rad: 0.022 }));
       meter = VD3K.meter(V, { label: 'FLOW METER', sub: 'on the inlet hose', w: 0.3, h: 0.17 }); meter.position.set(-0.3, -0.42, 0); g.add(meter);
@@ -3002,7 +3002,7 @@ table.rows button:hover { color: var(--pos); }
       // tracers: each dot keeps its place across the section (the flat view's e), turned round the axis by its index
       const dk = VD3.dark();
       parts.forEach((pt, i) => { const a = i * 2.39996, rr = pt.e * (rad(pt.x, q) - 0.002); tr.put(i, pt.x, rr * Math.cos(a), ZC + rr * Math.sin(a)); });
-      if (tr.col !== dk) { tr.col = dk; for (let i = 0; i < 300; i++) tr.setColorAt(i, new THREE.Color(dk ? '#e3e9f0' : '#26303b')); tr.instanceColor.needsUpdate = true; }
+      if (tr.col !== dk) { tr.col = dk; for (let i = 0; i < 300; i++) tr.setColorAt(i, new THREE.Color(dk ? '#efeae4' : '#393228')); tr.instanceColor.needsUpdate = true; }
       tr.show(parts.length); tr.done();
       arrV.set([0.04, 0, ZC], [1, 0, 0], q.v1 * 0.12, T.acol);
       h1line.pts([[PIPE.taps[0] + 0.02, -0.01, ZC + q.h1], [PIPE.taps[2] - 0.02, -0.01, ZC + q.h1]]); h1line.material.color.set(T.muted);
@@ -3046,13 +3046,13 @@ table.rows button:hover { color: var(--pos); }
       const V = G3.S; g = new THREE.Group(); V.scene.add(g); g.position.set(-0.45, 0, ZF);
       tank = VDK.tank(TT.W, DT, 1, GT); tank.position.x = -TT.W / 2; g.add(tank);
       liq = VDK.liqBox(); liq.position.x = -TT.W / 2; g.add(liq);
-      ring = VDK.mesh(new THREE.TorusGeometry(0.006, 0.0022, 8, 24).rotateY(Math.PI / 2), VDK.std({ color: '#2b3036', roughness: 0.5 })); g.add(ring);
+      ring = VDK.mesh(new THREE.TorusGeometry(0.006, 0.0022, 8, 24).rotateY(Math.PI / 2), VDK.std({ color: '#35312c', roughness: 0.5 })); g.add(ring);
       jet = VDK.mesh(new THREE.BufferGeometry(), LQ.jet); g.add(jet);
       drp = VD3K.particles(V, { n: 400, r: 0.0045 }); g.add(drp);
-      for (let i = 0; i < 3; i++) { const l = VDK.dashed(); ghosts.push(l); g.add(l); const m = VDK.mesh(new THREE.TorusGeometry(0.005, 0.0012, 6, 20).rotateY(Math.PI / 2), VDK.std({ color: '#7a8592' })); gmarks.push(m); g.add(m); }
+      for (let i = 0; i < 3; i++) { const l = VDK.dashed(); ghosts.push(l); g.add(l); const m = VDK.mesh(new THREE.TorusGeometry(0.005, 0.0012, 6, 20).rotateY(Math.PI / 2), VDK.std({ color: '#90877c' })); gmarks.push(m); g.add(m); }
       splash = VDK.mesh(new THREE.RingGeometry(0.012, 0.022, 32), new THREE.MeshBasicMaterial({ color: T.pos, side: THREE.DoubleSide })); splash.position.z = -ZF + 0.002; g.add(splash);
       const tape = VD3K.ruler(V, { len: 1.6, to: 160, unit: 'cm', w: 0.03 }); tape.position.set(GT + 0.8, -0.08, -ZF + 0.0005); g.add(tape);
-      supply = VDK.mesh(new THREE.BufferGeometry(), VDK.std({ color: '#2b3036', roughness: 0.75 }), true); g.add(supply);
+      supply = VDK.mesh(new THREE.BufferGeometry(), VDK.std({ color: '#35312c', roughness: 0.75 }), true); g.add(supply);
       fall = VDK.mesh(new THREE.CylinderGeometry(0.004, 0.005, 1, 10).rotateX(Math.PI / 2).translate(0, 0, -0.5), LQ.jet); g.add(fall);
       arrV = VDK.arrow(T.acol, 0.005); g.add(arrV);
       built = true;

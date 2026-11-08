@@ -15,9 +15,9 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
 /* only what this demo needs beyond demos/lib/vd.css */
-:root { --cursor: #c2410c; --mark: #1f6fd1; --compA: #6b7787; --profile-fill: rgba(31, 111, 209, 0.10); }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --cursor: #ff9a5c; --mark: #74b0ff; --compA: #9aa6b6; --profile-fill: rgba(116, 176, 255, 0.12); } }
-:root[data-theme="dark"] { --cursor: #ff9a5c; --mark: #74b0ff; --compA: #9aa6b6; --profile-fill: rgba(116, 176, 255, 0.12); }
+:root { --cursor: #c2410c; --mark: #1f6fd1; --compA: #857b6d; --profile-fill: rgba(31, 111, 209, 0.10); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --cursor: #ff9a5c; --mark: #74b0ff; --compA: #b4aa9c; --profile-fill: rgba(116, 176, 255, 0.12); } }
+:root[data-theme="dark"] { --cursor: #ff9a5c; --mark: #74b0ff; --compA: #b4aa9c; --profile-fill: rgba(116, 176, 255, 0.12); }
 .stage { position: relative; display: flex; flex-direction: column; min-height: min-content; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }   /* min-content: never clip the graph and the controls under the picture on a short window */
 :root[data-projector="on"] .stage { min-height: min-content; }   /* in Projector too: the library sets 440 px there */
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
@@ -437,9 +437,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (VG) { VG.wall(ctx, x, y, w, by); VG.bench(ctx, x, by, w, 12, Math.max(12, y + h - by - 2)); } else { ctx.fillStyle = T.canvas; ctx.fillRect(x, y, w, h); }
     const beamY = by - h * (isFr() ? 0.22 : 0.32), lw = Math.min(w * 0.24, 150 * p), lh = Math.max(26, h * 0.1);
     /* laser */
-    if (VG) VG.box(ctx, x + w * 0.03, beamY - lh / 2, lw, lh, { color: dark() ? '#3a4552' : '#2f3a47', r: 5 }); else { ctx.fillStyle = '#334'; ctx.fillRect(x + w * 0.03, beamY - lh / 2, lw, lh); }
+    if (VG) VG.box(ctx, x + w * 0.03, beamY - lh / 2, lw, lh, { color: dark() ? '#50473c' : '#453c31', r: 5 }); else { ctx.fillStyle = '#334'; ctx.fillRect(x + w * 0.03, beamY - lh / 2, lw, lh); }
     if (VG) VG.plate(ctx, `laser ${C().lam} nm`, x + w * 0.03 + lw / 2, beamY, { s: 8 * p });
-    ctx.fillStyle = dark() ? '#1f2630' : '#2a323c'; ctx.fillRect(x + w * 0.03 + lw * 0.2, beamY + lh / 2, 8, by - beamY - lh / 2); ctx.fillRect(x + w * 0.03 + lw * 0.75, beamY + lh / 2, 8, by - beamY - lh / 2);
+    ctx.fillStyle = dark() ? '#2f2820' : '#3b342b'; ctx.fillRect(x + w * 0.03 + lw * 0.2, beamY + lh / 2, 8, by - beamY - lh / 2); ctx.fillRect(x + w * 0.03 + lw * 0.75, beamY + lh / 2, 8, by - beamY - lh / 2);
     const st = ST(), fr = isFr(), x0 = x + w * 0.03 + lw, xp = x + w * 0.38, Lfrac = fr ? Math.log(c.L / st.Lmin) / Math.log(st.Lmax / st.Lmin) : (c.L - 1) / 3, xs = x + w * (fr ? 0.5 + 0.42 * Lfrac : 0.62 + 0.3 * Lfrac);
     /* the beam (in the near field setups, a beam widened to several mm, drawn as a band) */
     ctx.save(); ctx.strokeStyle = css(rgb, fr ? 0.55 : 0.95); ctx.lineWidth = (fr ? 12 : 3) * p; ctx.shadowColor = css(rgb, 0.8); ctx.shadowBlur = 8; ctx.beginPath(); ctx.moveTo(x0, beamY); ctx.lineTo(xp, beamY); ctx.stroke(); ctx.restore();
@@ -453,14 +453,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.fillStyle = g; ctx.beginPath(); ctx.moveTo(xp, beamY - 1.5); ctx.lineTo(xs, beamY - sh * 0.35); ctx.lineTo(xs, beamY + sh * 0.35); ctx.lineTo(xp, beamY + 1.5); ctx.closePath(); ctx.fill(); }
     /* pinhole plate on a stand */
     if (VG) VG.stand(ctx, xp, by, beamY - h * 0.2, { s: 0.8 * p });
-    const pg = ctx.createLinearGradient(xp - 4, 0, xp + 4, 0); pg.addColorStop(0, '#5c6672'); pg.addColorStop(0.5, '#c7ced6'); pg.addColorStop(1, '#4a535e');
-    if (isDisk()) { ctx.fillStyle = 'rgba(190,220,240,0.35)'; ctx.fillRect(xp - 2, beamY - h * 0.14, 4, h * 0.28); ctx.fillStyle = '#20262e'; ctx.fillRect(xp - 2.5, beamY - 3 * p, 5, 6 * p); glow(xp, beamY - 6 * p, 5 * p, rgb, 0.7); glow(xp, beamY + 6 * p, 5 * p, rgb, 0.7); }
+    const pg = ctx.createLinearGradient(xp - 4, 0, xp + 4, 0); pg.addColorStop(0, '#70685e'); pg.addColorStop(0.5, '#d5cfc8'); pg.addColorStop(1, '#5d554c');
+    if (isDisk()) { ctx.fillStyle = 'rgba(190,220,240,0.35)'; ctx.fillRect(xp - 2, beamY - h * 0.14, 4, h * 0.28); ctx.fillStyle = '#2d2821'; ctx.fillRect(xp - 2.5, beamY - 3 * p, 5, 6 * p); glow(xp, beamY - 6 * p, 5 * p, rgb, 0.7); glow(xp, beamY + 6 * p, 5 * p, rgb, 0.7); }
     else { ctx.fillStyle = pg; ctx.fillRect(xp - 3, beamY - h * 0.14, 6, h * 0.28); glow(xp, beamY, 7 * p, rgb, 0.9); }
     txt(isMys() ? 'pinhole, D = ?' : fr ? (isDisk() ? `disk on glass, D = ${f(Dnow() * 1e3, 2)} mm` : `round hole, D = ${f(Dnow() * 1e3, 2)} mm`) : `pinhole, D = ${f(Dnow() * 1e6, 0)} µm`, xp, beamY - h * 0.14 - 12 * p, { a: 'center', s: 11, c: T.ink, halo: dark() ? 'rgba(0,0,0,0.4)' : 'rgba(255,255,255,0.7)' });
     /* the screen */
     const sw = Math.max(8, 10 * p), top = beamY - h * 0.26, bot = by - 4;
     if (VG) VG.stand(ctx, xs + sw / 2, by, top + 10, { s: 0.8 * p });
-    ctx.fillStyle = dark() ? '#d8dde3' : '#f6f7f9'; ctx.strokeStyle = 'rgba(0,0,0,0.3)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.roundRect(xs, top, sw, bot - top - 26 * p, 2); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = dark() ? '#e2ded9' : '#f9f8f6'; ctx.strokeStyle = 'rgba(0,0,0,0.3)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.roundRect(xs, top, sw, bot - top - 26 * p, 2); ctx.fill(); ctx.stroke();
     glow(xs + sw / 2, beamY, 10 * p, rgb, 0.9);
     txt('screen', xs + sw / 2, top - 10 * p, { a: 'center', s: 11, c: T.muted });
     dim(xp, xs, by - 14 * p, `L = ${f(c.L, 2)} m`);
@@ -479,7 +479,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (!S.blind) {
       let n = Math.ceil(((Math.hypot(z, rho) - z) / (lam / 2)));
       const step = zoneRadius(n, lam, z) * sc - zoneRadius(Math.max(0, n - 1), lam, z) * sc;
-      if (step >= 1.2) for (let m = n; m >= 1; m--) { ctx.fillStyle = m % 2 ? css(rgb, 0.85) : (dark() ? '#2a313b' : '#9aa4b0'); ctx.beginPath(); ctx.arc(cx, cy, zoneRadius(m, lam, z) * sc, 0, 7); ctx.fill(); }
+      if (step >= 1.2) for (let m = n; m >= 1; m--) { ctx.fillStyle = m % 2 ? css(rgb, 0.85) : (dark() ? '#3a332b' : '#aea69c'); ctx.beginPath(); ctx.arc(cx, cy, zoneRadius(m, lam, z) * sc, 0, 7); ctx.fill(); }
       else { ctx.fillStyle = css(rgb, 0.4); ctx.fillRect(cx - R, cy - R, 2 * R, 2 * R); }
     } else { ctx.fillStyle = css(rgb, 0.4); ctx.fillRect(cx - R, cy - R, 2 * R, 2 * R); }
     /* the plate around the hole, or the disk */
@@ -491,73 +491,73 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   function drawSky(x, y, w, h, kind) {
     const p = proj(), rgb = lamRGB(C().lam), night = ctx.createLinearGradient(0, y, 0, y + h);
-    night.addColorStop(0, '#050a14'); night.addColorStop(1, kind === 'eye' ? '#1a2333' : '#0b1424');
+    night.addColorStop(0, '#100d08'); night.addColorStop(1, kind === 'eye' ? '#31281c' : '#1f1910');
     ctx.fillStyle = night; ctx.fillRect(x, y, w, h); stars(x, y, w, kind === 'eye' ? h * 0.55 : h, kind === 'eye' ? 3 : 7);
     const n2 = nNow() === 2;
     if (kind === 'eye') {
       const hy = y + h * 0.58, ex = x + w * 0.8, ey = y + h * 0.56, er = Math.min(h * 0.3, w * 0.13);
       /* road to the horizon */
-      ctx.fillStyle = '#121820'; ctx.fillRect(x, hy, w, h - (hy - y));
-      ctx.fillStyle = '#2a2f37'; ctx.beginPath(); ctx.moveTo(x + w * 0.16, hy); ctx.lineTo(x + w * 0.2, hy); ctx.lineTo(x + w * 0.62, y + h); ctx.lineTo(x - w * 0.1, y + h); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = '#1f1a13'; ctx.fillRect(x, hy, w, h - (hy - y));
+      ctx.fillStyle = '#36312b'; ctx.beginPath(); ctx.moveTo(x + w * 0.16, hy); ctx.lineTo(x + w * 0.2, hy); ctx.lineTo(x + w * 0.62, y + h); ctx.lineTo(x - w * 0.1, y + h); ctx.closePath(); ctx.fill();
       ctx.strokeStyle = 'rgba(240,220,140,0.6)'; ctx.setLineDash([10, 12]); ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(x + w * 0.18, hy); ctx.lineTo(x + w * 0.26, y + h); ctx.stroke(); ctx.setLineDash([]);
       /* the car far away: two headlights, drawn far apart enough to see */
       const cx = x + w * 0.18, cy = hy - 4, gap = n2 ? 14 * p : 0;
-      ctx.fillStyle = '#1b2029'; ctx.fillRect(cx - 12 * p, cy - 6 * p, 24 * p, 8 * p);
+      ctx.fillStyle = '#28231c'; ctx.fillRect(cx - 12 * p, cy - 6 * p, 24 * p, 8 * p);
       for (const s of (n2 ? [-1, 1] : [0])) glow(cx + s * gap / 2, cy - 2 * p, 9 * p, [1, 0.97, 0.85], 1);
-      txt(n2 ? (w < 600 ? `headlights 1.30 m apart, ${f(C().sepv, 2)} km away` : `two headlights 1.30 m apart, R = ${f(C().sepv, 2)} km away`) : 'one light', cx - 14 * p, cy - 22 * p, { s: w < 600 ? 10 : 11, c: '#dfe6ef' });
+      txt(n2 ? (w < 600 ? `headlights 1.30 m apart, ${f(C().sepv, 2)} km away` : `two headlights 1.30 m apart, R = ${f(C().sepv, 2)} km away`) : 'one light', cx - 14 * p, cy - 22 * p, { s: w < 600 ? 10 : 11, c: '#eee8e0' });
       /* rays to the pupil */
       ctx.strokeStyle = 'rgba(255,245,215,0.28)'; ctx.lineWidth = 1;
       const pr = er * Math.min(0.5, (C().D * 1e3) / 24 * 2.2) / 2 + 1;   /* pupil radius in the drawing: true to the 24 mm eye */
       for (const s of (n2 ? [-1, 1] : [0])) { ctx.beginPath(); ctx.moveTo(cx + s * gap / 2, cy - 2 * p); ctx.lineTo(ex - er * 0.98, ey - pr * 0.8); ctx.moveTo(cx + s * gap / 2, cy - 2 * p); ctx.lineTo(ex - er * 0.98, ey + pr * 0.8); ctx.stroke(); }
       /* the eye, a cross section: sclera, cornea, iris with the pupil, lens, retina */
-      ctx.save(); const sg = ctx.createRadialGradient(ex - er * 0.3, ey - er * 0.3, er * 0.1, ex, ey, er); sg.addColorStop(0, '#fbfbf8'); sg.addColorStop(1, '#cfd3d8');
+      ctx.save(); const sg = ctx.createRadialGradient(ex - er * 0.3, ey - er * 0.3, er * 0.1, ex, ey, er); sg.addColorStop(0, '#fbfbf8'); sg.addColorStop(1, '#d7d4d0');
       ctx.fillStyle = sg; ctx.beginPath(); ctx.arc(ex, ey, er, 0, 7); ctx.fill();
       ctx.strokeStyle = '#c05a5a'; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.arc(ex, ey, er * 0.93, -Math.PI * 0.62 + Math.PI, Math.PI * 0.62 + Math.PI, true); ctx.stroke();
       ctx.fillStyle = 'rgba(200,225,240,0.55)'; ctx.beginPath(); ctx.ellipse(ex - er * 0.96, ey, er * 0.14, er * 0.42, 0, 0, 7); ctx.fill();
-      ctx.fillStyle = '#4f7fa8'; ctx.fillRect(ex - er * 0.86, ey - er * 0.42, er * 0.07, er * 0.42 - pr); ctx.fillRect(ex - er * 0.86, ey + pr, er * 0.07, er * 0.42 - pr);
+      ctx.fillStyle = '#a18156'; ctx.fillRect(ex - er * 0.86, ey - er * 0.42, er * 0.07, er * 0.42 - pr); ctx.fillRect(ex - er * 0.86, ey + pr, er * 0.07, er * 0.42 - pr);
       ctx.fillStyle = 'rgba(235,225,180,0.85)'; ctx.beginPath(); ctx.ellipse(ex - er * 0.68, ey, er * 0.12, er * 0.3, 0, 0, 7); ctx.fill();
       ctx.strokeStyle = 'rgba(255,245,215,0.45)'; ctx.beginPath(); ctx.moveTo(ex - er * 0.86, ey - pr); ctx.lineTo(ex + er * 0.93, ey); ctx.lineTo(ex - er * 0.86, ey + pr); ctx.stroke();
       ctx.restore();
-      txt(`pupil D = ${f(C().D * 1e3, 2)} mm`, ex, ey + er + 14 * p, { a: 'center', s: 11, c: '#dfe6ef' });
-      txt('retina', ex + er * 0.55, ey - er - 9 * p, { a: 'center', s: 10.5, c: '#aab4c2' });
+      txt(`pupil D = ${f(C().D * 1e3, 2)} mm`, ex, ey + er + 14 * p, { a: 'center', s: 11, c: '#eee8e0' });
+      txt('retina', ex + er * 0.55, ey - er - 9 * p, { a: 'center', s: 10.5, c: '#c0b7ac' });
     } else if (kind === 'telescope') {
       const sx = x + w * 0.16, sy = y + h * 0.42, gap = n2 ? 18 * p : 0;
       for (const s of (n2 ? [-1, 1] : [0])) glow(sx, sy + s * gap / 2, 12 * p, [0.85, 0.9, 1], 1);
-      txt(n2 ? `two stars ${f(C().sepv, 2)} ly apart` : 'one star', sx - 8, sy - gap / 2 - 22 * p, { s: 11, c: '#dfe6ef' });
-      txt('2.48 million ly away', sx - 4, sy + gap / 2 + 24 * p, { s: 10.5, c: '#aab4c2' }); txt('(gap drawn much larger)', sx - 4, sy + gap / 2 + 38 * p, { s: 10.5, c: '#aab4c2' });
+      txt(n2 ? `two stars ${f(C().sepv, 2)} ly apart` : 'one star', sx - 8, sy - gap / 2 - 22 * p, { s: 11, c: '#eee8e0' });
+      txt('2.48 million ly away', sx - 4, sy + gap / 2 + 24 * p, { s: 10.5, c: '#c0b7ac' }); txt('(gap drawn much larger)', sx - 4, sy + gap / 2 + 38 * p, { s: 10.5, c: '#c0b7ac' });
       /* the telescope tube, pointing left */
       const tx = x + w * 0.52, ty = y + h * 0.4, tl = w * 0.36, tr = Math.min(h * 0.17, 50 * p) * (0.6 + 0.4 * Math.min(1, C().D / 2.4));
-      const tg = ctx.createLinearGradient(0, ty - tr, 0, ty + tr); tg.addColorStop(0, '#e6eaef'); tg.addColorStop(0.45, '#aeb7c2'); tg.addColorStop(1, '#5d6773');
+      const tg = ctx.createLinearGradient(0, ty - tr, 0, ty + tr); tg.addColorStop(0, '#eeebe7'); tg.addColorStop(0.45, '#c0b9b0'); tg.addColorStop(1, '#71695f');
       ctx.fillStyle = tg; ctx.beginPath(); ctx.roundRect(tx, ty - tr, tl, 2 * tr, 6); ctx.fill();
-      ctx.fillStyle = '#2b2f36'; ctx.beginPath(); ctx.ellipse(tx, ty, tr * 0.25, tr, 0, 0, 7); ctx.fill();
+      ctx.fillStyle = '#35312c'; ctx.beginPath(); ctx.ellipse(tx, ty, tr * 0.25, tr, 0, 0, 7); ctx.fill();
       ctx.strokeStyle = '#c8b46a'; ctx.lineWidth = 3; ctx.beginPath(); ctx.ellipse(tx, ty, tr * 0.25, tr, 0, 0, 7); ctx.stroke();
       ctx.fillStyle = 'rgba(30,60,120,0.85)'; ctx.fillRect(tx + tl * 0.35, ty - tr - tr * 1.1, tl * 0.4, tr * 0.9); ctx.fillRect(tx + tl * 0.35, ty + tr + tr * 0.2, tl * 0.4, tr * 0.9);
       ctx.strokeStyle = 'rgba(160,190,230,0.35)'; ctx.lineWidth = 1; for (let i = 1; i < 6; i++) { const xx = tx + tl * 0.35 + tl * 0.4 * i / 6; ctx.beginPath(); ctx.moveTo(xx, ty - tr - tr * 1.1); ctx.lineTo(xx, ty - tr * 1.2); ctx.moveTo(xx, ty + tr * 1.2); ctx.lineTo(xx, ty + tr * 2.1); ctx.stroke(); }
       ctx.strokeStyle = 'rgba(220,230,255,0.18)'; for (const s of (n2 ? [-1, 1] : [0])) { ctx.beginPath(); ctx.moveTo(sx, sy + s * gap / 2); ctx.lineTo(tx, ty - tr * 0.8); ctx.moveTo(sx, sy + s * gap / 2); ctx.lineTo(tx, ty + tr * 0.8); ctx.stroke(); }
-      txt(`mirror D = ${f(C().D, 2)} m`, tx + tl / 2, ty + tr * 2.4 + 12 * p, { a: 'center', s: 11, c: '#dfe6ef' });
+      txt(`mirror D = ${f(C().D, 2)} m`, tx + tl / 2, ty + tr * 2.4 + 12 * p, { a: 'center', s: 11, c: '#eee8e0' });
     } else {
       /* two point sources and a lens with an iris, imaging onto a sensor; or the camera */
       const cam = kind === 'camera', sx = x + w * 0.12, sy = y + h * 0.45, gap = n2 ? 22 * p : 0;
       for (const s of (n2 ? [-1, 1] : [0])) glow(sx, sy + s * gap / 2, 11 * p, cam ? [1, 0.95, 0.8] : lamRGB(C().lam), 1);
-      txt(cam ? 'two distant lamps' : n2 ? 'two point sources' : 'one point source', sx - 8, sy - gap / 2 - 22 * p, { s: 11, c: '#dfe6ef' });
-      if (!cam && n2) txt(`Δθ = ${f(C().sepv, 1)} µrad (drawn much larger)`, sx - 8, sy + gap / 2 + 24 * p, { s: 10.5, c: '#aab4c2' });
+      txt(cam ? 'two distant lamps' : n2 ? 'two point sources' : 'one point source', sx - 8, sy - gap / 2 - 22 * p, { s: 11, c: '#eee8e0' });
+      if (!cam && n2) txt(`Δθ = ${f(C().sepv, 1)} µrad (drawn much larger)`, sx - 8, sy + gap / 2 + 24 * p, { s: 10.5, c: '#c0b7ac' });
       const lx = x + w * 0.56, lr = Math.min(h * 0.3, 80 * p), Dmax = cam ? CAMERA_F / 1.4 : 25e-3, ar = lr * Math.max(0.06, Dnow() / Dmax);
       if (cam) { /* camera body and lens barrel */
-        ctx.fillStyle = '#20252c'; ctx.beginPath(); ctx.roundRect(lx + 10, sy - lr * 1.25, w * 0.3, lr * 2.5, 10); ctx.fill();
-        ctx.fillStyle = '#2d333b'; ctx.fillRect(lx - 18, sy - lr * 1.05, 36, lr * 2.1);
+        ctx.fillStyle = '#2b2721'; ctx.beginPath(); ctx.roundRect(lx + 10, sy - lr * 1.25, w * 0.3, lr * 2.5, 10); ctx.fill();
+        ctx.fillStyle = '#3a352e'; ctx.fillRect(lx - 18, sy - lr * 1.05, 36, lr * 2.1);
         ctx.fillStyle = 'rgba(255,255,255,0.08)'; ctx.fillRect(lx - 18, sy - lr * 1.05, 36, 4);
         if (VG) VG.plate(ctx, '50 mm', lx + 10 + w * 0.15, sy - lr * 1.25 + 12, { s: 8 * p });
       }
       /* iris: blades drawn as a ring, open to the aperture */
-      ctx.fillStyle = cam ? '#3b424c' : (dark() ? '#4a5260' : '#56606d'); ctx.fillRect(lx - 4, sy - lr, 8, lr - ar); ctx.fillRect(lx - 4, sy + ar, 8, lr - ar);
+      ctx.fillStyle = cam ? '#4b443c' : (dark() ? '#5e564c' : '#6b6358'); ctx.fillRect(lx - 4, sy - lr, 8, lr - ar); ctx.fillRect(lx - 4, sy + ar, 8, lr - ar);
       const lg = ctx.createLinearGradient(lx - 10, 0, lx + 10, 0); lg.addColorStop(0, 'rgba(170,210,240,0.25)'); lg.addColorStop(0.5, 'rgba(220,240,255,0.55)'); lg.addColorStop(1, 'rgba(170,210,240,0.25)');
       ctx.fillStyle = lg; ctx.beginPath(); ctx.ellipse(lx + 12, sy, 7, lr * 0.95, 0, 0, 7); ctx.fill();
       const fx = cam ? lx + 10 + w * 0.26 : x + w * 0.9;
       ctx.strokeStyle = cam ? 'rgba(255,240,200,0.30)' : css(lamRGB(C().lam), 0.35); ctx.lineWidth = 1;
       for (const s of (n2 ? [-1, 1] : [0])) { const ty = sy - s * gap * 0.35; ctx.beginPath(); ctx.moveTo(sx, sy + s * gap / 2); ctx.lineTo(lx, sy - ar); ctx.lineTo(fx, ty); ctx.lineTo(lx, sy + ar); ctx.lineTo(sx, sy + s * gap / 2); ctx.stroke(); }
-      ctx.fillStyle = cam ? '#3d6b4e' : '#33404d'; ctx.fillRect(fx, sy - lr * 0.8, 6, lr * 1.6);
-      txt(cam ? 'sensor' : 'detector', fx + 3, sy + lr * 0.8 + 12 * p, { a: 'center', s: 10.5, c: '#aab4c2' });
-      txt(cam ? `f/${C().N}: D = 50 mm/${C().N} = ${f(Dnow() * 1e3, 2)} mm` : `iris D = ${f(Dnow() * 1e3, 1)} mm`, lx, sy + lr + 16 * p, { a: 'center', s: 11, c: '#dfe6ef' });
+      ctx.fillStyle = cam ? '#3d6b4e' : '#4b4135'; ctx.fillRect(fx, sy - lr * 0.8, 6, lr * 1.6);
+      txt(cam ? 'sensor' : 'detector', fx + 3, sy + lr * 0.8 + 12 * p, { a: 'center', s: 10.5, c: '#c0b7ac' });
+      txt(cam ? `f/${C().N}: D = 50 mm/${C().N} = ${f(Dnow() * 1e3, 2)} mm` : `iris D = ${f(Dnow() * 1e3, 1)} mm`, lx, sy + lr + 16 * p, { a: 'center', s: 11, c: '#eee8e0' });
     }
   }
   function drawImage(L) {
@@ -584,11 +584,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (!T || !W) return;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
     const L = layout();
-    if (L.aw < W) { ctx.fillStyle = dark() ? '#0b1018' : '#e9edf2'; ctx.fillRect(L.aw, 0, W - L.aw, H); }
+    if (L.aw < W) { ctx.fillStyle = dark() ? '#17120c' : '#f1eeea'; ctx.fillRect(L.aw, 0, W - L.aw, H); }
     ctx.save(); ctx.beginPath(); ctx.rect(L.ax, L.ay, L.aw, L.ah); ctx.clip();
     if (S.setup === 'pinhole' || S.setup === 'mystery' || isFr()) drawPinhole(L.ax, L.ay, L.aw, L.ah); else drawSky(L.ax, L.ay, L.aw, L.ah, S.setup);
     ctx.restore();
-    if (L.aw === W) { ctx.fillStyle = dark() ? '#0b1018' : '#e9edf2'; ctx.fillRect(0, L.ah, W, H - L.ah); }
+    if (L.aw === W) { ctx.fillStyle = dark() ? '#17120c' : '#f1eeea'; ctx.fillRect(0, L.ah, W, H - L.ah); }
     drawImage(L);
     drawCurve(); readouts();
     $('fieldNote').textContent = `view ${fmtPos(2 * half())} across`;
@@ -800,7 +800,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const N3 = matchMedia('(max-width: 520px)').matches ? 120 : 176, HZ = 1.0;
   let S3 = null, G3 = null, v3 = null, key3 = '', raf3 = 0, apKey = '', on3 = false, need3 = true;
   const o3 = { th: -Math.PI / 2 + 0.62, ph: 1.0, zoom: 1 };
-  const LAB3 = { size: 0.085, color: '#e6ebf2', bg: 'rgba(14,18,24,0.74)' };
+  const LAB3 = { size: 0.085, color: '#f1ede7', bg: 'rgba(14,18,24,0.74)' };
   /* the height scale: 1 world unit is the top of the graph's usual scale (1.1 for one source, 2.1 for two, the near field's peak) */
   const zTop = () => (isFr() ? Math.max(1.1, profile(half() * Math.SQRT2 * 1.001).top * 1.06) : nNow() === 2 ? 2.1 : 1.1);
   function I3(u, v, P) {
@@ -815,7 +815,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const el = S3.el; el.removeAttribute('aria-hidden'); el.setAttribute('role', 'img'); el.tabIndex = 0;
     const G = G3 = { grp: new THREE.Group() }; S3.scene.add(G.grp);
     /* the detector: a dark plate under the surface */
-    const plate = new THREE.Mesh(new THREE.BoxGeometry(2.14, 2.14, 0.05), new THREE.MeshStandardMaterial({ color: 0x1b222b, roughness: 0.55, metalness: 0.35 }));
+    const plate = new THREE.Mesh(new THREE.BoxGeometry(2.14, 2.14, 0.05), new THREE.MeshStandardMaterial({ color: 0x2a241c, roughness: 0.55, metalness: 0.35 }));
     plate.position.z = -0.027; G.grp.add(plate);
     const geo = new THREE.PlaneGeometry(2, 2, N3, N3); geo.setAttribute('color', new THREE.BufferAttribute(new Float32Array((N3 + 1) * (N3 + 1) * 3), 3));
     G.surf = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ vertexColors: true, side: THREE.DoubleSide, polygonOffset: true, polygonOffsetFactor: 1, polygonOffsetUnits: 1 }));
@@ -845,7 +845,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const lo = S.setup === 'camera' ? CAMERA_F / 22 : st.Dmin / st.Dk, hi = S.setup === 'camera' ? CAMERA_F / 1.4 : st.Dmax / st.Dk;
     const f = isMys() ? 0.5 : Math.max(0, Math.min(1, Math.log(D / lo) / Math.log(hi / lo))), rh = 0.05 + 0.3 * f, side = 0.92;
     const kind = S.setup === 'telescope' ? 'mirror' : S.setup === 'eye' ? 'iris' : isDisk() ? 'disk' : (S.setup === 'two' || S.setup === 'camera') ? 'stop' : 'plate';
-    const plateCol = kind === 'iris' ? 0x4f7fa8 : kind === 'mirror' ? 0x2b2f36 : kind === 'stop' ? 0x30363f : 0x8a939e;
+    const plateCol = kind === 'iris' ? 0xa18156 : kind === 'mirror' ? 0x35312c : kind === 'stop' ? 0x3e3831 : 0x9c958b;
     const sh = new THREE.Shape(); sh.moveTo(-side / 2, -side / 2); sh.lineTo(side / 2, -side / 2); sh.lineTo(side / 2, side / 2); sh.lineTo(-side / 2, side / 2); sh.lineTo(-side / 2, -side / 2);
     if (kind !== 'disk') { const h = new THREE.Path(); h.absarc(0, 0, rh, 0, Math.PI * 2, true); sh.holes.push(h); }
     const pg = new THREE.ExtrudeGeometry(sh, { depth: 0.03, bevelEnabled: false, curveSegments: 48 }); pg.rotateY(Math.PI / 2);
@@ -853,9 +853,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       : new THREE.MeshStandardMaterial({ color: plateCol, roughness: 0.45, metalness: kind === 'plate' ? 0.7 : 0.2 }));
     G.ap.add(plate);
     if (kind === 'mirror' || kind === 'disk') {
-      const m = new THREE.Mesh(new THREE.CircleGeometry(rh, 64), kind === 'mirror' ? new THREE.MeshStandardMaterial({ color: 0xd9dde3, roughness: 0.12, metalness: 0.95, emissive: 0x30343a }) : new THREE.MeshStandardMaterial({ color: 0x14181e, roughness: 0.6 }));
+      const m = new THREE.Mesh(new THREE.CircleGeometry(rh, 64), kind === 'mirror' ? new THREE.MeshStandardMaterial({ color: 0xe2dfda, roughness: 0.12, metalness: 0.95, emissive: 0x393631 }) : new THREE.MeshStandardMaterial({ color: 0x1d1a15, roughness: 0.6 }));
       m.rotation.y = Math.PI / 2; m.position.x = 0.032; G.ap.add(m);
-      const rim = new THREE.Mesh(new THREE.TorusGeometry(rh, 0.012, 8, 64), new THREE.MeshStandardMaterial({ color: kind === 'mirror' ? 0xc8b46a : 0x14181e, roughness: 0.4, metalness: 0.6 }));
+      const rim = new THREE.Mesh(new THREE.TorusGeometry(rh, 0.012, 8, 64), new THREE.MeshStandardMaterial({ color: kind === 'mirror' ? 0xc8b46a : 0x1d1a15, roughness: 0.4, metalness: 0.6 }));
       rim.rotation.y = Math.PI / 2; rim.position.x = 0.034; G.ap.add(rim);
     }
     /* where it stands: left of the detector on a wide picture, behind it on a tall (phone) one, facing the pattern */
@@ -912,7 +912,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     G.lab.bar.set(`${+(sb * st.uk).toPrecision(3)} ${st.unit}`); G.lab.bar.position.set(-1 + 0.08 + bw / 2, -1.2, 0.05);
     /* height axis at the back right corner: I/I₀ ticks */
     while (G.axis.children.length) S3.dispose(G.axis.children[0]);
-    const axM = new THREE.MeshBasicMaterial({ color: 0x9aa6b6 }), ax = 1.1, ay = 1.1;
+    const axM = new THREE.MeshBasicMaterial({ color: 0xb4aa9c }), ax = 1.1, ay = 1.1;
     G.axis.add(VD3K.rod([ax, ay, 0], [ax, ay, HZ], 0.006, axM));
     const ticks = zt > 3 ? [1, 2, 3, 4].filter((t) => t < zt) : zt > 1.5 ? [0.5, 1, 1.5, 2] : [0.25, 0.5, 0.75, 1];
     for (const t of ticks) G.axis.add(VD3K.rod([ax - 0.04, ay, t * zs], [ax + 0.04, ay, t * zs], 0.004, axM));

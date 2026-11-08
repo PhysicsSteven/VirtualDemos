@@ -16,41 +16,41 @@
 <style>
 /* Layout: the vessel (beaker, dish or flow reactor) on the left; two plots stacked on the right; instrument rail on the right; stacks on narrow screens. */
 :root {
-  --bg: #e9edf2;
-  --surface: #f8fafc;
-  --canvas: #fcfdfe;
-  --ink: #17202b;
-  --muted: #5a6575;
-  --line: #d3d9e2;
-  --grid: #e6ebf1;
-  --grid-strong: #cfd7e1;
+  --bg: #f1eeea;
+  --surface: #fcfaf8;
+  --canvas: #fefdfc;
+  --ink: #2a2219;
+  --muted: #73695c;
+  --line: #e1dbd4;
+  --grid: #f0ece7;
+  --grid-strong: #e0d9d0;
   --pos: #c23f2c;
   --neg: #2b60b5;
   --equi: #a7740b;
-  --accent: #2b60b5;
+  --accent: #c4811c;
   --br: #2f8a57;
   --ferroin: #c9472f;
   --ferriin: #2f63c4;
   --cerium: #d9a514;
   --glass: #8ea3b8;
-  --bench: #eef1f4;
+  --bench: #f4f1ee;
   --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
-    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-    --equi: #e2b350; --accent: #69a0ff; --br: #5bc28a; --ferroin: #d4523a; --ferriin: #4a84ea;
-    --cerium: #e6bb3a; --glass: #61758b; --bench: #131a22;
+    --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
+    --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+    --equi: #e2b350; --accent: #fbc26d; --br: #5bc28a; --ferroin: #d4523a; --ferriin: #4a84ea;
+    --cerium: #e6bb3a; --glass: #61758b; --bench: #211b14;
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
-  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-  --equi: #e2b350; --accent: #69a0ff; --br: #5bc28a; --ferroin: #d4523a; --ferriin: #4a84ea;
-  --cerium: #e6bb3a; --glass: #61758b; --bench: #131a22;
+  --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
+  --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+  --equi: #e2b350; --accent: #fbc26d; --br: #5bc28a; --ferroin: #d4523a; --ferriin: #4a84ea;
+  --cerium: #e6bb3a; --glass: #61758b; --bench: #211b14;
   color-scheme: dark;
 }
 :root[data-projector="on"] { font-size: 125%; }
@@ -960,7 +960,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     ctx.restore();
     // stir bar (turns while running)
     const bw = Math.max(8 * s, w * 0.36 * Math.abs(Math.cos(o.stir)));
-    ctx.fillStyle = '#eef1f4'; ctx.strokeStyle = 'rgba(0,0,0,0.35)'; ctx.lineWidth = 1;
+    ctx.fillStyle = '#f4f1ee'; ctx.strokeStyle = 'rgba(0,0,0,0.35)'; ctx.lineWidth = 1;
     roundRect(ctx, cx - bw / 2, B - 11 * s, bw, 7 * s, 3.5 * s); ctx.fill(); ctx.stroke();
     // flow reactor: inlet and outlet tubes with moving dots
     if (o.flow) {

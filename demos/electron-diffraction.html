@@ -16,37 +16,37 @@
 <style>
 /* Layout: the tube in 3D at the top left, the side view of the cones under it, and a tall close-up of the screen with the measuring tool on the right, as in a darkened lab; rail on the right; stacks on phones. */
 :root {
-  --bg: #e9edf2;
-  --surface: #f8fafc;
-  --canvas: #fcfdfe;
-  --ink: #17202b;
-  --muted: #5a6575;
-  --line: #d3d9e2;
-  --grid: #e6ebf1;
-  --grid-strong: #cfd7e1;
+  --bg: #f1eeea;
+  --surface: #fcfaf8;
+  --canvas: #fefdfc;
+  --ink: #2a2219;
+  --muted: #73695c;
+  --line: #e1dbd4;
+  --grid: #f0ece7;
+  --grid-strong: #e0d9d0;
   --pos: #c23f2c;
   --neg: #2b60b5;
   --equi: #a7740b;
-  --accent: #2b60b5;
-  --room: #1e252c; --room-ink: #c3ccd5; --room-line: #3a4550;
+  --accent: #c4811c;
+  --room: #2b261f; --room-ink: #d4cdc4; --room-line: #4e463c;
   --r1: #a7740b; --r2: #0f86a0;
   --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
-    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-    --equi: #e2b350; --accent: #69a0ff;
-    --room: #0a0e12; --room-ink: #aab5c1; --room-line: #26313c;
+    --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
+    --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+    --equi: #e2b350; --accent: #fbc26d;
+    --room: #110e0b; --room-ink: #bfb7ac; --room-line: #3a3228;
     --r1: #e2b350; --r2: #4fd2ec; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
-  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-  --equi: #e2b350; --accent: #69a0ff;
-  --room: #0a0e12; --room-ink: #aab5c1; --room-line: #26313c;
+  --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
+  --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+  --equi: #e2b350; --accent: #fbc26d;
+  --room: #110e0b; --room-ink: #bfb7ac; --room-line: #3a3228;
   --r1: #e2b350; --r2: #4fd2ec; color-scheme: dark;
 }
 :root[data-projector="on"] { font-size: 125%; }
@@ -665,13 +665,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function gripDot(ctx, x, y, col, hot, ps, txt) {
     ctx.fillStyle = col; ctx.strokeStyle = hot ? '#ffffff' : 'rgba(0,0,0,0.55)'; ctx.lineWidth = (hot ? 2 : 1) * ps;
     ctx.beginPath(); ctx.arc(x, y, (hot ? 7.5 : 6.2) * ps, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
-    ctx.fillStyle = '#12161a'; ctx.font = `700 ${8.5 * ps}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(txt, x, y + 0.5);
+    ctx.fillStyle = '#191613'; ctx.font = `700 ${8.5 * ps}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(txt, x, y + 0.5);
   }
   function drawRuler(ctx, PX, PY, k, ps) {
     const s0 = inst.rulerZero, y0 = R_ * Math.sin(RULER.sMin / R_), y1 = R_ * Math.sin(RULER.sMax / R_);
     ctx.fillStyle = 'rgba(232,236,226,0.62)'; ctx.fillRect(PX(y0), PY(0), (y1 - y0) * k, RULER.w * k);
     ctx.strokeStyle = 'rgba(255,255,255,0.7)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(PX(y0), PY(0) + 0.5); ctx.lineTo(PX(y1), PY(0) + 0.5); ctx.stroke();
-    ctx.strokeStyle = '#1b2026'; ctx.fillStyle = '#1b2026'; ctx.font = `${8.5 * ps}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    ctx.strokeStyle = '#25211c'; ctx.fillStyle = '#25211c'; ctx.font = `${8.5 * ps}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
     let lastLab = -1e9;
     ctx.beginPath();
     for (let r = Math.ceil(RULER.sMin - s0); r <= RULER.sMax - s0; r++) {
@@ -701,21 +701,21 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     // the other ring's last jaw setting as faint ticks
     ctx.strokeStyle = RC[other - 1]; ctx.globalAlpha = 0.45; ctx.lineWidth = 1.2 * ps; ctx.setLineDash([3 * ps, 3 * ps]);
     ctx.beginPath(); for (const v of [mo.a, mo.b]) { ctx.moveTo(PX(v), PY(2.4)); ctx.lineTo(PX(v), PY(-8)); } ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
-    const m = S.marks.chord[S.ring], a = m.a, b = m.b, steel = '#b7bec6', edge = '#5d666f';
+    const m = S.marks.chord[S.ring], a = m.a, b = m.b, steel = '#c5bfb8', edge = '#6e675e';
     const poly = (pts, fill) => { ctx.beginPath(); pts.forEach(([u, v], i) => i ? ctx.lineTo(PX(u), PY(v)) : ctx.moveTo(PX(u), PY(v))); ctx.closePath(); ctx.fillStyle = fill; ctx.fill(); ctx.strokeStyle = edge; ctx.lineWidth = 1; ctx.stroke(); };
     // beam with the main scale, zero at the fixed jaw
     poly([[a - 10, -34], [a + 120, -34], [a + 120, -27], [a - 10, -27]], steel);
-    ctx.strokeStyle = '#20262c'; ctx.lineWidth = 1; ctx.beginPath();
+    ctx.strokeStyle = '#2b2721'; ctx.lineWidth = 1; ctx.beginPath();
     for (let mm = 0; mm <= 110; mm++) { const x = Math.round(PX(a + mm)) + 0.5, len = mm % 10 === 0 ? 3.2 : mm % 5 === 0 ? 2.2 : 1.3; ctx.moveTo(x, PY(-27)); ctx.lineTo(x, PY(-27 - len)); }
     ctx.stroke();
-    ctx.fillStyle = '#20262c'; ctx.font = `${8 * ps}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    ctx.fillStyle = '#2b2721'; ctx.font = `${8 * ps}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
     for (let mm = 0; mm <= 110; mm += 10) { const x = PX(a + mm); if (Math.abs(x - PX(b + 5)) < 26 * ps) continue; ctx.fillText(String(mm / 10), x, PY(-30.4)); }
     // fixed jaw, measuring face at y = a
     poly([[a - 7, -27], [a - 7, -10], [a - 1.2, -2.2], [a, -0.8], [a, -27]], steel);
     // sliding jaw and the vernier plate (10 divisions in 9 mm: 0.1 mm)
     poly([[b, -27], [b, -0.8], [b + 1.2, -2.2], [b + 7, -10], [b + 7, -27]], steel);
-    poly([[b - 3, -40], [b + 16, -40], [b + 16, -27], [b - 3, -27]], '#cfd5db');
-    ctx.strokeStyle = '#20262c'; ctx.beginPath();
+    poly([[b - 3, -40], [b + 16, -40], [b + 16, -27], [b - 3, -27]], '#dad6d0');
+    ctx.strokeStyle = '#2b2721'; ctx.beginPath();
     for (let j = 0; j <= 10; j++) { const x = Math.round(PX(b + 0.9 * j)) + 0.5, len = j % 5 === 0 ? 3 : 2; ctx.moveTo(x, PY(-27.2)); ctx.lineTo(x, PY(-27.2 - len)); }
     ctx.stroke();
     // grips
@@ -826,8 +826,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.strokeStyle = '#7dffa0'; ctx.globalAlpha = 0.55; ctx.lineWidth = 3 * ps;
     ctx.beginPath(); ctx.arc(X(0), Y(0), R_ * k, -TUBE.cap, TUBE.cap); ctx.stroke(); ctx.globalAlpha = 1;
     // gun and anode
-    ctx.fillStyle = '#5b6672'; ctx.fillRect(X(xMin), Y(5), (g - 2 - xMin) * k, 10 * k);
-    ctx.fillStyle = '#20262c'; ctx.fillRect(X(g - 0.6), Y(6), 1.2 * k + 1, 12 * k);
+    ctx.fillStyle = '#70685d'; ctx.fillRect(X(xMin), Y(5), (g - 2 - xMin) * k, 10 * k);
+    ctx.fillStyle = '#2b2721'; ctx.fillRect(X(g - 0.6), Y(6), 1.2 * k + 1, 12 * k);
     const dl = delta(), tt = tts(), lam = lamTrue();
     // undiffracted beam
     ctx.strokeStyle = '#9fe9ff'; ctx.globalAlpha = 0.8; ctx.lineWidth = 1.4 * ps;
@@ -903,7 +903,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.strokeStyle = RC[1]; ctx.lineWidth = 1.6 * ps; ctx.globalAlpha = 0.85; ctx.beginPath();
     for (let i = -2 * nx; i <= 2 * nx; i++) { const x = cx + i * a / 2 * sc; ctx.moveTo(x, 0); ctx.lineTo(x, H); }
     ctx.stroke(); ctx.restore(); ctx.globalAlpha = 1;
-    for (const [x, y] of atoms) { const [px, py] = P(x, y); if (px < -8 || px > W + 8 || py < 0 || py > H) continue; ctx.fillStyle = '#d9dee4'; ctx.beginPath(); ctx.arc(px, py, 3.6 * ps, 0, 2 * Math.PI); ctx.fill(); }
+    for (const [x, y] of atoms) { const [px, py] = P(x, y); if (px < -8 || px > W + 8 || py < 0 || py > H) continue; ctx.fillStyle = '#e3dfda'; ctx.beginPath(); ctx.arc(px, py, 3.6 * ps, 0, 2 * Math.PI); ctx.fill(); }
     // spacing arrows
     const arrow = (x0, y0, x1, y1, col) => {
       ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = 2 * ps; ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.stroke();
@@ -1047,7 +1047,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     el.setAttribute('aria-label', 'The electron diffraction tube in 3D with the high voltage supply and a bar magnet. Drag to turn, scroll to zoom. Drag the kV knob or the magnet up and down. Keys: up and down change the voltage, with shift for bigger steps; page up and page down move the magnet; M brings the magnet near or takes it away.');
     $('p3d').insertBefore(el, $('flat'));
     const scene = new THREE.Scene(), cam = new THREE.PerspectiveCamera(30, 1, 5, 6000); cam.up.set(0, 0, 1);
-    scene.add(new THREE.HemisphereLight(0xdfe8ff, 0x3a3028, 0.62));
+    scene.add(new THREE.HemisphereLight(0xf4f0ea, 0x3a3028, 0.62));
     const sun = new THREE.DirectionalLight(0xffffff, 0.55); sun.position.set(200, -300, 500); scene.add(sun);
     const fill = new THREE.DirectionalLight(0xffffff, 0.22); fill.position.set(-300, 200, 200); scene.add(fill);
     const std = (c, r = 0.6, m = 0) => new THREE.MeshStandardMaterial({ color: c, roughness: r, metalness: m });
@@ -1066,15 +1066,15 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     cap.rotation.z = -Math.PI / 2; cap.renderOrder = 1; tube.add(cap);
     const bulb = new THREE.Mesh(new THREE.SphereGeometry(R_, 64, 40), glass); bulb.renderOrder = 3; tube.add(bulb);
     const neck = cylX(18, 150, glass, -62 - 75, 0, 0, 40, true); neck.renderOrder = 3; tube.add(neck);
-    tube.add(cylX(20, 24, std(0x1c1d20, 0.5), -224, 0, 0));
+    tube.add(cylX(20, 24, std(0x201e1c, 0.5), -224, 0, 0));
     for (const a of [0, 1.2, 2.4, 3.6, 4.8]) tube.add(cylX(1.2, 10, std(0xc8b27a, 0.3, 0.8), -240, 9 * Math.cos(a), 9 * Math.sin(a), 10));
     // electron gun: cathode, Wehnelt cylinder, anode tube, graphite on its end
-    const metal = std(0xa9b1b8, 0.35, 0.75);
+    const metal = std(0xb7b1aa, 0.35, 0.75);
     tube.add(cylX(2.5, 10, std(0x8a5a3a, 0.5, 0.4), -196, 0, 0));
     tube.add(cylX(7, 16, metal, -184, 0, 0, 32, true));
     tube.add(cylX(5.5, 92, metal, -122, 0, 0, 32, true));
     const holder = new THREE.Mesh(new THREE.TorusGeometry(6, 0.9, 10, 32), metal); holder.rotation.y = Math.PI / 2; holder.position.set(R_ - L_ - 0.5, 0, 0); tube.add(holder);
-    const target = cylX(5.4, 0.5, std(0x18191b, 0.9), R_ - L_, 0, 0, 32); tube.add(target);
+    const target = cylX(5.4, 0.5, std(0x1b1a18, 0.9), R_ - L_, 0, 0, 32); tube.add(target);
     for (const s of [-1, 1]) tube.add(cylX(0.5, 70, metal, -110, 0, s * 12, 8));
     // anode connector on top of the neck
     tube.add(cylZ(3.2, 10, std(0xc8b27a, 0.3, 0.8), -128, 0, 22));
@@ -1086,7 +1086,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const coneGeo = new THREE.ConeGeometry(1, 1, 72, 1, true); coneGeo.translate(0, -0.5, 0);
     const cones = [0, 1].map((i) => add3(new THREE.Mesh(coneGeo, new THREE.MeshBasicMaterial({ color: i ? 0x52cfee : 0xffc94a, transparent: true, opacity: 0.13, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide }))));
     // stands holding the neck
-    const dark = std(0x24282d, 0.6);
+    const dark = std(0x2c2925, 0.6);
     for (const x of [-100, -205]) {
       box(16, 60, 6, dark, x, 0, 3);
       box(8, 8, Z0 - 24, dark, x, 0, (Z0 - 24) / 2 + 6);
@@ -1105,19 +1105,19 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const markMeshes = [];
     for (let i = 0; i < 4; i++) { const mm = new THREE.Mesh(new THREE.BoxGeometry(1.4, 1.2, 4), new THREE.MeshBasicMaterial({ color: i < 2 ? 0xffcf5a : 0x62dcf5 })); mm.renderOrder = 5; tube.add(mm); markMeshes.push(mm); }
     const cal = new THREE.Group(); tube.add(cal);
-    const steel = std(0xc3c9cf, 0.3, 0.8);
+    const steel = std(0xcecac4, 0.3, 0.8);
     const calBeam = box(2.2, 130, 7, steel, 0, 55, -30.5, cal);
     const jawA = box(2.4, 7, 26, steel, 0, -3.5, -14, cal);
     const jawB = new THREE.Group(); cal.add(jawB);
-    box(2.4, 7, 26, steel, 0, 3.5, -14, jawB); box(3.2, 19, 13, std(0xd6dbe0, 0.35, 0.6), 0, 6.5, -33.5, jawB);
+    box(2.4, 7, 26, steel, 0, 3.5, -14, jawB); box(3.2, 19, 13, std(0xdfdcd7, 0.35, 0.6), 0, 6.5, -33.5, jawB);
     // ---- high voltage supply with its kV meter and knob
     const SUP = { x: -305, y: -95, w: 200, d: 110, h: 95 };
-    box(SUP.w, SUP.d, SUP.h, std(0x3a4653, 0.5), SUP.x, SUP.y, SUP.h / 2);
+    box(SUP.w, SUP.d, SUP.h, std(0x51483c, 0.5), SUP.x, SUP.y, SUP.h / 2);
     const panel = mkTex(690, 300);
     const pp = new THREE.Mesh(new THREE.PlaneGeometry(SUP.w, SUP.h), new THREE.MeshStandardMaterial({ map: panel.t, roughness: 0.55 }));
     pp.rotation.x = Math.PI / 2; pp.position.set(SUP.x, SUP.y - SUP.d / 2 - 0.2, SUP.h / 2); scene.add(pp);
     const KN = { x: SUP.x + 55, y: SUP.y - SUP.d / 2 - 6, z: 42 };
-    const knob = add(cylY(11, 12, std(0x1b1d20, 0.4), KN.x, KN.y, KN.z, 40));
+    const knob = add(cylY(11, 12, std(0x201e1b, 0.4), KN.x, KN.y, KN.z, 40));
     { const ptr = new THREE.Mesh(new THREE.BoxGeometry(1.6, 1.4, 9), std(0xf2f2f2, 0.5)); ptr.position.set(0, -6.2, 5.5); knob.add(ptr); }
     const gripMat = () => new THREE.MeshBasicMaterial({ color: 0x69a0ff, transparent: true, opacity: 0.6, depthWrite: false });
     const knobGrip = new THREE.Mesh(new THREE.TorusGeometry(14.5, 0.9, 8, 48), gripMat()); knobGrip.rotation.x = Math.PI / 2; knobGrip.position.set(KN.x, KN.y - 6.5, KN.z); scene.add(knobGrip);
@@ -1126,7 +1126,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     heaterGlow.position.set(-196, -1, Z0); heaterGlow.scale.set(14, 14, 1); scene.add(heaterGlow);
     // cables from the supply to the tube base and to the anode connector
     const cable = (pts, col, r = 2) => { const curve = new THREE.CatmullRomCurve3(pts.map((p) => new THREE.Vector3(...p))); scene.add(new THREE.Mesh(new THREE.TubeGeometry(curve, 80, r, 8, false), std(col, 0.55))); };
-    cable([[SUP.x - 40, SUP.y + SUP.d / 2, 30], [SUP.x - 30, 10, 3], [-290, 20, 3], [-262, 5, Z0 - 40], [-246, 0, Z0]], 0x1d1f22);
+    cable([[SUP.x - 40, SUP.y + SUP.d / 2, 30], [SUP.x - 30, 10, 3], [-290, 20, 3], [-262, 5, Z0 - 40], [-246, 0, Z0]], 0x22201d);
     cable([[SUP.x + 60, SUP.y + SUP.d / 2, 40], [SUP.x + 80, 0, 3], [-170, 40, 30], [-128, 30, Z0 + 60], [-128, 0, Z0 + 27]], 0xc23f2c, 1.8);
     // ---- bar magnet above the neck, poles up and down
     const magnet = new THREE.Group(); scene.add(magnet);
@@ -1144,7 +1144,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   function paintRuler3D() {
     const x = G.rulerTex.x, W = 1280, H = 120, s0 = inst.rulerZero, U = (s) => (s - RULER.sMin) / (RULER.sMax - RULER.sMin) * W;
-    x.fillStyle = '#ecefe6'; x.fillRect(0, 0, W, H); x.strokeStyle = '#1b2026'; x.fillStyle = '#1b2026'; x.lineWidth = 2; x.beginPath();
+    x.fillStyle = '#ecefe6'; x.fillRect(0, 0, W, H); x.strokeStyle = '#25211c'; x.fillStyle = '#25211c'; x.lineWidth = 2; x.beginPath();
     for (let r = Math.ceil(RULER.sMin - s0); r <= RULER.sMax - s0; r++) { const u = U(r + s0), len = r % 10 === 0 ? 46 : r % 5 === 0 ? 32 : 18; x.moveTo(u, 0); x.lineTo(u, len); }
     x.stroke(); x.font = '600 30px sans-serif'; x.textAlign = 'center'; x.textBaseline = 'top';
     for (let r = Math.ceil((RULER.sMin - s0) / 10) * 10; r <= RULER.sMax - s0; r += 10) x.fillText(String(r), U(r + s0), 54);
@@ -1164,17 +1164,17 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   function paintPanel() {
     const x = G.panel.x, W = 690, H = 300;
-    x.fillStyle = '#3c4856'; x.fillRect(0, 0, W, H);
-    x.fillStyle = '#e6ecf2'; x.font = '700 26px sans-serif'; x.textAlign = 'left'; x.textBaseline = 'alphabetic'; x.fillText('HIGH VOLTAGE SUPPLY', 26, 42);
-    x.font = '18px sans-serif'; x.fillStyle = '#c7d0d9'; x.fillText('0 to 5 kV DC', 26, 68);
+    x.fillStyle = '#544a3e'; x.fillRect(0, 0, W, H);
+    x.fillStyle = '#f1ede7'; x.font = '700 26px sans-serif'; x.textAlign = 'left'; x.textBaseline = 'alphabetic'; x.fillText('HIGH VOLTAGE SUPPLY', 26, 42);
+    x.font = '18px sans-serif'; x.fillStyle = '#d8d1c8'; x.fillText('0 to 5 kV DC', 26, 68);
     x.fillStyle = '#170e02'; x.fillRect(26, 100, 250, 110);
     x.font = '600 76px "JetBrains Mono", monospace'; x.fillStyle = '#ffb43c'; x.shadowColor = 'rgba(255,170,50,0.8)'; x.shadowBlur = 14; x.textAlign = 'right'; x.textBaseline = 'middle';
     x.fillText(meterShown.toFixed(2), 232, 158); x.shadowBlur = 0;
     x.font = '700 22px sans-serif'; x.fillStyle = '#e8b77a'; x.textAlign = 'left'; x.fillText('kV', 238, 172);
-    x.fillStyle = '#e6ecf2'; x.font = '700 20px sans-serif'; x.textAlign = 'center'; x.fillText('ANODE', 510, 76);
-    x.font = '16px sans-serif'; x.fillStyle = '#c7d0d9';
+    x.fillStyle = '#f1ede7'; x.font = '700 20px sans-serif'; x.textAlign = 'center'; x.fillText('ANODE', 510, 76);
+    x.font = '16px sans-serif'; x.fillStyle = '#d8d1c8';
     for (let k = 0; k <= 5; k++) { const a = (-135 + 54 * k) * Math.PI / 180; x.fillText(String(k), 510 + 82 * Math.sin(a), 174 - 82 * Math.cos(a) + 6); }
-    x.fillStyle = '#e6ecf2'; x.font = '700 18px sans-serif'; x.fillText('HEATER 6.3 V', 110, 262);
+    x.fillStyle = '#f1ede7'; x.font = '700 18px sans-serif'; x.fillText('HEATER 6.3 V', 110, 262);
     x.fillStyle = '#3be06a'; x.beginPath(); x.arc(205, 256, 8, 0, 2 * Math.PI); x.fill();
     G.panel.t.needsUpdate = true;
   }
@@ -1221,7 +1221,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   let bgCache = '';
   function render3D(now) {
     if (!G.ready || !dims.gl[0]) return;
-    if (bgCache !== T.room) { bgCache = T.room; G.renderer.setClearColor(new THREE.Color(T.room || '#1e252c')); }
+    if (bgCache !== T.room) { bgCache = T.room; G.renderer.setClearColor(new THREE.Color(T.room || '#2b261f')); }
     update3D(now); fitCam(); G.renderer.render(G.scene, G.cam);
   }
   const dragVal = { kv: () => S.V, mag: () => S.mag.r };
@@ -1302,15 +1302,15 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const X = (u) => ox + u * s, Y = (v) => oy - v * s;
     ctx.fillStyle = '#2a2521'; ctx.fillRect(0, Y(0), W, 14 * s);
     // supply behind
-    ctx.fillStyle = '#3a4653'; ctx.fillRect(X(-300), Y(100), 150 * s, 100 * s);
+    ctx.fillStyle = '#51483c'; ctx.fillRect(X(-300), Y(100), 150 * s, 100 * s);
     ctx.fillStyle = '#170e02'; ctx.fillRect(X(-290), Y(88), 80 * s, 34 * s);
     ctx.fillStyle = '#ffb43c'; ctx.font = `600 ${20 * s}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillText(meterShown.toFixed(2), X(-216), Y(71));
-    ctx.fillStyle = '#e6ecf2'; ctx.font = `700 ${8 * s}px ${T.ui}`; ctx.textAlign = 'left'; ctx.fillText('kV', X(-213), Y(66));
+    ctx.fillStyle = '#f1ede7'; ctx.font = `700 ${8 * s}px ${T.ui}`; ctx.textAlign = 'left'; ctx.fillText('kV', X(-213), Y(66));
     // tube
     ctx.strokeStyle = 'rgba(210,232,240,0.6)'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(X(0), Y(Z0), R_ * s, 0, 2 * Math.PI); ctx.stroke();
     ctx.strokeRect(X(-212), Y(Z0 + 18), 150 * s, 36 * s);
-    ctx.fillStyle = '#1c1d20'; ctx.fillRect(X(-236), Y(Z0 + 20), 24 * s, 40 * s);
-    ctx.fillStyle = '#a9b1b8'; ctx.fillRect(X(-190), Y(Z0 + 5), 128 * s, 10 * s);
+    ctx.fillStyle = '#201e1c'; ctx.fillRect(X(-236), Y(Z0 + 20), 24 * s, 40 * s);
+    ctx.fillStyle = '#b7b1aa'; ctx.fillRect(X(-190), Y(Z0 + 5), 128 * s, 10 * s);
     ctx.strokeStyle = '#7dffa0'; ctx.lineWidth = 3; ctx.globalAlpha = 0.7; ctx.beginPath(); ctx.arc(X(0), Y(Z0), R_ * s - 2, -TUBE.cap, TUBE.cap); ctx.stroke(); ctx.globalAlpha = 1;
     // magnet
     const mz = Z0 + S.mag.r; ctx.fillStyle = S.mag.pole === 'N' ? '#c8372a' : '#2f5fb8'; ctx.fillRect(X(-125), Y(mz + 30), 14 * s, 30 * s);
@@ -1318,7 +1318,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     flatGeom = [{ id: 'kv', x: X(-185), y: Y(40), r: 11 * s, lab: 'kV' }, { id: 'mag', x: X(-118), y: Y(mz + 30), r: 9 * s, lab: 'magnet' }];
     for (const h of flatGeom) {
       const hot = flatHot === h.id || (flatDrag && flatDrag.id === h.id);
-      if (h.id === 'kv') { ctx.fillStyle = '#1b1d20'; ctx.beginPath(); ctx.arc(h.x, h.y, h.r, 0, 2 * Math.PI); ctx.fill(); }
+      if (h.id === 'kv') { ctx.fillStyle = '#201e1b'; ctx.beginPath(); ctx.arc(h.x, h.y, h.r, 0, 2 * Math.PI); ctx.fill(); }
       ctx.strokeStyle = T.accent; ctx.lineWidth = hot ? 2.4 : 1.4; ctx.globalAlpha = hot ? 1 : 0.75; ctx.beginPath(); ctx.arc(h.x, h.y, h.r + 3, 0, 2 * Math.PI); ctx.stroke(); ctx.globalAlpha = 1;
       ctx.fillStyle = T.roomInk; ctx.font = `700 ${Math.max(10, 9 * s)}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(h.lab, h.x + h.r + 7, h.y);
     }
@@ -1500,7 +1500,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const tubeW = Math.max(36 * ps, tw);
     ctx.fillStyle = 'rgba(190,210,230,0.12)'; ctx.strokeStyle = T.roomInk; ctx.lineWidth = 1.2;
     ctx.beginPath(); ctx.roundRect ? ctx.roundRect(tx, cy - 16 * ps, tubeW, 32 * ps, 14 * ps) : ctx.rect(tx, cy - 16 * ps, tubeW, 32 * ps); ctx.fill(); ctx.stroke();
-    ctx.fillStyle = X.tube === 'Cu' ? '#c8783e' : '#9aa3ad'; ctx.fillRect(tx + tubeW * 0.55, cy - 9 * ps, 7 * ps, 18 * ps);
+    ctx.fillStyle = X.tube === 'Cu' ? '#c8783e' : '#aca59b'; ctx.fillRect(tx + tubeW * 0.55, cy - 9 * ps, 7 * ps, 18 * ps);
     ctx.fillStyle = T.roomInk; ctx.font = `600 ${10 * ps}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
     ctx.fillText(`${X.tube} tube, 35 kV`, tx, cy - 20 * ps);
     const colX = tx + tubeW + 10 * ps;
@@ -1513,7 +1513,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     // crystal: a slab whose face makes θ with the beam, with its planes
     const cxl = R * 0.34, cyl = 7 * ps, ca = Math.cos(th), sa = -Math.sin(th);
     ctx.save(); ctx.translate(cx, cy); ctx.transform(ca, sa, -sa, ca, 0, 0);
-    ctx.fillStyle = 'rgba(200,225,255,0.22)'; ctx.strokeStyle = '#cfe3ff'; ctx.lineWidth = 1.2; ctx.fillRect(-cxl, 0, 2 * cxl, cyl * 2); ctx.strokeRect(-cxl, 0, 2 * cxl, cyl * 2);
+    ctx.fillStyle = 'rgba(200,225,255,0.22)'; ctx.strokeStyle = '#efe8df'; ctx.lineWidth = 1.2; ctx.fillRect(-cxl, 0, 2 * cxl, cyl * 2); ctx.strokeRect(-cxl, 0, 2 * cxl, cyl * 2);
     ctx.strokeStyle = 'rgba(207,227,255,0.55)'; ctx.lineWidth = 0.8; for (let k = 1; k < 4; k++) { ctx.beginPath(); ctx.moveTo(-cxl, k * cyl / 2); ctx.lineTo(cxl, k * cyl / 2); ctx.stroke(); }
     ctx.restore();
     // angle marks
@@ -1526,7 +1526,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const ex = cx + ux * R * 0.84, ey = cy + uy * R * 0.84, hot = X.drag === 'arm';
     ctx.strokeStyle = T.roomInk; ctx.globalAlpha = 0.5; ctx.lineWidth = 5 * ps; ctx.beginPath(); ctx.moveTo(cx + ux * R * 0.22, cy + uy * R * 0.22); ctx.lineTo(ex, ey); ctx.stroke(); ctx.globalAlpha = 1;
     ctx.save(); ctx.translate(ex, ey); ctx.rotate(-2 * th);
-    ctx.fillStyle = '#3c4652'; ctx.strokeStyle = hot ? T.accent : T.roomInk; ctx.lineWidth = hot ? 2 : 1.2; ctx.fillRect(0, -7 * ps, 34 * ps, 14 * ps); ctx.strokeRect(0, -7 * ps, 34 * ps, 14 * ps);
+    ctx.fillStyle = '#50483e'; ctx.strokeStyle = hot ? T.accent : T.roomInk; ctx.lineWidth = hot ? 2 : 1.2; ctx.fillRect(0, -7 * ps, 34 * ps, 14 * ps); ctx.strokeRect(0, -7 * ps, 34 * ps, 14 * ps);
     ctx.fillStyle = '#d23d2c'; ctx.globalAlpha = 0.3 + 0.7 * glowA; ctx.beginPath(); ctx.arc(30 * ps, 0, 3 * ps, 0, 2 * Math.PI); ctx.fill(); ctx.globalAlpha = 1;
     ctx.restore();
     // the counter's display

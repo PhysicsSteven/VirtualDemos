@@ -31,10 +31,10 @@
 /* Layout: the shaft and car on the left, scale and speed graphs on the right of the stage; the rail on the right. */
 /* Layout: lab bench. The gas box and speed histogram fill the left, a narrow instrument rail sits on the right; stacks on phones. */
 
-:root { --car: #c9d1db; --person: #4a5563; --N: #2b60b5; --W: #b0452f; --cable: #6b7787; }
-:root { --building: #e8ecf1; --slab: #c5cdd7; --shaft: #dbe1e8; --rail: #bcc5d0; --window: #f1d58c; --window-off: #d3dae3; --door: #b3bcc8; --lamp: #e39a2d; --cw: #848e9b; --car-wall: #dfe5ec; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --car: #3b4554; --person: #c3cad4; --N: #69a0ff; --W: #ff8a70; --cable: #9aa6b6; --building: #151c25; --slab: #2c3644; --shaft: #0c1117; --rail: #2b3542; --window: #6d5a2b; --window-off: #1d2530; --door: #3a4554; --lamp: #f0b552; --cw: #5a6574; --car-wall: #2f3946; } }
-:root[data-theme="dark"] { --car: #3b4554; --person: #c3cad4; --N: #69a0ff; --W: #ff8a70; --cable: #9aa6b6; --building: #151c25; --slab: #2c3644; --shaft: #0c1117; --rail: #2b3542; --window: #6d5a2b; --window-off: #1d2530; --door: #3a4554; --lamp: #f0b552; --cw: #5a6574; --car-wall: #2f3946; }
+:root { --car: #dad3ca; --person: #61584c; --N: #2b60b5; --W: #b0452f; --cable: #857b6d; }
+:root { --building: #f0ede9; --slab: #d6cfc6; --shaft: #e7e2dc; --rail: #cec7be; --window: #f1d58c; --window-off: #e2dcd4; --door: #c6bfb5; --lamp: #e39a2d; --cw: #999186; --car-wall: #ebe6e0; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --car: #52493d; --person: #d3ccc4; --N: #69a0ff; --W: #ff8a70; --cable: #b4aa9c; --building: #241e16; --slab: #42392e; --shaft: #16120d; --rail: #40382d; --window: #6d5a2b; --window-off: #2f281e; --door: #52483c; --lamp: #f0b552; --cw: #72685c; --car-wall: #443c31; } }
+:root[data-theme="dark"] { --car: #52493d; --person: #d3ccc4; --N: #69a0ff; --W: #ff8a70; --cable: #b4aa9c; --building: #241e16; --slab: #42392e; --shaft: #16120d; --rail: #40382d; --window: #6d5a2b; --window-off: #2f281e; --door: #52483c; --lamp: #f0b552; --cw: #72685c; --car-wall: #443c31; }
 :root[data-projector="on"] { font-size: 125%; }
 .bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; }
 .bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 12px; }
@@ -346,10 +346,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const g = g3, dk = VD3.dark(), bg = col3(T.canvas, '#ffffff');
     g.scene.background = bg; g.scene.fog = new THREE.Fog(bg, 14, 34);
     g.hemi.intensity = dk ? 0.6 : 0.7; g.sun.intensity = dk ? 0.35 : 0.5;
-    g.slabM.color = col3(T.slab, '#c5cdd7'); g.wallM.color = col3(T.building, '#e8ecf1'); g.shaftM.color = col3(T.shaft, '#dbe1e8'); g.doorM.color = col3(T.door, '#b3bcc8');
-    g.winOnM.color = col3(T.window, '#f1d58c'); g.winOnM.emissive = col3(T.window, '#f1d58c').multiplyScalar(dk ? 0.6 : 0.25); g.winOffM.color = col3(T.windowOff, '#d3dae3'); g.railM.color = col3(T.rail, '#bcc5d0');
-    g.carM.color = col3(T.car, '#c9d1db'); g.carWallM.color = col3(T.carWall, '#dfe5ec'); g.pM.color = col3(T.person, '#4a5563'); g.scaleM.color = col3(dk ? '#d8dde3' : '#2a2f36', '#2a2f36');
-    g.cwM.color = col3(T.cw, '#848e9b'); g.cableM.color = col3(T.cable, '#6b7787'); g.disp = '';
+    g.slabM.color = col3(T.slab, '#d6cfc6'); g.wallM.color = col3(T.building, '#f0ede9'); g.shaftM.color = col3(T.shaft, '#e7e2dc'); g.doorM.color = col3(T.door, '#c6bfb5');
+    g.winOnM.color = col3(T.window, '#f1d58c'); g.winOnM.emissive = col3(T.window, '#f1d58c').multiplyScalar(dk ? 0.6 : 0.25); g.winOffM.color = col3(T.windowOff, '#e2dcd4'); g.railM.color = col3(T.rail, '#cec7be');
+    g.carM.color = col3(T.car, '#dad3ca'); g.carWallM.color = col3(T.carWall, '#ebe6e0'); g.pM.color = col3(T.person, '#61584c'); g.scaleM.color = col3(dk ? '#e2ded9' : '#35312b', '#35312b');
+    g.cwM.color = col3(T.cw, '#999186'); g.cableM.color = col3(T.cable, '#857b6d'); g.disp = '';
   }
   /* draws the 3D picture into (x0, y0, w, h); returns the person's hip and feet and the scale's display on this canvas */
   function draw3(x0, y0, w, h, st, N) {

@@ -21,37 +21,37 @@
 <style>
 /* Layout: the grid of nuclei on the left, N(t) and the activity histogram stacked on the right; instrument rail on the right; stacks on narrow screens. */
 :root {
-  --bg: #e9edf2;
-  --surface: #f8fafc;
-  --canvas: #fcfdfe;
-  --ink: #17202b;
-  --muted: #5a6575;
-  --line: #d3d9e2;
-  --grid: #e6ebf1;
-  --grid-strong: #cfd7e1;
+  --bg: #f1eeea;
+  --surface: #fcfaf8;
+  --canvas: #fefdfc;
+  --ink: #2a2219;
+  --muted: #73695c;
+  --line: #e1dbd4;
+  --grid: #f0ece7;
+  --grid-strong: #e0d9d0;
   --pos: #c23f2c;
   --neg: #2b60b5;
   --equi: #a7740b;
-  --accent: #2b60b5;
+  --accent: #c4811c;
   --sp1: #1f57b0;
   --sp2: #e08414;
-  --sp3: #a3adba;
-  --sp3-line: #6f7a89;
+  --sp3: #b8b0a5;
+  --sp3-line: #877d71;
   --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
-    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-    --equi: #e2b350; --accent: #69a0ff; --sp1: #5f9bff; --sp2: #f5b041; --sp3: #475262; --sp3-line: #8794a6;
+    --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
+    --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+    --equi: #e2b350; --accent: #fbc26d; --sp1: #5f9bff; --sp2: #f5b041; --sp3: #605649; --sp3-line: #a49889;
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
-  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-  --equi: #e2b350; --accent: #69a0ff; --sp1: #5f9bff; --sp2: #f5b041; --sp3: #475262; --sp3-line: #8794a6;
+  --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
+  --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+  --equi: #e2b350; --accent: #fbc26d; --sp1: #5f9bff; --sp2: #f5b041; --sp3: #605649; --sp3-line: #a49889;
   color-scheme: dark;
 }
 :root[data-projector="on"] { font-size: 125%; }
@@ -925,7 +925,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       return c;
     };
     const hex = (c, fb) => (/^#[0-9a-f]{6}$/i.test(c) ? c : fb);
-    sprites = { key, s: [make(hex(T.sp[0], '#1f57b0'), 0.9, 0.9), make(hex(T.sp[1], '#e08414'), 0.78, 0.8), make(hex(T.sp[2], '#a3adba'), 0.5, 0.4)] };
+    sprites = { key, s: [make(hex(T.sp[0], '#1f57b0'), 0.9, 0.9), make(hex(T.sp[1], '#e08414'), 0.78, 0.8), make(hex(T.sp[2], '#b8b0a5'), 0.5, 0.4)] };
     return sprites;
   }
   /* the flash of a decay, one sprite per kind of decay and cell size (the glow that was a radial gradient made for each flash) */
@@ -974,7 +974,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function tray(ctx, x0, y0, gp, ps) {
     const rim = Math.round(7 * dpr * ps);
     let g = ctx.createLinearGradient(x0 - rim, y0 - rim, x0 + gp + rim, y0 + gp + rim);
-    g.addColorStop(0, '#eef2f6'); g.addColorStop(0.45, '#a9b3bf'); g.addColorStop(1, '#6d7784');
+    g.addColorStop(0, '#f5f2ef'); g.addColorStop(0.45, '#bdb5ab'); g.addColorStop(1, '#827a6f');
     ctx.fillStyle = g; ctx.beginPath(); ctx.roundRect(x0 - rim, y0 - rim, gp + 2 * rim, gp + 2 * rim, rim * 1.4); ctx.fill();
     ctx.strokeStyle = 'rgba(0,0,0,0.35)'; ctx.lineWidth = dpr; ctx.stroke();
     g = ctx.createRadialGradient(x0 + gp * 0.4, y0 + gp * 0.35, gp * 0.05, x0 + gp / 2, y0 + gp / 2, gp * 0.75);
@@ -991,7 +991,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (let i = 0; i < nSp(); i++) { const d = D[i]; last += d[d.length - 1] || 0; for (let k = 0; k < d.length; k++) tot += d[k]; }
     const bw = Math.min(W - 24, 330 * ps), bx = (W - bw) / 2, bh = h - 10 * ps, by = y + 4 * ps;
     const tube = Math.min(110 * ps, bw * 0.3);
-    VDGear.rod(ctx, bx, by + bh / 2, bx + tube, by + bh / 2, 7 * ps, { color: '#b9c1cb' });
+    VDGear.rod(ctx, bx, by + bh / 2, bx + tube, by + bh / 2, 7 * ps, { color: '#cac3ba' });
     ctx.fillStyle = '#3a2f22'; ctx.beginPath(); ctx.ellipse(bx, by + bh / 2, 2.5 * ps, 7 * ps, 0, 0, 7); ctx.fill();
     ctx.font = `600 ${9 * ps}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
     ctx.fillText('GM tube', bx + tube / 2, by + bh / 2 + 9 * ps);
@@ -1001,7 +1001,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const lw = (cw - 24 * ps) / 2, lh = Math.min(22 * ps, bh - 18 * ps);
     VDGear.lcd(ctx, cx + 8 * ps, by + 5 * ps, lw, lh, fmtInt(tot));
     VDGear.lcd(ctx, cx + 16 * ps + lw, by + 5 * ps, lw, lh, fmtInt(last));
-    ctx.font = `700 ${7.5 * ps}px ${T.ui}`; ctx.fillStyle = '#c9d2dc'; ctx.textAlign = 'center';
+    ctx.font = `700 ${7.5 * ps}px ${T.ui}`; ctx.fillStyle = '#dbd4ca'; ctx.textAlign = 'center';
     ctx.fillText('COUNTS', cx + 8 * ps + lw / 2, by + 7 * ps + lh); ctx.fillText('LAST STEP', cx + 16 * ps + lw * 1.5, by + 7 * ps + lh);
     ctx.restore();
   }
@@ -1035,8 +1035,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function leadPot(o) {
     /* a lead pot cut open at the front (toward −y): outer wall and lid, the cavity, and the two cut faces */
     const g = new THREE.Group(), S3 = G.S, V2 = (r, z) => new THREE.Vector2(r, z);
-    const lead = VD3K.material(S3, { roughness: 0.55, metalness: 0.35, side: THREE.DoubleSide }, ['#8d939c', '#6f7680']);
-    const cutM = VD3K.material(S3, { roughness: 0.35, metalness: 0.6, side: THREE.DoubleSide }, ['#c3c9d1', '#a3aab4']);
+    const lead = VD3K.material(S3, { roughness: 0.55, metalness: 0.35, side: THREE.DoubleSide }, ['#9b958e', '#7f7870']);
+    const cutM = VD3K.material(S3, { roughness: 0.35, metalness: 0.6, side: THREE.DoubleSide }, ['#d0cbc4', '#b3aca4']);
     const lathe = (pts) => { const m = new THREE.Mesh(new THREE.LatheGeometry(pts, 48, o.w2, 2 * Math.PI - 2 * o.w2), lead); m.rotation.x = Math.PI / 2; m.castShadow = m.receiveShadow = true; return m; };
     g.add(lathe([V2(0, 0), V2(o.ro, 0), V2(o.ro, o.h), V2(0, o.h)]), lathe([V2(0, o.zt), V2(o.ri, o.zt), V2(o.ri, o.zb), V2(0, o.zb)]));
     const sh = new THREE.Shape([V2(0, 0), V2(o.ro, 0), V2(o.ro, o.h), V2(0, o.h), V2(0, o.zt), V2(o.ri, o.zt), V2(o.ri, o.zb), V2(0, o.zb)]);
@@ -1050,7 +1050,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* a glass vial standing upside down on its port needle: aluminum crimp cap at the bottom, the liquid against it */
     const g = new THREE.Group(), gl = VD3K.glass(S3, { r: VR + 0.0012, len: h - 2 * (VR + 0.0012), axis: 'z', opacity: 0.25 });
     gl.position.z = 0.006 + h / 2; g.add(gl);
-    const cap = new THREE.Mesh(new THREE.CylinderGeometry(VR * 0.8, VR * 0.8, 0.006, 24), new THREE.MeshStandardMaterial({ color: '#c3c9d0', metalness: 0.7, roughness: 0.3 }));
+    const cap = new THREE.Mesh(new THREE.CylinderGeometry(VR * 0.8, VR * 0.8, 0.006, 24), new THREE.MeshStandardMaterial({ color: '#cfcac4', metalness: 0.7, roughness: 0.3 }));
     cap.rotation.x = Math.PI / 2; cap.position.z = 0.003; g.add(cap);
     const liq = new THREE.Mesh(new THREE.CylinderGeometry(VR, VR, 1, 32), new THREE.MeshStandardMaterial({ color: tint, transparent: true, opacity: 0.4, roughness: 0.1, depthWrite: false }));
     liq.rotation.x = Math.PI / 2; liq.renderOrder = 1; g.add(liq);
@@ -1065,13 +1065,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const lamp = new THREE.PointLight(0xffffff, 0.55, 1.2); lamp.position.set(-0.08, -0.32, 0.26); sc.add(lamp);   /* lights the cut */
     /* the alumina column: a glass tube with the alumina bed, a little white, so the nuclei show through */
     const col = VD3K.glass(S3, { r: 0.019, len: 0.082, axis: 'z', opacity: 0.2 }); col.position.z = 0.11; sc.add(col);
-    const bed = new THREE.Mesh(new THREE.CylinderGeometry(NR + 0.0012, NR + 0.0012, CZ1 - CZ0 + 0.006, 40, 1, true), VD3K.material(S3, { transparent: true, opacity: 0.16, roughness: 0.9, depthWrite: false, side: THREE.DoubleSide }, ['#ffffff', '#e6ebf0']));
+    const bed = new THREE.Mesh(new THREE.CylinderGeometry(NR + 0.0012, NR + 0.0012, CZ1 - CZ0 + 0.006, 40, 1, true), VD3K.material(S3, { transparent: true, opacity: 0.16, roughness: 0.9, depthWrite: false, side: THREE.DoubleSide }, ['#ffffff', '#efece7']));
     bed.rotation.x = Math.PI / 2; bed.position.z = (CZ0 + CZ1) / 2; bed.renderOrder = 3; sc.add(bed);
     /* saline vial on the inlet port, the eluate vial in its own cut open lead shield on the outlet port */
     G.saline = vial(S3, 0.056, '#9fd3f2'); G.saline.position.set(PIN[0], PIN[1], HL); sc.add(G.saline);
     const es = leadPot({ ro: 0.0225, ri: 0.0125, h: 0.074, zb: 0.004, zt: 0.068, w2: 0.9 }); es.position.set(POUT[0], POUT[1], HL); sc.add(es);
     G.eluate = vial(S3, 0.056, '#9fd3f2'); G.eluate.position.set(POUT[0], POUT[1], HL + 0.004); sc.add(G.eluate);
-    const steel = new THREE.MeshStandardMaterial({ color: '#cfd5dc', metalness: 0.8, roughness: 0.25 }), tubeM = VD3K.material(S3, { roughness: 0.3, transparent: true, opacity: 0.8 }, ['#e9eef2', '#c9d2da']);
+    const steel = new THREE.MeshStandardMaterial({ color: '#dbd6d0', metalness: 0.8, roughness: 0.25 }), tubeM = VD3K.material(S3, { roughness: 0.3, transparent: true, opacity: 0.8 }, ['#f1eeea', '#d9d2ca']);
     sc.add(VD3K.rod([PIN[0], PIN[1], HL - 0.004], [PIN[0], PIN[1], HL + 0.01], 0.0009, steel), VD3K.rod([POUT[0], POUT[1], HL - 0.004], [POUT[0], POUT[1], HL + 0.014], 0.0009, steel));
     G.inPts = [[PIN[0], PIN[1], HL - 0.002], [PIN[0] * 0.75, PIN[1] * 0.6, ZT - 0.004], [0, 0, 0.178], [0, 0, 0.165]].map((q) => new THREE.Vector3(...q));
     G.outPts = [[0, 0, 0.055], [0, 0, ZB + 0.006], [0.0135, 0.0175, ZB + 0.008], [0.0165, 0.0165, 0.07], [0.0165, 0.0165, ZT - 0.006], [POUT[0] * 0.8, POUT[1] * 0.85, HL - 0.006], [POUT[0], POUT[1], HL + 0.012]].map((q) => new THREE.Vector3(...q));
@@ -1142,7 +1142,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const L = G.L, sp = sim.sp, now = performance.now();
     /* colors from the page's species tokens, so the column matches the tray, the legend and the plots */
     const key = T.sp.join(',');
-    let all = key !== L.key; if (all) { L.key = key; for (let i = 0; i < 3; i++) G.ccol[i].set(/^#[0-9a-f]{6}$/i.test(T.sp[i]) ? T.sp[i] : ['#1f57b0', '#e08414', '#a3adba'][i]); }
+    let all = key !== L.key; if (all) { L.key = key; for (let i = 0; i < 3; i++) G.ccol[i].set(/^#[0-9a-f]{6}$/i.test(T.sp[i]) ? T.sp[i] : ['#1f57b0', '#e08414', '#b8b0a5'][i]); }
     if (all) for (let k = 0; k < L.N; k++) setNuc(k);
     /* nuclei that changed since the last frame; ⁹⁹ᵐTc that went from the column to "eluted" start their trip to the vial */
     let fresh = null;

@@ -17,10 +17,10 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
 /* only what this demo needs beyond demos/lib/vd.css: the treatment room, the QA graphs and the strip */
-:root { --beam: #c2410c; --pass: #15803d; --fail: #b91c1c; --band: rgba(21, 128, 61, 0.12); --det: #7c3aed; --base: #64748b; --grid: rgba(60, 70, 85, 0.13); }
+:root { --beam: #c2410c; --pass: #15803d; --fail: #b91c1c; --band: rgba(21, 128, 61, 0.12); --det: #7c3aed; --base: #887a67; --grid: rgba(60, 70, 85, 0.13); }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --beam: #fb923c; --pass: #4ade80; --fail: #f87171; --band: rgba(74, 222, 128, 0.12); --det: #c4a5ff;
-  --base: #94a3b8; --grid: rgba(200, 210, 225, 0.12); } }
-:root[data-theme="dark"] { --beam: #fb923c; --pass: #4ade80; --fail: #f87171; --band: rgba(74, 222, 128, 0.12); --det: #c4a5ff; --base: #94a3b8; --grid: rgba(200, 210, 225, 0.12); }
+  --base: #b5a897; --grid: rgba(200, 210, 225, 0.12); } }
+:root[data-theme="dark"] { --beam: #fb923c; --pass: #4ade80; --fail: #f87171; --band: rgba(74, 222, 128, 0.12); --det: #c4a5ff; --base: #b5a897; --grid: rgba(200, 210, 225, 0.12); }
 .stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
 .stage-ctl .clock { margin-left: auto; font-size: 0.8rem; color: var(--muted); }
@@ -374,24 +374,24 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function drawRoom() {
     const G = window.VDGear, d = dark(), b = roomBox(), p = b.p, cx = (b.x0 + b.x1) / 2 + Math.min(70 * p, (b.x1 - b.x0) * 0.12), floorY = H - 30 * p;
     G.backdrop(ctx, W, H, { horizon: (floorY - 6 * p) / H });
-    G.bench(ctx, 0, floorY, W, 8 * p, H - floorY, { top: d ? '#2b3138' : '#c9ced5', front: d ? '#1d2228' : '#a7aeb8' });
+    G.bench(ctx, 0, floorY, W, 8 * p, H - floorY, { top: d ? '#37322c' : '#d4d0ca', front: d ? '#27231e' : '#b7b0a8' });
     /* the back wall: panels with seams */
     ctx.strokeStyle = d ? 'rgba(255,255,255,0.04)' : 'rgba(30,40,55,0.06)'; ctx.lineWidth = 1; for (let x = 60 * p; x < W; x += 120 * p) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, floorY); ctx.stroke(); }
     /* the gantry: a ring behind the couch, its nozzle pointing straight down */
     const gr = Math.min((b.x1 - b.x0) * 0.42, H * 0.62), gcy = H * 0.42;
     ctx.save(); ctx.beginPath(); ctx.rect(0, 0, W, floorY); ctx.clip();
-    ctx.lineWidth = 34 * p; ctx.strokeStyle = d ? '#2c3440' : '#d5dae1'; ctx.beginPath(); ctx.arc(cx, gcy, gr, 0, 7); ctx.stroke();
-    ctx.lineWidth = 2 * p; ctx.strokeStyle = d ? '#3d4756' : '#bcc3cc'; for (const rr of [gr - 17 * p, gr + 17 * p]) { ctx.beginPath(); ctx.arc(cx, gcy, rr, 0, 7); ctx.stroke(); }
+    ctx.lineWidth = 34 * p; ctx.strokeStyle = d ? '#3f372d' : '#e0dcd6'; ctx.beginPath(); ctx.arc(cx, gcy, gr, 0, 7); ctx.stroke();
+    ctx.lineWidth = 2 * p; ctx.strokeStyle = d ? '#544b3f' : '#cbc5bd'; for (const rr of [gr - 17 * p, gr + 17 * p]) { ctx.beginPath(); ctx.arc(cx, gcy, rr, 0, 7); ctx.stroke(); }
     ctx.restore();
     const nzTop = Math.max(0, gcy - gr - 10 * p), nzBot = H * 0.3, nw = 56 * p;
-    G.box(ctx, cx - nw / 2, nzTop, nw, nzBot - nzTop, { color: d ? '#4a5563' : '#566273', r: 6 * p });
-    G.box(ctx, cx - nw * 0.36, nzBot - 2 * p, nw * 0.72, 14 * p, { color: d ? '#6b7786' : '#7b8796', r: 3 * p, shadow: false });
+    G.box(ctx, cx - nw / 2, nzTop, nw, nzBot - nzTop, { color: d ? '#61584c' : '#716658', r: 6 * p });
+    G.box(ctx, cx - nw * 0.36, nzBot - 2 * p, nw * 0.72, 14 * p, { color: d ? '#847a6d' : '#948a7d', r: 3 * p, shadow: false });
     G.plate(ctx, 'nozzle', cx, nzTop + 14 * p, { s: 7 * p });
     /* the couch */
     const couchY = H * 0.66, cw = Math.min((b.x1 - b.x0) * 0.62, 420 * p);
     G.shadow(ctx, cx, floorY - 2 * p, cw * 0.42, 6 * p, 0.8);
-    G.box(ctx, cx - 22 * p, couchY + 12 * p, 44 * p, floorY - couchY - 12 * p, { color: d ? '#3a4552' : '#8d97a3', r: 3 * p, shadow: false });
-    G.box(ctx, cx - cw / 2, couchY, cw, 13 * p, { color: d ? '#5c6673' : '#e5e7eb', r: 4 * p });
+    G.box(ctx, cx - 22 * p, couchY + 12 * p, 44 * p, floorY - couchY - 12 * p, { color: d ? '#50473c' : '#a1998f', r: 3 * p, shadow: false });
+    G.box(ctx, cx - cw / 2, couchY, cw, 13 * p, { color: d ? '#71695e' : '#ebe8e5', r: 4 * p });
     /* the device on the couch */
     const dev = S.view === 'patient' ? 'array' : S.chk === 'output' ? 'phantom' : S.chk === 'range' ? 'mlic' : 'lynx', dw = Math.min(cw * 0.55, 210 * p);
     let dTop = couchY, lcdText = '—';
@@ -403,19 +403,19 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       sideLabel('chamber at 2 cm', cx + dw / 2 + 6 * p, dTop + 2 * sh, p);
       if (r) lcdText = `${f(r.out, 1)} %`;
     } else if (dev === 'mlic') {
-      const hh = 42 * p; dTop = couchY - hh; G.box(ctx, cx - dw / 2, dTop, dw, hh, { color: d ? '#334a73' : '#2f4a7d', r: 5 * p });
+      const hh = 42 * p; dTop = couchY - hh; G.box(ctx, cx - dw / 2, dTop, dw, hh, { color: d ? '#6e5738' : '#2f4a7d', r: 5 * p });
       ctx.strokeStyle = 'rgba(255,255,255,0.25)'; ctx.lineWidth = 1; for (let i = 1; i < 14; i++) { const y = dTop + 6 * p + i * (hh - 12 * p) / 14; ctx.beginPath(); ctx.moveTo(cx - dw / 2 + 10 * p, y); ctx.lineTo(cx + dw / 2 - 10 * p, y); ctx.stroke(); }
       G.plate(ctx, 'range stack', cx, dTop + hh / 2, { s: 7 * p });
       if (r) lcdText = `R90 ${f(r.R90, 2)} cm`;
     } else if (dev === 'lynx') {
-      const hh = 30 * p; dTop = couchY - hh; G.box(ctx, cx - dw / 2, dTop, dw, hh, { color: d ? '#3b4250' : '#4b5563', r: 4 * p });
+      const hh = 30 * p; dTop = couchY - hh; G.box(ctx, cx - dw / 2, dTop, dw, hh, { color: d ? '#4e473d' : '#61584d', r: 4 * p });
       const glow = ctx.createLinearGradient(cx - dw / 2, 0, cx + dw / 2, 0); glow.addColorStop(0, 'rgba(120,255,170,0.15)'); glow.addColorStop(0.5, busy ? 'rgba(140,255,180,0.9)' : 'rgba(120,255,170,0.35)'); glow.addColorStop(1, 'rgba(120,255,170,0.15)');
       ctx.fillStyle = glow; ctx.fillRect(cx - dw / 2 + 8 * p, dTop + 3 * p, dw - 16 * p, 4 * p);
       G.plate(ctx, 'screen and camera', cx, dTop + hh / 2 + 4 * p, { s: 7 * p });
       if (r) lcdText = `${f(r.err, 1)} mm`;
     } else {
       const n = Math.round(S.zm * 2), sh = Math.min(5.5 * p, (couchY - nzBot - 60 * p) / Math.max(1, n)), ah = 16 * p; dTop = couchY - ah - n * sh;
-      G.box(ctx, cx - dw / 2, couchY - ah, dw, ah, { color: d ? '#334a73' : '#2f4a7d', r: 3 * p });
+      G.box(ctx, cx - dw / 2, couchY - ah, dw, ah, { color: d ? '#6e5738' : '#2f4a7d', r: 3 * p });
       for (let i = 0; i < n; i++) ctx.fillStyle = i % 2 ? (d ? '#bdb59b' : '#e6dcbc') : (d ? '#c9c2a8' : '#efe7cb'), ctx.fillRect(cx - dw / 2, dTop + i * sh, dw, sh - 0.6);
       sideLabel(`water equivalent slabs, ${f(S.zm, 1)} cm`, cx + dw / 2 + 6 * p, dTop + n * sh / 2, p);
       sideLabel('2D chamber array', cx + dw / 2 + 6 * p, couchY - ah / 2, p);
@@ -426,7 +426,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.beginPath(); ctx.moveTo(cx - cw / 2 - 20 * p, dTop); ctx.lineTo(cx + cw / 2 + 20 * p, dTop); ctx.stroke();
     ctx.setLineDash([2 * p, 3 * p]); ctx.beginPath(); ctx.moveTo(cx, nzBot + 14 * p); ctx.lineTo(cx, dTop); ctx.stroke(); ctx.restore();
     /* the beam on lamp above the room */
-    const lx = cx - nw / 2 - 30 * p, ly = nzTop + 22 * p; G.box(ctx, lx - 13 * p, ly - 9 * p, 26 * p, 18 * p, { color: d ? '#2a313b' : '#4b5563', r: 3 * p, shadow: false });
+    const lx = cx - nw / 2 - 30 * p, ly = nzTop + 22 * p; G.box(ctx, lx - 13 * p, ly - 9 * p, 26 * p, 18 * p, { color: d ? '#3a332b' : '#61584d', r: 3 * p, shadow: false });
     ctx.fillStyle = busy ? '#f59e0b' : d ? '#3f2f12' : '#7c5a1a'; if (busy) { ctx.shadowColor = '#f59e0b'; ctx.shadowBlur = 12 * p; }
     ctx.beginPath(); ctx.roundRect(lx - 9 * p, ly - 5 * p, 18 * p, 10 * p, 2 * p); ctx.fill(); ctx.shadowBlur = 0;
     G.label(ctx, 'beam on', lx, ly + 18 * p, { a: 'center', s: 9 * p });
@@ -440,10 +440,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     /* the cart with the electrometer */
     const ew = 128 * p, eh = 46 * p, ex = b.x0 + 4 * p, ey = couchY - 70 * p;
-    G.box(ctx, ex + 10 * p, ey + eh, ew - 20 * p, floorY - ey - eh - 8 * p, { color: d ? '#29313c' : '#9aa3ae', r: 3 * p, shadow: false });
-    for (const xx of [ex + 16 * p, ex + ew - 16 * p]) { ctx.fillStyle = d ? '#0b0f14' : '#2a3038'; ctx.beginPath(); ctx.arc(xx, floorY - 5 * p, 5 * p, 0, 7); ctx.fill(); }
-    G.cable(ctx, ex + ew, ey + eh * 0.6, cx - dw / 2, dTop + 6 * p, 24 * p, { w: 2.2 * p, color: d ? '#0b0f14' : '#2a3038' });
-    G.box(ctx, ex, ey, ew, eh, { color: d ? '#333c47' : '#3b4552', r: 5 * p });
+    G.box(ctx, ex + 10 * p, ey + eh, ew - 20 * p, floorY - ey - eh - 8 * p, { color: d ? '#3b342a' : '#aca59b', r: 3 * p, shadow: false });
+    for (const xx of [ex + 16 * p, ex + ew - 16 * p]) { ctx.fillStyle = d ? '#13100c' : '#37322b'; ctx.beginPath(); ctx.arc(xx, floorY - 5 * p, 5 * p, 0, 7); ctx.fill(); }
+    G.cable(ctx, ex + ew, ey + eh * 0.6, cx - dw / 2, dTop + 6 * p, 24 * p, { w: 2.2 * p, color: d ? '#13100c' : '#37322b' });
+    G.box(ctx, ex, ey, ew, eh, { color: d ? '#463e34' : '#50483d', r: 5 * p });
     G.plate(ctx, S.view === 'patient' ? 'array software' : dev === 'lynx' ? 'spot analysis' : 'electrometer', ex + ew / 2, ey + 7 * p, { s: 6.5 * p });
     G.lcd(ctx, ex + 7 * p, ey + 13 * p, ew - 14 * p, eh - 19 * p, lcdText);
     /* the verdict */
@@ -468,32 +468,32 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function stripes(w, h, n, a, b, o = {}) { const cv = document.createElement('canvas'); cv.width = w; cv.height = h; const c = cv.getContext('2d');
     for (let i = 0; i < n; i++) { c.fillStyle = i % 2 ? b : a; c.fillRect(0, i * h / n, w, h / n + 1); }
     if (o.line) { c.fillStyle = o.line; for (let i = 1; i < n; i++) c.fillRect(0, i * h / n - 1, w, 2); }
-    if (o.text) { c.fillStyle = 'rgba(255,255,255,0.85)'; c.font = `700 ${h * 0.09}px ${T.ui}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillRect(w * 0.3, h * 0.42, w * 0.4, h * 0.16); c.fillStyle = '#1f2833'; c.fillText(o.text, w / 2, h / 2); }
+    if (o.text) { c.fillStyle = 'rgba(255,255,255,0.85)'; c.font = `700 ${h * 0.09}px ${T.ui}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillRect(w * 0.3, h * 0.42, w * 0.4, h * 0.16); c.fillStyle = '#322a21'; c.fillText(o.text, w / 2, h / 2); }
     return new THREE.CanvasTexture(cv); }
   function init3() {
     const st = VD3K.stage($('scene'), { before: can, shadow: 2.2, fov: 30, far: 40, fogAt: [2.2, 4.5] }); if (!st) return false;
     st.el.hidden = true; st.sun.position.set(1.2, -2.4, 5); st.sun.shadow.bias = -0.0006;
     const K = VD3K, M = (o, c) => K.material(st, o, c), sc = st.scene, mesh = (geo, m, cast) => { const x = new THREE.Mesh(geo, m); x.castShadow = !!cast; x.receiveShadow = true; return x; };
     /* the room: floor and a curved wall */
-    const floor = mesh(new THREE.PlaneGeometry(14, 14), M({ roughness: 0.9 }, ['#c9ced5', '#2b323b'])); sc.add(floor, K.backdrop(st, { r: 4.4, h: 3.6, y: -0.9 }));
+    const floor = mesh(new THREE.PlaneGeometry(14, 14), M({ roughness: 0.9 }, ['#d4d0ca', '#3a342c'])); sc.add(floor, K.backdrop(st, { r: 4.4, h: 3.6, y: -0.9 }));
     /* the gantry: a drum round the couch (outer shell, bore and two covers) and the nozzle hanging from the top of the bore */
-    const cover = M({ roughness: 0.6, metalness: 0.1, side: THREE.DoubleSide }, ['#dfe3e8', '#3b4553']), shell = M({ roughness: 0.7, metalness: 0.15, side: THREE.DoubleSide }, ['#c3c9d1', '#323b48']);
+    const cover = M({ roughness: 0.6, metalness: 0.1, side: THREE.DoubleSide }, ['#e7e4e0', '#51483d']), shell = M({ roughness: 0.7, metalness: 0.15, side: THREE.DoubleSide }, ['#d0cbc4', '#463e34']);
     const gan = new THREE.Group(); gan.position.set(0, 0, GC); sc.add(gan);
     gan.add(mesh(new THREE.CylinderGeometry(1.95, 1.95, 0.7, 72, 1, true), shell, true), mesh(new THREE.CylinderGeometry(BORE, BORE, 0.7, 72, 1, true), cover));
     for (const y of [-0.35, 0.35]) { const r = mesh(new THREE.RingGeometry(BORE, 1.95, 72), cover); r.rotation.x = Math.PI / 2; r.position.y = y; gan.add(r);
       const e = mesh(new THREE.TorusGeometry(1.95, 0.02, 8, 96), shell); e.rotation.x = Math.PI / 2; e.position.y = y; gan.add(e); }
-    const nozM = M({ roughness: 0.45, metalness: 0.35 }, ['#566273', '#4a5563']), snM = M({ roughness: 0.4, metalness: 0.4 }, ['#7b8796', '#6b7786']);
+    const nozM = M({ roughness: 0.45, metalness: 0.35 }, ['#716658', '#61584c']), snM = M({ roughness: 0.4, metalness: 0.4 }, ['#948a7d', '#847a6d']);
     sc.add(K.box(0.42, 0.42, GC + BORE - 1.75, nozM, 0, 0, 1.75), K.box(0.26, 0.26, 1.75 - NZ, snM, 0, 0, NZ));
     /* the beam on lamp on the front cover */
     const lamp = new THREE.Group(), lampM = new THREE.MeshBasicMaterial({ color: 0x3f2f12 }); lamp.position.set(-1.45, -0.37, GC + 0.75);
-    lamp.add(K.box(0.24, 0.04, 0.12, M({ roughness: 0.6 }, ['#4b5563', '#2a313b']), 0, 0, -0.06)); const lf = new THREE.Mesh(new THREE.PlaneGeometry(0.17, 0.07), lampM); lf.rotation.x = Math.PI / 2; lf.position.y = -0.021; lamp.add(lf); sc.add(lamp);
+    lamp.add(K.box(0.24, 0.04, 0.12, M({ roughness: 0.6 }, ['#61584d', '#3a332b']), 0, 0, -0.06)); const lf = new THREE.Mesh(new THREE.PlaneGeometry(0.17, 0.07), lampM); lf.rotation.x = Math.PI / 2; lf.position.y = -0.021; lamp.add(lf); sc.add(lamp);
     /* the couch: a base, a column and the table top running into the bore */
-    const couchM = M({ roughness: 0.45, metalness: 0.1 }, ['#e5e7eb', '#6b7684']), colM = M({ roughness: 0.5, metalness: 0.25 }, ['#8d97a3', '#3a4552']);
+    const couchM = M({ roughness: 0.45, metalness: 0.1 }, ['#ebe8e5', '#82796d']), colM = M({ roughness: 0.5, metalness: 0.25 }, ['#a1998f', '#50473c']);
     sc.add(K.box(0.7, 0.9, 0.03, colM, 0, -1.25, 0), K.box(0.3, 0.42, CT - 0.09, colM, 0, -1.25, 0.03), K.box(0.52, 2.2, 0.06, couchM, 0, -0.55, CT - 0.06));
     /* the cart with the electrometer and the QA status panel */
-    const cartM = M({ roughness: 0.55, metalness: 0.2 }, ['#9aa3ae', '#29313c']), cx = -1.4, cy = -0.9;
+    const cartM = M({ roughness: 0.55, metalness: 0.2 }, ['#aca59b', '#3b342a']), cx = -1.4, cy = -0.9;
     sc.add(K.box(0.86, 0.46, 0.06, cartM, cx, cy, 0.12), K.box(0.86, 0.46, 0.04, cartM, cx, cy, 0.8));
-    for (const [x, y] of [[-0.4, -0.2], [0.4, -0.2], [-0.4, 0.2], [0.4, 0.2]]) { sc.add(K.rod([cx + x, cy + y, 0.12], [cx + x, cy + y, 0.8], 0.012, cartM)); const w = mesh(new THREE.CylinderGeometry(0.045, 0.045, 0.03, 20), M({ roughness: 0.8 }, ['#2a3038', '#0b0f14']), true); w.rotation.z = Math.PI / 2; w.position.set(cx + x, cy + y, 0.05); sc.add(w); }
+    for (const [x, y] of [[-0.4, -0.2], [0.4, -0.2], [-0.4, 0.2], [0.4, 0.2]]) { sc.add(K.rod([cx + x, cy + y, 0.12], [cx + x, cy + y, 0.8], 0.012, cartM)); const w = mesh(new THREE.CylinderGeometry(0.045, 0.045, 0.03, 20), M({ roughness: 0.8 }, ['#37322b', '#13100c']), true); w.rotation.z = Math.PI / 2; w.position.set(cx + x, cy + y, 0.05); sc.add(w); }
     const mE = K.meter(st, { label: 'ELECTROMETER', w: 0.36, h: 0.15 }), mS = K.meter(st, { label: 'QA STATUS', w: 0.36, h: 0.15 });
     mE.position.set(cx - 0.2, cy, 0.84 + 0.075); mS.position.set(cx + 0.2, cy, 0.84 + 0.075); sc.add(mE, mS);
     /* the devices, one group each, shown by the chosen check */
@@ -502,12 +502,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const b = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.3, 0.06), [side, side, side, side, top, top]); b.position.z = CT + 0.03; b.renderOrder = 2; g.add(b);
       const ch = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 0.006, 32).rotateX(Math.PI / 2), det); ch.position.z = CT + 0.04; g.add(ch, K.rod([-0.012, 0, CT + 0.04], [-0.16, 0, CT + 0.04], 0.003, det));
       dev.phantom = { g, top: CT + 0.06, w: 0.3, port: [-0.16, 0, CT + 0.04] }; }
-    { const g = new THREE.Group(), body = new THREE.MeshStandardMaterial({ map: stripes(256, 160, 28, '#2f4a7d', '#33507f', { line: 'rgba(255,255,255,0.18)', text: 'RANGE STACK' }), roughness: 0.45, metalness: 0.1 }), lid = M({ roughness: 0.45, metalness: 0.1 }, ['#2f4a7d', '#334a73']);
+    { const g = new THREE.Group(), body = new THREE.MeshStandardMaterial({ map: stripes(256, 160, 28, '#2f4a7d', '#755d3d', { line: 'rgba(255,255,255,0.18)', text: 'RANGE STACK' }), roughness: 0.45, metalness: 0.1 }), lid = M({ roughness: 0.45, metalness: 0.1 }, ['#2f4a7d', '#6e5738']);
       const b = mesh(new THREE.BoxGeometry(0.3, 0.3, 0.16), [body, body, body, body, lid, lid], true); b.position.z = CT + 0.08; g.add(b); dev.mlic = { g, top: CT + 0.16, w: 0.3, port: [-0.15, 0, CT + 0.05] }; }
     const scrCv = document.createElement('canvas'); scrCv.width = scrCv.height = 512; const scrTex = new THREE.CanvasTexture(scrCv);
-    { const g = new THREE.Group(), bodyM = M({ roughness: 0.5, metalness: 0.2 }, ['#4b5563', '#3b4250']); g.add(K.box(0.34, 0.34, 0.16, bodyM, 0, 0, CT));
+    { const g = new THREE.Group(), bodyM = M({ roughness: 0.5, metalness: 0.2 }, ['#61584d', '#4e473d']); g.add(K.box(0.34, 0.34, 0.16, bodyM, 0, 0, CT));
       const scr = new THREE.Mesh(new THREE.PlaneGeometry(0.24, 0.24), new THREE.MeshBasicMaterial({ map: scrTex })); scr.position.z = CT + 0.1605; g.add(scr); dev.lynx = { g, top: CT + 0.16, w: 0.34, port: [-0.17, 0, CT + 0.05] }; }
-    { const g = new THREE.Group(), arr = M({ roughness: 0.45, metalness: 0.1 }, ['#2f4a7d', '#334a73']); g.add(K.box(0.36, 0.36, 0.04, arr, 0, 0, CT)); const sl = new THREE.Group(); g.add(sl);
+    { const g = new THREE.Group(), arr = M({ roughness: 0.45, metalness: 0.1 }, ['#2f4a7d', '#6e5738']); g.add(K.box(0.36, 0.36, 0.04, arr, 0, 0, CT)); const sl = new THREE.Group(); g.add(sl);
       dev.array = { g, top: CT + 0.04, w: 0.36, port: [-0.18, 0, CT + 0.02], sl }; }
     for (const k in dev) sc.add(dev[k].g);
     /* the room lasers and the beam */
@@ -659,7 +659,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function drawPatient(c, p) {
     const pad = 12 * p, top = 30 * p, side = Math.max(60, Math.min((PW - 4 * pad) / 3, PH2 - top - 40 * p)), x0 = (PW - 3 * side - 2 * pad) / 2, half = 122;
     const xs = [x0, x0 + side + pad, x0 + 2 * (side + pad)], M = (mm, X0) => X0 + (mm + half) / (2 * half) * side, N = (mm) => top + (half - mm) / (2 * half) * side, cell = 7.62 / (2 * half) * side;
-    const bg = dark() ? '#0d1218' : '#f4f6f8';
+    const bg = dark() ? '#17130e' : '#f8f6f4';
     for (const X0 of xs) { c.fillStyle = bg; c.fillRect(X0, top, side, side); c.strokeStyle = T.line; c.strokeRect(X0 + 0.5, top + 0.5, side - 1, side - 1); }
     if (!S.Q) return;
     /* the plan, on its 1 mm grid */

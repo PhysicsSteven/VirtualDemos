@@ -20,20 +20,20 @@
 <style>
 /* Layout: lab bench. A strip of the whole ladder sits above the canvas for the current rung; a narrow instrument rail sits on the right; stacks on phones. */
 :root {
-  --bg: #e9edf2;
-  --surface: #f8fafc;
-  --canvas: #fcfdfe;
-  --relief: #dfe5ec;
-  --ink: #17202b;
-  --muted: #5a6575;
-  --line: #d3d9e2;
-  --grid: #e6ebf1;
-  --grid-strong: #cfd7e1;
+  --bg: #f1eeea;
+  --surface: #fcfaf8;
+  --canvas: #fefdfc;
+  --relief: #ebe6e0;
+  --ink: #2a2219;
+  --muted: #73695c;
+  --line: #e1dbd4;
+  --grid: #f0ece7;
+  --grid-strong: #e0d9d0;
   --pos: #c23f2c;
   --neg: #2b60b5;
-  --field: #1d2836;
+  --field: #342b1f;
   --equi: #a7740b;
-  --accent: #2b60b5;
+  --accent: #c4811c;
   --on-charge: #ffffff;
   --sun: #e9a817;
   --sky: #0b1017;
@@ -47,16 +47,16 @@
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
-    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-    --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+    --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --relief: #40372c; --ink: #eeeae4; --muted: #b0a698;
+    --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+    --field: #eee8e0; --equi: #e2b350; --accent: #fbc26d; --on-charge: #17130e; color-scheme: dark;
     --sun: #f5c451; --sky: #04070b; --sky-ink: #dfe6ef; --jan: #7fb0ff; --jul: #ff8a70; --ruler: #f0c75e; --green: #4fd1a0;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
-  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-  --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+  --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --relief: #40372c; --ink: #eeeae4; --muted: #b0a698;
+  --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+  --field: #eee8e0; --equi: #e2b350; --accent: #fbc26d; --on-charge: #17130e; color-scheme: dark;
   --sun: #f5c451; --sky: #04070b; --sky-ink: #dfe6ef; --jan: #7fb0ff; --jul: #ff8a70; --ruler: #f0c75e; --green: #4fd1a0;
 }
 :root[data-projector="on"] { font-size: 125%; }
@@ -1105,7 +1105,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const photo = (px, py, w2, h2, lab, color, offs) => {
       ctx.fillStyle = T.sky; rr(px, py, w2, h2, 6 * ps); ctx.fill();
       ctx.save(); ctx.beginPath(); ctx.rect(px, py, w2, h2); ctx.clip();
-      for (const s of BG) { ctx.globalAlpha = 0.5 + 0.25 * s[2]; dot(px + s[0] * w2, py + s[1] * h2, s[2] * ps, '#cfd9ea'); }
+      for (const s of BG) { ctx.globalAlpha = 0.5 + 0.25 * s[2]; dot(px + s[0] * w2, py + s[1] * h2, s[2] * ps, '#e8ded1'); }
       ctx.globalAlpha = 1;
       const sx = (o) => px + w2 / 2 + o / FOV * w2, sy = py + h2 / 2;
       const er = sigp / FOV * w2;
@@ -1535,7 +1535,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const bw = Math.min(150 * ps, B[2] * 0.4, B[3] - 70 * ps), bx = B[0], by = B[1] + 30 * ps, sx = bx + bw / 2, sy = by + bw / 2;
     ctx.fillStyle = T.sky; rr(bx, by, bw, bw, 6 * ps); ctx.fill();
     ctx.save(); ctx.beginPath(); ctx.rect(bx, by, bw, bw); ctx.clip();
-    for (const q of BG) { ctx.globalAlpha = 0.2 + 0.25 * q[2]; ctx.fillStyle = '#c9d4e6'; ctx.fillRect(bx + q[0] * bw, by + q[1] * bw, 1.2, 1.2); }
+    for (const q of BG) { ctx.globalAlpha = 0.2 + 0.25 * q[2]; ctx.fillStyle = '#e4d9cb'; ctx.fillRect(bx + q[0] * bw, by + q[1] * bw, 1.2, 1.2); }
     ctx.globalAlpha = 1; starGlow(sx, sy, Math.max(2, 9 - 0.6 * m.t.V) * ps, bvColor(m.t.bv)); ctx.restore();
     text(`V = ${m.t.V.toFixed(2)}, B − V = ${m.t.bv.toFixed(2)}`, bx, by + bw + 12 * ps, { font: F(10, 700), color: T.ink });
     text('picture, not to scale', bx, by + bw + 27 * ps, { font: F(9.5), color: T.muted });
@@ -1595,7 +1595,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       ctx.fillStyle = T.sky; rr(B[0], B[1], B[2], B[3], 6 * ps); ctx.fill();
       ctx.save(); ctx.beginPath(); ctx.rect(B[0], B[1], B[2], B[3]); ctx.clip();
       const pos = clusterXY(c);
-      for (const q of pos.bg) { ctx.globalAlpha = 0.25 + 0.4 * q[2]; ctx.fillStyle = '#c9d4e6'; ctx.fillRect(cx + q[0] * B[2], cy + q[1] * B[3], 1.2, 1.2); }
+      for (const q of pos.bg) { ctx.globalAlpha = 0.25 + 0.4 * q[2]; ctx.fillStyle = '#e4d9cb'; ctx.fillRect(cx + q[0] * B[2], cy + q[1] * B[3], 1.2, 1.2); }
       ctx.globalAlpha = 1;
       const Vb = Math.min(...c.stars.map((s) => s[1]));
       c.stars.forEach(([bv, V], i) => { const [u, v] = pos.out[i]; starGlow(cx + u * R * 1.9, cy + v * R * 1.9, Math.max(0.8, 3.6 - 0.45 * (V - Vb)) * ps, bvColor(bv)); });
@@ -1642,11 +1642,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       if (hot) { ctx.save(); ctx.globalAlpha = 0.25; dot(px, py, S.ph.r * sc + 4 * ps, col); ctx.restore(); }
       dot(px, py, S.ph.r * sc, null, col, hot ? 2.2 : 1.6);
       ctx.save(); ctx.setLineDash([3 * ps, 3 * ps]); dot(px, py, (S.ph.r + 3) * sc, null, col, 0.9); dot(px, py, (S.ph.r + 8) * sc, null, col, 0.9); ctx.restore();
-      text(lab, px, py + (S.ph.r + 8) * sc + 9 * ps, { align: 'center', font: F(9.5, 700), color: col, bg: '#04060b' });
+      text(lab, px, py + (S.ph.r + 8) * sc + 9 * ps, { align: 'center', font: F(9.5, 700), color: col, bg: '#0a0805' });
     };
     ring(S.ph.v, '#ffd27a', isHot('apV'), 'Cepheid aperture');
     ring(S.ph.c, '#7fdcff', isHot('apC'), 'comparison aperture');
-    text(`seeing ${m.F.fwhm.toFixed(1)} px, sky ${Math.round(m.a.sky)} counts per pixel`, I[0] + 6 * ps, I[1] + I[3] - 9 * ps, { font: F(9.5), color: '#dfe6ef', bg: '#04060b' });
+    text(`seeing ${m.F.fwhm.toFixed(1)} px, sky ${Math.round(m.a.sky)} counts per pixel`, I[0] + 6 * ps, I[1] + I[3] - 9 * ps, { font: F(9.5), color: '#eee8e0', bg: '#0a0805' });
     g.img = { I, sc };
     // the light curve from the recorded readings of this Cepheid
     const L = wide ? [x + iw + 2 * pad + 46 * ps, y + 50 * ps, w - iw - 3 * pad - 52 * ps, h - 100 * ps] : [x + 52 * ps, y + ih + 90 * ps, w - 66 * ps, h - ih - 140 * ps];
@@ -1706,8 +1706,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     sc.add(VD3K.star(S3, { r: 0.13, color: '#ffd27a', glow: 4 }));
     sc.add(new THREE.PointLight(0xffffff, 1.5, 0));
     P3.star = VD3K.star(S3, { r: 0.05, color: '#fff1c9', glow: 6 }); P3.star.position.set(0, DS3, 0); sc.add(P3.star);
-    const ring = VD3K.ring(1, { color: '#7d8da3', opacity: 0.9, seg: 160 }); sc.add(ring);
-    sc.add(new THREE.Mesh(new THREE.CircleGeometry(1, 96), new THREE.MeshBasicMaterial({ color: '#8fa6c8', transparent: true, opacity: 0.07, depthWrite: false, side: THREE.DoubleSide })));
+    const ring = VD3K.ring(1, { color: '#a09280', opacity: 0.9, seg: 160 }); sc.add(ring);
+    sc.add(new THREE.Mesh(new THREE.CircleGeometry(1, 96), new THREE.MeshBasicMaterial({ color: '#c4af93', transparent: true, opacity: 0.07, depthWrite: false, side: THREE.DoubleSide })));
     // the wall of background stars, far behind the star
     const r = rng(79), pos = [], col = [];
     for (let i = 0; i < 520; i++) { const b = 0.35 + 0.65 * r() * r(); pos.push((r() - 0.5) * 9, YB3 + r() * 0.4, -1.6 + 3.6 * r()); col.push(b * 0.86, b * 0.9, b); }
@@ -1760,18 +1760,18 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     S3.render();
     // labels in the scene
     const pr = (v) => { const q = S3.project(v); return [q[0] + ax, q[1] + ay]; };
-    const L = (v, txt, o) => { const [px, py] = pr(v); text(txt, px + (o.dx || 0) * ps, py + (o.dy || 0) * ps, { font: F(10.5, 700), color: o.color || '#e8eef6', align: o.align || 'left', bg: '#04060b' }); return [px, py]; };
-    title('Earth’s orbit in 3D, not to scale', ax + 12 * ps, ay + 10 * ps, '#aeb9c8');
+    const L = (v, txt, o) => { const [px, py] = pr(v); text(txt, px + (o.dx || 0) * ps, py + (o.dy || 0) * ps, { font: F(10.5, 700), color: o.color || '#f4f0ea', align: o.align || 'left', bg: '#0a0805' }); return [px, py]; };
+    title('Earth’s orbit in 3D, not to scale', ax + 12 * ps, ay + 10 * ps, '#c6bcb0');
     L(P3.star.position, S.par.star === 'custom' ? 'nearby star' : STARS[S.par.star].name, { dx: 10, dy: -10 });
     L(new THREE.Vector3(0, 0, 0), 'Sun', { dx: 12, dy: 14, color: '#ffd27a' });
     L(Ej, 'January', { dx: -10, align: 'right', color: '#ff8a7a' });
     L(El, 'July', { dx: 10, color: '#7fb0ff' });
-    { const [bx, by] = pr(new THREE.Vector3(0, YB3, 2.1)); text('distant background stars', Math.min(ax + aw - 12 * ps, Math.max(ax + 12 * ps, bx)), Math.max(ay + 30 * ps, by), { font: F(10), color: '#aeb9c8', align: 'center', bg: '#04060b' }); }
+    { const [bx, by] = pr(new THREE.Vector3(0, YB3, 2.1)); text('distant background stars', Math.min(ax + aw - 12 * ps, Math.max(ax + 12 * ps, bx)), Math.max(ay + 30 * ps, by), { font: F(10), color: '#c6bcb0', align: 'center', bg: '#0a0805' }); }
     const [ex, ey] = pr(E), hot = isHot('earth');
     ctx.strokeStyle = '#ffd27a'; ctx.lineWidth = (hot ? 2 : 1.3) * ps; ctx.beginPath(); ctx.arc(ex, ey, (hot ? 12 : 10) * ps, 0, 2 * Math.PI); ctx.stroke();
     { ctx.font = F(10.5, 700); const ew = ctx.measureText('Earth').width, lft = ex + 13 * ps + ew > ax + aw - 4 * ps;   /* near the right edge the label goes on the left of the ring */
-      text('Earth', lft ? ex - 13 * ps : ex + 13 * ps, ey - 11 * ps, { font: F(10.5, 700), color: '#e8eef6', bg: '#04060b', align: lft ? 'right' : 'left' }); }
-    { textLines(cl, ax + 12 * ps, ay + ah - 12 * ps - (cl.length - 1) * 13 * ps, { font: F(9.5), color: '#aeb9c8', bg: '#04060b' }, 13 * ps); }
+      text('Earth', lft ? ex - 13 * ps : ex + 13 * ps, ey - 11 * ps, { font: F(10.5, 700), color: '#f4f0ea', bg: '#0a0805', align: lft ? 'right' : 'left' }); }
+    { textLines(cl, ax + 12 * ps, ay + ah - 12 * ps - (cl.length - 1) * 13 * ps, { font: F(9.5), color: '#c6bcb0', bg: '#0a0805' }, 13 * ps); }
     g.earth = { cx: 0, cy: 0, R: 1, E: [ex, ey], plane: (x, y) => {
       P3.ray.setFromCamera(new THREE.Vector2((x - ax) / aw * 2 - 1, -((y - ay) / ah) * 2 + 1), S3.cam);
       const q = new THREE.Vector3(); return P3.ray.ray.intersectPlane(new THREE.Plane(new THREE.Vector3(0, 0, 1), 0), q) ? [q.x, q.y] : null; } };

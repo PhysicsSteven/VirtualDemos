@@ -15,9 +15,9 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
 /* only what this demo needs beyond demos/lib/vd.css: its own colors, the picture, the graph and the Set up card's place */
-:root { --field: #2b60b5; --sc: #2f9e8f; --metal: #9aa3ad; --coil: #c87a4f; --crit: #d2452b; --onset: #a7740b; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --field: #69a0ff; --sc: #5fd3c2; --metal: #7d8794; --coil: #e09a6f; --crit: #ff7a5c; --onset: #e2b350; } }
-:root[data-theme="dark"] { --field: #69a0ff; --sc: #5fd3c2; --metal: #7d8794; --coil: #e09a6f; --crit: #ff7a5c; --onset: #e2b350; }
+:root { --field: #2b60b5; --sc: #2f9e8f; --metal: #aca59b; --coil: #c87a4f; --crit: #d2452b; --onset: #a7740b; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --field: #69a0ff; --sc: #5fd3c2; --metal: #928a7f; --coil: #e09a6f; --crit: #ff7a5c; --onset: #e2b350; } }
+:root[data-theme="dark"] { --field: #69a0ff; --sc: #5fd3c2; --metal: #928a7f; --coil: #e09a6f; --crit: #ff7a5c; --onset: #e2b350; }
 .stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
 .scene { position: relative; flex: 1 1 auto; min-height: 400px; }
 .scene canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; }
@@ -284,17 +284,17 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     S3.el.classList.add('sc3');
     const sc = S3.scene, M = (o, c) => VD3K.material(S3, o, c), mesh = (geo, m, cast) => { const x = new THREE.Mesh(geo, m); x.castShadow = !!cast; x.receiveShadow = true; return x; };
     sc.add(VD3K.bench(S3, { w: 2.4, d: 1.6, y: 0.3 }), VD3K.backdrop(S3, { r: 0.9, h: 0.9, y: -0.3 }));
-    const steel = M({ roughness: 0.35, metalness: 0.6 }, ['#b9c0c8', '#7d8690']), dark3 = M({ roughness: 0.5, metalness: 0.2 }, ['#5d6774', '#4b5460']);
+    const steel = M({ roughness: 0.35, metalness: 0.6 }, ['#c7c1ba', '#8f887e']), dark3 = M({ roughness: 0.5, metalness: 0.2 }, ['#726a5f', '#5e574d']);
     const app = new THREE.Group(); app.scale.setScalar(KR); app.position.z = (ZS + 0.5) * KR; sc.add(app);
     /* the solenoid: a helix of copper wire on two end flanges */
     const turn = new THREE.Group(); app.add(turn);   /* turns with the camera: the plane of the field lines, the Hall probe in it, and the cut away coil */
     const coilM = M({ roughness: 0.35, metalness: 0.7 }, ['#c87a4f', '#d58e63']), turns = 18;
     /* the half of each turn behind the field lines' plane (the front half is cut away so the inside shows) */
     for (let i = 0; i < turns; i++) { const z = -ZS + 2 * ZS * (i + 0.5) / turns, ar = mesh(new THREE.TorusGeometry(AS, 0.075, 6, 40, Math.PI), coilM, true); ar.position.z = z; turn.add(ar); }
-    for (const z of [-ZS - 0.12, ZS + 0.12]) { const fl = mesh(new THREE.RingGeometry(AS - 0.25, AS + 0.35, 48, 1, 0, Math.PI), M({ roughness: 0.6, metalness: 0.1, side: THREE.DoubleSide }, ['#3b4350', '#2b323c'])); fl.position.z = z; turn.add(fl); }
+    for (const z of [-ZS - 0.12, ZS + 0.12]) { const fl = mesh(new THREE.RingGeometry(AS - 0.25, AS + 0.35, 48, 1, 0, Math.PI), M({ roughness: 0.6, metalness: 0.1, side: THREE.DoubleSide }, ['#4e473d', '#3b342c'])); fl.position.z = z; turn.add(fl); }
     for (let i = 0; i < 3; i++) { const a = i * 2.094 + 0.5; app.add(VD3K.rod([(AS + 0.25) * Math.cos(a), (AS + 0.25) * Math.sin(a), -ZS - 0.5], [(AS + 0.25) * Math.cos(a), (AS + 0.25) * Math.sin(a), ZS + 0.12], 0.06, steel)); }
     /* the cryostat: a glass dewar with a steel top plate and its neck */
-    const dew = VD3K.glass(S3, { r: CR, len: 2 * ZS - 0.6, axis: 'z', tint: '#dbe9f5', opacity: 0.16 }); dew.position.z = -0.2; app.add(dew);
+    const dew = VD3K.glass(S3, { r: CR, len: 2 * ZS - 0.6, axis: 'z', tint: '#efe9e1', opacity: 0.16 }); dew.position.z = -0.2; app.add(dew);
     const top = mesh(new THREE.CylinderGeometry(CR + 0.25, CR + 0.25, 0.18, 40), steel, true); top.rotation.x = Math.PI / 2; top.position.z = ZS + 0.25; app.add(top);
     app.add(VD3K.rod([0, 0, ZS + 0.3], [0, 0, ZS + 1.4], 0.35, steel));
     /* the sample on its rod, the Hall probe at its equator and the magnetometer's pickup coils */
@@ -303,13 +303,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const sph = mesh(new THREE.SphereGeometry(1, 48, 32), sphM, true); sph.renderOrder = 3; app.add(sph);
     const pickM = M({ roughness: 0.4, metalness: 0.6 }, ['#8a6f55', '#a3876b']);
     for (const z of [1.35, -1.35]) { const c = mesh(new THREE.TorusGeometry(1.25, 0.06, 8, 48), pickM, true); c.position.z = z; app.add(c); }
-    turn.add(VD3K.box(0.14, 0.1, 0.06, M({ roughness: 0.5 }, ['#20262e', '#20262e']), 1.1, 0, -0.03), VD3K.rod([1.18, 0, 0], [1.9, 0, 0], 0.025, steel), VD3K.rod([1.9, 0, 0], [1.9, 0, ZS + 0.25], 0.025, steel));
+    turn.add(VD3K.box(0.14, 0.1, 0.06, M({ roughness: 0.5 }, ['#2d2821', '#2d2821']), 1.1, 0, -0.03), VD3K.rod([1.18, 0, 0], [1.9, 0, 0], 0.025, steel), VD3K.rod([1.9, 0, 0], [1.9, 0, ZS + 0.25], 0.025, steel));
     const lineM = new THREE.MeshStandardMaterial({ roughness: 0.6, metalness: 0 }), ghostM = new THREE.LineBasicMaterial({ transparent: true, opacity: 0.28 });
     const lines = new THREE.Group(); turn.add(lines);
     /* the three meters on the bench in front, with their leads to the top plate */
     const xm = xm3, zTop = (2 * ZS + 0.85) * KR;
     const mk = (label, sub, y) => { const m = VD3K.meter(S3, { w: 0.1, h: 0.06, label, sub }); m.rotation.z = -0.5; m.position.set(xm - 0.03 * (y + 0.1) / 0.13, y, 0); sc.add(m);
-      sc.add(VD3K.cable([xm + 0.02, y + 0.02, 0.03], [-(CR + 0.1) * KR, 0.0, zTop], { via: [[xm + 0.06, y * 0.4, 0.01], [-(AS + 0.9) * KR, 0.02, 0.02], [-(AS + 0.9) * KR, 0.02, zTop - 0.02]], color: 0x2b323c, rad: 0.0018 })); return m; };
+      sc.add(VD3K.cable([xm + 0.02, y + 0.02, 0.03], [-(CR + 0.1) * KR, 0.0, zTop], { via: [[xm + 0.06, y * 0.4, 0.01], [-(AS + 0.9) * KR, 0.02, 0.02], [-(AS + 0.9) * KR, 0.02, zTop - 0.02]], color: 0x3b342c, rad: 0.0018 })); return m; };
     const meters = { m: mk('MAGNETOMETER', 'mA·m²', -0.1), b: mk('HALL PROBE', 'mT', 0.03), t: mk('THERMOMETER', 'K', 0.16) };
     g3 = { S3, app, sphM, turn, lines, lineM, ghostM, meters };
     VD3.orbit(can, G3.o, () => { if (use3()) draw(); }, { grab: () => !use3(), phMin: 0.5, phMax: 1.5, zMin: 0.6, zMax: 3 });

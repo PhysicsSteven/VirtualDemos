@@ -14,9 +14,9 @@
 <style>
 /* Layout: two metal spheres, a charged rod and ground on the left; the rail on the right. */
 /* Layout: lab bench. The gas box and speed histogram fill the left, a narrow instrument rail sits on the right; stacks on phones. */
-:root { --metal: #c9d1db; --metal-hi: #eef2f6; --rod: #8a6a3c; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --metal: #4a5566; --metal-hi: #6b7787; --rod: #d0a868; } }
-:root[data-theme="dark"] { --metal: #4a5566; --metal-hi: #6b7787; --rod: #d0a868; }
+:root { --metal: #dad3ca; --metal-hi: #f5f2ef; --rod: #8a6a3c; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --metal: #645a4c; --metal-hi: #857b6d; --rod: #d0a868; } }
+:root[data-theme="dark"] { --metal: #645a4c; --metal-hi: #857b6d; --rod: #d0a868; }
 :root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
 body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
@@ -930,7 +930,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     };
     pAnim = requestAnimationFrame(step);
   }
-  const BALL_C = { teflon: '#f1f0ea', polystyrene: '#e9e2cc', nylon: '#efe2bd', pyrex: '#cfe3e6', srtio3: '#d9cfc0', metal: '#b9c2cc', mystery: '#a9c4a6' };
+  const BALL_C = { teflon: '#f1f0ea', polystyrene: '#e9e2cc', nylon: '#efe2bd', pyrex: '#e4dcd1', srtio3: '#d9cfc0', metal: '#cbc4ba', mystery: '#a9c4a6' };
   function drawPolar() {
     const p = ps(), sol = S.pol, a = DI_A, sb = document.querySelector('.stepbar'), Hu = Math.max(200, (sb ? sb.offsetTop : H) - 4 * p);
     VG.backdrop(ctx, W, H);
@@ -939,16 +939,16 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const bx = W * (W > 560 ? 0.42 : 0.4), bw = Math.min(300 * p, W * 0.8), bh = 62 * p, yPan = benchY - bh - 10 * p;
     const yPanM = -a - DI_POST, tipM = a + S.pv * CM, topM = Math.min(tipM, a + 20 * CM) + 0.035;
     const sc = Math.min((yPan - 26 * p) / (topM - yPanM), 0.36 * Hu / (2 * a)), X = (x) => bx + x * sc, Y = (y) => yPan - (y - yPanM) * sc;
-    VG.box(ctx, bx - bw / 2, benchY - bh, bw, bh, { color: VG.dark() ? '#2b323c' : '#d6dbe1', r: 8 });
+    VG.box(ctx, bx - bw / 2, benchY - bh, bw, bh, { color: VG.dark() ? '#3b342c' : '#e0dcd7', r: 8 });
     VG.plate(ctx, 'analytical balance', bx + bw * 0.22, benchY - bh + 14 * p, { c: VG.dark() ? 'rgba(230,236,243,0.6)' : 'rgba(40,50,62,0.7)' });
     const lw = Math.min(130 * p, bw * 0.46), lx = bx - bw / 2 + 12 * p, ly = benchY - bh + 12 * p;
     VG.lcd(ctx, lx, ly, lw, 26 * p, `${(sol.mg === 0 ? 0 : sol.mg).toFixed(2).replace('-', '−')} mg`);
     if (!sol.stable) { ctx.strokeStyle = '#8ef0b0'; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.arc(lx + 9 * p, ly + 13 * p, 3.5 * p, 0, 7); ctx.stroke(); }
-    VG.label(ctx, 'reads to 0.01 mg', lx, ly + 36 * p, { s: 9 * p, c: VG.dark() ? '#9aa6b4' : '#4a5563' });
-    VG.label(ctx, 'TARE', bx + bw * 0.22, benchY - bh + 40 * p, { a: 'center', s: 9 * p, w: 700, c: VG.dark() ? '#9aa6b4' : '#4a5563' });
+    VG.label(ctx, 'reads to 0.01 mg', lx, ly + 36 * p, { s: 9 * p, c: VG.dark() ? '#b2a89c' : '#61584c' });
+    VG.label(ctx, 'TARE', bx + bw * 0.22, benchY - bh + 40 * p, { a: 'center', s: 9 * p, w: 700, c: VG.dark() ? '#b2a89c' : '#61584c' });
     /* pan and the insulating post */
-    VG.rod(ctx, bx, benchY - bh, bx, yPan, 3 * p, { color: '#9aa4b0' });
-    VG.box(ctx, X(-0.035), yPan - 3 * p, 0.07 * sc, 4 * p, { color: '#b8c0ca', r: 2, shadow: false });
+    VG.rod(ctx, bx, benchY - bh, bx, yPan, 3 * p, { color: '#aea69c' });
+    VG.box(ctx, X(-0.035), yPan - 3 * p, 0.07 * sc, 4 * p, { color: '#c9c2b9', r: 2, shadow: false });
     ctx.fillStyle = VG.dark() ? 'rgba(170,210,230,0.28)' : 'rgba(150,200,225,0.45)'; ctx.fillRect(X(-0.004), Y(-a) - 1, 0.008 * sc, Y(yPanM) - Y(-a) - 3 * p + 1);
     ctx.strokeStyle = 'rgba(80,120,150,0.5)'; ctx.lineWidth = 1; ctx.strokeRect(X(-0.004), Y(-a) - 1, 0.008 * sc, Y(yPanM) - Y(-a) - 3 * p + 1);
     /* the ball */
@@ -965,7 +965,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         const L = h * sc * (0.26 + 0.16 * t), Wd = h * sc * 0.2 * (1 - 0.25 * t), px = X(x), py = Y(y);
         ctx.save(); ctx.translate(px, py); ctx.rotate(t > 0.02 ? ang : 0);
         ctx.globalAlpha = 0.5 + 0.4 * t;
-        ctx.fillStyle = VG.dark() ? '#6b7787' : '#9aa3ad'; ctx.beginPath(); ctx.ellipse(0, 0, L, Wd, 0, 0, 7); ctx.fill();
+        ctx.fillStyle = VG.dark() ? '#857b6d' : '#aca59b'; ctx.beginPath(); ctx.ellipse(0, 0, L, Wd, 0, 0, 7); ctx.fill();
         if (t > 0.02) {
           ctx.globalAlpha = 0.25 + 0.75 * t;
           ctx.fillStyle = T.pos; ctx.beginPath(); ctx.ellipse(L * 0.45, 0, L * 0.55, Wd, 0, -Math.PI / 2, Math.PI / 2); ctx.fill();
@@ -1305,9 +1305,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* the stands: insulating acrylic posts on bases */
     for (const Sp of [g.A, g.B]) {
       const x = X(Sp.c); if (x > W + 60 || (Sp === g.B && S.gap > B_SHOW)) continue;
-      VG.stand(ctx, x, v.benchPx - 2 * p, Y(-Sp.r) + 2, { s: Math.max(0.6, Math.min(1.2, sc / 1100)), rod: dk ? '#7d93a3' : '#cfe0ea', color: dk ? '#2b3440' : '#3a4553' });
+      VG.stand(ctx, x, v.benchPx - 2 * p, Y(-Sp.r) + 2, { s: Math.max(0.6, Math.min(1.2, sc / 1100)), rod: dk ? '#a09280' : '#e8ded1', color: dk ? '#3e372d' : '#51483c' });
     }
-    VG.box(ctx, TX - 16 * p, TY - 16 * p, 32 * p, 16 * p, { color: dk ? '#2e3742' : '#3a4553', r: 3 });
+    VG.box(ctx, TX - 16 * p, TY - 16 * p, 32 * p, 16 * p, { color: dk ? '#41392f' : '#51483c', r: 3 });
     ctx.fillStyle = '#3fa34d'; ctx.beginPath(); ctx.arc(TX, TY - 16 * p, 4.5 * p, 0, 7); ctx.fill(); ctx.fillStyle = '#e2c83a'; ctx.beginPath(); ctx.arc(TX, TY - 16 * p, 2.2 * p, 0, 7); ctx.fill();
     VG.plate(ctx, 'earth', TX, TY - 7 * p, { s: 7 * p });
     /* the joining wire, when the spheres are joined but apart */
@@ -1329,7 +1329,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (const [id, Sp] of [['A', g.A], ['B', g.B]]) {
       const x = X(Sp.c), y = Y(0), r = Sp.r * sc; if (x - r > W + 20) continue;
       if (id === 'B' && S.gap > B_SHOW) continue;
-      VG.ball(ctx, x, y, r, /^#[0-9a-f]{6}$/i.test(T.metal) ? T.metal : '#c9d1db', { glint: 0.9 });
+      VG.ball(ctx, x, y, r, /^#[0-9a-f]{6}$/i.test(T.metal) ? T.metal : '#dad3ca', { glint: 0.9 });
       drawShade(id, x, y, r);
       ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.strokeStyle = dk ? 'rgba(255,255,255,0.18)' : 'rgba(20,30,45,0.35)'; ctx.lineWidth = 1; ctx.stroke();
       const rim = S.shade[id].rim;
@@ -1383,9 +1383,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const T0 = [X(tip[0]), Y(tip[1])], m1 = [T0[0] + dir[0] * WAND_TIP * sc, T0[1] - dir[1] * WAND_TIP * sc], m2 = [T0[0] + dir[0] * WAND_L * sc, T0[1] - dir[1] * WAND_L * sc];
       const lead = leadTo([tip[0] + dir[0] * WAND_L, tip[1] + dir[1] * WAND_L], 40 * p);
       ctx.save(); ctx.strokeStyle = '#3fa34d'; ctx.lineWidth = 2.2 * p; ctx.beginPath(); lead.forEach((q, i) => (i ? ctx.lineTo(q[0], q[1]) : ctx.moveTo(q[0], q[1]))); ctx.stroke(); ctx.restore();
-      VG.rod(ctx, T0[0], T0[1], m1[0], m1[1], Math.max(1.6 * p, 0.0025 * sc), { color: '#c0c7d0' });
+      VG.rod(ctx, T0[0], T0[1], m1[0], m1[1], Math.max(1.6 * p, 0.0025 * sc), { color: '#cfc9c1' });
       VG.rod(ctx, m1[0], m1[1], m2[0], m2[1], Math.max(3.5 * p, 0.007 * sc), { color: '#c23f2c' });
-      ctx.fillStyle = '#c0c7d0'; ctx.beginPath(); ctx.arc(T0[0], T0[1], Math.max(2 * p, 0.003 * sc), 0, 7); ctx.fill();
+      ctx.fillStyle = '#cfc9c1'; ctx.beginPath(); ctx.arc(T0[0], T0[1], Math.max(2 * p, 0.003 * sc), 0, 7); ctx.fill();
       if (S.wand.on) paths['g' + S.wand.on] = [...lead, m1, T0, [X(S.wand.on === 'A' ? g.A.c : g.B.c), Y(0)]];
       if (!S.wand.on && !gw && !S.wand.p && W > 520) VG.label(ctx, 'ground wand', T0[0] - 4 * p, T0[1] + 12 * p, { a: 'right', s: 10 * p, c: T.muted });
     }
@@ -1500,7 +1500,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* the handle and the rod */
     ctx.fillStyle = '#3b3128'; ctx.beginPath(); ctx.roundRect(x0 - 6 * p, yR - rr * 1.25, (x1 - x0) * 0.3, rr * 2.5, rr * 0.6); ctx.fill();
     const g = ctx.createLinearGradient(0, yR - rr, 0, yR + rr), base = RUB_COL[S.rubRod];
-    g.addColorStop(0, '#ffffff'); g.addColorStop(0.25, base); g.addColorStop(1, S.rubRod === 'rubber' ? '#0d0d0f' : '#8f9aa3');
+    g.addColorStop(0, '#ffffff'); g.addColorStop(0.25, base); g.addColorStop(1, S.rubRod === 'rubber' ? '#0f0e0d' : '#a29a90');
     ctx.globalAlpha = S.rubRod === 'glass' ? 0.85 : 1; ctx.fillStyle = g; ctx.beginPath(); ctx.roundRect(x0 + (x1 - x0) * 0.22, yR - rr, (x1 - x0) * 0.78, 2 * rr, rr); ctx.fill(); ctx.globalAlpha = 1;
     VG.label(ctx, `${RUB_NAME[S.rubRod]} rod`, x0 + (x1 - x0) * 0.3, yR - rr - 10 * p, { s: 11 * p, c: T.muted });
     /* the cloth: on the patch while rubbing, held below it otherwise */

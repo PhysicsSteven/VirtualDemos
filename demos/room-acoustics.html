@@ -52,9 +52,9 @@ table.rows input:focus { border-color: var(--accent); }
   .chips button, .btn, .proj, .spin, .seg button { min-height: 36px; }
   input[type="range"] { min-height: 28px; }
 }
-:root { --wallc: #8e97a3; --brick: #b9846a; --panel: #3f8f6b; --foam: #6d7a8c; --foam-hi: #9aa6b5; --spk: #36414e; --mic: #c23f2c; --ray: #2b60b5; --fit: #a7740b; --floorc: #f3f5f8; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --wallc: #6c7784; --brick: #8f5f49; --panel: #5fbf93; --foam: #4c5866; --foam-hi: #74818f; --spk: #c9d1db; --mic: #ff7660; --ray: #69a0ff; --fit: #e2b350; --floorc: #121922; } }
-:root[data-theme="dark"] { --wallc: #6c7784; --brick: #8f5f49; --panel: #5fbf93; --foam: #4c5866; --foam-hi: #74818f; --spk: #c9d1db; --mic: #ff7660; --ray: #69a0ff; --fit: #e2b350; --floorc: #121922; }
+:root { --wallc: #a19a90; --brick: #b9846a; --panel: #3f8f6b; --foam: #8a7e6f; --foam-hi: #b3a99c; --spk: #4c4338; --mic: #c23f2c; --ray: #2b60b5; --fit: #a7740b; --floorc: #f8f6f3; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --wallc: #82796e; --brick: #8f5f49; --panel: #5fbf93; --foam: #645a4e; --foam-hi: #8d8376; --spk: #dad3ca; --mic: #ff7660; --ray: #69a0ff; --fit: #e2b350; --floorc: #211b13; } }
+:root[data-theme="dark"] { --wallc: #82796e; --brick: #8f5f49; --panel: #5fbf93; --foam: #645a4e; --foam-hi: #8d8376; --spk: #dad3ca; --mic: #ff7660; --ray: #69a0ff; --fit: #e2b350; --floorc: #211b13; }
 .stage { min-height: 600px; }
 .rack { max-height: calc(100% - 20px); overflow-y: auto; }
 .rack .seg button { font-size: 0.76rem; padding: 3px 8px; }
@@ -444,13 +444,13 @@ table.mat td.num { font-family: var(--font-mono); text-align: right; }
     ctx.save(); ctx.shadowColor = dk ? 'rgba(0,0,0,0.5)' : 'rgba(20,30,45,0.22)'; ctx.shadowBlur = 18 * p; ctx.shadowOffsetY = 6 * p;
     ctx.fillStyle = T.floorc; ctx.fillRect(ox - wt, oy - wt, rw + 2 * wt, rh + 2 * wt); ctx.restore();
     /* the floor: concrete, carpet, or an audience seated 2 per m² (rows 1 m apart, a center aisle drawn clear, as in the 3D room) */
-    const fl = S.walls === 'wedges' ? 'wedges' : S.floor, fc = fl === 'carpet' ? Gm(T.floorc, dk ? '#3a4152' : '#7d8597', 0.4) : fl === 'audience' ? Gm(T.floorc, dk ? '#5a4634' : '#b58c62', 0.45) : T.floorc;
+    const fl = S.walls === 'wedges' ? 'wedges' : S.floor, fc = fl === 'carpet' ? Gm(T.floorc, dk ? '#50473c' : '#958b7f', 0.4) : fl === 'audience' ? Gm(T.floorc, dk ? '#5a4634' : '#b58c62', 0.45) : T.floorc;
     ctx.fillStyle = fc; ctx.fillRect(ox, oy, rw, rh);
     ctx.save(); ctx.beginPath(); ctx.rect(ox, oy, rw, rh); ctx.clip();
     if (fl === 'audience') { const [sx0] = srcPos(m);
       for (let x = 0.6; x <= S.L - 0.3; x += 1) for (let y = 0.25; y < S.W; y += 0.5) { if (Math.abs(y - S.W / 2) <= 0.55 || x <= sx0 + 0.8) continue;
         ctx.fillStyle = Gm(fc, '#000000', 0.3); ctx.fillRect(X(x) + 0.05 * sc, Y(y) - 0.22 * sc, 0.2 * sc, 0.44 * sc);
-        ctx.fillStyle = ['#2f4f7f', '#8a3b3b', '#3d6b4a', '#6a5a8a', '#2a2a2a', '#b08a3a'][Math.floor(rnd() * 6)]; ctx.beginPath(); ctx.arc(X(x), Y(y), 0.16 * sc, 0, 7); ctx.fill(); } }
+        ctx.fillStyle = ['#2f4f7f', '#8a3b3b', '#3d6b4a', '#86755e', '#2a2a2a', '#b08a3a'][Math.floor(rnd() * 6)]; ctx.beginPath(); ctx.arc(X(x), Y(y), 0.16 * sc, 0, 7); ctx.fill(); } }
     else { const n = Math.min(1800, Math.round(rw * rh / (30 * p * p)));
       for (let i = 0; i < n; i++) { ctx.fillStyle = Gm(fc, rnd() < 0.5 ? '#000000' : '#ffffff', 0.08 + 0.1 * rnd()); ctx.fillRect(ox + rnd() * rw, oy + rnd() * rh, 1.5 * p, 1.5 * p); } }
     ctx.restore();
@@ -684,7 +684,7 @@ table.mat td.num { font-family: var(--font-mono); text-align: right; }
     const scene = new THREE.Scene(), cam = new THREE.PerspectiveCamera(32, 1, 0.1, 400);
     const hemi = new THREE.HemisphereLight(0xffffff, 0x8a8278, 0.72), amb = new THREE.AmbientLight(0xffffff, 0.3); scene.add(hemi, amb);
     const sun = new THREE.DirectionalLight(0xfff3e4, 0.62); sun.castShadow = shadows; sun.shadow.mapSize.set(2048, 2048); sun.shadow.bias = -0.0005; sun.shadow.normalBias = 0.02; sun.shadow.radius = 3; scene.add(sun, sun.target);
-    const fill = new THREE.DirectionalLight(0xdfe8ff, 0.22); scene.add(fill);
+    const fill = new THREE.DirectionalLight(0xf4f0ea, 0.22); scene.add(fill);
     const room = new THREE.Group(), kit = new THREE.Group(); scene.add(room, kit);
     g3 = { renderer, el, scene, cam, sun, fill, hemi, room, kit, shadows, faces: [], rect: null, w: 0, h: 0, ray: new THREE.Raycaster() };
     VD3.orbit(el, orb3, () => { G3.dirty = true; }, { phMin: 0.18, phMax: 1.42, zMin: 0.6, zMax: 3.2, grab: grabMic });
@@ -709,13 +709,13 @@ table.mat td.num { font-family: var(--font-mono); text-align: right; }
   }
   function floorTex(kind, dk) {
     const Gm = window.VDGear.mix, rnd = mulberry(11);
-    if (kind === 'carpet') { const base = dk ? '#3a4152' : '#7d8597';
+    if (kind === 'carpet') { const base = dk ? '#50473c' : '#958b7f';
       return canvasTex(128, 128, (g, w, h) => { g.fillStyle = base; g.fillRect(0, 0, w, h); speckle(g, w, h, 2600, [Gm(base, '#000000', 0.25), Gm(base, '#ffffff', 0.18)], 1, rnd); }, 0.5, 0.5); }
     if (kind === 'audience') { const base = dk ? '#5a4634' : '#b58c62';   /* a wooden floor, planks 150 mm wide */
       return canvasTex(256, 256, (g, w, h) => { for (let i = 0; i < 8; i++) { g.fillStyle = Gm(base, i % 2 ? '#000000' : '#ffffff', 0.05 + 0.06 * rnd()); g.fillRect(0, i * 32, w, 32);
         g.fillStyle = Gm(base, '#000000', 0.3); g.fillRect(0, i * 32, w, 1.5); g.fillRect(((i * 97) % 200) + 20, i * 32, 1.5, 32); }
         speckle(g, w, h, 300, [Gm(base, '#000000', 0.2)], 1.2, rnd); }, 1.2, 1.2); }
-    const base = dk ? '#3b4048' : '#b9bcc0';   /* concrete */
+    const base = dk ? '#47423c' : '#bfbdba';   /* concrete */
     return canvasTex(256, 256, (g, w, h) => { g.fillStyle = base; g.fillRect(0, 0, w, h); speckle(g, w, h, 3200, [Gm(base, '#000000', 0.18), Gm(base, '#ffffff', 0.2), Gm(base, '#6b5d4f', 0.2)], 1.6, rnd); }, 2, 2);
   }
   function quad(o, u, v, mat) {   /* a rectangle from corner o along u and v, facing u × v, with uv in meters */
@@ -738,14 +738,14 @@ table.mat td.num { font-family: var(--font-mono); text-align: right; }
     const dk = VD3.dark(), key = JSON.stringify(opts()) + dk; if (key === G3.key) return; G3.key = key;
     const m = model(), d = S.walls === 'wedges' ? S.wedge : 0, L = S.L, Wd = S.W, Hh = S.H, Gm = window.VDGear.mix, { room, kit } = g3;
     clearGroup(room); clearGroup(kit);
-    const bg = hex(T.canvas, dk ? '#10161e' : '#fcfdfe'); g3.scene.background = new THREE.Color(bg);
+    const bg = hex(T.canvas, dk ? '#1d1811' : '#fefdfc'); g3.scene.background = new THREE.Color(bg);
     g3.hemi.intensity = dk ? 0.5 : 0.6; g3.sun.intensity = dk ? 0.3 : 0.34; g3.fill.intensity = dk ? 0.2 : 0.26;
     const shade = (o) => { o.castShadow = g3.shadows; o.receiveShadow = g3.shadows; return o; };
     const paint = dk ? Gm(hex(T.brick, '#8f5f49'), '#ffffff', 0.12) : Gm(hex(T.brick, '#b9846a'), '#ffffff', 0.62);
     const wallMat = new THREE.MeshStandardMaterial({ map: brickTex(paint, dk), roughness: 0.9 });
-    const hardMat = new THREE.MeshStandardMaterial({ color: dk ? 0x2a2f36 : 0x8f949a, roughness: 0.9 });
+    const hardMat = new THREE.MeshStandardMaterial({ color: dk ? 0x35312b : 0x999590, roughness: 0.9 });
     const floorMat = new THREE.MeshStandardMaterial({ map: floorTex(S.walls === 'wedges' ? 'concrete' : S.floor, dk), roughness: S.floor === 'concrete' ? 0.6 : 0.95 });
-    const slabMat = new THREE.MeshStandardMaterial({ color: dk ? 0x2b323b : 0xd5d9de, roughness: 0.95 });
+    const slabMat = new THREE.MeshStandardMaterial({ color: dk ? 0x3a342c : 0xdddad6, roughness: 0.95 });
     /* the six inner surfaces, each facing into the room, and with it whatever is on it */
     const F6 = [[[L, 0, 0], [-L, 0, 0], [0, 0, Hh]], [[L, Wd, 0], [0, -Wd, 0], [0, 0, Hh]], [[0, Wd, 0], [L, 0, 0], [0, 0, Hh]], [[0, 0, 0], [0, Wd, 0], [0, 0, Hh]],
       [[0, 0, 0], [L, 0, 0], [0, Wd, 0]], [[0, Wd, Hh], [L, 0, 0], [0, -Wd, 0]]];
@@ -757,7 +757,7 @@ table.mat td.num { font-family: var(--font-mono); text-align: right; }
     slab(L + 2 * T_W, T_W, Hh, L / 2, -T_W / 2 - e, Hh / 2, g3.faces[0]); slab(L + 2 * T_W, T_W, Hh, L / 2, Wd + T_W / 2 + e, Hh / 2, g3.faces[2]);
     slab(T_W, Wd, Hh, -T_W / 2 - e, Wd / 2, Hh / 2, g3.faces[3]); slab(T_W, Wd, Hh, L + T_W / 2 + e, Wd / 2, Hh / 2, g3.faces[1]);
     slab(L + 2 * T_W + 2 * e, Wd + 2 * T_W + 2 * e, 0.2, L / 2, Wd / 2, -0.1 - e, room);
-    const edges = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(L, Wd, Hh)), new THREE.LineBasicMaterial({ color: hex(T.gridStrong, '#cfd7e1'), transparent: true, opacity: 0.55 }));
+    const edges = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(L, Wd, Hh)), new THREE.LineBasicMaterial({ color: hex(T.gridStrong, '#e0d9d0'), transparent: true, opacity: 0.55 }));
     edges.position.set(L / 2, Wd / 2, Hh / 2); room.add(edges);
     if (S.walls === 'panels') {   /* 50 mm fabric covered panels on the walls (no wedges here, so free space = the room) */
       const pm = new THREE.MeshStandardMaterial({ color: hex(T.panel, '#3f8f6b'), roughness: 0.97 }), t = 0.05;
@@ -768,7 +768,7 @@ table.mat td.num { font-family: var(--font-mono); text-align: right; }
     }
     if (d) {   /* wedges tile every surface, alternate tiles turned a quarter turn, as in a real chamber */
       const S6 = F6.map(([, u, v]) => Math.hypot(...u) * Math.hypot(...v)).reduce((a, b) => a + b, 0), b0 = Math.max(Math.min(0.5, Math.max(0.15, 0.7 * d)), Math.sqrt(S6 / 9000));
-      const wm = new THREE.MeshStandardMaterial({ color: hex(T.foam, '#6d7a8c'), roughness: 1, flatShading: true, side: THREE.DoubleSide }), geo = wedgeGeom();
+      const wm = new THREE.MeshStandardMaterial({ color: hex(T.foam, '#8a7e6f'), roughness: 1, flatShading: true, side: THREE.DoubleSide }), geo = wedgeGeom();
       const M = new THREE.Matrix4(), X = new THREE.Vector3(), Y = new THREE.Vector3(), Z = new THREE.Vector3();
       F6.forEach(([o, u, v], i) => {
         const a = Math.hypot(...u), c = Math.hypot(...v), nu = Math.max(1, Math.round(a / b0)), nv = Math.max(1, Math.round(c / b0)), bu = a / nu, bv = c / nv;
@@ -783,13 +783,13 @@ table.mat td.num { font-family: var(--font-mono); text-align: right; }
       /* the wire net floor at the wedge tips, 0.25 m mesh */
       const pts = [], step = 0.25; for (let x = d; x <= L - d + 1e-6; x += step) pts.push(x, d, d, x, Wd - d, d); for (let y = d; y <= Wd - d + 1e-6; y += step) pts.push(d, y, d, L - d, y, d);
       const ng = new THREE.BufferGeometry(); ng.setAttribute('position', new THREE.Float32BufferAttribute(pts, 3));
-      room.add(new THREE.LineSegments(ng, new THREE.LineBasicMaterial({ color: dk ? 0x8a96a6 : 0x2c333c, transparent: true, opacity: 0.5 })));
+      room.add(new THREE.LineSegments(ng, new THREE.LineBasicMaterial({ color: dk ? 0xa49a8c : 0x3b352d, transparent: true, opacity: 0.5 })));
     }
     if (S.walls !== 'wedges' && S.floor === 'audience') {   /* 2 people per m²: seats 0.5 m apart in rows 1 m apart, facing the source */
       const seats = []; for (let x = 0.6; x <= L - 0.3; x += 1) for (let y = 0.25; y < Wd; y += 0.5) if (Math.abs(y - Wd / 2) > 0.55 && x > srcPos(m)[0] + 0.8) seats.push([x, y]);
       const wood = new THREE.MeshStandardMaterial({ color: dk ? 0x6b4a2e : 0x8b5a32, roughness: 0.7 }), cloth = new THREE.MeshStandardMaterial({ roughness: 0.9 }), skin = new THREE.MeshStandardMaterial({ roughness: 0.75 });
       const parts = [[new THREE.BoxGeometry(0.44, 0.44, 0.04), wood, 0, 0.45], [new THREE.BoxGeometry(0.04, 0.44, 0.42), wood, 0.2, 0.68], [new THREE.CylinderGeometry(0.15, 0.18, 0.6, 10), cloth, 0.04, 0.78], [new THREE.SphereGeometry(0.1, 12, 8), skin, 0.02, 1.2]];
-      const CL = [0x2f4f7f, 0x8a3b3b, 0x3d6b4a, 0x6a5a8a, 0x2a2a2a, 0xb08a3a, 0x7a7f86, 0x9c5a3c], SK = [0xf1c7a4, 0xd9a57e, 0xa8714f, 0x7a4b33, 0xe8b894];
+      const CL = [0x2f4f7f, 0x8a3b3b, 0x3d6b4a, 0x86755e, 0x2a2a2a, 0xb08a3a, 0x85817b, 0x9c5a3c], SK = [0xf1c7a4, 0xd9a57e, 0xa8714f, 0x7a4b33, 0xe8b894];
       const rnd = mulberry(3), M = new THREE.Matrix4(), col = new THREE.Color();
       parts.forEach(([geo, mat, dx, z], pi) => { if (pi === 2) geo.rotateX(Math.PI / 2);
         const im = new THREE.InstancedMesh(geo, mat, seats.length);
@@ -797,9 +797,9 @@ table.mat td.num { font-family: var(--font-mono); text-align: right; }
         shade(im); room.add(im); });
     }
     /* source: a dodecahedron loudspeaker on a tripod; microphone: a measuring microphone on a stand, and its receiver sphere */
-    const [sx, sy, sz] = srcPos(m).map((q) => q + d), metal = new THREE.MeshStandardMaterial({ color: 0x9aa3ad, metalness: 0.6, roughness: 0.35 });
-    const blk = new THREE.MeshStandardMaterial({ color: dk ? 0x3c4552 : 0x2c333c, metalness: 0.3, roughness: 0.45 });
-    const dod = shade(new THREE.Mesh(new THREE.DodecahedronGeometry(0.2), new THREE.MeshStandardMaterial({ color: dk ? 0x9fb0c4 : 0x4a5563, metalness: 0.25, roughness: 0.4, flatShading: true })));
+    const [sx, sy, sz] = srcPos(m).map((q) => q + d), metal = new THREE.MeshStandardMaterial({ color: 0xaca59b, metalness: 0.6, roughness: 0.35 });
+    const blk = new THREE.MeshStandardMaterial({ color: dk ? 0x50483e : 0x3b352d, metalness: 0.3, roughness: 0.45 });
+    const dod = shade(new THREE.Mesh(new THREE.DodecahedronGeometry(0.2), new THREE.MeshStandardMaterial({ color: dk ? 0xc1b4a2 : 0x61584c, metalness: 0.25, roughness: 0.4, flatShading: true })));
     dod.position.set(sx, sy, sz); kit.add(dod);
     const stand = (x, y, z0, z1, gr) => { const pole = shade(new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.015, z1 - z0, 10), metal)); pole.rotation.x = Math.PI / 2; pole.position.set(x, y, (z0 + z1) / 2); gr.add(pole);
       for (let k = 0; k < 3; k++) { const a = k * 2.094 + 0.5, A = new THREE.Vector3(x, y, z0 + 0.32), B = new THREE.Vector3(x + 0.3 * Math.cos(a), y + 0.3 * Math.sin(a), z0), dir = B.clone().sub(A);
@@ -812,7 +812,7 @@ table.mat td.num { font-family: var(--font-mono); text-align: right; }
     const sph = new THREE.Mesh(new THREE.SphereGeometry(0.5, 32, 18), new THREE.MeshBasicMaterial({ color: hex(T.mic, '#c23f2c'), transparent: true, opacity: dk ? 0.1 : 0.08, depthWrite: false }));
     mic.add(sph); kit.add(mic);
     const ln = new THREE.BufferGeometry(); ln.setAttribute('position', new THREE.Float32BufferAttribute([0, 0, 0, 1, 0, 0], 3));
-    const rLine = new THREE.Line(ln, new THREE.LineDashedMaterial({ color: hex(T.muted, '#5a6575'), dashSize: 0.12, gapSize: 0.08 })); rLine.computeLineDistances(); kit.add(rLine);
+    const rLine = new THREE.Line(ln, new THREE.LineDashedMaterial({ color: hex(T.muted, '#73695c'), dashSize: 0.12, gapSize: 0.08 })); rLine.computeLineDistances(); kit.add(rLine);
     /* the clap: the rays as points, and the direct wavefront clipped to the free space */
     const pg = new THREE.BufferGeometry(); pg.setAttribute('position', new THREE.BufferAttribute(new Float32Array(NPART * 3), 3)); pg.setAttribute('color', new THREE.BufferAttribute(new Float32Array(NPART * 3), 3));
     const pts = new THREE.Points(pg, new THREE.PointsMaterial({ size: Math.max(0.06, Math.hypot(L, Wd) / 110), vertexColors: true, sizeAttenuation: true, transparent: true, depthWrite: false }));

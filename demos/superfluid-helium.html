@@ -14,12 +14,12 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
 /* only what this demo needs beyond demos/lib/vd.css */
-:root { --he1: rgba(120, 170, 225, 0.45); --he2: rgba(70, 150, 235, 0.55); --he-edge: #4f86c6; --glass: rgba(150, 175, 200, 0.22); --glass-edge: #8ea3b8; --silver: #b9c3cd;
-  --bubble: #ffffff; --heat: #d2452b; --metal: #8a96a3; --lam: #a7740b; --plug: #a28b6a; --beam: #e0a020; }
+:root { --he1: rgba(120, 170, 225, 0.45); --he2: rgba(70, 150, 235, 0.55); --he-edge: #4f86c6; --glass: rgba(150, 175, 200, 0.22); --glass-edge: #8ea3b8; --silver: #ccc4ba;
+  --bubble: #ffffff; --heat: #d2452b; --metal: #a1988c; --lam: #a7740b; --plug: #a28b6a; --beam: #e0a020; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --he1: rgba(110, 160, 230, 0.35); --he2: rgba(90, 170, 255, 0.45); --he-edge: #7fb0e8; --glass: rgba(150, 175, 200, 0.12);
-  --glass-edge: #6b7f94; --silver: #56626f; --bubble: #e8f2ff; --heat: #ff7a5c; --metal: #a4b0bd; --lam: #e2b350; --plug: #8d7a5c; --beam: #ffd060; } }
+  --glass-edge: #6b7f94; --silver: #6d6458; --bubble: #f7f4f0; --heat: #ff7a5c; --metal: #bbb2a6; --lam: #e2b350; --plug: #8d7a5c; --beam: #ffd060; } }
 :root[data-theme="dark"] { --he1: rgba(110, 160, 230, 0.35); --he2: rgba(90, 170, 255, 0.45); --he-edge: #7fb0e8; --glass: rgba(150, 175, 200, 0.12);
-  --glass-edge: #6b7f94; --silver: #56626f; --bubble: #e8f2ff; --heat: #ff7a5c; --metal: #a4b0bd; --lam: #e2b350; --plug: #8d7a5c; --beam: #ffd060; }
+  --glass-edge: #6b7f94; --silver: #6d6458; --bubble: #f7f4f0; --heat: #ff7a5c; --metal: #bbb2a6; --lam: #e2b350; --plug: #8d7a5c; --beam: #ffd060; }
 .stage { position: relative; display: flex; flex-direction: column; min-height: min-content; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
 :root[data-projector="on"] .stage { min-height: min-content; }
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
@@ -424,7 +424,7 @@
     const hs = b.h * C3.x; ctx.fillStyle = T.bubble; ctx.globalAlpha = 0.85; ctx.fillRect(b.x, b.y + b.h - hs, b.w, hs); ctx.globalAlpha = 1;
     ctx.strokeStyle = T.he_edge; ctx.lineWidth = 1 * p; const ys = b.y + b.h - hs; ctx.beginPath(); for (let i = 0; i <= 12; i++) { const xx = b.x + i * b.w / 12; ctx.lineTo(xx, ys - (i % 2 ? 5 * p : 0) * Math.min(1, hs / (6 * p))); } ctx.stroke(); ctx.restore();
     label(sf ? `liquid: superfluid ${he3Phase(C3.T)} phase` : 'liquid: normal Fermi liquid', b.x + b.w / 2, b.y + 18 * p, { a: 'center', c: T.ink, w: 700, s: 11, max: b.w - 8 * p });
-    if (hs > 16 * p) label(`solid ${f(C3.x * 100, 1)} %`, b.x + b.w / 2, b.y + b.h - hs / 2, { a: 'center', c: '#1d2a3a', w: 700, s: 11 });
+    if (hs > 16 * p) label(`solid ${f(C3.x * 100, 1)} %`, b.x + b.w / 2, b.y + b.h - hs / 2, { a: 'center', c: '#382d1f', w: 700, s: 11 });
     const mY = b.y + b.h + 14 * p, mw = Math.min(b.w, 150 * p);
     meter(b.x, mY, mw, 28 * p, `${f(C3.T * 1000, C3.T < 0.01 ? 3 : 2)} mK`, 'thermometer in the cell');
     meter(b.x, mY + 54 * p, mw, 28 * p, `${f(meltP(C3.T) / 1e6, 5)} MPa`, 'pressure');

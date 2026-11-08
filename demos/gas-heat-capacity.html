@@ -16,9 +16,9 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
 /* only what this demo needs beyond demos/lib/vd.css */
-:root { --hot: #d2452b; --trans: #d9682b; --rot: #6a4fc4; --vib: #10958f; --work: #2f8a4e; --curve: #17202b; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --hot: #ff7a5c; --trans: #ff9a5c; --rot: #a991ff; --vib: #3fd0c6; --work: #66d38c; --curve: #e3e8ef; } }
-:root[data-theme="dark"] { --hot: #ff7a5c; --trans: #ff9a5c; --rot: #a991ff; --vib: #3fd0c6; --work: #66d38c; --curve: #e3e8ef; }
+:root { --hot: #d2452b; --trans: #d9682b; --rot: #6a4fc4; --vib: #10958f; --work: #2f8a4e; --curve: #2a2219; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --hot: #ff7a5c; --trans: #ff9a5c; --rot: #a991ff; --vib: #3fd0c6; --work: #66d38c; --curve: #eeeae4; } }
+:root[data-theme="dark"] { --hot: #ff7a5c; --trans: #ff9a5c; --rot: #a991ff; --vib: #3fd0c6; --work: #66d38c; --curve: #eeeae4; }
 .stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
 .stage-ctl .count { margin-left: auto; font-size: 0.82rem; color: var(--muted); }
@@ -346,7 +346,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function moveMol(dt, speed, wob) { for (const m of MOL) { m.x += m.vx * dt * speed; m.y += m.vy * dt * speed; m.a += m.w * dt * wob;
     if (m.x < 0) { m.x = -m.x; m.vx = Math.abs(m.vx); } if (m.x > 1) { m.x = 2 - m.x; m.vx = -Math.abs(m.vx); } if (m.y < 0) { m.y = -m.y; m.vy = Math.abs(m.vy); } if (m.y > 1) { m.y = 2 - m.y; m.vy = -Math.abs(m.vy); } } }
   function drawMol(x, y, w, h, shape, tC, vib) {
-    const r = Math.max(2.2, Math.min(w, h) * 0.018), col = dark() ? '#dfe7f1' : '#2b3644', col2 = dark() ? '#ff9a7a' : '#c0432a';
+    const r = Math.max(2.2, Math.min(w, h) * 0.018), col = dark() ? '#efe9e1' : '#42392d', col2 = dark() ? '#ff9a7a' : '#c0432a';
     for (const m of MOL) { const cx = x + r * 2 + m.x * (w - r * 4), cy = y + r * 2 + m.y * (h - r * 4), q = vib ? 1 + 0.15 * Math.sin(m.a * 5) : 1;
       ctx.fillStyle = col;
       if (shape === 'mono') { ctx.beginPath(); ctx.arc(cx, cy, r, 0, 7); ctx.fill(); continue; }
@@ -361,7 +361,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
   }
   function lcdBox(x, y, w, h, text, name) {
-    if (VG) { VG.box(ctx, x - 6, y - 6, w + 12, h + 22, { color: dark() ? '#2b3440' : '#34404e', r: 6 }); VG.lcd(ctx, x, y, w, h, text); VG.plate(ctx, name, x + w / 2, y + h + 8, { s: 8 * proj() }); }
+    if (VG) { VG.box(ctx, x - 6, y - 6, w + 12, h + 22, { color: dark() ? '#3e372d' : '#4c4236', r: 6 }); VG.lcd(ctx, x, y, w, h, text); VG.plate(ctx, name, x + w / 2, y + h + 8, { s: 8 * proj() }); }
   }
   function scene() { const y = Math.round(H * 0.84); if (VG) { VG.wall(ctx, 0, 0, W, y); VG.bench(ctx, 0, y, W, 14, Math.max(14, H - y - 2)); } else { ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H); } return y; }
   function drawHeat() {
@@ -371,7 +371,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const avail = by - 40 * p - H * 0.12, mm = Math.min(avail / (hTop * 1000 + 40), (W * 0.22) / (CYL_D * 1000));   /* px per mm */
     rulerAt = { m: 1e-3 / mm };
     const cw = CYL_D * 1000 * mm, cx = W * 0.32, base = by - 30 * p, gasH = s.h * 1000 * mm, top = base - gasH;
-    if (VG) VG.box(ctx, cx - cw / 2 - 18 * p, base, cw + 36 * p, 30 * p, { color: '#3d4754', r: 4 });
+    if (VG) VG.box(ctx, cx - cw / 2 - 18 * p, base, cw + 36 * p, 30 * p, { color: '#524a3f', r: 4 });
     /* gas, tinted warm as it heats */
     const warm = Math.max(0, Math.min(1, (s.T - T0C) / 180));
     ctx.fillStyle = dark() ? `rgba(${60 + 150 * warm},${80 - 20 * warm},${110 - 60 * warm},0.35)` : `rgba(${200 + 40 * warm},${220 - 60 * warm},${240 - 120 * warm},0.55)`;
@@ -379,7 +379,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     drawMol(cx - cw / 2, top, cw, gasH, g.shape, s.T, g.cvR - 1.5 > 1.05);
     /* heater coil at the bottom */
     const on = S.run && h.Q < heatState(gasKey(), h.n, h.mode, 0).C * (T_CUTOUT - T0C);
-    ctx.save(); ctx.strokeStyle = on ? '#ff6a3d' : (dark() ? '#7a838f' : '#5b6370'); ctx.lineWidth = 3 * p; if (on) { ctx.shadowColor = '#ff6a3d'; ctx.shadowBlur = 10 * p; }
+    ctx.save(); ctx.strokeStyle = on ? '#ff6a3d' : (dark() ? '#8d867c' : '#6e675d'); ctx.lineWidth = 3 * p; if (on) { ctx.shadowColor = '#ff6a3d'; ctx.shadowBlur = 10 * p; }
     ctx.beginPath(); for (let i = 0; i <= 40; i++) { const xx = cx - cw * 0.38 + cw * 0.76 * i / 40, yy = base - 10 * p + Math.sin(i * 1.2) * 5 * p; i ? ctx.lineTo(xx, yy) : ctx.moveTo(xx, yy); } ctx.stroke(); ctx.restore();
     /* glass walls */
     const wallTop = base - (hTop * 1000 + 30) * mm;
@@ -387,8 +387,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.fillStyle = gl; ctx.fillRect(cx - cw / 2, wallTop, cw, base - wallTop);
     ctx.strokeStyle = dark() ? 'rgba(220,235,245,0.75)' : 'rgba(80,110,130,0.8)'; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.moveTo(cx - cw / 2, wallTop); ctx.lineTo(cx - cw / 2, base); ctx.moveTo(cx + cw / 2, wallTop); ctx.lineTo(cx + cw / 2, base); ctx.stroke();
     /* piston, with a pin through the wall when locked */
-    const pt = 16 * p; if (VG) VG.box(ctx, cx - cw / 2 + 2, top - pt, cw - 4, pt, { color: dark() ? '#6c7786' : '#8e99a7', r: 2, shadow: false });
-    if (VG) VG.rod(ctx, cx, top - pt, cx, top - pt - 40 * p, 4 * p, { color: '#b4bcc6' });
+    const pt = 16 * p; if (VG) VG.box(ctx, cx - cw / 2 + 2, top - pt, cw - 4, pt, { color: dark() ? '#847a6e' : '#a59c90', r: 2, shadow: false });
+    if (VG) VG.rod(ctx, cx, top - pt, cx, top - pt - 40 * p, 4 * p, { color: '#c5beb5' });
     if (h.mode === 'V') { if (VG) VG.rod(ctx, cx - cw / 2 - 22 * p, top - pt / 2, cx + cw / 2 + 22 * p, top - pt / 2, 3 * p, { color: '#c9a24a' }); if (VG) VG.label(ctx, 'locking pin', cx + 10 * p, top - pt - 30 * p, { s: 10.5 * p }); }
     else if (VG) VG.label(ctx, 'free piston (1 atm)', cx + 10 * p, top - pt - 30 * p, { s: 10.5 * p });
     /* height scale */
@@ -401,7 +401,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     lcdBox(mx, H * 0.08, mw, mh, `${f(s.T, 2)} °C`, 'thermometer');
     lcdBox(mx, H * 0.08 + 66 * p, mw, mh, `${f(h.Q, 1)} J`, 'heat delivered');
     lcdBox(mx, H * 0.08 + 132 * p, mw, mh, `${f(s.h * 1000, 1)} mm`, 'piston height');
-    if (VG) { VG.cable(ctx, cx + cw / 2, base - 8 * p, mx - 6, H * 0.08 + 66 * p + mh / 2, 30, { w: 2.5 * p }); VG.cable(ctx, cx + cw / 2, top + gasH * 0.5, mx - 6, H * 0.08 + mh / 2, 20, { w: 2 * p, color: '#3a4553' }); }
+    if (VG) { VG.cable(ctx, cx + cw / 2, base - 8 * p, mx - 6, H * 0.08 + 66 * p + mh / 2, 30, { w: 2.5 * p }); VG.cable(ctx, cx + cw / 2, top + gasH * 0.5, mx - 6, H * 0.08 + mh / 2, 20, { w: 2 * p, color: '#51483c' }); }
     /* the energy split, unless Blind */
     if (!S.blind && h.Q > 0) {
       const sp = split(gasKey(), h.n, h.mode, s.T - T0C), parts = [['into motion through space', sp.trans, T.trans], ['into rotation', sp.rot, T.rot], ['into vibration', sp.vib, T.vib], ['work on the piston', sp.work, T.work]];
@@ -425,7 +425,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.strokeRect(fx - tubeW / 2, tubeTop, tubeW, neck - tubeTop + 4);
     /* the ball: its swing drawn 3 times larger than life so it can be seen (the photogate times the real motion) */
     const eqY = tubeTop + (neck - tubeTop) * 0.45, by0 = eqY - x * 1000 * 3 * p, br = tubeW / 2 - 1;
-    if (VG) VG.ball(ctx, fx, by0, br, '#9aa4b0', { glint: 1 }); else { ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(fx, by0, br, 0, 7); ctx.fill(); }
+    if (VG) VG.ball(ctx, fx, by0, br, '#aea69c', { glint: 1 }); else { ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(fx, by0, br, 0, 7); ctx.fill(); }
     if (VG) VG.gate(ctx, fx, eqY, tubeW + 10 * p, 30 * p, Math.abs(by0 - eqY) < br, { s: p });
     const lx = Math.min(W - 160 * p, fx + 90 * p); lcdBox(lx, H * 0.1, 132 * p, 28 * p, S.ru.lastPeriod ? `${f(S.ru.lastPeriod, 4)} s` : '—', 'period of the last swing');
     lcdBox(lx, H * 0.1 + 66 * p, 132 * p, 28 * p, `${S.ru.swings.length}`, 'swings timed');
@@ -451,7 +451,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* the floor, faintly shaded */
     ctx.fillStyle = dark() ? 'rgba(120,140,160,0.10)' : 'rgba(60,90,120,0.07)'; ctx.beginPath(); [0, 1, 3, 2].forEach((i, k) => (k ? ctx.lineTo(corners[i][0], corners[i][1]) : ctx.moveTo(corners[i][0], corners[i][1]))); ctx.fill();
     edge(false);
-    const base = hexRgb(dark() ? '#c9d3df' : '#4a5868'), rotC = hexRgb(T.rot), shade = hexRgb(dark() ? '#1a2029' : '#202833'), items = [];
+    const base = hexRgb(dark() ? '#ddd5cb' : '#665b4c'), rotC = hexRgb(T.rot), shade = hexRgb(dark() ? '#28221b' : '#322b21'), items = [];
     for (const m of G.mol) { const A = molAtoms(G, m).map((a) => P3(a[0], a[1], a[2])), c = mixA(base, rotC, spinOf(G, m, e.Teq)); items.push({ A, w: A.reduce((t, a) => t + a[2], 0) / A.length, col: css(c), edge: css(mixA(c, shade, 0.55)) }); }
     items.sort((a, b) => b.w - a.w);
     for (const it of items) {
@@ -496,7 +496,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function init3() {
     const S3 = VD3K.stage($('pane'), { before: can, shadow: 0.7, fov: 30, far: 30 });
     if (!S3) return false;
-    const steel = VD3K.material(S3, { roughness: 0.4, metalness: 0.35 }, ['#b4bcc6', '#8a939e']), dark3 = VD3K.material(S3, { roughness: 0.6, metalness: 0.2 }, ['#3d4754', '#2e3640']);
+    const steel = VD3K.material(S3, { roughness: 0.4, metalness: 0.35 }, ['#c5beb5', '#9c958b']), dark3 = VD3K.material(S3, { roughness: 0.6, metalness: 0.2 }, ['#524a3f', '#3f382f']);
     S3.scene.add(VD3K.bench(S3, { w: 6, d: 4, y: 0.8 }), VD3K.backdrop(S3, { r: 2.2, y: 1.0 }));
     /* --- heat a gas --- */
     const heat = new THREE.Group();
@@ -509,13 +509,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const pin = VD3K.rod([-0.085, 0, 0.008], [0.085, 0, 0.008], 0.004, VD3K.material(S3, { roughness: 0.35, metalness: 0.6 }, ['#c9a24a', '#a8873a']));
     const pG = new THREE.Group(); pG.add(piston, prod, pin); heat.add(pG);
     const pts = []; for (let i = 0; i <= 160; i++) { const a = i / 160 * Math.PI * 2 * 2.6, rr = 0.012 + 0.026 * i / 160; pts.push(new THREE.Vector3(rr * Math.cos(a), rr * Math.sin(a), BASE + 0.006)); }
-    const coilM = new THREE.MeshStandardMaterial({ color: '#5b6370', roughness: 0.5, metalness: 0.4 });
+    const coilM = new THREE.MeshStandardMaterial({ color: '#6e675d', roughness: 0.5, metalness: 0.4 });
     heat.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 200, 0.0018, 6, false), coilM));
     const rule = VD3K.ruler(S3, { len: 0.6, to: 600, unit: 'mm', step: 10, w: 0.03, wood: true }); const ruleG = new THREE.Group(); ruleG.add(rule); ruleG.quaternion.setFromRotationMatrix(new THREE.Matrix4().makeBasis(new THREE.Vector3(0, 0, 1), new THREE.Vector3(-1, 0, 0), new THREE.Vector3(0, -1, 0)));
     ruleG.position.set(-0.075, -0.035, BASE); heat.add(ruleG);   /* the rule stands up beside the cylinder, its 0 at the cylinder floor, printed side to the front */
     const atoms = VD3K.particles(S3, { n: MOL.length * 3, r: 0.0042, seg: 8 }); heat.add(atoms);
     /* the bonds: unit cylinders along y, stretched and turned between two atoms */
-    const bondG = new THREE.CylinderGeometry(0.0013, 0.0013, 1, 8), bonds = new THREE.InstancedMesh(bondG, new THREE.MeshStandardMaterial({ color: '#9aa4b0', roughness: 0.45, metalness: 0.2 }), MOL.length * 2);
+    const bondG = new THREE.CylinderGeometry(0.0013, 0.0013, 1, 8), bonds = new THREE.InstancedMesh(bondG, new THREE.MeshStandardMaterial({ color: '#aea69c', roughness: 0.45, metalness: 0.2 }), MOL.length * 2);
     bonds.frustumCulled = false; bonds.count = 0; heat.add(bonds);
     /* meters on a rack */
     const rack = VD3K.box(0.2, 0.02, 0.36, dark3, 0.26, 0.04, 0); heat.add(rack);
@@ -526,27 +526,27 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const colG = new THREE.Group(); colG.position.set(0.47, 0.02, 0); heat.add(colG);
     const seg = ['trans', 'rot', 'vib', 'work'].map((k) => { const m = new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.07, 1), new THREE.MeshStandardMaterial({ roughness: 0.6 })); m.geometry.translate(0, 0, 0.5); m.castShadow = true; colG.add(m);
       const lab = VD3K.label(' ', { size: 0.022, color: '#ffffff', bg: 'rgba(20,26,34,0.72)' }); colG.add(lab); return { k, m, lab }; });
-    const colTitle = VD3K.label('where the heat went', { size: 0.02, color: '#7d8898' }); colG.add(colTitle);
+    const colTitle = VD3K.label('where the heat went', { size: 0.02, color: '#968c7f' }); colG.add(colTitle);
     const glass = VD3K.glass(S3, { r: 0.04, len: 0.42, axis: 'z', ends: false, opacity: 0.08 }); glass.position.z = 0.21; colG.add(glass);
     /* --- Rüchardt --- */
     const ru = new THREE.Group();
     const flask = VD3K.bulb(S3, { r: 1, opacity: 0.2 }); ru.add(flask);
     const neckT = VD3K.glass(S3, { r: TUBE_D / 2, len: 0.5, axis: 'z', ends: false, opacity: 0.25 }); ru.add(neckT);
     const ring = new THREE.Mesh(new THREE.TorusGeometry(1, 0.25, 12, 40), VD3K.material(S3, { roughness: 0.9 }, ['#a87d4f', '#6e5236'])); ru.add(ring);
-    const ball = new THREE.Mesh(new THREE.SphereGeometry(TUBE_D / 2 * 0.98, 24, 16), VD3K.material(S3, { roughness: 0.25, metalness: 0.8 }, ['#c3cad3', '#9aa4b0'])); ball.castShadow = true; ru.add(ball);
-    const gateM = VD3K.material(S3, { roughness: 0.5 }, ['#2f3a46', '#2a333e']), gate = new THREE.Group();
+    const ball = new THREE.Mesh(new THREE.SphereGeometry(TUBE_D / 2 * 0.98, 24, 16), VD3K.material(S3, { roughness: 0.25, metalness: 0.8 }, ['#d2ccc4', '#aea69c'])); ball.castShadow = true; ru.add(ball);
+    const gateM = VD3K.material(S3, { roughness: 0.5 }, ['#443c31', '#3d352b']), gate = new THREE.Group();
     gate.add(VD3K.box(0.012, 0.03, 0.04, gateM, -0.025, 0, -0.02), VD3K.box(0.012, 0.03, 0.04, gateM, 0.025, 0, -0.02), VD3K.box(0.062, 0.03, 0.01, gateM, 0, 0, -0.03));
     const led = new THREE.Mesh(new THREE.SphereGeometry(0.004, 12, 8), new THREE.MeshBasicMaterial({ color: '#ff3030' })); led.position.set(-0.025, -0.017, 0.012); gate.add(led); ru.add(gate);
     const mP = VD3K.meter(S3, { label: 'PERIOD OF THE LAST SWING', w: 0.18, h: 0.09, tilt: 0 }), mN = VD3K.meter(S3, { label: 'SWINGS TIMED', w: 0.18, h: 0.09, tilt: 0 });
     const rack2 = VD3K.box(0.21, 0.02, 0.26, dark3, 0.3, 0.04, 0); ru.add(rack2, mP, mN); mP.position.set(0.3, 0.01, 0.2); mN.position.set(0.3, 0.01, 0.09);
     const gCab = { m: null };
     /* --- watch the molecules: the 3.60 nm box drawn 0.30 m on a side (1 σ = 25 mm) on the bench --- */
-    const molG = new THREE.Group(), frameM = VD3K.material(S3, { roughness: 0.5, metalness: 0.5 }, ['#8a939e', '#6a737e']), B = MOL_L * MOL_S3;
+    const molG = new THREE.Group(), frameM = VD3K.material(S3, { roughness: 0.5, metalness: 0.5 }, ['#9c958b', '#7d756c']), B = MOL_L * MOL_S3;
     for (let i = 0; i < 8; i++) for (const b of [1, 2, 4]) if (!(i & b)) { const j = i | b, P = (k) => [(k & 1 ? 0.5 : -0.5) * B, (k & 2 ? 0.5 : -0.5) * B, (k & 4 ? B : 0) + MOL_Z3]; molG.add(VD3K.rod(P(i), P(j), 0.0025, frameM)); }
     const molGlass = new THREE.Mesh(new THREE.BoxGeometry(B, B, B), new THREE.MeshStandardMaterial({ color: '#cfe0ee', transparent: true, opacity: 0.06, depthWrite: false })); molGlass.position.z = MOL_Z3 + B / 2; molG.add(molGlass);
     const molAt = VD3K.particles(S3, { n: MOL_N * 2, r: 0.5 * MOL_DRAW * MOL_S3, seg: 12 }); molG.add(molAt);
     const molBonds = new THREE.InstancedMesh(new THREE.CylinderGeometry(0.12 * MOL_S3, 0.12 * MOL_S3, 1, 8), new THREE.MeshStandardMaterial({ roughness: 0.45, metalness: 0.2, color: '#ffffff' }), MOL_N);
-    molBonds.frustumCulled = false; for (let i = 0; i < MOL_N; i++) molBonds.setColorAt(i, new THREE.Color('#9aa4b0')); molBonds.count = 0; molG.add(molBonds);   /* colors before count = 0, as in VD3K.particles */
+    molBonds.frustumCulled = false; for (let i = 0; i < MOL_N; i++) molBonds.setColorAt(i, new THREE.Color('#aea69c')); molBonds.count = 0; molG.add(molBonds);   /* colors before count = 0, as in VD3K.particles */
     const mTt = VD3K.meter(S3, { label: 'T, MOTION THROUGH SPACE', w: 0.17, h: 0.085, tilt: 0 }), mTr = VD3K.meter(S3, { label: 'T, ROTATION', w: 0.17, h: 0.085, tilt: 0 });
     const rack3 = VD3K.box(0.2, 0.02, 0.26, dark3, 0.33, 0.04, 0); mTt.position.set(0.33, 0.01, 0.2); mTr.position.set(0.33, 0.01, 0.095); molG.add(rack3, mTt, mTr);
     S3.scene.add(heat, ru, molG);
@@ -561,7 +561,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     g.heat.visible = heatV; g.ru.visible = S.view === 'ru'; g.molG.visible = molV;
     let tgt, dist;
     if (molV) {
-      const G = S.mol.G, e = molEnergy(G), a = molAvg(), base = hexRgb(dark() ? '#c9d3df' : '#7d8794'), rotC = hexRgb(T.rot), col = new THREE.Color();
+      const G = S.mol.G, e = molEnergy(G), a = molAvg(), base = hexRgb(dark() ? '#ddd5cb' : '#928a7f'), rotC = hexRgb(T.rot), col = new THREE.Color();
       const at = (q) => [(q[0] - MOL_L / 2) * MOL_S3, (q[1] - MOL_L / 2) * MOL_S3, q[2] * MOL_S3 + MOL_Z3];
       const BY = new THREE.Vector3(0, 1, 0), BD = new THREE.Vector3(), BQ = new THREE.Quaternion(), BM = new THREE.Matrix4(), BP = new THREE.Vector3(), BS = new THREE.Vector3();
       let k = 0, nb = 0;
@@ -578,7 +578,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       g.gas.scale.z = s.h; const warm = Math.max(0, Math.min(1, (s.T - T0C) / 180)); g.gasM.color.setRGB(0.82 + 0.15 * warm, 0.88 - 0.25 * warm, 0.95 - 0.5 * warm); g.gasM.opacity = 0.18 + 0.12 * warm;
       g.pG.position.z = BASE + s.h; g.pin.visible = h.mode === 'V';
       const on = S.run && h.Q < heatState(gasKey(), h.n, h.mode, 0).C * (T_CUTOUT - T0C);
-      g.coilM.emissive = new THREE.Color(on ? '#ff5a1f' : '#000000'); g.coilM.emissiveIntensity = on ? 0.9 : 0; g.coilM.color.set(on ? '#ff8a5a' : '#5b6370');
+      g.coilM.emissive = new THREE.Color(on ? '#ff5a1f' : '#000000'); g.coilM.emissiveIntensity = on ? 0.9 : 0; g.coilM.color.set(on ? '#ff8a5a' : '#6e675d');
       /* molecules: positions from the flat view's picture, inside the gas column */
       const Tk = s.T + C0, R0 = CYL_D / 2 * 0.82, ar = 0.0042;
       let k = 0, nb = 0; const BY = new THREE.Vector3(0, 1, 0), BD = new THREE.Vector3(), BP = new THREE.Vector3(), BS = new THREE.Vector3(), BQ = new THREE.Quaternion(), BM = new THREE.Matrix4();

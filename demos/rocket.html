@@ -25,16 +25,16 @@
 <style>
 /* Layout: the rocket on the left, graphs of speed and mass against time on the right of the stage; the rail on the right. */
 /* Layout: lab bench. The gas box and speed histogram fill the left, a narrow instrument rail sits on the right; stacks on phones. */
-:root { --vcol: #b0452f; --mcol: #2b60b5; --ycol: #2f7d4f; --flame: #e08a2c; --body: #c9d1db; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --vcol: #ff8a70; --mcol: #69a0ff; --ycol: #5fcf8a; --flame: #f0a050; --body: #6b7787; } }
-:root[data-theme="dark"] { --vcol: #ff8a70; --mcol: #69a0ff; --ycol: #5fcf8a; --flame: #f0a050; --body: #6b7787; }
+:root { --vcol: #b0452f; --mcol: #2b60b5; --ycol: #2f7d4f; --flame: #e08a2c; --body: #dad3ca; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --vcol: #ff8a70; --mcol: #69a0ff; --ycol: #5fcf8a; --flame: #f0a050; --body: #857b6d; } }
+:root[data-theme="dark"] { --vcol: #ff8a70; --mcol: #69a0ff; --ycol: #5fcf8a; --flame: #f0a050; --body: #857b6d; }
 /* scenery: sky that darkens toward space, stars, clouds, ground, pad, tower, rocket details */
-:root { --sky-low: #d4e8f7; --space: #bcc5d9; --star: #ffffff; --cloud: #ffffff; --ground: #d5e3c8; --pad: #b4bcc6; --steel: #8d99a8; --smoke: #e4e7eb;
-  --flame-core: #fff1b8; --nose: #c8574a; --fin: #8a96a6; --shadow: rgba(20, 30, 40, 0.16); }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --sky-low: #1f3a57; --space: #04070c; --star: #dfe6ef; --cloud: #33445a; --ground: #18241a; --pad: #3a4452; --steel: #5b6878; --smoke: #4a5463;
-  --flame-core: #ffe7a0; --nose: #c0574a; --fin: #8996a8; --shadow: rgba(0, 0, 0, 0.4); } }
-:root[data-theme="dark"] { --sky-low: #1f3a57; --space: #04070c; --star: #dfe6ef; --cloud: #33445a; --ground: #18241a; --pad: #3a4452; --steel: #5b6878; --smoke: #4a5463;
-  --flame-core: #ffe7a0; --nose: #c0574a; --fin: #8996a8; --shadow: rgba(0, 0, 0, 0.4); }
+:root { --sky-low: #d4e8f7; --space: #bcc5d9; --star: #ffffff; --cloud: #ffffff; --ground: #d5e3c8; --pad: #c5beb5; --steel: #a69c8f; --smoke: #eae8e5;
+  --flame-core: #fff1b8; --nose: #c8574a; --fin: #a49a8c; --shadow: rgba(20, 30, 40, 0.16); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --sky-low: #1f3a57; --space: #04070c; --star: #dfe6ef; --cloud: #33445a; --ground: #18241a; --pad: #50473c; --steel: #766b5d; --smoke: #61584c;
+  --flame-core: #ffe7a0; --nose: #c0574a; --fin: #a69a8b; --shadow: rgba(0, 0, 0, 0.4); } }
+:root[data-theme="dark"] { --sky-low: #1f3a57; --space: #04070c; --star: #dfe6ef; --cloud: #33445a; --ground: #18241a; --pad: #50473c; --steel: #766b5d; --smoke: #61584c;
+  --flame-core: #ffe7a0; --nose: #c0574a; --fin: #a69a8b; --shadow: rgba(0, 0, 0, 0.4); }
 :root[data-projector="on"] { font-size: 125%; }
 .bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; }
 .bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 12px; }
@@ -304,13 +304,13 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
     const starG = new THREE.BufferGeometry(), sp = [], rs = rng(42); for (let i = 0; i < 900; i++) { const u = rs() * 2 - 1, a = rs() * 6.283, r = Math.sqrt(1 - u * u); sp.push(r * Math.cos(a), r * Math.sin(a), u); }
     starG.setAttribute('position', new THREE.Float32BufferAttribute(sp, 3)); const starM = new THREE.PointsMaterial({ size: 2, sizeAttenuation: false, transparent: true, depthWrite: false }), stars = new THREE.Points(starG, starM); stars.scale.setScalar(150000);
     /* the rocket: engine bell, fins, body with a window that shows the fuel level, nose cone; z = 0 at the bell's exit */
-    const rocket = new THREE.Group(), bodyM = M({ roughness: 0.4, metalness: 0.3 }), noseM = M({ roughness: 0.4, metalness: 0.2 }), finM = M({ roughness: 0.5 }), bellM = M({ roughness: 0.35, metalness: 0.8, color: 0x3a3f46 });
+    const rocket = new THREE.Group(), bodyM = M({ roughness: 0.4, metalness: 0.3 }), noseM = M({ roughness: 0.4, metalness: 0.2 }), finM = M({ roughness: 0.5 }), bellM = M({ roughness: 0.35, metalness: 0.8, color: 0x45413b });
     const bell = mesh(upZ(new THREE.CylinderGeometry(0.35, 0.6, 1.4, 24, 1, true)), bellM); bell.material.side = THREE.DoubleSide; bell.position.z = 0.7;
     const body = mesh(upZ(new THREE.CylinderGeometry(RR, RR, RH - 4.4, 32)), bodyM); body.position.z = 1.4 + (RH - 4.4) / 2;
     const nose = mesh(upZ(new THREE.ConeGeometry(RR, 3, 32)), noseM); nose.position.z = RH - 1.5;
     for (let k = 0; k < 4; k++) { const sh = new THREE.Shape(); sh.moveTo(0, 0); sh.lineTo(1.5, -0.4); sh.lineTo(1.5, 0.8); sh.lineTo(0, 3.2); sh.closePath();
       const fg = new THREE.ExtrudeGeometry(sh, { depth: 0.12, bevelEnabled: false }); fg.rotateX(Math.PI / 2); fg.translate(RR - 0.05, 0.06, 1.4); const fin = mesh(fg, finM); fin.rotation.z = k * Math.PI / 2 + Math.PI / 4; rocket.add(fin); }
-    const winBack = mesh(new THREE.BoxGeometry(0.5, 0.2, 1), M({ roughness: 0.6, color: 0x1d252f })), fuelM = M({ roughness: 0.5, emissive: 0x552200 }), fuel = mesh(new THREE.BoxGeometry(0.42, 0.24, 1), fuelM, false);
+    const winBack = mesh(new THREE.BoxGeometry(0.5, 0.2, 1), M({ roughness: 0.6, color: 0x2e271e })), fuelM = M({ roughness: 0.5, emissive: 0x552200 }), fuel = mesh(new THREE.BoxGeometry(0.42, 0.24, 1), fuelM, false);
     const winH = RH - 6.2; winBack.scale.z = winH; winBack.position.set(0, -RR + 0.05, 1.9 + winH / 2);
     rocket.add(bell, body, nose, winBack, fuel);
     /* the first stage for Two stages: a plain cylinder BH tall with fins and a bell, drawn under the rocket, then let go */
@@ -336,8 +336,8 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
   const in3 = (e) => { const r = can.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top; return x >= rect3.x && x < rect3.x + rect3.w && y >= rect3.y && y < rect3.y + rect3.h; };
   function theme3() {
     const g = g3, dk = VD3.dark();
-    g.groundM.color = col3(T.ground, '#d5e3c8').multiplyScalar(dk ? 1 : 0.82); g.padM.color = col3(T.pad, '#b4bcc6'); g.steelM.color = col3(T.steel, '#8d99a8'); g.cloudM.color = col3(T.cloud, '#ffffff'); g.starM.color = col3(T.star, '#ffffff');
-    g.bodyM.color = col3(T.body, '#c9d1db'); g.noseM.color = col3(T.nose, '#c0392b'); g.finM.color = col3(T.fin, '#5f6a78'); g.fuelM.color = col3(T.flame, '#e08a2c'); g.smokeM.color = col3(T.smoke, '#e4e7eb');
+    g.groundM.color = col3(T.ground, '#d5e3c8').multiplyScalar(dk ? 1 : 0.82); g.padM.color = col3(T.pad, '#c5beb5'); g.steelM.color = col3(T.steel, '#a69c8f'); g.cloudM.color = col3(T.cloud, '#ffffff'); g.starM.color = col3(T.star, '#ffffff');
+    g.bodyM.color = col3(T.body, '#dad3ca'); g.noseM.color = col3(T.nose, '#c0392b'); g.finM.color = col3(T.fin, '#5f6a78'); g.fuelM.color = col3(T.flame, '#e08a2c'); g.smokeM.color = col3(T.smoke, '#eae8e5');
     g.hemi.intensity = dk ? 0.55 : 0.65; g.sun.intensity = dk ? 0.8 : 0.95;
     /* additive light reads as fire on a dark sky; on a light one it washes out to white, so the plume is painted normally there */
     for (const m of [g.plume.material, g.core.material]) { m.blending = dk ? THREE.AdditiveBlending : THREE.NormalBlending; m.needsUpdate = true; }

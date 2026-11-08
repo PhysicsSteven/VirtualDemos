@@ -23,20 +23,20 @@
 <style>
 /* Layout: lab bench. The orbit view and the third law chart fill the left, a narrow instrument rail sits on the right; stacks on phones. */
 :root {
-  --bg: #e9edf2;
-  --surface: #f8fafc;
-  --canvas: #fcfdfe;
-  --relief: #dfe5ec;
-  --ink: #17202b;
-  --muted: #5a6575;
-  --line: #d3d9e2;
-  --grid: #e6ebf1;
-  --grid-strong: #cfd7e1;
+  --bg: #f1eeea;
+  --surface: #fcfaf8;
+  --canvas: #fefdfc;
+  --relief: #ebe6e0;
+  --ink: #2a2219;
+  --muted: #73695c;
+  --line: #e1dbd4;
+  --grid: #f0ece7;
+  --grid-strong: #e0d9d0;
   --pos: #c23f2c;
   --neg: #2b60b5;
-  --field: #1d2836;
+  --field: #342b1f;
   --equi: #a7740b;
-  --accent: #2b60b5;
+  --accent: #c4811c;
   --on-charge: #ffffff;
   --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
@@ -45,16 +45,16 @@
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
-    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-    --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+    --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --relief: #40372c; --ink: #eeeae4; --muted: #b0a698;
+    --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+    --field: #eee8e0; --equi: #e2b350; --accent: #fbc26d; --on-charge: #17130e; color-scheme: dark;
     --sun: #f5c451;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
-  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-  --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+  --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --relief: #40372c; --ink: #eeeae4; --muted: #b0a698;
+  --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+  --field: #eee8e0; --equi: #e2b350; --accent: #fbc26d; --on-charge: #17130e; color-scheme: dark;
   --sun: #f5c451;
 }
 :root[data-projector="on"] { font-size: 125%; --canvas-scale: 1.5; }
@@ -153,7 +153,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
 }
 /* folded rail sections: secondary options behind their heading (layout redesign) */
 /* the 3D view: a WebGL canvas under the orbit canvas, which then only carries the words and takes no pointer */
-.pane.main.space { background: #04060b; }
+.pane.main.space { background: #0a0805; }
 .pane.main.space #view { pointer-events: none; }
 /* Sandbox rendezvous: the ship's controls */
 #rvBox { display: grid; gap: 8px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--line); }
@@ -1479,7 +1479,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     dwarf:   { name: 'Red dwarf', m: 0.3, R: 0.3 * 695700 / AU_KM, px: 7, col: '#e2643b' },
     jupiter: { name: 'Jupiter', m: 1 / 1047.35, R: 71492 / AU_KM, px: 6, col: '#c99a6b' },
     earth:   { name: 'Earth', m: 1 / 332946.05, R: 6378 / AU_KM, px: 4.5, col: '#4a8fe0' },
-    moon:    { name: 'Moon', m: 1 / 332946.05 / 81.30, R: 1737 / AU_KM, px: 3, col: '#9aa3ad' },
+    moon:    { name: 'Moon', m: 1 / 332946.05 / 81.30, R: 1737 / AU_KM, px: 3, col: '#aca59b' },
     /* the rendezvous: a 20 t ship and a 20 t target (1.0 × 10⁻²⁶ M☉, nominal M☉ = 1.98841 × 10³⁰ kg); a 10 m radius, so they never merge */
     ship:    { name: 'Ship', m: 2e4 / 1.98841e30, R: 0.01 / AU_KM, px: 5, col: '' },
     target:  { name: 'Target', m: 2e4 / 1.98841e30, R: 0.01 / AU_KM, px: 5, col: '#3ec7a4' }
@@ -2355,7 +2355,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
 
   // ---------- the look: space backdrop for the flat view, a planet lit from the star ----------
   // Pictures only. The space palette is shared by the 3D view's words and the flat view's Space backdrop option.
-  const SPACE = { canvas: 'rgba(5,8,14,0.8)', ink: '#e3e8ef', muted: '#a3afc0', line: '#3a4656', grid: '#141c28', gridStrong: '#2a3546',
+  const SPACE = { canvas: 'rgba(5,8,14,0.8)', ink: '#eeeae4', muted: '#beb3a5', line: '#544a3c', grid: '#261f16', gridStrong: '#443a2c',
                   pos: '#ff7660', neg: '#69a0ff', equi: '#e2b350', accent: '#8cb4ff', sun: '#f5c451' };
   let skyCv = null;
   function spaceBackdrop(ctx) {
@@ -2363,7 +2363,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       const c = document.createElement('canvas'); c.width = Math.round(W * dpr); c.height = Math.round(H * dpr);
       const g = c.getContext('2d'); g.scale(dpr, dpr);
       const bg = g.createRadialGradient(W * 0.5, H * 0.45, 0, W * 0.5, H * 0.45, Math.max(W, H) * 0.75);
-      bg.addColorStop(0, '#0b1220'); bg.addColorStop(1, '#03050a'); g.fillStyle = bg; g.fillRect(0, 0, W, H);
+      bg.addColorStop(0, '#1c160f'); bg.addColorStop(1, '#090704'); g.fillStyle = bg; g.fillRect(0, 0, W, H);
       let sd = 7; const rn = () => { sd = (sd * 16807) % 2147483647; return sd / 2147483647; };
       for (let i = 0, n = Math.round(W * H / 900); i < n; i++) {
         const b = Math.pow(rn(), 3) * 0.8 + 0.12, r = rn() < 0.04 ? 1.3 : 0.7, t = rn();
@@ -2419,13 +2419,13 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     const basic = (c, op) => new THREE.MeshBasicMaterial({ color: c, transparent: op != null, opacity: op == null ? 1 : op, depthWrite: op == null, side: THREE.DoubleSide });
     const lineOf = (n, mat) => { const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(new Float32Array(n * 3), 3)); g.setDrawRange(0, 0); const l = new THREE.Line(g, mat); l.frustumCulled = false; return l; };
     X.grid = new THREE.LineSegments(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({ vertexColors: true })); X.grid.frustumCulled = false;
-    X.disc = new THREE.Mesh(new THREE.CircleGeometry(1, 160), basic('#8fa6c8', 0.07));
-    X.axis = lineOf(2, new THREE.LineDashedMaterial({ color: '#9aa7b8', transparent: true, opacity: 0.85, dashSize: 1, gapSize: 1 }));
+    X.disc = new THREE.Mesh(new THREE.CircleGeometry(1, 160), basic('#c4af93', 0.07));
+    X.axis = lineOf(2, new THREE.LineDashedMaterial({ color: '#b6ab9c', transparent: true, opacity: 0.85, dashSize: 1, gapSize: 1 }));
     X.circ = VD3K.ring(1, { dashed: true, color: SPACE.equi, opacity: 0.95, seg: 160 }); X.esc = VD3K.ring(1, { dashed: true, color: SPACE.pos, opacity: 0.95, seg: 160 });
     X.wG = new THREE.Group();
     X.G.add(X.grid, X.disc, X.wG, X.axis, X.circ, X.esc);
     /* the predicted paths and the trails are thin tubes in the scene (k applied), so they keep a width on the picture */
-    X.tcA = new THREE.Mesh(new THREE.BufferGeometry(), basic('#aebbd0')); X.tcB = new THREE.Mesh(new THREE.BufferGeometry(), basic(SPACE.pos));
+    X.tcA = new THREE.Mesh(new THREE.BufferGeometry(), basic('#cdc1b1')); X.tcB = new THREE.Mesh(new THREE.BufferGeometry(), basic(SPACE.pos));
     X.ttA = new THREE.Mesh(new THREE.BufferGeometry(), new THREE.MeshBasicMaterial({ vertexColors: true })); X.ttB = new THREE.Mesh(new THREE.BufferGeometry(), new THREE.MeshBasicMaterial({ vertexColors: true }));
     for (const m of [X.tcA, X.tcB, X.ttA, X.ttB]) { m.frustumCulled = false; m.key = ''; sc.add(m); }
     /* a wide faint corona round the star and a small glow round each planet, so they read at any size */
@@ -2442,9 +2442,9 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     const arrowOf = (c) => { const g = new THREE.Group(), m = basic(c); g.shaft = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 1, 14), m); g.head = new THREE.Mesh(new THREE.ConeGeometry(1, 1, 20), m); g.add(g.shaft, g.head); return g; };
     X.launch = arrowOf(SPACE.accent); X.vA = arrowOf(SPACE.neg); X.vB = arrowOf(SPACE.pos);
     X.tip = new THREE.Mesh(new THREE.TorusGeometry(1, 0.24, 12, 48), basic(SPACE.accent));
-    X.tipIn = new THREE.Mesh(new THREE.CircleGeometry(0.8, 32), basic('#0b1220'));
-    X.mark = new THREE.Mesh(new THREE.TorusGeometry(1, 0.15, 12, 48), basic('#e3e8ef'));
-    const grey = basic('#b8c3d2');
+    X.tipIn = new THREE.Mesh(new THREE.CircleGeometry(0.8, 32), basic('#1c160f'));
+    X.mark = new THREE.Mesh(new THREE.TorusGeometry(1, 0.15, 12, 48), basic('#eeeae4'));
+    const grey = basic('#d0c6ba');
     X.focus = new THREE.Group(); X.focus.add(new THREE.Mesh(new THREE.TorusGeometry(1, 0.16, 8, 40), grey));
     X.ctr = new THREE.Group();
     for (const a of [Math.PI / 4, -Math.PI / 4]) { const bar = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.22, 0.22), grey); bar.rotation.z = a; X.focus.add(bar); }
@@ -2488,7 +2488,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   }
   function grid3(step, cx, cy, half) {
     const key = [step, cx, cy, half].join(); if (key === T3.gridKey) return; T3.gridKey = key;
-    const n = Math.ceil(half / step), seg = 28, pos = [], col = [], bg = new THREE.Color('#04060b'), c0 = new THREE.Color('#4f6585'), c1 = new THREE.Color('#7d93b4'), c = new THREE.Color();
+    const n = Math.ceil(half / step), seg = 28, pos = [], col = [], bg = new THREE.Color('#0a0805'), c0 = new THREE.Color('#816d53'), c1 = new THREE.Color('#b09c81'), c = new THREE.Color();
     const put = (x, y, ax) => { const f = Math.pow(Math.max(0, 1 - Math.hypot(x - cx, y - cy) / half), 1.3) * (ax ? 1 : 0.6); c.copy(bg).lerp(ax ? c1 : c0, f); pos.push(x, y, 0); col.push(c.r, c.g, c.b); };
     for (let i = -n; i <= n; i++) {
       const gx = cx + i * step, gy = cy + i * step, ax = Math.abs(gx) < step * 1e-6, ay = Math.abs(gy) < step * 1e-6;
@@ -2565,7 +2565,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   // the trail as a tube that fades into the sky toward its old end (the last 1500 points kept by the model, at most 600 drawn)
   function trail3(mesh, b, col) {
     const tr = b.trail.slice(-1500).concat([[b.x, b.y]]), st = Math.max(1, Math.ceil(tr.length / 600)), k = T3.k, pts = [], cols = [];
-    const bg = new THREE.Color('#04060b'), cc = new THREE.Color(col), t = new THREE.Color();
+    const bg = new THREE.Color('#0a0805'), cc = new THREE.Color(col), t = new THREE.Color();
     for (let i = (tr.length - 1) % st; i < tr.length; i += st) pts.push([tr[i][0] * k, tr[i][1] * k]);
     pts.forEach((_, i) => { t.copy(bg).lerp(cc, 0.12 + 0.88 * Math.pow((i + 1) / pts.length, 1.5)); cols.push(t.r, t.g, t.b); });
     tube3(mesh, pts, 0.0034, cols);
@@ -2642,7 +2642,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     const hot = drag && drag.type === 'vel' ? 1.35 : 1;
     X.tip.position.copy(tp); X.tip.scale.setScalar(0.017 * hot / Math.sqrt(o.zoom)); X.tipIn.position.copy(tp).setZ(0.0005); X.tipIn.scale.copy(X.tip.scale);
     X.mark.position.copy(lp); X.mark.scale.setScalar(0.02 * (drag && drag.type === 'pos' ? 1.35 : 1) / Math.sqrt(o.zoom));
-    S3.r.setClearColor('#04060b'); S3.render();
+    S3.r.setClearColor('#0a0805'); S3.render();
     labels3D(elA, elL);
   }
   // the words on the 3D picture, drawn on the orbit canvas over it (as the flat view draws them)
