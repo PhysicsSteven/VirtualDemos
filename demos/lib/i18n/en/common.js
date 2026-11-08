@@ -614,5 +614,10 @@ VDI18N.add('en', 'common', [
 "Ready to hand in?",
 "Still to do before you hand in:",
 "Everything is filled in.",
-"Use Print or save as PDF, and say in your answers which data are simulated."
+"Use Print or save as PDF, and say in your answers which data are simulated.",
+"✓ Agrees with your data",
+"Check this one: no number here matches what your table gives for this step",
+"The same arithmetic on your own table gives this number too.",
+"Redo this step from your table. Nothing is shown: the check only says whether the number follows from your data.",
+"Check this cell: it does not follow from the other cells of its row."
 ]);

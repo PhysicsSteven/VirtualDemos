@@ -1421,6 +1421,10 @@ details.about[open] > summary { margin-bottom: 8px; }
 .ws-progress-missing ul { margin: 4px 0 0 !important; padding-left: 18px; }
 .ws-progress-missing li { margin: 2px 0; }
 .ws-tick { display: block; text-align: right; font-size: 12px; font-weight: 700; color: #1a7f37; margin: -6px 0 6px; }
+.ws-check { display: block; text-align: right; font-size: 12px; margin: -4px 0 6px; color: #1a7f37; }
+.ws-check.ws-check-look { color: #9a6700; }
+.ws-check-cell { box-shadow: inset 3px 0 0 #1a7f37; }
+.ws-check-cell.ws-check-look { box-shadow: inset 3px 0 0 #bf8700; }
 .markdown-body h2 .ws-h2tag { font-size: 0.55em; font-weight: 600; vertical-align: middle; margin-left: 10px; color: var(--hd-muted, #57606a); }
 .markdown-body h2 .ws-h2tag.done { color: #1a7f37; }
 @media (max-width: 600px) { .ws-progress-tasks { gap: 4px 10px; font-size: 13px; } .ws-progress .ws-handin { margin-left: 0; } }
@@ -1463,7 +1467,8 @@ details.ws-help { margin: 10px 0 2px; font-size: 0.9em; } details.ws-help > summ
 details.ws-help p, details.ws-help ul { margin: 6px 0; } details.ws-help code { font-size: 0.95em; }
 @media print { .ws-colname, .ws-bar, details.ws-help { display: none !important; } }
 @media print {
-  .ws-btns, .ws-btn, .ws-status, .ws-note, .ws-noprint, .ws-progress, .ws-tick, .ws-h2tag { display: none !important; }
+  .ws-btns, .ws-btn, .ws-status, .ws-note, .ws-noprint, .ws-progress, .ws-tick, .ws-h2tag, .ws-check { display: none !important; }
+  .ws-check-cell { box-shadow: none !important; }
   .ws-panel { border: 0; background: none; padding: 0; margin: 8px 0 14px; }
   .ws-panel h2 { display: none; }
   .ws-who { grid-template-columns: 1fr 1fr; gap: 10px 24px; }
@@ -1488,8 +1493,8 @@ details.ws-help p, details.ws-help ul { margin: 6px 0; } details.ws-help code { 
 
   /* ---------- a field that saves and prints ---------- */
   let saveTimer = 0, plotFrame = 0;
-  const changed = () => { clearTimeout(saveTimer); saveTimer = setTimeout(save, 300); setStatus(VDI18N.t('Saving…')); replot(); progress(); };
-  let progress = () => {};   /* set once the answer boxes exist (the progress strip below) */
+  const changed = () => { clearTimeout(saveTimer); saveTimer = setTimeout(save, 300); setStatus(VDI18N.t('Saving…')); replot(); progress(); checks(); };
+  let progress = () => {}, checks = () => {};   /* set once the answer boxes exist (the progress strip and the self checks below) */
   function field(kind, label, cls) {
     const f = kind === 'area' ? el('textarea', { class: 'ws-f ' + (cls || ''), rows: 2, 'aria-label': label, spellcheck: 'true' })
       : el('input', { class: 'ws-f ' + (cls || ''), type: 'text', 'aria-label': label, autocomplete: 'off' });
@@ -1865,6 +1870,89 @@ details.ws-help p, details.ws-help ul { margin: 6px 0; } details.ws-help code { 
     };
   }
 
+  /* ---------- self checks against the student's own data (Steve, 2026-11-08) ----------
+     curriculum/labs/checks.js lists, for some worksheets, the arithmetic items whose number follows from the student's own
+     table (a ratio of two readings, a difference, a slope) and the cells worked out from other cells of their row. The check
+     redoes that arithmetic on what the student recorded and says only whether the number in their answer agrees with it, within
+     a few percent or the rounding they used. It never shows the value, it knows nothing about the answer keys, and it leaves
+     written answers alone. A student whose table has a wrong reading gets "agrees" for arithmetic done right on it: the check is
+     about the step, not the reading. Left out of printouts. */
+  const CHECKS = (window.VD_WS_CHECKS || {})[SLUG] || null;
+  if (CHECKS) {
+    const SUP = { '⁰': '0', '¹': '1', '²': '2', '³': '3', '⁴': '4', '⁵': '5', '⁶': '6', '⁷': '7', '⁸': '8', '⁹': '9', '⁻': '-', '⁺': '+' };
+    const sup = (t) => t.split('').map((c) => SUP[c] || c).join('');
+    /* the numbers in an answer, as students write them: 3600; 1,215,500,000; 2.90 × 10⁶; 3e8; −4.2; 10.9 %. Each comes with half a
+       unit of its last digit, so "19" agrees with 19.3 and "0.9" with 0.94 */
+    const TOKEN = /[-−–]?\d[\d,]*(?:\.\d+)?(?:\s*[×x*]\s*10\s*(?:[⁰¹²³⁴⁵⁶⁷⁸⁹⁻⁺]+|\^\s*\(?-?\d+\)?)|(?<=\b10)\s*[⁰¹²³⁴⁵⁶⁷⁸⁹⁻⁺]+|e-?\d+)?(?:\s*(?:thousand|million|billion|trillion|mil millones|millones|millón|mil|billones)\b)?/gi;
+    const WORDS = { thousand: 1e3, mil: 1e3, million: 1e6, millón: 1e6, millones: 1e6, billion: 1e9, 'mil millones': 1e9, trillion: 1e12, billones: 1e12 };
+    const numbersIn = (text) => {
+      const out = [], src = String(text || ''); let m; TOKEN.lastIndex = 0;
+      while ((m = TOKEN.exec(src))) {
+        let tok = m[0].replace(/,+$/, ''); if (!tok || (m.index && /[\w.]/.test(src[m.index - 1]))) continue;
+        let mult = 1; tok = tok.replace(/\s*(thousand|million|billion|trillion|mil millones|millones|millón|mil|billones)$/i, (q, w) => { mult = WORDS[w.toLowerCase()]; return ''; });
+        let t = tok.replace(/[−–]/g, '-').replace(/(\d),(?=\d{3}(\D|$))/g, '$1');
+        t = t.replace(/(\d(?:\.\d+)?)\s*[×x*]\s*10\s*([⁰¹²³⁴⁵⁶⁷⁸⁹⁻⁺]+)/, (q, a, e) => a + 'e' + sup(e)).replace(/(\d(?:\.\d+)?)\s*[×x*]\s*10\s*\^\s*\(?(-?\d+)\)?/, '$1e$2').replace(/^10\s*([⁰¹²³⁴⁵⁶⁷⁸⁹⁻⁺]+)$/, (q, e) => '1e' + sup(e)).trim();
+        if (!/^-?\d+(?:\.\d+)?(?:e-?\d+)?$/.test(t)) continue;
+        const v = parseFloat(t) * mult; if (!isFinite(v)) continue;
+        const frac = /\.(\d+)(?:e|$)/.exec(t), exp = /e(-?\d+)/.exec(t);
+        out.push({ v, round: 0.5 * Math.pow(10, -(frac ? frac[1].length : 0)) * (exp ? Math.pow(10, +exp[1]) : 1) * mult });
+      }
+      return out;
+    };
+    const near = (n, want, tol) => Math.abs(n.v - want) <= Math.max(Math.abs(want) * (tol == null ? 3 : tol) / 100, n.round || 0) + 1e-12;
+    const norm = (t) => String(t == null ? '' : t).toLowerCase().replace(/\$\$/g, '').replace(/[’]/g, "'").replace(/\s+/g, ' ').trim();
+    const colOf = (T, name) => { const n = norm(name); let i = T.cols.findIndex((c) => norm(c) === n); if (i < 0) i = T.cols.findIndex((c) => norm(c).indexOf(n) >= 0); return i; };
+    const mkRow = (T, R, row, i) => {
+      const col = (name) => (typeof name === 'number' ? name - 1 : colOf(T, name));
+      const cell = (name) => { const c = col(name); return c >= 0 ? row.cells[c] || null : null; };
+      /* a printed cell (an object's name, a period ratio) has no field: its text comes from the table the handout printed */
+      const s = (name) => { const c = col(name); if (c < 0) return ''; const f = row.cells[c]; return f ? shownOf(f) : (T.tpl[i] && T.tpl[i][c] ? T.tpl[i][c].text : ''); };
+      return { cell, s, n: (name) => WSF.num(s(name)) };
+    };
+    const matches = (r, where) => Object.keys(where).every((k) => { const w = where[k]; if (typeof w === 'function') return !!w(r.n(k), r.s(k)); if (typeof w === 'number') return near({ v: r.n(k), round: 0 }, w, 0.3); return norm(r.s(k)).indexOf(norm(w)) >= 0; });
+    const D = {
+      /* every filled row of table ti (1 based), or of its copy ri (0 based) */
+      rows: (ti, ri) => { const T = tables[ti - 1]; if (!T) return []; const runs = ri == null ? T.runs.filter((R) => !R.removed) : [T.runs[ri]].filter(Boolean); const out = [];
+        runs.forEach((R) => R.rows.forEach((row, i) => { if (row.cells.some((f) => f && !blank(shownOf(f)))) out.push(mkRow(T, R, row, i)); })); return out; },
+      row: (ti, where, ri) => D.rows(ti, ri).find((r) => matches(r, where)) || null,
+      n: (ti, where, col, ri) => { const r = D.row(ti, where, ri); return r ? r.n(col) : NaN; },
+      fit: (ti, ri) => { const T = tables[ti - 1]; const R = T && T.runs[ri || 0]; return R && R.lastFit && !R.lastFit.quad ? R.lastFit : null; },
+      slope: (ti, ri) => { const f = D.fit(ti, ri); return f ? f.b : NaN; },
+      intercept: (ti, ri) => { const f = D.fit(ti, ri); return f ? f.a : NaN; },
+      ans: (key) => { const a = answers.find((x) => x.key === key); return a ? numbersIn(a.f.value).map((x) => x.v) : []; },
+    };
+    /* the note sits right under the answer box, after its "answered" mark */
+    const note = (box, make) => { let after = box; if (after.nextElementSibling && after.nextElementSibling.classList.contains('ws-tick')) after = after.nextElementSibling;
+      let n = after.nextElementSibling; if (n && !n.classList.contains('ws-check')) n = null;
+      if (!n && make) { n = el('span', { class: 'ws-check', 'aria-live': 'polite' }); after.insertAdjacentElement('afterend', n); } return n; };
+    checks = () => {
+      Object.keys(CHECKS.items || {}).forEach((key) => {
+        const a = answers.find((x) => x.key === key); if (!a) return;
+        const box = a.f.closest('.ws-answer'); const def = CHECKS.items[key];
+        const have = numbersIn(a.f.value);
+        let want = null;
+        try { want = def.expect(D); } catch (_) { want = null; }
+        const any = want && typeof want === 'object' && !Array.isArray(want) && want.any; if (any) want = want.any;
+        want = (Array.isArray(want) ? want : [want]).filter((x) => typeof x === 'number' && isFinite(x));
+        if (!have.length || !want.length) { const n = note(box, false); if (n) n.remove(); return; }
+        const n = note(box, true);
+        const hit = want.map((w) => have.some((h) => near(h, w, def.tol)));
+        const ok = any ? hit.some(Boolean) : hit.every(Boolean);
+        n.textContent = ok ? VDI18N.t('✓ Agrees with your data') : VDI18N.t('Check this one: no number here matches what your table gives for this step');
+        n.title = ok ? VDI18N.t('The same arithmetic on your own table gives this number too.') : VDI18N.t('Redo this step from your table. Nothing is shown: the check only says whether the number follows from your data.');
+        n.className = 'ws-check' + (ok ? '' : ' ws-check-look');
+      });
+      (CHECKS.cells || []).forEach((def) => D.rows(def.table).forEach((r) => {
+        const f = r.cell(def.col); if (!f) return;
+        const shown = shownOf(f); let want = NaN;
+        try { want = def.from(r); } catch (_) { want = NaN; }
+        const n = WSF.num(shown), ok = isFinite(want) && !blank(shown) && !isNaN(n) ? near({ v: n, round: 0 }, want, def.tol == null ? 2 : def.tol) : null;
+        f.classList.toggle('ws-check-cell', ok != null); f.classList.toggle('ws-check-look', ok === false);
+        if (ok === false) f.title = VDI18N.t('Check this cell: it does not follow from the other cells of its row.'); else if (ok && !f.calc) f.title = '';
+      }));
+    };
+  }
+
   /* Export buttons again at the end of the worksheet. */
   const lastSec = sections[sections.length - 1];
   const endBox = el('section', { class: 'ws ws-panel ws-noprint tex2jax_ignore', 'aria-label': 'Save and export' }, [el('h2', { text: 'Save and export' })]);
@@ -1981,7 +2069,7 @@ details.ws-help p, details.ws-help ul { margin: 6px 0; } details.ws-help code { 
       if (!S || !S.worksheet) { alert(VDI18N.t('That file is not a worksheet save file.')); return; }
       if (S.worksheet !== SLUG && !confirm(VDI18N.t('That file is for a different worksheet ("{title}"). Open it here anyway?', { title: S.title || S.worksheet }))) return;
       if (!confirm(VDI18N.t('Replace what is on this page with the saved file?'))) return;
-      reset(); apply(S); save(); replot(); progress(); setStatus(VDI18N.t('Opened {file}.', { file: file.name }));
+      reset(); apply(S); save(); replot(); progress(); checks(); setStatus(VDI18N.t('Opened {file}.', { file: file.name }));
     }, () => alert(VDI18N.t('The file could not be read.')));
   }
   function reset() {
@@ -1994,13 +2082,13 @@ details.ws-help p, details.ws-help ul { margin: 6px 0; } details.ws-help code { 
     tables.forEach((T) => T.runs.forEach((R) => { R.source = null; setAxes(R, null); }));
     tables.forEach((T) => T.runs.forEach((R) => { R.rows.forEach((r) => r.cells.forEach((f) => f && f.wsSet(''))); R.notes.wsSet(''); }));
     try { localStorage.removeItem(KEY); } catch (_) {}
-    setStatus(VDI18N.t('Cleared.')); checkHand(); replot(); progress();
+    setStatus(VDI18N.t('Cleared.')); checkHand(); replot(); progress(); checks();
   }
 
   /* ---------- graphs ---------- */
   addEventListener('resize', () => replot());
   let clipN = 0;
-  function replot() { recalc(); if (GRAPHS.indexOf(SLUG) < 0 || plotFrame) return; plotFrame = requestAnimationFrame(() => { plotFrame = 0; (GRAPH_EVERY_TABLE.indexOf(SLUG) >= 0 ? tables : tables.slice(0, 1)).forEach((T) => T && T.runs.forEach((R) => R.graph && drawPlot(T, R))); }); }
+  function replot() { recalc(); if (GRAPHS.indexOf(SLUG) < 0 || plotFrame) return; plotFrame = requestAnimationFrame(() => { plotFrame = 0; (GRAPH_EVERY_TABLE.indexOf(SLUG) >= 0 ? tables : tables.slice(0, 1)).forEach((T) => T && T.runs.forEach((R) => R.graph && drawPlot(T, R))); checks(); }); }
   function graphBox(T, R, after) {
     R.axes = { x: '', y: '' };
     const pick = (k, label) => {
@@ -2113,6 +2201,7 @@ details.ws-help p, details.ws-help ul { margin: 6px 0; } details.ws-help code { 
   function drawPlot(T, R) {
     const box = R.graph; box.innerHTML = '';
     if (box.parentNode) box.parentNode.classList.toggle('ws-noprint', R.axes.x === '' || R.axes.y === '');   /* no axes chosen: nothing to print */
+    R.lastFit = null;
     if (R.axes.x === '' || R.axes.y === '') { box.appendChild(el('p', { class: 'ws-pnote', text: VDI18N.t('Choose a column for each axis to draw a graph of your data.') })); return; }
     const cx = +R.axes.x, cy = +R.axes.y, [xName, xUnit] = nameUnit(colShown(T, R, cx)), [yName, yUnit] = nameUnit(colShown(T, R, cy));
     const P = { xName, xUnit, yName, yUnit, title: VDI18N.t('{y} against {x}', { y: yName, x: xName }) };
@@ -2135,6 +2224,7 @@ details.ws-help p, details.ws-help ul { margin: 6px 0; } details.ws-help code { 
     let g = null;
     if (!sameX && !curve && kind && !quad) { const key = kind + '|' + xs.join(',') + '|' + ys.join(',') + '|' + (sig ? sig.join(',') : ''); if (R.fitKey !== key) { R.fitKey = key; R.fitOut = WSF.fit(kind, xs, ys, sig); } g = R.fitOut; }
     const f = sameX || curve ? null : quad ? (sig ? WSF.wquad(xs, ys, sig) : fitQuad(xs, ys)) : kind ? (g && !g.bad ? g : null) : sig ? WSF.wline(xs, ys, sig) : fitLine(xs, ys);
+    R.lastFit = f;   /* the self checks read the slope and intercept the student sees */
     const W = Math.round(Math.min(640, Math.max(330, R.graph.parentNode.clientWidth || 640))), H = f ? 380 : 270, /* drawn at the page's width so the labels stay readable on a phone */ svg = sv('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': VDI18N.t('{title}, {n} points', { title: P.title, n: pts.length }) });
     const lpad = (lo, hi) => { const a = Math.log10(lo), b = Math.log10(hi), d = Math.max(b - a, 0.3); return [Math.pow(10, a - 0.06 * d), Math.pow(10, b + 0.06 * d)]; };
     const xr = logOn ? lpad(Math.min(...xs), Math.max(...xs)) : pad(Math.min(...xs), Math.max(...xs), true), yr = logOn ? lpad(Math.min(...ys), Math.max(...ys)) : sig ? pad(Math.min(...ys.map((y, i) => y - sig[i])), Math.max(...ys.map((y, i) => y + sig[i])), true) : pad(Math.min(...ys), Math.max(...ys), true);
@@ -2277,7 +2367,7 @@ details.ws-help p, details.ws-help ul { margin: 6px 0; } details.ws-help code { 
     });
     for (let i = h.rows.length; i < R.rows.length; i++) get.forEach((g, c) => { if (g && R.rows[i].cells[c]) R.rows[i].cells[c].wsSet(''); });
     if (h.note && R.notes.value.indexOf(h.note) < 0) R.notes.wsSet(R.notes.value ? R.notes.value + '\n' + h.note : h.note);
-    received = h.sent; handBox.hidden = true; save(); replot(); progress();
+    received = h.sent; handBox.hidden = true; save(); replot(); progress(); checks();
     setStatus(/^The /.test(MAP.demo) ? VDI18N.t('{n} readings from {demo} demo are in your table.', { n: h.rows.length, demo: VDI18N.t(MAP.demo) }) : VDI18N.t('{n} readings from the {demo} demo are in your table.', { n: h.rows.length, demo: VDI18N.t(MAP.demo) }));
     (R.wrap || R.table).scrollIntoView({ block: 'nearest' });
   }
@@ -2289,7 +2379,7 @@ details.ws-help p, details.ws-help ul { margin: 6px 0; } details.ws-help code { 
   if (stored) { apply(stored); setStatus(VDI18N.t('Your work from {when} is back.', { when: new Date(stored.saved).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' }) })); }
   else if (!storageOK) setStatus(VDI18N.t('This browser is blocking storage (a private window?), so nothing is saved as you type. Use Save to a file.'), true);
   else setStatus(VDI18N.t('Nothing typed yet. Your work saves in this browser as you type.'));
-  checkHand(); replot(); progress();
+  checkHand(); replot(); progress(); checks();
   window.addEventListener('pagehide', () => { if (saveTimer) save(); });
   window.addEventListener('beforeprint', () => document.querySelectorAll('.ws textarea.ws-f').forEach((t) => { t.wsPrint.textContent = t.value; }));
 })();

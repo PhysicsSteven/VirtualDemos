@@ -1229,5 +1229,10 @@ VDI18N.add('es', 'common', {
 "Everything is filled in.":
   "Todo está llenado.",
 "Use Print or save as PDF, and say in your answers which data are simulated.":
-  "Usa Imprimir o guardar como PDF, y di en tus respuestas qué datos son simulados."
+  "Usa Imprimir o guardar como PDF, y di en tus respuestas qué datos son simulados.",
+  "✓ Agrees with your data": "✓ Concuerda con tus datos",
+  "Check this one: no number here matches what your table gives for this step": "Revisa esta: ningún número de aquí coincide con lo que da tu tabla en este paso",
+  "The same arithmetic on your own table gives this number too.": "La misma aritmética sobre tu propia tabla también da este número.",
+  "Redo this step from your table. Nothing is shown: the check only says whether the number follows from your data.": "Vuelve a hacer este paso a partir de tu tabla. No se muestra nada: la revisión solo dice si el número sale de tus datos.",
+  "Check this cell: it does not follow from the other cells of its row.": "Revisa esta celda: no sale de las otras celdas de su fila."
 });

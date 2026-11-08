@@ -14,3 +14,12 @@ Moved from CLAUDE.md on 2026-11-01, unchanged.
   worksheet button when opened from that course, via `?course=` and `demos/lib/nav.js`); a course with none of its own on that demo
   shows them all. A new course needs nothing more than its title on its handouts' second line.
 
+## Self checks (checks.js)
+
+`curriculum/labs/checks.js` lists, per worksheet, the answer boxes whose number follows from the student's own data table and
+the table columns worked out from other cells of their row. worksheet.js redoes that arithmetic on what the student recorded
+and says only whether the number they wrote agrees ("Agrees with your data" or "Check this one"); a worked out cell that does not
+add up gets an amber mark. It never shows a value, never grades written answers, and knows nothing about the keys: every rule is
+the step the question itself states, so it belongs in the public repo. When you edit a question or a column heading that a rule
+names, update the rule, and run the key test (load each TeacherKeys `-key.json` into its worksheet: every note must read
+Agrees and no cell may be marked). Astro 2203 has rules; add them for other worksheets the same way.
