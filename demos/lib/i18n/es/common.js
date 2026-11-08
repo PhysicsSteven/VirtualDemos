@@ -6,16 +6,16 @@ VDI18N.add('es', 'common', {
   "<a>Inicio</a>",
 "<a>Acoustics</a>":
   "<a>Acústica</a>",
-"Theme for every page of the site: Light, Dark, or whatever your browser or system is set to":
-  "Tema para todas las páginas del sitio: Claro, Oscuro o el que tenga tu navegador o sistema",
+"Theme for every page of the site: Day, Night, or whatever your browser or system is set to":
+  "Tema para todas las páginas del sitio: Día, Noche o el que tenga tu navegador o sistema",
 "Theme":
   "Tema",
 "Browser default":
   "Del navegador",
-"Light":
-  "Claro",
-"Dark":
-  "Oscuro",
+"Day":
+  "Día",
+"Night":
+  "Noche",
 "Put every control, preset and the simulation back the way the page opened":
   "Devuelve cada control, cada configuración y la simulación al estado en que se abrió la página",
 "Reset all":

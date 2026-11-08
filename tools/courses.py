@@ -81,6 +81,24 @@ BLURB['astro'] = (BLURB['astro+2203'] if MERGED.get('astro-2203') == 'astro' els
                   else BLURB['astro'])
 MODULES = {'acoustics', 'thermo', 'modern', 'astro'}   # modules follow the textbook chapters, not a course schedule
 TILE_START, TILE_END = '<!-- COURSES START (tools/courses.py) -->', '<!-- COURSES END -->'
+# The parchment look (Steve 2026-11-08, redesign direction D): one skin file, linked last so its tokens win, and one header band
+# on every site page. demos/lib/paper.css holds the tokens, textures and fonts; tools/paper.py links it into the demos.
+PAPER_LINK = '<link rel="stylesheet" href="demos/lib/paper.css">'
+MARK = ('<svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><ellipse cx="16" cy="16" rx="13" ry="6" fill="none" stroke="currentColor" stroke-width="1.8" transform="rotate(-30 16 16)"/>'
+        '<ellipse cx="16" cy="16" rx="13" ry="6" fill="none" stroke="currentColor" stroke-width="1.8" transform="rotate(30 16 16)"/><circle cx="16" cy="16" r="2.6" fill="currentColor"/></svg>')
+NEW_BTN = ('<button type="button" class="ib newbtn" data-whats-new title="See the recent changes to the site"><svg viewBox="0 0 16 16" aria-hidden="true" width="14" height="14" fill="currentColor">'
+           '<path d="M8 0.8l1.7 4.6 4.6 1.7-4.6 1.7L8 13.4 6.3 8.8 1.7 7.1l4.6-1.7z"/><path d="M13.2 10.6l.6 1.6 1.6.6-1.6.6-.6 1.6-.6-1.6-1.6-.6 1.6-.6z"/></svg>What’s new</button>')
+
+
+def top_bar(current=None, search=True, whats_new=False):
+    """The header band on every site page: brand, the three ways into the library, search, What's new (home page only,
+    Steve 2026-11-08), the theme switch, and the Courses link as the second layer (demo first, Steve 2026-11-08)."""
+    tabs = [('demos', 'index.html#topics', 'Demos'), ('openstax', 'openstax.html', 'OpenStax'), ('notes', 'notes/index.html', 'Notes')]
+    t = ''.join(f'<a class="tab" href="{h}"{" aria-current=\"page\"" if k == current else ""}>{l}</a>' for k, h, l in tabs)
+    return (f'<header class="top" aria-label="Site">\n  <a class="brand" href="index.html">{MARK}Virtual Physics Demos</a>\n  <nav class="tabs" aria-label="Library">{t}</nav>\n'
+            + (f'  {SEARCH_BOX.replace(chr(34) + "filter" + chr(34), chr(34) + "filter hfind" + chr(34), 1)}\n' if search else '  <span class="hfind"></span>\n')
+            + f'  {NEW_BTN if whats_new else ""}<span data-vd-theme></span>\n'
+            f'  <a class="courses" href="courses.html"{" aria-current=\"page\"" if current == "courses" else ""}><b>For a class</b> Courses</a>\n</header>')
 esc = html.escape
 
 
@@ -527,7 +545,7 @@ def course_page(course, m, cards, notes):
     return page_shell(title, BLURB[cid][0], lede, facts, ''.join(jump), '\n'.join(units), (how or
                       ('Units follow the textbook chapters.' if cid in MODULES else 'Units follow the course schedule.')
                       + ' Section numbers are volume:section in OpenStax University Physics. A demo can appear in more than one unit. Sections with no activity yet are listed under each unit.')
-                      + ' Looking for one subject? Every demo is also under <a href="index.html#topics">All demos by topic</a>.')
+                      + ' Looking for one subject? Every demo is also under <a href="index.html#topics">All demos by topic</a>.', tab='courses')
 
 
 TITLE = {'astro-2203': 'Astro 2203'}   # a folded course's name on the page it was folded into
@@ -634,7 +652,7 @@ def topic_card(name, demo, topic, where, cards, notes, ctitle):
       </li>'''
 
 
-def topic_page(fam, topic, t, m, cards, notes):
+def topic_page(fam, topic, t, m, cards, notes):   # tab='demos' is passed to page_shell below
     demos = {d['demo']: d for d in m['demos']}
     where = topics_of(t)
     ctitle = {c['id']: c['title'] for c in m['courses']}
@@ -653,7 +671,7 @@ def topic_page(fam, topic, t, m, cards, notes):
     how = ('Every demo on this subject, from every course and module, with all of its worksheets. Opened from here, a demo steps through '
            'this topic with its previous and next links. The other topics in ' + esc(fam['title']) + ' are in the bar above; the '
            '<a href="index.html#topics">home page</a> lists them all.')
-    return page_shell(topic['title'], fam['title'], topic['blurb'], facts, jump, body, how, base=True, back=('index.html#topics', 'Back to all topics'))
+    return page_shell(topic['title'], fam['title'], topic['blurb'], facts, jump, body, how, base=True, back=('index.html#topics', 'Back to all topics'), tab='demos')
 
 
 def openstax_page(m, cards, notes):
@@ -695,7 +713,7 @@ def openstax_page(m, cards, notes):
     how = ('Every section of OpenStax University Physics with the demos that serve it, chapter by chapter. Open a chapter to see its sections; '
            'search for a section number such as 3.2 to jump straight to its demos. Section numbers match the book.')
     page = page_shell('OpenStax University Physics', 'By textbook section', 'The free OpenStax textbook, section by section, with the demos for each.',
-                      facts, ''.join(jump), ALL_CH + '\n'.join(vols), how)
+                      facts, ''.join(jump), ALL_CH + '\n'.join(vols), how, tab='openstax')
     # a link to a chapter or section (#v1-ch3, #s1-3-2) opens its chapter
     return page.replace('<script src="search.js" defer></script>', '<script src="search.js" defer></script>\n' + OPEN_HASH, 1)
 
@@ -742,7 +760,7 @@ TOPIC_CSS = '''
 '''
 
 
-def page_shell(title, sub, lede, facts, jump, body, how, base=False, back=('index.html', 'Back to the home page')):
+def page_shell(title, sub, lede, facts, jump, body, how, base=False, back=('index.html', 'Back to the home page'), tab=None):
     """base: the page sits one folder down (topics/<id>.html), so a <base> makes every link resolve from the site root; such a
     page has no #anchor links of its own, since they would resolve against the root too."""
     return f'''<!doctype html>
@@ -760,38 +778,44 @@ def page_shell(title, sub, lede, facts, jump, body, how, base=False, back=('inde
 {shared_css()}
 {COURSE_CSS}
 {TOPIC_CSS}
+{TILE_CSS}
 {SEARCH_CSS}
 </style>
+{PAPER_LINK}
 </head>
-<body>
+<body class="site">
 <!-- Generated by tools/courses.py from curriculum/textbook-map.json. Edit the map or the script, not this file. -->
-<header class="hero">
+{top_bar(tab)}
+<header class="hero phead">
   <div class="wrap">
-    <p class="eyebrow"><a href="index.html">Virtual Physics Demos</a> · <b>{esc(sub)}</b></p>
+    <p class="eyebrow"><b>{esc(sub)}</b></p>
     <h1>{esc(title)}</h1>
     <p class="lede">{esc(lede)}</p>
     <ul class="facts">{facts}</ul>
   </div>
 </header>
 <nav class="tools" aria-label="Sections">
-  <div class="wrap">{SEARCH_BOX}<ul class="jump">{jump}</ul></div>
+  <div class="wrap"><ul class="jump">{jump}</ul></div>
 </nav>
 <main class="wrap">
   <p class="how">{how}</p>
 {body}
   <p class="more"><a href="{back[0]}">{esc(back[1])}</a></p>
 </main>
-<footer>
-  <div class="wrap">
-    <p>© 2026 Steven Anderson. All rights reserved. Free to use for teaching and learning; see the <a href="LICENSE.html">terms of use</a>.</p>
-    <p><a href="https://github.com/PhysicsSteven/VirtualDemos">Source on GitHub</a></p>
-  </div>
-</footer>
+{FOOTER}
 <script src="search.js" defer></script>
 {SPY}
 </body>
 </html>
 '''
+
+
+FOOTER = '''<footer>
+  <div class="wrap">
+    <p>© 2026 Steven Anderson. All rights reserved. Free to use for teaching and learning; see the <a href="LICENSE.html">terms of use</a>.</p>
+    <p><a href="index.html#topics">All demos</a> · <a href="openstax.html">OpenStax by section</a> · <a href="courses.html">Courses</a> · <a href="notes/index.html">Teaching notes</a> · <a href="https://github.com/PhysicsSteven/VirtualDemos">Source on GitHub</a></p>
+  </div>
+</footer>'''
 
 
 # The section bar marks the unit or week on screen as the page scrolls, and on a phone keeps that chip in view in the bar
@@ -917,8 +941,8 @@ TILE_CSS = '''
 
 
 def tiles(m, cards, t):
-    """The home page below the hero (Steve, 2026-10-28): search, Courses (LISTED), OpenStax University Physics by section and
-    All demos by topic (topics.json families)."""
+    """The home page below the hero (demo first, Steve 2026-11-08): the sticky subject bar, every subject with its topic links and
+    its demo cards (each demo once per subject), OpenStax University Physics by section, and the courses as the second layer."""
     out, m_demos = {}, {d['demo']: d for d in m['demos']}
     for c in m['courses']:
         names = []
@@ -934,17 +958,18 @@ def tiles(m, cards, t):
                  else f"{sum(1 for u in c['units'] if not u.get('schedule'))} units")
         out[c['id']] = tile(c['id'], c['title'], BLURB[c['id']][0], f"{count} · {len(names)} demos", BLURB[c['id']][1], names)
     listed = [out[c] for c in LISTED if c in out]
-    fams = []
+    fams, jump = [], []
     for f in t['families']:
-        n = len({d for x in f['topics'] for d in x['demos']})
-        firsts = [x['demos'][0] for x in f['topics']] + [d for x in f['topics'] for d in x['demos']]   # each topic's first demo, then the rest
-        pics = ''.join(thumb(d, '') for d in list(dict.fromkeys(firsts))[:4])
+        names = list(dict.fromkeys(d for x in f['topics'] for d in x['demos'] if d in cards))
+        jump.append(f'<li><a href="#{f["id"]}">{esc(f["title"])} <span class="n">{len(names)}</span></a></li>')
         links = ''.join(f'<li><a href="topics/{x["id"]}.html">{esc(x["title"])} <span class="n">{len(x["demos"])}</span></a></li>' for x in f['topics'])
-        fams.append(f'''      <li class="fam" id="{f['id']}">
-        <div class="mosaic" aria-hidden="true">{pics}</div>
-        <div class="fbody"><h3>{esc(f['title'])}</h3><p class="sub">{len(f['topics'])} topic{"s" if len(f['topics']) != 1 else ""} · {n} demos</p>
-        <ul class="tlinks">{links}</ul></div>
-      </li>''')
+        fams.append(f'''<section class="wrap fam" id="{f['id']}" aria-labelledby="{f['id']}-h">
+  <h2 id="{f['id']}-h">{esc(f['title'])} <span class="n">{len(names)} demos · {len(f['topics'])} topic{"s" if len(f['topics']) != 1 else ""}</span></h2>
+  <ul class="tlinks" aria-label="Topics in {esc(f['title'])}">{links}</ul>
+  <ul class="grid">
+{chr(10).join(demo_card(d, cards[d], m_demos.get(d)) for d in names)}
+  </ul>
+</section>''')
     vols = []
     for v in (1, 2, 3):
         ss = [s for s in m['sections'] if s['vol'] == v]
@@ -954,17 +979,17 @@ def tiles(m, cards, t):
         pick = [seen[round(i * (len(seen) - 1) / 3)] for i in range(4)] if len(seen) >= 4 else seen
         vols.append(tile(f'vol-{v}', f'Volume {v}', VOL_ABOUT[v], f'{len(chs)} chapters · {len(ss)} sections',
                          f'{BOOK[v]}, chapter by chapter, with the demos for each section.', pick, href=f'openstax.html#vol-{v}'))
+    clinks = ''.join(f'<a class="pbtn" href="{c["id"]}.html">{esc(c["title"])}</a>' for c in m['courses'] if c['id'] in LISTED)
     return f'''{TILE_START}
-<section class="wrap find" aria-labelledby="find-h">
+<nav class="tools" aria-label="Subjects">
+  <div class="wrap"><ul class="jump">{''.join(jump)}<li><a href="#openstax">OpenStax</a></li><li><a href="#courses">Courses</a></li></ul></div>
+</nav>
+<section class="wrap find" id="topics" aria-labelledby="find-h">
   <h2 id="find-h">Find a demo</h2>
   {SEARCH_BOX}
+  <p class="allnote">Every demo on the site, by subject. A demo can be under more than one topic; each is listed once per subject.</p>
 </section>
-<section class="wrap courses" id="courses" aria-labelledby="courses-h">
-  <h2 id="courses-h">Courses</h2>
-  <ul class="ctiles">
-{chr(10).join(listed)}
-  </ul>
-</section>
+{chr(10).join(fams)}
 <section class="wrap courses" id="openstax" aria-labelledby="openstax-h">
   <h2 id="openstax-h">OpenStax University Physics by section</h2>
   <p class="allnote">Every section of the free textbook with the demos that serve it.</p>
@@ -972,15 +997,71 @@ def tiles(m, cards, t):
 {chr(10).join(vols)}
   </ul>
 </section>
-<section class="wrap courses" id="topics" aria-labelledby="topics-h">
-  <h2 id="topics-h">All demos by topic</h2>
-  <p class="allnote">Every demo on the site, sorted by subject. A demo can be under more than one topic.</p>
-  <ul class="fams">
-{chr(10).join(fams)}
-  </ul>
+<section class="wrap courses" id="courses" aria-labelledby="courses-h">
+  <div class="course-strip sheet">
+    <div><span class="hand tilt">the second layer</span><h2 id="courses-h">Courses built from the library</h2>
+    <p>A course is a week by week path through these demos, with one required worksheet most weeks, reviews before each test, progress that stays in the student’s browser, and a Canvas cartridge. The demos are the same; the course only arranges them.</p></div>
+    <div class="cta"><a class="pbtn primary" href="courses.html">See the courses</a>{clinks}</div>
+  </div>
 </section>
 <script src="search.js" defer></script>
-{TILE_END}'''
+{TILE_END}{SPY}'''
+
+
+def demo_card(name, c, d):
+    """A demo on the home page: a pasted photograph, the title, two lines of description and its worksheets in handwriting."""
+    hs = (d or {}).get('handouts') or []
+    ws = f'<span class="ws hand">{len(hs)} worksheet{"s" if len(hs) != 1 else ""}</span>' if hs else ''
+    return (f'    <li><a class="card" href="demos/{name}.html">{thumb(name, "")}'
+            f'<span class="body"><h3>{esc(c["title"])}</h3><p>{c["desc"]}</p>{ws}</span></a></li>')
+
+
+def courses_page(m, cards, t):
+    """courses.html, the second layer (Steve 2026-11-08): the listed courses and what a course adds to the library."""
+    out = tiles_courses(m, cards)
+    facts = (f'<li><span><strong>{len(LISTED)}</strong> course{"s" if len(LISTED) != 1 else ""}</span></li>'
+             '<li><span>Week by week</span></li><li><span>Canvas cartridge for each</span></li>')
+    adds = [('1', 'A path', 'Week by week through the demos, in the order of the lectures, with the review before each test.'),
+            ('2', 'Required worksheets', 'One most weeks, marked on the week and on the demo card; the rest stay supplementary.'),
+            ('3', 'Progress', 'Each worksheet remembers what the student has answered, in their own browser; nothing is sent anywhere.'),
+            ('4', 'Canvas', 'A Common Cartridge file for the course, so every demo and worksheet sits in the LMS week by week.'),
+            ('5', 'The same demos', 'A demo opened from a course shows that course’s worksheets and steps to the next demo in the course. Opened from the library, it is the plain demo.')]
+    adds_html = ''.join(f'<li><b>{n}</b><span><strong>{esc(h)}</strong> {esc(x)}</span></li>' for n, h, x in adds)
+    body = f'''  <section class="unit" id="listed" aria-labelledby="listed-h">
+    <h2 id="listed-h">Courses</h2>
+    <p class="unote">Astro 2203 is the first course built this way, a trial run through the Winter Quarter. More follow as they are taught.</p>
+    <ul class="ctiles">
+{chr(10).join(out)}
+    </ul>
+  </section>
+  <section class="unit" id="adds" aria-labelledby="adds-h">
+    <h2 id="adds-h">What a course adds</h2>
+    <ul class="adds">{adds_html}</ul>
+  </section>'''
+    how = 'The library comes first: every demo and worksheet is free to open from the home page. A course is a second layer that arranges them for one class.'
+    return page_shell('Courses', 'For a class', 'A week by week path through the demos, built for one class at a time.', facts,
+                      '<li><a href="#listed">Courses</a></li><li><a href="#adds">What a course adds</a></li>', body, how, back=('index.html', 'Back to the library'), tab='courses')
+
+
+def tiles_courses(m, cards):
+    """The listed courses' tiles (the same tiles the home page showed first until 2026-11-08)."""
+    out, m_demos = [], {d['demo']: d for d in m['demos']}
+    for c in m['courses']:
+        if c['id'] not in LISTED:
+            continue
+        names = []
+        for u in c['units']:
+            for x in u['sections']:
+                s = next(s for s in m['sections'] if s['vol'] == x['vol'] and s['sec'] == x['sec'])
+                for d in s['demos']:
+                    if d not in names and d in cards and c['id'] in m_demos[d]['course']: names.append(d)
+            for d in u.get('demos', []):
+                if d not in names and d in cards: names.append(d)
+        weeks = [u for u in c['units'] if u.get('dates') and not u.get('review')]
+        count = (f"{len(weeks)} weeks · {sum(1 for u in c['units'] if u.get('review'))} tests" if weeks
+                 else f"{sum(1 for u in c['units'] if not u.get('schedule'))} units")
+        out.append(tile(c['id'], c['title'], BLURB[c['id']][0], f"{count} · {len(names)} demos", BLURB[c['id']][1], names))
+    return out
 
 
 def tile(cid, title, sub, count, lede, names, href=None):
@@ -1327,12 +1408,14 @@ def notfound_page(m):
 {SEARCH_CSS}
 {NOTFOUND_CSS}
 </style>
+{PAPER_LINK}
 </head>
-<body>
+<body class="site">
 <!-- Generated by tools/courses.py. Edit the script, not this file. -->
-<header class="hero">
+{top_bar(search=False)}
+<header class="hero phead">
   <div class="wrap">
-    <p class="eyebrow"><a href="index.html">Virtual Physics Demos</a> · <b>Page not found</b></p>
+    <p class="eyebrow"><b>Page not found</b></p>
     <h1>That page isn’t here</h1>
     <p class="lede">The link may be old, or a demo may have a new name. Search for it below, or start from a course or topic.</p>
     <p class="where" id="where"></p>
@@ -1349,12 +1432,7 @@ def notfound_page(m):
   </section>
   <p class="more"><a href="index.html">Go to the home page</a></p>
 </main>
-<footer>
-  <div class="wrap">
-    <p>© 2026 Steven Anderson. All rights reserved. Free to use for teaching and learning; see the <a href="LICENSE.html">terms of use</a>.</p>
-    <p><a href="https://github.com/PhysicsSteven/VirtualDemos">Source on GitHub</a></p>
-  </div>
-</footer>
+{FOOTER}
 <script src="search.js"></script>
 <script>
 (function () {{
@@ -1441,11 +1519,12 @@ def build():
         for x in f['topics']:
             out[ROOT / 'topics' / f'{x["id"]}.html'] = topic_page(f, x, t, m, cards, notes)
     out[ROOT / 'openstax.html'] = openstax_page(m, cards, notes)
+    out[ROOT / 'courses.html'] = courses_page(m, cards, t)
     # Misc became the Chemistry and biology topic (2026-10-28); old links land there
     out[ROOT / 'misc.html'] = MISC_REDIRECT
     idx = INDEX.read_text()
     block = tiles(m, cards, t)
-    # the homepage is the hero, the course tiles and the footer
+    # the homepage is the header band and the hero, the library (tiles) and the footer
     idx = re.sub(re.escape(TILE_START) + '.*?<footer>', lambda _: block + '\n\n<footer>', idx, count=1, flags=re.S)
     idx = re.sub(r'\n<script>.*?</script>', '', idx, count=1, flags=re.S)
     n_all = sum(len(sub['demos']) for sub in CATALOG_DATA()['subjects'])

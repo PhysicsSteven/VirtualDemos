@@ -1,0 +1,414 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="demos/lib/theme.js"></script>
+<title>Courses · Virtual Physics Demos</title>
+<meta name="description" content="Courses: A week by week path through the demos, built for one class at a time.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #dde3ea;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --shadow: 0 1px 2px rgb(23 32 43 / 0.06), 0 8px 24px -12px rgb(23 32 43 / 0.25);
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18212c; --pos: #ff7660; --neg: #69a0ff; --equi: #e2b350; --accent: #69a0ff;
+    --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 10px 28px -12px rgb(0 0 0 / 0.7);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18212c; --pos: #ff7660; --neg: #69a0ff; --equi: #e2b350; --accent: #69a0ff;
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 10px 28px -12px rgb(0 0 0 / 0.7);
+  color-scheme: dark;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-padding-top: 130px; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 16px; line-height: 1.5; }
+[hidden] { display: none !important; }
+a { color: inherit; }
+.wrap { max-width: 1240px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* The opening page of the notebook (parchment redesign, 2026-11-08; tokens, textures and fonts in demos/lib/paper.css) */
+.hero .wrap { position: relative; padding-top: 40px; padding-bottom: 26px; }
+.lhero .wrap { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 40px; align-items: center; }
+.phead .wrap { padding-top: 34px; padding-bottom: 18px; }
+.eyebrow { margin: 0 0 10px; }
+h1 { margin: 0; font-size: clamp(2.1rem, 5vw, 3.1rem); line-height: 1.05; text-wrap: balance; }
+.lede { margin: 12px 0 0; max-width: 58ch; font-size: 1.2rem; text-wrap: pretty; }
+.facts { display: flex; flex-wrap: wrap; gap: 6px 22px; margin: 18px 0 0; padding: 0; list-style: none; font-size: 0.95rem; }
+.facts li { display: flex; align-items: center; gap: 8px; }
+.facts li::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
+.facts a { color: var(--link); text-decoration: underline; text-underline-offset: 3px; }
+.facts strong { color: var(--ink); font-size: 0.9rem; }
+/* the card pasted beside the opening: how to teach with the site, with one demo's photograph */
+.teach { position: relative; padding: 18px 20px 20px; rotate: 0.6deg; }
+.teach h3 { margin: 0 0 8px; font-size: 1.25rem; }
+.teach ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; font-size: 0.95rem; }
+.teach li { padding-left: 22px; text-indent: -22px; }
+.teach li::before { content: "—"; color: var(--accent); margin-right: 8px; }
+.teach a { color: var(--link); text-decoration: none; border-bottom: 1px solid var(--line2); }
+.art-thumb { display: block; margin: 0 0 14px; text-decoration: none; color: inherit; }
+.art-thumb img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; border: 1px solid var(--line2); border-radius: 3px; box-shadow: inset 0 0 0 3px var(--paper3); }
+.art-thumb span { display: block; padding: 6px 2px 0; text-align: center; font: 1.1rem var(--hand); color: var(--accent); }
+.art-thumb:hover span, .art-thumb:focus-visible span { text-decoration: underline; }
+/* the course strip at the foot of the library: the second layer */
+.course-strip { position: relative; margin: 54px 0 0; padding: 24px 26px; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 24px; align-items: center; rotate: -0.3deg; }
+.course-strip .hand.tilt { position: absolute; right: 26px; top: -14px; font-size: 1.3rem; }
+.course-strip h2 { margin: 0 0 6px; font-size: 1.7rem; }
+.course-strip p { margin: 0; color: var(--ink2); max-width: 70ch; }
+.course-strip .cta { display: grid; gap: 8px; }
+.adds { margin: 14px 0 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+.adds li { display: grid; grid-template-columns: 30px 1fr; gap: 10px; font-size: 1rem; }
+.adds li b { font: 1.3rem var(--hand); color: var(--accent); font-weight: 500; }
+.adds li span { color: var(--ink2); }
+.adds li span strong { color: var(--ink); font-weight: 600; }
+
+/* Toolbar: filter and subject links, stays on screen while scrolling */
+.tools { position: sticky; top: 58px; z-index: 5; }
+.tools .wrap { display: flex; align-items: center; gap: 10px 18px; padding-top: 10px; padding-bottom: 10px; }
+.filter { position: relative; flex: 0 1 300px; min-width: 0; }
+.filter svg { position: absolute; left: 11px; top: 50%; translate: 0 -50%; width: 16px; height: 16px; color: var(--muted); pointer-events: none; }
+.filter input {
+  width: 100%; font: inherit; font-size: 0.95rem; color: var(--ink);
+  background: var(--surface); border: 1px solid var(--line); border-radius: 8px;
+  padding: 8px 34px 8px 34px;
+}
+.filter input::placeholder { color: var(--muted); }
+.filter input::-webkit-search-cancel-button { display: none; }
+.filter kbd {
+  position: absolute; right: 8px; top: 50%; translate: 0 -50%;
+  font-family: var(--font-mono); font-size: 0.72rem; color: var(--muted);
+  border: 1px solid var(--line); border-radius: 4px; padding: 0 5px; line-height: 1.5; pointer-events: none;
+}
+.filter input:not(:placeholder-shown) + kbd { display: none; }
+.clear {
+  position: absolute; right: 5px; top: 50%; translate: 0 -50%;
+  font: inherit; font-size: 0.8rem; font-weight: 700; color: var(--muted);
+  background: none; border: 0; border-radius: 5px; padding: 3px 7px; cursor: pointer;
+}
+.clear:hover { color: var(--ink); }
+.jump { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; min-width: 0; flex: 1 1 auto; }
+.jump a {
+  display: inline-flex; align-items: baseline; gap: 6px; white-space: nowrap;
+  font-size: 0.88rem; font-weight: 700; text-decoration: none; color: var(--ink);
+  padding: 5px 10px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface);
+}
+.jump a:hover { border-color: var(--accent); color: var(--accent); }
+.n { font-family: var(--font-mono); font-size: 0.75em; font-weight: 400; color: var(--muted); font-variant-numeric: tabular-nums; }
+.status { margin: 20px 0 -12px; font-family: var(--font-mono); font-size: 0.85rem; color: var(--muted); }
+.status:empty { display: none; }
+
+/* Subjects and cards */
+.fam { padding-top: 34px; }
+.fam h2 { display: flex; align-items: baseline; gap: 12px; margin: 0 0 8px; font-size: 1.7rem; }
+.fam h2 .n { font-size: 0.8rem; }
+.fam h2::after { content: ""; flex: 1; align-self: center; height: 1px; background: var(--line2); opacity: 0.6; }
+.fam .tlinks { margin: 0 0 16px; }
+.card .ws { margin-top: auto; padding-top: 6px; font-size: 1.05rem; color: var(--ink2); }
+main { padding-top: 12px; padding-bottom: 48px; }
+.subject { padding-top: 36px; }
+.subject h2 {
+  display: flex; align-items: baseline; gap: 10px; margin: 0 0 16px;
+  font-size: 1.35rem; letter-spacing: -0.01em;
+}
+.subject h2::after { content: ""; flex: 1; align-self: center; height: 1px; background: var(--line); }
+.subject h2 .n { font-size: 0.8rem; }
+/* Click a subject heading to fold its cards away; the sections below move up. Remembered per browser. */
+.fold { all: unset; display: inline-flex; align-items: baseline; gap: 10px; cursor: pointer; border-radius: 6px; }
+.fold:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+.fold::before { content: ""; width: 0.5em; height: 0.5em; border-right: 2px solid var(--muted); border-bottom: 2px solid var(--muted);
+  transform: translateY(-0.15em) rotate(45deg); transition: transform 0.15s ease; align-self: center; }
+.fold:hover::before { border-color: var(--ink); }
+.subject.collapsed .fold::before { transform: rotate(-45deg); }
+.subject.collapsed .grid { display: none; }
+.subject.collapsed h2 { margin-bottom: 0; color: var(--muted); }
+.subject.collapsed { padding-top: 22px; }
+.searching .subject.collapsed .grid { display: grid; }
+.searching .subject.collapsed h2 { margin-bottom: 16px; color: inherit; }
+@media (prefers-reduced-motion: reduce) { .fold::before { transition: none; } }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 272px), 1fr)); gap: 18px; margin: 0; padding: 0; list-style: none; }
+.grid > li { display: flex; min-width: 0; }
+.card {
+  display: flex; flex-direction: column; width: 100%;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow: hidden;
+  text-decoration: none; color: inherit;
+  transition: border-color 0.15s, box-shadow 0.2s, translate 0.2s;
+}
+.thumb { display: block; aspect-ratio: 16 / 10; background: var(--canvas); overflow: hidden; }
+.thumb img { display: block; width: 100%; height: 100%; object-fit: cover; transition: scale 0.35s ease; }
+.body { display: flex; flex-direction: column; gap: 6px; padding: 14px 16px 16px; flex: 1; }
+.card h3 { margin: 0; font-size: 1.3rem; line-height: 1.15; }
+.card p { margin: 0; color: var(--muted); font-size: 0.92rem; text-wrap: pretty; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.tags { display: flex; flex-wrap: wrap; gap: 5px; margin: auto 0 0; padding: 8px 0 0; list-style: none; }
+.tags li {
+  font-family: var(--font-mono); font-size: 0.7rem; line-height: 1.4; color: var(--muted);
+  background: var(--canvas); border: 1px solid var(--line); border-radius: 5px; padding: 2px 6px;
+}
+.card:hover { border-color: var(--accent); box-shadow: var(--shadow); translate: 0 -2px; }
+.card:hover .thumb img { scale: 1.03; }
+.card:hover h3 { color: var(--accent); }
+.card:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-color: var(--accent); }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.filter input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
+.empty { margin: 48px 0 0; padding: 28px; text-align: center; color: var(--muted); border: 1px dashed var(--line); border-radius: 12px; }
+.empty button { font: inherit; font-weight: 700; color: var(--accent); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; }
+
+footer { border-top: 1px solid var(--line); margin-top: 24px; }
+footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; padding-top: 22px; padding-bottom: max(28px, env(safe-area-inset-bottom, 0px)); color: var(--muted); font-size: 0.9rem; }
+footer p { margin: 0; }
+footer a { color: var(--accent); text-underline-offset: 3px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .card, .thumb img { transition: none; }
+  .card:hover { translate: none; }
+  .card:hover .thumb img { scale: none; }
+}
+@media (max-width: 700px) {
+  html { scroll-padding-top: 160px; }
+  .hero .wrap { padding-top: 26px; padding-bottom: 20px; }
+  .lhero .wrap { grid-template-columns: 1fr; gap: 22px; }
+  .teach { rotate: 0; }
+  .course-strip { grid-template-columns: 1fr; }
+  .lede { font-size: 1.05rem; }
+  .tools .wrap { flex-wrap: wrap; }
+  .filter { flex: 1 1 100%; }
+  .filter kbd { display: none; }
+  .jump { flex-basis: 100%; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin: 0 -16px; padding: 0 16px; }
+    .subject { padding-top: 28px; }
+}
+.newbtn { display: inline-flex; align-items: center; gap: 6px; min-height: 32px; padding: 4px 12px; font: inherit; font-size: 0.82rem; font-weight: 700;
+  color: var(--accent); background: var(--surface); border: 1px solid var(--line); border-radius: 999px; cursor: pointer; }
+.newbtn svg { width: 14px; height: 14px; fill: currentColor; flex: none; }
+.newbtn:hover { border-color: var(--accent); }
+.newbtn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+@media (max-width: 640px) { .hero-tools { margin: -16px 0 16px; } .newbtn { min-height: 36px; } }
+@media print { .hero-tools { display: none; } }
+
+/* course pages */
+.eyebrow a { color: var(--accent); font-weight: 600; text-underline-offset: 3px; }
+.jump a.opt { border-style: dashed; }
+.how { margin: 22px 0 0; max-width: 75ch; color: var(--muted); font-size: 0.92rem; }
+.unit { padding-top: 34px; }
+.unit h2 { display: flex; align-items: baseline; gap: 10px; margin: 0; font-size: 1.4rem; letter-spacing: -0.01em; }
+.unit h2::after { content: ""; flex: 1; align-self: center; height: 1px; background: var(--line); }
+.meta { display: flex; flex-wrap: wrap; gap: 4px 18px; margin: 4px 0 14px; font-family: var(--font-mono); font-size: 0.78rem; color: var(--muted); }
+.meta:empty { display: none; }
+.meta a { color: var(--accent); font-weight: 600; text-underline-offset: 3px; }
+.item:not(:has(> .pic)) { align-self: start; }
+.jump a.here { border-color: var(--accent); color: var(--accent); }
+.unote { margin: 4px 0 14px; max-width: 75ch; color: var(--muted); }
+.unit.optional { margin-top: 30px; padding: 24px 18px 18px; border: 1px dashed var(--line); border-radius: 14px; }
+.optnote { margin: 0 0 4px; font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--equi); }
+.list { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 520px), 1fr)); gap: 14px; margin: 0; padding: 0; list-style: none; }
+.item { display: grid; grid-template-columns: 1fr; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+.item .pic { display: block; border-bottom: 1px solid var(--line); }
+.item .thumb { border-bottom: 0; }
+.item .body { padding: 12px 14px 14px; gap: 5px; }
+.item h3 { margin: 0; font-size: 1.08rem; line-height: 1.25; }
+.item h3 a { text-decoration: none; }
+.item h3 a:hover { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+.item p { margin: 0; color: var(--muted); font-size: 0.9rem; text-wrap: pretty; }
+.kind { display: flex; flex-wrap: wrap; gap: 6px; }
+.role, .flag { font-family: var(--font-mono); font-size: 0.68rem; font-weight: 600; letter-spacing: 0.03em; text-transform: uppercase; border-radius: 5px; padding: 1px 6px; }
+.role-lab { background: var(--accent); color: var(--canvas); }
+.role-demo { border: 1px solid var(--line); color: var(--muted); }
+.flag { border: 1px dashed var(--equi); color: var(--equi); text-transform: none; letter-spacing: 0; }
+.secs { display: flex; flex-direction: column; gap: 2px; margin: 4px 0 0; padding: 0; list-style: none; font-size: 0.82rem; }
+.sec { font-family: var(--font-mono); font-size: 0.74rem; color: var(--accent); margin-right: 4px; }
+.links { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: auto !important; padding-top: 8px; font-size: 0.88rem; }
+.links a { color: var(--accent); font-weight: 700; text-underline-offset: 3px; min-height: 28px; display: inline-flex; align-items: center; }
+.links a.go { color: var(--canvas); background: var(--accent); border-radius: 7px; padding: 4px 12px; text-decoration: none; min-height: 36px; }
+.links a .req { margin-right: 6px; padding: 1px 7px; border: 1px solid currentColor; border-radius: 999px; font-size: 0.72rem; letter-spacing: 0.04em; text-transform: uppercase; }
+.also { grid-column: 1 / -1; color: var(--muted); font-size: 0.92rem; padding: 4px 2px; }
+.also a { font-weight: 700; }
+.also .where, .also .where a { font-weight: 400; }
+.item.coming { border-style: dashed; background: transparent; }
+.item.coming h3 { color: var(--muted); }
+.none { color: var(--muted); padding: 18px; border: 1px dashed var(--line); border-radius: 12px; }
+.gaps { margin-top: 12px; font-size: 0.9rem; }
+.gaps summary { cursor: pointer; color: var(--muted); font-weight: 700; min-height: 32px; display: flex; align-items: center; gap: 8px; }
+.gaps ul { margin: 6px 0 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 380px), 1fr)); gap: 3px 22px; }
+.gaps li { display: flex; align-items: baseline; gap: 4px; }
+.st { margin-left: auto; padding-left: 10px; white-space: nowrap; font-family: var(--font-mono); font-size: 0.7rem; color: var(--muted); }
+.st-needs-feature { color: var(--equi); }
+.topics { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+.topic { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; }
+.topic h3 { margin: 0 0 2px; font-size: 1.02rem; }
+.topic .unote { margin: 0 0 6px; font-size: 0.9rem; }
+.topic ul { margin: 0; padding-left: 18px; display: grid; gap: 3px; font-size: 0.92rem; }
+.topic a { color: var(--accent); font-weight: 700; text-underline-offset: 3px; }
+.topic a.ws { margin-left: 8px; font-weight: 400; }
+.topic .where, .topic .where a { color: var(--muted); font-weight: 400; font-size: 0.85rem; }
+.more { margin: 40px 0 0; color: var(--muted); }
+.more a { color: var(--accent); font-weight: 700; }
+@media (max-width: 700px) {
+  html { scroll-padding-top: 64px; }
+  .jump { flex-basis: 100%; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin: 0 -16px; padding: 0 16px; }
+  .gaps li { flex-wrap: wrap; }
+  .st { margin-left: 0; }
+}
+
+
+/* topic and textbook pages (tools/courses.py) */
+.jump a[aria-current] { background: var(--accent); border-color: var(--accent); color: var(--canvas); }
+.item .used { font-size: 0.84rem; }
+.item .used a { color: var(--accent); font-weight: 700; text-underline-offset: 3px; }
+.item .used .sec { margin-right: 0; }
+.allch { margin: 16px 0 0; }
+.allch button { min-height: 36px; padding: 6px 14px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); color: var(--accent);
+  font: inherit; font-size: 0.9rem; font-weight: 700; cursor: pointer; }
+.allch button:hover { border-color: var(--accent); }
+.allch button:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.ch { margin-top: 10px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
+.ch summary { cursor: pointer; padding: 10px 14px; font-weight: 700; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; min-height: 44px; }
+.ch .chn { font-family: var(--font-mono); font-size: 0.78rem; font-weight: 600; color: var(--accent); }
+.ch .n { margin-left: auto; font-family: var(--font-mono); font-size: 0.74rem; font-weight: 400; color: var(--muted); }
+.srows { margin: 0; padding: 0 14px 12px; list-style: none; display: grid; gap: 0; }
+.srows li { display: grid; grid-template-columns: 4.2em minmax(0, 16em) minmax(0, 1fr); gap: 2px 14px; padding: 7px 0; border-top: 1px solid var(--line); font-size: 0.9rem; align-items: baseline; }
+.srows li:target { background: var(--canvas); }
+.srows .stitle { display: flex; flex-wrap: wrap; gap: 2px 8px; align-items: baseline; }
+.srows .st { margin-left: 0; padding-left: 0; }
+.srows .sdemos a { color: var(--accent); font-weight: 700; text-underline-offset: 3px; }
+.srows .sdemos a.ws { font-weight: 400; }
+@media (max-width: 700px) {
+  .srows li { grid-template-columns: 3.6em minmax(0, 1fr); }
+  .srows .sdemos { grid-column: 2; }
+  .ch .n { margin-left: 0; flex-basis: 100%; }
+}
+
+
+/* course tiles (tools/courses.py) */
+.courses { padding-top: 30px; }
+.courses h2 { margin: 0 0 14px; font-size: 1.35rem; letter-spacing: -0.01em; }
+.ctiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); gap: 18px; margin: 0; padding: 0; list-style: none; }
+.ctile { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: auto auto; height: 100%; text-decoration: none; color: inherit;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; transition: border-color 0.15s, box-shadow 0.2s, translate 0.2s; }
+.ctile .mosaic { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-bottom: 1px solid var(--line); background: var(--canvas); }
+.ctile .mosaic { height: 92px; overflow: hidden; }
+.ctile .mosaic .thumb { border-bottom: 0; height: 92px; aspect-ratio: auto; }
+.ctile .mosaic .thumb img { height: 92px; }
+.ctile .cbody { grid-column: 1 / -1; padding: 14px 18px 18px; }
+.ctile h3 { margin: 0; font-size: 1.45rem; }
+.ctile .sub { margin: 2px 0 6px; font-family: var(--font-mono); font-size: 0.8rem; color: var(--accent); }
+.ctile p { margin: 0; color: var(--muted); font-size: 0.93rem; }
+.ctile:hover { border-color: var(--accent); box-shadow: var(--shadow); translate: 0 -2px; }
+.ctile:hover h3 { color: var(--accent); }
+.ctile:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+.allnote { margin: -6px 0 14px; color: var(--muted); font-size: 0.92rem; }
+.fams { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 270px), 1fr)); gap: 18px; margin: 0; padding: 0; list-style: none; }
+.fam { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; scroll-margin-top: 20px; }
+.fam .mosaic { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); height: 72px; overflow: hidden; border-bottom: 1px solid var(--line); background: var(--canvas); }
+.fam .mosaic .thumb { border-bottom: 0; height: 72px; aspect-ratio: auto; }
+.fam .mosaic .thumb img { height: 72px; }
+.fam .fbody { padding: 12px 16px 16px; }
+.fam h3 { margin: 0; font-size: 1.25rem; }
+.fam .sub { margin: 2px 0 10px; font-family: var(--font-mono); font-size: 0.78rem; color: var(--accent); }
+.tlinks { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.tlinks a { display: inline-flex; align-items: center; gap: 6px; min-height: 34px; padding: 4px 11px; border: 1px solid var(--line); border-radius: 999px;
+  background: var(--canvas); color: var(--ink); font-size: 0.88rem; font-weight: 700; text-decoration: none; }
+.tlinks a .n { font-family: var(--font-mono); font-size: 0.7rem; font-weight: 400; color: var(--muted); }
+.tlinks a:hover { border-color: var(--accent); color: var(--accent); }
+.tlinks a:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { .ctile { transition: none; } .ctile:hover { translate: none; } }
+
+
+/* site search (tools/courses.py) */
+.find { padding-top: 30px; }
+.find h2 { margin: 0 0 10px; font-size: 1.35rem; letter-spacing: -0.01em; }
+.find .filter { max-width: 620px; }
+.find .filter input { padding-top: 11px; padding-bottom: 11px; font-size: 1rem; }
+.hits { position: absolute; top: calc(100% + 6px); left: 0; z-index: 20; width: min(620px, calc(100vw - 32px)); max-height: min(70vh, 560px); overflow: auto;
+  overscroll-behavior: contain; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; box-shadow: var(--shadow); padding: 4px 6px 6px; }
+.find .hits { width: 100%; }
+.hits .hn { margin: 4px 8px 2px; font-family: var(--font-mono); font-size: 0.74rem; color: var(--muted); }
+.hits ul { margin: 0; padding: 0; list-style: none; }
+.hit { padding: 8px 8px 9px; border-radius: 7px; }
+.hit + .hit { border-top: 1px solid var(--line); }
+.hit:hover, .hit.on { background: var(--canvas); }
+.hit .ht { font-weight: 700; color: var(--ink); text-decoration: none; }
+.hit .ht:hover, .hit.on .ht { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+.hit .hk { margin-left: 6px; font-family: var(--font-mono); font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.03em; color: var(--muted); }
+.hit p { margin: 2px 0 0; font-size: 0.85rem; color: var(--muted); }
+.hit .hd { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.hit .hm { display: flex; flex-wrap: wrap; gap: 2px 12px; font-size: 0.8rem; }
+.hit .hm a { color: var(--accent); font-weight: 700; text-underline-offset: 3px; }
+.hit .hm a.tp { color: var(--ink); font-weight: 400; }
+.hit .hm .sec { margin: 0; }
+@media (hover: none) { .filter kbd { display: none; } .filter input { font-size: 16px; } }
+@media (max-width: 700px) {
+  .tools .wrap { flex-wrap: wrap; }
+  .tools .filter { flex: 1 1 100%; }
+  html:has(.tools .filter) { scroll-padding-top: 108px; }
+}
+
+</style>
+<link rel="stylesheet" href="demos/lib/paper.css">
+</head>
+<body class="site">
+<!-- Generated by tools/courses.py from curriculum/textbook-map.json. Edit the map or the script, not this file. -->
+<header class="top" aria-label="Site">
+  <a class="brand" href="index.html"><svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><ellipse cx="16" cy="16" rx="13" ry="6" fill="none" stroke="currentColor" stroke-width="1.8" transform="rotate(-30 16 16)"/><ellipse cx="16" cy="16" rx="13" ry="6" fill="none" stroke="currentColor" stroke-width="1.8" transform="rotate(30 16 16)"/><circle cx="16" cy="16" r="2.6" fill="currentColor"/></svg>Virtual Physics Demos</a>
+  <nav class="tabs" aria-label="Library"><a class="tab" href="index.html#topics">Demos</a><a class="tab" href="openstax.html">OpenStax</a><a class="tab" href="notes/index.html">Notes</a></nav>
+  <div class="filter hfind" role="search"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M11 11l3.5 3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><input type="search" id="q" placeholder="Search all demos" aria-label="Search all demos by name, topic or textbook section" autocomplete="off" spellcheck="false" role="combobox" aria-autocomplete="list" aria-controls="hits" aria-expanded="false"><kbd>/</kbd><button type="button" class="clear" hidden aria-label="Clear search">✕</button><div class="hits" id="hits" hidden><p class="hn" aria-live="polite"></p><ul></ul></div></div>
+  <span data-vd-theme></span>
+  <a class="courses" href="courses.html" aria-current="page"><b>For a class</b> Courses</a>
+</header>
+<header class="hero phead">
+  <div class="wrap">
+    <p class="eyebrow"><b>For a class</b></p>
+    <h1>Courses</h1>
+    <p class="lede">A week by week path through the demos, built for one class at a time.</p>
+    <ul class="facts"><li><span><strong>1</strong> course</span></li><li><span>Week by week</span></li><li><span>Canvas cartridge for each</span></li></ul>
+  </div>
+</header>
+<nav class="tools" aria-label="Sections">
+  <div class="wrap"><ul class="jump"><li><a href="#listed">Courses</a></li><li><a href="#adds">What a course adds</a></li></ul></div>
+</nav>
+<main class="wrap">
+  <p class="how">The library comes first: every demo and worksheet is free to open from the home page. A course is a second layer that arranges them for one class.</p>
+  <section class="unit" id="listed" aria-labelledby="listed-h">
+    <h2 id="listed-h">Courses</h2>
+    <p class="unote">Astro 2203 is the first course built this way, a trial run through the Winter Quarter. More follow as they are taught.</p>
+    <ul class="ctiles">
+      <li><a class="ctile" href="astro-2203.html">
+        <div class="mosaic" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/celestial-sphere-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/celestial-sphere-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><picture class="thumb"><source srcset="thumbs/units-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/units-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><picture class="thumb"><source srcset="thumbs/seasons-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/seasons-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture><picture class="thumb"><source srcset="thumbs/moon-phases-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/moon-phases-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></div>
+        <div class="cbody"><h3>Astro 2203</h3><p class="sub">Solar system astronomy · 10 weeks · 3 tests · 29 demos</p><p>From naked eye observations of the sky to the planets, their moons, the small bodies and planets around other stars, week by week through the Winter Quarter, with a review before each of the three tests and one required worksheet most weeks. The worksheets are written for an introductory class: algebra, ratios and short graphs.</p></div>
+      </a></li>
+    </ul>
+  </section>
+  <section class="unit" id="adds" aria-labelledby="adds-h">
+    <h2 id="adds-h">What a course adds</h2>
+    <ul class="adds"><li><b>1</b><span><strong>A path</strong> Week by week through the demos, in the order of the lectures, with the review before each test.</span></li><li><b>2</b><span><strong>Required worksheets</strong> One most weeks, marked on the week and on the demo card; the rest stay supplementary.</span></li><li><b>3</b><span><strong>Progress</strong> Each worksheet remembers what the student has answered, in their own browser; nothing is sent anywhere.</span></li><li><b>4</b><span><strong>Canvas</strong> A Common Cartridge file for the course, so every demo and worksheet sits in the LMS week by week.</span></li><li><b>5</b><span><strong>The same demos</strong> A demo opened from a course shows that course’s worksheets and steps to the next demo in the course. Opened from the library, it is the plain demo.</span></li></ul>
+  </section>
+  <p class="more"><a href="index.html">Back to the library</a></p>
+</main>
+<footer>
+  <div class="wrap">
+    <p>© 2026 Steven Anderson. All rights reserved. Free to use for teaching and learning; see the <a href="LICENSE.html">terms of use</a>.</p>
+    <p><a href="index.html#topics">All demos</a> · <a href="openstax.html">OpenStax by section</a> · <a href="courses.html">Courses</a> · <a href="notes/index.html">Teaching notes</a> · <a href="https://github.com/PhysicsSteven/VirtualDemos">Source on GitHub</a></p>
+  </div>
+</footer>
+<script src="search.js" defer></script>
+<script>/* tools/courses.py: mark the unit on screen in the section bar */ (function () { var bar = document.querySelector('.jump'); if (!bar) return; var cu = bar.querySelector('a[aria-current]'); if (cu && bar.scrollWidth > bar.clientWidth) bar.scrollLeft = cu.offsetLeft - bar.clientWidth / 2 + cu.offsetWidth / 2; if (!window.IntersectionObserver) return; var links = [].slice.call(bar.querySelectorAll('a[href^="#"]')), on = {}, cur = null; var secs = links.map(function (a) { return document.getElementById(a.getAttribute('href').slice(1)); }); if (!links.length) return; function mark() { var best = null; secs.forEach(function (s, i) { if (s && on[s.id]) best = best === null ? i : best; }); if (best === null || best === cur) return; if (cur !== null) links[cur].classList.remove('here'); cur = best; var a = links[cur]; a.classList.add('here'); if (bar.scrollWidth > bar.clientWidth) bar.scrollTo({ left: a.offsetLeft - bar.clientWidth / 2 + a.offsetWidth / 2, behavior: 'auto' }); } var io = new IntersectionObserver(function (es) { es.forEach(function (e) { on[e.target.id] = e.isIntersecting; }); mark(); }, { rootMargin: '-35% 0px -60% 0px' }); secs.forEach(function (s) { if (s) io.observe(s); }); })();</script>
+</body>
+</html>

@@ -321,11 +321,11 @@ rule('links', 'Every relative link and image in the site pages and worksheets po
    10-30; symbols.py --check failing on 10-31; notes/ideal-gas.html edited by hand on 10-26). Each builder's own check runs here.
    The notes check needs python's markdown package (pip install markdown) and says so when it is missing. */
 rule('generated', 'Generated files match their sources: course pages, nav and search (courses.py --check), the theme switch '
-  + '(theme.py --check), symbol glossaries (symbols.py --check) and the teaching notes pages (notes/src).',
-  'tools/courses.py, theme.py, symbols.py, notes.py outputs', () => {
+  + '(theme.py --check), the parchment skin link on every demo (paper.py --check), symbol glossaries (symbols.py --check) and the teaching notes pages (notes/src).',
+  'tools/courses.py, theme.py, paper.py, symbols.py, notes.py outputs', () => {
   const bad = [], py = (a) => { try { execFileSync('python3', a, { cwd: ROOT, stdio: ['ignore', 'pipe', 'pipe'], encoding: 'utf8' }); return null; }
     catch (e) { return ((e.stdout || '') + (e.stderr || '')).trim() || e.message; } };
-  for (const [tool, fix] of [['courses.py', 'python3 tools/courses.py'], ['theme.py', 'python3 tools/theme.py'], ['symbols.py', 'python3 tools/symbols.py']]) {
+  for (const [tool, fix] of [['courses.py', 'python3 tools/courses.py'], ['theme.py', 'python3 tools/theme.py'], ['paper.py', 'python3 tools/paper.py'], ['symbols.py', 'python3 tools/symbols.py']]) {
     const out = py(['tools/' + tool, '--check']);
     if (out) bad.push(['tools/' + tool, 0, out.split('\n').slice(-3).join(' | ').slice(0, 200), 'out of date: run ' + fix]);
   }

@@ -8,6 +8,7 @@ Moved from CLAUDE.md on 2026-11-01. Only the TeacherKeys path and the last check
 - `python3 tools/canvas.py` (Canvas course import files, IMS Common Cartridge 1.3, one per course, in `_build/canvas/`, from the map and
   catalog like the course pages; rerun after a map, catalog or handout change; `tools/canvas_check.rb` runs Canvas's own import code on one).
 - `python3 tools/theme.py` (links the theme switch on any page that lacks it; `--check`).
+- `python3 tools/paper.py` (links the parchment skin `demos/lib/paper.css` last in every demo's head; `--check`). The skin holds the site's tokens, textures and fonts for every page type; the site pages get it from `courses.py`, the notes from `notes.py`, the worksheets from `_includes/head-custom.html`.
 - `python3 tools/qr.py <demo>`, `python3 tools/reset.py <demo>` (Reset all button), `python3 tools/thumbs.py <demo>` (add an OVERRIDES entry for a good thumbnail state).
 - New demo checklist: demo file, tests, notes source + key answer, `curriculum/catalog.json`, `curriculum/textbook-map.json`
   (demo entry and the sections' demo lists), `curriculum/topics.json`, QR, Reset all, thumbnails, `tools/courses.py`, and a commit message that says what was built.
@@ -22,7 +23,7 @@ All browser checks need `NODE_PATH=/opt/node-tools/node_modules` in the cloud co
   `fill_key.cjs`). The `constants` rule flags literals in demo code that are close to a value in `demos/lib/constants.js` without equaling it.
   Added 2026-11-01 from mistakes that recurred: `constants-text` (the same for numbers in worksheets, notes and demo strings),
   `scripts` (every inline script and .js file parses), `links` (relative links and images resolve) and `generated` (courses.py,
-  theme.py and symbols.py `--check`, and notes pages against notes/src when `pip install markdown` has been run). About 9 s in all.
+  theme.py, paper.py and symbols.py `--check`, and notes pages against notes/src when `pip install markdown` has been run). About 9 s in all.
 - `node tools/democheck.cjs <demo> [--fast]` is the one command for a new or changed demo: house rules, map entries (catalog, textbook map,
   topic), Node tests, harvest and leaks, What's new reminder, `vdcheck --only after` and `--only clip`, and the opening state check.
   `--fast` skips the browser steps.
