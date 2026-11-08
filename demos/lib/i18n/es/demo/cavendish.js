@@ -111,5 +111,9 @@ VDI18N.add('es', 'demo/cavendish', {
 "away":
   "retiradas",
 "up the scale":
-  "subiendo por la escala"
+  "subiendo por la escala",
+"Close":
+  "Cerrar",
+"Wait until the large spheres have finished swinging.":
+  "Espera a que las esferas grandes terminen de girar."
 });

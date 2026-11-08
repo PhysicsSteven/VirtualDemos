@@ -449,5 +449,14 @@ VDI18N.add('en', 'demo/rotation', [
 "Kinetic energy at t = {#} s out of {#} J: ball +{#} J, rod {#} J.",
 "Lost in the hit",
 "L = −{#} kg·m²/s = mud",
-"Angular momentum about the pin at t = {#} s: ball −{#}, rod {#}, total −{#} kg·m²/s (mud = −{#} before the hit). Momentum along the ball's path +{#} before, −{#} kg·m/s after."
+"Angular momentum about the pin at t = {#} s: ball −{#}, rod {#}, total −{#} kg·m²/s (mud = −{#} before the hit). Momentum along the ball's path +{#} before, −{#} kg·m/s after.",
+"Close",
+"Compared with the start, over the last {#} s: I, ω, kinetic energy and L as ratios. Now I is {#} times, ω {#} times and the kinetic energy {#} times their starting values; L stays at {#}.",
+"I ratio",
+"ω ratio",
+"KE ratio",
+"L ratio",
+"Rotational energy: +{#} J at the start, plus {#} J of work done moving the masses, equals +{#} J now.",
+"Rotational energy: +{#} J at the start, plus +{#} J of work done moving the masses, equals +{#} J now.",
+"Rotational energy: +{#} J at the start, plus −{#} J of work done moving the masses, equals +{#} J now."
 ]);

@@ -2557,5 +2557,7 @@ VDI18N.add('es', 'common', {
 "Switch between a helium and a carbon and oxygen core":
   "Cambiar entre un núcleo de helio y uno de carbono y oxígeno",
 "Show or hide the simulated population":
-  "Mostrar u ocultar la población simulada"
+  "Mostrar u ocultar la población simulada",
+"Close":
+  "Cerrar"
 });

@@ -638,8 +638,6 @@ VDI18N.add('es', 'demo/faraday', {
   "= {#} µWb, B = {#} mT",
 "{#} mC":
   "{#} mC",
-"I is increasing (dI/dt > {#}), so ε = −L dI/dt is negative: the back EMF points against the positive direction and opposes the increase. Here |I| is growing, so ε pushes against the current: the source must work at the rate LI dI/dt = {#} mW, and the energy goes into the field.":
-  "I está aumentando (dI/dt > {#}), así que ε = −L dI/dt es negativa: la fuerza contraelectromotriz apunta en contra del sentido positivo y se opone al aumento. Aquí |I| está creciendo, así que ε empuja en contra de la corriente: la fuente debe trabajar a razón de LI dI/dt = {#} mW, y la energía va al campo.",
 "A coil (a solenoid seen from the side, or a toroid seen from above) driven by a current source on the bench. Drag the right end of the solenoid to change its length and the grip on top to change its radius; for the toroid drag its outer or inner edge. Now: solenoid of {#} turns, length {#} cm, radius {#} cm, core relative permeability {#}, waveform Ramp and hold, current {#} mA, back EMF −{#} mV. Keys: up arrow ramps the current up, down arrow ramps it down, O switches it on, X switches it off, left and right arrows change the length (toroid: the outer radius), space plays or pauses, R resets.":
   "Una bobina (un solenoide visto de lado, o un toroide visto desde arriba) alimentada por una fuente de corriente en la mesa. Arrastra el extremo derecho del solenoide para cambiar su longitud y el agarre de arriba para cambiar su radio; para el toroide arrastra su borde exterior o interior. Ahora: solenoide de {#} espiras, longitud {#} cm, radio {#} cm, permeabilidad relativa del núcleo {#}, forma de onda Rampa y mantener, corriente {#} mA, fuerza contraelectromotriz −{#} mV. Teclas: la flecha arriba sube la corriente en rampa, la flecha abajo la baja, O la enciende, X la apaga, las flechas izquierda y derecha cambian la longitud (toroide: el radio exterior), espacio inicia o pausa, R reinicia.",
 "= {#} mWb, B = {#} mT":
@@ -680,12 +678,138 @@ VDI18N.add('es', 'demo/faraday', {
   "{#} puntos de {#} s a {#} s. ε es un promedio de intervalo; I y U son valores en t. Se actualiza dos veces por segundo mientras corre.",
 "−{#} pV":
   "−{#} pV",
-"Φ<sub>B</sub> is decreasing; the current's own field opposes that, and the force on the coil's sides makes a torque against the rotation. The crank (or motor) must supply power τω = I²R = {#} µW.":
-  "Φ<sub>B</sub> está disminuyendo; el propio campo de la corriente se opone a eso, y la fuerza sobre los lados de la bobina produce una torca en contra de la rotación. La manivela (o el motor) debe suministrar una potencia τω = I²R = {#} µW.",
 "U = ½LI² = {#} nJ":
   "U = ½LI² = {#} nJ",
-"I is increasing (dI/dt > {#}), so ε = −L dI/dt is negative: the back EMF points against the positive direction and opposes the increase. Here |I| is growing, so ε pushes against the current: the source must work at the rate LI dI/dt = {#} µW, and the energy goes into the field.":
-  "I está aumentando (dI/dt > {#}), así que ε = −L dI/dt es negativa: la fuerza contraelectromotriz apunta en contra del sentido positivo y se opone al aumento. Aquí |I| está creciendo, así que ε empuja en contra de la corriente: la fuente debe trabajar a razón de LI dI/dt = {#} µW, y la energía va al campo.",
-"{#} points from {#} s to {#} s, every 6th sample ({#} ms apart) plus the last. ε is an interval average; I and U are values at t.":
-  "{#} puntos de {#} s a {#} s, una de cada 6 muestras (separadas {#} ms) más la última. ε es un promedio de intervalo; I y U son valores en t."
+"Close":
+  "Cerrar",
+"= {#} nWb through each secondary turn":
+  "= {#} nWb a través de cada vuelta del secundario",
+"{#} points from {#} s to {#} s. ε is an interval average; I and U are values at t.":
+  "{#} puntos de {#} s a {#} s. ε es un promedio de intervalo; I y U son valores en t.",
+"{#} points from {#} s to {#} s, one sample in every {#} ({#} µs apart) plus the last. ε is an interval average; I and U are values at t.":
+  "{#} puntos de {#} s a {#} s, una muestra de cada {#} (separadas {#} µs) más la última. ε es un promedio de intervalo; I y U son valores en t.",
+"{#} points from {#} s to {#} s, one sample in every {#} ({#} ms apart) plus the last. ε is an interval average; I and U are values at t.":
+  "{#} puntos de {#} s a {#} s, una muestra de cada {#} (separadas {#} ms) más la última. ε es un promedio de intervalo; I y U son valores en t.",
+"{#} points from {#} s to {#} s, one sample in every {#} ({#} s apart) plus the last. ε is an interval average; I and U are values at t.":
+  "{#} puntos de {#} s a {#} s, una muestra de cada {#} (separadas {#} s) más la última. ε es un promedio de intervalo; I y U son valores en t.",
+"{#} points from {#} s to {#} s, one sample in every {#} ({#} µs apart) plus the last. ε is an interval average; I and U are values at t. Refreshes twice a second while running.":
+  "{#} puntos de {#} s a {#} s, una muestra de cada {#} (separadas {#} µs) más la última. ε es un promedio de intervalo; I y U son valores en t. Se actualiza dos veces por segundo mientras corre.",
+"{#} points from {#} s to {#} s, one sample in every {#} ({#} ms apart) plus the last. ε is an interval average; I and U are values at t. Refreshes twice a second while running.":
+  "{#} puntos de {#} s a {#} s, una muestra de cada {#} (separadas {#} ms) más la última. ε es un promedio de intervalo; I y U son valores en t. Se actualiza dos veces por segundo mientras corre.",
+"{#} points from {#} s to {#} s, one sample in every {#} ({#} s apart) plus the last. ε is an interval average; I and U are values at t. Refreshes twice a second while running.":
+  "{#} puntos de {#} s a {#} s, una muestra de cada {#} (separadas {#} s) más la última. ε es un promedio de intervalo; I y U son valores en t. Se actualiza dos veces por segundo mientras corre.",
+"{#} points from {#} s to {#} s. EMF and current are interval averages; flux is the value at t.":
+  "{#} puntos de {#} s a {#} s. La EMF y la corriente son promedios de intervalo; el flujo es el valor en t.",
+"{#} points from {#} s to {#} s, one sample in every {#} ({#} µs apart) plus the last. EMF and current are interval averages; flux is the value at t.":
+  "{#} puntos de {#} s a {#} s, una muestra de cada {#} (separadas {#} µs) más la última. La EMF y la corriente son promedios de intervalo; el flujo es el valor en t.",
+"{#} points from {#} s to {#} s, one sample in every {#} ({#} ms apart) plus the last. EMF and current are interval averages; flux is the value at t.":
+  "{#} puntos de {#} s a {#} s, una muestra de cada {#} (separadas {#} ms) más la última. La EMF y la corriente son promedios de intervalo; el flujo es el valor en t.",
+"{#} points from {#} s to {#} s, one sample in every {#} ({#} s apart) plus the last. EMF and current are interval averages; flux is the value at t.":
+  "{#} puntos de {#} s a {#} s, una muestra de cada {#} (separadas {#} s) más la última. La EMF y la corriente son promedios de intervalo; el flujo es el valor en t.",
+"{#} points from {#} s to {#} s, one sample in every {#} ({#} µs apart) plus the last. EMF and current are interval averages; flux is the value at t. Refreshes twice a second while running.":
+  "{#} puntos de {#} s a {#} s, una muestra de cada {#} (separadas {#} µs) más la última. La EMF y la corriente son promedios de intervalo; el flujo es el valor en t. Se actualiza dos veces por segundo mientras corre.",
+"{#} points from {#} s to {#} s, one sample in every {#} ({#} ms apart) plus the last. EMF and current are interval averages; flux is the value at t. Refreshes twice a second while running.":
+  "{#} puntos de {#} s a {#} s, una muestra de cada {#} (separadas {#} ms) más la última. La EMF y la corriente son promedios de intervalo; el flujo es el valor en t. Se actualiza dos veces por segundo mientras corre.",
+"{#} points from {#} s to {#} s, one sample in every {#} ({#} s apart) plus the last. EMF and current are interval averages; flux is the value at t. Refreshes twice a second while running.":
+  "{#} puntos de {#} s a {#} s, una muestra de cada {#} (separadas {#} s) más la última. La EMF y la corriente son promedios de intervalo; el flujo es el valor en t. Se actualiza dos veces por segundo mientras corre.",
+"increasing":
+  "aumentando",
+"decreasing":
+  "disminuyendo",
+"clockwise":
+  "en sentido horario",
+"counterclockwise":
+  "en sentido antihorario",
+"left":
+  "izquierda",
+"right":
+  "derecha",
+"north":
+  "norte",
+"south":
+  "sur",
+"repels":
+  "repele",
+"attracts":
+  "atrae",
+"approaching":
+  "que se acerca",
+"receding":
+  "que se aleja",
+"Φ<sub>B</sub> is {change}, so the induced current runs {sense} seen from the right and its own field inside the coil points {z}, against the change.":
+  "Φ<sub>B</sub> está {change}, así que la corriente inducida circula {sense} vista desde la derecha y su propio campo dentro de la bobina apunta hacia {z}, en contra del cambio.",
+"The coil's {side} face acts as a {cface} pole, facing the magnet's {mpole} pole: it {verb} the {motion} magnet.":
+  "La cara {side} de la bobina actúa como un polo {cface}, frente al polo {mpole} del imán: {verb} al imán {motion}.",
+"The force on the magnet opposes its motion.":
+  "La fuerza sobre el imán se opone a su movimiento.",
+"Φ<sub>B</sub> is {change}; the current's own field opposes that, and the force on the coil's sides makes a torque against the rotation. The crank (or motor) must supply power τω = I²R = {P}.":
+  "Φ<sub>B</sub> está {change}; el propio campo de la corriente se opone a eso, y la fuerza sobre los lados de la bobina produce una torca en contra de la rotación. La manivela (o el motor) debe suministrar una potencia τω = I²R = {P}.",
+"{#} pJ":
+  "{#} pJ",
+"{#} nN·m":
+  "{#} nN·m",
+"{#} nW":
+  "{#} nW",
+"Here |I| is growing, so ε pushes against the current: the source must work at the rate LI dI/dt = {P}, and the energy goes into the field.":
+  "Aquí |I| está creciendo, así que ε empuja en contra de la corriente: la fuente debe trabajar a la tasa LI dI/dt = {P}, y la energía va al campo.",
+"The current is steady at {I}, so the flux NΦ<sub>B</sub> = LI is steady and there is no back EMF. An ideal inductor carries a steady current with no voltage across it.":
+  "La corriente es constante en {I}, así que el flujo NΦ<sub>B</sub> = LI es constante y no hay fuerza contraelectromotriz. Un inductor ideal lleva una corriente constante sin voltaje entre sus terminales.",
+"Here |I| is shrinking, so ε pushes along the current, trying to keep it going: the field gives its energy back at {P}.":
+  "Aquí |I| está disminuyendo, así que ε empuja a favor de la corriente, tratando de mantenerla: el campo devuelve su energía a {P}.",
+"The coil's field tries to hold the flux where it was, so it resists the turning.":
+  "El campo de la bobina trata de mantener el flujo donde estaba, así que se resiste al giro.",
+"The flux is not changing at this instant, so there is no EMF.":
+  "El flujo no está cambiando en este instante, así que no hay EMF.",
+"I is increasing (dI/dt &gt; 0), so ε = −L dI/dt is negative: the back EMF points against the positive direction and opposes the increase.":
+  "I está aumentando (dI/dt &gt; 0), así que ε = −L dI/dt es negativa: la fuerza contraelectromotriz apunta en contra de la dirección positiva y se opone al aumento.",
+"I is decreasing (dI/dt &lt; 0), so ε = −L dI/dt is positive: the back EMF points along the positive direction and opposes the decrease.":
+  "I está disminuyendo (dI/dt &lt; 0), así que ε = −L dI/dt es positiva: la fuerza contraelectromotriz apunta en la dirección positiva y se opone a la disminución.",
+"I is passing through zero.":
+  "I está pasando por cero.",
+"The secondary is open, so no current flows in it and nothing opposes the change: EMF<sub>2</sub> = −M dI<sub>1</sub>/dt = {E} is the bare induced EMF, largest when I<sub>1</sub> passes through zero. The primary current is the same as with no secondary at all.":
+  "El secundario está abierto, así que no circula corriente en él y nada se opone al cambio: EMF<sub>2</sub> = −M dI<sub>1</sub>/dt = {E} es la EMF inducida sin carga, máxima cuando I<sub>1</sub> pasa por cero. La corriente del primario es la misma que sin ningún secundario.",
+"I<sub>2</sub> is passing through zero: at this instant Φ<sub>2</sub> is at a turning point.":
+  "I<sub>2</sub> está pasando por cero: en este instante Φ<sub>2</sub> está en un punto de retorno.",
+"Φ<sub>2</sub> is {change}, so I<sub>2</sub> circulates {sense} seen from the right and its own field inside the secondary points {z}, against the change.":
+  "Φ<sub>2</sub> está {change}, así que I<sub>2</sub> circula {sense} vista desde la derecha y su propio campo dentro del secundario apunta hacia {z}, en contra del cambio.",
+"I<sub>1</sub> and I<sub>2</sub> circulate in opposite senses now: the facing ends are like poles and the coils repel.":
+  "I<sub>1</sub> e I<sub>2</sub> circulan ahora en sentidos opuestos: los extremos enfrentados son polos iguales y las bobinas se repelen.",
+"I<sub>1</sub> and I<sub>2</sub> circulate the same way now, so the coils attract; averaged over a cycle they repel.":
+  "I<sub>1</sub> e I<sub>2</sub> circulan ahora en el mismo sentido, así que las bobinas se atraen; en promedio sobre un ciclo se repelen.",
+"I<sub>1</sub> and I<sub>2</sub> circulate the same way now, so the coils attract; averaged over a cycle they attract.":
+  "I<sub>1</sub> e I<sub>2</sub> circulan ahora en el mismo sentido, así que las bobinas se atraen; en promedio sobre un ciclo se atraen.",
+"Closing the secondary changed the primary current amplitude from {a} to {b}: its opposing flux lowers the primary's effective inductance, and its resistance adds to the primary's.":
+  "Cerrar el secundario cambió la amplitud de la corriente del primario de {a} a {b}: su flujo opuesto reduce la inductancia efectiva del primario, y su resistencia se suma a la del primario.",
+"The flux into the page is growing, so the current runs counterclockwise, making its own field out of the page inside the loop.":
+  "El flujo hacia dentro de la página está creciendo, así que la corriente circula en sentido antihorario y produce su propio campo hacia fuera de la página dentro del circuito.",
+"The flux into the page is shrinking, so the current runs clockwise, making its own field into the page inside the loop.":
+  "El flujo hacia dentro de la página está disminuyendo, así que la corriente circula en sentido horario y produce su propio campo hacia dentro de la página dentro del circuito.",
+"The force ILB on the bar points left, against its motion.":
+  "La fuerza ILB sobre la barra apunta a la izquierda, en contra de su movimiento.",
+"The force ILB on the bar points right, against its motion.":
+  "La fuerza ILB sobre la barra apunta a la derecha, en contra de su movimiento.",
+"The bar is not moving, so the flux is steady and no current flows.":
+  "La barra no se mueve, así que el flujo es constante y no circula corriente.",
+"−{#} mC":
+  "−{#} mC",
+"ε = −L dI/dt = {#} mV":
+  "ε = −L dI/dt = {#} mV",
+"dI/dt < {#}: ε > {#} opposes the fall":
+  "dI/dt < {#}: ε > {#} se opone a la disminución",
+"A coil (a solenoid seen from the side, or a toroid seen from above) driven by a current source on the bench. Drag the right end of the solenoid to change its length and the grip on top to change its radius; for the toroid drag its outer or inner edge. Now: solenoid of {#} turns, length {#} cm, radius {#} cm, core relative permeability {#}, waveform Ramp and hold, current {#} A, back EMF {#} mV. Keys: up arrow ramps the current up, down arrow ramps it down, O switches it on, X switches it off, left and right arrows change the length (toroid: the outer radius), space plays or pauses, R resets.":
+  "Una bobina (un solenoide visto de lado, o un toroide visto desde arriba) alimentada por una fuente de corriente en la mesa. Arrastra el extremo derecho del solenoide para cambiar su longitud y el agarre de arriba para cambiar su radio; para el toroide arrastra su borde exterior o interior. Ahora: solenoide de {#} espiras, longitud {#} cm, radio {#} cm, permeabilidad relativa del núcleo {#}, forma de onda Rampa y mantener, corriente {#} A, fuerza contraelectromotriz {#} mV. Teclas: la flecha arriba sube la corriente en rampa, la flecha abajo la baja, O la enciende, X la apaga, las flechas izquierda y derecha cambian la longitud (toroide: el radio exterior), espacio inicia o pausa, R reinicia.",
+"A coil (a solenoid seen from the side, or a toroid seen from above) driven by a current source on the bench. Drag the right end of the solenoid to change its length and the grip on top to change its radius; for the toroid drag its outer or inner edge. Now: solenoid of {#} turns, length {#} cm, radius {#} cm, core relative permeability {#}, waveform Ramp and hold, current {#} A, back EMF {#} µV. Keys: up arrow ramps the current up, down arrow ramps it down, O switches it on, X switches it off, left and right arrows change the length (toroid: the outer radius), space plays or pauses, R resets.":
+  "Una bobina (un solenoide visto de lado, o un toroide visto desde arriba) alimentada por una fuente de corriente en la mesa. Arrastra el extremo derecho del solenoide para cambiar su longitud y el agarre de arriba para cambiar su radio; para el toroide arrastra su borde exterior o interior. Ahora: solenoide de {#} espiras, longitud {#} cm, radio {#} cm, permeabilidad relativa del núcleo {#}, forma de onda Rampa y mantener, corriente {#} A, fuerza contraelectromotriz {#} µV. Teclas: la flecha arriba sube la corriente en rampa, la flecha abajo la baja, O la enciende, X la apaga, las flechas izquierda y derecha cambian la longitud (toroide: el radio exterior), espacio inicia o pausa, R reinicia.",
+"A coil (a solenoid seen from the side, or a toroid seen from above) driven by a current source on the bench. Drag the right end of the solenoid to change its length and the grip on top to change its radius; for the toroid drag its outer or inner edge. Now: solenoid of {#} turns, length {#} cm, radius {#} cm, core relative permeability {#}, waveform Ramp and hold, current {#} mA, back EMF {#} V. Keys: up arrow ramps the current up, down arrow ramps it down, O switches it on, X switches it off, left and right arrows change the length (toroid: the outer radius), space plays or pauses, R resets.":
+  "Una bobina (un solenoide visto de lado, o un toroide visto desde arriba) alimentada por una fuente de corriente en la mesa. Arrastra el extremo derecho del solenoide para cambiar su longitud y el agarre de arriba para cambiar su radio; para el toroide arrastra su borde exterior o interior. Ahora: solenoide de {#} espiras, longitud {#} cm, radio {#} cm, permeabilidad relativa del núcleo {#}, forma de onda Rampa y mantener, corriente {#} mA, fuerza contraelectromotriz {#} V. Teclas: la flecha arriba sube la corriente en rampa, la flecha abajo la baja, O la enciende, X la apaga, las flechas izquierda y derecha cambian la longitud (toroide: el radio exterior), espacio inicia o pausa, R reinicia.",
+"A coil (a solenoid seen from the side, or a toroid seen from above) driven by a current source on the bench. Drag the right end of the solenoid to change its length and the grip on top to change its radius; for the toroid drag its outer or inner edge. Now: solenoid of {#} turns, length {#} cm, radius {#} cm, core relative permeability {#}, waveform Ramp and hold, current {#} mA, back EMF {#} mV. Keys: up arrow ramps the current up, down arrow ramps it down, O switches it on, X switches it off, left and right arrows change the length (toroid: the outer radius), space plays or pauses, R resets.":
+  "Una bobina (un solenoide visto de lado, o un toroide visto desde arriba) alimentada por una fuente de corriente en la mesa. Arrastra el extremo derecho del solenoide para cambiar su longitud y el agarre de arriba para cambiar su radio; para el toroide arrastra su borde exterior o interior. Ahora: solenoide de {#} espiras, longitud {#} cm, radio {#} cm, permeabilidad relativa del núcleo {#}, forma de onda Rampa y mantener, corriente {#} mA, fuerza contraelectromotriz {#} mV. Teclas: la flecha arriba sube la corriente en rampa, la flecha abajo la baja, O la enciende, X la apaga, las flechas izquierda y derecha cambian la longitud (toroide: el radio exterior), espacio inicia o pausa, R reinicia.",
+"A coil (a solenoid seen from the side, or a toroid seen from above) driven by a current source on the bench. Drag the right end of the solenoid to change its length and the grip on top to change its radius; for the toroid drag its outer or inner edge. Now: solenoid of {#} turns, length {#} cm, radius {#} cm, core relative permeability {#}, waveform Ramp and hold, current {#} mA, back EMF {#} µV. Keys: up arrow ramps the current up, down arrow ramps it down, O switches it on, X switches it off, left and right arrows change the length (toroid: the outer radius), space plays or pauses, R resets.":
+  "Una bobina (un solenoide visto de lado, o un toroide visto desde arriba) alimentada por una fuente de corriente en la mesa. Arrastra el extremo derecho del solenoide para cambiar su longitud y el agarre de arriba para cambiar su radio; para el toroide arrastra su borde exterior o interior. Ahora: solenoide de {#} espiras, longitud {#} cm, radio {#} cm, permeabilidad relativa del núcleo {#}, forma de onda Rampa y mantener, corriente {#} mA, fuerza contraelectromotriz {#} µV. Teclas: la flecha arriba sube la corriente en rampa, la flecha abajo la baja, O la enciende, X la apaga, las flechas izquierda y derecha cambian la longitud (toroide: el radio exterior), espacio inicia o pausa, R reinicia.",
+"A coil (a solenoid seen from the side, or a toroid seen from above) driven by a current source on the bench. Drag the right end of the solenoid to change its length and the grip on top to change its radius; for the toroid drag its outer or inner edge. Now: solenoid of {#} turns, length {#} cm, radius {#} cm, core relative permeability {#}, waveform Ramp and hold, current {#} µA, back EMF {#} V. Keys: up arrow ramps the current up, down arrow ramps it down, O switches it on, X switches it off, left and right arrows change the length (toroid: the outer radius), space plays or pauses, R resets.":
+  "Una bobina (un solenoide visto de lado, o un toroide visto desde arriba) alimentada por una fuente de corriente en la mesa. Arrastra el extremo derecho del solenoide para cambiar su longitud y el agarre de arriba para cambiar su radio; para el toroide arrastra su borde exterior o interior. Ahora: solenoide de {#} espiras, longitud {#} cm, radio {#} cm, permeabilidad relativa del núcleo {#}, forma de onda Rampa y mantener, corriente {#} µA, fuerza contraelectromotriz {#} V. Teclas: la flecha arriba sube la corriente en rampa, la flecha abajo la baja, O la enciende, X la apaga, las flechas izquierda y derecha cambian la longitud (toroide: el radio exterior), espacio inicia o pausa, R reinicia.",
+"A coil (a solenoid seen from the side, or a toroid seen from above) driven by a current source on the bench. Drag the right end of the solenoid to change its length and the grip on top to change its radius; for the toroid drag its outer or inner edge. Now: solenoid of {#} turns, length {#} cm, radius {#} cm, core relative permeability {#}, waveform Ramp and hold, current {#} µA, back EMF {#} mV. Keys: up arrow ramps the current up, down arrow ramps it down, O switches it on, X switches it off, left and right arrows change the length (toroid: the outer radius), space plays or pauses, R resets.":
+  "Una bobina (un solenoide visto de lado, o un toroide visto desde arriba) alimentada por una fuente de corriente en la mesa. Arrastra el extremo derecho del solenoide para cambiar su longitud y el agarre de arriba para cambiar su radio; para el toroide arrastra su borde exterior o interior. Ahora: solenoide de {#} espiras, longitud {#} cm, radio {#} cm, permeabilidad relativa del núcleo {#}, forma de onda Rampa y mantener, corriente {#} µA, fuerza contraelectromotriz {#} mV. Teclas: la flecha arriba sube la corriente en rampa, la flecha abajo la baja, O la enciende, X la apaga, las flechas izquierda y derecha cambian la longitud (toroide: el radio exterior), espacio inicia o pausa, R reinicia.",
+"A coil (a solenoid seen from the side, or a toroid seen from above) driven by a current source on the bench. Drag the right end of the solenoid to change its length and the grip on top to change its radius; for the toroid drag its outer or inner edge. Now: solenoid of {#} turns, length {#} cm, radius {#} cm, core relative permeability {#}, waveform Ramp and hold, current {#} µA, back EMF {#} µV. Keys: up arrow ramps the current up, down arrow ramps it down, O switches it on, X switches it off, left and right arrows change the length (toroid: the outer radius), space plays or pauses, R resets.":
+  "Una bobina (un solenoide visto de lado, o un toroide visto desde arriba) alimentada por una fuente de corriente en la mesa. Arrastra el extremo derecho del solenoide para cambiar su longitud y el agarre de arriba para cambiar su radio; para el toroide arrastra su borde exterior o interior. Ahora: solenoide de {#} espiras, longitud {#} cm, radio {#} cm, permeabilidad relativa del núcleo {#}, forma de onda Rampa y mantener, corriente {#} µA, fuerza contraelectromotriz {#} µV. Teclas: la flecha arriba sube la corriente en rampa, la flecha abajo la baja, O la enciende, X la apaga, las flechas izquierda y derecha cambian la longitud (toroide: el radio exterior), espacio inicia o pausa, R reinicia."
 });

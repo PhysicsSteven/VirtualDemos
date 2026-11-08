@@ -54,5 +54,8 @@ VDI18N.add('en', 'demo/cavendish', [
 "drag a large sphere to swing it",
 "3D, to scale · beam turn drawn ×{#}",
 "drag a large sphere to swing it, elsewhere to turn",
-"swinging to position A"
+"swinging to position A",
+"Close",
+"up the scale",
+"away"
 ]);

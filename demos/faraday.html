@@ -1432,7 +1432,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     $('dataHead').innerHTML = '<tr>' + cols.map((c) => `<th scope="col">${c[1]}</th>`).join('') + '</tr>';
     $('dataBody').innerHTML = idx.length ? idx.map((i) => '<tr>' + cols.map((c) => `<td>${cellTxt(hist[c[0]][i], c[2], c[0] === 't')}</td>`).join('') + '</tr>').join('') : `<tr><td colspan="${cols.length}">No points in the visible window yet</td></tr>`;
     const step = (S.mode === 'coils' ? CS.h : DT) * every;
-    $('dataCap').textContent = `${idx.length} points from ${fmtT(tL)} to ${fmtT(tR)}${every > 1 ? `, every ${every}th sample (${fmtSI(step, 's', 3)} apart) plus the last` : ''}. ${S.mode === 'self' ? 'ε is an interval average; I and U are values at t.' : 'EMF and current are interval averages; flux is the value at t.'}${running ? ' Refreshes twice a second while running.' : ''}`;
+    $('dataCap').textContent = `${idx.length} points from ${fmtT(tL)} to ${fmtT(tR)}${every > 1 ? `, one sample in every ${every} (${fmtSI(step, 's', 3)} apart) plus the last` : ''}. ${S.mode === 'self' ? 'ε is an interval average; I and U are values at t.' : 'EMF and current are interval averages; flux is the value at t.'}${running ? ' Refreshes twice a second while running.' : ''}`;
   }
   $('dataBtn').addEventListener('click', () => {
     dataOpen = !dataOpen; $('dataWrap').hidden = !dataOpen;
@@ -2810,6 +2810,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     set('sEmf', fmtSI(c.intEmf, 'Wb', 5)); set('sDphi', fmtSI(-N * dphi, 'Wb', 5));
     set('sQ', fmtSI(c.Q, 'C', 5)); set('sQf', fmtSI(-N * dphi / c.R, 'C', 5)); set('sHeat', fmtSI(c.heat, 'J', 4));
     let lenz = '';
+    /* the Lenz line is built from whole sentences with VDI18N.t, so every case is harvested from this source and translated (a stand in when the library is missing) */
+    const VDI18N = window.VDI18N || { t: (s, v) => s.replace(/\{(\w+)\}/g, (a, k) => (v && v[k] != null ? String(v[k]) : a)) };
     if (m === 'magnet') {
       const p = magP();
       set('mLink', fmtSI(N * c.phi, 'Wb', 4));
@@ -2821,18 +2823,18 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       set('mPF', act && act.kind === 'flip' ? '—' : fmtSI(-W.F * W.vMag, 'W', 3));
       set('sGhost', ghosts.length ? `${fmtSI(ghosts[0].Q, 'C', 5)} <span class="ok">${ghosts[0].label}</span>` : '—');
       const dPhidt = -c.emf / N, tiny = Math.abs(c.I) < 1e-4 * Iscale() || Math.abs(c.emf) < 1e-9;
-      if (tiny) lenz = 'No change of flux, so no induced EMF and no current.';
+      if (tiny) lenz = VDI18N.t('No change of flux, so no induced EMF and no current.');
       else {
         const inc = dPhidt > 0, Ipos = c.I > 0;
-        lenz = `Φ<sub>B</sub> is ${inc ? 'increasing' : 'decreasing'}, so the induced current runs ${Ipos ? 'counterclockwise' : 'clockwise'} seen from the right and its own field inside the coil points ${Ipos ? '+z' : '−z'}, against the change.`;
+        lenz = VDI18N.t('Φ<sub>B</sub> is {change}, so the induced current runs {sense} seen from the right and its own field inside the coil points {z}, against the change.', { change: inc ? VDI18N.t('increasing') : VDI18N.t('decreasing'), sense: Ipos ? VDI18N.t('counterclockwise') : VDI18N.t('clockwise'), z: Ipos ? '+z' : '−z' });
         const outside = Math.abs(W.z) > LEN / 2 + 0.006 && !(act && act.kind === 'flip');
         if (outside && Math.abs(W.vMag) > 1e-4) {
           const left = W.z < 0, cface = left ? (Ipos ? 'south' : 'north') : (Ipos ? 'north' : 'south');
           const mpole = (left === (Math.cos(W.th) > 0)) ? 'north' : 'south';
           const appr = (left && W.vMag > 0) || (!left && W.vMag < 0);
-          lenz += ` The coil's ${left ? 'left' : 'right'} face acts as a ${cface} pole, facing the magnet's ${mpole} pole: it ${cface === mpole ? 'repels' : 'attracts'} the ${appr ? 'approaching' : 'receding'} magnet.`;
-        } else if (act && act.kind === 'flip') lenz += ' The coil\'s field tries to hold the flux where it was, so it resists the turning.';
-        else lenz += ' The force on the magnet opposes its motion.';
+          lenz += ' ' + VDI18N.t("The coil's {side} face acts as a {cface} pole, facing the magnet's {mpole} pole: it {verb} the {motion} magnet.", { side: left ? VDI18N.t('left') : VDI18N.t('right'), cface: cface === 'north' ? VDI18N.t('north') : VDI18N.t('south'), mpole: mpole === 'north' ? VDI18N.t('north') : VDI18N.t('south'), verb: cface === mpole ? VDI18N.t('repels') : VDI18N.t('attracts'), motion: appr ? VDI18N.t('approaching') : VDI18N.t('receding') });
+        } else if (act && act.kind === 'flip') lenz += ' ' + VDI18N.t('The coil\'s field tries to hold the flux where it was, so it resists the turning.');
+        else lenz += ' ' + VDI18N.t('The force on the magnet opposes its motion.');
       }
     } else if (m === 'gen') {
       const G = S.gen, A = genA(), pk = G.N * G.B * A * G.w;
@@ -2843,8 +2845,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       set('mRms', fmtSI((W.motor ? pk : G.N * G.B * A * Math.abs(W.gw)) / Math.SQRT2, 'V', 4));
       set('mTq', fmtSI(G.N * c.I * A * G.B * Math.sin(W.gMid || W.gth), 'N·m', 3));
       set('mP', fmtSI(c.I * c.I * c.R, 'W', 3));
-      if (Math.abs(c.emf) < 1e-9) lenz = 'The flux is not changing at this instant, so there is no EMF.';
-      else lenz = `Φ<sub>B</sub> is ${-c.emf > 0 ? 'increasing' : 'decreasing'}; the current's own field opposes that, and the force on the coil's sides makes a torque against the rotation. The crank (or motor) must supply power τω = I²R = ${fmtSI(c.I * c.I * c.R, 'W', 3)}.`;
+      if (Math.abs(c.emf) < 1e-9) lenz = VDI18N.t('The flux is not changing at this instant, so there is no EMF.');
+      else lenz = VDI18N.t("Φ<sub>B</sub> is {change}; the current's own field opposes that, and the force on the coil's sides makes a torque against the rotation. The crank (or motor) must supply power τω = I²R = {P}.", { change: -c.emf > 0 ? VDI18N.t('increasing') : VDI18N.t('decreasing'), P: fmtSI(c.I * c.I * c.R, 'W', 3) });
     } else if (m === 'self') {
       const sy = SV.sys, p = S.self, dIdt = -c.emf / sy.L, tor = p.shape === 'tor';
       set('mDI', fmtSI(dIdt, 'A/s', 4)); set('mV', fmtSI(-c.emf, 'V', 4));
@@ -2856,11 +2858,11 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       set('sW', fmtSI(c.Wsrc, 'J', 5)); set('sdU', fmtSI(c.U - c.U0, 'J', 5));
       set('sChk', `${(c.Wsrc - (c.U - c.U0)).toExponential(1).replace('-', '−')} J`);
       const rate = p.I0 / p.T;
-      if (Math.abs(dIdt) < 1e-6 * rate) lenz = `The current is steady${Math.abs(c.I) > 1e-6 * p.I0 ? ` at ${fmtSI(c.I, 'A', 3)}` : ''}, so the flux NΦ<sub>B</sub> = LI is steady and there is no back EMF. An ideal inductor carries a steady current with no voltage across it.`;
+      if (Math.abs(dIdt) < 1e-6 * rate) lenz = Math.abs(c.I) > 1e-6 * p.I0 ? VDI18N.t('The current is steady at {I}, so the flux NΦ<sub>B</sub> = LI is steady and there is no back EMF. An ideal inductor carries a steady current with no voltage across it.', { I: fmtSI(c.I, 'A', 3) }) : VDI18N.t('The current is steady, so the flux NΦ<sub>B</sub> = LI is steady and there is no back EMF. An ideal inductor carries a steady current with no voltage across it.');
       else {
         const up = dIdt > 0, grow = c.I * dIdt > 0;
-        lenz = `I is ${up ? 'increasing' : 'decreasing'} (dI/dt ${up ? '&gt;' : '&lt;'} 0), so ε = −L dI/dt is ${up ? 'negative' : 'positive'}: the back EMF ${up ? 'points against the positive direction and opposes the increase' : 'points along the positive direction and opposes the decrease'}. ` +
-          (Math.abs(c.I) < 1e-6 * p.I0 ? 'I is passing through zero.' : grow ? `Here |I| is growing, so ε pushes against the current: the source must work at the rate LI dI/dt = ${fmtSI(-c.emf * c.I, 'W', 3)}, and the energy goes into the field.` : `Here |I| is shrinking, so ε pushes along the current, trying to keep it going: the field gives its energy back at ${fmtSI(c.emf * c.I, 'W', 3)}.`);
+        lenz = (up ? VDI18N.t('I is increasing (dI/dt &gt; 0), so ε = −L dI/dt is negative: the back EMF points against the positive direction and opposes the increase.') : VDI18N.t('I is decreasing (dI/dt &lt; 0), so ε = −L dI/dt is positive: the back EMF points along the positive direction and opposes the decrease.')) + ' ' +
+          (Math.abs(c.I) < 1e-6 * p.I0 ? VDI18N.t('I is passing through zero.') : grow ? VDI18N.t('Here |I| is growing, so ε pushes against the current: the source must work at the rate LI dI/dt = {P}, and the energy goes into the field.', { P: fmtSI(-c.emf * c.I, 'W', 3) }) : VDI18N.t('Here |I| is shrinking, so ε pushes along the current, trying to keep it going: the field gives its energy back at {P}.', { P: fmtSI(c.emf * c.I, 'W', 3) }));
       }
     } else if (m === 'coils') {
       const sy = CS.sys, o = CS.out, cl = S.coils.closed, ph = cl ? CS.phC : CS.phO, A = cx.abs;
@@ -2886,23 +2888,23 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       set('pTau', `${(sy.L1 / sy.R1 * 1e3).toFixed(2)} ms`); set('pPin', pf(ph.Pin, 'W')); set('pHeat', pf(ph.P1 + ph.P2, 'W'));
       set('pF', cl ? pf(ph.Favg, 'N') + dirF(ph.Favg, Fpk) : '0');
       $('steadyHint').innerHTML = `Air coils are loosely coupled: here k = ${sy.k.toFixed(2)}, so much of the flux of each coil misses the other. With the secondary open, |EMF<sub>2</sub>|/V<sub>0</sub> = ωM/|R<sub>1</sub> + iωL<sub>1</sub>| rises with frequency toward M/L<sub>1</sub> = k√(L<sub>2</sub>/L<sub>1</sub>), not toward the ideal transformer ratio N<sub>2</sub>/N<sub>1</sub>. Only with k close to 1, as on a shared iron core, does it reach N<sub>2</sub>/N<sub>1</sub>.`;
-      if (!cl) lenz = `The secondary is open, so no current flows in it and nothing opposes the change: EMF<sub>2</sub> = −M dI<sub>1</sub>/dt = ${pf(o.emf2, 'V')} is the bare induced EMF, largest when I<sub>1</sub> passes through zero. The primary current is the same as with no secondary at all.`;
+      if (!cl) lenz = VDI18N.t('The secondary is open, so no current flows in it and nothing opposes the change: EMF<sub>2</sub> = −M dI<sub>1</sub>/dt = {E} is the bare induced EMF, largest when I<sub>1</sub> passes through zero. The primary current is the same as with no secondary at all.', { E: pf(o.emf2, 'V') });
       else {
         const tiny = Math.abs(o.I2) < 0.02 * A(ph.X2);
-        lenz = tiny ? 'I<sub>2</sub> is passing through zero: at this instant Φ<sub>2</sub> is at a turning point.'
-          : `Φ<sub>2</sub> is ${o.emf2 < 0 ? 'increasing' : 'decreasing'}, so I<sub>2</sub> circulates ${o.I2 > 0 ? 'counterclockwise' : 'clockwise'} seen from the right and its own field inside the secondary points ${o.I2 > 0 ? '+z' : '−z'}, against the change. ` +
-            (o.I1 * o.I2 < 0 ? 'I<sub>1</sub> and I<sub>2</sub> circulate in opposite senses now: the facing ends are like poles and the coils repel.' : `I<sub>1</sub> and I<sub>2</sub> circulate the same way now, so the coils attract; averaged over a cycle they ${ph.Favg > 0 ? 'repel' : 'attract'}.`);
-        if (!blind()) lenz += ` Closing the secondary changed the primary current amplitude from ${pf(A(CS.phO.X1), 'A')} to ${pf(A(CS.phC.X1), 'A')}: its opposing flux lowers the primary's effective inductance, and its resistance adds to the primary's.`;
+        lenz = tiny ? VDI18N.t('I<sub>2</sub> is passing through zero: at this instant Φ<sub>2</sub> is at a turning point.')
+          : VDI18N.t('Φ<sub>2</sub> is {change}, so I<sub>2</sub> circulates {sense} seen from the right and its own field inside the secondary points {z}, against the change.', { change: o.emf2 < 0 ? VDI18N.t('increasing') : VDI18N.t('decreasing'), sense: o.I2 > 0 ? VDI18N.t('counterclockwise') : VDI18N.t('clockwise'), z: o.I2 > 0 ? '+z' : '−z' }) + ' ' +
+            (o.I1 * o.I2 < 0 ? VDI18N.t('I<sub>1</sub> and I<sub>2</sub> circulate in opposite senses now: the facing ends are like poles and the coils repel.') : ph.Favg > 0 ? VDI18N.t('I<sub>1</sub> and I<sub>2</sub> circulate the same way now, so the coils attract; averaged over a cycle they repel.') : VDI18N.t('I<sub>1</sub> and I<sub>2</sub> circulate the same way now, so the coils attract; averaged over a cycle they attract.'));
+        if (!blind()) lenz += ' ' + VDI18N.t("Closing the secondary changed the primary current amplitude from {a} to {b}: its opposing flux lowers the primary's effective inductance, and its resistance adds to the primary's.", { a: pf(A(CS.phO.X1), 'A'), b: pf(A(CS.phC.X1), 'A') });
       }
     } else {
       const r = railP(), Fx = c.I * r.L * r.B;
       set('mX', `${(W.x * 100).toFixed(1)} cm`); set('mV', `${W.rv.toFixed(3).replace('-', '−')} m/s`);
       set('mF', fmtSI(Fx, 'N', 3)); set('mPF', fmtSI(-Fx * W.rv, 'W', 4)); set('mP', fmtSI(c.I * c.I * c.R, 'W', 4));
       set('sKE', `${fmtSI(W.ke, 'J', 4)}${act && act.kind === 'coast' ? ` <span class="ok">of ${fmtSI(0.5 * r.m * act.v0 * act.v0, 'J', 3)} at the push</span>` : ''}`);
-      if (Math.abs(c.emf) < 1e-9) lenz = 'The bar is not moving, so the flux is steady and no current flows.';
+      if (Math.abs(c.emf) < 1e-9) lenz = VDI18N.t('The bar is not moving, so the flux is steady and no current flows.');
       else {
         const inc = -c.emf > 0;
-        lenz = `The flux into the page is ${inc ? 'growing' : 'shrinking'}, so the current runs ${inc ? 'counterclockwise' : 'clockwise'}, making its own field ${inc ? 'out of' : 'into'} the page inside the loop. The force ILB on the bar points ${Fx < 0 ? 'left' : 'right'}, against its motion.`;
+        lenz = (inc ? VDI18N.t('The flux into the page is growing, so the current runs counterclockwise, making its own field out of the page inside the loop.') : VDI18N.t('The flux into the page is shrinking, so the current runs clockwise, making its own field into the page inside the loop.')) + ' ' + (Fx < 0 ? VDI18N.t('The force ILB on the bar points left, against its motion.') : VDI18N.t('The force ILB on the bar points right, against its motion.'));
       }
     }
     $('lenzNow').innerHTML = lenz;

@@ -899,5 +899,23 @@ VDI18N.add('es', 'demo/rotation', {
 "L = −{#} kg·m²/s = mud":
   "L = −{#} kg·m²/s = mud",
 "Angular momentum about the pin at t = {#} s: ball −{#}, rod {#}, total −{#} kg·m²/s (mud = −{#} before the hit). Momentum along the ball's path +{#} before, −{#} kg·m/s after.":
-  "Momento angular respecto al pivote en t = {#} s: pelota −{#}, varilla {#}, total −{#} kg·m²/s (mud = −{#} antes del golpe). Momento a lo largo de la trayectoria de la pelota +{#} antes, −{#} kg·m/s después."
+  "Momento angular respecto al pivote en t = {#} s: pelota −{#}, varilla {#}, total −{#} kg·m²/s (mud = −{#} antes del golpe). Momento a lo largo de la trayectoria de la pelota +{#} antes, −{#} kg·m/s después.",
+"Compared with the start, over the last {#} s: I, ω, kinetic energy and L as ratios. Now I is {#} times, ω {#} times and the kinetic energy {#} times their starting values; L stays at {#}.":
+  "Comparado con el inicio, en los últimos {#} s: I, ω, energía cinética y L como cocientes. Ahora I es {#} veces, ω {#} veces y la energía cinética {#} veces sus valores iniciales; L se mantiene en {#}.",
+"I ratio":
+  "cociente de I",
+"ω ratio":
+  "cociente de ω",
+"KE ratio":
+  "cociente de EC",
+"L ratio":
+  "cociente de L",
+"Close":
+  "Cerrar",
+"Rotational energy: +{#} J at the start, plus {#} J of work done moving the masses, equals +{#} J now.":
+  "Energía de rotación: +{#} J al inicio, más {#} J de trabajo hecho al mover las masas, es igual a +{#} J ahora.",
+"Rotational energy: +{#} J at the start, plus +{#} J of work done moving the masses, equals +{#} J now.":
+  "Energía de rotación: +{#} J al inicio, más +{#} J de trabajo hecho al mover las masas, es igual a +{#} J ahora.",
+"Rotational energy: +{#} J at the start, plus −{#} J of work done moving the masses, equals +{#} J now.":
+  "Energía de rotación: +{#} J al inicio, más −{#} J de trabajo hecho al mover las masas, es igual a +{#} J ahora."
 });

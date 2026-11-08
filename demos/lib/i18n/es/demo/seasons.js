@@ -463,5 +463,57 @@ VDI18N.add('es', 'demo/seasons', {
 "day {#} · Sun and Earth not to scale":
   "día {#} · el Sol y la Tierra no están a escala",
 "Earth's real orbit is an ellipse and its axis is tilted, so the Sun's daily step against the stars is not the same all year. A sundial runs fast or slow against a clock by up to about {#} minutes, and solar days in December are about {#} seconds longer than in September.":
-  "La órbita real de la Tierra es una elipse y su eje está inclinado, así que el paso diario del Sol respecto a las estrellas no es igual todo el año. Un reloj de sol se adelanta o se atrasa respecto a un reloj hasta unos {#} minutos, y los días solares de diciembre son unos {#} segundos más largos que los de septiembre."
+  "La órbita real de la Tierra es una elipse y su eje está inclinado, así que el paso diario del Sol respecto a las estrellas no es igual todo el año. Un reloj de sol se adelanta o se atrasa respecto a un reloj hasta unos {#} minutos, y los días solares de diciembre son unos {#} segundos más largos que los de septiembre.",
+"On Jan {#} Earth is {#} AU from the Sun, so sunlight is −{#}% compared with {#} AU, everywhere on Earth at once.":
+  "El {#} de enero la Tierra está a {#} UA del Sol, así que la luz del Sol es −{#}% comparada con {#} UA, en toda la Tierra a la vez.",
+"Feb {#} · day {#}":
+  "{#} feb · día {#}",
+"On Feb {#} Earth is {#} AU from the Sun, so sunlight is +{#}% compared with {#} AU, everywhere on Earth at once.":
+  "El {#} de febrero la Tierra está a {#} UA del Sol, así que la luz del Sol es +{#}% comparada con {#} UA, en toda la Tierra a la vez.",
+"On Feb {#} Earth is {#} AU from the Sun, so sunlight is −{#}% compared with {#} AU, everywhere on Earth at once.":
+  "El {#} de febrero la Tierra está a {#} UA del Sol, así que la luz del Sol es −{#}% comparada con {#} UA, en toda la Tierra a la vez.",
+"On Mar {#} Earth is {#} AU from the Sun, so sunlight is −{#}% compared with {#} AU, everywhere on Earth at once.":
+  "El {#} de marzo la Tierra está a {#} UA del Sol, así que la luz del Sol es −{#}% comparada con {#} UA, en toda la Tierra a la vez.",
+"Apr {#} · day {#}":
+  "{#} abr · día {#}",
+"On Apr {#} Earth is {#} AU from the Sun, so sunlight is +{#}% compared with {#} AU, everywhere on Earth at once.":
+  "El {#} de abril la Tierra está a {#} UA del Sol, así que la luz del Sol es +{#}% comparada con {#} UA, en toda la Tierra a la vez.",
+"On Apr {#} Earth is {#} AU from the Sun, so sunlight is −{#}% compared with {#} AU, everywhere on Earth at once.":
+  "El {#} de abril la Tierra está a {#} UA del Sol, así que la luz del Sol es −{#}% comparada con {#} UA, en toda la Tierra a la vez.",
+"May {#} · day {#}":
+  "{#} may · día {#}",
+"On May {#} Earth is {#} AU from the Sun, so sunlight is +{#}% compared with {#} AU, everywhere on Earth at once.":
+  "El {#} de mayo la Tierra está a {#} UA del Sol, así que la luz del Sol es +{#}% comparada con {#} UA, en toda la Tierra a la vez.",
+"On May {#} Earth is {#} AU from the Sun, so sunlight is −{#}% compared with {#} AU, everywhere on Earth at once.":
+  "El {#} de mayo la Tierra está a {#} UA del Sol, así que la luz del Sol es −{#}% comparada con {#} UA, en toda la Tierra a la vez.",
+"On Jun {#} Earth is {#} AU from the Sun, so sunlight is +{#}% compared with {#} AU, everywhere on Earth at once.":
+  "El {#} de junio la Tierra está a {#} UA del Sol, así que la luz del Sol es +{#}% comparada con {#} UA, en toda la Tierra a la vez.",
+"On Jul {#} Earth is {#} AU from the Sun, so sunlight is +{#}% compared with {#} AU, everywhere on Earth at once.":
+  "El {#} de julio la Tierra está a {#} UA del Sol, así que la luz del Sol es +{#}% comparada con {#} UA, en toda la Tierra a la vez.",
+"Aug {#} · day {#}":
+  "{#} ago · día {#}",
+"On Aug {#} Earth is {#} AU from the Sun, so sunlight is +{#}% compared with {#} AU, everywhere on Earth at once.":
+  "El {#} de agosto la Tierra está a {#} UA del Sol, así que la luz del Sol es +{#}% comparada con {#} UA, en toda la Tierra a la vez.",
+"On Aug {#} Earth is {#} AU from the Sun, so sunlight is −{#}% compared with {#} AU, everywhere on Earth at once.":
+  "El {#} de agosto la Tierra está a {#} UA del Sol, así que la luz del Sol es −{#}% comparada con {#} UA, en toda la Tierra a la vez.",
+"Sep {#} · day {#}":
+  "{#} sep · día {#}",
+"On Sep {#} Earth is {#} AU from the Sun, so sunlight is +{#}% compared with {#} AU, everywhere on Earth at once.":
+  "El {#} de septiembre la Tierra está a {#} UA del Sol, así que la luz del Sol es +{#}% comparada con {#} UA, en toda la Tierra a la vez.",
+"On Sep {#} Earth is {#} AU from the Sun, so sunlight is −{#}% compared with {#} AU, everywhere on Earth at once.":
+  "El {#} de septiembre la Tierra está a {#} UA del Sol, así que la luz del Sol es −{#}% comparada con {#} UA, en toda la Tierra a la vez.",
+"Oct {#} · day {#}":
+  "{#} oct · día {#}",
+"On Oct {#} Earth is {#} AU from the Sun, so sunlight is +{#}% compared with {#} AU, everywhere on Earth at once.":
+  "El {#} de octubre la Tierra está a {#} UA del Sol, así que la luz del Sol es +{#}% comparada con {#} UA, en toda la Tierra a la vez.",
+"On Oct {#} Earth is {#} AU from the Sun, so sunlight is −{#}% compared with {#} AU, everywhere on Earth at once.":
+  "El {#} de octubre la Tierra está a {#} UA del Sol, así que la luz del Sol es −{#}% comparada con {#} UA, en toda la Tierra a la vez.",
+"On Nov {#} Earth is {#} AU from the Sun, so sunlight is −{#}% compared with {#} AU, everywhere on Earth at once.":
+  "El {#} de noviembre la Tierra está a {#} UA del Sol, así que la luz del Sol es −{#}% comparada con {#} UA, en toda la Tierra a la vez.",
+"On Dec {#} Earth is {#} AU from the Sun, so sunlight is −{#}% compared with {#} AU, everywhere on Earth at once.":
+  "El {#} de diciembre la Tierra está a {#} UA del Sol, así que la luz del Sol es −{#}% comparada con {#} UA, en toda la Tierra a la vez.",
+"Close":
+  "Cerrar",
+"Raise or lower the observer's latitude by half a degree (Shift: {#} degrees)":
+  "Sube o baja la latitud del observador medio grado (Shift: {#} grados)"
 });
