@@ -15,9 +15,9 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
 /* only what this demo needs beyond demos/lib/vd.css: the layer colors, the stage with its strip, the setup card and the graph */
-:root { --core: #c99a2e; --core2: #e7c25d; --mantle: #b5583a; --crust: #7d6f5f; --rockc: #b9a58a; --rocko: #5f6670; --mantleF: #c77b54; --meas: #c2410c; --model: #2b60b5; --prem: #7c3aed; --sea: #3b82c4; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --core: #e0b24a; --core2: #f4d77e; --mantle: #c8694a; --crust: #a39482; --rockc: #cdb999; --rocko: #8c95a1; --mantleF: #b56a46; --meas: #fb923c; --model: #69a0ff; --prem: #c4a5ff; --sea: #6aaee8; } }
-:root[data-theme="dark"] { --core: #e0b24a; --core2: #f4d77e; --mantle: #c8694a; --crust: #a39482; --rockc: #cdb999; --rocko: #8c95a1; --mantleF: #b56a46; --meas: #fb923c; --model: #69a0ff; --prem: #c4a5ff; --sea: #6aaee8; }
+:root { --core: #c99a2e; --core2: #e7c25d; --mantle: #b5583a; --crust: #7d6f5f; --rockc: #b9a58a; --rocko: #6f6860; --mantleF: #c77b54; --meas: #c2410c; --model: #2b60b5; --prem: #7c3aed; --sea: #3b82c4; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --core: #e0b24a; --core2: #f4d77e; --mantle: #c8694a; --crust: #a39482; --rockc: #cdb999; --rocko: #9f988e; --mantleF: #b56a46; --meas: #fb923c; --model: #69a0ff; --prem: #c4a5ff; --sea: #6aaee8; } }
+:root[data-theme="dark"] { --core: #e0b24a; --core2: #f4d77e; --mantle: #c8694a; --crust: #a39482; --rockc: #cdb999; --rocko: #9f988e; --mantleF: #b56a46; --meas: #fb923c; --model: #69a0ff; --prem: #c4a5ff; --sea: #6aaee8; }
 .stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
 .stage-ctl select { font: inherit; font-size: 0.84rem; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px; }
@@ -862,7 +862,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     VD3K.earth(S3, { r: 1 }, (e) => { earthBall = e; e.ball.material.clippingPlanes = clip; e.ball.material.side = THREE.DoubleSide; e.visible = false; planet.add(e); dirty3 = true; draw(); });
     /* the crust block: mantle slab with two floating blocks, depths in km times KM3 */
     const crust = new THREE.Group(); sc.add(crust);
-    const mM = new THREE.MeshStandardMaterial({ color: '#b56a46', roughness: 0.9 }), cM = new THREE.MeshStandardMaterial({ color: '#cdb999', roughness: 0.85 }), oM = new THREE.MeshStandardMaterial({ color: '#7d8590', roughness: 0.85 });
+    const mM = new THREE.MeshStandardMaterial({ color: '#b56a46', roughness: 0.9 }), cM = new THREE.MeshStandardMaterial({ color: '#cdb999', roughness: 0.85 }), oM = new THREE.MeshStandardMaterial({ color: '#8f887e', roughness: 0.85 });
     const slab = new THREE.Mesh(new THREE.BoxGeometry(2.4, 1, 1), mM), cb = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.7, 1), cM), ob = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.7, 1), oM);
     crust.add(slab, cb, ob);
     VD3.orbit(S3.el, G3.o, () => draw(), { phMin: 0.15, phMax: 2.95, zMin: 0.5, zMax: 3 });
@@ -920,14 +920,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const pc = S3.project([0, 0, 0]), pm = S3.project([0, 0, (1 + rcf) / 2]), pr = S3.project([0, 0, 1.12]);
       if (pc[2] < 1 && rcf > 0.08) label(ctx, 'core', pc[0], pc[1], { a: 'center', w: 700, col: '#3a2a08', halo: false });
       if (pm[2] < 1) label(ctx, 'mantle', pm[0], pm[1], { a: 'center', w: 700, col: '#fff', halo: false });
-      label(ctx, `${P.name}, cut in half${S.mode === 'convect' ? ': the mantle churning' : ''}`, area().x0 + 14 * p, 20 * p, { w: 700, size: 13, col: '#e8eef6', haloCol: '#04070d' });
+      label(ctx, `${P.name}, cut in half${S.mode === 'convect' ? ': the mantle churning' : ''}`, area().x0 + 14 * p, 20 * p, { w: 700, size: 13, col: '#f4f0ea', haloCol: '#0b0906' });
       void pr;
     } else {
       const s = 1.2 / Math.max(30, Math.max(S.tc, S.to) * 1.2), cb = floatBlock(S.tc, S.rcr, S.rm), ob = floatBlock(S.to, S.ro, S.rm);
       const a = S3.project([-0.55, -0.35, cb.above * s + 0.06]), b = S3.project([0.55, -0.35, ob.above * s + 0.06]);
-      label(ctx, 'Continent', a[0], a[1], { a: 'center', w: 700, col: '#e8eef6', haloCol: '#04070d' }); label(ctx, 'Ocean floor', b[0], b[1], { a: 'center', w: 700, col: '#e8eef6', haloCol: '#04070d' });
+      label(ctx, 'Continent', a[0], a[1], { a: 'center', w: 700, col: '#f4f0ea', haloCol: '#0b0906' }); label(ctx, 'Ocean floor', b[0], b[1], { a: 'center', w: 700, col: '#f4f0ea', haloCol: '#0b0906' });
       /* on the front faces: how high each block stands above the mantle's level and how deep its root goes, as in the side view */
-      const L3 = { col: '#e8eef6', haloCol: '#04070d', size: 11 }, roomy = W - card >= 600;
+      const L3 = { col: '#f4f0ea', haloCol: '#0b0906', size: 11 }, roomy = W - card >= 600;
       for (const [x, bl] of [[-0.55, cb], [0.55, ob]]) {
         const up = S3.project([x + 0.41, -0.5, bl.above * s / 2]), dn = S3.project([x + 0.41, -0.5, -bl.below * s / 2]);
         if (!roomy) continue;
@@ -936,7 +936,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       }
       const mt = S3.project([0, -0.5, -0.88]);
       if (mt[2] < 1) label(ctx, `mantle ${fs(S.rm)} kg/m³ (flows over millions of years)`, mt[0], mt[1], Object.assign({}, L3, { a: 'center' }));
-      titleFit('Crust floating on the mantle (heights and depths to scale)', area().x0 + 14 * p, 20 * p, { w: 700, size: 13, col: '#e8eef6', haloCol: '#04070d' });
+      titleFit('Crust floating on the mantle (heights and depths to scale)', area().x0 + 14 * p, 20 * p, { w: 700, size: 13, col: '#f4f0ea', haloCol: '#0b0906' });
     }
   }
 

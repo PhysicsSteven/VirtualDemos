@@ -1,16 +1,17 @@
-/* The lab look (Steve 2026-11-08, direction B "Instrument panel", replacing the parchment of the night before): a graphite header
-   band like an instrument faceplate, flat white bench panels on a cool gray, a teal signal color, IBM Plex Sans for reading and
-   IBM Plex Mono for small labels and numbers. No textures, filters or tilted pieces: pictures of the demos show as they are.
+/* The warm lab look (Steve 2026-11-08, direction C "Warm lab", which replaced the cool lab look B the same evening and the
+   parchment before it): a dark walnut header band like an instrument faceplate, flat ivory bench panels, an amber signal color,
+   IBM Plex Sans for reading and IBM Plex Mono for small labels and numbers. The demos' own drawing colors are warm to match. No textures, filters or tilted pieces: pictures of the demos show as they are.
    One file for every page type, linked last in <head> after a page's own styles, so its tokens win:
      home, course, topic, OpenStax and 404 pages (tools/courses.py), the teaching notes (tools/notes.py),
      every demo (tools/paper.py links it; the stage and its canvases keep their own drawing),
      the worksheets (_includes/head-custom.html; print stays black on white, curriculum/labs/print.css).
-   Day is the default; Night is the same panel with the lights down. theme.js keeps the stored values 'light' and 'dark'.
+   Day is the default; Night is the same bench with the lights down. theme.js keeps the stored values 'light' and 'dark'.
    The old token names (--bg, --surface, --canvas, --ink, --muted, --line, --accent, --hd-*) are redefined in every theme block,
    so every rule that already reads them takes the palette, and a page's own older dark block never wins. The parchment's names
    (--desk, --paper, --paper2, --paper3, --ink2, --line2, --old, --hand, --serif, --mottle, ...) stay defined, mapped to the
    flat palette and the sans, because page styles still read them. New names: --band* (the header band), --sans, --mono.
-   Contrast (WCAG AA or better): ink on panel 17:1, faded ink on panel 7:1, accent on panel 5.6:1 (Day), 9:1 (Night). */
+   Contrast (WCAG AA or better): ink on panel 17:1 (Day) and 14:1 (Night), faded ink 7.6:1 and 6.9:1, amber 5.5:1 and 8.1:1,
+   white on the amber button 5.6:1. */
 @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap");
 
 :root, :root[data-theme="light"] {
@@ -19,12 +20,12 @@
   /* the parchment's names, kept so older page styles that read them get the new faces and flat surfaces */
   --old: var(--sans); --oldsc: var(--sans); --hand: var(--sans); --serif: var(--sans);
   --mottle: none; --grain: none; --underline: none; --corners: 8px; --corners-s: 6px; --r: 8px; --r-s: 6px;
-  --desk: #eef1f4; --paper: #ffffff; --paper2: #f7f9fa; --paper3: #e6eaee; --ink: #15191e; --ink2: #4f5964; --line: #d6dce2; --line2: #b3bcc6;
-  --rule: rgb(16 24 32 / 0.08); --accent: #0b6e7a; --accent-ink: #ffffff; --red: #b42318; --ok: #2f7d32; --link: #0b6e7a; --stain: transparent;
-  --grid: #e3e8ec; --grid-strong: #cfd7e1; --pos: #c23f2c; --neg: #2b60b5; --equi: #a7740b; --field: #1d2836; --on-charge: #ffffff; --band: #1b2128;
-  --band-ink: #f2f5f7; --band-ink2: #b4bec8; --band-line: #2c343d; --band-accent: #4cc9d6; --band-field: #242b33; --band-hover: #2a323b;
-  --thumb-bg: #0f1418; --hero-bg: linear-gradient(#ffffff, #f4f6f8); --shadow: 0 1px 2px rgb(16 24 32 / 0.08), 0 8px 24px -12px rgb(16 24 32 / 0.25);
-  --shadow-s: 0 1px 2px rgb(16 24 32 / 0.06); --hd-code: rgb(16 24 32 / 0.06); --hd-warn: #a7740b; --hd-grid: #e3e8ec; --hd-dot: #c23f2c;
+  --desk: #f3efe8; --paper: #fffdf9; --paper2: #faf7f2; --paper3: #ebe4d8; --ink: #1d1812; --ink2: #5b5144; --line: #ded5c6; --line2: #c2b49c;
+  --rule: rgb(40 25 5 / 0.08); --accent: #9c5700; --accent-ink: #ffffff; --red: #a8381d; --ok: #3f6b2a; --link: #9c5700; --stain: transparent;
+  --grid: #ebe3d6; --grid-strong: #d5c9b5; --pos: #c23f2c; --neg: #2b60b5; --equi: #8a6a0b; --field: #2a2118; --on-charge: #ffffff; --band: #241d15;
+  --band-ink: #f4ead8; --band-ink2: #c4b398; --band-line: #3a3024; --band-accent: #e8a440; --band-field: #2f261c; --band-hover: #30271d;
+  --thumb-bg: #15110c; --hero-bg: linear-gradient(#fffdf9, #f6f1e9); --shadow: 0 1px 2px rgb(40 25 5 / 0.08), 0 8px 24px -12px rgb(40 25 5 / 0.25);
+  --shadow-s: 0 1px 2px rgb(40 25 5 / 0.06); --hd-code: rgb(40 25 5 / 0.06); --hd-warn: #8a6a0b; --hd-grid: #ebe3d6; --hd-dot: #c23f2c;
   --bg: var(--desk); --surface: var(--paper); --canvas: var(--paper2); --relief: var(--paper3); --muted: var(--ink2); --tag: var(--paper3);
   --hd-bg: var(--paper); --hd-ink: var(--ink); --hd-muted: var(--ink2); --hd-line: var(--line); --hd-line2: var(--line2); --hd-surface: var(--paper2);
   --hd-row: var(--paper2); --hd-field: var(--paper2); --hd-hover: var(--paper3); --hd-link: var(--link); --hd-accent: var(--accent);
@@ -33,12 +34,12 @@
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-  --desk: #0e1216; --paper: #161b21; --paper2: #12171c; --paper3: #20272f; --ink: #e8edf1; --ink2: #9aa6b2; --line: #262e37; --line2: #3a4450;
-  --rule: rgb(232 237 241 / 0.08); --accent: #4cc9d6; --accent-ink: #061417; --red: #f07167; --ok: #7bc47f; --link: #4cc9d6; --stain: transparent;
-  --grid: #1c232a; --grid-strong: #2a333d; --pos: #ff7660; --neg: #69a0ff; --equi: #e2b350; --field: #dfe6ef; --on-charge: #0d1218; --band: #0a0d10;
-  --band-ink: #e8edf1; --band-ink2: #9aa6b2; --band-line: #222a32; --band-accent: #4cc9d6; --band-field: #161b21; --band-hover: #1a2027;
-  --thumb-bg: #0a0d10; --hero-bg: linear-gradient(#141a20, #0e1216); --shadow: 0 1px 2px rgb(0 0 0 / 0.5), 0 10px 28px -12px rgb(0 0 0 / 0.8);
-  --shadow-s: 0 1px 2px rgb(0 0 0 / 0.35); --hd-code: rgb(232 237 241 / 0.08); --hd-warn: #e2b350; --hd-grid: #1c232a; --hd-dot: #ff7660;
+  --desk: #14110d; --paper: #1f1a14; --paper2: #1a1611; --paper3: #2b241b; --ink: #f0e5d1; --ink2: #b3a286; --line: #322a20; --line2: #4a3e2f;
+  --rule: rgb(240 229 209 / 0.08); --accent: #e8a440; --accent-ink: #1a1206; --red: #e07a5a; --ok: #9cc27f; --link: #e8a440; --stain: transparent;
+  --grid: #282017; --grid-strong: #3a3024; --pos: #ff7660; --neg: #69a0ff; --equi: #e2b350; --field: #efe3cf; --on-charge: #14110d; --band: #0e0c09;
+  --band-ink: #f0e5d1; --band-ink2: #a8977b; --band-line: #2a231a; --band-accent: #e8a440; --band-field: #1f1a14; --band-hover: #231d16;
+  --thumb-bg: #0d0b08; --hero-bg: linear-gradient(#1c1712, #14110d); --shadow: 0 1px 2px rgb(0 0 0 / 0.5), 0 10px 28px -12px rgb(0 0 0 / 0.8);
+  --shadow-s: 0 1px 2px rgb(0 0 0 / 0.35); --hd-code: rgb(240 229 209 / 0.08); --hd-warn: #e2b350; --hd-grid: #282017; --hd-dot: #ff7660;
   --bg: var(--desk); --surface: var(--paper); --canvas: var(--paper2); --relief: var(--paper3); --muted: var(--ink2); --tag: var(--paper3);
   --hd-bg: var(--paper); --hd-ink: var(--ink); --hd-muted: var(--ink2); --hd-line: var(--line); --hd-line2: var(--line2); --hd-surface: var(--paper2);
   --hd-row: var(--paper2); --hd-field: var(--paper2); --hd-hover: var(--paper3); --hd-link: var(--link); --hd-accent: var(--accent);
@@ -47,12 +48,12 @@
   }
 }
 :root[data-theme="dark"] {
-  --desk: #0e1216; --paper: #161b21; --paper2: #12171c; --paper3: #20272f; --ink: #e8edf1; --ink2: #9aa6b2; --line: #262e37; --line2: #3a4450;
-  --rule: rgb(232 237 241 / 0.08); --accent: #4cc9d6; --accent-ink: #061417; --red: #f07167; --ok: #7bc47f; --link: #4cc9d6; --stain: transparent;
-  --grid: #1c232a; --grid-strong: #2a333d; --pos: #ff7660; --neg: #69a0ff; --equi: #e2b350; --field: #dfe6ef; --on-charge: #0d1218; --band: #0a0d10;
-  --band-ink: #e8edf1; --band-ink2: #9aa6b2; --band-line: #222a32; --band-accent: #4cc9d6; --band-field: #161b21; --band-hover: #1a2027;
-  --thumb-bg: #0a0d10; --hero-bg: linear-gradient(#141a20, #0e1216); --shadow: 0 1px 2px rgb(0 0 0 / 0.5), 0 10px 28px -12px rgb(0 0 0 / 0.8);
-  --shadow-s: 0 1px 2px rgb(0 0 0 / 0.35); --hd-code: rgb(232 237 241 / 0.08); --hd-warn: #e2b350; --hd-grid: #1c232a; --hd-dot: #ff7660;
+  --desk: #14110d; --paper: #1f1a14; --paper2: #1a1611; --paper3: #2b241b; --ink: #f0e5d1; --ink2: #b3a286; --line: #322a20; --line2: #4a3e2f;
+  --rule: rgb(240 229 209 / 0.08); --accent: #e8a440; --accent-ink: #1a1206; --red: #e07a5a; --ok: #9cc27f; --link: #e8a440; --stain: transparent;
+  --grid: #282017; --grid-strong: #3a3024; --pos: #ff7660; --neg: #69a0ff; --equi: #e2b350; --field: #efe3cf; --on-charge: #14110d; --band: #0e0c09;
+  --band-ink: #f0e5d1; --band-ink2: #a8977b; --band-line: #2a231a; --band-accent: #e8a440; --band-field: #1f1a14; --band-hover: #231d16;
+  --thumb-bg: #0d0b08; --hero-bg: linear-gradient(#1c1712, #14110d); --shadow: 0 1px 2px rgb(0 0 0 / 0.5), 0 10px 28px -12px rgb(0 0 0 / 0.8);
+  --shadow-s: 0 1px 2px rgb(0 0 0 / 0.35); --hd-code: rgb(240 229 209 / 0.08); --hd-warn: #e2b350; --hd-grid: #282017; --hd-dot: #ff7660;
   --bg: var(--desk); --surface: var(--paper); --canvas: var(--paper2); --relief: var(--paper3); --muted: var(--ink2); --tag: var(--paper3);
   --hd-bg: var(--paper); --hd-ink: var(--ink); --hd-muted: var(--ink2); --hd-line: var(--line); --hd-line2: var(--line2); --hd-surface: var(--paper2);
   --hd-row: var(--paper2); --hd-field: var(--paper2); --hd-hover: var(--paper3); --hd-link: var(--link); --hd-accent: var(--accent);

@@ -20,18 +20,18 @@
 <style>
 /* Layout: one canvas with four panels: the tube, electron energy along the tube, the I(U) curve and the energy levels; instrument rail on the right; stacks on phones. */
 :root {
-  --bg: #e9edf2;
-  --surface: #f8fafc;
-  --canvas: #fcfdfe;
-  --ink: #17202b;
-  --muted: #5a6575;
-  --line: #d3d9e2;
-  --grid: #e6ebf1;
-  --grid-strong: #cfd7e1;
+  --bg: #f1eeea;
+  --surface: #fcfaf8;
+  --canvas: #fefdfc;
+  --ink: #2a2219;
+  --muted: #73695c;
+  --line: #e1dbd4;
+  --grid: #f0ece7;
+  --grid-strong: #e0d9d0;
   --pos: #c23f2c;
   --neg: #2b60b5;
   --equi: #a7740b;
-  --accent: #2b60b5;
+  --accent: #c4811c;
   --uv: #7a3ec2;
   --glow: #e5681a;
   --glass: #dfe7ef;
@@ -40,15 +40,15 @@
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
-    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-    --equi: #e2b350; --accent: #69a0ff; --uv: #b98cff; --glow: #ff9442; --glass: #1c2633; color-scheme: dark;
+    --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
+    --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+    --equi: #e2b350; --accent: #fbc26d; --uv: #b98cff; --glow: #ff9442; --glass: #1c2633; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
-  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-  --equi: #e2b350; --accent: #69a0ff; --uv: #b98cff; --glow: #ff9442; --glass: #1c2633; color-scheme: dark;
+  --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
+  --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+  --equi: #e2b350; --accent: #fbc26d; --uv: #b98cff; --glow: #ff9442; --glass: #1c2633; color-scheme: dark;
 }
 :root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
@@ -1058,7 +1058,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const sc = S3.scene, M = (o, c) => VD3K.material(S3, o, c), mesh = (geo, m, cast) => { const x = new THREE.Mesh(geo, m); x.castShadow = !!cast; x.receiveShadow = true; return x; };
     sc.add(VD3K.bench(S3, { w: 3, d: 2, y: 0.3 }), VD3K.backdrop(S3, { r: 1.2, h: 0.9, y: -0.55 }));
     /* the oven: a metal box with its front cut away, warm inside in step with the temperature */
-    const oven = new THREE.Group(), steel = M({ roughness: 0.5, metalness: 0.25 }, ['#b8c0c9', '#56606b']);
+    const oven = new THREE.Group(), steel = M({ roughness: 0.5, metalness: 0.25 }, ['#c8c1b9', '#696258']);
     const inner = M({ roughness: 0.9, metalness: 0, emissive: 0x000000, side: THREE.DoubleSide }, ['#d9c7b4', '#3a3029']);
     const OW = 0.26, OD = 0.09, OH = 0.13;
     oven.add(VD3K.box(OW, 0.006, OH, steel, 0, OD / 2, 0), VD3K.box(OW, OD, 0.006, steel, 0, 0, OH - 0.006), VD3K.box(OW, OD, 0.006, steel, 0, 0, 0));
@@ -1066,25 +1066,25 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const lining = mesh(new THREE.PlaneGeometry(OW - 0.014, OH - 0.014), inner); lining.rotation.x = Math.PI / 2; lining.position.set(0, OD / 2 - 0.004, OH / 2); oven.add(lining);
     const coilM = M({ roughness: 0.5, metalness: 0.3, emissive: 0x000000 }, ['#8a5a3a', '#6a4a30']);
     for (let k = 0; k < 9; k++) { const c = mesh(new THREE.TorusGeometry(0.006, 0.0012, 6, 16), coilM); c.rotation.y = Math.PI / 2; c.position.set(-0.1 + k * 0.025, OD / 2 - 0.012, 0.012); oven.add(c); }
-    const thermoWell = VD3K.rod([0.1, 0.02, OH], [0.1, 0.02, OH + 0.05], 0.003, M({ roughness: 0.3, metalness: 0.7 }, ['#c9ced4', '#7c848e']));
+    const thermoWell = VD3K.rod([0.1, 0.02, OH], [0.1, 0.02, OH + 0.05], 0.003, M({ roughness: 0.3, metalness: 0.7 }, ['#d3cfca', '#8d867d']));
     oven.add(thermoWell);
     sc.add(oven);
     /* the tube: glass, a cathode with its heater, two mesh grids and the collector plate */
     const tube = new THREE.Group(); tube.position.z = TZ;
     const glass = VD3K.glass(S3, { r: TR, len: 0.2, axis: 'x', opacity: 0.2 }); tube.add(glass);
-    const metal = M({ roughness: 0.35, metalness: 0.8 }, ['#7f8893', '#9aa4b0']), nickel = M({ roughness: 0.3, metalness: 0.85 }, ['#b3bac2', '#c7ced6']);
+    const metal = M({ roughness: 0.35, metalness: 0.8 }, ['#928a80', '#aea69c']), nickel = M({ roughness: 0.3, metalness: 0.85 }, ['#c1bbb4', '#d5cfc8']);
     const heatM = new THREE.MeshBasicMaterial({ color: 0xff8a3a }), heater = mesh(new THREE.CylinderGeometry(0.0035, 0.0035, 0.016, 12), heatM); heater.position.x = TX.k - 0.003; tube.add(heater);
     const cath = mesh(new THREE.CylinderGeometry(0.006, 0.006, 0.004, 24), metal); cath.rotation.z = Math.PI / 2; cath.position.x = TX.k; tube.add(cath);
     const grid = (x) => { const g = new THREE.Group(), ring = mesh(new THREE.TorusGeometry(TR * 0.8, 0.0009, 6, 40), nickel); ring.rotation.y = Math.PI / 2; g.add(ring);
       for (let k = -3; k <= 3; k++) { const w = mesh(new THREE.CylinderGeometry(0.00035, 0.00035, 2 * TR * 0.8 * Math.cos(Math.asin(k / 4)), 4), nickel); w.position.z = k * TR * 0.2; w.rotation.x = 0; g.add(w); const w2 = w.clone(); w2.rotation.x = Math.PI / 2; w2.position.set(0, k * TR * 0.2, 0); g.add(w2); }
       g.position.x = x; return g; };
     tube.add(grid(TX.g1), grid(TX.g2));
-    const anodeM = M({ roughness: 0.4, metalness: 0.7, emissive: 0x000000 }, ['#6d757f', '#8a939e']), anode = mesh(new THREE.CylinderGeometry(TR * 0.72, TR * 0.72, 0.002, 32), anodeM); anode.rotation.z = Math.PI / 2; anode.position.x = TX.a; tube.add(anode);
-    const drop = mesh(new THREE.SphereGeometry(0.006, 20, 10), M({ roughness: 0.08, metalness: 1 }, ['#c8ccd2', '#d8dce2'])); drop.scale.set(1.4, 1, 0.35); drop.position.set((TX.g1 + TX.g2) / 2, 0, -TR + 0.0025); tube.add(drop);
+    const anodeM = M({ roughness: 0.4, metalness: 0.7, emissive: 0x000000 }, ['#7e776e', '#9c958b']), anode = mesh(new THREE.CylinderGeometry(TR * 0.72, TR * 0.72, 0.002, 32), anodeM); anode.rotation.z = Math.PI / 2; anode.position.x = TX.a; tube.add(anode);
+    const drop = mesh(new THREE.SphereGeometry(0.006, 20, 10), M({ roughness: 0.08, metalness: 1 }, ['#d1cec9', '#e1ded9'])); drop.scale.set(1.4, 1, 0.35); drop.position.set((TX.g1 + TX.g2) / 2, 0, -TR + 0.0025); tube.add(drop);
     /* pins out of the left end and a stand under each end */
     for (const y of [-0.006, 0, 0.006]) tube.add(VD3K.rod([-0.1, y, 0], [-0.118, y, 0], 0.0007, nickel));
     sc.add(tube);
-    const stand = M({ roughness: 0.6, metalness: 0.2 }, ['#3b4552', '#2b333d']);
+    const stand = M({ roughness: 0.6, metalness: 0.2 }, ['#50483d', '#3c352c']);
     for (const x of [-0.075, 0.075]) { sc.add(VD3K.rod([x, 0, 0.006], [x, 0, TZ - TR], 0.0022, stand)); sc.add(VD3K.box(0.022, 0.03, 0.006, stand, x, 0, 0.006)); }
     /* the glow from excitations: thin slices across the gap, one per bin of the excitation histogram */
     const NB = 64, slices = [];
@@ -1097,7 +1097,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const mU = VD3K.meter(S3, { label: 'U  (G2 to K)', sub: 'supply', w: 0.085, h: 0.052 }), mI = VD3K.meter(S3, { label: 'I  collector', sub: 'electrometer', w: 0.085, h: 0.052 });
     mU.position.set(-0.13, -0.095, mU.position.z); mI.position.set(0.13, -0.095, mI.position.z); sc.add(mU, mI);
     sc.add(VD3K.cable([-0.118, 0, TZ], [-0.13, -0.085, 0.02], { color: 0xb8382a, via: [[-0.15, -0.02, TZ - 0.01], [-0.16, -0.08, 0.006]] }));
-    sc.add(VD3K.cable([TX.a, 0, TZ + TR], [0.13, -0.085, 0.02], { color: 0x23282f, via: [[TX.a + 0.02, 0.0, OH + 0.02], [0.15, -0.05, 0.05], [0.15, -0.1, 0.01]] }));
+    sc.add(VD3K.cable([TX.a, 0, TZ + TR], [0.13, -0.085, 0.02], { color: 0x2e2a24, via: [[TX.a + 0.02, 0.0, OH + 0.02], [0.15, -0.05, 0.05], [0.15, -0.1, 0.01]] }));
     g3 = { S3, oven, inner, coilM, heatM, glass, anodeM, drop, slices, dots, flashPool, mU, mI, thermoWell };
     can.addEventListener('wheel', (e) => { if (!in3(e)) e.stopImmediatePropagation(); }, { passive: true });
     can.addEventListener('dblclick', (e) => { if (!in3(e)) e.stopImmediatePropagation(); });

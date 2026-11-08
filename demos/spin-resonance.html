@@ -16,41 +16,41 @@
 <style>
 /* Layout: a 3D lab bench across the top of the stage, the oscilloscope and the chart recorder below it; instrument rail on the right; stacks on phones. */
 :root {
-  --bg: #e9edf2;
-  --surface: #f8fafc;
-  --canvas: #fcfdfe;
-  --ink: #17202b;
-  --muted: #5a6575;
-  --line: #d3d9e2;
-  --grid: #e6ebf1;
-  --grid-strong: #cfd7e1;
+  --bg: #f1eeea;
+  --surface: #fcfaf8;
+  --canvas: #fefdfc;
+  --ink: #2a2219;
+  --muted: #73695c;
+  --line: #e1dbd4;
+  --grid: #f0ece7;
+  --grid-strong: #e0d9d0;
   --pos: #c23f2c;
   --neg: #2b60b5;
   --equi: #a7740b;
-  --accent: #2b60b5;
-  --bezel: #2b3038; --bezel-ink: #c9d0d8; --screen: #04110c;
+  --accent: #c4811c;
+  --bezel: #37322c; --bezel-ink: #d7d1ca; --screen: #04110c;
   --paper: #f6f1e3; --paper-grid: #e3b9b0; --paper-major: #c98a7e; --pen: #3a2a8c;
-  --bench-bg: #dfe5ec;
+  --bench-bg: #ebe6e0;
   --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
-    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-    --equi: #e2b350; --accent: #69a0ff;
-    --bezel: #1b1f25; --bezel-ink: #b8c1cc; --screen: #020a07;
+    --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
+    --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+    --equi: #e2b350; --accent: #fbc26d;
+    --bezel: #24211c; --bezel-ink: #cac3ba; --screen: #020a07;
     --paper: #d9d3c4; --paper-grid: #c7a49c; --paper-major: #a9766b; --pen: #2c1f78;
-    --bench-bg: #121922; color-scheme: dark;
+    --bench-bg: #211b13; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
-  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-  --equi: #e2b350; --accent: #69a0ff;
-  --bezel: #1b1f25; --bezel-ink: #b8c1cc; --screen: #020a07;
+  --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
+  --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+  --equi: #e2b350; --accent: #fbc26d;
+  --bezel: #24211c; --bezel-ink: #cac3ba; --screen: #020a07;
   --paper: #d9d3c4; --paper-grid: #c7a49c; --paper-major: #a9766b; --pen: #2c1f78;
-  --bench-bg: #121922; color-scheme: dark;
+  --bench-bg: #211b13; color-scheme: dark;
 }
 :root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
@@ -339,14 +339,14 @@ table.rows td.b { font-size: 0.76rem; }
   const SAMPLES = {
     esr: {
       dpph:  { cap: '#e8771e', name: 'DPPH', lines: [{ spin: 'e', g: G_DPPH, fwhm: 0.25e-3, amp: 0.075 }] },
-      black: { cap: '#1d1d1f', name: 'Empty reference', lines: [] },
+      black: { cap: '#1f1e1d', name: 'Empty reference', lines: [] },
       water: { cap: '#f4f4f0', name: 'Water', lines: [] },
     },
     psr: {
       gly:   { cap: '#f2d01c', name: 'Glycerine', lines: [{ spin: 'H', fwhm: 0.05e-3, amp: 0.080 }] },
       poly:  { cap: '#2f9a4a', name: 'Polystyrene', lines: [{ spin: 'H', fwhm: 0.25e-3, amp: 0.030 }] },
       ptfe:  { cap: '#2d62c8', name: 'PTFE', lines: [{ spin: 'F', fwhm: 0.20e-3, amp: 0.024 }] },
-      black: { cap: '#1d1d1f', name: 'Empty reference', lines: [{ spin: 'H', fwhm: 0.30e-3, amp: 0.006 }] },
+      black: { cap: '#1f1e1d', name: 'Empty reference', lines: [{ spin: 'H', fwhm: 0.30e-3, amp: 0.006 }] },
       water: { cap: '#f4f4f0', name: 'Water', lines: [{ spin: 'H', fwhm: 0.05e-3, amp: 0.030 }] },
     },
   };
@@ -620,7 +620,7 @@ table.rows td.b { font-size: 0.76rem; }
     const tab = (x, y, w, h, txt, on, hotp) => {
       ctx.globalAlpha = on ? 1 : 0.45; ctx.fillStyle = hotp ? '#ffd2a8' : CUR;
       ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x - w / 2, y - h / 2, w, h, 3) : ctx.rect(x - w / 2, y - h / 2, w, h); ctx.fill();
-      ctx.fillStyle = '#1b1f25'; ctx.fillText(txt, x, y + 0.5); ctx.globalAlpha = 1;
+      ctx.fillStyle = '#24211c'; ctx.fillText(txt, x, y + 0.5); ctx.globalAlpha = 1;
     };
     for (const id of ['A', 'B']) tab(X(S.sc[id]), sy - 9 * ps, 14 * ps, 13 * ps, id, meas === 'time', hot(id));
     tab(sx + sw + 13 * ps, Y(S.sc.pos1 + S.sc.V / S.sc.v1), 14 * ps, 13 * ps, 'V', meas === 'volt', hot('V'));
@@ -630,7 +630,7 @@ table.rows td.b { font-size: 0.76rem; }
       ctx.fillStyle = col; ctx.globalAlpha = hot(id) ? 1 : 0.85;
       ctx.beginPath(); ctx.moveTo(x0, y); ctx.lineTo(x0 - 9 * ps, y - 7 * ps); ctx.lineTo(x0 - 20 * ps, y - 7 * ps); ctx.lineTo(x0 - 20 * ps, y + 7 * ps); ctx.lineTo(x0 - 9 * ps, y + 7 * ps); ctx.closePath(); ctx.fill();
       if (hot(id)) { ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.2; ctx.stroke(); }
-      ctx.fillStyle = '#1b1f25'; ctx.globalAlpha = 1; ctx.fillText(id[1], x0 - 13 * ps, y + 0.5);
+      ctx.fillStyle = '#24211c'; ctx.globalAlpha = 1; ctx.fillText(id[1], x0 - 13 * ps, y + 0.5);
     }
     // panel legends
     const vtxt = (v) => v < 1 ? `${Math.round(v * 1000)} mV` : `${v} V`;
@@ -980,16 +980,16 @@ table.rows td.b { font-size: 0.76rem; }
     const wood = mkTex(512, 256); { const x = wood.x; x.fillStyle = '#9b7552'; x.fillRect(0, 0, 512, 256); const r = mulberry(5); for (let i = 0; i < 90; i++) { x.strokeStyle = `rgba(${60 + 40 * r()},${35 + 20 * r()},20,${0.08 + 0.1 * r()})`; x.lineWidth = 1 + 3 * r(); x.beginPath(); const y = r() * 256; x.moveTo(0, y); x.bezierCurveTo(170, y + 8 * (r() - 0.5), 340, y + 8 * (r() - 0.5), 512, y + 6 * (r() - 0.5)); x.stroke(); } wood.t.needsUpdate = true; }
     box(176, 64, 4, new THREE.MeshStandardMaterial({ map: wood.t, roughness: 0.75 }), 4, -2, -2);
     // ---- console
-    const conBody = std(0x33475b, 0.5); box(32, 20, 15, conBody, -60, 8, 7.5);
+    const conBody = std(0x584936, 0.5); box(32, 20, 15, conBody, -60, 8, 7.5);
     const con = mkTex(640, 300); const conMat = new THREE.MeshStandardMaterial({ map: con.t, roughness: 0.55 });
     plane(32, 15, conMat, -60, -2.03, 7.5, '-y');
-    const hzKnob = add(cylY(1.7, 1.4, std(0x1d1f22, 0.4), -60 + 5, -2.7, 7.5 + 1.2));
+    const hzKnob = add(cylY(1.7, 1.4, std(0x22201d, 0.4), -60 + 5, -2.7, 7.5 + 1.2));
     const hzPtr = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.3, 1.3), std(0xf2f2f2, 0.5)); hzPtr.position.set(0, -0.72, 0.65); hzKnob.add(hzPtr);
     hzPtr.rotation.y = 0;
     const ledMat = (c) => new THREE.MeshStandardMaterial({ color: 0x220606, emissive: c, emissiveIntensity: 1, roughness: 0.3 });
     const sigLed = add(new THREE.Mesh(new THREE.SphereGeometry(0.55, 16, 12), ledMat(0xff2a1a))); sigLed.position.set(-60 + 11.5, -2.2, 7.5 + 3.8);
     const powLed = add(new THREE.Mesh(new THREE.SphereGeometry(0.45, 16, 12), ledMat(0x30ff60))); powLed.position.set(-60 - 13, -2.2, 7.5 - 4.6);
-    const bnc = std(0xc0c4c8, 0.3, 0.8);
+    const bnc = std(0xc7c4c1, 0.3, 0.8);
     for (const u of [7, 11.5, 1]) add(cylY(0.7, 1.2, bnc, -60 + u, -2.6, 7.5 - 4.4));
     // glow sprites for LEDs
     const glowTex = mkTex(64, 64); { const x = glowTex.x, g = x.createRadialGradient(32, 32, 0, 32, 32, 32); g.addColorStop(0, 'rgba(255,255,255,1)'); g.addColorStop(0.25, 'rgba(255,255,255,0.45)'); g.addColorStop(1, 'rgba(255,255,255,0)'); x.fillStyle = g; x.fillRect(0, 0, 64, 64); glowTex.t.needsUpdate = true; }
@@ -997,28 +997,28 @@ table.rows td.b { font-size: 0.76rem; }
     const sigGlow = glow(0xff3020, sigLed.position, 4.2), powGlow = glow(0x40ff70, powLed.position, 3);
     // ---- cell mount base and scan coils (ESR) / Zeeman magnet (PSR)
     const MX = -12;
-    box(32, 22, 1.4, std(0x4d545c, 0.6), MX, 0, 0.7);
-    const copper = std(0xb8733a, 0.38, 0.55), steel = std(0x8d949b, 0.35, 0.75), dark = std(0x202326, 0.5);
+    box(32, 22, 1.4, std(0x5b554e, 0.6), MX, 0, 0.7);
+    const copper = std(0xb8733a, 0.38, 0.55), steel = std(0x9a958e, 0.35, 0.75), dark = std(0x262320, 0.5);
     const esrGrp = new THREE.Group(), psrGrp = new THREE.Group(); scene.add(esrGrp, psrGrp);
     for (const s of [-1, 1]) {
       const cx = MX + s * 7.5;
       esrGrp.add(cylX(6, 4.2, copper, cx, 0, 10, 48));
       esrGrp.add(cylX(2.4, 12, steel, MX + s * 9.5, 0, 10));
       const ring = new THREE.Mesh(new THREE.TorusGeometry(3.1, 0.55, 12, 40), steel); ring.rotation.y = Math.PI / 2; ring.position.set(MX + s * 5.1, 0, 10); esrGrp.add(ring);
-      const ped = new THREE.Mesh(new THREE.BoxGeometry(6, 8, 3.6), std(0x3a3f45, 0.6)); ped.position.set(cx, 0, 3.2); esrGrp.add(ped);
+      const ped = new THREE.Mesh(new THREE.BoxGeometry(6, 8, 3.6), std(0x44403b, 0.6)); ped.position.set(cx, 0, 3.2); esrGrp.add(ped);
       // PSR: magnet cheeks, pole faces and the scan coils outside them
-      const ch = new THREE.Mesh(new THREE.BoxGeometry(9, 13, 19), std(0x9aa1a8, 0.45, 0.3)); ch.position.set(MX + s * 7, 0, 10.9); psrGrp.add(ch);
+      const ch = new THREE.Mesh(new THREE.BoxGeometry(9, 13, 19), std(0xa7a29b, 0.45, 0.3)); ch.position.set(MX + s * 7, 0, 10.9); psrGrp.add(ch);
       const pole = cylX(3.2, 0.6, steel, MX + s * 2.6, 0, 10); psrGrp.add(pole);
       psrGrp.add(cylX(5.2, 3, copper, MX + s * 13.5, 0, 10, 40));
       psrGrp.add(cylX(2.2, 4, steel, MX + s * 15.5, 0, 10));
     }
-    { const b = new THREE.Mesh(new THREE.BoxGeometry(23, 13, 2.6), std(0x9aa1a8, 0.45, 0.3)); b.position.set(MX, 0, 2.7); psrGrp.add(b); }
+    { const b = new THREE.Mesh(new THREE.BoxGeometry(23, 13, 2.6), std(0xa7a29b, 0.45, 0.3)); b.position.set(MX, 0, 2.7); psrGrp.add(b); }
     const mag = mkTex(360, 380); const magMat = new THREE.MeshStandardMaterial({ map: mag.t, roughness: 0.5 });
     { const p = new THREE.Mesh(new THREE.PlaneGeometry(9, 9.5), magMat); p.rotation.x = Math.PI / 2; p.position.set(MX - 7, -6.53, 13.5); psrGrp.add(p); }
     // ---- probes: body on a stand, rod into the gap, RF coil, phial with a colored cap
     const probeGrp = new THREE.Group(); scene.add(probeGrp);
     const PB = { x: MX, y: -17, z: 10 };
-    const probeBody = new THREE.Mesh(new THREE.BoxGeometry(7, 10, 6), std(0x56677a, 0.5)); probeBody.position.set(PB.x, PB.y, PB.z); probeGrp.add(probeBody);
+    const probeBody = new THREE.Mesh(new THREE.BoxGeometry(7, 10, 6), std(0x776a59, 0.5)); probeBody.position.set(PB.x, PB.y, PB.z); probeGrp.add(probeBody);
     { const st = new THREE.Mesh(new THREE.BoxGeometry(3, 3, 7), dark); st.position.set(PB.x, PB.y, 3.5); probeGrp.add(st); }
     probeGrp.add(cylY(0.9, 11, std(0xd8d8d0, 0.6), PB.x, -6.5, PB.z));
     for (let k = 0; k < 4; k++) { const t = new THREE.Mesh(new THREE.TorusGeometry(1.3, 0.16, 8, 24), copper); t.rotation.x = Math.PI / 2; t.position.set(PB.x, -1.3 + k * 0.9, PB.z); probeGrp.add(t); }
@@ -1028,9 +1028,9 @@ table.rows td.b { font-size: 0.76rem; }
     const capMat = std(0xe8771e, 0.45); probeGrp.add(cylY(1.0, 1.6, capMat, PB.x, -25, PB.z));
     const probeTop = mkTex(256, 360); const ptMat = new THREE.MeshStandardMaterial({ map: probeTop.t, roughness: 0.6 });
     { const p = new THREE.Mesh(new THREE.PlaneGeometry(7, 10), ptMat); p.position.set(PB.x, PB.y, PB.z + 3.02); probeGrp.add(p); }
-    const sens = cylZ(0.75, 1.3, std(0xb9bcc0, 0.3, 0.8), PB.x + 1.7, PB.y + 2.6, PB.z + 3.6); probeGrp.add(sens);
+    const sens = cylZ(0.75, 1.3, std(0xbfbdba, 0.3, 0.8), PB.x + 1.7, PB.y + 2.6, PB.z + 3.6); probeGrp.add(sens);
     { const slot = new THREE.Mesh(new THREE.BoxGeometry(1.3, 0.22, 0.2), dark); slot.position.set(0, 0.66, 0); slot.rotation.x = -Math.PI / 2; sens.add(slot); }
-    const freqK = cylZ(1.6, 1.6, std(0x1d1f22, 0.4), PB.x - 1.3, PB.y - 1.6, PB.z + 3.8); probeGrp.add(freqK);
+    const freqK = cylZ(1.6, 1.6, std(0x22201d, 0.4), PB.x - 1.3, PB.y - 1.6, PB.z + 3.8); probeGrp.add(freqK);
     { const ptr = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.2, 1.4), std(0xf2f2f2, 0.5)); ptr.position.set(0, 0.82, -0.75); freqK.add(ptr); }
     const pLed = new THREE.Mesh(new THREE.SphereGeometry(0.4, 12, 10), ledMat(0x30ff60)); pLed.position.set(PB.x - 2.2, PB.y + 3.6, PB.z + 3.2); probeGrp.add(pLed);
     // grip rings on everything you can turn or press: always visible, brighter on hover
@@ -1041,7 +1041,7 @@ table.rows td.b { font-size: 0.76rem; }
     const hzGrip = grip(2.3, scene, new THREE.Vector3(-55, -2.15, 8.7), Math.PI / 2);
     // ---- cell mount controls: FAST/SLOW switch, SLOW RUN button, Stop/Run LED
     const CM = { x: 13, y: -15 };
-    box(13, 8, 5, std(0x3a4a5a, 0.5), CM.x, CM.y, 2.5);
+    box(13, 8, 5, std(0x584c3c, 0.5), CM.x, CM.y, 2.5);
     const cmTex = mkTex(390, 240); const cmMat = new THREE.MeshStandardMaterial({ map: cmTex.t, roughness: 0.55 });
     plane(13, 8, cmMat, CM.x, CM.y, 5.02);
     const fsBase = add(cylZ(0.8, 0.4, bnc, CM.x - 3.6, CM.y + 0.4, 5.2));
@@ -1053,13 +1053,13 @@ table.rows td.b { font-size: 0.76rem; }
     const runGrip = grip(1.45, scene, new THREE.Vector3(CM.x + 0.6, CM.y + 0.4, 5.15));
     // ---- oscilloscope
     const SC = { x: 38, y: 7 };
-    box(36, 28, 22, std(0xc8ccd1, 0.55), SC.x, SC.y, 11);
+    box(36, 28, 22, std(0xd0cdc9, 0.55), SC.x, SC.y, 11);
     box(34, 2, 2, dark, SC.x, SC.y - 13, 1);
     const scp = mkTex(612, 374); const scpMat = new THREE.MeshBasicMaterial({ map: scp.t });
     plane(36, 22, scpMat, SC.x, SC.y - 14.03, 11, '-y');
     // ---- chart recorder with a paper roll and a tilted paper deck
     const CR = { x: 72, y: -6 };
-    box(26, 20, 9, std(0x2d3034, 0.55), CR.x, CR.y, 4.5);
+    box(26, 20, 9, std(0x33312e, 0.55), CR.x, CR.y, 4.5);
     add(cylX(2.2, 22, std(0xf2eee2, 0.8), CR.x, CR.y + 7.5, 10));
     const pap = mkTex(560, 256); const papMat = new THREE.MeshStandardMaterial({ map: pap.t, roughness: 0.85 });
     { const p = new THREE.Mesh(new THREE.PlaneGeometry(23, 10.5), papMat); p.position.set(CR.x, CR.y - 1.2, 9.25); p.rotation.x = -0.12; scene.add(p); }
@@ -1068,17 +1068,17 @@ table.rows td.b { font-size: 0.76rem; }
     // ---- thermometer in a stand
     const TH = { x: -34, y: -18 };
     add(cylZ(2.2, 0.8, dark, TH.x, TH.y, 0.4));
-    add(cylZ(0.5, 19, new THREE.MeshStandardMaterial({ color: 0xe8f4f8, transparent: true, opacity: 0.4, roughness: 0.1 }), TH.x, TH.y, 10.8));
+    add(cylZ(0.5, 19, new THREE.MeshStandardMaterial({ color: 0xf5f1eb, transparent: true, opacity: 0.4, roughness: 0.1 }), TH.x, TH.y, 10.8));
     const bulb = add(new THREE.Mesh(new THREE.SphereGeometry(0.8, 16, 12), std(0xc0261c, 0.3))); bulb.position.set(TH.x, TH.y, 1.8);
     const column = add(cylZ(0.24, 1, std(0xd0281c, 0.3), TH.x, TH.y, 2));
     // ---- cables
     const cable = (pts, col, r = 0.32) => { const curve = new THREE.CatmullRomCurve3(pts.map((p) => new THREE.Vector3(...p))); const m = new THREE.Mesh(new THREE.TubeGeometry(curve, 80, r, 8, false), std(col, 0.55)); scene.add(m); return m; };
-    cable([[MX - 3.5, -17, 9], [MX - 8, -19, 3], [-30, -14, 0.4], [-50, -8, 0.4], [-59, -3.6, 2], [-59, -2.4, 3.1]], 0x222428);
+    cable([[MX - 3.5, -17, 9], [MX - 8, -19, 3], [-30, -14, 0.4], [-50, -8, 0.4], [-59, -3.6, 2], [-59, -2.4, 3.1]], 0x282522);
     cable([[-53, -2.4, 3.1], [-50, -6, 0.4], [-20, -26, 0.4], [10, -26, 0.4], [28, -14, 0.4], [44, -8.6, 3]], 0xd9b331);
     cable([[-48.5, -2.4, 3.1], [-45, -5, 0.4], [-18, -24.5, 0.4], [12, -24.5, 0.4], [30, -12, 0.4], [49, -8.6, 3]], 0x3aaec9);
-    cable([[CM.x - 6.5, CM.y + 2, 2], [MX + 12, -9, 0.6], [MX + 10, -5, 1.3]], 0x222428);
-    cable([[CM.x + 6.5, CM.y + 2, 2], [26, -20, 0.4], [55, -22, 0.4], [62, -12, 2], [CR.x - 13, CR.y - 4, 3]], 0x222428);
-    cable([[-60, 18, 6], [-58, 24, 0.4], [-30, 22, 0.4], [CM.x, CM.y + 4, 2.5]], 0x222428, 0.28);
+    cable([[CM.x - 6.5, CM.y + 2, 2], [MX + 12, -9, 0.6], [MX + 10, -5, 1.3]], 0x282522);
+    cable([[CM.x + 6.5, CM.y + 2, 2], [26, -20, 0.4], [55, -22, 0.4], [62, -12, 2], [CR.x - 13, CR.y - 4, 3]], 0x282522);
+    cable([[-60, 18, 6], [-58, 24, 0.4], [-30, 22, 0.4], [CM.x, CM.y + 4, 2.5]], 0x282522, 0.28);
 
     G.renderer = renderer; G.scene = scene; G.cam = cam; G.el = el;
     Object.assign(G, { con, conMat, hzKnob, sigLed, sigGlow, powLed, powGlow, esrGrp, psrGrp, mag, probeBody, sampMat, capMat, probeTop, sens, freqK, pLed, sensGrip, freqGrip, hzGrip, fsGrip, runGrip, lever, runBtn, runLed, runGlow, scp, pap, crTex, column, cmTex });
@@ -1091,35 +1091,35 @@ table.rows td.b { font-size: 0.76rem; }
   }
   function paintStatic3D() {
     // cell mount top
-    { const x = G.cmTex.x; x.fillStyle = '#3a4a5a'; x.fillRect(0, 0, 390, 240); x.fillStyle = '#e8edf2'; x.font = '700 26px sans-serif'; x.textAlign = 'center'; x.fillText('CELL MOUNT', 195, 40);
+    { const x = G.cmTex.x; x.fillStyle = '#584c3c'; x.fillRect(0, 0, 390, 240); x.fillStyle = '#f1eee9'; x.font = '700 26px sans-serif'; x.textAlign = 'center'; x.fillText('CELL MOUNT', 195, 40);
       x.font = '700 22px sans-serif'; x.fillText('FAST', 50, 205); x.fillText('SLOW', 165, 205); x.fillText('SLOW RUN', 214, 160); x.fillText('STOP/RUN', 325, 160);
-      x.strokeStyle = '#e8edf2'; x.lineWidth = 2; x.beginPath(); x.moveTo(60, 175); x.lineTo(150, 175); x.stroke(); G.cmTex.t.needsUpdate = true; }
+      x.strokeStyle = '#f1eee9'; x.lineWidth = 2; x.beginPath(); x.moveTo(60, 175); x.lineTo(150, 175); x.stroke(); G.cmTex.t.needsUpdate = true; }
     // chart recorder front
-    { const x = G.crTex.x; x.fillStyle = '#2d3034'; x.fillRect(0, 0, 420, 70); x.fillStyle = '#dfe3e8'; x.font = '700 30px sans-serif'; x.textAlign = 'left'; x.textBaseline = 'middle'; x.fillText('CHART RECORDER', 16, 36); x.font = '22px sans-serif'; x.textAlign = 'right'; x.fillText('5 mm/s  1 V', 404, 36); G.crTex.t.needsUpdate = true; }
+    { const x = G.crTex.x; x.fillStyle = '#33312e'; x.fillRect(0, 0, 420, 70); x.fillStyle = '#e7e4e0'; x.font = '700 30px sans-serif'; x.textAlign = 'left'; x.textBaseline = 'middle'; x.fillText('CHART RECORDER', 16, 36); x.font = '22px sans-serif'; x.textAlign = 'right'; x.fillText('5 mm/s  1 V', 404, 36); G.crTex.t.needsUpdate = true; }
   }
   function paintConsole() {
     const x = G.con.x, W = 640, H = 300, s = 20, cx = (u) => W / 2 + u * s, cy = (v) => H / 2 - v * s;
-    x.fillStyle = '#34495e'; x.fillRect(0, 0, W, H);
-    x.fillStyle = '#e7edf3'; x.font = '700 26px sans-serif'; x.textAlign = 'left'; x.textBaseline = 'alphabetic'; x.fillText('SPIN RESONANCE CONSOLE', 24, 40);
+    x.fillStyle = '#5b4b37'; x.fillRect(0, 0, W, H);
+    x.fillStyle = '#f2eee8'; x.font = '700 26px sans-serif'; x.textAlign = 'left'; x.textBaseline = 'alphabetic'; x.fillText('SPIN RESONANCE CONSOLE', 24, 40);
     // meter
     x.fillStyle = '#120404'; x.fillRect(cx(-14.5), cy(5.6), 12.5 * s, 5.2 * s);
     x.font = '600 74px "JetBrains Mono", monospace'; x.fillStyle = '#ff3b28'; x.shadowColor = 'rgba(255,60,40,0.8)'; x.shadowBlur = 14; x.textAlign = 'right'; x.textBaseline = 'middle';
     x.fillText(meterShown.toFixed(digits()), cx(-4.3), cy(3.0)); x.shadowBlur = 0;
     x.font = '700 22px sans-serif'; x.fillStyle = '#ff9a8a'; x.textAlign = 'left'; x.fillText('kHz', cx(-4.0), cy(2.5));
-    x.fillStyle = '#c9d3dc'; x.font = '18px sans-serif'; x.textAlign = 'left'; x.fillText('FREQUENCY ÷ 1000', cx(-14.5), cy(-0.7));
+    x.fillStyle = '#dbd4ca'; x.font = '18px sans-serif'; x.textAlign = 'left'; x.fillText('FREQUENCY ÷ 1000', cx(-14.5), cy(-0.7));
     // Hz selector legend
-    x.font = '700 20px sans-serif'; x.fillStyle = '#e7edf3'; x.textAlign = 'center';
+    x.font = '700 20px sans-serif'; x.fillStyle = '#f2eee8'; x.textAlign = 'center';
     const k = { u: 5, v: 1.2 };
-    [['LO', -45], ['MID', 0], ['HI', 45]].forEach(([t, a]) => { const r = 2.9 * s, ang = a * Math.PI / 180; x.fillStyle = t === S.range ? '#ffd166' : '#e7edf3'; x.fillText(t, cx(k.u) + r * Math.sin(ang), cy(k.v) - r * Math.cos(ang) + 6); });
-    x.fillStyle = '#c9d3dc'; x.font = '18px sans-serif'; x.fillText('Hz', cx(k.u), cy(-2.3));
+    [['LO', -45], ['MID', 0], ['HI', 45]].forEach(([t, a]) => { const r = 2.9 * s, ang = a * Math.PI / 180; x.fillStyle = t === S.range ? '#ffd166' : '#f2eee8'; x.fillText(t, cx(k.u) + r * Math.sin(ang), cy(k.v) - r * Math.cos(ang) + 6); });
+    x.fillStyle = '#dbd4ca'; x.font = '18px sans-serif'; x.fillText('Hz', cx(k.u), cy(-2.3));
     x.fillText('CH2 SIGNAL', cx(11.5), cy(5.6)); x.fillText('POWER', cx(-13), cy(-2.9));
     x.fillText('CH1', cx(7), cy(-2.9)); x.fillText('CH2', cx(11.5), cy(-2.9)); x.fillText('PROBE', cx(1), cy(-2.9));
     G.con.t.needsUpdate = true;
   }
   function paintProbeTop() {
     const x = G.probeTop.x, psr = S.cfg === 'psr';
-    x.fillStyle = psr ? '#6a5a7e' : '#56677a'; x.fillRect(0, 0, 256, 360);
-    x.fillStyle = '#eef1f5'; x.textAlign = 'center'; x.font = '700 24px sans-serif';
+    x.fillStyle = psr ? '#6a5a7e' : '#776a59'; x.fillRect(0, 0, 256, 360);
+    x.fillStyle = '#f4f2ef'; x.textAlign = 'center'; x.font = '700 24px sans-serif';
     x.save(); x.translate(128, 180); x.fillText(psr ? 'PROTON PROBE' : 'ELECTRON PROBE', 0, 160); x.restore();
     x.font = '700 22px sans-serif'; x.fillText('SENS', 128 + 1.7 * 36.6, 180 - 2.6 * 36 - 46);
     if (psr) x.fillText('FREQ', 128 - 1.3 * 36.6, 180 + 1.6 * 36 + 72);
@@ -1127,19 +1127,19 @@ table.rows td.b { font-size: 0.76rem; }
     G.probeTop.t.needsUpdate = true;
   }
   function paintMagnet() {
-    const x = G.mag.x; x.fillStyle = '#9aa1a8'; x.fillRect(0, 0, 360, 380);
-    x.fillStyle = '#20252b'; x.textAlign = 'center'; x.font = '700 34px sans-serif'; x.fillText('ZEEMAN', 180, 70); x.fillText('MAGNET', 180, 112);
-    x.fillStyle = '#f4f4ee'; x.fillRect(30, 150, 300, 150); x.fillStyle = '#20252b'; x.font = '700 30px sans-serif'; x.fillText('B20', 180, 195);
+    const x = G.mag.x; x.fillStyle = '#a7a29b'; x.fillRect(0, 0, 360, 380);
+    x.fillStyle = '#2a2621'; x.textAlign = 'center'; x.font = '700 34px sans-serif'; x.fillText('ZEEMAN', 180, 70); x.fillText('MAGNET', 180, 112);
+    x.fillStyle = '#f4f4ee'; x.fillRect(30, 150, 300, 150); x.fillStyle = '#2a2621'; x.font = '700 30px sans-serif'; x.fillText('B20', 180, 195);
     x.font = '700 40px "JetBrains Mono", monospace'; x.fillText(`${(inst.B20 * 1e3).toFixed(2)} mT`, 180, 248); x.font = '22px sans-serif'; x.fillText('at 20 °C', 180, 284);
     x.font = '24px sans-serif'; x.fillText('−0.075 % per °C', 180, 345);
     G.mag.t.needsUpdate = true;
   }
   function paintScopeFront() {
     const x = G.scp.x, W = 612, H = 374;
-    x.fillStyle = '#c8ccd1'; x.fillRect(0, 0, W, H);
+    x.fillStyle = '#d0cdc9'; x.fillRect(0, 0, W, H);
     const sx = 26, sy = 34, sw = 360, sh = 288;
-    x.fillStyle = '#20252b'; x.font = '700 20px sans-serif'; x.textAlign = 'left'; x.textBaseline = 'alphabetic'; x.fillText('DUAL TRACE OSCILLOSCOPE', sx, 24);
-    x.fillStyle = '#1c2024'; x.fillRect(sx - 8, sy - 8, sw + 16, sh + 16);
+    x.fillStyle = '#2a2621'; x.font = '700 20px sans-serif'; x.textAlign = 'left'; x.textBaseline = 'alphabetic'; x.fillText('DUAL TRACE OSCILLOSCOPE', sx, 24);
+    x.fillStyle = '#23201d'; x.fillRect(sx - 8, sy - 8, sw + 16, sh + 16);
     x.fillStyle = '#03100b'; x.fillRect(sx, sy, sw, sh);
     x.strokeStyle = 'rgba(150,210,180,0.22)'; x.lineWidth = 1; x.beginPath();
     for (let i = 0; i <= 10; i++) { x.moveTo(sx + i * sw / 10, sy); x.lineTo(sx + i * sw / 10, sy + sh); }
@@ -1157,12 +1157,12 @@ table.rows td.b { font-size: 0.76rem; }
     }
     // knobs and labels on the right
     x.shadowBlur = 0; x.textAlign = 'center'; x.font = '700 15px sans-serif';
-    const knob = (cx, cy, r, lab, val) => { x.fillStyle = '#2a2e33'; x.beginPath(); x.arc(cx, cy, r, 0, 2 * Math.PI); x.fill(); x.fillStyle = '#d6d9dd'; x.fillRect(cx - 2, cy - r, 4, r * 0.6); x.fillStyle = '#20252b'; x.fillText(lab, cx, cy - r - 8); x.font = '14px sans-serif'; x.fillText(val, cx, cy + r + 18); x.font = '700 15px sans-serif'; };
+    const knob = (cx, cy, r, lab, val) => { x.fillStyle = '#322f2b'; x.beginPath(); x.arc(cx, cy, r, 0, 2 * Math.PI); x.fill(); x.fillStyle = '#dcdad7'; x.fillRect(cx - 2, cy - r, 4, r * 0.6); x.fillStyle = '#2a2621'; x.fillText(lab, cx, cy - r - 8); x.font = '14px sans-serif'; x.fillText(val, cx, cy + r + 18); x.font = '700 15px sans-serif'; };
     const vt = (v) => v < 1 ? `${Math.round(v * 1000)} mV` : `${v} V`;
     knob(450, 92, 26, 'CH1 V/DIV', vt(S.sc.v1)); knob(550, 92, 26, 'CH2 V/DIV', vt(S.sc.v2));
     knob(500, 220, 32, 'TIME/DIV', `${Math.round(S.sc.td * 1000)} ms`);
-    x.fillStyle = '#20252b'; x.fillText('CH1', 450, 330); x.fillText('CH2', 550, 330);
-    x.fillStyle = '#9ea4aa'; for (const c of [450, 550]) { x.beginPath(); x.arc(c, 352, 10, 0, 2 * Math.PI); x.fill(); }
+    x.fillStyle = '#2a2621'; x.fillText('CH1', 450, 330); x.fillText('CH2', 550, 330);
+    x.fillStyle = '#a9a59f'; for (const c of [450, 550]) { x.beginPath(); x.arc(c, 352, 10, 0, 2 * Math.PI); x.fill(); }
     G.scp.t.needsUpdate = true;
   }
   function paintPaper() {
@@ -1181,9 +1181,9 @@ table.rows td.b { font-size: 0.76rem; }
     const o = osc(), psr = S.cfg === 'psr';
     G.esrGrp.visible = !psr; G.psrGrp.visible = psr;
     G.freqK.visible = psr; G.freqGrip.visible = psr;
-    G.probeBody.material.color.setHex(psr ? 0x6a5a7e : 0x56677a);
+    G.probeBody.material.color.setHex(psr ? 0x6a5a7e : 0x776a59);
     const sm = SAMPLES[S.cfg][sample()]; G.capMat.color.set(sm.cap);
-    const sampCol = { dpph: 0x4a1e3a, black: 0xc8dde2, water: 0xbfe0ea, gly: 0xe8e0a8, poly: 0xf0f0ea, ptfe: 0xf6f6f6 }[sample()];
+    const sampCol = { dpph: 0x4a1e3a, black: 0xe0d6ca, water: 0xbfe0ea, gly: 0xe8e0a8, poly: 0xf0f0ea, ptfe: 0xf6f6f6 }[sample()];
     G.sampMat.color.setHex(sampCol); G.sampMat.transparent = sample() === 'black'; G.sampMat.opacity = sample() === 'black' ? 0.2 : 1;
     G.sigLed.material.emissiveIntensity = o.led; G.sigGlow.material.opacity = o.led * 0.9; G.sigGlow.visible = o.led > 0.02;
     const running = S.sweep === 'fast' || slow.running;
@@ -1210,7 +1210,7 @@ table.rows td.b { font-size: 0.76rem; }
     tokens3D(); update3D(); fitCam(); G.renderer.render(G.scene, G.cam);
   }
   let bgCache = '';
-  function tokens3D() { if (bgCache !== T.benchBg) { bgCache = T.benchBg; G.renderer.setClearColor(new THREE.Color(T.benchBg || '#dfe5ec')); } }
+  function tokens3D() { if (bgCache !== T.benchBg) { bgCache = T.benchBg; G.renderer.setClearColor(new THREE.Color(T.benchBg || '#ebe6e0')); } }
   let glDrag = null;
   function bindGL(el) {
     const ray = new THREE.Raycaster(), ndc = new THREE.Vector2();
@@ -1302,22 +1302,22 @@ table.rows td.b { font-size: 0.76rem; }
     rect(-90, -3, 180, 3, '#9b7552');
     const o = osc(), psr = S.cfg === 'psr';
     // console
-    rect(-76, 0, 32, 15, '#34495e'); ctx.fillStyle = '#120404'; ctx.fillRect(X(-74), Y(13.5), 13 * s, 5 * s);
+    rect(-76, 0, 32, 15, '#5b4b37'); ctx.fillStyle = '#120404'; ctx.fillRect(X(-74), Y(13.5), 13 * s, 5 * s);
     ctx.fillStyle = '#ff3b28'; ctx.font = `600 ${3.4 * s}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillText(meterShown.toFixed(digits()), X(-62), Y(11));
-    ctx.fillStyle = '#e7edf3'; ctx.font = `700 ${1.7 * s}px ${T.ui}`; ctx.textAlign = 'left'; ctx.fillText('SPIN RESONANCE CONSOLE  kHz', X(-74), Y(6.8));
+    ctx.fillStyle = '#f2eee8'; ctx.font = `700 ${1.7 * s}px ${T.ui}`; ctx.textAlign = 'left'; ctx.fillText('SPIN RESONANCE CONSOLE  kHz', X(-74), Y(6.8));
     const led = (u, v, col, b) => { ctx.fillStyle = col; ctx.globalAlpha = 0.15 + 0.85 * b; ctx.beginPath(); ctx.arc(X(u), Y(v), 0.8 * s, 0, 2 * Math.PI); ctx.fill(); if (b > 0.05) { ctx.globalAlpha = 0.25 * b; ctx.beginPath(); ctx.arc(X(u), Y(v), 2 * s, 0, 2 * Math.PI); ctx.fill(); } ctx.globalAlpha = 1; };
     led(-48.5, 11.5, '#ff3020', o.led);
     // cell mount
-    if (!psr) { rect(-26, 4, 5, 12, '#b8733a'); rect(-3, 4, 5, 12, '#b8733a'); rect(-30, 8.5, 6, 3, '#8d949b'); rect(1, 8.5, 6, 3, '#8d949b'); }
-    else { rect(-25, 1, 9, 19, '#9aa1a8'); rect(-8, 1, 9, 19, '#9aa1a8'); rect(-25, 1, 26, 2.6, '#9aa1a8'); ctx.fillStyle = '#20252b'; ctx.font = `700 ${1.5 * s}px ${T.ui}`; ctx.textAlign = 'center'; ctx.fillText('B₂₀', X(-20.5), Y(17)); ctx.fillText(`${(inst.B20 * 1e3).toFixed(2)} mT`, X(-20.5), Y(15)); }
-    rect(-15.5, 7, 7, 6, psr ? '#6a5a7e' : '#56677a'); ctx.fillStyle = SAMPLES[S.cfg][sample()].cap; ctx.fillRect(X(-13), Y(10.8), 2 * s, 1.6 * s);
+    if (!psr) { rect(-26, 4, 5, 12, '#b8733a'); rect(-3, 4, 5, 12, '#b8733a'); rect(-30, 8.5, 6, 3, '#9a958e'); rect(1, 8.5, 6, 3, '#9a958e'); }
+    else { rect(-25, 1, 9, 19, '#a7a29b'); rect(-8, 1, 9, 19, '#a7a29b'); rect(-25, 1, 26, 2.6, '#a7a29b'); ctx.fillStyle = '#2a2621'; ctx.font = `700 ${1.5 * s}px ${T.ui}`; ctx.textAlign = 'center'; ctx.fillText('B₂₀', X(-20.5), Y(17)); ctx.fillText(`${(inst.B20 * 1e3).toFixed(2)} mT`, X(-20.5), Y(15)); }
+    rect(-15.5, 7, 7, 6, psr ? '#6a5a7e' : '#776a59'); ctx.fillStyle = SAMPLES[S.cfg][sample()].cap; ctx.fillRect(X(-13), Y(10.8), 2 * s, 1.6 * s);
     // cell mount control box
-    rect(6, 0, 13, 5, '#3a4a5a'); led(16.5, 2.5, S.sweep === 'fast' || slow.running ? '#40ff70' : '#ff3020', 1);
-    ctx.fillStyle = '#e8edf2'; ctx.font = `700 ${1.4 * s}px ${T.ui}`; ctx.textAlign = 'center'; ctx.fillText(S.sweep === 'fast' ? 'FAST' : 'SLOW', X(9), Y(3.8)); ctx.fillText('RUN', X(13), Y(3.8));
+    rect(6, 0, 13, 5, '#584c3c'); led(16.5, 2.5, S.sweep === 'fast' || slow.running ? '#40ff70' : '#ff3020', 1);
+    ctx.fillStyle = '#f1eee9'; ctx.font = `700 ${1.4 * s}px ${T.ui}`; ctx.textAlign = 'center'; ctx.fillText(S.sweep === 'fast' ? 'FAST' : 'SLOW', X(9), Y(3.8)); ctx.fillText('RUN', X(13), Y(3.8));
     // scope and recorder
-    rect(22, 0, 34, 22, '#c8ccd1'); ctx.fillStyle = '#03100b'; ctx.fillRect(X(24), Y(20), 20 * s, 16 * s);
+    rect(22, 0, 34, 22, '#d0cdc9'); ctx.fillStyle = '#03100b'; ctx.fillRect(X(24), Y(20), 20 * s, 16 * s);
     if (scopeData) for (const [arr, col, pos, vd] of [[scopeData.ch1, C1, S.sc.pos1, S.sc.v1], [scopeData.ch2, C2, S.sc.pos2, S.sc.v2]]) { ctx.save(); ctx.beginPath(); ctx.rect(X(24), Y(20), 20 * s, 16 * s); ctx.clip(); ctx.strokeStyle = col; ctx.lineWidth = 1.2; ctx.beginPath(); for (let i = 0; i < arr.length; i += 3) { const px = X(24) + i / (arr.length - 1) * 20 * s, py = Y(12) - (pos + arr[i] / vd) * 2 * s; i ? ctx.lineTo(px, py) : ctx.moveTo(px, py); } ctx.stroke(); ctx.restore(); }
-    rect(60, 0, 26, 9, '#2d3034'); ctx.fillStyle = '#f6f1e3'; ctx.fillRect(X(61.5), Y(8.3), 23 * s, 6 * s);
+    rect(60, 0, 26, 9, '#33312e'); ctx.fillStyle = '#f6f1e3'; ctx.fillRect(X(61.5), Y(8.3), 23 * s, 6 * s);
     // handles: SENS, FREQ, Hz, FAST/SLOW, RUN (grips always visible)
     flatGeom = [
       { id: 'sens', x: X(-10.5), y: Y(14.2), r: 1.2 * s, lab: 'SENS', side: 1, drag: true },
@@ -1327,7 +1327,7 @@ table.rows td.b { font-size: 0.76rem; }
     ];
     for (const h of flatGeom) {
       const hot = flatHot === h.id || (flatDrag && flatDrag.id === h.id);
-      ctx.fillStyle = h.id === 'run' ? '#c62a1e' : '#1d1f22'; ctx.beginPath(); ctx.arc(h.x, h.y, h.r, 0, 2 * Math.PI); ctx.fill();
+      ctx.fillStyle = h.id === 'run' ? '#c62a1e' : '#22201d'; ctx.beginPath(); ctx.arc(h.x, h.y, h.r, 0, 2 * Math.PI); ctx.fill();
       ctx.strokeStyle = T.accent; ctx.lineWidth = hot ? 2.4 : 1.4; ctx.globalAlpha = hot ? 1 : 0.7; ctx.beginPath(); ctx.arc(h.x, h.y, h.r + 3, 0, 2 * Math.PI); ctx.stroke(); ctx.globalAlpha = 1;
       if (h.lab) { ctx.fillStyle = T.ink; ctx.font = `700 ${Math.max(9, 1.3 * s)}px ${T.ui}`; ctx.textBaseline = h.side ? 'middle' : 'bottom'; ctx.textAlign = h.side > 0 ? 'left' : h.side < 0 ? 'right' : 'center'; ctx.fillText(h.lab, h.side ? h.x + h.side * (h.r + 6) : h.x, h.side ? h.y : h.y - h.r - 4); }
     }
@@ -1357,7 +1357,7 @@ table.rows td.b { font-size: 0.76rem; }
   function setPlaying(p) { S.playing = p; $('play').textContent = p ? 'Pause' : 'Play'; }
   function renderSamples() {
     const box = $('samples'); box.textContent = '';
-    const capName = { '#e8771e': 'orange', '#1d1d1f': 'black', '#f4f4f0': 'white', '#f2d01c': 'yellow', '#2f9a4a': 'green', '#2d62c8': 'blue' };
+    const capName = { '#e8771e': 'orange', '#1f1e1d': 'black', '#f4f4f0': 'white', '#f2d01c': 'yellow', '#2f9a4a': 'green', '#2d62c8': 'blue' };
     for (const [id, s] of Object.entries(cfgSamples())) {
       const b = document.createElement('button'); b.type = 'button'; b.dataset.s = id;
       b.innerHTML = `<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${s.cap};border:1px solid var(--muted);margin-right:6px;vertical-align:-1px"></span>${s.name}`;

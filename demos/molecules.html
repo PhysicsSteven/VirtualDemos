@@ -13,9 +13,9 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
 /* only what this demo needs beyond demos/lib/vd.css */
-:root { --na: #8a63c9; --cl: #3f9a54; --elec: #2b6fc4; --ion: #d2452b; --neutral: #6b7787; --theory: #6a4fc4; --cursor: #d9682b; --iso: #2b8fc4; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --na: #b18cf0; --cl: #6fd08a; --elec: #69a8ff; --ion: #ff7a5c; --neutral: #9aa6b6; --theory: #a991ff; --cursor: #ff9a5c; --iso: #5cc2ff; } }
-:root[data-theme="dark"] { --na: #b18cf0; --cl: #6fd08a; --elec: #69a8ff; --ion: #ff7a5c; --neutral: #9aa6b6; --theory: #a991ff; --cursor: #ff9a5c; --iso: #5cc2ff; }
+:root { --na: #8a63c9; --cl: #3f9a54; --elec: #2b6fc4; --ion: #d2452b; --neutral: #857b6d; --theory: #6a4fc4; --cursor: #d9682b; --iso: #2b8fc4; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --na: #b18cf0; --cl: #6fd08a; --elec: #69a8ff; --ion: #ff7a5c; --neutral: #b4aa9c; --theory: #a991ff; --cursor: #ff9a5c; --iso: #5cc2ff; } }
+:root[data-theme="dark"] { --na: #b18cf0; --cl: #6fd08a; --elec: #69a8ff; --ion: #ff7a5c; --neutral: #b4aa9c; --theory: #a991ff; --cursor: #ff9a5c; --iso: #5cc2ff; }
 .stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
 .stage-ctl .count { margin-left: auto; font-size: 0.82rem; color: var(--muted); }
@@ -461,7 +461,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   const lab = (c, s, x, y, o = {}) => { c.save(); c.fillStyle = o.c || T.muted; c.font = `${o.w || 400} ${(o.s || 10.5) * proj()}px ${o.m ? T.mono : T.ui}`; c.textAlign = o.a || 'left'; c.textBaseline = o.bl || 'middle'; c.fillText(s, x, y); c.restore(); };
   function lcdBox(x, y, w, h, text, name) {
-    if (VG) { VG.box(ctx, x - 6, y - 6, w + 12, h + 22, { color: dark() ? '#2b3440' : '#34404e', r: 6 }); VG.lcd(ctx, x, y, w, h, text); VG.plate(ctx, name, x + w / 2, y + h + 8, { s: 8 * proj() }); }
+    if (VG) { VG.box(ctx, x - 6, y - 6, w + 12, h + 22, { color: dark() ? '#3e372d' : '#4c4236', r: 6 }); VG.lcd(ctx, x, y, w, h, text); VG.plate(ctx, name, x + w / 2, y + h + 8, { s: 8 * proj() }); }
   }
   function back(c, w, h) { if (VG) VG.backdrop(c, w, h); else { c.fillStyle = T.canvas; c.fillRect(0, 0, w, h); } }
   const nice = (r) => { const q = Math.pow(10, Math.floor(Math.log10(r))), m = r / q; return (m < 1.5 ? 1 : m < 3.5 ? 2 : m < 7.5 ? 5 : 10) * q; };
@@ -510,10 +510,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* the separation bracket and the scale */
     const by = yc + Math.max(rCl, rNa) + 56 * p; ctx.strokeStyle = T.ink; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.moveTo(xCl, by - 5 * p); ctx.lineTo(xCl, by + 5 * p); ctx.moveTo(xCl, by); ctx.lineTo(xNa, by); ctx.moveTo(xNa, by - 5 * p); ctx.lineTo(xNa, by + 5 * p); ctx.stroke();
     lab(ctx, `r = ${f(r, 3)} nm`, (xCl + xNa) / 2, by + 13 * p, { a: 'center', c: T.ink, m: true, s: 10.5 });
-    const ry = H - 46 * p; if (VG) VG.box(ctx, xCl - 10 * p, ry - 8 * p, 1.4 * sc + 20 * p, 26 * p, { color: dark() ? '#4a5563' : '#c9b48e', r: 3 });
-    ctx.strokeStyle = dark() ? '#e6edf5' : '#2b3644'; ctx.fillStyle = ctx.strokeStyle; ctx.lineWidth = 1;
+    const ry = H - 46 * p; if (VG) VG.box(ctx, xCl - 10 * p, ry - 8 * p, 1.4 * sc + 20 * p, 26 * p, { color: dark() ? '#61584c' : '#c9b48e', r: 3 });
+    ctx.strokeStyle = dark() ? '#f3eee8' : '#42392d'; ctx.fillStyle = ctx.strokeStyle; ctx.lineWidth = 1;
     for (let i = 0; i <= 140; i++) { const x = xCl + i / 100 * sc, len = i % 10 === 0 ? 10 : i % 5 === 0 ? 7 : 4; if (sc / 100 < 2.5 && i % 5) continue; ctx.beginPath(); ctx.moveTo(x, ry - 8 * p); ctx.lineTo(x, ry - 8 * p + len * p); ctx.stroke(); }
-    for (let i = 0; i <= 14; i += (sc < 260 ? 4 : 2)) lab(ctx, f(i / 10, 1), xCl + i / 10 * sc, ry + 9 * p, { a: 'center', c: dark() ? '#e6edf5' : '#2b3644', m: true, s: 9 });
+    for (let i = 0; i <= 14; i += (sc < 260 ? 4 : 2)) lab(ctx, f(i / 10, 1), xCl + i / 10 * sc, ry + 9 * p, { a: 'center', c: dark() ? '#f3eee8' : '#42392d', m: true, s: 9 });
     lab(ctx, 'nm', xCl + 1.4 * sc + 14 * p, ry + 9 * p, { c: T.muted, s: 9 });
     if (!S.blind) { const xc = xCl + ionCross() * sc; if (ionCross() < 1.4) { ctx.save(); ctx.setLineDash([3 * p, 3 * p]); ctx.strokeStyle = T.ion; ctx.beginPath(); ctx.moveTo(xc, ry - 12 * p); ctx.lineTo(xc, yc - 50 * p); ctx.stroke(); ctx.restore();
       lab(ctx, 'ions below here', xc - 4 * p, yc - 58 * p, { a: 'right', c: T.ion, s: 9.5 }); } }
@@ -548,7 +548,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function drawCov() {
     back(ctx, W, H); const { p, m, xA, sc, yc } = covGeom(), r = S.cov.r, xB = xA + r * sc, anti = S.cov.spin === 'anti' && S.cov.mol === 'H2';
     const rad = (el) => ({ H: 0.30, C: 0.42, N: 0.40, O: 0.38, F: 0.36, Cl: 0.50 }[el] * m.re * sc);
-    const col = (el) => ({ H: '#d8dde4', C: '#4a4f57', N: '#3d66c9', O: '#d2452b', F: '#7cc24b', Cl: '#3f9a54' }[el]);
+    const col = (el) => ({ H: '#e3dfd9', C: '#56514b', N: '#3d66c9', O: '#d2452b', F: '#7cc24b', Cl: '#3f9a54' }[el]);
     const ra = rad(m.a), rb = rad(m.b);
     /* the shared electron cloud: bonding piles charge up between the nuclei, antibonding leaves a node there */
     ctx.save(); const a0 = dark() ? 0.55 : 0.4;
@@ -559,16 +559,16 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.restore();
     if (VG) { VG.shadow(ctx, xA, yc + ra + 30 * p, ra, 4 * p, 0.5); VG.shadow(ctx, xB, yc + rb + 30 * p, rb, 4 * p, 0.5); VG.ball(ctx, xA, yc, ra, col(m.a)); VG.ball(ctx, xB, yc, rb, col(m.b)); }
     else { dot(ctx, xA, yc, ra, col(m.a)); dot(ctx, xB, yc, rb, col(m.b)); }
-    lab(ctx, m.a, xA, yc, { a: 'center', c: m.a === 'H' ? '#2b3644' : '#ffffff', w: 700, s: 12 }); lab(ctx, m.b, xB, yc, { a: 'center', c: m.b === 'H' ? '#2b3644' : '#ffffff', w: 700, s: 12 });
+    lab(ctx, m.a, xA, yc, { a: 'center', c: m.a === 'H' ? '#42392d' : '#ffffff', w: 700, s: 12 }); lab(ctx, m.b, xB, yc, { a: 'center', c: m.b === 'H' ? '#42392d' : '#ffffff', w: 700, s: 12 });
     if (S.cov.mol === 'H2') { const ay = yc - Math.max(ra, rb) - 40 * p;
       if (anti) { lab(ctx, '↑', xA, ay, { a: 'center', c: T.elec, w: 700, s: 18 }); lab(ctx, '↑', xB, ay, { a: 'center', c: T.elec, w: 700, s: 18 }); lab(ctx, 'spins parallel: the exclusion principle keeps the electrons apart', xA - 20 * p, ay - 26 * p, { s: 9.5 }); }
       else { lab(ctx, '↑↓', (xA + xB) / 2, ay, { a: 'center', c: T.elec, w: 700, s: 18 }); lab(ctx, 'spins opposite: both electrons can sit between the nuclei', xA - 20 * p, ay - 26 * p, { s: 9.5 }); } }
     const by = yc + Math.max(ra, rb) + 52 * p; ctx.strokeStyle = T.ink; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.moveTo(xA, by - 5 * p); ctx.lineTo(xA, by + 5 * p); ctx.moveTo(xA, by); ctx.lineTo(xB, by); ctx.moveTo(xB, by - 5 * p); ctx.lineTo(xB, by + 5 * p); ctx.stroke();
     lab(ctx, `r = ${f(r, 3)} nm`, (xA + xB) / 2, by + 13 * p, { a: 'center', c: T.ink, m: true });
     /* scale */
-    const ry = H - 46 * p, span = 4.2 * m.re, st = nice(span / 6); if (VG) VG.box(ctx, xA - 10 * p, ry - 8 * p, span * sc + 20 * p, 26 * p, { color: dark() ? '#4a5563' : '#c9b48e', r: 3 });
-    ctx.strokeStyle = dark() ? '#e6edf5' : '#2b3644'; ctx.lineWidth = 1;
-    for (let v = 0; v <= span + 1e-9; v += st / 5) { const big = Math.abs(v / st - Math.round(v / st)) < 1e-6; ctx.beginPath(); ctx.moveTo(xA + v * sc, ry - 8 * p); ctx.lineTo(xA + v * sc, ry - 8 * p + (big ? 10 : 4) * p); ctx.stroke(); if (big) lab(ctx, String(+v.toPrecision(4)), xA + v * sc, ry + 9 * p, { a: 'center', c: dark() ? '#e6edf5' : '#2b3644', m: true, s: 9 }); }
+    const ry = H - 46 * p, span = 4.2 * m.re, st = nice(span / 6); if (VG) VG.box(ctx, xA - 10 * p, ry - 8 * p, span * sc + 20 * p, 26 * p, { color: dark() ? '#61584c' : '#c9b48e', r: 3 });
+    ctx.strokeStyle = dark() ? '#f3eee8' : '#42392d'; ctx.lineWidth = 1;
+    for (let v = 0; v <= span + 1e-9; v += st / 5) { const big = Math.abs(v / st - Math.round(v / st)) < 1e-6; ctx.beginPath(); ctx.moveTo(xA + v * sc, ry - 8 * p); ctx.lineTo(xA + v * sc, ry - 8 * p + (big ? 10 : 4) * p); ctx.stroke(); if (big) lab(ctx, String(+v.toPrecision(4)), xA + v * sc, ry + 9 * p, { a: 'center', c: dark() ? '#f3eee8' : '#42392d', m: true, s: 9 }); }
     lab(ctx, 'nm', xA + span * sc + 14 * p, ry + 9 * p, { s: 9 });
     lab(ctx, `${m.name}: atom sizes and the cloud are only suggestive`, xA - 40 * p, ry - 24 * p, { s: 9.5 });
     if (W >= 640) { const mx = W - 150 * p, mw = 124 * p, mh = 28 * p; lcdBox(mx, 40 * p, mw, mh, `${f(r, 3)} nm`, 'separation r'); lcdBox(mx, 106 * p, mw, mh, `${f(covU(), 3)} eV`, 'energy U'); }
@@ -705,22 +705,22 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const p = proj(), l = S.lev.l, I = IfromB(Bv(m, 0)), wRot = HBAR * Math.sqrt(l * (l + 1)) / I, Trot1 = 2 * Math.PI * I / (HBAR * Math.SQRT2);
     const wVib = 2 * Math.PI * C_MS * 100 * nuVib(m), A = Math.sqrt(HBAR / (mu(m) * U_KG * wVib)) * 1e9, M = m.m1 + m.m2;
     const t = (performance.now() - spinT0) / 1000, slow = 4 / Trot1, ang = l ? wRot / slow * t : 0, r = m.re + A * Math.sin(2 * Math.PI * 1.5 * t);
-    if (VG) VG.box(ctx, x, y, w, h, { color: dark() ? '#1d2531' : '#2b3644', r: 8 }); else { ctx.fillStyle = '#2b3644'; ctx.fillRect(x, y, w, h); }
+    if (VG) VG.box(ctx, x, y, w, h, { color: dark() ? '#30281e' : '#42392d', r: 8 }); else { ctx.fillStyle = '#42392d'; ctx.fillRect(x, y, w, h); }
     const cx = x + w / 2, cy = y + 24 * p + (h - 70 * p) / 2, sc = (Math.min(w, h - 70 * p) / 2 - 14 * p) / ((m.re + A) * Math.max(m.m1, m.m2) / M);
     const ca = Math.cos(ang), sa = Math.sin(ang), dA = r * m.m2 / M * sc, dB = r * m.m1 / M * sc;
     const xa = cx - dA * ca, ya = cy - dA * sa, xb = cx + dB * ca, yb = cy + dB * sa;
     ctx.save(); ctx.strokeStyle = 'rgba(255,255,255,0.18)'; ctx.setLineDash([2 * p, 3 * p]); ctx.beginPath(); ctx.arc(cx, cy, m.re * Math.max(m.m1, m.m2) / M * sc, 0, 7); ctx.stroke(); ctx.setLineDash([]);
     ctx.strokeStyle = 'rgba(255,255,255,0.7)'; ctx.lineWidth = 2.5 * p; ctx.beginPath(); ctx.moveTo(xa, ya); ctx.lineTo(xb, yb); ctx.stroke(); ctx.restore();
-    const cl = (el) => ({ H: '#d8dde4', C: '#4a4f57', N: '#3d66c9', O: '#d2452b', F: '#7cc24b', Cl: '#3f9a54' }[el]), rr = (el) => (el === 'H' ? 6 : 10) * p;
+    const cl = (el) => ({ H: '#e3dfd9', C: '#56514b', N: '#3d66c9', O: '#d2452b', F: '#7cc24b', Cl: '#3f9a54' }[el]), rr = (el) => (el === 'H' ? 6 : 10) * p;
     const ball = (bx, by, el) => { if (VG) VG.ball(ctx, bx, by, rr(el), cl(el)); else dot(ctx, bx, by, rr(el), cl(el)); };
     ball(xa, ya, m.a); ball(xb, yb, m.b); dot(ctx, cx, cy, 2 * p, '#f2c14e');
-    const wt = { c: '#e8edf3', a: 'center', s: 8.5 };
+    const wt = { c: '#f2eee9', a: 'center', s: 8.5 };
     lab(ctx, `${m.name} in n = 0, l = ${l}`, cx, y + 12 * p, Object.assign({}, wt, { w: 700, s: 9 }));
     const N = l ? nuVib(m) * C_MS * 100 * 2 * Math.PI / wRot : 0, by0 = y + h - 40 * p;
     const ex = Math.floor(Math.log10(slow)), sup = (n) => [...String(n)].map((c) => '⁰¹²³⁴⁵⁶⁷⁸⁹'[c]).join('');
     lab(ctx, l ? `turn slowed ${f(slow / 10 ** ex, 1)} × 10${sup(ex)} times` : 'l = 0: not turning', cx, by0, wt);
     lab(ctx, l ? `really ${f(N, 0)} vibrations a turn` : 'the bond still vibrates', cx, by0 + 12 * p, wt);
-    lab(ctx, 'bond to scale, atoms not', cx, by0 + 24 * p, Object.assign({}, wt, { c: '#a9b4c2' }));
+    lab(ctx, 'bond to scale, atoms not', cx, by0 + 24 * p, Object.assign({}, wt, { c: '#c0b7ab' }));
     if (!spinRaf) spinRaf = requestAnimationFrame(() => { spinRaf = 0; if (S.view === 'lev') redraw(); });
   }
   /* the lines of the chosen kind, with Boltzmann weights at 300 K for their heights */
@@ -807,7 +807,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (nm < 440) { r = (440 - nm) / 60; b = 1; } else if (nm < 490) { g = (nm - 440) / 50; b = 1; } else if (nm < 510) { g = 1; b = (510 - nm) / 20; } else if (nm < 580) { r = (nm - 510) / 70; g = 1; } else if (nm < 645) { r = 1; g = (645 - nm) / 65; } else r = 1;
     return [r, g, b].map((v) => Math.round(255 * Math.pow(v, 0.8)));
   }
-  const ML_EL = { H: ['#d8dde4', 0.030], C: ['#4a4f57', 0.045], N: ['#3d66c9', 0.044], O: ['#d2452b', 0.042] };
+  const ML_EL = { H: ['#e3dfd9', 0.030], C: ['#56514b', 0.045], N: ['#3d66c9', 0.044], O: ['#d2452b', 0.042] };
   const mlMass = (el) => (el === 'H' ? MASS.H : MASS[el]);
   function mlGeom(m) {   /* atom positions in nm, x right and y down, center of mass at 0 */
     let P;
@@ -879,7 +879,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const sc = Math.min(W * (W < 600 ? 0.24 : 0.32), H * 0.42) / 0.16;   /* px per nm */
     /* the lamp */
     const lx = 26 * p, col = mlRGB(mlNm());
-    if (VG) VG.box(ctx, lx - 16 * p, cy - 30 * p, 40 * p, 60 * p, { color: dark() ? '#2b3440' : '#34404e', r: 6 }); else { ctx.fillStyle = '#34404e'; ctx.fillRect(lx - 16 * p, cy - 30 * p, 40 * p, 60 * p); }
+    if (VG) VG.box(ctx, lx - 16 * p, cy - 30 * p, 40 * p, 60 * p, { color: dark() ? '#3e372d' : '#4c4236', r: 6 }); else { ctx.fillStyle = '#4c4236'; ctx.fillRect(lx - 16 * p, cy - 30 * p, 40 * p, 60 * p); }
     const g = ctx.createRadialGradient(lx + 24 * p, cy, 2, lx + 24 * p, cy, 40 * p); g.addColorStop(0, `rgba(${col.join(',')},0.55)`); g.addColorStop(1, `rgba(${col.join(',')},0)`);
     ctx.fillStyle = g; ctx.fillRect(lx, cy - 40 * p, 70 * p, 80 * p);
     lab(ctx, { mw: 'microwave', ir: 'infrared', vis: 'visible', uv: 'ultraviolet' }[ML.lamp], lx + 4 * p, cy + 44 * p, { a: 'center', s: 9.5, c: T.muted });

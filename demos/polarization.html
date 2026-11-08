@@ -20,18 +20,18 @@
 <style>
 /* Layout: the polarizer bench (elements and the field between them) over two plots, or the reflection view; instrument rail on the right; stacks on phones. */
 :root {
-  --bg: #e9edf2;
-  --surface: #f8fafc;
-  --canvas: #fcfdfe;
-  --ink: #17202b;
-  --muted: #5a6575;
-  --line: #d3d9e2;
-  --grid: #e6ebf1;
-  --grid-strong: #cfd7e1;
+  --bg: #f1eeea;
+  --surface: #fcfaf8;
+  --canvas: #fefdfc;
+  --ink: #2a2219;
+  --muted: #73695c;
+  --line: #e1dbd4;
+  --grid: #f0ece7;
+  --grid-strong: #e0d9d0;
   --pos: #c23f2c;
   --neg: #2b60b5;
   --equi: #a7740b;
-  --accent: #2b60b5;
+  --accent: #c4811c;
   --bo: #7a45c0;
   --beam: #e0a92a;
   --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
@@ -39,15 +39,15 @@
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
-    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-    --equi: #e2b350; --accent: #69a0ff; --bo: #b48cff; --beam: #f0c050; color-scheme: dark;
+    --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
+    --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+    --equi: #e2b350; --accent: #fbc26d; --bo: #b48cff; --beam: #f0c050; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
-  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-  --equi: #e2b350; --accent: #69a0ff; --bo: #b48cff; --beam: #f0c050; color-scheme: dark;
+  --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
+  --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+  --equi: #e2b350; --accent: #fbc26d; --bo: #b48cff; --beam: #f0c050; color-scheme: dark;
 }
 :root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
@@ -559,12 +559,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const railY = (ri) => Math.min(L.top + ri * L.rowH + L.rowH * 0.93 + 4 * ps, b.h - 6 * ps);
     for (let ri = 0; ri < L.rows; ri++) {
       const y = railY(ri), g = c.createLinearGradient(0, y - 4 * ps, 0, y + 4 * ps);
-      g.addColorStop(0, dk ? '#8a949f' : '#d5dbe1'); g.addColorStop(0.45, dk ? '#5f6873' : '#a7b0ba'); g.addColorStop(1, dk ? '#2f363e' : '#6d7782');
+      g.addColorStop(0, dk ? '#9d968c' : '#e0dcd6'); g.addColorStop(0.45, dk ? '#726a60' : '#b9b2a8'); g.addColorStop(1, dk ? '#3d3730' : '#80796f');
       if (VG) VG.shadow(c, W / 2, y + 5 * ps, W * 0.48, 3 * ps, 0.8);
       c.fillStyle = g; c.fillRect(6 * ps, y - 4 * ps, W - 12 * ps, 8 * ps);
       c.fillStyle = dk ? 'rgba(255,255,255,0.25)' : 'rgba(30,36,44,0.35)'; for (let x = 10 * ps; x < W - 10 * ps; x += 8 * ps) c.fillRect(x, y - 4 * ps, 1, 2.5 * ps);
     }
-    const post = (x, y0, y1) => { if (!VG || y1 - y0 < 6 * ps) return; VG.rod(c, x, y0, x, y1 - 4 * ps, 2.6 * ps, { color: dk ? '#8d97a2' : '#b4bcc6' }); VG.box(c, x - 11 * ps, y1 - 9 * ps, 22 * ps, 10 * ps, { r: 2 * ps, shadow: false }); };
+    const post = (x, y0, y1) => { if (!VG || y1 - y0 < 6 * ps) return; VG.rod(c, x, y0, x, y1 - 4 * ps, 2.6 * ps, { color: dk ? '#a0998f' : '#c5beb5' }); VG.box(c, x - 11 * ps, y1 - 9 * ps, 22 * ps, 10 * ps, { r: 2 * ps, shadow: false }); };
     for (const p of L.pos) if (p.kind === 'el') post(p.x, p.y + L.re, railY(p.row));
     c.fillStyle = T.muted; c.font = `${10.5 * ps}px ${T.ui}`; c.textAlign = 'left'; c.textBaseline = 'top';
     const note = 'Light travels left to right. Disks and fields are drawn as seen facing the oncoming beam.';
@@ -595,13 +595,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (VG && first.x - L.rs - 40 * ps > 0) {
       post(18 * ps, first.y + 12 * ps, railY(0));
       VG.box(c, 4 * ps, first.y - 13 * ps, 26 * ps, 26 * ps, { r: 4 * ps, shadow: false });
-      c.fillStyle = '#2a3038'; c.fillRect(30 * ps, first.y - 6 * ps, 7 * ps, 12 * ps);
+      c.fillStyle = '#37322b'; c.fillRect(30 * ps, first.y - 6 * ps, 7 * ps, 12 * ps);
       c.fillStyle = '#fff3cf'; c.fillRect(36 * ps, first.y - 4.5 * ps, 2 * ps, 9 * ps);
     }
     if (VG && last.row === L.rows - 1 && W - (last.x + L.rs) > 46 * ps) {
       post(W - 18 * ps, last.y + 12 * ps, railY(L.rows - 1));
       VG.box(c, W - 32 * ps, last.y - 12 * ps, 28 * ps, 24 * ps, { r: 4 * ps, shadow: false });
-      c.fillStyle = '#0d1014'; c.beginPath(); c.arc(W - 30 * ps, last.y, 6 * ps, -Math.PI / 2, Math.PI / 2, true); c.fill();
+      c.fillStyle = '#13110e'; c.beginPath(); c.arc(W - 30 * ps, last.y, 6 * ps, -Math.PI / 2, Math.PI / 2, true); c.fill();
     }
     // slots
     for (const p of P) { if (p.kind === 'el') drawDisk(p); else drawStateSlot(p); }
@@ -622,12 +622,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     c.save();
     // the mount: an anodized ring (degree ticks every 10°, longer every 30° on the upper half the axis is read from) round the glass
     const ri = r * (r > 24 * ps ? 0.86 : 0.9);
-    c.fillStyle = '#262c33'; c.beginPath(); c.arc(x, y, r, 0, 2 * Math.PI); c.arc(x, y, ri, 0, 2 * Math.PI, true); c.fill('evenodd');
+    c.fillStyle = '#322d27'; c.beginPath(); c.arc(x, y, r, 0, 2 * Math.PI); c.arc(x, y, ri, 0, 2 * Math.PI, true); c.fill('evenodd');
     c.strokeStyle = 'rgba(232,238,244,0.8)'; c.lineWidth = Math.max(1, 0.9 * ps); c.beginPath();
     for (let a = -180; a < 180; a += 10) { const up = Math.abs(a) <= 90, l = (r - ri) * (up ? (a % 30 === 0 ? 0.75 : 0.45) : (a % 30 === 0 ? 0.4 : 0)); if (!l) continue; const sn = Math.sin(a * D2R), cs = Math.cos(a * D2R); c.moveTo(x - sn * (r - 1), y - cs * (r - 1)); c.lineTo(x - sn * (r - 1 - l), y - cs * (r - 1 - l)); }
     c.stroke();
     const gl = c.createRadialGradient(x - ri * 0.4, y - ri * 0.4, ri * 0.1, x, y, ri);
-    const tint = el.type === 'pol' ? '#7d858e' : el.type === 'qwp' ? T.equi : T.bo;
+    const tint = el.type === 'pol' ? '#8d867e' : el.type === 'qwp' ? T.equi : T.bo;
     c.fillStyle = tint; c.globalAlpha = el.type === 'pol' ? 0.3 : 0.3; c.beginPath(); c.arc(x, y, ri, 0, 2 * Math.PI); c.fill(); c.globalAlpha = 1;
     gl.addColorStop(0, 'rgba(255,255,255,0.45)'); gl.addColorStop(0.5, 'rgba(255,255,255,0.08)'); gl.addColorStop(1, 'rgba(0,0,0,0.12)'); c.fillStyle = gl; c.fill();
     // polarizer: lines parallel to the transmission axis
@@ -642,7 +642,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     // vertical reference tick at the top
     c.strokeStyle = T.gridStrong; c.lineWidth = 1.2 * ps; c.beginPath(); c.moveTo(x, y - r - 4 * ps); c.lineTo(x, y - r + 3 * ps); c.stroke();
     // rim
-    c.strokeStyle = sel ? T.accent : '#14181d'; c.lineWidth = (sel ? 2.4 : 1.4) * ps * (hot ? 1.3 : 1);
+    c.strokeStyle = sel ? T.accent : '#1c1915'; c.lineWidth = (sel ? 2.4 : 1.4) * ps * (hot ? 1.3 : 1);
     c.beginPath(); c.arc(x, y, r, 0, 2 * Math.PI); c.stroke();
     if (hot) { c.strokeStyle = T.accent; c.globalAlpha = 0.25; c.lineWidth = 7 * ps; c.beginPath(); c.arc(x, y, r, 0, 2 * Math.PI); c.stroke(); c.globalAlpha = 1; }
     // axis
@@ -1255,21 +1255,21 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     st.el.hidden = true; st.sun.shadow.bias = -0.0006;
     // the room: a floor, a painted wall with a skirting board, and a lab bench (worktop on a cabinet) under the rail
     const FLOOR = -0.88, mesh = (geo, m, cast, recv) => { const x = new THREE.Mesh(geo, m); x.castShadow = !!cast; x.receiveShadow = !!recv; return x; };
-    const floor = mesh(new THREE.PlaneGeometry(14, 14), mat({ roughness: 0.95 }, ['#cfd5dc', '#161c24']), false, true); floor.position.z = FLOOR;
+    const floor = mesh(new THREE.PlaneGeometry(14, 14), mat({ roughness: 0.95 }, ['#dbd6d0', '#231e17']), false, true); floor.position.z = FLOOR;
     // the wall is painted, not lit: a soft vertical wash, lighter towards the bench
     const wallCv = document.createElement('canvas'); wallCv.width = 16; wallCv.height = 256; const wallTex = new THREE.CanvasTexture(wallCv);
     const wall = new THREE.Mesh(new THREE.PlaneGeometry(14, 4), new THREE.MeshBasicMaterial({ map: wallTex })); wall.rotation.x = Math.PI / 2; wall.position.set(0.4, 0.62, FLOOR + 2);
-    st.onTheme((dk) => { const c = wallCv.getContext('2d'), gr = c.createLinearGradient(0, 0, 0, 256); gr.addColorStop(0, dk ? '#10161d' : '#d5dce4'); gr.addColorStop(0.6, dk ? '#18202a' : '#e8ecf1'); gr.addColorStop(1, dk ? '#141b24' : '#e1e6ec'); c.fillStyle = gr; c.fillRect(0, 0, 16, 256); c.fillStyle = dk ? '#232c38' : '#c3cbd5'; c.fillRect(0, 170, 16, 4); c.fillStyle = dk ? 'rgba(255,255,255,0.04)' : 'rgba(255,255,255,0.6)'; c.fillRect(0, 169, 16, 1); wallTex.needsUpdate = true; });
-    const skirt = K.box(14, 0.02, 0.1, mat({ roughness: 0.7 }, ['#b9c0c8', '#252e39']), 0.4, 0.61, FLOOR);
+    st.onTheme((dk) => { const c = wallCv.getContext('2d'), gr = c.createLinearGradient(0, 0, 0, 256); gr.addColorStop(0, dk ? '#1c1711' : '#e3ddd6'); gr.addColorStop(0.6, dk ? '#292219' : '#f0ede9'); gr.addColorStop(1, dk ? '#231d15' : '#ebe7e2'); c.fillStyle = gr; c.fillRect(0, 0, 16, 256); c.fillStyle = dk ? '#362f25' : '#d4cdc4'; c.fillRect(0, 170, 16, 4); c.fillStyle = dk ? 'rgba(255,255,255,0.04)' : 'rgba(255,255,255,0.6)'; c.fillRect(0, 169, 16, 1); wallTex.needsUpdate = true; });
+    const skirt = K.box(14, 0.02, 0.1, mat({ roughness: 0.7 }, ['#c7c1ba', '#383026']), 0.4, 0.61, FLOOR);
     const topM = mat({ roughness: 0.78 }, ['#d4c2a2', '#3b3229']), edgeM = mat({ roughness: 0.7 }, ['#a88b64', '#4a3d2e']);
     const top = mesh(new THREE.BoxGeometry(3.2, 0.95, 0.04), [edgeM, edgeM, edgeM, edgeM, topM, edgeM], true, true); top.position.set(0.45, 0.12, -0.02);
-    const cabM = mat({ roughness: 0.6, metalness: 0.15 }, ['#68747f', '#2f3843']), handM = mat({ roughness: 0.3, metalness: 0.7 }, ['#d9dee4', '#8d97a3']);
-    const cab = K.box(3.1, 0.85, -0.04 - FLOOR - 0.08, cabM, 0.45, 0.13, FLOOR + 0.08), plinth = K.box(3.0, 0.8, 0.08, mat({ roughness: 0.8 }, ['#3b434d', '#12171d']), 0.45, 0.14, FLOOR);
+    const cabM = mat({ roughness: 0.6, metalness: 0.15 }, ['#7d756a', '#423a30']), handM = mat({ roughness: 0.3, metalness: 0.7 }, ['#e3dfda', '#a1998f']);
+    const cab = K.box(3.1, 0.85, -0.04 - FLOOR - 0.08, cabM, 0.45, 0.13, FLOOR + 0.08), plinth = K.box(3.0, 0.8, 0.08, mat({ roughness: 0.8 }, ['#4c453c', '#1c1813']), 0.45, 0.14, FLOOR);
     scene.add(floor, wall, skirt, top, cab, plinth);
     for (const x of [-0.65, -0.1, 0.45, 1.0, 1.55]) scene.add(K.box(0.53, 0.008, 0.66, cabM, x, -0.297, -0.82), K.box(0.012, 0.016, 0.12, handM, x + 0.2, -0.305, -0.3));
     // shared materials: anodized black for the mounts, steel for posts, the rail's aluminum, the field and the beam
-    const blackM = M({ color: 0x22272e, roughness: 0.42, metalness: 0.35 }), steelM = mat({ roughness: 0.28, metalness: 0.75 }, ['#c3cad2', '#8d97a2']);
-    const railM = mat({ roughness: 0.35, metalness: 0.6 }, ['#a7b0ba', '#6c7682']), redM = M({ color: 0xd23a2a, roughness: 0.4, emissive: 0x3a0804 });
+    const blackM = M({ color: 0x2d2923, roughness: 0.42, metalness: 0.35 }), steelM = mat({ roughness: 0.28, metalness: 0.75 }, ['#d1cbc4', '#a0998f']);
+    const railM = mat({ roughness: 0.35, metalness: 0.6 }, ['#b9b2a8', '#80786e']), redM = M({ color: 0xd23a2a, roughness: 0.4, emissive: 0x3a0804 });
     const fieldM = new THREE.LineBasicMaterial({ transparent: true, opacity: 0.95 }), stalkM = new THREE.LineBasicMaterial({ transparent: true, opacity: 0.5 });
     const headM = new THREE.MeshBasicMaterial(), haloM = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.9, depthWrite: false });
     const NS = 64, NSEG = 5, NH = NSEG * NS / 4;
@@ -1289,7 +1289,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const rule = K.ruler(g3.st, { len: x1 - x0 - 0.02, from: 0, to: Math.round((x1 - x0 - 0.02) * 100), unit: 'cm', step: 1, w: 0.016 });
     rule.position.set(x0 + 0.01 + (x1 - x0 - 0.02) / 2, -0.025, RAILZ + 0.0002); g3.scene.add(rule);
     // the lamp: a vented housing on a pillar, a lens tube, and its cord to the back of the bench
-    g3.lampM = mat({ roughness: 0.45, metalness: 0.25 }, ['#3d4753', '#36404b']);
+    g3.lampM = mat({ roughness: 0.45, metalness: 0.25 }, ['#51493f', '#494238']);
     g3.scene.add(K.box(0.07, 0.07, ZB - 0.055 - RAILZ, g3.blackM, -0.12, 0, RAILZ), K.box(0.18, 0.1, 0.11, g3.lampM, -0.12, 0, ZB - 0.055));
     for (let k = 0; k < 5; k++) g3.scene.add(K.box(0.1, 0.006, 0.003, g3.blackM, -0.12, -0.03 + k * 0.015, ZB + 0.055));
     g3.scene.add(K.rod([-0.03, 0, ZB], [0.0, 0, ZB], 0.024, g3.blackM), K.rod([-0.212, 0.02, ZB - 0.03], [-0.23, 0.02, ZB - 0.03], 0.006, g3.blackM));
@@ -1297,7 +1297,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     g3.scene.add(K.cable([-0.23, 0.02, ZB - 0.03], [-0.75, 0.45, 0.004], { via: [[-0.27, 0.04, 0.004], [-0.4, 0.2, 0.004], [-0.55, 0.38, 0.004]], rad: 0.003 }));
     }
     st.onTheme(() => {
-      fieldM.color = col3(T.pos, '#c23f2c'); stalkM.color = fieldM.color; headM.color = fieldM.color; haloM.color = col3(T.accent, '#2b60b5');
+      fieldM.color = col3(T.pos, '#c23f2c'); stalkM.color = fieldM.color; headM.color = fieldM.color; haloM.color = col3(T.accent, '#c4811c');
       for (const b of g3.beams) b.material.color = col3(T.beam, '#e0a92a'); for (const b of g3.glows) b.material.color = col3(T.beam, '#e0a92a');
     });
     can.addEventListener('wheel', (e) => { if (!G3.on || !inBench3(e)) e.stopImmediatePropagation(); }, { passive: true });
@@ -1312,8 +1312,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // the fixed ring's face: engraved ticks every 2° (10° longer) on the upper half, which the index reads, numbered every 30° from −90° to 90°
   function scaleTex(rin) {
     return tex3((c, R) => {
-      c.fillStyle = '#1e2329'; c.fillRect(0, 0, 2 * R, 2 * R);
-      c.strokeStyle = '#eef2f6'; c.fillStyle = '#eef2f6'; c.lineCap = 'round';
+      c.fillStyle = '#28241f'; c.fillRect(0, 0, 2 * R, 2 * R);
+      c.strokeStyle = '#f5f2ef'; c.fillStyle = '#f5f2ef'; c.lineCap = 'round';
       for (let a = -180; a < 180; a += 2) {
         const up = Math.abs(a) <= 90, big = a % 10 === 0, l = up ? (a % 30 === 0 ? 34 : big ? 24 : 13) : (a % 30 === 0 ? 20 : 0); if (!l) continue;
         const s = Math.sin(a * D2R), k = Math.cos(a * D2R), r0 = R - 6, r1 = R - 6 - l;
@@ -1321,14 +1321,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       }
       c.font = '600 27px "JetBrains Mono", monospace'; c.textAlign = 'center'; c.textBaseline = 'middle';
       const rt = R - 64; for (let a = -90; a <= 90; a += 30) { const s = Math.sin(a * D2R), k = Math.cos(a * D2R); c.save(); c.translate(R - rt * s, R - rt * k); c.rotate(-a * D2R); c.fillText(a < 0 ? '−' + -a : String(a), 0, 0); c.restore(); }
-      c.fillStyle = '#0b0d10'; c.beginPath(); c.arc(R, R, R * rin, 0, 2 * Math.PI); c.fill();
+      c.fillStyle = '#100e0b'; c.beginPath(); c.arc(R, R, R * rin, 0, 2 * Math.PI); c.fill();
     });
   }
   // the turning glass: a polarizer is gray film with fine lines along its transmission axis; a wave plate is tinted crystal
   function glassTex3(type) {
     return tex3((c, R) => {
       if (type === 'pol') {
-        c.fillStyle = '#5d646c'; c.fillRect(0, 0, 2 * R, 2 * R); c.strokeStyle = 'rgba(20,24,28,0.55)'; c.lineWidth = 3;
+        c.fillStyle = '#6b655e'; c.fillRect(0, 0, 2 * R, 2 * R); c.strokeStyle = 'rgba(20,24,28,0.55)'; c.lineWidth = 3;
         c.beginPath(); for (let x = 8; x < 2 * R; x += 18) { c.moveTo(x, 0); c.lineTo(x, 2 * R); } c.stroke();
       } else {
         const g = c.createRadialGradient(R * 0.7, R * 0.6, 0, R, R, R); g.addColorStop(0, type === 'qwp' ? '#f6dc9a' : '#d9c3f5'); g.addColorStop(1, type === 'qwp' ? '#c99a2e' : '#8a5cc8');
@@ -1354,7 +1354,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const turn = new THREE.Group();
     const glass = new THREE.Mesh(faceX(new THREE.CircleGeometry(ri * 1.17, 72)), new THREE.MeshStandardMaterial({ map: glassTex3(e.type), transparent: true, opacity: e.type === 'pol' ? 0.62 : 0.72, side: THREE.DoubleSide, depthWrite: false, roughness: 0.15, metalness: 0.1 }));
     const bezel = g.mesh(new THREE.TorusGeometry(ri * 1.18, 0.0036, 10, 72).rotateY(Math.PI / 2), g.steelM, true);
-    const axC = e.type === 'pol' ? 0x15191e : e.type === 'qwp' ? 0x8a5a00 : 0x5a2a9a;
+    const axC = e.type === 'pol' ? 0x1d1a16 : e.type === 'qwp' ? 0x8a5a00 : 0x5a2a9a;
     const bar = new THREE.Mesh(new THREE.BoxGeometry(0.0012, 0.0022, 2 * ri * 1.12), M3(axC)); bar.position.x = 0.0015;
     const index = g.mesh(new THREE.ConeGeometry(0.0042, 0.011, 3).rotateX(Math.PI / 2), g.redM); index.position.set(0.0095, 0, ri * 1.16 + 0.006);
     const knob = g.mesh(new THREE.CylinderGeometry(0.0055, 0.0055, 0.014, 18).rotateZ(Math.PI / 2), g.steelM, true); knob.position.set(0.012, 0, -ri * 1.2);
@@ -1375,7 +1375,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     S.els.forEach((e, i) => mount3(e, (i + 1) * SP, i));
     // the detector head at the far end, cabled to the meter on the bench in front
     const head = g.mesh(new THREE.CylinderGeometry(0.026, 0.026, 0.05, 40).rotateZ(Math.PI / 2), g.lampM, true); head.position.set(xD + 0.025, 0, ZB);
-    const ap = new THREE.Mesh(faceX(new THREE.RingGeometry(0.012, 0.03, 40)), g.blackM), sensor = new THREE.Mesh(faceX(new THREE.CircleGeometry(0.012, 32)), M3(0x111418));
+    const ap = new THREE.Mesh(faceX(new THREE.RingGeometry(0.012, 0.03, 40)), g.blackM), sensor = new THREE.Mesh(faceX(new THREE.CircleGeometry(0.012, 32)), M3(0x171512));
     ap.rotation.z = Math.PI; sensor.rotation.z = Math.PI; ap.position.set(xD - 0.0005, 0, ZB); sensor.position.set(xD - 0.0003, 0, ZB); g.bench.add(head, ap, sensor);
     stand3(xD + 0.025, ZB - 0.024);
     g.meterG.position.set(xD + 0.02, 0.3, 0.09); g.meterG.rotation.z = 0.55; g.bench.add(K.box(0.2, 0.13, 0.09, g.lampM, xD + 0.02, 0.31, 0));

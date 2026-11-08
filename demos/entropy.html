@@ -16,9 +16,9 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
 /* only what this demo needs beyond demos/lib/vd.css */
-:root { --hot: #d2452b; --cold: #2b6fc4; --work: #2f8a4e; --solidA: #d9682b; --solidB: #2b8fc4; --mol: #2b3644; --theory: #6a4fc4; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --hot: #ff7a5c; --cold: #69a8ff; --work: #66d38c; --solidA: #ff9a5c; --solidB: #5cc2ff; --mol: #dfe7f1; --theory: #a991ff; } }
-:root[data-theme="dark"] { --hot: #ff7a5c; --cold: #69a8ff; --work: #66d38c; --solidA: #ff9a5c; --solidB: #5cc2ff; --mol: #dfe7f1; --theory: #a991ff; }
+:root { --hot: #d2452b; --cold: #2b6fc4; --work: #2f8a4e; --solidA: #d9682b; --solidB: #2b8fc4; --mol: #42392d; --theory: #6a4fc4; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --hot: #ff7a5c; --cold: #69a8ff; --work: #66d38c; --solidA: #ff9a5c; --solidB: #5cc2ff; --mol: #efe9e1; --theory: #a991ff; } }
+:root[data-theme="dark"] { --hot: #ff7a5c; --cold: #69a8ff; --work: #66d38c; --solidA: #ff9a5c; --solidB: #5cc2ff; --mol: #efe9e1; --theory: #a991ff; }
 .stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
 .stage-ctl .count { margin-left: auto; font-size: 0.82rem; color: var(--muted); }
@@ -316,7 +316,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function scene() { const y = Math.round(H * 0.86); if (VG) { VG.wall(ctx, 0, 0, W, y); VG.bench(ctx, 0, y, W, 14, Math.max(14, H - y - 2)); } else { ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H); } return y; }
   const lab = (s, x, y, o = {}) => { if (VG) VG.label(ctx, s, x, y, Object.assign({ s: 10.5 * proj() }, o)); };
   function lcdBox(x, y, w, h, text, name) {
-    if (VG) { VG.box(ctx, x - 6, y - 6, w + 12, h + 22, { color: dark() ? '#2b3440' : '#34404e', r: 6 }); VG.lcd(ctx, x, y, w, h, text); VG.plate(ctx, name, x + w / 2, y + h + 8, { s: 8 * proj() }); }
+    if (VG) { VG.box(ctx, x - 6, y - 6, w + 12, h + 22, { color: dark() ? '#3e372d' : '#4c4236', r: 6 }); VG.lcd(ctx, x, y, w, h, text); VG.plate(ctx, name, x + w / 2, y + h + 8, { s: 8 * proj() }); }
   }
   const trail = { g: null, pts: [], t: -1 };
   /* trails: where each molecule was over the last few frames (display only, kept outside the model; the 3D view uses them too) */
@@ -327,11 +327,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function drawFe() {
     const p = proj(), by = scene(), g = S.fe.g;
     const narrow = W < 560, bw = Math.min(W * (narrow ? 0.88 : 0.62), (by - 70 * p) * 2), bh = bw / 2, bx = W * 0.06, byy = (by - bh) / 2 + 6 * p, sc = bw / BOX_W;
-    if (VG) VG.box(ctx, bx - 10 * p, byy - 10 * p, bw + 20 * p, bh + 20 * p, { color: dark() ? '#3a4552' : '#56616f', r: 8 });
-    ctx.fillStyle = dark() ? '#0f151c' : '#f4f7fa'; ctx.fillRect(bx, byy, bw, bh);
+    if (VG) VG.box(ctx, bx - 10 * p, byy - 10 * p, bw + 20 * p, bh + 20 * p, { color: dark() ? '#50473c' : '#6d6458', r: 8 });
+    ctx.fillStyle = dark() ? '#1b1610' : '#faf7f4'; ctx.fillRect(bx, byy, bw, bh);
     ctx.fillStyle = dark() ? 'rgba(105,168,255,0.07)' : 'rgba(43,111,196,0.06)'; ctx.fillRect(bx, byy, bw / 2, bh);
     /* the partition, or its dashed ghost once removed */
-    if (g.wall) { ctx.fillStyle = dark() ? '#9aa6b6' : '#56616f'; ctx.fillRect(bx + bw / 2 - 3 * p, byy, 6 * p, bh); }
+    if (g.wall) { ctx.fillStyle = dark() ? '#b4aa9c' : '#6d6458'; ctx.fillRect(bx + bw / 2 - 3 * p, byy, 6 * p, bh); }
     else { ctx.save(); ctx.setLineDash([5 * p, 6 * p]); ctx.strokeStyle = T.muted; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(bx + bw / 2, byy); ctx.lineTo(bx + bw / 2, byy + bh); ctx.stroke(); ctx.restore(); }
     trailTick(g);
     if (!reduce && trail.pts.length > 1) {
@@ -346,7 +346,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     lab(g.wall ? 'partition' : 'partition removed', bx + bw / 2, byy - 18 * p, { a: 'center' });
     /* the count bar: the box's molecules split left and right, the same n the histogram below is counting */
     { const nL = leftCount(g), cy = byy + bh + 16 * p, ch = 12 * p, sx = bx + bw * nL / g.N;
-      ctx.fillStyle = dark() ? '#18212b' : '#e3e9ef'; ctx.fillRect(bx, cy, bw, ch);
+      ctx.fillStyle = dark() ? '#2a2319' : '#eeeae4'; ctx.fillRect(bx, cy, bw, ch);
       ctx.fillStyle = T.cold; ctx.fillRect(bx, cy, sx - bx, ch); ctx.fillStyle = T.hot; ctx.fillRect(sx, cy, bx + bw - sx, ch);
       ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(bx + bw / 2, cy - 3 * p); ctx.lineTo(bx + bw / 2, cy + ch + 3 * p); ctx.stroke();
       ctx.font = `700 ${9.5 * p}px ${T.mono}`; ctx.textBaseline = 'middle'; ctx.fillStyle = '#ffffff';
@@ -371,15 +371,15 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const c = Math.min(gw / (cols + rows * DX), avail / (rows * DY + 4)), hb = avail - rows * c * DY - c * 0.4, hc = Math.min(c * 0.8, hb / stackMax);
       const w = cols * c + rows * c * DX, y0 = top + avail - c * 0.4, slab = 6 * p;
       /* the slab under the solid */
-      ctx.fillStyle = dark() ? '#2b3440' : '#8b96a3';
+      ctx.fillStyle = dark() ? '#3e372d' : '#a1988d';
       ctx.beginPath(); ctx.moveTo(x - 4 * p, y0 + 4 * p); ctx.lineTo(x + cols * c + 4 * p, y0 + 4 * p); ctx.lineTo(x + w + 4 * p, y0 - rows * c * DY - 2 * p); ctx.lineTo(x + rows * c * DX - 4 * p, y0 - rows * c * DY - 2 * p); ctx.closePath(); ctx.fill();
-      ctx.fillStyle = dark() ? '#1d242d' : '#6c7682'; ctx.fillRect(x - 4 * p, y0 + 4 * p, cols * c + 8 * p, slab);
+      ctx.fillStyle = dark() ? '#2c261e' : '#80786e'; ctx.fillRect(x - 4 * p, y0 + 4 * p, cols * c + 8 * p, slab);
       const top0 = shade(col, 1.12), side0 = shade(col, 0.72), cw = c * 0.82, gx = c * 0.09;
       for (let j = rows - 1; j >= 0; j--) for (let i = 0; i < cols; i++) {
         const k = j * cols + i; if (k >= cnt) continue; const qq = s.n[n0 + k];
         const fx = x + i * c + j * c * DX + gx, fy = y0 - j * c * DY, dx = cw * DX, dy = cw * DY;
         /* the empty site: a floor tile */
-        ctx.fillStyle = dark() ? '#3a4552' : '#c3cbd4';
+        ctx.fillStyle = dark() ? '#50473c' : '#d3ccc4';
         ctx.beginPath(); ctx.moveTo(fx, fy); ctx.lineTo(fx + cw, fy); ctx.lineTo(fx + cw + dx, fy - dy); ctx.lineTo(fx + dx, fy - dy); ctx.closePath(); ctx.fill();
         for (let m = 0; m < qq; m++) {
           const yb = fy - m * hc, yt = yb - hc;
@@ -414,7 +414,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (eng) { arrow(cx, top, cx, cy - r, wq(info.Qh), T.hot, `Q_h = ${f(info.Qh, 0)} J`); arrow(cx, cy + r, cx, bot, wq(info.Qc), T.cold, `Q_c = ${f(info.Qc, 0)} J`); arrow(cx + r, cy, cx + r + 90 * p, cy, wq(info.W), T.work, null); }
     else { arrow(cx, cy - r, cx, top, wq(info.Qh), T.hot, `Q_h = ${f(info.Qh, 0)} J`); arrow(cx, bot, cx, cy + r, wq(info.Qc), T.cold, `Q_c = ${f(info.Qc, 0)} J`); arrow(cx + r + 90 * p, cy, cx + r, cy, wq(info.W), T.work, null); }
     if (info.W > 0) lab(`W = ${f(info.W, 0)} J`, cx + r + 10 * p, cy - Math.max(9 * p, wq(info.W) * 1.1) - 10 * p, { c: T.ink, m: true });
-    const gg = ctx.createRadialGradient(cx - r * 0.3, cy - r * 0.3, 2, cx, cy, r); gg.addColorStop(0, dark() ? '#5b6878' : '#c7cfd8'); gg.addColorStop(1, dark() ? '#2b3440' : '#7d8896');
+    const gg = ctx.createRadialGradient(cx - r * 0.3, cy - r * 0.3, 2, cx, cy, r); gg.addColorStop(0, dark() ? '#766b5d' : '#d7d0c8'); gg.addColorStop(1, dark() ? '#3e372d' : '#948b7f');
     ctx.fillStyle = gg; ctx.beginPath(); ctx.arc(cx, cy, r, 0, 7); ctx.fill(); ctx.strokeStyle = 'rgba(0,0,0,0.35)'; ctx.lineWidth = 1; ctx.stroke();
     if (VG) VG.plate(ctx, name, cx, cy, { s: 9 * p });
   }
@@ -669,18 +669,18 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   /* the room: a tiled floor, a wall with a dado panel, and a wooden lab bench with its top at z = 0 */
   function room3(V) {
     const g = new THREE.Group(), FL = -0.86, M = (o, c) => VD3K.material(V, o, c); let sd = 11; const rn = () => (sd = (sd * 16807) % 2147483647) / 2147483647;
-    const ft = tex3(V, 256, 256); ft.c.fillStyle = '#dfe2e5'; ft.c.fillRect(0, 0, 256, 256);
+    const ft = tex3(V, 256, 256); ft.c.fillStyle = '#e5e2df'; ft.c.fillRect(0, 0, 256, 256);
     for (let i = 0; i < 900; i++) { ft.c.fillStyle = `rgba(${rn() < 0.5 ? '255,255,255' : '90,96,104'},${0.05 + 0.06 * rn()})`; ft.c.fillRect(rn() * 256, rn() * 256, 2, 2); }
-    ft.c.fillStyle = '#b4bac1'; ft.c.fillRect(0, 0, 256, 3); ft.c.fillRect(0, 0, 3, 256); ft.t.wrapS = ft.t.wrapT = THREE.RepeatWrapping; ft.t.repeat.set(24, 16);
-    const floor = new THREE.Mesh(new THREE.PlaneGeometry(12, 8), M({ map: ft.t, roughness: 0.8 }, ['#ffffff', '#4a5260'])); floor.position.set(0, 2.5, FL); floor.receiveShadow = true;
-    const wall = new THREE.Mesh(new THREE.PlaneGeometry(12, 3.4), M({ roughness: 0.95 }, ['#eef1f4', '#1d2530'])); wall.rotation.x = Math.PI / 2; wall.position.set(0, 1.05, FL + 1.7);
-    const dado = new THREE.Mesh(new THREE.PlaneGeometry(12, 0.95), M({ roughness: 0.9 }, ['#dde3e9', '#222b37'])); dado.rotation.x = Math.PI / 2; dado.position.set(0, 1.045, FL + 0.475);
-    const skirt = M({ roughness: 0.6 }, ['#8d96a1', '#11161d']);
+    ft.c.fillStyle = '#c0bbb5'; ft.c.fillRect(0, 0, 256, 3); ft.c.fillRect(0, 0, 3, 256); ft.t.wrapS = ft.t.wrapT = THREE.RepeatWrapping; ft.t.repeat.set(24, 16);
+    const floor = new THREE.Mesh(new THREE.PlaneGeometry(12, 8), M({ map: ft.t, roughness: 0.8 }, ['#ffffff', '#5e564c'])); floor.position.set(0, 2.5, FL); floor.receiveShadow = true;
+    const wall = new THREE.Mesh(new THREE.PlaneGeometry(12, 3.4), M({ roughness: 0.95 }, ['#f4f1ee', '#2f281e'])); wall.rotation.x = Math.PI / 2; wall.position.set(0, 1.05, FL + 1.7);
+    const dado = new THREE.Mesh(new THREE.PlaneGeometry(12, 0.95), M({ roughness: 0.9 }, ['#e8e4de', '#352e24'])); dado.rotation.x = Math.PI / 2; dado.position.set(0, 1.045, FL + 0.475);
+    const skirt = M({ roughness: 0.6 }, ['#a0988e', '#1c1812']);
     g.add(floor, wall, dado, VD3K.box(12, 0.02, 0.012, skirt, 0, 1.04, FL + 0.95), VD3K.box(12, 0.02, 0.09, skirt, 0, 1.04, FL));
     const wt = tex3(V, 1024, 256), c = wt.c; c.fillStyle = '#d4b182'; c.fillRect(0, 0, 1024, 256);
     for (let y = 0; y < 256; y++) { const w = 0.5 + 0.5 * Math.sin(y * 0.19 + 3 * Math.sin(y * 0.023)); c.fillStyle = `rgba(140,92,48,${0.04 + 0.2 * Math.pow(w, 8)})`; c.fillRect(0, y, 1024, 1); }
     for (let i = 0; i < 60; i++) { c.fillStyle = `rgba(120,78,40,${0.05 + 0.08 * rn()})`; c.fillRect(0, rn() * 256, 1024, 1 + 2 * rn()); }
-    const top = M({ map: wt.t, roughness: 0.62 }, ['#ffffff', '#6b5a47']), leg = M({ roughness: 0.45, metalness: 0.5 }, ['#5d6670', '#3a424c']);
+    const top = M({ map: wt.t, roughness: 0.62 }, ['#ffffff', '#6b5a47']), leg = M({ roughness: 0.45, metalness: 0.5 }, ['#6f685e', '#4b443b']);
     const bt = VD3K.box(2.2, 0.9, 0.045, top, 0, 0.12, -0.045); bt.castShadow = false; g.add(bt);
     for (const sx of [-1, 1]) for (const sy of [-1, 1]) g.add(VD3K.box(0.05, 0.05, -FL - 0.045, leg, sx * 1.04, 0.12 + sy * 0.39, FL));
     for (const sx of [-1, 1]) g.add(VD3K.box(0.04, 0.78, 0.04, leg, sx * 1.04, 0.12, FL + 0.12));
@@ -693,7 +693,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   /* ---- free expansion: an insulated box with a glass front and a partition that lifts out through a slot in the lid ---- */
   function initFe(V) {
     const g = new THREE.Group(), w = BOX_W * U3, h = BOX_H * U3, cx = FX0 + w / 2, ow = w + 2 * TW3, od = D3 + 2 * TW3, plH = FZ0 - TW3;
-    const foam = VD3K.material(V, { roughness: 0.95 }, ['#ece7dc', '#7d786d']), steel = VD3K.material(V, { roughness: 0.35, metalness: 0.6 }, ['#9aa3ad', '#6c7580']);
+    const foam = VD3K.material(V, { roughness: 0.95 }, ['#ece7dc', '#7d786d']), steel = VD3K.material(V, { roughness: 0.35, metalness: 0.6 }, ['#aca59b', '#7e776e']);
     const plinth = VD3K.box(ow + 0.04, od + 0.04, plH, steel, cx, 0, 0);
     const half = (ow - 0.012) / 2;
     const lids = [VD3K.box(half, od, TW3, foam, cx - 0.006 - half / 2, 0, FZ0 + h), VD3K.box(half, od, TW3, foam, cx + 0.006 + half / 2, 0, FZ0 + h)]; lids.forEach((x) => { x.castShadow = false; });
@@ -701,7 +701,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (const sgn of [-1, 1]) g.add(VD3K.box(TW3, od, h, foam, cx + sgn * (w / 2 + TW3 / 2), 0, FZ0));
     /* the back wall's inner face: pale, the left half tinted as in the flat view, faint lines every 0.1 model units */
     const bk = tex3(V, 1024, 512), backM = new THREE.MeshStandardMaterial({ map: bk.t, emissiveMap: bk.t, emissive: '#ffffff', emissiveIntensity: 0.45, roughness: 0.9 });
-    V.onTheme((dk) => { const c = bk.c; c.fillStyle = dk ? '#121a23' : '#f4f7fa'; c.fillRect(0, 0, 1024, 512); c.fillStyle = dk ? 'rgba(105,168,255,0.12)' : 'rgba(43,111,196,0.08)'; c.fillRect(0, 0, 512, 512);
+    V.onTheme((dk) => { const c = bk.c; c.fillStyle = dk ? '#221b13' : '#faf7f4'; c.fillRect(0, 0, 1024, 512); c.fillStyle = dk ? 'rgba(105,168,255,0.12)' : 'rgba(43,111,196,0.08)'; c.fillRect(0, 0, 512, 512);
       c.strokeStyle = dk ? 'rgba(255,255,255,0.06)' : 'rgba(30,40,55,0.07)'; c.lineWidth = 2; for (let i = 1; i < 20; i++) { c.beginPath(); c.moveTo(i * 51.2, 0); c.lineTo(i * 51.2, 512); c.stroke(); } for (let i = 1; i < 10; i++) { c.beginPath(); c.moveTo(0, i * 51.2); c.lineTo(1024, i * 51.2); c.stroke(); }
       bk.t.needsUpdate = true; });
     const back = new THREE.Mesh(new THREE.BoxGeometry(w, TW3, h), [foam, foam, foam, backM, foam, foam]); back.position.set(cx, D3 / 2 + TW3 / 2, FZ0 + h / 2); back.receiveShadow = true; g.add(back);
@@ -711,7 +711,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* the partition and its handle; it rises out of the slot when removed */
     const part = new THREE.Group(), sheet = new THREE.Mesh(new THREE.BoxGeometry(0.004, D3 + 0.01, h + TW3 + 0.012), steel);
     sheet.position.set(cx, 0, FZ0 + (h + TW3 + 0.012) / 2); sheet.castShadow = true;
-    const knob = VD3K.rod([cx, -0.02, FZ0 + h + TW3 + 0.018], [cx, 0.02, FZ0 + h + TW3 + 0.018], 0.007, VD3K.material(V, { roughness: 0.5 }, ['#2b3644', '#1b222b']));
+    const knob = VD3K.rod([cx, -0.02, FZ0 + h + TW3 + 0.018], [cx, 0.02, FZ0 + h + TW3 + 0.018], 0.007, VD3K.material(V, { roughness: 0.5 }, ['#42392d', '#2a241c']));
     part.add(sheet, knob); g.add(part);
     /* the molecules (one pool, scaled to the disk radius) and their trails */
     const mol = VD3K.particles(V, { n: 200, r: 1, seg: 14 });
@@ -732,14 +732,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (let i = 0; i < g.N; i++) F.mol.put(i, (FX0 + g.x[i] * U3) / rad, 0, (FZ0 + g.y[i] * U3) / rad, g.x[i] < BOX_W / 2 ? cC : cH);
     F.mol.show(g.N); F.mol.done();
     trailTick(g);
-    const pos = F.trails.geometry.attributes.position, colA = F.trails.geometry.attributes.color, n = trail.pts.length, bg = col3(dark() ? '#121a23' : '#f4f7fa'), cc = new THREE.Color(); let k = 0;
+    const pos = F.trails.geometry.attributes.position, colA = F.trails.geometry.attributes.color, n = trail.pts.length, bg = col3(dark() ? '#221b13' : '#faf7f4'), cc = new THREE.Color(); let k = 0;
     if (!reduce && n > 1) for (let i = 0; i < g.N; i++) { const base = g.x[i] < BOX_W / 2 ? cC : cH;
       for (let j = 1; j < n; j++) { const a = trail.pts[j - 1], b = trail.pts[j];
         for (const [q, jj] of [[a, j - 1], [b, j]]) { pos.setXYZ(k, FX0 + q[0][i] * U3, 0.004, FZ0 + q[1][i] * U3); cc.copy(bg).lerp(base, 0.55 * jj / n); colA.setXYZ(k, cc.r, cc.g, cc.b); k++; } } }
     F.trails.geometry.setDrawRange(0, k); pos.needsUpdate = true; colA.needsUpdate = true;
     const key = `${nL}|${g.N}|${T.cold}|${T.hot}`;
     if (key !== F.stKey) { F.stKey = key; const c = F.st.c, Wd = 1024, Hd = 64, sx = Wd * nL / g.N;
-      c.fillStyle = '#20262e'; c.fillRect(0, 0, Wd, Hd); c.fillStyle = T.cold; c.fillRect(6, 8, sx - 6, Hd - 16); c.fillStyle = T.hot; c.fillRect(sx, 8, Wd - 6 - sx, Hd - 16);
+      c.fillStyle = '#2d2821'; c.fillRect(0, 0, Wd, Hd); c.fillStyle = T.cold; c.fillRect(6, 8, sx - 6, Hd - 16); c.fillStyle = T.hot; c.fillRect(sx, 8, Wd - 6 - sx, Hd - 16);
       c.fillStyle = '#ffffff'; c.fillRect(Wd / 2 - 2, 0, 4, Hd); c.font = `700 30px ${T.mono}`; c.textBaseline = 'middle';
       if (sx > 150) { c.textAlign = 'left'; c.fillText(`${nL} left`, 20, Hd / 2 + 1); } if (Wd - sx > 160) { c.textAlign = 'right'; c.fillText(`${g.N - nL} right`, Wd - 20, Hd / 2 + 1); }
       F.st.t.needsUpdate = true; }
@@ -766,7 +766,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const tileM = new THREE.MeshStandardMaterial({ roughness: 0.6, color: '#ffffff' }), cubeMA = new THREE.MeshStandardMaterial({ roughness: 0.45, metalness: 0.05 }), cubeMB = new THREE.MeshStandardMaterial({ roughness: 0.45, metalness: 0.05 });
     const inst = (m, n) => { const x = new THREE.InstancedMesh(box1, m, n); x.castShadow = true; x.receiveShadow = true; x.count = 0; x.frustumCulled = false; g.add(x); return x; };
     const tiles = inst(tileM, 600); { const w = new THREE.Color('#ffffff'); tiles.count = 600; for (let i = 0; i < 600; i++) tiles.setColorAt(i, w); tiles.count = 0; } const cubesA = inst(cubeMA, 400), cubesB = inst(cubeMB, 400);
-    const stand = VD3K.box(0.4, 0.12, 0.05, VD3K.material(V, { roughness: 0.5, metalness: 0.3 }, ['#8b96a3', '#3a4552']), 0.56, 0.17, 0); g.add(stand);
+    const stand = VD3K.box(0.4, 0.12, 0.05, VD3K.material(V, { roughness: 0.5, metalness: 0.3 }, ['#a1988d', '#50473c']), 0.56, 0.17, 0); g.add(stand);
     const MW = { w: 0.17, h: 0.1 }, meters = [meter3(V, Object.assign({ label: 'quanta in A' }, MW), 0.465, -0.08), meter3(V, Object.assign({ label: 'exchanges tried' }, MW), 0.655, -0.08),
       meter3(V, Object.assign({ label: 'temperature of A', sub: 'kT/ε' }, MW), 0.465, 0.17, 0.05 + 0.05), meter3(V, Object.assign({ label: 'temperature of B', sub: 'kT/ε' }, MW), 0.655, 0.17, 0.05 + 0.05)];
     meters.forEach((m) => g.add(m));
@@ -781,7 +781,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     put(E.pad, wA + wB + gap + 0.05, dep + 0.05, padH, x0 + (wA + wB + gap) / 2, 0, 0);
     put(E.slabA, wA, dep, slH, x0 + wA / 2, 0, padH); put(E.slabB, wB, dep, slH, x0 + wA + gap + wB / 2, 0, padH); put(E.contact, gap, dep, slH + 0.004, x0 + wA + gap / 2, 0, padH);
     const shade = (hex, k) => col3(hex).multiplyScalar(k);
-    E.slabMA.color.copy(shade(T.A, 0.62)); E.slabMB.color.copy(shade(T.B, 0.62)); E.cubeMA.color.set(T.A); E.cubeMB.color.set(T.B); const tA = col3(T.A).lerp(col3(dark() ? '#2a323c' : '#ffffff'), 0.72), tB = col3(T.B).lerp(col3(dark() ? '#2a323c' : '#ffffff'), 0.72);
+    E.slabMA.color.copy(shade(T.A, 0.62)); E.slabMB.color.copy(shade(T.B, 0.62)); E.cubeMA.color.set(T.A); E.cubeMB.color.set(T.B); const tA = col3(T.A).lerp(col3(dark() ? '#3b342b' : '#ffffff'), 0.72), tB = col3(T.B).lerp(col3(dark() ? '#3b342b' : '#ffffff'), 0.72);
     let tall = 0; for (let k = 0; k < N; k++) tall = Math.max(tall, s.n[k]);
     const stackMax = Math.max(4, Math.ceil(3 * e.q / N), tall), cw = c * 0.8, hc = Math.min(cw, 0.2 / stackMax);
     let nt = 0, na = 0, nb = 0;
@@ -821,10 +821,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     return g;
   }
   function device3(V) {
-    const g = new THREE.Group(), steel = VD3K.material(V, { roughness: 0.32, metalness: 0.65 }, ['#aab3bd', '#7a838e']), dk = VD3K.material(V, { roughness: 0.5, metalness: 0.3 }, ['#3a4552', '#2a333e']);
+    const g = new THREE.Group(), steel = VD3K.material(V, { roughness: 0.32, metalness: 0.65 }, ['#bcb5ab', '#8c857c']), dk = VD3K.material(V, { roughness: 0.5, metalness: 0.3 }, ['#50473c', '#3d352b']);
     const copper = new THREE.MeshStandardMaterial({ color: '#c47a45', roughness: 0.35, metalness: 0.7 });
     const eng = new THREE.Group(); eng.add(VD3K.box(0.17, 0.17, 0.02, dk, 0, 0, 0), VD3K.rod([0, 0, 0.02], [0, 0, 0.25], 0.062, steel), VD3K.rod([0, 0, ZQ - 0.025], [0, 0, ZQ + 0.025], 0.065, copper), VD3K.rod([0, 0, 0.25], [0, 0, 0.27], 0.07, dk), VD3K.rod([0, 0, 0.27], [0, 0, 0.32], 0.008, steel));
-    const fr = new THREE.Group(), cab = VD3K.material(V, { roughness: 0.4, metalness: 0.2 }, ['#e9edf1', '#9aa4af']);
+    const fr = new THREE.Group(), cab = VD3K.material(V, { roughness: 0.4, metalness: 0.2 }, ['#f0edea', '#ada69c']);
     fr.add(VD3K.box(0.15, 0.15, 0.25, cab, 0, 0, 0), VD3K.rod([0, 0, 0.25], [0, 0, 0.29], 0.04, dk), VD3K.rod([0, 0, 0.29], [0, 0, 0.32], 0.008, steel));
     for (const sx of [-1, 1]) for (let i = 0; i < 4; i++) fr.add(VD3K.rod([sx * 0.079, -0.06, 0.06 + i * 0.045], [sx * 0.079, 0.06, 0.06 + i * 0.045], 0.006, copper));
     const wheel = new THREE.Group(), tor = new THREE.Mesh(new THREE.TorusGeometry(0.06, 0.009, 12, 40), dk); tor.castShadow = true; wheel.add(tor);
@@ -836,7 +836,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function initSl(V) {
     const g = new THREE.Group();
     const hotM = new THREE.MeshStandardMaterial({ color: '#b8442c', emissive: '#ff4a10', emissiveIntensity: 0.22, roughness: 0.75 }), coldM = new THREE.MeshStandardMaterial({ color: '#6fa6e3', emissive: '#1d4fa0', emissiveIntensity: 0.2, roughness: 0.3, metalness: 0.1 });
-    const glowM = new THREE.MeshStandardMaterial({ color: '#ffb070', emissive: '#ff6a20', emissiveIntensity: 0.9, roughness: 0.6 }), frostM = new THREE.MeshStandardMaterial({ color: '#f4f9ff', roughness: 0.9 });
+    const glowM = new THREE.MeshStandardMaterial({ color: '#ffb070', emissive: '#ff6a20', emissiveIntensity: 0.9, roughness: 0.6 }), frostM = new THREE.MeshStandardMaterial({ color: '#fbfaf8', roughness: 0.9 });
     const RW = 0.3, RD = 0.62, RH = 0.32, RX = 0.37 + RW / 2, RY = 0.05;
     g.add(VD3K.box(RW, RD, RH, hotM, -RX, RY, 0), VD3K.box(RW, RD, RH, coldM, RX, RY, 0), VD3K.box(RW + 0.01, RD + 0.01, 0.02, frostM, RX, RY, RH));
     for (let i = 0; i < 3; i++) g.add(VD3K.box(0.006, RD * 0.86, 0.012, glowM, -0.37 - 0.003, RY, 0.07 + i * 0.075));   /* heating elements on the face the heat leaves by */

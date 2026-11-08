@@ -16,9 +16,9 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
 /* only what this demo needs beyond demos/lib/vd.css: its colors, the picture, the strip, the Set up card and the two graphs */
-:root { --sun: #e0a020; --jup: #b9783f; --sat: #b89a52; --ura: #3f9fb0; --nep: #2f5fd0; --px: #c2410c; --body: #2b60b5; --mark: #d9480f; --mars: #b8382a; --bar: #9aa8b8; --barhi: #5b6b7d; --gone: #b8382a; --ok: #2f8a4a; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --sun: #ffc94d; --jup: #e0a874; --sat: #dcc283; --ura: #79d2e0; --nep: #7aa2ff; --px: #fb923c; --body: #8fb8ff; --mark: #ff8a4c; --mars: #ff7a5c; --bar: #4d5a69; --barhi: #8a9aad; --gone: #ff7a5c; --ok: #6fd18d; } }
-:root[data-theme="dark"] { --sun: #ffc94d; --jup: #e0a874; --sat: #dcc283; --ura: #79d2e0; --nep: #7aa2ff; --px: #fb923c; --body: #8fb8ff; --mark: #ff8a4c; --mars: #ff7a5c; --bar: #4d5a69; --barhi: #8a9aad; --gone: #ff7a5c; --ok: #6fd18d; }
+:root { --sun: #e0a020; --jup: #b9783f; --sat: #b89a52; --ura: #3f9fb0; --nep: #2f5fd0; --px: #c2410c; --body: #2b60b5; --mark: #d9480f; --mars: #b8382a; --bar: #b6ab9c; --barhi: #7a6e5e; --gone: #b8382a; --ok: #2f8a4a; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --sun: #ffc94d; --jup: #e0a874; --sat: #dcc283; --ura: #79d2e0; --nep: #7aa2ff; --px: #fb923c; --body: #8fb8ff; --mark: #ff8a4c; --mars: #ff7a5c; --bar: #675d4f; --barhi: #aa9d8d; --gone: #ff7a5c; --ok: #6fd18d; } }
+:root[data-theme="dark"] { --sun: #ffc94d; --jup: #e0a874; --sat: #dcc283; --ura: #79d2e0; --nep: #7aa2ff; --px: #fb923c; --body: #8fb8ff; --mark: #ff8a4c; --mars: #ff7a5c; --bar: #675d4f; --barhi: #aa9d8d; --gone: #ff7a5c; --ok: #6fd18d; }
 .stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
 .stage-ctl select { font: inherit; font-size: 0.84rem; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px; }
@@ -998,7 +998,7 @@ onmessage = (e) => { const d = e.data;
     const trailG = new THREE.BufferGeometry(); trailG.setAttribute('position', new THREE.BufferAttribute(new Float32Array(2400 * 3), 3));
     const trailL = new THREE.Line(trailG, new THREE.LineBasicMaterial({ color: 0x8fb8ff, transparent: true, opacity: 0.4 })); sc.add(trailL);
     const marks = VD3K.particles(S3, { n: 24, r: 0.012, seg: 8, color: '#ff8a4c', emissive: '#ff6a2c' }); sc.add(marks);
-    g3 = { S3, sun, light, planet: mk(0.03, '#d9a066'), body: mk(0.016, '#8fb8ff'), orbits: { mars: orbitLine(0xff7a5c, 0.6, true), pl: orbitLine(0xa8b4c4, 0.5), body: orbitLine(0x8fb8ff, 0.9), x: orbitLine(0xfb923c, 0.8, true), j: orbitLine(0xe0a874, 0.4), s: orbitLine(0xdcc283, 0.4), u: orbitLine(0x79d2e0, 0.7), n: orbitLine(0x7aa2ff, 0.6, true) },
+    g3 = { S3, sun, light, planet: mk(0.03, '#d9a066'), body: mk(0.016, '#8fb8ff'), orbits: { mars: orbitLine(0xff7a5c, 0.6, true), pl: orbitLine(0xc2b8aa, 0.5), body: orbitLine(0x8fb8ff, 0.9), x: orbitLine(0xfb923c, 0.8, true), j: orbitLine(0xe0a874, 0.4), s: orbitLine(0xdcc283, 0.4), u: orbitLine(0x79d2e0, 0.7), n: orbitLine(0x7aa2ff, 0.6, true) },
       ura: mk(0.022, '#79d2e0'), nepB: mk(0.022, '#7aa2ff'), jup: mk(0.026, '#e0a874'), sat: mk(0.024, '#dcc283'), xB: mk(0.022, '#fb923c'),
       parts, trailL, trailG, marks, labels: { planet: lab('Jupiter', '#f2d2b0'), body: lab('asteroid', '#cfe0ff'), mark: lab('passed here', '#ffb48a'), mars: lab('Mars\'s orbit', '#ff9a80'), ura: lab('Uranus', '#a8e8f2'), nep: lab('Neptune', '#b4caff'), x: lab('planet X', '#ffc08a'), jup: lab('Jupiter', '#f2d2b0'), sat: lab('Saturn', '#ecdcae') } };
     VD3.orbit(can, G3.o, () => { if (use3()) draw(); }, { phMin: 0.05, phMax: 1.5, zMin: 0.5, zMax: 4 });
@@ -1025,7 +1025,7 @@ onmessage = (e) => { const d = e.data;
       const sc = SCENES[S.scene]; rot = S.frame === 'rot' ? -lamP(sys.t) : 0;
       if (sc.mars) { const m = PLANETS.mars; setOrbit(g.orbits.mars, m.a, m.e, m.w * D2R, k); const q = R2(m.a * Math.cos(2.3), m.a * Math.sin(2.3)); g.labels.mars.position.set(q[0] * k, q[1] * k, 0.03); g.labels.mars.visible = true; }
       setOrbit(g.orbits.pl, sys.pl.a, sys.pl.e, sys.pl.w * D2R, k);
-      const Pp = planetAt(sys, sys.t); g.planet.material.color.set(S.scene === 'belt' ? '#d9a066' : '#5b84f0'); g.planet.material.emissive.set(S.scene === 'belt' ? '#2a1a08' : '#0a1430');
+      const Pp = planetAt(sys, sys.t); g.planet.material.color.set(S.scene === 'belt' ? '#d9a066' : '#5b84f0'); g.planet.material.emissive.set(S.scene === 'belt' ? '#2a1a08' : '#261e14');
       g.planet.scale.setScalar(S.scene === 'belt' ? 1 : 0.8); put(g.planet, Pp[0], Pp[1], g.labels.planet, 0.07); g.labels.planet.set(sc.pname);
       if (many) { let n = 0; for (let j = 0; j < sys.n; j++) { if (sys.gone[j]) continue; const q = R2(sys.s[4 * j], sys.s[4 * j + 1]); g.parts.put(n++, q[0] * k, q[1] * k, 0, VD3K.heat(bodyEl(sys, j).e / 0.4)); } g.parts.show(n); g.parts.done(); }
       else {

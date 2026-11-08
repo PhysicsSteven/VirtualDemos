@@ -955,9 +955,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const S = VD3K.stage(boxPane, { before: box.nextSibling, shadow: 0.8, fov: 30, far: 30 });
     if (!S) return false;
     S.el.classList.add('g3');
-    const steel = VD3K.material(S, { roughness: 0.4, metalness: 0.35 }, ['#b4bcc6', '#8a939e']);
-    const alu = VD3K.material(S, { roughness: 0.55, metalness: 0.15 }, ['#cfd5dc', '#7d8692']);
-    const dark = VD3K.material(S, { roughness: 0.6, metalness: 0.3 }, ['#4b5562', '#39414c']);
+    const steel = VD3K.material(S, { roughness: 0.4, metalness: 0.35 }, ['#c5beb5', '#9c958b']);
+    const alu = VD3K.material(S, { roughness: 0.55, metalness: 0.15 }, ['#dbd6d0', '#90897f']);
+    const dark = VD3K.material(S, { roughness: 0.6, metalness: 0.3 }, ['#60584d', '#4b443a']);
     S.scene.add(VD3K.bench(S, { w: 6, d: 4, x: 0.25, y: 0.6 }), VD3K.backdrop(S, { r: 2.2, y: 0.9, x: 0.25 }));
     S.scene.add(VD3K.box(0.66, 0.1, Z0 - 0.012, dark, 0.27, 0, 0));
     /* back plate with the 5 nm grid, and the front glass */
@@ -965,8 +965,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const gt = new THREE.CanvasTexture(gc), back = new THREE.Mesh(new THREE.PlaneGeometry(LX * K3, LY * K3), new THREE.MeshBasicMaterial({ map: gt }));
     back.rotation.x = Math.PI / 2; back.position.set(LX * K3 / 2, 0.016, Z0 + LY * K3 / 2); back.receiveShadow = true; S.scene.add(back);
     S.onTheme((dk) => {
-      const c = gc.getContext('2d'); c.fillStyle = dk ? '#151c25' : '#f4f6f9'; c.fillRect(0, 0, 1000, 600);
-      c.strokeStyle = dk ? '#26313e' : '#dde3ea'; c.lineWidth = 2;
+      const c = gc.getContext('2d'); c.fillStyle = dk ? '#241e16' : '#f9f7f4'; c.fillRect(0, 0, 1000, 600);
+      c.strokeStyle = dk ? '#3c3328' : '#e9e4de'; c.lineWidth = 2;
       for (let x = 5; x < LX; x += 5) { c.beginPath(); c.moveTo(x * 20, 0); c.lineTo(x * 20, 600); c.stroke(); }
       for (let y = 5; y < LY; y += 5) { c.beginPath(); c.moveTo(0, y * 20); c.lineTo(1000, y * 20); c.stroke(); }
       gt.needsUpdate = true;
@@ -974,7 +974,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const glass = new THREE.Mesh(new THREE.PlaneGeometry(LX * K3 + 0.02, LY * K3 + 0.02), VD3K.material(S, { transparent: true, opacity: 0.1, roughness: 0.05, metalness: 0.2, depthWrite: false, side: THREE.DoubleSide }, ['#cfe3f0', '#9fc4dc']));
     glass.rotation.x = Math.PI / 2; glass.position.set(LX * K3 / 2, -0.016, Z0 + LY * K3 / 2); glass.renderOrder = 3; S.scene.add(glass);
     /* fixed walls: left, top and bottom bars, in their own steel so they can glow when held at a temperature */
-    const wallMat = [0, 1, 2, 3].map(() => VD3K.material(S, { roughness: 0.4, metalness: 0.35 }, ['#b4bcc6', '#8a939e']));
+    const wallMat = [0, 1, 2, 3].map(() => VD3K.material(S, { roughness: 0.4, metalness: 0.35 }, ['#c5beb5', '#9c958b']));
     S.scene.add(VD3K.box(0.012, 0.036, LY * K3 + 0.024, wallMat[0], -0.006, 0, Z0 - 0.012));
     S.scene.add(VD3K.box(LX * K3 + 0.012, 0.036, 0.012, wallMat[3], LX * K3 / 2, 0, Z0 + LY * K3));
     S.scene.add(VD3K.box(LX * K3 + 0.012, 0.036, 0.012, wallMat[2], LX * K3 / 2, 0, Z0 - 0.012));
@@ -993,9 +993,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const gasB = VD3K.particles(S, { n: NMAX, r: R * K3, seg: 10 }); S.scene.add(gasB);   /* gas B of the two gas setups */
     /* the divider of the two gas setups: a thin steel plate across the chamber at 25 nm, in two pieces around the hole */
     const divs = [0, 1].map(() => { const b = VD3K.box(0.004, 0.032, 1, steel, DIV_X * K3, 0, 0); b.geometry.translate(0, 0, 0.5); b.position.z = Z0; b.visible = false; S.scene.add(b); return b; });
-    const mark = VD3K.marker(S, { r: 0.008, color: tok.accent || '#2b60b5' }); S.scene.add(mark);
+    const mark = VD3K.marker(S, { r: 0.008, color: tok.accent || '#c4811c' }); S.scene.add(mark);
     const trailG = new THREE.BufferGeometry(); trailG.setAttribute('position', new THREE.BufferAttribute(new Float32Array(360 * 3), 3));
-    const trailL = new THREE.Line(trailG, new THREE.LineBasicMaterial({ color: tok.accent || '#2b60b5', transparent: true, opacity: 0.75 })); trailL.frustumCulled = false; S.scene.add(trailL);
+    const trailL = new THREE.Line(trailG, new THREE.LineBasicMaterial({ color: tok.accent || '#c4811c', transparent: true, opacity: 0.75 })); trailL.frustumCulled = false; S.scene.add(trailL);
     const FL = 72, flashes = [], fm = new THREE.CircleGeometry(0.008, 16);
     for (let k = 0; k < FL; k++) {
       const m = new THREE.Mesh(fm, new THREE.MeshBasicMaterial({ color: '#ff9a1f', transparent: true, opacity: 0, depthWrite: false }));
@@ -1013,7 +1013,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const therm = VD3K.meter(S, { label: 'TEMPERATURE', sub: 'from mean kinetic energy', w: 0.15, h: 0.09 });
     therm.position.set(-0.16, -0.04, 0.045); S.scene.add(therm);
     S.scene.add(VD3K.cable([-0.16, -0.03, 0.03], [-0.006, 0, Z0 + 0.04], { sag: 0.03, color: 0xb8382a }));
-    const wLab = VD3K.label('50.0 nm', { size: 0.024, color: '#7d8898' }), hLab = VD3K.label('30 nm', { size: 0.024, color: '#7d8898' });
+    const wLab = VD3K.label('50.0 nm', { size: 0.024, color: '#968c7f' }), hLab = VD3K.label('30 nm', { size: 0.024, color: '#968c7f' });
     hLab.position.set(-0.04, -0.02, Z0 + LY * K3 / 2); S.scene.add(wLab, hLab);
     const follow = VD3K.follow({ x: 0.25, y: 0, z: Z0 + 0.15 }, 0.1);
     let pScale = 0;
@@ -1055,7 +1055,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     S.size(r.width, r.height);
     const sp = Math.max(1, stats.vmax);
     void sp;
-    const cols = palette.map((c) => new THREE.Color(c)), mute = new THREE.Color(tok.muted || '#8090a0');
+    const cols = palette.map((c) => new THREE.Color(c)), mute = new THREE.Color(tok.muted || '#9e9282');
     if (two) {   /* each gas in its own color and pool, so each can have its own size */
       const cA = new THREE.Color(tok.neg), cB = new THREE.Color(tok.pos); let a = 0, b = 0;
       for (let i = 0; i < N; i++) {
@@ -1090,7 +1090,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const wx = GS.wallX * K3;
     /* the piston block, its rod (through the guide) and the handle all ride with the wall */
     g.face.position.x = wx; g.pRod.scale.y = ROD; g.pRod.position.set(wx + RAM, 0, Z0 + LY * K3 / 2); g.knob.position.set(wx + RAM + ROD, 0, Z0 + LY * K3 / 2);
-    g.knob.material.emissive = new THREE.Color(drag3 ? '#1d3f80' : '#000000');
+    g.knob.material.emissive = new THREE.Color(drag3 ? '#895a14' : '#000000');
     for (let w = 0; w < 4; w++) { const wg = wallGlow(w); g.wallMat[w].emissive.set(wg ? wg.color : '#000000'); g.wallMat[w].emissiveIntensity = wg ? 0.25 + 0.5 * wg.k : 0; }
     g.facePlate.visible = !two; g.facePlate.position.x = wx + 0.002;
     g.wLab.set(GS.wallX.toFixed(1) + ' nm'); g.wLab.position.set(wx / 2, -0.02, Z0 - 0.03);

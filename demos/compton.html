@@ -20,33 +20,33 @@
 <style>
 /* Layout: one canvas. Left, the collision seen in the scattering plane; right, the momentum triangle with the energy balance above a plot (detector spectrum, angular distribution or electron energies). Instrument rail on the right; stacks on phones. */
 :root {
-  --bg: #e9edf2;
-  --surface: #f8fafc;
-  --canvas: #fcfdfe;
-  --ink: #17202b;
-  --muted: #5a6575;
-  --line: #d3d9e2;
-  --grid: #e6ebf1;
-  --grid-strong: #cfd7e1;
+  --bg: #f1eeea;
+  --surface: #fcfaf8;
+  --canvas: #fefdfc;
+  --ink: #2a2219;
+  --muted: #73695c;
+  --line: #e1dbd4;
+  --grid: #f0ece7;
+  --grid-strong: #e0d9d0;
   --pos: #c23f2c;
   --neg: #2b60b5;
   --equi: #a7740b;
-  --accent: #2b60b5;
+  --accent: #c4811c;
   --elec: #17855f;
   --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
-    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-    --equi: #e2b350; --accent: #69a0ff; --elec: #4fd1a0; color-scheme: dark;
+    --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
+    --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+    --equi: #e2b350; --accent: #fbc26d; --elec: #4fd1a0; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
-  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-  --equi: #e2b350; --accent: #69a0ff; --elec: #4fd1a0; color-scheme: dark;
+  --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
+  --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+  --equi: #e2b350; --accent: #fbc26d; --elec: #4fd1a0; color-scheme: dark;
 }
 :root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
@@ -636,8 +636,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const sc = S3.scene, M = (o, c) => VD3K.material(S3, o, c), mesh = (geo, m, cast) => { const x = new THREE.Mesh(geo, m); x.castShadow = !!cast; x.receiveShadow = true; return x; };
     const alongX = (r, len, n) => { const g = new THREE.CylinderGeometry(r, r, len, n || 24); g.rotateZ(Math.PI / 2); return g; };
     sc.add(VD3K.bench(S3, { w: 3, d: 2, y: 0.2 }), VD3K.backdrop(S3, { r: 1.3, h: 0.9, y: -0.4 }));
-    const steel = M({ roughness: 0.35, metalness: 0.75 }, ['#b9c0c8', '#77808a']), dark = M({ roughness: 0.5, metalness: 0.3 }, ['#56606b', '#3a424c']);
-    const lead = M({ roughness: 0.7, metalness: 0.3 }, ['#6e7378', '#4c5156']), brass = M({ roughness: 0.3, metalness: 0.85 }, ['#c9a24a', '#a8873c']);
+    const steel = M({ roughness: 0.35, metalness: 0.75 }, ['#c7c1ba', '#898278']), dark = M({ roughness: 0.5, metalness: 0.3 }, ['#696258', '#4b443b']);
+    const lead = M({ roughness: 0.7, metalness: 0.3 }, ['#77746f', '#55524d']), brass = M({ roughness: 0.3, metalness: 0.85 }, ['#c9a24a', '#a8873c']);
     /* the X-ray tube: a glass bulb, the cathode neck and the molybdenum anode, in a lead housing open toward the graphite */
     const tube = new THREE.Group(); tube.position.set(XT, 0, ZB);
     tube.add(VD3K.box(0.11, 0.09, 0.1, lead, 0, 0, -0.05));
@@ -646,7 +646,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const anode = mesh(new THREE.CylinderGeometry(0.008, 0.008, 0.05, 20), M({ roughness: 0.25, metalness: 0.9 }, ['#b87333', '#a0632a']), true); anode.rotation.x = Math.PI / 2; anode.position.set(0, 0, 0.045); tube.add(anode);
     const glowM = new THREE.MeshBasicMaterial({ color: 0xffb070, transparent: true, opacity: 0.8 }), fil = mesh(new THREE.SphereGeometry(0.003, 10, 8), glowM); fil.position.set(0, 0, 0.11); tube.add(fil);
     sc.add(tube);
-    sc.add(VD3K.cable([XT, 0, ZB + 0.16], [XT - 0.12, 0.12, 0.004], { color: 0x23282f, rad: 0.004 }));
+    sc.add(VD3K.cable([XT, 0, ZB + 0.16], [XT - 0.12, 0.12, 0.004], { color: 0x2e2a24, rad: 0.004 }));
     /* lead slits on the beam line */
     for (const x of [-0.2, -0.13]) { const s = new THREE.Group(); s.add(VD3K.box(0.01, 0.04, 0.1, lead, 0, 0.0225, 0), VD3K.box(0.01, 0.04, 0.1, lead, 0, -0.0225, 0)); s.position.x = x; s.children.forEach((b) => { b.scale.y = 1; }); sc.add(s); }
     /* the beam to the scatterer */
@@ -654,18 +654,18 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* the graphite block on a turntable, the center of the arm */
     sc.add(mesh(new THREE.CylinderGeometry(0.06, 0.065, 0.012, 48).rotateX(Math.PI / 2).translate(0, 0, 0.006), steel, true));
     sc.add(VD3K.rod([0, 0, 0.012], [0, 0, ZB - 0.02], 0.006, steel));
-    const graphite = VD3K.box(0.02, 0.03, 0.04, M({ roughness: 0.9, metalness: 0.15 }, ['#3a3d42', '#2c2f34']), 0, 0, ZB - 0.02); sc.add(graphite);
+    const graphite = VD3K.box(0.02, 0.03, 0.04, M({ roughness: 0.9, metalness: 0.15 }, ['#413e3b', '#33302d']), 0, 0, ZB - 0.02); sc.add(graphite);
     /* the spectrometer arm: a rail from the center, the slit, the calcite crystal on its table and the ionization chamber */
     const arm = new THREE.Group();
     arm.add(VD3K.box(ARM + 0.03, 0.022, 0.008, dark, (ARM + 0.03) / 2, 0, 0.004));
     const slit = new THREE.Group(); slit.add(VD3K.box(0.008, 0.016, 0.06, lead, 0, 0.014, ZB - 0.03), VD3K.box(0.008, 0.016, 0.06, lead, 0, -0.014, ZB - 0.03)); slit.position.x = 0.1; arm.add(slit);
     arm.add(VD3K.rod([0.17, 0, 0.008], [0.17, 0, ZB - 0.012], 0.004, steel), VD3K.box(0.03, 0.03, 0.004, brass, 0.17, 0, ZB - 0.016));
-    const crystal = mesh(new THREE.BoxGeometry(0.004, 0.022, 0.026), new THREE.MeshStandardMaterial({ color: 0xe9f2f7, roughness: 0.05, metalness: 0, transparent: true, opacity: 0.75 }), true); crystal.position.set(0.17, 0, ZB); crystal.rotation.z = 0.35; arm.add(crystal);
+    const crystal = mesh(new THREE.BoxGeometry(0.004, 0.022, 0.026), new THREE.MeshStandardMaterial({ color: 0xf5f1eb, roughness: 0.05, metalness: 0, transparent: true, opacity: 0.75 }), true); crystal.position.set(0.17, 0, ZB); crystal.rotation.z = 0.35; arm.add(crystal);
     const chamber = mesh(alongX(0.018, 0.08, 32), brass, true); chamber.position.set(0.17 + 0.07 * Math.cos(0.7), 0.07 * Math.sin(0.7), ZB); chamber.rotation.z = 0.7; arm.add(chamber);
     arm.add(VD3K.rod([0.17 + 0.07 * Math.cos(0.7), 0.07 * Math.sin(0.7), 0.008], [0.17 + 0.07 * Math.cos(0.7), 0.07 * Math.sin(0.7), ZB - 0.018], 0.004, steel));
     const outM = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.35, depthWrite: false }), outB = mesh(alongX(0.0022, 0.16, 12), outM); outB.position.set(0.09, 0, ZB); outB.renderOrder = 3; arm.add(outB);
     sc.add(arm);
-    sc.add(VD3K.cable([0.24, 0.05, ZB], [0.32, 0.2, 0.004], { color: 0x23282f }));
+    sc.add(VD3K.cable([0.24, 0.05, ZB], [0.32, 0.2, 0.004], { color: 0x2e2a24 }));
     /* a θ scale on the bench round the turntable */
     const scaleCv = document.createElement('canvas'); scaleCv.width = scaleCv.height = 1024; const scaleTex = new THREE.CanvasTexture(scaleCv);
     const dial = new THREE.Mesh(new THREE.RingGeometry(0.075, 0.11, 96), new THREE.MeshStandardMaterial({ map: scaleTex, transparent: true, roughness: 0.6 })); dial.position.z = 0.0008; sc.add(dial);
@@ -685,7 +685,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const k = String(T.dark); if (g3.dialKey === k) return; g3.dialKey = k;
     const c = g3.scaleCv.getContext('2d'), N = 1024, cx = N / 2, r0 = N / 2 * 0.075 / 0.11, r1 = N / 2;
     c.clearRect(0, 0, N, N); c.fillStyle = T.dark ? 'rgba(60,68,78,0.9)' : 'rgba(236,239,243,0.95)'; c.beginPath(); c.arc(cx, cx, r1, 0, 7); c.arc(cx, cx, r0, 0, 7, true); c.fill();
-    c.strokeStyle = c.fillStyle = T.dark ? '#e3e8ef' : '#1f262f'; c.font = '600 30px "JetBrains Mono", monospace'; c.textAlign = 'center'; c.textBaseline = 'middle';
+    c.strokeStyle = c.fillStyle = T.dark ? '#eeeae4' : '#2e2820'; c.font = '600 30px "JetBrains Mono", monospace'; c.textAlign = 'center'; c.textBaseline = 'middle';
     for (let d = -180; d < 180; d += 5) { const a = d * DEG, l = d % 30 ? 22 : 44; c.lineWidth = d % 30 ? 2 : 4; c.beginPath(); c.moveTo(cx + Math.cos(a) * r1, cx - Math.sin(a) * r1); c.lineTo(cx + Math.cos(a) * (r1 - l), cx - Math.sin(a) * (r1 - l)); c.stroke();
       if (d % 30 === 0) { const rr = r1 - 76; c.fillText(String(Math.abs(d)), cx + Math.cos(a) * rr, cx - Math.sin(a) * rr); } }
     g3.scaleTex.needsUpdate = true;

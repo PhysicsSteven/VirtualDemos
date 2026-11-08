@@ -457,31 +457,31 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const cardW = () => (W > 820 && $('setupCard').style.display !== 'none' ? 300 : 0);
   function drawScanFlat() {
     const G = window.VDGear, d = dark(), p = proj(), fw = W - cardW(), floorY = H - 26 * p;
-    G.backdrop(ctx, W, H, { horizon: (floorY - 6 * p) / H }); G.bench(ctx, 0, floorY, W, 8 * p, H - floorY, { top: d ? '#2b3138' : '#c9ced5', front: d ? '#1d2228' : '#a7aeb8' });
+    G.backdrop(ctx, W, H, { horizon: (floorY - 6 * p) / H }); G.bench(ctx, 0, floorY, W, 8 * p, H - floorY, { top: d ? '#37322c' : '#d4d0ca', front: d ? '#27231e' : '#b7b0a8' });
     /* the gantry seen from the front, the phantom in its bore, and the image beside it */
     const big = fw > 640, cx = big ? fw * 0.28 : fw / 2, cy = H * 0.47, R = Math.min(big ? fw * 0.24 : fw * 0.42, H * 0.4), bore = R * 0.52;
     ctx.save(); ctx.beginPath(); ctx.rect(0, 0, W, floorY); ctx.clip();
-    G.box(ctx, cx - R * 0.9, cy + R * 0.55, R * 1.8, floorY - cy - R * 0.55, { color: d ? '#29313c' : '#c3c9d1', r: 6 * p, shadow: false });
-    ctx.fillStyle = d ? '#323b48' : '#e3e7ec'; ctx.beginPath(); ctx.arc(cx, cy, R, 0, 2 * Math.PI); ctx.moveTo(cx + bore, cy); ctx.arc(cx, cy, bore, 0, 2 * Math.PI, true); ctx.fill('evenodd');
-    ctx.strokeStyle = d ? '#46505e' : '#b5bdc7'; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.arc(cx, cy, R, 0, 7); ctx.stroke(); ctx.beginPath(); ctx.arc(cx, cy, bore, 0, 7); ctx.stroke();
+    G.box(ctx, cx - R * 0.9, cy + R * 0.55, R * 1.8, floorY - cy - R * 0.55, { color: d ? '#3b342a' : '#d0cbc4', r: 6 * p, shadow: false });
+    ctx.fillStyle = d ? '#463e34' : '#ebe8e4'; ctx.beginPath(); ctx.arc(cx, cy, R, 0, 2 * Math.PI); ctx.moveTo(cx + bore, cy); ctx.arc(cx, cy, bore, 0, 2 * Math.PI, true); ctx.fill('evenodd');
+    ctx.strokeStyle = d ? '#5c5348' : '#c6bfb6'; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.arc(cx, cy, R, 0, 7); ctx.stroke(); ctx.beginPath(); ctx.arc(cx, cy, bore, 0, 7); ctx.stroke();
     /* the tube and the detector arc going round inside the ring while it scans */
     const t = performance.now() / 1000, ang = busy() && S.busyKind === 'scan' ? t * 4.2 : -Math.PI / 2, rt = (R + bore) / 2;
     const tx = cx + rt * Math.cos(ang), ty = cy + rt * Math.sin(ang);
     if (busy() && S.busyKind === 'scan') { ctx.save(); if (d) ctx.globalCompositeOperation = 'lighter'; ctx.fillStyle = 'rgba(255,190,90,0.18)'; ctx.beginPath(); ctx.moveTo(tx, ty);
       ctx.arc(cx, cy, rt, ang + Math.PI - 0.55, ang + Math.PI + 0.55); ctx.closePath(); ctx.fill(); ctx.restore(); }
-    ctx.fillStyle = d ? '#6b7786' : '#566273'; ctx.beginPath(); ctx.arc(tx, ty, 9 * p, 0, 7); ctx.fill();
-    ctx.strokeStyle = d ? '#8b96a5' : '#7b8796'; ctx.lineWidth = 7 * p; ctx.beginPath(); ctx.arc(cx, cy, rt, ang + Math.PI - 0.5, ang + Math.PI + 0.5); ctx.stroke();
+    ctx.fillStyle = d ? '#847a6d' : '#716658'; ctx.beginPath(); ctx.arc(tx, ty, 9 * p, 0, 7); ctx.fill();
+    ctx.strokeStyle = d ? '#a3998d' : '#948a7d'; ctx.lineWidth = 7 * p; ctx.beginPath(); ctx.arc(cx, cy, rt, ang + Math.PI - 0.5, ang + Math.PI + 0.5); ctx.stroke();
     ctx.restore();
     /* the phantom: water with its inserts, in the bore */
     const k = bore * 0.78 / PH_R;
-    ctx.fillStyle = d ? '#2d5b7e' : '#bcdcf4'; ctx.beginPath(); ctx.arc(cx, cy, PH_R * k, 0, 7); ctx.fill(); ctx.strokeStyle = d ? '#7fb2d8' : '#5b8db5'; ctx.lineWidth = 1.5 * p; ctx.stroke();
+    ctx.fillStyle = d ? '#2d5b7e' : '#bcdcf4'; ctx.beginPath(); ctx.arc(cx, cy, PH_R * k, 0, 7); ctx.fill(); ctx.strokeStyle = d ? '#7fb2d8' : '#ae8d62'; ctx.lineWidth = 1.5 * p; ctx.stroke();
     INSERTS.forEach((key, i) => { if (key === 'water') return; const [x, y] = insAt(i); const g = gray(huTrue(key, S.kv), 'wide'); ctx.fillStyle = `rgb(${g},${g},${g})`; ctx.beginPath(); ctx.arc(cx + x * k, cy + y * k, INS_R * k, 0, 7); ctx.fill();
       if (key === S.ins) { ctx.strokeStyle = T.beam; ctx.lineWidth = 2.2 * p; ctx.stroke(); } });
     if (S.ins === 'water') { ctx.strokeStyle = T.beam; ctx.lineWidth = 2.2 * p; ctx.beginPath(); ctx.arc(cx, cy, INS_R * k, 0, 7); ctx.stroke(); }
     G.label(ctx, 'CT gantry with the calibration phantom', cx, Math.max(14 * p, cy - R - 10 * p), { a: 'center', s: 10 * p });
     /* the image on the console */
     if (big) { const side = Math.min(fw * 0.4, H * 0.72), x0 = fw * 0.56, y0 = (H - side) / 2 - 6 * p;
-      G.box(ctx, x0 - 8 * p, y0 - 8 * p, side + 16 * p, side + 16 * p, { color: d ? '#1b2129' : '#2a3038', r: 6 * p });
+      G.box(ctx, x0 - 8 * p, y0 - 8 * p, side + 16 * p, side + 16 * p, { color: d ? '#28231c' : '#37322b', r: 6 * p });
       ctx.imageSmoothingEnabled = true; ctx.drawImage(ctImage(), x0, y0, side, side); drawRoiMarks(ctx, x0, y0, side);
       G.label(ctx, `the image, ${S.kv} kV, window ${S.win === 'soft' ? '−160 to 240' : '−1000 to 1400'} HU`, x0 + side / 2, y0 + side + 20 * p, { a: 'center', s: 10 * p }); }
     else { const side = Math.min(fw * 0.32, H * 0.36); ctx.drawImage(ctImage(), fw - side - 10 * p, 10 * p, side, side); drawRoiMarks(ctx, fw - side - 10 * p, 10 * p, side); }
@@ -498,14 +498,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     G.backdrop(ctx, W, H, { horizon: (floorY - 6 * p) / H }); G.bench(ctx, 0, floorY, W, 8 * p, H - floorY);
     const x0 = 16 * p, x1 = fw - 16 * p, by = H * 0.5, tank0 = x0 + (x1 - x0) * 0.36, cm = (x1 - tank0 - 10 * p) / 22, th = Math.min(H * 0.42, 150 * p);
     /* the nozzle */
-    G.box(ctx, x0, by - 26 * p, 70 * p, 52 * p, { color: d ? '#4a5563' : '#566273', r: 6 * p }); G.plate(ctx, 'nozzle', x0 + 35 * p, by - 34 * p, { s: 7 * p });
+    G.box(ctx, x0, by - 26 * p, 70 * p, 52 * p, { color: d ? '#61584c' : '#716658', r: 6 * p }); G.plate(ctx, 'nozzle', x0 + 35 * p, by - 34 * p, { s: 7 * p });
     /* the slab, drawn to the tank's scale */
     const sw = Math.max(6 * p, q.t * cm), sx = tank0 - 20 * p - sw;
-    ctx.fillStyle = tcol(q.k); ctx.fillRect(sx, by - th * 0.42, sw, th * 0.84); ctx.strokeStyle = d ? '#0b0f14' : '#4b5563'; ctx.lineWidth = 1; ctx.strokeRect(sx + 0.5, by - th * 0.42 + 0.5, sw - 1, th * 0.84 - 1);
+    ctx.fillStyle = tcol(q.k); ctx.fillRect(sx, by - th * 0.42, sw, th * 0.84); ctx.strokeStyle = d ? '#13100c' : '#61584d'; ctx.lineWidth = 1; ctx.strokeRect(sx + 0.5, by - th * 0.42 + 0.5, sw - 1, th * 0.84 - 1);
     tag(ctx, S.tis === 'mystery' ? `mystery tissue, ${f(q.t, 1)} cm` : `${mat(q.k).name.replace(/ \(.*\)/, '')}, ${f(q.t, 1)} cm`, sx + sw / 2, by - th * 0.42 - 14 * p, { a: 'center', maxX: fw });
     /* the tank */
     const ty0 = by - th / 2; ctx.fillStyle = d ? 'rgba(80,140,200,0.28)' : 'rgba(150,200,240,0.45)'; ctx.fillRect(tank0, ty0, x1 - tank0, th);
-    ctx.strokeStyle = d ? '#7fb2d8' : '#5b8db5'; ctx.lineWidth = 2 * p; ctx.strokeRect(tank0, ty0, x1 - tank0, th);
+    ctx.strokeStyle = d ? '#7fb2d8' : '#ae8d62'; ctx.lineWidth = 2 * p; ctx.strokeRect(tank0, ty0, x1 - tank0, th);
     ctx.fillStyle = T.muted; ctx.font = `${9 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
     for (let z = 0; z <= 22; z += 2) { const x = tank0 + z * cm; ctx.fillRect(x, ty0 + th - 6 * p, 1, 6 * p); if (z % 4 === 0) ctx.fillText(String(z), x, ty0 + th + 3 * p); }
     G.label(ctx, 'water tank, depth in cm', tank0 + 4 * p, ty0 - 10 * p, { s: 10 * p });
@@ -574,57 +574,57 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const st = VD3K.stage($('scene'), { before: can, shadow: 2.2, fov: 30, far: 40, fogAt: [2.2, 4.5] }); if (!st) return false;
     st.el.hidden = true; st.sun.position.set(1.2, -2.4, 5); st.sun.shadow.bias = -0.0006;
     const K = VD3K, M = (o, c) => K.material(st, o, c), sc = st.scene, mesh = (geo, m, cast) => { const x = new THREE.Mesh(geo, m); x.castShadow = !!cast; x.receiveShadow = true; return x; };
-    sc.add(mesh(new THREE.PlaneGeometry(14, 14), M({ roughness: 0.9 }, ['#c9ced5', '#2b323b'])), K.backdrop(st, { r: 4.4, h: 3.6, y: -0.9 }));
+    sc.add(mesh(new THREE.PlaneGeometry(14, 14), M({ roughness: 0.9 }, ['#d4d0ca', '#3a342c'])), K.backdrop(st, { r: 4.4, h: 3.6, y: -0.9 }));
     const g = { scan: new THREE.Group(), curve: new THREE.Group(), range: new THREE.Group() }; for (const k in g) sc.add(g[k]);
     /* the CT room */
     const GC = 1.05, RO = 0.95, RI = 0.36, DEP = 0.7;
-    { const G = g.scan, shell = M({ roughness: 0.6, metalness: 0.1 }, ['#e3e7ec', '#3b4553']), cover = new THREE.MeshStandardMaterial({ color: 0xdfe5ec, transparent: true, opacity: 0.28, roughness: 0.3, depthWrite: false, side: THREE.DoubleSide });
-      st.onTheme((dk) => cover.color.set(dk ? '#5a6878' : '#dfe5ec'));
+    { const G = g.scan, shell = M({ roughness: 0.6, metalness: 0.1 }, ['#ebe8e4', '#51483d']), cover = new THREE.MeshStandardMaterial({ color: 0xebe6e0, transparent: true, opacity: 0.28, roughness: 0.3, depthWrite: false, side: THREE.DoubleSide });
+      st.onTheme((dk) => cover.color.set(dk ? '#766b5c' : '#ebe6e0'));
       const ring = new THREE.Group(); ring.position.set(0, 0, GC); G.add(ring);
       const outer = mesh(new THREE.CylinderGeometry(RO, RO, DEP, 72, 1, true), shell, true), inner = mesh(new THREE.CylinderGeometry(RI, RI, DEP, 72, 1, true), shell);
       ring.add(outer, inner); for (const y of [-DEP / 2, DEP / 2]) { const c = new THREE.Mesh(new THREE.RingGeometry(RI, RO, 72), cover); c.rotation.x = Math.PI / 2; c.position.y = y; c.renderOrder = 3; ring.add(c); }
       G.add(K.box(1.5, DEP, GC - RO + 0.25, shell, 0, 0, 0));
       /* the rotating tube and detector arc */
       const rot = new THREE.Group(); rot.position.set(0, 0, GC); G.add(rot);
-      const tubeM = M({ roughness: 0.4, metalness: 0.5 }, ['#6b7786', '#8b96a5']); const tube = K.box(0.16, 0.22, 0.12, tubeM, 0, 0, 0); tube.position.set(0, 0, 0.62); rot.add(tube);
-      const arc = mesh(new THREE.CylinderGeometry(0.8, 0.8, 0.12, 40, 1, true, Math.PI - 0.5, 1.0), M({ roughness: 0.5, metalness: 0.3, side: THREE.DoubleSide }, ['#4b5563', '#9aa3ae'])); arc.rotation.x = Math.PI / 2; rot.add(arc);
+      const tubeM = M({ roughness: 0.4, metalness: 0.5 }, ['#847a6d', '#a3998d']); const tube = K.box(0.16, 0.22, 0.12, tubeM, 0, 0, 0); tube.position.set(0, 0, 0.62); rot.add(tube);
+      const arc = mesh(new THREE.CylinderGeometry(0.8, 0.8, 0.12, 40, 1, true, Math.PI - 0.5, 1.0), M({ roughness: 0.5, metalness: 0.3, side: THREE.DoubleSide }, ['#61584d', '#aca59b'])); arc.rotation.x = Math.PI / 2; rot.add(arc);
       const fanM = new THREE.MeshBasicMaterial({ color: 0xffbe5a, transparent: true, opacity: 0.22, depthWrite: false, side: THREE.DoubleSide });
       const fg = new THREE.BufferGeometry(), pts = [0, 0, 0.62]; for (let i = 0; i <= 16; i++) { const a = -Math.PI / 2 - 0.5 + i / 16; pts.push(0.8 * Math.cos(a), 0, 0.8 * Math.sin(a)); }
       const idx = []; for (let i = 1; i <= 16; i++) idx.push(0, i, i + 1); fg.setAttribute('position', new THREE.Float32BufferAttribute(pts, 3)); fg.setIndex(idx);
       const fan = new THREE.Mesh(fg, fanM); fan.renderOrder = 4; rot.add(fan);
       /* the couch and the phantom */
-      const couchM = M({ roughness: 0.45, metalness: 0.1 }, ['#e5e7eb', '#6b7684']), colM = M({ roughness: 0.5, metalness: 0.25 }, ['#8d97a3', '#3a4552']);
+      const couchM = M({ roughness: 0.45, metalness: 0.1 }, ['#ebe8e5', '#82796d']), colM = M({ roughness: 0.5, metalness: 0.25 }, ['#a1998f', '#50473c']);
       G.add(K.box(0.4, 0.9, 0.03, colM, 0, -1.35, 0), K.box(0.26, 0.4, GC - 0.13 - 0.03 - 0.12, colM, 0, -1.35, 0.03), K.box(0.42, 2.0, 0.04, couchM, 0, -0.75, GC - 0.13 - 0.12));
-      const phM = new THREE.MeshStandardMaterial({ color: 0x9ccbee, transparent: true, opacity: 0.38, roughness: 0.2, depthWrite: false }); st.onTheme((dk) => phM.color.set(dk ? '#4f86b3' : '#9ccbee'));
+      const phM = new THREE.MeshStandardMaterial({ color: 0x9ccbee, transparent: true, opacity: 0.38, roughness: 0.2, depthWrite: false }); st.onTheme((dk) => phM.color.set(dk ? '#a98659' : '#9ccbee'));
       const ph = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 0.16, 64), phM); ph.position.set(0, 0, GC); ph.renderOrder = 2; G.add(ph);
       const insG = new THREE.Group(); insG.position.set(0, 0, GC); G.add(insG); const insM = [];
       INSERTS.forEach((k, i) => { if (k === 'water') return; const [x, y] = insAt(i), m = new THREE.MeshStandardMaterial({ roughness: 0.4 }), c = new THREE.Mesh(new THREE.CylinderGeometry(0.014, 0.014, 0.162, 24), m); c.position.set(x / 100, 0, -y / 100); insG.add(c); insM.push([k, m]); });
       /* the console with the image */
       const ctTex = new THREE.CanvasTexture(document.createElement('canvas')), desk = M({ roughness: 0.7 }, ['#cdbb9d', '#3a3229']);
       G.add(K.box(0.9, 0.5, 0.04, desk, -1.6, -0.6, 0.74)); for (const [x, y] of [[-0.4, -0.2], [0.4, -0.2], [-0.4, 0.2], [0.4, 0.2]]) G.add(K.rod([-1.6 + x, -0.6 + y, 0], [-1.6 + x, -0.6 + y, 0.74], 0.015, colM));
-      const mon = K.box(0.5, 0.03, 0.42, M({ roughness: 0.4 }, ['#2a3038', '#1b2129']), -1.6, -0.55, 0.85); G.add(mon, K.rod([-1.6, -0.55, 0.78], [-1.6, -0.55, 0.85], 0.02, colM));
+      const mon = K.box(0.5, 0.03, 0.42, M({ roughness: 0.4 }, ['#37322b', '#28231c']), -1.6, -0.55, 0.85); G.add(mon, K.rod([-1.6, -0.55, 0.78], [-1.6, -0.55, 0.85], 0.02, colM));
       const scr = new THREE.Mesh(new THREE.PlaneGeometry(0.4, 0.4), new THREE.MeshBasicMaterial({ map: ctTex })); scr.rotation.x = Math.PI / 2; scr.position.set(-1.6, -0.567, 1.06); G.add(scr);
       Object.assign(g, { rot, fan, insM, ctTex, scrKey: '', GC }); }
     /* the beam line */
     const BZ = 1.0;
-    { const G = g.curve, desk = M({ roughness: 0.6, metalness: 0.15 }, ['#9aa3ae', '#29313c']);
+    { const G = g.curve, desk = M({ roughness: 0.6, metalness: 0.15 }, ['#aca59b', '#3b342a']);
       G.add(K.box(1.5, 0.6, 0.06, desk, 0.05, 0, BZ - 0.18));
       for (const [x, y] of [[-0.65, -0.25], [0.75, -0.25], [-0.65, 0.25], [0.75, 0.25]]) G.add(K.rod([x, y, 0], [x, y, BZ - 0.18], 0.02, desk));
-      const noz = K.box(0.16, 0.16, 0.16, M({ roughness: 0.45, metalness: 0.35 }, ['#566273', '#4a5563']), -0.66, 0, BZ - 0.08); G.add(noz);
+      const noz = K.box(0.16, 0.16, 0.16, M({ roughness: 0.45, metalness: 0.35 }, ['#716658', '#61584c']), -0.66, 0, BZ - 0.08); G.add(noz);
       const slabM = new THREE.MeshStandardMaterial({ roughness: 0.6 }), slab = mesh(new THREE.BoxGeometry(1, 0.16, 0.16), slabM, true); slab.position.z = BZ; G.add(slab);
-      const tankM = new THREE.MeshStandardMaterial({ color: 0x9ccbee, transparent: true, opacity: 0.3, roughness: 0.1, depthWrite: false }); st.onTheme((dk) => tankM.color.set(dk ? '#4f86b3' : '#9ccbee'));
+      const tankM = new THREE.MeshStandardMaterial({ color: 0x9ccbee, transparent: true, opacity: 0.3, roughness: 0.1, depthWrite: false }); st.onTheme((dk) => tankM.color.set(dk ? '#a98659' : '#9ccbee'));
       const T0 = -0.25, TL = 0.24; const tank = new THREE.Mesh(new THREE.BoxGeometry(TL, 0.22, 0.24), tankM); tank.position.set(T0 + TL / 2, 0, BZ - 0.03); tank.renderOrder = 2; G.add(tank);
-      const frame = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(TL, 0.22, 0.24)), new THREE.LineBasicMaterial({ color: 0x5b8db5 })); frame.position.copy(tank.position); G.add(frame);
+      const frame = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(TL, 0.22, 0.24)), new THREE.LineBasicMaterial({ color: 0xae8d62 })); frame.position.copy(tank.position); G.add(frame);
       const rule = K.ruler(st, { len: 0.2, to: 20, unit: 'cm' }); rule.position.set(T0, -0.115, BZ - 0.145); G.add(rule);
       const beamM = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.85, depthWrite: false }), beam = new THREE.Mesh(new THREE.CylinderGeometry(0.004, 0.004, 1, 10), beamM); beam.rotation.z = Math.PI / 2; beam.renderOrder = 5; G.add(beam);
       const gcv = document.createElement('canvas'); gcv.width = gcv.height = 64; { const c = gcv.getContext('2d'), gr = c.createRadialGradient(32, 32, 0, 32, 32, 32); gr.addColorStop(0, 'rgba(255,255,255,1)'); gr.addColorStop(0.3, 'rgba(255,255,255,0.5)'); gr.addColorStop(1, 'rgba(255,255,255,0)'); c.fillStyle = gr; c.fillRect(0, 0, 64, 64); }
       const glowTex = new THREE.CanvasTexture(gcv), peak = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, color: 0xffd08a, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending })); peak.scale.set(0.05, 0.05, 1); peak.renderOrder = 6; G.add(peak);
-      const ghost = new THREE.Mesh(new THREE.TorusGeometry(0.012, 0.0015, 8, 32), new THREE.MeshBasicMaterial({ color: 0x8892a0 })); ghost.rotation.y = Math.PI / 2; G.add(ghost);
+      const ghost = new THREE.Mesh(new THREE.TorusGeometry(0.012, 0.0015, 8, 32), new THREE.MeshBasicMaterial({ color: 0x9e958a })); ghost.rotation.y = Math.PI / 2; G.add(ghost);
       Object.assign(g, { slab, slabM, beam, beamM, peak, ghost, T0, BZ, glowTex }); }
     /* the patient */
     { const G = g.range, skinM = new THREE.MeshStandardMaterial({ color: 0xf0d5c4, transparent: true, opacity: 0.22, roughness: 0.6, depthWrite: false, side: THREE.DoubleSide });
       st.onTheme((dk) => skinM.color.set(dk ? '#8a6a5c' : '#f0d5c4'));
-      const couchM = M({ roughness: 0.45, metalness: 0.1 }, ['#e5e7eb', '#6b7684']), colM = M({ roughness: 0.5, metalness: 0.25 }, ['#8d97a3', '#3a4552']);
+      const couchM = M({ roughness: 0.45, metalness: 0.1 }, ['#ebe8e5', '#82796d']), colM = M({ roughness: 0.5, metalness: 0.25 }, ['#a1998f', '#50473c']);
       const body = new THREE.Mesh(new THREE.SphereGeometry(1, 48, 32), skinM); body.renderOrder = 3; G.add(body);
       const table = K.box(0.5, 1.9, 0.04, couchM, 0, -0.2, 0.86); G.add(table, K.box(0.3, 0.4, 0.83, colM, 0, -0.6, 0.03));
       const lay = new THREE.Group(); G.add(lay);
@@ -632,7 +632,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const doseM = new THREE.MeshBasicMaterial({ color: 0xff8a3d, transparent: true, opacity: 0.32, depthWrite: false }), dose = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), doseM); dose.renderOrder = 5; G.add(dose);
       const edge = (col) => { const m = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ color: col, transparent: true, opacity: 0.55, depthWrite: false, side: THREE.DoubleSide })); m.rotation.y = Math.PI / 2; m.renderOrder = 6; G.add(m); return m; };
       const ePlan = edge(0x2563eb), eTrue = edge(0xea580c);
-      const noz = K.box(0.14, 0.14, 0.14, M({ roughness: 0.45, metalness: 0.35 }, ['#566273', '#4a5563']), 0, 0, 0); G.add(noz);
+      const noz = K.box(0.14, 0.14, 0.14, M({ roughness: 0.45, metalness: 0.35 }, ['#716658', '#61584c']), 0, 0, 0); G.add(noz);
       const beamM = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.85, depthWrite: false }), beam = new THREE.Mesh(new THREE.CylinderGeometry(0.004, 0.004, 1, 10), beamM); beam.rotation.z = Math.PI / 2; beam.renderOrder = 7; G.add(beam);
       Object.assign(g, { body, lay, tgt, tgtM, dose, doseM, ePlan, eTrue, rNoz: noz, rBeam: beam, rBeamM: beamM, layKey: '' }); }
     g3 = { st, g };

@@ -15,9 +15,9 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
 /* only what this demo needs beyond demos/lib/vd.css: its colors, the picture and the strip chart */
-:root { --lead: #6f7a86; --lead-hi: #c3cad3; --laser: #e0322a; --force: #2b60b5; --equil: #2f9a52; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --lead: #7d8794; --lead-hi: #c9d0d8; --laser: #ff5a4f; --force: #69a0ff; --equil: #4cc07f; } }
-:root[data-theme="dark"] { --lead: #7d8794; --lead-hi: #c9d0d8; --laser: #ff5a4f; --force: #69a0ff; --equil: #4cc07f; }
+:root { --lead: #847c71; --lead-hi: #d2ccc4; --laser: #e0322a; --force: #2b60b5; --equil: #2f9a52; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --lead: #928a7f; --lead-hi: #d7d1ca; --laser: #ff5a4f; --force: #69a0ff; --equil: #4cc07f; } }
+:root[data-theme="dark"] { --lead: #928a7f; --lead-hi: #d7d1ca; --laser: #ff5a4f; --force: #69a0ff; --equil: #4cc07f; }
 .stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
 .scene { position: relative; flex: 1 1 auto; min-height: 400px; }
 .scene canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; }
@@ -215,21 +215,21 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.fillStyle = VG.dark() ? 'rgba(255,255,255,0.03)' : 'rgba(40,30,20,0.04)'; ctx.beginPath(); ctx.arc(cx, cy, 0.098 * sc, 0, 7); ctx.fill();
     /* the swivel frame and the large spheres */
     const big = largeSpheres(a);
-    ctx.strokeStyle = VG.dark() ? '#56606c' : '#9aa3ad'; ctx.lineWidth = 5 * p; ctx.beginPath(); ctx.moveTo(X(big[0][0]), Y(big[0][1])); ctx.lineTo(X(big[1][0]), Y(big[1][1])); ctx.stroke();
+    ctx.strokeStyle = VG.dark() ? '#6a6258' : '#aca59b'; ctx.lineWidth = 5 * p; ctx.beginPath(); ctx.moveTo(X(big[0][0]), Y(big[0][1])); ctx.lineTo(X(big[1][0]), Y(big[1][1])); ctx.stroke();
     VG.screw(ctx, cx, cy, 5 * p);
-    if (DR.on) { ctx.save(); ctx.globalAlpha = 0.35; for (const [bx, by] of largeSpheres(DR.a)) VG.ball(ctx, X(bx), Y(by), RL * sc, '#6f7a86', { glint: 0.3 }); ctx.restore(); }
-    for (const [bx, by] of big) { VG.shadow(ctx, X(bx) + 4 * p, Y(by) + RL * sc * 0.9, RL * sc, RL * sc * 0.3, 0.6); VG.ball(ctx, X(bx), Y(by), RL * sc, '#6f7a86', { glint: 0.5 }); }
+    if (DR.on) { ctx.save(); ctx.globalAlpha = 0.35; for (const [bx, by] of largeSpheres(DR.a)) VG.ball(ctx, X(bx), Y(by), RL * sc, '#847c71', { glint: 0.3 }); ctx.restore(); }
+    for (const [bx, by] of big) { VG.shadow(ctx, X(bx) + 4 * p, Y(by) + RL * sc * 0.9, RL * sc, RL * sc * 0.3, 0.6); VG.ball(ctx, X(bx), Y(by), RL * sc, '#847c71', { glint: 0.5 }); }
     /* the case: a box with glass walls around the beam */
     const cw = CAV.l + rs + 0.006, ch = rs + 0.005, ang = -th * EXAG;
     ctx.fillStyle = VG.dark() ? 'rgba(140,190,230,0.10)' : 'rgba(150,200,230,0.22)'; ctx.strokeStyle = VG.dark() ? 'rgba(170,210,240,0.55)' : 'rgba(80,130,170,0.6)'; ctx.lineWidth = 1.5 * p;
     ctx.beginPath(); ctx.roundRect(X(-cw), Y(ch), 2 * cw * sc, 2 * ch * sc, 4 * p); ctx.fill(); ctx.stroke();
     /* the beam, the mirror and the small spheres, turned by EXAG × θ */
     ctx.save(); ctx.translate(cx, cy); ctx.rotate(ang);
-    ctx.fillStyle = VG.dark() ? '#9aa4b0' : '#7c8794'; ctx.fillRect(-CAV.l * sc, -1.5 * p, 2 * CAV.l * sc, 3 * p);
-    ctx.fillStyle = '#d8e2ec'; ctx.fillRect(-1.5 * p, -7 * p, 3 * p, 14 * p);
-    for (const s of [1, -1]) VG.ball(ctx, s * CAV.l * sc, 0, rs * sc, '#6f7a86', { glint: 0.6 });
+    ctx.fillStyle = VG.dark() ? '#aea69c' : '#92897e'; ctx.fillRect(-CAV.l * sc, -1.5 * p, 2 * CAV.l * sc, 3 * p);
+    ctx.fillStyle = '#ebe3d9'; ctx.fillRect(-1.5 * p, -7 * p, 3 * p, 14 * p);
+    for (const s of [1, -1]) VG.ball(ctx, s * CAV.l * sc, 0, rs * sc, '#847c71', { glint: 0.6 });
     ctx.restore();
-    ctx.fillStyle = VG.dark() ? '#e9edf2' : '#2e353f'; ctx.beginPath(); ctx.arc(cx, cy, 2.2 * p, 0, 7); ctx.fill();
+    ctx.fillStyle = VG.dark() ? '#f1eeea' : '#3e372f'; ctx.beginPath(); ctx.arc(cx, cy, 2.2 * p, 0, 7); ctx.fill();
     /* forces on the small spheres from the near large spheres */
     let Fshow = 0;
     if (!S.blind) {
@@ -249,7 +249,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const lx = ex - 26 * p, dl = Math.hypot(mx - lx, my - ly), dx = (mx - lx) / dl, dy = (my - ly) / dl, nx = Math.cos(ang), ny = Math.sin(ang), dn = dx * nx + dy * ny;
     const rx = dx - 2 * dn * nx, ry = dy - 2 * dn * ny, oy = my + ry * (ex - mx) / rx;
     ctx.beginPath(); ctx.moveTo(lx, ly); ctx.lineTo(mx, my); ctx.lineTo(ex, oy); ctx.stroke(); ctx.globalAlpha = 1;
-    VG.box(ctx, ex - 30 * p, ly - 6 * p, 26 * p, 12 * p, { color: '#2e353f', r: 3, shadow: false }); txt(ctx, 'laser', ex - 17 * p, ly + 15 * p, { a: 'center', s: 9, c: T.muted });
+    VG.box(ctx, ex - 30 * p, ly - 6 * p, 26 * p, 12 * p, { color: '#3e372f', r: 3, shadow: false }); txt(ctx, 'laser', ex - 17 * p, ly + 15 * p, { a: 'center', s: 9, c: T.muted });
     const capY = caption('top view, to scale · beam turn drawn ×20', 'drag a large sphere to swing it', wide ? W * 0.56 : W - 64 * p);
     if (DR.on) dragHint();
     if (Fshow) txt(ctx, `pull on each small sphere: ${f(Fshow * 1e9, 2)} nN`, 12 * p, capY - 16 * p, { s: 9.5, m: 1, c: T.force, b: 1 });
@@ -359,8 +359,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   function theme3() {
     const g = g3, dk = VD3.dark();
-    g.scene.background = col3(T.canvas, '#ffffff'); g.tableM.color = col3(dk ? '#3a3128' : '#b89a74', '#b89a74'); g.steelM.color = col3('#a7b0ba', '#a7b0ba'); g.leadM.color = col3(T.lead, '#6f7a86');
-    g.edgeM.color = col3(dk ? '#a9d2ee' : '#5a8fb4', '#5a8fb4'); g.fibreM.color = col3(dk ? '#e6ebf0' : '#4a525c', '#4a525c'); g.laserM.color = col3('#2e353f', '#2e353f'); g.rayM.color = col3(T.laser, '#e0322a'); g.fM.color = col3(T.force, '#2b60b5'); g.markM.color = col3(T.muted, '#8a929c'); g.ghostM.color = col3(T.lead, '#6f7a86');
+    g.scene.background = col3(T.canvas, '#ffffff'); g.tableM.color = col3(dk ? '#3a3128' : '#b89a74', '#b89a74'); g.steelM.color = col3('#b9b2a8', '#b9b2a8'); g.leadM.color = col3(T.lead, '#847c71');
+    g.edgeM.color = col3(dk ? '#a9d2ee' : '#ad8c61', '#ad8c61'); g.fibreM.color = col3(dk ? '#efece7' : '#5b544b', '#5b544b'); g.laserM.color = col3('#2e353f', '#2e353f'); g.rayM.color = col3(T.laser, '#e0322a'); g.fM.color = col3(T.force, '#2b60b5'); g.markM.color = col3(T.muted, '#9b948b'); g.ghostM.color = col3(T.lead, '#847c71');
     g.hemi.intensity = dk ? 0.55 : 0.7; g.sun.intensity = dk ? 0.7 : 0.8;
   }
   function ray3(m, a, b) { const v = new THREE.Vector3(b[0] - a[0], b[1] - a[1], b[2] - a[2]), L = v.length(); m.position.set(a[0], a[1], a[2]); m.scale.set(1, L, 1); m.quaternion.setFromUnitVectors(g3.Y, v.divideScalar(L)); }

@@ -21,36 +21,36 @@
 <style>
 /* Layout: one canvas with four views of the same AME2020 masses (the curve, the liquid drop terms, shell residuals, the chart of nuclides); instrument rail on the right; stacks on phones. */
 :root {
-  --bg: #e9edf2;
-  --surface: #f8fafc;
-  --canvas: #fcfdfe;
-  --ink: #17202b;
-  --muted: #5a6575;
-  --line: #d3d9e2;
-  --grid: #e6ebf1;
-  --grid-strong: #cfd7e1;
+  --bg: #f1eeea;
+  --surface: #fcfaf8;
+  --canvas: #fefdfc;
+  --ink: #2a2219;
+  --muted: #73695c;
+  --line: #e1dbd4;
+  --grid: #f0ece7;
+  --grid-strong: #e0d9d0;
   --pos: #c23f2c;
   --neg: #2b60b5;
   --equi: #a7740b;
-  --accent: #2b60b5;
+  --accent: #c4811c;
   --alpha: #17855f;
-  --emit: #7b52b8;
-  --seq0: #dfe8f5;
+  --emit: #ac8a5e;
+  --seq0: #f1ebe3;
   --seq1: #12356b;
   --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
-    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-    --equi: #e2b350; --accent: #69a0ff; --alpha: #4fd1a0; --emit: #b79cf2; --seq0: #1c2a3f; --seq1: #a9ccff; color-scheme: dark;
+    --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
+    --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+    --equi: #e2b350; --accent: #fbc26d; --alpha: #4fd1a0; --emit: #b79cf2; --seq0: #3c2f1f; --seq1: #a9ccff; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
-  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-  --equi: #e2b350; --accent: #69a0ff; --alpha: #4fd1a0; --emit: #b79cf2; --seq0: #1c2a3f; --seq1: #a9ccff; color-scheme: dark;
+  --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
+  --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+  --equi: #e2b350; --accent: #fbc26d; --alpha: #4fd1a0; --emit: #b79cf2; --seq0: #3c2f1f; --seq1: #a9ccff; color-scheme: dark;
 }
 :root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
@@ -846,12 +846,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const st = VD3K.stage(pane, { before: can, fov: 30, near: 1, far: 2000 }); if (!st) return false;
     G3.st = st; const sc = st.scene;
     st.sun.position.set(-120, -260, 300); st.sun.target.position.set(80, 55, 0);
-    const floorM = VD3K.material(st, { roughness: 0.95, metalness: 0 }, ['#e8ecf1', '#1a222c']);
+    const floorM = VD3K.material(st, { roughness: 0.95, metalness: 0 }, ['#f0ede9', '#2b241b']);
     const floor = new THREE.Mesh(new THREE.PlaneGeometry(200, 140), floorM); floor.position.set(80, 55, -0.02); sc.add(floor);
     /* chart grid every 10 on the floor */
     const gp = []; for (let v = 0; v <= 170; v += 10) gp.push(new THREE.Vector3(v - 0.5, -0.5, 0), new THREE.Vector3(v - 0.5, 117.5, 0));
     for (let v = 0; v <= 118; v += 10) gp.push(new THREE.Vector3(-0.5, v - 0.5, 0), new THREE.Vector3(169.5, v - 0.5, 0));
-    const gridM = new THREE.LineBasicMaterial({ transparent: true, opacity: 0.35 }); st.onTheme((dk) => gridM.color.set(dk ? '#3a4656' : '#b9c3cf'));
+    const gridM = new THREE.LineBasicMaterial({ transparent: true, opacity: 0.35 }); st.onTheme((dk) => gridM.color.set(dk ? '#544a3c' : '#cdc5bb'));
     sc.add(new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(gp), gridM));
     /* magic number strips */
     const magM = new THREE.MeshBasicMaterial({ color: T.pos, transparent: true, opacity: 0.16, depthWrite: false });
@@ -872,7 +872,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     PLOTTED.forEach((n, i) => { const h = colH(n); Sv.set(1, 1, h); P.set(n.N, n.Z, h / 2); M.compose(P, Q, Sv); G3.cols.setMatrixAt(i, M); });
     stab.forEach((n, i) => { const h = colH(n); M.makeTranslation(n.N, n.Z, h + 0.17); G3.caps.setMatrixAt(i, M); });
     G3.cols.instanceMatrix.needsUpdate = true; G3.caps.instanceMatrix.needsUpdate = true;
-    st.onTheme((dk) => G3.caps.material.color.set(dk ? '#e8edf3' : '#1d2733'));
+    st.onTheme((dk) => G3.caps.material.color.set(dk ? '#f2eee9' : '#31291f'));
     sc.add(G3.cols, G3.caps);
     /* the selected nuclide: a lit column outline and a label above it */
     G3.sel = new THREE.Mesh(new THREE.BoxGeometry(1.5, 1.5, 1), new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.45, depthWrite: false }));
@@ -887,11 +887,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (const m of [28, 50, 82, 126]) labs.push(lab('N ' + m, m, 121, 0.5, { size: 3 }));
     for (const m of [20, 28, 50, 82]) labs.push(lab('Z ' + m, 174, m, 0.5, { size: 3 }));
     /* height scale: a post at the back left corner with a tick every 2 MeV per nucleon */
-    const postM = VD3K.material(st, { roughness: 0.5 }, ['#7d8896', '#8d99a8']);
+    const postM = VD3K.material(st, { roughness: 0.5 }, ['#948b7f', '#a69c8f']);
     const PX = 168, PY = 112;
     sc.add(VD3K.rod([PX, PY, 0], [PX, PY, (9 - BASE) * HZ], 0.35, postM));
     for (let e = BASE; e <= 9; e += 1) { sc.add(VD3K.rod([PX - 1.2, PY, (e - BASE) * HZ], [PX + 1.2, PY, (e - BASE) * HZ], 0.18, postM)); labs.push(lab(e + (e === 9 ? ' MeV per nucleon' : ' MeV'), PX + (e === 9 ? 13 : 5), PY, (e - BASE) * HZ, { size: 3 })); }
-    st.onTheme((dk) => labs.forEach((L) => L.material.color.set(dk ? '#c3cdd8' : '#3a4554')));
+    st.onTheme((dk) => labs.forEach((L) => L.material.color.set(dk ? '#d6cfc5' : '#52483c')));
     G3.labs = labs;
     st.orbit(st.el, G3.o, () => drawAll(), { phMin: 0.15, phMax: 1.45, zMin: 0.55, zMax: 4 });
     /* click a column to select it; hover shows the same tip as the flat chart */

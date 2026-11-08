@@ -20,36 +20,36 @@
 <style>
 /* Layout: one canvas with the target seen side on (left) and a plot (right: deflection against b, or counts against angle); instrument rail on the right; stacks on phones. */
 :root {
-  --bg: #e9edf2;
-  --surface: #f8fafc;
-  --canvas: #fcfdfe;
-  --ink: #17202b;
-  --muted: #5a6575;
-  --line: #d3d9e2;
-  --grid: #e6ebf1;
-  --grid-strong: #cfd7e1;
+  --bg: #f1eeea;
+  --surface: #fcfaf8;
+  --canvas: #fefdfc;
+  --ink: #2a2219;
+  --muted: #73695c;
+  --line: #e1dbd4;
+  --grid: #f0ece7;
+  --grid-strong: #e0d9d0;
   --pos: #c23f2c;
   --neg: #2b60b5;
   --equi: #a7740b;
-  --accent: #2b60b5;
+  --accent: #c4811c;
   --alpha: #17855f;
   --pud: #e7c9b8;
-  --chamber-in: #fdfeff; --chamber-out: #e1e6ed; --proton: #d0523c; --neutron: #a59c93;
-  --zns: #1d8a5b; --zns-band: #d3dcd7; --lead: #5b6169; --gold: #c99a24;
+  --chamber-in: #fefefe; --chamber-out: #ece8e2; --proton: #d0523c; --neutron: #a59c93;
+  --zns: #1d8a5b; --zns-band: #d3dcd7; --lead: #68635c; --gold: #c99a24;
   --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
-    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-    --equi: #e2b350; --accent: #69a0ff; --alpha: #4fd1a0; --pud: #4a3530; --chamber-in: #131b26; --chamber-out: #05080c; --proton: #f2735c; --neutron: #b5aca3; --zns: #66e8b0; --zns-band: #18241f; --lead: #4b515a; --gold: #e2b54c; color-scheme: dark;
+    --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
+    --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+    --equi: #e2b350; --accent: #fbc26d; --alpha: #4fd1a0; --pud: #4a3530; --chamber-in: #251e14; --chamber-out: #0b0906; --proton: #f2735c; --neutron: #b5aca3; --zns: #66e8b0; --zns-band: #18241f; --lead: #59534c; --gold: #e2b54c; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
-  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-  --equi: #e2b350; --accent: #69a0ff; --alpha: #4fd1a0; --pud: #4a3530; --chamber-in: #131b26; --chamber-out: #05080c; --proton: #f2735c; --neutron: #b5aca3; --zns: #66e8b0; --zns-band: #18241f; --lead: #4b515a; --gold: #e2b54c; color-scheme: dark;
+  --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
+  --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+  --equi: #e2b350; --accent: #fbc26d; --alpha: #4fd1a0; --pud: #4a3530; --chamber-in: #251e14; --chamber-out: #0b0906; --proton: #f2735c; --neutron: #b5aca3; --zns: #66e8b0; --zns-band: #18241f; --lead: #59534c; --gold: #e2b54c; color-scheme: dark;
 }
 :root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
@@ -870,7 +870,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     S3.el.className = 'rs3';
     const sc = S3.scene, M = (o, c) => VD3K.material(S3, o, c), mesh = (geo, m, cast) => { const x = new THREE.Mesh(geo, m); x.castShadow = !!cast; x.receiveShadow = true; return x; };
     sc.add(VD3K.bench(S3, { w: 0.8, d: 0.6, y: 0.05 }));
-    const brass = M({ roughness: 0.35, metalness: 0.8 }, ['#c9a24a', '#a8873c']), leadM = M({ roughness: 0.7, metalness: 0.25 }, [T.lead || '#6e7378', T.lead || '#4c5156']), steel = M({ roughness: 0.3, metalness: 0.8 }, ['#c4cad1', '#8d96a0']);
+    const brass = M({ roughness: 0.35, metalness: 0.8 }, ['#c9a24a', '#a8873c']), leadM = M({ roughness: 0.7, metalness: 0.25 }, [T.lead || '#77746f', T.lead || '#55524d']), steel = M({ roughness: 0.3, metalness: 0.8 }, ['#d0cbc5', '#9f988e']);
     /* the chamber floor and a glass wall round it, so the inside shows */
     sc.add(mesh(new THREE.CylinderGeometry(0.03, 0.031, 0.004, 64).rotateX(Math.PI / 2).translate(0, 0, 0.002), M({ roughness: 0.6, metalness: 0.3 }, ['#d8c08a', '#6b5a34']), true));
     const wall = VD3K.glass(S3, { r: 0.03, len: 0.036, axis: 'z', ends: false, opacity: 0.12 }); wall.position.z = 0.022; sc.add(wall);
@@ -890,7 +890,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const scrM = new THREE.MeshStandardMaterial({ roughness: 0.9, metalness: 0, side: THREE.DoubleSide, transparent: true, opacity: 0.85 });
     const scr = mesh(new THREE.CylinderGeometry(RS3, RS3, HS, 96, 1, true, Math.PI / 2 + 0.35, 2 * Math.PI - 0.7).rotateX(Math.PI / 2), scrM); scr.position.z = ZS; sc.add(scr);
     /* the microscope that looks at the screen (Geiger and Marsden counted flashes by eye), on an arm round the chamber */
-    const scope = new THREE.Group(), tubeM = M({ roughness: 0.4, metalness: 0.5 }, ['#3b4552', '#2b333d']);
+    const scope = new THREE.Group(), tubeM = M({ roughness: 0.4, metalness: 0.5 }, ['#50483d', '#3c352c']);
     const body = mesh(new THREE.CylinderGeometry(0.0022, 0.0022, 0.022, 20).rotateZ(Math.PI / 2), tubeM, true); body.position.x = RS3 + 0.012; scope.add(body);
     const eye = mesh(new THREE.CylinderGeometry(0.003, 0.003, 0.004, 20).rotateZ(Math.PI / 2), tubeM, true); eye.position.x = RS3 + 0.025; scope.add(eye);
     scope.add(VD3K.box(0.03, 0.003, 0.002, steel, RS3 + 0.012, 0, 0.004)); scope.add(VD3K.rod([RS3 + 0.012, 0, 0.006], [RS3 + 0.012, 0, ZS - 0.002], 0.0008, steel));
@@ -1056,7 +1056,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (let i = 0; i < nAng; i++) cnt[Math.min(nb - 1, Math.floor(angles[i] / Math.PI * nb))]++;
     let mx = 0; for (const v of cnt) mx = Math.max(mx, v);
     // the zinc sulfide screen: a phosphor coated band, glowing where it has been struck
-    c.lineWidth = lw + 2 * ps; c.strokeStyle = mix(T.znsBand, T.dark ? '#000000' : '#5a6575', 0.3);
+    c.lineWidth = lw + 2 * ps; c.strokeStyle = mix(T.znsBand, T.dark ? '#000000' : '#73695c', 0.3);
     c.beginPath(); c.arc(g.cx, g.cy, R, 0, 2 * Math.PI); c.stroke();
     c.lineWidth = lw; c.strokeStyle = T.znsBand; c.stroke();
     for (let i = 0; i < nb; i++) {
@@ -1138,7 +1138,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       c.strokeStyle = T.alpha; c.globalAlpha = 0.7; c.lineWidth = 1.4 * u; c.beginPath(); c.moveTo(L0[0] + 30 * u, F[1]); c.lineTo(F[0], F[1]); c.stroke(); c.globalAlpha = 1;
       // screen: a ring around the foil with a gap for the incoming beam
       c.lineWidth = 4 * u; c.strokeStyle = T.znsBand; c.beginPath(); c.arc(F[0], F[1], rr, -Math.PI + 0.3, Math.PI - 0.3); c.stroke();
-      c.lineWidth = 1; c.strokeStyle = mix(T.znsBand, T.dark ? '#000000' : '#5a6575', 0.35); c.stroke();
+      c.lineWidth = 1; c.strokeStyle = mix(T.znsBand, T.dark ? '#000000' : '#73695c', 0.35); c.stroke();
       drawScope(c, F[0], F[1], rr + 3 * u, -0.8, u, 0.7);
       // gold leaf: thin, slightly crumpled, with a warm metallic sheen
       const lg = c.createLinearGradient(F[0] - 3 * u, 0, F[0] + 3 * u, 0);

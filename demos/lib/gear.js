@@ -9,7 +9,7 @@ window.VDGear = (function () {
   /* the room behind the apparatus: a wall that darkens a little towards the top and a soft floor glow */
   function backdrop(ctx, w, h, o = {}) {
     const d = dark(), g = ctx.createLinearGradient(0, 0, 0, h);
-    g.addColorStop(0, d ? '#0f151d' : '#eef1f5'); g.addColorStop(o.horizon || 0.7, d ? '#141b25' : '#f8f9fb'); g.addColorStop(1, d ? '#10161e' : '#eceff3');
+    g.addColorStop(0, d ? '#1c1710' : '#f4f2ef'); g.addColorStop(o.horizon || 0.7, d ? '#241d15' : '#fbfaf8'); g.addColorStop(1, d ? '#1d1811' : '#f2f0ed');
     ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
     const r = ctx.createRadialGradient(w * 0.45, h * 0.35, 0, w * 0.45, h * 0.35, Math.max(w, h) * 0.75);
     r.addColorStop(0, d ? 'rgba(120,150,190,0.06)' : 'rgba(255,255,255,0.55)'); r.addColorStop(1, 'rgba(0,0,0,0)');
@@ -38,14 +38,14 @@ window.VDGear = (function () {
   }
   /* metal: a cylinder between two points (rod, post, axle), shaded across its width */
   function rod(ctx, x1, y1, x2, y2, r, o = {}) {
-    const base = o.color || '#9aa4b0', L = Math.hypot(x2 - x1, y2 - y1) || 1, nx = -(y2 - y1) / L, ny = (x2 - x1) / L;
+    const base = o.color || '#aea69c', L = Math.hypot(x2 - x1, y2 - y1) || 1, nx = -(y2 - y1) / L, ny = (x2 - x1) / L;
     const g = ctx.createLinearGradient(x1 - nx * r, y1 - ny * r, x1 + nx * r, y1 + ny * r);
     g.addColorStop(0, mix(base, '#000000', 0.35)); g.addColorStop(0.35, mix(base, '#ffffff', 0.45)); g.addColorStop(0.55, base); g.addColorStop(1, mix(base, '#000000', 0.45));
     ctx.fillStyle = g; ctx.beginPath(); ctx.moveTo(x1 + nx * r, y1 + ny * r); ctx.lineTo(x2 + nx * r, y2 + ny * r); ctx.lineTo(x2 - nx * r, y2 - ny * r); ctx.lineTo(x1 - nx * r, y1 - ny * r); ctx.closePath(); ctx.fill();
   }
   /* a box (instrument case, driver housing): vertical gradient, bevel highlight, dark rim */
   function box(ctx, x, y, w, h, o = {}) {
-    const d = dark(), base = o.color || (d ? '#3a4552' : '#3f4a58'), r = o.r == null ? Math.min(8, w / 6, h / 6) : o.r;
+    const d = dark(), base = o.color || (d ? '#50473c' : '#564d41'), r = o.r == null ? Math.min(8, w / 6, h / 6) : o.r;
     if (o.shadow !== false) shadow(ctx, x + w / 2, y + h, w * 0.6, Math.max(3, w * 0.06), 0.9);
     const g = ctx.createLinearGradient(0, y, 0, y + h); g.addColorStop(0, mix(base, '#ffffff', 0.16)); g.addColorStop(1, mix(base, '#000000', 0.22));
     ctx.fillStyle = g; ctx.beginPath(); ctx.roundRect(x, y, w, h, r); ctx.fill();
@@ -53,7 +53,7 @@ window.VDGear = (function () {
     ctx.strokeStyle = 'rgba(255,255,255,0.14)'; ctx.beginPath(); ctx.roundRect(x + 1, y + 1, w - 2, h - 2, Math.max(0, r - 1)); ctx.stroke();
   }
   function screw(ctx, x, y, r) {
-    const g = ctx.createRadialGradient(x - r * 0.3, y - r * 0.3, 0, x, y, r); g.addColorStop(0, '#e9edf2'); g.addColorStop(1, '#7c8794');
+    const g = ctx.createRadialGradient(x - r * 0.3, y - r * 0.3, 0, x, y, r); g.addColorStop(0, '#f1eeea'); g.addColorStop(1, '#92897e');
     ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fill();
     ctx.strokeStyle = 'rgba(0,0,0,0.45)'; ctx.lineWidth = Math.max(0.8, r * 0.3); ctx.beginPath(); ctx.moveTo(x - r * 0.6, y + r * 0.2); ctx.lineTo(x + r * 0.6, y - r * 0.2); ctx.stroke();
   }
@@ -66,7 +66,7 @@ window.VDGear = (function () {
   }
   /* a pulley wheel with spokes, on its axle */
   function pulley(ctx, x, y, r, o = {}) {
-    const g = ctx.createRadialGradient(x - r * 0.35, y - r * 0.35, r * 0.1, x, y, r); g.addColorStop(0, '#dfe4ea'); g.addColorStop(0.7, '#9ba5b1'); g.addColorStop(1, '#5c6674');
+    const g = ctx.createRadialGradient(x - r * 0.35, y - r * 0.35, r * 0.1, x, y, r); g.addColorStop(0, '#e9e5e0'); g.addColorStop(0.7, '#afa79d'); g.addColorStop(1, '#72695e');
     ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fill();
     ctx.strokeStyle = 'rgba(0,0,0,0.35)'; ctx.lineWidth = Math.max(1, r * 0.12); ctx.beginPath(); ctx.arc(x, y, r * 0.82, 0, 7); ctx.stroke();
     ctx.lineWidth = Math.max(1, r * 0.08); for (let i = 0; i < 4; i++) { const a = (o.angle || 0) + i * Math.PI / 4; ctx.beginPath(); ctx.moveTo(x - Math.cos(a) * r * 0.7, y - Math.sin(a) * r * 0.7); ctx.lineTo(x + Math.cos(a) * r * 0.7, y + Math.sin(a) * r * 0.7); ctx.stroke(); }
@@ -74,31 +74,31 @@ window.VDGear = (function () {
   }
   /* a C clamp holding something to the bench edge at (x, y): jaw on the top, screw under the lip */
   function clamp(ctx, x, y, w, edge, o = {}) {
-    const c = o.color || '#5b6e8c';
+    const c = o.color || '#88765f';
     box(ctx, x - w / 2, y - 6, w, 8, { color: c, r: 2, shadow: false });
     box(ctx, x + w / 2 - 6, y - 6, 6, edge + 16, { color: c, r: 2, shadow: false });
     box(ctx, x - w / 2, y + edge, w, 6, { color: c, r: 2, shadow: false });
-    rod(ctx, x - w / 4, y + edge + 6, x - w / 4, y + edge + 18, 2.2, { color: '#b8c0ca' });
+    rod(ctx, x - w / 4, y + edge + 6, x - w / 4, y + edge + 18, 2.2, { color: '#c9c2b9' });
   }
   /* a slotted mass seen from the side: a flat disc with a bevel, brass or steel */
   function slotted(ctx, cx, y, w, t, o = {}) {
-    const base = o.brass ? '#c9a24a' : '#a9b2bd', g = ctx.createLinearGradient(cx - w / 2, 0, cx + w / 2, 0);
+    const base = o.brass ? '#c9a24a' : '#bbb4aa', g = ctx.createLinearGradient(cx - w / 2, 0, cx + w / 2, 0);
     g.addColorStop(0, mix(base, '#000000', 0.35)); g.addColorStop(0.3, mix(base, '#ffffff', 0.35)); g.addColorStop(0.6, base); g.addColorStop(1, mix(base, '#000000', 0.4));
     ctx.fillStyle = g; ctx.beginPath(); ctx.roundRect(cx - w / 2, y, w, t, Math.min(2, t / 3)); ctx.fill();
     ctx.fillStyle = 'rgba(0,0,0,0.25)'; ctx.fillRect(cx - w / 2, y + t - 0.8, w, 0.8);
   }
   /* a loudspeaker cabinet facing right (or left with o.flip): box, cone and dust cap */
   function speaker(ctx, x, y, w, h, o = {}) {
-    box(ctx, x, y, w, h, { color: o.color || '#2e353f', r: Math.min(6, w / 8) });
+    box(ctx, x, y, w, h, { color: o.color || '#3e372f', r: Math.min(6, w / 8) });
     const r = Math.min(w, h) * 0.36, cx = x + w / 2, cy = y + h / 2;
     let g = ctx.createRadialGradient(cx - r * 0.2, cy - r * 0.25, r * 0.1, cx, cy, r);
-    g.addColorStop(0, '#5b6370'); g.addColorStop(0.6, '#262b33'); g.addColorStop(1, '#14181d'); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx, cy, r, 0, 7); ctx.fill();
-    ctx.strokeStyle = '#4b535f'; ctx.lineWidth = Math.max(1, r * 0.08); ctx.beginPath(); ctx.arc(cx, cy, r * 0.95, 0, 7); ctx.stroke();
-    g = ctx.createRadialGradient(cx - r * 0.1, cy - r * 0.12, 0, cx, cy, r * 0.3); g.addColorStop(0, '#8a929e'); g.addColorStop(1, '#2b3139'); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx, cy, r * 0.3, 0, 7); ctx.fill();
+    g.addColorStop(0, '#6e675d'); g.addColorStop(0.6, '#322d27'); g.addColorStop(1, '#1c1915'); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx, cy, r, 0, 7); ctx.fill();
+    ctx.strokeStyle = '#5e564c'; ctx.lineWidth = Math.max(1, r * 0.08); ctx.beginPath(); ctx.arc(cx, cy, r * 0.95, 0, 7); ctx.stroke();
+    g = ctx.createRadialGradient(cx - r * 0.1, cy - r * 0.12, 0, cx, cy, r * 0.3); g.addColorStop(0, '#9c958b'); g.addColorStop(1, '#38332c'); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx, cy, r * 0.3, 0, 7); ctx.fill();
   }
   /* quiet annotation: small, muted, never bold; o.c overrides the color */
   function label(ctx, s, x, y, o = {}) {
-    const cs = getComputedStyle(document.documentElement), muted = o.c || cs.getPropertyValue('--muted').trim() || '#5a6575';
+    const cs = getComputedStyle(document.documentElement), muted = o.c || cs.getPropertyValue('--muted').trim() || '#73695c';
     ctx.save(); ctx.fillStyle = muted; ctx.globalAlpha = o.alpha == null ? 0.9 : o.alpha;
     ctx.font = `${o.w || 400} ${o.s || 10.5}px ${o.m ? cs.getPropertyValue('--font-mono') : cs.getPropertyValue('--font-ui')}`;
     ctx.textAlign = o.a || 'left'; ctx.textBaseline = o.bl || 'middle'; ctx.fillText(s, x, y); ctx.restore();
@@ -110,7 +110,7 @@ window.VDGear = (function () {
   }
   /* a cable from (x1, y1) to (x2, y2), sagging */
   function cable(ctx, x1, y1, x2, y2, sag, o = {}) {
-    ctx.save(); ctx.lineCap = 'round'; ctx.strokeStyle = o.color || '#20262e'; ctx.lineWidth = o.w || 3;
+    ctx.save(); ctx.lineCap = 'round'; ctx.strokeStyle = o.color || '#2d2821'; ctx.lineWidth = o.w || 3;
     ctx.beginPath(); ctx.moveTo(x1, y1); ctx.bezierCurveTo(x1 + (o.dx1 || 0), y1 + sag, x2 + (o.dx2 || 0), y2 + sag, x2, y2); ctx.stroke();
     ctx.strokeStyle = 'rgba(255,255,255,0.12)'; ctx.lineWidth = Math.max(1, (o.w || 3) * 0.3); ctx.stroke(); ctx.restore();
   }
@@ -133,8 +133,8 @@ window.VDGear = (function () {
   }
   /* a painted lab wall from y0 to y1: light falls from the top left, a faint tile or block grid (o.tile = [w, h] px, 0 for none) */
   function wall(ctx, x, y0, w, y1, o = {}) {
-    const d = dark(), h = y1 - y0, c0 = o.color || (d ? '#151c25' : '#eef1f5');
-    let g = ctx.createLinearGradient(0, y0, 0, y1); g.addColorStop(0, mix(c0, '#000000', d ? 0.25 : 0.05)); g.addColorStop(1, mix(c0, d ? '#2a3442' : '#ffffff', 0.35));
+    const d = dark(), h = y1 - y0, c0 = o.color || (d ? '#241e16' : '#f4f2ef');
+    let g = ctx.createLinearGradient(0, y0, 0, y1); g.addColorStop(0, mix(c0, '#000000', d ? 0.25 : 0.05)); g.addColorStop(1, mix(c0, d ? '#40372c' : '#ffffff', 0.35));
     ctx.fillStyle = g; ctx.fillRect(x, y0, w, h);
     g = ctx.createRadialGradient(x + w * 0.3, y0 + h * 0.15, 0, x + w * 0.3, y0 + h * 0.15, Math.max(w, h) * 0.9);
     g.addColorStop(0, d ? 'rgba(140,170,210,0.07)' : 'rgba(255,255,255,0.6)'); g.addColorStop(1, 'rgba(0,0,0,0)'); ctx.fillStyle = g; ctx.fillRect(x, y0, w, h);
@@ -152,20 +152,20 @@ window.VDGear = (function () {
   function stand(ctx, x, y, top, o = {}) {
     const s = o.s || 1, side = o.side || 0, bw = 64 * s, bx = x - bw / 2 + side * bw * 0.3;
     shadow(ctx, bx + bw / 2, y, bw * 0.62, 5 * s, 1);
-    const base = o.color || (dark() ? '#2b3440' : '#3a4553');
+    const base = o.color || (dark() ? '#3e372d' : '#51483c');
     ctx.save(); let g = ctx.createLinearGradient(0, y - 9 * s, 0, y); g.addColorStop(0, mix(base, '#ffffff', 0.2)); g.addColorStop(1, mix(base, '#000000', 0.25));
     ctx.fillStyle = g; ctx.beginPath(); ctx.moveTo(bx + 4 * s, y - 9 * s); ctx.lineTo(bx + bw - 4 * s, y - 9 * s); ctx.quadraticCurveTo(bx + bw, y - 9 * s, bx + bw, y - 4 * s);
     ctx.lineTo(bx + bw, y); ctx.lineTo(bx, y); ctx.lineTo(bx, y - 4 * s); ctx.quadraticCurveTo(bx, y - 9 * s, bx + 4 * s, y - 9 * s); ctx.fill();
     ctx.fillStyle = 'rgba(255,255,255,0.18)'; ctx.fillRect(bx + 4 * s, y - 9 * s, bw - 8 * s, 1); ctx.restore();
-    rod(ctx, x, y - 8 * s, x, top, 3.2 * s, { color: o.rod || '#b4bcc6' });
-    ctx.fillStyle = mix(o.rod || '#b4bcc6', '#ffffff', 0.4); ctx.beginPath(); ctx.ellipse(x, top, 3.2 * s, 1.2 * s, 0, 0, 7); ctx.fill();
+    rod(ctx, x, y - 8 * s, x, top, 3.2 * s, { color: o.rod || '#c5beb5' });
+    ctx.fillStyle = mix(o.rod || '#c5beb5', '#ffffff', 0.4); ctx.beginPath(); ctx.ellipse(x, top, 3.2 * s, 1.2 * s, 0, 0, 7); ctx.fill();
   }
   /* a boss head clamp at (x, y) on an upright, with its thumb screw towards o.side (default right) */
   function boss(ctx, x, y, s = 1, o = {}) {
     const side = o.side || 1;
-    box(ctx, x - 8 * s, y - 9 * s, 16 * s, 18 * s, { color: o.color || '#59687c', r: 2.5 * s, shadow: false });
-    rod(ctx, x + side * 8 * s, y, x + side * 15 * s, y, 1.6 * s, { color: '#c0c7d0' });
-    const kx = x + side * 17 * s; let g = ctx.createRadialGradient(kx - 1.5 * s, y - 2 * s, 0, kx, y, 5 * s); g.addColorStop(0, '#5a6372'); g.addColorStop(1, '#14181e');
+    box(ctx, x - 8 * s, y - 9 * s, 16 * s, 18 * s, { color: o.color || '#796c5c', r: 2.5 * s, shadow: false });
+    rod(ctx, x + side * 8 * s, y, x + side * 15 * s, y, 1.6 * s, { color: '#cfc9c1' });
+    const kx = x + side * 17 * s; let g = ctx.createRadialGradient(kx - 1.5 * s, y - 2 * s, 0, kx, y, 5 * s); g.addColorStop(0, '#70675c'); g.addColorStop(1, '#1d1a15');
     ctx.fillStyle = g; ctx.beginPath(); ctx.roundRect(kx - 2.5 * s, y - 5 * s, 5 * s, 10 * s, 1.5 * s); ctx.fill();
   }
   /* a photogate: a U frame opening upward, its infrared beam across the gap at (cx, beamY). on: the beam is blocked (LED lit).
@@ -177,7 +177,7 @@ window.VDGear = (function () {
     box(ctx, cx + w / 2, top, arm, bot - top, { color: col, r: 2.5 * s, shadow: false });
     box(ctx, cx - w / 2 - arm, bot - 8 * s, w + 2 * arm, 8 * s, { color: col, r: 2.5 * s, shadow: false });
     /* emitter and detector windows */
-    ctx.fillStyle = '#0b0f14'; ctx.fillRect(cx - w / 2 - 2 * s, beamY - 3 * s, 2 * s, 6 * s); ctx.fillRect(cx + w / 2, beamY - 3 * s, 2 * s, 6 * s);
+    ctx.fillStyle = '#13100c'; ctx.fillRect(cx - w / 2 - 2 * s, beamY - 3 * s, 2 * s, 6 * s); ctx.fillRect(cx + w / 2, beamY - 3 * s, 2 * s, 6 * s);
     /* the beam (infrared, drawn faint red) */
     ctx.save(); const bc = o.beam || '#ff5a3c'; ctx.strokeStyle = bc; ctx.lineWidth = 1.2 * s; ctx.globalAlpha = on ? 0.95 : 0.28;
     if (on) { ctx.shadowColor = bc; ctx.shadowBlur = 8 * s; } ctx.beginPath(); ctx.moveTo(cx - w / 2, beamY); ctx.lineTo(cx + w / 2, beamY); ctx.stroke(); ctx.restore();
@@ -194,7 +194,7 @@ window.VDGear = (function () {
   }
   /* a helical coil spring from (x1, y1) to (x2, y2): n turns of radius r, wire width wd; the back of each turn is darker */
   function spring(ctx, x1, y1, x2, y2, n, r, o = {}) {
-    const L = Math.hypot(x2 - x1, y2 - y1) || 1, ux = (x2 - x1) / L, uy = (y2 - y1) / L, nx = -uy, ny = ux, wd = o.w || 2, c = o.color || '#9aa4b0';
+    const L = Math.hypot(x2 - x1, y2 - y1) || 1, ux = (x2 - x1) / L, uy = (y2 - y1) / L, nx = -uy, ny = ux, wd = o.w || 2, c = o.color || '#aea69c';
     const lead = Math.min(o.lead == null ? 8 : o.lead, L * 0.2), a = lead, b = L - lead, steps = Math.max(24, Math.round(n * 24));
     const P = (t, ph) => { const s = a + (b - a) * t + Math.cos(ph) * r * 0.18 * (o.pitch || 1); return [x1 + ux * s + nx * Math.sin(ph) * r, y1 + uy * s + ny * Math.sin(ph) * r]; };
     ctx.save(); ctx.lineCap = 'round'; ctx.lineJoin = 'round';
@@ -212,7 +212,7 @@ window.VDGear = (function () {
   /* sky and ground for outdoor scenes: sky gradient down to the horizon at y, then ground to h */
   function outdoors(ctx, w, h, y, o = {}) {
     const d = dark(); let g = ctx.createLinearGradient(0, 0, 0, y);
-    g.addColorStop(0, d ? '#0b1626' : '#7fb2e5'); g.addColorStop(0.7, d ? '#13233a' : '#bcd8f1'); g.addColorStop(1, d ? '#1c2e45' : '#e3eef8');
+    g.addColorStop(0, d ? '#201a11' : '#7fb2e5'); g.addColorStop(0.7, d ? '#33281a' : '#bcd8f1'); g.addColorStop(1, d ? '#403321' : '#f3eee8');
     ctx.fillStyle = g; ctx.fillRect(0, 0, w, y);
     const sx = w * (o.sun == null ? 0.12 : o.sun), sy = y * 0.18;
     g = ctx.createRadialGradient(sx, sy, 0, sx, sy, Math.max(w, y) * 0.5); g.addColorStop(0, d ? 'rgba(200,215,255,0.10)' : 'rgba(255,248,225,0.75)'); g.addColorStop(1, 'rgba(255,255,255,0)');

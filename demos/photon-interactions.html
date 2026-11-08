@@ -16,9 +16,9 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
 /* only what this demo needs beyond demos/lib/vd.css: one color per interaction, the stage with its card and chart */
-:root { --coh: #7c3aed; --inc: #2b60b5; --pe: #c2410c; --pairn: #1f9a4a; --paire: #0f766e; --tot: #1d2430; --tr: #b45309; --en: #be185d; --slab: #c9d3df; --slabedge: #8a96a6; --beam: #c98a00; --fluor: #db2777; --band1: rgba(194, 65, 12, 0.08); --band2: rgba(43, 96, 181, 0.08); --band3: rgba(31, 154, 74, 0.09); }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --coh: #b79bff; --inc: #69a0ff; --pe: #ff8a50; --pairn: #4cd07d; --paire: #2dd4bf; --tot: #e8edf3; --tr: #fbbf24; --en: #f472b6; --slab: #2d3644; --slabedge: #6b7787; --beam: #ffc94a; --fluor: #f472b6; --band1: rgba(255, 138, 80, 0.10); --band2: rgba(105, 160, 255, 0.10); --band3: rgba(76, 208, 125, 0.10); } }
-:root[data-theme="dark"] { --coh: #b79bff; --inc: #69a0ff; --pe: #ff8a50; --pairn: #4cd07d; --paire: #2dd4bf; --tot: #e8edf3; --tr: #fbbf24; --en: #f472b6; --slab: #2d3644; --slabedge: #6b7787; --beam: #ffc94a; --fluor: #f472b6; --band1: rgba(255, 138, 80, 0.10); --band2: rgba(105, 160, 255, 0.10); --band3: rgba(76, 208, 125, 0.10); }
+:root { --coh: #7c3aed; --inc: #2b60b5; --pe: #c2410c; --pairn: #1f9a4a; --paire: #0f766e; --tot: #2f281e; --tr: #b45309; --en: #be185d; --slab: #ddd5cb; --slabedge: #a49a8c; --beam: #c98a00; --fluor: #db2777; --band1: rgba(194, 65, 12, 0.08); --band2: rgba(43, 96, 181, 0.08); --band3: rgba(31, 154, 74, 0.09); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --coh: #b79bff; --inc: #69a0ff; --pe: #ff8a50; --pairn: #4cd07d; --paire: #2dd4bf; --tot: #f2eee9; --tr: #fbbf24; --en: #f472b6; --slab: #423a2f; --slabedge: #857b6d; --beam: #ffc94a; --fluor: #f472b6; --band1: rgba(255, 138, 80, 0.10); --band2: rgba(105, 160, 255, 0.10); --band3: rgba(76, 208, 125, 0.10); } }
+:root[data-theme="dark"] { --coh: #b79bff; --inc: #69a0ff; --pe: #ff8a50; --pairn: #4cd07d; --paire: #2dd4bf; --tot: #f2eee9; --tr: #fbbf24; --en: #f472b6; --slab: #423a2f; --slabedge: #857b6d; --beam: #ffc94a; --fluor: #f472b6; --band1: rgba(255, 138, 80, 0.10); --band2: rgba(105, 160, 255, 0.10); --band3: rgba(76, 208, 125, 0.10); }
 .stage { position: relative; display: grid; grid-template-columns: 272px minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); grid-template-areas: "ctl ctl" "card main";
   border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
 .stage-ctl { grid-area: ctl; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
@@ -700,8 +700,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     S3.el.className = 'd3';
     const sc = S3.scene, M = (o, c) => VD3K.material(S3, o, c), DS = THREE.DoubleSide, tok = (n, fb) => VD3K.token(n, fb);
     const basic = (o) => new THREE.MeshBasicMaterial(Object.assign({ transparent: true, depthWrite: false }, o));
-    const steel = M({ roughness: 0.35, metalness: 0.7 }, ['#b9c0c8', '#77808a']), dark = M({ roughness: 0.55, metalness: 0.25 }, ['#56606b', '#3a424c']);
-    const lead = M({ roughness: 0.7, metalness: 0.3 }, ['#6e7378', '#4c5156']), paint = M({ roughness: 0.45, metalness: 0.2 }, ['#c9d0d8', '#7d8794']);
+    const steel = M({ roughness: 0.35, metalness: 0.7 }, ['#c7c1ba', '#898278']), dark = M({ roughness: 0.55, metalness: 0.25 }, ['#696258', '#4b443b']);
+    const lead = M({ roughness: 0.7, metalness: 0.3 }, ['#77746f', '#55524d']), paint = M({ roughness: 0.45, metalness: 0.2 }, ['#d7d1ca', '#928a7f']);
     const edgeM = new THREE.LineBasicMaterial({ transparent: true, opacity: 0.6 });
     sc.add(VD3K.bench(S3, { w: 6, d: 5, y: 0.6 }), VD3K.backdrop(S3, { r: 2.4, h: 3.2, y: -0.1, arc: Math.PI * 1.15 }));
     /* ---- Narrow and broad beam ---- */
@@ -710,7 +710,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const slab = new THREE.Mesh(new THREE.BoxGeometry(1, FACE, FACE), slabM); slab.renderOrder = 1; GB.add(slab);
     const slabE = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(1, FACE, FACE)), edgeM); GB.add(slabE);
     GB.add(VD3K.box(0.12, 0.2, ZB - 0.06, dark, -0.4, 0, 0), VD3K.box(0.14, 0.22, 0.12, lead, -0.4, 0, ZB - 0.06));
-    const hole = new THREE.Mesh(new THREE.PlaneGeometry(0.11, 0.11), new THREE.MeshBasicMaterial({ color: 0x0b0d10 })); hole.rotation.y = Math.PI / 2; hole.position.set(-0.3295, 0, ZB); GB.add(hole);
+    const hole = new THREE.Mesh(new THREE.PlaneGeometry(0.11, 0.11), new THREE.MeshBasicMaterial({ color: 0x100e0b })); hole.rotation.y = Math.PI / 2; hole.position.set(-0.3295, 0, ZB); GB.add(hole);
     const detM = new THREE.MeshStandardMaterial({ transparent: true, opacity: 0.55, roughness: 0.6, metalness: 0.1, side: DS, depthWrite: false });
     const det = new THREE.Mesh(new THREE.BoxGeometry(0.012, FACE, FACE), detM); det.renderOrder = 1; GB.add(det);
     const detStand = VD3K.box(0.05, 0.12, 0.004, dark, 0, 0, 0); GB.add(detStand);
@@ -723,23 +723,23 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     { const tube = VD3K.glass(S3, { r: 0.07, len: 0.3, axis: 'y', opacity: 0.18 }); tube.position.set(HX.an - 0.02, 0, ZB); GH.add(tube);
       const cu = M({ roughness: 0.35, metalness: 0.8 }, ['#c27a4a', '#9c5f38']);
       GH.add(VD3K.rod([HX.an - 0.02, 0.15, ZB], [HX.an - 0.02, 0.02, ZB], 0.016, cu));
-      const tgt = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.012, 32), M({ roughness: 0.4, metalness: 0.8 }, ['#8d939a', '#6b7178'])); tgt.position.set(HX.an - 0.02, 0.015, ZB); tgt.rotation.z = 0.35; GH.add(tgt);
+      const tgt = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.012, 32), M({ roughness: 0.4, metalness: 0.8 }, ['#99948e', '#77726c'])); tgt.position.set(HX.an - 0.02, 0.015, ZB); tgt.rotation.z = 0.35; GH.add(tgt);
       GH.add(VD3K.rod([HX.an - 0.02, -0.15, ZB], [HX.an - 0.02, -0.05, ZB], 0.01, steel));
       const fil = new THREE.Mesh(new THREE.TorusGeometry(0.008, 0.002, 6, 16), basic({ opacity: 0.9, color: 0xffa040 })); fil.position.set(HX.an - 0.02, -0.045, ZB); fil.rotation.x = Math.PI / 2; GH.add(fil);
       for (const s of [-1, 1]) GH.add(VD3K.box(0.05, 0.04, ZB - 0.075, dark, HX.an - 0.02, s * 0.17, 0), VD3K.rod([HX.an - 0.02, s * 0.17, ZB - 0.075], [HX.an - 0.02, s * 0.15, ZB], 0.008, dark));
       /* the filter holder rails */
       GH.add(VD3K.box(0.2, 0.03, 0.02, dark, (HX.al + HX.f2) / 2, 0, 0)); }
-    const alM = M({ roughness: 0.35, metalness: 0.7, transparent: true, opacity: 0.85 }, ['#d4d9df', '#a9b0b8']);
+    const alM = M({ roughness: 0.35, metalness: 0.7, transparent: true, opacity: 0.85 }, ['#dedad5', '#b7b1aa']);
     const f2M = M({ roughness: 0.35, metalness: 0.75, transparent: true, opacity: 0.85 }, ['#c27a4a', '#9c5f38']);
     const plAl = new THREE.Mesh(new THREE.BoxGeometry(1, 0.16, 0.16), alM), plF2 = new THREE.Mesh(new THREE.BoxGeometry(1, 0.16, 0.16), f2M); plAl.position.set(HX.al, 0, ZB); plF2.position.set(HX.f2, 0, ZB); GH.add(plAl, plF2);
     const pAl = VD3K.rod([HX.al, 0, 0.02], [HX.al, 0, ZB - 0.08], 0.004, steel), pF2 = VD3K.rod([HX.f2, 0, 0.02], [HX.f2, 0, ZB - 0.08], 0.004, steel); GH.add(pAl, pF2);
     /* the dosimeter: a small chamber on a stand, cabled to its meter */
     GH.add(VD3K.rod([HX.det, 0, ZB], [HX.det + 0.05, 0, ZB], 0.018, dark), VD3K.rod([HX.det + 0.05, 0, ZB], [HX.det + 0.14, 0, ZB], 0.008, steel), VD3K.rod([HX.det + 0.1, 0, 0], [HX.det + 0.1, 0, ZB], 0.006, steel), VD3K.box(0.08, 0.08, 0.008, dark, HX.det + 0.1, 0, 0));
     const meter = VD3K.meter(S3, { label: 'DOSIMETER', sub: 'air kerma at 1 m, µGy per mAs', w: 0.2, h: 0.1 }); meter.position.x = HX.det + 0.08; meter.position.y = -0.24; GH.add(meter);
-    GH.add(VD3K.cable([HX.det + 0.14, 0, ZB], [HX.det + 0.08, -0.22, 0.03], { color: 0x23282f, rad: 0.003, sag: 0.08 }));
+    GH.add(VD3K.cable([HX.det + 0.14, 0, ZB], [HX.det + 0.08, -0.22, 0.03], { color: 0x2e2a24, rad: 0.003, sag: 0.08 }));
     const dotsH = VD3K.particles(S3, { n: 400, r: 0.0042, seg: 8 }); dotsH.material = new THREE.MeshBasicMaterial({ color: 0xffffff }); GH.add(dotsH);
     sc.add(GH);
-    S3.onTheme(() => { slabM.color.copy(tok('--slabedge', '#6b7787')); detM.color.copy(tok('--muted', '#5a6575')); edgeM.color.copy(tok('--slabedge', '#6b7787')); });
+    S3.onTheme(() => { slabM.color.copy(tok('--slabedge', '#857b6d')); detM.color.copy(tok('--muted', '#73695c')); edgeM.color.copy(tok('--slabedge', '#857b6d')); });
     g3 = { S3, GB, GH, slab, slabE, det, detStand, segs, marks, plAl, plF2, pAl, pF2, meter, dotsH, key: '', dots: [], hk: '', last: 0 };
     can.addEventListener('wheel', (e) => { if (!in3(e)) e.stopImmediatePropagation(); }, { passive: true });
     can.addEventListener('dblclick', (e) => { if (!in3(e)) e.stopImmediatePropagation(); });

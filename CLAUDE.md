@@ -62,8 +62,8 @@ only when the work needs them.
 
 ## Demos
 - Each demo is one HTML file on the shared library `demos/lib/` (read `demos/lib/README.md`). The look of the whole site (tokens,
-  fonts, the header band) is `demos/lib/paper.css`, the lab look of 2026-11-08 (direction B, instrument panel): the page around a demo is the panel, the
-  canvases and 3D scenes are the instrument and keep their own look. A new demo gets the link from `python3 tools/paper.py`. Shared styles and behavior go in
+  fonts, the header band) is `demos/lib/paper.css`, the warm lab look of 2026-11-08 (direction C): a walnut band, ivory panels, amber accents. The
+  demos draw in warm grays too; blues stay only where they mean something (negative charge, cold, sky, water, stars, spectra). A new demo gets the link from `python3 tools/paper.py`. Shared styles and behavior go in
   the library, never pasted into a demo. A new 3D view uses `demos/lib/vd3kit.js`. The only outside libraries are three.js r128
   from cdnjs (only where it is already used) and Google Fonts.
 - **Edit `demos/<name>.html` directly.** Never rebuild a demo from an older copy elsewhere: that once wiped a finished pass.
@@ -71,7 +71,7 @@ only when the work needs them.
   line before code (use `/* */`). Tests are in `curriculum/validation/test_<demo>.cjs`.
 - Before pushing a new or changed demo, run `node tools/democheck.cjs <demo>` (rules, map, tests, translation, page checks,
   opening state). A visual fix comes with a picture from `node tools/beforeafter.cjs <demo>` attached to the reply. See `docs/tools.md`.
-- House style: Day and Night themes (the lab look, `demos/lib/paper.css`, linked last on every page; Day is the default), projector mode, 400 px and 360 px phones with no sideways scroll, keyboard access, Reduce
+- House style: Day and Night themes (the warm lab look, `demos/lib/paper.css`, linked last on every page; Day is the default), projector mode, 400 px and 360 px phones with no sideways scroll, keyboard access, Reduce
   motion, and Blind mode for predictions. Check the screenshots at desktop and phone width, light and dark.
 - Languages: English text is the key. After you build or change a demo, harvest its strings and check for leaks with
   `?lang=qps`. Every demo must be harvested [checked]. Never read displayed text back as state. See `demos/lib/i18n.md`.

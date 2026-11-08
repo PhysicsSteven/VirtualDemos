@@ -23,20 +23,20 @@
 @font-face { font-family: "VD Symbols"; src: local("Segoe UI Symbol"), local("Menlo"), local("DejaVu Sans Mono"), local("DejaVu Sans"), local("Noto Sans Symbols 2"), local("Noto Sans Symbols"), local("Apple Symbols"); unicode-range: U+2609; }
 /* Layout: a cutaway bench. The half star cross section fills the left with the timeline and profile charts under it, a narrow rail of controls and readouts on the right; stacks on phones. */
 :root {
-  --bg: #e9edf2;
-  --surface: #f8fafc;
-  --canvas: #fcfdfe;
-  --relief: #dfe5ec;
-  --ink: #17202b;
-  --muted: #5a6575;
-  --line: #d3d9e2;
-  --grid: #e6ebf1;
-  --grid-strong: #cfd7e1;
+  --bg: #f1eeea;
+  --surface: #fcfaf8;
+  --canvas: #fefdfc;
+  --relief: #ebe6e0;
+  --ink: #2a2219;
+  --muted: #73695c;
+  --line: #e1dbd4;
+  --grid: #f0ece7;
+  --grid-strong: #e0d9d0;
   --pos: #c23f2c;
   --neg: #2b60b5;
-  --field: #1d2836;
+  --field: #342b1f;
   --equi: #a7740b;
-  --accent: #2b60b5;
+  --accent: #c4811c;
   --on-charge: #ffffff;
   --el-h: #2f5fd0;
   --el-he: #e0a21b;
@@ -46,31 +46,31 @@
   --el-mg: #2e9a52;
   --el-si: #8a5a30;
   --el-sca: #e24f93;
-  --el-fe: #3b4048;
+  --el-fe: #47423c;
   --el-np: #9fb20e;
   --liquid: #8fb6dc;
-  --solid: #eef6ff;
+  --solid: #f9f7f4;
   --space: #04060a;
   --font-ui: "Atkinson Hyperlegible", "VD Symbols", "Segoe UI", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", "VD Symbols", ui-monospace, "SFMono-Regular", Menlo, monospace;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
-    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-    --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218;
+    --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --relief: #40372c; --ink: #eeeae4; --muted: #b0a698;
+    --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+    --field: #eee8e0; --equi: #e2b350; --accent: #fbc26d; --on-charge: #17130e;
     --el-h: #6f9bff; --el-he: #f2c14e; --el-c: #3cc6d6; --el-o: #ff7a5e; --el-ne: #c08cf5;
-    --el-mg: #62d688; --el-si: #a47a55; --el-sca: #ff8fb8; --el-fe: #d2d7dd; --el-np: #dff07a;
-    --liquid: #2c5580; --solid: #d6eaff; --space: #04060a; color-scheme: dark;
+    --el-mg: #62d688; --el-si: #a47a55; --el-sca: #ff8fb8; --el-fe: #dcd8d3; --el-np: #dff07a;
+    --liquid: #2c5580; --solid: #f1ebe4; --space: #04060a; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
-  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-  --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218;
+  --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --relief: #40372c; --ink: #eeeae4; --muted: #b0a698;
+  --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+  --field: #eee8e0; --equi: #e2b350; --accent: #fbc26d; --on-charge: #17130e;
   --el-h: #6f9bff; --el-he: #f2c14e; --el-c: #3cc6d6; --el-o: #ff7a5e; --el-ne: #c08cf5;
-  --el-mg: #62d688; --el-si: #a47a55; --el-sca: #ff8fb8; --el-fe: #d2d7dd; --el-np: #dff07a;
-  --liquid: #2c5580; --solid: #d6eaff; --space: #04060a; color-scheme: dark;
+  --el-mg: #62d688; --el-si: #a47a55; --el-sca: #ff8fb8; --el-fe: #dcd8d3; --el-np: #dff07a;
+  --liquid: #2c5580; --solid: #f1ebe4; --space: #04060a; color-scheme: dark;
 }
 :root[data-projector="on"] { font-size: 125%; }
 body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
@@ -486,7 +486,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   ];
   const EL_MASSIVE = ['si28', 's_ca', 'fe_grp'];   // a run that makes these (above 5%) gets the late burning features
   const VIRIDIS = ['#440154', '#482878', '#3e4989', '#31688e', '#26828e', '#1f9e89', '#35b779', '#6ece58', '#b5de2b', '#fde725'];
-  const INFERNO = ['#000004', '#1b0c41', '#4a0c6b', '#781c6d', '#a52c60', '#cf4446', '#ed6925', '#fb9b06', '#f7d13d', '#fcffa4'];
+  const INFERNO = ['#030201', '#33281a', '#4a0c6b', '#781c6d', '#a52c60', '#cf4446', '#ed6925', '#fb9b06', '#f7d13d', '#fcffa4'];
 
   // ---------- helpers ----------
   function rgb(c) {
@@ -1160,7 +1160,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   function sliceTokens() {
     if (tokC && tokC.mode === S.mode) return tokC;
     const T = tokens(); T.mode = S.mode;
-    Object.assign(T, { canvas: '#06080c', ink: '#e6ebf2', muted: '#8f9bab', grid: '#141a22', gridStrong: '#222c38', line: '#2a3442', accent: '#86b4ff', pos: '#ff8f7a', neg: '#69a0ff' });
+    Object.assign(T, { canvas: '#0c0906', ink: '#f1ede7', muted: '#a99f91', grid: '#211c15', gridStrong: '#362e24', line: '#40372c', accent: '#fcce89', pos: '#ff8f7a', neg: '#69a0ff' });
     return (tokC = T);
   }
 
@@ -1971,7 +1971,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   function drawSky2D() {
     sky.width = Math.max(1, Math.round(W * dpr)); sky.height = Math.max(1, Math.round(H * dpr));
     const c = skyc; c.setTransform(dpr, 0, 0, dpr, 0, 0);
-    c.fillStyle = '#04060a'; c.fillRect(0, 0, W, H); skyTw = [];
+    c.fillStyle = '#090705'; c.fillRect(0, 0, W, H); skyTw = [];
     if (!W || !H) return;
     const B = camBasis(ORBIT0.az, ORBIT0.pol), k = (H / 2) / Math.tan(hvFit(W, H)), sc = H / 900;
     const proj = (d) => {
@@ -2314,7 +2314,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       const halo = new THREE.Mesh(new THREE.PlaneGeometry(9, 9), haloMat); halo.renderOrder = 5; star.add(halo);
       // Earth for size comparison, lit by the star
       const light = new THREE.PointLight(0xffffff, 1.3, 0); scene.add(light);
-      scene.add(new THREE.AmbientLight(0x22324a, 0.6));
+      scene.add(new THREE.AmbientLight(0x473825, 0.6));
       const earth = new THREE.Mesh(new THREE.SphereGeometry(1, 40, 24), new THREE.MeshLambertMaterial({ color: 0x3f7fe0 }));
       earth.visible = false; scene.add(earth);
       // planet orbits at true scale (radii in R_sun; the group is scaled to view units each frame)
@@ -2322,7 +2322,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       for (const [nm, a] of PLANETS) {
         const P = []; for (let k = 0; k < 256; k++) { const t = (2 * Math.PI * k) / 256; P.push(Math.cos(t) * a * AU_RSUN, Math.sin(t) * a * AU_RSUN, 0); }
         const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(P, 3));
-        const l = new THREE.LineLoop(g, new THREE.LineBasicMaterial({ color: 0xa9bcd6, transparent: true, opacity: 0.45 }));
+        const l = new THREE.LineLoop(g, new THREE.LineBasicMaterial({ color: 0xd3c2ac, transparent: true, opacity: 0.45 }));
         l.userData = { nm, a }; rings.add(l);
       }
       // lost gas shells: camera facing planes through the center, one per mass drop in view
@@ -2692,7 +2692,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       if (!free(box)) continue;
       taken.push(box);
       c.fillStyle = 'rgba(6,8,12,0.6)'; c.fillRect(box[0], box[1], box[2] - box[0], box[3] - box[1]);
-      c.fillStyle = '#c3d2e6'; c.fillText(t, q[0] + 8 * p, q[1]);
+      c.fillStyle = '#e2d6c7'; c.fillText(t, q[0] + 8 * p, q[1]);
     }
     drawMiniKey(c, mo, T, p);
     // Earth label

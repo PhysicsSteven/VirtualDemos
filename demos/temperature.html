@@ -14,9 +14,9 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
 /* only what this demo needs beyond demos/lib/vd.css */
-:root { --hot: #d2452b; --cold: #2f7fd6; --ta: #d2452b; --tb: #2f7fd6; --fit: #2f8a4e; --curve: #17202b; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --hot: #ff7a5c; --cold: #74b0ff; --ta: #ff7a5c; --tb: #74b0ff; --fit: #66d38c; --curve: #e3e8ef; } }
-:root[data-theme="dark"] { --hot: #ff7a5c; --cold: #74b0ff; --ta: #ff7a5c; --tb: #74b0ff; --fit: #66d38c; --curve: #e3e8ef; }
+:root { --hot: #d2452b; --cold: #2f7fd6; --ta: #d2452b; --tb: #2f7fd6; --fit: #2f8a4e; --curve: #2a2219; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --hot: #ff7a5c; --cold: #74b0ff; --ta: #ff7a5c; --tb: #74b0ff; --fit: #66d38c; --curve: #eeeae4; } }
+:root[data-theme="dark"] { --hot: #ff7a5c; --cold: #74b0ff; --ta: #ff7a5c; --tb: #74b0ff; --fit: #66d38c; --curve: #eeeae4; }
 .stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
 .stage-ctl .count { margin-left: auto; font-size: 0.82rem; color: var(--muted); }
@@ -264,11 +264,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
      C_A dT_A/dt = −P and C_B dT_B/dt = +P with C = mc. The difference decays as exp(−t/τ), 1/τ = (kA/L)(1/C_A + 1/C_B),
      and both end at T_f = (C_A T_A0 + C_B T_B0)/(C_A + C_B): the heat one loses is the heat the other gains. */
   const SPECIFIC = { /* c in J/(kg·°C), Table 1.3 */
-    aluminum: { name: 'Aluminum', c: 900, col: '#b8c0ca' }, copper: { name: 'Copper', c: 387, col: '#c87a4f' }, steel: { name: 'Iron, steel', c: 452, col: '#7d8794' },
-    lead: { name: 'Lead', c: 128, col: '#6e7480' }, silver: { name: 'Silver', c: 235, col: '#d9dee5' }, gold: { name: 'Gold', c: 129, col: '#d4a63a' },
+    aluminum: { name: 'Aluminum', c: 900, col: '#c9c2b9' }, copper: { name: 'Copper', c: 387, col: '#c87a4f' }, steel: { name: 'Iron, steel', c: 452, col: '#928a7f' },
+    lead: { name: 'Lead', c: 128, col: '#7f786f' }, silver: { name: 'Silver', c: 235, col: '#e4e0da' }, gold: { name: 'Gold', c: 129, col: '#d4a63a' },
     glass: { name: 'Glass', c: 840, col: '#a9d3dc' }, granite: { name: 'Concrete, granite', c: 840, col: '#9a958c' },
     water: { name: 'Water', c: 4186, col: '#4f9fd8', liquid: true }, ethanol: { name: 'Ethanol', c: 2450, col: '#b9d9ec', liquid: true },
-    glycerin: { name: 'Glycerin', c: 2410, col: '#d9e6c4', liquid: true }, mercury: { name: 'Mercury', c: 139, col: '#aeb6c1', liquid: true } };
+    glycerin: { name: 'Glycerin', c: 2410, col: '#d9e6c4', liquid: true }, mercury: { name: 'Mercury', c: 139, col: '#c0b9af', liquid: true } };
   const MYSTERY_POOL = ['copper', 'steel', 'lead', 'silver', 'gold', 'glass'];
   const CONDUCT = { /* k in W/(m·°C), Table 1.5 */
     diamond: { name: 'Diamond', k: 2000 }, silver: { name: 'Silver', k: 420 }, copper: { name: 'Copper', k: 390 }, gold: { name: 'Gold', k: 318 },
@@ -301,15 +301,15 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
      is V0[1 + β(T − 20)] (Table 1.2), except water, whose volume is V0 ρ(20)/ρ(T) from Tanaka's density formula; the flask grows
      by V0 β_Pyrex (T − 20), and the difference rises in the capillary: h = ΔV/A. The capillary's own expansion is neglected. */
   const EXPAND = { /* α in 1/°C, Table 1.2 */
-    aluminum: { name: 'Aluminum', a: 25e-6, col: '#b8c0ca' }, brass: { name: 'Brass', a: 19e-6, col: '#c9a24a' }, copper: { name: 'Copper', a: 17e-6, col: '#c87a4f' },
-    gold: { name: 'Gold', a: 14e-6, col: '#d4a63a' }, steel: { name: 'Iron or steel', a: 12e-6, col: '#7d8794' }, invar: { name: 'Invar', a: 0.9e-6, col: '#8e959e' },
-    lead: { name: 'Lead', a: 29e-6, col: '#6e7480' }, silver: { name: 'Silver', a: 18e-6, col: '#d9dee5' }, glass: { name: 'Glass (ordinary)', a: 9e-6, col: '#a9d3dc' },
-    pyrex: { name: 'Glass (Pyrex)', a: 3e-6, col: '#c4e3ea' }, quartz: { name: 'Quartz', a: 0.4e-6, col: '#e2eef1' }, concrete: { name: 'Concrete, brick', a: 12e-6, col: '#9a958c' },
+    aluminum: { name: 'Aluminum', a: 25e-6, col: '#c9c2b9' }, brass: { name: 'Brass', a: 19e-6, col: '#c9a24a' }, copper: { name: 'Copper', a: 17e-6, col: '#c87a4f' },
+    gold: { name: 'Gold', a: 14e-6, col: '#d4a63a' }, steel: { name: 'Iron or steel', a: 12e-6, col: '#928a7f' }, invar: { name: 'Invar', a: 0.9e-6, col: '#9d978f' },
+    lead: { name: 'Lead', a: 29e-6, col: '#7f786f' }, silver: { name: 'Silver', a: 18e-6, col: '#e4e0da' }, glass: { name: 'Glass (ordinary)', a: 9e-6, col: '#a9d3dc' },
+    pyrex: { name: 'Glass (Pyrex)', a: 3e-6, col: '#c4e3ea' }, quartz: { name: 'Quartz', a: 0.4e-6, col: '#f0eae3' }, concrete: { name: 'Concrete, brick', a: 12e-6, col: '#9a958c' },
     marble: { name: 'Marble', a: 2.5e-6, col: '#e6e1d8' } };
   const ROD_POOL = ['aluminum', 'brass', 'copper', 'gold', 'steel', 'lead', 'silver', 'glass'];
   const LIQUIDS = { /* β in 1/°C, Table 1.2; water from its density */
-    water: { name: 'Water', b: null, col: '#4f9fd8' }, ether: { name: 'Ether', b: 1650e-6, col: '#e8eef3' }, ethanol: { name: 'Ethyl alcohol', b: 1100e-6, col: '#d84a4a' },
-    gasoline: { name: 'Gasoline', b: 950e-6, col: '#e2b84a' }, glycerin: { name: 'Glycerin', b: 500e-6, col: '#cfe3b5' }, mercury: { name: 'Mercury', b: 180e-6, col: '#aeb6c1' } };
+    water: { name: 'Water', b: null, col: '#4f9fd8' }, ether: { name: 'Ether', b: 1650e-6, col: '#f2eee9' }, ethanol: { name: 'Ethyl alcohol', b: 1100e-6, col: '#d84a4a' },
+    gasoline: { name: 'Gasoline', b: 950e-6, col: '#e2b84a' }, glycerin: { name: 'Glycerin', b: 500e-6, col: '#cfe3b5' }, mercury: { name: 'Mercury', b: 180e-6, col: '#c0b9af' } };
   const ROD_L0 = 1.000, T_REF = 20, FLASK_V0 = 5000, BORE = 1.00, CAP_A = Math.PI * BORE * BORE / 4, BETA_PYREX = 9e-6;   /* mm³, mm, mm² */
   function waterRho(T) { /* kg/m³, 0 to 40 °C */
     const a1 = -3.983035, a2 = 301.797, a3 = 522528.9, a4 = 69.34881, a5 = 999.974950;
@@ -470,7 +470,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     return y;
   }
   function thermoLCD(x, y, w, h, text, name) {
-    if (VG) { VG.box(ctx, x - 6, y - 6, w + 12, h + 22, { color: dark() ? '#2b3440' : '#34404e', r: 6 }); VG.lcd(ctx, x, y, w, h, text); VG.plate(ctx, name, x + w / 2, y + h + 8, { s: 8 * proj() }); }
+    if (VG) { VG.box(ctx, x - 6, y - 6, w + 12, h + 22, { color: dark() ? '#3e372d' : '#4c4236', r: 6 }); VG.lcd(ctx, x, y, w, h, text); VG.plate(ctx, name, x + w / 2, y + h + 8, { s: 8 * proj() }); }
     else { ctx.fillStyle = T.ink; ctx.font = `600 ${h * 0.6}px ${T.mono}`; ctx.textAlign = 'right'; ctx.fillText(text, x + w, y + h * 0.7); }
   }
   function arrow(x1, y1, x2, y2, w, col) {
@@ -544,7 +544,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const foam = dark() ? '#c9c2a8' : '#efe9d2', foamD = dark() ? '#8f8a76' : '#cfc7a8';
     if (VG) VG.shadow(ctx, (bx0 + bx1) / 2, by, (bx1 - bx0) * 0.55, 8);
     ctx.fillStyle = foamD; ctx.fillRect(bx0, top, bx1 - bx0, by - top);
-    const inner = ctx.createLinearGradient(0, top + 14, 0, by - 12); inner.addColorStop(0, dark() ? '#1b222b' : '#f7f4ea'); inner.addColorStop(1, dark() ? '#232b35' : '#e9e3cd');
+    const inner = ctx.createLinearGradient(0, top + 14, 0, by - 12); inner.addColorStop(0, dark() ? '#2a241c' : '#f7f4ea'); inner.addColorStop(1, dark() ? '#342d24' : '#e9e3cd');
     ctx.fillStyle = inner; ctx.fillRect(bx0 + 14, top + 14, bx1 - bx0 - 28, by - top - 26);
     ctx.fillStyle = foam; ctx.fillRect(bx0, top, bx1 - bx0, 14); ctx.fillRect(bx0, top, 14, by - top); ctx.fillRect(bx1 - 14, top, 14, by - top); ctx.fillRect(bx0, by - 12, bx1 - bx0, 12);
     ctx.save(); ctx.globalAlpha = 0.18; ctx.fillStyle = '#000'; for (let i = 0; i < 90; i++) { const xx = bx0 + ((i * 97) % 1000) / 1000 * (bx1 - bx0), yy = top + ((i * 61) % 1000) / 1000 * (by - top); if (xx > bx0 + 14 && xx < bx1 - 14 && yy > top + 14 && yy < by - 12) continue; ctx.fillRect(xx, yy, 1.5, 1.5); } ctx.restore();
@@ -555,7 +555,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* bar from face to face, colored along its length by the temperature drop (straight line in steady flow) */
     const xa = cA + sA / 2, xb = cB - sB / 2, br = Math.max(4, 7 * p);
     const gb = ctx.createLinearGradient(xa, 0, xb, 0); gb.addColorStop(0, tcol(st.TA)); gb.addColorStop(1, tcol(st.TB));
-    if (VG) VG.rod(ctx, xa, barY, xb, barY, br, { color: (CONDUCT[e.bar] && SPECIFIC[e.bar]) ? SPECIFIC[e.bar].col : e.bar === 'stainless' ? '#9aa2ad' : e.bar === 'glass' ? '#bfe0e8' : '#b8c0ca' });
+    if (VG) VG.rod(ctx, xa, barY, xb, barY, br, { color: (CONDUCT[e.bar] && SPECIFIC[e.bar]) ? SPECIFIC[e.bar].col : e.bar === 'stainless' ? '#aca59b' : e.bar === 'glass' ? '#bfe0e8' : '#b8c0ca' });
     ctx.save(); ctx.globalAlpha = 0.55; ctx.fillStyle = gb; ctx.fillRect(xa, barY - br, xb - xa, 2 * br); ctx.restore();
     if (VG) VG.label(ctx, `${CONDUCT[e.bar].name.split(' (')[0].toLowerCase()} bar, ${f(e.L * 100, 0)} cm`, (xa + xb) / 2, barY + br + 12 * p, { a: 'center', s: 10.5 * p });
     block(cA, floor, sA, keyA, st.TA, e.a === 'mystery' ? 'A: mystery' : `A: ${SPECIFIC[keyA].name.toLowerCase()}`);
@@ -571,7 +571,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const lw = 96 * p, lh = 26 * p, ly = top - lh - 20 * p;
     for (const [cx, sz, tt, nm] of [[cA, sA, st.TA, 'A'], [cB, sB, st.TB, 'B']]) {
       const ty = floor - sz;
-      ctx.strokeStyle = dark() ? '#c7ced8' : '#4a5563'; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(cx, ty + sz * 0.35); ctx.lineTo(cx, top + 4); ctx.stroke();
+      ctx.strokeStyle = dark() ? '#d7d0c8' : '#61584c'; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(cx, ty + sz * 0.35); ctx.lineTo(cx, top + 4); ctx.stroke();
       if (VG) VG.cable(ctx, cx, top + 4, cx, ly + lh + 16, -10, { w: 2.5 * p });
       thermoLCD(Math.max(4, Math.min(W - lw - 4, cx - lw / 2)), Math.max(6, ly), lw, lh, `${f(tt, 2)} °C`, `thermometer ${nm}`);
     }
@@ -581,16 +581,16 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* the bath vessel */
     const vx = W * 0.3, vw = Math.min(W * 0.34, 260 * p), vh = Math.min(H * 0.38, 210 * p), vt = by - vh;
     const lqTop = vt + vh * 0.18;
-    const COL = { ln2: dark() ? '#c9dcf2' : '#e5f0fb', dry: dark() ? '#6a7c8f' : '#c8d3de', ice: dark() ? '#3a7cb8' : '#a8d1f0', steam: dark() ? '#3a7cb8' : '#a8d1f0', room: null, mys: dark() ? '#8a5a3a' : '#e3b48a' };
+    const COL = { ln2: dark() ? '#c9dcf2' : '#f5f1eb', dry: dark() ? '#8c7f6d' : '#dcd4ca', ice: dark() ? '#3a7cb8' : '#a8d1f0', steam: dark() ? '#3a7cb8' : '#a8d1f0', room: null, mys: dark() ? '#8a5a3a' : '#e3b48a' };
     if (key === 'steam' || key === 'mys') { /* a hot plate under the beaker */
-      if (VG) VG.box(ctx, vx - vw / 2 - 14, by - 22 * p, vw + 28, 22 * p, { color: '#4a5260', r: 4 });
+      if (VG) VG.box(ctx, vx - vw / 2 - 14, by - 22 * p, vw + 28, 22 * p, { color: '#5e564c', r: 4 });
       ctx.fillStyle = key === 'steam' ? '#d2452b' : '#d98a2b'; ctx.fillRect(vx - vw / 2 - 4, by - 24 * p, vw + 8, 3);
     }
     const base = (key === 'steam' || key === 'mys') ? by - 24 * p : by;
     if (key !== 'room') {
       if (VG) VG.shadow(ctx, vx, base, vw * 0.6, 6);
       if (key === 'ln2') { /* a dewar: silvered double wall */
-        const g = ctx.createLinearGradient(vx - vw / 2, 0, vx + vw / 2, 0); g.addColorStop(0, '#6b7480'); g.addColorStop(0.3, '#e9edf2'); g.addColorStop(0.6, '#a3acb7'); g.addColorStop(1, '#59616c');
+        const g = ctx.createLinearGradient(vx - vw / 2, 0, vx + vw / 2, 0); g.addColorStop(0, '#7e776d'); g.addColorStop(0.3, '#f1eeea'); g.addColorStop(0.6, '#b6aea4'); g.addColorStop(1, '#6b645a');
         ctx.fillStyle = g; ctx.beginPath(); ctx.roundRect(vx - vw / 2, base - vh, vw, vh, [4, 4, 18, 18]); ctx.fill();
         ctx.fillStyle = COL.ln2; ctx.fillRect(vx - vw / 2 + 10, lqTop + (base - by), vw - 20, base - lqTop - (base - by) - 10);
       } else {
@@ -601,7 +601,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       /* contents */
       const yl = lqTop + (base - by);
       if (key === 'ice') for (let i = 0; i < 7; i++) { const x = vx - vw / 2 + 16 + ((i * 37) % 100) / 100 * (vw - 50), y = yl - 6 + (i % 3) * 8; ctx.fillStyle = 'rgba(255,255,255,0.8)'; ctx.strokeStyle = 'rgba(120,160,190,0.8)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.roundRect(x, y, 22 * p, 18 * p, 4); ctx.fill(); ctx.stroke(); }
-      if (key === 'dry') for (let i = 0; i < 9; i++) { const x = vx - vw / 2 + 14 + ((i * 53) % 100) / 100 * (vw - 40), y = base - 30 * p - (i % 3) * 14 * p; ctx.fillStyle = '#eef3f7'; ctx.beginPath(); ctx.roundRect(x, y, 18 * p, 12 * p, 3); ctx.fill(); }
+      if (key === 'dry') for (let i = 0; i < 9; i++) { const x = vx - vw / 2 + 14 + ((i * 53) % 100) / 100 * (vw - 40), y = base - 30 * p - (i % 3) * 14 * p; ctx.fillStyle = '#f6f3ef'; ctx.beginPath(); ctx.roundRect(x, y, 18 * p, 12 * p, 3); ctx.fill(); }
       const tt = performance.now() / 1000;
       if ((key === 'steam' || key === 'ln2' || key === 'dry') && !reduce) for (let i = 0; i < 14; i++) { const ph = (tt * (0.6 + (i % 5) * 0.1) + i * 0.37) % 1, x = vx - vw / 2 + 14 + ((i * 71) % 100) / 100 * (vw - 28), y = base - 8 - ph * (base - yl - 10);
         ctx.strokeStyle = 'rgba(255,255,255,0.75)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(x, y, (2 + (i % 3)) * p, 0, 7); ctx.stroke(); }
@@ -612,12 +612,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* the bulb on a stand, held in the bath */
     const sx = vx - vw / 2 - 40 * p; if (VG) { VG.stand(ctx, sx, by, by - vh - 120 * p, { s: p, side: -1 }); VG.boss(ctx, sx, by - vh - 70 * p, p); }
     const bulbR = Math.min(vw * 0.2, 38 * p), bcx = vx, bcy = base - bulbR - 18 * p;
-    ctx.strokeStyle = dark() ? '#9fb0c2' : '#6b7d90'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(sx + 16 * p, by - vh - 70 * p); ctx.lineTo(bcx - 4, by - vh - 70 * p); ctx.stroke();
+    ctx.strokeStyle = dark() ? '#bfb2a2' : '#8d806e'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(sx + 16 * p, by - vh - 70 * p); ctx.lineTo(bcx - 4, by - vh - 70 * p); ctx.stroke();
     const tg = th.Tg, gg = ctx.createRadialGradient(bcx - bulbR * 0.3, bcy - bulbR * 0.3, 2, bcx, bcy, bulbR); gg.addColorStop(0, 'rgba(255,255,255,0.8)'); gg.addColorStop(0.5, tcol(tg, 0.55)); gg.addColorStop(1, 'rgba(120,140,160,0.7)');
     ctx.fillStyle = gg; ctx.beginPath(); ctx.arc(bcx, bcy, bulbR, 0, 7); ctx.fill(); ctx.strokeStyle = 'rgba(80,100,120,0.8)'; ctx.lineWidth = 1.5; ctx.stroke();
     /* gas molecules in the bulb, moving faster when hotter */
     const sp = Math.sqrt(cToK(tg) / 293), tt = reduce ? 0 : performance.now() / 1000;
-    ctx.fillStyle = dark() ? '#e6edf5' : '#2a3442'; for (let i = 0; i < Math.round(th.n * 0.8); i++) { const a = i * 2.39996 + tt * sp * (0.6 + (i % 7) * 0.13), r = bulbR * 0.75 * Math.sqrt(((i * 0.618) % 1));
+    ctx.fillStyle = dark() ? '#f3eee8' : '#40372c'; for (let i = 0; i < Math.round(th.n * 0.8); i++) { const a = i * 2.39996 + tt * sp * (0.6 + (i % 7) * 0.13), r = bulbR * 0.75 * Math.sqrt(((i * 0.618) % 1));
       ctx.beginPath(); ctx.arc(bcx + Math.cos(a) * r, bcy + Math.sin(a * 1.3) * r * 0.9, 1.6 * p, 0, 7); ctx.fill(); }
     /* tube up to the gauge */
     const gx = W * 0.74, gy = H * 0.18, gw = Math.min(150 * p, W * 0.22), gh = 34 * p;
@@ -632,19 +632,19 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (ex.kind === 'rod') {
       const key = rodKey(), dl = rodDL(key, ex.T), x0 = W * 0.08, x1 = W * 0.78, ry = by - H * 0.22, r = Math.max(6, 9 * p);
       /* clamp block at the left, water jacket around the rod, circulator below */
-      if (VG) { VG.box(ctx, x0 - 26 * p, ry - 40 * p, 26 * p, by - ry + 40 * p, { color: '#4a5563', r: 3 }); }
+      if (VG) { VG.box(ctx, x0 - 26 * p, ry - 40 * p, 26 * p, by - ry + 40 * p, { color: '#61584c', r: 3 }); }
       const jx0 = x0 + 30 * p, jx1 = x1 - 30 * p, jr = r * 3.2;
       ctx.fillStyle = tcol(ex.T, 0.35); ctx.fillRect(jx0, ry - jr, jx1 - jx0, 2 * jr);
       ctx.strokeStyle = dark() ? 'rgba(220,235,245,0.6)' : 'rgba(90,120,140,0.6)'; ctx.lineWidth = 2; ctx.strokeRect(jx0, ry - jr, jx1 - jx0, 2 * jr);
       ctx.fillStyle = 'rgba(255,255,255,0.3)'; ctx.fillRect(jx0 + 4, ry - jr + 3, jx1 - jx0 - 8, 3);
       const m = EXPAND[key], shift = Math.max(-8, Math.min(8, dl * 4)) * p;   /* the end moves by ΔL, drawn 4000 times larger */
       if (VG) VG.rod(ctx, x0, ry, x1 + shift, ry, r, { color: m.col });
-      for (const sx of [jx0 + 20, jx1 - 20]) { if (VG) VG.box(ctx, sx - 10 * p, ry + jr, 20 * p, by - ry - jr, { color: '#5b6677', r: 2, shadow: false }); }
+      for (const sx of [jx0 + 20, jx1 - 20]) { if (VG) VG.box(ctx, sx - 10 * p, ry + jr, 20 * p, by - ry - jr, { color: '#756b5d', r: 2, shadow: false }); }
       /* digital dial gauge on its own stand */
-      const gx = x1 + 12 * p + shift; if (VG) { VG.rod(ctx, gx, ry, gx + 34 * p, ry, 2.5 * p, { color: '#d0d6de' }); VG.stand(ctx, x1 + 60 * p, by, ry - 70 * p, { s: p }); }
+      const gx = x1 + 12 * p + shift; if (VG) { VG.rod(ctx, gx, ry, gx + 34 * p, ry, 2.5 * p, { color: '#ddd8d1' }); VG.stand(ctx, x1 + 60 * p, by, ry - 70 * p, { s: p }); }
       thermoLCD(Math.min(W - 128 * p, x1 + 18 * p), ry - 80 * p, 110 * p, 28 * p, `${f(dl, 3)} mm`, 'dial gauge');
       /* circulator */
-      const cx = (jx0 + jx1) / 2, cw = 120 * p; if (VG) VG.box(ctx, cx - cw / 2, by - 50 * p, cw, 50 * p, { color: '#3d4754', r: 5 });
+      const cx = (jx0 + jx1) / 2, cw = 120 * p; if (VG) VG.box(ctx, cx - cw / 2, by - 50 * p, cw, 50 * p, { color: '#524a3f', r: 5 });
       if (VG) VG.lcd(ctx, cx - cw / 2 + 10 * p, by - 42 * p, cw - 20 * p, 22 * p, `${f(ex.T, 1)} °C`), VG.plate(ctx, 'water bath', cx, by - 10 * p, { s: 8 * p });
       if (VG) { VG.cable(ctx, cx - cw / 2 + 8, by - 50 * p, jx0 + 30, ry + jr, -20, { w: 4 * p, color: '#2c5f88' }); VG.cable(ctx, cx + cw / 2 - 8, by - 50 * p, jx1 - 30, ry + jr, -20, { w: 4 * p, color: '#2c5f88' }); }
       if (VG) VG.label(ctx, ex.rod === 'mystery' ? 'mystery rod, 1.000 m at 20.0 °C' : `${m.name.toLowerCase()} rod, 1.000 m at 20.0 °C`, (x0 + x1) / 2, ry - jr - 12 * p, { a: 'center', s: 11 * p });
@@ -653,7 +653,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       /* bath beaker */
       const bw = fr * 3.4, bh = fr * 2.6; ctx.fillStyle = tcol(ex.T, 0.3); ctx.fillRect(fx - bw / 2, by - bh, bw, bh - 30 * p);
       ctx.strokeStyle = dark() ? 'rgba(220,235,245,0.7)' : 'rgba(90,120,140,0.7)'; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.moveTo(fx - bw / 2, by - bh - 20 * p); ctx.lineTo(fx - bw / 2, by - 30 * p); ctx.lineTo(fx + bw / 2, by - 30 * p); ctx.lineTo(fx + bw / 2, by - bh - 20 * p); ctx.stroke();
-      if (VG) { VG.box(ctx, fx - bw / 2 - 10, by - 30 * p, bw + 20, 30 * p, { color: '#3d4754', r: 4 }); VG.lcd(ctx, fx + bw / 2 - 86 * p, by - 26 * p, 76 * p, 20 * p, `${f(ex.T, 1)} °C`); }
+      if (VG) { VG.box(ctx, fx - bw / 2 - 10, by - 30 * p, bw + 20, 30 * p, { color: '#524a3f', r: 4 }); VG.lcd(ctx, fx + bw / 2 - 86 * p, by - 26 * p, 76 * p, 20 * p, `${f(ex.T, 1)} °C`); }
       /* flask and capillary */
       /* the ruler spans this liquid's whole range from 0 to 40 °C, so the scale (px per mm) depends on the liquid */
       const col = LIQUIDS[key].col, capX = fx, capTop = H * 0.05, capBot = fy - fr - 16 * p, hmin = Math.min(0, capH(key, 0), capH(key, 40)), hmax = Math.max(0, capH(key, 0), capH(key, 40));
@@ -675,8 +675,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       if (VG) VG.label(ctx, `${LIQUIDS[key].name.toLowerCase()}, 5.000 mL in Pyrex, bore 1.00 mm`, fx, by + 18 * p, { a: 'center', s: 11 * p });
     }
   }
-  const LAYER_LOOK = { plaster: '#ece8df', glasswool: '#f1cf63', brick: '#b65a3c', glass: '#bfe2ec', wood: '#b9894f', foam: '#f6f7f8', steel: '#8a939e', aluminum: '#c3cad3', copper: '#c87a4f',
-    stainless: '#9aa2ad', cork: '#b88d5c', ice: '#e3f2fb', air: 'rgba(200,220,240,0.25)', snow: '#f6fafc', wool: '#e9e1d0', down: '#f7f2e6', diamond: '#e9f6fb', silver: '#d9dee5', gold: '#d4a63a', water: '#4f9fd8', fat: '#f1d7a8' };
+  const LAYER_LOOK = { plaster: '#ece8df', glasswool: '#f1cf63', brick: '#b65a3c', glass: '#bfe2ec', wood: '#b9894f', foam: '#f6f7f8', steel: '#8a939e', aluminum: '#d2ccc4', copper: '#c87a4f',
+    stainless: '#aca59b', cork: '#b88d5c', ice: '#e3f2fb', air: 'rgba(200,220,240,0.25)', snow: '#f6fafc', wool: '#e9e1d0', down: '#f7f2e6', diamond: '#f6f3ee', silver: '#e4e0da', gold: '#d4a63a', water: '#4f9fd8', fat: '#f1d7a8' };
   function drawCo() {
     const p = proj(), c = S.co, w = wallState(coWall()), rods = c.build === 'rods';
     const by = scene(0.9), x0 = W * 0.12, x1 = W * 0.88, top = H * 0.08, bot = by - 10;
@@ -728,7 +728,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     /* the probe */
     const xp = wx0 + c.x * total * sc, tp = w.at(c.x * total);
-    ctx.strokeStyle = dark() ? '#e6edf5' : '#222b36'; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(xp, wy0 - 4); ctx.lineTo(xp, ty(tp)); ctx.stroke();
+    ctx.strokeStyle = dark() ? '#f3eee8' : '#342d24'; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(xp, wy0 - 4); ctx.lineTo(xp, ty(tp)); ctx.stroke();
     ctx.fillStyle = T.accent; ctx.beginPath(); ctx.arc(xp, ty(tp), 5 * p, 0, 7); ctx.fill();
     thermoLCD(Math.max(4, Math.min(W - 104 * p, xp - 50 * p)), Math.max(4, (rods ? wy1 + 30 * p : top + 44 * p)), 96 * p, 24 * p, `${f(tp, 2)} °C`, 'probe');
     if (VG) VG.label(ctx, rods ? 'two rods 1.00 cm across, end to end, insulated along their sides' : `${f(c.A, c.A < 1 ? 3 : 2)} m² of wall, seen edge on`, W / 2, by + 16 * p, { a: 'center', s: 11 * p });
@@ -738,8 +738,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const sx = W * 0.5, R = Math.max(8, Math.min(H * 0.16, W * 0.12) * (c.D / 8)), top = H * 0.08, sy = by - H * 0.36;
     /* stand, boss and the thread the sphere hangs from */
     const stx = sx + Math.min(W * 0.22, 190 * p);
-    if (VG) { VG.stand(ctx, stx, by, top, { s: p, side: 1 }); VG.boss(ctx, stx, top + 22 * p, p, { side: -1 }); VG.rod(ctx, stx - 8 * p, top + 22 * p, sx, top + 22 * p, 2.2 * p, { color: '#b4bcc6' }); }
-    ctx.strokeStyle = dark() ? '#c7ced8' : '#4a5563'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(sx, top + 22 * p); ctx.lineTo(sx, sy - R); ctx.stroke();
+    if (VG) { VG.stand(ctx, stx, by, top, { s: p, side: 1 }); VG.boss(ctx, stx, top + 22 * p, p, { side: -1 }); VG.rod(ctx, stx - 8 * p, top + 22 * p, sx, top + 22 * p, 2.2 * p, { color: '#c5beb5' }); }
+    ctx.strokeStyle = dark() ? '#d7d0c8' : '#61584c'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(sx, top + 22 * p); ctx.lineTo(sx, sy - R); ctx.stroke();
     /* warm air rising off the sphere: plumes stronger and faster when hotter, swept sideways by the fan */
     const tt = reduce ? 0 : performance.now() / 1000, dT = Math.max(0, Tn - c.Ta), lean = Math.min(1.4, c.U / 2.5);
     if (dT > 0.05) { ctx.save(); for (let i = 0; i < 9; i++) { const ph = (tt * (0.25 + 0.03 * Math.sqrt(dT)) + i / 9) % 1, a = 0.35 * (1 - ph) * Math.min(1, dT / 30);
@@ -753,8 +753,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       ctx.save(); ctx.strokeStyle = dark() ? 'rgba(200,215,230,0.45)' : 'rgba(70,95,120,0.4)'; ctx.lineWidth = 1.5 * p; ctx.setLineDash([10 * p, 10 * p]); ctx.lineDashOffset = -(tt * 40 * c.U) % 20;
       for (let k = -2; k <= 2; k++) { const y = fy + k * fr * 0.4; ctx.beginPath(); ctx.moveTo(fx + 12 * p, y); ctx.bezierCurveTo(sx - R * 1.5, y, sx - R * 1.2, y + Math.sign(k || 1) * R * (1.2 - Math.abs(k) * 0.25), sx, y + Math.sign(k || 1) * R * (1.25 - Math.abs(k) * 0.2) * (k ? 1 : 0) + (k ? 0 : -R * 1.15)); ctx.lineTo(W * 0.95, y); ctx.stroke(); }
       ctx.restore();
-      if (VG) { VG.rod(ctx, fx - 20 * p, fy, fx - 20 * p, by - 8 * p, 3 * p, { color: '#8a939e' }); VG.box(ctx, fx - 46 * p, by - 10 * p, 52 * p, 10 * p, { color: '#3d4754', r: 3 }); VG.box(ctx, fx - 30 * p, fy - fr, 22 * p, 2 * fr, { color: '#4a5563', r: 6 }); }
-      ctx.strokeStyle = dark() ? '#c7ced8' : '#4a5563'; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.ellipse(fx, fy, 7 * p, fr, 0, 0, 7); ctx.stroke();
+      if (VG) { VG.rod(ctx, fx - 20 * p, fy, fx - 20 * p, by - 8 * p, 3 * p, { color: '#9c958b' }); VG.box(ctx, fx - 46 * p, by - 10 * p, 52 * p, 10 * p, { color: '#524a3f', r: 3 }); VG.box(ctx, fx - 30 * p, fy - fr, 22 * p, 2 * fr, { color: '#61584c', r: 6 }); }
+      ctx.strokeStyle = dark() ? '#d7d0c8' : '#61584c'; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.ellipse(fx, fy, 7 * p, fr, 0, 0, 7); ctx.stroke();
       if (VG) VG.label(ctx, `fan, ${f(c.U, 1)} m/s`, fx, fy + fr + 14 * p, { a: 'center', s: 10.5 * p });
     }
     /* radiation: short wavy arrows outward, more of them for the black sphere */
@@ -764,7 +764,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       for (let k = 0; k <= 10; k++) { const rr = r0 + (r1 - r0) * k / 10, w = Math.sin(k * 1.9) * 3 * p; const xx = sx + Math.cos(a) * rr - Math.sin(a) * w, yy = sy + Math.sin(a) * rr + Math.cos(a) * w; k ? ctx.lineTo(xx, yy) : ctx.moveTo(xx, yy); }
       ctx.stroke(); ctx.restore(); }
     /* the sphere, tinted by its temperature */
-    const col = c.surf === 'black' ? '#23272e' : SPECIFIC[c.metal].col;
+    const col = c.surf === 'black' ? '#2d2924' : SPECIFIC[c.metal].col;
     if (VG) VG.ball(ctx, sx, sy, R, col, { matte: c.surf === 'black' }); else { ctx.fillStyle = col; ctx.beginPath(); ctx.arc(sx, sy, R, 0, 7); ctx.fill(); }
     ctx.fillStyle = tcol(Tn, 0.35); ctx.beginPath(); ctx.arc(sx, sy, R, 0, 7); ctx.fill();
     /* thermocouple lead to its meter */
@@ -788,7 +788,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       ctx.restore();
     };
     const box = (x, title, sub, ok) => {
-      ctx.save(); ctx.fillStyle = dark() ? '#1d2530' : '#f4f6f9'; ctx.strokeStyle = ok ? T.line : T.hot; ctx.lineWidth = (ok ? 1.5 : 2.5) * p;
+      ctx.save(); ctx.fillStyle = dark() ? '#2f281e' : '#f9f7f4'; ctx.strokeStyle = ok ? T.line : T.hot; ctx.lineWidth = (ok ? 1.5 : 2.5) * p;
       ctx.beginPath(); ctx.roundRect(x - bw / 2, cy - bh / 2, bw, bh, 10 * p); ctx.fill(); ctx.stroke(); ctx.restore();
       ctx.fillStyle = T.ink; ctx.font = `700 ${(small ? 10.5 : 12.5) * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(title, x, cy + bh / 2 + 8 * p);
       ctx.fillStyle = T.muted; ctx.font = `${(small ? 9.5 : 10.5) * p}px ${T.ui}`; ctx.fillText(sub, x, cy + bh / 2 + 25 * p);

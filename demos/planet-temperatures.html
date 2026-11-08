@@ -16,9 +16,9 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
 /* only what this demo needs beyond demos/lib/vd.css: the colors of sunlight, heat and the zones, the three panes and the card */
-:root { --sunc: #c98a00; --irc: #c2410c; --refl: #6b7787; --hz: #1f9a4a; --hzo: #8bcf9a; --water: #2b60b5; --boil: #c23f2c; --meas: #7c3aed; --space: #04060b; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --sunc: #ffc94a; --irc: #ff8a50; --refl: #aab4c2; --hz: #4cd07d; --hzo: #2f6b43; --water: #69a0ff; --boil: #ff7660; --meas: #c4a5ff; } }
-:root[data-theme="dark"] { --sunc: #ffc94a; --irc: #ff8a50; --refl: #aab4c2; --hz: #4cd07d; --hzo: #2f6b43; --water: #69a0ff; --boil: #ff7660; --meas: #c4a5ff; }
+:root { --sunc: #c98a00; --irc: #c2410c; --refl: #857b6d; --hz: #1f9a4a; --hzo: #8bcf9a; --water: #2b60b5; --boil: #c23f2c; --meas: #7c3aed; --space: #04060b; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --sunc: #ffc94a; --irc: #ff8a50; --refl: #c0b7ac; --hz: #4cd07d; --hzo: #2f6b43; --water: #69a0ff; --boil: #ff7660; --meas: #c4a5ff; } }
+:root[data-theme="dark"] { --sunc: #ffc94a; --irc: #ff8a50; --refl: #c0b7ac; --hz: #4cd07d; --hzo: #2f6b43; --water: #69a0ff; --boil: #ff7660; --meas: #c4a5ff; }
 .stage { position: relative; display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr) 240px;
   grid-template-areas: "ctl ctl" "sys bud" "chart chart"; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
 .stage-ctl { grid-area: ctl; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
@@ -360,7 +360,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* Proxima: T_eff 2900 K and log L/L☉ = −2.82 from Pavlenko et al. 2017 (A&A 606, A49); orbit from Suárez Mascareño et al. 2025 */
     proxima: { body: 'Proxima Centauri b', star: 'Proxima Centauri', L: Math.pow(10, -2.82), T: 2900, d: 0.04848, a: 0.294, sp: 'whole', gh: false, e: 1, v: 11.186, col: '#b87a5a', meas: null,
       hint: 'The nearest star to the Sun, a red dwarf with 0.15 % of the Sun\'s light (log L = −2.82, 2900 K), and its planet b, 0.0485 AU out, 20 times closer than Earth to the Sun. Its albedo, air and size are unknown: the setup borrows Earth\'s albedo and escape speed, with no greenhouse.' },
-    trappist: { body: 'TRAPPIST-1 e', star: 'TRAPPIST-1', L: Math.pow(10, -3.26), T: 2566, d: 0.02925, a: 0.294, sp: 'whole', gh: false, e: 1, v: 11.186 * Math.sqrt(0.692 / 0.920), col: '#8a7aa8', meas: null,
+    trappist: { body: 'TRAPPIST-1 e', star: 'TRAPPIST-1', L: Math.pow(10, -3.26), T: 2566, d: 0.02925, a: 0.294, sp: 'whole', gh: false, e: 1, v: 11.186 * Math.sqrt(0.692 / 0.920), col: '#a5947d', meas: null,
       hint: 'TRAPPIST-1, a red dwarf with 0.055 % of the Sun\'s light (log L = −3.26, 2566 K), has seven Earth sized planets. Planet e, 0.0293 AU out, has 0.692 Earth masses and 0.920 Earth radii, so its escape speed is 9.70 km/s. Albedo borrowed from Earth, no greenhouse. The star is just below the 2600 K where the zone formulas start, so the edges use 2600 K.' },
   };
   const S = { preset: 'earth', body: 'Earth', star: 'Sun', L: 1, T: 5772, d: 1, a: 0.294, sp: 'whole', gh: true, e: 0.6, v: 11.186, col: '#3a78c0', meas: null, co2: CO2_NOW, co2On: true,
@@ -410,7 +410,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const solarish = () => S.star === 'Sun' || S.star === 'young Sun';
   function label(c, t, x, y, o = {}) { const p = proj(); c.save(); c.font = `${o.w || 600} ${(o.s || 11.5) * p}px ${K.ui}`; c.textAlign = o.a || 'left'; c.textBaseline = o.b || 'middle';
     if (o.halo !== false) { c.lineWidth = 3.5 * p; c.strokeStyle = o.bg || 'rgba(4,6,11,0.85)'; c.lineJoin = 'round'; c.strokeText(t, x, y); }
-    c.fillStyle = o.col || '#e3e8ef'; c.fillText(t, x, y); c.restore(); }
+    c.fillStyle = o.col || '#eeeae4'; c.fillText(t, x, y); c.restore(); }
   /* the inner planets' names on their orbits, outermost first; a name that would sit on another, on the Sun or on the planet's
      own label is left out (on a phone Mercury, Venus and Earth crowd the Sun), and the planet's own orbit is named by its label */
   function orbitNames(c, at, busy) {
@@ -425,7 +425,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   function drawSysFlat() {
     const c = sctx, Lr = sysLayout(), { cx, cy, s } = Lr, st = Lr.st, z = st.z, p = proj();
-    c.fillStyle = '#04060b'; c.fillRect(0, 0, SW, SH);
+    c.fillStyle = '#0a0805'; c.fillRect(0, 0, SW, SH);
     /* a few fixed stars behind, the same each time */
     let sd = 7; const rn = () => { sd = (sd * 16807) % 2147483647; return sd / 2147483647; };
     for (let i = 0; i < 160; i++) { const b = 0.25 + 0.6 * Math.pow(rn(), 3); c.fillStyle = `rgba(220,228,240,${b})`; c.fillRect(rn() * SW, rn() * SH, 1.2, 1.2); }
@@ -450,9 +450,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     label(c, S.star === 'Sun' || S.star === 'young Sun' ? (S.star === 'Sun' ? 'Sun' : 'young Sun') : S.star, cx, cy + sr + 12 * p, { a: 'center', col: rgb(sc), w: 700 });
     const tc = heatRGB(st.ts), pl = 7 * p;
     c.fillStyle = S.col; c.beginPath(); c.arc(px, py, pl, 0, 2 * Math.PI); c.fill();
-    c.strokeStyle = S.blind ? '#c8d2e0' : rgb(tc); c.lineWidth = 2.5 * p; c.beginPath(); c.arc(px, py, pl + 3 * p, 0, 2 * Math.PI); c.stroke();
+    c.strokeStyle = S.blind ? '#ded5ca' : rgb(tc); c.lineWidth = 2.5 * p; c.beginPath(); c.arc(px, py, pl + 3 * p, 0, 2 * Math.PI); c.stroke();
     const lt = S.body + (S.blind ? '' : ` · ${fx(st.ts, 0)} K`), right = px < SW - 140 * p;
-    label(c, lt, right ? px + pl + 8 * p : px - pl - 8 * p, py - 12 * p, { a: right ? 'left' : 'right', col: '#f1f4f8', w: 700 });
+    label(c, lt, right ? px + pl + 8 * p : px - pl - 8 * p, py - 12 * p, { a: right ? 'left' : 'right', col: '#f7f5f2', w: 700 });
     flatScale(c, s, Lr);
   }
   function flatScale(c, s, Lr) {
@@ -486,7 +486,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const zoneM = (col, op) => new THREE.MeshBasicMaterial({ color: col, transparent: true, opacity: op, side: THREE.DoubleSide, depthWrite: false });
     const opt = new THREE.Mesh(new THREE.RingGeometry(0.5, 1, 160, 1), zoneM(0x4cd07d, 0.13)), cons = new THREE.Mesh(new THREE.RingGeometry(0.5, 1, 160, 1), zoneM(0x4cd07d, 0.30));
     cons.position.z = 0.0005; sc.add(opt, cons);
-    const orbits = INNER.map(() => { const l = VD3K.ring(1, { color: '#aab9cd', dashed: true, opacity: 0.45 }); sc.add(l); return l; });
+    const orbits = INNER.map(() => { const l = VD3K.ring(1, { color: '#cabdad', dashed: true, opacity: 0.45 }); sc.add(l); return l; });
     const mine = VD3K.ring(1, { color: '#69a0ff', opacity: 0.85 }); sc.add(mine);
     const planet = VD3K.planet(S3, { r: 0.03, color: '#3a78c0', seg: 48 }); sc.add(planet);
     const haloM = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.85, side: THREE.DoubleSide, depthWrite: false });
@@ -530,7 +530,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const c = sctx; c.clearRect(0, 0, SW, SH);
     const pp = S3.project([x, y, 0]), sp = S3.project([0, 0, 0]);
     const lt = S.body + (S.blind ? '' : ` · ${fx(st.ts, 0)} K`), right = pp[0] < SW - 140 * p;
-    label(c, lt, right ? pp[0] + 14 * p : pp[0] - 14 * p, pp[1] - 14 * p, { a: right ? 'left' : 'right', col: '#f1f4f8', w: 700 });
+    label(c, lt, right ? pp[0] + 14 * p : pp[0] - 14 * p, pp[1] - 14 * p, { a: right ? 'left' : 'right', col: '#f7f5f2', w: 700 });
     label(c, solarish() ? (S.star === 'Sun' ? 'Sun' : 'young Sun') : S.star, sp[0], sp[1] + 22 * p, { a: 'center', col: rgb(sc), w: 700 });
     if (!S.blind) { const q = S3.project([z.mg * u * 0.707, -z.mg * u * 0.707, 0]); label(c, 'habitable zone', q[0] + 6 * p, q[1] + 8 * p, { col: '#8fe6ad', w: 700, s: 11 }); }
     if (solarish() && S.orbits) orbitNames(c, (o) => S3.project([-o.d * u * 0.92, -o.d * u * 0.39, 0]), [[sp[0] - 22 * p, sp[1] - 12 * p, sp[0] + 22 * p, sp[1] + 30 * p], right ? [pp[0] + 12 * p, pp[1] - 22 * p, pp[0] + 130 * p, pp[1] - 6 * p] : [pp[0] - 130 * p, pp[1] - 22 * p, pp[0] - 12 * p, pp[1] - 6 * p]]);
@@ -806,7 +806,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (!GS.on || !GW) return;
     const c = gctx, p = proj(), z = ghzNow(), q = ghzFactors(GS.R, GS.ago, gOpts()), wide = GW >= 760;
     c.setTransform(dpr, 0, 0, dpr, 0, 0); c.fillStyle = K.canvas; c.fillRect(0, 0, GW, GH);
-    const pad = 12 * p, dk = K.dark, inkM = dk ? '#ffffff' : '#10202a', sunM = dk ? '#ffd27a' : '#a85c00';
+    const pad = 12 * p, dk = K.dark, inkM = dk ? '#ffffff' : '#261e14', sunM = dk ? '#ffd27a' : '#a85c00';
     /* wide: the disk at the top left with the four bars under it, the map taking the whole right column; when the window is too
        short for bars under the disk (a wide, short pane) the bars go under the map as before */
     const A = wide ? [pad, pad, Math.min(GW * 0.46, GH - 2 * pad), 0] : [pad, pad, GW - 2 * pad, 0];
@@ -821,16 +821,16 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       : [A[0] + A[2] + 2 * pad, GH * 0.55 + 10 * p, GW - A[2] - 4 * pad, GH * 0.45 - 20 * p];
     // the disk, face on, with today's zone as rings
     const cx = A[0] + A[2] / 2, cy = A[1] + A[3] / 2, s = A[2] / 2 / 18.5;
-    c.fillStyle = '#04060b'; c.beginPath(); c.roundRect ? c.roundRect(A[0], A[1], A[2], A[3], 8 * p) : c.rect(A[0], A[1], A[2], A[3]); c.fill();
+    c.fillStyle = '#0a0805'; c.beginPath(); c.roundRect ? c.roundRect(A[0], A[1], A[2], A[3], 8 * p) : c.rect(A[0], A[1], A[2], A[3]); c.fill();
     c.save(); c.beginPath(); c.rect(A[0], A[1], A[2], A[3]); c.clip();
     const gl = c.createRadialGradient(cx, cy, 0, cx, cy, 9 * s); gl.addColorStop(0, 'rgba(255,226,170,0.55)'); gl.addColorStop(0.35, 'rgba(200,190,200,0.14)'); gl.addColorStop(1, 'rgba(120,150,220,0)');
     c.fillStyle = gl; c.fillRect(A[0], A[1], A[2], A[3]);
-    for (const d of DISK) { c.globalAlpha = 0.25 + 0.5 * d[2]; c.fillStyle = d[3] === 0 ? (d[2] > 0.85 ? '#a9c4ff' : '#dfe6ff') : d[3] === 2 ? '#ffe2b0' : '#cdbfae'; const r0 = d[3] === 0 ? 1.9 : 1.4; c.fillRect(cx + d[0] * s, cy + d[1] * s, r0, r0); }
+    for (const d of DISK) { c.globalAlpha = 0.25 + 0.5 * d[2]; c.fillStyle = d[3] === 0 ? (d[2] > 0.85 ? '#a9c4ff' : '#f4f0ea') : d[3] === 2 ? '#ffe2b0' : '#cdbfae'; const r0 = d[3] === 0 ? 1.9 : 1.4; c.fillRect(cx + d[0] * s, cy + d[1] * s, r0, r0); }
     c.globalAlpha = 1;
     // P today at the cursor's birth time, as a translucent green ring
     { const fs = []; let fm = 0; for (let R = 0.25; R < 18.5; R += 0.5) { const f = ghzFactors(R, GS.ago, gOpts()).p; fs.push([R, f]); fm = Math.max(fm, f); }
       for (const [R, f] of fs) { if (f < 0.02 * fm) continue; c.strokeStyle = `rgba(76,208,125,${(0.32 * f / fm).toFixed(3)})`; c.lineWidth = 0.5 * s + 0.5; c.beginPath(); c.arc(cx, cy, R * s, 0, 2 * Math.PI); c.stroke(); } }
-    c.setLineDash([5 * p, 4 * p]); c.strokeStyle = '#f0f4f8'; c.lineWidth = 1.2 * p;
+    c.setLineDash([5 * p, 4 * p]); c.strokeStyle = '#f7f4f1'; c.lineWidth = 1.2 * p;
     for (const R of z.z68.R) { c.beginPath(); c.arc(cx, cy, R * s, 0, 2 * Math.PI); c.stroke(); }
     c.setLineDash([]);
     // the Sun and the chosen star
@@ -840,12 +840,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     c.strokeStyle = '#ffffff'; c.lineWidth = (hot ? 2.4 : 1.6) * p; c.beginPath(); c.arc(tx, ty, 8 * p, 0, 2 * Math.PI); c.stroke();
     c.fillStyle = '#ffffff'; c.beginPath(); c.arc(tx, ty, 2.6 * p, 0, 2 * Math.PI); c.fill();
     c.restore();
-    label(c, 'The Milky Way from above (a drawing)', A[0] + 10 * p, A[1] + 14 * p, { s: 11, w: 700, col: '#dfe6ef' });
+    label(c, 'The Milky Way from above (a drawing)', A[0] + 10 * p, A[1] + 14 * p, { s: 11, w: 700, col: '#eee8e0' });
     label(c, 'Sun', sx + 7 * p, sy - 8 * p, { s: 10.5, w: 700, col: '#ffd27a' });
     label(c, 'your star: drag it in or out', Math.min(tx + 12 * p, A[0] + A[2] - 150 * p), ty + 16 * p, { s: 10.5, w: 600, col: '#ffffff' });
-    label(c, wide ? `dashed: the zone, ${fx(z.z68.R[0], 1)} to ${fx(z.z68.R[1], 1)} kpc (68% of the stars that could have complex life)` : `dashed: the zone, ${fx(z.z68.R[0], 1)} to ${fx(z.z68.R[1], 1)} kpc (68%)`, A[0] + 10 * p, A[1] + A[3] - 14 * p, { s: 10, col: '#dfe6ef' });
+    label(c, wide ? `dashed: the zone, ${fx(z.z68.R[0], 1)} to ${fx(z.z68.R[1], 1)} kpc (68% of the stars that could have complex life)` : `dashed: the zone, ${fx(z.z68.R[0], 1)} to ${fx(z.z68.R[1], 1)} kpc (68%)`, A[0] + 10 * p, A[1] + A[3] - 14 * p, { s: 10, col: '#eee8e0' });
     label(c, `green: P for stars born ${fx(GS.ago, 2)} Gyr ago`, A[0] + 10 * p, A[1] + A[3] - 30 * p, { s: 10, col: '#8fe0a8' });
-    for (const R of [5, 10, 15]) label(c, `${R} kpc`, cx + R * s * 0.7071 + 3 * p, cy + R * s * 0.7071 + 2 * p, { s: 9.5, col: '#8b95a5' });
+    for (const R of [5, 10, 15]) label(c, `${R} kpc`, cx + R * s * 0.7071 + 3 * p, cy + R * s * 0.7071 + 2 * p, { s: 9.5, col: '#a3998d' });
     gG.disk = { cx, cy, s, ta, tx, ty };
     // the map of where and when stars were born, shaded by H (stars that could have complex life today)
     if (!mapImg) {

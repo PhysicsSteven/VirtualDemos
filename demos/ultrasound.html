@@ -47,9 +47,9 @@ table.rows input:focus { border-color: var(--accent); }
 .chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
 @media (max-width: 820px) { .chips button { min-height: 36px; } }
 .readout dd.warn { color: var(--pos); }
-:root { --wood: #d8bf98; --wood-line: #c3a77c; --metal: #9aa4b0; --metal-hi: #c9d0d9; --string: #b4532a; --env: rgba(180, 83, 42, 0.18); --brass: #b98f2e; --box: #3b4656; --rule: #f1e3b5; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --wood: #5b4a33; --wood-line: #6d5a3f; --metal: #7d8793; --metal-hi: #a3adb9; --string: #f08a55; --env: rgba(240, 138, 85, 0.20); --brass: #d6ad4a; --box: #2c3542; --rule: #4d4630; } }
-:root[data-theme="dark"] { --wood: #5b4a33; --wood-line: #6d5a3f; --metal: #7d8793; --metal-hi: #a3adb9; --string: #f08a55; --env: rgba(240, 138, 85, 0.20); --brass: #d6ad4a; --box: #2c3542; --rule: #4d4630; }
+:root { --wood: #d8bf98; --wood-line: #c3a77c; --metal: #aea69c; --metal-hi: #d8d2ca; --string: #b4532a; --env: rgba(180, 83, 42, 0.18); --brass: #b98f2e; --box: #544a3d; --rule: #f1e3b5; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --wood: #5b4a33; --wood-line: #6d5a3f; --metal: #91897f; --metal-hi: #b7afa5; --string: #f08a55; --env: rgba(240, 138, 85, 0.20); --brass: #d6ad4a; --box: #40382e; --rule: #4d4630; } }
+:root[data-theme="dark"] { --wood: #5b4a33; --wood-line: #6d5a3f; --metal: #91897f; --metal-hi: #b7afa5; --string: #f08a55; --env: rgba(240, 138, 85, 0.20); --brass: #d6ad4a; --box: #40382e; --rule: #4d4630; }
 .fine { display: flex; gap: 6px; flex-wrap: wrap; }
 .fine .btn { padding: 3px 9px; font-family: var(--font-mono); font-size: 0.82rem; }
 .readout dd .ok { font-family: var(--font-ui); font-size: 0.85rem; font-weight: 400; color: var(--muted); }
@@ -59,30 +59,30 @@ table.rows input:focus { border-color: var(--accent); }
 .scene { position: absolute; inset: 0; }
 .shelf { position: absolute; left: 12px; bottom: 12px; right: 190px; z-index: 2; display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px; pointer-events: none; }
 .shelf > * { pointer-events: auto; }
-.gen { background: var(--box); color: #e3e8ef; border-radius: 10px; padding: 10px 12px; display: flex; flex-direction: column; gap: 8px; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.25); }
+.gen { background: var(--box); color: #eeeae4; border-radius: 10px; padding: 10px 12px; display: flex; flex-direction: column; gap: 8px; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.25); }
 .gen-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-.gen-title { font-size: 0.78rem; font-weight: 700; color: #c9d0d9; }
+.gen-title { font-size: 0.78rem; font-weight: 700; color: #d8d2ca; }
 .gen-lcd { font-family: var(--font-mono); font-weight: 600; font-size: 1.35rem; color: #7ee0a0; background: #0b1a12; border-radius: 5px; padding: 2px 10px; min-width: 7.2ch; text-align: right; font-variant-numeric: tabular-nums; }
 .gen-knobs { display: flex; align-items: center; gap: 12px; }
-.knobwrap { display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 0.72rem; color: #c9d0d9; }
+.knobwrap { display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 0.72rem; color: #d8d2ca; }
 .knob { position: relative; width: 52px; height: 52px; border-radius: 50%; cursor: grab; touch-action: none;
-  background: radial-gradient(circle at 38% 32%, #8b96a4, #4a5462 62%, #39414d); box-shadow: 0 0 0 3px #232a34, 0 2px 4px rgba(0, 0, 0, 0.5); }
+  background: radial-gradient(circle at 38% 32%, #a2998d, #60574c 62%, #4c443b); box-shadow: 0 0 0 3px #332c24, 0 2px 4px rgba(0, 0, 0, 0.5); }
 .knob:active { cursor: grabbing; }
-.knob-mark { position: absolute; left: 50%; top: 5px; width: 3px; height: 15px; margin-left: -1.5px; border-radius: 2px; background: #f1f4f8; transform-origin: 50% 21px; }
+.knob-mark { position: absolute; left: 50%; top: 5px; width: 3px; height: 15px; margin-left: -1.5px; border-radius: 2px; background: #f7f5f2; transform-origin: 50% 21px; }
 .knob:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
 .gen .fine { display: grid; grid-template-columns: auto auto; gap: 4px; }
-.gen .fine .btn { background: #39414d; color: #e3e8ef; border-color: #4a5462; }
+.gen .fine .btn { background: #4c443b; color: #eeeae4; border-color: #60574c; }
 .tray { background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; display: flex; flex-direction: column; gap: 8px; min-width: 0; flex: 1 1 300px; max-width: 600px; }
 .tray-title { font-size: 0.78rem; font-weight: 700; color: var(--muted); }
 .pieces { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 6px; }
 .pieces button { --w: 40px; --h: 14px; position: relative; width: var(--w); height: var(--h); min-height: 0; padding: 0; border: 0; border-radius: 3px; cursor: grab; touch-action: none;
-  font: 700 0.7rem/1 var(--font-mono); color: #17202b; background: linear-gradient(#c9d0d9, #9aa4b0); box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.18); }
+  font: 700 0.7rem/1 var(--font-mono); color: #2a2219; background: linear-gradient(#d8d2ca, #aea69c); box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.18); }
 .pieces button.brass { background: linear-gradient(#e2c26a, #b98f2e); }
 .pieces button span { position: relative; z-index: 1; }
 .tray-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; }
 .tray-foot .masslist { flex: 1 1 100%; }
 .vhandle { position: absolute; z-index: 2; border-radius: 6px; cursor: ew-resize; touch-action: none; display: flex; align-items: flex-end; justify-content: center; }
-.vhandle .grip { font-size: 0.8rem; color: #c9d0d9; line-height: 1; padding-bottom: 4px; pointer-events: none; }
+.vhandle .grip { font-size: 0.8rem; color: #d8d2ca; line-height: 1; padding-bottom: 4px; pointer-events: none; }
 .vhandle:hover, .vhandle.drag { box-shadow: 0 0 0 2px var(--accent); }
 .vhandle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .ghost { position: fixed; z-index: 50; pointer-events: none; transform: translate(-50%, -50%); opacity: 0.85; }
@@ -110,12 +110,12 @@ table.rows input:focus { border-color: var(--accent); }
 .card .btn { font-size: 0.78rem; padding: 3px 8px; }
 .card.away { opacity: 0; visibility: hidden; }
 @media (prefers-reduced-motion: reduce) { .card { transition: none; } }
-.gen .gen-sl { display: grid; grid-template-columns: auto minmax(110px, 1fr); align-items: center; gap: 4px 8px; font-size: 0.74rem; color: #c9d0d9; }
+.gen .gen-sl { display: grid; grid-template-columns: auto minmax(110px, 1fr); align-items: center; gap: 4px 8px; font-size: 0.74rem; color: #d8d2ca; }
 .gen .gen-sl input { accent-color: #7ee0a0; }
 .gen-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.gen .seg { background: #2c3542; border-color: #4a5462; }
-.gen .seg button { color: #c9d0d9; font-size: 0.78rem; }
-.gen .seg button[aria-pressed="true"] { background: #e3e8ef; color: #17202b; }
+.gen .seg { background: #40382e; border-color: #60574c; }
+.gen .seg button { color: #d8d2ca; font-size: 0.78rem; }
+.gen .seg button[aria-pressed="true"] { background: #eeeae4; color: #2a2219; }
 .shelf { right: 12px; }
 @media (max-width: 820px) {
   .scene { height: 520px; }
@@ -543,11 +543,11 @@ table.rows input:focus { border-color: var(--accent); }
   function probe(cx, cy, rot, p, label) {
     ctx.save(); ctx.translate(cx, cy); ctx.rotate(rot);
     const Gr = window.VDGear; Gr.cable(ctx, 0, -46 * p, 24 * p, -80 * p, -10 * p, { w: 3 * p, dx1: 0, dx2: -10 * p });
-    let g = ctx.createLinearGradient(-15 * p, 0, 15 * p, 0); g.addColorStop(0, '#9aa3ad'); g.addColorStop(0.35, '#f2f4f6'); g.addColorStop(1, '#7d8792');
+    let g = ctx.createLinearGradient(-15 * p, 0, 15 * p, 0); g.addColorStop(0, '#aca59b'); g.addColorStop(0.35, '#f6f4f2'); g.addColorStop(1, '#90897f');
     ctx.fillStyle = g; ctx.beginPath(); ctx.moveTo(-9 * p, -48 * p); ctx.lineTo(9 * p, -48 * p); ctx.quadraticCurveTo(12 * p, -24 * p, 17 * p, -8 * p); ctx.lineTo(17 * p, 0); ctx.lineTo(-17 * p, 0); ctx.lineTo(-17 * p, -8 * p); ctx.quadraticCurveTo(-12 * p, -24 * p, -9 * p, -48 * p); ctx.closePath(); ctx.fill();
     ctx.strokeStyle = 'rgba(0,0,0,0.3)'; ctx.lineWidth = 1; ctx.stroke();
-    ctx.fillStyle = '#2b323b'; ctx.fillRect(-17 * p, -3 * p, 34 * p, 3 * p);
-    if (label) { ctx.fillStyle = '#4a5360'; ctx.font = `700 ${7.5 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(label, 0, -20 * p); }
+    ctx.fillStyle = '#3a342c'; ctx.fillRect(-17 * p, -3 * p, 34 * p, 3 * p);
+    if (label) { ctx.fillStyle = '#5e564c'; ctx.font = `700 ${7.5 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(label, 0, -20 * p); }
     ctx.restore();
   }
   function drawBody(x, y, w, h, p) {
@@ -630,7 +630,7 @@ table.rows input:focus { border-color: var(--accent); }
   }
   function drawScreen(x, y, w, h, p) {
     /* the scanner's monitor: a bezel round a dark screen */
-    const Gr = window.VDGear; Gr.box(ctx, x - 12 * p, y - 12 * p, w + 24 * p, h + 44 * p, { r: 10 * p, color: '#2d3540' });
+    const Gr = window.VDGear; Gr.box(ctx, x - 12 * p, y - 12 * p, w + 24 * p, h + 44 * p, { r: 10 * p, color: '#3f382e' });
     Gr.plate(ctx, 'ultrasound scanner', x + 48 * p, y + h + 22 * p, { s: 7 * p });
     ctx.fillStyle = T.scope; ctx.beginPath(); ctx.roundRect(x - 4 * p, y - 4 * p, w + 8 * p, h + 8 * p, 4 * p); ctx.fill();
     { const g = ctx.createRadialGradient(x + w / 2, y + h / 2, 0, x + w / 2, y + h / 2, Math.max(w, h) * 0.7); g.addColorStop(0, 'rgba(126,224,160,0.07)'); g.addColorStop(1, 'rgba(0,0,0,0)'); ctx.fillStyle = g; ctx.fillRect(x - 4 * p, y - 4 * p, w + 8 * p, h + 8 * p); }
@@ -638,8 +638,8 @@ table.rows input:focus { border-color: var(--accent); }
     ctx.strokeStyle = grid; ctx.lineWidth = 1; for (let i = 0; i <= 10; i++) { const xx = x + w * i / 10; ctx.beginPath(); ctx.moveTo(xx, y); ctx.lineTo(xx, y + h); ctx.stroke(); } for (let j = 0; j <= 4; j++) { const yy = y + h * j / 4; ctx.beginPath(); ctx.moveTo(x, yy); ctx.lineTo(x + w, yy); ctx.stroke(); }
     if (S.mode === 'echo') {
       const zoom = S.tb === 'zoom', lo = zoom ? Math.max(0, Math.min(180, S.curT - 10)) : 0, hi = lo + (zoom ? 20 : 200); GEO.scr = { x, y, w, h, lo, hi };
-      for (let i = 0; i <= 10; i += zoom ? 2 : 2) txt(`${sig(lo + (hi - lo) * i / 10, 4)}`, x + w * i / 10, y + h + 10 * p, { a: 'center', s: 9, c: '#b9c3cf', m: 1 });
-      txt('time after the pulse is sent (μs)', x + w / 2, y + h + 22 * p, { a: 'center', s: 9, c: '#b9c3cf' });
+      for (let i = 0; i <= 10; i += zoom ? 2 : 2) txt(`${sig(lo + (hi - lo) * i / 10, 4)}`, x + w * i / 10, y + h + 10 * p, { a: 'center', s: 9, c: '#cdc5bb', m: 1 });
+      txt('time after the pulse is sent (μs)', x + w / 2, y + h + 22 * p, { a: 'center', s: 9, c: '#cdc5bb' });
       if (S.running) {
         const ech = echoesNow(), f0 = S.f0 * 1e6, n = Math.round(w * (zoom ? 2 : 3)), base = zoom ? y + h / 2 : y + h - 6 * p, amp = (zoom ? h / 2 - 6 * p : h - 14 * p) * S.gain;
         /* the sweep: the spot crosses the screen on the same slowed clock as the pulse in the body; what it has not reached yet
@@ -665,8 +665,8 @@ table.rows input:focus { border-color: var(--accent); }
         txt(`${S.curT.toFixed(2)} μs${S.depth && !S.blind ? `, ${(C_SCANNER * S.curT * 1e-6 / 2 * 100).toFixed(2)} cm` : ''}`, Math.min(cx + 5 * p, x + w - 120 * p), y + 24 * p, { s: 10, c: '#ffd36b', m: 1, b: 1 }); }
     } else {
       const lo = 0, hi = S.range; GEO.scr = { x, y, w, h, lo, hi };
-      for (let i = 0; i <= 10; i += 2) txt(`${sig(hi * i / 10 / 1000, 3)}`, x + w * i / 10, y + h + 10 * p, { a: 'center', s: 9, c: '#b9c3cf', m: 1 });
-      txt('Doppler shift (kHz)', x + w / 2, y + h + 22 * p, { a: 'center', s: 9, c: '#b9c3cf' });
+      for (let i = 0; i <= 10; i += 2) txt(`${sig(hi * i / 10 / 1000, 3)}`, x + w * i / 10, y + h + 10 * p, { a: 'center', s: 9, c: '#cdc5bb', m: 1 });
+      txt('Doppler shift (kHz)', x + w / 2, y + h + 22 * p, { a: 'center', s: 9, c: '#cdc5bb' });
       if (S.running) {
         const n = Math.round(w * 2), f0 = S.f0 * 1e6, lam = S.prof === 'lam', vals = []; let mx = 0;
         for (let i = 0; i <= n; i++) { const v = spectrum(hi * i / n, f0, vNow(), S.theta, MEDIA.blood.c, lam); vals.push(v); mx = Math.max(mx, v); }
@@ -703,34 +703,34 @@ table.rows input:focus { border-color: var(--accent); }
     const mesh = (geo, m, cast, recv) => { const x = new THREE.Mesh(geo, m); x.castShadow = !!cast; x.receiveShadow = !!recv; return x; };
     /* the room: floor, a painted wall with a skirting board, and a bench (worktop on a cabinet) */
     const FLOOR = -0.88;
-    const floor = mesh(new THREE.PlaneGeometry(12, 12), mat({ roughness: 0.95 }, ['#cfd5dc', '#161c24']), false, true); floor.position.z = FLOOR;
+    const floor = mesh(new THREE.PlaneGeometry(12, 12), mat({ roughness: 0.95 }, ['#dbd6d0', '#231e17']), false, true); floor.position.z = FLOOR;
     const wallCv = document.createElement('canvas'); wallCv.width = 16; wallCv.height = 256; const wallTex = new THREE.CanvasTexture(wallCv);
     const wall = new THREE.Mesh(new THREE.PlaneGeometry(12, 3.2), new THREE.MeshBasicMaterial({ map: wallTex })); wall.rotation.x = PI / 2; wall.position.set(0, 0.5, FLOOR + 1.6);
-    st.onTheme((dk) => { const c = wallCv.getContext('2d'), gr = c.createLinearGradient(0, 0, 0, 256); gr.addColorStop(0, dk ? '#10161d' : '#d3dae2'); gr.addColorStop(0.55, dk ? '#18202a' : '#e9edf1'); gr.addColorStop(1, dk ? '#141b24' : '#e0e5eb'); c.fillStyle = gr; c.fillRect(0, 0, 16, 256); c.fillStyle = dk ? '#232c38' : '#c3cbd5'; c.fillRect(0, 238, 16, 4); wallTex.needsUpdate = true; });
+    st.onTheme((dk) => { const c = wallCv.getContext('2d'), gr = c.createLinearGradient(0, 0, 0, 256); gr.addColorStop(0, dk ? '#1c1711' : '#e1dbd4'); gr.addColorStop(0.55, dk ? '#292219' : '#f0edea'); gr.addColorStop(1, dk ? '#231d15' : '#eae6e1'); c.fillStyle = gr; c.fillRect(0, 0, 16, 256); c.fillStyle = dk ? '#362f25' : '#d4cdc4'; c.fillRect(0, 238, 16, 4); wallTex.needsUpdate = true; });
     const topM = mat({ roughness: 0.75 }, ['#d6c6a8', '#3b3229']), edgeM = mat({ roughness: 0.7 }, ['#a88b64', '#4a3d2e']);
     const top = mesh(new THREE.BoxGeometry(2.4, 0.86, 0.035), [edgeM, edgeM, edgeM, edgeM, topM, edgeM], true, true); top.position.set(0, 0.06, -0.0175);
-    const cabM = mat({ roughness: 0.6, metalness: 0.15 }, ['#6d7884', '#2f3843']), handM = mat({ roughness: 0.3, metalness: 0.7 }, ['#d9dee4', '#8d97a3']);
-    sc.add(floor, wall, top, K.box(2.3, 0.8, -0.035 - FLOOR - 0.08, cabM, 0, 0.08, FLOOR + 0.08), K.box(2.2, 0.76, 0.08, mat({ roughness: 0.8 }, ['#3b434d', '#12171d']), 0, 0.09, FLOOR));
+    const cabM = mat({ roughness: 0.6, metalness: 0.15 }, ['#827a6f', '#423a30']), handM = mat({ roughness: 0.3, metalness: 0.7 }, ['#e3dfda', '#a1998f']);
+    sc.add(floor, wall, top, K.box(2.3, 0.8, -0.035 - FLOOR - 0.08, cabM, 0, 0.08, FLOOR + 0.08), K.box(2.2, 0.76, 0.08, mat({ roughness: 0.8 }, ['#4c453c', '#1c1813']), 0, 0.09, FLOOR));
     for (const x of [-0.85, -0.29, 0.27, 0.83]) sc.add(K.box(0.54, 0.008, 0.68, cabM, x, -0.321, -0.82), K.box(0.012, 0.016, 0.12, handM, x + 0.21, -0.33, -0.3));
     /* the transducer: a turned plastic body on its face (local z up the handle, the face at the origin), a dark lens, a strain relief */
-    const probe = new THREE.Group(), plast = mat({ roughness: 0.4, metalness: 0.05 }, ['#e8ebef', '#c9ced6']);
+    const probe = new THREE.Group(), plast = mat({ roughness: 0.4, metalness: 0.05 }, ['#eeece9', '#d5d0ca']);
     const prof = [[0, 0], [PR, 0], [PR, 0.004], [PR * 1.18, 0.02], [PR * 1.1, 0.05], [PR * 0.85, 0.082], [PR * 0.55, 0.09], [PR * 0.42, PL], [0, PL]].map(([r, z]) => new THREE.Vector2(r, z));
     const body = mesh(new THREE.LatheGeometry(prof, 40).rotateX(PI / 2), plast, true, false);
-    const lens = mesh(new THREE.CylinderGeometry(PR * 0.93, PR * 0.93, 0.0012, 40).rotateX(PI / 2), M({ color: 0x2b323b, roughness: 0.5 })); lens.position.z = 0.0004;
+    const lens = mesh(new THREE.CylinderGeometry(PR * 0.93, PR * 0.93, 0.0012, 40).rotateX(PI / 2), M({ color: 0x3a342c, roughness: 0.5 })); lens.position.z = 0.0004;
     const band = mesh(new THREE.CylinderGeometry(PR * 1.19, PR * 1.19, 0.004, 40).rotateX(PI / 2), M({ color: 0x3d6fb3, roughness: 0.4 })); band.position.z = 0.03;
-    const relief = mesh(new THREE.CylinderGeometry(0.0035, 0.0048, 0.03, 16).rotateX(PI / 2), M({ color: 0x2a2f36, roughness: 0.6 })); relief.position.z = PL + 0.012;
+    const relief = mesh(new THREE.CylinderGeometry(0.0035, 0.0048, 0.03, 16).rotateX(PI / 2), M({ color: 0x35312b, roughness: 0.6 })); relief.position.z = PL + 0.012;
     probe.add(body, lens, band, relief); sc.add(probe);
     const gel = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 16), new THREE.MeshStandardMaterial({ color: 0x9fd0f0, transparent: true, opacity: 0.55, roughness: 0.05, metalness: 0.1, depthWrite: false })); gel.renderOrder = 3; sc.add(gel);
     /* a bottle of coupling gel */
     const bottle = new THREE.Group(); bottle.add(mesh(new THREE.CylinderGeometry(0.022, 0.024, 0.11, 32).rotateX(PI / 2).translate(0, 0, 0.055), M({ color: 0x5aa7d8, roughness: 0.35 }), true),
-      mesh(new THREE.CylinderGeometry(0.009, 0.016, 0.03, 24).rotateX(PI / 2).translate(0, 0, 0.125), M({ color: 0xf2f4f6, roughness: 0.4 }), true),
-      mesh(new THREE.CylinderGeometry(0.0025, 0.004, 0.012, 12).rotateX(PI / 2).translate(0, 0, 0.146), M({ color: 0xf2f4f6, roughness: 0.4 }), true)); sc.add(bottle);
+      mesh(new THREE.CylinderGeometry(0.009, 0.016, 0.03, 24).rotateX(PI / 2).translate(0, 0, 0.125), M({ color: 0xf6f4f2, roughness: 0.4 }), true),
+      mesh(new THREE.CylinderGeometry(0.0025, 0.004, 0.012, 12).rotateX(PI / 2).translate(0, 0, 0.146), M({ color: 0xf6f4f2, roughness: 0.4 }), true)); sc.add(bottle);
     /* the scanner: a base with a trackball, knobs and keys, and a screen on a hinge at the back, tipped back a little */
-    const con = new THREE.Group(), caseM = mat({ roughness: 0.5, metalness: 0.15 }, ['#46515f', '#353f4b']), darkM = M({ color: 0x1e242c, roughness: 0.5 });
+    const con = new THREE.Group(), caseM = mat({ roughness: 0.5, metalness: 0.15 }, ['#5d5448', '#494137']), darkM = M({ color: 0x2b261f, roughness: 0.5 });
     con.add(K.box(0.36, 0.25, 0.045, caseM, 0, 0, 0), K.box(0.33, 0.13, 0.002, darkM, 0, -0.045, 0.045));
-    const ball = mesh(new THREE.SphereGeometry(0.017, 32, 16), M({ color: 0x9aa7b6, roughness: 0.25, metalness: 0.2 }), true); ball.position.set(0.0, -0.06, 0.044); con.add(ball);
-    for (let i = 0; i < 4; i++) { const kn = mesh(new THREE.CylinderGeometry(0.008, 0.009, 0.012, 24).rotateX(PI / 2), M({ color: 0xcfd6de, roughness: 0.35, metalness: 0.4 }), true); kn.position.set(-0.14 + i * 0.03, -0.025, 0.053); con.add(kn); }
-    for (let i = 0; i < 3; i++) for (let j = 0; j < 2; j++) con.add(K.box(0.022, 0.015, 0.004, M({ color: j ? 0x6b7887 : 0x3d6fb3, roughness: 0.5 }), 0.06 + i * 0.03, -0.09 + j * 0.024, 0.046));
+    const ball = mesh(new THREE.SphereGeometry(0.017, 32, 16), M({ color: 0xb4aa9c, roughness: 0.25, metalness: 0.2 }), true); ball.position.set(0.0, -0.06, 0.044); con.add(ball);
+    for (let i = 0; i < 4; i++) { const kn = mesh(new THREE.CylinderGeometry(0.008, 0.009, 0.012, 24).rotateX(PI / 2), M({ color: 0xddd7d0, roughness: 0.35, metalness: 0.4 }), true); kn.position.set(-0.14 + i * 0.03, -0.025, 0.053); con.add(kn); }
+    for (let i = 0; i < 3; i++) for (let j = 0; j < 2; j++) con.add(K.box(0.022, 0.015, 0.004, M({ color: j ? 0x857b6d : 0x3d6fb3, roughness: 0.5 }), 0.06 + i * 0.03, -0.09 + j * 0.024, 0.046));
     const mon = new THREE.Group(); mon.position.set(0, 0.095, 0.045); mon.rotation.x = -0.16; con.add(mon);
     mon.add(K.box(0.05, 0.02, 0.02, caseM, 0, 0.004, -0.004), K.box(FACEW + 0.026, 0.024, FACEH + 0.028, caseM, 0, 0, 0.012));
     const scrCv = document.createElement('canvas'); scrCv.width = SCW; scrCv.height = SCH; const scrTex = new THREE.CanvasTexture(scrCv); scrTex.anisotropy = st.r.capabilities.getMaxAnisotropy();
@@ -836,7 +836,7 @@ table.rows input:focus { border-color: var(--accent); }
       g3.ckey = key; if (g3.cable) g3.st.dispose(g3.cable);
       const tx = fx - b.dx * (PL + 0.025), tz = fz - b.dz * (PL + 0.025), cx = L.cx - 0.15, cy = L.cy + 0.11, back = y + 0.13;
       const via = [[tx - b.dx * 0.02, y + 0.012, tz + 0.03], [tx - b.dx * 0.03 + 0.02, y + 0.07, tz + 0.012], [L.bx + 0.09, back, 0.012 + L.cz * 0.4]];
-      g3.cable = g3.K.cable([tx, y, tz], [cx, cy, L.cz + 0.02], { via, rad: 0.0024, mat: g3.cabM || (g3.cabM = new THREE.MeshStandardMaterial({ color: 0x23282f, roughness: 0.6 })) }); g3.sc.add(g3.cable);
+      g3.cable = g3.K.cable([tx, y, tz], [cx, cy, L.cz + 0.02], { via, rad: 0.0024, mat: g3.cabM || (g3.cabM = new THREE.MeshStandardMaterial({ color: 0x2e2a24, roughness: 0.6 })) }); g3.sc.add(g3.cable);
     }
   }
   function draw3() {
@@ -846,7 +846,7 @@ table.rows input:focus { border-color: var(--accent); }
     if (L.nar && !g3.shelfB) { const wm = g3.mat({ roughness: 0.7 }, ['#a88b64', '#4a3d2e']); g3.shelfB = new THREE.Group(); g3.shelfB.add(g3.K.box(0.5, 0.44, 0.02, wm, 0, 0.28, 0.18), g3.K.box(0.02, 0.03, 0.12, wm, -0.2, 0.485, 0.06), g3.K.box(0.02, 0.03, 0.12, wm, 0.2, 0.485, 0.06)); g3.sc.add(g3.shelfB); }
     if (g3.shelfB) g3.shelfB.visible = L.nar;
     /* the screen: the flat view's drawScreen, painted into the texture */
-    { const save = ctx, sv = TXS; ctx = g3.scrCv.getContext('2d'); TXS = 2.5 / p; ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.fillStyle = '#2d3540'; ctx.fillRect(0, 0, SCW, SCH);
+    { const save = ctx, sv = TXS; ctx = g3.scrCv.getContext('2d'); TXS = 2.5 / p; ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.fillStyle = '#3f382e'; ctx.fillRect(0, 0, SCW, SCH);
       drawScreen(30, 26, SCW - 60, SCH - 26 - 76, 2.5);
       if (S.mode === 'echo' && (S.absorb || S.tgc)) {   /* the scanner's settings line: time gain compensation and the echo level at the cursor */
         const xr = SCW - 30 - 6 * 2.5, lv = levelDb();

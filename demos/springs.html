@@ -28,41 +28,41 @@
 <style>
 /* Layout: the mass and spring drawing top left, energy bars or the resonance curve below it, x, v, a and energy against time on the right; instrument rail on the right; stacks on narrow screens. */
 :root {
-  --bg: #e9edf2;
-  --surface: #f8fafc;
-  --canvas: #fcfdfe;
-  --ink: #17202b;
-  --muted: #5a6575;
-  --line: #d3d9e2;
-  --grid: #e6ebf1;
-  --grid-strong: #cfd7e1;
+  --bg: #f1eeea;
+  --surface: #fcfaf8;
+  --canvas: #fefdfc;
+  --ink: #2a2219;
+  --muted: #73695c;
+  --line: #e1dbd4;
+  --grid: #f0ece7;
+  --grid-strong: #e0d9d0;
   --pos: #c23f2c;
   --neg: #2b60b5;
   --equi: #a7740b;
-  --accent: #2b60b5;
+  --accent: #c4811c;
   --xcol: #7a45c0;
   --vcol: #1b8054;
   --acol: #b35918;
-  --wire: #3b4655;
-  --block: #cdd6e1;
+  --wire: #53493d;
+  --block: #dfd8cf;
   --oil: #c99a1e;
   --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
-    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-    --equi: #e2b350; --accent: #69a0ff; --xcol: #b48cff; --vcol: #4cc38a; --acol: #ff9a52; --wire: #aab4c2;
-    --block: #2c3a4c; --oil: #d9a93a;
+    --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
+    --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+    --equi: #e2b350; --accent: #fbc26d; --xcol: #b48cff; --vcol: #4cc38a; --acol: #ff9a52; --wire: #c0b7ac;
+    --block: #4a3e2e; --oil: #d9a93a;
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
-  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-  --equi: #e2b350; --accent: #69a0ff; --xcol: #b48cff; --vcol: #4cc38a; --acol: #ff9a52; --wire: #aab4c2;
-  --block: #2c3a4c; --oil: #d9a93a;
+  --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
+  --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+  --equi: #e2b350; --accent: #fbc26d; --xcol: #b48cff; --vcol: #4cc38a; --acol: #ff9a52; --wire: #c0b7ac;
+  --block: #4a3e2e; --oil: #d9a93a;
   color-scheme: dark;
 }
 :root[data-projector="on"] { font-size: 125%; }
@@ -1294,7 +1294,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
       const al = lead + (Lc - 2 * tilt * r) * tau + tilt * r * (Math.sin(ph) + 1), pe = r * Math.cos(ph); return [ax + ux * al + nx * pe, ay + uy * al + ny * pe, Math.sin(ph)]; };
     const seg = (front, w, c) => { ctx.strokeStyle = c; ctx.lineWidth = w; ctx.beginPath();
       for (let i = 0; i < M; i++) { const a = pt(i), b = pt(i + 1); if ((a[2] + b[2] > 0) !== front) continue; ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); } ctx.stroke(); };
-    const VG = window.VDGear, dk = VG ? VG.mix(/^#[0-9a-f]{6}$/i.test(col) ? col : '#3b4655', '#000000', 0.45) : col;
+    const VG = window.VDGear, dk = VG ? VG.mix(/^#[0-9a-f]{6}$/i.test(col) ? col : '#53493d', '#000000', 0.45) : col;
     seg(false, o.lw * 0.85, dk);
     ctx.strokeStyle = col; ctx.lineWidth = o.lw; ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(ax + ux * lead, ay + uy * lead); ctx.lineTo(pt(0)[0], pt(0)[1]); ctx.moveTo(pt(M)[0], pt(M)[1]); ctx.lineTo(bx, by); ctx.stroke();
     seg(true, o.lw, col);
@@ -1317,7 +1317,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   function rail(ctx, x0, x1, y) {
     const ps = projScale(), VG = window.VDGear, h = 7 * ps;
     if (!VG) { ctx.strokeStyle = T.ink; ctx.lineWidth = 2 * ps; ctx.beginPath(); ctx.moveTo(x0, y); ctx.lineTo(x1, y); ctx.stroke(); return; }
-    const gr = ctx.createLinearGradient(0, y, 0, y + h); gr.addColorStop(0, VG.dark() ? '#9aa6b4' : '#e7ebf0'); gr.addColorStop(0.35, VG.dark() ? '#6b7684' : '#aeb7c2'); gr.addColorStop(1, VG.dark() ? '#3c4550' : '#7d8794');
+    const gr = ctx.createLinearGradient(0, y, 0, y + h); gr.addColorStop(0, VG.dark() ? '#b2a89c' : '#efece8'); gr.addColorStop(0.35, VG.dark() ? '#82796d' : '#c0b9b0'); gr.addColorStop(1, VG.dark() ? '#4e473e' : '#928a7f');
     ctx.fillStyle = gr; ctx.fillRect(x0, y, x1 - x0, h); ctx.fillStyle = 'rgba(0,0,0,0.25)'; ctx.fillRect(x0, y + h - 1, x1 - x0, 1);
   }
   /* a glass trough or beaker of oil: walls with a highlight, oil darker towards the bottom, a bright meniscus line */
@@ -1357,7 +1357,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   function drawBlock(ctx, x, y, side, id, label, col) {
     const ps = projScale(), hot = isHot(id);
     if (hot) { ctx.fillStyle = T.accent; ctx.globalAlpha = 0.22; roundRect(ctx, x - side / 2 - 5 * ps, y - side / 2 - 5 * ps, side + 10 * ps, side + 10 * ps, 7 * ps); ctx.fill(); ctx.globalAlpha = 1; }
-    { const VG = window.VDGear, bc = /^#[0-9a-f]{6}$/i.test(T.block) ? T.block : '#cdd6e1', gr = ctx.createLinearGradient(x - side / 2, y - side / 2, x + side / 2, y + side / 2);
+    { const VG = window.VDGear, bc = /^#[0-9a-f]{6}$/i.test(T.block) ? T.block : '#dfd8cf', gr = ctx.createLinearGradient(x - side / 2, y - side / 2, x + side / 2, y + side / 2);
       gr.addColorStop(0, VG ? VG.mix(bc, '#ffffff', 0.35) : bc); gr.addColorStop(0.5, bc); gr.addColorStop(1, VG ? VG.mix(bc, '#000000', 0.22) : bc);
       ctx.save(); ctx.shadowColor = 'rgba(0,0,0,0.22)'; ctx.shadowBlur = 8 * ps; ctx.shadowOffsetY = 3 * ps; ctx.fillStyle = gr; roundRect(ctx, x - side / 2, y - side / 2, side, side, 4 * ps); ctx.fill(); ctx.restore();
       ctx.strokeStyle = 'rgba(255,255,255,0.5)'; ctx.lineWidth = 1; roundRect(ctx, x - side / 2 + 1.5, y - side / 2 + 1.5, side - 3, side - 3, 3 * ps); ctx.stroke(); }
@@ -1775,13 +1775,13 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     const mesh = (geo, m, cast) => { const x = new THREE.Mesh(geo, m); x.castShadow = cast !== false; x.receiveShadow = true; return x; };
     const unitBox = new THREE.BoxGeometry(1, 1, 1), alongX = (r) => { const gg = new THREE.CylinderGeometry(r, r, 1, 20); gg.rotateZ(Math.PI / 2); return gg; }, upZ = (r, nn) => { const gg = new THREE.CylinderGeometry(r, r, 1, nn || 20); gg.rotateX(Math.PI / 2); return gg; };
     sc.add(VD3K.bench(S3, { w: 3.2, d: 2.2, y: 0.3 }), VD3K.backdrop(S3, { r: 1.7, h: 2.4, y: -0.95, arc: Math.PI * 0.75 }));
-    const alu = M({ roughness: 0.42, metalness: 0.25 }, ['#d9dfe6', '#9aa5b1']), dark = M({ roughness: 0.6, metalness: 0.15 }, ['#4a5564', '#66717f']);
-    const steel = M({ roughness: 0.35, metalness: 0.35 }, ['#c4ccd5', '#a9b3be']), wood = M({ roughness: 0.8, metalness: 0 }, ['#b8946a', '#5d4a35']);
-    const wireA = M({ roughness: 0.3, metalness: 0.4, side: THREE.DoubleSide }, ['#6f7a88', '#c7cfd9']), wireB = M({ roughness: 0.3, metalness: 0.4, side: THREE.DoubleSide }, ['#6f7a88', '#c7cfd9']);
+    const alu = M({ roughness: 0.42, metalness: 0.25 }, ['#e5e0da', '#afa79c']), dark = M({ roughness: 0.6, metalness: 0.15 }, ['#62584c', '#7d7468']);
+    const steel = M({ roughness: 0.35, metalness: 0.35 }, ['#d4cdc5', '#bcb5ab']), wood = M({ roughness: 0.8, metalness: 0 }, ['#b8946a', '#5d4a35']);
+    const wireA = M({ roughness: 0.3, metalness: 0.4, side: THREE.DoubleSide }, ['#867d71', '#d8d1c8']), wireB = M({ roughness: 0.3, metalness: 0.4, side: THREE.DoubleSide }, ['#867d71', '#d8d1c8']);
     const wireC = Std({ roughness: 0.32, metalness: 0.35, side: THREE.DoubleSide }), goldM = Std({ roughness: 0.4, metalness: 0.3 });
-    const blockM = M({ roughness: 0.34, metalness: 0.2 }, ['#aeb7c2', '#a3aebb']), b1M = Std({ roughness: 0.45, metalness: 0.15 }), b2M = Std({ roughness: 0.45, metalness: 0.15 });
+    const blockM = M({ roughness: 0.34, metalness: 0.2 }, ['#c0b9b0', '#b9b0a5']), b1M = Std({ roughness: 0.45, metalness: 0.15 }), b2M = Std({ roughness: 0.45, metalness: 0.15 });
     const glassM = M({ transparent: true, opacity: 0.2, roughness: 0.08, metalness: 0.1, side: THREE.DoubleSide, depthWrite: false }, ['#cfe3f0', '#9fc4dc']);
-    const oilM = Std({ transparent: true, roughness: 0.15, metalness: 0, depthWrite: false }), paperM = M({ roughness: 0.95, metalness: 0 }, ['#fbfaf3', '#202833']);
+    const oilM = Std({ transparent: true, roughness: 0.15, metalness: 0, depthWrite: false }), paperM = M({ roughness: 0.95, metalness: 0 }, ['#fbfaf3', '#322b21']);
     const xM = Std({ roughness: 0.4, metalness: 0.1 }), fM = Std({ roughness: 0.45 }), vM = Std({ roughness: 0.45 }), peakM = Std({ roughness: 0.4, metalness: 0.3 });
     const traceM = [new THREE.MeshBasicMaterial({ side: THREE.DoubleSide }), new THREE.MeshBasicMaterial({ side: THREE.DoubleSide })];
     const gridLM = new THREE.LineBasicMaterial({ transparent: true, opacity: 0.55 }), timeLM = new THREE.LineBasicMaterial({ transparent: true, opacity: 0.75 });
@@ -1847,8 +1847,8 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     const c = (s, fb) => { try { return new THREE.Color(s || fb); } catch (_) { return new THREE.Color(fb); } };
     m.goldM.color = c(T.equi, '#a7740b'); m.oilM.color = c(T.oil, '#c99a1e'); m.xM.color = c(T.xcol, '#7a45c0'); m.fM.color = c(T.pos, '#c23f2c'); m.vM.color = c(T.vcol, '#1b8054');
     m.peakM.color = c(T.equi, '#a7740b'); m.b1M.color = c(T.pos, '#c23f2c'); m.b2M.color = c(T.neg, '#2b60b5');
-    m.traceM[0].color = c(T.xcol, '#7a45c0'); m.gridLM.color = c(T.gridStrong, '#cfd7e1'); m.timeLM.color = c(T.muted, '#5a6575'); m.eqLM.color = c(T.muted, '#5a6575');
-    m.circLM.color = c(T.muted, '#5a6575'); m.circDM.color = c(T.gridStrong, '#cfd7e1'); m.armLM.color = c(T.xcol, '#7a45c0'); m.shadLM.color = c(T.xcol, '#7a45c0'); m.gBrLM.color = c(T.equi, '#a7740b');
+    m.traceM[0].color = c(T.xcol, '#7a45c0'); m.gridLM.color = c(T.gridStrong, '#e0d9d0'); m.timeLM.color = c(T.muted, '#73695c'); m.eqLM.color = c(T.muted, '#73695c');
+    m.circLM.color = c(T.muted, '#73695c'); m.circDM.color = c(T.gridStrong, '#e0d9d0'); m.armLM.color = c(T.xcol, '#7a45c0'); m.shadLM.color = c(T.xcol, '#7a45c0'); m.gBrLM.color = c(T.equi, '#a7740b');
   }
   /* put a unit box between two corners */
   const boxAt = (o, x0, x1, y0, y1, z0, z1) => { o.scale.set(Math.max(1e-4, Math.abs(x1 - x0)), Math.max(1e-4, Math.abs(y1 - y0)), Math.max(1e-4, Math.abs(z1 - z0))); o.position.set((x0 + x1) / 2, (y0 + y1) / 2, (z0 + z1) / 2); };
@@ -3547,7 +3547,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
       if (nd.m > 0) {
         const i = sbMassIdx(nd.id), w = Math.max((hi - lo) * sx + 26 * ps, 84 * ps), hgt = Math.max(SB_H * s, 4), x0 = X((lo + hi) / 2) - w / 2;
         if (hot || joinHot) { ctx.fillStyle = T.accent; ctx.globalAlpha = 0.22; roundRect(ctx, x0 - 5 * ps, yy - 5 * ps, w + 10 * ps, hgt + 10 * ps, 6 * ps); ctx.fill(); ctx.globalAlpha = 1; }
-        const VG = window.VDGear, bc = /^#[0-9a-f]{6}$/i.test(T.block) ? T.block : '#cdd6e1';
+        const VG = window.VDGear, bc = /^#[0-9a-f]{6}$/i.test(T.block) ? T.block : '#dfd8cf';
         ctx.save(); ctx.shadowColor = 'rgba(0,0,0,0.22)'; ctx.shadowBlur = 6 * ps; ctx.shadowOffsetY = 2 * ps;
         const gr = ctx.createLinearGradient(x0, yy, x0 + w, yy + hgt); gr.addColorStop(0, VG ? VG.mix(bc, '#ffffff', 0.35) : bc); gr.addColorStop(1, VG ? VG.mix(bc, '#000000', 0.2) : bc);
         ctx.fillStyle = gr; roundRect(ctx, x0, yy, w, hgt, 3 * ps); ctx.fill(); ctx.restore();
@@ -3660,7 +3660,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
       if (nd.m > 0) {
         const i = sbMassIdx(nd.id), w = Math.max(SB_H * s, 4), yT = X(bLo), hgt = floorY - yT;
         if (hot || joinHot) { ctx.fillStyle = T.accent; ctx.globalAlpha = 0.22; roundRect(ctx, xx - 5 * ps, yT - 5 * ps, w + 10 * ps, hgt + 10 * ps, 6 * ps); ctx.fill(); ctx.globalAlpha = 1; }
-        const VG = window.VDGear, bc = /^#[0-9a-f]{6}$/i.test(T.block) ? T.block : '#cdd6e1';
+        const VG = window.VDGear, bc = /^#[0-9a-f]{6}$/i.test(T.block) ? T.block : '#dfd8cf';
         ctx.save(); ctx.shadowColor = 'rgba(0,0,0,0.22)'; ctx.shadowBlur = 6 * ps; ctx.shadowOffsetY = 2 * ps;
         const gr = ctx.createLinearGradient(xx, yT, xx + w, floorY); gr.addColorStop(0, VG ? VG.mix(bc, '#ffffff', 0.35) : bc); gr.addColorStop(1, VG ? VG.mix(bc, '#000000', 0.2) : bc);
         ctx.fillStyle = gr; roundRect(ctx, xx, yT, w, hgt, 3 * ps); ctx.fill(); ctx.restore();
@@ -3894,7 +3894,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
         ctx.strokeStyle = '#ffffff'; ctx.stroke();
         if (!V.horiz) { ctx.fillStyle = T.ink; ctx.font = `${9.5 * ps}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('shaker', cx, cy + itemH * 0.36); }
       } else {
-        const w = Math.min(itemW - 10 * ps, (34 + 30 * Math.cbrt(pt.m)) * ps), h = 16 * ps, bc = /^#[0-9a-f]{6}$/i.test(T.block) ? T.block : '#cdd6e1';
+        const w = Math.min(itemW - 10 * ps, (34 + 30 * Math.cbrt(pt.m)) * ps), h = 16 * ps, bc = /^#[0-9a-f]{6}$/i.test(T.block) ? T.block : '#dfd8cf';
         ctx.fillStyle = VG ? VG.mix(bc, '#ffffff', 0.15) : bc; roundRect(ctx, cx - w / 2, cy - h / 2, w, h, 3 * ps); ctx.fill();
         ctx.strokeStyle = T.muted; ctx.lineWidth = 1.2 * ps; roundRect(ctx, cx - w / 2, cy - h / 2, w, h, 3 * ps); ctx.stroke();
         ctx.fillStyle = T.ink; ctx.font = `600 ${9.5 * ps}px ${T.mono}`; ctx.fillText(`${Math.round(pt.m * 1000)} g`, cx, cy + 0.5);

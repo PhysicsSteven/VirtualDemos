@@ -16,9 +16,9 @@
 <style>
 /* Layout: a charging capacitor with an Amperian loop above a plot of B against r; the instrument rail on the right. */
 /* Layout: lab bench. The gas box and speed histogram fill the left, a narrow instrument rail sits on the right; stacks on phones. */
-:root { --wire: #b06a2c; --plate: #6b7787; --efield: #a7740b; --bfield: #2f7d4f; --loop: #6f4bb3; --surf: #6f4bb3; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --wire: #e0955a; --plate: #9aa6b6; --efield: #e2b350; --bfield: #5fcf8a; --loop: #b49bff; --surf: #b49bff; } }
-:root[data-theme="dark"] { --wire: #e0955a; --plate: #9aa6b6; --efield: #e2b350; --bfield: #5fcf8a; --loop: #b49bff; --surf: #b49bff; }
+:root { --wire: #b06a2c; --plate: #857b6d; --efield: #a7740b; --bfield: #2f7d4f; --loop: #a88456; --surf: #a88456; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --wire: #e0955a; --plate: #b4aa9c; --efield: #e2b350; --bfield: #5fcf8a; --loop: #b49bff; --surf: #b49bff; } }
+:root[data-theme="dark"] { --wire: #e0955a; --plate: #b4aa9c; --efield: #e2b350; --bfield: #5fcf8a; --loop: #b49bff; --surf: #b49bff; }
 :root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
 body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
@@ -275,9 +275,9 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
     const g = g3, [x0, y0, w, h] = G3.pane;
     if (G3.w !== w || G3.h !== h) { G3.w = w; G3.h = h; g.r.setSize(w, Math.max(1, h)); g.cam.aspect = w / Math.max(1, h); g.cam.updateProjectionMatrix(); }
     g.el.style.left = x0 + 'px'; g.el.style.top = y0 + 'px';
-    const key = [T.canvas, T.wire, T.b, T.loop].join(); if (G3.key !== key) { G3.key = key; const dk = VD3.dark(); g.scene.background = col3(T.canvas, '#fbfcfd'); g.hemi.groundColor = col3(dk ? '#1c222a' : '#8c8a84', '#8c8a84');
-      g.wireM.color = col3(T.wire, '#b06a2c'); g.plateM.color = col3(T.plate, '#6b7787'); g.qMp.color = col3(T.pos, '#c0392b'); g.qMn.color = col3(T.neg, '#2b60b5'); g.eM.color = col3(T.e, '#a7740b');
-      g.dotM.color = col3(dk ? '#fff2c4' : '#ffe08a', '#ffe08a'); g.loopM.color = g.knobM.color = col3(T.loop, '#6f4bb3'); g.surfM.color = col3(T.surf, '#6f4bb3'); for (const b of g.bRings) { b.m.color = b.hm.color = col3(T.b, '#2f7d4f'); } }
+    const key = [T.canvas, T.wire, T.b, T.loop].join(); if (G3.key !== key) { G3.key = key; const dk = VD3.dark(); g.scene.background = col3(T.canvas, '#fdfcfb'); g.hemi.groundColor = col3(dk ? '#29241d' : '#8c8a84', '#8c8a84');
+      g.wireM.color = col3(T.wire, '#b06a2c'); g.plateM.color = col3(T.plate, '#857b6d'); g.qMp.color = col3(T.pos, '#c0392b'); g.qMn.color = col3(T.neg, '#2b60b5'); g.eM.color = col3(T.e, '#a7740b');
+      g.dotM.color = col3(dk ? '#fff2c4' : '#ffe08a', '#ffe08a'); g.loopM.color = g.knobM.color = col3(T.loop, '#a88456'); g.surfM.color = col3(T.surf, '#a88456'); for (const b of g.bRings) { b.m.color = b.hm.color = col3(T.b, '#2f7d4f'); } }
     const asp = w / Math.max(1, h), span = Math.max(21, 36 / asp);
     VD3.place(g.cam, G3.o, new THREE.Vector3(0, 0, 0), span / (2 * Math.tan(15 * Math.PI / 180)));
     /* plate charges and E lines, in proportion to q */

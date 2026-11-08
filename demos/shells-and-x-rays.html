@@ -17,11 +17,11 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
 /* only what this demo needs beyond demos/lib/vd.css */
-:root { --up: #2b60b5; --down: #c0432a; --ka: #c0432a; --kb: #2b60b5; --brems: #6b7787; --diff: #b07a10;
-  --cat-alkali: #c1513b; --cat-alkaline: #a36720; --cat-transition: #59779e; --cat-post: #5f7b62; --cat-metalloid: #7c6da1; --cat-nonmetal: #358174;
-  --cat-halogen: #827622; --cat-noble: #ae5694; --cat-lanthanide: #3d7a9f; --cat-actinide: #996a52; } /* dark enough for white symbols at 4.5:1 (WCAG AA) */
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --up: #69a0ff; --down: #ff8a6a; --ka: #ff8a6a; --kb: #69a0ff; --brems: #9aa6b6; --diff: #f0c060; } }
-:root[data-theme="dark"] { --up: #69a0ff; --down: #ff8a6a; --ka: #ff8a6a; --kb: #69a0ff; --brems: #9aa6b6; --diff: #f0c060; }
+:root { --up: #2b60b5; --down: #c0432a; --ka: #c0432a; --kb: #2b60b5; --brems: #857b6d; --diff: #b07a10;
+  --cat-alkali: #c1513b; --cat-alkaline: #a36720; --cat-transition: #997f5e; --cat-post: #5f7b62; --cat-metalloid: #9d8a71; --cat-nonmetal: #358174;
+  --cat-halogen: #827622; --cat-noble: #ae5694; --cat-lanthanide: #91734b; --cat-actinide: #996a52; } /* dark enough for white symbols at 4.5:1 (WCAG AA) */
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --up: #69a0ff; --down: #ff8a6a; --ka: #ff8a6a; --kb: #69a0ff; --brems: #b4aa9c; --diff: #f0c060; } }
+:root[data-theme="dark"] { --up: #69a0ff; --down: #ff8a6a; --ka: #ff8a6a; --kb: #69a0ff; --brems: #b4aa9c; --diff: #f0c060; }
 .stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
 .stage-ctl .count { margin-left: auto; font-size: 0.82rem; color: var(--muted); }
@@ -599,7 +599,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (let k = -2; k <= 2; k++) { ctx.save(); ctx.globalAlpha = 0.6; arrow(ctx, ax - 2 * p, cy + 6 * p, ax - 2 * p + k * 16 * p, cy + th / 2 + 60 * p, T.ka, 1.2 * p); ctx.restore(); }
     if (S.xr.al > 0 || S.xr.cu > 0) { /* the filter across the beam: aluminum gray, copper below it in copper color, thickness not to scale */
       const fy = cy + th / 2 + 18 * p, fw = 96 * p, ha = S.xr.al > 0 ? 3 * p + S.xr.al * 0.8 * p : 0, hc = S.xr.cu > 0 ? 3 * p + S.xr.cu * 12 * p : 0;
-      ctx.fillStyle = '#c3c9d1'; if (ha) ctx.fillRect(ax - fw / 2, fy, fw, ha); ctx.fillStyle = '#c47a45'; if (hc) ctx.fillRect(ax - fw / 2, fy + ha, fw, hc);
+      ctx.fillStyle = '#d0cbc4'; if (ha) ctx.fillRect(ax - fw / 2, fy, fw, ha); ctx.fillStyle = '#c47a45'; if (hc) ctx.fillRect(ax - fw / 2, fy + ha, fw, hc);
       lbl(`${W < 700 ? '' : 'filter '}${S.xr.al > 0 ? f(S.xr.al, 1) + ' mm Al' : ''}${S.xr.al > 0 && S.xr.cu > 0 ? ' + ' : ''}${S.xr.cu > 0 ? f(S.xr.cu, 2) + ' mm Cu' : ''}`, ax + fw / 2 + 6 * p, fy + (ha + hc) / 2, { s: 10 * p, c: T.ink }); }
     lbl(S.xr.abs > 0 ? (W < 700 ? `through ${f(S.xr.abs, 1)} mm Al sheets` : `X-rays through ${f(S.xr.abs, 1)} mm Al sheets to the chamber and the spectrometer`) : 'X-rays to the spectrometer', ax, cy + th / 2 + 74 * p, { a: 'center', s: 10 * p });
     lbl(`high voltage ${f(kV, 1)} kV`, cx, cy - th / 2 - 28 * p, { a: 'center', s: 11 * p, w: 700, c: T.ink }); }
@@ -680,8 +680,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     S3.el.classList.add('xr3');
     const sc = S3.scene, M = (o, c) => VD3K.material(S3, o, c), mesh = (geo, m, cast) => { const x = new THREE.Mesh(geo, m); x.castShadow = !!cast; x.receiveShadow = true; return x; };
     sc.add(VD3K.bench(S3, { w: 2, d: 1.4, y: 0.25 }), VD3K.backdrop(S3, { r: 0.8, h: 0.7, y: -0.3 }));
-    const steel = M({ roughness: 0.4, metalness: 0.5 }, ['#b9c0c8', '#77808a']), dark3 = M({ roughness: 0.5, metalness: 0.2 }, ['#5d6774', '#4b5460']);
-    const copper = M({ roughness: 0.35, metalness: 0.7 }, ['#b87333', '#c4854a']), lead = M({ roughness: 0.7, metalness: 0.2 }, ['#6f7680', '#5a616a']);
+    const steel = M({ roughness: 0.4, metalness: 0.5 }, ['#c7c1ba', '#898278']), dark3 = M({ roughness: 0.5, metalness: 0.2 }, ['#726a5f', '#5e574d']);
+    const copper = M({ roughness: 0.35, metalness: 0.7 }, ['#b87333', '#c4854a']), lead = M({ roughness: 0.7, metalness: 0.2 }, ['#7f7870', '#69635b']);
     /* stand: two posts and clamps */
     for (const x of [-0.09, 0.09]) sc.add(VD3K.box(0.035, 0.035, 0.006, dark3, x, 0, 0), VD3K.rod([x, 0, 0.008], [x, 0, ZT - 0.04], 0.005, steel));
     /* the glass envelope with its two necks */
@@ -689,7 +689,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (const [a, b] of [[-0.14, -0.07], [0.05, 0.13]]) { const n = VD3K.glass(S3, { r: 0.016, len: b - a, axis: 'x', ends: false, opacity: 0.22 }); n.position.set((a + b) / 2, 0, ZT); sc.add(n); }
     /* cathode: stem, focusing cup and the hot filament */
     sc.add(VD3K.rod([-0.15, 0, ZT], [XC - 0.008, 0, ZT], 0.004, steel));
-    const cup = mesh(new THREE.CylinderGeometry(0.009, 0.007, 0.01, 24, 1, true), M({ roughness: 0.3, metalness: 0.7, side: THREE.DoubleSide }, ['#9aa3ad', '#8a939d']), true);
+    const cup = mesh(new THREE.CylinderGeometry(0.009, 0.007, 0.01, 24, 1, true), M({ roughness: 0.3, metalness: 0.7, side: THREE.DoubleSide }, ['#aca59b', '#9c958b']), true);
     cup.rotation.z = Math.PI / 2; cup.position.set(XC - 0.003, 0, ZT); sc.add(cup);
     const filM = new THREE.MeshBasicMaterial({ color: 0xffa040 }), coil = new THREE.Group();
     for (let i = 0; i < 6; i++) { const t = mesh(new THREE.TorusGeometry(0.0016, 0.00045, 6, 16), filM); t.rotation.y = Math.PI / 2; t.position.set(XC - 0.001, 0, ZT - 0.003 + i * 0.0012); coil.add(t); }
@@ -702,7 +702,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const wedge = new THREE.Shape(); wedge.moveTo(0, -0.011); wedge.lineTo(0.014, -0.011); wedge.lineTo(0.014, 0.011); wedge.lineTo(0.006, 0.011); wedge.closePath();
     const head = mesh(new THREE.ExtrudeGeometry(wedge, { depth: 0.022, bevelEnabled: false }), copper, true); head.geometry.translate(0, 0, -0.011);
     head.position.set(XA - 0.002, 0, ZT); sc.add(head);   /* the shape lies in (x, y): its slanted face looks back at the cathode and toward the front (−y) */
-    const tgtM = M({ roughness: 0.3, metalness: 0.7 }, ['#9aa3ad', '#a3acb6']), slant = Math.atan2(0.006, 0.022), tgt = mesh(new THREE.BoxGeometry(0.0012, 0.012, 0.012), tgtM);
+    const tgtM = M({ roughness: 0.3, metalness: 0.7 }, ['#aca59b', '#b5aea4']), slant = Math.atan2(0.006, 0.022), tgt = mesh(new THREE.BoxGeometry(0.0012, 0.012, 0.012), tgtM);
     tgt.rotation.z = -slant; tgt.position.set(XA + 0.0015, -0.0005, ZT); sc.add(tgt);
     const spotM = new THREE.SpriteMaterial({ map: glowTex, transparent: true, depthWrite: false, color: 0xffffff }), spot = new THREE.Sprite(spotM); spot.scale.set(0.01, 0.01, 1); spot.position.set(XA, -0.001, ZT); sc.add(spot);
     for (let i = 0; i < 5; i++) { const fin = mesh(new THREE.CylinderGeometry(0.024, 0.024, 0.003, 32), copper, true); fin.rotation.z = Math.PI / 2; fin.position.set(0.14 + i * 0.009, 0, ZT); sc.add(fin); }
@@ -711,11 +711,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* beam quality bench (Half value layer setup): the added filter on the collimator, the stack of aluminum sheets and the air kerma
        chamber with its electrometer, all square to the beam (mean direction BEAM). Thicknesses to scale; shown only with filtration */
     const BEAM = [-0.2425, -0.9701], ROT = Math.atan2(BEAM[0], -BEAM[1]), beamAt = (s) => [XA + s * BEAM[0], -0.001 + s * BEAM[1]];
-    const alM = M({ roughness: 0.35, metalness: 0.6 }, ['#c8ced6', '#a9b1bb']), alM2 = M({ roughness: 0.4, metalness: 0.55 }, ['#a7afb9', '#8b95a1']), cuM = M({ roughness: 0.35, metalness: 0.7 }, ['#c4753f', '#cf8550']);
+    const alM = M({ roughness: 0.35, metalness: 0.6 }, ['#d5d0c9', '#bab3aa']), alM2 = M({ roughness: 0.4, metalness: 0.55 }, ['#b8b1a8', '#9f978d']), cuM = M({ roughness: 0.35, metalness: 0.7 }, ['#c4753f', '#cf8550']);
     const plate = (m) => { const b = new THREE.Mesh(new THREE.BoxGeometry(0.044, 1, 0.044), m); b.castShadow = true; b.receiveShadow = true; b.rotation.z = ROT; b.visible = false; sc.add(b); return b; };
     const fAl = plate(alM), fCu = plate(cuM), sheets = []; for (let i = 0; i < 21; i++) sheets.push(plate(i % 2 ? alM2 : alM));
     const put = (o, s, t) => { const q = beamAt(s + t / 2); o.position.set(q[0], q[1], ZT); o.scale.y = t; o.visible = t > 0; };
-    const S_CH = 0.135, chamberM = M({ roughness: 0.5, metalness: 0.2 }, ['#3c4652', '#36404b']), chamber3 = new THREE.Group();
+    const S_CH = 0.135, chamberM = M({ roughness: 0.5, metalness: 0.2 }, ['#50483e', '#494238']), chamber3 = new THREE.Group();
     const disc = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.022, 0.012, 40), chamberM), win = new THREE.Mesh(new THREE.CircleGeometry(0.017, 40), M({ roughness: 0.6, metalness: 0 }, ['#e6e2d4', '#cfcab8']));
     disc.castShadow = true; win.rotation.x = -Math.PI / 2; win.position.y = 0.0061;   /* the chamber's entrance window faces the tube (+y in the group) */
     chamber3.add(disc, win, VD3K.rod([0, 0, -0.022], [0, 0, -ZT + 0.004], 0.0025, steel), VD3K.box(0.03, 0.03, 0.004, dark3, 0, 0, -ZT));
@@ -723,7 +723,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const stand = new THREE.Group(); sc.add(stand);   /* the posts that hold the filter and the sheet holder */
     for (const sp of [0.091, 0.118]) { const q = beamAt(sp); stand.add(VD3K.rod([q[0], q[1], 0.004], [q[0], q[1], ZT - 0.022], 0.002, steel), VD3K.box(0.022, 0.022, 0.004, dark3, q[0], q[1], 0)); }
     const elec = VD3K.meter(S3, { w: 0.1, h: 0.06, label: 'ELECTROMETER', sub: 'air kerma K/K₀' }); elec.position.set(-0.1, -0.21, 0); elec.rotation.z = 1.07; sc.add(elec);
-    const cq = beamAt(S_CH), lead3 = VD3K.cable([cq[0], cq[1], 0.004], [-0.085, -0.2, 0.012], { sag: 0, color: 0x23282f }); sc.add(lead3);
+    const cq = beamAt(S_CH), lead3 = VD3K.cable([cq[0], cq[1], 0.004], [-0.085, -0.2, 0.012], { sag: 0, color: 0x2e2a24 }); sc.add(lead3);
     const hvl3 = { fAl, fCu, sheets, put, chamber3, stand, elec, lead3, beamAt, S_CH, key: '' };
     /* the high voltage supply behind, with its meter and leads to both ends */
     sc.add(VD3K.box(0.13, 0.1, 0.075, dark3, -0.2, 0.14, 0));
@@ -769,7 +769,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (bq !== G3.bq) { G3.bq = bq; Object.assign(G3.o, bq ? { th: -0.5, ph: 1.12 } : { th: -Math.PI / 2 - 0.3, ph: 1.08 }); }   /* the beam bench is seen from the side */
     S3.size(w3, Hh); const narrow = W < 560, mid = hq.beamAt(narrow ? 0.13 : 0.11);
     S3.place(G3.o, bq ? [mid[0] - 0.01, mid[1] - 0.03, ZT - 0.05] : narrow ? [0, 0.01, ZT - 0.02] : [-0.02, 0.03, ZT - 0.04], (narrow ? (bq ? 0.5 : 0.45) : bq ? 0.6 : 0.72) * Math.max(1, 1.45 / asp));
-    g.tgtM.color.set(myst ? '#9aa3ad' : Z === 29 ? '#b87333' : Z === 79 ? '#d4af37' : '#a3acb6');
+    g.tgtM.color.set(myst ? '#aca59b' : Z === 29 ? '#b87333' : Z === 79 ? '#d4af37' : '#b5aea4');
     g.meter.set(f(kV, 1));
     const t = (performance.now() - g.t0) / 1000, glow = Math.min(1, kV / 60); g.spotM.opacity = 0.35 + 0.65 * glow;
     /* electrons: speed up across the gap (x grows as the square of the time), squeezed toward the focal spot by the cup */

@@ -16,9 +16,9 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
 /* only what this demo needs beyond demos/lib/vd.css: the water's colors, the tank picture, the strip, the drawing tools and the graph */
-:root { --w-base: #bcd8e8; --w-crest: #f6fbff; --w-trough: #4f8db8; --wallc: #3f4853; --plate: #d9c47e; --beach: #d6c6a0; --meas: #c2410c; --pred: #7c3aed; --src: #b8382a; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --w-base: #143650; --w-crest: #7cc4f0; --w-trough: #050f1a; --wallc: #a7b0bb; --plate: #8a7536; --beach: #4d4431; --meas: #fb923c; --pred: #c4a5ff; --src: #ff7a5c; } }
-:root[data-theme="dark"] { --w-base: #143650; --w-crest: #7cc4f0; --w-trough: #050f1a; --wallc: #a7b0bb; --plate: #8a7536; --beach: #4d4431; --meas: #fb923c; --pred: #c4a5ff; --src: #ff7a5c; }
+:root { --w-base: #bcd8e8; --w-crest: #fcfbf9; --w-trough: #ab895c; --wallc: #524a40; --plate: #d9c47e; --beach: #d6c6a0; --meas: #c2410c; --pred: #7c3aed; --src: #b8382a; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --w-base: #143650; --w-crest: #7cc4f0; --w-trough: #14100b; --wallc: #bab2a8; --plate: #8a7536; --beach: #4d4431; --meas: #fb923c; --pred: #c4a5ff; --src: #ff7a5c; } }
+:root[data-theme="dark"] { --w-base: #143650; --w-crest: #7cc4f0; --w-trough: #14100b; --wallc: #bab2a8; --plate: #8a7536; --beach: #4d4431; --meas: #fb923c; --pred: #c4a5ff; --src: #ff7a5c; }
 .stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
 .stage-ctl select { font: inherit; font-size: 0.84rem; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px; }
@@ -593,11 +593,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     S3.el.classList.add('rt3');
     const sc = S3.scene, M = (o, c) => VD3K.material(S3, o, c), tw = TW * MM, th = TH * MM;
     sc.add(VD3K.bench(S3, { w: 2.6, d: 1.8, y: 0.25 }), VD3K.backdrop(S3, { r: 1.0, h: 1.0, y: -0.25 }));
-    const frameM = M({ roughness: 0.45, metalness: 0.55 }, ['#a9b2bc', '#6f7884']), legM = M({ roughness: 0.6, metalness: 0.3 }, ['#59626e', '#454d58']);
+    const frameM = M({ roughness: 0.45, metalness: 0.55 }, ['#bbb4aa', '#827b71']), legM = M({ roughness: 0.6, metalness: 0.3 }, ['#6c655b', '#575046']);
     const g = new THREE.Group(); g.position.set(-tw / 2, -th / 2, 0); sc.add(g);
     /* legs, the glass floor and the frame */
     for (const [x, y] of [[0, 0], [tw, 0], [0, th], [tw, th]]) g.add(VD3K.rod([x, y, 0], [x, y, Z0], 0.008, legM));
-    const floor = new THREE.Mesh(new THREE.BoxGeometry(tw, th, 0.004), M({ roughness: 0.15, metalness: 0.05, transparent: true, opacity: 0.55 }, ['#cfe0ea', '#3a5568'])); floor.position.set(tw / 2, th / 2, Z0 - 0.002); floor.receiveShadow = true; g.add(floor);
+    const floor = new THREE.Mesh(new THREE.BoxGeometry(tw, th, 0.004), M({ roughness: 0.15, metalness: 0.05, transparent: true, opacity: 0.55 }, ['#e8ded1', '#65543d'])); floor.position.set(tw / 2, th / 2, Z0 - 0.002); floor.receiveShadow = true; g.add(floor);
     const fz = 0.022, fw = 0.008;
     for (const [x, y, w, d] of [[tw / 2, -fw / 2, tw + 2 * fw, fw], [tw / 2, th + fw / 2, tw + 2 * fw, fw], [-fw / 2, th / 2, fw, th], [tw + fw / 2, th / 2, fw, th]]) g.add(VD3K.box(w, d, fz, frameM, x, y, Z0 - 0.004));
     /* the water's surface */
@@ -606,7 +606,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const waterM = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.22, metalness: 0.08, transparent: true, opacity: 0.9 });
     const water = new THREE.Mesh(geo, waterM); water.receiveShadow = true; g.add(water);
     /* walls and plates as instanced boxes, one per run of cells along a row (rebuilt when the shapes change) */
-    const wallM = M({ roughness: 0.5, metalness: 0.15 }, ['#6b7480', '#9aa4b0']), plateM = new THREE.MeshStandardMaterial({ color: 0xe9dca0, roughness: 0.1, metalness: 0.05, transparent: true, opacity: 0.6, depthWrite: false });
+    const wallM = M({ roughness: 0.5, metalness: 0.15 }, ['#7e776d', '#aea69c']), plateM = new THREE.MeshStandardMaterial({ color: 0xe9dca0, roughness: 0.1, metalness: 0.05, transparent: true, opacity: 0.6, depthWrite: false });
     const unit = new THREE.BoxGeometry(1, 1, 1); unit.translate(0.5, 0.5, 0.5);
     const walls = new THREE.InstancedMesh(unit, wallM, NX * NY / 2), plates = new THREE.InstancedMesh(unit, plateM, NX * NY / 2);
     walls.castShadow = true; walls.count = 0; plates.count = 0; plates.renderOrder = -1; water.renderOrder = 1; g.add(walls, plates);
@@ -618,7 +618,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (const [x, y, w, d, rx, ry] of [[bw / 2, th / 2, bw, th, 0, -1], [tw - bw / 2, th / 2, bw, th, 0, 1], [tw / 2, bw / 2, tw, bw, 1, 0], [tw / 2, th - bw / 2, tw, bw, -1, 0]]) {
       const b = new THREE.Mesh(new THREE.PlaneGeometry(w, d), beachM); b.position.set(x, y, 0); b.rotation.set(rx * 0.07, ry * 0.07, 0); beaches.add(b); }
     /* the bar on its motor and the dippers on their rod */
-    const darkM = M({ roughness: 0.5, metalness: 0.2 }, ['#3b4350', '#2b323c']), srcM = M({ roughness: 0.35, metalness: 0.3 }, ['#b8382a', '#e0604a']);
+    const darkM = M({ roughness: 0.5, metalness: 0.2 }, ['#4e473d', '#3b342c']), srcM = M({ roughness: 0.35, metalness: 0.3 }, ['#b8382a', '#e0604a']);
     const bar = new THREE.Group(), barB = VD3K.box(0.006, th - 0.004, 0.008, srcM, 0, th / 2, -0.004); bar.add(barB);
     bar.add(VD3K.box(0.03, 0.022, 0.022, darkM, 0, th / 2, 0.05), VD3K.rod([0, th / 2, 0.004], [0, th / 2, 0.05], 0.002, frameM)); g.add(bar);
     const dips = [0, 1].map(() => { const d = new THREE.Group(); const ball = new THREE.Mesh(new THREE.SphereGeometry(DIP_R, 20, 14), srcM); ball.castShadow = true; d.add(ball, VD3K.rod([0, 0, 0], [0, 0, 0.07], 0.0012, frameM)); g.add(d); return d; });

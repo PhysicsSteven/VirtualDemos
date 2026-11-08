@@ -14,8 +14,8 @@
 <style>
 /* only what this demo needs beyond demos/lib/vd.css */
 :root { --cat: #7b5cd6; --ani: #2f9e57; --sband: #d9682b; --pband: #2b8fc4; --elec: #2b6fc4; --hole: #d2452b; --ptype: #f3d9d3; --ntype: #d6e4f5; --theory: #6a4fc4; --gold: #c99a1a; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --cat: #a58cff; --ani: #5fd38a; --sband: #ff9a5c; --pband: #5cc2ff; --elec: #69a8ff; --hole: #ff7a5c; --ptype: #4a2a26; --ntype: #23344d; --theory: #a991ff; --gold: #f0c445; } }
-:root[data-theme="dark"] { --cat: #a58cff; --ani: #5fd38a; --sband: #ff9a5c; --pband: #5cc2ff; --elec: #69a8ff; --hole: #ff7a5c; --ptype: #4a2a26; --ntype: #23344d; --theory: #a991ff; --gold: #f0c445; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --cat: #a58cff; --ani: #5fd38a; --sband: #ff9a5c; --pband: #5cc2ff; --elec: #69a8ff; --hole: #ff7a5c; --ptype: #4a2a26; --ntype: #4a3a26; --theory: #a991ff; --gold: #f0c445; } }
+:root[data-theme="dark"] { --cat: #a58cff; --ani: #5fd38a; --sband: #ff9a5c; --pband: #5cc2ff; --elec: #69a8ff; --hole: #ff7a5c; --ptype: #4a2a26; --ntype: #4a3a26; --theory: #a991ff; --gold: #f0c445; }
 .stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
 .stage-ctl .count { margin-left: auto; font-size: 0.82rem; color: var(--muted); }
@@ -453,7 +453,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   /* ionic radii for six fold coordination (nm), R. D. Shannon, Acta Cryst. A32, 751 (1976); the ions are drawn at 0.55 of these so
      the lattice shows through */
   const RAD = { Li: 0.076, Na: 0.102, K: 0.138, Rb: 0.152, Cs: 0.167, F: 0.133, Cl: 0.181, Br: 0.196, I: 0.220 };
-  const ICOL = { Li: '#b07ad9', Na: '#8a6bd8', K: '#7656c7', Rb: '#6a46b0', Cs: '#5a3a9a', F: '#8fcf4f', Cl: '#33a852', Br: '#b0503a', I: '#8a3f8f' };
+  const ICOL = { Li: '#b07ad9', Na: '#8a6bd8', K: '#7656c7', Rb: '#a28054', Cs: '#5a3a9a', F: '#8fcf4f', Cl: '#33a852', Br: '#b0503a', I: '#8a3f8f' };
   const can = $('can'), ctx = can.getContext('2d'), canX = $('canX'), xtx = canX.getContext('2d'), cur = $('curve'), cctx = cur.getContext('2d');
   let W = 0, H = 0, dpr = 1, CW = 0, CH = 0, T = null;
   let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
@@ -473,7 +473,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const lab = (c, s, x, y, o = {}) => { if (VG) VG.label(c, s, x, y, Object.assign({ s: 10.5 * proj() }, o)); else { c.fillStyle = o.c || T.muted; c.font = `${o.w || 400} ${o.s || 10.5}px ${T.ui}`; c.textAlign = o.a || 'left'; c.textBaseline = 'middle'; c.fillText(s, x, y); } };
   const panel = (c, x, y, w, h) => { if (VG) VG.panel(c, x, y, w, h, { r: 10 }); else { c.fillStyle = T.surface; c.fillRect(x, y, w, h); } };
   function lcdBox(c, x, y, w, h, text, name) {
-    if (VG) { VG.box(c, x - 6, y - 6, w + 12, h + 22, { color: dark() ? '#2b3440' : '#34404e', r: 6 }); VG.lcd(c, x, y, w, h, text); VG.plate(c, name, x + w / 2, y + h + 8, { s: 8 * proj() }); }
+    if (VG) { VG.box(c, x - 6, y - 6, w + 12, h + 22, { color: dark() ? '#3e372d' : '#4c4236', r: 6 }); VG.lcd(c, x, y, w, h, text); VG.plate(c, name, x + w / 2, y + h + 8, { s: 8 * proj() }); }
     else { c.fillStyle = T.ink; c.fillText(`${name}: ${text}`, x, y + h / 2); }
   }
   /* pseudo random numbers from an integer, for placing dots the same way each frame */
@@ -563,7 +563,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const x0 = W / 2 - (nDraw - 1) * b.d * k / 2;
     for (let i = 0; i < nDraw; i++) { const x = x0 + i * b.d * k, g = c.createRadialGradient(x, y0, 0, x, y0, 0.15 * k);
       g.addColorStop(0, dark() ? 'rgba(105,168,255,0.35)' : 'rgba(43,111,196,0.28)'); g.addColorStop(1, 'rgba(43,111,196,0)'); c.fillStyle = g; c.beginPath(); c.arc(x, y0, 0.15 * k, 0, 7); c.fill(); }
-    for (let i = 0; i < nDraw; i++) { const x = x0 + i * b.d * k; if (VG) VG.ball(c, x, y0, Math.max(3, 0.03 * k), dark() ? '#c9d3df' : '#56616f'); }
+    for (let i = 0; i < nDraw; i++) { const x = x0 + i * b.d * k; if (VG) VG.ball(c, x, y0, Math.max(3, 0.03 * k), dark() ? '#ddd5cb' : '#6d6458'); }
     if (b.N > nDraw) lab(c, `… ${b.N} atoms in all`, x0 + (nDraw - 1) * b.d * k + 14 * p, y0, { c: T.ink });
     lab(c, `d = ${f(b.d, 3)} nm`, x0, y0 + 0.15 * k + 10 * p, { c: T.ink, m: true });
     /* the two panels: energy against spacing, and the levels at this spacing with their electrons */
@@ -646,7 +646,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       c.strokeStyle = T.el; c.lineWidth = 2.2 * p; c.beginPath(); vals.forEach((v, i) => { const xx = X(nc * a * i / N), yy = Y(E) - amp * v / mx; i ? c.lineTo(xx, yy) : c.moveTo(xx, yy); }); c.stroke(); }
     c.restore();
     /* ions at the well centers, and the labels */
-    for (let i = 0; i < nc; i++) { const xi = X(i * a + k.w / 2); if (VG) VG.ball(c, xi, bot + 14 * p, 5 * p, dark() ? '#c9d3df' : '#56616f'); lab(c, '+', xi, bot + 14 * p, { a: 'center', c: dark() ? '#1b2330' : '#ffffff', w: 700, s: 9 }); }
+    for (let i = 0; i < nc; i++) { const xi = X(i * a + k.w / 2); if (VG) VG.ball(c, xi, bot + 14 * p, 5 * p, dark() ? '#ddd5cb' : '#6d6458'); lab(c, '+', xi, bot + 14 * p, { a: 'center', c: dark() ? '#2e271d' : '#ffffff', w: 700, s: 9 }); }
     lab(c, 'ions sit in the wells', X(nc * a) , bot + 30 * p, { a: 'right', s: 9 });
     if (!narrow) B.forEach((bd, i) => { if (bd[0] > Et) return; lab(c, `band ${i + 1}`, x1 + 6 * p, Y((bd[0] + Math.min(bd[1], Et)) / 2), { c: bcol(i), w: 700, s: 9.5 }); });
     c.strokeStyle = T.ink; c.lineWidth = 1.1 * p; const ay = bot + 30 * p; c.beginPath(); c.moveTo(X(0), ay - 4 * p); c.lineTo(X(0), ay + 4 * p); c.moveTo(X(0), ay); c.lineTo(X(a), ay); c.moveTo(X(a), ay - 4 * p); c.lineTo(X(a), ay + 4 * p); c.stroke();
@@ -685,11 +685,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* the cryostat: a steel can with a window, the sample bar with Hall contacts, and the meters */
     let px = 12 * p;
     if (!narrow) { const cw = Math.min(190 * p, W * 0.24), cx = 20 * p, ctop = 24 * p, ch = by - ctop - 10 * p;
-      if (VG) { VG.box(c, cx, ctop, cw, ch, { color: dark() ? '#4a5563' : '#8792a0', r: 14 }); VG.rod(c, cx + cw / 2, ctop - 18 * p, cx + cw / 2, ctop, 6 * p); }
-      const wx = cx + 18 * p, wy = ctop + 26 * p, ww = cw - 36 * p, wh = 92 * p; c.fillStyle = dark() ? '#0d1218' : '#1b232d'; c.beginPath(); c.roundRect(wx, wy, ww, wh, 8); c.fill();
-      const sx = wx + 14 * p, sw = ww - 28 * p, sy = wy + wh / 2 - 9 * p; c.fillStyle = S.dp.mat === 'GaAs' ? '#4b4f58' : '#5d6672'; c.fillRect(sx, sy, sw, 18 * p);
+      if (VG) { VG.box(c, cx, ctop, cw, ch, { color: dark() ? '#61584c' : '#9e9589', r: 14 }); VG.rod(c, cx + cw / 2, ctop - 18 * p, cx + cw / 2, ctop, 6 * p); }
+      const wx = cx + 18 * p, wy = ctop + 26 * p, ww = cw - 36 * p, wh = 92 * p; c.fillStyle = dark() ? '#17130e' : '#2c251c'; c.beginPath(); c.roundRect(wx, wy, ww, wh, 8); c.fill();
+      const sx = wx + 14 * p, sw = ww - 28 * p, sy = wy + wh / 2 - 9 * p; c.fillStyle = S.dp.mat === 'GaAs' ? '#57524c' : '#70695f'; c.fillRect(sx, sy, sw, 18 * p);
       c.fillStyle = '#d6b24a'; for (const q of [[sx - 3 * p, sy + 5 * p], [sx + sw - 5 * p, sy + 5 * p], [sx + sw / 2 - 4 * p, sy - 6 * p], [sx + sw / 2 - 4 * p, sy + 18 * p]]) c.fillRect(q[0], q[1], 8 * p, 8 * p);
-      lab(c, 'sample', wx + ww / 2, wy + wh - 10 * p, { a: 'center', c: '#c9d3df', s: 9 * p });
+      lab(c, 'sample', wx + ww / 2, wy + wh - 10 * p, { a: 'center', c: '#ddd5cb', s: 9 * p });
       const mw = cw - 36 * p, mh = 26 * p; lcdBox(c, wx, wy + wh + 26 * p, mw, mh, `${S.dp.T} K`, 'temperature');
       lcdBox(c, wx, wy + wh + 88 * p, mw, mh, lcdE(r.n), 'n (cm⁻³), Hall');
       lcdBox(c, wx, wy + wh + 150 * p, mw, mh, lcdE(r.p), 'p (cm⁻³), Hall');
@@ -761,7 +761,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const bx = W * (narrow ? 0.06 : 0.16), bw = W * (narrow ? 0.88 : 0.68), byy = 52 * p, bh = Math.max(46 * p, H * 0.14), X = (x) => bx + bw / 2 + x / span * bw;
     /* the junction: p side, depletion region, n side */
     c.fillStyle = T.pt; c.fillRect(bx, byy, X(-J.xp) - bx, bh); c.fillStyle = T.nt; c.fillRect(X(J.xn), byy, bx + bw - X(J.xn), bh);
-    c.fillStyle = dark() ? '#1a2029' : '#f6f7f9'; c.fillRect(X(-J.xp), byy, X(J.xn) - X(-J.xp), bh);
+    c.fillStyle = dark() ? '#28221b' : '#f9f8f6'; c.fillRect(X(-J.xp), byy, X(J.xn) - X(-J.xp), bh);
     c.strokeStyle = T.line; c.lineWidth = 1; c.strokeRect(bx, byy, bw, bh);
     /* fixed ions in the depletion region, carriers outside it */
     const ion = (x, y, s) => { c.strokeStyle = s < 0 ? T.ho : T.el; c.lineWidth = 1.2 * p; c.beginPath(); c.arc(x, y, 5 * p, 0, 7); c.stroke(); c.beginPath(); c.moveTo(x - 3 * p, y); c.lineTo(x + 3 * p, y); if (s > 0) { c.moveTo(x, y - 3 * p); c.lineTo(x, y + 3 * p); } c.stroke(); };
@@ -780,10 +780,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         for (let s = 0; s <= 30; s++) { const u = s / 30, xx = x1 + Math.cos(a) * len * u - Math.sin(a) * 3.5 * p * Math.sin(u * 14 - ph0), yy = y1 + Math.sin(a) * len * u + Math.cos(a) * 3.5 * p * Math.sin(u * 14 - ph0); s ? c.lineTo(xx, yy) : c.moveTo(xx, yy); } c.stroke(); c.setLineDash([]); } }
     /* the circuit: wires down to the battery and the meter */
     const wy = byy + bh + (narrow ? 40 : 46) * p, mw = (narrow ? 104 : 128) * p, mh = 26 * p;
-    if (VG) { VG.cable(c, bx, byy + bh / 2, bx - 10 * p, wy + 14 * p, 10 * p, { w: 2.5 * p, color: dark() ? '#c45a4a' : '#b8442c' }); VG.cable(c, bx + bw, byy + bh / 2, bx + bw + 10 * p, wy + 14 * p, 10 * p, { w: 2.5 * p, color: dark() ? '#9aa6b6' : '#20262e' }); }
+    if (VG) { VG.cable(c, bx, byy + bh / 2, bx - 10 * p, wy + 14 * p, 10 * p, { w: 2.5 * p, color: dark() ? '#c45a4a' : '#b8442c' }); VG.cable(c, bx + bw, byy + bh / 2, bx + bw + 10 * p, wy + 14 * p, 10 * p, { w: 2.5 * p, color: dark() ? '#b4aa9c' : '#2d2821' }); }
     const fwd = led || d.V >= 0;
-    const bxw = (narrow ? 112 : 140) * p, bxc = Math.max(bx - 10 * p, bxw / 2 + 6 * p); if (VG) VG.box(c, bxc - bxw / 2, wy + 10 * p, bxw, 34 * p, { color: dark() ? '#36404c' : '#3f4a58', r: 6 });
-    lab(c, led ? 'forward biased' : `${fwd ? '+' : '−'} to p   ${f(d.V, 2)} V`, bxc, wy + 27 * p, { a: 'center', c: '#e6ecf2', w: 700, s: 10 * p, m: true });
+    const bxw = (narrow ? 112 : 140) * p, bxc = Math.max(bx - 10 * p, bxw / 2 + 6 * p); if (VG) VG.box(c, bxc - bxw / 2, wy + 10 * p, bxw, 34 * p, { color: dark() ? '#4a4238' : '#564d41', r: 6 });
+    lab(c, led ? 'forward biased' : `${fwd ? '+' : '−'} to p   ${f(d.V, 2)} V`, bxc, wy + 27 * p, { a: 'center', c: '#f1ede7', w: 700, s: 10 * p, m: true });
     if (led) { const l = lambdaNm(ledEg()); lcdBox(c, Math.min(bx + bw + 10 * p - mw / 2, W - mw - 12 * p), wy + 12 * p, mw, mh, `${f(l, 0)} nm`, 'spectrometer peak'); }
     else { const I = dvI(); lcdBox(c, Math.min(bx + bw + 10 * p - mw / 2, W - mw - 12 * p), wy + 12 * p, mw, mh, ampText(I), 'ammeter'); }
     /* the band diagram across the junction, to the same scale */

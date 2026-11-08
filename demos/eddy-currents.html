@@ -28,9 +28,9 @@
 <style>
 /* Layout: three vertical pipes in cross-section with the falling magnets, and a speed graph; the rail on the right. */
 /* Layout: lab bench. The gas box and speed histogram fill the left, a narrow instrument rail sits on the right; stacks on phones. */
-:root { --cu: #b87333; --al: #9aa6b6; --pvc: #dfe5ec; --mag: #b0452f; --mag2: #2b60b5; --cur: #6f4bb3; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --cu: #d08a4a; --al: #7c8898; --pvc: #2a3442; --mag: #ff8a70; --mag2: #69a0ff; --cur: #b49bff; } }
-:root[data-theme="dark"] { --cu: #d08a4a; --al: #7c8898; --pvc: #2a3442; --mag: #ff8a70; --mag2: #69a0ff; --cur: #b49bff; }
+:root { --cu: #b87333; --al: #b4aa9c; --pvc: #ebe6e0; --mag: #b0452f; --mag2: #2b60b5; --cur: #a88456; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --cu: #d08a4a; --al: #968c7e; --pvc: #40372c; --mag: #ff8a70; --mag2: #69a0ff; --cur: #b49bff; } }
+:root[data-theme="dark"] { --cu: #d08a4a; --al: #968c7e; --pvc: #40372c; --mag: #ff8a70; --mag2: #69a0ff; --cur: #b49bff; }
 :root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
 body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
@@ -356,7 +356,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const up = (g) => { g.rotateX(Math.PI / 2); return g; };
     const benchM = Ms({ roughness: 0.85 }), bench = mesh(new THREE.PlaneGeometry(14, 10), benchM, false); bench.position.set(0, 3, 0);
     const woodM = Ms({ roughness: 0.7 }), base = mesh(new THREE.BoxGeometry(0.56, 0.16, Z0), woodM); base.position.set(0, 0, Z0 / 2);
-    const steelM = Ms({ roughness: 0.35, metalness: 0.7, color: 0x9aa3ad }), top = new THREE.Group();
+    const steelM = Ms({ roughness: 0.35, metalness: 0.7, color: 0xaca59b }), top = new THREE.Group();
     const bar = mesh(new THREE.BoxGeometry(0.56, 0.03, 0.02), steelM); bar.position.set(0, 0.06, Z0 + LEN + 0.07); top.add(bar);
     for (const x of [-0.27, 0.27]) { const pst = mesh(up(new THREE.CylinderGeometry(0.008, 0.008, LEN + 0.08, 16)), steelM); pst.position.set(x, 0.06, Z0 + (LEN + 0.08) / 2); top.add(pst); }
     /* the pipes: an outer and an inner wall with the front quarter removed, the two cut faces, and a rim at each end */
@@ -384,12 +384,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   const col3 = (s, fb) => { try { return new THREE.Color(s || fb); } catch (_) { return new THREE.Color(fb); } };
   function theme3() {
-    const g = g3, dk = VD3.dark(), bg = col3(T.canvas, '#fbfcfd');
+    const g = g3, dk = VD3.dark(), bg = col3(T.canvas, '#fdfcfb');
     g.scene.background = bg; g.scene.fog = new THREE.Fog(bg, 3, 7);
     g.hemi.intensity = dk ? 1.05 : 0.85; g.sun.intensity = dk ? 0.9 : 0.7; g.hemi.groundColor = col3(dk ? '#2a241d' : '#8c7a60', '#8c7a60');
     g.benchM.color = col3(dk ? '#3a3229' : '#cdbb9d', '#cdbb9d'); g.woodM.color = col3(dk ? '#6b5338' : '#b98d5c', '#b98d5c');
-    for (const q of g.pipes) { const c = q.P.id === 'pvc' ? (dk ? '#c9d0d8' : '#eef1f4') : T[q.P.id]; q.m.color = col3(c, '#b87333'); q.mi.color = col3(c, '#b87333').multiplyScalar(0.55); q.nM.color = col3(T.mag, '#b0452f'); q.sM.color = col3(T.mag2, '#2b60b5'); }
-    g.dotM.color = col3(T.cur, '#6f4bb3'); G3.lcd = '';
+    for (const q of g.pipes) { const c = q.P.id === 'pvc' ? (dk ? '#d7d1ca' : '#f4f1ee') : T[q.P.id]; q.m.color = col3(c, '#b87333'); q.mi.color = col3(c, '#b87333').multiplyScalar(0.55); q.nM.color = col3(T.mag, '#b0452f'); q.sM.color = col3(T.mag2, '#2b60b5'); }
+    g.dotM.color = col3(T.cur, '#a88456'); G3.lcd = '';
   }
   /* the 3D picture fills the left part of the stage (the pipes' column); the graph stays on the 2D canvas */
   function render3(rw, rh, k, tf) {
@@ -409,7 +409,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         const dz = -0.08 + 0.008 * j, z = zm + dz; rr.position.z = z;
         const e = live ? ringEmf(S.m, a, -dz, st.v) / (ref * Math.max(st.v, 1e-6)) : 0, al = Math.min(1, Math.abs(e));
         rr.visible = live && al >= 0.06 && z > Z0 && z < Z0 + LEN; if (!rr.visible) return;
-        rr.material.color = col3(T.cur, '#6f4bb3'); rr.material.opacity = 0.15 + 0.75 * al;
+        rr.material.color = col3(T.cur, '#a88456'); rr.material.opacity = 0.15 + 0.75 * al;
         /* dots go round counterclockwise seen from above where e > 0, a quarter turn per second at full strength (direction only) */
         const n = Math.round(ND * al), R = 0.0095 * WX - 0.0012;
         for (let d = 0; d < n && nd < 2 * NR * ND; d++) { const ang = (d / n) * 2 * Math.PI + Math.sign(e) * G3.ph * al; g.mat4.makeTranslation(PX3[i] + R * Math.cos(ang), R * Math.sin(ang), z); g.dots.setMatrixAt(nd++, g.mat4); }

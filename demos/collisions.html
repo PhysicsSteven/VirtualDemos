@@ -27,41 +27,41 @@
 <style>
 /* Layout: the scene across the top of the stage, before and after bars bottom left, a graph bottom right (x against t, the momentum diagram, F against t or the cradle outcomes); instrument rail on the right; stacks on narrow screens. */
 :root {
-  --bg: #e9edf2;
-  --surface: #f8fafc;
-  --canvas: #fcfdfe;
-  --ink: #17202b;
-  --muted: #5a6575;
-  --line: #d3d9e2;
-  --grid: #e6ebf1;
-  --grid-strong: #cfd7e1;
+  --bg: #f1eeea;
+  --surface: #fcfaf8;
+  --canvas: #fefdfc;
+  --ink: #2a2219;
+  --muted: #73695c;
+  --line: #e1dbd4;
+  --grid: #f0ece7;
+  --grid-strong: #e0d9d0;
   --pos: #c23f2c;
   --neg: #2b60b5;
   --equi: #a7740b;
-  --accent: #2b60b5;
+  --accent: #c4811c;
   --xcol: #7a45c0;
   --vcol: #1d8a5a;
   --acol: #c0601a;
-  --wire: #3b4655;
-  --block: #cdd6e1;
-  --table: #eef2f6;
+  --wire: #53493d;
+  --block: #dfd8cf;
+  --table: #f5f2ef;
   --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
-    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-    --equi: #e2b350; --accent: #69a0ff; --xcol: #b48cff; --vcol: #4cc38a; --acol: #ff9a52; --wire: #aab4c2;
-    --block: #2c3a4c; --table: #141b24;
+    --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
+    --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+    --equi: #e2b350; --accent: #fbc26d; --xcol: #b48cff; --vcol: #4cc38a; --acol: #ff9a52; --wire: #c0b7ac;
+    --block: #4a3e2e; --table: #231d15;
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
-  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-  --equi: #e2b350; --accent: #69a0ff; --xcol: #b48cff; --vcol: #4cc38a; --acol: #ff9a52; --wire: #aab4c2;
-  --block: #2c3a4c; --table: #141b24;
+  --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
+  --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+  --equi: #e2b350; --accent: #fbc26d; --xcol: #b48cff; --vcol: #4cc38a; --acol: #ff9a52; --wire: #c0b7ac;
+  --block: #4a3e2e; --table: #231d15;
   color-scheme: dark;
 }
 :root[data-projector="on"] { font-size: 125%; }
@@ -1163,7 +1163,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     const ps = g.ps, fs = 10 * ps;
     // air track beam with its holes; the ruler moves with the track in the center of mass frame
     { const VG = window.VDGear, tg = ctx.createLinearGradient(0, g.yT, 0, g.yT + 9 * ps), dk = VG && VG.dark();
-      tg.addColorStop(0, dk ? '#9aa6b4' : '#eef1f4'); tg.addColorStop(0.4, dk ? '#6b7684' : '#b9c1cb'); tg.addColorStop(1, dk ? '#3c4550' : '#868f9b');
+      tg.addColorStop(0, dk ? '#b2a89c' : '#f4f1ee'); tg.addColorStop(0.4, dk ? '#82796d' : '#cac3ba'); tg.addColorStop(1, dk ? '#4e473e' : '#999288');
       ctx.fillStyle = VG ? tg : T.block; ctx.fillRect(4, g.yT, W - 8, 9 * ps);
       if (VG) { const sh = ctx.createLinearGradient(0, g.yT + 9 * ps, 0, g.yT + 17 * ps); sh.addColorStop(0, dk ? 'rgba(0,0,0,0.4)' : 'rgba(20,30,45,0.15)'); sh.addColorStop(1, 'rgba(0,0,0,0)'); ctx.fillStyle = sh; ctx.fillRect(4, g.yT + 9 * ps, W - 8, 8 * ps); } }
     ctx.strokeStyle = T.muted; ctx.lineWidth = 1; ctx.strokeRect(4.5, g.yT + 0.5, W - 9, 9 * ps);
@@ -1467,7 +1467,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     sg = g;
     // frame bar
     const x0 = g.px(0) - CR.L * 0.75 * g.s, x1 = g.px(N - 1) + CR.L * 0.75 * g.s;
-    if (window.VDGear) window.VDGear.rod(ctx, x0, g.yP - 3.5 * ps, x1, g.yP - 3.5 * ps, 3.5 * ps, { color: '#b4bcc6' }); else { ctx.fillStyle = T.block; roundRect(ctx, x0, g.yP - 7 * ps, x1 - x0, 7 * ps, 3 * ps); ctx.fill(); ctx.strokeStyle = T.muted; ctx.lineWidth = 1; ctx.stroke(); }
+    if (window.VDGear) window.VDGear.rod(ctx, x0, g.yP - 3.5 * ps, x1, g.yP - 3.5 * ps, 3.5 * ps, { color: '#c5beb5' }); else { ctx.fillStyle = T.block; roundRect(ctx, x0, g.yP - 7 * ps, x1 - x0, 7 * ps, 3 * ps); ctx.fill(); ctx.strokeStyle = T.muted; ctx.lineWidth = 1; ctx.stroke(); }
     // rest positions, faint
     ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.setLineDash([3, 4]);
     for (let i = 0; i < N; i++) { const b = g.ball(i, 0); ctx.beginPath(); ctx.arc(b[0], b[1], CR.R * g.s, 0, 7); ctx.stroke(); }
@@ -1479,7 +1479,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
       ctx.strokeStyle = T.wire; ctx.lineWidth = 1.2 * ps; ctx.beginPath(); ctx.moveTo(g.px(i), g.yP); ctx.lineTo(b[0], b[1]); ctx.stroke();
       const hot = isHot('b' + i);
       if (hot) { ctx.fillStyle = T.accent; ctx.globalAlpha = 0.22; ctx.beginPath(); ctx.arc(b[0], b[1], R + 6 * ps, 0, 7); ctx.fill(); ctx.globalAlpha = 1; }
-      if (window.VDGear) window.VDGear.ball(ctx, b[0], b[1], R, '#aab3be');   /* polished steel */
+      if (window.VDGear) window.VDGear.ball(ctx, b[0], b[1], R, '#bcb5ab');   /* polished steel */
       else { const grd = ctx.createRadialGradient(b[0] - R * 0.35, b[1] - R * 0.35, R * 0.1, b[0], b[1], R); grd.addColorStop(0, T.canvas); grd.addColorStop(1, T.block); ctx.fillStyle = grd; ctx.beginPath(); ctx.arc(b[0], b[1], R, 0, 7); ctx.fill(); }
       ctx.strokeStyle = moving ? T.accent : T.muted; ctx.lineWidth = (moving || hot ? 2.2 : 1.0) * ps; ctx.globalAlpha = moving || hot ? 1 : 0.5; ctx.beginPath(); ctx.arc(b[0], b[1], R, 0, 7); ctx.stroke(); ctx.globalAlpha = 1;
       if (i < N - 1) handles.push({ id: 'b' + i, cursor: 'grab', grabbing: 'grabbing', circle: [b[0], b[1], R], body: true,
@@ -2346,7 +2346,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     // the frame: a beam with the two pivots, hung from the ceiling
     const beamY = Y(0) - 4 * ps, bx0 = X(-a - 0.1), bx1 = X(a + 0.1);
     ctx.fillStyle = T.gridStrong; ctx.fillRect(bx0 - 6 * ps, Y(0.14) - 2 * ps, bx1 - bx0 + 12 * ps, 4 * ps);
-    if (window.VDGear) { window.VDGear.rod(ctx, (bx0 + bx1) / 2 - 18 * ps, Y(0.14), (bx0 + bx1) / 2 - 18 * ps, beamY, 2.5 * ps); window.VDGear.rod(ctx, (bx0 + bx1) / 2 + 18 * ps, Y(0.14), (bx0 + bx1) / 2 + 18 * ps, beamY, 2.5 * ps); window.VDGear.rod(ctx, bx0, beamY, bx1, beamY, 5 * ps, { color: '#8e98a5' }); }
+    if (window.VDGear) { window.VDGear.rod(ctx, (bx0 + bx1) / 2 - 18 * ps, Y(0.14), (bx0 + bx1) / 2 - 18 * ps, beamY, 2.5 * ps); window.VDGear.rod(ctx, (bx0 + bx1) / 2 + 18 * ps, Y(0.14), (bx0 + bx1) / 2 + 18 * ps, beamY, 2.5 * ps); window.VDGear.rod(ctx, bx0, beamY, bx1, beamY, 5 * ps, { color: '#a39b90' }); }
     else { ctx.fillStyle = T.wire; ctx.fillRect(bx0, beamY - 5 * ps, bx1 - bx0, 10 * ps); }
     // protractor at the pivots with the friction pointer the block pushes round: it stays at the largest angle
     const rp = Math.min(0.3 * L, 0.24) * s, pcx = X(0), pcy = Y(0), span = run.r.th > Math.PI / 2 + 1e-9 ? Math.PI : Math.PI / 2;
@@ -2367,7 +2367,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     // the gun, on a stand on the bench, its muzzle 50 cm from the block
     const gy = Y(-L - b / 2), mx = X(g.muzzle), gl = BPK.gun * s, gh = Math.max(14 * ps, 0.07 * s);
     ctx.fillStyle = T.wire; ctx.fillRect(mx - gl * 0.7 - 3 * ps, gy + gh / 2, 6 * ps, benchY - gy - gh / 2);
-    if (window.VDGear) { window.VDGear.box(ctx, mx - gl, gy - gh / 2, gl * 0.62, gh, { r: 3 * ps }); window.VDGear.rod(ctx, mx - gl * 0.4, gy, mx, gy, Math.max(3 * ps, gh * 0.22), { color: '#6f7a87' }); }
+    if (window.VDGear) { window.VDGear.box(ctx, mx - gl, gy - gh / 2, gl * 0.62, gh, { r: 3 * ps }); window.VDGear.rod(ctx, mx - gl * 0.4, gy, mx, gy, Math.max(3 * ps, gh * 0.22), { color: '#857c71' }); }
     else { ctx.fillStyle = T.wire; ctx.fillRect(mx - gl, gy - gh / 2, gl * 0.62, gh); ctx.fillRect(mx - gl * 0.4, gy - 3 * ps, gl * 0.4, 6 * ps); }
     if (!BL) handles.push({ id: 'gun', grip: 'h', param: 'ub', dirX: 1, pt: [mx - gl * 0.69, gy], cursor: 'ew-resize' });
     // the bullet in flight, with a streak behind it (it crosses the gap in a few milliseconds), and the muzzle flash
@@ -2390,7 +2390,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     // the rods, kept parallel, and the block
     const tl = [cx - a, cyTop], tr = [cx + a, cyTop];
     for (const [px, q] of [[-a, tl], [a, tr]]) {
-      if (window.VDGear) window.VDGear.rod(ctx, X(px), Y(0), X(q[0]), Y(q[1]), 2 * ps, { color: '#b4bcc6' }); else { ctx.strokeStyle = T.wire; ctx.lineWidth = 3 * ps; ctx.beginPath(); ctx.moveTo(X(px), Y(0)); ctx.lineTo(X(q[0]), Y(q[1])); ctx.stroke(); }
+      if (window.VDGear) window.VDGear.rod(ctx, X(px), Y(0), X(q[0]), Y(q[1]), 2 * ps, { color: '#c5beb5' }); else { ctx.strokeStyle = T.wire; ctx.lineWidth = 3 * ps; ctx.beginPath(); ctx.moveTo(X(px), Y(0)); ctx.lineTo(X(q[0]), Y(q[1])); ctx.stroke(); }
     }
     for (const px of [-a, a]) { if (window.VDGear) window.VDGear.screw(ctx, X(px), Y(0), 3.5 * ps); else { ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(X(px), Y(0), 3 * ps, 0, 7); ctx.fill(); } }
     const bw = b * s, bxL = X(cx - b / 2), byT = Y(cyTop), wood = bpWood();
@@ -2401,7 +2401,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     for (let k = 1; k < 6; k++) { const yy = byT + bw * k / 6; ctx.beginPath(); ctx.moveTo(bxL, yy); for (let xx = 0; xx <= bw; xx += 6) ctx.lineTo(bxL + xx, yy + Math.sin(xx * 0.09 + k * 1.3) * 1.5); ctx.stroke(); }
     ctx.restore();
     ctx.strokeStyle = wood[2]; ctx.lineWidth = 1.2 * ps; roundRect(ctx, bxL, byT, bw, bw, 2 * ps); ctx.stroke();
-    for (const q of [tl, tr]) { ctx.fillStyle = '#5b6573'; ctx.beginPath(); ctx.arc(X(q[0]), Y(q[1]), 2.5 * ps, 0, 7); ctx.fill(); }
+    for (const q of [tl, tr]) { ctx.fillStyle = '#71685d'; ctx.beginPath(); ctx.arc(X(q[0]), Y(q[1]), 2.5 * ps, 0, 7); ctx.fill(); }
     if (t >= run.tc) {     /* the bullet's hole in the face it entered */
       ctx.fillStyle = '#2a1c10'; ctx.beginPath(); ctx.ellipse(bxL + 1.5 * ps, Y(cy), 1.6 * ps, Math.max(2 * ps, bh * 0.45), 0, 0, 7); ctx.fill();
     }
@@ -2893,13 +2893,13 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   function room3() {
     const V = G3.S, g = new THREE.Group();
     const ft = K3.tex(256, 256), c = ft.c;
-    c.fillStyle = '#dfe2e5'; c.fillRect(0, 0, 256, 256);
+    c.fillStyle = '#e5e2df'; c.fillRect(0, 0, 256, 256);
     for (let i = 0; i < 900; i++) { c.fillStyle = `rgba(${K3.rnd() < 0.5 ? '255,255,255' : '90,96,104'},${0.05 + 0.06 * K3.rnd()})`; c.fillRect(K3.rnd() * 256, K3.rnd() * 256, 2, 2); }
-    c.fillStyle = '#b4bac1'; c.fillRect(0, 0, 256, 3); c.fillRect(0, 0, 3, 256);
+    c.fillStyle = '#c0bbb5'; c.fillRect(0, 0, 256, 3); c.fillRect(0, 0, 3, 256);
     ft.t.wrapS = ft.t.wrapT = THREE.RepeatWrapping; ft.t.repeat.set(16 / 0.5, 12 / 0.5);
-    const floor = K3.mesh(new THREE.PlaneGeometry(16, 12), K3.th({ map: ft.t, roughness: 0.8, metalness: 0 }, ['#ffffff', '#4a5260']), false, true);
+    const floor = K3.mesh(new THREE.PlaneGeometry(16, 12), K3.th({ map: ft.t, roughness: 0.8, metalness: 0 }, ['#ffffff', '#5e564c']), false, true);
     floor.position.set(0, 3.5, FLOOR); g.add(floor);
-    const wallM = K3.th({ roughness: 0.95, metalness: 0 }, ['#eef1f4', '#1d2530']), dadoM = K3.th({ roughness: 0.9, metalness: 0 }, ['#dde3e9', '#222b37']), skirtM = K3.th({ roughness: 0.6 }, ['#8d96a1', '#11161d']);
+    const wallM = K3.th({ roughness: 0.95, metalness: 0 }, ['#f4f1ee', '#2f281e']), dadoM = K3.th({ roughness: 0.9, metalness: 0 }, ['#e8e4de', '#352e24']), skirtM = K3.th({ roughness: 0.6 }, ['#a0988e', '#1c1812']);
     const wall = K3.mesh(new THREE.PlaneGeometry(16, 3.4), wallM, false, true); wall.rotation.x = Math.PI / 2; wall.position.set(0, 1.25, FLOOR + 1.7); g.add(wall);
     const dado = K3.mesh(new THREE.PlaneGeometry(16, 0.95), dadoM, false, true); dado.rotation.x = Math.PI / 2; dado.position.set(0, 1.245, FLOOR + 0.475); g.add(dado);
     g.add(VD3K.box(16, 0.02, 0.012, skirtM, 0, 1.24, FLOOR + 0.95), VD3K.box(16, 0.02, 0.09, skirtM, 0, 1.24, FLOOR));
@@ -2910,7 +2910,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     c.fillStyle = '#d4b182'; c.fillRect(0, 0, 1024, 256);
     for (let y = 0; y < 256; y++) { const w = 0.5 + 0.5 * Math.sin(y * 0.19 + 3 * Math.sin(y * 0.023)); c.fillStyle = `rgba(140,92,48,${0.04 + 0.2 * Math.pow(w, 8)})`; c.fillRect(0, y, 1024, 1); }
     for (let i = 0; i < 60; i++) { c.fillStyle = `rgba(120,78,40,${0.05 + 0.08 * K3.rnd()})`; c.fillRect(0, K3.rnd() * 256, 1024, 1 + 2 * K3.rnd()); }
-    const top = K3.th({ map: wt.t, roughness: 0.62, metalness: 0 }, ['#ffffff', '#6b5a47']), leg = K3.th({ roughness: 0.45, metalness: 0.5 }, ['#5d6670', '#3a424c']);
+    const top = K3.th({ map: wt.t, roughness: 0.62, metalness: 0 }, ['#ffffff', '#6b5a47']), leg = K3.th({ roughness: 0.45, metalness: 0.5 }, ['#6f685e', '#4b443b']);
     const bt = VD3K.box(3.6, 1.0, 0.045, top, 0, 0.12, -0.045); bt.castShadow = false; g.add(bt);
     for (const sx of [-1, 1]) for (const sy of [-1, 1]) g.add(VD3K.box(0.05, 0.05, -FLOOR - 0.045, leg, sx * 1.72, 0.12 + sy * 0.44, FLOOR));
     for (const sx of [-1, 1]) g.add(VD3K.box(0.04, 0.88, 0.04, leg, sx * 1.72, 0.12, FLOOR + 0.12));
@@ -2925,7 +2925,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     const fill = new THREE.DirectionalLight(0xffffff, 0.32); fill.position.set(0.8, -3, 1.2); V.scene.add(fill);
     // a soft studio environment, so steel and aluminium catch highlights (pictures only)
     const cv = document.createElement('canvas'); cv.width = 256; cv.height = 128; const c = cv.getContext('2d');
-    const gr = c.createLinearGradient(0, 0, 0, 128); gr.addColorStop(0, '#f5f7fa'); gr.addColorStop(0.48, '#aab3bd'); gr.addColorStop(0.52, '#7c776f'); gr.addColorStop(1, '#4d463d');
+    const gr = c.createLinearGradient(0, 0, 0, 128); gr.addColorStop(0, '#faf8f5'); gr.addColorStop(0.48, '#bcb5ab'); gr.addColorStop(0.52, '#7c776f'); gr.addColorStop(1, '#4d463d');
     c.fillStyle = gr; c.fillRect(0, 0, 256, 128);
     for (const [x, y, w, h] of [[24, 16, 60, 18], [140, 10, 80, 14], [100, 40, 14, 22], [200, 44, 30, 16]]) { c.fillStyle = 'rgba(255,255,255,0.95)'; c.fillRect(x, y, w, h); }
     const et = new THREE.CanvasTexture(cv); et.mapping = THREE.EquirectangularReflectionMapping;
@@ -3030,8 +3030,8 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     const g = new THREE.Group(), w = 0.044, gp = 0.002, th = 0.011;
     const sh = new THREE.Shape(); sh.moveTo(-w, -w + gp); sh.lineTo(0, gp); sh.lineTo(w, -w + gp); sh.lineTo(w, -w + gp + th); sh.lineTo(0, gp + th); sh.lineTo(-w, -w + gp + th); sh.closePath();
     const geo = new THREE.ExtrudeGeometry(sh, { depth: 1, bevelEnabled: false }); geo.applyMatrix4(new THREE.Matrix4().set(0, 0, 1, -0.5, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1));
-    const bm = K3.std({ roughness: 0.42, metalness: 0.25, envMap: G3.env, envMapIntensity: 0.7 }), dark = K3.th({ roughness: 0.5, metalness: 0.3 }, ['#2f353c', '#262b31']), blk = K3.std({ color: '#15181c', roughness: 0.6, metalness: 0.2 });
-    const steel = K3.std({ color: '#c8cdd3', roughness: 0.25, metalness: 0.85, envMap: G3.env }), brass = K3.std({ color: '#c99a3e', roughness: 0.3, metalness: 0.85, envMap: G3.env });
+    const bm = K3.std({ roughness: 0.42, metalness: 0.25, envMap: G3.env, envMapIntensity: 0.7 }), dark = K3.th({ roughness: 0.5, metalness: 0.3 }, ['#3b3630', '#302c27']), blk = K3.std({ color: '#1b1916', roughness: 0.6, metalness: 0.2 });
+    const steel = K3.std({ color: '#d2cec9', roughness: 0.25, metalness: 0.85, envMap: G3.env }), brass = K3.std({ color: '#c99a3e', roughness: 0.3, metalness: 0.85, envMap: G3.env });
     const body = K3.mesh(geo, bm, true, true); g.add(body);
     const plates = [K3.mesh(geo, dark), K3.mesh(geo, dark)]; plates.forEach((p) => { p.scale.x = 0.004; g.add(p); });
     const bar = VD3K.box(1, 0.024, 0.012, dark, 0, 0, gp + th - 0.003); g.add(bar);
@@ -3043,8 +3043,8 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     for (let k = 0; k < 20; k++) { const d = K3.mesh(dg, brass); const s = k % 2 ? 1 : -1, j = k >> 1; d.position.set(0, s * (0.051 + j * 0.0059), -0.022); g.add(d); discs.push(d); }
     // the bumper on the facing end: a steel spring loop, a velcro pad or (Blind) a plain rubber block that says nothing about e
     const loopG = new THREE.TorusGeometry(0.009, 0.0011, 8, 24, Math.PI), loop = K3.mesh(loopG, steel);
-    const velcro = VD3K.box(0.006, 0.03, 0.02, K3.std({ color: '#1c1d22', roughness: 1 }), 0, 0, gp + th - 0.012);
-    const rubber = VD3K.box(0.008, 0.026, 0.018, K3.std({ color: '#30343a', roughness: 0.85 }), 0, 0, gp + th - 0.01);
+    const velcro = VD3K.box(0.006, 0.03, 0.02, K3.std({ color: '#221f1c', roughness: 1 }), 0, 0, gp + th - 0.012);
+    const rubber = VD3K.box(0.008, 0.026, 0.018, K3.std({ color: '#393631', roughness: 0.85 }), 0, 0, gp + th - 0.01);
     g.add(loop, velcro, rubber);
     let lastL = -1;
     g.setL = (L) => {
@@ -3067,7 +3067,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     const g = new THREE.Mesh(geo, m); g.renderOrder = 3; g.mat = m; g.visible = false; return g;
   }
   function gate3(name) {
-    const g = new THREE.Group(), blk = K3.th({ roughness: 0.45, metalness: 0.25 }, ['#30363e', '#2a3038']), steel = K3.std({ color: '#b9c1ca', roughness: 0.3, metalness: 0.7, envMap: G3.env });
+    const g = new THREE.Group(), blk = K3.th({ roughness: 0.45, metalness: 0.25 }, ['#3d3831', '#37322b']), steel = K3.std({ color: '#c9c2ba', roughness: 0.3, metalness: 0.7, envMap: G3.env });
     const zF = ZB + FLAGZ, yA = 0.15, top = ZB + 0.092;
     for (const s of [-1, 1]) {
       g.add(VD3K.box(0.03, 0.022, top - (zF - 0.022), blk, 0, s * yA, zF - 0.022));
@@ -3082,21 +3082,21 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   }
   function buildTrack() {
     const V = G3.S, g = new THREE.Group(); V.scene.add(g); TR3.g = g;
-    const ht = K3.tex(64, 64); ht.c.fillStyle = '#d6dce2'; ht.c.fillRect(0, 0, 64, 64); ht.c.fillStyle = '#4c545e'; ht.c.beginPath(); ht.c.arc(32, 32, 5, 0, 7); ht.c.fill();
+    const ht = K3.tex(64, 64); ht.c.fillStyle = '#e1ddd7'; ht.c.fillRect(0, 0, 64, 64); ht.c.fillStyle = '#5d564d'; ht.c.beginPath(); ht.c.arc(32, 32, 5, 0, 7); ht.c.fill();
     ht.t.wrapS = ht.t.wrapT = THREE.RepeatWrapping; ht.t.repeat.set(2 * TRK / 0.04, 1);
-    const beamM = K3.th({ map: ht.t, roughness: 0.34, metalness: 0.55, envMap: G3.env }, ['#ffffff', '#6f7984']);
+    const beamM = K3.th({ map: ht.t, roughness: 0.34, metalness: 0.55, envMap: G3.env }, ['#ffffff', '#827b71']);
     const beam = K3.mesh(new THREE.BoxGeometry(2 * TRK, 0.06, 0.06), beamM, true, true); beam.rotation.x = Math.PI / 4; beam.position.z = ZB - 0.03 * Math.SQRT2; g.add(beam);
-    const dark = K3.th({ roughness: 0.45, metalness: 0.4 }, ['#59626d', '#3c444e']), blk = K3.th({ roughness: 0.5, metalness: 0.3 }, ['#2b3036', '#22272d']);
+    const dark = K3.th({ roughness: 0.45, metalness: 0.4 }, ['#6b645a', '#4d463d']), blk = K3.th({ roughness: 0.5, metalness: 0.3 }, ['#35312c', '#2c2823']);
     g.add(VD3K.box(2 * TRK, 0.05, 0.05, dark, 0, 0, 0.012));
     for (const s of [-1, 1]) {
       g.add(VD3K.box(0.09, 0.16, 0.012, blk, s * (TRK - 0.18), 0, 0));
       g.add(VD3K.box(0.016, 0.1, ZB + 0.03 - 0.012, blk, s * (TRK + 0.008), 0, 0.012));
     }
     // air supply: a blower on the bench and its hose into the end of the track
-    const blow = new THREE.Group(); blow.add(VD3K.box(0.2, 0.17, 0.15, K3.th({ roughness: 0.55, metalness: 0.2 }, ['#3d4650', '#2e353e']), 0, 0, 0));
+    const blow = new THREE.Group(); blow.add(VD3K.box(0.2, 0.17, 0.15, K3.th({ roughness: 0.55, metalness: 0.2 }, ['#4f483e', '#3d372f']), 0, 0, 0));
     for (let k = 0; k < 5; k++) blow.add(VD3K.box(0.14, 0.002, 0.008, blk, 0, -0.086, 0.03 + k * 0.022));
     blow.position.set(TRK + 0.2, 0.34, 0); g.add(blow);
-    g.add(VD3K.cable([TRK + 0.016, 0, ZB - 0.05], [TRK + 0.2, 0.25, 0.08], { via: [[TRK + 0.09, 0.0, ZB - 0.07], [TRK + 0.14, 0.12, 0.03]], rad: 0.012, color: 0x24282d }));
+    g.add(VD3K.cable([TRK + 0.016, 0, ZB - 0.05], [TRK + 0.2, 0.25, 0.08], { via: [[TRK + 0.09, 0.0, ZB - 0.07], [TRK + 0.14, 0.12, 0.03]], rad: 0.012, color: 0x2c2925 }));
     // a steel rule in cm along the front of the track, tipped toward the viewer
     const rule = new THREE.Group();     /* three steel rules end to end, from −130 cm to 130 cm (so each prints sharply) */
     for (const [a, b] of [[-130, -50], [-50, 50], [50, 130]]) { const rl = VD3K.ruler(V, { len: (b - a) / 100, from: a, to: b, unit: 'cm', step: 1, w: 0.055 }); rl.position.x += (a + 130) / 100; rule.add(rl); }
@@ -3105,7 +3105,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     TR3.gates = { A: gate3('A'), B: gate3('B') }; g.add(TR3.gates.A, TR3.gates.B);
     // the two channel timer at the front of the bench
     TR3.meters = { A: VD3K.meter(V, { w: 0.18, h: 0.105, label: 'Gate A', sub: 'flag time, ms' }), B: VD3K.meter(V, { w: 0.18, h: 0.105, label: 'Gate B', sub: 'flag time, ms' }) };
-    g.add(VD3K.box(0.46, 0.16, 0.1, K3.th({ roughness: 0.5, metalness: 0.2 }, ['#59626d', '#3c444e']), -0.86, 0.42, 0));   /* the timer's case, on the bench behind the track */
+    g.add(VD3K.box(0.46, 0.16, 0.1, K3.th({ roughness: 0.5, metalness: 0.2 }, ['#6b645a', '#4d463d']), -0.86, 0.42, 0));   /* the timer's case, on the bench behind the track */
     TR3.meters.A.position.x = -0.96; TR3.meters.B.position.x = -0.76; for (const k of ['A', 'B']) { TR3.meters[k].position.y = 0.38; TR3.meters[k].position.z += 0.1; g.add(TR3.meters[k]); }
     TR3.cables = {}; TR3.cx = {};
     // center of mass pointer on the bench in front of the rule
@@ -3114,7 +3114,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     TR3.arr = [K3.arrow(0.006), K3.arrow(0.006)]; TR3.arr0 = [K3.arrow(0.006), K3.arrow(0.006)]; TR3.arrV = K3.arrow(0.0045); g.add(...TR3.arr, ...TR3.arr0, TR3.arrV);
     // explosion: a coil spring between the gliders and the thread that holds it
     const pts = []; for (let k = 0; k <= 200; k++) { const u = k / 200, a = u * 8 * 2 * Math.PI; pts.push(new THREE.Vector3(u, 0.009 * Math.cos(a), 0.009 * Math.sin(a))); }
-    TR3.spring = K3.mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 400, 0.0012, 6, false), K3.std({ color: '#c9ced4', roughness: 0.3, metalness: 0.8, envMap: G3.env }));
+    TR3.spring = K3.mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 400, 0.0012, 6, false), K3.std({ color: '#d3cfca', roughness: 0.3, metalness: 0.8, envMap: G3.env }));
     TR3.thread = K3.seg(0.0007, K3.std({ color: '#f0ece0', roughness: 0.9 })); g.add(TR3.spring, TR3.thread);
   }
   function cable3(gn, x) {
@@ -3235,15 +3235,15 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     const V = G3.S, g = new THREE.Group(); V.scene.add(g); TB3.g = g;
     const ht = K3.tex(64, 64); ht.c.fillStyle = '#ffffff'; ht.c.fillRect(0, 0, 64, 64); ht.c.fillStyle = 'rgba(60,70,82,0.55)'; ht.c.beginPath(); ht.c.arc(32, 32, 3.2, 0, 7); ht.c.fill();
     ht.t.wrapS = ht.t.wrapT = THREE.RepeatWrapping; ht.t.repeat.set(2 * TBL.x / 0.05, 2 * TBL.y / 0.05);
-    const surf = K3.mesh(new THREE.PlaneGeometry(2 * TBL.x, 2 * TBL.y), K3.th({ map: ht.t, roughness: 0.42, metalness: 0.05 }, ['#eef2f6', '#7d8a99']), false, true);
+    const surf = K3.mesh(new THREE.PlaneGeometry(2 * TBL.x, 2 * TBL.y), K3.th({ map: ht.t, roughness: 0.42, metalness: 0.05 }, ['#f5f2ef', '#978d7f']), false, true);
     surf.position.z = 0.0005; g.add(surf);
-    const frame = K3.th({ roughness: 0.5, metalness: 0.35 }, ['#6b747f', '#3c444e']), leg = K3.th({ roughness: 0.45, metalness: 0.5 }, ['#59626d', '#353d47']);
+    const frame = K3.th({ roughness: 0.5, metalness: 0.35 }, ['#7e766d', '#4d463d']), leg = K3.th({ roughness: 0.45, metalness: 0.5 }, ['#6b645a', '#463f36']);
     g.add(VD3K.box(2 * TBL.x + 0.12, 2 * TBL.y + 0.12, 0.06, frame, 0, 0, -0.06));
     for (const sx of [-1, 1]) for (const sy of [-1, 1]) g.add(VD3K.box(0.06, 0.06, -FLOOR - 0.06, leg, sx * (TBL.x - 0.08), sy * (TBL.y - 0.08), FLOOR));
-    g.add(VD3K.box(0.5, 0.36, 0.26, K3.th({ roughness: 0.55, metalness: 0.2 }, ['#3d4650', '#2e353e']), 0, 0, FLOOR));
-    g.add(VD3K.cable([0, 0.1, FLOOR + 0.24], [0, 0.1, -0.06], { via: [[0.05, 0.14, FLOOR + 0.4], [-0.05, 0.12, -0.25]], rad: 0.018, color: 0x24282d }));
+    g.add(VD3K.box(0.5, 0.36, 0.26, K3.th({ roughness: 0.55, metalness: 0.2 }, ['#4f483e', '#3d372f']), 0, 0, FLOOR));
+    g.add(VD3K.cable([0, 0.1, FLOOR + 0.24], [0, 0.1, -0.06], { via: [[0.05, 0.14, FLOOR + 0.4], [-0.05, 0.12, -0.25]], rad: 0.018, color: 0x2c2925 }));
     TB3.pk = [0, 1].map((i) => {
-      const T2 = K3.tex(256, 256), side = K3.std({ color: '#2a2f36', roughness: 0.5, metalness: 0.2 }), topM = K3.std({ map: T2.t, roughness: 0.35, metalness: 0.1 });
+      const T2 = K3.tex(256, 256), side = K3.std({ color: '#35312b', roughness: 0.5, metalness: 0.2 }), topM = K3.std({ map: T2.t, roughness: 0.35, metalness: 0.1 });
       const m = K3.mesh(new THREE.CylinderGeometry(1, 1, 0.024, 48).rotateX(Math.PI / 2).translate(0, 0, 0.012), [side, topM, side], true, true);
       T2.t.center.set(0.5, 0.5); T2.t.rotation = Math.PI / 2; m.T2 = T2; m.key = ''; g.add(m); return m;
     });
@@ -3257,11 +3257,11 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   function puckTop(m, i) {
     const col = T.body[i]; if (m.key === col) return; m.key = col;
     const c = m.T2.c; c.clearRect(0, 0, 256, 256);
-    c.fillStyle = '#e8ecf0'; c.fillRect(0, 0, 256, 256);
+    c.fillStyle = '#efece9'; c.fillRect(0, 0, 256, 256);
     c.fillStyle = col; c.beginPath(); c.arc(128, 128, 128, 0, 7); c.fill();
-    c.fillStyle = '#f4f6f8'; c.beginPath(); c.arc(128, 128, 92, 0, 7); c.fill();
+    c.fillStyle = '#f8f6f4'; c.beginPath(); c.arc(128, 128, 92, 0, 7); c.fill();
     c.fillStyle = col; c.globalAlpha = 0.25; c.beginPath(); c.arc(128, 128, 92, 0, 7); c.fill(); c.globalAlpha = 1;
-    c.fillStyle = '#1f262f'; c.font = `700 120px ${T.mono}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(String(i + 1), 128, 136);
+    c.fillStyle = '#2e2820'; c.font = `700 120px ${T.mono}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(String(i + 1), 128, 136);
     m.T2.t.needsUpdate = true;
   }
   function upd3Table() {
@@ -3344,7 +3344,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   const CR3 = { g: null };
   function buildCradle() {
     const V = G3.S, g = new THREE.Group(); V.scene.add(g); CR3.g = g;
-    const chrome = K3.std({ color: '#dfe3e8', roughness: 0.12, metalness: 1, envMap: G3.env, envMapIntensity: 1.3 }), base = K3.th({ roughness: 0.3, metalness: 0.1 }, ['#23272c', '#1a1d21']);
+    const chrome = K3.std({ color: '#e7e4e0', roughness: 0.12, metalness: 1, envMap: G3.env, envMapIntensity: 1.3 }), base = K3.th({ roughness: 0.3, metalness: 0.1 }, ['#2b2824', '#201e1b']);
     const strM = K3.std({ color: '#e8e4da', roughness: 0.8 });
     CR3.base = VD3K.box(1, 2 * CR3D + 0.08, 0.02, base, 0, 0, 0); g.add(CR3.base);
     CR3.rails = [-1, 1].map((s) => { const r = K3.seg(0.004, chrome); g.add(r); return r; });

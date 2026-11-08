@@ -46,9 +46,9 @@ table.rows input:focus { border-color: var(--accent); }
 .chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
 @media (max-width: 820px) { .chips button { min-height: 36px; } }
 .readout dd.warn { color: var(--pos); }
-:root { --bfield: #7a8796; --sol: #e4ebf3; --path: #a7740b; --efield: #c23f2c; --cur: #b8692e; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bfield: #8d9aab; --sol: #1c2633; --path: #e2b350; --efield: #ff7660; --cur: #d98a4c; } }
-:root[data-theme="dark"] { --bfield: #8d9aab; --sol: #1c2633; --path: #e2b350; --efield: #ff7660; --cur: #d98a4c; }
+:root { --bfield: #948a7c; --sol: #f2ece5; --path: #a7740b; --efield: #c23f2c; --cur: #b8692e; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bfield: #a99e8f; --sol: #31291e; --path: #e2b350; --efield: #ff7660; --cur: #d98a4c; } }
+:root[data-theme="dark"] { --bfield: #a99e8f; --sol: #31291e; --path: #e2b350; --efield: #ff7660; --cur: #d98a4c; }
 @media (max-width: 820px) { .stage { height: 760px; max-height: none; } }
 /* folded rail sections: secondary options behind their heading (layout redesign) */
 .dimseg { position: absolute; top: 26px; left: 10px; z-index: 2; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12); }
@@ -364,7 +364,7 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
     /* the glass sheet the field arrows lie in */
     const sheetM = new THREE.MeshPhongMaterial({ transparent: true, opacity: 0.1, depthWrite: false, side: THREE.DoubleSide, shininess: 80 }), sheet = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), sheetM);
     const edgeM = new THREE.LineBasicMaterial({ transparent: true, opacity: 0.35 }), edge = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.PlaneGeometry(1, 1)), edgeM);
-    const formerM = new THREE.MeshPhongMaterial({ transparent: true, opacity: 0.16, depthWrite: false, side: THREE.DoubleSide, color: 0xdfe8f2 }), former = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 1, 48, 1, true).rotateX(Math.PI / 2), formerM);
+    const formerM = new THREE.MeshPhongMaterial({ transparent: true, opacity: 0.16, depthWrite: false, side: THREE.DoubleSide, color: 0xf0e9e1 }), former = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 1, 48, 1, true).rotateX(Math.PI / 2), formerM);
     /* the winding: a copper tube with stripes that move with the current */
     const sc = document.createElement('canvas'); sc.width = 64; sc.height = 8; const sx = sc.getContext('2d'); sx.fillStyle = '#c47a3c'; sx.fillRect(0, 0, 64, 8); sx.fillStyle = '#f1c08f'; sx.fillRect(0, 0, 14, 8);
     const stripe = new THREE.CanvasTexture(sc); stripe.wrapS = stripe.wrapT = THREE.RepeatWrapping;
@@ -395,10 +395,10 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
   }
   const col3 = (s, fb) => { try { return new THREE.Color(s || fb); } catch (_) { return new THREE.Color(fb); } };
   function theme3() {
-    const g = g3, dk = VD3.dark(), bg = col3(T.canvas, '#fbfcfd');
-    g.scene.background = bg; g.hemi.intensity = dk ? 1.0 : 0.9; g.hemi.groundColor = col3(dk ? '#1c222a' : '#8c8a84', '#8c8a84');
-    g.sheetM.color = col3(dk ? '#1f2a38' : '#eef3f8', '#eef3f8'); g.sheetM.opacity = dk ? 0.5 : 0.45; g.edgeM.color = col3(T.muted, '#5a6575');
-    g.formerM.color = col3(dk ? '#4a5a70' : '#dfe8f2', '#dfe8f2'); g.bM.color = col3(T.bfield, '#7a8796'); g.eM.color = col3(T.efield, '#c23f2c');
+    const g = g3, dk = VD3.dark(), bg = col3(T.canvas, '#fdfcfb');
+    g.scene.background = bg; g.hemi.intensity = dk ? 1.0 : 0.9; g.hemi.groundColor = col3(dk ? '#29241d' : '#8c8a84', '#8c8a84');
+    g.sheetM.color = col3(dk ? '#362d21' : '#f7f4ef', '#f7f4ef'); g.sheetM.opacity = dk ? 0.5 : 0.45; g.edgeM.color = col3(T.muted, '#73695c');
+    g.formerM.color = col3(dk ? '#6d5f4d' : '#f0e9e1', '#f0e9e1'); g.bM.color = col3(T.bfield, '#948a7c'); g.eM.color = col3(T.efield, '#c23f2c');
     g.pathM.color = col3(T.path, '#a7740b'); g.elM.color = col3(T.neg, '#2b60b5');
   }
   function coil3() {

@@ -23,10 +23,10 @@
 <style>
 /* Layout: the ramp and its free body diagram on the left; the instrument rail on the right. */
 /* Layout: lab bench. The gas box and speed histogram fill the left, a narrow instrument rail sits on the right; stacks on phones. */
-:root { --w: #5a6575; --n: #2b60b5; --fr: #b0452f; --ap: #6f4bb3; --tn: #a7740b; --net: #2f7d4f; --wood: #c9a77a; --ramp: #dfe5ec; }
-:root { --wall: #eef1f5; --wall-line: #e0e5ec; --floor: #e4ded3; --floor-line: #d2cabd; --bench: #c49c6b; --board: #d6b88f; --grain: #8a6338; --metal: #a3adb9; --metal-dark: #5f6a78; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --w: #b4bfcc; --n: #69a0ff; --fr: #ff8a70; --ap: #b49bff; --tn: #e2b350; --net: #5fcf8a; --wood: #8d6c45; --ramp: #2a3442; --wall: #121922; --wall-line: #19222d; --floor: #1b2028; --floor-line: #252c36; --bench: #5c4630; --board: #6f5539; --grain: #2e2014; --metal: #56616f; --metal-dark: #9aa5b3; } }
-:root[data-theme="dark"] { --w: #b4bfcc; --n: #69a0ff; --fr: #ff8a70; --ap: #b49bff; --tn: #e2b350; --net: #5fcf8a; --wood: #8d6c45; --ramp: #2a3442; --wall: #121922; --wall-line: #19222d; --floor: #1b2028; --floor-line: #252c36; --bench: #5c4630; --board: #6f5539; --grain: #2e2014; --metal: #56616f; --metal-dark: #9aa5b3; }
+:root { --w: #73695c; --n: #2b60b5; --fr: #b0452f; --ap: #a88456; --tn: #a7740b; --net: #2f7d4f; --wood: #c9a77a; --ramp: #dfe5ec; }
+:root { --wall: #f4f2ef; --wall-line: #ebe7e1; --floor: #e4ded3; --floor-line: #d2cabd; --bench: #c49c6b; --board: #d6b88f; --grain: #8a6338; --metal: #b7afa5; --metal-dark: #766d61; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --w: #cac1b6; --n: #69a0ff; --fr: #ff8a70; --ap: #b49bff; --tn: #e2b350; --net: #5fcf8a; --wood: #8d6c45; --ramp: #2a3442; --wall: #211b13; --wall-line: #2c241b; --floor: #27221c; --floor-line: #352e26; --bench: #5c4630; --board: #6f5539; --grain: #2e2014; --metal: #6d6458; --metal-dark: #b1a89c; } }
+:root[data-theme="dark"] { --w: #cac1b6; --n: #69a0ff; --fr: #ff8a70; --ap: #b49bff; --tn: #e2b350; --net: #5fcf8a; --wood: #8d6c45; --ramp: #2a3442; --wall: #211b13; --wall-line: #2c241b; --floor: #27221c; --floor-line: #352e26; --bench: #5c4630; --board: #6f5539; --grain: #2e2014; --metal: #6d6458; --metal-dark: #b1a89c; }
 :root[data-projector="on"] { font-size: 125%; }
 .bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; }
 .bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 12px; }
@@ -45,15 +45,15 @@ table.rows input:focus { border-color: var(--accent); }
 .plotbox { position: relative; height: 200px; }
 @media (min-width: 821px) { :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 350px; } :root[data-projector="on"] .stage { min-height: 480px; } }
 /* vd-knobs: an instrument panel in the picture; each range input inside it is shown as a knob (layout redesign) */
-.instr { position: absolute; z-index: 2; display: flex; flex-wrap: wrap; align-items: flex-start; gap: 10px 14px; padding: 8px 12px; border-radius: 10px; background: #2c3542; color: #e3e8ef; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.25); }
+.instr { position: absolute; z-index: 2; display: flex; flex-wrap: wrap; align-items: flex-start; gap: 10px 14px; padding: 8px 12px; border-radius: 10px; background: #40382e; color: #eeeae4; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.25); }
 .instr > [hidden] { display: none !important; }
 .instr .kctl { display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 84px; }
-.instr .kctl label, .instr .kctl .klab { font-size: 0.72rem; font-weight: 700; color: #c9d0d9; text-align: center; max-width: 120px; line-height: 1.2; min-height: 2.4em; display: flex; align-items: flex-end; justify-content: center; }
+.instr .kctl label, .instr .kctl .klab { font-size: 0.72rem; font-weight: 700; color: #d8d2ca; text-align: center; max-width: 120px; line-height: 1.2; min-height: 2.4em; display: flex; align-items: flex-end; justify-content: center; }
 .instr .kctl output { font-family: var(--font-mono); font-weight: 600; font-size: 0.9rem; color: #7ee0a0; background: #0b1a12; border-radius: 4px; padding: 1px 6px; white-space: nowrap; }
 .instr input[type="range"] { display: none; }
 .vdknob { position: relative; width: 44px; height: 44px; border-radius: 50%; cursor: grab; touch-action: none; flex: none;
-  background: radial-gradient(circle at 38% 32%, #8b96a4, #4a5462 62%, #39414d); box-shadow: 0 0 0 3px #232a34, 0 2px 4px rgba(0, 0, 0, 0.5); }
-.vdknob::before { content: ""; position: absolute; left: 50%; top: 4px; width: 3px; height: 13px; margin-left: -1.5px; border-radius: 2px; background: #f1f4f8; transform: rotate(var(--a, 0deg)); transform-origin: 50% 18px; }
+  background: radial-gradient(circle at 38% 32%, #a2998d, #60574c 62%, #4c443b); box-shadow: 0 0 0 3px #332c24, 0 2px 4px rgba(0, 0, 0, 0.5); }
+.vdknob::before { content: ""; position: absolute; left: 50%; top: 4px; width: 3px; height: 13px; margin-left: -1.5px; border-radius: 2px; background: #f7f5f2; transform: rotate(var(--a, 0deg)); transform-origin: 50% 18px; }
 .vdknob:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
 .instr.compact { gap: 6px 8px; padding: 6px 8px; }
 .instr.compact .kctl { min-width: 70px; gap: 3px; }
@@ -64,9 +64,9 @@ table.rows input:focus { border-color: var(--accent); }
 .instr .kgroup { display: contents; }
 .instr .kgroup[hidden] { display: none; }
 /* in the light theme the panel is a brushed aluminum faceplate, so it belongs on a light wall; knobs and green readouts stay dark like a real instrument's */
-:root:not([data-theme="dark"]) .instr { background: linear-gradient(180deg, #f1f4f7, #d9dfe6); color: #1d252f; border: 1px solid #b9c2cc; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 2px 6px rgba(20, 30, 45, 0.18); }
-:root:not([data-theme="dark"]) .instr .kctl label, :root:not([data-theme="dark"]) .instr .kctl .klab { color: #3a4552; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .instr { background: #2c3542; color: #e3e8ef; border: 0; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.25); } :root:not([data-theme="light"]) .instr .kctl label, :root:not([data-theme="light"]) .instr .kctl .klab { color: #c9d0d9; } }
+:root:not([data-theme="dark"]) .instr { background: linear-gradient(180deg, #f7f4f1, #e5e0da); color: #2e271e; border: 1px solid #cbc4ba; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 2px 6px rgba(20, 30, 45, 0.18); }
+:root:not([data-theme="dark"]) .instr .kctl label, :root:not([data-theme="dark"]) .instr .kctl .klab { color: #50473c; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .instr { background: #40382e; color: #eeeae4; border: 0; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.25); } :root:not([data-theme="light"]) .instr .kctl label, :root:not([data-theme="light"]) .instr .kctl .klab { color: #d8d2ca; } }
 #paneSeg { display: flex; margin-bottom: 10px; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
 #paneSeg button { flex: 1; font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 8px; cursor: pointer; }
 #paneSeg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
@@ -502,7 +502,7 @@ table.rows input:focus { border-color: var(--accent); }
     const slots = Array.from({ length: 8 }, () => mesh(new THREE.CylinderGeometry(1, 1, 1, 32).rotateX(Math.PI / 2), slotM)), hookRod = mesh(new THREE.CylinderGeometry(0.004, 0.004, 1, 8).rotateX(Math.PI / 2), hookM), hBase = mesh(new THREE.CylinderGeometry(1, 1, 0.006, 32).rotateX(Math.PI / 2), hookM);
     hanger.add(hookRod, hBase, ...slots);
     /* the pull: a cord from the block's front face to a spring scale held in the direction of F */
-    const scaleG = new THREE.Group(), scBody = mesh(new THREE.CylinderGeometry(0.022, 0.022, 0.2, 20), M({ roughness: 0.4, metalness: 0.3, color: 0xd9dee4 })), scCap = mesh(new THREE.CylinderGeometry(0.026, 0.026, 0.025, 20), M({ roughness: 0.5, color: 0x6f4bb3 }));
+    const scaleG = new THREE.Group(), scBody = mesh(new THREE.CylinderGeometry(0.022, 0.022, 0.2, 20), M({ roughness: 0.4, metalness: 0.3, color: 0xe3dfda })), scCap = mesh(new THREE.CylinderGeometry(0.026, 0.026, 0.025, 20), M({ roughness: 0.5, color: 0xa88456 }));
     scCap.position.y = 0.11; const scRing = mesh(new THREE.TorusGeometry(0.03, 0.005, 8, 24), hookM); scRing.position.y = 0.15; scaleG.add(scBody, scCap, scRing);
     const cordF = new THREE.Line(lineG(2), stringM);
     /* the timer's two marks across the board */
@@ -519,16 +519,16 @@ table.rows input:focus { border-color: var(--accent); }
   }
   const in3 = (e) => { const r = can.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top; return x >= rect3.x && x < rect3.x + rect3.w && y >= rect3.y && y < rect3.y + rect3.h; };
   function theme3() {
-    const g = g3, dk = VD3.dark(), bg = col3(T.wall, '#eef1f5');
+    const g = g3, dk = VD3.dark(), bg = col3(T.wall, '#f4f2ef');
     g.scene.background = bg; g.scene.fog = new THREE.Fog(bg, 9, 22);
     g.hemi.intensity = dk ? 0.7 : 0.55; g.sun.intensity = dk ? 0.75 : 0.8; g.hemi.groundColor = col3(dk ? '#2a241d' : '#8c7a60', '#8c7a60');
     { const c = g.floorCv.getContext('2d'); c.fillStyle = T.floor; c.fillRect(0, 0, 512, 512); c.strokeStyle = T.floorLine; c.lineWidth = 6; for (let y = 0; y <= 512; y += 128) { c.beginPath(); c.moveTo(0, y); c.lineTo(512, y); c.stroke(); } for (let r = 0; r < 4; r++) { const x = (r % 2 ? 160 : 400); c.beginPath(); c.moveTo(x, r * 128); c.lineTo(x, r * 128 + 128); c.stroke(); } g.floorTex.needsUpdate = true; }
     { const c = g.wallCv.getContext('2d'); c.fillStyle = T.wall; c.fillRect(0, 0, 512, 512); c.strokeStyle = T.wallLine; c.lineWidth = 6; for (let r = 0; r < 8; r++) { const y = r * 64; c.beginPath(); c.moveTo(0, y); c.lineTo(512, y); for (let x = r % 2 ? 64 : 0; x <= 512; x += 128) { c.moveTo(x, y); c.lineTo(x, y + 64); } c.stroke(); } g.wallTex.needsUpdate = true; }
-    g.wallM.emissive = col3(T.wall, '#eef1f5').multiplyScalar(dk ? 0.25 : 0.35);
+    g.wallM.emissive = col3(T.wall, '#f4f2ef').multiplyScalar(dk ? 0.25 : 0.35);
     const wood = (m) => { m.color = new THREE.Color(dk ? 0x9a8a78 : 0xffffff); };
     wood(g.boardM); wood(g.benchM); wood(g.blockM); wood(g.labelM); g.boardEdgeM.color = col3(T.bench, '#c49c6b'); g.legM.color = col3(T.bench, '#c49c6b');
-    g.metalM.color = col3(T.metal, '#a3adb9'); g.metalDarkM.color = col3(T.metalDark, '#5f6a78'); g.slotM.color = col3(T.tn, '#a7740b'); g.markM.color = col3(T.accent, '#2b60b5');
-    g.stringM.color = col3(T.ink, '#1d252f'); g.label = '';
+    g.metalM.color = col3(T.metal, '#b7afa5'); g.metalDarkM.color = col3(T.metalDark, '#766d61'); g.slotM.color = col3(T.tn, '#a7740b'); g.markM.color = col3(T.accent, '#c4811c');
+    g.stringM.color = col3(T.ink, '#2e271e'); g.label = '';
   }
   /* draws the 3D picture into the rectangle (x0, y0, w, h) of the scene and returns R(s, u, y): a ramp point to this canvas */
   function draw3(x0, y0, w, h, drop, hangZ) {
@@ -549,7 +549,7 @@ table.rows input:focus { border-color: var(--accent); }
       g.strip.scale.x = Math.max(0.01, px); g.strip.position.set(px / 2, 0, 0.004); }
     /* the block, with its mass printed on the face toward the viewer */
     g.block.position.set(S.s + BS / 2, 0, BS / 2);
-    const lab = `${f(P.m, 1)} kg`; if (g.label !== lab) { g.label = lab; const c = g.labelCv.getContext('2d'); c.drawImage(woodCanvas(256, 256, '#c9a77a', '#8a6338', 12, 3), 0, 0); c.fillStyle = 'rgba(255,255,255,0.8)'; c.fillRect(38, 100, 180, 56); c.fillStyle = '#1d252f'; c.font = '700 44px sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(lab, 128, 129); g.labelTex.needsUpdate = true; }
+    const lab = `${f(P.m, 1)} kg`; if (g.label !== lab) { g.label = lab; const c = g.labelCv.getContext('2d'); c.drawImage(woodCanvas(256, 256, '#c9a77a', '#8a6338', 12, 3), 0, 0); c.fillStyle = 'rgba(255,255,255,0.8)'; c.fillRect(38, 100, 180, 56); c.fillStyle = '#2e271e'; c.font = '700 44px sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(lab, 128, 129); g.labelTex.needsUpdate = true; }
     /* pulley, string and hanging mass: the string's length is fixed, so when the block moves up the ramp by Δs the mass drops by Δs */
     const hang = P.m2 > 0; g.pulley.visible = g.clampRod.visible = g.clampBox.visible = g.stringA.visible = g.stringB.visible = g.hanger.visible = hang;
     if (hang) {

@@ -29,9 +29,9 @@
 /* Layout: the turntable from above and the falling mass from the side on the left; the rail on the right. */
 /* Layout: lab bench. The gas box and speed histogram fill the left, a narrow instrument rail sits on the right; stacks on phones. */
 
-:root { --plat: #c9d1db; --obj: #2b60b5; --mark: #b0452f; --mass: #6b7787; --str: #a7740b; --bench: #e7d6ba; --bench-edge: #b0906a; --grain: rgba(110,75,35,0.13); --wall: #f1f4f7; --floor: #dde1e6; --floor-line: #c9cfd7; --metal: #a3acb6; --metal-dark: #5f6873; --metal-hi: #eef1f4; --shadow: rgba(30,40,55,0.18); --led: #2f9e57; --screen: #26313d; --panel: rgba(252,253,254,0.88); }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --plat: #3b4554; --obj: #69a0ff; --mark: #ff8a70; --mass: #9aa6b6; --str: #e2b350; --bench: #2f281f; --bench-edge: #4a3b29; --grain: rgba(0,0,0,0.25); --wall: #131b24; --floor: #1b232d; --floor-line: #26303c; --metal: #6c7784; --metal-dark: #3a434e; --metal-hi: #c9d1db; --shadow: rgba(0,0,0,0.45); --led: #4fd07f; --screen: #0b1016; --panel: rgba(16,22,30,0.85); } }
-:root[data-theme="dark"] { --plat: #3b4554; --obj: #69a0ff; --mark: #ff8a70; --mass: #9aa6b6; --str: #e2b350; --bench: #2f281f; --bench-edge: #4a3b29; --grain: rgba(0,0,0,0.25); --wall: #131b24; --floor: #1b232d; --floor-line: #26303c; --metal: #6c7784; --metal-dark: #3a434e; --metal-hi: #c9d1db; --shadow: rgba(0,0,0,0.45); --led: #4fd07f; --screen: #0b1016; --panel: rgba(16,22,30,0.85); }
+:root { --plat: #dad3ca; --obj: #2b60b5; --mark: #b0452f; --mass: #857b6d; --str: #a7740b; --bench: #e7d6ba; --bench-edge: #b0906a; --grain: rgba(110,75,35,0.13); --wall: #f7f4f1; --floor: #e5e2de; --floor-line: #d6d1ca; --metal: #b5aea4; --metal-dark: #726a60; --metal-hi: #f4f1ee; --shadow: rgba(30,40,55,0.18); --led: #2f9e57; --screen: #3b3328; --panel: rgba(252,253,254,0.88); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --plat: #52493d; --obj: #69a0ff; --mark: #ff8a70; --mass: #b4aa9c; --str: #e2b350; --bench: #2f281f; --bench-edge: #4a3b29; --grain: rgba(0,0,0,0.25); --wall: #231c14; --floor: #2c251c; --floor-line: #3a3228; --metal: #82796e; --metal-dark: #4c453c; --metal-hi: #dad3ca; --shadow: rgba(0,0,0,0.45); --led: #4fd07f; --screen: #15110c; --panel: rgba(16,22,30,0.85); } }
+:root[data-theme="dark"] { --plat: #52493d; --obj: #69a0ff; --mark: #ff8a70; --mass: #b4aa9c; --str: #e2b350; --bench: #2f281f; --bench-edge: #4a3b29; --grain: rgba(0,0,0,0.25); --wall: #231c14; --floor: #2c251c; --floor-line: #3a3228; --metal: #82796e; --metal-dark: #4c453c; --metal-hi: #dad3ca; --shadow: rgba(0,0,0,0.45); --led: #4fd07f; --screen: #15110c; --panel: rgba(16,22,30,0.85); }
 :root[data-projector="on"] { font-size: 125%; }
 .bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; }
 .bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 12px; }
@@ -55,7 +55,7 @@ table.rows input:focus { border-color: var(--accent); }
 .tray { position: absolute; right: 10px; top: 10px; max-width: 250px; z-index: 2; display: flex; flex-direction: column; gap: 6px; padding: 8px 10px; background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--line); border-radius: 10px; }
 .tray-title { font-size: 0.74rem; font-weight: 700; color: var(--muted); }
 .pieces { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 5px; }
-.pieces button { --w: 40px; --h: 14px; width: var(--w); height: var(--h); padding: 0; border: 0; border-radius: 3px; cursor: pointer; font: 700 0.66rem/1 var(--font-mono); color: #17202b; background: linear-gradient(#c9d0d9, #9aa4b0); box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.18); }
+.pieces button { --w: 40px; --h: 14px; width: var(--w); height: var(--h); padding: 0; border: 0; border-radius: 3px; cursor: pointer; font: 700 0.66rem/1 var(--font-mono); color: #2a2219; background: linear-gradient(#d8d2ca, #aea69c); box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.18); }
 .pieces button.brass { background: linear-gradient(#e2c26a, #b98f2e); }
 .pieces button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .tray-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; }
@@ -361,18 +361,18 @@ table.rows input:focus { border-color: var(--accent); }
     const mesh = (g, m, cast, recv) => { const x = new THREE.Mesh(g, m); x.castShadow = !!cast; x.receiveShadow = !!recv; return x; };
     const box = (w, d, h, m, x, y, z) => K.box(w, d, h, m, x, y, z);
     // room: floor and a curved wall behind; a lab bench (worktop on a cabinet) whose right hand end the string runs over
-    const floor = mesh(new THREE.PlaneGeometry(8, 8), mat({ roughness: 0.95 }, ['#d6dbe1', '#1d2530']), false, true); floor.position.z = FLOOR;
+    const floor = mesh(new THREE.PlaneGeometry(8, 8), mat({ roughness: 0.95 }, ['#e0dcd7', '#2f281e']), false, true); floor.position.z = FLOOR;
     const wall = K.backdrop(st, { r: 2.3, h: 2.6, arc: Math.PI * 0.9 }); const wallG = new THREE.Group(); wallG.add(wall); wallG.position.set(-0.2, -0.6, FLOOR); scene.add(floor, wallG);
     const topM = mat({ roughness: 0.75 }, ['#d2bf9f', '#3d342a']), edgeM = mat({ roughness: 0.7 }, ['#a98c66', '#4a3d2e']);
     const top = mesh(new THREE.BoxGeometry(1.67, 0.77, 0.035), [edgeM, edgeM, edgeM, edgeM, topM, edgeM], true, true); top.position.set(-0.565, 0.065, -0.0175); scene.add(top);
-    const cabM = mat({ roughness: 0.6, metalness: 0.15 }, ['#66727f', '#323b47']), cabDk = mat({ roughness: 0.7 }, ['#3b434d', '#151a20']), handM = mat({ roughness: 0.3, metalness: 0.7 }, ['#d9dee4', '#8d97a3']);
+    const cabM = mat({ roughness: 0.6, metalness: 0.15 }, ['#7d7468', '#453e34']), cabDk = mat({ roughness: 0.7 }, ['#4c453c', '#1f1b16']), handM = mat({ roughness: 0.3, metalness: 0.7 }, ['#e3dfda', '#a1998f']);
     scene.add(box(1.57, 0.7, -0.035 - FLOOR - 0.08, cabM, -0.565, 0.07, FLOOR + 0.08), box(1.53, 0.64, 0.08, cabDk, -0.565, 0.08, FLOOR));
     for (let i = 0; i < 3; i++) {   // a stack of drawers at the right hand end of the front, cupboard doors further left
       const z = -0.06 - i * 0.255; scene.add(box(0.4, 0.008, 0.235, cabM, 0.0, -0.284, z - 0.235), box(0.12, 0.016, 0.012, handM, 0.0, -0.291, z - 0.05));
     }
     for (const x of [-0.5, -0.95]) scene.add(box(0.43, 0.008, 0.7, cabM, x, -0.284, -0.79), box(0.012, 0.016, 0.12, handM, x + (x > -0.7 ? -0.18 : 0.18), -0.291, -0.3));
     // turntable: a heavy base and column, the platter (strobe sectors and degree marks that turn with it), hub and spool
-    const metalM = mat({ roughness: 0.32, metalness: 0.6 }, ['#b4bcc6', '#7d8792']), darkM = mat({ roughness: 0.45, metalness: 0.4 }, ['#47505b', '#2c333c']);
+    const metalM = mat({ roughness: 0.32, metalness: 0.6 }, ['#c5beb5', '#90897f']), darkM = mat({ roughness: 0.45, metalness: 0.4 }, ['#5a5248', '#3b352d']);
     const base = mesh(cyl(0.085, 0.09, 0.014, 48), darkM, true, true); base.position.z = 0.007;
     const col = mesh(cyl(0.022, 0.026, 0.036, 32), metalM, true, true); col.position.z = 0.014 + 0.018;
     const table = new THREE.Group(); table.position.z = 0.05; scene.add(base, col, table);
@@ -418,7 +418,7 @@ table.rows input:focus { border-color: var(--accent); }
     const brassM = M({ roughness: 0.3, metalness: 0.7 }), steelM = M({ roughness: 0.32, metalness: 0.6 });
     // the light gates on a stand from the floor: start where the hanger hangs at rest, stop 0.500 m lower; a rule between them
     const gates = new THREE.Group(); rig.add(gates);
-    const gateM = mat({ roughness: 0.5, metalness: 0.2 }, ['#28323d', '#1c232b']), SX = HX + 0.13;
+    const gateM = mat({ roughness: 0.5, metalness: 0.2 }, ['#3b342a', '#2a241d']), SX = HX + 0.13;
     gates.add(K.rod([SX, 0.03, FLOOR + 0.02], [SX, 0.03, Z0 + 0.08], 0.006, metalM), box(0.22, 0.13, 0.02, darkM, SX + 0.03, 0.03, FLOOR));
     const mkGate = () => {
       const g = new THREE.Group();
@@ -438,7 +438,7 @@ table.rows input:focus { border-color: var(--accent); }
     const scr = new THREE.Group(); scr.position.set(-0.05, 0.25, 0); scr.rotation.z = -0.3; scene.add(scr);
     scr.add(box(0.07, 0.05, 0.008, darkM, 0, 0, 0), box(0.012, 0.012, 0.03, darkM, 0, 0.01, 0.008), box(0.29, 0.016, 0.185, darkM, 0, 0, 0.022));
     const screen = new THREE.Mesh(new THREE.PlaneGeometry(0.274, 0.171), new THREE.MeshBasicMaterial({ map: trTex, toneMapped: false })); screen.rotation.x = Math.PI / 2; screen.position.set(0, -0.0085, 0.1145); scr.add(screen);
-    const wire = { m: M({ roughness: 0.6, color: 0x23282f }), mesh: null };
+    const wire = { m: M({ roughness: 0.6, color: 0x2e2a24 }), mesh: null };
     g3 = { st, r: st.r, el: st.el, scene, cam: st.cam, metalM, darkM, platCv, platTex, sideCv, sideTex, table, spoolCore, flangeA, flangeB, flMark, strM, objM, loads, arrowM, coil, segA, segC, rig, pulley, hanger, brassM, steelM, gates, gate0, gate1, ruleG, ruleArms, timer, trCv, trTex, wire, f: K.follow({ x: 0.12, y: 0, z: -0.12 }, 0.08) };
     st.onTheme(theme3);
     can.addEventListener('wheel', (e) => { if (!G3.on) e.stopImmediatePropagation(); }, { passive: true });
@@ -448,18 +448,18 @@ table.rows input:focus { border-color: var(--accent); }
   }
   function theme3(dk) {
     const g = g3, col = (s, fb) => { try { return new THREE.Color(s || fb); } catch (_) { return new THREE.Color(fb); } };
-    g.strM.color = col(T.str, '#a7740b'); g.objM.color = col(T.obj, '#2b60b5'); g.steelM.color = col(dk ? '#9aa4b0' : '#b9c1ca', '#b9c1ca'); g.brassM.color = col(dk ? '#c9a24a' : '#c79a3a', '#c79a3a');
-    g.arrowM.color = col(T.accent, '#2b60b5'); g.arrowM.emissive = col(T.accent, '#2b60b5').multiplyScalar(dk ? 0.35 : 0.1);
+    g.strM.color = col(T.str, '#a7740b'); g.objM.color = col(T.obj, '#2b60b5'); g.steelM.color = col(dk ? '#aea69c' : '#c9c2ba', '#c9c2ba'); g.brassM.color = col(dk ? '#c9a24a' : '#c79a3a', '#c79a3a');
+    g.arrowM.color = col(T.accent, '#c4811c'); g.arrowM.emissive = col(T.accent, '#c4811c').multiplyScalar(dk ? 0.35 : 0.1);
     // the platter's top: brushed metal, a ring of 24 strobe sectors near the rim, degree marks (every 10°, longer every 90°) and the red reference line
     const c = g.platCv.getContext('2d'), N = 1024, R = N / 2; c.fillStyle = T.plat; c.fillRect(0, 0, N, N);
     for (let k = 0; k < 170; k++) { c.strokeStyle = k % 2 ? 'rgba(255,255,255,0.09)' : 'rgba(0,0,0,0.05)'; c.lineWidth = 3; c.beginPath(); c.arc(R, R, 30 + k * 2.75, 0, 7); c.stroke(); }
-    for (let k = 0; k < 24; k++) { c.fillStyle = k % 2 ? (dk ? '#dfe5ec' : '#f4f6f8') : (dk ? '#141a21' : '#1f262e'); c.beginPath(); c.moveTo(R, R); c.arc(R, R, R * 0.985, k * Math.PI / 12, (k + 1) * Math.PI / 12); c.closePath(); c.fill(); }
+    for (let k = 0; k < 24; k++) { c.fillStyle = k % 2 ? (dk ? '#ebe6e0' : '#f8f6f4') : (dk ? '#201b15' : '#2d2720'); c.beginPath(); c.moveTo(R, R); c.arc(R, R, R * 0.985, k * Math.PI / 12, (k + 1) * Math.PI / 12); c.closePath(); c.fill(); }
     c.fillStyle = T.plat; c.beginPath(); c.arc(R, R, R * 0.885, 0, 7); c.fill();
     for (let k = 0; k < 120; k++) { c.strokeStyle = k % 2 ? 'rgba(255,255,255,0.09)' : 'rgba(0,0,0,0.05)'; c.lineWidth = 3; c.beginPath(); c.arc(R, R, 30 + k * 3.7, 0, 7); c.stroke(); }
-    c.strokeStyle = dk ? '#c9d1db' : '#3a434e'; c.lineWidth = 4; c.beginPath(); for (let k = 0; k < 36; k++) { const a = k * Math.PI / 18, r0 = R * (k % 9 ? 0.83 : 0.76); c.moveTo(R + r0 * Math.cos(a), R + r0 * Math.sin(a)); c.lineTo(R + R * 0.87 * Math.cos(a), R + R * 0.87 * Math.sin(a)); } c.stroke();
+    c.strokeStyle = dk ? '#dad3ca' : '#4c453c'; c.lineWidth = 4; c.beginPath(); for (let k = 0; k < 36; k++) { const a = k * Math.PI / 18, r0 = R * (k % 9 ? 0.83 : 0.76); c.moveTo(R + r0 * Math.cos(a), R + r0 * Math.sin(a)); c.lineTo(R + R * 0.87 * Math.cos(a), R + R * 0.87 * Math.sin(a)); } c.stroke();
     c.strokeStyle = T.mark; c.lineWidth = 16; c.lineCap = 'round'; c.beginPath(); c.moveTo(R + 40, R); c.lineTo(R + R * 0.86, R); c.stroke(); c.lineCap = 'butt';
     g.platTex.needsUpdate = true;
-    const s = g.sideCv.getContext('2d'); for (let k = 0; k < 24; k++) { s.fillStyle = k % 2 ? (dk ? '#dfe5ec' : '#f4f6f8') : (dk ? '#141a21' : '#1f262e'); s.fillRect(k * 1024 / 24, 0, 1024 / 24 + 1, 32); } g.sideTex.needsUpdate = true;
+    const s = g.sideCv.getContext('2d'); for (let k = 0; k < 24; k++) { s.fillStyle = k % 2 ? (dk ? '#ebe6e0' : '#f8f6f4') : (dk ? '#201b15' : '#2d2720'); s.fillRect(k * 1024 / 24, 0, 1024 / 24 + 1, 32); } g.sideTex.needsUpdate = true;
     G3.sig = ''; G3.tr = '';
   }
   // the slotted masses on the hanger: rebuilt only when the pieces change; the gates follow the hanger's bottom
@@ -496,18 +496,18 @@ table.rows input:focus { border-color: var(--accent); }
   function trace3(M, tt) {
     const sig = [S.run ? Math.floor(tt * 8) : tt.toFixed(3), S.done, hidden(), M.t, M.alpha, S.r].join('|'); if (G3.tr === sig) return; G3.tr = sig;
     const c = g3.trCv.getContext('2d'), Wd = 768, Ht = 480, mono = T.mono || 'monospace', ui = T.ui || 'sans-serif';
-    c.fillStyle = '#0d151e'; c.fillRect(0, 0, Wd, Ht); c.fillStyle = '#9fb3c8'; c.font = `700 36px ${ui}`; c.textBaseline = 'top'; c.textAlign = 'left'; c.fillText('ω of the table against time', 28, 18);
+    c.fillStyle = '#1c160f'; c.fillRect(0, 0, Wd, Ht); c.fillStyle = '#c5b6a2'; c.font = `700 36px ${ui}`; c.textBaseline = 'top'; c.textAlign = 'left'; c.fillText('ω of the table against time', 28, 18);
     const L = 100, Rr = Wd - 30, T0 = 74, B = Ht - 74;
     c.strokeStyle = 'rgba(160,180,200,0.35)'; c.lineWidth = 2; c.strokeRect(L, T0, Rr - L, B - T0);
     if (hidden() || !M.moves) {
-      c.fillStyle = '#c8d6e4'; c.font = `26px ${ui}`; c.textAlign = 'center'; c.textBaseline = 'middle';
+      c.fillStyle = '#e2d8ca'; c.font = `26px ${ui}`; c.textAlign = 'center'; c.textBaseline = 'middle';
       c.fillText(!M.moves ? 'too little torque: the table stays still' : S.blind ? 'hidden in Blind: time the drop instead' : 'hidden for the Mystery object', (L + Rr) / 2, (T0 + B) / 2);
       g3.trTex.needsUpdate = true; return;
     }
     const nice = (v) => { const e = 10 ** Math.floor(Math.log10(v)), q = v / e; return (q <= 1 ? 1 : q <= 2 ? 2 : q <= 5 ? 5 : 10) * e; };
     const wEnd = M.alpha * M.t, tStep = nice(M.t / 4), wStep = nice(wEnd / 4), tMax = Math.ceil(M.t / tStep * 1.0001) * tStep, wMax = Math.ceil(wEnd / wStep * 1.0001) * wStep;
     const PX = (t) => L + (Rr - L) * t / tMax, PY = (w) => B - (B - T0) * w / wMax;
-    c.font = `26px ${mono}`; c.fillStyle = '#9fb3c8'; c.strokeStyle = 'rgba(160,180,200,0.16)';
+    c.font = `26px ${mono}`; c.fillStyle = '#c5b6a2'; c.strokeStyle = 'rgba(160,180,200,0.16)';
     c.textAlign = 'center'; c.textBaseline = 'top'; for (let t = 0; t <= tMax + 1e-9; t += tStep) { c.beginPath(); c.moveTo(PX(t), T0); c.lineTo(PX(t), B); c.stroke(); c.fillText(+t.toFixed(3) + '', PX(t), B + 8); }
     c.textAlign = 'right'; c.textBaseline = 'middle'; for (let w = 0; w <= wMax + 1e-9; w += wStep) { c.beginPath(); c.moveTo(L, PY(w)); c.lineTo(Rr, PY(w)); c.stroke(); c.fillText(+w.toFixed(3) + '', L - 10, PY(w)); }
     c.textAlign = 'center'; c.textBaseline = 'bottom'; c.fillText('t (s)', (L + Rr) / 2, Ht - 4); c.save(); c.translate(26, (T0 + B) / 2); c.rotate(-Math.PI / 2); c.textBaseline = 'middle'; c.fillText('ω (rad/s)', 0, 0); c.restore();
@@ -515,7 +515,7 @@ table.rows input:focus { border-color: var(--accent); }
     c.strokeStyle = '#6fd3ff'; c.lineWidth = 5; c.beginPath(); c.moveTo(PX(0), PY(0)); c.lineTo(PX(tt), PY(M.alpha * tt)); c.stroke();
     c.fillStyle = '#ffffff'; c.beginPath(); c.arc(PX(tt), PY(M.alpha * tt), 8, 0, 7); c.fill();
     c.fillStyle = '#8ef0b0'; c.font = `600 30px ${mono}`; c.textAlign = 'right'; c.textBaseline = 'top';
-    c.fillText(`ω ${f(M.alpha * tt, 2)} rad/s`, Rr - 12, T0 + 12); c.fillStyle = '#c8d6e4'; c.fillText(`v = ωr ${f(M.a * tt * 100, 1)} cm/s`, Rr - 12, T0 + 50);
+    c.fillText(`ω ${f(M.alpha * tt, 2)} rad/s`, Rr - 12, T0 + 12); c.fillStyle = '#e2d8ca'; c.fillText(`v = ωr ${f(M.a * tt * 100, 1)} cm/s`, Rr - 12, T0 + 50);
     g3.trTex.needsUpdate = true;
   }
   function render3(M, tt, y, th) {
@@ -536,7 +536,7 @@ table.rows input:focus { border-color: var(--accent); }
     seg3(g.segA, new THREE.Vector3(0, 0, ZB + n * PITCH), new THREE.Vector3(XP, 0, ZS)); seg3(g.segC, new THREE.Vector3(HX, 0, ZS - RP), new THREE.Vector3(HX, 0, hz));
     // light gates: start lights as the run begins, stop when the hanger's bottom reaches its beam (the end of the 0.500 m)
     const on0 = M.moves && (S.t > 0 || S.done), on1 = S.done;
-    for (const [gt, on, c] of [[g.gate0, on0, 0x3ddc84], [g.gate1, on1, 0xff4433]]) { const u = gt.userData; u.ledM.emissive.setHex(on ? c : 0x000000); u.ledM.color.setHex(on ? c : 0x3a3f46); u.beamM.opacity = on ? 0.75 : 0.22; }
+    for (const [gt, on, c] of [[g.gate0, on0, 0x3ddc84], [g.gate1, on1, 0xff4433]]) { const u = gt.userData; u.ledM.emissive.setHex(on ? c : 0x000000); u.ledM.color.setHex(on ? c : 0x45413b); u.beamM.opacity = on ? 0.75 : 0.22; }
     const lk = S.run ? Math.floor(tt * 20) : ['x', tt, M.moves, S.done].join();   /* while running, the timer's face is redrawn 20 times a simulated second (each texture upload costs on slow devices) */
     if (G3.lk !== lk) { G3.lk = lk; g.timer.set(!M.moves ? '- - -' : `${S.done ? M.t.toFixed(3) : f(tt, 3)} s`); }
     trace3(M, tt);

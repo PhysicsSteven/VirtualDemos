@@ -14,9 +14,9 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
 /* only what this demo needs beyond demos/lib/vd.css */
-:root { --ray: #b45309; --mirror: #475569; --glass: rgba(56, 132, 200, 0.18); --glass-edge: #3b82c4; --tube: #e7ebf0; --tube-edge: #9aa6b6; --mark: #1f6fd1; --halo: #c2410c; --sky: #0b1220; --air: rgba(120, 160, 220, 0.55); --good: #2f8a4e; --bad: #b42318; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --ray: #fbbf24; --mirror: #cbd5e1; --glass: rgba(120, 180, 240, 0.16); --glass-edge: #7cb8f0; --tube: #1b2433; --tube-edge: #4b5a70; --mark: #74b0ff; --halo: #ff9a5c; --sky: #05080f; --air: rgba(150, 190, 255, 0.5); --good: #5bd08a; --bad: #ff7b6b; } }
-:root[data-theme="dark"] { --ray: #fbbf24; --mirror: #cbd5e1; --glass: rgba(120, 180, 240, 0.16); --glass-edge: #7cb8f0; --tube: #1b2433; --tube-edge: #4b5a70; --mark: #74b0ff; --halo: #ff9a5c; --sky: #05080f; --air: rgba(150, 190, 255, 0.5); --good: #5bd08a; --bad: #ff7b6b; }
+:root { --ray: #b45309; --mirror: #665a4a; --glass: rgba(56, 132, 200, 0.18); --glass-edge: #3b82c4; --tube: #efece8; --tube-edge: #b4aa9c; --mark: #1f6fd1; --halo: #c2410c; --sky: #0b1220; --air: rgba(120, 160, 220, 0.55); --good: #2f8a4e; --bad: #b42318; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --ray: #fbbf24; --mirror: #dfd7cd; --glass: rgba(120, 180, 240, 0.16); --glass-edge: #7cb8f0; --tube: #31281d; --tube-edge: #6d604e; --mark: #74b0ff; --halo: #ff9a5c; --sky: #05080f; --air: rgba(150, 190, 255, 0.5); --good: #5bd08a; --bad: #ff7b6b; } }
+:root[data-theme="dark"] { --ray: #fbbf24; --mirror: #dfd7cd; --glass: rgba(120, 180, 240, 0.16); --glass-edge: #7cb8f0; --tube: #31281d; --tube-edge: #6d604e; --mark: #74b0ff; --halo: #ff9a5c; --sky: #05080f; --air: rgba(150, 190, 255, 0.5); --good: #5bd08a; --bad: #ff7b6b; }
 .stage { position: relative; display: flex; flex-direction: column; min-height: min-content; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
 :root[data-projector="on"] .stage { min-height: min-content; }
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
@@ -783,9 +783,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* scale bar */
     const field = 2 * half * pa / ARCSEC, nice = [0.01, 0.02, 0.05, 0.1, 0.2, 0.5, 1, 2, 5, 10, 20, 50, 100], bar = nice.find((v) => v >= field / 6) || field / 6, bl = bar / field * s;
     ctx.fillStyle = '#ffffff'; ctx.fillRect(ix + 12 * p, iy + s - 16 * p, bl, 3 * p);
-    ctx.font = `${11 * p}px ${TK.mono}`; ctx.fillStyle = '#e5e7eb'; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText(`${bar < 1 ? bar : bar.toFixed(0)}″`, ix + 12 * p, iy + s - 20 * p);
+    ctx.font = `${11 * p}px ${TK.mono}`; ctx.fillStyle = '#ebe8e5'; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText(`${bar < 1 ? bar : bar.toFixed(0)}″`, ix + 12 * p, iy + s - 20 * p);
     ctx.textAlign = 'right'; ctx.fillText(`${T('Strehl')} ${fx(R.strehl, 2)}`, ix + s - 10 * p, iy + s - 10 * p);
-    ctx.textBaseline = 'top'; ctx.fillStyle = '#cbd5e1'; ctx.font = `${10.5 * p}px ${TK.ui}`;
+    ctx.textBaseline = 'top'; ctx.fillStyle = '#dfd7cd'; ctx.font = `${10.5 * p}px ${TK.ui}`;
     const status = R.rays ? T('ray picture: the blur is far wider than diffraction') : E.air === 'ground' && E.expo === 'long' ? (R.done ? `${T('long exposure')}, ${LONG_N} ${T('moments')}` : `${T('exposing')} ${R.frames} / ${LONG_N}`) : E.air === 'ground' ? `${T('snapshot')}, t = ${fx(S.t * 1000, 1)} ms` : '';
     if (status) ctx.fillText(status, ix + s - 10 * p, iy + 10 * p);
     ctx.textAlign = 'left'; ctx.fillText(`${T('field')} ${g3(field)}″ ${T('across')}`, ix + 10 * p, iy + 10 * p);
@@ -807,7 +807,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) { const u = (i + 0.5) / n * 2 - 1, v = (j + 0.5) / n * 2 - 1, gi = Math.round(FFTN / 2 + u * a), gj = Math.round(FFTN / 2 + v * a), w = grid.get(gj * FFTN + gi), k = 4 * (j * n + i);
       if (w == null) { d[k + 3] = 0; continue; } const t = w / mx; d[k] = t > 0 ? 255 : 255 * (1 + t * 0.62); d[k + 1] = t > 0 ? 255 * (1 - t * 0.45) : 255 * (1 + t * 0.32); d[k + 2] = t > 0 ? 255 * (1 - t * 0.62) : 255; d[k + 3] = 235; }
     o.putImageData(id, 0, 0); ctx.imageSmoothingEnabled = true; ctx.drawImage(oc, x, y, s, s);
-    ctx.font = `${10 * p}px ${TK.mono}`; ctx.fillStyle = '#e5e7eb'; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText(`${T('wavefront')} ±${g3(mx / 550e-9)} λ`, x, y + s + 3 * p); }
+    ctx.font = `${10 * p}px ${TK.mono}`; ctx.fillStyle = '#ebe8e5'; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText(`${T('wavefront')} ±${g3(mx / 550e-9)} λ`, x, y + s + 3 * p); }
 
   /* the brightness along the line through the star's center, over the perfect telescope's peak */
   function drawCurve() { if (!TK || !CW) return; const p = proj(); cctx.setTransform(dpr, 0, 0, dpr, 0, 0); cctx.fillStyle = TK.canvas; cctx.fillRect(0, 0, CW, CH); if (!R) return;

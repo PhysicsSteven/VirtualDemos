@@ -925,7 +925,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const nr = Math.min(20 * p, ux * 0.24, rowGap * 0.3);
     ps.forEach((q) => { const id = q.id, base = id.replace(/bar$/, ''); const x = X(I3of(q) + (OFF[id] != null ? OFF[id] : OFF[base] || 0)), y = Y(qn(q).S) + (DOWN[id] ? nr * 1.6 : 0);
       const hit = !S.blind && b.neutral && b.matches.indexOf(id) >= 0;
-      ctx.save(); ctx.fillStyle = hit ? (dark() ? '#3b2f63' : '#e8defc') : (dark() ? '#1d2531' : '#f2f5f9'); ctx.strokeStyle = hit ? T.quark : T.line; ctx.lineWidth = hit ? 3 * p : 1;
+      ctx.save(); ctx.fillStyle = hit ? (dark() ? '#5f4c33' : '#f3eee7') : (dark() ? '#30281e' : '#f8f6f3'); ctx.strokeStyle = hit ? T.quark : T.line; ctx.lineWidth = hit ? 3 * p : 1;
       ctx.beginPath(); ctx.arc(x, y, nr, 0, 7); ctx.fill(); ctx.stroke(); ctx.restore();
       lab(q.txt, x, y, { a: 'center', s: Math.min(13 * p, nr * 0.75), w: 700, c: T.ink });
       const seen = !S.blind && S.qk.seen.has(id); lab(seen ? `${+q.m.toFixed(1)}` : '?', x, y + nr + 8 * p, { a: 'center', s: 9 * p, m: true, c: seen ? T.ink : T.muted }); });
@@ -953,11 +953,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const [cx, cy] = toScr(v, 0, 0), rr = R * v.s;
     /* the chamber body: a steel flange round the window, with its bolts */
     const ring = ctx.createRadialGradient(cx - rr * 0.3, cy - rr * 0.3, rr * 0.8, cx, cy, rr * 1.12);
-    ring.addColorStop(0, '#9aa4b0'); ring.addColorStop(0.6, '#5f6874'); ring.addColorStop(1, '#3a414b');
+    ring.addColorStop(0, '#aea69c'); ring.addColorStop(0.6, '#726b61'); ring.addColorStop(1, '#4a433b');
     ctx.fillStyle = ring; ctx.beginPath(); ctx.arc(cx, cy, rr * 1.1, 0, 7); ctx.fill();
     ctx.fillStyle = 'rgba(0,0,0,0.35)'; for (let k = 0; k < 24; k++) { const a = k * Math.PI / 12; ctx.beginPath(); ctx.arc(cx + Math.cos(a) * rr * 1.055, cy + Math.sin(a) * rr * 1.055, Math.max(1.5, rr * 0.012), 0, 7); ctx.fill(); }
     const film = ctx.createRadialGradient(cx - rr * 0.25, cy - rr * 0.3, rr * 0.1, cx, cy, rr);
-    film.addColorStop(0, '#1d2836'); film.addColorStop(1, '#0b1119');
+    film.addColorStop(0, '#342b1f'); film.addColorStop(1, '#18130c');
     ctx.save(); ctx.beginPath(); ctx.arc(cx, cy, rr, 0, 7); ctx.clip(); ctx.fillStyle = film; ctx.fillRect(cx - rr, cy - rr, 2 * rr, 2 * rr);
     /* fiducial crosses every 10 cm */
     ctx.strokeStyle = 'rgba(220,230,240,0.35)'; ctx.lineWidth = 1;
@@ -999,7 +999,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     lab(`B = ${f(D.B, 1)} T into the page ⊗   π⁻ beam ${f(D.pb / 1000, 2)} GeV/c`, pad + 10 * p, pad + 35 * p, { s: 10 * p, c: T.ink });
     const sb = 10 * v.s, sx = pad + 10 * p, sy = H - pad - 10 * p;
     if (VG) { VG.panel(ctx, pad, H - pad - 34 * p, sb + 20 * p, 34 * p, { r: 6 }); }
-    ctx.fillStyle = dark() ? '#e3e8ef' : '#17202b'; ctx.fillRect(sx, sy, sb, 3); ctx.fillRect(sx, sy - 5, 2, 8); ctx.fillRect(sx + sb - 2, sy - 5, 2, 8);
+    ctx.fillStyle = dark() ? '#eeeae4' : '#2a2219'; ctx.fillRect(sx, sy, sb, 3); ctx.fillRect(sx, sy - 5, 2, 8); ctx.fillRect(sx + sb - 2, sy - 5, 2, 8);
     lab('10 cm', sx + sb / 2, sy - 10 * p, { a: 'center', s: 9.5 * p, c: T.ink });
     const help = D.tool === 'fit' ? `Click points along the ${D.sign === '+' ? 'positive' : 'negative'} track (3 or more); drag to pan` : D.ang.length === 0 ? 'Click the vertex of the V' : D.ang.length === 1 ? 'Click along the first track, close to the vertex' : D.ang.length === 2 ? 'Click along the second track' : 'Click again to start a new angle';
     ctx.save(); ctx.font = `${10 * p}px ${T.ui}`; const hw = ctx.measureText(help).width; ctx.restore();

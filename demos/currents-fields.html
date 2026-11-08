@@ -15,21 +15,21 @@
 <style>
 /* Layout: one canvas (straight wires in cross section, or a loop or solenoid seen side on with B along its axis plotted below); instrument rail on the right; stacks on phones. */
 :root {
-  --bg: #e9edf2;
-  --surface: #f8fafc;
-  --canvas: #fcfdfe;
-  --ink: #17202b;
-  --muted: #5a6575;
-  --line: #d3d9e2;
-  --grid: #e6ebf1;
-  --grid-strong: #cfd7e1;
+  --bg: #f1eeea;
+  --surface: #fcfaf8;
+  --canvas: #fefdfc;
+  --ink: #2a2219;
+  --muted: #73695c;
+  --line: #e1dbd4;
+  --grid: #f0ece7;
+  --grid-strong: #e0d9d0;
   --pos: #c23f2c;
   --neg: #2b60b5;
   --equi: #a7740b;
-  --accent: #2b60b5;
+  --accent: #c4811c;
   --fout: #17855f;
   --fin: #7a45c0;
-  --bline: #4c5866;
+  --bline: #645a4e;
   --shade: #2b60b5;
   --on-wire: #ffffff;
   --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
@@ -37,15 +37,15 @@
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
-    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-    --equi: #e2b350; --accent: #69a0ff; --fout: #4fd1a0; --fin: #b48cff; --bline: #9aa7b8; --shade: #69a0ff; --on-wire: #10161e; color-scheme: dark;
+    --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
+    --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+    --equi: #e2b350; --accent: #fbc26d; --fout: #4fd1a0; --fin: #b48cff; --bline: #b6ab9c; --shade: #69a0ff; --on-wire: #1d1811; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
-  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-  --equi: #e2b350; --accent: #69a0ff; --fout: #4fd1a0; --fin: #b48cff; --bline: #9aa7b8; --shade: #69a0ff; --on-wire: #10161e; color-scheme: dark;
+  --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
+  --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+  --equi: #e2b350; --accent: #fbc26d; --fout: #4fd1a0; --fin: #b48cff; --bline: #b6ab9c; --shade: #69a0ff; --on-wire: #1d1811; color-scheme: dark;
 }
 :root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
@@ -1886,8 +1886,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   function theme3() {
     const g = g3, d = VD3.dark(), col = (s, fb) => { try { return new THREE.Color(s || fb); } catch (_) { return new THREE.Color(fb); } };
-    g.scene.background = col(T.canvas, '#fbfcfd'); g.hemi.intensity = d ? 1.05 : 0.8; g.sun.intensity = d ? 0.95 : 0.75;
-    g.edgeM.color = col(T.gridStrong, '#c9d1db'); g.ghostM.color = col(T.bline, '#9aa7b8'); g.lineM.color = col(T.shade, '#2b60b5'); g.lineM.emissive = col(T.shade, '#2b60b5');
+    g.scene.background = col(T.canvas, '#fdfcfb'); g.hemi.intensity = d ? 1.05 : 0.8; g.sun.intensity = d ? 0.95 : 0.75;
+    g.edgeM.color = col(T.gridStrong, '#dad3ca'); g.ghostM.color = col(T.bline, '#b6ab9c'); g.lineM.color = col(T.shade, '#2b60b5'); g.lineM.emissive = col(T.shade, '#2b60b5');
     g.copperM.color = g.nearM.color = col('#b87333', '#b87333'); g.outM.color = col(T.fout, '#1f8a5a'); g.inM.color = col(T.fin, '#7a4fc2');
   }
   function clear3(grp) { for (const o of grp.children.slice()) { grp.remove(o); if (o.geometry) o.geometry.dispose(); } }
@@ -1935,7 +1935,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       if (S.show.lines) for (const a of [Math.PI / 3, 2 * Math.PI / 3]) ghostLines((z, y) => [z, -y * Math.sin(a), y * Math.cos(a)]);
       const sol = S.sol, tr = Math.max(0.06, turnR() / V.s * 0.8), ringG = new THREE.TorusGeometry(sol.R, tr, 12, 48, Math.PI).rotateY(Math.PI / 2), nearG = ringG.clone().rotateX(Math.PI);   /* far and near halves of a turn; the near half is drawn faint so the field inside shows */
       for (const zk of solTurns(sol)) { const m = new THREE.Mesh(ringG, g.copperM), n = new THREE.Mesh(nearG, g.nearM); m.position.x = n.position.x = zk; n.renderOrder = 3; g.turns.add(m, n); }
-      if (sol.core && sol.N > 1) { g.ironM = g.ironM || new THREE.MeshStandardMaterial({ color: 0x8a9099, metalness: 0.55, roughness: 0.45, transparent: true, opacity: 0.6 });
+      if (sol.core && sol.N > 1) { g.ironM = g.ironM || new THREE.MeshStandardMaterial({ color: 0x98928b, metalness: 0.55, roughness: 0.45, transparent: true, opacity: 0.6 });
         const m = new THREE.Mesh(new THREE.CylinderGeometry(sol.R * 0.82, sol.R * 0.82, sol.L, 40).rotateZ(Math.PI / 2), g.ironM); m.renderOrder = 2; g.turns.add(m); }
       // one chevron on top of each end turn: out of the page (toward −y here) for I > 0, as in the flat view
       if (coilI(sol)) { const coneG = new THREE.ConeGeometry(tr * 1.8, tr * 3, 16).rotateX(Math.PI / 2);

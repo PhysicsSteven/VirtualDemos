@@ -19,19 +19,19 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
 /* Layout: a cart on a track over three stacked graphs (x, v, a against t) on the left; the instrument rail on the right. */
-:root { --xcol: #2b60b5; --vcol: #b0452f; --acol: #6f4bb3; --bcol: #b9770e; }
+:root { --xcol: #2b60b5; --vcol: #b0452f; --acol: #a88456; --bcol: #b9770e; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --xcol: #69a0ff; --vcol: #ff8a70; --acol: #b49bff; --bcol: #f2b544; } }
 :root[data-theme="dark"] { --xcol: #69a0ff; --vcol: #ff8a70; --acol: #b49bff; --bcol: #f2b544; }
 /* scenery: hallway wall and floor, the motion sensor, sky and building for the toss */
-:root { --road: #8d939c; --road-line: #f4f1e6; --kerb: #c9ced6; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --road: #2b3038; --road-line: #c9c3ad; --kerb: #3a414c; } }
-:root[data-theme="dark"] { --road: #2b3038; --road-line: #c9c3ad; --kerb: #3a414c; }
-:root { --wall: #eef0f3; --wall-trim: #d6dbe2; --door: #e2e6ec; --floor: #f0e9de; --floor-seam: #e1d6c4; --sensor: #3d4654; --grille: #8a95a3; --ping: #8a95a3;
-  --sky-top: #cfe3f5; --sky-bot: #eef5fb; --cloud: #ffffff; --grass: #d5e3c8; --building: #dde1e7; --window: #c7d6e6; --shine: rgba(255, 255, 255, 0.5); }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --wall: #151c25; --wall-trim: #262f3c; --door: #1b232e; --floor: #221e19; --floor-seam: #2e2821; --sensor: #a9b4c2; --grille: #4c5664; --ping: #7d8a9a;
-  --sky-top: #0c1626; --sky-bot: #172235; --cloud: #253043; --grass: #18241a; --building: #1d2530; --window: #2e3d52; --shine: rgba(255, 255, 255, 0.25); } }
-:root[data-theme="dark"] { --wall: #151c25; --wall-trim: #262f3c; --door: #1b232e; --floor: #221e19; --floor-seam: #2e2821; --sensor: #a9b4c2; --grille: #4c5664; --ping: #7d8a9a;
-  --sky-top: #0c1626; --sky-bot: #172235; --cloud: #253043; --grass: #18241a; --building: #1d2530; --window: #2e3d52; --shine: rgba(255, 255, 255, 0.25); }
+:root { --road: #9b958e; --road-line: #f4f1e6; --kerb: #d5d0ca; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --road: #37322c; --road-line: #c9c3ad; --kerb: #4b443b; } }
+:root[data-theme="dark"] { --road: #37322c; --road-line: #c9c3ad; --kerb: #4b443b; }
+:root { --wall: #f3f1ee; --wall-trim: #e1ddd7; --door: #ebe8e3; --floor: #f0e9de; --floor-seam: #e1d6c4; --sensor: #524a3f; --grille: #a1988c; --ping: #a1988c;
+  --sky-top: #cfe3f5; --sky-bot: #eef5fb; --cloud: #ffffff; --grass: #d5e3c8; --building: #e6e3de; --window: #e3d8ca; --shine: rgba(255, 255, 255, 0.5); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --wall: #241e16; --wall-trim: #3a3228; --door: #2d261c; --floor: #221e19; --floor-seam: #2e2821; --sensor: #c0b7ab; --grille: #62594e; --ping: #988d7f;
+  --sky-top: #0c1626; --sky-bot: #172235; --cloud: #253043; --grass: #18241a; --building: #2f281e; --window: #4f4231; --shine: rgba(255, 255, 255, 0.25); } }
+:root[data-theme="dark"] { --wall: #241e16; --wall-trim: #3a3228; --door: #2d261c; --floor: #221e19; --floor-seam: #2e2821; --sensor: #c0b7ab; --grille: #62594e; --ping: #988d7f;
+  --sky-top: #0c1626; --sky-bot: #172235; --cloud: #253043; --grass: #18241a; --building: #2f281e; --window: #4f4231; --shine: rgba(255, 255, 255, 0.25); }
 :root[data-projector="on"] { font-size: 125%; }
 .bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; }
 .bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 12px; }

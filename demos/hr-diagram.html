@@ -28,20 +28,20 @@
 <style>
 /* Layout: lab bench. The HR diagram and a to scale size strip fill the left, a narrow instrument rail sits on the right; stacks on phones. */
 :root {
-  --bg: #e9edf2;
-  --surface: #f8fafc;
-  --canvas: #fcfdfe;
-  --relief: #dfe5ec;
-  --ink: #17202b;
-  --muted: #5a6575;
-  --line: #d3d9e2;
-  --grid: #e6ebf1;
-  --grid-strong: #cfd7e1;
+  --bg: #f1eeea;
+  --surface: #fcfaf8;
+  --canvas: #fefdfc;
+  --relief: #ebe6e0;
+  --ink: #2a2219;
+  --muted: #73695c;
+  --line: #e1dbd4;
+  --grid: #f0ece7;
+  --grid-strong: #e0d9d0;
   --pos: #c23f2c;
   --neg: #2b60b5;
-  --field: #1d2836;
+  --field: #342b1f;
   --equi: #a7740b;
-  --accent: #2b60b5;
+  --accent: #c4811c;
   --on-charge: #ffffff;
   --sky: #0b1017;
   --band-alpha: 0.13;
@@ -51,16 +51,16 @@
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
-    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-    --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+    --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --relief: #40372c; --ink: #eeeae4; --muted: #b0a698;
+    --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+    --field: #eee8e0; --equi: #e2b350; --accent: #fbc26d; --on-charge: #17130e; color-scheme: dark;
     --sky: #04070b; --band-alpha: 0.17;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
-  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-  --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+  --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --relief: #40372c; --ink: #eeeae4; --muted: #b0a698;
+  --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+  --field: #eee8e0; --equi: #e2b350; --accent: #fbc26d; --on-charge: #17130e; color-scheme: dark;
   --sky: #04070b; --band-alpha: 0.17;
 }
 :root[data-projector="on"] { font-size: 125%; --canvas-scale: 1.5; }
@@ -1058,7 +1058,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.fillStyle = SPACE; ctx.fillRect(box.x, box.y, box.w, box.h);
     for (let i = 0; i < 70; i++) { const u = (Math.sin(i * 12.9898) * 43758.5453) % 1, v = (Math.sin(i * 78.233) * 12543.123) % 1, b = (Math.sin(i * 3.7) * 9631.7) % 1;
       ctx.fillStyle = `rgba(220,230,255,${0.12 + 0.35 * Math.abs(b)})`; ctx.fillRect(box.x + Math.abs(u) * box.w, box.y + Math.abs(v) * box.h, 1.2, 1.2); }
-    ctx.fillStyle = '#aeb9c8'; ctx.font = `700 ${10.5 * ps}px ${ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillStyle = '#c6bcb0'; ctx.font = `700 ${10.5 * ps}px ${ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
     ctx.fillText('TO SCALE', box.x + 12 * ps, box.y + 9 * ps);
     const cy = box.y + box.h / 2 + 6 * ps, room = box.h / 2 - 22 * ps;
     const big = Math.max(R, ref.R), small = Math.min(R, ref.R);
@@ -1089,7 +1089,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (starIsBig) { disk(bigX, bigPx, starCol, 'star', true); disk(smallX, smallPx, ref.col, ref.name, false); }
     else { disk(bigX, bigPx, ref.col, ref.name, false); disk(smallX, smallPx, starCol, 'star', true); }
     // labels
-    ctx.font = `600 ${11 * ps}px ${mono}`; ctx.fillStyle = '#e8eef6'; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    ctx.font = `600 ${11 * ps}px ${mono}`; ctx.fillStyle = '#f4f0ea'; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
     const starName = gone ? (S.track.remnant === 'black hole' ? 'Black hole' : 'Neutron star') : 'Star';
     const smallName = starIsBig ? ref.name : starName, bigName = starIsBig ? starName : ref.name;
     ctx.fillText(smallName, smallX, cy + Math.max(smallPx, 3) + 6 * ps);

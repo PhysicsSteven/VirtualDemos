@@ -14,9 +14,9 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
 /* only what this demo needs beyond demos/lib/vd.css: the apparatus colours, the Set up card, the sand kinds */
-:root { --wallc: #7a8594; --glass: rgba(120, 170, 220, 0.10); --liquid: rgba(214, 170, 60, 0.16); --hill: #d9ccb4; --drum: #e8eef5; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --wallc: #8d99a8; --glass: rgba(140, 190, 240, 0.08); --liquid: rgba(230, 190, 90, 0.13); --hill: #3a342a; --drum: #1c232c; } }
-:root[data-theme="dark"] { --wallc: #8d99a8; --glass: rgba(140, 190, 240, 0.08); --liquid: rgba(230, 190, 90, 0.13); --hill: #3a342a; --drum: #1c232c; }
+:root { --wallc: #92887c; --glass: rgba(120, 170, 220, 0.10); --liquid: rgba(214, 170, 60, 0.16); --hill: #d9ccb4; --drum: #f4efe9; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --wallc: #a69c8f; --glass: rgba(140, 190, 240, 0.08); --liquid: rgba(230, 190, 90, 0.13); --hill: #3a342a; --drum: #2b251d; } }
+:root[data-theme="dark"] { --wallc: #a69c8f; --glass: rgba(140, 190, 240, 0.08); --liquid: rgba(230, 190, 90, 0.13); --hill: #3a342a; --drum: #2b251d; }
 .stage { position: relative; display: grid; grid-template-rows: auto minmax(440px, 1fr); min-height: 600px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); }
 .stage-ctl .sp { margin-left: auto; display: flex; align-items: center; gap: 6px; font-size: 0.85rem; color: var(--muted); }
@@ -511,7 +511,7 @@ select { font: inherit; font-size: 0.86rem; color: var(--ink); background: var(-
 
   const $ = (id) => document.getElementById(id);
   /* colours of the sand kinds: name, fill */
-  const COLORS = { blue: '#3f8ef0', orange: '#f07a3a', yellow: '#efc23a', green: '#3fb26a', purple: '#a06ad8', red: '#e04848', white: '#f2eee6', black: '#3a3d42', sand: '#d2ad74' };
+  const COLORS = { blue: '#3f8ef0', orange: '#f07a3a', yellow: '#efc23a', green: '#3fb26a', purple: '#a06ad8', red: '#e04848', white: '#f2eee6', black: '#413e3b', sand: '#d2ad74' };
   const CNAMES = { blue: 'Blue', orange: 'Orange', yellow: 'Yellow', green: 'Green', purple: 'Purple', red: 'Red', white: 'White', black: 'Black', sand: 'Sand' };
   const MATS = { glass: 'Glass', sand: 'Quartz sand', steel: 'Steel', acrylic: 'Acrylic' };
   const K = (n, d, mu, color, more) => Object.assign({ n, d, spread: 0, mu, shape: 'round', mat: 'glass', color }, more || {});
@@ -612,7 +612,7 @@ select { font: inherit; font-size: 0.86rem; color: var(--ink); background: var(-
     if (sprites[color]) return sprites[color];
     const N = 64, c = document.createElement('canvas'); c.width = c.height = N; const g = c.getContext('2d');
     const darkOnDark = lum(COLORS[color] || color) < 0.3 && lum(T.canvas) < 0.3;   /* black stones on the dark theme */
-    const base = darkOnDark ? '#6a7079' : (COLORS[color] || color), gr = g.createRadialGradient(N * 0.36, N * 0.32, N * 0.04, N / 2, N / 2, N / 2);
+    const base = darkOnDark ? '#78726b' : (COLORS[color] || color), gr = g.createRadialGradient(N * 0.36, N * 0.32, N * 0.04, N / 2, N / 2, N / 2);
     gr.addColorStop(0, 'rgba(255,255,255,0.85)'); gr.addColorStop(0.18, base); gr.addColorStop(1, shade(base, 0.55));
     g.fillStyle = gr; g.beginPath(); g.arc(N / 2, N / 2, N / 2 - 1, 0, 2 * Math.PI); g.fill();
     /* a dark bead on the dark theme is drawn lighter with a pale rim so it reads against the drum and the hill */

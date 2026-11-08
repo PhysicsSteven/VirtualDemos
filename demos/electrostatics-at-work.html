@@ -68,9 +68,9 @@ table.rows input:focus { border-color: var(--accent); }
 .chips button { font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
 .chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
 @media (max-width: 820px) { .chips button { min-height: 36px; } }
-:root { --lead: #2f7d43; --dome: #9aa6b4; --dome-hi: #f4f7fa; --belt: #3a3f47; --spark: #6c4fd8; --ink-drop: #2350a8; --plate-hi: #c23f2c; --plate-lo: #5a6575; --dust: #8a6a44; --smoke: #6e6a64; --paper: #ffffff; --wood: #c9a678; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --lead: #6fbf83; --dome: #6d7887; --dome-hi: #c9d2dc; --belt: #b8c0cc; --spark: #b8a6ff; --ink-drop: #8fb6ff; --plate-hi: #ff7660; --plate-lo: #96a2b2; --dust: #c39a66; --smoke: #a39d95; --paper: #e8edf3; --wood: #8a6a44; } }
-:root[data-theme="dark"] { --lead: #6fbf83; --dome: #6d7887; --dome-hi: #c9d2dc; --belt: #b8c0cc; --spark: #b8a6ff; --ink-drop: #8fb6ff; --plate-hi: #ff7660; --plate-lo: #96a2b2; --dust: #c39a66; --smoke: #a39d95; --paper: #e8edf3; --wood: #8a6a44; }
+:root { --lead: #2f7d43; --dome: #b2a89c; --dome-hi: #faf7f4; --belt: #46413b; --spark: #6c4fd8; --ink-drop: #2350a8; --plate-hi: #c23f2c; --plate-lo: #73695c; --dust: #8a6a44; --smoke: #6e6a64; --paper: #ffffff; --wood: #c9a678; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --lead: #6fbf83; --dome: #857b6f; --dome-hi: #dbd4ca; --belt: #cac3ba; --spark: #b8a6ff; --ink-drop: #8fb6ff; --plate-hi: #ff7660; --plate-lo: #b0a698; --dust: #c39a66; --smoke: #a39d95; --paper: #f2eee9; --wood: #8a6a44; } }
+:root[data-theme="dark"] { --lead: #6fbf83; --dome: #857b6f; --dome-hi: #dbd4ca; --belt: #cac3ba; --spark: #b8a6ff; --ink-drop: #8fb6ff; --plate-hi: #ff7660; --plate-lo: #b0a698; --dust: #c39a66; --smoke: #a39d95; --paper: #f2eee9; --wood: #8a6a44; }
 </style>
 <link rel="stylesheet" id="vd-look" href="lib/look.css">
 <script id="vd-gear" src="lib/gear.js"></script>
@@ -1020,13 +1020,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const up = (g) => { g.rotateX(Math.PI / 2); return g; };
     const floorM = Ms({ roughness: 0.9 }), floor = mesh(new THREE.PlaneGeometry(60, 60), floorM, false); floor.position.set(0, 10, 0);
     const baseM = Ms({ roughness: 0.5, metalness: 0.2 }), base = mesh(new THREE.BoxGeometry(0.36, 0.26, BASE3), baseM); base.position.z = BASE3 / 2;
-    const ventM = Ms({ roughness: 0.6, color: 0x1d2229 }); for (let i = 0; i < 5; i++) { const v = mesh(new THREE.BoxGeometry(0.008, 0.002, 0.05), ventM, false); v.position.set(-0.13 + i * 0.018, -0.131, BASE3 / 2); base.add(v); }
-    const acryM = Ms({ roughness: 0.08, metalness: 0, transparent: true, opacity: 0.22, depthWrite: false, color: 0xd7ecff, side: THREE.DoubleSide }), col = mesh(up(new THREE.CylinderGeometry(0.045, 0.045, COL3, 40, 1, true)), acryM, false); col.position.z = BASE3 + COL3 / 2;
+    const ventM = Ms({ roughness: 0.6, color: 0x28241e }); for (let i = 0; i < 5; i++) { const v = mesh(new THREE.BoxGeometry(0.008, 0.002, 0.05), ventM, false); v.position.set(-0.13 + i * 0.018, -0.131, BASE3 / 2); base.add(v); }
+    const acryM = Ms({ roughness: 0.08, metalness: 0, transparent: true, opacity: 0.22, depthWrite: false, color: 0xf1ece5, side: THREE.DoubleSide }), col = mesh(up(new THREE.CylinderGeometry(0.045, 0.045, COL3, 40, 1, true)), acryM, false); col.position.z = BASE3 + COL3 / 2;
     const rubM = Ms({ roughness: 0.85 }), belt = new THREE.Group();
     for (const x of [-0.022, 0.022]) { const b = mesh(new THREE.BoxGeometry(0.003, 0.04, COL3 - 0.04), rubM, false); b.position.set(x, 0, BASE3 + COL3 / 2); belt.add(b); }
-    const rollM = Ms({ roughness: 0.3, metalness: 0.7, color: 0xb9c0c8 });
+    const rollM = Ms({ roughness: 0.3, metalness: 0.7, color: 0xc7c1ba });
     for (const z of [BASE3 + 0.025, BASE3 + COL3 - 0.02]) { const ro = mesh(new THREE.CylinderGeometry(0.022, 0.022, 0.05, 24), rollM, false); ro.position.set(0, 0, z); belt.add(ro); }
-    const domeM = Ms({ roughness: 0.22, metalness: 0.35, color: 0xe3e7ec }), dome = mesh(new THREE.SphereGeometry(1, 64, 48), domeM);
+    const domeM = Ms({ roughness: 0.22, metalness: 0.35, color: 0xebe8e4 }), dome = mesh(new THREE.SphereGeometry(1, 64, 48), domeM);
     const neck = mesh(up(new THREE.CylinderGeometry(0.05, 0.05, 0.03, 32)), rollM); neck.position.z = BASE3 + COL3 + 0.01;
     /* the wand, held by hand: a brass ball on a metal rod with a rubber handle, and its earth lead */
     const woodM = Ms({ roughness: 0.7 }), brassM = Ms({ roughness: 0.3, metalness: 0.4, color: 0xc9a24a }), wand = new THREE.Group();
@@ -1039,7 +1039,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const qM = Ms({ roughness: 0.35, emissive: 0x000000 }), beads = new THREE.InstancedMesh(new THREE.SphereGeometry(1, 10, 8), qM, NQ3); beads.frustumCulled = false;
     const beltQ = new THREE.InstancedMesh(new THREE.SphereGeometry(0.004, 8, 6), qM, 24); beltQ.frustumCulled = false;
     const lineM = new THREE.LineBasicMaterial({ transparent: true, opacity: 0.6 }), lines = new THREE.LineSegments(new THREE.BufferGeometry(), lineM); lines.geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(NL3 * 2 * 220 * 3), 3));
-    const sparkM = new THREE.MeshBasicMaterial({ color: 0xf4f8ff }), spark = new THREE.Mesh(new THREE.BufferGeometry(), sparkM);
+    const sparkM = new THREE.MeshBasicMaterial({ color: 0xfbfaf8 }), spark = new THREE.Mesh(new THREE.BufferGeometry(), sparkM);
     const glowM = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.35, color: 0x8fb6ff, depthWrite: false }), glow = new THREE.Mesh(new THREE.BufferGeometry(), glowM);
     scene.add(floor, base, col, belt, dome, neck, wand, lead, beads, negB, dotB, beltQ, lines, spark, glow);
     g3 = { r, el, scene, cam, hemi, sun, flash, floorM, baseM, acryM, rubM, domeM, dome, woodM, wand, wBall, wRod, wBase, clampG, lead, leadM, qM, negM, negB, dotB, beads, beltQ, lineM, lines, spark, glow, sparkM, mat4: new THREE.Matrix4(), pts: fib(NQ3), lpts: fib(NL3) };
@@ -1049,10 +1049,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   const col3 = (s, fb) => { try { return new THREE.Color(s || fb); } catch (_) { return new THREE.Color(fb); } };
   function theme3() {
-    const g = g3, dk = VD3.dark(), bg = col3(T.canvas, '#fbfcfd');
+    const g = g3, dk = VD3.dark(), bg = col3(T.canvas, '#fdfcfb');
     g.scene.background = bg; g.scene.fog = new THREE.Fog(bg, 4, 9);
     g.hemi.intensity = dk ? 1.0 : 0.8; g.sun.intensity = dk ? 0.85 : 0.7; g.hemi.groundColor = col3(dk ? '#2a241d' : '#8c7a60', '#8c7a60');
-    g.floorM.color = col3(dk ? '#3a3229' : '#cdbb9d', '#cdbb9d'); g.baseM.color = col3(T.belt, '#3a4250'); g.rubM.color = col3(T.belt, '#3a4250'); g.woodM.color = col3(T.wood, '#c49a6c');
+    g.floorM.color = col3(dk ? '#3a3229' : '#cdbb9d', '#cdbb9d'); g.baseM.color = col3(T.belt, '#4e463c'); g.rubM.color = col3(T.belt, '#4e463c'); g.woodM.color = col3(T.wood, '#c49a6c');
     g.qM.color = col3(T.pos, '#c0392b'); g.qM.emissive = col3(T.pos, '#c0392b').multiplyScalar(0.3); g.lineM.color = col3(T.pos, '#c0392b');
     g.negM.color = col3(T.neg, '#2350a8'); g.negM.emissive = col3(T.neg, '#2350a8').multiplyScalar(0.35); g.leadM.color = col3(T.lead, '#2f7d43');
     G3.R = -1; G3.nq = -1;

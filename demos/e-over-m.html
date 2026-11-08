@@ -16,35 +16,35 @@
 <style>
 /* Layout: the apparatus in 3D in a darkened room across the top of the stage, the view through the front coil onto the mirrored scale below it; instrument rail on the right; stacks on phones. */
 :root {
-  --bg: #e9edf2;
-  --surface: #f8fafc;
-  --canvas: #fcfdfe;
-  --ink: #17202b;
-  --muted: #5a6575;
-  --line: #d3d9e2;
-  --grid: #e6ebf1;
-  --grid-strong: #cfd7e1;
+  --bg: #f1eeea;
+  --surface: #fcfaf8;
+  --canvas: #fefdfc;
+  --ink: #2a2219;
+  --muted: #73695c;
+  --line: #e1dbd4;
+  --grid: #f0ece7;
+  --grid-strong: #e0d9d0;
   --pos: #c23f2c;
   --neg: #2b60b5;
   --equi: #a7740b;
-  --accent: #2b60b5;
-  --room: #1e252e; --room-ink: #b9c4cf; --beam: #5ff2cf;
+  --accent: #c4811c;
+  --room: #2d271f; --room-ink: #cdc5bb; --beam: #5ff2cf;
   --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
-    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-    --equi: #e2b350; --accent: #69a0ff;
-    --room: #090c11; --room-ink: #9eabb9; --beam: #5ff2cf; color-scheme: dark;
+    --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
+    --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+    --equi: #e2b350; --accent: #fbc26d;
+    --room: #100d0a; --room-ink: #b7ada0; --beam: #5ff2cf; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
-  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-  --equi: #e2b350; --accent: #69a0ff;
-  --room: #090c11; --room-ink: #9eabb9; --beam: #5ff2cf; color-scheme: dark;
+  --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
+  --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+  --equi: #e2b350; --accent: #fbc26d;
+  --room: #100d0a; --room-ink: #b7ada0; --beam: #5ff2cf; color-scheme: dark;
 }
 :root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
@@ -58,7 +58,7 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 .panes { min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1.5fr) minmax(0, 1fr); }
 .pane { position: relative; min-height: 0; min-width: 0; }
 .pane canvas { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
-#p3d { background: var(--room); border-bottom: 1px solid #39434f; }
+#p3d { background: var(--room); border-bottom: 1px solid #4d453b; }
 #p3d canvas, #sv { touch-action: none; outline: none; }
 #p3d canvas:focus-visible, #sv:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
 .tip { position: absolute; left: 8px; bottom: 6px; margin: 0; font-size: 0.76rem; color: var(--room-ink); background: color-mix(in srgb, var(--room) 80%, transparent); padding: 2px 6px; border-radius: 4px; pointer-events: none; max-width: calc(100% - 16px); }
@@ -515,10 +515,10 @@ table.rows tr.sim td.n { color: var(--equi); }
     ctx.save(); ctx.beginPath(); ctx.rect(0, topH, W, viewH); ctx.clip();
     // mirrored panel, lit from above
     const px0 = X(SCALE.x0), px1 = X(SCALE.x1), pz0 = Y(SCALE.z1), pz1 = Y(SCALE.z0);
-    const gr = ctx.createLinearGradient(0, pz0, 0, pz1); gr.addColorStop(0, '#d9e1e4'); gr.addColorStop(0.5, '#b7c2c7'); gr.addColorStop(1, '#8e999f');
+    const gr = ctx.createLinearGradient(0, pz0, 0, pz1); gr.addColorStop(0, '#e3dfda'); gr.addColorStop(0.5, '#c6c0b8'); gr.addColorStop(1, '#9e978f');
     ctx.fillStyle = gr; ctx.fillRect(px0, pz0, px1 - px0, pz1 - pz0);
     // graduations: mm along the top and bottom edges, a faint full height line each cm
-    ctx.strokeStyle = '#1b2228'; ctx.lineWidth = 1;
+    ctx.strokeStyle = '#27221c'; ctx.lineWidth = 1;
     const mmPx = k / 10;
     ctx.beginPath();
     for (let m = -80; m <= 80; m++) {
@@ -540,7 +540,7 @@ table.rows tr.sim td.n { color: var(--equi); }
     ctx.font = `600 ${nfs}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     for (let zr = SCALE.z1 - 0.75; zr > SCALE.z0 + 0.3; zr -= 1.25) {
       const y = Y(zr); if (y < topH - nfs || y > topH + viewH + nfs) continue;
-      for (let c = -7; c <= 7; c++) { const x = X(c), tw = ctx.measureText(String(Math.abs(c))).width + 4; ctx.fillStyle = '#c6cfd3'; ctx.fillRect(x - tw / 2, y - nfs * 0.6, tw, nfs * 1.2); ctx.fillStyle = '#1b2228'; ctx.fillText(String(Math.abs(c)), x, y + 0.5); }
+      for (let c = -7; c <= 7; c++) { const x = X(c), tw = ctx.measureText(String(Math.abs(c))).width + 4; ctx.fillStyle = '#d2cdc7'; ctx.fillRect(x - tw / 2, y - nfs * 0.6, tw, nfs * 1.2); ctx.fillStyle = '#27221c'; ctx.fillText(String(Math.abs(c)), x, y + 0.5); }
     }
     // the bulb outline, faint
     ctx.strokeStyle = 'rgba(200,220,230,0.18)'; ctx.lineWidth = 1.5; ctx.beginPath();
@@ -598,13 +598,13 @@ table.rows tr.sim td.n { color: var(--equi); }
     ctx.strokeStyle = 'rgba(185,196,207,0.35)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(X(-8), ty); ctx.lineTo(X(8), ty); ctx.stroke();
     let ex = X(S.eye); const off = ex < 8 ? -1 : ex > W - 8 ? 1 : 0; ex = clamp(ex, 16 * ps, W - 16 * ps);
     const eh = hot('eye') || S.sel === 'eye';
-    ctx.strokeStyle = eh ? '#ffffff' : '#c9d3dc'; ctx.lineWidth = (eh ? 2 : 1.4) * ps; ctx.fillStyle = 'rgba(9,12,17,0.9)';
+    ctx.strokeStyle = eh ? '#ffffff' : '#dbd4ca'; ctx.lineWidth = (eh ? 2 : 1.4) * ps; ctx.fillStyle = 'rgba(9,12,17,0.9)';
     ctx.beginPath(); ctx.ellipse(ex, ty, 13 * ps, 7.5 * ps, 0, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
-    ctx.fillStyle = eh ? '#ffffff' : '#c9d3dc'; ctx.beginPath(); ctx.arc(ex, ty, 3.6 * ps, 0, 2 * Math.PI); ctx.fill();
+    ctx.fillStyle = eh ? '#ffffff' : '#dbd4ca'; ctx.beginPath(); ctx.arc(ex, ty, 3.6 * ps, 0, 2 * Math.PI); ctx.fill();
     if (off) { ctx.font = `700 ${12 * ps}px ${T.ui}`; ctx.textAlign = off < 0 ? 'left' : 'right'; ctx.fillText(off < 0 ? '◀' : '▶', off < 0 ? 2 : W - 2, ty); }
     { ctx.font = `600 ${10.5 * ps}px ${T.ui}`; const lab = `eye ${S.eye >= 0 ? '+' : '−'}${Math.abs(S.eye).toFixed(1)} cm`, lw = ctx.measureText(lab).width + 8, right = ex > W / 2;
       const lx = right ? ex - 18 * ps - lw : ex + 18 * ps; ctx.fillStyle = T.room; ctx.fillRect(lx, ty - 8 * ps, lw, 16 * ps);
-      ctx.fillStyle = '#e3e8ef'; ctx.textAlign = 'left'; ctx.fillText(lab, lx + 4, ty); }
+      ctx.fillStyle = '#eeeae4'; ctx.textAlign = 'left'; ctx.fillText(lab, lx + 4, ty); }
   }
   function svHandles() {
     if (!sgeo) return [];
@@ -745,7 +745,7 @@ table.rows tr.sim td.n { color: var(--equi); }
     el.setAttribute('aria-label', 'The e/m apparatus in 3D: Helmholtz coils, the glass bulb with the glowing beam, the mirrored scale on the rear coil, the power supply and your eye. Drag to turn, scroll to zoom. Drag the V and I knobs up or down, the tube socket sideways, the eye along its rail. Keys: up and down set V, left and right set I, shift for bigger steps; [ and ] turn the tube; comma and period move the eye; space pauses.');
     $('p3d').insertBefore(el, $('flat'));
     const scene = new THREE.Scene(), cam = new THREE.PerspectiveCamera(30, 1, 1, 2000); cam.up.set(0, 0, 1);
-    scene.add(new THREE.HemisphereLight(0xdfe8ff, 0x3a3027, 0.55));
+    scene.add(new THREE.HemisphereLight(0xf4f0ea, 0x3a3027, 0.55));
     const sun = new THREE.DirectionalLight(0xffffff, 0.55); sun.position.set(-40, -90, 110); scene.add(sun);
     const fill = new THREE.DirectionalLight(0xffffff, 0.2); fill.position.set(80, 40, 60); scene.add(fill);
     const std = (c, r = 0.6, m = 0) => new THREE.MeshStandardMaterial({ color: c, roughness: r, metalness: m });
@@ -757,18 +757,18 @@ table.rows tr.sim td.n { color: var(--equi); }
     // bench top
     box(110, 70, 2, std(0x5b4a3c, 0.85), 8, -10, -24);
     // base of the apparatus and the coil posts
-    const dark = std(0x24282d, 0.55), grey = std(0x6d747c, 0.5, 0.3);
+    const dark = std(0x2c2925, 0.55), grey = std(0x7b756e, 0.5, 0.3);
     box(44, 20, 2.4, dark, 0, 0, -21.8);
     for (const s of [-1, 1]) {
       // coil: black former with copper winding showing on the inside face
-      const former = new THREE.Mesh(new THREE.TorusGeometry(15.8, 1.15, 16, 96), std(0x1c1f23, 0.45)); former.rotation.x = Math.PI / 2; former.position.set(0, s * 7.9, 0); scene.add(former);
+      const former = new THREE.Mesh(new THREE.TorusGeometry(15.8, 1.15, 16, 96), std(0x22201d, 0.45)); former.rotation.x = Math.PI / 2; former.position.set(0, s * 7.9, 0); scene.add(former);
       const wind = new THREE.Mesh(new THREE.TorusGeometry(15.8, 0.75, 12, 96), std(0xb8733a, 0.35, 0.6)); wind.rotation.x = Math.PI / 2; wind.position.set(0, s * 7.9 - s * 0.55, 0); scene.add(wind);
       box(3, 2.2, 6.2, dark, -9, s * 7.9, -17.6); box(3, 2.2, 6.2, dark, 9, s * 7.9, -17.6);
       box(22, 2.4, 1.2, dark, 0, s * 7.9, -15.2);
     }
     // the mirrored scale on the back of the rear coil, lit from above
     const scl = mkTex(1024, 480); paintScaleTex(scl);
-    const sMat = new THREE.MeshStandardMaterial({ map: scl.t, roughness: 0.25, metalness: 0.4, emissive: 0x5c6366, emissiveMap: scl.t });
+    const sMat = new THREE.MeshStandardMaterial({ map: scl.t, roughness: 0.25, metalness: 0.4, emissive: 0x65625d, emissiveMap: scl.t });
     const sPlane = new THREE.Mesh(new THREE.PlaneGeometry(16, 7.5), sMat); sPlane.rotation.x = Math.PI / 2; sPlane.position.set(0, GEOM.ys * 100, -1.5); scene.add(sPlane);
     box(16.8, 0.6, 0.6, grey, 0, GEOM.ys * 100 + 0.3, 2.45); box(16.8, 0.6, 0.6, grey, 0, GEOM.ys * 100 + 0.3, -5.45);
     for (const s of [-1, 1]) box(1, 0.6, 15, grey, s * 8.4, GEOM.ys * 100 + 0.3, -1.5);
@@ -779,16 +779,16 @@ table.rows tr.sim td.n { color: var(--equi); }
     const glass = new THREE.MeshStandardMaterial({ color: 0xcfe6ee, transparent: true, opacity: 0.14, roughness: 0.05, metalness: 0.1, depthWrite: false });
     const bulb = new THREE.Mesh(new THREE.SphereGeometry(GEOM.Rb * 100, 48, 32), glass); bulb.renderOrder = 2; tube.add(bulb);
     const neck = cylZ(1.6, 7, glass, 0, 0, -9.2, tube); neck.renderOrder = 2;
-    const sock = cylZ(3.2, 4, std(0x2b2f35, 0.5), 0, 0, -14.5, tube);
+    const sock = cylZ(3.2, 4, std(0x34312c, 0.5), 0, 0, -14.5, tube);
     box(1.0, 1.0, 1.6, std(0xe8e8e0, 0.5), 2.2, -2.2, -12.4, tube);   // a white index mark on the socket
     cylZ(1.2, 4, dark, 0, 0, -18.5);
     // the electron gun: anode cylinder along +x ending at the exit point, on two support wires
     const gun = new THREE.Group(); gun.position.set(0, 0, GEOM.z0 * 100); tube.add(gun);
-    cylX(0.42, 1.6, std(0x9aa3ab, 0.3, 0.8), -1.0, 0, 0, gun);
-    cylX(0.5, 0.25, std(0x9aa3ab, 0.3, 0.8), -0.15, 0, 0, gun);
+    cylX(0.42, 1.6, std(0xaaa39b, 0.3, 0.8), -1.0, 0, 0, gun);
+    cylX(0.5, 0.25, std(0xaaa39b, 0.3, 0.8), -0.15, 0, 0, gun);
     cylZ(0.08, 3.5, grey, -1.5, 0.3, -2, gun); cylZ(0.08, 3.5, grey, -0.6, -0.3, -2, gun);
     // deflection plates above and below the gun exit
-    box(1.6, 1.2, 0.08, std(0x9aa3ab, 0.3, 0.8), 1.1, 0, 0.7, gun); box(1.6, 1.2, 0.08, std(0x9aa3ab, 0.3, 0.8), 1.1, 0, -0.7, gun);
+    box(1.6, 1.2, 0.08, std(0xaaa39b, 0.3, 0.8), 1.1, 0, 0.7, gun); box(1.6, 1.2, 0.08, std(0xaaa39b, 0.3, 0.8), 1.1, 0, -0.7, gun);
     // glow sprites
     const glowTex = mkTex(64, 64); { const x = glowTex.x, g = x.createRadialGradient(32, 32, 0, 32, 32, 32); g.addColorStop(0, 'rgba(255,255,255,1)'); g.addColorStop(0.3, 'rgba(255,255,255,0.4)'); g.addColorStop(1, 'rgba(255,255,255,0)'); x.fillStyle = g; x.fillRect(0, 0, 64, 64); glowTex.t.needsUpdate = true; }
     const sprite = (col, s, parent) => { const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex.t, color: col, blending: THREE.AdditiveBlending, depthWrite: false, transparent: true })); sp.scale.set(s, s, 1); (parent || scene).add(sp); return sp; };
@@ -806,16 +806,16 @@ table.rows tr.sim td.n { color: var(--equi); }
     const grip = (r, pos, rotX, parent) => { const g = new THREE.Mesh(new THREE.TorusGeometry(r, 0.16, 8, 48), gripMat()); g.position.copy(pos); if (rotX) g.rotation.x = rotX; (parent || scene).add(g); return g; };
     const sockGrip = grip(4.0, new THREE.Vector3(0, 0, -14.5));
     // power supply with two meters and two knobs on its front face (−y)
-    const supply = std(0x3b4652, 0.55); box(24, 14, 13, supply, SUP.x, SUP.y + 7, SUP.z);
+    const supply = std(0x50483d, 0.55); box(24, 14, 13, supply, SUP.x, SUP.y + 7, SUP.z);
     const face = mkTex(720, 390); const faceMat = new THREE.MeshStandardMaterial({ map: face.t, roughness: 0.6 });
     { const p = new THREE.Mesh(new THREE.PlaneGeometry(24, 13), faceMat); p.rotation.x = Math.PI / 2; p.position.set(SUP.x, SUP.y - 0.02, SUP.z); scene.add(p); }
-    const knob = (x) => { const k = cylY(1.5, 1.6, std(0x15171a, 0.4), x, SUP.y - 0.8, SUP.z - 3.6); const ptr = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.3, 1.3), std(0xf2f2f2, 0.5)); ptr.position.set(0, -0.82, 0.7); k.add(ptr); return k; };
+    const knob = (x) => { const k = cylY(1.5, 1.6, std(0x1a1815, 0.4), x, SUP.y - 0.8, SUP.z - 3.6); const ptr = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.3, 1.3), std(0xf2f2f2, 0.5)); ptr.position.set(0, -0.82, 0.7); k.add(ptr); return k; };
     const kV = knob(SUP.x - 5.5), kI = knob(SUP.x + 5.5);
     const gV = grip(2.15, new THREE.Vector3(SUP.x - 5.5, SUP.y - 0.3, SUP.z - 3.6), Math.PI / 2), gI = grip(2.15, new THREE.Vector3(SUP.x + 5.5, SUP.y - 0.3, SUP.z - 3.6), Math.PI / 2);
     // cables
     const cable = (pts, col, r = 0.32) => { const curve = new THREE.CatmullRomCurve3(pts.map((p) => new THREE.Vector3(...p))); scene.add(new THREE.Mesh(new THREE.TubeGeometry(curve, 60, r, 8, false), std(col, 0.55))); };
     cable([[SUP.x - 10, SUP.y + 7, SUP.z - 6.5], [20, 6, -22.6], [11, 8, -22.6], [9, 8.6, -20]], 0xb02a22);
-    cable([[SUP.x - 10, SUP.y + 10, SUP.z - 6.5], [20, 10, -22.6], [11, -6, -22.6], [9, -6.4, -20]], 0x1d1f22);
+    cable([[SUP.x - 10, SUP.y + 10, SUP.z - 6.5], [20, 10, -22.6], [11, -6, -22.6], [9, -6.4, -20]], 0x22201d);
     cable([[SUP.x - 8, SUP.y + 12, SUP.z - 6.5], [16, 14, -22.6], [3, 4, -22.6], [1.2, 0, -20.6]], 0x2f6fb5, 0.28);
     // the observer's eye on a rail in front of the front coil, and its line of sight to the scale
     const EY = -GEOM.D * 100;
@@ -836,29 +836,29 @@ table.rows tr.sim td.n { color: var(--equi); }
   }
   function paintScaleTex(s) {
     const x = s.x, W = 1024, H = 480, k = W / 16;   // 64 px per cm
-    const g = x.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#e2e8ea'); g.addColorStop(0.55, '#bcc6ca'); g.addColorStop(1, '#949fa4');
+    const g = x.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#e9e6e3'); g.addColorStop(0.55, '#c9c4bd'); g.addColorStop(1, '#a39d95');
     x.fillStyle = g; x.fillRect(0, 0, W, H);
-    x.strokeStyle = '#1b2228'; x.lineWidth = 2; x.beginPath();
+    x.strokeStyle = '#27221c'; x.lineWidth = 2; x.beginPath();
     for (let m = -80; m <= 80; m++) { const px = W / 2 + m / 10 * k, L = (m % 10 === 0 ? 0.55 : m % 5 === 0 ? 0.36 : 0.22) * k; x.moveTo(px, 0); x.lineTo(px, L); x.moveTo(px, H); x.lineTo(px, H - L); }
     x.stroke(); x.strokeStyle = 'rgba(27,34,40,0.3)'; x.beginPath(); for (let c = -8; c <= 8; c++) { const px = W / 2 + c * k; x.moveTo(px, 0); x.lineTo(px, H); } x.stroke();
-    x.fillStyle = '#1b2228'; x.font = '700 22px sans-serif'; x.textAlign = 'center'; x.textBaseline = 'top';
+    x.fillStyle = '#27221c'; x.font = '700 22px sans-serif'; x.textAlign = 'center'; x.textBaseline = 'top';
     for (let c = -7; c <= 7; c++) { x.fillText(String(Math.abs(c)), W / 2 + c * k, 0.62 * k); }
     s.t.needsUpdate = true;
   }
   function paintFace() {
     const x = G.face.x, W = 720, H = 390;
-    x.fillStyle = '#3b4652'; x.fillRect(0, 0, W, H);
-    x.fillStyle = '#e8edf2'; x.font = '700 26px sans-serif'; x.textAlign = 'left'; x.textBaseline = 'alphabetic'; x.fillText('e/m POWER SUPPLY', 24, 40);
+    x.fillStyle = '#50483d'; x.fillRect(0, 0, W, H);
+    x.fillStyle = '#f1eee9'; x.font = '700 26px sans-serif'; x.textAlign = 'left'; x.textBaseline = 'alphabetic'; x.fillText('e/m POWER SUPPLY', 24, 40);
     const meter = (cx, val, unit, lab, over) => {
       x.fillStyle = '#120d05'; x.fillRect(cx - 140, 64, 280, 96);
       x.font = '600 62px "JetBrains Mono", monospace'; x.fillStyle = over ? '#ff5a3c' : '#ffb347'; x.shadowColor = 'rgba(255,170,60,0.8)'; x.shadowBlur = 12; x.textAlign = 'right'; x.textBaseline = 'middle';
       x.fillText(val, cx + 80, 114); x.shadowBlur = 0; x.font = '700 26px sans-serif'; x.fillStyle = '#d9a46a'; x.textAlign = 'left'; x.fillText(unit, cx + 92, 118);
-      x.fillStyle = '#e8edf2'; x.font = '700 20px sans-serif'; x.textAlign = 'center'; x.fillText(lab, cx, 186);
+      x.fillStyle = '#f1eee9'; x.font = '700 20px sans-serif'; x.textAlign = 'center'; x.fillText(lab, cx, 186);
     };
     meter(195, shownV.toFixed(1), 'V', 'ACCELERATING VOLTAGE', false);
     meter(525, shownI.toFixed(3), 'A', 'COIL CURRENT', false);
-    x.font = '700 22px sans-serif'; x.fillStyle = '#e8edf2'; x.textAlign = 'center'; x.fillText('V', 195, 372); x.fillText('I', 525, 372);
-    x.font = '18px sans-serif'; x.fillStyle = '#c9d3dc'; x.fillText('HEATER 6.3 V', 360, 300);
+    x.font = '700 22px sans-serif'; x.fillStyle = '#f1eee9'; x.textAlign = 'center'; x.fillText('V', 195, 372); x.fillText('I', 525, 372);
+    x.font = '18px sans-serif'; x.fillStyle = '#dbd4ca'; x.fillText('HEATER 6.3 V', 360, 300);
     x.fillStyle = '#ffb347'; x.beginPath(); x.arc(360, 330, 9, 0, 2 * Math.PI); x.fill();
     G.face.t.needsUpdate = true;
   }
@@ -903,7 +903,7 @@ table.rows tr.sim td.n { color: var(--equi); }
   let bgCache = '';
   function render3D() {
     if (!G.ready || !dims.gl[0]) return;
-    if (bgCache !== T.room) { bgCache = T.room; G.renderer.setClearColor(new THREE.Color(T.room || '#1e252e')); }
+    if (bgCache !== T.room) { bgCache = T.room; G.renderer.setClearColor(new THREE.Color(T.room || '#2d271f')); }
     update3D(); fitCam(); G.renderer.render(G.scene, G.cam);
   }
   function bindGL(el) {
@@ -987,22 +987,22 @@ table.rows tr.sim td.n { color: var(--equi); }
     const X = (u) => ox + u * s, Y = (v) => oy - v * s;
     // coil seen along its axis, bulb, scale behind
     ctx.strokeStyle = '#b8733a'; ctx.lineWidth = 2 * s; ctx.beginPath(); ctx.arc(X(0), Y(0), 15 * s, 0, 2 * Math.PI); ctx.stroke();
-    ctx.fillStyle = '#9aa5ab'; ctx.fillRect(X(-8), Y(2.25), 16 * s, 7.5 * s);
-    ctx.strokeStyle = '#1b2228'; ctx.lineWidth = 1; ctx.beginPath(); for (let c = -8; c <= 8; c++) { ctx.moveTo(X(c), Y(2.25)); ctx.lineTo(X(c), Y(2.25) + 0.5 * s); } ctx.stroke();
+    ctx.fillStyle = '#aaa39b'; ctx.fillRect(X(-8), Y(2.25), 16 * s, 7.5 * s);
+    ctx.strokeStyle = '#27221c'; ctx.lineWidth = 1; ctx.beginPath(); for (let c = -8; c <= 8; c++) { ctx.moveTo(X(c), Y(2.25)); ctx.lineTo(X(c), Y(2.25) + 0.5 * s); } ctx.stroke();
     ctx.strokeStyle = 'rgba(200,225,235,0.5)'; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.arc(X(0), Y(0), GEOM.Rb * 100 * s, 0, 2 * Math.PI); ctx.stroke();
-    ctx.fillStyle = '#9aa3ab'; ctx.fillRect(X(-1.8), Y(GEOM.z0 * 100 + 0.45), 1.8 * s, 0.9 * s);
+    ctx.fillStyle = '#aaa39b'; ctx.fillRect(X(-1.8), Y(GEOM.z0 * 100 + 0.45), 1.8 * s, 0.9 * s);
     ctx.strokeStyle = BEAM; ctx.lineWidth = 2; ctx.shadowColor = BEAM; ctx.shadowBlur = 8; ctx.beginPath();
     t.pts.forEach((q, i) => { const x = X(q[0] * 100), y = Y(q[2] * 100); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }); ctx.stroke(); ctx.shadowBlur = 0;
     // supply with two knobs
-    ctx.fillStyle = '#3b4652'; ctx.fillRect(X(22), Y(4), 24 * s, 16 * s);
+    ctx.fillStyle = '#50483d'; ctx.fillRect(X(22), Y(4), 24 * s, 16 * s);
     ctx.fillStyle = '#ffb347'; ctx.font = `600 ${Math.max(10, 2.2 * s)}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     ctx.fillText(`${shownV.toFixed(1)} V`, X(28), Y(1)); ctx.fillText(`${shownI.toFixed(3)} A`, X(40), Y(1));
     flatGeom = [{ id: 'V', x: X(28), y: Y(-6), r: 1.8 * s, lab: 'V' }, { id: 'I', x: X(40), y: Y(-6), r: 1.8 * s, lab: 'I' }];
     for (const h of flatGeom) {
       const hot = flatHot === h.id || (flatDrag && flatDrag.id === h.id);
-      ctx.fillStyle = '#15171a'; ctx.beginPath(); ctx.arc(h.x, h.y, h.r, 0, 2 * Math.PI); ctx.fill();
+      ctx.fillStyle = '#1a1815'; ctx.beginPath(); ctx.arc(h.x, h.y, h.r, 0, 2 * Math.PI); ctx.fill();
       ctx.strokeStyle = T.accent; ctx.lineWidth = hot ? 2.4 : 1.4; ctx.globalAlpha = hot ? 1 : 0.75; ctx.beginPath(); ctx.arc(h.x, h.y, h.r + 3, 0, 2 * Math.PI); ctx.stroke(); ctx.globalAlpha = 1;
-      ctx.fillStyle = '#e8edf2'; ctx.font = `700 ${12 * ps}px ${T.ui}`; ctx.fillText(h.lab, h.x, h.y - h.r - 10 * ps);
+      ctx.fillStyle = '#f1eee9'; ctx.font = `700 ${12 * ps}px ${T.ui}`; ctx.fillText(h.lab, h.x, h.y - h.r - 10 * ps);
     }
     ctx.fillStyle = T.roomInk; ctx.font = `${11 * ps}px ${T.ui}`; ctx.textAlign = 'right'; ctx.textBaseline = 'top';
     ctx.fillText('3D view needs WebGL: a front view along the coil axis', W - 8, 6);

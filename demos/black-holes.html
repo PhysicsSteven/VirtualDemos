@@ -15,19 +15,19 @@
 <style>
 /* Layout: one canvas in the stage. Left: the lensed sky, the ray traced view or the radial diagram; right: plots. Instrument rail on the right; stacks on phones. */
 :root {
-  --bg: #e9edf2;
-  --surface: #f8fafc;
-  --canvas: #fcfdfe;
-  --ink: #17202b;
-  --muted: #5a6575;
-  --line: #d3d9e2;
-  --grid: #e6ebf1;
-  --grid-strong: #cfd7e1;
+  --bg: #f1eeea;
+  --surface: #fcfaf8;
+  --canvas: #fefdfc;
+  --ink: #2a2219;
+  --muted: #73695c;
+  --line: #e1dbd4;
+  --grid: #f0ece7;
+  --grid-strong: #e0d9d0;
   --pos: #c23f2c;
   --neg: #2b60b5;
   --equi: #a7740b;
-  --accent: #2b60b5;
-  --hole: #05070a;
+  --accent: #c4811c;
+  --hole: #0a0805;
   --sky: #03050a;
   --sky-ink: #e3e8ef;
   --sky-muted: #8d99ab;
@@ -39,16 +39,16 @@
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
-    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-    --equi: #e2b350; --accent: #69a0ff; --hole: #000000; color-scheme: dark;
+    --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
+    --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+    --equi: #e2b350; --accent: #fbc26d; --hole: #000000; color-scheme: dark;
     --sky: #020307; --sky-ink: #e3e8ef; --sky-muted: #8d99ab; --sky-accent: #7fb0ff; --sky-gold: #f0c35a; --sky-pos: #ff8a70;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
-  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-  --equi: #e2b350; --accent: #69a0ff; --hole: #000000; color-scheme: dark;
+  --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
+  --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+  --equi: #e2b350; --accent: #fbc26d; --hole: #000000; color-scheme: dark;
   --sky: #020307; --sky-ink: #e3e8ef; --sky-muted: #8d99ab; --sky-accent: #7fb0ff; --sky-gold: #f0c35a; --sky-pos: #ff8a70;
 }
 :root[data-projector="on"] { font-size: 125%; }
@@ -1361,28 +1361,28 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // a pocket watch: brushed metal case and crown, cream face, one sweeping hand; ring colored to tell the two clocks apart
   function drawClock(c, x, y, R, ang, col, ps) {
     c.save();
-    c.fillStyle = '#a3acb7'; c.fillRect(x - 2.4 * ps, y - R - 6 * ps, 4.8 * ps, 5 * ps);
-    c.strokeStyle = '#a3acb7'; c.lineWidth = 1.5 * ps; c.beginPath(); c.arc(x, y - R - 8.5 * ps, 3 * ps, 0, 2 * Math.PI); c.stroke();
+    c.fillStyle = '#b6aea4'; c.fillRect(x - 2.4 * ps, y - R - 6 * ps, 4.8 * ps, 5 * ps);
+    c.strokeStyle = '#b6aea4'; c.lineWidth = 1.5 * ps; c.beginPath(); c.arc(x, y - R - 8.5 * ps, 3 * ps, 0, 2 * Math.PI); c.stroke();
     c.strokeStyle = col; c.lineWidth = 2 * ps; c.beginPath(); c.arc(x, y, R + 4.2 * ps, 0, 2 * Math.PI); c.stroke();
-    const cg = c.createLinearGradient(x - R, y - R, x + R, y + R); cg.addColorStop(0, '#eef1f5'); cg.addColorStop(0.5, '#8e98a4'); cg.addColorStop(1, '#d9dee5');
+    const cg = c.createLinearGradient(x - R, y - R, x + R, y + R); cg.addColorStop(0, '#f4f2ef'); cg.addColorStop(0.5, '#a29a90'); cg.addColorStop(1, '#e4e0da');
     c.fillStyle = cg; c.beginPath(); c.arc(x, y, R + 2.6 * ps, 0, 2 * Math.PI); c.fill();
     const fg = c.createRadialGradient(x - R * 0.35, y - R * 0.35, R * 0.1, x, y, R); fg.addColorStop(0, '#fffdf6'); fg.addColorStop(1, '#e2dccd');
     c.fillStyle = fg; c.beginPath(); c.arc(x, y, R, 0, 2 * Math.PI); c.fill();
-    c.strokeStyle = '#2a3038'; c.lineCap = 'round';
+    c.strokeStyle = '#37322b'; c.lineCap = 'round';
     for (let i = 0; i < 12; i++) { const a = i * Math.PI / 6, q = i % 3 === 0 ? 0.7 : 0.8; c.lineWidth = (i % 3 === 0 ? 1.6 : 1) * ps; c.beginPath(); c.moveTo(x + R * q * Math.cos(a), y + R * q * Math.sin(a)); c.lineTo(x + R * 0.9 * Math.cos(a), y + R * 0.9 * Math.sin(a)); c.stroke(); }
-    c.strokeStyle = '#1b2029'; c.lineWidth = 2 * ps; c.beginPath(); c.moveTo(x - R * 0.18 * Math.sin(ang), y + R * 0.18 * Math.cos(ang)); c.lineTo(x + R * 0.8 * Math.sin(ang), y - R * 0.8 * Math.cos(ang)); c.stroke();
+    c.strokeStyle = '#28231c'; c.lineWidth = 2 * ps; c.beginPath(); c.moveTo(x - R * 0.18 * Math.sin(ang), y + R * 0.18 * Math.cos(ang)); c.lineTo(x + R * 0.8 * Math.sin(ang), y - R * 0.8 * Math.cos(ang)); c.stroke();
     c.fillStyle = '#c23f2c'; c.beginPath(); c.arc(x, y, 1.8 * ps, 0, 2 * Math.PI); c.fill();
     c.restore();
   }
   // an astronaut falling feet first: lying along the radial axis with the feet toward the hole (−x); s is pixels per unit
   function drawAstronaut(c, x, y, s) {
-    const suit = '#eef1f5', shade = '#b5bfcb', line = '#4d5662';
+    const suit = '#f4f2ef', shade = '#c9c1b7', line = '#60594f';
     c.save(); c.translate(x, y); c.lineJoin = 'round'; c.lineCap = 'round';
     const limb = (x1, y1, x2, y2, w) => { c.strokeStyle = line; c.lineWidth = w + 1.6; c.beginPath(); c.moveTo(x1, y1); c.lineTo(x2, y2); c.stroke(); c.strokeStyle = suit; c.lineWidth = w; c.stroke(); };
     const rr = (x0, y0, w, h, rad, fill) => { c.beginPath(); c.moveTo(x0 + rad, y0); c.arcTo(x0 + w, y0, x0 + w, y0 + h, rad); c.arcTo(x0 + w, y0 + h, x0, y0 + h, rad); c.arcTo(x0, y0 + h, x0, y0, rad); c.arcTo(x0, y0, x0 + w, y0, rad); c.closePath(); c.fillStyle = fill; c.fill(); c.strokeStyle = line; c.lineWidth = 0.8; c.stroke(); };
     rr(-3.5 * s, -6 * s, 8 * s, 2.8 * s, 0.9 * s, shade);                       // life support pack
     limb(-3 * s, -1.3 * s, -10.5 * s, -1.9 * s, 2.9 * s); limb(-3 * s, 1.3 * s, -10.5 * s, 2 * s, 2.9 * s);
-    c.fillStyle = '#5a6472'; for (const yy of [-1.9, 2]) { c.beginPath(); c.ellipse(-11.6 * s, yy * s, 1.6 * s, 1.7 * s, 0, 0, 2 * Math.PI); c.fill(); }
+    c.fillStyle = '#70675c'; for (const yy of [-1.9, 2]) { c.beginPath(); c.ellipse(-11.6 * s, yy * s, 1.6 * s, 1.7 * s, 0, 0, 2 * Math.PI); c.fill(); }
     rr(-4.2 * s, -3.6 * s, 10 * s, 7.2 * s, 2 * s, suit);                       // torso
     c.fillStyle = '#c23f2c'; c.fillRect(-0.5 * s, -1.4 * s, 2.4 * s, 1.1 * s);      // chest patch
     c.fillStyle = '#2b60b5'; c.fillRect(-0.5 * s, 0.2 * s, 2.4 * s, 1.1 * s);

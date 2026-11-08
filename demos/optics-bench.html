@@ -17,53 +17,53 @@
 <style>
 /* Layout: lab bench. The optics canvas fills the left, a narrow instrument rail sits on the right; stacks on phones. */
 :root {
-  --bg: #e9edf2;
-  --surface: #f8fafc;
-  --canvas: #fcfdfe;
-  --relief: #dfe5ec;
-  --ink: #17202b;
-  --muted: #5a6575;
-  --line: #d3d9e2;
-  --grid: #e6ebf1;
-  --grid-strong: #cfd7e1;
+  --bg: #f1eeea;
+  --surface: #fcfaf8;
+  --canvas: #fefdfc;
+  --relief: #ebe6e0;
+  --ink: #2a2219;
+  --muted: #73695c;
+  --line: #e1dbd4;
+  --grid: #f0ece7;
+  --grid-strong: #e0d9d0;
   --pos: #c23f2c;
   --neg: #2b60b5;
-  --field: #1d2836;
+  --field: #342b1f;
   --equi: #a7740b;
-  --accent: #2b60b5;
+  --accent: #c4811c;
   --on-charge: #ffffff;
   --ray: #a7740b;
   --pr-green: #2f8a46;
   --glass: rgba(43, 96, 181, 0.10);
   --glass-edge: #7d9cc9;
-  --lab-bg: #1c232c; --lab-bg2: #2a3440; --lab-table: #232a32; --lab-ink: #eef2f7; --lab-muted: #b4bfcc;
+  --lab-bg: #2b251d; --lab-bg2: #3e362c; --lab-table: #312b24; --lab-ink: #f6f3ef; --lab-muted: #cac1b6;
   --lab-grid: rgba(255, 255, 255, 0.045); --lab-grid-strong: rgba(255, 255, 255, 0.1); --lab-halo: rgba(16, 21, 28, 0.82);
-  --lab-ray: #ffcf70; --lab-virt: #d9cfb4; --lab-pos: #ff8a73; --lab-p1: #ff8a73; --lab-p2: #6fdc8c; --lab-p3: #82b2ff; --lab-accent: #8fbaff;
-  --rail-hi: #c3c9d0; --rail-lo: #8b939d; --rail-ink: #12161b;
+  --lab-ray: #ffcf70; --lab-virt: #d9cfb4; --lab-pos: #ff8a73; --lab-p1: #ff8a73; --lab-p2: #6fdc8c; --lab-p3: #82b2ff; --lab-accent: #fcd292;
+  --rail-hi: #cfcac4; --rail-lo: #9c958c; --rail-ink: #1a1713;
   --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
-    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-    --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+    --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --relief: #40372c; --ink: #eeeae4; --muted: #b0a698;
+    --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+    --field: #eee8e0; --equi: #e2b350; --accent: #fbc26d; --on-charge: #17130e; color-scheme: dark;
     --ray: #e2b350; --pr-green: #5fcf7a; --glass: rgba(105, 160, 255, 0.13); --glass-edge: #5576a6;
-    --lab-bg: #07090d; --lab-bg2: #121821; --lab-table: #161b21; --lab-ink: #e3e8ef; --lab-muted: #a3afbf;
+    --lab-bg: #0d0a07; --lab-bg2: #201a13; --lab-table: #201c17; --lab-ink: #eeeae4; --lab-muted: #bdb3a5;
     --lab-grid: rgba(255, 255, 255, 0.035); --lab-grid-strong: rgba(255, 255, 255, 0.075); --lab-halo: rgba(7, 10, 14, 0.82);
-    --lab-ray: #ffc85e; --lab-virt: #cfc4a6; --lab-pos: #ff7a62; --lab-p1: #ff7a62; --lab-p2: #5fd27e; --lab-p3: #75a8ff; --lab-accent: #82b0ff;
-    --rail-hi: #a7aeb7; --rail-lo: #6c747e; --rail-ink: #0d1014;
+    --lab-ray: #ffc85e; --lab-virt: #cfc4a6; --lab-pos: #ff7a62; --lab-p1: #ff7a62; --lab-p2: #5fd27e; --lab-p3: #75a8ff; --lab-accent: #fccc85;
+    --rail-hi: #b6b0a8; --rail-lo: #7d766d; --rail-ink: #13110e;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
-  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-  --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+  --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --relief: #40372c; --ink: #eeeae4; --muted: #b0a698;
+  --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+  --field: #eee8e0; --equi: #e2b350; --accent: #fbc26d; --on-charge: #17130e; color-scheme: dark;
   --ray: #e2b350; --pr-green: #5fcf7a; --glass: rgba(105, 160, 255, 0.13); --glass-edge: #5576a6;
-  --lab-bg: #07090d; --lab-bg2: #121821; --lab-table: #161b21; --lab-ink: #e3e8ef; --lab-muted: #a3afbf;
+  --lab-bg: #0d0a07; --lab-bg2: #201a13; --lab-table: #201c17; --lab-ink: #eeeae4; --lab-muted: #bdb3a5;
   --lab-grid: rgba(255, 255, 255, 0.035); --lab-grid-strong: rgba(255, 255, 255, 0.075); --lab-halo: rgba(7, 10, 14, 0.82);
-  --lab-ray: #ffc85e; --lab-virt: #cfc4a6; --lab-pos: #ff7a62; --lab-p1: #ff7a62; --lab-p2: #5fd27e; --lab-p3: #75a8ff; --lab-accent: #82b0ff;
-  --rail-hi: #a7aeb7; --rail-lo: #6c747e; --rail-ink: #0d1014;
+  --lab-ray: #ffc85e; --lab-virt: #cfc4a6; --lab-pos: #ff7a62; --lab-p1: #ff7a62; --lab-p2: #5fd27e; --lab-p3: #75a8ff; --lab-accent: #fccc85;
+  --rail-hi: #b6b0a8; --rail-lo: #7d766d; --rail-ink: #13110e;
 }
 :root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
@@ -1170,36 +1170,36 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const x = m[0], [px, pt] = toPx(x, m[1]), pb = toPx(x, R.y + R.hc * 0.6)[1], pw = Math.max(5 * ps, Math.min(0.42 * s, 10 * ps));
     // steel post
     const g = ctx.createLinearGradient(px - pw / 2, 0, px + pw / 2, 0);
-    g.addColorStop(0, '#4a5058'); g.addColorStop(0.35, '#d5dae0'); g.addColorStop(0.6, '#8b939c'); g.addColorStop(1, '#30353b');
+    g.addColorStop(0, '#57524b'); g.addColorStop(0.35, '#dfdbd6'); g.addColorStop(0.6, '#9b948c'); g.addColorStop(1, '#3a3631');
     ctx.fillStyle = g; ctx.fillRect(px - pw / 2, pt, pw, pb - pt);
     // collar where the post enters its holder
     const cg = ctx.createLinearGradient(px - pw, 0, px + pw, 0);
-    cg.addColorStop(0, '#202429'); cg.addColorStop(0.4, '#5a616a'); cg.addColorStop(1, '#181b1f');
+    cg.addColorStop(0, '#282521'); cg.addColorStop(0.4, '#69635b'); cg.addColorStop(1, '#1e1c19');
     ctx.fillStyle = cg; ctx.fillRect(px - pw * 0.95, pb - Math.max(6 * ps, 0.5 * s), pw * 1.9, Math.max(6 * ps, 0.5 * s));
     // glass sits on a small round table
     if (isGlass(it)) {
       const pts = outline(it), xs = pts.map((p) => p[0]), x0 = Math.min(...xs) - 0.3, x1 = Math.max(...xs) + 0.3, y = m[1];
       quad(P3(x0, y, -1.5), P3(x1, y, -1.5), P3(x1, y, 1.5), P3(x0, y, 1.5));
-      ctx.fillStyle = '#3a4048'; ctx.fill();
+      ctx.fillStyle = '#47423b'; ctx.fill();
       const a = P3(x0, y, -1.5), b = P3(x1, y - 0.35, -1.5);
-      ctx.fillStyle = '#23272d'; ctx.fillRect(a[0], a[1], b[0] - a[0], Math.max(2, b[1] - a[1]));
+      ctx.fillStyle = '#2c2924'; ctx.fillRect(a[0], a[1], b[0] - a[0], Math.max(2, b[1] - a[1]));
     }
     // carrier on the rail, with an index mark that reads the ruler
     const wc = Math.max(1.2, 9 * ps / s), y0 = R.y, y1 = R.y + R.hc, D = R.D + 0.25;
     quad(P3(x - wc, y1, -D), P3(x + wc, y1, -D), P3(x + wc, y1, D * 0.85), P3(x - wc, y1, D * 0.85));
-    ctx.fillStyle = '#3d434c'; ctx.fill();
+    ctx.fillStyle = '#4b453e'; ctx.fill();
     const side = toPx(x, 0)[0] < W / 2 ? x + wc : x - wc;
     quad(P3(side, y0, -D), P3(side, y1, -D), P3(side, y1, D * 0.85), P3(side, y0, D * 0.85));
-    ctx.fillStyle = '#16191d'; ctx.fill();
+    ctx.fillStyle = '#1c1a17'; ctx.fill();
     const a = P3(x - wc, y1, -D), b = P3(x + wc, y0, -D);
     const fg = ctx.createLinearGradient(0, a[1], 0, b[1]);
-    fg.addColorStop(0, '#30363e'); fg.addColorStop(1, '#14171b');
+    fg.addColorStop(0, '#3d3831'); fg.addColorStop(1, '#1a1815');
     ctx.fillStyle = fg; ctx.fillRect(a[0], a[1], b[0] - a[0], b[1] - a[1]);
     ctx.fillStyle = 'rgba(255, 255, 255, 0.18)'; ctx.fillRect(a[0], a[1], b[0] - a[0], 1);
     const kx = a[0] + (b[0] - a[0]) * 0.78, ky = (a[1] + b[1]) / 2, kr = Math.min((b[1] - a[1]) * 0.32, 4.5 * ps);
-    ctx.fillStyle = '#5b636d'; ctx.beginPath(); ctx.arc(kx, ky, kr, 0, 2 * Math.PI); ctx.fill();
+    ctx.fillStyle = '#6c655c'; ctx.beginPath(); ctx.arc(kx, ky, kr, 0, 2 * Math.PI); ctx.fill();
     const ix = P3(x, y0, -D)[0];
-    ctx.fillStyle = '#f2f4f7'; ctx.beginPath();
+    ctx.fillStyle = '#f7f5f2'; ctx.beginPath();
     ctx.moveTo(ix, b[1] + 3 * ps); ctx.lineTo(ix - 3 * ps, b[1] - 1); ctx.lineTo(ix + 3 * ps, b[1] - 1); ctx.closePath(); ctx.fill();
   }
 
@@ -1271,7 +1271,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       for (const k of [-1, 1]) {
         const pts = [];
         for (let i = 0; i <= 12; i++) { const h = k * (st + (a - st) * i / 12); pts.push(local(it, sagAt(Rs, h) - th, h)); }
-        ctx.strokeStyle = '#0c0f13'; ctx.lineWidth = 2 * th * s; ctx.lineCap = 'butt'; polyline(pts);
+        ctx.strokeStyle = '#12100d'; ctx.lineWidth = 2 * th * s; ctx.lineCap = 'butt'; polyline(pts);
         ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)'; ctx.lineWidth = ps; polyline(pts);
       }
     }
@@ -1309,7 +1309,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (const sg of [-1, 1]) {
       const tE = L.thick(L.half) + 0.25, a = sg * (L.half + 0.02), b = sg * (L.half + 0.45);
       const q = [local(it, -tE, a), local(it, tE, a), local(it, tE, b), local(it, -tE, b)];
-      pathW(q, true); ctx.fillStyle = '#23282e'; ctx.fill();
+      pathW(q, true); ctx.fillStyle = '#2d2924'; ctx.fill();
       ctx.strokeStyle = 'rgba(255, 255, 255, 0.16)'; ctx.lineWidth = 1; ctx.stroke();
     }
     // thin lens mark: arrows out for converging, in for diverging
@@ -1350,18 +1350,18 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       pathW(cell, true);
       const c0 = toPx(...local(it, lxB, 0)), c1 = toPx(...local(it, (bl[0] + lxB) / 2, 0));
       const cg = ctx.createLinearGradient(c0[0], c0[1], c1[0], c1[1]);
-      cg.addColorStop(0, '#15181c'); cg.addColorStop(0.6, '#3a4149'); cg.addColorStop(1, '#262b31');
+      cg.addColorStop(0, '#1b1916'); cg.addColorStop(0.6, '#48423b'); cg.addColorStop(1, '#302c27');
       ctx.fillStyle = cg; ctx.fill(); ctx.strokeStyle = 'rgba(255, 255, 255, 0.14)'; ctx.lineWidth = 1; ctx.stroke();
       for (const [e, sg] of [[pts[0], Math.sign(y0) || -1], [pts[pts.length - 1], Math.sign(y1) || 1]]) {
         const a = lx(e) - sb * 0.22, b = ly(e);
         const q = [local(it, a, b - sg * 0.12), local(it, lxB, b - sg * 0.12), local(it, lxB, b + sg * 0.4), local(it, a, b + sg * 0.4)];
-        pathW(q, true); ctx.fillStyle = '#23282e'; ctx.fill();
+        pathW(q, true); ctx.fillStyle = '#2d2924'; ctx.fill();
         ctx.strokeStyle = 'rgba(255, 255, 255, 0.16)'; ctx.lineWidth = 1; ctx.stroke();
       }
     }
     // painted backing behind the silver
     pathW(pts.concat(behind.slice().reverse()), true);
-    ctx.fillStyle = '#2b3037'; ctx.fill();
+    ctx.fillStyle = '#36322c'; ctx.fill();
     ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)'; ctx.lineWidth = 1; ctx.stroke();
     ctx.save(); pathW(pts.concat(behind.slice().reverse()), true); ctx.clip();
     ctx.strokeStyle = 'rgba(255, 255, 255, 0.14)'; ctx.beginPath();
@@ -1374,7 +1374,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     // the silvered surface
     const e0 = toPx(...pts[0]), e1 = toPx(...pts[pts.length - 1]);
     const g = ctx.createLinearGradient(e0[0], e0[1], e1[0], e1[1]);
-    g.addColorStop(0, '#9aa4b0'); g.addColorStop(0.3, '#f4f7fa'); g.addColorStop(0.55, '#b9c2cc'); g.addColorStop(1, '#e6ebf0');
+    g.addColorStop(0, '#aea69c'); g.addColorStop(0.3, '#faf7f4'); g.addColorStop(0.55, '#cbc4ba'); g.addColorStop(1, '#efece7');
     ctx.save(); ctx.strokeStyle = g; ctx.lineWidth = 3.2 * ps; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
     polyline(pts); ctx.restore();
     if (it.shape !== 'plane' && it !== sel) {
@@ -1435,17 +1435,17 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function drawLightBox(it, T) {              // lamp housing behind the lit arrow (bench only)
     const x0 = it.x - 2.6, x1 = it.x - 0.15, y0 = it.y - 0.9, y1 = it.y + it.h + 0.9, D = 1.6;
     quad(P3(x0, y1, -D), P3(x1, y1, -D), P3(x1, y1, D), P3(x0, y1, D));
-    ctx.fillStyle = '#3a414a'; ctx.fill();
+    ctx.fillStyle = '#49433b'; ctx.fill();
     const seeRight = toPx(x1, 0)[0] < W / 2, xs = seeRight ? x1 : x0;
     quad(P3(xs, y0, -D), P3(xs, y1, -D), P3(xs, y1, D), P3(xs, y0, D));
     if (seeRight) {                           // the diffuser window that lights the arrow
       const a = P3(xs, y0, -D), b = P3(xs, y0, D), g = ctx.createLinearGradient(a[0], 0, b[0], 0);
       g.addColorStop(0, hexA(it.white ? '#ffffff' : T.ray, 0.55)); g.addColorStop(1, hexA(it.white ? '#ffffff' : T.ray, 0.25));
-      ctx.fillStyle = '#20252b'; ctx.fill(); ctx.fillStyle = g; ctx.fill();
-    } else { ctx.fillStyle = '#1b1f24'; ctx.fill(); }
+      ctx.fillStyle = '#2a2621'; ctx.fill(); ctx.fillStyle = g; ctx.fill();
+    } else { ctx.fillStyle = '#23201c'; ctx.fill(); }
     const a = P3(x0, y1, -D), b = P3(x1, y0, -D);
     const g = ctx.createLinearGradient(0, a[1], 0, b[1]);
-    g.addColorStop(0, '#363d46'); g.addColorStop(1, '#191d22');
+    g.addColorStop(0, '#453f37'); g.addColorStop(1, '#211e1a');
     ctx.fillStyle = g; ctx.fillRect(a[0], a[1], b[0] - a[0], b[1] - a[1]);
     ctx.fillStyle = 'rgba(255, 255, 255, 0.2)'; ctx.fillRect(a[0], a[1], b[0] - a[0], 1);
     ctx.strokeStyle = 'rgba(0, 0, 0, 0.55)'; ctx.lineWidth = Math.max(1, 1.5 * projScale()); ctx.beginPath();
@@ -1465,7 +1465,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (scene === 'table') { ctx.save(); ctx.translate(3 * ps, 5 * ps); pathW(hp, true); ctx.fillStyle = 'rgba(0, 0, 0, 0.35)'; ctx.fill(); ctx.restore(); }
     const a = toPx(...local(it, -1.7, -hw)), b = toPx(...local(it, -1.7, hw));
     const g = ctx.createLinearGradient(a[0], a[1], b[0], b[1]);
-    g.addColorStop(0, '#191d22'); g.addColorStop(0.55, '#3c434c'); g.addColorStop(1, '#4f5761');
+    g.addColorStop(0, '#211e1a'); g.addColorStop(0.55, '#4b453d'); g.addColorStop(1, '#605950');
     pathW(hp, true); ctx.fillStyle = g; ctx.fill();
     ctx.strokeStyle = 'rgba(255, 255, 255, 0.16)'; ctx.lineWidth = 1; ctx.stroke();
     ctx.strokeStyle = 'rgba(0, 0, 0, 0.5)'; ctx.lineWidth = Math.max(1, 1.3 * ps); ctx.beginPath();
@@ -1514,7 +1514,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     if (it.kind === 'point') {
       const [px, py] = toPx(it.x, it.y);
-      ctx.fillStyle = '#2a2f36'; ctx.fillRect(px - 4 * ps, py + 3 * ps, 8 * ps, 5 * ps);
+      ctx.fillStyle = '#35312b'; ctx.fillRect(px - 4 * ps, py + 3 * ps, 8 * ps, 5 * ps);
       ctx.save(); ctx.globalCompositeOperation = 'lighter'; glowDot(px, py, 22 * ps, c, 0.55); ctx.restore();
       ctx.beginPath(); ctx.arc(px, py, 5.5 * ps, 0, 2 * Math.PI);
       ctx.fillStyle = it.white ? '#ffffff' : '#fff1cf'; ctx.fill();
@@ -1642,17 +1642,17 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const ps = projScale(), h2 = sc.h / 2, zc = cardHalfW(sc);
     if (scene !== 'bench') {                  // seen from above: the card edge on, in a holder
       const a = toPx(sc.x - 0.12, sc.y + h2), b = toPx(sc.x + 0.12, sc.y - h2), wd = Math.max(4 * ps, b[0] - a[0]);
-      ctx.fillStyle = '#c9ced5'; ctx.fillRect((a[0] + b[0] - wd) / 2, a[1], wd, b[1] - a[1]);
+      ctx.fillStyle = '#d4d0ca'; ctx.fillRect((a[0] + b[0] - wd) / 2, a[1], wd, b[1] - a[1]);
       for (const y of [sc.y + h2, sc.y - h2]) {
-        const p = toPx(sc.x, y); ctx.fillStyle = '#23282e'; ctx.fillRect(p[0] - 6 * ps, p[1] - 3 * ps, 12 * ps, 6 * ps);
+        const p = toPx(sc.x, y); ctx.fillStyle = '#2d2924'; ctx.fillRect(p[0] - 6 * ps, p[1] - 3 * ps, 12 * ps, 6 * ps);
       }
       return;
     }
     const c = [P3(sc.x, sc.y - h2, -zc), P3(sc.x, sc.y + h2, -zc), P3(sc.x, sc.y + h2, zc), P3(sc.x, sc.y - h2, zc)];
     // card frame, then the matte white face (dim: the room is dark)
-    quad(...c); ctx.lineWidth = 3 * ps; ctx.strokeStyle = '#1d2126'; ctx.lineJoin = 'round'; ctx.stroke();
+    quad(...c); ctx.lineWidth = 3 * ps; ctx.strokeStyle = '#25221e'; ctx.lineJoin = 'round'; ctx.stroke();
     const g = ctx.createLinearGradient(c[0][0], 0, c[3][0], 0);
-    g.addColorStop(0, '#5a616a'); g.addColorStop(1, '#474d55');
+    g.addColorStop(0, '#69635b'); g.addColorStop(1, '#544f48');
     ctx.fillStyle = g; ctx.fill();
     ctx.strokeStyle = 'rgba(255, 255, 255, 0.22)'; ctx.lineWidth = 1; ctx.stroke();
     // the light on the face, in the card's own coordinates (linearized perspective about the card center)
@@ -1683,7 +1683,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.fillText(zoom > 1 ? `on the screen, × ${zoom}` : 'on the screen', bx + bw / 2, by + pad * 0.6 + head / 2);
     const ccx = bx + bw / 2, ccy = by + head + pad * 0.5 + cardH / 2;
     ctx.beginPath(); ctx.rect(ccx - cardW / 2, ccy - cardH / 2, cardW, cardH);
-    ctx.fillStyle = '#4e545c'; ctx.fill(); ctx.clip();
+    ctx.fillStyle = '#5b564f'; ctx.fill(); ctx.clip();
     ctx.transform(kz, 0, 0, -kz, ccx, ccy + kz * sc.y);
     if (zoom > 1) {                            /* millimeter grid on the zoomed card */
       const hh = sc.h / 2 / zoom, hz = zc / zoom;
@@ -2713,7 +2713,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* the two materials: tinted by how far n is above 1; a mirror is a silvered strip under the line */
     const tint = (n) => GLASS(Math.min(0.45, (n - 1) * 0.6));
     ctx.fillStyle = tint(G.n1); ctx.fillRect(0, 0, W, ly);
-    if (f.refl) { const g = ctx.createLinearGradient(0, ly, 0, ly + 14 * ps); g.addColorStop(0, '#e6edf3'); g.addColorStop(1, '#7c8894'); ctx.fillStyle = g; ctx.fillRect(0, ly, W, 14 * ps); }
+    if (f.refl) { const g = ctx.createLinearGradient(0, ly, 0, ly + 14 * ps); g.addColorStop(0, '#f2ede7'); g.addColorStop(1, '#92897e'); ctx.fillStyle = g; ctx.fillRect(0, ly, W, 14 * ps); }
     else { ctx.fillStyle = tint(G.n2); ctx.fillRect(0, ly, W, H - ly); }
     ctx.strokeStyle = T.ink; ctx.globalAlpha = 0.7; ctx.lineWidth = 1.5 * ps; ctx.beginPath(); ctx.moveTo(lx0, ly); ctx.lineTo(lx1, ly); ctx.stroke(); ctx.globalAlpha = 1;
     const name = (k) => FM_MEDIA.find((m) => m[0] === k)[1];

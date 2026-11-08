@@ -16,36 +16,36 @@
 <style>
 /* Layout: the 3D optics bench across the top of the stage, the measuring microscope and the top view below it; instrument rail on the right; stacks on phones. */
 :root {
-  --bg: #e9edf2;
-  --surface: #f8fafc;
-  --canvas: #fcfdfe;
-  --ink: #17202b;
-  --muted: #5a6575;
-  --line: #d3d9e2;
-  --grid: #e6ebf1;
-  --grid-strong: #cfd7e1;
+  --bg: #f1eeea;
+  --surface: #fcfaf8;
+  --canvas: #fefdfc;
+  --ink: #2a2219;
+  --muted: #73695c;
+  --line: #e1dbd4;
+  --grid: #f0ece7;
+  --grid-strong: #e0d9d0;
   --pos: #c23f2c;
   --neg: #2b60b5;
   --equi: #a7740b;
-  --accent: #2b60b5;
+  --accent: #c4811c;
   --beam: #d92b1f;
-  --bench-bg: #1d242d; --scope: #161b22; --scope-ink: #c6ced8;
+  --bench-bg: #2c261e; --scope: #211d17; --scope-ink: #d7d0c7;
   --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
-    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-    --equi: #e2b350; --accent: #69a0ff; --beam: #ff5544;
-    --bench-bg: #0a0e13; --scope: #0b0f14; --scope-ink: #b8c1cc; color-scheme: dark;
+    --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
+    --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+    --equi: #e2b350; --accent: #fbc26d; --beam: #ff5544;
+    --bench-bg: #120f0b; --scope: #13100c; --scope-ink: #cac3ba; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
-  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-  --equi: #e2b350; --accent: #69a0ff; --beam: #ff5544;
-  --bench-bg: #0a0e13; --scope: #0b0f14; --scope-ink: #b8c1cc; color-scheme: dark;
+  --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
+  --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+  --equi: #e2b350; --accent: #fbc26d; --beam: #ff5544;
+  --bench-bg: #120f0b; --scope: #13100c; --scope-ink: #cac3ba; color-scheme: dark;
 }
 :root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
@@ -64,7 +64,7 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 #pTop { border-left: 1px solid var(--line); }
 #p3d canvas, #eye, #top { touch-action: none; outline: none; }
 #p3d canvas:focus-visible, #eye:focus-visible, #top:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
-.tip { position: absolute; left: 8px; bottom: 6px; margin: 0; font-size: 0.76rem; color: #c6ced8; background: rgba(10, 14, 19, 0.7); padding: 2px 6px; border-radius: 4px; pointer-events: none; max-width: calc(100% - 16px); }
+.tip { position: absolute; left: 8px; bottom: 6px; margin: 0; font-size: 0.76rem; color: #d7d0c7; background: rgba(10, 14, 19, 0.7); padding: 2px 6px; border-radius: 4px; pointer-events: none; max-width: calc(100% - 16px); }
 button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .btn { font-weight: 700; }
 .btn.primary { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
@@ -470,7 +470,7 @@ table.rows tr.sim td { background: color-mix(in srgb, var(--equi) 9%, transparen
     ctx.fillText('jitter simulated', W - 12 * ps, 14 * ps); ctx.globalAlpha = 1;
     // eyepiece barrel
     const rim = ctx.createRadialGradient(ex, ey, R, ex, ey, R + 11 * ps);
-    rim.addColorStop(0, '#11151a'); rim.addColorStop(0.45, '#4a525c'); rim.addColorStop(1, '#22272e');
+    rim.addColorStop(0, '#191612'); rim.addColorStop(0.45, '#5b544b'); rim.addColorStop(1, '#2d2923');
     ctx.fillStyle = rim; ctx.beginPath(); ctx.arc(ex, ey, R + 11 * ps, 0, 2 * Math.PI); ctx.fill();
     ctx.save(); ctx.beginPath(); ctx.arc(ex, ey, R, 0, 2 * Math.PI); ctx.clip();
     const fld = ctx.createRadialGradient(ex, ey, 0, ex, ey, R);
@@ -523,10 +523,10 @@ table.rows tr.sim td { background: color-mix(in srgb, var(--equi) 9%, transparen
     const m = S.mic, fs = 11 * ps;
     // sleeve
     const sl = ctx.createLinearGradient(0, y - hs, 0, y + hs);
-    sl.addColorStop(0, '#d9dee4'); sl.addColorStop(0.5, '#f4f6f8'); sl.addColorStop(1, '#9aa3ad');
+    sl.addColorStop(0, '#e3dfda'); sl.addColorStop(0.5, '#f8f6f4'); sl.addColorStop(1, '#aca59b');
     ctx.fillStyle = sl; ctx.fillRect(x0, y - hs, xe - x0, 2 * hs);
-    ctx.strokeStyle = '#1b1f25'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(x0, y + 0.5); ctx.lineTo(xe, y + 0.5); ctx.stroke();
-    ctx.font = `600 ${fs}px ${T.mono}`; ctx.fillStyle = '#1b1f25'; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+    ctx.strokeStyle = '#24211c'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(x0, y + 0.5); ctx.lineTo(xe, y + 0.5); ctx.stroke();
+    ctx.font = `600 ${fs}px ${T.mono}`; ctx.fillStyle = '#24211c'; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
     for (let h = Math.floor((m - 2.7) * 2); h <= Math.floor(m * 2); h++) {
       const v = h / 2, x = xe - (m - v) * sp; if (x < x0 + 2 || x > xe) continue;
       const whole = h % 2 === 0; ctx.beginPath();
@@ -536,10 +536,10 @@ table.rows tr.sim td { background: color-mix(in srgb, var(--equi) 9%, transparen
     }
     // thimble
     const th = ctx.createLinearGradient(0, y - Rt, 0, y + Rt);
-    th.addColorStop(0, '#6c747e'); th.addColorStop(0.3, '#e9edf1'); th.addColorStop(0.55, '#c3cad2'); th.addColorStop(1, '#4f5660');
+    th.addColorStop(0, '#7d766d'); th.addColorStop(0.3, '#f0edea'); th.addColorStop(0.55, '#d1cbc4'); th.addColorStop(1, '#5f5850');
     ctx.fillStyle = th; ctx.beginPath(); ctx.moveTo(xe, y - Rt * 0.82); ctx.lineTo(xe + 8 * ps, y - Rt); ctx.lineTo(x1, y - Rt); ctx.lineTo(x1, y + Rt); ctx.lineTo(xe + 8 * ps, y + Rt); ctx.lineTo(xe, y + Rt * 0.82); ctx.closePath(); ctx.fill();
     // knurled ratchet end, the grip
-    const kx = xe + tw * 0.62; ctx.fillStyle = '#3b424b'; ctx.fillRect(kx, y - Rt, x1 - kx, 2 * Rt);
+    const kx = xe + tw * 0.62; ctx.fillStyle = '#4a443c'; ctx.fillRect(kx, y - Rt, x1 - kx, 2 * Rt);
     ctx.strokeStyle = 'rgba(255,255,255,0.18)'; ctx.lineWidth = 1; ctx.beginPath();
     const dv = ((m % 0.5) + 0.5) % 0.5 / 0.01;
     for (let j = 0; j < 36; j++) { const a = (j / 36) * 2 * Math.PI + dv / 50 * 2 * Math.PI; const yy = y - Rt * Math.sin(a); if (Math.cos(a) <= 0) continue; ctx.moveTo(kx + 1, yy); ctx.lineTo(x1 - 1, yy); }
@@ -550,7 +550,7 @@ table.rows tr.sim td { background: color-mix(in srgb, var(--equi) 9%, transparen
     ctx.fillStyle = T.accent; ctx.font = `700 ${9 * ps}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
     ctx.fillText('↕ turn', (kx + x1) / 2, y + Rt + 5);
     // thimble graduations: 50 divisions of 0.01 mm around the barrel
-    ctx.strokeStyle = '#14181d'; ctx.fillStyle = '#14181d'; ctx.lineWidth = 1; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    ctx.strokeStyle = '#1c1915'; ctx.fillStyle = '#1c1915'; ctx.lineWidth = 1; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
     for (let j = 0; j < 50; j++) {
       let a = ((j - dv) / 50) * 2 * Math.PI; a = Math.atan2(Math.sin(a), Math.cos(a));
       if (Math.abs(a) > Math.PI * 0.45) continue;
@@ -961,7 +961,7 @@ table.rows tr.sim td { background: color-mix(in srgb, var(--equi) 9%, transparen
     el.setAttribute('aria-label', 'The rotating mirror bench in 3D: laser, lens L1, beam splitter and microscope, lens L2, rotating mirror MR with its speed control, and the far mirror MF. Drag to turn, scroll to zoom. Drag L1 or L2 along the rail, MF along the beam, the speed knob up or down, or the micrometer thimble up or down. Keys: up and down change the speed, left and right change D, page up and page down change B, C reverses the motor, V switches the view, space pauses.');
     $('p3d').insertBefore(el, $('flat'));
     const scene = new THREE.Scene(), cam = new THREE.PerspectiveCamera(30, 1, 0.02, 40); cam.up.set(0, 0, 1);
-    scene.add(new THREE.HemisphereLight(0xdfe8ff, 0x3a3530, 0.75));
+    scene.add(new THREE.HemisphereLight(0xf4f0ea, 0x3a3530, 0.75));
     const sun = new THREE.DirectionalLight(0xffffff, 0.75); sun.position.set(-1.5, -2.5, 4); scene.add(sun);
     const fill = new THREE.DirectionalLight(0xffffff, 0.25); fill.position.set(2, 1, 1.5); scene.add(fill);
     const std = (c, r = 0.55, m = 0) => new THREE.MeshStandardMaterial({ color: c, roughness: r, metalness: m });
@@ -971,13 +971,13 @@ table.rows tr.sim td { background: color-mix(in srgb, var(--equi) 9%, transparen
     const cylY = (r, len, mat, x, y, z, parent, seg = 32) => { const m = new THREE.Mesh(new THREE.CylinderGeometry(r, r, len, seg), mat); m.position.set(x, y, z); return add(m, parent); };
     const cylZ = (r, len, mat, x, y, z, parent, seg = 32) => { const m = new THREE.Mesh(new THREE.CylinderGeometry(r, r, len, seg), mat); m.rotation.x = Math.PI / 2; m.position.set(x, y, z); return add(m, parent); };
     // optical table with a 25 mm hole grid
-    const tab = mkTex(1024, 400); { const x = tab.x; x.fillStyle = '#3a4048'; x.fillRect(0, 0, 1024, 400); const nx = 70, ny = 27; x.fillStyle = '#20252b';
+    const tab = mkTex(1024, 400); { const x = tab.x; x.fillStyle = '#47423b'; x.fillRect(0, 0, 1024, 400); const nx = 70, ny = 27; x.fillStyle = '#2a2621';
       for (let i = 0; i < nx; i++) for (let j = 0; j < ny; j++) { x.beginPath(); x.arc((i + 0.5) * 1024 / nx, (j + 0.5) * 400 / ny, 2.6, 0, 2 * Math.PI); x.fill(); } tab.t.needsUpdate = true; }
     const tabMat = new THREE.MeshStandardMaterial({ map: tab.t, roughness: 0.8, metalness: 0.2 });
     box(1.75, 0.68, 0.04, tabMat, -0.55, -0.06, -0.02);
-    box(1.75, 0.68, 0.12, std(0x23272d, 0.7), -0.55, -0.06, -0.1);
+    box(1.75, 0.68, 0.12, std(0x2c2924, 0.7), -0.55, -0.06, -0.1);
     // rail
-    const black = std(0x15181c, 0.45, 0.3), steel = std(0x9aa2ab, 0.32, 0.75), dark = std(0x24282e, 0.5, 0.2);
+    const black = std(0x1b1916, 0.45, 0.3), steel = std(0xaaa39b, 0.32, 0.75), dark = std(0x2d2a25, 0.5, 0.2);
     box(1.42, 0.045, 0.03, black, -0.66, 0, 0.015);
     const glass = new THREE.MeshStandardMaterial({ color: 0xbfe3ff, transparent: true, opacity: 0.38, roughness: 0.05, metalness: 0.1 });
     const carrier = (w) => { const g = new THREE.Group(); box(w, 0.06, 0.018, steel, 0, 0, 0.039, g); cylZ(0.006, H0 - 0.05, steel, 0, 0, 0.048 + (H0 - 0.05) / 2, g); scene.add(g); return g; };
@@ -994,41 +994,41 @@ table.rows tr.sim td { background: color-mix(in srgb, var(--equi) 9%, transparen
     const BSG = new THREE.Group(); scene.add(BSG);
     box(0.06, 0.08, 0.018, steel, 0, -0.01, 0.039, BSG);
     box(0.012, 0.012, H0 - 0.06, steel, 0, 0.0, 0.048 + (H0 - 0.06) / 2, BSG);
-    { const p = box(0.002, 0.034, 0.034, new THREE.MeshStandardMaterial({ color: 0xd8f0ff, transparent: true, opacity: 0.5, roughness: 0.05, metalness: 0.3 }), 0, 0, H0, BSG); p.rotation.z = -Math.PI / 4; }
+    { const p = box(0.002, 0.034, 0.034, new THREE.MeshStandardMaterial({ color: 0xf2ece5, transparent: true, opacity: 0.5, roughness: 0.05, metalness: 0.3 }), 0, 0, H0, BSG); p.rotation.z = -Math.PI / 4; }
     box(0.05, 0.13, 0.016, dark, 0, -0.15, H0 - 0.038, BSG);
     box(0.012, 0.012, H0 - 0.06, steel, 0, -0.15, 0.048 + (H0 - 0.06) / 2 - 0.004, BSG);
     box(0.06, 0.06, 0.018, steel, 0, -0.15, 0.039, BSG);
-    cylY(0.011, 0.17, std(0x2a2f36, 0.4, 0.4), 0, -0.155, H0, BSG);
+    cylY(0.011, 0.17, std(0x35312b, 0.4, 0.4), 0, -0.155, H0, BSG);
     cylY(0.007, 0.02, steel, 0, -0.065, H0, BSG);
-    cylY(0.016, 0.035, std(0x1b1e22, 0.45, 0.3), 0, -0.255, H0, BSG);
+    cylY(0.016, 0.035, std(0x211f1c, 0.45, 0.3), 0, -0.255, H0, BSG);
     const sleeve = cylX(0.0055, 0.045, steel, 0.05, -0.15, H0 - 0.03, BSG);
-    const thimble = cylX(0.009, 0.03, std(0xb8bfc7, 0.3, 0.8), 0.088, -0.15, H0 - 0.03, BSG);
-    const knurl = cylX(0.0095, 0.012, std(0x30353b, 0.6, 0.4), 0.108, -0.15, H0 - 0.03, BSG);
+    const thimble = cylX(0.009, 0.03, std(0xc6c0b9, 0.3, 0.8), 0.088, -0.15, H0 - 0.03, BSG);
+    const knurl = cylX(0.0095, 0.012, std(0x3a3631, 0.6, 0.4), 0.108, -0.15, H0 - 0.03, BSG);
     // rotating mirror on its motor
     const MRG = new THREE.Group(); scene.add(MRG);
     box(0.08, 0.08, 0.02, steel, 0, 0, 0.01, MRG);
-    cylZ(0.028, H0 - 0.04, std(0x2b3440, 0.4, 0.5), 0, 0, 0.02 + (H0 - 0.04) / 2, MRG);
+    cylZ(0.028, H0 - 0.04, std(0x3e372d, 0.4, 0.5), 0, 0, 0.02 + (H0 - 0.04) / 2, MRG);
     const mirrorG = new THREE.Group(); mirrorG.position.set(0, 0, H0); MRG.add(mirrorG);
-    box(0.0025, 0.026, 0.03, std(0xe8eef4, 0.08, 1.0), 0, 0, 0, mirrorG);
+    box(0.0025, 0.026, 0.03, std(0xf3efe9, 0.08, 1.0), 0, 0, 0, mirrorG);
     box(0.002, 0.028, 0.032, dark, -0.0022, 0, 0, mirrorG);
-    const blur = cylZ(0.0135, 0.03, new THREE.MeshStandardMaterial({ color: 0xdfe6ee, transparent: true, opacity: 0.2, roughness: 0.2, metalness: 0.8, depthWrite: false }), 0, 0, 0, mirrorG);
+    const blur = cylZ(0.0135, 0.03, new THREE.MeshStandardMaterial({ color: 0xede7e0, transparent: true, opacity: 0.2, roughness: 0.2, metalness: 0.8, depthWrite: false }), 0, 0, 0, mirrorG);
     // speed control box with a meter and a knob
     const CB = { x: 0.13, y: -0.25 };
-    box(0.17, 0.1, 0.075, std(0x2e3a48, 0.5, 0.2), CB.x, CB.y, 0.0375);
+    box(0.17, 0.1, 0.075, std(0x463c30, 0.5, 0.2), CB.x, CB.y, 0.0375);
     const ctl = mkTex(512, 220); const ctlMat = new THREE.MeshBasicMaterial({ map: ctl.t });
     { const p = new THREE.Mesh(new THREE.PlaneGeometry(0.17, 0.073), ctlMat); p.rotation.x = Math.PI / 2; p.position.set(CB.x, CB.y - 0.0505, 0.0375); scene.add(p); }
-    const knob = cylZ(0.016, 0.02, std(0x1d1f22, 0.4, 0.2), CB.x + 0.045, CB.y + 0.01, 0.085);
+    const knob = cylZ(0.016, 0.02, std(0x22201d, 0.4, 0.2), CB.x + 0.045, CB.y + 0.01, 0.085);
     const knobPtr = new THREE.Mesh(new THREE.BoxGeometry(0.003, 0.013, 0.003), std(0xffffff, 0.4)); knobPtr.position.set(0, 0.008, 0.0102); const knobTop = new THREE.Group(); knobTop.position.set(CB.x + 0.045, CB.y + 0.01, 0.085); knobTop.add(knobPtr); scene.add(knobTop);
     const cable = (pts, col, r = 0.004) => { const curve = new THREE.CatmullRomCurve3(pts.map((p) => new THREE.Vector3(...p))); scene.add(new THREE.Mesh(new THREE.TubeGeometry(curve, 60, r, 8, false), std(col, 0.6))); };
-    cable([[CB.x - 0.086, CB.y + 0.02, 0.03], [0.0, -0.12, 0.006], [0.0, -0.045, 0.01], [0.0, -0.03, 0.03]], 0x15171a);
-    cable([[CB.x + 0.086, CB.y, 0.02], [0.26, -0.3, 0.004], [0.3, -0.36, 0.004]], 0x15171a);
+    cable([[CB.x - 0.086, CB.y + 0.02, 0.03], [0.0, -0.12, 0.006], [0.0, -0.045, 0.01], [0.0, -0.03, 0.03]], 0x1a1815);
+    cable([[CB.x + 0.086, CB.y, 0.02], [0.26, -0.3, 0.004], [0.3, -0.36, 0.004]], 0x1a1815);
     // far mirror on a stand at the far end of the room (not to scale)
     const MFG = new THREE.Group(); scene.add(MFG);
-    box(0.2, 0.2, 0.04, std(0x2c3138, 0.8), 0, 0, -0.02, MFG);
+    box(0.2, 0.2, 0.04, std(0x37332d, 0.8), 0, 0, -0.02, MFG);
     box(0.06, 0.06, 0.018, steel, 0, 0, 0.009, MFG);
     cylZ(0.006, H0 - 0.03, steel, 0, 0, 0.018 + (H0 - 0.03) / 2, MFG);
     const mfHolder = new THREE.Mesh(new THREE.TorusGeometry(0.04, 0.006, 10, 40), dark); mfHolder.rotation.y = Math.PI / 2; mfHolder.position.z = H0; MFG.add(mfHolder);
-    const mfMirror = new THREE.Mesh(new THREE.SphereGeometry(0.12, 32, 12, 0, 2 * Math.PI, 0, 0.34), std(0xe6edf3, 0.08, 1.0));
+    const mfMirror = new THREE.Mesh(new THREE.SphereGeometry(0.12, 32, 12, 0, 2 * Math.PI, 0, 0.34), std(0xf2ede7, 0.08, 1.0));
     mfMirror.material.side = THREE.DoubleSide; mfMirror.rotation.z = -Math.PI / 2; mfMirror.position.set(-0.12, 0, H0); MFG.add(mfMirror);
     // beams: thin cones with an additive glow
     const bMat = new THREE.MeshBasicMaterial({ color: 0xff2a18, transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending, depthWrite: false });
@@ -1042,8 +1042,8 @@ table.rows tr.sim td { background: color-mix(in srgb, var(--equi) 9%, transparen
     const spots = { mf: glow(0xff4a30, 0.03), img: glow(0xff4a30, 0.02), las: glow(0xff4a30, 0.025), pulse: glow(0xffd0c0, 0.05), pulse2: glow(0xff3a20, 0.09) };
     // scale break marks and labels
     const brk = new THREE.Group(); scene.add(brk);
-    for (const s of [-1, 1]) { const b = new THREE.Mesh(new THREE.BoxGeometry(0.004, 0.06, 0.004), new THREE.MeshBasicMaterial({ color: 0xdfe6ee })); b.position.set(s * 0.012, 0, 0); b.rotation.z = 0.5; brk.add(b); }
-    const mkLabel = (txt, col) => { const t = mkTex(768, 96), m = new THREE.SpriteMaterial({ map: t.t, transparent: true, depthTest: false, sizeAttenuation: false }); const sp = new THREE.Sprite(m); sp.renderOrder = 10; scene.add(sp); const o = { sp, t, txt: null, col: col || '#e8eef5' }; setLabel(o, txt); return o; };
+    for (const s of [-1, 1]) { const b = new THREE.Mesh(new THREE.BoxGeometry(0.004, 0.06, 0.004), new THREE.MeshBasicMaterial({ color: 0xede7e0 })); b.position.set(s * 0.012, 0, 0); b.rotation.z = 0.5; brk.add(b); }
+    const mkLabel = (txt, col) => { const t = mkTex(768, 96), m = new THREE.SpriteMaterial({ map: t.t, transparent: true, depthTest: false, sizeAttenuation: false }); const sp = new THREE.Sprite(m); sp.renderOrder = 10; scene.add(sp); const o = { sp, t, txt: null, col: col || '#f4efe9' }; setLabel(o, txt); return o; };
     function setLabel(o, txt) {
       if (o.txt === txt) return; o.txt = txt; const x = o.t.x; x.clearRect(0, 0, 768, 96); x.font = '600 44px "Atkinson Hyperlegible", sans-serif';
       const w = Math.min(760, x.measureText(txt).width + 28); x.fillStyle = 'rgba(12,16,22,0.78)'; x.beginPath(); x.roundRect ? x.roundRect(384 - w / 2, 14, w, 68, 12) : x.rect(384 - w / 2, 14, w, 68); x.fill();
@@ -1131,14 +1131,14 @@ table.rows tr.sim td { background: color-mix(in srgb, var(--equi) 9%, transparen
   let ctlCache = '';
   function paintCtl() {
     const key = `${meterShown}|${S.dir}|${S.revs}`; if (key === ctlCache) return; ctlCache = key;
-    const x = G.ctl.x; x.fillStyle = '#2e3a48'; x.fillRect(0, 0, 512, 220);
-    x.fillStyle = '#e6edf4'; x.font = '700 28px sans-serif'; x.textAlign = 'left'; x.textBaseline = 'alphabetic'; x.fillText('MOTOR SPEED', 22, 40);
+    const x = G.ctl.x; x.fillStyle = '#463c30'; x.fillRect(0, 0, 512, 220);
+    x.fillStyle = '#f3eee7'; x.font = '700 28px sans-serif'; x.textAlign = 'left'; x.textBaseline = 'alphabetic'; x.fillText('MOTOR SPEED', 22, 40);
     x.fillStyle = '#04130f'; x.fillRect(22, 58, 300, 110);
     x.font = '600 84px "JetBrains Mono", monospace'; x.fillStyle = '#67f5cf'; x.shadowColor = 'rgba(80,240,200,0.8)'; x.shadowBlur = 12; x.textAlign = 'right'; x.textBaseline = 'middle';
     x.fillText(String(meterShown), 306, 116); x.shadowBlur = 0;
-    x.font = '700 26px sans-serif'; x.fillStyle = '#c8d4de'; x.textAlign = 'left'; x.fillText('rev/s', 336, 116);
+    x.font = '700 26px sans-serif'; x.fillStyle = '#dcd4ca'; x.textAlign = 'left'; x.fillText('rev/s', 336, 116);
     x.font = '700 26px sans-serif'; x.fillStyle = S.dir > 0 ? '#ff8f7a' : '#8fb6ff'; x.fillText(S.revs ? (S.dir > 0 ? 'CW' : 'CCW') : 'STOP', 336, 160);
-    x.fillStyle = '#c8d4de'; x.font = '22px sans-serif'; x.fillText('CW  CCW', 22, 200);
+    x.fillStyle = '#dcd4ca'; x.font = '22px sans-serif'; x.fillText('CW  CCW', 22, 200);
     G.ctl.t.needsUpdate = true;
   }
   function fitCam() {
@@ -1151,7 +1151,7 @@ table.rows tr.sim td { background: color-mix(in srgb, var(--equi) 9%, transparen
   let bgCache = '';
   function render3D() {
     if (!G.ready || !dims.gl[0]) return;
-    if (bgCache !== T.benchBg) { bgCache = T.benchBg; G.renderer.setClearColor(new THREE.Color(T.benchBg || '#1d242d')); }
+    if (bgCache !== T.benchBg) { bgCache = T.benchBg; G.renderer.setClearColor(new THREE.Color(T.benchBg || '#2c261e')); }
     update3D(); fitCam(); G.renderer.render(G.scene, G.cam);
   }
   function bindGL(el) {

@@ -16,9 +16,9 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
 /* only what this demo needs beyond demos/lib/vd.css */
-:root { --proton: #d2452b; --neutron: #7d8896; --gamma: #2f8a4e; --fis: #d9822b; --theory: #6a4fc4; --pp: #2b6fc4; --dt: #c4412b; --metal: #8f979f; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --proton: #ff7a5c; --neutron: #aab4c0; --gamma: #66d38c; --fis: #ffae5c; --theory: #a991ff; --pp: #69a8ff; --dt: #ff8a6c; --metal: #a9b1ba; } }
-:root[data-theme="dark"] { --proton: #ff7a5c; --neutron: #aab4c0; --gamma: #66d38c; --fis: #ffae5c; --theory: #a991ff; --pp: #69a8ff; --dt: #ff8a6c; --metal: #a9b1ba; }
+:root { --proton: #d2452b; --neutron: #948b7f; --gamma: #2f8a4e; --fis: #d9822b; --theory: #6a4fc4; --pp: #2b6fc4; --dt: #c4412b; --metal: #9e9890; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --proton: #ff7a5c; --neutron: #beb6ac; --gamma: #66d38c; --fis: #ffae5c; --theory: #a991ff; --pp: #69a8ff; --dt: #ff8a6c; --metal: #b9b2aa; } }
+:root[data-theme="dark"] { --proton: #ff7a5c; --neutron: #beb6ac; --gamma: #66d38c; --fis: #ffae5c; --theory: #a991ff; --pp: #69a8ff; --dt: #ff8a6c; --metal: #b9b2aa; }
 .stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden auto; background: var(--canvas); }
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
 .stage-ctl .count { margin-left: auto; font-size: 0.82rem; color: var(--muted); }
@@ -520,7 +520,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   const lab = (s, x, y, o = {}) => { if (VG) VG.label(ctx, s, x, y, Object.assign({ s: 10.5 * proj() }, o)); else { ctx.fillStyle = o.c || T.muted; ctx.font = `${o.w || 400} ${(o.s || 10.5 * proj())}px ${T.ui}`; ctx.textAlign = o.a || 'left'; ctx.textBaseline = 'middle'; ctx.fillText(s, x, y); } };
   function lcdBox(x, y, w, h, text, name) {
-    if (VG) { VG.box(ctx, x - 6, y - 6, w + 12, h + 22, { color: dark() ? '#2b3440' : '#34404e', r: 6 }); VG.lcd(ctx, x, y, w, h, text); VG.plate(ctx, name, x + w / 2, y + h + 8, { s: 8 * proj() }); }
+    if (VG) { VG.box(ctx, x - 6, y - 6, w + 12, h + 22, { color: dark() ? '#3e372d' : '#4c4236', r: 6 }); VG.lcd(ctx, x, y, w, h, text); VG.plate(ctx, name, x + w / 2, y + h + 8, { s: 8 * proj() }); }
     else { ctx.fillStyle = '#081109'; ctx.fillRect(x, y, w, h); ctx.fillStyle = '#8ef0b0'; ctx.font = `${h * 0.6}px ${T.mono}`; ctx.textAlign = 'right'; ctx.fillText(text, x + w - 4, y + h / 2); }
   }
   const pname = (k) => PART[k][2];
@@ -713,7 +713,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.fillStyle = dark() ? 'rgba(190,200,215,0.16)' : 'rgba(220,226,235,0.2)';
     for (const q of CP.field) { ctx.beginPath(); ctx.arc(cx + q[0] * Rpx, cy - q[1] * Rpx, 1.6 * p, 0, 7); ctx.fill(); }
     const sx = cx - Rpx * 1.35;
-    if (VG && sx > 0) { VG.rod(ctx, 0, cy, sx, cy, 8 * p, { color: '#a6afba' }); VG.box(ctx, Math.max(2, sx - 64 * p), cy - 13 * p, 50 * p, 26 * p, { color: '#4f5d6e', r: 4 }); lab('neutron source', Math.max(2, sx - 64 * p) + 25 * p, cy - 24 * p, { a: 'center', s: 9.5 * p }); }
+    if (VG && sx > 0) { VG.rod(ctx, 0, cy, sx, cy, 8 * p, { color: '#b8b1a8' }); VG.box(ctx, Math.max(2, sx - 64 * p), cy - 13 * p, 50 * p, 26 * p, { color: '#6c6051', r: 4 }); lab('neutron source', Math.max(2, sx - 64 * p) + 25 * p, cy - 24 * p, { a: 'center', s: 9.5 * p }); }
     ctx.save(); ctx.beginPath(); ctx.rect(0, 0, W, H * 0.88); ctx.clip();
     ctx.lineWidth = 1.2 * p; ctx.lineJoin = 'round';
     const path = (pts, last) => { ctx.beginPath(); pts.forEach((q, i) => (i ? ctx.lineTo(X(q), Y(q)) : ctx.moveTo(X(q), Y(q)))); if (last) ctx.lineTo(X(last), Y(last)); ctx.stroke(); };
@@ -766,17 +766,17 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const p = proj(), by = scene(), x = S.rx, c = rxCalc();
     const narrow = W < 620, cx = narrow ? W * 0.5 : W * 0.36, cy = by * 0.5, Rch = Math.min(narrow ? W * 0.42 : W * 0.3, by * 0.42);
     /* the scattering chamber, seen from above: a round vacuum vessel with the beam pipe on the left */
-    if (VG) { VG.rod(ctx, 0, cy, cx - Rch, cy, 9 * p, { color: '#a6afba' }); }
+    if (VG) { VG.rod(ctx, 0, cy, cx - Rch, cy, 9 * p, { color: '#b8b1a8' }); }
     let g = ctx.createRadialGradient(cx - Rch * 0.3, cy - Rch * 0.3, Rch * 0.1, cx, cy, Rch * 1.05);
-    g.addColorStop(0, dark() ? '#1b2430' : '#26303c'); g.addColorStop(1, dark() ? '#0b1016' : '#121820');
+    g.addColorStop(0, dark() ? '#2e271d' : '#3a3228'); g.addColorStop(1, dark() ? '#15110c' : '#1f1a13');
     ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx, cy, Rch, 0, 7); ctx.fill();
-    ctx.lineWidth = 7 * p; ctx.strokeStyle = '#8d97a3'; ctx.stroke(); ctx.lineWidth = 1; ctx.strokeStyle = 'rgba(255,255,255,0.35)'; ctx.beginPath(); ctx.arc(cx, cy, Rch - 4 * p, 0, 7); ctx.stroke();
+    ctx.lineWidth = 7 * p; ctx.strokeStyle = '#a1998f'; ctx.stroke(); ctx.lineWidth = 1; ctx.strokeStyle = 'rgba(255,255,255,0.35)'; ctx.beginPath(); ctx.arc(cx, cy, Rch - 4 * p, 0, 7); ctx.stroke();
     /* the detector on its arm at angle θ, measured from the beam direction */
     const th = x.th * Math.PI / 180, dr = Rch - 22 * p, dx = cx + dr * Math.cos(th), dy = cy - dr * Math.sin(th);
     ctx.save(); ctx.strokeStyle = 'rgba(200,210,222,0.35)'; ctx.setLineDash([3 * p, 4 * p]); ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + Rch * 0.92, cy); ctx.stroke(); ctx.beginPath(); ctx.arc(cx, cy, 34 * p, -th, 0); ctx.stroke(); ctx.restore();
-    if (VG) VG.rod(ctx, cx, cy, dx, dy, 2.2 * p, { color: '#7f8a97' });
-    ctx.save(); ctx.translate(dx, dy); ctx.rotate(-th); if (VG) VG.box(ctx, -10 * p, -12 * p, 20 * p, 24 * p, { color: '#4f5d6e', r: 3, shadow: false }); ctx.fillStyle = '#d8b25a'; ctx.fillRect(-11 * p, -7 * p, 2.5 * p, 14 * p); ctx.restore();
-    lab(`θ = ${x.th}°`, cx + 40 * p, cy - 14 * p, { c: '#c9d2dc' });
+    if (VG) VG.rod(ctx, cx, cy, dx, dy, 2.2 * p, { color: '#958c81' });
+    ctx.save(); ctx.translate(dx, dy); ctx.rotate(-th); if (VG) VG.box(ctx, -10 * p, -12 * p, 20 * p, 24 * p, { color: '#6c6051', r: 3, shadow: false }); ctx.fillStyle = '#d8b25a'; ctx.fillRect(-11 * p, -7 * p, 2.5 * p, 14 * p); ctx.restore();
+    lab(`θ = ${x.th}°`, cx + 40 * p, cy - 14 * p, { c: '#dbd4ca' });
     /* the target foil */
     ctx.fillStyle = '#c9a24a'; ctx.fillRect(cx - 2 * p, cy - 26 * p, 4 * p, 52 * p);
     const s = Math.max(2.4, Math.min(5.2, Rch / 40)) * p, t = x.t;
@@ -834,7 +834,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (c.mode === 'sph') {
       const narrow = W < 620, Rpx = Math.min(by * 0.4, (narrow ? W * 0.4 : W * 0.26)), cx = narrow ? W * 0.5 : W * 0.33, cy = by * 0.5, sc = Rpx / c.R;
       if (VG) { VG.shadow(ctx, cx, by - 2, Rpx * 0.9, 8 * p, 1); VG.ball(ctx, cx, cy, Rpx, toHex(T.metal), { glint: 0.7 }); } else { ctx.fillStyle = T.metal; ctx.beginPath(); ctx.arc(cx, cy, Rpx, 0, 7); ctx.fill(); }
-      ctx.save(); ctx.globalAlpha = 0.55; ctx.fillStyle = dark() ? '#0b1016' : '#26303c'; ctx.beginPath(); ctx.arc(cx, cy, Rpx, 0, 7); ctx.fill(); ctx.restore();
+      ctx.save(); ctx.globalAlpha = 0.55; ctx.fillStyle = dark() ? '#15110c' : '#3a3228'; ctx.beginPath(); ctx.arc(cx, cy, Rpx, 0, 7); ctx.fill(); ctx.restore();
       cpDrawFlat(cx, cy, sc, Rpx, p);
       ctx.strokeStyle = T.ink; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(cx, cy + Rpx + 14 * p); ctx.lineTo(cx + Rpx, cy + Rpx + 14 * p); ctx.stroke();
       lab(`R = ${f(c.R, 2)} cm`, cx + Rpx / 2, cy + Rpx + 26 * p, { a: 'center', c: T.ink, m: true });
@@ -871,24 +871,24 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const st = VD3K.stage($('pane'), { before: can, fov: 32, near: 0.5, far: 2000, fogAt: [1.3, 3.2] }); if (!st) return false;
     G3.st = st; const sc = st.scene;
     G3.bench = VD3K.bench(st, { w: 600, d: 600 }); sc.add(G3.bench);
-    G3.stand = new THREE.Mesh(new THREE.TorusGeometry(1, 0.08, 12, 48), VD3K.material(st, { roughness: 0.5, metalness: 0.6 }, ['#5d6772', '#8a95a3'])); sc.add(G3.stand);
+    G3.stand = new THREE.Mesh(new THREE.TorusGeometry(1, 0.08, 12, 48), VD3K.material(st, { roughness: 0.5, metalness: 0.6 }, ['#70695f', '#a1988c'])); sc.add(G3.stand);
     G3.dim = new THREE.Line(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({ color: 0xf2c14e })); G3.dim.renderOrder = 2; G3.dim.material.depthTest = false; sc.add(G3.dim);
     G3.dimLab = VD3K.label('R', { size: 1, color: '#ffffff', bg: 'rgba(20,28,38,0.8)' }); G3.dimLab.material.depthTest = false; G3.dimLab.renderOrder = 3; sc.add(G3.dimLab);
-    G3.shell = new THREE.Mesh(new THREE.SphereGeometry(1, 64, 40), VD3K.material(st, { roughness: 0.35, metalness: 0.7, transparent: true, opacity: 0.22, depthWrite: false }, ['#7f8a96', '#9aa6b4']));
-    G3.core = new THREE.Mesh(new THREE.SphereGeometry(1, 64, 40), new THREE.MeshBasicMaterial({ color: 0x0b1016, transparent: true, opacity: 0.35, depthWrite: false, side: THREE.BackSide }));
+    G3.shell = new THREE.Mesh(new THREE.SphereGeometry(1, 64, 40), VD3K.material(st, { roughness: 0.35, metalness: 0.7, transparent: true, opacity: 0.22, depthWrite: false }, ['#948c81', '#b2a89c']));
+    G3.core = new THREE.Mesh(new THREE.SphereGeometry(1, 64, 40), new THREE.MeshBasicMaterial({ color: 0x15110c, transparent: true, opacity: 0.35, depthWrite: false, side: THREE.BackSide }));
     sc.add(G3.core, G3.shell);
     /* the chain, in units of R: trails with colors fading into the dark core, nuclei, fragments, neutrons, a faint field of nuclei */
     const cg = G3.cg = new THREE.Group(); sc.add(cg);
     const lines = (op) => { const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(new Float32Array(G3.TR * 6), 3));
       const L = new THREE.LineSegments(g, new THREE.LineBasicMaterial({ color: 0x8cc8ff, transparent: op < 1, opacity: op })); L.frustumCulled = false; cg.add(L); return L; };
     G3.trails = lines(0.4); G3.live = lines(1);
-    G3.field = VD3K.particles(st, { n: 320, r: 0.012, color: '#8f9aa8', seg: 6 }); CP.field.forEach((q, i) => G3.field.put(i, q[0], q[1], q[2])); G3.field.show(CP.field.length); G3.field.done();
+    G3.field = VD3K.particles(st, { n: 320, r: 0.012, color: '#a69d91', seg: 6 }); CP.field.forEach((q, i) => G3.field.put(i, q[0], q[1], q[2])); G3.field.show(CP.field.length); G3.field.done();
     G3.nuc = VD3K.particles(st, { n: 200, r: 0.06, color: '#c0705a', seg: 14 });
     G3.frag = VD3K.particles(st, { n: 200, r: 0.045, color: T.fis, emissive: '#7a3d08', seg: 12 });
-    G3.neu = VD3K.particles(st, { n: 200, r: 0.022, color: '#e8eef5', emissive: '#56606c', seg: 8 });
+    G3.neu = VD3K.particles(st, { n: 200, r: 0.022, color: '#f4efe9', emissive: '#6a6258', seg: 8 });
     G3.fpt = VD3K.particles(st, { n: 400, r: 0.03, color: T.fis, emissive: '#7a3d08', seg: 8 });
     cg.add(G3.field, G3.nuc, G3.frag, G3.neu, G3.fpt);
-    G3.src = VD3K.rod([-2.6, 0, 0], [-1.4, 0, 0], 0.07, VD3K.material(st, { roughness: 0.4, metalness: 0.7 }, ['#a6afba', '#8d97a3'])); cg.add(G3.src);
+    G3.src = VD3K.rod([-2.6, 0, 0], [-1.4, 0, 0], 0.07, VD3K.material(st, { roughness: 0.4, metalness: 0.7 }, ['#b8b1a8', '#a1998f'])); cg.add(G3.src);
     st.orbit(st.el, G3.o, () => redraw(), { phMin: 0.2, phMax: 1.5, zMin: 0.5, zMax: 3 });
     return true;
   }
@@ -984,15 +984,15 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (const r of narrow ? [0.1, 1, 10] : [0.1, 0.2, 0.5, 1, 2, 5, 10]) { ctx.fillStyle = '#3a3226'; ctx.fillRect(XR(r) - 0.5, by - 12 * p, 1, 6 * p); ctx.fillStyle = dark() ? '#e8dcc0' : '#3a3226'; ctx.fillText(r + ' m', XR(r), by + 3 * p); }
     lab('distance scale is logarithmic', x1, by + 24 * p, { a: 'right', s: 9 * p, c: dark() ? '#e8dcc0' : undefined });
     /* the source in an open lead pig, aimed to the right */
-    const scx = x0 - 4 * p; if (VG) VG.box(ctx, scx - 26 * p, sy - 22 * p, 30 * p, 44 * p, { color: '#5d646d', r: 4 }); ctx.fillStyle = '#ffd25a'; ctx.beginPath(); ctx.arc(scx, sy, 4 * p, 0, 7); ctx.fill();
+    const scx = x0 - 4 * p; if (VG) VG.box(ctx, scx - 26 * p, sy - 22 * p, 30 * p, 44 * p, { color: '#6c665e', r: 4 }); ctx.fillStyle = '#ffd25a'; ctx.beginPath(); ctx.arc(scx, sy, 4 * p, 0, 7); ctx.fill();
     lab(D.src.name, scx - 11 * p, sy - 34 * p, { a: 'center', c: T.ink, w: 700 });
     /* the shield: thickness drawn to its own scale, next to the source */
     const shw = d.sh === 'none' ? 0 : Math.max(3 * p, Math.min(60 * p, d.x * 4 * p)), shx = scx + 10 * p;
-    if (shw > 0 && d.x > 0) { const col = { lead: '#6b7380', concrete: '#a8a39a', water: '#5aa0d8' }[d.sh]; ctx.save(); if (d.sh === 'water') ctx.globalAlpha = 0.6; if (VG) VG.box(ctx, shx, sy - 40 * p, shw, 80 * p, { color: col, r: 2 }); else { ctx.fillStyle = col; ctx.fillRect(shx, sy - 40 * p, shw, 80 * p); } ctx.restore();
+    if (shw > 0 && d.x > 0) { const col = { lead: '#7e776d', concrete: '#a8a39a', water: '#5aa0d8' }[d.sh]; ctx.save(); if (d.sh === 'water') ctx.globalAlpha = 0.6; if (VG) VG.box(ctx, shx, sy - 40 * p, shw, 80 * p, { color: col, r: 2 }); else { ctx.fillStyle = col; ctx.fillRect(shx, sy - 40 * p, shw, 80 * p); } ctx.restore();
       lab(`${f(d.x, 1)} cm ${d.sh}`, shx + shw / 2, sy - 50 * p, { a: 'center', c: T.ink }); }
     /* the meter at distance r */
     const mx = XR(d.r);
-    if (VG) { VG.rod(ctx, mx, sy, mx, by - 14 * p, 2 * p, { color: '#aab3be' }); VG.box(ctx, mx - 6 * p, sy - 8 * p, 26 * p, 16 * p, { color: '#e2c23a', r: 4 }); }
+    if (VG) { VG.rod(ctx, mx, sy, mx, by - 14 * p, 2 * p, { color: '#bcb5ab' }); VG.box(ctx, mx - 6 * p, sy - 8 * p, 26 * p, 16 * p, { color: '#e2c23a', r: 4 }); }
     const lw = 116 * p, lx = Math.min(W - lw - 10 * p, Math.max(8 * p, mx - lw / 2)), ly = Math.max(10 * p, sy - 120 * p);
     lcdBox(lx, ly, lw, 26 * p, `${sig(D.rate * 1e6, 3)} µSv/h`, 'dose rate meter');
     /* photons leaving the source (a picture only): fewer get through a thicker shield */
@@ -1016,17 +1016,17 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const st = VD3K.stage($('pane'), { before: can, fov: 30, near: 0.05, far: 80, shadow: 3, fogAt: [2.2, 5] }); if (!st) return false;
     D3.st = st; const sc = st.scene, M = (o, c) => VD3K.material(st, o, c);
     st.el.style.visibility = 'hidden';
-    const floor = new THREE.Mesh(new THREE.PlaneGeometry(60, 30), M({ roughness: 0.9 }, ['#d5d9de', '#262c34'])); floor.position.set(5, 0, 0); floor.receiveShadow = true; sc.add(floor);
-    const wall = new THREE.Mesh(new THREE.PlaneGeometry(60, 3.2), M({ roughness: 1 }, ['#eceff2', '#222a35'])); wall.rotation.x = Math.PI / 2; wall.position.set(5, 2.6, 1.6); wall.receiveShadow = true; sc.add(wall);
+    const floor = new THREE.Mesh(new THREE.PlaneGeometry(60, 30), M({ roughness: 0.9 }, ['#dddad6', '#332e27'])); floor.position.set(5, 0, 0); floor.receiveShadow = true; sc.add(floor);
+    const wall = new THREE.Mesh(new THREE.PlaneGeometry(60, 3.2), M({ roughness: 1 }, ['#f2efec', '#342d23'])); wall.rotation.x = Math.PI / 2; wall.position.set(5, 2.6, 1.6); wall.receiveShadow = true; sc.add(wall);
     const tape = VD3K.ruler(st, { len: 10, from: 0, to: 10, unit: 'm', step: 0.1, w: 0.09 }); tape.position.set(0, 0.32, 0.002); sc.add(tape);
-    const steel = M({ roughness: 0.35, metalness: 0.7 }, ['#a9b2bc', '#8d97a3']), dk = M({ roughness: 0.6, metalness: 0.2 }, ['#3b434d', '#2c333b']);
+    const steel = M({ roughness: 0.35, metalness: 0.7 }, ['#bbb4aa', '#a1998f']), dk = M({ roughness: 0.6, metalness: 0.2 }, ['#4c453c', '#3a342d']);
     /* the sealed source on a lab stand */
     const stand = D3.stand = new THREE.Group();
     stand.add(VD3K.box(0.22, 0.16, 0.012, dk, 0, 0, 0), VD3K.rod([-0.06, 0, 0.012], [-0.06, 0, DH0 + 0.05], 0.007, steel), VD3K.rod([-0.06, 0, DH0], [-0.012, 0, DH0], 0.004, steel));
     const cap = new THREE.Mesh(new THREE.CylinderGeometry(0.006, 0.006, 0.03, 20), steel); cap.rotation.z = Math.PI / 2; cap.position.set(0, 0, DH0); stand.add(cap);
     sc.add(stand);
     /* a seated patient (the source point is in the body), in a chair or the uptake room's recliner */
-    const pat = D3.patient = new THREE.Group(), skin = M({ roughness: 0.8 }, ['#d9a98a', '#b98d71']), gown = M({ roughness: 0.85, transparent: true, opacity: 0.88 }, ['#8fb3d9', '#5f84ad']), chairM = D3.chairM = M({ roughness: 0.7 }, ['#6d7680', '#4b535c']);
+    const pat = D3.patient = new THREE.Group(), skin = M({ roughness: 0.8 }, ['#d9a98a', '#b98d71']), gown = M({ roughness: 0.85, transparent: true, opacity: 0.88 }, ['#8fb3d9', '#a78a65']), chairM = D3.chairM = M({ roughness: 0.7 }, ['#7f786e', '#5b544c']);
     const cyl = (a, b, r, m) => VD3K.rod(a, b, r, m), ball = (p, r, m) => { const s = new THREE.Mesh(new THREE.SphereGeometry(r, 24, 16), m); s.position.set(...p); s.castShadow = true; return s; };
     pat.add(VD3K.box(0.5, 0.5, 0.06, chairM, 0.12, 0, 0.42), VD3K.box(0.08, 0.5, 0.62, chairM, -0.2, 0, 0.42));
     for (const [x, y] of [[-0.1, -0.2], [-0.1, 0.2], [0.33, -0.2], [0.33, 0.2]]) pat.add(cyl([x, y, 0], [x, y, 0.42], 0.015, steel));
@@ -1038,9 +1038,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     D3.tex = new THREE.CanvasTexture(gl);
     D3.glow = new THREE.Sprite(new THREE.SpriteMaterial({ map: D3.tex, color: '#ffe17a', depthTest: false, transparent: true, blending: THREE.AdditiveBlending })); D3.glow.position.set(0, 0, DH0); D3.glow.renderOrder = 7; sc.add(D3.glow);
     /* the shield slab, scaled to its thickness each frame (unit box) */
-    D3.mats = { lead: M({ roughness: 0.5, metalness: 0.4 }, ['#9aa1aa', '#6b727c']), concrete: M({ roughness: 0.95 }, ['#b9b4aa', '#8c877e']), water: M({ roughness: 0.1, transparent: true, opacity: 0.45, depthWrite: false }, ['#6fb3e6', '#4f93c8']) };
+    D3.mats = { lead: M({ roughness: 0.5, metalness: 0.4 }, ['#a9a39b', '#7b746c']), concrete: M({ roughness: 0.95 }, ['#b9b4aa', '#8c877e']), water: M({ roughness: 0.1, transparent: true, opacity: 0.45, depthWrite: false }, ['#6fb3e6', '#4f93c8']) };
     D3.slab = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), D3.mats.lead); D3.slab.castShadow = D3.slab.receiveShadow = true; sc.add(D3.slab);
-    D3.tank = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), M({ roughness: 0.05, metalness: 0.1, transparent: true, opacity: 0.18, depthWrite: false }, ['#dfeaf2', '#a9c3d6'])); D3.tank.renderOrder = 2; sc.add(D3.tank);
+    D3.tank = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), M({ roughness: 0.05, metalness: 0.1, transparent: true, opacity: 0.18, depthWrite: false }, ['#f0e9e1', '#d3c2ac'])); D3.tank.renderOrder = 2; sc.add(D3.tank);
     /* the dose rate meter on a tripod: the reading on its face is the one in the readouts */
     const tri = D3.meter = new THREE.Group();
     for (let i = 0; i < 3; i++) { const a = i * 2 * Math.PI / 3 + 0.4; tri.add(VD3K.rod([0.22 * Math.cos(a), 0.22 * Math.sin(a), 0], [0, 0, DH0 - 0.12], 0.008, dk)); }
@@ -1095,7 +1095,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const st = D3.st, p = proj(), d = S.do, D = doNow(), now = performance.now(), dt = Math.min(0.1, (now - (D3.last || now)) / 1000); D3.last = now;
     st.size(W, H);
     const pat = d.src === 'tc99m' || d.src === 'f18'; D3.stand.visible = !pat; D3.patient.visible = pat;
-    D3.chairM.color.set(d.src === 'f18' ? (dark() ? '#3e5a52' : '#5e8a7c') : (dark() ? '#4b535c' : '#6d7680'));
+    D3.chairM.color.set(d.src === 'f18' ? (dark() ? '#3e5a52' : '#5e8a7c') : (dark() ? '#5b544c' : '#7f786e'));
     const sl = slab3();
     D3.slab.visible = !!sl; D3.tank.visible = !!sl && d.sh === 'water';
     if (sl) {

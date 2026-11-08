@@ -352,11 +352,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     backdrop();
     const y0 = Hh * 0.5, xO = W * 0.06, xS1 = W * 0.2, xS2 = W * 0.28, xM0 = W * 0.36, Lpx = W * 0.22, xM1 = xM0 + Lpx, xScr = Math.min(W * 0.93, xM1 + Lpx * (0.1 + s.L2 / 3.5 * 0.45));
     /* oven */
-    if (VG) VG.box(ctx, xO - 30 * p, y0 - 34 * p, 60 * p, 68 * p, { color: dark() ? '#3b4450' : '#4a5563', r: 6 });
+    if (VG) VG.box(ctx, xO - 30 * p, y0 - 34 * p, 60 * p, 68 * p, { color: dark() ? '#4e473d' : '#61584c', r: 6 });
     const glow = Math.min(1, (s.T - 300) / 1300); ctx.fillStyle = `rgba(255,${Math.round(140 - 60 * glow)},40,${0.25 + 0.6 * glow})`; ctx.fillRect(xO - 18 * p, y0 - 20 * p, 36 * p, 40 * p);
     lbl(`oven ${s.T} K`, xO, y0 + 48 * p, { a: 'center', s: 10.5 * p });
     /* slits */
-    for (const xs of [xS1, xS2]) { ctx.fillStyle = dark() ? '#8b95a3' : '#59636f'; ctx.fillRect(xs - 3 * p, y0 - 60 * p, 6 * p, 56 * p); ctx.fillRect(xs - 3 * p, y0 + 4 * p, 6 * p, 56 * p); }
+    for (const xs of [xS1, xS2]) { ctx.fillStyle = dark() ? '#a1988d' : '#6d655b'; ctx.fillRect(xs - 3 * p, y0 - 60 * p, 6 * p, 56 * p); ctx.fillRect(xs - 3 * p, y0 + 4 * p, 6 * p, 56 * p); }
     lbl('slits', (xS1 + xS2) / 2, y0 - 70 * p, { a: 'center', s: 10.5 * p });
     if (s.sel) { ctx.save(); ctx.strokeStyle = T.accent; ctx.lineWidth = 1.5; ctx.strokeRect(xS1 + 8 * p, y0 - 16 * p, xS2 - xS1 - 16 * p, 32 * p); ctx.restore(); lbl(`velocity selector, ${s.v} m/s`, (xS1 + xS2) / 2, y0 + 72 * p, { a: 'center', s: 10 * p, c: T.accent }); }
     /* magnet: a knife edge pole above, a grooved pole below, drawn side on */
@@ -364,7 +364,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     lbl('N (knife edge)', xM0 + Lpx / 2, y0 - 14 * p - mh / 2, { a: 'center', s: 10.5 * p, c: '#fff' }); lbl('S (groove)', xM0 + Lpx / 2, y0 + 14 * p + mh / 2, { a: 'center', s: 10.5 * p, c: '#fff' });
     lbl(`magnet 3.50 cm, dB/dz = ${s.G} T/m`, xM0 + Lpx / 2, y0 - 14 * p - mh - 12 * p, { a: 'center', s: 10.5 * p });
     /* screen */
-    if (VG) VG.box(ctx, xScr - 4 * p, y0 - 80 * p, 8 * p, 160 * p, { color: dark() ? '#9fb3c4' : '#c5d4df', r: 2, shadow: false });
+    if (VG) VG.box(ctx, xScr - 4 * p, y0 - 80 * p, 8 * p, 160 * p, { color: dark() ? '#c1b4a2' : '#ddd3c7', r: 2, shadow: false });
     lbl('glass screen', xScr, y0 + 92 * p, { a: 'center', s: 10.5 * p }); if (s.L2 > 0) lbl(`drift ${s.L2} cm`, (xM1 + xScr) / 2, y0 + 50 * p, { a: 'center', s: 10 * p });
     /* paths, with the sideways scale blown up so they show */
     const half = sgHalf(), zpx = 70 * p / half, path = (zEnd, col, alpha) => {
@@ -389,17 +389,17 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const S3 = VD3K.stage($('pane'), { before: can, shadow: 0.2, fov: 30, fogAt: [1.8, 3.4] }); if (!S3) return false;
     const sc = S3.scene, M = (o, c) => VD3K.material(S3, o, c), mesh = (geo, m, cast) => { const x = new THREE.Mesh(geo, m); x.castShadow = !!cast; x.receiveShadow = true; return x; };
     sc.add(VD3K.bench(S3, { w: 1.6, d: 1.2, y: 0.15 }), VD3K.backdrop(S3, { r: 0.7, h: 0.6, y: -0.25 }));
-    const steel = M({ roughness: 0.4, metalness: 0.4 }, ['#b9c0c8', '#77808a']), dark3 = M({ roughness: 0.5, metalness: 0.2 }, ['#6a7583', '#4b5460']);
+    const steel = M({ roughness: 0.4, metalness: 0.4 }, ['#c7c1ba', '#898278']), dark3 = M({ roughness: 0.5, metalness: 0.2 }, ['#81786c', '#5e574d']);
     /* the vacuum tube's rail */
     const rail = VD3K.box(1, 0.03, 0.006, steel, 0, 0, 0); sc.add(rail);
     /* the oven: a box with a glowing mouth */
     const oven = VD3K.box(0.024, 0.028, 0.03, dark3, -0.07, 0, ZB3 - 0.015); sc.add(oven, VD3K.rod([-0.07, 0, 0.006], [-0.07, 0, ZB3 - 0.015], 0.003, steel));
     const mouthM = new THREE.MeshBasicMaterial({ color: 0xff8030 }), mouth = mesh(new THREE.PlaneGeometry(0.012, 0.016), mouthM); mouth.rotation.y = Math.PI / 2; mouth.position.set(-0.0579, 0, ZB3); sc.add(mouth);
     /* two slits */
-    const slitM = M({ roughness: 0.5, metalness: 0.4 }, ['#59636f', '#8b95a3']);
+    const slitM = M({ roughness: 0.5, metalness: 0.4 }, ['#6d655b', '#a1988d']);
     for (const x of [-0.045, -0.025]) { sc.add(VD3K.box(0.0015, 0.022, 0.014, slitM, x, 0, ZB3 + 0.0008), VD3K.box(0.0015, 0.022, 0.014, slitM, x, 0, ZB3 - 0.0148), VD3K.rod([x, 0.012, 0.006], [x, 0.012, ZB3 - 0.015], 0.0015, steel)); }
     /* the magnet: a knife edge north pole above, a grooved south pole below, on an iron yoke behind */
-    const nM = M({ roughness: 0.45, metalness: 0.3 }, ['#b23a2e', '#c0473a']), sM = M({ roughness: 0.45, metalness: 0.3 }, ['#3a5fae', '#4a6fbe']), yokeM = M({ roughness: 0.6, metalness: 0.5 }, ['#6b737c', '#4d545c']);
+    const nM = M({ roughness: 0.45, metalness: 0.3 }, ['#b23a2e', '#c0473a']), sM = M({ roughness: 0.45, metalness: 0.3 }, ['#3a5fae', '#4a6fbe']), yokeM = M({ roughness: 0.6, metalness: 0.5 }, ['#7b746c', '#5b554e']);
     const L1 = SG_L1;
     const knife = new THREE.Shape(); knife.moveTo(-0.012, 0.016); knife.lineTo(0.012, 0.016); knife.lineTo(0.0012, 0.0016); knife.lineTo(-0.0012, 0.0016); knife.closePath();
     const nPole = mesh(new THREE.ExtrudeGeometry(knife, { depth: L1, bevelEnabled: false }), nM, true); nPole.rotation.y = Math.PI / 2; nPole.rotation.order = 'YXZ'; nPole.rotation.x = 0;
@@ -417,7 +417,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const face = mesh(new THREE.PlaneGeometry(0.03, 0.03), glassM);
     /* the face stands across the beam and looks back at the oven: its width along the ribbon (−y), its height along z (up), its normal −x */
     face.quaternion.setFromRotationMatrix(new THREE.Matrix4().makeBasis(new THREE.Vector3(0, -1, 0), new THREE.Vector3(0, 0, 1), new THREE.Vector3(-1, 0, 0))); face.position.x = -0.0002; plate.add(face);
-    const edge = mesh(new THREE.BoxGeometry(0.0012, 0.031, 0.031), M({ roughness: 0.1, transparent: true, opacity: 0.4 }, ['#c5d4df', '#9fb3c4'])); edge.position.x = 0.0007; plate.add(edge);
+    const edge = mesh(new THREE.BoxGeometry(0.0012, 0.031, 0.031), M({ roughness: 0.1, transparent: true, opacity: 0.4 }, ['#ddd3c7', '#c1b4a2'])); edge.position.x = 0.0007; plate.add(edge);
     const clamp = VD3K.rod([0.003, 0, -0.016], [0.003, 0, -ZB3 + 0.006], 0.0015, steel); plate.add(clamp);
     plate.position.z = ZB3; sc.add(plate);
     /* the beam: one thin sheet per spot, or a fan for classical magnets */
@@ -471,7 +471,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function drawSgScreen() {
     const p = proj(), c = cctx, s = S.sg; c.setTransform(dpr, 0, 0, dpr, 0, 0); c.fillStyle = T.canvas; c.fillRect(0, 0, CW, CH);
     const half = sgHalf(), boxH = CH - 40 * p, boxW = Math.min(CW * 0.42, boxH * 1.4), bx = 54 * p, by = 14 * p, zpx = boxH / (2 * half), xpx = boxW / (SG_LEN * 1.3);
-    c.fillStyle = dark() ? '#1b2530' : '#e9f0f5'; c.fillRect(bx, by, boxW, boxH); c.strokeStyle = T.line; c.strokeRect(bx, by, boxW, boxH);
+    c.fillStyle = dark() ? '#2e271d' : '#f4f0ea'; c.fillRect(bx, by, boxW, boxH); c.strokeStyle = T.line; c.strokeRect(bx, by, boxW, boxH);
     const col = dark() ? 'rgba(235,225,200,0.55)' : 'rgba(60,50,40,0.45)'; c.fillStyle = col;
     for (const d of s.dots) { const x = bx + boxW / 2 + d.x * xpx, y = by + boxH / 2 - d.z * zpx; if (y < by || y > by + boxH) continue; c.fillRect(x, y, 1.6, 1.6); }
     /* ticks in mm */

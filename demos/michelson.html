@@ -13,9 +13,9 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
 /* only what this demo needs beyond demos/lib/vd.css */
-:root { --table: #2c333c; --table-hole: #1b2027; --frost: #10141a; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --table: #20262e; --table-hole: #0e1217; --frost: #07090c; } }
-:root[data-theme="dark"] { --table: #20262e; --table-hole: #0e1217; --frost: #07090c; }
+:root { --table: #3b352d; --table-hole: #26221c; --frost: #10141a; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --table: #2d2821; --table-hole: #16130f; --frost: #07090c; } }
+:root[data-theme="dark"] { --table: #2d2821; --table-hole: #16130f; --frost: #07090c; }
 .stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden auto; background: var(--canvas); }
 @media (min-width: 821px) { .bench > .stage { align-self: start; min-height: 100%; } :root[data-projector="on"] .bench > .stage { min-height: max(440px, 100%); } }   /* the stage grows with its controls on a short window instead of scrolling inside itself, and still fills a tall one */
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
@@ -25,7 +25,7 @@
 .pane { position: relative; min-height: 0; }
 .pane + .pane { border-left: 1px solid var(--line); }
 .pane canvas { position: absolute; inset: 0; width: 100%; height: 100%; outline: none; touch-action: pan-y; }
-.pane .tag { position: absolute; left: 10px; top: 8px; z-index: 1; font-size: 0.74rem; font-weight: 700; color: #c3ccd8; pointer-events: none; }
+.pane .tag { position: absolute; left: 10px; top: 8px; z-index: 1; font-size: 0.74rem; font-weight: 700; color: #d6cfc5; pointer-events: none; }
 .shelf { display: flex; flex-wrap: wrap; align-items: stretch; gap: 12px; padding: 10px; border-top: 1px solid var(--line); background: var(--surface); }
 .shelf .shelf-card { flex: 1 1 250px; display: flex; flex-direction: column; gap: 7px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--canvas); min-width: 0; }
 .shelf-card > .card-title { font-size: 0.78rem; font-weight: 700; color: var(--muted); }
@@ -358,11 +358,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function drawScreen() {
     if (!T || !SW) return;
     const c = sctx, p = proj(); c.setTransform(dpr, 0, 0, dpr, 0, 0);
-    const bg = c.createLinearGradient(0, 0, 0, SH); bg.addColorStop(0, dark() ? '#0b0f14' : '#1e242c'); bg.addColorStop(1, dark() ? '#06080b' : '#14181e'); c.fillStyle = bg; c.fillRect(0, 0, SW, SH);
+    const bg = c.createLinearGradient(0, 0, 0, SH); bg.addColorStop(0, dark() ? '#13100c' : '#2b261f'); bg.addColorStop(1, dark() ? '#0b0906' : '#1d1a15'); c.fillStyle = bg; c.fillRect(0, 0, SW, SH);
     const side = Math.max(60, Math.min(SW - 36, SH - 70 * p)), x0 = (SW - side) / 2, y0 = Math.max(28, (SH - side) / 2 - 10 * p);
     /* the screen's frame and frosted face */
-    c.save(); c.shadowColor = 'rgba(0,0,0,0.6)'; c.shadowBlur = 18; c.fillStyle = '#2b323c'; c.beginPath(); c.roundRect(x0 - 8, y0 - 8, side + 16, side + 16, 8); c.fill(); c.restore();
-    c.fillStyle = '#05070a'; c.fillRect(x0, y0, side, side);
+    c.save(); c.shadowColor = 'rgba(0,0,0,0.6)'; c.shadowBlur = 18; c.fillStyle = '#3b342c'; c.beginPath(); c.roundRect(x0 - 8, y0 - 8, side + 16, side + 16, 8); c.fill(); c.restore();
+    c.fillStyle = '#0a0805'; c.fillRect(x0, y0, side, side);
     c.imageSmoothingEnabled = true; c.imageSmoothingQuality = 'high'; c.drawImage(PAT, x0, y0, side, side);
     const fr = c.createRadialGradient(x0 + side * 0.3, y0 + side * 0.25, 0, x0 + side / 2, y0 + side / 2, side * 0.8); fr.addColorStop(0, 'rgba(255,255,255,0.05)'); fr.addColorStop(1, 'rgba(255,255,255,0)'); c.fillStyle = fr; c.fillRect(x0, y0, side, side);
     /* the detector's pinhole at the center */
@@ -415,9 +415,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     c.restore();
     /* the source */
     const white = isWhite();
-    if (VG) { VG.box(c, X(-318), Y(-22), (white ? 80 : 88) * k, 44 * k, { color: white ? '#5a5f68' : '#2d3e57', r: 6 * k }); }
-    else { c.fillStyle = '#2d3e57'; c.fillRect(X(-318), Y(-22), 88 * k, 44 * k); }
-    if (!white) { if (VG) VG.rod(c, X(-232), Y(0), X(-226), Y(0), 7 * k, { color: '#9aa4b0' }); }
+    if (VG) { VG.box(c, X(-318), Y(-22), (white ? 80 : 88) * k, 44 * k, { color: white ? '#67625b' : '#544430', r: 6 * k }); }
+    else { c.fillStyle = '#544430'; c.fillRect(X(-318), Y(-22), 88 * k, 44 * k); }
+    if (!white) { if (VG) VG.rod(c, X(-232), Y(0), X(-226), Y(0), 7 * k, { color: '#aea69c' }); }
     c.save(); c.fillStyle = lightCss(1); c.shadowColor = lightCss(0.9); c.shadowBlur = 10; c.beginPath(); c.arc(X(-226), Y(0), 2.5 * k, 0, 7); c.fill(); c.restore();
     if (VG) VG.plate(c, S.src === 'mystery' ? 'laser ?' : S.src === 'red' || S.src === 'green' ? 'He–Ne laser' : S.src === 'hg' ? 'Hg lamp + filter' : S.src === 'na' ? 'Na lamp' : 'white lamp', X(-274), Y(0), { s: Math.max(7, Math.min(10, 7 * k)) });
     /* the diverging lens on a post holder */
@@ -432,12 +432,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     { c.font = `${10.5 * p}px ${T.ui}`; const gap = X(30) - X(-34) - (c.measureText('beam splitter').width + c.measureText('compensator').width) / 2;
       lab('beam splitter', X(-34), Y(30), 'center'); lab('compensator', X(30), gap < 8 * p ? Y(26) + 14 * p : Y(26), 'center'); }   /* a small drawing: the two labels on separate lines */
     /* M1 on its stage, the micrometer behind it */
-    if (VG) { VG.box(c, X(m1x + 4), Y(-30), 26 * k, 60 * k, { color: '#4a5566', r: 3 * k }); VG.box(c, X(112), Y(-40), 70 * k, 80 * k, { color: '#3a4350', r: 4 * k, shadow: false }); VG.box(c, X(m1x + 4), Y(-30), 26 * k, 60 * k, { color: '#55627a', r: 3 * k, shadow: false }); }
-    c.fillStyle = '#d9e2ec'; c.fillRect(X(m1x), Y(-16), 4 * k, 32 * k); c.fillStyle = 'rgba(255,255,255,0.75)'; c.fillRect(X(m1x), Y(-16), 1.2 * k, 32 * k);
+    if (VG) { VG.box(c, X(m1x + 4), Y(-30), 26 * k, 60 * k, { color: '#645a4c', r: 3 * k }); VG.box(c, X(112), Y(-40), 70 * k, 80 * k, { color: '#4e463c', r: 4 * k, shadow: false }); VG.box(c, X(m1x + 4), Y(-30), 26 * k, 60 * k, { color: '#776a58', r: 3 * k, shadow: false }); }
+    c.fillStyle = '#ebe4da'; c.fillRect(X(m1x), Y(-16), 4 * k, 32 * k); c.fillStyle = 'rgba(255,255,255,0.75)'; c.fillRect(X(m1x), Y(-16), 1.2 * k, 32 * k);
     lab('M₁', X(m1x + 2), Y(-26));
     const mbx = 186, mby = 0;   /* the micrometer: barrel, thimble with its scale */
-    if (VG) { VG.rod(c, X(mbx - 8), Y(mby), X(mbx + 10), Y(mby), 6 * k, { color: '#b4bcc6' }); VG.rod(c, X(mbx + 10), Y(mby), X(mbx + 40), Y(mby), 10 * k, { color: '#c9cfd6' }); }
-    else { c.fillStyle = '#c9cfd6'; c.fillRect(X(mbx + 10), Y(mby - 10), 30 * k, 20 * k); }
+    if (VG) { VG.rod(c, X(mbx - 8), Y(mby), X(mbx + 10), Y(mby), 6 * k, { color: '#c5beb5' }); VG.rod(c, X(mbx + 10), Y(mby), X(mbx + 40), Y(mby), 10 * k, { color: '#d5d0ca' }); }
+    else { c.fillStyle = '#d5d0ca'; c.fillRect(X(mbx + 10), Y(mby - 10), 30 * k, 20 * k); }
     /* thimble divisions: 50 per turn, one division = 1 μm; the visible face shows the ticks moving as it turns */
     c.save(); c.beginPath(); c.rect(X(mbx + 10), Y(mby - 10), 30 * k, 20 * k); c.clip(); c.strokeStyle = 'rgba(30,36,44,0.75)'; c.lineWidth = 1;
     const turn = S.m / 50, frac = turn - Math.floor(turn);
@@ -445,8 +445,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     c.restore(); lab(`${f(S.m, 1)} μm`, X(mbx + 25), Y(mby + 22)); lab('micrometer', X(mbx + 25), Y(mby - 20));
     /* M2 on a kinematic mount with two tilt screws, the gas cell between it and the splitter */
     c.save(); c.translate(X(0), Y(m2y)); c.rotate(tiltDraw);
-    if (VG) { VG.box(c, -34 * k, -30 * k, 68 * k, 22 * k, { color: '#4a5566', r: 3 * k }); VG.screw(c, -24 * k, -19 * k, 3.6 * k); VG.screw(c, 24 * k, -19 * k, 3.6 * k); }
-    c.fillStyle = '#d9e2ec'; c.fillRect(-16 * k, -8 * k, 32 * k, 4 * k); c.fillStyle = 'rgba(255,255,255,0.75)'; c.fillRect(-16 * k, -4.6 * k, 32 * k, 1.2 * k); c.restore();
+    if (VG) { VG.box(c, -34 * k, -30 * k, 68 * k, 22 * k, { color: '#645a4c', r: 3 * k }); VG.screw(c, -24 * k, -19 * k, 3.6 * k); VG.screw(c, 24 * k, -19 * k, 3.6 * k); }
+    c.fillStyle = '#ebe4da'; c.fillRect(-16 * k, -8 * k, 32 * k, 4 * k); c.fillStyle = 'rgba(255,255,255,0.75)'; c.fillRect(-16 * k, -4.6 * k, 32 * k, 1.2 * k); c.restore();
     lab('M₂ (fixed, tilt screws)', X(48), Y(m2y - 18), 'left');
     if (S.cell) {
       const y1 = -25, y2 = -75; c.save(); c.fillStyle = 'rgba(190,220,235,0.22)'; c.strokeStyle = 'rgba(210,232,245,0.8)'; c.lineWidth = 1;
@@ -454,15 +454,15 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       c.fillStyle = 'rgba(225,240,250,0.65)'; c.fillRect(X(-13), Y(y2) - 1.5 * k, 26 * k, 3 * k); c.fillRect(X(-13), Y(y1) - 1.5 * k, 26 * k, 3 * k);
       c.restore(); lab('gas cell, 5.00 cm', X(-18), Y(-50), 'right');
       /* hose to the pump, the gauge */
-      if (VG) { VG.cable(c, X(-12), Y(-58), X(-150), Y(-125), 10 * k, { color: '#2a2f36', w: 4 * k }); VG.box(c, X(-230), Y(-158), 82 * k, 50 * k, { color: '#3b4656', r: 5 * k });
+      if (VG) { VG.cable(c, X(-12), Y(-58), X(-150), Y(-125), 10 * k, { color: '#35312b', w: 4 * k }); VG.box(c, X(-230), Y(-158), 82 * k, 50 * k, { color: '#544a3d', r: 5 * k });
         VG.plate(c, S.valve === 'pump' ? 'pump: on' : S.valve === 'vent' ? 'needle valve: open' : 'valves closed', X(-189), Y(-147), { s: Math.max(6.5, Math.min(9, 6.5 * k)) });
         VG.lcd(c, X(-222), Y(-138), 66 * k, 20 * k, `${f(S.P, 1)} kPa`); }
     }
     /* the screen and the counter's detector */
-    if (VG) VG.box(c, X(-44), Y(scrY), 88 * k, 9 * k, { color: '#c8ccd2', r: 2 * k });
+    if (VG) VG.box(c, X(-44), Y(scrY), 88 * k, 9 * k, { color: '#d1cec9', r: 2 * k });
     c.fillStyle = 'rgba(255,255,255,0.75)'; c.fillRect(X(-40), Y(scrY), 80 * k, 2 * k);
     lab('screen', X(-52), Y(scrY + 5), 'right');
-    if (VG) { VG.cable(c, X(0), Y(scrY + 9), X(80), Y(scrY + 18), 10 * k, { color: '#20262e', w: 2.5 * k }); VG.box(c, X(80), Y(scrY + 4), 74 * k, 28 * k, { color: '#34404e', r: 4 * k }); VG.lcd(c, X(84), Y(scrY + 8), 66 * k, 20 * k, isWhite() ? '——' : String(S.N)); }
+    if (VG) { VG.cable(c, X(0), Y(scrY + 9), X(80), Y(scrY + 18), 10 * k, { color: '#2d2821', w: 2.5 * k }); VG.box(c, X(80), Y(scrY + 4), 74 * k, 28 * k, { color: '#4c4236', r: 4 * k }); VG.lcd(c, X(84), Y(scrY + 8), 66 * k, 20 * k, isWhite() ? '——' : String(S.N)); }
     lab('fringe counter', X(117), Y(scrY - 6));
     lab(W < 520 ? 'to scale, but mirror travel ×40, tilt ×600' : 'drawn to scale; the mirror travel is drawn 40 times larger and the tilt 600 times', 10, H - 10, 'left');
   }

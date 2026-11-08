@@ -20,35 +20,35 @@
 <style>
 /* Layout: the energy diagram U(x) with the particle's line below it, an optional phase space panel, instrument rail on the right; stacks on phones. */
 :root {
-  --bg: #e9edf2;
-  --surface: #f8fafc;
-  --canvas: #fcfdfe;
-  --ink: #17202b;
-  --muted: #5a6575;
-  --line: #d3d9e2;
-  --grid: #e6ebf1;
-  --grid-strong: #cfd7e1;
+  --bg: #f1eeea;
+  --surface: #fcfaf8;
+  --canvas: #fefdfc;
+  --ink: #2a2219;
+  --muted: #73695c;
+  --line: #e1dbd4;
+  --grid: #f0ece7;
+  --grid-strong: #e0d9d0;
   --pos: #c23f2c;
   --neg: #2b60b5;
   --equi: #a7740b;
-  --accent: #2b60b5;
-  --pot: #dde2e9;
-  --pot-edge: #4f5b6b;
+  --accent: #c4811c;
+  --pot: #e8e4de;
+  --pot-edge: #695f51;
   --kin: #2e8a57;
   --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
-    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-    --equi: #e2b350; --accent: #69a0ff; --pot: #1f2834; --pot-edge: #a9b4c3; --kin: #5bc98c; color-scheme: dark;
+    --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
+    --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+    --equi: #e2b350; --accent: #fbc26d; --pot: #322b21; --pot-edge: #c1b7ab; --kin: #5bc98c; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
-  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-  --equi: #e2b350; --accent: #69a0ff; --pot: #1f2834; --pot-edge: #a9b4c3; --kin: #5bc98c; color-scheme: dark;
+  --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
+  --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+  --equi: #e2b350; --accent: #fbc26d; --pot: #322b21; --pot-edge: #c1b7ab; --kin: #5bc98c; color-scheme: dark;
 }
 :root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
@@ -1618,10 +1618,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const S3 = VD3K.stage(sPane, { before: sCan, fov: 30, near: 0.01, far: 80, shadow: 1.6, fogAt: [1.5, 3.4] });
     if (!S3) return false;
     const K = VD3K, mat = (o, c) => K.material(S3, o, c);
-    const steel = mat({ roughness: 0.28, metalness: 0.8 }, ['#c3cad3', '#9aa4b0']);
-    const dark = mat({ roughness: 0.55, metalness: 0.2 }, ['#3a4552', '#2c3540']);
+    const steel = mat({ roughness: 0.28, metalness: 0.8 }, ['#d2ccc4', '#aea69c']);
+    const dark = mat({ roughness: 0.55, metalness: 0.2 }, ['#50473c', '#3f372d']);
     const red = mat({ roughness: 0.4, metalness: 0.15 }, ['#c23f2c', '#e0644f']);
-    const inkM = mat({ roughness: 0.6 }, ['#17202b', '#e3e8ef']);
+    const inkM = mat({ roughness: 0.6 }, ['#2a2219', '#eeeae4']);
     const dashM = new THREE.LineDashedMaterial({ color: '#2b60b5', dashSize: 0.03, gapSize: 0.02 });
     const grp = {};
     /* the lab: bench and wall, shared by the spring, the pendulum and the track */
@@ -1630,7 +1630,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     lab.add(K.box(2.8, 1.3, 0.05, benchM, 0, 0.25, -0.05));
     for (const sx of [-1.3, 1.3]) for (const sy of [-0.3, 0.8]) lab.add(K.box(0.06, 0.06, 0.85, dark, sx, sy, -0.9));
     const floorM = new THREE.MeshBasicMaterial(), wallM = new THREE.MeshBasicMaterial();
-    S3.onTheme((dk) => { const bg = VD3K.token('--canvas', dk ? '#10161e' : '#fcfdfe'), t = new THREE.Color(dk ? '#000000' : '#8a96a6'); wallM.color.copy(bg).lerp(t, dk ? 0.25 : 0.14); floorM.color.copy(bg).lerp(t, dk ? 0.45 : 0.3); });
+    S3.onTheme((dk) => { const bg = VD3K.token('--canvas', dk ? '#1d1811' : '#fefdfc'), t = new THREE.Color(dk ? '#000000' : '#a49a8c'); wallM.color.copy(bg).lerp(t, dk ? 0.25 : 0.14); floorM.color.copy(bg).lerp(t, dk ? 0.45 : 0.3); });
     const floor = new THREE.Mesh(new THREE.PlaneGeometry(40, 30), floorM); floor.position.set(0, 6, -0.9);
     const wallG = new THREE.PlaneGeometry(40, 12); wallG.rotateX(Math.PI / 2);
     const wall = new THREE.Mesh(wallG, wallM); wall.position.set(0, 1.9, 5);
@@ -1638,16 +1638,16 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 
     /* spring: an air track 1.7 m long on two feet, the glider, the spring from the end bracket, and a meter rule */
     const spr = new THREE.Group();
-    const alu = mat({ roughness: 0.35, metalness: 0.55 }, ['#c9d0d8', '#8f99a4']);
-    const holes = texCanvas(2048, 64, (c, w, h) => { c.fillStyle = '#c9d0d8'; c.fillRect(0, 0, w, h); c.fillStyle = '#4a525c'; for (let i = 0; i < 170; i++) for (const y of [0.3, 0.7]) { c.beginPath(); c.arc((i + 0.5) / 170 * w, y * h, 3.2, 0, 2 * Math.PI); c.fill(); } });
+    const alu = mat({ roughness: 0.35, metalness: 0.55 }, ['#d7d1ca', '#a29b91']);
+    const holes = texCanvas(2048, 64, (c, w, h) => { c.fillStyle = '#d7d1ca'; c.fillRect(0, 0, w, h); c.fillStyle = '#5b544b'; for (let i = 0; i < 170; i++) for (const y of [0.3, 0.7]) { c.beginPath(); c.arc((i + 0.5) / 170 * w, y * h, 3.2, 0, 2 * Math.PI); c.fill(); } });
     const topM = new THREE.MeshStandardMaterial({ map: holes, roughness: 0.35, metalness: 0.5 });
     spr.add(K.box(1.7, 0.06, 0.045, [alu, alu, alu, alu, topM, alu], 0, 0, 0.055));
     for (const sx of [-0.72, 0.72]) spr.add(K.box(0.05, 0.18, 0.055, dark, sx, 0, 0));
     spr.add(K.box(0.03, 0.09, 0.085, dark, -0.835, 0, 0.1), K.box(0.03, 0.09, 0.06, dark, 0.835, 0, 0.1));
     /* the air supply: a blower behind the track, its hose into the right end */
-    const blowM = mat({ roughness: 0.5 }, ['#5d6b7a', '#46525f']);
+    const blowM = mat({ roughness: 0.5 }, ['#786d5f', '#5d5448']);
     spr.add(K.box(0.2, 0.13, 0.12, blowM, 0.62, 0.36, 0), K.rod([0.62, 0.295, 0.06], [0.62, 0.28, 0.06], 0.04, dark));
-    spr.add(K.cable([0.85, 0.02, 0.075], [0.62, 0.28, 0.06], { via: [[0.95, 0.05, 0.06], [0.95, 0.24, 0.02], [0.75, 0.28, 0.05]], rad: 0.009, color: 0x30363d }));
+    spr.add(K.cable([0.85, 0.02, 0.075], [0.62, 0.28, 0.06], { via: [[0.95, 0.05, 0.06], [0.95, 0.24, 0.02], [0.75, 0.28, 0.05]], rad: 0.009, color: 0x3c3731 }));
     const glider = new THREE.Group();
     glider.add(K.box(0.12, 0.08, 0.012, red, 0, 0, 0.1), K.box(0.12, 0.006, 0.04, red, 0, -0.037, 0.068), K.box(0.12, 0.006, 0.04, red, 0, 0.037, 0.068));
     glider.add(K.box(0.05, 0.003, 0.045, dark, 0, 0, 0.112));
@@ -1656,7 +1656,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const coil = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(helix), NS * 2, 0.0014, 6, false), steel); coil.castShadow = true; coil.position.set(-0.82, 0, 0.125); spr.add(coil);
     const rule = K.ruler(S3, { len: 1.2, from: -60, to: 60, unit: 'cm', step: 1, w: 0.045 }); const ruleG = new THREE.Group(); ruleG.add(rule); ruleG.position.set(-0.6, -0.11, 0); spr.add(ruleG);
     const sPins = [pinMesh(inkM, 0.009, 0.03), pinMesh(inkM, 0.009, 0.03)]; sPins.forEach((m) => spr.add(m));
-    const arF = new THREE.ArrowHelper(new THREE.Vector3(1, 0, 0), new THREE.Vector3(), 0.1, 0xc23f2c, 0.03, 0.02), arV = new THREE.ArrowHelper(new THREE.Vector3(1, 0, 0), new THREE.Vector3(), 0.1, 0x17202b, 0.03, 0.02);
+    const arF = new THREE.ArrowHelper(new THREE.Vector3(1, 0, 0), new THREE.Vector3(), 0.1, 0xc23f2c, 0.03, 0.02), arV = new THREE.ArrowHelper(new THREE.Vector3(1, 0, 0), new THREE.Vector3(), 0.1, 0x2a2219, 0.03, 0.02);
     spr.add(arF, arV); grp.spring = spr;
 
     /* pendulum: a stand with an arm out to the pivot, the light rod and the 1 kg bob; the dashed circle is the bob's path */
@@ -1668,21 +1668,21 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     arm.add(armX, K.rod([0, 0.2, 0], [0, -0.005, 0], 0.01, steel), elbow); pen.add(arm);
     const axle = K.rod([0, 0.015, 0], [0, -0.03, 0], 0.006, dark); pen.add(axle);
     const swing = new THREE.Group(); pen.add(swing);
-    const pRod = K.rod([0, 0, 0], [0, 0, -1], 0.004, mat({ roughness: 0.4, metalness: 0.5 }, ['#8a939e', '#aab3bd'])); pRod.position.y = -0.03; swing.add(pRod);
+    const pRod = K.rod([0, 0, 0], [0, 0, -1], 0.004, mat({ roughness: 0.4, metalness: 0.5 }, ['#9c958b', '#bcb5ab'])); pRod.position.y = -0.03; swing.add(pRod);
     const bob = new THREE.Mesh(new THREE.SphereGeometry(0.0312, 32, 20), red); bob.castShadow = true; swing.add(bob);
-    const path = K.ring(1, { dashed: true, opacity: 0.55, color: '#5a6575' }); path.rotation.x = Math.PI / 2; path.position.y = -0.03; pen.add(path);
+    const path = K.ring(1, { dashed: true, opacity: 0.55, color: '#73695c' }); path.rotation.x = Math.PI / 2; path.position.y = -0.03; pen.add(path);
     const pPins = [0, 1].map(() => { const m = new THREE.Mesh(new THREE.SphereGeometry(0.011, 16, 10), inkM); pen.add(m); return m; });
     grp.pend = pen;
 
     /* molecule: two argon atoms, each drawn σ across, about their center of mass; a 0.1 nm bar for scale. Units: 1 = 1 nm */
     const mol = new THREE.Group();
-    const slab = K.box(1.6, 0.9, 0.012, mat({ roughness: 0.9 }, ['#dfe5ec', '#1b232d']), 0, 0.05, -0.012); mol.add(slab);
-    const grid = new THREE.GridHelper(1.6, 16, 0x9aa6b4, 0xc2cad4); grid.rotation.x = Math.PI / 2; grid.position.set(0, 0.05, 0.001); grid.scale.z = 0.9 / 1.6; mol.add(grid);
+    const slab = K.box(1.6, 0.9, 0.012, mat({ roughness: 0.9 }, ['#ebe6e0', '#2c251c']), 0, 0.05, -0.012); mol.add(slab);
+    const grid = new THREE.GridHelper(1.6, 16, 0xb2a89c, 0xd3ccc3); grid.rotation.x = Math.PI / 2; grid.position.set(0, 0.05, 0.001); grid.scale.z = 0.9 / 1.6; mol.add(grid);
     const argon = mat({ roughness: 0.3, metalness: 0.05 }, ['#57a9c2', '#6cc0d8']);
     const atoms = [0, 1].map(() => { const a = new THREE.Mesh(new THREE.SphereGeometry(1, 48, 32), argon); a.castShadow = true; mol.add(a); return a; });
     const bar = K.box(0.1, 0.012, 0.004, inkM, 0, -0.3, 0); mol.add(bar);
     const rLines = [0, 1, 2, 3].map(() => { const l = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, 0, 0.6)]), dashM); l.computeLineDistances(); mol.add(l); return l; });
-    const dim = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-0.5, 0, 0), new THREE.Vector3(0.5, 0, 0)]), new THREE.LineBasicMaterial({ color: '#17202b' })); mol.add(dim);
+    const dim = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-0.5, 0, 0), new THREE.Vector3(0.5, 0, 0)]), new THREE.LineBasicMaterial({ color: '#2a2219' })); mol.add(dim);
     grp.lj = mol;
 
     /* roller coaster, in meters, shown at 1/60: rails, a spine, ties and white supports over grass, a station and the car */
@@ -1712,7 +1712,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 
     for (const k in grp) S3.scene.add(grp[k]);
     G3 = { S: S3, pBase, armX, elbow, grp, glider, coil, sPins, arF, arV, upr, arm, axle, swing, pRod, bob, path, pPins, atoms, bar, rLines, dim, cTrack, car, cPins, cE, tBuilt, tBall, tPins, tE, dashM,
-      wood: mat({ roughness: 0.75 }, ['#b88a57', '#7a5a3a']), railM: steel, cRail: mat({ roughness: 0.4, metalness: 0.3 }, ['#c23f2c', '#d9553f']), cSup: mat({ roughness: 0.6, metalness: 0.2 }, ['#eceae4', '#9aa1a8']),
+      wood: mat({ roughness: 0.75 }, ['#b88a57', '#7a5a3a']), railM: steel, cRail: mat({ roughness: 0.4, metalness: 0.3 }, ['#c23f2c', '#d9553f']), cSup: mat({ roughness: 0.6, metalness: 0.2 }, ['#eceae4', '#a7a29b']),
       tKey: '', cKey: '', obj: null, kind: '' };
     S3.orbit(S3.el, o3, () => drawAll(), { grab: grab3, phMin: 0.35, phMax: 1.48, zMin: 0.5, zMax: 3 });
     S3.el.addEventListener('pointermove', move3);

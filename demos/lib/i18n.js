@@ -355,10 +355,10 @@
   else setTimeout(start, 0);
 
   /* ---------- the switch, beside the theme switch ---------- */
-  var SW_CSS = '.vd-lang{display:inline-flex;align-items:center;gap:5px;margin:0;font:inherit;font-size:.82rem;font-weight:700;color:var(--muted,#5a6575);white-space:nowrap}'
+  var SW_CSS = '.vd-lang{display:inline-flex;align-items:center;gap:5px;margin:0;font:inherit;font-size:.82rem;font-weight:700;color:var(--muted,#73695c);white-space:nowrap}'
     + '.vd-lang svg{width:14px;height:14px;flex:none;fill:none;stroke:currentColor;stroke-width:1.3}'
-    + '.vd-lang select{font:inherit;font-weight:700;color:inherit;background:var(--surface,#f8fafc);border:1px solid var(--line,#d3d9e2);border-radius:6px;padding:4px 6px;cursor:pointer;max-width:11em}'
-    + '.vd-lang select:focus-visible{outline:2px solid var(--accent,#2b60b5);outline-offset:1px}'
+    + '.vd-lang select{font:inherit;font-weight:700;color:inherit;background:var(--surface,#fcfaf8);border:1px solid var(--line,#e1dbd4);border-radius:6px;padding:4px 6px;cursor:pointer;max-width:11em}'
+    + '.vd-lang select:focus-visible{outline:2px solid var(--accent,#c4811c);outline-offset:1px}'
     + '.vd-lang .vd-lang-draft{font-size:.7rem;font-weight:700;padding:1px 5px;border-radius:4px;border:1px solid currentColor}'
     + '.vd-theme-hero+.vd-lang{position:absolute;top:14px;right:var(--vd-lang-right,0);z-index:2}'
     + '.vd-theme-doc+.vd-lang{float:right;margin:0 0 8px 12px}'

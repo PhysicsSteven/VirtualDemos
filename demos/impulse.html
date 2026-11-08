@@ -24,10 +24,10 @@
 /* Layout: the track and cart on top, the force sensor graph below on the left; the rail on the right. */
 /* Layout: lab bench. The gas box and speed histogram fill the left, a narrow instrument rail sits on the right; stacks on phones. */
 
-:root { --cart: #2b60b5; --track: #9aa6b6; --sensor: #4a5563; --force: #b0452f; --vel: #1f8a5a; }
-:root { --bench: #eee8de; --bench-edge: #ddd3c3; --wall-dot: #e7ebf0; --metal: #b9c1cc; --metal-dark: #6b7686; --clay: #c98a5a; --logger: #3a4553; --lcd: #b5cfa4; --led: #2fae57; --cart-top: #1f4a8f; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --cart: #69a0ff; --track: #56606e; --sensor: #c3cad4; --force: #ff8a70; --vel: #4cd08f; --bench: #191f27; --bench-edge: #232b35; --wall-dot: #161d26; --metal: #4d5866; --metal-dark: #a3aebb; --clay: #a8714a; --logger: #2a333f; --lcd: #3f5c3e; --led: #4cd08f; --cart-top: #9cc0ff; } }
-:root[data-theme="dark"] { --cart: #69a0ff; --track: #56606e; --sensor: #c3cad4; --force: #ff8a70; --vel: #4cd08f; --bench: #191f27; --bench-edge: #232b35; --wall-dot: #161d26; --metal: #4d5866; --metal-dark: #a3aebb; --clay: #a8714a; --logger: #2a333f; --lcd: #3f5c3e; --led: #4cd08f; --cart-top: #9cc0ff; }
+:root { --cart: #2b60b5; --track: #b4aa9c; --sensor: #61584c; --force: #b0452f; --vel: #1f8a5a; }
+:root { --bench: #eee8de; --bench-edge: #ddd3c3; --wall-dot: #efece8; --metal: #cbc4ba; --metal-dark: #847a6d; --clay: #c98a5a; --logger: #51483c; --lcd: #b5cfa4; --led: #2fae57; --cart-top: #1f4a8f; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --cart: #69a0ff; --track: #6c6358; --sensor: #d3ccc4; --force: #ff8a70; --vel: #4cd08f; --bench: #26211a; --bench-edge: #342d24; --wall-dot: #251f17; --metal: #645b4f; --metal-dark: #b9b0a5; --clay: #a8714a; --logger: #3d362c; --lcd: #3f5c3e; --led: #4cd08f; --cart-top: #9cc0ff; } }
+:root[data-theme="dark"] { --cart: #69a0ff; --track: #6c6358; --sensor: #d3ccc4; --force: #ff8a70; --vel: #4cd08f; --bench: #26211a; --bench-edge: #342d24; --wall-dot: #251f17; --metal: #645b4f; --metal-dark: #b9b0a5; --clay: #a8714a; --logger: #3d362c; --lcd: #3f5c3e; --led: #4cd08f; --cart-top: #9cc0ff; }
 :root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
 body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
@@ -64,20 +64,20 @@ table.rows input:focus { border-color: var(--accent); }
 }
 
 /* vd-knobs: an instrument panel in the picture; each range input inside it is shown as a knob (layout redesign) */
-.instr { position: absolute; z-index: 2; display: flex; flex-wrap: wrap; align-items: flex-start; gap: 10px 14px; padding: 8px 12px; border-radius: 10px; background: #2c3542; color: #e3e8ef; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.25); }
+.instr { position: absolute; z-index: 2; display: flex; flex-wrap: wrap; align-items: flex-start; gap: 10px 14px; padding: 8px 12px; border-radius: 10px; background: #40382e; color: #eeeae4; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.25); }
 /* in the light theme the panel is a brushed aluminum faceplate, so it belongs on a light wall; knobs and green readouts stay dark like a real instrument's */
-:root:not([data-theme="dark"]) .instr { background: linear-gradient(180deg, #f1f4f7, #d9dfe6); color: #1d252f; border: 1px solid #b9c2cc; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 2px 6px rgba(20, 30, 45, 0.18); }
-:root:not([data-theme="dark"]) .instr .kctl label, :root:not([data-theme="dark"]) .instr .kctl .klab { color: #3a4552; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .instr { background: #2c3542; color: #e3e8ef; border: 0; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.25); } :root:not([data-theme="light"]) .instr .kctl label, :root:not([data-theme="light"]) .instr .kctl .klab { color: #c9d0d9; } }
+:root:not([data-theme="dark"]) .instr { background: linear-gradient(180deg, #f7f4f1, #e5e0da); color: #2e271e; border: 1px solid #cbc4ba; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 2px 6px rgba(20, 30, 45, 0.18); }
+:root:not([data-theme="dark"]) .instr .kctl label, :root:not([data-theme="dark"]) .instr .kctl .klab { color: #50473c; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .instr { background: #40382e; color: #eeeae4; border: 0; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.25); } :root:not([data-theme="light"]) .instr .kctl label, :root:not([data-theme="light"]) .instr .kctl .klab { color: #d8d2ca; } }
 .instr > [hidden] { display: none !important; }
 .instr-title { flex-basis: 100%; font-size: 0.72rem; font-weight: 700; opacity: 0.8; line-height: 1.2; }
 .instr .kctl { display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 84px; }
-.instr .kctl label, .instr .kctl .klab { font-size: 0.72rem; font-weight: 700; color: #c9d0d9; text-align: center; max-width: 120px; line-height: 1.2; min-height: 2.4em; display: flex; align-items: flex-end; justify-content: center; }
+.instr .kctl label, .instr .kctl .klab { font-size: 0.72rem; font-weight: 700; color: #d8d2ca; text-align: center; max-width: 120px; line-height: 1.2; min-height: 2.4em; display: flex; align-items: flex-end; justify-content: center; }
 .instr .kctl output { font-family: var(--font-mono); font-weight: 600; font-size: 0.9rem; color: #7ee0a0; background: #0b1a12; border-radius: 4px; padding: 1px 6px; white-space: nowrap; }
 .instr input[type="range"] { display: none; }
 .vdknob { position: relative; width: 44px; height: 44px; border-radius: 50%; cursor: grab; touch-action: none; flex: none;
-  background: radial-gradient(circle at 38% 32%, #8b96a4, #4a5462 62%, #39414d); box-shadow: 0 0 0 3px #232a34, 0 2px 4px rgba(0, 0, 0, 0.5); }
-.vdknob::before { content: ""; position: absolute; left: 50%; top: 4px; width: 3px; height: 13px; margin-left: -1.5px; border-radius: 2px; background: #f1f4f8; transform: rotate(var(--a, 0deg)); transform-origin: 50% 18px; }
+  background: radial-gradient(circle at 38% 32%, #a2998d, #60574c 62%, #4c443b); box-shadow: 0 0 0 3px #332c24, 0 2px 4px rgba(0, 0, 0, 0.5); }
+.vdknob::before { content: ""; position: absolute; left: 50%; top: 4px; width: 3px; height: 13px; margin-left: -1.5px; border-radius: 2px; background: #f7f5f2; transform: rotate(var(--a, 0deg)); transform-origin: 50% 18px; }
 .vdknob:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
 .instr.compact { gap: 6px 8px; padding: 6px 8px; }
 .instr.compact .kctl { min-width: 70px; gap: 3px; }
@@ -312,7 +312,7 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
     /* bench and pegboard wall */
     const benchM = M({ roughness: 0.85 }), wallM = M({ roughness: 1 });
     const bench = box(1.9, 0.75, 0.05, benchM, -0.25, 0.08, -TH - 0.025, false, true);
-    const peg = texCanvas(64, 64), pg = peg.getContext('2d'); pg.fillStyle = '#fff'; pg.fillRect(0, 0, 64, 64); pg.fillStyle = '#9aa3ad'; pg.beginPath(); pg.arc(32, 32, 5, 0, 7); pg.fill();
+    const peg = texCanvas(64, 64), pg = peg.getContext('2d'); pg.fillStyle = '#fff'; pg.fillRect(0, 0, 64, 64); pg.fillStyle = '#aca59b'; pg.beginPath(); pg.arc(32, 32, 5, 0, 7); pg.fill();
     const pegT = new THREE.CanvasTexture(peg); pegT.wrapS = pegT.wrapT = THREE.RepeatWrapping; pegT.repeat.set(76, 28); wallM.map = pegT;
     const wall = mesh(new THREE.PlaneGeometry(1.9, 0.7), wallM, false, true); wall.rotation.x = Math.PI / 2; wall.position.set(-0.25, 0.45, 0.3);
     /* aluminum track with a ruler along its face (1 cm marks, measured from the bumper's resting face), grooves and an end stop */
@@ -327,7 +327,7 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
     ruler.rotation.x = Math.PI / 2; ruler.position.set((TL0 + TL1) / 2, -TW / 2 - 0.0006, -TH / 2);
     const stop = box(0.02, TW, 0.05, darkM, TL0 + 0.01, 0, 0.025);
     /* the cart: body, darker top plate, front plate, four wheels with spokes so their turning shows */
-    const cartM = M({ roughness: 0.45, metalness: 0.1 }), topM = M({ roughness: 0.5 }), tyreM = M({ roughness: 0.8, color: 0x1e2226 }), hubM = M({ roughness: 0.35, metalness: 0.7 });
+    const cartM = M({ roughness: 0.45, metalness: 0.1 }), topM = M({ roughness: 0.5 }), tyreM = M({ roughness: 0.8, color: 0x25221f }), hubM = M({ roughness: 0.35, metalness: 0.7 });
     const cart = new THREE.Group(), bz = 2 * WR - 0.004;
     cart.add(box(CL, CWD, CH, cartM, -CL / 2, 0, bz + CH / 2), box(CL - 0.01, CWD - 0.012, 0.004, topM, -CL / 2, 0, bz + CH + 0.002), box(0.004, 0.05, 0.026, hubM, -0.002, 0, bz + CH / 2));
     const wheels = [];
@@ -353,7 +353,7 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
     lscrM.position.set(-0.03, 0, 0.0352); logger.add(lscrM);
     const ledM = new THREE.MeshBasicMaterial({ color: 0x2fae57 }), led = mesh(new THREE.SphereGeometry(0.004, 12, 8), ledM, false); led.position.set(0.06, -0.02, 0.036); logger.add(led);
     logger.position.set(0.14, -0.2, -TH); logger.rotation.z = -0.25;
-    const cableM = M({ roughness: 0.7, color: 0x24282d }), cable = mesh(new THREE.BufferGeometry(), cableM);
+    const cableM = M({ roughness: 0.7, color: 0x2c2925 }), cable = mesh(new THREE.BufferGeometry(), cableM);
     scene.add(bench, wall, track, grooves, ruler, stop, cart, spring, cap, clay, sensor, logger, cable);
     g3 = { rd, el, scene, cam, hemi, sun, benchM, wallM, alM, darkM, cartM, topM, cart, wheels, lab, labT, springM, spring, cap, clayM, clay, sensM, sensor, disp, dispT, logM, lscr, lscrT, ledM, cable, sprKey: '', labKey: '', dispKey: '', mountKey: '' };
     can.addEventListener('wheel', (e) => { if (!use3() || !in3(e)) e.stopImmediatePropagation(); }, { passive: true });
@@ -365,10 +365,10 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
   function theme3() {
     const g = g3, dk = VD3.dark();
     g.scene.background = col3(T.canvas, '#ffffff');
-    g.benchM.color = col3(dk ? '#3a3229' : '#ddd2bf', '#ddd2bf'); g.wallM.color = col3(dk ? '#2a313b' : '#eef1f5', '#eef1f5');
-    g.alM.color = col3(dk ? '#8b95a3' : '#c4ccd6', '#c4ccd6'); g.darkM.color = col3(dk ? '#4a5462' : '#5d6878', '#5d6878');
-    g.cartM.color = col3(T.cart, '#2b60b5'); g.topM.color = col3(T.cartTop, '#1f4a8f'); g.springM.color = col3(dk ? '#b8c0ca' : '#8a94a2', '#8a94a2');
-    g.clayM.color = col3(T.clay, '#c98a5a'); g.sensM.color = col3(dk ? '#56606e' : '#4a5563', '#4a5563'); g.logM.color = col3(dk ? '#2a333f' : '#3a4553', '#3a4553');
+    g.benchM.color = col3(dk ? '#3a3229' : '#ddd2bf', '#ddd2bf'); g.wallM.color = col3(dk ? '#3a332b' : '#f4f2ef', '#f4f2ef');
+    g.alM.color = col3(dk ? '#a1988d' : '#d5cec5', '#d5cec5'); g.darkM.color = col3(dk ? '#60574c' : '#766c5f', '#766c5f');
+    g.cartM.color = col3(T.cart, '#2b60b5'); g.topM.color = col3(T.cartTop, '#1f4a8f'); g.springM.color = col3(dk ? '#c9c2b9' : '#a0978c', '#a0978c');
+    g.clayM.color = col3(T.clay, '#c98a5a'); g.sensM.color = col3(dk ? '#6c6358' : '#61584c', '#61584c'); g.logM.color = col3(dk ? '#3d362c' : '#51483c', '#51483c');
     g.hemi.intensity = dk ? 0.5 : 0.62; g.sun.intensity = dk ? 0.75 : 0.85;
     g.labKey = g.dispKey = g.lscrKey = '';
   }
@@ -412,7 +412,7 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
       const t0 = tHit() - 0.2 * C().tc, t1 = tHit() + 1.2 * C().tc, Fh = C().Fmax * 1.15; c.strokeStyle = dk ? '#9fe0a0' : '#1b2a1b'; c.lineWidth = 4; c.beginPath(); let first = true;
       for (const [t, F] of S.pts) { if (t < t0 || t > t1 || t > S.t) continue; const xx = 8 + (Wl - 16) * (t - t0) / (t1 - t0), yy = Hl - 8 - (Hl - 16) * F / Fh; if (first) { c.moveTo(xx, yy); first = false; } else c.lineTo(xx, yy); }
       c.stroke(); g.lscrT.needsUpdate = true; }
-    g.ledM.color = col3(S.run && (reduce || Math.floor(performance.now() / 400) % 2 === 0) ? T.led : (dk ? '#2a333f' : '#5d6878'), '#2fae57');
+    g.ledM.color = col3(S.run && (reduce || Math.floor(performance.now() / 400) % 2 === 0) ? T.led : (dk ? '#3d362c' : '#766c5f'), '#2fae57');
     /* camera: frames the cart and the bumper; as the gap closes it narrows to the cart's front, the bumper and the sensor */
     const gap = Math.max(0, -cs.x), left = cs.x - CL * Math.min(1, 0.35 + gap * 2.2) - 0.01, right = L0 + 0.075, tx = (left + right) / 2, wf = (right - left) * (g.cam.aspect < 2 ? 1.55 : 1.2);
     const tv = Math.tan(g.cam.fov * Math.PI / 360), dist = Math.max(wf / 2 / (tv * g.cam.aspect), 0.11 / tv);

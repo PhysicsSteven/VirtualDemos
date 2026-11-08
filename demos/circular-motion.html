@@ -16,19 +16,19 @@
 <style>
 /* Layout: the moving object and its free body diagram on the left; the instrument rail on the right. */
 /* Layout: lab bench. The gas box and speed histogram fill the left, a narrow instrument rail sits on the right; stacks on phones. */
-:root { --w: #5a6575; --n: #2b60b5; --fr: #b0452f; --tn: #a7740b; --net: #2f7d4f; --vel: #6f4bb3; --road: #dfe5ec; }
+:root { --w: #73695c; --n: #2b60b5; --fr: #b0452f; --tn: #a7740b; --net: #2f7d4f; --vel: #a88456; --road: #ebe6e0; }
 /* scenery: tabletop, grass, trees, curbs, coaster, sky */
 :root { --table: #efe6d6; --table-grain: #e2d5bd; --table-edge: #cdbb98; --peg: #8a6a45; --grass: #e3ecd9; --tuft: #c2d4ae; --tree: #b5cfa6; --tree-dark: #8db27e;
-  --kerb: #ebb2a9; --kerb2: #ffffff; --lane: #ffffff; --skid: #59606b; --glass: #c4d8ec; --tyre: #2b2f36; --sky-top: #d3e6f6; --sky-bot: #f1f6fb; --cloud: #ffffff;
-  --ground: #dbe7cf; --steel: #a3aebb; --shine: rgba(255, 255, 255, 0.6); --shadow: rgba(20, 30, 40, 0.16); }
+  --kerb: #ebb2a9; --kerb2: #ffffff; --lane: #ffffff; --skid: #6a635a; --glass: #c4d8ec; --tyre: #35312c; --sky-top: #d3e6f6; --sky-bot: #f1f6fb; --cloud: #ffffff;
+  --ground: #dbe7cf; --steel: #b9b0a5; --shine: rgba(255, 255, 255, 0.6); --shadow: rgba(20, 30, 40, 0.16); }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --table: #27231e; --table-grain: #2f2a23; --table-edge: #463b2e; --peg: #a88560; --grass: #142019; --tuft: #1f3122; --tree: #1d3123; --tree-dark: #284430;
-  --kerb: #7a3d36; --kerb2: #b9c0ca; --lane: #66717f; --skid: #05070a; --glass: #5f7d9c; --tyre: #05070a; --sky-top: #0a1320; --sky-bot: #162133; --cloud: #253043;
-  --ground: #172317; --steel: #4c5866; --shine: rgba(255, 255, 255, 0.28); --shadow: rgba(0, 0, 0, 0.4); } }
+  --kerb: #7a3d36; --kerb2: #c9c2ba; --lane: #7d7468; --skid: #0a0805; --glass: #5f7d9c; --tyre: #0a0805; --sky-top: #0a1320; --sky-bot: #162133; --cloud: #253043;
+  --ground: #172317; --steel: #645a4e; --shine: rgba(255, 255, 255, 0.28); --shadow: rgba(0, 0, 0, 0.4); } }
 :root[data-theme="dark"] { --table: #27231e; --table-grain: #2f2a23; --table-edge: #463b2e; --peg: #a88560; --grass: #142019; --tuft: #1f3122; --tree: #1d3123; --tree-dark: #284430;
-  --kerb: #7a3d36; --kerb2: #b9c0ca; --lane: #66717f; --skid: #05070a; --glass: #5f7d9c; --tyre: #05070a; --sky-top: #0a1320; --sky-bot: #162133; --cloud: #253043;
-  --ground: #172317; --steel: #4c5866; --shine: rgba(255, 255, 255, 0.28); --shadow: rgba(0, 0, 0, 0.4); }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --w: #b4bfcc; --n: #69a0ff; --fr: #ff8a70; --tn: #e2b350; --net: #5fcf8a; --vel: #b49bff; --road: #2a3442; } }
-:root[data-theme="dark"] { --w: #b4bfcc; --n: #69a0ff; --fr: #ff8a70; --tn: #e2b350; --net: #5fcf8a; --vel: #b49bff; --road: #2a3442; }
+  --kerb: #7a3d36; --kerb2: #c9c2ba; --lane: #7d7468; --skid: #0a0805; --glass: #5f7d9c; --tyre: #0a0805; --sky-top: #0a1320; --sky-bot: #162133; --cloud: #253043;
+  --ground: #172317; --steel: #645a4e; --shine: rgba(255, 255, 255, 0.28); --shadow: rgba(0, 0, 0, 0.4); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --w: #cac1b6; --n: #69a0ff; --fr: #ff8a70; --tn: #e2b350; --net: #5fcf8a; --vel: #b49bff; --road: #40372c; } }
+:root[data-theme="dark"] { --w: #cac1b6; --n: #69a0ff; --fr: #ff8a70; --tn: #e2b350; --net: #5fcf8a; --vel: #b49bff; --road: #40372c; }
 :root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
 body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
@@ -435,7 +435,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // the ground: infield edge, the banked road with curbs and a dashed lane line, the embankment; rebuilt when r or θ changes
   function build3(r, th) {
     const col = (s, fb) => { try { return new THREE.Color(s || fb); } catch (_) { return new THREE.Color(fb); } };
-    const cRoad = col(T.road, '#dfe5ec').lerp(new THREE.Color(VD3.dark() ? '#3a414b' : '#8b939c'), 0.55), cK1 = col(T.kerb, '#c0392b'), cK2 = col(T.kerb2, '#ffffff'), cLane = col(T.lane, '#ffffff'), cGrass = col(T.grass, '#e3ecd9'), cBank = col(T.tuft, '#c2d4ae');
+    const cRoad = col(T.road, '#ebe6e0').lerp(new THREE.Color(VD3.dark() ? '#4a433b' : '#9b948c'), 0.55), cK1 = col(T.kerb, '#c0392b'), cK2 = col(T.kerb2, '#ffffff'), cLane = col(T.lane, '#ffffff'), cGrass = col(T.grass, '#e3ecd9'), cBank = col(T.tuft, '#c2d4ae');
     const ri = roadIn(r), ro = roadOut(r), kw = (ro - ri) * 0.07, ln = laneR(r), lw = (ro - ri) * 0.025, t = Math.tan(th), zo = (ro - r) * t, zi = (ri - r) * t;
     const ro2 = ro + Math.max(0, zo - zi) / Math.tan(35 * Math.PI / 180) + 0.001, N = 160, pos = [], cols = [];
     const band = (r0, r1, colOf, lift) => { for (let i = 0; i < N; i++) { const a0 = i / N * 2 * Math.PI, a1 = (i + 1) / N * 2 * Math.PI, c = colOf(i); if (!c) continue;
@@ -453,9 +453,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function theme3() {
     const g = g3, d = VD3.dark(), col = (s, fb) => { try { return new THREE.Color(s || fb); } catch (_) { return new THREE.Color(fb); } };
     g.scene.background = col(T.skyBot || T.canvas, '#eef3f8'); g.hemi.intensity = d ? 1.0 : 0.7; g.sun.intensity = d ? 0.9 : 0.75;
-    g.bodyM.color = col(T.n, '#2b60b5'); g.glassM.color = col(T.glass, '#9fc1e0'); g.tyreM.color = col(T.tyre, '#2b3038');
+    g.bodyM.color = col(T.n, '#2b60b5'); g.glassM.color = col(T.glass, '#9fc1e0'); g.tyreM.color = col(T.tyre, '#37322c');
     g.trunkM.color = col(d ? '#5a4632' : '#8a6a45', '#8a6a45'); g.crownM.color = col(T.tree, '#b5cfa6'); g.crownM2.color = col(T.treeDark, '#8db27e');
-    g.aV.userData.m.color = col(T.vel, '#6f4bb3'); g.aA.userData.m.color = col(T.net, '#2f7d4f'); G3.geo = '';
+    g.aV.userData.m.color = col(T.vel, '#a88456'); g.aA.userData.m.color = col(T.net, '#2f7d4f'); G3.geo = '';
   }
   function setArrow(a, o, dir, len, rad) {
     const n = Math.hypot(...dir); if (!(n > 0) || !(len > 0)) { a.visible = false; return; }

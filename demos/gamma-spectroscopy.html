@@ -18,32 +18,32 @@
 <style>
 /* Layout: one canvas with the bench (lead castle, source, detector, electronics) above the MCA screen; instrument rail on the right with a small analysis plot; stacks on phones. */
 :root {
-  --bg: #e9edf2;
-  --surface: #f8fafc;
-  --canvas: #fcfdfe;
-  --ink: #17202b;
-  --muted: #5a6575;
-  --line: #d3d9e2;
-  --grid: #e6ebf1;
-  --grid-strong: #cfd7e1;
+  --bg: #f1eeea;
+  --surface: #fcfaf8;
+  --canvas: #fefdfc;
+  --ink: #2a2219;
+  --muted: #73695c;
+  --line: #e1dbd4;
+  --grid: #f0ece7;
+  --grid-strong: #e0d9d0;
   --pos: #c23f2c;
   --neg: #2b60b5;
   --equi: #a7740b;
-  --accent: #2b60b5;
+  --accent: #c4811c;
   --gamma: #7a3ec2;
-  --lead: #646b75;
-  --lead-hi: #9198a2;
-  --lead-dk: #454b54;
-  --alu: #cfd6de;
-  --alu-dk: #8f99a5;
-  --pmt: #3b4351;
+  --lead: #746d65;
+  --lead-hi: #a19a92;
+  --lead-dk: #534d46;
+  --alu: #ddd7d0;
+  --alu-dk: #a39b91;
+  --pmt: #4f473d;
   --bench: #cdbb9c;
   --bench-dk: #a99678;
-  --nim: #d9dee5;
-  --scr: #0c1117;
-  --scr-ink: #d8e3ee;
-  --scr-muted: #8393a5;
-  --scr-grid: #1c2632;
+  --nim: #e4e0da;
+  --scr: #16120d;
+  --scr-ink: #ece4da;
+  --scr-muted: #a29686;
+  --scr-grid: #30281e;
   --scr-data: #f2c53d;
   --scr-roi: #ff5c6c;
   --scr-cur: #5fd0ff;
@@ -53,19 +53,19 @@
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
-    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-    --equi: #e2b350; --accent: #69a0ff; --gamma: #b98cff; --lead: #575e68; --lead-hi: #7d848e; --lead-dk: #3a4048;
-    --alu: #a3adb9; --alu-dk: #6b7581; --pmt: #2a313c; --bench: #4a3f30; --bench-dk: #362d22; --nim: #2b333f;
-    --scr: #05080c; --scr-ink: #d8e3ee; --scr-muted: #8393a5; --scr-grid: #18212c; --scr-data: #f2c53d; --scr-roi: #ff5c6c; --scr-cur: #5fd0ff; --scr-cal: #6fe0a0; color-scheme: dark;
+    --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
+    --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+    --equi: #e2b350; --accent: #fbc26d; --gamma: #b98cff; --lead: #676058; --lead-hi: #8d867e; --lead-dk: #47423b;
+    --alu: #b7afa5; --alu-dk: #7f776d; --pmt: #3b342b; --bench: #4a3f30; --bench-dk: #362d22; --nim: #3e362c;
+    --scr: #0b0906; --scr-ink: #ece4da; --scr-muted: #a29686; --scr-grid: #2a231a; --scr-data: #f2c53d; --scr-roi: #ff5c6c; --scr-cur: #5fd0ff; --scr-cal: #6fe0a0; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
-  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
-  --equi: #e2b350; --accent: #69a0ff; --gamma: #b98cff; --lead: #575e68; --lead-hi: #7d848e; --lead-dk: #3a4048;
-  --alu: #a3adb9; --alu-dk: #6b7581; --pmt: #2a313c; --bench: #4a3f30; --bench-dk: #362d22; --nim: #2b333f;
-  --scr: #05080c; --scr-ink: #d8e3ee; --scr-muted: #8393a5; --scr-grid: #18212c; --scr-data: #f2c53d; --scr-roi: #ff5c6c; --scr-cur: #5fd0ff; --scr-cal: #6fe0a0; color-scheme: dark;
+  --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
+  --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
+  --equi: #e2b350; --accent: #fbc26d; --gamma: #b98cff; --lead: #676058; --lead-hi: #8d867e; --lead-dk: #47423b;
+  --alu: #b7afa5; --alu-dk: #7f776d; --pmt: #3b342b; --bench: #4a3f30; --bench-dk: #362d22; --nim: #3e362c;
+  --scr: #0b0906; --scr-ink: #ece4da; --scr-muted: #a29686; --scr-grid: #2a231a; --scr-data: #f2c53d; --scr-roi: #ff5c6c; --scr-cur: #5fd0ff; --scr-cal: #6fe0a0; color-scheme: dark;
 }
 :root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
@@ -1185,8 +1185,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
 
   // ---------- the bench ----------
-  const NUC_COL = { cs137: '#d9a400', co60: '#2f7fd8', na22: '#c8402d', ba133: '#1d8a62', mn54: '#7a3ec2', cd109: '#d0559a', co57: '#1f9bb0', cszn: '#b07a2a', csref: '#d9a400', co57h: '#1f9bb0', unk: '#7c8796', none: '#7c8796' };
-  const MAT_COL = { al: '#c7ccd2', fe: '#8d96a3', cu: '#c27a45', mo: '#9aa3b5', sn: '#b9bfc8', ta: '#6f7c94' };
+  const NUC_COL = { cs137: '#d9a400', co60: '#2f7fd8', na22: '#c8402d', ba133: '#1d8a62', mn54: '#7a3ec2', cd109: '#d0559a', co57: '#1f9bb0', cszn: '#b07a2a', csref: '#d9a400', co57h: '#1f9bb0', unk: '#948a7e', none: '#948a7e' };
+  const MAT_COL = { al: '#d1cdc8', fe: '#a1998f', cu: '#c27a45', mo: '#b3a99c', sn: '#c7c1ba', ta: '#918472' };
   function benchGeom() {
     const p = LY.bench, ps = p.ps, narrow = LY.narrow;
     const top = p.y + 24 * ps;
@@ -1241,7 +1241,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     c.fillStyle = T.leadDk; c.beginPath(); c.moveTo(X(zr), Y(G.half + G.wallT)); c.lineTo(X(zr) + dz, Y(G.half + G.wallT) - dyz); c.lineTo(X(zr) + dz, Y(-G.half - G.wallT) - dyz); c.lineTo(X(zr), Y(-G.half - G.wallT)); c.closePath(); c.fill();
     // shadow of the castle on the bench
     c.fillStyle = 'rgba(0,0,0,0.18)'; c.fillRect(X(zl) + 4, Y(-G.half - G.wallT), (zr - zl) * sc + dz, 5 * ps);
-    const ig = c.createLinearGradient(0, Y(G.half), 0, Y(-G.half)); ig.addColorStop(0, '#2a2f36'); ig.addColorStop(1, T.leadDk);
+    const ig = c.createLinearGradient(0, Y(G.half), 0, Y(-G.half)); ig.addColorStop(0, '#35312b'); ig.addColorStop(1, T.leadDk);
     c.fillStyle = ig; c.fillRect(X(G.zL), Y(G.half), (G.zR - G.zL) * sc, 2 * G.half * sc);
     c.globalAlpha = 0.35; c.strokeStyle = T.lead; c.lineWidth = 1;
     for (let yy = -G.half; yy < G.half; yy += 2.5) { c.beginPath(); c.moveTo(X(G.zL), Y(yy) + 0.5); c.lineTo(X(G.zR), Y(yy) + 0.5); c.stroke(); }
@@ -1260,14 +1260,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     // V blocks
     c.fillStyle = T.aluDk; for (const z of [H * 0.3, H + 6]) { c.beginPath(); c.moveTo(X(z - 1.4), Y(-G.half)); c.lineTo(X(z + 1.4), Y(-G.half)); c.lineTo(X(z + 0.9), Y(-canR * 0.85)); c.lineTo(X(z - 0.9), Y(-canR * 0.85)); c.closePath(); c.fill(); }
     c.fillStyle = 'rgba(0,0,0,0.28)'; c.beginPath(); c.ellipse(X(H / 2 + 8), Y(-G.half) - 1.5, (H + 17) * sc / 2, 1.2 * sc, 0, 0, 2 * Math.PI); c.fill();
-    cylinder(c, X(H + 0.5), X(H + 0.5 + 13), G.cy, pmtR * sc, [T.pmt, '#6b7686', T.pmt, '#1b2028']);
-    cylinder(c, X(H + 13.5), X(H + 17.5), G.cy, pmtR * 0.82 * sc, ['#2a2f37', '#5a6372', '#2a2f37', '#15191e']);
+    cylinder(c, X(H + 0.5), X(H + 0.5 + 13), G.cy, pmtR * sc, [T.pmt, '#847a6d', T.pmt, '#27221c']);
+    cylinder(c, X(H + 13.5), X(H + 17.5), G.cy, pmtR * 0.82 * sc, ['#36312b', '#70675c', '#36312b', '#1d1a16']);
     cylinder(c, x0, x1, G.cy, canR * sc, [T.aluDk, T.alu, T.alu, T.aluDk], T.alu);
     // cutaway of the can face shows the crystal
     c.fillStyle = 'rgba(200, 225, 255, 0.55)'; c.fillRect(X(0), Y(R), H * sc, 2 * R * sc);
     c.strokeStyle = T.aluDk; c.lineWidth = 1; c.strokeRect(X(0) + 0.5, Y(R) + 0.5, H * sc, 2 * R * sc);
     // cable out through the right wall
-    c.strokeStyle = '#1f242b'; c.lineWidth = Math.max(2, 0.6 * sc); c.beginPath(); c.moveTo(X(H + 17.5), G.cy); c.lineTo(X(G.zR + G.wallT + 1), G.cy);
+    c.strokeStyle = '#2a2620'; c.lineWidth = Math.max(2, 0.6 * sc); c.beginPath(); c.moveTo(X(H + 17.5), G.cy); c.lineTo(X(G.zR + G.wallT + 1), G.cy);
     const el = G.el; if (LY.narrow) c.bezierCurveTo(X(G.zR + G.wallT + 3), G.cy, el.x + el.w * 0.9, el.y - 20, el.x + el.w * 0.9, el.y); else c.bezierCurveTo(X(G.zR + G.wallT + 4), G.cy, el.x - 10, el.y + el.h * 0.5, el.x, el.y + el.h * 0.55); c.stroke();
     // flashes in the crystal
     const now = performance.now() / 1000;
@@ -1278,7 +1278,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const hot = (id) => (drag && drag.id === id) || (!drag && hoverId === id);
     // backstop brick on the carriage (5 cm thick drawn)
     if (S.back === 'pb') { bricks(c, X(zb - 5), Y(6), 5 * sc, 12 * sc, 5 * sc, 3 * sc, T.lead, false); c.strokeStyle = T.leadDk; c.lineWidth = 1; c.strokeRect(X(zb - 5) + 0.5, Y(6) + 0.5, 5 * sc, 12 * sc); }
-    else if (S.back === 'fe') { const sg = c.createLinearGradient(X(zb - 1), 0, X(zb), 0); sg.addColorStop(0, '#7d8794'); sg.addColorStop(0.5, '#c3cad3'); sg.addColorStop(1, '#8a939f'); c.fillStyle = sg; c.fillRect(X(zb - 1), Y(6), 1 * sc, 12 * sc); c.strokeStyle = '#59616c'; c.lineWidth = 1; c.strokeRect(X(zb - 1) + 0.5, Y(6) + 0.5, 1 * sc, 12 * sc); }
+    else if (S.back === 'fe') { const sg = c.createLinearGradient(X(zb - 1), 0, X(zb), 0); sg.addColorStop(0, '#928a7f'); sg.addColorStop(0.5, '#d2ccc4'); sg.addColorStop(1, '#9d968c'); c.fillStyle = sg; c.fillRect(X(zb - 1), Y(6), 1 * sc, 12 * sc); c.strokeStyle = '#6b645a'; c.lineWidth = 1; c.strokeRect(X(zb - 1) + 0.5, Y(6) + 0.5, 1 * sc, 12 * sc); }
     // carriage plate on the rail
     c.fillStyle = T.alu; rr(c, X(zb - 5.5), Y(-G.half + 1.8), (zs - zb + 7) * sc, 0.8 * sc, 2); c.fill();
     c.fillStyle = T.aluDk; c.fillRect(X(zs - 0.2), Y(-1.4), 0.4 * sc, (-G.half + 1.8 + 1.4) * -sc);
@@ -1337,10 +1337,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   function knob(c, x, y, r, frac, hotK, ps, lab) {
     const g = c.createRadialGradient(x - r * 0.35, y - r * 0.35, r * 0.1, x, y, r);
-    g.addColorStop(0, '#5b6574'); g.addColorStop(1, '#1d2229');
+    g.addColorStop(0, '#72695d'); g.addColorStop(1, '#28241e');
     c.fillStyle = g; c.beginPath(); c.arc(x, y, r, 0, 2 * Math.PI); c.fill();
     const a = Math.PI * (0.75 + 1.5 * frac);
-    c.strokeStyle = '#f2f4f7'; c.lineWidth = 2 * ps; c.beginPath(); c.moveTo(x + Math.cos(a) * r * 0.25, y + Math.sin(a) * r * 0.25); c.lineTo(x + Math.cos(a) * r * 0.85, y + Math.sin(a) * r * 0.85); c.stroke();
+    c.strokeStyle = '#f7f5f2'; c.lineWidth = 2 * ps; c.beginPath(); c.moveTo(x + Math.cos(a) * r * 0.25, y + Math.sin(a) * r * 0.25); c.lineTo(x + Math.cos(a) * r * 0.85, y + Math.sin(a) * r * 0.85); c.stroke();
     // grip ring
     c.strokeStyle = T.accent; c.lineWidth = (hotK ? 3 : 1.6) * ps; c.globalAlpha = hotK ? 1 : 0.85;
     c.beginPath(); c.arc(x, y, r + 3 * ps, Math.PI * 0.75, Math.PI * 2.25); c.stroke(); c.globalAlpha = 1;
@@ -1382,7 +1382,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const dt = deadNow();
     const bh = Math.max(6, 8 * ps), by = Math.max(e.y + e.h * 0.5, e.y + fs + 16 * ps + 12 + bh + 6 * ps);
     c.fillText('DEAD', mx, by - bh - 3 * ps);
-    c.fillStyle = '#1b1f26'; c.fillRect(mx, by, mwid, bh); c.fillStyle = dt > 0.3 ? '#ff5a3c' : '#3ddc6a'; c.fillRect(mx, by, mwid * Math.min(1, dt), bh);
+    c.fillStyle = '#25211c'; c.fillRect(mx, by, mwid, bh); c.fillStyle = dt > 0.3 ? '#ff5a3c' : '#3ddc6a'; c.fillRect(mx, by, mwid * Math.min(1, dt), bh);
     c.fillStyle = T.ink; c.fillText(`${(100 * dt).toFixed(1)}%`, mx, by + bh + 8 * ps);
     if (e.h > 100) c.fillText(`${S.N} ch`, mx, Math.min(e.y + e.h - 10, by + bh + 22 * ps));
   }
@@ -1406,7 +1406,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     c.fillStyle = T.pmt; rr(c, scr.x - 3, scr.y - 3, scr.w + 6, scr.h + 6, 8); c.fill();
     c.fillStyle = T.scr; rr(c, scr.x, scr.y, scr.w, scr.h, 6); c.fill();
     // title bar
-    c.fillStyle = '#18212c'; rr(c, scr.x, scr.y, scr.w, M.head, 6); c.fill(); c.fillRect(scr.x, scr.y + M.head - 6, scr.w, 6);
+    c.fillStyle = '#2a231a'; rr(c, scr.x, scr.y, scr.w, M.head, 6); c.fill(); c.fillRect(scr.x, scr.y + M.head - 6, scr.w, 6);
     c.font = `600 ${10.5 * ps}px ${T.mono}`; c.textBaseline = 'middle'; c.textAlign = 'left'; c.fillStyle = T.scrInk;
     const st = acquiring ? (ready ? '● ACQUIRING' : '◌ WAIT') : '■ STOPPED';
     c.fillText(`MCA · ${S.N} ch`, scr.x + 10 * ps, scr.y + M.head / 2);

@@ -52,9 +52,9 @@ table.rows input:focus { border-color: var(--accent); }
   .chips button, .btn, .proj, .spin, .seg button { min-height: 36px; }
   input[type="range"] { min-height: 28px; }
 }
-:root { --sky: #eaf2fb; --sky2: #f7fafd; --grass: #9cc58a; --grass-dark: #6f9c5d; --tape: #f2d36b; --tape-edge: #b8962e; --spk: #36414e; --spk-b: #7a4fb0; --meter: #26313d; --lcd: #c9e7c1; --lcd-ink: #17202b; --wave: #2b60b5; --fit: #a7740b; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --sky: #0f1822; --sky2: #131d29; --grass: #2f4a2a; --grass-dark: #223820; --tape: #8a7536; --tape-edge: #5e4f22; --spk: #c9d1db; --spk-b: #b08ae0; --meter: #3a4553; --lcd: #9fd39a; --lcd-ink: #0d1218; --wave: #69a0ff; --fit: #e2b350; } }
-:root[data-theme="dark"] { --sky: #0f1822; --sky2: #131d29; --grass: #2f4a2a; --grass-dark: #223820; --tape: #8a7536; --tape-edge: #5e4f22; --spk: #c9d1db; --spk-b: #b08ae0; --meter: #3a4553; --lcd: #9fd39a; --lcd-ink: #0d1218; --wave: #69a0ff; --fit: #e2b350; }
+:root { --sky: #eaf2fb; --sky2: #f7fafd; --grass: #9cc58a; --grass-dark: #6f9c5d; --tape: #f2d36b; --tape-edge: #b8962e; --spk: #4c4338; --spk-b: #7a4fb0; --meter: #3b3328; --lcd: #c9e7c1; --lcd-ink: #2a2219; --wave: #2b60b5; --fit: #a7740b; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --sky: #0f1822; --sky2: #131d29; --grass: #2f4a2a; --grass-dark: #223820; --tape: #8a7536; --tape-edge: #5e4f22; --spk: #dad3ca; --spk-b: #b08ae0; --meter: #51483c; --lcd: #9fd39a; --lcd-ink: #17130e; --wave: #69a0ff; --fit: #e2b350; } }
+:root[data-theme="dark"] { --sky: #0f1822; --sky2: #131d29; --grass: #2f4a2a; --grass-dark: #223820; --tape: #8a7536; --tape-edge: #5e4f22; --spk: #dad3ca; --spk-b: #b08ae0; --meter: #51483c; --lcd: #9fd39a; --lcd-ink: #17130e; --wave: #69a0ff; --fit: #e2b350; }
 .stage { min-height: 640px; }
 .rack { right: 10px; left: auto; top: 10px; }
 .rack .seg button { font-size: 0.76rem; padding: 3px 8px; }
@@ -281,12 +281,12 @@ table.rows input:focus { border-color: var(--accent); }
     /* a loudspeaker on a tripod stand: pole, three legs, a cabinet with a tweeter over a woofer, facing the meter */
     const spk = (x, y, col, lab) => {
       Gr.shadow(ctx, x, gy, 22 * z, 4 * z, 0.8);
-      ctx.strokeStyle = dk ? '#7d8793' : '#2b323b'; ctx.lineWidth = 2.2 * z; ctx.lineCap = 'round';
+      ctx.strokeStyle = dk ? '#91897f' : '#3a342c'; ctx.lineWidth = 2.2 * z; ctx.lineCap = 'round';
       for (const dx of [-18, 0, 18]) { ctx.beginPath(); ctx.moveTo(x - 12 * z, gy - 24 * z); ctx.lineTo(x - 12 * z + dx * z, gy); ctx.stroke(); }
-      Gr.rod(ctx, x - 12 * z, y + 26 * z, x - 12 * z, gy - 20 * z, 2.2 * z, { color: dk ? '#8a949f' : '#5a6370' });
+      Gr.rod(ctx, x - 12 * z, y + 26 * z, x - 12 * z, gy - 20 * z, 2.2 * z, { color: dk ? '#9d968c' : '#6e665c' });
       const cw = 24 * z, ch = 54 * z, cx = x - 24 * z, cy = y - 27 * z;
       Gr.box(ctx, cx, cy, cw, ch, { r: 3 * z, color: col, shadow: false });
-      const cone = (yy, r) => { const g = ctx.createRadialGradient(cx + cw / 2 - r * 0.2, yy - r * 0.25, r * 0.1, cx + cw / 2, yy, r); g.addColorStop(0, '#6a7280'); g.addColorStop(0.6, '#262b33'); g.addColorStop(1, '#101317');
+      const cone = (yy, r) => { const g = ctx.createRadialGradient(cx + cw / 2 - r * 0.2, yy - r * 0.25, r * 0.1, cx + cw / 2, yy, r); g.addColorStop(0, '#7e766c'); g.addColorStop(0.6, '#322d27'); g.addColorStop(1, '#161411');
         ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx + cw / 2, yy, r, 0, 7); ctx.fill(); ctx.strokeStyle = 'rgba(255,255,255,0.15)'; ctx.lineWidth = 1; ctx.stroke(); };
       cone(y - 12 * z, 5 * z); cone(y + 10 * z, 9 * z);
       Gr.label(ctx, lab, cx + cw / 2, cy - 9 * z, { a: 'center', s: 11 * p, w: 700, c: T.ink, alpha: 0.85 }); };
@@ -295,16 +295,16 @@ table.rows input:focus { border-color: var(--accent); }
     /* the meter on its tripod at r */
     const mx = X(S.r), my = sy;
     Gr.shadow(ctx, mx, gy, 20 * z, 4 * z, 0.8);
-    ctx.strokeStyle = dk ? '#7d8793' : '#2b323b'; ctx.lineWidth = 2 * z; ctx.lineCap = 'round';
+    ctx.strokeStyle = dk ? '#91897f' : '#3a342c'; ctx.lineWidth = 2 * z; ctx.lineCap = 'round';
     for (const dx of [-15, 0, 15]) { ctx.beginPath(); ctx.moveTo(mx, my + 40 * z); ctx.lineTo(mx + dx * z, gy); ctx.stroke(); }
-    Gr.rod(ctx, mx, my + 2 * z, mx, my + 42 * z, 2.2 * z, { color: dk ? '#8a949f' : '#5a6370' });
+    Gr.rod(ctx, mx, my + 2 * z, mx, my + 42 * z, 2.2 * z, { color: dk ? '#9d968c' : '#6e665c' });
     /* the meter's body with its microphone on top, the windscreen at the height of the speakers */
-    Gr.box(ctx, mx - 7 * z, my - 2 * z, 14 * z, 22 * z, { r: 3 * z, color: '#39424e', shadow: false });
-    let wg = ctx.createRadialGradient(mx - 2 * z, my - 9 * z, 1 * z, mx, my - 7 * z, 7 * z); wg.addColorStop(0, dk ? '#5d6773' : '#5a6574'); wg.addColorStop(1, dk ? '#262c34' : '#20262e');
+    Gr.box(ctx, mx - 7 * z, my - 2 * z, 14 * z, 22 * z, { r: 3 * z, color: '#4c453b', shadow: false });
+    let wg = ctx.createRadialGradient(mx - 2 * z, my - 9 * z, 1 * z, mx, my - 7 * z, 7 * z); wg.addColorStop(0, dk ? '#71695f' : '#72685c'); wg.addColorStop(1, dk ? '#332e27' : '#2d2821');
     ctx.fillStyle = wg; ctx.beginPath(); ctx.arc(mx, my - 7 * z, 7 * z, 0, 7); ctx.fill();
     const bw = 108 * z, bh = 58 * z, bx = Math.min(W - bw - 6 * z, Math.max(6 * z, mx - bw / 2)), by = my - (bx < sx + 6 * z ? 118 : 84) * z;   /* lifted clear of the speakers when the meter is close to them */
     ctx.strokeStyle = dk ? 'rgba(200,210,220,0.25)' : 'rgba(40,50,60,0.25)'; ctx.lineWidth = 1; ctx.setLineDash([2 * z, 3 * z]); ctx.beginPath(); ctx.moveTo(mx, my - 14 * z); ctx.lineTo(mx, by + bh); ctx.stroke(); ctx.setLineDash([]);
-    Gr.box(ctx, bx, by, bw, bh, { r: 7 * z, color: '#34404c' });
+    Gr.box(ctx, bx, by, bw, bh, { r: 7 * z, color: '#4a4136' });
     Gr.lcd(ctx, bx + 7 * z, by + 7 * z, bw - 14 * z, 30 * z, `${f(reading(), 1)} dB`);
     Gr.plate(ctx, 'sound level meter', bx + bw / 2, by + 48 * z, { s: 7.5 * p });
     /* r marker on the tape */

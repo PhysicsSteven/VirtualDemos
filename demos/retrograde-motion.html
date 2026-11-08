@@ -876,7 +876,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const rings = new THREE.Mesh(new THREE.RingGeometry(1.25, 2.2, 64), new THREE.MeshBasicMaterial({ color: 0xd8c898, side: THREE.DoubleSide, transparent: true, opacity: 0.75 })); planet.add(rings);
     const orbE = mkLine(0x5fa3ff, 0.7), orbP = mkLine(0xffffff, 0.6), trail = mkLine(0xff8a5c, 0.95), sight = mkLine(0xffd166, 1), marks = new THREE.LineSegments(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({ color: 0xffd166, transparent: true, opacity: 0.3 }));
     const defer = mkLine(0xc4a5ff, 0.9), epi = mkLine(0xc4a5ff, 0.9), qc = mkLine(0xc4a5ff, 0.6, true), sunOrb = mkLine(0xffcf5a, 0.35, true);
-    const equant = new THREE.Mesh(new THREE.OctahedronGeometry(0.018), new THREE.MeshBasicMaterial({ color: 0xdfe6ef }));
+    const equant = new THREE.Mesh(new THREE.OctahedronGeometry(0.018), new THREE.MeshBasicMaterial({ color: 0xeee8e0 }));
     sc.add(orbE, orbP, trail, sight, marks, defer, epi, qc, sunOrb, equant);
     S3.sun.position.set(0, 0, 3); S3.hemi.intensity = 0.25;
     const light = new THREE.PointLight(0xffffff, 1.6, 0, 0); sc.add(light);
