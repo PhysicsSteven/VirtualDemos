@@ -15,4 +15,21 @@ function core(name,names){
  if(!match)throw Error(`Missing core boundary: ${name}`);
  const ctx={};vm.runInNewContext(match[1]+`\nglobalThis.result={${names}};`,ctx,{timeout:5000});return ctx.result;
 }
-module.exports={readDemo,readLib,core};
+/* for a demo without core markers: declarations taken by name, in the order given, and run together, so a test still runs
+   the page's own code. A name is a one line `const NAME = ...;` (or `const A = 1, NAME = 2;`) or a `function NAME(...) { ... }`
+   of any length (taken to its matching brace). `prelude` is code run first, for state the functions read (const S = {...}). */
+function pick(name,names,prelude=''){
+ const src=readDemo(name),list=names.split(',').map((s)=>s.trim()),out=[];
+ for(const k of list){
+  if(out.some((l)=>new RegExp(`(^|[ ,])${k} = `).test(l)))continue;   /* declared on a line already taken */
+  const m=src.match(new RegExp(`^[ \\t]*(const (?:[A-Za-z_$][\\w$]* = [^,;]+, )*${k} = .*;).*$`,'m'));
+  if(m){out.push(m[1]);continue;}
+  const f=src.search(new RegExp(`^[ \\t]*function ${k}\\(`,'m'));
+  if(f<0)throw Error(`${name}: no declaration of ${k}`);
+  let i=src.indexOf('{',f),depth=0;
+  for(;i<src.length;i++){const ch=src[i];if(ch==='{')depth++;else if(ch==='}'&&--depth===0)break;}
+  out.push(src.slice(f,i+1));
+ }
+ const ctx={};vm.runInNewContext(prelude+'\n'+out.join('\n')+`\nglobalThis.result={${list.join(',')}};`,ctx,{timeout:5000});return ctx.result;
+}
+module.exports={readDemo,readLib,core,pick};

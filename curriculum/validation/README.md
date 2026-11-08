@@ -2,7 +2,9 @@
 
 `test_<demo>.cjs` checks a demo's physics against independent analytic or numerical references. Each test pulls the code between a
 demo's `// ==CORE START==` and `// ==CORE END==` markers with `core('<demo>', 'fn,...')` from `demo_source.cjs`, so the test
-always runs the code the page runs. CI runs every Node test on each push (`.github/workflows/physics-labs.yml`). Tests that need
+always runs the code the page runs. A page whose physics sits outside the markers (Moon Phases, Spacetime, the Blackbody spectrum)
+is tested with `pick('<demo>', 'NAME,...', prelude)`, which takes each named one line `const` or whole `function` from the page
+and runs them together; `prelude` supplies any state they read. Star Slice plays back MESA data, so its test checks the data. CI runs every Node test on each push (`.github/workflows/physics-labs.yml`). Tests that need
 a browser (they mention playwright or chromium) are skipped there; run them locally with `NODE_PATH` set to the Playwright install.
 
     node curriculum/validation/test_pendulum.cjs
