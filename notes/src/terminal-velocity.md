@@ -15,7 +15,7 @@ Students should know Newton's second law and the drag force D = ½ρCAv² (§6.4
 
 ## Running it in class
 
-1. **Jump.** Ask Q1 before pressing Jump, then let it run: the drag arrow grows until it matches the weight, and the curve flattens at 44.4 m/s.
+1. **Jump.** Ask Q1 before pressing Jump, then let it run: the drag arrow grows until it matches the weight, and the curve flattens at 44.5 m/s.
 2. **How fast does it get there?** Pause near t = 4.5 s (v_T/g) and ask Q2.
 3. **Head first.** Switch to Head first on the way down: the speed climbs again, to 98 m/s for the textbook's 75 kg diver. Ask Q3. Switch back and watch it fall back to 44 m/s.
 4. **Parachute.** Run the Parachute setup at ×5. Ask Q4 while it opens; the largest deceleration is shown when Blind is off.
@@ -24,7 +24,7 @@ Students should know Newton's second law and the drag force D = ½ρCAv² (§6.4
 
 ## Questions
 
-**Q1.** Find the terminal speed of an 85 kg skydiver spread eagle, with C = 1.0, A = 0.70 m² and ρ = 1.21 kg/m³. Why does the speed stop growing?
+**Q1.** Find the terminal speed of an 85 kg skydiver spread eagle, with C = 1.0, A = 0.70 m² and ρ = 1.204 kg/m³. Why does the speed stop growing?
 
 **Q2.** From rest in uniform air, v = v_T tanh(gt/v_T). What fraction of v_T has the skydiver of Q1 reached at t = v_T/g, and when is the speed within 1% of v_T?
 
@@ -46,7 +46,7 @@ Students should know Newton's second law and the drag force D = ½ρCAv² (§6.4
 ## Physics behind the demo
 
 - Down positive, m dv/dt = mg − ½ρ(CA)v|v|, g = 9.81 m/s²; buoyancy and added mass left out, a straight vertical fall. RK4 with steps of at most 10 ms and v_T/(100g); it matches v_T tanh(gt/v_T) to 1 part in 10⁹, and landing is found by bisection.
-- Uniform air ρ = 1.21 kg/m³ (the textbook's); the thin air option is the International Standard Atmosphere below 11 km (U.S. Standard Atmosphere 1976).
+- Uniform air ρ = 1.204 kg/m³ (dry air at 20 °C; the textbook rounds it to 1.21); the thin air option is the International Standard Atmosphere below 11 km (U.S. Standard Atmosphere 1976).
 - Skydiver: C = 1.0 and A = 0.70 m² spread eagle, C = 0.70 and A = 0.18 m² head first (the textbook's Table 6.2 and examples); position changes take 1.0 s at a steady rate of change of CA.
 - Canopy: flat circular, 10.0 m flat diameter, C = 0.81 on the flat area (Scher and Young, NASA TN D-6423, 1971), CA = 63.6 m²; 1.0 s line stretch, 3.0 s fill with CA growing in proportion to time (model choices), body upright under it.
 - Coffee filter: 0.86 g, 15.1 cm across, C = 0.71 (Boyle and Pantaleone, arXiv:2206.14902, 2022). Nested filters: n times the mass, the same area.

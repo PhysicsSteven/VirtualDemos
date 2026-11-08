@@ -90,7 +90,7 @@ The cursor moves in steps of 1/1000 of the view, so the ring radius is uncertain
 
 ## Questions
 
-1. The Hubble Space Telescope has a 2.40 m mirror. For 550 nm light, what is the smallest angle it can resolve, and how close can two stars 2.0 million light years away be and still be seen as two? Check with the Hubble and two stars setup.
+1. The Hubble Space Telescope has a 2.40 m mirror. For 550 nm light, what is the smallest angle it can resolve, and how close can two stars 2.48 million light years away be and still be seen as two? Check with the Hubble and two stars setup.
 2. Why do astronomers build telescopes with ever larger mirrors, and why do radio telescopes have to be far larger than optical ones?
 3. A camera lens of focal length 50 mm is stopped down from f/4 to f/22. What happens to the size of the Airy disk on the sensor, and why can a photograph taken at f/22 look softer than one at f/8? Check with the Camera lens setup.
 4. Your answer to Before the lab question 3 is several kilometers, yet a real eye cannot tell two headlights apart that far away. Normal (20/20) vision resolves about one minute of arc. Give two reasons a real eye does worse than the diffraction limit.

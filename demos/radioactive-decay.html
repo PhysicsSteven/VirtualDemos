@@ -586,14 +586,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
 
   // ---------- setups ----------
-  // Half lives: ENSDF/NNDC evaluated values (C 14: the conventional 5730 yr, see note).
+  // Half lives: ENSDF/NNDC evaluated values (C 14: 5700 ± 30 yr, NUBASE2020 and ENSDF, as the nuclide chart uses; see note).
   const PRESETS = {
     coin: { unit: 'step', species: [{ name: 'parent', T: 1, range: [0.5, 10] }, { name: 'daughter' }], winHL: 10, coin: true,
       hint: 'Each step, every parent flips a fair coin and decays on heads, so p = 1/2 and T½ = 1 step. About half are left after one step, a quarter after two. Which ones go is pure chance.',
       note: 'With T½ = 1 step the decay chance per step is exactly ½. Other half lives give p = 1 − 2^(−1/T½) per step.' },
-    c14: { unit: 'yr', species: [{ name: '¹⁴C', T: 5730, range: [500, 50000] }, { name: '¹⁴N' }], winHL: 8, dating: true,
+    c14: { unit: 'yr', species: [{ name: '¹⁴C', T: 5700, range: [500, 50000] }, { name: '¹⁴N' }], winHL: 8, dating: true,
       hint: 'Living things take up carbon 14 from the air. After death it is not replaced, so the fraction left tells the age. Try the dating task below.',
-      note: '5730 yr is the textbook value (the Cambridge half life). The current evaluation is 5700 ± 30 yr; radiocarbon labs still quote ages with Libby’s 5568 yr by convention and then calibrate.' },
+      note: '5700 ± 30 yr is the current evaluation (NUBASE2020). Many textbooks still give the older 5730 yr (the Cambridge half life); radiocarbon labs still quote ages with Libby’s 5568 yr by convention and then calibrate.' },
     i131: { unit: 'd', species: [{ name: '¹³¹I', T: 8.0252, range: [0.5, 100] }, { name: '¹³¹Xe' }], winHL: 8,
       hint: 'Iodine 131 treats thyroid disease and is a fallout product. After 10 half lives, about 80 days, the activity has dropped to 1/1024 of its start.',
       note: '¹³¹I: 8.03 d, β⁻ decay to ¹³¹Xe. About 1% passes through the metastable ¹³¹ᵐXe (11.9 d) first; that detour is left out. In the body the iodine is also excreted, so the effective half life is shorter.' },

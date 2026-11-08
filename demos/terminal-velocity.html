@@ -74,7 +74,7 @@
           <div data-for="sky"><div class="slider-head"><label for="sM">Mass with gear m</label><output id="oM" for="sM"></output></div><input type="range" id="sM" min="40" max="130" step="1"></div>
           <div data-for="sky"><div class="slider-head"><label for="sH">Exit altitude</label><output id="oH" for="sH"></output></div><input type="range" id="sH" min="1000" max="11000" step="100"></div>
           <div data-for="sky"><div class="slider-head"><label for="sP">Pull altitude</label><output id="oP" for="sP"></output></div><input type="range" id="sP" min="500" max="3000" step="100"></div>
-          <div data-for="sky"><div class="slider-head"><span>Air</span></div><div class="seg" role="group" aria-label="Air" id="airSeg"><button type="button" data-air="text" aria-pressed="true">Uniform, 1.21 kg/m³</button><button type="button" data-air="isa" aria-pressed="false">Thins with height</button></div></div>
+          <div data-for="sky"><div class="slider-head"><span>Air</span></div><div class="seg" role="group" aria-label="Air" id="airSeg"><button type="button" data-air="text" aria-pressed="true">Uniform, 1.204 kg/m³</button><button type="button" data-air="isa" aria-pressed="false">Thins with height</button></div></div>
           <div data-for="lab"><div class="slider-head"><label for="sN">Filters stacked n</label><output id="oN" for="sN"></output></div><input type="range" id="sN" min="1" max="8" step="1"></div>
           <div data-for="lab"><div class="slider-head"><label for="sD">Release height above the detector</label><output id="oD" for="sD"></output></div><input type="range" id="sD" min="0.5" max="3" step="0.05"></div>
         </div>
@@ -132,7 +132,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
         <details class="more"><summary>The model and its formulas</summary>
           <p class="formula">D = ½ρCAv², ma = mg − D, v_T = √(2mg/(ρCA))</p>
-          <p class="hint">Model: the drag is ½ρCAv² against the motion, with a constant drag coefficient C (OpenStax University Physics Vol. 1, §6.4). Buoyancy and the air carried along with the body are left out, and the fall is straight down (a real exit also carries the plane's forward speed). g = 9.81 m/s² everywhere. Uniform air has the textbook's ρ = 1.21 kg/m³; air that thins with height follows the International Standard Atmosphere below 11 km (U.S. Standard Atmosphere 1976: 288.15 K and 101 325 Pa at the ground, cooling 6.5 K per km), so ρ is 1.225 kg/m³ at the ground and 0.413 kg/m³ at 10 km.</p>
+          <p class="hint">Model: the drag is ½ρCAv² against the motion, with a constant drag coefficient C (OpenStax University Physics Vol. 1, §6.4). Buoyancy and the air carried along with the body are left out, and the fall is straight down (a real exit also carries the plane's forward speed). g = 9.81 m/s² everywhere. Uniform air has ρ = 1.204 kg/m³, dry air at 20 °C and 101.325 kPa (ρ = PM/RT with the CRC molar mass; the textbook rounds it to 1.21); air that thins with height follows the International Standard Atmosphere below 11 km (U.S. Standard Atmosphere 1976: 288.15 K and 101 325 Pa at the ground, cooling 6.5 K per km), so ρ is 1.225 kg/m³ at the ground and 0.413 kg/m³ at 10 km.</p>
           <p class="hint">Skydiver: C = 1.0 and A = 0.70 m² spread eagle, C = 0.70 and A = 0.18 m² head first, the textbook's Table 6.2 and its two examples. A change of position takes 1.0 s, with the drag area CA changing at a steady rate. The round canopy is a flat circular one 10.0 m across when laid flat, with C = 0.81 on that flat area (Scher and Young, NASA TN D-6423, 1971), so CA = 63.6 m². After the pull the lines take 1.0 s to stretch, then the canopy fills in 3.0 s, its drag area growing in step with time; under it the body hangs upright with the head first values. The 10.0 m, 1.0 s and 3.0 s are model choices. The canopy is drawn with its open area in proportion to its drag area.</p>
           <p class="hint">Coffee filter: 0.86 g, 15.1 cm across the top, C = 0.71 on that circle (Boyle and Pantaleone, "The added mass of a falling coffee filter", arXiv:2206.14902, 2022, who measured 1.1 m/s for one filter). Stacked filters nest, so n of them have n times the mass and the same area. The motion detector under them reads the height above its face.</p>
           <p class="hint">The motion is integrated with fourth order Runge–Kutta in steps of at most 10 ms and a hundredth of v_T/g; from rest in uniform air it agrees with the exact v = v_T tanh(gt/v_T) to better than 1 part in 10⁹. Readings: t to 0.01 s, distances to 0.01 m, altitude to 0.1 m, v to 0.01 m/s and a to 0.01 m/s². No noise is added.</p>
@@ -150,7 +150,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   /* Falling through air with quadratic drag (OpenStax Vol 1 §6.4). Down is positive: y is the distance fallen and v the speed
      downward. The drag is D = ½ρ(CA)v², against the motion; buoyancy and the air carried along with the body are left out. */
   const G = 9.81;                          // m/s², uniform
-  const RHO_TEXT = 1.21;                   // kg/m³, the textbook's air density in §6.4
+  const RHO_TEXT = 1.204;                  // kg/m³, dry air at 20 °C and 101.325 kPa, PM/RT (the textbook's §6.4 rounds it to 1.21)
   // The International Standard Atmosphere below 11 km (U.S. Standard Atmosphere 1976): T falls 6.5 K per km from 288.15 K,
   // p = p₀(T/T₀)^(g₀M/(RL)), and ρ = pM/(RT).
   const ISA = { T0: 288.15, P0: 101325, L: 0.0065, M: 0.0289644, R: 8.31432, g0: 9.80665, top: 11000 };
@@ -230,7 +230,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const NAMES = { spread: 'spread eagle', head: 'head first' };
   const PRESETS = {
     spread: { kind: 'sky', m: 85, h0: 4000, pullAlt: 1000, air: 'text', pos0: 'spread', label: 'Spread eagle, 85 kg',
-      hint: 'The textbook\'s Example 6.17: an 85 kg skydiver spread eagle, C = 1.0 and A = 0.70 m² in air of 1.21 kg/m³. v_T = √(2 × 85 × 9.81 / (1.21 × 1.0 × 0.70)) = 44.4 m/s, about 160 km/h. The parachute opens by itself at the pull altitude.' },
+      hint: 'The textbook\'s Example 6.17: an 85 kg skydiver spread eagle, C = 1.0 and A = 0.70 m² in air of 1.204 kg/m³. v_T = √(2 × 85 × 9.81 / (1.204 × 1.0 × 0.70)) = 44.5 m/s, about 160 km/h. The parachute opens by itself at the pull altitude.' },
     head: { kind: 'sky', m: 75, h0: 4000, pullAlt: 1000, air: 'text', pos0: 'head', label: 'Head first, 75 kg',
       hint: 'The textbook\'s 75 kg skydiver head first: C = 0.70 and A = 0.18 m², less than a fifth of the spread eagle drag area, so v_T = 98.2 m/s, about 350 km/h. Switch to spread eagle on the way down and watch the speed fall back.' },
     canopy: { kind: 'sky', m: 85, h0: 2000, pullAlt: 1500, air: 'text', pos0: 'spread', label: 'Parachute at 1500 m',

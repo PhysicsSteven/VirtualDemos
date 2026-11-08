@@ -21,7 +21,7 @@ Textbook: OpenStax *University Physics*, Vol. 1, §6.4 (Drag Force and Terminal 
 - The drag is $$D = \tfrac12\rho CAv^2$$ with constant $$C$$; buoyancy and the air carried along with the body are left out, and $$g = 9.81$$ m/s².
 - Skydiver: $$C = 1.0$$, $$A = 0.70$$ m² spread eagle and $$C = 0.70$$, $$A = 0.18$$ m² head first, the textbook's values. A change of position takes 1.0 s.
 - Parachute: a round canopy with $$CA = 63.6$$ m²; after the pull the lines stretch for 1.0 s and the canopy fills in 3.0 s. Under it the body hangs upright.
-- Uniform air has $$\rho = 1.21$$ kg/m³. Air that thins with height follows the International Standard Atmosphere.
+- Uniform air has $$\rho = 1.204$$ kg/m³. Air that thins with height follows the International Standard Atmosphere.
 - Coffee filter: 0.86 g, 15.1 cm across the top, $$C = 0.71$$, from measurements on real filters. Nested filters have the same area.
 - Readings: $$t$$ to 0.01 s, distances to 0.01 m, $$v$$ to 0.01 m/s, $$a$$ to 0.01 m/s². No noise is added.
 
@@ -53,11 +53,11 @@ At $$t = v_T/g$$ the speed is $$\tanh 1 = 0.762$$ of $$v_T$$, and it takes about
 
 The density of the air falls with height. In the International Standard Atmosphere it is 1.225 kg/m³ at sea level, then 1.112, 1.006, 0.909, 0.819, 0.736, 0.660, 0.590, 0.525, 0.466 and 0.413 kg/m³ at 1, 2, 3, 4, 5, 6, 7, 8, 9 and 10 km.
 
-**Constants.** $$g = 9.81$$ m/s², $$\rho = 1.21$$ kg/m³ for uniform air. One coffee filter: $$m_1 = 0.86$$ g, top diameter 15.1 cm.
+**Constants.** $$g = 9.81$$ m/s², $$\rho = 1.204$$ kg/m³ for uniform air. One coffee filter: $$m_1 = 0.86$$ g, top diameter 15.1 cm.
 
 ## Before the lab
 
-1. Find the terminal speed of an 85 kg skydiver spread eagle ($$C = 1.0$$, $$A = 0.70$$ m²) in air of 1.21 kg/m³, in m/s and in km/h. How long after the jump is the speed $$0.762\,v_T$$?
+1. Find the terminal speed of an 85 kg skydiver spread eagle ($$C = 1.0$$, $$A = 0.70$$ m²) in air of 1.204 kg/m³, in m/s and in km/h. How long after the jump is the speed $$0.762\,v_T$$?
 2. Find the terminal speed of a 75 kg skydiver head first ($$C = 0.70$$, $$A = 0.18$$ m²). Why does the smaller skydiver fall faster?
 3. Sketch the graphs of $$v$$ and $$a$$ against $$t$$ for a jump from rest. What is $$a$$ at the start and at terminal speed?
 4. Four nested coffee filters have four times the weight of one and the same area. By what factor is their terminal speed larger?

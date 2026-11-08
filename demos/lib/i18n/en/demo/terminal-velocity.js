@@ -49,13 +49,11 @@ VDI18N.add('en', 'demo/terminal-velocity', [
 "Drag area CA",
 "Air density ρ",
 "D = ½ρCAv², ma = mg − D, v_T = √(2mg/(ρCA))",
-"Model: the drag is ½ρCAv² against the motion, with a constant drag coefficient C (OpenStax University Physics Vol. {#}, §{#}). Buoyancy and the air carried along with the body are left out, and the fall is straight down (a real exit also carries the plane's forward speed). g = {#} m/s² everywhere. Uniform air has the textbook's ρ = {#} kg/m³; air that thins with height follows the International Standard Atmosphere below {#} km (U.S. Standard Atmosphere {#}: {#} K and {#} {#} Pa at the ground, cooling {#} K per km), so ρ is {#} kg/m³ at the ground and {#} kg/m³ at {#} km.",
+"Model: the drag is ½ρCAv² against the motion, with a constant drag coefficient C (OpenStax University Physics Vol. {#}, §{#}). Buoyancy and the air carried along with the body are left out, and the fall is straight down (a real exit also carries the plane's forward speed). g = {#} m/s² everywhere. Uniform air has ρ = {#} kg/m³, dry air at {#} °C and {#} kPa (ρ = PM/RT with the CRC molar mass; the textbook rounds it to {#}); air that thins with height follows the International Standard Atmosphere below {#} km (U.S. Standard Atmosphere {#}: {#} K and {#} {#} Pa at the ground, cooling {#} K per km), so ρ is {#} kg/m³ at the ground and {#} kg/m³ at {#} km.",
 "Skydiver: C = {#} and A = {#} m² spread eagle, C = {#} and A = {#} m² head first, the textbook's Table {#} and its two examples. A change of position takes {#} s, with the drag area CA changing at a steady rate. The round canopy is a flat circular one {#} m across when laid flat, with C = {#} on that flat area (Scher and Young, NASA TN D-{#}, {#}), so CA = {#} m². After the pull the lines take {#} s to stretch, then the canopy fills in {#} s, its drag area growing in step with time; under it the body hangs upright with the head first values. The {#} m, {#} s and {#} s are model choices. The canopy is drawn with its open area in proportion to its drag area.",
 "Coffee filter: {#} g, {#} cm across the top, C = {#} on that circle (Boyle and Pantaleone, \"The added mass of a falling coffee filter\", arXiv:{#}, {#}, who measured {#} m/s for one filter). Stacked filters nest, so n of them have n times the mass and the same area. The motion detector under them reads the height above its face.",
 "The motion is integrated with fourth order Runge–Kutta in steps of at most {#} ms and a hundredth of v_T/g; from rest in uniform air it agrees with the exact v = v_T tanh(gt/v_T) to better than {#} part in {#}⁹. Readings: t to {#} s, distances to {#} m, altitude to {#} m, v to {#} m/s and a to {#} m/s². No noise is added.",
 "Blind hides the terminal speed, the drag force and the weight, the drag area, the air density, the largest deceleration, the force arrows and the terminal speed line on the graph, leaving the clock, the height, v and a.",
-"3D, to scale · streaks: the air moving past in {#} s · drag to turn",
-"drag {#} N",
 "altitude {#} m · head first",
 "head first, {#} kg",
 "head first",
@@ -78,7 +76,7 @@ VDI18N.add('en', 'demo/terminal-velocity', [
 "{#} filters",
 "Four filters nested together: four times the weight on the same area, so the terminal speed doubles, to {#} m/s.",
 "Mass m, {#} filters",
+"Close",
 "drag {#} mN",
-"3D, to scale · drag to turn",
 "Landed at t = {#} s, at {#} m/s."
 ]);

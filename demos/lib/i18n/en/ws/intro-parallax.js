@@ -7,6 +7,7 @@ VDI18N.add('en', 'ws/intro-parallax', [
 "Distance from your ruler, {#} ÷ s (pc)",
 "Distance uncertainty (%)",
 "Parallax: Measuring the Distance to a Star | VirtualDemos",
+"<a>Virtual Physics Demos</a>",
 "Parallax: Measuring the Distance to a Star",
 "<strong>Setups in the demo:</strong> {#} Parallax; Spectroscopic parallax; Main sequence fitting; {#} Cepheids; Cepheid photometry; {#} Type Ia; {#} Hubble’s law; Whole ladder. This worksheet uses {#} Parallax.",
 "On the left, Earth’s orbit around the Sun with a nearby star beyond it, in 3D (drag the empty sky to turn it) or, with Flat, seen from above; the angles are hugely exaggerated so you can see them. Drag Earth around its orbit, or play a year.",

@@ -3,7 +3,7 @@
 // checked by integrating P dV numerically along each leg and heat by integrating T dS, independent of the closed forms in the demo.
 const assert = require('node:assert');
 const { core } = require('./demo_source.cjs');
-const c = core('heat-engines', 'R,corners,temp,entropy,legEnergy,summary,build');
+const c = core('heat-engines', 'R,corners,temp,entropy,legEnergy,summary,build,ottoSetR');
 let n = 0;
 const near = (a, b, tol, w) => assert(Math.abs(a - b) <= tol * Math.max(Math.abs(b), 1e-30), `${w || ''}: expected ${b}, got ${a}`);
 function group(name, f) { f(); n++; console.log('PASS', name); }
@@ -73,6 +73,19 @@ group('corners land on the process lines: isotherms keep T, adiabats keep PV^γ,
   near(s.Tmax, 600, 1e-12); near(s.Tmin, 300, 1e-12);
   // state 1 of Otto is 300 K and 100 kPa; state 2 after compression r = 8 is 300 · 8^0.4 K
   const o = run('otto', { r: 8, T3: 1800 }); near(c.temp(o.vs[1].P, o.vs[1].V, 1), 300 * Math.pow(8, 0.4), 1e-12);
+});
+
+group('Otto compression ratio slider: T₁ and the peak T₃ stay fixed, Q_in = nC_v(T₃ − T₂) and Q_out = nC_v(T₄ − T₁) both change', () => {
+  for (const g of [1.4, 5 / 3]) {
+    const cv = c.R / (g - 1), E = c.build('otto', { r: 8, T3: 1800 }, nmol, g);
+    for (const r of [2, 3, 5, 8, 12]) {
+      c.ottoSetR(E, r, g); const vs = c.corners(E, g), s = c.summary(E, vs, g, nmol, 1, null), T = vs.map((v) => c.temp(v.P, v.V, nmol));
+      near(vs[0].V / vs[1].V, r, 1e-12, 'r'); near(T[0], 300, 1e-12, 'T1'); near(T[2], 1800, 1e-12, 'T3');
+      near(T[1], 300 * Math.pow(r, g - 1), 1e-12, 'T2'); near(T[3], 1800 * Math.pow(r, 1 - g), 1e-12, 'T4');
+      near(s.Qin, nmol * cv * (1800 - T[1]), 1e-10, 'Qin'); near(s.Qout, nmol * cv * (T[3] - 300), 1e-10, 'Qout');
+      near(s.Wnet / s.Qin, 1 - Math.pow(r, 1 - g), 1e-12, 'eta');
+    }
+  }
 });
 
 group('run backward, a cycle is a refrigerator: same |W|, heat flows reversed, Carnot COP = T_c/(T_h − T_c)', () => {

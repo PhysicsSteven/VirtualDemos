@@ -38,8 +38,8 @@ VDI18N.add('es', 'ws/terminal-velocity', {
   "Paracaidista: \\(C = 1.0\\), \\(A = 0.70\\) m² con los brazos extendidos y \\(C = 0.70\\), \\(A = 0.18\\) m² de cabeza, los valores del libro. Un cambio de posición tarda {#} s.",
 "Parachute: a round canopy with \\(CA = 63.6\\) m²; after the pull the lines stretch for {#} s and the canopy fills in {#} s. Under it the body hangs upright.":
   "Paracaídas: un paracaídas redondo con \\(CA = 63.6\\) m²; después de abrirlo, las cuerdas se estiran durante {#} s y la campana se llena en {#} s. Debajo de él el cuerpo cuelga vertical.",
-"Uniform air has \\(\\rho = 1.21\\) kg/m³. Air that thins with height follows the International Standard Atmosphere.":
-  "El aire uniforme tiene \\(\\rho = 1.21\\) kg/m³. El aire que se enrarece con la altura sigue la Atmósfera Estándar Internacional.",
+"Uniform air has \\(\\rho = 1.204\\) kg/m³. Air that thins with height follows the International Standard Atmosphere.":
+  "El aire uniforme tiene \\(\\rho = 1.204\\) kg/m³. El aire que se enrarece con la altura sigue la Atmósfera Estándar Internacional.",
 "Coffee filter: {#} g, {#} cm across the top, \\(C = 0.71\\), from measurements on real filters. Nested filters have the same area.":
   "Filtro de café: {#} g, {#} cm de diámetro en la parte superior, \\(C = 0.71\\), según mediciones en filtros reales. Los filtros encimados tienen la misma área.",
 "Readings: \\(t\\) to {#} s, distances to {#} m, \\(v\\) to {#} m/s, \\(a\\) to {#} m/s². No noise is added.":
@@ -66,8 +66,8 @@ VDI18N.add('es', 'ws/terminal-velocity', {
   "En \\(t = v_T/g\\) la rapidez es \\(\\tanh 1 = 0.762\\) de \\(v_T\\), y tarda cerca de \\(2.6\\,v_T/g\\) en quedar a menos de {#}% de ella.",
 "The density of the air falls with height. In the International Standard Atmosphere it is {#} kg/m³ at sea level, then {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} and {#} kg/m³ at {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} and {#} km.":
   "La densidad del aire baja con la altura. En la Atmósfera Estándar Internacional es {#} kg/m³ al nivel del mar, y luego {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} y {#} kg/m³ a {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#} y {#} km.",
-"<strong>Constants.</strong> \\(g = 9.81\\) m/s², \\(\\rho = 1.21\\) kg/m³ for uniform air. One coffee filter: \\(m_1 = 0.86\\) g, top diameter {#} cm.":
-  "<strong>Constantes.</strong> \\(g = 9.81\\) m/s², \\(\\rho = 1.21\\) kg/m³ para aire uniforme. Un filtro de café: \\(m_1 = 0.86\\) g, diámetro superior {#} cm.",
+"<strong>Constants.</strong> \\(g = 9.81\\) m/s², \\(\\rho = 1.204\\) kg/m³ for uniform air. One coffee filter: \\(m_1 = 0.86\\) g, top diameter {#} cm.":
+  "<strong>Constantes.</strong> \\(g = 9.81\\) m/s², \\(\\rho = 1.204\\) kg/m³ para aire uniforme. Un filtro de café: \\(m_1 = 0.86\\) g, diámetro superior {#} cm.",
 "Find the terminal speed of an {#} kg skydiver spread eagle (\\(C = 1.0\\), \\(A = 0.70\\) m²) in air of {#} kg/m³, in m/s and in km/h. How long after the jump is the speed \\(0.762\\,v_T\\)?":
   "Encuentra la rapidez terminal de un paracaidista de {#} kg con los brazos extendidos (\\(C = 1.0\\), \\(A = 0.70\\) m²) en aire de {#} kg/m³, en m/s y en km/h. ¿Cuánto tiempo después del salto la rapidez es \\(0.762\\,v_T\\)?",
 "Find the terminal speed of a {#} kg skydiver head first (\\(C = 0.70\\), \\(A = 0.18\\) m²). Why does the smaller skydiver fall faster?":
@@ -189,5 +189,9 @@ VDI18N.add('es', 'ws/terminal-velocity', {
 "Terminal speed":
   "Rapidez terminal",
 "Distance fallen":
-  "Distancia caída"
+  "Distancia caída",
+"Uniform air has \\(\\rho = 1.21\\) kg/m³. Air that thins with height follows the International Standard Atmosphere.":
+  "El aire uniforme tiene \\(\\rho = 1.21\\) kg/m³. El aire que se enrarece con la altura sigue la Atmósfera Estándar Internacional.",
+"<strong>Constants.</strong> \\(g = 9.81\\) m/s², \\(\\rho = 1.21\\) kg/m³ for uniform air. One coffee filter: \\(m_1 = 0.86\\) g, top diameter {#} cm.":
+  "<strong>Constantes.</strong> \\(g = 9.81\\) m/s², \\(\\rho = 1.21\\) kg/m³ para aire uniforme. Un filtro de café: \\(m_1 = 0.86\\) g, diámetro superior {#} cm."
 });

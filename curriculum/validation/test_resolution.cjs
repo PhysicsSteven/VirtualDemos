@@ -43,8 +43,8 @@ group('Rayleigh criterion: at Δθ = θ1 the peak of one pattern sits on the zer
   near(c.pair(D, lam, 0, 0), 2, 1e-15, 'on top of each other');
 });
 group('textbook numbers: Hubble 2.40 m at 550 nm resolves 2.80e-7 rad, 0.56 ly at 2.0 million ly; a 3.00 mm pupil 2.24e-4 rad, headlights 1.30 m apart to 5.81 km', () => {
-  const th = c.rayleigh(c.HUBBLE_D, c.LAMBDA_AVG); near(th, 2.80e-7, 2e-3, 'Hubble angle'); near(th * c.ANDROMEDA_LY, 0.559, 2e-3, 'ly');
-  near(th * c.ANDROMEDA_LY * c.LY, 5.3e15, 1e-2, 'metres');
+  const th = c.rayleigh(c.HUBBLE_D, c.LAMBDA_AVG); near(th, 2.80e-7, 2e-3, 'Hubble angle'); near(th * c.ANDROMEDA_LY, 0.6934, 2e-3, 'ly');
+  near(th * c.ANDROMEDA_LY * c.LY, 6.56e15, 1e-2, 'metres');
   const te = c.rayleigh(c.PUPIL_D, c.LAMBDA_AVG); near(te, 2.24e-4, 2e-3, 'eye angle'); near(c.headlightRange(te), 5.81e3, 2e-3, 'km');
   near(c.headlightAngle(c.headlightRange(te)), te, 1e-12, 'inverse');
 });

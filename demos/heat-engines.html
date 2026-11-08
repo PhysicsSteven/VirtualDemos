@@ -369,6 +369,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     brayton: (rp, g) => 1 - Math.pow(rp, (1 - g) / g),
     stirling: (Th, Tc, r, g, regen) => regen ? 1 - Tc / Th : (Th - Tc) * Math.log(r) / (Th * Math.log(r) + (Th - Tc) / (g - 1))
   };
+  // Otto compression ratio: move the combustion leg 2→3 to V₂ = V₁/r and keep the peak temperature T₃ (and T₁) fixed.
+  // On the power stroke adiabat ln P + γ ln V = ln(nRT₃) + (γ − 1) ln V₂, so its offset moves with ln V₂.
+  function ottoSetR(E, r, g) {
+    const lnT3 = E[2].c + (1 - g) * E[1].c, x2 = E[3].c - Math.log(r);
+    E[1].c = x2; E[2].c = lnT3 + (g - 1) * x2; return E;
+  }
   // Standard cycles as edge lists. State 1 of Otto, Diesel and Brayton is 300 K and 100 kPa.
   function build(name, p, n, g) {
     const nR = n * R, L = Math.log, P1 = Pref, V1 = nR * Tref / P1;
@@ -389,7 +395,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // ==CORE END==
 
   if (typeof document === 'undefined') {
-    globalThis.HE = { R, Pref, Tref, kOf, offsetThrough, meet, corners, temp, entropy, legEnergy, summary, eff, build };
+    globalThis.HE = { R, Pref, Tref, kOf, offsetThrough, meet, corners, temp, entropy, legEnergy, summary, eff, build, ottoSetR };
     return;
   }
 
@@ -404,7 +410,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       hint: 'Two isotherms joined by two adiabats. Drag the top leg to change T<sub>h</sub> and the bottom leg to change T<sub>c</sub>; dragging a corner slides its neighbors along their curves.' },
     otto: { label: 'Otto', types: 'SVSV', def: { r: 8, T3: 1800 },
       notes: ['compression stroke', 'combustion', 'power stroke', 'exhaust and intake'],
-      hint: '1→2 compression stroke, 2→3 the spark burns the fuel so fast that the volume barely changes, 3→4 power stroke, 4→1 exhaust and fresh intake, modeled as cooling at constant volume. Drag leg 2→3 sideways to change r.' },
+      hint: '1→2 compression stroke, 2→3 the spark burns the fuel so fast that the volume barely changes, 3→4 power stroke, 4→1 exhaust and fresh intake, modeled as cooling at constant volume. Drag leg 2→3 sideways to change r; the peak temperature T₃ stays where it is. Drag the power stroke 3→4 to change T₃.' },
     diesel: { label: 'Diesel', types: 'SPSV', def: { r: 15, rc: 2 },
       notes: ['compression stroke', 'fuel injected and burning', 'power stroke', 'exhaust and intake'],
       hint: 'Fuel is sprayed in at the top of the stroke and burns as the piston starts back out, so the heat comes in at about constant pressure. Drag leg 2→3 up or down to change r, or the adiabat 3→4 to change the cutoff ratio r<sub>c</sub> = V₃/V₂.' },
@@ -426,7 +432,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     carnot: { cycle: 'carnot', gas: 'mono', dir: 1, p: { Th: 500, Tc: 300 },
       hint: 'Heat enters only at T<sub>h</sub> and leaves only at T<sub>c</sub>, so η equals the Carnot limit 1 − T<sub>c</sub>/T<sub>h</sub>. On the T–S diagram the cycle is a rectangle: the area under the top edge is Q<sub>in</sub>, under the bottom edge Q<sub>out</sub>.' },
     otto: { cycle: 'otto', gas: 'di', dir: 1, p: { r: 8, T3: 1800 },
-      hint: 'The gasoline engine as an air standard cycle. Its efficiency η = 1 − r<sup>1−γ</sup> depends only on the compression ratio r. Raise r and watch η climb, though it stays well below the Carnot limit for its 300 K to 1800 K span.' },
+      hint: 'The gasoline engine as an air standard cycle. Its efficiency η = 1 − r<sup>1−γ</sup> depends only on the compression ratio r. Raise r and watch η climb, though it stays well below the Carnot limit for its 300 K to 1800 K span. Changing r keeps the peak at 1800 K, so the heat in and the heat out both change.' },
     diesel: { cycle: 'diesel', gas: 'di', dir: 1, p: { r: 15, rc: 2 },
       hint: 'A Diesel squeezes the air so hard (r = 15 here) that the fuel ignites on its own. Self ignition lets a Diesel run at a much higher compression ratio, and that is why Diesels beat gasoline engines. At the same r it is less efficient than an Otto: set r = 8 and compare.' },
     stirling: { cycle: 'stirling', gas: 'mono', dir: 1, p: { Th: 600, Tc: 300, r: 3 }, regen: true,
@@ -456,7 +462,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ],
     otto: [
       { key: 'r', label: 'Compression ratio r = V₁/V₂', min: 2, max: 12, step: 0.1, fmt: (v) => v.toFixed(1), edge: 1,
-        get: (E) => Math.exp(E[3].c - E[1].c), set: (E, v) => { E[1].c = E[3].c - Math.log(v); }, from: (x, y, E) => Math.exp(E[3].c - x) }
+        get: (E) => Math.exp(E[3].c - E[1].c), set: (E, v) => ottoSetR(E, v, gam()),
+        from: (x, y, E) => Math.exp(E[3].c - x) }
     ],
     diesel: [
       { key: 'r', label: 'Compression ratio r = V₁/V₂', min: 4, max: 22, step: 0.5, fmt: (v) => v.toFixed(1), edge: 1,

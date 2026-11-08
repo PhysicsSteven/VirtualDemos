@@ -86,7 +86,7 @@ Use the standard error of the slope to give $$T_{1/2}$$ with its uncertainty for
 
 1. A nucleus has already survived three half lives. What is the chance it decays within the next half life? Explain.
 2. Why doesn't the number left fall exactly to half in each half life?
-3. A piece of wood has 25% of the carbon 14 of living wood. How old is it? (Carbon 14 half life 5730 yr.) Try the Carbon 14 dating setup's task to check yourself.
+3. A piece of wood has 25% of the carbon 14 of living wood. How old is it? (Carbon 14 half life 5700 yr.) Try the Carbon 14 dating setup's task to check yourself.
 4. Iodine 131 is used to treat thyroid disease. Why is waste containing it stored for about 80 days before disposal?
 
 ## What to hand in

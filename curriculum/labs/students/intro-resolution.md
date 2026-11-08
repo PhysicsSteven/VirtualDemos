@@ -10,7 +10,7 @@ Student worksheet · Astro 2203
 
 **Using the demo.**
 
-- Two equally bright stars, 2.0 million light years away (as far as the Andromeda galaxy), are seen by a telescope with a perfect mirror. The picture shows the light the mirror focuses, and the graph shows the brightness along the line through both stars.
+- Two equally bright stars, 2.48 million light years away (as far as the Andromeda galaxy), are seen by a telescope with a perfect mirror. The picture shows the light the mirror focuses, and the graph shows the brightness along the line through both stars.
 - The 3D view draws that light as a landscape: each star's blur is a glowing peak whose height is its brightness, with the mirror beside it. Move the stars together and watch the two peaks merge into one; the label over the middle says how deep the dip between them is. Flat shows the telescope and the light as a photograph. Drag to turn the 3D view (two fingers on a phone).
 - The mirror's diameter, the wavelength (color) of the light and the distance between the stars can all be changed.
 - The cursor is the orange line on the graph. It opens at the midpoint between the stars, and its readout gives the brightness there as a fraction of one star's peak (I/I₀).

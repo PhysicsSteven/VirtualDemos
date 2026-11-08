@@ -1,6 +1,11 @@
 /* English strings of notes/sound-intensity, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'notes/sound-intensity', [
 "Sound Intensity and Decibels: teaching notes",
+"Site",
+"Virtual Physics Demos",
+"Library",
+"<a>Demos</a><a>OpenStax</a><a>Notes</a>",
+"<a><b>For a class</b> Courses</a>",
 "Sound Intensity and Decibels",
 "Intro physics (sound, OpenStax Vol {#} {#})",
 "Intensity is power per area. A point source spreads its power P over a sphere, so I = P/({#}πr²): double the distance and the intensity falls to a quarter.",

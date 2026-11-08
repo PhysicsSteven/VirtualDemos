@@ -30,9 +30,9 @@ Students should know exponentials and logarithms; the RC discharge in PHYS 202 i
 
 **Q1.** Predict: 400 coin flip nuclei each decay with probability ½ per step. How many do you expect to be left after one step, and after three? Will exactly that many be left? How large a difference from the expected count would surprise you?
 
-**Q2.** A nucleus with a half life of 5730 years has already survived 3 half lives. What is the chance it decays within the next 5730 years? Use the **Parents alive one half life ago that are still alive** readout to check your answer late in a run, when the survivors are old.
+**Q2.** A nucleus with a half life of 5700 years has already survived 3 half lives. What is the chance it decays within the next 5700 years? Use the **Parents alive one half life ago that are still alive** readout to check your answer late in a run, when the survivors are old.
 
-**Q3.** A piece of charcoal has 18.0% of the carbon 14 of a living sample. Using T½ = 5730 yr, how old is it? About how many half lives is that? The method assumes something about the atmosphere in the past; what?
+**Q3.** A piece of charcoal has 18.0% of the carbon 14 of a living sample. Using T½ = 5700 yr, how old is it? About how many half lives is that? The method assumes something about the atmosphere in the past; what?
 
 **Q4.** Iodine 131 has a half life of 8.03 days. What fraction of a dose is left after 30 days? What is its mean life τ? Why is the activity in a patient's thyroid in practice lower than this calculation says?
 
@@ -55,7 +55,7 @@ Students should know exponentials and logarithms; the RC discharge in PHYS 202 i
 - Each step of length Δt, every nucleus draws one random number and changes with the exact probability for that time, p = 1 − e^(−λΔt). For the coin preset Δt = T½ = 1 step, so p = ½; other half lives give p = 1 − 2^(−1/T½).
 - For a chain the step uses the Bateman probabilities, so a parent can pass through the daughter within one step. N_D(t) = N₀ λ_P/(λ_D − λ_P)(e^(−λ_P t) − e^(−λ_D t)); the daughter peaks at t = ln(λ_D/λ_P)/(λ_D − λ_P).
 - The ±1σ band is σ = √(N₀f(1 − f)) with f the expected fraction (a binomial spread).
-- Half lives are evaluated values: ¹⁴C uses the conventional 5730 yr (the current evaluation is 5700 ± 30 yr, and radiocarbon labs quote ages with Libby's 5568 yr and then calibrate). The ¹³¹ᵐXe branch of ¹³¹I and a tiny α branch of ²¹⁰Bi are left out. The dating method assumes a constant atmospheric ¹⁴C level; real dates use a calibration curve.
+- Half lives are evaluated values: ¹⁴C uses the current evaluation, 5700 ± 30 yr (NUBASE2020; many textbooks give the older 5730 yr, and radiocarbon labs quote ages with Libby's 5568 yr and then calibrate). The ¹³¹ᵐXe branch of ¹³¹I and a tiny α branch of ²¹⁰Bi are left out. The dating method assumes a constant atmospheric ¹⁴C level; real dates use a calibration curve.
 - A followed nucleus's age is taken at the middle of the step in which it decays. In the real nuclide presets the steps are short and the **Mean age at decay** tends to τ. In **Coin flip nuclei** decays can only happen once per whole step, so the mean tends to 1.5 steps rather than τ = 1.44 steps: a discrete process is not quite exponential decay.
 
 ## Going further

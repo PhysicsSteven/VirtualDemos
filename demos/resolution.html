@@ -199,11 +199,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   /* on a screen a distance L from the hole, a point a distance r from the center is at angle atan(r/L) */
   const screenAngle = (r, L) => Math.atan2(r, L);
-  /* real world numbers. The textbook's Hubble example (section 4.5): a 2.40 m mirror, light of 550 nm, and two stars at the 2 million
-     light year distance of the Andromeda galaxy. Its Chapter 4 Problem 59 on the eye: a 3.00 mm pupil, 550 nm, and a car's two headlights
+  /* real world numbers. The textbook's Hubble example (section 4.5): a 2.40 m mirror and light of 550 nm, with two stars at the distance of the
+     Andromeda galaxy, 761 kpc = 2.48 million light years (Li et al. 2021, HST Cepheids; the textbook rounds it to 2 million). Its Chapter 4 Problem 59 on the eye: a 3.00 mm pupil, 550 nm, and a car's two headlights
      1.30 m apart. A light year is 9.4607 × 10¹⁵ m (IAU). The camera lens is a 50 mm lens; its f-number N sets D = f/N (the marked
      values 1.4, 2.8, ... are used as they are). */
-  const LY = 9.4607304725808e15, HUBBLE_D = 2.40, ANDROMEDA_LY = 2.0e6, PUPIL_D = 3.00e-3, HEADLIGHTS = 1.30, LAMBDA_AVG = 550e-9;
+  const LY = 9.4607304725808e15, HUBBLE_D = 2.40, ANDROMEDA_LY = 2.48e6, PUPIL_D = 3.00e-3, HEADLIGHTS = 1.30, LAMBDA_AVG = 550e-9;
   const CAMERA_F = 0.050, F_STOPS = [1.4, 2, 2.8, 4, 5.6, 8, 11, 16, 22];
   const headlightAngle = (R) => 2 * Math.atan(HEADLIGHTS / 2 / R);        /* R in m */
   const headlightRange = (theta) => HEADLIGHTS / 2 / Math.tan(theta / 2); /* farthest R at which the headlights are theta apart */
@@ -281,7 +281,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     eye: { kind: 'sky', short: 'eye', field: 1000e-6, unit: 'µrad', uk: 1e6, dec: 1, Dlabel: 'Pupil diameter D', Du: 'mm', Dk: 1e3, Dmin: 2, Dmax: 8, Dstep: 0.1, Ddec: 2, two: true,
       sepLabel: 'Distance to the car R', sepMin: 0.5, sepMax: 20, sepStep: 0.01, sepU: 'km', title: 'A car\'s headlights at night, seen by an eye', place: 'On the retina (as angles seen from outside)' },
     telescope: { kind: 'sky', short: 'telescope', field: 8e-6, unit: 'µrad', uk: 1e6, dec: 3, Dlabel: 'Mirror diameter D', Du: 'm', Dk: 1, Dmin: 0.1, Dmax: 10, Dstep: 0.05, Ddec: 2, two: true,
-      sepLabel: 'Distance between the stars', sepMin: 0.02, sepMax: 4, sepStep: 0.01, sepU: 'ly', title: 'Two stars 2.0 million light years away, seen by a telescope', place: 'In the focal plane (as angles)' },
+      sepLabel: 'Distance between the stars', sepMin: 0.02, sepMax: 4, sepStep: 0.01, sepU: 'ly', title: 'Two stars 2.48 million light years away, seen by a telescope', place: 'In the focal plane (as angles)' },
     camera: { kind: 'screen', short: 'camera', field: 40e-6, unit: 'µm', uk: 1e6, dec: 2, Dlabel: 'f-number N', two: true, L: CAMERA_F,
       sepLabel: 'Separation of the two images', sepMin: 0.5, sepMax: 60, sepStep: 0.1, sepU: 'µm', title: 'A 50 mm camera lens imaging two distant points onto its sensor', place: 'On the sensor' },
     mystery: { kind: 'screen', short: 'mystery pinhole', field: 0.060, unit: 'mm', uk: 1e3, dec: 3, Dlabel: 'Pinhole diameter D', Du: 'µm', Dk: 1e6, Dmin: 50, Dmax: 300, Dstep: 5, Ddec: 0, two: false, mystery: true,
@@ -524,7 +524,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const sx = x + w * 0.16, sy = y + h * 0.42, gap = n2 ? 18 * p : 0;
       for (const s of (n2 ? [-1, 1] : [0])) glow(sx, sy + s * gap / 2, 12 * p, [0.85, 0.9, 1], 1);
       txt(n2 ? `two stars ${f(C().sepv, 2)} ly apart` : 'one star', sx - 8, sy - gap / 2 - 22 * p, { s: 11, c: '#dfe6ef' });
-      txt('2.0 million ly away', sx - 4, sy + gap / 2 + 24 * p, { s: 10.5, c: '#aab4c2' }); txt('(gap drawn much larger)', sx - 4, sy + gap / 2 + 38 * p, { s: 10.5, c: '#aab4c2' });
+      txt('2.48 million ly away', sx - 4, sy + gap / 2 + 24 * p, { s: 10.5, c: '#aab4c2' }); txt('(gap drawn much larger)', sx - 4, sy + gap / 2 + 38 * p, { s: 10.5, c: '#aab4c2' });
       /* the telescope tube, pointing left */
       const tx = x + w * 0.52, ty = y + h * 0.4, tl = w * 0.36, tr = Math.min(h * 0.17, 50 * p) * (0.6 + 0.4 * Math.min(1, C().D / 2.4));
       const tg = ctx.createLinearGradient(0, ty - tr, 0, ty + tr); tg.addColorStop(0, '#e6eaef'); tg.addColorStop(0.45, '#aeb7c2'); tg.addColorStop(1, '#5d6773');
@@ -677,7 +677,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (n === 2) {
       h += dd('Angle between the sources Δθ', `${g3(sep * 1e6)} µrad`);
       if (S.setup === 'eye') h += dd('Headlights', `1.30 m apart, ${f(c.sepv, 2)} km away`);
-      if (S.setup === 'telescope') h += dd('Stars', `${f(c.sepv, 2)} ly apart, 2.0 million ly away`);
+      if (S.setup === 'telescope') h += dd('Stars', `${f(c.sepv, 2)} ly apart, 2.48 million ly away`);
       if (S.setup === 'camera') h += dd('Images on the sensor', `${f(c.sepv, 1)} µm apart`);
     } else h += dd('Sources', 'one, on the axis');
     h += dd('Cursor', fmtPos(c.cur)) + dd('Intensity at the cursor I/I₀', f(Iexact(c.cur), 4));
@@ -690,7 +690,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       h += dd('Dip midway between the sources, below the peaks', hidden ? hide : `${f(100 * (1 - dip(D, lam, sep)), 1)} % (26.5 % at the Rayleigh limit)`);
     }
     if (S.setup === 'eye') h += dd('Farthest distance for resolving the headlights', S.blind ? hide : `${f(headlightRange(th1) / 1000, 2)} km`);
-    if (S.setup === 'telescope') h += dd('Closest stars it resolves at 2.0 million ly', S.blind ? hide : `${f(th1 * ANDROMEDA_LY, 3)} ly`);
+    if (S.setup === 'telescope') h += dd('Closest stars it resolves at 2.48 million ly', S.blind ? hide : `${f(th1 * ANDROMEDA_LY, 3)} ly`);
     $('out').innerHTML = h;
   }
 
@@ -722,7 +722,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     pinhole: 'A helium neon laser (632.8 nm) lights a pinhole 200 µm across, and a screen 2.00 m away catches the light. Instead of a small spot you get a bright disk ringed by faint rings: the Airy pattern. Put the cursor on the first dark ring and read its distance from the center; the angle is θ₁ = arctan(r/L). Change D and λ and see how the ring moves.',
     two: 'Two equally bright, independent point sources far away, seen through a lens whose iris sets the aperture D. Each makes its own Airy pattern in the focal plane, and the intensities add. Close the gap between them, or close the iris, and the two blur into one. Rayleigh\'s criterion: they are just resolved when the center of one pattern sits on the first dark ring of the other, Δθ = 1.22 λ/D.',
     eye: 'A car\'s two headlights, 1.30 m apart, seen at night by an eye with a 3.00 mm pupil in light of 550 nm (the numbers of the textbook\'s Chapter 4 Problem 59 on the eye). Move the car away until the two lights merge. Diffraction at the pupil sets the best the eye could do; a real eye also has aberrations and a finite spacing of receptors.',
-    telescope: 'The textbook\'s Hubble example: a 2.40 m mirror, light of 550 nm, and two stars at the 2.0 million light year distance it uses for the Andromeda galaxy. How close can the stars be and still be seen as two? Try a smaller mirror too.',
+    telescope: 'The textbook\'s Hubble example: a 2.40 m mirror, light of 550 nm, and two stars as far away as the Andromeda galaxy, 2.48 million light years. How close can the stars be and still be seen as two? Try a smaller mirror too.',
     camera: 'A 50 mm camera lens imaging two distant points that land 15 µm apart on the sensor. Its aperture is D = f/N, so stopping down to f/16 or f/22 makes the Airy disk on the sensor larger: the diameter of its first dark ring is 2.44 λN. That is why photographs get softer at very small apertures.',
     mystery: 'The same laser and screen, but the pinhole\'s size is hidden. Measure the first dark ring at a known screen distance and wavelength, and work out D. New mystery pinhole picks another between 80 µm and 300 µm.',
   };
@@ -790,7 +790,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('about3').textContent = 'Screen setups: the pinhole is lit by a plane wave and the screen is far enough away for the far field pattern (D²/λL is at most 0.22 here; the near field setups, Near the hole and A disk, do the Fresnel calculation instead). A point r from the center of the screen is at angle θ = arctan(r/L). Camera: a 50 mm lens with D = f/N, using the marked f-numbers; positions on the sensor are f tan θ. Picture: brightness is drawn in proportion to intensity (sRGB encoded), with 30 times more exposure when the faint rings are brought out; the colors of the wavelengths are approximate. The apparatus pictures are not to scale; the separations of the sources are drawn much larger than they are.';
   $('about5').textContent = 'Near the hole and A disk (Fresnel diffraction): a plane wave of unit intensity on a round hole or an opaque disk, the field on the screen from the Fresnel (paraxial) form of the Kirchhoff integral with the obliquity factor taken as 1 (Hecht, Optics, section 10.3; Goodman, Introduction to Fourier Optics, section 4.2): U(r) = −2iφ e^(ikr²/2L) ∫₀¹ J₀(kaur/L) e^(iφu²) u du with φ = πN_F and N_F = a²/λL, a = D/2, computed by Simpson\'s rule; the disk is the open beam minus the hole (Babinet). On the axis the neglected phase is under 0.002 rad for every setting here, and the readouts compare the result with the exact Rayleigh–Sommerfeld value, 1 + z²/R² − 2(z/R) cos k(R − z) for the hole and z²/R² for the disk, R = √(L² + a²). The edge of the hole or disk is taken as perfectly sharp and the beam as perfectly even; a real beam is Gaussian and must be several times wider than D. The picture is scaled to its brightest point; the graph is in units of the open beam. The zone picture is to scale: zone n ends at radius √(nλL + (nλ/2)²).';
   $('about6').textContent = '3D view: the same intensities drawn as a landscape over the detector, height I/I₀ (the scale post), glow the picture\'s brightness; each source makes one peak, and two sources closer than about 1.22 λ/D merge into one (the dip midway first appears at 0.947 λ/D, Sparrow\'s limit). At the Rayleigh limit the brightness midway between two equal sources is 73.5 % of the peaks, a dip 26.5 % deep (computed from [2J₁(x)/x]²; the textbook rounds 1.2197 to 1.22). The orange line is the cursor, the bright line along the sources is the graph below, the dashed circles are the first dark rings. The aperture beside the detector is drawn larger or smaller with D on a log scale and is not to scale with the pattern. Drag to turn, scroll or pinch to zoom, double click to go back.';
-  $('about4').textContent = 'Numbers: the textbook\'s Example 4.6, Hubble (2.40 m mirror, 550 nm, stars at 2.0 million light years) and its Chapter 4 Problem 59 on the eye (3.00 mm pupil, 550 nm, headlights 1.30 m apart); 1 ly = 9.4607 × 10¹⁵ m. Real eyes do worse than diffraction allows: normal (20/20) acuity is about one minute of arc, 291 µrad, because of aberrations and the spacing of the receptors on the retina. The cursor reads to 1/1000 of the view, and I/I₀ is the intensity there relative to the central peak of one source alone.';
+  $('about4').textContent = 'Numbers: the textbook\'s Example 4.6, Hubble (2.40 m mirror, 550 nm), with the stars at the Andromeda galaxy\'s measured distance, 2.48 million light years (Li et al. 2021; the textbook uses 2.0 million), and its Chapter 4 Problem 59 on the eye (3.00 mm pupil, 550 nm, headlights 1.30 m apart); 1 ly = 9.4607 × 10¹⁵ m. Real eyes do worse than diffraction allows: normal (20/20) acuity is about one minute of arc, 291 µrad, because of aberrations and the spacing of the receptors on the retina. The cursor reads to 1/1000 of the view, and I/I₀ is the intensity there relative to the central peak of one source alone.';
 
   /* ---------- 3D view (demos/lib/vd3kit.js): the pattern as a landscape of brightness ----------
      The surface is the same intensity as the flat picture and the graph (the Airy table airyFast, from the exact [2J₁(x)/x]², or the

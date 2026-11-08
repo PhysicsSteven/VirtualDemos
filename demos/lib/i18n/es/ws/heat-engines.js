@@ -48,8 +48,8 @@ VDI18N.add('es', 'ws/heat-engines', {
   "Un gas ideal, monoatómico (\\(\\gamma = 5/3\\)) o diatómico (\\(\\gamma = 7/5\\)), recorre un ciclo de tramos isotérmicos, adiabáticos, a presión constante y a volumen constante. Tú eliges el ciclo, el gas, la cantidad y el sentido, y arrastras las esquinas o los tramos en el diagrama PV, o usas los deslizadores.",
 "Each leg’s work, heat and change of internal energy are worked out on their own, so the first law \\(\\Delta U = Q - W\\) can be checked on every leg.":
   "El trabajo, el calor y el cambio de energía interna de cada tramo se calculan por separado, así que la primera ley \\(\\Delta U = Q - W\\) se puede verificar en cada tramo.",
-"The Otto, Diesel and Brayton cycles start at {#} K and {#} kPa. The Stirling engine has a regenerator that you can turn off.":
-  "Los ciclos Otto, Diésel y Brayton empiezan a {#} K y {#} kPa. El motor Stirling tiene un regenerador que puedes apagar.",
+"The Otto, Diesel and Brayton cycles start at {#} K and {#} kPa. Changing the Otto compression ratio keeps the peak temperature \\(T_3\\) at {#} K, so the heat taken in and the heat given off both change with \\(r\\). The Stirling engine has a regenerator that you can turn off.":
+  "Los ciclos Otto, Diésel y Brayton empiezan a {#} K y {#} kPa. Al cambiar la razón de compresión del Otto, la temperatura máxima \\(T_3\\) se queda en {#} K, así que cambian con \\(r\\) tanto el calor que entra como el que sale. El motor Stirling tiene un regenerador que puedes apagar.",
 "The efficiency panel shows the heat taken in, the heat given off and the net work, and the textbook formula for the cycle chosen.":
   "El panel de eficiencia muestra el calor absorbido, el calor cedido y el trabajo neto, y la fórmula del libro para el ciclo elegido.",
 "Record reading stores the cycle, the gas, the amount, the direction, the cycle’s parameters (temperatures, compression ratio and so on), the heat in, the heat out, the net work and the lowest and highest temperatures. Export to worksheet sends the readings to the Data table below; Clear starts a new series, which goes into a new copy of the table.":
@@ -241,5 +241,7 @@ VDI18N.add('es', 'ws/heat-engines', {
 "Amount of gas":
   "Cantidad de gas",
 "Compression ratio, V₁/V₂":
-  "Razón de compresión, V₁/V₂"
+  "Razón de compresión, V₁/V₂",
+"The Otto, Diesel and Brayton cycles start at {#} K and {#} kPa. The Stirling engine has a regenerator that you can turn off.":
+  "Los ciclos Otto, Diésel y Brayton empiezan a {#} K y {#} kPa. El motor Stirling tiene un regenerador que puedes apagar."
 });

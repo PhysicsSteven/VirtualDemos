@@ -5,6 +5,7 @@ VDI18N.add('en', 'ws/intro-resolution', [
 "Angle between the stars (µrad)",
 "Brightness midway I/I₀",
 "Seeing Fine Detail: Telescopes and Radio Dishes | VirtualDemos",
+"<a>Virtual Physics Demos</a>",
 "Seeing Fine Detail: Telescopes and Radio Dishes",
 "<strong>Setups in the demo:</strong> Laser through a pinhole; Two point sources; Headlights and the eye; Hubble and two stars; Camera lens; Mystery pinhole; Near the hole: Fresnel zones; A disk: the Poisson spot. This worksheet uses Hubble and two stars.",
 "Two equally bright stars, {#} million light years away (as far as the Andromeda galaxy), are seen by a telescope with a perfect mirror. The picture shows the light the mirror focuses, and the graph shows the brightness along the line through both stars.",

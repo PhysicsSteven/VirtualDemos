@@ -7,6 +7,7 @@ VDI18N.add('en', 'demo/sound-intensity', [
 "sphere area {#}πr² = {#} m²",
 "SOUND LEVEL METER",
 "Sound Intensity and Decibels",
+"<a><span>←</span> <span>Ultrasound: Echoes and Blood Flow</span></a><a><span>Room Acoustics and the Anechoic Chamber</span> <span>→</span></a>",
 "A loudspeaker in an open field spreads its power P over a sphere, so the intensity falls as I = P/({#}πr²). The sound level meter reads β = {#} log(I/I₀) in decibels: every doubling of the distance takes off {#} dB. Add a second source and find out why two {#} dB sources make {#} dB, not {#}.",
 "I₀ = {#}⁻¹² W/m², free field",
 "A loudspeaker on a stand at the left of an open field and a sound level meter on a tripod over a measuring tape. Drag the meter along the tape to change the distance r. Left and right arrows move it by {#} m (with Shift, {#} m); page up and page down double or halve r.",
@@ -40,8 +41,7 @@ VDI18N.add('en', 'demo/sound-intensity', [
 "<span>Blind: hide predictions</span>",
 "Blind hides the intensities, each source's own level and the pressure amplitude; the meter stays. The Mystery source always hides its power.",
 "Each source is a point that sends its power P out equally in all directions, high above an open field with nothing to reflect the sound (a free field), so I = P/({#}πr²) exactly and no energy is lost in the air. (Air absorbs about {#} dB per km at {#} kHz, {#} °C and {#} % humidity, by ISO {#}-{#}: about {#} dB over {#} m, left out.) Close to a real loudspeaker, within about its own size, the point source picture fails; the demo starts at {#} m. Source B stands beside A, at the same distance from the meter.",
-"The sources play independent noise, so their intensities add: I = I_A + I_B + I_background, and β = {#} log(I/I₀). Two loudspeakers playing the same tone would interfere instead (OpenStax section {#}, Interference of Waves). The background is a steady noise of the chosen level, the same everywhere. The meter shows the level to {#} dB, as a real meter does; the pressure amplitude uses ρ = {#} kg/m³ and v = {#} m/s.",
-"<a><span>←</span> <span>Ultrasound: Echoes and Blood Flow</span></a><a><span>Room Acoustics and the Anechoic Chamber</span> <span>→</span></a>",
+"The sources play independent noise, so their intensities add: I = I_A + I_B + I_background, and β = {#} log(I/I₀). Two loudspeakers playing the same tone would interfere instead (OpenStax section {#}, Interference of Waves). The background is a steady noise of the chosen level, the same everywhere. The meter shows the level to {#} dB, as a real meter does; the pressure amplitude uses ρ = {#} kg/m³ (air at {#} °C) and v = {#} m/s.",
 "A: {#} mW background {#} dB",
 "Background alone",
 "Two {#} mW sources side by side. Read the level with A alone, B alone and both: two equal independent sources give twice the intensity, which is only {#} dB more, at every distance.",
@@ -53,6 +53,8 @@ VDI18N.add('en', 'demo/sound-intensity', [
 "mystery",
 "hidden: the source is a mystery",
 "A mystery",
+"Close",
+"Move the meter toward or away from the speaker by {#} m (Shift: {#} m)",
 "same power, {#}, {#}, {#} squares: I ∝ {#}/r²",
 "A: mystery background {#} dB"
 ]);

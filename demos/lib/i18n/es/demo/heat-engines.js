@@ -38,8 +38,6 @@ VDI18N.add('es', 'demo/heat-engines', {
   "Ciclos de máquinas térmicas",
 "<a>The first law of thermodynamics</a>":
   "<a>La primera ley de la termodinámica</a>",
-"<a><span>←</span> <span>Heat Capacities of Gases</span></a><a><span>Entropy and the Second Law</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Capacidades caloríficas de los gases</span></a><a><span>Entropía y la segunda ley</span> <span>→</span></a>",
 "An ideal gas in a cylinder goes around a closed loop on the PV diagram. The area inside the loop is the net work per cycle, and no engine can beat the Carnot efficiency set by its hottest and coldest temperatures.":
   "Un gas ideal en un cilindro recorre un ciclo cerrado en el diagrama PV. El área dentro del ciclo es el trabajo neto por ciclo, y ninguna máquina puede superar la eficiencia de Carnot que fijan sus temperaturas más caliente y más fría.",
 "Next leg":
@@ -192,8 +190,6 @@ VDI18N.add('es', 'demo/heat-engines', {
   "<b>Aproximaciones.</b> Gas ideal con capacidades caloríficas constantes. Cada proceso es cuasiestático, lo bastante lento para que el gas se mantenga uniforme y siga la trayectoria dibujada. Los ciclos Otto, Diesel y Brayton son modelos de aire estándar: el mismo gas vuelve a recorrer el ciclo, la quema de combustible es calor agregado y el escape más la admisión de aire fresco es calor retirado. En el aire real γ baja hacia aproximadamente {#} a las temperaturas de combustión, y los motores reales pierden por fricción y por pasos rápidos e irreversibles, así que las eficiencias reales están muy por debajo de estas. Donde la temperatura cambia mientras fluye el calor (tramos isobáricos e isocóricos), una versión reversible necesitaría una serie de depósitos ajustados al gas; el dibujo muestra un lado caliente y un lado frío. El regenerador de Stirling es ideal: devuelve exactamente el calor que guardó.",
 "<b>How the cycle stays closed.</b> Each process is a power law P V<sup>k</sup> = constant, with k = {#} (isobaric), {#} (isothermal), γ (adiabatic) or infinite (isochoric). Each corner is where two neighboring curves cross, so dragging a corner slides its two neighbors along their other curves. Entropy is S = n C<sub>v</sub> ln(T/{#} K) + n R ln(V/V<sub>{#}</sub>), with V<sub>{#}</sub> the volume at {#} K and {#} kPa; only differences in S matter.":
   "<b>Cómo se mantiene cerrado el ciclo.</b> Cada proceso es una ley de potencias P V<sup>k</sup> = constante, con k = {#} (isobárico), {#} (isotérmico), γ (adiabático) o infinito (isocórico). Cada esquina es donde se cruzan dos curvas vecinas, así que arrastrar una esquina desliza a sus dos vecinas a lo largo de sus otras curvas. La entropía es S = n C<sub>v</sub> ln(T/{#} K) + n R ln(V/V<sub>{#}</sub>), con V<sub>{#}</sub> el volumen a {#} K y {#} kPa; solo importan las diferencias de S.",
-"hot reservoir at {#} K: heat flows into the gas":
-  "depósito caliente a {#} K: el calor fluye hacia el gas",
 "cycle":
   "ciclo",
 "W_net (J)":
@@ -206,12 +202,12 @@ VDI18N.add('es', 'demo/heat-engines', {
   "← el pistón empuja el gas hacia adentro: W < {#}",
 "Q {#}→{#} = {#}: S does not change":
   "Q {#}→{#} = {#}: S no cambia",
-"The gasoline engine as an air standard cycle. Its efficiency η = {#} − r<sup>{#}−γ</sup> depends only on the compression ratio r. Raise r and watch η climb, though it stays well below the Carnot limit for its {#} K to {#} K span.":
-  "El motor de gasolina como ciclo de aire estándar. Su eficiencia η = {#} − r<sup>{#}−γ</sup> depende solo de la razón de compresión r. Aumenta r y observa cómo sube η, aunque se queda muy por debajo del límite de Carnot para su intervalo de {#} K a {#} K.",
+"The gasoline engine as an air standard cycle. Its efficiency η = {#} − r<sup>{#}−γ</sup> depends only on the compression ratio r. Raise r and watch η climb, though it stays well below the Carnot limit for its {#} K to {#} K span. Changing r keeps the peak at {#} K, so the heat in and the heat out both change.":
+  "El motor de gasolina como ciclo de aire estándar. Su eficiencia η = {#} − r<sup>{#}−γ</sup> depende solo de la razón de compresión r. Aumenta r y observa cómo sube η, aunque se queda muy por debajo del límite de Carnot para su intervalo de {#} K a {#} K. Al cambiar r, el pico se queda en {#} K, así que cambian tanto el calor que entra como el que sale.",
 "Compression ratio r = V₁/V₂":
   "Razón de compresión r = V₁/V₂",
-"{#}→{#} compression stroke, {#}→{#} the spark burns the fuel so fast that the volume barely changes, {#}→{#} power stroke, {#}→{#} exhaust and fresh intake, modeled as cooling at constant volume. Drag leg {#}→{#} sideways to change r.":
-  "{#}→{#} carrera de compresión, {#}→{#} la chispa quema el combustible tan rápido que el volumen apenas cambia, {#}→{#} carrera de potencia, {#}→{#} escape y admisión de aire fresco, modelados como enfriamiento a volumen constante. Arrastra el tramo {#}→{#} hacia los lados para cambiar r.",
+"{#}→{#} compression stroke, {#}→{#} the spark burns the fuel so fast that the volume barely changes, {#}→{#} power stroke, {#}→{#} exhaust and fresh intake, modeled as cooling at constant volume. Drag leg {#}→{#} sideways to change r; the peak temperature T₃ stays where it is. Drag the power stroke {#}→{#} to change T₃.":
+  "{#}→{#} carrera de compresión, {#}→{#} la chispa quema el combustible tan rápido que el volumen apenas cambia, {#}→{#} carrera de potencia, {#}→{#} escape y admisión de aire fresco, modelados como enfriamiento a volumen constante. Arrastra el tramo {#}→{#} hacia los lados para cambiar r; la temperatura máxima T₃ se queda donde está. Arrastra la carrera de potencia {#}→{#} para cambiar T₃.",
 "<span>heating</span>":
   "<span>calentamiento</span>",
 "<span>cooling</span>":
@@ -333,5 +329,13 @@ VDI18N.add('es', 'demo/heat-engines', {
 "Leg {#}→{#}: isobaric compression, cooling":
   "Tramo {#}→{#}: compresión isobárica, enfriamiento",
 "Entropy at the corners: −{#}, −{#}, {#}, −{#} J/K. Summing ΔS over the legs gives zero to rounding: S is a state function, so it returns to its starting value.":
-  "Entropía en las esquinas: −{#}, −{#}, {#}, −{#} J/K. La suma de ΔS en los tramos da cero salvo redondeo: S es una función de estado, así que regresa a su valor inicial."
+  "Entropía en las esquinas: −{#}, −{#}, {#}, −{#} J/K. La suma de ΔS en los tramos da cero salvo redondeo: S es una función de estado, así que regresa a su valor inicial.",
+"<a><span>←</span> <span>Heat Capacities of Gases</span></a><a><span>Entropy and the Second Law</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Capacidades caloríficas de los gases</span></a><a><span>Entropía y la segunda ley</span> <span>→</span></a>",
+"hot reservoir at {#} K: heat flows into the gas":
+  "depósito caliente a {#} K: el calor fluye hacia el gas",
+"The gasoline engine as an air standard cycle. Its efficiency η = {#} − r<sup>{#}−γ</sup> depends only on the compression ratio r. Raise r and watch η climb, though it stays well below the Carnot limit for its {#} K to {#} K span.":
+  "El motor de gasolina como ciclo de aire estándar. Su eficiencia η = {#} − r<sup>{#}−γ</sup> depende solo de la razón de compresión r. Aumenta r y observa cómo sube η, aunque se queda muy por debajo del límite de Carnot para su intervalo de {#} K a {#} K.",
+"{#}→{#} compression stroke, {#}→{#} the spark burns the fuel so fast that the volume barely changes, {#}→{#} power stroke, {#}→{#} exhaust and fresh intake, modeled as cooling at constant volume. Drag leg {#}→{#} sideways to change r.":
+  "{#}→{#} carrera de compresión, {#}→{#} la chispa quema el combustible tan rápido que el volumen apenas cambia, {#}→{#} carrera de potencia, {#}→{#} escape y admisión de aire fresco, modelados como enfriamiento a volumen constante. Arrastra el tramo {#}→{#} hacia los lados para cambiar r."
 });

@@ -1,6 +1,11 @@
 /* English strings of notes/radioactive-decay, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'notes/radioactive-decay', [
 "Radioactive Decay: teaching notes",
+"Site",
+"Virtual Physics Demos",
+"Library",
+"<a>Demos</a><a>OpenStax</a><a>Notes</a>",
+"<a><b>For a class</b> Courses</a>",
 "Radioactive Decay",
 "Modern physics; PHYS {#} (exponential decay, as in RC circuits)",
 "Each nucleus has the same fixed chance per unit time of decaying, λ, whatever its age. Which nucleus goes next is pure chance.",

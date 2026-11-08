@@ -1,6 +1,11 @@
 /* English strings of notes/terminal-velocity, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'notes/terminal-velocity', [
 "Terminal Velocity: teaching notes",
+"Site",
+"Virtual Physics Demos",
+"Library",
+"<a>Demos</a><a>OpenStax</a><a>Notes</a>",
+"<a><b>For a class</b> Courses</a>",
 "Terminal Velocity",
 "Intro mechanics (drag)",
 "Drag grows with speed, so a falling body speeds up less and less until the drag equals its weight. From then on the net force is zero and the speed stays at the terminal speed v_T = √(2mg/(ρCA)).",

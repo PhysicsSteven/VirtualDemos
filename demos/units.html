@@ -324,7 +324,7 @@ window.VD_EARTH = { day: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wB
     let E = M; for (let i = 0; i < 40; i++) E = M + e * Math.sin(E);
     const x = a * (Math.cos(E) - e), y = a * Math.sqrt(1 - e * e) * Math.sin(E); return { lon: Math.atan2(y, x) + w * Math.PI / 180, r: Math.hypot(x, y) }; }
   const EARTH_NOW = planetAt('Earth', JD_VIEW), SUN = [-EARTH_NOW.r * AU, GROUND - RE_];   // the frame is turned so that the Sun lies due left of Earth
-  // stars and galaxies: right ascension and declination (°, J2000) or galactic l, b (°), distance (ly). Stars from Wolfram StarData
+  // stars and galaxies: right ascension and declination (°, J2000) or galactic l, b (°), distance (ly). Stars from Wolfram StarData; Andromeda 761 kpc = 2.48 million ly (Li et al. 2021)
   const STARS = [['Proxima Centauri', 217.43, -62.68, 4.25, 'M'], ['Alpha Centauri A and B', 219.90, -60.83, 4.37, 'G'], ['Barnard\'s Star', 269.45, 4.69, 5.94, 'M'], ['Wolf 359', 164.12, 7.01, 7.79, 'M'],
     ['Lalande 21185', 165.83, 35.97, 8.31, 'M'], ['Sirius', 101.29, -16.72, 8.60, 'A'], ['Luyten 726-8', 24.75, -17.95, 8.73, 'M'], ['Ross 154', 282.46, -23.84, 9.69, 'M'], ['Ross 248', 355.48, 44.18, 10.33, 'M'],
     ['Epsilon Eridani', 53.23, -9.46, 10.49, 'K'], ['Lacaille 9352', 346.47, -35.85, 10.73, 'M'], ['Ross 128', 176.93, 0.80, 10.88, 'M'], ['Procyon', 114.83, 5.22, 11.40, 'F'], ['61 Cygni', 316.72, 38.75, 11.40, 'K'],
@@ -334,7 +334,7 @@ window.VD_EARTH = { day: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wB
     ['Rigel', 78.63, -8.20, 863, 'B'], ['Deneb', 310.36, 45.28, 2616, 'A']];
   const CLUSTERS = [['Hyades cluster', 66.75, 15.87, 153], ['Pleiades', 56.75, 24.12, 444], ['Orion Nebula', 83.82, -5.39, 1344]];
   const GALAXIES = [['Large Magellanic Cloud', 280.47, -32.89, 1.63e5, 1.4e4], ['Small Magellanic Cloud', 302.81, -44.33, 2.0e5, 7e3], ['Sagittarius Dwarf', 5.57, -14.17, 6.5e4, 1e4],
-    ['Andromeda (M31)', 121.17, -21.57, 2.54e6, 1.5e5], ['Triangulum (M33)', 133.61, -31.33, 2.73e6, 6e4], ['NGC 6822', 25.34, -18.40, 1.6e6, 7e3], ['IC 1613', 129.73, -60.58, 2.4e6, 1e4],
+    ['Andromeda (M31)', 121.17, -21.57, 2.48e6, 1.5e5], ['Triangulum (M33)', 133.61, -31.33, 2.73e6, 6e4], ['NGC 6822', 25.34, -18.40, 1.6e6, 7e3], ['IC 1613', 129.73, -60.58, 2.4e6, 1e4],
     ['IC 10', 118.97, -3.33, 2.2e6, 5e3], ['WLM', 75.86, -73.62, 3.0e6, 8e3], ['Leo I', 225.99, 49.11, 8.2e5, 2e3]];
   const GROUPS = [['M81 group', 142.09, 40.90, 1.17e7], ['Centaurus A group', 309.52, 19.42, 1.2e7], ['Sculptor group', 97.37, -87.96, 1.14e7], ['M101 group', 102.04, 59.77, 2.1e7],
     ['Leo Triplet', 242.0, 64.0, 3.5e7], ['Virgo Cluster', 283.78, 74.49, 5.4e7], ['Fornax Cluster', 236.72, -53.64, 6.2e7], ['Hydra Cluster', 269.6, 26.5, 1.58e8], ['Centaurus Cluster', 302.4, 21.6, 1.7e8],

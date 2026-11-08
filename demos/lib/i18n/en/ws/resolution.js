@@ -5,6 +5,7 @@ VDI18N.add('en', 'ws/resolution', [
 "Separation Δθ (µrad)",
 "Intensity at the cursor I/I₀",
 "Circular Apertures and Resolution | VirtualDemos",
+"<a>Virtual Physics Demos</a>",
 "Circular Apertures and Resolution",
 "Student laboratory · Physics II (if time allows: wave optics)",
 "<strong>Setups in the demo:</strong> Laser through a pinhole; Two point sources; Headlights and the eye; Hubble and two stars; Camera lens; Mystery pinhole.",

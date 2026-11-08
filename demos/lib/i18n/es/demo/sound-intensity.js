@@ -14,6 +14,8 @@ VDI18N.add('es', 'demo/sound-intensity', {
   "SONÓMETRO",
 "Sound Intensity and Decibels":
   "Intensidad del sonido y decibeles",
+"<a><span>←</span> <span>Ultrasound: Echoes and Blood Flow</span></a><a><span>Room Acoustics and the Anechoic Chamber</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Ultrasonido: ecos y flujo sanguíneo</span></a><a><span>Acústica de salas y la cámara anecoica</span> <span>→</span></a>",
 "A loudspeaker in an open field spreads its power P over a sphere, so the intensity falls as I = P/({#}πr²). The sound level meter reads β = {#} log(I/I₀) in decibels: every doubling of the distance takes off {#} dB. Add a second source and find out why two {#} dB sources make {#} dB, not {#}.":
   "Una bocina en un campo abierto reparte su potencia P sobre una esfera, así que la intensidad disminuye como I = P/({#}πr²). El sonómetro lee β = {#} log(I/I₀) en decibeles: cada vez que se duplica la distancia se pierden {#} dB. Añade una segunda fuente y descubre por qué dos fuentes de {#} dB dan {#} dB, no {#}.",
 "I₀ = {#}⁻¹² W/m², free field":
@@ -80,10 +82,8 @@ VDI18N.add('es', 'demo/sound-intensity', {
   "A ciegas oculta las intensidades, el nivel propio de cada fuente y la amplitud de presión; el sonómetro se queda. La Fuente misteriosa siempre oculta su potencia.",
 "Each source is a point that sends its power P out equally in all directions, high above an open field with nothing to reflect the sound (a free field), so I = P/({#}πr²) exactly and no energy is lost in the air. (Air absorbs about {#} dB per km at {#} kHz, {#} °C and {#} % humidity, by ISO {#}-{#}: about {#} dB over {#} m, left out.) Close to a real loudspeaker, within about its own size, the point source picture fails; the demo starts at {#} m. Source B stands beside A, at the same distance from the meter.":
   "Cada fuente es un punto que envía su potencia P por igual en todas direcciones, muy por encima de un campo abierto sin nada que refleje el sonido (un campo libre), así que I = P/({#}πr²) exactamente y no se pierde energía en el aire. (El aire absorbe unos {#} dB por km a {#} kHz, {#} °C y {#} % de humedad, según ISO {#}-{#}: unos {#} dB en {#} m, que se omiten.) Cerca de una bocina real, dentro de más o menos su propio tamaño, la imagen de fuente puntual falla; la demo empieza a {#} m. La fuente B está junto a A, a la misma distancia del sonómetro.",
-"The sources play independent noise, so their intensities add: I = I_A + I_B + I_background, and β = {#} log(I/I₀). Two loudspeakers playing the same tone would interfere instead (OpenStax section {#}, Interference of Waves). The background is a steady noise of the chosen level, the same everywhere. The meter shows the level to {#} dB, as a real meter does; the pressure amplitude uses ρ = {#} kg/m³ and v = {#} m/s.":
-  "Las fuentes emiten ruido independiente, así que sus intensidades se suman: I = I_A + I_B + I_background, y β = {#} log(I/I₀). Dos bocinas que tocan el mismo tono interferirían en cambio (OpenStax sección {#}, Interferencia de ondas). El fondo es un ruido constante del nivel elegido, igual en todas partes. El sonómetro muestra el nivel con precisión de {#} dB, como un sonómetro real; la amplitud de presión usa ρ = {#} kg/m³ y v = {#} m/s.",
-"<a><span>←</span> <span>Ultrasound: Echoes and Blood Flow</span></a><a><span>Room Acoustics and the Anechoic Chamber</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Ultrasonido: ecos y flujo sanguíneo</span></a><a><span>Acústica de salas y la cámara anecoica</span> <span>→</span></a>",
+"The sources play independent noise, so their intensities add: I = I_A + I_B + I_background, and β = {#} log(I/I₀). Two loudspeakers playing the same tone would interfere instead (OpenStax section {#}, Interference of Waves). The background is a steady noise of the chosen level, the same everywhere. The meter shows the level to {#} dB, as a real meter does; the pressure amplitude uses ρ = {#} kg/m³ (air at {#} °C) and v = {#} m/s.":
+  "Las fuentes emiten ruido independiente, así que sus intensidades se suman: I = I_A + I_B + I_background, y β = {#} log(I/I₀). Dos bocinas que tocan el mismo tono interferirían en cambio (OpenStax sección {#}, Interferencia de ondas). El fondo es un ruido constante del nivel elegido, igual en todas partes. El sonómetro muestra el nivel con precisión de {#} dB, como un sonómetro real; la amplitud de presión usa ρ = {#} kg/m³ (aire a {#} °C) y v = {#} m/s.",
 "A: {#} mW background {#} dB":
   "A: {#} mW fondo {#} dB",
 "Background alone":
@@ -109,5 +109,7 @@ VDI18N.add('es', 'demo/sound-intensity', {
 "same power, {#}, {#}, {#} squares: I ∝ {#}/r²":
   "misma potencia, {#}, {#}, {#} cuadros: I ∝ {#}/r²",
 "A: mystery background {#} dB":
-  "A: misteriosa fondo {#} dB"
+  "A: misteriosa fondo {#} dB",
+"The sources play independent noise, so their intensities add: I = I_A + I_B + I_background, and β = {#} log(I/I₀). Two loudspeakers playing the same tone would interfere instead (OpenStax section {#}, Interference of Waves). The background is a steady noise of the chosen level, the same everywhere. The meter shows the level to {#} dB, as a real meter does; the pressure amplitude uses ρ = {#} kg/m³ and v = {#} m/s.":
+  "Las fuentes emiten ruido independiente, así que sus intensidades se suman: I = I_A + I_B + I_background, y β = {#} log(I/I₀). Dos bocinas que tocan el mismo tono interferirían en cambio (OpenStax sección {#}, Interferencia de ondas). El fondo es un ruido constante del nivel elegido, igual en todas partes. El sonómetro muestra el nivel con precisión de {#} dB, como un sonómetro real; la amplitud de presión usa ρ = {#} kg/m³ y v = {#} m/s."
 });

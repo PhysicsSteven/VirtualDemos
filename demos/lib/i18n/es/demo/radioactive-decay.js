@@ -26,8 +26,8 @@ VDI18N.add('es', 'demo/radioactive-decay', {
   "<a><span>←</span> <span>Volado cuántico</span></a><a><span>Átomos en un campo magnético</span> <span>→</span></a>",
 "Each nucleus decays at random, with no memory of how long it has lived. Yet a large sample shrinks by half every half life, as predictably as a clock.":
   "Cada núcleo se desintegra al azar, sin memoria de cuánto tiempo ha vivido. Aun así, una muestra grande se reduce a la mitad en cada vida media, tan predecible como un reloj.",
-"t in steps, yr, d or h by setup · λ = ln {#} / T½":
-  "t en pasos, años, d o h según la configuración · λ = ln {#} / T½",
+"t in steps, min, h, d, yr, Myr or Gyr by setup · λ = ln {#} / T½":
+  "t en pasos, min, h, d, años, Myr o Gyr según la configuración · λ = ln {#} / T½",
 "Tray of nuclei. Parent nuclei are large balls, daughters slightly smaller balls in a second color, stable end products small gray balls. Each decay flashes and sends a short alpha or beta track out of the nucleus; the Geiger counter below counts every decay. Click a nucleus to follow it. Keys: arrows move the followed nucleus, space plays or pauses, S takes one step, R resets.":
   "Bandeja de núcleos. Los núcleos madre son esferas grandes, las hijas esferas un poco más pequeñas de un segundo color, y los productos finales estables esferas grises pequeñas. Cada desintegración destella y lanza una traza corta alfa o beta fuera del núcleo; el contador Geiger de abajo cuenta cada desintegración. Haz clic en un núcleo para seguirlo. Teclas: las flechas mueven el núcleo seguido, espacio inicia o pausa, S da un paso, R reinicia.",
 "Many nuclei":
@@ -88,6 +88,10 @@ VDI18N.add('es', 'demo/radioactive-decay', {
   "Cobalto {#}",
 "⁹⁹Mo generator":
   "Generador de ⁹⁹Mo",
+"Potassium {#}: dating Moon rocks":
+  "Potasio {#}: fechar rocas lunares",
+"Aluminum {#}: early heat":
+  "Aluminio {#}: el calor temprano",
 "Each step, every parent flips a fair coin and decays on heads, so p = {#}/{#} and T½ = {#} step. About half are left after one step, a quarter after two. Which ones go is pure chance.":
   "En cada paso, cada núcleo madre lanza una moneda justa y se desintegra si sale cara, así que p = {#}/{#} y T½ = {#} paso. Queda cerca de la mitad después de un paso, un cuarto después de dos. Cuáles se van es puro azar.",
 "Nucleus":
@@ -376,8 +380,8 @@ VDI18N.add('es', 'demo/radioactive-decay', {
   "λ = ln {#} / T½ (año⁻¹)",
 "{#} <span>with Δt = {#} yr</span>":
   "{#} <span>con Δt = {#} años</span>",
-"{#} yr is the textbook value (the Cambridge half life). The current evaluation is {#} ± {#} yr; radiocarbon labs still quote ages with Libby’s {#} yr by convention and then calibrate. You can also drag the T½ marker on the N(t) plot.":
-  "{#} años es el valor de los libros de texto (la vida media de Cambridge). La evaluación actual es {#} ± {#} años; los laboratorios de radiocarbono todavía reportan las edades con los {#} años de Libby por convención y luego las calibran. También puedes arrastrar el marcador de T½ en la gráfica de N(t).",
+"{#} ± {#} yr is the current evaluation (NUBASE2020). Many textbooks still give the older {#} yr (the Cambridge half life); radiocarbon labs still quote ages with Libby’s {#} yr by convention and then calibrate. You can also drag the T½ marker on the N(t) plot.":
+  "{#} ± {#} años es la evaluación actual (NUBASE2020). Muchos libros de texto todavía dan el valor anterior de {#} años (la vida media de Cambridge); los laboratorios de radiocarbono todavía reportan las edades con los {#} años de Libby por convención y luego las calibran. También puedes arrastrar el marcador de T½ en la gráfica de N(t).",
 "A piece of charcoal has <b>{#}%</b> of the carbon {#} a living sample has. How old is it?":
   "Un trozo de carbón tiene <b>{#}%</b> del carbono {#} que tiene una muestra viva. ¿Qué edad tiene?",
 "Iodine {#} treats thyroid disease and is a fallout product. After {#} half lives, about {#} days, the activity has dropped to {#}/{#} of its start.":
@@ -420,8 +424,6 @@ VDI18N.add('es', 'demo/radioactive-decay', {
   "²¹⁰Bi: {#} d (β⁻); ²¹⁰Po: {#} d (α); el ²⁰⁶Pb es estable. Estos son los últimos pasos de la serie del uranio {#}. Se deja fuera una pequeña rama α del ²¹⁰Bi ({#}%). También puedes arrastrar el marcador de T½ en la gráfica de N(t).",
 "The daughter outlives the parent, so there is no equilibrium: once the parent is gone the daughter decays on its own half life. At the peak the two activities are equal. The dashed orange line on the N(t) plot marks the daughter peak.":
   "La hija vive más que la madre, así que no hay equilibrio: cuando la madre se acaba, la hija se desintegra con su propia vida media. En el máximo las dos actividades son iguales. La línea naranja punteada en la gráfica de N(t) marca el máximo de la hija.",
-"{#}% <span>of {#}; expected {#}%</span>":
-  "{#}% <span>de {#}; esperado {#}%</span>",
 "A long lived parent feeds a short lived daughter. Within a few daughter half lives the daughter’s activity catches up and then tracks the parent’s. On the log scale the two activity lines run parallel.":
   "Una madre de vida larga alimenta a una hija de vida corta. En unas pocas vidas medias de la hija, la actividad de la hija alcanza a la de la madre y luego la sigue. En la escala logarítmica las dos líneas de actividad corren paralelas.",
 "Half lives of ¹³²Te":
@@ -512,34 +514,6 @@ VDI18N.add('es', 'demo/radioactive-decay', {
   "⁹⁹Mo: {#} h; ⁹⁹ᵐTc: {#} h (ENSDF {#}). El {#}% de las desintegraciones del ⁹⁹Mo pasan por ⁹⁹ᵐTc (la fracción indicada en la información de prescripción de un generador comercial, Ultra-TechneKow V4; las compilaciones de datos nucleares dan de {#} a {#}%); el resto va directo a ⁹⁹Tc, estable a esta escala. Aquí la elución saca de la columna todos los núcleos de ⁹⁹ᵐTc; una columna real libera cerca del {#}%. También puedes arrastrar el marcador de T½ en la gráfica de N(t).",
 "The daughter lives {#} times shorter than the parent: transient equilibrium. The activity ratio settles at B λ<sub>D</sub>/(λ<sub>D</sub> − λ<sub>P</sub>) = {#}, with only a share B = {#} of the parent decays feeding the daughter, and both then fall with the parent’s half life. The dashed orange line on the N(t) plot marks the daughter peak after the last elution.":
   "La hija vive {#} veces menos que la madre: equilibrio transitorio. El cociente de actividades se estabiliza en B λ<sub>D</sub>/(λ<sub>D</sub> − λ<sub>P</sub>) = {#}, ya que solo una fracción B = {#} de las desintegraciones de la madre alimenta a la hija, y luego ambas bajan con la vida media de la madre. La línea naranja punteada en la gráfica de N(t) marca el máximo de la hija después de la última elución.",
-"⁹⁹Mo {#}":
-  "⁹⁹Mo {#}",
-"⁹⁹ᵐTc {#}":
-  "⁹⁹ᵐTc {#}",
-"⁹⁹Tc {#}":
-  "⁹⁹Tc {#}",
-"T½ ⁹⁹Mo":
-  "T½ ⁹⁹Mo",
-"T½ ⁹⁹ᵐTc":
-  "T½ ⁹⁹ᵐTc",
-"ln N falls by λ = {#} per h":
-  "ln N baja λ = {#} por h",
-"bin = {#} h":
-  "intervalo = {#} h",
-"⁹⁹Mo decays":
-  "desintegraciones de ⁹⁹Mo",
-"⁹⁹ᵐTc decays":
-  "desintegraciones de ⁹⁹ᵐTc",
-"Potential energy of the alpha":
-  "Energía potencial de la alfa",
-"parent gone":
-  "la madre se acabó",
-"t in steps, min, h, d, yr, Myr or Gyr by setup · λ = ln {#} / T½":
-  "t en pasos, min, h, d, años, Myr o Gyr según la configuración · λ = ln {#} / T½",
-"Potassium {#}: dating Moon rocks":
-  "Potasio {#}: fechar rocas lunares",
-"Aluminum {#}: early heat":
-  "Aluminio {#}: el calor temprano",
 "Potassium {#} dates rocks: a melt lets the argon gas out, and once the rock sets, the argon made by the decay is trapped. The oldest rocks from the lunar highlands set about {#} billion years ago, about {#} half lives: watch how few of the starting potassium {#} nuclei would still be there.":
   "El potasio {#} fecha rocas: al fundirse, la roca deja escapar el gas argón, y una vez que se solidifica, el argón que produce la desintegración queda atrapado. Las rocas más antiguas de las tierras altas lunares se solidificaron hace unos {#} mil millones de años, unas {#} vidas medias: observa qué pocos de los núcleos de potasio {#} iniciales seguirían ahí.",
 "t = {#} Gyr":
@@ -576,6 +550,8 @@ VDI18N.add('es', 'demo/radioactive-decay', {
   "{#} <span>con Δt = {#} Myr</span>",
 "²⁶Al: {#} × {#}⁵ yr, β⁺ decay ({#}%) and electron capture to stable ²⁶Mg. Meteorites show ²⁶Al/²⁷Al = {#} × {#}⁻⁵ when the first solids formed. You can also drag the T½ marker on the N(t) plot.":
   "²⁶Al: {#} × {#}⁵ años, desintegración β⁺ ({#}%) y captura electrónica a ²⁶Mg estable. Los meteoritos muestran ²⁶Al/²⁷Al = {#} × {#}⁻⁵ cuando se formaron los primeros sólidos. También puedes arrastrar la marca T½ en la gráfica de N(t).",
+"{#}% <span>of {#}; expected {#}%</span>":
+  "{#}% <span>de {#}; esperado {#}%</span>",
 "²⁶Al {#}":
   "²⁶Al {#}",
 "²⁶Mg {#}":
@@ -586,8 +562,34 @@ VDI18N.add('es', 'demo/radioactive-decay', {
   "ln N baja λ = {#} por Myr",
 "bin = {#} Myr":
   "intervalo = {#} Myr",
+"Potential energy of the alpha":
+  "Energía potencial de la alfa",
 "{#} yr ± {#} yr <span>true age {#} yr</span>":
   "{#} años ± {#} años <span>edad real {#} años</span>",
+"parent gone":
+  "la madre se acabó",
+"t in steps, yr, d or h by setup · λ = ln {#} / T½":
+  "t en pasos, años, d o h según la configuración · λ = ln {#} / T½",
+"{#} yr is the textbook value (the Cambridge half life). The current evaluation is {#} ± {#} yr; radiocarbon labs still quote ages with Libby’s {#} yr by convention and then calibrate. You can also drag the T½ marker on the N(t) plot.":
+  "{#} años es el valor de los libros de texto (la vida media de Cambridge). La evaluación actual es {#} ± {#} años; los laboratorios de radiocarbono todavía reportan las edades con los {#} años de Libby por convención y luego las calibran. También puedes arrastrar el marcador de T½ en la gráfica de N(t).",
+"⁹⁹Mo {#}":
+  "⁹⁹Mo {#}",
+"⁹⁹ᵐTc {#}":
+  "⁹⁹ᵐTc {#}",
+"⁹⁹Tc {#}":
+  "⁹⁹Tc {#}",
+"T½ ⁹⁹Mo":
+  "T½ ⁹⁹Mo",
+"T½ ⁹⁹ᵐTc":
+  "T½ ⁹⁹ᵐTc",
+"ln N falls by λ = {#} per h":
+  "ln N baja λ = {#} por h",
+"bin = {#} h":
+  "intervalo = {#} h",
+"⁹⁹Mo decays":
+  "desintegraciones de ⁹⁹Mo",
+"⁹⁹ᵐTc decays":
+  "desintegraciones de ⁹⁹ᵐTc",
 "t = {#} step":
   "t = {#} paso"
 });

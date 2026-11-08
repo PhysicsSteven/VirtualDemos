@@ -154,6 +154,7 @@ VDI18N.add('en', 'demo/units', [
 "in",
 "yd",
 "light year",
+"Close",
 "proton (diameter): {#} × {#}⁻¹⁵ m",
 "hydrogen atom (diameter): {#} × {#}⁻¹⁰ m",
 "DNA double helix (width): {#} × {#}⁻⁹ m",

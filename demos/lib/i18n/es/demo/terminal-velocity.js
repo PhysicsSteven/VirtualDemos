@@ -98,8 +98,8 @@ VDI18N.add('es', 'demo/terminal-velocity', {
   "Densidad del aire ρ",
 "D = ½ρCAv², ma = mg − D, v_T = √(2mg/(ρCA))":
   "D = ½ρCAv², ma = mg − D, v_T = √(2mg/(ρCA))",
-"Model: the drag is ½ρCAv² against the motion, with a constant drag coefficient C (OpenStax University Physics Vol. {#}, §{#}). Buoyancy and the air carried along with the body are left out, and the fall is straight down (a real exit also carries the plane's forward speed). g = {#} m/s² everywhere. Uniform air has the textbook's ρ = {#} kg/m³; air that thins with height follows the International Standard Atmosphere below {#} km (U.S. Standard Atmosphere {#}: {#} K and {#} {#} Pa at the ground, cooling {#} K per km), so ρ is {#} kg/m³ at the ground and {#} kg/m³ at {#} km.":
-  "Modelo: el arrastre es ½ρCAv² en contra del movimiento, con un coeficiente de arrastre C constante (OpenStax University Physics Vol. {#}, §{#}). Se omiten el empuje de flotación y el aire arrastrado junto con el cuerpo, y la caída es vertical (una salida real también lleva la rapidez horizontal del avión). g = {#} m/s² en todas partes. El aire uniforme tiene la ρ = {#} kg/m³ del libro; el aire que se enrarece con la altura sigue la Atmósfera Estándar Internacional por debajo de {#} km (U.S. Standard Atmosphere {#}: {#} K y {#} {#} Pa en el suelo, enfriándose {#} K por km), así que ρ es {#} kg/m³ en el suelo y {#} kg/m³ a {#} km.",
+"Model: the drag is ½ρCAv² against the motion, with a constant drag coefficient C (OpenStax University Physics Vol. {#}, §{#}). Buoyancy and the air carried along with the body are left out, and the fall is straight down (a real exit also carries the plane's forward speed). g = {#} m/s² everywhere. Uniform air has ρ = {#} kg/m³, dry air at {#} °C and {#} kPa (ρ = PM/RT with the CRC molar mass; the textbook rounds it to {#}); air that thins with height follows the International Standard Atmosphere below {#} km (U.S. Standard Atmosphere {#}: {#} K and {#} {#} Pa at the ground, cooling {#} K per km), so ρ is {#} kg/m³ at the ground and {#} kg/m³ at {#} km.":
+  "Modelo: el arrastre es ½ρCAv² en contra del movimiento, con un coeficiente de arrastre C constante (OpenStax University Physics Vol. {#}, §{#}). Se omiten el empuje de flotación y el aire arrastrado junto con el cuerpo, y la caída es vertical (una salida real también lleva la rapidez horizontal del avión). g = {#} m/s² en todas partes. El aire uniforme tiene ρ = {#} kg/m³, aire seco a {#} °C y {#} kPa (ρ = PM/RT con la masa molar del CRC; el libro la redondea a {#}); el aire que se enrarece con la altura sigue la Atmósfera Estándar Internacional por debajo de {#} km (U.S. Standard Atmosphere {#}: {#} K y {#} {#} Pa en el suelo, enfriándose {#} K por km), así que ρ es {#} kg/m³ en el suelo y {#} kg/m³ a {#} km.",
 "Skydiver: C = {#} and A = {#} m² spread eagle, C = {#} and A = {#} m² head first, the textbook's Table {#} and its two examples. A change of position takes {#} s, with the drag area CA changing at a steady rate. The round canopy is a flat circular one {#} m across when laid flat, with C = {#} on that flat area (Scher and Young, NASA TN D-{#}, {#}), so CA = {#} m². After the pull the lines take {#} s to stretch, then the canopy fills in {#} s, its drag area growing in step with time; under it the body hangs upright with the head first values. The {#} m, {#} s and {#} s are model choices. The canopy is drawn with its open area in proportion to its drag area.":
   "Paracaidista: C = {#} y A = {#} m² con los brazos extendidos, C = {#} y A = {#} m² de cabeza, la Tabla {#} del libro y sus dos ejemplos. Un cambio de posición tarda {#} s, con el área de arrastre CA cambiando a ritmo constante. El paracaídas redondo es uno circular plano de {#} m de diámetro extendido, con C = {#} sobre esa área plana (Scher y Young, NASA TN D-{#}, {#}), así que CA = {#} m². Después de abrirlo, las cuerdas tardan {#} s en estirarse y luego el paracaídas se llena en {#} s, con su área de arrastre creciendo en proporción al tiempo; bajo él, el cuerpo cuelga erguido con los valores de cabeza. Los {#} m, {#} s y {#} s son elecciones del modelo. El paracaídas se dibuja con su área abierta en proporción a su área de arrastre.",
 "Coffee filter: {#} g, {#} cm across the top, C = {#} on that circle (Boyle and Pantaleone, \"The added mass of a falling coffee filter\", arXiv:{#}, {#}, who measured {#} m/s for one filter). Stacked filters nest, so n of them have n times the mass and the same area. The motion detector under them reads the height above its face.":
@@ -108,10 +108,6 @@ VDI18N.add('es', 'demo/terminal-velocity', {
   "El movimiento se integra con Runge–Kutta de cuarto orden en pasos de a lo más {#} ms y una centésima de v_T/g; desde el reposo en aire uniforme coincide con la solución exacta v = v_T tanh(gt/v_T) a mejor que {#} parte en {#}⁹. Lecturas: t a {#} s, distancias a {#} m, altitud a {#} m, v a {#} m/s y a a {#} m/s². No se agrega ruido.",
 "Blind hides the terminal speed, the drag force and the weight, the drag area, the air density, the largest deceleration, the force arrows and the terminal speed line on the graph, leaving the clock, the height, v and a.":
   "A ciegas oculta la rapidez terminal, la fuerza de arrastre y el peso, el área de arrastre, la densidad del aire, la mayor desaceleración, las flechas de fuerza y la línea de rapidez terminal en la gráfica, y deja el reloj, la altura, v y a.",
-"3D, to scale · streaks: the air moving past in {#} s · drag to turn":
-  "3D, a escala · estelas: el aire que pasa en {#} s · arrastra para girar",
-"drag {#} N":
-  "arrastre {#} N",
 "altitude {#} m · head first":
   "altitud {#} m · de cabeza",
 "head first, {#} kg":
@@ -158,8 +154,14 @@ VDI18N.add('es', 'demo/terminal-velocity', {
   "Masa m, {#} filtros",
 "drag {#} mN":
   "arrastre {#} mN",
-"3D, to scale · drag to turn":
-  "3D, a escala · arrastra para girar",
 "Landed at t = {#} s, at {#} m/s.":
-  "Aterrizó en t = {#} s, a {#} m/s."
+  "Aterrizó en t = {#} s, a {#} m/s.",
+"Model: the drag is ½ρCAv² against the motion, with a constant drag coefficient C (OpenStax University Physics Vol. {#}, §{#}). Buoyancy and the air carried along with the body are left out, and the fall is straight down (a real exit also carries the plane's forward speed). g = {#} m/s² everywhere. Uniform air has the textbook's ρ = {#} kg/m³; air that thins with height follows the International Standard Atmosphere below {#} km (U.S. Standard Atmosphere {#}: {#} K and {#} {#} Pa at the ground, cooling {#} K per km), so ρ is {#} kg/m³ at the ground and {#} kg/m³ at {#} km.":
+  "Modelo: el arrastre es ½ρCAv² en contra del movimiento, con un coeficiente de arrastre C constante (OpenStax University Physics Vol. {#}, §{#}). Se omiten el empuje de flotación y el aire arrastrado junto con el cuerpo, y la caída es vertical (una salida real también lleva la rapidez horizontal del avión). g = {#} m/s² en todas partes. El aire uniforme tiene la ρ = {#} kg/m³ del libro; el aire que se enrarece con la altura sigue la Atmósfera Estándar Internacional por debajo de {#} km (U.S. Standard Atmosphere {#}: {#} K y {#} {#} Pa en el suelo, enfriándose {#} K por km), así que ρ es {#} kg/m³ en el suelo y {#} kg/m³ a {#} km.",
+"3D, to scale · streaks: the air moving past in {#} s · drag to turn":
+  "3D, a escala · estelas: el aire que pasa en {#} s · arrastra para girar",
+"drag {#} N":
+  "arrastre {#} N",
+"3D, to scale · drag to turn":
+  "3D, a escala · arrastra para girar"
 });

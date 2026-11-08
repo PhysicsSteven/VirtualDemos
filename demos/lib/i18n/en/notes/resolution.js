@@ -1,6 +1,11 @@
 /* English strings of notes/resolution, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'notes/resolution', [
 "Circular Apertures and Resolution: teaching notes",
+"Site",
+"Virtual Physics Demos",
+"Library",
+"<a>Demos</a><a>OpenStax</a><a>Notes</a>",
+"<a><b>For a class</b> Courses</a>",
 "Circular Apertures and Resolution",
 "Intro physics (wave optics: circular apertures, the Rayleigh criterion)",
 "Light through a round hole does not make a point: it makes the Airy pattern, a bright central disk with faint rings. The first dark ring is at sin θ = {#} λ/D, so a larger hole or a shorter wavelength makes a smaller disk.",
