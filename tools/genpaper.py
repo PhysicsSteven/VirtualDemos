@@ -1,4 +1,5 @@
-"""Writes demos/lib/paper.css, the site skin, from tools/paper-src/ (head.css, lab.css, rest.css) and the palettes below.
+"""Writes demos/lib/paper.css, the site skin, from tools/paper-src/ (head.css, lab.css, rest.css, and lookscope.css last
+   when it exists: tools/lookscope.py writes it from the palettes here) and the palettes below.
    python3 tools/genpaper.py           writes demos/lib/paper.css
    python3 tools/genpaper.py --check   exits 1 when paper.css differs from what this would write
    Change colors here, never in paper.css. Every text color must keep WCAG AA (4.5:1) on each panel color of its block
@@ -106,7 +107,7 @@ def build():
 :root[data-theme="dark"] {{
 {block(DARK, 'dark')}
 }}
-""" + labcss + rd('rest.css')
+""" + labcss + rd('rest.css') + (rd('lookscope.css') if os.path.exists(os.path.join(SRC, 'lookscope.css')) else '')
 if __name__ == '__main__':
     out = build()
     bad = contrast_problems()

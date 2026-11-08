@@ -114,6 +114,9 @@ body.site .role, body.site .flag { text-transform: none; letter-spacing: 0; }
 .top a:focus-visible, .top button:focus-visible, .top input:focus-visible, .top select:focus-visible { outline: 2px solid var(--band-accent); outline-offset: 2px; }
 .top .hfind input { height: 36px; padding: 6px 30px 6px 34px; font: 0.95rem var(--sans); background: var(--band-field); border: 1px solid var(--band-line); border-radius: var(--r-s); color: var(--band-ink); }
 .top .hfind svg { color: var(--band-ink2); }
+/* the search hint key and placeholder in the band take the band's faded ink (they read the page's --ink2 before: 2.1:1 on the band) */
+.top .hfind kbd { color: var(--band-ink2); background: var(--band-hover); border-color: var(--band-line); }
+.top .hfind input::placeholder { color: var(--band-ink2); opacity: 1; }
 .top .hfind .hits { top: calc(100% + 8px); }
 .app .rail section + section, .app .rail > details + section, .app .rail > section + details { border-top-color: var(--line); }
 .app .handout-menu ul { background: var(--paper); border-color: var(--line); }
