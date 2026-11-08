@@ -36,7 +36,7 @@ where $$k(E)\,dE$$ is the kerma carried by photons between E and E + dE before t
 
 1. Show that $$\frac{d\ln K}{dx} = -\langle\mu\rangle_x$$, where $$\langle\mu\rangle_x$$ is the mean of μ(E) weighted by the kerma $$k(E)e^{-\mu(E)x}$$ that remains behind x.
 2. Differentiate once more to show that $$\frac{d\langle\mu\rangle_x}{dx} = -\left(\langle\mu^2\rangle_x - \langle\mu\rangle_x^2\right) \le 0$$. Explain why this proves HVL₂ ≥ HVL₁, with equality only for a single energy.
-3. From the NIST table, μ/ρ of aluminum is 1.128 cm²/g at 30 keV and 0.5685 cm²/g at 40 keV. Find the HVL in aluminum at each energy (ρ = 2.699 g/cm³).
+3. From the NIST table, μ/ρ of aluminum is 1.128 cm²/g at 30 keV, 0.5685 cm²/g at 40 keV and 0.3681 cm²/g at 50 keV. Find the HVL in aluminum at each energy (ρ = 2.699 g/cm³).
 4. 21 CFR 1020.30(m) gives these minimum first HVLs for diagnostic equipment (the table in paragraph (m)(1) of the rule), in mm of aluminum: 0.3 at 30 kV, 0.4 at 40 kV, 0.5 at 50 kV, 1.3 at 51 kV, 1.5 at 60 kV, 1.8 at 70 kV, 2.5 at 71 kV, 2.9 at 80 kV, 3.2 at 90 kV and 3.6 at 100 kV. Why does the table jump between 50 and 51 kV and between 70 and 71 kV? (The rule's categories of operating range explain it.)
 
 ## Safety
@@ -75,7 +75,7 @@ Work out ln(K/K₀) in Table 1, and the last two columns of Table 2 (the minimum
 2. Interpolate in your table (linearly in ln K, between the two points on either side) to find the thickness where K/K₀ = 0.5 (HVL₁) and the extra thickness from there to K/K₀ = 0.25 (HVL₂). Find the homogeneity coefficient. Check your values against the first row at 80 kV in Table 2.
 3. Fit a straight line to the first three points of Table 1 only, and to the last three only. Convert each slope to an effective attenuation coefficient and, with Before the lab question 3, to an effective photon energy. How much has the beam hardened between the front and the back of the stack?
 4. Graph HVL₁ against tube voltage (the first copy of Table 2). At which voltages does the model's beam meet the federal minimum?
-5. From the second copy of Table 2, graph HVL₁ against the aluminum filtration for the rows with no copper. How much total aluminum filtration does the model need for HVL₁ ≥ 2.9 mm? Compare the effect on HVL₁ of 0.1 mm of copper with that of 1 mm of extra aluminum.
+5. From the second copy of Table 2, graph HVL₁ against the aluminum filtration for the rows with no copper (the first five rows). How much total aluminum filtration does the model need for HVL₁ ≥ 2.9 mm? Compare the effect on HVL₁ of 0.1 mm of copper with that of 1 mm of extra aluminum.
 
 ## Uncertainty
 

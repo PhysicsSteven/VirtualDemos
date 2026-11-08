@@ -80,9 +80,9 @@ Work out the last four columns of Table 1 and the last two of Table 2 yourself. 
 
 ## Analysis
 
-1. Graph ln N_P against t (Table 1). Find $$\lambda_P$$ and the ⁹⁹Mo half life from the slope, with the standard error, and compare with 65.924 h.
+1. Graph ln N_P against t (Table 1). Find $$\lambda_P$$ and the ⁹⁹Mo half life from the slope, with the standard error, and compare with 65.924 h. (The counts are one sample followed in time, so the standard error understates the real uncertainty; see the Uncertainty section.)
 2. Graph N_D against t. Read the peak time and estimate its uncertainty from the scatter of the points near the peak. Compare with $$t_{\max}$$ from Before the lab question 3.
-3. Graph the pull $$(N_D - N_D^{\text{Bateman}})/\sqrt{N_D^{\text{Bateman}}}$$ against t. If the counts scatter as Poisson counts about the Bateman curve, the pulls should have mean near 0 and standard deviation near 1. Do they?
+3. Graph the pull $$(N_D - N_D^{\text{Bateman}})/\sqrt{N_D^{\text{Bateman}}}$$ against t. If the counts scatter as Poisson counts about the Bateman curve, the pulls would have mean near 0 and standard deviation near 1. Here readings 2 h apart share most of their nuclei, and the counts come from a fixed 10,000, so a standard deviation well below 1 is expected. What do yours show?
 4. Average A_D/A_P over the readings from 72 h on, with the standard error of the mean. Solve the equilibrium ratio for B with its uncertainty, and say whether your result can tell B = 0.886 from B = 1.
 5. Graph the eluted N_D against N_P (Table 2). Compare the slope, with its standard error, with Y from Before the lab question 5, and the intercept with zero.
 

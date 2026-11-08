@@ -110,7 +110,7 @@ No hazards in the virtual lab. In a real treatment room, follow the center's pro
 
 ## Analysis
 
-1. Graph $$1/M$$ against $$1/V$$ (in 1/kV) for each copy of the first table and fit straight lines. From each intercept find $$Q_{sat}$$ with its standard error, and then $$k_s = Q_{sat}/M$$ at 400 V. Compare each with the two voltage result from your 400 V and 200 V readings (pulsed coefficients above) and with the first order formula from Before the lab.
+1. Graph $$1/M$$ against $$1/V$$ (in 1/kV) for each copy of the first table and fit straight lines. Look at the residuals: where the points curve (at the higher dose per pulse), fit only 150 to 500 V. From each intercept find $$Q_{sat}$$ with its standard error, and then $$k_s = Q_{sat}/M$$ at 400 V. Compare each with the two voltage result from your 400 V and 200 V readings (pulsed coefficients above) and with the first order formula from Before the lab.
 2. Divide the slope by the intercept for each copy. How do the two compare, and what does that say about how $$u$$ depends on the dose per pulse?
 3. From Part 2: compute $$k_{TP}$$, $$k_{pol}$$ and $$k_s$$ (continuous formula), then $$N_{D,w,Q_0} = D_w/M_{Q_0}$$ with $$D_w$$ = 0.5000 Gy/min × 2.000 min. Give its type A uncertainty from your readings and compare it with the certificate value in the readouts.
 4. From Part 3: complete the factor table and compute $$D_w$$ for the 100 MU plan and the dose per MU. Combine the relative uncertainties in quadrature (type A of $$M_+$$ from $$s/\sqrt{n}$$, $$k_{TP}$$ from the thermometer's and barometer's last digits taken as uniform, $$k_{pol}$$ and $$k_s$$ from their readings, $$N_{D,w}$$ and $$k_Q$$ as given). Which term dominates?

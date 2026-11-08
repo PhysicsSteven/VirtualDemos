@@ -12,8 +12,6 @@ VDI18N.add('es', 'ws/mp-proton-qa', {
   "Cambio del tamaño de spot (%)",
 "Machine":
   "Máquina",
-"Day":
-  "Día",
 "Delivery errors":
   "Errores de entrega",
 "Depth (cm)":
@@ -36,6 +34,8 @@ VDI18N.add('es', 'ws/mp-proton-qa', {
   "Desplazamiento de los spots (mm)",
 "Proton Therapy QA: Morning Checks, Drift and Patient Plans | VirtualDemos":
   "Control de calidad en protonterapia: controles matutinos, deriva y planes de pacientes | VirtualDemos",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
 "Proton Therapy QA: Morning Checks, Drift and Patient Plans":
   "Control de calidad en protonterapia: controles matutinos, deriva y planes de pacientes",
 "<strong>Setups in the demo:</strong> Daily QA, all good; Output {#} % high; Energy {#} % high, at {#} MeV; Same error, at {#} MeV; Steering off {#} mm; Scanning magnet gain {#} % high; Spots {#} % larger; Output drifting; Mystery drift; Patient QA, clean delivery; Patient QA, spots shifted {#} mm; Range error, measured at the edge; Patient QA, spots {#} % larger. This worksheet uses all of them.":
@@ -210,8 +210,8 @@ VDI18N.add('es', 'ws/mp-proton-qa', {
   "Con las seis corridas sanas de la Parte {#}, llena la tabla Ruido de lectura para la salida, la diferencia de R90, el mayor error de spot y el cambio del tamaño de spot. ¿Cuántas desviaciones estándar de ruido caben dentro de cada tolerancia? ¿Podría el ruido por sí solo hacer fallar a una máquina sana en una mañana dada?",
 "For each fault in Part {#}, say which checks failed and which passed. Explain why each fault shows up only in the checks it does. Which faults would a check of the central spot alone miss?":
   "Para cada falla de la Parte {#}, di qué pruebas fallaron y cuáles pasaron. Explica por qué cada falla aparece solo en las pruebas en que aparece. ¿Qué fallas pasaría por alto una prueba solo del spot central?",
-"Fill in the Range against energy table. Graph \\(\\Delta R\\) (mm) against the baseline R90 (cm) and fit a straight line (with an intercept). From the slope and the {#} % energy error, find \\(p\\) with its uncertainty, and compare with {#}. Look at the residuals: is \\(\\Delta R / R\\) the same at every energy? At which energies does this fault pass the range check?":
-  "Llena la tabla Alcance en función de la energía. Grafica \\(\\Delta R\\) (mm) en función del R90 de línea base (cm) y ajusta una recta (con ordenada al origen). A partir de la pendiente y del error de energía de {#} %, encuentra \\(p\\) con su incertidumbre, y compáralo con {#}. Observa los residuos: ¿es \\(\\Delta R / R\\) igual a todas las energías? ¿A qué energías pasa esta falla la prueba de alcance?",
+"Fill in the Range against energy table. Graph \\(\\Delta R\\) (mm) against the baseline R90 (cm) and fit a straight line (with an intercept). From the slope and the {#} % energy error, find \\(p\\) with its uncertainty, and compare with {#} (the two need not agree: {#} fits real ranges over a wide span of energies, while your fit measures the model’s local slope near these energies). Look at the residuals: is \\(\\Delta R / R\\) the same at every energy? At which energies does this fault pass the range check?":
+  "Llena la tabla Alcance en función de la energía. Grafica \\(\\Delta R\\) (mm) en función del R90 de línea base (cm) y ajusta una recta (con ordenada al origen). A partir de la pendiente y del error de energía de {#} %, encuentra \\(p\\) con su incertidumbre, y compáralo con {#} (no tienen por qué coincidir: {#} ajusta alcances reales en un intervalo amplio de energías, mientras que tu ajuste mide la pendiente local del modelo cerca de estas energías). Observa los residuos: ¿es \\(\\Delta R / R\\) igual a todas las energías? ¿A qué energías pasa esta falla la prueba de alcance?",
 "Graph the output of Output drifting against the day and fit a straight line (with an intercept). Give the drift rate with its uncertainty. Predict the day the fitted line reaches {#} %, with its uncertainty from the fit. On which morning did the QA first fail? Explain why, with day to day variation, a single morning can fail before the line crosses {#} % or pass after it.":
   "Grafica la salida de Salida en deriva en función del día y ajusta una recta (con ordenada al origen). Da la tasa de deriva con su incertidumbre. Predice el día en que la recta ajustada llega a {#} %, con su incertidumbre a partir del ajuste. ¿En qué mañana falló el control por primera vez? Explica por qué, con la variación de un día a otro, una sola mañana puede fallar antes de que la recta cruce {#} % o pasar después.",
 "For the Mystery drift, graph each check against the day. Which one is changing? Fit it and give its rate with an uncertainty, and predict when it will leave its tolerance. Then press Show the answer and compare.":
@@ -269,5 +269,9 @@ VDI18N.add('es', 'ws/mp-proton-qa', {
 "Spot size at isocenter in air, before the phantom":
   "Tamaño de spot en el isocentro en aire, antes del maniquí",
 "Proton Therapy QA":
-  "Control de calidad en protonterapia"
+  "Control de calidad en protonterapia",
+"Day":
+  "Día",
+"Fill in the Range against energy table. Graph \\(\\Delta R\\) (mm) against the baseline R90 (cm) and fit a straight line (with an intercept). From the slope and the {#} % energy error, find \\(p\\) with its uncertainty, and compare with {#}. Look at the residuals: is \\(\\Delta R / R\\) the same at every energy? At which energies does this fault pass the range check?":
+  "Llena la tabla Alcance en función de la energía. Grafica \\(\\Delta R\\) (mm) en función del R90 de línea base (cm) y ajusta una recta (con ordenada al origen). A partir de la pendiente y del error de energía de {#} %, encuentra \\(p\\) con su incertidumbre, y compáralo con {#}. Observa los residuos: ¿es \\(\\Delta R / R\\) igual a todas las energías? ¿A qué energías pasa esta falla la prueba de alcance?"
 });

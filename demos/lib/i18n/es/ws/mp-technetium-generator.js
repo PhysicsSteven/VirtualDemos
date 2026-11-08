@@ -26,6 +26,8 @@ VDI18N.add('es', 'ws/mp-technetium-generator', {
   "Eluido/N_P",
 "A Technetium Generator | VirtualDemos":
   "Un generador de tecnecio | VirtualDemos",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
 "A Technetium Generator":
   "Un generador de tecnecio",
 "<strong>Setups in the demo:</strong> ⁹⁹Mo generator (this worksheet); Technetium 99m; Fluorine {#} (PET); Iridium {#}; Cobalt {#}; the chains and single isotopes of the Modern Physics worksheets.":
@@ -128,12 +130,12 @@ VDI18N.add('es', 'ws/mp-technetium-generator', {
   "Eluido/N_P, fila {#}",
 "Work out the last four columns of Table {#} and the last two of Table {#} yourself. For the Bateman column use \\(N_P(0) = 10\\,000\\) and B = {#}.":
   "Calcula tú mismo las últimas cuatro columnas de la Tabla {#} y las últimas dos de la Tabla {#}. Para la columna de Bateman usa \\(N_P(0) = 10\\,000\\) y B = {#}.",
-"Graph ln N_P against t (Table {#}). Find \\(\\lambda_P\\) and the ⁹⁹Mo half life from the slope, with the standard error, and compare with {#} h.":
-  "Grafica ln N_P en función de t (Tabla {#}). Encuentra \\(\\lambda_P\\) y la vida media del ⁹⁹Mo a partir de la pendiente, con el error estándar, y compáralas con {#} h.",
+"Graph ln N_P against t (Table {#}). Find \\(\\lambda_P\\) and the ⁹⁹Mo half life from the slope, with the standard error, and compare with {#} h. (The counts are one sample followed in time, so the standard error understates the real uncertainty; see the Uncertainty section.)":
+  "Grafica ln N_P en función de t (Tabla {#}). Encuentra \\(\\lambda_P\\) y la vida media del ⁹⁹Mo a partir de la pendiente, con el error estándar, y compáralas con {#} h. (Los conteos son una sola muestra seguida en el tiempo, así que el error estándar subestima la incertidumbre real; ve la sección Incertidumbre.)",
 "Graph N_D against t. Read the peak time and estimate its uncertainty from the scatter of the points near the peak. Compare with \\(t_{\\max}\\) from Before the lab question {#}.":
   "Grafica N_D en función de t. Lee el tiempo del máximo y estima su incertidumbre a partir de la dispersión de los puntos cerca del máximo. Compáralo con \\(t_{\\max}\\) de la pregunta {#} de Antes del laboratorio.",
-"Graph the pull \\((N_D - N_D^{\\text{Bateman}})/\\sqrt{N_D^{\\text{Bateman}}}\\) against t. If the counts scatter as Poisson counts about the Bateman curve, the pulls should have mean near {#} and standard deviation near {#}. Do they?":
-  "Grafica la desviación normalizada \\((N_D - N_D^{\\text{Bateman}})/\\sqrt{N_D^{\\text{Bateman}}}\\) en función de t. Si los conteos se dispersan como conteos de Poisson alrededor de la curva de Bateman, las desviaciones normalizadas deberían tener una media cercana a {#} y una desviación estándar cercana a {#}. ¿La tienen?",
+"Graph the pull \\((N_D - N_D^{\\text{Bateman}})/\\sqrt{N_D^{\\text{Bateman}}}\\) against t. If the counts scatter as Poisson counts about the Bateman curve, the pulls would have mean near {#} and standard deviation near {#}. Here readings {#} h apart share most of their nuclei, and the counts come from a fixed {#}, so a standard deviation well below {#} is expected. What do yours show?":
+  "Grafica la desviación normalizada \\((N_D - N_D^{\\text{Bateman}})/\\sqrt{N_D^{\\text{Bateman}}}\\) en función de t. Si los conteos se dispersaran como conteos de Poisson alrededor de la curva de Bateman, las desviaciones normalizadas tendrían una media cercana a {#} y una desviación estándar cercana a {#}. Aquí, lecturas separadas {#} h comparten la mayoría de sus núcleos, y los conteos salen de un total fijo de {#}, así que se espera una desviación estándar bastante menor que {#}. ¿Qué muestran las tuyas?",
 "Average A_D/A_P over the readings from {#} h on, with the standard error of the mean. Solve the equilibrium ratio for B with its uncertainty, and say whether your result can tell B = {#} from B = {#}.":
   "Promedia A_D/A_P sobre las lecturas desde {#} h en adelante, con el error estándar de la media. Despeja B de la razón de equilibrio con su incertidumbre, y di si tu resultado puede distinguir B = {#} de B = {#}.",
 "Graph the eluted N_D against N_P (Table {#}). Compare the slope, with its standard error, with Y from Before the lab question {#}, and the intercept with zero.":
@@ -177,5 +179,9 @@ VDI18N.add('es', 'ws/mp-technetium-generator', {
 "Time after an elution when the ⁹⁹ᵐTc count peaks":
   "Tiempo después de una elución en que el conteo de ⁹⁹ᵐTc alcanza su máximo",
 "Radioactive Decay (generator)":
-  "Desintegración radiactiva (generador)"
+  "Desintegración radiactiva (generador)",
+"Graph ln N_P against t (Table {#}). Find \\(\\lambda_P\\) and the ⁹⁹Mo half life from the slope, with the standard error, and compare with {#} h.":
+  "Grafica ln N_P en función de t (Tabla {#}). Encuentra \\(\\lambda_P\\) y la vida media del ⁹⁹Mo a partir de la pendiente, con el error estándar, y compáralas con {#} h.",
+"Graph the pull \\((N_D - N_D^{\\text{Bateman}})/\\sqrt{N_D^{\\text{Bateman}}}\\) against t. If the counts scatter as Poisson counts about the Bateman curve, the pulls should have mean near {#} and standard deviation near {#}. Do they?":
+  "Grafica la desviación normalizada \\((N_D - N_D^{\\text{Bateman}})/\\sqrt{N_D^{\\text{Bateman}}}\\) en función de t. Si los conteos se dispersan como conteos de Poisson alrededor de la curva de Bateman, las desviaciones normalizadas deberían tener una media cercana a {#} y una desviación estándar cercana a {#}. ¿La tienen?"
 });

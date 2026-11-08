@@ -42,7 +42,7 @@ How a material stops photons depends on their energy. Below about 100 keV the ph
 
 ## Before the lab
 
-1. A CT room has 150 body scans (DLP 550 mGy cm) and 30 head scans (DLP 1200 mGy cm) a week, 40 % of them repeated with contrast. Find the weekly scatter air kerma at 1 m, and at a point 3.3 m from the scanner.
+1. A CT room has 150 body scans (DLP 550 mGy cm) and 30 head scans (DLP 1200 mGy cm) a week, 40 % of them repeated with contrast. Find the weekly scatter air kerma at 1 m, and at a point 3.3 m from the scanner (the 3 m to the wall plus the 0.3 m beyond it that NCRP 147 uses).
 2. For an office beyond that wall (public, T = 1), find B. With lead's Archer parameters at 120 kV, α = 2.246 mm⁻¹, β = 5.73 mm⁻¹, γ = 0.547, invert Archer's form and find the lead thickness.
 3. A 6 MV linac delivers 450 Gy a week at isocenter. Its primary barrier faces an office (public, T = 1) with U = 1/4, and the point is 6.05 m from the target. Find B and the number of tenth value layers n. With TVL₁ = 37 cm and TVLₑ = 33 cm, find the concrete thickness.
 4. Lead's tenth value layer at 6 MV is 5.7 cm and its density 11.35 g/cm³; concrete's is 37 cm and 2.35 g/cm³. Compare the two tenth value layers in g/cm². What does that say about the photons' main interaction at 6 MV?
@@ -101,7 +101,7 @@ Table 4. Proton room, forward wall.
 1. From Table 1, find the mass per area (kg/m²) of the lead and concrete walls in the first row (lead 11.35 g/cm³, concrete 2.35 g/cm³). How many times more mass does concrete need? Do the same for the 6 MV primary barrier in Table 2.
 2. In Table 1, the corridor and the radiation workers rows each change B by a factor of 5. Compare how much the lead and the concrete change, and explain from the shape of Archer's curve why thin walls do not change in proportion to log B.
 3. From Table 2's primary rows, how much does the concrete grow from 6 to 18 MV? Why does it grow, while lead's tenth value layer stays at 5.7 cm from 6 to 18 MV?
-4. Graph log₁₀ of the neutron dose at the door against the maze length (Table 3, first copy). Is it a straight line? Find its slope at long maze lengths and compare with $$-1/\mathrm{TVD}$$, TVD = 2.06 √S₁ with S₁ = 6 m². Which term of the modified Kersey formula dominates a short maze?
+4. Graph log₁₀ of the neutron dose at the door against the maze length (Table 3, first copy). Is it a straight line? Find its slope at long maze lengths and compare with $$-1/\mathrm{TVD}$$, TVD = 2.06 √S₁ with S₁ = 6 m². The modified Kersey formula adds a fast neutron term, $$1.64 \times 10^{-d_2/1.9\ \mathrm{m}}$$, to the tenth value term. How much does it add to the neutron dose at your shortest maze, and below about what maze length would it be the larger of the two?
 5. Graph the concrete thickness against ln(N/10¹³) (Table 4). Fit a line and compare the slope with λ = 52 cm. Explain why the slope comes out a little smaller.
 
 ## Uncertainty

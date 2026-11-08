@@ -22,6 +22,8 @@ VDI18N.add('es', 'ws/mp-proton-calibration', {
   "De dónde viene",
 "Calibrating a Proton Beam: TRS-{#} Step by Step | VirtualDemos":
   "Calibración de un haz de protones: TRS-{#} paso a paso | VirtualDemos",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
 "Calibrating a Proton Beam: TRS-{#} Step by Step":
   "Calibración de un haz de protones: TRS-{#} paso a paso",
 "Student worksheet · Medical Physics":
@@ -144,8 +146,8 @@ VDI18N.add('es', 'ws/mp-proton-calibration', {
   "datos del TRS-{#}",
 "\\(D_w\\) for {#} MU (Gy)":
   "\\(D_w\\) para {#} MU (Gy)",
-"Graph \\(1/M\\) against \\(1/V\\) (in {#}/kV) for each copy of the first table and fit straight lines. From each intercept find \\(Q_{sat}\\) with its standard error, and then \\(k_s = Q_{sat}/M\\) at {#} V. Compare each with the two voltage result from your {#} V and {#} V readings (pulsed coefficients above) and with the first order formula from Before the lab.":
-  "Grafica \\(1/M\\) en función de \\(1/V\\) (en {#}/kV) para cada copia de la primera tabla y ajusta rectas. Con cada ordenada al origen encuentra \\(Q_{sat}\\) con su error estándar, y luego \\(k_s = Q_{sat}/M\\) a {#} V. Compara cada uno con el resultado de dos voltajes de tus lecturas a {#} V y {#} V (coeficientes pulsados de arriba) y con la fórmula de primer orden de Antes del laboratorio.",
+"Graph \\(1/M\\) against \\(1/V\\) (in {#}/kV) for each copy of the first table and fit straight lines. Look at the residuals: where the points curve (at the higher dose per pulse), fit only {#} to {#} V. From each intercept find \\(Q_{sat}\\) with its standard error, and then \\(k_s = Q_{sat}/M\\) at {#} V. Compare each with the two voltage result from your {#} V and {#} V readings (pulsed coefficients above) and with the first order formula from Before the lab.":
+  "Grafica \\(1/M\\) en función de \\(1/V\\) (en {#}/kV) para cada copia de la primera tabla y ajusta rectas. Observa los residuos: donde los puntos se curvan (con la dosis por pulso más alta), ajusta solo de {#} a {#} V. Con cada ordenada al origen encuentra \\(Q_{sat}\\) con su error estándar, y luego \\(k_s = Q_{sat}/M\\) a {#} V. Compara cada uno con el resultado de dos voltajes de tus lecturas a {#} V y {#} V (coeficientes pulsados de arriba) y con la fórmula de primer orden de Antes del laboratorio.",
 "Divide the slope by the intercept for each copy. How do the two compare, and what does that say about how \\(u\\) depends on the dose per pulse?":
   "Divide la pendiente entre la ordenada al origen para cada copia. ¿Cómo se comparan las dos, y qué dice eso sobre cómo depende \\(u\\) de la dosis por pulso?",
 "From Part {#}: compute \\(k_{TP}\\), \\(k_{pol}\\) and \\(k_s\\) (continuous formula), then \\(N_{D,w,Q_0} = D_w/M_{Q_0}\\) with \\(D_w\\) = {#} Gy/min × {#} min. Give its type A uncertainty from your readings and compare it with the certificate value in the readouts.":
@@ -257,5 +259,7 @@ VDI18N.add('es', 'ws/mp-proton-calibration', {
 "Reference depth":
   "Profundidad de referencia",
 "Dosimetry: Kerma, Equilibrium and the Ion Chamber":
-  "Dosimetría: kerma, equilibrio y la cámara de ionización"
+  "Dosimetría: kerma, equilibrio y la cámara de ionización",
+"Graph \\(1/M\\) against \\(1/V\\) (in {#}/kV) for each copy of the first table and fit straight lines. From each intercept find \\(Q_{sat}\\) with its standard error, and then \\(k_s = Q_{sat}/M\\) at {#} V. Compare each with the two voltage result from your {#} V and {#} V readings (pulsed coefficients above) and with the first order formula from Before the lab.":
+  "Grafica \\(1/M\\) en función de \\(1/V\\) (en {#}/kV) para cada copia de la primera tabla y ajusta rectas. Con cada ordenada al origen encuentra \\(Q_{sat}\\) con su error estándar, y luego \\(k_s = Q_{sat}/M\\) a {#} V. Compara cada uno con el resultado de dos voltajes de tus lecturas a {#} V y {#} V (coeficientes pulsados de arriba) y con la fórmula de primer orden de Antes del laboratorio."
 });

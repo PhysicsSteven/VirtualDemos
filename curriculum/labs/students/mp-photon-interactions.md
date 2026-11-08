@@ -99,6 +99,8 @@ No hazards in the virtual lab. In the real lab, the sources and X-ray beams used
 
 ### Narrow and broad beam
 
+The buildup $$B$$ is the broad beam $$K/K_0$$ divided by $$e^{-\mu t}$$ with the tabulated $$\mu$$ (the $$\mu t$$ column), not by the counted narrow beam $$T$$, so dividing the two recorded columns gives a slightly different number for thick slabs.
+
 | Reading | Material | Energy (keV) | Thickness $$t$$ (cm) | $$\mu t$$ | Photons $$N$$ | Narrow beam $$T$$ | Standard error of $$T$$ | ln $$T$$ | Broad beam $$K/K_0$$ | Standard error of $$K/K_0$$ | Buildup $$B$$ | Standard error of $$B$$ |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
 | | | | | | | | | | | | | |
@@ -123,7 +125,7 @@ No hazards in the virtual lab. In the real lab, the sources and X-ray beams used
 
 ## Analysis
 
-1. From the water table: at which of your energies is each process the largest share of $$\mu/\rho$$? Between which two of your energies does the photoelectric effect give way to Compton scattering, and between which does pair production overtake Compton scattering? Check your answers against the Which process wins table.
+1. From the water table: at which of your energies is each process the largest share of $$\mu/\rho$$? Between which two of your energies does the photoelectric effect give way to Compton scattering, and between which does pair production overtake Compton scattering (or does it at none of them)? Check your answers against the Which process wins table.
 2. For water, compute $$\mu_{tr}/\mu$$ at 10 keV, 100 keV, 1 MeV and 10 MeV. Explain why it is near 1 at 10 keV, falls to a minimum near 100 keV, and rises again. At 100 keV, what share of the photon energy does the Compton electron get on average?
 3. Compare $$g$$ for water and for lead at 1 MeV and 10 MeV. Why is $$g$$ larger for lead, and larger at higher energy?
 4. From the Z dependence table, graph ln $$\tau_a$$ against ln Z. Is it a straight line? Find the slope $$n$$ and its standard error, so that $$\tau_a \propto Z^n$$ at 100 keV. Is $$n$$ between 3 and 5?

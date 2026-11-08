@@ -69,11 +69,11 @@ Table 1. Transmission of 511 keV photons, ¹⁸F at 2 m.
 
 Table 2. Barrier for the uptake room wall.
 
-| Reading | Patients a week N | Uptake time (h) | Occupancy T | Design goal P (mSv/wk) | Patient absorption | Weekly dose, no wall (mSv) | Transmission needed B | Lead, broad beam (mm) | Lead, narrow beam (mm) |
-|---|---|---|---|---|---|---|---|---|---|
-| | | | | | | | | | |
-| | | | | | | | | | |
-| | | | | | | | | | |
+| Reading | Patients a week N | Uptake time (h) | Occupancy T | Design goal P (mSv/wk) | Patient absorption | Weekly dose, no wall (mSv) | Transmission needed B | Lead, broad beam (mm) | Lead, narrow beam (mm) | Concrete, broad beam (cm) |
+|---|---|---|---|---|---|---|---|---|---|---|
+| | | | | | | | | | | |
+| | | | | | | | | | | |
+| | | | | | | | | | | |
 
 Work out ln(T) = ln(rate/rate at x = 0) for both beams in Table 1.
 

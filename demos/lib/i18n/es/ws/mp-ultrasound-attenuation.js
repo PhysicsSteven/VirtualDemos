@@ -24,6 +24,8 @@ VDI18N.add('es', 'ws/mp-ultrasound-attenuation', {
   "α = −pendiente/{#} (dB/cm)",
 "Attenuation of Ultrasound in Tissue | VirtualDemos":
   "Atenuación del ultrasonido en el tejido | VirtualDemos",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
 "Attenuation of Ultrasound in Tissue":
   "Atenuación del ultrasonido en el tejido",
 "<strong>Setups in the demo:</strong> Attenuation in muscle (this worksheet): muscle of adjustable depth over {#} cm of bone, with absorption on; the echo, layer and Doppler setups of the Acoustics worksheet.":
@@ -122,8 +124,8 @@ VDI18N.add('es', 'ws/mp-ultrasound-attenuation', {
   "El modelo no tiene ruido, así que la dispersión alrededor de cada recta proviene de dónde colocaste el cursor y del redondeo. Mueve el cursor {#} µs a cada lado de un pico y mira cuánto baja el nivel; usa eso para estimar la incertidumbre de cada L, y di si es lo bastante grande para importar frente a los errores estándar de tus ajustes. Una medición real de α en el músculo tiene incertidumbres mucho mayores: los valores publicados dependen de la especie, de la temperatura y de la dirección de las fibras.",
 "Why do scanners use {#} to {#} MHz for the abdomen and {#} MHz or more for the thyroid or a tendon? Use your penetration depths from Before the lab question {#} and the pulse length at each frequency.":
   "¿Por qué los escáneres usan de {#} a {#} MHz para el abdomen y {#} MHz o más para la tiroides o un tendón? Usa tus profundidades de penetración de la pregunta {#} de Antes del laboratorio y la longitud del pulso a cada frecuencia.",
-"The TGC curve for {#} dB/(cm MHz) does not make the bone echo exactly the same height at every depth. Give two reasons from the About the demo notes.":
-  "La curva de TGC para {#} dB/(cm MHz) no hace que el eco del hueso tenga exactamente la misma altura a cada profundidad. Da dos razones a partir de las notas de Sobre la demo.",
+"The TGC curve for {#} dB/(cm MHz) does not make the bone echo exactly the same height at every depth. Give the reason, from the About the demo notes.":
+  "La curva de TGC para {#} dB/(cm MHz) no hace que el eco del hueso tenga exactamente la misma altura a cada profundidad. Da la razón, a partir de las notas de Sobre la demo.",
 "Set TGC to {#} and imagine the beam passing through {#} cm of fat over the muscle. Would the deeper tissue look too bright or too dark? Why?":
   "Pon la TGC en {#} e imagina que el haz atraviesa {#} cm de grasa sobre el músculo. ¿El tejido más profundo se vería demasiado brillante o demasiado oscuro? ¿Por qué?",
 "Cortical bone’s α₀ is {#} dB/(cm MHz). How much is lost going through {#} cm of skull and back at {#} MHz? What does this mean for transcranial ultrasound?":
@@ -165,5 +167,7 @@ VDI18N.add('es', 'ws/mp-ultrasound-attenuation', {
 "Depth the scanner assumes for an echo":
   "Profundidad que supone el escáner para un eco",
 "Ultrasound: Echoes and Blood Flow (absorption)":
-  "Ultrasonido: ecos y flujo sanguíneo (absorción)"
+  "Ultrasonido: ecos y flujo sanguíneo (absorción)",
+"The TGC curve for {#} dB/(cm MHz) does not make the bone echo exactly the same height at every depth. Give two reasons from the About the demo notes.":
+  "La curva de TGC para {#} dB/(cm MHz) no hace que el eco del hueso tenga exactamente la misma altura a cada profundidad. Da dos razones a partir de las notas de Sobre la demo."
 });

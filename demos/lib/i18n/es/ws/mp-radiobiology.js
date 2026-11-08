@@ -68,6 +68,8 @@ VDI18N.add('es', 'ws/mp-radiobiology', {
   "Con RBE {#} (Gy(RBE))",
 "Radiobiology: Cell Survival and Fractionation | VirtualDemos":
   "Radiobiología: supervivencia celular y fraccionamiento | VirtualDemos",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
 "Radiobiology: Cell Survival and Fractionation":
   "Radiobiología: supervivencia celular y fraccionamiento",
 "Student worksheet · Medical Physics":
@@ -280,8 +282,8 @@ VDI18N.add('es', 'ws/mp-radiobiology', {
   "Dosis ponderada por RBE (Gy(RBE)), fila {#}",
 "With RBE {#} (Gy(RBE)), row {#}":
   "Con RBE {#} (Gy(RBE)), fila {#}",
-"Graph ln \\(S\\) in air against \\(D\\) for V79 and fit a quadratic, ln \\(S = a + bD + cD^2\\). Find α and β with their standard errors from the coefficients. Is \\(a\\) zero within its uncertainty, as it should be? Find α/β and SF2.":
-  "Grafica ln \\(S\\) en aire en función de \\(D\\) para V79 y ajusta una cuadrática, ln \\(S = a + bD + cD^2\\). Encuentra α y β con sus errores estándar a partir de los coeficientes. ¿Es \\(a\\) cero dentro de su incertidumbre, como debería? Encuentra α/β y SF2.",
+"Graph ln \\(S\\) in air against \\(D\\) for V79 and fit a quadratic, ln \\(S = a + bD + cD^2\\). Find α and β from the coefficients. These readings are exact model values, so \\(a\\) comes out zero and the standard errors are tiny; the test of the intercept belongs to the assay fit in Analysis {#}. Find α/β and SF2.":
+  "Grafica ln \\(S\\) en aire en función de \\(D\\) para V79 y ajusta una cuadrática, ln \\(S = a + bD + cD^2\\). Encuentra α y β a partir de los coeficientes. Estas lecturas son valores exactos del modelo, así que \\(a\\) sale cero y los errores estándar son diminutos; la prueba de la ordenada al origen corresponde al ajuste del ensayo en el Análisis {#}. Encuentra α/β y SF2.",
 "Do the same with ln \\(S\\) without oxygen. From your four fitted values, find the OER at low and at high dose (Before the lab question {#}) and compare them with the OER column. Does the OER of V79 rise or fall with dose? Does that of T1 (second copy of the table)?":
   "Haz lo mismo con ln \\(S\\) sin oxígeno. A partir de tus cuatro valores ajustados, encuentra el OER a dosis baja y a dosis alta (pregunta {#} de Antes del laboratorio) y compáralos con la columna OER. ¿El OER de V79 sube o baja con la dosis? ¿Y el de T1 (segunda copia de la tabla)?",
 "From the oxygen table, the dose ratio is the OER at {#} mmHg and {#} in air. At about what oxygen pressure is it halfway between? Arterial blood carries about {#} mmHg and venous blood about {#} mmHg. Why does it matter for radiotherapy that a tumor has regions below about {#} mmHg, but hardly matters whether normal tissue sits at {#} or {#} mmHg?":
@@ -296,8 +298,8 @@ VDI18N.add('es', 'ws/mp-radiobiology', {
   "Con la segunda tabla de fraccionamiento, con el efecto tardío fijo, ¿cómo cambia la EQD2 del tumor (α/β {#} Gy) con \\(n\\)? Usa el control α/β de tu tejido para encontrar qué α/β necesitaría un tumor para que menos fracciones más grandes no le costaran nada. Explica la respuesta a partir de la fórmula de la BED.",
 "From the third table, compare {#} Gy in {#} fractions with {#} Gy in {#} for prostate cancer (α/β {#} Gy) and for late responding tissue ({#} Gy). Why could a shorter course be at least as good for prostate cancer?":
   "Con la tercera tabla, compara {#} Gy en {#} fracciones con {#} Gy en {#} para el cáncer de próstata (α/β {#} Gy) y para el tejido de respuesta tardía ({#} Gy). ¿Por qué un curso más corto podría ser al menos igual de bueno para el cáncer de próstata?",
-"From the proton tables, graph RBE against LET\\(_d\\) for \\((\\alpha/\\beta)_x\\) = {#} and {#} Gy and fit straight lines. Find the slopes with their standard errors. At what LET\\(_d\\) does the RBE pass {#} for each tissue? Which tissue’s RBE depends more strongly on LET, and why does the model make it so?":
-  "Con las tablas de protones, grafica la RBE en función de LET\\(_d\\) para \\((\\alpha/\\beta)_x\\) = {#} y {#} Gy y ajusta rectas. Encuentra las pendientes con sus errores estándar. ¿A qué LET\\(_d\\) pasa la RBE de {#} para cada tejido? ¿La RBE de qué tejido depende más fuertemente de la LET, y por qué el modelo lo hace así?",
+"From the proton tables, graph RBE against LET\\(_d\\) for \\((\\alpha/\\beta)_x\\) = {#} and {#} Gy and fit straight lines. Find the slopes with their standard errors. At what LET\\(_d\\) does the RBE pass {#} for each tissue? (For one of them every reading is already above {#}: extend its line below your lowest LET.) Which tissue’s RBE depends more strongly on LET, and why does the model make it so?":
+  "Con las tablas de protones, grafica la RBE en función de LET\\(_d\\) para \\((\\alpha/\\beta)_x\\) = {#} y {#} Gy y ajusta rectas. Encuentra las pendientes con sus errores estándar. ¿A qué LET\\(_d\\) pasa la RBE de {#} para cada tejido? (Para uno de ellos todas las lecturas ya están por encima de {#}: extiende su recta por debajo de tu LET más baja.) ¿La RBE de qué tejido depende más fuertemente de la LET, y por qué el modelo lo hace así?",
 "From the third proton table, graph RBE against the dose per fraction. Does the RBE head toward the RBE\\(_{max}\\) and RBE\\(_{min}\\) columns at the two ends? A distal edge with LET\\(_d\\) = {#} keV/µm sits inside the brainstem and gets {#} Gy per fraction: what RBE weighted dose does it get per fraction, against what RBE {#} gives?":
   "Con la tercera tabla de protones, grafica la RBE en función de la dosis por fracción. ¿Se acerca la RBE a las columnas RBE\\(_{max}\\) y RBE\\(_{min}\\) en los dos extremos? Un borde distal con LET\\(_d\\) = {#} keV/µm queda dentro del tronco encefálico y recibe {#} Gy por fracción: ¿qué dosis ponderada por RBE recibe por fracción, frente a la que da una RBE de {#}?",
 "Only the assay readings carry random error here: the survival, fractionation and RBE readings come straight from the models, whose uncertainty is in their parameters. For each dose in the assay table, compare the spread of the three flask counts with the square root of their mean: do they agree, as they should for counting statistics alone? Then repeat the whole assay with two new experiments and refit. Do the three sets of α and β agree within the standard errors of your first fit? Real assays scatter more than Poisson counting, from clumps of cells, uneven plating and colonies that merge. Last, the α/β of prostate cancer is {#} Gy with a range of {#} to {#} Gy (Brenner and Hall {#}): find the EQD2 of {#} Gy in {#} fractions at both ends of that range, and say how much that uncertainty matters for the comparison in Analysis {#}.":
@@ -371,5 +373,9 @@ VDI18N.add('es', 'ws/mp-radiobiology', {
 "Number of equal fractions":
   "Número de fracciones iguales",
 "Oxygen partial pressure":
-  "Presión parcial de oxígeno"
+  "Presión parcial de oxígeno",
+"Graph ln \\(S\\) in air against \\(D\\) for V79 and fit a quadratic, ln \\(S = a + bD + cD^2\\). Find α and β with their standard errors from the coefficients. Is \\(a\\) zero within its uncertainty, as it should be? Find α/β and SF2.":
+  "Grafica ln \\(S\\) en aire en función de \\(D\\) para V79 y ajusta una cuadrática, ln \\(S = a + bD + cD^2\\). Encuentra α y β con sus errores estándar a partir de los coeficientes. ¿Es \\(a\\) cero dentro de su incertidumbre, como debería? Encuentra α/β y SF2.",
+"From the proton tables, graph RBE against LET\\(_d\\) for \\((\\alpha/\\beta)_x\\) = {#} and {#} Gy and fit straight lines. Find the slopes with their standard errors. At what LET\\(_d\\) does the RBE pass {#} for each tissue? Which tissue’s RBE depends more strongly on LET, and why does the model make it so?":
+  "Con las tablas de protones, grafica la RBE en función de LET\\(_d\\) para \\((\\alpha/\\beta)_x\\) = {#} y {#} Gy y ajusta rectas. Encuentra las pendientes con sus errores estándar. ¿A qué LET\\(_d\\) pasa la RBE de {#} para cada tejido? ¿La RBE de qué tejido depende más fuertemente de la LET, y por qué el modelo lo hace así?"
 });

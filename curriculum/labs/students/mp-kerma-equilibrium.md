@@ -11,7 +11,7 @@ Student worksheet · Medical Physics
 **Using the demo.**
 
 - This worksheet uses the **Kerma and dose** view. A broad beam of photons of one energy enters water from the left. The dashed line is the collision kerma of the primary photons from NIST's $$\mu_{en}/\rho$$, the solid line the model's absorbed dose, and the pink points a Monte Carlo estimate of the dose, each with its standard uncertainty.
-- Play sends photons in and counts histories: each dot in the picture is an interaction and each purple line the Compton electron it sets moving, to scale. Pause stops the count; Start again clears the histories. Changing the energy or the depths shown starts a new count.
+- Play sends photons in and counts histories: each dot in the picture is an interaction and each purple line the Compton electron it sets moving, to scale. Pause stops the count; Reset clears the histories. Changing the energy or the depths shown starts a new count.
 - The depth probe (the vertical line) can be dragged, moved with the arrow keys or set on the card. The readouts give the collision kerma, the model's dose and the Monte Carlo dose at the probe.
 - Record reading stores the numbers at the probe. Export to worksheet sends them to the first Data table; Clear starts a new series, which goes into a new copy of the table.
 - The model: each Compton electron goes straight along its starting direction for its CSDA range and leaves its collision stopping power (ESTAR) along the way; scattered photons leave the water. The Lab fold lists what it leaves out.

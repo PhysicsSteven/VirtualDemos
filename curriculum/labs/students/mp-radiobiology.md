@@ -127,7 +127,7 @@ No hazards in the virtual lab. In a real radiobiology lab, irradiators are radia
 
 ## Analysis
 
-1. Graph ln $$S$$ in air against $$D$$ for V79 and fit a quadratic, ln $$S = a + bD + cD^2$$. Find α and β with their standard errors from the coefficients. Is $$a$$ zero within its uncertainty, as it should be? Find α/β and SF2.
+1. Graph ln $$S$$ in air against $$D$$ for V79 and fit a quadratic, ln $$S = a + bD + cD^2$$. Find α and β from the coefficients. These readings are exact model values, so $$a$$ comes out zero and the standard errors are tiny; the test of the intercept belongs to the assay fit in Analysis 4. Find α/β and SF2.
 2. Do the same with ln $$S$$ without oxygen. From your four fitted values, find the OER at low and at high dose (Before the lab question 2) and compare them with the OER column. Does the OER of V79 rise or fall with dose? Does that of T1 (second copy of the table)?
 3. From the oxygen table, the dose ratio is the OER at 0 mmHg and 1 in air. At about what oxygen pressure is it halfway between? Arterial blood carries about 95 mmHg and venous blood about 40 mmHg. Why does it matter for radiotherapy that a tumor has regions below about 10 mmHg, but hardly matters whether normal tissue sits at 40 or 95 mmHg?
 4. From the assay table, check the plating efficiency and every surviving fraction and its standard error from the colony counts (Before the lab question 4). Graph ln SF against $$D$$ and fit a quadratic. Find α and β of the mystery line with their standard errors, and so α/β, SF2 and the dose $$D_{10}$$ that leaves 10 % surviving. Does the fit's intercept agree with zero?
@@ -135,7 +135,7 @@ No hazards in the virtual lab. In a real radiobiology lab, irradiators are radia
 6. From the first fractionation table, graph EQD2 against $$n$$ for the three tissues. Which tissue's EQD2 changes most as the 60 Gy is split into fewer fractions, and why? What does that mean for giving a whole course in one or a few large fractions?
 7. From the second fractionation table, with the late effect held fixed, how does the tumor's EQD2 (α/β 10 Gy) change with $$n$$? Use the Your tissue α/β control to find what α/β a tumor would need for fewer, larger fractions to cost it nothing. Explain the answer from the BED formula.
 8. From the third table, compare 60 Gy in 20 fractions with 74 Gy in 37 for prostate cancer (α/β 1.5 Gy) and for late responding tissue (3 Gy). Why could a shorter course be at least as good for prostate cancer?
-9. From the proton tables, graph RBE against LET$$_d$$ for $$(\alpha/\beta)_x$$ = 2 and 10 Gy and fit straight lines. Find the slopes with their standard errors. At what LET$$_d$$ does the RBE pass 1.1 for each tissue? Which tissue's RBE depends more strongly on LET, and why does the model make it so?
+9. From the proton tables, graph RBE against LET$$_d$$ for $$(\alpha/\beta)_x$$ = 2 and 10 Gy and fit straight lines. Find the slopes with their standard errors. At what LET$$_d$$ does the RBE pass 1.1 for each tissue? (For one of them every reading is already above 1.1: extend its line below your lowest LET.) Which tissue's RBE depends more strongly on LET, and why does the model make it so?
 10. From the third proton table, graph RBE against the dose per fraction. Does the RBE head toward the RBE$$_{max}$$ and RBE$$_{min}$$ columns at the two ends? A distal edge with LET$$_d$$ = 8 keV/µm sits inside the brainstem and gets 1 Gy per fraction: what RBE weighted dose does it get per fraction, against what RBE 1.1 gives?
 
 ## Uncertainty

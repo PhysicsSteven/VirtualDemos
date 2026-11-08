@@ -26,6 +26,8 @@ VDI18N.add('es', 'ws/mp-kerma-equilibrium', {
   "β del modelo",
 "Kerma, Dose and Charged Particle Equilibrium | VirtualDemos":
   "Kerma, dosis y equilibrio de partículas cargadas | VirtualDemos",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
 "Kerma, Dose and Charged Particle Equilibrium":
   "Kerma, dosis y equilibrio de partículas cargadas",
 "Student worksheet · Medical Physics":
@@ -34,8 +36,8 @@ VDI18N.add('es', 'ws/mp-kerma-equilibrium', {
   "<strong>Configuraciones en la demo:</strong> Acumulación con ⁶⁰Co; Equilibrio en profundidad; {#} MeV: una acumulación delgada; {#} MeV: una acumulación profunda; Curva de saturación, protones; Alta dosis por pulso; ⁶⁰Co: casi sin recombinación; Calibrar una capa de {#} MeV; {#} MeV: z_ref = {#} g/cm²; De dónde viene N_D,w.",
 "This worksheet uses the <strong>Kerma and dose</strong> view. A broad beam of photons of one energy enters water from the left. The dashed line is the collision kerma of the primary photons from NIST’s \\(\\mu_{en}/\\rho\\), the solid line the model’s absorbed dose, and the pink points a Monte Carlo estimate of the dose, each with its standard uncertainty.":
   "Esta hoja de trabajo usa la vista <strong>Kerma y dosis</strong>. Un haz amplio de fotones de una sola energía entra al agua por la izquierda. La línea punteada es la kerma de colisión de los fotones primarios según el \\(\\mu_{en}/\\rho\\) del NIST, la línea continua la dosis absorbida del modelo, y los puntos rosas una estimación Monte Carlo de la dosis, cada uno con su incertidumbre estándar.",
-"Start sends photons in and counts histories: each dot in the picture is an interaction and each purple line the Compton electron it sets moving, to scale. Pause stops the count; Start again clears the histories. Changing the energy or the depths shown starts a new count.":
-  "Iniciar envía fotones y cuenta historias: cada punto de la imagen es una interacción y cada línea morada el electrón Compton que pone en movimiento, a escala. Pausa detiene la cuenta; Iniciar de nuevo borra las historias. Cambiar la energía o las profundidades mostradas inicia una cuenta nueva.",
+"Play sends photons in and counts histories: each dot in the picture is an interaction and each purple line the Compton electron it sets moving, to scale. Pause stops the count; Reset clears the histories. Changing the energy or the depths shown starts a new count.":
+  "Iniciar envía fotones y cuenta historias: cada punto de la imagen es una interacción y cada línea morada el electrón Compton que pone en movimiento, a escala. Pausa detiene la cuenta; Reiniciar borra las historias. Cambiar la energía o las profundidades mostradas inicia una cuenta nueva.",
 "The depth probe (the vertical line) can be dragged, moved with the arrow keys or set on the card. The readouts give the collision kerma, the model’s dose and the Monte Carlo dose at the probe.":
   "La sonda de profundidad (la línea vertical) se puede arrastrar, mover con las flechas o fijar en la tarjeta. Las lecturas dan la kerma de colisión, la dosis del modelo y la dosis Monte Carlo en la sonda.",
 "Record reading stores the numbers at the probe. Export to worksheet sends them to the first Data table; Clear starts a new series, which goes into a new copy of the table.":
@@ -193,5 +195,7 @@ VDI18N.add('es', 'ws/mp-kerma-equilibrium', {
 "Depth where the electrons are set moving":
   "Profundidad donde los electrones se ponen en movimiento",
 "Dosimetry: Kerma, Equilibrium and the Ion Chamber":
-  "Dosimetría: kerma, equilibrio y la cámara de ionización"
+  "Dosimetría: kerma, equilibrio y la cámara de ionización",
+"Start sends photons in and counts histories: each dot in the picture is an interaction and each purple line the Compton electron it sets moving, to scale. Pause stops the count; Start again clears the histories. Changing the energy or the depths shown starts a new count.":
+  "Iniciar envía fotones y cuenta historias: cada punto de la imagen es una interacción y cada línea morada el electrón Compton que pone en movimiento, a escala. Pausa detiene la cuenta; Iniciar de nuevo borra las historias. Cambiar la energía o las profundidades mostradas inicia una cuenta nueva."
 });

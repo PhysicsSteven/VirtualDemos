@@ -778,7 +778,7 @@
     /* Transmission: Reading | shield | x | narrow | broad | buildup | ln T broad, ln T narrow (typed). Barrier, a series whose barrier
        inputs differ: Reading | N | t | T | P | patient | weekly dose | B | lead broad | lead narrow */
     'mp-shielding-barrier': { demo: 'Nuclear Reactions, Fission and Fusion (broad beam)', cols: ['row', 'shield', 'x_cm', 'rate_narrow_uSv_h', 'rate_uSv_h', 'buildup', null, null],
-      alt: [{ table: 1, when: (rows) => new Set(rows.map((r) => [r.patients_wk, r.t_h, r.T, r.P_mSv_wk, r.patient].join())).size > 1, cols: ['row', 'patients_wk', 't_h', 'T', 'P_mSv_wk', 'patient', 'week_mSv', 'B_needed', 'lead_broad_mm', 'lead_narrow_mm'] }] },
+      alt: [{ table: 1, when: (rows) => new Set(rows.map((r) => [r.patients_wk, r.t_h, r.T, r.P_mSv_wk, r.patient].join())).size > 1, cols: ['row', 'patients_wk', 't_h', 'T', 'P_mSv_wk', 'patient', 'week_mSv', 'B_needed', 'lead_broad_mm', 'lead_narrow_mm', 'concrete_broad_cm'] }] },
     /* Reading | setup and frequency | muscle depth | cursor time | echo level | TGC | 2d (typed); Table 2 is typed from the fits */
     'mp-ultrasound-attenuation': { demo: 'Ultrasound: Echoes and Blood Flow (absorption)', cols: ['row', (r) => `${r.setup}, ${r.f0_MHz} MHz`, 'depth_cm', 'cursor_time_us', 'level_dB', 'tgc', null] },
   });
@@ -1967,7 +1967,8 @@ details.ws-help p, details.ws-help ul { margin: 6px 0; } details.ws-help code { 
     const S = { worksheet: SLUG, title: TITLE, version: VERSION, saved: new Date().toISOString(), student: {}, tables: [], answers: {}, unplaced: leftovers, received };
     WHO.forEach(([k]) => { S.student[k] = who[k].value; });
     tables.forEach((T) => S.tables.push({ columns: T.cols, runs: T.runs.map((R) => ({ label: R.label ? R.label.value : null, notes: R.notes.value, source: R.source || null,
-      removed: R.removed || undefined, axes: R.axes, added: R.xcols.length ? R.xcols.map((x) => x.name.value) : undefined, rows: R.rows.map((r) => r.cells.map((f) => (f ? rawOf(f) : null))) })) }));
+      removed: R.removed || undefined, axes: R.axes, added: R.xcols.length ? R.xcols.map((x) => x.name.value) : undefined, rows: R.rows.map((r, i) => r.cells.map((f, c) => (f ? rawOf(f) : (T.tpl[i] && T.tpl[i][c] ? T.tpl[i][c].text : null)))) })) }));
+    /* a fixed cell (text printed in the handout's table, like a photon energy) is saved as that text, so a save file or key carries it */
     answers.forEach((a) => { if (a.f.value) S.answers[a.key] = { q: a.q, text: a.f.value }; });
     return S;
   }
@@ -2003,7 +2004,7 @@ details.ws-help p, details.ws-help ul { margin: 6px 0; } details.ws-help code { 
         R.notes.wsSet(sr.notes || '');
         (sr.rows || []).forEach((cells, i) => {
           const row = R.rows[i] || newRow(T, R);
-          (cells || []).forEach((v, c) => { if (v != null && v !== '') { if (row.cells[c]) row.cells[c].wsSet(v); else warn.push(T.heading); } });
+          (cells || []).forEach((v, c) => { if (v != null && v !== '') { if (row.cells[c]) row.cells[c].wsSet(v); else if (!(T.tpl[i] && T.tpl[i][c])) warn.push(T.heading); } });   /* a fixed cell's saved text is not a lost value */
         });
       });
     });

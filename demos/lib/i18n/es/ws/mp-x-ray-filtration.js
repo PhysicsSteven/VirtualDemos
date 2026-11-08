@@ -24,6 +24,8 @@ VDI18N.add('es', 'ws/mp-x-ray-filtration', {
   "Primera CHR mínima (mm Al)",
 "Filtration and Half Value Layers | VirtualDemos":
   "Filtración y capas hemirreductoras | VirtualDemos",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
 "Filtration and Half Value Layers":
   "Filtración y capas hemirreductoras",
 "<strong>Setups in the demo:</strong> Half value layer, {#} kV (this worksheet), with a tungsten target and {#} mm of aluminum filtration; the shell, periodic table and X-ray spectrum setups of the Modern Physics worksheets.":
@@ -52,8 +54,8 @@ VDI18N.add('es', 'ws/mp-x-ray-filtration', {
   "Demuestra que \\(\\frac{d\\ln K}{dx} = -\\langle\\mu\\rangle_x\\), donde \\(\\langle\\mu\\rangle_x\\) es la media de μ(E) ponderada por la kerma \\(k(E)e^{-\\mu(E)x}\\) que queda detrás de x.",
 "Differentiate once more to show that \\(\\frac{d\\langle\\mu\\rangle_x}{dx} = -\\left(\\langle\\mu^2\\rangle_x - \\langle\\mu\\rangle_x^2\\right) \\le 0\\). Explain why this proves HVL₂ ≥ HVL₁, with equality only for a single energy.":
   "Deriva una vez más para demostrar que \\(\\frac{d\\langle\\mu\\rangle_x}{dx} = -\\left(\\langle\\mu^2\\rangle_x - \\langle\\mu\\rangle_x^2\\right) \\le 0\\). Explica por qué esto prueba que CHR₂ ≥ CHR₁, con igualdad solo para una sola energía.",
-"From the NIST table, μ/ρ of aluminum is {#} cm²/g at {#} keV and {#} cm²/g at {#} keV. Find the HVL in aluminum at each energy (ρ = {#} g/cm³).":
-  "Según la tabla del NIST, μ/ρ del aluminio es {#} cm²/g a {#} keV y {#} cm²/g a {#} keV. Encuentra la CHR en aluminio a cada energía (ρ = {#} g/cm³).",
+"From the NIST table, μ/ρ of aluminum is {#} cm²/g at {#} keV, {#} cm²/g at {#} keV and {#} cm²/g at {#} keV. Find the HVL in aluminum at each energy (ρ = {#} g/cm³).":
+  "Según la tabla del NIST, μ/ρ del aluminio es {#} cm²/g a {#} keV, {#} cm²/g a {#} keV y {#} cm²/g a {#} keV. Encuentra la CHR en aluminio a cada energía (ρ = {#} g/cm³).",
 "{#} CFR {#}(m) gives these minimum first HVLs for diagnostic equipment (the table in paragraph (m)({#}) of the rule), in mm of aluminum: {#} at {#} kV, {#} at {#} kV, {#} at {#} kV, {#} at {#} kV, {#} at {#} kV, {#} at {#} kV, {#} at {#} kV, {#} at {#} kV, {#} at {#} kV and {#} at {#} kV. Why does the table jump between {#} and {#} kV and between {#} and {#} kV? (The rule’s categories of operating range explain it.)":
   "{#} CFR {#}(m) da estas primeras CHR mínimas para equipos de diagnóstico (la tabla del párrafo (m)({#}) de la norma), en mm de aluminio: {#} a {#} kV, {#} a {#} kV, {#} a {#} kV, {#} a {#} kV, {#} a {#} kV, {#} a {#} kV, {#} a {#} kV, {#} a {#} kV, {#} a {#} kV y {#} a {#} kV. ¿Por qué la tabla salta entre {#} y {#} kV y entre {#} y {#} kV? (Las categorías de intervalo de operación de la norma lo explican.)",
 "No hazards in the virtual lab. A real HVL measurement is made with the chamber far from any scattering surface, the beam collimated to just cover it, and the operator behind the console barrier.":
@@ -120,8 +122,8 @@ VDI18N.add('es', 'ws/mp-x-ray-filtration', {
   "Ajusta una recta solo a los primeros tres puntos de la Tabla {#}, y solo a los últimos tres. Convierte cada pendiente en un coeficiente de atenuación efectivo y, con la pregunta {#} de Antes del laboratorio, en una energía de fotón efectiva. ¿Cuánto se ha endurecido el haz entre el frente y el fondo de la pila?",
 "Graph HVL₁ against tube voltage (the first copy of Table {#}). At which voltages does the model’s beam meet the federal minimum?":
   "Grafica CHR₁ en función del voltaje del tubo (la primera copia de la Tabla {#}). ¿A qué voltajes cumple el haz del modelo con el mínimo federal?",
-"From the second copy of Table {#}, graph HVL₁ against the aluminum filtration for the rows with no copper. How much total aluminum filtration does the model need for HVL₁ ≥ {#} mm? Compare the effect on HVL₁ of {#} mm of copper with that of {#} mm of extra aluminum.":
-  "Con la segunda copia de la Tabla {#}, grafica CHR₁ en función de la filtración de aluminio para las filas sin cobre. ¿Cuánta filtración total de aluminio necesita el modelo para CHR₁ ≥ {#} mm? Compara el efecto sobre CHR₁ de {#} mm de cobre con el de {#} mm de aluminio adicional.",
+"From the second copy of Table {#}, graph HVL₁ against the aluminum filtration for the rows with no copper (the first five rows). How much total aluminum filtration does the model need for HVL₁ ≥ {#} mm? Compare the effect on HVL₁ of {#} mm of copper with that of {#} mm of extra aluminum.":
+  "Con la segunda copia de la Tabla {#}, grafica CHR₁ en función de la filtración de aluminio para las filas sin cobre (las primeras cinco filas). ¿Cuánta filtración total de aluminio necesita el modelo para CHR₁ ≥ {#} mm? Compara el efecto sobre CHR₁ de {#} mm de cobre con el de {#} mm de aluminio adicional.",
 "The model is exact, so the scatter comes from rounding: the chamber reading is given to {#} decimals and the sheets to {#} mm. Estimate the uncertainty of your interpolated HVL₁ from those two, and from the error of linear interpolation in ln K (compare with interpolation in K itself). In a real measurement the chamber’s energy response, scatter from the sheets and the purity of the aluminum dominate.":
   "El modelo es exacto, así que la dispersión viene del redondeo: la lectura de la cámara se da con {#} decimales y las láminas con precisión de {#} mm. Estima la incertidumbre de tu CHR₁ interpolada a partir de esas dos, y del error de la interpolación lineal en ln K (compárala con la interpolación en K misma). En una medición real dominan la respuesta en energía de la cámara, la dispersión en las láminas y la pureza del aluminio.",
 "The model’s beam, with {#} mm of aluminum, falls below the federal minimum at {#} kV, while real tubes with {#} mm of added aluminum usually pass. Name the parts of a real tube that filter the beam before the added filter (inherent filtration). Which of them does the model include, and which does it leave out?":
@@ -155,5 +157,9 @@ VDI18N.add('es', 'ws/mp-x-ray-filtration', {
 "Thickness of aluminum sheets on the chamber":
   "Espesor de las láminas de aluminio sobre la cámara",
 "Shells, the Periodic Table and X-Rays (filtration)":
-  "Capas, la tabla periódica y los rayos X (filtración)"
+  "Capas, la tabla periódica y los rayos X (filtración)",
+"From the NIST table, μ/ρ of aluminum is {#} cm²/g at {#} keV and {#} cm²/g at {#} keV. Find the HVL in aluminum at each energy (ρ = {#} g/cm³).":
+  "Según la tabla del NIST, μ/ρ del aluminio es {#} cm²/g a {#} keV y {#} cm²/g a {#} keV. Encuentra la CHR en aluminio a cada energía (ρ = {#} g/cm³).",
+"From the second copy of Table {#}, graph HVL₁ against the aluminum filtration for the rows with no copper. How much total aluminum filtration does the model need for HVL₁ ≥ {#} mm? Compare the effect on HVL₁ of {#} mm of copper with that of {#} mm of extra aluminum.":
+  "Con la segunda copia de la Tabla {#}, grafica CHR₁ en función de la filtración de aluminio para las filas sin cobre. ¿Cuánta filtración total de aluminio necesita el modelo para CHR₁ ≥ {#} mm? Compara el efecto sobre CHR₁ de {#} mm de cobre con el de {#} mm de aluminio adicional."
 });

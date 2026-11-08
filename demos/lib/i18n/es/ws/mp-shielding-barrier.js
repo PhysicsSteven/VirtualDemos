@@ -32,8 +32,12 @@ VDI18N.add('es', 'ws/mp-shielding-barrier', {
   "Plomo, haz ancho (mm)",
 "Lead, narrow beam (mm)":
   "Plomo, haz estrecho (mm)",
+"Concrete, broad beam (cm)":
+  "Concreto, haz ancho (cm)",
 "Shielding a PET Uptake Room | VirtualDemos":
   "Blindaje de una sala de captación PET | VirtualDemos",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
 "Shielding a PET Uptake Room":
   "Blindaje de una sala de captación PET",
 "<strong>Setups in the demo:</strong> PET uptake room (this worksheet), in the Dose view; the reaction, fission, fusion and dose setups of the Modern Physics worksheets.":
@@ -130,6 +134,8 @@ VDI18N.add('es', 'ws/mp-shielding-barrier', {
   "<span>I</span>Plomo, haz ancho (mm)",
 "<span>J</span>Lead, narrow beam (mm)":
   "<span>J</span>Plomo, haz estrecho (mm)",
+"<span>K</span>Concrete, broad beam (cm)":
+  "<span>K</span>Concreto, haz ancho (cm)",
 "Patients a week N, row {#}":
   "Pacientes por semana N, fila {#}",
 "Uptake time (h), row {#}":
@@ -148,6 +154,8 @@ VDI18N.add('es', 'ws/mp-shielding-barrier', {
   "Plomo, haz ancho (mm), fila {#}",
 "Lead, narrow beam (mm), row {#}":
   "Plomo, haz estrecho (mm), fila {#}",
+"Concrete, broad beam (cm), row {#}":
+  "Concreto, haz ancho (cm), fila {#}",
 "Work out ln(T) = ln(rate/rate at x = {#}) for both beams in Table {#}.":
   "Calcula ln(T) = ln(tasa/tasa en x = {#}) para ambos haces en la Tabla {#}.",
 "Graph ln(T) broad against x for lead. Fit a line to the points from {#} cm on, and compare its slope with α and with the narrow beam μ. Then fit the points from {#} to {#} cm and compare with α + β.":
