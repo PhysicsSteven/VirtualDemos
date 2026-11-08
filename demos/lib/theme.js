@@ -3,7 +3,7 @@
    Load it first in <head>, as a plain blocking script, before any stylesheet or other script:
      <script src="lib/theme.js"></script>
    It reads the saved choice (localStorage 'vd-theme': 'light', 'dark' or 'auto' for Browser default; nothing saved
-   means Day, the warm lab look with the lights up, the site default since the 2026-11-08 redesign; it was Dark from 2026-10-25) and sets
+   means Night, the site default (Steve 2026-11-08: easier on the eyes; it was Day for part of 2026-11-08 and Dark from 2026-10-25) and sets
    data-theme on <html> before the page paints, so pages do not flash. Every page already styles itself from
    :root tokens with a dark @media block guarded by :not([data-theme="light"]) and a [data-theme="dark"] block.
 
@@ -22,7 +22,7 @@
   'use strict';
   if (window.VDTheme) return;
   var KEY = 'vd-theme', root = document.documentElement;
-  var read = function () { var v = null; try { v = localStorage.getItem(KEY); } catch (_) {} return v === 'light' || v === 'dark' ? v : v === 'auto' ? '' : 'light'; };
+  var read = function () { var v = null; try { v = localStorage.getItem(KEY); } catch (_) {} return v === 'light' || v === 'dark' ? v : v === 'auto' ? '' : 'dark'; };
   var mode = read();
   if (mode) root.setAttribute('data-theme', mode);
 
@@ -66,10 +66,15 @@
   try { sysMotion = nativeMM && nativeMM('(prefers-reduced-motion: reduce)'); } catch (_) {}
   var pref = function (k, v) { var x = null; try { x = localStorage.getItem(k); } catch (_) {} return x === v; };
   var siteStill = pref('vd-motion', 'reduce'), bigText = pref('vd-text', 'large');
+  /* Look, chosen in Preferences (2026-11-08): 'warm' (Warm lab, the default, nothing saved) or 'lab' (Lab, the cool palette),
+     saved in localStorage 'vd-look'. data-vd-look="lab" on <html> switches demos/lib/paper.css to its Lab blocks. It changes
+     the page around each demo only, so canvases are not redrawn. */
+  var look = pref('vd-look', 'lab') ? 'lab' : 'warm';
   var still = function () { return siteStill || !!(sysMotion && sysMotion.matches); };
   function markPrefs() {
     if (siteStill) root.setAttribute('data-vd-motion', 'reduce'); else root.removeAttribute('data-vd-motion');
     if (bigText) root.setAttribute('data-vd-text', 'large'); else root.removeAttribute('data-vd-text');
+    if (look === 'lab') root.setAttribute('data-vd-look', 'lab'); else root.removeAttribute('data-vd-look');
   }
   markPrefs();
   var PCSS = ''
@@ -136,20 +141,22 @@
     if (sys.addEventListener) sys.addEventListener('change', onSys); else if (sys.addListener) sys.addListener(onSys);
   }
   function setPrefs(o, save) {
-    var was = still(), wasBig = bigText;
+    var was = still(), wasBig = bigText, wasLook = look;
     if ('reduceMotion' in o) siteStill = !!o.reduceMotion;
     if ('largeText' in o) bigText = !!o.largeText;
+    if ('look' in o) look = o.look === 'lab' ? 'lab' : 'warm';
     markPrefs();
     if (save) { try {
       if ('reduceMotion' in o) { if (siteStill) localStorage.setItem('vd-motion', 'reduce'); else localStorage.removeItem('vd-motion'); }
       if ('largeText' in o) { if (bigText) localStorage.setItem('vd-text', 'large'); else localStorage.removeItem('vd-text'); }
+      if ('look' in o) { if (look === 'lab') localStorage.setItem('vd-look', 'lab'); else localStorage.removeItem('vd-look'); }
     } catch (_) {} }
     if (still() !== was) changed();
-    if (still() !== was || bigText !== wasBig) { try { window.dispatchEvent(new CustomEvent('vd-prefs', { detail: { reduceMotion: siteStill, largeText: bigText } })); } catch (_) {} }
+    if (still() !== was || bigText !== wasBig || look !== wasLook) { try { window.dispatchEvent(new CustomEvent('vd-prefs', { detail: { reduceMotion: siteStill, largeText: bigText, look: look } })); } catch (_) {} }
   }
   window.addEventListener('storage', function (e) {
     if (e.key === KEY || e.key === null) apply(read(), false);
-    if (e.key === 'vd-motion' || e.key === 'vd-text' || e.key === null) setPrefs({ reduceMotion: pref('vd-motion', 'reduce'), largeText: pref('vd-text', 'large') }, false);
+    if (e.key === 'vd-motion' || e.key === 'vd-text' || e.key === 'vd-look' || e.key === null) setPrefs({ reduceMotion: pref('vd-motion', 'reduce'), largeText: pref('vd-text', 'large'), look: pref('vd-look', 'lab') ? 'lab' : 'warm' }, false);
   });
 
   /* the switch */
@@ -218,9 +225,9 @@
   window.addEventListener('afterprint', function () { if (beforePrint !== null) { var v = beforePrint; beforePrint = null; apply(v, false); } });
 
   window.VDTheme = { get: function () { return mode; }, set: function (v) { apply(v, true); }, dark: dark };
-  /* VDPrefs.get() { reduceMotion, largeText } (the site settings; the device's own Reduce motion is VDPrefs.still())
-     VDPrefs.set({ reduceMotion?, largeText? }) saves them; a 'vd-prefs' event fires on window after a change */
-  window.VDPrefs = { get: function () { return { reduceMotion: siteStill, largeText: bigText }; }, set: function (o) { setPrefs(o || {}, true); },
+  /* VDPrefs.get() { reduceMotion, largeText, look } (the site settings; the device's own Reduce motion is VDPrefs.still())
+     VDPrefs.set({ reduceMotion?, largeText?, look? }) saves them (look is 'warm' or 'lab'); a 'vd-prefs' event fires on window after a change */
+  window.VDPrefs = { get: function () { return { reduceMotion: siteStill, largeText: bigText, look: look }; }, set: function (o) { setPrefs(o || {}, true); },
     still: still, device: function () { return !!(sysMotion && sysMotion.matches); } };
 })();
 
