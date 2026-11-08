@@ -583,5 +583,49 @@ VDI18N.add('es', 'demo/magnetic-force', {
 "+{#} meV":
   "+{#} meV",
 "{#} pV":
-  "{#} pV"
+  "{#} pV",
+"it escapes through a coil":
+  "escapa por una bobina",
+"escaped through a coil":
+  "escapó por una bobina",
+"hit a coil":
+  "chocó con una bobina",
+"stopped at the step limit":
+  "se detuvo en el límite de pasos",
+"Result":
+  "Resultado",
+"Turning points":
+  "Puntos de retorno",
+"Bounce period (s)":
+  "Periodo de rebote (s)",
+"μ against the start":
+  "μ comparado con el inicio",
+"I (A)":
+  "I (A)",
+"B<sub>z</sub> (T)":
+  "B<sub>z</sub> (T)",
+"t (m)":
+  "t (m)",
+"V<sub>H</sub> (V)":
+  "V<sub>H</sub> (V)",
+"α (°)":
+  "α (°)",
+"B₀ (T)":
+  "B₀ (T)",
+"trapped (still at {#} µs)":
+  "atrapado (sigue a los {#} µs)",
+"Row {#} captured.":
+  "Fila {#} registrada.",
+"Row {#} captured with no bounce period yet (it needs three turning points).":
+  "Fila {#} registrada todavía sin periodo de rebote (se necesitan tres puntos de retorno).",
+"Row {#} captured while the edges were still charging: wait until the voltage stops changing.":
+  "Fila {#} registrada mientras los bordes aún se cargaban: espera a que el voltaje deje de cambiar.",
+"Readings work in the free setups (Circular motion, Electron vs proton and E × B drift), the Magnetic bottle and the Hall effect.":
+  "Las lecturas funcionan en las configuraciones libres (Movimiento circular, Electrón contra protón y Deriva E × B), la Botella magnética y el Efecto Hall.",
+"No rows to export yet.":
+  "Todavía no hay filas para exportar.",
+"Readings cleared.":
+  "Lecturas borradas.",
+"Row {#} deleted.":
+  "Fila {#} eliminada."
 });

@@ -66,4 +66,12 @@ require('./lib.cjs')({ demo: 'capacitors', title: 'Capacitors and Dielectrics' }
   state.arrow = { rect: ex };
   await r.secs(3.0);
   r.check.row = await p.evaluate(() => [...document.querySelectorAll('#rowsTbl tbody tr td')].map((td) => (td.querySelector('input') ? td.querySelector('input').value : td.textContent)).join(' | '));
+  state.arrow = null;
+
+  /* the Spheres table (added 2026-11-07): the same meters on concentric spheres, with breakdown */
+  state.caption = 'For the Spheres table, switch the view to Spherical and read the meters the same way';
+  await p.evaluate(() => window.scrollTo(0, 0)); await r.tick(2);
+  await r.click('#viewSeg [data-v="sphere"]');
+  await r.secs(3.6);
+  r.check.sphere = (await r.text('#meas')).replace(/\s+/g, ' ').slice(0, 160);
 });

@@ -70,7 +70,7 @@ VDI18N.add('en', 'site', [
 "Close",
 "<time>November {#}, {#}</time>",
 "Magnetism demos in 3D",
-"Charges in Magnetic Fields draws its solenoid and the spiraling path in true 3D and has two new setups: a magnetic bottle, where protons bounce between two coils or escape through the loss cone, and the Hall effect, where you watch carriers pile up on one edge of a strip until the Hall voltage settles. In Magnetic Fields of Currents the solenoid can be wound as one real helix in the 3D view, with its field lines followed through space. <a>Open Charges in Magnetic Fields</a>",
+"Charges in Magnetic Fields draws its solenoid and the spiraling path in true 3D and has two new setups: a magnetic bottle, where protons bounce between two coils or escape through the loss cone, and the Hall effect, where you watch carriers pile up on one edge of a strip until the Hall voltage settles. Capture reading works in both, and Export to worksheet sends the bottle runs to Table 2 of the worksheet. In Magnetic Fields of Currents the solenoid can be wound as one real helix in the 3D view, with its field lines followed through space. <a>Open Charges in Magnetic Fields</a>",
 "Circuits: the loop rule as a landscape",
 "Circuits has a Potential view: the circuit in 3D with every point raised to its potential. Batteries lift the charge, resistors and bulbs are ramps down, wires are level, and every loop comes back to the height it started from. The DC and RC circuits worksheets use it. <a>Open Circuits</a>",
 "Capacitors: spheres and sparks",

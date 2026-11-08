@@ -539,7 +539,7 @@ details.hall[open] > summary { margin-bottom: 8px; }
         </div>
         <p class="hint status" id="labStatus" aria-live="polite"></p>
         <div class="twrap"><table class="rows" id="tbl"><thead><tr><th>#</th><th>Particle</th><th>v⊥ (m/s)</th><th>r (m)</th><th>T (s)</th><th><span class="sr-only">Delete</span></th></tr></thead><tbody></tbody></table></div>
-        <details class="more"><summary>More about this</summary><p class="hint">Capture stores what you read: the particle, the settings as displayed (q, m, v, B, E), your ruler reading and your timer reading divided by the turns timed. It never stores the model's r or T. Cells can be edited; rows stay through setup changes until Clear.</p></details>
+        <details class="more"><summary>More about this</summary><p class="hint">Capture stores what you read: the particle, the settings as displayed (q, m, v, B, E), your ruler reading and your timer reading divided by the turns timed. It never stores the model's r or T. Cells can be edited; rows stay through setup changes until Clear. In the Magnetic bottle, Capture stores the pitch angle, B₀, whether the proton escaped, the turning points, the measured bounce period and μ against the start, as shown; in the Hall effect it stores the sample, I, B<sub>z</sub>, t and the voltmeter reading. Each of the three keeps its own rows, and Export sends the rows of the setup on screen.</p></details>
         <details class="plotfold"><summary>Plot and fit</summary><div class="foldbody">
         <div class="inline">
           <span class="lab">Plot</span>
@@ -1049,7 +1049,7 @@ details.hall[open] > summary { margin-bottom: 8px; }
   let playing = !reduce, simT = 0, tScale = 1e-7;
   // lab state: Blind, the ruler (ends in world meters), the timer (simulation seconds) and the captured rows
   const DEMO_VERSION = 'magnetic-force@2026-10-22.2';
-  const LAB = { blind: false, ruler: false, reads: 'd', ra: { x: 0, y: 0 }, rb: { x: 0.01, y: 0 }, tRun: false, tEl: 0, turns: 1, rows: [], plot: 'rv', table: false, kb: 'v0', kbFocus: false };
+  const LAB = { blind: false, ruler: false, reads: 'd', ra: { x: 0, y: 0 }, rb: { x: 0.01, y: 0 }, tRun: false, tEl: 0, turns: 1, rows: [], bot: [], hall: [], plot: 'rv', table: false, kb: 'v0', kbFocus: false };
 
   // ---------- particles ----------
   function partOf(k, mode) {
@@ -2815,6 +2815,7 @@ details.hall[open] > summary { margin-bottom: 8px; }
     $('secSel').hidden = m !== 'sel'; $('secSpec').hidden = m !== 'spec'; $('secCyc').hidden = m !== 'cyc'; $('secBot').hidden = m !== 'bottle';
     $('secMeasure').hidden = m !== 'free';
     if (m === 'hall') $('hallDet').open = true;
+    if (LAB.shown && LAB.shown !== rowKind()) renderTable();
     $('hallBoxWrap').hidden = m === 'hall';
     $('fit').hidden = !(m === 'free' || m === 'bottle' || m === 'hall'); $('fit').textContent = m === 'free' ? 'Fit view' : 'Reset view'; $('fire').hidden = !(m === 'sel' || m === 'spec'); $('clear').hidden = !(m === 'sel' || m === 'spec');
     const pk = m === 'free' ? S.f.part : m === 'sel' ? S.sel.part : m === 'bottle' ? S.bot.part : S.cyc.part;
@@ -2993,8 +2994,31 @@ details.hall[open] > summary { margin-bottom: 8px; }
     countText(); drawAll();
   }
   const numStr = (x) => String(+(+x).toPrecision(12));
+  /* three lists of readings: orbits (the free setups), the magnetic bottle and the Hall strip; Capture, Export and Clear act on the
+     list of the setup on screen, and each list is its own series for the worksheet (bottle rows go to its Table 2) */
+  function rowKind() { return S.mode === 'bottle' ? 'bot' : S.mode === 'hall' ? 'hall' : 'orbit'; }
+  function rowList() { return rowKind() === 'orbit' ? LAB.rows : LAB[rowKind()]; }
+  function captureBottle() {
+    botReadouts(false);
+    const p = partOf(S.bot.part), ended = !$('bEndRow').hidden, tb = botBouncePeriod(), tNow = roundSig(simT, 3);
+    LAB.bot.push({ particle: p.name, short: p.short, v: numStr(roundSig(botV(), 3)), alpha: S.bot.al, B0: numStr(S.bot.B), s: numStr(S.bot.s / 100), rho: numStr(roundSig(S.bot.rho / 100, 3)),
+      t: numStr(tNow), result: ended ? $('bEnd').textContent : `trapped (still at ${si(tNow, 's', 3)})`, turns: $('bNt').textContent, Tb: tb ? numStr(roundSig(tb, 3)) : '',
+      mu: $('bMu').textContent.replace(/\s*×.*$/, '') });
+    status(`Row ${LAB.bot.length} captured${tb ? '' : ' with no bounce period yet (it needs three turning points)'}.`);
+    renderTable();
+  }
+  function captureHall() {
+    const name = LAB.blind ? BLIND_NAMES[HS.mat] : { cu: 'Copper', nge: 'n-type Ge', pge: 'p-type Ge' }[HS.mat];
+    const V = HS.I > 0 && HS.B > 0 ? roundSig(hallNow(), 3) : 0;
+    LAB.hall.push({ sample: name, I: numStr(HS.I), Bz: (HS.bz * HS.B).toFixed(2), Bdir: HS.B ? (HS.bz < 0 ? 'into the page' : 'out of the page') : 'off', thick: numStr(HS.t),
+      tt: numStr(roundSig(Math.min(HS.tt, 999), 3)), V: numStr(V) });
+    status(`Row ${LAB.hall.length} captured${HS.tt > 12 ? '' : ' while the edges were still charging: wait until the voltage stops changing'}.`);
+    renderTable();
+  }
   function capture() {
-    if (S.mode !== 'free') { status('Readings work in the free setups: Circular motion, Electron vs proton and E × B drift.'); return; }
+    if (S.mode === 'bottle') { captureBottle(); return; }
+    if (S.mode === 'hall') { captureHall(); return; }
+    if (S.mode !== 'free') { status('Readings work in the free setups (Circular motion, Electron vs proton and E × B drift), the Magnetic bottle and the Hall effect.'); return; }
     const p = partOf(S.f.part), R = rulerNow(), B = Bz(), E = Emag(), tShown = LAB.tEl > 0 ? roundSig(LAB.tEl, 3) : null, turns = LAB.turns;
     const row = {
       setup: S.preset ? document.querySelector(`#presets button[data-p="${S.preset}"]`).textContent : 'Your own setup', particle: p.name, short: p.short,
@@ -3011,7 +3035,25 @@ details.hall[open] > summary { margin-bottom: 8px; }
     renderTable();
   }
   function renderTable() {
+    const TBL_HEAD = {
+    orbit: '<th>#</th><th>Particle</th><th>v⊥ (m/s)</th><th>r (m)</th><th>T (s)</th>',
+    bot: '<th>#</th><th>α (°)</th><th>B₀ (T)</th><th>Result</th><th>Turning points</th><th>Bounce period (s)</th><th>μ against the start</th>',
+    hall: '<th>#</th><th>Sample</th><th>I (A)</th><th>B<sub>z</sub> (T)</th><th>t (m)</th><th>V<sub>H</sub> (V)</th>'
+  };
+    const k = rowKind(), del = '<th><span class="sr-only">Delete</span></th>'; LAB.shown = k;
+    $('tbl').querySelector('thead').innerHTML = `<tr>${TBL_HEAD[k]}${del}</tr>`;
+    document.querySelector('#secReadings .plotfold').hidden = k !== 'orbit';
     const tb = $('tbl').querySelector('tbody'); tb.textContent = '';
+    if (k !== 'orbit') {
+      const L = rowList(), cell = (v) => `<td class="b">${String(v).replace(/^-/, '−')}</td>`;
+      L.forEach((r, i) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td class="n">${i + 1}</td>` + (k === 'bot' ? [r.alpha, r.B0, r.result, r.turns, r.Tb, r.mu] : [r.sample, r.I, r.Bz, r.thick, r.V]).map(cell).join('') +
+          `<td><button type="button" data-del="${i}" aria-label="Delete row ${i + 1}">×</button></td>`;
+        tb.appendChild(tr);
+      });
+      return;
+    }
     LAB.rows.forEach((r, i) => {
       const tr = document.createElement('tr');
       tr.title = `${r.setup}. ${r.particle}, q = ${r.q} C, m = ${r.m} kg, B = ${r.B} T ${r.Bdir}${r.E ? `, E = ${r.E} V/m` : ''}${r.ruler ? `, ruler ${r.ruler} m across the ${r.reads}` : ''}${r.timer ? `, timer ${r.timer} s for ${r.turns} turn${r.turns > 1 ? 's' : ''}` : ''}`;
@@ -3023,7 +3065,7 @@ details.hall[open] > summary { margin-bottom: 8px; }
     fitAndPlot();
   }
   $('tbl').addEventListener('change', (e) => { const t = e.target; if (t.dataset && t.dataset.f) { LAB.rows[+t.dataset.i][t.dataset.f] = t.value.trim(); fitAndPlot(); } });
-  $('tbl').addEventListener('click', (e) => { const b = e.target.closest('button[data-del]'); if (b) { LAB.rows.splice(+b.dataset.del, 1); status(`Row ${+b.dataset.del + 1} deleted.`); renderTable(); } });
+  $('tbl').addEventListener('click', (e) => { const b = e.target.closest('button[data-del]'); if (b) { rowList().splice(+b.dataset.del, 1); status(`Row ${+b.dataset.del + 1} deleted.`); renderTable(); } });
   // the points for the chosen plot, from the rows only; every fit has a free intercept (Steve, 2026-10-25), so origin is false for all three
   const PLOTS = {
     rv: { x: 'v⊥', xu: 'm/s', y: 'r', yu: 'm', origin: false, fx: (r) => +r.v, fy: (r) => +r.r, slope: 'm/(|q|B)', su: 's' },
@@ -3107,7 +3149,25 @@ details.hall[open] > summary { margin-bottom: 8px; }
     if (!F.pts.length) html += '<tr><td colspan="5" class="n">No points yet</td></tr>';
     $('dataTbl').innerHTML = html + '</tbody>';
   }
+  function csvBottle() {
+    const meta = ['Charges in Magnetic Fields, Magnetic bottle (simulated data)', `demo version,${DEMO_VERSION}`,
+      'model,two coaxial coils of radius 6 cm each with the exact Biot-Savart ring field; motion stepped with the Boris rotation (0.04 rad of turning per step; speed exact); nonrelativistic; no collisions or radiation',
+      'rounding,settings as displayed; time and bounce period to 3 significant figures; mu now against the start as displayed (3 decimals)',
+      'seed,none'];
+    const header = ['row', 'particle', 'v_m_per_s', 'pitch_angle_deg', 'B0_tesla', 'coil_spacing_m', 'start_off_axis_m', 't_s', 'result', 'turning_points', 'bounce_period_s', 'mu_over_mu_start'];
+    return csvText(meta, header, LAB.bot.map((r, i) => [i + 1, r.particle, r.v, r.alpha, r.B0, r.s, r.rho, r.t, r.result, r.turns, r.Tb, r.mu]));
+  }
+  function csvHall() {
+    const meta = ['Charges in Magnetic Fields, Hall effect (simulated data)', `demo version,${DEMO_VERSION}`,
+      'model,strip 10 mm wide; steady state V_H = -I B_z/(n q t); the edge field grows as 1 - exp(-t/tau) with tau = epsilon/sigma',
+      'rounding,settings as displayed; V_H as the voltmeter showed it (3 significant figures); B_z is signed (+ out of the page)',
+      'seed,none'];
+    const header = ['row', 'sample', 'I_A', 'Bz_tesla', 'B_direction', 'thickness_m', 't_over_tau', 'V_H_volts'];
+    return csvText(meta, header, LAB.hall.map((r, i) => [i + 1, r.sample, r.I, r.Bz, r.Bdir, r.thick, r.tt, r.V]));
+  }
   function csvNow() {
+    if (rowKind() === 'bot') return csvBottle();
+    if (rowKind() === 'hall') return csvHall();
     const meta = ['Charges in Magnetic Fields (simulated data)', `demo version,${DEMO_VERSION}`,
       `setup at export,${S.preset ? document.querySelector(`#presets button[data-p="${S.preset}"]`).textContent : 'Your own setup'} (each row lists its own setup and settings)`,
       'model,nonrelativistic exact motion in uniform fields; B perpendicular to the page and E in the page; r = m v_perp/(|q| B) and T = 2 pi m/(|q| B) in pure B; sharp field edges; no radiation',
@@ -3126,13 +3186,13 @@ details.hall[open] > summary { margin-bottom: 8px; }
   /* Export to worksheet: the readings go to the student worksheet through localStorage (same site), and the worksheet offers to put
      them in its Data table. The CSV travels with them, and is downloaded here instead if this browser blocks storage. Clear starts
      a new series, so the worksheet puts the next export in a new copy of its table. */
-  let wsSeries = Date.now();
+  const wsSeries = { orbit: Date.now(), bot: Date.now() + 1, hall: Date.now() + 2 };
   function toWorksheet(txt, fallback, opt = {}) {
     const ws = opt.ws || 'magnetic-force', st = document.getElementById(opt.st || 'labStatus');
     const cells = (l) => { const o = []; let c = '', q = false; for (let i = 0; i < l.length; i++) { const h = l[i]; if (q) { if (h === '"' && l[i + 1] === '"') { c += h; i++; } else if (h === '"') q = false; else c += h; } else if (h === '"') q = true; else if (h === ',') { o.push(c); c = ''; } else c += h; } o.push(c); return o; };
     const lines = txt.trim().split('\n'), data = lines.filter((l) => l && l[0] !== '#'), meta = {}, heads = [];
     lines.filter((l) => l[0] === '#').forEach((l) => { const c = cells(l.replace(/^#\s*/, '')); heads.push(c); if (c.length > 1 && !(c[0] in meta)) meta[c[0]] = c[1]; });
-    const hand = { v: 1, demo: 'magnetic-force', series: opt.series || wsSeries, sent: new Date().toISOString(), columns: cells(data[0]), rows: data.slice(1).map(cells), meta,
+    const hand = { v: 1, demo: 'magnetic-force', series: opt.series || wsSeries[rowKind()], sent: new Date().toISOString(), columns: cells(data[0]), rows: data.slice(1).map(cells), meta,
       note: 'Simulated data from the Charges in Magnetic Fields demo.', csv: txt, csvName: opt.csvName || 'magnetic-force-readings.csv' };
     if (opt.shape) opt.shape(hand, heads);
     const say = (t) => { st.hidden = false; st.textContent = t; };
@@ -3143,8 +3203,12 @@ details.hall[open] > summary { margin-bottom: 8px; }
     const a = document.createElement('a'); a.href = '../curriculum/labs/students/' + ws + '.html'; a.target = ws + '-worksheet'; a.textContent = 'Open the worksheet';
     a.style.color = 'var(--accent)'; st.appendChild(a);
   }
-  $('expCsv').addEventListener('click', () => { if (!LAB.rows.length) { status('No rows to export yet.'); return; } const txt = csvNow(); toWorksheet(txt, () => download('magnetic-force-readings.csv', txt)); });
-  $('clearRows').addEventListener('click', () => { wsSeries = Date.now(); LAB.rows = []; status('Readings cleared.'); renderTable(); });
+  $('expCsv').addEventListener('click', () => {
+    if (!rowList().length) { status('No rows to export yet.'); return; }
+    const txt = csvNow(), name = { orbit: 'magnetic-force-readings.csv', bot: 'magnetic-force-bottle.csv', hall: 'magnetic-force-hall.csv' }[rowKind()];
+    toWorksheet(txt, () => download(name, txt), { csvName: name });
+  });
+  $('clearRows').addEventListener('click', () => { const k = rowKind(); wsSeries[k] = Date.now(); rowList().length = 0; status('Readings cleared.'); renderTable(); });
   for (const b of document.querySelectorAll('[data-plot]')) b.addEventListener('click', () => { LAB.plot = b.dataset.plot; press('[data-plot]', (x) => x.dataset.plot === LAB.plot); fitAndPlot(); });
   $('dataBtn').addEventListener('click', () => { LAB.table = !LAB.table; $('dataWrap').hidden = !LAB.table; $('dataBtn').setAttribute('aria-expanded', String(LAB.table)); $('dataBtn').textContent = LAB.table ? 'Hide data table' : 'Show data table'; });
   $('rulerOn').addEventListener('change', (e) => setRuler(e.target.checked));

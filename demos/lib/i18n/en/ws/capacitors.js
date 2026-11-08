@@ -54,7 +54,7 @@ VDI18N.add('en', 'ws/capacitors', [
 "Use a separate copy for each scan. Fill in the last column yourself for the two separation scans. For networks, put the component label in the first column and leave geometry columns blank.",
 "<strong>Spheres</strong>",
 "<span>A</span>Reading and material",
-"<span>F</span>Voltage at the last spark (V)",
+"<span>E</span>Voltage at the last spark (V)",
 "Reading and material, row {#}",
 "a (m), row {#}",
 "b (m), row {#}",

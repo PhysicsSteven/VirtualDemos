@@ -90,11 +90,11 @@ Use a separate copy for each scan. Fill in the last column yourself for the two 
 
 **Spheres**
 
-| Reading and material | $$a$$ (m) | $$b$$ (m) | $$C$$ (F) | $$V$$ (V) | Voltage at the last spark (V) | $$1/a - 1/b$$ (1/m) | $$a(b-a)/b$$ (m) | $$1/C$$ (1/F) |
-|---|---|---|---|---|---|---|---|---|
-| | | | | | | | | |
-| | | | | | | | | |
-| | | | | | | | | |
+| Reading and material | $$a$$ (m) | $$b$$ (m) | $$C$$ (F) | Voltage at the last spark (V) | $$1/a - 1/b$$ (1/m) | $$a(b-a)/b$$ (m) | $$1/C$$ (1/F) |
+|---|---|---|---|---|---|---|---|
+| | | | | | | | |
+| | | | | | | | |
+| | | | | | | | |
 
 Use one copy for the radius scans and one for the breakdown scan. Fill in the last three columns yourself: $$1/a - 1/b$$ and $$1/C$$ on the radius scan rows, $$a(b-a)/b$$ on the breakdown rows.
 

@@ -171,10 +171,10 @@
        reading; the part columns here have names such as R_B_ohm and Q1_beta, which parts() does not match. */
     'junction-transistor': { demo: 'Circuits', cols: ['row', (r) => [r.setup, Object.keys(r).map((k) => /^(.+)_(ohm|emf_V|beta)$/.exec(k)).filter((x) => x && r[x[0]] !== '' && r[x[0]] != null)
       .map(([k, n, u]) => (u === 'beta' ? `${n} β = ${r[k]}` : u === 'ohm' ? `${n} = ${ohms(+r[k])}` : `${n} = ${r[k]} ${PART_UNIT[u]}`)).join(', ')].filter(Boolean).join(', '), 'I_A1_A', 'I_A2_A', pick(/^V_.+_V$/), null, null] },
-    /* a series from the Spherical view goes to the Spheres table: Reading and material | a | b | C | V | Voltage at the last spark |
+    /* a series from the Spherical view goes to the Spheres table: Reading and material | a | b | C | Voltage at the last spark |
        1/a − 1/b, a(b − a)/b and 1/C (typed) */
     capacitors: { demo: 'Capacitors and Dielectrics', cols: [(r) => [r.row, r.preset, r.battery && String(r.preset).indexOf(r.battery) < 0 ? r.battery : ''].filter(Boolean).join(', '), 'd_m', 'A_m2', 'insertion_fraction', 'C_F', 'Q_C', 'V_volts', 'U_J'],
-      alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.geometry === 'spherical'), cols: [(r) => [r.row, r.material].filter(Boolean).join(', '), 'a_m', 'b_m', 'C_F', 'V_volts', 'V_last_spark_volts', null, null, null] }] },
+      alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.geometry === 'spherical'), cols: [(r) => [r.row, r.material].filter(Boolean).join(', '), 'a_m', 'b_m', 'C_F', 'V_last_spark_volts', null, null, null] }] },
     'coulomb-sandbox': { demo: 'Coulomb Sandbox', cols: [(r, h) => [r.row, h['config ' + r.config], h['config ' + r.config + ' charges']].filter(Boolean).join(', '),
       'x_m', 'y_m', null, 'V_volts', 'E_V_per_m', 'E_direction_deg'] },
     faraday: { demo: "Faraday's Law", cols: [(r) => [r.run ? 'run ' + r.run : '', FD_MODE[r.mode] || r.mode, r.N ? 'N = ' + r.N : '', r.R_ohm ? `R = ${sig(r.R_ohm)} Ω` : ''].filter(Boolean).join(', '),
@@ -186,8 +186,14 @@
       (r) => String(r.charges_q_C_x_m_y_m || '').split(';').map((c) => c.trim().split(/\s+/)).filter((c) => c.length === 3).map(([q, x, y]) => `q = ${q} C at (${x}, ${y}) m`).join('; '),
       'Q_enc_C', 'flux_numerical_N_m2_per_C', 'flux_predicted_Q_enc_over_eps0_N_m2_per_C', null,
       (r) => `${r.tolerance_met === 'yes' ? 'tolerance met' : 'tolerance not met'}, ${r.field_evaluations} evaluations`] },
-    'magnetic-force': { demo: 'Charges in Magnetic Fields', cols: [both('row', 'particle'), 'v_perp_m_per_s', (r) => (r.B_tesla !== '' && r.B_tesla != null ? `${r.B_tesla} T${r.B_direction ? ', ' + r.B_direction : ''}` : ''),
-      'r_measured_m', 'turns_timed', 'timer_s', 'T_measured_s'] },
+    /* Orbits: Run/sample | v or I | B | r or t | Turns | Elapsed time | T or V_H. Hall effect series (rows with a sample) fill the same
+       table with I, signed B_z, the thickness and V_H; magnetic bottle series go to Table 2: Run | α | B₀ | Escaped or trapped |
+       Turning points | Bounce period | μ now against the start */
+    'magnetic-force': { demo: 'Charges in Magnetic Fields', cols: [both('row', 'particle', 'sample'), (r) => (r.sample ? r.I_A : r.v_perp_m_per_s),
+      (r) => (r.sample ? r.Bz_tesla : r.B_tesla !== '' && r.B_tesla != null ? `${r.B_tesla} T${r.B_direction ? ', ' + r.B_direction : ''}` : ''),
+      (r) => (r.sample ? r.thickness_m : r.r_measured_m), 'turns_timed', 'timer_s', (r) => (r.sample ? r.V_H_volts : r.T_measured_s)],
+      alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.pitch_angle_deg !== '' && r.pitch_angle_deg != null),
+        cols: ['row', 'pitch_angle_deg', 'B0_tesla', 'result', 'turning_points', 'bounce_period_s', 'mu_over_mu_start'] }] },
     resistivity: { demo: 'Resistivity of a Wire', cols: ['row', 'material', 'd_mm', 'T_C', 'L_m', 'I_A', 'V_V', 'R_ohm'] },
     /* Reading | Layout | x (cm) | y (cm) | Potential V (V) | Field E (V/m) | Current I (A); a series of Strip L by W readings goes to the
        Resistance table: Reading | L (cm) | W (cm) | Battery V (V) | Current I (A) | R = V/I | L/W (the last two typed) */

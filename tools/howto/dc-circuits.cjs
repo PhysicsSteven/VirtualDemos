@@ -47,4 +47,12 @@ require('./lib.cjs')({ demo: 'circuits', title: "Kirchhoff's Rules", query: '#dc
   await r.moveTo(ex[0] + ex[2] / 2, ex[1] + ex[3] / 2 + 4, 0.8);
   state.arrow = { rect: ex };
   await r.secs(3.0);
+  state.arrow = null;
+
+  /* the Potential view (added 2026-11-07): each point raised to its potential */
+  state.caption = 'To see the voltages, switch the view to Potential: height is potential, so each bulb is a slope';
+  await p.evaluate(() => window.scrollTo(0, 0)); await r.tick(2);
+  await r.click('#viewSeg [data-v="pot"]');
+  await r.secs(3.6);
+  r.check.pot = await p.evaluate(() => document.querySelector('#viewSeg [data-v="pot"]').getAttribute('aria-pressed'));
 });

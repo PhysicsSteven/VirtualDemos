@@ -108,8 +108,8 @@ VDI18N.add('es', 'ws/capacitors', {
   "<strong>Esferas</strong>",
 "<span>A</span>Reading and material":
   "<span>A</span>Lectura y material",
-"<span>F</span>Voltage at the last spark (V)":
-  "<span>F</span>Voltaje en la última chispa (V)",
+"<span>E</span>Voltage at the last spark (V)":
+  "<span>E</span>Voltaje en la última chispa (V)",
 "Reading and material, row {#}":
   "Lectura y material, fila {#}",
 "a (m), row {#}":
