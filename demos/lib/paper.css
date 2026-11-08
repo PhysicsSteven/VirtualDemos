@@ -5,7 +5,7 @@
      home, course, topic, OpenStax and 404 pages (tools/courses.py), the teaching notes (tools/notes.py),
      every demo (tools/paper.py links it; the stage and its canvases keep their own drawing),
      the worksheets (_includes/head-custom.html; print stays black on white, curriculum/labs/print.css).
-   Day is the default; Night is the same bench with the lights down. theme.js keeps the stored values 'light' and 'dark'.
+   Night is the default (Steve 2026-11-08); Day is the same bench with the lights up. theme.js keeps the stored values 'light' and 'dark'.
    The old token names (--bg, --surface, --canvas, --ink, --muted, --line, --accent, --hd-*) are redefined in every theme block,
    so every rule that already reads them takes the palette, and a page's own older dark block never wins. The parchment's names
    (--desk, --paper, --paper2, --paper3, --ink2, --line2, --old, --hand, --serif, --mottle, ...) stay defined, mapped to the

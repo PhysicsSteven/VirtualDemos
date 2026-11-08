@@ -72,7 +72,7 @@ only when the work needs them.
   line before code (use `/* */`). Tests are in `curriculum/validation/test_<demo>.cjs`.
 - Before pushing a new or changed demo, run `node tools/democheck.cjs <demo>` (rules, map, tests, translation, page checks,
   opening state). A visual fix comes with a picture from `node tools/beforeafter.cjs <demo>` attached to the reply. See `docs/tools.md`.
-- House style: Day and Night themes (the warm lab look, `demos/lib/paper.css`, linked last on every page; Day is the default), projector mode, 400 px and 360 px phones with no sideways scroll, keyboard access, Reduce
+- House style: Day and Night themes (the warm lab look, `demos/lib/paper.css`, linked last on every page; Night is the default, Steve 2026-11-08), projector mode, 400 px and 360 px phones with no sideways scroll, keyboard access, Reduce
   motion, and Blind mode for predictions. Check the screenshots at desktop and phone width, light and dark.
 - Languages: English text is the key. After you build or change a demo, harvest its strings and check for leaks with
   `?lang=qps`. Every demo must be harvested [checked]. Never read displayed text back as state. See `demos/lib/i18n.md`.
