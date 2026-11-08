@@ -960,10 +960,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     film.addColorStop(0, '#342b1f'); film.addColorStop(1, '#18130c');
     ctx.save(); ctx.beginPath(); ctx.arc(cx, cy, rr, 0, 7); ctx.clip(); ctx.fillStyle = film; ctx.fillRect(cx - rr, cy - rr, 2 * rr, 2 * rr);
     /* fiducial crosses every 10 cm */
-    ctx.strokeStyle = 'rgba(220,230,240,0.35)'; ctx.lineWidth = 1;
+    ctx.strokeStyle = 'rgba(238,231,222,0.35)'; ctx.lineWidth = 1;
     for (let x = -50; x <= 50; x += 10) for (let y = -50; y <= 50; y += 10) { if (x * x + y * y > R * R) continue; const [X, Y] = toScr(v, x, y), a = Math.max(3, 0.8 * v.s); ctx.beginPath(); ctx.moveTo(X - a, Y); ctx.lineTo(X + a, Y); ctx.moveTo(X, Y - a); ctx.lineTo(X, Y + a); ctx.stroke(); }
     /* bubbles */
-    if (ev) { const bsz = Math.max(1.3, 0.11 * v.s); ctx.fillStyle = 'rgba(236,242,250,0.92)';
+    if (ev) { const bsz = Math.max(1.3, 0.11 * v.s); ctx.fillStyle = 'rgba(247,244,239,0.92)';
       for (const tr of ev.tracks) for (const [x, y] of tr.pts) { const X = v.ox + x * v.s, Y = v.oy - y * v.s; if (X < -4 || Y < -4 || X > W + 4 || Y > H + 4) continue; ctx.fillRect(X - bsz / 2, Y - bsz / 2, bsz, bsz); }
       if (D.labels) {
         const [px, py] = toScr(v, ev.vertex[0], ev.vertex[1]); ctx.strokeStyle = '#ffd36a'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(px, py, 5 * p, 0, 7); ctx.stroke();

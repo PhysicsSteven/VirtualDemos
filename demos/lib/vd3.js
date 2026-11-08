@@ -74,7 +74,7 @@
     var hint = function () {
       if (hinted || !el.parentNode) return; hinted = true;
       var d = document.createElement('div'); d.textContent = h.hint || 'Use two fingers to turn the view'; d.setAttribute('aria-hidden', 'true');
-      d.style.cssText = 'position:absolute;transform:translate(-50%,-50%);background:rgba(20,24,30,0.78);color:#fff;font:600 13px system-ui,sans-serif;padding:6px 12px;border-radius:8px;pointer-events:none;z-index:5;transition:opacity 0.4s;white-space:nowrap';
+      d.style.cssText = 'position:absolute;transform:translate(-50%,-50%);background:rgba(29,26,21,0.78);color:#fff;font:600 13px system-ui,sans-serif;padding:6px 12px;border-radius:8px;pointer-events:none;z-index:5;transition:opacity 0.4s;white-space:nowrap';
       d.style.left = (el.offsetLeft + el.offsetWidth / 2) + 'px'; d.style.top = (el.offsetTop + el.offsetHeight / 2) + 'px';
       el.parentNode.appendChild(d); setTimeout(function () { d.style.opacity = '0'; }, 1500); setTimeout(function () { d.remove(); }, 2000);
     };

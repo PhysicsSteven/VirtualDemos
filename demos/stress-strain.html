@@ -830,7 +830,7 @@ table.rows input:focus { border-color: var(--accent); }
     ctx.fillStyle = T.canvas; ctx.fillRect(xi, cellTop, bw, bot - cellTop);
     ctx.save(); ctx.globalAlpha = liquid ? (k === 'mercury' ? 0.95 : 0.7) : 0.45; ctx.fillStyle = fill; ctx.fillRect(xi, pistY, bw, bot - pistY); ctx.restore();
     if (liquid) {   // molecules, evenly spread through the column: they crowd together as it is squeezed
-      ctx.fillStyle = k === 'mercury' ? 'rgba(60,66,74,0.55)' : 'rgba(20,50,90,0.35)'; let sd = 3; const rnd = () => ((sd = (sd * 16807) % 2147483647) / 2147483647);
+      ctx.fillStyle = k === 'mercury' ? 'rgba(73,68,61,0.55)' : 'rgba(20,50,90,0.35)'; let sd = 3; const rnd = () => ((sd = (sd * 16807) % 2147483647) / 2147483647);
       for (let i = 0; i < 70; i++) { const u = rnd(), v = rnd(); ctx.beginPath(); ctx.arc(xi + 4 * p + u * (bw - 8 * p), pistY + 3 * p + v * (bot - pistY - 6 * p), 1.7 * p, 0, 7); ctx.fill(); }
     } else {   // the metal cube in oil, with its strain gauge, and the pressure pressing on each face
       const a0 = bw * 0.62, a = a0 * (1 + (q.ue * 1e-6) * EX_SOL), ccx = cx, ccy = bot - a0 / 2 - 8 * p;

@@ -587,8 +587,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (use3()) { ctx.clearRect(0, 0, W3(), Hh); drawTube3(Z, kV, myst, lines); } else {
     /* the tube: glass envelope, hot filament, target tilted to send X-rays down through a window */
     const cx = W * 0.27, cy = Hh * 0.42, tw = Math.min(W * 0.42, 340 * p), th = 84 * p;
-    ctx.save(); const gl = ctx.createLinearGradient(0, cy - th / 2, 0, cy + th / 2); gl.addColorStop(0, 'rgba(255,255,255,0.45)'); gl.addColorStop(0.5, 'rgba(200,220,235,0.12)'); gl.addColorStop(1, 'rgba(150,170,190,0.35)');
-    ctx.fillStyle = gl; ctx.strokeStyle = dark() ? 'rgba(220,235,245,0.6)' : 'rgba(80,110,130,0.7)'; ctx.lineWidth = 2; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(cx - tw / 2, cy - th / 2, tw, th, th / 2) : ctx.rect(cx - tw / 2, cy - th / 2, tw, th); ctx.fill(); ctx.stroke(); ctx.restore();
+    ctx.save(); const gl = ctx.createLinearGradient(0, cy - th / 2, 0, cy + th / 2); gl.addColorStop(0, 'rgba(255,255,255,0.45)'); gl.addColorStop(0.5, 'rgba(200,220,235,0.12)'); gl.addColorStop(1, 'rgba(187,172,153,0.35)');
+    ctx.fillStyle = gl; ctx.strokeStyle = dark() ? 'rgba(240,233,225,0.6)' : 'rgba(126,108,84,0.7)'; ctx.lineWidth = 2; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(cx - tw / 2, cy - th / 2, tw, th, th / 2) : ctx.rect(cx - tw / 2, cy - th / 2, tw, th); ctx.fill(); ctx.stroke(); ctx.restore();
     const fx = cx - tw / 2 + 34 * p; ctx.strokeStyle = '#ff7a3d'; ctx.lineWidth = 2.5 * p; ctx.beginPath(); for (let i = 0; i <= 12; i++) { const yy = cy - 14 * p + i * 28 * p / 12, xx = fx + (i % 2 ? 5 : -5) * p; i ? ctx.lineTo(xx, yy) : ctx.moveTo(xx, yy); } ctx.stroke();
     lbl('hot filament (cathode)', fx, cy + th / 2 + 14 * p, { a: 'center', s: 10 * p });
     const ax = cx + tw / 2 - 30 * p; if (VG) VG.box(ctx, ax - 6 * p, cy - 26 * p, 46 * p, 52 * p, { color: '#b87333', r: 3 });

@@ -16,12 +16,12 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
 /* only what this demo needs beyond demos/lib/vd.css */
-:root { --field: #2b60b5; --puck: #48423b; --puck-edge: #292621; --magnet: #bcb5ab; --magnet-n: #c0392b; --magnet-s: #2b60b5; --ln2: rgba(150, 196, 236, 0.35); --ln2-edge: #bba07c;
-  --cur-a: #d2452b; --cur-b: #2b7bd2; --hand: #a7740b; --foam: #e9e4d8; --foam-edge: #b9b1a0; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --field: #69a0ff; --puck: #5b544b; --puck-edge: #9d968c; --magnet: #d3ccc4; --magnet-n: #ff7a5c; --magnet-s: #69a0ff;
-  --ln2: rgba(110, 160, 220, 0.25); --ln2-edge: #7fb0e0; --cur-a: #ff7a5c; --cur-b: #5fb0ff; --hand: #e2b350; --foam: #3b3a36; --foam-edge: #6b675e; } }
-:root[data-theme="dark"] { --field: #69a0ff; --puck: #5b544b; --puck-edge: #9d968c; --magnet: #d3ccc4; --magnet-n: #ff7a5c; --magnet-s: #69a0ff;
-  --ln2: rgba(110, 160, 220, 0.25); --ln2-edge: #7fb0e0; --cur-a: #ff7a5c; --cur-b: #5fb0ff; --hand: #e2b350; --foam: #3b3a36; --foam-edge: #6b675e; }
+:root { --own-field: #2b60b5; --puck: #48423b; --puck-edge: #292621; --magnet: #bcb5ab; --magnet-n: #c0392b; --magnet-s: #2b60b5; --ln2: rgba(150, 196, 236, 0.35); --ln2-edge: #bba07c;
+  --cur-a: #d2452b; --cur-b: #2b7bd2; --own-hand: #a7740b; --foam: #e9e4d8; --foam-edge: #b9b1a0; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --own-field: #69a0ff; --puck: #5b544b; --puck-edge: #9d968c; --magnet: #d3ccc4; --magnet-n: #ff7a5c; --magnet-s: #69a0ff;
+  --ln2: rgba(110, 160, 220, 0.25); --ln2-edge: #7fb0e0; --cur-a: #ff7a5c; --cur-b: #5fb0ff; --own-hand: #e2b350; --foam: #3b3a36; --foam-edge: #6b675e; } }
+:root[data-theme="dark"] { --own-field: #69a0ff; --puck: #5b544b; --puck-edge: #9d968c; --magnet: #d3ccc4; --magnet-n: #ff7a5c; --magnet-s: #69a0ff;
+  --ln2: rgba(110, 160, 220, 0.25); --ln2-edge: #7fb0e0; --cur-a: #ff7a5c; --cur-b: #5fb0ff; --own-hand: #e2b350; --foam: #3b3a36; --foam-edge: #6b675e; }
 .stage { position: relative; display: flex; flex-direction: column; min-height: min-content; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
 :root[data-projector="on"] .stage { min-height: min-content; }
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
@@ -297,7 +297,7 @@
   const gap = () => S.z - MD.o.l / 2;
   const sgnG = () => (S.side === 'above' ? -1 : 1);   /* gravity along the axis pointing away from the puck */
   function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
-    T = {}; for (const k of ['canvas', 'surface', 'ink', 'muted', 'line', 'accent', 'field', 'puck', 'puck-edge', 'magnet', 'magnet-n', 'magnet-s', 'ln2', 'ln2-edge', 'cur-a', 'cur-b', 'hand', 'foam', 'foam-edge']) T[k.replace('-', '_')] = g('--' + k);
+    T = {}; for (const k of ['canvas', 'surface', 'ink', 'muted', 'line', 'accent', 'field', 'puck', 'puck-edge', 'magnet', 'magnet-n', 'magnet-s', 'ln2', 'ln2-edge', 'cur-a', 'cur-b', 'hand', 'foam', 'foam-edge']) T[k.replace('-', '_')] = g('--' + k); T.field = g('--own-field'); T.hand = g('--own-hand');
     T.mono = g('--font-mono') || 'monospace'; T.ui = g('--font-ui') || 'system-ui, sans-serif'; }
 
   /* ---------- the model and moving the magnet ---------- */

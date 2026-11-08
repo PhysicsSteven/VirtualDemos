@@ -14,7 +14,7 @@
 /* folded rail sections: secondary options behind their heading (layout redesign, as in springs) */
 .rail details.more > p + p { margin-top: 6px; }
 /* Source and observer card on the picture (lean sidebar): top right over the wavefronts; under the picture on phones */
-.card { position: absolute; z-index: 2; top: 58px; right: 12px; width: min(290px, calc(100% - 24px)); max-height: calc(100% - 70px); overflow-y: auto; display: flex; flex-direction: column; gap: 8px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 12px; }
+.card { position: absolute; z-index: 2; top: 58px; right: 12px; width: min(290px, calc(100% - 24px)); display: flex; flex-direction: column; gap: 8px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 12px; }
 .card-title { font-size: 0.74rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
 .card #obsSec { display: flex; flex-direction: column; gap: 8px; }
 .card .slider-head label, .card .slider-head output { font-size: 0.8rem; }
@@ -387,9 +387,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const $ = (id) => document.getElementById(id);
   /* the controls card sits under the button strip, which wraps to a second row (with Tools) on narrower screens */
   { const ctl = document.querySelector('.stage-ctl'), card = $('card');
-    const cv = $('can'), place = () => { if (getComputedStyle(card).position !== 'absolute') { card.style.top = card.style.maxHeight = ''; return; }
-      const top = ctl.offsetTop + ctl.offsetHeight + 8; card.style.top = top + 'px';
-      card.style.maxHeight = `calc(100% - ${top + 12}px)`; };
+    const cv = $('can'), place = () => { if (getComputedStyle(card).position !== 'absolute') { card.style.top = ''; return; }
+      const top = ctl.offsetTop + ctl.offsetHeight + 8; card.style.top = top + 'px'; };   /* VD.fitStage grows the stage when the card is taller than the picture */
     if (ctl && card && window.ResizeObserver) { const ro = new ResizeObserver(place); ro.observe(ctl); if (cv) ro.observe(cv); } }
   const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
   const RAD = Math.PI / 180;
@@ -1111,6 +1110,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const on3 = () => D3.want && D3.ok && !light();
   /* the measuring tools: the stopwatch on the simulated clock; the ruler on the flat picture, in meters (sound) or light seconds (light) */
   VD.setupCard($('card'));   /* the card drags by its title (grip), wherever it floats over the picture */
+  VD.fitStage();   /* the card never hangs off the picture on a short window or in Projector */
   VD.tools({ el: can, time: () => S.t, scale: () => { const g = geom(); if (on3() || !g) return null; return { m: (light() ? 299792458 : 1) / g.sc, area: [g.m.x, g.m.y, g.m.w, g.m.h], unit: light() ? 'light s' : null }; } });
   const orb = () => (D3.plane === 'ground' ? D3.oG : D3.oS);
   // simulation point (x, y) to world (z up); the flat view's plane is z = 0 (Street) or y = 0 (Sky, ground at the observer's feet)

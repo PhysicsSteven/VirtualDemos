@@ -1775,7 +1775,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const c = Math.cos(th), vis = c >= 0 ? -1 : 1, cw = OBL * hb * Math.max(0.25, Math.abs(c));
     if (hot) { ctx.fillStyle = T.accent; ctx.globalAlpha = 0.25; roundRect(ctx, -hl - cw - 5, -hb - 5, 2 * hl + 2 * cw + 10, 2 * hb + 10, 7); ctx.fill(); ctx.globalAlpha = 1; }
     const half = (sg) => { ctx.beginPath(); ctx.moveTo(0, -hb); ctx.lineTo(sg * hl, -hb); ctx.ellipse(sg * hl, 0, cw, hb, 0, -Math.PI / 2, Math.PI / 2, sg < 0); ctx.lineTo(0, hb); ctx.closePath(); };
-    ctx.save(); ctx.shadowColor = T.dark ? 'rgba(0,0,0,0.6)' : 'rgba(20,30,50,0.3)'; ctx.shadowBlur = 10 * sc; ctx.shadowOffsetY = 5 * sc;
+    ctx.save(); ctx.shadowColor = T.dark ? 'rgba(0,0,0,0.6)' : 'rgba(46,36,24,0.3)'; ctx.shadowBlur = 10 * sc; ctx.shadowOffsetY = 5 * sc;
     half(1); ctx.fillStyle = T.pos; ctx.fill(); half(-1); ctx.fillStyle = T.neg; ctx.fill(); ctx.restore();
     // round shading over both halves
     ctx.save(); ctx.beginPath(); ctx.moveTo(-hl, -hb); ctx.lineTo(hl, -hb); ctx.ellipse(hl, 0, cw, hb, 0, -Math.PI / 2, Math.PI / 2); ctx.lineTo(-hl, hb); ctx.ellipse(-hl, 0, cw, hb, 0, Math.PI / 2, 1.5 * Math.PI); ctx.closePath(); ctx.clip();

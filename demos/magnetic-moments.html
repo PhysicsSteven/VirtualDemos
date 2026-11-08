@@ -15,9 +15,9 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
 /* only what this demo needs beyond demos/lib/vd.css */
-:root { --orbit: #2b60b5; --mom: #c0432a; --field: #2f8a4e; --pi: #2f8a4e; --sp: #2b60b5; --sm: #c0432a; --atom: #8a5a14; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --orbit: #69a0ff; --mom: #ff8a6a; --field: #66d38c; --pi: #66d38c; --sp: #69a0ff; --sm: #ff8a6a; --atom: #f0c060; } }
-:root[data-theme="dark"] { --orbit: #69a0ff; --mom: #ff8a6a; --field: #66d38c; --pi: #66d38c; --sp: #69a0ff; --sm: #ff8a6a; --atom: #f0c060; }
+:root { --orbit: #2b60b5; --mom: #c0432a; --own-field: #2f8a4e; --pi: #2f8a4e; --sp: #2b60b5; --sm: #c0432a; --atom: #8a5a14; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --orbit: #69a0ff; --mom: #ff8a6a; --own-field: #66d38c; --pi: #66d38c; --sp: #69a0ff; --sm: #ff8a6a; --atom: #f0c060; } }
+:root[data-theme="dark"] { --orbit: #69a0ff; --mom: #ff8a6a; --own-field: #66d38c; --pi: #66d38c; --sp: #69a0ff; --sm: #ff8a6a; --atom: #f0c060; }
 .stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
 .stage-ctl .count { margin-left: auto; font-size: 0.82rem; color: var(--muted); }
@@ -264,7 +264,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function tokens() {
     const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
     T = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), accent: g('--accent'),
-      orbit: g('--orbit'), mom: g('--mom'), field: g('--field'), pi: g('--pi'), sp: g('--sp'), sm: g('--sm'), atom: g('--atom'), mono: g('--font-mono'), ui: g('--font-ui') };
+      orbit: g('--orbit'), mom: g('--mom'), field: g('--own-field'), pi: g('--pi'), sp: g('--sp'), sm: g('--sm'), atom: g('--atom'), mono: g('--font-mono'), ui: g('--font-ui') };
   }
   const atomKey = () => (S.sg.atom === 'mystery' ? S.sg.mys : S.sg.atom);
   /* keep a label inside the canvas: shift it in from the edge, and shrink it if it is wider than the canvas (phone widths) */
@@ -449,8 +449,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       g.beamM.opacity = c.band != null ? 0.12 : 0.35; G3.n = -1; }
     /* the deposit on the glass, drawn with the same stretch */
     if (G3.n !== s.dots.length) { G3.n = s.dots.length;
-      const cx = g.cv.getContext('2d'), N = 512, dk = dark(); cx.fillStyle = dk ? 'rgba(40,55,70,0.9)' : 'rgba(225,235,242,0.9)'; cx.fillRect(0, 0, N, N);
-      cx.strokeStyle = dk ? 'rgba(200,215,230,0.5)' : 'rgba(80,95,110,0.5)'; cx.lineWidth = 2; cx.strokeRect(1, 1, N - 2, N - 2);
+      const cx = g.cv.getContext('2d'), N = 512, dk = dark(); cx.fillStyle = dk ? 'rgba(68,57,42,0.9)' : 'rgba(240,234,227,0.9)'; cx.fillRect(0, 0, N, N);
+      cx.strokeStyle = dk ? 'rgba(228,217,202,0.5)' : 'rgba(108,97,82,0.5)'; cx.lineWidth = 2; cx.strokeRect(1, 1, N - 2, N - 2);
       const px = N / 2 / 0.015, col = dk ? 'rgba(250,235,195,0.8)' : 'rgba(45,35,25,0.75)'; cx.fillStyle = col;
       for (const d of s.dots) { const x = N / 2 + d.x / (SG_LEN / 2) * HX * px, y = N / 2 - d.z * zs * px; if (y < 0 || y > N) continue; cx.fillRect(x - 2.5, y - 2.5, 5, 5); }
       g.tex.needsUpdate = true; }

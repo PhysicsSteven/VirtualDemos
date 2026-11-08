@@ -1589,7 +1589,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       arrow(ctx, px + ex2 / el2 * pr2, py + ey2 / el2 * pr2, px + ex2 / el2 * (pr2 + Lr), py + ey2 / el2 * (pr2 + Lr), w2 >= 0 ? T.pos : T.neg, 2 * S);
       /* each star's number on its disk, or beside a disk too small to hold it */
       const num = (n, x, y, r) => {
-        if (r >= 9 * S) { ctx.save(); ctx.font = `700 ${Math.min(14, r / S * 0.9) * S}px ${mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = 'rgba(20,24,32,0.8)'; ctx.fillText(n, x, y + 0.5 * S); ctx.restore(); }
+        if (r >= 9 * S) { ctx.save(); ctx.font = `700 ${Math.min(14, r / S * 0.9) * S}px ${mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = 'rgba(31,27,21,0.8)'; ctx.fillText(n, x, y + 0.5 * S); ctx.restore(); }
         else label(ctx, DK, n, x - r - 5 * S, y - r - 5 * S, 'right', '#f4f0ea', `700 ${12 * S}px ${mono}`);
       };
       num('1', sx, sy, sr - 4 * S); num('2', px, py, X3.Pr);

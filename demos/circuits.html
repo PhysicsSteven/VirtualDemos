@@ -37,7 +37,7 @@
   --resq: #1d8a5a;
   --indq: #c0462b;
   --cur2: #b0561b;
-  --paper: #fbf8f0; --paper-rule: #ece5d4; --paper-dot: #cabfa6;
+  --own-paper: #fbf8f0; --paper-rule: #ece5d4; --paper-dot: #cabfa6;
   --bench: #d8c3a0; --bench-lo: #b99d74;
   --scope: #0f1a14; --scope-grid: #29402f;
   --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
@@ -49,7 +49,7 @@
     --line: #3f362a; --grid: #292219; --grid-strong: #443a2c; --pos: #ff7660; --neg: #69a0ff;
     --equi: #e2b350; --accent: #fbc26d; --wire: #c0b7ac; --glow: #ffd24d; --kir: #4fd6d0;
     --capq: #b48cff; --resq: #4cc38a; --indq: #ff8a63; --cur2: #f0a060;
-    --paper: #221b11; --paper-rule: #352a1c; --paper-dot: #53432e; --bench: #3a2f24; --bench-lo: #261e16;
+    --own-paper: #221b11; --paper-rule: #352a1c; --paper-dot: #53432e; --bench: #3a2f24; --bench-lo: #261e16;
     --scope: #08100b; --scope-grid: #1f3326;
     color-scheme: dark;
   }
@@ -59,7 +59,7 @@
   --line: #3f362a; --grid: #292219; --grid-strong: #443a2c; --pos: #ff7660; --neg: #69a0ff;
   --equi: #e2b350; --accent: #fbc26d; --wire: #c0b7ac; --glow: #ffd24d; --kir: #4fd6d0;
   --capq: #b48cff; --resq: #4cc38a; --indq: #ff8a63; --cur2: #f0a060;
-  --paper: #221b11; --paper-rule: #352a1c; --paper-dot: #53432e; --bench: #3a2f24; --bench-lo: #261e16;
+  --own-paper: #221b11; --paper-rule: #352a1c; --paper-dot: #53432e; --bench: #3a2f24; --bench-lo: #261e16;
   --scope: #08100b; --scope-grid: #1f3326;
   color-scheme: dark;
 }
@@ -90,7 +90,7 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 .pane { position: relative; min-height: 0; min-width: 0; background: var(--canvas); }
 .pane canvas { position: absolute; inset: 0; display: block; outline: none; }
 .pane canvas:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
-#cPane { grid-area: c; background: var(--paper); }
+#cPane { grid-area: c; background: var(--own-paper); }
 #cPane canvas { touch-action: none; }
 #cPane canvas.pot3d { position: absolute; inset: 0; z-index: 1; }
 .potkey { position: absolute; left: 10px; right: 10px; bottom: 8px; z-index: 2; margin: 0; font-size: 0.78rem; color: var(--muted); pointer-events: none; }
@@ -2486,7 +2486,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
   function tokens() {
     const cs = getComputedStyle(document.documentElement);
     const g = (n) => cs.getPropertyValue(n).trim();
-    T = { canvas: g('--paper'), surface: g('--canvas'), paper: g('--paper'), paperRule: g('--paper-rule'), paperDot: g('--paper-dot'), bench: g('--bench'), benchLo: g('--bench-lo'), dark: isDark(),
+    T = { canvas: g('--own-paper'), surface: g('--canvas'), paper: g('--own-paper'), paperRule: g('--paper-rule'), paperDot: g('--paper-dot'), bench: g('--bench'), benchLo: g('--bench-lo'), dark: isDark(),
       ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'),
       pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), accent: g('--accent'), wire: g('--wire'), glow: g('--glow'), kir: g('--kir'),
       capq: g('--capq'), resq: g('--resq'), indq: g('--indq'), cur2: g('--cur2'), scope: g('--scope'), scopeGrid: g('--scope-grid'),
@@ -3259,10 +3259,10 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     const gb = ctx.createRadialGradient(cx - rg * 0.2, cy - rg * 0.2, 0, cx, cy, rg * 0.7); gb.addColorStop(0, shade(BRASS, 0.4)); gb.addColorStop(1, shade(BRASS, -0.35));
     ctx.fillStyle = gb; ctx.beginPath(); ctx.arc(cx, cy, rg * 0.68, 0, 2 * Math.PI); ctx.fill();
     const gg = ctx.createRadialGradient(cx - rg * 0.35, cy - rg * 0.4, rg * 0.05, cx, cy, rg);
-    gg.addColorStop(0, 'rgba(255,255,255,0.8)'); gg.addColorStop(0.35, 'rgba(235,240,245,0.38)'); gg.addColorStop(1, 'rgba(185,195,205,0.5)');
+    gg.addColorStop(0, 'rgba(255,255,255,0.8)'); gg.addColorStop(0.35, 'rgba(244,241,236,0.38)'); gg.addColorStop(1, 'rgba(204,196,186,0.5)');
     ctx.fillStyle = gg; ctx.beginPath(); ctx.arc(cx, cy, rg, 0, 2 * Math.PI); ctx.fill();
     if (g > 0.002) { ctx.fillStyle = rgba(fc, 0.15 + 0.7 * g); ctx.fill(); }
-    ctx.strokeStyle = T.dark ? 'rgba(220,228,236,0.55)' : 'rgba(70,80,90,0.55)'; ctx.lineWidth = 1; ctx.stroke();
+    ctx.strokeStyle = T.dark ? 'rgba(235,229,221,0.55)' : 'rgba(88,81,72,0.55)'; ctx.lineWidth = 1; ctx.stroke();
     const fw = 0.085 * s, lw = Math.max(1, 0.022 * s);
     ctx.strokeStyle = '#a1998f'; ctx.lineWidth = Math.max(0.8, 0.012 * s); ctx.beginPath();
     ctx.moveTo(cx - fw, cy + 0.11 * s); ctx.lineTo(cx - fw, cy); ctx.moveTo(cx + fw, cy + 0.11 * s); ctx.lineTo(cx + fw, cy); ctx.stroke();
@@ -5776,7 +5776,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
   function potLabel(i, text, x, y, z, part) {
     const pool = part ? (P3.plabels || (P3.plabels = [])) : P3.labels;
     let L = pool[i];
-    if (!L) { L = pool[i] = part ? VD3K.label(text, { size: 1, color: '#f0b27a', font: '"Atkinson Hyperlegible", system-ui, sans-serif', weight: 700 }) : VD3K.label(text, { size: 1, color: '#f1eeea', bg: 'rgba(16,22,30,0.82)', font: '"JetBrains Mono", ui-monospace, monospace' }); P3.S.scene.add(L); }
+    if (!L) { L = pool[i] = part ? VD3K.label(text, { size: 1, color: '#f0b27a', font: '"Atkinson Hyperlegible", system-ui, sans-serif', weight: 700 }) : VD3K.label(text, { size: 1, color: '#f1eeea', bg: 'rgba(29,24,17,0.82)', font: '"JetBrains Mono", ui-monospace, monospace' }); P3.S.scene.add(L); }
     L.visible = true; L.set(text); L.position.set(x, y, z);
     const s = P3.lsz * (part ? 0.85 : 1), r = L.scale.x / L.scale.y; L.scale.set(s * r, s, 1); return L;
   }

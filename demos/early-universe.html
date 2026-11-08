@@ -16,9 +16,9 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
 /* only what this demo needs beyond demos/lib/vd.css */
-:root { --lcdm: #2b6fc4; --matter: #c0562b; --empty: #2f8a4e; --desit: #8a4fc4; --hot: #d2452b; --neutron: #7c6f5f; --helium: #c99a12; --theory: #6a4fc4; --data: #352c21; --band: rgba(43, 111, 196, 0.07); }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --lcdm: #69a8ff; --matter: #ff9a6c; --empty: #66d38c; --desit: #c4a0ff; --hot: #ff7a5c; --neutron: #c6baab; --helium: #ffd257; --theory: #a991ff; --data: #f3eee8; --band: rgba(105, 168, 255, 0.09); } }
-:root[data-theme="dark"] { --lcdm: #69a8ff; --matter: #ff9a6c; --empty: #66d38c; --desit: #c4a0ff; --hot: #ff7a5c; --neutron: #c6baab; --helium: #ffd257; --theory: #a991ff; --data: #f3eee8; --band: rgba(105, 168, 255, 0.09); }
+:root { --lcdm: #2b6fc4; --matter: #c0562b; --empty: #2f8a4e; --desit: #8a4fc4; --hot: #d2452b; --neutron: #7c6f5f; --helium: #c99a12; --theory: #6a4fc4; --data: #352c21; --own-band: rgba(43, 111, 196, 0.07); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --lcdm: #69a8ff; --matter: #ff9a6c; --empty: #66d38c; --desit: #c4a0ff; --hot: #ff7a5c; --neutron: #c6baab; --helium: #ffd257; --theory: #a991ff; --data: #f3eee8; --own-band: rgba(105, 168, 255, 0.09); } }
+:root[data-theme="dark"] { --lcdm: #69a8ff; --matter: #ff9a6c; --empty: #66d38c; --desit: #c4a0ff; --hot: #ff7a5c; --neutron: #c6baab; --helium: #ffd257; --theory: #a991ff; --data: #f3eee8; --own-band: rgba(105, 168, 255, 0.09); }
 .stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
 .stage-ctl .count { margin-left: auto; font-size: 0.82rem; color: var(--muted); }
@@ -428,7 +428,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
     T = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), accent: g('--accent'),
       lcdm: g('--lcdm'), matter: g('--matter'), empty: g('--empty'), desit: g('--desit'), hot: g('--hot'), neutron: g('--neutron'), helium: g('--helium'),
-      theory: g('--theory'), data: g('--data'), band: g('--band'), mono: g('--font-mono'), ui: g('--font-ui') };
+      theory: g('--theory'), data: g('--data'), band: g('--own-band'), mono: g('--font-mono'), ui: g('--font-ui') };
   }
 
   /* the physics, computed once (and again when H₀ changes) */
@@ -468,7 +468,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function space(x, y, w, h) {
     const g = ctx.createRadialGradient(x + w * 0.5, y + h * 0.45, 0, x + w * 0.5, y + h * 0.45, Math.max(w, h) * 0.8);
     g.addColorStop(0, '#2a2115'); g.addColorStop(1, '#0b0805'); ctx.fillStyle = g; ctx.fillRect(x, y, w, h);
-    for (let k = 0; k < 160; k++) { const sx = hash2(k, 7, 11) * w, sy = hash2(k, 9, 13) * h, b = hash2(k, 3, 17); ctx.fillStyle = `rgba(220,230,255,${0.15 + 0.4 * b})`; ctx.fillRect(x + sx, y + sy, b > 0.85 ? 1.6 : 1, b > 0.85 ? 1.6 : 1); }
+    for (let k = 0; k < 160; k++) { const sx = hash2(k, 7, 11) * w, sy = hash2(k, 9, 13) * h, b = hash2(k, 3, 17); ctx.fillStyle = `rgba(243,238,232,${0.15 + 0.4 * b})`; ctx.fillRect(x + sx, y + sy, b > 0.85 ? 1.6 : 1, b > 0.85 ? 1.6 : 1); }
   }
   function drawGalaxy(x, y, g, r, dim) {
     const sp = g.kind < 0.62, col = sp ? '200,218,255' : '255,226,184', rr = r * g.size;
@@ -521,7 +521,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (showV) txt(ctx, 'arrows: distance moved in 2 Gyr at today\'s speed', W - 12 * p, H - 22 * p, { c: '#ffc878', a: 'right', s: 9.5, ui: true });
     /* the survey: distances from home to A to E (Mpc) */
     const narrow = W < 560, pw = (narrow ? 150 : 178) * p, ph = (narrow ? 104 : 140) * p, px = W - pw - 10 * p, py = 10 * p;
-    if (VG) VG.panel(ctx, px, py, pw, ph, { fill: 'rgba(8,12,22,0.82)', r: 8 });
+    if (VG) VG.panel(ctx, px, py, pw, ph, { fill: 'rgba(20,16,10,0.82)', r: 8 });
     txt(ctx, `${MODEL_NAME[S.ex.model]}  t = ${f(S.ex.tau, 2)} Gyr`, px + 10 * p, py + 13 * p, { c: '#efe9e1', s: narrow ? 9.5 : 10.5, w: 700 });
     MARKED.forEach(([nm, i, j], k) => { const d = properDist(a, galaxyAt(i, j), h0), y = py + (narrow ? 30 : 34) * p + k * (narrow ? 15 : 20) * p;
       txt(ctx, `${nm}`, px + 12 * p, y, { c: '#8fd0ff', s: narrow ? 10 : 11, w: 700 }); txt(ctx, `${f(d, 2)} Mpc`, px + pw - 10 * p, y, { c: '#8ef0b0', s: narrow ? 10 : 11.5, a: 'right', w: 600 }); });
@@ -947,7 +947,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     txt(ctx, W < 560 ? 'drag to turn' : 'drag to turn · click a galaxy in the middle layer to watch from it', 12 * p, H - 8 * p, { c: '#c3b5a2', s: 9.5, ui: true, b: 'bottom' });
     // the survey: distances from home to A to E (Mpc), as in the flat view
     const narrow = W < 560, pw = (narrow ? 150 : 178) * p, ph = (narrow ? 104 : 140) * p, px = W - pw - 10 * p, py = 10 * p;
-    if (VG) VG.panel(ctx, px, py, pw, ph, { fill: 'rgba(8,12,22,0.82)', r: 8 });
+    if (VG) VG.panel(ctx, px, py, pw, ph, { fill: 'rgba(20,16,10,0.82)', r: 8 });
     txt(ctx, `${MODEL_NAME[S.ex.model]}  t = ${f(S.ex.tau, 2)} Gyr`, px + 10 * p, py + 13 * p, { c: '#efe9e1', s: narrow ? 9.5 : 10.5, w: 700 });
     MARKED.forEach(([nm, i, j], k) => { const d = properDist(a, galaxyAt(i, j), h0), y = py + (narrow ? 30 : 34) * p + k * (narrow ? 15 : 20) * p;
       txt(ctx, `${nm}`, px + 12 * p, y, { c: '#8fd0ff', s: narrow ? 10 : 11, w: 700 }); txt(ctx, `${f(d, 2)} Mpc`, px + pw - 10 * p, y, { c: '#8ef0b0', s: narrow ? 10 : 11.5, a: 'right', w: 600 }); });

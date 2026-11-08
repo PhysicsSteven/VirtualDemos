@@ -23,9 +23,9 @@
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --acol: #69a0ff; --bcol: #ff8a70; --rcol: #5fcf8a; --water: #15324a; --bank: #2e3a25; --water-deep: #0f2638; --ripple: rgba(190,220,255,0.45); --leaf: #7fae4a; --grass: #6f8a44; --dock: #7d6346; --hull: #c9c3b4; } }
 :root[data-theme="dark"] { --acol: #69a0ff; --bcol: #ff8a70; --rcol: #5fcf8a; --water: #15324a; --bank: #2e3a25; --water-deep: #0f2638; --ripple: rgba(190,220,255,0.45); --leaf: #7fae4a; --grass: #6f8a44; --dock: #7d6346; --hull: #c9c3b4; }
 /* the drawing surface: graph paper on a wooden desk (vector setups), and the river banks */
-:root { --paper: #fbfaf4; --paper-line: #e2d6c6; --paper-major: #c3ab8c; --paper-axis: #463c30; --desk: #b88f66; --desk-dark: #8c6744; --tree: #4d7a3f; --tree-dark: #2f5428; --soil: #c2a97f; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --paper: #2a231a; --paper-line: #413526; --paper-major: #66533a; --paper-axis: #d2c7b9; --desk: #3b2f25; --desk-dark: #241b14; --tree: #3e6434; --tree-dark: #233c1f; --soil: #4b3f2c; } }
-:root[data-theme="dark"] { --paper: #2a231a; --paper-line: #413526; --paper-major: #66533a; --paper-axis: #d2c7b9; --desk: #3b2f25; --desk-dark: #241b14; --tree: #3e6434; --tree-dark: #233c1f; --soil: #4b3f2c; }
+:root { --own-paper: #fbfaf4; --paper-line: #e2d6c6; --paper-major: #c3ab8c; --paper-axis: #463c30; --own-desk: #b88f66; --desk-dark: #8c6744; --tree: #4d7a3f; --tree-dark: #2f5428; --soil: #c2a97f; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --own-paper: #2a231a; --paper-line: #413526; --paper-major: #66533a; --paper-axis: #d2c7b9; --own-desk: #3b2f25; --desk-dark: #241b14; --tree: #3e6434; --tree-dark: #233c1f; --soil: #4b3f2c; } }
+:root[data-theme="dark"] { --own-paper: #2a231a; --paper-line: #413526; --paper-major: #66533a; --paper-axis: #d2c7b9; --own-desk: #3b2f25; --desk-dark: #241b14; --tree: #3e6434; --tree-dark: #233c1f; --soil: #4b3f2c; }
 :root[data-projector="on"] { font-size: 125%; }
 .bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; }
 .bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 12px; }
@@ -376,7 +376,7 @@
   function tokens() {
     const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
     T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'), accent: g('--accent'),
-      A: g('--acol'), B: g('--bcol'), R: g('--rcol'), water: g('--water'), bank: g('--bank'), waterDeep: g('--water-deep'), ripple: g('--ripple'), leaf: g('--leaf'), grass: g('--grass'), dock: g('--dock'), hull: g('--hull'), equi: g('--equi'), s3: g('--s3col'), s4: g('--s4col'), paper: g('--paper'), paperLine: g('--paper-line'), paperMajor: g('--paper-major'), paperAxis: g('--paper-axis'), desk: g('--desk'), deskDark: g('--desk-dark'), tree: g('--tree'), treeDark: g('--tree-dark'), soil: g('--soil'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' };
+      A: g('--acol'), B: g('--bcol'), R: g('--rcol'), water: g('--water'), bank: g('--bank'), waterDeep: g('--water-deep'), ripple: g('--ripple'), leaf: g('--leaf'), grass: g('--grass'), dock: g('--dock'), hull: g('--hull'), equi: g('--equi'), s3: g('--s3col'), s4: g('--s4col'), paper: g('--own-paper'), paperLine: g('--paper-line'), paperMajor: g('--paper-major'), paperAxis: g('--paper-axis'), desk: g('--own-desk'), deskDark: g('--desk-dark'), tree: g('--tree'), treeDark: g('--tree-dark'), soil: g('--soil'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' };
   }
   const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.35 : 1);
   const f = (v, d = 2) => (Math.abs(v) < 0.5 * 10 ** -d ? (0).toFixed(d) : v.toFixed(d)).replace('-', '−');
@@ -596,7 +596,7 @@
     ctx.save(); ctx.translate(X(pos[0]), Y(pos[1])); ctx.rotate(-hd);
     const bl2 = 18 * p, bw2 = 8 * p, moving = R.run || (R.t > 0 && !R.landed);
     if (moving) { ctx.strokeStyle = T.ripple; ctx.lineWidth = 1.5 * p; for (const sgn of [1, -1]) { ctx.beginPath(); ctx.moveTo(-bl2 * 0.6, sgn * bw2 * 0.8); ctx.lineTo(-bl2 * 2.6, sgn * bw2 * 2.6); ctx.stroke(); } }   // wake behind the stern
-    ctx.fillStyle = 'rgba(10,30,50,0.25)'; ctx.beginPath(); ctx.ellipse(2 * p, 3 * p, bl2 * 1.1, bw2 * 1.05, 0, 0, 7); ctx.fill();
+    ctx.fillStyle = 'rgba(40,31,20,0.25)'; ctx.beginPath(); ctx.ellipse(2 * p, 3 * p, bl2 * 1.1, bw2 * 1.05, 0, 0, 7); ctx.fill();
     const hg = ctx.createLinearGradient(0, -bw2, 0, bw2); hg.addColorStop(0, '#ffffff'); hg.addColorStop(0.5, T.hull); hg.addColorStop(1, T.hull); ctx.fillStyle = hg; ctx.beginPath(); ctx.moveTo(bl2 * 1.15, 0); ctx.quadraticCurveTo(bl2 * 0.5, bw2, -bl2 * 0.8, bw2); ctx.lineTo(-bl2, bw2 * 0.7); ctx.lineTo(-bl2, -bw2 * 0.7); ctx.lineTo(-bl2 * 0.8, -bw2); ctx.quadraticCurveTo(bl2 * 0.5, -bw2, bl2 * 1.15, 0); ctx.closePath(); ctx.fill();
     ctx.strokeStyle = T.ink; ctx.lineWidth = 1; ctx.stroke(); ctx.fillStyle = T.canvas; ctx.fillRect(-bl2 * 0.45, -bw2 * 0.5, bl2 * 0.6, bw2); ctx.strokeRect(-bl2 * 0.45, -bw2 * 0.5, bl2 * 0.6, bw2);
     ctx.restore();
@@ -924,7 +924,7 @@
       const q = P(rim - 0.021, d); g.save(); g.translate(q[0], q[1]); g.rotate(-(d - 90) * Math.PI / 180);
       g.font = `${d % 30 === 0 ? 700 : 400} ${d % 30 === 0 ? 46 : 34}px ${T.mono}`; g.fillText(String(d), 0, 0); g.restore();
     }
-    g.strokeStyle = 'rgba(28,33,40,0.25)'; g.lineWidth = 2; g.beginPath(); g.arc(m, m, 0.09 * k, 0, 7); g.moveTo(m - 0.13 * k, m); g.lineTo(m + 0.13 * k, m); g.moveTo(m, m - 0.13 * k); g.lineTo(m, m + 0.13 * k); g.stroke();
+    g.strokeStyle = 'rgba(39,35,29,0.25)'; g.lineWidth = 2; g.beginPath(); g.arc(m, m, 0.09 * k, 0, 7); g.moveTo(m - 0.13 * k, m); g.lineTo(m + 0.13 * k, m); g.moveTo(m, m - 0.13 * k); g.lineTo(m, m + 0.13 * k); g.stroke();
     g.fillStyle = '#3b3731'; g.beginPath(); g.arc(m, m, FT_GEOM.pin * k * 1.1, 0, 7); g.fill();   /* the hole for the pin */
     const t = new THREE.CanvasTexture(c); t.anisotropy = 8; return t;
   }
@@ -1148,8 +1148,8 @@
     const paperTex = canvasTex(2048, 2048, (c, w) => {
       const k = w / (2 * HALF), X0 = (x) => (x + HALF) * k, Y0 = (y) => (HALF - y) * k;
       c.clearRect(0, 0, w, w); c.fillStyle = 'rgba(251,250,244,0.86)'; c.fillRect(0, 0, w, w);
-      for (let i = -HALF; i <= HALF; i++) for (let j = 1; j < 5; j++) { c.strokeStyle = 'rgba(134,181,201,0.35)'; c.lineWidth = 1.2; const u = i + j / 5; c.beginPath(); c.moveTo(X0(u), 0); c.lineTo(X0(u), w); c.moveTo(0, Y0(u)); c.lineTo(w, Y0(u)); c.stroke(); }
-      for (let i = -HALF; i <= HALF; i++) { c.strokeStyle = i % 5 ? 'rgba(134,181,201,0.9)' : '#ad8e65'; c.lineWidth = i % 5 ? 2.2 : 4; c.beginPath(); c.moveTo(X0(i), 0); c.lineTo(X0(i), w); c.moveTo(0, Y0(i)); c.lineTo(w, Y0(i)); c.stroke(); }
+      for (let i = -HALF; i <= HALF; i++) for (let j = 1; j < 5; j++) { c.strokeStyle = 'rgba(195,171,140,0.35)'; c.lineWidth = 1.2; const u = i + j / 5; c.beginPath(); c.moveTo(X0(u), 0); c.lineTo(X0(u), w); c.moveTo(0, Y0(u)); c.lineTo(w, Y0(u)); c.stroke(); }
+      for (let i = -HALF; i <= HALF; i++) { c.strokeStyle = i % 5 ? 'rgba(195,171,140,0.9)' : '#ad8e65'; c.lineWidth = i % 5 ? 2.2 : 4; c.beginPath(); c.moveTo(X0(i), 0); c.lineTo(X0(i), w); c.moveTo(0, Y0(i)); c.lineTo(w, Y0(i)); c.stroke(); }
       c.strokeStyle = '#463c30'; c.lineWidth = 6; c.beginPath(); c.moveTo(X0(0), 0); c.lineTo(X0(0), w); c.moveTo(0, Y0(0)); c.lineTo(w, Y0(0)); c.stroke();
       c.fillStyle = '#463c30'; c.font = `600 34px ${T.mono}`; c.textAlign = 'center'; c.textBaseline = 'top';
       for (let i = -10; i <= 10; i += 2) if (i) { c.fillText(String(i).replace('-', '−'), X0(i), Y0(0) + 10); }

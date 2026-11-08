@@ -152,9 +152,9 @@
     box.castShadow = true; pl.rotation.x = Math.PI / 2; pl.position.y = -0.0181; g.add(box, pl); g.rotation.x = o.tilt == null ? -0.55 : o.tilt; g.position.z = h / 2;
     var last = null, c = T.cv.getContext('2d');
     var foot = function () {
-      c.fillStyle = 'rgba(230,236,243,0.85)'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.font = '700 30px ' + FONT;
+      c.fillStyle = 'rgba(242,237,231,0.85)'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.font = '700 30px ' + FONT;
       if (o.label) c.fillText(o.label, cw / 2, ch * 0.7);
-      if (o.sub) { c.font = '22px ' + FONT; c.fillStyle = 'rgba(230,236,243,0.6)'; c.fillText(o.sub, cw / 2, ch * 0.82); }
+      if (o.sub) { c.font = '22px ' + FONT; c.fillStyle = 'rgba(242,237,231,0.6)'; c.fillText(o.sub, cw / 2, ch * 0.82); }
     };
     g.set = function (a, b) {
       var k = a + '|' + b; if (k === last) return; last = k; c.fillStyle = '#443c31'; c.fillRect(0, 0, cw, ch);

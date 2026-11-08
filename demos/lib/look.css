@@ -2,8 +2,8 @@
    Only presentation: no sizes that the layout or the canvases depend on. Each demo may override after this block. */
 :root {
   --look-radius: 12px;
-  --look-shadow: 0 1px 2px rgba(20, 30, 45, 0.06), 0 6px 20px rgba(20, 30, 45, 0.07);
-  --look-lift: 0 1px 2px rgba(20, 30, 45, 0.10), 0 10px 28px rgba(20, 30, 45, 0.14);
+  --look-shadow: 0 1px 2px rgba(43, 34, 22, 0.06), 0 6px 20px rgba(43, 34, 22, 0.07);
+  --look-lift: 0 1px 2px rgba(43, 34, 22, 0.10), 0 10px 28px rgba(43, 34, 22, 0.14);
   --look-edge: color-mix(in srgb, var(--line) 75%, transparent);
   --look-quiet: color-mix(in srgb, var(--muted) 95%, var(--surface)); /* 95%: at least 4.5:1 on surface and page background in both themes (WCAG AA) */
   --look-glass: color-mix(in srgb, var(--surface) 84%, transparent);
@@ -37,13 +37,13 @@ body { background: radial-gradient(1400px 700px at 15% -20%, color-mix(in srgb, 
 .card-title, .rack-title { letter-spacing: 0.02em; }
 @media (max-width: 820px) { .card, .rack { box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; } }
 /* buttons: a hairline of depth, a quiet hover */
-.btn, .chips button, .spin, .proj { transition: border-color 0.15s, background-color 0.15s, box-shadow 0.15s; box-shadow: 0 1px 0 rgba(20, 30, 45, 0.05); }
+.btn, .chips button, .spin, .proj { transition: border-color 0.15s, background-color 0.15s, box-shadow 0.15s; box-shadow: 0 1px 0 rgba(43, 34, 22, 0.05); }
 .btn:hover:not(:disabled), .chips button:hover:not([aria-pressed="true"]), .spin:hover, .proj:hover { border-color: color-mix(in srgb, var(--accent) 50%, var(--line)); }
-.seg { box-shadow: inset 0 1px 2px rgba(20, 30, 45, 0.06); }
+.seg { box-shadow: inset 0 1px 2px rgba(43, 34, 22, 0.06); }
 @media (prefers-reduced-motion: reduce) { .btn, .chips button, .spin, .proj { transition: none; } }
 /* instruments (function generators, meters): one anodized finish across the module */
 .gen { background: linear-gradient(180deg, var(--inst-top), var(--inst-bot)); border: 1px solid var(--inst-rim); color: var(--inst-ink);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.10), 0 1px 0 rgba(0, 0, 0, 0.3), 0 6px 16px rgba(10, 15, 22, 0.25); }
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.10), 0 1px 0 rgba(0, 0, 0, 0.3), 0 6px 16px rgba(21, 17, 11, 0.25); }
 .gen-lcd { background: var(--look-lcd-bg); color: var(--look-lcd-ink); box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6), 0 1px 0 rgba(255, 255, 255, 0.08); text-shadow: 0 0 6px color-mix(in srgb, var(--look-lcd-ink) 45%, transparent); }
 .knob { background: radial-gradient(circle at 36% 30%, #b7afa5, #71685c 55%, #4d463c 80%, #3b342c);
   box-shadow: 0 0 0 3px #2a241d, 0 0 0 4px rgba(255, 255, 255, 0.06), 0 3px 6px rgba(0, 0, 0, 0.55); }

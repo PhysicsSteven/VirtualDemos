@@ -29,9 +29,9 @@
 /* Layout: the turntable from above and the falling mass from the side on the left; the rail on the right. */
 /* Layout: lab bench. The gas box and speed histogram fill the left, a narrow instrument rail sits on the right; stacks on phones. */
 
-:root { --plat: #dad3ca; --obj: #2b60b5; --mark: #b0452f; --mass: #857b6d; --str: #a7740b; --bench: #e7d6ba; --bench-edge: #b0906a; --grain: rgba(110,75,35,0.13); --wall: #f7f4f1; --floor: #e5e2de; --floor-line: #d6d1ca; --metal: #b5aea4; --metal-dark: #726a60; --metal-hi: #f4f1ee; --shadow: rgba(30,40,55,0.18); --led: #2f9e57; --screen: #3b3328; --panel: rgba(252,253,254,0.88); }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --plat: #52493d; --obj: #69a0ff; --mark: #ff8a70; --mass: #b4aa9c; --str: #e2b350; --bench: #2f281f; --bench-edge: #4a3b29; --grain: rgba(0,0,0,0.25); --wall: #231c14; --floor: #2c251c; --floor-line: #3a3228; --metal: #82796e; --metal-dark: #4c453c; --metal-hi: #dad3ca; --shadow: rgba(0,0,0,0.45); --led: #4fd07f; --screen: #15110c; --panel: rgba(16,22,30,0.85); } }
-:root[data-theme="dark"] { --plat: #52493d; --obj: #69a0ff; --mark: #ff8a70; --mass: #b4aa9c; --str: #e2b350; --bench: #2f281f; --bench-edge: #4a3b29; --grain: rgba(0,0,0,0.25); --wall: #231c14; --floor: #2c251c; --floor-line: #3a3228; --metal: #82796e; --metal-dark: #4c453c; --metal-hi: #dad3ca; --shadow: rgba(0,0,0,0.45); --led: #4fd07f; --screen: #15110c; --panel: rgba(16,22,30,0.85); }
+:root { --plat: #dad3ca; --obj: #2b60b5; --mark: #b0452f; --mass: #857b6d; --str: #a7740b; --bench: #e7d6ba; --bench-edge: #b0906a; --grain: rgba(110,75,35,0.13); --wall: #f7f4f1; --floor: #e5e2de; --floor-line: #d6d1ca; --metal: #b5aea4; --metal-dark: #726a60; --metal-hi: #f4f1ee; --shadow: rgba(53,44,32,0.18); --led: #2f9e57; --screen: #3b3328; --panel: rgba(254,253,252,0.88); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --plat: #52493d; --obj: #69a0ff; --mark: #ff8a70; --mass: #b4aa9c; --str: #e2b350; --bench: #2f281f; --bench-edge: #4a3b29; --grain: rgba(0,0,0,0.25); --wall: #231c14; --floor: #2c251c; --floor-line: #3a3228; --metal: #82796e; --metal-dark: #4c453c; --metal-hi: #dad3ca; --shadow: rgba(0,0,0,0.45); --led: #4fd07f; --screen: #15110c; --panel: rgba(29,24,17,0.85); } }
+:root[data-theme="dark"] { --plat: #52493d; --obj: #69a0ff; --mark: #ff8a70; --mass: #b4aa9c; --str: #e2b350; --bench: #2f281f; --bench-edge: #4a3b29; --grain: rgba(0,0,0,0.25); --wall: #231c14; --floor: #2c251c; --floor-line: #3a3228; --metal: #82796e; --metal-dark: #4c453c; --metal-hi: #dad3ca; --shadow: rgba(0,0,0,0.45); --led: #4fd07f; --screen: #15110c; --panel: rgba(29,24,17,0.85); }
 :root[data-projector="on"] { font-size: 125%; }
 .bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; }
 .bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 12px; }
@@ -498,7 +498,7 @@ table.rows input:focus { border-color: var(--accent); }
     const c = g3.trCv.getContext('2d'), Wd = 768, Ht = 480, mono = T.mono || 'monospace', ui = T.ui || 'sans-serif';
     c.fillStyle = '#1c160f'; c.fillRect(0, 0, Wd, Ht); c.fillStyle = '#c5b6a2'; c.font = `700 36px ${ui}`; c.textBaseline = 'top'; c.textAlign = 'left'; c.fillText('ω of the table against time', 28, 18);
     const L = 100, Rr = Wd - 30, T0 = 74, B = Ht - 74;
-    c.strokeStyle = 'rgba(160,180,200,0.35)'; c.lineWidth = 2; c.strokeRect(L, T0, Rr - L, B - T0);
+    c.strokeStyle = 'rgba(197,182,163,0.35)'; c.lineWidth = 2; c.strokeRect(L, T0, Rr - L, B - T0);
     if (hidden() || !M.moves) {
       c.fillStyle = '#e2d8ca'; c.font = `26px ${ui}`; c.textAlign = 'center'; c.textBaseline = 'middle';
       c.fillText(!M.moves ? 'too little torque: the table stays still' : S.blind ? 'hidden in Blind: time the drop instead' : 'hidden for the Mystery object', (L + Rr) / 2, (T0 + B) / 2);
@@ -507,7 +507,7 @@ table.rows input:focus { border-color: var(--accent); }
     const nice = (v) => { const e = 10 ** Math.floor(Math.log10(v)), q = v / e; return (q <= 1 ? 1 : q <= 2 ? 2 : q <= 5 ? 5 : 10) * e; };
     const wEnd = M.alpha * M.t, tStep = nice(M.t / 4), wStep = nice(wEnd / 4), tMax = Math.ceil(M.t / tStep * 1.0001) * tStep, wMax = Math.ceil(wEnd / wStep * 1.0001) * wStep;
     const PX = (t) => L + (Rr - L) * t / tMax, PY = (w) => B - (B - T0) * w / wMax;
-    c.font = `26px ${mono}`; c.fillStyle = '#c5b6a2'; c.strokeStyle = 'rgba(160,180,200,0.16)';
+    c.font = `26px ${mono}`; c.fillStyle = '#c5b6a2'; c.strokeStyle = 'rgba(197,182,163,0.16)';
     c.textAlign = 'center'; c.textBaseline = 'top'; for (let t = 0; t <= tMax + 1e-9; t += tStep) { c.beginPath(); c.moveTo(PX(t), T0); c.lineTo(PX(t), B); c.stroke(); c.fillText(+t.toFixed(3) + '', PX(t), B + 8); }
     c.textAlign = 'right'; c.textBaseline = 'middle'; for (let w = 0; w <= wMax + 1e-9; w += wStep) { c.beginPath(); c.moveTo(L, PY(w)); c.lineTo(Rr, PY(w)); c.stroke(); c.fillText(+w.toFixed(3) + '', L - 10, PY(w)); }
     c.textAlign = 'center'; c.textBaseline = 'bottom'; c.fillText('t (s)', (L + Rr) / 2, Ht - 4); c.save(); c.translate(26, (T0 + B) / 2); c.rotate(-Math.PI / 2); c.textBaseline = 'middle'; c.fillText('ω (rad/s)', 0, 0); c.restore();

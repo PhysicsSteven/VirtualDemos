@@ -17,10 +17,10 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
 /* only what this demo needs beyond demos/lib/vd.css: the treatment room, the QA graphs and the strip */
-:root { --beam: #c2410c; --pass: #15803d; --fail: #b91c1c; --band: rgba(21, 128, 61, 0.12); --det: #7c3aed; --base: #887a67; --grid: rgba(60, 70, 85, 0.13); }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --beam: #fb923c; --pass: #4ade80; --fail: #f87171; --band: rgba(74, 222, 128, 0.12); --det: #c4a5ff;
-  --base: #b5a897; --grid: rgba(200, 210, 225, 0.12); } }
-:root[data-theme="dark"] { --beam: #fb923c; --pass: #4ade80; --fail: #f87171; --band: rgba(74, 222, 128, 0.12); --det: #c4a5ff; --base: #b5a897; --grid: rgba(200, 210, 225, 0.12); }
+:root { --beam: #c2410c; --pass: #15803d; --fail: #b91c1c; --own-band: rgba(21, 128, 61, 0.12); --det: #7c3aed; --base: #887a67; --grid: rgba(83, 74, 62, 0.13); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --beam: #fb923c; --pass: #4ade80; --fail: #f87171; --own-band: rgba(74, 222, 128, 0.12); --det: #c4a5ff;
+  --base: #b5a897; --grid: rgba(223, 214, 202, 0.12); } }
+:root[data-theme="dark"] { --beam: #fb923c; --pass: #4ade80; --fail: #f87171; --own-band: rgba(74, 222, 128, 0.12); --det: #c4a5ff; --base: #b5a897; --grid: rgba(223, 214, 202, 0.12); }
 .stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
 .stage-ctl .clock { margin-left: auto; font-size: 0.8rem; color: var(--muted); }
@@ -341,7 +341,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const sig = (v, n = 4) => (!isFinite(v) ? '—' : (+v.toPrecision(n)).toString());
   function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
     T = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), beam: g('--beam'), pass: g('--pass'), fail: g('--fail'),
-      band: g('--band'), det: g('--det'), base: g('--base'), grid: g('--grid'), mono: g('--font-mono'), ui: g('--font-ui') }; }
+      band: g('--own-band'), det: g('--det'), base: g('--base'), grid: g('--grid'), mono: g('--font-mono'), ui: g('--font-ui') }; }
   const dark = () => window.VDGear.dark();
   const reduced = () => !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
   const CRIT = { '3/3': [3, 3], '3/2': [3, 2], '2/2': [2, 2] };
@@ -376,7 +376,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     G.backdrop(ctx, W, H, { horizon: (floorY - 6 * p) / H });
     G.bench(ctx, 0, floorY, W, 8 * p, H - floorY, { top: d ? '#37322c' : '#d4d0ca', front: d ? '#27231e' : '#b7b0a8' });
     /* the back wall: panels with seams */
-    ctx.strokeStyle = d ? 'rgba(255,255,255,0.04)' : 'rgba(30,40,55,0.06)'; ctx.lineWidth = 1; for (let x = 60 * p; x < W; x += 120 * p) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, floorY); ctx.stroke(); }
+    ctx.strokeStyle = d ? 'rgba(255,255,255,0.04)' : 'rgba(53,44,32,0.06)'; ctx.lineWidth = 1; for (let x = 60 * p; x < W; x += 120 * p) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, floorY); ctx.stroke(); }
     /* the gantry: a ring behind the couch, its nozzle pointing straight down */
     const gr = Math.min((b.x1 - b.x0) * 0.42, H * 0.62), gcy = H * 0.42;
     ctx.save(); ctx.beginPath(); ctx.rect(0, 0, W, floorY); ctx.clip();

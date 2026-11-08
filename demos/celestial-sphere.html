@@ -35,8 +35,8 @@
 #skyCan { touch-action: pan-y; cursor: grab; }
 .pbar { position: absolute; z-index: 2; left: 8px; right: 8px; top: 8px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; pointer-events: none; }
 .pbar > * { pointer-events: auto; }
-.pbar .pt { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #ded6cb; background: rgba(5, 7, 13, 0.6); border-radius: 5px; padding: 3px 7px; pointer-events: none; }
-.pbar .seg { background: rgba(21, 28, 37, 0.85); border-color: #453b2e; }
+.pbar .pt { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #ded6cb; background: rgba(12, 9, 6, 0.6); border-radius: 5px; padding: 3px 7px; pointer-events: none; }
+.pbar .seg { background: rgba(36, 30, 22, 0.85); border-color: #453b2e; }
 .pbar .seg button { color: #c2b8aa; }
 .pbar .seg button[aria-pressed="true"] { background: #eeeae4; color: #1d1811; }
 .pnote { position: absolute; z-index: 2; left: 8px; bottom: 8px; right: 8px; font-size: 0.76rem; color: #cdc4b8; pointer-events: none; text-shadow: 0 1px 2px #000; }
@@ -77,7 +77,7 @@
 .pane.out.depth #outFlat, .pane.out.depth #outLbl, .pane.out.depth canvas.vd3d { display: none !important; }
 .pane.out.depth #dimSeg { display: none; }
 #outDepth { touch-action: pan-y; }
-.pbar select { font: inherit; font-size: 0.82rem; color: #eeeae4; background: rgba(21, 28, 37, 0.85); border: 1px solid #453b2e; border-radius: 6px; padding: 3px 4px; max-width: 11rem; }
+.pbar select { font: inherit; font-size: 0.82rem; color: #eeeae4; background: rgba(36, 30, 22, 0.85); border: 1px solid #453b2e; border-radius: 6px; padding: 3px 4px; max-width: 11rem; }
 #depthTab tbody tr { cursor: pointer; }
 #depthTab tbody tr[aria-selected="true"] td { color: var(--accent); font-weight: 700; }
 #depthTab td:nth-child(n+2), #depthTab th:nth-child(n+2) { text-align: right; font-family: var(--font-mono); }
@@ -646,8 +646,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   let TK = null;
   function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim(); TK = { ecl: g('--ecl'), eq: g('--eq'), hor: g('--hor'), sel: g('--sel'), moon: g('--moon'), pole: g('--pole'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; }
   /* lines on the night sky keep the dark theme colors in both themes (the sky is dark either way) */
-  const LC = { eq: 'rgba(105,160,255,0.75)', eq0: 'rgba(105,160,255,0.55)', grid: 'rgba(105,160,255,0.22)', aa: 'rgba(95,208,138,0.30)', ecl: 'rgba(242,193,78,0.85)', mo: 'rgba(195,203,214,0.65)',
-    cap: 'rgba(183,148,255,0.55)', prec: 'rgba(183,148,255,0.85)', path: 'rgba(255,138,80,0.85)', fig: 'rgba(170,190,215,0.45)', bound: 'rgba(150,120,170,0.35)' };
+  const LC = { eq: 'rgba(105,160,255,0.75)', eq0: 'rgba(105,160,255,0.55)', grid: 'rgba(105,160,255,0.22)', aa: 'rgba(95,208,138,0.30)', ecl: 'rgba(242,193,78,0.85)', mo: 'rgba(213,206,196,0.65)',
+    cap: 'rgba(183,148,255,0.55)', prec: 'rgba(183,148,255,0.85)', path: 'rgba(255,138,80,0.85)', fig: 'rgba(212,195,173,0.45)', bound: 'rgba(150,120,170,0.35)' };
   const LW = { eq: 1.4, eq0: 1, grid: 0.8, aa: 0.8, ecl: 1.6, mo: 1.1, cap: 1.2, prec: 1.4, path: 1.6, fig: 1, bound: 0.8 };
   function skyRGB(h) {
     const st = [[-18, [5, 7, 13]], [-12, [9, 14, 30]], [-6, [26, 40, 76]], [0, [74, 102, 152]], [8, [88, 136, 200]], [20, [104, 156, 222]]];
@@ -697,9 +697,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (!G3on) {
       ctx.fillStyle = '#0c0906'; ctx.fillRect(0, 0, OW, OH);
       const c0 = C.p([0, 0, 0]), R = C.F / Math.sqrt(CAMD * CAMD - 1), gr = ctx.createRadialGradient(c0[0] - R * 0.3, c0[1] - R * 0.3, R * 0.1, c0[0], c0[1], R);
-      gr.addColorStop(0, 'rgba(60,80,120,0.22)'); gr.addColorStop(1, 'rgba(40,55,90,0.10)');
+      gr.addColorStop(0, 'rgba(116,93,64,0.22)'); gr.addColorStop(1, 'rgba(86,68,44,0.10)');
       ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(c0[0], c0[1], R, 0, TAU); ctx.fill();
-      ctx.strokeStyle = 'rgba(160,180,210,0.35)'; ctx.lineWidth = 1; ctx.stroke();
+      ctx.strokeStyle = 'rgba(206,188,164,0.35)'; ctx.lineWidth = 1; ctx.stroke();
       const lines = collectLines();
       for (const ln of lines) strokeLocal(ctx, C, ln.pts, LC[ln.k].replace(/[\d.]+\)$/, (m) => `${(parseFloat(m) * 0.35).toFixed(2)})`), LW[ln.k] * s * 0.8, 0);
       drawStarsOut(ctx, C, 0, s);
@@ -747,7 +747,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (o.avoid && LB.some((b) => box[0] < b[2] && box[2] > b[0] && box[1] < b[3] && box[3] > b[1])) return false;
     if (o.dry) return true;
     LB.push(box);
-    if (o.halo !== false) { ctx.lineWidth = 3; ctx.strokeStyle = 'rgba(5,7,13,0.85)'; ctx.strokeText(txt, x, y); }
+    if (o.halo !== false) { ctx.lineWidth = 3; ctx.strokeStyle = 'rgba(12,9,6,0.85)'; ctx.strokeText(txt, x, y); }
     ctx.fillStyle = o.color || '#eee8e0'; ctx.fillText(txt, x, y); return true;
   }
   function drawOutLabels(C, s) {
@@ -773,8 +773,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       ctx.fillStyle = '#d5cec4'; ctx.globalAlpha = mu.f ? 1 : 0.45; ctx.beginPath(); ctx.arc(mu.p[0], mu.p[1], 5 * s, 0, TAU); ctx.fill(); ctx.globalAlpha = 1;
     }
     label(ctx, 'Sun', su.p[0] + 10 * s, su.p[1] + 10 * s, { size: 12, color: su.f ? '#ffd27a' : 'rgba(255,210,122,0.55)' });
-    label(ctx, 'Moon', mu.p[0] + 8 * s, mu.p[1] - 8 * s, { size: 12, color: mu.f ? '#eee8e0' : 'rgba(223,230,239,0.55)' });
-    if ($('tNames').checked) for (const i of NAMED) { if (!(VM[i] <= 1.6 || KEYNAMES.has(SKY.names[i]))) continue; const q = L(sv(i)); if (!q.f) continue; label(ctx, SKY.names[i], q.p[0] + 5, q.p[1] - 5, { size: 10.5, color: 'rgba(223,230,239,0.85)', avoid: true }); }
+    label(ctx, 'Moon', mu.p[0] + 8 * s, mu.p[1] - 8 * s, { size: 12, color: mu.f ? '#eee8e0' : 'rgba(238,232,224,0.55)' });
+    if ($('tNames').checked) for (const i of NAMED) { if (!(VM[i] <= 1.6 || KEYNAMES.has(SKY.names[i]))) continue; const q = L(sv(i)); if (!q.f) continue; label(ctx, SKY.names[i], q.p[0] + 5, q.p[1] - 5, { size: 10.5, color: 'rgba(238,232,224,0.85)', avoid: true }); }
     if ($('tEcl').checked) { const q = L(eclDir(K.P, 0, 0)); if (q.f) { ctx.fillStyle = '#f2c14e'; ctx.beginPath(); ctx.arc(q.p[0], q.p[1], 3 * s, 0, TAU); ctx.fill(); label(ctx, 'March equinox ♈', q.p[0] + 6, q.p[1] + 9, { size: 10, color: '#f2c14e' }); } }
     const si = selInfo(), q = L(si.v); ctx.strokeStyle = '#ff8a50'; ctx.lineWidth = 2 * s; ctx.globalAlpha = q.f ? 1 : 0.5; ctx.beginPath(); ctx.arc(q.p[0], q.p[1], 8 * s, 0, TAU); ctx.stroke(); ctx.globalAlpha = 1;
   }
@@ -859,7 +859,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   function drawChartFrame(ctx, Pj) {
     const kd = Pj.kd, hw = Pj.HS * 15 * kd, x0 = Pj.cx - hw, y0 = Pj.cy - 90 * kd;
-    ctx.strokeStyle = 'rgba(160,180,210,0.45)'; ctx.lineWidth = 1; ctx.strokeRect(x0, y0, 2 * hw, 180 * kd);
+    ctx.strokeStyle = 'rgba(206,188,164,0.45)'; ctx.lineWidth = 1; ctx.strokeRect(x0, y0, 2 * hw, 180 * kd);
     /* hour labels on whole hours of right ascension */
     const st = Pj.HS === 12 ? 3 : 2, r0 = Math.ceil((Pj.c0 - Pj.HS) / st) * st;
     for (let ra = r0; ra <= Pj.c0 + Pj.HS + 1e-9; ra += st) { const x = Pj.cx - (ra - Pj.c0) * 15 * kd; label(ctx, `${wrap(ra, 24).toFixed(0) % 24}h`, x, y0 + 180 * kd + 10 * Pj.s, { align: 'center', size: 10, color: '#c2b8aa' }); }
@@ -897,8 +897,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if ($('tMoonOrb').checked) { const mo = moonOrbit(); for (const [v, t] of [[mo.asc, '☊'], [mo.desc, '☋']]) { if (!up(v)) continue; const p = skyPt(Pj, v); if (inView(p)) label(ctx, t, p[0], p[1], { size: 13, align: 'center', color: '#d5cec4' }); } }
     if ($('tEcl').checked) { const v = eclDir(K.P, 0, 0); if (up(v)) { const p = skyPt(Pj, v); if (inView(p)) label(ctx, '♈', p[0], p[1] - 9, { size: 12, align: 'center', color: '#f2c14e' }); } }
     if ($('tNames').checked) {
-      for (const i of NAMED) { if (VM[i] > lim || !(VM[i] <= 2.6 || KEYNAMES.has(SKY.names[i]))) continue; const v = sv(i); if (!up(v)) continue; const p = skyPt(Pj, v); if (inView(p)) label(ctx, SKY.names[i], p[0] + 5, p[1] - 6, { size: 10.5, color: 'rgba(223,230,239,0.8)', avoid: true }); }
-      if ($('tFig').checked && lim > 3) for (const c of conLabels()) { if (!up(c.v)) continue; const p = skyPt(Pj, c.v); if (inView(p)) label(ctx, CON[c.c], p[0], p[1] + 12, { size: 10, align: 'center', color: 'rgba(170,190,215,0.6)', avoid: true }); }
+      for (const i of NAMED) { if (VM[i] > lim || !(VM[i] <= 2.6 || KEYNAMES.has(SKY.names[i]))) continue; const v = sv(i); if (!up(v)) continue; const p = skyPt(Pj, v); if (inView(p)) label(ctx, SKY.names[i], p[0] + 5, p[1] - 6, { size: 10.5, color: 'rgba(238,232,224,0.8)', avoid: true }); }
+      if ($('tFig').checked && lim > 3) for (const c of conLabels()) { if (!up(c.v)) continue; const p = skyPt(Pj, c.v); if (inView(p)) label(ctx, CON[c.c], p[0], p[1] + 12, { size: 10, align: 'center', color: 'rgba(212,195,173,0.6)', avoid: true }); }
     }
     /* the selected object */
     const si = selInfo(); if (up(si.v)) { const p = skyPt(Pj, si.v); if (inView(p)) { ctx.strokeStyle = '#ff8a50'; ctx.lineWidth = 2 * s; ctx.beginPath(); ctx.arc(p[0], p[1], 10 * s, 0, TAU); ctx.stroke(); } }
@@ -907,7 +907,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function drawInset(ctx, Pj) {
     const E = K.ecl, solar = E.sep < 1.6, lunar = E.shadowDist < 2.0; if (!solar && !lunar) return;
     const s = Pj.s, R = 62 * s, cx = Pj.W - R - 12, cy = 44 * s + R, deg = R / 0.8;
-    ctx.save(); ctx.beginPath(); ctx.arc(cx, cy, R, 0, TAU); ctx.fillStyle = 'rgba(5,7,13,0.92)'; ctx.fill(); ctx.strokeStyle = 'rgba(160,180,210,0.6)'; ctx.lineWidth = 1; ctx.stroke(); ctx.clip();
+    ctx.save(); ctx.beginPath(); ctx.arc(cx, cy, R, 0, TAU); ctx.fillStyle = 'rgba(12,9,6,0.92)'; ctx.fill(); ctx.strokeStyle = 'rgba(206,188,164,0.6)'; ctx.lineWidth = 1; ctx.stroke(); ctx.clip();
     /* a local tangent plane: x toward east on the sky, y toward the north celestial pole */
     const c0 = solar ? K.sunT.u : K.sun.u.map((x) => -x), ex = norm(cross(K.P.n, c0)), ny = cross(c0, ex);
     const at = (v) => { const d = dot(v, c0); return [cx - dot(v, ex) / d / D2R * deg, cy - dot(v, ny) / d / D2R * deg]; };
@@ -916,7 +916,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       g.addColorStop(0, '#fff6d6'); g.addColorStop(0.78, '#ffd36a'); g.addColorStop(1, 'rgba(255,190,60,0)');
       ctx.fillStyle = g; ctx.beginPath(); ctx.arc(ps[0], ps[1], E.sunSd * deg * 1.25, 0, TAU); ctx.fill();
       ctx.fillStyle = '#0c0906'; ctx.beginPath(); ctx.arc(pm[0], pm[1], E.moonSd * deg, 0, TAU); ctx.fill();
-      ctx.strokeStyle = 'rgba(195,203,214,0.5)'; ctx.stroke();
+      ctx.strokeStyle = 'rgba(213,206,196,0.5)'; ctx.stroke();
     } else {
       const pc = at(K.sun.u.map((x) => -x)), pm = at(K.moon.u);
       ctx.fillStyle = 'rgba(120,60,40,0.30)'; ctx.beginPath(); ctx.arc(pc[0], pc[1], E.penumbra * deg, 0, TAU); ctx.fill();
@@ -1366,7 +1366,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       }
     }
     if (!blind && !ticks.length && floorA > 0.5) for (const L of rings) { const q = Cm.P(onFloor(L * Math.cos(0.5), -L * Math.sin(0.5))); if (q && q[0] > 0 && q[0] < OW && q[1] > 0 && q[1] < OH) ticks.push([`${lyText(L)} ly`, q[0], q[1], 'rgba(150,180,220,0.9)']); }
-    ctx.lineWidth = 1.3 * s; ctx.strokeStyle = 'rgba(170,190,215,0.62)';
+    ctx.lineWidth = 1.3 * s; ctx.strokeStyle = 'rgba(212,195,173,0.62)';
     for (const fg of SKY.figures) if (fg[0] === DP.con) {
       ctx.beginPath(); let on = false;
       for (const i of fg.slice(1)) { const st = byI[i], q = st && st.p ? Cm.P(st.p) : null; if (q) { if (on) ctx.lineTo(q[0], q[1]); else ctx.moveTo(q[0], q[1]); on = true; } else on = false; }
@@ -1396,7 +1396,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         const o = { size: 11, color: v.st.i === selI ? '#ffb48a' : '#eee8e0', avoid: true };
         const at = spots.find(([x, dy]) => x > 2 && x + w < OW - 2 && label(ctx, txt, x, v.q[1] + dy, { ...o, dry: true }));
         if (at) {
-          if (at[1]) { ctx.save(); ctx.strokeStyle = 'rgba(223,230,239,0.45)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(v.q[0], v.q[1]); ctx.lineTo(at[0] < v.q[0] ? at[0] + w + 2 * s : at[0] - 2 * s, v.q[1] + at[1]); ctx.stroke(); ctx.restore(); }
+          if (at[1]) { ctx.save(); ctx.strokeStyle = 'rgba(238,232,224,0.45)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(v.q[0], v.q[1]); ctx.lineTo(at[0] < v.q[0] ? at[0] + w + 2 * s : at[0] - 2 * s, v.q[1] + at[1]); ctx.stroke(); ctx.restore(); }
           label(ctx, txt, at[0], v.q[1] + at[1], o);
         }
       }

@@ -34,7 +34,7 @@
   --on-charge: #ffffff;
   --good: #2f8a46;
   --lab-bg: #2b251d; --lab-bg2: #3e362c; --lab-table: #312b24; --lab-ink: #f6f3ef; --lab-muted: #cac1b6;
-  --lab-grid: rgba(255, 255, 255, 0.045); --lab-grid-strong: rgba(255, 255, 255, 0.1); --lab-halo: rgba(16, 21, 28, 0.82);
+  --lab-grid: rgba(255, 255, 255, 0.045); --lab-grid-strong: rgba(255, 255, 255, 0.1); --lab-halo: rgba(27, 23, 17, 0.82);
   --lab-accent: #fcd292; --lab-gold: #f2c25a; --lab-wall: #5b544b; --lab-wall2: #48423b; --lab-scope: #15120d;
   --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
@@ -45,7 +45,7 @@
     --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
     --field: #eee8e0; --equi: #e2b350; --accent: #fbc26d; --on-charge: #17130e; color-scheme: dark; --good: #5fcf7a;
     --lab-bg: #0d0a07; --lab-bg2: #201a13; --lab-table: #201c17; --lab-ink: #eeeae4; --lab-muted: #bdb3a5;
-    --lab-grid: rgba(255, 255, 255, 0.035); --lab-grid-strong: rgba(255, 255, 255, 0.075); --lab-halo: rgba(7, 10, 14, 0.82);
+    --lab-grid: rgba(255, 255, 255, 0.035); --lab-grid-strong: rgba(255, 255, 255, 0.075); --lab-halo: rgba(13, 11, 8, 0.82);
     --lab-accent: #fccc85; --lab-gold: #e8b84e; --lab-wall: #4a443d; --lab-wall2: #39342e; --lab-scope: #0e0c09;
   }
 }
@@ -54,7 +54,7 @@
   --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
   --field: #eee8e0; --equi: #e2b350; --accent: #fbc26d; --on-charge: #17130e; color-scheme: dark; --good: #5fcf7a;
   --lab-bg: #0d0a07; --lab-bg2: #201a13; --lab-table: #201c17; --lab-ink: #eeeae4; --lab-muted: #bdb3a5;
-  --lab-grid: rgba(255, 255, 255, 0.035); --lab-grid-strong: rgba(255, 255, 255, 0.075); --lab-halo: rgba(7, 10, 14, 0.82);
+  --lab-grid: rgba(255, 255, 255, 0.035); --lab-grid-strong: rgba(255, 255, 255, 0.075); --lab-halo: rgba(13, 11, 8, 0.82);
   --lab-accent: #fccc85; --lab-gold: #e8b84e; --lab-wall: #4a443d; --lab-wall2: #39342e; --lab-scope: #0e0c09;
 }
 :root[data-projector="on"] { font-size: 125%; }
@@ -1239,7 +1239,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       ctx.fillStyle = 'rgba(255, 255, 255, 0.12)'; ctx.fillRect(-film, -2 * ps, 2 * film, 0.8 * ps);
     } else {
       ctx.globalAlpha = 0.5; ctx.fillStyle = sh; ctx.fillRect(-film, -2 * ps, 2 * film, 4 * ps); ctx.globalAlpha = 1;
-      ctx.fillStyle = 'rgba(20, 24, 28, 0.55)'; ctx.fillRect(-film, -0.6 * ps, 2 * film, 1.2 * ps);
+      ctx.fillStyle = 'rgba(27, 24, 21, 0.55)'; ctx.fillRect(-film, -0.6 * ps, 2 * film, 1.2 * ps);
     }
     // the illuminated patch: N slits (drawn wider than life, on a log scale)
     const nl = nLen();

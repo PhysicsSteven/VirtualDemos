@@ -1165,7 +1165,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     { const VG = window.VDGear, tg = ctx.createLinearGradient(0, g.yT, 0, g.yT + 9 * ps), dk = VG && VG.dark();
       tg.addColorStop(0, dk ? '#b2a89c' : '#f4f1ee'); tg.addColorStop(0.4, dk ? '#82796d' : '#cac3ba'); tg.addColorStop(1, dk ? '#4e473e' : '#999288');
       ctx.fillStyle = VG ? tg : T.block; ctx.fillRect(4, g.yT, W - 8, 9 * ps);
-      if (VG) { const sh = ctx.createLinearGradient(0, g.yT + 9 * ps, 0, g.yT + 17 * ps); sh.addColorStop(0, dk ? 'rgba(0,0,0,0.4)' : 'rgba(20,30,45,0.15)'); sh.addColorStop(1, 'rgba(0,0,0,0)'); ctx.fillStyle = sh; ctx.fillRect(4, g.yT + 9 * ps, W - 8, 8 * ps); } }
+      if (VG) { const sh = ctx.createLinearGradient(0, g.yT + 9 * ps, 0, g.yT + 17 * ps); sh.addColorStop(0, dk ? 'rgba(0,0,0,0.4)' : 'rgba(43,34,22,0.15)'); sh.addColorStop(1, 'rgba(0,0,0,0)'); ctx.fillStyle = sh; ctx.fillRect(4, g.yT + 9 * ps, W - 8, 8 * ps); } }
     ctx.strokeStyle = T.muted; ctx.lineWidth = 1; ctx.strokeRect(4.5, g.yT + 0.5, W - 9, 9 * ps);
     ctx.fillStyle = T.muted; ctx.globalAlpha = 0.5;
     const hs = 0.05, k0 = Math.ceil((-XR - 0.2 + off) / hs), k1 = Math.floor((XR + 0.2 + off) / hs);
@@ -3233,7 +3233,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   const TB3 = { g: null };
   function buildTable() {
     const V = G3.S, g = new THREE.Group(); V.scene.add(g); TB3.g = g;
-    const ht = K3.tex(64, 64); ht.c.fillStyle = '#ffffff'; ht.c.fillRect(0, 0, 64, 64); ht.c.fillStyle = 'rgba(60,70,82,0.55)'; ht.c.beginPath(); ht.c.arc(32, 32, 3.2, 0, 7); ht.c.fill();
+    const ht = K3.tex(64, 64); ht.c.fillStyle = '#ffffff'; ht.c.fillRect(0, 0, 64, 64); ht.c.fillStyle = 'rgba(80,72,62,0.55)'; ht.c.beginPath(); ht.c.arc(32, 32, 3.2, 0, 7); ht.c.fill();
     ht.t.wrapS = ht.t.wrapT = THREE.RepeatWrapping; ht.t.repeat.set(2 * TBL.x / 0.05, 2 * TBL.y / 0.05);
     const surf = K3.mesh(new THREE.PlaneGeometry(2 * TBL.x, 2 * TBL.y), K3.th({ map: ht.t, roughness: 0.42, metalness: 0.05 }, ['#f5f2ef', '#978d7f']), false, true);
     surf.position.z = 0.0005; g.add(surf);

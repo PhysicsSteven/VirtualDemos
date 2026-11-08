@@ -57,7 +57,7 @@ table.rows input:focus { border-color: var(--accent); }
 /* vd-knobs: an instrument panel in the picture; each range input inside it is shown as a knob (layout redesign) */
 .instr { position: absolute; z-index: 2; display: flex; flex-wrap: wrap; align-items: flex-start; gap: 10px 14px; padding: 8px 12px; border-radius: 10px; background: #40382e; color: #eeeae4; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.25); }
 /* in the light theme the panel is a brushed aluminum faceplate, so it belongs on a light wall; knobs and green readouts stay dark like a real instrument's */
-:root:not([data-theme="dark"]) .instr { background: linear-gradient(180deg, #f7f4f1, #e5e0da); color: #2e271e; border: 1px solid #cbc4ba; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 2px 6px rgba(20, 30, 45, 0.18); }
+:root:not([data-theme="dark"]) .instr { background: linear-gradient(180deg, #f7f4f1, #e5e0da); color: #2e271e; border: 1px solid #cbc4ba; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 2px 6px rgba(43, 34, 22, 0.18); }
 :root:not([data-theme="dark"]) .instr .kctl label, :root:not([data-theme="dark"]) .instr .kctl .klab { color: #50473c; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .instr { background: #40382e; color: #eeeae4; border: 0; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.25); } :root:not([data-theme="light"]) .instr .kctl label, :root:not([data-theme="light"]) .instr .kctl .klab { color: #d8d2ca; } }
 .instr > [hidden] { display: none !important; }
@@ -692,7 +692,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   /* a label in the 3D view: text with a soft plate behind it so it reads on any part of the scene */
   function tag(s, x, y, o = {}) {
     const p = ps(); ctx.font = `${o.b ? '700 ' : '600 '}${(o.s || 10.5) * p}px ${T.ui}`; const tw = ctx.measureText(VD3.turnText(s)).width, a = o.a || 'center', bx = a === 'center' ? x - tw / 2 : a === 'right' ? x - tw : x;
-    ctx.fillStyle = VD3.dark() ? 'rgba(16,22,30,0.72)' : 'rgba(252,253,254,0.8)'; ctx.beginPath(); ctx.roundRect(bx - 5 * p, y - 9 * p, tw + 10 * p, 18 * p, 5 * p); ctx.fill();
+    ctx.fillStyle = VD3.dark() ? 'rgba(29,24,17,0.72)' : 'rgba(254,253,252,0.8)'; ctx.beginPath(); ctx.roundRect(bx - 5 * p, y - 9 * p, tw + 10 * p, 18 * p, 5 * p); ctx.fill();
     txt(s, x, y + 0.5 * p, { a, s: o.s || 10.5, c: o.c || T.ink, b: o.b });
   }
   function caption3(s) { const p = ps(), [x0, y0, w, h] = G3.pane; ctx.font = `${9.5 * p}px ${T.ui}`; if (ctx.measureText(VD3.turnText(s)).width > w - 20 * p) return; tag(s, x0 + w - 8 * p, y0 + h - 12 * p, { a: 'right', s: 9.5, c: T.muted }); }

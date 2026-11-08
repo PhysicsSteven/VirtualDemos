@@ -18,11 +18,11 @@
 <style>
 /* only what this demo needs beyond demos/lib/vd.css: the tank, the tracks, the graphs and the strip */
 :root { --water: #d7ebf6; --water-edge: #8fb9d3; --slab: #e9dcc0; --slab-edge: #a8916a; --nozzle: #6c655b; --dose: #c2410c; --model: #1d4ed8;
-  --pstar: #b91c1c; --det: #7c3aed; --grid: rgba(60, 70, 85, 0.13); --fit: #15803d; --elec: #a16207; }
+  --pstar: #b91c1c; --det: #7c3aed; --grid: rgba(83, 74, 62, 0.13); --fit: #15803d; --elec: #a16207; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --water: #10283a; --water-edge: #2f5f80; --slab: #3b3326; --slab-edge: #8a7552; --nozzle: #b4aa9c;
-  --dose: #fb923c; --model: #7cb0ff; --pstar: #ff7a7a; --det: #c4a5ff; --grid: rgba(200, 210, 225, 0.12); --fit: #4ade80; --elec: #facc15; } }
+  --dose: #fb923c; --model: #7cb0ff; --pstar: #ff7a7a; --det: #c4a5ff; --grid: rgba(223, 214, 202, 0.12); --fit: #4ade80; --elec: #facc15; } }
 :root[data-theme="dark"] { --water: #10283a; --water-edge: #2f5f80; --slab: #3b3326; --slab-edge: #8a7552; --nozzle: #b4aa9c;
-  --dose: #fb923c; --model: #7cb0ff; --pstar: #ff7a7a; --det: #c4a5ff; --grid: rgba(200, 210, 225, 0.12); --fit: #4ade80; --elec: #facc15; }
+  --dose: #fb923c; --model: #7cb0ff; --pstar: #ff7a7a; --det: #c4a5ff; --grid: rgba(223, 214, 202, 0.12); --fit: #4ade80; --elec: #facc15; }
 .stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
 .stage-ctl select { font: inherit; font-size: 0.84rem; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px; }
@@ -302,7 +302,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       ctx.strokeStyle = lk[1]; ctx.lineWidth = 1; ctx.strokeRect(b.x0 + 0.5, b.y0 - lip * 0.6 + 0.5, wS - 1, b.y1 - b.y0 + lip * 0.6 - 1);
     }
     /* walls: the thin entrance window on the beam side, thicker acrylic elsewhere */
-    const glass = d ? 'rgba(190,215,240,0.22)' : 'rgba(120,150,175,0.35)', edge = d ? 'rgba(220,235,255,0.35)' : 'rgba(70,95,120,0.55)';
+    const glass = d ? 'rgba(190,215,240,0.22)' : 'rgba(120,150,175,0.35)', edge = d ? 'rgba(243,238,232,0.35)' : 'rgba(116,98,74,0.55)';
     ctx.fillStyle = glass; ctx.fillRect(b.x0 - 2 * p, top, 2 * p, b.y1 - top + wall); ctx.fillRect(b.x1, top, wall, b.y1 - top + wall); ctx.fillRect(b.x0 - 2 * p, b.y1, b.x1 - b.x0 + 2 * p + wall, wall);
     ctx.strokeStyle = edge; ctx.lineWidth = 1; ctx.strokeRect(b.x0 - 2 * p + 0.5, top + 0.5, b.x1 - b.x0 + 2 * p + wall - 1, b.y1 - top + wall - 1);
     ctx.fillStyle = d ? 'rgba(255,255,255,0.12)' : 'rgba(255,255,255,0.7)'; ctx.fillRect(b.x1 + 1, top + 2, 1.2 * p, b.y1 - top);

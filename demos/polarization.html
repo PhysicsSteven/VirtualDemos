@@ -562,7 +562,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       g.addColorStop(0, dk ? '#9d968c' : '#e0dcd6'); g.addColorStop(0.45, dk ? '#726a60' : '#b9b2a8'); g.addColorStop(1, dk ? '#3d3730' : '#80796f');
       if (VG) VG.shadow(c, W / 2, y + 5 * ps, W * 0.48, 3 * ps, 0.8);
       c.fillStyle = g; c.fillRect(6 * ps, y - 4 * ps, W - 12 * ps, 8 * ps);
-      c.fillStyle = dk ? 'rgba(255,255,255,0.25)' : 'rgba(30,36,44,0.35)'; for (let x = 10 * ps; x < W - 10 * ps; x += 8 * ps) c.fillRect(x, y - 4 * ps, 1, 2.5 * ps);
+      c.fillStyle = dk ? 'rgba(255,255,255,0.25)' : 'rgba(43,38,31,0.35)'; for (let x = 10 * ps; x < W - 10 * ps; x += 8 * ps) c.fillRect(x, y - 4 * ps, 1, 2.5 * ps);
     }
     const post = (x, y0, y1) => { if (!VG || y1 - y0 < 6 * ps) return; VG.rod(c, x, y0, x, y1 - 4 * ps, 2.6 * ps, { color: dk ? '#a0998f' : '#c5beb5' }); VG.box(c, x - 11 * ps, y1 - 9 * ps, 22 * ps, 10 * ps, { r: 2 * ps, shadow: false }); };
     for (const p of L.pos) if (p.kind === 'el') post(p.x, p.y + L.re, railY(p.row));
@@ -623,7 +623,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     // the mount: an anodized ring (degree ticks every 10°, longer every 30° on the upper half the axis is read from) round the glass
     const ri = r * (r > 24 * ps ? 0.86 : 0.9);
     c.fillStyle = '#322d27'; c.beginPath(); c.arc(x, y, r, 0, 2 * Math.PI); c.arc(x, y, ri, 0, 2 * Math.PI, true); c.fill('evenodd');
-    c.strokeStyle = 'rgba(232,238,244,0.8)'; c.lineWidth = Math.max(1, 0.9 * ps); c.beginPath();
+    c.strokeStyle = 'rgba(243,239,233,0.8)'; c.lineWidth = Math.max(1, 0.9 * ps); c.beginPath();
     for (let a = -180; a < 180; a += 10) { const up = Math.abs(a) <= 90, l = (r - ri) * (up ? (a % 30 === 0 ? 0.75 : 0.45) : (a % 30 === 0 ? 0.4 : 0)); if (!l) continue; const sn = Math.sin(a * D2R), cs = Math.cos(a * D2R); c.moveTo(x - sn * (r - 1), y - cs * (r - 1)); c.lineTo(x - sn * (r - 1 - l), y - cs * (r - 1 - l)); }
     c.stroke();
     const gl = c.createRadialGradient(x - ri * 0.4, y - ri * 0.4, ri * 0.1, x, y, ri);
@@ -863,14 +863,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       c.restore(); c.globalAlpha = 1;
     };
     medium(s.y, g.cy, n1, false); medium(g.cy, s.y + s.h, n2, true);
-    c.strokeStyle = dk ? 'rgba(220,235,245,0.55)' : 'rgba(255,255,255,0.95)'; c.lineWidth = 2 * ps; c.beginPath(); c.moveTo(s.x, g.cy - 1 * ps); c.lineTo(s.x + s.w, g.cy - 1 * ps); c.stroke();
-    c.strokeStyle = dk ? 'rgba(0,0,0,0.6)' : 'rgba(40,70,85,0.45)'; c.lineWidth = 1.2 * ps; c.beginPath(); c.moveTo(s.x, g.cy + 0.6 * ps); c.lineTo(s.x + s.w, g.cy + 0.6 * ps); c.stroke();
+    c.strokeStyle = dk ? 'rgba(240,233,225,0.55)' : 'rgba(255,255,255,0.95)'; c.lineWidth = 2 * ps; c.beginPath(); c.moveTo(s.x, g.cy - 1 * ps); c.lineTo(s.x + s.w, g.cy - 1 * ps); c.stroke();
+    c.strokeStyle = dk ? 'rgba(0,0,0,0.6)' : 'rgba(82,65,43,0.45)'; c.lineWidth = 1.2 * ps; c.beginPath(); c.moveTo(s.x, g.cy + 0.6 * ps); c.lineTo(s.x + s.w, g.cy + 0.6 * ps); c.stroke();
     // a clear protractor centered where the light meets the surface: 0° along the normal, 90° along the surface, every 5°
     { const R = Math.min(g.Lr * 0.74, 150 * ps), R0 = R * 0.84;
       c.fillStyle = dk ? 'rgba(200,215,235,0.06)' : 'rgba(255,255,255,0.3)'; c.beginPath(); c.arc(g.cx, g.cy, R, 0, 2 * Math.PI); c.arc(g.cx, g.cy, R0, 0, 2 * Math.PI, true); c.fill('evenodd');
-      c.strokeStyle = dk ? 'rgba(200,215,235,0.45)' : 'rgba(40,52,66,0.45)'; c.lineWidth = 1 * ps; c.beginPath(); c.arc(g.cx, g.cy, R, 0, 2 * Math.PI); c.stroke();
+      c.strokeStyle = dk ? 'rgba(200,215,235,0.45)' : 'rgba(64,54,42,0.45)'; c.lineWidth = 1 * ps; c.beginPath(); c.arc(g.cx, g.cy, R, 0, 2 * Math.PI); c.stroke();
       c.beginPath(); for (let a = 0; a < 360; a += 5) { const l = a % 30 === 0 ? 9 : a % 10 === 0 ? 6 : 3.5, t = a * D2R; c.moveTo(g.cx + R * Math.sin(t), g.cy - R * Math.cos(t)); c.lineTo(g.cx + (R - l * ps) * Math.sin(t), g.cy - (R - l * ps) * Math.cos(t)); } c.stroke();
-      c.fillStyle = dk ? 'rgba(200,215,235,0.7)' : 'rgba(40,52,66,0.7)'; c.font = `${8.5 * ps}px ${T.mono}`; c.textAlign = 'center'; c.textBaseline = 'middle';
+      c.fillStyle = dk ? 'rgba(200,215,235,0.7)' : 'rgba(64,54,42,0.7)'; c.font = `${8.5 * ps}px ${T.mono}`; c.textAlign = 'center'; c.textBaseline = 'middle';
       if (R > 70 * ps) for (let a = 0; a < 360; a += 30) { const t = a * D2R, v = [0, 30, 60, 90, 60, 30][(a / 30) % 6]; c.fillText(String(v), g.cx + (R - 16 * ps) * Math.sin(t), g.cy - (R - 16 * ps) * Math.cos(t)); } }
     const mname = (n) => (Math.abs(n - 1) < 0.005 ? 'air' : Math.abs(n - 1.33) < 0.005 ? 'water' : Math.abs(n - 1.5) < 0.005 ? 'glass' : 'medium');
     label(c, `n₁ = ${n1.toFixed(2)} (${mname(n1)})`, s.x + 12 * ps, s.y + 16 * ps, T.ink, 'left', 'middle');
@@ -1328,7 +1328,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function glassTex3(type) {
     return tex3((c, R) => {
       if (type === 'pol') {
-        c.fillStyle = '#6b655e'; c.fillRect(0, 0, 2 * R, 2 * R); c.strokeStyle = 'rgba(20,24,28,0.55)'; c.lineWidth = 3;
+        c.fillStyle = '#6b655e'; c.fillRect(0, 0, 2 * R, 2 * R); c.strokeStyle = 'rgba(27,24,21,0.55)'; c.lineWidth = 3;
         c.beginPath(); for (let x = 8; x < 2 * R; x += 18) { c.moveTo(x, 0); c.lineTo(x, 2 * R); } c.stroke();
       } else {
         const g = c.createRadialGradient(R * 0.7, R * 0.6, 0, R, R, R); g.addColorStop(0, type === 'qwp' ? '#f6dc9a' : '#d9c3f5'); g.addColorStop(1, type === 'qwp' ? '#c99a2e' : '#8a5cc8');

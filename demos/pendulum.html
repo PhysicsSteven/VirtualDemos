@@ -26,7 +26,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
 /* Layout: one demo, three scenes (Photogate lab, Exact period, Double pendulum). The photogate lab: the pendulum with a photogate at the bottom of its swing on the left; the rail on the right. */
-:root { --bob: #2b60b5; --rod: #857b6d; --gate: #a7740b; --beam: #b0452f; --wall: #f7f4f1; --wall-line: #eeeae5; --bench: #cfae84; --bench-edge: #9c7a52; --grain: rgba(110,75,35,0.18); --metal: #b5aea4; --metal-dark: #726a60; --metal-hi: #f4f1ee; --wood: #c0925a; --wood-dark: #8a6236; --gate-body: #4c4338; --bob-dark: #173a72; --shadow: rgba(30,40,55,0.18); }
+:root { --bob: #2b60b5; --rod: #857b6d; --gate: #a7740b; --beam: #b0452f; --wall: #f7f4f1; --wall-line: #eeeae5; --bench: #cfae84; --bench-edge: #9c7a52; --grain: rgba(110,75,35,0.18); --metal: #b5aea4; --metal-dark: #726a60; --metal-hi: #f4f1ee; --wood: #c0925a; --wood-dark: #8a6236; --gate-body: #4c4338; --bob-dark: #173a72; --shadow: rgba(53,44,32,0.18); }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bob: #69a0ff; --rod: #b4aa9c; --gate: #e2b350; --beam: #ff8a70; --wall: #231c14; --wall-line: #2c241b; --bench: #4d3d2a; --bench-edge: #34291c; --grain: rgba(0,0,0,0.25); --metal: #82796e; --metal-dark: #4c453c; --metal-hi: #dad3ca; --wood: #8f6d45; --wood-dark: #5e4528; --gate-body: #645a4e; --bob-dark: #2a5296; --shadow: rgba(0,0,0,0.45); } }
 :root[data-theme="dark"] { --bob: #69a0ff; --rod: #b4aa9c; --gate: #e2b350; --beam: #ff8a70; --wall: #231c14; --wall-line: #2c241b; --bench: #4d3d2a; --bench-edge: #34291c; --grain: rgba(0,0,0,0.25); --metal: #82796e; --metal-dark: #4c453c; --metal-hi: #dad3ca; --wood: #8f6d45; --wood-dark: #5e4528; --gate-body: #645a4e; --bob-dark: #2a5296; --shadow: rgba(0,0,0,0.45); }
 :root[data-projector="on"] { font-size: 125%; }
@@ -1618,11 +1618,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const paint = (dk) => {
         const c = bcv.getContext('2d'), N = 1024, X = (u) => (u / BS + 0.5) * N, R = (u) => u / BS * N, cx = X(0), cy = X(0);
         c.fillStyle = dk ? '#2b241c' : '#f0ebe5'; c.fillRect(0, 0, N, N);
-        c.strokeStyle = dk ? 'rgba(255,255,255,0.05)' : 'rgba(30,40,55,0.06)'; c.lineWidth = 1;
+        c.strokeStyle = dk ? 'rgba(255,255,255,0.05)' : 'rgba(53,44,32,0.06)'; c.lineWidth = 1;
         for (let u = -1.1; u <= 1.11; u += 0.1) { c.beginPath(); c.moveTo(X(u), 0); c.lineTo(X(u), N); c.moveTo(0, X(u)); c.lineTo(N, X(u)); c.stroke(); }
-        c.strokeStyle = dk ? 'rgba(220,228,238,0.45)' : 'rgba(40,52,66,0.45)'; c.setLineDash([10, 12]); c.lineWidth = 2; c.beginPath(); c.arc(cx, cy, R(1), 0, TAU); c.stroke(); c.setLineDash([]);
+        c.strokeStyle = dk ? 'rgba(237,230,221,0.45)' : 'rgba(64,54,42,0.45)'; c.setLineDash([10, 12]); c.lineWidth = 2; c.beginPath(); c.arc(cx, cy, R(1), 0, TAU); c.stroke(); c.setLineDash([]);
         /* protractor: angles from straight down, a tick every 10° */
-        c.lineWidth = 2; c.fillStyle = c.strokeStyle = dk ? 'rgba(220,228,238,0.7)' : 'rgba(40,52,66,0.7)'; c.font = '600 22px "JetBrains Mono", monospace'; c.textAlign = 'center'; c.textBaseline = 'middle';
+        c.lineWidth = 2; c.fillStyle = c.strokeStyle = dk ? 'rgba(237,230,221,0.7)' : 'rgba(64,54,42,0.7)'; c.font = '600 22px "JetBrains Mono", monospace'; c.textAlign = 'center'; c.textBaseline = 'middle';
         const r0 = R(0.2); c.beginPath(); c.arc(cx, cy, r0, 0, TAU); c.stroke();
         for (let a = 0; a < 360; a += 10) { const t = a * DEG, l = a % 90 ? (a % 30 ? 8 : 14) : 22, sx = Math.sin(t), cy2 = Math.cos(t); c.beginPath(); c.moveTo(cx + r0 * sx, cy + r0 * cy2); c.lineTo(cx + (r0 + l) * sx, cy + (r0 + l) * cy2); c.stroke(); }
         for (const [a, s] of [[0, '0°'], [90, '90°'], [-90, '−90°'], [180, '180°']]) { const t = a * DEG; c.fillText(s, cx + (r0 + 42) * Math.sin(t), cy + (r0 + 36) * Math.cos(t)); }

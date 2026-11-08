@@ -16,9 +16,9 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
 /* only what this demo needs beyond demos/lib/vd.css: its colors, the picture, the strip, the Set up card and the two graphs */
-:root { --sun: #e0a020; --jup: #b9783f; --sat: #b89a52; --ura: #3f9fb0; --nep: #2f5fd0; --px: #c2410c; --body: #2b60b5; --mark: #d9480f; --mars: #b8382a; --bar: #b6ab9c; --barhi: #7a6e5e; --gone: #b8382a; --ok: #2f8a4a; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --sun: #ffc94d; --jup: #e0a874; --sat: #dcc283; --ura: #79d2e0; --nep: #7aa2ff; --px: #fb923c; --body: #8fb8ff; --mark: #ff8a4c; --mars: #ff7a5c; --bar: #675d4f; --barhi: #aa9d8d; --gone: #ff7a5c; --ok: #6fd18d; } }
-:root[data-theme="dark"] { --sun: #ffc94d; --jup: #e0a874; --sat: #dcc283; --ura: #79d2e0; --nep: #7aa2ff; --px: #fb923c; --body: #8fb8ff; --mark: #ff8a4c; --mars: #ff7a5c; --bar: #675d4f; --barhi: #aa9d8d; --gone: #ff7a5c; --ok: #6fd18d; }
+:root { --sun: #e0a020; --jup: #b9783f; --sat: #b89a52; --ura: #3f9fb0; --nep: #2f5fd0; --px: #c2410c; --body: #2b60b5; --mark: #d9480f; --mars: #b8382a; --bar: #b6ab9c; --barhi: #7a6e5e; --gone: #b8382a; --own-ok: #2f8a4a; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --sun: #ffc94d; --jup: #e0a874; --sat: #dcc283; --ura: #79d2e0; --nep: #7aa2ff; --px: #fb923c; --body: #8fb8ff; --mark: #ff8a4c; --mars: #ff7a5c; --bar: #675d4f; --barhi: #aa9d8d; --gone: #ff7a5c; --own-ok: #6fd18d; } }
+:root[data-theme="dark"] { --sun: #ffc94d; --jup: #e0a874; --sat: #dcc283; --ura: #79d2e0; --nep: #7aa2ff; --px: #fb923c; --body: #8fb8ff; --mark: #ff8a4c; --mars: #ff7a5c; --bar: #675d4f; --barhi: #aa9d8d; --gone: #ff7a5c; --own-ok: #6fd18d; }
 .stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
 .stage-ctl select { font: inherit; font-size: 0.84rem; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px; }
@@ -522,7 +522,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const fint = (v) => Math.round(v).toLocaleString('en-US');
   const deg = (r) => ((r / D2R) % 360 + 360) % 360;
   function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
-    K = {}; for (const n of ['canvas', 'surface', 'ink', 'muted', 'line', 'accent', 'sun', 'jup', 'sat', 'ura', 'nep', 'px', 'body', 'mark', 'mars', 'bar', 'barhi', 'gone', 'ok']) K[n] = g('--' + n);
+    K = {}; for (const n of ['canvas', 'surface', 'ink', 'muted', 'line', 'accent', 'sun', 'jup', 'sat', 'ura', 'nep', 'px', 'body', 'mark', 'mars', 'bar', 'barhi', 'gone', 'ok']) K[n] = g('--' + n); K.ok = g('--own-ok');
     K.mono = g('--font-mono') || 'JetBrains Mono, monospace'; K.ui = g('--font-ui') || 'Atkinson Hyperlegible, sans-serif'; }
   const proj = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
 

@@ -37,7 +37,7 @@
   --glass: rgba(43, 96, 181, 0.10);
   --glass-edge: #7d9cc9;
   --lab-bg: #2b251d; --lab-bg2: #3e362c; --lab-table: #312b24; --lab-ink: #f6f3ef; --lab-muted: #cac1b6;
-  --lab-grid: rgba(255, 255, 255, 0.045); --lab-grid-strong: rgba(255, 255, 255, 0.1); --lab-halo: rgba(16, 21, 28, 0.82);
+  --lab-grid: rgba(255, 255, 255, 0.045); --lab-grid-strong: rgba(255, 255, 255, 0.1); --lab-halo: rgba(27, 23, 17, 0.82);
   --lab-ray: #ffcf70; --lab-virt: #d9cfb4; --lab-pos: #ff8a73; --lab-p1: #ff8a73; --lab-p2: #6fdc8c; --lab-p3: #82b2ff; --lab-accent: #fcd292;
   --rail-hi: #cfcac4; --rail-lo: #9c958c; --rail-ink: #1a1713;
   --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
@@ -50,7 +50,7 @@
     --field: #eee8e0; --equi: #e2b350; --accent: #fbc26d; --on-charge: #17130e; color-scheme: dark;
     --ray: #e2b350; --pr-green: #5fcf7a; --glass: rgba(105, 160, 255, 0.13); --glass-edge: #5576a6;
     --lab-bg: #0d0a07; --lab-bg2: #201a13; --lab-table: #201c17; --lab-ink: #eeeae4; --lab-muted: #bdb3a5;
-    --lab-grid: rgba(255, 255, 255, 0.035); --lab-grid-strong: rgba(255, 255, 255, 0.075); --lab-halo: rgba(7, 10, 14, 0.82);
+    --lab-grid: rgba(255, 255, 255, 0.035); --lab-grid-strong: rgba(255, 255, 255, 0.075); --lab-halo: rgba(13, 11, 8, 0.82);
     --lab-ray: #ffc85e; --lab-virt: #cfc4a6; --lab-pos: #ff7a62; --lab-p1: #ff7a62; --lab-p2: #5fd27e; --lab-p3: #75a8ff; --lab-accent: #fccc85;
     --rail-hi: #b6b0a8; --rail-lo: #7d766d; --rail-ink: #13110e;
   }
@@ -61,7 +61,7 @@
   --field: #eee8e0; --equi: #e2b350; --accent: #fbc26d; --on-charge: #17130e; color-scheme: dark;
   --ray: #e2b350; --pr-green: #5fcf7a; --glass: rgba(105, 160, 255, 0.13); --glass-edge: #5576a6;
   --lab-bg: #0d0a07; --lab-bg2: #201a13; --lab-table: #201c17; --lab-ink: #eeeae4; --lab-muted: #bdb3a5;
-  --lab-grid: rgba(255, 255, 255, 0.035); --lab-grid-strong: rgba(255, 255, 255, 0.075); --lab-halo: rgba(7, 10, 14, 0.82);
+  --lab-grid: rgba(255, 255, 255, 0.035); --lab-grid-strong: rgba(255, 255, 255, 0.075); --lab-halo: rgba(13, 11, 8, 0.82);
   --lab-ray: #ffc85e; --lab-virt: #cfc4a6; --lab-pos: #ff7a62; --lab-p1: #ff7a62; --lab-p2: #5fd27e; --lab-p3: #75a8ff; --lab-accent: #fccc85;
   --rail-hi: #b6b0a8; --rail-lo: #7d766d; --rail-ink: #13110e;
 }
@@ -1218,7 +1218,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.save(); ctx.clip();                 // seen through its thickness, glass edges look green
     ctx.strokeStyle = 'rgba(120, 225, 195, 0.2)'; ctx.lineWidth = 7 * ps; ctx.stroke();
     ctx.restore();
-    ctx.strokeStyle = 'rgba(205, 232, 255, 0.62)'; ctx.lineWidth = 1.2 * ps; ctx.lineJoin = 'round'; ctx.stroke();
+    ctx.strokeStyle = 'rgba(238, 231, 222, 0.62)'; ctx.lineWidth = 1.2 * ps; ctx.lineJoin = 'round'; ctx.stroke();
     if (hl && hl.length > 1) {
       ctx.save(); ctx.strokeStyle = 'rgba(255, 255, 255, 0.36)'; ctx.lineWidth = 1.5 * ps; ctx.lineCap = 'round';
       pathW(hl, false); ctx.stroke(); ctx.restore();
@@ -1235,7 +1235,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     glassBody(pts, T, hl);
     if (it.kind !== 'semi') {               // faint ghosts of the faces, reflected inside the glass
       pathW(pts.map((p) => inset(p, 0.8)), true);
-      ctx.strokeStyle = 'rgba(205, 232, 255, 0.08)'; ctx.lineWidth = ps; ctx.stroke();
+      ctx.strokeStyle = 'rgba(238, 231, 222, 0.08)'; ctx.lineWidth = ps; ctx.stroke();
     }
     const lp = it.kind === 'semi' ? local(it, 0, it.r * 0.45) : [it.x, it.y];
     const [lx, ly] = toPx(lp[0], lp[1]);
@@ -1261,10 +1261,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.lineJoin = 'round'; ctx.lineCap = 'round';
     if (it.shape !== 'flat') {                 /* rod walls, dimmer than the end face */
       const a = surfHalf(it), z = sagAt(surfR(it), a), Lx = Math.hypot(W, H) / s + Math.hypot(it.x, it.y) + 10;
-      ctx.strokeStyle = 'rgba(205, 232, 255, 0.35)'; ctx.lineWidth = 1.1 * ps;
+      ctx.strokeStyle = 'rgba(238, 231, 222, 0.35)'; ctx.lineWidth = 1.1 * ps;
       for (const k of [-1, 1]) polyline([local(it, z, k * a), local(it, Lx, k * a)]);
     }
-    ctx.strokeStyle = 'rgba(205, 232, 255, 0.85)'; ctx.lineWidth = 1.8 * ps;
+    ctx.strokeStyle = 'rgba(238, 231, 222, 0.85)'; ctx.lineWidth = 1.8 * ps;
     polyline(it.shape === 'flat' ? [reg[0], reg[3]] : outline(it));
     if (it.shape !== 'flat' && surfStop(it) < surfHalf(it) - 1e-6) {      /* the aperture stop: opaque blades over the rest of the face */
       const Rs = surfR(it), a = surfHalf(it), st = surfStop(it), th = Math.max(0.25, 4 * ps / s);
@@ -1733,7 +1733,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.strokeStyle = 'rgba(255, 255, 255, 0.28)'; ctx.setLineDash([4 * ps, 4 * ps]); ctx.beginPath(); ctx.moveTo(bx, Y(y0)); ctx.lineTo(bx + bw, Y(y0)); ctx.stroke(); ctx.setLineDash([]);
     for (const sc of screens()) {
       if (Math.abs(sc.x - xc) > along) continue;
-      ctx.strokeStyle = 'rgba(205, 212, 222, 0.75)'; ctx.lineWidth = 3 * ps; ctx.beginPath(); ctx.moveTo(X(sc.x), cy - ih / 2); ctx.lineTo(X(sc.x), cy + ih / 2); ctx.stroke();
+      ctx.strokeStyle = 'rgba(221, 214, 206, 0.75)'; ctx.lineWidth = 3 * ps; ctx.beginPath(); ctx.moveTo(X(sc.x), cy - ih / 2); ctx.lineTo(X(sc.x), cy + ih / 2); ctx.stroke();
     }
     ctx.globalCompositeOperation = 'lighter'; ctx.lineCap = 'round';
     for (const s of segs) {

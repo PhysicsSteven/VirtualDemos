@@ -40,7 +40,7 @@
   --rig-bench: #2d2923;
   --rig-bench-hi: #49433b;
   --rig-ink: #e4ddd4;
-  --rig-halo: rgba(12, 16, 22, 0.82);
+  --rig-halo: rgba(21, 18, 13, 0.82);
   --cat-alkali: #d0573f;
   --cat-alkaline: #d98a2b;
   --cat-transition: #a38864;
@@ -59,14 +59,14 @@
     --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
     --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
     --equi: #e2b350; --accent: #fbc26d; --good: #5fc27f; --scope: #050402; --scope-ink: #c1b8ac;
-    --rig-bg: #15120d; --rig-bg2: #0c0906; --rig-bench: #1d1a16; --rig-bench-hi: #332e27; --rig-ink: #cdc5bb; --rig-halo: rgba(6, 8, 12, 0.85); color-scheme: dark;
+    --rig-bg: #15120d; --rig-bg2: #0c0906; --rig-bench: #1d1a16; --rig-bench-hi: #332e27; --rig-ink: #cdc5bb; --rig-halo: rgba(12, 9, 6, 0.85); color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
   --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
   --equi: #e2b350; --accent: #fbc26d; --good: #5fc27f; --scope: #050402; --scope-ink: #c1b8ac;
-    --rig-bg: #15120d; --rig-bg2: #0c0906; --rig-bench: #1d1a16; --rig-bench-hi: #332e27; --rig-ink: #cdc5bb; --rig-halo: rgba(6, 8, 12, 0.85); color-scheme: dark;
+    --rig-bg: #15120d; --rig-bg2: #0c0906; --rig-bench: #1d1a16; --rig-bench-hi: #332e27; --rig-ink: #cdc5bb; --rig-halo: rgba(12, 9, 6, 0.85); color-scheme: dark;
 }
 :root[data-projector="on"] { font-size: 125%; }
 :root[data-projector="on"] body { font-size: 1.2rem; }
@@ -865,14 +865,14 @@ function airFromVac(vnm) {
     ctx.font = `${Math.round(sh * 0.6)}px ${mono()}`; ctx.textBaseline = 'bottom'; ctx.textAlign = 'center';
     for (let v = Math.ceil(l0 / 10) * 10; v <= l1; v += 10) {
       const x = Math.round(X(v)) + 0.5, maj = v % 50 === 0;
-      ctx.fillStyle = `rgba(205,215,228,${maj ? 0.36 : 0.2})`;
+      ctx.fillStyle = `rgba(226,218,207,${maj ? 0.36 : 0.2})`;
       ctx.fillRect(x - 0.5, Hs + 1, 1, maj ? sh * 0.3 : sh * 0.17);
-      if (v % 100 === 0 && x > 12 && x < W - 12) { ctx.fillStyle = 'rgba(205,215,228,0.45)'; ctx.fillText(String(v), x, H - 1); }
+      if (v % 100 === 0 && x > 12 && x < W - 12) { ctx.fillStyle = 'rgba(226,218,207,0.45)'; ctx.fillText(String(v), x, H - 1); }
     }
     const lf = `600 ${10 * lps}px ${mono()}`;
     ctx.font = lf;
-    if (l0 < 380) haloText(ctx, 'ULTRAVIOLET', 7, 7 * lps + 4, 'left', absorb ? 'rgba(255,255,255,0.8)' : 'rgba(255,255,255,0.5)', 'rgba(5,7,11,0.72)', 3);
-    if (l1 > 750) haloText(ctx, 'INFRARED', W - 7, 7 * lps + 4, 'right', absorb ? 'rgba(255,255,255,0.8)' : 'rgba(255,255,255,0.5)', 'rgba(5,7,11,0.72)', 3);
+    if (l0 < 380) haloText(ctx, 'ULTRAVIOLET', 7, 7 * lps + 4, 'left', absorb ? 'rgba(255,255,255,0.8)' : 'rgba(255,255,255,0.5)', 'rgba(11,8,5,0.72)', 3);
+    if (l1 > 750) haloText(ctx, 'INFRARED', W - 7, 7 * lps + 4, 'right', absorb ? 'rgba(255,255,255,0.8)' : 'rgba(255,255,255,0.5)', 'rgba(11,8,5,0.72)', 3);
     // Fraunhofer's letters over absorption lines
     if (absorb && opts.fraun) {
       ctx.font = `700 ${10.5 * lps}px ${mono()}`;
@@ -885,7 +885,7 @@ function airFromVac(vnm) {
         if (x < 0 || x > W) continue;
         rows[row].push([x - tw / 2, x + tw / 2]);
         const y = 4 * lps + bh / 2 + row * (bh + 2);
-        haloText(ctx, lt, x, y, 'center', '#f9f7f4', 'rgba(5,7,11,0.78)', 4);
+        haloText(ctx, lt, x, y, 'center', '#f9f7f4', 'rgba(11,8,5,0.78)', 4);
       }
     }
     // marked line
@@ -898,7 +898,7 @@ function airFromVac(vnm) {
     }
     if (opts.empty) {
       ctx.font = `${12 * lps}px ${mono()}`;
-      haloText(ctx, opts.empty, W / 2, Hs / 2, 'center', tok('--scope-ink'), 'rgba(5,7,11,0.85)', 6);
+      haloText(ctx, opts.empty, W / 2, Hs / 2, 'center', tok('--scope-ink'), 'rgba(11,8,5,0.85)', 6);
     }
   }
   function drawAxis() {
@@ -1241,9 +1241,9 @@ function airFromVac(vnm) {
       tubeHalo(c, cx, (yB + yE) / 2, (yE - yB) / 2 + 6, col, 1);
     }
     // glass and the diffuse glow in the bulbs
-    c.fillStyle = col ? rgba(col, 0.3) : 'rgba(205,220,235,0.07)';
+    c.fillStyle = col ? rgba(col, 0.3) : 'rgba(231,221,209,0.07)';
     bulb(yA); c.fill(); bulb(yE); c.fill();
-    c.fillStyle = col ? rgba(col, 0.5) : 'rgba(205,220,235,0.07)';
+    c.fillStyle = col ? rgba(col, 0.5) : 'rgba(231,221,209,0.07)';
     taper(yB, yC, yB); c.fill(); taper(yD, yE, yE); c.fill();
     // electrodes: a wire and a small metal cylinder in each bulb
     c.strokeStyle = '#a8a29b'; c.lineWidth = 0.7;
@@ -1258,10 +1258,10 @@ function airFromVac(vnm) {
       c.fillStyle = rgba(mixc(col, WHITE, 0.3), 1); c.fillRect(cx - t.capR, yC - 0.5, 2 * t.capR, yD - yC + 1);
       c.fillStyle = rgba(mixc(col, WHITE, 0.72), 1); c.fillRect(cx - 0.7, yC, 1.4, yD - yC);
     } else {
-      c.fillStyle = 'rgba(205,220,235,0.1)'; c.fillRect(cx - t.capR, yC, 2 * t.capR, yD - yC);
+      c.fillStyle = 'rgba(231,221,209,0.1)'; c.fillRect(cx - t.capR, yC, 2 * t.capR, yD - yC);
     }
     // glass outline and highlights
-    c.strokeStyle = 'rgba(220,234,248,0.5)'; c.lineWidth = 0.8;
+    c.strokeStyle = 'rgba(241,235,227,0.5)'; c.lineWidth = 0.8;
     bulb(yA); c.stroke(); bulb(yE); c.stroke(); taper(yB, yC, yB); c.stroke(); taper(yD, yE, yE); c.stroke();
     if (!col) c.strokeRect(cx - t.capR, yC, 2 * t.capR, yD - yC);
     c.strokeStyle = 'rgba(255,255,255,0.32)'; c.lineWidth = 1;
@@ -1326,13 +1326,13 @@ function airFromVac(vnm) {
   // absorption cell of cool gas, with a heater winding (metal vapors need heating to have any atoms in the gas)
   function drawCell(c, x, cy, r, it) {
     const L = 104;
-    c.fillStyle = 'rgba(205,220,235,0.09)'; rrect(c, x, cy - r, L, 2 * r, 3); c.fill();
+    c.fillStyle = 'rgba(231,221,209,0.09)'; rrect(c, x, cy - r, L, 2 * r, 3); c.fill();
     if (it.col) { c.fillStyle = rgba(it.col, 0.08); rrect(c, x, cy - r, L, 2 * r, 3); c.fill(); }
     c.strokeStyle = 'rgba(196,122,70,0.75)'; c.lineWidth = 0.9; c.beginPath();
     for (let k = 10; k < L - 6; k += 7) { c.moveTo(x + k, cy + r); c.lineTo(x + k + 4, cy - r); }
     c.stroke();
-    c.strokeStyle = 'rgba(220,234,248,0.6)'; c.lineWidth = 0.9; rrect(c, x, cy - r, L, 2 * r, 3); c.stroke();
-    c.fillStyle = 'rgba(225,238,250,0.28)';
+    c.strokeStyle = 'rgba(241,235,227,0.6)'; c.lineWidth = 0.9; rrect(c, x, cy - r, L, 2 * r, 3); c.stroke();
+    c.fillStyle = 'rgba(243,238,232,0.28)';
     for (const ex of [x, x + L]) { c.beginPath(); c.ellipse(ex, cy, 2.4, r, 0, 0, 2 * Math.PI); c.fill(); }
     c.strokeStyle = 'rgba(255,255,255,0.3)'; c.lineWidth = 1; c.beginPath(); c.moveTo(x + 5, cy - r + 2.2); c.lineTo(x + L - 5, cy - r + 2.2); c.stroke();
     c.fillStyle = '#e6dec6'; rrect(c, x + L / 2 - 15, cy - 6.5, 30, 13, 1.5); c.fill();
@@ -1358,7 +1358,7 @@ function airFromVac(vnm) {
     if (mounted) { const xr = sx + L * 0.55; c.fillStyle = grad(c, 0, CY - r - 1.5, 0, CY + r + 1.5, METAL_V); c.fillRect(xr - 5, CY - r - 1.5, 10, 2 * r + 3); }
     c.fillStyle = grad(c, 0, CY - r - 1.5, 0, CY + r + 1.5, METAL_V); rrect(c, sx - 5, CY - r - 1.5, 6.5, 2 * r + 3, 1.5); c.fill();
     c.fillStyle = '#050403'; c.fillRect(sx - 5.6, CY - 5, 1.3, 10);
-    c.fillStyle = 'rgba(228,234,242,0.82)'; rrect(c, sx + 14, CY - r - 0.8, 22, 3.6, 1); c.fill();
+    c.fillStyle = 'rgba(241,236,229,0.82)'; rrect(c, sx + 14, CY - r - 0.8, 22, 3.6, 1); c.fill();
     c.fillStyle = grad(c, 0, CY - r - 1.5, 0, CY + r + 1.5, METAL_V); rrect(c, sx + L - 46, CY - r - 1.5, 15, 2 * r + 3, 2); c.fill();
     c.fillStyle = grad(c, 0, CY - r - 3, 0, CY + r + 3, ['#302e2b', '#100f0d', '#070706']); rrect(c, sx + L, CY - r - 3, 14, 2 * r + 6, 5); c.fill();
   }
@@ -1398,7 +1398,7 @@ function airFromVac(vnm) {
     if (star) {
       let q = 7;
       const rnd = () => { q = (q * 16807) % 2147483647; return q / 2147483647; };
-      for (let k = 0; k < 90; k++) { c.fillStyle = `rgba(220,230,255,${0.15 + 0.5 * rnd() * rnd()})`; c.fillRect(rnd() * W, rnd() * H, 1.2, 1.2); }
+      for (let k = 0; k < 90; k++) { c.fillStyle = `rgba(243,238,232,${0.15 + 0.5 * rnd() * rnd()})`; c.fillRect(rnd() * W, rnd() * H, 1.2, 1.2); }
     }
     c.save(); c.translate(ox, oy); c.scale(s, s);
     const sx = srcW + gap, emit = [];
@@ -1862,7 +1862,7 @@ function airFromVac(vnm) {
       } else {
         const rn = (n) => 0.14 * R * n;
         if (a.m !== 'sch') {
-          ctx.strokeStyle = 'rgba(170,181,195,0.28)'; ctx.lineWidth = 1;
+          ctx.strokeStyle = 'rgba(193,184,172,0.28)'; ctx.lineWidth = 1;
           for (let n = 1; n <= AM_NMAX; n++) { ctx.beginPath(); ctx.arc(cx, cy, rn(n), 0, 6.283); ctx.stroke(); }
         }
         if (a.m === 'sch' && !a.ion) {

@@ -18,10 +18,10 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
 /* only what this demo needs beyond demos/lib/vd.css: the scanner, the beam line, the patient path and their graphs */
-:root { --beam: #c2410c; --plan: #2563eb; --pass: #15803d; --fail: #b91c1c; --band: rgba(37, 99, 235, 0.10); --sub: #7c3aed; --tis: #0f766e; --myst: #c026d3; --grid: rgba(60, 70, 85, 0.13); }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --beam: #fb923c; --plan: #7ea2ff; --pass: #4ade80; --fail: #f87171; --band: rgba(126, 162, 255, 0.12); --sub: #c4a5ff;
-  --tis: #5eead4; --myst: #f0abfc; --grid: rgba(200, 210, 225, 0.12); } }
-:root[data-theme="dark"] { --beam: #fb923c; --plan: #7ea2ff; --pass: #4ade80; --fail: #f87171; --band: rgba(126, 162, 255, 0.12); --sub: #c4a5ff; --tis: #5eead4; --myst: #f0abfc; --grid: rgba(200, 210, 225, 0.12); }
+:root { --beam: #c2410c; --plan: #2563eb; --pass: #15803d; --fail: #b91c1c; --own-band: rgba(37, 99, 235, 0.10); --sub: #7c3aed; --tis: #0f766e; --myst: #c026d3; --grid: rgba(83, 74, 62, 0.13); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --beam: #fb923c; --plan: #7ea2ff; --pass: #4ade80; --fail: #f87171; --own-band: rgba(126, 162, 255, 0.12); --sub: #c4a5ff;
+  --tis: #5eead4; --myst: #f0abfc; --grid: rgba(223, 214, 202, 0.12); } }
+:root[data-theme="dark"] { --beam: #fb923c; --plan: #7ea2ff; --pass: #4ade80; --fail: #f87171; --own-band: rgba(126, 162, 255, 0.12); --sub: #c4a5ff; --tis: #5eead4; --myst: #f0abfc; --grid: rgba(223, 214, 202, 0.12); }
 .stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
 .stage-ctl .clock { margin-left: auto; font-size: 0.8rem; color: var(--muted); }
@@ -404,7 +404,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const sgn = (v, d) => { if (!isFinite(v)) return '—'; const t = Math.abs(v) < 0.5 * Math.pow(10, -d) ? 0 : v; return (t > 0 ? '+' : '') + f(t, d); };
   function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
     T = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), beam: g('--beam'), plan: g('--plan'), pass: g('--pass'), fail: g('--fail'),
-      band: g('--band'), sub: g('--sub'), tis: g('--tis'), myst: g('--myst'), grid: g('--grid'), mono: g('--font-mono'), ui: g('--font-ui') }; }
+      band: g('--own-band'), sub: g('--sub'), tis: g('--tis'), myst: g('--myst'), grid: g('--grid'), mono: g('--font-mono'), ui: g('--font-ui') }; }
   const dark = () => window.VDGear.dark();
   const reduced = () => !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
   const busy = () => S.busy > performance.now();

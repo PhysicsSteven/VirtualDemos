@@ -20,13 +20,13 @@
 /* scenery: tabletop, grass, trees, curbs, coaster, sky */
 :root { --table: #efe6d6; --table-grain: #e2d5bd; --table-edge: #cdbb98; --peg: #8a6a45; --grass: #e3ecd9; --tuft: #c2d4ae; --tree: #b5cfa6; --tree-dark: #8db27e;
   --kerb: #ebb2a9; --kerb2: #ffffff; --lane: #ffffff; --skid: #6a635a; --glass: #c4d8ec; --tyre: #35312c; --sky-top: #d3e6f6; --sky-bot: #f1f6fb; --cloud: #ffffff;
-  --ground: #dbe7cf; --steel: #b9b0a5; --shine: rgba(255, 255, 255, 0.6); --shadow: rgba(20, 30, 40, 0.16); }
+  --ground: #dbe7cf; --steel: #b9b0a5; --shine: rgba(255, 255, 255, 0.6); --own-shadow: rgba(38, 31, 22, 0.16); }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --table: #27231e; --table-grain: #2f2a23; --table-edge: #463b2e; --peg: #a88560; --grass: #142019; --tuft: #1f3122; --tree: #1d3123; --tree-dark: #284430;
   --kerb: #7a3d36; --kerb2: #c9c2ba; --lane: #7d7468; --skid: #0a0805; --glass: #5f7d9c; --tyre: #0a0805; --sky-top: #0a1320; --sky-bot: #162133; --cloud: #253043;
-  --ground: #172317; --steel: #645a4e; --shine: rgba(255, 255, 255, 0.28); --shadow: rgba(0, 0, 0, 0.4); } }
+  --ground: #172317; --steel: #645a4e; --shine: rgba(255, 255, 255, 0.28); --own-shadow: rgba(0, 0, 0, 0.4); } }
 :root[data-theme="dark"] { --table: #27231e; --table-grain: #2f2a23; --table-edge: #463b2e; --peg: #a88560; --grass: #142019; --tuft: #1f3122; --tree: #1d3123; --tree-dark: #284430;
   --kerb: #7a3d36; --kerb2: #c9c2ba; --lane: #7d7468; --skid: #0a0805; --glass: #5f7d9c; --tyre: #0a0805; --sky-top: #0a1320; --sky-bot: #162133; --cloud: #253043;
-  --ground: #172317; --steel: #645a4e; --shine: rgba(255, 255, 255, 0.28); --shadow: rgba(0, 0, 0, 0.4); }
+  --ground: #172317; --steel: #645a4e; --shine: rgba(255, 255, 255, 0.28); --own-shadow: rgba(0, 0, 0, 0.4); }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --w: #cac1b6; --n: #69a0ff; --fr: #ff8a70; --tn: #e2b350; --net: #5fcf8a; --vel: #b49bff; --road: #40372c; } }
 :root[data-theme="dark"] { --w: #cac1b6; --n: #69a0ff; --fr: #ff8a70; --tn: #e2b350; --net: #5fcf8a; --vel: #b49bff; --road: #40372c; }
 :root[data-projector="on"] { font-size: 125%; }
@@ -231,7 +231,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       w: g('--w'), n: g('--n'), fr: g('--fr'), tn: g('--tn'), net: g('--net'), vel: g('--vel'), road: g('--road'), 
       table: g('--table'), tableGrain: g('--table-grain'), tableEdge: g('--table-edge'), peg: g('--peg'), grass: g('--grass'), tuft: g('--tuft'), tree: g('--tree'), treeDark: g('--tree-dark'),
       kerb: g('--kerb'), kerb2: g('--kerb2'), lane: g('--lane'), skid: g('--skid'), glass: g('--glass'), tyre: g('--tyre'), skyTop: g('--sky-top'), skyBot: g('--sky-bot'), cloud: g('--cloud'),
-      ground: g('--ground'), steel: g('--steel'), shine: g('--shine'), shadow: g('--shadow'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; }
+      ground: g('--ground'), steel: g('--steel'), shine: g('--shine'), shadow: g('--own-shadow'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; }
   const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
   const f = (v, d = 1) => (!isFinite(v) ? '∞' : (Math.abs(v) < 0.5 * 10 ** -d ? (0).toFixed(d) : v.toFixed(d)).replace('-', '−'));
 

@@ -498,7 +498,7 @@ details.more[open] summary { margin-bottom: 6px; }
      (squeezed) and lighter (stretched) bands, slowed as by a strobe */
   function drawRodStrain(x0, len, y, r) {
     if (reduce) return; const e = S.keep ? 1 : S.env, c = Math.cos(S.ph), M = 60;
-    for (let i = 0; i < M; i++) { const u = (i + 0.5) / M, st = Math.sin(S.n * PI * u) * c * e; ctx.fillStyle = st > 0 ? `rgba(20,30,45,${0.45 * st})` : `rgba(255,255,255,${-0.6 * st})`; ctx.fillRect(x0 + len * i / M, y - r, len / M + 0.5, 2 * r); }
+    for (let i = 0; i < M; i++) { const u = (i + 0.5) / M, st = Math.sin(S.n * PI * u) * c * e; ctx.fillStyle = st > 0 ? `rgba(43,34,22,${0.45 * st})` : `rgba(255,255,255,${-0.6 * st})`; ctx.fillRect(x0 + len * i / M, y - r, len / M + 0.5, 2 * r); }
   }
   function draw() {
     if (!T || !W) return;
@@ -540,14 +540,14 @@ details.more[open] summary { margin-bottom: 6px; }
     const tTop = ry - tubeR - 6 * p, tBot = ry + tubeR + 6 * p, xr = xd + 1.42 * ppm;
     /* the glass tube on two cradles */
     for (const tx of [xd + 0.2 * ppm, xr - 0.2 * ppm]) { Gr.rod(ctx, tx, tBot, tx, ry + 55 * p, 1.8 * p); Gr.box(ctx, tx - 9 * p, ry + 54 * p, 18 * p, 7 * p, { r: 2 * p, color: '#4c453b', shadow: false }); }
-    { const gt = ctx.createLinearGradient(0, tTop, 0, tBot); gt.addColorStop(0, dk ? 'rgba(200,225,245,0.28)' : 'rgba(255,255,255,0.95)'); gt.addColorStop(0.25, dk ? 'rgba(120,150,180,0.10)' : 'rgba(215,230,240,0.45)'); gt.addColorStop(1, dk ? 'rgba(0,0,0,0.35)' : 'rgba(120,145,170,0.35)');
+    { const gt = ctx.createLinearGradient(0, tTop, 0, tBot); gt.addColorStop(0, dk ? 'rgba(200,225,245,0.28)' : 'rgba(255,255,255,0.95)'); gt.addColorStop(0.25, dk ? 'rgba(176,153,124,0.10)' : 'rgba(215,230,240,0.45)'); gt.addColorStop(1, dk ? 'rgba(0,0,0,0.35)' : 'rgba(166,148,124,0.35)');
       ctx.fillStyle = gt; ctx.beginPath(); ctx.roundRect(xd - 4 * p, tTop, xr - xd + 4 * p, tBot - tTop, (tBot - tTop) / 2); ctx.fill(); }
-    ctx.strokeStyle = dk ? 'rgba(170,195,220,0.6)' : 'rgba(80,100,120,0.55)'; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.roundRect(xd - 4 * p, tTop, xr - xd + 4 * p, tBot - tTop, (tBot - tTop) / 2); ctx.stroke();
+    ctx.strokeStyle = dk ? 'rgba(214,198,176,0.6)' : 'rgba(117,102,83,0.55)'; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.roundRect(xd - 4 * p, tTop, xr - xd + 4 * p, tBot - tTop, (tBot - tTop) / 2); ctx.stroke();
     if (ring) drawAir((m) => xd + m * ppm, 0, S.l, ry, (tBot - tTop) / 2 - 3, false, f, v);
     drawDust(xd, ppm, tBot - 1.5 * p, 0, S.l, 0.002, 1.6 * p, xd, GEO.xl);
     Gr.box(ctx, xd - 3 * p, tTop + 3 * p, 4 * p, tBot - tTop - 6 * p, { r: 1, color: '#c9a24a', shadow: false });
     Gr.rod(ctx, GEO.xl + 6 * p, ry, xr + 30 * p, ry, 2 * p); Gr.box(ctx, GEO.xl, tTop + 2 * p, 6 * p, tBot - tTop - 4 * p, { r: 1.5 * p, color: '#8b5a3c', shadow: false });
-    ctx.fillStyle = dk ? 'rgba(220,235,250,0.18)' : 'rgba(255,255,255,0.75)'; ctx.fillRect(xd + 4 * p, tTop + 2 * p, xr - xd - 12 * p, 1.4 * p);
+    ctx.fillStyle = dk ? 'rgba(241,236,229,0.18)' : 'rgba(255,255,255,0.75)'; ctx.fillRect(xd + 4 * p, tTop + 2 * p, xr - xd - 12 * p, 1.4 * p);
     Object.assign($('plunger').style, { left: `${GEO.xl - 6 * p}px`, top: `${tTop - 4 * p}px`, width: `${18 * p}px`, height: `${tBot - tTop + 8 * p}px` });
     /* meter rule under the tube, 0 at the disc */
     const rl = tBot + 22 * p; Gr.shadow(ctx, xd + 0.7 * ppm, rl + 15 * p, 0.72 * ppm, 3 * p, 0.6);
@@ -562,7 +562,7 @@ details.more[open] summary { margin-bottom: 6px; }
     /* close up of 16 cm of tube around the pointer, with a millimeter scale */
     const zTop = rl + 34 * p, zH = Math.max(70 * p, Math.min(130 * p, Hh - zTop - 16 * p)), zL = 16 * p, zR = W - 16 * p, half = 0.08, zppm = (zR - zL) / (2 * half), zx0 = S.x - half;
     if (zH > 40 * p && zTop + zH < Hh) {
-      ctx.save(); ctx.shadowColor = dk ? 'rgba(0,0,0,0.5)' : 'rgba(20,30,45,0.14)'; ctx.shadowBlur = 14 * p; ctx.shadowOffsetY = 4 * p;
+      ctx.save(); ctx.shadowColor = dk ? 'rgba(0,0,0,0.5)' : 'rgba(43,34,22,0.14)'; ctx.shadowBlur = 14 * p; ctx.shadowOffsetY = 4 * p;
       ctx.fillStyle = T.surface; ctx.beginPath(); ctx.roundRect(zL, zTop, zR - zL, zH, 8 * p); ctx.fill(); ctx.restore(); ctx.strokeStyle = T.line; ctx.beginPath(); ctx.roundRect(zL + 0.5, zTop + 0.5, zR - zL, zH, 8 * p); ctx.stroke();
       const zFloor = zTop + zH - 30 * p, zx = (m) => zL + (m - zx0) * zppm;
       ctx.save(); ctx.beginPath(); ctx.rect(zL, zTop, zR - zL, zH); ctx.clip();

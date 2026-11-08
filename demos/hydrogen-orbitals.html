@@ -1374,12 +1374,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const W = ctx.canvas.width / dpr, H = ctx.canvas.height / dpr, off = Math.max(40 * ps, Math.min(span * 0.16, 90 * ps));
     const right = cx + off * 0.9 + Math.max(w1, w2) + 8 < W, tx = right ? cx + off * 0.9 : cx - off * 0.9, ty = Math.min(cy + off * 0.7, H - 90 * ps);
     const ex = tx + (right ? -3 : 3) * ps, ey = ty - 3 * ps, dl = Math.hypot(ex - cx, ey - cy) || 1;
-    ctx.strokeStyle = 'rgba(230,236,243,0.55)'; ctx.lineWidth = ps;
+    ctx.strokeStyle = 'rgba(242,237,231,0.55)'; ctx.lineWidth = ps;
     ctx.beginPath(); ctx.moveTo(cx + (ex - cx) / dl * 6 * ps, cy + (ey - cy) / dl * 6 * ps); ctx.lineTo(ex, ey); ctx.stroke();
     ctx.textAlign = right ? 'left' : 'right'; ctx.textBaseline = 'top'; ctx.lineJoin = 'round';
-    ctx.strokeStyle = 'rgba(5,8,13,0.75)'; ctx.lineWidth = 3.5 * ps;
-    ctx.font = f1; ctx.strokeText(l1, tx, ty - 6 * ps); ctx.fillStyle = 'rgba(236,241,247,0.92)'; ctx.fillText(l1, tx, ty - 6 * ps);
-    ctx.font = f2; ctx.strokeText(l2, tx, ty + 8 * ps); ctx.fillStyle = 'rgba(170,182,198,0.95)'; ctx.fillText(l2, tx, ty + 8 * ps);
+    ctx.strokeStyle = 'rgba(12,9,6,0.75)'; ctx.lineWidth = 3.5 * ps;
+    ctx.font = f1; ctx.strokeText(l1, tx, ty - 6 * ps); ctx.fillStyle = 'rgba(246,242,237,0.92)'; ctx.fillText(l1, tx, ty - 6 * ps);
+    ctx.font = f2; ctx.strokeText(l2, tx, ty + 8 * ps); ctx.fillStyle = 'rgba(196,186,172,0.95)'; ctx.fillText(l2, tx, ty + 8 * ps);
   }
   function niceStep(raw) {
     const p = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p;
@@ -1547,7 +1547,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.fillStyle = T.cbg; ctx.fillRect(0, 0, W, H);
     const pool = ctx.createRadialGradient(W / 2, H * 0.46, 0, W / 2, H * 0.46, 0.7 * Math.max(W, H));
-    pool.addColorStop(0, 'rgba(58,90,140,0.16)'); pool.addColorStop(1, 'rgba(58,90,140,0)');
+    pool.addColorStop(0, 'rgba(131,103,67,0.16)'); pool.addColorStop(1, 'rgba(131,103,67,0)');
     ctx.fillStyle = pool; ctx.fillRect(0, 0, W, H);
     if (!SL.img) return;
     paintSlice();
@@ -1559,12 +1559,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.beginPath(); ctx.rect(bx.x0, bx.y0, bx.side, bx.side); ctx.clip();
     // axes through the nucleus
     if (S.layers.axes) {
-      ctx.strokeStyle = 'rgba(150,165,185,0.35)'; ctx.lineWidth = 1;
+      ctx.strokeStyle = 'rgba(182,169,153,0.35)'; ctx.lineWidth = 1;
       ctx.beginPath(); ctx.moveTo(bx.x0, cy); ctx.lineTo(bx.x0 + bx.side, cy); ctx.moveTo(cx, bx.y0); ctx.lineTo(cx, bx.y0 + bx.side); ctx.stroke();
     }
     // nodal lines
     if (S.layers.nodes && (SL.segs.length || SL.zAxis)) {
-      ctx.strokeStyle = 'rgba(235,242,250,0.75)'; ctx.lineWidth = 1.3 * ps; ctx.setLineDash([4 * ps, 3 * ps]);
+      ctx.strokeStyle = 'rgba(246,243,238,0.75)'; ctx.lineWidth = 1.3 * ps; ctx.setLineDash([4 * ps, 3 * ps]);
       ctx.beginPath();
       const sg = SL.segs;
       for (let i = 0; i < sg.length; i += 4) { ctx.moveTo(cx + sg[i] * sc, cy - sg[i + 1] * sc); ctx.lineTo(cx + sg[i + 2] * sc, cy - sg[i + 3] * sc); }
@@ -1669,7 +1669,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (lx + tw > W - 6) lx = px - 14 - tw;
     if (ly + th > H - 6) ly = py - 14 - th;
     lx = Math.max(4, lx); ly = Math.max(4, ly);
-    ctx.fillStyle = dark ? 'rgba(10,15,22,0.92)' : T.canvas; ctx.strokeStyle = dark ? T.cline : T.line; ctx.lineWidth = 1;
+    ctx.fillStyle = dark ? 'rgba(21,17,11,0.92)' : T.canvas; ctx.strokeStyle = dark ? T.cline : T.line; ctx.lineWidth = 1;
     ctx.beginPath(); ctx.roundRect ? ctx.roundRect(lx, ly, tw, th, 5) : ctx.rect(lx, ly, tw, th); ctx.fill(); ctx.stroke();
     ctx.fillStyle = dark ? T.cink : T.ink; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
     lines.forEach((s, i) => ctx.fillText(s, lx + 7, ly + 5 + i * lh));

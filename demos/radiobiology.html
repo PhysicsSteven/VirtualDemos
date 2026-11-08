@@ -15,9 +15,9 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
 /* only what this demo needs beyond demos/lib/vd.css: one color per curve and tissue, the dishes and the stage with its card and chart */
-:root { --air: #2b60b5; --hyp: #c2410c; --now: #7c3aed; --comp: #a49a8c; --tumor: #c2410c; --late: #2b60b5; --prost: #1f9a4a; --cust: #7c3aed; --dish: #f5f2ef; --dishedge: #b3a99c; --agar: #f3e9d2; --stain: #5b2a86; --phys: #a49a8c; --clin: #b45309; --bio: #be185d; --fx: #2b60b5; --band: rgba(43, 96, 181, 0.07); }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --air: #69a0ff; --hyp: #ff8a50; --now: #b79bff; --comp: #978d7f; --tumor: #ff8a50; --late: #69a0ff; --prost: #4cd07d; --cust: #b79bff; --dish: #2d261c; --dishedge: #766c5f; --agar: #2a2620; --stain: #c9a2f2; --phys: #978d7f; --clin: #fbbf24; --bio: #f472b6; --fx: #69a0ff; --band: rgba(105, 160, 255, 0.08); } }
-:root[data-theme="dark"] { --air: #69a0ff; --hyp: #ff8a50; --now: #b79bff; --comp: #978d7f; --tumor: #ff8a50; --late: #69a0ff; --prost: #4cd07d; --cust: #b79bff; --dish: #2d261c; --dishedge: #766c5f; --agar: #2a2620; --stain: #c9a2f2; --phys: #978d7f; --clin: #fbbf24; --bio: #f472b6; --fx: #69a0ff; --band: rgba(105, 160, 255, 0.08); }
+:root { --air: #2b60b5; --hyp: #c2410c; --now: #7c3aed; --comp: #a49a8c; --tumor: #c2410c; --late: #2b60b5; --prost: #1f9a4a; --cust: #7c3aed; --dish: #f5f2ef; --dishedge: #b3a99c; --agar: #f3e9d2; --own-stain: #5b2a86; --phys: #a49a8c; --clin: #b45309; --bio: #be185d; --fx: #2b60b5; --own-band: rgba(43, 96, 181, 0.07); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --air: #69a0ff; --hyp: #ff8a50; --now: #b79bff; --comp: #978d7f; --tumor: #ff8a50; --late: #69a0ff; --prost: #4cd07d; --cust: #b79bff; --dish: #2d261c; --dishedge: #766c5f; --agar: #2a2620; --own-stain: #c9a2f2; --phys: #978d7f; --clin: #fbbf24; --bio: #f472b6; --fx: #69a0ff; --own-band: rgba(105, 160, 255, 0.08); } }
+:root[data-theme="dark"] { --air: #69a0ff; --hyp: #ff8a50; --now: #b79bff; --comp: #978d7f; --tumor: #ff8a50; --late: #69a0ff; --prost: #4cd07d; --cust: #b79bff; --dish: #2d261c; --dishedge: #766c5f; --agar: #2a2620; --own-stain: #c9a2f2; --phys: #978d7f; --clin: #fbbf24; --bio: #f472b6; --fx: #69a0ff; --own-band: rgba(105, 160, 255, 0.08); }
 .stage { position: relative; display: grid; grid-template-columns: 272px minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); grid-template-areas: "ctl ctl" "card main";
   border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
 .stage-ctl { grid-area: ctl; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
@@ -296,7 +296,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const fx = (v, d) => (!isFinite(v) ? '—' : v.toFixed(d).replace('-', '−'));
   const plainNum = (v, n = 4) => (!isFinite(v) ? '' : String(+Number(v).toPrecision(n)));
   function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
-    T = {}; for (const k of ['canvas', 'ink', 'muted', 'line', 'surface', 'accent', 'air', 'hyp', 'now', 'comp', 'tumor', 'late', 'prost', 'cust', 'dish', 'dishedge', 'agar', 'stain', 'phys', 'clin', 'bio', 'fx', 'band']) T[k] = g('--' + k);
+    T = {}; for (const k of ['canvas', 'ink', 'muted', 'line', 'surface', 'accent', 'air', 'hyp', 'now', 'comp', 'tumor', 'late', 'prost', 'cust', 'dish', 'dishedge', 'agar', 'stain', 'phys', 'clin', 'bio', 'fx', 'band']) T[k] = g('--' + k); T.stain = g('--own-stain'); T.band = g('--own-band');
     T.mono = g('--font-mono') || 'monospace'; T.ui = g('--font-ui') || 'sans-serif'; }
   const proj = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.25 : 1);
 
@@ -430,7 +430,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const glassB = M({ transparent: true, opacity: 0.55, roughness: 0.15, metalness: 0.1 }, ['#856944', '#6e5739']);
     sc.add(VD3K.rod([0.158, 0.04, 0], [0.158, 0.04, 0.06], 0.017, glassB), VD3K.rod([0.158, 0.04, 0.06], [0.158, 0.04, 0.072], 0.009, M({ roughness: 0.6 }, ['#35312c', '#2b2823'])));
     const pen = VD3K.rod([-0.17, 0.05, 0.005], [-0.1, 0.062, 0.005], 0.005, M({ roughness: 0.5 }, ['#443c31', '#3d352b'])); sc.add(pen);
-    S3.onTheme(() => { agarM.color.copy(tok('--agar', '#f4e7c8')); stainM.color.copy(tok('--stain', '#6b2fa3')); dishes.forEach((d) => { d.key = ''; }); });
+    S3.onTheme(() => { agarM.color.copy(tok('--agar', '#f4e7c8')); stainM.color.copy(tok('--own-stain', '#6b2fa3')); dishes.forEach((d) => { d.key = ''; }); });
     g3 = { S3, dishes };
     can.addEventListener('wheel', (e) => { if (!in3(e)) e.stopImmediatePropagation(); }, { passive: true });
     can.addEventListener('dblclick', (e) => { if (!in3(e)) e.stopImmediatePropagation(); });

@@ -525,7 +525,7 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
     /* glass column, clipped to the visible height */
     const yTop = y0 - top * sc;
     ctx.save(); ctx.fillStyle = dark() ? 'rgba(150,190,230,0.05)' : 'rgba(170,200,230,0.12)'; ctx.fillRect(x0, yTop, colW, top * sc);
-    ctx.strokeStyle = dark() ? 'rgba(170,200,230,0.35)' : 'rgba(90,120,150,0.45)'; ctx.lineWidth = 1.5 * p;
+    ctx.strokeStyle = dark() ? 'rgba(170,200,230,0.35)' : 'rgba(146,123,94,0.45)'; ctx.lineWidth = 1.5 * p;
     ctx.beginPath(); ctx.moveTo(x0, yTop); ctx.lineTo(x0, y0); ctx.moveTo(x0 + colW, yTop); ctx.lineTo(x0 + colW, y0); ctx.stroke(); ctx.restore();
     /* atoms, back to front (y is depth) */
     const r = Math.max(1.6, (S.bonds ? 0.3 : 0.48) * sc);   /* ball and stick with bonds, space filling without */
@@ -624,7 +624,7 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
   }
   /* one balance, hot plate and 600 mL beaker (drawn to scale, 8.5 cm wide inside), with a probe thermometer; covered: a lid keeps the vapor in */
   function drawRig(cx, benchY, p, st, covered) {
-    const b = S.bk, s = SUBSTANCES[b.sub], m0 = b.m / 1000, g = covered ? 1 : 0, ink = dark() ? 'rgba(200,220,240,0.78)' : 'rgba(70,100,130,0.85)';
+    const b = S.bk, s = SUBSTANCES[b.sub], m0 = b.m / 1000, g = covered ? 1 : 0, ink = dark() ? 'rgba(200,220,240,0.78)' : 'rgba(126,103,74,0.85)';
     const balW = (S.cover2 ? 196 : 220) * p, balH = 38 * p, plW = 166 * p, plH = 28 * p, by = benchY - balH, py = by - plH;
     /* balance: the vapor that stays under the lid still weighs on it */
     if (window.VDGear) { VDGear.box(ctx, cx - balW / 2, by, balW, balH, { color: dark() ? '#d5d0ca' : '#edeae7', r: 6 });
@@ -661,8 +661,8 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
         const col = k % Math.min(4, per), row = Math.floor(k / Math.min(4, per)), slot = (bwid - 16 * p) / Math.min(4, per);
         const x = bx + 8 * p + col * slot + (slot - side) / 2 + (row % 2 ? 0.25 : -0.1) * (slot - side), y = st.mL > 0 ? surf - side * 0.12 - row * side * 0.22 : floor - side - row * side * 0.92;
         ctx.save(); ctx.translate(x + side / 2, y + side / 2); ctx.rotate(((k * 37) % 17 - 8) * 0.03); ctx.globalAlpha = 0.55 + 0.4 * left;
-        const ig = ctx.createLinearGradient(-side / 2, -side / 2, side / 2, side / 2); ig.addColorStop(0, 'rgba(244,251,255,0.97)'); ig.addColorStop(1, 'rgba(165,202,235,0.85)');
-        ctx.fillStyle = ig; ctx.strokeStyle = 'rgba(120,160,200,0.75)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.roundRect(-side / 2, -side / 2, side, side, side * (0.14 + 0.32 * (1 - left))); ctx.fill(); ctx.stroke();
+        const ig = ctx.createLinearGradient(-side / 2, -side / 2, side / 2, side / 2); ig.addColorStop(0, 'rgba(251,250,248,0.97)'); ig.addColorStop(1, 'rgba(165,202,235,0.85)');
+        ctx.fillStyle = ig; ctx.strokeStyle = 'rgba(190,164,130,0.75)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.roundRect(-side / 2, -side / 2, side, side, side * (0.14 + 0.32 * (1 - left))); ctx.fill(); ctx.stroke();
         ctx.fillStyle = 'rgba(255,255,255,0.7)'; ctx.fillRect(-side * 0.3, -side * 0.32, side * 0.22, side * 0.08); ctx.restore();
       }
     }
@@ -678,7 +678,7 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
       ctx.restore(); }
     if (boiling && covered) {                                /* vapor stays under the lid, condenses on it and drips back */
       const top = bt + 10 * p, hgt = Math.max(0, floor - liqH - top);
-      const fg = ctx.createLinearGradient(0, top, 0, top + hgt); fg.addColorStop(0, dark() ? 'rgba(220,230,240,0.22)' : 'rgba(255,255,255,0.55)'); fg.addColorStop(1, 'rgba(255,255,255,0)');
+      const fg = ctx.createLinearGradient(0, top, 0, top + hgt); fg.addColorStop(0, dark() ? 'rgba(238,231,222,0.22)' : 'rgba(255,255,255,0.55)'); fg.addColorStop(1, 'rgba(255,255,255,0)');
       ctx.fillStyle = fg; ctx.fillRect(bx + 2 * p, top, bwid - 4 * p, hgt);
       ctx.fillStyle = dark() ? 'rgba(200,225,250,0.75)' : 'rgba(120,170,220,0.8)';
       for (let k = 0; k < 9; k++) { const x = bx + 10 * p + k * (bwid - 20 * p) / 8; ctx.beginPath(); ctx.arc(x, bt + 3 * p, (1.6 + (k % 3) * 0.6) * p, 0, Math.PI); ctx.fill(); }
@@ -697,7 +697,7 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
     /* the lid: a glass plate with a knob, sealed with a gasket */
     if (covered) {
       const lx = bx - 10 * p, lw = bwid + 20 * p, lg = ctx.createLinearGradient(0, bt - 6 * p, 0, bt);
-      lg.addColorStop(0, dark() ? 'rgba(210,225,240,0.45)' : 'rgba(225,238,250,0.95)'); lg.addColorStop(1, dark() ? 'rgba(150,175,200,0.35)' : 'rgba(170,195,220,0.9)');
+      lg.addColorStop(0, dark() ? 'rgba(210,225,240,0.45)' : 'rgba(243,238,232,0.95)'); lg.addColorStop(1, dark() ? 'rgba(196,178,154,0.35)' : 'rgba(214,198,176,0.9)');
       ctx.fillStyle = lg; ctx.strokeStyle = ink; ctx.lineWidth = 1.4 * p; ctx.beginPath(); ctx.roundRect(lx, bt - 6 * p, lw, 6 * p, 3 * p); ctx.fill(); ctx.stroke();
       ctx.fillStyle = dark() ? '#6c6358' : '#82796d'; ctx.fillRect(bx - 1 * p, bt, bwid + 2 * p, 2 * p);
       ctx.fillStyle = dark() ? '#aea69c' : '#928a7f'; ctx.beginPath(); ctx.roundRect(cx - 10 * p, bt - 13 * p, 20 * p, 7 * p, 3 * p); ctx.fill();

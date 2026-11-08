@@ -528,11 +528,11 @@ table.rows tr.sim td.n { color: var(--equi); }
       ctx.moveTo(x, pz0); ctx.lineTo(x, pz0 + L); ctx.moveTo(x, pz1); ctx.lineTo(x, pz1 - L);
     }
     ctx.stroke();
-    if (mmPx >= 4) { ctx.strokeStyle = 'rgba(27,34,40,0.12)'; ctx.beginPath(); for (let m = -80; m <= 80; m++) { if (m % 5 === 0) continue; const x = Math.round(X(m / 10)) + 0.5; if (x < -2 || x > W + 2) continue; ctx.moveTo(x, pz0); ctx.lineTo(x, pz1); } ctx.stroke(); }
-    ctx.strokeStyle = 'rgba(27,34,40,0.22)'; ctx.beginPath();
+    if (mmPx >= 4) { ctx.strokeStyle = 'rgba(39,34,28,0.12)'; ctx.beginPath(); for (let m = -80; m <= 80; m++) { if (m % 5 === 0) continue; const x = Math.round(X(m / 10)) + 0.5; if (x < -2 || x > W + 2) continue; ctx.moveTo(x, pz0); ctx.lineTo(x, pz1); } ctx.stroke(); }
+    ctx.strokeStyle = 'rgba(39,34,28,0.22)'; ctx.beginPath();
     for (let m = -75; m <= 75; m += 10) { const x = Math.round(X(m / 10)) + 0.5; ctx.moveTo(x, pz0); ctx.lineTo(x, pz1); }
     ctx.stroke();
-    ctx.strokeStyle = 'rgba(27,34,40,0.5)'; ctx.beginPath();
+    ctx.strokeStyle = 'rgba(39,34,28,0.5)'; ctx.beginPath();
     for (let c = -8; c <= 8; c++) { const x = Math.round(X(c)) + 0.5; ctx.moveTo(x, pz0); ctx.lineTo(x, pz1); }
     ctx.stroke();
     // numbers in rows every 1.25 cm up the panel, so a row is always in view
@@ -543,7 +543,7 @@ table.rows tr.sim td.n { color: var(--equi); }
       for (let c = -7; c <= 7; c++) { const x = X(c), tw = ctx.measureText(String(Math.abs(c))).width + 4; ctx.fillStyle = '#d2cdc7'; ctx.fillRect(x - tw / 2, y - nfs * 0.6, tw, nfs * 1.2); ctx.fillStyle = '#27221c'; ctx.fillText(String(Math.abs(c)), x, y + 0.5); }
     }
     // the bulb outline, faint
-    ctx.strokeStyle = 'rgba(200,220,230,0.18)'; ctx.lineWidth = 1.5; ctx.beginPath();
+    ctx.strokeStyle = 'rgba(228,217,202,0.18)'; ctx.lineWidth = 1.5; ctx.beginPath();
     { const f = (GEOM.ys + GEOM.D) / GEOM.D; ctx.arc(X((xe - xe * f) * 100), Y((t.zc - t.zc * f) * 100), GEOM.Rb * 100 * f * k, 0, 2 * Math.PI); }
     ctx.stroke();
     // beam and its reflection, projected onto the scale
@@ -586,7 +586,7 @@ table.rows tr.sim td.n { color: var(--equi); }
       if (S.sel === id) { ctx.strokeStyle = '#fff'; ctx.lineWidth = 1; ctx.stroke(); }
       const txt = `${id} ${Math.abs(S.ptr[id]).toFixed(2)} cm`, tw = ctx.measureText(txt).width + 10;
       let lx = id === 'L' ? x - 12 * ps - tw : x + 12 * ps; lx = clamp(lx, 2, W - tw - 2);
-      ctx.fillStyle = 'rgba(9,12,17,0.82)'; ctx.fillRect(lx, topH - 19 * ps, tw, 15 * ps);
+      ctx.fillStyle = 'rgba(16,13,10,0.82)'; ctx.fillRect(lx, topH - 19 * ps, tw, 15 * ps);
       ctx.fillStyle = PTR; ctx.textAlign = 'left'; ctx.fillText(txt, lx + 5, topH - 11.5 * ps);
     }
     // the eye rail along the bottom, with the caption on it
@@ -595,10 +595,10 @@ table.rows tr.sim td.n { color: var(--equi); }
     ctx.font = `${10.5 * ps}px ${T.ui}`; ctx.textBaseline = 'middle'; ctx.fillStyle = T.roomInk; ctx.globalAlpha = 0.75;
     ctx.textAlign = 'left'; if (exNow > clear) ctx.fillText(S.view === 'whole' ? 'View through the front coil, scale in cm' : `Zoom on the ${S.view === 'L' ? 'left' : 'right'} side, cm`, 8, ty, W * 0.3);
     ctx.textAlign = 'right'; if (exNow < W - clear) ctx.fillText('beam flicker simulated', W - 8, ty, W * 0.25); ctx.globalAlpha = 1;
-    ctx.strokeStyle = 'rgba(185,196,207,0.35)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(X(-8), ty); ctx.lineTo(X(8), ty); ctx.stroke();
+    ctx.strokeStyle = 'rgba(205,197,187,0.35)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(X(-8), ty); ctx.lineTo(X(8), ty); ctx.stroke();
     let ex = X(S.eye); const off = ex < 8 ? -1 : ex > W - 8 ? 1 : 0; ex = clamp(ex, 16 * ps, W - 16 * ps);
     const eh = hot('eye') || S.sel === 'eye';
-    ctx.strokeStyle = eh ? '#ffffff' : '#dbd4ca'; ctx.lineWidth = (eh ? 2 : 1.4) * ps; ctx.fillStyle = 'rgba(9,12,17,0.9)';
+    ctx.strokeStyle = eh ? '#ffffff' : '#dbd4ca'; ctx.lineWidth = (eh ? 2 : 1.4) * ps; ctx.fillStyle = 'rgba(16,13,10,0.9)';
     ctx.beginPath(); ctx.ellipse(ex, ty, 13 * ps, 7.5 * ps, 0, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
     ctx.fillStyle = eh ? '#ffffff' : '#dbd4ca'; ctx.beginPath(); ctx.arc(ex, ty, 3.6 * ps, 0, 2 * Math.PI); ctx.fill();
     if (off) { ctx.font = `700 ${12 * ps}px ${T.ui}`; ctx.textAlign = off < 0 ? 'left' : 'right'; ctx.fillText(off < 0 ? '◀' : '▶', off < 0 ? 2 : W - 2, ty); }
@@ -840,7 +840,7 @@ table.rows tr.sim td.n { color: var(--equi); }
     x.fillStyle = g; x.fillRect(0, 0, W, H);
     x.strokeStyle = '#27221c'; x.lineWidth = 2; x.beginPath();
     for (let m = -80; m <= 80; m++) { const px = W / 2 + m / 10 * k, L = (m % 10 === 0 ? 0.55 : m % 5 === 0 ? 0.36 : 0.22) * k; x.moveTo(px, 0); x.lineTo(px, L); x.moveTo(px, H); x.lineTo(px, H - L); }
-    x.stroke(); x.strokeStyle = 'rgba(27,34,40,0.3)'; x.beginPath(); for (let c = -8; c <= 8; c++) { const px = W / 2 + c * k; x.moveTo(px, 0); x.lineTo(px, H); } x.stroke();
+    x.stroke(); x.strokeStyle = 'rgba(39,34,28,0.3)'; x.beginPath(); for (let c = -8; c <= 8; c++) { const px = W / 2 + c * k; x.moveTo(px, 0); x.lineTo(px, H); } x.stroke();
     x.fillStyle = '#27221c'; x.font = '700 22px sans-serif'; x.textAlign = 'center'; x.textBaseline = 'top';
     for (let c = -7; c <= 7; c++) { x.fillText(String(Math.abs(c)), W / 2 + c * k, 0.62 * k); }
     s.t.needsUpdate = true;

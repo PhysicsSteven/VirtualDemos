@@ -18,11 +18,11 @@
 <style>
 /* only what this demo needs beyond demos/lib/vd.css: the phantom, the dose wash, the graph and the strip */
 :root { --water: #d7ebf6; --water-edge: #8fb9d3; --proton: #c2410c; --photon: #0f766e; --layer: #887a67; --det: #7c3aed; --target: #be123c;
-  --grid: rgba(60, 70, 85, 0.13); }
+  --grid: rgba(83, 74, 62, 0.13); }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --water: #10283a; --water-edge: #2f5f80; --proton: #fb923c; --photon: #5eead4; --layer: #b5a897;
-  --det: #c4a5ff; --target: #fb7185; --grid: rgba(200, 210, 225, 0.12); } }
+  --det: #c4a5ff; --target: #fb7185; --grid: rgba(223, 214, 202, 0.12); } }
 :root[data-theme="dark"] { --water: #10283a; --water-edge: #2f5f80; --proton: #fb923c; --photon: #5eead4; --layer: #b5a897;
-  --det: #c4a5ff; --target: #fb7185; --grid: rgba(200, 210, 225, 0.12); }
+  --det: #c4a5ff; --target: #fb7185; --grid: rgba(223, 214, 202, 0.12); }
 .stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
 .stage-ctl .clock { margin-left: auto; font-size: 0.8rem; color: var(--muted); }
@@ -372,7 +372,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       ctx.fillStyle = q.ph ? T.photon : '#ffd08a'; ctx.beginPath(); ctx.arc(x, y, 1.6 * p, 0, 7); ctx.fill(); }
     ctx.restore(); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
     /* walls */
-    const glass = d ? 'rgba(190,215,240,0.22)' : 'rgba(120,150,175,0.35)', edge = d ? 'rgba(220,235,255,0.35)' : 'rgba(70,95,120,0.55)';
+    const glass = d ? 'rgba(190,215,240,0.22)' : 'rgba(120,150,175,0.35)', edge = d ? 'rgba(243,238,232,0.35)' : 'rgba(116,98,74,0.55)';
     ctx.fillStyle = glass; ctx.fillRect(b.x0 - 2 * p, top, 2 * p, b.y1 - top + wall); ctx.fillRect(b.x1, top, wall, b.y1 - top + wall); ctx.fillRect(b.x0 - 2 * p, b.y1, b.x1 - b.x0 + 2 * p + wall, wall);
     ctx.strokeStyle = edge; ctx.lineWidth = 1; ctx.strokeRect(b.x0 - 2 * p + 0.5, top + 0.5, b.x1 - b.x0 + 2 * p + wall - 1, b.y1 - top + wall - 1);
     ctx.fillStyle = d ? 'rgba(255,255,255,0.12)' : 'rgba(255,255,255,0.7)'; ctx.fillRect(b.x1 + 1, top + 2, 1.2 * p, b.y1 - top);
@@ -653,7 +653,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     function pill(c, txt, x, y, o2 = {}) {
       const p = proj(); c.save(); c.font = `${o2.w || 600} ${(o2.s || 11) * p}px ${T.ui}`; const w = c.measureText(txt).width + 12 * p, h = 18 * p;
       let x0 = o2.a === 'right' ? x - w : o2.a === 'center' ? x - w / 2 : x; x0 = Math.max(4, Math.min(W - w - 4, x0));
-      c.fillStyle = dark() ? 'rgba(15,20,27,0.78)' : 'rgba(255,255,255,0.85)'; c.beginPath(); c.roundRect(x0, y - h / 2, w, h, 6 * p); c.fill();
+      c.fillStyle = dark() ? 'rgba(26,22,16,0.78)' : 'rgba(255,255,255,0.85)'; c.beginPath(); c.roundRect(x0, y - h / 2, w, h, 6 * p); c.fill();
       c.fillStyle = o2.c || T.ink; c.textBaseline = 'middle'; c.textAlign = 'left'; c.fillText(txt, x0 + 6 * p, y + 0.5); c.restore();
     }
     function labels3(L) {

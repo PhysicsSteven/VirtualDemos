@@ -877,7 +877,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* the selected nuclide: a lit column outline and a label above it */
     G3.sel = new THREE.Mesh(new THREE.BoxGeometry(1.5, 1.5, 1), new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.45, depthWrite: false }));
     st.onTheme(() => G3.sel.material.color.set(T.accent)); sc.add(G3.sel);
-    G3.selLab = VD3K.label('', { size: 4.2, bg: 'rgba(20,28,38,0.82)', color: '#ffffff' }); sc.add(G3.selLab);
+    G3.selLab = VD3K.label('', { size: 4.2, bg: 'rgba(37,30,21,0.82)', color: '#ffffff' }); sc.add(G3.selLab);
     /* labels: axes, magic numbers and the height scale */
     const lab = (t, x, y, z, o) => { const L = VD3K.label(t, Object.assign({ size: 3.2, color: '#ffffff' }, o || {})); L.position.set(x, y, z); sc.add(L); return L; };
     const labs = [];

@@ -974,14 +974,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       ctx.fillStyle = `rgba(255,255,255,${0.15 + 0.35 * Math.abs((u * 7) % 1)})`;
       ctx.fillRect(x0 + Math.abs(u) * w, y0 + Math.abs(v) * h, 1.2, 1.2);
     }
-    const ink = '#f4efe9', quiet = 'rgba(214,224,238,0.72)', gold = dark ? C.equi : '#f2c14e';
+    const ink = '#f4efe9', quiet = 'rgba(235,227,217,0.72)', gold = dark ? C.equi : '#f2c14e';
     const cBlue = dark ? C.neg : '#7fb0ff', cRed = dark ? C.pos : '#ff8a73', cTwin = dark ? C.twin : '#c7a2ff';
     const colOf = (k) => (k === 'home' ? cBlue : k === 'rocket' ? cRed : cTwin);
     const yA = y0 + h - 22 * ps;   /* the x axis of the strip */
-    line([x0, yA], [x0 + w, yA], 'rgba(214,224,238,0.45)', 1 * ps);
+    line([x0, yA], [x0 + w, yA], 'rgba(235,227,217,0.45)', 1 * ps);
     const step = tickStep(), b = viewBounds();
     for (let k = Math.ceil(b.x0 / step); k * step <= b.x1; k++) {
-      const X = sx(k * step); line([X, yA], [X, yA + (k % 5 === 0 ? 6 : 3) * ps], 'rgba(214,224,238,0.45)', 1 * ps);
+      const X = sx(k * step); line([X, yA], [X, yA + (k % 5 === 0 ? 6 : 3) * ps], 'rgba(235,227,217,0.45)', 1 * ps);
       if (k % 5 === 0 || step >= 5) { ctx.font = font(9); ctx.fillStyle = quiet; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(fmt(k * step, 0), X, yA + 7 * ps); }
     }
     ctx.font = font(10, 600); ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillStyle = ink;

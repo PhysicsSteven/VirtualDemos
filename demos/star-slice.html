@@ -503,7 +503,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   }
   const css = (c, a = 1) => `rgba(${c[0] | 0},${c[1] | 0},${c[2] | 0},${a})`;
   const lum = (c) => (0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]) / 255;
-  const contrastInk = (c, a) => (lum(c) > 0.55 ? `rgba(12,18,26,${a})` : `rgba(255,255,255,${a})`);
+  const contrastInk = (c, a) => (lum(c) > 0.55 ? `rgba(25,20,13,${a})` : `rgba(255,255,255,${a})`);
   const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
   const isNum = (x) => typeof x === 'number' && isFinite(x);
   const num = (x) => (isNum(x) ? x : null);
@@ -1593,7 +1593,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     if (mo.blend) {
       o.font = `600 ${11 * p}px ${uiFont()}`; o.textBaseline = 'top'; o.textAlign = 'right';
       const t = blendTag(mo), tw = o.measureText(t).width, x = W - 10 * p, y = G.up ? 10 * p : H - 24 * p;
-      o.fillStyle = 'rgba(6,8,12,0.62)'; o.fillRect(x - tw - 6 * p, y - 3 * p, tw + 12 * p, 17 * p);
+      o.fillStyle = 'rgba(12,9,6,0.62)'; o.fillRect(x - tw - 6 * p, y - 3 * p, tw + 12 * p, 17 * p);
       o.fillStyle = T.muted; o.fillText(t, x, y);
     }
     if (D.collapse && S.idx === D.N - 1) {
@@ -2592,7 +2592,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     let w = Math.max(bw, c.measureText(title).width), rows = 0;
     if (sw) { c.font = `${10.5 * p}px ${uiFont()}`; let lx = 0; rows = 1; for (const [e] of sw) { const ew = c.measureText(e.name).width + 20 * p; if (lx + ew > w) { rows++; lx = 0; } lx += ew; } }
     const h = sw ? fs + 8 * p + rows * 15 * p : fs + 30 * p, y0 = H - h - 10 * p;
-    c.fillStyle = 'rgba(6,8,12,0.66)'; c.fillRect(x0 - 5 * p, y0 - 5 * p, w + 10 * p, h + 8 * p);
+    c.fillStyle = 'rgba(12,9,6,0.66)'; c.fillRect(x0 - 5 * p, y0 - 5 * p, w + 10 * p, h + 8 * p);
     c.textAlign = 'left'; c.textBaseline = 'top'; c.font = `600 ${fs}px ${uiFont()}`; c.fillStyle = T.ink; c.fillText(title, x0, y0);
     if (stops) {
       const g = c.createLinearGradient(x0, 0, x0 + bw, 0);
@@ -2664,7 +2664,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       const f0 = c.font, fs = f0.replace(/([\d.]+)px/, (m, v) => (v * 0.72).toFixed(1) + 'px');
       const wa = c.measureText(a).width; c.font = fs; const ws = c.measureText(sub).width; c.font = f0; const wb = c.measureText(b).width;
       const hgt = (i ? 11.5 : 13) * p;
-      c.fillStyle = 'rgba(6,8,12,0.62)'; c.fillRect(8 * p, y - 3 * p, wa + ws + wb + 10 * p, hgt + 6 * p);
+      c.fillStyle = 'rgba(12,9,6,0.62)'; c.fillRect(8 * p, y - 3 * p, wa + ws + wb + 10 * p, hgt + 6 * p);
       c.fillStyle = col; c.fillText(a, 13 * p, y);
       if (sub) { c.font = fs; c.fillText(sub, 13 * p + wa, y + hgt * 0.38); c.font = f0; }
       if (b) c.fillText(b, 13 * p + wa + ws, y);
@@ -2680,7 +2680,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         const sc = V3.shellMat.uniforms.uCol.value, t = 'star (smaller than a pixel here)', tw = c.measureText(t).width;
         c.fillStyle = `rgb(${Math.round(sc.x * 255)},${Math.round(sc.y * 255)},${Math.round(sc.z * 255)})`;
         c.beginPath(); c.arc(q[0], q[1], 2.2 * p, 0, 7); c.fill();
-        c.fillStyle = 'rgba(6,8,12,0.6)'; c.fillRect(q[0] + 5 * p, q[1] - 8 * p, tw + 8 * p, 16 * p);
+        c.fillStyle = 'rgba(12,9,6,0.6)'; c.fillRect(q[0] + 5 * p, q[1] - 8 * p, tw + 8 * p, 16 * p);
         c.fillStyle = T.ink; c.fillText(t, q[0] + 9 * p, q[1]);
         taken.push([q[0] - 4, q[1] - 9 * p, q[0] + tw + 14 * p, q[1] + 9 * p]);
       }
@@ -2691,7 +2691,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       const t = `${r.nm}'s orbit`, tw = c.measureText(t).width, box = [q[0] + 4 * p, q[1] - 8 * p, q[0] + tw + 12 * p, q[1] + 8 * p];
       if (!free(box)) continue;
       taken.push(box);
-      c.fillStyle = 'rgba(6,8,12,0.6)'; c.fillRect(box[0], box[1], box[2] - box[0], box[3] - box[1]);
+      c.fillStyle = 'rgba(12,9,6,0.6)'; c.fillRect(box[0], box[1], box[2] - box[0], box[3] - box[1]);
       c.fillStyle = '#e2d6c7'; c.fillText(t, q[0] + 8 * p, q[1]);
     }
     drawMiniKey(c, mo, T, p);

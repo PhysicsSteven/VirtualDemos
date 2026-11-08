@@ -540,11 +540,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.lineWidth = 1.5 * p; ctx.strokeStyle = '#ffffff'; ctx.beginPath(); ctx.arc(rx, ry, 9 * p, 0, 2 * Math.PI); ctx.stroke();
     const bR = Math.min(rh * 0.14, 30 * p), bx = x0 + rw - bR - 12 * p, by = y0 + bR + 12 * p; seenDisk(bx, by, bR);
     ctx.fillStyle = T.rInk; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'right'; ctx.textBaseline = 'top';
-    ctx.fillStyle = 'rgba(11,14,20,0.7)'; const lab = 'seen at the ring', tw = ctx.measureText(lab).width; ctx.fillRect(bx - tw / 2 - 4 * p, by + bR + 6 * p, tw + 8 * p, 14 * p);
+    ctx.fillStyle = 'rgba(19,16,12,0.7)'; const lab = 'seen at the ring', tw = ctx.measureText(lab).width; ctx.fillRect(bx - tw / 2 - 4 * p, by + bR + 6 * p, tw + 8 * p, 14 * p);
     ctx.fillStyle = T.rInk; ctx.textAlign = 'center'; ctx.fillText(lab, bx, by + bR + 8 * p);
     const t1 = rw < 520 * p ? `Performer ${S.dist.toFixed(1)} m from the backdrop; shadows ${cvShadowScale(S.dist).toFixed(2)} × life size` : `Footlights ${CV_STAGE_D} m from the backdrop; performer ${S.dist.toFixed(1)} m from it; shadows ${cvShadowScale(S.dist).toFixed(2)} × life size`;
     ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'left'; const tw1 = Math.min(ctx.measureText(t1).width, rw - 2 * bR - 40 * p);
-    ctx.fillStyle = 'rgba(11,14,20,0.7)'; ctx.fillRect(x0 + 6 * p, y0 + 4 * p, tw1 + 8 * p, 16 * p); ctx.fillStyle = T.rInk; ctx.fillText(t1, x0 + 10 * p, y0 + 7 * p, tw1);
+    ctx.fillStyle = 'rgba(19,16,12,0.7)'; ctx.fillRect(x0 + 6 * p, y0 + 4 * p, tw1 + 8 * p, 16 * p); ctx.fillStyle = T.rInk; ctx.fillText(t1, x0 + 10 * p, y0 + 7 * p, tw1);
   }
   /* the spectrum reaching the eye, the three cone sensitivities, and the cone signal bars */
   function drawSpectrum() {

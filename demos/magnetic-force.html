@@ -1379,19 +1379,19 @@ details.hall[open] > summary { margin-bottom: 8px; }
     const ps = projScale();
     c.save();
     if (round) { c.beginPath(); c.arc(x + w / 2, y + h / 2, w / 2, 0, 2 * Math.PI); } else rrect(c, x, y, w, h, r);
-    c.shadowColor = T.dark ? 'rgba(0,0,0,0.55)' : 'rgba(20,30,50,0.18)'; c.shadowBlur = 12 * ps; c.shadowOffsetY = 3 * ps;
+    c.shadowColor = T.dark ? 'rgba(0,0,0,0.55)' : 'rgba(46,36,24,0.18)'; c.shadowBlur = 12 * ps; c.shadowOffsetY = 3 * ps;
     c.fillStyle = T.pole; c.fill(); c.shadowColor = 'transparent';
     c.clip();
     // brushed paint: a broad sheen and fine streaks
     const g = c.createLinearGradient(x, y, x + w, y + h);
-    g.addColorStop(0, T.dark ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0.55)'); g.addColorStop(0.45, 'rgba(255,255,255,0)'); g.addColorStop(1, T.dark ? 'rgba(0,0,0,0.25)' : 'rgba(40,55,80,0.10)');
+    g.addColorStop(0, T.dark ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0.55)'); g.addColorStop(0.45, 'rgba(255,255,255,0)'); g.addColorStop(1, T.dark ? 'rgba(0,0,0,0.25)' : 'rgba(77,62,43,0.10)');
     c.fillStyle = g; c.fillRect(x, y, w, h);
-    c.strokeStyle = T.dark ? 'rgba(255,255,255,0.025)' : 'rgba(40,55,80,0.035)'; c.lineWidth = 1;
+    c.strokeStyle = T.dark ? 'rgba(255,255,255,0.025)' : 'rgba(77,62,43,0.035)'; c.lineWidth = 1;
     c.beginPath(); for (let k = 0, yy = y + 3; yy < y + h; yy += 3 + (k++ % 3)) { c.moveTo(x, yy); c.lineTo(x + w, yy + 0.5); } c.stroke();
     c.restore();
     c.save();
     if (round) { c.beginPath(); c.arc(x + w / 2, y + h / 2, w / 2 - 1, 0, 2 * Math.PI); } else rrect(c, x + 0.5, y + 0.5, w - 1, h - 1, r);
-    c.strokeStyle = T.dark ? 'rgba(255,255,255,0.08)' : 'rgba(30,45,70,0.22)'; c.lineWidth = 1.5 * ps; c.stroke();
+    c.strokeStyle = T.dark ? 'rgba(255,255,255,0.08)' : 'rgba(66,52,34,0.22)'; c.lineWidth = 1.5 * ps; c.stroke();
     c.restore();
     if (letter) {
       const fs = Math.max(14, Math.min(34 * ps, h * 0.22, w * 0.22)), lx = at ? at[0] : x + w - fs * 0.75 - 6 * ps, ly = at ? at[1] : y + h - fs * 0.7 - 4 * ps;
@@ -2534,7 +2534,7 @@ details.hall[open] > summary { margin-bottom: 8px; }
     lead(-Math.PI * 0.62, T.dark ? '#d0493b' : '#b8372b', bx + 18 * ps);
     lead(-Math.PI * 0.3, T.dark ? '#6c665e' : '#3a3630', bx + 34 * ps);
     rrect(c, bx, by, bw, bh, 5 * ps);
-    c.save(); c.shadowColor = T.dark ? 'rgba(0,0,0,0.6)' : 'rgba(20,30,50,0.3)'; c.shadowBlur = 8 * ps; c.shadowOffsetY = 3 * ps;
+    c.save(); c.shadowColor = T.dark ? 'rgba(0,0,0,0.6)' : 'rgba(46,36,24,0.3)'; c.shadowBlur = 8 * ps; c.shadowOffsetY = 3 * ps;
     c.fillStyle = T.dark ? '#100e0b' : '#34302b'; c.fill(); c.restore();
     c.strokeStyle = T.dark ? '#4c453c' : '#1a1815'; c.lineWidth = 1.2; c.stroke();
     rrect(c, x0 - 4 * ps, y0 - 4 * ps, w + 8 * ps, h + 8 * ps, 3 * ps); c.fillStyle = '#0c1410'; c.fill();

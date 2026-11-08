@@ -550,10 +550,10 @@ details.more[open] summary { margin-bottom: 6px; }
       ctx.fillStyle = T.accent; ctx.beginPath(); ctx.arc(xs, yy, 4.5 * p, 0, 7); ctx.fill(); }
     /* the tube's glass: a highlight along the top, shade along the bottom, a rim at each end */
     let gl = ctx.createLinearGradient(0, ty, 0, ty + tubeH);
-    gl.addColorStop(0, dk ? 'rgba(200,220,240,0.20)' : 'rgba(255,255,255,0.85)'); gl.addColorStop(0.12, 'rgba(255,255,255,0)'); gl.addColorStop(0.8, 'rgba(0,0,0,0)'); gl.addColorStop(1, dk ? 'rgba(0,0,0,0.45)' : 'rgba(40,60,80,0.16)');
+    gl.addColorStop(0, dk ? 'rgba(200,220,240,0.20)' : 'rgba(255,255,255,0.85)'); gl.addColorStop(0.12, 'rgba(255,255,255,0)'); gl.addColorStop(0.8, 'rgba(0,0,0,0)'); gl.addColorStop(1, dk ? 'rgba(0,0,0,0.45)' : 'rgba(77,62,43,0.16)');
     ctx.fillStyle = gl; ctx.fillRect(x0, ty, x1 - x0, tubeH);
-    ctx.strokeStyle = dk ? 'rgba(170,190,210,0.45)' : 'rgba(70,90,110,0.45)'; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.roundRect(x0, ty, x1 - x0, tubeH, 4 * p); ctx.stroke();
-    ctx.fillStyle = dk ? 'rgba(220,235,250,0.10)' : 'rgba(255,255,255,0.7)'; ctx.fillRect(x0 + 6 * p, ty + 3 * p, x1 - x0 - 12 * p, 2 * p);
+    ctx.strokeStyle = dk ? 'rgba(207,192,173,0.45)' : 'rgba(107,92,73,0.45)'; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.roundRect(x0, ty, x1 - x0, tubeH, 4 * p); ctx.stroke();
+    ctx.fillStyle = dk ? 'rgba(241,236,229,0.10)' : 'rgba(255,255,255,0.7)'; ctx.fillRect(x0 + 6 * p, ty + 3 * p, x1 - x0 - 12 * p, 2 * p);
     /* source: a speaker driver clamped to the left end */
     Gr.speaker(ctx, x0 - 30 * p, ty + tubeH * 0.1, 26 * p, tubeH * 0.8, { color: '#3e372f' });
     /* scale under the tube, 0 to 2 m */
@@ -774,10 +774,10 @@ details.more[open] summary { margin-bottom: 6px; }
       ctx.globalAlpha = ph === 'gas' ? 0.78 : ph === 'liquid' ? 0.92 : 1; ctx.fillStyle = g; ctx.beginPath(); ctx.roundRect(x0, y, x1 - x0, lh, 4 * p); ctx.fill(); ctx.globalAlpha = 1;
       /* what the lane is made of, as a texture: gas as sparse molecules, liquid with a bright surface, solid with a lit top edge */
       ctx.save(); ctx.beginPath(); ctx.roundRect(x0, y, x1 - x0, lh, 4 * p); ctx.clip();
-      if (ph === 'gas') { ctx.fillStyle = 'rgba(40,60,80,0.18)'; let sd = 17 + i; const rnd = () => ((sd = (sd * 16807) % 2147483647) / 2147483647); for (let q = 0; q < (x1 - x0) / 7; q++) { ctx.beginPath(); ctx.arc(x0 + rnd() * (x1 - x0), y + 2 * p + rnd() * (lh - 4 * p), 1.1 * p, 0, 7); ctx.fill(); } }
+      if (ph === 'gas') { ctx.fillStyle = 'rgba(77,62,43,0.18)'; let sd = 17 + i; const rnd = () => ((sd = (sd * 16807) % 2147483647) / 2147483647); for (let q = 0; q < (x1 - x0) / 7; q++) { ctx.beginPath(); ctx.arc(x0 + rnd() * (x1 - x0), y + 2 * p + rnd() * (lh - 4 * p), 1.1 * p, 0, 7); ctx.fill(); } }
       else if (ph === 'liquid') { ctx.fillStyle = 'rgba(255,255,255,0.45)'; ctx.fillRect(x0, y + 1, x1 - x0, 2 * p); }
       ctx.fillStyle = 'rgba(255,255,255,0.35)'; ctx.fillRect(x0 + 4 * p, y + 2 * p, x1 - x0 - 8 * p, 1.2 * p); ctx.restore();
-      ctx.strokeStyle = dk ? 'rgba(255,255,255,0.18)' : 'rgba(30,40,55,0.25)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.roundRect(x0, y, x1 - x0, lh, 4 * p); ctx.stroke();
+      ctx.strokeStyle = dk ? 'rgba(255,255,255,0.18)' : 'rgba(53,44,32,0.25)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.roundRect(x0, y, x1 - x0, lh, 4 * p); ctx.stroke();
       if (started) {
         const f = raceFront(l.v, R.t, L), xf = x0 + f * ppm, xs = x0 + Math.max(0, f - trail) * ppm;
         g = ctx.createLinearGradient(xs, 0, xf, 0); g.addColorStop(0, 'rgba(255,170,40,0)'); g.addColorStop(1, 'rgba(255,170,40,0.85)');
@@ -788,7 +788,7 @@ details.more[open] summary { margin-bottom: 6px; }
       }
       const light = ph === 'gas' || ['ethanol', 'glycerin', 'pyrex', 'diamond', 'bone', 'concrete', 'aluminum', 'mercury'].includes(l.mystery ? '' : l.id);
       txt(`${l.slot + 1}  ${l.name}`, x0 + 8 * p, y + lh / 2, { s: Math.min(11, lh / p * 0.5), b: 1, c: light ? '#31291f' : '#f8f6f4' });
-      if (W >= 620) txt(l.mystery ? '?' : ph, x1 - 8 * p, y + lh / 2, { a: 'right', s: Math.min(9.5, lh / p * 0.42), c: light ? 'rgba(29,39,51,0.6)' : 'rgba(244,246,248,0.7)' });
+      if (W >= 620) txt(l.mystery ? '?' : ph, x1 - 8 * p, y + lh / 2, { a: 'right', s: Math.min(9.5, lh / p * 0.42), c: light ? 'rgba(49,41,31,0.6)' : 'rgba(248,246,244,0.7)' });
     });
     /* the scale along the course */
     const ay = top + n * (lh + gap) + 4 * p;
@@ -1097,7 +1097,7 @@ details.more[open] summary { margin-bottom: 6px; }
     const P = render3(); if (!P) return;
     const p = ps(), ls = lanesNow(), L = S.L, R = S.race, n = Math.max(1, ls.length), started = R.run || R.done;
     const tag = (s, x, y, o = {}) => { ctx.font = `${o.b ? '700 ' : ''}${(o.s || 10) * p}px ${T.ui}`; const w = ctx.measureText(s).width + 10 * p, h = 16 * p;
-      ctx.fillStyle = o.bg || (Gr.dark() ? 'rgba(15,21,29,0.78)' : 'rgba(255,255,255,0.82)'); ctx.beginPath(); ctx.roundRect(x - (o.a === 'left' ? 0 : w / 2), y - h / 2, w, h, 4 * p); ctx.fill();
+      ctx.fillStyle = o.bg || (Gr.dark() ? 'rgba(28,23,16,0.78)' : 'rgba(255,255,255,0.82)'); ctx.beginPath(); ctx.roundRect(x - (o.a === 'left' ? 0 : w / 2), y - h / 2, w, h, 4 * p); ctx.fill();
       txt(s, x - (o.a === 'left' ? -5 * p : 0), y, { a: o.a === 'left' ? 'left' : 'center', s: o.s || 10, b: o.b, c: o.c }); };
     /* distances along the course beside lane 1, skipping any that would crowd the one before */
     let lastX = -1e9, lastY = -1e9;
@@ -1249,7 +1249,7 @@ details.more[open] summary { margin-bottom: 6px; }
   function tag3(s, x, y, o = {}) {
     const p = ps(); ctx.font = `${o.b ? '700 ' : ''}${(o.s || 10) * p}px ${T.ui}`; const w = ctx.measureText(s).width + 10 * p, h = 16 * p;
     x = Math.max(w / 2 + 4 * p, Math.min(W - w / 2 - 4 * p, x));
-    ctx.fillStyle = Gr.dark() ? 'rgba(15,21,29,0.8)' : 'rgba(255,255,255,0.86)'; ctx.beginPath(); ctx.roundRect(x - w / 2, y - h / 2, w, h, 4 * p); ctx.fill();
+    ctx.fillStyle = Gr.dark() ? 'rgba(28,23,16,0.8)' : 'rgba(255,255,255,0.86)'; ctx.beginPath(); ctx.roundRect(x - w / 2, y - h / 2, w, h, 4 * p); ctx.fill();
     txt(s, x, y, { a: 'center', s: o.s || 10, b: o.b, c: o.c });
   }
   /* a few lines of caption on a frosted panel */
@@ -1317,7 +1317,7 @@ details.more[open] summary { margin-bottom: 6px; }
     for (const [q, n] of [[headA, 'A'], [headB, 'B']]) tag3(n, q[0], q[1] - (nw ? 16 : 26) * p, { s: 11, b: 1 });
     ctx.strokeStyle = T.accent; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(headA[0], yy); ctx.lineTo(headB[0], yy); ctx.stroke(); for (const q of [headA, headB]) { ctx.beginPath(); ctx.moveTo(q[0], yy - 4 * p); ctx.lineTo(q[0], yy + 4 * p); ctx.stroke(); }
     const dl = `d = ${S.d.toFixed(2)} m`; ctx.font = `700 ${10 * ps()}px ${T.ui}`; const dw = ctx.measureText(dl).width + 10 * p;
-    ctx.fillStyle = Gr.dark() ? 'rgba(15,21,29,0.8)' : 'rgba(255,255,255,0.86)'; ctx.beginPath(); ctx.roundRect((headA[0] + headB[0]) / 2 - dw / 2, yy - 17 * p, dw, 14 * p, 4 * p); ctx.fill();
+    ctx.fillStyle = Gr.dark() ? 'rgba(28,23,16,0.8)' : 'rgba(255,255,255,0.86)'; ctx.beginPath(); ctx.roundRect((headA[0] + headB[0]) / 2 - dw / 2, yy - 17 * p, dw, 14 * p, 4 * p); ctx.fill();
     txt(dl, (headA[0] + headB[0]) / 2, yy - 10 * p, { a: 'center', s: 10, b: 1, c: T.accent });
     const lines = [S.clap ? `sound front slowed ×${Math.round(1 / SLOWNESS())}` : 'Clap, then watch the sound front reach A and then B', 'drag a microphone along the bench to move it'];
     caption3(lines, 10 * p, nw ? h - (lines.length * 14 + 14) * p : barBottom(), false);

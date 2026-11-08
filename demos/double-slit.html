@@ -825,7 +825,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   let view3d = new URLSearchParams(location.search).get('view') !== 'flat', v3 = null;   /* ?view=flat opens the flat view, as on the other 3D demos */
   const cam = { yaw: 0.95, pitch: 0.5, user: false };
   const B3 = { xs: -2.05, xnd: -1.35, xl: 2.55, hp: 1.45, zp: 0.52, th: 0.07, zsl: 0.36, hs: 1.55, floor: -2.1 };
-  const LAB = { ink: '#f0ece7', muted: '#bcb2a5', halo: 'rgba(6,9,13,0.78)' };
+  const LAB = { ink: '#f0ece7', muted: '#bcb2a5', halo: 'rgba(12,10,7,0.78)' };
   const clampCam = () => { cam.yaw = Math.max(0.3, Math.min(1.25, cam.yaw)); cam.pitch = Math.max(0.06, Math.min(0.75, cam.pitch)); };
   function labBox() {
     const A = LY.app, ps = projScale();
@@ -921,10 +921,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const ringPts = (x) => { const o = []; for (let i = 0; i <= 48; i++) { const f = 2 * Math.PI * i / 48; o.push(P(x, R * Math.sin(f), R * Math.cos(f))); } return o; };
     const cz = (x) => P(x, 0, 0)[3];
     if (!front) {
-      pPoly(hull(ringPts(xa).concat(ringPts(xb)))); ctx.fillStyle = 'rgba(150,170,195,0.045)'; ctx.fill();
-      ctx.strokeStyle = 'rgba(160,178,200,0.16)'; ctx.lineWidth = 1; ctx.stroke();
+      pPoly(hull(ringPts(xa).concat(ringPts(xb)))); ctx.fillStyle = 'rgba(192,175,153,0.045)'; ctx.fill();
+      ctx.strokeStyle = 'rgba(197,182,163,0.16)'; ctx.lineWidth = 1; ctx.stroke();
     }
-    ctx.strokeStyle = front ? 'rgba(175,190,210,0.22)' : 'rgba(150,165,185,0.1)'; ctx.lineWidth = front ? 1.4 : 1;
+    ctx.strokeStyle = front ? 'rgba(207,194,178,0.22)' : 'rgba(182,169,153,0.1)'; ctx.lineWidth = front ? 1.4 : 1;
     for (const x of rings) {
       const pts = ringPts(x), c = cz(x); ctx.beginPath(); let on = false;
       for (const p of pts) { const isF = p[3] > c; if (isF === front) { on ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]); on = true; } else on = false; }
@@ -986,7 +986,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (let y = -hp + 0.05; y < hp; y += 0.06) { const p = P(xf, y, -zp), q = P(xf, y, zp); ctx.moveTo(p[0], p[1]); ctx.lineTo(q[0], q[1]); }
     ctx.stroke(); ctx.restore();
     // the lower wall of each slot is seen through the opening
-    for (const sl of slits) quad(P, [xf, sl.lo, -zl], [0, sl.lo, -zl], [0, sl.lo, zl], [xf, sl.lo, zl], 'rgba(150,160,172,0.75)');
+    for (const sl of slits) quad(P, [xf, sl.lo, -zl], [0, sl.lo, -zl], [0, sl.lo, zl], [xf, sl.lo, zl], 'rgba(170,162,152,0.75)');
   }
 
   function drawApparatus3D(ps) {
@@ -1070,7 +1070,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const sl = slits[id === 'a1' ? 0 : 1], y = id === 'a1' ? sl.hi : sl.lo, sg = id === 'a1' ? 1 : -1;
       const hot = (drag && drag.id === id) || (!drag && hoverId === id);
       if (hot) { const p = P(xf, y, -zl), q = P(xf, y, zl); ctx.strokeStyle = 'rgba(105,160,255,0.55)'; ctx.lineWidth = 5 * ps; ctx.beginPath(); ctx.moveTo(p[0], p[1]); ctx.lineTo(q[0], q[1]); ctx.stroke(); }
-      ctx.strokeStyle = hot ? '#69a0ff' : 'rgba(230,235,241,0.85)'; ctx.lineWidth = 1.3 * ps; ctx.beginPath();
+      ctx.strokeStyle = hot ? '#69a0ff' : 'rgba(240,236,231,0.85)'; ctx.lineWidth = 1.3 * ps; ctx.beginPath();
       for (const z of [-0.07, 0, 0.07]) { const p = P(xf, y, z); ctx.moveTo(p[0], p[1] - sg * 2 * ps); ctx.lineTo(p[0], p[1] - sg * 7 * ps); }
       ctx.stroke();
     }
@@ -1113,7 +1113,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       // neutral density filter that dims the laser to about one photon at a time in the apparatus
       post3(P, B3.xnd, -0.26);
       const nd = circX(P, B3.xnd, 0.26, 32);
-      pPoly(nd); ctx.fillStyle = 'rgba(38,42,50,0.82)'; ctx.fill(); ctx.strokeStyle = '#aaa298'; ctx.lineWidth = 1.6 * ps; ctx.stroke();
+      pPoly(nd); ctx.fillStyle = 'rgba(49,45,39,0.82)'; ctx.fill(); ctx.strokeStyle = '#aaa298'; ctx.lineWidth = 1.6 * ps; ctx.stroke();
       ctx.save(); planeXf(P, [B3.xnd - 0.002, 0, 0], [0, 0, 0.26], [0, 0.26, 0]); ctx.fillStyle = 'rgba(255,255,255,0.07)'; ctx.beginPath(); ctx.ellipse(-0.25, -0.3, 0.35, 0.18, -0.6, 0, 2 * Math.PI); ctx.fill(); ctx.restore();
       beamSeg(xsrc, B3.xnd, 0.14, 0.85);
       post3(P, xsrc - 0.5, -0.2);
@@ -1417,7 +1417,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       ctx.fillStyle = vg(cy - bh / 2, cy + bh / 2, ['#7e776e', '#3a352e', '#1c1a17']); roundRect(x, cy - bh / 2, bw, bh, 3 * ps); ctx.fill();
       ctx.fillStyle = '#e3bd25'; ctx.fillRect(x + bw * 0.45, cy - bh / 2 + 2 * ps, bw * 0.18, bh * 0.3);
       ctx.fillStyle = vg(cy - bh / 3, cy + bh / 3, ['#d2ccc4', '#80786e']); ctx.fillRect(x + bw, cy - bh * 0.3, w * 0.08, bh * 0.6);
-      ctx.fillStyle = 'rgba(52,56,64,0.85)'; ctx.fillRect(x + w - 6 * ps, sy, 2.5 * ps, sh);
+      ctx.fillStyle = 'rgba(63,59,53,0.85)'; ctx.fillRect(x + w - 6 * ps, sy, 2.5 * ps, sh);
       ctx.strokeStyle = '#aaa298'; ctx.lineWidth = 1; ctx.strokeRect(x + w - 6 * ps, sy, 2.5 * ps, sh);
     } else if (S.kind === 'electron') {
       const bh = Math.min(sh * 0.8, 34 * ps);

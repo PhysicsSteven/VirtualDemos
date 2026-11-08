@@ -15,9 +15,9 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
 /* only what this demo needs beyond demos/lib/vd.css: the floor plan, the rooms in 3D and the transmission graph */
-:root { --ray: #c2410c; --pass: #15803d; --fail: #b91c1c; --lead: #a18156; --conc: #b8a98a; --steel: #57534e; --gyp: #e7e2d6; --bpe: #0f766e; --grid: rgba(60, 70, 85, 0.13); }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --ray: #fb923c; --pass: #4ade80; --fail: #f87171; --lead: #8fb0e8; --conc: #c8b893; --steel: #a8a29e; --gyp: #e5e0d3; --bpe: #2dd4bf; --grid: rgba(200, 210, 225, 0.12); } }
-:root[data-theme="dark"] { --ray: #fb923c; --pass: #4ade80; --fail: #f87171; --lead: #8fb0e8; --conc: #c8b893; --steel: #a8a29e; --gyp: #e5e0d3; --bpe: #2dd4bf; --grid: rgba(200, 210, 225, 0.12); }
+:root { --ray: #c2410c; --pass: #15803d; --fail: #b91c1c; --lead: #a18156; --conc: #b8a98a; --steel: #57534e; --gyp: #e7e2d6; --bpe: #0f766e; --grid: rgba(83, 74, 62, 0.13); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --ray: #fb923c; --pass: #4ade80; --fail: #f87171; --lead: #8fb0e8; --conc: #c8b893; --steel: #a8a29e; --gyp: #e5e0d3; --bpe: #2dd4bf; --grid: rgba(223, 214, 202, 0.12); } }
+:root[data-theme="dark"] { --ray: #fb923c; --pass: #4ade80; --fail: #f87171; --lead: #8fb0e8; --conc: #c8b893; --steel: #a8a29e; --gyp: #e5e0d3; --bpe: #2dd4bf; --grid: rgba(223, 214, 202, 0.12); }
 .stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
 .scene { position: relative; flex: 1 1 auto; min-height: 340px; }
@@ -333,7 +333,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const X = (x) => cx + x * sc, Y = (y) => cy - y * sc, minT = (t) => Math.max(t * sc, 3 * p);
     /* the floor of the room */
     ctx.fillStyle = d ? '#28231d' : '#f3f1ee'; ctx.fillRect(X(-L.a), Y(L.a), 2 * L.a * sc, 2 * L.a * sc);
-    ctx.strokeStyle = d ? 'rgba(255,255,255,0.05)' : 'rgba(30,40,55,0.06)'; ctx.lineWidth = 1;
+    ctx.strokeStyle = d ? 'rgba(255,255,255,0.05)' : 'rgba(53,44,32,0.06)'; ctx.lineWidth = 1;
     for (let g = -Math.floor(L.a); g <= L.a; g++) { ctx.beginPath(); ctx.moveTo(X(g), Y(L.a)); ctx.lineTo(X(g), Y(-L.a)); ctx.stroke(); ctx.beginPath(); ctx.moveTo(X(-L.a), Y(g)); ctx.lineTo(X(L.a), Y(g)); ctx.stroke(); }
     const wall = (x0, y0, x1, y1, m, hl) => { const xa = Math.min(X(x0), X(x1)), ya = Math.min(Y(y0), Y(y1)), w = Math.max(Math.abs(X(x1) - X(x0)), 3 * p), h = Math.max(Math.abs(Y(y1) - Y(y0)), 3 * p);
       ctx.fillStyle = MATC(m); ctx.globalAlpha = hl ? 1 : 0.75; ctx.fillRect(xa, ya, w, h); ctx.globalAlpha = 1; if (hl) { ctx.strokeStyle = T.accent; ctx.lineWidth = 2 * p; ctx.strokeRect(xa, ya, w, h); } };

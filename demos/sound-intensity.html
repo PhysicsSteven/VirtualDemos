@@ -303,7 +303,7 @@ table.rows input:focus { border-color: var(--accent); }
     let wg = ctx.createRadialGradient(mx - 2 * z, my - 9 * z, 1 * z, mx, my - 7 * z, 7 * z); wg.addColorStop(0, dk ? '#71695f' : '#72685c'); wg.addColorStop(1, dk ? '#332e27' : '#2d2821');
     ctx.fillStyle = wg; ctx.beginPath(); ctx.arc(mx, my - 7 * z, 7 * z, 0, 7); ctx.fill();
     const bw = 108 * z, bh = 58 * z, bx = Math.min(W - bw - 6 * z, Math.max(6 * z, mx - bw / 2)), by = my - (bx < sx + 6 * z ? 118 : 84) * z;   /* lifted clear of the speakers when the meter is close to them */
-    ctx.strokeStyle = dk ? 'rgba(200,210,220,0.25)' : 'rgba(40,50,60,0.25)'; ctx.lineWidth = 1; ctx.setLineDash([2 * z, 3 * z]); ctx.beginPath(); ctx.moveTo(mx, my - 14 * z); ctx.lineTo(mx, by + bh); ctx.stroke(); ctx.setLineDash([]);
+    ctx.strokeStyle = dk ? 'rgba(219,211,201,0.25)' : 'rgba(58,51,42,0.25)'; ctx.lineWidth = 1; ctx.setLineDash([2 * z, 3 * z]); ctx.beginPath(); ctx.moveTo(mx, my - 14 * z); ctx.lineTo(mx, by + bh); ctx.stroke(); ctx.setLineDash([]);
     Gr.box(ctx, bx, by, bw, bh, { r: 7 * z, color: '#4a4136' });
     Gr.lcd(ctx, bx + 7 * z, by + 7 * z, bw - 14 * z, 30 * z, `${f(reading(), 1)} dB`);
     Gr.plate(ctx, 'sound level meter', bx + bw / 2, by + 48 * z, { s: 7.5 * p });

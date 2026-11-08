@@ -16,9 +16,9 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
 /* only what this demo needs beyond demos/lib/vd.css */
-:root { --rel: #2f62c8; --newt: #c0432a; --probe: #e08a12; --light: #d4a00a; --field: #6a4fc4; --curve: #2a2219; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --rel: #7aa7ff; --newt: #ff7a5c; --probe: #ffb347; --light: #ffe066; --field: #a991ff; --curve: #eeeae4; } }
-:root[data-theme="dark"] { --rel: #7aa7ff; --newt: #ff7a5c; --probe: #ffb347; --light: #ffe066; --field: #a991ff; --curve: #eeeae4; }
+:root { --rel: #2f62c8; --newt: #c0432a; --probe: #e08a12; --light: #d4a00a; --own-field: #6a4fc4; --curve: #2a2219; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --rel: #7aa7ff; --newt: #ff7a5c; --probe: #ffb347; --light: #ffe066; --own-field: #a991ff; --curve: #eeeae4; } }
+:root[data-theme="dark"] { --rel: #7aa7ff; --newt: #ff7a5c; --probe: #ffb347; --light: #ffe066; --own-field: #a991ff; --curve: #eeeae4; }
 .stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
 .stage-ctl .count { margin-left: auto; font-size: 0.82rem; color: var(--muted); }
@@ -224,7 +224,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function tokens() {
     const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
     T = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), accent: g('--accent'),
-      rel: g('--rel'), newt: g('--newt'), probe: g('--probe'), light: g('--light'), field: g('--field'), curve: g('--curve'), mono: g('--font-mono'), ui: g('--font-ui') };
+      rel: g('--rel'), newt: g('--newt'), probe: g('--probe'), light: g('--light'), field: g('--own-field'), curve: g('--curve'), mono: g('--font-mono'), ui: g('--font-ui') };
   }
   const nice = (r) => { const q = Math.pow(10, Math.floor(Math.log10(r))), m = r / q; return (m < 1.5 ? 1 : m < 3.5 ? 2 : m < 7.5 ? 5 : 10) * q; };
   /* significant figures for a readout, without exponent notation for the sizes used here */
@@ -273,7 +273,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const x0 = -0.9, x1 = 3.5, L = 30 * p, R = W - 30 * p, X = (x) => L + (x - x0) / (x1 - x0) * (R - L), y = H * 0.56;
     /* the light second ruler along the track */
     ctx.strokeStyle = 'rgba(200,215,235,0.4)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(L, y + 58 * p); ctx.lineTo(R, y + 58 * p); ctx.stroke();
-    ctx.fillStyle = 'rgba(220,230,245,0.75)'; ctx.font = `${9.5 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    ctx.fillStyle = 'rgba(240,233,225,0.75)'; ctx.font = `${9.5 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
     for (let k = -0.5; k <= 3.5 + 1e-9; k += 0.5) { const xx = X(k), big = Math.abs(k - Math.round(k)) < 1e-9; ctx.beginPath(); ctx.moveTo(xx, y + 58 * p); ctx.lineTo(xx, y + (big ? 66 : 62) * p); ctx.stroke(); if (big) ctx.fillText(`${k}`, xx, y + 68 * p); }
     ctx.textAlign = 'right'; ctx.fillText('light seconds', R, y + 82 * p);
     const t = h.t, v = rocketV(), u = probeU(), pg = gateTimes(u), rg = gateTimes(v);
@@ -531,10 +531,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (let x = 1.4; x < 9; x += 2) { en.add(VD3K.rod([x, 0, 0], [x, 0, ZB - 0.05], 0.03, dark)); en.add(VD3K.box(0.3, 0.3, 0.03, dark, x, 0, 0)); }
     for (const [x, nm] of [[0.5, 'pickup 1'], [0.5 + FLIGHT, 'pickup 2']]) {
       const ring = new THREE.Mesh(new THREE.TorusGeometry(0.11, 0.035, 12, 36), dark); ring.rotation.y = Math.PI / 2; ring.position.set(x, 0, ZB); ring.castShadow = true; en.add(ring);
-      const L = VD3K.label(nm, { size: 0.3, color: '#ffffff', bg: 'rgba(30,38,48,0.78)' }); L.position.set(x, 0, ZB + 0.38); en.add(L);
+      const L = VD3K.label(nm, { size: 0.3, color: '#ffffff', bg: 'rgba(47,40,31,0.78)' }); L.position.set(x, 0, ZB + 0.38); en.add(L);
     }
     en.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0.5, -0.3, ZB - 0.25), new THREE.Vector3(0.5 + FLIGHT, -0.3, ZB - 0.25)]), new THREE.LineBasicMaterial({ color: 0x73695c })));
-    const dl = VD3K.label('8.400 m between the pickups', { size: 0.28, color: '#ffffff', bg: 'rgba(30,38,48,0.7)' }); dl.position.set(0.5 + FLIGHT / 2, -0.3, ZB - 0.42); en.add(dl);
+    const dl = VD3K.label('8.400 m between the pickups', { size: 0.28, color: '#ffffff', bg: 'rgba(47,40,31,0.7)' }); dl.position.set(0.5 + FLIGHT / 2, -0.3, ZB - 0.42); en.add(dl);
     /* the magnet: iron poles above and below a 1 m square gap the beam enters at its middle; a ruler along the entrance face */
     const MX = 9.4, MS = 1.0, mag = new THREE.Group(); mag.position.set(MX, 0, 0); en.add(mag);
     const ironM = M({ color: 0x7a2b2b, roughness: 0.55, metalness: 0.25 });

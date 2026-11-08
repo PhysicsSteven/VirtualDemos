@@ -498,7 +498,7 @@
     ctx.beginPath(); ctx.arc(g.cx, g.cy, g.R, 0, 7); ctx.clip();
     const glow = ctx.createRadialGradient(g.cx, g.cy, 0, g.cx, g.cy, g.R); glow.addColorStop(0, '#211c15'); glow.addColorStop(1, '#0c0a07'); ctx.fillStyle = glow; ctx.fillRect(g.cx - g.R, g.cy - g.R, 2 * g.R, 2 * g.R);
     /* reticle: lines every 0.5 mm, ticks every 0.1 mm on the middle line */
-    ctx.strokeStyle = 'rgba(190,205,225,0.45)'; ctx.lineWidth = 1; ctx.fillStyle = 'rgba(190,205,225,0.7)'; ctx.font = `${10 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    ctx.strokeStyle = 'rgba(222,209,193,0.45)'; ctx.lineWidth = 1; ctx.fillStyle = 'rgba(222,209,193,0.7)'; ctx.font = `${10 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
     for (let m = -3; m <= 3; m++) { const y = g.cy - m * 0.5e-3 * g.k; ctx.beginPath(); ctx.moveTo(g.cx - g.R, y); ctx.lineTo(g.cx + g.R, y); ctx.stroke(); }
     ctx.beginPath(); ctx.moveTo(g.cx, g.cy - g.R); ctx.lineTo(g.cx, g.cy + g.R); ctx.stroke();
     for (let m = -15; m <= 15; m++) { const y = g.cy - m * 0.1e-3 * g.k, w = m % 5 ? 4 : 8; ctx.beginPath(); ctx.moveTo(g.cx - w * p, y); ctx.lineTo(g.cx + w * p, y); ctx.stroke(); }

@@ -467,7 +467,7 @@ table.rows input:focus { border-color: var(--accent); }
     /* the Set up card sits in the room left over to the right of the floor when there is room for it, otherwise over the floor's top left */
     if (getComputedStyle(card).position === 'absolute') { const tc = GEO.trayCol ? 84 * p : 0, spare = W - (x0 + fw) - 24 * p - tc; card.style.left = spare >= 300 ? `${x0 + fw + 16 * p + tc}px` : '12px'; card.style.width = spare >= 300 ? `${Math.min(360, spare)}px` : ''; }
     /* the floor, lifted off the page by a soft shadow */
-    ctx.save(); ctx.shadowColor = Gr.dark() ? 'rgba(0,0,0,0.55)' : 'rgba(20,30,45,0.18)'; ctx.shadowBlur = 18 * p; ctx.shadowOffsetY = 6 * p;
+    ctx.save(); ctx.shadowColor = Gr.dark() ? 'rgba(0,0,0,0.55)' : 'rgba(43,34,22,0.18)'; ctx.shadowBlur = 18 * p; ctx.shadowOffsetY = 6 * p;
     ctx.fillStyle = T.surface; ctx.fillRect(x0, fy, fw, fh); ctx.restore();
     if (S.view !== 'none') {
       const gw = Math.max(40, Math.min(260, Math.round(fw / 3))), gh = Math.round(gw * ROOM_Y / ROOM_X), F = fieldGrid(gw, gh), d = F.img.data;
@@ -522,7 +522,7 @@ table.rows input:focus { border-color: var(--accent); }
     ctx.fillStyle = gm; ctx.beginPath(); ctx.arc(mx, my, 7.5 * p, 0, 7); ctx.fill(); ctx.strokeStyle = 'rgba(0,0,0,0.35)'; ctx.lineWidth = 1; ctx.stroke();
     ctx.strokeStyle = 'rgba(0,0,0,0.25)'; for (let i = -1; i <= 1; i++) { ctx.beginPath(); ctx.moveTo(mx - 5 * p, my + i * 2.6 * p); ctx.lineTo(mx + 5 * p, my + i * 2.6 * p); ctx.stroke(); }
     const lbl = dbText(level(P(S.mx, S.my))); ctx.font = `600 ${11 * p}px ${T.mono}`; const lw = ctx.measureText(lbl).width + 10 * p;
-    ctx.fillStyle = Gr.dark() ? 'rgba(13,18,24,0.82)' : 'rgba(255,255,255,0.86)'; ctx.beginPath(); ctx.roundRect(mx + 12 * p, my - 22 * p, lw, 18 * p, 4 * p); ctx.fill();
+    ctx.fillStyle = Gr.dark() ? 'rgba(23,19,14,0.82)' : 'rgba(255,255,255,0.86)'; ctx.beginPath(); ctx.roundRect(mx + 12 * p, my - 22 * p, lw, 18 * p, 4 * p); ctx.fill();
     txt(lbl, mx + 17 * p, my - 13 * p, { s: 11, b: 1, m: 1 });
     if (S.view === 'waves' && !reduce) Gr.label(ctx, 'waves slowed about 1000 times', x0 + fw, fy - 10 * p, { a: 'right', s: 9 * p, alpha: 0.75 });
     if (S.view === 'loud') Gr.label(ctx, 'loudness map: darker is louder (50 to 85 dB)', x0 + fw, fy - 10 * p, { a: 'right', s: 9 * p, alpha: 0.75 });

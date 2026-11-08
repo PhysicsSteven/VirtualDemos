@@ -522,7 +522,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     for (let i = 0; i < 4; i++) {
       const vy = ly0 + s.hb * (0.1 + i * 0.075);
       c.fillStyle = '#12100d'; rr(c, s.lx + s.lw * 0.18, vy, s.lw * 0.64, Math.max(2, s.hb * 0.035), 1.5); c.fill();
-      if (on) { c.fillStyle = `rgba(235, 240, 255, ${glow})`; rr(c, s.lx + s.lw * 0.2, vy + 0.5, s.lw * 0.6, Math.max(1, s.hb * 0.035 - 1.5), 1); c.fill(); }
+      if (on) { c.fillStyle = `rgba(248, 245, 242, ${glow})`; rr(c, s.lx + s.lw * 0.2, vy + 0.5, s.lw * 0.6, Math.max(1, s.hb * 0.035 - 1.5), 1); c.fill(); }
     }
     // pilot lamp
     c.fillStyle = on ? '#ffb02e' : '#4a3a1c'; c.beginPath(); c.arc(s.lx + s.lw * 0.22, ly1 - s.hb * 0.1, Math.max(2.5, 3.2 * ps), 0, 7); c.fill();
@@ -586,14 +586,14 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const env = () => { c.beginPath(); c.moveTo(x0 + 3, gBot); c.lineTo(x0, gTop + tw / 2); c.arc(t.cx, gTop + tw / 2, tw / 2, Math.PI, 0); c.lineTo(x1 - 3, gBot); c.quadraticCurveTo(t.cx, gBot + 8, x0 + 3, gBot); c.closePath(); };
     env(); c.fillStyle = dark ? 'rgba(160, 195, 235, 0.06)' : 'rgba(190, 215, 240, 0.22)'; c.fill();
     // stem press and support wires
-    c.fillStyle = dark ? 'rgba(170, 200, 230, 0.12)' : 'rgba(150, 180, 210, 0.28)';
+    c.fillStyle = dark ? 'rgba(170, 200, 230, 0.12)' : 'rgba(204, 183, 156, 0.28)';
     c.beginPath(); c.moveTo(t.cx - tw * 0.18, gBot + 2); c.lineTo(t.cx - tw * 0.08, gBot - tw * 0.3); c.lineTo(t.cx + tw * 0.08, gBot - tw * 0.3); c.lineTo(t.cx + tw * 0.18, gBot + 2); c.closePath(); c.fill();
     const [fbx, fby] = cathPt(t, -TH, 1), [bbx, bby] = cathPt(t, TH, 1);
     c.strokeStyle = '#9c958c'; c.lineWidth = 1.2;
     c.beginPath(); c.moveTo(t.cx + tw * 0.04, gBot - tw * 0.28); c.lineTo(fbx, fby); c.moveTo(t.cx + tw * 0.06, gBot - tw * 0.28); c.lineTo(bbx, bby); c.stroke();
     // getter flash: a silvery patch inside the dome
     const gg = c.createRadialGradient(t.cx + tw * 0.2, gTop + tw * 0.2, 1, t.cx + tw * 0.2, gTop + tw * 0.22, tw * 0.22);
-    gg.addColorStop(0, dark ? 'rgba(200,205,215,0.5)' : 'rgba(120,128,140,0.55)'); gg.addColorStop(1, 'rgba(120,128,140,0)');
+    gg.addColorStop(0, dark ? 'rgba(214,208,201,0.5)' : 'rgba(138,131,122,0.55)'); gg.addColorStop(1, 'rgba(138,131,122,0)');
     c.save(); env(); c.clip(); c.fillStyle = gg; c.beginPath(); c.arc(t.cx + tw * 0.2, gTop + tw * 0.22, tw * 0.24, 0, 7); c.fill(); c.restore();
     // cathode: a half cylinder coated with the metal, its hollow facing the light
     const N = 28, top = [], bot = [];
@@ -664,7 +664,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const cg2 = c.createLinearGradient(t.cx - 7, 0, t.cx + 7, 0); cg2.addColorStop(0, T.aluDk); cg2.addColorStop(0.5, T.alu); cg2.addColorStop(1, T.aluDk);
     c.fillStyle = cg2; rr(c, t.cx - 6 * Math.min(ps, 1.2), gTop - 8, 12 * Math.min(ps, 1.2), 10, 2); c.fill();
     // glass outline and highlights
-    env(); c.strokeStyle = dark ? 'rgba(175, 205, 235, 0.5)' : 'rgba(95, 125, 160, 0.6)'; c.lineWidth = 1.5; c.stroke();
+    env(); c.strokeStyle = dark ? 'rgba(175, 205, 235, 0.5)' : 'rgba(155, 131, 100, 0.6)'; c.lineWidth = 1.5; c.stroke();
     c.save(); env(); c.clip();
     c.strokeStyle = dark ? 'rgba(255,255,255,0.16)' : 'rgba(255,255,255,0.75)'; c.lineWidth = Math.max(3, tw * 0.05); c.lineCap = 'round';
     c.beginPath(); c.moveTo(x0 + tw * 0.11, gTop + tw * 0.55); c.lineTo(x0 + tw * 0.11, gBot - tw * 0.2); c.stroke();
@@ -707,7 +707,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const pvx = mx + mw / 2, pvy = my + mh * 0.96, rad = Math.min(mw * 0.48, mh * 0.82), a0 = -Math.PI * 0.78, a1 = -Math.PI * 0.22;
     const fs = meterFS;
     c.save(); rr(c, mx, my, mw, mh, 4); c.clip();
-    c.strokeStyle = 'rgba(140,150,160,0.55)'; c.lineWidth = Math.max(2, rad * 0.05); c.beginPath(); c.arc(pvx, pvy, rad * 0.8, a0, a1); c.stroke();
+    c.strokeStyle = 'rgba(158,151,142,0.55)'; c.lineWidth = Math.max(2, rad * 0.05); c.beginPath(); c.arc(pvx, pvy, rad * 0.8, a0, a1); c.stroke();
     c.strokeStyle = '#211e1b'; c.fillStyle = '#211e1b'; c.lineWidth = 1;
     const major = fs === 3 ? 0.5 : fs / 5, nMin = fs === 3 ? 5 : 4;
     for (let v = 0; v <= fs + 1e-9; v += major / nMin) {

@@ -877,7 +877,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const w = (tr.k === 'a' ? 3 : 1.6) * dpr * ps, xy = tr.xy;
       ctx.globalAlpha = Math.min(1, tr.a * 1.5); ctx.beginPath();
       for (let j = 0; j < xy.length; j += 4) { ctx.moveTo(xy[j], xy[j + 1]); ctx.lineTo(xy[j + 2], xy[j + 3]); }
-      ctx.strokeStyle = 'rgba(10,20,35,0.55)'; ctx.lineWidth = w + 2 * dpr; ctx.stroke();
+      ctx.strokeStyle = 'rgba(30,23,15,0.55)'; ctx.lineWidth = w + 2 * dpr; ctx.stroke();
       ctx.strokeStyle = tr.k === 'a' ? '#ffe27a' : '#7fe3ff'; ctx.lineWidth = w; ctx.stroke();
     }
     flashes.length = keep; ctx.globalAlpha = 1;

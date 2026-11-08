@@ -18,7 +18,7 @@
 /* Layout: lab bench. The gas box and speed histogram fill the left, a narrow instrument rail sits on the right; stacks on phones. */
 
 :root { --earth: #6b8fb8; --sat: #61584c; --grav: #2b60b5; --speed: #b0452f; --net: #1f8a5a; }
-:root { --star: rgba(70, 90, 125, 0.45); --land: #7fa36a; --ocean-deep: #4a6f99; --ice: #eef3f8; --atmo: rgba(120, 175, 235, 0.45); --atmo-clear: rgba(120, 175, 235, 0); --panel: #2f5d9e; --panel-line: rgba(255, 255, 255, 0.35); --dial: #ffffff; --shade: rgba(10, 20, 40, 0.3); }
+:root { --star: rgba(70, 90, 125, 0.45); --land: #7fa36a; --ocean-deep: #4a6f99; --ice: #eef3f8; --atmo: rgba(120, 175, 235, 0.45); --atmo-clear: rgba(120, 175, 235, 0); --panel: #2f5d9e; --panel-line: rgba(255, 255, 255, 0.35); --dial: #ffffff; --shade: rgba(33, 26, 17, 0.3); }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --earth: #3d5a7a; --sat: #d3ccc4; --grav: #69a0ff; --speed: #ff8a70; --net: #4cd08f; --star: rgba(225, 235, 255, 0.85); --land: #4f6e44; --ocean-deep: #263c56; --ice: #c9d3de; --atmo: rgba(110, 170, 255, 0.40); --atmo-clear: rgba(110, 170, 255, 0); --panel: #3d6fb8; --panel-line: rgba(255, 255, 255, 0.25); --dial: #2e271d; --shade: rgba(0, 0, 0, 0.45); } }
 :root[data-theme="dark"] { --earth: #3d5a7a; --sat: #d3ccc4; --grav: #69a0ff; --speed: #ff8a70; --net: #4cd08f; --star: rgba(225, 235, 255, 0.85); --land: #4f6e44; --ocean-deep: #263c56; --ice: #c9d3de; --atmo: rgba(110, 170, 255, 0.40); --atmo-clear: rgba(110, 170, 255, 0); --panel: #3d6fb8; --panel-line: rgba(255, 255, 255, 0.25); --dial: #2e271d; --shade: rgba(0, 0, 0, 0.45); }
 :root[data-projector="on"] { font-size: 125%; }
@@ -376,7 +376,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       { const q = Q(Math.cos(gth), Math.sin(gth), -0.04); ctx.fillStyle = '#ffd27a'; ctx.font = `700 ${11 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText('ground clock', q[0], q[1] + 8 * p); }
       const top = S.mode === 'orbit' ? Q(r * Math.cos(th), r * Math.sin(th), 0.08 * Math.max(r, 1.6)) : Q((1 + Math.max(r - 1, 0.06)) * Math.cos(gth), (1 + Math.max(r - 1, 0.06)) * Math.sin(gth), 0.04);
       lab(top, 'second clock', '#f6f3ee');
-      ctx.fillStyle = 'rgba(232,238,252,0.7)'; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText('drag to turn, wheel to zoom', pw / 2, h3 - 20 * p);
+      ctx.fillStyle = 'rgba(246,243,238,0.7)'; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText('drag to turn, wheel to zoom', pw / 2, h3 - 20 * p);
       ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.86; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(10 * p, 46 * p, Math.min(pw - 20 * p, 360 * p), 54 * p, 8 * p) : ctx.rect(10 * p, 46 * p, Math.min(pw - 20 * p, 360 * p), 54 * p); ctx.fill(); ctx.globalAlpha = 1;
     } else {
     stars(0, 0, pw, wide ? Hh : ph);

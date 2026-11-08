@@ -499,7 +499,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   let topGeo = null;   /* scale and center of the last flat drawing (for the ruler) */
   function starfield(ctx, W, H, seed) {
     let s = seed; const rn = () => { s = (s * 16807) % 2147483647; return s / 2147483647; };
-    for (let i = 0; i < 160; i++) { const a = 0.15 + 0.55 * rn() ** 2; ctx.fillStyle = `rgba(220,228,240,${a})`; ctx.fillRect(rn() * W, rn() * H, 1.2, 1.2); }
+    for (let i = 0; i < 160; i++) { const a = 0.15 + 0.55 * rn() ** 2; ctx.fillStyle = `rgba(238,231,222,${a})`; ctx.fillRect(rn() * W, rn() * H, 1.2, 1.2); }
   }
   function arrowTo(ctx, x0, y0, ang, R, cx, cy) {   /* from (x0, y0) along screen angle ang until the circle of radius R about (cx, cy) */
     const dx = Math.cos(ang), dy = Math.sin(ang), ox = x0 - cx, oy = y0 - cy, b = ox * dx + oy * dy, c = ox * ox + oy * oy - R * R, t = -b + Math.sqrt(Math.max(0, b * b - c));
@@ -520,7 +520,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function ringTag(ctx, n, x, y, p, col) { if (tagsAt.some((q) => Math.hypot(q[0] - x, q[1] - y) < 15 * p)) return; tagsAt.push([x, y]); numberTag(ctx, n, x, y, p, col); }
   function numberTag(ctx, n, x, y, p, col) {
     ctx.font = `700 ${9.5 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    ctx.fillStyle = 'rgba(4,7,13,0.75)'; ctx.beginPath(); ctx.arc(x, y, 7.5 * p, 0, 2 * Math.PI); ctx.fill();
+    ctx.fillStyle = 'rgba(11,9,6,0.75)'; ctx.beginPath(); ctx.arc(x, y, 7.5 * p, 0, 2 * Math.PI); ctx.fill();
     ctx.strokeStyle = col; ctx.lineWidth = 1; ctx.stroke(); ctx.fillStyle = col; ctx.fillText(String(n), x, y + 0.5);
   }
   function drawTop() {
@@ -585,7 +585,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const L0 = look(S.model, k, jd), cn = constellationAt(L0.lam, L0.beta);
     if (cn) { ctx.font = `700 ${11 * p}px ${T.ui}`; const tw = ctx.measureText(cn).width, dd = Math.hypot(end[0] - cx, end[1] - cy) || 1, ux = (end[0] - cx) / dd, uy = (end[1] - cy) / dd;   /* outside the ring, away from the planets */
       const lx = clamp(end[0] + ux * (tw / 2 + 10 * p), tw / 2 + 6, W - tw / 2 - 6), ly = clamp(end[1] + uy * 16 * p, 12, H - 10);
-      ctx.fillStyle = 'rgba(4,7,13,0.7)'; ctx.fillRect(lx - tw / 2 - 4, ly - 8 * p, tw + 8, 16 * p); label(ctx, cn, lx, ly, T.sight, p, 'center'); }
+      ctx.fillStyle = 'rgba(11,9,6,0.7)'; ctx.fillRect(lx - tw / 2 - 4, ly - 8 * p, tw + 8, 16 * p); label(ctx, cn, lx, ly, T.sight, p, 'center'); }
     ctx.fillStyle = T.muted; ctx.font = `${10.5 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
     ctx.fillText(S.frame === 'earth' ? 'Earth held still (Tycho Brahe\'s system).' : 'Seen from above the North Pole.', 10, H - 22 * p); ctx.fillText('Distances to scale; stars only give directions.', 10, H - 8);
   }
@@ -660,7 +660,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const m = st[i + 2] / 10; if (m > mlim) continue; const x = X(st[i] / 10), y = Y(st[i + 1] / 10); if (x < -4 || x > W + 4 || y < -4 || y > H + 4) continue;
       const r = Math.max(0.55, (2.9 - 0.44 * m)) * (p > 1 ? 1.2 : 1); ctx.fillStyle = bvColor(st[i + 3] / 10); ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.fill();
     }
-    ctx.font = `${9.5 * p}px ${T.ui}`; ctx.fillStyle = 'rgba(220,228,240,0.7)'; ctx.textAlign = 'left';
+    ctx.font = `${9.5 * p}px ${T.ui}`; ctx.fillStyle = 'rgba(238,231,222,0.7)'; ctx.textAlign = 'left';
     if (!wide) for (const [nm, l, b] of SKY.named) { const x = X(l), y = Y(b); if (inX(x) && y > 10 && y < H - 14) { ctx.fillText(nm, x + 5, y - 5); const w = ctx.measureText(nm).width; taken.push([x + 5 + w / 2, y - 5, w]); } }
     /* the Sun */
     { const x = X(now.sunLam), y = Y(0); if (inX(x)) { dot(ctx, x, y, Math.max(6, 0.27 * pxd) * p, T.sun, 3.4); label(ctx, 'Sun', x + 10 * p, y + 14 * p, T.sun, p); } }
@@ -679,8 +679,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       if (e.kind === 'conjunction' || e.kind === 'superior' || (S.marks && e.kind !== S.marks)) continue;
       if (!L.ahead && e.jd > S.jd) continue;
       const q = lonlat(geo(S.model, S.planet, e.jd)), x = X(q.lam), y = Y(q.beta); if (!inX(x)) continue;
-      const up = e.kind !== 'station' ? -1 : 1; ctx.strokeStyle = 'rgba(223,230,239,0.6)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, y + up * 16 * p); ctx.stroke();
-      ctx.fillStyle = 'rgba(223,230,239,0.85)'; const nm = e.kind === 'station' ? 'stationary' : e.kind === 'greatest' ? 'greatest elong.' : e.kind === 'inferior' ? 'inferior conj.' : 'opposition';
+      const up = e.kind !== 'station' ? -1 : 1; ctx.strokeStyle = 'rgba(238,232,224,0.6)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, y + up * 16 * p); ctx.stroke();
+      ctx.fillStyle = 'rgba(238,232,224,0.85)'; const nm = e.kind === 'station' ? 'stationary' : e.kind === 'greatest' ? 'greatest elong.' : e.kind === 'inferior' ? 'inferior conj.' : 'opposition';
       const txt = S.marks ? String(fromJD(e.jd).y) : `${nm} ${short(e.jd)}`, tw = ctx.measureText(txt).width; let ty = y + up * 22 * p + (up > 0 ? 6 * p : 0);
       for (let n = 0; n < 8 && boxes.some((b) => Math.abs(b[0] - x) < (b[2] + tw) / 2 + 4 && Math.abs(b[1] - ty) < 12 * p); n++) ty += up * 12 * p;
       boxes.push([x, ty, tw]); ctx.fillText(txt, x, ty);
@@ -733,7 +733,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* the globe: the dark side faintly, the lit part bright */
     const col = COLOR[k];
     ctx.translate(cx, cy); ctx.rotate(rot);
-    ctx.fillStyle = 'rgba(70,78,92,0.35)'; ctx.beginPath(); ctx.arc(0, 0, r, 0, 2 * Math.PI); ctx.fill();
+    ctx.fillStyle = 'rgba(90,82,72,0.35)'; ctx.beginPath(); ctx.arc(0, 0, r, 0, 2 * Math.PI); ctx.fill();
     const c = Math.cos(q.alpha * DEG);
     ctx.fillStyle = col; ctx.beginPath(); ctx.arc(0, 0, r, -Math.PI / 2, Math.PI / 2); ctx.ellipse(0, 0, Math.abs(c) * r, r, 0, Math.PI / 2, -Math.PI / 2, c < 0); ctx.closePath(); ctx.fill();
     if (k === 'jupiter' && r > 4) { ctx.globalCompositeOperation = 'source-atop'; ctx.restore(); ctx.save(); ctx.beginPath(); ctx.arc(cx, cy, Rf, 0, 2 * Math.PI); ctx.clip(); }

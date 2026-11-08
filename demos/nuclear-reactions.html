@@ -710,7 +710,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function cpDrawFlat(cx, cy, sc, Rpx, p) {
     const R = S.ch.R, t = CP.t, X = (q) => cx + q[0] * sc, Y = (q) => cy - q[1] * sc, fade = (a) => (reduce ? 1 : Math.max(0, a));
     /* the metal is full of nuclei: a faint field of them, then the source on the left */
-    ctx.fillStyle = dark() ? 'rgba(190,200,215,0.16)' : 'rgba(220,226,235,0.2)';
+    ctx.fillStyle = dark() ? 'rgba(213,204,192,0.16)' : 'rgba(234,228,221,0.2)';
     for (const q of CP.field) { ctx.beginPath(); ctx.arc(cx + q[0] * Rpx, cy - q[1] * Rpx, 1.6 * p, 0, 7); ctx.fill(); }
     const sx = cx - Rpx * 1.35;
     if (VG && sx > 0) { VG.rod(ctx, 0, cy, sx, cy, 8 * p, { color: '#b8b1a8' }); VG.box(ctx, Math.max(2, sx - 64 * p), cy - 13 * p, 50 * p, 26 * p, { color: '#6c6051', r: 4 }); lab('neutron source', Math.max(2, sx - 64 * p) + 25 * p, cy - 24 * p, { a: 'center', s: 9.5 * p }); }
@@ -773,7 +773,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.lineWidth = 7 * p; ctx.strokeStyle = '#a1998f'; ctx.stroke(); ctx.lineWidth = 1; ctx.strokeStyle = 'rgba(255,255,255,0.35)'; ctx.beginPath(); ctx.arc(cx, cy, Rch - 4 * p, 0, 7); ctx.stroke();
     /* the detector on its arm at angle θ, measured from the beam direction */
     const th = x.th * Math.PI / 180, dr = Rch - 22 * p, dx = cx + dr * Math.cos(th), dy = cy - dr * Math.sin(th);
-    ctx.save(); ctx.strokeStyle = 'rgba(200,210,222,0.35)'; ctx.setLineDash([3 * p, 4 * p]); ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + Rch * 0.92, cy); ctx.stroke(); ctx.beginPath(); ctx.arc(cx, cy, 34 * p, -th, 0); ctx.stroke(); ctx.restore();
+    ctx.save(); ctx.strokeStyle = 'rgba(220,212,202,0.35)'; ctx.setLineDash([3 * p, 4 * p]); ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + Rch * 0.92, cy); ctx.stroke(); ctx.beginPath(); ctx.arc(cx, cy, 34 * p, -th, 0); ctx.stroke(); ctx.restore();
     if (VG) VG.rod(ctx, cx, cy, dx, dy, 2.2 * p, { color: '#958c81' });
     ctx.save(); ctx.translate(dx, dy); ctx.rotate(-th); if (VG) VG.box(ctx, -10 * p, -12 * p, 20 * p, 24 * p, { color: '#6c6051', r: 3, shadow: false }); ctx.fillStyle = '#d8b25a'; ctx.fillRect(-11 * p, -7 * p, 2.5 * p, 14 * p); ctx.restore();
     lab(`θ = ${x.th}°`, cx + 40 * p, cy - 14 * p, { c: '#dbd4ca' });
@@ -873,7 +873,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     G3.bench = VD3K.bench(st, { w: 600, d: 600 }); sc.add(G3.bench);
     G3.stand = new THREE.Mesh(new THREE.TorusGeometry(1, 0.08, 12, 48), VD3K.material(st, { roughness: 0.5, metalness: 0.6 }, ['#70695f', '#a1988c'])); sc.add(G3.stand);
     G3.dim = new THREE.Line(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({ color: 0xf2c14e })); G3.dim.renderOrder = 2; G3.dim.material.depthTest = false; sc.add(G3.dim);
-    G3.dimLab = VD3K.label('R', { size: 1, color: '#ffffff', bg: 'rgba(20,28,38,0.8)' }); G3.dimLab.material.depthTest = false; G3.dimLab.renderOrder = 3; sc.add(G3.dimLab);
+    G3.dimLab = VD3K.label('R', { size: 1, color: '#ffffff', bg: 'rgba(37,30,21,0.8)' }); G3.dimLab.material.depthTest = false; G3.dimLab.renderOrder = 3; sc.add(G3.dimLab);
     G3.shell = new THREE.Mesh(new THREE.SphereGeometry(1, 64, 40), VD3K.material(st, { roughness: 0.35, metalness: 0.7, transparent: true, opacity: 0.22, depthWrite: false }, ['#948c81', '#b2a89c']));
     G3.core = new THREE.Mesh(new THREE.SphereGeometry(1, 64, 40), new THREE.MeshBasicMaterial({ color: 0x15110c, transparent: true, opacity: 0.35, depthWrite: false, side: THREE.BackSide }));
     sc.add(G3.core, G3.shell);

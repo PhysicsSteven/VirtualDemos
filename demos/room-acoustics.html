@@ -441,7 +441,7 @@ table.mat td.num { font-family: var(--font-mono); text-align: right; }
       ctx.fillText(anim ? `${speedTxt()}, t = ${(anim.t * 1000).toFixed(0)} ms` : 'drag to turn · drag the microphone to change r', R.x1, R.planBot + 22 * p); ctx.textAlign = 'left'; return; }
     /* floor and walls */
     const Gm = window.VDGear.mix, dk = window.VDGear.dark(), rw = S.L * sc, rh = S.W * sc, rnd = mulberry(5), wt = 8 * p;
-    ctx.save(); ctx.shadowColor = dk ? 'rgba(0,0,0,0.5)' : 'rgba(20,30,45,0.22)'; ctx.shadowBlur = 18 * p; ctx.shadowOffsetY = 6 * p;
+    ctx.save(); ctx.shadowColor = dk ? 'rgba(0,0,0,0.5)' : 'rgba(43,34,22,0.22)'; ctx.shadowBlur = 18 * p; ctx.shadowOffsetY = 6 * p;
     ctx.fillStyle = T.floorc; ctx.fillRect(ox - wt, oy - wt, rw + 2 * wt, rh + 2 * wt); ctx.restore();
     /* the floor: concrete, carpet, or an audience seated 2 per m² (rows 1 m apart, a center aisle drawn clear, as in the 3D room) */
     const fl = S.walls === 'wedges' ? 'wedges' : S.floor, fc = fl === 'carpet' ? Gm(T.floorc, dk ? '#50473c' : '#958b7f', 0.4) : fl === 'audience' ? Gm(T.floorc, dk ? '#5a4634' : '#b58c62', 0.45) : T.floorc;

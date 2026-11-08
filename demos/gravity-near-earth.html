@@ -17,7 +17,7 @@
 /* Layout: lab bench. The gas box and speed histogram fill the left, a narrow instrument rail sits on the right; stacks on phones. */
 
 :root { --earth: #6b8fb8; --land: #7fa36a; --mass: #61584c; --gv: #b0452f; --cv: #a7740b; --ev: #2b60b5; }
-:root { --star: rgba(70, 90, 125, 0.45); --atmo: rgba(120, 175, 235, 0.45); --atmo-clear: rgba(120, 175, 235, 0); --ocean-deep: #4a6f99; --ice: #eef3f8; --moon: #b9bcc2; --moon-dark: #8e939b; --mars: #c97a52; --mars-dark: #9b5537; --icon: #73695c; --shade: rgba(10, 20, 40, 0.35); }
+:root { --star: rgba(70, 90, 125, 0.45); --atmo: rgba(120, 175, 235, 0.45); --atmo-clear: rgba(120, 175, 235, 0); --ocean-deep: #4a6f99; --ice: #eef3f8; --moon: #b9bcc2; --moon-dark: #8e939b; --mars: #c97a52; --mars-dark: #9b5537; --icon: #73695c; --shade: rgba(33, 26, 17, 0.35); }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --earth: #3d5a7a; --land: #4f6e44; --mass: #d3ccc4; --gv: #ff8a70; --cv: #e2b350; --ev: #69a0ff; --star: rgba(225, 235, 255, 0.85); --atmo: rgba(110, 170, 255, 0.40); --atmo-clear: rgba(110, 170, 255, 0); --ocean-deep: #263c56; --ice: #c9d3de; --moon: #8a8e95; --moon-dark: #62666d; --mars: #9a5638; --mars-dark: #6e3a24; --icon: #c2b8ac; --shade: rgba(0, 0, 0, 0.45); } }
 :root[data-theme="dark"] { --earth: #3d5a7a; --land: #4f6e44; --mass: #d3ccc4; --gv: #ff8a70; --cv: #e2b350; --ev: #69a0ff; --star: rgba(225, 235, 255, 0.85); --atmo: rgba(110, 170, 255, 0.40); --atmo-clear: rgba(110, 170, 255, 0); --ocean-deep: #263c56; --ice: #c9d3de; --moon: #8a8e95; --moon-dark: #62666d; --mars: #9a5638; --mars-dark: #6e3a24; --icon: #c2b8ac; --shade: rgba(0, 0, 0, 0.45); }
 :root[data-projector="on"] { font-size: 125%; }
@@ -283,7 +283,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   let g3 = null, rect3 = { x: 0, y: 0, w: 0, h: 0 }, spin3 = 0, spinLast = 0;
   const use3 = () => !!(G3.on && g3);
   const col3 = (s, fb) => { try { return new THREE.Color(s || fb); } catch (_) { return new THREE.Color(fb); } };
-  const LIT = { gv: '#ff8a70', cv: '#e2b350', ink: '#f6f3ee', muted: 'rgba(232,238,252,0.7)' };   /* label colors on the dark sky */
+  const LIT = { gv: '#ff8a70', cv: '#e2b350', ink: '#f6f3ee', muted: 'rgba(246,243,238,0.7)' };   /* label colors on the dark sky */
   function init3D() {
     G3.tried = true;
     const rd = VD3.renderer(); if (!rd) return false;
@@ -416,7 +416,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         const x = q[0] + (al === 'right' ? -6 : al === 'center' ? 0 : 6) * p, tw = ctx.measureText(t).width, x0 = al === 'right' ? x - tw : al === 'center' ? x - tw / 2 : x, hh = 13 * p, dir = bl === 'bottom' ? -1 : 1;
         let y = q[1] + (bl === 'top' ? 6 : bl === 'bottom' ? -6 : 0) * p; const top = () => (bl === 'top' ? y : bl === 'bottom' ? y - hh : y - hh / 2);
         for (let k = 0; k < 5 && LB3.some((b) => x0 < b[2] && x0 + tw > b[0] && top() < b[3] && top() + hh > b[1]); k++) y += dir * hh;
-        LB3.push([x0, top(), x0 + tw, top() + hh]); ctx.lineWidth = 3; ctx.lineJoin = 'round'; ctx.strokeStyle = 'rgba(5,10,20,0.75)'; ctx.strokeText(t, x, y); ctx.fillText(t, x, y); };
+        LB3.push([x0, top(), x0 + tw, top() + hh]); ctx.lineWidth = 3; ctx.lineJoin = 'round'; ctx.strokeStyle = 'rgba(16,13,8,0.75)'; ctx.strokeText(t, x, y); ctx.fillText(t, x, y); };
       const LB3 = [];
       lab(R3.gTip, S.blind ? 'gravity' : `gravity ${f(E.grav, 2)} N`, LIT.gv, 'left', 'top');
       if (S.spin && E.cent > 0) lab(R3.cTip, 'centrifugal ×100', LIT.cv);

@@ -369,13 +369,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     c.strokeStyle = 'rgba(255,255,255,0.55)'; c.lineWidth = 1; const cx = x0 + side / 2, cy = y0 + side / 2;
     c.beginPath(); c.arc(cx, cy, 4, 0, 7); c.stroke(); c.beginPath(); c.moveTo(cx - 9, cy); c.lineTo(cx - 5, cy); c.moveTo(cx + 5, cy); c.lineTo(cx + 9, cy); c.moveTo(cx, cy - 9); c.lineTo(cx, cy - 5); c.moveTo(cx, cy + 5); c.lineTo(cx, cy + 9); c.stroke();
     /* a millimeter scale along the bottom edge */
-    const yb = y0 + side + 14, mm = side / 80; c.strokeStyle = 'rgba(220,228,238,0.7)'; c.fillStyle = 'rgba(220,228,238,0.8)'; c.font = `${10 * p}px ${T.mono}`; c.textAlign = 'center'; c.textBaseline = 'top';
+    const yb = y0 + side + 14, mm = side / 80; c.strokeStyle = 'rgba(237,230,221,0.7)'; c.fillStyle = 'rgba(237,230,221,0.8)'; c.font = `${10 * p}px ${T.mono}`; c.textAlign = 'center'; c.textBaseline = 'top';
     for (let k = -40; k <= 40; k += 5) { const x = cx + k * mm, big = k % 20 === 0; c.beginPath(); c.moveTo(x, yb - 6); c.lineTo(x, yb - (big ? 0 : 3)); c.stroke();
       if (big) { c.textAlign = k === -40 ? 'left' : k === 40 ? 'right' : 'center'; c.fillText(k === 40 ? '40 mm' : `${k}`.replace('-', '−'), x, yb + 2); } }
     /* the counter's display */
     const lw = 92 * p, lh = 26 * p;
     if (VG) { VG.lcd(c, x0 + side - lw - 6, y0 + 6, lw, lh, isWhite() ? '— —' : String(S.N)); }
-    c.fillStyle = 'rgba(220,228,238,0.75)'; c.font = `${10 * p}px ${T.ui}`; c.textAlign = 'right'; c.textBaseline = 'top'; c.fillText('fringes counted', x0 + side - 6, y0 + 8 + lh);
+    c.fillStyle = 'rgba(237,230,221,0.75)'; c.font = `${10 * p}px ${T.ui}`; c.textAlign = 'right'; c.textBaseline = 'top'; c.fillText('fringes counted', x0 + side - 6, y0 + 8 + lh);
   }
 
   // ---------- drawing: the top view ----------
@@ -389,7 +389,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const X = (x) => ox + x * k, Y = (y) => oy + y * k;
     c.fillStyle = T.hole; for (let gx = Math.ceil((xmin - 60) / 25) * 25; gx <= xmax + 60; gx += 25) for (let gy = Math.ceil((ymin - 60) / 25) * 25; gy <= ymax + 60; gy += 25) { const px = X(gx), py = Y(gy); if (px > -3 && px < W + 3 && py > -3 && py < H + 3) { c.beginPath(); c.arc(px, py, Math.max(1.2, 2.2 * k), 0, 7); c.fill(); } }
     const vg = c.createRadialGradient(W * 0.45, H * 0.4, 0, W * 0.45, H * 0.4, Math.max(W, H) * 0.8); vg.addColorStop(0, 'rgba(255,255,255,0.05)'); vg.addColorStop(1, 'rgba(0,0,0,0.25)'); c.fillStyle = vg; c.fillRect(0, 0, W, H);
-    const lab = (s, x, y, a = 'center') => { c.save(); c.font = `${10.5 * p}px ${T.ui}`; c.textAlign = a; c.textBaseline = 'middle'; c.fillStyle = 'rgba(214,222,232,0.85)'; c.fillText(s, x, y); c.restore(); };
+    const lab = (s, x, y, a = 'center') => { c.save(); c.font = `${10.5 * p}px ${T.ui}`; c.textAlign = a; c.textBaseline = 'middle'; c.fillStyle = 'rgba(231,224,215,0.85)'; c.fillText(s, x, y); c.restore(); };
     const exag = 40, mOff = dUm() * 1e-3 * exag;            /* the mirror's travel is drawn 40 times larger */
     const m1x = 100 + mOff, m2y = -100, scrY = 150;
     const tiltDraw = S.tx * ARCMIN * 600;                    /* M2's tilt drawn 600 times larger */
@@ -421,13 +421,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     c.save(); c.fillStyle = lightCss(1); c.shadowColor = lightCss(0.9); c.shadowBlur = 10; c.beginPath(); c.arc(X(-226), Y(0), 2.5 * k, 0, 7); c.fill(); c.restore();
     if (VG) VG.plate(c, S.src === 'mystery' ? 'laser ?' : S.src === 'red' || S.src === 'green' ? 'He–Ne laser' : S.src === 'hg' ? 'Hg lamp + filter' : S.src === 'na' ? 'Na lamp' : 'white lamp', X(-274), Y(0), { s: Math.max(7, Math.min(10, 7 * k)) });
     /* the diverging lens on a post holder */
-    c.save(); c.translate(X(-48), Y(0)); c.fillStyle = 'rgba(180,215,235,0.55)'; c.strokeStyle = 'rgba(220,240,255,0.8)'; c.lineWidth = 1;
+    c.save(); c.translate(X(-48), Y(0)); c.fillStyle = 'rgba(180,215,235,0.55)'; c.strokeStyle = 'rgba(243,238,232,0.8)'; c.lineWidth = 1;
     c.beginPath(); c.moveTo(-3 * k, -12 * k); c.lineTo(3 * k, -12 * k); c.quadraticCurveTo(0.6 * k, 0, 3 * k, 12 * k); c.lineTo(-3 * k, 12 * k); c.quadraticCurveTo(-0.6 * k, 0, -3 * k, -12 * k); c.fill(); c.stroke(); c.restore();
     lab('lens', X(-48), Y(-22));
     /* the beam splitter (half silvered face toward the source) and the compensator, both at 45° */
     const plate = (cx, cy, half, coated) => { c.save(); c.translate(X(cx), Y(cy)); c.rotate(-Math.PI / 4);
-      c.fillStyle = 'rgba(170,205,225,0.45)'; c.strokeStyle = 'rgba(225,240,250,0.85)'; c.lineWidth = 1; c.beginPath(); c.rect(-half * k, -2.2 * k, 2 * half * k, 4.4 * k); c.fill(); c.stroke();
-      if (coated) { c.strokeStyle = 'rgba(235,235,240,0.95)'; c.lineWidth = Math.max(1.5, 1.2 * k); c.beginPath(); c.moveTo(-half * k, -2.2 * k); c.lineTo(half * k, -2.2 * k); c.stroke(); } c.restore(); };
+      c.fillStyle = 'rgba(170,205,225,0.45)'; c.strokeStyle = 'rgba(243,238,232,0.85)'; c.lineWidth = 1; c.beginPath(); c.rect(-half * k, -2.2 * k, 2 * half * k, 4.4 * k); c.fill(); c.stroke();
+      if (coated) { c.strokeStyle = 'rgba(240,238,235,0.95)'; c.lineWidth = Math.max(1.5, 1.2 * k); c.beginPath(); c.moveTo(-half * k, -2.2 * k); c.lineTo(half * k, -2.2 * k); c.stroke(); } c.restore(); };
     plate(0, 0, 18, true); plate(26, 0, 14, false);
     { c.font = `${10.5 * p}px ${T.ui}`; const gap = X(30) - X(-34) - (c.measureText('beam splitter').width + c.measureText('compensator').width) / 2;
       lab('beam splitter', X(-34), Y(30), 'center'); lab('compensator', X(30), gap < 8 * p ? Y(26) + 14 * p : Y(26), 'center'); }   /* a small drawing: the two labels on separate lines */
@@ -439,7 +439,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (VG) { VG.rod(c, X(mbx - 8), Y(mby), X(mbx + 10), Y(mby), 6 * k, { color: '#c5beb5' }); VG.rod(c, X(mbx + 10), Y(mby), X(mbx + 40), Y(mby), 10 * k, { color: '#d5d0ca' }); }
     else { c.fillStyle = '#d5d0ca'; c.fillRect(X(mbx + 10), Y(mby - 10), 30 * k, 20 * k); }
     /* thimble divisions: 50 per turn, one division = 1 μm; the visible face shows the ticks moving as it turns */
-    c.save(); c.beginPath(); c.rect(X(mbx + 10), Y(mby - 10), 30 * k, 20 * k); c.clip(); c.strokeStyle = 'rgba(30,36,44,0.75)'; c.lineWidth = 1;
+    c.save(); c.beginPath(); c.rect(X(mbx + 10), Y(mby - 10), 30 * k, 20 * k); c.clip(); c.strokeStyle = 'rgba(43,38,31,0.75)'; c.lineWidth = 1;
     const turn = S.m / 50, frac = turn - Math.floor(turn);
     for (let i = 0; i < 50; i++) { const a = (i / 50 - frac) * 2 * Math.PI, s = Math.sin(a); if (Math.cos(a) < 0) continue; const yy = Y(mby) + s * 10 * k; c.beginPath(); c.moveTo(X(mbx + 10), yy); c.lineTo(X(mbx + 10) + (i % 5 === 0 ? 9 : 5) * k, yy); c.stroke(); }
     c.restore(); lab(`${f(S.m, 1)} μm`, X(mbx + 25), Y(mby + 22)); lab('micrometer', X(mbx + 25), Y(mby - 20));
@@ -451,7 +451,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (S.cell) {
       const y1 = -25, y2 = -75; c.save(); c.fillStyle = 'rgba(190,220,235,0.22)'; c.strokeStyle = 'rgba(210,232,245,0.8)'; c.lineWidth = 1;
       c.beginPath(); c.roundRect(X(-12), Y(y2), 24 * k, (y1 - y2) * k, 3 * k); c.fill(); c.stroke();
-      c.fillStyle = 'rgba(225,240,250,0.65)'; c.fillRect(X(-13), Y(y2) - 1.5 * k, 26 * k, 3 * k); c.fillRect(X(-13), Y(y1) - 1.5 * k, 26 * k, 3 * k);
+      c.fillStyle = 'rgba(243,238,232,0.65)'; c.fillRect(X(-13), Y(y2) - 1.5 * k, 26 * k, 3 * k); c.fillRect(X(-13), Y(y1) - 1.5 * k, 26 * k, 3 * k);
       c.restore(); lab('gas cell, 5.00 cm', X(-18), Y(-50), 'right');
       /* hose to the pump, the gauge */
       if (VG) { VG.cable(c, X(-12), Y(-58), X(-150), Y(-125), 10 * k, { color: '#35312b', w: 4 * k }); VG.box(c, X(-230), Y(-158), 82 * k, 50 * k, { color: '#544a3d', r: 5 * k });

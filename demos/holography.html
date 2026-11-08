@@ -416,18 +416,18 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function label(c, s, x, y, o = {}) { const p = proj(), sz = (o.size || 11) * p; c.font = `${o.bold ? '600 ' : ''}${sz}px ${T.mono}`; const w = c.measureText(s).width, al = o.align || 'left', cw = c.canvas.width / dpr;
     let x0 = al === 'center' ? x - w / 2 : al === 'right' ? x - w : x; x0 = Math.max(6, Math.min(cw - w - 6, x0));
     if (o.top != null) y = Math.max(o.top + sz, y);   /* below a caption at the top of the pane */
-    c.fillStyle = 'rgba(11,15,21,0.78)'; c.fillRect(x0 - 4, y - sz, w + 8, sz + 6); txt(c, s, x0, y, Object.assign({}, o, { align: 'left' })); }
+    c.fillStyle = 'rgba(20,17,12,0.78)'; c.fillRect(x0 - 4, y - sz, w + 8, sz + 6); txt(c, s, x0, y, Object.assign({}, o, { align: 'left' })); }
   function arrow(c, x1, y1, x2, y2, col, w = 2) { const a = Math.atan2(y2 - y1, x2 - x1), h = 8 * proj(); c.strokeStyle = col; c.fillStyle = col; c.lineWidth = w; c.beginPath(); c.moveTo(x1, y1); c.lineTo(x2 - h * 0.7 * Math.cos(a), y2 - h * 0.7 * Math.sin(a)); c.stroke();
     c.beginPath(); c.moveTo(x2, y2); c.lineTo(x2 - h * Math.cos(a - 0.4), y2 - h * Math.sin(a - 0.4)); c.lineTo(x2 - h * Math.cos(a + 0.4), y2 - h * Math.sin(a + 0.4)); c.closePath(); c.fill(); }
   function room(c, w, h) {
     const g = c.createLinearGradient(0, 0, 0, h); g.addColorStop(0, '#1a150f'); g.addColorStop(1, '#100d0a'); c.fillStyle = g; c.fillRect(0, 0, w, h);
-    c.fillStyle = 'rgba(160,175,195,0.07)'; const s = 25 * proj(); for (let y = s / 2; y < h; y += s) for (let x = s / 2; x < w; x += s) { c.beginPath(); c.arc(x, y, 1.6, 0, TAU); c.fill(); }   /* breadboard holes, 25 mm pitch in look only */
+    c.fillStyle = 'rgba(192,179,163,0.07)'; const s = 25 * proj(); for (let y = s / 2; y < h; y += s) for (let x = s / 2; x < w; x += s) { c.beginPath(); c.arc(x, y, 1.6, 0, TAU); c.fill(); }   /* breadboard holes, 25 mm pitch in look only */
   }
   /* the photographic plate in its holder, standing across the beams at z = 0 */
   function plateGlass(c, x, y0, y1, developed) {
     const p = proj(), w = 7 * p;
-    c.fillStyle = developed ? 'rgba(120,128,140,0.55)' : 'rgba(170,205,225,0.28)'; c.fillRect(x - w / 2, y0, w, y1 - y0);
-    if (developed) { c.fillStyle = 'rgba(30,34,40,0.6)'; for (let y = y0; y < y1; y += 2.5 * p) c.fillRect(x - w / 2, y, w, 1.1 * p); }
+    c.fillStyle = developed ? 'rgba(138,131,122,0.55)' : 'rgba(170,205,225,0.28)'; c.fillRect(x - w / 2, y0, w, y1 - y0);
+    if (developed) { c.fillStyle = 'rgba(39,36,31,0.6)'; for (let y = y0; y < y1; y += 2.5 * p) c.fillRect(x - w / 2, y, w, 1.1 * p); }
     c.strokeStyle = 'rgba(210,225,240,0.75)'; c.lineWidth = 1; c.strokeRect(x - w / 2 + 0.5, y0 + 0.5, w - 1, y1 - y0 - 1);
     c.fillStyle = '#52483c'; c.fillRect(x - w / 2 - 4 * p, y0 - 10 * p, w + 8 * p, 10 * p); c.fillRect(x - w / 2 - 4 * p, y1, w + 8 * p, 10 * p);
     c.fillStyle = '#786c5c'; c.fillRect(x - w / 2 - 4 * p, y0 - 10 * p, w + 8 * p, 2 * p); c.fillRect(x - w / 2 - 4 * p, y1, w + 8 * p, 2 * p);
@@ -498,8 +498,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const oc = document.createElement('canvas'); oc.width = inset.img.width; oc.height = inset.img.height; oc.getContext('2d').putImageData(inset.img, 0, 0);
     ctx.save(); ctx.beginPath(); ctx.roundRect ? ctx.roundRect(b.x, b.y, b.w, b.h, 10 * p) : ctx.rect(b.x, b.y, b.w, b.h); ctx.clip();
     ctx.imageSmoothingEnabled = true; ctx.drawImage(oc, b.x, b.y, b.w, b.h); ctx.restore();
-    ctx.strokeStyle = 'rgba(220,230,240,0.55)'; ctx.lineWidth = 1.2; ctx.strokeRect(b.x + 0.5, b.y + 0.5, b.w - 1, b.h - 1);
-    const pzx = b.x + (-inset.z0) / inset.zw * b.w; ctx.strokeStyle = 'rgba(230,240,250,0.9)'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(pzx, b.y); ctx.lineTo(pzx, b.y + b.h); ctx.stroke();
+    ctx.strokeStyle = 'rgba(238,231,222,0.55)'; ctx.lineWidth = 1.2; ctx.strokeRect(b.x + 0.5, b.y + 0.5, b.w - 1, b.h - 1);
+    const pzx = b.x + (-inset.z0) / inset.zw * b.w; ctx.strokeStyle = 'rgba(245,241,235,0.9)'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(pzx, b.y); ctx.lineTo(pzx, b.y + b.h); ctx.stroke();
     label(ctx, 'at the plate, magnified: 12 μm top to bottom', b.x + 8 * p, b.y + 18 * p, { size: 10 });
     label(ctx, 'developed', pzx + 4 * p, b.y + b.h - 10 * p, { size: 9.5, color: T.muted });
     /* the beams' directions */
@@ -526,15 +526,15 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const top0 = Math.pow(1 + 1 / Math.sqrt(r.K), 2) * (r.obj === 'plane' ? 1 : 1.25), ymax = Math.max(imax, top0) * 1.05, Y = (v) => top + curveH - v / ymax * curveH;
     c.fillStyle = rgba(col, 0.18); c.beginPath(); for (let i = 0; i < npx; i++) c.lineTo(left + i + 0.5, Y(hi[i])); for (let i = npx - 1; i >= 0; i--) c.lineTo(left + i + 0.5, Y(lo[i])); c.closePath(); c.fill();
     c.strokeStyle = rgba(col, 1); c.lineWidth = 1.4; c.beginPath(); for (let i = 0; i < npx; i++) { const yy = Y(sub > 3 ? mean[i] : hi[i]); i ? c.lineTo(left + i + 0.5, yy) : c.moveTo(left + i + 0.5, yy); } c.stroke();
-    c.strokeStyle = 'rgba(200,210,225,0.25)'; c.lineWidth = 1; c.beginPath(); c.moveTo(left, Y(0)); c.lineTo(right, Y(0)); c.stroke();
+    c.strokeStyle = 'rgba(223,214,202,0.25)'; c.lineWidth = 1; c.beginPath(); c.moveTo(left, Y(0)); c.lineTo(right, Y(0)); c.stroke();
     txt(c, 'light falling on the plate, I(x)', left, 16 * p, { size: 10.5, color: T.muted });
     const im = c.createImageData(npx, 1); for (let i = 0; i < npx; i++) { const t = mean[i] / (ymax / 1.05), g = 30 + 200 * (1 - t); im.data[4 * i] = g; im.data[4 * i + 1] = g + 4; im.data[4 * i + 2] = g + 10; im.data[4 * i + 3] = 255; }
     const oc = document.createElement('canvas'); oc.width = npx; oc.height = 1; oc.getContext('2d').putImageData(im, 0, 0); c.imageSmoothingEnabled = false; c.drawImage(oc, left, stripY, xw, stripH); c.imageSmoothingEnabled = true;
-    c.strokeStyle = 'rgba(200,210,225,0.4)'; c.strokeRect(left + 0.5, stripY + 0.5, xw - 1, stripH - 1);
+    c.strokeStyle = 'rgba(223,214,202,0.4)'; c.strokeRect(left + 0.5, stripY + 0.5, xw - 1, stripH - 1);
     txt(c, w < 560 ? 'developed plate (dark where more light fell)' : 'developed plate under the microscope (dark where more light fell)', left, stripY - 3 * p, { size: 9.5, color: T.muted });
     if (sub >= 40 && per > 1.2e-6) label(c, 'fringes too fine to see at this field of view: zoom in', w / 2, stripY + stripH / 2 + 4 * p, { align: 'center', size: 10 });
     /* scale: ticks along the strip in μm */
-    const step = niceStep(m.fov / 6); c.strokeStyle = 'rgba(200,210,225,0.6)'; c.lineWidth = 1;
+    const step = niceStep(m.fov / 6); c.strokeStyle = 'rgba(223,214,202,0.6)'; c.lineWidth = 1;
     for (let x = Math.ceil(xa / step) * step; x <= xa + m.fov; x += step) { const px = X(x); if (px < left + 18 * p || px > right - 18 * p) continue; c.beginPath(); c.moveTo(px, stripY + stripH); c.lineTo(px, stripY + stripH + 5 * p); c.stroke(); txt(c, fmtUm(x), px, stripY + stripH + 16 * p, { size: 9.5, align: 'center', color: T.muted }); }
     /* the cursors */
     for (const [k, nm, cc] of [['a', 'A', '#ffb547'], ['b', 'B', '#6fd3ff']]) { const px = X(m[k]); if (px < left - 1 || px > right + 1) continue; c.strokeStyle = cc; c.lineWidth = 1.6; c.setLineDash([5, 3]); c.beginPath(); c.moveTo(px, top - 4 * p); c.lineTo(px, stripY + stripH); c.stroke(); c.setLineDash([]); label(c, nm, px, top + 6 * p, { align: 'center', color: cc, size: 10.5, bold: true }); }
@@ -564,8 +564,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const crop = G.xr / M.xr, r0 = M.rows * (1 - crop) / 2;
     ctx.imageSmoothingEnabled = true; ctx.drawImage(mapImage(), 0, r0, M.cols, M.rows * crop, zpx0, G.X(G.xr), zpx1 - zpx0, G.X(-G.xr) - G.X(G.xr));
     /* the traced back half: where the light seems to come from */
-    const pz = G.Z(0); ctx.fillStyle = 'rgba(11,15,21,0.32)'; ctx.fillRect(zpx0, G.X(G.xr), pz - zpx0, G.X(-G.xr) - G.X(G.xr));
-    ctx.strokeStyle = 'rgba(200,210,225,0.35)'; ctx.setLineDash([4, 4]); ctx.strokeRect(zpx0 + 0.5, G.X(G.xr) + 0.5, pz - zpx0 - 1, G.X(-G.xr) - G.X(G.xr) - 1); ctx.setLineDash([]);
+    const pz = G.Z(0); ctx.fillStyle = 'rgba(20,17,12,0.32)'; ctx.fillRect(zpx0, G.X(G.xr), pz - zpx0, G.X(-G.xr) - G.X(G.xr));
+    ctx.strokeStyle = 'rgba(223,214,202,0.35)'; ctx.setLineDash([4, 4]); ctx.strokeRect(zpx0 + 0.5, G.X(G.xr) + 0.5, pz - zpx0 - 1, G.X(-G.xr) - G.X(G.xr) - 1); ctx.setLineDash([]);
     label(ctx, 'traced back: where the light seems to come from', zpx0 + 6 * p, G.X(G.xr) + 16 * p, { size: 10 });
     if (W >= 560) label(ctx, 'light leaving the plate', pz + 12 * p, G.X(G.xr) + 16 * p, { size: 10 });
     /* the light falling on the plate, from the left */
@@ -594,7 +594,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* screen */
     const sc = screenNow(), l = A.x + 12 * p, rr = A.x + A.w - 10 * p, t = A.y + 26 * p, b = A.y + A.h - 22 * p, xr = 9e-3, X = (x) => l + (x + xr) / (2 * xr) * (rr - l);
     let mx = sc.peakI || 1; const Y = (v) => b - Math.sqrt(v / mx) * (b - t);
-    c.strokeStyle = 'rgba(200,210,225,0.25)'; c.beginPath(); c.moveTo(l, b); c.lineTo(rr, b); c.stroke();
+    c.strokeStyle = 'rgba(223,214,202,0.25)'; c.beginPath(); c.moveTo(l, b); c.lineTo(rr, b); c.stroke();
     c.strokeStyle = rgba(col, 1); c.lineWidth = 1.2; c.beginPath(); const npx = Math.round(rr - l);
     for (let i = 0; i < npx; i++) { const x0 = -xr + i / npx * 2 * xr, n0 = Math.round(x0 / sc.dx + sc.N / 2), n1 = Math.round((x0 + 2 * xr / npx) / sc.dx + sc.N / 2); let v = 0; for (let n = n0; n < n1; n++) if (sc.I[n] > v) v = sc.I[n]; i ? c.lineTo(l + i, Y(v)) : c.moveTo(l + i, Y(v)); }
     c.stroke();
@@ -603,14 +603,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     txt(c, 'x (mm)', rr, b + 14 * p, { size: 9.5, align: 'right', color: T.muted });
     /* zoom on the brightest point: ±40 μm */
     const zw = Math.min(A.w * 0.36, 170 * p), zh = (b - t) * 0.62, zx = rr - zw, zy = t, half = 40e-6;
-    c.fillStyle = 'rgba(16,22,30,0.92)'; c.fillRect(zx, zy, zw, zh); c.strokeStyle = 'rgba(200,210,225,0.4)'; c.strokeRect(zx + 0.5, zy + 0.5, zw - 1, zh - 1);
+    c.fillStyle = 'rgba(29,24,17,0.92)'; c.fillRect(zx, zy, zw, zh); c.strokeStyle = 'rgba(223,214,202,0.4)'; c.strokeRect(zx + 0.5, zy + 0.5, zw - 1, zh - 1);
     c.strokeStyle = rgba(col, 1); c.lineWidth = 1.4; c.beginPath();
     for (let i = 0; i <= 120; i++) { const x = sc.peakX - half + i / 120 * 2 * half, fn = x / sc.dx + sc.N / 2, n = Math.floor(fn), u = fn - n, v = sc.I[n] * (1 - u) + sc.I[n + 1] * u, yy = zy + zh - 4 - v / mx * (zh - 14 * p); i ? c.lineTo(zx + i / 120 * zw, yy) : c.moveTo(zx, yy); }
     c.stroke(); txt(c, 'brightest point ±40 μm', zx + 4 * p, zy + 11 * p, { size: 9, color: T.muted });
     c.strokeStyle = '#fff'; c.setLineDash([3, 3]); c.beginPath(); c.moveTo(X(sc.peakX), t); c.lineTo(X(sc.peakX), b); c.stroke(); c.setLineDash([]);
     /* angles */
     const l2 = B.x + 12 * p, r2 = B.x + B.w - 12 * p, t2 = B.y + 26 * p, b2 = B.y + B.h - 22 * p, TH = (a) => l2 + (a + 90) / 180 * (r2 - l2), lg = (v) => (v > 1e-7 ? (Math.log10(v) + 7) / 7 : 0), Y2 = (v) => b2 - lg(v) * (b2 - t2);
-    c.strokeStyle = 'rgba(200,210,225,0.12)'; for (let e = -6; e <= 0; e += 2) { c.beginPath(); c.moveTo(l2, Y2(Math.pow(10, e))); c.lineTo(r2, Y2(Math.pow(10, e))); c.stroke(); }
+    c.strokeStyle = 'rgba(223,214,202,0.12)'; for (let e = -6; e <= 0; e += 2) { c.beginPath(); c.moveTo(l2, Y2(Math.pow(10, e))); c.lineTo(r2, Y2(Math.pow(10, e))); c.stroke(); }
     c.fillStyle = rgba(col, 0.85); for (let i = 0; i < HIST.length; i++) { const v = HIST[i]; if (v <= 1e-7) continue; const x0 = TH(-90 + i * 0.1); c.fillRect(x0, Y2(v), Math.max(1, TH(0.1) - TH(0)), b2 - Y2(v)); }
     txt(c, 'light leaving the plate per 0.1° (fraction, log scale)', l2, B.y + 16 * p, { size: 10.5, color: T.muted });
     for (let a = -90; a <= 90; a += 30) txt(c, `${String(a).replace('-', '−')}°`, TH(a), b2 + 14 * p, { size: 9.5, align: 'center', color: T.muted });
@@ -620,7 +620,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const dx = TH(S.rc.det); c.strokeStyle = '#fff'; c.lineWidth = 1.4; c.setLineDash([5, 3]); c.beginPath(); c.moveTo(dx, t2); c.lineTo(dx, b2); c.stroke(); c.setLineDash([]);
     /* zoom: ±1° around the detector, 0.01° bins */
     const zw2 = Math.min(B.w * 0.36, 170 * p), zh2 = (b2 - t2) * 0.62, zx2 = l2 + 4 * p, zy2 = t2 + 10 * p, Z1 = angleHist(RECON, S.rc.det - 1, S.rc.det + 1, 0.01); let zm = 0; for (const v of Z1) if (v > zm) zm = v;
-    c.fillStyle = 'rgba(16,22,30,0.92)'; c.fillRect(zx2, zy2, zw2, zh2); c.strokeStyle = 'rgba(200,210,225,0.4)'; c.strokeRect(zx2 + 0.5, zy2 + 0.5, zw2 - 1, zh2 - 1);
+    c.fillStyle = 'rgba(29,24,17,0.92)'; c.fillRect(zx2, zy2, zw2, zh2); c.strokeStyle = 'rgba(223,214,202,0.4)'; c.strokeRect(zx2 + 0.5, zy2 + 0.5, zw2 - 1, zh2 - 1);
     c.fillStyle = rgba(col, 1); for (let i = 0; i < Z1.length; i++) { const hh = zm > 0 ? Z1[i] / zm * (zh2 - 16 * p) : 0; c.fillRect(zx2 + i / Z1.length * zw2, zy2 + zh2 - 2 - hh, Math.max(1, zw2 / Z1.length), hh); }
     const sl0 = zx2 + (0.5 - 0.025) * zw2, sl1 = zx2 + (0.5 + 0.025) * zw2; c.fillStyle = 'rgba(255,255,255,0.18)'; c.fillRect(sl0, zy2, sl1 - sl0, zh2);
     txt(c, `detector slit, ${f(S.rc.det, 2)}° ± 1° shown`, zx2 + 4 * p, zy2 + 11 * p, { size: 9, color: T.muted });

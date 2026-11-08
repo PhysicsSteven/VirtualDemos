@@ -125,7 +125,7 @@ table.rows input:focus { border-color: var(--accent); }
 /* 3D view: the scanner's controls slide under its screen, at the right; the flat picture's canvas stays on top for labels only */
 @media (min-width: 821px) { .stage.v3 .shelf { justify-content: flex-end; } }
 .viewdim { position: absolute; top: 10px; right: 10px; z-index: 2; }
-.viewdim .seg { box-shadow: 0 1px 2px rgba(20, 30, 45, 0.08); }
+.viewdim .seg { box-shadow: 0 1px 2px rgba(43, 34, 22, 0.08); }
 </style>
 <link rel="stylesheet" id="vd-look" href="lib/look.css">
 <script id="vd-gear" src="lib/gear.js"></script>
@@ -552,7 +552,7 @@ table.rows input:focus { border-color: var(--accent); }
   }
   function drawBody(x, y, w, h, p) {
     const ppm = h / DEPTH_MAX, L = layers(), tx = x + w * 0.5, Gr = window.VDGear;
-    ctx.save(); ctx.shadowColor = Gr.dark() ? 'rgba(0,0,0,0.5)' : 'rgba(20,30,45,0.16)'; ctx.shadowBlur = 16 * p; ctx.shadowOffsetY = 5 * p; ctx.fillStyle = T.surface; ctx.fillRect(x, y, w, h); ctx.restore();
+    ctx.save(); ctx.shadowColor = Gr.dark() ? 'rgba(0,0,0,0.5)' : 'rgba(43,34,22,0.16)'; ctx.shadowBlur = 16 * p; ctx.shadowOffsetY = 5 * p; ctx.fillStyle = T.surface; ctx.fillRect(x, y, w, h); ctx.restore();
     let d = 0; for (const l of L) { const y0 = y + d * ppm, y1 = Math.min(y + h, y + (d + l.d) * ppm); if (y0 >= y + h) break;
       tissue(l.m, x, y, x, y0, w, y1 - y0, p);
       const hide = (S.preset === 'cyst' && l.m !== 'fat') || S.blind;
@@ -605,7 +605,7 @@ table.rows input:focus { border-color: var(--accent); }
   function drawVessel(x, y, w, h, p) {
     const Gr0 = window.VDGear;
     const ppm = h / 0.06, vy = y + cm(3) * ppm, R = cm(0.4) * ppm;   /* 6 cm of depth shown; artery 8 mm across, 3 cm down */
-    ctx.save(); ctx.shadowColor = window.VDGear.dark() ? 'rgba(0,0,0,0.5)' : 'rgba(20,30,45,0.16)'; ctx.shadowBlur = 16 * p; ctx.shadowOffsetY = 5 * p; ctx.fillStyle = T.surface; ctx.fillRect(x, y, w, h); ctx.restore();
+    ctx.save(); ctx.shadowColor = window.VDGear.dark() ? 'rgba(0,0,0,0.5)' : 'rgba(43,34,22,0.16)'; ctx.shadowBlur = 16 * p; ctx.shadowOffsetY = 5 * p; ctx.fillStyle = T.surface; ctx.fillRect(x, y, w, h); ctx.restore();
     tissue('fat', x, y, x, y, w, cm(1) * ppm, p); tissue('muscle', x, y, x, y + cm(1) * ppm, w, h - cm(1) * ppm, p);
     txt('fat', x + 6 * p, y + cm(0.5) * ppm, { s: 10 }); txt('muscle', x + 6 * p, y + cm(1.6) * ppm, { s: 10 });
     { const g = ctx.createLinearGradient(0, vy - R, 0, vy + R); g.addColorStop(0, Gr0.mix(T.blood.startsWith('#') ? T.blood : '#b0413e', '#000000', 0.35)); g.addColorStop(0.3, T.blood); g.addColorStop(0.7, T.blood); g.addColorStop(1, Gr0.mix(T.blood.startsWith('#') ? T.blood : '#b0413e', '#000000', 0.35)); ctx.fillStyle = g; } ctx.fillRect(x, vy - R, w, 2 * R);

@@ -745,7 +745,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     } else if (S.st === 'disk' || S.st === 'planets') {
       for (const c of CONDENSE) { const rr = g.rings[c.k]; if (!rr.visible || RHO(lineAt(c.T, S.L)) < 0.3) continue; const q = pr([0, -RHO(lineAt(c.T, S.L)), 0]); label(ctx, c.k === 'water' ? `frost line ${sig(frostLine(S.L), 3)} AU` : c.short, q[0], q[1] + 12 * p, { a: 'center', col: c.ice ? '#8cc8ff' : '#e0b08a', haloCol: halo, s: c.k === 'water' ? 11.5 : 10, w: c.k === 'water' ? 700 : 500 }); }
       if (S.st === 'disk') { const q = pr([RHO(S.r), 0, 0.14]); label(ctx, `${sig(S.r, 3)} AU · ${sig(diskT(S.r, S.L), 3)} K`, q[0], q[1] - 12 * p, { a: 'center', col: '#fb923c', haloCol: halo, w: 700 }); }
-      for (const [n, a] of PLANETS) { if (narrowPhone() && !['Earth', 'Jupiter', 'Neptune'].includes(n)) continue; const az = G3.o.th - Math.PI / 2, q = pr([RHO(a) * Math.cos(az), RHO(a) * Math.sin(az), 0]); ctx.fillStyle = 'rgba(219,228,239,0.75)'; ctx.beginPath(); ctx.arc(q[0], q[1], 2.2 * p, 0, 2 * Math.PI); ctx.fill(); ctx.save(); ctx.translate(q[0], q[1] - 6 * p); ctx.rotate(-Math.PI / 2); label(ctx, n, 0, 0, { col: 'rgba(219,228,239,0.85)', haloCol: halo, s: 9.5, w: 400 }); ctx.restore(); }
+      for (const [n, a] of PLANETS) { if (narrowPhone() && !['Earth', 'Jupiter', 'Neptune'].includes(n)) continue; const az = G3.o.th - Math.PI / 2, q = pr([RHO(a) * Math.cos(az), RHO(a) * Math.sin(az), 0]); ctx.fillStyle = 'rgba(237,230,221,0.75)'; ctx.beginPath(); ctx.arc(q[0], q[1], 2.2 * p, 0, 2 * Math.PI); ctx.fill(); ctx.save(); ctx.translate(q[0], q[1] - 6 * p); ctx.rotate(-Math.PI / 2); label(ctx, n, 0, 0, { col: 'rgba(237,230,221,0.85)', haloCol: halo, s: 9.5, w: 400 }); ctx.restore(); }
       label(ctx, narrowPhone() ? 'log scale: 0.1 AU (center) to 100 AU (edge)' : 'distances on a log scale: 0.1 AU at the center to 100 AU at the edge · drag to turn', 14 * p, H - 18 * p, { col: lc, haloCol: halo, s: 10.5, w: 400 });
       if (S.st === 'planets') { label(ctx, narrowPhone() ? 'bodies drawn larger than to scale' : 'bodies drawn far larger than to scale; orbits shown turning, not to the time scale of growth', 14 * p, H - 36 * p, { col: lc, haloCol: halo, s: 10.5, w: 400 }); timeBar3(); }
     } else {
@@ -756,11 +756,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       meltMini();
     }
   }
-  function timeBar3() { const p = P(); ctx.save(); ctx.fillStyle = 'rgba(4,6,11,0.55)'; ctx.fillRect(8 * p, 6 * p, Math.min(W - 16 * p, 540 * p), 46 * p); ctx.restore();
+  function timeBar3() { const p = P(); ctx.save(); ctx.fillStyle = 'rgba(10,8,5,0.55)'; ctx.fillRect(8 * p, 6 * p, Math.min(W - 16 * p, 540 * p), 46 * p); ctx.restore();
     const k0 = K; K = Object.assign({}, K, { muted: '#cec5ba', line: '#544a3c', canvas: '#0a0805' }); timeBar(20 * p, 30 * p, Math.min(W - 40 * p, 500 * p), GR.t, S.gas); K = k0; }
   function meltMini() {   /* a small graph of the center's temperature in the 3D view */
     const p = P(), run = ML.run, i = meltAt(run, ML.t), w = Math.min(260 * p, W * 0.4), h = 110 * p, x = 12 * p, y = 12 * p;
-    ctx.fillStyle = 'rgba(4,6,11,0.6)'; ctx.fillRect(x, y, w, h); const X = (t) => x + 8 * p + t / T_MELT_END * (w - 16 * p), Y = (T) => y + h - 16 * p - (T - 100) / 2000 * (h - 30 * p);
+    ctx.fillStyle = 'rgba(10,8,5,0.6)'; ctx.fillRect(x, y, w, h); const X = (t) => x + 8 * p + t / T_MELT_END * (w - 16 * p), Y = (T) => y + h - 16 * p - (T - 100) / 2000 * (h - 30 * p);
     ctx.strokeStyle = '#fb923c'; ctx.setLineDash([4, 3]); ctx.beginPath(); ctx.moveTo(X(0), Y(MELT.Tcore)); ctx.lineTo(X(T_MELT_END), Y(MELT.Tcore)); ctx.stroke(); ctx.setLineDash([]);
     ctx.strokeStyle = '#7ea2ff'; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(X(0), Y(MELT.Tsurf)); ctx.lineTo(X(S.tf), Y(MELT.Tsurf)); for (let k = 0; k <= i; k++) ctx.lineTo(X(run.t[k]), Y(run.Tc[k])); ctx.stroke();
     label(ctx, 'center temperature, 0 to 20 Myr', x + 8 * p, y + 10 * p, { col: '#ede6dd', haloCol: '#0a0805', s: 10, w: 600 });
@@ -1198,7 +1198,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (c !== 'cloud' && c !== 'impacts') { const fl = frostLine(STORY.L), q = pr([0, -fl * s, 0]); if (fl * s > 0.04) tag(`frost line ${sig(fl, 3)} AU`, q[0], q[1] + 13 * p, { a: 'center', col: '#8cc8ff', haloCol: halo, w: 700, s: 11 }); }
     if (c === 'grow' || c === 'impacts') {
       const az = G3.o.th - Math.PI / 2;
-      for (const [n, a] of PLANETS) { if (a * s < 0.04 || a * s > 1.4) continue; const q = pr([a * s * Math.cos(az), a * s * Math.sin(az), 0]); tag(VDI18N.t('{name} today', { name: VDI18N.t(n) }), q[0], q[1] - 8 * p, { a: 'center', col: 'rgba(219,228,239,0.75)', haloCol: halo, s: 9.5, w: 400 }); }
+      for (const [n, a] of PLANETS) { if (a * s < 0.04 || a * s > 1.4) continue; const q = pr([a * s * Math.cos(az), a * s * Math.sin(az), 0]); tag(VDI18N.t('{name} today', { name: VDI18N.t(n) }), q[0], q[1] - 8 * p, { a: 'center', col: 'rgba(237,230,221,0.75)', haloCol: halo, s: 9.5, w: 400 }); }
     }
     if (c === 'cloud' && SY.fol) label(ctx, SY.fol.ranges.length > 1 ? VDI18N.t('teal: the gas that will settle where {name}\'s building blocks form ({k} rings between {a} and {b} AU)', { name: VDI18N.t(SY.fol.name), k: SY.fol.ranges.length, a: sig(SY.fol.r1, 2), b: sig(SY.fol.r2, 2) })
       : VDI18N.t('teal: the gas that will settle where {name} forms ({a} to {b} AU)', { name: VDI18N.t(SY.fol.name), a: sig(SY.fol.r1, 2), b: sig(SY.fol.r2, 2) }), 14 * p, H - 74 * p, { col: FOL_COL, haloCol: halo, s: 10.5, w: 600 });
@@ -1208,7 +1208,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const cap = storyCaption(), asIs = (f) => VDI18N.raw(f);
     ctx.save(); ctx.font = `${12 * p}px ${K.ui}`; const lines = asIs(() => wrapText(ctx, cap, cw - 20 * p)); ctx.restore();
     const ch = (34 + 16 * lines.length) * p;
-    ctx.save(); ctx.fillStyle = 'rgba(4,6,11,0.66)'; ctx.strokeStyle = 'rgba(219,228,239,0.18)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x0, y0, cw, ch, 8 * p) : ctx.rect(x0, y0, cw, ch); ctx.fill(); ctx.stroke(); ctx.restore();
+    ctx.save(); ctx.fillStyle = 'rgba(10,8,5,0.66)'; ctx.strokeStyle = 'rgba(237,230,221,0.18)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x0, y0, cw, ch, 8 * p) : ctx.rect(x0, y0, cw, ch); ctx.fill(); ctx.stroke(); ctx.restore();
     /* the title shrinks to fit the card (long titles in other languages on phones) */
     const ttl = VDI18N.t('{i} of {n} · {title}', { i: SY.ch + 1, n: CHAPTERS.length, title: chTitle(SY.ch) });
     ctx.save(); ctx.font = `700 ${12.5 * p}px ${K.ui}`; const tw = asIs(() => ctx.measureText(ttl).width); ctx.restore();
@@ -1231,9 +1231,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* the chapter bar */
     const bw = W - 24 * p, segW = bw / CHAPTERS.length, by = H - 22 * p; storyBarBoxes = [];
     CHAPTERS.forEach((q, i) => { const bx = 12 * p + i * segW; storyBarBoxes.push([bx, by - 8 * p, segW, 22 * p, i]);
-      ctx.fillStyle = i < SY.ch ? 'rgba(255,210,122,0.75)' : i === SY.ch ? 'rgba(255,210,122,0.95)' : 'rgba(219,228,239,0.22)'; ctx.fillRect(bx + 2 * p, by, segW - 4 * p, 4 * p);
+      ctx.fillStyle = i < SY.ch ? 'rgba(255,210,122,0.75)' : i === SY.ch ? 'rgba(255,210,122,0.95)' : 'rgba(237,230,221,0.22)'; ctx.fillRect(bx + 2 * p, by, segW - 4 * p, 4 * p);
       /* on phones only the current chapter is named, kept inside the picture */
-      if (!phone) asIs(() => label(ctx, `${i + 1} ${chTitle(i)}`, bx + 2 * p, by - 7 * p, { col: i === SY.ch ? '#ffd27a' : 'rgba(219,228,239,0.7)', haloCol: halo, s: 9.5, w: i === SY.ch ? 700 : 400 }));
+      if (!phone) asIs(() => label(ctx, `${i + 1} ${chTitle(i)}`, bx + 2 * p, by - 7 * p, { col: i === SY.ch ? '#ffd27a' : 'rgba(237,230,221,0.7)', haloCol: halo, s: 9.5, w: i === SY.ch ? 700 : 400 }));
       else if (i === SY.ch) { const t = `${i + 1} ${chTitle(i)}`; ctx.save(); ctx.font = `700 ${9.5 * p}px ${K.ui}`; const w = asIs(() => ctx.measureText(t).width); ctx.restore();
         asIs(() => label(ctx, t, Math.max(12 * p, Math.min(bx + 2 * p, W - 12 * p - w)), by - 7 * p, { col: '#ffd27a', haloCol: halo, s: 9.5, w: 700 })); } });
   }

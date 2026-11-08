@@ -52,7 +52,7 @@
     --equi: #e2b350; --accent: #fbc26d; --capq: #b48cff; --resq: #4cc38a; --wire: #c0b7ac;
     --plate: #8a7f71; --diel: #46c7b4; --fline: #988d7f;
     --bench: #3a2f24; --bench-lo: #261e16; --alu: #aca59b; --steel: #928a7f; --ptfe: #d8d6cf; --base-col: #211e1b;
-    --glass: #7fc4c1; --water: #3f8fd8; --paper: #d9d0b8; --acrylic: #d3c2ac; --acrylic-base: rgba(170, 200, 215, 0.28);
+    --glass: #7fc4c1; --water: #3f8fd8; --paper: #d9d0b8; --acrylic: #d3c2ac; --acrylic-base: rgba(212, 195, 173, 0.28);
     --meter-case: #100e0b; --meter-face: #e9e1cc; --meter-ink: #2b2620; --board: #2e2b27; --board-ink: #9b948b; --hole: #100e0b;
     color-scheme: dark;
   }
@@ -63,7 +63,7 @@
   --equi: #e2b350; --accent: #fbc26d; --capq: #b48cff; --resq: #4cc38a; --wire: #c0b7ac;
   --plate: #8a7f71; --diel: #46c7b4; --fline: #988d7f;
   --bench: #3a2f24; --bench-lo: #261e16; --alu: #aca59b; --steel: #928a7f; --ptfe: #d8d6cf; --base-col: #211e1b;
-  --glass: #7fc4c1; --water: #3f8fd8; --paper: #d9d0b8; --acrylic: #d3c2ac; --acrylic-base: rgba(170, 200, 215, 0.28);
+  --glass: #7fc4c1; --water: #3f8fd8; --paper: #d9d0b8; --acrylic: #d3c2ac; --acrylic-base: rgba(212, 195, 173, 0.28);
   --meter-case: #100e0b; --meter-face: #e9e1cc; --meter-ink: #2b2620; --board: #2e2b27; --board-ink: #9b948b; --hole: #100e0b;
   color-scheme: dark;
 }
@@ -1188,7 +1188,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     const g = ctx.createLinearGradient(0, b.y, 0, b.y + b.h); g.addColorStop(0, shade(T.mCase, 0.22)); g.addColorStop(0.5, T.mCase); g.addColorStop(1, shade(T.mCase, -0.35));
     ctx.fillStyle = g; roundRect(ctx, b.x, b.y, b.w, b.h, 6 * q); ctx.fill();
     ctx.strokeStyle = 'rgba(255,255,255,0.18)'; ctx.lineWidth = 1; roundRect(ctx, b.x + 0.5, b.y + 0.5, b.w - 1, b.h - 1, 6 * q); ctx.stroke();
-    if (title) { ctx.fillStyle = 'rgba(225,230,236,0.82)'; ctx.font = `700 ${Math.max(8, 8.6 * q)}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText(title, b.x + 8 * q, b.y + 6 * q); }
+    if (title) { ctx.fillStyle = 'rgba(235,231,226,0.82)'; ctx.font = `700 ${Math.max(8, 8.6 * q)}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText(title, b.x + 8 * q, b.y + 6 * q); }
   }
   function bindingPost(ctx, x, y, r, col) {
     const g = ctx.createRadialGradient(x - r * 0.3, y - r * 0.3, 0, x, y, r * 1.05); g.addColorStop(0, shade(col, 0.45)); g.addColorStop(1, shade(col, -0.35));
@@ -1215,14 +1215,14 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
       ctx.strokeStyle = 'rgba(255,255,255,0.16)'; ctx.lineWidth = 1;
       for (let i = 0; i < 18; i++) { const a = i * Math.PI / 9; ctx.beginPath(); ctx.moveTo(kx + Math.cos(a) * kr * 0.8, ky + Math.sin(a) * kr * 0.8); ctx.lineTo(kx + Math.cos(a) * kr, ky + Math.sin(a) * kr); ctx.stroke(); }
       ctx.strokeStyle = '#efece9'; ctx.lineWidth = 2 * q; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(kx + Math.cos(ang) * kr * 0.2, ky + Math.sin(ang) * kr * 0.2); ctx.lineTo(kx + Math.cos(ang) * kr * 0.78, ky + Math.sin(ang) * kr * 0.78); ctx.stroke();
-      ctx.fillStyle = 'rgba(225,230,236,0.7)'; ctx.font = `${Math.max(7, 7.5 * q)}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText('VOLTAGE', kx + kr + 6 * q, ky);
+      ctx.fillStyle = 'rgba(235,231,226,0.7)'; ctx.font = `${Math.max(7, 7.5 * q)}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText('VOLTAGE', kx + kr + 6 * q, ky);
     }
     const py = narrow ? Math.min(b.y + b.h - 9 * q, ly + lh + 16 * q) : ly + lh / 2 - 2 * q, pr = 5.6 * q;
     const minus = narrow ? [b.x + b.w - pad - 30 * q, py] : [b.x + b.w - pad - postW + 12 * q, py], plus = [minus[0] + 22 * q, py];
     bindingPost(ctx, minus[0], minus[1], pr, BLK); bindingPost(ctx, plus[0], plus[1], pr, RED);
-    ctx.fillStyle = 'rgba(225,230,236,0.8)'; ctx.font = `700 ${Math.max(8, 9 * q)}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+    ctx.fillStyle = 'rgba(235,231,226,0.8)'; ctx.font = `700 ${Math.max(8, 9 * q)}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
     ctx.fillText('−', minus[0], py - pr); ctx.fillText('+', plus[0], py - pr);
-    ctx.fillStyle = 'rgba(225,230,236,0.6)'; ctx.font = `${Math.max(7, 7.5 * q)}px ${T.mono}`; if (narrow) { ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillText('OUTPUT', minus[0] - pr - 5 * q, py); } else { ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText('OUTPUT', (minus[0] + plus[0]) / 2, py + pr + 3 * q); }
+    ctx.fillStyle = 'rgba(235,231,226,0.6)'; ctx.font = `${Math.max(7, 7.5 * q)}px ${T.mono}`; if (narrow) { ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillText('OUTPUT', minus[0] - pr - 5 * q, py); } else { ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText('OUTPUT', (minus[0] + plus[0]) / 2, py + pr + 3 * q); }
     return { plus, minus };
   }
   // a knife switch on a slate base; returns its two terminals and its box
@@ -1252,7 +1252,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   // an electrometer: cream dial from 0 to the full scale, needle at V; returns its posts
   function drawElectrometer(ctx, b, q, V, FS, postsRight) {
     caseBox(ctx, b, q, '');
-    ctx.fillStyle = 'rgba(225,230,236,0.82)'; ctx.font = `700 ${Math.max(8, 8.6 * q)}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.fillText(b.w > 130 ? 'ELECTROMETER' : 'METER', b.x + b.w - 8 * q, b.y + 6 * q);
+    ctx.fillStyle = 'rgba(235,231,226,0.82)'; ctx.font = `700 ${Math.max(8, 8.6 * q)}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.fillText(b.w > 130 ? 'ELECTROMETER' : 'METER', b.x + b.w - 8 * q, b.y + 6 * q);
     const fx = b.x + 7 * q, fy = b.y + 18 * q, fw = b.w - 14 * q, fh = b.h - 34 * q;
     const gf = ctx.createLinearGradient(0, fy, 0, fy + fh); gf.addColorStop(0, T.mFace); gf.addColorStop(1, shade(T.mFace, -0.1));
     ctx.fillStyle = gf; roundRect(ctx, fx, fy, fw, fh, 3 * q); ctx.fill(); ctx.strokeStyle = 'rgba(0,0,0,0.5)'; ctx.lineWidth = 1; ctx.stroke();
@@ -1276,7 +1276,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     ctx.restore();
     const py = b.y + b.h - 9 * q, prr = 4.6 * q, minus = [postsRight ? b.x + b.w - 34 * q : b.x + 14 * q, b.y - 1], plus = [postsRight ? b.x + b.w - 14 * q : b.x + 34 * q, b.y - 1];
     for (const [p, col] of [[minus, BLK], [plus, RED]]) { ctx.fillStyle = '#1b1916'; ctx.fillRect(p[0] - 3 * q, p[1], 6 * q, 4 * q); bindingPost(ctx, p[0], p[1], prr, col); }
-    ctx.fillStyle = 'rgba(225,230,236,0.7)'; ctx.font = `${Math.max(7, 7.5 * q)}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillStyle = 'rgba(235,231,226,0.7)'; ctx.font = `${Math.max(7, 7.5 * q)}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     ctx.fillText(`RANGE ${FS >= 1000 ? FS / 1000 + ' kV' : FS + ' V'}`, b.x + b.w / 2, py);
     return { plus, minus };
   }
@@ -1513,7 +1513,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
       }
       if (look.tank) {               // thin glass walls: a pale rim on the visible top edges
         const tf = f['010'];
-        if (tf) { poly(ctx, tf); ctx.strokeStyle = 'rgba(235,248,255,0.7)'; ctx.lineWidth = 1.4; ctx.stroke(); }
+        if (tf) { poly(ctx, tf); ctx.strokeStyle = 'rgba(248,245,242,0.7)'; ctx.lineWidth = 1.4; ctx.stroke(); }
       }
       if (isHot('f') && fr) { poly(ctx, fr); ctx.fillStyle = T.accent; ctx.globalAlpha = 0.12; ctx.fill(); ctx.globalAlpha = 1; poly(ctx, fr); ctx.strokeStyle = T.accent; ctx.lineWidth = 2; ctx.stroke(); }
     };
@@ -2873,7 +2873,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     S3.el.classList.add('s3');
     G3.sup = VD3K.meter(S3, { w: 0.15, h: 0.08, label: 'HV SUPPLY', sub: 'V_s', kind: 'lcd' }); S3.scene.add(G3.sup);
     G3.vm = VD3K.meter(S3, { w: 0.15, h: 0.08, label: 'V ACROSS', sub: 'electrostatic voltmeter', kind: 'lcd' }); S3.scene.add(G3.vm);
-    G3.resLab = VD3K.label('100 GΩ', { size: 0.015, color: '#eeeae4', bg: 'rgba(20,26,34,0.78)' }); S3.scene.add(G3.resLab);
+    G3.resLab = VD3K.label('100 GΩ', { size: 0.015, color: '#eeeae4', bg: 'rgba(33,28,21,0.78)' }); S3.scene.add(G3.resLab);
     S3.scene.add(VD3K.bench(S3, { w: 3, d: 2, y: 0.3 }));
     VD3.orbit(S3.el, G3.o, () => {}, { phMin: 0.35, phMax: 1.5, zMin: 0.6, zMax: 2.6 });
     return true;

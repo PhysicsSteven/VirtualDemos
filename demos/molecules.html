@@ -896,7 +896,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (ML.st === 'glow') { const pulse = 0.55 + 0.35 * Math.sin(ML.t * 9), gg = ctx.createRadialGradient(cx, cy, 0, cx, cy, 0.17 * sc); gg.addColorStop(0, `rgba(255,214,102,${0.55 * pulse})`); gg.addColorStop(1, 'rgba(255,214,102,0)'); ctx.fillStyle = gg; ctx.beginPath(); ctx.arc(cx, cy, 0.17 * sc, 0, 7); ctx.fill(); }
     /* bonds, then atoms (sizes not to scale) */
     const bonds = m.atoms.length === 2 ? [[0, 1]] : [[0, 1], [0, 2]];
-    ctx.save(); ctx.strokeStyle = dark() ? 'rgba(230,237,245,0.75)' : 'rgba(43,54,68,0.8)'; ctx.lineWidth = 5 * p; ctx.lineCap = 'round';
+    ctx.save(); ctx.strokeStyle = dark() ? 'rgba(243,238,232,0.75)' : 'rgba(66,57,45,0.8)'; ctx.lineWidth = 5 * p; ctx.lineCap = 'round';
     for (const [i, j] of bonds) { if (ML.st === 'break' && m.frag[0].includes(i) !== m.frag[0].includes(j)) continue; ctx.beginPath(); ctx.moveTo(X(P[i]), Y(P[i])); ctx.lineTo(X(P[j]), Y(P[j])); ctx.stroke(); }
     ctx.restore();
     m.atoms.forEach((el, i) => { const [c, r] = ML_EL[el], rr = r * sc; if (VG) VG.ball(ctx, X(P[i]), Y(P[i]), rr, c); else dot(ctx, X(P[i]), Y(P[i]), rr, c); lab(ctx, el, X(P[i]), Y(P[i]), { a: 'center', c: '#ffffff', w: 700, s: 11 }); });

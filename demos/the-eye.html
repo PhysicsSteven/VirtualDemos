@@ -524,7 +524,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.fillStyle = '#2a251e'; const ox = cxp + cw / 2, oy = cyp + cw / 2;
     for (let i = 0; i < 18; i++) { const a0 = i * Math.PI / 9; ctx.beginPath(); ctx.moveTo(ox, oy); ctx.arc(ox, oy, Math.min(Rs, 3 * cw), a0, a0 + Math.PI / 18); ctx.closePath(); ctx.fill(); }
     ctx.restore(); ctx.filter = 'none'; ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5; ctx.strokeRect(cxp, cyp, cw, cw);
-    ctx.fillStyle = 'rgba(20,24,30,0.75)'; ctx.fillRect(cxp, cyp, 50 * p, 15 * p); txt('1:1 crop', cxp + 5 * p, cyp + 8 * p, { s: 9, b: 1, c: '#ffffff' });
+    ctx.fillStyle = 'rgba(29,26,21,0.75)'; ctx.fillRect(cxp, cyp, 50 * p, 15 * p); txt('1:1 crop', cxp + 5 * p, cyp + 8 * p, { s: 9, b: 1, c: '#ffffff' });
     txt(`blur ${(q.blur * 1e6).toFixed(1)} µm, ${q.px.toFixed(1)} px`, px0 + pw, py0 + ph + 12 * p, { a: 'right', s: 10, m: 1, c: S.blind ? T.ink : q.sharp ? T.np : T.pos });
   }
   function draw() {

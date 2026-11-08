@@ -825,7 +825,7 @@ table.rows button:hover { color: var(--pos); }
   function glassWalls(ctx, x0, yTop, x1, yBot, lw) {   // an open topped container: thick glass, a dark edge, a highlight down the left wall
     ctx.lineJoin = 'round'; ctx.lineCap = 'round';
     const path = () => { ctx.beginPath(); ctx.moveTo(x0, yTop); ctx.lineTo(x0, yBot); ctx.lineTo(x1, yBot); ctx.lineTo(x1, yTop); };
-    if (window.VDGear) { ctx.strokeStyle = window.VDGear.dark() ? 'rgba(170,200,230,0.12)' : 'rgba(150,185,215,0.25)'; ctx.lineWidth = lw * 2.6; path(); ctx.stroke(); }
+    if (window.VDGear) { ctx.strokeStyle = window.VDGear.dark() ? 'rgba(170,200,230,0.12)' : 'rgba(206,186,159,0.25)'; ctx.lineWidth = lw * 2.6; path(); ctx.stroke(); }
     ctx.strokeStyle = T.wire; ctx.lineWidth = lw; path(); ctx.stroke();
     if (window.VDGear && yBot - yTop > 12) { ctx.strokeStyle = 'rgba(255,255,255,0.55)'; ctx.lineWidth = Math.max(1, lw * 0.45); ctx.beginPath(); ctx.moveTo(x0 + lw * 1.6, yTop + 6); ctx.lineTo(x0 + lw * 1.6, yBot - 6); ctx.stroke(); }
   }

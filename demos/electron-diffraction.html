@@ -1498,7 +1498,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     // tube on the left, collimator, incident beam along +x
     const tx = Math.max(g.app.x + 14 * ps, cx - R * 1.6), tw = Math.min(70 * ps, cx - R * 0.55 - tx - 26 * ps), beamCol = '#b99cff';
     const tubeW = Math.max(36 * ps, tw);
-    ctx.fillStyle = 'rgba(190,210,230,0.12)'; ctx.strokeStyle = T.roomInk; ctx.lineWidth = 1.2;
+    ctx.fillStyle = 'rgba(224,212,196,0.12)'; ctx.strokeStyle = T.roomInk; ctx.lineWidth = 1.2;
     ctx.beginPath(); ctx.roundRect ? ctx.roundRect(tx, cy - 16 * ps, tubeW, 32 * ps, 14 * ps) : ctx.rect(tx, cy - 16 * ps, tubeW, 32 * ps); ctx.fill(); ctx.stroke();
     ctx.fillStyle = X.tube === 'Cu' ? '#c8783e' : '#aca59b'; ctx.fillRect(tx + tubeW * 0.55, cy - 9 * ps, 7 * ps, 18 * ps);
     ctx.fillStyle = T.roomInk; ctx.font = `600 ${10 * ps}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
@@ -1514,7 +1514,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const cxl = R * 0.34, cyl = 7 * ps, ca = Math.cos(th), sa = -Math.sin(th);
     ctx.save(); ctx.translate(cx, cy); ctx.transform(ca, sa, -sa, ca, 0, 0);
     ctx.fillStyle = 'rgba(200,225,255,0.22)'; ctx.strokeStyle = '#efe8df'; ctx.lineWidth = 1.2; ctx.fillRect(-cxl, 0, 2 * cxl, cyl * 2); ctx.strokeRect(-cxl, 0, 2 * cxl, cyl * 2);
-    ctx.strokeStyle = 'rgba(207,227,255,0.55)'; ctx.lineWidth = 0.8; for (let k = 1; k < 4; k++) { ctx.beginPath(); ctx.moveTo(-cxl, k * cyl / 2); ctx.lineTo(cxl, k * cyl / 2); ctx.stroke(); }
+    ctx.strokeStyle = 'rgba(239,232,223,0.55)'; ctx.lineWidth = 0.8; for (let k = 1; k < 4; k++) { ctx.beginPath(); ctx.moveTo(-cxl, k * cyl / 2); ctx.lineTo(cxl, k * cyl / 2); ctx.stroke(); }
     ctx.restore();
     // angle marks
     ctx.strokeStyle = RC[0]; ctx.lineWidth = 1.4; ctx.beginPath(); ctx.arc(cx, cy, R * 0.5, -th, 0); ctx.stroke();

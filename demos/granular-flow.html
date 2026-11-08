@@ -616,7 +616,7 @@ select { font: inherit; font-size: 0.86rem; color: var(--ink); background: var(-
     gr.addColorStop(0, 'rgba(255,255,255,0.85)'); gr.addColorStop(0.18, base); gr.addColorStop(1, shade(base, 0.55));
     g.fillStyle = gr; g.beginPath(); g.arc(N / 2, N / 2, N / 2 - 1, 0, 2 * Math.PI); g.fill();
     /* a dark bead on the dark theme is drawn lighter with a pale rim so it reads against the drum and the hill */
-    g.strokeStyle = darkOnDark ? 'rgba(225,230,238,0.75)' : 'rgba(0,0,0,0.35)'; g.lineWidth = darkOnDark ? 5 : 2; g.stroke();
+    g.strokeStyle = darkOnDark ? 'rgba(237,232,226,0.75)' : 'rgba(0,0,0,0.35)'; g.lineWidth = darkOnDark ? 5 : 2; g.stroke();
     return (sprites[color] = c);
   }
   function lum(css) { const m = /^#([0-9a-f]{6})$/i.exec((css || '').trim()), r = /rgba?\(([^)]+)\)/.exec(css || '');

@@ -892,7 +892,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const vr = vTop();
     if (pvDirty || !PV || PV.vr !== vr || PV.ls.name !== lineSetup().name) buildPV(vr);
     const Y = (v) => (b.T + b.B) / 2 - v / vr * (b.B - b.T) / 2, X = (x) => eg.cx + x * eg.sc;
-    c.strokeStyle = 'rgba(140,155,175,0.25)'; c.lineWidth = 1; c.strokeRect(b.L + 0.5, b.T + 0.5, b.R - b.L, b.B - b.T);
+    c.strokeStyle = 'rgba(172,159,143,0.25)'; c.lineWidth = 1; c.strokeRect(b.L + 0.5, b.T + 0.5, b.R - b.L, b.B - b.T);
     c.imageSmoothingEnabled = true;
     c.drawImage(pvCan, 0, 0, pvCan.width, pvCan.height, X(-S.rmax), b.T, X(S.rmax) - X(-S.rmax), b.B - b.T);
     // rest wavelength

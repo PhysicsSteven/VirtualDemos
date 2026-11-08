@@ -968,7 +968,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.save(); rr(ctx, bx, by, box, box, 8); ctx.clip();
     if (S.star) {
       /* a few faint background stars, fixed */
-      ctx.fillStyle = 'rgba(220,228,240,0.55)';
+      ctx.fillStyle = 'rgba(238,231,222,0.55)';
       for (let i = 0; i < 26; i++) { const u = (Math.sin(i * 91.7) * 0.5 + 0.5), v = (Math.sin(i * 37.3 + 1) * 0.5 + 0.5); ctx.fillRect(bx + u * box, by + v * box, i % 5 ? 1 : 1.6, i % 5 ? 1 : 1.6); }
       const r = box * 0.2;
       if (dim === 0) {
@@ -993,7 +993,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         hg.addColorStop(0, css(col, 0.6)); hg.addColorStop(0.35, css(col, 0.2)); hg.addColorStop(1, css(col, 0));
         ctx.fillStyle = hg; ctx.fillRect(bx, by, box, box); ctx.globalAlpha = 1;
       }
-      ctx.strokeStyle = 'rgba(200,215,230,0.35)'; ctx.lineWidth = 1.4 * ps;
+      ctx.strokeStyle = 'rgba(228,217,202,0.35)'; ctx.lineWidth = 1.4 * ps;
       ctx.beginPath(); ctx.arc(cx, cy, rb, Math.PI * 0.72, Math.PI * 2.28); ctx.stroke();
       ctx.fillStyle = '#7e776d'; ctx.fillRect(cx - rb * 0.42, cy + rb * 0.68, rb * 0.84, rb * 0.5);
       ctx.strokeStyle = '#9c958b'; ctx.lineWidth = 1.2 * ps;
@@ -1055,8 +1055,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* prism */
     ctx.save();
     ctx.beginPath(); ctx.moveTo(prX, beamY + 30 * ps); ctx.lineTo(prX + prW, beamY + 30 * ps); ctx.lineTo(prX + prW / 2, beamY - 34 * ps); ctx.closePath();
-    const pg = ctx.createLinearGradient(prX, 0, prX + prW, 0); pg.addColorStop(0, 'rgba(190,215,240,0.55)'); pg.addColorStop(0.5, 'rgba(235,245,255,0.35)'); pg.addColorStop(1, 'rgba(160,190,220,0.55)');
-    ctx.fillStyle = pg; ctx.fill(); ctx.strokeStyle = 'rgba(120,150,180,0.9)'; ctx.lineWidth = 1.2 * ps; ctx.stroke();
+    const pg = ctx.createLinearGradient(prX, 0, prX + prW, 0); pg.addColorStop(0, 'rgba(190,215,240,0.55)'); pg.addColorStop(0.5, 'rgba(248,245,242,0.35)'); pg.addColorStop(1, 'rgba(160,190,220,0.55)');
+    ctx.fillStyle = pg; ctx.fill(); ctx.strokeStyle = 'rgba(176,153,124,0.9)'; ctx.lineWidth = 1.2 * ps; ctx.stroke();
     ctx.restore();
     /* screen */
     ctx.fillStyle = '#16130e'; rr(ctx, scrX, scrT, scrW, scrH, 2); ctx.fill();
@@ -1065,7 +1065,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       ctx.fillStyle = css(BAND[k].rgb.map((v) => Math.round(v * a)));
       ctx.fillRect(scrX + 1, y0, scrW - 2, y1 - y0 + 0.6);
     }
-    ctx.strokeStyle = 'rgba(160,170,185,0.6)'; ctx.lineWidth = 1; ctx.setLineDash([2, 2]);
+    ctx.strokeStyle = 'rgba(183,174,162,0.6)'; ctx.lineWidth = 1; ctx.setLineDash([2, 2]);
     ctx.beginPath(); ctx.moveTo(scrX, visT); ctx.lineTo(scrX + scrW, visT); ctx.moveTo(scrX, visB); ctx.lineTo(scrX + scrW, visB); ctx.stroke(); ctx.setLineDash([]);
     ctx.strokeStyle = '#6b645a'; ctx.lineWidth = 1.5 * ps; rr(ctx, scrX, scrT, scrW, scrH, 2); ctx.stroke();
     /* share of the power in each band, beside the screen */
@@ -1162,7 +1162,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const Y_SUN = lumY(5772);
   let S3 = null, G3 = null, on3 = false, key3 = '';
   const o3 = { th: -Math.PI / 2 + 0.12, ph: 1.22, zoom: 1 };
-  const LAB = { size: 0.11, color: '#f1ede7', bg: 'rgba(14,18,24,0.74)' };
+  const LAB = { size: 0.11, color: '#f1ede7', bg: 'rgba(23,20,15,0.74)' };
   function texCanvas(w, h) { const cv = document.createElement('canvas'); cv.width = w; cv.height = h; const t = new THREE.CanvasTexture(cv); return { cv, t, c: cv.getContext('2d') }; }
   function init3() {
     S3 = VD3K.stage(document.querySelector('.pane.strip'), { fov: 30, near: 0.05, far: 60, sky: '#070a10' }); if (!S3) return false;
@@ -1213,7 +1213,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     c.fillStyle = '#16130e'; c.fillRect(0, 0, W, H);
     const bright = (l) => Math.min(1, Math.pow(planck(l * 1e-9, T) / B_EXPOSE, 1 / 2.2));
     for (let l = 380; l < 750; l++) { const a = bright(l), y0 = visT + (l - 380) / 370 * (visB - visT); c.fillStyle = css(BAND[l - 380].rgb.map((v) => Math.round(v * a))); c.fillRect(0, y0, W, (visB - visT) / 370 + 0.6); }
-    c.strokeStyle = 'rgba(160,170,185,0.7)'; c.setLineDash([6, 6]); c.lineWidth = 2; c.beginPath(); c.moveTo(0, visT); c.lineTo(W, visT); c.moveTo(0, visB); c.lineTo(W, visB); c.stroke(); c.setLineDash([]);
+    c.strokeStyle = 'rgba(183,174,162,0.7)'; c.setLineDash([6, 6]); c.lineWidth = 2; c.beginPath(); c.moveTo(0, visT); c.lineTo(W, visT); c.moveTo(0, visB); c.lineTo(W, visB); c.stroke(); c.setLineDash([]);
     G3.scr.t.needsUpdate = true;
     /* the fan of rays from the prism, each as bright as the screen there */
     while (G3.fan.children.length) S3.dispose(G3.fan.children[0]);

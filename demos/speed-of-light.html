@@ -64,7 +64,7 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 #pTop { border-left: 1px solid var(--line); }
 #p3d canvas, #eye, #top { touch-action: none; outline: none; }
 #p3d canvas:focus-visible, #eye:focus-visible, #top:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
-.tip { position: absolute; left: 8px; bottom: 6px; margin: 0; font-size: 0.76rem; color: #d7d0c7; background: rgba(10, 14, 19, 0.7); padding: 2px 6px; border-radius: 4px; pointer-events: none; max-width: calc(100% - 16px); }
+.tip { position: absolute; left: 8px; bottom: 6px; margin: 0; font-size: 0.76rem; color: #d7d0c7; background: rgba(18, 15, 11, 0.7); padding: 2px 6px; border-radius: 4px; pointer-events: none; max-width: calc(100% - 16px); }
 button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .btn { font-weight: 700; }
 .btn.primary { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
@@ -1046,7 +1046,7 @@ table.rows tr.sim td { background: color-mix(in srgb, var(--equi) 9%, transparen
     const mkLabel = (txt, col) => { const t = mkTex(768, 96), m = new THREE.SpriteMaterial({ map: t.t, transparent: true, depthTest: false, sizeAttenuation: false }); const sp = new THREE.Sprite(m); sp.renderOrder = 10; scene.add(sp); const o = { sp, t, txt: null, col: col || '#f4efe9' }; setLabel(o, txt); return o; };
     function setLabel(o, txt) {
       if (o.txt === txt) return; o.txt = txt; const x = o.t.x; x.clearRect(0, 0, 768, 96); x.font = '600 44px "Atkinson Hyperlegible", sans-serif';
-      const w = Math.min(760, x.measureText(txt).width + 28); x.fillStyle = 'rgba(12,16,22,0.78)'; x.beginPath(); x.roundRect ? x.roundRect(384 - w / 2, 14, w, 68, 12) : x.rect(384 - w / 2, 14, w, 68); x.fill();
+      const w = Math.min(760, x.measureText(txt).width + 28); x.fillStyle = 'rgba(21,18,13,0.78)'; x.beginPath(); x.roundRect ? x.roundRect(384 - w / 2, 14, w, 68, 12) : x.rect(384 - w / 2, 14, w, 68); x.fill();
       x.fillStyle = o.col; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText(txt, 384, 50); o.t.t.needsUpdate = true;
     }
     const labels = { laser: mkLabel('Laser'), L1: mkLabel('L1'), BS: mkLabel('Microscope'), L2: mkLabel('L2'), MR: mkLabel('MR'), MF: mkLabel('MF'), ctl: mkLabel('Speed control'), D: mkLabel('D', '#ffe2a8') };

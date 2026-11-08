@@ -12,7 +12,7 @@ window.VDGear = (function () {
     g.addColorStop(0, d ? '#1c1710' : '#f4f2ef'); g.addColorStop(o.horizon || 0.7, d ? '#241d15' : '#fbfaf8'); g.addColorStop(1, d ? '#1d1811' : '#f2f0ed');
     ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
     const r = ctx.createRadialGradient(w * 0.45, h * 0.35, 0, w * 0.45, h * 0.35, Math.max(w, h) * 0.75);
-    r.addColorStop(0, d ? 'rgba(120,150,190,0.06)' : 'rgba(255,255,255,0.55)'); r.addColorStop(1, 'rgba(0,0,0,0)');
+    r.addColorStop(0, d ? 'rgba(185,159,125,0.06)' : 'rgba(255,255,255,0.55)'); r.addColorStop(1, 'rgba(0,0,0,0)');
     ctx.fillStyle = r; ctx.fillRect(0, 0, w, h);
   }
   /* a lab bench top seen slightly from above: top face, front edge with grain, and a shadow under the lip */
@@ -107,7 +107,7 @@ window.VDGear = (function () {
   /* a small engraved name plate on an instrument */
   function plate(ctx, s, cx, cy, o = {}) {
     ctx.save(); ctx.font = `700 ${o.s || 8}px ${getComputedStyle(document.documentElement).getPropertyValue('--font-ui')}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    ctx.fillStyle = 'rgba(0,0,0,0.35)'; ctx.fillText(s.toUpperCase(), cx, cy + 0.8); ctx.fillStyle = o.c || 'rgba(230,236,243,0.9)'; ctx.fillText(s.toUpperCase(), cx, cy); ctx.restore();
+    ctx.fillStyle = 'rgba(0,0,0,0.35)'; ctx.fillText(s.toUpperCase(), cx, cy + 0.8); ctx.fillStyle = o.c || 'rgba(242,237,231,0.9)'; ctx.fillText(s.toUpperCase(), cx, cy); ctx.restore();
   }
   /* a cable from (x1, y1) to (x2, y2), sagging */
   function cable(ctx, x1, y1, x2, y2, sag, o = {}) {
@@ -138,15 +138,15 @@ window.VDGear = (function () {
     let g = ctx.createLinearGradient(0, y0, 0, y1); g.addColorStop(0, mix(c0, '#000000', d ? 0.25 : 0.05)); g.addColorStop(1, mix(c0, d ? '#40372c' : '#ffffff', 0.35));
     ctx.fillStyle = g; ctx.fillRect(x, y0, w, h);
     g = ctx.createRadialGradient(x + w * 0.3, y0 + h * 0.15, 0, x + w * 0.3, y0 + h * 0.15, Math.max(w, h) * 0.9);
-    g.addColorStop(0, d ? 'rgba(140,170,210,0.07)' : 'rgba(255,255,255,0.6)'); g.addColorStop(1, 'rgba(0,0,0,0)'); ctx.fillStyle = g; ctx.fillRect(x, y0, w, h);
+    g.addColorStop(0, d ? 'rgba(201,178,149,0.07)' : 'rgba(255,255,255,0.6)'); g.addColorStop(1, 'rgba(0,0,0,0)'); ctx.fillStyle = g; ctx.fillRect(x, y0, w, h);
     const t = o.tile === undefined ? [64, 32] : o.tile;
     if (t && t[0] > 4) { ctx.save(); ctx.beginPath(); ctx.rect(x, y0, w, h); ctx.clip(); ctx.lineWidth = 1;
-      ctx.strokeStyle = o.line || (d ? 'rgba(255,255,255,0.025)' : 'rgba(40,60,90,0.055)');
+      ctx.strokeStyle = o.line || (d ? 'rgba(255,255,255,0.025)' : 'rgba(86,68,44,0.055)');
       for (let r = 0, yy = y1 - t[1]; yy > y0 - t[1]; yy -= t[1], r++) { ctx.beginPath(); ctx.moveTo(x, Math.round(yy) + 0.5); ctx.lineTo(x + w, Math.round(yy) + 0.5);
         for (let xx = x + (r % 2) * t[0] / 2; xx < x + w; xx += t[0]) { ctx.moveTo(Math.round(xx) + 0.5, yy); ctx.lineTo(Math.round(xx) + 0.5, yy + t[1]); } ctx.stroke(); }
       ctx.restore(); }
     /* the room darkens just above the bench (ambient occlusion) */
-    g = ctx.createLinearGradient(0, y1 - Math.min(40, h * 0.2), 0, y1); g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, d ? 'rgba(0,0,0,0.35)' : 'rgba(30,40,55,0.08)');
+    g = ctx.createLinearGradient(0, y1 - Math.min(40, h * 0.2), 0, y1); g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, d ? 'rgba(0,0,0,0.35)' : 'rgba(53,44,32,0.08)');
     ctx.fillStyle = g; ctx.fillRect(x, y1 - Math.min(40, h * 0.2), w, Math.min(40, h * 0.2));
   }
   /* a retort stand: a cast base resting on the bench at y (center x), and an upright rod up to top. o.side: which way the base extends (1 right, -1 left) */
@@ -172,7 +172,7 @@ window.VDGear = (function () {
   /* a photogate: a U frame opening upward, its infrared beam across the gap at (cx, beamY). on: the beam is blocked (LED lit).
      w is the gap; the arms reach h below the beam. */
   function gate(ctx, cx, beamY, w, h, on, o = {}) {
-    const s = o.s || 1, arm = 9 * s, top = beamY - 10 * s, bot = beamY + h, col = o.color || (dark() ? '#3b4654' : '#2f3945');
+    const s = o.s || 1, arm = 9 * s, top = beamY - 10 * s, bot = beamY + h, col = o.color || (dark() ? '#52493d' : '#433b31');
     shadow(ctx, cx, bot + 2 * s, w * 0.75, 3 * s, 0.7);
     box(ctx, cx - w / 2 - arm, top, arm, bot - top, { color: col, r: 2.5 * s, shadow: false });
     box(ctx, cx + w / 2, top, arm, bot - top, { color: col, r: 2.5 * s, shadow: false });
@@ -189,9 +189,9 @@ window.VDGear = (function () {
   /* a frosted panel drawn on the canvas (for a trace or graph that sits in the picture) */
   function panel(ctx, x, y, w, h, o = {}) {
     const d = dark(), r = o.r == null ? 10 : o.r;
-    ctx.save(); ctx.shadowColor = d ? 'rgba(0,0,0,0.5)' : 'rgba(20,30,45,0.14)'; ctx.shadowBlur = 18; ctx.shadowOffsetY = 4;
-    ctx.fillStyle = o.fill || (d ? 'rgba(20,27,36,0.88)' : 'rgba(255,255,255,0.9)'); ctx.beginPath(); ctx.roundRect(x, y, w, h, r); ctx.fill(); ctx.restore();
-    ctx.save(); ctx.strokeStyle = d ? 'rgba(255,255,255,0.08)' : 'rgba(20,30,45,0.10)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.roundRect(x + 0.5, y + 0.5, w - 1, h - 1, r); ctx.stroke(); ctx.restore();
+    ctx.save(); ctx.shadowColor = d ? 'rgba(0,0,0,0.5)' : 'rgba(43,34,22,0.14)'; ctx.shadowBlur = 18; ctx.shadowOffsetY = 4;
+    ctx.fillStyle = o.fill || (d ? 'rgba(35,29,21,0.88)' : 'rgba(255,255,255,0.9)'); ctx.beginPath(); ctx.roundRect(x, y, w, h, r); ctx.fill(); ctx.restore();
+    ctx.save(); ctx.strokeStyle = d ? 'rgba(255,255,255,0.08)' : 'rgba(43,34,22,0.10)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.roundRect(x + 0.5, y + 0.5, w - 1, h - 1, r); ctx.stroke(); ctx.restore();
   }
   /* a helical coil spring from (x1, y1) to (x2, y2): n turns of radius r, wire width wd; the back of each turn is darker */
   function spring(ctx, x1, y1, x2, y2, n, r, o = {}) {

@@ -30,7 +30,7 @@
   --fout: #17855f;
   --fin: #7a45c0;
   --bline: #645a4e;
-  --shade: #2b60b5;
+  --shade: #b0622c;
   --on-wire: #ffffff;
   --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
@@ -39,13 +39,13 @@
   :root:not([data-theme="light"]) {
     --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
     --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
-    --equi: #e2b350; --accent: #fbc26d; --fout: #4fd1a0; --fin: #b48cff; --bline: #b6ab9c; --shade: #69a0ff; --on-wire: #1d1811; color-scheme: dark;
+    --equi: #e2b350; --accent: #fbc26d; --fout: #4fd1a0; --fin: #b48cff; --bline: #b6ab9c; --shade: #e0904f; --on-wire: #1d1811; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
   --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
-  --equi: #e2b350; --accent: #fbc26d; --fout: #4fd1a0; --fin: #b48cff; --bline: #b6ab9c; --shade: #69a0ff; --on-wire: #1d1811; color-scheme: dark;
+  --equi: #e2b350; --accent: #fbc26d; --fout: #4fd1a0; --fin: #b48cff; --bline: #b6ab9c; --shade: #e0904f; --on-wire: #1d1811; color-scheme: dark;
 }
 :root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
@@ -1887,7 +1887,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function theme3() {
     const g = g3, d = VD3.dark(), col = (s, fb) => { try { return new THREE.Color(s || fb); } catch (_) { return new THREE.Color(fb); } };
     g.scene.background = col(T.canvas, '#fdfcfb'); g.hemi.intensity = d ? 1.05 : 0.8; g.sun.intensity = d ? 0.95 : 0.75;
-    g.edgeM.color = col(T.gridStrong, '#dad3ca'); g.ghostM.color = col(T.bline, '#b6ab9c'); g.lineM.color = col(T.shade, '#2b60b5'); g.lineM.emissive = col(T.shade, '#2b60b5');
+    g.edgeM.color = col(T.gridStrong, '#dad3ca'); g.ghostM.color = col(T.bline, '#b6ab9c'); g.lineM.color = col(T.shade, '#b0622c'); g.lineM.emissive = col(T.shade, '#b0622c');
     g.copperM.color = g.nearM.color = col('#b87333', '#b87333'); g.outM.color = col(T.fout, '#1f8a5a'); g.inM.color = col(T.fin, '#7a4fc2');
   }
   function clear3(grp) { for (const o of grp.children.slice()) { grp.remove(o); if (o.geometry) o.geometry.dispose(); } }

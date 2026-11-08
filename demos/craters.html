@@ -501,7 +501,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const p = proj(); c.save(); c.font = `400 ${10.5 * p}px ${K.ui}`;
     let lines = [t]; if (c.measureText(t).width > W - 30 * p) { const a = t.split(' · '), k = Math.ceil(a.length / 2); lines = [a.slice(0, k).join(' · '), a.slice(k).join(' · ')]; }
     const lh = 14 * p, w = Math.max(...lines.map((l) => c.measureText(l).width)), y0 = H - 26 * p - (lines.length - 1) * lh;
-    c.fillStyle = 'rgba(8,12,18,0.62)'; c.beginPath(); c.roundRect(6 * p, y0 - 9 * p, w + 12 * p, lines.length * lh + 4 * p, 5 * p); c.fill();
+    c.fillStyle = 'rgba(17,14,9,0.62)'; c.beginPath(); c.roundRect(6 * p, y0 - 9 * p, w + 12 * p, lines.length * lh + 4 * p, 5 * p); c.fill();
     c.fillStyle = '#e5dfd7'; c.textAlign = 'left'; c.textBaseline = 'middle'; lines.forEach((l, i) => c.fillText(l, 12 * p, y0 + i * lh));
     c.restore();
   }
@@ -555,7 +555,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.restore();
     /* the gauge: a circle as wide as the smallest crater to count, and a scale bar */
     const gr = S.Dc / 2 * field.s, gx = ox + 18 * p + gr, gy = oy + 34 * p + gr;
-    ctx.fillStyle = K.dark ? 'rgba(10,12,16,0.65)' : 'rgba(255,255,255,0.7)'; ctx.fillRect(ox + 6 * p, oy + 6 * p, Math.max(150 * p, 2 * gr + 26 * p), 2 * gr + 66 * p);
+    ctx.fillStyle = K.dark ? 'rgba(16,13,10,0.65)' : 'rgba(255,255,255,0.7)'; ctx.fillRect(ox + 6 * p, oy + 6 * p, Math.max(150 * p, 2 * gr + 26 * p), 2 * gr + 66 * p);
     label(ctx, `count if at least ${S.Dc} km wide`, ox + 12 * p, oy + 18 * p, { col: K.gauge, s: 10.5, halo: false });
     ctx.strokeStyle = K.gauge; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.arc(gx, gy, Math.max(1.5, gr), 0, 2 * Math.PI); ctx.stroke();
     scaleBar(ctx, ox + 12 * p, gy + gr + 26 * p, field.s, Math.min(side * 0.3, 140 * p));

@@ -409,7 +409,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   const solarish = () => S.star === 'Sun' || S.star === 'young Sun';
   function label(c, t, x, y, o = {}) { const p = proj(); c.save(); c.font = `${o.w || 600} ${(o.s || 11.5) * p}px ${K.ui}`; c.textAlign = o.a || 'left'; c.textBaseline = o.b || 'middle';
-    if (o.halo !== false) { c.lineWidth = 3.5 * p; c.strokeStyle = o.bg || 'rgba(4,6,11,0.85)'; c.lineJoin = 'round'; c.strokeText(t, x, y); }
+    if (o.halo !== false) { c.lineWidth = 3.5 * p; c.strokeStyle = o.bg || 'rgba(10,8,5,0.85)'; c.lineJoin = 'round'; c.strokeText(t, x, y); }
     c.fillStyle = o.col || '#eeeae4'; c.fillText(t, x, y); c.restore(); }
   /* the inner planets' names on their orbits, outermost first; a name that would sit on another, on the Sun or on the planet's
      own label is left out (on a phone Mercury, Venus and Earth crowd the Sun), and the planet's own orbit is named by its label */
@@ -419,7 +419,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       if (o.n === S.body) continue;
       const q = at(o), w = c.measureText(o.n).width, b = [q[0] - 2, q[1] - 7 * p, q[0] + w + 2, q[1] + 7 * p];
       if (boxes.some((r) => b[0] < r[2] && b[2] > r[0] && b[1] < r[3] && b[3] > r[1])) continue;
-      boxes.push(b); label(c, o.n, q[0], q[1], { col: 'rgba(190,200,215,0.85)', w: 400, s: 10 });
+      boxes.push(b); label(c, o.n, q[0], q[1], { col: 'rgba(213,204,192,0.85)', w: 400, s: 10 });
     }
     c.restore();
   }
@@ -428,7 +428,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     c.fillStyle = '#0a0805'; c.fillRect(0, 0, SW, SH);
     /* a few fixed stars behind, the same each time */
     let sd = 7; const rn = () => { sd = (sd * 16807) % 2147483647; return sd / 2147483647; };
-    for (let i = 0; i < 160; i++) { const b = 0.25 + 0.6 * Math.pow(rn(), 3); c.fillStyle = `rgba(220,228,240,${b})`; c.fillRect(rn() * SW, rn() * SH, 1.2, 1.2); }
+    for (let i = 0; i < 160; i++) { const b = 0.25 + 0.6 * Math.pow(rn(), 3); c.fillStyle = `rgba(238,231,222,${b})`; c.fillRect(rn() * SW, rn() * SH, 1.2, 1.2); }
     /* the habitable zones */
     if (!S.blind) {
       const ring = (r0, r1, col) => { c.beginPath(); c.arc(cx, cy, r1 * s, 0, 2 * Math.PI); c.arc(cx, cy, r0 * s, 0, 2 * Math.PI, true); c.fillStyle = col; c.fill('evenodd'); };
@@ -437,7 +437,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       label(c, 'habitable zone', cx + z.mg * s * 0.707 + 6 * p, cy - z.mg * s * 0.707 - 6 * p, { col: '#8fe6ad', w: 700, s: 11 });
     }
     /* the inner planets' orbits */
-    if (solarish() && S.orbits) { for (const o of INNER) { c.strokeStyle = 'rgba(170,185,205,0.45)'; c.setLineDash([3, 4]); c.lineWidth = 1; c.beginPath(); c.arc(cx, cy, o.d * s, 0, 2 * Math.PI); c.stroke(); c.setLineDash([]); }
+    if (solarish() && S.orbits) { for (const o of INNER) { c.strokeStyle = 'rgba(202,189,173,0.45)'; c.setLineDash([3, 4]); c.lineWidth = 1; c.beginPath(); c.arc(cx, cy, o.d * s, 0, 2 * Math.PI); c.stroke(); c.setLineDash([]); }
       orbitNames(c, (o) => [cx - o.d * s * 0.92, cy + o.d * s * 0.39], [[cx - 16 * p, cy - 16 * p, cx + 16 * p, cy + 16 * p]]); }
     /* the planet's orbit and the planet */
     const pr = S.d * s, px = cx + pr * Math.cos(S.ang), py = cy - pr * Math.sin(S.ang);
@@ -458,9 +458,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function flatScale(c, s, Lr) {
     const p = proj(), nice = (r) => { const q = Math.pow(10, Math.floor(Math.log10(r))), m = r / q; return (m < 1.5 ? 1 : m < 3.5 ? 2 : m < 7.5 ? 5 : 10) * q; };
     const au = nice(Lr.Rv / 3), w = au * s, x0 = SW - w - 16 * p, y0 = SH - 16 * p;
-    c.strokeStyle = 'rgba(210,220,235,0.85)'; c.lineWidth = 1.5; c.beginPath(); c.moveTo(x0, y0 - 4); c.lineTo(x0, y0); c.lineTo(x0 + w, y0); c.lineTo(x0 + w, y0 - 4); c.stroke();
-    label(c, `${sig(au, 2)} AU`, x0 + w / 2, y0 - 10 * p, { a: 'center', col: 'rgba(210,220,235,0.95)', w: 400, s: 10.5 });
-    label(c, 'distances to scale · star and planet sizes are not', 14 * p, SH - 14 * p, { col: 'rgba(170,180,195,0.9)', w: 400, s: 10 });
+    c.strokeStyle = 'rgba(233,224,212,0.85)'; c.lineWidth = 1.5; c.beginPath(); c.moveTo(x0, y0 - 4); c.lineTo(x0, y0); c.lineTo(x0 + w, y0); c.lineTo(x0 + w, y0 - 4); c.stroke();
+    label(c, `${sig(au, 2)} AU`, x0 + w / 2, y0 - 10 * p, { a: 'center', col: 'rgba(233,224,212,0.95)', w: 400, s: 10.5 });
+    label(c, 'distances to scale · star and planet sizes are not', 14 * p, SH - 14 * p, { col: 'rgba(193,184,172,0.9)', w: 400, s: 10 });
   }
   /* the light from the star spreading: a 1 m² patch at d is 4 m² at 2d (a wedge whose width doubles) */
   function spreadFlat(c, cx, cy, s) {
@@ -537,7 +537,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (S.spread) { const a1 = S3.project([r * Math.cos(S.ang), r * Math.sin(S.ang), -0.1 * r]), a2 = S3.project([2 * r * Math.cos(S.ang), 2 * r * Math.sin(S.ang), -0.17 * r]);
       label(c, `1 m² at d: ${sig(flux(S.L, S.d), 4)} W/m²`, a1[0], a1[1] + 14 * p, { a: 'center', col: '#ffd77a', s: 10.5 });
       label(c, `spread over 4 m² at 2d: ${sig(flux(S.L, 2 * S.d), 4)} W/m²`, a2[0], a2[1] + 14 * p, { a: 'center', col: '#ffd77a', s: 10.5 }); }
-    if (SW > 600) label(c, 'drag the planet in or out · drag elsewhere to turn · sizes not to scale', 14 * p, SH - 14 * p, { col: 'rgba(170,180,195,0.9)', w: 400, s: 10 });
+    if (SW > 600) label(c, 'drag the planet in or out · drag elsewhere to turn · sizes not to scale', 14 * p, SH - 14 * p, { col: 'rgba(193,184,172,0.9)', w: 400, s: 10 });
   }
   function drawSys() { if (!K || !SW) return; sctx.setTransform(dpr, 0, 0, dpr, 0, 0); if (use3()) drawSys3(); else drawSysFlat(); }
 
@@ -559,7 +559,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const e = eNow(), lay = st.lay, gh = S.gh && e < 0.999;
     if (gh) {
       const n = lay.kind === 'one' ? 1 : Math.min(14, Math.max(2, Math.round(lay.n))), alpha = lay.kind === 'one' ? 0.10 + 0.28 * lay.eps : 0.17, hh = (ground - airTop) / n;
-      for (let i = 0; i < n; i++) { c.fillStyle = `rgba(150,170,200,${alpha})`; c.fillRect(L, airTop + hh * i + hh * 0.12, Rr - L, hh * 0.76); }
+      for (let i = 0; i < n; i++) { c.fillStyle = `rgba(196,178,154,${alpha})`; c.fillRect(L, airTop + hh * i + hh * 0.12, Rr - L, hh * 0.76); }
     }
     /* arrows: widths grow as the square root of the power, so Venus's 100 times stronger ground glow still fits */
     const inP = st.Sx / SPREAD[S.sp], ref = S.a * inP, ab = st.absorbed, surf = st.surf, out = e * surf, back = surf - out, maxP = Math.max(inP, surf);
@@ -858,7 +858,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     c.save(); c.imageSmoothingEnabled = true; c.drawImage(mapImg, M[0], M[1], M[2], M[3]); c.restore();
     // contours as cell edges of the 68% and 95% sets
     c.save(); c.beginPath(); c.rect(M[0], M[1], M[2], M[3]); c.clip();
-    for (const [lv, col, w] of [[z.lev[0.95], dk ? 'rgba(255,255,255,0.55)' : 'rgba(16,32,42,0.45)', 1], [z.lev[0.68], inkM, 1.8]]) {
+    for (const [lv, col, w] of [[z.lev[0.95], dk ? 'rgba(255,255,255,0.55)' : 'rgba(38,30,20,0.45)', 1], [z.lev[0.68], inkM, 1.8]]) {
       c.strokeStyle = col; c.lineWidth = w * p; c.beginPath();
       const inS = (i, j) => i >= 0 && j >= 0 && i < z.nR && j < z.nT && z.H[j * z.nR + i] >= lv;
       for (let j = 0; j < z.nT; j++) for (let i = 0; i < z.nR; i++) { if (!inS(i, j)) continue;

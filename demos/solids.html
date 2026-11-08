@@ -636,7 +636,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     B.forEach((bd, i) => { if (bd[0] > Et) return; c.globalAlpha = i + 1 === k.n ? 0.30 : 0.16; c.fillStyle = bcol(i); c.fillRect(x0, Y(Math.min(bd[1], Et)), x1 - x0, Y(bd[0]) - Y(Math.min(bd[1], Et))); });
     c.globalAlpha = 1;
     /* the potential: wells (V = 0) and barriers (V₀) */
-    c.fillStyle = dark() ? 'rgba(200,210,225,0.20)' : 'rgba(60,70,90,0.18)'; for (let i = 0; i < nc; i++) c.fillRect(X(i * a + k.w), Y(k.V0), k.b * sc, Y(0) - Y(k.V0));
+    c.fillStyle = dark() ? 'rgba(223,214,202,0.20)' : 'rgba(88,77,62,0.18)'; for (let i = 0; i < nc; i++) c.fillRect(X(i * a + k.w), Y(k.V0), k.b * sc, Y(0) - Y(k.V0));
     c.strokeStyle = T.ink; c.lineWidth = 1.6 * p; c.beginPath(); c.moveTo(X(0), Y(0)); for (let i = 0; i < nc; i++) { c.lineTo(X(i * a + k.w), Y(0)); c.lineTo(X(i * a + k.w), Y(k.V0)); c.lineTo(X((i + 1) * a), Y(k.V0)); c.lineTo(X((i + 1) * a), Y(0)); } c.stroke();
     /* the chosen state on its energy line */
     if (isFinite(E)) { const N = Math.max(200, Math.round((x1 - x0) / 1.5)), ps = kpPsi(E, k.s, k.V0, k.w, k.b), vals = [];

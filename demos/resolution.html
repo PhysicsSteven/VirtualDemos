@@ -417,7 +417,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function stars(x, y, w, h, seed) {
     ctx.save(); for (let i = 0; i < 70; i++) { const a = Math.sin(i * 127.1 + seed) * 43758.5453, b = Math.sin(i * 311.7 + seed) * 12345.678;
       const sx = x + (a - Math.floor(a)) * w, sy = y + (b - Math.floor(b)) * h * 0.92, r = 0.4 + ((i * 7) % 5) * 0.18;
-      ctx.fillStyle = `rgba(230,236,255,${0.25 + ((i * 13) % 7) / 12})`; ctx.beginPath(); ctx.arc(sx, sy, r, 0, 7); ctx.fill(); } ctx.restore();
+      ctx.fillStyle = `rgba(246,243,238,${0.25 + ((i * 13) % 7) / 12})`; ctx.beginPath(); ctx.arc(sx, sy, r, 0, 7); ctx.fill(); } ctx.restore();
   }
   function glow(x, y, r, rgb, a = 1) {
     const g = ctx.createRadialGradient(x, y, 0, x, y, r); g.addColorStop(0, css([1, 1, 1], a)); g.addColorStop(0.18, css(rgb, 0.9 * a)); g.addColorStop(1, css(rgb, 0));
@@ -437,7 +437,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (VG) { VG.wall(ctx, x, y, w, by); VG.bench(ctx, x, by, w, 12, Math.max(12, y + h - by - 2)); } else { ctx.fillStyle = T.canvas; ctx.fillRect(x, y, w, h); }
     const beamY = by - h * (isFr() ? 0.22 : 0.32), lw = Math.min(w * 0.24, 150 * p), lh = Math.max(26, h * 0.1);
     /* laser */
-    if (VG) VG.box(ctx, x + w * 0.03, beamY - lh / 2, lw, lh, { color: dark() ? '#50473c' : '#453c31', r: 5 }); else { ctx.fillStyle = '#334'; ctx.fillRect(x + w * 0.03, beamY - lh / 2, lw, lh); }
+    if (VG) VG.box(ctx, x + w * 0.03, beamY - lh / 2, lw, lh, { color: dark() ? '#50473c' : '#453c31', r: 5 }); else { ctx.fillStyle = '#433c34'; ctx.fillRect(x + w * 0.03, beamY - lh / 2, lw, lh); }
     if (VG) VG.plate(ctx, `laser ${C().lam} nm`, x + w * 0.03 + lw / 2, beamY, { s: 8 * p });
     ctx.fillStyle = dark() ? '#2f2820' : '#3b342b'; ctx.fillRect(x + w * 0.03 + lw * 0.2, beamY + lh / 2, 8, by - beamY - lh / 2); ctx.fillRect(x + w * 0.03 + lw * 0.75, beamY + lh / 2, 8, by - beamY - lh / 2);
     const st = ST(), fr = isFr(), x0 = x + w * 0.03 + lw, xp = x + w * 0.38, Lfrac = fr ? Math.log(c.L / st.Lmin) / Math.log(st.Lmax / st.Lmin) : (c.L - 1) / 3, xs = x + w * (fr ? 0.5 + 0.42 * Lfrac : 0.62 + 0.3 * Lfrac);
@@ -472,7 +472,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (sz < 60) return;
     const p = proj(), D = Dnow(), lam = lamNow(), z = C().L, disk = isDisk(), a = D / 2, R = (sz - 30 * p) / 2, cx = x + sz / 2, cy = y + 22 * p + R;
     const rho = disk ? 1.6 * a : a, sc = R / rho, rgb = lamRGB(C().lam);
-    ctx.save(); ctx.fillStyle = dark() ? 'rgba(10,14,20,0.82)' : 'rgba(255,255,255,0.86)'; ctx.strokeStyle = T.line; ctx.lineWidth = 1;
+    ctx.save(); ctx.fillStyle = dark() ? 'rgba(19,16,11,0.82)' : 'rgba(255,255,255,0.86)'; ctx.strokeStyle = T.line; ctx.lineWidth = 1;
     ctx.beginPath(); ctx.roundRect(x, y, sz, sz, 8); ctx.fill(); ctx.stroke();
     txt(S.blind ? 'Fresnel zones (hidden)' : sz > 170 * p ? 'Fresnel zones, seen from the center' : 'Fresnel zones', x + 8, y + 11 * p, { s: 10.5, w: 700, c: T.ink });
     ctx.beginPath(); ctx.arc(cx, cy, R, 0, 7); ctx.clip();
@@ -483,7 +483,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       else { ctx.fillStyle = css(rgb, 0.4); ctx.fillRect(cx - R, cy - R, 2 * R, 2 * R); }
     } else { ctx.fillStyle = css(rgb, 0.4); ctx.fillRect(cx - R, cy - R, 2 * R, 2 * R); }
     /* the plate around the hole, or the disk */
-    ctx.fillStyle = dark() ? 'rgba(70,78,90,0.92)' : 'rgba(80,88,100,0.9)';
+    ctx.fillStyle = dark() ? 'rgba(88,81,72,0.92)' : 'rgba(98,91,81,0.9)';
     ctx.beginPath(); if (disk) ctx.arc(cx, cy, a * sc, 0, 7); else { ctx.rect(cx - R - 2, cy - R - 2, 2 * R + 4, 2 * R + 4); ctx.moveTo(cx + a * sc, cy); ctx.arc(cx, cy, a * sc, 0, 7); } ctx.fill('evenodd');
     ctx.restore();
     ctx.save(); ctx.strokeStyle = T.line; ctx.beginPath(); ctx.arc(cx, cy, R, 0, 7); ctx.stroke(); ctx.restore();
@@ -533,7 +533,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       ctx.strokeStyle = '#c8b46a'; ctx.lineWidth = 3; ctx.beginPath(); ctx.ellipse(tx, ty, tr * 0.25, tr, 0, 0, 7); ctx.stroke();
       ctx.fillStyle = 'rgba(30,60,120,0.85)'; ctx.fillRect(tx + tl * 0.35, ty - tr - tr * 1.1, tl * 0.4, tr * 0.9); ctx.fillRect(tx + tl * 0.35, ty + tr + tr * 0.2, tl * 0.4, tr * 0.9);
       ctx.strokeStyle = 'rgba(160,190,230,0.35)'; ctx.lineWidth = 1; for (let i = 1; i < 6; i++) { const xx = tx + tl * 0.35 + tl * 0.4 * i / 6; ctx.beginPath(); ctx.moveTo(xx, ty - tr - tr * 1.1); ctx.lineTo(xx, ty - tr * 1.2); ctx.moveTo(xx, ty + tr * 1.2); ctx.lineTo(xx, ty + tr * 2.1); ctx.stroke(); }
-      ctx.strokeStyle = 'rgba(220,230,255,0.18)'; for (const s of (n2 ? [-1, 1] : [0])) { ctx.beginPath(); ctx.moveTo(sx, sy + s * gap / 2); ctx.lineTo(tx, ty - tr * 0.8); ctx.moveTo(sx, sy + s * gap / 2); ctx.lineTo(tx, ty + tr * 0.8); ctx.stroke(); }
+      ctx.strokeStyle = 'rgba(243,238,232,0.18)'; for (const s of (n2 ? [-1, 1] : [0])) { ctx.beginPath(); ctx.moveTo(sx, sy + s * gap / 2); ctx.lineTo(tx, ty - tr * 0.8); ctx.moveTo(sx, sy + s * gap / 2); ctx.lineTo(tx, ty + tr * 0.8); ctx.stroke(); }
       txt(`mirror D = ${f(C().D, 2)} m`, tx + tl / 2, ty + tr * 2.4 + 12 * p, { a: 'center', s: 11, c: '#eee8e0' });
     } else {
       /* two point sources and a lens with an iris, imaging onto a sensor; or the camera */
@@ -550,7 +550,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       }
       /* iris: blades drawn as a ring, open to the aperture */
       ctx.fillStyle = cam ? '#4b443c' : (dark() ? '#5e564c' : '#6b6358'); ctx.fillRect(lx - 4, sy - lr, 8, lr - ar); ctx.fillRect(lx - 4, sy + ar, 8, lr - ar);
-      const lg = ctx.createLinearGradient(lx - 10, 0, lx + 10, 0); lg.addColorStop(0, 'rgba(170,210,240,0.25)'); lg.addColorStop(0.5, 'rgba(220,240,255,0.55)'); lg.addColorStop(1, 'rgba(170,210,240,0.25)');
+      const lg = ctx.createLinearGradient(lx - 10, 0, lx + 10, 0); lg.addColorStop(0, 'rgba(170,210,240,0.25)'); lg.addColorStop(0.5, 'rgba(243,238,232,0.55)'); lg.addColorStop(1, 'rgba(170,210,240,0.25)');
       ctx.fillStyle = lg; ctx.beginPath(); ctx.ellipse(lx + 12, sy, 7, lr * 0.95, 0, 0, 7); ctx.fill();
       const fx = cam ? lx + 10 + w * 0.26 : x + w * 0.9;
       ctx.strokeStyle = cam ? 'rgba(255,240,200,0.30)' : css(lamRGB(C().lam), 0.35); ctx.lineWidth = 1;
@@ -800,7 +800,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const N3 = matchMedia('(max-width: 520px)').matches ? 120 : 176, HZ = 1.0;
   let S3 = null, G3 = null, v3 = null, key3 = '', raf3 = 0, apKey = '', on3 = false, need3 = true;
   const o3 = { th: -Math.PI / 2 + 0.62, ph: 1.0, zoom: 1 };
-  const LAB3 = { size: 0.085, color: '#f1ede7', bg: 'rgba(14,18,24,0.74)' };
+  const LAB3 = { size: 0.085, color: '#f1ede7', bg: 'rgba(23,20,15,0.74)' };
   /* the height scale: 1 world unit is the top of the graph's usual scale (1.1 for one source, 2.1 for two, the near field's peak) */
   const zTop = () => (isFr() ? Math.max(1.1, profile(half() * Math.SQRT2 * 1.001).top * 1.06) : nNow() === 2 ? 2.1 : 1.1);
   function I3(u, v, P) {

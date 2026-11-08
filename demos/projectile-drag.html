@@ -2564,12 +2564,12 @@ body[data-nc] #unitsG, body[data-nc] #unitsF, body:not([data-nc]) #ncUnits { dis
     };
     const v0Arrow = arrow(accentM), tip = new THREE.Mesh(sphere, std({ color: '#ffffff', roughness: 0.3, emissive: '#000000' }));
     const tipRing = new THREE.Mesh(new THREE.TorusGeometry(1, 0.22, 8, 32), accentM);
-    const v0Lab = VD3K.label('v₀', { size: 1, color: '#ffffff', bg: 'rgba(43,96,181,0.92)' }), thLab = VD3K.label('45°', { size: 1, color: '#ffffff', bg: 'rgba(30,38,48,0.72)' });
-    const hLab = VD3K.label('h', { size: 1, color: '#ffffff', bg: 'rgba(30,38,48,0.72)' });
+    const v0Lab = VD3K.label('v₀', { size: 1, color: '#ffffff', bg: 'rgba(43,96,181,0.92)' }), thLab = VD3K.label('45°', { size: 1, color: '#ffffff', bg: 'rgba(47,40,31,0.72)' });
+    const hLab = VD3K.label('h', { size: 1, color: '#ffffff', bg: 'rgba(47,40,31,0.72)' });
     S.scene.add(v0Arrow, tip, tipRing, v0Lab, thLab, hLab);
     /* on the selected ball: velocity (scale of the v₀ arrow), weight and drag (one force scale) */
     const velArrow = arrow(accentM), wArrow = arrow(std({ color: '#50483d', roughness: 0.5 })), dArrow = arrow(std({ color: '#d2452f', roughness: 0.5 }));
-    const velLab = VD3K.label('v', { size: 1, color: '#ffffff', bg: 'rgba(43,96,181,0.92)' }), wLab = VD3K.label('weight', { size: 1, color: '#ffffff', bg: 'rgba(40,48,60,0.85)' }), dLab = VD3K.label('drag', { size: 1, color: '#ffffff', bg: 'rgba(196,60,40,0.92)' });
+    const velLab = VD3K.label('v', { size: 1, color: '#ffffff', bg: 'rgba(43,96,181,0.92)' }), wLab = VD3K.label('weight', { size: 1, color: '#ffffff', bg: 'rgba(58,51,42,0.85)' }), dLab = VD3K.label('drag', { size: 1, color: '#ffffff', bg: 'rgba(196,60,40,0.92)' });
     S.scene.add(velArrow, wArrow, dArrow, velLab, wLab, dLab);
     /* the time cursor: a ring round the selected ball and a plumb line to the grass */
     const curRing = VD3K.marker(S, { r: 1, color: '#2b60b5' }); curRing.material.depthTest = true;
@@ -2723,9 +2723,9 @@ body[data-nc] #unitsG, body[data-nc] #unitsF, body:not([data-nc]) #ncUnits { dis
     g.prevLine = dashTube(cur.pts, rad * 0.9, T.ink, 0, 0.42); g.vacG.add(g.prevLine);
     const ring = (col) => { const m = new THREE.Mesh(new THREE.RingGeometry(span * 0.006, span * 0.009, 32), new THREE.MeshBasicMaterial({ color: col, transparent: true, opacity: 0.9, depthWrite: false })); m.position.z = span * 0.0008; return m; };
     g.vacMark = ring(T.muted); g.vacMark.position.x = vac.range;
-    g.vacLab = VD3K.label('vacuum  ' + fmtM(vac.range), { size: span * 0.022 * F3.lk, color: '#ffffff', bg: 'rgba(90,101,117,0.88)' }); g.vacLab.position.set(vac.range, 0, span * 0.03);
+    g.vacLab = VD3K.label('vacuum  ' + fmtM(vac.range), { size: span * 0.022 * F3.lk, color: '#ffffff', bg: 'rgba(115,105,92,0.88)' }); g.vacLab.position.set(vac.range, 0, span * 0.03);
     g.prevMark = ring(T.ink); g.prevMark.position.x = cur.range;
-    g.prevLab = VD3K.label('next  ' + fmtM(cur.range), { size: span * 0.022 * F3.lk, color: '#ffffff', bg: 'rgba(23,32,43,0.8)' }); g.prevLab.position.set(cur.range, 0, span * 0.03);
+    g.prevLab = VD3K.label('next  ' + fmtM(cur.range), { size: span * 0.022 * F3.lk, color: '#ffffff', bg: 'rgba(42,34,25,0.8)' }); g.prevLab.position.set(cur.range, 0, span * 0.03);
     g.vacG.add(g.vacMark, g.vacLab, g.prevMark, g.prevLab);
   }
 

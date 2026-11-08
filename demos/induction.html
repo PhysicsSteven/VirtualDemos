@@ -940,7 +940,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const yPanM = -a - DI_POST, tipM = a + S.pv * CM, topM = Math.min(tipM, a + 20 * CM) + 0.035;
     const sc = Math.min((yPan - 26 * p) / (topM - yPanM), 0.36 * Hu / (2 * a)), X = (x) => bx + x * sc, Y = (y) => yPan - (y - yPanM) * sc;
     VG.box(ctx, bx - bw / 2, benchY - bh, bw, bh, { color: VG.dark() ? '#3b342c' : '#e0dcd7', r: 8 });
-    VG.plate(ctx, 'analytical balance', bx + bw * 0.22, benchY - bh + 14 * p, { c: VG.dark() ? 'rgba(230,236,243,0.6)' : 'rgba(40,50,62,0.7)' });
+    VG.plate(ctx, 'analytical balance', bx + bw * 0.22, benchY - bh + 14 * p, { c: VG.dark() ? 'rgba(242,237,231,0.6)' : 'rgba(60,52,42,0.7)' });
     const lw = Math.min(130 * p, bw * 0.46), lx = bx - bw / 2 + 12 * p, ly = benchY - bh + 12 * p;
     VG.lcd(ctx, lx, ly, lw, 26 * p, `${(sol.mg === 0 ? 0 : sol.mg).toFixed(2).replace('-', '−')} mg`);
     if (!sol.stable) { ctx.strokeStyle = '#8ef0b0'; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.arc(lx + 9 * p, ly + 13 * p, 3.5 * p, 0, 7); ctx.stroke(); }
@@ -950,7 +950,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     VG.rod(ctx, bx, benchY - bh, bx, yPan, 3 * p, { color: '#aea69c' });
     VG.box(ctx, X(-0.035), yPan - 3 * p, 0.07 * sc, 4 * p, { color: '#c9c2b9', r: 2, shadow: false });
     ctx.fillStyle = VG.dark() ? 'rgba(170,210,230,0.28)' : 'rgba(150,200,225,0.45)'; ctx.fillRect(X(-0.004), Y(-a) - 1, 0.008 * sc, Y(yPanM) - Y(-a) - 3 * p + 1);
-    ctx.strokeStyle = 'rgba(80,120,150,0.5)'; ctx.lineWidth = 1; ctx.strokeRect(X(-0.004), Y(-a) - 1, 0.008 * sc, Y(yPanM) - Y(-a) - 3 * p + 1);
+    ctx.strokeStyle = 'rgba(145,119,85,0.5)'; ctx.lineWidth = 1; ctx.strokeRect(X(-0.004), Y(-a) - 1, 0.008 * sc, Y(yPanM) - Y(-a) - 3 * p + 1);
     /* the ball */
     const cx = X(0), cy = Y(0), r = a * sc, metal = sol.m.kappa === Infinity;
     VG.ball(ctx, cx, cy, r, BALL_C[S.pb], { matte: !metal && S.pb !== 'pyrex', glint: metal ? 1 : 0.5 });
@@ -1331,7 +1331,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       if (id === 'B' && S.gap > B_SHOW) continue;
       VG.ball(ctx, x, y, r, /^#[0-9a-f]{6}$/i.test(T.metal) ? T.metal : '#dad3ca', { glint: 0.9 });
       drawShade(id, x, y, r);
-      ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.strokeStyle = dk ? 'rgba(255,255,255,0.18)' : 'rgba(20,30,45,0.35)'; ctx.lineWidth = 1; ctx.stroke();
+      ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.strokeStyle = dk ? 'rgba(255,255,255,0.18)' : 'rgba(43,34,22,0.35)'; ctx.lineWidth = 1; ctx.stroke();
       const rim = S.shade[id].rim;
       ctx.font = `700 ${Math.max(10, Math.min(15, r * 0.22)) * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
       if (rim) for (let i = 0; i < 48; i++) { const th = 2 * Math.PI * i / 48, a = Math.abs(rim[i]) / smax; if (a < 0.04) continue; ctx.globalAlpha = 0.2 + 0.8 * a; ctx.fillStyle = rim[i] > 0 ? T.pos : T.neg; ctx.fillText(rim[i] > 0 ? '+' : '−', x + (r + 9 * p) * Math.cos(th), y - (r + 9 * p) * Math.sin(th)); }

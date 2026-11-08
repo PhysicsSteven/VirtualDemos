@@ -684,7 +684,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function dial3() {
     const k = String(T.dark); if (g3.dialKey === k) return; g3.dialKey = k;
     const c = g3.scaleCv.getContext('2d'), N = 1024, cx = N / 2, r0 = N / 2 * 0.075 / 0.11, r1 = N / 2;
-    c.clearRect(0, 0, N, N); c.fillStyle = T.dark ? 'rgba(60,68,78,0.9)' : 'rgba(236,239,243,0.95)'; c.beginPath(); c.arc(cx, cx, r1, 0, 7); c.arc(cx, cx, r0, 0, 7, true); c.fill();
+    c.clearRect(0, 0, N, N); c.fillStyle = T.dark ? 'rgba(77,70,61,0.9)' : 'rgba(242,240,237,0.95)'; c.beginPath(); c.arc(cx, cx, r1, 0, 7); c.arc(cx, cx, r0, 0, 7, true); c.fill();
     c.strokeStyle = c.fillStyle = T.dark ? '#eeeae4' : '#2e2820'; c.font = '600 30px "JetBrains Mono", monospace'; c.textAlign = 'center'; c.textBaseline = 'middle';
     for (let d = -180; d < 180; d += 5) { const a = d * DEG, l = d % 30 ? 22 : 44; c.lineWidth = d % 30 ? 2 : 4; c.beginPath(); c.moveTo(cx + Math.cos(a) * r1, cx - Math.sin(a) * r1); c.lineTo(cx + Math.cos(a) * (r1 - l), cx - Math.sin(a) * (r1 - l)); c.stroke();
       if (d % 30 === 0) { const rr = r1 - 76; c.fillText(String(Math.abs(d)), cx + Math.cos(a) * rr, cx - Math.sin(a) * rr); } }

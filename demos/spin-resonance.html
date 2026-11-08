@@ -29,7 +29,7 @@
   --equi: #a7740b;
   --accent: #c4811c;
   --bezel: #37322c; --bezel-ink: #d7d1ca; --screen: #04110c;
-  --paper: #f6f1e3; --paper-grid: #e3b9b0; --paper-major: #c98a7e; --pen: #3a2a8c;
+  --own-paper: #f6f1e3; --paper-grid: #e3b9b0; --paper-major: #c98a7e; --pen: #3a2a8c;
   --bench-bg: #ebe6e0;
   --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
@@ -40,7 +40,7 @@
     --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
     --equi: #e2b350; --accent: #fbc26d;
     --bezel: #24211c; --bezel-ink: #cac3ba; --screen: #020a07;
-    --paper: #d9d3c4; --paper-grid: #c7a49c; --paper-major: #a9766b; --pen: #2c1f78;
+    --own-paper: #d9d3c4; --paper-grid: #c7a49c; --paper-major: #a9766b; --pen: #2c1f78;
     --bench-bg: #211b13; color-scheme: dark;
   }
 }
@@ -49,7 +49,7 @@
   --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
   --equi: #e2b350; --accent: #fbc26d;
   --bezel: #24211c; --bezel-ink: #cac3ba; --screen: #020a07;
-  --paper: #d9d3c4; --paper-grid: #c7a49c; --paper-major: #a9766b; --pen: #2c1f78;
+  --own-paper: #d9d3c4; --paper-grid: #c7a49c; --paper-major: #a9766b; --pen: #2c1f78;
   --bench-bg: #211b13; color-scheme: dark;
 }
 :root[data-projector="on"] { font-size: 125%; }
@@ -473,7 +473,7 @@ table.rows td.b { font-size: 0.76rem; }
     const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
     T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'),
       pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), accent: g('--accent'), bezel: g('--bezel'), bezelInk: g('--bezel-ink'), screen: g('--screen'),
-      paper: g('--paper'), paperGrid: g('--paper-grid'), paperMajor: g('--paper-major'), pen: g('--pen'), benchBg: g('--bench-bg'),
+      paper: g('--own-paper'), paperGrid: g('--paper-grid'), paperMajor: g('--paper-major'), pen: g('--pen'), benchBg: g('--bench-bg'),
       mono: g('--font-mono'), ui: g('--font-ui') };
   }
   const C1 = '#f2c94c', C2 = '#4fd8f0', CUR = '#ff9f5a';

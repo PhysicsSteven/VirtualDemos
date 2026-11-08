@@ -1440,7 +1440,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     c.save(); c.translate(scr.x + 12 * ps, (box.T + box.B) / 2); c.rotate(-Math.PI / 2); c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('counts per channel', 0, 0); c.restore();
     // LLD / ULD markers
     const lldC = Math.round(S.lld / 100 * S.N), uldC = Math.round(S.uld / 100 * S.N);
-    c.fillStyle = 'rgba(120, 140, 160, 0.13)';
+    c.fillStyle = 'rgba(157, 142, 123, 0.13)';
     if (lldC > view[0]) c.fillRect(box.L, box.T, Math.min(box.R, X(lldC)) - box.L, box.B - box.T);
     if (uldC < view[1]) c.fillRect(X(uldC), box.T, box.R - X(uldC), box.B - box.T);
     // spectrum: one bar per channel, or the maximum per pixel column when channels outnumber pixels

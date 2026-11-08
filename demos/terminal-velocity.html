@@ -292,7 +292,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       skyHi: g('--sky-hi'), skyLo: g('--sky-lo'), ghost: g('--ghost'), surface: g('--surface'), mono: g('--font-mono'), ui: g('--font-ui') }; }
   function txt(c, s, x, y, o = {}) { const p = ps(); c.fillStyle = o.c || T.ink; c.font = `${o.b ? '700 ' : ''}${(o.s || 11) * p}px ${o.m ? T.mono : T.ui}`; c.textAlign = o.a || 'left'; c.textBaseline = o.bl || 'middle'; c.fillText(s, x, y); }
   function tag(c, s, x, y, o = {}) { const p = ps(); c.font = `${o.b ? '700 ' : ''}${(o.s || 11) * p}px ${o.m ? T.mono : T.ui}`; const w = c.measureText(s).width, a = o.a || 'left', x0 = a === 'center' ? x - w / 2 : a === 'right' ? x - w : x;
-    c.fillStyle = VD3.dark() ? 'rgba(13,18,24,0.72)' : 'rgba(255,255,255,0.78)'; c.beginPath(); c.roundRect(x0 - 4 * p, y - 9 * p * (o.s || 11) / 11, w + 8 * p, 18 * p * (o.s || 11) / 11, 4 * p); c.fill(); txt(c, s, x, y, o); }
+    c.fillStyle = VD3.dark() ? 'rgba(23,19,14,0.72)' : 'rgba(255,255,255,0.78)'; c.beginPath(); c.roundRect(x0 - 4 * p, y - 9 * p * (o.s || 11) / 11, w + 8 * p, 18 * p * (o.s || 11) / 11, 4 * p); c.fill(); txt(c, s, x, y, o); }
   function arrow2(c, x0, y0, x1, y1, col, w) { const p = ps(), a = Math.atan2(y1 - y0, x1 - x0), h = Math.min(9 * p, Math.hypot(x1 - x0, y1 - y0) * 0.6);
     c.strokeStyle = col; c.fillStyle = col; c.lineWidth = w * p; c.beginPath(); c.moveTo(x0, y0); c.lineTo(x1 - h * 0.6 * Math.cos(a), y1 - h * 0.6 * Math.sin(a)); c.stroke();
     c.beginPath(); c.moveTo(x1, y1); c.lineTo(x1 - h * Math.cos(a - 0.4), y1 - h * Math.sin(a - 0.4)); c.lineTo(x1 - h * Math.cos(a + 0.4), y1 - h * Math.sin(a + 0.4)); c.closePath(); c.fill(); }
@@ -550,7 +550,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (S.kind === 'sky') {
       const z = alt(), b = bodyNow(), span = !b.phase ? 10 : 10 + 36 * Math.min(1, b.phase === 'fill' ? 0.3 + b.cu : 0.3 * b.cu), sc = H / span, zc = z + (b.phase === 'fill' ? 4.5 * Math.min(1, b.cu * 1.6) : 0.2), Y = (zz) => H / 2 - (zz - zc) * sc;
       const gr = ctx.createLinearGradient(0, 0, 0, H), up = Math.min(1, z / 11000); gr.addColorStop(0, T.skyHi); gr.addColorStop(1, T.skyLo); ctx.fillStyle = gr; ctx.fillRect(0, 0, W, H);
-      ctx.fillStyle = `rgba(10,20,40,${0.35 * up})`; ctx.fillRect(0, 0, W, H);
+      ctx.fillStyle = `rgba(33,26,17,${0.35 * up})`; ctx.fillRect(0, 0, W, H);
       /* clouds on the fall line's side, at their altitudes */
       for (const [x, , cz, s] of CLOUDS.slice(0, 6)) { const yy = Y(cz); if (yy < -s * sc || yy > H + s * sc) continue; ctx.fillStyle = 'rgba(255,255,255,0.75)'; ctx.beginPath(); ctx.ellipse(cx + x * sc * 0.15, yy, s * sc * 0.6, s * sc * 0.2, 0, 0, 7); ctx.fill(); }
       /* the ground */
@@ -564,7 +564,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       /* the canopy */
       const bz = Y(z);
       if (b.phase === 'fill') { const rad = Math.max(0.12, Math.sqrt(b.cu)) * 3.5 * sc, sk = Y(z + 0.55 + 0.6 + 7.5), hh = 2.5 * (1.6 - 0.6 * b.cu) * sc;
-        ctx.strokeStyle = 'rgba(60,70,80,0.7)'; ctx.lineWidth = 1; ctx.beginPath(); for (const s of [-1, -0.5, 0, 0.5, 1]) { ctx.moveTo(cx + s * rad, sk); ctx.lineTo(cx, Y(z + 1.15)); } ctx.lineTo(cx, bz - 0.55 * sc); ctx.stroke();
+        ctx.strokeStyle = 'rgba(78,71,62,0.7)'; ctx.lineWidth = 1; ctx.beginPath(); for (const s of [-1, -0.5, 0, 0.5, 1]) { ctx.moveTo(cx + s * rad, sk); ctx.lineTo(cx, Y(z + 1.15)); } ctx.lineTo(cx, bz - 0.55 * sc); ctx.stroke();
         ctx.fillStyle = T.suit; ctx.beginPath(); ctx.ellipse(cx, sk, rad, hh, 0, Math.PI, 2 * Math.PI); ctx.closePath(); ctx.fill(); ctx.fillStyle = 'rgba(255,255,255,0.45)'; ctx.beginPath(); ctx.ellipse(cx, sk, rad * 0.45, hh * 0.98, 0, Math.PI, 2 * Math.PI); ctx.fill(); }
       else if (b.phase === 'stretch') { const len = (9.6 * b.cu + 0.3) * sc; ctx.strokeStyle = '#d8d2c4'; ctx.lineWidth = 4 * p; ctx.beginPath(); ctx.moveTo(cx, bz - 0.5 * sc); ctx.lineTo(cx, bz - 0.5 * sc - len); ctx.stroke(); ctx.fillStyle = T.suit; ctx.beginPath(); ctx.arc(cx, bz - 0.5 * sc - len, 0.45 * sc, Math.PI, 0); ctx.fill(); }
       /* the body, side on: a capsule along its axis, turned by the pose */
@@ -604,7 +604,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   /* what both views show over the picture: the clock and the instruments, a speed bar with the terminal speed, a caption */
   function hud(caption) {
     const p = ps(), x = 12 * p, y = 62 * p, sky = S.kind === 'sky', a = aNow(), vt = vTerm(S.f.m, dragArea(S.f, S.s.t), airRho(S.f, S.s.y));
-    const box = (x0, y0, w, h) => { ctx.fillStyle = VD3.dark() ? 'rgba(13,18,24,0.62)' : 'rgba(255,255,255,0.72)'; ctx.beginPath(); ctx.roundRect(x0, y0, w, h, 8 * p); ctx.fill(); };
+    const box = (x0, y0, w, h) => { ctx.fillStyle = VD3.dark() ? 'rgba(23,19,14,0.62)' : 'rgba(255,255,255,0.72)'; ctx.beginPath(); ctx.roundRect(x0, y0, w, h, 8 * p); ctx.fill(); };
     box(x - 6 * p, y - 6 * p, (sky ? 210 : 250) * p, 82 * p);
     txt(ctx, `${f2(S.s.v)} m/s`, x, y + 12 * p, { s: 20, m: 1, b: 1 });
     txt(ctx, sky ? `${f1(S.s.v * 3.6)} km/h · a = ${f2(a)} m/s²` : `a = ${f2(a)} m/s²`, x, y + 34 * p, { s: 10.5, m: 1, c: T.muted });

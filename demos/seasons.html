@@ -665,7 +665,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // a picture choice), and the blue ring is the observer's latitude circle: the lit share of that ring is the day length.
   // Sun and Earth are drawn far larger than to scale; the orbit and its dates are the model's.
   const OBS_LON = -92.6 * DEG, ER3 = 0.1, SUN3 = 0.12;
-  const SPACE = { canvas: 'rgba(5,8,14,0.78)', ink: '#eeeae4', muted: '#b6ab9c', relief: '#40372c', gridStrong: '#544a3c', pos: '#ff7660', accent: '#fbc26d', sun: '#f5c451' };
+  const SPACE = { canvas: 'rgba(13,10,6,0.78)', ink: '#eeeae4', muted: '#b6ab9c', relief: '#40372c', gridStrong: '#544a3c', pos: '#ff7660', accent: '#fbc26d', sun: '#f5c451' };
   const T3 = { S: null, on: false, cam: 'orbit', earth: null, tiltG: null, spinG: null, ring: null, pin: null, ghosts: [], ghostMat: null, exag: null, line: null, disc: null, follow: null, tries: 0, sub: null, axis: null };
   // Whole orbit: today's Earth drawn larger than the faded season Earths, so its axis, latitude ring and the point under the Sun read
   const BIG3 = 1.6;
@@ -763,7 +763,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const ps = C.ps, eps = S.tilt * DEG, n = [0, Math.sin(eps), Math.cos(eps)];
     const tip = (T, k) => { const h = helio(T); return M.proj(h[0] + n[0] * k, h[1] + n[1] * k, h[2] + n[2] * k); };
     ctx.save(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.lineJoin = 'round';
-    const put = (txt, x, y, font, col) => { ctx.font = font; ctx.strokeStyle = 'rgba(4,6,11,0.85)'; ctx.lineWidth = 3 * ps; ctx.strokeText(txt, x, y); ctx.fillStyle = col; ctx.fillText(txt, x, y); };
+    const put = (txt, x, y, font, col) => { ctx.font = font; ctx.strokeStyle = 'rgba(10,8,5,0.85)'; ctx.lineWidth = 3 * ps; ctx.strokeText(txt, x, y); ctx.fillStyle = col; ctx.fillText(txt, x, y); };
     const near = T3.cam === 'earth';
     if (layers.seasons && !near) {
       for (const s of SEASONS) {
@@ -889,7 +889,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       if (12 + lw + 18 * ps + bw > W - 12) { if (on3 && hy && W < 470) { x = 12; al = 'left'; y0 = hy + 68 * ps; } else x = null; }
       if (x !== null) {
         ctx.textAlign = al; ctx.lineJoin = 'round';
-        rows.forEach((r, i) => { const y = y0 + i * 14 * ps; if (on3) { ctx.strokeStyle = 'rgba(4,6,11,0.85)'; ctx.lineWidth = 3 * ps; ctx.strokeText(r[0], x, y); } ctx.fillStyle = r[1]; ctx.fillText(r[0], x, y); });
+        rows.forEach((r, i) => { const y = y0 + i * 14 * ps; if (on3) { ctx.strokeStyle = 'rgba(10,8,5,0.85)'; ctx.lineWidth = 3 * ps; ctx.strokeText(r[0], x, y); } ctx.fillStyle = r[1]; ctx.fillText(r[0], x, y); });
       }
     }
     ctx.restore();
@@ -1627,7 +1627,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     } else { ctx.fillStyle = T.planet; ctx.fillRect(x - r, y - r, 2 * r, 2 * r); }
     /* night: dark beyond a soft terminator, away from the Sun */
     const lg = ctx.createLinearGradient(x + sx(toSun) * r, y + sy(toSun) * r, x - sx(toSun) * r, y - sy(toSun) * r);
-    lg.addColorStop(0, 'rgba(4,8,20,0)'); lg.addColorStop(0.44, 'rgba(4,8,20,0.05)'); lg.addColorStop(0.56, 'rgba(4,8,20,0.82)'); lg.addColorStop(1, 'rgba(4,8,20,0.9)');
+    lg.addColorStop(0, 'rgba(16,13,8,0)'); lg.addColorStop(0.44, 'rgba(16,13,8,0.05)'); lg.addColorStop(0.56, 'rgba(16,13,8,0.82)'); lg.addColorStop(1, 'rgba(16,13,8,0.9)');
     ctx.fillStyle = lg; ctx.fillRect(x - r, y - r, 2 * r, 2 * r);
     const rg = ctx.createRadialGradient(x, y, r * 0.55, x, y, r); rg.addColorStop(0, 'rgba(0,0,0,0)'); rg.addColorStop(1, 'rgba(0,0,0,0.35)');
     ctx.fillStyle = rg; ctx.fillRect(x - r, y - r, 2 * r, 2 * r);
@@ -1657,8 +1657,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.fillStyle = '#efe8df'; ctx.beginPath();
     for (let k = 0; k < 8; k++) { const rr = k % 2 ? 2.2 * p : 8 * p, aa = k * Math.PI / 4; k ? ctx.lineTo(stx + rr * Math.cos(aa), sty + rr * Math.sin(aa)) : ctx.moveTo(stx + rr, sty); }
     ctx.closePath(); ctx.fill();
-    ctx.fillStyle = 'rgba(207,224,255,0.9)'; ctx.font = `${11 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText('distant star', stx + 12 * p, sty);
-    ctx.fillStyle = 'rgba(207,224,255,0.6)'; ctx.fillText(W < 600 ? '(very far away)' : '(far off the top: the same direction all year)', stx + 12 * p, sty + 15 * p);
+    ctx.fillStyle = 'rgba(239,232,223,0.9)'; ctx.font = `${11 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText('distant star', stx + 12 * p, sty);
+    ctx.fillStyle = 'rgba(239,232,223,0.6)'; ctx.fillText(W < 600 ? '(very far away)' : '(far off the top: the same direction all year)', stx + 12 * p, sty + 15 * p);
     /* past track along the orbit */
     if (S.trail && S.t > 0) { const a0 = -Math.PI / 2, a1 = A.orbit, turns = Math.min(1, (a1 - a0) / (2 * Math.PI));
       ctx.strokeStyle = 'rgba(120,170,255,0.55)'; ctx.lineWidth = 3 * p; ctx.beginPath(); ctx.arc(G.cx, G.cy, G.R, -a0, -(a0 + turns * 2 * Math.PI), true); ctx.stroke(); }
@@ -1678,7 +1678,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       if (Math.abs(d) > 0.004) { ctx.strokeStyle = '#ff5a4f'; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.arc(px, py, rr, -a0, -(a0 + d), d > 0); ctx.stroke(); }
     }
     /* the planet's name and where it is */
-    ctx.fillStyle = 'rgba(230,238,255,0.92)'; ctx.font = `600 ${12 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    ctx.fillStyle = 'rgba(246,243,238,0.92)'; ctx.font = `600 ${12 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
     ctx.fillText(P.name, px, py + G.pr + 6 * p);
     /* counters, top left */
     const L = 14 * p; let y = 14 * p; ctx.textAlign = 'left'; ctx.font = `${12 * p}px ${T.mono}`; ctx.textBaseline = 'top';
@@ -1686,20 +1686,20 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     line(`time  ${hms(S.t)}`, '#f6f3ee');
     line(`turns against the star  ${c.sid}`, '#9cc0ff');
     line(`noons (faces the Sun)   ${isFinite(sol) ? c.sol : 0}`, T.sunline);
-    line(`orbits  ${f(S.t / P.orb, 3)}`, 'rgba(230,238,255,0.7)');
+    line(`orbits  ${f(S.t / P.orb, 3)}`, 'rgba(246,243,238,0.7)');
     if (S.msg) { ctx.fillStyle = '#ffdca3'; ctx.font = `${11 * p}px ${T.ui}`; ctx.fillText(S.msg, L, y + 2 * p); }
     /* legend, bottom left */
     ctx.font = `${11 * p}px ${T.ui}`; ctx.textBaseline = 'bottom'; let yb = H - 10 * p;
-    const key = (col, txt, dash) => { ctx.strokeStyle = col; ctx.lineWidth = 2 * p; ctx.setLineDash(dash ? [6 * p, 5 * p] : []); ctx.beginPath(); ctx.moveTo(L, yb - 6 * p); ctx.lineTo(L + 22 * p, yb - 6 * p); ctx.stroke(); ctx.setLineDash([]); ctx.fillStyle = 'rgba(230,238,255,0.8)'; ctx.fillText(txt, L + 28 * p, yb); yb -= 16 * p; };
+    const key = (col, txt, dash) => { ctx.strokeStyle = col; ctx.lineWidth = 2 * p; ctx.setLineDash(dash ? [6 * p, 5 * p] : []); ctx.beginPath(); ctx.moveTo(L, yb - 6 * p); ctx.lineTo(L + 22 * p, yb - 6 * p); ctx.stroke(); ctx.setLineDash([]); ctx.fillStyle = 'rgba(246,243,238,0.8)'; ctx.fillText(txt, L + 28 * p, yb); yb -= 16 * p; };
     if (S.trail && isFinite(sol)) key('#ff5a4f', 'the extra turn: from the star direction to the Sun');
     key(T.sunline, 'toward the Sun', true); key('#9cc0ff', 'toward the distant star', true);
-    ctx.fillStyle = 'rgba(230,238,255,0.55)'; ctx.fillText('top view from above the north pole · not to scale', L, yb);
+    ctx.fillStyle = 'rgba(246,243,238,0.55)'; ctx.fillText('top view from above the north pole · not to scale', L, yb);
     if (S.zoom) drawZoom(G, A, spot);
   }
   /* the close up: the marked spot with the star and Sun directions and the angle between them */
   function drawZoom(G, A, spot) {
     const p = G.p, w = Math.min(230 * p, W * 0.42), h = w * 0.82, x0 = W - w - 12 * p, y0 = H - h - 12 * p;
-    ctx.fillStyle = 'rgba(8,12,22,0.92)'; ctx.strokeStyle = 'rgba(160,190,255,0.5)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x0, y0, w, h, 8) : ctx.rect(x0, y0, w, h); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = 'rgba(20,16,10,0.92)'; ctx.strokeStyle = 'rgba(160,190,255,0.5)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x0, y0, w, h, 8) : ctx.rect(x0, y0, w, h); ctx.fill(); ctx.stroke();
     const cx = x0 + w / 2, cy = y0 + h * 0.62, r = h * 0.3;
     ctx.save(); ctx.beginPath(); ctx.rect(x0, y0, w, h); ctx.clip();
     drawPlanet(cx, cy, r, A, p, true);
@@ -1708,7 +1708,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.strokeStyle = '#9cc0ff'; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx, cy - Lr); ctx.stroke();
     ctx.strokeStyle = T.sunline; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + sx(toSun) * Lr, cy + sy(toSun) * Lr); ctx.stroke(); ctx.setLineDash([]);
     const d = sdWrap((toSun - Math.PI / 2) * 180 / Math.PI);
-    ctx.fillStyle = 'rgba(230,238,255,0.9)'; ctx.font = `${11 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillStyle = 'rgba(246,243,238,0.9)'; ctx.font = `${11 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
     ctx.fillText('close up (not to scale)', x0 + 8 * p, y0 + 6 * p);
     ctx.font = `${11 * p}px ${T.mono}`; ctx.fillText(`Sun is ${f(Math.abs(d), 3)}° ${d >= 0 ? 'left' : 'right'} of the star`, x0 + 8 * p, y0 + 22 * p);
     ctx.restore();
@@ -1821,7 +1821,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       ctx.strokeStyle = ctx.fillStyle; ctx.lineWidth = 4.5 * p; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(q0[0], q0[1]); ctx.lineTo(q2[0], q2[1]); ctx.stroke(); ctx.lineCap = 'butt';
       ctx.restore();
     }
-    { const q0 = Pt([0, 0, 0]), q1 = Pt([0, L, 0]), q2 = Pt(tip); ctx.fillStyle = dark ? 'rgba(185,195,207,0.8)' : 'rgba(125,135,148,0.8)'; ctx.strokeStyle = dark ? '#eeeae4' : '#50493f'; ctx.lineWidth = 1 * p;
+    { const q0 = Pt([0, 0, 0]), q1 = Pt([0, L, 0]), q2 = Pt(tip); ctx.fillStyle = dark ? 'rgba(205,197,187,0.8)' : 'rgba(146,138,127,0.8)'; ctx.strokeStyle = dark ? '#eeeae4' : '#50493f'; ctx.lineWidth = 1 * p;
       ctx.beginPath(); ctx.moveTo(q0[0], q0[1]); ctx.lineTo(q1[0], q1[1]); ctx.lineTo(q2[0], q2[1]); ctx.closePath(); ctx.fill(); ctx.stroke(); }
     ctx.fillStyle = T.muted; ctx.font = `${9.5 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; { const nq = Pt([0, 1.22, 0]); ctx.fillText('N', nq[0], nq[1] - 6 * p); }
     /* the clock face: the minute hands of the clock (at 12) and of the sundial, 6° a minute */

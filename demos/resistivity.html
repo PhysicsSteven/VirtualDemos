@@ -688,8 +688,8 @@ table.rows input:focus { border-color: var(--accent); }
     const t = `${vShown()} V`; if (g3.lcd === t) return; g3.lcd = t;
     const c = g3.dmCv.getContext('2d'), w = 512, h = 300; c.fillStyle = '#443c31'; c.fillRect(0, 0, w, h);
     VG.lcd(c, 28, 28, w - 56, 120, t, { font: '600 80px "JetBrains Mono", ui-monospace, monospace' });
-    c.fillStyle = 'rgba(230,236,243,0.8)'; c.font = '700 30px "Atkinson Hyperlegible", sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('VOLTMETER', w / 2, 196);
-    c.font = '22px "Atkinson Hyperlegible", sans-serif'; c.fillStyle = 'rgba(230,236,243,0.6)'; c.fillText('across the clips', w / 2, 232);
+    c.fillStyle = 'rgba(242,237,231,0.8)'; c.font = '700 30px "Atkinson Hyperlegible", sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('VOLTMETER', w / 2, 196);
+    c.font = '22px "Atkinson Hyperlegible", sans-serif'; c.fillStyle = 'rgba(242,237,231,0.6)'; c.fillText('across the clips', w / 2, 232);
     for (const [f, k] of [[0.3, '#b8382a'], [0.7, '#1d1a16']]) { c.fillStyle = k; c.beginPath(); c.arc(w * f, 272, 16, 0, 7); c.fill(); }
     g3.dmTex.needsUpdate = true;
   }
@@ -1043,7 +1043,7 @@ table.rows input:focus { border-color: var(--accent); }
     ctx.save(); ctx.imageSmoothingEnabled = false; ctx.drawImage(off, X(0), Y(0), 24 * sc, 16 * sc); ctx.restore();
     /* equipotentials every V0/10, by marching squares on the cell centers */
     if (!S.blind) {
-      ctx.save(); ctx.strokeStyle = dark ? 'rgba(235,240,248,0.7)' : 'rgba(40,46,56,0.65)'; ctx.lineWidth = 1.2 * p; ctx.beginPath();
+      ctx.save(); ctx.strokeStyle = dark ? 'rgba(246,242,237,0.7)' : 'rgba(55,49,41,0.65)'; ctx.lineWidth = 1.2 * p; ctx.beginPath();
       for (let k = 1; k < 10; k++) { const L = SH.V0 * k / 10;
         for (let y = 0; y < SH_NY - 1; y++) for (let x = 0; x < SH_NX - 1; x++) {
           const q = [V[shI(x, y)], V[shI(x + 1, y)], V[shI(x + 1, y + 1)], V[shI(x, y + 1)]]; if (!q.every(isFinite)) continue;

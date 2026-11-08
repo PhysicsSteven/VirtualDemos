@@ -52,7 +52,7 @@ table.rows input:focus { border-color: var(--accent); }
 /* vd-knobs: an instrument panel in the picture; each range input inside it is shown as a knob (layout redesign) */
 .instr { position: absolute; z-index: 2; display: flex; flex-wrap: wrap; align-items: flex-start; gap: 10px 14px; padding: 8px 12px; border-radius: 10px; background: #40382e; color: #eeeae4; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.25); }
 /* in the light theme the panel is a brushed aluminum faceplate, so it belongs on a light wall; knobs and green readouts stay dark like a real instrument's */
-:root:not([data-theme="dark"]) .instr { background: linear-gradient(180deg, #f7f4f1, #e5e0da); color: #2e271e; border: 1px solid #cbc4ba; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 2px 6px rgba(20, 30, 45, 0.18); }
+:root:not([data-theme="dark"]) .instr { background: linear-gradient(180deg, #f7f4f1, #e5e0da); color: #2e271e; border: 1px solid #cbc4ba; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 2px 6px rgba(43, 34, 22, 0.18); }
 :root:not([data-theme="dark"]) .instr .kctl label, :root:not([data-theme="dark"]) .instr .kctl .klab { color: #50473c; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .instr { background: #40382e; color: #eeeae4; border: 0; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.25); } :root:not([data-theme="light"]) .instr .kctl label, :root:not([data-theme="light"]) .instr .kctl .klab { color: #d8d2ca; } }
 .instr > [hidden] { display: none !important; }
@@ -538,7 +538,7 @@ table.rows input:focus { border-color: var(--accent); }
     const c = g3.lcdCv.getContext('2d'), w = 512, h = 160; c.fillStyle = '#443c31'; c.fillRect(0, 0, w, h);
     if (window.VDGear) window.VDGear.lcd(c, 18, 16, w - 150, h - 32, t, { font: '600 76px "JetBrains Mono", ui-monospace, monospace' });
     else { c.fillStyle = '#0b1a12'; c.fillRect(18, 16, w - 150, h - 32); c.fillStyle = '#7ee0a0'; c.font = '600 76px monospace'; c.textAlign = 'right'; c.textBaseline = 'middle'; c.fillText(t, w - 150, h / 2); }
-    c.fillStyle = 'rgba(230,236,243,0.85)'; c.font = '700 26px "Atkinson Hyperlegible", sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('TARE', w - 66, 56); c.font = '20px "Atkinson Hyperlegible", sans-serif'; c.fillStyle = 'rgba(230,236,243,0.6)'; c.fillText('0.01 g', w - 66, 100);
+    c.fillStyle = 'rgba(242,237,231,0.85)'; c.font = '700 26px "Atkinson Hyperlegible", sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('TARE', w - 66, 56); c.font = '20px "Atkinson Hyperlegible", sans-serif'; c.fillStyle = 'rgba(242,237,231,0.6)'; c.fillText('0.01 g', w - 66, 100);
     g3.lcdTex.needsUpdate = true;
   }
   /* sign of the current that actually flows in the coil (the commutator reverses it each half turn) */

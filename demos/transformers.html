@@ -389,7 +389,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* power station: building, chimney with a puff */
     const sx = 10 * p, sw = Math.min(120 * p, W * 0.17);
     if (VG) { VG.box(ctx, sx, gy - 70 * p, sw, 70 * p, { color: dark() ? '#56514b' : '#96918b', r: 3 }); VG.box(ctx, sx + sw * 0.62, gy - 120 * p, sw * 0.18, 52 * p, { color: dark() ? '#65615c' : '#aca8a3', r: 2, shadow: false }); }
-    ctx.fillStyle = dark() ? 'rgba(200,210,225,0.18)' : 'rgba(255,255,255,0.75)'; for (let i = 0; i < 3; i++) { ctx.beginPath(); ctx.arc(sx + sw * 0.71 + i * 9 * p, gy - 128 * p - i * 10 * p, (7 + i * 3) * p, 0, 7); ctx.fill(); }
+    ctx.fillStyle = dark() ? 'rgba(223,214,202,0.18)' : 'rgba(255,255,255,0.75)'; for (let i = 0; i < 3; i++) { ctx.beginPath(); ctx.arc(sx + sw * 0.71 + i * 9 * p, gy - 128 * p - i * 10 * p, (7 + i * 3) * p, 0, 7); ctx.fill(); }
     txt('power station', sx + sw / 2, gy + 8 * p, { a: 'center', bl: 'top', s: 10.5, c: T.ink });
     txt('12 kV', sx + sw / 2, gy - 40 * p, { a: 'center', s: 11, c: '#ffffff', m: true });
     /* transformers: boxes with cooling fins and bushings */

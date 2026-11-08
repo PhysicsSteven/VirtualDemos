@@ -661,7 +661,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const p = proj(), fs = (o.s || 11) * p; ctx.save(); ctx.font = `${o.w || 600} ${fs}px ${o.m ? T.mono : T.ui}`;
     const tw = ctx.measureText(s).width, pad = 6 * p; let x0 = (o.a || 'center') === 'center' ? x - tw / 2 : o.a === 'right' ? x - tw : x;
     x0 = Math.max(pad + 2, Math.min(W - tw - pad - 2, x0)); y = Math.max(fs, Math.min(H - fs, y));
-    ctx.fillStyle = dark() ? 'rgba(18,24,32,0.8)' : 'rgba(255,255,255,0.86)'; ctx.beginPath(); ctx.roundRect(x0 - pad, y - fs * 0.78, tw + 2 * pad, fs * 1.56, 6 * p); ctx.fill();
+    ctx.fillStyle = dark() ? 'rgba(31,26,19,0.8)' : 'rgba(255,255,255,0.86)'; ctx.beginPath(); ctx.roundRect(x0 - pad, y - fs * 0.78, tw + 2 * pad, fs * 1.56, 6 * p); ctx.fill();
     ctx.fillStyle = o.c || T.ink; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(s, x0, y + 0.5); ctx.restore();
   }
   const at3 = (q, dy = 0) => { const v = G3.S.project(q); return [v[0], v[1] + dy * proj()]; };
@@ -702,7 +702,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* the back wall's inner face: pale, the left half tinted as in the flat view, faint lines every 0.1 model units */
     const bk = tex3(V, 1024, 512), backM = new THREE.MeshStandardMaterial({ map: bk.t, emissiveMap: bk.t, emissive: '#ffffff', emissiveIntensity: 0.45, roughness: 0.9 });
     V.onTheme((dk) => { const c = bk.c; c.fillStyle = dk ? '#221b13' : '#faf7f4'; c.fillRect(0, 0, 1024, 512); c.fillStyle = dk ? 'rgba(105,168,255,0.12)' : 'rgba(43,111,196,0.08)'; c.fillRect(0, 0, 512, 512);
-      c.strokeStyle = dk ? 'rgba(255,255,255,0.06)' : 'rgba(30,40,55,0.07)'; c.lineWidth = 2; for (let i = 1; i < 20; i++) { c.beginPath(); c.moveTo(i * 51.2, 0); c.lineTo(i * 51.2, 512); c.stroke(); } for (let i = 1; i < 10; i++) { c.beginPath(); c.moveTo(0, i * 51.2); c.lineTo(1024, i * 51.2); c.stroke(); }
+      c.strokeStyle = dk ? 'rgba(255,255,255,0.06)' : 'rgba(53,44,32,0.07)'; c.lineWidth = 2; for (let i = 1; i < 20; i++) { c.beginPath(); c.moveTo(i * 51.2, 0); c.lineTo(i * 51.2, 512); c.stroke(); } for (let i = 1; i < 10; i++) { c.beginPath(); c.moveTo(0, i * 51.2); c.lineTo(1024, i * 51.2); c.stroke(); }
       bk.t.needsUpdate = true; });
     const back = new THREE.Mesh(new THREE.BoxGeometry(w, TW3, h), [foam, foam, foam, backM, foam, foam]); back.position.set(cx, D3 / 2 + TW3 / 2, FZ0 + h / 2); back.receiveShadow = true; g.add(back);
     const glass = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshStandardMaterial({ color: '#d7e8f4', transparent: true, opacity: 0.13, roughness: 0.05, metalness: 0.1, depthWrite: false }));
