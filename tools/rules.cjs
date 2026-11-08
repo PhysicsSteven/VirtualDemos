@@ -237,6 +237,8 @@ rule('key-pdfs', 'Every worksheet edited after its key PDF was printed gets its 
    every number of 4 or more figures in a worksheet, a notes source or a demo's harvested strings, including 1.989 × 10³⁰ and
    1.989\times10^{30}, must equal the value it sits near, rounded or cut to the figures it shows. */
 const CONST_TEXT_ALLOW = {  /* 'file number': reason */
+  'notes/src/early-universe.md 87.16': 'a galaxy distance in Mpc, not the rubidium 87 mass VDC.mRb87u',
+  'notes/src/sound-waves.md 4.002602': 'the standard atomic weight of helium as a molar mass in g/mol (CIAAW), not the helium 4 atomic mass VDC.mHe4u from AME2020',
   'curriculum/labs/students/intro-scale.md 8.317': 'minutes of light travel time, not the gas constant',
 };
 const SUPER = { '⁰': '0', '¹': '1', '²': '2', '³': '3', '⁴': '4', '⁵': '5', '⁶': '6', '⁷': '7', '⁸': '8', '⁹': '9', '⁻': '-', '−': '-' };

@@ -42,6 +42,12 @@
     RyeV:   [13.605693122990, 'eV', 'Rydberg energy', 'CODATA 2022'],
     RH:     [10967758.34, '1/m', 'Rydberg constant for hydrogen R∞/(1 + m_e/m_p)', 'from CODATA 2022'],
     lambdaC:[2.42631023538e-12, 'm', 'electron Compton wavelength', 'CODATA 2022'],
+    /* atomic masses, AME2020 (Wang et al. 2021, Chinese Phys. C 45, 030003), rounded to 7 or 8 figures; used by Bose–Einstein Condensation */
+    mRb87u: [86.909181, 'u', 'atomic mass of rubidium 87', 'AME2020'],
+    mNa23u: [22.989769, 'u', 'atomic mass of sodium 23', 'AME2020'],
+    mLi7u:  [7.0160034, 'u', 'atomic mass of lithium 7', 'AME2020'],
+    mH1u:   [1.0078250, 'u', 'atomic mass of hydrogen 1', 'AME2020'],
+    mHe4u:  [4.0026033, 'u', 'atomic mass of helium 4', 'AME2020'],
     /* site conventions and standard values */
     g:      [9.81, 'm/s²', 'free fall acceleration (site convention, textbook value)', 'OpenStax'],
     g0:     [9.80665, 'm/s²', 'standard gravity (ISA atmosphere model only)', 'exact (CGPM 1901)'],

@@ -1185,6 +1185,19 @@
       "Rollin film",
       "two fluid model"
      ]
+    },
+    {
+     "demo": "bose-einstein",
+     "title": "Bose–Einstein Condensation",
+     "desc": "Cool a gas of atoms in a box from 1 µK toward absolute zero: each atom's wave packet grows to the thermal de Broglie wavelength, the packets overlap, and the atoms pile into one shared ground state. Exact Bose–Einstein occupations of the box levels, an energy ladder, the phase of the wavefunction as color, the velocity picture of 1995 and the condensate fraction curve.",
+     "tags": [
+      "Bose–Einstein condensate",
+      "thermal de Broglie wavelength",
+      "quantum statistics",
+      "chemical potential",
+      "ground state",
+      "ultracold atoms"
+     ]
     }
    ]
   },

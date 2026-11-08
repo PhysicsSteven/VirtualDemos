@@ -144,7 +144,8 @@
       "blackbody",
       "ising",
       "galton-board",
-      "superfluid-helium"
+      "superfluid-helium",
+      "bose-einstein"
      ]
     }
    ]
@@ -294,7 +295,8 @@
       "superconductors",
       "superconducting-levitation",
       "superconducting-vortices",
-      "superfluid-helium"
+      "superfluid-helium",
+      "bose-einstein"
      ]
     },
     {

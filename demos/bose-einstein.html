@@ -1,0 +1,646 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="lib/theme.js"></script>
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
+<script src="lib/vd3.js"></script>
+<script src="lib/vd3kit.js"></script>
+<title>Bose–Einstein Condensation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css */
+:root { --cond: #e8c64a; --therm: #3b8fe0; --merc: #d95c3c; --floor: #e7ecf3; --floor-edge: #8d99a8; --touch: #2a9d8f; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --cond: #ffd95a; --therm: #5fb0ff; --merc: #ff7a5c; --floor: #141b26; --floor-edge: #4a5868; --touch: #4fd1c0; } }
+:root[data-theme="dark"] { --cond: #ffd95a; --therm: #5fb0ff; --merc: #ff7a5c; --floor: #141b26; --floor-edge: #4a5868; --touch: #4fd1c0; }
+.stage { position: relative; display: flex; flex-direction: column; min-height: min-content; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+:root[data-projector="on"] .stage { min-height: min-content; }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.stage-ctl .note { margin-left: auto; font-size: 0.8rem; color: var(--muted); }
+.pane { position: relative; flex: 1 1 auto; min-height: 500px; }
+.pane canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; touch-action: pan-y; }
+#can { z-index: 1; }
+.pane canvas.sc3 { z-index: 0; }
+.shelf { display: flex; flex-wrap: wrap; align-items: stretch; gap: 12px; padding: 10px; border-top: 1px solid var(--line); background: var(--surface); }
+.shelf-card { flex: 1 1 240px; display: grid; grid-template-columns: minmax(0, 1fr); align-content: start; gap: 8px 16px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--canvas); }
+.shelf-card > .card-title { font-size: 0.78rem; font-weight: 700; color: var(--muted); }
+.shelf-card > .wide { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; }
+.shelf-card .lab { font-size: 0.8rem; color: var(--muted); }
+.shelf-card .slider-head output { white-space: nowrap; }
+.shelf-card select { font: inherit; font-size: 0.9rem; padding: 4px 6px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); max-width: 100%; }
+#sT { accent-color: var(--merc); }
+.rail details.more > p + p { margin-top: 6px; }
+@media (max-width: 820px) { .pane { min-height: 0; height: 460px; flex: none; } .shelf-card { flex: 1 1 100%; } }
+@media (max-width: 520px) { .stage-ctl .note { margin-left: 0; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Bose–Einstein Condensation</h1>
+      <p>A gas of atoms in a box, cooled toward absolute zero. Hot, each atom is a small wave packet darting about on its own. As the gas cools the packets grow to the thermal de Broglie wavelength, overlap, and the atoms pile into the lowest quantum state: one wavefunction shared by all of them, the condensate. Every occupation here comes from the Bose–Einstein distribution for the box's levels.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">SI units</div>
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/bose-einstein.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/bose-einstein.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM13 2h2v1h-2zM19 2h2v1h-2zM22 2h2v1h-2zM25 2h1v1h-1zM30 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM15 3h1v1h-1zM18 3h1v1h-1zM20 3h2v1h-2zM23 3h2v1h-2zM26 3h2v1h-2zM29 3h2v1h-2zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h2v1h-2zM13 4h1v1h-1zM18 4h1v1h-1zM21 4h3v1h-3zM28 4h2v1h-2zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h3v1h-3zM15 5h3v1h-3zM19 5h1v1h-1zM21 5h1v1h-1zM24 5h1v1h-1zM27 5h2v1h-2zM30 5h1v1h-1zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h2v1h-2zM21 6h2v1h-2zM25 6h1v1h-1zM27 6h2v1h-2zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM12 7h1v1h-1zM15 7h2v1h-2zM18 7h1v1h-1zM20 7h1v1h-1zM23 7h2v1h-2zM27 7h4v1h-4zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h2v1h-2zM15 9h1v1h-1zM17 9h1v1h-1zM21 9h4v1h-4zM26 9h1v1h-1zM2 10h1v1h-1zM4 10h5v1h-5zM14 10h3v1h-3zM20 10h1v1h-1zM22 10h1v1h-1zM24 10h2v1h-2zM27 10h3v1h-3zM32 10h5v1h-5zM2 11h2v1h-2zM6 11h1v1h-1zM10 11h3v1h-3zM16 11h3v1h-3zM25 11h1v1h-1zM28 11h1v1h-1zM30 11h1v1h-1zM33 11h1v1h-1zM36 11h2v1h-2zM2 12h3v1h-3zM6 12h1v1h-1zM8 12h2v1h-2zM13 12h1v1h-1zM15 12h1v1h-1zM19 12h2v1h-2zM22 12h2v1h-2zM26 12h1v1h-1zM28 12h3v1h-3zM32 12h3v1h-3zM36 12h3v1h-3zM3 13h1v1h-1zM10 13h1v1h-1zM14 13h1v1h-1zM16 13h1v1h-1zM18 13h1v1h-1zM20 13h1v1h-1zM23 13h1v1h-1zM26 13h1v1h-1zM29 13h2v1h-2zM32 13h3v1h-3zM38 13h1v1h-1zM2 14h2v1h-2zM5 14h2v1h-2zM8 14h1v1h-1zM12 14h5v1h-5zM19 14h1v1h-1zM22 14h1v1h-1zM24 14h15v1h-15zM2 15h1v1h-1zM4 15h4v1h-4zM11 15h3v1h-3zM18 15h2v1h-2zM22 15h1v1h-1zM24 15h2v1h-2zM30 15h1v1h-1zM33 15h1v1h-1zM3 16h2v1h-2zM6 16h3v1h-3zM13 16h1v1h-1zM15 16h1v1h-1zM17 16h3v1h-3zM22 16h3v1h-3zM27 16h1v1h-1zM29 16h2v1h-2zM32 16h4v1h-4zM38 16h1v1h-1zM3 17h3v1h-3zM12 17h1v1h-1zM14 17h1v1h-1zM16 17h8v1h-8zM25 17h1v1h-1zM28 17h1v1h-1zM33 17h2v1h-2zM37 17h1v1h-1zM2 18h1v1h-1zM7 18h4v1h-4zM12 18h1v1h-1zM17 18h2v1h-2zM21 18h1v1h-1zM23 18h1v1h-1zM26 18h4v1h-4zM31 18h2v1h-2zM34 18h1v1h-1zM36 18h1v1h-1zM38 18h1v1h-1zM2 19h1v1h-1zM4 19h1v1h-1zM6 19h2v1h-2zM9 19h1v1h-1zM13 19h2v1h-2zM17 19h1v1h-1zM20 19h1v1h-1zM22 19h2v1h-2zM25 19h1v1h-1zM28 19h1v1h-1zM30 19h1v1h-1zM37 19h1v1h-1zM2 20h1v1h-1zM4 20h2v1h-2zM8 20h3v1h-3zM12 20h1v1h-1zM15 20h1v1h-1zM17 20h2v1h-2zM21 20h1v1h-1zM23 20h2v1h-2zM26 20h1v1h-1zM28 20h3v1h-3zM33 20h3v1h-3zM37 20h2v1h-2zM2 21h6v1h-6zM9 21h1v1h-1zM13 21h2v1h-2zM16 21h2v1h-2zM20 21h6v1h-6zM28 21h3v1h-3zM32 21h1v1h-1zM38 21h1v1h-1zM2 22h3v1h-3zM7 22h2v1h-2zM14 22h1v1h-1zM17 22h1v1h-1zM19 22h1v1h-1zM21 22h1v1h-1zM24 22h5v1h-5zM31 22h2v1h-2zM34 22h3v1h-3zM2 23h3v1h-3zM6 23h2v1h-2zM10 23h1v1h-1zM18 23h1v1h-1zM21 23h1v1h-1zM25 23h1v1h-1zM28 23h1v1h-1zM30 23h2v1h-2zM35 23h1v1h-1zM37 23h1v1h-1zM2 24h1v1h-1zM4 24h2v1h-2zM8 24h1v1h-1zM10 24h1v1h-1zM14 24h1v1h-1zM16 24h2v1h-2zM20 24h1v1h-1zM22 24h1v1h-1zM24 24h1v1h-1zM26 24h1v1h-1zM28 24h4v1h-4zM33 24h3v1h-3zM37 24h2v1h-2zM3 25h1v1h-1zM6 25h1v1h-1zM11 25h1v1h-1zM13 25h2v1h-2zM17 25h2v1h-2zM21 25h2v1h-2zM25 25h1v1h-1zM29 25h1v1h-1zM31 25h1v1h-1zM33 25h2v1h-2zM37 25h1v1h-1zM2 26h1v1h-1zM4 26h1v1h-1zM6 26h1v1h-1zM8 26h2v1h-2zM12 26h1v1h-1zM17 26h1v1h-1zM20 26h9v1h-9zM31 26h4v1h-4zM36 26h2v1h-2zM2 27h2v1h-2zM5 27h1v1h-1zM9 27h1v1h-1zM12 27h2v1h-2zM16 27h3v1h-3zM23 27h1v1h-1zM25 27h2v1h-2zM31 27h1v1h-1zM33 27h1v1h-1zM2 28h1v1h-1zM5 28h4v1h-4zM12 28h3v1h-3zM16 28h1v1h-1zM22 28h1v1h-1zM26 28h5v1h-5zM33 28h2v1h-2zM37 28h2v1h-2zM2 29h1v1h-1zM6 29h2v1h-2zM10 29h2v1h-2zM14 29h1v1h-1zM18 29h1v1h-1zM23 29h1v1h-1zM25 29h1v1h-1zM29 29h6v1h-6zM37 29h2v1h-2zM2 30h1v1h-1zM5 30h1v1h-1zM8 30h1v1h-1zM10 30h1v1h-1zM12 30h3v1h-3zM16 30h1v1h-1zM19 30h1v1h-1zM25 30h14v1h-14zM10 31h3v1h-3zM14 31h1v1h-1zM17 31h7v1h-7zM25 31h2v1h-2zM29 31h2v1h-2zM34 31h2v1h-2zM2 32h7v1h-7zM11 32h2v1h-2zM14 32h4v1h-4zM19 32h1v1h-1zM22 32h2v1h-2zM26 32h1v1h-1zM28 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM36 32h3v1h-3zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h1v1h-1zM12 33h9v1h-9zM23 33h3v1h-3zM28 33h1v1h-1zM30 33h1v1h-1zM34 33h2v1h-2zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h2v1h-2zM14 34h2v1h-2zM18 34h1v1h-1zM21 34h1v1h-1zM23 34h1v1h-1zM25 34h10v1h-10zM36 34h2v1h-2zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h1v1h-1zM12 35h1v1h-1zM14 35h2v1h-2zM17 35h1v1h-1zM20 35h1v1h-1zM22 35h1v1h-1zM24 35h2v1h-2zM30 35h3v1h-3zM34 35h1v1h-1zM36 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM10 36h3v1h-3zM14 36h1v1h-1zM17 36h2v1h-2zM20 36h2v1h-2zM24 36h1v1h-1zM28 36h2v1h-2zM31 36h1v1h-1zM37 36h2v1h-2zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h2v1h-2zM15 37h1v1h-1zM17 37h1v1h-1zM21 37h3v1h-3zM26 37h1v1h-1zM28 37h3v1h-3zM32 37h1v1h-1zM34 37h1v1h-1zM38 37h1v1h-1zM2 38h7v1h-7zM10 38h4v1h-4zM15 38h1v1h-1zM17 38h1v1h-1zM19 38h1v1h-1zM21 38h1v1h-1zM24 38h5v1h-5zM31 38h1v1h-1zM34 38h5v1h-5z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl" id="strip">
+        <button type="button" class="spin attn" id="play" data-vd-key="play">Play</button>
+        <button type="button" class="btn" id="reset" title="Put the atoms back where they started at the temperature the setup began with">Reset</button>
+        <div class="seg" role="group" aria-label="Speed" id="speed"><button type="button" data-sp="0.25" aria-pressed="false">¼×</button><button type="button" data-sp="1" aria-pressed="true">1×</button><button type="button" data-sp="4" aria-pressed="false">4×</button></div>
+        <div class="seg" role="group" aria-label="What to show" id="sceneSeg"><button type="button" data-scene="box" aria-pressed="true">Atoms in the box</button><button type="button" data-scene="vel" aria-pressed="false">Velocities</button><button type="button" data-scene="frac" aria-pressed="false">Condensate fraction</button></div>
+        <div class="seg" role="group" aria-label="Perspective" id="dimSeg"><button type="button" data-dim="3d" aria-pressed="true">3D</button><button type="button" data-dim="flat" aria-pressed="false">Flat</button></div>
+        <span class="note mono" id="note" role="status"></span>
+      </div>
+      <div class="pane" id="pane">
+        <canvas id="can" tabindex="0" role="img" aria-label="A square box of atoms seen in perspective. Each atom is a wave packet drawn as a bump; the ladder on the left shows which energy level each atom is in, and the thermometer on the right the temperature. Drag to turn the view; Space plays or pauses."></canvas>
+      </div>
+      <div class="shelf" id="shelf">
+        <div class="shelf-card" role="group" aria-label="Temperature">
+          <span class="card-title">Temperature</span>
+          <div><div class="slider-head"><label for="sT">Temperature T</label><output id="oT" class="mono" for="sT"></output></div><input type="range" id="sT" min="0" max="3" step="0.005" aria-label="Temperature, logarithmic from 1 nanokelvin to 1 microkelvin"></div>
+          <div class="wide">
+            <button type="button" class="btn" id="cool" aria-pressed="false">Cool down</button>
+            <button type="button" class="btn" id="warm" aria-pressed="false">Warm up</button>
+            <span class="lab" id="rampNote">While playing, the temperature falls a factor of 10 every 8 seconds.</span>
+          </div>
+        </div>
+        <div class="shelf-card" role="group" aria-label="The gas">
+          <span class="card-title">The gas</span>
+          <div class="wide"><label class="lab" for="selAtom">Atom</label><select id="selAtom"></select></div>
+          <div><div class="slider-head"><label for="sN">Number of atoms N</label><output id="oN" class="mono" for="sN"></output></div><input type="range" id="sN" min="10" max="400" step="10"></div>
+          <div><div class="slider-head"><label for="sL">Box side L</label><output id="oL" class="mono" for="sL"></output></div><input type="range" id="sL" min="2" max="20" step="0.5"></div>
+        </div>
+        <div class="shelf-card" role="group" aria-label="The picture">
+          <span class="card-title">The picture</span>
+          <div class="wide"><span class="lab">Color</span>
+            <div class="seg" role="group" aria-label="What the color shows" id="colorSeg"><button type="button" data-color="density" aria-pressed="true">Density</button><button type="button" data-color="phase" aria-pressed="false">Phase of the wavefunction</button></div>
+          </div>
+          <label class="check"><input type="checkbox" id="chkLadder" checked><span>Energy ladder and thermometer</span></label>
+          <label class="check"><input type="checkbox" id="chkLevels" checked><span>Mark kT and the thermal wavelength</span></label>
+        </div>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="cool" aria-pressed="true">Cool a hot gas to a condensate</button>
+          <button type="button" data-p="touch" aria-pressed="false">Where the packets touch</button>
+          <button type="button" data-p="cold" aria-pressed="false">Almost all condensed</button>
+          <button type="button" data-p="sodium" aria-pressed="false">A lighter atom: sodium</button>
+          <button type="button" data-p="few" aria-pressed="false">Few atoms, big box</button>
+          <button type="button" data-p="warm" aria-pressed="false">Warm a condensate back up</button>
+          <button type="button" data-p="vel" aria-pressed="false">The velocity picture of 1995</button>
+        </div>
+        <details class="more" open><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the condensate count, to predict it from the overlap</span></label>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="formula">E = (h²/8mL²)(n<sub>x</sub>² + n<sub>y</sub>²), ⟨n⟩ = 1/(e<sup>(E − μ)/kT</sup> − 1), Σ⟨n⟩ = N</p>
+          <p class="formula">λ<sub>T</sub> = h/√(2πmkT), packets touch when Nλ<sub>T</sub>²/L² = 1</p>
+          <p class="hint" id="about1"></p>
+          <p class="hint" id="about2"></p>
+          <p class="hint" id="about3"></p>
+          <p class="hint" id="about4"></p>
+        </details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  /* An ideal (noninteracting) Bose gas of N atoms in a square two dimensional box of side L with hard walls.
+     Levels: E = e1 (nx² + ny²), e1 = h²/(8 m L²), nx, ny = 1, 2, 3, ...; the ground state has q = nx² + ny² = 2.
+     Each level holds <n> = 1/(exp((E − μ)/kT) − 1) atoms (Bose–Einstein), and the chemical potential μ is solved from
+     Σ <n> = N. The sum runs level by level over every q up to QMAX = 200,000 (about 46,000 distinct energies); above that,
+     when a hot gas needs it, the levels are counted with the smooth density of states of the box, (π/4 − 1/(2√q)) per unit q
+     (Weyl's formula, with the edge term), which there is accurate to about one part in 10⁵ of the atom number.
+     Nothing takes a thermodynamic limit: a finite number of atoms in a finite box condenses gradually, and that crossover
+     is what the demo shows. */
+  const H_PLANCK = 6.62607015e-34, KB = 1.380649e-23, AMU = 1.66053906892e-27;   /* J s, J/K, kg: demos/lib/constants.js */
+  const HBAR = H_PLANCK / (2 * Math.PI), ZETA32 = 2.6123753486854883, ZETA3 = 1.2020569031595942;
+  /* atomic masses in u, AME2020 (Wang et al. 2021, Chinese Phys. C 45, 030003), rounded; the year is the first condensate of that atom */
+  const ATOMS = {
+    rb87: { name: 'Rubidium 87', u: 86.909181, year: 1995, where: 'JILA (Boulder)' },
+    na23: { name: 'Sodium 23', u: 22.989769, year: 1995, where: 'MIT' },
+    li7: { name: 'Lithium 7', u: 7.0160034, year: 1995, where: 'Rice' },
+    h1: { name: 'Hydrogen', u: 1.0078250, year: 1998, where: 'MIT' },
+    he4: { name: 'Helium 4 (metastable)', u: 4.0026033, year: 2001, where: 'Orsay and Paris' },
+  };
+  const massOf = (key) => ATOMS[key].u * AMU;
+  const QMAX = 200000;
+  let LV = null;
+  /* the distinct energies q = nx² + ny² ≤ QMAX, sorted, with how many (nx, ny) pairs share each (g) and the pairs themselves */
+  function levels() {
+    if (LV) return LV;
+    const g = new Uint16Array(QMAX + 1), nmax = Math.floor(Math.sqrt(QMAX - 1));
+    for (let nx = 1; nx <= nmax; nx++) for (let ny = 1; nx * nx + ny * ny <= QMAX; ny++) g[nx * nx + ny * ny]++;
+    let m = 0; for (let q = 2; q <= QMAX; q++) if (g[q]) m++;
+    const Q = new Float64Array(m), G = new Float64Array(m), idx = new Int32Array(QMAX + 1).fill(-1), pairs = new Array(m);
+    let i = 0; for (let q = 2; q <= QMAX; q++) if (g[q]) { Q[i] = q; G[i] = g[q]; idx[q] = i; pairs[i] = []; i++; }
+    for (let nx = 1; nx <= nmax; nx++) for (let ny = 1; nx * nx + ny * ny <= QMAX; ny++) pairs[idx[nx * nx + ny * ny]].push(nx);
+    return (LV = { Q, G, pairs, n: m });
+  }
+  const e1 = (m, L) => H_PLANCK * H_PLANCK / (8 * m * L * L);
+  const lambdaT = (m, T) => H_PLANCK / Math.sqrt(2 * Math.PI * m * KB * T);
+  /* the position spread of a minimum uncertainty packet whose momentum spread is the thermal one, √(m kT) per axis */
+  const packetSigma = (m, T) => lambdaT(m, T) / (2 * Math.sqrt(2 * Math.PI));
+  /* where the packets touch: n λ_T² = 1 in two dimensions, n = N/L² */
+  const degeneracyT = (N, L, m) => H_PLANCK * H_PLANCK * N / (2 * Math.PI * m * KB * L * L);
+  /* three dimensional ideal gas: uniform gas of number density n, and N atoms in an isotropic harmonic trap of angular frequency w */
+  const tc3dBox = (n, m) => 2 * Math.PI * HBAR * HBAR / (m * KB) * Math.pow(n / ZETA32, 2 / 3);
+  const tcTrap = (N, w, m) => HBAR * w * Math.pow(N / ZETA3, 1 / 3) / KB;
+  function erfc(x) {   /* Numerical Recipes erfcc, relative error under 1.2e-7 */
+    const z = Math.abs(x), t = 1 / (1 + 0.5 * z);
+    const r = t * Math.exp(-z * z - 1.26551223 + t * (1.00002368 + t * (0.37409196 + t * (0.09678418 + t * (-0.18628806 + t * (0.27886807 + t * (-1.13520398 + t * (1.48851587 + t * (-0.82215223 + t * 0.17087277)))))))));
+    return x >= 0 ? r : 2 - r;
+  }
+  /* atoms above QMAX: Σ_k e^{-kx} ∫_{QMAX}^∞ (π/4 − 1/(2√q)) e^{-k a (q − 2)} dq, a = e1/kT, x = (E0 − μ)/kT */
+  function tail(a, x, deriv) {
+    let s = 0, d = 0; const Qm = QMAX;
+    for (let k = 1; k <= 60; k++) {
+      const ka = k * a, t1 = Math.PI / 4 * Math.exp(-ka * (Qm - 2)) / ka, t2 = 0.5 * Math.sqrt(Math.PI / ka) * Math.exp(2 * ka) * erfc(Math.sqrt(ka * Qm));
+      const term = Math.exp(-k * x) * (t1 - t2); s += term; d -= k * term;
+      if (Math.abs(term) < 1e-16 * Math.abs(s)) break;
+    }
+    return deriv ? [s, d] : s;
+  }
+  /* Σ over levels of 1/(e^{a(q−2)+x} − 1) and its derivative in x; cut where the terms are below e^{-36}; the tail above QMAX */
+  function countAtoms(a, x) {
+    const { Q, G, n } = levels(); let N = 0, D = 0, i = 0;
+    for (; i < n; i++) { const u = a * (Q[i] - 2) + x; if (u > 36) break; const e = Math.exp(u), f = 1 / (e - 1); N += G[i] * f; D -= G[i] * e * f * f; }
+    if (i === n) { const [t, d] = tail(a, x, true); N += t; D += d; }
+    return [N, D];
+  }
+  /* the chemical potential, as x = (E0 − μ)/kT > 0, for N atoms: Newton on ln x inside a shrinking bracket */
+  function solveX(N, a) {
+    let lo = 1e-15, hi = 80, y = Math.log(1 / N);   /* a first guess from the cold limit, x ≈ 1/N0 */
+    const Zb = countAtoms(a, 40)[0] * Math.exp(40); if (Zb > N) y = Math.log(Math.log(Zb / N));   /* hot: Boltzmann, x = ln(Z/N) */
+    y = Math.min(Math.log(hi), Math.max(Math.log(lo), y));
+    for (let it = 0; it < 80; it++) {
+      const x = Math.exp(y), [n, d] = countAtoms(a, x), f = n - N;
+      if (Math.abs(f) < 1e-10 * N) return x;
+      if (f > 0) lo = Math.max(lo, x); else hi = Math.min(hi, x);
+      let yn = y - f / (d * x);   /* d/dy of n(e^y) = d · x */
+      if (!(yn > Math.log(lo) && yn < Math.log(hi))) yn = 0.5 * (Math.log(lo) + Math.log(hi));
+      y = yn;
+    }
+    return Math.exp(y);
+  }
+  /* everything about the gas at temperature T: μ, the ground state count, the occupation of each distinct level */
+  function occupations(N, m, L, T) {
+    const E1 = e1(m, L), a = E1 / (KB * T), x = solveX(N, a), { Q, G, n } = levels(), occ = new Float64Array(n);
+    let i = 0, inLevels = 0; for (; i < n; i++) { const u = a * (Q[i] - 2) + x; if (u > 36) break; occ[i] = G[i] / (Math.exp(u) - 1); inLevels += occ[i]; }
+    const n0 = 1 / (Math.exp(x) - 1), above = i === n ? tail(a, x) : 0;
+    return { N, T, e1: E1, a, x, mu: 2 * E1 - x * KB * T, n0, frac: n0 / N, occ, cut: i, above, inLevels, lambda: lambdaT(m, T), sigma: packetSigma(m, T), nLambda2: N * lambdaT(m, T) ** 2 / (L * L) };
+  }
+  /* give each of N drawn atoms a level: u[i] in [0, 1) picks it through the cumulative distribution, lowest levels first,
+     so an atom with a small u sits low and the same u moves smoothly down as the gas cools. Returns level indices (−1: above QMAX). */
+  function assignLevels(o, u) {
+    const out = new Int32Array(u.length), order = Array.from(u.keys()).sort((p, q) => u[p] - u[q]);
+    let acc = 0, i = 0, k = 0;
+    for (; i < o.cut && k < order.length; i++) { acc += o.occ[i] / o.N; while (k < order.length && u[order[k]] < acc) out[order[k++]] = i; }
+    while (k < order.length) out[order[k++]] = -1;
+    return out;
+  }
+  /* the box ground state density, N0 atoms: (4 N0/L²) sin²(πx/L) sin²(πy/L) */
+  const groundDensity = (n0, L, x, y) => 4 * n0 / (L * L) * Math.sin(Math.PI * x / L) ** 2 * Math.sin(Math.PI * y / L) ** 2;
+  /* the momentum spread of the box ground state along one axis, |φ̃₁(k)|² with ∫ dk = 1 */
+  function groundMomentum1(k, L) {
+    const k1 = Math.PI / L, d = k1 * k1 - k * k;
+    if (Math.abs(d) < 1e-9 * k1 * k1) return L / (4 * Math.PI);   /* the removable point k = ±k1: the limit is L/(4π) */
+    return 4 * Math.PI / (L * L * L) * Math.cos(k * L / 2) ** 2 / (d * d);
+  }
+  /* velocity distribution (atoms per unit vx vy): the condensate's exact ground state spread plus the thermal atoms in the
+     semiclassical form 1/(e^{mv²/2kT + x} − 1), which treats the excited levels as a continuum (good when kT ≫ e1) */
+  function velocityDensity(o, m, L, vx, vy) {
+    const kx = m * vx / HBAR, ky = m * vy / HBAR, cond = o.n0 * groundMomentum1(kx, L) * groundMomentum1(ky, L) * (m / HBAR) ** 2;
+    const th = m * (vx * vx + vy * vy) / (2 * KB * o.T) + o.x, nth = o.N - o.n0;
+    /* normalization of the thermal part: ∫ d²v 1/(e^{βmv²/2 + x} − 1) = (2π kT/m) Σ_k e^{-kx}/k = −(2π kT/m) ln(1 − e^{-x}) */
+    const norm = -(2 * Math.PI * KB * o.T / m) * Math.log(1 - Math.exp(-o.x));
+    return cond + (th > 40 ? 0 : nth / norm / (Math.exp(th) - 1));
+  }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const TMIN = 1e-9, TMAX = 1e-6, DECADES = 3, RAMP = 8;   /* slider: 1 nK to 1 µK; cooling: a decade every 8 s */
+  const SCALE = 1e-4;   /* seconds of the gas per second on screen at 1×: a rubidium atom at 1 µK crosses a 10 µm box in about 7 s */
+  const NG = 96;        /* density grid cells across the box */
+  const PRESETS = {
+    cool: { atom: 'rb87', N: 100, L: 10, T: 1e-6, cool: -1, scene: 'box', color: 'density',
+      hint: 'One hundred rubidium atoms in a box 10 µm on a side, at 1 µK. Hot, every atom is a tiny wave packet (0.19 µm, far smaller than the 1 µm between neighbors) darting about, and the ladder shows them spread over thousands of levels. Press Play: the gas cools a factor of ten every 8 seconds. Watch the packets swell as the thermal wavelength grows, touch near 35 nK, and then the atoms drop into the ground state one after another, until at 1 nK almost every atom is in the same wavefunction.' },
+    touch: { atom: 'rb87', N: 100, L: 10, T: 3.5e-8, cool: 0, scene: 'box', color: 'density',
+      hint: 'The same gas held at 35 nK, where Nλ²/L² = 1: the thermal wavelength equals the spacing between atoms and the packets touch. Only a few percent of the atoms are in the ground state here; in a box with a finite number of atoms the pile up is gradual, not a sharp jump. Cool a little further and watch the fraction climb.' },
+    cold: { atom: 'rb87', N: 100, L: 10, T: 1e-9, cool: 0, scene: 'box', color: 'phase',
+      hint: 'At 1 nK about 98 of the 100 atoms share the box ground state. Color shows the phase of the wavefunction: one color across the whole condensate, because one wave describes all of them. The two or three atoms still excited keep their own stripes, and their phase runs at a different rate. Try Warm up.' },
+    sodium: { atom: 'na23', N: 100, L: 10, T: 1e-6, cool: -1, scene: 'box', color: 'density',
+      hint: 'Sodium atoms are 3.8 times lighter than rubidium 87, so at the same temperature their thermal wavelength is √3.8 = 1.9 times longer and the packets touch at 3.8 times the temperature, 133 nK instead of 35 nK. Press Play and compare where the ladder empties. Sodium condensed at MIT in 1995, months after rubidium at JILA.' },
+    few: { atom: 'rb87', N: 20, L: 20, T: 1e-7, cool: -1, scene: 'box', color: 'density',
+      hint: 'Twenty atoms in a box 20 µm across: the spacing is 4.5 µm, so the packets have to grow much bigger before they touch, and that takes a temperature 20 times lower than with 100 atoms in a 10 µm box (1.8 nK). A dilute gas needs to be colder. Press Play.' },
+    warm: { atom: 'rb87', N: 100, L: 10, T: 1e-9, cool: 1, scene: 'box', color: 'density',
+      hint: 'A condensate at 1 nK. Press Play and the gas warms a factor of ten every 8 seconds: atoms leave the ground state one by one, their packets shrink, and the ladder fills back up. The transition is reversible.' },
+    vel: { atom: 'rb87', N: 100, L: 10, T: 3e-7, cool: -1, scene: 'vel', color: 'density',
+      hint: 'How a condensate is actually seen: the trap is switched off, the atoms fly apart for a few hundredths of a second, and a picture of the cloud then maps their velocities. The broad hill is the thermal gas, a Maxwell–Boltzmann like spread of speeds; the sharp peak that grows as the gas cools is the condensate, whose velocity spread is only the quantum uncertainty of the ground state, h/(2L) or so. This is the famous picture from the 1995 rubidium experiment, computed here for this box. Press Play.' },
+  };
+  const S = { preset: 'cool', atom: 'rb87', N: 100, L: 10, T: 1e-6, T0: 1e-6, cool: -1, scene: 'box', color: 'density', run: false, speed: 1, t: 0, ladder: true, marks: true, blind: false, msg: '' };
+  const can = $('can'), ctx = can.getContext('2d');
+  let W = 0, H = 0, dpr = 1, T = null, view3 = null, g3 = null, M3 = null, O = null, lvl = null, pairsOf = null, fracCurve = null, ladTop = 0;
+  const f = (v, d = 3) => (!isFinite(v) ? '—' : v.toFixed(d).replace('-', '−'));
+  const proj = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
+  const mass = () => massOf(S.atom), side = () => S.L * 1e-6;
+  const fmtT = (t) => (t >= 1e-6 ? `${f(t * 1e6, 2)} µK` : `${f(t * 1e9, t < 1e-8 ? 2 : t < 1e-7 ? 1 : 0)} nK`);
+  const fmtLen = (x) => (x >= 1e-6 ? `${f(x * 1e6, 2)} µm` : `${f(x * 1e9, 0)} nm`);
+  function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = {}; for (const k of ['canvas', 'surface', 'ink', 'muted', 'line', 'accent', 'cond', 'therm', 'merc', 'floor', 'floor-edge', 'touch']) T[k.replace('-', '_')] = g('--' + k);
+    T.mono = g('--font-mono') || 'monospace'; T.ui = g('--font-ui') || 'system-ui, sans-serif'; T.dark = (window.VD3 && VD3.dark()) || matchMedia('(prefers-color-scheme: dark)').matches; }
+
+  /* ---------- the atoms: fixed random numbers, positions, directions, phases ---------- */
+  const rnd = (() => { let s = 20261108; return () => { s |= 0; s = s + 0x6D2B79F5 | 0; let t = Math.imul(s ^ s >>> 15, 1 | s); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; })();
+  const NMAX = 400, AT = { u: new Float64Array(NMAX), x: new Float64Array(NMAX), y: new Float64Array(NMAX), sx: new Int8Array(NMAX), sy: new Int8Array(NMAX), ph: new Float64Array(NMAX), pick: new Uint32Array(NMAX), swap: new Uint8Array(NMAX) };
+  function seedAtoms() {
+    for (let i = 0; i < NMAX; i++) { AT.u[i] = rnd(); AT.x[i] = 0.04 + 0.92 * rnd(); AT.y[i] = 0.04 + 0.92 * rnd(); AT.sx[i] = rnd() < 0.5 ? -1 : 1; AT.sy[i] = rnd() < 0.5 ? -1 : 1; AT.ph[i] = rnd() * 2 * Math.PI; AT.pick[i] = Math.floor(rnd() * 1e6); AT.swap[i] = rnd() < 0.5 ? 1 : 0; }
+  }
+  seedAtoms();
+  /* the gas at the current temperature: occupations, each drawn atom's level and its (nx, ny) */
+  function compute() {
+    O = occupations(S.N, mass(), side(), S.T);
+    const u = AT.u.subarray(0, S.N); lvl = assignLevels(O, u);
+    const LVS = levels(); pairsOf = new Array(S.N);
+    for (let i = 0; i < S.N; i++) { const k = lvl[i]; if (k < 0) { pairsOf[i] = null; continue; } const P = LVS.pairs[k], nx = P[AT.pick[i] % P.length], ny = Math.round(Math.sqrt(LVS.Q[k] - nx * nx)); pairsOf[i] = AT.swap[i] ? [ny, nx] : [nx, ny]; }
+  }
+  /* a packet's wave vector (1/m) and speed (m/s) from its level: k = (π/L)(nx, ny) */
+  function kOf(i) { const p = pairsOf[i]; if (!p) return null; const kk = Math.PI / side(); return [AT.sx[i] * kk * p[0], AT.sy[i] * kk * p[1]]; }
+  function advance(dt) {   /* move the thermal packets by dt seconds of gas time; bounce off the walls */
+    const L = side(), m = mass();
+    for (let i = 0; i < S.N; i++) {
+      if (lvl[i] === 0) continue; const k = kOf(i); if (!k) continue;
+      let x = AT.x[i] + HBAR * k[0] / m * dt / L, y = AT.y[i] + HBAR * k[1] / m * dt / L;
+      while (x < 0 || x > 1) { if (x < 0) x = -x; if (x > 1) x = 2 - x; AT.sx[i] = -AT.sx[i]; }
+      while (y < 0 || y > 1) { if (y < 0) y = -y; if (y > 1) y = 2 - y; AT.sy[i] = -AT.sy[i]; }
+      AT.x[i] = x; AT.y[i] = y;
+    }
+  }
+  const setT = (t) => { S.T = Math.min(TMAX, Math.max(TMIN, t)); compute(); };
+
+  /* ---------- the density on the grid: condensate (exact) + thermal packets (Gaussians the size of the thermal spread) ---------- */
+  const GP = NG + 1, RHO = new Float32Array(GP * GP), PHS = new Float32Array(GP * GP), AMP = new Float32Array(GP * GP);
+  let blend = 0;   /* 0: packets drawn as spheres (smaller than a grid cell), 1: as bumps of the surface */
+  function field() {
+    const L = side(), cell = L / NG, sig = O.sigma, s2 = 2 * sig * sig, n0 = O.n0, m = mass();
+    blend = Math.min(1, Math.max(0, (sig / cell - 0.7) / 0.9));
+    const w0 = -2 * O.e1 / HBAR * S.t;   /* the condensate's phase, e^{-iE0 t/ħ} */
+    for (let j = 0; j < GP; j++) for (let i = 0; i < GP; i++) { const r = groundDensity(n0, L, i * cell, j * cell), k = j * GP + i; RHO[k] = r; AMP[k] = r; PHS[k] = w0; }
+    if (blend > 0) {
+      const amp = blend / (2 * Math.PI * sig * sig), reach = Math.min(NG, Math.ceil(3 * sig / cell));
+      for (let a = 0; a < S.N; a++) {
+        if (lvl[a] === 0) continue; const k = kOf(a); if (!k) continue;
+        const cx = AT.x[a] * NG, cy = AT.y[a] * NG, i0 = Math.max(0, Math.floor(cx - reach)), i1 = Math.min(NG, Math.ceil(cx + reach)), j0 = Math.max(0, Math.floor(cy - reach)), j1 = Math.min(NG, Math.ceil(cy + reach));
+        const om = HBAR * (k[0] * k[0] + k[1] * k[1]) / (2 * m), base = AT.ph[a] - om * S.t;
+        for (let j = j0; j <= j1; j++) { const dy = (j - cy) * cell; for (let i = i0; i <= i1; i++) {
+          const dx = (i - cx) * cell, c = amp * Math.exp(-(dx * dx + dy * dy) / s2), q = j * GP + i; RHO[q] += c;
+          if (c > AMP[q]) { AMP[q] = c; PHS[q] = base + k[0] * dx + k[1] * dy; } } }
+      }
+    }
+  }
+  const rhoRef = () => 4 * S.N / (side() * side());   /* the condensate's peak density when every atom is in it */
+  const hOf = (r) => Math.min(2.2, Math.sqrt(r / rhoRef()));   /* drawn height: the square root of the density, in units of the full condensate's peak */
+  /* colors: a dark to bright ramp for the density, hue for the phase (dimmer where there is nothing) */
+  function ramp(t, out) {   /* t 0..1 → rgb 0..1 */
+    const dk = T.dark, stops = dk ? [[0.09, 0.12, 0.2], [0.13, 0.33, 0.6], [0.16, 0.62, 0.68], [0.55, 0.85, 0.42], [0.99, 0.9, 0.3]] : [[0.86, 0.9, 0.96], [0.45, 0.62, 0.9], [0.14, 0.55, 0.66], [0.5, 0.78, 0.35], [0.95, 0.78, 0.15]];
+    const u = Math.min(0.9999, Math.max(0, t)) * (stops.length - 1), k = Math.floor(u), fr = u - k, A = stops[k], B = stops[k + 1];
+    out[0] = A[0] + (B[0] - A[0]) * fr; out[1] = A[1] + (B[1] - A[1]) * fr; out[2] = A[2] + (B[2] - A[2]) * fr; return out;
+  }
+  function hueRgb(h, s, l, out) {
+    h = ((h % 1) + 1) % 1; const q = l < 0.5 ? l * (1 + s) : l + s - l * s, p = 2 * l - q, hk = (t) => { t = ((t % 1) + 1) % 1; return t < 1 / 6 ? p + (q - p) * 6 * t : t < 0.5 ? q : t < 2 / 3 ? p + (q - p) * (2 / 3 - t) * 6 : p; };
+    out[0] = hk(h + 1 / 3); out[1] = hk(h); out[2] = hk(h - 1 / 3); return out;
+  }
+  const C3 = [0, 0, 0];
+  function colorAt(k, out) {
+    const h = hOf(RHO[k]);
+    if (S.color === 'density') return ramp(h / 1.4, out);
+    const s = Math.min(1, h * 1.6), bg = T.dark ? [0.1, 0.12, 0.17] : [0.9, 0.92, 0.95]; hueRgb(PHS[k] / (2 * Math.PI), 0.85, T.dark ? 0.58 : 0.5, C3);
+    out[0] = bg[0] + (C3[0] - bg[0]) * s; out[1] = bg[1] + (C3[1] - bg[1]) * s; out[2] = bg[2] + (C3[2] - bg[2]) * s; return out;
+  }
+
+  /* ---------- the velocity grid ---------- */
+  const VG = 80, VP = VG + 1, VEL = new Float32Array(VP * VP);
+  let velRef = 1, velMax = 1;
+  function velScale() {   /* fixed per setup: the range covers the hot gas, the height unit is the thermal peak where the packets touch */
+    const m = mass(), Td = Math.min(TMAX, Math.max(TMIN, degeneracyT(S.N, side(), m))); velMax = 4 * Math.sqrt(2 * KB * Td / m);
+    const od = occupations(S.N, m, side(), Td); velRef = velocityDensity(od, m, side(), 0, 0) * 0.5;
+  }
+  function velField() { const m = mass(), L = side(); for (let j = 0; j < VP; j++) for (let i = 0; i < VP; i++) VEL[j * VP + i] = velocityDensity(O, m, L, (i / VG * 2 - 1) * velMax, (j / VG * 2 - 1) * velMax); }
+  const hVel = (v) => Math.min(2.2, Math.sqrt(v / velRef));
+
+  /* ---------- overlays drawn on the 2D canvas: the energy ladder and the thermometer ---------- */
+  function ladder(x0, y0, w, h) {
+    const p = proj(), { Q } = levels(), E = (q) => q * O.e1 / KB * 1e9;   /* energies in nK */
+    /* the ladder's top follows the hottest atoms (98th percentile) so the pile up stays readable as the gas cools */
+    const qs = []; for (let i = 0; i < S.N; i++) if (lvl[i] >= 0) qs.push(Q[lvl[i]]); qs.sort((a, b) => a - b);
+    const q98 = qs.length ? qs[Math.min(qs.length - 1, Math.floor(0.98 * qs.length))] : 2, target = Math.max(E(Math.max(30, q98 * 1.15)), E(2) * 1.6);
+    ladTop = ladTop ? ladTop + (target - ladTop) * (S.run ? 0.08 : 1) : target;
+    const Y = (e) => y0 + h - e / ladTop * h;
+    ctx.save(); ctx.fillStyle = T.surface; ctx.globalAlpha = 0.78; ctx.beginPath(); ctx.roundRect(x0 - 6 * p, y0 - 22 * p, w + 12 * p, h + 40 * p, 8 * p); ctx.fill(); ctx.globalAlpha = 1;
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1 * p; ctx.beginPath(); ctx.moveTo(x0, y0 + h); ctx.lineTo(x0, y0 - 4 * p); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x0 - 3 * p, y0 + 1 * p); ctx.lineTo(x0, y0 - 5 * p); ctx.lineTo(x0 + 3 * p, y0 + 1 * p); ctx.stroke();
+    ctx.fillStyle = T.ink; ctx.font = `italic 700 ${12 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText('E', x0 + 5 * p, y0 - 7 * p);
+    /* level lines while they can be told apart, a shaded band above */
+    ctx.strokeStyle = T.line; ctx.lineWidth = 1; let last = -1e9, dense = null;
+    for (let i = 0; i < Q.length && E(Q[i]) <= ladTop; i++) { const y = Y(E(Q[i])); if (last - y < 2.5 * p) { dense = dense == null ? y : dense; continue; } last = y; ctx.beginPath(); ctx.moveTo(x0 + 4 * p, Math.round(y) + 0.5); ctx.lineTo(x0 + w, Math.round(y) + 0.5); ctx.stroke(); }
+    if (dense != null) { ctx.fillStyle = T.line; ctx.globalAlpha = 0.55; ctx.fillRect(x0 + 4 * p, y0, w - 4 * p, Math.max(0, dense - y0)); ctx.globalAlpha = 1; }
+    /* kT */
+    if (S.marks) { const yk = Y(S.T * 1e9); if (yk > y0) { ctx.strokeStyle = T.merc; ctx.setLineDash([4 * p, 3 * p]); ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.moveTo(x0 + 2 * p, yk); ctx.lineTo(x0 + w + 4 * p, yk); ctx.stroke(); ctx.setLineDash([]);
+      ctx.fillStyle = T.merc; ctx.font = `700 ${10.5 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText('kT', x0 + w - 14 * p, yk - 2 * p); } }
+    /* one dot per atom, spread sideways by its place in the level */
+    const counts = new Map();
+    for (let i = 0; i < S.N; i++) { const k = lvl[i]; if (k < 0) continue; const c = counts.get(k) || 0; counts.set(k, c + 1);
+      const y = Y(E(Q[k])), cond = k === 0, slot = (c % 24) / 24, row = Math.floor(c / 24);
+      ctx.fillStyle = cond ? T.cond : T.therm; ctx.beginPath(); ctx.arc(x0 + 8 * p + slot * (w - 14 * p), y - (cond ? 2.5 * p + row * 5 * p : 0), (cond ? 2.6 : 2.2) * p, 0, 7); ctx.fill(); }
+    /* axis: energy in nK, and the ground state */
+    ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    const step = niceStep(ladTop / 4); for (let e = step; e < ladTop * 0.98; e += step) { const y = Y(e); ctx.fillText(fmtE(e), x0 - 3 * p, y); ctx.fillRect(x0 - 2 * p, y - 0.5, 2 * p, 1); }
+    ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.font = `${10.5 * p}px ${T.ui}`; ctx.fillStyle = T.muted;
+    ctx.fillText(W < 640 ? 'E/k (nK)' : 'levels, E/k in nK', x0 - 4 * p, y0 + h + 5 * p);
+    if (!S.blind) { ctx.fillStyle = T.cond; ctx.font = `700 ${10.5 * p}px ${T.ui}`; ctx.fillText(`${Math.round(O.n0)} in the ground state`, x0 - 4 * p, y0 + h + 17 * p); }
+    ctx.restore();
+  }
+  const fmtE = (e) => (e >= 1000 ? `${f(e / 1000, e >= 10000 ? 0 : 1)} µK` : e >= 10 ? f(e, 0) : f(e, 1));
+  function niceStep(x) { const e = 10 ** Math.floor(Math.log10(x)), r = x / e; return (r < 1.5 ? 1 : r < 3 ? 2 : r < 7 ? 5 : 10) * e; }
+  function thermometer(x0, y0, w, h) {
+    const p = proj(), Y = (t) => y0 + h - (Math.log10(t / TMIN) / DECADES) * h, Td = degeneracyT(S.N, side(), mass());
+    ctx.save(); ctx.fillStyle = T.surface; ctx.globalAlpha = 0.78; ctx.beginPath(); ctx.roundRect(x0 - 10 * p, y0 - 22 * p, w + 20 * p, h + 52 * p, 8 * p); ctx.fill(); ctx.globalAlpha = 1;
+    ctx.fillStyle = T.ink; ctx.font = `italic 700 ${12 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillText('T', x0 + w / 2, y0 - 7 * p);
+    const tube = 7 * p, bulb = 9 * p, cx = x0 + w / 2;
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.roundRect(cx - tube / 2, y0, tube, h, tube / 2); ctx.stroke();
+    ctx.beginPath(); ctx.arc(cx, y0 + h + bulb * 0.9, bulb, 0, 7); ctx.stroke();
+    ctx.fillStyle = T.merc; ctx.beginPath(); ctx.arc(cx, y0 + h + bulb * 0.9, bulb - 1.5 * p, 0, 7); ctx.fill();
+    const yT = Y(S.T); ctx.beginPath(); ctx.roundRect(cx - tube / 2 + 1.5 * p, yT, tube - 3 * p, y0 + h + bulb * 0.5 - yT, 2 * p); ctx.fill();
+    ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    for (const [t, lab] of [[1e-9, '1 nK'], [1e-8, '10 nK'], [1e-7, '100 nK'], [1e-6, '1 µK']]) { const y = Y(t); ctx.fillRect(cx + tube / 2, y - 0.5, 3 * p, 1); ctx.fillText(W < 640 ? lab.replace(' ', '') : lab, cx + tube / 2 + 5 * p, y); }
+    if (S.marks && Td > TMIN && Td < TMAX) { const y = Y(Td); ctx.strokeStyle = T.touch; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.moveTo(cx - tube / 2 - 10 * p, y); ctx.lineTo(cx + tube / 2 + 2 * p, y); ctx.stroke();
+      ctx.fillStyle = T.touch; ctx.font = `700 ${10 * p}px ${T.ui}`; ctx.textAlign = 'right'; ctx.fillText(W < 640 ? 'touch' : 'packets touch', cx - tube / 2 - 12 * p, y - 6 * p); ctx.fillText(fmtT(Td), cx - tube / 2 - 12 * p, y + 6 * p); }
+    ctx.fillStyle = T.ink; ctx.font = `700 ${11.5 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(fmtT(S.T), cx, y0 + h + 2 * bulb + 2 * p);
+    ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.fillText(S.cool < 0 ? 'cooling' : S.cool > 0 ? 'warming' : 'held', cx, y0 + h + 2 * bulb + 16 * p);
+    ctx.restore();
+  }
+  function overlays() {
+    if (!S.ladder || S.scene === 'frac') return;
+    const p = proj(), narrow = W < 640, lw = narrow ? 34 * p : 70 * p, tw = 14 * p, top = 46 * p, bot = narrow ? 44 * p : 40 * p, hh = H - top - bot;
+    if (S.scene === 'box') ladder(narrow ? 28 * p : 54 * p, top, lw, hh - 10 * p);
+    thermometer(W - (narrow ? 58 : 118) * p, top, tw, hh - 24 * p);
+  }
+
+  /* ---------- the flat views ---------- */
+  const IMG = { box: null, vel: null };
+  function imageOf(key, n, get) {
+    const img = IMG[key] && IMG[key].width === n ? IMG[key] : (IMG[key] = ctx.createImageData(n, n)), d = img.data, c = [0, 0, 0];
+    for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) { get(i, n - 1 - j, c); const k = 4 * (j * n + i); d[k] = c[0] * 255; d[k + 1] = c[1] * 255; d[k + 2] = c[2] * 255; d[k + 3] = 255; }
+    return img;
+  }
+  let tmpCan = null;
+  function blit(img, x, y, w, h) {
+    if (!tmpCan) tmpCan = document.createElement('canvas'); tmpCan.width = img.width; tmpCan.height = img.height; tmpCan.getContext('2d').putImageData(img, 0, 0);
+    ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high'; ctx.drawImage(tmpCan, x, y, w, h);
+  }
+  function boxFrame() {   /* where the box square sits on the canvas, leaving room for the overlays */
+    const p = proj(), narrow = W < 640, left = S.ladder ? (narrow ? (S.scene === 'box' ? 72 : 16) : 150) * p : 20 * p, right = S.ladder ? (narrow ? (S.marks ? 104 : 78) : 150) * p : 20 * p, top = 40 * p, bot = 36 * p;
+    const s = Math.max(40, Math.min(W - left - right, H - top - bot)); return { x: left + (W - left - right - s) / 2, y: top + (H - top - bot - s) / 2, s, p };
+  }
+  function drawBoxFlat() {
+    const { x, y, s, p } = boxFrame(), L = side();
+    const img = imageOf('box', GP, (i, j, c) => colorAt(j * GP + i, c)); blit(img, x, y, s, s);
+    /* hot packets smaller than a cell: dots */
+    if (blend < 1) { ctx.globalAlpha = 1 - blend; const r = Math.max(2.2 * p, O.sigma / L * s * 2); ctx.fillStyle = S.color === 'density' ? (T.dark ? '#dff0ff' : '#1d4f8f') : T.ink;
+      for (let i = 0; i < S.N; i++) { if (lvl[i] === 0) continue; ctx.beginPath(); ctx.arc(x + AT.x[i] * s, y + s - AT.y[i] * s, r, 0, 7); ctx.fill(); } ctx.globalAlpha = 1; }
+    ctx.strokeStyle = T.floor_edge; ctx.lineWidth = 1.5 * p; ctx.strokeRect(x, y, s, s);
+    ctx.fillStyle = T.muted; ctx.font = `${11 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(`box ${f(S.L, 1)} µm on a side, seen from above`, x + s / 2, y + s + 6 * p);
+    if (S.marks) scaleBar(x + s - 8 * p, y + s - 10 * p, s / L, p);
+    legend(x, y - 8 * p, p);
+  }
+  function scaleBar(xr, yb, pxPerM, p) {   /* the thermal wavelength as a bar */
+    const w = O.lambda * pxPerM; if (w < 3) { ctx.fillStyle = T.ink; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillText(`λ_T = ${fmtLen(O.lambda)} (too small to draw)`, xr, yb); return; }
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(xr - w, yb); ctx.lineTo(xr, yb); ctx.moveTo(xr - w, yb - 4 * p); ctx.lineTo(xr - w, yb + 4 * p); ctx.moveTo(xr, yb - 4 * p); ctx.lineTo(xr, yb + 4 * p); ctx.stroke();
+    ctx.fillStyle = T.ink; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillText(`λ_T = ${fmtLen(O.lambda)}`, xr, yb - 5 * p);
+  }
+  function legend(x, y, p) {
+    ctx.font = `${10.5 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillStyle = T.muted;
+    const narrow = W < 640;
+    ctx.fillText(S.scene === 'vel' ? (narrow ? 'atoms at each velocity: hill = thermal gas, spike = condensate' : 'how many atoms move at each velocity: the broad hill is the thermal gas, the spike the condensate')
+      : S.color === 'density' ? (narrow ? 'brighter: more atoms per area' : 'brighter: more atoms per area (height is the square root of the density)') : (narrow ? 'hue: phase of the wavefunction' : 'hue: phase of the wavefunction; dim where there are no atoms'), x, y);
+  }
+  function drawVelFlat() {
+    const { x, y, s, p } = boxFrame();
+    const img = imageOf('vel', VP, (i, j, c) => ramp(hVel(VEL[j * VP + i]) / 1.4, c)); blit(img, x, y, s, s);
+    ctx.strokeStyle = T.floor_edge; ctx.lineWidth = 1.5 * p; ctx.strokeRect(x, y, s, s);
+    ctx.fillStyle = T.muted; ctx.font = `${11 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    ctx.fillText(`velocity, ${f(-velMax * 1000, 1)} to ${f(velMax * 1000, 1)} mm/s each way`, x + s / 2, y + s + 6 * p);
+    legend(x, y - 8 * p, p);
+    velMarks(x, y, s, p);
+  }
+  function velMarks(x, y, s, p) {
+    if (!S.marks) return; const vth = Math.sqrt(2 * KB * S.T / mass()), r = vth / velMax * s / 2;
+    ctx.strokeStyle = T.merc; ctx.setLineDash([4 * p, 3 * p]); ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.arc(x + s / 2, y + s / 2, r, 0, 7); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = T.merc; ctx.font = `700 ${10 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText(`√(2kT/m) = ${f(vth * 1000, 2)} mm/s`, x + s / 2 + r * 0.72 + 4 * p, y + s / 2 - r * 0.72);
+  }
+
+  /* ---------- the condensate fraction graph ---------- */
+  function fracPoints() {
+    const key = [S.atom, S.N, S.L].join(); if (fracCurve && fracCurve.key === key) return fracCurve;
+    const pts = [], m = mass(), L = side(); for (let i = 0; i <= 90; i++) { const t = TMIN * 10 ** (DECADES * i / 90); pts.push([t, occupations(S.N, m, L, t).frac]); }
+    return (fracCurve = { key, pts });
+  }
+  function drawFrac() {
+    const p = proj(), L = 62 * p, R = 20 * p, Tp = 34 * p, B = 46 * p, w = W - L - R, h = H - Tp - B, { pts } = fracPoints(), Td = degeneracyT(S.N, side(), mass());
+    const X = (t) => L + Math.log10(t / TMIN) / DECADES * w, Y = (fr) => Tp + (1 - fr) * h;
+    ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.fillStyle = T.muted; ctx.font = `${10.5 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (const [t, lab] of [[1e-9, '1 nK'], [1e-8, '10 nK'], [1e-7, '100 nK'], [1e-6, '1 µK']]) { ctx.beginPath(); ctx.moveTo(X(t), Tp); ctx.lineTo(X(t), Tp + h); ctx.stroke(); ctx.fillText(lab, X(t), Tp + h + 5 * p); }
+    for (let d = 0; d < DECADES; d++) for (let k = 2; k < 10; k++) { const t = TMIN * 10 ** d * k; ctx.fillRect(X(t), Tp + h - 3 * p, 1, 3 * p); }
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    for (let fr = 0; fr <= 1.001; fr += 0.25) { ctx.beginPath(); ctx.moveTo(L, Y(fr)); ctx.lineTo(L + w, Y(fr)); ctx.stroke(); ctx.fillText(`${Math.round(fr * 100)} %`, L - 6 * p, Y(fr)); }
+    ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.font = `${11 * p}px ${T.ui}`; ctx.fillText('temperature (logarithmic)', L + w / 2, H - 4 * p);
+    ctx.save(); ctx.translate(14 * p, Tp + h / 2); ctx.rotate(-Math.PI / 2); ctx.textBaseline = 'middle'; ctx.fillText('share of the atoms in the ground state, N₀/N', 0, 0); ctx.restore();
+    if (S.marks && Td > TMIN && Td < TMAX) { ctx.strokeStyle = T.touch; ctx.setLineDash([5 * p, 4 * p]); ctx.lineWidth = 1.3 * p; ctx.beginPath(); ctx.moveTo(X(Td), Tp); ctx.lineTo(X(Td), Tp + h); ctx.stroke(); ctx.setLineDash([]);
+      ctx.fillStyle = T.touch; ctx.font = `700 ${10.5 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText(`packets touch: Nλ²/L² = 1 at ${fmtT(Td)}`, X(Td) + 5 * p, Tp + 4 * p); }
+    if (!S.blind) { ctx.strokeStyle = T.cond; ctx.lineWidth = 2.2 * p; ctx.beginPath(); pts.forEach((q, i) => { if (i) ctx.lineTo(X(q[0]), Y(q[1])); else ctx.moveTo(X(q[0]), Y(q[1])); }); ctx.stroke();
+      ctx.fillStyle = T.cond; ctx.beginPath(); ctx.arc(X(S.T), Y(O.frac), 5 * p, 0, 7); ctx.fill();
+      ctx.fillStyle = T.ink; ctx.font = `700 ${11 * p}px ${T.mono}`; ctx.textAlign = X(S.T) > L + w * 0.6 ? 'right' : 'left'; ctx.textBaseline = 'bottom';
+      ctx.fillText(`${fmtT(S.T)}: ${f(O.frac * 100, 1)} % (${Math.round(O.n0)} of ${S.N})`, X(S.T) + (X(S.T) > L + w * 0.6 ? -9 : 9) * p, Y(O.frac) - 4 * p); }
+    else { ctx.fillStyle = T.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.font = `${12 * p}px ${T.ui}`; ctx.fillText('Blind: the curve is hidden. Predict where it rises from the overlap of the packets.', L + w / 2, Tp + h / 2); }
+    ctx.fillStyle = T.muted; ctx.font = `${10.5 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText(`${ATOMS[S.atom].name}, N = ${S.N}, L = ${f(S.L, 1)} µm: the exact Bose–Einstein count for this box`, L + 6 * p, Tp - 24 * p);
+  }
+
+  /* ---------- drawing ---------- */
+  function draw() {
+    if (!T || !W || !O) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    if (S.scene === 'frac') { ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H); drawFrac(); return; }
+    if (S.scene === 'box') field(); else velField();
+    if (use3()) { draw3(); ctx.clearRect(0, 0, W, H); }
+    else { ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H); if (S.scene === 'box') drawBoxFlat(); else drawVelFlat(); }
+    if (use3()) labels3();
+    overlays();
+  }
+
+  /* ---------- 3D: the box floor, the surface of the wavefunction, the hot atoms as spheres ---------- */
+  const G3 = { o: { th: -Math.PI / 2 + 0.1, ph: 0.6, zoom: 1 } };
+  function init3D() {
+    const S3 = VD3K.stage($('pane'), { before: can, fov: 28, near: 0.05, far: 60 }); if (!S3) return false;
+    S3.el.classList.add('sc3');
+    const sc = S3.scene;
+    const floorM = VD3K.material(S3, { roughness: 0.9, metalness: 0 }, ['#e7ecf3', '#141b26']);
+    const floor = new THREE.Mesh(new THREE.PlaneGeometry(2.3, 2.3), floorM); floor.position.z = -0.004; sc.add(floor);
+    const edgeM = new THREE.LineBasicMaterial({ color: '#8d99a8' }); S3.onTheme((dk) => edgeM.color.set(dk ? '#6f7f92' : '#8d99a8'));
+    const eg = new THREE.BufferGeometry(); eg.setAttribute('position', new THREE.Float32BufferAttribute([-1, -1, 0, 1, -1, 0, 1, -1, 0, 1, 1, 0, 1, 1, 0, -1, 1, 0, -1, 1, 0, -1, -1, 0], 3)); sc.add(new THREE.LineSegments(eg, edgeM));
+    /* the surface: a grid of GP × GP vertices with vertex colors */
+    const mk = (n) => { const g = new THREE.BufferGeometry(), idx = [];
+      g.setAttribute('position', new THREE.BufferAttribute(new Float32Array(n * n * 3), 3)); g.setAttribute('color', new THREE.BufferAttribute(new Float32Array(n * n * 3), 3));
+      for (let j = 0; j < n - 1; j++) for (let i = 0; i < n - 1; i++) { const a = j * n + i, b = a + 1, c = a + n, d = c + 1; idx.push(a, b, d, a, d, c); } g.setIndex(idx); return g; };
+    const surfM = new THREE.MeshStandardMaterial({ vertexColors: true, side: THREE.DoubleSide, roughness: 0.55, metalness: 0.05, flatShading: false });
+    const surf = new THREE.Mesh(mk(GP), surfM), vsurf = new THREE.Mesh(mk(VP), surfM); surf.frustumCulled = vsurf.frustumCulled = false; sc.add(surf, vsurf);
+    const balls = VD3K.particles(S3, { n: NMAX, r: 0.012, color: '#dff0ff', seg: 10 }); balls.material.transparent = true; sc.add(balls);
+    S3.onTheme((dk) => { balls.material.color.set(dk ? '#dff0ff' : '#1d4f8f'); });
+    g3 = { S3, surf, vsurf, balls }; M3 = new THREE.Matrix4();
+    VD3.orbit(can, G3.o, () => { if (use3()) draw(); }, { grab: () => !use3(), phMin: 0.25, phMax: 1.45, zMin: 0.6, zMax: 2.5 });
+    can.style.touchAction = 'pan-y';
+    return true;
+  }
+  const use3 = () => !!(view3 && view3.is3d() && g3);
+  const HS = 0.42;   /* scene height of a full condensate's peak; the box is 2 units across */
+  function fillSurface(mesh, n, hAt, cAt) {
+    const P = mesh.geometry.attributes.position.array, C = mesh.geometry.attributes.color.array, c = [0, 0, 0];
+    for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) { const k = j * n + i; P[3 * k] = i / (n - 1) * 2 - 1; P[3 * k + 1] = j / (n - 1) * 2 - 1; P[3 * k + 2] = hAt(k) * HS; cAt(k, c); C[3 * k] = c[0]; C[3 * k + 1] = c[1]; C[3 * k + 2] = c[2]; }
+    mesh.geometry.attributes.position.needsUpdate = true; mesh.geometry.attributes.color.needsUpdate = true; mesh.geometry.computeVertexNormals();
+  }
+  function draw3() {
+    const g = g3, S3 = g.S3; S3.size(W, H);
+    if (S.scene === 'box') {
+      g.surf.visible = true; g.vsurf.visible = false; fillSurface(g.surf, GP, (k) => hOf(RHO[k]), colorAt);
+      let n = 0; if (blend < 1) { const r = Math.max(0.012, O.sigma / side() * 2 * 2), sc = r / 0.012; g.balls.material.opacity = 1 - blend; M3.makeScale(sc, sc, sc);
+        for (let i = 0; i < S.N; i++) { if (lvl[i] === 0 || !pairsOf[i]) continue; M3.setPosition(AT.x[i] * 2 - 1, AT.y[i] * 2 - 1, r); g.balls.setMatrixAt(n++, M3); } }
+      g.balls.count = n; g.balls.instanceMatrix.needsUpdate = true; g.balls.visible = n > 0;
+    } else { g.surf.visible = false; g.vsurf.visible = true; g.balls.visible = false; fillSurface(g.vsurf, VP, (k) => hVel(VEL[k]), (k, out) => ramp(hVel(VEL[k]) / 1.4, out)); }
+    S3.place(G3.o, [0, 0, 0.18], S3.fit(5.6, 1.5));
+    S3.render();
+  }
+  function labels3() {
+    const g = g3, S3 = g.S3, p = proj();
+    const lab = (txt, q, o) => { o = Object.assign({ a: 'center', s: 11 * p, c: T.ink }, o || {}); ctx.save(); ctx.font = `${o.w || 400} ${o.s}px ${T.ui}`; ctx.textAlign = o.a; ctx.textBaseline = 'middle';
+      ctx.lineJoin = 'round'; ctx.lineWidth = 3.5 * p; ctx.strokeStyle = T.canvas; ctx.globalAlpha = 0.8; ctx.strokeText(txt, q[0], q[1]); ctx.globalAlpha = 1; ctx.fillStyle = o.c; ctx.fillText(txt, q[0], q[1]); ctx.restore(); };
+    if (S.scene === 'box') { lab(`box ${f(S.L, 1)} µm on a side`, S3.project([0, -1.12, 0]), { c: T.muted });
+      if (S.marks) { const w = O.lambda / side() * 2, q0 = S3.project([1 - w, -1, 0]), q1 = S3.project([1, -1, 0]); if (q1[0] - q0[0] > 4) { ctx.strokeStyle = T.ink; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(q0[0], q0[1]); ctx.lineTo(q1[0], q1[1]); ctx.stroke(); }
+        lab(`λ_T = ${fmtLen(O.lambda)}`, [q1[0] - 2 * p, q1[1] + 12 * p], { a: 'right', s: 10 * p }); } }
+    else { lab(`velocity, ±${f(velMax * 1000, 1)} mm/s each way`, S3.project([0, -1.12, 0]), { c: T.muted });
+      if (S.marks) { const vth = Math.sqrt(2 * KB * S.T / mass()), r = vth / velMax; ctx.strokeStyle = T.merc; ctx.setLineDash([4 * p, 3 * p]); ctx.lineWidth = 1.2 * p; ctx.beginPath();
+        for (let k = 0; k <= 64; k++) { const q = S3.project([r * Math.cos(k / 64 * 2 * Math.PI), r * Math.sin(k / 64 * 2 * Math.PI), 0.002]); if (k) ctx.lineTo(q[0], q[1]); else ctx.moveTo(q[0], q[1]); } ctx.stroke(); ctx.setLineDash([]);
+        lab(`√(2kT/m) = ${f(vth * 1000, 2)} mm/s`, S3.project([r * 0.72 + 0.04, r * 0.72, 0.002]), { a: 'left', c: T.merc, s: 10 * p, w: 700 }); } }
+    legend(S.ladder ? (W < 640 ? (S.scene === 'box' ? 72 : 16) : 150) * p : 12 * p, 30 * p, p);
+  }
+
+  /* ---------- readouts, sync, presets ---------- */
+  function readouts() {
+    const dd = (a, b) => `<div><dt>${a}</dt><dd>${b}</dd></div>`, m = mass(), Td = degeneracyT(S.N, side(), m), vth = Math.sqrt(2 * KB * S.T / m);
+    $('out').innerHTML = dd('Temperature', fmtT(S.T)) + dd('Thermal wavelength λ<sub>T</sub>', fmtLen(O.lambda)) + dd('Packet width (±σ)', fmtLen(2 * O.sigma))
+      + dd('Mean spacing L/√N', fmtLen(side() / Math.sqrt(S.N))) + dd('Overlap Nλ<sub>T</sub>²/L²', f(O.nLambda2, O.nLambda2 < 0.1 ? 3 : 2))
+      + dd('Packets touch at', fmtT(Td))
+      + (S.blind ? '<div class="wide"><dt>In the ground state</dt><dd class="ok">hidden: predict it</dd></div>' : dd('In the ground state N<sub>0</sub>', `${f(O.n0, O.n0 < 10 ? 2 : 1)} of ${S.N} (${f(O.frac * 100, 1)} %)`))
+      + dd('E₀ − μ', `${f((2 * O.e1 - O.mu) / KB * 1e9, 3)} nK · k`) + dd('kT ÷ level spacing e<sub>1</sub>', f(1 / O.a, 1 / O.a < 10 ? 2 : 0))
+      + dd('Thermal speed √(2kT/m)', `${f(vth * 1000, 2)} mm/s`) + dd('Time', `${f(S.t * 1000, 2)} ms`);
+  }
+  function sync() {
+    $('sT').value = Math.log10(S.T / TMIN); $('oT').textContent = fmtT(S.T); $('sN').value = S.N; $('oN').textContent = String(S.N); $('sL').value = S.L; $('oL').textContent = `${f(S.L, 1)} µm`; $('selAtom').value = S.atom;
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
+    for (const b of document.querySelectorAll('#sceneSeg button')) b.setAttribute('aria-pressed', String(b.dataset.scene === S.scene));
+    for (const b of document.querySelectorAll('#colorSeg button')) b.setAttribute('aria-pressed', String(b.dataset.color === S.color));
+    for (const b of document.querySelectorAll('#speed button')) b.setAttribute('aria-pressed', String(+b.dataset.sp === S.speed));
+    $('cool').setAttribute('aria-pressed', String(S.cool < 0)); $('warm').setAttribute('aria-pressed', String(S.cool > 0));
+    $('rampNote').textContent = S.cool < 0 ? 'While playing, the temperature falls a factor of 10 every 8 seconds.' : S.cool > 0 ? 'While playing, the temperature rises a factor of 10 every 8 seconds.' : 'The temperature is held; set it with the slider, or press Cool down or Warm up.';
+    $('colorSeg').parentElement.hidden = S.scene !== 'box'; $('chkLadder').parentElement.hidden = S.scene === 'frac';
+  }
+  function setRun(on) { S.run = on; const b = $('play'); b.textContent = on ? 'Pause' : 'Play'; b.classList.toggle('attn', !on); }
+  function applyPreset(k) {
+    const c = PRESETS[k]; S.preset = k; Object.assign(S, { atom: c.atom, N: c.N, L: c.L, T: c.T, T0: c.T, cool: c.cool, scene: c.scene, color: c.color, t: 0 });
+    seedAtoms(); fracCurve = null; ladTop = 0; velScale(); compute(); setRun(false); $('presetHint').textContent = c.hint; sync(); redraw();
+  }
+  function changedGas() { S.preset = 'custom'; S.T0 = S.T; fracCurve = null; velScale(); compute(); sync(); redraw(); }
+  function redraw() { draw(); readouts(); $('note').textContent = S.msg || (use3() ? 'Drag to turn the view' : ''); }
+
+  /* ---------- controls ---------- */
+  for (const [k, a] of Object.entries(ATOMS)) { const o = document.createElement('option'); o.value = k; o.textContent = `${a.name} (${a.u.toFixed(3)} u)`; $('selAtom').appendChild(o); }
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  $('play').addEventListener('click', () => { setRun(!S.run); redraw(); });
+  $('reset').addEventListener('click', () => { S.t = 0; seedAtoms(); setT(S.T0); ladTop = 0; setRun(false); sync(); redraw(); });
+  $('speed').addEventListener('click', (e) => { const b = e.target.closest('[data-sp]'); if (!b) return; S.speed = +b.dataset.sp; sync(); });
+  $('sceneSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-scene]'); if (!b) return; S.scene = b.dataset.scene; sync(); redraw(); });
+  $('colorSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-color]'); if (!b) return; S.color = b.dataset.color; sync(); redraw(); });
+  $('sT').addEventListener('input', (e) => { S.preset = 'custom'; setT(TMIN * 10 ** +e.target.value); S.T0 = S.T; sync(); redraw(); });
+  $('sN').addEventListener('input', (e) => { S.N = +e.target.value; $('oN').textContent = String(S.N); });
+  $('sN').addEventListener('change', (e) => { S.N = +e.target.value; changedGas(); });
+  $('sL').addEventListener('input', (e) => { S.L = +e.target.value; $('oL').textContent = `${f(S.L, 1)} µm`; });
+  $('sL').addEventListener('change', (e) => { S.L = +e.target.value; changedGas(); });
+  $('selAtom').addEventListener('change', (e) => { S.atom = e.target.value; changedGas(); });
+  $('cool').addEventListener('click', () => { S.cool = S.cool < 0 ? 0 : -1; sync(); redraw(); });
+  $('warm').addEventListener('click', () => { S.cool = S.cool > 0 ? 0 : 1; sync(); redraw(); });
+  $('chkLadder').addEventListener('change', (e) => { S.ladder = e.target.checked; redraw(); });
+  $('chkLevels').addEventListener('change', (e) => { S.marks = e.target.checked; redraw(); });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; redraw(); });
+  can.addEventListener('keydown', (e) => { if (e.key === ' ') { $('play').click(); e.preventDefault(); } });
+
+  let last = performance.now(), acc = 0;
+  function frame(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    if (S.run) {
+      const gasDt = dt * SCALE * S.speed; S.t += gasDt; advance(gasDt);
+      if (S.cool) { const nt = S.T * 10 ** (S.cool * dt * S.speed / RAMP); if ((S.cool < 0 && nt <= TMIN) || (S.cool > 0 && nt >= TMAX)) { setT(nt); S.cool = 0; sync(); } else setT(nt); $('sT').value = Math.log10(S.T / TMIN); $('oT').textContent = fmtT(S.T); }
+      draw(); acc += dt; if (acc > 0.2) { acc = 0; readouts(); }
+    } else if (use3()) draw();
+    requestAnimationFrame(frame);
+  }
+  function resize() { dpr = window.devicePixelRatio || 1; const r = $('pane').getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); redraw(); }
+  const retheme = () => { tokens(); redraw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  VD.projector({ onChange: resize });
+
+  $('about1').textContent = 'The model: N atoms that do not interact, in a square box with hard walls, in two dimensions so that the whole wavefunction can be drawn as a surface. The levels are E = (h²/8mL²)(nx² + ny²); each holds on average 1/(e^((E − μ)/kT) − 1) atoms (the Bose–Einstein distribution), and the chemical potential μ is solved so that the occupations add up to N. The condensate is the ground state nx = ny = 1, drawn exactly: N₀ · (4/L²) sin²(πx/L) sin²(πy/L). The dots on the ladder are one sample of those occupations (each atom keeps its own random number, so the same atoms sink as the gas cools); the readouts give the averages.';
+  $('about2').textContent = 'The packets are a picture of the thermal atoms, not a second calculation: an atom at temperature T has a momentum spread √(mkT) along each axis, and the smallest packet consistent with that spread (the uncertainty principle) has a position spread σ = λ_T/(2√2π), about a fifth of the thermal de Broglie wavelength λ_T = h/√(2πmkT). Each excited atom is drawn as such a packet, moving at the speed of its level (ħπ√(nx² + ny²)/mL) and bouncing off the walls; its stripes in the phase view are its de Broglie wavelength. Packets smaller than a grid cell are drawn as dots. The condensate has one phase everywhere, turning at E₀/ħ, slow compared with the thermal packets. The surface height is the square root of the density, so the thin hot packets and the broad condensate fit in one picture.';
+  $('about3').textContent = 'Approximations: no interactions (a real condensate\'s atoms repel weakly, which widens the condensate and shifts the transition by a few percent); two dimensions, where an infinite ideal gas would not condense at all, so what you see is the gradual crossover of a finite number of atoms in a finite box, which is what a small trapped gas does too; the velocity view treats the excited levels as a continuum (good when kT is many times the level spacing e1, see the readouts). Time runs 10,000 times slower than the atoms, at 1×.';
+  $('about4').textContent = `Values: h, k and the atomic mass unit from CODATA 2022; atomic masses from AME2020 (Wang et al. 2021). The first condensates: rubidium 87 at JILA (Anderson et al., Science 269, 198, 1995: about 2000 atoms, the condensate appearing near 170 nK at a density of 2.5 × 10¹² per cm³), sodium 23 at MIT (Davis et al. 1995), lithium 7 at Rice (Bradley et al. 1995), hydrogen at MIT (Fried et al. 1998), metastable helium 4 at Orsay and at ENS Paris (2001). For a uniform three dimensional gas at the JILA density the ideal gas formula kT_c = (2πħ²/m)(n/2.612)^(2/3) gives ${f(tc3dBox(2.5e18, massOf('rb87')) * 1e9, 0)} nK; the real atoms were in a harmonic trap, whose peak density is higher, which is why the measured 170 nK is larger. For liquid helium 4 (density 0.1451 g/cm³) the same formula gives ${f(tc3dBox(145.1 / massOf('he4'), massOf('he4')), 2)} K, close to the real lambda point of 2.17 K even though liquid helium is far from an ideal gas.`;
+
+  window.__bec = { S, get O() { return O; }, get lvl() { return lvl; }, applyPreset, setT, compute, advance, occupations, degeneracyT, tc3dBox, lambdaT, velocityDensity, levels };
+  tokens();
+  { const q = new URLSearchParams(location.search).get('setup'); applyPreset(PRESETS[q] ? q : 'cool'); }
+  new ResizeObserver(resize).observe($('pane')); resize();
+  view3 = VD3K.view({ seg: '#dimSeg', init: init3D, start: '3d', change: () => { if (g3) g3.S3.el.hidden = !use3(); redraw(); }, status: (m) => { S.msg = m; $('note').textContent = m; } });
+  if (window.VD && VD.panel) VD.panel({ play: '#play', reset: '#reset', speed: '#speed', end: ['#dimSeg'] });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
