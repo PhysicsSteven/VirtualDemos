@@ -77,6 +77,10 @@ only when the work needs them.
 - Languages: English text is the key. After you build or change a demo, harvest its strings and check for leaks with
   `?lang=qps`. Every demo must be harvested [checked]. Never read displayed text back as state. See `demos/lib/i18n.md`.
 - How to add a demo, and the new demo checklist: `docs/adding-a-demo.md`.
+- Break-it test (Steve 2026-11-09): before an interactive demo or tool is reported done, use it the way a student would: zoom far out
+  and back in, pan, drag, push every control to its limits, type extreme or odd inputs, resize the stage, switch setups, themes and
+  looks. Known values must stay exact throughout (the derivatives grapher's f′(0) for x³ − 3x stays −3 at any zoom). Static checks
+  miss these: the derivatives grapher shipped with zoom bugs that only showed after a zoom out and back in.
 
 ## Handouts, worksheets and videos
 - Procedure steps state the task, not the control. Rules for headings, `worksheet.js` maps and course lines: `docs/handouts.md`.
