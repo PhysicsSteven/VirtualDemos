@@ -1281,6 +1281,7 @@ VDI18N.add('en', 'common', [
 "Show or hide the simulated population",
 "Look",
 "Warm lab",
-"Warm lab (walnut and amber) or Lab (graphite and teal), for the page around each demo. The pictures keep their colors.",
+"Cool lab",
+"Warm lab (walnut and amber) or Cool lab (graphite and teal), for the page around each demo. The pictures keep their colors.",
 "Preferences: theme, look, language, Reduce motion, Larger text and Projector, for every page"
 ]);

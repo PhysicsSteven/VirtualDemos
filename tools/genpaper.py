@@ -73,7 +73,7 @@ TEXT = ['ink', 'ink2', 'accent', 'link', 'red', 'ok', 'equi', 'hd-warn', 'pos', 
 PANELS = ['paper', 'paper2', 'paper3', 'desk']
 def contrast_problems():
     bad = []
-    for name, d in [('Warm lab Day', LIGHT), ('Warm lab Night', DARK), ('Lab Day', {**LIGHT, **LAB_LIGHT}), ('Lab Night', {**DARK, **LAB_DARK})]:
+    for name, d in [('Warm lab Day', LIGHT), ('Warm lab Night', DARK), ('Cool lab Day', {**LIGHT, **LAB_LIGHT}), ('Cool lab Night', {**DARK, **LAB_DARK})]:
         for f in TEXT:
             for b in PANELS:
                 r = ratio(d[f], d[b])

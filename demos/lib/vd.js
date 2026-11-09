@@ -927,7 +927,7 @@
 
   /* Preferences (2026-11-08): one dialog for the settings that follow a student from page to page, opened by the gear button
      #vdPrefs placed right after Projector (the keyboard shortcuts button #vdHelp goes right after it). Theme (VDTheme), Look
-     (Warm lab or Lab, VDPrefs.look, the page skin in paper.css),
+     (Warm lab or Cool lab, VDPrefs.look, the page skin in paper.css),
      language (VDI18N, shown when the site has another language), Reduce motion and Larger text (VDPrefs in theme.js, saved
      for the whole site) and Projector (it presses #proj, which remembers itself). Every existing control stays where it is and
      keeps working; the dialog only sets the same things. Reduce motion here also sets the demo's own Reduce motion box, and
@@ -969,11 +969,11 @@
       }
       if (window.VDPrefs) {
         var lk = mk('div', 'seg'); lk.setAttribute('role', 'group');
-        [['warm', 'Warm lab'], ['lab', 'Lab']].forEach(function (o) {
+        [['warm', 'Warm lab'], ['lab', 'Cool lab']].forEach(function (o) {
           var b = mk('button', '', o[1]); b.type = 'button'; b.setAttribute('data-look-v', o[0]);
           b.addEventListener('click', function () { VDPrefs.set({ look: o[0] }); paint(); }); lk.appendChild(b);
         });
-        row('Look', 'Warm lab (walnut and amber) or Lab (graphite and teal), for the page around each demo. The pictures keep their colors.', lk, 'vdPrefLook');
+        row('Look', 'Warm lab (walnut and amber) or Cool lab (graphite and teal), for the page around each demo. The pictures keep their colors.', lk, 'vdPrefLook');
       }
       var langSel = document.querySelector('.vd-lang select');
       if (langSel && window.VDI18N) {

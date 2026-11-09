@@ -2564,8 +2564,10 @@ VDI18N.add('es', 'common', {
   "Aspecto",
 "Warm lab":
   "Laboratorio cálido",
-"Warm lab (walnut and amber) or Lab (graphite and teal), for the page around each demo. The pictures keep their colors.":
-  "Laboratorio cálido (nogal y ámbar) o Laboratorio (grafito y verde azulado), para la página alrededor de cada demostración. Las imágenes conservan sus colores.",
+"Cool lab":
+  "Laboratorio frío",
+"Warm lab (walnut and amber) or Cool lab (graphite and teal), for the page around each demo. The pictures keep their colors.":
+  "Laboratorio cálido (nogal y ámbar) o Laboratorio frío (grafito y verde azulado), para la página alrededor de cada demostración. Las imágenes conservan sus colores.",
 "Preferences: theme, look, language, Reduce motion, Larger text and Projector, for every page":
   "Preferencias: tema, aspecto, idioma, Reducir movimiento, Texto más grande y Proyector, para todas las páginas"
 });

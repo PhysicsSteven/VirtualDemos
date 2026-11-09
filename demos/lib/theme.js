@@ -66,8 +66,8 @@
   try { sysMotion = nativeMM && nativeMM('(prefers-reduced-motion: reduce)'); } catch (_) {}
   var pref = function (k, v) { var x = null; try { x = localStorage.getItem(k); } catch (_) {} return x === v; };
   var siteStill = pref('vd-motion', 'reduce'), bigText = pref('vd-text', 'large');
-  /* Look, chosen in Preferences (2026-11-08): 'warm' (Warm lab, the default, nothing saved) or 'lab' (Lab, the cool palette),
-     saved in localStorage 'vd-look'. data-vd-look="lab" on <html> switches demos/lib/paper.css to its Lab blocks. It changes
+  /* Look, chosen in Preferences (2026-11-08): 'warm' (Warm lab, the default, nothing saved) or 'lab' (Cool lab, the cool palette; it was called Lab until 2026-11-09, which collided with the Lab fold inside demos),
+     saved in localStorage 'vd-look'. data-vd-look="lab" on <html> switches demos/lib/paper.css to its Cool lab blocks. It changes
      the page around each demo only, so canvases are not redrawn. */
   var look = pref('vd-look', 'lab') ? 'lab' : 'warm';
   var still = function () { return siteStill || !!(sysMotion && sysMotion.matches); };
