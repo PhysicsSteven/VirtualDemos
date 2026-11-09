@@ -763,7 +763,17 @@ dl.formulas .f { color: var(--fg-f); } dl.formulas .d1 { color: var(--fg-d1); } 
        of |value| in view) to f's, so shapes compare at any zoom; zero stays on the axis, so zero crossings line up. Readouts stay true. */
     const own = $('ownScale').checked, size98 = (ys) => { const a = []; for (const y of ys) if (isFinite(y)) a.push(Math.abs(y)); if (!a.length) return 0; a.sort((p, q) => p - q); return a[Math.min(a.length - 1, Math.floor(a.length * 0.98))]; };
     const ref = size98(fy), K = { d1: 1, d2: 1, d3: 1, int: 1 };
-    const factor = (ys) => { const c = size98(ys); if (!own || !(c > 0) || !(ref > 0)) return 1; const r = ref / c, e = Math.floor(Math.log10(r)), m = r / Math.pow(10, e); return (m < 1.5 ? 1 : m < 3.5 ? 2 : m < 7.5 ? 5 : 10) * Math.pow(10, e); };
+    /* a factor is kept while the scaled curve stays within 5 times f's size either way, so zooming does not keep moving the
+       curves; it is 1 (true size) whenever that fits, and changes only when a curve would otherwise look flat or run off the picture */
+    const ownKey = `${own},${S.src}`;
+    if (S.Kkey !== ownKey) { S.Kkey = ownKey; S.K = { d1: 1, d2: 1, d3: 1, int: 1 }; }
+    const factor = (ys, k) => {
+      const c = size98(ys); if (!own || !(c > 0) || !(ref > 0)) return 1;
+      if (c / ref >= 0.2 && c / ref <= 5) return (S.K[k] = 1);
+      const kept = S.K[k], q = c * kept / ref; if (q >= 0.2 && q <= 5) return kept;
+      const r = ref / c, e = Math.floor(Math.log10(r)), m = r / Math.pow(10, e);
+      return (S.K[k] = (m < 1.5 ? 1 : m < 3.5 ? 2 : m < 7.5 ? 5 : 10) * Math.pow(10, e));
+    };
     const times = (ys, k) => { if (k !== 1) for (let i = 0; i < ys.length; i++) ys[i] *= k; return ys; };
     const scaled = (g, k) => (k === 1 ? g : (x) => g(x) * k);
     /* the shaded area from a to the point */
@@ -783,7 +793,7 @@ dl.formulas .f { color: var(--fg-f); } dl.formulas .d1 { color: var(--fg-d1); } 
     }
     if (show.int) {
       if (!S.F || S.F.key !== `${S.x0},${S.x1},${S.a},${n},${S.src}`) S.F = { key: `${S.x0},${S.x1},${S.a},${n},${S.src}`, ys: cumulative(S.fns.f, xs, S.a, scale) };
-      K.int = factor(S.F.ys);
+      K.int = factor(S.F.ys, 'int');
       curve(null, times(Float64Array.from(S.F.ys), K.int), xs, T.int, 2.5 * p, [16 * p, 6 * p]);
       if (S.a >= S.x0 && S.a <= S.x1) {
         const ya = Math.min(Math.max(Y(0), 12 * p), H - 18 * p);
@@ -791,7 +801,7 @@ dl.formulas .f { color: var(--fg-f); } dl.formulas .d1 { color: var(--fg-d1); } 
         ctx.font = `700 ${12 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText('a', X(S.a) + 5 * p, ya - 5 * p);
       }
     }
-    const draw1 = (k, color, w, dash) => { const ys = sample(S.fns[k]); K[k] = factor(ys); curve(scaled(S.fns[k], K[k]), times(ys, K[k]), xs, color, w * p, dash); };
+    const draw1 = (k, color, w, dash) => { const ys = sample(S.fns[k]); K[k] = factor(ys, k); curve(scaled(S.fns[k], K[k]), times(ys, K[k]), xs, color, w * p, dash); };
     if (show.d3) draw1('d3', T.d3, 2, [12 * p, 5 * p, 3 * p, 5 * p]);
     if (show.d2) draw1('d2', T.d2, 2.5, [2 * p, 5 * p]);
     if (show.d1) draw1('d1', T.d1, 2.5, [10 * p, 6 * p]);
@@ -812,7 +822,7 @@ dl.formulas .f { color: var(--fg-f); } dl.formulas .d1 { color: var(--fg-d1); } 
     if (show.f) dot(fv, T.f);
     /* the factors, in each curve's color, at the top right */
     if (own) {
-      const rows = [['d1', 'f′', show.d1], ['d2', 'f″', show.d2], ['d3', 'f‴', show.d3], ['int', 'F', show.int]].filter((r) => r[2]);
+      const rows = [['d1', 'f′', show.d1], ['d2', 'f″', show.d2], ['d3', 'f‴', show.d3], ['int', 'F', show.int]].filter((r) => r[2] && K[r[0]] !== 1);
       ctx.font = `${12 * p}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'top';
       rows.forEach(([k, name], i) => { ctx.fillStyle = T[k]; label(VDI18N.t('{c} drawn × {k}', { c: name, k: kStr(K[k]) }), W - 8 * p, (30 + 17 * i) * p); });
     }
