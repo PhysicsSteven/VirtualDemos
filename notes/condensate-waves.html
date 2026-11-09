@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="../demos/lib/theme.js"></script>
+<title>Condensates: Interference and Vortices: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+@media screen { :root[data-theme="dark"] {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; overflow-wrap: break-word; }   /* a long file name breaks instead of pushing a phone sideways */
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+<link rel="stylesheet" id="vd-paper" href="../demos/lib/paper.css">
+</head>
+<body class="notes">
+<header class="top" aria-label="Site"><a class="brand" href="../index.html"><svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><ellipse cx="16" cy="16" rx="13" ry="6" fill="none" stroke="currentColor" stroke-width="1.8" transform="rotate(-30 16 16)"/><ellipse cx="16" cy="16" rx="13" ry="6" fill="none" stroke="currentColor" stroke-width="1.8" transform="rotate(30 16 16)"/><circle cx="16" cy="16" r="2.6" fill="currentColor"/></svg>Virtual Physics Demos</a><nav class="tabs" aria-label="Library"><a class="tab" href="../index.html#topics">Demos</a><a class="tab" href="../openstax.html">OpenStax</a><a class="tab" href="index.html" aria-current="page">Notes</a></nav><span class="hfind"></span><span data-vd-theme></span><a class="courses" href="../courses.html"><b>For a class</b> Courses</a></header>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Condensates: Interference and Vortices</h1><ul class="meta"><li><a href="../demos/condensate-waves.html">Open the demo</a></li><li>Intro modern physics, after Bose–Einstein Condensation</li><li>15 to 25 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>A Bose–Einstein condensate is one wavefunction shared by all its atoms, so two condensates interfere like two coherent light beams. The stripes are a few micrometers apart because rubidium atoms that have fallen for a few hundredths of a second have de Broglie wavelengths that long.</li>
+<li>A condensate cannot rotate like a bucket of water. Its velocity is set by the slope of the phase, v = (ħ/m)∇φ, so the flow has no curl wherever there are atoms. It turns by threading in vortices: holes around which the phase winds once, each carrying circulation h/m. Stirred fast enough, it fills with a lattice of them, one per area πħ/(mΩ).</li>
+<li>In a harmonic trap some motions do not care about the interactions at all: the center of mass sloshes at the trap frequency ω (Kohn's theorem), and in a flat trap the cloud breathes at exactly 2ω.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students should have seen Bose–Einstein Condensation, the de Broglie wavelength, and two slit interference. The demo solves the Gross–Pitaevskii equation, the Schrödinger equation for one wavefunction ψ shared by N atoms plus a term g|ψ|² for their repulsion, for rubidium 87 in a flat trap (20 Hz in the plane, 1 kHz across it). <strong>3D</strong> draws the square root of the density as a surface; <strong>Flat</strong> is the view from above, like an absorption image. <strong>Color</strong> shows the density or the phase of ψ (a hue wheel: a vortex is a point where every color meets). Rings mark the vortices, orange for counterclockwise and teal for clockwise. <strong>Graph against time</strong> follows the quantity that matters in each setup. The readouts give the fringe spacing, the periods and the vortex count as measured from the wavefunction.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Two condensates interfere.</strong> Ask Q1 first. Press Play: the trap and the barrier switch off and the two clouds fly apart and overlap in stripes. Pause near 24 ms and compare the measured spacing with ht/(md) in the readouts. Then turn off <strong>Atoms repel each other</strong> and run it again (Q2).</li>
+<li><strong>Two condensates collide in the trap.</strong> The halves slide into the middle and run through each other. The stripes are finest where they meet fastest. The dark grooves left behind break up into vortex pairs.</li>
+<li><strong>One vortex goes around.</strong> Switch the color to Phase: every color meets at the hole. Ask Q3. Press Play and watch the vortex circle the center; the graph shows its angle, and the readout the time for one lap.</li>
+<li><strong>A vortex and an antivortex.</strong> The pair travels in a straight line, each carried by the other's flow. Ask students to predict which way it goes from the two directions of rotation.</li>
+<li><strong>Stir it: a vortex lattice forms.</strong> Ask Q4. Press Play (4× helps). The cloud stretches, its edge ripples, vortices enter from outside and settle into a triangular lattice, all turning the same way. The angular momentum per atom on the graph steps up as each one enters.</li>
+<li><strong>Tighten the trap</strong> and <strong>Shift the trap.</strong> Ask Q5 before Play. Turn on Blind in the Lab to hide the measured periods while students predict.</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> In the Two condensates interfere setup the clouds start d = 14.8 µm apart. Two waves from sources d apart, observed after a time of flight t, make stripes ht/(md) apart. Find the spacing for rubidium 87 (86.909 u) after 23.9 ms, and compare with what the demo measures.</p></div>
+
+<div class="q"><p><strong>Q2.</strong> With the repulsion turned off, the demo measures stripes much closer to ht/(md) (d is 13.2 µm then). Why does the repulsion between the atoms make the stripes wider?</p></div>
+
+<div class="q"><p><strong>Q3.</strong> The fluid circles a vortex at speed v = ħ/(mr). Find the speed 1.0 µm from the core of a rubidium vortex, and the circulation ∮v·dl around any loop that encloses the core. Why does the speed not depend on how fast anything was stirred?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> Feynman's rule says a stirred superfluid holds one vortex per area πħ/(mΩ), so that on average it turns like a solid body. Find that area for rubidium stirred at Ω = 0.75 × (2π × 20 Hz). The stirred cloud is about 26 µm across. How many vortices does the rule predict, and how many does the demo show?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> The trap frequency is 20 Hz. Predict the sloshing period of a displaced cloud and the breathing period after the trap is tightened. Then measure both. Why does the sloshing period not depend on the number of atoms or on their repulsion?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"The stripes come from atoms bumping into each other."</strong> The stripes are interference of two waves, and they are there with the repulsion turned off too. Each atom is in both clouds at once; a single atom detected lands on a bright stripe.</li>
+<li><strong>"A stirred condensate rotates like a solid body."</strong> It cannot: wherever there are atoms the flow has no curl. Between the vortices the fluid is irrotational; the rotation lives entirely in the cores.</li>
+<li><strong>"A vortex can carry any amount of circulation."</strong> The phase must come back to itself around any loop, so the circulation is a whole number times h/m. Here every vortex carries one quantum.</li>
+<li><strong>"Atoms that repel each other must change every frequency."</strong> The center of mass moves as if there were no interactions in a harmonic trap, because the internal forces cancel in pairs (Newton's third law). The breathing frequency of a flat cloud is also fixed, by a symmetry of the two dimensional equation.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>The two dimensional Gross–Pitaevskii equation, iħ ∂ψ/∂t = [−(ħ²/2m)∇² + V + g₂|ψ|² − ΩL_z]ψ with ∫|ψ|² = N and g₂ = √(8π)ħ²a/(m a_z), a_z = √(ħ/mω_z) = 0.341 µm, a = 98.98 a₀ (van Kempen et al. 2002). Valid while μ &lt; ħω_z, which holds in every setup.</li>
+<li>Split step Fourier on a 128 × 128 grid (256 × 256 for free flight), second order in the time step; the rotation term splits exactly between the x and y transforms. Energy is conserved to about one part in 10⁷ and the atom number exactly. Ground states come from imaginary time; vortex states hold the phase winding while they settle.</li>
+<li>Stir: an elliptical trap (ellipticity ε = 0.1) turning at 0.75ω, solved in the turning frame with damping γ = 0.1, (i − γ)ħ ∂ψ/∂t = Hψ, a standard stand in for the thermal cloud (Tsubota, Kasamatsu and Ueda 2002). Without damping the vortices still enter but never settle.</li>
+<li>Breathing at exactly 2ω for any coupling in two dimensions: Pitaevskii and Rosch, Phys. Rev. A 55, R853 (1997). Sloshing at ω: Kohn's theorem.</li>
+<li>Experiments: interference of two condensates, Andrews et al., Science 275, 637 (1997); vortex lattices, Madison et al. (2000) and Abo-Shaeer et al., Science 292, 476 (2001).</li>
+<li>Left out: temperature (no thermal cloud except through γ), the third dimension, and the gravity and imaging optics of a real time of flight.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>. © 2026 Steven Anderson. All rights reserved; see the <a href="../LICENSE.html">terms of use</a>.</footer>
+</main>
+</body>
+</html>

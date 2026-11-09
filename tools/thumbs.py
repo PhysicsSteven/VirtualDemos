@@ -49,6 +49,7 @@ OVERRIDES = {
     "millikan": {"wait": 900, "crop": ".stage", "js": "document.getElementById('setupCard').style.visibility = 'hidden'; window.__mk.applyPreset('rise'); window.__mk.step(6); window.__mk.drawAll();"},
     "rotating-frames": {"wait": 900, "crop": ".stage", "js": "document.getElementById('setupCard').style.visibility = 'hidden'; window.__rf.applyPreset('rider'); window.__rf.S.force = false; window.__rf.run(1.0);"},
     "bose-einstein": {"wait": 1500, "crop": ".pane", "js": "window.__bec.applyPreset('touch'); window.__bec.setT(1.4e-8);"},
+    "condensate-waves": {"wait": 1500, "crop": ".pane", "js": "window.__cw.finishPrep(); window.__cw.run(300);"},
     "rainbows": {"wait": 1500, "crop": ".stage", "js": "document.getElementById('setupCard').style.visibility = 'hidden'; window.__rb.applyPreset('evening'); window.__rb.S.marks = false; window.__rb.drawAll();"},
     "color-vision": {"wait": 900, "crop": ".stage", "js": "document.getElementById('setupCard').style.visibility = 'hidden'; window.__cv.applyPreset('yellow');"},
     "quantum-coin": {"wait": 900, "crop": ".stage", "js": "document.getElementById('setupCard').style.visibility = 'hidden'; window.__qc.applyPreset('s60'); window.__qc.measure(300);"},

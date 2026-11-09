@@ -276,7 +276,8 @@
       "franck-hertz",
       "blackbody",
       "quantum-coin",
-      "millikan"
+      "millikan",
+      "condensate-waves"
      ]
     },
     {
@@ -296,7 +297,8 @@
       "superconducting-levitation",
       "superconducting-vortices",
       "superfluid-helium",
-      "bose-einstein"
+      "bose-einstein",
+      "condensate-waves"
      ]
     },
     {

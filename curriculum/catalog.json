@@ -1198,6 +1198,19 @@
       "ground state",
       "ultracold atoms"
      ]
+    },
+    {
+     "demo": "condensate-waves",
+     "title": "Condensates: Interference and Vortices",
+     "desc": "A Bose–Einstein condensate is one wave for thousands of atoms: release two and they interfere in stripes, stir one and it fills with quantized vortices that settle into a lattice, and squeeze or shift the trap to see it breathe at exactly 2ω and slosh at ω. The Gross–Pitaevskii equation for rubidium atoms in a flat trap.",
+     "tags": [
+      "Bose–Einstein condensate",
+      "matter wave interference",
+      "quantized vortex",
+      "superfluid",
+      "Gross–Pitaevskii equation",
+      "ultracold atoms"
+     ]
     }
    ]
   },

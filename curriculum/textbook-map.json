@@ -6647,7 +6647,8 @@
       "status": "usable",
       "demos": [
         "electron-diffraction",
-        "double-slit"
+        "double-slit",
+        "condensate-waves"
       ],
       "note": "Volume 3 mapping (2026-10-24, Claude). Electron diffraction: λ = h/p from ring radii at several voltages. Double Slit: electrons and buckyballs make fringes with λ = h/p (worksheet wave-particle-duality). (OpenStax recheck 2026-10-24, Claude)",
       "unit": "photons-matter-waves"
@@ -6751,7 +6752,8 @@
       "requirement": "module",
       "status": "usable",
       "demos": [
-        "quantum-waves"
+        "quantum-waves",
+        "condensate-waves"
       ],
       "note": "Volume 3 mapping (2026-10-24, Claude). Quantum waves: oscillator eigenstates.",
       "unit": "quantum-mechanics"
@@ -11090,6 +11092,30 @@
       "note": "New 2026-11-08 (Claude, at Steve's request after a Veritasium video on Bose–Einstein condensation). An ideal Bose gas of N atoms in a two dimensional box: exact Bose–Einstein occupations of the box levels (chemical potential solved for N), thermal atoms drawn as minimum uncertainty packets of the thermal de Broglie wavelength that overlap and drop into the shared ground state as the gas cools; energy ladder, thermometer, phase as color, the velocity distribution picture of 1995, and the condensate fraction curve. Atoms: Rb 87, Na 23, Li 7, H, He 4 (AME2020 masses). No worksheet yet.",
       "title": "Bose–Einstein Condensation",
       "url": "demos/bose-einstein.html"
+    },
+    {
+      "demo": "condensate-waves",
+      "course": [
+        "modern"
+      ],
+      "sections": [
+        {
+          "vol": 3,
+          "sec": "6.5",
+          "title": "De Broglie’s Matter Waves"
+        },
+        {
+          "vol": 3,
+          "sec": "7.5",
+          "title": "The Quantum Harmonic Oscillator"
+        }
+      ],
+      "role": "lab",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "New 2026-11-09 (Claude, at Steve's request: the quantum follow ups to Bose–Einstein Condensation). The two dimensional Gross–Pitaevskii equation for rubidium 87 in a pancake trap, split step Fourier: two condensates interfering in free flight (Andrews 1997) and colliding in the trap, a single vortex precessing, a vortex and antivortex pair, a stirred condensate forming a vortex lattice (damped GPE), breathing at exactly 2ω and sloshing at ω. No worksheet.",
+      "title": "Condensates: Interference and Vortices",
+      "url": "demos/condensate-waves.html"
     },
     {
       "demo": "stress-strain",

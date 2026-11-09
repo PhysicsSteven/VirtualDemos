@@ -1,0 +1,603 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="lib/theme.js"></script>
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
+<script src="lib/vd3.js"></script>
+<script src="lib/vd3kit.js"></script>
+<title>Condensates: Interference and Vortices</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css */
+:root { --cw-plus: #c2410c; --cw-minus: #0f766e; --cw-trace: #b45309; --cw-pred: #7c5a3a; --cw-floor-edge: #a69c8f; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --cw-plus: #fb923c; --cw-minus: #5eead4; --cw-trace: #fbbf24; --cw-pred: #d6b48c; --cw-floor-edge: #8f8272; } }
+:root[data-theme="dark"] { --cw-plus: #fb923c; --cw-minus: #5eead4; --cw-trace: #fbbf24; --cw-pred: #d6b48c; --cw-floor-edge: #8f8272; }
+.stage { position: relative; display: flex; flex-direction: column; min-height: min-content; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+:root[data-projector="on"] .stage { min-height: min-content; }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.stage-ctl .note { margin-left: auto; font-size: 0.8rem; color: var(--muted); }
+.pane { position: relative; flex: 1 1 auto; min-height: 520px; }
+.pane canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; touch-action: pan-y; }
+#can { z-index: 1; }
+.pane canvas.sc3 { z-index: 0; }
+.shelf { display: flex; flex-wrap: wrap; align-items: stretch; gap: 12px; padding: 10px; border-top: 1px solid var(--line); background: var(--surface); }
+.shelf-card { flex: 1 1 240px; display: grid; grid-template-columns: minmax(0, 1fr); align-content: start; gap: 8px 16px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--canvas); }
+.shelf-card > .card-title { font-size: 0.78rem; font-weight: 700; color: var(--muted); }
+.shelf-card > .wide { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; }
+.shelf-card .lab { font-size: 0.8rem; color: var(--muted); }
+.shelf-card .slider-head output { white-space: nowrap; }
+.rail details.more > p + p { margin-top: 6px; }
+@media (max-width: 820px) { .pane { min-height: 0; height: 460px; flex: none; } .shelf-card { flex: 1 1 100%; } }
+@media (max-width: 520px) { .stage-ctl .note { margin-left: 0; } }
+</style>
+<link rel="stylesheet" id="vd-paper" href="lib/paper.css">
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Condensates: Interference and Vortices</h1>
+      <p>A Bose–Einstein condensate is one wave shared by thousands of atoms, so it does what waves do. Release two condensates and they overlap in stripes, like light through two slits. Stir one and it cannot simply turn: it fills with tiny whirlpools, each carrying exactly one quantum of circulation. Every frame here is a solution of the Gross–Pitaevskii equation for rubidium atoms in a flat trap.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">SI units</div>
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/condensate-waves.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/condensate-waves.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM12 2h1v1h-1zM19 2h1v1h-1zM23 2h1v1h-1zM25 2h2v1h-2zM30 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM11 3h4v1h-4zM16 3h1v1h-1zM18 3h1v1h-1zM20 3h1v1h-1zM22 3h3v1h-3zM27 3h1v1h-1zM29 3h2v1h-2zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h2v1h-2zM13 4h2v1h-2zM18 4h1v1h-1zM23 4h1v1h-1zM25 4h2v1h-2zM28 4h1v1h-1zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h1v1h-1zM12 5h1v1h-1zM15 5h1v1h-1zM18 5h2v1h-2zM24 5h1v1h-1zM27 5h4v1h-4zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h2v1h-2zM13 6h1v1h-1zM17 6h3v1h-3zM21 6h2v1h-2zM25 6h1v1h-1zM28 6h1v1h-1zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h3v1h-3zM14 7h2v1h-2zM19 7h1v1h-1zM24 7h1v1h-1zM29 7h2v1h-2zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h3v1h-3zM14 9h4v1h-4zM19 9h5v1h-5zM26 9h1v1h-1zM28 9h1v1h-1zM2 10h1v1h-1zM4 10h5v1h-5zM11 10h4v1h-4zM16 10h3v1h-3zM24 10h2v1h-2zM27 10h4v1h-4zM32 10h5v1h-5zM2 11h1v1h-1zM6 11h1v1h-1zM10 11h1v1h-1zM13 11h1v1h-1zM17 11h1v1h-1zM20 11h1v1h-1zM22 11h1v1h-1zM25 11h1v1h-1zM28 11h1v1h-1zM30 11h1v1h-1zM33 11h1v1h-1zM36 11h2v1h-2zM4 12h1v1h-1zM6 12h4v1h-4zM11 12h3v1h-3zM17 12h5v1h-5zM23 12h1v1h-1zM28 12h2v1h-2zM32 12h3v1h-3zM36 12h3v1h-3zM2 13h1v1h-1zM4 13h2v1h-2zM9 13h1v1h-1zM11 13h1v1h-1zM13 13h2v1h-2zM16 13h2v1h-2zM20 13h4v1h-4zM30 13h1v1h-1zM32 13h3v1h-3zM38 13h1v1h-1zM2 14h1v1h-1zM4 14h1v1h-1zM7 14h6v1h-6zM14 14h1v1h-1zM17 14h1v1h-1zM19 14h1v1h-1zM21 14h2v1h-2zM24 14h1v1h-1zM26 14h3v1h-3zM30 14h9v1h-9zM2 15h2v1h-2zM6 15h2v1h-2zM9 15h1v1h-1zM11 15h2v1h-2zM14 15h3v1h-3zM18 15h1v1h-1zM22 15h1v1h-1zM24 15h2v1h-2zM30 15h1v1h-1zM33 15h1v1h-1zM2 16h2v1h-2zM5 16h2v1h-2zM8 16h4v1h-4zM14 16h1v1h-1zM16 16h3v1h-3zM20 16h1v1h-1zM22 16h2v1h-2zM28 16h3v1h-3zM32 16h4v1h-4zM38 16h1v1h-1zM3 17h1v1h-1zM5 17h3v1h-3zM12 17h2v1h-2zM16 17h3v1h-3zM21 17h3v1h-3zM25 17h1v1h-1zM31 17h1v1h-1zM33 17h2v1h-2zM37 17h1v1h-1zM2 18h1v1h-1zM5 18h2v1h-2zM8 18h1v1h-1zM11 18h1v1h-1zM14 18h2v1h-2zM17 18h1v1h-1zM20 18h3v1h-3zM24 18h1v1h-1zM26 18h4v1h-4zM31 18h2v1h-2zM34 18h1v1h-1zM36 18h1v1h-1zM38 18h1v1h-1zM2 19h4v1h-4zM7 19h1v1h-1zM9 19h2v1h-2zM12 19h4v1h-4zM17 19h2v1h-2zM23 19h3v1h-3zM30 19h1v1h-1zM37 19h1v1h-1zM2 20h1v1h-1zM4 20h2v1h-2zM8 20h1v1h-1zM10 20h6v1h-6zM22 20h3v1h-3zM26 20h1v1h-1zM28 20h3v1h-3zM33 20h3v1h-3zM37 20h2v1h-2zM3 21h1v1h-1zM7 21h1v1h-1zM9 21h1v1h-1zM11 21h2v1h-2zM16 21h1v1h-1zM18 21h1v1h-1zM20 21h1v1h-1zM23 21h3v1h-3zM28 21h3v1h-3zM32 21h1v1h-1zM38 21h1v1h-1zM2 22h2v1h-2zM5 22h6v1h-6zM12 22h1v1h-1zM14 22h1v1h-1zM19 22h1v1h-1zM24 22h1v1h-1zM26 22h4v1h-4zM31 22h2v1h-2zM34 22h3v1h-3zM3 23h2v1h-2zM7 23h1v1h-1zM9 23h1v1h-1zM12 23h2v1h-2zM18 23h2v1h-2zM21 23h1v1h-1zM23 23h1v1h-1zM25 23h1v1h-1zM28 23h1v1h-1zM30 23h2v1h-2zM35 23h1v1h-1zM37 23h1v1h-1zM5 24h4v1h-4zM11 24h3v1h-3zM15 24h1v1h-1zM17 24h1v1h-1zM19 24h1v1h-1zM22 24h3v1h-3zM26 24h1v1h-1zM28 24h4v1h-4zM33 24h3v1h-3zM37 24h2v1h-2zM5 25h3v1h-3zM10 25h4v1h-4zM16 25h8v1h-8zM25 25h1v1h-1zM28 25h2v1h-2zM31 25h1v1h-1zM33 25h2v1h-2zM37 25h1v1h-1zM4 26h2v1h-2zM8 26h1v1h-1zM16 26h3v1h-3zM21 26h1v1h-1zM24 26h2v1h-2zM27 26h1v1h-1zM31 26h4v1h-4zM36 26h2v1h-2zM2 27h2v1h-2zM6 27h2v1h-2zM9 27h3v1h-3zM13 27h1v1h-1zM17 27h1v1h-1zM20 27h1v1h-1zM22 27h2v1h-2zM25 27h1v1h-1zM30 27h1v1h-1zM33 27h1v1h-1zM2 28h1v1h-1zM5 28h1v1h-1zM8 28h2v1h-2zM11 28h1v1h-1zM13 28h1v1h-1zM17 28h2v1h-2zM21 28h1v1h-1zM27 28h3v1h-3zM33 28h2v1h-2zM37 28h2v1h-2zM2 29h1v1h-1zM4 29h3v1h-3zM10 29h1v1h-1zM13 29h2v1h-2zM17 29h1v1h-1zM21 29h3v1h-3zM26 29h1v1h-1zM29 29h6v1h-6zM38 29h1v1h-1zM2 30h1v1h-1zM4 30h1v1h-1zM6 30h1v1h-1zM8 30h5v1h-5zM17 30h1v1h-1zM19 30h1v1h-1zM21 30h1v1h-1zM26 30h11v1h-11zM10 31h3v1h-3zM14 31h1v1h-1zM17 31h2v1h-2zM20 31h3v1h-3zM25 31h3v1h-3zM29 31h2v1h-2zM34 31h2v1h-2zM2 32h7v1h-7zM12 32h1v1h-1zM14 32h2v1h-2zM17 32h1v1h-1zM20 32h1v1h-1zM22 32h3v1h-3zM26 32h1v1h-1zM28 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM36 32h3v1h-3zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h5v1h-5zM17 33h2v1h-2zM23 33h3v1h-3zM28 33h1v1h-1zM30 33h1v1h-1zM34 33h2v1h-2zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h3v1h-3zM16 34h1v1h-1zM20 34h2v1h-2zM24 34h11v1h-11zM36 34h2v1h-2zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h4v1h-4zM16 35h3v1h-3zM25 35h1v1h-1zM28 35h1v1h-1zM30 35h3v1h-3zM34 35h1v1h-1zM36 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM10 36h1v1h-1zM12 36h4v1h-4zM20 36h1v1h-1zM24 36h1v1h-1zM28 36h2v1h-2zM31 36h1v1h-1zM37 36h2v1h-2zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h1v1h-1zM18 37h1v1h-1zM22 37h2v1h-2zM25 37h1v1h-1zM28 37h4v1h-4zM34 37h1v1h-1zM38 37h1v1h-1zM2 38h7v1h-7zM10 38h2v1h-2zM14 38h1v1h-1zM16 38h1v1h-1zM19 38h1v1h-1zM21 38h1v1h-1zM24 38h1v1h-1zM26 38h3v1h-3zM34 38h5v1h-5z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl" id="strip">
+        <button type="button" class="spin attn" id="play" data-vd-key="play">Play</button>
+        <button type="button" class="btn" id="reset" title="Put the condensate back the way this setup started">Reset</button>
+        <div class="seg" role="group" aria-label="Speed" id="speed"><button type="button" data-sp="0.25" aria-pressed="false">¼×</button><button type="button" data-sp="1" aria-pressed="true">1×</button><button type="button" data-sp="4" aria-pressed="false">4×</button></div>
+        <div class="seg" role="group" aria-label="Perspective" id="dimSeg"><button type="button" data-dim="3d" aria-pressed="true">3D</button><button type="button" data-dim="flat" aria-pressed="false">Flat</button></div>
+        <span class="note mono" id="note" role="status"></span>
+      </div>
+      <div class="pane" id="pane">
+        <canvas id="can" tabindex="0" role="img" aria-label="The condensate seen in perspective: the height of the surface is the square root of the atom density, and the color shows the density or the phase of the wavefunction. Vortices are marked with small rings. Drag to turn the view; Space plays or pauses."></canvas>
+      </div>
+      <div class="shelf" id="shelf">
+        <div class="shelf-card" role="group" aria-label="The atoms">
+          <span class="card-title">The atoms</span>
+          <div><div class="slider-head"><label for="sN">Number of atoms N</label><output id="oN" class="mono" for="sN"></output></div><input type="range" id="sN" min="500" max="10000" step="500"></div>
+          <label class="check"><input type="checkbox" id="chkInt" checked><span>Atoms repel each other (rubidium's real scattering length)</span></label>
+          <span class="lab" id="gasNote"></span>
+        </div>
+        <div class="shelf-card" role="group" aria-label="Stirring">
+          <span class="card-title">Stirring</span>
+          <div><div class="slider-head"><label for="sW">Stirring rate Ω</label><output id="oW" class="mono" for="sW"></output></div><input type="range" id="sW" min="0" max="0.95" step="0.05"></div>
+          <div><div class="slider-head"><label for="sE">Trap ellipticity ε</label><output id="oE" class="mono" for="sE"></output></div><input type="range" id="sE" min="0" max="0.15" step="0.01"></div>
+          <span class="lab" id="stirNote"></span>
+        </div>
+        <div class="shelf-card" role="group" aria-label="The picture">
+          <span class="card-title">The picture</span>
+          <div class="wide"><span class="lab">Color</span>
+            <div class="seg" role="group" aria-label="What the color shows" id="colorSeg"><button type="button" data-color="density" aria-pressed="false">Density</button><button type="button" data-color="phase" aria-pressed="true">Phase of the wavefunction</button></div>
+          </div>
+          <label class="check"><input type="checkbox" id="chkVort" checked><span>Mark the vortices</span></label>
+          <label class="check"><input type="checkbox" id="chkTrace" checked><span>Graph against time</span></label>
+        </div>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="split" aria-pressed="true">Two condensates interfere</button>
+          <button type="button" data-p="collide" aria-pressed="false">Two condensates collide in the trap</button>
+          <button type="button" data-p="vortex" aria-pressed="false">One vortex goes around</button>
+          <button type="button" data-p="pair" aria-pressed="false">A vortex and an antivortex</button>
+          <button type="button" data-p="stir" aria-pressed="false">Stir it: a vortex lattice forms</button>
+          <button type="button" data-p="breathe" aria-pressed="false">Tighten the trap: breathing at 2ω</button>
+          <button type="button" data-p="slosh" aria-pressed="false">Shift the trap: sloshing at ω</button>
+        </div>
+        <details class="more" open><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the measured spacing and periods, to predict them first</span></label>
+        <div><div class="slider-head"><label for="sG">Damping γ</label><output id="oG" class="mono" for="sG"></output></div><input type="range" id="sG" min="0" max="0.1" step="0.01"></div>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="formula">iħ ∂ψ/∂t = [−(ħ²/2m)∇² + V + g₂|ψ|² − ΩL<sub>z</sub>] ψ, g₂ = √(8π) ħ²a/(m a<sub>z</sub>)</p>
+          <p class="formula">fringe spacing → ht/(md), circulation ∮v·dl = h/m per vortex, one vortex per area πħ/(mΩ)</p>
+          <p class="hint" id="about1"></p>
+          <p class="hint" id="about2"></p>
+          <p class="hint" id="about3"></p>
+          <p class="hint" id="about4"></p>
+        </details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  /* The Gross–Pitaevskii equation for a flattened (pancake) condensate, in two dimensions:
+       iħ ∂ψ/∂t = [ −(ħ²/2m)∇² + V(x, y, t) + g₂ |ψ|² − Ω L_z ] ψ,   ∫|ψ|² dA = N,
+     with the tight axial trap ω_z folded into the two dimensional coupling g₂ = √(8π) ħ² a / (m a_z), a_z = √(ħ/mω_z)
+     (valid while the chemical potential stays below ħω_z). Lengths are in the radial oscillator length a⊥ = √(ħ/mω),
+     times in 1/ω, energies in ħω, and ψ is normalized to 1, so the coupling is the single number G = √(8π) N a / a_z.
+     Solved on an n × n grid by the split step Fourier method (Strang splitting, second order in the time step): half a step of
+     the potential and interaction, the kinetic and rotation terms by 1D Fourier transforms along x then y, half a step of the
+     potential again. The rotation term −ΩL_z = iΩ(x∂_y − y∂_x) is diagonal in (k_x, y) for its y∂_x part and in (x, k_y)
+     for its x∂_y part (Bao, Wang and Markowich 2005), so each 1D transform carries its share exactly.
+     A step can also be taken in imaginary time (to find a ground state) or with a damping γ, (i − γ)ħ ∂ψ/∂t = Hψ, a standard
+     stand in for the thermal cloud that lets a stirred condensate settle (Choi, Morgan and Burnett 1998; Tsubota, Kasamatsu
+     and Ueda 2002); damped and imaginary steps put the norm back to 1 after each step. */
+  const H_PLANCK = 6.62607015e-34, AMU = 1.66053906892e-27, A0 = 5.29177210544e-11;   /* demos/lib/constants.js */
+  const HBAR = H_PLANCK / (2 * Math.PI);
+  const M_RB87 = 86.909181 * AMU;   /* AME2020 */
+  const A_RB87 = 98.98 * A0;        /* s wave scattering length of rubidium 87 in |F = 2, m_F = 2⟩, van Kempen et al. 2002 */
+  const oscLength = (m, w) => Math.sqrt(HBAR / (m * w));
+  /* the dimensionless coupling for N atoms of scattering length a with axial trap frequency wz */
+  const couplingG = (N, a, m, wz) => Math.sqrt(8 * Math.PI) * N * a / oscLength(m, wz);
+  /* Thomas–Fermi values in two dimensions, trap units: μ = √(G/π), radius R = √(2μ), healing length ξ = 1/√(2μ) */
+  const tfMu = (G) => Math.sqrt(G / Math.PI), tfRadius = (G) => Math.sqrt(2 * tfMu(G)), healing = (G) => 1 / Math.sqrt(2 * Math.max(1e-9, tfMu(G)));
+
+  /* in place radix 2 FFT of n complex numbers at re[o + s·j], im[o + s·j]; sign −1 forward, +1 inverse (unscaled) */
+  const BITREV = {}, TW = {};
+  function fftPrep(n) {
+    if (BITREV[n]) return; const br = new Uint32Array(n), bits = Math.round(Math.log2(n));
+    for (let i = 0; i < n; i++) { let r = 0; for (let b = 0; b < bits; b++) r |= ((i >> b) & 1) << (bits - 1 - b); br[i] = r; }
+    const c = new Float64Array(n / 2), s = new Float64Array(n / 2); for (let i = 0; i < n / 2; i++) { c[i] = Math.cos(2 * Math.PI * i / n); s[i] = Math.sin(2 * Math.PI * i / n); }
+    BITREV[n] = br; TW[n] = [c, s];
+  }
+  function fft(re, im, o, s, n, sign) {
+    const br = BITREV[n], tc = TW[n][0], ts = TW[n][1];
+    for (let i = 0; i < n; i++) { const j = br[i]; if (j > i) { const a = o + s * i, b = o + s * j; let t = re[a]; re[a] = re[b]; re[b] = t; t = im[a]; im[a] = im[b]; im[b] = t; } }
+    for (let len = 2; len <= n; len <<= 1) { const half = len >> 1, step = n / len;
+      for (let i = 0; i < n; i += len) for (let k = 0; k < half; k++) {
+        const wr = tc[k * step], wi = sign * ts[k * step], a = o + s * (i + k), b = a + s * half;
+        const xr = re[b] * wr - im[b] * wi, xi = re[b] * wi + im[b] * wr; re[b] = re[a] - xr; im[b] = im[a] - xi; re[a] += xr; im[a] += xi; } }
+  }
+  /* the grid: n points a side over [−half, half), spacing dx; wave numbers in FFT order */
+  function makeGrid(n, half) {
+    fftPrep(n); const dx = 2 * half / n, x = new Float64Array(n), k = new Float64Array(n);
+    for (let i = 0; i < n; i++) { x[i] = -half + i * dx; k[i] = 2 * Math.PI / (2 * half) * (i < n / 2 ? i : i - n); }
+    return { n, half, dx, x, k, re: new Float64Array(n * n), im: new Float64Array(n * n) };
+  }
+  /* the potential, trap units: an anisotropic harmonic trap (ex, ey: the squared trap frequencies relative to ω), shifted by
+     (x0, 0), plus a Gaussian barrier along x = 0 of height b and 1/e² half width w. off: no trap at all (free expansion). */
+  function potential(gr, P) {
+    const { n, x } = gr, V = new Float64Array(n * n);
+    for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) {
+      const X = x[i] - (P.x0 || 0), Y = x[j]; let v = P.off ? 0 : 0.5 * ((P.ex == null ? 1 : P.ex) * X * X + (P.ey == null ? 1 : P.ey) * Y * Y);
+      if (P.b) v += P.b * Math.exp(-2 * x[i] * x[i] / (P.w * P.w)); V[j * n + i] = v; }
+    return V;
+  }
+  /* one step. mode 'real' (time dt), 'imag' (imaginary time dt) or 'damped' (damping gam); G the coupling; W the rotation Ω */
+  /* exp(−c·h·(V + G|ψ|²)) at every point, c = cr + i ci */
+  function potStep(re, im, V, G, h, cr, ci) {
+    for (let q = 0; q < re.length; q++) { const r = re[q], s = im[q], e = (V[q] + G * (r * r + s * s)) * h, a = cr ? Math.exp(-cr * e) : 1, c = Math.cos(ci * e) * a, sn = -Math.sin(ci * e) * a; re[q] = r * c - s * sn; im[q] = r * sn + s * c; }
+  }
+  /* the kinetic and rotation factor along the rows: transform each row, multiply, transform back */
+  function kinRows(re, im, n, KR, KI) {
+    for (let line = 0; line < n; line++) {
+      const o = line * n;
+      fft(re, im, o, 1, n, -1);
+      for (let i = 0; i < n; i++) { const c = KR[o + i], sn = KI[o + i], q = o + i, r = re[q], u = im[q]; re[q] = r * c - u * sn; im[q] = r * sn + u * c; }
+      fft(re, im, o, 1, n, 1);
+    }
+  }
+  /* rows and columns swapped (the y pass runs on the swapped array, so every transform is along contiguous memory) */
+  function transpose(a, t, n) { for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) t[i * n + j] = a[j * n + i]; }
+  /* one step. mode 'real' (time dt), 'imag' (imaginary time dt) or 'damped' (damping gam); G the coupling; W the rotation Ω */
+  function step(gr, V, G, dt, mode, gam, W) {
+    const { n, x, k, re, im } = gr; let cr, ci;   /* the exponent is −(cr + i ci)·H */
+    if (mode === 'imag') { cr = dt; ci = 0; } else if (mode === 'damped') { cr = gam * dt / (1 + gam * gam); ci = dt / (1 + gam * gam); } else { cr = 0; ci = dt; }
+    /* the kinetic and rotation factors, kept while the step does not change: for each line (a row y for the x pass, a column x
+       for the y pass) and wave number, exp(−c(k²/2 ± Ω·other·k)) with the 1/n of the inverse transform; half a step along x */
+    const key = n + ' ' + dt + ' ' + mode + ' ' + gam + ' ' + W;
+    if (gr.kkey !== key) { gr.kkey = key; gr.K = [];
+      for (const [sgn, h] of [[1, 0.5], [-1, 1]]) { const KR = new Float64Array(n * n), KI = new Float64Array(n * n);
+        for (let line = 0; line < n; line++) for (let i = 0; i < n; i++) { const kk = k[i], e = (0.5 * kk * kk + sgn * W * x[line] * kk) * h, a = Math.exp(-cr * e) / n; KR[line * n + i] = Math.cos(ci * e) * a; KI[line * n + i] = -Math.sin(ci * e) * a; }
+        gr.K.push(KR, KI); } }
+    const K = gr.K;
+    potStep(re, im, V, G, 0.5, cr, ci);
+    if (mode !== 'real') normalize(gr);
+    const tr = gr.tr || (gr.tr = new Float64Array(n * n)), ti = gr.ti || (gr.ti = new Float64Array(n * n));
+    kinRows(re, im, n, K[0], K[1]);
+    transpose(re, tr, n); transpose(im, ti, n); kinRows(tr, ti, n, K[2], K[3]); transpose(tr, re, n); transpose(ti, im, n);
+    kinRows(re, im, n, K[0], K[1]);
+    if (mode !== 'real') normalize(gr);   /* the norm decays during an imaginary or damped step; the interaction must see N atoms */
+    potStep(re, im, V, G, 0.5, cr, ci);
+    if (gr.mask) for (let q = 0; q < n * n; q++) { re[q] *= gr.mask[q]; im[q] *= gr.mask[q]; }
+    if (mode !== 'real') normalize(gr);
+  }
+  /* an absorbing edge for free flight: atoms that reach the outer tenth of the grid fade out (rate κ per unit time), so nothing
+     wraps around the periodic grid; the atom count then falls, and the page says so */
+  function absorber(gr, dt, kappa) {
+    const { n, x, half } = gr, m = new Float64Array(n * n), edge = 0.85 * half, fall = (u) => { const a = Math.abs(u); return a < edge ? 0 : ((a - edge) / (half - edge)) ** 2; };
+    for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) m[j * n + i] = Math.exp(-kappa * dt * (fall(x[i]) + fall(x[j])));
+    return m;
+  }
+  /* the largest time step for which the split step method stays stable on this grid: dt·k_max²/2 below about π/2, with a margin */
+  const stableDt = (gr) => Math.min(0.01, 0.7 * gr.dx * gr.dx / Math.PI);
+  function normalize(gr) { const { re, im, dx } = gr; let s = 0; for (let q = 0; q < re.length; q++) s += re[q] * re[q] + im[q] * im[q]; s = 1 / Math.sqrt(s * dx * dx); for (let q = 0; q < re.length; q++) { re[q] *= s; im[q] *= s; } }
+  function norm(gr) { const { re, im, dx } = gr; let s = 0; for (let q = 0; q < re.length; q++) s += re[q] * re[q] + im[q] * im[q]; return s * dx * dx; }
+  /* averages: ⟨x⟩, ⟨y⟩, ⟨x²⟩, ⟨y²⟩, ⟨r²⟩, and ⟨L_z⟩ per atom in units of ħ (by finite differences) */
+  function moments(gr) {
+    const { n, x, re, im, dx } = gr; let mx = 0, my = 0, xx = 0, yy = 0, lz = 0, s = 0;
+    for (let j = 1; j < n - 1; j++) for (let i = 1; i < n - 1; i++) { const q = j * n + i, d = re[q] * re[q] + im[q] * im[q]; s += d; mx += d * x[i]; my += d * x[j]; xx += d * x[i] * x[i]; yy += d * x[j] * x[j];
+      /* L_z = −i(x∂_y − y∂_x): Re ψ* L_z ψ = x(re ∂y im − im ∂y re) − y(re ∂x im − im ∂x re) */
+      const dyr = (re[q + n] - re[q - n]) / (2 * dx), dyi = (im[q + n] - im[q - n]) / (2 * dx), dxr = (re[q + 1] - re[q - 1]) / (2 * dx), dxi = (im[q + 1] - im[q - 1]) / (2 * dx);
+      lz += x[i] * (re[q] * dyi - im[q] * dyr) - x[j] * (re[q] * dxi - im[q] * dxr); }
+    return { mx: mx / s, my: my / s, xx: xx / s, yy: yy / s, r2: (xx + yy) / s, lz: lz / s };
+  }
+  /* energy per atom, trap units (Ω = 0 lab frame): kinetic by Fourier transform, potential, interaction */
+  function energy(gr, V, G) {
+    const { n, k, re, im, dx } = gr, R = Float64Array.from(re), I = Float64Array.from(im); let ek = 0, ep = 0, ei = 0;
+    for (let q = 0; q < n * n; q++) { const d = re[q] * re[q] + im[q] * im[q]; ep += V[q] * d; ei += 0.5 * G * d * d; }
+    for (let j = 0; j < n; j++) fft(R, I, j * n, 1, n, -1); for (let i = 0; i < n; i++) fft(R, I, i, n, n, -1);
+    let s = 0; for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) { const q = j * n + i, d = R[q] * R[q] + I[q] * I[q]; s += d; ek += 0.5 * (k[i] * k[i] + k[j] * k[j]) * d; }
+    return { kin: ek / s, pot: ep * dx * dx, int: ei * dx * dx, total: ek / s + ep * dx * dx + ei * dx * dx };
+  }
+  /* start: a Thomas–Fermi or Gaussian guess centered at (cx, cy), optionally with a phase winding s around (vx, vy) */
+  function seed(gr, G, cx, cy, wind) {
+    const { n, x, re, im } = gr, R2 = G > 1 ? 2 * tfMu(G) : 1;
+    for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) { const X = x[i] - cx, Y = x[j] - cy, q = j * n + i, a = G > 1 ? Math.sqrt(Math.max(0, 1 - (X * X + Y * Y) / R2)) + 1e-3 * Math.exp(-(X * X + Y * Y) / R2) : Math.exp(-(X * X + Y * Y) / 2); re[q] = a; im[q] = 0; }
+    normalize(gr);
+  }
+  /* multiply by e^{i s θ} around each listed vortex [vx, vy, s] */
+  function imprint(gr, list) {
+    const { n, x, re, im } = gr;
+    for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) { let th = 0; for (const [vx, vy, s] of list) th += s * Math.atan2(x[j] - vy, x[i] - vx); const q = j * n + i, a = Math.hypot(re[q], im[q]); re[q] = a * Math.cos(th); im[q] = a * Math.sin(th); }
+  }
+  /* vortices: the phase winding around each grid plaquette where the density is above a share of the peak */
+  function findVortices(gr, share) {
+    const { n, x, re, im, dx } = gr, out = []; let peak = 0; for (let q = 0; q < n * n; q++) peak = Math.max(peak, re[q] * re[q] + im[q] * im[q]);
+    const ph = (q) => Math.atan2(im[q], re[q]), wrap = (d) => d - 2 * Math.PI * Math.round(d / (2 * Math.PI));
+    for (let j = 1; j < n - 2; j++) for (let i = 1; i < n - 2; i++) {
+      const a = j * n + i, b = a + 1, c = a + n + 1, d = a + n;
+      /* the density near the core is small; ask that the surroundings (two cells out) are inside the cloud */
+      const env = Math.min(re[a - n - 1] ** 2 + im[a - n - 1] ** 2, re[c + n + 1] ** 2 + im[c + n + 1] ** 2, re[b - n + 1] ** 2 + im[b - n + 1] ** 2, re[d + n - 1] ** 2 + im[d + n - 1] ** 2);
+      if (env < share * peak) continue;
+      const w = wrap(ph(b) - ph(a)) + wrap(ph(c) - ph(b)) + wrap(ph(d) - ph(c)) + wrap(ph(a) - ph(d)), s = Math.round(w / (2 * Math.PI));
+      if (!s) continue;
+      /* where in the cell ψ = 0: ψ bilinear across the cell, a few Newton steps from the middle */
+      const A = [re[a], im[a]], B = [re[b] - re[a], im[b] - im[a]], C = [re[d] - re[a], im[d] - im[a]], D = [re[c] - re[b] - re[d] + re[a], im[c] - im[b] - im[d] + im[a]];
+      let u = 0.5, v = 0.5;
+      for (let it = 0; it < 6; it++) {
+        const fr = A[0] + B[0] * u + C[0] * v + D[0] * u * v, fi = A[1] + B[1] * u + C[1] * v + D[1] * u * v;
+        const ar = B[0] + D[0] * v, ai = B[1] + D[1] * v, br = C[0] + D[0] * u, bi = C[1] + D[1] * u, det = ar * bi - ai * br;
+        if (!det) break; u -= (fr * bi - fi * br) / det; v -= (ar * fi - ai * fr) / det;
+      }
+      if (!(u >= 0 && u <= 1 && v >= 0 && v <= 1)) { u = 0.5; v = 0.5; }
+      out.push({ x: x[i] + u * dx, y: x[j] + v * dx, s });
+    }
+    return out;
+  }
+  /* the period of the strongest stripes along the row through the middle: the main peak of |FFT|² of the density cut, ignoring the
+     slow envelope (the lowest wave numbers) */
+  function fringePeriod(gr, kmin) {
+    const { n, re, im, half } = gr, R = new Float64Array(n), I = new Float64Array(n), j0 = n / 2;
+    for (let i = 0; i < n; i++) { const q = j0 * n + i; R[i] = re[q] * re[q] + im[q] * im[q]; }
+    fft(R, I, 0, 1, n, -1); let best = 0, bi = 0; const dk = Math.PI / half;
+    for (let i = 1; i < n / 2; i++) { if (i * dk < kmin) continue; const p = R[i] * R[i] + I[i] * I[i]; if (p > best) { best = p; bi = i; } }
+    /* refine with a parabola through the neighbors of the peak (in power) */
+    const pw = (i) => R[i] * R[i] + I[i] * I[i], a = pw(bi - 1), b = pw(bi), c = pw(bi + 1), sh = (a - c) / (2 * (a - 2 * b + c)) || 0;
+    return 2 * Math.PI / ((bi + sh) * dk);
+  }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const F_TRAP = 20, F_AX = 1000;   /* Hz: the radial and the axial trap frequencies (a pancake trap; held fixed) */
+  const W_TRAP = 2 * Math.PI * F_TRAP, W_AX = 2 * Math.PI * F_AX, AP = oscLength(M_RB87, W_TRAP), TU = 1 / W_TRAP;   /* a⊥ in m, 1/ω in s */
+  const DG = 128;   /* display grid points across the view */
+  const PRESETS = {
+    split: { N: 5000, n: 256, half: 32, view: 18, prep: { n: 128, P: { b: 30, w: 2 } }, run: { off: true }, absorb: true, color: 'density', trace: 'none', fringes: true,
+      hint: 'Five thousand rubidium atoms held in a trap split down the middle by a sheet of light (a repulsive barrier), so there are two condensates side by side, about 15 µm apart. Press Play: the trap and the barrier switch off, both clouds spread out, and where they overlap the density falls into straight stripes, like light from two slits. The stripes widen as the clouds fly apart, in proportion to the time of flight t: two waves from sources a distance d apart make stripes ht/(md) apart. The repulsion between the atoms pushes each cloud outward and makes the stripes about 40 percent wider than that; turn the repulsion off and they match it within a few percent. This is the experiment of Andrews et al. at MIT in 1997, the first proof that a condensate is one coherent wave. Atoms that reach the edge of the picture are let go.' },
+    collide: { N: 4000, n: 128, half: 9, view: 8.5, prep: { P: { b: 40, w: 3 } }, run: {}, color: 'density', trace: 'none', fringes: true,
+      hint: 'Two condensates held apart by a broad barrier in the middle of the trap. Press Play: the barrier is removed and the two halves slide down into the middle of the trap and run through each other. Where they overlap they interfere: fine stripes whose spacing is h divided by the momentum of one cloud relative to the other, closest together when they meet fastest at the center. The repulsion between the atoms bends the stripes into dark grooves that outlive the crossing.' },
+    vortex: { N: 5000, n: 128, half: 8, view: 7, prep: { P: {}, imprint: [[1.6, 0, 1]] }, run: {}, color: 'phase', trace: 'angle',
+      hint: 'A condensate with one vortex in it, 3.9 µm from the middle: a hole where the density goes to zero, around which the phase of the wavefunction winds once through every color. The fluid circles the hole with speed ħ/(mr), so the circulation around it is exactly h/m, one quantum. Press Play: the vortex goes around the center of the trap in the same direction as its own flow, carried by the slope of the density, and faster the farther out it is.' },
+    pair: { N: 5000, n: 128, half: 8, view: 7, prep: { P: {}, imprint: [[-2, 0.8, 1], [-2, -0.8, -1]] }, run: {}, color: 'phase', trace: 'none',
+      hint: 'A vortex (orange ring, turning counterclockwise) and an antivortex (teal ring, clockwise) side by side. Their flows add between them, and each is carried along by the other\'s flow, so the pair moves in a straight line together, like a smoke ring seen in cross section. Press Play and watch where they go when they reach the thin edge of the cloud.' },
+    stir: { N: 4000, n: 128, half: 10, view: 9, prep: { P: {} }, run: {}, W: 0.75, eps: 0.1, gam: 0.1, color: 'density', trace: 'lz', dampedDt: 0.01,
+      hint: 'A condensate in a trap squeezed slightly into an ellipse, and the ellipse turning at 0.75ω (15 turns per second): the picture turns with the stirrer. Press Play. A normal fluid would simply rotate with the trap; a condensate cannot rotate as a body, because its flow must have no curl wherever there are atoms. Instead it wobbles, its edge breaks up, and vortices enter from the outside one after another, then settle into a regular triangular lattice, all turning the same way. The first vortices enter after about 8 trap periods (0.4 s of real time; a minute or so here, faster at 4×); the damping stands in for the thermal cloud that lets the vortices settle. Madison et al. (Paris, 2000) and Abo-Shaeer et al. (MIT, 2001) saw exactly this.' },
+    breathe: { N: 5000, n: 128, half: 8, view: 7, prep: { P: { ex: 0.64, ey: 0.64 } }, run: {}, color: 'density', trace: 'r',
+      hint: 'A condensate that settled in a trap 20 percent weaker, which is suddenly tightened. Press Play: the cloud squeezes in and bounces back out, over and over. In a flat round harmonic trap this breathing has exactly twice the trap frequency, 2ω, whatever the number of atoms and however strongly they repel (a hidden symmetry of the two dimensional Gross–Pitaevskii equation, Pitaevskii and Rosch 1997). Turn off the repulsion and compare.' },
+    slosh: { N: 5000, n: 128, half: 9, view: 8, prep: { P: { x0: 1.5 } }, run: {}, color: 'density', trace: 'x',
+      hint: 'A condensate that settled in a trap centered 3.6 µm to the right, and the trap is moved back to the middle. Press Play: the whole cloud swings back and forth through the center without changing shape, at exactly the trap frequency ω (Kohn\'s theorem: in a harmonic trap the center of mass does not feel the interactions at all). Experimenters use this sloshing to measure their trap frequency.' },
+  };
+  const S = { preset: 'split', N: 2000, inter: true, W: 0, eps: 0, gam: 0, color: 'phase', run: false, speed: 1, t: 0, vort: true, trace: true, blind: false, msg: '' };
+  const can = $('can'), ctx = can.getContext('2d');
+  let W = 0, H = 0, dpr = 1, T = null, view3 = null, g3 = null;
+  let gr = null, V = null, G = 0, dt = 0.004, psi0 = null, mu0 = 0, peak0 = 1, prep = null, vorts = [], traceData = [], sep0 = 0, fringe = NaN, perSteps = 1, acc = 0, stepMs = 3, drawn = 0, frameNo = 0, onGrid = 1, en = null, mom = null;
+  const f = (v, d = 3) => (!isFinite(v) ? '—' : v.toFixed(d).replace('-', '−'));
+  const proj = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
+  const um = (x) => `${f(x * AP * 1e6, x * AP * 1e6 < 10 ? 2 : 1)} µm`, ms = (t) => `${f(t * TU * 1000, 1)} ms`;
+  const cfg = () => PRESETS[S.preset];
+  function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = {}; for (const k of ['canvas', 'surface', 'ink', 'muted', 'line', 'accent', 'cw-plus', 'cw-minus', 'cw-trace', 'cw-pred', 'cw-floor-edge']) T[k.replace(/-/g, '_')] = g('--' + k);
+    T.mono = g('--font-mono') || 'monospace'; T.ui = g('--font-ui') || 'system-ui, sans-serif'; T.dark = (window.VD3 && VD3.dark()) || matchMedia('(prefers-color-scheme: dark)').matches; }
+
+  /* ---------- the run: potential, step, preparation ---------- */
+  function runPotential() {
+    const c = cfg(), P = Object.assign({}, c.run); if (!P.off) { P.ex = (P.ex == null ? 1 : P.ex) * (1 + S.eps); P.ey = (P.ey == null ? 1 : P.ey) * (1 - S.eps); }
+    V = potential(gr, P);
+  }
+  const mode = () => (S.gam > 0 ? 'damped' : 'real');
+  /* the time step: the grid's stability limit, or a longer step where strong damping keeps the finest ripples down (Stir) */
+  const dtNow = () => (cfg().dampedDt && S.gam >= 0.05 ? cfg().dampedDt : dt);
+  /* start a preparation: a ground state found in imaginary time on the preparation grid (the same spacing as the run's grid),
+     with the phase windings put back after each step when the setup holds vortices; done a few steps per frame */
+  function prepare() {
+    const c = cfg(); G = S.inter ? couplingG(S.N, A_RB87, M_RB87, W_AX) : 0;
+    gr = makeGrid(c.n, c.half); dt = stableDt(gr);
+    gr.mask = c.absorb ? absorber(gr, dt, 40) : null;
+    const pn = (c.prep.n || c.n), pg = makeGrid(pn, c.half * pn / c.n), PV = potential(pg, c.prep.P);
+    seed(pg, G, c.prep.P.x0 || 0, 0);
+    prep = { pg, PV, done: 0, total: c.prep.imprint ? 500 : 400, imprint: c.prep.imprint };
+    S.t = 0; traceData = []; vorts = []; fringe = NaN; setRun(false); S.msg = 'Finding the condensate’s ground state…'; note();
+  }
+  function prepWork(budget) {
+    const t0 = performance.now(), p = prep;
+    while (p.done < p.total && performance.now() - t0 < budget) {
+      if (p.imprint) imprint(p.pg, p.imprint);
+      step(p.pg, p.PV, G, p.imprint ? 0.004 : 0.02, 'imag', 0, 0); p.done++;
+    }
+    if (p.done < p.total) { S.msg = `Finding the condensate’s ground state: ${Math.round(100 * p.done / p.total)} %`; note(); return; }
+    if (p.imprint) imprint(p.pg, p.imprint);
+    const e = energy(p.pg, p.PV, G); mu0 = e.total + e.int;   /* μ = E + E_int per atom for a stationary state */
+    /* copy into the center of the run grid */
+    const off = (gr.n - p.pg.n) / 2; gr.re.fill(0); gr.im.fill(0);
+    for (let j = 0; j < p.pg.n; j++) for (let i = 0; i < p.pg.n; i++) { const a = j * p.pg.n + i, b = (j + off) * gr.n + i + off; gr.re[b] = p.pg.re[a]; gr.im[b] = p.pg.im[a]; }
+    psi0 = [Float64Array.from(gr.re), Float64Array.from(gr.im)];
+    peak0 = 0; for (let q = 0; q < gr.re.length; q++) peak0 = Math.max(peak0, gr.re[q] ** 2 + gr.im[q] ** 2);
+    let s = 0, ax = 0; for (let j = 0; j < gr.n; j++) for (let i = 0; i < gr.n; i++) { const d = gr.re[j * gr.n + i] ** 2 + gr.im[j * gr.n + i] ** 2; s += d; ax += d * Math.abs(gr.x[i]); } sep0 = 2 * ax / s;
+    prep = null; runPotential(); measure(true); S.msg = ''; note(); redraw();
+  }
+  function restart() { if (!psi0) return; gr.re.set(psi0[0]); gr.im.set(psi0[1]); S.t = 0; traceData = []; fringe = NaN; setRun(false); measure(true); redraw(); }
+  /* the slow measurements: averages, vortices, the fringe spacing, the trace */
+  function measure(all) {
+    mom = moments(gr); onGrid = norm(gr);
+    if (all || frameNo % 4 === 0) vorts = findVortices(gr, 0.04).filter((v) => Math.abs(v.x) < cfg().view && Math.abs(v.y) < cfg().view);
+    if (all || frameNo % 8 === 0) en = energy(gr, V, G);
+    if (cfg().fringes && S.t > 0) { const q = (gr.n / 2) * gr.n + gr.n / 2, mid = gr.re[q] ** 2 + gr.im[q] ** 2; let pk = 0; for (let i = 0; i < gr.n; i++) { const r = (gr.n / 2) * gr.n + i; pk = Math.max(pk, gr.re[r] ** 2 + gr.im[r] ** 2); }
+      fringe = mid > 0.05 * pk ? fringePeriod(gr, 2 * Math.PI / Math.max(1, Math.sqrt(mom.xx))) : NaN; }
+    const c = cfg(); let y = null;
+    if (c.trace === 'x') y = mom.mx; else if (c.trace === 'r') y = Math.sqrt(mom.r2); else if (c.trace === 'lz') y = mom.lz;
+    else if (c.trace === 'angle') { const v = vorts.filter((q) => q.s > 0).sort((a, b) => Math.hypot(a.x, a.y) - Math.hypot(b.x, b.y))[0];
+      if (v) { let a = Math.atan2(v.y, v.x) * 180 / Math.PI; const last = traceData.length ? traceData[traceData.length - 1][1] : a; while (a - last > 180) a -= 360; while (a - last < -180) a += 360; y = a; } }
+    if (y != null && (!traceData.length || S.t - traceData[traceData.length - 1][0] > 0.02)) traceData.push([S.t, y]);
+  }
+  /* a period from the trace: the mean spacing of its turning points (twice it), or for the angle trace the time per turn */
+  function period() {
+    const c = cfg(), d = traceData; if (d.length < 8) return NaN;
+    if (c.trace === 'angle') { const a = d[0], b = d[d.length - 1]; return b[0] - a[0] > 2 && Math.abs(b[1] - a[1]) > 20 ? 360 * (b[0] - a[0]) / (b[1] - a[1]) : NaN; }
+    const turns = []; for (let i = 2; i < d.length - 2; i++) { const y = d[i][1]; if ((y > d[i - 1][1] && y >= d[i + 1][1] && y > d[i - 2][1] && y >= d[i + 2][1]) || (y < d[i - 1][1] && y <= d[i + 1][1] && y < d[i - 2][1] && y <= d[i + 2][1])) turns.push(d[i][0]); }
+    if (turns.length < 3) return NaN; return 2 * (turns[turns.length - 1] - turns[0]) / (turns.length - 1);
+  }
+
+  /* ---------- colors ---------- */
+  function ramp(t, out) {   /* warm: dark umber to amber to cream (Night), cream to amber to umber (Day) */
+    const stops = T.dark ? [[0.11, 0.09, 0.07], [0.36, 0.17, 0.08], [0.75, 0.38, 0.11], [0.97, 0.7, 0.29], [1, 0.95, 0.83]] : [[0.97, 0.95, 0.91], [0.93, 0.78, 0.55], [0.8, 0.46, 0.18], [0.52, 0.22, 0.08], [0.24, 0.09, 0.04]];
+    const u = (t > 0 ? Math.min(0.9999, t) : 0) * (stops.length - 1), k = Math.floor(u), fr = u - k, A = stops[k], B = stops[k + 1];
+    out[0] = A[0] + (B[0] - A[0]) * fr; out[1] = A[1] + (B[1] - A[1]) * fr; out[2] = A[2] + (B[2] - A[2]) * fr; return out;
+  }
+  function hueRgb(h, s, l, out) {
+    h = ((h % 1) + 1) % 1; const q = l < 0.5 ? l * (1 + s) : l + s - l * s, p = 2 * l - q, hk = (t) => { t = ((t % 1) + 1) % 1; return t < 1 / 6 ? p + (q - p) * 6 * t : t < 0.5 ? q : t < 2 / 3 ? p + (q - p) * (2 / 3 - t) * 6 : p; };
+    out[0] = hk(h + 1 / 3); out[1] = hk(h); out[2] = hk(h - 1 / 3); return out;
+  }
+  /* the display grid: density (in units of the starting peak) and phase sampled from the run grid over the view */
+  const DD = new Float32Array(DG * DG), DP = new Float32Array(DG * DG), C3 = [0, 0, 0];
+  function sample() {
+    const c = cfg(), vh = c.view, { n, half, dx, re, im } = gr, rot = mu0 * S.t;   /* the phase is shown relative to e^(−iμt/ħ) */
+    /* free flight: scaled to the densest point now, since the cloud thins out a hundredfold; otherwise to the starting peak */
+    let ref = peak0; if (c.run.off) { ref = 0; for (let q = 0; q < re.length; q++) ref = Math.max(ref, re[q] * re[q] + im[q] * im[q]); if (!(ref > 0)) ref = 1; }
+    for (let j = 0; j < DG; j++) for (let i = 0; i < DG; i++) {
+      const X = -vh + 2 * vh * i / (DG - 1), Y = -vh + 2 * vh * j / (DG - 1), fi = (X + half) / dx, fj = (Y + half) / dx, i0 = Math.min(n - 2, Math.max(0, Math.floor(fi))), j0 = Math.min(n - 2, Math.max(0, Math.floor(fj))), u = fi - i0, w = fj - j0;
+      let d = 0, R = 0, I = 0; for (const [a, b, wt] of [[i0, j0, (1 - u) * (1 - w)], [i0 + 1, j0, u * (1 - w)], [i0, j0 + 1, (1 - u) * w], [i0 + 1, j0 + 1, u * w]]) { const q = b * n + a; d += wt * (re[q] * re[q] + im[q] * im[q]); R += wt * re[q]; I += wt * im[q]; }
+      DD[j * DG + i] = d / ref; DP[j * DG + i] = Math.atan2(I, R) + rot;
+    }
+  }
+  const hOf = (k) => Math.min(1.6, Math.sqrt(DD[k]));
+  function colorAt(k, out) {
+    const h = hOf(k); if (S.color === 'density') return ramp(h / 1.15, out);
+    const s = Math.min(1, h * 1.8), bg = T.dark ? [0.11, 0.09, 0.07] : [0.95, 0.93, 0.89]; hueRgb(DP[k] / (2 * Math.PI), 0.8, T.dark ? 0.58 : 0.48, C3);
+    out[0] = bg[0] + (C3[0] - bg[0]) * s; out[1] = bg[1] + (C3[1] - bg[1]) * s; out[2] = bg[2] + (C3[2] - bg[2]) * s; return out;
+  }
+
+  /* ---------- flat view ---------- */
+  let img = null, tmpCan = null;
+  function frame2() {   /* the square of the view on the canvas, leaving room for the graph */
+    const p = proj(), gh = traceOn() ? (W < 640 ? 96 : 116) * p : 0, top = 34 * p, bot = 30 * p + gh, s = Math.max(40, Math.min(W - 24 * p, H - top - bot));
+    return { x: (W - s) / 2, y: top + (H - top - bot - s) / 2, s, p };
+  }
+  function drawFlat() {
+    const { x, y, s, p } = frame2();
+    if (!img) img = ctx.createImageData(DG, DG); const d = img.data, c = [0, 0, 0];
+    for (let j = 0; j < DG; j++) for (let i = 0; i < DG; i++) { colorAt((DG - 1 - j) * DG + i, c); const k = 4 * (j * DG + i); d[k] = c[0] * 255; d[k + 1] = c[1] * 255; d[k + 2] = c[2] * 255; d[k + 3] = 255; }
+    if (!tmpCan) tmpCan = document.createElement('canvas'); tmpCan.width = DG; tmpCan.height = DG; tmpCan.getContext('2d').putImageData(img, 0, 0);
+    ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high'; ctx.drawImage(tmpCan, x, y, s, s);
+    ctx.strokeStyle = T.cw_floor_edge; ctx.lineWidth = 1.5 * p; ctx.strokeRect(x, y, s, s);
+    const vh = cfg().view, toPx = (X, Y) => [x + (X + vh) / (2 * vh) * s, y + s - (Y + vh) / (2 * vh) * s];
+    if (S.vort) for (const v of vorts) { const [px, py] = toPx(v.x, v.y); ring(px, py, v.s, p); }
+    scaleBar(x + s - 10 * p, y + s - 12 * p, s / (2 * vh), p);
+    ctx.fillStyle = T.muted; ctx.font = `${11 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(`${um(2 * vh)} across, seen from above${S.W > 0 ? ', turning with the stirrer' : ''}`, x + s / 2, y + s + 6 * p);
+    legend(x, y - 8 * p, p);
+  }
+  function ring(px, py, s, p) { ctx.strokeStyle = s > 0 ? T.cw_plus : T.cw_minus; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.arc(px, py, 6 * p, 0, 7); ctx.stroke(); }
+  function scaleBar(xr, yb, pxPerUnit, p) {
+    const um10 = 10e-6 / AP, w = um10 * pxPerUnit; ctx.strokeStyle = T.ink; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(xr - w, yb); ctx.lineTo(xr, yb); ctx.moveTo(xr - w, yb - 4 * p); ctx.lineTo(xr - w, yb + 4 * p); ctx.moveTo(xr, yb - 4 * p); ctx.lineTo(xr, yb + 4 * p); ctx.stroke();
+    ctx.fillStyle = T.ink; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillText('10 µm', xr, yb - 5 * p);
+  }
+  function legend(x, y, p) {
+    const narrow = W < 640; ctx.font = `${10.5 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillStyle = T.muted;
+    const v = S.vort && vorts.length ? (narrow ? '; rings: vortices' : '; rings: vortices (orange counterclockwise, teal clockwise)') : '';
+    ctx.fillText((S.color === 'density' ? (narrow ? 'brighter: more atoms' : cfg().run.off ? 'brighter: more atoms per area (scaled to the densest point)' : 'brighter: more atoms per area') : (narrow ? 'hue: phase' : 'hue: phase of the wavefunction; dim where there are no atoms')) + v, x, y);
+  }
+
+  /* ---------- the graph against time ---------- */
+  const traceOn = () => S.trace && cfg().trace !== 'none';
+  function drawTrace() {
+    if (!traceOn()) return;
+    const p = proj(), c = cfg(), narrow = W < 640, w = Math.min(W - 24 * p, 520 * p), h = (narrow ? 78 : 96) * p, x0 = (W - w) / 2, y0 = H - h - 12 * p, L = 46 * p, gx = x0 + L, gw = w - L - 10 * p, gy = y0 + 16 * p, gh = h - 34 * p;
+    ctx.save(); ctx.fillStyle = T.surface; ctx.globalAlpha = 0.86; ctx.beginPath(); ctx.roundRect(x0, y0, w, h, 8 * p); ctx.fill(); ctx.globalAlpha = 1;
+    const lab = { x: 'center of the cloud ⟨x⟩ (µm)', r: 'rms radius √⟨r²⟩ (µm)', lz: 'angular momentum per atom ⟨L_z⟩/ħ', angle: 'angle of the vortex around the center (degrees)' }[c.trace];
+    ctx.fillStyle = T.muted; ctx.font = `${10.5 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText(lab, x0 + 8 * p, y0 + 3 * p);
+    const tmax = Math.max(c.trace === 'lz' ? 120 : 20, S.t), d = traceData, conv = c.trace === 'x' || c.trace === 'r' ? AP * 1e6 : 1;
+    let lo = Infinity, hi = -Infinity; for (const q of d) { lo = Math.min(lo, q[1] * conv); hi = Math.max(hi, q[1] * conv); } if (!d.length) { lo = 0; hi = 1; } if (hi - lo < 1e-6) { hi += 0.5; lo -= 0.5; } const pad = (hi - lo) * 0.1; lo -= pad; hi += pad;
+    const X = (t) => gx + t / tmax * gw, Y = (v) => gy + gh - (v - lo) / (hi - lo) * gh;
+    ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.strokeRect(gx, gy, gw, gh);
+    ctx.fillStyle = T.muted; ctx.font = `${9.5 * p}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillText(f(hi, 1), gx - 4 * p, gy + 4 * p); ctx.fillText(f(lo, 1), gx - 4 * p, gy + gh - 4 * p);
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top'; const tstep = tmax * TU * 1000 > 2000 ? 500 : tmax * TU * 1000 > 400 ? 100 : 50;
+    for (let tm = 0; tm <= tmax * TU * 1000 + 1e-9; tm += tstep) { const xx = X(tm / 1000 / TU); ctx.fillRect(xx, gy + gh, 1, 3 * p); if (xx < gx + gw - 20 * p || tm === 0) ctx.fillText(String(tm), xx, gy + gh + 4 * p); }
+    ctx.textAlign = 'right'; ctx.fillText('ms', gx + gw, gy + gh + 4 * p);
+    ctx.strokeStyle = T.cw_trace; ctx.lineWidth = 1.8 * p; ctx.beginPath(); d.forEach((q, i) => { const xx = X(q[0]), yy = Y(q[1] * conv); if (i) ctx.lineTo(xx, yy); else ctx.moveTo(xx, yy); }); ctx.stroke();
+    ctx.restore();
+  }
+
+  /* ---------- drawing ---------- */
+  function draw() {
+    if (!T || !W) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    if (!gr || prep && !psi0) { ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H); ctx.fillStyle = T.muted; ctx.font = `${13 * proj()}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(S.msg || '…', W / 2, H / 2); return; }
+    sample();
+    if (use3()) { draw3(); ctx.clearRect(0, 0, W, H); labels3(); } else { ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H); drawFlat(); }
+    drawTrace();
+    if (prep) { const p = proj(); ctx.fillStyle = T.surface; ctx.globalAlpha = 0.9; ctx.fillRect(0, H / 2 - 18 * p, W, 36 * p); ctx.globalAlpha = 1; ctx.fillStyle = T.ink; ctx.font = `${13 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(S.msg, W / 2, H / 2); }
+  }
+
+  /* ---------- 3D: the surface of the condensate over a floor ---------- */
+  const G3 = { o: { th: -Math.PI / 2 + 0.15, ph: 0.75, zoom: 1 } };
+  function init3D() {
+    const S3 = VD3K.stage($('pane'), { before: can, fov: 28, near: 0.05, far: 60 }); if (!S3) return false;
+    S3.el.classList.add('sc3'); const sc = S3.scene;
+    const floorM = VD3K.material(S3, { roughness: 0.9, metalness: 0 }, ['#f2eee8', '#251e15']);
+    const floor = new THREE.Mesh(new THREE.PlaneGeometry(2.2, 2.2), floorM); floor.position.z = -0.004; sc.add(floor);
+    const g = new THREE.BufferGeometry(), idx = [];
+    g.setAttribute('position', new THREE.BufferAttribute(new Float32Array(DG * DG * 3), 3)); g.setAttribute('color', new THREE.BufferAttribute(new Float32Array(DG * DG * 3), 3));
+    for (let j = 0; j < DG - 1; j++) for (let i = 0; i < DG - 1; i++) { const a = j * DG + i, b = a + 1, c = a + DG, d = c + 1; idx.push(a, b, d, a, d, c); } g.setIndex(idx);
+    const surf = new THREE.Mesh(g, new THREE.MeshStandardMaterial({ vertexColors: true, side: THREE.DoubleSide, roughness: 0.55, metalness: 0.05 })); surf.frustumCulled = false; sc.add(surf);
+    g3 = { S3, surf };
+    VD3.orbit(can, G3.o, () => { if (use3()) draw(); }, { grab: () => !use3(), phMin: 0.25, phMax: 1.45, zMin: 0.6, zMax: 2.5 });
+    can.style.touchAction = 'pan-y';
+    return true;
+  }
+  const use3 = () => !!(view3 && view3.is3d() && g3);
+  const HS = 0.36;
+  function draw3() {
+    const S3 = g3.S3, P = g3.surf.geometry.attributes.position.array, C = g3.surf.geometry.attributes.color.array, c = [0, 0, 0]; S3.size(W, H);
+    for (let j = 0; j < DG; j++) for (let i = 0; i < DG; i++) { const k = j * DG + i; P[3 * k] = i / (DG - 1) * 2 - 1; P[3 * k + 1] = j / (DG - 1) * 2 - 1; P[3 * k + 2] = hOf(k) * HS; colorAt(k, c); C[3 * k] = c[0]; C[3 * k + 1] = c[1]; C[3 * k + 2] = c[2]; }
+    g3.surf.geometry.attributes.position.needsUpdate = true; g3.surf.geometry.attributes.color.needsUpdate = true; g3.surf.geometry.computeVertexNormals();
+    const sh = traceOn() ? 1 : 0; S3.place(G3.o, [0, -0.5 * sh, 0.14], S3.fit(5.4 + 1.6 * sh, 1.4)); S3.render();
+  }
+  function labels3() {
+    const S3 = g3.S3, p = proj(), vh = cfg().view;
+    const lab = (txt, q, o) => { o = Object.assign({ a: 'center', s: 11 * p, c: T.ink }, o || {}); ctx.save(); ctx.font = `${o.w || 400} ${o.s}px ${T.ui}`; ctx.textAlign = o.a; ctx.textBaseline = 'middle';
+      ctx.lineJoin = 'round'; ctx.lineWidth = 3.5 * p; ctx.strokeStyle = T.canvas; ctx.globalAlpha = 0.8; ctx.strokeText(txt, q[0], q[1]); ctx.globalAlpha = 1; ctx.fillStyle = o.c; ctx.fillText(txt, q[0], q[1]); ctx.restore(); };
+    lab(`${um(2 * vh)} across${S.W > 0 ? ', turning with the stirrer' : ''}`, S3.project([0, -1.1, 0]), { c: T.muted });
+    if (S.vort) for (const v of vorts) {   /* the ring sits at the rim of the core: the highest surface point a few cells around it */
+      const X = v.x / vh, Y = v.y / vh, ci = Math.round((X + 1) / 2 * (DG - 1)), cj = Math.round((Y + 1) / 2 * (DG - 1)); let z = 0;
+      for (let dj = -3; dj <= 3; dj++) for (let di = -3; di <= 3; di++) { const i = ci + di, j = cj + dj; if (i >= 0 && j >= 0 && i < DG && j < DG) z = Math.max(z, hOf(j * DG + i)); }
+      const q = S3.project([X, Y, z * HS + 0.01]); ring(q[0], q[1], v.s, p); }
+    legend(12 * p, 26 * p, p);
+  }
+
+  /* ---------- readouts, sync, presets ---------- */
+  function readouts() {
+    const dd = (a, b) => `<div><dt>${a}</dt><dd>${b}</dd></div>`, c = cfg(); if (!gr || !mom) { $('out').innerHTML = ''; return; }
+    const plus = vorts.filter((v) => v.s > 0).length, minus = vorts.length - plus, per = period(), hid = '<span class="ok">hidden: predict it</span>';
+    let h = dd('Time', `${ms(S.t)} (ωt = ${f(S.t, 1)})`) + dd('Atoms', c.absorb ? `${S.N.toLocaleString('en-US')} (${f(onGrid * 100, 0)} % still in view)` : S.N.toLocaleString('en-US'));
+    h += G > 0 ? dd('Chemical potential μ/h', `${f(mu0 * F_TRAP, 0)} Hz`) + dd('Cloud radius (Thomas–Fermi)', um(tfRadius(G))) + dd('Healing length ξ (vortex core size)', um(healing(G)))
+      : dd('Chemical potential μ/h', `${f(mu0 * F_TRAP, 0)} Hz (ħω, no repulsion)`) + dd('Oscillator length √(ħ/mω)', um(1));
+    h += dd('Vortices in view', vorts.length ? `${plus} counterclockwise, ${minus} clockwise` : 'none') + dd('Angular momentum per atom', `${f(mom.lz, 2)} ħ`);
+    if (en) h += dd('Energy per atom', `${f(en.total, 3)} ħω`);
+    if (c.fringes) { h += dd('Fringe spacing, measured', S.blind ? hid : isFinite(fringe) ? um(fringe) : 'not yet overlapping');
+      if (c.run.off) h += dd('ht/(md), d = ' + um(sep0), S.t > 0 ? um(2 * Math.PI * S.t / sep0) : '—'); }
+    if (c.trace === 'x') h += dd('Sloshing period, measured', S.blind ? hid : isFinite(per) ? ms(per) : 'wait for a few swings') + dd('Kohn: 1/f, f = ω/2π', ms(2 * Math.PI / Math.sqrt(1 + S.eps)));
+    if (c.trace === 'r') h += dd('Breathing period, measured', S.blind ? hid : isFinite(per) ? ms(per) : 'wait for a few swings') + dd('Expected π/ω (breathing at 2ω)', ms(Math.PI));
+    if (c.trace === 'angle') h += dd('Time for the vortex to go around', S.blind ? hid : isFinite(per) ? `${f(Math.abs(per) * TU * 1000, 0)} ms` : 'wait');
+    if (S.W > 0) h += dd('Stirring rate Ω', `${f(S.W, 2)} ω = ${f(S.W * F_TRAP, 1)} turns per second`) + dd('Feynman: one vortex per πħ/(mΩ)', `${f(Math.PI / S.W * AP * AP * 1e12, 1)} µm²`);
+    $('out').innerHTML = h;
+  }
+  function note() { $('note').textContent = S.msg || (use3() ? 'Drag to turn the view' : ''); }
+  function sync() {
+    $('sN').value = S.N; $('oN').textContent = S.N.toLocaleString('en-US'); $('chkInt').checked = S.inter;
+    $('sW').value = S.W; $('oW').textContent = S.W > 0 ? `${f(S.W, 2)} ω` : 'off'; $('sE').value = S.eps; $('oE').textContent = f(S.eps, 2); $('sG').value = S.gam; $('oG').textContent = f(S.gam, 2);
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
+    for (const b of document.querySelectorAll('#colorSeg button')) b.setAttribute('aria-pressed', String(b.dataset.color === S.color));
+    for (const b of document.querySelectorAll('#speed button')) b.setAttribute('aria-pressed', String(+b.dataset.sp === S.speed));
+    const g = S.inter ? couplingG(S.N, A_RB87, M_RB87, W_AX) : 0;
+    $('gasNote').textContent = S.inter ? `Coupling g₂N = ${f(g, 0)} ħω a⊥²; the pancake is a_z = ${f(oscLength(M_RB87, W_AX) * 1e6, 2)} µm thick` : 'An ideal gas: the condensate is the oscillator ground state, whatever N.';
+    $('stirNote').textContent = cfg().run.off ? 'No trap during the flight, so stirring does nothing here.' : S.W > 0 ? (S.gam > 0 ? 'The picture turns with the stirrer. Damping (Lab) lets vortices settle.' : 'The picture turns with the stirrer. Without damping (Lab) vortices enter but never settle.') : 'Set a stirring rate to turn the trap.';
+  }
+  function setRun(on) { S.run = on; const b = $('play'); b.textContent = on ? 'Pause' : 'Play'; b.classList.toggle('attn', !on); }
+  function applyPreset(k) {
+    const c = PRESETS[k]; S.preset = k; Object.assign(S, { N: c.N, W: c.W || 0, eps: c.eps || 0, gam: c.gam || 0, color: c.color, inter: true });
+    $('presetHint').textContent = c.hint; sync(); prepare(); redraw();
+  }
+  function redraw() { draw(); readouts(); note(); }
+
+  /* ---------- controls ---------- */
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  $('play').addEventListener('click', () => { if (prep) return; setRun(!S.run); redraw(); });
+  $('reset').addEventListener('click', () => { restart(); });
+  $('speed').addEventListener('click', (e) => { const b = e.target.closest('[data-sp]'); if (!b) return; S.speed = +b.dataset.sp; sync(); });
+  $('colorSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-color]'); if (!b) return; S.color = b.dataset.color; sync(); redraw(); });
+  $('sN').addEventListener('input', (e) => { $('oN').textContent = (+e.target.value).toLocaleString('en-US'); });
+  $('sN').addEventListener('change', (e) => { S.N = +e.target.value; sync(); prepare(); });
+  $('chkInt').addEventListener('change', (e) => { S.inter = e.target.checked; sync(); prepare(); });
+  $('sW').addEventListener('input', (e) => { S.W = +e.target.value; sync(); redraw(); });
+  $('sE').addEventListener('input', (e) => { S.eps = +e.target.value; if (gr && !prep) runPotential(); sync(); redraw(); });
+  $('sG').addEventListener('input', (e) => { S.gam = +e.target.value; sync(); redraw(); });
+  $('chkVort').addEventListener('change', (e) => { S.vort = e.target.checked; redraw(); });
+  $('chkTrace').addEventListener('change', (e) => { S.trace = e.target.checked; redraw(); });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; redraw(); });
+  can.addEventListener('keydown', (e) => { if (e.key === ' ') { $('play').click(); e.preventDefault(); } });
+
+  /* ---------- the loop: as many steps per frame as fit in a few milliseconds (more at 4×, fewer at ¼×) ---------- */
+  let lastRead = 0;
+  function frame(now) {
+    frameNo++;
+    if (prep) { prepWork(14); draw(); }
+    else if (S.run && gr) {
+      const budget = 9 * S.speed; acc += S.speed < 1 ? S.speed : 1; const t0 = performance.now();
+      if (acc >= 1) { acc -= 1; let k = 0; do { const h = dtNow(); step(gr, V, G, h, mode(), S.gam, cfg().run.off ? 0 : S.W); S.t += h; k++; } while (performance.now() - t0 < (S.speed < 1 ? 3 : budget) && k < (S.speed < 1 ? 1 : 400)); }
+      measure(false); draw(); if (now - lastRead > 250) { lastRead = now; readouts(); }
+    } else if (use3()) draw();
+    requestAnimationFrame(frame);
+  }
+  function resize() { dpr = window.devicePixelRatio || 1; const r = $('pane').getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); redraw(); }
+  const retheme = () => { tokens(); redraw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  VD.projector({ onChange: resize });
+
+  $('about1').textContent = `The model: the Gross–Pitaevskii equation, the standard mean field description of a dilute condensate at zero temperature: one wavefunction ψ for all N atoms, whose square is the atom density. The atoms are rubidium 87 (scattering length a = 98.98 Bohr radii, 5.24 nm) in a pancake trap, ${F_TRAP} Hz in the plane and ${F_AX} Hz across it. The tight direction is frozen into its ground state, which leaves a two dimensional equation with the coupling g₂ = √(8π)ħ²a/(m a_z), a_z = √(ħ/mω_z) = ${f(oscLength(M_RB87, W_AX) * 1e6, 3)} µm. That is good while the chemical potential μ is below ħω_z = h × ${F_AX} Hz, which holds for every setup here (see the readouts).`;
+  $('about2').textContent = `The numbers: lengths are worked in the oscillator length a⊥ = √(ħ/mω) = ${f(AP * 1e6, 3)} µm and times in 1/ω = ${f(TU * 1000, 2)} ms. The equation is solved on a square grid by the split step Fourier method (second order in the time step, which is kept below the grid's stability limit). The energy per atom stays constant to about one part in ten million and the atom number exactly, which you can check in the readouts. Each ground state is found first by stepping in imaginary time; for the vortex setups the phase winding is held in place while it settles. The color in the Phase view is the phase of ψ relative to e^(−iμt/ħ), so a still condensate keeps its color.`;
+  $('about3').textContent = 'Approximations: zero temperature (no thermal cloud) and two dimensions. In the Stir setup a damping γ, (i − γ)ħ ∂ψ/∂t = Hψ, stands in for the thermal cloud; without it the energy is conserved and the vortices that enter keep moving and never settle into a lattice. The damping used, γ = 0.1, is a few times larger than in real clouds, which makes the lattice form sooner. In free flight, atoms that reach the edge of the picture are removed so that nothing wraps around the grid. The fringe spacing ht/(md) is the far field formula for two clouds a distance d apart that do not interact; with the repulsion turned off the measured stripes match it within a few percent after about 20 ms. The repulsion turns the clouds\' interaction energy into outward flow, which stretches each cloud\'s phase and widens the stripes by a nearly constant factor (about 1.4 for the 5,000 atoms of this setup; the readouts show both).';
+  $('about4').textContent = 'Sources: rubidium 87 mass from AME2020; the scattering length of the |F = 2, m_F = 2⟩ state, 98.98 a₀, from van Kempen et al., Phys. Rev. Lett. 88, 093201 (2002); h and the atomic mass unit from CODATA 2022. The experiments: interference of two condensates, Andrews et al., Science 275, 637 (1997); vortex lattices in stirred condensates, Madison et al., Phys. Rev. Lett. 84, 806 (2000) and Abo-Shaeer et al., Science 292, 476 (2001); breathing at exactly 2ω in two dimensions, Pitaevskii and Rosch, Phys. Rev. A 55, R853 (1997); damped Gross–Pitaevskii stirring, Tsubota, Kasamatsu and Ueda, Phys. Rev. A 65, 023603 (2002).';
+
+  window.__cw = { S, get gr() { return gr; }, get prep() { return prep; }, get vorts() { return vorts; }, get trace() { return traceData; }, applyPreset, restart, period, run: (k) => { for (let i = 0; i < k; i++) { const h = dtNow(); step(gr, V, G, h, mode(), S.gam, cfg().run.off ? 0 : S.W); S.t += h; if (i % 10 === 9) { frameNo++; measure(false); } } measure(true); redraw(); }, finishPrep: () => { while (prep) prepWork(1e9); } };
+  tokens();
+  { const q = new URLSearchParams(location.search).get('setup'); const k = PRESETS[q] ? q : 'split'; S.preset = k; $('presetHint').textContent = PRESETS[k].hint; Object.assign(S, { N: PRESETS[k].N, W: PRESETS[k].W || 0, eps: PRESETS[k].eps || 0, gam: PRESETS[k].gam || 0, color: PRESETS[k].color }); sync(); prepare(); }
+  new ResizeObserver(resize).observe($('pane')); resize();
+  view3 = VD3K.view({ seg: '#dimSeg', init: init3D, start: '3d', change: () => { if (g3) g3.S3.el.hidden = !use3(); redraw(); }, status: (m) => { S.msg = m; note(); } });
+  if (window.VD && VD.panel) VD.panel({ play: '#play', reset: '#reset', speed: '#speed', end: ['#dimSeg'] });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
