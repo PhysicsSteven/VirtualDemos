@@ -134,14 +134,14 @@ VDI18N.add('en', 'demo/ideal-gas', [
 "A on the right",
 "B on the left",
 "half of each gas",
+"closed",
+"divider closed",
 "Helium mass ({#} u) on the left and argon mass ({#} u) on the right, the same size and temperature. Remove the divider: the light molecules move faster and spread faster.",
 "mean square displacement (nm²)",
 "gas A",
 "gas B",
 "{#} molecules of helium mass ({#} u) on the left, nothing on the right, and a hole {#} nm wide, smaller than the distance a molecule travels between collisions (about {#} nm here). Open the hole and count how fast the gas leaks through. Then make gas A argon ({#} u) and repeat: Graham's law says the rate goes as {#}/√m.",
 "Hot argon ({#} K) on the left and cold argon ({#} K) on the right. Remove the divider: the gases mix, and collisions bring both sides to one temperature.",
-"closed",
-"divider closed",
 "Q from the piston",
 "Q from the top",
 "Q from the bottom",
@@ -154,5 +154,6 @@ VDI18N.add('en', 'demo/ideal-gas', [
 "removed",
 "A curve at {#} K",
 "B curve at {#} K",
-"M-B at {#} K"
+"M-B at {#} K",
+"t = {#} ns playback {#}× faster than Fixed rate"
 ]);

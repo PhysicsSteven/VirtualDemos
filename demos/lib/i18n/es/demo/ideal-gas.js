@@ -30,6 +30,14 @@ VDI18N.add('es', 'demo/ideal-gas', {
   "Avanza un momento y vuelve a pausar",
 "Step":
   "Paso",
+"<span>Playback</span>":
+  "<span>Reproducción</span>",
+"Fixed rate":
+  "Ritmo fijo",
+"Slow motion follows T":
+  "La cámara lenta sigue a T",
+"{#} ps per second":
+  "{#} ps por segundo",
 "Divider":
   "Divisor",
 "Divider closed":
@@ -144,14 +152,6 @@ VDI18N.add('es', 'demo/ideal-gas', {
   "Argón",
 "Carbon dioxide CO₂":
   "Dióxido de carbono CO₂",
-"<span>Playback</span>":
-  "<span>Reproducción</span>",
-"{#} ps per second":
-  "{#} ps por segundo",
-"Fixed rate":
-  "Ritmo fijo",
-"Slow motion follows T":
-  "La cámara lenta sigue a T",
 "Starting speeds":
   "Rapideces iniciales",
 "Equal speeds":
@@ -232,10 +232,10 @@ VDI18N.add('es', 'demo/ideal-gas', {
   "{#} ns por segundo",
 "{#} nN/m":
   "{#} nN/m",
-"t = {#} ps playback {#}× faster than Fixed rate":
-  "t = {#} ps reproducción {#}× más rápida que Ritmo fijo",
 "{#} zJ":
   "{#} zJ",
+"t = {#} ps playback {#}× faster than Fixed rate":
+  "t = {#} ps reproducción {#}× más rápida que Ritmo fijo",
 "The walls are held at {#} K. Every molecule that hits a wall leaves as if from a gas at {#} K, so the {#} K gas gives heat to the walls and cools until T settles near {#} K; Q counts the heat. Then push the piston: the walls carry off the work you do, and T stays near {#} K (an isothermal squeeze) instead of rising. Switch the walls to Insulated and compare.":
   "Las paredes se mantienen a {#} K. Cada molécula que choca con una pared sale como si viniera de un gas a {#} K, así que el gas a {#} K cede calor a las paredes y se enfría hasta que T se asienta cerca de {#} K; Q cuenta el calor. Luego empuja el pistón: las paredes se llevan el trabajo que haces, y T se mantiene cerca de {#} K (una compresión isotérmica) en lugar de subir. Cambia las paredes a Aislada y compara.",
 "The left wall is held at {#} K and the piston at {#} K; the top and bottom are insulated. The gas never settles to one temperature: molecules carry energy from the hot wall across to the cold one, the left half stays warmer than the right, and once the flow is steady the heat in at the left matches the heat out at the piston, so Q for all the walls stops changing. Pick each wall to read its own Q.":
@@ -278,24 +278,28 @@ VDI18N.add('es', 'demo/ideal-gas', {
   "gas B",
 "{#} molecules of helium mass ({#} u) on the left, nothing on the right, and a hole {#} nm wide, smaller than the distance a molecule travels between collisions (about {#} nm here). Open the hole and count how fast the gas leaks through. Then make gas A argon ({#} u) and repeat: Graham's law says the rate goes as {#}/√m.":
   "{#} moléculas con la masa del helio ({#} u) a la izquierda, nada a la derecha, y un orificio de {#} nm de ancho, más pequeño que la distancia que recorre una molécula entre choques (cerca de {#} nm aquí). Abre el orificio y cuenta qué tan rápido se escapa el gas. Luego haz que el gas A sea argón ({#} u) y repite: la ley de Graham dice que la tasa va como {#}/√m.",
+"Hot argon ({#} K) on the left and cold argon ({#} K) on the right. Remove the divider: the gases mix, and collisions bring both sides to one temperature.":
+  "Argón caliente ({#} K) a la izquierda y argón frío ({#} K) a la derecha. Quita el divisor: los gases se mezclan, y los choques llevan a ambos lados a una sola temperatura.",
 "closed":
   "cerrado",
 "divider closed":
   "divisor cerrado",
-"Hot argon ({#} K) on the left and cold argon ({#} K) on the right. Remove the divider: the gases mix, and collisions bring both sides to one temperature.":
-  "Argón caliente ({#} K) a la izquierda y argón frío ({#} K) a la derecha. Quita el divisor: los gases se mezclan, y los choques llevan a ambos lados a una sola temperatura.",
 "Q from the piston":
   "Q del pistón",
 "Q from the top":
   "Q de arriba",
 "Q from the bottom":
   "Q de abajo",
+"Close":
+  "Cerrar",
 "Open the divider (Hole or Removed) and let the run go for a while first.":
   "Primero abre el divisor (Orificio o Quitado) y deja correr la ejecución un rato.",
 "hole, {#} nm":
   "orificio, {#} nm",
 "time since the divider opened (ps)":
   "tiempo desde que se abrió el divisor (ps)",
+"hole {#} nm":
+  "orificio {#} nm",
 "t = {#} ps since opening":
   "t = {#} ps desde la apertura",
 "removed":
