@@ -401,18 +401,24 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function ubvFluxes(T) {
     const lam = [], ln = []; let mx = -Infinity;
     for (let l = 290; l <= 1000.0001; l += 0.5) { const v = ubvLnB(l, T); lam.push(l); ln.push(v); if (v > mx) mx = v; }
+    /* each band is summed about its own largest ln B_λ, and its log is kept (lnU, lnB, lnV): for a cold source like the
+       2.7 K background the U band is e^-10000 below the peak, so fractions of one shared maximum underflow to 0 and the
+       colors became NaN (break-it test, 2026-11-09) */
     const out = {};
     for (const b of ['U', 'B', 'V']) {
+      let mb = -Infinity;
+      for (let i = 0; i < lam.length; i++) if (ubvResponse(b, lam[i]) > 0 && ln[i] > mb) mb = ln[i];
       let s = 0;
-      for (let i = 0; i < lam.length; i++) { const w = i === 0 || i === lam.length - 1 ? 0.5 : 1; s += w * Math.exp(ln[i] - mx) * ubvResponse(b, lam[i]); }
-      out[b] = s * 0.5;
+      for (let i = 0; i < lam.length; i++) { const r = ubvResponse(b, lam[i]); if (r > 0) s += (i === 0 || i === lam.length - 1 ? 0.5 : 1) * Math.exp(ln[i] - mb) * r; }
+      out['ln' + b] = mb + Math.log(s * 0.5);
+      out[b] = Math.exp(out['ln' + b] - mx);
     }
     return out;
   }
   /* colors on the Vega system: Vega's U − B and B − V are zero by definition */
   function ubvColors(T) {
     const f = ubvFluxes(T);
-    return { UB: -2.5 * Math.log10(f.U / f.B) - VEGA_UB, BV: -2.5 * Math.log10(f.B / f.V) - VEGA_BV, BoverV: f.B / f.V, f };
+    return { UB: -2.5 * (f.lnU - f.lnB) / Math.LN10 - VEGA_UB, BV: -2.5 * (f.lnB - f.lnV) / Math.LN10 - VEGA_BV, BoverV: Math.exp(f.lnB - f.lnV), f };
   }
   /* the temperature of the blackbody with a given B − V (bisection on ln T between 1000 K and 1e6 K; B − V falls as T rises) */
   function ubvTempFromBV(bv) {

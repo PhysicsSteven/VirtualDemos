@@ -400,7 +400,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     return { k: 'none', text: 'No eclipse: the Moon is not new or full' };
   }
   const nodeDist = () => { const a = mod(phiN(), 180); return Math.min(a, 180 - a); };
-  const daysToSeason = () => mod(phiN(), 180) / (360 / EC_YEAR);
+  /* an eclipse season: the Sun within about 17° of a node (the solar limit, asin(1.48° / 5.145°) = 16.7°,
+     rounded up); the countdown runs to the start of the next season, not to the node itself (break-it test, 2026-11-09) */
+  const SEASON_HALF = 17;
+  const daysToSeason = () => Math.max(0, mod(phiN(), 180) - SEASON_HALF) / (360 / EC_YEAR);
 
   // ---------- canvases ----------
   const V = {
@@ -1099,7 +1102,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       R_.nodeDist.textContent = nodeDist().toFixed(1) + '°';
       const b = beta(e, pn);
       R_.beta.textContent = minus((b >= 0 ? '+' : '') + b.toFixed(2) + '°');
-      R_.season.textContent = nodeDist() < 17 ? 'now' : 'in ' + daysToSeason().toFixed(0) + ' d';
+      R_.season.textContent = nodeDist() < SEASON_HALF ? 'now' : 'in ' + daysToSeason().toFixed(0) + ' d';
       R_.elapsed.textContent = minus(S.T.toFixed(1) + ' d');
       R_.drift.textContent = minus((-360 * S.T / P_NODE).toFixed(2) + '° (−19.3° per year)');
       const st = eclipseState();

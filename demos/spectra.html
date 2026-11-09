@@ -1131,6 +1131,7 @@ function airFromVac(vnm) {
   function drawOrbit() {
     const cv = $('cOrbit'), [ctx, W, H] = fit(cv), ps = projScale(), ink = tok('--ink'), muted = tok('--muted'), acc = tok('--accent');
     ctx.clearRect(0, 0, W, H);
+    if (W < 60 || H < 60) return;   /* the card is hidden: nothing to draw (a negative radius would throw) */
     const nu = S.orb, whole = Math.abs(nu - Math.round(nu)) < 1e-9, nMax = Math.max(Math.ceil(nu - 1e-9), S.ni);
     const cx = W / 2, cy = H / 2 + 6 * ps, Rmax = Math.min(W, H) / 2 - 24 * ps, sc = Rmax / (nMax * nMax * BOHR_A0);   /* px per nm */
     ctx.font = `${10 * ps}px ${mono()}`; ctx.textBaseline = 'middle';

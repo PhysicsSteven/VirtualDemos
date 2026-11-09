@@ -184,7 +184,10 @@ async function runDemo(browser, cmp, base, d) {
     const play = await page.$('#play, #go, #run, #start, #playBtn');
     if (play && await play.isVisible()) { for (let i = 0; i < 10; i++) await play.click({ timeout: 2000 }).catch(() => {}); await page.waitForTimeout(400); await probe('Play pressed ten times fast'); }
     /* every control to its limits and back */
+    const shown = (key) => page.evaluate((k) => { const e = k.startsWith('#') || k.startsWith('[') ? document.querySelector(k) : document.querySelectorAll('input, select, textarea')[+k.split(':')[1]];
+      return !!e && !e.disabled && (e.offsetParent !== null || e.getClientRects().length > 0); }, key);
     for (const c of opening) {
+      if (!(await shown(c.key))) continue;   /* a student can't reach a control that an earlier step hid */
       if (c.type === 'range') {
         await setVal(c.key, c.min || '0'); await page.waitForTimeout(250); await probe(c.key + ' at its minimum ' + (c.min || 0));
         await setVal(c.key, c.max || '100'); await page.waitForTimeout(250); await probe(c.key + ' at its maximum ' + (c.max || 100));
