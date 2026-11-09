@@ -30,6 +30,8 @@ VDI18N.add('es', 'demo/doppler', {
   "Tipo de onda",
 "Sound":
   "Sonido",
+"Light":
+  "Luz",
 "Whole view":
   "Vista completa",
 "Follow source":
@@ -208,6 +210,8 @@ VDI18N.add('es', 'demo/doppler', {
   "recibida < {#} nm · z = −{#}",
 "At {#} c, γ = {#}. Light that left the source while it moved straight across the line of sight (θ = {#}°) arrives with f′ = f/γ: λ goes from {#} to {#} nm from time dilation alone. Classical physics predicts no shift there.":
   "A {#} c, γ = {#}. La luz que salió de la fuente mientras esta se movía perpendicular a la línea de visión (θ = {#}°) llega con f′ = f/γ: λ pasa de {#} a {#} nm solo por la dilatación del tiempo. La física clásica no predice ningún corrimiento ahí.",
+"Close":
+  "Cerrar",
 "Received frequency f′ against time":
   "Frecuencia recibida f′ contra el tiempo",
 "No sound reaches the observer yet: it is outside the Mach cone.":
@@ -239,7 +243,5 @@ VDI18N.add('es', 'demo/doppler', {
 "no light yet":
   "aún no llega luz",
 "transverse: f′/f ≈ 1/γ":
-  "transversal: f′/f ≈ 1/γ",
-"Light":
-  "Luz"
+  "transversal: f′/f ≈ 1/γ"
 });
