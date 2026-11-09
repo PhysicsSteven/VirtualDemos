@@ -1,7 +1,7 @@
 /* site in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'site', {
-"Chladni Plates":
-  "Placas de Chladni",
+"Rocket Propulsion":
+  "Propulsión de cohetes",
 "Virtual Physics Demos":
   "Demos virtuales de física",
 "Site":
@@ -36,8 +36,8 @@ VDI18N.add('es', 'site', {
   "<span>Celular, laptop o proyector</span>",
 "<a><span>Teaching notes</span></a>":
   "<a><span>Notas para la enseñanza</span></a>",
-"<span>Chladni Plates →</span>":
-  "<span>Placas de Chladni →</span>",
+"<span>Rocket Propulsion →</span>":
+  "<span>Propulsión de cohetes →</span>",
 "Teaching with the site":
   "Enseñar con el sitio",
 "Projector mode and a QR code on every demo, so students follow on their phones":
@@ -172,8 +172,6 @@ VDI18N.add('es', 'site', {
   "Centro de masa",
 "Find the center of mass of masses on a plate, watch a firework's pieces keep its center of mass on the original parabola, and walk along a boat that slides back.":
   "Encuentra el centro de masa de masas sobre una placa, observa cómo los pedazos de un cohete de fuegos artificiales mantienen su centro de masa en la parábola original y camina sobre una lancha que se desliza hacia atrás.",
-"Rocket Propulsion":
-  "Propulsión de cohetes",
 "Burn fuel and watch the rocket get lighter and faster: the rocket equation in deep space, then a launch against gravity, a rocket too heavy to lift off at first, and why a slow burn wastes fuel.":
   "Quema combustible y observa cómo el cohete se vuelve más ligero y más rápido: la ecuación del cohete en el espacio profundo, luego un lanzamiento contra la gravedad, un cohete demasiado pesado para despegar al principio y por qué una combustión lenta desperdicia combustible.",
 "Rotation and Torque":
@@ -310,6 +308,8 @@ VDI18N.add('es', 'site', {
   "Acústica de salas y la cámara anecoica",
 "Clap in a hard room and time the echoes dying away, add absorbing panels and test Sabine's formula, then line the walls with wedges for an anechoic chamber with a clean {#}/r² and a low frequency cutoff.":
   "Aplaude en un cuarto de paredes duras y cronometra cómo se apagan los ecos, agrega paneles absorbentes y pon a prueba la fórmula de Sabine; luego cubre las paredes con cuñas para tener una cámara anecoica con un {#}/r² limpio y un corte a baja frecuencia.",
+"Chladni Plates":
+  "Placas de Chladni",
 "Drive a metal plate at its resonances and watch sand gather on the nodal lines: square and circular plates, a response curve with every mode, a 3D view and Chladni's law.":
   "Excita una placa metálica en sus resonancias y observa cómo la arena se junta en las líneas nodales: placas cuadradas y circulares, una curva de respuesta con cada modo, una vista en 3D y la ley de Chladni.",
 "Acoustic Levitation":
@@ -362,8 +362,8 @@ VDI18N.add('es', 'site', {
   "Bombea helio líquido por debajo de {#} K y deja de hervir; luego el efecto fuente, una película que trepa y sale de un vaso de precipitados, y el experimento del disco giratorio que mide qué parte del líquido es superfluida. A partir de propiedades medidas del helio.",
 "Bose–Einstein Condensation":
   "Condensación de Bose–Einstein",
-"Cool a gas of atoms in a box from {#} µK toward absolute zero: each atom's wave packet grows to the thermal de Broglie wavelength, the packets overlap, and the atoms pile into one shared ground state. Exact Bose–Einstein occupations of the box levels, an energy ladder, the phase of the wavefunction as color, the velocity picture of {#} and the condensate fraction curve.":
-  "Enfría un gas de átomos en una caja desde {#} µK hacia el cero absoluto: el paquete de ondas de cada átomo crece hasta la longitud de onda térmica de De Broglie, los paquetes se traslapan y los átomos se acumulan en un único estado fundamental compartido. Ocupaciones exactas de Bose–Einstein de los niveles de la caja, una escalera de energías, la fase de la función de onda como color, la imagen de velocidades de {#} y la curva de la fracción condensada.",
+"Cool a gas of atoms in a box or a harmonic trap from {#} µK toward absolute zero: each atom's wave packet grows to the thermal de Broglie wavelength, the packets overlap, and the atoms pile into one shared ground state. Exact Bose–Einstein occupations of the box levels, an energy ladder, the phase of the wavefunction as color, the velocity picture of {#} and the condensate fraction curve.":
+  "Enfría un gas de átomos en una caja o en una trampa armónica desde {#} µK hacia el cero absoluto: el paquete de onda de cada átomo crece hasta la longitud de onda térmica de de Broglie, los paquetes se traslapan y los átomos se acumulan en un solo estado base compartido. Ocupaciones exactas de Bose–Einstein de los niveles de la caja, una escalera de energías, la fase de la función de onda como color, la imagen de velocidades de {#} y la curva de la fracción condensada.",
 "Electricity and magnetism <span>{#} demos · {#} topics</span>":
   "Electricidad y magnetismo <span>{#} demos · {#} temas</span>",
 "Topics in Electricity and magnetism":
@@ -574,6 +574,10 @@ VDI18N.add('es', 'site', {
   "Volado cuántico",
 "An ordinary coin beside a quantum coin in a superposition, then the spin of an atom on a Bloch sphere and Stern–Gerlach magnets in a row. Measure many and compare the counts with |amplitude|².":
   "Una moneda ordinaria junto a una moneda cuántica en superposición, luego el espín de un átomo en una esfera de Bloch e imanes de Stern–Gerlach en fila. Mide muchas y compara los conteos con |amplitud|².",
+"Condensates: Interference and Vortices":
+  "Condensados: interferencia y vórtices",
+"A Bose–Einstein condensate is one wave for thousands of atoms: release two and they interfere in stripes, stir one and it fills with quantized vortices that settle into a lattice, and squeeze or shift the trap to see it breathe at exactly {#}ω and slosh at ω. The Gross–Pitaevskii equation for rubidium atoms in a flat trap.":
+  "Un condensado de Bose–Einstein es una sola onda para miles de átomos: suelta dos e interfieren en franjas, agita uno y se llena de vórtices cuantizados que se acomodan en una red, y aprieta o desplaza la trampa para verlo respirar a exactamente {#}ω y oscilar a ω. La ecuación de Gross–Pitaevskii para átomos de rubidio en una trampa plana.",
 "Hydrogen Orbitals":
   "Orbitales del hidrógeno",
 "Every hydrogen state up to n = {#} as a 3D cloud sampled from |ψ|², a slice showing its nodes, and its radial probability against the Bohr orbit. Mix 1s and 2p and watch the charge slosh at the Lyman α frequency.":
@@ -722,6 +726,8 @@ VDI18N.add('es', 'site', {
   "<a>Radiación en medicina <span>{#}</span></a>",
 "<a>Chemistry and biology <span>{#}</span></a>":
   "<a>Química y biología <span>{#}</span></a>",
+"<a>Math for physics <span>{#}</span></a>":
+  "<a>Matemáticas para física <span>{#}</span></a>",
 "Photon Interactions in Matter":
   "Interacciones de fotones con la materia",
 "How X-rays and gamma rays are stopped: the NIST coefficients of any element or tissue from {#} keV to {#} MeV split into coherent, Compton, photoelectric and pair, where each one wins, a Monte Carlo beam through a slab for buildup, and beam hardening with half value layers.":
@@ -762,6 +768,10 @@ VDI18N.add('es', 'site', {
   "ADN en 3D",
 "Build a DNA double helix atom by atom from any sequence or a random one: B and A forms, ball and stick, space filling or cartoon, hydrogen bonds, the two grooves, and a PDB export.":
   "Construye una doble hélice de ADN átomo por átomo a partir de cualquier secuencia o de una al azar: formas B y A, barras y esferas, esferas compactas o caricatura, puentes de hidrógeno, los dos surcos y exportación a PDB.",
+"Functions and Their Derivatives":
+  "Funciones y sus derivadas",
+"Type or paste any function and see it graphed with its first, second and third derivatives and its integral, updating as you type; slide a point along the curve to see the tangent slope.":
+  "Escribe o pega cualquier función y mírala graficada con su primera, segunda y tercera derivada y su integral, actualizándose mientras escribes; desliza un punto por la curva para ver la pendiente de la tangente.",
 "OpenStax University Physics by section":
   "OpenStax Física universitaria por sección",
 "Every section of the free textbook with the demos that serve it.":
@@ -1802,6 +1812,8 @@ VDI18N.add('es', 'site', {
   "<span>{#}:{#}</span> Dualidad onda-partícula",
 "<a>Open demo</a> <a>Worksheet: Wave and Particle Duality</a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Hoja de trabajo: Dualidad onda-partícula</a> <a>Notas</a>",
+"<a>Condensates: Interference and Vortices</a>":
+  "<a>Condensados: interferencia y vórtices</a>",
 "<a>e/m of the Electron</a>":
   "<a>e/m del electrón</a>",
 "<a>Open demo</a> <a>Worksheet: Charge to Mass Ratio of the Electron</a> <a>Notes</a>":
@@ -1838,6 +1850,8 @@ VDI18N.add('es', 'site', {
   "<a>Decaimiento radiactivo</a>",
 "<a>Open demo</a> <a>Worksheet {#}: Measuring a Half Life</a> <a>Worksheet {#}: Parent and Daughter</a> <a>Worksheet {#}: Alpha and Beta Decay</a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Medir una vida media</a> <a>Hoja de trabajo {#}: Núcleo padre y núcleo hijo</a> <a>Hoja de trabajo {#}: Decaimiento alfa y beta</a> <a>Notas</a>",
+"Also used in this unit: <a>Condensates: Interference and Vortices</a> <span>(card under <a>Photons and matter waves</a>; {#}:{#})</span>":
+  "También se usa en esta unidad: <a>Condensados: interferencia y vórtices</a> <span>(tarjeta en <a>Fotones y ondas de materia</a>; {#}:{#})</span>",
 "Atomic structure":
   "Estructura atómica",
 "<a>Atoms in a Magnetic Field</a>":
@@ -2628,18 +2642,20 @@ VDI18N.add('es', 'site', {
   "<span>Capítulo {#}</span> Movimiento rectilíneo <span>{#} secciones · {#} demos</span>",
 "<span>{#}:{#}</span><span>Position, Displacement, and Average Velocity</span><span><a>Motion Graphs</a></span>":
   "<span>{#}:{#}</span><span>Posición, desplazamiento y velocidad media</span><span><a>Gráficas de movimiento</a></span>",
-"<span>{#}:{#}</span><span>Instantaneous Velocity and Speed</span><span><a>Motion Graphs</a></span>":
-  "<span>{#}:{#}</span><span>Velocidad instantánea y rapidez</span><span><a>Gráficas de movimiento</a></span>",
-"<span>{#}:{#}</span><span>Average and Instantaneous Acceleration</span><span><a>Motion Graphs</a></span>":
-  "<span>{#}:{#}</span><span>Aceleración media e instantánea</span><span><a>Gráficas de movimiento</a></span>",
+"<span>{#}:{#}</span><span>Instantaneous Velocity and Speed</span>":
+  "<span>{#}:{#}</span><span>Velocidad instantánea y rapidez</span>",
+"<a>Motion Graphs</a> · <a>Functions and Their Derivatives</a>":
+  "<a>Gráficas de movimiento</a> · <a>Funciones y sus derivadas</a>",
+"<span>{#}:{#}</span><span>Average and Instantaneous Acceleration</span>":
+  "<span>{#}:{#}</span><span>Aceleración media e instantánea</span>",
 "<span>{#}:{#}</span><span>Motion with Constant Acceleration</span>":
   "<span>{#}:{#}</span><span>Movimiento con aceleración constante</span>",
 "<a>Projectile Range</a> · <a>Motion Graphs</a>":
   "<a>Alcance de proyectiles</a> · <a>Gráficas de movimiento</a>",
 "<span>{#}:{#}</span><span>Free Fall</span><span><a>Motion Graphs</a></span>":
   "<span>{#}:{#}</span><span>Caída libre</span><span><a>Gráficas de movimiento</a></span>",
-"<span>{#}:{#}</span><span>Finding Velocity and Displacement from Acceleration</span><span><a>Motion Graphs</a></span>":
-  "<span>{#}:{#}</span><span>Cálculo de la velocidad y el desplazamiento a partir de la aceleración</span><span><a>Gráficas de movimiento</a></span>",
+"<span>{#}:{#}</span><span>Finding Velocity and Displacement from Acceleration</span>":
+  "<span>{#}:{#}</span><span>Cálculo de la velocidad y el desplazamiento a partir de la aceleración</span>",
 "<span>Chapter {#}</span> Motion in Two and Three Dimensions <span>{#} sections · {#} demos</span>":
   "<span>Capítulo {#}</span> Movimiento en dos y tres dimensiones <span>{#} secciones · {#} demos</span>",
 "<span>{#}:{#}</span><span>Displacement and Velocity Vectors</span>":
@@ -3296,8 +3312,8 @@ VDI18N.add('es', 'site', {
   "<a>Explorador de espectros</a> · <a>Experimento de Franck–Hertz</a> · <a>Dispersión de Rutherford</a>",
 "<span>{#}:{#}</span><span>De Broglie’s Matter Waves</span>":
   "<span>{#}:{#}</span><span>Las ondas de materia de De Broglie</span>",
-"<a>Electron Diffraction</a> · <a>Double Slit, One Particle at a Time</a>":
-  "<a>Difracción de electrones</a> · <a>Doble rendija, una partícula a la vez</a>",
+"<a>Electron Diffraction</a> · <a>Double Slit, One Particle at a Time</a> · <a>Condensates: Interference and Vortices</a>":
+  "<a>Difracción de electrones</a> · <a>Doble rendija, una partícula a la vez</a> · <a>Condensados: interferencia y vórtices</a>",
 "<span>{#}:{#}</span><span>Wave-Particle Duality</span><span><a>Double Slit, One Particle at a Time</a></span>":
   "<span>{#}:{#}</span><span>Dualidad onda-partícula</span><span><a>Doble rendija, una partícula a la vez</a></span>",
 "<span>Chapter {#}</span> Quantum Mechanics <span>{#} sections · {#} demos</span>":
@@ -3312,8 +3328,10 @@ VDI18N.add('es', 'site', {
   "<span>{#}:{#}</span><span>La ecuación de Schrӧdinger</span><span><a>Paquetes de onda cuánticos</a></span>",
 "<span>{#}:{#}</span><span>The Quantum Particle in a Box</span><span><a>Quantum Wave Packets</a></span>":
   "<span>{#}:{#}</span><span>La partícula cuántica en una caja</span><span><a>Paquetes de onda cuánticos</a></span>",
-"<span>{#}:{#}</span><span>The Quantum Harmonic Oscillator</span><span><a>Quantum Wave Packets</a></span>":
-  "<span>{#}:{#}</span><span>El oscilador armónico cuántico</span><span><a>Paquetes de onda cuánticos</a></span>",
+"<span>{#}:{#}</span><span>The Quantum Harmonic Oscillator</span>":
+  "<span>{#}:{#}</span><span>El oscilador armónico cuántico</span>",
+"<a>Quantum Wave Packets</a> · <a>Condensates: Interference and Vortices</a>":
+  "<a>Paquetes de onda cuánticos</a> · <a>Condensados: interferencia y vórtices</a>",
 "<span>{#}:{#}</span><span>The Quantum Tunneling of Particles through Potential Barriers</span>":
   "<span>{#}:{#}</span><span>El efecto túnel de partículas a través de barreras de potencial</span>",
 "<a>Quantum Wave Packets</a> · <a>Radioactive Decay</a>":
@@ -3472,6 +3490,8 @@ VDI18N.add('es', 'site', {
   "<a>ADN en 3D</a>",
 "Mechanics":
   "Mecánica",
+"<a>Functions and Their Derivatives</a>":
+  "<a>Funciones y sus derivadas</a>",
 "<a>Belousov–Zhabotinsky Reaction</a>":
   "<a>Reacción de Belousov–Zhabotinsky</a>",
 "Electricity and magnetism":
@@ -3528,6 +3548,8 @@ VDI18N.add('es', 'site', {
   "También en <a>Calor y termodinámica</a>",
 "In <a>Modern Physics</a> · <a>Thermodynamics</a>":
   "En <a>Física moderna</a> · <a>Termodinámica</a>",
+"Also under <a>Photons and quanta</a>":
+  "También en <a>Fotones y cuantos</a>",
 "<a>Back to all topics</a>":
   "<a>Regresar a todos los temas</a>",
 "Charges and fields · Virtual Physics Demos":
@@ -3562,8 +3584,6 @@ VDI18N.add('es', 'site', {
   "OpenStax <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span>",
 "In <a>Physics II</a> · <a>Modern Physics</a>":
   "En <a>Física II</a> · <a>Física moderna</a>",
-"Also under <a>Photons and quanta</a>":
-  "También en <a>Fotones y cuantos</a>",
 "Chemistry and biology · Virtual Physics Demos":
   "Química y biología · Demos virtuales de física",
 "<b>Medical physics and beyond</b>":
@@ -3576,6 +3596,8 @@ VDI18N.add('es', 'site', {
   "<a>Radiación en medicina</a>",
 "<a>Chemistry and biology</a>":
   "<a>Química y biología</a>",
+"<a>Math for physics</a>":
+  "<a>Matemáticas para física</a>",
 "Every demo on this subject, from every course and module, with all of its worksheets. Opened from here, a demo steps through this topic with its previous and next links. The other topics in Medical physics and beyond are in the bar above; the <a>home page</a> lists them all.":
   "Todas las demos de este tema, de cada curso y módulo, con todas sus hojas de trabajo. Abierta desde aquí, una demo recorre este tema con sus enlaces de anterior y siguiente. Los demás temas de Física médica y más están en la barra de arriba; la <a>página de inicio</a> los enlista todos.",
 "Chemistry and biology demos":
@@ -3770,6 +3792,14 @@ VDI18N.add('es', 'site', {
   "<span>OpenStax Vol. {#} · Cap. {#}–{#} · Vol. {#} · Cap. {#}, {#}, {#}</span>",
 "Magnetism demos":
   "Demos de magnetismo",
+"Math for physics · Virtual Physics Demos":
+  "Matemáticas para física · Demos virtuales de física",
+"Math for physics":
+  "Matemáticas para física",
+"Type any function and see its derivatives and its integral graphed with it.":
+  "Escribe cualquier función y mira sus derivadas y su integral graficadas junto con ella.",
+"Math for physics demos":
+  "Demos de matemáticas para física",
 "Radiation in medicine · Virtual Physics Demos":
   "Radiación en medicina · Demos virtuales de física",
 "Radiation in medicine":
@@ -3934,6 +3964,20 @@ VDI18N.add('es', 'site', {
   "<span>OpenStax Vol. {#} · Cap. {#} · Vol. {#} · Cap. {#}, {#}–{#}, {#}</span>",
 "Interference and diffraction demos":
   "Demos de interferencia y difracción",
+"<span>Chladni Plates →</span>":
+  "<span>Placas de Chladni →</span>",
+"Cool a gas of atoms in a box from {#} µK toward absolute zero: each atom's wave packet grows to the thermal de Broglie wavelength, the packets overlap, and the atoms pile into one shared ground state. Exact Bose–Einstein occupations of the box levels, an energy ladder, the phase of the wavefunction as color, the velocity picture of {#} and the condensate fraction curve.":
+  "Enfría un gas de átomos en una caja desde {#} µK hacia el cero absoluto: el paquete de ondas de cada átomo crece hasta la longitud de onda térmica de De Broglie, los paquetes se traslapan y los átomos se acumulan en un único estado fundamental compartido. Ocupaciones exactas de Bose–Einstein de los niveles de la caja, una escalera de energías, la fase de la función de onda como color, la imagen de velocidades de {#} y la curva de la fracción condensada.",
+"<span>{#}:{#}</span><span>Instantaneous Velocity and Speed</span><span><a>Motion Graphs</a></span>":
+  "<span>{#}:{#}</span><span>Velocidad instantánea y rapidez</span><span><a>Gráficas de movimiento</a></span>",
+"<span>{#}:{#}</span><span>Average and Instantaneous Acceleration</span><span><a>Motion Graphs</a></span>":
+  "<span>{#}:{#}</span><span>Aceleración media e instantánea</span><span><a>Gráficas de movimiento</a></span>",
+"<span>{#}:{#}</span><span>Finding Velocity and Displacement from Acceleration</span><span><a>Motion Graphs</a></span>":
+  "<span>{#}:{#}</span><span>Cálculo de la velocidad y el desplazamiento a partir de la aceleración</span><span><a>Gráficas de movimiento</a></span>",
+"<a>Electron Diffraction</a> · <a>Double Slit, One Particle at a Time</a>":
+  "<a>Difracción de electrones</a> · <a>Doble rendija, una partícula a la vez</a>",
+"<span>{#}:{#}</span><span>The Quantum Harmonic Oscillator</span><span><a>Quantum Wave Packets</a></span>":
+  "<span>{#}:{#}</span><span>El oscilador armónico cuántico</span><span><a>Paquetes de onda cuánticos</a></span>",
 "<b>Physics</b>":
   "<b>Física</b>",
 "Interactive demonstrations for introductory physics. Each one runs in the browser with nothing to install.":

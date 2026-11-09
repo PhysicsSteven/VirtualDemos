@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="../demos/lib/theme.js"></script>
+<title>Functions and Their Derivatives: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+@media screen { :root[data-theme="dark"] {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; overflow-wrap: break-word; }   /* a long file name breaks instead of pushing a phone sideways */
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+<link rel="stylesheet" id="vd-paper" href="../demos/lib/paper.css">
+</head>
+<body class="notes">
+<header class="top" aria-label="Site"><a class="brand" href="../index.html"><svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><ellipse cx="16" cy="16" rx="13" ry="6" fill="none" stroke="currentColor" stroke-width="1.8" transform="rotate(-30 16 16)"/><ellipse cx="16" cy="16" rx="13" ry="6" fill="none" stroke="currentColor" stroke-width="1.8" transform="rotate(30 16 16)"/><circle cx="16" cy="16" r="2.6" fill="currentColor"/></svg>Virtual Physics Demos</a><nav class="tabs" aria-label="Library"><a class="tab" href="../index.html#topics">Demos</a><a class="tab" href="../openstax.html">OpenStax</a><a class="tab" href="index.html" aria-current="page">Notes</a></nav><span class="hfind"></span><span data-vd-theme></span><a class="courses" href="../courses.html"><b>For a class</b> Courses</a></header>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Functions and Their Derivatives</h1><ul class="meta"><li><a href="../demos/derivatives.html">Open the demo</a></li><li>Physics I (Vol 1 3.2, 3.3, 3.6) and any course that uses calculus</li><li>10 to 25 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>The derivative is the slope of the function at each point: where f rises, f′ is positive; where f has a peak or a valley, f′ crosses zero.</li>
+<li>The second derivative is the slope of the slope. Where f curves upward f″ is positive, where it curves downward f″ is negative, and an inflection point is where f″ changes sign.</li>
+<li>For motion, the same chain reads position, velocity, acceleration, jerk: the dropped ball has a straight line velocity and a constant acceleration.</li>
+<li>The integral runs the other way: F(x) is the area under f from a, and the slope of F is f again.</li>
+</ul>
+<h2>Before class</h2>
+<p>Nothing to install. Use Projector mode so the curves are thick enough to read. The box takes ordinary typing (2x, sin x, x^3, e^(-x^2/2)), and a pasted y = or f(x) = is fine. Blind mode in the Lab fold hides the derivative formulas and values, so students can sketch f′ before they see it.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>A cubic.</strong> Turn on Blind and leave only f showing. Ask students to sketch f′ on the same axes, then turn f′ on (Q1). Press Play: the tangent line slides along, and its slope is the value of f′ at the point.</li>
+<li><strong>A dropped ball.</strong> Switch to the dropped ball. The same three curves are now height, velocity and acceleration (Q2). Turn on f‴: the jerk is zero.</li>
+<li><strong>Sine.</strong> f″ is f upside down. Type sin(2x) and compare f″ with f (Q3); connect to a = −ω²x for a mass on a spring.</li>
+<li><strong>A corner.</strong> Ask for a prediction of f′ for |x| before showing it (Q4).</li>
+<li><strong>The integral.</strong> Use the 1/x setup: F from a = 1 is ln x. Then the bell curve with the integral on (Q5).</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> For f(x) = x³ − 3x, find where f′ = 0 and use the sign of f″ there to say which point is a peak and which is a valley. Where is the inflection point? Check each answer by moving the point in the demo.</p></div>
+
+<div class="q"><p><strong>Q2.</strong> A ball is dropped from 20 m: h(t) = 20 − 4.905t² in meters, t in seconds. When does it land, and what is its velocity just before it lands? What are the second and third derivatives, and what do they mean physically?</p></div>
+
+<div class="q"><p><strong>Q3.</strong> Type sin(2x). What is f″ divided by f at any point? What would it be for sin(kx)? A mass on a spring has x(t) = A cos(ωt). What does this say about its acceleration?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> Predict, then check: sketch f′ and f″ for f(x) = |x|. What happens at x = 0? The demo shows f″ = 0 everywhere; why can that not be the whole story at x = 0? (Hint: f′(1) − f′(−1) must equal the area under f″ from −1 to 1.)</p></div>
+
+<div class="q"><p><strong>Q5.</strong> For the bell curve e^(−x²/2), the integral from 0 levels off at 1.2533 as x grows. What is the area under the whole curve, from −∞ to ∞? Read F(1) from the demo with a = 0, and use it to find the fraction of the whole area that lies between x = −1 and x = 1. Where have you seen that fraction before?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"Where f is biggest, f′ is biggest."</strong> At a peak f′ is zero; f′ is largest where f is steepest.</li>
+<li><strong>"f″ &lt; 0 means f is decreasing."</strong> f″ says how the slope changes, not its sign. On the left of the cubic f rises (f′ &gt; 0) while curving downward (f″ &lt; 0).</li>
+<li><strong>"A negative acceleration means slowing down."</strong> The dropped ball has a = −9.81 m/s² the whole way and speeds up, because its velocity is negative too.</li>
+<li><strong>"The integral is the area, so it cannot be negative."</strong> F counts area below the axis, or to the left of a, as negative.</li>
+</ul>
+<h2>How the demo works</h2>
+<ul>
+<li>The box is read by a parser written for the page; nothing typed is run as code. Implied multiplication (2x, 3sin(x), (x+1)(x−1)), function powers (sin^2(x), sin^-1(x)) and absolute value bars are understood.</li>
+<li>Derivatives are symbolic and exact: the sum, product, power and chain rules, then like terms and factors are combined, so the formulas shown are the exact derivatives. Odd roots of negative numbers are real (∛x is defined for x &lt; 0); even roots are not.</li>
+<li>The integral is numerical: adaptive Simpson's rule, to about nine significant figures. Where the area diverges (1/x across 0) it stops.</li>
+<li>A derivative is drawn only where f is defined, and a jump is left as a gap. Angles are in radians.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>. © 2026 Steven Anderson. All rights reserved; see the <a href="../LICENSE.html">terms of use</a>.</footer>
+</main>
+</body>
+</html>
