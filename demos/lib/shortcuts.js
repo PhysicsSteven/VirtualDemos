@@ -30,7 +30,7 @@ window.VD_SHORTCUTS = {
   "condensate-waves": [],
   "derivatives": [
     ["← →", "Move the point along the curve (Shift for bigger steps)", "on the picture"],
-    ["+ −", "Zoom in or out", "on the picture"]
+    ["+ −", "Zoom in or out (or Ctrl + scroll)", "on the picture"]
   ],
   "blackbody": [
     ["↑ ← ↓ →", "Raise the temperature (↑ ←) or lower it (↓ →) (Shift for bigger steps)", "on the spectrum chart"]

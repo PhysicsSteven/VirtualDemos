@@ -34,7 +34,7 @@
 .shelf-card { flex: 1 1 230px; display: grid; grid-template-columns: minmax(0, 1fr); align-content: start; gap: 7px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--canvas); }
 .shelf-card > .card-title { font-size: 0.78rem; font-weight: 700; color: var(--muted); }
 .shelf-card .row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; font-size: 0.86rem; }
-.shelf-card input[type="number"] { width: 6.5em; font: inherit; font-family: var(--font-mono); padding: 3px 6px; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; }
+.shelf-card input[type="number"] { width: 7.5em; font: inherit; font-family: var(--font-mono); padding: 3px 6px; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; }
 .sw { display: inline-block; width: 26px; height: 0; border-top: 3px solid; vertical-align: middle; margin-right: 6px; }
 .sw.f { border-color: var(--fg-f); }
 .sw.d1 { border-color: var(--fg-d1); border-top-style: dashed; }
@@ -73,7 +73,7 @@ dl.formulas .f { color: var(--fg-f); } dl.formulas .d1 { color: var(--fg-d1); } 
       <div class="stage-ctl" id="strip">
         <button type="button" class="spin attn" id="play" data-vd-key="play">Play</button>
         <button type="button" class="btn" id="reset" title="Put the point back at its starting place">Reset</button>
-        <span class="note" id="note">Play slides the point along the curve. Drag the graph to move it; scroll or pinch to zoom.</span>
+        <span class="note" id="note">Play slides the point along the curve. Drag the graph to move it; Ctrl + scroll or pinch to zoom.</span>
       </div>
       <div class="fbar">
         <label for="fx" id="fxLabel" translate="no">f(x) =</label>
@@ -103,7 +103,7 @@ dl.formulas .f { color: var(--fg-f); } dl.formulas .d1 { color: var(--fg-d1); } 
           <span class="card-title">The view</span>
           <div class="row"><label for="x0in">x from</label><input type="number" id="x0in" step="any"><label for="x1in">to</label><input type="number" id="x1in" step="any"></div>
           <div class="row"><label for="y0in">y from</label><input type="number" id="y0in" step="any"><label for="y1in">to</label><input type="number" id="y1in" step="any"></div>
-          <div class="row"><button type="button" class="btn" id="zin">Zoom in</button><button type="button" class="btn" id="zout">Zoom out</button><button type="button" class="btn" id="fitY">Fit y to f</button></div>
+          <div class="row"><button type="button" class="btn" id="zin">Zoom in</button><button type="button" class="btn" id="zout">Zoom out</button><button type="button" class="btn" id="fitY">Fit y to f</button><button type="button" class="btn" id="homeView">Reset view</button></div>
         </div>
       </div>
     </div>
@@ -690,7 +690,13 @@ dl.formulas .f { color: var(--fg-f); } dl.formulas .d1 { color: var(--fg-d1); } 
     const raw = span / Math.max(2, px), p10 = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p10;
     return (m <= 1 ? 1 : m <= 2 ? 2 : m <= 5 ? 5 : 10) * p10;
   }
-  const tick = (v, step) => fmt(Math.abs(v) < step * 1e-6 ? 0 : Number(v.toFixed(Math.max(0, -Math.floor(Math.log10(step)) + 1))));
+  function tick(v, step) {
+    if (Math.abs(v) < step * 1e-6) return '0';
+    if (step >= 1e5 || step < 1e-3) { const e = Math.floor(Math.log10(Math.abs(v))), m = Number((v / Math.pow(10, e)).toPrecision(3)); return (m === 1 ? '' : m === -1 ? '−' : fmt(m) + '×') + '10' + sup(e); }
+    return fmt(Number(v.toFixed(Math.max(0, -Math.floor(Math.log10(step)) + 1))));
+  }
+  /* text with a halo in the canvas color, so a curve or axis under it does not hide it */
+  const label = (t, x, y) => { ctx.save(); ctx.strokeStyle = T.canvas; ctx.lineWidth = 4; ctx.lineJoin = 'round'; ctx.strokeText(t, x, y); ctx.restore(); ctx.fillText(t, x, y); };
   function grid(p) {
     const sx = niceStep(S.x1 - S.x0, W / (90 * p)), sy = niceStep(S.y1 - S.y0, H / (60 * p));
     ctx.lineWidth = 1; ctx.strokeStyle = T.line; ctx.beginPath();
@@ -704,9 +710,9 @@ dl.formulas .f { color: var(--fg-f); } dl.formulas .d1 { color: var(--fg-d1); } 
     ctx.stroke();
     ctx.fillStyle = T.muted; ctx.font = `${11 * p}px ${T.mono}`;
     const below = ax + 16 * p < H; ctx.textAlign = 'center'; ctx.textBaseline = below ? 'top' : 'bottom';
-    for (let x = Math.ceil(S.x0 / sx) * sx; x <= S.x1; x += sx) { if (Math.abs(x) < sx / 2) continue; ctx.fillText(tick(x, sx), X(x), below ? ax + 4 * p : ax - 4 * p); }
+    for (let x = Math.ceil(S.x0 / sx) * sx; x <= S.x1; x += sx) { if (Math.abs(x) < sx / 2) continue; label(tick(x, sx), X(x), below ? ax + 4 * p : ax - 4 * p); }
     const right = ay + 50 * p < W; ctx.textAlign = right ? 'left' : 'right'; ctx.textBaseline = 'middle';
-    for (let y = Math.ceil(S.y0 / sy) * sy; y <= S.y1; y += sy) { if (Math.abs(y) < sy / 2) continue; const u = Y(y); if (u < 10 || u > H - 10) continue; ctx.fillText(tick(y, sy), right ? ay + 5 * p : ay - 5 * p, u); }
+    for (let y = Math.ceil(S.y0 / sy) * sy; y <= S.y1; y += sy) { if (Math.abs(y) < sy / 2) continue; const u = Y(y); if (u < 10 || u > H - 10) continue; label(tick(y, sy), right ? ay + 5 * p : ay - 5 * p, u); }
     ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillText(S.v, W - 6 * p, (Y(0) >= 0 && Y(0) <= H ? Y(0) : H) - 4 * p);
   }
   /* a curve from its samples, with gaps where it is undefined or jumps (a jump that bisection cannot shrink is a discontinuity) */
@@ -789,7 +795,7 @@ dl.formulas .f { color: var(--fg-f); } dl.formulas .d1 { color: var(--fg-d1); } 
     if (show.f) dot(fv, T.f);
     ctx.fillStyle = T.muted; ctx.font = `${12 * p}px ${T.mono}`; ctx.textBaseline = 'top';
     const lab = `${S.v} = ${f4(S.px)}`, wl = ctx.measureText(lab).width;
-    ctx.textAlign = u + wl + 12 > W ? 'right' : 'left'; ctx.fillText(lab, u + (u + wl + 12 > W ? -6 : 6) * p, 8 * p);
+    ctx.textAlign = u + wl + 12 > W ? 'right' : 'left'; label(lab, u + (u + wl + 12 > W ? -6 : 6) * p, 8 * p);
   }
   function Fat(x) { return S.fns ? integral(S.fns.f, S.a, x, 1) : NaN; }
 
@@ -821,7 +827,7 @@ dl.formulas .f { color: var(--fg-f); } dl.formulas .d1 { color: var(--fg-d1); } 
     $('out').innerHTML = h;
   }
   function viewInputs() {
-    const set = (id, v) => { const el = $(id); if (document.activeElement !== el) el.value = Number(v.toPrecision(5)); };
+    const set = (id, v) => { const el = $(id); if (document.activeElement !== el) el.value = Math.abs(v) >= 1e5 || (v !== 0 && Math.abs(v) < 1e-3) ? v.toExponential(2) : Number(v.toPrecision(5)); };
     set('x0in', S.x0); set('x1in', S.x1); set('y0in', S.y0); set('y1in', S.y1);
   }
 
@@ -860,6 +866,7 @@ dl.formulas .f { color: var(--fg-f); } dl.formulas .d1 { color: var(--fg-d1); } 
   $('zin').addEventListener('click', () => zoom(1 / 1.5));
   $('zout').addEventListener('click', () => zoom(1.5));
   $('fitY').addEventListener('click', () => { fitY(); need = true; });
+  $('homeView').addEventListener('click', () => { const c = PRESETS[S.preset]; S.x0 = c ? c.x[0] : -5; S.x1 = c ? c.x[1] : 5; fitY(); viewInputs(); need = true; });
   for (const id of ['x0in', 'x1in']) $(id).addEventListener('change', () => { setView(+$('x0in').value, +$('x1in').value, S.y0, S.y1); if (S.autoY) fitY(); });
   for (const id of ['y0in', 'y1in']) $(id).addEventListener('change', () => { S.autoY = false; setView(S.x0, S.x1, +$('y0in').value, +$('y1in').value); });
 
@@ -897,7 +904,9 @@ dl.formulas .f { color: var(--fg-f); } dl.formulas .d1 { color: var(--fg-d1); } 
     if (!ptrs.size) drag = null; else if (drag && drag.pinch) drag = null;
   };
   can.addEventListener('pointerup', up); can.addEventListener('pointercancel', up);
+  /* plain scrolling scrolls the page; Ctrl or ⌘ + scroll (and a trackpad pinch, which arrives the same way) zooms */
   can.addEventListener('wheel', (e) => {
+    if (!e.ctrlKey && !e.metaKey) return;
     e.preventDefault();
     const r = can.getBoundingClientRect();
     zoom(Math.pow(1.0015, Math.max(-200, Math.min(200, e.deltaY))), Xi(e.clientX - r.left), Yi(e.clientY - r.top));
