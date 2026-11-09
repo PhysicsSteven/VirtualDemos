@@ -92,6 +92,7 @@ dl.formulas .f { color: var(--fg-f); } dl.formulas .d1 { color: var(--fg-d1); } 
           <label class="check"><input type="checkbox" id="showD3"><span><span class="sw d3"></span>f‴, the third derivative (slope of f″)</span></label>
           <label class="check"><input type="checkbox" id="showInt"><span><span class="sw int"></span>The integral of f, from a</span></label>
           <label class="check"><input type="checkbox" id="showTan" checked><span><span class="sw tan"></span>Tangent line at the point</span></label>
+          <label class="check"><input type="checkbox" id="ownScale"><span>Scale each curve to the size of f, to compare shapes (zero stays on the axis)</span></label>
         </div>
         <div class="shelf-card" role="group" aria-label="The integral">
           <span class="card-title">The integral</span>
@@ -758,6 +759,13 @@ dl.formulas .f { color: var(--fg-f); } dl.formulas .d1 { color: var(--fg-d1); } 
     const show = { f: $('showF').checked, d1: $('showD1').checked, d2: $('showD2').checked, d3: $('showD3').checked, int: $('showInt').checked, tan: $('showTan').checked, area: $('showArea').checked };
     const fy = sample(S.fns.f);
     let scale = 0; for (const y of fy) if (isFinite(y)) scale = Math.max(scale, Math.abs(y));
+    /* with Scale each curve: a curve is drawn times a round factor (1, 2 or 5 × 10ⁿ) that brings its typical size (98th percentile
+       of |value| in view) to f's, so shapes compare at any zoom; zero stays on the axis, so zero crossings line up. Readouts stay true. */
+    const own = $('ownScale').checked, size98 = (ys) => { const a = []; for (const y of ys) if (isFinite(y)) a.push(Math.abs(y)); if (!a.length) return 0; a.sort((p, q) => p - q); return a[Math.min(a.length - 1, Math.floor(a.length * 0.98))]; };
+    const ref = size98(fy), K = { d1: 1, d2: 1, d3: 1, int: 1 };
+    const factor = (ys) => { const c = size98(ys); if (!own || !(c > 0) || !(ref > 0)) return 1; const r = ref / c, e = Math.floor(Math.log10(r)), m = r / Math.pow(10, e); return (m < 1.5 ? 1 : m < 3.5 ? 2 : m < 7.5 ? 5 : 10) * Math.pow(10, e); };
+    const times = (ys, k) => { if (k !== 1) for (let i = 0; i < ys.length; i++) ys[i] *= k; return ys; };
+    const scaled = (g, k) => (k === 1 ? g : (x) => g(x) * k);
     /* the shaded area from a to the point */
     if (show.int && show.area && isFinite(S.a)) {
       const lo = Math.min(S.a, S.px), hi = Math.max(S.a, S.px), m = 300;
@@ -775,16 +783,18 @@ dl.formulas .f { color: var(--fg-f); } dl.formulas .d1 { color: var(--fg-d1); } 
     }
     if (show.int) {
       if (!S.F || S.F.key !== `${S.x0},${S.x1},${S.a},${n},${S.src}`) S.F = { key: `${S.x0},${S.x1},${S.a},${n},${S.src}`, ys: cumulative(S.fns.f, xs, S.a, scale) };
-      curve(null, S.F.ys, xs, T.int, 2.5 * p, [16 * p, 6 * p]);
+      K.int = factor(S.F.ys);
+      curve(null, times(Float64Array.from(S.F.ys), K.int), xs, T.int, 2.5 * p, [16 * p, 6 * p]);
       if (S.a >= S.x0 && S.a <= S.x1) {
         const ya = Math.min(Math.max(Y(0), 12 * p), H - 18 * p);
         ctx.fillStyle = T.int; ctx.beginPath(); ctx.arc(X(S.a), Y(0) >= 0 && Y(0) <= H ? Y(0) : ya, 4 * p, 0, 7); ctx.fill();
         ctx.font = `700 ${12 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText('a', X(S.a) + 5 * p, ya - 5 * p);
       }
     }
-    if (show.d3) curve(S.fns.d3, sample(S.fns.d3), xs, T.d3, 2 * p, [12 * p, 5 * p, 3 * p, 5 * p]);
-    if (show.d2) curve(S.fns.d2, sample(S.fns.d2), xs, T.d2, 2.5 * p, [2 * p, 5 * p]);
-    if (show.d1) curve(S.fns.d1, sample(S.fns.d1), xs, T.d1, 2.5 * p, [10 * p, 6 * p]);
+    const draw1 = (k, color, w, dash) => { const ys = sample(S.fns[k]); K[k] = factor(ys); curve(scaled(S.fns[k], K[k]), times(ys, K[k]), xs, color, w * p, dash); };
+    if (show.d3) draw1('d3', T.d3, 2, [12 * p, 5 * p, 3 * p, 5 * p]);
+    if (show.d2) draw1('d2', T.d2, 2.5, [2 * p, 5 * p]);
+    if (show.d1) draw1('d1', T.d1, 2.5, [10 * p, 6 * p]);
     if (show.f) curve(S.fns.f, fy, xs, T.f, 3.2 * p, []);
     /* the point: guide, tangent, and a dot on each curve */
     const u = X(S.px);
@@ -795,15 +805,22 @@ dl.formulas .f { color: var(--fg-f); } dl.formulas .d1 { color: var(--fg-d1); } 
       ctx.moveTo(0, Y(fv + sv * (S.x0 - S.px))); ctx.lineTo(W, Y(fv + sv * (S.x1 - S.px))); ctx.stroke(); ctx.globalAlpha = 1;
     }
     const dot = (y, c) => { if (!isFinite(y)) return; const w = Y(y); if (w < -10 || w > H + 10) return; ctx.fillStyle = c; ctx.strokeStyle = T.canvas; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(u, w, 5 * p, 0, 7); ctx.fill(); ctx.stroke(); };
-    if (show.int) dot(Fat(S.px), T.int);
-    if (show.d3) dot(S.fns.d3(S.px), T.d3);
-    if (show.d2) dot(S.fns.d2(S.px), T.d2);
-    if (show.d1) dot(sv, T.d1);
+    if (show.int) dot(Fat(S.px) * K.int, T.int);
+    if (show.d3) dot(S.fns.d3(S.px) * K.d3, T.d3);
+    if (show.d2) dot(S.fns.d2(S.px) * K.d2, T.d2);
+    if (show.d1) dot(sv * K.d1, T.d1);
     if (show.f) dot(fv, T.f);
+    /* the factors, in each curve's color, at the top right */
+    if (own) {
+      const rows = [['d1', 'f′', show.d1], ['d2', 'f″', show.d2], ['d3', 'f‴', show.d3], ['int', 'F', show.int]].filter((r) => r[2]);
+      ctx.font = `${12 * p}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'top';
+      rows.forEach(([k, name], i) => { ctx.fillStyle = T[k]; label(VDI18N.t('{c} drawn × {k}', { c: name, k: kStr(K[k]) }), W - 8 * p, (30 + 17 * i) * p); });
+    }
     ctx.fillStyle = T.muted; ctx.font = `${12 * p}px ${T.mono}`; ctx.textBaseline = 'top';
     const lab = `${S.v} = ${f4(S.px)}`, wl = ctx.measureText(lab).width;
     ctx.textAlign = u + wl + 12 > W ? 'right' : 'left'; label(lab, u + (u + wl + 12 > W ? -6 : 6) * p, 8 * p);
   }
+  function kStr(k) { if (k === 1) return '1'; const e = Math.round(Math.log10(k)); if (Math.abs(e) <= 3) return fmt(Number(k.toPrecision(2))); const m = Number((k / Math.pow(10, e)).toPrecision(2)); return (m === 1 ? '' : fmt(m) + '×') + '10' + sup(e); }
   function Fat(x) { return S.fns ? integral(S.fns.f, S.a, x, 1) : NaN; }
 
   /* the rail */
@@ -857,7 +874,7 @@ dl.formulas .f { color: var(--fg-f); } dl.formulas .d1 { color: var(--fg-d1); } 
   }
   $('play').addEventListener('click', () => setRun(!S.run));
   $('reset').addEventListener('click', () => { setRun(false); S.px = PRESETS[S.preset] ? PRESETS[S.preset].p : S.x0 + 0.08 * (S.x1 - S.x0); need = true; });
-  for (const id of ['showF', 'showD1', 'showD2', 'showD3', 'showInt', 'showTan', 'showArea']) $(id).addEventListener('change', () => { formulas(); need = true; });
+  for (const id of ['showF', 'showD1', 'showD2', 'showD3', 'showInt', 'showTan', 'showArea', 'ownScale']) $(id).addEventListener('change', () => { formulas(); need = true; });
   $('aLow').addEventListener('input', () => { const v = parseFloat($('aLow').value); if (isFinite(v)) { S.a = v; formulas(); need = true; } });
   $('aHere').addEventListener('click', () => { S.a = Number(S.px.toPrecision(6)); $('aLow').value = S.a; if (!$('showInt').checked) $('showInt').checked = true; formulas(); need = true; });
   $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; formulas(); need = true; });

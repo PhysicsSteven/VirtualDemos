@@ -34,6 +34,8 @@ VDI18N.add('es', 'demo/derivatives', {
   "<span><span></span>La integral de f, desde a</span>",
 "<span><span></span>Tangent line at the point</span>":
   "<span><span></span>Recta tangente en el punto</span>",
+"<span>Scale each curve to the size of f, to compare shapes (zero stays on the axis)</span>":
+  "<span>Escalar cada curva al tamaño de f, para comparar formas (el cero se queda en el eje)</span>",
 "The integral":
   "La integral",
 "<span>The integral</span>":
@@ -178,6 +180,8 @@ VDI18N.add('es', 'demo/derivatives', {
   "Todavía se muestra la última gráfica.",
 "Graphing what is finished so far, while you type.":
   "Graficando lo que ya está completo, mientras escribes.",
+"{c} drawn × {k}":
+  "{c} dibujada × {k}",
 "too long to show":
   "demasiado larga para mostrarse",
 "f is level here: f′ = 0":
