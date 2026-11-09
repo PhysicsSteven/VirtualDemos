@@ -34,3 +34,10 @@ All browser checks need `NODE_PATH=/opt/node-tools/node_modules` in the cloud co
   Play or Release press visibly changes the stage. Pictures go to `/tmp/vdcheck/opencheck`.
 - `node tools/beforeafter.cjs <demo> [--ref origin/main]` writes one picture of the demo before and after a change, desktop and phone,
   light and dark. Attach it to the reply for any visual fix.
+- `node tools/breakit.cjs <demo>... | --all [--jobs 4]` is the break-it test (Steve 2026-11-09): it uses the demo like a student (zoom out and back
+  in, drag past the edge, keys, Play pressed fast, every slider to its ends, odd numbers and text typed in every box, every select option,
+  checkbox and preset button, Projector, Day and Cool lab, a 400 px phone, Reset all) and probes after every step for page errors, NaN or
+  Infinity on the page, a stage gone blank, sideways scroll on the phone, Reset all that leaves a control changed, and the demo's known
+  values from `tools/breakit/<demo>.cjs` (`checks`: page code returning true or a message; `steps`: extra sequences; see
+  `tools/breakit/derivatives.cjs`). A zoom out and back that does not return is a warning to look at (a zoom limit is fine). About 30 s a
+  demo. Pictures and a JSON report go to `/tmp/vdcheck/breakit/<demo>`.

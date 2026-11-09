@@ -80,7 +80,9 @@ only when the work needs them.
 - Break-it test (Steve 2026-11-09): before an interactive demo or tool is reported done, use it the way a student would: zoom far out
   and back in, pan, drag, push every control to its limits, type extreme or odd inputs, resize the stage, switch setups, themes and
   looks. Known values must stay exact throughout (the derivatives grapher's f′(0) for x³ − 3x stays −3 at any zoom). Static checks
-  miss these: the derivatives grapher shipped with zoom bugs that only showed after a zoom out and back in.
+  miss these: the derivatives grapher shipped with zoom bugs that only showed after a zoom out and back in. `node tools/breakit.cjs
+  <demo>` runs the scripted part (see `docs/tools.md`); put the demo's known values in `tools/breakit/<demo>.cjs`, then try the
+  odd sequences the script can't guess and look at the pictures.
 
 ## Handouts, worksheets and videos
 - Procedure steps state the task, not the control. Rules for headings, `worksheet.js` maps and course lines: `docs/handouts.md`.
