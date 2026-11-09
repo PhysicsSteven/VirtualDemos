@@ -522,7 +522,9 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     const p = h * h / m;
     const w = e > 1e-9 ? Math.atan2(ey, ex) : Math.atan2(y, x);
     const radial = Math.abs(h) < 1e-9 * Math.max(1, r * Math.sqrt(v2));
-    const parabolic = Math.abs(e - 1) < 0.002;
+    /* parabolic is judged from the energy, not from e: a very slow launch is a bound ellipse with e just under 1
+       (it falls into the star), and was mislabeled "just escapes" when e decided it (break-it test, 2026-11-09) */
+    const parabolic = Math.abs(eps) < 1e-3 * m / r;
     const bound = eps < 0 && !parabolic;
     const a = bound ? -m / (2 * eps) : Infinity;
     const q = radial ? 0 : p / (1 + e);

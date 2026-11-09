@@ -92,6 +92,20 @@ test('the fit of readings recovers 4 pi²/GM = 1/M from timer and ruler values a
   close(exact.b, 1); close(exact.sb, 0);
 });
 
+test('a very slow launch is a bound ellipse, not a parabola; a launch at escape speed is', () => {
+  const m = GM(1);
+  for (const kms of [0.2, 0.5, 1.0, 1.3]) {               /* tangential at 1 AU: e = 1 - v²r/m, just under 1 */
+    const el = K.orbitElements({ x: 1, y: 0, vx: 0, vy: kms / K.KMS }, m);
+    assert.ok(el.e > 0.997 && el.eps < 0, 'e ' + el.e);
+    assert.equal(el.parabolic, false); assert.equal(el.bound, true);
+    close(el.a, -m / (2 * el.eps), 1e-12); close(el.P * el.P, el.a ** 3, 1e-12);
+  }
+  const esc = K.orbitElements({ x: 1, y: 0, vx: 0, vy: Math.sqrt(2 * m) }, m);
+  assert.equal(esc.parabolic, true); assert.equal(esc.bound, false);
+  const fast = K.orbitElements({ x: 1, y: 0, vx: 0, vy: 1.01 * Math.sqrt(2 * m) }, m);
+  assert.equal(fast.parabolic, false); assert.equal(fast.bound, false);
+});
+
 test('CSV helpers', () => {
   assert.equal(K.buildCSV(['T (simulated data)', ['demo version', 'kepler-orbits@x']], ['a_AU', 'T_yr'], [[0.3871, 0.24084], ["Halley's comet", '']]),
     "# T (simulated data)\n# demo version,kepler-orbits@x\na_AU,T_yr\n0.3871,0.24084\nHalley's comet,\n");
