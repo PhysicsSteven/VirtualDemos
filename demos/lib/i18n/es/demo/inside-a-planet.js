@@ -18,8 +18,8 @@ VDI18N.add('es', 'demo/inside-a-planet', {
   "núcleo de PREM {#} km",
 "Earth, cut through the middle (drawn to scale)":
   "La Tierra, cortada por la mitad (dibujada a escala)",
-"core: {#} km, {#} {#} kg/m³":
-  "núcleo: {#} km, {#} {#} kg/m³",
+"core: {#} km, {#} kg/m³":
+  "núcleo: {#} km, {#} kg/m³",
 "mantle: {#} kg/m³":
   "manto: {#} kg/m³",
 "Inside a Planet":
@@ -236,6 +236,12 @@ VDI18N.add('es', 'demo/inside-a-planet', {
   "Continente",
 "Ocean floor":
   "Fondo oceánico",
+"{#} km up":
+  "{#} km arriba",
+"root {#} km":
+  "raíz {#} km",
+"mantle {#} kg/m³ (flows over millions of years)":
+  "manto {#} kg/m³ (fluye a lo largo de millones de años)",
 "Crust floating on the mantle (heights and depths to scale)":
   "Corteza flotando sobre el manto (alturas y profundidades a escala)",
 "Average crust: continents {#} km thick and the ocean floor {#} km (Huang et al. {#}); continental crust {#} kg/m³ (Christensen and Mooney {#}), ocean crust {#} kg/m³ and the top of the mantle {#} kg/m³ (PREM). The thick, light continent floats {#} km higher. Earth measures {#} km between the average land ({#} km up) and the average sea floor ({#} km down).":
@@ -256,12 +262,6 @@ VDI18N.add('es', 'demo/inside-a-planet', {
   "Raíz de la corteza oceánica debajo",
 "Continent higher by":
   "El continente es más alto por",
-"mantle {#} kg/m³ (flows over millions of years)":
-  "manto {#} kg/m³ (fluye a lo largo de millones de años)",
-"{#} km up":
-  "{#} km arriba",
-"root {#} km":
-  "raíz {#} km",
 "the mantle's level":
   "el nivel del manto",
 "Crust floating on the mantle (side view, heights and depths to scale)":
@@ -270,8 +270,6 @@ VDI18N.add('es', 'demo/inside-a-planet', {
   "Si la Tierra fuera una sola roca de principio a fin, con la densidad de la roca del manto en la superficie (unos {#} kg/m³), su densidad media sería {#} kg/m³, muy por debajo de los {#} kg/m³ medidos a partir de su masa y su tamaño, y su C/MR² sería {#}, el valor para una esfera de densidad uniforme. Ambos indican que el interior es más denso: prueba con un núcleo.",
 "Mercury, cut through the middle (drawn to scale)":
   "Mercurio, cortado por la mitad (dibujado a escala)",
-"core: {#} km, {#} kg/m³":
-  "núcleo: {#} km, {#} kg/m³",
 "Mercury, with the core radius from its gravity field and spin ({#} ± {#} km, Hauck et al. {#}). The core fills {#}% of the radius and holds about three quarters of the mass.":
   "Mercurio, con el radio del núcleo obtenido de su campo de gravedad y su giro ({#} ± {#} km, Hauck et al. {#}). El núcleo ocupa el {#}% del radio y contiene cerca de tres cuartas partes de la masa.",
 "Mercury cut in half: a core of radius {#} km inside a mantle.":
@@ -326,6 +324,10 @@ VDI18N.add('es', 'demo/inside-a-planet', {
   "Corteza de unos {#} km de espesor, como bajo la meseta del Tíbet. Se eleva el doble sobre el manto, y su raíz llega al doble de profundidad: las montañas altas flotan sobre raíces profundas.",
 "A continent stretched to {#} km thick, as in a rift or a basin. It sinks: stretched continents end up below sea level.":
   "Un continente estirado hasta {#} km de espesor, como en un rift o una cuenca. Se hunde: los continentes estirados terminan por debajo del nivel del mar.",
+"Close":
+  "Cerrar",
 "Your own mantle.":
-  "Tu propio manto."
+  "Tu propio manto.",
+"core: {#} km, {#} {#} kg/m³":
+  "núcleo: {#} km, {#} {#} kg/m³"
 });

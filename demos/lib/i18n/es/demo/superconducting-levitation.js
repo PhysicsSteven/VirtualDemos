@@ -18,6 +18,10 @@ VDI18N.add('es', 'demo/superconducting-levitation', {
   "el peso del imán",
 "Superconducting Levitation and Flux Pinning":
   "Levitación superconductora y anclaje de flujo",
+"<a>Condensed matter physics</a>":
+  "<a>Física de la materia condensada</a>",
+"<a><span>←</span> <span>Superconductors and the Meissner Effect</span></a><a><span>Vortices in a Superconductor</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Superconductores y el efecto Meissner</span></a><a><span>Vórtices en un superconductor</span> <span>→</span></a>",
 "A magnet floats above a superconductor cooled in liquid nitrogen. Cool the superconductor with the magnet already near it and the magnet is pinned: it floats, and it can even hang underneath. Watch the currents in the superconductor and the field lines.":
   "Un imán flota sobre un superconductor enfriado con nitrógeno líquido. Si enfrías el superconductor con el imán ya cerca, el imán queda anclado: flota e incluso puede quedar colgado por debajo. Observa las corrientes en el superconductor y las líneas de campo.",
 "Time controls":

@@ -10,6 +10,8 @@ VDI18N.add('es', 'ws/resolution', {
   "Intensidad en el cursor I/I₀",
 "Circular Apertures and Resolution | VirtualDemos":
   "Aperturas circulares y resolución | VirtualDemos",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
 "Circular Apertures and Resolution":
   "Aperturas circulares y resolución",
 "Student laboratory · Physics II (if time allows: wave optics)":

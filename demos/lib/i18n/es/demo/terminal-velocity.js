@@ -160,6 +160,8 @@ VDI18N.add('es', 'demo/terminal-velocity', {
   "Cuatro filtros encajados: cuatro veces el peso sobre la misma área, así que la rapidez terminal se duplica, a {#} m/s.",
 "Mass m, {#} filters":
   "Masa m, {#} filtros",
+"Close":
+  "Cerrar",
 "3D, to scale · drag to turn":
   "3D, a escala · arrastra para girar",
 "drag {#} mN":

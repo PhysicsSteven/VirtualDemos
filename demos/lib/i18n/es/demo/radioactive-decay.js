@@ -562,6 +562,10 @@ VDI18N.add('es', 'demo/radioactive-decay', {
   "{#} <span>con Δt = {#} Myr</span>",
 "²⁶Al: {#} × {#}⁵ yr, β⁺ decay ({#}%) and electron capture to stable ²⁶Mg. Meteorites show ²⁶Al/²⁷Al = {#} × {#}⁻⁵ when the first solids formed. You can also drag the T½ marker on the N(t) plot.":
   "²⁶Al: {#} × {#}⁵ años, desintegración β⁺ ({#}%) y captura electrónica a ²⁶Mg estable. Los meteoritos muestran ²⁶Al/²⁷Al = {#} × {#}⁻⁵ cuando se formaron los primeros sólidos. También puedes arrastrar la marca T½ en la gráfica de N(t).",
+"Close":
+  "Cerrar",
+"Move to a neighboring nucleus once one is picked (Shift for {#} steps)":
+  "Pasa a un núcleo vecino una vez que hayas elegido uno (Shift para {#} pasos)",
 "²⁶Al {#}":
   "²⁶Al {#}",
 "²⁶Mg {#}":

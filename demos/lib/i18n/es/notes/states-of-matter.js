@@ -2,6 +2,16 @@
 VDI18N.add('es', 'notes/states-of-matter', {
 "States of Matter: teaching notes":
   "Estados de la materia: notas para el docente",
+"Site":
+  "Sitio",
+"Virtual Physics Demos":
+  "Demos virtuales de física",
+"Library":
+  "Biblioteca",
+"<a>Demos</a><a>OpenStax</a><a>Notes</a>":
+  "<a>Demos</a><a>OpenStax</a><a>Notas</a>",
+"<a><b>For a class</b> Courses</a>":
+  "<a><b>Para una clase</b> Cursos</a>",
 "States of Matter":
   "Estados de la materia",
 "Thermodynamics; intro physics (heat, phase changes, latent heat)":

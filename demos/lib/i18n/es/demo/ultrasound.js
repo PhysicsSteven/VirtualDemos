@@ -204,6 +204,8 @@ VDI18N.add('es', 'demo/ultrasound', {
   "La rapidez de la sangre está oculta. Mide el corrimiento a tres o más ángulos y calcula la rapidez con cada uno; deberían coincidir. Nuevo flujo misterioso elige otro.",
 "Start the scanner first.":
   "Primero enciende el ecógrafo.",
+"Close":
+  "Cerrar",
 "The last cyst's top was {#} cm down. A new one is hidden.":
   "La parte superior del último quiste estaba a {#} cm de profundidad. Hay uno nuevo oculto.",
 "The last mystery flow was {#} m/s. A new one is running.":

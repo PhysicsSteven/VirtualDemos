@@ -420,6 +420,8 @@ VDI18N.add('es', 'demo/springs', {
   "Desfase δ de x respecto a la fuerza impulsora",
 "gold dot: amplitude of the last full cycle":
   "punto dorado: amplitud del último ciclo completo",
+"Phase plot of v (m/s) against x (m). Now {#}, {#}.":
+  "Gráfica de fase de v (m/s) en función de x (m). Ahora {#}, {#}.",
 "Both blocks start displaced the same way, so the middle spring never stretches: mode {#} at ω₁ = √(k/m). Press Mode {#}: the blocks move opposite and the middle spring adds stiffness, ω₂ = √((k + 2k_c)/m). Then make k₂ different from k₁ and press the mode buttons again: the modes become lopsided.":
   "Ambos bloques empiezan desplazados en el mismo sentido, así que el resorte del medio nunca se estira: modo {#} con ω₁ = √(k/m). Pulsa Modo {#}: los bloques se mueven en sentidos opuestos y el resorte del medio añade rigidez, ω₂ = √((k + 2k_c)/m). Luego haz k₂ distinta de k₁ y vuelve a pulsar los botones de los modos: los modos quedan desiguales.",
 "x₁ = q₁ + q₂, x₂ = q₁ − q₂; each q oscillates at its own ω with its own amplitude.":
@@ -580,6 +582,18 @@ VDI18N.add('es', 'demo/springs', {
   "Gráfica de la amplitud capturada A en función de la frecuencia impulsora ω para {#} filas, con la A(ω) predicha para los valores actuales en línea discontinua. Mostrar la tabla de datos lista los puntos.",
 "Each point is one capture of a driven run. Set ω, wait until the transient has died away (several decay times, 2m/b each), then capture. A is the largest |x| over the last whole drive cycle. No curve is fitted; with Blind off the dashed curve is the prediction for the present settings.":
   "Cada punto es una captura de una corrida con fuerza impulsora. Fija ω, espera a que el transitorio se desvanezca (varios tiempos de decaimiento, de 2m/b cada uno) y luego captura. A es el mayor |x| durante el último ciclo completo de la fuerza impulsora. No se ajusta ninguna curva; con A ciegas desactivado, la curva discontinua es la predicción para los valores actuales.",
+"Close":
+  "Cerrar",
+"Pull the block {#} cm one way or the other and release it from rest (↑ ↓ when hanging; with Shift, block {#})":
+  "Jala el bloque {#} cm hacia un lado u otro y suéltalo desde el reposo (↑ ↓ si cuelga; con Shift, el bloque {#})",
+"Give the block a push of {#} cm/s backward or forward":
+  "Dale al bloque un empujón de {#} cm/s hacia atrás o hacia adelante",
+"Pull the picked block {#} cm one way or the other and release it (← → on a level track)":
+  "Jala el bloque elegido {#} cm hacia un lado u otro y suéltalo (← → en una pista horizontal)",
+"Pull the picked puck {#} cm and release it":
+  "Jala el disco elegido {#} cm y suéltalo",
+"Start the rig in normal mode {#} to {#} alone":
+  "Inicia el montaje solo en el modo normal {#} a {#}",
 "Stopwatch running.":
   "Cronómetro en marcha.",
 "A spring hangs below with a hook at its end. Put a block on the hook or hang another spring from it.":
@@ -618,6 +632,8 @@ VDI18N.add('es', 'demo/springs', {
   "Aún no hay lecturas con fuerza impulsora",
 "dashed: predicted A(ω), current settings":
   "discontinua: A(ω) predicha, valores actuales",
+"E₀ − E − ∫bv² dt = {#} × {#}⁻¹⁵ J":
+  "E₀ − E − ∫bv² dt = {#} × {#}⁻¹⁵ J",
 "Below rest (cm) against time (s)":
   "Bajo el reposo (cm) contra el tiempo (s)",
 "Energy now, from the rig at rest":

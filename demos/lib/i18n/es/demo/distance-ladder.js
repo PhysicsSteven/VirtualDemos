@@ -36,6 +36,10 @@ VDI18N.add('es', 'demo/distance-ladder', {
   "regla: {#}″",
 "field {#}″ wide · dashed circles: ±σ = {#} mas (Hipparcos)":
   "campo de {#}″ de ancho · círculos punteados: ±σ = {#} mas (Hipparcos)",
+"<a>Particle physics and cosmology</a>":
+  "<a>Física de partículas y cosmología</a>",
+"<a><span>←</span> <span>Charges in Magnetic Fields</span></a><a><span>The Big Bang and the Early Universe</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Cargas en campos magnéticos</span></a><a><span>El Big Bang y el universo temprano</span> <span>→</span></a>",
 "No single method measures every distance. Each rung reaches farther, and each is calibrated by the rung below it.":
   "Ningún método mide todas las distancias. Cada peldaño llega más lejos, y cada uno se calibra con el peldaño de abajo.",
 "<span>pc</span> · <span>kpc</span> · <span>Mpc</span> · <span>″ and mas</span> · <span>km/s</span> · <span>{#} pc = {#} AU = {#} ly</span>":
@@ -214,8 +218,6 @@ VDI18N.add('es', 'demo/distance-ladder', {
   "La misma luz se reparte sobre un área que crece como d², así que el flujo es F = L/{#}πd². El doble de lejos significa un cuarto del flujo, que es {#} log₁₀{#} = {#} magnitudes más débil.",
 "Cepheid in the LMC":
   "Cefeida en la GNM",
-"Night":
-  "Noche",
 "{#} of {#}, t = {#} d":
   "{#} de {#}, t = {#} d",
 "Previous night":
@@ -318,18 +320,14 @@ VDI18N.add('es', 'demo/distance-ladder', {
   "Los puntos con anillo son tus mediciones actuales de cada peldaño. Haz clic en una barra para abrir ese peldaño.",
 "Earth on a circular orbit of exactly {#} AU, the star in the plane of the orbit, placed so that January and July are the extremes of its shift; then the shift is 2p. A real star off the plane traces a small ellipse instead. The top view is not to scale: a star {#} pc away would sit {#} orbit radii from the Sun. The photos zoom so the shift fills the frame; the dashed circles show the instrument’s position uncertainty.":
   "La Tierra en una órbita circular de exactamente {#} UA, la estrella en el plano de la órbita, colocada de modo que enero y julio sean los extremos de su desplazamiento; entonces el desplazamiento es 2p. Una estrella real fuera del plano traza en cambio una pequeña elipse. La vista superior no está a escala: una estrella a {#} pc estaría a {#} radios orbitales del Sol. Las fotos se amplían para que el desplazamiento llene el cuadro; los círculos punteados muestran la incertidumbre de posición del instrumento.",
-"<a>Particle physics and cosmology</a>":
-  "<a>Física de partículas y cosmología</a>",
-"<a><span>←</span> <span>Charges in Magnetic Fields</span></a><a><span>The Big Bang and the Early Universe</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Cargas en campos magnéticos</span></a><a><span>El Big Bang y el universo temprano</span> <span>→</span></a>",
 "drag Earth along its orbit; drag elsewhere to turn":
   "arrastra la Tierra a lo largo de su órbita; arrastra en otro lugar para girar",
 "EARTH’S ORBIT IN 3D, NOT TO SCALE":
   "LA ÓRBITA DE LA TIERRA EN 3D, NO A ESCALA",
-"p (mas)":
-  "p (mas)",
 "early March":
   "principios de marzo",
+"p (mas)":
+  "p (mas)",
 "mid March":
   "mediados de marzo",
 "Spectroscopic parallax (calibrated by rung {#})":
@@ -536,6 +534,8 @@ VDI18N.add('es', 'demo/distance-ladder', {
   "A unos {#} Mpc (Proyecto Clave del telescopio espacial Hubble). Solo las cefeidas brillantes de periodo largo pueden verse tan lejos.",
 "Galaxy {#} (Cepheids)":
   "Galaxia {#} (cefeidas)",
+"Close":
+  "Cerrar",
 "nearby star":
   "estrella cercana",
 "field {#}″ wide · dashed circles: ±σ = {#} µas (Gaia)":
@@ -571,5 +571,7 @@ VDI18N.add('es', 'demo/distance-ladder', {
 "calibrates":
   "calibra",
 "early April":
-  "principios de abril"
+  "principios de abril",
+"Night":
+  "Noche"
 });

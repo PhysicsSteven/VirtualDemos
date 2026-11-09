@@ -114,6 +114,12 @@ VDI18N.add('es', 'demo/planet-temperatures', {
   "Escape al espacio e",
 "Escaping to space e: click, or press Enter, to type a value":
   "Escape al espacio e: haz clic, o pulsa Intro, para escribir un valor",
+"Carbon dioxide in Earth's air, in parts per million by volume: today {#}, before industry {#}":
+  "Dióxido de carbono en el aire de la Tierra, en partes por millón en volumen: hoy {#}, preindustrial {#}",
+"CO₂ in Earth's air":
+  "CO₂ en el aire de la Tierra",
+"{#} ppm":
+  "{#} ppm",
 "Escape speed":
   "Rapidez de escape",
 "Escape speed: click, or press Enter, to type a value":
@@ -134,6 +140,10 @@ VDI18N.add('es', 'demo/planet-temperatures', {
   "<a>Hoja de trabajo {#}: La zona habitable galáctica</a>",
 "Earth under the young Sun":
   "La Tierra bajo el Sol joven",
+"Earth before industry":
+  "La Tierra preindustrial",
+"Earth with doubled CO₂":
+  "La Tierra con el CO₂ duplicado",
 "Proxima Centauri b":
   "Próxima Centauri b",
 "TRAPPIST-{#} e":
@@ -210,8 +220,26 @@ VDI18N.add('es', 'demo/planet-temperatures', {
   "He, CH₄, H₂O, N₂, O₂, CO₂",
 "lost to space":
   "perdidos al espacio",
+"Earth's air (NASA)":
+  "Aire de la Tierra (NASA)",
+"{#} bar at the surface: N₂ {#} %, O₂ {#} %, Ar {#} %, H₂O about {#} %, CO₂ {#} ppm, CH₄ {#} ppm":
+  "{#} bar en la superficie: N₂ {#} %, O₂ {#} %, Ar {#} %, H₂O cerca de {#} %, CO₂ {#} ppm, CH₄ {#} ppm",
+"CO₂ above each square meter":
+  "CO₂ sobre cada metro cuadrado",
+"{#} kg (Earth today: {#} kg)":
+  "{#} kg (la Tierra hoy: {#} kg)",
 "CO₂":
   "CO₂",
+"{#} ppm (today {#}, in {#} {#})":
+  "{#} ppm (hoy {#}, en {#} {#})",
+"Forcing against today":
+  "Forzamiento respecto a hoy",
+"Change, no feedbacks":
+  "Cambio, sin retroalimentaciones",
+"Today's greenhouse":
+  "El efecto invernadero de hoy",
+"about half from water vapor, a quarter from clouds, a fifth from CO₂ (Schmidt et al. {#})":
+  "cerca de la mitad del vapor de agua, un cuarto de las nubes, un quinto del CO₂ (Schmidt y colaboradores {#})",
 "<span>Blind: hide the model's temperatures, the zone and which gases stay</span>":
   "<span>A ciegas: ocultar las temperaturas del modelo, la zona y qué gases se quedan</span>",
 "absorbed per m² = S ({#} − a) / f, f = {#} (whole planet), {#} (day side), {#} (under the star)":
@@ -226,6 +254,8 @@ VDI18N.add('es', 'demo/planet-temperatures', {
   "bordes de la zona habitable: d = √(L / S_eff), S_eff = S₀ + aT⋆ + bT⋆² + cT⋆³ + dT⋆⁴, T⋆ = T_star − {#} K",
 "air kept for billions of years if {#} v_rms < v_esc, v_rms = √(3kT/m)":
   "el aire se conserva miles de millones de años si {#} v_rms < v_esc, v_rms = √(3kT/m)",
+"Model: the planet absorbs the starlight on its disk that it does not reflect and radiates heat like a blackbody from the area that shares the heat. Approximations: one temperature for that whole area (real planets are warmer at the equator and on the day side); no heat from inside the planet (Jupiter gives out about as much again of its own); the greenhouse is one number e, chosen to match a measured temperature, standing for the simple layer models; Earth's CO₂ control changes e by the CO₂ forcing {#} ln(C/{#} ppm) W/m² (Myhre et al. {#}) and gives the warming with no feedbacks (water vapor, ice and clouds roughly triple it); real air also carries heat up by convection, and clouds and ice change the albedo as the temperature changes, which the model holds fixed. Each planet sits at its average distance on a circle. Under the star assumes the star straight overhead and no heat carried into the ground or away. The habitable zone edges come from detailed climate models (Kopparapu et al. {#}), not from this balance: inside the zone a planet like Earth, with enough carbon dioxide and water, could keep liquid water at its surface. The air rule uses the model temperature at the ground; gas escapes from the top of an atmosphere, which can be much hotter (on Earth it is, which is why Earth loses hydrogen and helium), and the solar wind strips some air too, so the rule is a rough guide.":
+  "Modelo: el planeta absorbe la luz estelar sobre su disco que no refleja y radia calor como un cuerpo negro desde el área que reparte el calor. Aproximaciones: una sola temperatura para toda esa área (los planetas reales son más cálidos en el ecuador y en el lado diurno); sin calor del interior del planeta (Júpiter emite casi otro tanto por su cuenta); el efecto invernadero es un solo número e, elegido para igualar una temperatura medida, que representa los modelos simples de capas; el control de CO₂ de la Tierra cambia e con el forzamiento del CO₂ {#} ln(C/{#} ppm) W/m² (Myhre y colaboradores {#}) y da el calentamiento sin retroalimentaciones (el vapor de agua, el hielo y las nubes lo triplican más o menos); el aire real también lleva calor hacia arriba por convección, y las nubes y el hielo cambian el albedo al cambiar la temperatura, lo que el modelo mantiene fijo. Cada planeta está a su distancia media en un círculo. Bajo la estrella supone la estrella justo arriba y ningún calor que se lleve al suelo o se aleje. Los bordes de la zona habitable salen de modelos climáticos detallados (Kopparapu y colaboradores {#}), no de este balance: dentro de la zona un planeta como la Tierra, con suficiente dióxido de carbono y agua, podría mantener agua líquida en su superficie. La regla del aire usa la temperatura del modelo al nivel del suelo; el gas escapa por la parte alta de una atmósfera, que puede estar mucho más caliente (en la Tierra lo está, por eso la Tierra pierde hidrógeno y helio), y el viento solar también arranca algo de aire, así que la regla es una guía aproximada.",
 "Where the numbers come from":
   "De dónde vienen los números",
 "L☉ = {#} × {#}²⁶ W, the nominal solar luminosity (IAU {#} Resolution B3); {#} AU = {#} × {#}¹¹ m (IAU {#} Resolution B2).":
@@ -302,8 +332,14 @@ VDI18N.add('es', 'demo/planet-temperatures', {
   "Venus, {#} UA, albedo de Bond {#}: sus nubes reflejan la mayor parte de la luz solar, así que sin efecto invernadero sería más fría que la Tierra ({#} K). Su superficie está a {#} K. El ajuste de efecto invernadero que la reproduce deja escapar solo cerca del {#} % de la radiación térmica del suelo, como si unas {#} capas de aire atraparan cada una toda la radiación: {#} bar de dióxido de carbono.",
 "The Moon, {#} AU from the Sun, Bond albedo {#}, no air. A lunar day lasts {#} Earth days, so the ground under a high Sun comes close to balance: about {#} K in the model against {#} K measured at the equator. At night it falls to {#} K: with no air nothing holds the heat.":
   "La Luna, a {#} UA del Sol, albedo de Bond {#}, sin aire. Un día lunar dura {#} días terrestres, así que el suelo bajo un Sol alto se acerca al equilibrio: unos {#} K en el modelo contra {#} K medidos en el ecuador. De noche baja a {#} K: sin aire nada retiene el calor.",
+"Mars, {#} AU, Bond albedo {#}. With no greenhouse the balance gives {#} K; the average surface is about {#} K. Its thin carbon dioxide air ({#} mbar) adds only about {#} K, yet above each square meter of Mars there is {#} times as much carbon dioxide as above Earth. With so little air pressing on them, CO₂ molecules absorb heat radiation only in narrow lines, and Mars has almost no water vapor, the gas that does most of the work on Earth.":
+  "Marte, {#} UA, albedo de Bond {#}. Sin efecto invernadero el balance da {#} K; la superficie promedio está cerca de {#} K. Su aire delgado de dióxido de carbono ({#} mbar) añade solo unos {#} K, y aun así sobre cada metro cuadrado de Marte hay {#} veces más dióxido de carbono que sobre la Tierra. Con tan poco aire que las presione, las moléculas de CO₂ absorben radiación térmica solo en líneas angostas, y Marte casi no tiene vapor de agua, el gas que hace la mayor parte del trabajo en la Tierra.",
 "Four billion years ago the Sun gave out about {#} % of its light today (L = {#} L☉, Gough {#}). Keep Earth's albedo and today's greenhouse and the planet comes out at {#} K, below freezing, yet rocks show liquid water then: the faint young Sun puzzle. A stronger greenhouse is the usual answer. The zone moves in with the dimmer Sun. The star's temperature is left at today's {#} K (the zone edges depend mostly on L).":
   "Hace cuatro mil millones de años el Sol emitía cerca del {#} % de su luz actual (L = {#} L☉, Gough {#}). Con el albedo de la Tierra y el efecto invernadero actual el planeta sale a {#} K, bajo el punto de congelación, y aun así las rocas muestran agua líquida en esa época: el problema del Sol joven débil. Un efecto invernadero más fuerte es la respuesta habitual. La zona se acerca con el Sol más tenue. La temperatura de la estrella se deja en los {#} K actuales (los bordes de la zona dependen sobre todo de L).",
+"Earth with the {#} ppm of carbon dioxide its air held in {#}, against {#} ppm today. Less CO₂ lets more heat radiation out: the forcing is {#} ln({#}/{#}) = −{#} W/m², and with nothing else changing the planet comes out {#} K cooler. That is the response with no feedbacks; with water vapor, ice and clouds responding the real change is roughly three times larger. Measured warming from {#} to {#} to the decade {#} to {#} is {#} K (IPCC {#}), from all causes together.":
+  "La Tierra con los {#} ppm de dióxido de carbono que tenía su aire en {#}, contra {#} ppm hoy. Menos CO₂ deja salir más radiación térmica: el forzamiento es {#} ln({#}/{#}) = −{#} W/m², y sin que cambie nada más el planeta queda {#} K más frío. Esa es la respuesta sin retroalimentaciones; con el vapor de agua, el hielo y las nubes respondiendo, el cambio real es unas tres veces mayor. El calentamiento medido de {#} a {#} a la década {#} a {#} es de {#} K (IPCC {#}), por todas las causas juntas.",
+"Twice the {#} carbon dioxide: {#} ppm. Against today's {#} ppm the forcing is {#} W/m², and the model warms by {#} K with no feedbacks; doubling from {#} ppm is {#} W/m² and {#} K. The IPCC ({#}) puts the full warming for a doubling, with water vapor, ice and clouds responding, at about {#} K (likely {#} to {#} K): the feedbacks roughly triple it.":
+  "El doble del dióxido de carbono de {#}: {#} ppm. Contra los {#} ppm de hoy el forzamiento es {#} W/m², y el modelo calienta {#} K sin retroalimentaciones; duplicar desde {#} ppm da {#} W/m² y {#} K. El IPCC ({#}) calcula el calentamiento total por una duplicación, con el vapor de agua, el hielo y las nubes respondiendo, en cerca de {#} K (probable de {#} a {#} K): las retroalimentaciones lo triplican más o menos.",
 "The nearest star to the Sun, a red dwarf with {#} % of the Sun's light (log L = −{#}, {#} K), and its planet b, {#} AU out, {#} times closer than Earth to the Sun. Its albedo, air and size are unknown: the setup borrows Earth's albedo and escape speed, with no greenhouse.":
   "La estrella más cercana al Sol, una enana roja con el {#} % de la luz del Sol (log L = −{#}, {#} K), y su planeta b, a {#} UA, {#} veces más cerca que la Tierra del Sol. Su albedo, su aire y su tamaño son desconocidos: la configuración toma el albedo y la rapidez de escape de la Tierra, sin efecto invernadero.",
 "TRAPPIST-{#}, a red dwarf with {#} % of the Sun's light (log L = −{#}, {#} K), has seven Earth sized planets. Planet e, {#} AU out, has {#} Earth masses and {#} Earth radii, so its escape speed is {#} km/s. Albedo borrowed from Earth, no greenhouse. The star is just below the {#} K where the zone formulas start, so the edges use {#} K.":

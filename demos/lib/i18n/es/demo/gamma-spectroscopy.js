@@ -54,6 +54,8 @@ VDI18N.add('es', 'demo/gamma-spectroscopy', {
   "Espectroscopía gamma",
 "<a>Nuclear physics</a>":
   "<a>Física nuclear</a>",
+"<a><span>←</span> <span>Vortices in a Superconductor</span></a><a><span>Nuclear Reactions, Fission and Fusion</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Vórtices en un superconductor</span></a><a><span>Reacciones nucleares, fisión y fusión</span> <span>→</span></a>",
 "A virtual NaI(Tl) scintillation spectrometer, set up like ORTEC Experiment {#} (SPA38 detector, EASY-MCA-2K). Every pulse is simulated from physics: Monte Carlo photon transport in the crystal, detector resolution, the electronics and counting statistics. Acquire, mark peaks, calibrate, and measure.":
   "Un espectrómetro virtual de centelleo de NaI(Tl), preparado como el Experimento {#} de ORTEC (detector SPA38, EASY-MCA-2K). Cada pulso se simula a partir de la física: transporte Monte Carlo de fotones en el cristal, resolución del detector, la electrónica y la estadística de conteo. Adquiere, marca picos, calibra y mide.",
 "E in keV · d in cm · times in s · m<sub>e</sub>c² = {#} keV":

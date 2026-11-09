@@ -540,12 +540,18 @@ VDI18N.add('es', 'demo/temperature', {
   "Un ciclista hace girar un generador que enciende un foco fluorescente compacto. Cada estación transmite solo parte de lo que recibe: el cuerpo convierte cerca del {#}% de la energía de los alimentos en trabajo, el generador el {#}% del trabajo en electricidad, el foco el {#}% de eso en luz. Solo el {#}% de la energía de los alimentos termina como luz; el resto calienta al ciclista, al generador y al foco. Prueba el Sol sobre una celda solar, o un calentador en lugar del foco.",
 "The energy chain has no worksheet readings: read the numbers from the Readouts.":
   "La cadena de energía no tiene lecturas para la hoja de trabajo: lee los números en Lecturas en pantalla.",
+"Close":
+  "Cerrar",
 "The last mystery block was {mat}.":
   "El último bloque misterioso era de {mat}.",
+"The last mystery block was iron, steel.":
+  "El último bloque misterioso era de hierro, acero.",
 "Last mystery bath was {#} °C.":
   "El último baño misterioso estaba a {#} °C.",
 "The last mystery rod was {mat}.":
   "La última varilla misteriosa era de {mat}.",
+"The last mystery rod was gold.":
+  "La última varilla misteriosa era de oro.",
 "Light bulb (CFL)":
   "Foco (CFL)",
 "The last mystery block was silver.":

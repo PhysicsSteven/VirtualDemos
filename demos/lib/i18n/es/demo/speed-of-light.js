@@ -238,6 +238,8 @@ VDI18N.add('es', 'demo/speed-of-light', {
   "Método del par: últimas filas CW y CCW, ω = {#}π(f<sub>CW</sub> + f<sub>CCW</sub>)",
 "Accepted c = {#} {#} {#} m/s (exact)":
   "c aceptada = {#} {#} {#} m/s (exacta)",
+"yours −{#} %, {#} σ":
+  "el tuyo −{#} %, {#} σ",
 "yours +{#} %, {#} σ":
   "la tuya +{#} %, {#} σ"
 });

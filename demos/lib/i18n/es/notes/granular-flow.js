@@ -2,6 +2,16 @@
 VDI18N.add('es', 'notes/granular-flow', {
 "Granular Flow: Sorting and Landslides: teaching notes":
   "Flujo granular: segregación y deslaves: notas para el docente",
+"Site":
+  "Sitio",
+"Virtual Physics Demos":
+  "Demos virtuales de física",
+"Library":
+  "Biblioteca",
+"<a>Demos</a><a>OpenStax</a><a>Notes</a>":
+  "<a>Demos</a><a>OpenStax</a><a>Notas</a>",
+"<a><b>For a class</b> Courses</a>":
+  "<a><b>Para una clase</b> Cursos</a>",
 "Granular Flow: Sorting and Landslides":
   "Flujo granular: segregación y deslaves",
 "Physics I (friction, drag, collisions), or any class as a demonstration":

@@ -218,8 +218,6 @@ VDI18N.add('es', 'demo/solar-system-formation', {
   "distancias en escala logarítmica: {#} UA en el centro a {#} UA en el borde · arrastra para girar",
 "The disk and the probe":
   "El disco y la sonda",
-"Done":
-  "Listo",
 "Young Sun's brightness L":
   "Brillo del Sol joven L",
 "{#} × today's":
@@ -384,6 +382,10 @@ VDI18N.add('es', 'demo/solar-system-formation', {
   "Un planetesimal de solo {#} km de radio, formado pronto: el calor escapa de un cuerpo pequeño más rápido de lo que el aluminio {#} lo produce, así que se mantiene frío.",
 "A body the size of the asteroid Vesta (mean radius {#} km), formed {#} million years after the first solids. Vesta did melt and has an iron core (Dawn mission, Russell et al. {#}).":
   "Un cuerpo del tamaño del asteroide Vesta (radio medio de {#} km), formado {#} millones de años después de los primeros sólidos. Vesta sí se fundió y tiene un núcleo de hierro (misión Dawn, Russell y colaboradores {#}).",
+"Close":
+  "Cerrar",
+"on the picture ({#} Frost line stage)":
+  "en la imagen (etapa {#} Línea de congelación)",
 "iron core":
   "núcleo de hierro",
 "formed at {#} million yr":
@@ -456,16 +458,12 @@ VDI18N.add('es', 'demo/solar-system-formation', {
   "Impactos hasta ahora",
 "t = {#} million yr":
   "t = {#} millones de años",
-"Saturn today":
-  "Saturno hoy",
 "{t} million years after the gas cleared, {n} rocky planets are left. The largest has {m} Earth masses at {a} AU (Earth: {#} at {#} AU, Venus: {#} at {#} AU). This is run {k} of {runs}, the one most like our planets: every run ends differently, because collisions hang on tiny differences in the orbits.":
   "{t} millones de años después de que se fue el gas, quedan {n} planetas rocosos. El más grande tiene {m} masas terrestres a {a} UA (la Tierra: {#} a {#} UA; Venus: {#} a {#} UA). Esta es la corrida {k} de {runs}, la más parecida a nuestros planetas: cada corrida termina distinta, porque los choques dependen de diferencias diminutas en las órbitas.",
+"Saturn today":
+  "Saturno hoy",
 "Venus today":
   "Venus hoy",
-"Mercury today":
-  "Mercurio hoy",
-"Mars today":
-  "Marte hoy",
 "young Earth":
   "la Tierra joven",
 "Theia":
@@ -496,8 +494,8 @@ VDI18N.add('es', 'demo/solar-system-formation', {
   "Partículas",
 "the Moon (drawn)":
   "la Luna (dibujada)",
-"{h} hours after contact: a disk of {md} Moon masses circles Earth ({th} % of it from Theia, {fe} % iron), and {me} Moon masses escaped. Within about a year the disk gathers into a moon (drawn, not simulated): with this disk's mass and spin, about {mm} Moon masses (the formula of Ida, Canup and Stewart {#}).":
-  "{h} horas después del contacto: un disco de {md} masas lunares gira alrededor de la Tierra ({th} % de él viene de Tea, {fe} % es hierro), y escaparon {me} masas lunares. En alrededor de un año el disco se junta en una luna (dibujada, no simulada): con la masa y el giro de este disco, de unas {mm} masas lunares (la fórmula de Ida, Canup y Stewart {#}).",
+"{h} hours after contact: a disk of {md} Moon masses circles Earth ({th} % of it from Theia, {fe} % iron), and {me} Moon masses escaped. Within about a year the disk gathers into a moon (drawn, not simulated): with this disk's mass and spin, at most about {mm} Moon masses (the formula of Ida, Canup and Stewart {#}, leaving out the mass lost while the moon gathers; their runs kept a tenth to a half of the disk).":
+  "{h} horas después del contacto: un disco de {md} masas lunares gira alrededor de la Tierra ({th} % de Tea, {fe} % hierro), y {me} masas lunares escaparon. En cerca de un año el disco se junta en una luna (dibujada, no simulada): con la masa y el giro de este disco, como máximo unas {mm} masas lunares (la fórmula de Ida, Canup y Stewart {#}, sin tomar en cuenta la masa que se pierde mientras la luna se junta; sus corridas conservaron de una décima parte a la mitad del disco).",
 "The real Moon's rocks match Earth's isotopes almost exactly, yet here the disk comes mostly from Theia: a puzzle still being worked on.":
   "Las rocas de la Luna real coinciden casi exactamente con los isótopos de la Tierra, pero aquí el disco viene sobre todo de Tea: un enigma que todavía se estudia.",
 "Disk around Earth":
@@ -526,6 +524,8 @@ VDI18N.add('es', 'demo/solar-system-formation', {
   "la Tierra mientras crece: {#} masas terrestres",
 "{#} Earth masses, a = {#} AU, e = {#}":
   "{#} masas terrestres, a = {#} UA, e = {#}",
+"Mars today":
+  "Marte hoy",
 "This run's {name} took its last giant impact {t} million years after the gas cleared: {mi} Earth masses hit at {v} km/s.":
   "En esta corrida, {name} recibió su último impacto gigante {t} millones de años después de que se fue el gas: {mi} masas terrestres chocaron a {v} km/s.",
 "Earth today":
@@ -600,6 +600,12 @@ VDI18N.add('es', 'demo/solar-system-formation', {
   "1 segundo ≈ {t} mil años",
 "1 second ≈ {t} million yr":
   "1 segundo ≈ {t} millones de años",
+"Done":
+  "Listo",
+"Mercury today":
+  "Mercurio hoy",
+"{h} hours after contact: a disk of {md} Moon masses circles Earth ({th} % of it from Theia, {fe} % iron), and {me} Moon masses escaped. Within about a year the disk gathers into a moon (drawn, not simulated): with this disk's mass and spin, about {mm} Moon masses (the formula of Ida, Canup and Stewart {#}).":
+  "{h} horas después del contacto: un disco de {md} masas lunares gira alrededor de la Tierra ({th} % de él viene de Tea, {fe} % es hierro), y escaparon {me} masas lunares. En alrededor de un año el disco se junta en una luna (dibujada, no simulada): con la masa y el giro de este disco, de unas {mm} masas lunares (la fórmula de Ida, Canup y Stewart {#}).",
 "Loading the Moon-forming impact…":
   "Cargando el impacto que formó la Luna…",
 "Theia, a body about the size of Mars ({mi} Earth masses), falls toward the young Earth ({mt} Earth masses). They will meet {ang}° from head on, as fast as falling together from far away makes them: the standard Moon-forming impact (Canup and Asphaug 2001). Each of the {n} particles feels every other's gravity and its neighbors' pressure.":

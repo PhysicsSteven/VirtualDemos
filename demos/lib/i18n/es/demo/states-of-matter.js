@@ -124,6 +124,8 @@ VDI18N.add('es', 'demo/states-of-matter', {
   "Vista Vaso de precipitados: una muestra calentada a una potencia constante P en un vaso perfectamente aislado y abierto al aire a {#} atm, así que todo el calor va a la muestra (nada al vidrio ni a la habitación) y el vapor se va. Los calores específicos y latentes son de OpenStax University Physics Volumen {#}, tablas {#} y {#}: hielo {#} J/kg·°C, agua {#}, etanol {#}; el agua se funde a {#} °C con Lf = {#} kJ/kg y hierve a {#} °C con Lv = {#} kJ/kg; el etanol hierve a {#} °C con Lv = {#} kJ/kg. Cada etapa toma un calor Q = mcΔT o Q = mL, entregado a razón de Q = Pt. Se desprecia la evaporación por debajo del punto de ebullición. La balanza está tarada, así que solo lee la muestra. El vaso tapado al lado es la misma muestra sobre la misma parrilla con una tapa: hasta que hierve, los dos coinciden; luego su vapor se condensa en la tapa y escurre de regreso, así que nada sale y su balanza sigue leyendo toda la masa (la masa se conserva; solo el vaso abierto pierde el vapor). La tapa pasa el calor a la habitación, lo cual no se modela, así que la muestra tapada se queda en el punto de ebullición. El hielo se dibuja como cubos que se encogen al fundirse, con su volumen total siguiendo la masa de hielo que queda.",
 "<a>Temperature and heat</a>":
   "<a>Temperatura y calor</a>",
+"<a><span>←</span> <span>Temperature and Heat</span></a><a><span>Superfluid Helium</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Temperatura y calor</span></a><a><span>Helio superfluido</span> <span>→</span></a>",
 "The atoms in 3D: drag to turn, wheel or pinch to zoom, double click to reset.":
   "Los átomos en 3D: arrastra para girar, rueda o pellizca para hacer zoom, doble clic para restablecer.",
 "balance (tared)":

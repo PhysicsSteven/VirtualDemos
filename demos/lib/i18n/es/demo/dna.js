@@ -214,6 +214,8 @@ VDI18N.add('es', 'demo/dna', {
   "<span><i></i>hebra {#}</span><span><i></i>hebra {#}</span><span><i></i>puente de hidrógeno</span>",
 "Your sequence":
   "Tu secuencia",
+"Close":
+  "Cerrar",
 "<span><i></i>strand {#}</span><span><i></i>strand {#}</span>":
   "<span><i></i>hebra {#}</span><span><i></i>hebra {#}</span>",
 "B-DNA and A-DNA · {#} bp · CGCGAATTCGCG":

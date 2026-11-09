@@ -164,8 +164,8 @@ VDI18N.add('es', 'demo/transformers', {
   "Voltaje en las casas",
 "R as aluminum wire":
   "R como cable de aluminio",
-"{#} {#} km of a pair of {#} cm wires":
-  "{#} {#} km de un par de cables de {#} cm",
+"{#} km of a pair of {#} cm wires":
+  "{#} km de un par de cables de {#} cm",
 "i_P peak {#} A":
   "i_P máxima {#} A",
 "i_S peak {#} mA":
@@ -194,6 +194,10 @@ VDI18N.add('es', 'demo/transformers', {
   "Otra vez el Ejemplo {#} de OpenStax: {#} kW enviados a {#} kV por una línea de {#} Ω son {#} A y pierden ({#} A)²({#} Ω) = {#} W. Envíalos a {#} V en cambio y la línea necesitaría {#} A y perdería {#} MW, más que la potencia enviada. Luego prueba una línea larga a {#} kV.",
 "loss (W)":
   "pérdida (W)",
+"Close":
+  "Cerrar",
 "two cycles, each trace to its own peak":
-  "dos ciclos, cada traza a su propio máximo"
+  "dos ciclos, cada traza a su propio máximo",
+"{#} {#} km of a pair of {#} cm wires":
+  "{#} {#} km de un par de cables de {#} cm"
 });

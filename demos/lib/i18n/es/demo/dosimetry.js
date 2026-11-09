@@ -4,8 +4,8 @@ VDI18N.add('es', 'demo/dosimetry', {
   "agua",
 "photons":
   "fotones",
-"Start to send photons in: each dot is an interaction, each purple line the electron it sets moving (to scale).":
-  "Pulsa Comenzar para enviar fotones: cada punto es una interacción, cada línea morada el electrón que pone en movimiento (a escala).",
+"Press Play to send photons in: each dot is an interaction, each purple line the electron it sets moving (to scale).":
+  "Pulsa Iniciar para enviar fotones: cada punto es una interacción, cada línea morada el electrón que pone en movimiento (a escala).",
 "depth z (cm)":
   "profundidad z (cm)",
 "d_max {#} cm":
@@ -258,8 +258,8 @@ VDI18N.add('es', 'demo/dosimetry', {
   "fotones de {#} MeV",
 "The first {#} cm of the water, magnified {#}×":
   "Los primeros {#} cm del agua, ampliados {#}×",
-"Press Start to send photons in.":
-  "Pulsa Comenzar para enviar fotones.",
+"Press Play to send photons in.":
+  "Pulsa Iniciar para enviar fotones.",
 "Inside the block all is to scale: each dot is an interaction, each purple line the electron it sets moving. Drag to turn.":
   "Dentro del bloque todo está a escala: cada punto es una interacción, cada línea morada el electrón que pone en movimiento. Arrastra para girar.",
 "view":

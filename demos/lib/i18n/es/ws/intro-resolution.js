@@ -10,6 +10,8 @@ VDI18N.add('es', 'ws/intro-resolution', {
   "Brillo a la mitad I/I₀",
 "Seeing Fine Detail: Telescopes and Radio Dishes | VirtualDemos":
   "Ver detalles finos: telescopios y antenas de radio | VirtualDemos",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
 "Seeing Fine Detail: Telescopes and Radio Dishes":
   "Ver detalles finos: telescopios y antenas de radio",
 "<strong>Setups in the demo:</strong> Laser through a pinhole; Two point sources; Headlights and the eye; Hubble and two stars; Camera lens; Mystery pinhole; Near the hole: Fresnel zones; A disk: the Poisson spot. This worksheet uses Hubble and two stars.":

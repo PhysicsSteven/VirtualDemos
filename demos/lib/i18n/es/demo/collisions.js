@@ -456,6 +456,10 @@ VDI18N.add('es', 'demo/collisions', {
   "x = ½μ(u₁ − u₂)² con μ = m₁m₂/(m₁ + m₂), la energía cinética del movimiento relativo al centro de masa; y = la energía cinética perdida. Para filas con un solo amortiguador, la pendiente es {#} − e². El ajuste es una recta por mínimos cuadrados y = a + bx con pesos iguales, solo con tus filas capturadas; las filas con una celda vacía se omiten. Los errores estándar provienen de la dispersión de las filas alrededor de la recta, que aquí es solo el redondeo del cronómetro y de la pantalla.",
 "Plot of kinetic energy lost against ½μ(u₁ − u₂)², x: ½μ(u₁ − u₂)² (J), y: K before − K after (J), for {#} captured rows; the residuals are in a strip below. Show data table lists the points.":
   "Gráfica de la energía cinética perdida en función de ½μ(u₁ − u₂)², x: ½μ(u₁ − u₂)² (J), y: K antes − K después (J), para {#} filas capturadas; los residuos están en una franja debajo. Mostrar la tabla de datos lista los puntos.",
+"Close":
+  "Cerrar",
+"Pick body {#} or body {#} (1D track, 2D table, and other setups with two bodies)":
+  "Elige el cuerpo {#} o el cuerpo {#} (pista 1D, mesa 2D y otras configuraciones con dos cuerpos)",
 "Track, gliders, flags and gates to scale; rule in cm. Drag to turn; drag a grip to change a value.":
   "Riel, deslizadores, banderas y compuertas a escala; regla en cm. Arrastra para girar; arrastra un control para cambiar un valor.",
 "Table and pucks to scale; dashed: the paths. Drag to turn; drag a grip to change a value.":

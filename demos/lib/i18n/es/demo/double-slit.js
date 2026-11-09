@@ -26,6 +26,8 @@ VDI18N.add('es', 'demo/double-slit', {
   "Impactos por intervalo",
 "Double Slit, One Particle at a Time":
   "Doble rendija, una partícula a la vez",
+"<a><span>←</span> <span>Telescope Aberrations</span></a><a><span>Diffraction Grating</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Aberraciones de telescopios</span></a><a><span>Rejilla de difracción</span> <span>→</span></a>",
 "Send photons, electrons or C₆₀ molecules through two slits one at a time. Each one lands at a single point; only the pile of many points shows the interference pattern.":
   "Envía fotones, electrones o moléculas de C₆₀ a través de dos rendijas, una a la vez. Cada una llega a un solo punto; solo la acumulación de muchos puntos muestra el patrón de interferencia.",
 "λ = h/p · Δy ≈ λL/d · envelope zero at sin θ = λ/a":

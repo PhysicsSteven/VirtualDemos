@@ -2,6 +2,16 @@
 VDI18N.add('es', 'notes/radioactive-decay', {
 "Radioactive Decay: teaching notes":
   "Decaimiento radiactivo: notas para el docente",
+"Site":
+  "Sitio",
+"Virtual Physics Demos":
+  "Demos virtuales de física",
+"Library":
+  "Biblioteca",
+"<a>Demos</a><a>OpenStax</a><a>Notes</a>":
+  "<a>Demos</a><a>OpenStax</a><a>Notas</a>",
+"<a><b>For a class</b> Courses</a>":
+  "<a><b>Para una clase</b> Cursos</a>",
 "Radioactive Decay":
   "Decaimiento radiactivo",
 "Modern physics; PHYS {#} (exponential decay, as in RC circuits)":

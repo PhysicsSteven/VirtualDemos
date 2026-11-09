@@ -38,6 +38,8 @@ VDI18N.add('es', 'ws/heat-engines', {
   "Q, W, Δ U de la demo",
 "Heat Engine Cycles | VirtualDemos":
   "Ciclos de máquinas térmicas | VirtualDemos",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
 "Heat Engine Cycles":
   "Ciclos de máquinas térmicas",
 "Textbook: OpenStax <em>University Physics</em>, Vol. {#}, §§{#} to {#} and {#} to {#}. Access for free at https://openstax.org/details/books/university-physics-volume-{#}.":

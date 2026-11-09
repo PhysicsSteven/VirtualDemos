@@ -458,6 +458,8 @@ VDI18N.add('es', 'demo/capacitors', {
   "V ENTRE",
 "electrostatic voltmeter":
   "voltímetro electrostático",
+"{#} GΩ":
+  "{#} GΩ",
 "DC SUPPLY":
   "FUENTE DE CD",
 "eq":
@@ -630,6 +632,8 @@ VDI18N.add('es', 'demo/capacitors', {
   "Perforado: el papel tuvo ruptura dieléctrica a {#} kV y ahora un canal quemado conduce, así que la corriente de {#} nA de la fuente pasa directamente por él. Pon una pieza nueva.",
 "<span>W<sub>supply</sub> = ΔU + heat in R + sparks</span><br>{#} mJ = {#} J + {#} mJ + {#} mJ":
   "<span>W<sub>fuente</sub> = ΔU + calor en R + chispas</span><br>{#} mJ = {#} J + {#} mJ + {#} mJ",
+"Close":
+  "Cerrar",
 "<span>W<sub>supply</sub> = ΔU + heat in R + sparks</span><br>{#} J = {#} J + {#} mJ + {#} mJ":
   "<span>W<sub>fuente</sub> = ΔU + calor en R + chispas</span><br>{#} J = {#} J + {#} mJ + {#} mJ",
 "<span>W<sub>supply</sub> = ΔU + heat in R + sparks</span><br>{#} J = {#} J + {#} J + {#} mJ":
@@ -640,6 +644,8 @@ VDI18N.add('es', 'demo/capacitors', {
   "MEDIDOR",
 "<span>W<sub>hand</sub> = ΔU − W<sub>battery</sub></span><br>{#} pJ = {#} pJ − {#} J<span><br><span>W<sub>battery</sub> = V<sub>b</sub>ΔQ while connected</span></span>":
   "<span>W<sub>hand</sub> = ΔU − W<sub>battery</sub></span><br>{#} pJ = {#} pJ − {#} J<span><br><span>W<sub>battery</sub> = V<sub>b</sub>ΔQ mientras está conectada</span></span>",
+"<span>W<sub>hand</sub> = ΔU − W<sub>battery</sub></span><br>−{#} fJ = {#} fJ − {#} fJ<span><br><span>W<sub>battery</sub> = V<sub>b</sub>ΔQ while connected</span></span>":
+  "<span>W<sub>hand</sub> = ΔU − W<sub>battery</sub></span><br>−{#} fJ = {#} fJ − {#} fJ<span><br><span>W<sub>battery</sub> = V<sub>b</sub>ΔQ mientras está conectada</span></span>",
 "Free charge, each symbol {#} nC":
   "Carga libre, cada símbolo {#} nC",
 "<span>W<sub>hand</sub> = ΔU − W<sub>battery</sub></span><br>−{#} nJ = {#} nJ − {#} nJ<span><br><span>W<sub>battery</sub> = V<sub>b</sub>ΔQ while connected</span></span>":
@@ -650,6 +656,8 @@ VDI18N.add('es', 'demo/capacitors', {
   "Predicción: {t} s.",
 "{#} spark, at {#} kV. Predicted: {#} s.":
   "{#} chispa, a {#} kV. Predicción: {#} s.",
+"<span>W<sub>supply</sub> = ΔU + heat in R + sparks</span><br>{#} mJ = {#} µJ + {#} mJ + {#} mJ":
+  "<span>W<sub>supply</sub> = ΔU + calor en R + chispas</span><br>{#} mJ = {#} µJ + {#} mJ + {#} mJ",
 "difference −{#} × {#}⁻²⁴ J":
   "diferencia −{#} × {#}⁻²⁴ J",
 "<span>W<sub>hand</sub> = ΔU − W<sub>battery</sub></span><br>{#} pJ = (−{#} pJ) − (−{#} nJ)<span><br><span>W<sub>battery</sub> = V<sub>b</sub>ΔQ while connected</span></span>":

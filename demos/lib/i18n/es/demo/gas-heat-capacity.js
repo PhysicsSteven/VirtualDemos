@@ -20,6 +20,8 @@ VDI18N.add('es', 'demo/gas-heat-capacity', {
   "<a><span>←</span> <span>Gas en una caja</span></a><a><span>Ciclos de máquinas térmicas</span> <span>→</span></a>",
 "Heat a gas with its piston locked, then with it free to rise. The same heat warms it less when it can push the piston: some goes into work. Measure C<sub>V</sub>, C<sub>P</sub> and their ratio γ, and find γ again from a ball bouncing on a cushion of gas.":
   "Calienta un gas con su pistón bloqueado y luego con el pistón libre para subir. El mismo calor lo calienta menos cuando puede empujar el pistón: una parte se convierte en trabajo. Mide C<sub>V</sub>, C<sub>P</sub> y su razón γ, y encuentra γ otra vez con una esfera que rebota sobre un cojín de gas.",
+"T in °C · Q in J · V in L":
+  "T en °C · Q en J · V en L",
 "Time controls":
   "Controles de tiempo",
 "Run for a moment and pause again":
@@ -294,6 +296,10 @@ VDI18N.add('es', 'demo/gas-heat-capacity', {
   "nitrógeno",
 "The last mystery gas was nitrogen.":
   "El último gas misterioso fue nitrógeno.",
+"fluorine":
+  "flúor",
+"The last mystery gas was fluorine.":
+  "El último gas misterioso fue flúor.",
 "nitrous oxide":
   "óxido nitroso",
 "The last mystery gas was nitrous oxide.":

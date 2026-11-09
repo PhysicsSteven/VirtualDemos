@@ -18,6 +18,8 @@ VDI18N.add('es', 'ws/terminal-velocity', {
   "v al aterrizar (m/s)",
 "Terminal Velocity | VirtualDemos":
   "Rapidez terminal | VirtualDemos",
+"<a>Virtual Physics Demos</a>":
+  "<a>Demos virtuales de física</a>",
 "Terminal Velocity":
   "Rapidez terminal",
 "Textbook: OpenStax <em>University Physics</em>, Vol. {#}, §{#} (Drag Force and Terminal Speed). Access for free at https://openstax.org/details/books/university-physics-volume-{#}.":

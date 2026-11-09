@@ -130,6 +130,8 @@ VDI18N.add('es', 'demo/resolution', {
   "Cerca del agujero y Un disco (difracción de Fresnel): una onda plana de intensidad unitaria sobre un agujero redondo o un disco opaco, el campo en la pantalla a partir de la forma de Fresnel (paraxial) de la integral de Kirchhoff con el factor de oblicuidad tomado como {#} (Hecht, Optics, sección {#}; Goodman, Introduction to Fourier Optics, sección {#}): U(r) = −2iφ e^(ikr²/2L) ∫₀¹ J₀(kaur/L) e^(iφu²) u du con φ = πN_F y N_F = a²/λL, a = D/{#}, calculada con la regla de Simpson; el disco es el haz abierto menos el agujero (Babinet). Sobre el eje la fase despreciada es menor que {#} rad para todos los ajustes de aquí, y las lecturas comparan el resultado con el valor exacto de Rayleigh–Sommerfeld, {#} + z²/R² − {#}(z/R) cos k(R − z) para el agujero y z²/R² para el disco, R = √(L² + a²). El borde del agujero o del disco se toma como perfectamente nítido y el haz como perfectamente uniforme; un haz real es gaussiano y debe ser varias veces más ancho que D. La imagen está escalada a su punto más brillante; la gráfica está en unidades del haz abierto. La imagen de las zonas está a escala: la zona n termina en el radio √(nλL + (nλ/{#})²).",
 "3D view: the same intensities drawn as a landscape over the detector, height I/I₀ (the scale post), glow the picture's brightness; each source makes one peak, and two sources closer than about {#} λ/D merge into one (the dip midway first appears at {#} λ/D, Sparrow's limit). At the Rayleigh limit the brightness midway between two equal sources is {#} % of the peaks, a dip {#} % deep (computed from [2J₁(x)/x]²; the textbook rounds {#} to {#}). The orange line is the cursor, the bright line along the sources is the graph below, the dashed circles are the first dark rings. The aperture beside the detector is drawn larger or smaller with D on a log scale and is not to scale with the pattern. Drag to turn, scroll or pinch to zoom, double click to go back.":
   "Vista 3D: las mismas intensidades dibujadas como un paisaje sobre el detector, con altura I/I₀ (el poste de escala) y el brillo de la imagen como resplandor; cada fuente forma un pico, y dos fuentes más cercanas que unos {#} λ/D se funden en uno (la caída a la mitad aparece primero a {#} λ/D, el límite de Sparrow). En el límite de Rayleigh el brillo a la mitad entre dos fuentes iguales es el {#} % de los picos, una caída de {#} % de profundidad (calculado con [2J₁(x)/x]²; el libro redondea {#} a {#}). La línea naranja es el cursor, la línea brillante a lo largo de las fuentes es la gráfica de abajo, y los círculos punteados son los primeros anillos oscuros. La abertura junto al detector se dibuja más grande o más pequeña con D en escala logarítmica y no está a escala con el patrón. Arrastra para girar, desplaza o pellizca para acercar, doble clic para volver.",
+"laser {#} nm":
+  "láser de {#} nm",
 "cursor":
   "cursor",
 "two point sources":
@@ -322,26 +324,26 @@ VDI18N.add('es', 'demo/resolution', {
   "campo cercano (Fresnel), pocas zonas",
 "near field, disk":
   "campo cercano, disco",
+"Close":
+  "Cerrar",
 "Fresnel zones":
   "Zonas de Fresnel",
 "I/I₀ (I₀: the beam with nothing in it)":
   "I/I₀ (I₀: el haz sin nada en él)",
 "I/I₀ (I₀: one source's peak)":
   "I/I₀ (I₀: el pico de una sola fuente)",
-"{#}: <span>not resolved</span>":
-  "{#}: <span>no resueltas</span>",
-"Numbers: the textbook's Example {#}, Hubble ({#} m mirror, {#} nm, stars at {#} million light years) and its Chapter {#} Problem {#} on the eye ({#} mm pupil, {#} nm, headlights {#} m apart); {#} ly = {#} × {#}¹⁵ m. Real eyes do worse than diffraction allows: normal ({#}/{#}) acuity is about one minute of arc, {#} µrad, because of aberrations and the spacing of the receptors on the retina. The cursor reads to {#}/{#} of the view, and I/I₀ is the intensity there relative to the central peak of one source alone.":
-  "Números: el Ejemplo {#} del libro de texto, Hubble (espejo de {#} m, {#} nm, estrellas a {#} millones de años luz) y su Problema {#} del Capítulo {#} sobre el ojo (pupila de {#} mm, {#} nm, faros separados {#} m); {#} a. l. = {#} × {#}¹⁵ m. Los ojos reales lo hacen peor de lo que permite la difracción: la agudeza normal ({#}/{#}) es de cerca de un minuto de arco, {#} µrad, por las aberraciones y la separación de los receptores en la retina. El cursor lee hasta {#}/{#} de la vista, e I/I₀ es la intensidad ahí relativa al pico central de una sola fuente.",
-"laser {#} nm":
-  "láser de {#} nm",
-"The textbook's Hubble example: a {#} m mirror, light of {#} nm, and two stars at the {#} million light year distance it uses for the Andromeda galaxy. How close can the stars be and still be seen as two? Try a smaller mirror too.":
-  "El ejemplo del Hubble del libro de texto: un espejo de {#} m, luz de {#} nm, y dos estrellas a la distancia de {#} millones de años luz que usa para la galaxia de Andrómeda. ¿Qué tan cerca pueden estar las estrellas y aún verse como dos? Prueba también con un espejo más pequeño.",
 "dip {#} % below the peaks":
   "caída de {#} % bajo los picos",
+"{#}: <span>not resolved</span>":
+  "{#}: <span>no resueltas</span>",
 "no dip: one peak":
   "sin caída: un solo pico",
-"{#}: <span>just resolved</span>":
-  "{#}: <span>apenas resueltas</span>",
 "{#}× exposure: the peaks are cut off":
-  "exposición {#}×: los picos quedan recortados"
+  "exposición {#}×: los picos quedan recortados",
+"Numbers: the textbook's Example {#}, Hubble ({#} m mirror, {#} nm, stars at {#} million light years) and its Chapter {#} Problem {#} on the eye ({#} mm pupil, {#} nm, headlights {#} m apart); {#} ly = {#} × {#}¹⁵ m. Real eyes do worse than diffraction allows: normal ({#}/{#}) acuity is about one minute of arc, {#} µrad, because of aberrations and the spacing of the receptors on the retina. The cursor reads to {#}/{#} of the view, and I/I₀ is the intensity there relative to the central peak of one source alone.":
+  "Números: el Ejemplo {#} del libro de texto, Hubble (espejo de {#} m, {#} nm, estrellas a {#} millones de años luz) y su Problema {#} del Capítulo {#} sobre el ojo (pupila de {#} mm, {#} nm, faros separados {#} m); {#} a. l. = {#} × {#}¹⁵ m. Los ojos reales lo hacen peor de lo que permite la difracción: la agudeza normal ({#}/{#}) es de cerca de un minuto de arco, {#} µrad, por las aberraciones y la separación de los receptores en la retina. El cursor lee hasta {#}/{#} de la vista, e I/I₀ es la intensidad ahí relativa al pico central de una sola fuente.",
+"The textbook's Hubble example: a {#} m mirror, light of {#} nm, and two stars at the {#} million light year distance it uses for the Andromeda galaxy. How close can the stars be and still be seen as two? Try a smaller mirror too.":
+  "El ejemplo del Hubble del libro de texto: un espejo de {#} m, luz de {#} nm, y dos estrellas a la distancia de {#} millones de años luz que usa para la galaxia de Andrómeda. ¿Qué tan cerca pueden estar las estrellas y aún verse como dos? Prueba también con un espejo más pequeño.",
+"{#}: <span>just resolved</span>":
+  "{#}: <span>apenas resueltas</span>"
 });

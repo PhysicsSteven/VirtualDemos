@@ -2,7 +2,7 @@
 VDI18N.add('en', 'demo/dosimetry', [
 "water",
 "photons",
-"Start to send photons in: each dot is an interaction, each purple line the electron it sets moving (to scale).",
+"Press Play to send photons in: each dot is an interaction, each purple line the electron it sets moving (to scale).",
 "depth z (cm)",
 "d_max {#} cm",
 "collision kerma K_col (NIST μ_en/ρ)",
@@ -129,7 +129,7 @@ VDI18N.add('en', 'demo/dosimetry', [
 "water phantom",
 "{#} MeV photons",
 "The first {#} cm of the water, magnified {#}×",
-"Press Start to send photons in.",
+"Press Play to send photons in.",
 "Inside the block all is to scale: each dot is an interaction, each purple line the electron it sets moving. Drag to turn.",
 "view",
 "setting",

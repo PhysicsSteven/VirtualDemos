@@ -2,6 +2,16 @@
 VDI18N.add('es', 'notes/resolution', {
 "Circular Apertures and Resolution: teaching notes":
   "Aperturas circulares y resolución: notas para el docente",
+"Site":
+  "Sitio",
+"Virtual Physics Demos":
+  "Demos virtuales de física",
+"Library":
+  "Biblioteca",
+"<a>Demos</a><a>OpenStax</a><a>Notes</a>":
+  "<a>Demos</a><a>OpenStax</a><a>Notas</a>",
+"<a><b>For a class</b> Courses</a>":
+  "<a><b>Para una clase</b> Cursos</a>",
 "Circular Apertures and Resolution":
   "Aperturas circulares y resolución",
 "Intro physics (wave optics: circular apertures, the Rayleigh criterion)":

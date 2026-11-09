@@ -553,7 +553,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       ctx.fillStyle = T.photon; ctx.beginPath(); ctx.arc(xi, yi, 2.2, 0, 7); ctx.fill();
     }
     ctx.restore(); ctx.globalAlpha = 1;
-    if (!S.run && !tracks.length) text('Start to send photons in: each dot is an interaction, each purple line the electron it sets moving (to scale).', x0 + 10 * p, py1 - 14 * p, { s: 11 * p });
+    if (!S.run && !tracks.length) text('Press Play to send photons in: each dot is an interaction, each purple line the electron it sets moving (to scale).', x0 + 10 * p, py1 - 14 * p, { s: 11 * p });
     }
     /* the graph */
     const gy0 = py1 + 34 * p, gy1 = H - (W < 600 ? 86 : 54) * p;
@@ -901,7 +901,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     tag3(b, `${f(S.E, 3)} MeV photons`, Q([-0.5, 0, t.zb + 0.14]), { c: T.photon });
     tag3(b, nar ? `the first ${lenText(zm)}, magnified ${f(mag, 0)}×` : `The first ${lenText(zm)} of the water, magnified ${f(mag, 0)}×`, Q([B.x0 + B.len / 2, B.y, B.z + B.w / 2 + 0.03]), { w: 700 });
     if (inside) tag3(b, `z = ${f(S.z, 3)} cm`, Q([B.x0 + S.z / zm * B.len, B.y - B.w / 2, B.z - B.w / 2 - 0.02]), { c: T.accent, m: true });
-    if (!S.run && !tracks.length) note3(b, 'Press Start to send photons in.', 1);
+    if (!S.run && !tracks.length) note3(b, 'Press Play to send photons in.', 1);
     else if (md) note3(b, nar ? 'Back wall: Monte Carlo dose by depth.' : 'The back wall of the block shows the Monte Carlo dose in each depth bin: watch it build up.', 1, T.mc);
     note3(b, nar ? 'In the block all to scale: dots are interactions, lines the electrons.' : 'Inside the block all is to scale: each dot is an interaction, each purple line the electron it sets moving. Drag to turn.');
   }

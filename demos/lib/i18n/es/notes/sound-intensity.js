@@ -2,6 +2,16 @@
 VDI18N.add('es', 'notes/sound-intensity', {
 "Sound Intensity and Decibels: teaching notes":
   "Intensidad del sonido y decibeles: notas para el docente",
+"Site":
+  "Sitio",
+"Virtual Physics Demos":
+  "Demos virtuales de física",
+"Library":
+  "Biblioteca",
+"<a>Demos</a><a>OpenStax</a><a>Notes</a>":
+  "<a>Demos</a><a>OpenStax</a><a>Notas</a>",
+"<a><b>For a class</b> Courses</a>":
+  "<a><b>Para una clase</b> Cursos</a>",
 "Sound Intensity and Decibels":
   "Intensidad del sonido y decibeles",
 "Intro physics (sound, OpenStax Vol {#} {#})":

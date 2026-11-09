@@ -10,6 +10,8 @@ VDI18N.add('es', 'demo/motion-graphs', {
   "<a><span>←</span> <span>Vectores y movimiento relativo</span></a><a><span>Alcance de proyectiles</span> <span>→</span></a>",
 "A cart moves along a straight track. Its position, velocity and acceleration are graphed against time: each graph is the slope of the one above, and the area under each is the change in the one above.":
   "Un carrito se mueve por un riel recto. Su posición, velocidad y aceleración se grafican en función del tiempo: cada gráfica es la pendiente de la de arriba, y el área bajo cada una es el cambio de la de arriba.",
+"x in m · v in m/s · a in m/s² · t in s":
+  "x en m · v en m/s · a en m/s² · t en s",
 "A cart on a track above graphs of position, velocity and acceleration against time. Drag on a graph, or press the left and right arrow keys, to move the time marker. Space plays or pauses, R starts over. In Walk the graph, drag the cart or hold the left and right arrow keys during a run to move it.":
   "Un carrito en un riel sobre gráficas de posición, velocidad y aceleración en función del tiempo. Arrastra sobre una gráfica, o pulsa las flechas izquierda y derecha, para mover el marcador de tiempo. Espacio inicia o pausa, R empieza de nuevo. En Recorre la gráfica, arrastra el carrito o mantén pulsadas las flechas izquierda y derecha durante una corrida para moverlo.",
 "Time controls":

@@ -74,6 +74,8 @@ VDI18N.add('es', 'demo/lasers', {
   "Paso",
 "Switch on again":
   "Volver a encender",
+"<span>Simulation speed</span>":
+  "<span>Velocidad de simulación</span>",
 "Processes":
   "Procesos",
 "Laser":
@@ -230,6 +232,8 @@ VDI18N.add('es', 'demo/lasers', {
   "Neón a {#} K (M = {#} u), λ = {#} nm en el vacío. Un modo emite láser donde la ganancia supera la pérdida. El ensanchamiento Doppler es inhomogéneo: cada modo usa su propio grupo de átomos, así que varios modos emiten a la vez. Las alturas de los modos son ilustrativas, proporcionales a qué tan por encima del umbral está la ganancia; los modos reales compiten y las barras ignoran la quema de huecos y el hundimiento de Lamb.",
 "Rate equations for one cavity mode and a uniform medium; no spatial hole burning, no thermal effects. Nd:YAG is an ideal four level laser and ruby an ideal three level laser: pump bands and the Nd lower level empty instantly. Rod {#} cm long, mode radius {#} mm, cavity {#} cm with refractive index {#}, {#}% internal loss per round trip, β = {#}⁻⁹ of spontaneous emission into the mode. Doping ({#} at.% Nd, {#} wt.% Cr₂O₃), cross sections and lifetimes as in Koechner. Real ruby lasers are flash pumped in pulses; running one continuously at these powers would overheat it.":
   "Ecuaciones de tasa para un modo de la cavidad y un medio uniforme; sin quema espacial de huecos, sin efectos térmicos. El Nd:YAG es un láser ideal de cuatro niveles y el rubí un láser ideal de tres niveles: las bandas de bombeo y el nivel inferior del Nd se vacían al instante. Barra de {#} cm de largo, radio del modo {#} mm, cavidad de {#} cm con índice de refracción {#}, {#}% de pérdida interna por viaje redondo, β = {#}⁻⁹ de la emisión espontánea hacia el modo. Dopaje ({#} at.% Nd, {#} wt.% Cr₂O₃), secciones eficaces y vidas medias como en Koechner. Los láseres de rubí reales se bombean con lámpara de destello en pulsos; operar uno de forma continua a estas potencias lo sobrecalentaría.",
+"{#} × {#}⁻¹⁰ W out":
+  "{#} × {#}⁻¹⁰ W de salida",
 "POWER METER":
   "POWER METER",
 "to scale: mirrors {#} cm apart, rod {#} cm long, beam {#} mm in radius; drawn photons follow log q":
@@ -244,8 +248,14 @@ VDI18N.add('es', 'demo/lasers', {
   "medio",
 "P_abs (W)":
   "P_abs (W)",
+"t = {#} µs · window {#} µs":
+  "t = {#} µs · ventana {#} µs",
 "{#} ms per second":
   "{#} ms por segundo",
+"{#} nW":
+  "{#} nW",
+"{#} nW out, {#} nm (infrared, drawn red)":
+  "{#} nW de salida, {#} nm (infrarrojo, dibujado en rojo)",
 "Absorption":
   "Absorción",
 "rate B₁₂ ρ(ν) N₁":
@@ -280,6 +290,10 @@ VDI18N.add('es', 'demo/lasers', {
   "N₂ = N₁: transparente, sin ganancia",
 "One transition between two levels with equal degeneracies, so B₁₂ = B₂₁. The thermal ratio is the Boltzmann factor; the rate ratio stimulated/spontaneous uses the Planck energy density at the same temperature. Animations are not to scale: wavelengths, speeds and timing are chosen to be seen.":
   "Una transición entre dos niveles con degeneraciones iguales, así que B₁₂ = B₂₁. La razón térmica es el factor de Boltzmann; la razón de tasas estimulada/espontánea usa la densidad de energía de Planck a la misma temperatura. Las animaciones no están a escala: las longitudes de onda, las rapideces y los tiempos se eligen para que se vean.",
+"{#} mW out, {#} nm (infrared, drawn red)":
+  "{#} mW de salida, {#} nm (infrarrojo, dibujado en rojo)",
+"{#} µW out, {#} nm (infrared, drawn red)":
+  "{#} µW de salida, {#} nm (infrarrojo, dibujado en rojo)",
 "Ruby: three level":
   "Rubí: tres niveles",
 "Cr³⁺ ions in sapphire; energy in eV":

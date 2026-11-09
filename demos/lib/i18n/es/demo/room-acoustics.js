@@ -176,6 +176,8 @@ VDI18N.add('es', 'demo/room-acoustics', {
   "arrastra para girar · arrastra el micrófono para cambiar r",
 "The room in 3D, with the loudspeaker and the microphone on its center line. Drag the microphone to change r; drag elsewhere to turn the view, scroll or pinch to zoom, double click to reset the view. Left and right arrows move the microphone by {#} m (with Shift, {#} m), comma and period turn the view, C claps.":
   "La sala en 3D, con el altavoz y el micrófono sobre su línea central. Arrastra el micrófono para cambiar r; arrastra en otro lugar para girar la vista, usa la rueda o pellizca para hacer zoom, doble clic para restablecer la vista. Las flechas izquierda y derecha mueven el micrófono {#} m (con Shift, {#} m), coma y punto giran la vista, C aplaude.",
+"slow motion ×{#}/{#}, t = {#} ms":
+  "cámara lenta ×{#}/{#}, t = {#} ms",
 "T = {#} s (measured, T20)":
   "T = {#} s (medido, T20)",
 "bars: energy every {#} ms · blue: Schroeder · dashed: fit":

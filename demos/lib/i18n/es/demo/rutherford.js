@@ -138,6 +138,8 @@ VDI18N.add('es', 'demo/rutherford', {
   "Ajuste a Rutherford, χ² por intervalo",
 "Past {#}° in a real foil of thickness t, ntπb₉₀²":
   "Más allá de {#}° en una lámina real de espesor t, ntπb₉₀²",
+"{#}% <span>{#} in {#}</span>":
+  "{#}% <span>{#} de cada {#}</span>",
 "Atoms crossed":
   "Átomos atravesados",
 "Largest kick per atom":

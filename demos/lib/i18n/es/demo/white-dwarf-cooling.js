@@ -276,6 +276,8 @@ VDI18N.add('es', 'demo/white-dwarf-cooling', {
   "{#} millones de años · {#} × {#}⁷ K",
 "{#} Myr · {#} L":
   "{#} millones de años · {#} L",
+"{#} Myr · {#} × {#}⁻¹ L":
+  "{#} millones de años · {#} × {#}⁻¹ L",
 "{#} × {#}⁻¹ L<sub>sun</sub>":
   "{#} × {#}⁻¹ L<sub>sun</sub>"
 });
