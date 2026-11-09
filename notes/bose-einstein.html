@@ -83,6 +83,7 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 <li><strong>Few atoms, big box.</strong> A dilute gas must be colder: 20 atoms in a 20 µm box touch at 1.8 nK.</li>
 <li><strong>The velocity picture of 1995.</strong> Ask Q5. Press Play and watch the spike grow out of the thermal hill as the gas cools, then switch to Flat for the image a camera gives.</li>
 <li><strong>Condensate fraction.</strong> The curve for this box, with the overlap temperature marked. Change N and L and see the curve slide.</li>
+<li><strong>In a harmonic trap, like the real experiments.</strong> Switch the container to Harmonic trap (or pick the setup). Ask Q7. The cloud shrinks as it cools and a small dense bump, the trap's ground state, appears in the middle: in a trap the condensate is smaller than the thermal cloud, which is how it was first seen. <strong>The 1995 picture, from a trap</strong> shows the same in velocity.</li>
 </ol>
 <h2>Questions</h2>
 <div class="q"><p><strong>Q1.</strong> Rubidium 87 has a mass of 86.909 u. Find its thermal de Broglie wavelength at 1.00 µK, and at 35 nK. By what factor does it grow?</p></div>
@@ -96,6 +97,8 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 <div class="q"><p><strong>Q5.</strong> In the velocity view at 170 nK (the temperature where the 1995 JILA condensate appeared), how fast do the thermal rubidium atoms move, √(2kT/m)? The ground state of a 10 µm box has a velocity spread of about h/(2mL) along each axis. Find it, and explain why the condensate shows up as a sharp spike.</p></div>
 
 <div class="q"><p><strong>Q6.</strong> For a uniform three dimensional ideal Bose gas the condensation temperature is kT_c = (2πħ²/m)(n/2.612)^(2/3). Liquid helium 4 has a density of 0.1451 g/cm³. Find T_c and compare it with the measured lambda point, 2.17 K. Why is the agreement only rough?</p></div>
+
+<div class="q"><p><strong>Q7.</strong> In a round two dimensional harmonic trap the levels are evenly spaced, ħω apart, and for many atoms the gas condenses below kT_c = ħω√(6N)/π, with a share 1 − (T/T_c)² in the ground state. Find T_c for 100 rubidium atoms in a 50 Hz trap. At 10 nK, what share does the formula predict, and what does the demo's exact count give?</p></div>
 <h2>Common misconceptions</h2>
 <ul>
 <li><strong>"The atoms slow down and stop at the bottom of the box."</strong> They drop into the lowest quantum state, whose wavefunction fills the whole box; the condensate is as spread out as the box allows, not a puddle in one corner.</li>
@@ -110,7 +113,7 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 <li>The condensate density is N₀(4/L²) sin²(πx/L) sin²(πy/L). Each excited atom is drawn as a minimum uncertainty packet whose momentum spread is the thermal √(mkT) per axis, so its position spread is σ = λ_T/(2√2π); it moves at ħπ√(nx² + ny²)/(mL) and bounces off the walls. The height of the surface is the square root of the density.</li>
 <li>The ladder samples the occupations once per atom with a fixed random number per atom, so the same atoms sink as the gas cools; the readouts are the averages.</li>
 <li>Velocity view: the condensate's exact momentum spread (the Fourier transform of the box ground state) plus the thermal atoms as the semiclassical Bose distribution 1/(e^(mv²/2kT + x) − 1), normalized to N − N₀.</li>
-<li>Left out: interactions between atoms (which widen a real condensate and shift the transition by a few percent), the third dimension (an infinite two dimensional ideal gas would not condense; a finite one crosses over gradually, as shown), and the trap (real condensates sit in harmonic traps, where kT_c = 0.94 ħω N^(1/3)).</li>
+<li>Left out: interactions between atoms (which widen a real condensate and shift the transition by a few percent), the third dimension (an infinite two dimensional ideal gas would not condense; a finite one crosses over gradually, as shown), and the shape of a real trap: the Harmonic trap container is round and two dimensional (levels ħω(nx + ny + 1), kT_c = ħω√(6N)/π for many atoms, Bagnato and Kleppner 1991), while real traps are three dimensional, where kT_c = 0.94 ħω N^(1/3).</li>
 <li>Constants: h, k and u from CODATA 2022; atomic masses from AME2020. The 1995 rubidium numbers (about 2000 atoms, 170 nK, 2.5 × 10¹² per cm³) are from Anderson et al., Science 269, 198 (1995).</li>
 </ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>. © 2026 Steven Anderson. All rights reserved; see the <a href="../LICENSE.html">terms of use</a>.</footer>
 </main>

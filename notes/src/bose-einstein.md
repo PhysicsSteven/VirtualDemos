@@ -22,6 +22,7 @@ Students should know the de Broglie wavelength, the particle in a box levels E =
 5. **Few atoms, big box.** A dilute gas must be colder: 20 atoms in a 20 µm box touch at 1.8 nK.
 6. **The velocity picture of 1995.** Ask Q5. Press Play and watch the spike grow out of the thermal hill as the gas cools, then switch to Flat for the image a camera gives.
 7. **Condensate fraction.** The curve for this box, with the overlap temperature marked. Change N and L and see the curve slide.
+8. **In a harmonic trap, like the real experiments.** Switch the container to Harmonic trap (or pick the setup). Ask Q7. The cloud shrinks as it cools and a small dense bump, the trap's ground state, appears in the middle: in a trap the condensate is smaller than the thermal cloud, which is how it was first seen. **The 1995 picture, from a trap** shows the same in velocity.
 
 ## Questions
 
@@ -37,6 +38,8 @@ Students should know the de Broglie wavelength, the particle in a box levels E =
 
 **Q6.** For a uniform three dimensional ideal Bose gas the condensation temperature is kT_c = (2πħ²/m)(n/2.612)^(2/3). Liquid helium 4 has a density of 0.1451 g/cm³. Find T_c and compare it with the measured lambda point, 2.17 K. Why is the agreement only rough?
 
+**Q7.** In a round two dimensional harmonic trap the levels are evenly spaced, ħω apart, and for many atoms the gas condenses below kT_c = ħω√(6N)/π, with a share 1 − (T/T_c)² in the ground state. Find T_c for 100 rubidium atoms in a 50 Hz trap. At 10 nK, what share does the formula predict, and what does the demo's exact count give?
+
 ## Common misconceptions
 
 - **"The atoms slow down and stop at the bottom of the box."** They drop into the lowest quantum state, whose wavefunction fills the whole box; the condensate is as spread out as the box allows, not a puddle in one corner.
@@ -51,5 +54,5 @@ Students should know the de Broglie wavelength, the particle in a box levels E =
 - The condensate density is N₀(4/L²) sin²(πx/L) sin²(πy/L). Each excited atom is drawn as a minimum uncertainty packet whose momentum spread is the thermal √(mkT) per axis, so its position spread is σ = λ_T/(2√2π); it moves at ħπ√(nx² + ny²)/(mL) and bounces off the walls. The height of the surface is the square root of the density.
 - The ladder samples the occupations once per atom with a fixed random number per atom, so the same atoms sink as the gas cools; the readouts are the averages.
 - Velocity view: the condensate's exact momentum spread (the Fourier transform of the box ground state) plus the thermal atoms as the semiclassical Bose distribution 1/(e^(mv²/2kT + x) − 1), normalized to N − N₀.
-- Left out: interactions between atoms (which widen a real condensate and shift the transition by a few percent), the third dimension (an infinite two dimensional ideal gas would not condense; a finite one crosses over gradually, as shown), and the trap (real condensates sit in harmonic traps, where kT_c = 0.94 ħω N^(1/3)).
+- Left out: interactions between atoms (which widen a real condensate and shift the transition by a few percent), the third dimension (an infinite two dimensional ideal gas would not condense; a finite one crosses over gradually, as shown), and the shape of a real trap: the Harmonic trap container is round and two dimensional (levels ħω(nx + ny + 1), kT_c = ħω√(6N)/π for many atoms, Bagnato and Kleppner 1991), while real traps are three dimensional, where kT_c = 0.94 ħω N^(1/3).
 - Constants: h, k and u from CODATA 2022; atomic masses from AME2020. The 1995 rubidium numbers (about 2000 atoms, 170 nK, 2.5 × 10¹² per cm³) are from Anderson et al., Science 269, 198 (1995).

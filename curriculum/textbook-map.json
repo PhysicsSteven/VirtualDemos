@@ -11089,7 +11089,7 @@
       "role": "lab",
       "beyond_book": true,
       "status": "usable",
-      "note": "New 2026-11-08 (Claude, at Steve's request after a Veritasium video on Bose–Einstein condensation). An ideal Bose gas of N atoms in a two dimensional box: exact Bose–Einstein occupations of the box levels (chemical potential solved for N), thermal atoms drawn as minimum uncertainty packets of the thermal de Broglie wavelength that overlap and drop into the shared ground state as the gas cools; energy ladder, thermometer, phase as color, the velocity distribution picture of 1995, and the condensate fraction curve. Atoms: Rb 87, Na 23, Li 7, H, He 4 (AME2020 masses). No worksheet yet.",
+      "note": "New 2026-11-08 (Claude, at Steve's request after a Veritasium video on Bose–Einstein condensation). An ideal Bose gas of N atoms in a two dimensional box: exact Bose–Einstein occupations of the box levels (chemical potential solved for N), thermal atoms drawn as minimum uncertainty packets of the thermal de Broglie wavelength that overlap and drop into the shared ground state as the gas cools; energy ladder, thermometer, phase as color, the velocity distribution picture of 1995, and the condensate fraction curve. Atoms: Rb 87, Na 23, Li 7, H, He 4 (AME2020 masses). 2026-11-09: a Harmonic trap container (round 2D trap, exact occupations of the levels ħω(nx + ny + 1), T_c = ħω√(6N)/π for many atoms, atoms swinging at their level's amplitude, the trap velocity picture). No worksheet yet.",
       "title": "Bose–Einstein Condensation",
       "url": "demos/bose-einstein.html"
     },

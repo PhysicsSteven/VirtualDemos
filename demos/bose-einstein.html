@@ -81,9 +81,11 @@
         </div>
         <div class="shelf-card" role="group" aria-label="The gas">
           <span class="card-title">The gas</span>
+          <div class="wide"><span class="lab">Container</span><div class="seg" role="group" aria-label="Container" id="contSeg"><button type="button" data-cont="box" aria-pressed="true">Box</button><button type="button" data-cont="trap" aria-pressed="false">Harmonic trap</button></div></div>
           <div class="wide"><label class="lab" for="selAtom">Atom</label><select id="selAtom"></select></div>
           <div><div class="slider-head"><label for="sN">Number of atoms N</label><output id="oN" class="mono" for="sN"></output></div><input type="range" id="sN" min="10" max="400" step="10"></div>
-          <div><div class="slider-head"><label for="sL">Box side L</label><output id="oL" class="mono" for="sL"></output></div><input type="range" id="sL" min="2" max="20" step="0.5"></div>
+          <div id="rowL"><div class="slider-head"><label for="sL">Box side L</label><output id="oL" class="mono" for="sL"></output></div><input type="range" id="sL" min="2" max="20" step="0.5"></div>
+          <div id="rowF" hidden><div class="slider-head"><label for="sF">Trap frequency f</label><output id="oF" class="mono" for="sF"></output></div><input type="range" id="sF" min="10" max="200" step="5"></div>
         </div>
         <div class="shelf-card" role="group" aria-label="The picture">
           <span class="card-title">The picture</span>
@@ -107,6 +109,8 @@
           <button type="button" data-p="few" aria-pressed="false">Few atoms, big box</button>
           <button type="button" data-p="warm" aria-pressed="false">Warm a condensate back up</button>
           <button type="button" data-p="vel" aria-pressed="false">The velocity picture of 1995</button>
+          <button type="button" data-p="trap" aria-pressed="false">In a harmonic trap, like the real experiments</button>
+          <button type="button" data-p="trapvel" aria-pressed="false">The 1995 picture, from a trap</button>
         </div>
         <details class="more" open><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
@@ -124,6 +128,7 @@
           <p class="hint" id="about2"></p>
           <p class="hint" id="about3"></p>
           <p class="hint" id="about4"></p>
+          <p class="hint" id="about5"></p>
         </details>
         </div></details>
       </section>
@@ -245,6 +250,52 @@
     const norm = -(2 * Math.PI * KB * o.T / m) * Math.log(1 - Math.exp(-o.x));
     return cond + (th > 40 ? 0 : nth / norm / (Math.exp(th) - 1));
   }
+  /* ---- the same gas in a round harmonic trap (two dimensions), the way real condensates are held ----
+     Levels E = ħω(nx + ny + 1); the level q = nx + ny holds q + 1 states. The occupations are summed level by level until the
+     terms are below e^{-36}. For many atoms the gas condenses below kT_c = ħω √(N/ζ(2)) = ħω √(6N)/π, where the excited
+     levels hold N (T/T_c)² atoms (Bagnato and Kleppner 1991); a finite N crosses over smoothly near T_c. */
+  const ZETA2 = Math.PI * Math.PI / 6;
+  const tcTrap2 = (N, w) => HBAR * w * Math.sqrt(N / ZETA2) / KB;
+  const oscLen = (m, w) => Math.sqrt(HBAR / (m * w));
+  function countTrap(a, x) {   /* Σ_q (q + 1)/(e^{aq + x} − 1) and its derivative in x */
+    let N = 0, D = 0;
+    for (let q = 0; ; q++) { const u = a * q + x; if (u > 36) break; const e = Math.exp(u), f = 1 / (e - 1); N += (q + 1) * f; D -= (q + 1) * e * f * f; }
+    return [N, D];
+  }
+  function solveXTrap(N, a) {
+    let lo = 1e-15, hi = 80, y = Math.log(1 / N);
+    const Zb = countTrap(a, 30)[0] * Math.exp(30); if (Zb > N) y = Math.log(Math.log(Zb / N));
+    y = Math.min(Math.log(hi), Math.max(Math.log(lo), y));
+    for (let it = 0; it < 100; it++) {
+      const x = Math.exp(y), [n, d] = countTrap(a, x), f = n - N;
+      if (Math.abs(f) < 1e-10 * N) return x;
+      if (f > 0) lo = Math.max(lo, x); else hi = Math.min(hi, x);
+      let yn = y - f / (d * x); if (!(yn > Math.log(lo) && yn < Math.log(hi))) yn = 0.5 * (Math.log(lo) + Math.log(hi)); y = yn;
+    }
+    return Math.exp(y);
+  }
+  /* the trapped gas at temperature T: as occupations() for the box, with occ[q] the atoms in level q (E = (q + 1)ħω) */
+  function occupationsTrap(N, m, w, T) {
+    const E1 = HBAR * w, a = E1 / (KB * T), x = solveXTrap(N, a), occ = [];
+    let inLevels = 0; for (let q = 0; ; q++) { const u = a * q + x; if (u > 36) break; occ.push((q + 1) / (Math.exp(u) - 1)); inLevels += occ[q]; }
+    const n0 = 1 / (Math.exp(x) - 1);
+    return { N, T, e1: E1, a, x, mu: E1 - x * KB * T, n0, frac: n0 / N, occ: Float64Array.from(occ), cut: occ.length, above: 0, inLevels, lambda: lambdaT(m, T), sigma: packetSigma(m, T), nLambda2: NaN };
+  }
+  /* the trap ground state density, N0 atoms: (N0/πℓ²) e^{−r²/ℓ²}, ℓ = √(ħ/mω) */
+  const trapGroundDensity = (n0, l, x, y) => n0 / (Math.PI * l * l) * Math.exp(-(x * x + y * y) / (l * l));
+  /* dilogarithm Li2(z) for 0 ≤ z < 1: the series below 1/2, Euler's reflection above */
+  function li2(z) {
+    if (z <= 0) return 0; if (z > 0.5) return ZETA2 - Math.log(z) * Math.log(1 - z) - li2(1 - z);
+    let s = 0, t = z; for (let k = 1; k < 200; k++) { s += t / (k * k); t *= z; if (t < 1e-17) break; } return s;
+  }
+  /* velocity distribution in the trap: the ground state's Gaussian spread (ħ/(mℓ) per axis, ⟨v²⟩ = ħ/(2mℓ²) per axis) plus the
+     thermal atoms in the semiclassical form, integrated over the trap: −ln(1 − e^{−(x + mv²/2kT)}), normalized with
+     ∫ d²v = (2πkT/m) Li2(e^{−x}) */
+  function velocityDensityTrap(o, m, w, vx, vy) {
+    const l = oscLen(m, w), s2 = (HBAR / (m * l)) ** 2, cond = o.n0 / (Math.PI * s2) * Math.exp(-(vx * vx + vy * vy) / s2);
+    const u = m * (vx * vx + vy * vy) / (2 * KB * o.T) + o.x, nth = o.N - o.n0, norm = (2 * Math.PI * KB * o.T / m) * li2(Math.exp(-o.x));
+    return cond + (u > 40 ? 0 : nth * -Math.log(1 - Math.exp(-u)) / norm);
+  }
   // ==CORE END==
   if (typeof document === 'undefined') return;
 
@@ -267,13 +318,26 @@
       hint: 'A condensate at 1 nK. Press Play and the gas warms a factor of ten every 8 seconds: atoms leave the ground state one by one, their packets shrink, and the ladder fills back up. The transition is reversible.' },
     vel: { atom: 'rb87', N: 100, L: 10, T: 3e-7, cool: -1, scene: 'vel', color: 'density',
       hint: 'How a condensate is actually seen: the trap is switched off, the atoms fly apart for a few hundredths of a second, and a picture of the cloud then maps their velocities. The broad hill is the thermal gas, a Maxwell–Boltzmann like spread of speeds; the sharp peak that grows as the gas cools is the condensate, whose velocity spread is only the quantum uncertainty of the ground state, h/(2L) or so. This is the famous picture from the 1995 rubidium experiment, computed here for this box. Press Play.' },
+    trap: { atom: 'rb87', N: 100, trap: true, f: 50, T: 1.5e-7, cool: -1, scene: 'box', color: 'density',
+      hint: 'One hundred rubidium atoms in a round harmonic trap of 50 Hz, the kind of trap every real condensate is made in, at 150 nK. The trap\'s levels are evenly spaced, ħω/k = 2.4 nK apart, and each hot atom swings back and forth through a cloud about 12 µm wide (rms), so the hottest ones swing out past the edge of the picture. Press Play: as the gas cools the cloud shrinks, and near T_c = 18.7 nK a dense bump appears in the middle, the trap\'s ground state, only 1.5 µm across (√(ħ/mω)). Unlike in the box, the condensate is much smaller than the thermal cloud, which is how it was first spotted. For many atoms the condensed share would be 1 − (T/T_c)²; compare that with the exact count in the readouts.' },
+    trapvel: { atom: 'rb87', N: 400, trap: true, f: 50, T: 1.5e-7, cool: -1, scene: 'vel', color: 'density',
+      hint: 'Four hundred rubidium atoms in a 50 Hz trap, cooling from 150 nK, seen by velocity, the way the 1995 pictures were taken. The thermal atoms spread over a broad hill of speeds (√(kT/m) is 3.8 mm/s at 150 nK); the condensate\'s spread is set only by the size of the trap\'s ground state, ħ/(mℓ) = 0.48 mm/s. Press Play: below T_c = 37 nK a sharp peak grows out of the middle of the hill. In the real experiment the trap was not round, and the peak came out elongated while the thermal hill stayed round, a sign that it was the ground state of that trap.' },
   };
-  const S = { preset: 'cool', atom: 'rb87', N: 100, L: 10, T: 1e-6, T0: 1e-6, cool: -1, scene: 'box', color: 'density', run: false, speed: 1, t: 0, ladder: true, marks: true, blind: false, msg: '' };
+  const S = { preset: 'cool', trap: false, f: 50, atom: 'rb87', N: 100, L: 10, T: 1e-6, T0: 1e-6, cool: -1, scene: 'box', color: 'density', run: false, speed: 1, t: 0, ladder: true, marks: true, blind: false, msg: '' };
   const can = $('can'), ctx = can.getContext('2d');
   let W = 0, H = 0, dpr = 1, T = null, view3 = null, g3 = null, M3 = null, O = null, lvl = null, pairsOf = null, fracCurve = null, ladTop = 0;
   const f = (v, d = 3) => (!isFinite(v) ? '—' : v.toFixed(d).replace('-', '−'));
   const proj = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
-  const mass = () => massOf(S.atom), side = () => S.L * 1e-6;
+  const mass = () => massOf(S.atom), trapW = () => 2 * Math.PI * S.f;
+  /* the marked temperature: where the packets touch in the box, T_c of the large N limit in the trap */
+  const markT = () => (S.trap ? tcTrap2(S.N, trapW()) : degeneracyT(S.N, S.L * 1e-6, mass()));
+  /* the width of the picture: the box itself, or for the trap 6.4 thermal rms widths at T_c, √(kT_c/m)/ω each */
+  const side = () => (S.trap ? 6.4 * Math.sqrt(KB * markT() / mass()) / trapW() : S.L * 1e-6);
+  const occAt = (t) => (S.trap ? occupationsTrap(S.N, mass(), trapW(), t) : occupations(S.N, mass(), side(), t));
+  const velAt = (o, vx, vy) => (S.trap ? velocityDensityTrap(o, mass(), trapW(), vx, vy) : velocityDensity(o, mass(), side(), vx, vy));
+  /* the level energies in units of e1, by level index: box q = nx² + ny², trap q + 1 */
+  let LQT = null;
+  const levQ = () => { if (!S.trap) return levels().Q; if (!LQT || LQT.length < O.cut) { LQT = new Float64Array(Math.max(O.cut, 64)); for (let k = 0; k < LQT.length; k++) LQT[k] = k + 1; } return LQT; };
   const fmtT = (t) => (t >= 1e-6 ? `${f(t * 1e6, 2)} µK` : `${f(t * 1e9, t < 1e-8 ? 2 : t < 1e-7 ? 1 : 0)} nK`);
   const fmtLen = (x) => (x >= 1e-6 ? `${f(x * 1e6, 2)} µm` : `${f(x * 1e9, 0)} nm`);
   function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
@@ -286,17 +350,34 @@
   function seedAtoms() {
     for (let i = 0; i < NMAX; i++) { AT.u[i] = rnd(); AT.x[i] = 0.04 + 0.92 * rnd(); AT.y[i] = 0.04 + 0.92 * rnd(); AT.sx[i] = rnd() < 0.5 ? -1 : 1; AT.sy[i] = rnd() < 0.5 ? -1 : 1; AT.ph[i] = rnd() * 2 * Math.PI; AT.pick[i] = Math.floor(rnd() * 1e6); AT.swap[i] = rnd() < 0.5 ? 1 : 0; }
   }
-  seedAtoms();
+  /* in the trap each atom swings along x and y with its own starting angles (a second random stream, so the box is unchanged) */
+  AT.ax = new Float64Array(NMAX); AT.ay = new Float64Array(NMAX);
+  const rnd2 = (() => { let s = 1995; return () => { s = (s * 1103515245 + 12345) % 2147483648; return s / 2147483648; }; })();
+  function seedAngles() { for (let i = 0; i < NMAX; i++) { AT.ax[i] = 2 * Math.PI * rnd2(); AT.ay[i] = 2 * Math.PI * rnd2(); } }
+  seedAtoms(); seedAngles();
   /* the gas at the current temperature: occupations, each drawn atom's level and its (nx, ny) */
+  /* trap: amplitude ℓ√(2n + 1) per axis (the classical turning point of level n), position A cos(angle), in picture units */
+  function placeTrap() {
+    const l = oscLen(mass(), trapW()), L = side();
+    for (let i = 0; i < S.N; i++) { const p = pairsOf[i]; if (!p) continue; AT.x[i] = 0.5 + l * Math.sqrt(2 * p[0] + 1) * Math.cos(AT.ax[i]) / L; AT.y[i] = 0.5 + l * Math.sqrt(2 * p[1] + 1) * Math.cos(AT.ay[i]) / L; }
+  }
   function compute() {
+    if (S.trap) {
+      O = occupationsTrap(S.N, mass(), trapW(), S.T); lvl = assignLevels(O, AT.u.subarray(0, S.N)); pairsOf = new Array(S.N);
+      for (let i = 0; i < S.N; i++) { const q = lvl[i]; if (q < 0) { pairsOf[i] = null; continue; } const nx = AT.pick[i] % (q + 1); pairsOf[i] = AT.swap[i] ? [q - nx, nx] : [nx, q - nx]; }
+      placeTrap(); return;
+    }
     O = occupations(S.N, mass(), side(), S.T);
     const u = AT.u.subarray(0, S.N); lvl = assignLevels(O, u);
     const LVS = levels(); pairsOf = new Array(S.N);
     for (let i = 0; i < S.N; i++) { const k = lvl[i]; if (k < 0) { pairsOf[i] = null; continue; } const P = LVS.pairs[k], nx = P[AT.pick[i] % P.length], ny = Math.round(Math.sqrt(LVS.Q[k] - nx * nx)); pairsOf[i] = AT.swap[i] ? [ny, nx] : [nx, ny]; }
   }
   /* a packet's wave vector (1/m) and speed (m/s) from its level: k = (π/L)(nx, ny) */
-  function kOf(i) { const p = pairsOf[i]; if (!p) return null; const kk = Math.PI / side(); return [AT.sx[i] * kk * p[0], AT.sy[i] * kk * p[1]]; }
-  function advance(dt) {   /* move the thermal packets by dt seconds of gas time; bounce off the walls */
+  function kOf(i) { const p = pairsOf[i]; if (!p) return null;
+    if (S.trap) { const m = mass(), w = trapW(), l = oscLen(m, w); return [-m * w * l * Math.sqrt(2 * p[0] + 1) * Math.sin(AT.ax[i]) / HBAR, -m * w * l * Math.sqrt(2 * p[1] + 1) * Math.sin(AT.ay[i]) / HBAR]; }
+    const kk = Math.PI / side(); return [AT.sx[i] * kk * p[0], AT.sy[i] * kk * p[1]]; }
+  function advance(dt) {   /* move the thermal packets by dt seconds of gas time; bounce off the walls (box) or swing (trap) */
+    if (S.trap) { const w = trapW(); for (let i = 0; i < S.N; i++) { AT.ax[i] += w * dt; AT.ay[i] += w * dt; } placeTrap(); return; }
     const L = side(), m = mass();
     for (let i = 0; i < S.N; i++) {
       if (lvl[i] === 0) continue; const k = kOf(i); if (!k) continue;
@@ -314,8 +395,8 @@
   function field() {
     const L = side(), cell = L / NG, sig = O.sigma, s2 = 2 * sig * sig, n0 = O.n0, m = mass();
     blend = Math.min(1, Math.max(0, (sig / cell - 0.7) / 0.9));
-    const w0 = -2 * O.e1 / HBAR * S.t;   /* the condensate's phase, e^{-iE0 t/ħ} */
-    for (let j = 0; j < GP; j++) for (let i = 0; i < GP; i++) { const r = groundDensity(n0, L, i * cell, j * cell), k = j * GP + i; RHO[k] = r; AMP[k] = r; PHS[k] = w0; }
+    const w0 = -(S.trap ? 1 : 2) * O.e1 / HBAR * S.t, l = S.trap ? oscLen(m, trapW()) : 0;   /* the condensate's phase, e^{-iE0 t/ħ} */
+    for (let j = 0; j < GP; j++) for (let i = 0; i < GP; i++) { const r = S.trap ? trapGroundDensity(n0, l, i * cell - L / 2, j * cell - L / 2) : groundDensity(n0, L, i * cell, j * cell), k = j * GP + i; RHO[k] = r; AMP[k] = r; PHS[k] = w0; }
     if (blend > 0) {
       const amp = blend / (2 * Math.PI * sig * sig), reach = Math.min(NG, Math.ceil(3 * sig / cell));
       for (let a = 0; a < S.N; a++) {
@@ -328,7 +409,7 @@
       }
     }
   }
-  const rhoRef = () => 4 * S.N / (side() * side());   /* the condensate's peak density when every atom is in it */
+  const rhoRef = () => (S.trap ? S.N / (Math.PI * oscLen(mass(), trapW()) ** 2) : 4 * S.N / (side() * side()));   /* the condensate's peak density when every atom is in it */
   const hOf = (r) => Math.min(2.2, Math.sqrt(r / rhoRef()));   /* drawn height: the square root of the density, in units of the full condensate's peak */
   /* colors: a dark to bright ramp for the density, hue for the phase (dimmer where there is nothing) */
   function ramp(t, out) {   /* t 0..1 → rgb 0..1 */
@@ -352,18 +433,18 @@
   const VG = 80, VP = VG + 1, VEL = new Float32Array(VP * VP);
   let velRef = 1, velMax = 1;
   function velScale() {   /* fixed per setup: the range covers the hot gas, the height unit is the thermal peak where the packets touch */
-    const m = mass(), Td = Math.min(TMAX, Math.max(TMIN, degeneracyT(S.N, side(), m))); velMax = 4 * Math.sqrt(2 * KB * Td / m);
-    const od = occupations(S.N, m, side(), Td); velRef = velocityDensity(od, m, side(), 0, 0) * 0.5;
+    const m = mass(), Td = Math.min(TMAX, Math.max(TMIN, markT())); velMax = 4 * Math.sqrt(2 * KB * Td / m);
+    const od = occAt(Td); velRef = velAt(od, 0, 0) * 0.5;
   }
-  function velField() { const m = mass(), L = side(); for (let j = 0; j < VP; j++) for (let i = 0; i < VP; i++) VEL[j * VP + i] = velocityDensity(O, m, L, (i / VG * 2 - 1) * velMax, (j / VG * 2 - 1) * velMax); }
+  function velField() { for (let j = 0; j < VP; j++) for (let i = 0; i < VP; i++) VEL[j * VP + i] = velAt(O, (i / VG * 2 - 1) * velMax, (j / VG * 2 - 1) * velMax); }
   const hVel = (v) => Math.min(2.2, Math.sqrt(v / velRef));
 
   /* ---------- overlays drawn on the 2D canvas: the energy ladder and the thermometer ---------- */
   function ladder(x0, y0, w, h) {
-    const p = proj(), { Q } = levels(), E = (q) => q * O.e1 / KB * 1e9;   /* energies in nK */
+    const p = proj(), Q = levQ(), E = (q) => q * O.e1 / KB * 1e9;   /* energies in nK */
     /* the ladder's top follows the hottest atoms (98th percentile) so the pile up stays readable as the gas cools */
     const qs = []; for (let i = 0; i < S.N; i++) if (lvl[i] >= 0) qs.push(Q[lvl[i]]); qs.sort((a, b) => a - b);
-    const q98 = qs.length ? qs[Math.min(qs.length - 1, Math.floor(0.98 * qs.length))] : 2, target = Math.max(E(Math.max(30, q98 * 1.15)), E(2) * 1.6);
+    const q98 = qs.length ? qs[Math.min(qs.length - 1, Math.floor(0.98 * qs.length))] : 2, target = Math.max(E(Math.max(30, q98 * 1.15)), E(Q[0]) * 1.6);
     ladTop = ladTop ? ladTop + (target - ladTop) * (S.run ? 0.08 : 1) : target;
     const Y = (e) => y0 + h - e / ladTop * h;
     ctx.save(); ctx.fillStyle = T.surface; ctx.globalAlpha = 0.78; ctx.beginPath(); ctx.roundRect(x0 - 6 * p, y0 - 22 * p, w + 12 * p, h + 40 * p, 8 * p); ctx.fill(); ctx.globalAlpha = 1;
@@ -372,7 +453,7 @@
     ctx.fillStyle = T.ink; ctx.font = `italic 700 ${12 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText('E', x0 + 5 * p, y0 - 7 * p);
     /* level lines while they can be told apart, a shaded band above */
     ctx.strokeStyle = T.line; ctx.lineWidth = 1; let last = -1e9, dense = null;
-    for (let i = 0; i < Q.length && E(Q[i]) <= ladTop; i++) { const y = Y(E(Q[i])); if (last - y < 2.5 * p) { dense = dense == null ? y : dense; continue; } last = y; ctx.beginPath(); ctx.moveTo(x0 + 4 * p, Math.round(y) + 0.5); ctx.lineTo(x0 + w, Math.round(y) + 0.5); ctx.stroke(); }
+    for (let i = 0; i < (S.trap ? O.cut : Q.length) && E(Q[i]) <= ladTop; i++) { const y = Y(E(Q[i])); if (last - y < 2.5 * p) { dense = dense == null ? y : dense; continue; } last = y; ctx.beginPath(); ctx.moveTo(x0 + 4 * p, Math.round(y) + 0.5); ctx.lineTo(x0 + w, Math.round(y) + 0.5); ctx.stroke(); }
     if (dense != null) { ctx.fillStyle = T.line; ctx.globalAlpha = 0.55; ctx.fillRect(x0 + 4 * p, y0, w - 4 * p, Math.max(0, dense - y0)); ctx.globalAlpha = 1; }
     /* kT */
     if (S.marks) { const yk = Y(S.T * 1e9); if (yk > y0) { ctx.strokeStyle = T.merc; ctx.setLineDash([4 * p, 3 * p]); ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.moveTo(x0 + 2 * p, yk); ctx.lineTo(x0 + w + 4 * p, yk); ctx.stroke(); ctx.setLineDash([]);
@@ -393,7 +474,7 @@
   const fmtE = (e) => (e >= 1000 ? `${f(e / 1000, e >= 10000 ? 0 : 1)} µK` : e >= 10 ? f(e, 0) : f(e, 1));
   function niceStep(x) { const e = 10 ** Math.floor(Math.log10(x)), r = x / e; return (r < 1.5 ? 1 : r < 3 ? 2 : r < 7 ? 5 : 10) * e; }
   function thermometer(x0, y0, w, h) {
-    const p = proj(), Y = (t) => y0 + h - (Math.log10(t / TMIN) / DECADES) * h, Td = degeneracyT(S.N, side(), mass());
+    const p = proj(), Y = (t) => y0 + h - (Math.log10(t / TMIN) / DECADES) * h, Td = markT();
     ctx.save(); ctx.fillStyle = T.surface; ctx.globalAlpha = 0.78; ctx.beginPath(); ctx.roundRect(x0 - 10 * p, y0 - 22 * p, w + 20 * p, h + 52 * p, 8 * p); ctx.fill(); ctx.globalAlpha = 1;
     ctx.fillStyle = T.ink; ctx.font = `italic 700 ${12 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillText('T', x0 + w / 2, y0 - 7 * p);
     const tube = 7 * p, bulb = 9 * p, cx = x0 + w / 2;
@@ -404,7 +485,7 @@
     ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
     for (const [t, lab] of [[1e-9, '1 nK'], [1e-8, '10 nK'], [1e-7, '100 nK'], [1e-6, '1 µK']]) { const y = Y(t); ctx.fillRect(cx + tube / 2, y - 0.5, 3 * p, 1); ctx.fillText(W < 640 ? lab.replace(' ', '') : lab, cx + tube / 2 + 5 * p, y); }
     if (S.marks && Td > TMIN && Td < TMAX) { const y = Y(Td); ctx.strokeStyle = T.touch; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.moveTo(cx - tube / 2 - 10 * p, y); ctx.lineTo(cx + tube / 2 + 2 * p, y); ctx.stroke();
-      ctx.fillStyle = T.touch; ctx.font = `700 ${10 * p}px ${T.ui}`; ctx.textAlign = 'right'; ctx.fillText(W < 640 ? 'touch' : 'packets touch', cx - tube / 2 - 12 * p, y - 6 * p); ctx.fillText(fmtT(Td), cx - tube / 2 - 12 * p, y + 6 * p); }
+      ctx.fillStyle = T.touch; ctx.font = `700 ${10 * p}px ${T.ui}`; ctx.textAlign = 'right'; ctx.fillText(S.trap ? 'T_c' : W < 640 ? 'touch' : 'packets touch', cx - tube / 2 - 12 * p, y - 6 * p); ctx.fillText(fmtT(Td), cx - tube / 2 - 12 * p, y + 6 * p); }
     ctx.fillStyle = T.ink; ctx.font = `700 ${11.5 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(fmtT(S.T), cx, y0 + h + 2 * bulb + 2 * p);
     ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.fillText(S.cool < 0 ? 'cooling' : S.cool > 0 ? 'warming' : 'held', cx, y0 + h + 2 * bulb + 16 * p);
     ctx.restore();
@@ -437,9 +518,10 @@
     const img = imageOf('box', GP, (i, j, c) => colorAt(j * GP + i, c)); blit(img, x, y, s, s);
     /* hot packets smaller than a cell: dots */
     if (blend < 1) { ctx.globalAlpha = 1 - blend; const r = Math.max(2.2 * p, O.sigma / L * s * 2); ctx.fillStyle = S.color === 'density' ? (T.dark ? '#f4f0ea' : '#1d4f8f') : T.ink;
-      for (let i = 0; i < S.N; i++) { if (lvl[i] === 0) continue; ctx.beginPath(); ctx.arc(x + AT.x[i] * s, y + s - AT.y[i] * s, r, 0, 7); ctx.fill(); } ctx.globalAlpha = 1; }
+      ctx.save(); ctx.beginPath(); ctx.rect(x, y, s, s); ctx.clip();   /* in the trap the hottest atoms swing out past the picture */
+      for (let i = 0; i < S.N; i++) { if (lvl[i] === 0) continue; ctx.beginPath(); ctx.arc(x + AT.x[i] * s, y + s - AT.y[i] * s, r, 0, 7); ctx.fill(); } ctx.restore(); ctx.globalAlpha = 1; }
     ctx.strokeStyle = T.floor_edge; ctx.lineWidth = 1.5 * p; ctx.strokeRect(x, y, s, s);
-    ctx.fillStyle = T.muted; ctx.font = `${11 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(`box ${f(S.L, 1)} µm on a side, seen from above`, x + s / 2, y + s + 6 * p);
+    ctx.fillStyle = T.muted; ctx.font = `${11 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(S.trap ? `trap of ${S.f} Hz, ${f(L * 1e6, 0)} µm across, seen from above` : `box ${f(S.L, 1)} µm on a side, seen from above`, x + s / 2, y + s + 6 * p);
     if (S.marks) scaleBar(x + s - 8 * p, y + s - 10 * p, s / L, p);
     legend(x, y - 8 * p, p);
   }
@@ -471,12 +553,12 @@
 
   /* ---------- the condensate fraction graph ---------- */
   function fracPoints() {
-    const key = [S.atom, S.N, S.L].join(); if (fracCurve && fracCurve.key === key) return fracCurve;
-    const pts = [], m = mass(), L = side(); for (let i = 0; i <= 90; i++) { const t = TMIN * 10 ** (DECADES * i / 90); pts.push([t, occupations(S.N, m, L, t).frac]); }
+    const key = [S.atom, S.N, S.L, S.trap, S.f].join(); if (fracCurve && fracCurve.key === key) return fracCurve;
+    const pts = []; for (let i = 0; i <= 90; i++) { const t = TMIN * 10 ** (DECADES * i / 90); pts.push([t, occAt(t).frac]); }
     return (fracCurve = { key, pts });
   }
   function drawFrac() {
-    const p = proj(), L = 62 * p, R = 20 * p, Tp = 34 * p, B = 46 * p, w = W - L - R, h = H - Tp - B, { pts } = fracPoints(), Td = degeneracyT(S.N, side(), mass());
+    const p = proj(), L = 62 * p, R = 20 * p, Tp = 34 * p, B = 46 * p, w = W - L - R, h = H - Tp - B, { pts } = fracPoints(), Td = markT();
     const X = (t) => L + Math.log10(t / TMIN) / DECADES * w, Y = (fr) => Tp + (1 - fr) * h;
     ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.fillStyle = T.muted; ctx.font = `${10.5 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
     for (const [t, lab] of [[1e-9, '1 nK'], [1e-8, '10 nK'], [1e-7, '100 nK'], [1e-6, '1 µK']]) { ctx.beginPath(); ctx.moveTo(X(t), Tp); ctx.lineTo(X(t), Tp + h); ctx.stroke(); ctx.fillText(lab, X(t), Tp + h + 5 * p); }
@@ -486,14 +568,14 @@
     ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.font = `${11 * p}px ${T.ui}`; ctx.fillText('temperature (logarithmic)', L + w / 2, H - 4 * p);
     ctx.save(); ctx.translate(14 * p, Tp + h / 2); ctx.rotate(-Math.PI / 2); ctx.textBaseline = 'middle'; ctx.fillText('share of the atoms in the ground state, N₀/N', 0, 0); ctx.restore();
     if (S.marks && Td > TMIN && Td < TMAX) { ctx.strokeStyle = T.touch; ctx.setLineDash([5 * p, 4 * p]); ctx.lineWidth = 1.3 * p; ctx.beginPath(); ctx.moveTo(X(Td), Tp); ctx.lineTo(X(Td), Tp + h); ctx.stroke(); ctx.setLineDash([]);
-      ctx.fillStyle = T.touch; ctx.font = `700 ${10.5 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText(`packets touch: Nλ²/L² = 1 at ${fmtT(Td)}`, X(Td) + 5 * p, Tp + 4 * p); }
+      ctx.fillStyle = T.touch; ctx.font = `700 ${10.5 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText(S.trap ? `T_c = ħω√(6N)/πk = ${fmtT(Td)} (many atoms)` : `packets touch: Nλ²/L² = 1 at ${fmtT(Td)}`, X(Td) + 5 * p, Tp + 4 * p); }
     if (!S.blind) { ctx.strokeStyle = T.cond; ctx.lineWidth = 2.2 * p; ctx.beginPath(); pts.forEach((q, i) => { if (i) ctx.lineTo(X(q[0]), Y(q[1])); else ctx.moveTo(X(q[0]), Y(q[1])); }); ctx.stroke();
       ctx.fillStyle = T.cond; ctx.beginPath(); ctx.arc(X(S.T), Y(O.frac), 5 * p, 0, 7); ctx.fill();
       ctx.fillStyle = T.ink; ctx.font = `700 ${11 * p}px ${T.mono}`; ctx.textAlign = X(S.T) > L + w * 0.6 ? 'right' : 'left'; ctx.textBaseline = 'bottom';
       ctx.fillText(`${fmtT(S.T)}: ${f(O.frac * 100, 1)} % (${Math.round(O.n0)} of ${S.N})`, X(S.T) + (X(S.T) > L + w * 0.6 ? -9 : 9) * p, Y(O.frac) - 4 * p); }
     else { ctx.fillStyle = T.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.font = `${12 * p}px ${T.ui}`; ctx.fillText('Blind: the curve is hidden. Predict where it rises from the overlap of the packets.', L + w / 2, Tp + h / 2); }
     ctx.fillStyle = T.muted; ctx.font = `${10.5 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
-    ctx.fillText(`${ATOMS[S.atom].name}, N = ${S.N}, L = ${f(S.L, 1)} µm: the exact Bose–Einstein count for this box`, L + 6 * p, Tp - 24 * p);
+    ctx.fillText(S.trap ? `${ATOMS[S.atom].name}, N = ${S.N}, f = ${S.f} Hz: the exact Bose–Einstein count for this trap` : `${ATOMS[S.atom].name}, N = ${S.N}, L = ${f(S.L, 1)} µm: the exact Bose–Einstein count for this box`, L + 6 * p, Tp - 24 * p);
   }
 
   /* ---------- drawing ---------- */
@@ -543,7 +625,7 @@
     if (S.scene === 'box') {
       g.surf.visible = true; g.vsurf.visible = false; fillSurface(g.surf, GP, (k) => hOf(RHO[k]), colorAt);
       let n = 0; if (blend < 1) { const r = Math.max(0.012, O.sigma / side() * 2 * 2), sc = r / 0.012; g.balls.material.opacity = 1 - blend; M3.makeScale(sc, sc, sc);
-        for (let i = 0; i < S.N; i++) { if (lvl[i] === 0 || !pairsOf[i]) continue; M3.setPosition(AT.x[i] * 2 - 1, AT.y[i] * 2 - 1, r); g.balls.setMatrixAt(n++, M3); } }
+        for (let i = 0; i < S.N; i++) { if (lvl[i] === 0 || !pairsOf[i] || Math.abs(AT.x[i] - 0.5) > 0.5 || Math.abs(AT.y[i] - 0.5) > 0.5) continue; M3.setPosition(AT.x[i] * 2 - 1, AT.y[i] * 2 - 1, r); g.balls.setMatrixAt(n++, M3); } }
       g.balls.count = n; g.balls.instanceMatrix.needsUpdate = true; g.balls.visible = n > 0;
     } else { g.surf.visible = false; g.vsurf.visible = true; g.balls.visible = false; fillSurface(g.vsurf, VP, (k) => hVel(VEL[k]), (k, out) => ramp(hVel(VEL[k]) / 1.4, out)); }
     S3.place(G3.o, [0, 0, 0.18], S3.fit(5.6, 1.5));
@@ -553,7 +635,7 @@
     const g = g3, S3 = g.S3, p = proj();
     const lab = (txt, q, o) => { o = Object.assign({ a: 'center', s: 11 * p, c: T.ink }, o || {}); ctx.save(); ctx.font = `${o.w || 400} ${o.s}px ${T.ui}`; ctx.textAlign = o.a; ctx.textBaseline = 'middle';
       ctx.lineJoin = 'round'; ctx.lineWidth = 3.5 * p; ctx.strokeStyle = T.canvas; ctx.globalAlpha = 0.8; ctx.strokeText(txt, q[0], q[1]); ctx.globalAlpha = 1; ctx.fillStyle = o.c; ctx.fillText(txt, q[0], q[1]); ctx.restore(); };
-    if (S.scene === 'box') { lab(`box ${f(S.L, 1)} µm on a side`, S3.project([0, -1.12, 0]), { c: T.muted });
+    if (S.scene === 'box') { lab(S.trap ? `trap of ${S.f} Hz, ${f(side() * 1e6, 0)} µm across` : `box ${f(S.L, 1)} µm on a side`, S3.project([0, -1.12, 0]), { c: T.muted });
       if (S.marks) { const w = O.lambda / side() * 2, q0 = S3.project([1 - w, -1, 0]), q1 = S3.project([1, -1, 0]); if (q1[0] - q0[0] > 4) { ctx.strokeStyle = T.ink; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(q0[0], q0[1]); ctx.lineTo(q1[0], q1[1]); ctx.stroke(); }
         lab(`λ_T = ${fmtLen(O.lambda)}`, [q1[0] - 2 * p, q1[1] + 12 * p], { a: 'right', s: 10 * p }); } }
     else { lab(`velocity, ±${f(velMax * 1000, 1)} mm/s each way`, S3.project([0, -1.12, 0]), { c: T.muted });
@@ -565,7 +647,15 @@
 
   /* ---------- readouts, sync, presets ---------- */
   function readouts() {
-    const dd = (a, b) => `<div><dt>${a}</dt><dd>${b}</dd></div>`, m = mass(), Td = degeneracyT(S.N, side(), m), vth = Math.sqrt(2 * KB * S.T / m);
+    const dd = (a, b) => `<div><dt>${a}</dt><dd>${b}</dd></div>`, m = mass(), Td = markT(), vth = Math.sqrt(2 * KB * S.T / m);
+    if (S.trap) { const l = oscLen(m, trapW()), rms = Math.sqrt(KB * S.T / m) / trapW();
+      $('out').innerHTML = dd('Temperature', fmtT(S.T)) + dd('Thermal wavelength λ<sub>T</sub>', fmtLen(O.lambda)) + dd('Ground state size √(ħ/mω)', fmtLen(l))
+        + dd('Thermal cloud size √(kT/m)/ω', fmtLen(rms)) + dd('T<sub>c</sub> = ħω√(6N)/πk (many atoms)', fmtT(Td))
+        + (S.blind ? '<div class="wide"><dt>In the ground state</dt><dd class="ok">hidden: predict it</dd></div>' : dd('In the ground state N<sub>0</sub>', `${f(O.n0, O.n0 < 10 ? 2 : 1)} of ${S.N} (${f(O.frac * 100, 1)} %)`))
+        + dd('Large N: 1 − (T/T<sub>c</sub>)²', S.T < Td ? `${f((1 - (S.T / Td) ** 2) * 100, 1)} %` : '0 % (above T<sub>c</sub>)')
+        + dd('E₀ − μ', `${f((O.e1 - O.mu) / KB * 1e9, 3)} nK · k`) + dd('kT ÷ level spacing ħω', f(1 / O.a, 1 / O.a < 10 ? 2 : 0))
+        + dd('Thermal speed √(2kT/m)', `${f(vth * 1000, 2)} mm/s`) + dd('Time', `${f(S.t * 1000, 2)} ms`);
+      return; }
     $('out').innerHTML = dd('Temperature', fmtT(S.T)) + dd('Thermal wavelength λ<sub>T</sub>', fmtLen(O.lambda)) + dd('Packet width (±σ)', fmtLen(2 * O.sigma))
       + dd('Mean spacing L/√N', fmtLen(side() / Math.sqrt(S.N))) + dd('Overlap Nλ<sub>T</sub>²/L²', f(O.nLambda2, O.nLambda2 < 0.1 ? 3 : 2))
       + dd('Packets touch at', fmtT(Td))
@@ -574,6 +664,8 @@
       + dd('Thermal speed √(2kT/m)', `${f(vth * 1000, 2)} mm/s`) + dd('Time', `${f(S.t * 1000, 2)} ms`);
   }
   function sync() {
+    $('rowL').hidden = S.trap; $('rowF').hidden = !S.trap; $('sF').value = S.f; $('oF').textContent = `${S.f} Hz`;
+    for (const b of document.querySelectorAll('#contSeg button')) b.setAttribute('aria-pressed', String((b.dataset.cont === 'trap') === S.trap));
     $('sT').value = Math.log10(S.T / TMIN); $('oT').textContent = fmtT(S.T); $('sN').value = S.N; $('oN').textContent = String(S.N); $('sL').value = S.L; $('oL').textContent = `${f(S.L, 1)} µm`; $('selAtom').value = S.atom;
     for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
     for (const b of document.querySelectorAll('#sceneSeg button')) b.setAttribute('aria-pressed', String(b.dataset.scene === S.scene));
@@ -585,8 +677,8 @@
   }
   function setRun(on) { S.run = on; const b = $('play'); b.textContent = on ? 'Pause' : 'Play'; b.classList.toggle('attn', !on); }
   function applyPreset(k) {
-    const c = PRESETS[k]; S.preset = k; Object.assign(S, { atom: c.atom, N: c.N, L: c.L, T: c.T, T0: c.T, cool: c.cool, scene: c.scene, color: c.color, t: 0 });
-    seedAtoms(); fracCurve = null; ladTop = 0; velScale(); compute(); setRun(false); $('presetHint').textContent = c.hint; sync(); redraw();
+    const c = PRESETS[k]; S.preset = k; Object.assign(S, { atom: c.atom, N: c.N, L: c.L || 10, trap: !!c.trap, f: c.f || 50, T: c.T, T0: c.T, cool: c.cool, scene: c.scene, color: c.color, t: 0 });
+    seedAtoms(); seedAngles(); fracCurve = null; ladTop = 0; velScale(); compute(); setRun(false); $('presetHint').textContent = c.hint; sync(); redraw();
   }
   function changedGas() { S.preset = 'custom'; S.T0 = S.T; fracCurve = null; velScale(); compute(); sync(); redraw(); }
   function redraw() { draw(); readouts(); $('note').textContent = S.msg || (use3() ? 'Drag to turn the view' : ''); }
@@ -595,7 +687,7 @@
   for (const [k, a] of Object.entries(ATOMS)) { const o = document.createElement('option'); o.value = k; o.textContent = `${a.name} (${a.u.toFixed(3)} u)`; $('selAtom').appendChild(o); }
   for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
   $('play').addEventListener('click', () => { setRun(!S.run); redraw(); });
-  $('reset').addEventListener('click', () => { S.t = 0; seedAtoms(); setT(S.T0); ladTop = 0; setRun(false); sync(); redraw(); });
+  $('reset').addEventListener('click', () => { S.t = 0; seedAtoms(); seedAngles(); setT(S.T0); ladTop = 0; setRun(false); sync(); redraw(); });
   $('speed').addEventListener('click', (e) => { const b = e.target.closest('[data-sp]'); if (!b) return; S.speed = +b.dataset.sp; sync(); });
   $('sceneSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-scene]'); if (!b) return; S.scene = b.dataset.scene; sync(); redraw(); });
   $('colorSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-color]'); if (!b) return; S.color = b.dataset.color; sync(); redraw(); });
@@ -605,6 +697,9 @@
   $('sL').addEventListener('input', (e) => { S.L = +e.target.value; $('oL').textContent = `${f(S.L, 1)} µm`; });
   $('sL').addEventListener('change', (e) => { S.L = +e.target.value; changedGas(); });
   $('selAtom').addEventListener('change', (e) => { S.atom = e.target.value; changedGas(); });
+  $('contSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-cont]'); if (!b) return; S.trap = b.dataset.cont === 'trap'; ladTop = 0; changedGas(); });
+  $('sF').addEventListener('input', (e) => { S.f = +e.target.value; $('oF').textContent = `${S.f} Hz`; });
+  $('sF').addEventListener('change', (e) => { S.f = +e.target.value; ladTop = 0; changedGas(); });
   $('cool').addEventListener('click', () => { S.cool = S.cool < 0 ? 0 : -1; sync(); redraw(); });
   $('warm').addEventListener('click', () => { S.cool = S.cool > 0 ? 0 : 1; sync(); redraw(); });
   $('chkLadder').addEventListener('change', (e) => { S.ladder = e.target.checked; redraw(); });
@@ -633,7 +728,8 @@
   $('about3').textContent = 'Approximations: no interactions (a real condensate\'s atoms repel weakly, which widens the condensate and shifts the transition by a few percent); two dimensions, where an infinite ideal gas would not condense at all, so what you see is the gradual crossover of a finite number of atoms in a finite box, which is what a small trapped gas does too; the velocity view treats the excited levels as a continuum (good when kT is many times the level spacing e1, see the readouts). Time runs 10,000 times slower than the atoms, at 1×.';
   $('about4').textContent = `Values: h, k and the atomic mass unit from CODATA 2022; atomic masses from AME2020 (Wang et al. 2021). The first condensates: rubidium 87 at JILA (Anderson et al., Science 269, 198, 1995: about 2000 atoms, the condensate appearing near 170 nK at a density of 2.5 × 10¹² per cm³), sodium 23 at MIT (Davis et al. 1995), lithium 7 at Rice (Bradley et al. 1995), hydrogen at MIT (Fried et al. 1998), metastable helium 4 at Orsay and at ENS Paris (2001). For a uniform three dimensional gas at the JILA density the ideal gas formula kT_c = (2πħ²/m)(n/2.612)^(2/3) gives ${f(tc3dBox(2.5e18, massOf('rb87')) * 1e9, 0)} nK; the real atoms were in a harmonic trap, whose peak density is higher, which is why the measured 170 nK is larger. For liquid helium 4 (density 0.1451 g/cm³) the same formula gives ${f(tc3dBox(145.1 / massOf('he4'), massOf('he4')), 2)} K, close to the real lambda point of 2.17 K even though liquid helium is far from an ideal gas.`;
 
-  window.__bec = { S, get O() { return O; }, get lvl() { return lvl; }, applyPreset, setT, compute, advance, occupations, degeneracyT, tc3dBox, lambdaT, velocityDensity, levels };
+  $('about5').textContent = 'The harmonic trap: the same ideal gas in a round two dimensional trap of frequency f, levels E = ħω(nx + ny + 1) with level q = nx + ny holding q + 1 states, summed exactly. Unlike the infinite box, an infinite gas in a two dimensional trap does condense, below kT_c = ħω√(6N)/π, with N(T/T_c)² atoms left in the excited levels (Bagnato and Kleppner, Phys. Rev. A 44, 7439, 1991); the exact count for N atoms is a little smaller near T_c and rounds the corner. Each excited atom swings along x and y with the amplitude of its level, ℓ√(2n + 1), ℓ = √(ħ/mω); the condensate is the ground state, a Gaussian of width ℓ. The velocity view adds the thermal atoms of every place in the trap: −ln(1 − e^(−(mv²/2kT + x))), normalized with the dilogarithm.';
+  window.__bec = { S, get O() { return O; }, get lvl() { return lvl; }, applyPreset, setT, compute, advance, occupations, occupationsTrap, tcTrap2, degeneracyT, tc3dBox, lambdaT, velocityDensity, levels };
   tokens();
   { const q = new URLSearchParams(location.search).get('setup'); applyPreset(PRESETS[q] ? q : 'cool'); }
   new ResizeObserver(resize).observe($('pane')); resize();

@@ -4,7 +4,7 @@
 // the tail above QMAX against the exact sum, the level sampling, and the normalizations of the ground state and velocity densities.
 const assert = require('node:assert');
 const { core } = require('./demo_source.cjs');
-const c = core('bose-einstein', 'H_PLANCK,KB,AMU,HBAR,ATOMS,massOf,QMAX,levels,e1,lambdaT,packetSigma,degeneracyT,tc3dBox,tcTrap,erfc,tail,countAtoms,solveX,occupations,assignLevels,groundDensity,groundMomentum1,velocityDensity');
+const c = core('bose-einstein', 'H_PLANCK,KB,AMU,HBAR,ATOMS,massOf,QMAX,levels,e1,lambdaT,packetSigma,degeneracyT,tc3dBox,tcTrap,erfc,tail,countAtoms,solveX,occupations,assignLevels,groundDensity,groundMomentum1,velocityDensity,ZETA2,tcTrap2,oscLen,countTrap,occupationsTrap,trapGroundDensity,li2,velocityDensityTrap');
 let n = 0;
 const near = (a, b, tol, w) => assert(Math.abs(a - b) <= tol * Math.abs(b), `${w || ''}: expected ${b}, got ${a}`);
 function group(name, f) { f(); n++; console.log('PASS', name); }
@@ -56,5 +56,13 @@ group('Densities: the ground state density integrates to N0; |φ̃₁(k)|² inte
   const o = c.occupations(100, mRb, L, 2e-8), vmax = 0.03, nv = 600; let sv = 0; const dv = 2 * vmax / nv;
   for (let i = 0; i < nv; i++) for (let j = 0; j < nv; j++) sv += c.velocityDensity(o, mRb, L, -vmax + (i + 0.5) * dv, -vmax + (j + 0.5) * dv) * dv * dv;
   near(sv, 100, 0.01, 'velocity density integrates to N');
+});
+group('Harmonic trap: occupations add up to N; 100 Rb atoms at 50 Hz have T_c = 18.7 nK; many atoms follow 1 − (T/T_c)²; the dilogarithm; the densities integrate to N0 and N', () => {
+  const w = 2 * Math.PI * 50; near(c.tcTrap2(100, w), 1.871e-8, 1e-3); near(c.HBAR * w / c.KB, 2.400e-9, 1e-3);
+  for (const T of [1e-6, 1e-7, 1.87e-8, 1e-8, 1e-9]) { const o = c.occupationsTrap(100, mRb, w, T); near(o.inLevels, 100, 1e-8, `N at ${T}`); assert(o.mu < o.e1); }
+  const N = 20000, Tc = c.tcTrap2(N, w); for (const r of [0.3, 0.5, 0.7]) near(c.occupationsTrap(N, mRb, w, r * Tc).frac, 1 - r * r, 0.04, `T/Tc = ${r} (finite size lowers it, by 3 % at 0.7)`);
+  near(c.li2(0.3), 0.3261295100755, 1e-10); near(c.li2(0.7), 0.8893776242860, 1e-10); near(c.li2(1 - 1e-12), c.ZETA2, 1e-9);
+  const l = c.oscLen(mRb, w), h = 8 * l / 200; let s = 0; for (let i = 0; i < 200; i++) for (let j = 0; j < 200; j++) s += c.trapGroundDensity(5, l, -4 * l + (i + 0.5) * h, -4 * l + (j + 0.5) * h) * h * h; near(s, 5, 1e-6, 'ground density');
+  const o = c.occupationsTrap(100, mRb, w, 3e-8), V = 0.02, n = 400, d = 2 * V / n; let t = 0; for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) t += c.velocityDensityTrap(o, mRb, w, -V + (i + 0.5) * d, -V + (j + 0.5) * d) * d * d; near(t, 100, 1e-6, 'velocity density');
 });
 console.log(`${n} groups passed`);
