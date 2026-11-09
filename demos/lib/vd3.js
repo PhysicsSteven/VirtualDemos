@@ -14,6 +14,7 @@
                                      On a touch screen one finger scrolls the page (a short hint says to use two) and two
                                      fingers turn and pinch; a touch that opt.grab takes does not scroll. opt.oneFinger: true
                                      turns with one finger instead (the page then cannot be scrolled from the view).
+                                     opt.active() returning false leaves this orbit alone (several orbits on one canvas).
                                      Returns { reset() }.
    VD3.touch(el, h)                  the same touch handling for a demo with its own orbit code (see the comment there)
    VD3.turnText(s)                   "drag to turn" becomes "use two fingers to turn"; on a phone canvas text gets this by itself
@@ -99,6 +100,9 @@
     var pts = new Map(), mode = null;
     var gap = function () { var p = Array.from(pts.values()); return Math.hypot(p[0].x - p[1].x, p[0].y - p[1].y) || 1; };
     var two = opt.oneFinger !== true;
+    /* opt.active(): false while this view is not the one showing (several orbits on one canvas, one per scene): the wheel,
+       double click, pinch and keys then leave it alone (rotation's four scenes all zoomed at once; break-it test, 2026-11-09) */
+    var on = function () { return !opt.active || opt.active(); };
     el.style.touchAction = two ? 'pan-y' : 'none'; el.style.cursor = 'grab';
     el.addEventListener('pointerdown', function (e) {
       if (two && e.pointerType === 'touch') return;   /* touches: VD3.touch below */
@@ -116,13 +120,15 @@
     });
     var up = function (e) { pts.delete(e.pointerId); if (!pts.size) mode = null; el.style.cursor = 'grab'; };
     el.addEventListener('pointerup', up); el.addEventListener('pointercancel', up);
-    el.addEventListener('wheel', function (e) { e.preventDefault(); o.zoom = clamp(o.zoom / Math.exp(e.deltaY * 0.0012), zMin, zMax); onChange(); }, { passive: false });
+    el.addEventListener('wheel', function (e) { if (!on()) return; e.preventDefault(); o.zoom = clamp(o.zoom / Math.exp(e.deltaY * 0.0012), zMin, zMax); onChange(); }, { passive: false });
     if (two) VD3.touch(el, { grab: opt.grab, move: function (dx, dy, k) {
+      if (!on()) return;
       o.th -= dx * 0.008; o.ph = clamp(o.ph - dy * 0.006, phMin, phMax); o.zoom = clamp(o.zoom * k, zMin, zMax); onChange(); } });
     var reset = function () { o.th = home.th; o.ph = home.ph; o.zoom = home.zoom; onChange(); };
-    el.addEventListener('dblclick', reset);
+    el.addEventListener('dblclick', function () { if (on()) reset(); });
     if (opt.keys !== false) el.setAttribute('data-vd-orbit', '');   /* the ? dialog (VD.help) lists the 3D keys where this is on the page */
     if (opt.keys !== false) el.addEventListener('keydown', function (e) {
+      if (!on()) return;
       if (e.key === ',' || e.key === '.') o.th += e.key === ',' ? 0.12 : -0.12;
       else if (e.key === '-' || e.key === '=' || e.key === '+') o.zoom = clamp(o.zoom * (e.key === '-' ? 0.9 : 1.1), zMin, zMax);
       else return;

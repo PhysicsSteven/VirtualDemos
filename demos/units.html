@@ -256,15 +256,15 @@ window.VD_EARTH = { day: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wB
     const decimals = (frac == null ? 0 : frac.length) - exp;   // decimal places in plain notation
     return { value: parseFloat(t), sig, decimals, ambiguous };
   }
-  function roundSig(x, n) { if (x === 0) return 0; const e = Math.floor(Math.log10(Math.abs(x))); const f = 10 ** (n - 1 - e); return Math.round(x * f) / f; }
+  function roundSig(x, n) { if (x === 0) return 0; const e = Math.floor(Math.log10(Math.abs(x))); const f = 10 ** (n - 1 - e); return Math.sign(x) * Math.round(Math.abs(x) * f) / f; }
   function combine(a, b, op) {
     const A = sigInfo(a), B = sigInfo(b); if (!A || !B) return null;
     const raw = op === '*' ? A.value * B.value : op === '/' ? A.value / B.value : op === '+' ? A.value + B.value : A.value - B.value;
     if (op === '*' || op === '/') { const n = Math.min(A.sig, B.sig); return { A, B, raw, rule: 'sig', keep: n, rounded: roundSig(raw, n) }; }
-    const d = Math.min(A.decimals, B.decimals); return { A, B, raw, rule: 'dec', keep: d, rounded: Math.round(raw * 10 ** d) / 10 ** d };
+    const d = Math.min(A.decimals, B.decimals); return { A, B, raw, rule: 'dec', keep: d, rounded: Math.sign(raw) * Math.round(Math.abs(raw) * 10 ** d) / 10 ** d };
   }
   function formatKeep(x, r) {
-    if (r.rule === 'dec') return r.keep >= 0 ? x.toFixed(r.keep) : String(Math.round(x));
+    if (r.rule === 'dec') return r.keep >= 0 ? x.toFixed(Math.min(r.keep, 100)) : String(Math.round(x));
     const e = x === 0 ? 0 : Math.floor(Math.log10(Math.abs(x))); if (e >= 6 || e <= -4 || e >= r.keep) return x.toExponential(Math.max(0, r.keep - 1)).replace('e+', ' × 10^').replace('e-', ' × 10^−');   // 470 with 2 figures is written 4.7 × 10^2
     return x.toFixed(Math.max(0, r.keep - 1 - e));
   }
@@ -414,7 +414,7 @@ window.VD_EARTH = { day: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wB
   const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
   const SUP = { '-': '⁻', '.': '·', 0: '⁰', 1: '¹', 2: '²', 3: '³', 4: '⁴', 5: '⁵', 6: '⁶', 7: '⁷', 8: '⁸', 9: '⁹' };
   const sup = (n) => String(n).split('').map((c) => SUP[c] || c).join('');
-  function sci(v, n = 3) { if (!isFinite(v)) return '—'; if (v === 0) return '0'; const e = Math.floor(Math.log10(Math.abs(v))); if (e >= -2 && e < 5) return String(+v.toPrecision(n)); return `${(v / 10 ** e).toFixed(n - 1).replace('-', '−')} × 10${sup(e)}`; }
+  function sci(v, n = 3) { if (!isFinite(v)) return '—'; if (v === 0) return '0'; const e = Math.floor(Math.log10(Math.abs(v))); if (e >= -2 && e < 5) return String(+v.toPrecision(n)); let m = (v / 10 ** e).toFixed(n - 1), e2 = e; if (Math.abs(+m) >= 10) { e2 = e + 1; m = (v / 10 ** e2).toFixed(n - 1); } return `${m.replace('-', '−')} × 10${sup(e2)}`; }
   function setTab(t) {
     S.tab = t; for (const b of document.querySelectorAll('#tabs button')) b.setAttribute('aria-selected', String(b.dataset.t === t));
     can.hidden = t !== 'scale'; $('pConvert').hidden = t !== 'convert'; $('pDims').hidden = t !== 'dims'; $('pSig').hidden = t !== 'sig'; $('pFermi').hidden = t !== 'fermi'; stage.classList.toggle('tools', t !== 'scale');
@@ -429,7 +429,7 @@ window.VD_EARTH = { day: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wB
   $('cKind').addEventListener('click', (e) => { const b = e.target.closest('[data-k]'); if (!b) return; S.kind = b.dataset.k; const u = Object.keys(UNITS[S.kind]); S.from = u[1] || u[0]; S.to = u[0]; convUI(); render(); });
   $('cFrom').addEventListener('change', (e) => { S.from = e.target.value; render(); }); $('cTo').addEventListener('change', (e) => { S.to = e.target.value; render(); }); $('cVal').addEventListener('input', render);
   function renderConvert() {
-    const v = parseFloat($('cVal').value.replace('−', '-')), U = UNITS[S.kind], si = Object.keys(U).find((u) => U[u] === 1);
+    const cTxt = $('cVal').value.trim().replace('−', '-'), v = /^[+-]?(\d+\.?\d*|\.\d+)(e[+-]?\d+)?$/i.test(cTxt) ? parseFloat(cTxt) : NaN, U = UNITS[S.kind], si = Object.keys(U).find((u) => U[u] === 1);
     const fac = (u) => (U[u] === 1 ? '' : U[u] >= 1 ? `(${sci(U[u], 10)} ${si} / 1 ${u})` : `(1 ${si} / ${sci(1 / U[u], 10)} ${u})`);
     const parts = [`${isFinite(v) ? v : '?'} ${S.from}`]; if (S.from !== si) parts.push(`× (${sci(U[S.from], 10)} ${si} / 1 ${S.from})`); if (S.to !== si) parts.push(`× (1 ${S.to} / ${sci(U[S.to], 10)} ${si})`);
     /* the chain as fractions: each unit that appears on top and on the bottom is struck through, and the unit left over is the answer's */
@@ -546,6 +546,7 @@ window.VD_EARTH = { day: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wB
   function renderSig() {
     const r = combine($('sA').value, $('sB').value, $('sOp').value);
     if (!r) { $('sTbl').innerHTML = ''; $('sOut').textContent = 'Type two numbers, like 12.07 or 3.50e-2.'; return; }
+    if (!isFinite(r.raw)) { $('sTbl').innerHTML = ''; $('sDig') && ($('sDig').innerHTML = ''); $('sOut').textContent = 'Calculator: not a finite number'; return; }
     const row = (lab, q) => `<tr><td>${lab}</td><td>${q.sig}${q.ambiguous ? ' (ambiguous)' : ''}</td><td>${q.decimals}</td></tr>`;
     $('sTbl').innerHTML = `<tr><th></th><th>significant figures</th><th>decimal places</th></tr>${row($('sA').value, r.A)}${row($('sB').value, r.B)}`;
     const rule = r.rule === 'sig' ? `keep ${r.keep} significant figure${r.keep === 1 ? '' : 's'}` : r.keep < 0 ? `round to the nearest ${10 ** -r.keep}` : `keep ${r.keep} decimal place${r.keep === 1 ? '' : 's'}`;
@@ -559,7 +560,7 @@ window.VD_EARTH = { day: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wB
     const box = $('sDig'); if (!box) return;
     const add = r.rule === 'dec', op = $('sOp').value, OPS = { '*': '×', '/': '÷', '+': '+', '-': '−' };
     const cellsOf = (str, cls) => { const pt = str.indexOf('.'), ip = pt < 0 ? str.length : pt; return [...str].map((ch, n) => (ch === '.' ? { ch, pow: null } : { ch, pow: n < ip ? ip - 1 - n : ip - n, cls: cls(n < ip ? ip - 1 - n : ip - n) })); };
-    const input = (q) => { const x = Math.abs(q.value), str = x.toFixed(Math.max(0, q.decimals)); if (str.length > 22 || /e/.test(str)) return null;
+    const input = (q) => { const x = Math.abs(q.value), str = x.toFixed(Math.min(100, Math.max(0, q.decimals))); if (str.length > 22 || /e/.test(str)) return null;
       const f = x === 0 ? 0 : Math.floor(Math.log10(x) + 1e-12), last = f - q.sig + 1;
       return cellsOf(str, (pw) => (x === 0 ? 'sig' : pw > f ? 'lead' : pw < last ? (q.ambiguous ? 'amb' : 'ph') : 'sig')); };
     const rawX = Math.abs(r.raw), rawS = String(+rawX.toPrecision(12)), rf = rawX === 0 ? 0 : Math.floor(Math.log10(rawX) + 1e-12), cutPow = add ? -r.keep : rf - r.keep + 1;
@@ -594,7 +595,7 @@ window.VD_EARTH = { day: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wB
     S.fr.forEach((r, i) => { $(`fl${i}`).addEventListener('input', (e) => { r[1] = +e.target.value; render(); }); $(`fh${i}`).addEventListener('input', (e) => { r[2] = +e.target.value; render(); }); });
   }
   $('fQ').addEventListener('click', (e) => { const b = e.target.closest('[data-f]'); if (b) { S.fq = b.dataset.f; fermiUI(); render(); } });
-  function renderFermi() { const [lo, hi] = fermi(S.fr), mid = Math.sqrt(lo * hi); $('fOut').textContent = S.blind ? 'Estimate: hidden in Blind' : `Between ${sci(lo)} and ${sci(hi)}: about 10${sup(Math.round(Math.log10(mid)))} (geometric middle ${sci(mid, 2)})`; drawLadder(); }
+  function renderFermi() { const [lo, hi] = fermi(S.fr), mid = Math.sqrt(lo * hi), okf = S.fr.every((q) => q[1] > 0 && q[2] > 0 && isFinite(q[1]) && isFinite(q[2])) && isFinite(lo) && isFinite(hi) && lo > 0 && hi > 0; $('fOut').textContent = !okf ? 'Enter positive numbers.' : S.blind ? 'Estimate: hidden in Blind' : `Between ${sci(lo)} and ${sci(hi)}: about 10${sup(Math.round(Math.log10(mid)))} (geometric middle ${sci(mid, 2)})`; drawLadder(); }
   /* the estimate built up factor by factor, on a scale of powers of ten: the running products of the low values and of the high
      values. On this scale multiplying is adding, so each factor shifts the bar, and its spread (high ÷ low) widens it. */
   function drawLadder() {
@@ -1215,6 +1216,7 @@ window.VD_EARTH = { day: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wB
     if (S.fly && S.tab === 'scale' && S.view === 'zoom') { zoomTo(S.zoom + S.fly * dt * 0.8); $('flyIn').textContent = S.fly === -1 ? 'Pause' : 'Fly in'; $('flyOut').textContent = S.fly === 1 ? 'Pause' : 'Fly out'; if (S.zoom <= -15.3 || S.zoom >= 27) { S.fly = 0; } } else { $('flyIn').textContent = 'Fly in'; $('flyOut').textContent = 'Fly out'; } }
   function render() { if (S.tab === 'scale') draw(); else if (S.tab === 'convert') renderConvert(); else if (S.tab === 'dims') renderDims(); else if (S.tab === 'sig') renderSig(); else renderFermi(); }
   $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; $('blindTag').hidden = !S.blind; render(); });
+  window.vdReadings = () => 0;   /* nothing here is recorded, so Reset all never warns about readings */
   function init() { convUI(); dimsUI(); fermiUI(); setTab('scale'); }
   function resize() { dpr = window.devicePixelRatio || 1; const r = stage.getBoundingClientRect(); W = r.width; Hh = r.height; can.width = Math.round(W * dpr); can.height = Math.round(Hh * dpr); can.style.width = W + 'px'; can.style.height = Hh + 'px'; render(); }
   const retheme = () => { tokens(); render(); };

@@ -665,7 +665,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (BIN) return ebFlux(s.r * Math.cos(s.th), s.r * Math.sin(s.th) * Math.cos(D.i), Math.sin(s.th) > 0, B.r1, B.r2, B.t1, B.t2);
     if (Math.sin(s.th) <= 0) return 1;             // planet behind the star
     const X = s.r * Math.cos(s.th), Y = s.r * Math.sin(s.th) * Math.cos(D.i);
-    return 1 - blocked(Math.hypot(X, Y) / D.Rs, D.k);
+    return Math.max(0, 1 - blocked(Math.hypot(X, Y) / D.Rs, D.k));   /* a planet that covers the whole star: 90 step quadrature gives 1.0002, never below 0 (break-it test, 2026-11-09) */
   }
   /* two stars: line of sight velocities including γ (m/s); star 2 moves opposite star 1, M1/M2 times as fast */
   const v1 = (s) => B.gam * 1000 + vr(s), v2 = (s) => B.gam * 1000 - vr(s) * B.m1 / B.m2;

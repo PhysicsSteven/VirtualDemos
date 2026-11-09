@@ -648,7 +648,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const cfg = () => PRESETS[S.preset];
   const nSp = () => lam.length;          // number of unstable species
   const tNow = () => (sim ? sim.step * dt : 0);
-  const spName = (i) => (S.custom ? (i === 0 ? 'parent' : i === nSp() ? (nSp() === 2 ? 'stable' : 'daughter') : 'daughter') : cfg().species[i].name);
+  const spName = (i) => (S.custom ? (i === 0 ? 'parent' : i === nSp() ? (nSp() === 2 ? 'stable' : 'daughter') : 'daughter') : cfg().species[i] ? cfg().species[i].name : 'eluted ⁹⁹ᵐTc, in the vial');   /* species 3 is the eluate (a followed nucleus that was eluted threw here; break-it test, 2026-11-09) */
 
   function nice125(v) { const p = Math.pow(10, Math.floor(Math.log10(v))), m = v / p; return (m < 1.5 ? 1 : m < 3.5 ? 2 : m < 7.5 ? 5 : 10) * p; }
   function niceDown(v) { const p = Math.pow(10, Math.floor(Math.log10(v))), m = v / p; return (m >= 5 ? 5 : m >= 2 ? 2 : 1) * p; }

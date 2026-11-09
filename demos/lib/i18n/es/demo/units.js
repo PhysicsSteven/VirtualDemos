@@ -1,5 +1,11 @@
 /* demo/units in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/units', {
+"Enter a number.":
+  "Escribe un número.",
+"Enter positive numbers.":
+  "Escribe números positivos.",
+"Calculator: not a finite number":
+  "Calculadora: no es un número finito",
 "dog, {#} m at the shoulder":
   "perro, {#} m a la cruz",
 "person: {#} m":

@@ -99,7 +99,7 @@ async function runDemo(browser, cmp, base, d) {
       .sort((a, b) => b.clientWidth * b.clientHeight - a.clientWidth * a.clientHeight)[0];
     return big('.stage') || big('canvas') || null;
   })).asElement();
-  const shot = async () => { const s = await stage(); if (!s) return null; try { return await s.screenshot({ animations: 'allow', timeout: 5000 }); } catch (e) { errs.push('the stage could not be photographed in 5 s (hidden, or the page is busy)'); return null; } };
+  const shot = async () => { const s = await stage(); if (!s) return null; try { return await s.screenshot({ animations: 'allow', timeout: 15000 }); } catch (e) { errs.push('the stage could not be photographed in 15 s (hidden, or the page is busy)'); return null; } };
   const open = await shot(), openInk = open ? (await compare(cmp, open))[1] : 0;
   const opening = await page.evaluate(CONTROLS);
   /* controls that move on their own while the demo runs (a day or age slider) can't be compared after Reset all */

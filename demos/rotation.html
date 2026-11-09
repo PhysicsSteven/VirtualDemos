@@ -2688,10 +2688,10 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     g3.spRef = line3(refM, 2); spG.add(g3.spRef);
     view.addEventListener('wheel', (e) => { if (!use3()) e.stopImmediatePropagation(); }, { passive: true });
     const grab = (sc) => (e) => !use3() || S.scene !== sc || !!handleAt(e), ch = () => { if (use3()) dirty = true; };
-    VD3.orbit(view, G3.o, ch, { grab: grab('roll'), phMin: 0.3, phMax: 1.55, zMin: 0.5, zMax: 3, keys: false });
-    VD3.orbit(view, G3.ot, ch, { grab: grab('torque'), phMin: 0.05, phMax: 1.45, zMin: 0.5, zMax: 3, keys: false });
-    VD3.orbit(view, G3.os, ch, { grab: grab('spin'), phMin: 0.05, phMax: 1.5, zMin: 0.5, zMax: 3, keys: false });
-    VD3.orbit(view, G3.oe, ch, { grab: grab('seesaw'), phMin: 0.4, phMax: 1.55, zMin: 0.5, zMax: 3, keys: false });
+    VD3.orbit(view, G3.o, ch, { grab: grab('roll'), active: () => use3() && S.scene === 'roll', phMin: 0.3, phMax: 1.55, zMin: 0.5, zMax: 3, keys: false });
+    VD3.orbit(view, G3.ot, ch, { grab: grab('torque'), active: () => use3() && S.scene === 'torque', phMin: 0.05, phMax: 1.45, zMin: 0.5, zMax: 3, keys: false });
+    VD3.orbit(view, G3.os, ch, { grab: grab('spin'), active: () => use3() && S.scene === 'spin', phMin: 0.05, phMax: 1.5, zMin: 0.5, zMax: 3, keys: false });
+    VD3.orbit(view, G3.oe, ch, { grab: grab('seesaw'), active: () => use3() && S.scene === 'seesaw', phMin: 0.4, phMax: 1.55, zMin: 0.5, zMax: 3, keys: false });
     return true;
   }
   function theme3() {

@@ -795,6 +795,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function drop() { recrater(); S.anim = 0; animPre = 0; S.run = true; animT0 = performance.now(); card.away(false); sync(); }
   function setMode(m, quiet) {
     S.mode = m; S.run = false;
+    if (S.anim < 1) { S.anim = 1; animPre = 1; }   /* a mode switch mid fall finishes the impact (it froze half made; break-it test, 2026-11-09) */
     if (m === 'count' && !S.surf) { S.sKey = 'mare'; S.preset = 'mare'; S.Dc = SURF.mare.Dc; buildSurface(); $('presetHint').textContent = SURF.mare.why; }
     if (m === 'cool' && !quiet) { S.preset = 'today'; S.t = 4.5; $('presetHint').textContent = PRESETS.today.hint; }
     if (m === 'impact' && !quiet) { $('presetHint').textContent = (PRESETS[S.preset] && PRESETS[S.preset].mode === 'impact') ? PRESETS[S.preset].hint : ''; }
