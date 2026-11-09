@@ -1053,6 +1053,18 @@
       "Cavendish experiment",
       "G"
      ]
+    },
+    {
+     "demo": "derivatives",
+     "title": "Functions and Their Derivatives",
+     "desc": "Type or paste any function and see it graphed with its first, second and third derivatives and its integral, updating as you type; slide a point along the curve to see the tangent slope.",
+     "tags": [
+      "derivative",
+      "second derivative",
+      "integral",
+      "tangent line",
+      "calculus"
+     ]
     }
    ]
   },

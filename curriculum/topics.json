@@ -416,6 +416,14 @@
       "bz-reaction",
       "dna"
      ]
+    },
+    {
+     "id": "math",
+     "title": "Math for physics",
+     "blurb": "Type any function and see its derivatives and its integral graphed with it.",
+     "demos": [
+      "derivatives"
+     ]
     }
    ]
   }

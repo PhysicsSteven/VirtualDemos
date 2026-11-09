@@ -2845,7 +2845,8 @@
       "requirement": "required",
       "status": "usable",
       "demos": [
-        "motion-graphs"
+        "motion-graphs",
+        "derivatives"
       ],
       "unit": "kinematics",
       "note": "Motion Graphs: position, velocity and acceleration graphs with slopes (tangents) and areas, for stages of constant acceleration; Walk the graph for x(t) and v(t)."
@@ -2862,7 +2863,8 @@
       "requirement": "required",
       "status": "usable",
       "demos": [
-        "motion-graphs"
+        "motion-graphs",
+        "derivatives"
       ],
       "unit": "kinematics",
       "note": "Motion Graphs: position, velocity and acceleration graphs with slopes (tangents) and areas, for stages of constant acceleration; Walk the graph for x(t) and v(t)."
@@ -2914,7 +2916,8 @@
       "requirement": "required",
       "status": "usable",
       "demos": [
-        "motion-graphs"
+        "motion-graphs",
+        "derivatives"
       ],
       "unit": "kinematics",
       "note": "Motion Graphs: position, velocity and acceleration graphs with slopes (tangents) and areas, for stages of constant acceleration; Walk the graph for x(t) and v(t)."
@@ -12000,6 +12003,35 @@
       "handouts": [
         "mp-ct-range"
       ]
+    },
+    {
+      "demo": "derivatives",
+      "course": [
+        "later"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "3.2",
+          "title": "Instantaneous Velocity and Speed"
+        },
+        {
+          "vol": 1,
+          "sec": "3.3",
+          "title": "Average and Instantaneous Acceleration"
+        },
+        {
+          "vol": 1,
+          "sec": "3.6",
+          "title": "Finding Velocity and Displacement from Acceleration"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "New 2026-11-09 (Claude, at Steve's request): a math tool. Type a function and see f, its first, second and third derivatives (exact, symbolic) and its integral from a (numerical), with a tangent line at a point. No worksheet, notes or video for now (Steve).",
+      "title": "Functions and Their Derivatives",
+      "url": "demos/derivatives.html"
     }
   ],
   "activities": [
