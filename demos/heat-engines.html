@@ -33,6 +33,7 @@
   --equi: #a7740b;
   --accent: #c4811c;
   --work: #17855f;
+  --work-ink: #0f6b4a; --pos-ink: #a8301f; --neg-ink: #214d95;
   --steel: #a3998d;
   --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
@@ -41,13 +42,13 @@
   :root:not([data-theme="light"]) {
     --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
     --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
-    --equi: #e2b350; --accent: #fbc26d; --work: #4fd1a0; --steel: #847a6d; color-scheme: dark;
+    --equi: #e2b350; --accent: #fbc26d; --work: #4fd1a0; --steel: #847a6d; --work-ink: #4fd1a0; --pos-ink: #ff7660; --neg-ink: #69a0ff; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
   --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
-  --equi: #e2b350; --accent: #fbc26d; --work: #4fd1a0; --steel: #847a6d; color-scheme: dark;
+  --equi: #e2b350; --accent: #fbc26d; --work: #4fd1a0; --steel: #847a6d; --work-ink: #4fd1a0; --pos-ink: #ff7660; --neg-ink: #69a0ff; color-scheme: dark;
 }
 :root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
@@ -794,7 +795,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function tokens() {
     const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
     T = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'),
-      pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), accent: g('--accent'), work: g('--work'), steel: g('--steel'),
+      pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), accent: g('--accent'), work: g('--work'), steel: g('--steel'), workInk: g('--work-ink'), posInk: g('--pos-ink'), negInk: g('--neg-ink'),
       mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' };
   }
   function rgb(hex) { const h = hex.replace('#', ''); const v = h.length === 3 ? h.split('').map((c) => parseInt(c + c, 16)) : [0, 2, 4].map((i) => parseInt(h.slice(i, i + 2), 16)); return v; }
@@ -825,7 +826,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const x0 = align === 'left' ? x : align === 'right' ? x - w : x - w / 2;
     const y0 = base === 'middle' ? y - h / 2 : base === 'bottom' ? y - h : y;
     if (o.halo !== false) { c.fillStyle = T.canvas; c.globalAlpha = 0.86; c.fillRect(x0 - 3, y0, w + 6, h); c.globalAlpha = 1; }
-    c.fillStyle = col; c.fillText(txt, x, y + (base === 'middle' ? 0.5 : 0));
+    /* text on the paper or on the tinted bars takes the darker (Day) shade of the line color */
+    c.fillStyle = col === T.work ? T.workInk : col === T.pos ? T.posInk : col === T.neg ? T.negInk : col; c.fillText(txt, x, y + (base === 'middle' ? 0.5 : 0));
     return w;
   }
   const clampN = (v, a, b) => Math.max(a, Math.min(b, v));

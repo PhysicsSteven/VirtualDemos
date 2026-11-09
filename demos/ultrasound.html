@@ -505,7 +505,7 @@ table.rows input:focus { border-color: var(--accent); }
 
   // ---------- drawing ----------
   let TXS = 1;   /* text scale: 1 on the page, larger when the same drawing code paints a texture for the 3D view */
-  function txt(s, x, y, o = {}) { const p = ps() * TXS; ctx.fillStyle = o.c || T.ink; ctx.font = `${o.b ? '700 ' : ''}${(o.s || 11) * p}px ${o.m ? T.mono : T.ui}`; ctx.textAlign = o.a || 'left'; ctx.textBaseline = o.bl || 'middle'; ctx.fillText(s, x, y); }
+  function txt(s, x, y, o = {}) { const p = ps() * TXS; ctx.fillStyle = o.c || T.ink; ctx.font = `${o.b ? '700 ' : ''}${(o.s || 11) * p}px ${o.m ? T.mono : T.ui}`; ctx.textAlign = o.a || 'left'; ctx.textBaseline = o.bl || 'middle'; if (o.halo) { ctx.save(); ctx.strokeStyle = T.canvas; ctx.lineWidth = 3 * ps(); ctx.lineJoin = 'round'; ctx.strokeText(s, x, y); ctx.restore(); } ctx.fillText(s, x, y); }
   const DEPTH_MAX = 0.15;   /* m shown in the body panel */
   function draw() {
     if (!T || !W) return;
@@ -547,7 +547,7 @@ table.rows input:focus { border-color: var(--accent); }
     ctx.fillStyle = g; ctx.beginPath(); ctx.moveTo(-9 * p, -48 * p); ctx.lineTo(9 * p, -48 * p); ctx.quadraticCurveTo(12 * p, -24 * p, 17 * p, -8 * p); ctx.lineTo(17 * p, 0); ctx.lineTo(-17 * p, 0); ctx.lineTo(-17 * p, -8 * p); ctx.quadraticCurveTo(-12 * p, -24 * p, -9 * p, -48 * p); ctx.closePath(); ctx.fill();
     ctx.strokeStyle = 'rgba(0,0,0,0.3)'; ctx.lineWidth = 1; ctx.stroke();
     ctx.fillStyle = '#3a342c'; ctx.fillRect(-17 * p, -3 * p, 34 * p, 3 * p);
-    if (label) { ctx.fillStyle = '#5e564c'; ctx.font = `700 ${7.5 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(label, 0, -20 * p); }
+    if (label) { ctx.fillStyle = '#3a342c'; ctx.font = `700 ${7.5 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(label, 0, -20 * p); }
     ctx.restore();
   }
   function drawBody(x, y, w, h, p) {
@@ -562,7 +562,7 @@ table.rows input:focus { border-color: var(--accent); }
     if (S.preset === 'cyst') { /* the cyst is hidden: muscle, with the same texture, drawn over it */ const y0 = y + cm(S.cyst) * ppm; tissue('muscle', x, y, x, y0 - 1, w, cm(1.5) * ppm + 2, p); }
     ctx.strokeStyle = T.line; ctx.strokeRect(x + 0.5, y + 0.5, w, h);
     /* depth scale on the left edge */
-    for (let c = 0; c <= 15; c++) { const yy = y + cm(c) * ppm; ctx.strokeStyle = T.ink; ctx.beginPath(); ctx.moveTo(x, yy); ctx.lineTo(x + (c % 5 ? 4 : 8) * p, yy); ctx.stroke(); if (c % 5 === 0 && c) txt(`${c} cm`, x + 10 * p, yy, { s: 9, c: T.ink, m: 1 }); }
+    for (let c = 0; c <= 15; c++) { const yy = y + cm(c) * ppm; ctx.strokeStyle = T.ink; ctx.beginPath(); ctx.moveTo(x, yy); ctx.lineTo(x + (c % 5 ? 4 : 8) * p, yy); ctx.stroke(); if (c % 5 === 0 && c) { txt(`${c} cm`, x + 10 * p, yy, { s: 9, c: T.ink, m: 1, halo: 1 }); } }
     /* transducer and the pulse traveling down and back */
     ctx.strokeStyle = T.accent; ctx.globalAlpha = 0.3; ctx.lineWidth = 10 * p; ctx.beginPath(); ctx.moveTo(tx, y); ctx.lineTo(tx, y + h); ctx.stroke(); ctx.globalAlpha = 1;
     /* a blob of gel under the probe face */

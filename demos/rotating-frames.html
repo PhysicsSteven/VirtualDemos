@@ -16,9 +16,9 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
 /* only what this demo needs beyond demos/lib/vd.css: its colors, the picture and the Set up card's place */
-:root { --table: #d9cdb6; --tableLine: #a8977a; --ball: #c0392b; --cor: #1f6fd1; --cen: #2e8b57; --fric: #9a5bd0; --room: #857b6d; --trail: #d9822b; --floor: #e8e2d6; --brass: #b08a3e; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --table: #3b3428; --tableLine: #6e604a; --ball: #ff6b5a; --cor: #6aa8ff; --cen: #5fd18f; --fric: #c99bff; --room: #b4aa9c; --trail: #ffae5c; --floor: #262420; --brass: #d8b45a; } }
-:root[data-theme="dark"] { --table: #3b3428; --tableLine: #6e604a; --ball: #ff6b5a; --cor: #6aa8ff; --cen: #5fd18f; --fric: #c99bff; --room: #b4aa9c; --trail: #ffae5c; --floor: #262420; --brass: #d8b45a; }
+:root { --table: #d9cdb6; --tableLine: #a8977a; --ball: #c0392b; --cor: #1f6fd1; --cen: #2e8b57; --fric: #9a5bd0; --room: #857b6d; --room-ink: #6f6558; --trail: #d9822b; --floor: #e8e2d6; --brass: #b08a3e; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --table: #3b3428; --tableLine: #6e604a; --ball: #ff6b5a; --cor: #6aa8ff; --cen: #5fd18f; --fric: #c99bff; --room: #b4aa9c; --room-ink: #b4aa9c; --trail: #ffae5c; --floor: #262420; --brass: #d8b45a; } }
+:root[data-theme="dark"] { --table: #3b3428; --tableLine: #6e604a; --ball: #ff6b5a; --cor: #6aa8ff; --cen: #5fd18f; --fric: #c99bff; --room: #b4aa9c; --room-ink: #b4aa9c; --trail: #ffae5c; --floor: #262420; --brass: #d8b45a; }
 .stage { position: relative; display: grid; grid-template-rows: auto minmax(480px, 1fr); min-height: 620px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); }
 .scene { position: relative; min-height: 0; }
@@ -271,7 +271,7 @@
   function is3() { return !!(v3 && v3.is3d()); }
   function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
     T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), accent: g('--accent'), surface: g('--surface'), table: g('--table'), tline: g('--tableLine'), ball: g('--ball'),
-      cor: g('--cor'), cen: g('--cen'), fric: g('--fric'), room: g('--room'), trail: g('--trail'), floor: g('--floor'), brass: g('--brass'), mono: g('--font-mono') || 'JetBrains Mono' }; }
+      cor: g('--cor'), cen: g('--cen'), fric: g('--fric'), room: g('--room'), roomInk: g('--room-ink'), trail: g('--trail'), floor: g('--floor'), brass: g('--brass'), mono: g('--font-mono') || 'JetBrains Mono' }; }
   const fmtT = (s) => { if (!isFinite(s)) return 'never'; const a = Math.abs(s); if (a < 120) return `${f(s, 1)} s`; if (a < 7200) return `${f(s / 60, 1)} min`; if (a < 86400 * 3) return `${f(s / 3600, 2)} h`; return `${f(s / 86400, 2)} days`; };
 
   // ---------- the ball: launch and where it is ----------
@@ -353,7 +353,7 @@
     /* the room: a wall mark (a door) outside the rim, fixed in the room */
     const door = rfRot([0, TR * 1.12], roomA), D = X(door), dn = rfRot([1, 0], roomA);
     ctx.strokeStyle = T.room; ctx.lineWidth = 4 * p; ctx.beginPath(); ctx.moveTo(D[0] - dn[0] * 18 * p, D[1] + dn[1] * 18 * p); ctx.lineTo(D[0] + dn[0] * 18 * p, D[1] - dn[1] * 18 * p); ctx.stroke();
-    ctx.fillStyle = T.room; ctx.font = `${10 * p}px ${mono()}`; ctx.textBaseline = 'middle';
+    ctx.fillStyle = T.roomInk; ctx.font = `${10 * p}px ${mono()}`; ctx.textBaseline = 'middle';
     const DL = X(rfRot([0, TR * 1.2], roomA)); ctx.fillText('door', DL[0], DL[1]);
     /* the table */
     ctx.fillStyle = T.table; ctx.beginPath(); ctx.arc(cx, cy, R, 0, 2 * Math.PI); ctx.fill();

@@ -29,6 +29,7 @@
   --equi: #a7740b;
   --accent: #c4811c;
   --br: #2f8a57;
+  --br-ink: #1f6b40;
   --ferroin: #c9472f;
   --ferriin: #2f63c4;
   --cerium: #d9a514;
@@ -41,7 +42,7 @@
   :root:not([data-theme="light"]) {
     --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
     --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
-    --equi: #e2b350; --accent: #fbc26d; --br: #5bc28a; --ferroin: #d4523a; --ferriin: #4a84ea;
+    --equi: #e2b350; --accent: #fbc26d; --br: #5bc28a; --br-ink: #5bc28a; --ferroin: #d4523a; --ferriin: #4a84ea;
     --cerium: #e6bb3a; --glass: #61758b; --bench: #211b14;
     color-scheme: dark;
   }
@@ -49,7 +50,7 @@
 :root[data-theme="dark"] {
   --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
   --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
-  --equi: #e2b350; --accent: #fbc26d; --br: #5bc28a; --ferroin: #d4523a; --ferriin: #4a84ea;
+  --equi: #e2b350; --accent: #fbc26d; --br: #5bc28a; --br-ink: #5bc28a; --ferroin: #d4523a; --ferriin: #4a84ea;
   --cerium: #e6bb3a; --glass: #61758b; --bench: #211b14;
   color-scheme: dark;
 }
@@ -801,7 +802,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   function tokens() {
     const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
     T = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'),
-      pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), accent: g('--accent'), br: g('--br'), ferroin: g('--ferroin'), ferriin: g('--ferriin'),
+      pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), accent: g('--accent'), br: g('--br'), brInk: g('--br-ink'), ferroin: g('--ferroin'), ferriin: g('--ferriin'),
       cerium: g('--cerium'), glass: g('--glass'), bench: g('--bench'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' };
     const r = hex(T.ferroin), b = hex(T.ferriin);
     for (let k = 0; k < 256; k++) { const c = mixc(r, b, k / 255); LUT[k] = (255 << 24) | (c[2] << 16) | (c[1] << 8) | c[0]; }
@@ -1016,7 +1017,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const blk = vesselBlock(k, W, H, fill, { stir: stirAngle, lines: [
       { text: 'Now in the beaker', bold: true },
       { text: `x  HBrO₂   ${sci(BK.y[0], 3)}`, color: T.equi },
-      { text: `y  Br⁻     ${sci(BK.y[1], 3)}`, color: T.br },
+      { text: `y  Br⁻     ${sci(BK.y[1], 3)}`, color: T.brInk },
       { text: `z  catalyst, oxidized  ${sci(z, 3)}`, color: T.neg }
     ], bar: { s: sZ, l0: 'red ferroin', l1: 'blue ferriin', cols: solution } });
     // time series of the three scaled concentrations, log scale
@@ -1123,7 +1124,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     for (let e = -2; e <= 3; e++) yp.push([e, [ys * 1.16, map1(e, RANGE.y), -1.06]]);
     for (let e = -4; e <= 0; e++) zp.push([e, [ys * 1.12, -xs * 1.12, map1(e, RANGE.z)]]);
     axis('x  HBrO₂', T.equi, xp, [0, xs * 1.42, -1.12], [0, 0]);
-    axis('y  Br⁻', T.br, yp, [ys * 1.42, 0, -1.12], [0, 0]);
+    axis('y  Br⁻', T.brInk, yp, [ys * 1.42, 0, -1.12], [0, 0]);
     axis('z  catalyst', T.neg, zp, [ys * 1.12, -xs * 1.12, 1.18], [0, 0]);
     const fq = project(to3(BK.fixed[0], BK.fixed[1], BK.fixed[2]));
     ctx.font = mono(k, 10); halo(ctx, bkStable() ? 'steady state, stable' : 'steady state, unstable', fq[0] + 9 * s, fq[1] - 10 * s, T.muted, 'left');

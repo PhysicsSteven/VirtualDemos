@@ -389,7 +389,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const X = (x) => ox + x * k, Y = (y) => oy + y * k;
     c.fillStyle = T.hole; for (let gx = Math.ceil((xmin - 60) / 25) * 25; gx <= xmax + 60; gx += 25) for (let gy = Math.ceil((ymin - 60) / 25) * 25; gy <= ymax + 60; gy += 25) { const px = X(gx), py = Y(gy); if (px > -3 && px < W + 3 && py > -3 && py < H + 3) { c.beginPath(); c.arc(px, py, Math.max(1.2, 2.2 * k), 0, 7); c.fill(); } }
     const vg = c.createRadialGradient(W * 0.45, H * 0.4, 0, W * 0.45, H * 0.4, Math.max(W, H) * 0.8); vg.addColorStop(0, 'rgba(255,255,255,0.05)'); vg.addColorStop(1, 'rgba(0,0,0,0.25)'); c.fillStyle = vg; c.fillRect(0, 0, W, H);
-    const lab = (s, x, y, a = 'center') => { c.save(); c.font = `${10.5 * p}px ${T.ui}`; c.textAlign = a; c.textBaseline = 'middle'; c.fillStyle = 'rgba(231,224,215,0.85)'; c.fillText(s, x, y); c.restore(); };
+    const lab = (s, x, y, a = 'center') => { c.save(); c.font = `${10.5 * p}px ${T.ui}`; c.textAlign = a; c.textBaseline = 'middle'; c.lineJoin = 'round'; c.lineWidth = 3.5; c.strokeStyle = 'rgba(22,18,13,0.88)'; c.strokeText(s, x, y); c.fillStyle = '#f4efe8'; c.fillText(s, x, y); c.restore(); };
     const exag = 40, mOff = dUm() * 1e-3 * exag;            /* the mirror's travel is drawn 40 times larger */
     const m1x = 100 + mOff, m2y = -100, scrY = 150;
     const tiltDraw = S.tx * ARCMIN * 600;                    /* M2's tilt drawn 600 times larger */

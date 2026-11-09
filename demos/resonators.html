@@ -34,6 +34,7 @@
   --water: #4aa6c4;
   --glass: #7d98a3;
   --brass: #a7740b;
+  --brass-ink: #7a5406;
   --wood: #f0e4c8;
   --wood-edge: #c9b48c;
   --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
@@ -44,14 +45,14 @@
     --bg: #13100c; --surface: #1e1a14; --canvas: #191510; --ink: #ebe7e1; --muted: #a9a095;
     --line: #383026; --grid: #231e17; --grid-strong: #362e24; --pos: #ff7660; --neg: #69a0ff;
     --equi: #e2b350; --accent: #e09422; --paper: #17130e; --water: #3a87a3; --glass: #5f7a84;
-    --brass: #e2b350; --wood: #2a2418; --wood-edge: #5c4d33; color-scheme: dark;
+    --brass: #e2b350; --brass-ink: #e2b350; --wood: #2a2418; --wood-edge: #5c4d33; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --bg: #13100c; --surface: #1e1a14; --canvas: #191510; --ink: #ebe7e1; --muted: #a9a095;
   --line: #383026; --grid: #231e17; --grid-strong: #362e24; --pos: #ff7660; --neg: #69a0ff;
   --equi: #e2b350; --accent: #e09422; --paper: #17130e; --water: #3a87a3; --glass: #5f7a84;
-  --brass: #e2b350; --wood: #2a2418; --wood-edge: #5c4d33; color-scheme: dark;
+  --brass: #e2b350; --brass-ink: #e2b350; --wood: #2a2418; --wood-edge: #5c4d33; color-scheme: dark;
 }
 :root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
@@ -645,7 +646,7 @@ table.rows button { font: inherit; font-size: 0.8rem; background: none; border: 
   function tokens() {
     const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
     T = { paper: g('--paper'), canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'),
-      pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), accent: g('--accent'), water: g('--water'), glass: g('--glass'), brass: g('--brass'), wood: g('--wood'), woodEdge: g('--wood-edge'),
+      pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), accent: g('--accent'), water: g('--water'), glass: g('--glass'), brass: g('--brass'), brassInk: g('--brass-ink'), wood: g('--wood'), woodEdge: g('--wood-edge'),
       mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' };
     buildKey(); plotDirty = true;
   }
@@ -754,7 +755,7 @@ table.rows button { font: inherit; font-size: 0.8rem; background: none; border: 
     ctx.beginPath(); ctx.moveTo(cx - 9 * ls - sw, fy); ctx.lineTo(cx - 9 * ls - sw, fy - 38 * ls); ctx.moveTo(cx + 9 * ls + sw, fy); ctx.lineTo(cx + 9 * ls + sw, fy - 38 * ls); ctx.stroke();
     ctx.beginPath(); ctx.moveTo(cx - 9 * ls, fy); ctx.quadraticCurveTo(cx, fy + 10 * ls, cx + 9 * ls, fy); ctx.moveTo(cx, fy + 6 * ls); ctx.lineTo(cx, fy + 9 * ls); ctx.stroke();
     ctx.beginPath(); ctx.moveTo(cx + 24 * ls, fy - 46 * ls); ctx.lineTo(cx + 10 * ls, fy - 46 * ls); ctx.stroke(); ctx.lineCap = 'butt';
-    tag(`${S.fork} Hz`, cx + 26 * ls, fy - 46 * ls, T.brass, 'left', 'middle', true, 10.5);
+    tag(`${S.fork} Hz`, cx + 26 * ls, fy - 46 * ls, T.brassInk, 'left', 'middle', true, 10.5);
     // water handle
     barGrip(tx - 4 * ls, tx + tw + 4 * ls, yW, isHot('water'), T.accent);
     // captured readings: ticks on the ruler
@@ -804,7 +805,7 @@ table.rows button { font: inherit; font-size: 0.8rem; background: none; border: 
     ctx.strokeStyle = T.accent; ctx.globalAlpha = 0.5; ctx.lineWidth = 1; ctx.setLineDash([2 * ls, 3 * ls]); ctx.beginPath(); ctx.moveTo(g.tx + g.tw + 2, yW); ctx.lineTo(X(db), yW); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
     grip(X(db), yW, isHot('level'), T.accent);
     // labels
-    if (!S.blind) for (const r of D.res) tag(g.narrow ? `L${sub(r.k)} ${(r.L * 100).toFixed(1)}` : `L${sub(r.k)} = ${(r.L * 100).toFixed(1)} cm`, pL + 4 * ls, Y(r.L) - 3 * ls, T.equi, 'left', 'bottom', true, 10);
+    if (!S.blind) for (const r of D.res) tag(g.narrow ? `L${sub(r.k)} ${(r.L * 100).toFixed(1)}` : `L${sub(r.k)} = ${(r.L * 100).toFixed(1)} cm`, pL + 4 * ls, Y(r.L) - 3 * ls, T.brassInk, 'left', 'bottom', true, 10);
     tag(`${db.toFixed(1)} dB`, Math.min(X(db) + 10 * ls, pR - 50 * ls), yW + 3 * ls, T.accent, 'left', 'top', true, 10.5);
     title(['Sound level in the tube against water position', 'Level against water position', 'Level'], pL, 8 * ls, pR - pL);
     tag('L (cm)', g.rulerX, g.top - 28 * ls, T.muted, 'left', 'bottom', false, 10);
@@ -975,7 +976,7 @@ table.rows button { font: inherit; font-size: 0.8rem; background: none; border: 
       const gy = ST.hold ? yc - amp * ST.hold.h : yc - amp * 0.0;
       grip(xp, gy, isHot('pluck'), T.brass);
       G.pluckPt = [xp, gy];
-      tag(`x₀ = ${(p * S.sL * 100).toFixed(1)} cm = ${fracTxt(S.q)}L`, clamp(xp + 10 * ls, L0, R0 - 150 * ls), yc + amp + 4 * ls, T.brass, 'left', 'top', true, 10);
+      tag(`x₀ = ${(p * S.sL * 100).toFixed(1)} cm = ${fracTxt(S.q)}L`, clamp(xp + 10 * ls, L0, R0 - 150 * ls), yc + amp + 4 * ls, T.brassInk, 'left', 'top', true, 10);
     } else {
       tag('bowed: a kink circles between the two parabolas', L0, yc + amp + 4 * ls, T.muted, 'left', 'top', false, 10);
     }

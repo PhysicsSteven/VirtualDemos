@@ -386,7 +386,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const nzTop = Math.max(0, gcy - gr - 10 * p), nzBot = H * 0.3, nw = 56 * p;
     G.box(ctx, cx - nw / 2, nzTop, nw, nzBot - nzTop, { color: d ? '#61584c' : '#716658', r: 6 * p });
     G.box(ctx, cx - nw * 0.36, nzBot - 2 * p, nw * 0.72, 14 * p, { color: d ? '#847a6d' : '#948a7d', r: 3 * p, shadow: false });
-    G.plate(ctx, 'nozzle', cx, nzTop + 14 * p, { s: 7 * p });
+    G.plate(ctx, 'nozzle', cx, nzTop + 14 * p, { s: 7 * p, c: '#ffffff' });
     /* the couch */
     const couchY = H * 0.66, cw = Math.min((b.x1 - b.x0) * 0.62, 420 * p);
     G.shadow(ctx, cx, floorY - 2 * p, cw * 0.42, 6 * p, 0.8);
@@ -450,7 +450,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const ok = S.view === 'patient' ? (S.G ? S.G.pass >= 95 : null) : r ? r.ok : null;
     if (ok != null && !busy) { const tx = S.view === 'patient' ? (ok ? 'PASS (≥ 95 %)' : 'FAIL (< 95 %)') : ok ? 'ALL CHECKS PASS' : 'OUT OF TOLERANCE';
       ctx.font = `700 ${12 * p}px ${T.ui}`; const tw = ctx.measureText(tx).width + 18 * p; ctx.fillStyle = ok ? T.pass : T.fail; ctx.globalAlpha = 0.92;
-      ctx.beginPath(); ctx.roundRect(ex, ey - 30 * p, tw, 22 * p, 11 * p); ctx.fill(); ctx.globalAlpha = 1; ctx.fillStyle = '#ffffff'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(tx, ex + 9 * p, ey - 19 * p); }
+      ctx.beginPath(); ctx.roundRect(ex, ey - 30 * p, tw, 22 * p, 11 * p); ctx.fill(); ctx.globalAlpha = 1; ctx.fillStyle = dark() ? '#0b0f0c' : '#ffffff'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(tx, ex + 9 * p, ey - 19 * p); }
     G.label(ctx, (W < 560 ? '' : 'IBA Proteus ONE style room, ') + (S.view === 'patient' ? 'patient plan' : `${sig(S.e, 4)} MeV`), b.x0 + 4 * p, 16 * p, { s: 10.5 * p, c: T.ink, alpha: 0.85 });
   }
 
@@ -566,7 +566,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const ok = S.view === 'patient' ? (S.G ? S.G.pass >= 95 : null) : r ? r.ok : null;
     if (ok != null && !busy) { const tx = S.view === 'patient' ? (ok ? 'PASS (≥ 95 %)' : 'FAIL (< 95 %)') : ok ? 'ALL CHECKS PASS' : 'OUT OF TOLERANCE', [x, y0] = Q(g.cart[0], g.cart[1], 1.12), y = Math.max(64 * p, Math.min(H - 16 * p, y0));
       ctx.font = `700 ${12 * p}px ${T.ui}`; const tw = ctx.measureText(tx).width + 18 * p, x0 = Math.max(6 * p, x - tw / 2); ctx.fillStyle = ok ? T.pass : T.fail; ctx.globalAlpha = 0.92;
-      ctx.beginPath(); ctx.roundRect(x0, y - 11 * p, tw, 22 * p, 11 * p); ctx.fill(); ctx.globalAlpha = 1; ctx.fillStyle = '#ffffff'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(tx, x0 + 9 * p, y); }
+      ctx.beginPath(); ctx.roundRect(x0, y - 11 * p, tw, 22 * p, 11 * p); ctx.fill(); ctx.globalAlpha = 1; ctx.fillStyle = dark() ? '#0b0f0c' : '#ffffff'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(tx, x0 + 9 * p, y); }
     ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.font = `600 ${10.5 * p}px ${T.ui}`;
     const lines = [(W < 560 ? '' : 'IBA Proteus ONE style room, ') + (S.view === 'patient' ? 'patient plan' : `${sig(S.e, 4)} MeV`),
       fw < 520 ? 'Roughly to scale; beam drawn as a line.' : 'Room and devices roughly to scale; the beam is drawn as a visible line.', fw < 520 ? 'Drag to turn.' : 'Drag to turn the view.'];

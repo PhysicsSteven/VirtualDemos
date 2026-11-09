@@ -23,9 +23,9 @@
 <style>
 /* Layout: a wire on a meter rule with a sliding contact, a supply, ammeter and voltmeter on the left; the rail on the right. */
 /* Layout: lab bench. The gas box and speed histogram fill the left, a narrow instrument rail sits on the right; stacks on phones. */
-:root { --wire: #b06a2c; --meter: #f7f5f2; --clip: #2b60b5; --ecol: #a88456; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --wire: #e0955a; --meter: #2e271e; --clip: #69a0ff; --ecol: #b49bff; } }
-:root[data-theme="dark"] { --wire: #e0955a; --meter: #2e271e; --clip: #69a0ff; --ecol: #b49bff; }
+:root { --wire: #b06a2c; --meter: #f7f5f2; --clip: #2b60b5; --ecol: #a88456; --i-ink: #86230f; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --wire: #e0955a; --meter: #2e271e; --clip: #69a0ff; --ecol: #b49bff; --i-ink: #ff7660; } }
+:root[data-theme="dark"] { --wire: #e0955a; --meter: #2e271e; --clip: #69a0ff; --ecol: #b49bff; --i-ink: #ff7660; }
 :root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
 body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
@@ -427,7 +427,7 @@ table.rows input:focus { border-color: var(--accent); }
   let W = 0, H = 0, dpr = 1, T = null, geo = null;
   function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
     T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'), accent: g('--accent'),
-      wire: g('--wire'), meter: g('--meter'), clip: g('--clip'), e: g('--ecol'), pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; }
+      wire: g('--wire'), meter: g('--meter'), clip: g('--clip'), e: g('--ecol'), pos: g('--pos'), iInk: g('--i-ink'), neg: g('--neg'), equi: g('--equi'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; }
   const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
   const SUP = { '-': '⁻', 0: '⁰', 1: '¹', 2: '²', 3: '³', 4: '⁴', 5: '⁵', 6: '⁶', 7: '⁷', 8: '⁸', 9: '⁹' };
   function sci(v, n) { if (!isFinite(v)) return '—'; if (v === 0) return '0'; const e = Math.floor(Math.log10(Math.abs(v))); if (e >= -2 && e < 4) return sig(v, n).replace('-', '−');
@@ -543,7 +543,7 @@ table.rows input:focus { border-color: var(--accent); }
     VG.cable(ctx, pa, yW + 4 * p, W / 2 - 70 * p, H - 30 * p, 40 * p, { color: '#b8382a', w: 3 * p }); VG.cable(ctx, pb, yW + 4 * p, W / 2 + 70 * p, H - 30 * p, 40 * p, { color: '#2d2821', w: 3 * p });
     for (const x of [pa, pb]) { VG.rod(ctx, x, yW - 9 * p, x, yW + 8 * p, 4.5 * p, { color: '#c9a24a' }); VG.screw(ctx, x, yW - 9 * p, 4 * p); }
     VG.rod(ctx, X(WIRE_A), yW, X(WIRE_B), yW, (0.55 + d() * 2.2) * p, { color: T.wire });
-    arrowH(X(0.03), X(0.03) + 34 * p, yW - 12 * p, T.pos, p); txt('I', X(0.03) + 40 * p, yW - 12 * p, { c: T.pos, w: 700, s: 11 });
+    arrowH(X(0.03), X(0.03) + 34 * p, yW - 12 * p, T.pos, p); txt('I', X(0.03) + 40 * p, yW - 12 * p, { c: T.iInk, w: 700, s: 11 });
     /* the voltmeter and its leads to the clips */
     const dw = 150 * p, dh = 60 * p, dmx = Math.max(10 * p, Math.min(W - 10 * p - dw, (X(0) + Lx) / 2 - dw / 2)), dmy = yW - 116 * p;
     VG.cable(ctx, dmx + dw * 0.3, dmy + dh, X(0), yW - 14 * p, 26 * p, { color: '#b8382a', w: 2.4 * p }); VG.cable(ctx, dmx + dw * 0.7, dmy + dh, Lx, yW - 14 * p, 26 * p, { color: '#2d2821', w: 2.4 * p });

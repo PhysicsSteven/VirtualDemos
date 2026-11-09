@@ -606,7 +606,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const gc = ctx.createRadialGradient(G.cx - G.rc * 0.2, G.cy - G.rc * 0.3, 2, G.cx, G.cy, G.rc); gc.addColorStop(0, K.core2); gc.addColorStop(1, K.core);
       ctx.fillStyle = gc; ctx.beginPath(); ctx.arc(G.cx, G.cy, G.rc, Math.PI, 2 * Math.PI); ctx.closePath(); ctx.fill();
       ctx.strokeStyle = K.line; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(G.cx, G.cy, G.R, Math.PI, 2 * Math.PI); ctx.moveTo(G.cx - G.R, G.cy); ctx.lineTo(G.cx + G.R, G.cy); ctx.stroke();
-      label(ctx, 'core', G.cx, G.cy - G.rc * 0.45, { a: 'center', col: '#3a2a08', halo: false, w: 700 });
+      label(ctx, 'core', G.cx, G.cy - G.rc * 0.45, { a: 'center', col: '#3a2a08', haloCol: '#ffe9a6', w: 700 });
     } else { ctx.strokeStyle = K.line; ctx.strokeRect(G.x, G.y, G.w, G.h); label(ctx, 'core below', G.x + G.w / 2, G.y + G.h + 12 * p, { a: 'center', col: K.muted }); label(ctx, 'surface', G.x + G.w / 2, G.y - 9 * p, { a: 'center', col: K.muted }); }
     /* the flow: arrows on a grid, longest for the fastest rock now in the picture */
     let vmax = 1e-9; for (let q = 0; q < B.u.length; q++) vmax = Math.max(vmax, Math.hypot(B.u[q], B.w[q]));
@@ -918,8 +918,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (!crustMode) {
       const P = S.mode === 'layers' ? PLANETS[S.lp] : PLANETS[S.cp], rcf = S.mode === 'layers' ? S.rc / P.R : MANTLE[S.cp].rc / MANTLE[S.cp].R;
       const pc = S3.project([0, 0, 0]), pm = S3.project([0, 0, (1 + rcf) / 2]), pr = S3.project([0, 0, 1.12]);
-      if (pc[2] < 1 && rcf > 0.08) label(ctx, 'core', pc[0], pc[1], { a: 'center', w: 700, col: '#3a2a08', halo: false });
-      if (pm[2] < 1) label(ctx, 'mantle', pm[0], pm[1], { a: 'center', w: 700, col: '#fff', halo: false });
+      if (pc[2] < 1 && rcf > 0.08) label(ctx, 'core', pc[0], pc[1], { a: 'center', w: 700, col: '#3a2a08', haloCol: '#ffe9a6' });
+      if (pm[2] < 1) label(ctx, 'mantle', pm[0], pm[1], { a: 'center', w: 700, col: '#fff', haloCol: '#4a2216' });
       label(ctx, `${P.name}, cut in half${S.mode === 'convect' ? ': the mantle churning' : ''}`, area().x0 + 14 * p, 20 * p, { w: 700, size: 13, col: '#f4f0ea', haloCol: '#0b0906' });
       void pr;
     } else {

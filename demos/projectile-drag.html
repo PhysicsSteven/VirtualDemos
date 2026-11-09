@@ -1067,7 +1067,7 @@ body[data-nc] #unitsG, body[data-nc] #unitsF, body:not([data-nc]) #ncUnits { dis
     const m = /^#?([0-9a-f]{6})$/i.exec(hex || ''); if (!m) return '#fff';
     const n = parseInt(m[1], 16), lin = (c) => { c /= 255; return c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4); };
     const Y = 0.2126 * lin(n >> 16) + 0.7152 * lin((n >> 8) & 255) + 0.0722 * lin(n & 255);
-    return Y > 0.3 ? '#201a12' : '#ffffff';
+    return Y > 0.2 ? '#201a12' : '#ffffff';
   }
   const narrow = () => window.matchMedia('(max-width: 820px)').matches;
 
@@ -1185,6 +1185,8 @@ body[data-nc] #unitsG, body[data-nc] #unitsF, body:not([data-nc]) #ncUnits { dis
     const r = 7.5 * ps;
     ctx.fillStyle = color; ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.fill();
     ctx.fillStyle = badgeInk(color); ctx.font = `700 ${10 * ps}px ` + monoFont(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    /* a mid tone shot color suits neither white nor dark numerals alone: a thin outline in the opposite tone helps */
+    const ink = badgeInk(color); ctx.save(); ctx.lineJoin = 'round'; ctx.lineWidth = 2.2 * ps; ctx.strokeStyle = ink === '#ffffff' ? 'rgba(20,14,8,0.45)' : 'rgba(255,255,255,0.35)'; ctx.strokeText(String(n), x, y + 0.5); ctx.restore();
     ctx.fillText(String(n), x, y + 0.5);
   }
 

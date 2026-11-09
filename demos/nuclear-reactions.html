@@ -16,9 +16,9 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
 /* only what this demo needs beyond demos/lib/vd.css */
-:root { --proton: #d2452b; --neutron: #948b7f; --gamma: #2f8a4e; --fis: #d9822b; --theory: #6a4fc4; --pp: #2b6fc4; --dt: #c4412b; --metal: #9e9890; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --proton: #ff7a5c; --neutron: #beb6ac; --gamma: #66d38c; --fis: #ffae5c; --theory: #a991ff; --pp: #69a8ff; --dt: #ff8a6c; --metal: #b9b2aa; } }
-:root[data-theme="dark"] { --proton: #ff7a5c; --neutron: #beb6ac; --gamma: #66d38c; --fis: #ffae5c; --theory: #a991ff; --pp: #69a8ff; --dt: #ff8a6c; --metal: #b9b2aa; }
+:root { --proton: #d2452b; --neutron: #948b7f; --gamma: #2f8a4e; --gamma-ink: #247a3f; --fis: #d9822b; --theory: #6a4fc4; --pp: #2b6fc4; --dt: #c4412b; --metal: #9e9890; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --proton: #ff7a5c; --neutron: #beb6ac; --gamma: #66d38c; --gamma-ink: #66d38c; --fis: #ffae5c; --theory: #a991ff; --pp: #69a8ff; --dt: #ff8a6c; --metal: #b9b2aa; } }
+:root[data-theme="dark"] { --proton: #ff7a5c; --neutron: #beb6ac; --gamma: #66d38c; --gamma-ink: #66d38c; --fis: #ffae5c; --theory: #a991ff; --pp: #69a8ff; --dt: #ff8a6c; --metal: #b9b2aa; }
 .stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden auto; background: var(--canvas); }
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
 .stage-ctl .count { margin-left: auto; font-size: 0.82rem; color: var(--muted); }
@@ -515,7 +515,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function tokens() {
     const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
     T = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), accent: g('--accent'),
-      proton: g('--proton'), neutron: g('--neutron'), gamma: g('--gamma'), fis: g('--fis'), theory: g('--theory'), pp: g('--pp'), dt: g('--dt'), metal: g('--metal'), mono: g('--font-mono'), ui: g('--font-ui') };
+      proton: g('--proton'), neutron: g('--neutron'), gamma: g('--gamma'), gammaInk: g('--gamma-ink'), fis: g('--fis'), theory: g('--theory'), pp: g('--pp'), dt: g('--dt'), metal: g('--metal'), mono: g('--font-mono'), ui: g('--font-ui') };
     SPR.clear();
   }
   const lab = (s, x, y, o = {}) => { if (VG) VG.label(ctx, s, x, y, Object.assign({ s: 10.5 * proj() }, o)); else { ctx.fillStyle = o.c || T.muted; ctx.font = `${o.w || 400} ${(o.s || 10.5 * proj())}px ${T.ui}`; ctx.textAlign = o.a || 'left'; ctx.textBaseline = 'middle'; ctx.fillText(s, x, y); } };
@@ -803,7 +803,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (VG) VG.panel(ctx, lx, ly, lw, lh, { r: 8 });
     lab(eqText(), lx + 12 * p, ly + 18 * p, { c: T.ink, w: 700, s: 12 * p });
     const ok = (a, b) => (a === b ? '✓' : '✗');
-    const row = (k, a, b, y, col) => { lab(k, lx + 12 * p, y, { s: 10 * p }); lab(a, lx + lw * 0.52, y, { a: 'right', m: true, c: T.ink, s: 10 * p }); lab(b, lx + lw - 24 * p, y, { a: 'right', m: true, c: T.ink, s: 10 * p }); if (col) lab(col, lx + lw - 10 * p, y, { a: 'center', c: col === '✓' ? T.gamma : T.proton, w: 700, s: 11 * p }); };
+    const row = (k, a, b, y, col) => { lab(k, lx + 12 * p, y, { s: 10 * p }); lab(a, lx + lw * 0.52, y, { a: 'right', m: true, c: T.ink, s: 10 * p }); lab(b, lx + lw - 24 * p, y, { a: 'right', m: true, c: T.ink, s: 10 * p }); if (col) lab(col, lx + lw - 10 * p, y, { a: 'center', c: col === '✓' ? T.gammaInk : T.proton, w: 700, s: 11 * p }); };
     lab('before', lx + lw * 0.52, ly + 42 * p, { a: 'right', s: 9.5 * p }); lab('after', lx + lw - 24 * p, ly + 42 * p, { a: 'right', s: 9.5 * p });
     row('charge ΣZ', String(c.Zin), String(c.Zout), ly + 62 * p, ok(c.Zin, c.Zout));
     row('nucleons ΣA', String(c.Ain), String(c.Aout), ly + 82 * p, ok(c.Ain, c.Aout));
@@ -812,7 +812,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     else if (!c.balanced) lab('does not balance: no such reaction', lx + 12 * p, ly + 126 * p, { c: T.proton, s: 10 * p });
     else if (!S.blind) { lab(`Q = ${f(c.Q, 4)} MeV`, lx + 12 * p, ly + 126 * p, { c: T.ink, m: true, w: 700, s: 11 * p }); lab(c.Q >= 0 ? 'exothermic: mass becomes energy' : `endothermic: K must reach ${f(c.Kth, 4)} MeV`, lx + 12 * p, ly + 146 * p, { s: 10 * p }); }
     else lab('Q hidden (Blind)', lx + 12 * p, ly + 126 * p, { s: 10 * p });
-    if (c.balanced) lab(c.allowed ? `products share ${f(c.Kout, 4)} MeV of kinetic energy` : (x.proj === 'none' ? 'cannot happen: the products weigh more' : 'not enough energy: no reaction'), lx + 12 * p, ly + 170 * p, { c: c.allowed ? T.gamma : T.proton, s: 10 * p, w: 700 });
+    if (c.balanced) lab(c.allowed ? `products share ${f(c.Kout, 4)} MeV of kinetic energy` : (x.proj === 'none' ? 'cannot happen: the products weigh more' : 'not enough energy: no reaction'), lx + 12 * p, ly + 170 * p, { c: c.allowed ? T.gammaInk : T.proton, s: 10 * p, w: 700 });
     lcdBox(lx + lw / 2 - 70 * p, ly + lh + 26 * p, 140 * p, 26 * p, detText(c), `detector at ${x.th}°`);
   }
   function detText(c) { if (!c.allowed) return '—'; if (!c.kin) return '—'; const s0 = c.kin.sols[0]; return s0 ? `${f(s0.Kb, 3)} MeV` : 'nothing'; }

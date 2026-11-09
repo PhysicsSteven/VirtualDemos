@@ -15,11 +15,11 @@
 <style>
 /* only what this demo needs beyond demos/lib/vd.css */
 :root { --he1: rgba(120, 170, 225, 0.45); --he2: rgba(70, 150, 235, 0.55); --he-edge: #4f86c6; --glass: rgba(150, 175, 200, 0.22); --glass-edge: #8ea3b8; --silver: #ccc4ba;
-  --bubble: #ffffff; --heat: #d2452b; --metal: #a1988c; --lam: #a7740b; --plug: #a28b6a; --beam: #e0a020; }
+  --bubble: #ffffff; --heat: #d2452b; --metal: #a1988c; --lam: #a7740b; --lam-ink: #7a5406; --plug: #a28b6a; --beam: #e0a020; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --he1: rgba(110, 160, 230, 0.35); --he2: rgba(90, 170, 255, 0.45); --he-edge: #7fb0e8; --glass: rgba(150, 175, 200, 0.12);
-  --glass-edge: #6b7f94; --silver: #6d6458; --bubble: #f7f4f0; --heat: #ff7a5c; --metal: #bbb2a6; --lam: #e2b350; --plug: #8d7a5c; --beam: #ffd060; } }
+  --glass-edge: #6b7f94; --silver: #6d6458; --bubble: #f7f4f0; --heat: #ff7a5c; --metal: #bbb2a6; --lam: #e2b350; --lam-ink: #e2b350; --plug: #8d7a5c; --beam: #ffd060; } }
 :root[data-theme="dark"] { --he1: rgba(110, 160, 230, 0.35); --he2: rgba(90, 170, 255, 0.45); --he-edge: #7fb0e8; --glass: rgba(150, 175, 200, 0.12);
-  --glass-edge: #6b7f94; --silver: #6d6458; --bubble: #f7f4f0; --heat: #ff7a5c; --metal: #bbb2a6; --lam: #e2b350; --plug: #8d7a5c; --beam: #ffd060; }
+  --glass-edge: #6b7f94; --silver: #6d6458; --bubble: #f7f4f0; --heat: #ff7a5c; --metal: #bbb2a6; --lam: #e2b350; --lam-ink: #e2b350; --plug: #8d7a5c; --beam: #ffd060; }
 .stage { position: relative; display: flex; flex-direction: column; min-height: min-content; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
 :root[data-projector="on"] .stage { min-height: min-content; }
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
@@ -260,7 +260,7 @@
   const f = (v, d = 3) => (!isFinite(v) ? '—' : v.toFixed(d).replace('-', '−'));
   const proj = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
   function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
-    T = {}; for (const k of ['canvas', 'surface', 'ink', 'muted', 'line', 'accent', 'he1', 'he2', 'he-edge', 'glass', 'glass-edge', 'silver', 'bubble', 'heat', 'metal', 'lam', 'plug', 'beam']) T[k.replace('-', '_')] = g('--' + k);
+    T = {}; for (const k of ['canvas', 'surface', 'ink', 'muted', 'line', 'accent', 'he1', 'he2', 'he-edge', 'glass', 'glass-edge', 'silver', 'bubble', 'heat', 'metal', 'lam', 'lam-ink', 'plug', 'beam']) T[k.replace('-', '_')] = g('--' + k);
     T.mono = g('--font-mono') || 'monospace'; T.ui = g('--font-ui') || 'system-ui, sans-serif'; }
   const rnd = (() => { let s = 12345; return () => { s = (s * 16807) % 2147483647; return s / 2147483647; }; })();
 
@@ -467,7 +467,7 @@
     if (S.x === 'pump') {
       const P = S.pump, tmax = Math.max(5, Math.ceil(P.t / 60 / 5) * 5), A = axes({ x0: 0, x1: tmax, dx: tmax > 20 ? 5 : 1, y0: 1, y1: 4.5, dy: 0.5, yd: 1, xl: 'time (minutes)', yl: 'temperature (K)', right: true });
       cx.strokeStyle = T.lam; cx.setLineDash([5 * A.p, 4 * A.p]); cx.beginPath(); cx.moveTo(A.L, A.ys(T_LAMBDA)); cx.lineTo(A.L + A.w, A.ys(T_LAMBDA)); cx.stroke(); cx.setLineDash([]);
-      cx.fillStyle = T.lam; cx.textAlign = 'right'; cx.textBaseline = 'bottom'; cx.fillText('lambda point, 2.1768 K', A.L + A.w - 4 * A.p, A.ys(T_LAMBDA) - 2 * A.p);
+      cx.fillStyle = T.lam_ink; cx.textAlign = 'right'; cx.textBaseline = 'bottom'; cx.fillText('lambda point, 2.1768 K', A.L + A.w - 4 * A.p, A.ys(T_LAMBDA) - 2 * A.p);
       const n0 = P.M0 / (M_HE * 1000), ym = (fr) => A.Tp + (1 - fr) * A.h;
       cx.strokeStyle = T.muted; cx.lineWidth = 1.5 * A.p; cx.beginPath(); P.hist.concat([[P.t, P.T, P.n]]).forEach((q, i) => { const X = A.xs(q[0] / 60), Y = ym(q[2] / n0); if (i) cx.lineTo(X, Y); else cx.moveTo(X, Y); }); cx.stroke();
       cx.strokeStyle = T.accent; cx.lineWidth = 2 * A.p; cx.beginPath(); P.hist.concat([[P.t, P.T, P.n]]).forEach((q, i) => { const X = A.xs(q[0] / 60), Y = A.ys(q[1]); if (i) cx.lineTo(X, Y); else cx.moveTo(X, Y); }); cx.stroke();
@@ -476,7 +476,7 @@
     } else if (S.x === 'fountain') {
       const F = S.fountain, A = axes({ x0: 0, x1: 20, dx: 5, y0: 0, y1: 100, dy: 20, xl: 'temperature rise inside the tube (mK)', yl: 'column height (cm)' });
       cx.strokeStyle = T.lam; cx.setLineDash([5 * A.p, 4 * A.p]); cx.beginPath(); cx.moveTo(A.L, A.ys(TUBE * 100)); cx.lineTo(A.L + A.w, A.ys(TUBE * 100)); cx.stroke(); cx.setLineDash([]);
-      cx.fillStyle = T.lam; cx.textAlign = 'right'; cx.textBaseline = 'bottom'; cx.fillText('top of the tube', A.L + A.w - 4 * A.p, A.ys(TUBE * 100) - 2 * A.p);
+      cx.fillStyle = T.lam_ink; cx.textAlign = 'right'; cx.textBaseline = 'bottom'; cx.fillText('top of the tube', A.L + A.w - 4 * A.p, A.ys(TUBE * 100) - 2 * A.p);
       if (!S.blind) { cx.save(); cx.beginPath(); cx.rect(A.L, A.Tp, A.w, A.h); cx.clip(); cx.strokeStyle = T.accent; cx.lineWidth = 2 * A.p; cx.beginPath();
         const dmax = Math.min(20, (2.1761 - F.Tf) * 1000); for (let i = 0; i <= 100; i++) { const d = dmax * i / 100, X = A.xs(d), Y = A.ys(fountainHeight(F.Tf, d / 1000) * 100); if (i) cx.lineTo(X, Y); else cx.moveTo(X, Y); } cx.stroke();
         cx.fillStyle = T.accent; cx.beginPath(); cx.arc(A.xs(F.dT), A.ys(fountainHeight(F.Tf, F.dT / 1000) * 100), 4.5 * A.p, 0, 7); cx.fill(); cx.restore();
@@ -490,7 +490,7 @@
     } else if (S.x === 'he3') {
       const Hh = S.he3, tmax = Math.max(60, Math.ceil(Hh.t / 60 / 30) * 30), A = axes({ x0: 0, x1: tmax, dx: tmax > 180 ? 60 : 30, y0: 3.36, y1: 3.44, dy: 0.02, yd: 2, xl: 'time (minutes)', yl: 'pressure (MPa)' });
       if (!S.blind) for (const [pt, nm] of [[HE3_A, 'A: superfluid begins, 2.444 mK'], [HE3_AB, 'A to B, 1.896 mK']]) { cx.strokeStyle = T.lam; cx.setLineDash([5 * A.p, 4 * A.p]); cx.beginPath(); cx.moveTo(A.L, A.ys(pt.P / 1e6)); cx.lineTo(A.L + A.w, A.ys(pt.P / 1e6)); cx.stroke(); cx.setLineDash([]);
-        cx.fillStyle = T.lam; cx.textAlign = 'right'; cx.textBaseline = pt === HE3_A ? 'top' : 'bottom'; cx.fillText(nm, A.L + A.w - 4 * A.p, A.ys(pt.P / 1e6) + (pt === HE3_A ? 2 : -2) * A.p); }
+        cx.fillStyle = T.lam_ink; cx.textAlign = 'right'; cx.textBaseline = pt === HE3_A ? 'top' : 'bottom'; cx.fillText(nm, A.L + A.w - 4 * A.p, A.ys(pt.P / 1e6) + (pt === HE3_A ? 2 : -2) * A.p); }
       cx.save(); cx.beginPath(); cx.rect(A.L, A.Tp, A.w, A.h); cx.clip(); cx.strokeStyle = T.accent; cx.lineWidth = 2 * A.p; cx.beginPath();
       Hh.hist.concat([[Hh.t, Hh.T, meltP(Hh.T)]]).forEach((q, i) => { const X = A.xs(q[0] / 60), Y = A.ys(q[2] / 1e6); if (i) cx.lineTo(X, Y); else cx.moveTo(X, Y); }); cx.stroke(); cx.restore();
       cx.fillStyle = T.accent; cx.textAlign = 'left'; cx.textBaseline = 'top'; cx.fillText('pressure in the cell as it is squeezed', A.L + 6 * A.p, 6 * A.p);

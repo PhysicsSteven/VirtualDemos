@@ -16,9 +16,9 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
 /* only what this demo needs beyond demos/lib/vd.css: its colors, the strip, the picture and the calibration steps */
-:root { --water: #2f7fc1; --water2: #cfe6f7; --photon: #c2410c; --elec: #7c3aed; --kerma: #b45309; --dose: #0f766e; --mc: #be185d; --ion: #2563eb; --neg: #dc2626; --beam: #f59e0b; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --water: #5aa9e6; --water2: #12324d; --photon: #fb923c; --elec: #c4a5ff; --kerma: #fbbf24; --dose: #2dd4bf; --mc: #f472b6; --ion: #7aa7ff; --neg: #ff7a7a; --beam: #fcd34d; } }
-:root[data-theme="dark"] { --water: #5aa9e6; --water2: #12324d; --photon: #fb923c; --elec: #c4a5ff; --kerma: #fbbf24; --dose: #2dd4bf; --mc: #f472b6; --ion: #7aa7ff; --neg: #ff7a7a; --beam: #fcd34d; }
+:root { --water-ink: #1a5a94; --water: #2f7fc1; --water2: #cfe6f7; --photon: #c2410c; --elec: #7c3aed; --kerma: #b45309; --dose: #0f766e; --mc: #be185d; --ion: #2563eb; --neg: #dc2626; --beam: #f59e0b; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --water-ink: #5aa9e6; --water: #5aa9e6; --water2: #12324d; --photon: #fb923c; --elec: #c4a5ff; --kerma: #fbbf24; --dose: #2dd4bf; --mc: #f472b6; --ion: #7aa7ff; --neg: #ff7a7a; --beam: #fcd34d; } }
+:root[data-theme="dark"] { --water-ink: #5aa9e6; --water: #5aa9e6; --water2: #12324d; --photon: #fb923c; --elec: #c4a5ff; --kerma: #fbbf24; --dose: #2dd4bf; --mc: #f472b6; --ion: #7aa7ff; --neg: #ff7a7a; --beam: #fcd34d; }
 .stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
 .stage-ctl .clock { margin-left: auto; font-size: 0.8rem; color: var(--muted); }
@@ -443,7 +443,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
     T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid') || g('--line'), surface: g('--surface'), accent: g('--accent'),
-      water: g('--water'), water2: g('--water2'), photon: g('--photon'), elec: g('--elec'), kerma: g('--kerma'), dose: g('--dose'), mc: g('--mc'), ion: g('--ion'), neg: g('--neg'), beam: g('--beam'),
+      water: g('--water'), waterInk: g('--water-ink'), water2: g('--water2'), photon: g('--photon'), elec: g('--elec'), kerma: g('--kerma'), dose: g('--dose'), mc: g('--mc'), ion: g('--ion'), neg: g('--neg'), beam: g('--beam'),
       mono: g('--font-mono'), ui: g('--font-ui') }; }
 
   /* ---------- Kerma view ---------- */
@@ -536,7 +536,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const gw = ctx.createLinearGradient(0, py0, 0, py1); gw.addColorStop(0, T.water2); gw.addColorStop(1, T.water2);
     ctx.save(); ctx.globalAlpha = 0.9; ctx.fillStyle = gw; ctx.fillRect(x0, py0, x1 - x0, py1 - py0); ctx.restore();
     ctx.strokeStyle = T.water; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(x0, py0 - 4); ctx.lineTo(x0, py1 + 4); ctx.stroke();
-    text('water', x1 - 6 * p, py0 + 12 * p, { a: 'right', s: 11 * p, c: T.water });
+    text('water', x1 - 6 * p, py0 + 12 * p, { a: 'right', s: 11 * p, c: T.waterInk });
     text('photons', x0 - 8 * p, py0 + 12 * p, { a: 'right', s: 11 * p, c: T.photon });
     ctx.strokeStyle = T.photon; ctx.lineWidth = 1.2; ctx.globalAlpha = 0.7;
     for (let i = 0; i < 5; i++) { const y = py0 + (i + 0.5) / 5 * (py1 - py0); ctx.beginPath(); ctx.moveTo(x0 - 40 * p, y); ctx.lineTo(x0 - 6 * p, y); ctx.lineTo(x0 - 11 * p, y - 3); ctx.moveTo(x0 - 6 * p, y); ctx.lineTo(x0 - 11 * p, y + 3); ctx.stroke(); }
@@ -600,7 +600,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (use3()) { S.ionGeom = { xl, xr, cy, R, eb: Math.max(2, R * 0.18) }; chamber3({ x: 0, y: 0, w: W, h: hb }, p); }
     else {
     ctx.fillStyle = T.water2; ctx.globalAlpha = 0.8; ctx.fillRect(x0 - 30 * p, cy - R - 26 * p, x1 - x0 + 30 * p, 2 * R + 52 * p); ctx.globalAlpha = 1;
-    text('water', x1 - 6 * p, cy - R - 14 * p, { a: 'right', s: 11 * p, c: T.water });
+    text('water', x1 - 6 * p, cy - R - 14 * p, { a: 'right', s: 11 * p, c: T.waterInk });
     /* wall (graphite inside a PMMA sleeve), domed tip at the left */
     ctx.fillStyle = '#45413b'; ctx.beginPath(); ctx.moveTo(xr, cy - R - 6 * p); ctx.lineTo(xl + R, cy - R - 6 * p); ctx.arc(xl + R, cy, R + 6 * p, -Math.PI / 2, Math.PI / 2, true); ctx.lineTo(xr, cy + R + 6 * p); ctx.closePath(); ctx.fill();
     ctx.fillStyle = T.canvas; ctx.beginPath(); ctx.moveTo(xr, cy - R); ctx.lineTo(xl + R, cy - R); ctx.arc(xl + R, cy, R, -Math.PI / 2, Math.PI / 2, true); ctx.lineTo(xr, cy + R); ctx.closePath(); ctx.fill();
@@ -897,7 +897,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const Q = render3(b, 'kerma', [-0.04, 0, 0.36], 1.2);
     /* words over the picture */
     const nar = b.w < 560;
-    tag3(b, 'water phantom', Q([t.x0 + t.len, -t.w / 2, t.h + 0.02]), { c: T.water, a: 'right' });
+    tag3(b, 'water phantom', Q([t.x0 + t.len, -t.w / 2, t.h + 0.02]), { c: T.waterInk, a: 'right' });
     tag3(b, `${f(S.E, 3)} MeV photons`, Q([-0.5, 0, t.zb + 0.14]), { c: T.photon });
     tag3(b, nar ? `the first ${lenText(zm)}, magnified ${f(mag, 0)}×` : `The first ${lenText(zm)} of the water, magnified ${f(mag, 0)}×`, Q([B.x0 + B.len / 2, B.y, B.z + B.w / 2 + 0.03]), { w: 700 });
     if (inside) tag3(b, `z = ${f(S.z, 3)} cm`, Q([B.x0 + S.z / zm * B.len, B.y - B.w / 2, B.z - B.w / 2 - 0.02]), { c: T.accent, m: true });
@@ -924,7 +924,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     tag3(b, `central electrode ${sign}${S.V} V`, Q([0.02, 0, c.zc + c.Ro + 0.012]), { c: T.ink });
     tag3(b, 'air cavity, 0.6 cm³', Q([-c.L / 2 + 0.01, 0, c.zc - c.Ro - 0.012]), { s: 10.5 });
     tag3(b, 'graphite wall, earthed', Q([-0.03, 0.02, c.zc + c.Ro + 0.035]), { s: 10.5 });
-    tag3(b, 'water (cut away)', Q([-0.13, 0.0, 0.03]), { c: T.water, s: 10.5, a: 'left' });
+    tag3(b, 'water (cut away)', Q([-0.13, 0.0, 0.03]), { c: T.waterInk, s: 10.5, a: 'left' });
     tag3(b, S.beamC === 'proton' ? 'proton pulses, 1 kHz' : 'cobalt 60, continuous', Q([0, 0, 0.42]), { c: T.beam, s: 10.5 });
     tag3(b, 'electrometer', Q([0.3, -0.06, 0.12]), { s: 10.5 });
     let ky = b.y + 18 * p; const kx = b.x + 12 * p;

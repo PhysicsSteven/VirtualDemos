@@ -187,5 +187,9 @@ VDI18N.add('es', 'demo/photoelectric', {
 "Platinum cathode (emitter)":
   "Cátodo de platino (emisor)",
 "hf < φ : no electrons":
-  "hf < φ : sin electrones"
+  "hf < φ : sin electrones",
+"Light":
+  "Luz",
+"Close":
+  "Cerrar"
 });

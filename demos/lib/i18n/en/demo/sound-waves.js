@@ -212,5 +212,8 @@ VDI18N.add('en', 'demo/sound-waves', [
 "a {#} m person is {#} px tall",
 "at this scale (shown enlarged)",
 "<span>hidden: mystery</span><br><span>on its way</span>",
-"The unknown gas had v = {#} m/s at {#} °C (γ = {#}, M = {#} g/mol)."
+"The unknown gas had v = {#} m/s at {#} °C (γ = {#}, M = {#} g/mol).",
+"Close",
+"The last mystery material was copper (annealed), v = {#} m/s. A new one is in its lane.",
+"<span>hidden: mystery</span><br><span>arrived at {#} ms</span>"
 ]);

@@ -14,9 +14,9 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
 /* only what this demo needs beyond demos/lib/vd.css */
-:root { --face: #a1988c; --outside: rgba(166, 148, 124, 0.18); --pin: #35312c; --vortex: #ffffff; --vortex-edge: #1d4f8f; --lam: #a7740b; --left: #c0562f; --right: #2f6fc0; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --face: #bbb2a6; --outside: rgba(190, 164, 130, 0.12); --pin: #d9d2ca; --vortex: #ffffff; --vortex-edge: #9cc4ff; --lam: #e2b350; --left: #ff8a5c; --right: #6fb0ff; } }
-:root[data-theme="dark"] { --face: #bbb2a6; --outside: rgba(190, 164, 130, 0.12); --pin: #d9d2ca; --vortex: #ffffff; --vortex-edge: #9cc4ff; --lam: #e2b350; --left: #ff8a5c; --right: #6fb0ff; }
+:root { --face: #a1988c; --outside: rgba(166, 148, 124, 0.18); --pin: #35312c; --vortex: #ffffff; --vortex-edge: #1d4f8f; --lam: #a7740b; --lam-ink: #7c5608; --left: #c0562f; --right: #2f6fc0; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --face: #bbb2a6; --outside: rgba(190, 164, 130, 0.12); --pin: #d9d2ca; --vortex: #ffffff; --vortex-edge: #9cc4ff; --lam: #e2b350; --lam-ink: #e2b350; --left: #ff8a5c; --right: #6fb0ff; } }
+:root[data-theme="dark"] { --face: #bbb2a6; --outside: rgba(190, 164, 130, 0.12); --pin: #d9d2ca; --vortex: #ffffff; --vortex-edge: #9cc4ff; --lam: #e2b350; --lam-ink: #e2b350; --left: #ff8a5c; --right: #6fb0ff; }
 .stage { position: relative; display: flex; flex-direction: column; min-height: min-content; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
 :root[data-projector="on"] .stage { min-height: min-content; }
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
@@ -256,7 +256,7 @@
   const mT = (b) => b * BU * 1000, fromMT = (v) => v / 1000 / BU;
   const proj = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
   function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
-    T = {}; for (const k of ['canvas', 'surface', 'ink', 'muted', 'line', 'accent', 'face', 'outside', 'pin', 'vortex', 'vortex-edge', 'lam', 'left', 'right']) T[k.replace('-', '_')] = g('--' + k);
+    T = {}; for (const k of ['canvas', 'surface', 'ink', 'muted', 'line', 'accent', 'face', 'outside', 'pin', 'vortex', 'vortex-edge', 'lam', 'lam-ink', 'left', 'right']) T[k.replace('-', '_')] = g('--' + k);
     T.mono = g('--font-mono') || 'monospace'; T.ui = g('--font-ui') || 'system-ui, sans-serif'; T.dark = (getComputedStyle(document.body).backgroundColor.match(/\d+/g) || [255]).slice(0, 3).reduce((a, b) => a + +b, 0) < 300; }
 
   /* ---------- the simulation ---------- */
@@ -327,7 +327,7 @@
     if (S.graph === 'profile') {
       const A = axes({ x0: 0, x1: xmax, dx: 0.5, xd: 1, y0: 0, y1: 120, dy: 20, xl: 'position across the slab (µm)', yl: 'field inside (mT)' }), pr = profile(S.st, NB), w = xmax / NB;
       if (!S.blind) { cx.strokeStyle = T.lam; cx.setLineDash([5 * A.p, 4 * A.p]); cx.beginPath(); cx.moveTo(A.L, A.ys(mT(S.Ba))); cx.lineTo(A.L + A.w, A.ys(mT(S.Ba))); cx.stroke(); cx.setLineDash([]);
-        cx.fillStyle = T.lam; cx.textAlign = 'right'; cx.textBaseline = 'bottom'; cx.fillText('applied field', A.L + A.w - 4 * A.p, A.ys(mT(S.Ba)) - 2 * A.p); }
+        cx.fillStyle = T.lam_ink; cx.textAlign = 'right'; cx.textBaseline = 'bottom'; cx.fillText('applied field', A.L + A.w - 4 * A.p, A.ys(mT(S.Ba)) - 2 * A.p); }
       cx.fillStyle = T.accent; cx.globalAlpha = 0.75; for (let b = 0; b < NB; b++) { const x0 = A.xs(b * w), x1 = A.xs((b + 1) * w); cx.fillRect(x0 + 1, A.ys(Math.min(120, mT(pr[b]))), x1 - x0 - 2, A.ys(0) - A.ys(Math.min(120, mT(pr[b])))); } cx.globalAlpha = 1;
       cx.fillStyle = T.accent; cx.textAlign = 'left'; cx.textBaseline = 'top'; cx.fillText('bars: vortices per area × Φ0, in strips across the slab', A.L + 6 * A.p, 6 * A.p);
     } else {

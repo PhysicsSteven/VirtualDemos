@@ -173,5 +173,9 @@ VDI18N.add('es', 'demo/michelson', {
 "Sodium's two yellow lines, {#} nm apart. Their fringes drift in and out of step, so the rings fade and come back every {#} mm of mirror travel.":
   "Las dos líneas amarillas del sodio, separadas {#} nm. Sus franjas entran y salen de fase, así que los anillos se desvanecen y reaparecen cada {#} mm de recorrido del espejo.",
 "to scale, but mirror travel ×{#}, tilt ×{#}":
-  "a escala, pero recorrido del espejo ×{#}, inclinación ×{#}"
+  "a escala, pero recorrido del espejo ×{#}, inclinación ×{#}",
+"Light":
+  "Luz",
+"Close":
+  "Cerrar"
 });

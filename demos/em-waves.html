@@ -32,6 +32,8 @@
   --equi: #a7740b;
   --accent: #c4811c;
   --bf: #17855f;
+  --bf-ink: #0f6b4b;
+  --equi-ink: #7a5406;
   --bo: #7a45c0;
   --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
@@ -40,13 +42,13 @@
   :root:not([data-theme="light"]) {
     --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
     --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
-    --equi: #e2b350; --accent: #fbc26d; --bf: #4fd1a0; --bo: #b48cff; color-scheme: dark;
+    --equi: #e2b350; --accent: #fbc26d; --bf: #4fd1a0; --bf-ink: #4fd1a0; --equi-ink: #e2b350; --bo: #b48cff; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
   --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
-  --equi: #e2b350; --accent: #fbc26d; --bf: #4fd1a0; --bo: #b48cff; color-scheme: dark;
+  --equi: #e2b350; --accent: #fbc26d; --bf: #4fd1a0; --bf-ink: #4fd1a0; --equi-ink: #e2b350; --bo: #b48cff; color-scheme: dark;
 }
 :root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
@@ -658,7 +660,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function tokens() {
     const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
     T = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'),
-      gridStrong: g('--grid-strong'), pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), accent: g('--accent'), bf: g('--bf'), bo: g('--bo'),
+      gridStrong: g('--grid-strong'), pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), accent: g('--accent'), bf: g('--bf'), bfInk: g('--bf-ink'), equiInk: g('--equi-ink'), bo: g('--bo'),
       mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' };
   }
   function rgb(hex) { const h = hex.replace('#', ''); const n = parseInt(h.length === 3 ? h.split('').map((c) => c + c).join('') : h, 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; }
@@ -919,7 +921,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     let y = m.y + 14 * ps;
     for (const [col, nm, txt] of rows) {
       c.strokeStyle = col; c.lineWidth = 3 * ps; c.beginPath(); c.moveTo(m.x + 12 * ps, y); c.lineTo(m.x + 30 * ps, y); c.stroke();
-      label(c, nm, m.x + 36 * ps, y, col, 'left', 'middle', true);
+      label(c, nm, m.x + 36 * ps, y, col === T.bf ? T.bfInk : col === T.equi ? T.equiInk : col, 'left', 'middle', true);
       label(c, txt, m.x + 64 * ps, y, T.ink, 'left', 'middle');
       y += 18 * ps;
     }

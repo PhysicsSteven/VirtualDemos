@@ -100,5 +100,9 @@ VDI18N.add('en', 'demo/wave-power', [
 "A new unknown string is on the apparatus.",
 "hanger {#} g + {#} g = {#} g",
 "Start the vibrator first: the meter reads nothing while it is stopped.",
-"The unknown string had μ = {#} g/m."
+"The unknown string had μ = {#} g/m.",
+"Close",
+"Lower or raise the driver frequency by {#} Hz (Shift: {#} Hz)",
+"Raise or lower the vibrator amplitude by {#} mm",
+"{#}: too steep for the linear model, lower A or f"
 ]);

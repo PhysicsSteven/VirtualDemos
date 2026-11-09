@@ -1789,7 +1789,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     ctx.strokeStyle = 'rgba(0,0,0,0.35)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(0, -hb); ctx.lineTo(0, hb); ctx.stroke();
     ctx.beginPath(); ctx.moveTo(-hl, -hb); ctx.lineTo(hl, -hb); ctx.moveTo(-hl, hb); ctx.lineTo(hl, hb); ctx.stroke();
     ctx.beginPath(); ctx.ellipse(-vis * hl, 0, cw, hb, 0, -Math.PI / 2, Math.PI / 2, vis > 0); ctx.stroke();
-    ctx.fillStyle = 'rgba(255,255,255,0.95)'; ctx.font = `700 ${Math.min(hb * 1.2, 16 * sc)}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillStyle = T.dark ? 'rgba(20,16,12,0.96)' : 'rgba(255,255,255,0.95)'; ctx.font = `700 ${Math.min(hb * 1.2, 16 * sc)}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     ctx.fillText('N', hl * 0.52, 0.5); ctx.fillText('S', -hl * 0.52, 0.5);
     // grip ridges in the middle
     ctx.strokeStyle = 'rgba(255,255,255,0.6)'; ctx.lineWidth = 1.3 * ps;

@@ -52,9 +52,9 @@ table.rows input:focus { border-color: var(--accent); }
   .chips button, .btn, .proj, .spin, .seg button { min-height: 36px; }
   input[type="range"] { min-height: 28px; }
 }
-:root { --sky: #eaf2fb; --sky2: #f7fafd; --grass: #9cc58a; --grass-dark: #6f9c5d; --tape: #f2d36b; --tape-edge: #b8962e; --spk: #4c4338; --spk-b: #7a4fb0; --meter: #3b3328; --lcd: #c9e7c1; --lcd-ink: #2a2219; --wave: #2b60b5; --fit: #a7740b; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --sky: #0f1822; --sky2: #131d29; --grass: #2f4a2a; --grass-dark: #223820; --tape: #8a7536; --tape-edge: #5e4f22; --spk: #dad3ca; --spk-b: #b08ae0; --meter: #51483c; --lcd: #9fd39a; --lcd-ink: #17130e; --wave: #69a0ff; --fit: #e2b350; } }
-:root[data-theme="dark"] { --sky: #0f1822; --sky2: #131d29; --grass: #2f4a2a; --grass-dark: #223820; --tape: #8a7536; --tape-edge: #5e4f22; --spk: #dad3ca; --spk-b: #b08ae0; --meter: #51483c; --lcd: #9fd39a; --lcd-ink: #17130e; --wave: #69a0ff; --fit: #e2b350; }
+:root { --sky: #eaf2fb; --sky2: #f7fafd; --grass: #9cc58a; --grass-dark: #6f9c5d; --tape: #f2d36b; --tape-edge: #b8962e; --spk: #4c4338; --spk-b: #7a4fb0; --meter: #3b3328; --lcd: #c9e7c1; --lcd-ink: #2a2219; --wave: #2b60b5; --fit: #a7740b; --fit-ink: #7a5406; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --sky: #0f1822; --sky2: #131d29; --grass: #2f4a2a; --grass-dark: #223820; --tape: #8a7536; --tape-edge: #5e4f22; --spk: #dad3ca; --spk-b: #b08ae0; --meter: #51483c; --lcd: #9fd39a; --lcd-ink: #17130e; --wave: #69a0ff; --fit: #e2b350; --fit-ink: #e2b350; } }
+:root[data-theme="dark"] { --sky: #0f1822; --sky2: #131d29; --grass: #2f4a2a; --grass-dark: #223820; --tape: #8a7536; --tape-edge: #5e4f22; --spk: #dad3ca; --spk-b: #b08ae0; --meter: #51483c; --lcd: #9fd39a; --lcd-ink: #17130e; --wave: #69a0ff; --fit: #e2b350; --fit-ink: #e2b350; }
 .stage { min-height: 640px; }
 .rack { right: 10px; left: auto; top: 10px; }
 .rack .seg button { font-size: 0.76rem; padding: 3px 8px; }
@@ -208,7 +208,7 @@ table.rows input:focus { border-color: var(--accent); }
   let W = 0, H = 0, dpr = 1, T = null, geo = null;
   function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
     T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'), accent: g('--accent'),
-      sky: g('--sky'), sky2: g('--sky2'), grass: g('--grass'), grassDark: g('--grass-dark'), tape: g('--tape'), tapeEdge: g('--tape-edge'), spk: g('--spk'), spkB: g('--spk-b'), meter: g('--meter'), lcd: g('--lcd'), lcdInk: g('--lcd-ink'), wave: g('--wave'), fit: g('--fit'),
+      sky: g('--sky'), sky2: g('--sky2'), grass: g('--grass'), grassDark: g('--grass-dark'), tape: g('--tape'), tapeEdge: g('--tape-edge'), spk: g('--spk'), spkB: g('--spk-b'), meter: g('--meter'), lcd: g('--lcd'), lcdInk: g('--lcd-ink'), wave: g('--wave'), fit: g('--fit'), fitInk: g('--fit-ink'),
       mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; }
   const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
   const f = (v, d = 1) => (!isFinite(v) ? '—' : v.toFixed(d).replace('-', '−'));
@@ -238,7 +238,7 @@ table.rows input:focus { border-color: var(--accent); }
     /* the tape's case at the zero end */
     Gr.box(ctx, x0 - 26 * p, ty - 6 * p, 28 * p, 28 * p, { r: 8 * p, color: '#c23f2c', shadow: false }); Gr.screw(ctx, x0 - 12 * p, ty + 8 * p, 3 * p);
     const minor = S.view <= 4 ? 0.1 : 1, major = S.view <= 4 ? 0.5 : 4;
-    ctx.fillStyle = T.lcdInk; ctx.font = `${10 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    ctx.fillStyle = T.ink; ctx.font = `${10 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
     for (let i = 0; i <= Math.round(S.view / minor); i++) { const r = i * minor, x = X(r), big = Math.abs(r / major - Math.round(r / major)) < 1e-9;
       ctx.strokeStyle = T.tapeEdge; ctx.beginPath(); ctx.moveTo(x, ty); ctx.lineTo(x, ty + (big ? 9 : 4) * p); ctx.stroke(); if (big) ctx.fillText(`${+r.toFixed(1)}`, x, ty + 22 * p); }
     ctx.fillText('m', x1 + 14 * p, ty + 22 * p);
@@ -263,7 +263,7 @@ table.rows input:focus { border-color: var(--accent); }
           ctx.globalAlpha = 0.7; ctx.lineWidth = 1 * p; ctx.beginPath();
           for (let k = 1; k < n; k++) { const t = k / n; ctx.moveTo(...lerp(P[0], P[1], t)); ctx.lineTo(...lerp(P[3], P[2], t)); ctx.moveTo(...lerp(P[0], P[3], t)); ctx.lineTo(...lerp(P[1], P[2], t)); }
           ctx.stroke();
-          ctx.globalAlpha = 0.9; ctx.fillStyle = T.fit; ctx.font = `${n === m ? '700 ' : ''}${10.5 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+          ctx.globalAlpha = 1; ctx.fillStyle = T.fitInk; ctx.font = `${n === m ? '700 ' : ''}${10.5 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
           ctx.fillText(n === 1 ? `d = ${+d.toFixed(1)} m` : `${n}d`, q.x, Math.max(P[2][1], P[3][1]) + 4 * p);
           ctx.font = `${9.5 * p}px ${T.ui}`; ctx.fillText(`${n * n} square${n > 1 ? 's' : ''}`, q.x, Math.max(P[2][1], P[3][1]) + 17 * p); });
         ctx.globalAlpha = 0.85; ctx.fillStyle = T.ink; ctx.font = `600 ${11 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
@@ -275,7 +275,7 @@ table.rows input:focus { border-color: var(--accent); }
     /* the sphere through the meter: the source's power is spread over its area 4πr² */
     const rr = S.r * sc; ctx.globalAlpha = 1; ctx.strokeStyle = T.fit; ctx.lineWidth = 1.5 * p; ctx.setLineDash([6 * p, 5 * p]); ctx.beginPath(); ctx.arc(sx, sy, rr, -Math.PI / 2, Math.PI / 2); ctx.stroke(); ctx.setLineDash([]);
     const la = -Math.PI / 4, lx = sx + rr * Math.cos(la), ly = sy + rr * Math.sin(la);
-    if (ly > 60 * p) { ctx.fillStyle = T.fit; ctx.font = `700 ${12 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText(`sphere area 4πr² = ${f(4 * Math.PI * S.r * S.r, S.r < 3 ? 2 : 0)} m²`, Math.min(lx + 6 * p, W - 230 * p), ly - 4 * p); }
+    if (ly > 60 * p) { ctx.fillStyle = T.fitInk; ctx.font = `700 ${12 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText(`sphere area 4πr² = ${f(4 * Math.PI * S.r * S.r, S.r < 3 ? 2 : 0)} m²`, Math.min(lx + 6 * p, W - 230 * p), ly - 4 * p); }
     ctx.restore(); ctx.globalAlpha = 1;
     /* speaker A on its stand, and B beside it (drawn behind) */
     /* a loudspeaker on a tripod stand: pole, three legs, a cabinet with a tweeter over a woofer, facing the meter */

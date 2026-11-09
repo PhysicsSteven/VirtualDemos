@@ -17,10 +17,10 @@
 /* Layout: Earth, the orbit and the two clocks on the left, the rate against radius graph on the right; the rail on the right. */
 /* Layout: lab bench. The gas box and speed histogram fill the left, a narrow instrument rail sits on the right; stacks on phones. */
 
-:root { --earth: #6b8fb8; --sat: #61584c; --grav: #2b60b5; --speed: #b0452f; --net: #1f8a5a; }
+:root { --earth: #6b8fb8; --sat: #61584c; --grav: #2b60b5; --speed: #b0452f; --net: #1f8a5a; --net-ink: #1a7248; }
 :root { --star: rgba(70, 90, 125, 0.45); --land: #7fa36a; --ocean-deep: #4a6f99; --ice: #eef3f8; --atmo: rgba(120, 175, 235, 0.45); --atmo-clear: rgba(120, 175, 235, 0); --panel: #2f5d9e; --panel-line: rgba(255, 255, 255, 0.35); --dial: #ffffff; --shade: rgba(33, 26, 17, 0.3); }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --earth: #3d5a7a; --sat: #d3ccc4; --grav: #69a0ff; --speed: #ff8a70; --net: #4cd08f; --star: rgba(225, 235, 255, 0.85); --land: #4f6e44; --ocean-deep: #263c56; --ice: #c9d3de; --atmo: rgba(110, 170, 255, 0.40); --atmo-clear: rgba(110, 170, 255, 0); --panel: #3d6fb8; --panel-line: rgba(255, 255, 255, 0.25); --dial: #2e271d; --shade: rgba(0, 0, 0, 0.45); } }
-:root[data-theme="dark"] { --earth: #3d5a7a; --sat: #d3ccc4; --grav: #69a0ff; --speed: #ff8a70; --net: #4cd08f; --star: rgba(225, 235, 255, 0.85); --land: #4f6e44; --ocean-deep: #263c56; --ice: #c9d3de; --atmo: rgba(110, 170, 255, 0.40); --atmo-clear: rgba(110, 170, 255, 0); --panel: #3d6fb8; --panel-line: rgba(255, 255, 255, 0.25); --dial: #2e271d; --shade: rgba(0, 0, 0, 0.45); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --earth: #3d5a7a; --sat: #d3ccc4; --grav: #69a0ff; --speed: #ff8a70; --net: #4cd08f; --net-ink: #4cd08f; --star: rgba(225, 235, 255, 0.85); --land: #4f6e44; --ocean-deep: #263c56; --ice: #c9d3de; --atmo: rgba(110, 170, 255, 0.40); --atmo-clear: rgba(110, 170, 255, 0); --panel: #3d6fb8; --panel-line: rgba(255, 255, 255, 0.25); --dial: #2e271d; --shade: rgba(0, 0, 0, 0.45); } }
+:root[data-theme="dark"] { --earth: #3d5a7a; --sat: #d3ccc4; --grav: #69a0ff; --speed: #ff8a70; --net: #4cd08f; --net-ink: #4cd08f; --star: rgba(225, 235, 255, 0.85); --land: #4f6e44; --ocean-deep: #263c56; --ice: #c9d3de; --atmo: rgba(110, 170, 255, 0.40); --atmo-clear: rgba(110, 170, 255, 0); --panel: #3d6fb8; --panel-line: rgba(255, 255, 255, 0.25); --dial: #2e271d; --shade: rgba(0, 0, 0, 0.45); }
 :root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
 body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
@@ -173,7 +173,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, set() {} })))(can, { key: 'plot', axis: () => (W > 640 ? 'x' : 'y'), def: (a) => (a === 'x' ? 0.5 : 0.55), min: 0.3, max: 0.75, label: 'Divider between the orbit and the graph', onChange: () => draw() });
   function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
     T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'), accent: g('--accent'),
-      earth: g('--earth'), sat: g('--sat'), grav: g('--grav'), speed: g('--speed'), net: g('--net'), star: g('--star'), land: g('--land'), oceanDeep: g('--ocean-deep'), ice: g('--ice'), atmo: g('--atmo'), atmoClear: g('--atmo-clear'), panel: g('--panel'), panelLine: g('--panel-line'), dial: g('--dial'), shade: g('--shade'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; }
+      earth: g('--earth'), sat: g('--sat'), grav: g('--grav'), speed: g('--speed'), net: g('--net'), netInk: g('--net-ink'), star: g('--star'), land: g('--land'), oceanDeep: g('--ocean-deep'), ice: g('--ice'), atmo: g('--atmo'), atmoClear: g('--atmo-clear'), panel: g('--panel'), panelLine: g('--panel-line'), dial: g('--dial'), shade: g('--shade'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; }
   const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
   const f = (v, d = 2) => (!isFinite(v) ? '—' : (Math.abs(v) < 0.5 * 10 ** -d ? 0 : v).toFixed(d).replace('-', '−'));
   function sci(v, n = 3) { if (!isFinite(v)) return '—'; if (v === 0) return '0'; const e = Math.floor(Math.log10(Math.abs(v))); const SUP = { '-': '⁻', 0: '⁰', 1: '¹', 2: '²', 3: '³', 4: '⁴', 5: '⁵', 6: '⁶', 7: '⁷', 8: '⁸', 9: '⁹' };
@@ -362,6 +362,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     draw();
   }
   $('viewSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-view]'); if (b) setView(b.dataset.view); });
+  /* a dark halo under the labels drawn over the 3D scene, which is dark in both looks (the canvas itself is clear there) */
+  function halo(t, x, y) { ctx.save(); ctx.strokeStyle = 'rgba(14,11,7,0.8)'; ctx.lineWidth = 3 * ps(); ctx.lineJoin = 'round'; ctx.strokeText(t, x, y); ctx.restore(); }
   function draw() {
     if (!T || !W) return;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh);
@@ -372,11 +374,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (g3 && !use3()) g3.el.hidden = true;
     if (use3()) {
       const h3 = wide ? Hh : ph; ctx.clearRect(0, 0, pw, h3);
-      const Q = draw3(0, 0, pw, h3, gth, th, K), r = S.r / RE, lab = (q, t, col) => { ctx.fillStyle = col; ctx.font = `700 ${11 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillText(t, q[0], q[1] - 8 * p); };
-      { const q = Q(Math.cos(gth), Math.sin(gth), -0.04); ctx.fillStyle = '#ffd27a'; ctx.font = `700 ${11 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText('ground clock', q[0], q[1] + 8 * p); }
+      const Q = draw3(0, 0, pw, h3, gth, th, K), r = S.r / RE, lab = (q, t, col) => { ctx.fillStyle = col; ctx.font = `700 ${11 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; halo(t, q[0], q[1] - 8 * p); ctx.fillText(t, q[0], q[1] - 8 * p); };
+      { const q = Q(Math.cos(gth), Math.sin(gth), -0.04); ctx.fillStyle = '#ffd27a'; ctx.font = `700 ${11 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; halo('ground clock', q[0], q[1] + 8 * p); ctx.fillText('ground clock', q[0], q[1] + 8 * p); }
       const top = S.mode === 'orbit' ? Q(r * Math.cos(th), r * Math.sin(th), 0.08 * Math.max(r, 1.6)) : Q((1 + Math.max(r - 1, 0.06)) * Math.cos(gth), (1 + Math.max(r - 1, 0.06)) * Math.sin(gth), 0.04);
       lab(top, 'second clock', '#f6f3ee');
-      ctx.fillStyle = 'rgba(246,243,238,0.7)'; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText('drag to turn, wheel to zoom', pw / 2, h3 - 20 * p);
+      ctx.fillStyle = '#f6f3ee'; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; halo('drag to turn, wheel to zoom', pw / 2, h3 - 20 * p); ctx.fillText('drag to turn, wheel to zoom', pw / 2, h3 - 20 * p);
       ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.86; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(10 * p, 46 * p, Math.min(pw - 20 * p, 360 * p), 54 * p, 8 * p) : ctx.rect(10 * p, 46 * p, Math.min(pw - 20 * p, 360 * p), 54 * p); ctx.fill(); ctx.globalAlpha = 1;
     } else {
     stars(0, 0, pw, wide ? Hh : ph);
@@ -406,7 +408,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.textBaseline = 'top'; ctx.fillText(rText(rHi), gx0 + gw, gy0 + gh + 3); ctx.textAlign = 'left'; ctx.fillText('R', gx0, gy0 + gh + 3);
     if (!S.blind) for (const [w, col, lab] of [['g', T.grav, 'gravity'], ['s', T.speed, 'speed'], ['n', T.net, 'net']]) {
       ctx.strokeStyle = col; ctx.lineWidth = (w === 'n' ? 2.5 : 1.5) * p; ctx.beginPath(); for (let i = 0; i <= 200; i++) { const r = rLo + (rHi - rLo) * i / 200; const x = X(r), y = Y(fn(r, w)); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); } ctx.stroke();
-      ctx.fillStyle = col; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillText(lab, gx0 + gw - 4 * p, Y(fn(rHi, w)) - 3 * p);
+      ctx.fillStyle = w === 'n' ? T.netInk : col; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillText(lab, gx0 + gw - 4 * p, Y(fn(rHi, w)) - 3 * p);
     }
     ctx.strokeStyle = T.accent; ctx.setLineDash([3 * p, 3 * p]); ctx.beginPath(); ctx.moveTo(X(S.r), gy0); ctx.lineTo(X(S.r), gy0 + gh); ctx.stroke(); ctx.setLineDash([]);
   }

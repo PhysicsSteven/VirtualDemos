@@ -874,8 +874,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.save(); ctx.fillStyle = C.ink; ctx.font = `600 ${16 * ps}px ${C.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
     ctx.fillText(dateOf(S.T), 12, hy + 38 * ps);
     ctx.font = `${11 * ps}px ${C.mono}`; ctx.fillStyle = C.muted;
-    ctx.fillText('day ' + (Math.floor(wrapT(S.T)) + 1) + (on3 && hy ? ' · Sun and Earth not to scale' : ''), 12, hy + 52 * ps);
-    if (on3 && !hy) ctx.fillText('Sun and Earth not to scale', 12, 68 * ps);
+    const dayTxt = 'day ' + (Math.floor(wrapT(S.T)) + 1) + (on3 && hy ? ' · Sun and Earth not to scale' : '');
+    if (on3) { ctx.save(); ctx.strokeStyle = 'rgba(10,8,5,0.85)'; ctx.lineWidth = 3 * ps; ctx.lineJoin = 'round'; ctx.strokeText(dayTxt, 12, hy + 52 * ps); ctx.restore(); }
+    ctx.fillText(dayTxt, 12, hy + 52 * ps);
+    if (on3 && !hy) { ctx.save(); ctx.strokeStyle = 'rgba(10,8,5,0.85)'; ctx.lineWidth = 3 * ps; ctx.lineJoin = 'round'; ctx.strokeText('Sun and Earth not to scale', 12, 68 * ps); ctx.restore(); ctx.fillText('Sun and Earth not to scale', 12, 68 * ps); }
     // what today's tilt does, in the colors of the picture: the yellow dot is where the Sun is overhead, the blue ring is your
     // latitude, and the axis keeps one direction in space all year
     if (!(on3 && T3.cam === 'earth')) {

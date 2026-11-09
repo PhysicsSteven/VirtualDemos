@@ -240,6 +240,12 @@ VDI18N.add('es', 'demo/binding-energy', {
   "número de protones Z →",
 "{#} MeV per nucleon":
   "{#} MeV por nucleón",
+"⁶²Ni {#} MeV":
+  "⁶²Ni {#} MeV",
+"Chart of nuclides in 3D: height is B/A, color too":
+  "Carta de nucleidos en 3D: la altura es B/A, y el color también",
+"height above {#} MeV per nucleon, {#} squares per MeV · dark caps: stable · drag to turn, click a column":
+  "altura sobre {#} MeV por nucleón, {#} cuadros por MeV · tapas oscuras: estables · arrastra para girar, haz clic en una columna",
 "{#} protons, {#} neutrons, A = {#}":
   "{#} protones, {#} neutrones, A = {#}",
 "β⁺ decay or electron capture · half life {#} minutes":
@@ -448,6 +454,10 @@ VDI18N.add('es', 'demo/binding-energy', {
   "Carta de núclidos, coloreada por semivida",
 "half life; stable in ink":
   "semivida; estables en tinta",
+"Light":
+  "Ligeros",
+"Close":
+  "Cerrar",
 "e⁺ + ν (or an electron captured)":
   "e⁺ + ν (o un electrón capturado)",
 "Stable · {#}% of natural B":

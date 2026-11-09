@@ -429,7 +429,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     c.strokeStyle = T.caseEdge; c.lineWidth = 1; c.stroke();
     c.strokeStyle = 'rgba(255,255,255,0.18)'; c.beginPath(); c.moveTo(b.x + 7, b.y + 1.5); c.lineTo(b.x + b.w - 7, b.y + 1.5); c.stroke();
     c.fillStyle = T.aluDk; for (const [x, y] of [[b.x + 7, b.y + 7], [b.x + b.w - 7, b.y + 7], [b.x + 7, b.y + b.h - 7], [b.x + b.w - 7, b.y + b.h - 7]]) { c.beginPath(); c.arc(x, y, 1.8, 0, 7); c.fill(); }
-    c.fillStyle = T.muted; c.font = `700 ${Math.max(8, Math.min(10.5 * ps, b.w / 22))}px ${T.mono}`; c.textAlign = 'left'; c.textBaseline = 'top';
+    c.fillStyle = T.dark ? T.ink : T.muted; c.font = `700 ${Math.max(8, Math.min(10.5 * ps, b.w / 22))}px ${T.mono}`; c.textAlign = 'left'; c.textBaseline = 'top';
     c.fillText(title, b.x + 14, b.y + 9);
   }
   function knob(c, x, y, r, frac, hot, ps, lab) {

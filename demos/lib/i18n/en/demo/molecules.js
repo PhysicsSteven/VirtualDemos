@@ -269,5 +269,8 @@ VDI18N.add('en', 'demo/molecules', [
 "sizes in proportion to measured radii; the scale gives the separation",
 "turns faster (rotation)",
 "passes through (no vibration at this wavenumber)",
-"no dipole"
+"no dipole",
+"Light",
+"Close",
+"Change the separation of the atoms in {#} nanometer steps, the level in Energy levels, or the cursor in the HCl spectrum (Shift for bigger steps)"
 ]);

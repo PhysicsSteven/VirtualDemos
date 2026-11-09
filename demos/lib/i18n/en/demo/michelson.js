@@ -86,5 +86,7 @@ VDI18N.add('en', 'demo/michelson', [
 "M₂ tilted by half a minute of arc. Near equal paths the two images of the source sit side by side, and the fringes are nearly straight lines. Away from equal paths they curve into arcs of off center rings.",
 "White light makes fringes only within about a micrometer of equal paths, where each color's fringes still line up. Find the straight fringes with the red laser first, then switch to white light and turn the micrometer slowly.",
 "Sodium's two yellow lines, {#} nm apart. Their fringes drift in and out of step, so the rings fade and come back every {#} mm of mirror travel.",
-"to scale, but mirror travel ×{#}, tilt ×{#}"
+"to scale, but mirror travel ×{#}, tilt ×{#}",
+"Light",
+"Close"
 ]);

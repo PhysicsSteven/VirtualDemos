@@ -48,9 +48,9 @@ table.rows input:focus { border-color: var(--accent); }
 .chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
 @media (max-width: 820px) { .chips button { min-height: 36px; } }
 .readout dd.warn { color: var(--pos); }
-:root { --eyeball: #f4f1ec; --sclera: #d7d1ca; --lensc: #9cc3e6; --retina: #c23f2c; --ray: #b8692e; --glass: #6f9fd8; --np: #2f9a52; --fp: #a7740b; --virt: #a1988c; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --eyeball: #2c251d; --sclera: #544a3c; --lensc: #8a6d47; --retina: #ff7660; --ray: #f0b44a; --glass: #69a0ff; --np: #4cc07f; --fp: #e2b350; --virt: #978d7f; } }
-:root[data-theme="dark"] { --eyeball: #2c251d; --sclera: #544a3c; --lensc: #8a6d47; --retina: #ff7660; --ray: #f0b44a; --glass: #69a0ff; --np: #4cc07f; --fp: #e2b350; --virt: #978d7f; }
+:root { --eyeball: #f4f1ec; --sclera: #d7d1ca; --lensc: #9cc3e6; --retina: #c23f2c; --ray: #b8692e; --glass: #6f9fd8; --np: #2f9a52; --np-ink: #1f7a40; --fp: #a7740b; --virt: #a1988c; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --eyeball: #2c251d; --sclera: #544a3c; --lensc: #8a6d47; --retina: #ff7660; --ray: #f0b44a; --glass: #69a0ff; --np: #4cc07f; --np-ink: #4cc07f; --fp: #e2b350; --virt: #978d7f; } }
+:root[data-theme="dark"] { --eyeball: #2c251d; --sclera: #544a3c; --lensc: #8a6d47; --retina: #ff7660; --ray: #f0b44a; --glass: #69a0ff; --np: #4cc07f; --np-ink: #4cc07f; --fp: #e2b350; --virt: #978d7f; }
 </style>
 <link rel="stylesheet" id="vd-look" href="lib/look.css">
 <script id="vd-gear" src="lib/gear.js"></script>
@@ -247,7 +247,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const can = $('can'), ctx = can.getContext('2d'), stage = $('stage');
   let W = 0, Hh = 0, dpr = 1, T = null;
   function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
-    T = {}; for (const k of ['canvas', 'ink', 'muted', 'line', 'grid', 'accent', 'surface', 'relief', 'pos', 'eyeball', 'sclera', 'lensc', 'retina', 'ray', 'glass', 'np', 'fp', 'virt']) T[k] = g('--' + k);
+    T = {}; for (const k of ['canvas', 'ink', 'muted', 'line', 'grid', 'accent', 'surface', 'relief', 'pos', 'eyeball', 'sclera', 'lensc', 'retina', 'ray', 'glass', 'np', 'np-ink', 'fp', 'virt']) T[k] = g('--' + k);
     T.mono = g('--font-mono'); T.ui = g('--font-ui'); }
   const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
   const fmtD = (d) => (!isFinite(d) ? 'far away (∞)' : d >= 1 ? `${d.toFixed(2)} m` : `${(d * 100).toFixed(1)} cm`);
@@ -350,7 +350,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* range the eye can focus */
     const near = st.NP, far = st.FP, xa = X(near), xb = !isFinite(far) || far < 0 ? x0 : X(far);
     ctx.fillStyle = T.np; ctx.globalAlpha = 0.18; ctx.fillRect(Math.min(xa, xb), y - 10 * p, Math.abs(xa - xb), 20 * p); ctx.globalAlpha = 1;
-    ctx.fillStyle = T.np; ctx.fillRect(xa - 1.5 * p, y - 14 * p, 3 * p, 28 * p); txt('near point', xa, y - 22 * p, { a: 'center', s: 9, c: T.np, b: 1 });
+    ctx.fillStyle = T.np; ctx.fillRect(xa - 1.5 * p, y - 14 * p, 3 * p, 28 * p); txt('near point', xa, y - 22 * p, { a: 'center', s: 9, c: T['np-ink'], b: 1 });
     if (isFinite(far) && far > 0) { ctx.fillStyle = T.fp; ctx.fillRect(xb - 1.5 * p, y - 14 * p, 3 * p, 28 * p); txt('far point', xb, y - 22 * p, { a: 'center', s: 9, c: T.fp, b: 1 }); }
     /* eye and glasses */
     ctx.fillStyle = T.sclera; ctx.beginPath(); ctx.arc(x1 + 4 * p, y, 9 * p, 0, 7); ctx.fill(); txt('eye', x1 + 4 * p, y - 18 * p, { a: 'center', s: 9, c: T.muted });
@@ -461,7 +461,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (!S.blind && !isNaN(q.dof.near)) {
       const xa = X(Math.max(0.05, q.dof.near)), xb = X(q.dof.far);
       ctx.fillStyle = T.np; ctx.globalAlpha = 0.2; ctx.fillRect(Math.min(xa, xb), y - 10 * p, Math.abs(xa - xb), 20 * p); ctx.globalAlpha = 1;
-      txt('in focus', (xa + xb) / 2, y - 18 * p, { a: 'center', s: 9, c: T.np, b: 1 });
+      txt('in focus', (xa + xb) / 2, y - 18 * p, { a: 'center', s: 9, c: T['np-ink'], b: 1 });
     }
     /* the camera */
     const cx = x1 + 2 * p; VG.box(ctx, cx - 9 * p, y - 7 * p, 18 * p, 14 * p, { color: '#3e372f', r: 3, shadow: false }); ctx.fillStyle = '#6e675d'; ctx.beginPath(); ctx.arc(cx - 9 * p, y, 4 * p, 0, 7); ctx.fill();
@@ -535,7 +535,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       drawScaleCam(24 * p, W - 30 * p, topH * 0.62, q);
       ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(0, topH); ctx.lineTo(W, topH); ctx.stroke();
       drawCamera(0, topH, W, Hh - topH, q);
-      if (!S.blind) txt(q.sharp ? 'sharp' : 'blurred', 12 * p, topH + 16 * p, { s: 13, b: 1, c: q.sharp ? T.np : T.pos });
+      if (!S.blind) txt(q.sharp ? 'sharp' : 'blurred', 12 * p, topH + 16 * p, { s: 13, b: 1, c: q.sharp ? T['np-ink'] : T.pos });
       txt('enlarged view of the camera, to scale', 12 * p, Hh - 12 * p, { s: 9, c: T.muted });
       return;
     }
@@ -546,7 +546,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (narrow) { drawSeen(12 * p, topH + 30 * p, cwS, chS, st); drawEye(0, topH + chS + 30 * p, W, Hh - topH - chS - 30 * p, st); }
     else { drawEye(0, topH, W - cwS - 16 * p, Hh - topH, st); drawSeen(W - cwS - 12 * p, topH + 34 * p, cwS, chS, st); }
     const sharp = st.img.blur < SHARP;
-    if (!S.blind) txt(sharp ? 'sharp' : 'blurred', W - 12 * p, topH + 18 * p, { a: 'right', s: 13, b: 1, c: sharp ? T.np : T.pos });
+    if (!S.blind) txt(sharp ? 'sharp' : 'blurred', W - 12 * p, topH + 18 * p, { a: 'right', s: 13, b: 1, c: sharp ? T['np-ink'] : T.pos });
   }
   function resize() { dpr = window.devicePixelRatio || 1; const rc = stage.getBoundingClientRect(); W = rc.width; Hh = rc.height; can.width = Math.round(W * dpr); can.height = Math.round(Hh * dpr); can.style.width = W + 'px'; can.style.height = Hh + 'px'; draw(); }
   const retheme = () => { tokens(); draw(); };

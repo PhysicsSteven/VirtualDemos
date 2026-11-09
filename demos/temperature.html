@@ -14,9 +14,9 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
 /* only what this demo needs beyond demos/lib/vd.css */
-:root { --hot: #d2452b; --cold: #2f7fd6; --ta: #d2452b; --tb: #2f7fd6; --fit: #2f8a4e; --curve: #2a2219; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --hot: #ff7a5c; --cold: #74b0ff; --ta: #ff7a5c; --tb: #74b0ff; --fit: #66d38c; --curve: #eeeae4; } }
-:root[data-theme="dark"] { --hot: #ff7a5c; --cold: #74b0ff; --ta: #ff7a5c; --tb: #74b0ff; --fit: #66d38c; --curve: #eeeae4; }
+:root { --hot-ink: #b0381b; --hot: #d2452b; --cold: #2f7fd6; --ta: #d2452b; --tb: #2f7fd6; --fit: #2f8a4e; --curve: #2a2219; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --hot-ink: #ff7a5c; --hot: #ff7a5c; --cold: #74b0ff; --ta: #ff7a5c; --tb: #74b0ff; --fit: #66d38c; --curve: #eeeae4; } }
+:root[data-theme="dark"] { --hot-ink: #ff7a5c; --hot: #ff7a5c; --cold: #74b0ff; --ta: #ff7a5c; --tb: #74b0ff; --fit: #66d38c; --curve: #eeeae4; }
 .stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
 .stage-ctl .count { margin-left: auto; font-size: 0.82rem; color: var(--muted); }
@@ -441,7 +441,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function tokens() {
     const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
     T = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), accent: g('--accent'),
-      hot: g('--hot'), cold: g('--cold'), ta: g('--ta'), tb: g('--tb'), fit: g('--fit'), curve: g('--curve'), mono: g('--font-mono'), ui: g('--font-ui') };
+      hot: g('--hot'), hotInk: g('--hot-ink'), cold: g('--cold'), ta: g('--ta'), tb: g('--tb'), fit: g('--fit'), curve: g('--curve'), mono: g('--font-mono'), ui: g('--font-ui') };
   }
 
   // ---------- the pieces of each view ----------
@@ -496,7 +496,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       ctx.fillStyle = 'rgba(255,255,255,0.25)'; ctx.fillRect(x + 2, y + 2, s - 4, 2);
       ctx.strokeStyle = 'rgba(0,0,0,0.3)'; ctx.lineWidth = 1; ctx.strokeRect(x + 0.5, y + 0.5, s - 1, s - 1);
     }
-    if (label) { ctx.fillStyle = T.ink; ctx.font = `700 ${12 * proj()}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(label, cx, by + 6); }
+    if (label) { ctx.fillStyle = '#2a2219'; ctx.font = `700 ${12 * proj()}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(label, cx, by + 6); }
   }
   /* Heat drawn as dots, each carrying a fixed energy (a 1, 2, 5 step chosen so a few leave each second), so the number of dots that
      have crossed is the heat that has flowed: in Equilibrium a dot leaves each time the heat out of A passes another step, and in
@@ -521,7 +521,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const s = `each dot carries ${fmtJ(eqFlow.Ep)} · ${eqFlow.sent} have left ${dir > 0 ? 'A' : 'B'}`, tr = window.VDI18N ? VDI18N.t(s) : s;
       ctx.save(); ctx.font = `600 ${10 * p}px ${T.ui}`; const wide = ctx.measureText(tr).width > Math.abs(xb - xa) + 40 * p; ctx.restore();
       const parts = wide ? tr.split(' · ') : [tr], y0 = y - br - 44 * p - (parts.length - 1) * 13 * p;
-      const draw = () => parts.forEach((t, i) => VG.label(ctx, t, (xa + xb) / 2, y0 + i * 13 * p, { a: 'center', s: 10 * p, c: T.hot }));
+      const draw = () => parts.forEach((t, i) => VG.label(ctx, t, (xa + xb) / 2, y0 + i * 13 * p, { a: 'center', s: 10 * p, c: T.hotInk }));
       if (window.VDI18N) VDI18N.raw(draw); else draw();
     }
   }
@@ -566,7 +566,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     eqDots(st, xa, xb, barY, br, p);
     if (Math.abs(P) > 1e-3) { const w = Math.max(1.5, Math.min(8, 2 + Math.log10(1 + Math.abs(P)) * 4)) * p, dir = Math.sign(P);
       arrow(mx - dir * len / 2, barY - br - 14 * p, mx + dir * len / 2, barY - br - 14 * p, w, T.hot);
-      if (VG) VG.label(ctx, 'heat', mx, barY - br - 28 * p, { a: 'center', s: 10.5 * p, c: T.hot }); }
+      if (VG) VG.label(ctx, 'heat', mx, barY - br - 28 * p, { a: 'center', s: 10.5 * p, c: T.hotInk }); }
     /* probes and their meters */
     const lw = 96 * p, lh = 26 * p, ly = top - lh - 20 * p;
     for (const [cx, sz, tt, nm] of [[cA, sA, st.TA, 'A'], [cB, sB, st.TB, 'B']]) {

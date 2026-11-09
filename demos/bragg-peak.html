@@ -335,7 +335,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* the depth rule */
     G.shadow(ctx, (b.x0 + b.x1) / 2, benchY - 2 * p, (b.x1 - b.x0) * 0.55, 4 * p, 0.7);
     const ry = b.y1 + wall + 4 * p, rh = 17 * p, rg = ctx.createLinearGradient(0, ry, 0, ry + rh);
-    rg.addColorStop(0, d ? '#90887d' : '#ece9e5'); rg.addColorStop(1, d ? '#5e574e' : '#c8c1b8');
+    rg.addColorStop(0, d ? '#aaa296' : '#ece9e5'); rg.addColorStop(1, d ? '#8c8479' : '#c8c1b8');
     ctx.fillStyle = rg; ctx.beginPath(); ctx.roundRect(b.x0 - 34 * p, ry, b.x1 - b.x0 + 40 * p, rh, 2 * p); ctx.fill();
     const rink = d ? '#18140f' : '#322a21'; ctx.strokeStyle = rink; ctx.fillStyle = rink; ctx.lineWidth = 1; ctx.font = `600 ${10 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
     const ticks = niceTicks(0, S.zmax, 8), st = ticks.length > 1 ? ticks[1] - ticks[0] : S.zmax;
@@ -381,7 +381,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     G.box(ctx, -12 * p, cy - nh / 2, nx1 + 12 * p, nh, { color: photons ? (d ? '#5b6170' : '#6b7280') : (d ? '#4a5563' : '#566273'), r: 6 * p, shadow: false });
     G.box(ctx, nx1 - 4 * p, cy - nh * 0.32, 12 * p, nh * 0.64, { color: d ? '#847a6d' : '#948a7d', r: 3 * p, shadow: false });
     ctx.fillStyle = d ? '#ccbaa3' : '#ece4da'; ctx.fillRect(nx1 + 7 * p, cy - 5 * ky, 1.5 * p, 10 * ky);
-    G.plate(ctx, photons ? 'linac' : 'nozzle', (nx1 - 12 * p) / 2, cy - nh / 2 + 10 * p, { s: 7.5 * p });
+    G.plate(ctx, photons ? 'linac' : 'nozzle', (nx1 - 12 * p) / 2, cy - nh / 2 + 10 * p, { s: 7.5 * p, c: '#ffffff' });
     G.label(ctx, photons ? '6 MV photons' : S.view === 'pristine' ? `protons, ${sig(S.e, 4)} MeV` : `protons, ${S.L.length} layers`, 6 * p, cy + nh / 2 + 10 * p, { s: 10.5 * p, c: T.ink, alpha: 0.9 });
     /* the Bragg peak chamber on its scanning carriage, and the electrometer */
     const xd = b.x0 + S.z * sx, ch = Math.min((b.y1 - b.y0) * 0.8, 8.4 * ky), cw = Math.max(7 * p, Math.min(1 * sx, 14 * p)), cg = ctx.createLinearGradient(xd - cw / 2, 0, xd + cw / 2, 0);

@@ -16,9 +16,9 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
 /* only what this demo needs beyond demos/lib/vd.css */
-:root { --cond: #e8c64a; --therm: #3b8fe0; --merc: #d95c3c; --floor: #f2eee8; --floor-edge: #a69c8f; --touch: #2a9d8f; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --cond: #ffd95a; --therm: #5fb0ff; --merc: #ff7a5c; --floor: #251e15; --floor-edge: #665b4c; --touch: #4fd1c0; } }
-:root[data-theme="dark"] { --cond: #ffd95a; --therm: #5fb0ff; --merc: #ff7a5c; --floor: #251e15; --floor-edge: #665b4c; --touch: #4fd1c0; }
+:root { --cond: #e8c64a; --therm: #3b8fe0; --merc: #d95c3c; --floor: #f2eee8; --floor-edge: #a69c8f; --touch: #2a9d8f; --cond-ink: #7a5800; --merc-ink: #b0381b; --touch-ink: #1b7166; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --cond: #ffd95a; --therm: #5fb0ff; --merc: #ff7a5c; --floor: #251e15; --floor-edge: #665b4c; --touch: #4fd1c0; --cond-ink: #ffd95a; --merc-ink: #ff7a5c; --touch-ink: #4fd1c0; } }
+:root[data-theme="dark"] { --cond: #ffd95a; --therm: #5fb0ff; --merc: #ff7a5c; --floor: #251e15; --floor-edge: #665b4c; --touch: #4fd1c0; --cond-ink: #ffd95a; --merc-ink: #ff7a5c; --touch-ink: #4fd1c0; }
 .stage { position: relative; display: flex; flex-direction: column; min-height: min-content; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
 :root[data-projector="on"] .stage { min-height: min-content; }
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
@@ -341,7 +341,7 @@
   const fmtT = (t) => (t >= 1e-6 ? `${f(t * 1e6, 2)} µK` : `${f(t * 1e9, t < 1e-8 ? 2 : t < 1e-7 ? 1 : 0)} nK`);
   const fmtLen = (x) => (x >= 1e-6 ? `${f(x * 1e6, 2)} µm` : `${f(x * 1e9, 0)} nm`);
   function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
-    T = {}; for (const k of ['canvas', 'surface', 'ink', 'muted', 'line', 'accent', 'cond', 'therm', 'merc', 'floor', 'floor-edge', 'touch']) T[k.replace('-', '_')] = g('--' + k);
+    T = {}; for (const k of ['canvas', 'surface', 'ink', 'muted', 'line', 'accent', 'cond', 'therm', 'merc', 'floor', 'floor-edge', 'touch', 'cond-ink', 'merc-ink', 'touch-ink']) T[k.replace('-', '_')] = g('--' + k);
     T.mono = g('--font-mono') || 'monospace'; T.ui = g('--font-ui') || 'system-ui, sans-serif'; T.dark = (window.VD3 && VD3.dark()) || matchMedia('(prefers-color-scheme: dark)').matches; }
 
   /* ---------- the atoms: fixed random numbers, positions, directions, phases ---------- */
@@ -457,7 +457,7 @@
     if (dense != null) { ctx.fillStyle = T.line; ctx.globalAlpha = 0.55; ctx.fillRect(x0 + 4 * p, y0, w - 4 * p, Math.max(0, dense - y0)); ctx.globalAlpha = 1; }
     /* kT */
     if (S.marks) { const yk = Y(S.T * 1e9); if (yk > y0) { ctx.strokeStyle = T.merc; ctx.setLineDash([4 * p, 3 * p]); ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.moveTo(x0 + 2 * p, yk); ctx.lineTo(x0 + w + 4 * p, yk); ctx.stroke(); ctx.setLineDash([]);
-      ctx.fillStyle = T.merc; ctx.font = `700 ${10.5 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText('kT', x0 + w - 14 * p, yk - 2 * p); } }
+      ctx.fillStyle = T.merc_ink; ctx.font = `700 ${10.5 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText('kT', x0 + w - 14 * p, yk - 2 * p); } }
     /* one dot per atom, spread sideways by its place in the level */
     const counts = new Map();
     for (let i = 0; i < S.N; i++) { const k = lvl[i]; if (k < 0) continue; const c = counts.get(k) || 0; counts.set(k, c + 1);
@@ -468,7 +468,7 @@
     const step = niceStep(ladTop / 4); for (let e = step; e < ladTop * 0.98; e += step) { const y = Y(e); ctx.fillText(fmtE(e), x0 - 3 * p, y); ctx.fillRect(x0 - 2 * p, y - 0.5, 2 * p, 1); }
     ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.font = `${10.5 * p}px ${T.ui}`; ctx.fillStyle = T.muted;
     ctx.fillText(W < 640 ? 'E/k (nK)' : 'levels, E/k in nK', x0 - 4 * p, y0 + h + 5 * p);
-    if (!S.blind) { ctx.fillStyle = T.cond; ctx.font = `700 ${10.5 * p}px ${T.ui}`; ctx.fillText(`${Math.round(O.n0)} in the ground state`, x0 - 4 * p, y0 + h + 17 * p); }
+    if (!S.blind) { ctx.fillStyle = T.cond_ink; ctx.font = `700 ${10.5 * p}px ${T.ui}`; ctx.fillText(`${Math.round(O.n0)} in the ground state`, x0 - 4 * p, y0 + h + 17 * p); }
     ctx.restore();
   }
   const fmtE = (e) => (e >= 1000 ? `${f(e / 1000, e >= 10000 ? 0 : 1)} µK` : e >= 10 ? f(e, 0) : f(e, 1));
@@ -485,7 +485,7 @@
     ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
     for (const [t, lab] of [[1e-9, '1 nK'], [1e-8, '10 nK'], [1e-7, '100 nK'], [1e-6, '1 µK']]) { const y = Y(t); ctx.fillRect(cx + tube / 2, y - 0.5, 3 * p, 1); ctx.fillText(W < 640 ? lab.replace(' ', '') : lab, cx + tube / 2 + 5 * p, y); }
     if (S.marks && Td > TMIN && Td < TMAX) { const y = Y(Td); ctx.strokeStyle = T.touch; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.moveTo(cx - tube / 2 - 10 * p, y); ctx.lineTo(cx + tube / 2 + 2 * p, y); ctx.stroke();
-      ctx.fillStyle = T.touch; ctx.font = `700 ${10 * p}px ${T.ui}`; ctx.textAlign = 'right'; ctx.fillText(S.trap ? 'T_c' : W < 640 ? 'touch' : 'packets touch', cx - tube / 2 - 12 * p, y - 6 * p); ctx.fillText(fmtT(Td), cx - tube / 2 - 12 * p, y + 6 * p); }
+      ctx.fillStyle = T.touch_ink; ctx.font = `700 ${10 * p}px ${T.ui}`; ctx.textAlign = 'right'; ctx.fillText(S.trap ? 'T_c' : W < 640 ? 'touch' : 'packets touch', cx - tube / 2 - 12 * p, y - 6 * p); ctx.fillText(fmtT(Td), cx - tube / 2 - 12 * p, y + 6 * p); }
     ctx.fillStyle = T.ink; ctx.font = `700 ${11.5 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(fmtT(S.T), cx, y0 + h + 2 * bulb + 2 * p);
     ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.fillText(S.cool < 0 ? 'cooling' : S.cool > 0 ? 'warming' : 'held', cx, y0 + h + 2 * bulb + 16 * p);
     ctx.restore();
@@ -568,7 +568,7 @@
     ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.font = `${11 * p}px ${T.ui}`; ctx.fillText('temperature (logarithmic)', L + w / 2, H - 4 * p);
     ctx.save(); ctx.translate(14 * p, Tp + h / 2); ctx.rotate(-Math.PI / 2); ctx.textBaseline = 'middle'; ctx.fillText('share of the atoms in the ground state, N₀/N', 0, 0); ctx.restore();
     if (S.marks && Td > TMIN && Td < TMAX) { ctx.strokeStyle = T.touch; ctx.setLineDash([5 * p, 4 * p]); ctx.lineWidth = 1.3 * p; ctx.beginPath(); ctx.moveTo(X(Td), Tp); ctx.lineTo(X(Td), Tp + h); ctx.stroke(); ctx.setLineDash([]);
-      ctx.fillStyle = T.touch; ctx.font = `700 ${10.5 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText(S.trap ? `T_c = ħω√(6N)/πk = ${fmtT(Td)} (many atoms)` : `packets touch: Nλ²/L² = 1 at ${fmtT(Td)}`, X(Td) + 5 * p, Tp + 4 * p); }
+      ctx.fillStyle = T.touch_ink; ctx.font = `700 ${10.5 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText(S.trap ? `T_c = ħω√(6N)/πk = ${fmtT(Td)} (many atoms)` : `packets touch: Nλ²/L² = 1 at ${fmtT(Td)}`, X(Td) + 5 * p, Tp + 4 * p); }
     if (!S.blind) { ctx.strokeStyle = T.cond; ctx.lineWidth = 2.2 * p; ctx.beginPath(); pts.forEach((q, i) => { if (i) ctx.lineTo(X(q[0]), Y(q[1])); else ctx.moveTo(X(q[0]), Y(q[1])); }); ctx.stroke();
       ctx.fillStyle = T.cond; ctx.beginPath(); ctx.arc(X(S.T), Y(O.frac), 5 * p, 0, 7); ctx.fill();
       ctx.fillStyle = T.ink; ctx.font = `700 ${11 * p}px ${T.mono}`; ctx.textAlign = X(S.T) > L + w * 0.6 ? 'right' : 'left'; ctx.textBaseline = 'bottom';

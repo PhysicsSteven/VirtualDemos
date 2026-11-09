@@ -461,7 +461,7 @@ details.more[open] summary { margin-bottom: 6px; }
   }
 
   // ---------- drawing ----------
-  function txt(s, x, y, o = {}) { const p = ps(); ctx.fillStyle = o.c || T.ink; ctx.font = `${o.b ? '700 ' : ''}${(o.s || 11) * p}px ${o.m ? T.mono : T.ui}`; ctx.textAlign = o.a || 'left'; ctx.textBaseline = o.bl || 'middle'; ctx.fillText(s, x, y); }
+  function txt(s, x, y, o = {}) { const p = ps(); ctx.fillStyle = o.c || T.ink; ctx.font = `${o.b ? '700 ' : ''}${(o.s || 11) * p}px ${o.m ? T.mono : T.ui}`; ctx.textAlign = o.a || 'left'; ctx.textBaseline = o.bl || 'middle'; if (o.halo) { ctx.save(); ctx.lineJoin = 'round'; ctx.lineWidth = 3 * p; ctx.strokeStyle = o.halo; ctx.strokeText(s, x, y); ctx.restore(); } ctx.fillText(s, x, y); }
   /* dust heaps: grains counted in bins and drawn as a heap profile on the tube floor */
   function drawDust(xd, ppm, floor, x0m, x1m, binM, hScale, clipL, clipR) {
     const nb = Math.ceil((x1m - x0m) / binM), bins = new Array(nb).fill(0);
@@ -551,8 +551,8 @@ details.more[open] summary { margin-bottom: 6px; }
     Object.assign($('plunger').style, { left: `${GEO.xl - 6 * p}px`, top: `${tTop - 4 * p}px`, width: `${18 * p}px`, height: `${tBot - tTop + 8 * p}px` });
     /* meter rule under the tube, 0 at the disc */
     const rl = tBot + 22 * p; Gr.shadow(ctx, xd + 0.7 * ppm, rl + 15 * p, 0.72 * ppm, 3 * p, 0.6);
-    { const rg = ctx.createLinearGradient(0, rl, 0, rl + 14 * p); rg.addColorStop(0, Gr.mix(T.rule.startsWith('#') ? T.rule : '#f1e3b5', '#ffffff', 0.25)); rg.addColorStop(1, T.rule); ctx.fillStyle = rg; } ctx.fillRect(xd, rl, 1.4 * ppm, 14 * p); ctx.strokeStyle = T.ink; ctx.lineWidth = 1;
-    for (let i = 0; i <= 140; i++) { const x = xd + i / 100 * ppm, big = i % 10 === 0; if (!big && ppm < 250) continue; ctx.beginPath(); ctx.moveTo(x, rl); ctx.lineTo(x, rl + (big ? 7 : 3) * p); ctx.stroke(); if (big && (!narrow || i % 20 === 0)) txt(String(i), x, rl + 10.5 * p, { s: 8, a: 'center', m: 1 }); }
+    { const rg = ctx.createLinearGradient(0, rl, 0, rl + 14 * p); rg.addColorStop(0, Gr.mix(T.rule.startsWith('#') ? T.rule : '#f1e3b5', '#ffffff', Gr.dark() ? 0.06 : 0.25)); rg.addColorStop(1, T.rule); ctx.fillStyle = rg; } ctx.fillRect(xd, rl, 1.4 * ppm, 14 * p); ctx.strokeStyle = T.ink; ctx.lineWidth = 1;
+    for (let i = 0; i <= 140; i++) { const x = xd + i / 100 * ppm, big = i % 10 === 0; if (!big && ppm < 250) continue; ctx.beginPath(); ctx.moveTo(x, rl); ctx.lineTo(x, rl + (big ? 7 : 3) * p); ctx.stroke(); if (big && (!narrow || i % 20 === 0)) txt(String(i), x, rl + 10.5 * p, { s: 8, a: 'center', m: 1, halo: Gr.dark() ? 'rgba(26,20,13,0.9)' : undefined }); }
     txt('cm', xd + 1.4 * ppm + 4 * p, rl + 7 * p, { s: 8, m: 1, c: T.muted });
     /* the pointer */
     ctx.strokeStyle = T.accent; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(GEO.xx, tTop - 10 * p); ctx.lineTo(GEO.xx, rl + 14 * p); ctx.stroke();

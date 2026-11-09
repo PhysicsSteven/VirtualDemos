@@ -394,7 +394,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* height scale */
     const rx = cx - cw / 2 - 40 * p; ctx.fillStyle = dark() ? '#d9cfae' : '#f3e7c0'; ctx.fillRect(rx, wallTop, 22 * p, base - wallTop);
     ctx.strokeStyle = '#3a3428'; ctx.fillStyle = '#3a3428'; ctx.font = `${9 * p}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.lineWidth = 1;
-    const st = mm * 10 < 6 ? 50 : 10; for (let k = 0; k * mm <= base - wallTop; k += st) { const y = base - k * mm, big = k % (st * 5) === 0; ctx.beginPath(); ctx.moveTo(rx + 22 * p, y); ctx.lineTo(rx + 22 * p - (big ? 10 : 5) * p, y); ctx.stroke(); if (big) ctx.fillText(String(k), rx + 8 * p, y); }
+    const st = mm * 10 < 6 ? 50 : 10; for (let k = 0; k * mm <= base - wallTop; k += st) { const y = base - k * mm, big = k % (st * 5) === 0; ctx.beginPath(); ctx.moveTo(rx + 22 * p, y); ctx.lineTo(rx + 22 * p - (big ? 10 : 5) * p, y); ctx.stroke(); if (big) { ctx.save(); ctx.lineJoin = 'round'; ctx.lineWidth = 3.5 * p; ctx.strokeStyle = dark() ? '#d9cfae' : '#f3e7c0'; ctx.strokeText(String(k), rx + 8 * p, y); ctx.restore(); ctx.fillText(String(k), rx + 8 * p, y); } }
     if (VG) VG.label(ctx, 'mm', rx + 11 * p, wallTop - 8 * p, { s: 9.5 * p, a: 'center' });
     /* meters */
     const mx = Math.min(W - 160 * p, cx + cw / 2 + 120 * p), mw = 132 * p, mh = 28 * p;
@@ -411,7 +411,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       let xx = bx; for (const [, v, c] of parts) { const ww = bw * v / tot; ctx.fillStyle = c; ctx.fillRect(xx, byy, ww, bh); xx += ww; }
       let yy = byy + bh + 14 * p; for (const [nm, v, c] of parts) { if (v < 1e-9) continue; ctx.fillStyle = c; ctx.fillRect(bx, yy - 5 * p, 10 * p, 10 * p); if (VG) VG.label(ctx, `${nm}: ${f(100 * v / tot, 1)}%`, bx + 16 * p, yy, { s: 10.5 * p, c: T.ink }); yy += 22 * p; }
     }
-    if (VG) VG.label(ctx, `${S.heat.gas === 'mystery' ? 'mystery gas' : g.name.split(',')[0].toLowerCase()}, ${f(h.n, 2)} mol${S.blind ? '' : ''}; picture of molecules only`, cx, by + 16 * p, { a: 'center', s: 10.5 * p });
+    if (VG) VG.label(ctx, `${S.heat.gas === 'mystery' ? 'mystery gas' : g.name.split(',')[0].toLowerCase()}, ${f(h.n, 2)} mol${S.blind ? '' : ''}; picture of molecules only`, cx, by + 16 * p, { a: 'center', s: 10.5 * p, c: T.ink });
   }
   function drawRu() {
     const p = proj(), by = scene(), r = ruchardt(S.ru.gas, S.ru.V / 1000), x = S.ru.dropped ? ballX(r, S.ru.x0, S.ru.t) : 0;

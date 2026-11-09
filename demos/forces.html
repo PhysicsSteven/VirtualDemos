@@ -23,10 +23,10 @@
 <style>
 /* Layout: the ramp and its free body diagram on the left; the instrument rail on the right. */
 /* Layout: lab bench. The gas box and speed histogram fill the left, a narrow instrument rail sits on the right; stacks on phones. */
-:root { --w: #73695c; --n: #2b60b5; --fr: #b0452f; --ap: #a88456; --tn: #a7740b; --net: #2f7d4f; --wood: #c9a77a; --ramp: #dfe5ec; }
+:root { --w: #73695c; --n: #2b60b5; --fr: #b0452f; --ap: #a88456; --tn: #a7740b; --ap-ink: #6e5430; --tn-ink: #7f5a06; --net: #2f7d4f; --wood: #c9a77a; --ramp: #dfe5ec; }
 :root { --wall: #f4f2ef; --wall-line: #ebe7e1; --floor: #e4ded3; --floor-line: #d2cabd; --bench: #c49c6b; --board: #d6b88f; --grain: #8a6338; --metal: #b7afa5; --metal-dark: #766d61; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --w: #cac1b6; --n: #69a0ff; --fr: #ff8a70; --ap: #b49bff; --tn: #e2b350; --net: #5fcf8a; --wood: #8d6c45; --ramp: #2a3442; --wall: #211b13; --wall-line: #2c241b; --floor: #27221c; --floor-line: #352e26; --bench: #5c4630; --board: #6f5539; --grain: #2e2014; --metal: #6d6458; --metal-dark: #b1a89c; } }
-:root[data-theme="dark"] { --w: #cac1b6; --n: #69a0ff; --fr: #ff8a70; --ap: #b49bff; --tn: #e2b350; --net: #5fcf8a; --wood: #8d6c45; --ramp: #2a3442; --wall: #211b13; --wall-line: #2c241b; --floor: #27221c; --floor-line: #352e26; --bench: #5c4630; --board: #6f5539; --grain: #2e2014; --metal: #6d6458; --metal-dark: #b1a89c; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --w: #cac1b6; --n: #69a0ff; --fr: #ff8a70; --ap: #b49bff; --tn: #e2b350; --ap-ink: #b49bff; --tn-ink: #e2b350; --net: #5fcf8a; --wood: #8d6c45; --ramp: #2a3442; --wall: #211b13; --wall-line: #2c241b; --floor: #27221c; --floor-line: #352e26; --bench: #5c4630; --board: #6f5539; --grain: #2e2014; --metal: #6d6458; --metal-dark: #b1a89c; } }
+:root[data-theme="dark"] { --w: #cac1b6; --n: #69a0ff; --fr: #ff8a70; --ap: #b49bff; --tn: #e2b350; --ap-ink: #b49bff; --tn-ink: #e2b350; --net: #5fcf8a; --wood: #8d6c45; --ramp: #2a3442; --wall: #211b13; --wall-line: #2c241b; --floor: #27221c; --floor-line: #352e26; --bench: #5c4630; --board: #6f5539; --grain: #2e2014; --metal: #6d6458; --metal-dark: #b1a89c; }
 :root[data-projector="on"] { font-size: 125%; }
 .bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; }
 .bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 12px; }
@@ -334,7 +334,7 @@ table.rows input:focus { border-color: var(--accent); }
   function tokens() {
     const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
     T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'), accent: g('--accent'),
-      w: g('--w'), n: g('--n'), fr: g('--fr'), ap: g('--ap'), tn: g('--tn'), net: g('--net'), wood: g('--wood'), ramp: g('--ramp'), wall: g('--wall'), wallLine: g('--wall-line'), floor: g('--floor'), floorLine: g('--floor-line'), bench: g('--bench'), board: g('--board'), grain: g('--grain'), metal: g('--metal'), metalDark: g('--metal-dark'), surface: g('--surface'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' };
+      w: g('--w'), n: g('--n'), fr: g('--fr'), ap: g('--ap'), tn: g('--tn'), apInk: g('--ap-ink'), tnInk: g('--tn-ink'), net: g('--net'), wood: g('--wood'), ramp: g('--ramp'), wall: g('--wall'), wallLine: g('--wall-line'), floor: g('--floor'), floorLine: g('--floor-line'), bench: g('--bench'), board: g('--board'), grain: g('--grain'), metal: g('--metal'), metalDark: g('--metal-dark'), surface: g('--surface'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' };
   }
   const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
   // scenery: wood grain streaks made once from a seeded generator, as fractions of the piece they decorate
@@ -604,7 +604,7 @@ table.rows input:focus { border-color: var(--accent); }
     ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1 - Math.cos(ang) * hl * 0.8, y1 - Math.sin(ang) * hl * 0.8); ctx.stroke(); ctx.setLineDash([]);
     ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x1 - Math.cos(ang - 0.42) * hl, y1 - Math.sin(ang - 0.42) * hl); ctx.lineTo(x1 - Math.cos(ang + 0.42) * hl, y1 - Math.sin(ang + 0.42) * hl); ctx.closePath(); ctx.fill();
     if (lab) { ctx.font = `700 ${12 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; const sd = (side || 0) * 15 * p, tx = x1 + Math.cos(ang) * 14 * p - Math.sin(ang) * sd, ty = y1 + Math.sin(ang) * 14 * p + Math.cos(ang) * sd;
-      const w = ctx.measureText(lab).width + 6 * p; ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.85; ctx.fillRect(tx - w / 2, ty - 8 * p, w, 16 * p); ctx.globalAlpha = 1; ctx.fillStyle = col; ctx.fillText(lab, tx, ty); }
+      const w = ctx.measureText(lab).width + 6 * p; ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.85; ctx.fillRect(tx - w / 2, ty - 8 * p, w, 16 * p); ctx.globalAlpha = 1; ctx.fillStyle = col === T.ap ? T.apInk : col === T.tn ? T.tnInk : col; ctx.fillText(lab, tx, ty); }
   }
   function draw() {
     if (!T || !W) return;

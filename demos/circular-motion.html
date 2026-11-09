@@ -16,7 +16,7 @@
 <style>
 /* Layout: the moving object and its free body diagram on the left; the instrument rail on the right. */
 /* Layout: lab bench. The gas box and speed histogram fill the left, a narrow instrument rail sits on the right; stacks on phones. */
-:root { --w: #73695c; --n: #2b60b5; --fr: #b0452f; --tn: #a7740b; --net: #2f7d4f; --vel: #a88456; --road: #ebe6e0; }
+:root { --w: #73695c; --n: #2b60b5; --fr: #b0452f; --tn: #a7740b; --tn-ink: #7a5406; --net: #2f7d4f; --vel: #a88456; --vel-ink: #735526; --road: #ebe6e0; }
 /* scenery: tabletop, grass, trees, curbs, coaster, sky */
 :root { --table: #efe6d6; --table-grain: #e2d5bd; --table-edge: #cdbb98; --peg: #8a6a45; --grass: #e3ecd9; --tuft: #c2d4ae; --tree: #b5cfa6; --tree-dark: #8db27e;
   --kerb: #ebb2a9; --kerb2: #ffffff; --lane: #ffffff; --skid: #6a635a; --glass: #c4d8ec; --tyre: #35312c; --sky-top: #d3e6f6; --sky-bot: #f1f6fb; --cloud: #ffffff;
@@ -27,8 +27,8 @@
 :root[data-theme="dark"] { --table: #27231e; --table-grain: #2f2a23; --table-edge: #463b2e; --peg: #a88560; --grass: #142019; --tuft: #1f3122; --tree: #1d3123; --tree-dark: #284430;
   --kerb: #7a3d36; --kerb2: #c9c2ba; --lane: #7d7468; --skid: #0a0805; --glass: #5f7d9c; --tyre: #0a0805; --sky-top: #0a1320; --sky-bot: #162133; --cloud: #253043;
   --ground: #172317; --steel: #645a4e; --shine: rgba(255, 255, 255, 0.28); --own-shadow: rgba(0, 0, 0, 0.4); }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --w: #cac1b6; --n: #69a0ff; --fr: #ff8a70; --tn: #e2b350; --net: #5fcf8a; --vel: #b49bff; --road: #40372c; } }
-:root[data-theme="dark"] { --w: #cac1b6; --n: #69a0ff; --fr: #ff8a70; --tn: #e2b350; --net: #5fcf8a; --vel: #b49bff; --road: #40372c; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --w: #cac1b6; --n: #69a0ff; --fr: #ff8a70; --tn: #e2b350; --tn-ink: #e2b350; --net: #5fcf8a; --vel: #b49bff; --vel-ink: #b49bff; --road: #40372c; } }
+:root[data-theme="dark"] { --w: #cac1b6; --n: #69a0ff; --fr: #ff8a70; --tn: #e2b350; --tn-ink: #e2b350; --net: #5fcf8a; --vel: #b49bff; --vel-ink: #b49bff; --road: #40372c; }
 :root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
 body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
@@ -228,7 +228,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, set() {} })))(can, { key: 'fbd', axis: () => (W > 760 ? 'x' : 'y'), def: (a) => (a === 'x' ? 0.62 : 0.58), min: 0.4, max: 0.8, snaps: [0.5, 2 / 3, 0.75], label: 'Divider between the motion and the free body diagram', onChange: () => draw() });
   function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
     T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'), accent: g('--accent'),
-      w: g('--w'), n: g('--n'), fr: g('--fr'), tn: g('--tn'), net: g('--net'), vel: g('--vel'), road: g('--road'), 
+      w: g('--w'), n: g('--n'), fr: g('--fr'), tn: g('--tn'), tnInk: g('--tn-ink') || g('--tn'), velInk: g('--vel-ink') || g('--vel'), net: g('--net'), vel: g('--vel'), road: g('--road'), 
       table: g('--table'), tableGrain: g('--table-grain'), tableEdge: g('--table-edge'), peg: g('--peg'), grass: g('--grass'), tuft: g('--tuft'), tree: g('--tree'), treeDark: g('--tree-dark'),
       kerb: g('--kerb'), kerb2: g('--kerb2'), lane: g('--lane'), skid: g('--skid'), glass: g('--glass'), tyre: g('--tyre'), skyTop: g('--sky-top'), skyBot: g('--sky-bot'), cloud: g('--cloud'),
       ground: g('--ground'), steel: g('--steel'), shine: g('--shine'), shadow: g('--own-shadow'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; }
@@ -251,6 +251,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   /* a force for the diagram: 0.1 N steps under 100 N, whole newtons with commas above (11,772 N, not 11772.0 N) */
   const fN = (v) => (Math.abs(v) < 100 ? f(v, 1) : Math.round(v).toLocaleString('en-US'));
   let lblBox = null;   /* [left, right] of the pane the arrow labels must stay in (the free body diagram) */
+  const inkOf = (c) => (c === T.tn ? T.tnInk : c === T.vel ? T.velInk : c);   /* label text: a darker shade of the arrow's own hue in Day */
   function arrow(x0, y0, dx, dy, col, lw, lab, side) {
     const p = ps(), L = Math.hypot(dx, dy); if (L < 2) return;
     const x1 = x0 + dx, y1 = y0 + dy, ang = Math.atan2(dy, dx), hl = Math.min(12 * p, L * 0.5);
@@ -263,7 +264,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       if (Math.abs(c) > 0.45) { tx = x1 + Math.sign(c) * 8 * p; ty = y1 + sn * 10 * p + (side || 0) * 12 * p; x0b = c < 0 ? tx - w : tx; }
       else { tx = x1; ty = y1 + Math.sign(sn) * 14 * p; x0b = tx - w / 2 + (side || 0) * (w / 2 + 8 * p); }   /* side moves a vertical arrow's label off the shaft */
       if (lblBox) x0b = Math.max(lblBox[0] + 4 * p, Math.min(lblBox[1] - w - 4 * p, x0b));   /* keep the label inside its pane */
-      ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.85; ctx.fillRect(x0b, ty - 8 * p, w, 16 * p); ctx.globalAlpha = 1; ctx.fillStyle = col; ctx.textAlign = 'left'; ctx.fillText(lab, x0b + 3 * p, ty); }
+      ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.85; ctx.fillRect(x0b, ty - 8 * p, w, 16 * p); ctx.globalAlpha = 1; ctx.fillStyle = inkOf(col); ctx.textAlign = 'left'; ctx.fillText(lab, x0b + 3 * p, ty); }
   }
   function draw() {
     if (!T || !W) return;
@@ -286,7 +287,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     else { x = cx + R * ux; y = cy + R * uy; vx = loopView ? Math.cos(th) : -Math.sin(th); vy = loopView ? -Math.sin(th) : -Math.cos(th); if (loopView && S.angVel < 0) { vx = -vx; vy = -vy; } }   /* sliding back down */
     if (!free) { const vm = Math.hypot(vx, vy); vx /= vm; vy /= vm; }
     if (u3) {   // the 3D view draws the road, the car and its arrows; this canvas keeps their labels, the status line and the free body diagram
-      const R3 = render3((x - cx) / R * S.r, -(y - cy) / R * S.r, Math.atan2(-vy, vx), sw, wide ? H : sh, !free && !bl), lab = (q, t, c) => { const a = R3.Q(q); ctx.font = `700 ${12 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; const w = ctx.measureText(t).width + 6 * p; ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.8; ctx.fillRect(a[0] + 4 * p, a[1] - 8 * p, w, 16 * p); ctx.globalAlpha = 1; ctx.fillStyle = c; ctx.fillText(t, a[0] + 7 * p, a[1]); };
+      const R3 = render3((x - cx) / R * S.r, -(y - cy) / R * S.r, Math.atan2(-vy, vx), sw, wide ? H : sh, !free && !bl), lab = (q, t, c) => { const a = R3.Q(q); ctx.font = `700 ${12 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; const w = ctx.measureText(t).width + 6 * p; ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.8; ctx.fillRect(a[0] + 4 * p, a[1] - 8 * p, w, 16 * p); ctx.globalAlpha = 1; ctx.fillStyle = inkOf(c); ctx.fillText(t, a[0] + 7 * p, a[1]); };
       const o = R3.o, hd = Math.atan2(-vy, vx); lab([o[0] + Math.cos(hd) * R3.vL, o[1] + Math.sin(hd) * R3.vL, o[2]], 'v', T.vel);
       if (!free && !bl) { const n = Math.hypot(o[0], o[1]) || 1; lab([o[0] - o[0] / n * 0.25 * S.r, o[1] - o[1] / n * 0.25 * S.r, o[2]], 'a = v²/r', T.net); }
     } else {

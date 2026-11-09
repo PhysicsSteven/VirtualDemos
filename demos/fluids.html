@@ -36,6 +36,7 @@
   --accent: #c4811c;
   --xcol: #7a45c0;
   --vcol: #1d8a5a;
+  --vcol-ink: #16724a;
   --acol: #c0601a;
   --wire: #53493d;
   --block: #dfd8cf;
@@ -57,7 +58,7 @@
   :root:not([data-theme="light"]) {
     --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
     --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
-    --equi: #e2b350; --accent: #fbc26d; --xcol: #b48cff; --vcol: #4cc38a; --acol: #ff9a52; --wire: #c0b7ac;
+    --equi: #e2b350; --accent: #fbc26d; --xcol: #b48cff; --vcol: #4cc38a; --vcol-ink: #4cc38a; --acol: #ff9a52; --wire: #c0b7ac;
     --block: #4a3e2e; --liq-water: #4a9ff0; --liq-sea: #3fb2c0; --liq-oil: #e8b94a; --liq-myst: #b48cf0; --liq-hg: #c9c2b9;
     --cork: #a8865a; --wood: #9a6a3a; --ice: #8fc3da; --metal: #958c81; --lead: #6b645a; --liq-alpha: 0.34;
     color-scheme: dark;
@@ -66,7 +67,7 @@
 :root[data-theme="dark"] {
   --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
   --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
-  --equi: #e2b350; --accent: #fbc26d; --xcol: #b48cff; --vcol: #4cc38a; --acol: #ff9a52; --wire: #c0b7ac;
+  --equi: #e2b350; --accent: #fbc26d; --xcol: #b48cff; --vcol: #4cc38a; --vcol-ink: #4cc38a; --acol: #ff9a52; --wire: #c0b7ac;
   --block: #4a3e2e; --liq-water: #4a9ff0; --liq-sea: #3fb2c0; --liq-oil: #e8b94a; --liq-myst: #b48cf0; --liq-hg: #c9c2b9;
   --cork: #a8865a; --wood: #9a6a3a; --ice: #8fc3da; --metal: #958c81; --lead: #6b645a; --liq-alpha: 0.34;
   color-scheme: dark;
@@ -723,7 +724,7 @@ table.rows button:hover { color: var(--pos); }
     const cs = getComputedStyle(document.documentElement);
     const g = (n) => cs.getPropertyValue(n).trim();
     T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'),
-      pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), accent: g('--accent'), xcol: g('--xcol'), vcol: g('--vcol'), acol: g('--acol'),
+      pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), accent: g('--accent'), xcol: g('--xcol'), vcol: g('--vcol'), vcolInk: g('--vcol-ink'), acol: g('--acol'),
       wire: g('--wire'), block: g('--block'), ui: g('--font-ui') || 'sans-serif', mono: g('--font-mono') || 'monospace',
       liq: { water: g('--liq-water'), sea: g('--liq-sea'), oil: g('--liq-oil'), hg: g('--liq-hg'), myst: g('--liq-myst') }, la: +g('--liq-alpha') || 0.3,
       mat: { cork: g('--cork'), wood: g('--wood'), ice: g('--ice'), metal: g('--metal'), lead: g('--lead') } };
@@ -769,7 +770,7 @@ table.rows button:hover { color: var(--pos); }
   function labelBox(ctx, txt, x, y, align, col, size, weight, fam) {
     const w = richWidth(ctx, txt, size, weight, fam), x0 = align === 'right' ? x - w : align === 'center' ? x - w / 2 : x;
     ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.86; ctx.fillRect(x0 - 3, y - size * 0.95, w + 6, size * 1.32); ctx.globalAlpha = 1;
-    ctx.fillStyle = col; ctx.textBaseline = 'alphabetic'; richText(ctx, txt, x0, y, size, weight, 'left', fam);
+    ctx.fillStyle = col === T.vcol ? T.vcolInk : col; ctx.textBaseline = 'alphabetic'; richText(ctx, txt, x0, y, size, weight, 'left', fam);
     return w;
   }
   function roundRect(ctx, x, y, w, h, r) {
@@ -1473,7 +1474,7 @@ table.rows button:hover { color: var(--pos); }
       ctx.fillStyle = col; ctx.fillRect(cx - bw / 2, y, bw, bot - y);
       ctx.fillStyle = T.ink; ctx.font = `${10 * ls}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
       ctx.fillText(sig(v, 3), cx, y - 3 * ls);
-      ctx.fillStyle = col; ctx.font = `700 ${10.5 * ls}px ${T.ui}`; ctx.textBaseline = 'top';
+      ctx.fillStyle = col === T.vcol ? T.vcolInk : col; ctx.font = `700 ${10.5 * ls}px ${T.ui}`; ctx.textBaseline = 'top';
       richText(ctx, lab, cx, bot + 5 * ls, 10.5 * ls, 700, 'center');
     });
   }

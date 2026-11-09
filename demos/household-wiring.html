@@ -361,8 +361,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* the panel, door open: bus bars, breakers, neutral and ground bars */
     const px = 14 * p, py = 22 * p, pw = (narrow ? 78 : 104) * p, ph = 150 * p, trippedBreaker = S.tripped.startsWith('breaker');
     GR.rod(ctx, px + pw * 0.3, 0, px + pw * 0.3, py + 2 * p, 7 * p, { color: '#928a7f' });
-    GR.box(ctx, px, py, pw, ph, { color: GR.mix(T.panel, '#000000', 0.05), r: 4 * p });
-    GR.plate(ctx, 'panel', px + pw / 2, py + 9 * p, { s: 8 * p });
+    GR.box(ctx, px, py, pw, ph, { color: GR.mix(T.panel, '#000000', dk ? 0.3 : 0.05), r: 4 * p });
+    GR.plate(ctx, 'panel', px + pw / 2, py + 9 * p, dk ? { s: 8 * p } : { s: 8 * p, c: '#2a2621' });
     const ix = px + 6 * p, iy = py + 17 * p, iw = pw - 12 * p, ih = ph - 23 * p;
     ctx.fillStyle = dk ? '#443d33' : '#60594f'; ctx.beginPath(); ctx.roundRect(ix, iy, iw, ih, 3 * p); ctx.fill();
     const cx = ix + iw / 2, bw = (iw - 30 * p) / 2, bh = 14 * p, rowY = (i) => iy + 6 * p + i * 18 * p;
@@ -476,7 +476,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         ctx.save(); ctx.strokeStyle = T.glow; ctx.globalAlpha = 0.25 + 0.75 * glow; ctx.shadowColor = T.glow; ctx.shadowBlur = 10 * p * glow; ctx.lineWidth = 2.4 * p; for (let j = 0; j < 4; j++) { ctx.beginPath(); ctx.moveTo(ax - 13 * p, ay - 39 * p + j * 8 * p); ctx.lineTo(ax + 13 * p, ay - 39 * p + j * 8 * p); ctx.stroke(); } ctx.restore();
         ctx.strokeStyle = 'rgba(179,171,162,0.6)'; ctx.lineWidth = 1 * p; ctx.beginPath(); for (let xx = ax - 16 * p; xx <= ax + 16 * p; xx += 4 * p) { ctx.moveTo(xx, ay - 44 * p); ctx.lineTo(xx, ay - 10 * p); } ctx.stroke();
       }
-      txt(`${APPS[k].name}`, ax, counterY + 30 * p, { a: 'center', s: 10 }); txt(`${(r.loadP[k] || 0).toFixed(0)} W`, ax, counterY + 44 * p, { a: 'center', s: 10, m: 1, c: T.muted });
+      txt(`${APPS[k].name}`, ax, counterY + 30 * p, { a: 'center', s: 10 }); txt(`${(r.loadP[k] || 0).toFixed(0)} W`, ax, counterY + 44 * p, { a: 'center', s: 10, m: 1, c: dk ? T.ink : T.muted });
     });
     if (S.fault === 'short') { const sx = (xH + xN) / 2, sy = oy - 22 * p, live = r.Ihot > 0;
       if (live) { g = ctx.createRadialGradient(sx, sy, 0, sx, sy, 26 * p); g.addColorStop(0, 'rgba(255,240,200,0.95)'); g.addColorStop(0.4, 'rgba(255,170,60,0.5)'); g.addColorStop(1, 'rgba(255,120,30,0)'); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(sx, sy, 26 * p, 0, 7); ctx.fill(); }

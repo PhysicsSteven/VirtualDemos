@@ -16,10 +16,10 @@
 /* Layout: Earth with the test mass and its forces on the left, the g against height graph on the right; the rail on the right. */
 /* Layout: lab bench. The gas box and speed histogram fill the left, a narrow instrument rail sits on the right; stacks on phones. */
 
-:root { --earth: #6b8fb8; --land: #7fa36a; --mass: #61584c; --gv: #b0452f; --cv: #a7740b; --ev: #2b60b5; }
+:root { --earth: #6b8fb8; --land: #7fa36a; --mass: #61584c; --gv: #b0452f; --cv: #a7740b; --gv-ink: #9a3a26; --cv-ink: #7f5a06; --ev: #2b60b5; }
 :root { --star: rgba(70, 90, 125, 0.45); --atmo: rgba(120, 175, 235, 0.45); --atmo-clear: rgba(120, 175, 235, 0); --ocean-deep: #4a6f99; --ice: #eef3f8; --moon: #b9bcc2; --moon-dark: #8e939b; --mars: #c97a52; --mars-dark: #9b5537; --icon: #73695c; --shade: rgba(33, 26, 17, 0.35); }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --earth: #3d5a7a; --land: #4f6e44; --mass: #d3ccc4; --gv: #ff8a70; --cv: #e2b350; --ev: #69a0ff; --star: rgba(225, 235, 255, 0.85); --atmo: rgba(110, 170, 255, 0.40); --atmo-clear: rgba(110, 170, 255, 0); --ocean-deep: #263c56; --ice: #c9d3de; --moon: #8a8e95; --moon-dark: #62666d; --mars: #9a5638; --mars-dark: #6e3a24; --icon: #c2b8ac; --shade: rgba(0, 0, 0, 0.45); } }
-:root[data-theme="dark"] { --earth: #3d5a7a; --land: #4f6e44; --mass: #d3ccc4; --gv: #ff8a70; --cv: #e2b350; --ev: #69a0ff; --star: rgba(225, 235, 255, 0.85); --atmo: rgba(110, 170, 255, 0.40); --atmo-clear: rgba(110, 170, 255, 0); --ocean-deep: #263c56; --ice: #c9d3de; --moon: #8a8e95; --moon-dark: #62666d; --mars: #9a5638; --mars-dark: #6e3a24; --icon: #c2b8ac; --shade: rgba(0, 0, 0, 0.45); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --earth: #3d5a7a; --land: #4f6e44; --mass: #d3ccc4; --gv: #ff8a70; --cv: #e2b350; --gv-ink: #ff8a70; --cv-ink: #e2b350; --ev: #69a0ff; --star: rgba(225, 235, 255, 0.85); --atmo: rgba(110, 170, 255, 0.40); --atmo-clear: rgba(110, 170, 255, 0); --ocean-deep: #263c56; --ice: #c9d3de; --moon: #8a8e95; --moon-dark: #62666d; --mars: #9a5638; --mars-dark: #6e3a24; --icon: #c2b8ac; --shade: rgba(0, 0, 0, 0.45); } }
+:root[data-theme="dark"] { --earth: #3d5a7a; --land: #4f6e44; --mass: #d3ccc4; --gv: #ff8a70; --cv: #e2b350; --gv-ink: #ff8a70; --cv-ink: #e2b350; --ev: #69a0ff; --star: rgba(225, 235, 255, 0.85); --atmo: rgba(110, 170, 255, 0.40); --atmo-clear: rgba(110, 170, 255, 0); --ocean-deep: #263c56; --ice: #c9d3de; --moon: #8a8e95; --moon-dark: #62666d; --mars: #9a5638; --mars-dark: #6e3a24; --icon: #c2b8ac; --shade: rgba(0, 0, 0, 0.45); }
 :root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
 body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
@@ -171,7 +171,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, set() {} })))(can, { key: 'plot', axis: () => (W > 640 ? 'x' : 'y'), def: (a) => (a === 'x' ? 0.48 : 0.55), min: 0.3, max: 0.75, label: 'Divider between the Earth and the graph', onChange: () => draw() });
   function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
     T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'), accent: g('--accent'),
-      earth: g('--earth'), land: g('--land'), mass: g('--mass'), gv: g('--gv'), cv: g('--cv'), ev: g('--ev'), star: g('--star'), atmo: g('--atmo'), atmoClear: g('--atmo-clear'), oceanDeep: g('--ocean-deep'), ice: g('--ice'), moon: g('--moon'), moonDark: g('--moon-dark'), mars: g('--mars'), marsDark: g('--mars-dark'), icon: g('--icon'), shade: g('--shade'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; }
+      earth: g('--earth'), land: g('--land'), mass: g('--mass'), gv: g('--gv'), cv: g('--cv'), gvInk: g('--gv-ink'), cvInk: g('--cv-ink'), ev: g('--ev'), star: g('--star'), atmo: g('--atmo'), atmoClear: g('--atmo-clear'), oceanDeep: g('--ocean-deep'), ice: g('--ice'), moon: g('--moon'), moonDark: g('--moon-dark'), mars: g('--mars'), marsDark: g('--mars-dark'), icon: g('--icon'), shade: g('--shade'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; }
   const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
   const B = () => BODIES[S.body], lat = () => S.lat * Math.PI / 180;
   const f = (v, d = 3) => (!isFinite(v) ? '—' : v.toFixed(d).replace('-', '−'));
@@ -218,7 +218,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const p = ps(), dx = x1 - x0, dy = y1 - y0, L = Math.hypot(dx, dy); if (L < 2) return; const ux = dx / L, uy = dy / L, hd = 8 * p;
     ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = (w || 2.5) * p; ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1 - ux * hd, y1 - uy * hd); ctx.stroke();
     ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x1 - ux * hd - uy * hd * 0.5, y1 - uy * hd + ux * hd * 0.5); ctx.lineTo(x1 - ux * hd + uy * hd * 0.5, y1 - uy * hd - ux * hd * 0.5); ctx.closePath(); ctx.fill();
-    if (lab) { ctx.font = `700 ${11 * p}px ${T.ui}`; const tw = ctx.measureText(lab).width, flip = x1 + 6 * p + tw > W - 4 * p, lx = flip ? x1 - 6 * p : x1 + 6 * p, ly = flip ? y1 - 14 * p : y1; ctx.textAlign = flip ? 'right' : 'left'; ctx.textBaseline = 'middle'; ctx.save(); ctx.strokeStyle = T.canvas; ctx.lineWidth = 3 * p; ctx.lineJoin = 'round'; ctx.globalAlpha = 0.85; ctx.strokeText(lab, lx, ly); ctx.restore(); ctx.fillText(lab, lx, ly); }
+    if (lab) { ctx.font = `700 ${11 * p}px ${T.ui}`; const tw = ctx.measureText(lab).width, flip = x1 + 6 * p + tw > W - 4 * p, lx = flip ? x1 - 6 * p : x1 + 6 * p, ly = flip ? y1 - 14 * p : y1; ctx.textAlign = flip ? 'right' : 'left'; ctx.textBaseline = 'middle'; ctx.save(); ctx.strokeStyle = T.canvas; ctx.lineWidth = 3 * p; ctx.lineJoin = 'round'; ctx.globalAlpha = 0.85; ctx.strokeText(lab, lx, ly); ctx.restore(); ctx.fillStyle = col === T.gv ? T.gvInk : col === T.cv ? T.cvInk : col; ctx.fillText(lab, lx, ly); }
   }
   // ---------- scenery: stars, the planet's surface, icons for where the mass is; precomputed once ----------
   const rng = ((seed) => () => { seed = (seed + 0x6d2b79f5) | 0; let t = Math.imul(seed ^ (seed >>> 15), 1 | seed); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; })(11);
@@ -423,7 +423,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       if (!S.blind) lab(R3.top, `scale reads ${f(Math.max(0, E.g), 3)} N`, LIT.ink, 'center', 'bottom');
       if (S.spin) lab(R3.pathPt, 'path in one day', LIT.cv, 'center', 'bottom');
       lab(R3.axisTop, S.spin ? 'axis (spinning)' : 'axis', LIT.muted, 'center', 'bottom');
-      ctx.fillStyle = LIT.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillText(DRG.on ? 'drag out or in along the line from the center to change the height' : (S.spin ? 'turning shown far faster than real · ' : '') + 'drag the scale out or in · drag elsewhere to turn', pw / 2, h3 - 8 * p);
+      ctx.fillStyle = LIT.ink; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; const cap = DRG.on ? 'drag out or in along the line from the center to change the height' : (S.spin ? 'turning shown far faster than real · ' : '') + 'drag the scale out or in · drag elsewhere to turn';
+      ctx.save(); ctx.lineWidth = 3; ctx.lineJoin = 'round'; ctx.strokeStyle = 'rgba(16,13,8,0.75)'; ctx.strokeText(cap, pw / 2, h3 - 8 * p); ctx.restore(); ctx.fillText(cap, pw / 2, h3 - 8 * p);
     } else {
     stars(0, 0, pw, wide ? Hh : ph + 14 * p);
     planet(cx, cy, Rp);
@@ -448,7 +449,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.fillText(hText(hMax), gx0 + gw, gy0 + gh + 3); ctx.textAlign = 'left'; ctx.fillText('0', gx0, gy0 + gh + 3);
     ctx.strokeStyle = T.ev; ctx.lineWidth = 2 * p; ctx.beginPath(); for (let i = 0; i <= 200; i++) { const h = hMax * i / 200, x = X(h), y = Y(gGrav(b, h)); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); } ctx.stroke();
     if (hMax < 2.5e7) { ctx.strokeStyle = T.cv; ctx.setLineDash([5 * p, 4 * p]); ctx.beginPath(); const hEnd = Math.min(hMax, b.R / 2); ctx.moveTo(X(0), Y(g0)); ctx.lineTo(X(hEnd), Y(linearApprox(b, hEnd))); ctx.stroke(); ctx.setLineDash([]);
-      ctx.fillStyle = T.cv; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText('g₀(1 − 2h/R)', X(hEnd * 0.55), Y(linearApprox(b, hEnd * 0.55)) + 6 * p); }
+      ctx.fillStyle = T.cvInk; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText('g₀(1 − 2h/R)', X(hEnd * 0.55), Y(linearApprox(b, hEnd * 0.55)) + 6 * p); }
     ctx.fillStyle = T.gv; ctx.beginPath(); ctx.arc(X(S.h), Y(E.grav), 5 * p, 0, 7); ctx.fill();
     ctx.fillStyle = T.ev; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillText('GM/(R + h)²', gx0 + gw - 4 * p, gy0 + gh * 0.95);
   }

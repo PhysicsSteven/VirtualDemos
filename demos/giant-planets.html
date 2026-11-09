@@ -17,9 +17,9 @@
 <style>
 /* only what this demo needs beyond demos/lib/vd.css: the planets' colors, the picture, the strip and the close up */
 :root { --jup: #c99a6b; --jup2: #e8d3b4; --sat: #d9c08a; --sat2: #efe2bf; --ura: #8fd0d8; --ura2: #c4ebef; --nep: #4a74d0; --nep2: #7fa2e8; --ear: #3f78c0; --ear2: #6fae6a; --mar: #b5532f; --mar2: #d98a5c; --plu: #c9a98a; --plu2: #efe0cc;
-  --ring: #b8a47e; --roche: #c2410c; --rigid: #7c3aed; --moon: #5b6573; --sel: #c2410c; --debris: #b4321f; --water: #2b7bb9; --space: #0b0f16; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --ring: #d8c49a; --roche: #fb923c; --rigid: #c4a5ff; --moon: #c3cbd6; --sel: #fb923c; --debris: #ff8a5c; --water: #5aa9e6; } }
-:root[data-theme="dark"] { --ring: #d8c49a; --roche: #fb923c; --rigid: #c4a5ff; --moon: #c3cbd6; --sel: #fb923c; --debris: #ff8a5c; --water: #5aa9e6; }
+  --ring: #b8a47e; --roche: #c2410c; --rigid: #7c3aed; --moon: #5b6573; --sel: #c2410c; --debris: #b4321f; --water: #2b7bb9; --water-ink: #1f6aa5; --space: #0b0f16; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --ring: #d8c49a; --roche: #fb923c; --rigid: #c4a5ff; --moon: #c3cbd6; --sel: #fb923c; --debris: #ff8a5c; --water: #5aa9e6; --water-ink: #5aa9e6; } }
+:root[data-theme="dark"] { --ring: #d8c49a; --roche: #fb923c; --rigid: #c4a5ff; --moon: #c3cbd6; --sel: #fb923c; --debris: #ff8a5c; --water: #5aa9e6; --water-ink: #5aa9e6; }
 .stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
 .stage-ctl select { font: inherit; font-size: 0.84rem; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px; }
@@ -599,7 +599,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function tokens() {
     const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
     K = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), accent: g('--accent'), surface: g('--surface'),
-      ring: g('--ring'), roche: g('--roche'), rigid: g('--rigid'), moon: g('--moon'), sel: g('--sel'), debris: g('--debris'), water: g('--water'),
+      ring: g('--ring'), roche: g('--roche'), rigid: g('--rigid'), moon: g('--moon'), sel: g('--sel'), debris: g('--debris'), water: g('--water'), waterInk: g('--water-ink'),
       jupiter: [g('--jup'), g('--jup2')], saturn: [g('--sat'), g('--sat2')], uranus: [g('--ura'), g('--ura2')], neptune: [g('--nep'), g('--nep2')], earth: [g('--ear'), g('--ear2')], mars: [g('--mar'), g('--mar2')], pluto: [g('--plu'), g('--plu2')],
       mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif', dark: VD3.dark() };
   }
@@ -707,7 +707,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       if (S.sel === k) { ctx.strokeStyle = K.sel; ctx.lineWidth = 2 * p; ctx.strokeRect(cx - bw / 2, Y(v), bw, y1 - Y(v)); }
       label(f(v, 3), cx, Math.min(Y(v), Y(1.25)) - 9 * p, { a: 'center', mono: true, w: 600, size: 11 }); label(P(k).name, cx, y1 + 13 * p, { a: 'center', col: K.muted, size: 11 }); });
     ctx.save(); ctx.strokeStyle = K.water; ctx.lineWidth = 2 * p; ctx.setLineDash([7, 4]); ctx.beginPath(); ctx.moveTo(x0, Y(1)); ctx.lineTo(x1, Y(1)); ctx.stroke(); ctx.restore();
-    label('water, 1.00', x1 - 4, Y(1) - 9 * p, { a: 'right', col: K.water, w: 700, size: 11 });
+    label('water, 1.00', x1 - 4, Y(1) - 9 * p, { a: 'right', col: K.waterInk, w: 700, size: 11 });
     scaleBar(L.s, 16 * p, 24 * p, 160 * p);
     { const t1 = 'True sizes and tilts (the angle under each name is its axial tilt).', t2 = 'Bands and colors are a painting.';
       ctx.font = `400 ${10 * p}px ${K.ui}`;   /* one line where it fits, else two (phones) */

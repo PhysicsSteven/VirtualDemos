@@ -317,7 +317,9 @@ table.rows input:focus { border-color: var(--accent); }
       ctx.fillStyle = T.metalDark; ctx.fillRect(hx - 1 * p, y0, 2 * p, dh - 0.6 * p);   // the slot
     }
     ctx.fillStyle = T.metalDark; ctx.fillRect(hx - ms / 2 - 1 * p, my + mh - 2 * p, ms + 2 * p, 2 * p);   // hanger base plate
-    ctx.fillStyle = T.canvas; ctx.font = `700 ${10 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(`${Math.round(S.m * 1000)} g`, px + 10 * p, my + ms * 0.35);
+    ctx.font = `700 ${10 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; const mt = `${Math.round(S.m * 1000)} g`;   /* a halo of the opposite tone keeps it readable on the mid gray mass */
+    ctx.save(); ctx.strokeStyle = T.ink; ctx.globalAlpha = 0.7; ctx.lineWidth = 2.6 * p; ctx.lineJoin = 'round'; ctx.strokeText(mt, px + 10 * p, my + ms * 0.35); ctx.restore();
+    ctx.fillStyle = T.canvas; ctx.fillText(mt, px + 10 * p, my + ms * 0.35);
     // drop marks
     ctx.strokeStyle = T.accent; ctx.lineWidth = 1.5 * p; ctx.setLineDash([4 * p, 4 * p]); for (const yy of [top, bot - 40 * p]) { ctx.beginPath(); ctx.moveTo(px - 40 * p, yy); ctx.lineTo(Math.min(px + 60 * p, W - 6 * p), yy); ctx.stroke(); } ctx.setLineDash([]);
     ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = wide ? 'left' : 'right'; ctx.fillText('0.500 m drop', wide ? px + 30 * p : px - 14 * p, (top + bot - 40 * p) / 2);

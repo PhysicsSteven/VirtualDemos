@@ -648,7 +648,7 @@ table.rows td.b { font-size: 0.76rem; }
     const b1 = S.sweep === 'slow' ? (slow.running ? 'SLOW sweep: CH1 rises over 25 s, untriggered' : 'SLOW: waiting for SLOW RUN') : `A→B ΔT ${dT.toFixed(2)} ms`;
     const b2 = S.sweep === 'slow' ? '' : `V ${vC.toFixed(3)} V`;
     ctx.textAlign = 'left'; ctx.fillStyle = CUR; ctx.fillText(b1, sx, yb);
-    if (b2) { ctx.textAlign = 'right'; const nt = '  noise simulated'; const wide = ctx.measureText(b2 + nt).width + ctx.measureText(b1).width + 20 < sw; ctx.fillText(b2, sx + sw - (wide ? ctx.measureText(nt).width : 0), yb); if (wide) { ctx.fillStyle = T.bezelInk; ctx.globalAlpha = 0.6; ctx.fillText(nt, sx + sw, yb); ctx.globalAlpha = 1; } }
+    if (b2) { ctx.textAlign = 'right'; const nt = '  noise simulated'; const wide = ctx.measureText(b2 + nt).width + ctx.measureText(b1).width + 20 < sw; ctx.fillText(b2, sx + sw - (wide ? ctx.measureText(nt).width : 0), yb); if (wide) { ctx.fillStyle = T.bezelInk; ctx.globalAlpha = 0.85; ctx.fillText(nt, sx + sw, yb); ctx.globalAlpha = 1; } }
     if (!osc().on) {   // oscillator stopped: say it on the screen, on a halo box
       const msg = 'CH2 flat: the oscillator has stopped (SENS above threshold)';
       ctx.font = `600 ${fs}px ${T.ui}`; const w = Math.min(sw - 16, ctx.measureText(msg).width + 14);
@@ -787,7 +787,7 @@ table.rows td.b { font-size: 0.76rem; }
       ctx.strokeStyle = T.accent; ctx.lineWidth = (on ? 2.2 : 1.3) * ps; ctx.globalAlpha = on ? 1 : 0.85;
       ctx.beginPath(); ctx.moveTo(x, py0 - 6 * ps); ctx.lineTo(x, py0 + ph); ctx.stroke();
       ctx.fillStyle = T.accent; ctx.beginPath(); ctx.moveTo(x, py0 - 1); ctx.lineTo(x - 6 * ps, py0 - 11 * ps); ctx.lineTo(x + 6 * ps, py0 - 11 * ps); ctx.closePath(); ctx.fill();
-      ctx.globalAlpha = 1; ctx.fillStyle = T.canvas; ctx.font = `600 ${8.5 * ps}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(String(id), x, py0 - 7.5 * ps);
+      ctx.globalAlpha = 1; ctx.fillStyle = parseInt(String(T.canvas).slice(1, 3), 16) > 128 ? '#ffffff' : T.canvas; ctx.font = `600 ${8.5 * ps}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(String(id), x, py0 - 7.5 * ps);
     }
     const dmm = S.ch.r2 - S.ch.r1, ttxt = `ruler ${dmm.toFixed(1)} mm → ${(dmm / SLOW.paper).toFixed(2)} s`;
     ctx.font = `600 ${10.5 * ps}px ${T.mono}`; ctx.textBaseline = 'middle'; ctx.textAlign = 'left'; ctx.fillStyle = T.accent;

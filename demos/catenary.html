@@ -31,7 +31,7 @@
   --accent: #c4811c;
   --wire: #53493d;
   --block: #dfd8cf;
-  --wcol: #1d8a5a;
+  --wcol: #177a4f;
   --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 }
@@ -709,14 +709,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     // header line
     ctx.font = `700 ${12.5 * ps}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
     if (K.taut) {
-      ctx.fillStyle = T.pos;
+      ctx.fillStyle = '#ffb3a3'; /* on the dark ceiling beam in both themes */
       ctx.fillText(W < 520 ? 'Taut: tension would be infinite' : 'Taut: a straight heavy chain would need infinite tension (length held at the support distance)', 10 * ps, 13 * ps);
     } else {
-      ctx.fillStyle = T.muted; ctx.font = `${11.5 * ps}px ${T.mono}`;
+      ctx.fillStyle = '#f6efe4'; ctx.font = `${11.5 * ps}px ${T.mono}`; /* light text on the dark ceiling beam (both themes) */
       const sag = sagOf(K).d;
       const txt = `S = ${fm(S.S)}   span ${fm(K.dx)}   sag ${fm(sag)}`;
       ctx.fillText(W < 440 ? `S = ${fm(S.S)}   sag ${fm(sag)}` : txt, 10 * ps, 13 * ps);
-      if (semiInfo && W > 560) { ctx.textAlign = 'right'; ctx.fillStyle = T.pos; ctx.fillText(semiInfo, W - 10 * ps, 13 * ps); }
+      if (semiInfo && W > 560) { ctx.textAlign = 'right'; ctx.fillStyle = '#ffb3a3'; ctx.fillText(semiInfo, W - 10 * ps, 13 * ps); }
     }
   }
 

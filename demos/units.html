@@ -1188,8 +1188,10 @@ window.VD_EARTH = { day: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wB
     const raw = view / 4, e = Math.floor(Math.log10(raw)), m = raw / 10 ** e, step = (m >= 5 ? 5 : m >= 2 ? 2 : 1) * 10 ** e, bw = step * k;
     ctx.strokeStyle = dark ? '#f2eee8' : '#2a2219'; ctx.fillStyle = ctx.strokeStyle; ctx.lineWidth = 2 * p; const bx = 16 * p, by = Hh - 20 * p;
     ctx.beginPath(); ctx.moveTo(bx, by - 6 * p); ctx.lineTo(bx, by); ctx.lineTo(bx + bw, by); ctx.lineTo(bx + bw, by - 6 * p); ctx.stroke();
-    ctx.font = `${11 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText(sci(step, 1) + ' m', bx, by - 8 * p);
-    ctx.textAlign = 'right'; ctx.fillText(`width of view: ${sci(view, 2)} m (10${sup(S.zoom.toFixed(1))})`, W - 14 * p, Hh - 6 * p);
+    ctx.font = `${11 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+    const halo = (t, x, y) => { ctx.save(); ctx.strokeStyle = dark ? 'rgba(17,14,9,0.75)' : 'rgba(255,253,249,0.85)'; ctx.lineWidth = 3.5 * p; ctx.lineJoin = 'round'; ctx.strokeText(t, x, y); ctx.restore(); };   /* the ground is a mid green: a halo keeps the text readable */
+    halo(sci(step, 1) + ' m', bx, by - 8 * p); ctx.fillText(sci(step, 1) + ' m', bx, by - 8 * p);
+    ctx.textAlign = 'right'; const wv = `width of view: ${sci(view, 2)} m (10${sup(S.zoom.toFixed(1))})`; halo(wv, W - 14 * p, Hh - 6 * p); ctx.fillText(wv, W - 14 * p, Hh - 6 * p);
     $('oZoom').textContent = `${sci(view, 2)} m`; $('sZoom').value = S.zoom;
   }
   function setView(v) { S.view = v; S.fly = 0; for (const b of document.querySelectorAll('#scaleView button')) b.setAttribute('aria-pressed', String(b.dataset.v === v)); $('flyIn').hidden = $('flyOut').hidden = v !== 'zoom'; $('zoomCtl').hidden = v !== 'zoom' || S.tab !== 'scale'; draw(); }

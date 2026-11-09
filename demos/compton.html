@@ -32,7 +32,7 @@
   --neg: #2b60b5;
   --equi: #a7740b;
   --accent: #c4811c;
-  --elec: #17855f;
+  --elec: #12714f;
   --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 }
@@ -438,6 +438,20 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function niceStep(raw) { const p = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p; return (m < 1.5 ? 1 : m < 3 ? 2 : m < 7 ? 5 : 10) * p; }
 
   // ---------- drawing helpers ----------
+  /* label ink: the same hue pushed toward black (Day) or white (Night) until it reads on the plate; best black or white on a fill */
+  const _px = document.createElement('canvas').getContext('2d', { willReadFrequently: true });
+  function rgbOf(col) { _px.clearRect(0, 0, 1, 1); _px.fillStyle = '#000'; _px.fillStyle = col; _px.fillRect(0, 0, 1, 1); const d = _px.getImageData(0, 0, 1, 1).data; return [d[0], d[1], d[2]]; }
+  const lumOf = (c) => { const f = (v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); }; return 0.2126 * f(c[0]) + 0.7152 * f(c[1]) + 0.0722 * f(c[2]); };
+  const crOf = (a, b) => { const x = lumOf(a), y = lumOf(b); return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05); };
+  function inkOn(col, bg) {
+    const b = rgbOf(bg), c0 = rgbOf(col), to = lumOf(b) < 0.4 ? 255 : 0;
+    for (let t = 0; t <= 1.001; t += 0.05) { const c = c0.map((v) => Math.round(v + (to - v) * t)); if (crOf(c, b) >= 4.7) return `rgb(${c[0]}, ${c[1]}, ${c[2]})`; }
+    return to ? '#fff' : '#000';
+  }
+  function bestOn(fill, alpha) {
+    const b = rgbOf(T.canvas), f = rgbOf(fill), m = f.map((v, i) => v * alpha + b[i] * (1 - alpha));
+    return crOf([255, 255, 255], m) >= crOf([0, 0, 0], m) ? '#fff' : '#000';
+  }
   function label(c, txt, x, y, col, align = 'left', base = 'middle', bold = false, size = 11) {
     const ps = PS;
     c.font = `${bold ? '600 ' : ''}${size * ps}px ${T.mono}`; c.textAlign = align; c.textBaseline = base;
@@ -446,7 +460,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (LBOX) { const sh = Math.max(LBOX.x + 4 - x0, Math.min(0, LBOX.x + LBOX.w - 4 - (x0 + w))); x0 += sh; x += sh; }
     const y0 = base === 'middle' ? y - h / 2 : base === 'bottom' ? y - h : y;
     c.fillStyle = T.canvas; c.globalAlpha = 0.86; c.fillRect(x0 - 3, y0, w + 6, h); c.globalAlpha = 1;
-    c.fillStyle = col; c.fillText(txt, x, y + (base === 'middle' ? 0.5 : 0));
+    c.fillStyle = inkOn(col, T.canvas); c.fillText(txt, x, y + (base === 'middle' ? 0.5 : 0));
     return w;
   }
   function arrow(c, x1, y1, x2, y2, col, lw) {
@@ -586,7 +600,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
     // the electron
     c.fillStyle = T.elec; c.beginPath(); c.arc(exy[0], exy[1], 6 * ps, 0, 2 * Math.PI); c.fill();
-    c.fillStyle = T.canvas; c.font = `700 ${8 * ps}px ${T.mono}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('−', exy[0], exy[1] + 0.5);
+    c.fillStyle = bestOn(T.elec, 1); c.font = `700 ${8 * ps}px ${T.mono}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('−', exy[0], exy[1] + 0.5);
 
     // grips: scattered photon on the guide circle, recoil electron a little inside it
     const hP = [cx + ux * Rg, cy + uy * Rg], hE = [cx + ex * Rg * 0.8, cy + ey * Rg * 0.8];
@@ -814,7 +828,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     c.fillText(toScale ? 'Energy, to scale' : 'Energy: rest energy bar not to scale', b.x, b.y - 2 * ps);
     const seg = (x, y, wd, col, txt, alpha = 0.85) => {
       c.fillStyle = col; c.globalAlpha = alpha; c.fillRect(x, y, Math.max(wd, 1), rowH); c.globalAlpha = 1;
-      if (txt) { c.font = `600 ${10 * ps}px ${T.mono}`; const tw = c.measureText(txt).width; if (tw + 6 * ps < wd) { c.fillStyle = T.canvas; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(txt, x + wd / 2, y + rowH / 2 + 0.5); return true; } }
+      if (txt) { c.font = `600 ${10 * ps}px ${T.mono}`; const tw = c.measureText(txt).width; if (tw + 6 * ps < wd) { c.fillStyle = bestOn(col, alpha); c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(txt, x + wd / 2, y + rowH / 2 + 0.5); return true; } }
       return false;
     };
     const rowLab = (txt, y) => { c.font = `600 ${10.5 * ps}px ${T.ui}`; c.fillStyle = T.ink; c.textAlign = 'left'; c.textBaseline = 'middle'; c.fillText(txt, b.x, y + rowH / 2); };

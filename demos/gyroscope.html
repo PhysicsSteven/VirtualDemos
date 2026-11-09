@@ -32,9 +32,9 @@
 /* Layout: the gyroscope in an oblique 3D view with a strip of its tilt against time on the left; the rail on the right. */
 /* Layout: lab bench. The gas box and speed histogram fill the left, a narrow instrument rail sits on the right; stacks on phones. */
 
-:root { --wheel: #2b60b5; --axle: #61584c; --post: #b4aa9c; --Lv: #b0452f; --tau: #1f8a5a; --trail: #a7740b; --floor: #f4f1ee; --floor-line: #e7e3de; --fog: rgba(254,253,252,0.9); --fog-clear: rgba(254,253,252,0); --tyre: #37322c; --spoke: #a1998f; --base: #5b544b; --base-top: #877f75; --metal-hi: #f4f1ee; --shadow: rgba(53,44,32,0.16); }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --wheel: #69a0ff; --axle: #d3ccc4; --post: #6c6358; --Lv: #ff8a70; --tau: #4cd08f; --trail: #e2b350; --floor: #221c15; --floor-line: #312a20; --fog: rgba(29,24,17,0.9); --fog-clear: rgba(29,24,17,0); --tyre: #5c554b; --spoke: #a1988d; --base: #3b352d; --base-top: #5e564c; --metal-hi: #dad3ca; --shadow: rgba(0,0,0,0.4); } }
-:root[data-theme="dark"] { --wheel: #69a0ff; --axle: #d3ccc4; --post: #6c6358; --Lv: #ff8a70; --tau: #4cd08f; --trail: #e2b350; --floor: #221c15; --floor-line: #312a20; --fog: rgba(29,24,17,0.9); --fog-clear: rgba(29,24,17,0); --tyre: #5c554b; --spoke: #a1988d; --base: #3b352d; --base-top: #5e564c; --metal-hi: #dad3ca; --shadow: rgba(0,0,0,0.4); }
+:root { --wheel: #2b60b5; --axle: #61584c; --post: #b4aa9c; --Lv: #b0452f; --tau: #1f8a5a; --tau-ink: #14694a; --trail: #a7740b; --trail-ink: #7a5406; --floor: #f4f1ee; --floor-line: #e7e3de; --fog: rgba(254,253,252,0.9); --fog-clear: rgba(254,253,252,0); --tyre: #37322c; --spoke: #a1998f; --base: #5b544b; --base-top: #877f75; --metal-hi: #f4f1ee; --shadow: rgba(53,44,32,0.16); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --wheel: #69a0ff; --axle: #d3ccc4; --post: #6c6358; --Lv: #ff8a70; --tau: #4cd08f; --tau-ink: #4cd08f; --trail: #e2b350; --trail-ink: #e2b350; --floor: #221c15; --floor-line: #312a20; --fog: rgba(29,24,17,0.9); --fog-clear: rgba(29,24,17,0); --tyre: #5c554b; --spoke: #a1988d; --base: #3b352d; --base-top: #5e564c; --metal-hi: #dad3ca; --shadow: rgba(0,0,0,0.4); } }
+:root[data-theme="dark"] { --wheel: #69a0ff; --axle: #d3ccc4; --post: #6c6358; --Lv: #ff8a70; --tau: #4cd08f; --tau-ink: #4cd08f; --trail: #e2b350; --trail-ink: #e2b350; --floor: #221c15; --floor-line: #312a20; --fog: rgba(29,24,17,0.9); --fog-clear: rgba(29,24,17,0); --tyre: #5c554b; --spoke: #a1988d; --base: #3b352d; --base-top: #5e564c; --metal-hi: #dad3ca; --shadow: rgba(0,0,0,0.4); }
 :root[data-projector="on"] { font-size: 125%; }
 .bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; }
 .bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 12px; }
@@ -266,7 +266,7 @@ table.rows input:focus { border-color: var(--accent); }
   function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
     T = { canvas: g('--canvas'), surface: g('--surface') || g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'), accent: g('--accent'),
       wheel: g('--wheel'), axle: g('--axle'), post: g('--post'), Lv: g('--Lv'), tau: g('--tau'), trail: g('--trail'),
-      floor: g('--floor'), floorLine: g('--floor-line'), fog: g('--fog'), fogClear: g('--fog-clear'), tyre: g('--tyre'), spoke: g('--spoke'), base: g('--base'), baseTop: g('--base-top'), metalHi: g('--metal-hi'), shadow: g('--shadow'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; }
+      floor: g('--floor'), floorLine: g('--floor-line'), fog: g('--fog'), fogClear: g('--fog-clear'), tyre: g('--tyre'), spoke: g('--spoke'), base: g('--base'), baseTop: g('--base-top'), metalHi: g('--metal-hi'), shadow: g('--shadow'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif', tauInk: g('--tau-ink'), trailInk: g('--trail-ink') }; }
   const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
 /* the divider between the pieces (VD.split, demos/lib/vd.js); a browser with an older cached vd.js keeps the default */
 const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, set() {} })))(can, { key: 'strip', axis: () => 'y', def: () => 1 - Math.min(120, Hh * 0.22) * ps() / Hh, min: 0.5, max: 0.9, snaps: [2 / 3, 0.75], label: 'Divider between the gyroscope and the tilt strip', onChange: () => draw() });
@@ -285,7 +285,7 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
     const dx = b[0] - a[0], dy = b[1] - a[1], L = Math.hypot(dx, dy); if (L < 3) return; const ux = dx / L, uy = dy / L, h = Math.min(12, L * 0.4) * w / 2.5;
     ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = w; ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0] - ux * h, b[1] - uy * h); ctx.stroke();
     ctx.beginPath(); ctx.moveTo(b[0], b[1]); ctx.lineTo(b[0] - ux * h - uy * h * 0.5, b[1] - uy * h + ux * h * 0.5); ctx.lineTo(b[0] - ux * h + uy * h * 0.5, b[1] - uy * h - ux * h * 0.5); ctx.closePath(); ctx.fill();
-    if (lab) { ctx.font = `700 ${12 * ps()}px ${T.ui}`; ctx.textAlign = ux > 0.3 ? 'left' : ux < -0.3 ? 'right' : 'center'; ctx.textBaseline = uy > 0.3 ? 'top' : uy < -0.3 ? 'bottom' : 'middle'; ctx.fillText(lab, b[0] + ux * 5, b[1] + uy * 5); }
+    if (lab) { ctx.fillStyle = col === T.tau ? T.tauInk : col; ctx.font = `700 ${12 * ps()}px ${T.ui}`; ctx.textAlign = ux > 0.3 ? 'left' : ux < -0.3 ? 'right' : 'center'; ctx.textBaseline = uy > 0.3 ? 'top' : uy < -0.3 ? 'bottom' : 'middle'; ctx.fillText(lab, b[0] + ux * 5, b[1] + uy * 5); }
   }
   function draw() {
     if (!T || !W || !S.sim) return;
@@ -303,7 +303,7 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
       const gq = Q([S.d + 0.035, 0, -postH]); ctx.fillStyle = T.accent; ctx.font = `700 ${10 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; if (gq[2] < 1) halo('gate', gq[0] + 4, gq[1] + 2);
       if (S.vecs && c.w3 > 0 && !S.fell) {
         const tau = cross(C, [0, 0, -MW * G]), tm = Math.hypot(...tau) || 1;
-        lab(C.map((x, i) => x + e[i] * 0.16), 'L', T.Lv, C); lab(C.map((x, i) => x + tau[i] / tm * 0.09), 'τ = dL/dt', T.tau, C); lab([C[0], C[1], C[2] - 0.07], 'Mg', T.muted, C);
+        lab(C.map((x, i) => x + e[i] * 0.16), 'L', T.Lv, C); lab(C.map((x, i) => x + tau[i] / tm * 0.09), 'τ = dL/dt', T.tauInk, C); lab([C[0], C[1], C[2] - 0.07], 'Mg', T.muted, C);
       }
       const st = strobeNow(c), cb = $('camBar'); cb.style.bottom = `${Hh - h3 + 8}px`;
       if (st) { ctx.font = `${10.5 * p}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom';
@@ -394,7 +394,7 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
     ctx.save(); ctx.beginPath(); ctx.rect(sx0, sy0, sx1 - sx0, sy1 - sy0); ctx.clip(); ctx.setLineDash([4 * p, 4 * p]); ctx.lineWidth = 1;
     ctx.strokeStyle = T.muted; for (const t of S.marks) { const x = X(t); if (x < sx0) continue; ctx.beginPath(); ctx.moveTo(x, sy0); ctx.lineTo(x, sy1); ctx.stroke(); }
     if (isFinite(eq) && eq >= lo && eq <= hi) { ctx.strokeStyle = T.trail; ctx.lineWidth = 1.4 * p; ctx.beginPath(); ctx.moveTo(sx0, Y(eq)); ctx.lineTo(sx1, Y(eq)); ctx.stroke();
-      ctx.setLineDash([]); ctx.fillStyle = T.trail; ctx.font = `${10 * p}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillText(`steady tilt ${f(eq, 1)}°`, sx1 - 4, Y(eq) - 2); }
+      ctx.setLineDash([]); ctx.fillStyle = T.trailInk; ctx.font = `${10 * p}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillText(`steady tilt ${f(eq, 1)}°`, sx1 - 4, Y(eq) - 2); }
     ctx.restore();
     ctx.strokeStyle = T.accent; ctx.lineWidth = 1.6 * p; ctx.beginPath(); let first = true; for (const [t, v] of S.trace) { if (S.t - t > span) continue; const x = X(t), y = Y(v); first ? ctx.moveTo(x, y) : ctx.lineTo(x, y); first = false; } ctx.stroke();
     // timer
@@ -434,7 +434,7 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
     }
     ctx.strokeStyle = T.accent; ctx.lineWidth = 2 * p; ctx.lineJoin = 'round'; ctx.beginPath(); pts.forEach(([t, v], i) => (i ? ctx.lineTo(X(t), Y(v)) : ctx.moveTo(X(t), Y(v)))); ctx.stroke();
     if (isFinite(eq) && eq >= lo && eq <= hi) { ctx.font = `${10 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; const sl = `steady tilt ${f(eq, 1)}°`, sw = ctx.measureText(sl).width, sly = Math.max(sy0 + 12 * p, Y(eq) - 2);
-      ctx.globalAlpha = 0.85; ctx.fillStyle = T.canvas; ctx.fillRect(sx0 + 4 * p, sly - 11 * p, sw + 8, 11 * p); ctx.globalAlpha = 1; ctx.fillStyle = T.trail; ctx.fillText(sl, sx0 + 8 * p, sly); }
+      ctx.globalAlpha = 0.85; ctx.fillStyle = T.canvas; ctx.fillRect(sx0 + 4 * p, sly - 11 * p, sw + 8, 11 * p); ctx.globalAlpha = 1; ctx.fillStyle = T.trailInk; ctx.fillText(sl, sx0 + 8 * p, sly); }
     ctx.restore();
     // the tilt now, at the right hand end
     const yN = Math.max(sy0 + 6 * p, Math.min(sy1 - 6 * p, Y(now))); ctx.fillStyle = T.accent; ctx.beginPath(); ctx.arc(sx1, Y(now), 3.5 * p, 0, 7); ctx.fill();

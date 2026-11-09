@@ -22,9 +22,9 @@
 <style>
 /* Layout: the magnet and the wire or loop on the left; the rail on the right. */
 /* Layout: lab bench. The gas box and speed histogram fill the left, a narrow instrument rail sits on the right; stacks on phones. */
-:root { --north: #b0452f; --south: #2b60b5; --wire: #b06a2c; --bf: #2f7d4f; --force: #a88456; --mu: #a7740b; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --north: #ff8a70; --south: #69a0ff; --wire: #e0955a; --bf: #5fcf8a; --force: #b49bff; --mu: #e2b350; } }
-:root[data-theme="dark"] { --north: #ff8a70; --south: #69a0ff; --wire: #e0955a; --bf: #5fcf8a; --force: #b49bff; --mu: #e2b350; }
+:root { --north: #b0452f; --south: #2b60b5; --wire: #b06a2c; --bf: #2f7d4f; --force: #a88456; --force-ink: #735526; --mu: #a7740b; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --north: #ff8a70; --south: #69a0ff; --wire: #e0955a; --bf: #5fcf8a; --force: #b49bff; --force-ink: #b49bff; --mu: #e2b350; } }
+:root[data-theme="dark"] { --north: #ff8a70; --south: #69a0ff; --wire: #e0955a; --bf: #5fcf8a; --force: #b49bff; --force-ink: #b49bff; --mu: #e2b350; }
 :root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
 body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
@@ -234,7 +234,7 @@ table.rows input:focus { border-color: var(--accent); }
   let W = 0, H = 0, dpr = 1, T = null;
   function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
     T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'), accent: g('--accent'),
-      N: g('--north'), S: g('--south'), wire: g('--wire'), b: g('--bf'), force: g('--force'), mu: g('--mu'), surface: g('--surface'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; }
+      N: g('--north'), S: g('--south'), wire: g('--wire'), b: g('--bf'), force: g('--force'), forceInk: g('--force-ink') || g('--force'), mu: g('--mu'), surface: g('--surface'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; }
   const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
   const f = (v, d = 2) => (!isFinite(v) ? '—' : (Math.abs(v) < 0.5 * 10 ** -d ? (0).toFixed(d) : v.toFixed(d)).replace('-', '−'));
   const Bnow = () => (S.mystery ? S.mystery : S.B), hideB = () => S.blind || !!S.mystery;
@@ -283,8 +283,8 @@ table.rows input:focus { border-color: var(--accent); }
       const hf = hideB(), F = Fwire(), r = hf ? 16 * p : Math.min(40, 6 + Math.abs(F) * 300) * p;
       if (Math.abs(F) > 1e-9 || hf) { const fx = cx + 90 * p, fy = cy - h / 2 - 36 * p; ctx.strokeStyle = T.force; ctx.fillStyle = T.force; ctx.lineWidth = 2.5 * p; ctx.beginPath(); ctx.arc(fx, fy, r, 0, 7); ctx.stroke();
         if (Fz > 0) { ctx.beginPath(); ctx.arc(fx, fy, r * 0.22, 0, 7); ctx.fill(); } else { ctx.beginPath(); ctx.moveTo(fx - r * 0.6, fy - r * 0.6); ctx.lineTo(fx + r * 0.6, fy + r * 0.6); ctx.moveTo(fx + r * 0.6, fy - r * 0.6); ctx.lineTo(fx - r * 0.6, fy + r * 0.6); ctx.stroke(); }
-        ctx.font = `700 ${12.5 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(hf ? `force on the wire ${Fz > 0 ? 'up, out of the page' : 'down, into the page'}` : `F on the wire = ${f(Math.abs(F) * 1000, 2)} mN, ${Fz > 0 ? 'up (out of the page)' : 'down (into the page)'}`, fx + r + 8 * p, fy); }
-      else { ctx.fillStyle = T.force; ctx.font = `700 ${12.5 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.fillText('No force: the current runs along B.', cx - gw / 2, cy - h / 2 - 40 * p); }
+        ctx.fillStyle = T.forceInk; ctx.font = `700 ${12.5 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(hf ? `force on the wire ${Fz > 0 ? 'up, out of the page' : 'down, into the page'}` : `F on the wire = ${f(Math.abs(F) * 1000, 2)} mN, ${Fz > 0 ? 'up (out of the page)' : 'down (into the page)'}`, fx + r + 8 * p, fy); }
+      else { ctx.fillStyle = T.forceInk; ctx.font = `700 ${12.5 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.fillText('No force: the current runs along B.', cx - gw / 2, cy - h / 2 - 40 * p); }
       // balance display under the magnet
       const by = cy + h / 2 + 30 * p; ctx.fillStyle = T.surface; ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5; ctx.fillRect(cx - 120 * p, by, 240 * p, 54 * p); ctx.strokeRect(cx - 120 * p, by, 240 * p, 54 * p);
       ctx.fillStyle = T.muted; ctx.font = `${10.5 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText('balance under the magnet (zeroed at I = 0)', cx, by + 5 * p);
@@ -597,10 +597,10 @@ table.rows input:focus { border-color: var(--accent); }
         const tip = Q([0, 0, ZC + (Fz > 0 ? len : -len)]), side = Q([GAP / 2 + PD + 0.01, -0.02, zp]), lab = hf ? `force on the wire, ${Fz > 0 ? 'up' : 'down'}` : `F on the wire = ${f(Math.abs(F) * 1000, 2)} mN, ${Fz > 0 ? 'up' : 'down'}`;
         const lx = narrow ? 10 * p : Math.max(side[0], tip[0] + 40 * p), ly = narrow ? 30 * p : Math.min(tip[1], side[1]) - 16 * p;
         ctx.save(); ctx.strokeStyle = T.force; ctx.globalAlpha = 0.6; ctx.lineWidth = 1.2; ctx.setLineDash([3, 3]); ctx.beginPath(); ctx.moveTo(tip[0], tip[1]); ctx.lineTo(narrow ? tip[0] : lx - 4 * p, narrow ? ly + 8 * p : ly); ctx.stroke(); ctx.restore();
-        txt(lab, [lx, ly], { w: 700, c: T.force, bl: narrow ? 'top' : 'middle' });
+        txt(lab, [lx, ly], { w: 700, c: T.forceInk, bl: narrow ? 'top' : 'middle' });
         const mq = Q([0, -0.058, BAL_H + 0.006 + YOKE + (Fz > 0 ? 0 : len)]);
-        if (!narrow) txt('equal and opposite force on the magnet: the balance reads it', [mq[0] - 12 * p, mq[1] + 2 * p], { s: 10.5, c: T.force, a: 'right' });
-      } else txt('No force: the current runs along B.', [Q([GAP / 2 + PD + 0.01, -0.02, zp])[0], Q([0, 0, zp])[1] - 16 * p], { w: 700, c: T.force });
+        if (!narrow) txt('equal and opposite force on the magnet: the balance reads it', [mq[0] - 12 * p, mq[1] + 2 * p], { s: 10.5, c: T.forceInk, a: 'right' });
+      } else txt('No force: the current runs along B.', [Q([GAP / 2 + PD + 0.01, -0.02, zp])[0], Q([0, 0, zp])[1] - 16 * p], { w: 700, c: T.forceInk });
       const wl = Q([-Math.cos(th) * hl, -Math.sin(th) * hl, (ZC + ZHOLD) / 2 + 0.02]);
       txt(`I = ${f(Math.abs(S.I), 1)} A`, [wl[0] - 10 * p, wl[1]], { w: 700, a: 'right', m: true });
       const aq = Q([0.036 * Math.cos(th / 2), 0.036 * Math.sin(th / 2), ZC]); txt(`θ = ${S.th}°`, [aq[0] + 4 * p, aq[1]], { s: 10.5, m: true, w: 700 });
@@ -610,7 +610,7 @@ table.rows input:focus { border-color: var(--accent); }
       const th = S.loop.th, sg = sgnLoop(), h = LOOP.a / 2, c = Math.cos(th), s = Math.sin(th);
       const mq = Q([sg * c * 0.052, sg * s * 0.052, ZC]); txt('μ', mq, { w: 700, s: 14, a: 'center', c: T.mu });
       const Fs = Math.abs(S.I) * S.N * LOOP.a * Bv, fl = bl ? 0.035 : Math.min(0.07, Fs * 1.6);
-      if (Fs > 0 || bl) { const t1 = Q([-s * h, c * h + (sg > 0 ? 1 : -1) * (fl + 0.006), ZC]); txt(bl ? 'F' : `F = ${f(Fs * 1000, 1)} mN`, [t1[0] + 6 * p, t1[1] - 8 * p], { w: 700, c: T.force }); const t2 = Q([s * h, -c * h - (sg > 0 ? 1 : -1) * (fl + 0.006), ZC]); txt('F', [t2[0] + 6 * p, t2[1] - 8 * p], { w: 700, c: T.force }); }
+      if (Fs > 0 || bl) { const t1 = Q([-s * h, c * h + (sg > 0 ? 1 : -1) * (fl + 0.006), ZC]); txt(bl ? 'F' : `F = ${f(Fs * 1000, 1)} mN`, [t1[0] + 6 * p, t1[1] - 8 * p], { w: 700, c: T.forceInk }); const t2 = Q([s * h, -c * h - (sg > 0 ? 1 : -1) * (fl + 0.006), ZC]); txt('F', [t2[0] + 6 * p, t2[1] - 8 * p], { w: 700, c: T.forceInk }); }
       const cq = Q([0, 0, ZC + h + 0.012]); txt(`${S.N} turns, ${LOOP.a * 100} cm square`, [cq[0] + 12 * p, cq[1] - 6 * p], { s: 10.5, c: T.muted });
       if (S.comm) { const kq = Q([0.016, 0, ZC - h - 0.016]); txt('commutator and brushes', [kq[0] + 10 * p, kq[1] + 4 * p], { s: 10.5, c: T.muted }); }
     }

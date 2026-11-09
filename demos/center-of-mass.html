@@ -437,7 +437,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       ctx.strokeStyle = T.plateGrid; for (let i = 1; i < 10; i++) { const x = B.x0 + B.sc * i / 10; ctx.beginPath(); ctx.moveTo(x, B.y0); ctx.lineTo(x, B.y0 + B.h); ctx.stroke(); } for (let j = 1; j < 6; j++) { const y = B.y0 + B.h - B.sc * j / 10; ctx.beginPath(); ctx.moveTo(B.x0, y); ctx.lineTo(B.x0 + B.w, y); ctx.stroke(); }
       ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText('0', B.x0, B.y0 + B.h + 3); ctx.textAlign = 'right'; ctx.fillText('1.0 m', B.x0 + B.w, B.y0 + B.h + 3); ctx.textBaseline = 'bottom'; ctx.textAlign = 'left'; ctx.fillText('0.6 m', B.x0 - 2, B.y0 - 3);
       S.ms.forEach((a, i) => { const [x, y] = toPx(B, a), r = (8 + 9 * Math.sqrt(a.m)) * p; puck(x, y, r, COLS()[i]); if (i === S.sel) { ctx.strokeStyle = T.ink; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.arc(x, y, r + 1.5 * p, 0, 7); ctx.stroke(); }
-        ctx.fillStyle = T.canvas; ctx.font = `700 ${11 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(`${a.m.toFixed(1)}`, x, y); });
+        ctx.font = `700 ${11 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        /* light digits on a mid tone puck: a thin dark outline under them keeps them readable on every color */
+        if (/^#[ef]/i.test(T.canvas)) { ctx.save(); ctx.lineJoin = 'round'; ctx.lineWidth = 3 * p; ctx.strokeStyle = 'rgba(25,18,10,0.6)'; ctx.strokeText(`${a.m.toFixed(1)}`, x, y); ctx.restore(); }
+        ctx.fillStyle = T.canvas; ctx.fillText(`${a.m.toFixed(1)}`, x, y); });
       if (!S.blind) { const C = centre(S.ms), [x, y] = toPx(B, C); cross(x, y, T.cm); }
       return;
     }

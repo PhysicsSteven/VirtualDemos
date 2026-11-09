@@ -49,7 +49,10 @@
       if (x.tot) { c.globalAlpha = 0.18; c.fillRect(bx, y1, bw, h); c.globalAlpha = 1; c.strokeStyle = x.c; c.lineWidth = 1.5 * ps(); c.strokeRect(bx + 0.75, y1, bw - 1.5, Math.max(h, 1)); }
       else c.fillRect(bx, y1, bw, Math.max(h, 1));
       c.fillStyle = ink; c.textAlign = 'center'; c.font = font(10, 1);
-      c.fillText(sup(fmt(x.v)), bx + bw / 2, x.v >= 0 ? Math.max(11 * ps(), y1 - 4) : Math.min(bot + 1, y1 + h + 11 * ps()));
+      /* a halo in the canvas color, so a value pushed onto a clamped bar still reads (2026-11-09 contrast pass) */
+      var vt = sup(fmt(x.v)), vy = x.v >= 0 ? Math.max(11 * ps(), y1 - 4) : Math.min(bot + 1, y1 + h + 11 * ps());
+      c.save(); c.lineJoin = 'round'; c.lineWidth = 3 * ps(); c.strokeStyle = tok('--canvas') || '#fff'; c.strokeText(vt, bx + bw / 2, vy); c.restore();
+      c.fillText(vt, bx + bw / 2, vy);
       c.fillStyle = mut; c.font = font(10); c.fillText(x.label, bx + bw / 2, H - 6 * ps());
     });
     c.fillStyle = mut; c.font = font(10); c.textAlign = 'left'; c.fillText('Energy (' + unit + ')', 4, 11 * ps());

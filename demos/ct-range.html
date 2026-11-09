@@ -488,7 +488,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   function drawRoiMarks(c, x0, y0, side) { const p = proj(), k = side / 24, i = INSERTS.indexOf(S.ins), [x, y] = insAt(i);
     c.strokeStyle = '#facc15'; c.lineWidth = 1.6 * p; c.beginPath(); c.arc(x0 + (12 + x) * k, y0 + (12 + y) * k, INS_R * 0.8 * k, 0, 7); c.stroke();
-    if (side > 200) { c.font = `${9.5 * p}px ${T.ui}`; c.fillStyle = 'rgba(250,250,210,0.9)'; c.textAlign = 'center'; c.textBaseline = 'middle';
+    if (side > 200) { c.font = `${9.5 * p}px ${T.ui}`; c.fillStyle = 'rgb(255,255,225)'; c.textAlign = 'center'; c.textBaseline = 'middle';
       INSERTS.forEach((key, q) => { if (key === 'water') return; const [a, b] = insAt(q), rr = Math.hypot(a, b), lx = a / rr * (RING + 2.6), ly = b / rr * (RING + 2.6); c.fillText(SHORT[key], x0 + (12 + lx) * k, y0 + (12 + ly) * k); }); } }
 
   /* the beam line: nozzle, the slab, the water tank, and where the peak falls with and without the slab */

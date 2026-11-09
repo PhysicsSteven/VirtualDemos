@@ -534,7 +534,9 @@ table.rows input:focus { border-color: var(--accent); }
   }
 
   // ---------- drawing ----------
-  function txt(s, x, y, o = {}) { const p = ps(); ctx.fillStyle = o.c || T.ink; ctx.font = `${o.b ? '700 ' : ''}${(o.s || 11) * p}px ${o.m ? T.mono : T.ui}`; ctx.textAlign = o.a || 'left'; ctx.textBaseline = o.bl || 'middle'; ctx.fillText(s, x, y); }
+  function txt(s, x, y, o = {}) { const p = ps(); ctx.fillStyle = o.c || T.ink; ctx.font = `${o.b ? '700 ' : ''}${(o.s || 11) * p}px ${o.m ? T.mono : T.ui}`; ctx.textAlign = o.a || 'left'; ctx.textBaseline = o.bl || 'middle';
+    if (o.plate) { const w = ctx.measureText(s).width, h = (o.s || 11) * p; ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.92; ctx.fillRect(x - 1 * p, y - h * 0.62, w + 2 * p, h * 1.24); ctx.globalAlpha = 1; ctx.fillStyle = o.c || T.ink; }
+    ctx.fillText(s, x, y); }
   function draw() {
     if (!T || !W) return;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); const p = ps(), narrow = W < 620;
@@ -553,7 +555,7 @@ table.rows input:focus { border-color: var(--accent); }
     Gr.shadow(ctx, vx + S.L * ppm / 2, ry + rh + 1, S.L * ppm * 0.52, 3 * q, 0.7);
     let gr = ctx.createLinearGradient(0, ry, 0, ry + rh); gr.addColorStop(0, Gr.mix(T.rule.startsWith('#') ? T.rule : '#f1e3b5', '#ffffff', 0.25)); gr.addColorStop(1, T.rule);
     ctx.fillStyle = gr; ctx.beginPath(); ctx.roundRect(vx, ry, S.L * ppm, rh, 1.5 * q); ctx.fill(); ctx.strokeStyle = 'rgba(0,0,0,0.25)'; ctx.lineWidth = 1; ctx.stroke();
-    ctx.strokeStyle = T.ink; ctx.lineWidth = 0.8; for (let i = 0; i <= Math.round(S.L * 100); i++) { const x = vx + i / 100 * ppm, big = i % 10 === 0, mid = i % 5 === 0; if (!big && ppm < 250) continue; ctx.globalAlpha = big ? 0.85 : 0.5; ctx.beginPath(); ctx.moveTo(x, ry); ctx.lineTo(x, ry + (big ? 6 : mid ? 4 : 2.5) * q); ctx.stroke(); ctx.globalAlpha = 1; if (big && (!narrow || i % 20 === 0) && i < Math.round(S.L * 100) - 4) txt(String(i / 100), x + 2 * q, ry + 9 * q, { s: 7.5 * Math.sqrt(q / p), m: 1, c: T.muted }); }
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 0.8; for (let i = 0; i <= Math.round(S.L * 100); i++) { const x = vx + i / 100 * ppm, big = i % 10 === 0, mid = i % 5 === 0; if (!big && ppm < 250) continue; ctx.globalAlpha = big ? 0.85 : 0.5; ctx.beginPath(); ctx.moveTo(x, ry); ctx.lineTo(x, ry + (big ? 6 : mid ? 4 : 2.5) * q); ctx.stroke(); ctx.globalAlpha = 1; if (big && (!narrow || i % 20 === 0) && i < Math.round(S.L * 100) - 4) txt(String(i / 100), x + 2 * q, ry + 9 * q, { s: 7.5 * Math.sqrt(q / p), m: 1, c: T.muted, plate: 1 }); }
     Gr.label(ctx, `L = ${S.L.toFixed(2)} m`, (vx + ax) / 2, tableY + edge + 16 * p, { a: 'center', s: 11 * p, w: 600, c: T.ink });
     /* pulley on a rod clamped to the bench edge */
     const bx = px - 2 * q;
@@ -608,7 +610,7 @@ table.rows input:focus { border-color: var(--accent); }
       /* a light ring on a smooth vertical rod: it slides freely, so the end has no sideways force on it */
       const rt = sy - clip - 12 * q; Gr.shadow(ctx, ax, dBot, 10 * q, 3 * q); Gr.rod(ctx, ax, rt, ax, dBot, 2.6 * q, { color: '#d2ccc4' });
       ctx.strokeStyle = '#d2a64a'; ctx.lineWidth = 2.6 * q; ctx.beginPath(); ctx.ellipse(ax, yEnd, 6 * q, 3 * q, 0, 0, TAU); ctx.stroke();
-      Gr.label(ctx, 'free end', ax, dBot + edge + 4 * p, { a: 'center', s: 9 * p });
+      Gr.label(ctx, 'free end', ax, dBot + edge + 4 * p, { a: 'center', s: 9 * p, c: T.ink });
     } else if (S.abs === 'fixed') {
       /* the string clamped to a post: that point cannot move */
       Gr.shadow(ctx, ax, dBot, 12 * q, 3 * q); Gr.rod(ctx, ax, sy + 6 * q, ax, dBot, 4 * q);
@@ -625,7 +627,7 @@ table.rows input:focus { border-color: var(--accent); }
       Gr.slotted(ctx, ax, pistonY, dw - 6 * q, 4 * q);
       ctx.strokeStyle = 'rgba(0,0,0,0.35)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.roundRect(ax - dw / 2, dTop, dw, dBot - dTop, 3 * q); ctx.stroke();
       Gr.box(ctx, ax - dw / 2 - 3 * q, dTop - 4 * q, dw + 6 * q, 6 * q, { r: 2 * q, shadow: false }); Gr.box(ctx, ax - dw / 2 - 4 * q, dBot - 6 * q, dw + 8 * q, 6 * q, { r: 2 * q, shadow: false });
-      Gr.label(ctx, 'absorber', ax, dBot + edge + 4 * p, { a: 'center', s: 9 * p });
+      Gr.label(ctx, 'absorber', ax, dBot + edge + 4 * p, { a: 'center', s: 9 * p, c: T.ink });
     }
     ctx.strokeStyle = T.string; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(ax, yEnd); ctx.lineTo(px, sy); ctx.stroke();
     const hx = px + pr, hy0 = sy + pr, hang = overlay ? Math.max(hy0 + 70 * q, tableY + 40 * q) : Math.max(hy0 + 70 * p, tableY + 30 * p);
@@ -660,7 +662,7 @@ table.rows input:focus { border-color: var(--accent); }
         txt(on && S.abs === 'matched' ? 'energy per meter, ½μy_t² + ½Ty_x² (dashed: its average)' : 'energy per meter, ½μy_t² + ½Ty_x²', sx(0), laneT - 6 * p, { s: 9, c: T.muted });
       }
     }
-    Gr.label(ctx, pul ? `sideways motion drawn ×${Math.round(yScale / ppm)}, slowed ×${Math.round(PULSE_CROSS * vNow / S.L)}` : `sideways motion drawn ×${Math.round(yScale / ppm)}, slowed as by a strobe`, W - 10 * p, Hh - 10 * p, { a: 'right', s: 9 * p, alpha: 0.75 });
+    Gr.label(ctx, pul ? `sideways motion drawn ×${Math.round(yScale / ppm)}, slowed ×${Math.round(PULSE_CROSS * vNow / S.L)}` : `sideways motion drawn ×${Math.round(yScale / ppm)}, slowed as by a strobe`, W - 10 * p, Hh - 10 * p, { a: 'right', s: 9 * p });
   }
 
   let roT = 0;

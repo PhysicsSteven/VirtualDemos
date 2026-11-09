@@ -13,9 +13,9 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
 /* only what this demo needs beyond demos/lib/vd.css: the bodies' colours, the bench, the Set up card, the record plot */
-:root { --mass: #857b6d; --pos: #c23f2c; --neg: #2b60b5; --arrow: #a7740b; --bench: #ebe6e0; --wood: #b88a52; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --mass: #b4aa9c; --pos: #ff7660; --neg: #69a0ff; --arrow: #e2b350; --bench: #2e271e; --wood: #8a6a40; } }
-:root[data-theme="dark"] { --mass: #b4aa9c; --pos: #ff7660; --neg: #69a0ff; --arrow: #e2b350; --bench: #2e271e; --wood: #8a6a40; }
+:root { --mass: #857b6d; --pos: #c23f2c; --neg: #2b60b5; --arrow: #a7740b; --arrow-ink: #7a5406; --bench: #ebe6e0; --wood: #b88a52; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --mass: #b4aa9c; --pos: #ff7660; --neg: #69a0ff; --arrow: #e2b350; --arrow-ink: #e2b350; --bench: #2e271e; --wood: #755731; } }
+:root[data-theme="dark"] { --mass: #b4aa9c; --pos: #ff7660; --neg: #69a0ff; --arrow: #e2b350; --arrow-ink: #e2b350; --bench: #2e271e; --wood: #755731; }
 .stage { position: relative; display: grid; grid-template-rows: auto minmax(380px, 1fr); min-height: 520px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); }
 .scene { position: relative; min-height: 0; }
@@ -161,7 +161,7 @@ table.rec th { color: var(--muted); font-weight: 600; }
   const fx = (v) => `${(+v).toFixed(1)} ${M().xu}`;
   const fq = (v) => S.mode === 'grav' ? `${Math.round(v)} kg` : `${v > 0 ? '+' : v < 0 ? '−' : ''}${Math.abs(v).toFixed(S.mode === 'coul' ? 1 : 0)} ${M().qu}`;
   function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
-    T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), accent: g('--accent'), surface: g('--surface'), mass: g('--mass'), pos: g('--pos'), neg: g('--neg'), arrow: g('--arrow'), bench: g('--bench'), wood: g('--wood'), mono: g('--font-mono'), ui: g('--font-ui') }; }
+    T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), accent: g('--accent'), surface: g('--surface'), mass: g('--mass'), pos: g('--pos'), neg: g('--neg'), arrow: g('--arrow'), arrowInk: g('--arrow-ink'), bench: g('--bench'), wood: g('--wood'), mono: g('--font-mono'), ui: g('--font-ui') }; }
   const r = () => S.x2 - S.x1, F = () => flForce(S.mode, S.a, S.b, r());
   const R1 = () => flDrawR(S.mode, S.a, S.same), R2 = () => flDrawR(S.mode, S.b, S.same);
   const minGap = () => R1() + R2() + M().len * 0.005;
@@ -212,7 +212,7 @@ table.rec th { color: var(--muted); font-weight: 600; }
       if (f < 0) L = Math.min(L, Math.max(14 * p, 0.45 * (b2.x - b1.x)));   /* pulling arrows point at each other: keep them from crossing */
       const ay = Math.min(b1.y - b1.rad, b2.y - b2.rad) - 34 * p, s = f > 0 ? 1 : -1;   /* s = +1: body 2 pushed to the right */
       arrow(b2.x, ay, b2.x + s * L, T.arrow, 4 * p); arrow(b1.x, ay, b1.x - s * L, T.arrow, 4 * p);
-      ctx.fillStyle = T.arrow; ctx.font = `600 ${11 * p}px ${T.mono}`; ctx.textBaseline = 'bottom';
+      ctx.fillStyle = T.arrowInk; ctx.font = `600 ${11 * p}px ${T.mono}`; ctx.textBaseline = 'bottom';
       const txt = S.blind ? 'F = ?' : `F = ${fN(f)}`;
       ctx.textAlign = 'right'; ctx.fillText(txt, b1.x + 8 * p, ay - 8 * p); ctx.textAlign = 'left'; ctx.fillText(txt, b2.x - 8 * p, ay - 8 * p);
       ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';

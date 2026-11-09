@@ -479,12 +479,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.fillStyle = ink; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
     ctx.fillText(text, lx + 8 * PS, y + th / 2 + 0.5);
   }
-  function clampText(ctx, text, x, y, w, pad) {
+  function clampText(ctx, text, x, y, w, pad, halo) {
     const tw = ctx.measureText(text).width;
     const align = ctx.textAlign;
     let x0 = align === 'right' ? x - tw : align === 'center' ? x - tw / 2 : x;
     x0 = Math.max(pad, Math.min(w - pad - tw, x0));
-    ctx.save(); ctx.textAlign = 'left'; ctx.fillText(text, x0, y); ctx.restore();
+    ctx.save(); ctx.textAlign = 'left'; if (halo) { ctx.lineJoin = 'round'; ctx.lineWidth = 3 * PS; ctx.strokeStyle = halo; ctx.strokeText(text, x0, y); } ctx.fillText(text, x0, y); ctx.restore();
   }
   function sunRays(ctx, xFrom, xTo, ys, label) {
     ctx.save();
@@ -894,12 +894,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     // phase names round the ring
     if (S.ring) {
       const names = ['New', 'Waxing crescent', 'First quarter', 'Waxing gibbous', 'Full', 'Waning gibbous', 'Third quarter', 'Waning crescent'];
-      ctx.font = font(400, 10.5, 'ui'); ctx.textBaseline = 'middle'; ctx.fillStyle = T.muted;
+      ctx.globalAlpha = 1; ctx.font = font(400, 10.5, 'ui'); ctx.textBaseline = 'middle'; ctx.fillStyle = T.muted;
       const c0 = P3([0, 0, 0]);
       for (let k = 0; k < 8; k++) {
         const q = moonAt(k * 45, pn), p = P3([q[0] * 1.2, q[1] * 1.2, q[2]]), dx = p[0] - c0[0];
         ctx.textAlign = Math.abs(dx) < 0.25 * w * 0.2 ? 'center' : dx > 0 ? 'left' : 'right';
-        clampText(ctx, names[k], p[0], p[1], w, 4 * PS);
+        clampText(ctx, names[k], p[0], p[1], w, 4 * PS, 'rgba(4,6,11,0.85)');
       }
     }
     if (S.shadow) { const p = P3([-0.62, 0, RE3 * 0.8]); ctx.fillStyle = T.muted; ctx.font = font(600, 11, 'ui'); ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; clampText(ctx, "Earth's shadow", p[0], p[1], w, 4 * PS); }
@@ -952,7 +952,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     // captions
     ctx.fillStyle = T.ink; ctx.font = font(700, 15, 'ui'); ctx.textAlign = 'left'; ctx.textBaseline = 'top';
     ctx.fillText('Day ' + dayOf().toFixed(1) + ' of 29.53 · ' + phaseName(e), 12 * PS, 10 * PS);
-    ctx.fillStyle = T.muted; ctx.font = font(400, 11.5, 'ui');
+    ctx.globalAlpha = 1; ctx.fillStyle = T.muted; ctx.font = font(400, 11.5, 'ui');
+    ctx.save(); ctx.lineJoin = 'round'; ctx.lineWidth = 3 * PS; ctx.strokeStyle = 'rgba(4,6,11,0.85)'; ctx.strokeText('Not to scale · blue dot: you, ' + fmtHM(S.hour), 12 * PS, 30 * PS); ctx.restore();
     ctx.fillText('Not to scale · blue dot: you, ' + fmtHM(S.hour), 12 * PS, 30 * PS);
     if (S.eclipse) {
       const st = eclipseState(), py = 50 * PS;

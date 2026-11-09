@@ -226,5 +226,7 @@ VDI18N.add('en', 'demo/binding-energy', [
 "{#} ⁴He → ¹²C",
 "How red giants burn helium: two alphas briefly make ⁸Be, which captures a third before it falls apart. Less energy per kilogram than hydrogen burning, because ⁴He is already tightly bound.",
 "Chart of nuclides, colored by half life",
-"half life; stable in ink"
+"half life; stable in ink",
+"Light",
+"Close"
 ]);

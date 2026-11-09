@@ -501,7 +501,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.strokeStyle = 'rgba(238,231,222,0.55)'; ctx.lineWidth = 1.2; ctx.strokeRect(b.x + 0.5, b.y + 0.5, b.w - 1, b.h - 1);
     const pzx = b.x + (-inset.z0) / inset.zw * b.w; ctx.strokeStyle = 'rgba(245,241,235,0.9)'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(pzx, b.y); ctx.lineTo(pzx, b.y + b.h); ctx.stroke();
     label(ctx, 'at the plate, magnified: 12 μm top to bottom', b.x + 8 * p, b.y + 18 * p, { size: 10 });
-    label(ctx, 'developed', pzx + 4 * p, b.y + b.h - 10 * p, { size: 9.5, color: T.muted });
+    label(ctx, 'developed', pzx + 4 * p, b.y + b.h - 10 * p, { size: 9.5, color: '#d9d0c4' });
     /* the beams' directions */
     const cy = b.y + b.h / 2, cx = b.x + b.w * 0.3, Lr = Math.min(b.w, b.h) * 0.22;
     const dir = (th) => [Math.cos(th * RAD), -Math.sin(th * RAD)], dr = dir(r.thr);

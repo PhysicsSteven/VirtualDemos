@@ -349,7 +349,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       ctx.fillStyle = dark() ? '#2a2319' : '#eeeae4'; ctx.fillRect(bx, cy, bw, ch);
       ctx.fillStyle = T.cold; ctx.fillRect(bx, cy, sx - bx, ch); ctx.fillStyle = T.hot; ctx.fillRect(sx, cy, bx + bw - sx, ch);
       ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(bx + bw / 2, cy - 3 * p); ctx.lineTo(bx + bw / 2, cy + ch + 3 * p); ctx.stroke();
-      ctx.font = `700 ${9.5 * p}px ${T.mono}`; ctx.textBaseline = 'middle'; ctx.fillStyle = '#ffffff';
+      ctx.font = `700 ${9.5 * p}px ${T.mono}`; ctx.textBaseline = 'middle'; ctx.fillStyle = dark() ? '#0b0f14' : '#ffffff';
       if (sx - bx > 34 * p) { ctx.textAlign = 'left'; ctx.fillText(`${nL} left`, bx + 4 * p, cy + ch / 2 + 0.5); }
       if (bx + bw - sx > 40 * p) { ctx.textAlign = 'right'; ctx.fillText(`${g.N - nL} right`, bx + bw - 4 * p, cy + ch / 2 + 0.5); } }
     lab(`${g.N} molecules; insulated box, no heat in or out`, bx + bw / 2, by + 16 * p, { a: 'center' });

@@ -93,5 +93,7 @@ VDI18N.add('en', 'demo/photoelectric', [
 "Calcium cathode (emitter)",
 "Copper cathode (emitter)",
 "Platinum cathode (emitter)",
-"hf < φ : no electrons"
+"hf < φ : no electrons",
+"Light",
+"Close"
 ]);

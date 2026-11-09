@@ -532,7 +532,9 @@ table.rows tr.sim td { background: color-mix(in srgb, var(--equi) 9%, transparen
       const whole = h % 2 === 0; ctx.beginPath();
       if (whole) { ctx.moveTo(x, y); ctx.lineTo(x, y - hs * 0.62); } else { ctx.moveTo(x, y); ctx.lineTo(x, y + hs * 0.5); }
       ctx.stroke();
-      if (whole && x > x0 + 6 * ps) ctx.fillText(String(v), x, y - hs * 0.62 - 1);
+      if (whole && x > x0 + 6 * ps) {   /* the digits stand half over the dark panel: a pale halo keeps them readable on either */
+        ctx.save(); ctx.strokeStyle = '#f4f1ec'; ctx.lineWidth = 3 * ps; ctx.lineJoin = 'round'; ctx.strokeText(String(v), x, y - hs * 0.62 - 1); ctx.restore();
+        ctx.fillText(String(v), x, y - hs * 0.62 - 1); }
     }
     // thimble
     const th = ctx.createLinearGradient(0, y - Rt, 0, y + Rt);
@@ -547,7 +549,7 @@ table.rows tr.sim td { background: color-mix(in srgb, var(--equi) 9%, transparen
     const hot = (eyeDrag && eyeDrag.id === 'thimble') || (!eyeDrag && eyeHot === 'thimble');
     ctx.strokeStyle = T.accent; ctx.globalAlpha = hot ? 1 : 0.6; ctx.lineWidth = (hot ? 2.4 : 1.4) * ps;
     ctx.strokeRect(kx - 2, y - Rt - 3, x1 - kx + 4, 2 * Rt + 6); ctx.globalAlpha = 1;
-    ctx.fillStyle = T.accent; ctx.font = `700 ${9 * ps}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    ctx.fillStyle = '#fbc26d'; ctx.font = `700 ${9 * ps}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';   /* the eyepiece panel is dark in both looks */
     ctx.fillText('↕ turn', (kx + x1) / 2, y + Rt + 5);
     // thimble graduations: 50 divisions of 0.01 mm around the barrel
     ctx.strokeStyle = '#1c1915'; ctx.fillStyle = '#1c1915'; ctx.lineWidth = 1; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';

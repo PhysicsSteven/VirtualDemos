@@ -30,6 +30,7 @@
   --neg: #2b60b5;
   --equi: #a7740b;
   --accent: #c4811c;
+  --own-accent-ink: #7a4400;
   --gamma: #7a3ec2;
   --lead: #746d65;
   --lead-hi: #a19a92;
@@ -55,7 +56,7 @@
   :root:not([data-theme="light"]) {
     --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
     --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
-    --equi: #e2b350; --accent: #fbc26d; --gamma: #b98cff; --lead: #676058; --lead-hi: #8d867e; --lead-dk: #47423b;
+    --equi: #e2b350; --accent: #fbc26d; --own-accent-ink: #fbc26d; --gamma: #b98cff; --lead: #676058; --lead-hi: #8d867e; --lead-dk: #47423b;
     --alu: #b7afa5; --alu-dk: #7f776d; --pmt: #3b342b; --bench: #4a3f30; --bench-dk: #362d22; --nim: #3e362c;
     --scr: #0b0906; --scr-ink: #ece4da; --scr-muted: #a29686; --scr-grid: #2a231a; --scr-data: #f2c53d; --scr-roi: #ff5c6c; --scr-cur: #5fd0ff; --scr-cal: #6fe0a0; color-scheme: dark;
   }
@@ -63,7 +64,7 @@
 :root[data-theme="dark"] {
   --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
   --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
-  --equi: #e2b350; --accent: #fbc26d; --gamma: #b98cff; --lead: #676058; --lead-hi: #8d867e; --lead-dk: #47423b;
+  --equi: #e2b350; --accent: #fbc26d; --own-accent-ink: #fbc26d; --gamma: #b98cff; --lead: #676058; --lead-hi: #8d867e; --lead-dk: #47423b;
   --alu: #b7afa5; --alu-dk: #7f776d; --pmt: #3b342b; --bench: #4a3f30; --bench-dk: #362d22; --nim: #3e362c;
   --scr: #0b0906; --scr-ink: #ece4da; --scr-muted: #a29686; --scr-grid: #2a231a; --scr-data: #f2c53d; --scr-roi: #ff5c6c; --scr-cur: #5fd0ff; --scr-cal: #6fe0a0; color-scheme: dark;
 }
@@ -1146,7 +1147,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const projOn = () => document.documentElement.getAttribute('data-projector') === 'on';
   function tokens() {
     const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
-    T = {}; for (const n of ['canvas', 'surface', 'ink', 'muted', 'line', 'grid', 'grid-strong', 'pos', 'neg', 'equi', 'accent', 'gamma', 'lead', 'lead-hi', 'lead-dk', 'alu', 'alu-dk', 'pmt', 'bench', 'bench-dk', 'nim', 'scr', 'scr-ink', 'scr-muted', 'scr-grid', 'scr-data', 'scr-roi', 'scr-cur', 'scr-cal']) T[n.replace(/-(\w)/g, (_, c) => c.toUpperCase())] = g('--' + n);
+    T = {}; for (const n of ['canvas', 'surface', 'ink', 'muted', 'line', 'grid', 'grid-strong', 'pos', 'neg', 'equi', 'accent', 'own-accent-ink', 'gamma', 'lead', 'lead-hi', 'lead-dk', 'alu', 'alu-dk', 'pmt', 'bench', 'bench-dk', 'nim', 'scr', 'scr-ink', 'scr-muted', 'scr-grid', 'scr-data', 'scr-roi', 'scr-cur', 'scr-cal']) T[n.replace(/-(\w)/g, (_, c) => c.toUpperCase())] = g('--' + n);
     T.mono = g('--font-mono') || 'monospace'; T.ui = g('--font-ui') || 'sans-serif';
   }
   const can = $('can'), pane = $('pane'), ctx = can.getContext('2d');
@@ -1313,7 +1314,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     // labels, drawn last on halos
     const lb = (t, x, y, colr, al = 'center', bold = false) => label(c, t, x, y, colr, al, 'middle', bold, ps * 0.92, T.canvas, 10.5);
     const yD = Math.min(Y(R) - 3 * ps, Y(1.27) - 24 * ps);          // dimension line above the source label
-    lb(`d = ${S.d.toFixed(1)} cm`, (X(zs) + X(0)) / 2, yD - 7 * ps, T.accent, 'center', true);
+    lb(`d = ${S.d.toFixed(1)} cm`, (X(zs) + X(0)) / 2, yD - 7 * ps, T.ownAccentInk, 'center', true);
     c.strokeStyle = T.accent; c.lineWidth = 1 * ps; c.beginPath(); c.moveTo(X(zs), yD); c.lineTo(X(0), yD); c.stroke();
     if (sc > 5.5) {
       lb(`NaI(Tl) ${C.SIZES[S.size].label}`, X(H / 2), Y(-canR) + 10 * ps, T.ink, 'center', true);

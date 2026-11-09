@@ -39,6 +39,8 @@
   --ebony: #2a241d;
   --brass: #a7740b;
   --hue-l: 40%;
+  --hue-ink-l: 28%;
+  --brass-ink: #7f5a06;
   --hue-s: 68%;
   --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
@@ -48,14 +50,14 @@
     --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
     --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
     --equi: #e2b350; --accent: #fbc26d; --warm: #13120f; --wood: #221c15; --wood-edge: #4b3f30;
-    --ivory: #ddd5c6; --ebony: #0b0a08; --brass: #e2b350; --hue-l: 66%; --hue-s: 70%; color-scheme: dark;
+    --ivory: #ddd5c6; --ebony: #0b0a08; --brass: #e2b350; --hue-l: 66%; --hue-ink-l: 66%; --brass-ink: #e2b350; --hue-s: 70%; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
   --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
   --equi: #e2b350; --accent: #fbc26d; --warm: #13120f; --wood: #221c15; --wood-edge: #4b3f30;
-  --ivory: #ddd5c6; --ebony: #0b0a08; --brass: #e2b350; --hue-l: 66%; --hue-s: 70%; color-scheme: dark;
+  --ivory: #ddd5c6; --ebony: #0b0a08; --brass: #e2b350; --hue-l: 66%; --hue-ink-l: 66%; --brass-ink: #e2b350; --hue-s: 70%; color-scheme: dark;
 }
 :root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
@@ -772,13 +774,15 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const cs = getComputedStyle(document.documentElement);
     const g = (n) => cs.getPropertyValue(n).trim();
     T = { warm: g('--warm'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'),
-      wood: g('--wood'), woodEdge: g('--wood-edge'), brass: g('--brass'), pos: g('--pos'), accent: g('--accent'),
-      hl: g('--hue-l') || '40%', hs: g('--hue-s') || '68%', mono: g('--font-mono') || 'monospace' };
+      wood: g('--wood'), woodEdge: g('--wood-edge'), brass: g('--brass'), brassInk: g('--brass-ink') || g('--brass'), pos: g('--pos'), accent: g('--accent'),
+      hl: g('--hue-l') || '40%', hil: g('--hue-ink-l') || '28%', hs: g('--hue-s') || '68%', mono: g('--font-mono') || 'monospace' };
     buildKey(); buildTable();
   }
   // one color per harmonic, warm amber at n = 1 turning through red and violet to teal at n = 16
   const hue = (n) => ((35 - (n - 1) * 215 / 15) % 360 + 360) % 360;
   const hcol = (n, al) => `hsla(${hue(n).toFixed(0)}, ${T.hs}, ${T.hl}, ${al === undefined ? 1 : al})`;
+  /* the same hue, darker in Day, for text (lines and bars keep hcol) */
+  const hink = (n) => `hsl(${hue(n).toFixed(0)}, ${T.hs}, ${T.hil})`;
   function resize() {
     dpr = window.devicePixelRatio || 1;
     const r = pane.getBoundingClientRect();
@@ -927,7 +931,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     else if (D.info.kind === 'drift') btxt = [`T₁ = ${fmtMs(T1)}, but the shape drifts`, `T₁ = ${fmtMs(T1)}, drifting`];
     else btxt = [`T₁ = ${fmtMs(T1)}, but it never repeats exactly`, `T₁ = ${fmtMs(T1)}, no repeat`];
     const bx = xb + 10 * ls, room = R - bx;
-    if (room > 60 * ls) tag(pick(btxt, room, 10.5, true), bx, yb, T.brass, 'left', 'middle', true, 10.5);
+    if (room > 60 * ls) tag(pick(btxt, room, 10.5, true), bx, yb, T.brassInk, 'left', 'middle', true, 10.5);
     // title
     const title = dsp ? pick([`Wave packet on ${dsp.m.name === 'Bar or particle' ? 'a bar, or a particle' : dsp.m.name.toLowerCase()}: crests at v_p, envelope at v_g`, `Packet: ${dsp.m.name.toLowerCase()}`, 'Wave packet'], r.w - 20 * ls, 11.5, true)
       : inX ? pick([`Wave in space, moving right: the sum of ${D.ns.length} harmonic${D.ns.length === 1 ? '' : 's'}`, 'Wave in space, moving right', 'Wave in space'], r.w - 20 * ls, 11.5, true)
@@ -1080,7 +1084,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     // labels last
     for (const [t, x] of vowTags) tag(t, x, top + 2 * ls, T.accent, 'center', 'top', true, 10.5);
     const a1 = D.a[1];
-    tag(a1 > 0 ? 'f₁' : pick(['f₁: no energy here', 'f₁'], (R - xf) - 70 * ls, 10.5, true), xf - 4 * ls, bot + 18 * ls, T.brass, 'left', 'top', true, 10.5);
+    tag(a1 > 0 ? 'f₁' : pick(['f₁: no energy here', 'f₁'], (R - xf) - 70 * ls, 10.5, true), xf - 4 * ls, bot + 18 * ls, T.brassInk, 'left', 'top', true, 10.5);
     if (D.info.kind === 'periodic' && D.info.g > 1) {
       const xg = X(D.info.f);
       ctx.strokeStyle = T.pos; ctx.setLineDash([3 * ls, 3 * ls]); ctx.beginPath(); ctx.moveTo(xg, top); ctx.lineTo(xg, bot); ctx.stroke(); ctx.setLineDash([]);
@@ -1095,7 +1099,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       if (s) {
         const a = S.a[n], txt = `n = ${n} · ${fmtHz(fOf(n))} · ${a > 0 ? toDb(a).toFixed(1) + ' dB' : 'off'}${muted(n) ? ' (removed)' : ''}`;
         ctx.font = font(10.5, true); const w = ctx.measureText(txt).width;
-        tag(txt, clamp(s.x - w / 2, L, R - w), Math.max(top + 32 * ls, s.y - 12 * ls), hcol(n), 'left', 'bottom', true, 10.5);
+        tag(txt, clamp(s.x - w / 2, L, R - w), Math.max(top + 32 * ls, s.y - 12 * ls), hink(n), 'left', 'bottom', true, 10.5);
       }
     }
     // the instrument slider's spectrum, named at the top right
@@ -1195,7 +1199,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         rrect(cx - gw / 2, y - gh / 2, gw, gh, gh / 2); ctx.fill(); ctx.stroke();
       }
       // n label
-      ctx.font = font(10.5, true); ctx.fillStyle = m ? T.muted : hcol(n); ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+      ctx.font = font(10.5, true); ctx.fillStyle = m ? T.muted : hink(n); ctx.textAlign = 'center'; ctx.textBaseline = 'top';
       ctx.fillText(G.cw < 18 * ls && n % 2 === 0 && n !== NH ? '·' : String(n), cx, rowN);
       if (m) { ctx.font = font(9.5); ctx.fillStyle = T.muted; ctx.textBaseline = 'bottom'; ctx.fillText('off', cx, bot - 2); }
       // phase dial
@@ -1214,7 +1218,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       const txt = key.startsWith('bar') ? `a${sub(n)} = ${a.toFixed(2)}${a > 0 ? ` (${toDb(a).toFixed(1)} dB)` : ''}` : `φ${sub(n)} = ${Math.round(((S.ph[n] * 180 / PI) % 360 + 360) % 360)}°`;
       ctx.font = font(10.5, true); const w = ctx.measureText(txt).width;
       const yy = key.startsWith('bar') ? Math.max(top - 2, Yv(a) - 8 * ls) : dialY - dr - 4 * ls;
-      tag(txt, clamp(cx - w / 2, 8, W - w - 8), yy, hcol(n), 'left', 'bottom', true, 10.5);
+      tag(txt, clamp(cx - w / 2, 8, W - w - 8), yy, hink(n), 'left', 'bottom', true, 10.5);
     }
     const title = pick(['Harmonic bars: drag to set each amplitude' + (S.showDials ? ', dials set phases' : ''), 'Harmonic bars: drag to set', 'Harmonic bars'], W - 30 * ls, 11, true);
     tag(title, 18 * ls, r.y + 10 * ls, T.ink, 'left', 'middle', true, 11);

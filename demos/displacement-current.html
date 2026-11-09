@@ -16,9 +16,9 @@
 <style>
 /* Layout: a charging capacitor with an Amperian loop above a plot of B against r; the instrument rail on the right. */
 /* Layout: lab bench. The gas box and speed histogram fill the left, a narrow instrument rail sits on the right; stacks on phones. */
-:root { --wire: #b06a2c; --plate: #857b6d; --efield: #a7740b; --bfield: #2f7d4f; --loop: #a88456; --surf: #a88456; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --wire: #e0955a; --plate: #b4aa9c; --efield: #e2b350; --bfield: #5fcf8a; --loop: #b49bff; --surf: #b49bff; } }
-:root[data-theme="dark"] { --wire: #e0955a; --plate: #b4aa9c; --efield: #e2b350; --bfield: #5fcf8a; --loop: #b49bff; --surf: #b49bff; }
+:root { --wire: #b06a2c; --plate: #857b6d; --efield: #a7740b; --bfield: #2f7d4f; --loop: #a88456; --surf: #a88456; --efield-ink: #7f5a06; --loop-ink: #6e5430; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --wire: #e0955a; --plate: #b4aa9c; --efield: #e2b350; --bfield: #5fcf8a; --loop: #b49bff; --surf: #b49bff; --efield-ink: #e2b350; --loop-ink: #b49bff; } }
+:root[data-theme="dark"] { --wire: #e0955a; --plate: #b4aa9c; --efield: #e2b350; --bfield: #5fcf8a; --loop: #b49bff; --surf: #b49bff; --efield-ink: #e2b350; --loop-ink: #b49bff; }
 :root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
 body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
@@ -198,7 +198,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function tokens() {
     const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
     T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'), accent: g('--accent'),
-      wire: g('--wire'), plate: g('--plate'), e: g('--efield'), b: g('--bfield'), loop: g('--loop'), surf: g('--surf'), pos: g('--pos'), neg: g('--neg'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' };
+      wire: g('--wire'), plate: g('--plate'), e: g('--efield'), eInk: g('--efield-ink'), loopInk: g('--loop-ink'), b: g('--bfield'), loop: g('--loop'), surf: g('--surf'), pos: g('--pos'), neg: g('--neg'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' };
   }
   const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
 /* the divider between the pieces (VD.split, demos/lib/vd.js); a browser with an older cached vd.js keeps the default */
@@ -303,8 +303,8 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
     const p = geo.p; G3.pane = [0, 0, W, geo.sceneH]; ctx.clearRect(0, 0, W, geo.sceneH); const Q = render3(n);
     const li = Q([-12, 0, 0.6]), le = Q([0, 0, -5.4]), ll = Q([S.z, 0, S.r + 0.8]);
     ctx.fillStyle = T.ink; ctx.font = `600 ${12 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillText(`I = ${si(n.I, 'A')}`, li[0], li[1] - 4 * p);
-    ctx.fillStyle = T.e; ctx.font = `600 ${11.5 * p}px ${T.ui}`; ctx.textBaseline = 'top'; ctx.fillText(`E = ${si(n.E, 'V/m')}`, le[0], le[1] + 4 * p);
-    ctx.fillStyle = T.loop; ctx.font = `700 ${12 * p}px ${T.ui}`; ctx.textBaseline = 'bottom'; ctx.fillText(`loop, r = ${S.r.toFixed(1)} cm`, ll[0], ll[1] - 6 * p);
+    ctx.fillStyle = T.eInk; ctx.font = `600 ${11.5 * p}px ${T.ui}`; ctx.textBaseline = 'top'; ctx.fillText(`E = ${si(n.E, 'V/m')}`, le[0], le[1] + 4 * p);
+    ctx.fillStyle = T.loopInk; ctx.font = `700 ${12 * p}px ${T.ui}`; ctx.textBaseline = 'bottom'; ctx.fillText(`loop, r = ${S.r.toFixed(1)} cm`, ll[0], ll[1] - 6 * p);
     ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom';
     ctx.fillText(W > 560 ? 'Gap drawn 1.2 cm wide (really 2 mm). Green rings: B, brighter where stronger. Drag the purple knob; drag elsewhere to turn.' : 'Gap drawn wider than scale. Drag the knob; drag elsewhere to turn.', W - 10 * p, geo.sceneH - 6 * p);
   }
@@ -338,7 +338,7 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
     const nE = Math.round(10 * n.q / (CAP * 200));
     ctx.strokeStyle = T.e; ctx.fillStyle = T.e; ctx.lineWidth = 1.6 * p;
     for (let i = 0; i < nE; i++) { const y = g.cy - Rp + (i + 0.5) * 2 * Rp / nE; ctx.beginPath(); ctx.moveTo(Zx(-0.45), y); ctx.lineTo(Zx(0.4), y); ctx.stroke(); ctx.beginPath(); ctx.moveTo(Zx(0.48), y); ctx.lineTo(Zx(0.3), y - 3 * p); ctx.lineTo(Zx(0.3), y + 3 * p); ctx.fill(); }
-    ctx.fillStyle = T.e; ctx.font = `600 ${11.5 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(`E = ${si(n.E, 'V/m')}`, Zx(0), g.cy + Rp + 6 * p);
+    ctx.fillStyle = T.eInk; ctx.font = `600 ${11.5 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(`E = ${si(n.E, 'V/m')}`, Zx(0), g.cy + Rp + 6 * p);
     ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.fillText('gap drawn wider than scale', Zx(0), g.cy + Rp + 22 * p);
     // B field marks: ⊙ above, ⊗ below the axis (I to the right), size in proportion to B at that place
     if (!bl && n.I > 1e-9) {
@@ -363,7 +363,7 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
     }
     ctx.globalAlpha = 1; ctx.strokeStyle = T.loop; ctx.lineWidth = 3 * p; ctx.beginPath(); ctx.ellipse(lx, g.cy, ew, lr, 0, 0, 7); ctx.stroke();
     ctx.fillStyle = T.loop; ctx.beginPath(); ctx.arc(lx, g.cy - lr, 6 * p, 0, 7); ctx.fill();
-    ctx.font = `700 ${12 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillText(`loop, r = ${S.r.toFixed(1)} cm`, lx, g.cy - lr - 9 * p);
+    ctx.fillStyle = T.loopInk; ctx.font = `700 ${12 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillText(`loop, r = ${S.r.toFixed(1)} cm`, lx, g.cy - lr - 9 * p);
     // B(r) plot
     drawPlot(n);
     $('clock').textContent = `t = ${si(S.t, 's')} · τ = RC = ${si(n.tau, 's')}`;

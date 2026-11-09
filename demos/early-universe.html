@@ -16,9 +16,9 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
 /* only what this demo needs beyond demos/lib/vd.css */
-:root { --lcdm: #2b6fc4; --matter: #c0562b; --empty: #2f8a4e; --desit: #8a4fc4; --hot: #d2452b; --neutron: #7c6f5f; --helium: #c99a12; --theory: #6a4fc4; --data: #352c21; --own-band: rgba(43, 111, 196, 0.07); }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --lcdm: #69a8ff; --matter: #ff9a6c; --empty: #66d38c; --desit: #c4a0ff; --hot: #ff7a5c; --neutron: #c6baab; --helium: #ffd257; --theory: #a991ff; --data: #f3eee8; --own-band: rgba(105, 168, 255, 0.09); } }
-:root[data-theme="dark"] { --lcdm: #69a8ff; --matter: #ff9a6c; --empty: #66d38c; --desit: #c4a0ff; --hot: #ff7a5c; --neutron: #c6baab; --helium: #ffd257; --theory: #a991ff; --data: #f3eee8; --own-band: rgba(105, 168, 255, 0.09); }
+:root { --lcdm: #2b6fc4; --matter: #c0562b; --matter-ink: #a9471f; --empty-ink: #226e3c; --empty: #2f8a4e; --desit: #8a4fc4; --hot: #d2452b; --neutron: #7c6f5f; --helium: #c99a12; --theory: #6a4fc4; --data: #352c21; --own-band: rgba(43, 111, 196, 0.07); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --lcdm: #69a8ff; --matter: #ff9a6c; --matter-ink: #ff9a6c; --empty-ink: #66d38c; --empty: #66d38c; --desit: #c4a0ff; --hot: #ff7a5c; --neutron: #c6baab; --helium: #ffd257; --theory: #a991ff; --data: #f3eee8; --own-band: rgba(105, 168, 255, 0.09); } }
+:root[data-theme="dark"] { --lcdm: #69a8ff; --matter: #ff9a6c; --matter-ink: #ff9a6c; --empty-ink: #66d38c; --empty: #66d38c; --desit: #c4a0ff; --hot: #ff7a5c; --neutron: #c6baab; --helium: #ffd257; --theory: #a991ff; --data: #f3eee8; --own-band: rgba(105, 168, 255, 0.09); }
 .stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
 .stage-ctl .count { margin-left: auto; font-size: 0.82rem; color: var(--muted); }
@@ -427,7 +427,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function tokens() {
     const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
     T = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), accent: g('--accent'),
-      lcdm: g('--lcdm'), matter: g('--matter'), empty: g('--empty'), desit: g('--desit'), hot: g('--hot'), neutron: g('--neutron'), helium: g('--helium'),
+      lcdm: g('--lcdm'), matter: g('--matter'), empty: g('--empty'), matterInk: g('--matter-ink'), emptyInk: g('--empty-ink'), desit: g('--desit'), hot: g('--hot'), neutron: g('--neutron'), helium: g('--helium'),
       theory: g('--theory'), data: g('--data'), band: g('--own-band'), mono: g('--font-mono'), ui: g('--font-ui') };
   }
 
@@ -536,7 +536,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     c.setLineDash([2 * p, 3 * p]); c.strokeStyle = T.muted; c.beginPath(); c.moveTo(A.X(0), Tp); c.lineTo(A.X(0), Tp + ph); c.moveTo(L, A.Y(1)); c.lineTo(L + w, A.Y(1)); c.stroke(); c.setLineDash([]);
     c.restore();
     let lx = L + 8 * p; const ly = Tp + 8 * p;
-    for (const k of ['lcdm', 'matter', 'empty', 'desitter']) { const s = MODEL_NAME[k]; c.font = `${10 * p}px ${T.mono}`; const tw = c.measureText(s).width; if (lx + tw > L + w) break; txt(c, s, lx, ly, { c: T[MODEL_TOK[k]], w: k === S.ex.model ? 700 : 400 }); lx += tw + 14 * p; }
+    for (const k of ['lcdm', 'matter', 'empty', 'desitter']) { const s = MODEL_NAME[k]; c.font = `${10 * p}px ${T.mono}`; const tw = c.measureText(s).width; if (lx + tw > L + w) break; txt(c, s, lx, ly, { c: T[MODEL_TOK[k] + 'Ink'] || T[MODEL_TOK[k]], w: k === S.ex.model ? 700 : 400 }); lx += tw + 14 * p; }
     txt(c, 'today', A.X(0) + 4 * p, Tp + ph - 8 * p, { c: T.muted });
   }
 
@@ -944,7 +944,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     txt(ctx, '100 Mpc', rx, ry + 12 * p, { c: '#efe9e1', a: 'center', s: 10.5 });
     if (early) txt(ctx, 'z > 20: before the first galaxies; the dots mark where the matter is', W / 2, 18 * p, { c: '#ffd9a0', a: 'center', s: 10.5, ui: true });
     if (showV) txt(ctx, 'arrows: distance moved in 2 Gyr at today\'s speed', W - 12 * p, H - 22 * p, { c: '#ffc878', a: 'right', s: 9.5, ui: true });
-    txt(ctx, W < 560 ? 'drag to turn' : 'drag to turn · click a galaxy in the middle layer to watch from it', 12 * p, H - 8 * p, { c: '#c3b5a2', s: 9.5, ui: true, b: 'bottom' });
+    txt(ctx, W < 560 ? 'drag to turn' : 'drag to turn · click a galaxy in the middle layer to watch from it', 12 * p, H - 8 * p, { c: T.muted, s: 9.5, ui: true, b: 'bottom' });
     // the survey: distances from home to A to E (Mpc), as in the flat view
     const narrow = W < 560, pw = (narrow ? 150 : 178) * p, ph = (narrow ? 104 : 140) * p, px = W - pw - 10 * p, py = 10 * p;
     if (VG) VG.panel(ctx, px, py, pw, ph, { fill: 'rgba(20,16,10,0.82)', r: 8 });

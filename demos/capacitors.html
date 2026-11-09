@@ -1625,7 +1625,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     handles.push({ id: 'V', cursor: 'ns-resize', box: [bSup.x, bSup.y, bSup.w, bSup.h] });
     const kn = drawKnife(ctx, bSw, q, conn, isHot('sw'));
     handles.push({ id: 'sw', click: true, cursor: 'pointer', box: kn.box });
-    ctx.fillStyle = T.muted; ctx.font = `${fs * 0.8}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    ctx.fillStyle = T.ink; ctx.font = `${fs * 0.8}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
     ctx.fillText(conn ? 'switch closed' : 'switch open', bSw.x + bSw.w / 2, bSw.y + bSw.h - 14 * q);
     const Vabs = Math.abs(st.V);
     const ranges = [100, 200, 500, 1000, 2000, 5000];

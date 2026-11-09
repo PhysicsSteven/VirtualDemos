@@ -1605,9 +1605,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       label(ctx, DK, P.inc <= 0.05 ? 'To Earth, straight up' : elev < 0.05 ? 'To Earth, in the orbit plane' : `To Earth, ${elev.toFixed(1)}° up`, tx, ty, tx > W * 0.6 ? 'right' : tx < W * 0.4 ? 'left' : 'center', '#f4f0ea', f12);
     } else label(ctx, DK, 'To Earth: hidden in a mystery', W / 2, H - 14 * S, 'center', '#e8eef6', f12);
     ctx.save(); ctx.font = `${10.5 * S}px ${mono}`; ctx.fillStyle = '#c6bcb0'; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
-    if (!hidden() && !(BIN && D.F === 1)) ctx.fillText('star wobble ×' + comma(D.F), 8 * S, H - 22 * S);
+    ctx.strokeStyle = 'rgba(10,8,5,0.85)'; ctx.lineWidth = 3 * S; ctx.lineJoin = 'round';   /* a dark outline: the words sit on the 3D scene */
+    if (!hidden() && !(BIN && D.F === 1)) { ctx.strokeText('star wobble ×' + comma(D.F), 8 * S, H - 22 * S); ctx.fillText('star wobble ×' + comma(D.F), 8 * S, H - 22 * S); }
     const sizes = BIN && !hidden() && D.Rs * X3.u >= 0.045 && D.Rp * X3.u >= 0.032 ? 'stars and orbit to scale' : 'sizes not to scale';
-    ctx.fillText(sizes + ' · drag to turn', 8 * S, H - 8 * S);
+    ctx.strokeText(sizes + ' · drag to turn', 8 * S, H - 8 * S); ctx.fillText(sizes + ' · drag to turn', 8 * S, H - 8 * S);
     ctx.restore();
   }
   const Ms3 = () => 1 - D.q;

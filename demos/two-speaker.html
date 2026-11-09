@@ -434,6 +434,8 @@ table.rows input:focus { border-color: var(--accent); }
   }
 
   // ---------- drawing ----------
+  /* a quiet label over the busy interference picture: a small plate of the canvas color keeps it readable on any stripe */
+  function plabel(Gr, s, x, y, o) { ctx.save(); ctx.font = `${o.w || 400} ${o.s}px ${T.ui}`; const w = ctx.measureText(s).width, h = o.s, p = ps(); ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.9; ctx.beginPath(); ctx.roundRect(x - 3 * p, y - h * 0.75, w + 6 * p, h * 1.5, 3 * p); ctx.fill(); ctx.restore(); Gr.label(ctx, s, x, y, o); }
   function txt(s, x, y, o = {}) { const p = ps(); ctx.fillStyle = o.c || T.ink; ctx.font = `${o.b ? '700 ' : ''}${(o.s || 11) * p}px ${o.m ? T.mono : T.ui}`; ctx.textAlign = o.a || 'left'; ctx.textBaseline = o.bl || 'middle'; ctx.fillText(s, x, y); }
   const off = document.createElement('canvas'), octx = off.getContext('2d');
   /* the floor's field on a coarse grid: r₁ and r₂ at each cell, kept until the setup or the size changes */
@@ -497,7 +499,7 @@ table.rows input:focus { border-color: var(--accent); }
     }
     /* walk line */
     const wx = x0 + S.X * ppm; ctx.strokeStyle = T.equi; ctx.lineWidth = 2 * p; ctx.setLineDash([8 * p, 5 * p]); ctx.beginPath(); ctx.moveTo(wx, fy); ctx.lineTo(wx, fy + fh); ctx.stroke(); ctx.setLineDash([]);
-    Gr.label(ctx, 'walk line', wx + 5 * p, fy + fh - 8 * p, { s: 9 * p, c: T.equi, w: 700, alpha: 1 });
+    plabel(Gr, 'walk line', wx + 5 * p, fy + fh - 8 * p, { s: 9 * p, c: T.equi, w: 700, alpha: 1 });
     /* the wall: a slab seen from above, and the two speaker cabinets on it facing into the room */
     let gw2 = ctx.createLinearGradient(x0 - 12 * p, 0, x0, 0); gw2.addColorStop(0, Gr.dark() ? '#2d2821' : '#a0988e'); gw2.addColorStop(1, Gr.dark() ? '#4c443b' : '#cfcac4');
     ctx.fillStyle = gw2; ctx.fillRect(x0 - 12 * p, fy - 4 * p, 12 * p, fh + 8 * p);
@@ -512,8 +514,8 @@ table.rows input:focus { border-color: var(--accent); }
       /* the cone seen edge on from above: a curved lip at the front of the cabinet */
       ctx.fillStyle = '#1c1915'; ctx.beginPath(); ctx.ellipse(x0 + bw - 3 * p, sy, 3 * p, bh * 0.38, 0, -PI / 2, PI / 2); ctx.fill();
       ctx.restore();
-      Gr.label(ctx, name, x0 + bw + 6 * p, sy - s * 15 * p, { s: 10 * p, w: 700, c: T.ink, alpha: 0.85 }); }
-    if (!S.sand) Gr.label(ctx, `d = ${S.d.toFixed(2)} m`, x0 + 24 * p, yc, { s: 10 * p });
+      plabel(Gr, name, x0 + bw + 6 * p, sy - s * 15 * p, { s: 10 * p, w: 700, c: T.ink }); }
+    if (!S.sand) plabel(Gr, `d = ${S.d.toFixed(2)} m`, x0 + 24 * p, yc, { s: 10 * p });
     /* the microphone on its stand, from above: three legs, the boom and the capsule */
     Gr.shadow(ctx, mx + 3 * p, my + 4 * p, 18 * p, 14 * p, 0.8);
     ctx.strokeStyle = Gr.dark() ? '#aea69c' : '#4d463c'; ctx.lineWidth = 2 * p; ctx.lineCap = 'round';

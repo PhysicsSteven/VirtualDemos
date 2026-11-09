@@ -650,7 +650,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         ctx.stroke();
       }
     }
-    ctx.font = `600 ${10.5 * p}px ${T.ui}`; ctx.fillStyle = 'rgba(160,185,225,0.55)'; ctx.textAlign = 'center';
+    ctx.font = `600 ${10.5 * p}px ${T.ui}`; ctx.fillStyle = 'rgba(160,185,225,0.8)'; ctx.textAlign = 'center';
     const wide = S.span > 200;   /* the whole zodiac: only its own constellations are named */
     const taken = [];   /* names already written, which the event labels below keep clear of: [middle x, baseline y, width] */
     for (const id in SKY.names) { if (wide && !ZODIAC.includes(id) && id !== 'Oph') continue; const nm = SKY.names[id], x = X(nm[1]), y = Y(nm[2]); if (inX(x) && y > 14 && y < H - 18) { const t = nm[0].toUpperCase(); ctx.fillText(t, x, y); taken.push([x, y, ctx.measureText(t).width]); } }

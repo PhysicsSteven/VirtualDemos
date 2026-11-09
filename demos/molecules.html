@@ -458,6 +458,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
     T = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), accent: g('--accent'),
       na: g('--na'), cl: g('--cl'), elec: g('--elec'), ion: g('--ion'), neutral: g('--neutral'), theory: g('--theory'), cursor: g('--cursor'), iso: g('--iso'), mono: g('--font-mono'), ui: g('--font-ui') };
+    /* text versions of the line colors: Day needs a darker shade to read on the paper and the bench */
+    const dk = dark();
+    T.elecInk = dk ? T.elec : '#1f58a8'; T.ionInk = dk ? T.ion : '#b33a22'; T.neutralInk = dk ? T.neutral : '#6b6153';
   }
   const lab = (c, s, x, y, o = {}) => { c.save(); c.fillStyle = o.c || T.muted; c.font = `${o.w || 400} ${(o.s || 10.5) * proj()}px ${o.m ? T.mono : T.ui}`; c.textAlign = o.a || 'left'; c.textBaseline = o.bl || 'middle'; c.fillText(s, x, y); c.restore(); };
   function lcdBox(x, y, w, h, text, name) {
@@ -502,8 +505,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* the valence electron: on sodium for neutral atoms, on chlorine for ions */
     const ex = ions ? xCl + rCl * 0.72 : xNa - rNa * 0.72, ey = yc - (ions ? rCl : rNa) * 0.55;
     ctx.save(); ctx.shadowColor = T.elec; ctx.shadowBlur = 8 * p; dot(ctx, ex, ey, 4.5 * p, T.elec); ctx.restore();
-    lab(ctx, 'e⁻', ex + 7 * p, ey - 8 * p, { c: T.elec, w: 700, s: 10 });
-    const sign = (x, s) => lab(ctx, s, x, yc, { c: '#ffffff', w: 700, s: 16, a: 'center' });
+    lab(ctx, 'e⁻', ex + 7 * p, ey - 8 * p, { c: T.elecInk, w: 700, s: 10 });
+    const sign = (x, s) => lab(ctx, s, x, yc, { c: '#0d0a07', w: 700, s: 16, a: 'center' });
     if (ions) { sign(xCl, '−'); sign(xNa, '+'); }
     lab(ctx, ions ? 'Cl⁻' : 'Cl', xCl, yc + Math.max(rCl, rNa) + 34 * p, { a: 'center', c: T.ink, w: 700, s: 12 });
     lab(ctx, ions ? 'Na⁺' : 'Na', xNa, yc + Math.max(rCl, rNa) + 34 * p, { a: 'center', c: T.ink, w: 700, s: 12 });
@@ -513,10 +516,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const ry = H - 46 * p; if (VG) VG.box(ctx, xCl - 10 * p, ry - 8 * p, 1.4 * sc + 20 * p, 26 * p, { color: dark() ? '#61584c' : '#c9b48e', r: 3 });
     ctx.strokeStyle = dark() ? '#f3eee8' : '#42392d'; ctx.fillStyle = ctx.strokeStyle; ctx.lineWidth = 1;
     for (let i = 0; i <= 140; i++) { const x = xCl + i / 100 * sc, len = i % 10 === 0 ? 10 : i % 5 === 0 ? 7 : 4; if (sc / 100 < 2.5 && i % 5) continue; ctx.beginPath(); ctx.moveTo(x, ry - 8 * p); ctx.lineTo(x, ry - 8 * p + len * p); ctx.stroke(); }
-    for (let i = 0; i <= 14; i += (sc < 260 ? 4 : 2)) lab(ctx, f(i / 10, 1), xCl + i / 10 * sc, ry + 9 * p, { a: 'center', c: dark() ? '#f3eee8' : '#42392d', m: true, s: 9 });
+    for (let i = 0; i <= 14; i += (sc < 260 ? 4 : 2)) lab(ctx, f(i / 10, 1), xCl + i / 10 * sc, ry + 9 * p, { a: 'center', c: dark() ? '#f3eee8' : '#1d1812', m: true, s: 9 });
     lab(ctx, 'nm', xCl + 1.4 * sc + 14 * p, ry + 9 * p, { c: T.muted, s: 9 });
     if (!S.blind) { const xc = xCl + ionCross() * sc; if (ionCross() < 1.4) { ctx.save(); ctx.setLineDash([3 * p, 3 * p]); ctx.strokeStyle = T.ion; ctx.beginPath(); ctx.moveTo(xc, ry - 12 * p); ctx.lineTo(xc, yc - 50 * p); ctx.stroke(); ctx.restore();
-      lab(ctx, 'ions below here', xc - 4 * p, yc - 58 * p, { a: 'right', c: T.ion, s: 9.5 }); } }
+      lab(ctx, 'ions below here', xc - 4 * p, yc - 58 * p, { a: 'right', c: T.ionInk, s: 9.5 }); } }
     lab(ctx, W >= 640 ? 'sizes in proportion to measured radii (Na 186, Cl 99, Na⁺ 102, Cl⁻ 181 pm); the scale gives the separation of the centers' : 'sizes in proportion to measured radii; the scale gives the separation', xCl - 8 * p, 18 * p, { s: 9.5 });
     if (W >= 640) { const mx = W - 150 * p, mw = 124 * p, mh = 28 * p;
       lcdBox(mx, 40 * p, mw, mh, `${f(r, 3)} nm`, 'separation r');
@@ -535,7 +538,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       if (rep) plotLine(c, A, (r) => ionA(n) / Math.pow(r, n), 0.1, 1.4, T.theory, 1.3, [1, 3]);
       plotLine(c, A, (r) => ionU(r, n, rep), 0.1, 1.4, T.ion, 2.4);
       const tx = L + w - 6 * p; c.textAlign = 'right'; c.font = `${10 * p}px ${T.mono}`;
-      c.fillStyle = T.ion; c.fillText('Na⁺ + Cl⁻', tx, A.Y(1.52) - 9 * p); c.fillStyle = T.neutral; c.textAlign = 'left'; c.fillText('Na + Cl (neutral atoms)', A.X(0.42), A.Y(0) - 9 * p); c.textAlign = 'right';
+      c.fillStyle = T.ionInk; c.fillText('Na⁺ + Cl⁻', tx, A.Y(1.52) - 9 * p); c.fillStyle = T.neutralInk; c.textAlign = 'left'; c.fillText('Na + Cl (neutral atoms)', A.X(0.42), A.Y(0) - 9 * p); c.textAlign = 'right';
       c.fillStyle = T.theory; c.fillText(rep ? 'dashed: ΔE − ke²/r and A/rⁿ' : 'dashed: ΔE − ke²/r', tx, A.Y(-4.2));
     }
     for (const q of rowsOf('ion')) dot(c, A.X(+q.r_nm), A.Y(+q.U_eV), 3.2 * p, T.ink);
@@ -568,7 +571,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* scale */
     const ry = H - 46 * p, span = 4.2 * m.re, st = nice(span / 6); if (VG) VG.box(ctx, xA - 10 * p, ry - 8 * p, span * sc + 20 * p, 26 * p, { color: dark() ? '#61584c' : '#c9b48e', r: 3 });
     ctx.strokeStyle = dark() ? '#f3eee8' : '#42392d'; ctx.lineWidth = 1;
-    for (let v = 0; v <= span + 1e-9; v += st / 5) { const big = Math.abs(v / st - Math.round(v / st)) < 1e-6; ctx.beginPath(); ctx.moveTo(xA + v * sc, ry - 8 * p); ctx.lineTo(xA + v * sc, ry - 8 * p + (big ? 10 : 4) * p); ctx.stroke(); if (big) lab(ctx, String(+v.toPrecision(4)), xA + v * sc, ry + 9 * p, { a: 'center', c: dark() ? '#f3eee8' : '#42392d', m: true, s: 9 }); }
+    for (let v = 0; v <= span + 1e-9; v += st / 5) { const big = Math.abs(v / st - Math.round(v / st)) < 1e-6; ctx.beginPath(); ctx.moveTo(xA + v * sc, ry - 8 * p); ctx.lineTo(xA + v * sc, ry - 8 * p + (big ? 10 : 4) * p); ctx.stroke(); if (big) lab(ctx, String(+v.toPrecision(4)), xA + v * sc, ry + 9 * p, { a: 'center', c: dark() ? '#f3eee8' : '#1d1812', m: true, s: 9 }); }
     lab(ctx, 'nm', xA + span * sc + 14 * p, ry + 9 * p, { s: 9 });
     lab(ctx, `${m.name}: atom sizes and the cloud are only suggestive`, xA - 40 * p, ry - 24 * p, { s: 9.5 });
     if (W >= 640) { const mx = W - 150 * p, mw = 124 * p, mh = 28 * p; lcdBox(mx, 40 * p, mw, mh, `${f(r, 3)} nm`, 'separation r'); lcdBox(mx, 106 * p, mw, mh, `${f(covU(), 3)} eV`, 'energy U'); }

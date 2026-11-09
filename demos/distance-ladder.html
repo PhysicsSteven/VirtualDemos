@@ -975,7 +975,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         text(g.note, Math.max(L, Math.min(lx, R - nw)), cy + bh / 2 + 10 * ps, { font: F(10.5), color: T.muted });
       } else {
         const inside = lx + tw < xb - 4 * ps;
-        if (inside) text(g.name, lx, cy + 0.5, { font: F(10, 700), color: active ? T.canvas : T.muted });
+        if (inside) text(g.name, lx, cy + 0.5, { font: F(10, 700), color: active ? T.canvas : T.ink });
         else if (x0 - 6 * ps - tw > L) text(g.name, x0 - 6 * ps, cy + 0.5, { font: F(10, 700), align: 'right', color: active ? T.accent : T.muted });
         else text(g.name, lx, cy + 0.5, { font: F(10, 700), color: active ? T.accent : T.muted, bg: T.canvas });
       }
@@ -1761,7 +1761,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     // labels in the scene
     const pr = (v) => { const q = S3.project(v); return [q[0] + ax, q[1] + ay]; };
     const L = (v, txt, o) => { const [px, py] = pr(v); text(txt, px + (o.dx || 0) * ps, py + (o.dy || 0) * ps, { font: F(10.5, 700), color: o.color || '#f4f0ea', align: o.align || 'left', bg: '#0a0805' }); return [px, py]; };
-    title('Earth’s orbit in 3D, not to scale', ax + 12 * ps, ay + 10 * ps, '#c6bcb0');
+    title('Earth’s orbit in 3D, not to scale', ax + 12 * ps, ay + 10 * ps, T.muted);
     L(P3.star.position, S.par.star === 'custom' ? 'nearby star' : STARS[S.par.star].name, { dx: 10, dy: -10 });
     L(new THREE.Vector3(0, 0, 0), 'Sun', { dx: 12, dy: 14, color: '#ffd27a' });
     L(Ej, 'January', { dx: -10, align: 'right', color: '#ff8a7a' });

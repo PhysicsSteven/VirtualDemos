@@ -105,5 +105,7 @@ VDI18N.add('en', 'demo/induction-at-work', [
 "scope",
 "{#} nJ",
 "on, {#} mA, {#} mW",
-"-{#} mJ"
+"-{#} mJ",
+"Light",
+"Close"
 ]);

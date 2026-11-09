@@ -653,12 +653,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const fy = H - bot + 18 * ps, unit = S.tool === 'arc' ? 'ruler' : 'jaws';
     for (const ring of [1, 2]) {
       const m = S.marks[S.tool][ring], Dm = markD(S.tool, ring), on = ring === S.ring, dec = S.tool === 'arc' ? 1 : 1;
-      ctx.textAlign = 'left'; ctx.fillStyle = RC[ring - 1]; ctx.globalAlpha = on ? 1 : 0.6;
+      ctx.textAlign = 'left'; ctx.fillStyle = RC[ring - 1]; ctx.globalAlpha = on ? 1 : 0.85;
       ctx.font = `${on ? 600 : 400} ${10.5 * ps}px ${T.mono}`;
       const txt = S.tool === 'arc' ? `D${ring === 1 ? '₁' : '₂'} ${unit} ${m.a.toFixed(dec)} and ${m.b.toFixed(dec)} → ${Dm.toFixed(1)} mm` : `D${ring === 1 ? '₁' : '₂'} caliper → ${Dm.toFixed(1)} mm`;
       ctx.fillText(txt, 10 * ps, fy + (ring - 1) * 17 * ps, W - 20 * ps);
     }
-    ctx.globalAlpha = 0.6; ctx.fillStyle = T.roomInk; ctx.font = `${9.5 * ps}px ${T.ui}`; ctx.textAlign = 'right';
+    ctx.globalAlpha = 0.85; ctx.fillStyle = T.roomInk; ctx.font = `${9.5 * ps}px ${T.ui}`; ctx.textAlign = 'right';
     ctx.fillText('wander simulated', W - 10 * ps, fy + 17 * ps); ctx.globalAlpha = 1;
   }
   const hotMark = (ring, id) => (scrDrag && scrDrag.ring === ring && scrDrag.id === id) || (!scrDrag && scrHot && scrHot.ring === ring && scrHot.id === id);

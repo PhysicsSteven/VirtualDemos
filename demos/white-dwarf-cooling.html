@@ -45,6 +45,7 @@
   --accent: #c4811c;
   --liquid: #c8641c;
   --solid: #137f9e;
+  --solid-ink: #0f6f8c;
   --track: #a49b8f;
   --dot: #685b49;
   --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
@@ -54,13 +55,13 @@
   :root:not([data-theme="light"]) {
     --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
     --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
-    --equi: #e2b350; --accent: #fbc26d; --liquid: #f39a52; --solid: #4fc6e6; --track: #7a6f61; --dot: #c5baab; color-scheme: dark;
+    --equi: #e2b350; --accent: #fbc26d; --liquid: #f39a52; --solid: #4fc6e6; --solid-ink: #4fc6e6; --track: #7a6f61; --dot: #c5baab; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
   --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
-  --equi: #e2b350; --accent: #fbc26d; --liquid: #f39a52; --solid: #4fc6e6; --track: #7a6f61; --dot: #c5baab; color-scheme: dark;
+  --equi: #e2b350; --accent: #fbc26d; --liquid: #f39a52; --solid: #4fc6e6; --solid-ink: #4fc6e6; --track: #7a6f61; --dot: #c5baab; color-scheme: dark;
 }
 :root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
@@ -700,7 +701,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function tokens() {
     const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
     T = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'),
-      pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), accent: g('--accent'), liquid: g('--liquid'), solid: g('--solid'), track: g('--track'), dot: g('--dot'),
+      pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), accent: g('--accent'), liquid: g('--liquid'), solid: g('--solid'), solidInk: g('--solid-ink'), track: g('--track'), dot: g('--dot'),
       mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif', dark: /^#[01]/.test(g('--canvas')) };
     dirty = true;
   }
@@ -1101,7 +1102,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const tight = labelW(c, mTxt, 10) + labelW(c, cTxt, 10, true) + 24 * ps > box.R - box.L && Math.abs(cy0 - ym) < 30 * ps;
       const my = tight ? (cy0 <= ym ? ym + 12 * ps : ym - 12 * ps) : ym - 10 * ps;
       const cy = tight ? (cy0 <= ym ? Math.min(cy0, ym) - 14 * ps : Math.max(cy0, ym) + 14 * ps) : cy0 + 14 * ps;
-      label(c, mTxt, box.R - 4 * ps, my, T.solid, 'right', 'middle', false, 10);
+      label(c, mTxt, box.R - 4 * ps, my, T.solidInk, 'right', 'middle', false, 10);
       label(c, cTxt, box.L + 6 * ps, clamp(cy, box.T + 9 * ps, box.B - 9 * ps), T.ink, 'left', 'middle', true, 10);
     }
     frame(c, box);

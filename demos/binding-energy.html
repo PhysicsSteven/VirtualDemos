@@ -34,6 +34,7 @@
   --equi: #a7740b;
   --accent: #c4811c;
   --alpha: #17855f;
+  --alpha-ink: #0f6b49;
   --emit: #ac8a5e;
   --seq0: #f1ebe3;
   --seq1: #12356b;
@@ -44,13 +45,13 @@
   :root:not([data-theme="light"]) {
     --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
     --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
-    --equi: #e2b350; --accent: #fbc26d; --alpha: #4fd1a0; --emit: #b79cf2; --seq0: #3c2f1f; --seq1: #a9ccff; color-scheme: dark;
+    --equi: #e2b350; --accent: #fbc26d; --alpha: #4fd1a0; --alpha-ink: #4fd1a0; --emit: #b79cf2; --seq0: #3c2f1f; --seq1: #a9ccff; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
   --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
-  --equi: #e2b350; --accent: #fbc26d; --alpha: #4fd1a0; --emit: #b79cf2; --seq0: #3c2f1f; --seq1: #a9ccff; color-scheme: dark;
+  --equi: #e2b350; --accent: #fbc26d; --alpha: #4fd1a0; --alpha-ink: #4fd1a0; --emit: #b79cf2; --seq0: #3c2f1f; --seq1: #a9ccff; color-scheme: dark;
 }
 :root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
@@ -483,7 +484,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function tokens() {
     const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
     T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'),
-      pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), accent: g('--accent'), alpha: g('--alpha'), seq0: g('--seq0'), seq1: g('--seq1'),
+      pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), accent: g('--accent'), alpha: g('--alpha'), alphaInk: g('--alpha-ink'), seq0: g('--seq0'), seq1: g('--seq1'),
       mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif', emit: g('--emit') };
     T.s0 = hexRgb(T.seq0); T.s1 = hexRgb(T.seq1);
   }
@@ -673,7 +674,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       c.globalAlpha = 1;
       const mid = pts[kind === 'fusion' && S.zoom === 'full' ? 30 : 20];
       const txt = kind === 'fusion' ? 'fusion releases energy' : 'fission releases energy';
-      queueLabel(txt, mid[0], mid[1] + 18 * ps, col, 'center', 'top', true);
+      queueLabel(txt, mid[0], mid[1] + 18 * ps, T.alphaInk, 'center', 'top', true);
     }
   }
   function rxNuclides() { const s = new Set(); if (!S.rx) return s; const r = REACTIONS[S.rx]; for (const [Z, A] of r.inn.concat(r.out)) { const n = get(Z, A); if (n && n.A > 1) s.add(n); else if (n && n.Z === 1) s.add(n); } return s; }

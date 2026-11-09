@@ -211,5 +211,9 @@ VDI18N.add('es', 'demo/induction-at-work', {
 "on, {#} mA, {#} mW":
   "encendida, {#} mA, {#} mW",
 "-{#} mJ":
-  "-{#} mJ"
+  "-{#} mJ",
+"Light":
+  "Luz",
+"Close":
+  "Cerrar"
 });

@@ -17,11 +17,11 @@
 <style>
 /* only what this demo needs beyond demos/lib/vd.css */
 :root { --own-field: #2b60b5; --puck: #48423b; --puck-edge: #292621; --magnet: #bcb5ab; --magnet-n: #c0392b; --magnet-s: #2b60b5; --ln2: rgba(150, 196, 236, 0.35); --ln2-edge: #bba07c;
-  --cur-a: #d2452b; --cur-b: #2b7bd2; --own-hand: #a7740b; --foam: #e9e4d8; --foam-edge: #b9b1a0; }
+  --cur-a: #d2452b; --cur-b: #2b7bd2; --own-hand: #a7740b; --own-hand-ink: #7a5406; --magnet-ink: #ffffff; --grip-ink: #17130e; --foam: #e9e4d8; --foam-edge: #b9b1a0; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --own-field: #69a0ff; --puck: #5b544b; --puck-edge: #9d968c; --magnet: #d3ccc4; --magnet-n: #ff7a5c; --magnet-s: #69a0ff;
-  --ln2: rgba(110, 160, 220, 0.25); --ln2-edge: #7fb0e0; --cur-a: #ff7a5c; --cur-b: #5fb0ff; --own-hand: #e2b350; --foam: #3b3a36; --foam-edge: #6b675e; } }
+  --ln2: rgba(110, 160, 220, 0.25); --ln2-edge: #7fb0e0; --cur-a: #ff7a5c; --cur-b: #5fb0ff; --own-hand: #e2b350; --own-hand-ink: #e2b350; --magnet-ink: #17130e; --grip-ink: #17130e; --foam: #3b3a36; --foam-edge: #6b675e; } }
 :root[data-theme="dark"] { --own-field: #69a0ff; --puck: #5b544b; --puck-edge: #9d968c; --magnet: #d3ccc4; --magnet-n: #ff7a5c; --magnet-s: #69a0ff;
-  --ln2: rgba(110, 160, 220, 0.25); --ln2-edge: #7fb0e0; --cur-a: #ff7a5c; --cur-b: #5fb0ff; --own-hand: #e2b350; --foam: #3b3a36; --foam-edge: #6b675e; }
+  --ln2: rgba(110, 160, 220, 0.25); --ln2-edge: #7fb0e0; --cur-a: #ff7a5c; --cur-b: #5fb0ff; --own-hand: #e2b350; --own-hand-ink: #e2b350; --magnet-ink: #17130e; --grip-ink: #17130e; --foam: #3b3a36; --foam-edge: #6b675e; }
 .stage { position: relative; display: flex; flex-direction: column; min-height: min-content; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
 :root[data-projector="on"] .stage { min-height: min-content; }
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
@@ -297,7 +297,7 @@
   const gap = () => S.z - MD.o.l / 2;
   const sgnG = () => (S.side === 'above' ? -1 : 1);   /* gravity along the axis pointing away from the puck */
   function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
-    T = {}; for (const k of ['canvas', 'surface', 'ink', 'muted', 'line', 'accent', 'field', 'puck', 'puck-edge', 'magnet', 'magnet-n', 'magnet-s', 'ln2', 'ln2-edge', 'cur-a', 'cur-b', 'hand', 'foam', 'foam-edge']) T[k.replace('-', '_')] = g('--' + k); T.field = g('--own-field'); T.hand = g('--own-hand');
+    T = {}; for (const k of ['canvas', 'surface', 'ink', 'muted', 'line', 'accent', 'field', 'puck', 'puck-edge', 'magnet', 'magnet-n', 'magnet-s', 'ln2', 'ln2-edge', 'cur-a', 'cur-b', 'hand', 'foam', 'foam-edge']) T[k.replace('-', '_')] = g('--' + k); T.field = g('--own-field'); T.hand = g('--own-hand'); T.hand_ink = g('--own-hand-ink'); T.magnet_ink = g('--magnet-ink'); T.grip_ink = g('--grip-ink');
     T.mono = g('--font-mono') || 'monospace'; T.ui = g('--font-ui') || 'system-ui, sans-serif'; }
 
   /* ---------- the model and moving the magnet ---------- */
@@ -415,7 +415,7 @@
       const yn = Y(zt), ys = Y(zb), half = (ys - yn) / 2;
       ctx.fillStyle = T.magnet_n; ctx.globalAlpha = 0.8; ctx.fillRect(X(-m.a), Math.min(yn, yn + half), 2 * m.a * V.sc, Math.abs(half)); ctx.fillStyle = T.magnet_s; ctx.fillRect(X(-m.a), Math.min(ys, ys - half), 2 * m.a * V.sc, Math.abs(half)); ctx.globalAlpha = 1;
       ctx.strokeStyle = T.ink; ctx.lineWidth = 1.2 * p; ctx.strokeRect(X(-m.a), ya, 2 * m.a * V.sc, hh);
-      const fs = Math.min(13 * p, Math.abs(half) * 0.8); if (fs > 6) { ctx.fillStyle = '#fff'; ctx.font = `700 ${fs}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('N', X(0), yn + half / 2); ctx.fillText('S', X(0), ys - half / 2); }
+      const fs = Math.min(13 * p, Math.abs(half) * 0.8); if (fs > 6) { ctx.fillStyle = T.magnet_ink; ctx.font = `700 ${fs}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('N', X(0), yn + half / 2); ctx.fillText('S', X(0), ys - half / 2); }
       /* the gap */
       const xg = X(Math.max(R, m.a) + 0.004), y1 = Y(zb), y0 = Y(0);
       ctx.strokeStyle = T.muted; ctx.lineWidth = 1 * p; ctx.setLineDash([3 * p, 3 * p]); ctx.beginPath(); ctx.moveTo(X(m.a), y1); ctx.lineTo(xg + 6 * p, y1); ctx.stroke(); ctx.setLineDash([]);
@@ -423,7 +423,7 @@
       ctx.fillStyle = T.ink; ctx.font = `600 ${12 * p}px ${T.mono}`; ctx.textBaseline = 'middle'; { const gt = `gap ${f(gap() * 1000, 1)} mm`, fit = xg + 8 * p + ctx.measureText(gt).width < W - 4; ctx.textAlign = fit ? 'left' : 'right'; ctx.fillText(gt, fit ? xg + 8 * p : xg - 6 * p, (y0 + y1) / 2); }
       if (S.held) { /* the hand's grip: a tab on the far face */
         const yh = Y(zt + 0.002 * (1)), xs = X(0); ctx.fillStyle = T.hand; ctx.globalAlpha = 0.85; ctx.beginPath(); ctx.roundRect(xs - 9 * p, Math.min(yh, Y(zt)) - (flip ? 0 : 14 * p), 18 * p, 14 * p + Math.abs(yh - Y(zt)), 4 * p); ctx.fill(); ctx.globalAlpha = 1;
-        ctx.fillStyle = T.muted; ctx.font = `${11 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.fillText('held', xs, flip ? Y(zt) + 22 * p : Y(zt) - 22 * p); }
+        ctx.fillStyle = T.grip_ink; ctx.font = `${11 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.fillText('held', xs, flip ? Y(zt) + 22 * p : Y(zt) - 22 * p); }
     }
     /* labels */
     ctx.font = `${11.5 * p}px ${T.ui}`; ctx.textBaseline = 'middle'; ctx.fillStyle = T.muted; ctx.textAlign = 'left';
@@ -449,7 +449,7 @@
     cx.fillText('gap (mm)', L + w / 2, CH - 1 * p); cx.save(); cx.translate(13 * p, Tp + h / 2); cx.rotate(-Math.PI / 2); cx.textBaseline = 'middle'; cx.fillText('force of puck on magnet (mN)', 0, 0); cx.restore();
     cx.textAlign = 'left'; cx.textBaseline = 'top'; cx.fillText(S.side === 'below' ? 'positive: pushes the magnet away; negative: pulls it toward the puck' : 'positive: pushes the magnet up', L + 4 * p, 6 * p);
     if (!S.blind) { const yw = ys(S.side === 'below' ? -Wt : Wt); cx.strokeStyle = T.hand; cx.setLineDash([6 * p, 4 * p]); cx.lineWidth = 1.5 * p; cx.beginPath(); cx.moveTo(L, yw); cx.lineTo(L + w, yw); cx.stroke(); cx.setLineDash([]);
-      cx.fillStyle = T.hand; cx.textAlign = 'right'; cx.textBaseline = 'bottom'; cx.fillText(S.side === 'below' ? 'pull needed to hold its weight' : "the magnet's weight", L + w - 4 * p, yw - 2 * p); }
+      cx.fillStyle = T.hand_ink; cx.textAlign = 'right'; cx.textBaseline = 'bottom'; cx.fillText(S.side === 'below' ? 'pull needed to hold its weight' : "the magnet's weight", L + w - 4 * p, yw - 2 * p); }
     if (!S.blind && pts.length) { cx.save(); cx.beginPath(); cx.rect(L, Tp, w, h); cx.clip(); cx.strokeStyle = T.field; cx.lineWidth = 1.8 * p; cx.beginPath();
       pts.forEach((q, i) => { const X = xs(q[0]), Y = ys(q[1] * 1000); if (i) cx.lineTo(X, Y); else cx.moveTo(X, Y); }); cx.stroke();
       const l = pts[pts.length - 1]; cx.fillStyle = T.field; cx.beginPath(); cx.arc(xs(l[0]), ys(l[1] * 1000), 4 * p, 0, 7); cx.fill(); cx.restore(); }

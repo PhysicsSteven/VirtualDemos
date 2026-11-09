@@ -558,7 +558,7 @@ details.more[open] summary { margin-bottom: 6px; }
     Gr.speaker(ctx, x0 - 30 * p, ty + tubeH * 0.1, 26 * p, tubeH * 0.8, { color: '#3e372f' });
     /* scale under the tube, 0 to 2 m */
     ry = ty + tubeH + 12 * p; ctx.strokeStyle = T.muted; ctx.globalAlpha = 0.7; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(x0, ry); ctx.lineTo(x1, ry); ctx.stroke();
-    for (let i = 0; i <= 20; i++) { const x = x0 + i / 10 * ppm; ctx.beginPath(); ctx.moveTo(x, ry); ctx.lineTo(x, ry + (i % 5 ? 4 : 8) * p); ctx.stroke(); if (i % 5 === 0) txt(`${i / 10} m`, x, ry + 15 * p, { a: i === 20 ? 'right' : 'center', s: 9, m: 1, c: T.muted }); } ctx.globalAlpha = 1;
+    for (let i = 0; i <= 20; i++) { const x = x0 + i / 10 * ppm; ctx.beginPath(); ctx.moveTo(x, ry); ctx.lineTo(x, ry + (i % 5 ? 4 : 8) * p); ctx.stroke(); if (i % 5 === 0) { ctx.globalAlpha = 1; txt(`${i / 10} m`, x, ry + 15 * p, { a: i === 20 ? 'right' : 'center', s: 9, m: 1, c: T.ink }); ctx.globalAlpha = 0.7; } } ctx.globalAlpha = 1;
     Gr.label(ctx, `displacement drawn ×${sig(X, 2)}, motion slowed to one cycle in 2 s`, x1, narrow ? Hh - 26 * p : Hh - 12 * p, { a: 'right', s: 9 * p, alpha: 0.75 });
     }
     /* graphs of s and Δp along the tube at this instant */
@@ -577,7 +577,7 @@ details.more[open] summary { margin-bottom: 6px; }
       const xm = x0 + MIC_X * ppm, y0 = gTop + gH + 16 * p, ym = y0 + gH / 2 - pressure(Wv, MIC_X, t) / Wv.dpMax * gH * 0.42;
       ctx.fillStyle = T.pos; ctx.strokeStyle = T.canvas; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(xm, ym, 4.5 * p, 0, 7); ctx.fill(); ctx.stroke();
       txt('probe mic', xm + 7 * p, ym - 9 * p, { s: 9, c: T.pos }); }
-    Gr.label(ctx, 'dashed: compressions, where Δp is largest and s = 0', x0, Hh - 12 * p - (L3 && L3.foot ? L3.foot * p : 0), { s: 9 * p, alpha: 0.75 });
+    Gr.label(ctx, 'dashed: compressions, where Δp is largest and s = 0', x0, Hh - 12 * p - (L3 && L3.foot ? L3.foot * p : 0), { s: 9 * p, c: T.ink });
   }
   function drawTof() {
     const p = ps(), g = gasNow(), v = soundSpeed(g, S.tC), c = S.clap || S.last;
@@ -586,7 +586,7 @@ details.more[open] summary { margin-bottom: 6px; }
     /* bench and its scale, 0 at the clap */
     const Gr = window.VDGear, dk = Gr.dark();
     Gr.bench(ctx, x0 - 30 * p, benchY, x1 - x0 + 40 * p, 18 * p, 16 * p);
-    ctx.strokeStyle = T.muted; ctx.lineWidth = 1; for (let i = 0; i <= 40; i++) { const x = x0 + i / 10 * ppm; ctx.beginPath(); ctx.moveTo(x, benchY + 20 * p); ctx.lineTo(x, benchY + (i % 5 ? 24 : 28) * p); ctx.stroke(); if (i % 5 === 0 && (W > 620 || i % 10 === 0)) txt(`${i / 10} m`, x, benchY + 36 * p, { a: 'center', s: 9, m: 1, c: T.muted }); }
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1; for (let i = 0; i <= 40; i++) { const x = x0 + i / 10 * ppm; ctx.beginPath(); ctx.moveTo(x, benchY + 20 * p); ctx.lineTo(x, benchY + (i % 5 ? 24 : 28) * p); ctx.stroke(); if (i % 5 === 0 && (W > 620 || i % 10 === 0)) txt(`${i / 10} m`, x, benchY + 36 * p, { a: 'center', s: 9, m: 1, c: T.ink }); }
     /* the clap: two hands at x = 0 */
     for (const sd of [-1, 1]) { const hx = x0 + sd * 6 * p, hy = benchY - 40 * p, hg = ctx.createLinearGradient(hx - 6 * p, 0, hx + 6 * p, 0);
       hg.addColorStop(0, '#b98a68'); hg.addColorStop(0.5, '#e3b998'); hg.addColorStop(1, '#a87a59'); ctx.fillStyle = hg; ctx.beginPath(); ctx.ellipse(hx, hy, 6 * p, 16 * p, sd * 0.25, 0, 7); ctx.fill();

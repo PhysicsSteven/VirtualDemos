@@ -539,5 +539,11 @@ VDI18N.add('es', 'demo/molecules', {
 "passes through (no vibration at this wavenumber)":
   "pasa (no hay vibración a este número de onda)",
 "no dipole":
-  "sin dipolo"
+  "sin dipolo",
+"Light":
+  "Luz",
+"Close":
+  "Cerrar",
+"Change the separation of the atoms in {#} nanometer steps, the level in Energy levels, or the cursor in the HCl spectrum (Shift for bigger steps)":
+  "Cambia la separación de los átomos en pasos de {#} nanómetros, el nivel en Niveles de energía o el cursor en el espectro de HCl (Shift para pasos más grandes)"
 });

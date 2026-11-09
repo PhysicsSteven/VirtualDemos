@@ -13,9 +13,9 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
 /* only what this demo needs beyond demos/lib/vd.css */
-:root { --ray-a: #c98a00; --ray-b: #0f8fa8; --img: #c2410c; --pupil: #2f8a3a; --sel: #c4811c; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --ray-a: #ffc94a; --ray-b: #4fd8f0; --img: #ff8a50; --pupil: #6bdc7a; --sel: #fbc26d; } }
-:root[data-theme="dark"] { --ray-a: #ffc94a; --ray-b: #4fd8f0; --img: #ff8a50; --pupil: #6bdc7a; --sel: #fbc26d; }
+:root { --ray-a: #c98a00; --ray-b: #0f8fa8; --img: #c2410c; --pupil: #2f8a3a; --pupil-ink: #1f6f2b; --sel: #c4811c; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --ray-a: #ffc94a; --ray-b: #4fd8f0; --img: #ff8a50; --pupil: #6bdc7a; --pupil-ink: #6bdc7a; --sel: #fbc26d; } }
+:root[data-theme="dark"] { --ray-a: #ffc94a; --ray-b: #4fd8f0; --img: #ff8a50; --pupil: #6bdc7a; --pupil-ink: #6bdc7a; --sel: #fbc26d; }
 .stage { position: relative; display: flex; flex-direction: column; min-height: 560px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
 .stage-ctl { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
 .stage-ctl .seg { flex-wrap: wrap; }
@@ -481,7 +481,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
     const dark = (VD3 && VD3.dark) ? VD3.dark() : false;
     T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), accent: g('--accent'), a: g('--ray-a'), b: g('--ray-b'),
-      img: g('--img'), pupil: g('--pupil'), sel: g('--sel'), mono: g('--font-mono') || 'monospace', dark, halo: dark ? 'rgba(12,16,22,0.78)' : 'rgba(252,253,254,0.85)' };
+      img: g('--img'), pupil: g('--pupil'), pupilInk: g('--pupil-ink'), sel: g('--sel'), mono: g('--font-mono') || 'monospace', dark, halo: dark ? 'rgba(12,16,22,0.78)' : 'rgba(252,253,254,0.85)' };
   }
 
   /* ---------- the model: everything the pictures and readouts need, from the core ---------- */
@@ -887,7 +887,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         ctx.save(); ctx.strokeStyle = T.pupil; ctx.lineWidth = 2.2 * ps;
         for (const sg of [-1, 1]) { ctx.beginPath(); ctx.moveTo(x - 4 * ps, view.cy + sg * (r + 3 * ps)); ctx.lineTo(x, view.cy + sg * r); ctx.lineTo(x + 4 * ps, view.cy + sg * (r + 3 * ps)); ctx.stroke(); }
         ctx.restore();
-        tag('exit pupil', x, view.cy + r + 34 * ps, T.pupil, { size: 10 });
+        tag('exit pupil', x, view.cy + r + 34 * ps, T.pupilInk, { size: 10 });
       }
     }
   }

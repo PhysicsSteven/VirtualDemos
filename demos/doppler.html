@@ -43,6 +43,7 @@
   --accent: #c4811c;
   --wave: #3f5b78;
   --obs: #17855f;
+  --obs-ink: #0f6b4b;
   --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 }
@@ -50,13 +51,13 @@
   :root:not([data-theme="light"]) {
     --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
     --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
-    --equi: #e2b350; --accent: #fbc26d; --wave: #9fb7d2; --obs: #4fd1a0; color-scheme: dark;
+    --equi: #e2b350; --accent: #fbc26d; --wave: #9fb7d2; --obs: #4fd1a0; --obs-ink: #4fd1a0; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
   --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
-  --equi: #e2b350; --accent: #fbc26d; --wave: #9fb7d2; --obs: #4fd1a0; color-scheme: dark;
+  --equi: #e2b350; --accent: #fbc26d; --wave: #9fb7d2; --obs: #4fd1a0; --obs-ink: #4fd1a0; color-scheme: dark;
 }
 :root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
@@ -434,7 +435,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const cs = getComputedStyle(document.documentElement);
     const g = (n) => cs.getPropertyValue(n).trim();
     T = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'),
-      gridStrong: g('--grid-strong'), pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), accent: g('--accent'), wave: g('--wave'), obs: g('--obs'),
+      gridStrong: g('--grid-strong'), pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), accent: g('--accent'), wave: g('--wave'), obs: g('--obs'), obsInk: g('--obs-ink'),
       mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' };
     const m = /^#?([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})/i.exec(T.canvas);
     darkTheme = m ? (parseInt(m[1], 16) + parseInt(m[2], 16) + parseInt(m[3], 16)) / 3 < 128 : false;
@@ -710,7 +711,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const ob = opy + 22 * ps < m.y + m.h - 30 * ps;
     let ox = opx; c.font = `600 ${11 * ps}px ${T.mono}`; const ow = c.measureText(olab).width / 2 + 6;
     ox = Math.max(m.x + ow, Math.min(m.x + m.w - ow, ox));
-    label(c, olab, ox, ob ? opy + 22 * ps : opy - 22 * ps, T.obs, 'center', 'middle', true);
+    label(c, olab, ox, ob ? opy + 22 * ps : opy - 22 * ps, T.obsInk, 'center', 'middle', true);
     if (roots[0] && roots[0].thLabel) {
       const [tx, ty, cs] = roots[0].thLabel, th = Math.acos(Math.max(-1, Math.min(1, roots[0].cosTh))) / RAD;
       label(c, `θ = ${th.toFixed(0)}°`, tx, ty, T.equi, cs < -0.2 ? 'right' : cs > 0.2 ? 'left' : 'center', 'middle', true);
@@ -1395,7 +1396,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     else if (roots.length === 1) olab = `hears ${fmtHz(S.f * roots[0].k)}`;
     else olab = `hears ${fmtHz(S.f * roots[0].k)} and ${fmtHz(S.f * roots[1].k)}${roots[1].k < 0 || roots[0].k < 0 ? ' (one backward)' : ''}`;
     c.font = `600 ${11 * ps}px ${T.mono}`; const ow = c.measureText(olab).width / 2 + 6;
-    label(c, olab, Math.max(m.x + ow, Math.min(m.x + m.w - ow, oP[0])), oP[1] + 24 * ps, T.obs, 'center', 'middle', true);
+    label(c, olab, Math.max(m.x + ow, Math.min(m.x + m.w - ow, oP[0])), oP[1] + 24 * ps, T.obsInk, 'center', 'middle', true);
     if (roots[0]) {
       const r = roots[0], eP = proj3(w3(r.x, r.y)), thd = Math.hypot(r.vx, r.vy) > 0 ? Math.acos(Math.max(-1, Math.min(1, r.cosTh))) / RAD : null;
       const tx = `left from here, θ = ${thd === null ? '' : thd.toFixed(0)}°`; c.font = `${10.5 * ps}px ${T.mono}`; const hw = c.measureText(tx).width / 2 + 6;

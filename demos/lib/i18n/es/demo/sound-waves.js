@@ -414,6 +414,8 @@ VDI18N.add('es', 'demo/sound-waves', {
   "<span>oculto: misterio</span><br><span>golpea para cronometrarlo</span>",
 "The last mystery material was {name}, v = {v} m/s. A new one is in its lane.":
   "El último material misterioso era {name}, v = {v} m/s. Hay uno nuevo en su carril.",
+"The last mystery material was blood, v = {#} m/s. A new one is in its lane.":
+  "El último material misterioso era sangre, v = {#} m/s. Hay uno nuevo en su carril.",
 "A new unknown gas fills the room.":
   "Un nuevo gas desconocido llena el cuarto.",
 "a {#} m person is {#} px tall":
@@ -424,8 +426,12 @@ VDI18N.add('es', 'demo/sound-waves', {
   "<span>oculto: misterio</span><br><span>en camino</span>",
 "The unknown gas had v = {#} m/s at {#} °C (γ = {#}, M = {#} g/mol).":
   "El gas desconocido tenía v = {#} m/s a {#} °C (γ = {#}, M = {#} g/mol).",
-"The last mystery material was glycerin, v = {#} m/s. A new one is in its lane.":
-  "El último material misterioso era glicerina, v = {#} m/s. Hay uno nuevo en su carril.",
+"Close":
+  "Cerrar",
+"The last mystery material was copper (annealed), v = {#} m/s. A new one is in its lane.":
+  "El último material misterioso era cobre (recocido), v = {#} m/s. Hay uno nuevo en su carril.",
 "<span>hidden: mystery</span><br><span>arrived at {#} ms</span>":
-  "<span>oculto: misterio</span><br><span>llegó a los {#} ms</span>"
+  "<span>oculto: misterio</span><br><span>llegó a los {#} ms</span>",
+"The last mystery material was glycerin, v = {#} m/s. A new one is in its lane.":
+  "El último material misterioso era glicerina, v = {#} m/s. Hay uno nuevo en su carril."
 });

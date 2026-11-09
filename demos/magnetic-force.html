@@ -37,7 +37,7 @@
   --accent: #c4811c;
   --force: #7a3fc0;
   --iso1: #17855f;
-  --bfield: #13808f;
+  --bfield: #13808f; --bfield-ink: #0e6572;
   --copper: #b8692e; --copper-hi: #f2b37a; --copper-lo: #6e3412;
   --steel: #b1a89c; --steel-hi: #f5f2ef; --steel-lo: #71685d;
   --pole: #ded8d0; --pole-ink: #a99e90; --former: #d9c9a3; --film: #efe7d2; --film-ink: #2a2118;
@@ -49,7 +49,7 @@
   :root:not([data-theme="light"]) {
     --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
     --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
-    --equi: #e2b350; --accent: #fbc26d; --force: #c49bff; --iso1: #4fd1a0; --bfield: #4cc4d4;
+    --equi: #e2b350; --accent: #fbc26d; --force: #c49bff; --iso1: #4fd1a0; --bfield: #4cc4d4; --bfield-ink: #4cc4d4;
     --copper: #c4773a; --copper-hi: #f6c08c; --copper-lo: #5e2b0e; --steel: #978d81; --steel-hi: #ebe6e0; --steel-lo: #524a40;
     --pole: #2f281e; --pole-ink: #574c3d; --former: #8c7b58; --film: #d6ccb2; --film-ink: #1d1812;
     --phosphor: #5fe08a; --hand: #c99d78; --hand-ink: #6b4429; color-scheme: dark;
@@ -58,7 +58,7 @@
 :root[data-theme="dark"] {
   --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --ink: #eeeae4; --muted: #b0a698;
   --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
-  --equi: #e2b350; --accent: #fbc26d; --force: #c49bff; --iso1: #4fd1a0; --bfield: #4cc4d4;
+  --equi: #e2b350; --accent: #fbc26d; --force: #c49bff; --iso1: #4fd1a0; --bfield: #4cc4d4; --bfield-ink: #4cc4d4;
     --copper: #c4773a; --copper-hi: #f6c08c; --copper-lo: #5e2b0e; --steel: #978d81; --steel-hi: #ebe6e0; --steel-lo: #524a40;
     --pole: #2f281e; --pole-ink: #574c3d; --former: #8c7b58; --film: #d6ccb2; --film-ink: #1d1812;
     --phosphor: #5fe08a; --hand: #c99d78; --hand-ink: #6b4429; color-scheme: dark;
@@ -1213,7 +1213,7 @@ details.hall[open] > summary { margin-bottom: 8px; }
     const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
     T = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'),
       pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), accent: g('--accent'), force: g('--force'), iso1: g('--iso1'),
-      bfield: g('--bfield'), copper: g('--copper'), copperHi: g('--copper-hi'), copperLo: g('--copper-lo'),
+      bfield: g('--bfield'), bfieldInk: g('--bfield-ink'), copper: g('--copper'), copperHi: g('--copper-hi'), copperLo: g('--copper-lo'),
       steel: g('--steel'), steelHi: g('--steel-hi'), steelLo: g('--steel-lo'), pole: g('--pole'), poleInk: g('--pole-ink'),
       former: g('--former'), film: g('--film'), filmInk: g('--film-ink'), phosphor: g('--phosphor'), hand: g('--hand'), handInk: g('--hand-ink'),
       dark: isDark(), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' };
@@ -1276,7 +1276,7 @@ details.hall[open] > summary { margin-bottom: 8px; }
     if (labelClip) { const lo = labelClip.x + 4, hi = labelClip.x + labelClip.w - 4 - w; const nx = Math.max(lo, Math.min(hi, x0)); x += nx - x0; x0 = nx; }
     const y0 = base === 'middle' ? y - h / 2 : base === 'bottom' ? y - h : y;
     c.fillStyle = T.canvas; c.globalAlpha = 0.85; c.fillRect(x0 - 3, y0, w + 6, h); c.globalAlpha = 1;
-    c.fillStyle = col; c.fillText(txt, x, y + (base === 'middle' ? 0.5 : 0));
+    c.fillStyle = col === T.bfield ? T.bfieldInk : col; c.fillText(txt, x, y + (base === 'middle' ? 0.5 : 0));
   }
   function arrow(c, x0, y0, x1, y1, col, lw, head) {
     const ps = projScale(), L = Math.hypot(x1 - x0, y1 - y0); if (L < 0.5) return;
@@ -1441,7 +1441,10 @@ details.hall[open] > summary { margin-bottom: 8px; }
     g2.addColorStop(0, shade(col, 0.55)); g2.addColorStop(1, col);
     c.fillStyle = g2; c.beginPath(); c.arc(x, y, r, 0, 2 * Math.PI); c.fill();
     c.strokeStyle = T.canvas; c.lineWidth = 1.2 * ps; c.stroke();
-    if (sign) { c.fillStyle = '#ffffff'; c.font = `700 ${8 * ps}px ${T.mono}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(sign, x, y + 0.5); }
+    if (sign) {
+      /* white or near black, whichever reads better on the lit middle of the bead */
+      const q = hex(col).map((v) => v + (255 - v) * 0.27), lin = q.map((v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); }), lum = 0.2126 * lin[0] + 0.7152 * lin[1] + 0.0722 * lin[2];
+      c.fillStyle = 1.05 / (lum + 0.05) >= (lum + 0.05) / 0.0535 ? '#ffffff' : '#0d0a07'; c.font = `700 ${8 * ps}px ${T.mono}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(sign, x, y + 0.5); }
   }
   // short flashes where particles strike a plate, a screen or the film
   let flashes = [];

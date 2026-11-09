@@ -24,10 +24,10 @@
 /* Layout: the track and cart on top, the force sensor graph below on the left; the rail on the right. */
 /* Layout: lab bench. The gas box and speed histogram fill the left, a narrow instrument rail sits on the right; stacks on phones. */
 
-:root { --cart: #2b60b5; --track: #b4aa9c; --sensor: #61584c; --force: #b0452f; --vel: #1f8a5a; }
+:root { --cart: #2b60b5; --track: #b4aa9c; --sensor: #61584c; --force: #b0452f; --vel: #1f8a5a; --vel-ink: #14694a; }
 :root { --bench: #eee8de; --bench-edge: #ddd3c3; --wall-dot: #efece8; --metal: #cbc4ba; --metal-dark: #847a6d; --clay: #c98a5a; --logger: #51483c; --lcd: #b5cfa4; --led: #2fae57; --cart-top: #1f4a8f; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --cart: #69a0ff; --track: #6c6358; --sensor: #d3ccc4; --force: #ff8a70; --vel: #4cd08f; --bench: #26211a; --bench-edge: #342d24; --wall-dot: #251f17; --metal: #645b4f; --metal-dark: #b9b0a5; --clay: #a8714a; --logger: #3d362c; --lcd: #3f5c3e; --led: #4cd08f; --cart-top: #9cc0ff; } }
-:root[data-theme="dark"] { --cart: #69a0ff; --track: #6c6358; --sensor: #d3ccc4; --force: #ff8a70; --vel: #4cd08f; --bench: #26211a; --bench-edge: #342d24; --wall-dot: #251f17; --metal: #645b4f; --metal-dark: #b9b0a5; --clay: #a8714a; --logger: #3d362c; --lcd: #3f5c3e; --led: #4cd08f; --cart-top: #9cc0ff; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --cart: #69a0ff; --track: #6c6358; --sensor: #d3ccc4; --force: #ff8a70; --vel: #4cd08f; --vel-ink: #4cd08f; --bench: #26211a; --bench-edge: #342d24; --wall-dot: #251f17; --metal: #645b4f; --metal-dark: #b9b0a5; --clay: #a8714a; --logger: #3d362c; --lcd: #3f5c3e; --led: #4cd08f; --cart-top: #9cc0ff; } }
+:root[data-theme="dark"] { --cart: #69a0ff; --track: #6c6358; --sensor: #d3ccc4; --force: #ff8a70; --vel: #4cd08f; --vel-ink: #4cd08f; --bench: #26211a; --bench-edge: #342d24; --wall-dot: #251f17; --metal: #645b4f; --metal-dark: #b9b0a5; --clay: #a8714a; --logger: #3d362c; --lcd: #3f5c3e; --led: #4cd08f; --cart-top: #9cc0ff; }
 :root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
 body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
@@ -236,7 +236,7 @@ table.rows input:focus { border-color: var(--accent); }
   let W = 0, Hh = 0, dpr = 1, T = null;
   function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
     T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'), accent: g('--accent'),
-      cart: g('--cart'), track: g('--track'), sensor: g('--sensor'), force: g('--force'), vel: g('--vel'), bench: g('--bench'), benchEdge: g('--bench-edge'), wallDot: g('--wall-dot'), metal: g('--metal'), metalDark: g('--metal-dark'), clay: g('--clay'), logger: g('--logger'), lcd: g('--lcd'), led: g('--led'), cartTop: g('--cart-top'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; }
+      cart: g('--cart'), track: g('--track'), sensor: g('--sensor'), force: g('--force'), vel: g('--vel'), velInk: g('--vel-ink'), bench: g('--bench'), benchEdge: g('--bench-edge'), wallDot: g('--wall-dot'), metal: g('--metal'), metalDark: g('--metal-dark'), clay: g('--clay'), logger: g('--logger'), lcd: g('--lcd'), led: g('--led'), cartTop: g('--cart-top'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; }
   const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
 /* the divider between the pieces (VD.split, demos/lib/vd.js); a browser with an older cached vd.js keeps the default */
 const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, set() {} })))(can, { key: 'plot', axis: () => 'y', def: () => (use3() ? Math.max(150 * ps(), Hh * 0.4) : 150 * ps()) / Hh, min: 0.2, max: 0.75, label: 'Divider between the cart and the force graph', onChange: () => draw() });
@@ -442,7 +442,7 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
     ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     if (comp > 0 && !S.blind) { const a = Q(comp / 2, 0, AXZ + 0.032); a[1] = Math.max(a[1], yTop); ctx.fillStyle = T.ink; ctx.font = `700 ${11 * p}px ${T.mono}`; ctx.fillText(`${S.bump === 'clay' ? 'squashed' : 'pushed in'} ${f(comp * 1000, 1)} mm`, a[0], a[1]); }
     if (Math.abs(cs.v) > 1e-6) { const [ax, ay0] = Q(cs.x - CL / 2, 0, 0.09), ay = Math.max(ay0, yTop + 14 * p), L = cs.v * 60 * p; ctx.strokeStyle = T.vel; ctx.fillStyle = T.vel; ctx.lineWidth = 2.5 * p; ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(ax + L, ay); ctx.stroke();
-      const s = Math.sign(L); ctx.beginPath(); ctx.moveTo(ax + L + s * 7 * p, ay); ctx.lineTo(ax + L, ay - 5 * p); ctx.lineTo(ax + L, ay + 5 * p); ctx.closePath(); ctx.fill(); ctx.font = `700 ${11 * p}px ${T.mono}`; ctx.fillText(`${f(cs.v, 3)} m/s`, ax, ay - 12 * p); }
+      const s = Math.sign(L); ctx.beginPath(); ctx.moveTo(ax + L + s * 7 * p, ay); ctx.lineTo(ax + L, ay - 5 * p); ctx.lineTo(ax + L, ay + 5 * p); ctx.closePath(); ctx.fill(); ctx.font = `700 ${11 * p}px ${T.mono}`; ctx.fillStyle = T.velInk; ctx.fillText(`${f(cs.v, 3)} m/s`, ax, ay - 12 * p); }
     ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillText('drag to turn, wheel to zoom', W - 10 * p, h3 - 6 * p);
   }
   function draw() {
@@ -515,7 +515,7 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
     ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.fillText('force sensor', x1 + 17 * p, ty - 56 * p);
     // velocity arrow
     if (Math.abs(cs.v) > 1e-6) { const L = cs.v * 60 * p, ay = ty - ch - 22 * p, ax = cxr - cw / 2; ctx.strokeStyle = T.vel; ctx.fillStyle = T.vel; ctx.lineWidth = 2.5 * p; ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(ax + L, ay); ctx.stroke();
-      const s = Math.sign(L); ctx.beginPath(); ctx.moveTo(ax + L + s * 7 * p, ay); ctx.lineTo(ax + L, ay - 5 * p); ctx.lineTo(ax + L, ay + 5 * p); ctx.closePath(); ctx.fill(); ctx.font = `700 ${11 * p}px ${T.mono}`; ctx.fillText(`${f(cs.v, 3)} m/s`, ax, ay - 12 * p); }
+      const s = Math.sign(L); ctx.beginPath(); ctx.moveTo(ax + L + s * 7 * p, ay); ctx.lineTo(ax + L, ay - 5 * p); ctx.lineTo(ax + L, ay + 5 * p); ctx.closePath(); ctx.fill(); ctx.font = `700 ${11 * p}px ${T.mono}`; ctx.fillStyle = T.velInk; ctx.fillText(`${f(cs.v, 3)} m/s`, ax, ay - 12 * p); }
     }
     // force graph around the contact
     const gx0 = 56 * p, gw = W - gx0 - 20 * p, gy0 = ty + 60 * p, gh = Hh - gy0 - 40 * p;
