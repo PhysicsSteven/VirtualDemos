@@ -102,6 +102,9 @@ async function runDemo(browser, cmp, base, d) {
   const shot = async () => { const s = await stage(); if (!s) return null; try { return await s.screenshot({ animations: 'allow', timeout: 5000 }); } catch (e) { errs.push('the stage could not be photographed in 5 s (hidden, or the page is busy)'); return null; } };
   const open = await shot(), openInk = open ? (await compare(cmp, open))[1] : 0;
   const opening = await page.evaluate(CONTROLS);
+  /* controls that move on their own while the demo runs (a day or age slider) can't be compared after Reset all */
+  await page.waitForTimeout(500);
+  const live = new Set((await page.evaluate(CONTROLS)).filter((c) => opening.some((o) => o.key === c.key && String(o.value) !== String(c.value))).map((c) => c.key));
   const canvasSel = await page.evaluate(() => {
     const cs = [...document.querySelectorAll('.stage canvas, canvas')].filter((c) => c.offsetParent !== null);
     cs.sort((a, b) => b.clientWidth * b.clientHeight - a.clientWidth * a.clientHeight);
@@ -218,7 +221,7 @@ async function runDemo(browser, cmp, base, d) {
     if (ra && await ra.isVisible()) {
       await ra.click(); await page.waitForTimeout(600);
       const now = await page.evaluate(CONTROLS), was = new Map(opening.map((c) => [c.key, c.value]));
-      const off = now.filter((c) => was.has(c.key) && String(was.get(c.key)) !== String(c.value)).map((c) => c.key + ' is ' + JSON.stringify(c.value) + ', opened at ' + JSON.stringify(was.get(c.key)));
+      const off = now.filter((c) => was.has(c.key) && !live.has(c.key) && String(was.get(c.key)) !== String(c.value)).map((c) => c.key + ' is ' + JSON.stringify(c.value) + ', opened at ' + JSON.stringify(was.get(c.key)));
       const s = await probe('Reset all');
       if (off.length) found.push({ level: 'FAIL', step: 'Reset all', what: 'did not restore ' + off.slice(0, 4).join('; ') + (off.length > 4 ? ' and ' + (off.length - 4) + ' more' : ''), picture: null });
     }
