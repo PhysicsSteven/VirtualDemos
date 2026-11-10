@@ -40,6 +40,13 @@ VDI18N.add('en', 'demo/wire-force', [
 "Record at least two currents with L = {#} cm and θ = {#}°.",
 "Blind hides the predicted force, torque and B from the fit, and draws arrows equal length. The balance reading, the meters and the settings stay.",
 "Model: uniform field between the poles and zero outside (no fringing); the balance sees the reaction force on the magnet, which equals the force on the wire (Newton's third law). The loop is rectangular, {#} cm by {#} cm, mass {#} g, with a little friction at its axle; the supply holds the current fixed, so back emf is ignored (a real motor's speed is limited mainly by back emf). The loop is shown {#} times slower than real, the motor about {#} times slower; the rotation rate readout is real.",
+"TARE",
+"B = {#} T, from N to S",
+"F on the wire = {#} mN, down",
+"equal and opposite force on the magnet: the balance reads it",
+"L = {#} cm in the field",
+"balance, zeroed at I = {#}",
+"Lines across the gap show the uniform field; the dots move with the current to show its direction, not its speed. Drag to turn the view.",
 "Hold the loop",
 "Only the part of the wire across the field counts: F = ILB sin θ. At θ = {#} the current runs along B and there is no force at all.",
 "Seen from above: the loop turns about an axis pointing out of the page.",
@@ -57,5 +64,7 @@ VDI18N.add('en', 'demo/wire-force', [
 "I, row {#}",
 "reading, row {#}",
 "Row {#} captured.",
-"Close"
+"Close",
+"{#} turns, {#} cm square",
+"commutator and brushes"
 ]);

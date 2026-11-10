@@ -10,7 +10,7 @@ VDI18N.add('en', 'demo/e-over-m', [
 "HEATER {#} V",
 "e/m of the Electron",
 "<a>Photons and matter waves</a>",
-"<a><span>←</span> <span>Double Slit, One Particle at a Time</span></a><a><span>Millikan Oil Drop</span> <span>→</span></a>",
+"<a><span>←</span> <span>Condensates: Interference and Vortices</span></a><a><span>Millikan Oil Drop</span> <span>→</span></a>",
 "Electrons from a {#} to {#} V gun bend into a glowing circle in the field of a pair of Helmholtz coils. Read the radius on the mirrored scale without parallax and measure the charge to mass ratio of the electron.",
 "r in cm · B in mT · e/m = 2V/(B²r²) · B = ({#}/{#})<sup>{#}/{#}</sup>μ₀NI/a",
 "Time controls",
@@ -94,6 +94,7 @@ VDI18N.add('en', 'demo/e-over-m', [
 "Accepted (CODATA): {#} × {#}¹¹ C/kg",
 "−{#}% from the slope",
 "The procedure took five readings at the voltages and currents of the sample data in the PASCO manual ({#} V, {#} A up to {#} V, {#} A), eye lined up on each edge, and filled the table (marked *, simulated readings scattered by {#} mm, one standard deviation). The slope of 2V against (Br)² is e/m. Add your own readings to the same table.",
+"Close",
 "3D view needs WebGL: a front view along the coil axis",
 "Drag the V and I knobs up or down."
 ]);

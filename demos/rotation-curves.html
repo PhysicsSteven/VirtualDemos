@@ -1265,7 +1265,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       S.tsp = 61;
     }
     S.t = 0;
-    syncUI(); for (const id of Object.keys(SL)) fromSlider(id);   // snap the model to the slider steps
+    syncUI();   /* the model keeps the preset's exact masses (9.0e9, not the slider step 8.91e9); a slider drag snaps it (break-it test, 2026-11-09) */
     markPreset(name);
     recompute(); readouts(); drawAll();
     if (!reduce) setPlaying(true);

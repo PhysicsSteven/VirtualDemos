@@ -1022,8 +1022,12 @@ table.rows tr.sim td.n { color: var(--equi); }
 
   // ---------- controls ----------
   function changed() { trDirty = true; G.dirty = true; G.panelDirty = true; syncUI(); dirtyAll(); }
-  function setV(v) { v = clamp(Math.round(v), 100, 200); if (v === S.V) return; S.V = v; $('vSl').value = v; refreshMeters(); changed(); }
-  function setI(v) { v = clamp(Math.round(v * 100) / 100, 0, 3.5); if (v === S.I) return; S.I = v; $('iSl').value = v; refreshMeters(); changed(); }
+  /* a preset's hint quotes its own V and I ("150 V, 1.5 A, 3.7 cm"), so leaving them drops the preset (break-it test, 2026-11-09) */
+  function leavePreset() { if (!S.preset) return; const s = PRESETS[S.preset].set; if (S.V === s.V && S.I === s.I) return; S.preset = null;
+    document.querySelectorAll('#presets button').forEach((b) => b.setAttribute('aria-pressed', 'false'));
+    $('presetHint').textContent = 'Your own setup. Pick a preset to return to a known one.'; }
+  function setV(v) { v = clamp(Math.round(v), 100, 200); if (v === S.V) return; S.V = v; $('vSl').value = v; leavePreset(); refreshMeters(); changed(); }
+  function setI(v) { v = clamp(Math.round(v * 100) / 100, 0, 3.5); if (v === S.I) return; S.I = v; $('iSl').value = v; leavePreset(); refreshMeters(); changed(); }
   function setTilt(v) { v = clamp(Math.round(v), -30, 30); if (v === S.tilt) return; S.tilt = v; $('tSl').value = v; changed(); }
   function setPlaying(p) { S.playing = p; $('play').textContent = p ? 'Pause' : 'Play'; }
   function refreshMeters() {
