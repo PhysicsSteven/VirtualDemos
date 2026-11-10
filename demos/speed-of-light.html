@@ -1327,7 +1327,7 @@ table.rows tr.sim td { background: color-mix(in srgb, var(--equi) 9%, transparen
     long: { hint: 'A longer path gives the mirror more time to turn and a longer lever arm, so the shift grows roughly as D² / (D + B). L1 has to move: A comes from the focus condition. Enter D, B and A again if you measure them yourself.',
       apply() { S.revs = 1000; S.dir = 1; S.D = 20; S.B = 0.5; S.view = 'normal'; S.mic = restMic() + 0.2; } },
     measure: { hint: 'A table already filled by the procedure: rest, then 500, 750 and 1000 rev/s each way, read as a careful student would. These are simulated readings on this seed\'s bench. The slope of reading against signed speed gives c.',
-      apply() { S.revs = 1000; S.dir = 1; S.D = 12; S.B = 0.5; S.view = 'normal'; S.mic = restMic(); S.rows = simulatedRows(); } },
+      apply() { S.revs = 1000; S.dir = 1; S.D = 12; S.B = 0.5; S.view = 'normal'; S.mic = restMic(); S.A = focusA(S.D, S.B); /* the table is made at the bench's own focus, not the previous A (break-it test, 2026-11-09) */ S.rows = simulatedRows(); } },
   };
   function applyPreset(p) {
     S.preset = p; S.ghost = null; if (p === 'measure') { S.rows = []; wsSeries = Date.now(); }

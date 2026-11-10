@@ -382,7 +382,8 @@
 
   // ---------- running ----------
   const card = VD.setupCard($('setupCard'));
-  function setRun(on) { S.run = on; card.away(on); $('play').textContent = on ? 'Pause' : S.st && S.st.t > 0 ? 'Play' : 'Play'; $('play').classList.toggle('attn', !on); status(); }
+  function setRun(on) { S.run = on; card.away(on); $('play').textContent = on ? 'Pause' : S.st && S.st.t > 0 ? 'Play' : 'Play'; $('play').classList.toggle('attn', !on); status();
+    if (!on && S.st) readouts();   /* readouts refresh every 100 ms while running: on Pause show the state it stopped in, not one up to 100 ms old (break-it test, 2026-11-09) */ }
   function step(dt) {
     const p = P(); let left = dt * S.speed;
     while (left > 1e-12) { const h = Math.min(ET_H, left); const ev = etStep(S.st, p, h); left -= h; for (const e of ev) note(e); }

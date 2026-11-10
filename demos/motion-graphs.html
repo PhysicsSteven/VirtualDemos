@@ -241,7 +241,7 @@ table.rows input:focus { border-color: var(--accent); }
   }
   function stateAt(run, t) {
     const st = run.stages;
-    if (!st.length) return { x: run.x0, v: run.v0, a: 0 };
+    if (!st.length) return { x: run.x0 + run.v0 * Math.max(t, 0), v: run.v0, a: 0 };   /* no stage lasts: the cart just coasts at v0, so x keeps up with v (break-it test, 2026-11-09) */
     let s = st[0];
     for (const q of st) { if (t >= q.t0) s = q; }
     const u = Math.min(Math.max(t - s.t0, 0), s.T);
@@ -866,6 +866,7 @@ table.rows input:focus { border-color: var(--accent); }
   }
   function distance(t) { // integral of |v| from 0 to t, exact within each stage
     let d = 0;
+    if (!run.stages.length) return Math.abs(run.v0) * Math.max(t, 0);   /* coasting at v0 (break-it test, 2026-11-09) */
     for (const sg of run.stages) {
       const u1 = Math.min(Math.max(t - sg.t0, 0), sg.T); if (u1 <= 0) break;
       const xAt = (u) => sg.v0 * u + 0.5 * sg.a * u * u, ts = sg.a !== 0 ? -sg.v0 / sg.a : -1;
@@ -1039,6 +1040,8 @@ table.rows input:focus { border-color: var(--accent); }
   new ResizeObserver(resize).observe(stage);
   applyPreset('const'); renderRows(); resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  /* debug hook for tools/breakit/motion-graphs.cjs (break-it test, 2026-11-09) */
+  window.__mg = { S, get run() { return run; }, get runB() { return runB; }, stateAt, meetTimes, distance, stopDist, tMax, st, RAMP_L, G };
   requestAnimationFrame(frame);
 })();
 </script>

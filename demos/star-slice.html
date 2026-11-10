@@ -3784,6 +3784,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     selectDataset(S.datasets.indexOf(first));
   }
   else $('msg').textContent = 'No datasets are embedded in this page. Use Load MESA file to open a .json.gz from extract_profiles.py.';
+  /* for the break-it test (tools/breakit/star-slice.cjs) */
+  window.__ss = { S, cur, disp, RSUN_KM, sci, grp, fmtRsun, get view() { return view; } };
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(markAll);
 })();
 </script>

@@ -295,6 +295,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
      what they showed just before it opened */
   const sig = (v, n = 4) => +(+v).toPrecision(n);
   window.vdVersion = HW_VERSION;
+  window.__hw = { S, now, state, solveCircuit };   /* debug hook for tools/breakit/household-wiring.cjs (break-it test, 2026-11-09) */
   window.vdShowCols = [['I_hot_A', 'Hot (A)'], ['V_outlet_V', 'Outlet (V)'], ['protection', 'Protection']];
   window.vdReadingRow = () => {
     if (S.blind && !S.tripped) return 'Blind hides the currents: turn Blind off to record them.';

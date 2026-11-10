@@ -874,7 +874,8 @@ table.rows td.b { font-size: 0.76rem; }
   const NUC_COL = () => ({ e: T.accent, H: T.pos, F: T.equi });
   function fitAndPlot() {
     const F = fits(), dl = $('fitOut'); let html = '';
-    const pm = (v, e, d) => isFinite(e) ? `${v.toFixed(d)} ± ${e.toFixed(d)}` : v.toFixed(d);
+    /* a flat line (every reading the same) has slope 0, so g and γ are not defined: show a dash, not Infinity (break-it test, 2026-11-09) */
+    const pm = (v, e, d) => !isFinite(v) ? '—' : isFinite(e) ? `${v.toFixed(d)} ± ${e.toFixed(d)}` : v.toFixed(d);
     if (S.cfg === 'esr') {
       const f = F.e.fit;
       if (f) { const g = gFromSlope(f.k), eg = g * f.se / f.k;

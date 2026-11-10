@@ -605,7 +605,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   /* the gas moves 0.5 box heights a second at 1×; the solids try 30 exchanges a second at 1× */
   function advance(dt) {
     if (S.view === 'fe') { const g = S.fe.g, tt = dt * S.speed * 0.5, n = Math.max(1, Math.ceil(tt / GAS_DT));
-      for (let i = 0; i < n; i++) gasStep(g, tt / n);
+      /* at 100× with a hundred or more molecules one frame is thousands of steps: stop at a time budget, and the model clock (t) shows what was really run (break-it test, 2026-11-09) */
+      const t0 = performance.now(); for (let i = 0; i < n; i++) { gasStep(g, tt / n); if ((i & 15) === 15 && performance.now() - t0 > 30) break; }
       if (!g.wall) { const last = g.trace[g.trace.length - 1]; if (!last || g.tOpen - last[0] >= 0.05) { g.trace.push([g.tOpen, leftCount(g)]); if (g.trace.length > 4000) g.trace.splice(0, g.trace.length - 4000); } } }
     else if (S.view === 'es') { const s = S.es.s, k = Math.max(1, Math.round(30 * dt * S.speed)); solidStep(s, k);
       const last = s.trace[s.trace.length - 1]; if (s.steps - last[0] >= Math.max(1, s.steps / 800)) s.trace.push([s.steps, s.qA]); if (s.trace.length > 3000) s.trace = s.trace.filter((_, i) => i % 2 === 0); }

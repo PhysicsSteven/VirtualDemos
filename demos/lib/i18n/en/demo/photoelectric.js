@@ -21,6 +21,7 @@ VDI18N.add('en', 'demo/photoelectric', [
 "(eV) vs frequency",
 "Current I (nA) vs voltage",
 "collector voltage V (volts)",
+"phototube",
 "Photoelectric Effect",
 "<a>Photons and matter waves</a>",
 "<a><span>←</span> <span>Blackbody Radiation</span></a><a><span>Spectra Explorer</span> <span>→</span></a>",
@@ -39,6 +40,7 @@ VDI18N.add('en', 'demo/photoelectric', [
 "UV on zinc",
 "Measure h",
 "Each blue photon carries {#} eV, more than sodium needs ({#} eV), so every absorbed photon can free an electron. The extra {#} eV becomes kinetic energy.",
+"Light",
 "{#} nm · violet",
 "<span>{#} nm</span><span>UV | visible</span><span>{#} nm</span>",
 "Mercury lines, as in the h/e lab",
@@ -69,7 +71,6 @@ VDI18N.add('en', 'demo/photoelectric', [
 "Photons",
 "Theory line and answers",
 "Model: each absorbed photon frees at most one electron, with a kinetic energy spread evenly between {#} and K<sub>max</sub>. One electron per thousand photons (quantum efficiency {#}%). Electron speeds on screen are slowed enormously; the fastest real ones move at hundreds of km/s.",
-"phototube",
 "phototube drawn {#} times its size · electrons slowed enormously · drag to turn, a knob to set it",
 "Full power red light and not a single electron. Each {#} nm photon has only {#} eV, below sodium's work function. Turning up the brightness sends more weak photons, not stronger ones.",
 "{#} nm · red",
@@ -93,7 +94,6 @@ VDI18N.add('en', 'demo/photoelectric', [
 "Calcium cathode (emitter)",
 "Copper cathode (emitter)",
 "Platinum cathode (emitter)",
-"hf < φ : no electrons",
-"Light",
-"Close"
+"Close",
+"hf < φ : no electrons"
 ]);

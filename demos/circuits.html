@@ -5923,6 +5923,10 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
   });
   tokens();
   { const p = fromHash() || 'series'; S.mode = PRESETS[p].mode; showMode(); applyPreset(p, true); }
+  /* the page writes the setup into the address, and Reset all reloads that address: it opened at the last setup, not the one the page
+     opened with. Put the opening address back first (unless Reset all will ask and be cancelled). (break-it test, 2026-11-09) */
+  { const h0 = location.hash, b = $('vdReset');
+    if (b) b.addEventListener('click', () => { try { if (!(b.vdLost && b.vdLost()) && location.hash !== h0) history.replaceState(null, '', location.pathname + location.search + h0); } catch (_) {} }, true); }
   setRunning(!reduce); $('rmotion').checked = reduce;
   dotKey(); setView(view); setTool('select');
   resizeAll();

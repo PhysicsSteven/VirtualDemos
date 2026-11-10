@@ -161,6 +161,7 @@ VDI18N.add('en', 'demo/entropy', [
 "breaks the Clausius statement",
 "A refrigerator that moves {#} J from a {#} K freezer to a {#} K room with no work at all. The Clausius statement says no such refrigerator exists.",
 "refrigerator",
+"Close",
 "Reset puts the partition back.",
 "ΔS hot",
 "ΔS cold",

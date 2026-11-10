@@ -2675,7 +2675,9 @@ body[data-nc] #unitsG, body[data-nc] #unitsF, body:not([data-nc]) #ncUnits { dis
     return new THREE.TubeGeometry(curve, segs, rad, 6, false);
   }
   function dashTube(pts, rad, color, dashes, opacity) {
-    const curve = new THREE.CatmullRomCurve3(pts.map((q) => new THREE.Vector3(q[1], 0, q[2])));
+    /* a shot with no flight (angle 0 from the ground) has one point, and a one point curve crashes three.js (break-it test, 2026-11-09) */
+    const vp = pts.map((q) => new THREE.Vector3(q[1], 0, q[2])); if (vp.length < 2) vp.push(new THREE.Vector3((vp[0] ? vp[0].x : 0) + 1e-6, 0, vp[0] ? vp[0].z : 0));
+    const curve = new THREE.CatmullRomCurve3(vp);
     const cv = document.createElement('canvas'); cv.width = 32; cv.height = 4; const c = cv.getContext('2d'); c.fillStyle = '#ffffff'; c.fillRect(0, 0, dashes ? 18 : 32, 4);
     const tex = new THREE.CanvasTexture(cv); tex.wrapS = THREE.RepeatWrapping; tex.repeat.set(dashes || 1, 1);
     const m = new THREE.MeshBasicMaterial({ color, alphaMap: tex, transparent: true, opacity: opacity || 0.9, alphaTest: 0.5, depthWrite: !!dashes });

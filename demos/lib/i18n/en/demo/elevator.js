@@ -45,6 +45,7 @@ VDI18N.add('en', 'demo/elevator', [
 "Floor {#} to floor {#}: {#} s.",
 "<span>speeding up going up</span>",
 "speeding up going up",
+"Close",
 "<span>constant speed up</span>",
 "<span>free fall: the cable has snapped</span>",
 "<span>safety brakes stopping the car</span>"

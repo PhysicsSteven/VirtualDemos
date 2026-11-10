@@ -7,6 +7,9 @@ VDI18N.add('en', 'demo/energy-track', [
 "Potential U",
 "Thermal",
 "Total",
+"Kinetic",
+"Potential",
+"Energy (J)",
 "Energy on a Track",
 "<a><span>←</span> <span>Granular Flow: Sorting and Landslides</span></a><a><span>Rotating Frames</span> <span>→</span></a>",
 "Shape a track, let a skater go, and watch kinetic, potential and thermal energy trade places while the total stays fixed. Add friction, loops and jumps; see where the skater leaves the track.",
@@ -49,11 +52,8 @@ VDI18N.add('en', 'demo/energy-track', [
 "on the track: m dv/dt = −mg sinθ ∓ μN, N = m(v²κ + g cosθ)",
 "E<sub>th</sub> grows by μN Δs while sliding",
 "Model: the skater is a point mass that slides (no rolling, no air drag). The track is a smooth curve through its points (a natural cubic spline). On the track the motion is found in steps of {#} ms (fourth order Runge–Kutta) and the speed is then set from the energy balance, so K + U + E<sub>th</sub> equals the starting total at every step. Kinetic friction is μN against the motion; at rest the same μ holds the skater on a slope where tanθ ≤ μ. The track pushes but cannot pull: where it would have to pull (N &lt; {#}) the skater leaves it, unless Stick to the track is on. In the air the path is the exact parabola. Landing on the track keeps the speed along the track and turns the speed across it into thermal energy (a perfectly inelastic bump); landing on the ground does the same with the downward speed, and the walls stop the skater. g: Earth {#} m/s², and the Moon {#}, Mars {#} and Jupiter {#} m/s² from the NASA Planetary Fact Sheet.",
-"Kinetic",
-"Potential",
-"Energy (J)",
-"Energy bars, in J: Kinetic {#}, Potential {#}, Thermal {#}, Total {#}.",
 "The same valley with μ = {#}. Each swing turns some energy into thermal energy (μN on every meter slid), so the turning points come lower each time and the skater settles near the bottom. The total bar does not change.",
+"Energy bars, in J: Kinetic {#}, Potential {#}, Thermal {#}, Total {#}.",
 "Two wells with a hill between, its top {#} m up. Started at {#} m the skater crosses the hill and back; drag it lower than the hilltop and it stays in one well. The hill only lets through a skater whose total energy is above U at the top.",
 "A loop the loop. At the top of the loop the track can only push down, so the skater needs v² ≥ gR there (R the radius of the track at the top). Started from this height it makes it round, back up the far ramp, and through the loop again backwards.",
 "The same loop, started lower. Near the top the track would have to pull the skater in, which it cannot, so the skater leaves the track and falls across the loop as a projectile. Turn on Stick to the track and it goes round.",
@@ -61,5 +61,6 @@ VDI18N.add('en', 'demo/energy-track', [
 "A hump with a tight top. Coming up to the top the track curves away faster than the skater can follow (N would drop below zero), so the skater leaves the track, flies over the top and lands on the far ramp.",
 "The same hump with the skater on rails, like a roller coaster car. The rails can pull as well as push, so the skater stays on: N goes negative (the readout shows it) over the top, and the skater climbs the far ramp to its starting height.",
 "The valley on the Moon, g = {#} m/s². The skater turns around at the same heights as on Earth (the heights depend only on energy per unit weight), but everything happens √({#}/{#}) = {#} times slower.",
-"A plain track to start from. Drag the grips to reshape it, drag points from the tray onto it to add bends ({#} points at most), and drag a grip onto the bin to take it away."
+"A plain track to start from. Drag the grips to reshape it, drag points from the tray onto it to add bends ({#} points at most), and drag a grip onto the bin to take it away.",
+"Close"
 ]);

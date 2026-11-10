@@ -101,5 +101,6 @@ VDI18N.add('en', 'demo/motion-graphs', [
 "✎ draw on this graph",
 "Draw any velocity graph with the mouse or a finger on the v–t pane, and see its derivative (the a–t graph, the slope of v) and its integral (the x–t graph, x₀ plus the area under v). The cart drives your motion when you press Play. Switch to drawing a, and both v and x come from areas.",
 "Draw on the v–t graph. a–t shows its slope, x–t its area added to x₀.",
-"Draw on the a–t graph. v–t shows v₀ plus the area under a; x–t, x₀ plus the area under v."
+"Draw on the a–t graph. v–t shows v₀ plus the area under a; x–t, x₀ plus the area under v.",
+"Close"
 ]);

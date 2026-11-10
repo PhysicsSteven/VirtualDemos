@@ -1126,7 +1126,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   new ResizeObserver(resize).observe($('pane')); new ResizeObserver(resize).observe(cur.parentElement); resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   window.addEventListener('load', () => setTimeout(redraw, 0));
-  window.__mo = { S, setView, applyPreset, redraw, sync, spSet, spData, spRel, setR, custom };
+  window.__mo = { S, setView, applyPreset, redraw, sync, spSet, spData, spRel, setR, custom,
+    /* the physics, for tools/breakit/molecules.cjs (break-it test, 2026-11-09) */
+    core: { ionTerms, ionMin, ionU, crossR, crossBare, nForD, MOLS, HCL37, G, Bv, nuVib, term, transition, mu, De, morse, h2pU, h2pS, h2pMin, h2pMidRatio, mlResponse, mlBreakNm, ML_MOLS, bandLines, kFromNu, levTr, CM_EV, C_MS, A0, ML, NACL } };
   const HOW = { 'molecular-bonds': 'Ionic and Covalent Bonds', 'hcl-spectrum': 'The Infrared Spectrum of HCl' }, howWs = () => WS[S.view] || 'molecular-bonds';
   VD.howTo({ src: () => `media/how-this-works/${howWs()}.mp4`, poster: () => `media/how-this-works/${howWs()}.jpg`, title: () => `How this works: ${HOW[howWs()]}` });
 })();

@@ -1093,6 +1093,8 @@ table.rows input:focus { border-color: var(--accent); }
   /* opens in 3D where WebGL works, unless the page asks for the flat view (?view=flat) or the device asks to save data */
   G3.want = new URLSearchParams(location.search).get('view') !== 'flat' && !!window.VD3 && !VD3.lowPower(); if (G3.want) setView('3d');
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  /* for the break-it test (tools/breakit/forces.cjs) */
+  window.__forces = { S, forces, tackle, G, LEN, get simClock() { return simClock; } };
   requestAnimationFrame(frame);
 })();
 </script>

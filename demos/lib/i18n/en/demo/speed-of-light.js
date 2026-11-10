@@ -106,12 +106,10 @@ VDI18N.add('en', 'demo/speed-of-light', [
 "A longer path gives the mirror more time to turn and a longer lever arm, so the shift grows roughly as D² / (D + B). L1 has to move: A comes from the focus condition. Enter D, B and A again if you measure them yourself.",
 "A table already filled by the procedure: rest, then {#}, {#} and {#} rev/s each way, read as a careful student would. These are simulated readings on this seed's bench. The slope of reading against signed speed gives c.",
 "D = {#} m, B = {#} m, A = {#} m, simulated reading",
-"{#} sim *",
+"{#} sim",
 "rest",
 "Speed meter row {#}, rev/s",
 "Micrometer row {#}, mm",
-"Rows marked sim are simulated readings made by the procedure on this seed's bench, not yours. Rows marked * were taken at another D, B or A and are left out of the fit.",
-"{#} sim",
 "Rows marked sim are simulated readings made by the procedure on this seed's bench, not yours.",
 "Slope k ({#} readings)",
 "{#} ± {#} µm per rev/s",
@@ -119,5 +117,12 @@ VDI18N.add('en', 'demo/speed-of-light', [
 "c = {#}πAD² / (D + B)k",
 "Pair method: last CW and CCW rows, ω = {#}π(f<sub>CW</sub> + f<sub>CCW</sub>)",
 "Accepted c = {#} {#} {#} m/s (exact)",
-"yours −{#} %, {#} σ"
+"yours −{#} %, {#} σ",
+"Close",
+"Speed the mirror up or down by {#} revolutions per second (Shift: ten times as much)",
+"Move the crosshair by {#} mm (Shift: {#} mm)",
+"Move the crosshair by {#} mm",
+"yours +{#} %, {#} σ",
+"{#} sim *",
+"Rows marked sim are simulated readings made by the procedure on this seed's bench, not yours. Rows marked * were taken at another D, B or A and are left out of the fit."
 ]);

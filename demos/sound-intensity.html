@@ -357,7 +357,7 @@ table.rows input:focus { border-color: var(--accent); }
 
   // ---------- readings ----------
   const capStatus = (m) => { $('capStatus').textContent = m; };
-  const srcKey = () => `${S.mystery ? 'mystery' : POWERS[S.iA]}|${pB()}|${S.bg}`;
+  const srcKey = () => `${S.mystery ? 'mystery' + S.mystery : POWERS[S.iA]}|${pB()}|${S.bg}`;   /* a new mystery power starts a new series: the fit must not mix two hidden sources (break-it test, 2026-11-09) */
   const srcText = (r) => [r.pA === 'mystery' ? 'A mystery' : `A ${pw(+r.pA)}`, r.pB ? `B ${pw(+r.pB)}` : '', r.bg ? `background ${r.bg} dB` : ''].filter(Boolean).join(', ');
   $('capture').addEventListener('click', () => { S.rows.push({ r: f(S.r, 1), pA: S.mystery ? 'mystery' : String(POWERS[S.iA]), pB: S.bOn ? String(pB()) : '', bg: S.bg ? String(S.bg) : '', L: f(reading(), 1), key: srcKey() });
     renderRows(); capStatus(`Row ${S.rows.length} recorded.`); });

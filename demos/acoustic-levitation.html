@@ -1397,7 +1397,7 @@ table.traps tr.held td { color: var(--accent); font-weight: 600; }
     const wTxt = `width ${fmtE(uR - uL)}`, wW = ctx.measureText(wTxt).width;
     ctx.textAlign = 'right'; ctx.fillText(wTxt, R, H - 10 * ps);
     ctx.textAlign = 'left';
-    for (const lab of ['lower ←  U  → higher', 'U →']) if (ctx.measureText(lab).width + wW + 12 * ps < R - L + 30 * ps) { ctx.fillText(lab, L, H - 10 * ps); break; }
+    for (const lab of ['lower ←  U  → higher', 'U →']) if (ctx.measureText(lab).width + wW + 12 * ps < R - L) { ctx.fillText(lab, L, H - 10 * ps); break; }   /* no 30 px slack: the label ran into the width text on a narrow graph (break-it test, 2026-11-09) */
     if (!PH.traps.length) { const tx = 'No trap: the bead falls'; ctx.font = `700 ${12 * ps}px ${T.ui}`; const tw = ctx.measureText(tx).width; ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.9; ctx.fillRect((L + R) / 2 - tw / 2 - 4, top + 6 * ps, tw + 8, 16 * ps); ctx.globalAlpha = 1; ctx.textAlign = 'center'; ctx.fillStyle = T.pos; ctx.fillText(tx, (L + R) / 2, top + 18 * ps); }
   }
 

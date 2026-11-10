@@ -1703,6 +1703,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   window.__tf = { get S() { return S; }, probe: (x) => { if (S.view === 'wedge') { S.wedge.x = Math.max(0, Math.min(WEDGE_L, x)); changed(); } }, get frameMs() { return frameMs; }, get spec() { return spec; }, handles, rayGeom, applyPreset, setView: (v) => { setView(v); changed(); },
     get g3() { return g3; }, get d3() { return use3d(); },
+    film, quarterR, lensT, lensR, wedgeT,   /* the core, for tools/breakit/thin-films.cjs (break-it test, 2026-11-09) */
     canvasBox: (w) => { const r = (w === 's' ? sCan : can).getBoundingClientRect(); return [r.left, r.top]; } };
 
   // ---------- Readings (shared section): one row of what the student sees now ----------

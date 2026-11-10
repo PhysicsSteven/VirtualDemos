@@ -393,7 +393,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   let cardAt = '';
   function placeCard(wide, gx, gw, p) {
     const el = $('setupCard');
-    if (getComputedStyle(el).position !== 'absolute') return 0;
+    if (getComputedStyle(el).position !== 'absolute') {   /* narrowed to a phone after laying out wide: drop the inline px position and width, or the card keeps the wide size and the page scrolls sideways (break-it test, 2026-11-09) */
+      if (cardAt) { cardAt = ''; el.classList.remove('across', 'two'); el.style.left = el.style.top = el.style.width = ''; }
+      return 0;
+    }
     const x = Math.round(gx - 34 * p), w = Math.round(gw + 34 * p), key = wide ? `${x},${w}` : '';
     if (key !== cardAt) {
       cardAt = key; el.classList.toggle('across', wide); el.classList.toggle('two', wide && w >= 420);

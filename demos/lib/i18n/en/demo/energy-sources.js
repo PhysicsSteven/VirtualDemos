@@ -44,6 +44,7 @@ VDI18N.add('en', 'demo/energy-sources', [
 "{#} × {#}⁵ tonnes",
 "{#} × {#}⁷ tonnes",
 "{#} × {#}⁶ tonnes",
+"Close",
 "Mass for {#} kWh of electricity",
 "Uranium {#} (fissioned): {#} g",
 "Natural gas: {#} kg",
