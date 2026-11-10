@@ -583,6 +583,7 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
   tokens(); new ResizeObserver(resize).observe(stage); init(); resize();
   /* opens in 3D where WebGL works, unless the page asks for the flat view (?view=flat) or the device asks to save data */
   G3.want = new URLSearchParams(location.search).get('view') !== 'flat' && !!window.VD3 && !VD3.lowPower(); if (G3.want) setView('3d');
+  window.__imp = { S, stats, contact, force, cartState, trapezoid, BUMPERS, tHit };   /* hook for tools/breakit (break-it test, 2026-11-09) */
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   let last = performance.now();
   (function loop(now) { const dt = Math.min(0.05, ((now || last) - last) / 1000); last = now || last; tick(dt); requestAnimationFrame(loop); })();

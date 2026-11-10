@@ -690,6 +690,8 @@ table.rows input:focus { border-color: var(--accent); }
   /* the turntable opens in 3D where WebGL works, unless the page asks for the flat view (?view=flat) or the device asks to save data */
   if (new URLSearchParams(location.search).get('view') !== 'flat' && window.VD3 && !VD3.lowPower()) setView('3d');
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  /* debug hook for tools/breakit/rotational-dynamics.cjs (break-it test, 2026-11-09) */
+  window.__rd = { S, mot, Itot, Iobj, tf, fromRow };
   requestAnimationFrame(frame);
 })();
 </script>

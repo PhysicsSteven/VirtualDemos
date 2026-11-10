@@ -842,6 +842,8 @@ table.rows input:focus { border-color: var(--accent); }
     const q = pNow();
     if (P.coll.on) { capStatus('Stop collecting first, then capture the cylinder and stopwatch readings.'); return; }
     if (!(P.coll.V > 0)) { capStatus('Collect some water in the cylinder first.'); return; }
+    /* the cylinder was filled at another valve setting: its volume and time do not belong with this setting's ΔP and N_R (break-it test, 2026-11-09) */
+    if (P.coll.q != null && Math.abs(P.coll.q - pQ()) > 1e-15) { capStatus('The valve was moved after this water was collected. Empty the cylinder and collect again.'); return; }
     P.rows.push({ key: `${P.liq}|${P.D}`, liquid: q.liq.name, rho: String(q.liq.rho), D: (P.D * 1000).toFixed(1), valve: String(P.valve), V: String(q.Vr), t: q.tr.toFixed(2), dP: q.dPr.toFixed(1),
       dye: q.reg === 'laminar' ? 'straight thread' : q.reg === 'unstable' ? 'puffs' : q.reg === 'turbulent' ? 'mixed' : 'still' });
     renderRows(); capStatus(`Row ${P.rows.length} captured.`);
@@ -887,7 +889,7 @@ table.rows input:focus { border-color: var(--accent); }
     P.dye = []; P.puffs = []; pEmpty(); pFit(); });
   $('pipeSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-d]'); if (!b) return; P.D = +b.dataset.d; P.dye = []; P.puffs = []; pEmpty(); pFit(); });
   $('sValve').addEventListener('input', (e) => { P.valve = +e.target.value; if (P.coll.on) { pStopColl(); capStatus('Changing the flow stops the stopwatch; empty the cylinder and collect again.'); } pSync(); draw(); readouts(); });
-  $('collect').addEventListener('click', () => { if (P.coll.on) { pStopColl(); } else { if (P.coll.V >= 1e-3) { capStatus('The cylinder is full: empty it first.'); return; } if (P.coll.V > 0) { capStatus('Empty the cylinder first, so the stopwatch and volume start from zero.'); return; } P.coll.on = true; pSync(); } draw(); readouts(); });
+  $('collect').addEventListener('click', () => { if (P.coll.on) { pStopColl(); } else { if (P.coll.V >= 1e-3) { capStatus('The cylinder is full: empty it first.'); return; } if (P.coll.V > 0) { capStatus('Empty the cylinder first, so the stopwatch and volume start from zero.'); return; } P.coll.on = true; P.coll.q = pQ(); /* the flow that fills the cylinder, so a row is never captured at a different valve setting (break-it test, 2026-11-09) */ pSync(); } draw(); readouts(); });
   $('empty').addEventListener('click', pEmpty);
   window.__vi = { setExp, valve: (u) => { $('sValve').value = u; $('sValve').dispatchEvent(new Event('input')); }, collectFor: (t) => { pEmpty(); P.coll.on = true; pAdvance(t); pStopColl(); draw(); readouts(); }, now: pNow, get P() { return P; } };
 

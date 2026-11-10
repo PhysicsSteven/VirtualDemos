@@ -1164,7 +1164,7 @@ table.rows tr.sim td.n { color: var(--equi); }
     frameMs = 0.9 * frameMs + 0.1 * (performance.now() - t0);
     requestAnimationFrame(loop);
   }
-  window.__em = { get frameMs() { return frameMs; }, S, getTrace, applyPreset, setV, setI, setTilt, setEye, setPtr, capture, fitRows, csvTable, svHandles, get sgeo() { return sgeo; }, get gl() { return G.ready; }, setPlaying, onScale, reflOnScale,
+  window.__em = { core: { trace, coilField, coilFieldNumeric, bCenter, radiusUniform, emFrom, speed, N_TURNS, A_TRUE, EM }, rowCalc, coilA, get frameMs() { return frameMs; }, S, getTrace, applyPreset, setV, setI, setTilt, setEye, setPtr, capture, fitRows, csvTable, svHandles, get sgeo() { return sgeo; }, get gl() { return G.ready; }, setPlaying, onScale, reflOnScale,
     meters: () => [shownV, shownI],
     pickScreen() { if (!G.ready) return null; const r = G.el.getBoundingClientRect(), o = {}; for (const p of G.pick) { const v = new THREE.Vector3(); p.grip.getWorldPosition(v); v.project(G.cam); o[p.id] = [r.left + (v.x + 1) / 2 * r.width, r.top + (1 - v.y) / 2 * r.height]; } return o; } };
 

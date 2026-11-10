@@ -226,6 +226,8 @@ VDI18N.add('es', 'demo/viscometer', {
   "Agua: unas {#} veces menos viscosa que el glicerol. Aquí todas las esferas caen demasiado rápido para la ley de Stokes; mira lo que dan los tiempos.",
 "Collect some water in the cylinder first.":
   "Primero recolecta algo de agua en la probeta.",
+"The valve was moved after this water was collected. Empty the cylinder and collect again.":
+  "La válvula se movió después de recolectar esta agua. Vacía la probeta y recolecta de nuevo.",
 "Mystery liquid (water and glycerol) · {#} mm pipe · dye a straight thread":
   "Líquido misterioso (agua y glicerol) · tubería de {#} mm · colorante en un hilo recto",
 "<span>no: inertia dominates (drag {#} times Stokes')</span>":
