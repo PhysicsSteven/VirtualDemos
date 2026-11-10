@@ -214,7 +214,8 @@
     'thin-films': { demo: 'Thin Film Interference', cols: ['row', (r) => `${r.view}, n ${r.n1} / ${r.nf} / ${r.n2}${+r.theta_deg ? `, θ₁ = ${r.theta_deg}°` : ''}${r.h_um ? `, spacer ${r.h_um} µm` : ''}${r.lens_R_m ? `, lens R = ${r.lens_R_m} m` : ''}`,
       'lambda_nm', 't_nm', 'R_pct', (r) => r.x_mm || r.r_mm || '', null] },
     /* Reading | Tool | Meter reading V (kV) | Wavelength λ (pm) | D₁ (mm) | D₂ (mm) */
-    'electron-diffraction': { demo: 'Electron Diffraction', cols: [(r) => (r.simulated === 'yes' ? `${r.row} (simulated)` : r.row), (r) => (r.tool === 'arc' ? 'ruler (arc)' : 'caliper (chord)'), 'meter_kV', 'lambda_pm', 'D1_mm', 'D2_mm'] },
+    /* Reading | Tool | V | D₁ | D₂ | λ₁, λ₂, 1/√V (typed). The demo's λ from the meter is left out: the worksheet measures λ (Steve 2026-11-10) */
+    'electron-diffraction': { demo: 'Electron Diffraction', cols: [(r) => (r.simulated === 'yes' ? `${r.row} (simulated)` : r.row), (r) => (r.tool === 'arc' ? 'ruler (arc)' : 'caliper (chord)'), 'meter_kV', 'D1_mm', 'D2_mm', null, null, null] },
     /* Reading | Tube and crystal | Crystal angle θ (°) | Count rate (1/s) | Line, Order m, sin θ (typed) */
     'x-ray-diffraction': { demo: 'Electron Diffraction (X-ray Bragg spectrometer)', cols: ['row', (r) => `${r.tube} tube, ${r.crystal} crystal`, 'theta_deg', 'rate_per_s', null, null, null] },
     /* Reading | f (Hz) | E₀ (V/m) | B₀ (T) | E₀² (typed) | I (W/m²) | pressure absorbed (Pa) | pressure reflected (Pa) */

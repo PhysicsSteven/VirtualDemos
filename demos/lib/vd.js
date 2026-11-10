@@ -64,19 +64,33 @@
   /* Reset all (markup from tools/reset.py): reloads the page, so every control, preset and the simulation are as the page
      opened (the address, Projector and Reduce motion survive). Asks first when a table holds more data rows than it had
      just after load, or a Capture, Record, Add point, Add to table, Keep trace or Pin button was pressed since the last
-     Clear. A shared setting (set= in the address) is dropped on the reload. A demo can define window.vdReadings = () => count instead. b.vdLost() is there for tests */
+     Clear. A shared setting (set= in the address) is dropped on the reload. A table whose rows get rewritten is computed and not counted. A demo can define window.vdReadings = () => count instead. b.vdLost() is there for tests */
   VD.reset = function (b) {
     var base = new WeakMap(), rec = false;
     function data(t) { var n = 0; Array.prototype.forEach.call(t.rows, function (r) {
       if (r.parentNode.tagName === 'THEAD' || r.parentNode.tagName === 'TFOOT') return;
       if (r.cells.length > 1 || (r.cells.length === 1 && r.cells[0].colSpan < 2)) n++; }); return n; }
-    function snap() { document.querySelectorAll('table').forEach(function (t) { base.set(t, data(t)); }); }
+    /* A table the page computes from the setup (equilibria, a conversion table) rewrites its rows when the setup changes; a table of
+       readings only gains rows (Add) or loses them (delete, Clear). So a table whose rows were seen to be replaced, some gone and new
+       ones in the same look, is computed and never counts as readings (break-it test, 2026-11-10: Potential Energy Curves warned of
+       "2 readings" after a preset change). Rows are told apart by their text; a
+       readings table whose old rows change (a starred row) still warns through the Capture or Record press. */
+    var seen = new WeakMap(), computed = new WeakSet();
+    function keys(t) { var k = {}; Array.prototype.forEach.call(t.rows, function (r) {
+      if (r.parentNode.tagName === 'THEAD' || r.parentNode.tagName === 'TFOOT' || !r.cells.length) return;
+      var c = r.textContent.replace(/\s+/g, ' ').trim(); k[c] = (k[c] || 0) + 1; }); return k; }
+    function watch() { document.querySelectorAll('table').forEach(function (t) { if (computed.has(t)) return;
+      var k = keys(t), o = seen.get(t); seen.set(t, k); if (!o) return; var gone = false, added = false, c;
+      for (c in o) if ((k[c] || 0) < o[c]) gone = true;
+      for (c in k) if ((o[c] || 0) < k[c]) added = true;
+      if (gone && added) computed.add(t); }); }
+    function snap() { document.querySelectorAll('table').forEach(function (t) { base.set(t, data(t)); }); watch(); setInterval(watch, 400); }
     if (document.readyState === 'complete') setTimeout(snap, 400); else window.addEventListener('load', function () { setTimeout(snap, 400); });
     document.addEventListener('click', function (e) { var x = e.target.closest && e.target.closest('button'); if (!x || x === b) return;
       var s = x.textContent.trim(); if (/^(capture|record|add to table|add point|keep trace|pin this)/i.test(s)) rec = true;
       else if (/^clear/i.test(s)) rec = false; }, true);
     function lost() { if (typeof window.vdReadings === 'function') return Number(window.vdReadings()) || 0; var n = 0;
-      document.querySelectorAll('table').forEach(function (t) { n += Math.max(0, data(t) - (base.has(t) ? base.get(t) : 0)); }); return n || (rec ? -1 : 0); }
+      watch(); document.querySelectorAll('table').forEach(function (t) { if (!computed.has(t)) n += Math.max(0, data(t) - (base.has(t) ? base.get(t) : 0)); }); return n || (rec ? -1 : 0); }
     b.vdLost = lost;
     b.addEventListener('click', function () { var n = lost();
       if (n && !window.confirm('Reset all clears ' + (n > 1 ? 'the ' + n + ' readings' : n === 1 ? 'the reading' : 'the readings') + ' you recorded. '

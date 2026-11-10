@@ -30,8 +30,8 @@ VDI18N.add('es', 'demo/electron-diffraction', {
   "Difracción de electrones",
 "<a><span>←</span> <span>Circular Apertures and Resolution</span></a><a><span>Holography</span> <span>→</span></a>":
   "<a><span>←</span> <span>Aberturas circulares y resolución</span></a><a><span>Holografía</span> <span>→</span></a>",
-"A virtual electron diffraction tube. Electrons pass through a thin graphite film and land on the screen in two rings. Measure the ring diameters at several voltages and find the graphite spacings from λ = h/p.":
-  "Un tubo de difracción de electrones virtual. Los electrones atraviesan una película delgada de grafito y llegan a la pantalla en dos anillos. Mide los diámetros de los anillos a varios voltajes y encuentra los espaciados del grafito a partir de λ = h/p.",
+"A virtual electron diffraction tube. Electrons pass through a thin graphite film and land on the screen in two rings. Measure the ring diameters at several voltages: with the known graphite spacings they give the electron's wavelength, to test λ = h/p, or with λ = h/p they give the spacings.":
+  "Un tubo virtual de difracción de electrones. Los electrones atraviesan una película delgada de grafito y llegan a la pantalla en dos anillos. Mide los diámetros de los anillos a varios voltajes: con las separaciones conocidas del grafito dan la longitud de onda del electrón, para probar λ = h/p, o con λ = h/p dan las separaciones.",
 "V in kV · D, L, R in mm · λ in pm · d in nm · 2d sin θ = λ":
   "V en kV · D, L, R en mm · λ en pm · d en nm · 2d sin θ = λ",
 "Time controls":
@@ -72,12 +72,8 @@ VDI18N.add('es', 'demo/electron-diffraction', {
   "Conos",
 "Lattice":
   "Red",
-"Sweep the voltage slowly between {#} and {#} kV":
-  "Barre el voltaje lentamente entre {#} y {#} kV",
-"Sweep V":
-  "Barrer V",
-"{#} kV <small>sweeping</small>":
-  "{#} kV <small>barriendo</small>",
+"{#} kV <small>meter</small>":
+  "{#} kV <small>medidor</small>",
 "The electron diffraction tube in 3D with the high voltage supply and a bar magnet. Drag to turn, scroll to zoom. Drag the kV knob or the magnet up and down. Keys: up and down change the voltage, with shift for bigger steps; page up and page down move the magnet; M brings the magnet near or takes it away.":
   "El tubo de difracción de electrones en 3D con la fuente de alto voltaje y un imán de barra. Arrastra para girar, desplaza para acercar. Arrastra la perilla de kV o el imán hacia arriba y abajo. Teclas: arriba y abajo cambian el voltaje, con Shift para pasos más grandes; Re Pág y Av Pág mueven el imán; M acerca o aleja el imán.",
 "Side view of the tube and the supply. Drag the voltage knob up or down, and the bar magnet up or down. Keys: up and down change the voltage, page up and page down move the magnet, M brings the magnet near or takes it away.":
@@ -110,8 +106,8 @@ VDI18N.add('es', 'demo/electron-diffraction', {
   "Medir los espaciados",
 "Why only two rings":
   "Por qué solo dos anillos",
-"The voltage sweeps between {#} and {#} kV. Faster electrons have a shorter wavelength, so both rings shrink: D is close to proportional to λ, and λ to {#}/√V. Press Sweep V to stop, then measure.":
-  "El voltaje barre entre {#} y {#} kV. Los electrones más rápidos tienen una longitud de onda más corta, así que ambos anillos se encogen: D es casi proporcional a λ, y λ a {#}/√V. Pulsa Barrer V para detener y luego mide.",
+"Raise the voltage with the kV knob, from {#} to {#} kV. Faster electrons have a shorter wavelength, so both rings shrink: D is close to proportional to λ, and λ to {#}/√V.":
+  "Sube el voltaje con la perilla de kV, de {#} a {#} kV. Los electrones más rápidos tienen una longitud de onda más corta, así que ambos anillos se encogen: D es casi proporcional a λ, y λ a {#}/√V.",
 "High voltage supply":
   "Fuente de alto voltaje",
 "{#} kV set":
@@ -214,8 +210,8 @@ VDI18N.add('es', 'demo/electron-diffraction', {
   "Tasa ({#}/s)",
 "Tube seed":
   "Semilla del tubo",
-"Blind: hide the accepted spacings, the true rings and the angles":
-  "A ciegas: ocultar los espaciados aceptados, los anillos reales y los ángulos",
+"Blind: hide λ from the meter, the accepted spacings, the true rings and the angles":
+  "A ciegas: oculta λ del medidor, las separaciones aceptadas, los anillos verdaderos y los ángulos",
 "The small tilt of the beam, the slow wander of the pattern, the meter jitter, where the ruler's zero falls and the scatter of the procedure's readings are simulated and fixed by the seed. Share the seed so a class works on the same tube.":
   "La pequeña inclinación del haz, la deriva lenta del patrón, la fluctuación del medidor, dónde cae el cero de la regla y la dispersión de las lecturas del procedimiento son simuladas y fijadas por la semilla. Comparte la semilla para que un grupo trabaje con el mismo tubo.",
 "The tube follows the common teaching electron diffraction tube: an electron gun, a thin polycrystalline graphite film at the end of the anode, and a fluorescent screen on the inside of a glass bulb. Its numbers are from the maker's data sheet: graphite spacings d₁₀ = {#} nm and d₁₁ = {#} nm, graphite to screen L = {#} ± {#} mm, bulb diameter about {#} mm (R = {#} mm), screen diameter about {#} mm, heater at most {#} V, anode {#} to {#} kV ({#} to {#} kV here). Some lab handouts quote L = {#} mm or {#} mm: enter the value you use for L and R in the analysis.":
@@ -230,10 +226,10 @@ VDI18N.add('es', 'demo/electron-diffraction', {
   "Simulado: la pequeña inclinación del haz respecto al eje, una deriva lenta del patrón de unos {#} mm, una fluctuación del medidor de unos cuantos volts y la dispersión de {#} mm de las lecturas del procedimiento, todo fijado por la semilla.",
 "X-ray readings":
   "Lecturas de rayos X",
-"{#} <small>counts/s at θ = {#}°</small>":
-  "{#} <small>cuentas/s en θ = {#}°</small>",
 "{#} counts/s":
   "{#} cuentas/s",
+"{#} <small>counts/s at θ = {#}°</small>":
+  "{#} <small>cuentas/s en θ = {#}°</small>",
 "Cu tube, {#} kV":
   "Tubo de Cu, {#} kV",
 "counts/s":
@@ -246,8 +242,6 @@ VDI18N.add('es', 'demo/electron-diffraction', {
   "Tasa de conteo ({#}/s) en función de θ",
 "Turn the crystal, or scan, to trace the spectrum":
   "Gira el cristal, o barre, para trazar el espectro",
-"{#} kV <small>meter</small>":
-  "{#} kV <small>medidor</small>",
 "Hold the caliper in front of the screen. Drag jaw A (it moves the whole caliper) onto the ring on one side, then open jaw B to the other side. The vernier reads to {#} mm. D is the straight chord.":
   "Sostén el calibrador frente a la pantalla. Arrastra la mordaza A (mueve todo el calibrador) sobre el anillo de un lado, y luego abre la mordaza B hacia el otro lado. El vernier lee a {#} mm. D es la cuerda recta.",
 "Your D₁ (chord)":
@@ -310,6 +304,10 @@ VDI18N.add('es', 'demo/electron-diffraction', {
   "Las filas de átomos actúan como planos de Bragg. Espaciado entre láminas: {#} nm, a lo largo del haz, así que no hay anillo.",
 "<i></i>Fit: D = 2Lλ/d + c, a least squares line":
   "<i></i>Ajuste: D = 2Lλ/d + c, una recta de mínimos cuadrados",
+"Close":
+  "Cerrar",
+"Change the crystal angle θ (Shift for {#} degree) (X rays)":
+  "Cambia el ángulo del cristal θ (Shift para {#} grado) (rayos X)",
 "Mo tube, {#} kV":
   "Tubo de Mo, {#} kV",
 "molybdenum anode · LiF ({#}) crystal":
@@ -329,5 +327,15 @@ VDI18N.add('es', 'demo/electron-diffraction', {
 "3D view needs WebGL: a flat drawing of the tube":
   "La vista 3D necesita WebGL: un dibujo plano del tubo",
 "Drag the kV knob or the bar magnet up and down.":
-  "Arrastra la perilla de kV o el imán de barra hacia arriba y abajo."
+  "Arrastra la perilla de kV o el imán de barra hacia arriba y abajo.",
+"A virtual electron diffraction tube. Electrons pass through a thin graphite film and land on the screen in two rings. Measure the ring diameters at several voltages and find the graphite spacings from λ = h/p.":
+  "Un tubo de difracción de electrones virtual. Los electrones atraviesan una película delgada de grafito y llegan a la pantalla en dos anillos. Mide los diámetros de los anillos a varios voltajes y encuentra los espaciados del grafito a partir de λ = h/p.",
+"Sweep the voltage slowly between {#} and {#} kV":
+  "Barre el voltaje lentamente entre {#} y {#} kV",
+"Sweep V":
+  "Barrer V",
+"{#} kV <small>sweeping</small>":
+  "{#} kV <small>barriendo</small>",
+"Blind: hide the accepted spacings, the true rings and the angles":
+  "A ciegas: ocultar los espaciados aceptados, los anillos reales y los ángulos"
 });

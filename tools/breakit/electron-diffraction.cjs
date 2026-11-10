@@ -37,15 +37,16 @@ module.exports = {
       return true; })()` },
   ],
   steps: [
-    { name: 'presets, sweep on and off, magnet to the neck and back with both poles, voltage to both ends', fn: `(async () => {
+    { name: 'presets (no sweep: the voltage stays where it is set), magnet to the neck and back with both poles, voltage to both ends', fn: `(async () => {
       const pause = (ms) => new Promise((r) => setTimeout(r, ms)), set = (id, v) => { const e = document.getElementById(id); e.value = v; e.dispatchEvent(new Event('input', { bubbles: true })); };
       for (const b of document.querySelectorAll('#presets button')) { b.click(); await pause(250); }
       document.querySelector('#presets [data-p=magnet]').click(); await pause(200);
       for (const v of ['25', '26', '120', '60']) { set('mag', v); await pause(120); }
       for (const id of ['polS', 'polN']) { document.getElementById(id).click(); await pause(150); }
       for (const v of ['2', '5', '2', '3.5']) { set('volt', v); await pause(120); }
-      document.getElementById('sweep').click(); await pause(500); document.getElementById('sweep').click(); await pause(200);
-      document.querySelector('#presets [data-p=raise]').click(); await pause(300);
+      if (document.getElementById('sweep')) return 'the Sweep V button is back (Steve 2026-11-10: no sweep)';
+      document.querySelector('#presets [data-p=raise]').click(); await pause(1500);
+      if (+document.getElementById('volt').value !== 3.5) return 'Raise the voltage: the knob moved by itself to ' + document.getElementById('volt').value + ' kV';
     })()` },
   ],
 };

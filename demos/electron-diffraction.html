@@ -145,7 +145,7 @@ table.rows tr.sim td.n { color: var(--pos); }
   <header class="bar">
     <div>
       <h1>Electron Diffraction</h1>
-      <p>A virtual electron diffraction tube. Electrons pass through a thin graphite film and land on the screen in two rings. Measure the ring diameters at several voltages and find the graphite spacings from λ = h/p.</p>
+      <p>A virtual electron diffraction tube. Electrons pass through a thin graphite film and land on the screen in two rings. Measure the ring diameters at several voltages: with the known graphite spacings they give the electron's wavelength, to test λ = h/p, or with λ = h/p they give the spacings.</p>
     </div>
     <div class="bar-right">
       <div class="units mono">V in kV · D, L, R in mm · λ in pm · d in nm · 2d sin θ = λ</div>
@@ -174,7 +174,6 @@ table.rows tr.sim td.n { color: var(--pos); }
           <button type="button" id="vGeo" aria-pressed="true">Cones</button>
           <button type="button" id="vLat" aria-pressed="false">Lattice</button>
         </div>
-        <button type="button" class="btn e-only" id="sweep" aria-pressed="false" title="Sweep the voltage slowly between 2.5 and 5 kV">Sweep V</button>
         <button type="button" class="btn e-only" id="play">Pause</button>
         <span class="count mono" id="status" aria-live="off"></span>
       </div>
@@ -348,7 +347,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
           <span><input type="number" class="seed" id="seed" min="1" max="99999" step="1" value="1924"> <button type="button" class="btn" id="newSeed">New</button></span>
         </div>
         <div class="toggles">
-          <label><input type="checkbox" id="blind"> Blind: hide the accepted spacings, the true rings and the angles</label>
+          <label><input type="checkbox" id="blind"> Blind: hide λ from the meter, the accepted spacings, the true rings and the angles</label>
         </div>
         <details class="more"><summary>More about this</summary>
           <p class="hint">The small tilt of the beam, the slow wander of the pattern, the meter jitter, where the ruler's zero falls and the scatter of the procedure's readings are simulated and fixed by the seed. Share the seed so a class works on the same tube.</p>
@@ -520,7 +519,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // ---------- state ----------
   let inst = instrument(1924);
   const S = {
-    V: 3.5, sweep: false, sweepT: 0, playing: true, preset: 'raise',
+    V: 3.5, playing: true, preset: 'raise',
     tool: 'arc', ring: 1, sel: 'b', side: 'geo', cones: false,
     mag: { r: 120, pole: 'N' },
     marks: { arc: { 1: { a: 0, b: 0 }, 2: { a: 0, b: 0 } }, chord: { 1: { a: 0, b: 0 }, 2: { a: 0, b: 0 } } },
@@ -867,7 +866,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const h1 = 'Cross section through the axis', hw = ctx.measureText(h1).width;
     ctx.font = `${10 * ps}px ${T.mono}`; ctx.textAlign = 'right';
     const deg = (a) => (a * 180 / Math.PI).toFixed(2) + '°';
-    const ang = S.blind ? `λ ${(lam * 1e12).toFixed(2)} pm · angles hidden` : `λ ${(lam * 1e12).toFixed(2)} pm · 2θ₁ ${deg(tt[0])} · 2θ₂ ${deg(tt[1])}`;
+    const ang = S.blind ? 'λ and angles hidden' : `λ ${(lam * 1e12).toFixed(2)} pm · 2θ₁ ${deg(tt[0])} · 2θ₂ ${deg(tt[1])}`;
     const aw = ctx.measureText(ang).width;
     if (hw + aw + 30 * ps < W) { ctx.fillText(ang, W - 10 * ps, 14 * ps); ctx.textAlign = 'left'; ctx.font = `600 ${11 * ps}px ${T.ui}`; ctx.fillText(h1, 10 * ps, 14 * ps); }
     else { ctx.textAlign = 'left'; ctx.fillText(ang, 10 * ps, 14 * ps, W - 20 * ps); }
@@ -1338,9 +1337,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   cans.flat.addEventListener('keydown', benchKeys);
 
   // ---------- controls ----------
-  function setV(v, keepSweep) {
+  function setV(v) {
     v = clamp(Math.round(v * 100) / 100, 2, 5);
-    if (!keepSweep && S.sweep) setSweep(false);
     if (v === S.V) return; S.V = v; $('volt').value = v; changed();
   }
   function setMag(r) { r = clamp(Math.round(r), 25, MAG.rmax); if (r === S.mag.r) return; S.mag.r = r; $('mag').value = r; changed(); }
@@ -1348,7 +1346,6 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function setTool(t) { S.tool = t; scrHot = null; changed(); }
   function setRing(r) { S.ring = r; changed(); }
   function setSide(s) { S.side = s; changed(); }
-  function setSweep(on) { S.sweep = on; if (on && !S.playing) setPlaying(true); syncUI(); }
   function setPlaying(p) { S.playing = p; $('play').textContent = p ? 'Pause' : 'Play'; }
   function changed() { syncUI(); liveOuts(); dirty.scr = dirty.geo = dirty.flat = true; G.dirty = true; }
   const TOOL_HINT = {
@@ -1369,7 +1366,6 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('tArc').setAttribute('aria-pressed', String(S.tool === 'arc')); $('tChord').setAttribute('aria-pressed', String(S.tool === 'chord'));
     $('ring1').setAttribute('aria-pressed', String(S.ring === 1)); $('ring2').setAttribute('aria-pressed', String(S.ring === 2));
     $('vGeo').setAttribute('aria-pressed', String(S.side === 'geo')); $('vLat').setAttribute('aria-pressed', String(S.side === 'lat'));
-    $('sweep').setAttribute('aria-pressed', String(S.sweep));
     $('polN').setAttribute('aria-pressed', String(S.mag.pole === 'N')); $('polS').setAttribute('aria-pressed', String(S.mag.pole === 'S'));
     $('mExact').setAttribute('aria-pressed', String(S.method === 'exact')); $('mSmall').setAttribute('aria-pressed', String(S.method === 'small'));
     $('volt').value = S.V; $('voltOut').textContent = `${S.V.toFixed(2)} kV set`;
@@ -1381,13 +1377,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   function status() {
     const lam = lambdaDB(meterShown * 1000, S.rel);
-    $('lamOut').textContent = `${(lam * 1e12).toFixed(2)} pm${S.rel ? '' : ' (not relativistic)'}`;
-    $('status').innerHTML = `${meterShown.toFixed(2)} kV <small>${S.sweep ? 'sweeping' : 'meter'}</small>`;
+    $('lamOut').textContent = S.blind ? 'hidden (Blind)' : `${(lam * 1e12).toFixed(2)} pm${S.rel ? '' : ' (not relativistic)'}`;
+    $('status').innerHTML = `${meterShown.toFixed(2)} kV <small>meter</small>`;
   }
   $('tArc').addEventListener('click', () => setTool('arc')); $('tChord').addEventListener('click', () => setTool('chord'));
   $('ring1').addEventListener('click', () => setRing(1)); $('ring2').addEventListener('click', () => setRing(2));
   $('vGeo').addEventListener('click', () => setSide('geo')); $('vLat').addEventListener('click', () => setSide('lat'));
-  $('sweep').addEventListener('click', () => setSweep(!S.sweep));
   $('play').addEventListener('click', () => setPlaying(!S.playing));
   $('volt').addEventListener('input', (e) => setV(+e.target.value));
   $('mag').addEventListener('input', (e) => setMag(+e.target.value));
@@ -1415,8 +1410,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const PRESETS = {
     big: { hint: () => 'At 2.2 kV the electrons are slow, so the de Broglie wavelength is long and the Bragg angles are large: the outer ring is more than half as wide as the screen. Each ring is a cone of electrons diffracted by the graphite.',
       apply() { S.V = 2.2; S.side = 'geo'; S.cones = false; } },
-    raise: { hint: () => 'The voltage sweeps between 2.5 and 5 kV. Faster electrons have a shorter wavelength, so both rings shrink: D is close to proportional to λ, and λ to 1/√V. Press Sweep V to stop, then measure.',
-      apply() { S.V = 3.5; S.sweep = !reduce; S.sweepT = 0; S.side = 'geo'; S.cones = false; if (!reduce) setPlaying(true); } },
+    raise: { hint: () => 'Raise the voltage with the kV knob, from 2.5 to 5 kV. Faster electrons have a shorter wavelength, so both rings shrink: D is close to proportional to λ, and λ to 1/√V.',
+      apply() { S.V = 3.5; S.side = 'geo'; S.cones = false; } },
     two: { hint: () => 'Two rings, two cones: each set of lattice planes in the graphite gives its own Bragg angle at the same λ. The inner ring comes from the wider spacing. The ratio of the diameters stays the same at every voltage.',
       apply() { S.V = 4.0; S.side = 'geo'; S.cones = true; } },
     magnet: { hint: () => 'The bar magnet is held above the neck. The whole pattern slides sideways, less at higher voltage, and the other way with the other pole facing the neck. Light and X-rays are not turned by a magnet, so the pattern is made by moving charges: the electrons.',
@@ -1428,7 +1423,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       apply() { S.V = 4.0; S.side = 'lat'; S.cones = false; } },
   };
   function applyPreset(p) {
-    S.preset = p; S.sweep = false; S.mag.r = MAG.rmax; S.mag.pole = 'N';
+    S.preset = p; S.mag.r = MAG.rmax; S.mag.pole = 'N';
     if (p !== 'measure' && S.rows.every((r) => r.sim)) S.rows = [];
     PRESETS[p].apply();
     placeMarks(p === 'measure' ? null : OFF);
@@ -1468,7 +1463,6 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (const id of ['p3d', 'pScr', 'pGeo']) $(id).hidden = xray;
     $('pX').hidden = !xray; document.querySelector('.panes').classList.toggle('xmode', xray);
     if (!xray && X.scan) setXScan(false);
-    if (xray && S.sweep) setSweep(false);
     resize(); if (xray) { xMark(); xOuts(); } else status();
     X.dirty = true;
   }
@@ -1637,7 +1631,6 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const t0 = performance.now();
     if (S.playing) {
       tWander += dt;
-      if (S.sweep) { S.sweepT += dt; setV(3.75 - 1.25 * Math.cos(2 * Math.PI * S.sweepT / 14), true); }
       if (now - lastMove > 120) { lastMove = now; dirty.scr = true; }
       meterClock += dt; if (meterClock > 0.5) { meterClock = 0; meterN++; }
     }
@@ -1674,7 +1667,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   ro.observe(cans.plot.parentElement);
   resize();
   applyPreset('raise');
-  if (reduce) { S.sweep = false; setPlaying(false); syncUI(); } else setPlaying(true);
+  if (reduce) { setPlaying(false); syncUI(); } else setPlaying(true);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { G.panelDirty = true; dirtyAll(); });
   requestAnimationFrame(loop);
 })();

@@ -1940,9 +1940,6 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     if (now - lastRead > 100) { updateReadouts(false); lastRead = now; }
     requestAnimationFrame(loop);
   }
-  /* The tables here (equilibria, U and T data) are computed from the curve, not readings a student recorded, so Reset all must not warn
-     that it clears them (it asked "clears the 2 readings" after a preset change, and a dismissed prompt left the controls as they were) (break-it test, 2026-11-09). */
-  window.vdReadings = () => 0;
   window.__pc = { get frameMs() { return frameMs; }, get st() { return st; }, get info() { return info; }, get S() { return S; }, get eqs() { return eqs; },
     get P() { return P; }, get dt() { return dt; }, get escaped() { return escaped; }, get handles() { return dragHandles(); }, get tCurve() { return tCurve; }, get on3d() { return on3d; }, view3: () => view3, get objPx() { return G3 && G3.objPx; },
     pix: (x) => [X(x, G2.W), G2.Y(P.U(x))], advance, setRunning, applyPreset, place: (x, E, d) => { place(x, E, d); updateReadouts(true); } };
