@@ -1738,7 +1738,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (now - lastRead > 150) { countReadouts(); lastRead = now; }
     requestAnimationFrame(loop);
   }
-  window.__rs = { get frameMs() { return frameMs; }, get S() { return S; }, get fired() { return fired; }, get past90() { return past90; }, get bins() { return bins; }, get throttled() { return throttled; },
+  window.__rs = { core: { KC, MA, AMU, headOn, deflect, rMin, bOf, orbit, integrate, recoil, speedC, bTouch, plumExact, plumKick, nucR, massNumber, binFrac, dsdo, Ds, Dnow, tgt, Rnuc, Rcontact, bmax, atomR, nLayers }, get frameMs() { return frameMs; }, get S() { return S; }, get fired() { return fired; }, get past90() { return past90; }, get bins() { return bins; }, get throttled() { return throttled; },
     setRate(i) { S.rate = i; $('rate').value = i; readouts(); }, setPlaying, setQ, setB, handles() { return dragHandles().map((h) => ({ id: h.id, seg: h.seg })); }, fireMany(n) { for (let i = 0; i < n; i++) { if (i < n - 300) { const b = sampleB(S.model === 'nuc' ? bmax() : atomR(), Math.random()); count(S.model === 'nuc' ? deflect(b, Dnow()) : plumFoil(nLayers(), Dnow(), atomR(), Math.random)); } else beamOne(false); } countReadouts(); } };
 
   // Readings: one row per 5° bin of the counts, for the bins the whole beam can reach (θ above the smallest angle of the beam's edge)

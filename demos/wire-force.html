@@ -230,6 +230,7 @@ table.rows input:focus { border-color: var(--accent); }
     motor: { I: 1, L: 4, th: 90, N: 20, B: 0.2, comm: true, hint: 'A commutator reverses the current each time μ lines up with B (the loop\'s plane across the field), so the torque keeps the same sense and the loop keeps turning: a DC motor. The torque is not steady; it is largest when the plane of the loop lies along B.' }
   };
   const S = { preset: 'balance', I: 2, L: 4, th: 90, N: 1, B: 0.2, comm: false, mystery: null, blind: false, rows: [], loop: { th: 2.2, w: 0, run: false } };
+  window.__wireforce = { S, G, LOOP, forceOnWire, balanceReading, torque, energy, moment, loopJ, PRESETS };   /* known-value hook for tools/breakit.cjs */
   const can = $('can'), ctx = can.getContext('2d'), stage = $('stage');
   let W = 0, H = 0, dpr = 1, T = null;
   function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
@@ -240,7 +241,7 @@ table.rows input:focus { border-color: var(--accent); }
   const Bnow = () => (S.mystery ? S.mystery : S.B), hideB = () => S.blind || !!S.mystery;
   const isLoop = () => S.preset === 'loop' || S.preset === 'motor';
   const Fwire = () => forceOnWire(S.I, S.L / 100, Bnow(), S.th);
-  const dmShown = () => (balanceReading(S.I, S.L / 100, Bnow(), S.th) * 1000).toFixed(2);   // grams
+  const dmShown = () => { const t = (balanceReading(S.I, S.L / 100, Bnow(), S.th) * 1000).toFixed(2); return t === '-0.00' ? '0.00' : t; };   // grams; no minus sign on a rounded zero (break-it test, 2026-11-09)
 
   function arrow(x0, y0, dx, dy, col, lw, lab) {
     const p = ps(), L = Math.hypot(dx, dy); if (L < 2) return;
@@ -289,7 +290,7 @@ table.rows input:focus { border-color: var(--accent); }
       const by = cy + h / 2 + 30 * p; ctx.fillStyle = T.surface; ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5; ctx.fillRect(cx - 120 * p, by, 240 * p, 54 * p); ctx.strokeRect(cx - 120 * p, by, 240 * p, 54 * p);
       ctx.fillStyle = T.muted; ctx.font = `${10.5 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText('balance under the magnet (zeroed at I = 0)', cx, by + 5 * p);
       // the magnet is pushed opposite to the wire: wire up (Fz > 0) → magnet down → heavier
-      const dm = balanceReading(S.I, S.L / 100, Bnow(), S.th) * 1000; ctx.fillStyle = T.ink; ctx.font = `700 ${20 * p}px ${T.mono}`; ctx.fillText(`${dm >= 0 ? '+' : '−'}${Math.abs(dm).toFixed(2)} g`, cx, by + 22 * p);
+      const dm = balanceReading(S.I, S.L / 100, Bnow(), S.th) * 1000; ctx.fillStyle = T.ink; ctx.font = `700 ${20 * p}px ${T.mono}`; ctx.fillText(`${dm >= 0 || Math.abs(dm) < 0.005 ? '+' : '−'}${Math.abs(dm).toFixed(2)} g`, cx, by + 22 * p);   /* no minus on a rounded zero (break-it test, 2026-11-09) */
       return;
     }
     // loop seen from above: the axis is vertical (out of the page); the loop's plane is a line; its two vertical sides are the dots

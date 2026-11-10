@@ -21,7 +21,7 @@ Students should know β = 10 log(I/I₀) and that intensity falls as 1/r² from 
 2. **Add absorbing panels.** Twenty foam panels (14.4 m²) cut T at 500 Hz to 1.62 s (Sabine 1.69 s). Record T for 0, 5, 10, 20, 30 and 40 panels and plot T against 1/A (Q2, Q3). At 125 Hz the same panels barely help: 8.01 s (Q4).
 3. **Room with an audience.** A 12 m × 9 m × 4 m hall whose floor is an audience on wooden chairs. T at 500 Hz is 0.65 s, against 6.32 s with a bare concrete floor (Q5).
 4. **Anechoic chamber.** Wedges 0.3 m deep on all six surfaces. Switch to **Level against distance** and record 0.5, 1, 2 and 4 m at 500 Hz: 95.2, 89.1, 83.1, 77.1 dB, a clean 6.0 dB per doubling. Clap: only the direct sound arrives (Q6).
-5. **Below the cutoff.** The same chamber at 125 Hz, where λ = 2.74 m is more than four times the wedge depth (cutoff c/4d = 286 Hz). The readings are 95.3, 89.7, 84.7 and 80.4 dB: only 5.6, 5.0 and 4.3 dB per doubling (Q7).
+5. **Below the cutoff.** The same chamber at 125 Hz, where λ = 2.75 m is more than four times the wedge depth (cutoff c/4d = 286 Hz). The readings are 95.3, 89.7, 84.7 and 80.4 dB: only 5.6, 5.0 and 4.3 dB per doubling (Q7).
 6. **Mystery panels.** Twenty panels of a hidden material. Measure T with and without them and find their α in each band (Q8).
 
 ## Questions

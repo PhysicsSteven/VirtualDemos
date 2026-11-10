@@ -174,8 +174,8 @@ VDI18N.add('es', 'demo/diffraction-grating', {
   "láser, λ = ?",
 "RGB laser module: three diodes in one beam, typically {#}, {#} and {#} nm.":
   "Módulo láser RGB: tres diodos en un haz, típicamente de {#}, {#} y {#} nm.",
-"One beam, three colors. Red bends the most and blue the least. Only blue reaches a third order: {#} × {#} nm / d = {#}.":
-  "Un haz, tres colores. El rojo se desvía más y el azul menos. Solo el azul llega a un tercer orden: {#} × {#} nm / d = {#}.",
+"One beam, three colors. Red bends the most and blue the least. Green and blue reach a third order ({#} × {#} nm / d = {#}, {#} × {#} nm / d = {#}); red does not ({#} × {#} nm / d = {#}).":
+  "Un haz, tres colores. El rojo se desvía más y el azul menos. El verde y el azul llegan a un tercer orden ({#} × {#} nm / d = {#}, {#} × {#} nm / d = {#}); el rojo no ({#} × {#} nm / d = {#}).",
 "I / I₀ across the wall · far field · N = {#} · {#}, {#}, {#} nm":
   "I / I₀ a lo ancho de la pared · campo lejano · N = {#} · {#}, {#}, {#} nm",
 "RGB laser module":

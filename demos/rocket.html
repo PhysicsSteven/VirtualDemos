@@ -559,6 +559,8 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
      the pad (0 if at once). */
   const r6 = (v) => +(+v).toPrecision(6);
   window.vdVersion = 'rocket@2026-10-24';
+  /* debug hook for tools/breakit/rocket.cjs */
+  window.__rocket = { S, fly, P, flight, stagedFlight, G, n0, PRESETS, endTime };
   window.vdShowCols = [['m_fuel_kg', 'fuel (kg)'], ['b_kg_s', 'burn (kg/s)'], ['v_cutoff_m_s', 'v cutoff (m/s)']];
   window.vdReadingRow = () => {
     if (S.p.two) return 'Readings are for a one stage rocket, as in the worksheet: switch off Two stages to record.';

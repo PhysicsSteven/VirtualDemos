@@ -394,6 +394,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   /* a reading for the Readings section (tools/readings_panel.py): the flashlight only; what Blind hides is left blank.
      The time and the energies count from the last time the capacitor was emptied (or the capacitor changed). */
   const g4 = (v) => +(+v).toPrecision(4);
+  /* debug hook for tools/breakit/induction-at-work.cjs (break-it test, 2026-11-09) */
+  window.__iw = { S, FL, TB, CARD, XS, MU0, coilFlux, coilFluxDz, loopFlux, loopFluxDz, wireFlux, wireFluxDu, wireEmfs, locate, magnetMoment, coilResistance,
+    headEmf, track2Bits, f2fTransitions, f2fDecode, decodeTrack2, findPeaks, flashStep, flashState };
   window.vdVersion = IW_VERSION;
   window.vdShowCols = [['f_Hz', 'Shakes/s'], ['t_s', 'Time (s)'], ['emf_peak_V', 'EMF (V)']];
   window.vdReadingRow = () => {

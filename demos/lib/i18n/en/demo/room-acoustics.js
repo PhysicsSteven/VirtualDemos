@@ -12,7 +12,6 @@ VDI18N.add('en', 'demo/room-acoustics', [
 "c = {#} m/s, air at {#} °C",
 "Plan view of a room with a loudspeaker and a microphone on its center line, and under it a graph: the decay of a clap, or the sound level against distance. Drag the microphone to change its distance r from the speaker. Left and right arrows move it by {#} m (with Shift, {#} m); C claps.",
 "Time controls",
-"Clap",
 "<span>Speed</span>",
 "Clap speed",
 "Slow motion",
@@ -85,9 +84,7 @@ VDI18N.add('en', 'demo/room-acoustics', [
 "T is measured as in ISO {#}: the decay curve is the backward integral of the clap response (Schroeder's method), and a least squares line from −{#} to −{#} dB is extended to −{#} dB (T20). A measured T scatters by about {#} to {#} % from run to run of the rays (each setup always gives the same run); the level meter by under {#} dB.",
 "Sabine: T = {#} ln {#} · V/(cA) = {#} V/A, A = Σ Sα. Eyring: T = {#} V/(−S ln({#} − ᾱ)), which goes to {#} as ᾱ → {#}. Panels are {#} m × {#} m, spread evenly around the walls; the ceiling is the wall material.",
 "Wedges line all six surfaces (the floor is a wire net), and the room is the free space between their tips. Beranek and Sleeper (J. Acoust. Soc. Am. {#}, {#}, {#}) define the cutoff as the frequency where the pressure reflection rises to {#} % (α = {#}) and find it where the wedge length is about a quarter wavelength: f_c = c/(4d). Around f_c this demo uses the stated model R = {#} (f_c/f)², at most {#}, α = {#} − R²; the shape is a model, not measured data. The level meter reads the steady sound of a {#} mW source (sound power level {#} dB), with ρ = {#} kg/m³.",
-"The room: {#} m × {#} m, {#} m high",
-"drag to turn · drag the microphone to change r",
-"The room in 3D, with the loudspeaker and the microphone on its center line. Drag the microphone to change r; drag elsewhere to turn the view, scroll or pinch to zoom, double click to reset the view. Left and right arrows move the microphone by {#} m (with Shift, {#} m), comma and period turn the view, C claps.",
+"The 3D room needs three.js from cdnjs.cloudflare.com and WebGL; the plan works without them.",
 "slow motion ×{#}/{#}, t = {#} ms",
 "T = {#} s (measured, T20)",
 "bars: energy every {#} ms · blue: Schroeder · dashed: fit",
@@ -117,5 +114,7 @@ VDI18N.add('en', 'demo/room-acoustics', [
 "Twenty panels of a hidden material. Measure T with and without them, in each band, and use Sabine to find their absorption coefficient α.",
 "Absorption and predictions",
 "hidden: the panels are a mystery",
-"{#} mystery panels"
+"{#} mystery panels",
+"Close",
+"Move the microphone away from or toward the loudspeaker by {#} m (Shift: {#} m)"
 ]);

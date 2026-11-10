@@ -264,6 +264,8 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
   /* a reading for the Readings section (tools/readings_panel.py); what Blind hides is left blank */
   const g4 = (v) => +(+v).toPrecision(4);
   window.vdVersion = IE_VERSION;
+  /* debug hook for tools/breakit/induced-electric-field.cjs */
+  window.__ief = { S, PRESETS, physics, pathD, current, Ephi, overlap, circulation, fluxThrough, window_, MU0 };
   window.vdShowCols = [['path_r_cm', 'Path (cm)'], ['emf_V', '−dΦ/dt (V)'], ['E_V_per_m', 'E (V/m)']];
   window.vdReadingRow = () => {
     const f = physics(), d = pathD(), b = S.blind, Eon = Ephi(S.pa, S.R, f.dB);

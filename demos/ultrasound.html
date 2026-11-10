@@ -422,6 +422,8 @@ table.rows input:focus { border-color: var(--accent); }
   function setRun(on, keepCard) { S.running = on; if (keepCard !== undefined) S.keepCard = keepCard; const over = getComputedStyle(card).position === 'absolute' && !S.keepCard; card.classList.toggle('away', on && over); card.inert = on && over;
     $('run').textContent = on ? 'Stop the scanner' : 'Start the scanner'; $('run').classList.toggle('attn', !on); readouts(); draw(); tone(); }
   $('run').addEventListener('click', () => setRun(!S.running, false));
+  /* debug hook for tools/breakit/ultrasound.cjs */
+  window.__us = { S, PRESETS, MEDIA, ATTEN, layers, echoesNow, levelDb, shiftNow, vNow, reflect, echoes, alphaDb, dopplerShift, spectrum, signal, C_SCANNER, CYCLES };
 
   /* Listen: the shift is in the audible range, as on a Doppler scanner; laminar flow plays a spread of tones up to the largest */
   let AC = null, oscs = [];

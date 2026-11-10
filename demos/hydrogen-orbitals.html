@@ -720,7 +720,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       $('rDE').textContent = minus(d.toFixed(3)) + ' eV';
       $('rBeat').textContent = isFinite(T) ? T.toFixed(3) + ' fs' : 'none';
       $('rLam').textContent = Math.abs(d) > 1e-9 ? fmtLam(HC / Math.abs(d)) : 'none';
-      if (dip.amp > 1e-4) {
+      /* the midpoint quadrature leaves about 1e-4 a₀ of noise for a forbidden pair (Δl = 3 gave "Yes, it radiates"), so the cutoff is 1e-3 a₀ (break-it test, 2026-11-09) */
+      if (dip.amp > 1e-3) {
         $('rDip').textContent = '±' + dip.amp.toFixed(3) + ' a₀';
         const shape = dip.minor < 1e-3 * dip.amp ? 'back and forth on a line' : Math.abs(dip.minor - dip.amp) < 1e-3 * dip.amp ? 'around a circle' : 'around an ellipse';
         $('rRule').textContent = isFinite(T)
@@ -1240,7 +1241,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const tanHalf = () => Math.tan((G.cam.fov * Math.PI / 180) / 2);
   function camDist() { return curFit * 1.08 / (tanHalf() * Math.min(1, G.cam.aspect)) / orbit.zoom; }
   function dipoleNow() {
-    if (!dip || dip.amp < 1e-4 || !isFinite(beatT())) return null;
+    if (!dip || dip.amp < 1e-3 || !isFinite(beatT())) return null;   /* 1e-3: quadrature noise (break-it test, 2026-11-09) */
     const del = dE() * S.t / HBAR_EVFS, c = Math.cos(del), s = Math.sin(del);
     // Re(d e^{−iδ}) = Re d cos δ + Im d sin δ
     return dip.d.map((v) => v[0] * c + v[1] * s);

@@ -364,8 +364,9 @@ table.mat td.num { font-family: var(--font-mono); text-align: right; }
       hint: 'A 12 m × 9 m × 4 m hall whose floor is covered by an audience on wooden chairs, 2 people per m². People are good absorbers: compare T with the floor bare (Concrete), and at 125 Hz, where they absorb much less.' },
     anechoic: { L: 8, W: 6, H: 5, walls: 'wedges', nPanels: 0, panel: 'foam', wedge: 0.3, floor: 'concrete', band: 500, r: 1, mode: 'level',
       hint: 'An anechoic chamber: wedges 0.3 m deep on every surface, so the free space is 7.4 m × 5.4 m × 4.4 m. Record the level at r = 0.5, 1, 2, 4 m: each doubling of r should lower it by 6.0 dB. Then clap.' },
+    /* the hint said 2.74 m: 343.2/125 = 2.7456, which rounds to 2.75 (break-it test, 2026-11-09) */
     cutoff: { L: 8, W: 6, H: 5, walls: 'wedges', nPanels: 0, panel: 'foam', wedge: 0.3, floor: 'concrete', band: 125, r: 1, mode: 'level',
-      hint: 'The same chamber in the 125 Hz band. A wavelength of 2.74 m is more than four times the 0.3 m wedges (cutoff 286 Hz), so they reflect part of the sound and the level no longer falls a clean 6 dB per doubling. Try deeper wedges.' },
+      hint: 'The same chamber in the 125 Hz band. A wavelength of 2.75 m is more than four times the 0.3 m wedges (cutoff 286 Hz), so they reflect part of the sound and the level no longer falls a clean 6 dB per doubling. Try deeper wedges.' },
     mystery: { L: 9, W: 7, H: 3, walls: 'panels', nPanels: 20, panel: 'mystery', wedge: 0.5, floor: 'concrete', band: 500, r: 3, mode: 'decay',
       hint: 'Twenty panels of a hidden material. Measure T with and without them, in each band, and use Sabine to find their absorption coefficient α.' }
   };
@@ -406,6 +407,9 @@ table.mat td.num { font-family: var(--font-mono); text-align: right; }
     S.pending = true; S.res = null; readouts(); draw();
     clearTimeout(timer); timer = setTimeout(() => { S.res = measure(); S.pending = false; readouts(); draw(); }, 40);
   }
+
+  /* debug hook for tools/breakit/room-acoustics.cjs (break-it test, 2026-11-09) */
+  window.__ra = { S, model, measure, f, P_SRC, srcPos, rMax, wedgeMax, MATERIALS, BANDS, roomModel, placePanels, sabineT, eyringT, directDose, splFromW, wedgeCutoff, wedgeAlpha, PANEL_W, PANEL_H };
 
   // ---------- drawing ----------
   function regions() {

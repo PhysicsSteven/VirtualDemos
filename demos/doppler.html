@@ -1033,8 +1033,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     S.M = Math.max(0, Math.min(mx, Math.round(M * 1000) / 1000)); $('spd').value = S.M; custom(); updateArrowT(); sliderOuts();
   }
   function setDir(d) { S.dir = ((Math.round(d) % 360) + 360) % 360; $('dir').value = S.dir; custom(); sliderOuts(); }
-  function setOSpeed(M) { S.Mo = Math.max(0, Math.min(0.9, Math.round(M * 1000) / 1000)); $('ospd').value = S.Mo; custom(); updateArrowT(); sliderOuts(); }
-  function setODir(d) { S.odir = ((Math.round(d) % 360) + 360) % 360; $('odir').value = S.odir; custom(); sliderOuts(); }
+  function setOSpeed(M) { S.Mo = Math.max(0, Math.min(0.9, Math.round(M * 1000) / 1000)); $('ospd').value = S.Mo; custom(); updateArrowT(); sliderOuts(); obsChanged(); }
+  function setODir(d) { S.odir = ((Math.round(d) % 360) + 360) % 360; $('odir').value = S.odir; custom(); sliderOuts(); obsChanged(); }
+  /* the received frequency depends on the observer's velocity now: refresh the arriving waves and the readouts even when paused, so f′ does not keep the old speed (break-it test, 2026-11-09) */
+  function obsChanged() { if (!playing) { listen(); readouts(); } }
   $('spd').addEventListener('input', (e) => { setSpeed(+e.target.value); if (!playing) { drawAll(); } });
   $('dir').addEventListener('input', (e) => { setDir(+e.target.value); drawAll(); });
   $('ospd').addEventListener('input', (e) => { setOSpeed(+e.target.value); drawAll(); });

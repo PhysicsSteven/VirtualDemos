@@ -85,15 +85,15 @@ VDI18N.add('en', 'demo/diffraction-grating', [
 "needs a single wavelength",
 "A laser of unknown color. Put caliper jaw A on the m = {#} spot and B on m = {#}, read L from the meter stick, and compute λ. Compare the exact tan and sin result with the small angle one.",
 "I / I₀ across the wall · far field · N = {#} · λ = ?",
+"m ≥ {#} off view →",
+"← m ≤ −{#} off view",
 "laser, λ = ?",
 "RGB laser module: three diodes in one beam, typically {#}, {#} and {#} nm.",
-"One beam, three colors. Red bends the most and blue the least. Only blue reaches a third order: {#} × {#} nm / d = {#}.",
+"One beam, three colors. Red bends the most and blue the least. Green and blue reach a third order ({#} × {#} nm / d = {#}, {#} × {#} nm / d = {#}); red does not ({#} × {#} nm / d = {#}).",
 "I / I₀ across the wall · far field · N = {#} · {#}, {#}, {#} nm",
 "RGB laser module",
 "White light from a slit and lens: a daylight spectrum (CIE D65) with every wavelength from {#} to {#} nm.",
 "Each order is a rainbow with violet nearest the center. Orders {#} and {#} overlap: {#} × {#} nm = {#} nm is more than {#} × {#} nm = {#} nm, so second order red lands beyond third order violet.",
-"m ≥ {#} off view →",
-"← m ≤ −{#} off view",
 "orders {#} and {#} overlap",
 "White light",
 "Hydrogen: the visible Balmer lines, {#}, {#}, {#} and {#} nm.",
@@ -138,5 +138,6 @@ VDI18N.add('en', 'demo/diffraction-grating', [
 "λ from a",
 "a from λ",
 "I / I₀ zoomed: center to dark fringe {#} · a = {#} µm",
-"Enter L in meters, y in centimeters (both positive) and a whole order number m ≥ {#}."
+"Enter L in meters, y in centimeters (both positive) and a whole order number m ≥ {#}.",
+"Close"
 ]);

@@ -468,8 +468,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
                 hint: 'Two orders on each side. A third order would need sin θ = 3λ/d = 3 × 632.8 nm / 1.667 µm = 1.14, which is impossible, so it does not exist.' },
     measure:  { src: 'unknown', lpm: 600, grat: '600', L: 0.8, frameL: 1.0, N: 600, dA: 3.5, alpha: 0, mode: 'measure', zoom: false,
                 hint: 'A laser of unknown color. Put caliper jaw A on the m = 0 spot and B on m = 1, read L from the meter stick, and compute λ. Compare the exact tan and sin result with the small angle one.' },
+    /* hint said only blue reaches order 3, but green (0.94) does too (break-it test, 2026-11-09) */
     rgb:      { src: 'rgb', lpm: 600, grat: '600', L: 0.6, frameL: 0.75, N: 600, dA: 3.5, alpha: 0, mode: 'explore', zoom: false,
-                hint: 'One beam, three colors. Red bends the most and blue the least. Only blue reaches a third order: 3 × 450 nm / d = 0.81.' },
+                hint: 'One beam, three colors. Red bends the most and blue the least. Green and blue reach a third order (3 × 520 nm / d = 0.94, 3 × 450 nm / d = 0.81); red does not (3 × 638 nm / d = 1.15).' },
     white:    { src: 'white', lpm: 300, grat: '300', L: 1.0, frameL: 1.2, N: 300, dA: 3.5, alpha: 0, mode: 'explore', zoom: false,
                 hint: 'Each order is a rainbow with violet nearest the center. Orders 2 and 3 overlap: 2 × 700 nm = 1400 nm is more than 3 × 400 nm = 1200 nm, so second order red lands beyond third order violet.' },
     hydrogen: { src: 'H', lpm: 600, grat: '600', L: 0.6, frameL: 0.75, N: 600, dA: 3.5, alpha: 0, mode: 'explore', zoom: false,
