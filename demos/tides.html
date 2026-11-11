@@ -206,6 +206,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <button type="button" data-p="spring" aria-pressed="false">Spring and neap</button>
           <button type="button" data-p="closer" aria-pressed="false">Moon closer (1/d³)</button>
           <button type="button" data-p="sunmoon" aria-pressed="false">Sun vs Moon</button>
+          <button type="button" data-p="locked" aria-pressed="false">Same face toward Earth</button>
         </div>
         <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint">Pick a setup, or switch between the two views below and drag the Moon.</p></details>
       </section>
@@ -270,6 +271,20 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
         <details class="more"><summary>More about this</summary><p class="hint"><strong>Why 24 h 50 min?</strong> While Earth turns once, the Moon moves about 12° along its orbit in the same direction (360° in 29.53 days). Earth has to turn a little more to bring the city back under the Moon, about 50 minutes more. So each high tide comes about 25 minutes later than half a day after the one before.</p></details>
       </section>
 
+      <section id="spinSec" hidden>
+        <h2>The Moon's spin</h2>
+        <div class="seg full" role="group" aria-label="The Moon's spin" id="spinSeg">
+          <button type="button" data-spin="locked" aria-pressed="true">Once per orbit</button>
+          <button type="button" data-spin="free" aria-pressed="false">Not at all</button>
+        </div>
+        <dl class="readout">
+          <div><dt>Orbit, relative to the stars</dt><dd id="rOrb">27.32 d</dd></div>
+          <div><dt>Spin, relative to the stars</dt><dd id="rSpin">27.32 d</dd></div>
+          <div class="wide"><dt>Crater, angle from facing Earth</dt><dd id="rFace">0°, facing Earth</dd></div>
+        </dl>
+        <details class="more"><summary>More about this</summary><p class="hint">The crater marks the Moon's near side. The Moon turns once on its axis in the same 27.32 days it takes to go once around Earth (both relative to the stars), so the crater always points at Earth and we only ever see one face. Switch to Not at all: the Moon stops turning, the crater keeps pointing the same way among the stars, and half an orbit later it points away from Earth. The picture keeps the Sun on the right, so even a Moon that does not turn slowly turns backward on the screen, about 1° a day, as Earth moves along its orbit. New moon to new moon takes 29.53 days, which is also the Moon's day from one sunrise to the next. Tidal friction locked the Moon's spin to its orbit long ago.</p></details>
+      </section>
+
       <!-- vd-readings --><section class="vd-readings" data-ws="tides" data-title="Tides" data-demo="tides">
         <h2>Readings</h2>
         <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
@@ -314,6 +329,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
           <span><i class="swatch moonb"></i>Moon's bulge alone</span>
           <span><i class="swatch sunb"></i>Sun's bulge alone</span>
           <span><i class="swatch city"></i>The city on the equator, with its tide mark</span>
+          <span><i class="swatch city"></i>A crater on the Moon's near side</span>
         </div>
         <details class="more"><summary>More about this</summary><p class="hint">Model: equilibrium tide on an Earth covered by a deep ocean, ignoring the bulge's own gravity and Earth's elastic response. Moon and Sun in Earth's equatorial plane, circular orbits. Real tides are shaped by ocean basins and coastlines and lag behind the Moon; ranges run from a few centimeters to over 15 m. Sizes and distances are not to scale.</p></details>
         <details class="more"><summary>More about this</summary><p class="hint"><strong>Tidal friction.</strong> Earth spins faster than the Moon orbits, so friction drags the bulges a little ahead of the Moon. Their pull speeds the Moon along its orbit and it moves away, about 3.8 cm per year, while Earth's spin slows and the day lengthens by about 2 ms per century. The same kind of friction in the Moon long ago locked its rotation to its orbit, so one face always points at Earth.</p></details>
@@ -332,6 +348,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const R_EARTH = 6.371e6, D_MOON = 3.844e8, D_SUN = 1.495978707e11;   // m; mean radius and mean Moon distance, NASA fact sheets; D_SUN is 1 au
   const G0 = 9.81;              // m/s², for "fraction of g"
   const P_SYN = 29.53;          // synodic month, days
+  const Y_SID = 365.256363004;  // sidereal year, days (IERS; constants.js)
+  const P_SID = 1 / (1 / P_SYN + 1 / Y_SID);   // the Moon's orbit relative to the stars, 27.32 d: the synodic month less Earth's motion around the Sun
   const LUNAR_DAY = 24 / (1 - 1 / P_SYN);   // hours: Earth turns 15°/h against the Sun, the Moon 360°/P_SYN per day
   const DR0 = D_MOON / R_EARTH; // today's distance in Earth radii, 60.34
   // acceleration at (x, y) (m, origin at Earth's center) toward a mass M at (d, 0)
@@ -356,6 +374,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function dailyRange(phiM, Am, As) { return 1.5 * Math.sqrt(Am * Am + As * As + 2 * Am * As * Math.cos(2 * phiM)); }
   const sunMoonTide = (dM) => (M_SUN / M_MOON) * (dM / D_SUN) ** 3;
   const sunMoonPull = (dM) => (M_SUN / M_MOON) * (dM / D_SUN) ** 2;
+  /* direction of the Moon's near side crater (rad, in the picture, which keeps the Sun on +x) with the Moon at angle phiM.
+     Locked: the Moon turns once per orbit, so the crater points back at Earth. Not turning: the crater keeps its direction among the
+     stars from the moment the spin stopped (psi0 at day0); the picture itself turns 360° per sidereal year against the stars. */
+  const moonFace = (locked, phiM, day, psi0, day0) => (locked ? phiM + Math.PI : psi0 - 2 * Math.PI * (day - day0) / Y_SID);
   // PHYSICS-END
 
   const $ = (id) => document.getElementById(id);
@@ -373,8 +395,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   const DMIN = 40, DMAX = 120;
 
-  const INIT = { view: 'pull', arrows: 'tidal', dR: DR0, hour: 9, tp: 0, sun: false, each: true, speed: 3 };
-  const S = Object.assign({ playing: !reduce }, INIT);
+  const INIT = { view: 'pull', arrows: 'tidal', dR: DR0, hour: 9, tp: 0, sun: false, each: true, speed: 3, spin: 'locked' };
+  const S = Object.assign({ playing: !reduce, day: 0, psi0: Math.PI, day0: 0 }, INIT);
+  /* S.day: days of simulated time, not wrapped; it follows S.tp however it changes (play, drag, slider, setups), taking the short way round */
+  let lastTp = S.tp;
+  function syncDay() { S.day += mod(S.tp - lastTp + P_SYN / 2, P_SYN) - P_SYN / 2; lastTp = S.tp; }
+  const facePsi = () => { syncDay(); return moonFace(S.spin === 'locked', 2 * Math.PI * S.tp / P_SYN, S.day, S.psi0, S.day0); };
+  /* angle of the crater away from facing Earth, degrees in (-180, 180] */
+  const faceOff = () => { const a = mod(facePsi() - 2 * Math.PI * S.tp / P_SYN - Math.PI + Math.PI, 2 * Math.PI) - Math.PI; return a * 180 / Math.PI; };
   const dM = () => S.dR * R_EARTH;
   const phiM = () => 2 * Math.PI * S.tp / P_SYN;
   const phiC = (h) => (h - 12) * Math.PI / 12;
@@ -483,6 +511,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       if (line) { ((window.VDI18N && VDI18N.raw) || ((f) => f()))(() => ctx.fillText(line, 12 * PS, y)); y += 16 * PS; }
     }
     return y;
+  }
+  /* the Moon's near side crater: a spoke from the Moon's center and a ringed dot, in the accent color */
+  function crater(ctx, x0, y0, x, y, mr) {
+    ctx.save(); ctx.strokeStyle = T.accent; ctx.lineWidth = 2 * PS; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x, y); ctx.stroke();
+    ctx.beginPath(); ctx.arc(x, y, Math.max(3 * PS, 0.22 * mr), 0, 2 * Math.PI); ctx.fillStyle = T.accent; ctx.fill();
+    ctx.strokeStyle = T.canvas; ctx.lineWidth = 1.2 * PS; ctx.stroke(); ctx.restore();
   }
   function grip(ctx, x, y, r, hot, color) {
     ctx.save();
@@ -728,6 +763,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     // the Moon
     const [mx, my] = moonPos(g);
     body(ctx, mx, my, mr, T.lit, T.unlit, T.muted);
+    { const ps = facePsi(); crater(ctx, mx, my, mx + 0.62 * mr * Math.cos(ps), my - 0.62 * mr * Math.sin(ps), mr); }
     const hotM = (dragM && dragM.id === 'moon') || (!dragM && hoverM === 'moon');
     grip(ctx, mx, my, mr + 7 * PS, hotM || focusMain, T.accent);
     ctx.fillStyle = T.accent; ctx.font = font(700, 11.5, 'ui'); ctx.textBaseline = 'middle';
@@ -972,6 +1008,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     clampText(ctx, 'City ' + fmtHM(S.hour), lxx, lyy, w, 4 * PS);
     /* the Moon */
     const [mx, my] = P3(ORBIT3 * cm, ORBIT3 * sm, 0), mr = rad3(ORBIT3 * cm, ORBIT3 * sm, 0, MOON_R);
+    { const ps = facePsi(), [kx, ky] = P3(ORBIT3 * cm + 0.62 * MOON_R * Math.cos(ps), ORBIT3 * sm + 0.62 * MOON_R * Math.sin(ps), 0); crater(ctx, mx, my, kx, ky, mr); }
     const hotM = (dragM && dragM.id === 'moon') || (!dragM && hoverM === 'moon');
     grip(ctx, mx, my, mr + 7 * PS, hotM || focusMain, T.accent);
     const ex = mx - ox, ey = my - oy, el = Math.hypot(ex, ey) || 1;
@@ -1253,6 +1290,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (document.activeElement !== phaseIn) phaseIn.value = S.tp;
     $('phaseOut').textContent = S.tp.toFixed(1) + ' d';
     $('play').textContent = S.playing ? 'Pause' : 'Play';
+    $('rOrb').textContent = P_SID.toFixed(2) + ' d';
+    $('rSpin').textContent = S.spin === 'locked' ? P_SID.toFixed(2) + ' d' : (typeof VDI18N === 'object' ? VDI18N.t('none') : 'none');
+    { const f = Math.abs(faceOff()); $('rFace').textContent = f < 0.5 ? '0°, facing Earth' : f.toFixed(0) + '°'; }
 
     const r1 = M_SUN / M_MOON, r2 = (d / D_SUN) ** 3;
     $('rPullRatio').textContent = sunMoonPull(d).toFixed(0) + '×';
@@ -1283,6 +1323,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       last = ts;
       const dh = dt * S.speed;
       S.hour = mod(S.hour + dh, 24); S.tp = mod(S.tp + dh / 24, P_SYN); simClock += dh;
+      syncDay();
     } else last = 0;
     T = tokens(); PS = pscale();
     if (V.main.W && V.main.H) {
@@ -1315,6 +1356,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('timeCtl').hidden = v !== 'bulge';
     $('pullRead').hidden = v !== 'pull';
     $('bulgeRead').hidden = v !== 'bulge';
+    $('spinSec').hidden = v !== 'bulge';
     $('keyPull').hidden = v !== 'pull';
     $('keyBulge').hidden = v !== 'bulge';
     $('keysHint').innerHTML = v === 'pull'
@@ -1330,6 +1372,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     requestDraw();
   }
   function setSun(on) { S.sun = on; $('tSun').checked = on; requestDraw(); }
+  /* the Moon's spin: 'locked' (once per orbit, the real Moon) or 'free' (stops turning now, keeping its direction among the stars) */
+  function setSpin(v) {
+    if (v === 'free' && S.spin !== 'free') { S.psi0 = facePsi(); S.day0 = S.day; }
+    S.spin = v;
+    for (const b of document.querySelectorAll('#spinSeg button')) b.setAttribute('aria-pressed', String(b.dataset.spin === v));
+    requestDraw();
+  }
   function setSpeed(s) {
     S.speed = s;
     for (const o of document.querySelectorAll('#speed button')) o.setAttribute('aria-pressed', String(+o.dataset.s === s));
@@ -1450,6 +1499,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('tEach').addEventListener('change', (ev) => { S.each = ev.target.checked; requestDraw(); });
   $('play').addEventListener('click', () => setPlaying(!S.playing));
   for (const b of document.querySelectorAll('#speed button')) b.addEventListener('click', () => setSpeed(+b.dataset.s));
+  for (const b of document.querySelectorAll('#spinSeg button')) b.addEventListener('click', () => setSpin(b.dataset.spin));
 
   const HINTS = {
     pull: 'Every point on Earth is pulled toward the Moon, the near side a little harder (3% at today\'s distance). Switch to Tidal pull: subtracting the pull on Earth\'s center leaves arrows pointing out on the near and far sides and in around the sides.',
@@ -1457,6 +1507,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     beach: 'Follow the city: two high tides and two low tides a day. The next day\'s high comes about 50 minutes later, because the Moon has moved on in its orbit.',
     spring: 'Watch a month go by. At new and full moon the Sun\'s and Moon\'s bulges line up: spring tides, the biggest range. At the quarters they are at right angles: neap tides.',
     closer: 'At 40 R<sub>E</sub>, two thirds of today\'s distance, the pull is (60.3/40)² = 2.3 times today\'s but the tide is (60.3/40)³ = 3.4 times. Drag the Moon in and out and compare the two curves.',
+    locked: 'Watch the crater on the Moon: it always points at Earth, because the Moon turns once on its axis in each orbit, 27.32 days. Switch The Moon\'s spin to Not at all and the crater keeps pointing the same way among the stars; half an orbit later it points away from Earth.',
     sunmoon: 'At first quarter the two bulges are at right angles. The Sun\'s (gold) is 0.46 of the Moon\'s (red), even though the Sun pulls 179 times harder.'
   };
   const PRE = {
@@ -1465,7 +1516,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     beach:   { view: 'bulge', dR: DR0, sun: false, hour: 6, tp: 3, speed: 3, play: true },
     spring:  { view: 'bulge', dR: DR0, sun: true, hour: 12, tp: 0, speed: 48, play: true },
     closer:  { view: 'pull', arrows: 'tidal', dR: 40 },
-    sunmoon: { view: 'bulge', dR: DR0, sun: true, hour: 12, tp: P_SYN / 4, speed: 3, play: false, each: true }
+    sunmoon: { view: 'bulge', dR: DR0, sun: true, hour: 12, tp: P_SYN / 4, speed: 3, play: false, each: true },
+    locked:  { view: 'bulge', dR: DR0, sun: false, hour: 9, tp: 0, speed: 48, play: true, spin: 'locked' }
   };
   function applyPreset(name) {
     const p = PRE[name];
@@ -1476,6 +1528,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (p.each) { S.each = true; $('tEach').checked = true; }
     if (p.hour !== undefined) S.hour = p.hour;
     if (p.tp !== undefined) S.tp = p.tp;
+    if (p.spin) setSpin(p.spin);
     if (p.speed) setSpeed(p.speed);
     if (p.play !== undefined) setPlaying(p.play && !reduce);
     setPreset(name); $('presetHint').innerHTML = HINTS[name];
@@ -1485,7 +1538,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   $('reset').addEventListener('click', () => {
     S.hour = INIT.hour; S.tp = INIT.tp; setDist(INIT.dR, true); setSpeed(INIT.speed); setSun(INIT.sun);
-    S.each = true; $('tEach').checked = true;
+    S.each = true; $('tEach').checked = true; setSpin(INIT.spin);
     setPreset(null); $('presetHint').textContent = 'Pick a setup, or switch between the two views below and drag the Moon.';
     setPlaying(!reduce);
   });
@@ -1515,8 +1568,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(requestDraw);
 
   // exposed for testing
-  window.__tides = { S, applyPreset, setView, setView3, setArrows, frameMs: () => frameMs, findHighs, cityLevelAt, mainHandles, plotHandles,
-    phys: { G, M_MOON, M_SUN, M_EARTH, R_EARTH, D_MOON, D_SUN, LUNAR_DAY, pullAt, tidalAt, tidalAxial, tidalPerp, exactNear, exactFar, tideAmp, height, dailyRange, sunMoonTide, sunMoonPull } };
+  window.__tides = { S, applyPreset, setView, setView3, setArrows, setSpin, facePsi, faceOff, frameMs: () => frameMs, findHighs, cityLevelAt, mainHandles, plotHandles,
+    phys: { G, M_MOON, M_SUN, M_EARTH, R_EARTH, D_MOON, D_SUN, LUNAR_DAY, pullAt, tidalAt, tidalAxial, tidalPerp, exactNear, exactFar, tideAmp, height, dailyRange, sunMoonTide, sunMoonPull, P_SYN, P_SID, Y_SID, moonFace } };
 })();
 </script>
 <script>/* dividers between the panes (VD.splitPanes in demos/lib/vd.js); a browser with an older cached vd.js keeps the panes as they are */

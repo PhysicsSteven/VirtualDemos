@@ -78,6 +78,8 @@ VDI18N.add('es', 'demo/tides', {
   "La Luna más cerca ({#}/d³)",
 "Sun vs Moon":
   "El Sol contra la Luna",
+"Same face toward Earth":
+  "La misma cara hacia la Tierra",
 "Pick a setup, or switch between the two views below and drag the Moon.":
   "Elige una configuración, o cambia entre las dos vistas de abajo y arrastra la Luna.",
 "Arrows":
@@ -138,6 +140,22 @@ VDI18N.add('es', 'demo/tides', {
   "θ es el ángulo desde el punto bajo la Luna (o el Sol). Máximos de +A bajo el cuerpo y en el lado opuesto, mínimos de −A/{#} a {#}°. El intervalo diario es {#} A para un solo cuerpo.",
 "<strong>Why {#} h {#} min?</strong> While Earth turns once, the Moon moves about {#}° along its orbit in the same direction ({#}° in {#} days). Earth has to turn a little more to bring the city back under the Moon, about {#} minutes more. So each high tide comes about {#} minutes later than half a day after the one before.":
   "<strong>¿Por qué {#} h {#} min?</strong> Mientras la Tierra da una vuelta, la Luna avanza unos {#}° en su órbita en el mismo sentido ({#}° en {#} días). La Tierra tiene que girar un poco más para volver a poner la ciudad bajo la Luna, unos {#} minutos más. Así que cada marea alta llega unos {#} minutos más tarde que medio día después de la anterior.",
+"The Moon's spin":
+  "El giro de la Luna",
+"Once per orbit":
+  "Una vez por órbita",
+"Not at all":
+  "Nada",
+"Orbit, relative to the stars":
+  "Órbita, respecto a las estrellas",
+"Spin, relative to the stars":
+  "Giro, respecto a las estrellas",
+"Crater, angle from facing Earth":
+  "Cráter, ángulo respecto a mirar a la Tierra",
+"{#}°, facing Earth":
+  "{#}°, mirando a la Tierra",
+"The crater marks the Moon's near side. The Moon turns once on its axis in the same {#} days it takes to go once around Earth (both relative to the stars), so the crater always points at Earth and we only ever see one face. Switch to Not at all: the Moon stops turning, the crater keeps pointing the same way among the stars, and half an orbit later it points away from Earth. The picture keeps the Sun on the right, so even a Moon that does not turn slowly turns backward on the screen, about {#}° a day, as Earth moves along its orbit. New moon to new moon takes {#} days, which is also the Moon's day from one sunrise to the next. Tidal friction locked the Moon's spin to its orbit long ago.":
+  "El cráter marca la cara visible de la Luna. La Luna gira una vez sobre su eje en los mismos {#} días que tarda en dar una vuelta alrededor de la Tierra (ambos respecto a las estrellas), así que el cráter siempre apunta a la Tierra y solo vemos una cara. Cambia a Nada: la Luna deja de girar, el cráter sigue apuntando en la misma dirección entre las estrellas y media órbita después apunta en sentido contrario a la Tierra. La imagen mantiene el Sol a la derecha, así que incluso una Luna que no gira gira lentamente hacia atrás en la pantalla, unos {#}° por día, mientras la Tierra avanza en su órbita. De luna nueva a luna nueva pasan {#} días, que es también el día de la Luna, de un amanecer al siguiente. La fricción de marea fijó hace mucho el giro de la Luna a su órbita.",
 "Sun's pull ÷ Moon's":
   "Atracción del Sol ÷ la de la Luna",
 "Sun's tide ÷ Moon's":
@@ -148,8 +166,8 @@ VDI18N.add('es', 'demo/tides', {
   "El Sol atrae con mucha más fuerza, pero una marea viene de la diferencia de atracción a lo ancho de la Tierra, y esa disminuye como {#}/d³. El Sol está {#} veces más lejos que la Luna, así que su marea es menos de la mitad de la de la Luna. En luna nueva y luna llena los dos abultamientos se alinean (mareas vivas, intervalo {#} + {#}); en los cuartos quedan en ángulo recto (mareas muertas, intervalo {#} − {#}).",
 "<span><i></i>Moon's total pull at a point</span> <span><i></i>Pull at Earth's center</span> <span><i></i>Tidal pull: point minus center</span>":
   "<span><i></i>Atracción total de la Luna en un punto</span> <span><i></i>Atracción en el centro de la Tierra</span> <span><i></i>Atracción de marea: punto menos centro</span>",
-"<span><i></i>Ocean, height exaggerated</span> <span><i></i>Moon's bulge alone</span> <span><i></i>Sun's bulge alone</span> <span><i></i>The city on the equator, with its tide mark</span>":
-  "<span><i></i>Océano, altura exagerada</span> <span><i></i>Abultamiento de la Luna solo</span> <span><i></i>Abultamiento del Sol solo</span> <span><i></i>La ciudad en el ecuador, con su marca de marea</span>",
+"<span><i></i>Ocean, height exaggerated</span> <span><i></i>Moon's bulge alone</span> <span><i></i>Sun's bulge alone</span> <span><i></i>The city on the equator, with its tide mark</span> <span><i></i>A crater on the Moon's near side</span>":
+  "<span><i></i>Océano, altura exagerada</span> <span><i></i>Abultamiento de la Luna solo</span> <span><i></i>Abultamiento del Sol solo</span> <span><i></i>La ciudad en el ecuador, con su marca de marea</span> <span><i></i>Un cráter en la cara visible de la Luna</span>",
 "Model: equilibrium tide on an Earth covered by a deep ocean, ignoring the bulge's own gravity and Earth's elastic response. Moon and Sun in Earth's equatorial plane, circular orbits. Real tides are shaped by ocean basins and coastlines and lag behind the Moon; ranges run from a few centimeters to over {#} m. Sizes and distances are not to scale.":
   "Modelo: marea de equilibrio en una Tierra cubierta por un océano profundo, ignorando la gravedad propia del abultamiento y la respuesta elástica de la Tierra. La Luna y el Sol en el plano ecuatorial de la Tierra, en órbitas circulares. Las mareas reales dependen de las cuencas oceánicas y las costas y van retrasadas respecto a la Luna; sus intervalos van de unos pocos centímetros a más de {#} m. Los tamaños y las distancias no están a escala.",
 "<strong>Tidal friction.</strong> Earth spins faster than the Moon orbits, so friction drags the bulges a little ahead of the Moon. Their pull speeds the Moon along its orbit and it moves away, about {#} cm per year, while Earth's spin slows and the day lengthens by about {#} ms per century. The same kind of friction in the Moon long ago locked its rotation to its orbit, so one face always points at Earth.":
@@ -244,12 +262,16 @@ VDI18N.add('es', 'demo/tides', {
   "En cuarto creciente los dos abultamientos están en ángulo recto. El del Sol (dorado) es {#} del de la Luna (rojo), aunque el Sol atrae {#} veces más fuerte.",
 "Neap tide: bulges at right angles":
   "Marea muerta: los abultamientos en ángulo recto",
+"Watch the crater on the Moon: it always points at Earth, because the Moon turns once on its axis in each orbit, {#} days. Switch The Moon's spin to Not at all and the crater keeps pointing the same way among the stars; half an orbit later it points away from Earth.":
+  "Observa el cráter de la Luna: siempre apunta a la Tierra, porque la Luna gira una vez sobre su eje en cada órbita, {#} días. Cambia El giro de la Luna a Nada y el cráter sigue apuntando en la misma dirección entre las estrellas; media órbita después apunta en sentido contrario a la Tierra.",
+"in {#} min<small>at {#}:{#}</small>":
+  "en {#} min<small>a las {#}:{#}</small>",
 "Close":
   "Cerrar",
 "Move the time forward or back {#} minutes":
   "Mover el tiempo {#} minutos hacia delante o hacia atrás",
-"in {#} min<small>at {#}:{#}</small>":
-  "en {#} min<small>a las {#}:{#}</small>",
+"<span><i></i>Ocean, height exaggerated</span> <span><i></i>Moon's bulge alone</span> <span><i></i>Sun's bulge alone</span> <span><i></i>The city on the equator, with its tide mark</span>":
+  "<span><i></i>Océano, altura exagerada</span> <span><i></i>Abultamiento de la Luna solo</span> <span><i></i>Abultamiento del Sol solo</span> <span><i></i>La ciudad en el ecuador, con su marca de marea</span>",
 "<span><i></i>Ocean, height exaggerated</span> <span><i></i>Moon's bulge alone</span> <span><i></i>Sun's bulge alone</span> <span><i></i>The city, on the equator</span>":
   "<span><i></i>Océano, altura exagerada</span> <span><i></i>Abultamiento de la Luna solo</span> <span><i></i>Abultamiento del Sol solo</span> <span><i></i>La ciudad, en el ecuador</span>"
 });

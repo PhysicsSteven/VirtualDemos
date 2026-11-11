@@ -4,7 +4,8 @@
    state stays in range (distance 40 to 120 R_E, hour in [0, 24), day in [0, 29.53)).
    Ocean bulges: the readout amplitudes equal the equilibrium tide, the Sun to Moon tide ratio is 0.46 at today's distance, the daily
    range readout equals the highest minus lowest water level around the equator (numerically), and every "next high tide" is a true
-   local maximum of the city's water level. At 60.34 R_E the Moon's amplitude is 0.357 m, the Sun's 0.164 m. */
+   local maximum of the city's water level. The Moon's spin: the locked crater faces Earth, a stopped Moon keeps its
+   direction among the stars, and the sidereal month is 27.32 d. At 60.34 R_E the Moon's amplitude is 0.357 m, the Sun's 0.164 m. */
 const pre = `const T = window.__tides; if (!T) return true; const S = T.S, P = T.phys;
   const rd = (id) => document.getElementById(id).textContent.replace(/\\u2212/g, '-');
   const num = (s) => { const m = s.replace(/\\u2212/g, '-').match(/(-?[\\d.]+)\\s*(?:\\u00d7\\s*10([\\u207b\\u2070\\u00b9\\u00b2\\u00b3\\u2074-\\u2079]+))?/); if (!m) return NaN;
@@ -64,9 +65,33 @@ module.exports = {
         if (T.cityLevelAt(t - 0.05) > c + 1e-6 || T.cityLevelAt(t + 0.05) > c + 1e-6) return 'high at +' + t.toFixed(3) + ' h is not a maximum';
       }
       if (S.dR >= 40 && hs.length < 1 && !isNaN(S.hour)) return 'no high tide found within 26 h';
+      return true; })()` },
+    { name: "the Moon's spin: locked crater faces Earth, a stopped Moon keeps its direction among the stars, 27.32 d", fn: `(() => { ${pre}
+      if (S.view !== 'bulge' || !T.facePsi) return true;
+      if (Math.abs(P.P_SID - 27.3217) > 0.002) return 'sidereal month ' + P.P_SID + ' d, want 27.32';
+      if (rd('rOrb') !== '27.32 d') return 'orbit readout ' + rd('rOrb');
+      const dd = ((S.day - S.tp) % P.P_SYN + P.P_SYN) % P.P_SYN; if (Math.min(dd, P.P_SYN - dd) > 1e-6) return 'day count ' + S.day + ' does not follow the phase ' + S.tp;
+      const ps = T.facePsi(), off = T.faceOff();
+      if (S.spin === 'locked') {
+        if (Math.abs(off) > 1e-9) return 'locked crater is ' + off + '° from facing Earth';
+        if (rd('rSpin') !== '27.32 d' || !/^0°/.test(rd('rFace'))) return 'locked readouts ' + rd('rSpin') + ' / ' + rd('rFace');
+      } else {
+        const w = ps + 2 * Math.PI * S.day / P.Y_SID - (S.psi0 + 2 * Math.PI * S.day0 / P.Y_SID), e = Math.abs(Math.atan2(Math.sin(w), Math.cos(w)));
+        if (e > 1e-9) return 'stopped Moon turned ' + e + ' rad relative to the stars';
+        if (rd('rSpin') !== 'none') return 'spin readout ' + rd('rSpin');
+        if (Math.abs(parseFloat(rd('rFace')) - Math.abs(off)) > 0.51) return 'crater readout ' + rd('rFace') + ' vs ' + off;
+      }
       return true; })()` }
   ],
   steps: [
+    { name: "stop the Moon's spin mid run, run fast through new moon, drag the phase, then lock it again", fn: `(async () => { const T = window.__tides; if (!T || !T.setSpin) return;
+      const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+      T.applyPreset('locked'); T.S.tp = 27; await wait(300); document.querySelector('#spinSeg [data-spin="free"]').click(); await wait(900);
+      const ph = document.getElementById('phase'); ph.value = 2; ph.dispatchEvent(new Event('input', { bubbles: true })); await wait(200);
+      ph.value = 28; ph.dispatchEvent(new Event('input', { bubbles: true })); await wait(200);
+      document.querySelector('#spinSeg [data-spin="free"]').click(); await wait(200);
+      document.querySelector('#spinSeg [data-spin="locked"]').click(); await wait(300);
+    })()` },
     { name: "change distance and Sun while the day runs, then a preset mid run", fn: `(async () => { const T = window.__tides; if (!T) return;
       const wait = (ms) => new Promise((r) => setTimeout(r, ms));
       T.applyPreset('spring'); await wait(300);

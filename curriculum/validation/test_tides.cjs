@@ -2,7 +2,7 @@
 // Legacy physics boundary extracted in memory; no demo HTML modifications.
 const assert=require('node:assert/strict'),vm=require('node:vm');const {readDemo}=require('./demo_source.cjs');
 const source=readDemo('tides').match(/\/\/ PHYSICS-BEGIN([\s\S]*?)\/\/ PHYSICS-END/);assert(source);
-const ctx={};vm.runInNewContext(source[1]+'\nglobalThis.c={G,M_MOON,M_SUN,M_EARTH,R_EARTH,D_MOON,D_SUN,pullAt,tidalAt,tidalAxial,tidalPerp,tideAmp,height,dailyRange,exactNear,exactFar,sunMoonTide,sunMoonPull};',ctx);const c=ctx.c;let n=0;
+const ctx={};vm.runInNewContext(source[1]+'\nglobalThis.c={G,M_MOON,M_SUN,M_EARTH,R_EARTH,D_MOON,D_SUN,pullAt,tidalAt,tidalAxial,tidalPerp,tideAmp,height,dailyRange,exactNear,exactFar,sunMoonTide,sunMoonPull,P_SYN,P_SID,Y_SID,moonFace};',ctx);const c=ctx.c;let n=0;
 function group(name,f){f();n++;console.log('PASS',name);}
 const near=(a,b,t=1e-10)=>assert(Math.abs(a-b)<=t*Math.max(1e-12,Math.abs(b)),`${a} != ${b}`);
 group('tidal acceleration is Newtonian acceleration minus the center acceleration, with axial stretch/transverse compression',()=>{
@@ -30,5 +30,12 @@ group('worksheet claims: mean of near and far is the formula times 1/(1 − R²/
   const q=c.exactNear(M,d)/c.exactFar(M,d);assert(Math.abs(q-(1+3/k))<5/(k*k),`near/far ${q} at ${k}`);}
  const r40=(c.exactNear(M,40*R)+c.exactFar(M,40*R))/2/c.tidalAxial(M,40*R)-1;assert(r40>0.00124&&r40<0.00126,String(r40));
  near(c.sunMoonTide(c.D_MOON),0.4596,1e-3);near(c.sunMoonPull(c.D_MOON),178.9,1e-3);
+});
+group('Moon spin: sidereal month 27.32 d from 29.53 d and the sidereal year; a locked Moon faces Earth and turns once per sidereal month; a stopped one keeps its star direction',()=>{
+ assert(Math.abs(c.P_SID-27.3217)<0.002,String(c.P_SID));near(1/c.P_SID,1/c.P_SYN+1/c.Y_SID,1e-12);
+ for(const t of [0,3.7,14.765,29]){const phi=2*Math.PI*t/c.P_SYN,ps=c.moonFace(true,phi,t,0,0);near(Math.cos(ps-phi),-1,1e-12);
+  /* star frame angle = picture angle + 2πt/Y: grows 2π per sidereal month */
+  near(ps+2*Math.PI*t/c.Y_SID-Math.PI,2*Math.PI*t/c.P_SID,1e-9);
+  const pf=c.moonFace(false,phi,t+40,1.2,40);near(pf+2*Math.PI*(t+40)/c.Y_SID,1.2+2*Math.PI*40/c.Y_SID,1e-12);}
 });
 console.log(`${n} tides test groups passed (ideal equilibrium model, not coastal predictions)`);
