@@ -313,7 +313,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
           <span><i class="swatch ocean"></i>Ocean, height exaggerated</span>
           <span><i class="swatch moonb"></i>Moon's bulge alone</span>
           <span><i class="swatch sunb"></i>Sun's bulge alone</span>
-          <span><i class="swatch city"></i>The city, on the equator</span>
+          <span><i class="swatch city"></i>The city on the equator, with its tide mark</span>
         </div>
         <details class="more"><summary>More about this</summary><p class="hint">Model: equilibrium tide on an Earth covered by a deep ocean, ignoring the bulge's own gravity and Earth's elastic response. Moon and Sun in Earth's equatorial plane, circular orbits. Real tides are shaped by ocean basins and coastlines and lag behind the Moon; ranges run from a few centimeters to over 15 m. Sizes and distances are not to scale.</p></details>
         <details class="more"><summary>More about this</summary><p class="hint"><strong>Tidal friction.</strong> Earth spins faster than the Moon orbits, so friction drags the bulges a little ahead of the Moon. Their pull speeds the Moon along its orbit and it moves away, about 3.8 cm per year, while Earth's spin slows and the day lengthens by about 2 ms per century. The same kind of friction in the Moon long ago locked its rotation to its orbit, so one face always points at Earth.</p></details>
@@ -617,8 +617,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     return { w, h, cx, cy, Rp, Ro, mr, base, kh };
   }
   const moonPos = (g) => [g.cx + g.Ro * Math.cos(phiM()), g.cy - g.Ro * Math.sin(phiM())];
-  const cityR = (g, a) => g.Rp + g.base + g.kh * height(a, phiM(), Am(), As());
-  const cityPos = (g) => { const a = phiC(S.hour), r = cityR(g, a); return [g.cx + r * Math.cos(a), g.cy - r * Math.sin(a), a]; };
+  /* The city stands on the solid Earth, on a post that reaches CITY_TOP Earth radii (on screen) above the undisturbed sea, higher than
+     any drawn high tide (at most 0.34: 0.3 R at today's spring tide, 1.7 × base when bulgeGeo caps the scale). The water rises and
+     falls against the post; waterR is the water surface at angle a. */
+  const CITY_TOP = 0.36;
+  const cityR = (g) => g.Rp + g.base + CITY_TOP * g.Rp;
+  const waterR = (g, a) => g.Rp + g.base + g.kh * height(a, phiM(), Am(), As());
+  const cityPos = (g) => { const a = phiC(S.hour), r = cityR(g); return [g.cx + r * Math.cos(a), g.cy - r * Math.sin(a), a]; };
   function shellPath(ctx, g, fn) {
     ctx.beginPath();
     for (let i = 0; i <= 180; i++) {
@@ -706,10 +711,16 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const hotC = (dragM && dragM.id === 'city') || (!dragM && hoverM === 'city');
     ctx.strokeStyle = T.accent; ctx.lineWidth = 2.5 * PS;
     ctx.beginPath(); ctx.moveTo(cx + Rp * Math.cos(ac), cy - Rp * Math.sin(ac)); ctx.lineTo(qx, qy); ctx.stroke();
+    { /* tide mark: where the water meets the city's post */
+      const wr = waterR(g, ac), wx = cx + wr * Math.cos(ac), wy = cy - wr * Math.sin(ac), tx = 7 * PS * Math.sin(ac), ty = 7 * PS * Math.cos(ac);
+      ctx.lineCap = 'round'; ctx.strokeStyle = T.canvas; ctx.lineWidth = 5.5 * PS;
+      ctx.beginPath(); ctx.moveTo(wx - tx, wy - ty); ctx.lineTo(wx + tx, wy + ty); ctx.stroke();
+      ctx.strokeStyle = T.ocean; ctx.lineWidth = 3 * PS; ctx.stroke(); ctx.lineCap = 'butt';
+    }
     ctx.fillStyle = T.accent; ctx.beginPath(); ctx.arc(qx, qy, (hotC ? 6.5 : 5) * PS, 0, 2 * Math.PI); ctx.fill();
     ctx.strokeStyle = T.canvas; ctx.lineWidth = 1.5 * PS; ctx.stroke();
     grip(ctx, qx, qy, 11 * PS, hotC, T.accent);
-    const lr = cityR(g, ac) + 24 * PS, lxx = cx + lr * Math.cos(ac), lyy = cy - lr * Math.sin(ac);
+    const lr = cityR(g) + 24 * PS, lxx = cx + lr * Math.cos(ac), lyy = cy - lr * Math.sin(ac);
     ctx.fillStyle = T.accent; ctx.font = font(700, 11.5, 'ui'); ctx.textBaseline = 'middle';
     ctx.textAlign = Math.abs(Math.cos(ac)) < 0.3 ? 'center' : Math.cos(ac) > 0 ? 'left' : 'right';
     clampText(ctx, 'City ' + fmtHM(S.hour), lxx, lyy, w, 4 * PS);
@@ -934,7 +945,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     g.eachM.visible = g.eachS.visible = S.sun && S.each;
     if (g.eachM.visible) { fill(g.eachM, (a) => am * P2(Math.cos(a - pm))); fill(g.eachS, (a) => as * P2(Math.cos(a))); }
     g.gridB.rotation.z = ac;
-    const rc = 1 + base + kh * height(ac, pm, am, as), ca = Math.cos(ac), sa = Math.sin(ac);
+    const rc = 1 + base + CITY_TOP, rw = 1 + base + kh * height(ac, pm, am, as), ca = Math.cos(ac), sa = Math.sin(ac);
     setArrowShaft(g.stalk, ca, sa, rc - 1);
     g.cityDot.position.set(rc * ca, rc * sa, 0);
     g.moonB.position.set(ORBIT3 * cm, ORBIT3 * sm, 0);
@@ -947,6 +958,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     { const [nx, ny] = P3(0, 0, 1.16); ctx.fillStyle = T.ink; ctx.globalAlpha = 0.8; ctx.font = font(600, 10.5, 'ui'); ctx.textBaseline = 'top'; ctx.fillText('N', nx, ny + 3 * PS); ctx.globalAlpha = 1; }
     /* the city */
     const [qx, qy] = P3(rc * ca, rc * sa, 0), hotC = (dragM && dragM.id === 'city') || (!dragM && hoverM === 'city');
+    { /* tide mark: where the water meets the city's post (along the equator, so it reads as the water line from any view) */
+      const d = 0.035, [ax, ay] = P3(rw * ca - d * sa, rw * sa + d * ca, 0), [bx, by] = P3(rw * ca + d * sa, rw * sa - d * ca, 0);
+      ctx.lineCap = 'round'; ctx.strokeStyle = T.canvas; ctx.lineWidth = 5.5 * PS;
+      ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(bx, by); ctx.stroke();
+      ctx.strokeStyle = T.ocean; ctx.lineWidth = 3 * PS; ctx.stroke(); ctx.lineCap = 'butt';
+    }
     grip(ctx, qx, qy, 11 * PS, hotC, T.accent);
     const [lx0, ly0] = P3((rc + 0.16) * ca, (rc + 0.16) * sa, 0), dx = lx0 - ox, dy = ly0 - oy, dl = Math.hypot(dx, dy) || 1;
     const lxx = qx + dx / dl * 22 * PS, lyy = qy + dy / dl * 22 * PS;
@@ -975,7 +992,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         set: (p) => { const a = P3(moonX3(DMIN), 0, 0), b = P3(moonX3(DMAX), 0, 0), ux = b[0] - a[0], uy = b[1] - a[1];
           setDist(DMIN + ((p.x - a[0]) * ux + (p.y - a[1]) * uy) / (ux * ux + uy * uy || 1) * (DMAX - DMIN)); } }];
     }
-    const gg = bulgeGeo(), pm = phiM(), ac = phiC(S.hour), rc = 1 + gg.base / gg.Rp + gg.kh / gg.Rp * height(ac, pm, Am(), As());
+    const gg = bulgeGeo(), pm = phiM(), ac = phiC(S.hour), rc = 1 + gg.base / gg.Rp + CITY_TOP;
     const [mx, my] = P3(ORBIT3 * Math.cos(pm), ORBIT3 * Math.sin(pm), 0), [qx, qy] = P3(rc * Math.cos(ac), rc * Math.sin(ac), 0);
     return [
       { id: 'moon', cursor: 'grab', pt: [mx, my], r: rad3(ORBIT3 * Math.cos(pm), ORBIT3 * Math.sin(pm), 0, MOON_R) + 6 * PS,
