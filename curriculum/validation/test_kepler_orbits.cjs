@@ -4,7 +4,7 @@
 // angular momentum by the integrator, equal areas in equal times, open orbits, and the fit and CSV helpers.
 const assert = require('node:assert/strict');
 const { core } = require('./demo_source.cjs');
-const K = core('kepler-orbits', 'TAU,KMS,R_HIT,orbitElements,accelOf,specificEnergy,newBody,startWedgesOn,resetPeriodClock,advanceBody,launchState,num,fitOrigin,csvCell,buildCSV');
+const K = core('kepler-orbits', 'TAU,KMS,R_HIT,orbitElements,accelOf,specificEnergy,newBody,startWedgesOn,resetPeriodClock,advanceBody,launchState,energyParts,launchAtFraction,num,fitOrigin,csvCell,buildCSV');
 let n = 0;
 const close = (a, b, rel = 1e-12, abs = 1e-12, msg = '') => assert(Math.abs(a - b) <= abs + rel * Math.abs(b), `${msg} expected ${b}, got ${a}`);
 const test = (name, fn) => { fn(); n++; console.log('PASS', name); };
@@ -110,6 +110,32 @@ test('CSV helpers', () => {
   assert.equal(K.buildCSV(['T (simulated data)', ['demo version', 'kepler-orbits@x']], ['a_AU', 'T_yr'], [[0.3871, 0.24084], ["Halley's comet", '']]),
     "# T (simulated data)\n# demo version,kepler-orbits@x\na_AU,T_yr\n0.3871,0.24084\nHalley's comet,\n");
   assert.equal(K.csvCell('a,b'), '"a,b"'); assert.equal(K.num('−2'), -2);
+});
+
+test('bound and unbound: the sign of E from v0/v_esc, e = |2f² − 1| sideways, and K + U conserved on every shape', () => {
+  for (const M of [0.5, 1, 2]) for (const r of [0.4, 1, 3]) {
+    const m = GM(M), base = { x: r * Math.cos(0.7), y: r * Math.sin(0.7), vx: 0, vy: 0 };
+    for (const f of [0.1, 0.3, Math.SQRT1_2, 0.85, 1, 1.2, 1.6]) {
+      const st = K.launchAtFraction(base, m, f, true), el = K.orbitElements(st, m), E = K.energyParts(st, m);
+      close(Math.hypot(st.vx, st.vy), f * Math.sqrt(2 * m / r), 1e-12);
+      close(st.x * st.vx + st.y * st.vy, 0, 0, 1e-12 * m);                       // sideways: v perpendicular to r
+      close(E.E, E.K + E.U, 1e-15); close(E.U, -m / r, 1e-14); close(E.E, el.eps, 1e-12, 1e-12);
+      close(E.E, (f * f - 1) * m / r, 1e-12, 1e-12);                             // E = (f² − 1) GM/r
+      close(el.e, Math.abs(2 * f * f - 1), 1e-9, 1e-9);
+      if (f < 1) assert.ok(el.bound && E.E < 0); else if (f === 1) assert.ok(el.parabolic); else assert.ok(!el.bound && E.E > 0);
+      if (f === Math.SQRT1_2) assert.ok(el.e < 1e-9, 'circle at v = √(GM/r)');
+    }
+    // keeping the direction: the speed changes, the direction does not
+    const tilt = { x: r, y: 0, vx: 1, vy: 2 }, t2 = K.launchAtFraction(tilt, m, 1.2, false);
+    close(Math.atan2(t2.vy, t2.vx), Math.atan2(2, 1), 1e-12); close(Math.hypot(t2.vx, t2.vy), 1.2 * Math.sqrt(2 * m / r), 1e-12);
+  }
+  // integrated: K and U trade, K + U stays put (ellipse launched at aphelion, parabola, hyperbola)
+  for (const f of [0.4, 0.85, 1, 1.2]) {
+    const m = GM(1), st = K.launchAtFraction({ x: 1, y: 0, vx: 0, vy: 1 }, m, f, true), E0 = K.energyParts(st, m);
+    const b = run(st, 1, 3), E1 = K.energyParts(b, m), scale = m / Math.min(1, K.orbitElements(st, m).q);
+    assert.ok(Math.abs(E1.E - E0.E) < 2e-6 * scale, `f = ${f}: E drifted ${E1.E - E0.E}`);
+    assert.ok(Math.abs(E1.K - E0.K) > 0.05 * scale || f === 0.4, 'kinetic energy changed along the path');
+  }
 });
 
 console.log(`${n} kepler-orbits test groups passed`);

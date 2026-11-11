@@ -82,6 +82,28 @@ module.exports = {
       const dp = Math.hypot(px - prev.px, py - prev.py) / (M * 1);
       if (dp > 1e-6 * Math.max(1, Math.hypot(prev.px, prev.py) / M)) return 'momentum changed by ' + dp + ' M☉·AU/yr per M with no merge';
       return true; })()` },
+    { name: "Bound and unbound: the strip shows v0/v_esc of the launch, the pressed shape agrees with the sign of E", fn: `(() => {
+      const K = window.__kepler; if (!K || K.S.sand || !K.S.bu) return true;
+      const S = K.S, L = K.elements(S.launch), f = L.v / L.vesc, inp = document.getElementById('buF'), out = document.getElementById('buFOut').textContent;
+      if (document.getElementById('buStrip').hidden) return 'Bound and unbound is on but the strip is hidden';
+      if (Math.abs(parseFloat(out) - f) > 6e-4) return 'strip shows ' + out + ', v0/v_esc = ' + f;
+      if (document.activeElement !== inp && Math.abs(+inp.value - f) > 0.003 && f >= +inp.min && f <= +inp.max) return 'slider at ' + inp.value + ', v0/v_esc = ' + f;
+      const E = K.energyParts(S.launch, K.mu()).E, pr = document.querySelector('#buShape [aria-pressed=true]');
+      if (Math.abs(E - L.eps) > 1e-12 * Math.abs(L.eps) + 1e-12) return 'energyParts E ' + E + ' but ε ' + L.eps;
+      if (S.blind) return true;
+      const want = L.parabolic ? 'parabola' : !L.bound ? 'hyperbola' : L.e < 1e-3 ? 'circle' : 'ellipse';
+      if (!pr || pr.dataset.s !== want) return 'pressed shape ' + (pr && pr.dataset.s) + ', the launch gives ' + want + ' (E = ' + E + ')';
+      if ((E < 0) !== (f < 1) && !L.parabolic) return 'sign of E ' + E + ' disagrees with v0/v_esc ' + f;
+      return true; })()` },
+    { name: "Gravity assist: the probe is bound to the Sun before the flyby and unbound after it", fn: `(() => {
+      const K = window.__kepler; if (!K || !K.S.sand || !K.SBK.st) return true;
+      const on = document.querySelector('#sbkRigs [data-r=assist][aria-pressed=true]'); if (!on || K.SBK.drag) return true;
+      const bs = K.SBK.st.bs, s = bs.find((q) => q.kind === 'star'), j = bs.find((q) => q.kind === 'jupiter'), p = bs.find((q) => q.kind === 'ship');
+      if (!s || !j || !p) return true;
+      const TAU = 2 * Math.PI, t = K.SBK.st.t, dx = p.x - s.x, dy = p.y - s.y, eps = 0.5 * ((p.vx - s.vx) ** 2 + (p.vy - s.vy) ** 2) - TAU * TAU * (s.m + p.m) / Math.hypot(dx, dy);
+      if (t < 0.9 && eps >= 0) return 'before the flyby (t = ' + t + ' yr) the probe has ε = ' + eps + ' ≥ 0';
+      if (t > 1.1 && eps <= 0) return 'after the flyby (t = ' + t + ' yr) the probe has ε = ' + eps + ' ≤ 0';
+      return true; })()` },
   ],
   steps: [
     { name: 'Halley then Escape then Mercury, then M ×10 and back mid orbit (keep shape on and off)', fn: `(async () => {
@@ -117,6 +139,29 @@ module.exports = {
       document.querySelector('#presets [data-p=sandbox]').click(); await pause(200);
       for (const b of document.querySelectorAll('#sbkRigs button')) { b.click(); await pause(200); document.getElementById('play').click(); await pause(700); }
       document.querySelector('#presets [data-p=earth]').click(); await pause(300);
+    })()` },
+    { name: 'Bound and unbound: every shape, the slider to both ends, 3D and flat, zoom out and back, drag the tip past escape', fn: `(async () => {
+      const K = window.__kepler, S = K.S, pause = (ms) => new Promise((r) => setTimeout(r, ms)), q = (s) => document.querySelector(s);
+      q('#presets [data-p=bound]').click(); await pause(300);
+      for (const sh of ['circle', 'ellipse', 'parabola', 'hyperbola', 'circle']) { q('#buShape [data-s=' + sh + ']').click(); await pause(400); }
+      const f = q('#buF');
+      for (const v of ['0.1', '1.6', '1', '0.7071', '0.85']) { f.value = v; f.dispatchEvent(new Event('input', { bubbles: true })); await pause(300); }
+      for (const d of ['3d', 'flat']) { q('#viewSeg [data-dim="' + d + '"]').click(); await pause(400); }
+      const v = q('#view'); for (const k of ['-', '-', '-', '-', '+', '+', '+', '+']) { v.dispatchEvent(new KeyboardEvent('keydown', { key: k, bubbles: true, cancelable: true })); await pause(60); }
+      q('#chartSeg [data-v=law]').click(); await pause(200); q('#chartSeg [data-v=energy]').click(); await pause(200);
+      const r = v.getBoundingClientRect(), send = (type, x, y) => v.dispatchEvent(new PointerEvent(type, { clientX: r.left + x, clientY: r.top + y, pointerId: 1, bubbles: true, button: 0, buttons: type === 'pointerup' ? 0 : 1 }));
+      const tx = K.V.cx + S.launch.x * K.V.s + S.launch.vx * S.kw * K.V.s, ty = K.V.cy - S.launch.y * K.V.s - S.launch.vy * S.kw * K.V.s;
+      send('pointerdown', tx, ty); for (const dy of [-20, -80, -200, -600]) { send('pointermove', tx, ty + dy); await pause(120); } send('pointerup', tx, ty - 600); await pause(1500);
+      q('#blind').click(); await pause(300); q('#blind').click(); await pause(300);
+      q('#presets [data-p=earth]').click(); await pause(300);
+    })()` },
+    { name: 'Gravity assist: run through the flyby, Reset, run again fast', fn: `(async () => {
+      const pause = (ms) => new Promise((r) => setTimeout(r, ms)), q = (s) => document.querySelector(s);
+      q('#presets [data-p=sandbox]').click(); await pause(200); q('#sbkRigs [data-r=assist]').click(); await pause(200);
+      q('#play').click(); await pause(4500); q('#play').click(); q('#reset').click(); await pause(200);
+      const sp = q('#spd'); sp.value = sp.max; sp.dispatchEvent(new Event('input', { bubbles: true }));
+      q('#play').click(); await pause(2500); q('#play').click();
+      q('#presets [data-p=earth]').click(); await pause(300);
     })()` },
   ],
 };

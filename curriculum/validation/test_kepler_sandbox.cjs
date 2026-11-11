@@ -2,7 +2,7 @@
 // Kepler's Laws Sandbox: bodies that all pull on one another (G = 4π² AU³/(M☉·yr²)), velocity Verlet with a shared step, merging on contact.
 const assert = require('node:assert');
 const { core } = require('./demo_source.cjs');
-const K = core('kepler-orbits', 'TAU,SBK_ETA,nbAccel,nbDt,nbAdvance,nbMergeOnce,nbTotals,nbHost,nbElements,nbCircular,orbitElements');
+const K = core('kepler-orbits', 'TAU,SBK_ETA,nbAccel,nbDt,nbAdvance,nbMergeOnce,nbTotals,nbHost,nbElements,nbCircular,orbitElements,assistStart');
 let n = 0;
 const near = (a, b, tol, w) => assert(Math.abs(a - b) <= tol * Math.max(1, Math.abs(b)), `${w || ''}: expected ${b}, got ${a}`);
 const rel = (a, b) => Math.abs(a - b) / Math.abs(b);
@@ -51,5 +51,25 @@ group('the host is the heavier body that pulls hardest; a circular launch gives 
   const sun = body('S', 1, 0, 0, 0, 0), jup = body('J', 0.001, 1, 0, 0, 6.28), moon = body('M', 4e-8, 1.01, 0, 0, 0);
   assert.equal(K.nbHost([sun, jup, moon], moon), jup); assert.equal(K.nbHost([sun, jup, moon], jup), sun); assert.equal(K.nbHost([sun, jup], sun), null);
   Object.assign(moon, K.nbCircular(jup, moon.m, moon.x, moon.y)); near(K.nbElements(moon, jup).e, 0, 1e-9);
+});
+group('Gravity assist past Jupiter: bound before, unbound after; the same speed relative to Jupiter in and out; total energy kept', () => {
+  const AU_KM = 1.495978707e8, mJ = 1 / 1047.35, G = 4 * Math.PI ** 2, KMS = 4.740470, J = KMS * KMS;
+  const q = K.assistStart({ mJ, aJ: 5.2029, q0: 1, Q0: 9, rp: 0.003, tBack: 1, mP: 2e4 / 1.98841e30, RS: 695700 / AU_KM, RJ: 71492 / AU_KM, RP: 0.01 / AU_KM });
+  const st = { t: 0, bs: q.map((b, i) => Object.assign({ id: i, name: 'b' + i }, b)) }, E0 = K.nbTotals(st.bs).E;
+  const eps = () => K.nbElements(st.bs[2], st.bs[0]).eps * J;
+  const e0 = eps(); let dmin = Infinity, tmin = 0, prev = null; const cross = [];
+  for (let t = 0.0005; t <= 2.5 + 1e-9; t += 0.0005) {
+    K.nbAdvance(st, t, 1e7); assert.equal(st.bs.length, 3, 'no merge');
+    const [, j, p] = st.bs, d = Math.hypot(p.x - j.x, p.y - j.y);
+    if (d < dmin) { dmin = d; tmin = t; }
+    if (prev != null && (prev - 0.1) * (d - 0.1) < 0) cross.push(Math.hypot(p.vx - j.vx, p.vy - j.vy) * KMS);
+    prev = d;
+  }
+  const e1 = eps();
+  near(dmin * AU_KM, 0.003 * AU_KM, 0.01, 'closest approach (km)'); near(tmin, 1, 0.002, 'flyby one year in');
+  assert(e0 < -80 && e0 > -100, `bound before: ε = ${e0}`); assert(e1 > 100 && e1 < 120, `unbound after: ε = ${e1}`);
+  assert.equal(cross.length, 2); assert(rel(cross[1], cross[0]) < 0.01, `u at 0.1 AU in ${cross[0]}, out ${cross[1]}`);
+  assert(rel(K.nbTotals(st.bs).E, E0) < 1e-9, 'total energy of the system');
+  console.log(`   probe ε around the Sun ${e0.toFixed(1)} → ${e1.toFixed(1)} MJ/kg; u at 0.1 AU from Jupiter ${cross[0].toFixed(2)} in, ${cross[1].toFixed(2)} out km/s`);
 });
 console.log(`${n} kepler sandbox test groups passed`);

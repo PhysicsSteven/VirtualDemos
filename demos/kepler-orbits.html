@@ -159,6 +159,13 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
 #rvBox { display: grid; gap: 8px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--line); }
 #rvBox .rvh { margin: 0; font-size: 0.95rem; }
 #rvBox .btnrow .btn { flex: 1 1 46%; }
+/* Bound and unbound (2026-11-11): the launch speed strip along the bottom of the orbit view */
+.buStrip { position: absolute; left: 10px; right: 10px; bottom: 8px; z-index: 2; display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; padding: 6px 10px; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; }
+.buStrip[hidden] { display: none; }
+.buStrip label { font-size: 0.82rem; font-weight: 600; }
+.buStrip input[type=range] { flex: 1 1 140px; min-width: 110px; }
+.buStrip output { min-width: 3.6em; font-size: 0.85rem; }
+.buStrip .seg button { padding: 4px 8px; font-size: 0.8rem; }
 .v3note { position: absolute; left: 12px; bottom: 40px; z-index: 2; max-width: 60%; margin: 0; font-size: 0.8rem; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 8px; }
 </style>
 <link rel="stylesheet" id="vd-look" href="lib/look.css">
@@ -191,6 +198,12 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <button type="button" class="btn" id="fit">Fit</button>
         </div>
         <p class="v3note" id="v3note" role="status" hidden></p>
+        <div class="buStrip" id="buStrip" hidden>
+          <label for="buF">Launch speed ÷ escape speed</label>
+          <input type="range" id="buF" min="0.1" max="1.6" step="0.005" value="0.85">
+          <output id="buFOut" class="mono" for="buF">0.850</output>
+          <div class="seg" role="group" aria-label="Launch for this shape" id="buShape"><button type="button" data-s="circle" aria-pressed="false">Circle</button><button type="button" data-s="ellipse" aria-pressed="false">Ellipse</button><button type="button" data-s="parabola" aria-pressed="false">Parabola</button><button type="button" data-s="hyperbola" aria-pressed="false">Hyperbola</button></div>
+        </div>
       </div>
       <div class="pane chart" id="chartPane">
         <canvas id="chart" role="img" aria-label="Kepler's third law: orbital period against semi major axis on log scales, with the planets of the solar system and the current orbit."></canvas>
@@ -214,6 +227,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <button type="button" data-p="alphacen" aria-pressed="false">Binary star</button>
           <button type="button" data-p="circle" aria-pressed="false">Circular orbit</button>
           <button type="button" data-p="escape" aria-pressed="false">Escape</button>
+          <button type="button" data-p="bound" aria-pressed="false">Bound and unbound</button>
           <button type="button" data-p="sandbox" aria-pressed="false">Sandbox</button>
         </div>
         <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
@@ -232,6 +246,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <button type="button" data-r="empty" aria-pressed="false">Empty space</button>
           <button type="button" data-r="rvCatch" aria-pressed="false">Rendezvous: catch the target ahead</button>
           <button type="button" data-r="rvOuter" aria-pressed="false">Rendezvous: a target in an outer orbit</button>
+          <button type="button" data-r="assist" aria-pressed="false">Gravity assist past Jupiter</button>
         </div>
         <div class="slider-head"><span class="hint" id="sbkFollowLab">The view follows</span></div>
         <div class="seg wrap" role="group" aria-labelledby="sbkFollowLab" id="sbkFollow">
@@ -336,6 +351,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
         <div class="seg" role="group" aria-labelledby="chartLab" id="chartSeg">
           <button type="button" data-v="law" aria-pressed="true">Third law</button>
           <button type="button" data-v="fit" aria-pressed="false">Your readings</button>
+          <button type="button" data-v="energy" aria-pressed="false">Energy</button>
         </div>
         <label class="check"><input type="checkbox" id="tReduce">Reduce motion</label>
         <button type="button" class="btn" id="dataBtn" aria-expanded="false" aria-controls="dataWrap">Show data table</button>
@@ -411,6 +427,8 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <label><input type="checkbox" id="tFoci" checked>Foci and axis</label>
           <label><input type="checkbox" id="tCirc" checked>Speed circles</label>
           <label><input type="checkbox" id="tVel" checked>Velocity now</label>
+          <label><input type="checkbox" id="tForce">Gravity force</label>
+          <label><input type="checkbox" id="tLine1">Straight path with no gravity</label>
           <label><input type="checkbox" id="tGrid" checked>AU grid</label>
           <label><input type="checkbox" id="tSpace">Space backdrop on the flat view</label>
         </div>
@@ -625,6 +643,22 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     const Q = a * (1 + e);
     return { x: Q, y: 0, vx: 0, vy: Math.sqrt(m * (1 - e) / Q) };
   }
+  /* Bound and unbound (2026-11-11). Energy per kilogram of the planet: kinetic v²/2, potential −GM/r (zero far away) and their
+     sum, which gravity alone keeps fixed. Its sign decides the path: E < 0 closes (circle or ellipse), E = 0 a parabola, E > 0 a
+     hyperbola. */
+  function energyParts(st, m) {
+    const K = 0.5 * (st.vx * st.vx + st.vy * st.vy), U = -m / Math.hypot(st.x, st.y);
+    return { K, U, E: K + U };
+  }
+  /* the same launch point and direction at f times the escape speed √(2GM/r); with no speed to give a direction, sideways and
+     counterclockwise. Launched sideways, e = |2f² − 1| (at r, v² = 2f²·GM/r, and e = |r v²/GM − 1| at an apsis). */
+  function launchAtFraction(st, m, f, sideways) {
+    const r = Math.hypot(st.x, st.y), v = Math.hypot(st.vx, st.vy), ve = Math.sqrt(2 * m / r);
+    let ux = -st.y / r, uy = st.x / r;
+    if (v > 0 && sideways) { const s = st.x * st.vy - st.y * st.vx >= 0 ? 1 : -1; ux *= s; uy *= s; }
+    else if (v > 0) { ux = st.vx / v; uy = st.vy / v; }
+    return { x: st.x, y: st.y, vx: f * ve * ux, vy: f * ve * uy };
+  }
 
   // ---- readings: the student's fit and the CSV ----
   const num = (s) => { const t = String(s == null ? '' : s).trim().replace(/−/g, '-'); return t === '' ? NaN : Number(t); };
@@ -718,6 +752,27 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     for (const b of bs) { K += 0.5 * b.m * (b.vx * b.vx + b.vy * b.vy); px += b.m * b.vx; py += b.m * b.vy; Lz += b.m * (b.x * b.vy - b.y * b.vx); M += b.m; X += b.m * b.x; Y += b.m * b.y; }
     for (let i = 0; i < bs.length; i++) for (let j = i + 1; j < bs.length; j++) U -= TAU * TAU * bs[i].m * bs[j].m / Math.hypot(bs[j].x - bs[i].x, bs[j].y - bs[i].y);
     return { K, U, E: K + U, px, py, Lz, M, X: M ? X / M : 0, Y: M ? Y / M : 0, VX: M ? px / M : 0, VY: M ? py / M : 0 };
+  }
+  /* Gravity assist (Steve 2026-11-11): the Sun, Jupiter on its circle (a = 5.2029 AU) and a probe on a bound transfer orbit (closest to
+     the Sun q0, farthest Q0) that crosses Jupiter's orbit on the way out and passes behind Jupiter, rp from its center. Set up at the
+     closest approach from the two body hyperbola in Jupiter's frame: the probe comes in at u∞, the speed of its transfer orbit
+     relative to Jupiter where it crosses, and is turned through δ with sin(δ/2) = 1/(1 + rp u∞²/GM_J), toward Jupiter's direction
+     of motion. Then the system is run backward tBack years (the same integrator with every velocity reversed, which retraces the
+     path) so the run starts with the probe far from Jupiter. Returns plain bodies [Sun, Jupiter, probe], { m, R, x, y, vx, vy }. */
+  function assistStart(o) {
+    const mS = 1, mJ = o.mJ, M = mS + mJ, aJ = o.aJ, G = TAU * TAU, vJ = Math.sqrt(G * M / aJ);
+    const sun = { m: mS, R: o.RS, x: -aJ * mJ / M, y: 0, vx: 0, vy: -vJ * mJ / M };
+    const jup = { m: mJ, R: o.RJ, x: aJ * mS / M, y: 0, vx: 0, vy: vJ * mS / M };
+    const v2 = G * mS * (2 / aJ - 2 / (o.q0 + o.Q0)), vt = Math.sqrt(G * mS * 2 * o.q0 * o.Q0 / (o.q0 + o.Q0)) / aJ, vr = Math.sqrt(v2 - vt * vt);
+    const ux = vr, uy = vt - vJ, u = Math.hypot(ux, uy), GJ = G * mJ;
+    const d = 2 * Math.asin(1 / (1 + o.rp * u * u / GJ)), rot = (x, y, a) => [x * Math.cos(a) - y * Math.sin(a), x * Math.sin(a) + y * Math.cos(a)];
+    const o1 = rot(ux, uy, d), o2 = rot(ux, uy, -d), out = o1[1] > o2[1] ? o1 : o2;
+    const ix = ux / u, iy = uy / u, ox = out[0] / u, oy = out[1] / u, vp = Math.sqrt(u * u + 2 * GJ / o.rp);
+    const bx = ix + ox, by = iy + oy, bl = Math.hypot(bx, by), px = ix - ox, py = iy - oy, pl = Math.hypot(px, py);
+    const pro = { m: o.mP, R: o.RP, x: jup.x + o.rp * px / pl, y: jup.y + o.rp * py / pl, vx: jup.vx + vp * bx / bl, vy: jup.vy + vp * by / bl };
+    const st = { t: 0, bs: [sun, jup, pro].map((b, i) => Object.assign({}, b, { id: i, vx: -b.vx, vy: -b.vy })) };
+    nbAdvance(st, o.tBack, 1e7);
+    return st.bs.map((b) => ({ m: b.m, R: b.R, x: b.x, y: b.y, vx: -b.vx, vy: -b.vy }));
   }
   // the body that pulls hardest on b among the heavier ones (largest m/r²), or null
   function nbHost(bs, b) {
@@ -821,7 +876,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   /* Energy bars per kilogram of the planet, in MJ/kg (1 MJ/kg = 1 km²/s²): v²/2, −GM/r and their sum ε (demos/lib/vdenergy.js) */
   VD.energy({ el: $('eBars'), unit: 'MJ/kg', hidden: () => S.blind, run: () => S.A.E0 + ',' + S.M,
     terms: () => { const A = S.A, k = 0.5 * (A.vx * A.vx + A.vy * A.vy) * KMS * KMS, u = -mu() / Math.hypot(A.x, A.y) * KMS * KMS;
-      return [{ label: 'Kinetic', v: k, c: '--c1' }, { label: 'Potential', v: u, c: '--c2' }]; } });
+      return [{ label: 'Kinetic', v: k, c: '--accent' }, { label: 'Potential', v: u, c: '--neg' }]; } });
   // Reduce motion: the OS setting, or the in-page toggle remembered for this browser session only
   let reduce = !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
   try { const v = sessionStorage.getItem('kepler-orbits-reduce-motion'); if (v === 'on') reduce = true; else if (v === 'off') reduce = false; } catch (_) {}
@@ -831,7 +886,8 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     M: 1, keep: true, speed: 0.04, playing: true, t: 0, nW: 12,
     launch: { x: 0.3075, y: 0, vx: 0, vy: 12.32 },
     A: null, B: null, Blaunch: null,
-    layers: { wedge: true, conic: true, trail: true, foci: true, circ: true, vel: true, grid: true, space: false },
+    layers: { wedge: true, conic: true, trail: true, foci: true, circ: true, vel: true, grid: true, space: false, force: false, line1: false },
+    bu: false,
     kw: 0.05, preset: 'mercury',
     blind: false, cview: 'law', keyMode: 'vel',
     timer: { on: false, acc: 0 }, ruler: { on: false, pts: [null, null], active: 0 }
@@ -875,7 +931,11 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     circle:  { r: 1.0, f: 1, spd: 0.15,
                hint: 'Launch speed equals the circular speed, so the arrow tip sits on the gold circle and the two foci merge at the star. Try 0.9 or 1.1 times it.' },
     escape:  { r: 1.0, f: 1.2 * Math.SQRT2, spd: 0.2,
-               hint: 'Launch at 1.2 times the escape speed. Energy is positive, the path is a hyperbola and the planet leaves for good at a finite speed v∞.' }
+               hint: 'Launch at 1.2 times the escape speed. Energy is positive, the path is a hyperbola and the planet leaves for good at a finite speed v∞.' },
+    /* Bound and unbound (Steve 2026-11-11): one launch point 1 AU out, the speed set against the escape speed on the strip in the
+       view; the energy chart, the gravity arrow and the no gravity line come on with it */
+    bound:   { r: 1.0, f: 0.85 * Math.SQRT2, spd: 0.25, bu: true,
+               hint: 'Newton\u2019s laws make the orbit. The only force on the planet is the star\u2019s gravity, F = GMm/r², pulling toward the star (the green arrow). With no force the planet would go straight on (the dashed line), as the first law says; the pull bends its path and speeds it up or slows it down, as the second law says. Gravity is the only force, so the total energy E = ½mv² − GMm/r stays the same while kinetic and potential energy trade back and forth (the chart below). The launch speed against the escape speed √(2GM/r) sets the sign of E: below it E < 0 and the path closes (a circle at v = √(GM/r), else an ellipse); at it E = 0 and the path is a parabola; above it E > 0 and the path is a hyperbola. Launched sideways, e = |2(v₀/v_esc)² − 1|. To see a probe go from bound to unbound, try Sandbox, then Gravity assist past Jupiter.' }
   };
 
 
@@ -884,6 +944,15 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   function makeBody(st, wedges) { const b = newBody(st, S.t, mu()); if (wedges) startWedges(b); return b; }
   const accel = (b) => accelOf(b, mu());
   const energy = (b) => specificEnergy(b, mu());
+  /* the energy chart's record of planet A: [t, K, U] per kilogram in AU²/yr², one point a frame, thinned to every other point
+     past 4,000 so a long run keeps its whole history */
+  function recordEnergy() {
+    const A = S.A; if (!A) return;
+    const h = A.eh || (A.eh = []), last = h[h.length - 1];
+    if (last && A.t <= last[0]) return;
+    const e = energyParts(A, mu()); h.push([A.t, e.K, e.U]);
+    if (h.length > 4000) A.eh = h.filter((_, i) => i % 2 === 0 || i === h.length - 1);
+  }
   const startWedges = (b) => startWedgesOn(b, mu(), S.nW);
   const advance = (b, T, budget) => advanceBody(b, T, budget, mu(), S.nW);
 
@@ -919,7 +988,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     const g = (n) => cs.getPropertyValue(n).trim();
     return { pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), grid: g('--grid'), gridStrong: g('--grid-strong'),
              canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), accent: g('--accent'), line: g('--line'),
-             sun: g('--sun'), mono: g('--font-mono') || 'monospace', ps: paneScale(parseFloat(g('--canvas-scale')) || 1) };
+             sun: g('--sun'), ok: g('--ok'), mono: g('--font-mono') || 'monospace', ps: paneScale(parseFloat(g('--canvas-scale')) || 1) };
   }
   const toPx = (x, y) => [V.cx + x * V.s, V.cy - y * V.s];
   const toW = (px, py) => ({ x: (px - V.cx) / V.s, y: (V.cy - py) / V.s });
@@ -959,7 +1028,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     const T = tokens(), ps = T.ps;
     const box = orbitBox(S.launch);
     if (S.Blaunch) { const b2 = orbitBox(S.Blaunch); box.x0 = Math.min(box.x0, b2.x0); box.x1 = Math.max(box.x1, b2.x1); box.y0 = Math.min(box.y0, b2.y0); box.y1 = Math.max(box.y1, b2.y1); }
-    const mL = 26 * ps, mR = 26 * ps, mT = 50 * ps, mB = 30 * ps;
+    const mL = 26 * ps, mR = 26 * ps, mT = S.bu ? Math.max(50 * ps, clockY() + 40 * ps) : 50 * ps, mB = 30 * ps + botPad();
     const w = Math.max(box.x1 - box.x0, 1e-3), h = Math.max(box.y1 - box.y0, 1e-3);
     const s = Math.min((W - mL - mR) / w, (H - mT - mB) / h);
     VT.s = s;
@@ -1277,6 +1346,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       }
     };
     if (S.B) drawBody(S.B, T.pos);
+    newtonMarks(ctx, T, ps, toPx, A);
     drawBody(A, T.neg);
     spinMark(ctx, T, ps, toPx);
 
@@ -1300,15 +1370,41 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     }
 
     // scale bar and time
-    const barW = step * V.s, bx = 14 * ps, by = H - 14 * ps;
+    const barW = step * V.s, bx = 14 * ps, by = H - 14 * ps - botPad();
     ctx.strokeStyle = T.muted; ctx.lineWidth = 1.5 * ps;
     ctx.beginPath(); ctx.moveTo(bx, by - 4 * ps); ctx.lineTo(bx, by); ctx.lineTo(bx + barW, by); ctx.lineTo(bx + barW, by - 4 * ps); ctx.stroke();
     text(ctx, T, sig(step, 2) + ' AU', bx + barW / 2, by - 4 * ps, 'center', 'bottom', T.muted, 11 * ps);
-    text(ctx, T, 'star and planet not to scale', W - 12 * ps, H - 10 * ps, 'right', 'bottom', T.muted, 10 * ps, 400);
+    text(ctx, T, 'star and planet not to scale', W - 12 * ps, H - 10 * ps - botPad(), 'right', 'bottom', T.muted, 10 * ps, 400);
     const y0 = clockY();
     text(ctx, T, 't = ' + fmtT(S.t), 12 * ps, y0, 'left', 'top', T.ink, 13 * ps, 700);
     text(ctx, T, statusText(A, elA), 12 * ps, y0 + 18 * ps, 'left', 'top', T.muted, 11 * ps, 600);
   }
+  /* Newton's laws on planet A (layers Gravity force and Straight path with no gravity): the pull of the star per kilogram,
+     GM/r² toward it, drawn to one scale for the run (half the circular speed circle at the launch point), but never longer than
+     0.7 of the way to the star; and the straight line the planet would follow from here if gravity switched off (first law).
+     proj maps AU to the picture (the flat view or the 3D one). */
+  function newtonMarks(ctx, T, ps, proj, b) {
+    if (!b || b.done || (!S.layers.force && !S.layers.line1)) return;
+    const r = Math.hypot(b.x, b.y), v = Math.hypot(b.vx, b.vy), [px, py] = proj(b.x, b.y), fs = 10 * ps;
+    if (S.layers.line1 && v > 0) {
+      const L = Math.max(2.5 * v * S.kw, 0.6 * r), ex = b.x + b.vx / v * L, ey = b.y + b.vy / v * L, [qx, qy] = proj(ex, ey);
+      ctx.save(); ctx.strokeStyle = T.muted; ctx.lineWidth = 1.4 * ps; ctx.setLineDash([6 * ps, 5 * ps]);
+      ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(qx, qy); ctx.stroke(); ctx.restore();
+      text(ctx, T, 'no gravity: straight on', qx, qy - 8 * ps, 'center', 'bottom', T.muted, fs, 600);
+    }
+    if (S.layers.force && r > 0) {
+      const L0 = S.launch, r0 = Math.hypot(L0.x, L0.y), kf = 0.5 * S.kw * Math.pow(r0, 1.5) / Math.sqrt(mu());
+      const len = Math.min(kf * mu() / (r * r), 0.7 * r), [fx2, fy2] = proj(b.x - b.x / r * len, b.y - b.y / r * len);
+      if (Math.hypot(fx2 - px, fy2 - py) > 4 * ps) {
+        arrow(ctx, px, py, fx2, fy2, T.ok, 2.4 * ps, 9 * ps, T.canvas);
+        const ang = Math.atan2(fy2 - py, fx2 - px), nx = -Math.sin(ang), ny = Math.cos(ang);
+        text(ctx, T, 'gravity', (px + fx2) / 2 + nx * 12 * ps, (py + fy2) / 2 + ny * 12 * ps, 'center', 'middle', T.ok, fs, 700);
+      }
+    }
+  }
+  /* room the launch speed strip takes at the bottom of the orbit view, so the words and the fitted orbit stay above it */
+  const buStrip = $('buStrip');
+  const botPad = () => (S.bu && !S.sand && buStrip.offsetHeight ? buStrip.offsetHeight + 10 : 0);
   /* where the clock goes: top left, or under the strip of buttons when a narrow picture makes the strip reach across */
   function clockY() {
     const bar = mainPane.querySelector('.viewbar'), ps = tokens().ps;
@@ -1332,6 +1428,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, CW, CH);
     if (S.blind || S.cview === 'fit') { drawFitChart(ctx, T, ps); return; }
+    if (S.cview === 'energy') { drawEnergyChart(ctx, T, ps); return; }
     const mL = 52 * ps, mR = 14 * ps, mT = 30 * ps, mB = 30 * ps;
     const pw = CW - mL - mR, ph = CH - mT - mB;
     if (pw < 40 || ph < 30) return;
@@ -1419,6 +1516,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   }
   function updateReadouts() {
     const A = S.A, el = elements(A), elL = elements(S.launch);
+    syncBu();
     R.lV.textContent = kms(elL.v);
     R.lR.textContent = sig(elL.r, 3) + ' AU';
     R.lC.textContent = kms(elL.vcirc);
@@ -1510,13 +1608,19 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     /* the rendezvous: the ship on a 1 AU circle, the target on the same circle 30° ahead, or on a 1.52368 AU circle (Mars's a) 44.34°
        ahead, the lead the Hohmann transfer needs, so the first burn can go now */
     rvCatch: { span: 2.8, spd: 0.15, follow: 'cm', sel: 1, dv: 0.903, build: () => sbkRv(1, 1, 30) },
-    rvOuter: { span: 3.6, spd: 0.15, follow: 'cm', sel: 1, dv: 2.94, build: () => sbkRv(1, 1.52368, hohmann(1, 1.52368, TAU * TAU).lead) }
+    rvOuter: { span: 3.6, spd: 0.15, follow: 'cm', sel: 1, dv: 2.94, build: () => sbkRv(1, 1.52368, hohmann(1, 1.52368, TAU * TAU).lead) },
+    /* gravity assist: a probe on a transfer orbit from 1 AU out to 9 AU passes 0.003 AU (449,000 km, 6.3 Jupiter radii) behind
+       Jupiter one year after the start (assistStart in the CORE); Jupiter at the semi major axis of the PLANETS table */
+    assist: { span: 18, spd: 0.4, follow: 'cm', sel: 2, build: () => {
+      const k = SBK_KIND, q = assistStart({ mJ: k.jupiter.m, aJ: 5.2029, q0: 1, Q0: 9, rp: 0.003, tBack: 1, mP: k.ship.m, RS: k.star.R, RJ: k.jupiter.R, RP: k.ship.R });
+      const bs = ['star', 'jupiter', 'ship'].map((kind, i) => sbkMake(kind, q[i].x, q[i].y, q[i].vx, q[i].vy)); bs[2].name = 'Probe'; return bs; } }
   };
   function sbkRv(r1, r2, lead) {
     const s = sbkMake('star', 0, 0, 0, 0), a = lead * Math.PI / 180, sh = sbkMake('ship', r1, 0, 0, 0), tg = sbkMake('target', r2 * Math.cos(a), r2 * Math.sin(a), 0, 0);
     Object.assign(sh, nbCircular(s, sh.m, sh.x, sh.y)); Object.assign(tg, nbCircular(s, tg.m, tg.x, tg.y)); return [s, sh, tg];
   }
   const SBK_RV_HINT = {
+    assist: 'A probe heads out from 1 AU on an orbit that would turn back at 9 AU: around the Sun its energy is negative, so it is bound. It passes just behind Jupiter. In Jupiter\u2019s frame the flyby is a hyperbola: the probe leaves Jupiter as fast as it came, only turned. But Jupiter moves at 13 km/s, so around the Sun the turn adds speed: the probe\u2019s energy around the Sun jumps from about −89 to +110 MJ/kg and it leaves the solar system. The energy comes from Jupiter, which slows by a speed too small to see; the total energy of the system stays the same. The spike on the chart at the flyby is Jupiter\u2019s own pull speeding the probe up for a few days (ε counts only the Sun). Passing in front of Jupiter instead slows a probe down.',
     rvCatch: 'The target is 30° ahead of you on the same circle. Try a forward burn first and watch: you rise into a bigger, slower orbit and fall behind. Then Reset and burn backward instead: the smaller orbit is quicker. With 0.903 km/s backward your orbit takes 11/12 of a year, so after one lap, back at its farthest point, you meet the target: coast there and burn 0.903 km/s forward to match its speed.',
     rvOuter: 'The target circles 1.52 AU out, where Mars does, 44.3° ahead of you: just the lead for a Hohmann transfer. Burn forward 2.94 km/s now, coast half an ellipse (259 days) to the farthest point, and burn forward 2.65 km/s to match the target\'s circle. The readouts give the Hohmann numbers for wherever you are.'
   };
@@ -1560,7 +1664,8 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   }
   /* the system as it is now becomes the start that Reset goes back to */
   function sbkCommit() { SBK.st.t = 0; for (const b of SBK.st.bs) b.trail = []; SBK.start = sbkClone(SBK.st.bs); sbkChart0(); SBK.E0 = SBK.st.bs.length > 1 ? sbkTot().E : NaN; rvReset(); }
-  function sbkChart0() { SBK.chart = []; if (SBK.st.bs.length > 1) { const t = sbkTot(); SBK.chart.push([SBK.st.t, t.K, t.U]); } }
+  function sbkChartRow() { const t = sbkTot(), A = sbkAssistPick(), v = A ? sbkAssistVals(A) : null; return v ? [SBK.st.t, t.K, t.U, v.eps, v.k] : [SBK.st.t, t.K, t.U]; }
+  function sbkChart0() { SBK.chart = []; if (SBK.st.bs.length > 1) SBK.chart.push(sbkChartRow()); }
   function sbkReset() { SBK.st = { t: 0, bs: sbkClone(SBK.start) }; sbkChart0(); SBK.E0 = SBK.st.bs.length > 1 ? sbkTot().E : NaN; rvReset(); sbkPlay(false); sbkSay('Back to the start.'); }
   function sbkPlay(on) { SBK.playing = on == null ? !SBK.playing : on; playBtn.textContent = SBK.playing ? 'Pause' : 'Play'; SBK.last = 0; schedule(); }
   function sbkEdited() { for (const b of document.querySelectorAll('#sbkRigs button')) b.setAttribute('aria-pressed', 'false'); sbkCommit(); sbkArrowScale(); }
@@ -1588,7 +1693,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     const t = st.bs.length ? sbkTot() : null;
     const fr = sbkFrame0();
     for (const b of st.bs) { const L = b.trail[b.trail.length - 1]; if (!L || Math.hypot(b.x - fr.x - L[0], b.y - fr.y - L[1]) * V.s > 1.5) { b.trail.push([b.x - fr.x, b.y - fr.y]); if (b.trail.length > 4000) b.trail.splice(0, 1000); } }
-    if (st.bs.length > 1) { SBK.chart.push([st.t, t.K, t.U]); if (SBK.chart.length > 3000) SBK.chart = SBK.chart.filter((_, i) => i % 2 === 0); }
+    if (st.bs.length > 1) { SBK.chart.push(sbkChartRow()); if (SBK.chart.length > 3000) SBK.chart = SBK.chart.filter((_, i) => i % 2 === 0); }
     if (RV.pred && st.t > RV.pred.t0 + RV.pred.T / 8) rvRefresh();
   }
 
@@ -1735,6 +1840,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   const EJ = 1.98841e30 * 1.495978707e11 ** 2 / 3.15576e7 ** 2;   /* one M☉·AU²/yr² in joules (IAU nominal M☉, the au, the Julian year) */
   function sbkChart() {
     const T = tokens(), ps = T.ps, ctx = cctx, data = SBK.chart; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, CW, CH);
+    if (sbkAssistPick() && data.length && data[0].length > 3) { sbkAssistChart(T, ps, ctx, data); return; }
     const mL = 62 * ps, mR = 14 * ps, mT = 26 * ps, mB = 28 * ps, pw = CW - mL - mR, ph = CH - mT - mB; if (pw < 40 || ph < 30) return;
     text(ctx, T, 'Energy of the whole system', mL, 6 * ps, 'left', 'top', T.ink, 11 * ps, 700);
     if (S.blind) { text(ctx, T, 'Hidden in Blind', mL + pw / 2, mT + ph / 2, 'center', 'middle', T.muted, 11 * ps, 600); return; }
@@ -1750,6 +1856,36 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     line((q) => q[1], T.pos, 1.6); line((q) => q[2], T.neg, 1.6); line((q) => q[1] + q[2], T.ink, 2.2);
     let lx = mL + 8 * ps; for (const [lab, col] of [['kinetic K', T.pos], ['potential U', T.neg], ['total E = K + U', T.ink]]) { ctx.fillStyle = col; ctx.fillRect(lx, mT + 8 * ps, 14 * ps, 3 * ps); text(ctx, T, lab, lx + 18 * ps, mT + 10 * ps, 'left', 'middle', col, 10 * ps, 600); ctx.font = `600 ${10 * ps}px ${T.mono}`; lx += ctx.measureText(lab).width + 26 * ps; }
   }
+  /* the gravity assist bodies when the system has them: the star, a Jupiter and the probe (the ship kind, with no rendezvous target) */
+  function sbkAssistPick() {
+    const bs = SBK.st ? SBK.st.bs : [], s = bs.find((q) => q.kind === 'star'), j = bs.find((q) => q.kind === 'jupiter'), p = bs.find((q) => q.kind === 'ship');
+    return s && j && p && !bs.some((q) => q.kind === 'target') ? { s, j, p } : null;
+  }
+  /* the probe per kilogram: its energy around the star ε = v²/2 − G(M + m)/r and its kinetic energy relative to Jupiter u²/2 (AU²/yr²) */
+  function sbkAssistVals(A) {
+    const e = nbElements(A.p, A.s), u = Math.hypot(A.p.vx - A.j.vx, A.p.vy - A.j.vy);
+    return { eps: e.eps, k: 0.5 * u * u, u, dJ: Math.hypot(A.p.x - A.j.x, A.p.y - A.j.y) };
+  }
+  /* the gravity assist chart, per kilogram of the probe in MJ/kg: its energy around the Sun ε (it jumps at the flyby, from below zero
+     to above) and its kinetic energy relative to Jupiter u²/2 (the same going out as coming in, at the same distance from Jupiter) */
+  function sbkAssistChart(T, ps, ctx, data) {
+    const L = 62 * ps, R = CW - 14 * ps, top = 30 * ps, bot = CH - 34 * ps; if (R - L < 40 || bot - top < 30) return;
+    text(ctx, T, 'Probe: energy per kilogram (MJ/kg)', L, 6 * ps, 'left', 'top', T.ink, 11 * ps, 700);
+    if (S.blind) { text(ctx, T, 'Hidden in Blind', (L + R) / 2, (top + bot) / 2, 'center', 'middle', T.muted, 11 * ps, 600); return; }
+    const J = KMS * KMS, t0 = data[0][0], t1 = Math.max(data[data.length - 1][0], t0 + 0.5);
+    let big = 1; for (const q of data) big = Math.max(big, Math.abs(q[3] * J), Math.min(q[4] * J, 4 * Math.abs(q[3] * J)));
+    big *= 1.1;
+    const B = linTicks(ctx, T, ps, L, R, top, bot, [t0, t1], [-big, big], true, 't (yr)', '');
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(L, Math.round(B.Y(0)) + 0.5); ctx.lineTo(R, Math.round(B.Y(0)) + 0.5); ctx.stroke();
+    ctx.save(); ctx.beginPath(); ctx.rect(L, top, R - L, bot - top); ctx.clip();
+    const line = (f, col, w) => { ctx.strokeStyle = col; ctx.lineWidth = w * ps; ctx.beginPath(); data.forEach((q, i) => { const x = B.X(q[0]), y = B.Y(Math.max(-1.3 * big, Math.min(1.3 * big, f(q) * J))); if (i) ctx.lineTo(x, y); else ctx.moveTo(x, y); }); ctx.stroke(); };
+    line((q) => q[4], T.accent, 1.8); line((q) => q[3], T.ink, 2.4);
+    ctx.restore();
+    let lx = L + 6 * ps;
+    for (const [lab, col] of [['around the Sun, ε', T.ink], ['relative to Jupiter, u²/2', T.accent]]) { text(ctx, T, lab, lx, top + 4 * ps, 'left', 'top', col, 10 * ps, 700, true); ctx.font = `700 ${10 * ps}px ${T.mono}`; lx += ctx.measureText(lab).width + 18 * ps; }
+    const e = data[data.length - 1][3];
+    text(ctx, T, e < 0 ? 'ε < 0: bound to the Sun' : 'ε > 0: unbound', R, 6 * ps, 'right', 'top', e < 0 ? T.neg : T.pos, 11 * ps, 700);
+  }
   function sbkReadouts() {
     const bs = SBK.st.bs, dd = (a, b, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`, kg = 1.98841e30, PKG = kg * 4740.470;
     let h = dd('Time', fmtT(SBK.st.t)) + dd('Bodies', String(bs.length));
@@ -1761,6 +1897,11 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       if (host) { const el = nbElements(b, host); h += dd(`Distance to ${host.name}`, `${sig(el.r, 4)} AU`) + dd(`Speed around ${host.name}`, `${sig(el.v * KMS, 4)} km/s`);
         h += S.blind ? dd('Orbit', 'hidden in Blind', true) : el.bound ? dd(`Orbit around ${host.name}, as if the two were alone`, `a = ${sig(el.a, 4)} AU, e = ${el.e.toFixed(3)}, P = ${fmtT(el.P)}`, true) : dd(`Orbit around ${host.name}`, 'not bound: it escapes', true); }
       else h += dd('Host', 'none: nothing heavier pulls on it', true); }
+    const AS = sbkAssistPick();
+    if (AS) { const v = sbkAssistVals(AS), J = KMS * KMS;
+      h += dd('Probe speed relative to Jupiter', `${sig(v.u * KMS, 4)} km/s`) + dd('Probe distance to Jupiter', `${sig(v.dJ, 3)} AU`);
+      h += S.blind ? dd('Probe energy around the Sun', 'hidden in Blind', true)
+        : dd('Probe energy per kilogram around the Sun, ε = v²/2 − GM/r', `${minus(sig(v.eps * J, 4))} MJ/kg: ${v.eps < 0 ? 'bound to the Sun' : 'unbound, it leaves the solar system'}`, true); }
     const out = $('sbkOut'); if (out._vdWas !== h) { out._vdWas = h; out.innerHTML = h; }   /* the last HTML written (the shown HTML is translated in another language) */
     const rv = rvReadouts(), ro = $('rvOut'); if (ro._vdWas !== rv) { ro._vdWas = rv; ro.innerHTML = rv; }
   }
@@ -1851,6 +1992,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     const dtr = last ? Math.min(0.05, (ts - last) / 1000) : 0;
     last = ts;
     if (S.playing && !drag && dtr > 0) stepSim(dtr * S.speed);
+    recordEnergy();
     animateView();
     if (W && H) drawView();
     if (CW && CH) drawChart();
@@ -1894,7 +2036,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     $('mass').value = Math.log10(Mn); R.massOut.textContent = Mn.toFixed(2) + ' M☉';
   }
   function loadPreset(name) {
-    if (name === 'sandbox') { sbkEnter(); return; }
+    if (name === 'sandbox') { setBu(false); sbkEnter(); return; }
     if (S.sand) sbkLeave();
     const M = PRESETS[name].M || (S.massPreset ? 1 : S.M);
     if (M !== S.M) setMass(M);
@@ -1903,7 +2045,37 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     setSpeed(PRESETS[name].spd / Math.sqrt(S.M));
     relaunch();
     setPresetUI(name);
+    setBu(!!PRESETS[name].bu);
     fitView(false, true);
+  }
+  /* Bound and unbound: the strip in the view, the energy chart, and the gravity and no gravity layers come on with the preset;
+     another preset puts them back as the page opened (wedges on, the two Newton layers off, the third law chart). The equal area
+     wedges are off here: they belong to the second law and crowd the picture. */
+  function setLayer(id, key, on) { S.layers[key] = on; $(id).checked = on; }
+  function setBu(on) {
+    const was = S.bu; S.bu = on; buStrip.hidden = !on;
+    if (on && !was) { setLayer('tForce', 'force', true); setLayer('tLine1', 'line1', true); setLayer('tWedge', 'wedge', false); S.cview = 'energy'; syncLab(); }
+    if (!on && was) { setLayer('tForce', 'force', false); setLayer('tLine1', 'line1', false); setLayer('tWedge', 'wedge', true); if (S.cview === 'energy') { S.cview = 'law'; syncLab(); } }
+    if (W && H) resize();
+  }
+  function buLaunch(f, sideways) {
+    S.launch = launchAtFraction(S.launch, mu(), f, sideways);
+    setPresetUI(null); setBu(true);
+    relaunch(); fitView(false, false); last = 0; setPlaying(true);
+  }
+  $('buF').addEventListener('input', (e) => { const f = +e.target.value; $('buFOut').textContent = f.toFixed(3); buLaunch(f, false); });
+  const BU_SHAPE = { circle: [Math.SQRT1_2, true], ellipse: [0.85, true], parabola: [1, false], hyperbola: [1.2, false] };
+  for (const b of document.querySelectorAll('#buShape button')) b.addEventListener('click', () => {
+    const [f, side] = BU_SHAPE[b.dataset.s]; $('buF').value = f; $('buFOut').textContent = f.toFixed(3); buLaunch(f, side);
+  });
+  /* the strip follows the launch (the arrow tip can be dragged too): the speed ratio, and the shape the launch gives */
+  function syncBu() {
+    if (!S.bu) return;
+    const el = elements(S.launch), f = el.v / el.vesc, inp = $('buF');
+    if (document.activeElement !== inp && Math.abs(+inp.value - f) > 0.0025) inp.value = f;
+    const out = $('buFOut'), ft = f.toFixed(3); if (out.textContent !== ft) out.textContent = ft;
+    const shape = S.blind ? '' : el.parabolic ? 'parabola' : !el.bound ? 'hyperbola' : el.e < 1e-3 ? 'circle' : 'ellipse';
+    for (const b of document.querySelectorAll('#buShape button')) { const v = String(b.dataset.s === shape); if (b.getAttribute('aria-pressed') !== v) b.setAttribute('aria-pressed', v); }
   }
   for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => loadPreset(b.dataset.p));
 
@@ -1918,7 +2090,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       scale(S.launch); if (S.Blaunch) scale(S.Blaunch);
       for (const b of [S.A, S.B]) {
         if (!b) continue;
-        scale(b); accel(b); b.E0 *= ratio;
+        scale(b); accel(b); b.E0 *= ratio; b.eh = null;
         b.trail = [[b.x, b.y]]; resetPeriodClock(b);
         if (b.wedges) startWedges(b);
       }
@@ -1932,6 +2104,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   $('keep').addEventListener('change', (e) => { S.keep = e.target.checked; });
 
   const bindLayer = (id, key, fn) => $(id).addEventListener('change', (e) => { S.layers[key] = e.target.checked; if (fn) fn(); schedule(); });
+  bindLayer('tForce', 'force'); bindLayer('tLine1', 'line1');
   bindLayer('tWedge', 'wedge'); bindLayer('tConic', 'conic'); bindLayer('tTrail', 'trail');
   bindLayer('tFoci', 'foci'); bindLayer('tCirc', 'circ'); bindLayer('tVel', 'vel'); bindLayer('tGrid', 'grid'); bindLayer('tSpace', 'space');
   for (const b of document.querySelectorAll('#nwSeg button')) {
@@ -2089,6 +2262,59 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText(ylab, L, top - 3 * ps);
     return { X, Y };
   }
+  /* The energy chart (2026-11-11), per kilogram of planet A in MJ/kg (1 MJ/kg = 1 km²/s²): bars for kinetic K = v²/2, potential
+     U = −GM/r and the total E = K + U now, beside K, U and E against time since the launch. One scale for the run: the largest of
+     K and |U| anywhere on the orbit (at the nearest point, q, held to at least 2% of the launch distance so a plunge still shows),
+     so the bars never rescale as they change. The words say what the sign of E means. */
+  const EN = { K: (T) => T.accent, U: (T) => T.neg };
+  function energyScale() {
+    const A = S.A, el = elements(S.launch), m = mu(), q = Math.max(el.radial ? 0 : el.q, 0.02 * el.r);
+    const e0 = energyParts(S.launch, m), vq2 = 2 * (e0.E + m / q);
+    return Math.max(e0.K, -e0.U, m / q, 0.5 * vq2) * 1.08 || 1;
+  }
+  function energyWords(el) {
+    if (el.parabolic) return ['E = 0: a parabola, it just escapes', 'equi'];
+    if (el.bound) return ['E < 0: bound, the path closes', 'neg'];
+    return ['E > 0: unbound, a hyperbola', 'pos'];
+  }
+  function drawEnergyChart(ctx, T, ps) {
+    const A = S.A, m = mu(), now = energyParts(A, m), el = elements(A), sc = energyScale(), J = KMS * KMS;
+    const fs = 10.5 * ps, narrow = CW < 520 * ps, bw = narrow ? Math.max(130 * ps, CW * 0.36) : Math.min(250 * ps, CW * 0.3);
+    const [words, wc] = energyWords(el), title = 'Energy per kilogram (MJ/kg)';
+    ctx.font = `700 ${11 * ps}px ${T.mono}`;
+    const two = ctx.measureText(title).width + ctx.measureText(words).width + 40 * ps > CW;   /* a phone: the words go under the title */
+    const top = (two ? 50 : 34) * ps, bot = CH - 34 * ps, Yb = (v) => top + (bot - top) * (sc - v) / (2 * sc);
+    text(cctx, T, title, 10 * ps, 8 * ps, 'left', 'top', T.ink, 11 * ps, 700);
+    text(cctx, T, words, two ? 10 * ps : CW - 10 * ps, (two ? 25 : 8) * ps, two ? 'left' : 'right', 'top', T[wc], 11 * ps, 700);
+    if (bot - top < 40) return;
+    // bars
+    const bars = [['K', now.K, T.accent], ['U', now.U, T.neg], [narrow ? 'E' : 'E = K + U', now.E, T.ink]], gap = 8 * ps, n = 3;
+    const w = Math.min(46 * ps, (bw - 30 * ps - gap * (n + 1)) / n), x0 = 34 * ps, z = Yb(0);
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(x0 - 6 * ps, z + 0.5); ctx.lineTo(x0 + n * (w + gap), z + 0.5); ctx.stroke();
+    text(cctx, T, '0', x0 - 10 * ps, z, 'right', 'middle', T.muted, fs, 400);
+    bars.forEach(([lab, v, col], i) => {
+      const bx = x0 + i * (w + gap), y = Yb(Math.max(-sc, Math.min(sc, v))), y1 = Math.min(y, z), h = Math.max(Math.abs(z - y), 1);
+      if (i === 2) { ctx.save(); ctx.globalAlpha = 0.18; ctx.fillStyle = col; ctx.fillRect(bx, y1, w, h); ctx.restore(); ctx.strokeStyle = col; ctx.lineWidth = 1.5 * ps; ctx.strokeRect(bx + 0.75, y1, w - 1.5, h); }
+      else { ctx.fillStyle = col; ctx.fillRect(bx, y1, w, h); }
+      const vy = v >= 0 ? y1 - 3 * ps : y1 + h + 3 * ps;
+      text(cctx, T, sig(v * J, 3), bx + w / 2, vy, 'center', v >= 0 ? 'bottom' : 'top', col, fs, 700);
+      text(cctx, T, lab, bx + w / 2, v >= 0 ? z + 4 * ps : z - 4 * ps, 'center', v >= 0 ? 'top' : 'bottom', T.muted, fs, 600);
+    });
+    // K, U and E against time
+    const L = x0 + n * (w + gap) + 46 * ps, R = CW - 14 * ps;
+    if (R - L < 80 * ps) return;
+    const h = A.eh || [], t1 = Math.max(A.t, el.bound ? el.P : 0, 1e-9), Jsc = sc * J;
+    const B = linTicks(ctx, T, ps, L, R, top, bot, [0, t1], [-Jsc, Jsc], true, 't (yr)', '');
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(L, Math.round(B.Y(0)) + 0.5); ctx.lineTo(R, Math.round(B.Y(0)) + 0.5); ctx.stroke();
+    ctx.save(); ctx.beginPath(); ctx.rect(L, top, R - L, bot - top); ctx.clip();
+    const line = (f, col, wd) => { ctx.strokeStyle = col; ctx.lineWidth = wd * ps; ctx.beginPath(); h.forEach((q, i) => { const X = B.X(q[0]), Y = B.Y(Math.max(-1.2 * Jsc, Math.min(1.2 * Jsc, f(q) * J))); if (i) ctx.lineTo(X, Y); else ctx.moveTo(X, Y); }); ctx.stroke(); };
+    line((q) => q[1], T.accent, 2); line((q) => q[2], T.neg, 2); line((q) => q[1] + q[2], T.ink, 2.4);
+    ctx.restore();
+    let lx = L + 6 * ps;
+    for (const [lab, col] of narrow ? [['K', T.accent], ['U', T.neg], ['E', T.ink]] : [['kinetic K', T.accent], ['potential U', T.neg], ['total E', T.ink]]) {
+      text(cctx, T, lab, lx, top + 4 * ps, 'left', 'top', col, fs, 700, true); ctx.font = `700 ${fs}px ${T.mono}`; lx += ctx.measureText(lab).width + 18 * ps;
+    }
+  }
   function drawFitChart(ctx, T, ps) {
     const F = fitSpec(), f = F.f;
     // text lines wrapped to the pane (a phone is narrow); the first is the title
@@ -2132,6 +2358,11 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       return { cap: `Your readings, T² against a³ for star mass ${F.Mn.toFixed(2)} M☉. ${F.f ? F.res.join('; ') + '.' : 'Not enough readings to fit.'}`,
         head: ['a³ (AU³)', 'T² (yr²)', 'residual (yr²)'], rows: F.xs.map((x, i) => [sig(x, 5), sig(F.ys[i], 5), F.f ? sig(F.f.res[i], 3) : '—']) };
     }
+    if (S.cview === 'energy') {
+      const h = S.A.eh || [], J = KMS * KMS, step = Math.max(1, Math.ceil(h.length / 40)), pick = h.filter((_, i) => i % step === 0 || i === h.length - 1);
+      return { cap: 'Energy per kilogram of the planet since the launch (MJ/kg): kinetic K = v²/2, potential U = −GM/r, total E = K + U',
+        head: ['t (yr)', 'K (MJ/kg)', 'U (MJ/kg)', 'E (MJ/kg)'], rows: pick.map((q) => [sig(q[0], 4), sig(q[1] * J, 5), sig(q[2] * J, 5), sig((q[1] + q[2]) * J, 5)]) };
+    }
     const r = PLANETS.concat([HALLEY]).map((p) => [p[0], String(p[2]), String(+p[3].toPrecision(5))]);
     const el = elements(S.A);
     if (el.bound) r.push(['this orbit', sig(el.a, 4), sig(el.P, 4)]);
@@ -2159,9 +2390,11 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   function syncLab() {
     const fit = S.blind || S.cview === 'fit';
     $('blindTag').hidden = !S.blind; $('blindHint').hidden = !S.blind;
-    for (const b of document.querySelectorAll('#chartSeg button')) { b.setAttribute('aria-pressed', String(b.dataset.v === (fit ? 'fit' : 'law'))); b.disabled = S.blind && b.dataset.v === 'law'; }
+    const cv = fit ? 'fit' : S.cview;
+    for (const b of document.querySelectorAll('#chartSeg button')) { b.setAttribute('aria-pressed', String(b.dataset.v === cv)); b.disabled = S.blind && b.dataset.v !== 'fit'; }
     for (const id of ['rA', 'rE', 'rP', 'rPm', 'rEps', 'wDt', 'wTheory']) R[id].parentElement.hidden = S.blind;
     chart.setAttribute('aria-label', (fit ? 'Plot of your captured readings, period squared against semi major axis cubed, with a least squares line (slope and intercept) and a residual strip below it.'
+      : cv === 'energy' ? 'Energy per kilogram of the planet: bars for kinetic, potential and total energy now, and the three against time since the launch. The total stays flat.'
       : "Kepler's third law: orbital period against semi major axis on log scales, with the planets of the solar system and the current orbit.") + ' Show data table in the Lab section lists the plotted values.');
     // the hint on show came from a preset (it may have been changed by hand since): swap in the version without answers
     if (S.hintFrom) $('presetHint').textContent = (S.blind && BLIND_HINT[S.hintFrom]) || PRESETS[S.hintFrom].hint;
@@ -2358,7 +2591,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   // ---------- the look: space backdrop for the flat view, a planet lit from the star ----------
   // Pictures only. The space palette is shared by the 3D view's words and the flat view's Space backdrop option.
   const SPACE = { canvas: 'rgba(13,10,6,0.8)', ink: '#eeeae4', muted: '#beb3a5', line: '#544a3c', grid: '#261f16', gridStrong: '#443a2c',
-                  pos: '#ff7660', neg: '#69a0ff', equi: '#e2b350', accent: '#8cb4ff', sun: '#f5c451' };
+                  pos: '#ff7660', neg: '#69a0ff', equi: '#e2b350', accent: '#8cb4ff', sun: '#f5c451', ok: '#8fd27a' };
   let skyCv = null;
   function spaceBackdrop(ctx) {
     if (!skyCv || skyCv.w !== W || skyCv.h !== H) {   /* a fixed seeded star field, redrawn only when the pane changes size */
@@ -2586,7 +2819,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     const E = T3.E, R = Math.max(E.hw, E.hh), k = T3.k = 1 / R, G = X.G, ps = tokens().ps;
     G.scale.setScalar(k);
     // camera: frame the box with room for the strip at the top and the words at the bottom
-    const o = T3.o, t = Math.tan(S3.cam.fov * Math.PI / 360), asp = W / H, top = Math.max(50 * ps, clockY() + 34 * ps), bot = (W < 560 * ps ? 62 : 48) * ps;
+    const o = T3.o, t = Math.tan(S3.cam.fov * Math.PI / 360), asp = W / H, top = Math.max(50 * ps, clockY() + 34 * ps), bot = (W < 560 * ps ? 62 : 48) * ps + botPad();
     const cr = Math.abs(Math.sin(o.th)), sr0 = Math.abs(Math.cos(o.th)), hx = (E.hw * cr + E.hh * sr0) * k, hy = (E.hw * sr0 + E.hh * cr) * k;   /* the box across and along the line of sight */
     const need = Math.max(hx * 1.14 / (t * asp), (hy * Math.max(Math.cos(o.ph), 0.4) + 0.07) * 1.06 / t * H / Math.max(60, H - top - bot));
     S3.cam.setViewOffset(W, H, 0, 0.035 * H + (bot - top) / 2, W, H);
@@ -2715,6 +2948,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       });
     }
     spinMark(ctx, T, ps, P3);
+    newtonMarks(ctx, T, ps, (x, y) => P3(x, y), A);
     // where a planet has left the picture
     for (const [b, col] of [[S.B, T.pos], [A, T.neg]]) {
       if (!b) continue; const p = P3(b.x, b.y);
@@ -2730,7 +2964,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     const g = S.layers.grid ? 'Grid squares ' + sig(niceStep(2.6 / k, W < 600 ? 6 : 10), 2) + ' AU.' : '';
     const notes = W < 560 * ps ? [g, 'Star and planets far larger than to scale.', 'Drag the arrow tip to launch; drag elsewhere to turn.']
       : [(g ? g + ' ' : '') + 'Star and planets drawn far larger than to scale.', 'Drag the arrow tip to launch; drag elsewhere to turn.'];
-    notes.filter(Boolean).reverse().forEach((l, i) => text(ctx, T, l, 12 * ps, H - (12 + 16 * i) * ps, 'left', 'bottom', T.muted, (W < 400 ? 9 : 10) * ps, 400));
+    notes.filter(Boolean).reverse().forEach((l, i) => text(ctx, T, l, 12 * ps, H - (12 + 16 * i) * ps - botPad(), 'left', 'bottom', T.muted, (W < 400 ? 9 : 10) * ps, 400));
   }
   // dragging on the 3D picture: the arrow tip, the launch marker or a ruler point; anything else turns the view (VD3.orbit)
   const evPx3 = (e) => { const r = T3.S.el.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
@@ -2810,7 +3044,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   });
 
   // exposed for testing
-  window.__kepler = { SBK, sbkLoad, S, elements, makeBody, advance, presetState, relaunch, loadPreset, mu, capture, csvText, fitSpec, setBlind, setReduce, setKeyMode, setRuler, get rows() { return rows; }, get V() { return V; }, toPx, chartData, T3, view3 };
+  window.__kepler = { setBu, buLaunch, energyParts, energyScale, SBK, sbkLoad, S, elements, makeBody, advance, presetState, relaunch, loadPreset, mu, capture, csvText, fitSpec, setBlind, setReduce, setKeyMode, setRuler, get rows() { return rows; }, get V() { return V; }, toPx, chartData, T3, view3 };
 })();
 </script>
 <script>/* dividers between the panes (VD.splitPanes in demos/lib/vd.js); a browser with an older cached vd.js keeps the panes as they are */
