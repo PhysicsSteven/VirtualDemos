@@ -18,7 +18,7 @@ Student worksheet · Astro 2203
 - Below the view, a bar chart shows the real numbers of known asteroids (or Kuiper belt objects) at each distance from the Sun, counted from the JPL Small Body Database, with the resonances marked. Each simulated body adds a dot at its starting distance, as high as the largest eccentricity it has reached. Click a bar to start a body at that distance. A second chart follows the body's eccentricity (asteroid belt) or its distance from Neptune (Kuiper belt) over time.
 - An asteroid whose orbit stretches until it reaches in to Mars's orbit is taken out of the run, since a close pass by Mars or Earth would soon throw it off its path. A body that comes within the planet's own sphere of control (its Hill radius) is thrown out too.
 - In Finding Neptune, the chart shows how far Uranus was seen from where the best possible orbit puts it, in arcseconds (″; 3600″ make one degree). Planet X is an extra planet you can add; its distance, mass and position change the fit right away.
-- The real gaps in the asteroid belt took millions of years to clear, much too long to run here. The demo runs a few thousand years and shows the kicks that clear them.
+- The real gaps in the asteroid belt took millions of years to clear, much too long to run here. The demo runs a few thousand years and shows the kicks that clear them. It opens slow enough to follow the bodies, a few years each second; speed it up to run thousands of years.
 - Record reading stores the setup, the starting distance, the period ratio, the time run and what happened. Export to worksheet sends the readings to the matching Data table below; Clear starts a new series, which goes into a new copy of the table.
 
 </details>
@@ -51,7 +51,7 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**Part 1: kicks in the asteroid belt.** Choose the 3:1 resonance setup and run it. Watch where Jupiter passes the asteroid (the yellow dots) and what happens to the asteroid's orbit. When the run stops because the asteroid's orbit reaches Mars's, record a reading. Then do the same for the 5:2 resonance. For the 2:1 resonance, Between the gaps and Hildas at 3:2, run each for about 20,000 years and record a reading. Last, choose the 3:1 resonance again, move the starting distance to 2.55 AU, run for about 20,000 years and record a reading. Send the six readings to the worksheet, then clear them.
+**Part 1: kicks in the asteroid belt.** Choose the 3:1 resonance setup and run it. Watch a few of Jupiter's turns at the opening speed to see where Jupiter passes the asteroid (the yellow dots), then speed the run up and watch what happens to the asteroid's orbit. When the run stops because the asteroid's orbit reaches Mars's, record a reading. Then do the same for the 5:2 resonance. For the 2:1 resonance, Between the gaps and Hildas at 3:2, run each for about 20,000 years and record a reading. Last, choose the 3:1 resonance again, move the starting distance to 2.55 AU, run for about 20,000 years and record a reading. Send the six readings to the worksheet, then clear them.
 
 **Part 2: where the gaps are.** For each row of the Gaps table, work out where the resonance should be from Kepler's third law, as in Analysis 1. Then find the gap in the bar chart of real asteroids and write down its distance from the Sun (click the shortest bar in the gap; the starting distance on the card shows its distance).
 

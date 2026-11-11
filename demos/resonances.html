@@ -71,7 +71,7 @@
         <button type="button" class="spin attn" id="play">Play</button>
         <button type="button" class="btn" id="reset" title="Put the bodies back where this setup starts them">Reset</button>
         <label class="lbl" for="selSpeed">Speed</label>
-        <select id="selSpeed"><option value="1">1</option><option value="10" selected>10</option><option value="100">100</option></select>
+        <select id="selSpeed"><option value="0.01">0.01</option><option value="0.03" selected>0.03</option><option value="0.1">0.1</option><option value="1">1</option><option value="10">10</option><option value="100">100</option></select>
         <div class="seg" role="group" aria-label="Frame of the picture" id="frameSeg"><button type="button" data-frame="fixed" aria-pressed="true" title="Seen from the stars: the planet goes round">Fixed stars</button><button type="button" data-frame="rot" aria-pressed="false" title="Turning with the planet, so the planet stays put and the pattern of the kicks shows">Turns with the planet</button></div>
         <div class="seg" role="group" aria-label="Perspective" id="dimSeg"><button type="button" data-dim="3d" aria-pressed="true">3D</button><button type="button" data-dim="flat" aria-pressed="false">Flat</button></div>
         <span class="clock mono" id="clock" aria-live="off"></span>
@@ -532,10 +532,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const aJ = PLANETS.jupiter.a, aN = PLANETS.neptune.a;
   const SCENES = {
     belt: { planet: 'jupiter', pname: 'Jupiter', body: 'asteroid', dt: 0.1, mars: true, R: 5.75, base: 100, hist: BELT_HIST,
-      res: [[4, 1], [3, 1], [5, 2], [7, 3], [2, 1], [3, 2]], aMin: 2.0, aMax: 4.1, aStep: 0.001 },
+      res: [[4, 1], [3, 1], [5, 2], [7, 3], [2, 1], [3, 2]], aMin: 2.0, aMax: 4.1, aStep: 0.001, speed: 0.03 },
     kuiper: { planet: 'neptune', pname: 'Neptune', body: 'body', dt: 0.5, mars: false, R: 60, base: 1000, hist: KB_HIST,
-      res: [[4, 3], [3, 2], [5, 3], [7, 4], [2, 1], [5, 2]].map(([p, q]) => [q, p]), aMin: 34, aMax: 56, aStep: 0.01 },
-    neptune: { planet: null, base: 4 },
+      res: [[4, 3], [3, 2], [5, 3], [7, 4], [2, 1], [5, 2]].map(([p, q]) => [q, p]), aMin: 34, aMax: 56, aStep: 0.01, speed: 0.03 },
+    neptune: { planet: null, base: 4, speed: 10 },
   };
   const pl = PLANETS.pluto, nep = PLANETS.neptune, plutoPh = ((pl.L - nep.L) % 360 + 360) % 360, plutoM = pl.L - pl.w;
   const PRESETS = {
@@ -573,8 +573,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       hint: 'Move planet X (its distance, mass and where it is in 1846) to make Uranus\'s leftover drift as small as you can. The direction comes out well even when the distance is wrong.' },
   };
   const PRESET_ORDER = { belt: ['r31', 'r52', 'r21', 'calm', 'hilda', 'belt', 'clear'], kuiper: ['pluto', 'plutoTurn', 'plutinos', 'classical', 'kbelt'], neptune: ['alone', 'leverrier', 'real', 'own'] };
-  const S = { scene: 'belt', preset: 'r31', a: 2.502, e: 0.15, ph: 60, M: 0, speed: 10, frame: 'fixed', run: false, blind: false,
+  const S = { scene: 'belt', preset: 'r31', a: 2.502, e: 0.15, ph: 60, M: 0, speed: 0.03, frame: 'fixed', run: false, blind: false,
     X: null, xa: 30, xm: 17, xl: 300, xe: 0, xw: 0, useOld: false, showNep: false, year: 1690, rate: 0 };
+  let stepAcc = 0;   /* the part of a step that has played but not been stepped yet (slow speeds) */
   let sys = null, T = null, trail = [], hist = { t: [], v: [], every: 1, k: 0 }, many = false, msg = '';
   let NT = null, fit = null, fitStart = null, fitAlone = null;
   /* Clearing the gaps: the run lives in a Web Worker when the browser has one (kwWorker null: not tried yet, false: none), and
@@ -654,7 +655,7 @@ onmessage = (e) => { const d = e.data;
     if (kc && kc.kw) { kwBuild(); trail = []; hist = { t: [], v: [], every: 1, k: 0 }; msg = ''; sample(true); return; }
     kwMode = false;
     const sc = SCENES[S.scene], b = bodiesFor(); many = b.length > 1;
-    sys = makeSystem(sc.planet, b, sc.dt); trail = []; hist = { t: [], v: [], every: 1, k: 0 }; msg = ''; sample(true);
+    sys = makeSystem(sc.planet, b, sc.dt); stepAcc = 0; trail = []; hist = { t: [], v: [], every: 1, k: 0 }; msg = ''; sample(true);
   }
   /* the history graph keeps at most 1500 points, thinning itself as the run goes on */
   function sample(force) {
@@ -705,7 +706,7 @@ onmessage = (e) => { const d = e.data;
     $('presets').innerHTML = PRESET_ORDER[S.scene].map((k) => `<button type="button" data-p="${k}" aria-pressed="${k === S.preset}">${PRESETS[k].name}</button>`).join('');
   }
   function applyPreset(k) {
-    const c = PRESETS[k]; if (!c) return; S.preset = k; S.scene = c.scene;
+    const c = PRESETS[k]; if (!c) return; const was = PRESETS[S.preset], newScene = c.scene !== S.scene; S.preset = k; S.scene = c.scene;
     if (c.scene === 'neptune') {
       nepSetup();
       if (!c.X) S.X = null;
@@ -714,6 +715,7 @@ onmessage = (e) => { const d = e.data;
       S.showNep = c.X === 'neptune'; S.year = 1690; refit();
     } else if (!c.many) Object.assign(S, { a: c.a, e: c.e, ph: c.ph, M: c.M || 0 });
     if (c.kw) S.speed = 100;   /* as fast as the computer allows: the clock shows the real rate */
+    else if ((newScene && (c.scene === 'neptune' || (was && was.scene === 'neptune'))) || (was && was.kw)) S.speed = SCENES[c.scene].speed;   /* slow enough to follow the bodies: 3 yr per s in the belt, 30 in the Kuiper belt; a speed chosen in one belt carries to the other */
     $('presetHint').textContent = c.hint; build(); setRun(false); presetChips(); sync(); redraw();
   }
   function setScene(sc) { if (sc === S.scene) return; applyPreset(PRESET_ORDER[sc][0]); }
@@ -738,7 +740,7 @@ onmessage = (e) => { const d = e.data;
       $('sXl').value = S.xl; $('oXl').textContent = `${fx(S.xl, 1)}°`; $('sXe').value = S.xe; $('oXe').textContent = fx(S.xe, 3); $('sXw').value = S.xw; $('oXw').textContent = `${fx(S.xw, 1)}°`;
     }
     const sel = $('selSpeed'), base = sc.base;
-    for (const o of sel.options) o.textContent = nepS ? `${fint(base * o.value / 10 * 2.5)} yr per s` : `${fint(base * o.value)} yr per s`;
+    for (const o of sel.options) { o.textContent = nepS ? `${fint(base * o.value / 10 * 2.5)} yr per s` : `${fint(base * o.value)} yr per s`; o.hidden = o.disabled = nepS && +o.value < 1; }
     sel.value = String(S.speed); showCols();
     $('hist').setAttribute('aria-label', nepS ? 'Graph: how far Uranus is from where the fitted orbit puts it, in arcseconds, for each sighting from 1690 to 1845.' : S.scene === 'belt'
       ? 'Bar chart: how many real numbered asteroids there are at each distance from the Sun (JPL), with Jupiter\'s resonances marked, and a dot for each simulated asteroid at its starting distance, as high as the largest eccentricity it has reached. Click a bar to start an asteroid at that distance.'
@@ -1066,11 +1068,17 @@ onmessage = (e) => { const d = e.data;
 
   /* ---------- run, size, theme ---------- */
   const redraw = () => { if (!K || !W) return; draw(); drawHist(); drawPlot(); readouts(); clock(); };
-  function draw() { if (!K || !W) return; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); layout(); if (use3()) { ctx.clearRect(0, 0, W, H); draw3(); } else drawFlat(); }
+  function draw() { if (!K || !W) return; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); layout();
+    /* at slow speeds a step of 0.1 or 0.5 yr would show as a jerk, so the picture (only) carries each body on along its Kepler
+       ellipse about the Sun for the part of a step that has played (the planet is exact on its fixed ellipse); the run itself is untouched */
+    const f = (!kwMode && sys && S.scene !== 'neptune' && stepAcc > 0) ? stepAcc * sys.dt : 0, s0 = sys && sys.s, t0 = sys && sys.t;
+    if (f) { const s = s0.slice(); for (let j = 0; j < sys.n; j++) if (!sys.gone[j] && !drift(s, 4 * j, GM, f)) for (let i = 4 * j; i < 4 * j + 4; i++) s[i] = s0[i]; sys.s = s; sys.t = t0 + f; }
+    try { if (use3()) { ctx.clearRect(0, 0, W, H); draw3(); } else drawFlat(); } finally { if (f) { sys.s = s0; sys.t = t0; } }
+  }
   /* deterministic stepping for tests, key capture and the video: advance the run by years (or the year counter in Finding Neptune) */
   function run(years) { if (S.scene === 'neptune') { S.year = Math.min(NF.GALLE, S.year + years); redraw(); return; }
     if (kwMode) { const end = Math.min(kwSt.t + years, KW_END); while (kwSt.t < end - 1e-9) { KW.step(kwSt, Math.max(1, Math.min(400, Math.round((end - kwSt.t) / kwSt.dt)))); kwSync(); } if (kwWorker) { kwBusy = false; kwGen++; kwWorker.postMessage({ cmd: 'load', st: kwSt, gen: kwGen }); } rr.t0 = sys.t; redraw(); return; }
-    const n = Math.round(years / sys.dt); stepRun(n); redraw(); }
+    const n = Math.round(years / sys.dt); stepAcc = 0; stepRun(n); redraw(); }
   let last = performance.now(), perStep = 0.002, lastOut = 0, rr = { sim: 0, real: 0, t0: 0 };
   function frame(now) {
     const dtr = Math.min(0.1, (now - last) / 1000); last = now;
@@ -1083,8 +1091,8 @@ onmessage = (e) => { const d = e.data;
       }
       else {
         const want = dtr * SCENES[S.scene].base * S.speed, live = Math.max(1, sys.gone.filter((g) => !g).length);
-        let n = Math.round(want / sys.dt); const cap = Math.max(1, Math.floor(13 / (perStep * live)));
-        if (n > cap) n = cap;
+        stepAcc += want / sys.dt; let n = Math.floor(stepAcc); stepAcc -= n; const cap = Math.max(1, Math.floor(13 / (perStep * live)));
+        if (n > cap) { n = cap; stepAcc = 0; }
         const t0 = performance.now(), ty = sys.t; stepRun(n); if (n) perStep = 0.8 * perStep + 0.2 * (performance.now() - t0) / (n * live);
         rr.sim += sys.t - ty; rr.real += dtr; if (rr.real > 0.7) { S.rate = rr.sim / rr.real; rr.sim = 0; rr.real = 0; }
         draw(); if (now - lastOut > 200 || !S.run) { lastOut = now; drawHist(); drawPlot(); readouts(); clock(); }

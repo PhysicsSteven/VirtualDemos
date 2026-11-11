@@ -19,6 +19,17 @@ require('./lib.cjs')({ demo: 'resonances', title: 'Orbital Resonances' }, async 
 
   state.caption = 'Watch the yellow dots: Jupiter passes the asteroid at the same two places';
   state.arrow = { rect: await r.box('#scene') };
+  await r.secs(4.5);
+  state.arrow = null;
+
+  state.caption = 'Speed the run up to 1,000 years per second to see thousands of years';
+  const sp = await r.box('#selSpeed');
+  await r.moveTo(sp[0] + sp[2] / 2, sp[1] + sp[3] / 2, 0.6);
+  await p.selectOption('#selSpeed', '10'); await p.evaluate(() => document.getElementById('selSpeed').dispatchEvent(new Event('change')));
+  state.arrow = { rect: sp };
+  await r.secs(1.0);
+  state.caption = 'The tugs at the same two places stretch the orbit until it reaches Mars\'s';
+  state.arrow = { rect: await r.box('#scene') };
   for (let k = 0; k < 30 * 8 && await p.evaluate(() => window.__res.S.run); k++) await r.tick(1);
   state.arrow = null;
   r.check.stopped = await p.evaluate(() => !window.__res.S.run);
