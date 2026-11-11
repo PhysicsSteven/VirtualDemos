@@ -1423,7 +1423,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   can.addEventListener('pointerup', endPointer);
   can.addEventListener('pointercancel', () => { throwing = null; drag = null; drawAll(); });
   can.addEventListener('pointerleave', () => { if (!drag) { hoverId = null; hover = null; if (!playing) drawAll(); } });
-  can.addEventListener('wheel', (ev) => { ev.preventDefault(); const [x, y] = evXY(ev); zoom(Math.exp(-ev.deltaY * 0.0015), x, y); }, { passive: false });
+  can.addEventListener('wheel', (ev) => { ev.preventDefault(); zoom(Math.exp(-ev.deltaY * 0.0015)); }, { passive: false });   /* about the view's center, like the buttons and keys (Steve 2026-11-11) */
   can.addEventListener('keydown', (e) => {
     const k = e.key, big = e.shiftKey;
     if (k.startsWith('Arrow')) {
