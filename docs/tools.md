@@ -41,5 +41,5 @@ All browser checks need `NODE_PATH=/opt/node-tools/node_modules` in the cloud co
   values from `tools/breakit/<demo>.cjs` (`checks`: page code returning true or a message; `steps`: extra sequences; see
   `tools/breakit/derivatives.cjs`). A zoom out and back that does not return is a warning to look at (a zoom limit is fine). About 30 s a
   demo. Pictures and a JSON report go to `/tmp/vdcheck/breakit/<demo>`. The script finds things that break, not things that are hard to
-  watch, so it is only half the test: the other half is the "watch it like a student" look in CLAUDE.md (open at the defaults and judge
-  whether the motion is followable, the labels make sense and the first view teaches something). A clean breakit run is not a pass alone.
+  watch, so it is only half the test: the other half is the "watch it like a student" checks in CLAUDE.md (fresh-eyes first minute, time
+  scale on screen, picture matches the physics, worksheet steps still work, controls behave like other demos). A clean breakit run is not a pass alone.

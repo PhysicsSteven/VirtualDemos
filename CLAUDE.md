@@ -83,13 +83,23 @@ only when the work needs them.
   miss these: the derivatives grapher shipped with zoom bugs that only showed after a zoom out and back in. `node tools/breakit.cjs
   <demo>` runs the scripted part (see `docs/tools.md`); put the demo's known values in `tools/breakit/<demo>.cjs`, then try the
   odd sequences the script can't guess and look at the pictures.
-- Watch it like a student (Steve 2026-11-11), part of the break-it test: open the demo fresh at its defaults, change nothing, and
-  watch it the way a student seeing it for the first time would. Ask: can the eye follow the motion at the default speed (no blur,
-  no strobing, nothing that laps faster than about once a second)? Do the labels and readouts make sense without the notes, and
-  are they readable while things move? Does the first view, before any click, already show something worth learning? Repeat at
-  each setup or preset's own defaults. Fix pacing and legibility problems as you find them (default speed, time scale, label size or
-  wording), keeping the physics exact. The script can't see these: Orbital Resonances passed every scripted check while it opened at
-  1,000 years per second, too fast for anyone to watch.
+- Watch it like a student (Steve 2026-11-11), part of the break-it test. The script finds things that break, not things that are
+  wrong to look at or hard to follow: Orbital Resonances passed every scripted check while it opened at 1,000 years per second. So
+  also judge these by eye, and fix what you find (keeping the physics exact):
+  - Fresh-eyes first minute: open the demo cold at its defaults, change nothing, no notes. Within a minute a student should be able
+    to tell what to do and what to notice, the labels should make sense and stay readable while things move, and the first view,
+    before any click, should already show something worth learning. Repeat at each setup or preset's own defaults.
+  - Time scale is visible: any animation shows its rate on screen ("1 s = 3 years") and opens at a pace where the key event takes a
+    few seconds and the eye can follow it (no blur, no strobing, nothing lapping faster than about once a second).
+  - Picture matches the physics: what is drawn must be physically right, not only the numbers. Sizes, directions, arrows, what
+    floats or sinks, what moves with what. Correct readouts beside a misleading drawing still teach the wrong thing.
+  - Matches the worksheet: when a demo changes, walk its worksheet steps against the demo's defaults, so a change (a default speed,
+    a preset, a label, a control) can't silently break a step or make a recorded value unreachable.
+  - Controls behave the same across demos: a student who learned one demo should not be surprised in the next. Scroll zoom keeps
+    the point under the pointer fixed, + and − zoom, drag pans or turns the view the same way, Reset and Play mean the same thing.
+    Where a demo differs, make it match the common behavior rather than adding a new one.
+  A future judgment pass (not a rule yet): name the one or two misconceptions students bring to each demo (heavier falls faster,
+  seasons from distance) and check the demo doesn't accidentally reinforce them.
 
 ## Handouts, worksheets and videos
 - Procedure steps state the task, not the control. Rules for headings, `worksheet.js` maps and course lines: `docs/handouts.md`.
