@@ -95,8 +95,8 @@ only when the work needs them.
     floats or sinks, what moves with what. Correct readouts beside a misleading drawing still teach the wrong thing.
   - Matches the worksheet: when a demo changes, walk its worksheet steps against the demo's defaults, so a change (a default speed,
     a preset, a label, a control) can't silently break a step or make a recorded value unreachable.
-  - Controls behave the same across demos: a student who learned one demo should not be surprised in the next. Scroll zoom keeps
-    the point under the pointer fixed, + and − zoom, drag pans or turns the view the same way, Reset and Play mean the same thing.
+  - Controls behave the same across demos: a student who learned one demo should not be surprised in the next. Zoom (scroll and
+    + and −; where scroll zoom anchors is still being decided, see the Lagrange Points work), drag pans or turns the view the same way, Reset and Play mean the same thing.
     Where a demo differs, make it match the common behavior rather than adding a new one.
   A future judgment pass (not a rule yet): name the one or two misconceptions students bring to each demo (heavier falls faster,
   seasons from distance) and check the demo doesn't accidentally reinforce them.
