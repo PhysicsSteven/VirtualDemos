@@ -83,6 +83,13 @@ only when the work needs them.
   miss these: the derivatives grapher shipped with zoom bugs that only showed after a zoom out and back in. `node tools/breakit.cjs
   <demo>` runs the scripted part (see `docs/tools.md`); put the demo's known values in `tools/breakit/<demo>.cjs`, then try the
   odd sequences the script can't guess and look at the pictures.
+- Watch it like a student (Steve 2026-11-11), part of the break-it test: open the demo fresh at its defaults, change nothing, and
+  watch it the way a student seeing it for the first time would. Ask: can the eye follow the motion at the default speed (no blur,
+  no strobing, nothing that laps faster than about once a second)? Do the labels and readouts make sense without the notes, and
+  are they readable while things move? Does the first view, before any click, already show something worth learning? Repeat at
+  each setup or preset's own defaults. Fix pacing and legibility problems as you find them (default speed, time scale, label size or
+  wording), keeping the physics exact. The script can't see these: Orbital Resonances passed every scripted check while it opened at
+  1,000 years per second, too fast for anyone to watch.
 
 ## Handouts, worksheets and videos
 - Procedure steps state the task, not the control. Rules for headings, `worksheet.js` maps and course lines: `docs/handouts.md`.
