@@ -2019,7 +2019,10 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
       tlab.push([tk, age]);
     }
     R3.grid.put(gl); R3.tlines.put(tl);
-    const nS = 360, seriesOf = (key, c0) => { const out = []; if (held || t - t0s <= 0) return out; for (let i = 0; i <= nS; i++) { const ti = t0s + (t - t0s) * i / nS, s1 = stateAt(ti); out.push([c0 + s1[key], (t - ti) * vp]); } return out; };
+    /* samples on a fixed grid of whole steps (not tied to the pen), at most 1/48 of the shortest period, so the trace keeps its shape as the paper moves */
+    const hS = Math.max(plotStep([segs]), Twin / 1500), tk0 = Math.ceil(t0s / hS);
+    const seriesOf = (key, c0) => { const out = []; if (held || t - t0s <= 0) return out; const put = (ti) => out.push([c0 + stateAt(ti)[key], (t - ti) * vp]);
+      put(t0s); for (let i = tk0; i * hS < t; i++) if (i * hS > t0s) put(i * hS); put(t); return out; };
     R3.mats.traceM[0].color.set(cp ? T.pos : T.xcol); R3.mats.traceM[1].color.set(T.neg);
     R3.traces[0].put(seriesOf(cp ? 'x1' : 'x', vert ? 0 : wx(xeq)), Pmap, 0.0024); R3.traces[1].visible = cp; if (cp) R3.traces[1].put(seriesOf('x2', wx(xc2)), Pmap, 0.0024);
     /* the pens (track) or a laser spot (hanging) */
@@ -2155,6 +2158,8 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     return out;
   }
   // samples of a run at the given times (only up to tEnd), plus its exact end point
+  // the plots' sampling step: 1/48 of the shortest period or decay time of any segment drawn
+  const plotStep = (lists) => { let h = Infinity; for (const L of lists) for (const g of L) h = Math.min(h, hmaxOf(g)); return h; };
   function sampleList(list, ts, tEnd, withEnergy) {
     const out = [];
     let k = 0;
@@ -2204,9 +2209,14 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     const n = panels.length, ph = (bot - top - (n - 1) * gap) / n;
     const tL = view.tLshow, Lw = view.L, tR = tL + Lw;
     const X = (tt) => Lm + (tt - tL) / Lw * (R - Lm);
+    /* sample times on a fixed grid of whole steps h, the same every frame as the window scrolls, with h no longer than 1/48 of the
+       shortest period (the drawn peaks fall short of the true ones by at most 1 − cos(π/48) = 0.2 %). A grid tied to the window's
+       left edge slid under the curve each frame, and with only a few samples a cycle the peaks shimmered and beat against it. */
     const cols = Math.max(2, Math.floor((R - Lm) / 1.5));
-    const ts = new Float64Array(cols + 1);
-    for (let j = 0; j <= cols; j++) ts[j] = tL + Lw * j / cols;
+    const h = Math.max(Math.min(Lw / cols, plotStep([segs, ...ghosts.map((G) => G.segs), ...compare.map((G) => G.segs)])), Lw / 8000);
+    const j0 = Math.floor(tL / h), nT = Math.ceil(tR / h) - j0;
+    const ts = new Float64Array(nT + 1);
+    for (let j = 0; j <= nT; j++) ts[j] = (j0 + j) * h;
     const past = sampleList(segs, ts, held ? 0 : t, true);
     const gh = ghosts.map((G) => ({ G, pts: sampleList(G.segs, ts, G.tEnd, false) }));
     const cp = compare.map((G) => ({ G, pts: sampleList(G.segs, ts, Infinity, false) }));
