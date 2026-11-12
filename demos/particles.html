@@ -1020,8 +1020,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   can.addEventListener('pointermove', (e) => { if (!drag || S.view !== 'dt') return; const dx = e.clientX - drag.x, dy = e.clientY - drag.y; if (Math.hypot(dx, dy) > 5) drag.moved = true;
     if (drag.moved) { const v = view(); D.cx = drag.cx - dx / v.s; D.cy = drag.cy + dy / v.s; redraw(); } });
   can.addEventListener('pointerup', (e) => { if (!drag || S.view !== 'dt') return; const d = drag; drag = null; if (d.moved) return; const r = can.getBoundingClientRect(), w = toWorld(view(), e.clientX - r.left, e.clientY - r.top); D.cur = null; placePoint(w); });
-  can.addEventListener('wheel', (e) => { if (S.view !== 'dt') return; e.preventDefault(); const r = can.getBoundingClientRect(), v = view(), w = toWorld(v, e.clientX - r.left, e.clientY - r.top);
-    zoomAt(w, e.deltaY < 0 ? 1.25 : 0.8); }, { passive: false });
+  can.addEventListener('wheel', (e) => { if (S.view !== 'dt') return; e.preventDefault();
+    zoomAt([D.cx, D.cy], e.deltaY < 0 ? 1.25 : 0.8); }, { passive: false });   /* the wheel zooms about the view's center, like the buttons and keys (Steve 2026-11-12: centered everywhere) */
   function zoomAt(w, k) { const z = Math.max(1, Math.min(12, D.zoom * k)); const kk = z / D.zoom; D.cx = w[0] - (w[0] - D.cx) / kk; D.cy = w[1] - (w[1] - D.cy) / kk; D.zoom = z; if (z === 1) { D.cx = 0; D.cy = 0; } redraw(); }
   can.addEventListener('keydown', (e) => { if (S.view !== 'dt') return; const st = e.shiftKey ? 2 : 0.25;
     if (!D.cur) D.cur = [D.cx, D.cy];

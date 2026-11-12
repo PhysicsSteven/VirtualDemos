@@ -3345,7 +3345,7 @@ details.hall[open] > summary { margin-bottom: 8px; }
   can.addEventListener('wheel', (ev) => {
     if (S.mode !== 'free' && S.mode !== 'bottle' && S.mode !== 'hall') return;
     const r = can.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top; if (!inScene(x, y)) return;
-    ev.preventDefault(); zoom(Math.exp(-ev.deltaY * 0.0015), x, y);
+    ev.preventDefault(); zoom(Math.exp(-ev.deltaY * 0.0015));   /* the wheel zooms about the view's center, like the buttons and keys (Steve 2026-11-12: centered everywhere) */
   }, { passive: false });
   // what the arrow keys move in the free setups, picked with S
   function kbTargets() {

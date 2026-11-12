@@ -897,7 +897,7 @@ dl.formulas .f { color: var(--fg-f); } dl.formulas .d1 { color: var(--fg-d1); } 
   }
   function zoom(fct, cx, cy) {
     if (cx === undefined) { cx = (S.x0 + S.x1) / 2; cy = (S.y0 + S.y1) / 2; }
-    /* stop at the ends of the x range about the pointer, so the point under it stays put */
+    /* stop at the ends of the x range about the zoom center, so the point there stays put */
     const span = S.x1 - S.x0; fct = Math.min(1e6, Math.max(1e-6, span * fct)) / span;
     if (fct === 1) return;
     if (S.autoY) { setView(cx - (cx - S.x0) * fct, cx + (S.x1 - cx) * fct, S.y0, S.y1); fitY(); return; }
@@ -944,13 +944,13 @@ dl.formulas .f { color: var(--fg-f); } dl.formulas .d1 { color: var(--fg-d1); } 
     if (!ptrs.size) drag = null; else if (drag && drag.pinch) drag = null;
   };
   can.addEventListener('pointerup', up); can.addEventListener('pointercancel', up);
-  /* the wheel over the graph zooms about the pointer, one notch about 20 % whatever the mouse or browser reports (lines,
+  /* the wheel over the graph zooms about the middle of the view (Steve 2026-11-12), one notch about 20 % whatever the mouse or browser reports (lines,
      pages or pixels; a trackpad's many small steps add up the same way). While y is on automatic, only x zooms and y is fitted
      to f again, so the curve keeps filling the picture; once y has been set by hand both axes zoom together. */
   can.addEventListener('wheel', (e) => {
     e.preventDefault();
-    const r = can.getBoundingClientRect(), d = e.deltaY * (e.deltaMode === 1 ? 33 : e.deltaMode === 2 ? 400 : 1);
-    zoom(Math.exp(Math.max(-100, Math.min(100, d)) * 0.0018), Xi(e.clientX - r.left), Yi(e.clientY - r.top));
+    const d = e.deltaY * (e.deltaMode === 1 ? 33 : e.deltaMode === 2 ? 400 : 1);
+    zoom(Math.exp(Math.max(-100, Math.min(100, d)) * 0.0018));   /* the wheel zooms about the view's center, like the buttons and keys (Steve 2026-11-12: centered everywhere) */
   }, { passive: false });
   can.addEventListener('keydown', (e) => {
     const step = (S.x1 - S.x0) / (e.shiftKey ? 10 : 100);

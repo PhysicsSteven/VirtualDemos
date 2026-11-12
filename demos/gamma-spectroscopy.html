@@ -1818,7 +1818,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   can.addEventListener('pointerup', endDrag);
   can.addEventListener('pointercancel', endDrag);
   can.addEventListener('pointerleave', () => { if (!drag) hoverId = null; });
-  can.addEventListener('wheel', (ev) => { const [x, y] = pos(ev); if (!inPlot(x, y)) return; ev.preventDefault(); zoom(ev.deltaY < 0 ? 0.8 : 1.25, mcaGeom().invX(x)); }, { passive: false });
+  can.addEventListener('wheel', (ev) => { const [x, y] = pos(ev); if (!inPlot(x, y)) return; ev.preventDefault(); zoom(ev.deltaY < 0 ? 0.8 : 1.25); }, { passive: false });   /* about the channel cursor, like the buttons and keys (Steve 2026-11-12) */
   function markAt(ch) {
     const w = Math.max(4, 0.04 * ch + 4), st = C.findPeak(spec.counts, ch, w);
     if (st && st.net > 10) { setCand(st, 'peak'); cursor = Math.round(st.cen); $('cE').focus({ preventScroll: true }); }

@@ -1344,8 +1344,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   cv.addEventListener('pointercancel', endPtr);
   cv.addEventListener('wheel', (e) => {
     e.preventDefault();
-    const p = pos(e);
-    zoomAt(p.x, p.y, Math.exp(-e.deltaY * (e.deltaMode === 1 ? 0.05 : 0.0015)));
+    zoomAt(W / 2, H / 2, Math.exp(-e.deltaY * (e.deltaMode === 1 ? 0.05 : 0.0015)));   /* about the view's center, like the keys (Steve 2026-11-12) */
   }, { passive: false });
 
   cv.addEventListener('keydown', (e) => {
