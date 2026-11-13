@@ -28,7 +28,8 @@
      rsp(m, T, p)          stopping power relative to water (per cm)
      sigmaR(T, m, p)       range straggling (g/cm²)
      bk(Es, Rs)            Bragg–Kleeman fit R = α E^p by least squares in log–log: { alpha, p }
-     dose(o)               depth dose curve: o = { T, p, layers: [{ m, t (cm) }], spread (fraction, 1σ), nuclear, dz (cm), zmax (cm) }
+     dose(o)               depth dose curve: o = { T, p, layers: [{ m, t (cm) }], spread (fraction, 1σ), nuclear, dz (cm), zmax (cm),
+                           z0 (cm, first depth; default 0) }
                            returns { z: [], d: [], e: [], phi: [] } (cm, MeV cm²/g per primary as dose shape, mean energy, primary fluence)
      distal(z, d, f)       depth on the far side of the peak where the dose falls to f of the peak (linear interpolation)
      theta0(x, m, T, p)    Highland rms projected angle after x g/cm² (rad)
@@ -47,6 +48,14 @@
     adipose: { name: 'Adipose tissue (ICRP)', rho: 0.92, I: 63.2, ZA: 0.55847, X0: 41.73 },
     lung: { name: 'Lung tissue (ICRP)', rho: 1.05, I: 75.3, ZA: 0.54965, X0: 36.50 },
     bone: { name: 'Compact bone (ICRU)', rho: 1.85, I: 91.9, ZA: 0.53010, X0: 30.49 },
+    /* added 2026-11-13 for the body layers in Charged Particles in Matter: NIST STAR compositions (skin matno 250, brain 123,
+       cortical bone 120), Z/A and X0 worked out the same way as above */
+    skin: { name: 'Skin (ICRP)', rho: 1.10, I: 72.7, ZA: 0.54932, X0: 37.68 },
+    brain: { name: 'Brain (ICRP)', rho: 1.03, I: 73.3, ZA: 0.55422, X0: 36.73 },
+    cortical: { name: 'Cortical bone (ICRP)', rho: 1.85, I: 106.4, ZA: 0.52130, X0: 27.41 },
+    /* inflated lung: the ICRP lung composition at 0.26 g/cm³ (ICRU Report 46), as in ct-range.html. In this model (no density
+       correction) the mass stopping power does not depend on the density, so it is lung tissue's per gram */
+    lunginf: { name: 'Lung, inflated', rho: 0.26, I: 75.3, ZA: 0.54965, X0: 36.50 },
     air: { name: 'Air (dry)', rho: 1.20479e-3, I: 85.7, ZA: 0.49919, X0: 36.62 },
     graphite: { name: 'Graphite', rho: 1.70, I: 78.0, ZA: 0.49954, X0: 42.70 },
     beryllium: { name: 'Beryllium', rho: 1.848, I: 63.7, ZA: 0.44384, X0: 65.19 },
@@ -159,23 +168,27 @@
     const segs = []; let z0 = 0, w0 = 0, E = T;
     for (const l of layers) {
       const M = mat(l.m), Eout = after(E, l.t * M.rho, M, P), wl = range(E, 'water', P) - (Eout > 0 ? range(Eout, 'water', P) : 0);
-      /* a layer thicker than the range (a whole tissue medium): the segment ends where the particle stops */
-      const tl = Eout > 0 ? l.t : range(E, M, P) / M.rho;
-      segs.push({ z0, z1: z0 + tl, w0, w1: w0 + wl, ratio: S(Math.max(P.A * 2, (E + Math.max(Eout, P.A)) / 2), M, P) / S(Math.max(P.A * 2, (E + Math.max(Eout, P.A)) / 2), 'water', P) });
-      z0 += tl; w0 += wl; E = Eout; if (!(E > 0)) break;
+      /* a layer thicker than the range (a whole tissue medium): the particle stops at tl, but the layer goes on to its full
+         thickness with the same scale (water depth per cm), so the end points that straggle past the CSDA range land in the layer
+         and not in water (2026-11-13; before, the depth past the stop was counted as water, which stretched or squeezed the far
+         side of the peak by the layer's stopping power ratio) */
+      const tl = Eout > 0 ? l.t : range(E, M, P) / M.rho, ratio = S(Math.max(P.A * 2, (E + Math.max(Eout, P.A)) / 2), M, P) / S(Math.max(P.A * 2, (E + Math.max(Eout, P.A)) / 2), 'water', P);
+      const z1 = z0 + l.t, w1 = w0 + wl * l.t / tl;
+      segs.push({ z0, z1, w0, w1, ratio });
+      z0 = z1; w0 = w1; E = Eout; if (!(E > 0)) break;
     }
     return (z) => { for (const s of segs) if (z < s.z1) return { w: s.w0 + (z - s.z0) / (s.z1 - s.z0) * (s.w1 - s.w0), ratio: s.ratio }; return { w: w0 + (z - z0), ratio: 1 }; };
   }
   function dose(o) {
-    const P = part(o.p), dz = o.dz || 0.02, zmax = o.zmax || 40, layers = (o.layers || []).filter((l) => l.t > 0);
-    const nz = Math.round(zmax / dz), z = new Float64Array(nz + 1), d = new Float64Array(nz + 1), e = new Float64Array(nz + 1), phi = new Float64Array(nz + 1);
+    const P = part(o.p), dz = o.dz || 0.02, zmax = o.zmax || 40, layers = (o.layers || []).filter((l) => l.t > 0), zs = o.z0 || 0;
+    const nz = Math.max(0, Math.round((zmax - zs) / dz)), z = new Float64Array(nz + 1), d = new Float64Array(nz + 1), e = new Float64Array(nz + 1), phi = new Float64Array(nz + 1);
     const wAt = wetDepth(layers, P, o.T);
     const R0 = range(o.T, 'water', P), sStr = o.straggle === false ? 0 : sigmaR(o.T, 'water', P), sE = (o.spread || 0) * o.T / S(o.T, 'water', P);
     const sig = Math.max(1e-4, Math.sqrt(sStr * sStr + sE * sE)), nuc = o.nuclear !== false && P.z === 1, ns = o.ns || 160;
     const pdf = (R) => Math.exp(-0.5 * Math.pow((R - R0) / sig, 2)) / (sig * Math.sqrt(2 * Math.PI));
     let wPrev = -Infinity;
     for (let i = 0; i <= nz; i++) {
-      const zz = i * dz, at = wAt(zz), w = at.w, top = R0 + 6 * sig - w;
+      const zz = zs + i * dz, at = wAt(zz), w = at.w, top = R0 + 6 * sig - w;
       let el = 0, en = 0;
       if (o.straggle === false && !(o.spread > 0)) { const r = R0 - w; if (r > 0) { const q = resid(r, P); el = q.S; en = q.E; } else if (wPrev < R0) el = P.A / (w - wPrev > 0 && isFinite(wPrev) ? w - wPrev : dz); }
       else if (top > 0) {

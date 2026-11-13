@@ -22,14 +22,12 @@ VDI18N.add('es', 'demo/charged-particles', {
   "<a>{#} · Partículas cargadas en la materia</a>",
 "<a><span>←</span> <span>Rutherford Scattering</span></a><a><span>Dosimetry: Kerma, Equilibrium and the Ion Chamber</span> <span>→</span></a>":
   "<a><span>←</span> <span>Dispersión de Rutherford</span></a><a><span>Dosimetría: kerma, equilibrio y la cámara de ionización</span> <span>→</span></a>",
-"Send protons, alpha particles or carbon ions into water, through a slab of bone, lung, plastic or metal first if you like. Watch each track slow down, scatter and stop, see the Bragg peak build up from the tracks, and compare the Bethe stopping power and range with the NIST PSTAR tables.":
-  "Envía protones, partículas alfa o iones de carbono al agua, pasando antes, si quieres, por una placa de hueso, pulmón, plástico o metal. Observa cómo cada traza se frena, se dispersa y se detiene, mira cómo el pico de Bragg se forma a partir de las trazas, y compara el poder de frenado y el alcance de Bethe con las tablas NIST PSTAR.",
+"Send protons, alpha particles or carbon ions into water, through a slab of bone, lung, plastic or metal first, or through layers of skin, fat, muscle, bone, lung and brain you stack up yourself. Watch each track slow down, scatter and stop, see the Bragg peak build up from the tracks, and compare the Bethe stopping power and range with the NIST PSTAR tables.":
+  "Envía protones, partículas alfa o iones de carbono al agua, pasando antes por una placa de hueso, pulmón, plástico o metal, o por capas de piel, grasa, músculo, hueso, pulmón y cerebro que tú mismo apilas. Observa cómo cada traza se frena, se dispersa y se detiene, mira cómo el pico de Bragg se forma a partir de las trazas, y compara el poder de frenado y el alcance de Bethe con las tablas NIST PSTAR.",
 "depth in cm · E in MeV":
   "profundidad en cm · E en MeV",
 "Time controls":
   "Controles de tiempo",
-"Fire":
-  "Disparar",
 "Rate":
   "Tasa",
 "{#} tracks/s":
@@ -68,6 +66,8 @@ VDI18N.add('es', 'demo/charged-particles', {
   "Dispersión de energía ({#}σ)",
 "Slab before the water":
   "Placa antes del agua",
+"Body layers (listed under Setups)":
+  "Capas del cuerpo (ver la lista)",
 "Compact bone (ICRU)":
   "Hueso compacto (ICRU)",
 "Lung tissue (ICRP)":
@@ -116,6 +116,14 @@ VDI18N.add('es', 'demo/charged-particles', {
   "Pulmón en el camino",
 "Lead range shifter":
   "Desplazador de alcance de plomo",
+"Chest wall and lung":
+  "Pared torácica y pulmón",
+"Slim patient":
+  "Paciente delgado",
+"Large patient":
+  "Paciente corpulento",
+"Skull and brain":
+  "Cráneo y cerebro",
 "Alpha {#} MeV/u":
   "Alfa {#} MeV/u",
 "Carbon {#} MeV/u":
@@ -128,6 +136,14 @@ VDI18N.add('es', 'demo/charged-particles', {
   "Alcance contra PSTAR",
 "Protons of {#} MeV in water: PSTAR gives a CSDA range of {#} mm. The dose rises slowly as the protons slow, then peaks sharply just before they stop: the Bragg peak.":
   "Protones de {#} MeV en agua: PSTAR da un alcance CSDA de {#} mm. La dosis sube lentamente a medida que los protones se frenan y luego tiene un máximo agudo justo antes de que se detengan: el pico de Bragg.",
+"Body layers":
+  "Capas del cuerpo",
+"Body layers, from the skin in":
+  "Capas del cuerpo, desde la piel hacia dentro",
+"From the skin in, in the order the beam meets them; water after the last one.":
+  "Desde la piel hacia dentro, en el orden en que el haz las encuentra; agua después de la última.",
+"Add a layer":
+  "Agregar una capa",
 "Proton, {#} MeV":
   "Protón, {#} MeV",
 "CSDA range in water R₀":
@@ -160,6 +176,8 @@ VDI18N.add('es', 'demo/charged-particles', {
   "Profundidad final media",
 "Spread of the end depths":
   "Dispersión de las profundidades finales",
+"Energy and dose in each layer":
+  "Energía y dosis en cada capa",
 "<span>Blind: hide the model's ranges, peak and widths</span>":
   "<span>A ciegas: ocultar los alcances, el pico y los anchos del modelo</span>",
 "S/ρ = K z² (Z/A)({#}/β²)[½ ln(2mₑc²β²γ²W_max/I²) − β²], K = {#} MeV cm²/mol":
@@ -170,8 +188,8 @@ VDI18N.add('es', 'demo/charged-particles', {
   "σ_R² = ∫ (dσ_E²/dx)/S³ dE, dσ_E²/dx = K mₑc² z² (Z/A) ρ ({#} − β²/{#})/({#} − β²)",
 "θ₀ = ({#} MeV/βcp) z √(x/X₀)[{#} + {#} ln(x z²/X₀β²)] (Highland)":
   "θ₀ = ({#} MeV/βcp) z √(x/X₀)[{#} + {#} ln(x z²/X₀β²)] (Highland)",
-"Model: the Bethe formula with the full maximum energy transfer and NIST PSTAR's material data (density, mean excitation energy I, composition), with no shell, Barkas, Bloch or density corrections: for protons in water its CSDA ranges are within {#} mm of PSTAR from {#} to {#} MeV and its stopping powers within about {#} % above {#} MeV (about {#} % high at {#} MeV). It is used down to {#} MeV per nucleon; the rest of the energy is put down where the particle stops (for a proton in water, less than {#} mm). The broad beam curve spreads the end points as a Gaussian from Bohr's straggling and the beam's energy spread. Protons are lost to nuclear reactions at {#} % per cm of water, and {#} % of the energy they carried is put down locally (Bortfeld {#}); for ions nuclear reactions and fragments are left out. A slab is turned into water equivalent depth with its stopping power ratio to water at the energy there. Each drawn track takes steps of up to {#} mm with Gaussian energy loss straggling and Highland multiple scattering (good to about {#} %, PDG). Electrons (Stopping power view): collision stopping from the ICRU {#} formula with the density effect for water only, no radiative loss.":
-  "Modelo: la fórmula de Bethe con la transferencia máxima de energía completa y los datos de materiales de NIST PSTAR (densidad, energía media de excitación I, composición), sin correcciones de capa, de Barkas, de Bloch ni de densidad: para protones en agua sus alcances CSDA quedan dentro de {#} mm de PSTAR de {#} a {#} MeV y sus poderes de frenado dentro de alrededor de {#} % por encima de {#} MeV (alrededor de {#} % altos a {#} MeV). Se usa hasta {#} MeV por nucleón; el resto de la energía se deposita donde se detiene la partícula (para un protón en agua, menos de {#} mm). La curva de haz amplio dispersa los puntos finales como una gaussiana a partir de la fluctuación de Bohr y la dispersión de energía del haz. Los protones se pierden por reacciones nucleares a razón de {#} % por cm de agua, y el {#} % de la energía que llevaban se deposita localmente (Bortfeld {#}); para iones se omiten las reacciones nucleares y los fragmentos. Una placa se convierte en profundidad equivalente en agua con su razón de poder de frenado respecto al agua a la energía que hay ahí. Cada traza dibujada avanza en pasos de hasta {#} mm con fluctuación gaussiana de la pérdida de energía y dispersión múltiple de Highland (buena a alrededor de {#} %, PDG). Electrones (vista Poder de frenado): frenado por colisión con la fórmula de ICRU {#} con el efecto de densidad solo para el agua, sin pérdida radiativa.",
+"Model: the Bethe formula with the full maximum energy transfer and NIST PSTAR's material data (density, mean excitation energy I, composition), with no shell, Barkas, Bloch or density corrections: for protons in water its CSDA ranges are within {#} mm of PSTAR from {#} to {#} MeV and its stopping powers within about {#} % above {#} MeV (about {#} % high at {#} MeV). It is used down to {#} MeV per nucleon; the rest of the energy is put down where the particle stops (for a proton in water, less than {#} mm). The broad beam curve spreads the end points as a Gaussian from Bohr's straggling and the beam's energy spread. Protons are lost to nuclear reactions at {#} % per cm of water, and {#} % of the energy they carried is put down locally (Bortfeld {#}); for ions nuclear reactions and fragments are left out. Body layers: each is a uniform slab across the whole beam, with NIST's tissue data (skin, brain and cortical bone from ICRP; inflated lung is the ICRP lung composition at {#} g/cm³, ICRU Report {#}, which in this model stops protons per gram exactly as lung tissue does); real anatomy is curved and changes across the beam, which spreads the peak further (not modeled). The energy left in each layer is the broad beam dose times the layer's density, added up over its depth; its dose is that energy over the layer's mass per cm². A slab is turned into water equivalent depth with its stopping power ratio to water at the energy there. Each drawn track takes steps of up to {#} mm with Gaussian energy loss straggling and Highland multiple scattering (good to about {#} %, PDG). Electrons (Stopping power view): collision stopping from the ICRU {#} formula with the density effect for water only, no radiative loss.":
+  "Modelo: la fórmula de Bethe con la transferencia máxima de energía completa y los datos de materiales de NIST PSTAR (densidad, energía media de excitación I, composición), sin correcciones de capa, de Barkas, de Bloch ni de densidad: para protones en agua sus alcances CSDA quedan dentro de {#} mm de PSTAR de {#} a {#} MeV y sus poderes de frenado dentro de alrededor de {#} % por encima de {#} MeV (alrededor de {#} % altos a {#} MeV). Se usa hasta {#} MeV por nucleón; el resto de la energía se deposita donde se detiene la partícula (para un protón en agua, menos de {#} mm). La curva de haz amplio dispersa los puntos finales como una gaussiana a partir de la fluctuación de Bohr y la dispersión de energía del haz. Los protones se pierden por reacciones nucleares a razón de {#} % por cm de agua, y el {#} % de la energía que llevaban se deposita localmente (Bortfeld {#}); para iones se omiten las reacciones nucleares y los fragmentos. Capas del cuerpo: cada una es una placa uniforme a lo ancho de todo el haz, con los datos de tejidos de NIST (piel, cerebro y hueso cortical de ICRP; el pulmón inflado es la composición del pulmón de ICRP a {#} g/cm³, informe ICRU {#}, que en este modelo frena los protones por gramo exactamente igual que el tejido pulmonar); la anatomía real es curva y cambia a lo ancho del haz, lo que ensancha más el pico (no se modela). La energía depositada en cada capa es la dosis de haz amplio por la densidad de la capa, sumada a lo largo de su profundidad; su dosis es esa energía entre la masa de la capa por cm². Una placa se convierte en profundidad equivalente en agua con su razón de poder de frenado respecto al agua a la energía que hay ahí. Cada traza dibujada avanza en pasos de hasta {#} mm con fluctuación gaussiana de la pérdida de energía y dispersión múltiple de Highland (buena a alrededor de {#} %, PDG). Electrones (vista Poder de frenado): frenado por colisión con la fórmula de ICRU {#} con el efecto de densidad solo para el agua, sin pérdida radiativa.",
 "NIST PSTAR CSDA ranges in water":
   "Alcances CSDA de NIST PSTAR en agua",
 "PSTAR R (g/cm²)":
@@ -246,6 +264,82 @@ VDI18N.add('es', 'demo/charged-particles', {
   "Plomo, {#} cm",
 "One centimeter of lead: dense, but its electrons are fewer per gram (Z/A = {#} against {#} for water) and more tightly bound (I = {#} eV), so per gram it stops protons only about {#} times as well as water. Lead also scatters them far more.":
   "Un centímetro de plomo: denso, pero tiene menos electrones por gramo (Z/A = {#} contra {#} del agua) y más fuertemente ligados (I = {#} eV), así que por gramo frena a los protones solo unas {#} veces tan bien como el agua. El plomo también los dispersa mucho más.",
+"Skin":
+  "Piel",
+"Fat":
+  "Grasa",
+"Muscle":
+  "Músculo",
+"Bone":
+  "Hueso",
+"Lung":
+  "Pulmón",
+"Lung, {#} cm":
+  "Pulmón, {#} cm",
+"A beam into the chest: {#} mm of skin, {#} cm of fat, {#} cm of muscle, an {#} mm rib (cortical bone) and {#} cm of inflated lung, with water standing in for the tissue beyond. The rib, at {#} g/cm³, takes out as much energy as {#} cm of water; the {#} cm of inflated lung, at {#} g/cm³, only as much as {#} cm, so the peak lands deep, at {#} cm. The table under the readouts gives each layer's share of the {#} MeV and its dose.":
+  "Un haz que entra al tórax: {#} mm de piel, {#} cm de grasa, {#} cm de músculo, una costilla de {#} mm (hueso cortical) y {#} cm de pulmón inflado, con agua en lugar del tejido que sigue. La costilla, de {#} g/cm³, quita tanta energía como {#} cm de agua; los {#} cm de pulmón inflado, de {#} g/cm³, solo tanta como {#} cm, así que el pico queda profundo, a {#} cm. La tabla bajo las lecturas da la parte de los {#} MeV que se queda en cada capa y su dosis.",
+"Use layer {#}":
+  "Usar la capa {#}",
+"Tissue of layer {#}":
+  "Tejido de la capa {#}",
+"Fat (adipose)":
+  "Grasa (tejido adiposo)",
+"Bone (cortical)":
+  "Hueso (cortical)",
+"Lung, inflated":
+  "Pulmón inflado",
+"Lung tissue, no air":
+  "Tejido pulmonar, sin aire",
+"Brain":
+  "Cerebro",
+"Move toward the skin":
+  "Mover hacia la piel",
+"Move layer {#} toward the skin":
+  "Mover la capa {#} hacia la piel",
+"Move deeper":
+  "Mover más adentro",
+"Move layer {#} deeper":
+  "Mover la capa {#} más adentro",
+"Remove this layer":
+  "Quitar esta capa",
+"Remove layer {#}":
+  "Quitar la capa {#}",
+"Thickness of layer {#}":
+  "Espesor de la capa {#}",
+"Layers in use":
+  "Capas en uso",
+"{#}, {#} cm in all":
+  "{#}, {#} cm en total",
+"Their water equivalent thickness":
+  "Su espesor equivalente en agua",
+"Layer":
+  "Capa",
+"E in (MeV)":
+  "E al entrar (MeV)",
+"Left (MeV)":
+  "Depositada (MeV)",
+"Tracks (MeV)":
+  "Trazas (MeV)",
+"Dose (Gy)":
+  "Dosis (Gy)",
+"{#} to {#} cm":
+  "{#} a {#} cm",
+"Water beyond":
+  "Agua después",
+"Carried away (neutrons, gammas)":
+  "Se lleva fuera (neutrones, gammas)",
+"A slim patient: {#} mm of skin, {#} cm of fat and {#} cm of muscle, then water for the organs beyond. The {#} MeV peak sits at {#} cm, {#} cm past the muscle. Compare the Large patient setup.":
+  "Un paciente delgado: {#} mm de piel, {#} cm de grasa y {#} cm de músculo, y luego agua para los órganos que siguen. El pico de {#} MeV queda a {#} cm, {#} cm después del músculo. Compáralo con la configuración Paciente corpulento.",
+"Fat, {#} cm":
+  "Grasa, {#} cm",
+"The same anatomy with {#} cm of fat instead of {#} cm. Fat stops protons a little less than water per centimeter ({#} times at {#} MeV), so the peak moves {#} cm deeper, to {#} cm; but the organs are now {#} cm deeper, so the peak falls only {#} cm past the muscle. To reach the same organ as in the slim patient the beam needs about {#} MeV (from the CSDA ranges; try it with the energy slider).":
+  "La misma anatomía con {#} cm de grasa en lugar de {#} cm. La grasa frena los protones un poco menos que el agua por centímetro ({#} veces a {#} MeV), así que el pico se mueve {#} cm más adentro, a {#} cm; pero los órganos ahora están {#} cm más adentro, así que el pico cae solo {#} cm después del músculo. Para llegar al mismo órgano que en el paciente delgado, el haz necesita unos {#} MeV (de los alcances CSDA; pruébalo con el control de energía).",
+"Brain, {#} cm":
+  "Cerebro, {#} cm",
+"A beam into the head: {#} mm of scalp (skin), {#} mm of skull (cortical bone), then brain. The skull takes out as much energy as {#} cm of water, so the {#} MeV protons, whose CSDA range in water is {#} cm, stop {#} cm in. The brain layer runs past the end of the range, so no water is reached.":
+  "Un haz que entra a la cabeza: {#} mm de cuero cabelludo (piel), {#} mm de cráneo (hueso cortical) y luego cerebro. El cráneo quita tanta energía como {#} cm de agua, así que los protones de {#} MeV, cuyo alcance CSDA en agua es {#} cm, se detienen a {#} cm. La capa de cerebro sigue más allá del final del alcance, así que no se llega al agua.",
+"the beam stops in them":
+  "el haz se detiene en ellas",
 "Alpha particle":
   "Partícula alfa",
 "Alpha particles of {#} MeV per nucleon ({#} MeV) move as fast as {#} MeV protons. Range goes as M/z² at the same speed, and for an alpha M/z² is {#}/{#} of the proton's, so the range is about the same; but the alpha is four times heavier, so its range straggles about half as much compared with its range, and the peak is sharper.":
@@ -262,6 +356,8 @@ VDI18N.add('es', 'demo/charged-particles', {
   "Poder de frenado másico en función de la energía en escalas logarítmicas. Por encima de unos {#} MeV baja casi como {#}/β², luego se nivela y sube lentamente a medida que la partícula se vuelve relativista. Elige un material para comparar; el control de energía mueve el marcador.",
 "CSDA range against energy on log scales, with the NIST PSTAR ranges for protons in water and the Bragg–Kleeman power law R = αE^p fitted to the PSTAR values from {#} to {#} MeV.":
   "Alcance CSDA en función de la energía en escalas logarítmicas, con los alcances NIST PSTAR para protones en agua y la ley de potencias de Bragg–Kleeman R = αE^p ajustada a los valores de PSTAR de {#} a {#} MeV.",
+"Close":
+  "Cerrar",
 "kinetic energy T (MeV), alpha particle":
   "energía cinética T (MeV), partícula alfa",
 "Alpha particle, Water (Bethe, CSDA)":
@@ -321,5 +417,15 @@ VDI18N.add('es', 'demo/charged-particles', {
 "Proton in Lead":
   "Protón en Plomo",
 "tracks ({#})":
-  "trazas ({#})"
+  "trazas ({#})",
+"Lung tissue":
+  "Tejido pulmonar",
+"{#}, {#} μm in all":
+  "{#}, {#} μm en total",
+"all off or {#} cm: only water":
+  "todas apagadas o de {#} cm: solo agua",
+"stopped":
+  "detenido",
+"Fire":
+  "Disparar"
 });
