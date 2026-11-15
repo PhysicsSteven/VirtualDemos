@@ -80,6 +80,10 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 .units { color: var(--muted); font-size: 0.8rem; }
 .stage { position: relative; min-height: 520px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); display: grid; grid-template-rows: minmax(0, 58fr) minmax(0, 42fr); }
 .pane + .pane { border-top: 1px solid var(--line); }
+/* the panes shrink with the stage: a canvas sized for a wide window used to hold its pane (and the drawing) wide after the window
+   narrowed, so the phone layout never came (student view calls, 2026-11-15) */
+.stage { grid-template-columns: minmax(0, 1fr); }
+.stage > .pane { min-width: 0; overflow: hidden; }
 #app { touch-action: none; outline: none; position: relative; z-index: 1; }
 #appPane { position: relative; }
 .pe3 { position: absolute; left: 0; top: 0; z-index: 0; }
@@ -679,7 +683,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       const nmT = c.measureText('evacuated phototube').width <= bw ? 'evacuated phototube' : 'phototube';
       c.font = `600 ${Math.min(10 * ps, bw / (nmT.length * 0.62))}px ${T.mono}`; c.fillText(nmT, t.cx, by_);
     }
-    lb('anode (collector)', t.ax, gTop + tw * 0.34, T.ink, 'center', false, 9.5);
+    /* on a phone the 3D/Flat strip spans the stage top and hid this label: keep it just under the strip (student view, 2026-11-15) */
+    let anY = gTop + tw * 0.34;
+    if (L.narrow) { const cb = document.querySelector('.stage-ctl'); if (cb) anY = Math.max(anY, cb.getBoundingClientRect().bottom - c.canvas.getBoundingClientRect().top + 10 * ps); }
+    lb('anode (collector)', t.ax, anY, T.ink, 'center', false, 9.5);
     lb(`${L.narrow ? S.metal : nm} cathode (emitter)`, t.cx + tw * 0.02, t.zBot + t.R * KDEP + 14 * ps, T.ink, 'center', true, L.narrow ? 9.5 : 10.5);
     if (S.pow > 0 && (S.lam < 380 || S.lam > 750)) lb(S.lam < 380 ? 'UV, invisible' : 'IR, invisible', (s.sx + s.hitX) / 2 - 6, s.beamY - s.sh - 10 * ps, S.lam < 380 ? '#8b5cf6' : T.muted, 'center', true);
     if (s.hg) lb(`Hg ${Math.round(S.lam)} nm filter`, Math.min(s.fx, x0 - 50 * ps), s.my0 - 12 * ps, T.ink, 'center', false, 9.5);
@@ -690,6 +697,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       if (L.narrow || tw < 150) { lb('hf < φ', mx, my - 9 * ps, T.pos, 'center', true, 12); lb('no electrons', mx, my + 9 * ps, T.pos, 'center', true, 12); }
       else lb('hf < φ : no electrons', mx, my, T.pos, 'center', true, 13);
     }
+    /* the Flat view names its slow motion too, as the 3D caption does (student view calls, 2026-11-15) */
+    /* on a phone the instruments fill the bench, so the note sits just above the lamp shelf */
+    label(c, L.narrow ? 'electrons slowed 10⁸×' : 'electrons slowed about 10⁸ times', 12 * ps, L.narrow ? L.shelfY - 8 * ps : AH - 6 * ps, T.muted, 'left', 'bottom', false, ps, 9.5);
   }
 
   function meterRange(nA) { for (const fs of [1, 3, 10, 30, 100]) if (nA <= fs * 1.0001) return fs; return 100; }
@@ -1080,7 +1090,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   const playBtn = $('play');
   function setRunning(r) { running = r; playBtn.textContent = r ? 'Pause' : 'Play'; playBtn.classList.toggle('primary', !r); last = performance.now(); }
   playBtn.addEventListener('click', () => setRunning(!running));
-  $('reset').addEventListener('click', () => applyPreset('blue'));
+  /* Reset starts the run again at t = 0 (no photons or electrons in flight) and keeps every setting, as on the other demos; it used
+     to load the Blue on sodium setup and lose the student's metal, wavelength, power and voltage (student view, 2026-11-15) */
+  $('reset').addEventListener('click', () => { electrons = []; photons = []; glints = []; flash = 0; spawnAccP = 0; changed(); });
 
   // on canvas controls: the wavelength and intensity knobs, the voltage knob and the reversing switch
   function setKnob(id, f) {
@@ -1398,7 +1410,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     if (S.pow > 0 && (S.lam < 380 || S.lam > 750)) lb(S.lam < 380 ? 'UV, invisible' : 'IR, invisible', [(XS + XE) / 2, 0, ZW + 0.035], 0, -6, S.lam < 380 ? '#8b5cf6' : T.muted, 'center', true);
     const hgl = HG.includes(Math.round(S.lam)) && S.lam === Math.round(S.lam);
     if (hgl) lb(`Hg ${Math.round(S.lam)} nm filter`, [XF, 0, ZW + 0.024], 0, -10, T.ink, 'center', false, 9.5);
-    label(c, narrow ? `tube drawn ${TS}× its size · drag to turn` : `phototube drawn ${TS} times its size · electrons slowed enormously · drag to turn, a knob to set it`, 12 * ps, AH - 8 * ps, T.muted, 'left', 'bottom', false, ps, 9.5);
+    /* the rate on screen: VS = 0.44 gaps/s per √eV against 5.9 × 10⁵ m/s per √eV across the 14 mm gap (4.2 × 10⁷ gaps/s), so the
+       electrons are slowed about 10⁸ times (student view, 2026-11-15) */
+    label(c, narrow ? `tube drawn ${TS}× its size · slowed 10⁸× · drag to turn` : `phototube drawn ${TS} times its size · electrons slowed about 10⁸ times · drag to turn, a knob to set it`, 12 * ps, AH - 8 * ps, T.muted, 'left', 'bottom', false, ps, 9.5);
     if (Kmax() <= 0 && S.pow > 0) {
       if (narrow) { lb('hf < φ', [0.024 * TS, 0, ZW + 0.03], 6, -8, T.pos, 'left', true, 12); lb('no electrons', [0.024 * TS, 0, ZW + 0.03], 6, 8, T.pos, 'left', true, 12); }
       else lb('hf < φ : no electrons', [0.024 * TS, 0, ZW + 0.035], 6, 0, T.pos, 'left', true, 13);

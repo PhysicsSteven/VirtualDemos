@@ -110,6 +110,8 @@ VDI18N.add('es', 'demo/photon-interactions', {
   "Fotones",
 "Random seed":
   "Semilla aleatoria",
+"Random seed: click, or press Enter, to type a value":
+  "Semilla aleatoria: haz clic, o presiona Enter, para escribir un valor",
 "New seed":
   "Nueva semilla",
 "A broad parallel beam on a slab that is endless sideways. The narrow beam counts only photons that never interacted; the broad beam counts every photon behind the slab, as air collision kerma (μ_en, which in air is within {#} % of the air kerma).":
@@ -406,6 +408,10 @@ VDI18N.add('es', 'demo/photon-interactions', {
   "Detener",
 "{#} of {#} photons":
   "{#} de {#} fotones",
+"Lead, {#} cm":
+  "Plomo, {#} cm",
+"⁶⁰Co photons (one beam at the mean of its two lines, {#} keV) through {#} cm of lead, about two mean free paths. Buildup is smaller in lead than in water at the same μt, since the photons that scatter are soon absorbed by the photoelectric effect.":
+  "Fotones del ⁶⁰Co (un solo haz en el promedio de sus dos líneas, {#} keV) a través de {#} cm de plomo, unos dos caminos libres medios. La acumulación es menor en plomo que en agua al mismo μt, ya que los fotones que se dispersan pronto son absorbidos por el efecto fotoeléctrico.",
 "{#} never interacted":
   "{#} nunca interactuaron",
 "{#} scattered":
@@ -434,10 +440,6 @@ VDI18N.add('es', 'demo/photon-interactions', {
   "Interacciones",
 "{#} coherent, {#} incoherent, {#} photoelectric, {#} pair; {#} fluorescence X-rays":
   "{#} coherentes, {#} incoherentes, {#} fotoeléctricas, {#} de pares; {#} rayos X de fluorescencia",
-"Lead, {#} cm":
-  "Plomo, {#} cm",
-"⁶⁰Co photons (one beam at the mean of its two lines, {#} keV) through {#} cm of lead, about two mean free paths. Buildup is smaller in lead than in water at the same μt, since the photons that scatter are soon absorbed by the photoelectric effect.":
-  "Fotones del ⁶⁰Co (un solo haz en el promedio de sus dos líneas, {#} keV) a través de {#} cm de plomo, unos dos caminos libres medios. La acumulación es menor en plomo que en agua al mismo μt, ya que los fotones que se dispersan pronto son absorbidos por el efecto fotoeléctrico.",
 "Ordinary concrete, {#} cm":
   "Concreto ordinario, {#} cm",
 "⁶⁰Co photons through {#} cm of ordinary concrete, μt = {#}: the narrow beam would keep {#} %, but the broad beam air kerma behind the wall is about {#} times that. A shielding calculation that leaves out buildup underestimates the dose.":
@@ -452,8 +454,6 @@ VDI18N.add('es', 'demo/photon-interactions', {
   "{#} mm de Al + {#} mm de cobre",
 "Hardening":
   "Endurecimiento",
-"Close":
-  "Cerrar",
 "{#} mm Al + {#} mm pmma (acrylic)":
   "{#} mm de Al + {#} mm de pmma (acrílico)",
 "{#} mm Al + {#} mm water, liquid":
@@ -486,6 +486,8 @@ VDI18N.add('es', 'demo/photon-interactions', {
   "Parte en Plomo",
 "{#} photons":
   "{#} fotones",
+"Close":
+  "Cerrar",
 "Sample photons colored by energy; each stops in a filter with the chance {#} − e^(−μx) at its energy. Slowed down.":
   "Fotones de muestra coloreados por energía; cada uno se detiene en un filtro con probabilidad {#} − e^(−μx) a su energía. Ralentizado.",
 "Sample photons; slowed down.":

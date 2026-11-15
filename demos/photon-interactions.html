@@ -921,6 +921,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; sync(); redraw(); });
   const typed = (id, o) => VD.typeIn($(id), Object.assign({ can: () => true }, o));
   typed('oE', { get: () => S.E, set: (v) => { S.E = v; changed(); }, min: () => (S.view === 'beam' ? 10 : 1), max: () => (S.view === 'beam' ? 2e4 : 1e5), step: 0.001, unit: 'keV', label: 'Photon energy (keV)', seed: () => String(+S.E.toPrecision(6)) });
+  /* the seed can be typed, so a student can go back to seed 1 after New seed (student view calls, 2026-11-15) */
+  typed('seedOut', { get: () => S.seed, set: (v) => { S.seed = v; changed(); }, min: 1, max: 99999, step: 1, label: 'Random seed' });
   typed('oT', { get: () => S.t, set: (v) => { S.t = v; changed(); }, min: 0, max: 60, step: 0.01, unit: 'cm', label: 'Slab thickness' });
   typed('oZ', { get: () => S.Z, set: (v) => { S.Z = v; CURVES = null; changed(); }, min: 1, max: 92, step: 1, label: 'Atomic number Z' });
   typed('oAl', { get: () => S.al, set: (v) => { S.al = v; changed(); }, min: 0, max: 10, step: 0.01, unit: 'mm', label: 'Aluminum filtration' });

@@ -10,6 +10,8 @@ VDI18N.add('es', 'demo/photoelectric', {
   "lámpara + monocromador",
 "power":
   "potencia",
+"electrons slowed about {#}⁸ times":
+  "electrones ralentizados unas {#}⁸ veces",
 "PICOAMMETER":
   "PICOAMMETER",
 "nA":
@@ -42,6 +44,8 @@ VDI18N.add('es', 'demo/photoelectric', {
   "Corriente I (nA) en función del voltaje",
 "collector voltage V (volts)":
   "voltaje del colector V (volts)",
+"phototube":
+  "fototubo",
 "Photoelectric Effect":
   "Efecto fotoeléctrico",
 "<a>Photons and matter waves</a>":
@@ -78,6 +82,8 @@ VDI18N.add('es', 'demo/photoelectric', {
   "Medir h",
 "Each blue photon carries {#} eV, more than sodium needs ({#} eV), so every absorbed photon can free an electron. The extra {#} eV becomes kinetic energy.":
   "Cada fotón azul lleva {#} eV, más de lo que necesita el sodio ({#} eV), así que cada fotón absorbido puede liberar un electrón. Los {#} eV sobrantes se convierten en energía cinética.",
+"Light":
+  "Luz",
 "{#} nm · violet":
   "{#} nm · violeta",
 "<span>{#} nm</span><span>UV | visible</span><span>{#} nm</span>":
@@ -138,10 +144,8 @@ VDI18N.add('es', 'demo/photoelectric', {
   "Recta teórica y respuestas",
 "Model: each absorbed photon frees at most one electron, with a kinetic energy spread evenly between {#} and K<sub>max</sub>. One electron per thousand photons (quantum efficiency {#}%). Electron speeds on screen are slowed enormously; the fastest real ones move at hundreds of km/s.":
   "Modelo: cada fotón absorbido libera a lo más un electrón, con una energía cinética repartida uniformemente entre {#} y K<sub>max</sub>. Un electrón por cada mil fotones (eficiencia cuántica de {#}%). Las rapideces de los electrones en pantalla están enormemente reducidas; los más rápidos reales se mueven a cientos de km/s.",
-"phototube":
-  "fototubo",
-"phototube drawn {#} times its size · electrons slowed enormously · drag to turn, a knob to set it":
-  "fototubo dibujado {#} veces su tamaño · electrones enormemente más lentos · arrastra para girar, una perilla para ajustarla",
+"phototube drawn {#} times its size · electrons slowed about {#}⁸ times · drag to turn, a knob to set it":
+  "fototubo dibujado {#} veces su tamaño · electrones ralentizados unas {#}⁸ veces · arrastra para girar, una perilla para ajustarla",
 "Full power red light and not a single electron. Each {#} nm photon has only {#} eV, below sodium's work function. Turning up the brightness sends more weak photons, not stronger ones.":
   "Luz roja a toda potencia y ni un solo electrón. Cada fotón de {#} nm tiene solo {#} eV, por debajo de la función de trabajo del sodio. Subir el brillo envía más fotones débiles, no fotones más fuertes.",
 "{#} nm · red":
@@ -186,10 +190,36 @@ VDI18N.add('es', 'demo/photoelectric', {
   "Cátodo de cobre (emisor)",
 "Platinum cathode (emitter)":
   "Cátodo de platino (emisor)",
+"Pt cathode (emitter)":
+  "Cátodo de Pt (emisor)",
+"lamp + mono":
+  "lámpara + mono",
+"electrons slowed {#}⁸×":
+  "electrones ralentizados {#}⁸×",
+"{#} nA FS":
+  "{#} nA FE",
+"SUPPLY":
+  "SUPPLY",
+"V anode":
+  "V ánodo",
+"tube drawn {#}× its size · slowed {#}⁸× · drag to turn":
+  "tubo dibujado {#}× su tamaño · ralentizado {#}⁸× · arrastra para girar",
+"Na cathode (emitter)":
+  "Cátodo de Na (emisor)",
+"Zn cathode (emitter)":
+  "Cátodo de Zn (emisor)",
+"Cs cathode (emitter)":
+  "Cátodo de Cs (emisor)",
+"K cathode (emitter)":
+  "Cátodo de K (emisor)",
+"Ca cathode (emitter)":
+  "Cátodo de Ca (emisor)",
+"Cu cathode (emitter)":
+  "Cátodo de Cu (emisor)",
+"Close":
+  "Cerrar",
 "hf < φ : no electrons":
   "hf < φ : sin electrones",
-"Light":
-  "Luz",
-"Close":
-  "Cerrar"
+"phototube drawn {#} times its size · electrons slowed enormously · drag to turn, a knob to set it":
+  "fototubo dibujado {#} veces su tamaño · electrones enormemente más lentos · arrastra para girar, una perilla para ajustarla"
 });
