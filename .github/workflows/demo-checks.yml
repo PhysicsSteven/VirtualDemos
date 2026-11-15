@@ -87,7 +87,7 @@ jobs:
             breakit)   # two at a time: GitHub's 4 core machines draw 3D in software, and three at once timed out photos
                        node tools/breakit.cjs $DEMOS --jobs 2 2>&1 | tee -a check.log || status=1
                        # a failure under load is often the machine (docs/checks.md): rerun the failed demos alone, and that verdict stands
-                       again=$(grep -E '^FAIL ' check.log | awk '{print $2}' | sort -u | tr '\n' ' ')
+                       again=$(grep -E '^FAIL ' check.log | awk '{print $2}' | sort -u | tr '\n' ' ' || true)
                        if [ -n "$again" ]; then echo "== rerunning alone: $again" | tee -a check.log; status=0
                          node tools/breakit.cjs $again 2>&1 | tee rerun.log | sed 's/^/rerun: /' | tee -a check.log || status=1; fi
                        if [ "$MODE" = all ]; then node tools/opencheck.cjs $DEMOS 2>&1 | tee -a check.log || status=1; fi ;;
