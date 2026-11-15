@@ -466,8 +466,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   };
   const S = { st: 'story', follow: 'system', preset: 'story', r0: 5000, P0: 4, spin: true, L: 1, r: 1, f: 1, gas: 3, R: 50, tf: 0.5, speed: 1, run: false, blind: false };
   const NPARC = 1400;
-  const CL = { C: null, view: 1, done: false };          /* collapse */
+  const CL = { C: null, view: 1, done: false, rate: 0 };          /* collapse */
   const GR = { D: null, t: 1e3, tau: 0, done: false };     /* growth: t in years; tau a display clock for the orbits */
+  /* the drawn orbits turn once in this many seconds at 1 AU; at 4 the bodies at the disk's inner edge (0.35 AU) lapped faster than
+     once a second (student view, 2026-11-15) */
+  const ORBIT_S = 6;
   const ML = { run: null, t: 0, done: false };            /* melting: t in Myr after the first solids */
   const T_MELT_END = 20;
   const distOf = (v) => 0.1 * Math.pow(10, v / 1000), valOfDist = (r) => Math.round(1000 * Math.log10(r / 0.1));
@@ -499,6 +502,15 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     return RAMP[RAMP.length - 1][1];
   }
   const rgb = (a, al = 1) => `rgba(${a[0]},${a[1]},${a[2]},${al})`;
+  /* a key for the temperature colors, a bar from 20 K to 2000 K on a log scale: without it a planetesimal at 180 K, drawn in the
+     ramp's red, looked red hot (student view, 2026-11-15) */
+  function heatKey(c, x, y, w, col, halo) {
+    const p = P(), h = 7 * p, u = (T) => Math.log(T / 20) / Math.log(100);
+    for (let i = 0; i < w; i += 2) { c.fillStyle = rgb(heatRGB(20 * Math.pow(100, i / w))); c.fillRect(x + i, y, 2.5, h); }
+    c.strokeStyle = col; c.lineWidth = 1; c.strokeRect(x + 0.5, y + 0.5, w - 1, h);
+    label(c, 'temperature color', x, y - 8 * p, { col, haloCol: halo, halo: !!halo, s: 10, w: 600 });
+    for (const T of [20, 100, 500, 2000]) label(c, T === 2000 ? '2000 K' : String(T), x + u(T) * w, y + h + 9 * p, { a: T === 20 ? 'left' : T === 2000 ? 'right' : 'center', col, haloCol: halo, halo: !!halo, s: 9.5, w: 400 });
+  }
 
   /* ---------- the flat views ---------- */
   function frame2(x, y, w, h, title) {   /* a panel with a light border and a title */
@@ -625,6 +637,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const core = coreRadius(run, i); if (core > 0) { ctx.fillStyle = '#827b71'; ctx.strokeStyle = '#e5dfd7'; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.arc(cx, cy, cr * core, 0, 2 * Math.PI); ctx.fill(); ctx.stroke(); label(ctx, 'iron core', cx, cy, { a: 'center', col: '#ffffff', s: 10.5, w: 700, haloCol: '#48423b' }); }
     ctx.strokeStyle = K.line; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(cx, cy, cr, 0, 2 * Math.PI); ctx.stroke();
     label(ctx, `R = ${sig(S.R, 3)} km, cut through the middle`, cx, cy + cr + 16 * p, { a: 'center', col: K.muted, s: 10.5 });
+    if (!phone) { const kw = Math.max(150 * p, 2 * cr); heatKey(ctx, cx - kw / 2, cy + cr + 44 * p, kw, K.muted, null); }   /* no room on a phone: its 3D view has the key */
     /* the center's temperature against time */
     const gx = phone ? 58 * p : cx + cr + 70 * p, gy = phone ? cy + cr + 44 * p : 40 * p, gw = W - gx - (W > 820 ? 300 : 20 * p), gh = phone ? H - gy - 50 * p : H - 110 * p;
     if (gw < 80 || gh < 60) return;
@@ -750,7 +763,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       if (S.st === 'planets') { label(ctx, narrowPhone() ? 'bodies drawn larger than to scale' : 'bodies drawn far larger than to scale; orbits shown turning, not to the time scale of growth', 14 * p, H - 36 * p, { col: lc, haloCol: halo, s: 10.5, w: 400 }); timeBar3(); }
     } else {
       const run = ML.run, i = meltAt(run, ML.t), q = pr([0, 0, 1.12]);
-      label(ctx, `R = ${sig(S.R, 3)} km · center ${grp(run.Tc[i])} K`, q[0], q[1] - 6 * p, { a: 'center', col: lc, haloCol: halo, w: 700 });
+      /* on a phone the small graph at the top left covered this label: kept below it (student view, 2026-11-15) */
+      label(ctx, `R = ${sig(S.R, 3)} km · center ${grp(run.Tc[i])} K`, q[0], W < 640 ? Math.max(q[1] - 6 * p, 134 * p) : q[1] - 6 * p, { a: 'center', col: lc, haloCol: halo, w: 700 });
+      { const kw = Math.min(200 * p, W * 0.5); heatKey(ctx, W < 640 ? 14 * p : W - kw - 16 * p, H - (W < 640 ? 58 : 34) * p, kw, lc, halo); }
       if (g.coreM.visible) { const c = pr([0, 0, 0]); label(ctx, 'iron core', c[0], c[1], { a: 'center', col: '#ffffff', haloCol: '#35312b', w: 700 }); }
       label(ctx, 'a quarter cut away · inside colored by temperature · drag to turn', 14 * p, H - 18 * p, { col: lc, haloCol: halo, s: 10.5, w: 400 });
       meltMini();
@@ -764,14 +779,15 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.strokeStyle = '#fb923c'; ctx.setLineDash([4, 3]); ctx.beginPath(); ctx.moveTo(X(0), Y(MELT.Tcore)); ctx.lineTo(X(T_MELT_END), Y(MELT.Tcore)); ctx.stroke(); ctx.setLineDash([]);
     ctx.strokeStyle = '#7ea2ff'; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(X(0), Y(MELT.Tsurf)); ctx.lineTo(X(S.tf), Y(MELT.Tsurf)); for (let k = 0; k <= i; k++) ctx.lineTo(X(run.t[k]), Y(run.Tc[k])); ctx.stroke();
     label(ctx, 'center temperature, 0 to 20 Myr', x + 8 * p, y + 10 * p, { col: '#ede6dd', haloCol: '#0a0805', s: 10, w: 600 });
-    label(ctx, 'iron sinks 1822 K', x + w - 8 * p, Y(MELT.Tcore) - 8 * p, { a: 'right', col: '#fb923c', haloCol: '#0a0805', s: 9.5, w: 400 });
+    /* in a narrow box this label ran into the title above: then it goes under its line (student view, 2026-11-15) */
+    label(ctx, 'iron sinks 1822 K', x + w - 8 * p, Y(MELT.Tcore) + (w < 230 * p ? 8 : -8) * p, { a: 'right', col: '#fb923c', haloCol: '#0a0805', s: 9.5, w: 400 });
   }
   const gasLeft = () => (GR.t <= S.gas * 1e6 ? Math.min(1, (S.gas * 1e6 - GR.t) / (0.2 * S.gas * 1e6) + 0.15) : 0);
   function drawBodies3() {
     const g = g3, B = GR.D.B, M4 = new THREE.Matrix4(), Q = new THREE.Quaternion(), V = new THREE.Vector3(), Sc = new THREE.Vector3(), col = new THREE.Color(); let k = 0, h = 0;
     const cR = new THREE.Color(K.dark ? '#d39a6a' : '#b07a4c'), cI = new THREE.Color('#bfe0ff'), cG = new THREE.Color('#e9b874');
     for (const b of B) {
-      const rho = RHO(b.a), th = b.ph + 2 * Math.PI * GR.tau / 4 * Math.pow(b.a, -1.5), sz = Math.min(0.05, 0.0035 + 0.011 * Math.cbrt(b.m));
+      const rho = RHO(b.a), th = b.ph + 2 * Math.PI * GR.tau / ORBIT_S * Math.pow(b.a, -1.5), sz = Math.min(0.05, 0.0035 + 0.011 * Math.cbrt(b.m));
       V.set(rho * Math.cos(th), rho * Math.sin(th), 0); Sc.setScalar(b.giant ? 0.03 : sz); M4.compose(V, Q, Sc); g.bodies.setMatrixAt(k, M4);
       col.copy(b.giant ? cG : b.ice ? cI : cR); g.bodies.setColorAt(k, col); k++;
       if (b.giant && h < g.halos.length) { const hm = g.halos[h++]; hm.visible = true; hm.position.copy(V); hm.scale.setScalar(0.05); }
@@ -907,11 +923,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const x1 = xo * Math.cos(w) - yo * Math.sin(w), y1 = xo * Math.sin(w) + yo * Math.cos(w), y2 = y1 * Math.cos(b.i), z2 = y1 * Math.sin(b.i);
     return [x1 * Math.cos(O) - y2 * Math.sin(O), x1 * Math.sin(O) + y2 * Math.cos(O), z2];
   }
-  const impPos = (b) => orbitPoint(b, 2 * Math.PI * hash(b.id, 3) + 2 * Math.PI * SY.tauD / 4 * Math.pow(b.a, -1.5));
+  const impPos = (b) => orbitPoint(b, 2 * Math.PI * hash(b.id, 3) + 2 * Math.PI * SY.tauD / ORBIT_S * Math.pow(b.a, -1.5));
   /* the impacts between two times start a flash on the body that was hit */
   function noteImpacts(D, t1, t2) { for (const ev of D.events) if (ev[0] > t1 && ev[0] <= t2) { SY.flash.push({ id: ev[1], at: SY.clock }); SY.lastEv = ev; SY.lastAt = SY.clock; } SY.flash = SY.flash.filter((f) => SY.clock - f.at < 1.6).slice(-4); }
   /* where a body is drawn: on its circular orbit, turning at its Kepler rate on a slowed display clock (SY.tauD) */
-  const bodyPos = (b) => { const th = b.ph + 2 * Math.PI * SY.tauD / 4 * Math.pow(b.a, -1.5); return [b.a * Math.cos(th), b.a * Math.sin(th), 0]; };
+  const bodyPos = (b) => { const th = b.ph + 2 * Math.PI * SY.tauD / ORBIT_S * Math.pow(b.a, -1.5); return [b.a * Math.cos(th), b.a * Math.sin(th), 0]; };
   function stepStory(fr) {
     const c = CHAPTERS[SY.ch].k, sp = S.speed; SY.started = true;
     if (c === 'cloud') {
@@ -951,7 +967,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const c = CHAPTERS[SY.ch].k, fl = frostLine(STORY.L), rd = diskRadius(STORY.r0, STORY.P0);
     if (c === 'cloud') {
       const C = SY.C, n = cloudCounts(C);
-      if (!SY.started) return VDI18N.t('A cold cloud core of gas and dust, {d} AU across, turning once every {p} million years. Its own gravity is about to win: press Start.', { d: grp(2 * STORY.r0), p: STORY.P0 });
+      if (!SY.started) return VDI18N.t('A cold cloud core of gas and dust, {d} AU across, turning once every {p} million years. Its own gravity is about to win: press Play.', { d: grp(2 * STORY.r0), p: STORY.P0 });
       if (n.fall > 0.6 * C.n) return VDI18N.t('Every parcel falls toward the center. Gas falling near the spin axis reaches the middle and builds the young Sun, a protostar.');
       if (n.fall > 0) return VDI18N.t('Gas falling from the sides keeps its spin and cannot reach the center: it swings past and meets gas from the other side of the midplane. A flat disk forms, {r} AU in radius.', { r: grp(rd) });
       return VDI18N.t('The collapse is over: {pc} % of the parcels fell onto the young Sun and the rest turn in a disk. The disk\'s edge goes around {k} times faster than the cloud did.', { pc: Math.round(100 * n.sun / C.n), k: grp(spinUp(STORY.r0, STORY.P0)) });
@@ -1319,6 +1335,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (const b of document.querySelectorAll('#stageSeg button')) b.setAttribute('aria-pressed', String(b.dataset.st === S.st));
     for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
     const timed = S.st !== 'disk'; for (const id of ['play', 'restart', 'skip', 'selSpeed']) $(id).hidden = !timed; document.querySelector('label[for="selSpeed"]').hidden = !timed;
+    /* the frost line stage has no clock: hide the time controls' group too, not only its buttons, so no empty box is left on the strip (student view, 2026-11-15) */
+    const tg = $('play').closest('.vd-tg'); if (tg) tg.hidden = !timed;
     $('selSpeed').value = String(S.speed); can.classList.toggle('drag', S.st === 'disk');
   }
   const card = VD.setupCard($('setupCard'));
@@ -1367,11 +1385,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const C = CL.C, rd = Rd();
     let rmax = 0; for (let i = 0; i < C.n; i++) if (C.st[i] === 0) { const k = 3 * i; rmax = Math.max(rmax, Math.hypot(C.p[k], C.p[k + 1], C.p[k + 2])); }
     const want = Math.max(1.3 * rd, 1.12 * rmax, 1); CL.view += (want - CL.view) * Math.min(1, 0.08 * fr);
-    stepCloud(C, fr * S.speed * 0.0035 * Math.sqrt(CL.view ** 3 / GM));
+    const dt = fr * S.speed * 0.0035 * Math.sqrt(CL.view ** 3 / GM); stepCloud(C, dt); CL.rate = dt / (fr / 60);
     const n = cloudCounts(C), q = parcel(C); if (!n.fall && (q.settled || q.gone) && C.t > fallTime(S.r0)) CL.done = true;
   }
   function stepGrowth(fr) { GR.t = Math.min(T_END, GR.t * Math.pow(10, 0.0075 * fr * S.speed)); growTo(GR.D, GR.t); if (GR.t >= T_END) GR.done = true; }
-  function stepMelt(fr) { ML.t = Math.min(T_MELT_END, ML.t + 0.03 * fr * S.speed); if (ML.t >= T_MELT_END) ML.done = true; }
+  /* 0.48 million years a second at normal speed for the first 3 million years after the body forms, when its center heats and
+     melts (at 1.8 the melting went by in half a second), then 1.8 million years a second for the slow cooling (student view, 2026-11-15) */
+  const meltRate = () => (ML.t < S.tf + 3 ? 0.48 : 1.8) * S.speed;
+  function stepMelt(fr) { ML.t = Math.min(T_MELT_END, ML.t + meltRate() * fr / 60); if (ML.t >= T_MELT_END) ML.done = true; }
   function toEnd() {
     if (S.st === 'story') storyToEnd();
     else if (S.st === 'collapse') { let k = 0; while (!CL.done && k++ < 4000) stepCollapse(4); }
@@ -1415,9 +1436,17 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function draw() {
     if (!K || !W) return; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     if (S.st === 'planets' && !GR.D) resetGrowth();
-    if (use3()) { draw3(); return; }
+    if (use3()) { draw3(); labRate(); return; }
     ctx.fillStyle = K.canvas; ctx.fillRect(0, 0, W, H);
     if (S.st === 'story') drawStoryFlat(); else if (S.st === 'collapse') drawCollapseFlat(); else if (S.st === 'disk') drawDiskFlat(); else if (S.st === 'planets') drawPlanetsFlat(); else drawMeltFlat();
+    labRate();
+  }
+  /* the labs show their time lapse at the top right while they run, as the whole story does on its picture (student view, 2026-11-15) */
+  function labRate() {
+    const r = !S.run ? 0 : S.st === 'collapse' ? CL.rate : S.st === 'planets' ? GR.t * Math.LN10 * 0.45 * S.speed : S.st === 'melt' ? meltRate() * 1e6 : 0;
+    if (!(r > 0)) return;
+    const p = P(), t = r < 1e4 ? VDI18N.t('1 second ≈ {t} yr', { t: grp(r) }) : r < 1e6 ? VDI18N.t('1 second ≈ {t} thousand yr', { t: grp(r / 1e3) }) : VDI18N.t('1 second ≈ {t} million yr', { t: sig(r / 1e6, 3) });
+    const d3 = use3(); label(ctx, t, W - 14 * p, (S.st === 'planets' && W < 640 ? 66 : 18) * p, { a: 'right', col: d3 ? '#ede6dd' : K.ink, haloCol: d3 ? '#0a0805' : K.canvas, s: 11, w: 600 });
   }
   let last = performance.now(), lastOut = 0;
   function frame(now) {

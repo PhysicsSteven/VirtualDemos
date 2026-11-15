@@ -359,7 +359,8 @@ table.lines tr.on td { background: color-mix(in srgb, var(--accent) 16%, transpa
         <h2 id="modelsTitle">Models of the hydrogen atom</h2>
         <p class="hint" style="margin: 4px 0 8px;">One lamp shines the same photons up into six atoms, oldest model on the left. Under each, the light it gives off, against hydrogen's real lines.</p>
         <canvas id="cModels" class="models-cv" role="img" aria-label="Six models of the hydrogen atom side by side under one photon beam, each with a strip of the light it gives off."></canvas>
-        <p class="hint amkey"><span><i style="background: var(--equi);"></i>hydrogen's lines (NIST, matched by the Rydberg formula)</span><span><i style="width: 14px; background: linear-gradient(90deg, #8a3cff, #2b6cff, #22c55e, #facc15, #ef4444);"></i>light this atom gave off, each bar in its own color</span><span>strip from 10 to 2000 nm, log scale; the rainbow band is visible light</span></p>
+        <!-- the last line names the slow motion: the atoms hold each excited state about a second (student view, 2026-11-15) -->
+        <p class="hint amkey"><span><i style="background: var(--equi);"></i>hydrogen's lines (NIST, matched by the Rydberg formula)</span><span><i style="width: 14px; background: linear-gradient(90deg, #8a3cff, #2b6cff, #22c55e, #facc15, #ef4444);"></i>light this atom gave off, each bar in its own color</span><span>strip from 10 to 2000 nm, log scale; the rainbow band is visible light</span><span>slow motion: an excited atom waits about 1 s here before it gives off light (really nanoseconds; the Schrödinger atom shows the real lifetime)</span></p>
         <p class="sr-only" id="amLive" aria-live="polite"></p>
       </section>
 
@@ -1704,7 +1705,7 @@ function airFromVac(vnm) {
   const amU = (lam) => Math.round(1000 * Math.log(lam / AM_L0) / Math.log(AM_L1 / AM_L0));
   const amLamU = (u) => AM_L0 * Math.pow(AM_L1 / AM_L0, u / 1000);
   function amFresh(m) {
-    return { m, n: 1, l: 0, wait: 0, ion: false, exc: false, ph: Math.random() * 6.283, tc: 0, done: false, bins: new Float64Array(AM_BINS), out: [], trail: [], note: '' };
+    return { m, n: 1, l: 0, wait: 0, ion: false, ionFrom: 1, exc: false, ph: Math.random() * 6.283, tc: 0, done: false, bins: new Float64Array(AM_BINS), out: [], trail: [], note: '' };
   }
   function amRestart() { AM.atoms = AM_MODELS.map((m) => amFresh(m.key)); AM.photons = []; }
   amRestart();
@@ -1721,7 +1722,7 @@ function airFromVac(vnm) {
     if (a.m === 'plan') return false;
     if (a.ion) return false;
     const to = amAbsorbN(a.n, E, AM_TOL);
-    if (to === 'ion') { if (Math.random() >= AM_PION) return false; a.ion = true; a.wait = 2; return true; }
+    if (to === 'ion') { if (Math.random() >= AM_PION) return false; a.ion = true; a.ionFrom = a.n; a.wait = 2; return true; }
     if (!to) return false;
     if (a.m === 'sch') { const l2 = amAbsorbL(a.n, a.l, to, Math.random()); if (l2 < 0) return false; a.l = l2; }
     a.n = to; a.wait = amDwell(a); return true;
@@ -1807,7 +1808,9 @@ function airFromVac(vnm) {
     if (a.m === 'ball') return 'a hard, solid sphere';
     if (a.m === 'pud') return a.exc ? 'electron ringing' : `rings at ${amThomsonNm(AM.R).toFixed(1)} nm`;
     if (a.m === 'plan') return a.done ? 'collapsed; a fresh atom next' : `t = ${(a.tc / 5 * amCollapseTime(BOHR_A0 * 1e-9) * 1e12).toFixed(1)} ps of 15.6`;
-    if (a.ion) return 'ionized, electron gone';
+    /* which level it was ionized from: a Lyman β lamp (12.1 eV) ionizes only an atom already lifted to n = 3, and "ionized, electron
+       gone" read as if the lamp alone could ionize hydrogen (student view, 2026-11-15) */
+    if (a.ion) return `ionized from n = ${a.ionFrom}`;
     if (a.m === 'sch') return `${a.n}${SUB[a.l]}, lives ${fmtT(amLifetime(a.n, a.l))}` + (a.note ? `, ${a.note}` : '');
     return `n = ${a.n}, E = ${amLevel(a.n).toFixed(2)} eV`;
   }
@@ -1897,7 +1900,9 @@ function airFromVac(vnm) {
       ctx.restore();
       /* status line */
       ctx.fillStyle = ink; ctx.font = `${10.5 * ps}px ${mf}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      let st = amStatus(a); while (ctx.measureText(st).width > pw - 6 && st.length > 8) st = st.slice(0, -2);
+      /* a long status shrinks to fit before it is cut, and a cut one ends in an ellipsis ("collapsed; a fresh ato") (student view, 2026-11-15) */
+      let st = amStatus(a), fz = 10.5 * ps; while (ctx.measureText(st).width > pw - 6 && fz > 8.5 * ps) { fz -= 0.5 * ps; ctx.font = `${fz}px ${mf}`; }
+      if (ctx.measureText(st).width > pw - 6) { while (ctx.measureText(st + '…').width > pw - 6 && st.length > 8) st = st.slice(0, -1); st += '…'; }
       ctx.fillText(st, cx, by + box + 9 * ps);
       /* its spectrum strip, log scale 10 to 2000 nm */
       const sx = cx0 + 6, sw = pw - 12, sy = by + box + 18 * ps, X = (nm) => sx + Math.log(nm / AX0) / Math.log(AX1 / AX0) * sw;

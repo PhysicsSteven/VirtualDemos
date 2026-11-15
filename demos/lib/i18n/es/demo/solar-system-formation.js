@@ -154,7 +154,7 @@ VDI18N.add('es', 'demo/solar-system-formation', {
   "La historia completa corre los modelos de las etapas uno tras otro para una sola nube ({#} UA de radio, que da una vuelta cada {#} millones de años), con un disco que tiene la masa mínima dentro de la línea de hielo y tres veces esa masa más allá (con la masa mínima ahí, ningún núcleo llega a {#} masas terrestres antes de que se acabe el gas: el problema de la escala de tiempo para formar a Júpiter así), dibujado con distancias reales; los cuerpos se dibujan mucho más grandes que a escala y sus órbitas giran despacio en la pantalla, no a su ritmo real. El capítulo {#} repite una corrida de una simulación de N cuerpos hecha para esta página (tools/solar-system-formation/nbody.c), una de tres con distintos comienzos al azar, la que termina más parecida a nuestros planetas (las otras dos terminan con uno y con dos planetas rocosos): los {#} protoplanetas rocosos que quedan cuando se acaba el gas, con pequeñas excentricidades e inclinaciones al azar (Kokubo, Genda e Ida {#}), y Júpiter y Saturno, que empiezan ya formados en sus órbitas de hoy, durante {#} millones de años. Cada cuerpo atrae a todos los demás (un integrador de Wisdom y Holman, que sigue paso a paso los acercamientos); los cuerpos que se tocan se unen completos, conservando la masa y el momento, y se registran la rapidez y el ángulo del impacto. Los impactos reales también lanzan escombros y algunos cuerpos rebotan; los modelos que incluyen esto terminan con casi los mismos planetas (Chambers {#}). Los modelos como este suelen hacer a Marte demasiado grande: el problema del Marte pequeño (Raymond y colaboradores {#}), que todavía se estudia. Los tamaños, las excentricidades y las inclinaciones de las órbitas en la pantalla vienen de la corrida; las direcciones de las órbitas y el lugar de cada cuerpo en su órbita son solo para el dibujo. El capítulo {#} es una corrida de hidrodinámica de partículas suavizadas hecha para esta página (tools/solar-system-formation/sph.c), a baja resolución como las primeras simulaciones de este tipo (Benz, Slattery y Cameron {#}; las recientes usan millones de partículas): el impacto estándar de Canup y Asphaug ({#}), un cuerpo de {#} masas terrestres que choca con uno de {#} a {#}° de un choque de frente, sin rapidez propia a gran distancia. Cada cuerpo tiene un núcleo de hierro con el {#} % de su masa bajo un manto de roca, que primero se deja asentar en equilibrio; la presión viene de la ecuación de estado de Tillotson con los valores del hierro y el granito de Melosh ({#}); la roca estirada no tiene resistencia; una viscosidad artificial convierte el movimiento del choque en calor. Las posiciones entre los cuadros guardados se interpolan alrededor del eje de giro. Después de {#} horas, el disco es el material en órbitas que no tocan la Tierra (su radio sale de su masa con la densidad media de la Tierra), y la masa de la Luna es la estimación de Ida, Canup y Stewart ({#}) a partir de la masa y el momento angular del disco. La Luna del final está dibujada, no simulada: se junta justo fuera del límite de Roche en alrededor de un año (Kokubo, Ida y Makino {#}). Seguir elige el planeta rocoso más cercano a la órbita de un planeta al final de la corrida (el más grande a menos del {#} % de ella), los protoplanetas de los que se formó, sus planetesimales iniciales y el gas de la nube que se asienta en sus anillos (el gas se asienta en j²/GM; se deja fuera la expansión posterior del disco, así que esto marca dónde cayó el material, no todos los lugares por donde pasó). Las cuatro etapas: Colapso: el modelo de caída de Ulrich ({#}): las parcelas caen bajo la atracción del Sol joven solamente, conservan su giro alrededor del eje, pierden su movimiento hacia arriba y hacia abajo donde se encuentran en el plano medio las corrientes de arriba y de abajo, y se acomodan en órbitas circulares; se dejan fuera la gravedad y la presión de la propia nube, los campos magnéticos y la expansión posterior del disco. Disco: la nebulosa solar de masa mínima de Hayashi ({#}), con la temperatura de un grano oscuro a plena luz solar (un disco real es más caliente en su parte media densa cerca del Sol), y temperaturas de condensación de Lodders ({#}) a {#}⁻⁴ bar. Crecimiento: crecimiento oligárquico (Kokubo e Ida {#}, {#}): los vecinos a menos de {#} radios de Hill mutuos se unen una vez que pasa el tiempo de crecimiento hasta su masa conjunta, así que los cuerpos terminan entre una y dos veces la masa de aislamiento (se unen cuerpos completos); un núcleo de {#} masas terrestres que se forma mientras dura el gas se convierte en gigante (no se modela cuánto gas reúne); se dejan fuera los impactos gigantes posteriores, la atracción de los gigantes sobre sus vecinos y la migración. Núcleos de hierro: calentamiento por aluminio {#} y conducción en una esfera sólida formada de una vez (valores de Johansen y colaboradores {#}); una celda fundida pierde todo calor adicional, en representación de la agitación de un océano de magma.",
 "young Sun (protostar)":
   "Sol joven (protoestrella)",
-"A cold cloud core of gas and dust, {d} AU across, turning once every {p} million years. Its own gravity is about to win: press Start.":
+"A cold cloud core of gas and dust, {d} AU across, turning once every {p} million years. Its own gravity is about to win: press Play.":
   "Un núcleo frío de gas y polvo de una nube, de {d} UA de ancho, que da una vuelta cada {p} millones de años. Su propia gravedad está por ganar: presiona Iniciar.",
 "The cloud falls in":
   "La nube se derrumba",
@@ -262,6 +262,8 @@ VDI18N.add('es', 'demo/solar-system-formation', {
   "{#}, {#} masas terrestres",
 "R = {#} km · center {#} K":
   "R = {#} km · centro {#} K",
+"temperature color":
+  "color de la temperatura",
 "a quarter cut away · inside colored by temperature · drag to turn":
   "un cuarto recortado · interior coloreado por temperatura · arrastra para girar",
 "center temperature, {#} to {#} Myr":
@@ -312,6 +314,10 @@ VDI18N.add('es', 'demo/solar-system-formation', {
   "Siguiendo a Júpiter",
 "A cloud core {#} AU in radius (about {#} parsec) turning once every {#} million years, a spin like those measured in dense cloud cores (Goodman et al. {#}, about {#} × {#}⁻¹⁴ per second). Its equator ends up in a disk {#} AU across in radius, about the size of the planets' realm.":
   "Un núcleo de nube de {#} UA de radio (cerca de {#} pársec) que da una vuelta cada {#} millones de años, un giro como los medidos en núcleos de nubes densas (Goodman y colaboradores {#}, cerca de {#} × {#}⁻¹⁴ por segundo). Su ecuador termina en un disco de {#} UA de radio, más o menos del tamaño del dominio de los planetas.",
+"{#} second ≈ {t} thousand yr":
+  "{#} segundo ≈ {t} mil años",
+"{#} second ≈ {#} thousand yr":
+  "{#} segundo ≈ {#} mil años",
 "The same cloud turning four times more slowly: the disk comes out {#}² = {#} times smaller, about {#} AU in radius.":
   "La misma nube girando cuatro veces más despacio: el disco sale {#}² = {#} veces más pequeño, de unos {#} UA de radio.",
 "The same cloud turning twice as fast: the disk comes out {#}² = {#} times larger, about {#} AU in radius.":
@@ -370,6 +376,10 @@ VDI18N.add('es', 'demo/solar-system-formation', {
   "los planetas actuales",
 "Hayashi's minimum mass solar nebula: just enough solids to make today's planets, with gas that lasts {#} million years, the middle of what young star clusters show (Haisch, Lada and Lada {#}). No core reaches {#} Earth masses in time, so no giant forms.":
   "La nebulosa solar de masa mínima de Hayashi: apenas los sólidos suficientes para formar los planetas actuales, con gas que dura {#} millones de años, el valor medio de lo que muestran los cúmulos de estrellas jóvenes (Haisch, Lada y Lada {#}). Ningún núcleo llega a {#} masas terrestres a tiempo, así que no se forma ningún gigante.",
+"{#} second ≈ {t} yr":
+  "{#} segundo ≈ {t} años",
+"{#} second ≈ {#} yr":
+  "{#} segundo ≈ {#} años",
 "Three times the minimum mass: cores beyond the frost line reach {#} Earth masses while the gas is still there and become giants. The rocky bodies inside the frost line stay small.":
   "Tres veces la masa mínima: los núcleos más allá de la línea de congelación llegan a {#} masas terrestres mientras el gas sigue ahí y se convierten en gigantes. Los cuerpos rocosos dentro de la línea de congelación se quedan pequeños.",
 "The heavier disk, but its gas is blown away after {#} million years: the cores are not big enough in time, and no giant forms.":
@@ -386,6 +396,10 @@ VDI18N.add('es', 'demo/solar-system-formation', {
   "Cerrar",
 "on the picture ({#} Frost line stage)":
   "en la imagen (etapa {#} Línea de congelación)",
+"{#} second ≈ {t} million yr":
+  "{#} segundo ≈ {t} millones de años",
+"{#} second ≈ {#} million yr":
+  "{#} segundo ≈ {#} millones de años",
 "iron core":
   "núcleo de hierro",
 "formed at {#} million yr":
@@ -458,12 +472,18 @@ VDI18N.add('es', 'demo/solar-system-formation', {
   "Impactos hasta ahora",
 "t = {#} million yr":
   "t = {#} millones de años",
-"{t} million years after the gas cleared, {n} rocky planets are left. The largest has {m} Earth masses at {a} AU (Earth: {#} at {#} AU, Venus: {#} at {#} AU). This is run {k} of {runs}, the one most like our planets: every run ends differently, because collisions hang on tiny differences in the orbits.":
-  "{t} millones de años después de que se fue el gas, quedan {n} planetas rocosos. El más grande tiene {m} masas terrestres a {a} UA (la Tierra: {#} a {#} UA; Venus: {#} a {#} UA). Esta es la corrida {k} de {runs}, la más parecida a nuestros planetas: cada corrida termina distinta, porque los choques dependen de diferencias diminutas en las órbitas.",
+"Mars today":
+  "Marte hoy",
 "Saturn today":
   "Saturno hoy",
+"{t} million years after the gas cleared, {n} rocky planets are left. The largest has {m} Earth masses at {a} AU (Earth: {#} at {#} AU, Venus: {#} at {#} AU). This is run {k} of {runs}, the one most like our planets: every run ends differently, because collisions hang on tiny differences in the orbits.":
+  "{t} millones de años después de que se fue el gas, quedan {n} planetas rocosos. El más grande tiene {m} masas terrestres a {a} UA (la Tierra: {#} a {#} UA; Venus: {#} a {#} UA). Esta es la corrida {k} de {runs}, la más parecida a nuestros planetas: cada corrida termina distinta, porque los choques dependen de diferencias diminutas en las órbitas.",
+"Earth today":
+  "la Tierra hoy",
 "Venus today":
   "Venus hoy",
+"Mercury today":
+  "Mercurio hoy",
 "young Earth":
   "la Tierra joven",
 "Theia":
@@ -524,12 +544,8 @@ VDI18N.add('es', 'demo/solar-system-formation', {
   "la Tierra mientras crece: {#} masas terrestres",
 "{#} Earth masses, a = {#} AU, e = {#}":
   "{#} masas terrestres, a = {#} UA, e = {#}",
-"Mars today":
-  "Marte hoy",
 "This run's {name} took its last giant impact {t} million years after the gas cleared: {mi} Earth masses hit at {v} km/s.":
   "En esta corrida, {name} recibió su último impacto gigante {t} millones de años después de que se fue el gas: {mi} masas terrestres chocaron a {v} km/s.",
-"Earth today":
-  "la Tierra hoy",
 "teal: the gas that will settle where {name} forms ({a} to {b} AU)":
   "verde azulado: el gas que se asentará donde se forma {name} ({a} a {b} UA)",
 "teal: the gas that will settle where Jupiter forms ({#} to {#} AU)":
@@ -558,10 +574,6 @@ VDI18N.add('es', 'demo/solar-system-formation', {
   "En esta corrida no queda ningún planeta cerca de la órbita de {name}: los protoplanetas que empezaron cerca de ella salieron disparados o los barrieron sus vecinos.",
 "Models like this one usually get Mars wrong, too big or missing: the small Mars problem, still being worked on.":
   "Los modelos como este suelen fallar con Marte, que sale demasiado grande o no aparece: el problema del Marte pequeño, que todavía se estudia.",
-"{#} second ≈ {t} thousand yr":
-  "{#} segundo ≈ {t} mil años",
-"{#} second ≈ {t} yr":
-  "{#} segundo ≈ {t} años",
 "The collapse is over: {pc} % of the parcels fell onto the young Sun and the rest turn in a disk. The disk's edge goes around {k} times faster than the cloud did.":
   "Terminó el colapso: el {pc} % de las parcelas cayó en el Sol joven y el resto gira en un disco. El borde del disco da vueltas {k} veces más rápido que la nube.",
 "{h} hours before contact":
@@ -602,8 +614,6 @@ VDI18N.add('es', 'demo/solar-system-formation', {
   "1 segundo ≈ {t} millones de años",
 "Done":
   "Listo",
-"Mercury today":
-  "Mercurio hoy",
 "{h} hours after contact: a disk of {md} Moon masses circles Earth ({th} % of it from Theia, {fe} % iron), and {me} Moon masses escaped. Within about a year the disk gathers into a moon (drawn, not simulated): with this disk's mass and spin, about {mm} Moon masses (the formula of Ida, Canup and Stewart {#}).":
   "{h} horas después del contacto: un disco de {md} masas lunares gira alrededor de la Tierra ({th} % de él viene de Tea, {fe} % es hierro), y escaparon {me} masas lunares. En alrededor de un año el disco se junta en una luna (dibujada, no simulada): con la masa y el giro de este disco, de unas {mm} masas lunares (la fórmula de Ida, Canup y Stewart {#}).",
 "Loading the Moon-forming impact…":
