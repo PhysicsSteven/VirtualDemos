@@ -26,8 +26,6 @@ VDI18N.add('es', 'demo/double-slit', {
   "Impactos por intervalo",
 "Double Slit, One Particle at a Time":
   "Doble rendija, una partícula a la vez",
-"<a><span>←</span> <span>Telescope Aberrations</span></a><a><span>Diffraction Grating</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Aberraciones de telescopios</span></a><a><span>Rejilla de difracción</span> <span>→</span></a>",
 "Send photons, electrons or C₆₀ molecules through two slits one at a time. Each one lands at a single point; only the pile of many points shows the interference pattern.":
   "Envía fotones, electrones o moléculas de C₆₀ a través de dos rendijas, una a la vez. Cada una llega a un solo punto; solo la acumulación de muchos puntos muestra el patrón de interferencia.",
 "λ = h/p · Δy ≈ λL/d · envelope zero at sin θ = λ/a":
@@ -152,8 +150,6 @@ VDI18N.add('es', 'demo/double-slit', {
   "I(θ) = I₀ · cos²(πd sen θ/λ) · [sen β/β]², β = πa sen θ/λ",
 "The first factor is two slit interference: fringes spaced λL/d. The second is the diffraction of each slit: a broad envelope whose first zero sits at sin θ = λ/a. The pattern is their product, so the envelope sets how bright each fringe can be.":
   "El primer factor es la interferencia de dos rendijas: franjas separadas λL/d. El segundo es la difracción de cada rendija: una envolvente ancha cuyo primer cero está en sen θ = λ/a. El patrón es su producto, así que la envolvente fija qué tan brillante puede ser cada franja.",
-"Hits":
-  "Impactos",
 "Predicted curve":
   "Curva predicha",
 "Maxima marks":
@@ -176,6 +172,10 @@ VDI18N.add('es', 'demo/double-slit', {
   "Vista 3D: las rendijas son largas, así que cada una emite una onda cilíndrica y las franjas son líneas a lo ancho de la pantalla. Las rendijas mantienen su cociente real entre ancho y separación. Arrastra el banco vacío, o pulsa [ y ], para girarlo; el botón Vista 3D o V cambia a la vista superior.",
 "Model: a monochromatic plane wave falls on two slits, and the screen pattern is the paraxial Fresnel calculation, which matches the formula above in the far field. Each hit is drawn at random from that pattern; its position along the slits is just spread out for display. Slits are drawn enlarged and L is not to scale. Hits count only if they land on the screen shown.":
   "Modelo: una onda plana monocromática incide sobre dos rendijas, y el patrón en la pantalla es el cálculo paraxial de Fresnel, que coincide con la fórmula de arriba en el campo lejano. Cada impacto se sortea al azar a partir de ese patrón; su posición a lo largo de las rendijas solo se reparte para mostrarla. Las rendijas se dibujan agrandadas y L no está a escala. Los impactos cuentan solo si caen en la pantalla mostrada.",
+"<a><span>←</span> <span>Telescope Aberrations</span></a><a><span>Diffraction Grating</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Aberraciones de telescopios</span></a><a><span>Rejilla de difracción</span> <span>→</span></a>",
+"Hits":
+  "Impactos",
 "A very faint red laser, one photon at a time. G. I. Taylor did this in {#} with the fringes around a needle’s shadow. Fringes {#} mm apart, nine bright ones inside the central envelope, which ends {#} mm from the center.":
   "Un láser rojo muy tenue, un fotón a la vez. G. I. Taylor hizo esto en {#} con las franjas alrededor de la sombra de una aguja. Franjas separadas {#} mm, nueve brillantes dentro de la envolvente central, que termina a {#} mm del centro.",
 "<span></span>{#} nm <span>red</span>":
@@ -190,8 +190,6 @@ VDI18N.add('es', 'demo/double-slit', {
   "Filtro ND",
 "Photon counting camera":
   "Cámara de conteo de fotones",
-"Fire some particles":
-  "Dispara algunas partículas",
 "C₆₀ at {#} m/s, λ = {#} pm. Arndt and colleagues used a grating with a {#} nm period; two slits with that spacing put the peaks in the same places, and many slits would only sharpen them. With d = 2a the second order falls on an envelope zero and is missing. The real beam had a wide spread of speeds that blurred the side peaks; here every molecule has the same speed.":
   "C₆₀ a {#} m/s, λ = {#} pm. Arndt y sus colegas usaron una rejilla con un periodo de {#} nm; dos rendijas con esa separación ponen los picos en los mismos lugares, y muchas rendijas solo los harían más nítidos. Con d = 2a el segundo orden cae sobre un cero de la envolvente y falta. El haz real tenía una gran dispersión de rapideces que difuminaba los picos laterales; aquí todas las moléculas tienen la misma rapidez.",
 "Molecule speed v":
@@ -218,6 +216,12 @@ VDI18N.add('es', 'demo/double-slit', {
   "Tu propia configuración. Elige una predefinida para volver a un experimento conocido.",
 "Turn on the cursors (Measure) and put them on two fringes first.":
   "Activa primero los cursores (Medir) y ponlos sobre dos franjas.",
+"Close":
+  "Cerrar",
+"Close or open slit {#} or slit {#}":
+  "Cierra o abre la rendija {#} o la rendija {#}",
+"Fire some particles":
+  "Dispara algunas partículas",
 "{#} <small>detected</small>":
   "{#} <small>detectadas</small>",
 "<a><span>←</span> <span>Color Vision</span></a><a><span>Diffraction Grating</span> <span>→</span></a>":

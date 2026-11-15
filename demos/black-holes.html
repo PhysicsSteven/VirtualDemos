@@ -1180,7 +1180,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const outw = im.id === 'im1', dir = outw ? 1 : -1, off = (outw ? 16 : 14) * ps;
       const lxp = im.sx + (Math.abs(ux) > 0.3 ? dir * Math.sign(ux || 1) * off : 0), lyp = im.sy - (Math.abs(ux) > 0.3 ? 0 : dir * Math.sign(uy || 1) * off);
       const al = Math.abs(ux) > 0.3 ? (dir * Math.sign(ux || 1) > 0 ? 'left' : 'right') : 'center';
-      label(c, `${outw ? '1' : '2'}: μ = ${im.m.toFixed(2)}`, lxp, lyp, outw ? T.skyAccent : T.skyPos, { ...sk, align: al });
+      /* a label that would run off the side of the picture was pinned at the edge over its own marker: it goes just above the
+         marker instead (student view calls, 2026-11-15) */
+      const lt = `${outw ? '1' : '2'}: μ = ${im.m.toFixed(2)}`; font(c, 11 * ps); const lw = tw(c, lt);
+      let lx2 = lxp, ly2 = lyp, al2 = al;
+      if ((al === 'right' && lxp - lw < m.x + 5) || (al === 'left' && lxp + lw > m.x + m.w - 5)) { lx2 = im.sx; ly2 = im.sy - 17 * ps; al2 = 'center'; }
+      label(c, lt, lx2, ly2, outw ? T.skyAccent : T.skyPos, { ...sk, align: al2 });
     }
     // scale bar: 1 θ_E as an angle
     const te = thetaE(M(), Math.pow(10, S.logDL) * KPC, Math.pow(10, S.logDS) * KPC);
@@ -1264,7 +1269,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       c.fillStyle = T.accent; c.beginPath(); c.arc(X(u), Y(tp), 4.5 * ps, 0, 2 * Math.PI); c.fill();
       c.fillStyle = T.pos; c.beginPath(); c.arc(X(u), Y(tm), 4.5 * ps, 0, 2 * Math.PI); c.fill();
       c.restore();
-      label(c, 'θ = ±1: the Einstein ring', b2.L + 6 * ps, Y(1) - 10 * ps, T.accent, { ps });
+      /* the ring's name sat on the θ₊ marker's label when θ₊ is near 1: it moves to whichever side of the line is farther from that label (student view calls, 2026-11-15) */
+      { const rt = 'θ = ±1: the Einstein ring'; font(c, 11 * ps); const rw = tw(c, rt), py = Y(tp) - 12 * ps, mx = X(u) + (u > 1 ? -8 : 8) * ps;
+        font(c, 11 * ps); const pw = tw(c, `θ₊ = ${tp.toFixed(3)}`), p0 = u > 1 ? mx - pw : mx, p1 = u > 1 ? mx : mx + pw;
+        let ry = Y(1) - 10 * ps;
+        if (p0 < b2.L + rw + 50 * ps && p1 > b2.L && Math.abs(py - ry) < 16 * ps) { const rb = Y(1) + 12 * ps; if (Math.abs(py - rb) > Math.abs(py - ry)) ry = rb; }
+        label(c, rt, b2.L + 6 * ps, ry, T.accent, { ps }); }
       label(c, `θ₊ = ${tp.toFixed(3)}`, X(u) + (u > 1 ? -8 : 8) * ps, Y(tp) - 12 * ps, T.accent, { ps, align: u > 1 ? 'right' : 'left' });
       label(c, `θ₋ = ${tm.toFixed(3)}`, X(u) + (u > 1 ? -8 : 8) * ps, Y(tm) + 12 * ps, T.pos, { ps, align: u > 1 ? 'right' : 'left' });
       frame(b2);

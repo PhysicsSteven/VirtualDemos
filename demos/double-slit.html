@@ -1158,9 +1158,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     hLabel(S.kind === 'photon' ? 'Photon counting camera' : S.kind === 'electron' ? 'Phosphor screen' : 'Molecule detector', sq[0], sq[1] - 2 * ps, LAB.muted, 'center', 'bottom', 10.5);
     const dTxt = `d = ${trim(sig(S.d / f.unit))} ${f.uname}`, aTxt = `a = ${trim(sig(S.a / f.unit))} ${f.uname}`;
     const pq = P(xf, B3.hp + 0.1, -0.1);
-    hLabel(`${dTxt} · ${aTxt}`, pq[0], pq[1] - 2 * ps, LAB.ink, 'center', 'bottom', 10.5, T.mono);
+    /* on a phone the d and a tag sat on top of the detector's name: there it moves to the box's bottom left corner (student view calls, 2026-11-15) */
+    if (!LY.wide) hLabel(`${dTxt} · ${aTxt}`, box.x + 8 * ps, box.y + box.h - 8 * ps, LAB.ink, 'left', 'bottom', 10.5, T.mono);
+    else hLabel(`${dTxt} · ${aTxt}`, pq[0], pq[1] - 2 * ps, LAB.ink, 'center', 'bottom', 10.5, T.mono);
     for (const sl of slits) { const q = P(0, sl.c, B3.zp + 0.05); hLabel(String(sl.i), q[0] + 4 * ps, q[1], S.open[sl.i - 1] ? LAB.ink : LAB.muted, 'left', 'middle', 10.5, T.mono); }
-    if (S.det) { const q = P(xf - 0.2, slits[1].c - 0.12, -zl - 0.2); hLabel('which slit detectors', q[0], q[1] + 4 * ps, LAB.muted, 'center', 'top', 10); }
+    if (S.det) { const q = P(xf - 0.2, slits[1].c - 0.12, -zl - 0.2);
+      /* on a phone the name sat over slit label 2: it moves to the bottom right corner (student view calls, 2026-11-15) */
+      if (!LY.wide) hLabel('which slit detectors', box.x + box.w - 8 * ps, box.y + box.h - 8 * ps, LAB.muted, 'right', 'bottom', 10);
+      else hLabel('which slit detectors', q[0], q[1] + 4 * ps, LAB.muted, 'center', 'top', 10); }
     hLabel(`L = ${sig(S.L)} m, not to scale`, v3.Lmid[0], v3.Lmid[1] + 6 * ps, LAB.muted, 'center', 'top', 10.5, T.mono);
     hLabel(LY.wide ? '3D view (slits enlarged)' : '3D view', box.x + 8 * ps, box.y + 8 * ps, LAB.muted, 'left', 'top', 11);
     if (vac) hLabel('in vacuum', box.x + box.w - 8 * ps, box.y + 8 * ps, LAB.muted, 'right', 'top', 10);

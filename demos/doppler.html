@@ -14,7 +14,8 @@
 /* folded rail sections: secondary options behind their heading (layout redesign, as in springs) */
 .rail details.more > p + p { margin-top: 6px; }
 /* Source and observer card on the picture (lean sidebar): top right over the wavefronts; under the picture on phones */
-.card { position: absolute; z-index: 2; top: 58px; right: 12px; width: min(290px, calc(100% - 24px)); display: flex; flex-direction: column; gap: 8px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 12px; }
+/* narrower and tighter, so the card covers less of the sky the jet flies across (student view calls, 2026-11-15) */
+.card { position: absolute; z-index: 2; top: 58px; right: 12px; width: min(262px, calc(100% - 24px)); display: flex; flex-direction: column; gap: 5px; padding: 6px 9px; border: 1px solid var(--line); border-radius: 12px; }
 .card-title { font-size: 0.74rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
 .card #obsSec { display: flex; flex-direction: column; gap: 8px; }
 .card .slider-head label, .card .slider-head output { font-size: 0.8rem; }

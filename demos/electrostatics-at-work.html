@@ -42,6 +42,8 @@
 .wandcard { position: absolute; left: 10px; top: 10px; z-index: 2; display: flex; gap: 6px; align-items: center; flex-wrap: wrap; background: color-mix(in srgb, var(--canvas) 88%, transparent); border: 1px solid var(--line); border-radius: 8px; padding: 5px 7px; font-size: 0.84rem; }
 .wandcard[hidden] { display: none; }
 @media (max-width: 640px) { .wandcard { font-size: 0.8rem; padding: 4px 5px; gap: 4px; } .wandcard span { display: none; } .wandcard button { padding: 3px 7px; } }
+/* on a phone the Tools button drops below 3D/Flat, so it no longer covers "Hang it up" (student view calls, 2026-11-15) */
+@media (max-width: 640px) { .stage > .vdt-float { top: 52px !important; right: 10px !important; } }
 .wandcard span { font-weight: 700; color: var(--muted); font-size: 0.76rem; letter-spacing: 0.05em; text-transform: uppercase; padding: 0 2px; }
 .wandcard button { font: inherit; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 3px 9px; cursor: pointer; }
 .wandcard button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
@@ -769,7 +771,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const py = sceneH + 8 * p, ph = Hh - py - 8 * p, gw = narrow ? W - 16 * p : (W - 24 * p) / 2;
     const P1 = { x: 8 * p, y: py, w: gw, h: narrow ? ph / 2 - 4 * p : ph }, P2 = narrow ? { x: 8 * p, y: py + ph / 2 + 4 * p, w: gw, h: ph / 2 - 4 * p } : { x: 16 * p + gw, y: py, w: gw, h: ph };
     const vm = vMax(R), span = 20, vTop = vm * 1.15, wP = wandNow(), vs = !wP ? vm : wP.touching ? 0 : wP.s.qSpark * wP.s.V1;
-    plotFrame(P1.x, P1.y, P1.w, P1.h, 'Dome voltage against time', `last ${span} s`, S.blind ? '' : `0 to ${sci(vTop / 1000, 2)} kV`);
+    /* the charging runs in real time: say so under the clock axis (student view calls, 2026-11-15) */
+    plotFrame(P1.x, P1.y, P1.w, P1.h, 'Dome voltage against time', `last ${span} s, real time`, S.blind ? '' : `0 to ${sci(vTop / 1000, 2)} kV`);
     const ix0 = P1.x + 8 * p, ix1 = P1.x + P1.w - 8 * p, iy0 = P1.y + P1.h - 18 * p, iy1 = P1.y + 32 * p, X = (t) => ix1 - (S.t - t) / span * (ix1 - ix0), Y = (v) => iy0 - v / vTop * (iy0 - iy1);
     ctx.strokeStyle = T.grid; ctx.beginPath(); ctx.moveTo(ix0, iy0); ctx.lineTo(ix1, iy0); ctx.stroke();
     ctx.strokeStyle = T.plateHi; ctx.setLineDash([5 * p, 4 * p]); ctx.beginPath(); ctx.moveTo(ix0, Y(vs)); ctx.lineTo(ix1, Y(vs)); ctx.stroke(); ctx.setLineDash([]);

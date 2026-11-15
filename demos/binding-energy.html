@@ -634,11 +634,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (sy > box.T && sy < box.B && sx > box.L && sx < box.R) selRing(sx, sy);
     c.restore();
     // a few direct labels
-    const tags = S.zoom === 'full' ? [[2, 4], [6, 12], [8, 16], [92, 238]] : S.zoom === 'light' ? [[1, 2], [1, 3], [2, 4], [3, 6], [3, 7], [4, 9], [6, 12], [8, 16], [10, 20], [12, 24], [14, 28]] : [[28, 62], [26, 58], [26, 56], [28, 60], [24, 52], [28, 64]];
+    const tags = S.zoom === 'full' ? [[2, 4], [6, 12], [8, 16], [92, 238]] : S.zoom === 'light' ? [[1, 2], [1, 3], [2, 3], [2, 4], [3, 6], [3, 7], [4, 9], [6, 12], [8, 16], [10, 20], [12, 24], [14, 28]] : [[28, 62], [26, 58], [26, 56], [28, 60], [24, 52], [28, 64]];
     for (const [Z, A] of tags) {
       const n = get(Z, A); if (!n) continue; if (S.rx && rxNuclides().has(n)) continue; if (S.rx === 'u235' && A === 238) continue;
       const x = box.X(A), y = box.Y(n.ba); if (x < box.L || x > box.R || y < box.T || y > box.B) continue;
-      const up = S.zoom === 'peak' ? (A === 56 || A === 52 ? 1 : -1) : (A === 2 || A === 3 ? -1 : 1);
+      /* in Light the stable ³He dot sat beside the ³H tag and read as ³H: it gets its own tag below it, ³H's stays above (student view calls, 2026-11-15) */
+      const up = S.zoom === 'peak' ? (A === 56 || A === 52 ? 1 : -1) : (A === 2 || (A === 3 && Z === 1) ? -1 : 1);
       queueLabel(nm(n), x + (S.zoom === 'peak' ? 0 : 6 * ps), y + up * 13 * ps, T.ink, S.zoom === 'peak' ? 'center' : 'left');
     }
     if (S.zoom === 'full') {
