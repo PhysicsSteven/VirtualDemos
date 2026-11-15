@@ -1,7 +1,7 @@
 /* demo/polarization in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/polarization', {
-"Light travels left to right. Disks and fields are drawn as seen facing the oncoming beam.":
-  "La luz viaja de izquierda a derecha. Los discos y los campos se dibujan como se ven de frente al haz que llega.",
+"Light travels left to right. Disks and fields are drawn as seen facing the oncoming beam. Slowed about {#} × {#}¹⁵ times.":
+  "La luz viaja de izquierda a derecha. Los discos y los campos se dibujan como se ven de frente al haz que llega. Ralentizado unas {#} × {#}¹⁵ veces.",
 "Light in":
   "Luz de entrada",
 "unpolarized":
@@ -182,12 +182,12 @@ VDI18N.add('es', 'demo/polarization', {
   "I/I₀ después del último elemento",
 "Lamp: unpolarized":
   "Lámpara: no polarizada",
-"Not to scale: field and wavelength hugely magnified. Drag a mount to turn it.":
-  "No está a escala: el campo y la longitud de onda están enormemente aumentados. Arrastra una montura para girarla.",
-"Not to scale · drag a mount to turn it":
-  "No está a escala · arrastra una montura para girarla",
-"Not to scale: the field and its wavelength are drawn hugely magnified (light: about {#} µm). Drag a mount to turn it, drag elsewhere to turn the view.":
-  "No está a escala: el campo y su longitud de onda se dibujan enormemente aumentados (luz: cerca de {#} µm). Arrastra una montura para girarla, arrastra en otro lugar para girar la vista.",
+"Not to scale: magnified, slowed about {#} × {#}¹⁵ times. Drag a mount to turn it.":
+  "No está a escala: aumentado y ralentizado unas {#} × {#}¹⁵ veces. Arrastra una montura para girarla.",
+"Not to scale · slowed {#} × {#}¹⁵ times · drag a mount":
+  "No está a escala · ralentizado {#} × {#}¹⁵ veces · arrastra una montura",
+"Not to scale: field and wavelength (about {#} µm) hugely magnified, slowed about {#} × {#}¹⁵ times. Drag a mount to turn it, elsewhere to turn the view.":
+  "No está a escala: el campo y la longitud de onda (cerca de {#} µm) están enormemente aumentados y ralentizados unas {#} × {#}¹⁵ veces. Arrastra una montura para girarla, o en otro lugar para girar la vista.",
 "Elements":
   "Elementos",
 "I/I₀ out":
@@ -272,8 +272,12 @@ VDI18N.add('es', 'demo/polarization', {
   "θc = {#}°",
 "n₁ = {#} (water)":
   "n₁ = {#} (agua)",
-"Drawn as seen facing the oncoming beam.":
-  "Dibujado como se ve de frente al haz que llega.",
+"Close":
+  "Cerrar",
+"Turn the picked element by {#} degree (Polarizer bench, Shift for {#})":
+  "Gira el elemento elegido {#} grado (Banco de polarizadores, Shift para {#})",
+"Drawn facing the oncoming beam; slowed about {#} × {#}¹⁵ times.":
+  "Dibujado de frente al haz que llega; ralentizado unas {#} × {#}¹⁵ veces.",
 "circular left":
   "circular izquierda",
 "In":
@@ -285,5 +289,19 @@ VDI18N.add('es', 'demo/polarization', {
 "circ. R":
   "circ. D",
 "circ. L":
-  "circ. I"
+  "circ. I",
+"Not to scale: magnified, slowed about 2 × 10¹⁵ times. Drag a mount to turn it.":
+  "No está a escala: aumentado y ralentizado unas 2 × 10¹⁵ veces. Arrastra una montura para girarla.",
+"Not to scale · slowed 2 × 10¹⁵ times · drag a mount":
+  "No está a escala · ralentizado 2 × 10¹⁵ veces · arrastra una montura",
+"Light travels left to right. Disks and fields are drawn as seen facing the oncoming beam.":
+  "La luz viaja de izquierda a derecha. Los discos y los campos se dibujan como se ven de frente al haz que llega.",
+"Not to scale: field and wavelength hugely magnified. Drag a mount to turn it.":
+  "No está a escala: el campo y la longitud de onda están enormemente aumentados. Arrastra una montura para girarla.",
+"Not to scale · drag a mount to turn it":
+  "No está a escala · arrastra una montura para girarla",
+"Not to scale: the field and its wavelength are drawn hugely magnified (light: about {#} µm). Drag a mount to turn it, drag elsewhere to turn the view.":
+  "No está a escala: el campo y su longitud de onda se dibujan enormemente aumentados (luz: cerca de {#} µm). Arrastra una montura para girarla, arrastra en otro lugar para girar la vista.",
+"Drawn as seen facing the oncoming beam.":
+  "Dibujado como se ve de frente al haz que llega."
 });

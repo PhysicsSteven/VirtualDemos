@@ -159,7 +159,7 @@ VDI18N.add('en', 'demo/photon-interactions', [
 "{#} mm Al",
 "{#} % of the photons get through the filters",
 "photon energy",
-"Sample photons colored by energy; each stops in a filter with the chance {#} − e^(−μx) at its energy. Slowed down.",
+"Sample photons colored by energy; each stops in a filter with the chance {#} − e^(−μx) at its energy. Slowed {#} × {#}⁸ times.",
 "Filters drawn {#} times thicker; the dosimeter is {#} m from the focus, drawn nearer. Drag to turn.",
 "Photon energy (keV)",
 "{#} kVp, tungsten anode: photons per keV",
@@ -219,7 +219,6 @@ VDI18N.add('en', 'demo/photon-interactions', [
 "{#} coherent, {#} incoherent, {#} photoelectric, {#} pair; {#} fluorescence X-rays",
 "Lead, {#} cm",
 "⁶⁰Co photons (one beam at the mean of its two lines, {#} keV) through {#} cm of lead, about two mean free paths. Buildup is smaller in lead than in water at the same μt, since the photons that scatter are soon absorbed by the photoelectric effect.",
-"{#} photons",
 "Ordinary concrete, {#} cm",
 "⁶⁰Co photons through {#} cm of ordinary concrete, μt = {#}: the narrow beam would keep {#} %, but the broad beam air kerma behind the wall is about {#} times that. A shielding calculation that leaves out buildup underestimates the dose.",
 "{#} keV photons through {#} cm of water. Scattered photons lose little energy at this energy, so many survive to the far side: the buildup factor is large even though the slab is only about two mean free paths.",
@@ -227,6 +226,7 @@ VDI18N.add('en', 'demo/photon-interactions', [
 "{#} kVp with {#} mm Al and {#} mm of copper added, a filtration used to cut skin dose in fluoroscopy. The mean energy rises and the two half value layers move closer together (h closer to {#}).",
 "{#} mm Al + {#} mm copper",
 "Hardening",
+"Close",
 "{#} mm Al + {#} mm pmma (acrylic)",
 "{#} mm Al + {#} mm water, liquid",
 "{#} mm Al + {#} mm soft tissue (icru {#})",
@@ -240,6 +240,7 @@ VDI18N.add('en', 'demo/photon-interactions', [
 "{#} mm copper",
 "{#} % of photons pass",
 "Filters drawn {#}× thicker; dosimeter nearer than {#} m.",
-"Sample photons; slowed down.",
-"Share in Lead"
+"Sample photons, slowed {#} × {#}⁸ times.",
+"Share in Lead",
+"{#} photons"
 ]);

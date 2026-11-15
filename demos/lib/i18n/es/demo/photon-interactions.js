@@ -318,8 +318,8 @@ VDI18N.add('es', 'demo/photon-interactions', {
   "El {#} % de los fotones atraviesa los filtros",
 "photon energy":
   "energía del fotón",
-"Sample photons colored by energy; each stops in a filter with the chance {#} − e^(−μx) at its energy. Slowed down.":
-  "Fotones de muestra coloreados por energía; cada uno se detiene en un filtro con probabilidad {#} − e^(−μx) a su energía. Ralentizado.",
+"Sample photons colored by energy; each stops in a filter with the chance {#} − e^(−μx) at its energy. Slowed {#} × {#}⁸ times.":
+  "Fotones de muestra coloreados por energía; cada uno se detiene en un filtro con probabilidad {#} − e^(−μx) a su energía. Ralentizados {#} × {#}⁸ veces.",
 "Filters drawn {#} times thicker; the dosimeter is {#} m from the focus, drawn nearer. Drag to turn.":
   "Filtros dibujados {#} veces más gruesos; el dosímetro está a {#} m del foco, dibujado más cerca. Arrastra para girar.",
 "Photon energy (keV)":
@@ -438,8 +438,6 @@ VDI18N.add('es', 'demo/photon-interactions', {
   "Plomo, {#} cm",
 "⁶⁰Co photons (one beam at the mean of its two lines, {#} keV) through {#} cm of lead, about two mean free paths. Buildup is smaller in lead than in water at the same μt, since the photons that scatter are soon absorbed by the photoelectric effect.":
   "Fotones del ⁶⁰Co (un solo haz en el promedio de sus dos líneas, {#} keV) a través de {#} cm de plomo, unos dos caminos libres medios. La acumulación es menor en plomo que en agua al mismo μt, ya que los fotones que se dispersan pronto son absorbidos por el efecto fotoeléctrico.",
-"{#} photons":
-  "{#} fotones",
 "Ordinary concrete, {#} cm":
   "Concreto ordinario, {#} cm",
 "⁶⁰Co photons through {#} cm of ordinary concrete, μt = {#}: the narrow beam would keep {#} %, but the broad beam air kerma behind the wall is about {#} times that. A shielding calculation that leaves out buildup underestimates the dose.":
@@ -454,6 +452,8 @@ VDI18N.add('es', 'demo/photon-interactions', {
   "{#} mm de Al + {#} mm de cobre",
 "Hardening":
   "Endurecimiento",
+"Close":
+  "Cerrar",
 "{#} mm Al + {#} mm pmma (acrylic)":
   "{#} mm de Al + {#} mm de pmma (acrílico)",
 "{#} mm Al + {#} mm water, liquid":
@@ -480,8 +480,14 @@ VDI18N.add('es', 'demo/photon-interactions', {
   "Pasa el {#} % de los fotones",
 "Filters drawn {#}× thicker; dosimeter nearer than {#} m.":
   "Filtros dibujados {#}× más gruesos; dosímetro a menos de {#} m.",
-"Sample photons; slowed down.":
-  "Fotones de muestra; ralentizado.",
+"Sample photons, slowed {#} × {#}⁸ times.":
+  "Fotones de muestra, ralentizados {#} × {#}⁸ veces.",
 "Share in Lead":
-  "Parte en Plomo"
+  "Parte en Plomo",
+"{#} photons":
+  "{#} fotones",
+"Sample photons colored by energy; each stops in a filter with the chance {#} − e^(−μx) at its energy. Slowed down.":
+  "Fotones de muestra coloreados por energía; cada uno se detiene en un filtro con probabilidad {#} − e^(−μx) a su energía. Ralentizado.",
+"Sample photons; slowed down.":
+  "Fotones de muestra; ralentizado."
 });

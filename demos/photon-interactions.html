@@ -835,8 +835,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     tag3(b, nar ? `${fx(100 * through, 1)} % of photons pass` : `${fx(100 * through, 1)} % of the photons get through the filters`, Q([HX.det - 0.05, 0, ZB + 0.12]), { s: 10.5 });
     { const p = proj(), y = b.y + 12 * p; ctx.save(); const gr = ctx.createLinearGradient(b.x + 10 * p, 0, b.x + 110 * p, 0); for (let i = 0; i <= 10; i++) gr.addColorStop(i / 10, '#' + VD3K.heat(i / 10).getHexString()); ctx.fillStyle = gr; ctx.fillRect(b.x + 10 * p, y, 100 * p, 6 * p); ctx.restore();
       mono('0', b.x + 10 * p, y + 18 * p, T.muted, 'left'); mono(`${S.kv} keV`, b.x + 110 * p, y + 18 * p, T.muted, 'right'); text('photon energy', b.x + 116 * p, y + 7 * p, T.muted, 'left', 'alphabetic', 10); }
-    if (nar) { note3(b, 'Filters drawn 5× thicker; dosimeter nearer than 1 m.'); note3(b, 'Sample photons; slowed down.', 1); }
-    else { note3(b, 'Sample photons colored by energy; each stops in a filter with the chance 1 − e^(−μx) at its energy. Slowed down.', 1); note3(b, 'Filters drawn 5 times thicker; the dosimeter is 1 m from the focus, drawn nearer. Drag to turn.'); }
+    /* the rate on screen: dots fly v = 0.32 m/s across the 0.72 m drawn for 1 m, so light is slowed c / (0.32 / 0.72) ≈ 7 × 10⁸ times
+       (student view, 2026-11-15) */
+    if (nar) { note3(b, 'Filters drawn 5× thicker; dosimeter nearer than 1 m.'); note3(b, 'Sample photons, slowed 7 × 10⁸ times.', 1); }
+    else { note3(b, 'Sample photons colored by energy; each stops in a filter with the chance 1 − e^(−μx) at its energy. Slowed 7 × 10⁸ times.', 1); note3(b, 'Filters drawn 5 times thicker; the dosimeter is 1 m from the focus, drawn nearer. Drag to turn.'); }
   }
 
   /* ---------- draw ---------- */

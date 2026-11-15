@@ -567,8 +567,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const post = (x, y0, y1) => { if (!VG || y1 - y0 < 6 * ps) return; VG.rod(c, x, y0, x, y1 - 4 * ps, 2.6 * ps, { color: dk ? '#a0998f' : '#c5beb5' }); VG.box(c, x - 11 * ps, y1 - 9 * ps, 22 * ps, 10 * ps, { r: 2 * ps, shadow: false }); };
     for (const p of L.pos) if (p.kind === 'el') post(p.x, p.y + L.re, railY(p.row));
     c.fillStyle = T.muted; c.font = `${10.5 * ps}px ${T.ui}`; c.textAlign = 'left'; c.textBaseline = 'top';
-    const note = 'Light travels left to right. Disks and fields are drawn as seen facing the oncoming beam.';
-    c.fillText(c.measureText(note).width < W - 24 * ps ? note : 'Drawn as seen facing the oncoming beam.', 12 * ps, 7 * ps);
+    /* the rate on screen: one field cycle takes 2.6 s (OMEGA), real 0.5 µm light about 1.7 fs, so slowed about 2 × 10¹⁵ times
+       (student view, 2026-11-15) */
+    const note = 'Light travels left to right. Disks and fields are drawn as seen facing the oncoming beam. Slowed about 2 × 10¹⁵ times.';
+    c.fillText(c.measureText(note).width < W - 24 * ps ? note : 'Drawn facing the oncoming beam; slowed about 2 × 10¹⁵ times.', 12 * ps, 7 * ps);
     // the beam: a band through the slots, brightness from the intensity
     const P = L.pos, I0 = states[0].S[0];
     const segI = (k) => states[k].S[0] / I0;
@@ -1455,8 +1457,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     states.forEach((s, j) => { const [x, y] = P3((j + 0.5) * SP, 0, ZB - 0.062); if (y < h - 30 * ps) label(ctx, j === 0 ? 'I₀' : `${fmtI(s.S[0] / I0)} I₀`, x, y, T.ink, 'center', 'middle', true, narrow ? 10 : 11); });
     if (!narrow) { const [x, y] = P3(-0.12, -0.05, RAILZ + 0.07), d = describe(states[0].S); label(ctx, S.input.kind === 'lin' ? `Lamp, polarizer ${fmtDeg(S.input.ang, 0)}` : `Lamp: ${shortDesc(d)}`, x, y, S.sel === -1 && S.input.kind === 'lin' ? T.accent : T.ink, 'center', 'middle', true); }
     ctx.font = `${10.5 * ps}px ${T.mono}`;
-    const cap = 'Not to scale: the field and its wavelength are drawn hugely magnified (light: about 0.5 µm). Drag a mount to turn it, drag elsewhere to turn the view.';
-    label(ctx, fitText([cap, (window.VDI18N ? VDI18N.t('Not to scale: field and wavelength hugely magnified. Drag a mount to turn it.') : 'Not to scale: field and wavelength hugely magnified. Drag a mount to turn it.'), (window.VDI18N ? VDI18N.t('Not to scale · drag a mount to turn it') : 'Not to scale · drag a mount to turn it')], W - 24 * ps, 10, false), 12 * ps, h - 12 * ps, T.muted, 'left', 'middle', false, 10);
+    /* the caption names the slow motion too (student view, 2026-11-15) */
+    const cap = 'Not to scale: field and wavelength (about 0.5 µm) hugely magnified, slowed about 2 × 10¹⁵ times. Drag a mount to turn it, elsewhere to turn the view.';
+    label(ctx, fitText([cap, (window.VDI18N ? VDI18N.t('Not to scale: magnified, slowed about 2 × 10¹⁵ times. Drag a mount to turn it.') : 'Not to scale: magnified, slowed about 2 × 10¹⁵ times. Drag a mount to turn it.'), (window.VDI18N ? VDI18N.t('Not to scale · slowed 2 × 10¹⁵ times · drag a mount') : 'Not to scale · slowed 2 × 10¹⁵ times · drag a mount')], W - 24 * ps, 10, false), 12 * ps, h - 12 * ps, T.muted, 'left', 'middle', false, 10);
   }
   function setView3(v) {
     if (v === '3d' && !G3.ok) {

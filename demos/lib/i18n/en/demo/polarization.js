@@ -1,6 +1,6 @@
 /* English strings of demo/polarization, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'demo/polarization', [
-"Light travels left to right. Disks and fields are drawn as seen facing the oncoming beam.",
+"Light travels left to right. Disks and fields are drawn as seen facing the oncoming beam. Slowed about {#} × {#}¹⁵ times.",
 "Light in",
 "unpolarized",
 "{#} · Polarizer",
@@ -91,9 +91,9 @@ VDI18N.add('en', 'demo/polarization', [
 "LIGHT METER",
 "I/I₀ after the last element",
 "Lamp: unpolarized",
-"Not to scale: field and wavelength hugely magnified. Drag a mount to turn it.",
-"Not to scale · drag a mount to turn it",
-"Not to scale: the field and its wavelength are drawn hugely magnified (light: about {#} µm). Drag a mount to turn it, drag elsewhere to turn the view.",
+"Not to scale: magnified, slowed about {#} × {#}¹⁵ times. Drag a mount to turn it.",
+"Not to scale · slowed {#} × {#}¹⁵ times · drag a mount",
+"Not to scale: field and wavelength (about {#} µm) hugely magnified, slowed about {#} × {#}¹⁵ times. Drag a mount to turn it, elsewhere to turn the view.",
 "Elements",
 "I/I₀ out",
 "n₁ = {#} (air)",
@@ -136,11 +136,15 @@ VDI18N.add('en', 'demo/polarization', [
 "total internal reflection",
 "θc = {#}°",
 "n₁ = {#} (water)",
-"Drawn as seen facing the oncoming beam.",
+"Close",
+"Turn the picked element by {#} degree (Polarizer bench, Shift for {#})",
+"Drawn facing the oncoming beam; slowed about {#} × {#}¹⁵ times.",
 "circular left",
 "In",
 "unpol.",
 "{#} Pol",
 "circ. R",
-"circ. L"
+"circ. L",
+"Not to scale: magnified, slowed about 2 × 10¹⁵ times. Drag a mount to turn it.",
+"Not to scale · slowed 2 × 10¹⁵ times · drag a mount"
 ]);
