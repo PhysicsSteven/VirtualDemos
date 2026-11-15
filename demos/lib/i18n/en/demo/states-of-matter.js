@@ -98,5 +98,8 @@ VDI18N.add('en', 'demo/states-of-matter', [
 "liquid warms",
 "boiling at {#} °C",
 "boiling",
+"shaded: squeezed",
+"piston {n} nm up",
+"shaded: height squeezed above the dashed line · piston {n} nm up",
 "slow motion: 1 s here = {n} ns"
 ]);

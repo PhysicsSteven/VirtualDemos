@@ -105,6 +105,7 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; padding: 10px 10px 0; }
 .stage-ctl.sub { padding: 8px 10px 10px; border-bottom: 1px solid var(--line); justify-content: space-between; }
 .count { margin-left: auto; font-size: 0.9rem; font-weight: 600; white-space: nowrap; }
+.count.prate { margin-left: 0; font-weight: 400; color: var(--muted); font-size: 0.8rem; }   /* (student view calls, 2026-11-15) */
 .count small { font-weight: 400; color: var(--muted); font-size: 0.8rem; font-family: var(--font-ui); }
 .stage { position: relative; height: clamp(380px, 62vh, 760px); overflow: hidden; background: var(--space); }
 .stage canvas { position: absolute; inset: 0; display: block; }
@@ -288,6 +289,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" data-dim="flat" aria-pressed="false">Flat</button>
         </div>
         <span class="count mono" id="count" aria-live="off"></span>
+        <!-- the playback rate beside the age: saved moments per second at the chosen speed (student view calls, 2026-11-15) -->
+        <span class="count prate" id="prate" title="Play steps through the saved MESA moments at this rate; steps where nothing visible changes go ten times faster"></span>
       </div>
       <div class="stage-ctl sub">
         <div class="seg" role="group" aria-label="Color by" id="modes">
@@ -3519,7 +3522,11 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   for (const b of document.querySelectorAll('#modes button')) b.addEventListener('click', () => setMode(b.dataset.m));
   for (const b of document.querySelectorAll('#speeds button')) b.addEventListener('click', () => {
     S.speed = +b.dataset.s; for (const x of document.querySelectorAll('#speeds button')) x.setAttribute('aria-pressed', String(x === b));
+    rateText();
   });
+  /* Play shows two saved moments per second at 1×, scaled by the speed buttons (student view calls, 2026-11-15) */
+  function rateText() { $('prate').textContent = 2 * S.speed === 1 ? '· 1 moment/s' : `· ${2 * S.speed} moments/s`; }
+  rateText();
   for (const b of document.querySelectorAll('#xmodes button')) b.addEventListener('click', () => {
     S.xmode = b.dataset.x; for (const x of document.querySelectorAll('#xmodes button')) x.setAttribute('aria-pressed', String(x === b)); chartsDirty = true; schedule();
   });

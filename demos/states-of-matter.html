@@ -819,9 +819,12 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
     scene.add(piston);
     const hx = md.Lx / 2 + 0.05, hy = md.Ly / 2 + 0.05, brk = new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-hx, -hy, ZB), new THREE.Vector3(hx, -hy, ZB), new THREE.Vector3(hx, hy, ZB), new THREE.Vector3(-hx, hy, ZB)]),
       new THREE.LineDashedMaterial({ color: 0x3a7bd5, dashSize: 0.5, gapSize: 0.35 })); brk.computeLineDistances(); scene.add(brk);   /* where the squeezed height scale starts */
+    /* the squeezed part of the column as a pale haze, so its crowded look reads as a squeezed scale, not a dense gas (student view calls, 2026-11-15) */
+    const sqz = new THREE.Mesh(new THREE.BoxGeometry(2 * hx, 2 * hy, 1), new THREE.MeshBasicMaterial({ color: 0xbcd4ff, transparent: true, opacity: 0.13, depthWrite: false }));
+    sqz.renderOrder = 2; scene.add(sqz);
     VD3.orbit(el, orb, () => { G3.dirty = true; }, { phMin: 0.25, phMax: 1.5, zMin: 0.35, zMax: 3 });
     el.addEventListener('keydown', (e) => { if (e.key === ' ') { $('go').click(); e.preventDefault(); } });
-    Object.assign(G3, { r, el, scene, cam, atoms, bonds, cap, floorMat, lamp, glow, benchMat, glass, edges, piston, brk, dial, dialCv, dialTex, dialP: null, sun, hemi: scene.children[0], m4: new THREE.Matrix4(), q: new THREE.Quaternion(), v: new THREE.Vector3(), s: new THREE.Vector3(), up: new THREE.Vector3(0, 1, 0), col: new THREE.Color() });
+    Object.assign(G3, { r, el, scene, cam, atoms, bonds, cap, floorMat, lamp, glow, benchMat, glass, edges, piston, brk, sqz, dial, dialCv, dialTex, dialP: null, sun, hemi: scene.children[0], m4: new THREE.Matrix4(), q: new THREE.Quaternion(), v: new THREE.Vector3(), s: new THREE.Vector3(), up: new THREE.Vector3(0, 1, 0), col: new THREE.Color() });
     theme3D(); return true;
   }
   function theme3D() {
@@ -856,6 +859,7 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
     const hz = zd(md.h);
     g.glass.scale.z = Math.max(1, hz); g.glass.position.z = hz / 2; g.edges.scale.z = Math.max(1, hz); g.edges.position.z = hz / 2;
     g.piston.position.z = hz; g.brk.visible = md.h > ZB;
+    g.sqz.visible = md.h > ZB; if (md.h > ZB) { g.sqz.scale.z = hz - ZB; g.sqz.position.z = (hz + ZB) / 2; }
     if (g.dialP !== S.Patm) { const c = g.dialCv.getContext('2d'); c.clearRect(0, 0, 256, 256); gauge(c, 128, 128, 118); g.dialTex.needsUpdate = true; g.dialP = S.Patm; }
 
     const gl = S.heat ? 0.35 + 0.65 * S.pow / 8 : 0, hot = S.heat > 0 ? 0xff5a1f : 0x3f8cff;   /* the coil glows with the heater setting */
@@ -883,7 +887,11 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
     if (!T || !W) return;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     if (S.view === 'atoms') {
-      if (S.dim === '3d' && G3.ok) { ctx.clearRect(0, 0, W, H); draw3D(); drawSplit(proj()); if (S.md.h > ZB && window.VDGear) VDGear.label(ctx, `height squeezed above the dashed line · piston ${f(S.md.h * NM, 1)} nm up`, 14 * proj(), 16 * proj(), { s: 11 * proj() }); }
+      if (S.dim === '3d' && G3.ok) { ctx.clearRect(0, 0, W, H); draw3D(); drawSplit(proj()); if (S.md.h > ZB && window.VDGear) { /* on a phone the long label ran under the heat box and off the edge: a short one above the rate line (student view calls, 2026-11-15) */
+        const q = proj(), nar = W < 600;
+        const I = typeof VDI18N === 'object', n = f(S.md.h * NM, 1);
+        if (nar) { VDGear.label(ctx, I ? VDI18N.t('shaded: squeezed') : 'shaded: squeezed', 14 * q, H - 48 * q, { s: 11 * q }); VDGear.label(ctx, I ? VDI18N.t('piston {n} nm up', { n }) : `piston ${n} nm up`, 14 * q, H - 33 * q, { s: 11 * q }); }
+        else VDGear.label(ctx, I ? VDI18N.t('shaded: height squeezed above the dashed line · piston {n} nm up', { n }) : `shaded: height squeezed above the dashed line · piston ${n} nm up`, 14 * q, 16 * q, { s: 11 * q }); } }
       else drawAtomsFlat();
       if (nsRate > 0 && window.VDGear) { const q = proj(); VDGear.label(ctx, typeof VDI18N === 'object' ? VDI18N.t('slow motion: 1 s here = {n} ns', { n: f(nsRate, 3) }) : `slow motion: 1 s here = ${f(nsRate, 3)} ns`, 14 * q, H - 16 * q, { s: 11 * q }); }
     } else drawBeaker();

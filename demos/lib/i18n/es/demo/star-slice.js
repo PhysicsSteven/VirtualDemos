@@ -20,6 +20,10 @@ VDI18N.add('es', 'demo/star-slice', {
   "Volver al primer momento guardado",
 "<span>Speed</span>":
   "<span>Rapidez</span>",
+"Play steps through the saved MESA moments at this rate; steps where nothing visible changes go ten times faster":
+  "Reproducir avanza por los momentos guardados de MESA a esta tasa; los pasos donde nada visible cambia van diez veces más rápido",
+"· {#} moments/s":
+  "· {#} momentos/s",
 "Color by":
   "Colorear por",
 "Glow":
@@ -266,6 +270,8 @@ VDI18N.add('es', 'demo/star-slice', {
   "Cámara 3D {#}×",
 "Star radius {#} R☉ · {#}×{#}⁶ km · cut faces: linear radius, to scale":
   "Radio de la estrella {#} R☉ · {#}×{#}⁶ km · caras del corte: radio lineal, a escala",
+"· {#} moment/s":
+  "· {#} momento/s",
 "He (⁴He)":
   "He (⁴He)",
 "Ne (²⁰Ne + ²²Ne)":
@@ -314,8 +320,6 @@ VDI18N.add('es', 'demo/star-slice', {
   "<b>Fuente</b> LOGS_wd_cool · wd_cool_0.6M.json.gz",
 "<b>Columns</b> mass, logR, radius, logT, logRho, h1, he4, c12, o16, ne20, ne22, mg24, si28, mixing_type, conv_vel (log_conv_vel), eps_nuc, pp, cno, tri_alpha, velocity, phase (eos_phase), eps_phase_sep (eps_phase_separation), gamma (gam), eta, zbar_div_abar, burn_c (c12_c12 + c12_o16), burn_o (o16_o16)":
   "<b>Columnas</b> mass, logR, radius, logT, logRho, h1, he4, c12, o16, ne20, ne22, mg24, si28, mixing_type, conv_vel (log_conv_vel), eps_nuc, pp, cno, tri_alpha, velocity, phase (eos_phase), eps_phase_sep (eps_phase_separation), gamma (gam), eta, zbar_div_abar, burn_c (c12_c12 + c12_o16), burn_o (o16_o16)",
-"Si (²⁸Si)":
-  "Si (²⁸Si)",
 "{#} phase separation":
   "{#} separación de fases",
 "mixing code -{#}":
@@ -354,6 +358,8 @@ VDI18N.add('es', 'demo/star-slice', {
   "(tamaño, no distancia)",
 "Star radius {#} R☉ · {#} km · {#} Earth radii · cut faces: linear radius, to scale · true size":
   "Radio de la estrella {#} R☉ · {#} km · {#} radios terrestres · caras del corte: radio lineal, a escala · tamaño real",
+"Si (²⁸Si)":
+  "Si (²⁸Si)",
 "<span>{#}</span><span>T in K, log scale</span><span>{#}×{#}⁷</span>":
   "<span>{#}</span><span>T en K, escala logarítmica</span><span>{#}×{#}⁷</span>",
 "<span>{#}×{#}⁻⁶</span><span>ρ in g/cm³, log scale</span><span>{#}×{#}⁶</span>":

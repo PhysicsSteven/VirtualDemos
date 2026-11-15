@@ -196,6 +196,12 @@ VDI18N.add('es', 'demo/states-of-matter', {
   "hirviendo a {#} °C",
 "boiling":
   "ebullición",
+"shaded: squeezed":
+  "sombreado: comprimido",
+"piston {n} nm up":
+  "pistón {n} nm arriba",
+"shaded: height squeezed above the dashed line · piston {n} nm up":
+  "sombreado: altura comprimida sobre la línea discontinua · pistón {n} nm arriba",
 "slow motion: 1 s here = {n} ns":
   "cámara lenta: 1 s aquí = {n} ns",
 "<a><span>←</span> <span>Temperature and Heat</span></a><a><span>Blackbody Radiation</span> <span>→</span></a>":
