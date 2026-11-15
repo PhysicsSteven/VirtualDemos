@@ -130,7 +130,7 @@ def page(title, body, robots=""):
 <meta name="viewport" content="width=device-width, initial-scale=1">
 {"" if robots else THEME}{robots}<title>{html.escape(title)}</title>
 {FONTS}
-{MATHJAX if robots else ""}<style>{CSS}</style>
+{MATHJAX if robots or has_math(body) else ""}<style>{CSS}</style>
 {"" if robots else PAPER}</head>
 <body{"" if robots else " class=\"notes\""}>
 {"" if robots else TOP}<main>
@@ -182,14 +182,31 @@ def md(text):
     def keep(m):
         store.append(m.group(0))
         return f"@@MATH{len(store) - 1}@@"
-    text = MATH_INLINE.sub(keep, MATH_DISPLAY.sub(keep, text))
+    def keep_display(m):
+        """kramdown's rule, as on the worksheets: $$...$$ alone on its line is display math, $$...$$ inside a sentence is inline,
+        written \\(...\\) for MathJax so it stays in the line."""
+        line_start = text.rfind("\n", 0, m.start()) + 1
+        line_end = text.find("\n", m.end())
+        line_end = len(text) if line_end < 0 else line_end
+        alone = not text[line_start:m.start()].strip() and not text[m.end():line_end].strip()
+        if alone:
+            return keep(m)
+        store.append("\\(" + m.group(0)[2:-2] + "\\)")
+        return f"@@MATH{len(store) - 1}@@"
+    text = MATH_INLINE.sub(keep, MATH_DISPLAY.sub(keep_display, text))
     out = markdown.markdown(text, extensions=["tables", "sane_lists"])
     return re.sub(r"@@MATH(\d+)@@", lambda m: html.escape(store[int(m.group(1))], quote=False), out)
 
 
-MATHJAX = ('<script>window.MathJax = { tex: { inlineMath: [["$", "$"]], displayMath: [["$$", "$$"]] } };</script>\n'
+MATHJAX = ('<script>window.MathJax = { tex: { inlineMath: [["$", "$"], ["\\\\(", "\\\\)"]], displayMath: [["$$", "$$"]] } };</script>\n'
            '<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script>\n'
            '<style>mjx-container[display="true"] { overflow-x: auto; overflow-y: hidden; max-width: 100%; }</style>\n')
+
+
+def has_math(body):
+    """True when a page carries $...$ or $$...$$ math. Key pages always load MathJax; a public notes page loads it only then, so a
+    page whose text has a stray dollar sign is left alone (2026-11-15: photon-interactions and radiobiology showed raw TeX)."""
+    return bool(MATH_DISPLAY.search(body) or MATH_INLINE.search(body) or "\\(" in body)
 
 
 def render_body(text, answers=None):
