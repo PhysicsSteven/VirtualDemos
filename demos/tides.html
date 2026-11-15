@@ -179,6 +179,8 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
             <button type="button" data-s="1" aria-pressed="false">1</button>
             <button type="button" data-s="3" aria-pressed="true">3</button>
             <button type="button" data-s="12" aria-pressed="false">12</button>
+            <!-- 24 h/s: a month in 30 s while Earth turns once a second (48 h/s spins it twice a second) (student view, 2026-11-15) -->
+            <button type="button" data-s="24" aria-pressed="false">24</button>
             <button type="button" data-s="48" aria-pressed="false">48</button>
           </div>
         </div>
@@ -487,6 +489,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.fillStyle = ink; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
     ctx.fillText(text, lx + 8 * PS, y + th / 2 + 0.5);
   }
+  /* the city's label moved sideways off the Moon when the city passes under it (student view, 2026-11-15): out at right angles to
+     the line from the Moon to the city, clear of the Moon's disk and its label; sets the text alignment */
+  function cityBeside(ctx, qx, qy, mx, my, mr) {
+    let tx = my - qy, ty = qx - mx; const tl = Math.hypot(tx, ty) || 1; tx /= tl; ty /= tl;
+    const d = mr + 14 * PS; ctx.textAlign = Math.abs(tx) < 0.4 ? 'center' : tx > 0 ? 'left' : 'right';
+    return [qx + tx * d, qy + ty * (Math.abs(tx) < 0.4 ? d + 4 * PS : d * 0.6)];
+  }
   function clampText(ctx, text, x, y, w, pad) {
     const tw = ctx.measureText(text).width, align = ctx.textAlign;
     let x0 = align === 'right' ? x - tw : align === 'center' ? x - tw / 2 : x;
@@ -755,13 +764,15 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.fillStyle = T.accent; ctx.beginPath(); ctx.arc(qx, qy, (hotC ? 6.5 : 5) * PS, 0, 2 * Math.PI); ctx.fill();
     ctx.strokeStyle = T.canvas; ctx.lineWidth = 1.5 * PS; ctx.stroke();
     grip(ctx, qx, qy, 11 * PS, hotC, T.accent);
-    const lr = cityR(g) + 24 * PS, lxx = cx + lr * Math.cos(ac), lyy = cy - lr * Math.sin(ac);
+    const lr = cityR(g) + 24 * PS, [mx, my] = moonPos(g);
+    let lxx = cx + lr * Math.cos(ac), lyy = cy - lr * Math.sin(ac);
     ctx.fillStyle = T.accent; ctx.font = font(700, 11.5, 'ui'); ctx.textBaseline = 'middle';
     ctx.textAlign = Math.abs(Math.cos(ac)) < 0.3 ? 'center' : Math.cos(ac) > 0 ? 'left' : 'right';
+    /* under the Moon (high tide) the city's label sat on the Moon and its label: move it above or below the Moon (student view, 2026-11-15) */
+    if (Math.hypot(lxx - mx, lyy - my) < mr + 40 * PS) [lxx, lyy] = cityBeside(ctx, qx, qy, mx, my, mr);
     clampText(ctx, 'City ' + fmtHM(S.hour), lxx, lyy, w, 4 * PS);
 
     // the Moon
-    const [mx, my] = moonPos(g);
     body(ctx, mx, my, mr, T.lit, T.unlit, T.muted);
     { const ps = facePsi(); crater(ctx, mx, my, mx + 0.62 * mr * Math.cos(ps), my - 0.62 * mr * Math.sin(ps), mr); }
     const hotM = (dragM && dragM.id === 'moon') || (!dragM && hoverM === 'moon');
@@ -1002,12 +1013,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     grip(ctx, qx, qy, 11 * PS, hotC, T.accent);
     const [lx0, ly0] = P3((rc + 0.16) * ca, (rc + 0.16) * sa, 0), dx = lx0 - ox, dy = ly0 - oy, dl = Math.hypot(dx, dy) || 1;
-    const lxx = qx + dx / dl * 22 * PS, lyy = qy + dy / dl * 22 * PS;
+    let lxx = qx + dx / dl * 22 * PS, lyy = qy + dy / dl * 22 * PS;
+    const [mx, my] = P3(ORBIT3 * cm, ORBIT3 * sm, 0), mr = rad3(ORBIT3 * cm, ORBIT3 * sm, 0, MOON_R);
     ctx.fillStyle = T.accent; ctx.font = font(700, 11.5, 'ui'); ctx.textBaseline = 'middle';
     ctx.textAlign = Math.abs(dx / dl) < 0.3 ? 'center' : dx > 0 ? 'left' : 'right';
+    /* under the Moon (high tide) the city's label sat on the Moon and its label: move it above or below the Moon (student view, 2026-11-15) */
+    if (Math.hypot(lxx - mx, lyy - my) < mr + 40 * PS) [lxx, lyy] = cityBeside(ctx, qx, qy, mx, my, mr);
     clampText(ctx, 'City ' + fmtHM(S.hour), lxx, lyy, w, 4 * PS);
     /* the Moon */
-    const [mx, my] = P3(ORBIT3 * cm, ORBIT3 * sm, 0), mr = rad3(ORBIT3 * cm, ORBIT3 * sm, 0, MOON_R);
     { const ps = facePsi(), [kx, ky] = P3(ORBIT3 * cm + 0.62 * MOON_R * Math.cos(ps), ORBIT3 * sm + 0.62 * MOON_R * Math.sin(ps), 0); crater(ctx, mx, my, kx, ky, mr); }
     const hotM = (dragM && dragM.id === 'moon') || (!dragM && hoverM === 'moon');
     grip(ctx, mx, my, mr + 7 * PS, hotM || focusMain, T.accent);
@@ -1514,10 +1527,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     pull:    { view: 'pull', arrows: 'total', dR: DR0 },
     bulges:  { view: 'bulge', dR: DR0, sun: false, hour: 9, tp: 0, speed: 3, play: true },
     beach:   { view: 'bulge', dR: DR0, sun: false, hour: 6, tp: 3, speed: 3, play: true },
-    spring:  { view: 'bulge', dR: DR0, sun: true, hour: 12, tp: 0, speed: 48, play: true },
+    spring:  { view: 'bulge', dR: DR0, sun: true, hour: 12, tp: 0, speed: 24, play: true },   /* 24, not 48 h/s: at 48 Earth and the city lapped twice a second (student view, 2026-11-15) */
     closer:  { view: 'pull', arrows: 'tidal', dR: 40 },
     sunmoon: { view: 'bulge', dR: DR0, sun: true, hour: 12, tp: P_SYN / 4, speed: 3, play: false, each: true },
-    locked:  { view: 'bulge', dR: DR0, sun: false, hour: 9, tp: 0, speed: 48, play: true, spin: 'locked' }
+    locked:  { view: 'bulge', dR: DR0, sun: false, hour: 9, tp: 0, speed: 24, play: true, spin: 'locked' }   /* 24 h/s, as Spring and neap (student view, 2026-11-15) */
   };
   function applyPreset(name) {
     const p = PRE[name];
@@ -1536,10 +1549,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
 
+  /* Reset, as on the rest of the site: time back to the start (this setup's own start, or the page's), every setting kept;
+     Reset all restores the settings (student view, 2026-11-15) */
   $('reset').addEventListener('click', () => {
-    S.hour = INIT.hour; S.tp = INIT.tp; setDist(INIT.dR, true); setSpeed(INIT.speed); setSun(INIT.sun);
-    S.each = true; $('tEach').checked = true; setSpin(INIT.spin);
-    setPreset(null); $('presetHint').textContent = 'Pick a setup, or switch between the two views below and drag the Moon.';
+    const pb = document.querySelector('#presets button[aria-pressed="true"]'), p = (pb && PRE[pb.dataset.p]) || {};
+    S.hour = p.hour !== undefined ? p.hour : INIT.hour; S.tp = p.tp !== undefined ? p.tp : INIT.tp; simClock = 0;
     setPlaying(!reduce);
   });
 

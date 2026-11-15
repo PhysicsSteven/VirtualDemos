@@ -30,6 +30,8 @@ VDI18N.add('es', 'demo/telescope-aberrations', {
   "instantánea",
 "snapshot, t = {#} ms":
   "instantánea, t = {#} ms",
+"air shown {#} times slower":
+  "aire mostrado {#} veces más lento",
 "field":
   "campo",
 "across":
@@ -66,6 +68,8 @@ VDI18N.add('es', 'demo/telescope-aberrations', {
   "Enfoque de la cámara",
 "Star's angle":
   "Ángulo de la estrella",
+"Light":
+  "Luz",
 "Telescope":
   "Telescopio",
 "Focal length":
@@ -348,12 +352,8 @@ VDI18N.add('es', 'demo/telescope-aberrations', {
   "Abertura",
 "Pause the air":
   "Pausar el aire",
-"long exposure":
-  "exposición larga",
-"moments":
-  "momentos",
-"long exposure, {#} moments":
-  "exposición larga, {#} momentos",
+"Close":
+  "Cerrar",
 "Choose a cause first.":
   "Primero elige una causa.",
 "Right: the camera is out of focus. Turn the focus until the Strehl ratio is {#} or more.":
@@ -372,14 +372,14 @@ VDI18N.add('es', 'demo/telescope-aberrations', {
   "Si la cámara solo estuviera desenfocada, algún enfoque haría nítida la estrella. ¿Hay alguno?",
 "Right. Now pick the fix, and focus again for the sharpest star.":
   "Correcto. Ahora elige la corrección y vuelve a enfocar para tener la estrella más nítida.",
-"Done. Now focus again for the sharpest star.":
-  "Listo. Ahora vuelve a enfocar para tener la estrella más nítida.",
 "Done, but did it help? The cause may be somewhere else.":
   "Listo, pero ¿ayudó? La causa puede estar en otra parte.",
+"This telescope has no mirror: it is a lens telescope.":
+  "Este telescopio no tiene espejo: es un telescopio de lente.",
 "This telescope has no lens to replace: it uses a mirror.":
   "Este telescopio no tiene lente que cambiar: usa un espejo.",
-"Adaptive optics bends a thin mirror to cancel whatever blur it can measure, so it helps many problems a little. But was the cause the air?":
-  "La óptica adaptativa dobla un espejo delgado para cancelar cualquier difuminado que pueda medir, así que ayuda un poco con muchos problemas. Pero ¿la causa era el aire?",
+"Done. Now focus again for the sharpest star.":
+  "Listo. Ahora vuelve a enfocar para tener la estrella más nítida.",
 "Turn the camera focus in and out, or tick Star test. Does some focus make the star sharp? Does the blur look the same on both sides of the focus?":
   "Mueve el enfoque de la cámara hacia adentro y hacia afuera, o marca Prueba de estrella. ¿Algún enfoque hace nítida la estrella? ¿El difuminado se ve igual a ambos lados del foco?",
 "Move the star to the center of the view. Does the blur change?":
@@ -392,10 +392,8 @@ VDI18N.add('es', 'demo/telescope-aberrations', {
   "Tapa el borde de la abertura (usa solo el centro). ¿Qué difuminado se reduce mucho cuando solo se usa el centro del espejo o de la lente?",
 "The answer":
   "La respuesta",
-"The answer: Moving air above the telescope (seeing) (r₀ {#} cm)":
-  "La respuesta: Aire en movimiento sobre el telescopio (seeing) (r₀ {#} cm)",
-"This telescope has no mirror: it is a lens telescope.":
-  "Este telescopio no tiene espejo: es un telescopio de lente.",
+"The answer: The mirror is a sphere, not a parabola (spherical aberration) (f/{#})":
+  "La respuesta: El espejo es una esfera, no una parábola (aberración esférica) (f/{#})",
 "The answer: The camera is not at the focus (+{#} mm)":
   "La respuesta: La cámara no está en el foco (+{#} mm)",
 "Solved":
@@ -404,12 +402,20 @@ VDI18N.add('es', 'demo/telescope-aberrations', {
   "Presiona Nuevo misterio para otro telescopio.",
 "Solved: Strehl ratio {#}. Press New mystery for another telescope.":
   "Resuelto: razón de Strehl {#}. Presiona Nuevo misterio para otro telescopio.",
-"The answer: The mirror is a sphere, not a parabola (spherical aberration) (f/{#})":
-  "La respuesta: El espejo es una esfera, no una parábola (aberración esférica) (f/{#})",
 "The answer: The star is far from the center of the view (coma) (f/{#}, {#}′)":
   "La respuesta: La estrella está lejos del centro del campo (coma) (f/{#}, {#}′)",
 "The answer: The mirror is pinched by its clamps (astigmatism) ({#} nm)":
   "La respuesta: Las sujeciones presionan el espejo (astigmatismo) ({#} nm)",
 "The answer: The lens focuses each color at a different place (chromatic aberration)":
-  "La respuesta: La lente enfoca cada color en un lugar distinto (aberración cromática)"
+  "La respuesta: La lente enfoca cada color en un lugar distinto (aberración cromática)",
+"The answer: Moving air above the telescope (seeing) (r₀ {#} cm)":
+  "La respuesta: Aire en movimiento sobre el telescopio (seeing) (r₀ {#} cm)",
+"long exposure":
+  "exposición larga",
+"moments":
+  "momentos",
+"long exposure, {#} moments":
+  "exposición larga, {#} momentos",
+"Adaptive optics bends a thin mirror to cancel whatever blur it can measure, so it helps many problems a little. But was the cause the air?":
+  "La óptica adaptativa dobla un espejo delgado para cancelar cualquier difuminado que pueda medir, así que ayuda un poco con muchos problemas. Pero ¿la causa era el aire?"
 });

@@ -771,7 +771,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function drawImage([x0, y0, w, h], p) { const E = R ? R.E : eff(), m = 12 * p;
     txt(T('The star on the camera'), x0 + m, y0 + 18 * p, { bold: true, color: TK.ink });
     if (!R) return;
-    const testH = TEST ? Math.min(110 * p, w / 3.4) + 26 * p : 0, s = Math.max(60, Math.min(w - 2 * m, h - 50 * p - testH)), ix = x0 + (w - s) / 2, iy = y0 + 28 * p;
+    const testH = TEST ? Math.min(110 * p, w / 3.4) + 26 * p : 0, s = Math.max(60, Math.min(w - 2 * m, h - 58 * p - testH))   /* 58, not 50: the legend under the picture sat on the divider's handle (student view, 2026-11-15) */, ix = x0 + (w - s) / 2, iy = y0 + 28 * p;
     const half = FFTN / 2 / S.zoom, gain = S.faint ? 30 : 1;
     ctx.fillStyle = TK.sky; ctx.fillRect(ix, iy, s, s); paint(R, ix, iy, s, half, gain);
     ctx.strokeStyle = TK.line; ctx.lineWidth = 1; ctx.strokeRect(ix + 0.5, iy + 0.5, s - 1, s - 1);
@@ -788,6 +788,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.textBaseline = 'top'; ctx.fillStyle = '#dfd7cd'; ctx.font = `${10.5 * p}px ${TK.ui}`;
     const status = R.rays ? T('ray picture: the blur is far wider than diffraction') : E.air === 'ground' && E.expo === 'long' ? (R.done ? `${T('long exposure')}, ${LONG_N} ${T('moments')}` : `${T('exposing')} ${R.frames} / ${LONG_N}`) : E.air === 'ground' ? `${T('snapshot')}, t = ${fx(S.t * 1000, 1)} ms` : '';
     if (status) ctx.fillText(status, ix + s - 10 * p, iy + 10 * p);
+    /* the time scale on screen: the moving air is shown slowed down 100 times (student view, 2026-11-15) */
+    if (!R.rays && !S.mys && E.air === 'ground' && E.expo !== 'long') ctx.fillText(T('air shown 100 times slower'), ix + s - 10 * p, iy + 24 * p);
     ctx.textAlign = 'left'; ctx.fillText(`${T('field')} ${g3(field)}″ ${T('across')}`, ix + 10 * p, iy + 10 * p);
     if (!S.mys && !S.blind && w > 300) wavefrontMap(ix + 10 * p, iy + 28 * p, Math.min(70 * p, s * 0.2), E, p);
     /* legend */

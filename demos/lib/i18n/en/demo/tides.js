@@ -111,6 +111,7 @@ VDI18N.add('en', 'demo/tides', [
 "Daily tidal range over a month (m)",
 "dashed: with the Sun",
 "in {#} h {#} min<small>at {#}:{#}</small>",
+"in {#} min<small>at {#}:{#}</small>",
 "Sun ▸",
 "Every point on Earth is pulled toward the Moon, the near side a little harder ({#}% at today's distance). Switch to Tidal pull: subtracting the pull on Earth's center leaves arrows pointing out on the near and far sides and in around the sides.",
 "center",
@@ -132,7 +133,6 @@ VDI18N.add('en', 'demo/tides', [
 "At first quarter the two bulges are at right angles. The Sun's (gold) is {#} of the Moon's (red), even though the Sun pulls {#} times harder.",
 "Neap tide: bulges at right angles",
 "Watch the crater on the Moon: it always points at Earth, because the Moon turns once on its axis in each orbit, {#} days. Switch The Moon's spin to Not at all and the crater keeps pointing the same way among the stars; half an orbit later it points away from Earth.",
-"in {#} min<small>at {#}:{#}</small>",
 "Close",
 "Move the time forward or back {#} minutes"
 ]);

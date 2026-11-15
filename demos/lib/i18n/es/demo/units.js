@@ -1,11 +1,5 @@
 /* demo/units in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/units', {
-"Enter a number.":
-  "Escribe un número.",
-"Enter positive numbers.":
-  "Escribe números positivos.",
-"Calculator: not a finite number":
-  "Calculadora: no es un número finito",
 "dog, {#} m at the shoulder":
   "perro, {#} m a la cruz",
 "person: {#} m":
@@ -464,6 +458,14 @@ VDI18N.add('es', 'demo/units', {
   "universo observable (diámetro)",
 "one tick per power of ten; drag to read a size":
   "una marca por potencia de diez; arrastra para leer un tamaño",
+"Enter a number.":
+  "Escribe un número.",
+"Enter positive numbers.":
+  "Escribe números positivos.",
+"Calculator: not a finite number":
+  "Calculadora: no es un número finito",
 "Running product after each factor, low to high (the answer is hidden in Blind)":
-  "Producto acumulado después de cada factor, de bajo a alto (la respuesta está oculta en A ciegas)"
+  "Producto acumulado después de cada factor, de bajo a alto (la respuesta está oculta en A ciegas)",
+"Mount Everest: {#} m high":
+  "Monte Everest: {#} m de altura"
 });
