@@ -1062,7 +1062,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
           + dd('Seen alone?', fl === 't' ? 'no: it decays (≈ 5 × 10⁻²⁵ s) before forming a hadron' : 'no: confined in hadrons', true)
           + dd('Mass note', fl === 't' ? 'from direct measurements (PDG 2024)' : 'a running mass (PDG 2024 MS-bar); a bound quark has no single mass', true);
       } else { const p = BY[k], q = qn(p);
-        o = dd('Particle', `${p.html} ${esc(p.name)}`, true) + dd('Mass', p.mNote ? esc(p.mNote) : `${p.m} MeV/c²`) + dd('Charge', `${sgn(q.Q)} e`) + dd('Spin', `${spinTxt(p.spin)} (${p.spin % 1 ? 'fermion' : 'boson'})`)
+        /* Mass spans the readout: 0.51099895069 MeV/c² broke as "0.5109989506 / 9 MeV/c²" in half a column (student view, 2026-11-15) */
+        o = dd('Particle', `${p.html} ${esc(p.name)}`, true) + dd('Mass', p.mNote ? esc(p.mNote) : `${p.m} MeV/c²`, true) + dd('Charge', `${sgn(q.Q)} e`) + dd('Spin', `${spinTxt(p.spin)} (${p.spin % 1 ? 'fermion' : 'boson'})`)
           + dd('Baryon number B', sgn(q.B)) + dd('L<sub>e</sub>, L<sub>μ</sub>, L<sub>τ</sub>', `${sgn(q.Le)}, ${sgn(q.Lm)}, ${sgn(q.Lt)}`) + dd('Strangeness S', sgn(q.S))
           + dd('Quarks', esc(p.quarks || '—')) + dd('Antiparticle', p.self ? 'itself' : BY[p.anti].html) + dd('Mean life', esc(tauTxt(p)), true) + dd('Main decays', esc(p.decay), true)
           + (p.force ? dd('Carries', `the ${p.force} force`, true) : ''); }

@@ -21,7 +21,6 @@ VDI18N.add('en', 'demo/nuclear-reactions', [
 "Build a nuclear reaction, balance it and weigh it: the mass that goes missing comes out as energy. Then let fission neutrons multiply in a sphere of uranium until it goes critical, see why fusion needs a star's heat and quantum tunneling, and measure the dose from a gamma source as you step back and add shielding.",
 "masses: AME2020 · energies in MeV",
 "Time controls",
-"Fire",
 "<span>Speed</span>",
 "Reactions",
 "Chain reaction",
@@ -383,6 +382,7 @@ VDI18N.add('en', 'demo/nuclear-reactions', [
 "A PET uptake room: each patient is given {#} MBq ({#} mCi) of ¹⁸F FDG and rests an hour before the scan. The wall is {#} m from the chair and an office is on the other side. With the broad beam on, add lead and compare with the narrow beam: scattered photons build up behind the shield. The barrier calculation below says how thick the wall must be.",
 "shield",
 "broad",
+"Close",
 "ΣZ {#} → {#} <span>✗</span> · ΣA {#} → {#} <span>✓</span> · <span>no mass for ²³⁵H</span>",
 "ΣZ {#} → {#} <span>✗</span> · ΣA {#} → {#} <span>✓</span> · <span>no mass for ²³⁵He</span>",
 "ΣZ {#} → {#} <span>✗</span> · ΣA {#} → {#} <span>✓</span> · <span>no mass for ²³⁵Li</span>",
@@ -656,7 +656,7 @@ VDI18N.add('en', 'demo/nuclear-reactions', [
 "{#}: no barrier needed",
 "DETECTOR",
 "columns: generations · orange: fissions",
-"¹⁸F (PET), {#} MBq, a patient resting after the injection",
+"¹⁸F (PET), {#} MBq, a patient",
 "To scale. Photons slowed down; a few of those",
 "heading for the meter drawn. Drag to turn."
 ]);

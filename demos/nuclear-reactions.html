@@ -919,6 +919,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* words and meters on top, as in the flat view */
     lab(`${MAT[c.mat].name}, ${f(sphereMass(MAT[c.mat], c.R), 1)} kg, R = ${f(c.R, 2)} cm`, 14 * p, 16 * p, { c: T.ink, w: 700 });
     lab(W < 620 ? 'drag to turn' : `a neutron fired in every ${CP_GAP} s · red: the nucleus each neutron will strike · orange: fission fragments · drag to turn`, 14 * p, 32 * p, { c: T.muted });
+    /* the 3D view (the default) showed no time scale and no scale note, which only the flat view had (student view, 2026-11-15) */
+    lab(`1 s here is ${f(CP_V * c.R / V_N * 1e9, 1)} ns${W < 620 ? '' : ' · nuclei drawn far larger than to scale'}`, 14 * p, 48 * p, { c: T.muted });
     lab(cpCaption(), 14 * p, H - 14 * p, { c: T.ink, m: true });
     if (W < 620) return;
     const mx = W - 160 * p, mw = 130 * p, mh = 28 * p, sk = kStats(CHN.ks);
@@ -1128,10 +1130,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const chip = (t, x, y, o) => { const fs = o.s || 10.5 * p; ctx.font = `${o.w || 400} ${fs}px ${o.m ? T.mono : T.ui}`; const tw = ctx.measureText(t).width, x0 = o.a === 'center' ? x - tw / 2 : o.a === 'right' ? x - tw : x;
       ctx.save(); ctx.globalAlpha = 0.85; ctx.fillStyle = T.canvas; ctx.beginPath(); ctx.roundRect(x0 - 5 * p, y - fs * 0.8, tw + 10 * p, fs * 1.6, 4 * p); ctx.fill(); ctx.restore(); lab(t, x, y, o); };
     const sp = at([0, 0, pat ? 1.5 : DH0 + 0.12]); sp[1] = Math.max(24 * p, sp[1]);
-    chip(`${D.src.name}, ${D.A >= 1e9 ? sig(D.A / 1e9, 3) + ' GBq' : sig(D.A / 1e6, 3) + ' MBq'}${pat ? (d.src === 'f18' ? ', a patient resting after the injection' : ', a patient after the injection') : ''}`, Math.max(8 * p, Math.min(W - 8 * p, sp[0])), sp[1] - 12 * p, { a: sp[0] < W * 0.3 ? 'left' : 'center', c: T.ink, w: 700 });
+    /* on a phone the long source words ran under the dose rate meter: shorter words there, lifted above the meter when they would meet it (student view, 2026-11-15) */
+    const mq = at([d.r, 0, DH0 + 0.12]), lw = 116 * p, lx = Math.min(W - lw - 10 * p, Math.max(8 * p, mq[0] + 24 * p)), ly = Math.max(10 * p, Math.min(H - 80 * p, mq[1] - 70 * p));
+    const srcY = W < 620 && Math.abs(sp[1] - 12 * p - (ly + 13 * p)) < 30 * p ? Math.max(14 * p, ly - 14 * p) : sp[1] - 12 * p;
+    chip(`${D.src.name}, ${D.A >= 1e9 ? sig(D.A / 1e9, 3) + ' GBq' : sig(D.A / 1e6, 3) + ' MBq'}${pat ? (W < 620 ? ', a patient' : d.src === 'f18' ? ', a patient resting after the injection' : ', a patient after the injection') : ''}`, Math.max(8 * p, Math.min(W - 8 * p, sp[0])), srcY, { a: sp[0] < W * 0.3 ? 'left' : 'center', c: T.ink, w: 700 });
     if (sl) { const below = sl.z0 > 0.2, q = at([sl.cx, 0, below ? sl.z0 - 0.05 : Math.min(sl.z1, 1.5) + 0.06]); chip(`${f(d.x, 1)} cm ${d.sh}${sl.squeezed ? ' (drawn thinner than it is)' : ''}`, q[0], below ? Math.min(H - 60 * p, q[1] + 10 * p) : Math.max(44 * p, q[1] - 8 * p), { a: 'center', c: T.ink }); }
     const rq = at([d.r / 2, 0.32, 0.02]); chip(`r = ${f(d.r, 2)} m`, rq[0], Math.min(H - 44 * p, rq[1] + 16 * p), { a: 'center', c: T.ink, m: true, w: 700 });
-    const mq = at([d.r, 0, DH0 + 0.12]), lw = 116 * p, lx = Math.min(W - lw - 10 * p, Math.max(8 * p, mq[0] + 24 * p)), ly = Math.max(10 * p, Math.min(H - 80 * p, mq[1] - 70 * p));
     lcdBox(lx, ly, lw, 26 * p, `${sig(D.rate * 1e6, 3)} µSv/h`, 'dose rate meter');
     const nt = W < 620 ? ['To scale. Photons slowed down; a few of those', 'heading for the meter drawn' + (trB > tr ? ' (gold: scattered)' : '') + '. Drag to turn.']
       : [`Distances and thicknesses to scale. The photons are slowed down, and only a few of those heading toward the meter are drawn${trB > tr ? ' (gold: scattered in the shield, broad beam)' : ''}. Drag to turn.`];

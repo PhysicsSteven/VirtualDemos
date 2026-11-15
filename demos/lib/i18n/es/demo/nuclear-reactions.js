@@ -42,8 +42,6 @@ VDI18N.add('es', 'demo/nuclear-reactions', {
   "masas: AME2020 · energías en MeV",
 "Time controls":
   "Controles de tiempo",
-"Fire":
-  "Disparar",
 "<span>Speed</span>":
   "<span>Rapidez</span>",
 "Reactions":
@@ -766,6 +764,8 @@ VDI18N.add('es', 'demo/nuclear-reactions', {
   "blindaje",
 "broad":
   "ancho",
+"Close":
+  "Cerrar",
 "ΣZ {#} → {#} <span>✗</span> · ΣA {#} → {#} <span>✓</span> · <span>no mass for ²³⁵H</span>":
   "ΣZ {#} → {#} <span>✗</span> · ΣA {#} → {#} <span>✓</span> · <span>sin masa para ²³⁵H</span>",
 "ΣZ {#} → {#} <span>✗</span> · ΣA {#} → {#} <span>✓</span> · <span>no mass for ²³⁵He</span>":
@@ -1312,16 +1312,24 @@ VDI18N.add('es', 'demo/nuclear-reactions', {
   "DETECTOR",
 "columns: generations · orange: fissions":
   "columnas: generaciones · naranja: fisiones",
-"¹⁸F (PET), {#} MBq, a patient resting after the injection":
-  "¹⁸F (PET), {#} MBq, un paciente en reposo después de la inyección",
+"¹⁸F (PET), {#} MBq, a patient":
+  "¹⁸F (PET), {#} MBq, un paciente",
 "To scale. Photons slowed down; a few of those":
   "A escala. Fotones más lentos; se dibujan unos cuantos de los",
 "heading for the meter drawn. Drag to turn.":
   "que van hacia el medidor. Arrastra para girar.",
+"Fire":
+  "Disparar",
+"¹⁸F (PET), {#} MBq, a patient resting after the injection":
+  "¹⁸F (PET), {#} MBq, un paciente en reposo después de la inyección",
 "²³⁵U metal, {#} kg, R = {#} cm":
   "²³⁵U metálico, {#} kg, R = {#} cm",
 "a neutron fired in every {#} s · red: the nucleus each neutron will strike · orange: fission fragments · drag to turn":
   "se dispara un neutrón cada {#} s · rojo: el núcleo con el que chocará cada neutrón · naranja: fragmentos de fisión · arrastra para girar",
 "A hundred neutrons, each causing a fission with probability k/ν̄. With k = {#} the numbers grow by {#}% a generation on average, but chance makes each run different: Start over gives a new run. Try k below, at and above {#}.":
-  "Cien neutrones, cada uno causa una fisión con probabilidad k/ν̄. Con k = {#} los números crecen en promedio un {#}% por generación, pero el azar hace que cada corrida sea distinta: Empezar de nuevo da una corrida nueva. Prueba k por debajo de {#}, igual y por encima."
+  "Cien neutrones, cada uno causa una fisión con probabilidad k/ν̄. Con k = {#} los números crecen en promedio un {#}% por generación, pero el azar hace que cada corrida sea distinta: Empezar de nuevo da una corrida nueva. Prueba k por debajo de {#}, igual y por encima.",
+"{#} s here is {#} ns · nuclei drawn far larger than to scale":
+  "{#} s aquí son {#} ns · núcleos dibujados mucho más grandes que a escala",
+"{#} s here is {#} ns":
+  "{#} s aquí son {#} ns"
 });
