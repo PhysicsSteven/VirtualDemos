@@ -831,7 +831,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     G.rings = [0, 1].map(() => { const r = VD3K.ring(1, { seg: 160 }); r.material = G.ringMat; r.computeLineDistances(); r.position.z = 0.004; G.grp.add(r); return r; });
     /* the height scale: a post at the back corner with ticks */
     G.axis = new THREE.Group(); G.grp.add(G.axis);
-    G.lab = {}; for (const k of ['place', 'ap', 'src', 'dip', 'bar', 'zt', 'z1', 'z2', 'cut']) { const l = G.lab[k] = VD3K.label(' ', LAB3); l.material.depthTest = false; l.renderOrder = 9; G.grp.add(l); }
+    G.lab = {}; for (const k of ['place', 'ap', 'apNote', 'src', 'dip', 'bar', 'zt', 'z1', 'z2', 'cut']) { const l = G.lab[k] = VD3K.label(' ', LAB3); l.material.depthTest = false; l.renderOrder = 9; G.grp.add(l); }
     G.bar = new THREE.Mesh(new THREE.BoxGeometry(1, 0.012, 0.004), new THREE.MeshBasicMaterial({ color: 0xffffff })); G.grp.add(G.bar);
     G.ap = new THREE.Group(); G.grp.add(G.ap);
     { const p = $('pane'); if (p.clientWidth < p.clientHeight * 1.05) { o3.th = -Math.PI / 2 + 0.12; o3.ph = 0.95; } }   /* a phone looks from the front, the aperture behind */
@@ -862,7 +862,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const at = apAt(); G.ap.position.set(...at); G.ap.rotation.z = tall ? -Math.PI / 2 : 0;
     /* the light it passes, as a faint cone to the pattern (focused by a lens or mirror; spreading from a pinhole) */
     const A = new THREE.Vector3(...at).add(new THREE.Vector3(tall ? 0 : 0.03, tall ? -0.03 : 0, 0)), B = new THREE.Vector3(0, 0, 0), len = A.distanceTo(B), spread = !(st.kind === 'sky' || S.setup === 'camera');
-    const cg = new THREE.CylinderGeometry(spread ? 0.45 : 0.015, kind === 'disk' ? side * 0.42 : rh, len, 48, 1, true);
+    /* the cylinder's bottom (−y) is turned to face the pattern: so its top is at the aperture, its bottom at the pattern (they were swapped, and
+       the light from a pinhole drew narrowing and a mirror's focused light widening; student view, 2026-11-15) */
+    const cg = new THREE.CylinderGeometry(kind === 'disk' ? side * 0.42 : rh, spread ? 0.45 : 0.015, len, 48, 1, true);
     const cone = new THREE.Mesh(cg, new THREE.MeshBasicMaterial({ color: new THREE.Color(...rgb), transparent: true, opacity: 0.07, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide }));
     cone.position.copy(A).add(B).multiplyScalar(0.5); cone.quaternion.setFromUnitVectors(new THREE.Vector3(0, -1, 0), B.clone().sub(A).normalize()); G.cone = cone; G.grp.add(cone);
   }
@@ -903,10 +905,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       : S.setup === 'two' ? `iris D = ${f(D * 1e3, 1)} mm` : isFr() ? (isDisk() ? `disk on glass, D = ${f(D * 1e3, 2)} mm` : `round hole, D = ${f(D * 1e3, 2)} mm`) : `pinhole, D = ${f(D * 1e6, 0)} µm`;
     const at = apAt();
     G.lab.ap.set(apText); G.lab.ap.position.set(at[0], at[1], -0.1);
+    /* the aperture is sized on a log scale over its slider, so a 200 µm pinhole and Hubble's 2.4 m mirror look alike: say so (student view, 2026-11-15) */
+    G.lab.apNote.set('aperture not to scale'); G.lab.apNote.position.set(at[0], at[1], -0.22);
     const n2 = nNow() === 2, srcText = S.setup === 'telescope' ? (n2 ? `two stars ${f(C().sepv, 2)} ly apart` : 'one star') : S.setup === 'eye' ? (n2 ? `headlights 1.30 m apart, ${f(C().sepv, 2)} km away` : 'one light')
       : S.setup === 'camera' ? 'two distant lamps' : S.setup === 'two' ? (n2 ? `Δθ = ${f(C().sepv, 1)} µrad` : 'one point source') : `laser ${C().lam} nm`;
     G.lab.src.set(srcText); G.lab.src.position.set(at[0], at[1], 1.08);
-    G.lab.place.set(st.place); G.lab.place.position.set(tall3() ? 0 : -0.45, tall3() ? -1.3 : 1.22, 0.02);
+    /* at the back edge, right of center: in the middle the peaks rose through it (student view, 2026-11-15) */
+    G.lab.place.set(st.place); G.lab.place.position.set(tall3() ? 0 : 0.55, tall3() ? -1.3 : 1.22, 0.02);
     /* scale bar along the front edge, as in the flat picture */
     const sb = niceStep(2 * hw) / 2, bw = sb / hw; G.bar.scale.x = bw; G.bar.position.set(-1 + 0.08 + bw / 2, -1.1, 0.01);
     G.lab.bar.set(`${+(sb * st.uk).toPrecision(3)} ${st.unit}`); G.lab.bar.position.set(-1 + 0.08 + bw / 2, -1.2, 0.05);
@@ -914,11 +919,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     while (G.axis.children.length) S3.dispose(G.axis.children[0]);
     const axM = new THREE.MeshBasicMaterial({ color: 0xb4aa9c }), ax = 1.1, ay = 1.1;
     G.axis.add(VD3K.rod([ax, ay, 0], [ax, ay, HZ], 0.006, axM));
-    const ticks = zt > 3 ? [1, 2, 3, 4].filter((t) => t < zt) : zt > 1.5 ? [0.5, 1, 1.5, 2] : [0.25, 0.5, 0.75, 1];
+    const ticks = (zt > 3 ? [1, 2, 3, 4] : zt > 1.5 ? [0.5, 1, 1.5, 2] : [0.25, 0.5, 0.75, 1]).filter((t) => t <= zt + 1e-9);
     for (const t of ticks) G.axis.add(VD3K.rod([ax - 0.04, ay, t * zs], [ax + 0.04, ay, t * zs], 0.004, axM));
     G.lab.zt.set('I/I₀'); G.lab.zt.position.set(ax, ay, HZ + 0.1);
-    G.lab.z1.set(f(ticks[1], 1)); G.lab.z1.position.set(ax + 0.13, ay, ticks[1] * zs);
-    G.lab.z2.set(f(ticks[3], 1)); G.lab.z2.position.set(ax + 0.13, ay, ticks[3] * zs);
+    /* label the second and the last tick (the near field's 3 or 4 ticks left the top one unlabeled; student view, 2026-11-15) */
+    const tl1 = ticks[1], tl2 = ticks[ticks.length - 1];
+    G.lab.z1.set(f(tl1, 1)); G.lab.z1.position.set(ax + 0.13, ay, tl1 * zs);
+    G.lab.z2.set(f(tl2, 1)); G.lab.z2.position.set(ax + 0.13, ay, tl2 * zs);
     /* how deep the dip between two sources is: the Rayleigh limit puts it at 26.5 % */
     const showDip = n2 && !S.blind && !isMys() && !P;
     G.lab.dip.visible = showDip;

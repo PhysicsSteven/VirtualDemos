@@ -8,7 +8,7 @@ Textbook: OpenStax *University Physics*, Vol. 3, §4.5. Access for free at https
 <details class="about" markdown="1">
 <summary>About the demo</summary>
 
-**Setups in the demo:** Laser through a pinhole; Two point sources; Headlights and the eye; Hubble and two stars; Camera lens; Mystery pinhole.
+**Setups in the demo:** Laser through a pinhole; Two point sources; Headlights and the eye; Hubble and two stars; Camera lens; Mystery pinhole; Near the hole: Fresnel zones; A disk: the Poisson spot.
 
 **Using the demo.**
 

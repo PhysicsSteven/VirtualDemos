@@ -272,8 +272,6 @@ VDI18N.add('es', 'demo/retrograde-motion', {
   "ARIES",
 "PISCES":
   "PISCIS",
-"Hamal":
-  "Hamal",
 "stationary Sep {#}":
   "estacionario {#} sep",
 "opposition Oct {#}":
@@ -388,6 +386,8 @@ VDI18N.add('es', 'demo/retrograde-motion', {
   "{#}%, creciente",
 "{#} Nov {#} · Ptolemy's epicycles":
   "{#} nov {#} · epiciclos de Ptolomeo",
+"Close":
+  "Cerrar",
 "Earth at rest. Ptolemy's distances: Mercury out to":
   "La Tierra en reposo. Distancias de Ptolomeo: Mercurio hasta",
 "inferior conj. Oct {#}":
@@ -410,52 +410,54 @@ VDI18N.add('es', 'demo/retrograde-motion', {
   "La Tierra en reposo. Distancias de Ptolomeo: Júpiter hasta",
 "CETUS":
   "BALLENA",
+"Hamal":
+  "Hamal",
 "opposition Dec {#}":
   "oposición {#} dic",
 "westward (retrograde), −{#}°/day":
   "hacia el oeste (retrógrado), −{#}°/día",
 "Earth at rest. Ptolemy's distances: Saturn out to":
   "La Tierra en reposo. Distancias de Ptolomeo: Saturno hasta",
-"AQUILA":
-  "ÁGUILA",
 "CORONA AUSTRINA":
   "CORONA AUSTRAL",
-"EQUULEUS":
-  "CABALLITO",
 "LUPUS":
   "LOBO",
 "MICROSCOPIUM":
   "MICROSCOPIO",
 "PISCIS AUSTRINUS":
   "PEZ AUSTRAL",
+"EQUULEUS":
+  "CABALLITO",
 "{#} Nov {#} · Copernicus's circles":
   "{#} nov {#} · círculos de Copérnico",
 "AURIGA":
   "AURIGA",
 "ORION":
   "ORIÓN",
-"PEGASUS":
-  "PEGASO",
-"PERSEUS":
-  "PERSEO",
 "TRIANGULUM":
   "TRIÁNGULO",
 "Fomalhaut":
   "Fomalhaut",
 "CORVUS":
   "CUERVO",
-"COMA BERENICES":
-  "CABELLERA DE BERENICE",
+"AQUILA":
+  "ÁGUILA",
 "CRATER":
   "COPA",
-"DELPHINUS":
-  "DELFÍN",
 "NORMA":
   "ESCUADRA",
+"PEGASUS":
+  "PEGASO",
 "SCULPTOR":
   "ESCULTOR",
 "TELESCOPIUM":
   "TELESCOPIO",
+"PERSEUS":
+  "PERSEO",
+"COMA BERENICES":
+  "CABELLERA DE BERENICE",
+"DELPHINUS":
+  "DELFÍN",
 "◀ {#} day":
   "◀ {#} día",
 "{#} day ▶":

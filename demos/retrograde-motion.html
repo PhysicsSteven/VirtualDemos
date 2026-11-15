@@ -505,10 +505,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const dx = Math.cos(ang), dy = Math.sin(ang), ox = x0 - cx, oy = y0 - cy, b = ox * dx + oy * dy, c = ox * ox + oy * oy - R * R, t = -b + Math.sqrt(Math.max(0, b * b - c));
     return [x0 + dx * t, y0 + dy * t];
   }
-  function drawZodiacRing(ctx, cx, cy, R, p) {
+  function drawZodiacRing(ctx, cx, cy, R, p, box) {
     ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(cx, cy, R, 0, 2 * Math.PI); ctx.stroke();
     ctx.fillStyle = T.muted; ctx.font = `${10.5 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    for (const id of ZODIAC) { const nm = SKY.names[id]; if (!nm) continue; const a = -nm[1] * DEG, r = R - 12 * p; ctx.save(); ctx.translate(cx + r * Math.cos(a), cy + r * Math.sin(a)); ctx.rotate(Math.sin(a) > 0.05 ? a - Math.PI / 2 : a + Math.PI / 2); ctx.fillText(nm[0], 0, 0);   /* upright: names on the lower half turn the other way */ ctx.restore(); }
+    for (const id of ZODIAC) { const nm = SKY.names[id]; if (!nm) continue; const a = -nm[1] * DEG, r = R - 12 * p;
+      /* a name that would run into the note at the bottom left is left out (student view, 2026-11-15) */
+      if (box) { const hx = ctx.measureText(nm[0]).width / 2 + 2, x = cx + r * Math.cos(a), y = cy + r * Math.sin(a); if (x - hx < box[2] && x + hx > box[0] && y + hx > box[1] && y - hx < box[3]) continue; }
+      ctx.save(); ctx.translate(cx + r * Math.cos(a), cy + r * Math.sin(a)); ctx.rotate(Math.sin(a) > 0.05 ? a - Math.PI / 2 : a + Math.PI / 2); ctx.fillText(nm[0], 0, 0);   /* upright: names on the lower half turn the other way */ ctx.restore(); }
     for (let d = 0; d < 360; d += 30) { const a = -d * DEG; ctx.beginPath(); ctx.moveTo(cx + (R - 4) * Math.cos(a), cy + (R - 4) * Math.sin(a)); ctx.lineTo(cx + (R + 4) * Math.cos(a), cy + (R + 4) * Math.sin(a)); ctx.stroke(); }
   }
   function dot(ctx, x, y, r, col, glow) {
@@ -529,7 +532,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (use3()) { ctx.clearRect(0, 0, W, H); labels3D(ctx, W, H, p); return; }
     ctx.fillStyle = T.space; ctx.fillRect(0, 0, W, H); starfield(ctx, W, H, 11);
     const cx = W / 2, cy = H / 2 + 6, R = Math.min(W, H) / 2 - 10; tagsAt = [];
-    drawZodiacRing(ctx, cx, cy, R, p);
+    if (R < 40) return;   /* a pane squeezed for a moment (a divider, a resize) would give circles a negative radius, which throws (2026-11-15) */
+    drawZodiacRing(ctx, cx, cy, R, p, captionBox(ctx, H, p, captionText()));
     if (S.model === 'ptolemy') drawPtolemy(ctx, W, H, cx, cy, R, p); else drawHelio(ctx, W, H, cx, cy, R, p);
   }
   function viewRadius() {
@@ -586,8 +590,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (cn) { ctx.font = `700 ${11 * p}px ${T.ui}`; const tw = ctx.measureText(cn).width, dd = Math.hypot(end[0] - cx, end[1] - cy) || 1, ux = (end[0] - cx) / dd, uy = (end[1] - cy) / dd;   /* outside the ring, away from the planets */
       const lx = clamp(end[0] + ux * (tw / 2 + 10 * p), tw / 2 + 6, W - tw / 2 - 6), ly = clamp(end[1] + uy * 16 * p, 12, H - 10);
       ctx.fillStyle = 'rgba(11,9,6,0.7)'; ctx.fillRect(lx - tw / 2 - 4, ly - 8 * p, tw + 8, 16 * p); label(ctx, cn, lx, ly, T.sight, p, 'center'); }
-    ctx.fillStyle = T.muted; ctx.font = `${10.5 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
-    ctx.fillText(S.frame === 'earth' ? 'Earth held still (Tycho Brahe\'s system).' : 'Seen from above the North Pole.', 10, H - 22 * p); ctx.fillText('Distances to scale; stars only give directions.', 10, H - 8);
+    caption(ctx, H, p, captionText());
   }
   function drawPtolemy(ctx, W, H, cx, cy, R, p) {
     const k = S.planet, jd = S.jd, pt = ptolemy(k, jd), sunR = SUN_ER / pt.scale, rmax = Math.max(pt.far, sunR), sc = (R - 34 * p) / rmax;
@@ -620,8 +623,23 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     label(ctx, 'Earth', cx - 9 * p, cy + 13 * p, T.earth, p, 'right'); label(ctx, 'Sun', X(sV) + 10 * p, Y(sV) - 10 * p, T.sun, p); label(ctx, EL[k].name, X(P) + 9 * p, Y(P) - 10 * p, COLOR[k], p);
     if (Math.hypot(qx - cx, qy - cy) > 18 * p) label(ctx, 'equant', qx - 7 * p, qy - 10 * p, T.muted, p * 0.9, 'right'); label(ctx, 'epicycle', X(C) + pt.r * sc * 0.72 + 4, Y(C) - pt.r * sc * 0.72 - 4, T.epi, p * 0.9);
     label(ctx, 'deferent', X(Dv) - sc * 0.7, Y(Dv) + sc * 0.74, T.epi, p * 0.9, 'right');
-    ctx.fillStyle = T.muted; ctx.font = `${10.5 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
-    ctx.fillText(`Earth at rest. Ptolemy's distances: ${EL[k].name} out to`, 10, H - 22 * p); ctx.fillText(`${PTOL[k].shell.toLocaleString('en-US')} Earth radii, the Sun at ${SUN_ER.toLocaleString('en-US')}.`, 10, H - 8);
+    caption(ctx, H, p, captionText());
+  }
+  function captionText() {
+    const k = S.planet;
+    return S.model === 'ptolemy' ? [`Earth at rest. Ptolemy's distances: ${EL[k].name} out to`, `${PTOL[k].shell.toLocaleString('en-US')} Earth radii, the Sun at ${SUN_ER.toLocaleString('en-US')}.`]
+      : [S.frame === 'earth' ? 'Earth held still (Tycho Brahe\'s system).' : 'Seen from above the North Pole.', 'Distances to scale; stars only give directions.'];
+  }
+  function captionBox(ctx, H, p, [a, b]) {
+    ctx.font = `${10.5 * p}px ${T.ui}`; const w = Math.max(ctx.measureText(a).width, ctx.measureText(b).width);
+    return [6, H - 33 * p, 14 + w, H];
+  }
+  /* the two line note at the bottom left, on a dark backing: the zodiac ring's names (Libra, Scorpius) ran through it, worst in the
+     shorter Ptolemy view and on a phone (student view, 2026-11-15) */
+  function caption(ctx, H, p, [a, b]) {
+    const bx = captionBox(ctx, H, p, [a, b]); ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+    ctx.fillStyle = 'rgba(11,9,6,0.6)'; ctx.fillRect(bx[0], bx[1], bx[2] - bx[0], bx[3] - bx[1]);
+    ctx.fillStyle = T.muted; ctx.fillText(a, 10, H - 22 * p); ctx.fillText(b, 10, H - 8);
   }
 
   /* ---------- the sky strip ---------- */
@@ -653,7 +671,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.font = `600 ${10.5 * p}px ${T.ui}`; ctx.fillStyle = 'rgba(160,185,225,0.8)'; ctx.textAlign = 'center';
     const wide = S.span > 200;   /* the whole zodiac: only its own constellations are named */
     const taken = [];   /* names already written, which the event labels below keep clear of: [middle x, baseline y, width] */
-    for (const id in SKY.names) { if (wide && !ZODIAC.includes(id) && id !== 'Oph') continue; const nm = SKY.names[id], x = X(nm[1]), y = Y(nm[2]); if (inX(x) && y > 14 && y < H - 18) { const t = nm[0].toUpperCase(); ctx.fillText(t, x, y); taken.push([x, y, ctx.measureText(t).width]); } }
+    /* keep the names off the strip's title and the EAST and WEST tags (on a phone they wrote over each other; student view, 2026-11-15) */
+    const keep = [], clear = (x0, y0, x1, y1) => !keep.some((k) => x0 < k[2] && x1 > k[0] && y0 < k[3] && y1 > k[1]);
+    { const tg = sky.parentElement.querySelector('.tag'), r0 = sky.getBoundingClientRect(); if (tg && r0.width) { const r = tg.getBoundingClientRect(); keep.push([r.left - r0.left - 4, r.top - r0.top - 2, r.right - r0.left + 4, r.bottom - r0.top + 2]); }
+      const f0 = ctx.font; ctx.font = `700 ${10.5 * p}px ${T.ui}`; const we = ctx.measureText('◀ EAST').width, ww = ctx.measureText('WEST ▶').width; ctx.font = f0;
+      keep.push([4, 30 * p - 11 * p, 12 + we, 30 * p + 3], [W - 12 - ww, 30 * p - 11 * p, W - 4, 30 * p + 3]); }
+    for (const id in SKY.names) { if (wide && !ZODIAC.includes(id) && id !== 'Oph') continue; const nm = SKY.names[id], x = X(nm[1]), y = Y(nm[2]); if (inX(x) && y > 14 && y < H - 18) { const t = nm[0].toUpperCase(), tw = ctx.measureText(t).width; if (!clear(x - tw / 2, y - 9 * p, x + tw / 2, y + 2)) continue; ctx.fillText(t, x, y); taken.push([x, y, tw]); } }
     /* stars */
     const st = SKY.stars, mlim = wide ? 4.2 : S.span > 120 ? 4.6 : 5.2;
     for (let i = 0; i < st.length; i += 4) {
@@ -661,7 +684,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const r = Math.max(0.55, (2.9 - 0.44 * m)) * (p > 1 ? 1.2 : 1); ctx.fillStyle = bvColor(st[i + 3] / 10); ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.fill();
     }
     ctx.font = `${9.5 * p}px ${T.ui}`; ctx.fillStyle = 'rgba(238,231,222,0.7)'; ctx.textAlign = 'left';
-    if (!wide) for (const [nm, l, b] of SKY.named) { const x = X(l), y = Y(b); if (inX(x) && y > 10 && y < H - 14) { ctx.fillText(nm, x + 5, y - 5); const w = ctx.measureText(nm).width; taken.push([x + 5 + w / 2, y - 5, w]); } }
+    if (!wide) for (const [nm, l, b] of SKY.named) { const x = X(l), y = Y(b); if (inX(x) && y > 10 && y < H - 14) { const w = ctx.measureText(nm).width; if (!clear(x + 5, y - 14 * p, x + 5 + w, y - 3)) continue; ctx.fillText(nm, x + 5, y - 5); taken.push([x + 5 + w / 2, y - 5, w]); } }
     /* the Sun */
     { const x = X(now.sunLam), y = Y(0); if (inX(x)) { dot(ctx, x, y, Math.max(6, 0.27 * pxd) * p, T.sun, 3.4); label(ctx, 'Sun', x + 10 * p, y + 14 * p, T.sun, p); } }
     const line = (c, from, to, col, w, dash) => {
@@ -682,8 +705,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const up = e.kind !== 'station' ? -1 : 1; ctx.strokeStyle = 'rgba(238,232,224,0.6)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, y + up * 16 * p); ctx.stroke();
       ctx.fillStyle = 'rgba(238,232,224,0.85)'; const nm = e.kind === 'station' ? 'stationary' : e.kind === 'greatest' ? 'greatest elong.' : e.kind === 'inferior' ? 'inferior conj.' : 'opposition';
       const txt = S.marks ? String(fromJD(e.jd).y) : `${nm} ${short(e.jd)}`, tw = ctx.measureText(txt).width; let ty = y + up * 22 * p + (up > 0 ? 6 * p : 0);
-      for (let n = 0; n < 8 && boxes.some((b) => Math.abs(b[0] - x) < (b[2] + tw) / 2 + 4 && Math.abs(b[1] - ty) < 12 * p); n++) ty += up * 12 * p;
-      boxes.push([x, ty, tw]); ctx.fillText(txt, x, ty);
+      const xl = clamp(x, tw / 2 + 4, W - tw / 2 - 4);   /* inside the strip: "greatest elong." was cut at its edge (student view, 2026-11-15) */
+      for (let n = 0; n < 8 && boxes.some((b) => Math.abs(b[0] - xl) < (b[2] + tw) / 2 + 4 && Math.abs(b[1] - ty) < 12 * p); n++) ty += up * 12 * p;
+      boxes.push([xl, ty, tw]); ctx.fillText(txt, xl, ty);
     }
     /* numbered points, matching the lines of sight above */
     if (L.sight) markTimes().filter((t) => t <= S.jd + 1e-6).forEach((t, i) => { const q = lonlat(geo(S.model, S.planet, t)); numberTag(ctx, i + 1, X(q.lam), Y(q.beta), p, T.sight); });
@@ -709,6 +733,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const [W, H] = dims.scope; if (!W || !T) return;
     const ctx = cctx, p = projScale(); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.space; ctx.fillRect(0, 0, W, H);
     const k = S.planet, q = look(S.model, k, S.jd), cx = W / 2, cy = H / 2 + 4, Rf = Math.min(W, H) / 2 - 22 * p, FIELD = 80;   /* arcseconds across */
+    if (Rf < 4) return;   /* too small to draw (a negative radius throws; 2026-11-15) */
     ctx.fillStyle = '#000'; ctx.beginPath(); ctx.arc(cx, cy, Rf, 0, 2 * Math.PI); ctx.fill(); ctx.strokeStyle = T.line; ctx.lineWidth = 2; ctx.stroke();
     const farSize = 2 * Math.asin(EL[k].R / ((EL[k].a[0] * (1 + EL[k].e[0]) + EL.earth.a[0] * (1 + EL.earth.e[0])) * AU_KM)) / DEG * 3600;
     const size = q.size != null ? q.size : farSize * q.rel, r = Math.max(1.2, size / FIELD * Rf);
