@@ -4,6 +4,7 @@ VDI18N.add('en', 'demo/forces', [
 "a / cos θ (m/s²)",
 "Held in place. Press Release.",
 "FREE BODY DIAGRAM OF THE BLOCK",
+"Held: the forces once you press Release",
 "f (kinetic) = {#} N",
 "net = ma = {#} N",
 "Arrow lengths are to scale",
@@ -140,5 +141,7 @@ VDI18N.add('en', 'demo/forces', [
 "Blind: arrows show directions only",
 "T each",
 "Tension, lift, acceleration and the pull that holds the load",
-"Work and kinetic energy"
+"Work and kinetic energy",
+"Stopped at the end. Press Put back.",
+"At the stop: the push of the stop is not drawn"
 ]);

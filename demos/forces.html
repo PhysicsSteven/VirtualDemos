@@ -393,6 +393,14 @@ table.rows input:focus { border-color: var(--accent); }
   $('newMystery').addEventListener('click', () => { setMystery(true); capStatus('A new mystery surface. Earlier rows used a different one.'); });
 
   // ---------- run ----------
+  /* the block (or m) has run into a stop at either end: Release would only hit it again (student view, 2026-11-15) */
+  /* written out as VDI18N.t literals so the harvest finds them although they show only after a run */
+  const trS = (k) => { const en = { stop: 'Stopped at the end. Press Put back.', stopFbd: 'At the stop: the push of the stop is not drawn', held: 'Held: the forces once you press Release' }[k];
+    if (!window.VDI18N) return en;
+    return k === 'stop' ? VDI18N.t('Stopped at the end. Press Put back.') : k === 'stopFbd' ? VDI18N.t('At the stop: the push of the stop is not drawn') : VDI18N.t('Held: the forces once you press Release'); };
+  const atStop = () => !S.run && !S.tackle && (S.s <= 0.25 + 1e-9 || S.s >= LEN - 0.25 - 1e-9);
+  /* a muted "real time" after the status line while it runs, so the rate is on screen (student view, 2026-11-15) */
+  function rateTag(st, x, y) { if (!S.run) return; const p = ps(), w = ctx.measureText(st).width; ctx.save(); ctx.font = `${11 * p}px ${T.ui}`; ctx.fillStyle = T.muted; ctx.fillText('real time', x + w + 10 * p, y + 2 * p); ctx.restore(); }
   function setRun(on) { S.run = on; $('go').textContent = on ? 'Hold' : 'Release'; $('go').classList.toggle('attn', !on); }
   $('go').addEventListener('click', () => { S.timing = null; if (!S.run && S.v === 0) clearWork(); setRun(!S.run); });
   function clearWork() { S.work = { g: 0, F: 0, f: 0, T: 0 }; S.v0 = S.v; }
@@ -505,6 +513,9 @@ table.rows input:focus { border-color: var(--accent); }
     const scaleG = new THREE.Group(), scBody = mesh(new THREE.CylinderGeometry(0.022, 0.022, 0.2, 20), M({ roughness: 0.4, metalness: 0.3, color: 0xe3dfda })), scCap = mesh(new THREE.CylinderGeometry(0.026, 0.026, 0.025, 20), M({ roughness: 0.5, color: 0xa88456 }));
     scCap.position.y = 0.11; const scRing = mesh(new THREE.TorusGeometry(0.03, 0.005, 8, 24), hookM); scRing.position.y = 0.15; scaleG.add(scBody, scCap, scRing);
     const cordF = new THREE.Line(lineG(2), stringM);
+    /* the lines' points move every frame but their bounding spheres stay where they were first drawn, so three.js culled the cord
+       to the spring scale as soon as the block slid away: the block ran on with no cord. Never cull them (student view, 2026-11-15) */
+    for (const l of [stringA, stringB, cordF]) l.frustumCulled = false;
     /* the timer's two marks across the board */
     const markM = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.85 }), marks = [0, 1].map(() => mesh(new THREE.BoxGeometry(0.012, RW + 0.02, 0.002), markM, false, false));
     rig.add(board, hinge, block, pulley, clampRod, clampBox, ...marks);
@@ -703,9 +714,9 @@ table.rows input:focus { border-color: var(--accent); }
     if (S.timing) for (const sm of [S.timing.s0, S.timing.s0 + (S.timing.s0 > LEN / 2 ? -GATE_D : GATE_D)]) { const yy = yP + (LEN + 0.3 - sm) * sc; ctx.strokeStyle = T.accent; ctx.lineWidth = 2 * p; ctx.setLineDash([3 * p, 3 * p]); ctx.beginPath(); ctx.moveTo(xL - 0.45 * sc, yy); ctx.lineTo(xL - 0.05 * sc, yy); ctx.stroke(); ctx.setLineDash([]); }
     // status and timer
     ctx.font = `600 ${13 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillStyle = T.ink;
-    let st = S.run ? (Math.abs(S.v) > 1e-9 ? (S.v > 0 ? 'm rising, m₂ falling' : 'm falling, m₂ rising') : 'Balanced: at rest') : 'Held in place. Press Release.';
+    let st = S.run ? (Math.abs(S.v) > 1e-9 ? (S.v > 0 ? 'm rising, m₂ falling' : 'm falling, m₂ rising') : 'Balanced: at rest') : atStop() ? trS('stop') : 'Held in place. Press Release.';
     if (S.blind && S.run) st = Math.abs(S.v) > 1e-9 ? 'Moving' : 'At rest';
-    ctx.fillText(st, x0 + 14 * p, y0 + 4 * p);
+    ctx.fillText(st, x0 + 14 * p, y0 + 4 * p); rateTag(st, x0 + 14 * p, y0 + 4 * p);
     if (S.timing) { ctx.font = `700 ${15 * p}px ${T.mono}`; ctx.fillStyle = T.accent; ctx.fillText(S.timing.done ? `Timer: ${S.lastGate.toFixed(3)} s for 1.000 m` : `Timer: ${S.timing.t.toFixed(3)} s`, x0 + 14 * p, y0 + 24 * p); }
     if (S.pairs) { ctx.fillStyle = T.w; ctx.font = `600 ${11.5 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText(S.blind ? 'Mass m also pulls the Earth up, and pulls down on the string.' : `m also pulls the Earth up with ${f(fz.W, 1)} N, and the string down with ${f(fz.T, 1)} N.`, x0 + 14 * p, y0 + 44 * p, w - 28 * p); }
   }
@@ -761,7 +772,7 @@ table.rows input:focus { border-color: var(--accent); }
     ctx.font = `600 ${13 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillStyle = T.ink;
     let st = !S.run ? (y >= TK_TOP - 1e-9 ? 'At the top: the blocks meet. Press Put back.' : 'Held in place. Press Release.')
       : Math.abs(S.v) > 1e-9 ? (S.v > 0 ? 'Load rising' : 'Load falling') : y <= 1e-12 ? (S.blind ? 'Resting on the floor' : 'On the floor: n F is not more than mg') : 'At rest';
-    ctx.fillText(st, x0 + 14 * p, y0 + 4 * p);
+    ctx.fillText(st, x0 + 14 * p, y0 + 4 * p); rateTag(st, x0 + 14 * p, y0 + 4 * p);
     ctx.font = `${12 * p}px ${T.mono}`; ctx.fillStyle = T.muted;
     ctx.fillText(`n = ${n} · rope pulled ${f(rope, 2)} m · load up ${f(lift, 2)} m`, x0 + 14 * p, y0 + 24 * p);
   }
@@ -876,9 +887,9 @@ table.rows input:focus { border-color: var(--accent); }
     // status
     ctx.font = `600 ${13 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillStyle = T.ink;
     const dirWord = P.th > 0 ? (S.v > 0 ? 'up the ramp' : 'down the ramp') : (S.v > 0 ? 'to the right' : 'to the left');
-    let st = S.run ? (Math.abs(S.v) > 1e-9 ? `Sliding ${dirWord}` : 'At rest: static friction holds it') : 'Held in place. Press Release.';
+    let st = S.run ? (Math.abs(S.v) > 1e-9 ? `Sliding ${dirWord}` : 'At rest: static friction holds it') : atStop() ? trS('stop') : 'Held in place. Press Release.';
     if (S.blind && S.run) st = Math.abs(S.v) > 1e-9 ? 'Moving' : 'At rest';
-    ctx.fillText(st, x0 + 14 * p, y0 + 4 * p);
+    ctx.fillText(st, x0 + 14 * p, y0 + 4 * p); rateTag(st, x0 + 14 * p, y0 + 4 * p);
     if (S.timing) { ctx.font = `700 ${15 * p}px ${T.mono}`; ctx.fillStyle = T.accent; ctx.fillText(S.timing.done ? `Timer: ${S.lastGate.toFixed(3)} s for 1.000 m` : `Timer: ${S.timing.t.toFixed(3)} s`, x0 + 14 * p, y0 + 24 * p); }
     if (fz.lift) { ctx.fillStyle = T.fr; ctx.font = `600 ${12 * p}px ${T.ui}`; ctx.fillText('F lifts the block off the surface: N = 0 (beyond this model)', x0 + 14 * p, y0 + 44 * p); }
     // Newton's third law: the partners of the forces on the block act on other objects (ramp, string, Earth), equal in size and opposite in direction
@@ -896,6 +907,8 @@ table.rows input:focus { border-color: var(--accent); }
     const p = ps(), P = S.p, th = P.th * Math.PI / 180, fz = forces(S.p, S.v), bl = S.blind;
     ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.beginPath(); if (x0 > 0) { ctx.moveTo(x0, 12 * p); ctx.lineTo(x0, H - 12 * p); } else { ctx.moveTo(12 * p, y0); ctx.lineTo(W - 12 * p, y0); } ctx.stroke();
     ctx.fillStyle = T.muted; ctx.font = `700 ${11 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText(S.atwood ? 'FREE BODY DIAGRAM OF MASS m' : 'FREE BODY DIAGRAM OF THE BLOCK', x0 + 14 * p, y0 + 12 * p);
+    /* held or stopped, the diagram shows a net force on a body that is not moving: say why (student view, 2026-11-15) */
+    if (!S.run && Math.abs(fz.net) > 1e-6) { ctx.font = `${11 * p}px ${T.ui}`; ctx.fillText(trS(atStop() ? 'stopFbd' : 'held'), x0 + 14 * p, y0 + 28 * p); }
     const cx = x0 + w / 2, cy = y0 + h / 2 + 10 * p, Rm = Math.max(20 * p, Math.min(Math.min(w, h) * (S.atwood ? 0.3 : 0.36), h / 2 - 50 * p));   /* a short pane (a phone): vertical arrows and their labels clear the title and the note */   /* Atwood: both arrows vertical, so a little shorter to clear the title and the note */
     const items = [['W = mg', T.w, 0, -fz.W], ['N', T.n, -Math.sin(th) * fz.N, Math.cos(th) * fz.N]];
     const up = [Math.cos(th), Math.sin(th)];

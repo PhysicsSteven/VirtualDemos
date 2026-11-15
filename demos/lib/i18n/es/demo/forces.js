@@ -8,6 +8,8 @@ VDI18N.add('es', 'demo/forces', {
   "Sujeto en su lugar. Pulsa Soltar.",
 "FREE BODY DIAGRAM OF THE BLOCK":
   "DIAGRAMA DE CUERPO LIBRE DEL BLOQUE",
+"Held: the forces once you press Release":
+  "Sujeto: las fuerzas en cuanto pulses Soltar",
 "f (kinetic) = {#} N":
   "f (cinética) = {#} N",
 "net = ma = {#} N":
@@ -16,6 +18,8 @@ VDI18N.add('es', 'demo/forces', {
   "Las longitudes de las flechas están a escala",
 "Forces and Friction":
   "Fuerzas y fricción",
+"<a><span>←</span> <span>Circular Motion</span></a><a><span>Elevator: Apparent Weight</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Movimiento circular</span></a><a><span>Elevador: peso aparente</span> <span>→</span></a>",
 "A block on a ramp you can tilt, push, and tie to a hanging mass. The free body diagram shows every force on the block; their sum gives its acceleration through F = ma.":
   "Un bloque en una rampa que puedes inclinar, empujar y atar a una masa colgante. El diagrama de cuerpo libre muestra cada fuerza sobre el bloque; su suma da su aceleración mediante F = ma.",
 "g = {#} m/s² · ramp {#} m long":
@@ -164,8 +168,6 @@ VDI18N.add('es', 'demo/forces', {
   "Al deslizarse hacia abajo sin empuje ni masa colgante, a = g sin θ − μk g cos θ, así que a/cos θ = g tan θ − μk g: una recta con pendiente g y ordenada al origen −μk g. El ajuste usa solo filas con F = {#} y m₂ = {#}.",
 "Blind hides every force size, the acceleration, the friction type, the slip angle, the arrows' lengths (all drawn the same size) and μk from the fit. The timer, the settings and the force directions stay.":
   "A ciegas oculta el tamaño de cada fuerza, la aceleración, el tipo de fricción, el ángulo de deslizamiento, las longitudes de las flechas (todas dibujadas del mismo tamaño) y μk del ajuste. El cronómetro, los ajustes y las direcciones de las fuerzas se quedan.",
-"<a><span>←</span> <span>Circular Motion</span></a><a><span>Elevator: Apparent Weight</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Movimiento circular</span></a><a><span>Elevador: peso aparente</span> <span>→</span></a>",
 "Hold":
   "Sujetar",
 "Sliding to the right":
@@ -260,8 +262,8 @@ VDI18N.add('es', 'demo/forces', {
   "Usa primero Soltar en la marca superior, y deja que el cronómetro termine.",
 "At rest":
   "En reposo",
-"Held still: press Release.":
-  "Sujeto quieto: pulsa Soltar.",
+"Not sliding: the bumps are locked.":
+  "Sin deslizarse: las irregularidades están trabadas.",
 "N, friction, tension, acceleration":
   "N, fricción, tensión, aceleración",
 "hidden in Blind":
@@ -270,12 +272,8 @@ VDI18N.add('es', 'demo/forces', {
   "Trabajo, energía cinética y potencia",
 "A new mystery surface. Earlier rows used a different one.":
   "Una nueva superficie misteriosa. Las filas anteriores usaron otra.",
-"Moving":
-  "En movimiento",
-"Sliding: the bumps catch and tear past each other.":
-  "Deslizándose: las irregularidades se enganchan y se arrancan al pasar unas por otras.",
-"Not sliding: the bumps are locked.":
-  "Sin deslizarse: las irregularidades están trabadas.",
+"Held still: press Release.":
+  "Sujeto quieto: pulsa Soltar.",
 "Blind: arrows show directions only":
   "A ciegas: las flechas muestran solo direcciones",
 "T each":
@@ -283,5 +281,13 @@ VDI18N.add('es', 'demo/forces', {
 "Tension, lift, acceleration and the pull that holds the load":
   "Tensión, elevación, aceleración y el jalón que sostiene la carga",
 "Work and kinetic energy":
-  "Trabajo y energía cinética"
+  "Trabajo y energía cinética",
+"Stopped at the end. Press Put back.":
+  "Detenido en el extremo. Pulsa Regresar.",
+"At the stop: the push of the stop is not drawn":
+  "En el tope: no se dibuja el empuje del tope",
+"Moving":
+  "En movimiento",
+"Sliding: the bumps catch and tear past each other.":
+  "Deslizándose: las irregularidades se enganchan y se arrancan al pasar unas por otras."
 });

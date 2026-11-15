@@ -675,6 +675,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     coils: { r: [[1, 'real time'], [0.1, 'slow motion ×10'], [0.01, 'slow motion ×100'], [0.001, 'slow motion ×1000']], lab: ['Real time', '1/10', '1/100', '1/1000'] }
   };
   const rateSet = () => RATE_SETS[S.mode === 'coils' ? 'coils' : 'std'];
+  const OPEN_RATE = { magnet: 2, self: 2, rails: 1, gen: 0, coils: 2 };   // index into the rate set each apparatus opens at
+  let rateSeeded = false;
   const F_VALUES = [10, 20, 30, 50, 60, 100, 150, 200, 300, 500, 700, 1000];   // source frequencies, Hz
   const COIL_A1 = 0.04;                // primary mean radius, m
   const DT = 1e-3;                     // physics step, s of the apparatus's own time
@@ -1182,7 +1184,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     else if (name === 'self') { newMove(0); selfWindow(); }
     else if (name === 'gen') beginMove(0, 2.6 * 2 * Math.PI / S.gen.w);
     else if (name === 'rails') railsPull(0.2);
-    if (coilsChanged) setRate(c.mode === 'coils' ? 2 : 0);
+    /* Each apparatus opens at a playback rate where its move takes a few seconds: at real time the opening push was over
+       0.6 s after the page loaded, before a student had looked at it. The physics and the plotted times are unchanged;
+       the rate stays as the student set it until the apparatus changes. (student view, 2026-11-15) */
+    if (modeChanged || coilsChanged || !rateSeeded) { setRate(OPEN_RATE[c.mode]); rateSeeded = true; }
     if (reduce) setRunning(false); else setRunning(true);
     ghostKey();
     if (modeChanged) requestAnimationFrame(resize);

@@ -132,7 +132,9 @@ table.rec th { color: var(--muted); font-weight: 600; }
   /* the radius drawn, in ruler units: lead spheres to scale in Gravity (or all as 1000 kg with Same size), charges a fixed size */
   function flDrawR(mode, q, same) {
     if (mode === 'grav') return flRadius(same ? 1000 : q) / FL_MODES.grav.x;
-    return mode === 'coul' ? 0.35 : 35;
+    /* atomic scale: 16 pm, not 35 pm, so the proton and electron of the preset at the Bohr radius (52.9 pm) no longer overlap on the
+       drawing, and a student who drags them apart can slide back to 52.9 pm (student view, 2026-11-15) */
+    return mode === 'coul' ? 0.35 : 16;
   }
   // ==CORE END==
   if (typeof document === 'undefined') return;
@@ -195,12 +197,18 @@ table.rec th { color: var(--muted); font-weight: 600; }
       ctx.beginPath(); ctx.arc(x, y, rad, 0, 2 * Math.PI); ctx.fill();
       ctx.fillStyle = S.mode === 'grav' ? T.ink : T.canvas; ctx.font = `600 ${Math.max(10, Math.min(16, rad * 0.55)) * p / p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
       if (S.mode !== 'grav') ctx.fillText(q > 0 ? '+' : q < 0 ? '−' : '0', x, y + 1);
-      ctx.fillStyle = T.ink; ctx.font = `${11 * p}px ${T.mono}`; ctx.textBaseline = 'bottom'; ctx.fillText(`${lab} ${fq(q)}`, x, y - rad - 6 * p);
       /* center mark down to the ruler */
       ctx.strokeStyle = T.muted; ctx.setLineDash([3 * p, 3 * p]); ctx.beginPath(); ctx.moveTo(x, yb); ctx.lineTo(x, ry); ctx.stroke(); ctx.setLineDash([]);
       return { x, y, rad }; };
     const n = S.mode === 'grav' ? ['m₁', 'm₂'] : ['q₁', 'q₂'];
     const b1 = body(S.x1, S.a, R1(), n[0]), b2 = body(S.x2, S.b, R2(), n[1]);
+    /* the two name labels: when the bodies are close the centered labels ran into each other ("q₁ +1qe −1 e"), so they then
+       move apart, each ending at the midpoint (student view, 2026-11-15) */
+    { ctx.fillStyle = T.ink; ctx.font = `${11 * p}px ${T.mono}`; ctx.textBaseline = 'bottom';
+      const t1 = `${n[0]} ${fq(S.a)}`, t2 = `${n[1]} ${fq(S.b)}`, w1 = ctx.measureText(t1).width, w2 = ctx.measureText(t2).width;
+      const ly = (b) => b.y - b.rad - 6 * p, mid = (b1.x + b2.x) / 2;
+      if (b1.x + w1 / 2 + 8 * p > b2.x - w2 / 2) { ctx.textAlign = 'right'; ctx.fillText(t1, mid - 5 * p, ly(b1)); ctx.textAlign = 'left'; ctx.fillText(t2, mid + 5 * p, ly(b2)); }
+      else { ctx.textAlign = 'center'; ctx.fillText(t1, b1.x, ly(b1)); ctx.fillText(t2, b2.x, ly(b2)); } }
     /* the distance between centers */
     const dy = ry + rh + 22 * p; ctx.strokeStyle = T.muted; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(b1.x, dy); ctx.lineTo(b2.x, dy); ctx.moveTo(b1.x, dy - 5 * p); ctx.lineTo(b1.x, dy + 5 * p); ctx.moveTo(b2.x, dy - 5 * p); ctx.lineTo(b2.x, dy + 5 * p); ctx.stroke();
     ctx.fillStyle = T.ink; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(`r = ${fx(r())}`, (b1.x + b2.x) / 2, dy + 6 * p);
@@ -209,12 +217,13 @@ table.rec th { color: var(--muted); font-weight: 600; }
     if (mag > 0) {
       const ref = { grav: 1e-9, coul: 1e-2, atom: 1e-12 }[S.mode];
       let L = Math.max(14 * p, Math.min(150 * p, 20 * p * Math.log10(mag / ref + 1) + 14 * p));
-      if (f < 0) L = Math.min(L, Math.max(14 * p, 0.45 * (b2.x - b1.x)));   /* pulling arrows point at each other: keep them from crossing */
+      if (f < 0) L = Math.min(L, 0.45 * (b2.x - b1.x));   /* pulling arrows point at each other: keep them from crossing, even at the closest gap (student view, 2026-11-15) */
       const ay = Math.min(b1.y - b1.rad, b2.y - b2.rad) - 34 * p, s = f > 0 ? 1 : -1;   /* s = +1: body 2 pushed to the right */
       arrow(b2.x, ay, b2.x + s * L, T.arrow, 4 * p); arrow(b1.x, ay, b1.x - s * L, T.arrow, 4 * p);
       ctx.fillStyle = T.arrowInk; ctx.font = `600 ${11 * p}px ${T.mono}`; ctx.textBaseline = 'bottom';
       const txt = S.blind ? 'F = ?' : `F = ${fN(f)}`;
-      ctx.textAlign = 'right'; ctx.fillText(txt, b1.x + 8 * p, ay - 8 * p); ctx.textAlign = 'left'; ctx.fillText(txt, b2.x - 8 * p, ay - 8 * p);
+      const fm = (b1.x + b2.x) / 2;   /* keep the two force labels apart when the bodies are close (student view, 2026-11-15) */
+      ctx.textAlign = 'right'; ctx.fillText(txt, Math.min(b1.x + 8 * p, fm - 6 * p), ay - 8 * p); ctx.textAlign = 'left'; ctx.fillText(txt, Math.max(b2.x - 8 * p, fm + 6 * p), ay - 8 * p);
       ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
       ctx.fillText(W < 640 ? 'Arrow lengths grow with log F (not to scale).' : 'Arrow lengths grow with log F (not to scale), so very small and very large forces both show.', 12 * p, 10 * p);
     }
