@@ -816,6 +816,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (th === 0) return '0°';
     return `${d.toPrecision(2)}° (${trim((th * 1e6).toPrecision(3))} µrad)`;
   }
+  /* the target's label waits until the beam's tracks are drawn, so it sits on top of them on its backing (student view, 2026-11-15) */
+  let TLAB = null;
+  const tlabel = (...a) => (TLAB ? TLAB.push(a) : label(...a));
   function label(c, txt, x, y, col, align = 'left', base = 'middle', bold = false) {
     const ps = projScale();
     c.font = `${bold ? '600 ' : ''}${11 * ps}px ${T.mono}`; c.textAlign = align; c.textBaseline = base;
@@ -841,11 +844,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const cone = S.mode === 'single' && S.model === 'nuc' && cm.k > 0.01;
     if (cone) drawCone(g, D, cm, false);
     // target
+    TLAB = S.mode === 'beam' ? [] : null;
     if (S.model === 'plum') drawPudding(g); else drawNucleus(g, D, cm);
     if (S.mode === 'beam') {
       drawRing(g);
       c.drawImage(trails, 0, 0, trails.width, trails.height, 0, 0, W, Hh);
       for (const f of flights) drawFlying(f, g, 0.9);
+      const tl = TLAB; TLAB = null; for (const a of tl) label(...a);
       drawApparatus(g);
     } else {
       if (cone) drawCone(g, D, cm, true);
@@ -987,8 +992,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const txt = `${t.sym ? t.sym + ' nucleus, ' : ''}Z = ${t.Z}`;
     const lx = g.cx + Math.max(rn, rc) + 6 * ps;
     c.font = `${11 * ps}px ${T.mono}`;
-    if (lx + c.measureText(txt).width + 6 < g.s.x + g.s.w) label(c, txt, lx, g.cy + 13 * ps, T.pos, 'left', 'middle');
-    else label(c, txt, g.cx, g.cy + Math.max(rn, rc) + 14 * ps, T.pos, 'center', 'middle');
+    if (lx + c.measureText(txt).width + 6 < g.s.x + g.s.w) tlabel(c, txt, lx, g.cy + 13 * ps, T.pos, 'left', 'middle');
+    else tlabel(c, txt, g.cx, g.cy + Math.max(rn, rc) + 14 * ps, T.pos, 'center', 'middle');
   }
   // inset: the nucleus and an alpha magnified together, the same zoom for both
   function drawZoom(g) {
@@ -1045,7 +1050,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       c.globalAlpha = 0.55 + 0.45 * d; c.beginPath(); c.arc(ex, ey, rr, 0, 2 * Math.PI); c.fill();
     }
     c.globalAlpha = 1;
-    label(c, `${t.sym ? t.sym + ' atom' : 'Atom'}, +${t.Z}e spread through R = ${fmtLen(atomR())}`, g.cx, g.cy - R - 12 * ps, T.pos, 'center', 'middle');
+    tlabel(c, `${t.sym ? t.sym + ' atom' : 'Atom'}, +${t.Z}e spread through R = ${fmtLen(atomR())}`, g.cx, g.cy - R - 12 * ps, T.pos, 'center', 'middle');
   }
   function drawBeamBand(g) {
     const c = ctx, ps = g.ps, s = g.s, bm = (S.model === 'plum' ? atomR() : bmax()) * g.sc;
@@ -1103,12 +1108,16 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     c.globalCompositeOperation = prev; c.globalAlpha = 1;
     c.fillStyle = T.muted; c.font = `${10.5 * ps}px ${T.mono}`; c.textBaseline = 'middle';
-    const lab = (a, t, al) => { c.textAlign = al; c.fillText(t, g.cx + (R + lw) * Math.cos(a), g.cy - (R + lw + 4 * ps) * Math.sin(a)); };
-    lab(0.02, '0°', 'left'); lab(Math.PI / 2, '90°', 'center'); lab(Math.PI - 0.02, '180°', 'right');
-    c.textAlign = 'left'; c.textBaseline = 'top';
+    const lab = (a, t, al, inner) => { c.textAlign = al; const rr = inner ? R - lw - 10 * ps : R + lw + 4 * ps; c.fillText(t, g.cx + (R + lw) * Math.cos(a), g.cy - rr * Math.sin(a)); };
     const farX = Math.round(Math.log10(1e13 / (R / g.sc)));
-    c.fillText(`screen really ~1 cm away (~10${supNum(farX)}× farther):`, g.s.x + 10 * ps, g.s.y + 10 * ps);
-    c.fillText(`each ${pj().name} lands at its final angle θ`, g.s.x + 10 * ps, g.s.y + 25 * ps);
+    const cap1 = `screen really ~1 cm away (~10${supNum(farX)}× farther):`, cap2 = `each ${pj().name} lands at its final angle θ`;
+    /* on a narrow stage the caption reaches the top of the screen: the 90° mark then goes just inside it (student view, 2026-11-15) */
+    const capR = g.s.x + 10 * ps + Math.max(c.measureText(cap1).width, c.measureText(cap2).width), top90 = g.cy - (R + lw + 4 * ps);
+    const inside = capR > g.cx - 14 * ps && top90 < g.s.y + 40 * ps;
+    lab(0.02, '0°', 'left'); lab(Math.PI / 2, '90°', 'center', inside); lab(Math.PI - 0.02, '180°', 'right');
+    c.textAlign = 'left'; c.textBaseline = 'top';
+    c.fillText(cap1, g.s.x + 10 * ps, g.s.y + 10 * ps);
+    c.fillText(cap2, g.s.x + 10 * ps, g.s.y + 25 * ps);
     // edge of the drawn region, and a scale break between it and the screen
     c.strokeStyle = T.muted; c.globalAlpha = 0.6; c.lineWidth = 1 * ps; c.setLineDash([3 * ps, 5 * ps]);
     c.beginPath(); c.arc(g.cx, g.cy, g.zone, 0, 2 * Math.PI); c.stroke(); c.setLineDash([]);

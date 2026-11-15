@@ -223,7 +223,7 @@ table.rows input:focus { border-color: var(--accent); }
   VD.tools({ el: $('can'), strip: '.viewbar', time: () => S.t });
   let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
   const HINT = { none: 'The empty turntable: measure its own moment of inertia first, so you can subtract it later.', disk: 'A solid disk, 1.00 kg and 10.0 cm in radius: I = ½MR².', ring: 'A ring with the same mass and outer radius as the disk, but its mass far from the axis: I = ½M(R₁² + R₂²), nearly twice the disk.', pair: 'Two 0.200 kg masses at equal distances from the axis: I grows as d². Slide them out and time the drop again.', mystery: 'An unknown object. Measure the table with and without it and subtract.' };
-  const S = { pieces: [20, 20, 5], obj: 'none', d: 0.08, m: 0.05, r: 0.02, fric: false, t: 0, run: false, done: false, blind: false, rows: [], ang: 0 };
+  const S = { pieces: [20, 20, 5], obj: 'none', d: 0.08, m: 0.05, r: 0.02, fric: false, t: 0, run: false, done: false, blind: false, rows: [], ang: 0, tc: 0 };
   const can = $('can'), ctx = can.getContext('2d'), stage = $('stage');
   let W = 0, Hh = 0, dpr = 1, T = null;
   function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
@@ -234,6 +234,15 @@ table.rows input:focus { border-color: var(--accent); }
   const f = (v, d = 3) => (!isFinite(v) ? '—' : v.toFixed(d).replace('-', '−'));
   const Iobj = () => IOBJ[S.obj](S.d), Itot = () => I0 + Iobj(), tf = () => (S.fric ? TAU_F : 0);
   const mot = () => motion(S.m, S.r, Itot(), tf());
+  /* the table's angle and ω now. Once the hanger reaches the stop gate the string goes slack and the table coasts, slowed only by
+     the bearing friction torque when it is on (at constant ω without it), instead of freezing dead; the timed run and every
+     readout at the stop gate are unchanged (student view, 2026-11-15) */
+  function spin(M) {
+    const tt = Math.min(S.t, M.t), th0 = 0.5 * M.a * tt * tt / S.r;
+    if (!S.done || !M.moves || !(S.tc > 0)) return { th: th0, w: M.alpha * tt };
+    const wf = M.alpha * M.t, dec = tf() / Itot(), tc = dec > 0 ? Math.min(S.tc, wf / dec) : S.tc;
+    return { th: th0 + wf * tc - 0.5 * dec * tc * tc, w: Math.max(0, wf - dec * tc) };
+  }
   const hidden = () => S.blind || S.obj === 'mystery';
   function sci(v, n = 3) { if (!isFinite(v)) return '—'; if (v === 0) return '0'; const e = Math.floor(Math.log10(Math.abs(v))); const SUP = { '-': '⁻', 0: '⁰', 1: '¹', 2: '²', 3: '³', 4: '⁴', 5: '⁵', 6: '⁶', 7: '⁷', 8: '⁸', 9: '⁹' };
     return `${(v / 10 ** e).toFixed(n - 1).replace('-', '−')} × 10${String(e).split('').map((c) => SUP[c]).join('')}`; }
@@ -266,7 +275,7 @@ table.rows input:focus { border-color: var(--accent); }
   function draw() {
     if (!T || !W) return;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh);
-    const p = ps(), M = mot(), tt = Math.min(S.t, M.t), y = 0.5 * M.a * tt * tt, th = y / S.r, wide = W > 560;
+    const p = ps(), M = mot(), tt = Math.min(S.t, M.t), y = 0.5 * M.a * tt * tt, th = spin(M).th, wide = W > 560;
     const cx = wide ? W * 0.32 : W * 0.4, cy = Hh * 0.45, R = Math.min(wide ? W * 0.26 : W * 0.3, Hh * 0.33), sc = R / 0.13;
     const sr = Math.max(4 * p, S.r * sc), px = wide ? W * 0.72 : W * 0.8, py = cy - sr, top = cy + 20 * p, bot = Hh - 40 * p;
     const my = top + (bot - top - 40 * p) * y / H;
@@ -359,8 +368,8 @@ table.rows input:focus { border-color: var(--accent); }
   // none below a fifth of a period a frame, nearly gone by half a period, where it would alias (student view, 2026-11-15)
   let frameDt = 1 / 60;
   function blurAmt(M, tt, period) {
-    if (!S.run || !M.moves) return 0;
-    const perFrame = M.alpha * tt * 180 / Math.PI * Math.max(1 / 60, frameDt);
+    if (!(S.run || (S.done && S.tc > 0)) || !M.moves) return 0;
+    const perFrame = spin(M).w * 180 / Math.PI * Math.max(1 / 60, frameDt);
     return 0.92 * Math.max(0, Math.min(1, (perFrame / period - 0.2) / 0.25));
   }
   function init3D() {
@@ -573,11 +582,19 @@ table.rows input:focus { border-color: var(--accent); }
   }
   // labels drawn over the 3D view, on small panels so they read over the bench and the wall
   function draw3(M, tt, y, p) {
-    ctx.clearRect(0, 0, W, Hh); const Q = render3(M, tt, y, y / S.r), hz = Z0 - y;
+    const tray = $('tray');
+    ctx.clearRect(0, 0, W, Hh); const sp = spin(M), Q = render3(M, tt, y, sp.th), hz = Z0 - y;
     const tag = (txt, q, o = {}) => {
       const [x, yy, z] = Q(q); if (z > 1 || x < -40 || x > W + 40 || yy < 56 * p || yy > Hh - 10 * p) return;   /* not under the buttons */
       ctx.font = `${o.b ? 700 : 600} ${(o.s || 11.5) * p}px ${T.ui}`; const w = ctx.measureText(txt).width + 10 * p, h = 18 * p;
       let x0 = o.al === 'right' ? x - w : o.al === 'center' ? x - w / 2 : x; x0 = Math.max(4, Math.min(W - w - 4, x0));
+      /* a label that would sit under the Hanging mass panel goes to the other side of its point ("start gate" did, once the
+         camera had followed the mass down) (student view, 2026-11-15) */
+      if (tray && !tray.classList.contains('away')) {
+        const cr = can.getBoundingClientRect(), tr = tray.getBoundingClientRect(), L = tr.left - cr.left, R = tr.right - cr.left, Tp = tr.top - cr.top, B = tr.bottom - cr.top;
+        const under = (a) => a < R && a + w > L && yy + h / 2 > Tp && yy - h / 2 < B;
+        if (under(x0)) { const alt = [o.al === 'right' ? x + 8 * p : x - w - 8 * p, L - w - 6 * p].map((a) => Math.max(4, Math.min(W - w - 4, a))).find((a) => !under(a)); if (alt == null) return; x0 = alt; }
+      }
       ctx.fillStyle = T.panel; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x0, yy - h / 2, w, h, 5 * p) : ctx.rect(x0, yy - h / 2, w, h); ctx.fill();
       ctx.fillStyle = o.c || T.ink; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(txt, x0 + 5 * p, yy + 0.5 * p);
     };
@@ -595,7 +612,7 @@ table.rows input:focus { border-color: var(--accent); }
     tag('start gate', [HX + 0.18, S.r + 0.03, zs], {}); tag('stop gate', [HX + 0.18, S.r + 0.03, zs - H], {});
     tag('0.500 m drop', [HX + 0.175, S.r + 0.03, zs - H / 2], { c: T.accent, b: 1 });
     if (W > 560) tag(`spool r = ${f(S.r * 100, 1)} cm`, [-0.02, -0.03, ZS + 0.035], { al: 'right' });
-    tag(hidden() ? 'ω' : `ω = ${f(M.alpha * tt, 2)} rad/s`, [0.152 * Math.cos(-2.1), 0.152 * Math.sin(-2.1), ZT], { c: T.accent, b: 1, al: 'right' });
+    tag(hidden() ? 'ω' : `ω = ${f(sp.w, 2)} rad/s`, [0.152 * Math.cos(-2.1), 0.152 * Math.sin(-2.1), ZT], { c: T.accent, b: 1, al: 'right' });
     const msg3 = !M.moves ? 'too little torque to turn it' : S.done ? `timer: ${M.t.toFixed(3)} s for 0.500 m` : `timer: ${f(S.t, 3)} s`;
     ctx.font = `700 ${14 * p}px ${T.mono}`; const mw = ctx.measureText(msg3).width + 16 * p, by = Hh - 34 * p;
     ctx.fillStyle = T.panel; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(10 * p, by, mw, 24 * p, 6 * p) : ctx.rect(10 * p, by, mw, 24 * p); ctx.fill();
@@ -617,7 +634,7 @@ table.rows input:focus { border-color: var(--accent); }
     for (const b of document.querySelectorAll('#rSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.r === S.r));
     $('rowD').hidden = S.obj !== 'pair'; $('sD').value = S.d; $('oD').textContent = `${f(S.d * 100, 1)} cm`; $('massList').textContent = `hanger ${HANGER_G} g` + S.pieces.map((g) => ` + ${g} g`).join('') + ` = ${f(S.m * 1000, 0)} g`; $('takeLast').disabled = $('takeAll').disabled = !S.pieces.length; $('fric').checked = S.fric; $('objHint').textContent = HINT[S.obj];
   }
-  const wind = () => { S.t = 0; S.done = false; setRun(false); sync(); draw(); readouts(); };
+  const wind = () => { S.t = 0; S.tc = 0; S.done = false; setRun(false); sync(); draw(); readouts(); };
   $('objSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-o]'); if (b) { S.obj = b.dataset.o; wind(); fit(); } });
   $('rSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-r]'); if (b) { S.r = +b.dataset.r; wind(); } });
   $('sD').addEventListener('input', (e) => { S.d = +e.target.value; wind(); fit(); });
@@ -631,12 +648,13 @@ table.rows input:focus { border-color: var(--accent); }
   $('takeAll').addEventListener('click', () => setPieces([]));
   $('fric').addEventListener('change', (e) => { S.fric = e.target.checked; wind(); fit(); });
   function setRun(on) { S.run = on; $('tray').classList.toggle('away', on); $('tray').inert = on; $('go').textContent = on ? 'Pause' : 'Release'; $('go').classList.toggle('attn', !on); }
-  $('go').addEventListener('click', () => { if (S.done) { S.t = 0; S.done = false; } if (reduce) { const M = mot(); S.t = M.moves ? M.t : 0; S.done = M.moves; setRun(false); draw(); readouts(); return; } setRun(!S.run); });
+  $('go').addEventListener('click', () => { if (S.done) { S.t = 0; S.tc = 0; S.done = false; } if (reduce) { const M = mot(); S.t = M.moves ? M.t : 0; S.done = M.moves; setRun(false); draw(); readouts(); return; } setRun(!S.run); });
   $('wind').addEventListener('click', wind);
   let last = performance.now();
   function frame(now) {
     const dt = Math.min(0.05, (now - last) / 1000); last = now; frameDt += 0.2 * (dt - frameDt);
-    if (S.run) { const M = mot(); S.t += dt; if (!M.moves || S.t >= M.t) { S.t = Math.min(S.t, M.t); S.done = M.moves; setRun(false); } draw(); readouts(); }
+    if (S.run) { const M = mot(); S.t += dt; if (!M.moves || S.t >= M.t) { S.t = Math.min(S.t, M.t); S.tc = 0; S.done = M.moves; setRun(false); } draw(); readouts(); }
+    else if (S.done && !reduce && !document.hidden) { const M = mot(); if (spin(M).w > 0) { S.tc += dt; draw(); } }   // coasting after the stop gate
     requestAnimationFrame(frame);
   }
   can.addEventListener('keydown', (e) => { if (e.key === ' ') $('go').click(); else if (e.key === 'r' || e.key === 'R') wind(); else if (e.key === 'ArrowUp') addPiece(5); else if (e.key === 'ArrowDown') { if (S.pieces.length) setPieces(S.pieces.slice(0, -1)); } else return; e.preventDefault(); });
