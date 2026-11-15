@@ -12,6 +12,8 @@ VDI18N.add('es', 'demo/resonances', {
   "tiempo (años)",
 "eccentricity e of the asteroid":
   "excentricidad e del asteroide",
+"This takes thousands of years: try Speed {#} yr per s":
+  "Esto tarda miles de años: prueba la velocidad de {#} años por s",
 "above this it crosses Mars's orbit":
   "por encima de esto cruza la órbita de Marte",
 "Orbital Resonances":
@@ -202,6 +204,8 @@ VDI18N.add('es', 'demo/resonances', {
   "{#}″ rms",
 "year {#}":
   "año {#}",
+"Close":
+  "Cerrar",
 "Jupiter passed here":
   "Júpiter pasó por aquí",
 "Jupiter last passed it":

@@ -37,6 +37,7 @@
   --on-charge: #ffffff;
   --star: #e79a2c;
   --planet: #26303c;
+  --orb-planet: #3d6fae;   /* the planet on the flat orbit, blue like the 3D one (student view calls, 2026-11-15) */
   --s1: #2a7d6b;
   --s2: #b5532a;
   --canvas-scale: 1;
@@ -48,14 +49,14 @@
     --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --relief: #40372c; --ink: #eeeae4; --muted: #b0a698;
     --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
     --field: #eee8e0; --equi: #e2b350; --accent: #fbc26d; --on-charge: #17130e; color-scheme: dark;
-    --star: #f4b450; --planet: #05080c; --s1: #4fc4a8; --s2: #ff9b6a;
+    --star: #f4b450; --planet: #05080c; --orb-planet: #9cc0f0; --s1: #4fc4a8; --s2: #ff9b6a;
   }
 }
 :root[data-theme="dark"] {
   --bg: #17130e; --surface: #241e16; --canvas: #1d1811; --relief: #40372c; --ink: #eeeae4; --muted: #b0a698;
   --line: #3f362a; --grid: #292219; --grid-strong: #3e3426; --pos: #ff7660; --neg: #69a0ff;
   --field: #eee8e0; --equi: #e2b350; --accent: #fbc26d; --on-charge: #17130e; color-scheme: dark;
-  --star: #f4b450; --planet: #05080c; --s1: #4fc4a8; --s2: #ff9b6a;
+  --star: #f4b450; --planet: #05080c; --orb-planet: #9cc0f0; --s1: #4fc4a8; --s2: #ff9b6a;
 }
 :root[data-projector="on"] { font-size: 125%; --canvas-scale: 1.45; }
 html, body { height: 100%; }
@@ -949,7 +950,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const g = (n) => cs.getPropertyValue(n).trim();
     return { pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), grid: g('--grid'), gridStrong: g('--grid-strong'), field: g('--field'),
              canvas: g('--canvas'), relief: g('--relief'), ink: g('--ink'), muted: g('--muted'), accent: g('--accent'), line: g('--line'),
-             star: g('--star'), planet: g('--planet'), s1: g('--s1'), s2: g('--s2'), S: parseFloat(g('--canvas-scale')) || 1 };
+             star: g('--star'), planet: g('--planet'), orbPlanet: g('--orb-planet'), s1: g('--s1'), s2: g('--s2'), S: parseFloat(g('--canvas-scale')) || 1 };
   }
   function rgb(hex) {
     hex = hex.replace('#', '');
@@ -1082,7 +1083,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const f10 = `700 ${11 * S}px ${mono}`;
       label(ctx, T, '1', sx + rsPx + 6 * S, sy + rsPx + 4 * S, 'left', T.ink, f10); label(ctx, T, '2', px - rpPx - 6 * S, py - rpPx - 4 * S, 'right', T.ink, f10);
     } else {
-      ctx.fillStyle = T.field; ctx.beginPath(); ctx.arc(px, py, rpPx, 0, TAU); ctx.fill();
+      ctx.fillStyle = T.orbPlanet; ctx.beginPath(); ctx.arc(px, py, rpPx, 0, TAU); ctx.fill();   /* blue, as in 3D (student view calls, 2026-11-15) */
       ctx.strokeStyle = T.canvas; ctx.lineWidth = 1.5 * S; ctx.stroke();
     }
 

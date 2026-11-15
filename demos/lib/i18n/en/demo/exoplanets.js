@@ -197,10 +197,5 @@ VDI18N.add('en', 'demo/exoplanets', [
 "dashed: hydrogen and helium, same T and g · band shapes schematic",
 "dashed: H₂ + He",
 "band shapes schematic, heights exact in H",
-"bands schematic",
-"{#} s = {#} h",
-"{#} s = {#} d",
-"slow motion",
-"To Earth, {#}° up",
-"Revealed: M₁ = {#} M<sub>sun</sub>, R₁ = {#} R<sub>sun</sub>, T₁ = {#} K; M₂ = {#} M<sub>sun</sub>, R₂ = {#} R<sub>sun</sub>, T₂ = {#} K; a = {#} AU, i = {#}°, γ = {#} km/s."
+"bands schematic"
 ]);

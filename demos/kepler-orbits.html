@@ -1254,7 +1254,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     };
     if (S.layers.trail) { if (S.B) drawTrail(S.B, T.pos); drawTrail(A, T.neg); }
 
-    let aBox = null;   // where the semi major axis label went, so the star label can avoid it
+    let aBox = null, aphBox = null;   // where the semi major axis label went, so the star label can avoid it; the aphelion label, for Mercury's spin tag
     // foci, axis, perihelion, aphelion
     if (S.layers.foci && !elA.radial && elA.e > 1e-4) {
       const c = Math.cos(elA.w), s = Math.sin(elA.w);
@@ -1298,7 +1298,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
         if (Math.hypot(fx - sx0, fy - sy0) > 24 * ps && (Math.abs(fx - ox * 1.8 - aphX) > gap || Math.abs(fy - Qy) > 2 * fs))
           text(ctx, T, 'empty focus', fx - ox * 1.8, fy - oy * 1.8, 'center', 'middle', T.muted, fs, 400);
         ctx.fillStyle = T.muted; ctx.beginPath(); ctx.arc(Qx, Qy, 3 * ps, 0, TAU); ctx.fill();
-        text(ctx, T, aphTxt, Qx - ox * 1.8, Qy - oy * 1.8, 'center', 'middle', T.muted, fs, 400);
+        text(ctx, T, aphTxt, Qx - ox * 1.8, Qy - oy * 1.8, 'center', 'middle', T.muted, fs, 400); aphBox = { x0: aphX - wA / 2 - 4 * ps, x1: aphX + wA / 2 + 4 * ps, y: Qy - oy * 1.8 };
       } else {
         const [sx0, sy0] = toPx(0, 0);
         ctx.moveTo(sx0, sy0); ctx.lineTo(sx0 - (qx - sx0) * 4, sy0 - (qy - sy0) * 4); ctx.stroke(); ctx.setLineDash([]);
@@ -1369,7 +1369,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     if (S.B) drawBody(S.B, T.pos);
     newtonMarks(ctx, T, ps, toPx, A);
     drawBody(A, T.neg);
-    spinMark(ctx, T, ps, toPx);
+    spinMark(ctx, T, ps, toPx, [aBox, aphBox]);
 
     // ruler: two picked points, the line between them and its length
     if (S.ruler.on) {
@@ -1495,6 +1495,9 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     line(S.M, T.accent, 2 * ps, []);
     // planets
     const full = pw > 520;
+    /* the boxes of the planet dots and names, so the live points' tags can stay off them (student view calls, 2026-11-15) */
+    const taken = [], boxOf = (str, x, y, align, base, size) => { ctx.font = `600 ${size}px ${T.mono}`; const tw = ctx.measureText(str).width;
+      return [align === 'left' ? x : x - tw, base === 'top' ? y : y - size, tw, size]; };
     PLANETS.concat([HALLEY]).forEach((pl, i) => {
       const px = X(pl[2]), py = Y(pl[3]);
       const comet = pl === HALLEY;
@@ -1504,6 +1507,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       const name = full ? pl[0] : pl[1];
       if (i % 2 === 0) text(ctx, T, name, px - 6 * ps, py - 5 * ps, 'right', 'bottom', T.ink, fs, 600);
       else text(ctx, T, name, px + 6 * ps, py + 5 * ps, 'left', 'top', T.ink, fs, 600);
+      taken.push([px - 5 * ps, py - 5 * ps, 10 * ps, 10 * ps], i % 2 === 0 ? boxOf(name, px - 6 * ps, py - 5 * ps, 'right', 'bottom', fs) : boxOf(name, px + 6 * ps, py + 5 * ps, 'left', 'top', fs));
     });
     ctx.restore();
 
@@ -1518,7 +1522,13 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       ctx.beginPath(); ctx.arc(px, py, 6.5 * ps, 0, TAU);
       ctx.fillStyle = off ? T.canvas : col; ctx.fill(); ctx.lineWidth = 2 * ps; ctx.strokeStyle = off ? col : T.canvas; ctx.stroke();
       if (!off) { ctx.beginPath(); ctx.arc(px, py, 9.5 * ps, 0, TAU); ctx.strokeStyle = col; ctx.lineWidth = 1.5 * ps; ctx.stroke(); }
-      text(ctx, T, lab, px + 10 * ps, py - 10 * ps, 'left', 'bottom', col, fs + 0.5, 700, true);
+      /* the tag goes to the first corner where it covers no planet dot, name or other tag: up right, down right, up left, down left (student view calls, 2026-11-15) */
+      const hit = (a, b) => a[0] < b[0] + b[2] && b[0] < a[0] + a[2] && a[1] < b[1] + b[3] && b[1] < a[1] + a[3];
+      const spots = [[1, -1, 'left', 'bottom'], [1, 1, 'left', 'top'], [-1, -1, 'right', 'bottom'], [-1, 1, 'right', 'top']].map(([sx, sy, al, bs]) => {
+        const x = px + sx * 10 * ps, y = py + sy * 10 * ps, bx = boxOf(lab, x, y, al, bs, fs + 0.5);
+        return { x, y, al, bs, bx, ok: bx[0] >= mL && bx[0] + bx[2] <= mL + pw && bx[1] >= mT - 12 * ps && !taken.some((t) => hit(t, bx)) };
+      }), sp = spots.find((q) => q.ok) || spots[0];
+      text(ctx, T, lab, sp.x, sp.y, sp.al, sp.bs, col, fs + 0.5, 700, true); taken.push(sp.bx);
       return true;
     };
     if (S.B) live(S.B, T.pos, 'second');
@@ -2638,7 +2648,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   /* Mercury's 3:2 spin (Mercury preset only): a fixed spot on the surface, turning at a steady rate, 3 turns per 2 orbits
      (sidereal rotation 58.646 d, orbit 87.969 d). It faces the star at the launch perihelion. proj maps AU to the screen,
      so the same line serves the flat and 3D views */
-  function spinMark(ctx, T, ps, proj) {
+  function spinMark(ctx, T, ps, proj, avoid) {
     const A = S.A;
     if (S.preset !== 'mercury' || A.done) return;
     const P = Math.pow(PRESETS.mercury.a, 1.5) / Math.sqrt(S.M), phi = Math.PI + 1.5 * TAU * S.t / P;
@@ -2648,7 +2658,14 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     ctx.beginPath(); ctx.moveTo(p[0], p[1]); ctx.lineTo(p[0] + ux * r, p[1] + uy * r); ctx.lineWidth = 2.4 * ps; ctx.strokeStyle = T.ink; ctx.stroke();
     ctx.beginPath(); ctx.arc(p[0] + ux * r, p[1] + uy * r, 3 * ps, 0, TAU); ctx.fillStyle = T.ink; ctx.fill();
     const n = S.t / P;   /* "spins", not "turns": on the opening picture "3.11 turns" read as turns of the orbit (student view, 2026-11-15) */
-    text(ctx, T, n.toFixed(2) + ' orbits · ' + (1.5 * n).toFixed(2) + ' spins', p[0], p[1] + r + 6 * ps, 'center', 'top', T.ink, 10 * ps, 600, true);
+    /* below the spin circle, or above it, or beside it: the first place where it covers neither the "a = " nor the aphelion label (near aphelion) (student view calls, 2026-11-15) */
+    const sTxt = n.toFixed(2) + ' orbits · ' + (1.5 * n).toFixed(2) + ' spins'; ctx.font = `600 ${10 * ps}px ${T.mono}`;
+    const sw = ctx.measureText(sTxt).width, fh = 10 * ps, boxes = (avoid || []).filter(Boolean);
+    const spots = [[p[0], p[1] + r + 6 * ps, 'center', 'top'], [p[0], p[1] - r - 6 * ps, 'center', 'bottom'], [p[0] - r - 6 * ps, p[1], 'right', 'middle'], [p[0] + r + 6 * ps, p[1], 'left', 'middle']];
+    const clear = ([x, y, al, bs]) => { const x0 = al === 'center' ? x - sw / 2 : al === 'right' ? x - sw : x, yc = bs === 'top' ? y + fh / 2 : bs === 'bottom' ? y - fh / 2 : y;
+      return !boxes.some((b) => b.x1 > x0 && b.x0 < x0 + sw && Math.abs(b.y - yc) < fh + 2 * ps); };
+    const sp = spots.find(clear) || spots[0];
+    text(ctx, T, sTxt, sp[0], sp[1], sp[2], sp[3], T.ink, 10 * ps, 600, true);
   }
 
   // ---------- 3D view (three.js through demos/lib/vd3kit.js) ----------
@@ -2915,7 +2932,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       wl.push([Math.abs(wd.area).toPrecision(3), m[0], m[1]]);
     }
     // foci, axis, apsides
-    let aBox = null, perLab = null;
+    let aBox = null, perLab = null, aphBox = null;
     if (S.layers.foci && !elA.radial && elA.e > 1e-4) {
       const c = Math.cos(elA.w), s = Math.sin(elA.w), q = P3(elA.q * c, elA.q * s);
       if (elA.bound) {
@@ -2927,7 +2944,8 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
         }
         const fClash = aBox && Math.abs(aBox.y - (F[1] + 15 * ps)) < 20 * ps && F[0] + 45 * ps > aBox.x0 && F[0] - 45 * ps < aBox.x1;
         if (!fClash && W >= 560 * ps && Math.hypot(F[0] - s0[0], F[1] - s0[1]) > 30 * ps && Math.hypot(F[0] - Q[0], F[1] - Q[1]) > 90 * ps) text(ctx, T, 'empty focus', F[0], F[1] + 15 * ps, 'center', 'middle', T.muted, fs, 400);
-        text(ctx, T, S.blind ? 'aphelion' : 'aphelion ' + sig(elA.Q, 3) + ' AU', Q[0], Q[1] + 16 * ps, 'center', 'middle', T.muted, fs, 400);
+        const aphT = S.blind ? 'aphelion' : 'aphelion ' + sig(elA.Q, 3) + ' AU'; text(ctx, T, aphT, Q[0], Q[1] + 16 * ps, 'center', 'middle', T.muted, fs, 400);
+        ctx.font = `400 ${fs}px ${T.mono}`; const hwA = ctx.measureText(aphT).width / 2 + 4 * ps; aphBox = { x0: Q[0] - hwA, x1: Q[0] + hwA, y: Q[1] + 16 * ps };
       }
       const lab = S.blind ? 'perihelion' : 'perihelion ' + sig(elA.q, 3) + ' AU', right = q[0] >= s0[0];
       perLab = [lab, q[0] + (right ? 10 : -10) * ps, q[1], right ? 'left' : 'right'];
@@ -2966,7 +2984,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
         text(ctx, T, String(i + 1), q[0] + 8 * ps, q[1] - 8 * ps, 'left', 'bottom', hot ? T.accent : T.ink, fs, 700);
       });
     }
-    spinMark(ctx, T, ps, P3);
+    spinMark(ctx, T, ps, P3, [aBox, aphBox]);
     newtonMarks(ctx, T, ps, (x, y) => P3(x, y), A);
     // where a planet has left the picture
     for (const [b, col] of [[S.B, T.pos], [A, T.neg]]) {

@@ -707,6 +707,7 @@ onmessage = (e) => { const d = e.data;
   }
   function applyPreset(k) {
     const c = PRESETS[k]; if (!c) return; const was = PRESETS[S.preset], newScene = c.scene !== S.scene; S.preset = k; S.scene = c.scene;
+    if (newScene) { FZ.z = 1; FZ.x = 0; FZ.y = 0; }   /* (student view calls, 2026-11-15) */
     if (c.scene === 'neptune') {
       nepSetup();
       if (!c.X) S.X = null;
@@ -781,10 +782,19 @@ onmessage = (e) => { const d = e.data;
 
   /* ---------- drawing: the flat picture ---------- */
   const view = { s: 1, cx: 0, cy: 0 };
+  const FZ = { z: 1, x: 0, y: 0, drag: null };   /* the flat picture's zoom and pan (student view calls, 2026-11-15) */
   function layout() {
     const narrow = W < 821, cardW = narrow ? 0 : $('setupCard').offsetWidth + 28, R = S.scene === 'neptune' ? 34 : SCENES[S.scene].R;
-    const w = W - cardW; view.s = Math.min(w, H) / (2 * R) * 0.96; view.cx = w / 2; view.cy = H / 2;
+    const w = W - cardW; view.s = Math.min(w, H) / (2 * R) * 0.96 * FZ.z; view.cx = w / 2 + FZ.x; view.cy = H / 2 + FZ.y;
   }
+  /* the flat picture zooms and pans like the 3D one: scroll zooms about the middle of the view, drag pans (student view calls, 2026-11-15) */
+  function flatZoom(f) { const z = Math.max(0.5, Math.min(12, FZ.z * f)), k = z / FZ.z; FZ.x *= k; FZ.y *= k; FZ.z = z; redraw(); }
+  can.addEventListener('wheel', (e) => { if (use3() || S.scene === 'neptune') return; e.preventDefault(); flatZoom(Math.exp(-0.0015 * Math.max(-300, Math.min(300, e.deltaY)))); }, { passive: false });
+  can.addEventListener('pointerdown', (e) => { if (use3() || S.scene === 'neptune' || e.button) return; FZ.drag = [e.clientX, e.clientY]; try { can.setPointerCapture(e.pointerId); } catch (_) {} can.style.cursor = 'grabbing'; });
+  can.addEventListener('pointermove', (e) => { if (!FZ.drag) return; FZ.x += e.clientX - FZ.drag[0]; FZ.y += e.clientY - FZ.drag[1]; FZ.drag = [e.clientX, e.clientY]; redraw(); });
+  const flatUp = () => { if (FZ.drag) { FZ.drag = null; can.style.cursor = ''; } };
+  can.addEventListener('pointerup', flatUp); can.addEventListener('pointercancel', flatUp);
+  can.addEventListener('dblclick', () => { if (use3()) return; FZ.z = 1; FZ.x = 0; FZ.y = 0; redraw(); });
   let rot = 0;
   const P2 = (x, y) => { const c = Math.cos(rot), s = Math.sin(rot), u = x * c - y * s, v = x * s + y * c; return [view.cx + u * view.s, view.cy - v * view.s]; };
   function ellipse(a, e, w, col, wid, dash) {
@@ -918,6 +928,8 @@ onmessage = (e) => { const d = e.data;
     for (let t = 0; t <= tmax; t += ts) { const lb = fint(t), x = Math.min(X(t), PW - 2 - px.measureText(lb).width / 2); px.fillStyle = K.muted; px.textAlign = 'center'; px.textBaseline = 'top'; px.fillText(lb, x, y0 + h + 5 * p); }
     px.fillStyle = K.muted; px.textAlign = 'center'; px.textBaseline = 'bottom'; px.fillText('time (years)', x0 + w / 2, PH - 2);
     px.textAlign = 'left'; px.textBaseline = 'top'; px.fillStyle = K.ink; px.font = `${11.5 * p}px ${K.ui}`; px.fillText(title, x0 + 6, 4 * p);
+    /* the 3:1, 5:2 and Whole belt runs take thousands of years: say so on the graph while the speed is slow (student view calls, 2026-11-15) */
+    if (['r31', 'r52', 'belt'].includes(S.preset) && !msg && SCENES.belt.base * S.speed < 1000) { px.fillStyle = K.muted; px.font = `${10.5 * p}px ${K.ui}`; px.textAlign = 'left'; px.textBaseline = 'top'; px.fillText('This takes thousands of years: try Speed 1,000 yr per s', x0 + 6, 20 * p); }
     if (!many && S.scene === 'belt') { const eM = 1 - MARS_Q / sys.a0[0]; if (eM > 0 && eM < 0.5) { const y = Y(eM); px.strokeStyle = K.mars; px.setLineDash([4, 4]); px.beginPath(); px.moveTo(x0, y); px.lineTo(x0 + w, y); px.stroke(); px.setLineDash([]);
       px.fillStyle = K.mars; px.textAlign = 'right'; px.textBaseline = 'bottom'; px.font = `${10.5 * p}px ${K.ui}`; px.fillText('above this it crosses Mars\'s orbit', x0 + w, y - 2); } }
     if (!many && S.scene === 'kuiper' && isFinite(sys.dmin[0])) { const y = Y(sys.dmin[0]); px.strokeStyle = K.mark; px.setLineDash([4, 4]); px.beginPath(); px.moveTo(x0, y); px.lineTo(x0 + w, y); px.stroke(); px.setLineDash([]);

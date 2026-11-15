@@ -12,7 +12,7 @@ Textbook: OpenStax *University Physics*, Vol. 3, §11.6 (the distance ladder beh
 
 **Using the demo.**
 
-- Cepheid photometry shows one simulated CCD image per night of a Cepheid variable in the Large Magellanic Cloud, with three comparison stars of known V magnitude: C1 (13.85), C2 (14.62) and C3 (15.10). The Cepheid chips choose which of five Cepheids is in the field; the night slider and the Previous night and Next night buttons step through the nights.
+- Cepheid photometry shows one simulated CCD image per night of a Cepheid variable in the Large Magellanic Cloud, with three comparison stars of known V magnitude: S1 (13.85), S2 (14.62) and S3 (15.10). The Cepheid chips choose which of five Cepheids is in the field; the night slider and the Previous night and Next night buttons step through the nights.
 - Two apertures sit on the image: one on the Cepheid and one on a comparison star. Drag either to another star; dropped, it centers itself on the star's light. The aperture radius slider sets the size of both.
 - Each aperture adds up the counts of the pixels inside it and takes away the sky, measured as the median of a ring 3 to 8 px outside the aperture. The readouts give both net counts, the instrumental difference, the Cepheid's V, its uncertainty from the photon counts, the raw instrumental magnitude, and the night's seeing and sky.
 - Record reading stores the night, its time, the comparison star, both net counts and the results. The light curve under the image draws your readings as you take them. Export to worksheet sends readings from several nights to the first data table below and readings at several aperture sizes on one night to the second. Clear starts a new series, which goes into a new copy of the table.
@@ -40,7 +40,7 @@ with P in days. The mean apparent magnitude and $$M_V$$ give the distance modulu
 
 ## Before the lab
 
-1. On one night the Cepheid gives 5200 net counts and C1 ($$V = 13.85$$) gives 10 400. Find the Cepheid's V.
+1. On one night the Cepheid gives 5200 net counts and S1 ($$V = 13.85$$) gives 10 400. Find the Cepheid's V.
 2. The next night thin cloud lets through only 70% of the light. What happens to $$N_V$$, $$N_C$$, $$\Delta m$$ and V?
 3. A star gives 10 000 net counts with negligible sky. What is the uncertainty in its magnitude?
 4. A Cepheid has a period of 11.4 days and a mean V of 14.30. Find $$M_V$$, the distance modulus and the distance in kpc.
@@ -52,11 +52,11 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**Part 1. The light curve.** Choose Cepheid photometry and Cepheid C3, with the comparison aperture on C1. Record a reading on every night, from the first to the last. Send the readings to the worksheet.
+**Part 1. The light curve.** Choose Cepheid photometry and Cepheid C3, with the comparison aperture on S1. Record a reading on every night, from the first to the last. Send the readings to the worksheet.
 
-**Part 2. A second comparison star.** Clear the readings. Move the comparison aperture to C2 and record readings on the first ten nights again. Send them; they go into a new copy of the first table.
+**Part 2. A second comparison star.** Clear the readings. Move the comparison aperture to S2 and record readings on the first ten nights again. Send them; they go into a new copy of the first table.
 
-**Part 3. The aperture size.** Clear the readings. Stay on night 5, with the comparison aperture on C1, and record a reading at each aperture radius from 2 to 9 px. Send the readings; they fill the second table.
+**Part 3. The aperture size.** Clear the readings. Stay on night 5, with the comparison aperture on S1, and record a reading at each aperture radius from 2 to 9 px. Send the readings; they fill the second table.
 
 ## Data
 
@@ -83,7 +83,7 @@ No hazards in the virtual lab.
 3. Find the mean V as the average of the fitted curve over one cycle (the sine fit's C), and from the brightest and faintest V.
 4. Use the Leavitt law to find $$M_V$$, then the distance modulus and the distance to the Large Magellanic Cloud. Compare with the measured 49.6 kpc (Pietrzyński et al. 2019).
 5. Graph the raw instrumental magnitude against t on the same nights. Why is it so much more ragged than V? Which nights were cloudy?
-6. Compare the V values from C1 and from C2 on the same nights (Part 2). Do they agree within their uncertainties? Find the mean difference.
+6. Compare the V values from S1 and from S2 on the same nights (Part 2). Do they agree within their uncertainties? Find the mean difference.
 7. From Part 3, graph $$\sigma_V$$ against the aperture radius. Which radius gives the smallest uncertainty? Does V itself change with the radius? Explain both.
 
 ## Uncertainty

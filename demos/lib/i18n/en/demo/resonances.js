@@ -6,6 +6,7 @@ VDI18N.add('en', 'demo/resonances', [
 "largest e (dots)",
 "time (years)",
 "eccentricity e of the asteroid",
+"This takes thousands of years: try Speed {#} yr per s",
 "above this it crosses Mars's orbit",
 "Orbital Resonances",
 "<a><span>←</span> <span>Planet Temperatures and Habitable Zones</span></a><a><span>Building a Solar System</span> <span>→</span></a>",

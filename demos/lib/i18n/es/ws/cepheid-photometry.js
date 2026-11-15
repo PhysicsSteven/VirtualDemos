@@ -30,8 +30,8 @@ VDI18N.add('es', 'ws/cepheid-photometry', {
   "Libro de texto: OpenStax <em>University Physics</em>, Vol. {#}, §{#} (la escalera de distancias detrás de la ley de Hubble). Acceso gratuito en https://openstax.org/details/books/university-physics-volume-{#}.",
 "<strong>Setups in the demo:</strong> {#} Parallax; Spectroscopic parallax; Main sequence fitting; {#} Cepheids; Cepheid photometry; {#} Type Ia; {#} Hubble’s law; Whole ladder. This worksheet uses <strong>Cepheid photometry</strong>.":
   "<strong>Configuraciones en la demo:</strong> {#} Paralaje; Paralaje espectroscópico; Ajuste de la secuencia principal; {#} Cefeidas; Fotometría de cefeidas; {#} Tipo Ia; {#} Ley de Hubble; Toda la escalera. Esta hoja de trabajo usa <strong>Fotometría de cefeidas</strong>.",
-"Cepheid photometry shows one simulated CCD image per night of a Cepheid variable in the Large Magellanic Cloud, with three comparison stars of known V magnitude: C1 ({#}), C2 ({#}) and C3 ({#}). The Cepheid chips choose which of five Cepheids is in the field; the night slider and the Previous night and Next night buttons step through the nights.":
-  "Fotometría de cefeidas muestra una imagen CCD simulada por noche de una variable cefeida en la Gran Nube de Magallanes, con tres estrellas de comparación de magnitud V conocida: C1 ({#}), C2 ({#}) y C3 ({#}). Los botones de cefeida eligen cuál de cinco cefeidas está en el campo; el deslizador de la noche y los botones Noche anterior y Noche siguiente recorren las noches.",
+"Cepheid photometry shows one simulated CCD image per night of a Cepheid variable in the Large Magellanic Cloud, with three comparison stars of known V magnitude: S1 ({#}), S2 ({#}) and S3 ({#}). The Cepheid chips choose which of five Cepheids is in the field; the night slider and the Previous night and Next night buttons step through the nights.":
+  "Fotometría de cefeidas muestra una imagen CCD simulada por noche de una variable cefeida en la Gran Nube de Magallanes, con tres estrellas de comparación de magnitud V conocida: S1 ({#}), S2 ({#}) y S3 ({#}). Los botones de cefeida eligen cuál de cinco cefeidas está en el campo; el deslizador de la noche y los botones Noche anterior y Noche siguiente recorren las noches.",
 "Two apertures sit on the image: one on the Cepheid and one on a comparison star. Drag either to another star; dropped, it centers itself on the star’s light. The aperture radius slider sets the size of both.":
   "Hay dos aperturas sobre la imagen: una en la cefeida y otra en una estrella de comparación. Arrastra cualquiera de ellas a otra estrella; al soltarla, se centra sola en la luz de la estrella. El deslizador del radio de la apertura fija el tamaño de ambas.",
 "Each aperture adds up the counts of the pixels inside it and takes away the sky, measured as the median of a ring {#} to {#} px outside the aperture. The readouts give both net counts, the instrumental difference, the Cepheid’s V, its uncertainty from the photon counts, the raw instrumental magnitude, and the night’s seeing and sky.":
@@ -54,8 +54,8 @@ VDI18N.add('es', 'ws/cepheid-photometry', {
   "\\[M_V = -2.43\\,(\\log_{10}P - 1) - 4.05,\\]",
 "with P in days. The mean apparent magnitude and \\(M_V\\) give the distance modulus \\(m - M = 5\\log_{10}(d/10\\ \\text{pc})\\).":
   "con P en días. La magnitud aparente media y \\(M_V\\) dan el módulo de distancia \\(m - M = 5\\log_{10}(d/10\\ \\text{pc})\\).",
-"On one night the Cepheid gives {#} net counts and C1 (\\(V = 13.85\\)) gives {#} {#}. Find the Cepheid’s V.":
-  "En una noche la cefeida da {#} cuentas netas y C1 (\\(V = 13.85\\)) da {#} {#}. Encuentra la V de la cefeida.",
+"On one night the Cepheid gives {#} net counts and S1 (\\(V = 13.85\\)) gives {#} {#}. Find the Cepheid’s V.":
+  "En una noche la cefeida da {#} cuentas netas y S1 (\\(V = 13.85\\)) da {#} {#}. Encuentra la V de la cefeida.",
 "The next night thin cloud lets through only {#}% of the light. What happens to \\(N_V\\), \\(N_C\\), \\(\\Delta m\\) and V?":
   "La noche siguiente una nube delgada deja pasar solo el {#}% de la luz. ¿Qué les pasa a \\(N_V\\), \\(N_C\\), \\(\\Delta m\\) y V?",
 "A star gives {#} {#} net counts with negligible sky. What is the uncertainty in its magnitude?":
@@ -64,12 +64,12 @@ VDI18N.add('es', 'ws/cepheid-photometry', {
   "Una cefeida tiene un periodo de {#} días y una V media de {#}. Encuentra \\(M_V\\), el módulo de distancia y la distancia en kpc.",
 "A light curve is sampled once a night for {#} nights. About how many cycles of an {#} day Cepheid does that cover? Could a {#} day period be told apart from it with once a night sampling? (Think about what you would see.)":
   "Una curva de luz se muestrea una vez por noche durante {#} noches. ¿Más o menos cuántos ciclos de una cefeida de {#} días cubre eso? ¿Se podría distinguir de ella un periodo de {#} días muestreando una vez por noche? (Piensa en lo que verías.)",
-"<strong>Part {#}. The light curve.</strong> Choose Cepheid photometry and Cepheid C3, with the comparison aperture on C1. Record a reading on every night, from the first to the last. Send the readings to the worksheet.":
-  "<strong>Parte {#}. La curva de luz.</strong> Elige Fotometría de cefeidas y la cefeida C3, con la apertura de comparación en C1. Registra una lectura en cada noche, de la primera a la última. Envía las lecturas a la hoja de trabajo.",
-"<strong>Part {#}. A second comparison star.</strong> Clear the readings. Move the comparison aperture to C2 and record readings on the first ten nights again. Send them; they go into a new copy of the first table.":
-  "<strong>Parte {#}. Una segunda estrella de comparación.</strong> Borra las lecturas. Mueve la apertura de comparación a C2 y registra lecturas de nuevo en las primeras diez noches. Envíalas; van a una nueva copia de la primera tabla.",
-"<strong>Part {#}. The aperture size.</strong> Clear the readings. Stay on night {#}, with the comparison aperture on C1, and record a reading at each aperture radius from {#} to {#} px. Send the readings; they fill the second table.":
-  "<strong>Parte {#}. El tamaño de la apertura.</strong> Borra las lecturas. Quédate en la noche {#}, con la apertura de comparación en C1, y registra una lectura con cada radio de apertura de {#} a {#} px. Envía las lecturas; llenan la segunda tabla.",
+"<strong>Part {#}. The light curve.</strong> Choose Cepheid photometry and Cepheid C3, with the comparison aperture on S1. Record a reading on every night, from the first to the last. Send the readings to the worksheet.":
+  "<strong>Parte {#}. La curva de luz.</strong> Elige Fotometría de cefeidas y la cefeida C3, con la apertura de comparación en S1. Registra una lectura en cada noche, de la primera a la última. Envía las lecturas a la hoja de trabajo.",
+"<strong>Part {#}. A second comparison star.</strong> Clear the readings. Move the comparison aperture to S2 and record readings on the first ten nights again. Send them; they go into a new copy of the first table.":
+  "<strong>Parte {#}. Una segunda estrella de comparación.</strong> Borra las lecturas. Mueve la apertura de comparación a S2 y registra lecturas de nuevo en las primeras diez noches. Envíalas; van a una nueva copia de la primera tabla.",
+"<strong>Part {#}. The aperture size.</strong> Clear the readings. Stay on night {#}, with the comparison aperture on S1, and record a reading at each aperture radius from {#} to {#} px. Send the readings; they fill the second table.":
+  "<strong>Parte {#}. El tamaño de la apertura.</strong> Borra las lecturas. Quédate en la noche {#}, con la apertura de comparación en S1, y registra una lectura con cada radio de apertura de {#} a {#} px. Envía las lecturas; llenan la segunda tabla.",
 "<strong>The Cepheid, night by night.</strong>":
   "<strong>La cefeida, noche tras noche.</strong>",
 "<span>B</span>Night":
@@ -142,8 +142,8 @@ VDI18N.add('es', 'ws/cepheid-photometry', {
   "Usa la ley de Leavitt para encontrar \\(M_V\\), luego el módulo de distancia y la distancia a la Gran Nube de Magallanes. Compárala con los {#} kpc medidos (Pietrzyński et al. {#}).",
 "Graph the raw instrumental magnitude against t on the same nights. Why is it so much more ragged than V? Which nights were cloudy?":
   "Grafica la magnitud instrumental cruda en función de t en las mismas noches. ¿Por qué es mucho más irregular que V? ¿Qué noches estuvieron nubladas?",
-"Compare the V values from C1 and from C2 on the same nights (Part {#}). Do they agree within their uncertainties? Find the mean difference.":
-  "Compara los valores de V obtenidos con C1 y con C2 en las mismas noches (Parte {#}). ¿Coinciden dentro de sus incertidumbres? Encuentra la diferencia media.",
+"Compare the V values from S1 and from S2 on the same nights (Part {#}). Do they agree within their uncertainties? Find the mean difference.":
+  "Compara los valores de V obtenidos con S1 y con S2 en las mismas noches (Parte {#}). ¿Coinciden dentro de sus incertidumbres? Encuentra la diferencia media.",
 "From Part {#}, graph \\(\\sigma_V\\) against the aperture radius. Which radius gives the smallest uncertainty? Does V itself change with the radius? Explain both.":
   "A partir de la Parte {#}, grafica \\(\\sigma_V\\) en función del radio de la apertura. ¿Qué radio da la menor incertidumbre? ¿Cambia V misma con el radio? Explica ambas cosas.",
 "Compare the scatter of your V points about the fitted curve with the uncertainties \\(\\sigma_V\\) the demo gives. Estimate the uncertainty of the period from Analysis {#} and carry it, with the uncertainty of the mean V, into the distance. Remember that real Cepheids of one period also differ by about {#} mag in \\(M_V\\), the width of the instability strip, so one Cepheid gives the distance only to about {#}%.":

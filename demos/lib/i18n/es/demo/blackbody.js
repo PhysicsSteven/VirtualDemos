@@ -152,6 +152,8 @@ VDI18N.add('es', 'demo/blackbody', {
   "Vista 3D: la esfera brilla con el mismo color calculado. Su brillo sigue la luminancia de cada metro cuadrado, Y = ∫B<sub>λ</sub>ȳ dλ, en escala logarítmica: la del Sol es el brillo completo y cada factor de {#} menos le quita un treceavo (el ojo abarca unos {#} factores de {#}), así que {#} K ({#}% de la luminancia del Sol por metro cuadrado) sigue siendo un naranja claro, {#} K un rojo opaco tenue, y un cuerpo por debajo de unos {#} K no brilla; un cuerpo más caliente que el Sol solo agranda su halo. La pantalla detrás del prisma usa la exposición fija de la franja plana, fijada por el pico del Sol. Cuerpo negro ideal: sin oscurecimiento del limbo, sin líneas. Arrastra para girar, desplaza o pellizca para acercar, doble clic para volver.",
 "A ball glowing in the color its temperature gives, its light spread by a prism onto a screen with the ultraviolet, visible and infrared shares, a radiometer reading the flux, and the blackbody color scale with spectral classes. Drag to turn.":
   "Una esfera que brilla con el color que le da su temperatura, su luz dispersada por un prisma sobre una pantalla con las fracciones ultravioleta, visible e infrarroja, un radiómetro que mide el flujo y la escala de colores del cuerpo negro con las clases espectrales. Arrastra para girar.",
+"radiometer · W/m²":
+  "radiómetro · W/m²",
 "peak (nm)":
   "pico (nm)",
 "flux (W/m²)":

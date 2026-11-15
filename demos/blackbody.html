@@ -1202,7 +1202,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const screen = new THREE.Mesh(new THREE.PlaneGeometry(0.16, 1.05), new THREE.MeshBasicMaterial({ map: G.scr.t }));
     screen.rotation.x = Math.PI / 2; screen.rotation.z = 0.35; screen.position.set(0.45, 0.25, 0.62); sc.add(screen); G.screen = screen;
     G.fan = new THREE.Group(); sc.add(G.fan);
-    G.lab = {}; for (const k of ['ball', 'uv', 'vis', 'ir']) { const l = G.lab[k] = VD3K.label(' ', LAB); l.material.depthTest = false; l.renderOrder = 9; sc.add(l); }
+    G.lab = {}; for (const k of ['ball', 'uv', 'vis', 'ir', 'meter']) { const l = G.lab[k] = VD3K.label(' ', LAB); l.material.depthTest = false; l.renderOrder = 9; sc.add(l); }
     /* the radiometer */
     G.meter = VD3K.meter(S3, { w: 0.8, h: 0.46, label: 'RADIOMETER · W/m²', sub: 'σT⁴ = π × area under Bλ' }); G.meter.position.set(1.4, 0.05, 0); G.meter.rotation.z = 0.32; sc.add(G.meter);
     /* the color scale on a board at the back */
@@ -1238,6 +1238,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     G3.lab.ir.set('IR ' + pct(ir)); G3.lab.ir.position.set(lx + 0.12, ly, 0.62 - 0.525 + irH / H * 0.525);
     G3.lab.ball.set(T < 100 ? fmtT(T) + ' · microwaves, no glow' : T < 700 ? fmtT(T) + ' · infrared, no visible glow' : T < 1000 ? fmtT(T) + ' · dull red glow' : fmtT(T));   /* the color code is on the flat strip */ G3.lab.ball.position.set(-1.75, -0.2, 0.02);
     G3.meter.set(sci(SIG * T ** 4, 3));
+    /* the meter's own printed label faces up and is lost at this angle, so a tag under it names the unit (student view calls, 2026-11-15) */
+    G3.lab.meter.set('radiometer · W/m²'); G3.lab.meter.position.set(1.4, -0.32, 0.02);
     for (const k in G3.lab) { const L = G3.lab[k], im = L.material.map.image, z = LAB.size * (L.userData.k || 1); L.scale.set(z * im.width / im.height, z, 1); }
     paintScale(G3.scale.c, 1024, 160); G3.scale.t.needsUpdate = true;
   }
