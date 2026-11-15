@@ -70,10 +70,6 @@ VDI18N.add('es', 'demo/seasons', {
   "Duración del día y altura del Sol al mediodía a {#}° N",
 "Reasons for Seasons":
   "Las causas de las estaciones",
-"<a>The sky from Earth</a>":
-  "<a>El cielo desde la Tierra</a>",
-"<a><span>←</span> <span>The Sky and the Celestial Sphere</span></a><a><span>Moon Phases</span> <span>→</span></a>":
-  "<a><span>←</span> <span>El cielo y la esfera celeste</span></a><a><span>Fases de la Luna</span> <span>→</span></a>",
 "Seasons come from the tilt of Earth's axis, not from its distance to the Sun. Earth is closest to the Sun in January. The same orbit and tilt make a solar day longer than one turn against the stars, and make a sundial run ahead of or behind a clock.":
   "Las estaciones se deben a la inclinación del eje de la Tierra, no a su distancia al Sol. La Tierra está más cerca del Sol en enero. La misma órbita y la misma inclinación hacen que un día solar dure más que una vuelta respecto a las estrellas, y que un reloj de sol se adelante o se atrase respecto a un reloj.",
 "Time controls":
@@ -274,10 +270,28 @@ VDI18N.add('es', 'demo/seasons', {
   "cambian la latitud. Mantén",
 "for bigger steps.":
   "para pasos más grandes.",
+"<a>The sky from Earth</a>":
+  "<a>El cielo desde la Tierra</a>",
+"<a><span>←</span> <span>The Sky and the Celestial Sphere</span></a><a><span>Moon Phases</span> <span>→</span></a>":
+  "<a><span>←</span> <span>El cielo y la esfera celeste</span></a><a><span>Fases de la Luna</span> <span>→</span></a>",
+"day {#} · Sun and Earth not to scale":
+  "día {#} · el Sol y la Tierra no están a escala",
 "date":
   "fecha",
 "noon (°)":
   "mediodía (°)",
+"Dec {#}":
+  "{#} dic",
+"Dec {#} · day {#}":
+  "{#} dic · día {#}",
+"On Dec {#} Earth is {#} AU from the Sun, so sunlight is +{#}% compared with {#} AU, everywhere on Earth at once.":
+  "El {#} de diciembre la Tierra está a {#} UA del Sol, así que la luz del Sol es +{#}% comparada con {#} UA, en toda la Tierra a la vez.",
+"Jan {#}":
+  "{#} ene",
+"Jan {#} · day {#}":
+  "{#} ene · día {#}",
+"On Jan {#} Earth is {#} AU from the Sun, so sunlight is +{#}% compared with {#} AU, everywhere on Earth at once.":
+  "El {#} de enero la Tierra está a {#} UA del Sol, así que la luz del Sol es +{#}% comparada con {#} UA, en toda la Tierra a la vez.",
 "distant star":
   "estrella lejana",
 "(far off the top: the same direction all year)":
@@ -292,6 +306,8 @@ VDI18N.add('es', 'demo/seasons', {
   "mediodías (de cara al Sol) {#}",
 "orbits {#}":
   "órbitas {#}",
+"{#} s = {#} days":
+  "{#} s = {#} días",
 "the extra turn: from the star direction to the Sun":
   "la vuelta adicional: de la dirección de la estrella al Sol",
 "toward the Sun":
@@ -368,6 +384,8 @@ VDI18N.add('es', 'demo/seasons', {
   "{#} días, al revés",
 "Jupiter spins in under {#} hours and takes almost {#} years to orbit, so its two days differ by only {#} seconds.":
   "Júpiter gira en menos de {#} horas y tarda casi {#} años en dar la vuelta al Sol, así que sus dos días difieren solo en {#} segundos.",
+"{#} s = {#} h ({#} days)":
+  "{#} s = {#} h ({#} días)",
 "The Moon turns once against the stars in {#} days, its sidereal month. It goes round the Sun with Earth, once a year, so a day on the Moon (sunrise to sunrise) is {#} days: the month of phases.":
   "La Luna da una vuelta respecto a las estrellas en {#} días, su mes sidéreo. Da la vuelta al Sol con la Tierra, una vez al año, así que un día en la Luna (de una salida del Sol a la siguiente) dura {#} días: el mes de las fases.",
 "{#} h ({#} days)":
@@ -394,10 +412,6 @@ VDI18N.add('es', 'demo/seasons', {
   "El {#} de junio la Tierra está a {#} UA del Sol, así que la luz del Sol es −{#}% comparada con {#} UA, en toda la Tierra a la vez.",
 "December solstice. The North Pole leans away. Short days and a low Sun make northern winter, even though Earth is only days from its closest point to the Sun.":
   "Solsticio de diciembre. El Polo Norte se inclina en sentido contrario. Los días cortos y el Sol bajo producen el invierno del norte, aunque la Tierra esté a solo unos días de su punto más cercano al Sol.",
-"Dec {#} · day {#}":
-  "{#} dic · día {#}",
-"On Dec {#} Earth is {#} AU from the Sun, so sunlight is +{#}% compared with {#} AU, everywhere on Earth at once.":
-  "El {#} de diciembre la Tierra está a {#} UA del Sol, así que la luz del Sol es +{#}% comparada con {#} UA, en toda la Tierra a la vez.",
 "March equinox. The axis leans neither toward nor away from the Sun, so the day and night line runs through both poles and every latitude gets about {#} hours of day.":
   "Equinoccio de marzo. El eje no se inclina ni hacia el Sol ni en sentido contrario, así que la línea entre el día y la noche pasa por los dos polos y cada latitud recibe unas {#} horas de día.",
 "Mar {#} · day {#}":
@@ -416,12 +430,16 @@ VDI18N.add('es', 'demo/seasons', {
   "{#} jul · día {#}",
 "On Jul {#} Earth is {#} AU from the Sun, so sunlight is −{#}% compared with {#} AU, everywhere on Earth at once.":
   "El {#} de julio la Tierra está a {#} UA del Sol, así que la luz del Sol es −{#}% comparada con {#} UA, en toda la Tierra a la vez.",
-"Jan {#} · day {#}":
-  "{#} ene · día {#}",
-"On Jan {#} Earth is {#} AU from the Sun, so sunlight is +{#}% compared with {#} AU, everywhere on Earth at once.":
-  "El {#} de enero la Tierra está a {#} UA del Sol, así que la luz del Sol es +{#}% comparada con {#} UA, en toda la Tierra a la vez.",
-"Jan {#}":
-  "{#} ene",
+"Close":
+  "Cerrar",
+"Raise or lower the observer's latitude by half a degree (Shift: {#} degrees)":
+  "Sube o baja la latitud del observador medio grado (Shift: {#} grados)",
+"Feb {#} · day {#}":
+  "{#} feb · día {#}",
+"On Feb {#} Earth is {#} AU from the Sun, so sunlight is +{#}% compared with {#} AU, everywhere on Earth at once.":
+  "El {#} de febrero la Tierra está a {#} UA del Sol, así que la luz del Sol es +{#}% comparada con {#} UA, en toda la Tierra a la vez.",
+"Feb {#}":
+  "{#} feb",
 "(very far away)":
   "(muy lejos)",
 "Jun {#}":
@@ -446,8 +464,6 @@ VDI18N.add('es', 'demo/seasons', {
   "EL CIELO DESDE {#}°",
 "Daily mean insolation (W/m²) at {#}°":
   "Insolación media diaria (W/m²) a {#}°",
-"Dec {#}":
-  "{#} dic",
 "Mar {#}":
   "{#} mar",
 "Sun overhead at {#}°":
@@ -460,16 +476,10 @@ VDI18N.add('es', 'demo/seasons', {
   "{#} h {#} min <small>noche polar</small>",
 "time {#} h ({#} days)":
   "tiempo {#} h ({#} días)",
-"day {#} · Sun and Earth not to scale":
-  "día {#} · el Sol y la Tierra no están a escala",
 "Earth's real orbit is an ellipse and its axis is tilted, so the Sun's daily step against the stars is not the same all year. A sundial runs fast or slow against a clock by up to about {#} minutes, and solar days in December are about {#} seconds longer than in September.":
   "La órbita real de la Tierra es una elipse y su eje está inclinado, así que el paso diario del Sol respecto a las estrellas no es igual todo el año. Un reloj de sol se adelanta o se atrasa respecto a un reloj hasta unos {#} minutos, y los días solares de diciembre son unos {#} segundos más largos que los de septiembre.",
 "On Jan {#} Earth is {#} AU from the Sun, so sunlight is −{#}% compared with {#} AU, everywhere on Earth at once.":
   "El {#} de enero la Tierra está a {#} UA del Sol, así que la luz del Sol es −{#}% comparada con {#} UA, en toda la Tierra a la vez.",
-"Feb {#} · day {#}":
-  "{#} feb · día {#}",
-"On Feb {#} Earth is {#} AU from the Sun, so sunlight is +{#}% compared with {#} AU, everywhere on Earth at once.":
-  "El {#} de febrero la Tierra está a {#} UA del Sol, así que la luz del Sol es +{#}% comparada con {#} UA, en toda la Tierra a la vez.",
 "On Feb {#} Earth is {#} AU from the Sun, so sunlight is −{#}% compared with {#} AU, everywhere on Earth at once.":
   "El {#} de febrero la Tierra está a {#} UA del Sol, así que la luz del Sol es −{#}% comparada con {#} UA, en toda la Tierra a la vez.",
 "On Mar {#} Earth is {#} AU from the Sun, so sunlight is −{#}% compared with {#} AU, everywhere on Earth at once.":
@@ -511,9 +521,5 @@ VDI18N.add('es', 'demo/seasons', {
 "On Nov {#} Earth is {#} AU from the Sun, so sunlight is −{#}% compared with {#} AU, everywhere on Earth at once.":
   "El {#} de noviembre la Tierra está a {#} UA del Sol, así que la luz del Sol es −{#}% comparada con {#} UA, en toda la Tierra a la vez.",
 "On Dec {#} Earth is {#} AU from the Sun, so sunlight is −{#}% compared with {#} AU, everywhere on Earth at once.":
-  "El {#} de diciembre la Tierra está a {#} UA del Sol, así que la luz del Sol es −{#}% comparada con {#} UA, en toda la Tierra a la vez.",
-"Close":
-  "Cerrar",
-"Raise or lower the observer's latitude by half a degree (Shift: {#} degrees)":
-  "Sube o baja la latitud del observador medio grado (Shift: {#} grados)"
+  "El {#} de diciembre la Tierra está a {#} UA del Sol, así que la luz del Sol es −{#}% comparada con {#} UA, en toda la Tierra a la vez."
 });

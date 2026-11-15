@@ -953,13 +953,15 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       apply() { Object.assign(FL, { shape: 'hoop', m: 2, R: 0.3, v0: 0.8, rim0: 0.8, mu: 0.3, t: 0, run: false }); } },
     skid: { scene: 'floor', ts: 0.25, hint: 'A solid ball thrown along the floor with no spin. It slides at first: friction slows it and spins it up until v = ωR, after a time 2v₀/(7μk g). From then on it rolls at 5/7 of its launch speed. Shown at ¼ speed.',
       apply() { Object.assign(FL, { shape: 'sphere', m: 7, R: 0.11, v0: 4, rim0: 0, mu: 0.2, t: 0, run: false }); } },
-    backspin: { scene: 'floor', ts: 1, hint: 'Thrown forward with strong backspin, ω₀R = −9 m/s. Friction slows the ball and then sends it back: once v = ωR it rolls back toward you at (v₀ + ⅖ω₀R)/(1 + ⅖). The angular momentum about the floor stays the same throughout.',
+    /* backspin and the three spools opened at 1×: the ball launched at 13 rev/s and strobed, its skid was over in 1.2 s, and the dropped
+       spool landed in 0.45 s; shown at ¼ speed like the skid and the skater (student view, 2026-11-15) */
+    backspin: { scene: 'floor', ts: 0.25, hint: 'Thrown forward with strong backspin, ω₀R = −9 m/s. Friction slows the ball and then sends it back: once v = ωR it rolls back toward you at (v₀ + ⅖ω₀R)/(1 + ⅖). The angular momentum about the floor stays the same throughout. Shown at ¼ speed.',
       apply() { Object.assign(FL, { shape: 'sphere', m: 7, R: 0.11, v0: 3, rim0: -9, mu: 0.3, t: 0, run: false }); } },
-    yoyo: { scene: 'yoyo', ts: 1, hint: 'Two identical yo-yos let go together from the same height: one unwinds from its string, the other just falls. The string pulls up, and its torque spins the yo-yo up, so it falls at a = g/(1 + I/mr²), here g/25.5.',
+    yoyo: { scene: 'yoyo', ts: 0.25, hint: 'Two identical yo-yos let go together from the same height: one unwinds from its string, the other just falls. The string pulls up, and its torque spins the yo-yo up, so it falls at a = g/(1 + I/mr²), here g/25.5. Shown at ¼ speed.',
       apply() { Object.assign(YO, { shape: 'yoyo', m: 0.06, R: 0.028, r: 0.004, H: 1, t: 0, run: false }); } },
-    paper: { scene: 'yoyo', ts: 1, hint: 'Hold the loose end of a roll of paper and let the roll go, beside a roll that is just dropped. The paper leaves from the outside of the roll, so I/mR² is only a little over ½ and it falls at about 0.64 g.',
+    paper: { scene: 'yoyo', ts: 0.25, hint: 'Hold the loose end of a roll of paper and let the roll go, beside a roll that is just dropped. The paper leaves from the outside of the roll, so I/mR² is only a little over ½ and it falls at about 0.64 g. Shown at ¼ speed.',
       apply() { Object.assign(YO, { shape: 'tube', m: 0.1, R: 0.055, r: 0.02, H: 1, t: 0, run: false }); } },
-    cyl: { scene: 'yoyo', ts: 1, hint: 'A solid cylinder with the string wound on its surface falls at exactly ⅔g, whatever its mass and radius; a thin ring falls at ½g.',
+    cyl: { scene: 'yoyo', ts: 0.25, hint: 'A solid cylinder with the string wound on its surface falls at exactly ⅔g, whatever its mass and radius; a thin ring falls at ½g. Shown at ¼ speed.',
       apply() { Object.assign(YO, { shape: 'disk', m: 0.5, R: 0.05, r: 0.02, H: 1, t: 0, run: false }); } },
     skater: { scene: 'spin', ts: 0.25, hint: 'Arms out, spinning slowly. Press Pull in: I drops by about 4.5 times, so ω rises by the same factor while L stays fixed. Shown at ¼ speed.',
       apply() { Object.assign(SP, { look: 'skater', I0: 0.8, m: 3, r: 0.8 }); setSpinRate(1); } },
@@ -2912,6 +2914,11 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     if (TQ.r > 0.001) {
       const txt = Math.abs(Math.sin(rel)) >= 0.985 && TQ.F > 0 ? 'r = r⊥ = ' + fx(TQ.r, 2) + ' m' : 'r = ' + fx(TQ.r, 2) + ' m';
       const side = Math.sin(rel) >= 0 ? -1 : 1, nw = [-sph * side, cph * side], lq = Q(cph * 0.35 * TQ.r + nw[0] * 0.09 * L, sph * 0.35 * TQ.r + nw[1] * 0.09 * L, zp);
+      /* with a short r (the opening door push at 0.15 m) the label sat on the push point and its handle hid the digits: move it
+         clear, below or above the push point, away from the force arrow (student view, 2026-11-15) */
+      ctx.font = `600 ${11.5 * ps}px ${T.mono}`;
+      const lw = ctx.measureText(txt).width;
+      if (Math.abs(lq[0] - P[0]) < lw / 2 + 14 * ps && Math.abs(lq[1] - P[1]) < 22 * ps) lq[1] = P[1] + (tip[1] <= P[1] ? 32 : -32) * ps;
       label(ctx, txt, lq[0], lq[1], T.neg, 'center', 'middle', 11.5);
     }
     {
@@ -3228,6 +3235,9 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     $('stage').dataset.layout = sc === 'torque' || sc === 'spin' || sc === 'yoyo' || sc === 'hit' ? 'side' : 'below';
     $('keyBox').innerHTML = KEYS[sc];
     $('speedSeg').hidden = sc === 'seesaw';
+    /* a scene tab opens its setup at that setup's own speed, so the Floor tab's skid runs at the ¼ its hint states
+       (student view, 2026-11-15) */
+    if (S.preset[sc] && PRESETS[S.preset[sc]]) setTs(PRESETS[S.preset[sc]].ts);
     syncPresetChips(); syncSliders();
     hoverId = null; drag = null;
     requestAnimationFrame(() => { resize(); dirty = true; });

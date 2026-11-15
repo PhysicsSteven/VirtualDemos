@@ -1055,13 +1055,15 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (!W || !H) return;
     const ps = C.ps = paneScale(C.ps, W, H);
     const el = 22 * DEG, ce = Math.cos(el), se = Math.sin(el);
-    const top = 64 * ps;
-    const cyR = 0.72;
-    const Rs = Math.max(30, Math.min(W / 2 - 30 * ps, (H * cyR - top) / ce, (H * (1 - cyR) - 22 * ps) / se));
-    const cx = W / 2, cy = H * cyR;
-    const P = (E, N, U) => [cx + Rs * E, cy - Rs * (U * ce + N * se)];
+    /* at 1280 x 800 this pane is about 150 px tall and the dome was drawn 95 px wide under a 64 px top margin, so the noon label,
+       zenith and the Jun, Mar, Sep and Dec path names piled up. The noon label now sits left of the Sun (the path names are on the
+       right) and zenith is named above its dot, which frees the top margin for a larger dome (student view, 2026-11-15) */
     const phi = S.lat * DEG;
-    const o = orbitAt(S.T), dec = declination(o.lam, S.tilt);
+    const o = orbitAt(S.T), dec = declination(o.lam, S.tilt), sd = sunDay(phi, dec);
+    const top = (sd.H0 >= Math.PI || sd.H0 <= 0 ? 56 : 34) * ps, bot = 22 * ps;
+    const Rs = Math.max(30, Math.min(W / 2 - 30 * ps, (H - top - bot) / (ce + se)));
+    const cx = W / 2, cy = top + Rs * ce + Math.max(0, (H - top - bot) - Rs * (ce + se)) * 0.6;
+    const P = (E, N, U) => [cx + Rs * E, cy - Rs * (U * ce + N * se)];
     const sunVec = (H_, d) => [-Math.cos(d) * Math.sin(H_), Math.cos(phi) * Math.sin(d) - Math.sin(phi) * Math.cos(d) * Math.cos(H_),
                                Math.sin(phi) * Math.sin(d) + Math.cos(phi) * Math.cos(d) * Math.cos(H_)];
 
@@ -1092,7 +1094,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     const z = P(0, 0, 1);
     ctx.fillStyle = C.muted; ctx.beginPath(); ctx.arc(z[0], z[1], 2 * ps, 0, 2 * Math.PI); ctx.fill();
-    ctx.font = `${10 * ps}px ${C.mono}`; ctx.textAlign = 'left'; ctx.fillText('zenith', z[0] + 5 * ps, z[1] - 1);
+    ctx.font = `${10 * ps}px ${C.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillText('zenith', z[0], z[1] - 4 * ps);   /* above the dot, clear of the Jun path name */
     ctx.restore();
 
     const path = (d, color, lw, alpha, below) => {
@@ -1126,12 +1128,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.restore();
 
     // noon Sun, sunrise, sunset
-    const sd = sunDay(phi, dec), alt = noonAlt(phi, dec);
+    const alt = noonAlt(phi, dec);
     ctx.save(); ctx.font = `600 ${11 * ps}px ${C.mono}`;
     if (alt > 0) {
       const q = P(...sunVec(0, dec));
       drawSun(ctx, C, q[0], q[1], 7 * ps);
-      labelBox(ctx, C, 'noon ' + alt.toFixed(1) + '°', q[0], q[1] - 17 * ps, 'center', C.ink);
+      labelBox(ctx, C, 'noon ' + alt.toFixed(1) + '°', q[0] - 12 * ps, q[1], 'right', C.ink);
     }
     if (sd.H0 > 0 && sd.H0 < Math.PI) {
       const rise = P(...sunVec(-sd.H0, dec)), set = P(...sunVec(sd.H0, dec));
@@ -1541,7 +1543,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     earth: { view: 'orbit', planet: 'earth', hint: 'Earth turns once against the stars in 23 h 56 min 4.1 s. In that time it moves about 1° along its orbit, so it must turn about 1° more, which takes about 4 minutes, to bring the Sun back to the meridian: 24 h. 366.26 sidereal days fit in a year but only 365.26 solar days. Turn on the close up to see the 1°.' },
     mars: { view: 'orbit', planet: 'mars', hint: 'Mars turns in 24.6229 h and takes 687 Earth days to orbit, so its solar day, the sol, is only 2.2 minutes longer: 24.6597 h.' },
     mercury: { view: 'orbit', planet: 'mercury', hint: 'Mercury turns three times in two of its years (58.6 days a turn, 88 days a year). Its solar day is two of its years long, 176 Earth days: Mercury goes round the Sun twice between one noon and the next.' },
-    venus: { view: 'orbit', planet: 'venus', hint: 'Venus spins backward, once every 243 days, slower than it orbits (225 days). Spinning backward, it needs less turning to face the Sun again, so its solar day is shorter than its sidereal day: 117 Earth days.' },
+    /* speed: the fastest this setup opens at. At 1 turn/s Venus went round the Sun in 0.9 s and a solar day took 0.5 s; Slow makes
+       them 3.7 s and 1.9 s (student view, 2026-11-15) */
+    venus: { view: 'orbit', planet: 'venus', speed: 0.25, hint: 'Venus spins backward, once every 243 days, slower than it orbits (225 days). Spinning backward, it needs less turning to face the Sun again, so its solar day is shorter than its sidereal day: 117 Earth days.' },
     jupiter: { view: 'orbit', planet: 'jupiter', hint: 'Jupiter spins in under 10 hours and takes almost 12 years to orbit, so its two days differ by only 3.3 seconds.' },
     moon: { view: 'orbit', planet: 'moon', hint: 'The Moon turns once against the stars in 27.3 days, its sidereal month. It goes round the Sun with Earth, once a year, so a day on the Moon (sunrise to sunrise) is 29.5 days: the month of phases.' },
     notilt: { view: 'year', e: 0.0167086, tilt: 0, parts: false, hint: "Earth's ellipse with no tilt: the sundial falls behind in winter, when Earth is near the Sun and moving fastest, and gains in summer. The swing is about ±7.7 minutes, once a year." },
@@ -1689,6 +1693,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     line(`turns against the star  ${c.sid}`, '#9cc0ff');
     line(`noons (faces the Sun)   ${isFinite(sol) ? c.sol : 0}`, T.sunline);
     line(`orbits  ${f(S.t / P.orb, 3)}`, 'rgba(246,243,238,0.7)');
+    /* the time scale on screen: the Slow, Fast and Very fast buttons did not say how fast (student view, 2026-11-15) */
+    line(`1 s = ${hms(S.speed * Math.abs(P.rot))}`, 'rgba(246,243,238,0.7)');
     if (S.msg) { ctx.fillStyle = '#ffdca3'; ctx.font = `${11 * p}px ${T.ui}`; ctx.fillText(S.msg, L, y + 2 * p); }
     /* legend, bottom left */
     ctx.font = `${11 * p}px ${T.ui}`; ctx.textBaseline = 'bottom'; let yb = H - 10 * p;
@@ -1903,6 +1909,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const c = PRESETS[k]; S.preset = k; S.view = c.view; $('sdPresetHint').textContent = c.hint;
     if (c.view === 'orbit') { if (c.planet) setPlanet(c.planet); else { S.n = c.n; S.retro = false; setPlanet(null); } S.zoom = c.planet === 'earth' || c.planet === 'jupiter'; }
     else { S.e = c.e != null ? c.e : 0.0167086; S.tilt = c.tilt != null ? c.tilt : 23.4393; S.parts = !!c.parts; S.date = 41; }
+    if (c.speed) S.speed = Math.min(S.speed, c.speed);
     S.preset = k; restart(); sync(); resize();
   }
   for (const b of document.querySelectorAll('#sdPresets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
@@ -1922,7 +1929,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   for (const b of document.querySelectorAll('#modeSeg button')) b.addEventListener('click', () => { if (S.mode !== b.dataset.m) setMode(b.dataset.m); });
   window.__sdMode = () => S.mode;
-  for (const b of document.querySelectorAll('#sdSpeedSeg button')) b.addEventListener('click', () => { S.speed = +b.dataset.s; sync(); });
+  for (const b of document.querySelectorAll('#sdSpeedSeg button')) b.addEventListener('click', () => { S.speed = +b.dataset.s; sync(); draw(); });
   $('sdN').addEventListener('input', (e) => { S.n = +e.target.value; S.preset = 'custom'; setPlanet(null); S.preset = 'custom'; restart(); });
   $('sdRetro').addEventListener('change', (e) => { S.retro = e.target.checked; if (S.planet) { S.n = Math.max(1, Math.min(30, Math.round(sdPerYear(S.P.rot, S.P.orb).sid))); } S.preset = 'custom'; setPlanet(null); S.preset = 'custom'; restart(); });
   $('sdZoom').addEventListener('change', (e) => { S.zoom = e.target.checked; draw(); });
