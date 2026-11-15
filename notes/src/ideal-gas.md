@@ -48,6 +48,12 @@ Students should know KE = ½mv², that momentum reverses in an elastic bounce, a
 - **"Every expansion cools a gas."** Only if the gas does work; in a free expansion it does almost none.
 - **"Near absolute zero the molecules are nearly still."** Classically they slow as √T but keep a full Maxwell–Boltzmann spread at any T above zero. Real argon would have liquefied long before (near 87 K at 1 atm), and quantum effects matter near 0 K.
 
+## Real molecule sizes
+
+The **Molecule size** switch on the Gas card picks **All 0.50 nm** (one model disk for every gas, as in the other setups and the worksheets) or **Real sizes**: each gas becomes a hard disk as wide as its Lennard-Jones collision diameter σ, found from its measured viscosity (Svehla 1962): helium 0.255 nm, hydrogen 0.283 nm, argon 0.354 nm, nitrogen 0.380 nm and carbon dioxide 0.394 nm. The setup **Real molecule sizes** fills the box with 300 carbon dioxide molecules at 300 K. Under Measurements, **Molecule size** reads the collisions per molecule, the mean free path (the distance a molecule goes between collisions) and how far P sits above NkT/A, each measured beside its 2D formula; the measured values add up since the gas last changed, so let them run. For carbon dioxide in the box the formulas give a mean free path of 4.22 nm and P 6.4% above NkT/A; choose helium and the disks shrink, to 6.73 nm and 2.9%.
+
+The last readings are for the real gas, in three dimensions, at this T and 1 atm. For hard spheres the mean free path is λ = kT/(√2 πσ²P), 59.2 nm for carbon dioxide and 141 nm for helium at 300 K, more than ten times the box's, so a real gas at 1 atm sits within a fraction of a percent of ideal (PV/NkT = 0.9958 for carbon dioxide, from its van der Waals a and b). The same σ gives the hard sphere van der Waals b = (2/3)πN_Aσ³, four times the volume of the molecules: 0.0772 L/mol for carbon dioxide against the measured 0.0429 L/mol (CRC), about half, while for helium and hydrogen the two agree within about 15%. Real molecules are soft, and N₂ and CO₂ are rods rather than disks, so σ is an approximation.
+
 ## Physics behind the demo
 
 - Hard disks 0.5 nm across with the mass of argon. Collisions are elastic: equal masses swap their velocity components along the line of centers. Walls reflect elastically; the piston reflects each molecule relative to its own motion, v′ = 2u − v.

@@ -47,6 +47,12 @@ Students should know Kepler's third law and the idea of a Doppler shift. Turn on
 - **"Radial velocity gives the planet's mass."** It gives M_p sin i. Without a transit (or another way to find i), the true mass can be larger.
 - **"Most planets are hot Jupiters, since those were found first."** Their signals are the largest and repeat fastest; they orbit only about 1% of Sun like stars or fewer.
 
+## Transmission spectra
+
+During a transit some starlight passes through the ring of air at the planet's edge. Where a molecule absorbs, that air is opaque higher up, so the planet looks bigger and the transit deeper at that wavelength. Press **Spectrum** above the light curve to see the transit depth against wavelength (0.3 to 20 µm, log scale), and set the gas, the **Equilibrium temperature** and the **Cloud top** in the **Atmosphere** section. The size of the features is set by the scale height H, the height over which the air thins by a factor of e: H = kT/(μ m_u g), and the features are about n × 2R_pH/R_s² deep, with n = 2.
+
+Hot air, low gravity and light molecules give a tall atmosphere. **WASP-39 b**, a hot Saturn (g = 4.26 m/s², T_eq = 1,166 K, hydrogen and helium with μ = 2.33), has H = 977 km and features of about 838 ppm on a transit 19,592 ppm deep; JWST saw its carbon dioxide band at 4.3 µm in 2022. Switch the gas to **Carbon dioxide** (μ = 44.009) at the same T and g: H drops to 52 km and the features to 44 ppm, 44.009/2.33 = 18.9 times smaller. That is how a spectrum tells a puffy hydrogen atmosphere from a compact one of heavy molecules. **HD 209458 b** (H = 562 km) was the first planet with an atmosphere detected, from its sodium at 589 nm (Charbonneau et al. 2002). **GJ 1214 b** has a flat spectrum (Kreidberg et al. 2014): clouds 6 scale heights up hide the bands, and lowering the **Cloud top** shows what a clear hydrogen atmosphere would give. The bands sit at their real wavelengths, but their shapes are schematic, with each gas's strongest band 2 scale heights tall, so the heights scale exactly as H.
+
 ## Physics behind the demo
 
 - Two body Kepler orbit: P = 2π√(a³/G(M_s + M_p)), solved through Kepler's equation for eccentric orbits. Time is measured from conjunction, when the planet is nearest our line of sight.
