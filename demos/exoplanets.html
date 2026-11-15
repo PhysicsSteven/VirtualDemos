@@ -1008,7 +1008,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.textAlign = 'right';
     ctx.fillText(BIN ? (hidden() ? 'mystery: the pair is too close to see apart' : 'stars to scale') : hidden() ? 'mystery: the planet is too small to see' : 'planet to scale with star', W - 8 * S, H - 8 * S);
     ctx.restore();
-    if (slowNow) label(ctx, T, 'slow motion', W - 10 * S, padT - 12 * S, 'right', T.accent, `700 ${11 * S}px ${uiFont()}`);
+    /* the time scale on screen, as everywhere on the site: the run was 12 s an orbit, but nothing said what a second stood for
+       (student view, 2026-11-15). The slow motion rate follows the transit's length, so a mystery keeps it to itself. */
+    if (slowNow) label(ctx, T, hidden() ? 'slow motion' : 'slow motion · 1 s = ' + fmtPeriod(rate()), W - 10 * S, padT - 12 * S, 'right', T.accent, `700 ${11 * S}px ${uiFont()}`);
+    else label(ctx, T, '1 s = ' + fmtPeriod(rate()), W - 10 * S, padT - 12 * S, 'right', T.muted, `600 ${11 * S}px ${uiFont()}`);
     if (!D.transits && !(BIN && D.ecl2) && P.inc > 0) {
       label(ctx, T, BIN ? 'no eclipses from here' : 'no transit from here', cx, cy + R0 + 12 * S > H - padB ? padT : cy + R0 + 12 * S, 'center', T.ink, `700 ${12 * S}px ${uiFont()}`);
     }
@@ -1578,8 +1581,25 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* where the To Earth label goes, so the conjunction label can keep clear of it */
     const [etx, ety0] = S3.project(X3.e3.clone().multiplyScalar(1.45)), ety = ety0 + 14 * S;
     const clash = (x, y) => Math.abs(y - ety) < 16 * S && Math.abs(x - etx) < 170 * S;
-    const qoff = 12 * S + (BIN ? X3.Pr : 0), qly = clash(qx, qy + qoff) ? qy - qoff : qy + qoff;   /* two stars: clear of star 2's disk */
-    label(ctx, DK, BIN ? 'star 2 in front here' : D.transits ? 'transit here' : 'nearest our line of sight', qx + (qr ? -10 : 10) * S, qly, qr ? 'right' : 'left', '#c6bcb0', f11);
+    const qoff = 12 * S + (BIN ? X3.Pr : 0);   /* two stars: clear of star 2's disk */
+    /* the label goes where the orbit does not run: on its old place, just below and beside the conjunction, it sat on the near
+       side of the orbit and hid the planet as it came in to transit (student view, 2026-11-15). The first of these places whose
+       box no orbit point (widened by the planet's size) falls in, and clear of the To Earth label, wins. */
+    const qtxt = BIN ? 'star 2 in front here' : D.transits ? 'transit here' : 'nearest our line of sight';
+    ctx.save(); ctx.font = f11; const qw = ctx.measureText(qtxt).width + 6; ctx.restore();
+    const qh = 15 * S, qm = Math.max(4 * S, X3.Pr + 3 * S), stepP = Math.max(1, Math.floor(D.path.length / 120));
+    const op = []; for (let j = 0; j < D.path.length; j += stepP) { const [r, th] = D.path[j]; op.push(S3.project(w3(-Ms3() * r * Math.cos(th), -Ms3() * r * Math.sin(th)))); }
+    for (const k of [1.25, 1.3, 1.35, 1.4]) op.push(S3.project(X3.e3.clone().multiplyScalar(k)));   /* and the Earth arrow's tip */
+    let qpick = null;
+    for (const off of [qoff, qoff + 12 * S, qoff + 24 * S]) for (const right of [qr, !qr]) for (const sg of [1, -1]) {
+      if (qpick) break;
+      const lx = right ? qx - 10 * S - qw + 3 : qx + 10 * S - 3, ly = qy + sg * off;
+      if (lx < 4 * S || lx + qw > W - 4 * S || ly - qh / 2 < 4 * S || ly + qh / 2 > H - 4 * S || clash(qx, ly)) continue;
+      if (op.some(([x, y]) => x > lx - qm && x < lx + qw + qm && y > ly - qh / 2 - qm && y < ly + qh / 2 + qm)) continue;
+      qpick = [right, ly];
+    }
+    if (!qpick) qpick = [qr, clash(qx, qy + qoff) ? qy - qoff : qy + qoff];
+    label(ctx, DK, qtxt, qx + (qpick[0] ? -10 : 10) * S, qpick[1], qpick[0] ? 'right' : 'left', '#c6bcb0', f11);
     if (BIN && !hidden()) {
       /* the other conjunction (star 2 behind star 1), star 2's velocity arrow opposite star 1's, and the names of the two stars */
       const rc2 = D.a * (1 - P.e * P.e) / (1 - P.e * Math.sin(D.w)), [ux2, uy2] = S3.project(w3(0, Ms3() * rc2)), ur = ux2 > W * 0.5;
@@ -1602,7 +1622,15 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const f12 = `700 ${12 * S}px ${uiFont()}`;
     if (!hidden()) {
       const tx = etx, ty = ety, elev = 90 - P.inc;
-      label(ctx, DK, P.inc <= 0.05 ? 'To Earth, straight up' : elev < 0.05 ? 'To Earth, in the orbit plane' : `To Earth, ${elev.toFixed(1)}° up`, tx, ty, tx > W * 0.6 ? 'right' : tx < W * 0.4 ? 'left' : 'center', '#f4f0ea', f12);
+      const etxt = P.inc <= 0.05 ? 'To Earth, straight up' : elev < 0.05 ? 'To Earth, in the orbit plane' : `To Earth, ${elev.toFixed(1)}° up`;
+      /* with Earth above the orbit plane the arrow's tip comes close to the star, and a label run toward the star covered it and
+         its velocity arrow (Not edge on): run the label the other way when it fits (student view, 2026-11-15) */
+      let eal = tx > W * 0.6 ? 'right' : tx < W * 0.4 ? 'left' : 'center';
+      ctx.save(); ctx.font = f12; const ew = ctx.measureText(etxt).width + 6; ctx.restore();
+      const ebox = (al) => { const x0 = al === 'right' ? tx - ew : al === 'center' ? tx - ew / 2 : tx; return [x0, x0 + ew]; };
+      const onStar = (al) => { const [x0, x1] = ebox(al), cx = Math.max(x0, Math.min(x1, sx)), cy = Math.max(ty - 9 * S, Math.min(ty + 9 * S, sy)); return Math.hypot(cx - sx, cy - sy) < sr + Lr * 0.5; };
+      if (onStar(eal)) { const alt = ['left', 'right', 'center'].find((al) => !onStar(al) && ebox(al)[0] > 4 * S && ebox(al)[1] < W - 4 * S); if (alt) eal = alt; }
+      label(ctx, DK, etxt, tx, ty, eal, '#f4f0ea', f12);
     } else label(ctx, DK, 'To Earth: hidden in a mystery', W / 2, H - 14 * S, 'center', '#e8eef6', f12);
     ctx.save(); ctx.font = `${10.5 * S}px ${mono}`; ctx.fillStyle = '#c6bcb0'; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
     ctx.strokeStyle = 'rgba(10,8,5,0.85)'; ctx.lineWidth = 3 * S; ctx.lineJoin = 'round';   /* a dark outline: the words sit on the 3D scene */

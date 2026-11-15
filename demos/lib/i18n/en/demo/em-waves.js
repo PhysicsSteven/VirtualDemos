@@ -273,6 +273,7 @@ VDI18N.add('en', 'demo/em-waves', [
 "Drag to paint metal.",
 "Drag to erase metal and wires.",
 "Tap to put the probe there and read ⟨E²⟩, the field squared averaged over one period.",
+"Close",
 "Left circular (counterclockwise)",
 "beam",
 "TM111 in a cavity",

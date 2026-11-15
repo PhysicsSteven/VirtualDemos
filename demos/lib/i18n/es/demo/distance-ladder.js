@@ -26,6 +26,8 @@ VDI18N.add('es', 'demo/distance-ladder', {
   "Próxima Centauri",
 "angles exaggerated: a star at {#} pc is {#} AU away":
   "ángulos exagerados: una estrella a {#} pc está a {#} UA",
+"time: {#} s = {#} days, one year in {#} s":
+  "tiempo: {#} s = {#} días, un año en {#} s",
 "WHAT THE TELESCOPE SEES, ZOOMED":
   "LO QUE VE EL TELESCOPIO, AMPLIADO",
 "BOTH PHOTOS OVERLAID: MEASURE THE SHIFT":
@@ -324,10 +326,10 @@ VDI18N.add('es', 'demo/distance-ladder', {
   "arrastra la Tierra a lo largo de su órbita; arrastra en otro lugar para girar",
 "EARTH’S ORBIT IN 3D, NOT TO SCALE":
   "LA ÓRBITA DE LA TIERRA EN 3D, NO A ESCALA",
-"early March":
-  "principios de marzo",
 "p (mas)":
   "p (mas)",
+"early March":
+  "principios de marzo",
 "mid March":
   "mediados de marzo",
 "Spectroscopic parallax (calibrated by rung {#})":
@@ -336,6 +338,8 @@ VDI18N.add('es', 'demo/distance-ladder', {
   "El tipo espectral de una estrella de la secuencia principal da su brillo verdadero M, leído de estrellas cercanas del mismo tipo cuyos paralajes se conocen. Su brillo aparente m da entonces la distancia. Elige una estrella, calcula su distancia y luego compárala con su paralaje.",
 "Real data: every star on the diagram and every target is a Hipparcos star from the HYG database v3.8 (CC BY-SA {#}; distances {#}/parallax, van Leeuwen {#}). The calibration is the mean and spread of M_V of the nearby class V stars of the same half class (for example F5 to F9 V). Extinction is ignored.":
   "Datos reales: cada estrella del diagrama y cada objetivo es una estrella de Hipparcos de la base de datos HYG v3.8 (CC BY-SA {#}; distancias {#}/paralaje, van Leeuwen {#}). La calibración es la media y la dispersión de M_V de las estrellas cercanas de clase V de la misma media clase (por ejemplo, F5 a F9 V). Se ignora la extinción.",
+"late March":
+  "finales de marzo",
 "CALIBRATION: THE {#} HIPPARCOS STARS WITHIN {#} PC (HYG)":
   "CALIBRACIÓN: LAS {#} ESTRELLAS DE HIPPARCOS A MENOS DE {#} PC (HYG)",
 "color B − V (hotter left)":
@@ -394,6 +398,8 @@ VDI18N.add('es', 'demo/distance-ladder', {
   "tiempo (días)",
 "m (V band), brighter up":
   "m (banda V), más brillante arriba",
+"time: {#} s = {#} d":
+  "tiempo: {#} s = {#} d",
 "mean m = {#}":
   "m media = {#}",
 "Δt = {#} d":
@@ -540,8 +546,6 @@ VDI18N.add('es', 'demo/distance-ladder', {
   "estrella cercana",
 "field {#}″ wide · dashed circles: ±σ = {#} µas (Gaia)":
   "campo de {#}″ de ancho · círculos punteados: ±σ = {#} µas (Gaia)",
-"late March":
-  "finales de marzo",
 "K5–K9 V stars: mean M = {#}, spread {#} ({#} stars)":
   "Estrellas K5–K9 V: M media = {#}, dispersión {#} ({#} estrellas)",
 "TARGET: HIP {#}, K5 V (A REAL STAR)":
@@ -573,5 +577,67 @@ VDI18N.add('es', 'demo/distance-ladder', {
 "early April":
   "principios de abril",
 "Night":
-  "Noche"
+  "Noche",
+"early January":
+  "principios de enero",
+"early February":
+  "principios de febrero",
+"early May":
+  "principios de mayo",
+"early June":
+  "principios de junio",
+"early July":
+  "principios de julio",
+"early August":
+  "principios de agosto",
+"early September":
+  "principios de septiembre",
+"early October":
+  "principios de octubre",
+"early November":
+  "principios de noviembre",
+"early December":
+  "principios de diciembre",
+"mid January":
+  "mediados de enero",
+"mid February":
+  "mediados de febrero",
+"mid April":
+  "mediados de abril",
+"mid May":
+  "mediados de mayo",
+"mid June":
+  "mediados de junio",
+"mid July":
+  "mediados de julio",
+"mid August":
+  "mediados de agosto",
+"mid September":
+  "mediados de septiembre",
+"mid October":
+  "mediados de octubre",
+"mid November":
+  "mediados de noviembre",
+"mid December":
+  "mediados de diciembre",
+"late January":
+  "finales de enero",
+"late April":
+  "finales de abril",
+"late May":
+  "finales de mayo",
+"late June":
+  "finales de junio",
+"late July":
+  "finales de julio",
+"late August":
+  "finales de agosto",
+"late September":
+  "finales de septiembre",
+"late October":
+  "finales de octubre",
+"late November":
+  "finales de noviembre",
+"late December":
+  "finales de diciembre"
 });

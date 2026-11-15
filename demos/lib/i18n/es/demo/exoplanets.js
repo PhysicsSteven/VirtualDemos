@@ -250,12 +250,22 @@ VDI18N.add('es', 'demo/exoplanets', {
   "ambos, con fondo plano",
 "sizes to scale":
   "tamaños a escala",
+"{#} s = {#} h":
+  "{#} s = {#} h",
+"{#} s = {#} d":
+  "{#} s = {#} d",
+"{#} s = {#} yr":
+  "{#} s = {#} a",
+"slow motion · {#} s = {#} h":
+  "cámara lenta · {#} s = {#} h",
 "From far away, Earth dims the Sun by {#} ppm for {#} hours once a year and moves it at only {#} cm/s. Add a little noise and both signals disappear.":
   "Desde muy lejos, la Tierra atenúa al Sol {#} ppm durante {#} horas una vez al año y lo mueve a solo {#} cm/s. Añade un poco de ruido y ambas señales desaparecen.",
 "Jupiter swings the Sun at about {#} m/s, easy for a good spectrograph if you wait {#} years. Its {#}% transit lines up for only about {#}% of random viewers.":
   "Júpiter mueve al Sol a unos {#} m/s, fácil para un buen espectrógrafo si esperas {#} años. Su tránsito del {#}% se alinea solo para cerca del {#}% de los observadores al azar.",
 "periastron":
   "periastro",
+"{#} s = {#} yr":
+  "{#} s = {#} años",
 "{#} h and {#} h":
   "{#} h y {#} h",
 "A stretched orbit makes the velocity curve lopsided: a sharp swing at periastron, then a long slow drift. Like HD {#} b, which has e = {#}; the slider stops at {#}.":
@@ -284,10 +294,12 @@ VDI18N.add('es', 'demo/exoplanets', {
   "Dos estrellas un poco más pesada y un poco más ligera que el Sol, inclinadas {#}° respecto al canto: cada eclipse es parcial, en forma de V sin parte plana, así que los tiempos de contacto por sí solos no dan ambos radios.",
 "An eccentric orbit (e = {#}): the second eclipse does not come half an orbit after the first, the two eclipses last different times, and the velocity curves are lopsided.":
   "Una órbita excéntrica (e = {#}): el segundo eclipse no llega medio periodo después del primero, los dos eclipses duran tiempos distintos y las curvas de velocidad son asimétricas.",
-"slow motion":
-  "cámara lenta",
+"Close":
+  "Cerrar",
 "−{#} ppm":
   "−{#} ppm",
+"slow motion · {#} s = {#} d":
+  "cámara lenta · {#} s = {#} d",
 "A mystery binary: see the Mystery system section.":
   "Una binaria misteriosa: consulta la sección Sistema misterioso.",
 "Mystery binary: star {#}'s spectrum gives T₁ = {#} K. Everything else is hidden, and every measurement has noise ({#}% in brightness, {#} km/s in velocity).":
@@ -306,6 +318,8 @@ VDI18N.add('es', 'demo/exoplanets', {
   "Revelado: M₁ = {#} M<sub>sun</sub>, R₁ = {#} R<sub>sun</sub>, T₁ = {#} K; M₂ = {#} M<sub>sun</sub>, R₂ = {#} R<sub>sun</sub>, T₂ = {#} K; a = {#} UA, i = {#}°, γ = −{#} km/s.",
 "time from mid transit":
   "tiempo desde la mitad del tránsito",
+"slow motion":
+  "cámara lenta",
 "Revealed: M₁ = {#} M<sub>sun</sub>, R₁ = {#} R<sub>sun</sub>, T₁ = {#} K; M₂ = {#} M<sub>sun</sub>, R₂ = {#} R<sub>sun</sub>, T₂ = {#} K; a = {#} AU, i = {#}°, γ = {#} km/s.":
   "Revelado: M₁ = {#} M<sub>sun</sub>, R₁ = {#} R<sub>sun</sub>, T₁ = {#} K; M₂ = {#} M<sub>sun</sub>, R₂ = {#} R<sub>sun</sub>, T₂ = {#} K; a = {#} UA, i = {#}°, γ = {#} km/s.",
 "To Earth, {#}° up":

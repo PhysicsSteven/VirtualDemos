@@ -150,6 +150,8 @@ VDI18N.add('es', 'demo/blackbody', {
   "Modelo: cuerpos negros ideales. Las estrellas reales tienen líneas de absorción y se clasifican por ellas; aquí T es la temperatura efectiva. Los colores usan un ajuste analítico al observador CIE {#} (Wyman, Sloan y Shirley {#}) y sRGB con punto blanco D65, así que un cuerpo a {#} K se ve blanco. Cada muestra de color está escalada a brillo máximo; tu pantalla y la adaptación de tu ojo cambian lo que ves.",
 "3D view: the ball glows in the same computed color. Its brightness follows the luminance of each square meter, Y = ∫B<sub>λ</sub>ȳ dλ, on a log scale: the Sun's is full brightness and each factor of {#} less takes a thirteenth off (the eye works over about {#} factors of {#}), so {#} K ({#}% of the Sun's luminance per square meter) is still a clear orange, {#} K a faint dull red, and a body below about {#} K shows no glow; a body hotter than the Sun only grows its halo. The screen behind the prism uses the flat strip's fixed exposure, set by the Sun's peak. Ideal blackbody: no limb darkening, no lines. Drag to turn, scroll or pinch to zoom, double click to go back.":
   "Vista 3D: la esfera brilla con el mismo color calculado. Su brillo sigue la luminancia de cada metro cuadrado, Y = ∫B<sub>λ</sub>ȳ dλ, en escala logarítmica: la del Sol es el brillo completo y cada factor de {#} menos le quita un treceavo (el ojo abarca unos {#} factores de {#}), así que {#} K ({#}% de la luminancia del Sol por metro cuadrado) sigue siendo un naranja claro, {#} K un rojo opaco tenue, y un cuerpo por debajo de unos {#} K no brilla; un cuerpo más caliente que el Sol solo agranda su halo. La pantalla detrás del prisma usa la exposición fija de la franja plana, fijada por el pico del Sol. Cuerpo negro ideal: sin oscurecimiento del limbo, sin líneas. Arrastra para girar, desplaza o pellizca para acercar, doble clic para volver.",
+"A ball glowing in the color its temperature gives, its light spread by a prism onto a screen with the ultraviolet, visible and infrared shares, a radiometer reading the flux, and the blackbody color scale with spectral classes. Drag to turn.":
+  "Una esfera que brilla con el color que le da su temperatura, su luz dispersada por un prisma sobre una pantalla con las fracciones ultravioleta, visible e infrarroja, un radiómetro que mide el flujo y la escala de colores del cuerpo negro con las clases espectrales. Arrastra para girar.",
 "peak (nm)":
   "pico (nm)",
 "flux (W/m²)":
@@ -192,20 +194,18 @@ VDI18N.add('es', 'demo/blackbody', {
   "{#}×{#}⁵ L<sub>sun</sub>",
 "The cosmic microwave background is the most perfect blackbody known, at {#} K. Its peak sits near {#} mm, in microwaves. The slider stops at {#} K, so this preset is a special case.":
   "El fondo cósmico de microondas es el cuerpo negro más perfecto que se conoce, a {#} K. Su pico está cerca de {#} mm, en las microondas. El deslizador se detiene en {#} K, así que esta configuración es un caso especial.",
-"B − V = +NaN":
-  "B − V = +NaN",
-"U − B = +NaN":
-  "U − B = +NaN",
 "microwaves, no glow":
   "microondas, sin brillo",
-"NaN":
-  "NaN",
+"Close":
+  "Cerrar",
 "Bλ and the U, B, V filters":
   "Bλ y los filtros U, B, V",
 "Color by temperature":
   "Color según la temperatura",
 "Never green.":
   "Nunca verde.",
+"{#} K · microwaves, no glow":
+  "{#} K · microondas, sin brillo",
 "Wavelength λ, log scale":
   "Longitud de onda λ, escala logarítmica",
 "Spectral radiance Bλ, log scale":
@@ -318,12 +318,14 @@ VDI18N.add('es', 'demo/blackbody', {
   "{#} lectura enviada a la hoja de trabajo. <a>Abrir la hoja de trabajo</a>",
 "{#} readings sent to the worksheet. <a>Open the worksheet</a>":
   "{#} lecturas enviadas a la hoja de trabajo. <a>Abrir la hoja de trabajo</a>",
+"B − V = +NaN":
+  "B − V = +NaN",
+"U − B = +NaN":
+  "U − B = +NaN",
+"NaN":
+  "NaN",
 "<a><span>←</span> <span>States of Matter</span></a><a><span>Gas in a Box</span> <span>→</span></a>":
   "<a><span>←</span> <span>Estados de la materia</span></a><a><span>Gas en una caja</span> <span>→</span></a>",
-"A ball glowing in the color its temperature gives, its light spread by a prism onto a screen with the ultraviolet, visible and infrared shares, a radiometer reading the flux, and the blackbody color scale with spectral classes. Drag to turn.":
-  "Una esfera que brilla con el color que le da su temperatura, su luz dispersada por un prisma sobre una pantalla con las fracciones ultravioleta, visible e infrarroja, un radiómetro que mide el flujo y la escala de colores del cuerpo negro con las clases espectrales. Arrastra para girar.",
-"{#} K · microwaves, no glow":
-  "{#} K · microondas, sin brillo",
 "Wavelength λ (nm)":
   "Longitud de onda λ (nm)"
 });

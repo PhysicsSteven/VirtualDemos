@@ -867,7 +867,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       ctx.font = `600 ${11 * ps}px ${mono}`;
       const w = ctx.measureText(txt).width;
       const tx = Math.min(padL + pw - w - 4, Math.max(padL + 6, xa - 10 * ps)), tyy = Math.min(padT + ph - 22 * ps, Math.max(ya + 26 * ps, padT + ph * 0.55));
-      if (xa < padL + pw && w < pw - 20) { ctx.fillStyle = T.pos; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(txt, tx, tyy); }
+      /* a halo in the chart's background color keeps the label readable where the curve or the visible band runs through it
+         (student view, 2026-11-15) */
+      if (xa < padL + pw && w < pw - 20) { ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.lineJoin = 'round'; ctx.strokeStyle = T.canvas; ctx.lineWidth = 4 * ps; ctx.strokeText(txt, tx, tyy); ctx.fillStyle = T.pos; ctx.fillText(txt, tx, tyy); }
     }
 
     // peak markers
@@ -1035,7 +1037,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const bx = pad, by = (rowH - box) / 2;
     const src = drawSource(ctx, bx, by, box, ps, mono);
 
-    /* spectrometer: slit, prism, and a screen; the prism bends violet most, so violet lands at the top */
+    /* spectrometer: slit, prism, and a screen; a prism bends light toward its base and violet most, so with the base up violet
+       lands at the top (the prism was drawn apex up, which would send violet to the bottom) (student view, 2026-11-15) */
     const uv = uvFraction(S.T), vis = visibleFraction(S.T), ir = Math.max(0, 1 - uv - vis);
     const slitX = bx + box + 22 * ps, prX = slitX + 34 * ps, prW = 40 * ps;
     const scrW = 14 * ps, scrX = prX + prW + (two ? 46 : 70) * ps;
@@ -1060,7 +1063,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     /* prism */
     ctx.save();
-    ctx.beginPath(); ctx.moveTo(prX, beamY + 30 * ps); ctx.lineTo(prX + prW, beamY + 30 * ps); ctx.lineTo(prX + prW / 2, beamY - 34 * ps); ctx.closePath();
+    ctx.beginPath(); ctx.moveTo(prX, beamY - 30 * ps); ctx.lineTo(prX + prW, beamY - 30 * ps); ctx.lineTo(prX + prW / 2, beamY + 34 * ps); ctx.closePath();
     const pg = ctx.createLinearGradient(prX, 0, prX + prW, 0); pg.addColorStop(0, 'rgba(190,215,240,0.55)'); pg.addColorStop(0.5, 'rgba(248,245,242,0.35)'); pg.addColorStop(1, 'rgba(160,190,220,0.55)');
     ctx.fillStyle = pg; ctx.fill(); ctx.strokeStyle = 'rgba(176,153,124,0.9)'; ctx.lineWidth = 1.2 * ps; ctx.stroke();
     ctx.restore();
@@ -1081,7 +1084,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.fillText('vis ' + pct(vis), lx, (visT + visB) / 2);
     ctx.fillText('IR ' + pct(ir), lx, scrB - irH / 2);
     ctx.font = `${9.5 * ps}px ${ui}`; ctx.fillStyle = T.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
-    if (!two) ctx.fillText('prism', prX + prW / 2, beamY + 34 * ps);
+    if (!two) ctx.fillText('prism', prX + prW / 2, beamY + 39 * ps);
 
     /* radiometer: reads σT⁴, the flux from each square meter of surface (π times the area under the curve) */
     let mx, my, mw = 150 * ps, mh = 64 * ps;
@@ -1191,7 +1194,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     G.beamMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending, depthWrite: false });
     sc.add(VD3K.rod([-1.3, 0, 0.62], [-0.55, 0, 0.62], 0.018, G.beamMat));
     const prism = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.22, 0.55, 3), new THREE.MeshStandardMaterial({ color: 0xcfe3f0, transparent: true, opacity: 0.35, roughness: 0.05, metalness: 0.1, depthWrite: false }));
-    prism.rotation.x = Math.PI / 2; prism.rotation.y = Math.PI / 6; prism.position.set(-0.5, 0, 0.62); sc.add(prism);
+    /* the prism's axis lies across the beam and its base is up, so it spreads the colors up and down onto the screen with violet,
+       bent most toward the base, at the top (it stood on end, which spreads colors sideways) (student view, 2026-11-15) */
+    prism.rotation.y = Math.PI; prism.position.set(-0.5, 0, 0.62); sc.add(prism);
     /* the screen: a strip whose picture is drawn on a canvas, violet at the top, ultraviolet above it, infrared below */
     G.scr = texCanvas(96, 512);
     const screen = new THREE.Mesh(new THREE.PlaneGeometry(0.16, 1.05), new THREE.MeshBasicMaterial({ map: G.scr.t }));

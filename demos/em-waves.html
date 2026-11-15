@@ -1148,7 +1148,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     // wavelength ticks above, frequency ticks below
     c.font = `${9.5 * ps}px ${T.mono}`; c.textBaseline = 'bottom'; c.fillStyle = T.muted; c.strokeStyle = T.muted; c.lineWidth = 1;
     const lam = [[1e3, '1 km'], [1, '1 m'], [1e-3, '1 mm'], [1e-6, '1 µm'], [1e-9, '1 nm'], [1e-12, '1 pm']];
-    for (const [l, t] of lam) { const x = stripX(g, Math.log10(C / l)); c.textAlign = 'center'; c.fillText(t, x, g.barY - 3 * ps); c.beginPath(); c.moveTo(x, g.barY - 2 * ps); c.lineTo(x, g.barY); c.stroke(); }
+    /* a tick name the current wavelength's label would half cover is left out, so "1 µm" beside 550 nm never reads as
+       "1 550 nm" (student view, 2026-11-15) */
+    const curTx = Math.max(s.x + 40 * ps, Math.min(s.x + s.w - 40 * ps, stripX(g, S.logf)));
+    c.font = `600 ${10 * LS()}px ${T.mono}`; const curHalf = c.measureText(fmtSI(lambdaOf(fNow()), 'm')).width / 2 + 3;
+    c.font = `${9.5 * ps}px ${T.mono}`;
+    for (const [l, t] of lam) { const x = stripX(g, Math.log10(C / l)); c.textAlign = 'center'; if (Math.abs(x - curTx) > curHalf + c.measureText(t).width / 2 + 2 * ps) c.fillText(t, x, g.barY - 3 * ps); c.beginPath(); c.moveTo(x, g.barY - 2 * ps); c.lineTo(x, g.barY); c.stroke(); }
     c.textBaseline = 'top';
     const fr = [[6, '1 MHz'], [9, '1 GHz'], [12, '1 THz'], [15, '1 PHz'], [18, '1 EHz'], [21, '1 ZHz']];
     for (const [e, t] of fr) { const x = stripX(g, e); c.textAlign = e === 21 ? 'right' : 'center'; c.fillText(t, e === 21 ? x + 2 : x, g.barY + g.barH + 3 * ps); c.beginPath(); c.moveTo(x, g.barY + g.barH); c.lineTo(x, g.barY + g.barH + 2 * ps); c.stroke(); }
