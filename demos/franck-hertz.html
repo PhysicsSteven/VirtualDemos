@@ -589,6 +589,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     return { p, ps, x0, x1, cy, th, xk, xg1, xg2, xa, oven, thermo, X: (s) => xg1 + s * (xg2 - xg1) };
   }
   const T_MIN = 100, T_MAX = 210;
+  /* the dots cross the 8 mm gap in about 5 s; a 2 to 5 eV electron takes about 10 ns, so say how slowed they are (student view, 2026-11-15) */
+  const SLOWMO = 'electrons drawn ~10⁹× slower';
   function drawTube(p, now) {
     if (use3()) { drawTube3(p, now); return; }
     const c = ctx, g = tubeGeom(), ps = g.ps, hg = S.gas === 'hg';
@@ -596,6 +598,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     title(c, p, hg ? 'Tetrode tube with mercury vapor' : 'Tetrode tube with neon');
     c.font = `${10.5 * ps}px ${T.mono}`; c.fillStyle = T.muted; c.textAlign = 'left'; c.textBaseline = 'top';
     c.fillText(hg ? 'violet: 253.7 nm UV, invisible to the eye' : 'orange: the glow seen through the glass', p.x + 12 * ps, p.y + 25 * ps);
+    c.fillText(SLOWMO, p.x + 12 * ps, p.y + 39 * ps);
     // oven
     if (hg) {
       const o = g.oven, f = (S.TC - T_MIN) / (T_MAX - T_MIN);
@@ -741,7 +744,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     label(c, hg ? `threshold 4.887 eV` : `threshold 18.38 eV`, X(0) + 6 * ps, Y(eg.thr) - 10 * ps, T.equi, 'left', 'middle', true, ps);
     if (W0 > 0) {
       const sTop = Math.min(1, eg.top / W0), xt = X(sTop * 0.7), yt = Y(W0 * sTop * 0.7);
-      if (W0 > eg.thr * 1.15) label(c, 'no collisions', xt + 8 * ps, Math.max(box.T + 8 * ps, yt + 6 * ps), T.muted, 'left', 'middle', false, ps);
+      /* at high U this label ran into the threshold label; lift it above when they would touch (student view, 2026-11-15) */
+      let yl = Math.max(box.T + 8 * ps, yt + 6 * ps); const yth = Y(eg.thr) - 10 * ps;
+      c.font = `600 ${11 * ps}px ${T.mono}`; const thrR = X(0) + 6 * ps + c.measureText(hg ? 'threshold 4.887 eV' : 'threshold 18.38 eV').width;
+      if (xt + 8 * ps < thrR + 6 * ps && Math.abs(yl - yth) < 15 * ps) yl = Math.max(box.T + 8 * ps, yth - 16 * ps);
+      if (W0 > eg.thr * 1.15) label(c, 'no collisions', xt + 8 * ps, yl, T.muted, 'left', 'middle', false, ps);
     }
   }
 
@@ -763,6 +770,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const c = ctx, pg = plotGeom(), ps = pg.ps, box = pg.box, X = pg.X, Y = pg.Y, g = G();
     if (box.R - box.L < 60 || box.B - box.T < 50) return;
     title(c, p, 'Collector current I against U');
+    /* the sweep rate, so the time scale is on the stage (student view, 2026-11-15) */
     // grid
     c.font = `${10.5 * ps}px ${T.mono}`; c.fillStyle = T.muted; c.textAlign = 'right'; c.textBaseline = 'middle';
     const ys = nice(yTop / 4);
@@ -770,6 +778,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const xs = g.Umax > 40 ? 10 : 5; c.textAlign = 'center'; c.textBaseline = 'top';
     for (let v = 0; v <= g.Umax + 1e-9; v += xs) { const x = Math.round(X(v)) + 0.5; c.strokeStyle = T.grid; c.beginPath(); c.moveTo(x, box.T); c.lineTo(x, box.B); c.stroke(); c.fillText(String(v), x, box.B + 5); }
     c.textAlign = 'right'; c.fillText('U (V)', box.R, box.B + 20 * ps);
+    /* the sweep rate under the axis, so the time scale is on the stage (student view, 2026-11-15) */
+    c.textAlign = 'left'; c.fillText(`sweep ${g.rate * (S.fast ? 4 : 1)} V/s`, box.L, box.B + 20 * ps);
     c.save(); c.translate(p.x + 12 * ps, (box.T + box.B) / 2); c.rotate(-Math.PI / 2); c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('I (nA)', 0, 0); c.restore();
     c.save(); c.beginPath(); c.rect(box.L, box.T - 2, box.R - box.L, box.B - box.T + 4); c.clip();
     // guide lines at n·E_exc
@@ -1146,6 +1156,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     title(c, p, hg ? 'Tetrode tube with mercury vapor, in its oven' : 'Tetrode tube with neon');
     c.font = `${10.5 * ps}px ${T.mono}`; c.fillStyle = T.muted; c.textAlign = 'left'; c.textBaseline = 'top';
     c.fillText((hg ? 'violet: 253.7 nm UV, invisible to the eye' : 'orange: the glow seen through the glass') + (p.w > 540 * ps ? ` · tube drawn larger than its ${G().L * 1000} mm gap` : ''), p.x + 12 * ps, p.y + 25 * ps);
+    c.fillText(SLOWMO, p.x + 12 * ps, p.y + 39 * ps);
     const top = (x) => Q([x, 0, TZ + TR + 0.004]);
     { const qk = top(TX.k), q1 = top(TX.g1), near = Math.abs(qk[0] - q1[0]) < 22 * ps;
       for (const [s, x] of [[near ? 'K G1' : 'K', near ? TX.g1 : TX.k], ...(near ? [] : [['G1', TX.g1]]), ['G2', TX.g2], ['A', TX.a]]) { const q = top(x); label(c, s, q[0], q[1] - 6 * ps, T.ink, near && s === 'K G1' ? 'right' : 'center', 'bottom', true, ps); } }

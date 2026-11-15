@@ -4,6 +4,8 @@ VDI18N.add('es', 'demo/franck-hertz', {
   "Tubo tetrodo con vapor de mercurio",
 "violet: {#} nm UV, invisible to the eye":
   "violeta: UV de {#} nm, invisible al ojo",
+"electrons drawn ~{#}⁹× slower":
+  "electrones dibujados ~{#}⁹× más lentos",
 "I = {#} nA":
   "I = {#} nA",
 "U below U_c: no electron gets through":
@@ -20,6 +22,8 @@ VDI18N.add('es', 'demo/franck-hertz', {
   "umbral {#} eV",
 "Collector current I against U":
   "Corriente del colector I en función de U",
+"sweep {#} V/s":
+  "barrido {#} V/s",
 "I (nA)":
   "I (nA)",
 "Sweeping U…":
@@ -40,10 +44,6 @@ VDI18N.add('es', 'demo/franck-hertz', {
   "I = -{#} nA",
 "Franck–Hertz Experiment":
   "Experimento de Franck–Hertz",
-"<a>Photons and matter waves</a>":
-  "<a>Fotones y ondas de materia</a>",
-"<a><span>←</span> <span>Spectra Explorer</span></a><a><span>Rutherford Scattering</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Explorador de espectros</span></a><a><span>Dispersión de Rutherford</span> <span>→</span></a>",
 "Electrons crossing mercury vapor can give an atom only one fixed amount of energy, {#} eV, so the collector current drops every {#} V. Sweep U, mark the peaks, measure the spacing.":
   "Los electrones que atraviesan vapor de mercurio solo pueden darle a un átomo una cantidad fija de energía, {#} eV, así que la corriente del colector cae cada {#} V. Barre U, marca los picos, mide el espaciamiento.",
 "U in V · I in nA · energies in eV · λ = {#} nm / E(eV)":
@@ -62,8 +62,8 @@ VDI18N.add('es', 'demo/franck-hertz', {
   "Neón",
 "Mark peaks":
   "Marcar picos",
-"U {#} <small>V</small> · I -{#} <small>nA</small>":
-  "U {#} <small>V</small> · I -{#} <small>nA</small>",
+"U {#} <small>V</small> · I {#} <small>nA</small>":
+  "U {#} <small>V</small> · I {#} <small>nA</small>",
 "The Franck–Hertz tube with electrons crossing the vapor, the electron energy along the tube, the collector current I against the accelerating voltage U, and the energy levels of the atom. Drag the U cursor on the current plot to set U, the retarding line in the energy panel to set U_r, and the oven thermometer to set the temperature. In mark peaks mode, click a maximum on the plot to mark it. Keys: left and right change U, up and down change the oven temperature, space plays or pauses, M toggles mark peaks, Enter marks the maximum nearest the cursor, Backspace removes the last mark, N starts a new sweep.":
   "El tubo de Franck–Hertz con electrones atravesando el vapor, la energía de los electrones a lo largo del tubo, la corriente del colector I en función del voltaje de aceleración U, y los niveles de energía del átomo. Arrastra el cursor U en la gráfica de corriente para fijar U, la línea de frenado en el panel de energía para fijar U_r, y el termómetro del horno para fijar la temperatura. En el modo de marcar picos, haz clic en un máximo de la gráfica para marcarlo. Teclas: izquierda y derecha cambian U, arriba y abajo cambian la temperatura del horno, espacio inicia o pausa, M activa o desactiva marcar picos, Enter marca el máximo más cercano al cursor, Retroceso quita la última marca, N inicia un nuevo barrido.",
 "Divider between the tube and the graphs":
@@ -114,8 +114,8 @@ VDI18N.add('es', 'demo/franck-hertz', {
   "Rápido",
 "Collector current I":
   "Corriente del colector I",
-"-{#} nA":
-  "-{#} nA",
+"{#} nA":
+  "{#} nA",
 "Reaching the collector":
   "Llegan al colector",
 "Energy at G2 with no collisions, e(U − U<sub>c</sub>)":
@@ -160,6 +160,14 @@ VDI18N.add('es', 'demo/franck-hertz', {
   "Presión de vapor del mercurio de Huber, Laesecke y Friend, Ind. Eng. Chem. Res. {#}, {#} ({#}), con el vapor en equilibrio con mercurio líquido a la temperatura del horno. Niveles de energía del NIST Handbook of Basic Atomic Spectroscopic Data (Sansonetti y Martin), como en la NIST Atomic Spectra Database.",
 "<span><i></i>Recorded current</span> <span><i></i>Previous curve (ghost)</span> <span><i></i>Electrons</span> <span><i></i>Excitation threshold</span> <span><i></i>Marked peaks</span> <span><i></i>Mercury {#} nm UV (invisible, drawn violet)</span> <span><i></i>Neon red and orange glow</span>":
   "<span><i></i>Corriente registrada</span> <span><i></i>Curva anterior (fantasma)</span> <span><i></i>Electrones</span> <span><i></i>Umbral de excitación</span> <span><i></i>Picos marcados</span> <span><i></i>UV de {#} nm del mercurio (invisible, dibujado en violeta)</span> <span><i></i>Brillo rojo y naranja del neón</span>",
+"<a>Photons and matter waves</a>":
+  "<a>Fotones y ondas de materia</a>",
+"<a><span>←</span> <span>Spectra Explorer</span></a><a><span>Rutherford Scattering</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Explorador de espectros</span></a><a><span>Dispersión de Rutherford</span> <span>→</span></a>",
+"-{#} nA":
+  "-{#} nA",
+"U {#} <small>V</small> · I -{#} <small>nA</small>":
+  "U {#} <small>V</small> · I -{#} <small>nA</small>",
 "U (G2 to K)":
   "U (de G2 a K)",
 "supply":
@@ -168,16 +176,12 @@ VDI18N.add('es', 'demo/franck-hertz', {
   "I colector",
 "electrometer":
   "electrómetro",
-"{#} nA":
-  "{#} nA",
 "Tetrode tube with mercury vapor, in its oven":
   "Tubo tetrodo con vapor de mercurio, en su horno",
 "Peak n":
   "Pico n",
 "Oven (°C)":
   "Horno (°C)",
-"U {#} <small>V</small> · I {#} <small>nA</small>":
-  "U {#} <small>V</small> · I {#} <small>nA</small>",
 "Your own setup. Pick a setup above to return to a known one.":
   "Tu propia configuración. Elige una configuración arriba para volver a una conocida.",
 "Fill pressure p, at {#} °C":
@@ -218,6 +222,8 @@ VDI18N.add('es', 'demo/franck-hertz', {
   "Un tubo de neón a temperatura ambiente, barrido hasta {#} V. El neón se excita sobre todo a los niveles 2p⁵3p cerca de {#} eV, que decaen con luz roja y naranja, así que puedes ver dónde ocurren las colisiones: aparece una capa luminosa en G2 cerca de {#} V y se mueve hacia el cátodo, y se agrega una capa nueva más o menos cada {#} V.",
 "The first maximum is near {#} V, not at {#} V (dashed lines at n × {#} V). The electrons gain e(U − U_c), not eU: the contact potential between the oxide cathode and the grid metal shifts every peak by U_c. Their starting energy spread and the gradual cutoff at the collector add further shifts of the same size for every peak. A shift common to all peaks drops out of the differences, so measure the spacing.":
   "El primer máximo está cerca de {#} V, no en {#} V (líneas discontinuas en n × {#} V). Los electrones ganan e(U − U_c), no eU: el potencial de contacto entre el cátodo de óxido y el metal de la rejilla desplaza cada pico en U_c. Su dispersión de energía inicial y el corte gradual en el colector agregan otros desplazamientos del mismo tamaño para cada pico. Un desplazamiento común a todos los picos se cancela en las diferencias, así que mide el espaciamiento.",
+"Close":
+  "Cerrar",
 "Let the sweep finish first.":
   "Deja que termine el barrido primero.",
 "no collisions":

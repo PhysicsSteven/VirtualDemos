@@ -1632,7 +1632,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* one key with names: the count is glued to k or M, so the run could never match as a pattern */
     const cv = { live: spec.live.toFixed(1), real: spec.real.toFixed(1), dead: (100 * dt).toFixed(1), n: fmtCount(spec.total) };
     if (window.VDI18N && VDI18N.lang !== 'en') for (const k in cv) cv[k] = cv[k].replace('.', VDI18N.decimal);
-    $('count').innerHTML = window.VDI18N ? VDI18N.t('Live {live} <small>s</small> · Real {real} <small>s</small> · Dead {dead}<small>%</small> · {n} <small>counts</small>', cv) : 'Live {live} <small>s</small> · Real {real} <small>s</small> · Dead {dead}<small>%</small> · {n} <small>counts</small>'.replace(/\{(\w+)\}/g, (m, k) => cv[k]);
+    /* the clock speed beside the clocks: at ×10 the Real clock ran ten times the wall clock with nothing on the stage saying so (student view, 2026-11-15) */
+    const ck = { x: String(S.speed) }, ckT = '<small>clock</small> ×{x}';
+    $('count').innerHTML = (window.VDI18N ? VDI18N.t('Live {live} <small>s</small> · Real {real} <small>s</small> · Dead {dead}<small>%</small> · {n} <small>counts</small>', cv) : 'Live {live} <small>s</small> · Real {real} <small>s</small> · Dead {dead}<small>%</small> · {n} <small>counts</small>'.replace(/\{(\w+)\}/g, (m, k) => cv[k]))
+      + ' · ' + (window.VDI18N ? VDI18N.t(ckT, ck) : ckT.replace('{x}', ck.x));
     roiReadout();
   }
   function roiReadout() {
@@ -1717,7 +1720,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   for (const b of document.querySelectorAll('[data-size]')) b.addEventListener('click', () => { custom(); S.size = b.dataset.size; syncControls(); touchDep(); });
   for (const b of document.querySelectorAll('[data-cg]')) b.addEventListener('click', () => setCoarse(+b.dataset.cg));
   for (const b of document.querySelectorAll('[data-n]')) b.addEventListener('click', () => { const n = +b.dataset.n; if (n === S.N) return; custom(); const f = n / S.N; S.N = n; spec = newSpec(); rois = rois.map((r) => ({ a: Math.round(r.a * f), b: Math.round(r.b * f) })); cursor = Math.round(cursor * f); view = [0, S.N]; syncControls(); touchChan(); });
-  for (const b of document.querySelectorAll('[data-sp]')) b.addEventListener('click', () => { S.speed = +b.dataset.sp; syncControls(); });
+  for (const b of document.querySelectorAll('[data-sp]')) b.addEventListener('click', () => { S.speed = +b.dataset.sp; syncControls(); liveReadouts(); });
   for (const b of document.querySelectorAll('[data-an]')) b.addEventListener('click', () => { S.ana = b.dataset.an; drawAna(); });
   const clamp = (v, el) => { const mn = +el.min, mx = +el.max, st = +el.step; v = Math.round((v - mn) / st) * st + mn; return +Math.max(mn, Math.min(mx, v)).toFixed(4); };
   function setDist(v) { v = clamp(v, $('dist')); if (v === S.d) return; custom(); S.d = v; $('dist').value = v; touchDep(); }

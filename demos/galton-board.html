@@ -315,7 +315,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   let last = performance.now(), lastRead = 0;
   function frame(now) {
     const dt = Math.min(0.05, (now - last) / 1000); last = now;
-    if (S.stream && (S.fast || reduce)) { spawnT -= dt; while (spawnT <= 0) { launch(); spawnT += 0.06; } draw(); }
+    /* with Skip the fall nothing is animated, so stream 250 balls a second (was 16): the worksheet's 2000 ball runs took two minutes each (student view, 2026-11-15) */
+    if (S.stream && (S.fast || reduce)) { spawnT -= dt; while (spawnT <= 0) { launch(); spawnT += S.fast ? 0.004 : 0.06; } draw(); }
     else if (S.balls.length || S.queue || S.stream) { step(dt); draw(); }
     if (now - lastRead > 150) { readouts(); lastRead = now; }
     requestAnimationFrame(frame);

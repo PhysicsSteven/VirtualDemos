@@ -46,6 +46,8 @@ VDI18N.add('es', 'demo/gamma-spectroscopy', {
   "Agrega dos o más puntos de calibración.",
 "Live {live} <small>s</small> · Real {real} <small>s</small> · Dead {dead}<small>%</small> · {n} <small>counts</small>":
   "Vivo {live} <small>s</small> · Real {real} <small>s</small> · Muerto {dead}<small>%</small> · {n} <small>cuentas</small>",
+"<small>clock</small> ×{x}":
+  "<small>reloj</small> ×{x}",
 "steel plate":
   "placa de acero",
 "◌ WAIT":
@@ -88,8 +90,8 @@ VDI18N.add('es', 'demo/gamma-spectroscopy', {
   "Llena",
 "Zoom in":
   "Acercar",
-"Live {#} <small>s</small> · Real {#} <small>s</small> · Dead {#}<small>%</small> · {#} <small>counts</small>":
-  "Vivo {#} <small>s</small> · Real {#} <small>s</small> · Muerto {#}<small>%</small> · {#} <small>cuentas</small>",
+"Live {#} <small>s</small> · Real {#} <small>s</small> · Dead {#}<small>%</small> · {#} <small>counts</small> · <small>clock</small> ×{#}":
+  "Vivo {#} <small>s</small> · Real {#} <small>s</small> · Muerto {#}<small>%</small> · {#} <small>cuentas</small> · <small>reloj</small> ×{#}",
 "The bench: a lead castle shown cut open with the source on a sliding holder, absorber sheets, the NaI(Tl) detector and photomultiplier, and the high voltage supply, amplifier and MCA. Below it the MCA screen shows counts against channel. Drag the source holder to change the distance, turn the HV and fine gain knobs, click the coarse gain switch. Drag across the spectrum to make a region of interest; drag its edges to adjust. In mark peak mode, click a peak. Keys: space starts or stops acquisition, left and right move the cursor (shift for {#} channels), the bracket keys move the source, page up and down change the high voltage, L switches lin and log, M marks the peak at the cursor, plus and minus zoom, Delete removes the selected region.":
   "El banco: un castillo de plomo mostrado en corte con la fuente en un portafuente deslizante, láminas absorbentes, el detector de NaI(Tl) y el fotomultiplicador, y la fuente de alto voltaje, el amplificador y el MCA. Debajo, la pantalla del MCA muestra las cuentas en función del canal. Arrastra el portafuente para cambiar la distancia, gira las perillas de HV y de ganancia fina, haz clic en el selector de ganancia gruesa. Arrastra sobre el espectro para crear una región de interés; arrastra sus bordes para ajustarla. En el modo marcar pico, haz clic en un pico. Teclas: espacio inicia o detiene la adquisición, izquierda y derecha mueven el cursor (Shift para {#} canales), las teclas de corchete mueven la fuente, Re Pág y Av Pág cambian el alto voltaje, L cambia entre lin y log, M marca el pico en el cursor, más y menos hacen zoom, Supr quita la región seleccionada.",
 "<a>Worksheet {#}: Calibrating a Detector</a>":
@@ -292,8 +294,6 @@ VDI18N.add('es', 'demo/gamma-spectroscopy', {
   "CSV del espectro",
 "Table CSV":
   "CSV de la tabla",
-"Clear table":
-  "Borrar la tabla",
 "Press Mark peak and click a photopeak, or use a region of interest. Enter the energy of that line and add the point. Two points give a line E = a + b·ch; three or more allow a quadratic term.":
   "Pulsa Marcar pico y haz clic en un fotopico, o usa una región de interés. Escribe la energía de esa línea y agrega el punto. Dos puntos dan una recta E = a + b·ch; tres o más permiten un término cuadrático.",
 "Peak to calibrate":
@@ -390,12 +390,12 @@ VDI18N.add('es', 'demo/gamma-spectroscopy', {
   "Cursor canal {#} cuentas {#} E {#} keV",
 "Add a row for the standard and one for the unknown.":
   "Agrega una fila para el estándar y una para la desconocida.",
+"{#} to {#}":
+  "{#} a {#}",
 "GF-{#}-M-{#}. Point source on the axis, half life {#} y. Ω/{#}π = ½({#} − d/√(d² + R²)) is exact for a point on the axis of a disk of radius R. The absorber sits on the holder just in front of the source.":
   "GF-{#}-M-{#}. Fuente puntual en el eje, vida media {#} años. Ω/{#}π = ½({#} − d/√(d² + R²)) es exacta para un punto en el eje de un disco de radio R. El absorbente está en el portafuente, justo delante de la fuente.",
 "ORTEC Experiment {#}. The ¹³⁷Cs standard, {#} µCi ± {#}%, is {#} cm from the crystal with a region of interest on the {#} keV peak. Acquire {#} s live and Add to table. Then choose Cs-{#} from the RSS8 set, keep the distance and the region, Clear, acquire {#} s live, and Add to table. The activity is A = {#} µCi × (net rate of the source)/(net rate of the standard); the Activity plot does this and carries the {#}% certificate uncertainty. Show true activity to check. The ¹³⁷Cs part of the mixed Cs/Zn source can be measured the same way.":
   "Experimento {#} de ORTEC. El estándar de ¹³⁷Cs, {#} µCi ± {#}%, está a {#} cm del cristal con una región de interés en el pico de {#} keV. Adquiere {#} s vivos y Agregar a la tabla. Luego elige Cs-{#} del juego RSS8, conserva la distancia y la región, Borrar, adquiere {#} s vivos y Agregar a la tabla. La actividad es A = {#} µCi × (tasa neta de la fuente)/(tasa neta del estándar); la gráfica Actividad hace esto y propaga la incertidumbre de {#}% del certificado. Mostrar la actividad real para comprobar. La parte de ¹³⁷Cs de la fuente mezclada Cs/Zn se puede medir de la misma manera.",
-"{#} to {#}":
-  "{#} a {#}",
 "Needs a row for the Cs-{#} standard and one for a Cs-{#} source at the same distance.":
   "Necesita una fila para el estándar de Cs-{#} y otra para una fuente de Cs-{#} a la misma distancia.",
 "Put the region of interest on the {#} keV peak, acquire the standard and the unknown for the same live time at the same distance, and add a row for each.":
@@ -434,8 +434,8 @@ VDI18N.add('es', 'demo/gamma-spectroscopy', {
   "neta {#} ± {#}",
 "net {#}k ± {#}":
   "neta {#}k ± {#}",
-"Live {#} <small>s</small> · Real {#} <small>s</small> · Dead {#}<small>%</small> · {#}k <small>counts</small>":
-  "Vivo {#} <small>s</small> · Real {#} <small>s</small> · Muerto {#}<small>%</small> · {#}k <small>cuentas</small>",
+"Live {#} <small>s</small> · Real {#} <small>s</small> · Dead {#}<small>%</small> · {#}k <small>counts</small> · <small>clock</small> ×{#}":
+  "Vivo {#} <small>s</small> · Real {#} <small>s</small> · Muerto {#}<small>%</small> · {#}k <small>cuentas</small> · <small>reloj</small> ×{#}",
 "{#} ± {#} ch":
   "{#} ± {#} canales",
 "calibrate first":
@@ -458,8 +458,14 @@ VDI18N.add('es', 'demo/gamma-spectroscopy', {
   "Resolución en función de la energía",
 "Needs a calibration. Counting statistics of the photoelectrons alone give a slope of −{#}/{#}; the constant term in this model ({#}%) flattens it at high energy.":
   "Necesita una calibración. La estadística de conteo de los fotoelectrones por sí sola da una pendiente de −{#}/{#}; el término constante de este modelo ({#}%) la aplana a alta energía.",
+"Live {#} <small>s</small> · Real {#} <small>s</small> · Dead {#}<small>%</small> · {#}M <small>counts</small> · <small>clock</small> ×{#}":
+  "Vivo {#} <small>s</small> · Real {#} <small>s</small> · Muerto {#}<small>%</small> · {#}M <small>cuentas</small> · <small>reloj</small> ×{#}",
 "Acquire":
   "Adquirir",
+"Close":
+  "Cerrar",
+"Move the cursor along the channels (Shift for {#} channels)":
+  "Mover el cursor a lo largo de los canales (Shift para {#} canales)",
 "RSS8 set. Point source on the axis, half life {#} d. Ω/{#}π = ½({#} − d/√(d² + R²)) is exact for a point on the axis of a disk of radius R. The absorber sits on the holder just in front of the source.":
   "Juego RSS8. Fuente puntual en el eje, vida media {#} d. Ω/{#}π = ½({#} − d/√(d² + R²)) es exacta para un punto en el eje de un disco de radio R. El absorbente está en el portafuente, justo delante de la fuente.",
 "RSS8 set. Point source on the axis, half life {#} d. Ω/{#}π = ½({#} − d/√(d² + R²)) is exact for a point on the axis of a disk of radius R. The absorber sits on the holder just in front of the source. The Ag K X-rays ({#} to {#} keV) land near channel {#}, right at the lower level discriminator: lower it to {#}% to see the whole peak. The {#} keV gamma ray comes from only {#}% of decays.":
@@ -486,8 +492,6 @@ VDI18N.add('es', 'demo/gamma-spectroscopy', {
   "molibdeno: x = {#} mm, ρx = {#} g/cm² (ρ = {#} g/cm³)",
 "tin: x = {#} mm, ρx = {#} g/cm² (ρ = {#} g/cm³)":
   "estaño: x = {#} mm, ρx = {#} g/cm² (ρ = {#} g/cm³)",
-"Live {#} <small>s</small> · Real {#} <small>s</small> · Dead {#}<small>%</small> · {#}M <small>counts</small>":
-  "Vivo {#} <small>s</small> · Real {#} <small>s</small> · Muerto {#}<small>%</small> · {#}M <small>cuentas</small>",
 "Hide true activity":
   "Ocultar la actividad real",
 "Remove row {#}":
@@ -506,6 +510,14 @@ VDI18N.add('es', 'demo/gamma-spectroscopy', {
   "log₁₀ d (cm)",
 "log₁₀ net rate":
   "log₁₀ tasa neta",
+"Live {#} <small>s</small> · Real {#} <small>s</small> · Dead {#}<small>%</small> · {#} <small>counts</small>":
+  "Vivo {#} <small>s</small> · Real {#} <small>s</small> · Muerto {#}<small>%</small> · {#} <small>cuentas</small>",
+"Clear table":
+  "Borrar la tabla",
+"Live {#} <small>s</small> · Real {#} <small>s</small> · Dead {#}<small>%</small> · {#}k <small>counts</small>":
+  "Vivo {#} <small>s</small> · Real {#} <small>s</small> · Muerto {#}<small>%</small> · {#}k <small>cuentas</small>",
+"Live {#} <small>s</small> · Real {#} <small>s</small> · Dead {#}<small>%</small> · {#}M <small>counts</small>":
+  "Vivo {#} <small>s</small> · Real {#} <small>s</small> · Muerto {#}<small>%</small> · {#}M <small>cuentas</small>",
 "<a><span>←</span> <span>Superconductors and the Meissner Effect</span></a><a><span>Nuclear Reactions, Fission and Fusion</span> <span>→</span></a>":
   "<a><span>←</span> <span>Superconductores y el efecto Meissner</span></a><a><span>Reacciones nucleares, fisión y fusión</span> <span>→</span></a>"
 });

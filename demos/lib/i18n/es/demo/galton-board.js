@@ -86,6 +86,8 @@ VDI18N.add('es', 'demo/galton-board', {
   "{#} filas: suelta unos cientos y el histograma coincide con la curva normal de media {#} y desviación estándar √{#} = {#}. Las casillas {#} a {#}, dentro de una desviación estándar del centro, deberían contener el {#}% de las bolas; la regla del {#}% es para una variable continua, y aquí las casillas de los bordes cuentan completas.",
 "Drop at least two balls before recording.":
   "Suelta al menos dos bolas antes de registrar.",
+"Close":
+  "Cerrar",
 "Stop":
   "Detener"
 });
