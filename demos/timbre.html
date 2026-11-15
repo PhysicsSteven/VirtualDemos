@@ -153,7 +153,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 @media (min-width: 821px) and (max-height: 820px) { :root[data-projector="on"] .bar .units { display: none; } :root[data-projector="on"] .bar p { font-size: 1rem; max-width: none; } }
 
 /* with the shelf under it the picture keeps its room (a stage at least 760 px tall); on a short screen the page scrolls instead of squeezing it */
-@media (min-width: 821px) { .stage:has(> .shelf) { min-height: 760px; } .stage.v3d:has(> .shelf) { min-height: 960px; } }
+/* Flat gets the 3D view's 960 px too: at 1280 by 800 a 760 px stage left the canvas 315 px tall, too short to draw the harmonic
+   bars, so Flat (and the Wave packet setup, which turns Flat on) showed no bars to drag (student view, 2026-11-15) */
+@media (min-width: 821px) { .stage:has(> .shelf) { min-height: 960px; } .stage.v3d:has(> .shelf) { min-height: 960px; } }
 /* the 3D bench sits over the harmonic bars: a taller picture on a phone */
 @media (max-width: 820px) { .stage.v3d:has(> .shelf) > .pane { height: 88vh; min-height: 680px; } }
 </style>
@@ -871,6 +873,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       ctx.strokeStyle = T.grid; ctx.beginPath(); ctx.moveTo(px, top); ctx.lineTo(px, bot); ctx.stroke();
       ctx.fillText(fmtTick(v, xst), px, bot + 5 * ls);
     }
+    /* the wave against position moves; say how slowed (student view, 2026-11-15) */
+    if (inX && R - L > 300 * ls) { ctx.textAlign = 'left'; ctx.font = font(10); ctx.fillText(`moving slowed: f₁ drawn at ${dsp ? F_DISP : F_VIS} Hz`, L, bot + 5 * ls + 12 * ls); ctx.font = font(10.5); }
     ctx.textAlign = 'right'; ctx.fillText(inX ? 'x (m)' : D.info.kind === 'drift' ? `t − ${(t0).toFixed(2)} s (ms)` : 't (ms)', R, bot + 5 * ls + 12 * ls);
     ctx.save(); ctx.translate(r.x + 11 * ls, (top + bot) / 2); ctx.rotate(-PI / 2); ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('signal (bar units)', 0, 0); ctx.restore();
 

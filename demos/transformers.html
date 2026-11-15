@@ -490,7 +490,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     c.textAlign = 'right'; c.textBaseline = 'middle';
     for (let e = y0; e <= y1; e += 2) { c.fillText(`${10 ** e >= 1 ? 10 ** e : '10' + String(e).replace('-', '⁻').replace('6', '⁶').replace('4', '⁴').replace('2', '²')} %`, L0 - 4 * p, Y(10 ** e)); c.strokeStyle = T.grid; c.beginPath(); c.moveTo(L0, Y(10 ** e)); c.lineTo(R0, Y(10 ** e)); c.stroke(); }
     c.fillStyle = T.ink; c.font = `700 ${11 * p}px ${T.ui}`; c.textAlign = 'left'; c.textBaseline = 'bottom';
-    c.fillText(`Share of the power lost in the line against transmission voltage (log scales), P = ${si(ln.P, 'W', 3)}, R = ${ohms(ln.R)}`, L0, top - 6 * p);
+    /* on a phone the title ran off the right edge and the 1/V² note sat across the 100 % line: shorter wordings when they do not fit (student view, 2026-11-15) */
+    const fit = (opts, room) => opts.find((o) => c.measureText(o).width <= room) || opts[opts.length - 1];
+    c.fillText(fit([`Share of the power lost in the line against transmission voltage (log scales), P = ${si(ln.P, 'W', 3)}, R = ${ohms(ln.R)}`, `Share lost against V, P = ${si(ln.P, 'W', 3)}, R = ${ohms(ln.R)}`], CW - L0 - 6 * p), L0, top - 6 * p);
     c.fillStyle = T.muted; c.font = `${10 * p}px ${T.ui}`; c.textAlign = 'center'; c.textBaseline = 'top'; c.fillText('transmission voltage V', (L0 + R0) / 2, bot + 16 * p);
     if (S.blind) { c.fillText('hidden in Blind', (L0 + R0) / 2, (top + bot) / 2); return; }
     c.save(); c.beginPath(); c.rect(L0, top, R0 - L0, bot - top); c.clip(); c.strokeStyle = T.heat; c.lineWidth = 2.5 * p; c.beginPath();
@@ -498,7 +500,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     c.stroke();
     c.setLineDash([4 * p, 4 * p]); c.strokeStyle = T.gridStrong; c.beginPath(); c.moveTo(L0, Y(100)); c.lineTo(R0, Y(100)); c.stroke(); c.setLineDash([]);
     const L = lnNow(), pc = L.ok ? 100 * L.frac : 100; c.fillStyle = T.heat; c.beginPath(); c.arc(X(ln.VT), Y(Math.max(1e-6, pc)), 5.5 * p, 0, 7); c.fill(); c.restore();
-    c.fillStyle = T.muted; c.textAlign = 'right'; c.textBaseline = 'top'; c.fillText('the loss falls as 1/V²: ten times the voltage, a hundredth of the loss', R0 - 6 * p, top + 4 * p);
+    c.fillStyle = T.muted; c.textAlign = 'right'; c.textBaseline = 'top'; c.fillText(fit(['the loss falls as 1/V²: ten times the voltage, a hundredth of the loss', 'the loss falls as 1/V²'], (R0 - L0) * 0.6), R0 - 6 * p, top + 4 * p);
   }
 
   function draw() {

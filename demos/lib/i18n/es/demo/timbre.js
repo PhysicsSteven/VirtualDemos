@@ -14,6 +14,8 @@ VDI18N.add('es', 'demo/timbre', {
   "Espectro",
 "Harmonic ladder: string modes, slowed so f₁ is drawn at {#} Hz":
   "Escalera de armónicos: modos de la cuerda, ralentizados para que f₁ se dibuje a {#} Hz",
+"Harmonic bars: drag to set each amplitude, dials set phases":
+  "Barras de armónicos: arrastra para fijar cada amplitud, los cuadrantes fijan las fases",
 "Timbre and Harmonics":
   "Timbre y armónicos",
 "<a><span>←</span> <span>Room Acoustics and the Anechoic Chamber</span></a><a><span>Doppler Effect and Shock Waves</span> <span>→</span></a>":
@@ -280,8 +282,6 @@ VDI18N.add('es', 'demo/timbre', {
   "Las barras de abajo fijan los armónicos: el instrumento se mueve como su suma, el micrófono alimenta ambas pantallas",
 "displacement magnified, slowed so f₁ is drawn at {#} Hz · not to scale · drag to turn":
   "desplazamiento ampliado, ralentizado para que f₁ se dibuje a {#} Hz · no a escala · arrastra para girar",
-"Harmonic bars: drag to set each amplitude, dials set phases":
-  "Barras de armónicos: arrastra para fijar cada amplitud, los cuadrantes fijan las fases",
 "<span><i></i>Waveform: the sum, what you hear</span><span><i></i>Harmonic colors, n = {#} (amber) to {#} (teal)</span><span><i></i>Ideal shape (infinitely many harmonics)</span><span><i></i>Repetition period and f₁</span><span><i></i>Above {#} kHz, played {#} dB quieter</span><span><i></i>Ladder: air displacement, pipe open at both ends</span>":
   "<span><i></i>Forma de onda: la suma, lo que oyes</span><span><i></i>Colores de los armónicos, n = {#} (ámbar) a {#} (verde azulado)</span><span><i></i>Forma ideal (infinitos armónicos)</span><span><i></i>Periodo de repetición y f₁</span><span><i></i>Arriba de {#} kHz, tocado {#} dB más bajo</span><span><i></i>Escalera: desplazamiento del aire, tubo abierto en ambos extremos</span>",
 "pipe open at both ends":
@@ -348,6 +348,8 @@ VDI18N.add('es', 'demo/timbre', {
   "La configuración Paquete de ondas no es uno de estos instrumentos. Mueve el deslizador o elige el nombre de un instrumento para volver a los instrumentos. Espectros ilustrativos, no grabaciones; todos suenan con la misma f₁ y las fases actuales, así que solo cambia la mezcla de armónicos.",
 "= Δx <small>no dispersion</small>":
   "= Δx <small>sin dispersión</small>",
+"moving slowed: f₁ drawn at {#} Hz":
+  "movimiento ralentizado: f₁ se dibuja a {#} Hz",
 "repeats every λ = {#} m":
   "se repite cada λ = {#} m",
 "Wave in space, moving right: the sum of {#} harmonics":
@@ -370,6 +372,10 @@ VDI18N.add('es', 'demo/timbre', {
   "{#} filas enviadas a la hoja de trabajo. <a>Abrir la hoja de trabajo</a>",
 "Readings cleared.":
   "Lecturas borradas.",
+"Close":
+  "Cerrar",
+"Turn the picked harmonic's phase {#} degrees one way or the other":
+  "Gira la fase del armónico elegido {#} grados hacia un lado o hacia el otro",
 "Run {#} recorded (Wave packet): {#} rows so far.":
   "Corrida {#} registrada (Paquete de ondas): {#} filas hasta ahora.",
 "Packet: bar or particle":
@@ -392,12 +398,12 @@ VDI18N.add('es', 'demo/timbre', {
   "Instrumento = suma de los armónicos de las barras",
 "magnified and slowed, not to scale · drag to turn":
   "ampliado y ralentizado, no a escala · arrastra para girar",
-"Wave in space, moving right: the sum of {#} harmonic":
-  "Onda en el espacio, moviéndose a la derecha: la suma de {#} armónico",
 "Wave in space, moving right":
   "Onda en el espacio, moviéndose a la derecha",
 "Packet: deep water":
   "Paquete: agua profunda",
 "Packet: ripples":
-  "Paquete: ondas capilares"
+  "Paquete: ondas capilares",
+"Wave in space, moving right: the sum of {#} harmonic":
+  "Onda en el espacio, moviéndose a la derecha: la suma de {#} armónico"
 });

@@ -196,6 +196,10 @@ VDI18N.add('es', 'demo/transformers', {
   "pérdida (W)",
 "Close":
   "Cerrar",
+"Share lost against V, P = {#} kW, R = {#} Ω":
+  "Fracción perdida contra V, P = {#} kW, R = {#} Ω",
+"the loss falls as {#}/V²":
+  "la pérdida cae como {#}/V²",
 "two cycles, each trace to its own peak":
   "dos ciclos, cada traza a su propio máximo",
 "{#} {#} km of a pair of {#} cm wires":

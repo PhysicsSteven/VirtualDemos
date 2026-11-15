@@ -642,7 +642,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const size = (L.size || 11.5) * ls;
       c.font = `${L.bold ? '700 ' : ''}${size}px ${L.font === 'ui' ? T.ui : T.mono}`;
       c.textAlign = L.align || 'left'; c.textBaseline = 'middle';
-      const w = c.measureText(L.txt).width, x0 = L.align === 'right' ? L.x - w : L.align === 'center' ? L.x - w / 2 : L.x;
+      let w = c.measureText(L.txt).width, x0 = L.align === 'right' ? L.x - w : L.align === 'center' ? L.x - w / 2 : L.x;
+      /* keep a label inside the canvas: on a phone "θ₁ = 0° (drawn at 20°)" lost its θ₁ off the left edge (student view, 2026-11-15) */
+      const cw = c.canvas.clientWidth || 1e9, sh = x0 < 3 ? 3 - x0 : x0 + w > cw - 3 ? Math.max(3 - x0, cw - 3 - x0 - w) : 0;
+      if (sh) { L.x += sh; x0 += sh; }
       if (L.halo !== false) {
         c.fillStyle = L.bg || T.canvas; c.globalAlpha = L.bgA || 0.86;
         c.fillRect(x0 - 3, L.y - size * 0.62, w + 6, size * 1.24); c.globalAlpha = 1;
@@ -744,7 +747,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     c.strokeStyle = T.ink; c.lineWidth = 1.2 * lw;
     const ar = 34 * ls;
     c.beginPath(); c.arc(g.A[0], g.A[1], ar, -Math.PI / 2 - g.thD, -Math.PI / 2); c.stroke();
-    lab(`θ₁ = ${S.th}°${S.th < MIN_DRAW ? ` (drawn at ${MIN_DRAW}°)` : ''}`, g.A[0] - ar * Math.sin(g.thD / 2) - 6 * ls, g.A[1] - ar * Math.cos(g.thD / 2) - 9 * ls, { align: 'right', size: 11 });
+    lab(`θ₁ = ${S.th}°${S.th < MIN_DRAW ? (R.w < 460 ? ` (drawn ${MIN_DRAW}°)` : ` (drawn at ${MIN_DRAW}°)`) : ''}`, g.A[0] - ar * Math.sin(g.thD / 2) - 6 * ls, g.A[1] - ar * Math.cos(g.thD / 2) - 9 * ls, { align: 'right', size: 11 });
     if (!g.tirTop && g.hf > 18 * ls) {
       const tt = Math.atan(g.tanTf), ar2 = Math.min(g.hf * 0.7, 30 * ls);
       c.beginPath(); c.arc(g.A[0], g.A[1], ar2, Math.PI / 2 - tt, Math.PI / 2); c.stroke();
@@ -762,7 +765,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     lab(`n₁ = ${S.n1.toFixed(2)}${nm(S.n1)}`, R.x + g.pad, R.y + 16 * ls, { size: 11.5 });
     lab(`n_f = ${S.nf.toFixed(2)}${nm(S.nf)}`, R.x + g.pad, g.hf > 18 * ls ? (g.y1 + g.y2) / 2 : g.y1 - 11 * ls, { size: 11.5, color: T.ink });
     lab(`n₂ = ${S.n2.toFixed(2)}${nm(S.n2)}`, R.x + g.pad, R.y + R.h - 14 * ls, { size: 11.5 });
-    lab('film drawn far thicker than scale', R.x + g.pad, R.y + R.h - 32 * ls, { size: 10, font: 'ui', color: T.muted });
+    /* on a phone the extra path line sat one line above this note, on top of the "2: none" shift badge under the film; there the note
+       moves to the bottom right, beside n₂, and the extra path takes its line (student view, 2026-11-15) */
+    if (short) lab('film drawn far thicker than scale', R.x + R.w - g.pad, R.y + R.h - 14 * ls, { size: 10, font: 'ui', color: T.muted, align: 'right' });
+    else lab('film drawn far thicker than scale', R.x + g.pad, R.y + R.h - 32 * ls, { size: 10, font: 'ui', color: T.muted });
     // thickness dimension and its grip on the bottom surface
     const xd = R.x + R.w - g.pad - 6 * ls;
     c.strokeStyle = T.ink; c.fillStyle = T.ink; c.lineWidth = 1.2 * lw;
@@ -772,8 +778,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const P = 2 * S.nf * S.t * (g.tirTop ? 0 : Math.sqrt(Math.max(0, 1 - (S.n1 * Math.sin(S.th * DEG) / S.nf) ** 2)));
     if (g.tirTop) lab('Total internal reflection at the top surface: only an evanescent wave enters the film.', R.x + R.w - g.pad, R.y + R.h - 34 * ls, { align: 'right', size: 10.5, color: T.muted, font: 'ui' });
     else {
-      lab(`extra path 2n_f t cos θ_t = ${P.toFixed(0)} nm = ${(P / S.lam).toFixed(2)} λ₀`, R.x + R.w - g.pad, R.y + R.h - (short ? 52 : 36) * ls, { align: 'right', size: 11 });   /* a phone: a line above the film note */
-      if (g.tirBot) lab('total internal reflection at the bottom surface', R.x + R.w - g.pad, R.y + R.h - 16 * ls, { align: 'right', size: 10.5, color: T.muted, font: 'ui' });
+      lab(`extra path 2n_f t cos θ_t = ${P.toFixed(0)} nm = ${(P / S.lam).toFixed(2)} λ₀`, R.x + R.w - g.pad, R.y + R.h - (short ? 32 : 36) * ls, { align: 'right', size: 11 });
+      if (g.tirBot) lab('total internal reflection at the bottom surface', R.x + R.w - g.pad, R.y + R.h - (short ? 50 : 16) * ls, { align: 'right', size: 10.5, color: T.muted, font: 'ui' });
     }
     c.restore();
     // drag grips: bottom surface (thickness) and the start of the incoming ray (angle)
@@ -841,6 +847,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     lab(`1: top surface, amplitude ${A1.toFixed(3)}`, x0, rows[0] - rowH * 0.5 + 2, { color: T.pos, size: 10.5 });
     lab(f.tirTop ? '2: no ray (total internal reflection)' : `2: bottom surface, amplitude ${A2.toFixed(3)}`, x0, rows[1] - rowH * 0.5 + 2, { color: T.neg, size: 10.5 });
     lab(`1 + 2: amplitude ${Math.hypot(sr, si).toFixed(3)}, ${kind}`, x0, rows[2] - rowH + 4, { color: T.ink, size: 10.5, bold: true });
+    /* the waves cycle at 0.45 per second; say how much slower that is than light (student view, 2026-11-15) */
+    lab(`slow motion: one real cycle lasts ${(S.lam / 299.792458).toFixed(2)} fs`, x1, bot - 1 * ls, { align: 'right', size: 10, color: T.muted, font: 'ui' });
     if (mx <= 1e-9) lab('Equal indices: nothing reflects', (x0 + x1) / 2, rows[1], { align: 'center', color: T.muted, font: 'ui' });
     c.restore();
     flushLabels(c, ls);
