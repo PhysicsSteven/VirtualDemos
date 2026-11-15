@@ -16,8 +16,8 @@ VDI18N.add('es', 'demo/gas-heat-capacity', {
   "Capacidades caloríficas de los gases",
 "<a>The kinetic theory of gases</a>":
   "<a>La teoría cinética de los gases</a>",
-"<a><span>←</span> <span>Gas in a Box</span></a><a><span>Heat Engine Cycles</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Gas en una caja</span></a><a><span>Ciclos de máquinas térmicas</span> <span>→</span></a>",
+"<a><span>←</span> <span>Gas in a Box</span></a><a><span>Bose–Einstein Condensation</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Gas en una caja</span></a><a><span>Condensación de Bose–Einstein</span> <span>→</span></a>",
 "Heat a gas with its piston locked, then with it free to rise. The same heat warms it less when it can push the piston: some goes into work. Measure C<sub>V</sub>, C<sub>P</sub> and their ratio γ, and find γ again from a ball bouncing on a cushion of gas.":
   "Calienta un gas con su pistón bloqueado y luego con el pistón libre para subir. El mismo calor lo calienta menos cuando puede empujar el pistón: una parte se convierte en trabajo. Mide C<sub>V</sub>, C<sub>P</sub> y su razón γ, y encuentra γ otra vez con una esfera que rebota sobre un cojín de gas.",
 "T in °C · Q in J · V in L":
@@ -274,6 +274,8 @@ VDI18N.add('es', 'demo/gas-heat-capacity', {
   "Átomos solos y lisos, como el argón. Un choque empuja a lo largo de la línea que pasa por ambos centros, así que nunca puede poner a girar un átomo: toda la energía se queda en movimiento a través del espacio, {#}/{#} kT por átomo, y C_V = {#}/{#} R.",
 "Watch the molecules has no worksheet: read the temperatures from the readouts and the graph.":
   "Observar las moléculas no tiene hoja de trabajo: lee las temperaturas en las lecturas y en la gráfica.",
+"Close":
+  "Cerrar",
 "motion {#} K":
   "movimiento {#} K",
 "no spin":
@@ -288,44 +290,46 @@ VDI18N.add('es', 'demo/gas-heat-capacity', {
   "El último gas misterioso fue {gas}.",
 "The last mystery gas was carbon dioxide.":
   "El último gas misterioso fue dióxido de carbono.",
-"carbon monoxide":
-  "monóxido de carbono",
-"The last mystery gas was carbon monoxide.":
-  "El último gas misterioso fue monóxido de carbono.",
 "nitrogen":
   "nitrógeno",
 "The last mystery gas was nitrogen.":
   "El último gas misterioso fue nitrógeno.",
-"fluorine":
-  "flúor",
-"The last mystery gas was fluorine.":
-  "El último gas misterioso fue flúor.",
-"nitrous oxide":
-  "óxido nitroso",
-"The last mystery gas was nitrous oxide.":
-  "El último gas misterioso fue óxido nitroso.",
-"helium":
-  "helio",
-"The last mystery gas was helium.":
-  "El último gas misterioso fue helio.",
-"neon":
-  "neón",
-"The last mystery gas was neon.":
-  "El último gas misterioso fue neón.",
-"oxygen":
-  "oxígeno",
-"The last mystery gas was oxygen.":
-  "El último gas misterioso fue oxígeno.",
-"argon":
-  "argón",
-"The last mystery gas was argon.":
-  "El último gas misterioso fue argón.",
+"hydrogen":
+  "hidrógeno",
+"The last mystery gas was hydrogen.":
+  "El último gas misterioso fue hidrógeno.",
 "hydrogen sulfide":
   "sulfuro de hidrógeno",
 "The last mystery gas was hydrogen sulfide.":
   "El último gas misterioso fue sulfuro de hidrógeno.",
-"hydrogen":
-  "hidrógeno",
-"The last mystery gas was hydrogen.":
-  "El último gas misterioso fue hidrógeno."
+"argon":
+  "argón",
+"The last mystery gas was argon.":
+  "El último gas misterioso fue argón.",
+"carbon monoxide":
+  "monóxido de carbono",
+"The last mystery gas was carbon monoxide.":
+  "El último gas misterioso fue monóxido de carbono.",
+"fluorine":
+  "flúor",
+"The last mystery gas was fluorine.":
+  "El último gas misterioso fue flúor.",
+"helium":
+  "helio",
+"The last mystery gas was helium.":
+  "El último gas misterioso fue helio.",
+"oxygen":
+  "oxígeno",
+"The last mystery gas was oxygen.":
+  "El último gas misterioso fue oxígeno.",
+"nitrous oxide":
+  "óxido nitroso",
+"The last mystery gas was nitrous oxide.":
+  "El último gas misterioso fue óxido nitroso.",
+"neon":
+  "neón",
+"The last mystery gas was neon.":
+  "El último gas misterioso fue neón.",
+"<a><span>←</span> <span>Gas in a Box</span></a><a><span>Heat Engine Cycles</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Gas en una caja</span></a><a><span>Ciclos de máquinas térmicas</span> <span>→</span></a>"
 });

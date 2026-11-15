@@ -2858,7 +2858,8 @@ void main() {
         labels.push([`h = ${fcm(h)}`, hs2[0] + 14 * ps, hs2[1] - 10 * ps, { size: fs, color: T.ink }]);
         labels.push([`cap radius a = ${fcm(a)}`, as[0], as[1] + fs + 16 * ps, { size: fs, align: 'center', color: T.ink }]);
         labels.push(['side: E runs along it, no flux', as[0], as[1] + 2 * fs + 24 * ps, { size: fsz(11), weight: 400, align: 'center', color: T.muted }]);
-        const ss = P2([0, 0, 11.5]); labels.push([`σ = ${minus(String(Ysym.sig))} nC/m²`, ss[0] + 10 * ps, ss[1], { size: fs, color: qcol }]);
+        /* the sheet's top edge projects near the stage top in the short 3D panel: keep σ below the "Drag to turn" hint, not under it or clipped (student view, 2026-11-15) */
+        const ss = P2([0, 0, 11.5]); labels.push([`σ = ${minus(String(Ysym.sig))} nC/m²`, ss[0] + 10 * ps, Math.max(ss[1], fsz(11) + 12 + fs + 10 * ps), { size: fs, color: qcol }]);
       }
       for (const h of hs) h.draw(hotId(h.id));
       labels.push([`E = ${fmtSI(Math.abs(E), 'N/C', 3)} ${E > 0 ? 'outward' : E < 0 ? 'inward' : ''} on the Gaussian surface`, 12, H - 12, { size: fsz(12), color: E >= 0 ? T.fout : T.fin }]);

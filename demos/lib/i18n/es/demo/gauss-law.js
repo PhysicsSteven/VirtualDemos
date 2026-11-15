@@ -238,10 +238,14 @@ VDI18N.add('es', 'demo/gauss-law', {
   "<i></i><span>−{#} nC</span><span>—</span><span>en ({#}, {#}) cm, adentro, q/ε₀ = −{#}</span>",
 "Box {#} × {#} × {#} cm":
   "Caja de {#} × {#} × {#} cm",
+"{#}×{#}⁻¹⁴ N·m²/C <span>≈ {#}</span><span>differs from Q<sub>enc</sub>/ε₀ by {#}×{#}⁻¹⁴ N·m²/C</span>":
+  "{#}×{#}⁻¹⁴ N·m²/C <span>≈ {#}</span><span>difiere de Q<sub>enc</sub>/ε₀ en {#}×{#}⁻¹⁴ N·m²/C</span>",
+"<i></i><span>+{#} nC</span><span>{#}</span><span>at (−{#}, −{#}) cm, inside, q/ε₀ = {#}</span>":
+  "<i></i><span>+{#} nC</span><span>{#}</span><span>en (−{#}, −{#}) cm, adentro, q/ε₀ = {#}</span>",
+"<i></i><span>−{#} nC</span><span>−{#}</span><span>at ({#}, {#}) cm, inside, q/ε₀ = −{#}</span>":
+  "<i></i><span>−{#} nC</span><span>−{#}</span><span>en ({#}, {#}) cm, adentro, q/ε₀ = −{#}</span>",
 "A uniformly charged insulating ball. Inside, the Gaussian sphere encloses only the fraction (r/R)³ of the charge, so E grows in proportion to r. Outside, E = kQ/r², as if all the charge sat at the center.":
   "Una esfera aislante con carga uniforme. Adentro, la esfera gaussiana encierra solo la fracción (r/R)³ de la carga, así que E crece en proporción a r. Afuera, E = kQ/r², como si toda la carga estuviera en el centro.",
-"<i></i><span>+{#} nC</span><span>—</span><span>at (−{#}, −{#}) cm, inside, q/ε₀ = {#}</span>":
-  "<i></i><span>+{#} nC</span><span>—</span><span>en (−{#}, −{#}) cm, dentro, q/ε₀ = {#}</span>",
 "none selected":
   "ninguna seleccionada",
 "An infinite line of charge. All the flux leaves through the curved side of the cylinder; the field runs along the end caps. The length L cancels, so E = λ/({#}πε₀r) falls off as {#}/r.":
@@ -288,14 +292,16 @@ VDI18N.add('es', 'demo/gauss-law', {
   "costado: E corre a lo largo de él, sin flujo",
 "(kN/C) against x (cm), x measured from the sheet":
   "(kN/C) en función de x (cm), x medida desde la lámina",
-"Plot of E_x against x, measured from the sheet, for an infinite plane of charge, σ = {#} nC/m². The Gaussian surface is at h = {#} cm, where E = {#} kN/C. Drag the marker or use the left and right arrow keys to move the Gaussian surface. Show data table in the rail lists the plotted values.":
-  "Gráfica de E_x en función de x, medida desde la lámina, para un plano de carga infinito, σ = {#} nC/m². La superficie gaussiana está en h = {#} cm, donde E = {#} kN/C. Arrastra el marcador o usa las flechas izquierda y derecha para mover la superficie gaussiana. Mostrar la tabla de datos, en el panel, lista los valores graficados.",
 "A cylinder lying in the slice with its axis along x: the rectangle you see is its cross section. Drag its edges to change the length and the diameter.":
   "Un cilindro acostado en el corte con su eje a lo largo de x: el rectángulo que ves es su corte transversal. Arrastra sus bordes para cambiar la longitud y el diámetro.",
 "Any closed shape: the curve you see, extended ± half the depth above and below the slice, with flat top and bottom faces. Drag the control points, double click the curve to add one, select one and press Delete to remove it, or draw a new surface.":
   "Cualquier forma cerrada: la curva que ves, extendida ± la mitad de la profundidad arriba y abajo del corte, con caras superior e inferior planas. Arrastra los puntos de control, haz doble clic en la curva para agregar uno, selecciona uno y pulsa Supr para quitarlo, o dibuja una superficie nueva.",
 "Your own setup. Pick a setup to return to a known one.":
   "Tu propia configuración. Elige una configuración para volver a una conocida.",
+"Plot of E_x against x, measured from the sheet, for an infinite plane of charge, σ = {#} nC/m². The Gaussian surface is at h = {#} cm, where E = {#} kN/C. Drag the marker or use the left and right arrow keys to move the Gaussian surface. Show data table in the rail lists the plotted values.":
+  "Gráfica de E_x en función de x, medida desde la lámina, para un plano de carga infinito, σ = {#} nC/m². La superficie gaussiana está en h = {#} cm, donde E = {#} kN/C. Arrastra el marcador o usa las flechas izquierda y derecha para mover la superficie gaussiana. Mostrar la tabla de datos, en el panel, lista los valores graficados.",
+"Close":
+  "Cerrar",
 "Note":
   "Nota",
 "just left of the sheet":
@@ -314,14 +320,8 @@ VDI18N.add('es', 'demo/gauss-law', {
   "forma libre",
 "Numerical ∮E·dA over the 3D prism":
   "∮E·dA numérica sobre el prisma 3D",
-"{#} N·m²/C<span>differs from Q<sub>enc</sub>/ε₀ by {#}×{#}⁻¹³ N·m²/C, a fraction {#}×{#}⁻¹⁵</span>":
-  "{#} N·m²/C<span>difiere de Q<sub>enc</sub>/ε₀ en {#}×{#}⁻¹³ N·m²/C, una fracción {#}×{#}⁻¹⁵</span>",
 "The surface integral is evaluated with adaptive Gauss–Kronrod quadrature ({#} field evaluations, {#} ms) using the full 3D field of every charge, with no use of Gauss's law. Each flat side panel and the triangulated top and bottom faces are integrated separately, and it refines wherever E·n changes fast, near a charge close to the surface. Every one dimensional integral met its error target.":
   "La integral de superficie se evalúa con cuadratura adaptativa de Gauss–Kronrod ({#} evaluaciones del campo, {#} ms) usando el campo 3D completo de cada carga, sin usar la ley de Gauss. Cada panel lateral plano y las caras superior e inferior trianguladas se integran por separado, y se refina donde E·n cambia rápido, cerca de una carga próxima a la superficie. Cada integral unidimensional alcanzó su objetivo de error.",
-"<i></i><span>+{#} nC</span><span>{#}</span><span>at (−{#}, −{#}) cm, inside, q/ε₀ = {#}</span>":
-  "<i></i><span>+{#} nC</span><span>{#}</span><span>en (−{#}, −{#}) cm, adentro, q/ε₀ = {#}</span>",
-"<i></i><span>−{#} nC</span><span>−{#}</span><span>at ({#}, {#}) cm, inside, q/ε₀ = −{#}</span>":
-  "<i></i><span>−{#} nC</span><span>−{#}</span><span>en ({#}, {#}) cm, adentro, q/ε₀ = −{#}</span>",
 "<i></i><span>+{#} nC</span><span>{#}</span><span>at ({#}, −{#}) cm, inside, q/ε₀ = {#}</span>":
   "<i></i><span>+{#} nC</span><span>{#}</span><span>en ({#}, −{#}) cm, adentro, q/ε₀ = {#}</span>",
 "Prism, depth {#} cm":
@@ -332,12 +332,18 @@ VDI18N.add('es', 'demo/gauss-law', {
   "Arrastra para girar",
 "{#} N·m²/C<span>differs from Q<sub>enc</sub>/ε₀ by {#} N·m²/C, a fraction {#}</span>":
   "{#} N·m²/C<span>difiere de Q<sub>enc</sub>/ε₀ en {#} N·m²/C, una fracción de {#}</span>",
-"{#}×{#}⁻¹⁴ N·m²/C <span>≈ {#}</span><span>differs from Q<sub>enc</sub>/ε₀ by {#}×{#}⁻¹⁴ N·m²/C</span>":
-  "{#}×{#}⁻¹⁴ N·m²/C <span>≈ {#}</span><span>difiere de Q<sub>enc</sub>/ε₀ en {#}×{#}⁻¹⁴ N·m²/C</span>",
 "−{#}×{#}⁻¹⁵ N·m²/C <span>≈ {#}</span><span>differs from Q<sub>enc</sub>/ε₀ by {#}×{#}⁻¹⁵ N·m²/C</span>":
   "−{#}×{#}⁻¹⁵ N·m²/C <span>≈ {#}</span><span>difiere de Q<sub>enc</sub>/ε₀ en {#}×{#}⁻¹⁵ N·m²/C</span>",
+"−{#}×{#}⁻¹⁴ N·m²/C <span>≈ {#}</span><span>differs from Q<sub>enc</sub>/ε₀ by {#}×{#}⁻¹⁴ N·m²/C</span>":
+  "−{#}×{#}⁻¹⁴ N·m²/C <span>≈ {#}</span><span>difiere de Q<sub>enc</sub>/ε₀ en {#}×{#}⁻¹⁴ N·m²/C</span>",
 "{#} values of E_r for a uniformly charged insulating ball with Q = {#} nC and radius R = {#} cm, at even steps across the plot plus the Gaussian surface and R. Positive E_r points outward.":
   "{#} valores de E_r para una esfera aislante con carga uniforme Q = {#} nC y radio R = {#} cm, a pasos iguales a lo largo de la gráfica más la superficie gaussiana y R. E_r positivo apunta hacia afuera.",
+"{#}×{#}⁻¹⁴ N·m²/C <span>≈ {#}</span><span>differs from Q<sub>enc</sub>/ε₀ by {#} N·m²/C, a fraction {#}</span>":
+  "{#}×{#}⁻¹⁴ N·m²/C <span>≈ {#}</span><span>difiere de Q<sub>enc</sub>/ε₀ en {#} N·m²/C, una fracción de {#}</span>",
+"<i></i><span>+{#} nC</span><span>—</span><span>at (−{#}, −{#}) cm, inside, q/ε₀ = {#}</span>":
+  "<i></i><span>+{#} nC</span><span>—</span><span>en (−{#}, −{#}) cm, dentro, q/ε₀ = {#}</span>",
+"{#} N·m²/C<span>differs from Q<sub>enc</sub>/ε₀ by {#}×{#}⁻¹³ N·m²/C, a fraction {#}×{#}⁻¹⁵</span>":
+  "{#} N·m²/C<span>difiere de Q<sub>enc</sub>/ε₀ en {#}×{#}⁻¹³ N·m²/C, una fracción {#}×{#}⁻¹⁵</span>",
 "{#}×{#}⁻¹⁵ N·m²/C <span>≈ {#}</span><span>differs from Q<sub>enc</sub>/ε₀ by {#} N·m²/C, a fraction {#}</span>":
   "{#}×{#}⁻¹⁵ N·m²/C <span>≈ {#}</span><span>difiere de Q<sub>enc</sub>/ε₀ en {#} N·m²/C, una fracción {#}</span>",
 "{#} N·m²/C <span>≈ {#}</span><span>agrees with Q<sub>enc</sub>/ε₀ to every digit of double precision</span>":

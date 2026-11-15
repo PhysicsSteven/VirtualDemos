@@ -601,10 +601,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       /* the column */
       const Qcut = heatState(gasKey(), h.n, h.mode, 0).C * (T_CUTOUT - T0C), sp = split(gasKey(), h.n, h.mode, s.T - T0C), tot = Math.max(1e-12, sp.trans + sp.rot + sp.vib + sp.work);
       const col = { trans: T.trans, rot: T.rot, vib: T.vib, work: T.work }, name = { trans: 'motion through space', rot: 'rotation', vib: 'vibration', work: 'work on the piston' };
-      let z = 0; const full = 0.42 * h.Q / Qcut;
+      /* labels sit at their slice's middle but never closer than one label height to the one below (the lowest at least 2 cm up, clear of the stage edge), so the shares stay readable while the column is short (student view, 2026-11-15) */
+      let z = 0, lz = -0.008; const full = 0.42 * h.Q / Qcut;
       g.seg.forEach((q) => {
         const share = sp[q.k] / tot, hh = full * share; q.m.visible = hh > 1e-5 && !S.blind; q.m.scale.z = Math.max(1e-5, hh); q.m.position.z = z; q.m.material.color.set(col[q.k]);
-        q.lab.visible = q.m.visible && share > 0.001; if (q.lab.visible) { q.lab.set(`${name[q.k]}: ${f(100 * share, 1)}%`); q.lab.position.set(0.045 + q.lab.scale.x / 2, -0.03, z + hh / 2); }
+        q.lab.visible = q.m.visible && share > 0.001; if (q.lab.visible) { q.lab.set(`${name[q.k]}: ${f(100 * share, 1)}%`); lz = Math.max(z + hh / 2, lz + 0.028); q.lab.position.set(0.045 + q.lab.scale.x / 2, -0.03, lz); }
         z += hh;
       });
       g.colTitle.visible = !S.blind; g.colTitle.position.set(0, -0.03, 0.45); g.glass.visible = !S.blind;

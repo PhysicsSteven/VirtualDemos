@@ -379,7 +379,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const top = S.mode === 'orbit' ? Q(r * Math.cos(th), r * Math.sin(th), 0.08 * Math.max(r, 1.6)) : Q((1 + Math.max(r - 1, 0.06)) * Math.cos(gth), (1 + Math.max(r - 1, 0.06)) * Math.sin(gth), 0.04);
       lab(top, 'second clock', '#f6f3ee');
       ctx.fillStyle = '#f6f3ee'; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; halo('drag to turn, wheel to zoom', pw / 2, h3 - 20 * p); ctx.fillText('drag to turn, wheel to zoom', pw / 2, h3 - 20 * p);
-      ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.86; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(10 * p, 46 * p, Math.min(pw - 20 * p, 360 * p), 54 * p, 8 * p) : ctx.rect(10 * p, 46 * p, Math.min(pw - 20 * p, 360 * p), 54 * p); ctx.fill(); ctx.globalAlpha = 1;
+      ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.86; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(10 * p, 46 * p, Math.min(pw - 20 * p, 360 * p), 72 * p, 8 * p) : ctx.rect(10 * p, 46 * p, Math.min(pw - 20 * p, 360 * p), 72 * p); ctx.fill(); ctx.globalAlpha = 1;
     } else {
     stars(0, 0, pw, wide ? Hh : ph);
     earth(cx, cy, RE * sc, gth);   // Earth turns with the ground clock, and stands still when the ground clock does
@@ -396,6 +396,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.fillStyle = T.ink; ctx.font = `700 ${13 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
     ctx.fillText(`ground clock:  ${f(S.t / 3600, 3)} h`, 40 * p, 54 * p);
     ctx.fillText(`second clock:  ${f(S.t / 3600, 3)} h ${K.total >= 0 ? '+' : '−'} ${us(Math.abs(K.total * S.t) * 1e6)}`, 40 * p, 78 * p);
+    /* the time scale on screen, not only in More about this: the clocks run one simulated hour per real second (student view, 2026-11-15) */
+    ctx.fillStyle = T.muted; ctx.font = `${11 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.fillText('time scale: 1 s = 1 h', 40 * p, 101 * p);
     // graph: gain per day against r
     const gx0 = wide ? pw + 50 * p : 60 * p, gw = wide ? W - gx0 - 20 * p : W - 80 * p, gy0 = wide ? 110 * p : ph + 30 * p, gh = wide ? Hh - gy0 - 60 * p : Hh - gy0 - 40 * p;
     const rLo = RE, rHi = RMAX, X = (r) => gx0 + gw * (r - rLo) / (rHi - rLo);
