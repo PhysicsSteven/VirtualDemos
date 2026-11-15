@@ -6,10 +6,6 @@ VDI18N.add('es', 'demo/condensate-waves', {
   "Buscando el estado base del condensado: {#} %",
 "Condensates: Interference and Vortices":
   "Condensados: interferencia y vórtices",
-"<a>Photons and matter waves</a>":
-  "<a>Fotones y ondas de materia</a>",
-"<a><span>←</span> <span>Double Slit, One Particle at a Time</span></a><a><span>e/m of the Electron</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Doble rendija, una partícula a la vez</span></a><a><span>e/m del electrón</span> <span>→</span></a>",
 "A Bose–Einstein condensate is one wave shared by thousands of atoms, so it does what waves do. Release two condensates and they overlap in stripes, like light through two slits. Stir one and it cannot simply turn: it fills with tiny whirlpools, each carrying exactly one quantum of circulation. Every frame here is a solution of the Gross–Pitaevskii equation for rubidium atoms in a flat trap.":
   "Un condensado de Bose–Einstein es una sola onda compartida por miles de átomos, así que hace lo que hacen las ondas. Suelta dos condensados y se traslapan en franjas, como la luz a través de dos rendijas. Agita uno y no puede simplemente girar: se llena de diminutos remolinos, cada uno con exactamente un cuanto de circulación. Cada cuadro aquí es una solución de la ecuación de Gross–Pitaevskii para átomos de rubidio en una trampa plana.",
 "Time controls":
@@ -86,6 +82,10 @@ VDI18N.add('es', 'demo/condensate-waves', {
   "Aproximaciones: temperatura cero (sin nube térmica) y dos dimensiones. En la configuración de agitación, un amortiguamiento γ, (i − γ)ħ ∂ψ/∂t = Hψ, hace las veces de la nube térmica; sin él la energía se conserva y los vórtices que entran siguen moviéndose y nunca se asientan en una red. El amortiguamiento usado, γ = {#}, es unas cuantas veces mayor que en las nubes reales, lo que hace que la red se forme antes. En vuelo libre, los átomos que llegan al borde de la imagen se eliminan para que nada dé la vuelta por la malla. El espaciamiento de franjas ht/(md) es la fórmula de campo lejano para dos nubes a una distancia d que no interactúan; con la repulsión apagada, las franjas medidas coinciden con ella con una diferencia de pocos por ciento después de unos {#} ms. La repulsión convierte la energía de interacción de las nubes en flujo hacia afuera, que estira la fase de cada nube y ensancha las franjas por un factor casi constante (alrededor de {#} para los {#} átomos de esta configuración; las lecturas muestran ambos).",
 "Sources: rubidium {#} mass from AME2020; the scattering length of the |F = {#}, m_F = {#}⟩ state, {#} a₀, from van Kempen et al., Phys. Rev. Lett. {#}, {#} ({#}); h and the atomic mass unit from CODATA {#}. The experiments: interference of two condensates, Andrews et al., Science {#}, {#} ({#}); vortex lattices in stirred condensates, Madison et al., Phys. Rev. Lett. {#}, {#} ({#}) and Abo-Shaeer et al., Science {#}, {#} ({#}); breathing at exactly {#}ω in two dimensions, Pitaevskii and Rosch, Phys. Rev. A {#}, R853 ({#}); damped Gross–Pitaevskii stirring, Tsubota, Kasamatsu and Ueda, Phys. Rev. A {#}, {#} ({#}).":
   "Fuentes: masa del rubidio {#} de AME2020; la longitud de dispersión del estado |F = {#}, m_F = {#}⟩, {#} a₀, de van Kempen et al., Phys. Rev. Lett. {#}, {#} ({#}); h y la unidad de masa atómica de CODATA {#}. Los experimentos: interferencia de dos condensados, Andrews et al., Science {#}, {#} ({#}); redes de vórtices en condensados agitados, Madison et al., Phys. Rev. Lett. {#}, {#} ({#}) y Abo-Shaeer et al., Science {#}, {#} ({#}); respiración exactamente a {#}ω en dos dimensiones, Pitaevskii y Rosch, Phys. Rev. A {#}, R853 ({#}); agitación de Gross–Pitaevskii amortiguada, Tsubota, Kasamatsu y Ueda, Phys. Rev. A {#}, {#} ({#}).",
+"<a>Photons and matter waves</a>":
+  "<a>Fotones y ondas de materia</a>",
+"<a><span>←</span> <span>Double Slit, One Particle at a Time</span></a><a><span>e/m of the Electron</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Doble rendija, una partícula a la vez</span></a><a><span>e/m del electrón</span> <span>→</span></a>",
 "Two condensates held apart by a broad barrier in the middle of the trap. Press Play: the barrier is removed and the two halves slide down into the middle of the trap and run through each other. Where they overlap they interfere: fine stripes whose spacing is h divided by the momentum of one cloud relative to the other, closest together when they meet fastest at the center. The repulsion between the atoms bends the stripes into dark grooves that outlive the crossing.":
   "Dos condensados separados por una barrera ancha en medio de la trampa. Pulsa Iniciar: se retira la barrera y las dos mitades se deslizan hacia el centro de la trampa y se atraviesan una a otra. Donde se traslapan interfieren: franjas finas cuyo espaciamiento es h dividido entre el momento de una nube relativo a la otra, más juntas cuando se encuentran con la mayor rapidez en el centro. La repulsión entre los átomos curva las franjas en surcos oscuros que sobreviven al cruce.",
 "Set a stirring rate to turn the trap.":
@@ -103,5 +103,9 @@ VDI18N.add('es', 'demo/condensate-waves', {
 "A condensate that settled in a trap centered {#} µm to the right, and the trap is moved back to the middle. Press Play: the whole cloud swings back and forth through the center without changing shape, at exactly the trap frequency ω (Kohn's theorem: in a harmonic trap the center of mass does not feel the interactions at all). Experimenters use this sloshing to measure their trap frequency.":
   "Un condensado que se asentó en una trampa centrada {#} µm a la derecha, y la trampa se regresa al centro. Pulsa Iniciar: toda la nube oscila de un lado a otro por el centro sin cambiar de forma, exactamente a la frecuencia de la trampa ω (teorema de Kohn: en una trampa armónica el centro de masa no siente las interacciones en absoluto). Los experimentadores usan este vaivén para medir la frecuencia de su trampa.",
 "Close":
-  "Cerrar"
+  "Cerrar",
+"; 1 s here = {r} ms":
+  "; 1 s aquí = {r} ms",
+"; slow motion: 1 s here = {r} ms of real time":
+  "; cámara lenta: 1 s aquí = {r} ms de tiempo real"
 });

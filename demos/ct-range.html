@@ -683,9 +683,15 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     else if (S.view === 'curve') { const q = wetState(); { const [x, y] = Q(g.T0 - 0.03, 0, g.BZ + 0.11); tag(ctx, S.tis === 'mystery' ? `mystery tissue, ${f(q.t, 1)} cm` : `${mat(q.k).name.replace(/ \(.*\)/, '')}, ${f(q.t, 1)} cm`, x, y, { a: 'center', maxX: fw }); }
       { const [x, y] = Q(g.T0 + 0.12, 0, g.BZ + 0.14); tag(ctx, 'water tank', x, y, { a: 'center', maxX: fw }); }
       if (q.w) { const [x, y] = Q(g.T0 + (q.R0 - q.w.mm / 10) * 0.01, 0, g.BZ - 0.05); tag(ctx, `peak ${f(q.R0 - q.w.mm / 10, 2)} cm (no slab ${f(q.R0, 2)})`, x, y + 14 * p, { a: 'center', maxX: fw }); } }
-    else { const P = S.P, x0 = -SITES[S.site].half * 0.01, zc = g.tgt.position.z; { const [x, y] = Q(g.tgt.position.x, 0, zc + 0.06); tag(ctx, 'target', x, y, { a: 'center', maxX: fw }); }
+    else { const P = S.P, x0 = -SITES[S.site].half * 0.01, zc = g.tgt.position.z;
+      /* the target's tag and the real R90 tag both sit above the strip and overlapped when the target is short or the view far
+         (the phone picture); when they would touch, the target's tag moves up a line (student view, 2026-11-15) */
+      const [tx, ty] = Q(g.tgt.position.x, 0, zc + 0.06), [rx, ry] = Q(x0 + P.zTrue * 0.01, 0, zc + 0.06);
+      ctx.font = `600 ${10.5 * p}px ${T.ui}`; const half = (ctx.measureText('target').width + ctx.measureText('real R90').width) / 2 + 10 * p;
+      const lift = g.eTrue.visible && Math.abs(tx - rx) < half && Math.abs(ty - (ry - 6 * p)) < 18 * p ? Math.max(0, ty - (ry - 6 * p - 18 * p)) : 0;
+      tag(ctx, 'target', tx, ty - lift, { a: 'center', maxX: fw });
       { const [x, y] = Q(x0 + P.zPlan * 0.01, 0, zc - 0.06); tag(ctx, 'planned R90', x, y + 6 * p, { a: 'center', c: T.plan, maxX: fw }); }
-      if (g.eTrue.visible) { const [x, y] = Q(x0 + P.zTrue * 0.01, 0, zc + 0.06); tag(ctx, 'real R90', x, y - 6 * p, { a: 'center', c: T.beam, maxX: fw }); } }
+      if (g.eTrue.visible) tag(ctx, 'real R90', rx, ry - 6 * p, { a: 'center', c: T.beam, maxX: fw }); }
     ctx.textAlign = 'left'; ctx.textBaseline = 'top';
     const lines = [S.view === 'scan' ? `CT scan at ${S.kv} kV` : S.view === 'curve' ? `${T_WET} MeV beam, water tank` : SITES[S.site].name,
       S.view === 'range' ? 'To scale along the beam; the layers are a strip on the beam\'s path.' : 'Roughly to scale; the beam drawn as a line.', fw < 520 ? 'Drag to turn.' : 'Drag to turn the view.'];

@@ -321,7 +321,7 @@
   const S = { preset: 'split', N: 2000, inter: true, W: 0, eps: 0, gam: 0, color: 'phase', run: false, speed: 1, t: 0, vort: true, trace: true, blind: false, msg: '' };
   const can = $('can'), ctx = can.getContext('2d');
   let W = 0, H = 0, dpr = 1, T = null, view3 = null, g3 = null;
-  let gr = null, V = null, G = 0, dt = 0.004, psi0 = null, mu0 = 0, peak0 = 1, prep = null, vorts = [], traceData = [], sep0 = 0, fringe = NaN, perSteps = 1, acc = 0, stepMs = 3, drawn = 0, frameNo = 0, onGrid = 1, en = null, mom = null;
+  let gr = null, V = null, G = 0, dt = 0.004, psi0 = null, mu0 = 0, peak0 = 1, prep = null, rate = NaN, rateT0 = null, rateS0 = 0, vorts = [], traceData = [], sep0 = 0, fringe = NaN, perSteps = 1, acc = 0, stepMs = 3, drawn = 0, frameNo = 0, onGrid = 1, en = null, mom = null;
   const f = (v, d = 3) => (!isFinite(v) ? '—' : v.toFixed(d).replace('-', '−'));
   const proj = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
   const um = (x) => `${f(x * AP * 1e6, x * AP * 1e6 < 10 ? 2 : 1)} µm`, ms = (t) => `${f(t * TU * 1000, 1)} ms`;
@@ -347,7 +347,7 @@
     const pn = (c.prep.n || c.n), pg = makeGrid(pn, c.half * pn / c.n), PV = potential(pg, c.prep.P);
     seed(pg, G, c.prep.P.x0 || 0, 0);
     prep = { pg, PV, done: 0, total: c.prep.imprint ? 500 : 400, imprint: c.prep.imprint };
-    S.t = 0; traceData = []; vorts = []; fringe = NaN; setRun(false); S.msg = 'Finding the condensate’s ground state…'; note();
+    S.t = 0; rate = NaN; traceData = []; vorts = []; fringe = NaN; setRun(false); S.msg = 'Finding the condensate’s ground state…'; note();
   }
   function prepWork(budget) {
     const t0 = performance.now(), p = prep;
@@ -445,6 +445,13 @@
     const narrow = W < 640; ctx.font = `${10.5 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillStyle = T.muted;
     const v = S.vort && vorts.length ? (narrow ? '; rings: vortices' : '; rings: vortices (orange counterclockwise, teal clockwise)') : '';
     ctx.fillText((S.color === 'density' ? (narrow ? 'brighter: more atoms' : cfg().run.off ? 'brighter: more atoms per area (scaled to the densest point)' : 'brighter: more atoms per area') : (narrow ? 'hue: phase' : 'hue: phase of the wavefunction; dim where there are no atoms')) + v, x, y);
+    /* the clock and the measured pace on the stage: the solver runs as fast as the computer allows, so the slow motion factor is
+       measured over the last second rather than fixed; a student sees that one second here is a fraction of a millisecond
+       (student view, 2026-11-15) */
+    const r = S.run && !prep && isFinite(rate) && rate > 0 ? rate * TU * 1000 : NaN, rs = r < 1 ? f(r, 2) : f(r, 1);
+    const i18 = typeof VDI18N === 'object', pace = !isFinite(r) ? '' : narrow ? (i18 ? VDI18N.t('; 1 s here = {r} ms', { r: rs }) : `; 1 s here = ${rs} ms`)
+      : (i18 ? VDI18N.t('; slow motion: 1 s here = {r} ms of real time', { r: rs }) : `; slow motion: 1 s here = ${rs} ms of real time`);
+    ctx.fillText(`t = ${ms(S.t)}` + pace, x, y + 15 * p);
   }
 
   /* ---------- the graph against time ---------- */
@@ -551,9 +558,11 @@
 
   /* ---------- controls ---------- */
   for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
-  $('play').addEventListener('click', () => { if (prep) return; setRun(!S.run); redraw(); });
+  /* Play while the ground state is still being found used to do nothing; now it is remembered and the run starts as soon as the
+     condensate is ready (student view, 2026-11-15) */
+  $('play').addEventListener('click', () => { setRun(!S.run); redraw(); });
   $('reset').addEventListener('click', () => { restart(); });
-  $('speed').addEventListener('click', (e) => { const b = e.target.closest('[data-sp]'); if (!b) return; S.speed = +b.dataset.sp; sync(); });
+  $('speed').addEventListener('click', (e) => { const b = e.target.closest('[data-sp]'); if (!b) return; S.speed = +b.dataset.sp; rate = NaN; rateT0 = null; sync(); });
   $('colorSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-color]'); if (!b) return; S.color = b.dataset.color; sync(); redraw(); });
   $('sN').addEventListener('input', (e) => { $('oN').textContent = (+e.target.value).toLocaleString('en-US'); });
   $('sN').addEventListener('change', (e) => { S.N = +e.target.value; sync(); prepare(); });
@@ -574,8 +583,9 @@
     else if (S.run && gr) {
       const budget = 9 * S.speed; acc += S.speed < 1 ? S.speed : 1; const t0 = performance.now();
       if (acc >= 1) { acc -= 1; let k = 0; do { const h = dtNow(); step(gr, V, G, h, mode(), S.gam, cfg().run.off ? 0 : S.W); S.t += h; k++; } while (performance.now() - t0 < (S.speed < 1 ? 3 : budget) && k < (S.speed < 1 ? 1 : 400)); }
+      if (rateT0 === null || S.t < rateS0) { rateT0 = now; rateS0 = S.t; } else if (now - rateT0 > 1000) { rate = (S.t - rateS0) / ((now - rateT0) / 1000); rateT0 = now; rateS0 = S.t; }
       measure(false); draw(); if (now - lastRead > 250) { lastRead = now; readouts(); }
-    } else if (use3()) draw();
+    } else { rateT0 = null; if (use3()) draw(); }
     requestAnimationFrame(frame);
   }
   function resize() { dpr = window.devicePixelRatio || 1; const r = $('pane').getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); redraw(); }
