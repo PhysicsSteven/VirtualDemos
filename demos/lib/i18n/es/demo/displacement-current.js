@@ -14,6 +14,10 @@ VDI18N.add('es', 'demo/displacement-current', {
   "tenue: en el hueco, para comparar",
 "Displacement Current":
   "Corriente de desplazamiento",
+"<a>Sources of magnetic fields</a>":
+  "<a>Fuentes de campos magnéticos</a>",
+"<a><span>←</span> <span>Force on a Current</span></a><a><span>Magnetism in Matter</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Fuerza sobre una corriente</span></a><a><span>Magnetismo en la materia</span> <span>→</span></a>",
 "A capacitor charges through a wire. No charge crosses the gap, yet there is a magnetic field around it. Ampère's law only works if the changing electric field between the plates counts as a current.":
   "Un capacitor se carga a través de un cable. Ninguna carga cruza el hueco, y aun así hay un campo magnético a su alrededor. La ley de Ampère solo funciona si el campo eléctrico variable entre las placas cuenta como una corriente.",
 "plates {#} cm radius, {#} mm apart · C = {#} pF":
@@ -24,6 +28,8 @@ VDI18N.add('es', 'demo/displacement-current', {
   "Controles de tiempo",
 "t = {#} µs · τ = RC = {#} µs":
   "t = {#} µs · τ = RC = {#} µs",
+"<span>slow motion: {#} s = {#} µs</span>":
+  "<span>cámara lenta: {#} s = {#} µs</span>",
 "Divider between the capacitor and the graph":
   "Divisor entre el capacitor y la gráfica",
 "Loop around the wire":
@@ -86,10 +92,6 @@ VDI18N.add('es', 'demo/displacement-current', {
   "El capacitor se carga como q = CV({#} − e<sup>−t/RC</sup>), así que la corriente I = (V/R)e<sup>−t/RC</sup> se extingue. El tiempo corre unas {#}⁵ veces más lento que en la realidad. Placas ideales: el campo entre ellas es uniforme y se ignora el efecto de borde; el cable es largo y recto, de {#} mm de radio. El campo en la espira es el valor instantáneo (cuasiestático) de Ampère–Maxwell: se dejan fuera el retardo y la radiación, una corrección del orden de (tamaño/λ)² ≈ {#}⁻¹⁰ para un aparato de {#} cm y una constante de tiempo de {#} µs.",
 "Blind hides B, the displacement current, the enclosed currents and the B(r) curve, leaving the circuit current, the field between the plates and the loop's size and place.":
   "A ciegas oculta B, la corriente de desplazamiento, las corrientes encerradas y la curva B(r), y deja la corriente del circuito, el campo entre las placas y el tamaño y la posición de la espira.",
-"<a>Sources of magnetic fields</a>":
-  "<a>Fuentes de campos magnéticos</a>",
-"<a><span>←</span> <span>Force on a Current</span></a><a><span>Magnetism in Matter</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Fuerza sobre una corriente</span></a><a><span>Magnetismo en la materia</span> <span>→</span></a>",
 "Gap drawn {#} cm wide (really {#} mm). Green rings: B, brighter where stronger. Drag the purple knob; drag elsewhere to turn.":
   "Hueco dibujado de {#} cm de ancho (en realidad {#} mm). Anillos verdes: B, más brillantes donde es más intenso. Arrastra la perilla morada; arrastra en otro lugar para girar.",
 "B (pT)":
@@ -108,6 +110,8 @@ VDI18N.add('es', 'demo/displacement-current', {
   "entre las placas",
 "A loop inside the plates encloses only the share r²/R² of the displacement current, so B grows in proportion to r there, like inside a thick wire.":
   "Una espira dentro de las placas encierra solo la fracción r²/R² de la corriente de desplazamiento, así que ahí B crece en proporción a r, como dentro de un cable grueso.",
+"Close":
+  "Cerrar",
 "Gap drawn wider than scale. Drag the knob; drag elsewhere to turn.":
   "Hueco dibujado más ancho que a escala. Arrastra la perilla; arrastra en otro lugar para girar."
 });

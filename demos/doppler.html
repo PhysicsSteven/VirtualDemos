@@ -582,7 +582,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function label(c, txt, x, y, col, align = 'left', base = 'middle', bold = false, size = 11) {
     c.font = `${bold ? '600 ' : ''}${size * PS}px ${T.mono}`; c.textAlign = align; c.textBaseline = base;
     const w = c.measureText(txt).width, h = (size + 3) * PS;
-    const x0 = align === 'left' ? x : align === 'right' ? x - w : x - w / 2;
+    let x0 = align === 'left' ? x : align === 'right' ? x - w : x - w / 2;
+    /* a label whose object is on the picture stays whole on it: the ambulance's opened cut off at the left edge (student view, 2026-11-15) */
+    const cw = c.canvas.clientWidth; if (cw > w + 12 && x >= 0 && x <= cw) { const dx = Math.max(5 - x0, Math.min(0, cw - 5 - w - x0)); x0 += dx; x += dx; }
     const y0 = base === 'middle' ? y - h / 2 : base === 'bottom' ? y - h : y;
     c.fillStyle = T.canvas; c.globalAlpha = 0.86; c.fillRect(x0 - 3, y0, w + 6, h); c.globalAlpha = 1;
     c.fillStyle = col; c.fillText(txt, x, y + (base === 'middle' ? 0.5 : 0));

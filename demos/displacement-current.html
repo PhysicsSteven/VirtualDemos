@@ -48,8 +48,11 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   input[type="range"] { min-height: 28px; }
 }
 /* folded rail sections: secondary options behind their heading (layout redesign) */
-.dimseg { position: absolute; top: 44px; right: 10px; z-index: 2; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12); }
-@media (max-width: 560px) { .clock { top: 52px; font-size: 0.8rem; } .dimseg { top: 86px; } }
+/* the clock's second line shows the slow motion rate, so the 3D/Flat switch sits lower (student view, 2026-11-15) */
+.clock span { display: block; text-align: right; }
+.clock .clockrate { font-size: 0.74rem; font-weight: 500; color: var(--muted); }
+.dimseg { position: absolute; top: 58px; right: 10px; z-index: 2; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12); }
+@media (max-width: 560px) { .clock { top: 52px; font-size: 0.8rem; } .dimseg { top: 98px; } }
 .dimseg[hidden] { display: none; }
 .dimseg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
 .dimseg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
@@ -80,7 +83,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <button type="button" class="spin attn" id="go">Charge</button>
         <button type="button" class="spin" id="reset">Reset</button>
       </div>
-      <div class="clock" id="clock">t = 0 µs</div>
+      <div class="clock" id="clock"><span id="clockT">t = 0 µs</span><span class="clockrate">slow motion: 1 s = 10 µs</span></div>
       <div class="seg dimseg" role="group" aria-label="Perspective" id="dimSeg"><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
       <span class="blindtag" id="blindTag" hidden>Blind</span>
     </div>
@@ -323,7 +326,7 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
     geo = layout(); const g = geo, p = g.p, n = now(), bl = S.blind, ig = inGap();
     if (g3) g3.el.hidden = !use3();
-    if (use3()) { drawScene3(n); drawPlot(n); $('clock').textContent = `t = ${si(S.t, 's')} · τ = RC = ${si(n.tau, 's')}`; return; }
+    if (use3()) { drawScene3(n); drawPlot(n); $('clockT').textContent = `t = ${si(S.t, 's')} · τ = RC = ${si(n.tau, 's')}`; return; }
     // wire
     ctx.fillStyle = T.wire; ctx.fillRect(10 * p, g.cy - 3 * p, Zx(-0.6) - 10 * p, 6 * p); ctx.fillRect(Zx(0.6), g.cy - 3 * p, W - 10 * p - Zx(0.6), 6 * p);
     // current arrows on the wire
@@ -366,7 +369,7 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
     ctx.fillStyle = T.loopInk; ctx.font = `700 ${12 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillText(`loop, r = ${S.r.toFixed(1)} cm`, lx, g.cy - lr - 9 * p);
     // B(r) plot
     drawPlot(n);
-    $('clock').textContent = `t = ${si(S.t, 's')} · τ = RC = ${si(n.tau, 's')}`;
+    $('clockT').textContent = `t = ${si(S.t, 's')} · τ = RC = ${si(n.tau, 's')}`;
   }
   function drawPlot(n) {
     const p = geo.p, L = 64 * p, R = W - 16 * p, top = geo.plotTop + 20 * p, bot = H - 30 * p, rmax = 9;
@@ -391,7 +394,10 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
     ctx.restore();
     const Bl = fieldB(n.I, S.r * CM, inGap()); ctx.fillStyle = T.loop; ctx.beginPath(); ctx.arc(PX(S.r), PY(Bl), 5.5 * p, 0, 7); ctx.fill();
     ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'right'; ctx.textBaseline = 'top';
-    ctx.fillText(inGap() ? 'faint: around the wire, for comparison' : 'faint: in the gap, for comparison', R - 6 * p, top + 4 * p);
+    /* on a narrow stage this note ran into "plate edge": drop it a line when they would meet (student view, 2026-11-15) */
+    const faint = inGap() ? 'faint: around the wire, for comparison' : 'faint: in the gap, for comparison', fw = ctx.measureText(faint).width;
+    ctx.font = `${10 * p}px ${T.mono}`; const pe = PX(5) + 4 * p + ctx.measureText('plate edge').width + 8 * p; ctx.font = `${10 * p}px ${T.ui}`;
+    ctx.fillText(faint, R - 6 * p, R - 6 * p - fw < pe ? top + 18 * p : top + 4 * p);
   }
 
   // ---------- readouts ----------
