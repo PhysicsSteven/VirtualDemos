@@ -43,8 +43,10 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 .viewbar { position: absolute; top: 10px; left: 10px; z-index: 2; display: flex; gap: 6px; flex-wrap: wrap; }
 .dimseg { position: absolute; top: 52px; left: 10px; z-index: 2; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12); }
 .clock { position: absolute; top: 10px; right: 10px; z-index: 2; font-family: var(--font-mono); font-size: 0.9rem; font-weight: 600; background: color-mix(in srgb, var(--canvas) 85%, transparent); border-radius: 6px; padding: 4px 8px; }
+.clock small { display: block; font-size: 0.68rem; font-weight: 400; color: var(--muted); text-align: right; }   /* the time scale on screen (student view, 2026-11-15) */
 /* a longer language: the buttons fill the top row, so the clock sits on the row below, beside 3D | Flat */
 :root[data-vd-lang] .clock { top: 52px; }
+@media (max-width: 520px) { .clock { top: 52px; } }   /* on a phone the clock sat on top of the Tools button (student view, 2026-11-15) */
 .blindtag { position: absolute; right: 10px; bottom: 8px; z-index: 3; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--canvas); background: var(--ink); border-radius: 5px; padding: 3px 8px; }
 .slider-head label { font-size: 0.88rem; }
 .slider-head output { font-size: 0.85rem; color: var(--muted); font-family: var(--font-mono); }
@@ -97,7 +99,7 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
     <div class="stage" id="stage">
       <canvas id="can" tabindex="0" role="img" aria-label="Three vertical pipes, in 3D (drag to turn) or flat, cut open to show the falling magnets and the induced currents in their walls, with a graph of speed against time. Space drops or pauses, R starts over."></canvas>
       <div class="viewbar"><button type="button" class="spin attn" id="drop">Drop all three</button><button type="button" class="spin" id="again">Reset</button></div>
-      <div class="clock" id="clock">t = 0.00 s</div>
+      <div class="clock" id="clock"><span id="clockT">t = 0.00 s</span><small>real time</small></div>
       <div class="seg dimseg" role="group" aria-label="Perspective" id="dimSeg"><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
       <span class="blindtag" id="blindTag" hidden>Blind</span>
     </div>
@@ -286,7 +288,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       for (let j = 0; j <= 200; j++) { const t = tm * j / 200, v = fall(MAG.mass, k[i], t).v; j ? ctx.lineTo(X(t), V(v)) : ctx.moveTo(X(t), V(v)); } ctx.stroke(); });
     ctx.restore();
     ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText('plastic pipe: free fall, off the top of the scale', gx0 + 6 * p, gy0 + 4 * p);
-    $('clock').textContent = `t = ${f(S.t, 2)} s`;
+    $('clockT').textContent = `t = ${f(S.t, 2)} s`;
   }
   function readouts() {
     const k = ks(), tf = tFall(), bl = S.blind;
@@ -398,7 +400,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       g.cam.setViewOffset(W, H, (W - rw) / 2, (H - rh) / 2, W, H); g.cam.updateProjectionMatrix(); }   /* the whole stage, with the pipes centered in their column */
     const key = [T.canvas, T.cu, T.cur, T.mag].join(); if (G3.key !== key) { G3.key = key; theme3(); }
     const asp = rw / Math.max(1, rh), st0 = fall(MAG.mass, k[0], Math.min(S.t, tf[0])), zc = Z0 + LEN - Math.min(LEN, st0.y);
-    if (G3.follow) VD3.place(g.cam, G3.o, new THREE.Vector3(PX3[0] + 0.07, 0, Math.min(zc, Z0 + LEN - 0.08)), 0.62 * Math.max(1, 0.9 / asp));
+    G3.zt = Math.min(zc, Z0 + LEN - 0.08);
+    if (G3.follow) VD3.place(g.cam, G3.o, new THREE.Vector3(PX3[0] + 0.07, 0, G3.zt), 0.62 * Math.max(1, 0.9 / asp));
     else VD3.place(g.cam, G3.o, new THREE.Vector3(0, 0, Z0 + LEN * 0.52), 2.55 * Math.max(1, 0.75 / asp));
     const a = radius(); let nd = 0;
     g.pipes.forEach((q, i) => {
@@ -425,12 +428,20 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const p = ps(), Q = render3(rw, rh, k, tf); ctx.clearRect(0, 0, W, H); if (!Q) return;
     const txt = (s, q, o = {}) => { ctx.save(); ctx.font = `${o.w || 400} ${(o.s || 11.5) * p}px ${o.m ? T.mono : T.ui}`; ctx.textAlign = o.a || 'center'; ctx.textBaseline = o.bl || 'middle';
       ctx.lineWidth = 4; ctx.strokeStyle = T.canvas; ctx.globalAlpha = 0.85; ctx.lineJoin = 'round'; ctx.strokeText(s, q[0], q[1]); ctx.globalAlpha = 1; ctx.fillStyle = o.c || T.ink; ctx.fillText(s, q[0], q[1]); ctx.restore(); };
+    let offR = 0, offL = 0;
     PIPES.forEach((P, i) => {
       if (!G3.follow) { const t0 = Q([PX3[i], 0, Z0 + LEN + 0.02]); txt(P.name, [t0[0], t0[1] - 10 * p], { w: 700, s: 12 }); }
       /* the timer under each pipe stops when its magnet reaches the bottom: on the base, or in a row along the bottom when the base is out of view */
       const b = Q([PX3[i], -0.08, Z0 * 0.55]), s = S.t >= tf[i] ? `${f(tf[i], 2)} s` : S.t > 0 ? `${f(S.t, 2)} s` : '0.00 s', w = 66 * p, h = 22 * p;
-      const onBase = b[2] < 1 && b[0] > w && b[0] < rw - w && b[1] > 0 && b[1] < rh - 30 * p, at = onBase ? b : [rw / 2 + (i - 1) * (w + 54 * p), rh - 52 * p];
-      if (!onBase) txt(P.name.replace(' (PVC)', ''), [at[0], at[1] - h / 2 - 9 * p], { s: 10.5, w: 700 });
+      const onBase = b[2] < 1 && b[0] > w && b[0] < rw - w && b[1] > 0 && b[1] < rh - 30 * p;
+      /* close up, each timer sits under its own pipe; a pipe out of the column (behind the graph) gets its timer at the column's edge,
+         raised a row, with an arrow. The row used to be centered, so the Plastic timer sat under the aluminum pipe (student view, 2026-11-15) */
+      let at = onBase ? b : [rw / 2 + (i - 1) * (w + 54 * p), rh - 52 * p], nm = P.name.replace(' (PVC)', '');
+      if (!onBase && G3.follow) { const xm = Q([PX3[i], 0, G3.zt])[0];
+        if (xm > w / 2 + 6 * p && xm < rw - w / 2 - 6 * p) at = [xm, rh - 52 * p];
+        else if (xm >= rw - w / 2 - 6 * p) { at = [rw - w / 2 - 6 * p, rh - (104 + 52 * offR++) * p]; nm += ' →'; }
+        else { at = [w / 2 + 6 * p, rh - (104 + 52 * offL++) * p]; nm = '← ' + nm; } }
+      if (!onBase) txt(nm, [at[0], at[1] - h / 2 - 9 * p], { s: 10.5, w: 700 });
       if (window.VDGear) window.VDGear.lcd(ctx, at[0] - w / 2, at[1] - h / 2, w, h, s, { font: `600 ${12 * p}px ${T.mono}` });
       else { ctx.fillStyle = '#0b1a12'; ctx.fillRect(at[0] - w / 2, at[1] - h / 2, w, h); txt(s, at, { m: true, c: '#7ee0a0' }); }
     });

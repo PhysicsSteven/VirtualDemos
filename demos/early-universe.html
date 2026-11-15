@@ -22,6 +22,7 @@
 .stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
 .stage-ctl .count { margin-left: auto; font-size: 0.82rem; color: var(--muted); }
+#rateTag { margin-left: 0.6em; font-size: 0.74rem; opacity: 0.85; } #rateTag:empty { display: none; } /* (student view, 2026-11-15) */
 .pane { position: relative; flex: 1 1 auto; min-height: 420px; }
 .pane canvas { position: absolute; inset: 0; width: 100%; height: 100%; outline: none; }
 .pane canvas.vd3d { pointer-events: none; }
@@ -79,7 +80,7 @@
           <button type="button" data-dim="3d" aria-pressed="false">3D</button>
           <button type="button" data-dim="flat" aria-pressed="true">Flat</button>
         </div>
-        <span class="count mono" id="clock"></span>
+        <span class="count mono" id="clock"><span id="clockT"></span><small id="rateTag"></small></span>
       </div>
       <div class="pane" id="pane">
         <canvas id="can" tabindex="0" role="img" aria-label="A patch of the universe full of galaxies, drawn to a fixed ruler in megaparsecs. Click a galaxy to watch from it. Space plays or pauses."></canvas>
@@ -494,7 +495,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (let i = Math.floor(i0 / stride) * stride; i <= i1; i += stride) for (let j = Math.floor(j0 / stride) * stride; j <= j1; j += stride) {
       const g = galaxyAt(i, j), [x, y] = scr(g); if (x < -20 || x > W + 20 || y < -20 || y > H + 20) continue; drawGalaxy(x, y, g, r, early);
     }
-    /* velocity arrows: the distance each marked galaxy would move in 2 Gyr at its present speed v = H d */
+    /* velocity arrows: the distance each marked galaxy would move in 2 Gyr at its speed v = H d at time t; the label said "today's speed", wrong away from t = 0 (student view, 2026-11-15) */
     const showV = S.ex.arrows && !S.blind;
     const arrowTo = (x1, y1, x2, y2, col) => { const L = Math.hypot(x2 - x1, y2 - y1); if (L < 3) return; const ux = (x2 - x1) / L, uy = (y2 - y1) / L, hl = Math.min(8 * p, L * 0.5);
       ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = 1.6 * p; ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2 - ux * hl, y2 - uy * hl); ctx.stroke();
@@ -518,7 +519,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     txt(ctx, '100 Mpc', rx + rl / 2, ry - 10 * p, { c: '#efe9e1', a: 'center', s: 10.5 });
     if (stride > 1) txt(ctx, `showing 1 galaxy in ${stride * stride}`, rx + rl + 14 * p, ry, { c: '#c3b5a2', s: 9.5 });
     if (early) txt(ctx, 'z > 20: before the first galaxies; the dots mark where the matter is', W / 2, 18 * p, { c: '#ffd9a0', a: 'center', s: 10.5, ui: true });
-    if (showV) txt(ctx, 'arrows: distance moved in 2 Gyr at today\'s speed', W - 12 * p, H - 22 * p, { c: '#ffc878', a: 'right', s: 9.5, ui: true });
+    if (showV) txt(ctx, 'arrows: distance moved in 2 Gyr at the speed at t', W - 12 * p, H - 22 * p, { c: '#ffc878', a: 'right', s: 9.5, ui: true });
     /* the survey: distances from home to A to E (Mpc) */
     const narrow = W < 560, pw = (narrow ? 150 : 178) * p, ph = (narrow ? 104 : 140) * p, px = W - pw - 10 * p, py = 10 * p;
     if (VG) VG.panel(ctx, px, py, pw, ph, { fill: 'rgba(20,16,10,0.82)', r: 8 });
@@ -720,8 +721,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   // ---------- frame ----------
   function redraw() { if (!T || !W) return; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H); if (E3.S) E3.S.el.style.display = S.view === 'ex' && E3.on && aNow() > 0 ? '' : 'none'; ({ ex: drawEx, th: drawTh, bbn: drawBbn, cmb: drawCmb })[S.view]();
-    cctx.setTransform(dpr, 0, 0, dpr, 0, 0); cctx.fillStyle = T.canvas; cctx.fillRect(0, 0, CW, CH); ({ ex: curveEx, th: curveTh, bbn: curveBbn, cmb: curveCmb })[S.view](); readouts(); clock(); }
-  function clock() { $('clock').textContent = S.view === 'ex' ? `t = ${f(S.ex.tau, 2)} Gyr from today` : S.view === 'th' ? `t = ${tWords(Math.pow(10, S.th.logt))}` : S.view === 'bbn' ? `t = ${tWords(bbnT())}` : `z = ${S.cmb.z}`; }
+    cctx.setTransform(dpr, 0, 0, dpr, 0, 0); cctx.fillStyle = T.canvas; cctx.fillRect(0, 0, CW, CH); ({ ex: curveEx, th: curveTh, bbn: curveBbn, cmb: curveCmb })[S.view](); readouts(); clock(); clockRate(); }
+  function clock() { $('clockT').textContent = S.view === 'ex' ? `t = ${f(S.ex.tau, 2)} Gyr from today` : S.view === 'th' ? `t = ${tWords(Math.pow(10, S.th.logt))}` : S.view === 'bbn' ? `t = ${tWords(bbnT())}` : `z = ${S.cmb.z}`; }
+  /* the rate the clock runs at, beside it, so a student can see the time scale of Play (student view, 2026-11-15) */
+  function rateWords() { const k = S.speed; return S.view === 'ex' ? `1 s = ${k} Gyr` : S.view === 'bbn' ? `time grows ${f(Math.pow(10, 0.4 * k), 1)}× each second` : S.view === 'cmb' ? `1 + z shrinks ${f(Math.exp(0.6 * k), 1)}× each second` : ''; }
+  function clockRate() { $('rateTag').textContent = rateWords(); }
 
   // ---------- readouts ----------
   function readouts() {
@@ -921,7 +925,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     E3.g.scale.setScalar(a);
     const early = a < 1 / 21, showV = S.ex.arrows && !S.blind, fac = Hof(X().m, a) / HUBBLE_GYR * 2;
     E3.mat.opacity = early ? 0.4 : 1;
-    // velocity arrows: the distance moved in 2 Gyr at today's speed v = H d, as in the flat view
+    // velocity arrows: the distance moved in 2 Gyr at the speed v = H d at the time shown, as in the flat view
     const b = E3.base, buf = E3.arr.geometry.attributes.position;
     for (let q = 0; q < b.length / 3; q++) { const x = b[3 * q], y = b[3 * q + 1], z = b[3 * q + 2]; buf.setXYZ(2 * q, x, y, z); buf.setXYZ(2 * q + 1, x * (1 + fac), y * (1 + fac), z * (1 + fac)); }
     buf.needsUpdate = true; E3.arr.visible = showV;
@@ -943,7 +947,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const [rx, ry] = pr(0, -0.8 * RV3, 0);
     txt(ctx, '100 Mpc', rx, ry + 12 * p, { c: '#efe9e1', a: 'center', s: 10.5 });
     if (early) txt(ctx, 'z > 20: before the first galaxies; the dots mark where the matter is', W / 2, 18 * p, { c: '#ffd9a0', a: 'center', s: 10.5, ui: true });
-    if (showV) txt(ctx, 'arrows: distance moved in 2 Gyr at today\'s speed', W - 12 * p, H - 22 * p, { c: '#ffc878', a: 'right', s: 9.5, ui: true });
+    if (showV) txt(ctx, 'arrows: distance moved in 2 Gyr at the speed at t', W - 12 * p, H - 22 * p, { c: '#ffc878', a: 'right', s: 9.5, ui: true });
     txt(ctx, W < 560 ? 'drag to turn' : 'drag to turn · click a galaxy in the middle layer to watch from it', 12 * p, H - 8 * p, { c: T.muted, s: 9.5, ui: true, b: 'bottom' });
     // the survey: distances from home to A to E (Mpc), as in the flat view
     const narrow = W < 560, pw = (narrow ? 150 : 178) * p, ph = (narrow ? 104 : 140) * p, px = W - pw - 10 * p, py = 10 * p;

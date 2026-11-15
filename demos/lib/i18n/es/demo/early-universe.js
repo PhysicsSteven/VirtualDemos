@@ -2,8 +2,8 @@
 VDI18N.add('es', 'demo/early-universe', {
 "home: the Milky Way":
   "hogar: la Vía Láctea",
-"arrows: distance moved in {#} Gyr at today's speed":
-  "flechas: distancia recorrida en {#} mil millones de años a la rapidez de hoy",
+"arrows: distance moved in {#} Gyr at the speed at t":
+  "flechas: distancia recorrida en {#} mil millones de años a la rapidez en t",
 "Planck ΛCDM t = {#} Gyr":
   "ΛCDM de Planck t = {#} mil millones de años",
 "time from today t (Gyr)":
@@ -40,6 +40,8 @@ VDI18N.add('es', 'demo/early-universe', {
   "<span>Rapidez</span>",
 "t = {#} Gyr from today":
   "t = {#} mil millones de años desde hoy",
+"{#} s = {#} Gyr":
+  "{#} s = {#} mil millones de años",
 "Expansion":
   "Expansión",
 "Thermal history":
@@ -270,6 +272,8 @@ VDI18N.add('es', 'demo/early-universe', {
   "Y predicho = {#}(n/p)/({#} + n/p)",
 "Observed Y_p":
   "Y_p observado",
+"time grows {#}× each second":
+  "el tiempo crece {#}× cada segundo",
 "frequency ν (GHz)":
   "frecuencia ν (GHz)",
 "radio":
@@ -322,6 +326,8 @@ VDI18N.add('es', 'demo/early-universe', {
   "Energía media de los fotones {#} kT",
 "Best fit to FIRAS":
   "Mejor ajuste a FIRAS",
+"{#} + z shrinks {#}× each second":
+  "{#} + z se reduce {#}× cada segundo",
 "Planck ΛCDM t = −{#} Gyr":
   "ΛCDM de Planck t = −{#} mil millones de años",
 "The same universe {#} billion years ago, when the scale factor was {#}: every distance between galaxies was half of today's. Light sent then reaches us today with every wavelength doubled, a redshift z = {#}. Measure the Hubble parameter then and compare it with today's.":
@@ -348,6 +354,8 @@ VDI18N.add('es', 'demo/early-universe', {
   "El fondo de microondas hoy: un cuerpo negro a {#} K con su máximo en {#} GHz (una longitud de onda de unos {#} mm). Los cuadros son las mediciones de COBE FIRAS (Fixsen et al. {#}); la gráfica de abajo las muestra contra la curva de cuerpo negro y, a la derecha, sus diminutas diferencias respecto a ella.",
 "The Microwave background view has no readings to record: use its readouts, or record temperatures in the Thermal history view.":
   "La vista Fondo de microondas no tiene lecturas para registrar: usa sus lecturas en pantalla, o registra temperaturas en la vista Historia térmica.",
+"Close":
+  "Cerrar",
 "FIRAS; line: {#} K":
   "FIRAS; línea: {#} K",
 "TIME":

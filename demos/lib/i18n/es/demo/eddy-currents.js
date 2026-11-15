@@ -8,10 +8,6 @@ VDI18N.add('es', 'demo/eddy-currents', {
   "tubo de plástico: caída libre, fuera de la escala por arriba",
 "Eddy Currents: Magnet in a Pipe":
   "Corrientes de Foucault: imán en un tubo",
-"<a>Induction and inductance</a>":
-  "<a>Inducción e inductancia</a>",
-"<a><span>←</span> <span>Induced Electric Fields</span></a><a><span>Transformers</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Campos eléctricos inducidos</span></a><a><span>Transformadores</span> <span>→</span></a>",
 "Drop the same strong magnet down a copper pipe, an aluminum pipe and a plastic pipe. In the metal pipes the moving magnet's changing flux drives currents around the wall, and by Lenz's law those currents push back: the magnet drifts down at a slow, steady speed.":
   "Deja caer el mismo imán potente por un tubo de cobre, uno de aluminio y uno de plástico. En los tubos metálicos, el flujo cambiante del imán en movimiento impulsa corrientes alrededor de la pared, y por la ley de Lenz esas corrientes se oponen: el imán baja a una rapidez lenta y constante.",
 "pipes {#} m long · g = {#} m/s²":
@@ -22,6 +18,8 @@ VDI18N.add('es', 'demo/eddy-currents', {
   "Controles de tiempo",
 "Drop all three":
   "Soltar los tres",
+"<small>real time</small>":
+  "<small>tiempo real</small>",
 "Set up the magnet and pipes. Drag, or use the arrow keys, to move this card; double click to put it back":
   "Prepara el imán y los tubos. Arrastra, o usa las flechas, para mover esta tarjeta; doble clic la regresa a su lugar",
 "Set up the magnet and pipes":
@@ -60,6 +58,12 @@ VDI18N.add('es', 'demo/eddy-currents', {
   "A ciegas oculta la constante de arrastre, la rapidez terminal, los tiempos de caída predichos y el calor, y deja el reloj y el cronómetro de cada tubo. Mide cuánto tarda cada imán y calcula su rapidez constante.",
 "Model: the magnet as a point dipole on the pipe's axis and a thin walled pipe (w much less than a), which gives a drag force in proportion to speed with the constant k above (Levin and coworkers, Am. J. Phys. {#}). A real magnet that nearly fills the pipe falls at the same order of speed but not exactly this one. The magnet does not touch the wall; air drag is ignored. Conductivity follows ρ = ρ₂₀[{#} + α(T − {#} °C)] down to −{#} °C; below that the resistivity is taken as a straight line in T to the measured value at −{#} °C ({#} times the {#} °C value for copper, {#} for aluminum). The cold ratio depends on how pure the metal is: the cold stage in Resistivity shows how ({#} for copper with a residual resistance ratio of {#}).":
   "Modelo: el imán como un dipolo puntual en el eje del tubo y un tubo de pared delgada (w mucho menor que a), lo que da una fuerza de arrastre proporcional a la rapidez con la constante k de arriba (Levin y colaboradores, Am. J. Phys. {#}). Un imán real que casi llena el tubo cae con una rapidez del mismo orden pero no exactamente esta. El imán no toca la pared; se ignora el arrastre del aire. La conductividad sigue ρ = ρ₂₀[{#} + α(T − {#} °C)] hasta −{#} °C; por debajo de eso, la resistividad se toma como una recta en T hasta el valor medido a −{#} °C ({#} veces el valor a {#} °C para el cobre, {#} para el aluminio). La razón en frío depende de la pureza del metal: la etapa fría de Resistividad muestra cómo ({#} para el cobre con una razón de resistencia residual de {#}).",
+"<a>Induction and inductance</a>":
+  "<a>Inducción e inductancia</a>",
+"<a><span>←</span> <span>Induced Electric Fields</span></a><a><span>Transformers</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Campos eléctricos inducidos</span></a><a><span>Transformadores</span> <span>→</span></a>",
+"Plastic →":
+  "Plástico →",
 "Widths of the pipes and magnets drawn {#} times larger; lengths to scale. Drag to turn.":
   "Anchos de los tubos y los imanes dibujados {#} veces más grandes; longitudes a escala. Arrastra para girar.",
 "Rings: the current in the wall, brighter where it is larger, dots turning its way.":
@@ -69,5 +73,15 @@ VDI18N.add('es', 'demo/eddy-currents', {
 "Drop the magnets and let them reach the bottom of the metal pipes first: each pipe's timer stops when its magnet does.":
   "Suelta los imanes y deja que lleguen primero al fondo de los tubos metálicos: el cronómetro de cada tubo se detiene cuando se detiene su imán.",
 "Close":
-  "Cerrar"
+  "Cerrar",
+"Aluminum →":
+  "Aluminio →",
+"Copper →":
+  "Cobre →",
+"← Copper":
+  "← Cobre",
+"← Aluminum":
+  "← Aluminio",
+"← Plastic":
+  "← Plástico"
 });

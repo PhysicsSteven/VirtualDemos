@@ -46,7 +46,7 @@ module.exports = {
       const sg = rowOf(0); if (S.T === 20 && (sg[0] !== '59.6' || sg[1] !== '37.7' || sg[2] !== '0.0')) return 'σ at 20 °C shows ' + sg; 
       return true; })()` },
     { name: "the clock equals the simulated time; the sliders and their outputs equal the state", fn: `(() => { ${pre}
-      const clk = document.getElementById('clock').textContent.replace(/\\u2212/g, '-');
+      const clk = document.getElementById('clockT').textContent.replace(/\\u2212/g, '-');
       if (!/^t = [\\d.]+ s$/.test(clk)) return 'clock reads ' + clk;
       if (!S.run && Math.abs(parseFloat(clk.slice(4)) - S.t) > 0.0051) return 'clock ' + clk + ', S.t = ' + S.t;
       const o = (id) => document.getElementById(id).textContent.replace(/\\u2212/g, '-');
