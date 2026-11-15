@@ -91,6 +91,7 @@ VDI18N.add('en', 'demo/acoustic-levitation', [
 "<span><i></i>Trap pocket: where U is below the chosen level</span> <span><i></i>U + Wz along the axis</span> <span><i></i>Gravity alone, Wz</span>",
 "Trap pockets: U below the level",
 "level",
+"beads move {#} times slower than real",
 "Pressure amplitude |p|",
 "top bowl, phase Δφ",
 "bottom bowl, phase {#}",
@@ -109,6 +110,7 @@ VDI18N.add('en', 'demo/acoustic-levitation', [
 "At {#} V water would float, but steel is {#} times denser and falls straight through. Raise the drive: in this model steel needs about {#} V.",
 "The top bowl's phase sweeps back and forth. Each {#}° moves the traps by one trap spacing, and the beads ride along: acoustic tweezers.",
 "A water droplet is {#} times denser than foam. It still floats at {#} V, but sits further below its node, and its trap is shallower for its weight.",
+"Holds water: push up to {#} × its weight",
 "With one emitter the phase only shifts the timing of the whole field; the reflected wave shifts with it, so the traps stay put.",
 "The 3D grid has {#} × {#} × {#} points {#} mm apart, x and y within ±{#} mm, between the reflector and the emitter, outside its near field. Each point holds the full source sum the slice uses, for each bowl at unit drive; drive and phase are applied when drawing, and the colors between points are interpolated linearly. Time runs {#} {#} times slower than real: one {#} µs cycle takes {#} s. Opacity and color strength grow as |p|^{#}, a display choice so the weaker waves near the bowls still show. Trap pockets are the surfaces where Gor'kov's U for this bead equals the level, on a finer grid of {#} × {#} × {#} points {#} mm apart near the axis. Gravity is not part of them: it adds Wz, which pulls each trap below its pocket's center and, when it wins, drops the bead (see the trap table).",
 "One transducer over a flat reflector: the sound runs straight up and down the axis, so the traps are about λ/{#} = {#} mm apart, as in the simple standing wave. The field is far weaker: a foam bead floats only above about {#} V, a water droplet not at all in this range. Phase does nothing here, because the reflected wave shifts with the emitter.",
@@ -125,11 +127,10 @@ VDI18N.add('en', 'demo/acoustic-levitation', [
 "Change the drive voltage in steps of {#} V",
 "U + Wz on the axis",
 "lower ← U → higher",
-"the envelope of the wave; dark is a node",
+"the envelope of the wave; dark is a node; beads move {#} times slower than real",
 "-{#} pJ",
 "{#}% of the deepest U; gravity not included",
 "{#} V, over the {#} V limit",
 "Falls: water needs {#} V",
-"Holds water: push up to {#} × its weight",
 "3D needs WebGL and three.js, which did not load; the flat slice shows the same physics."
 ]);

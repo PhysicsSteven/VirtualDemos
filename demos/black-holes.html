@@ -588,6 +588,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     logRo: Math.log10(15), gx: 0.03, gy: 0.012, gsz: 4, rayStars: true, disk: false,
     logR: Math.log10(30), obj: null };
   let playing = !reduce;
+  const LENS_RATE = 0.42;   // the source moves this many t_E per second of play (student view, 2026-11-15)
   const M = () => Math.pow(10, S.logM);
   const PRESETS = {
     ring: { view: 'lens', logM: 12, logDL: 6, logDS: Math.log10(2e6), shape: 'gal', rho: 0.35, bx: 0, by: 0, play: false,
@@ -1057,7 +1058,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     return port;
   }
   function drawPort(c, g, rr) {
-    const m = g.m, ps = g.ps, Rp = Math.round(Math.max(34, Math.min(70 * ps, m.w * 0.15, m.h * 0.17)));
+    /* the last term keeps the "rim" note above the "far away" clock label, which it covered at 1280 (student view, 2026-11-15) */
+    const m = g.m, ps = g.ps, Rp = Math.round(Math.max(34, Math.min(70 * ps, m.w * 0.15, m.h * 0.17, (g.cy - m.y - 167 * ps) / 2)));
     const px = m.x + m.w - Rp - 14 * ps, py = m.y + Rp + 30 * ps, P = ensurePort(rr, 2 * Rp * Math.min(dpr, 2));
     c.save(); c.beginPath(); c.arc(px, py, Rp, 0, 2 * Math.PI); c.clip();
     c.imageSmoothingEnabled = true; c.drawImage(P.off, px - Rp, py - Rp, 2 * Rp, 2 * Rp); c.restore();
@@ -1187,6 +1189,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     label(c, `θ_{E} = ${fmtAngle(te)}`, bx0 + k + 8 * ps, by0 - 2 * ps, T.skyInk, sk);
     label(c, 'thin lens, point mass', m.x + m.w - 10 * ps, m.y + 14 * ps, T.skyMuted, { ...sk, align: 'right' });
     label(c, lensKind ? `sky and ${lensKind} glow: illustrative` : 'sky: illustrative', m.x + m.w - 10 * ps, m.y + 31 * ps, T.skyMuted, { ...sk, align: 'right', size: 10 });
+    /* the source crossed at LENS_RATE t_E per second with no time scale on screen (student view, 2026-11-15) */
+    label(c, `1 s = ${fmtTime(LENS_RATE * tEsec())}`, m.x + m.w - 10 * ps, m.y + 48 * ps, T.skyInk, { ...sk, align: 'right' });
     c.restore();
   }
   function plotBox(r, ps, top) { return { L: r.x + 50 * ps, R: r.x + r.w - 14 * ps, T: r.y + (top || 30) * ps, B: r.y + r.h - 34 * ps }; }
@@ -1762,7 +1766,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const t0 = performance.now();
     if (playing && !drag) {
       if (S.view === 'lens') {
-        let x = S.bx + 0.42 * dt;
+        let x = S.bx + LENS_RATE * dt;
         if (x > 2.5) { x = -2.5; measured = []; lastMeasT = -99; }
         S.bx = +x.toFixed(4); $('sx').value = S.bx; dirty = true;
       } else if (S.view === 'ray' && table) {

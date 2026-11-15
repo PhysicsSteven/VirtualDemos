@@ -4,8 +4,6 @@ VDI18N.add('es', 'demo/acoustic-levitation', {
   "U + Wz a lo largo del eje",
 "width {#} nJ":
   "ancho {#} nJ",
-"lower ← U → higher":
-  "menor ← U → mayor",
 "Acoustic Levitation":
   "Levitación acústica",
 "<a>Beyond the textbook</a>":
@@ -86,8 +84,6 @@ VDI18N.add('es', 'demo/acoustic-levitation', {
   "Radio de la cuenta a",
 "Fill the traps":
   "Llenar las trampas",
-"Add a bead":
-  "Añadir una cuenta",
 "Hold a bead":
   "Sostener una cuenta",
 "Stack of beads":
@@ -186,6 +182,8 @@ VDI18N.add('es', 'demo/acoustic-levitation', {
   "Bolsas de trampa: U por debajo del nivel",
 "level":
   "nivel",
+"beads move {#} times slower than real":
+  "las cuentas se mueven {#} veces más lento que en la realidad",
 "Pressure amplitude |p|":
   "Amplitud de presión |p|",
 "top bowl, phase Δφ":
@@ -204,8 +202,6 @@ VDI18N.add('es', 'demo/acoustic-levitation', {
   "+{#}°, trampas +{#} mm",
 "Your own setup. Pick a setup above to start again.":
   "Tu propia configuración. Elige una configuración de arriba para empezar de nuevo.",
-"Holds water: push up to {#} × its weight":
-  "Sostiene agua: empuja hacia arriba hasta {#} × su peso",
 "width {#} µJ":
   "ancho {#} µJ",
 "No trap: the bead falls":
@@ -224,6 +220,8 @@ VDI18N.add('es', 'demo/acoustic-levitation', {
   "La fase del cuenco superior barre de un lado a otro. Cada {#}° mueve las trampas un espaciado entre trampas, y las cuentas las acompañan: pinzas acústicas.",
 "A water droplet is {#} times denser than foam. It still floats at {#} V, but sits further below its node, and its trap is shallower for its weight.":
   "Una gota de agua es {#} veces más densa que la espuma. Todavía flota a {#} V, pero queda más abajo de su nodo, y su trampa es menos profunda para su peso.",
+"Holds water: push up to {#} × its weight":
+  "Sostiene agua: empuja hacia arriba hasta {#} × su peso",
 "With one emitter the phase only shifts the timing of the whole field; the reflected wave shifts with it, so the traps stay put.":
   "Con un solo emisor la fase solo desplaza la sincronía de todo el campo; la onda reflejada se desplaza con ella, así que las trampas no se mueven.",
 "The 3D grid has {#} × {#} × {#} points {#} mm apart, x and y within ±{#} mm, between the reflector and the emitter, outside its near field. Each point holds the full source sum the slice uses, for each bowl at unit drive; drive and phase are applied when drawing, and the colors between points are interpolated linearly. Time runs {#} {#} times slower than real: one {#} µs cycle takes {#} s. Opacity and color strength grow as |p|^{#}, a display choice so the weaker waves near the bowls still show. Trap pockets are the surfaces where Gor'kov's U for this bead equals the level, on a finer grid of {#} × {#} × {#} points {#} mm apart near the axis. Gravity is not part of them: it adds Wz, which pulls each trap below its pocket's center and, when it wins, drops the bead (see the trap table).":
@@ -248,10 +246,16 @@ VDI18N.add('es', 'demo/acoustic-levitation', {
   "{#} fila enviada a la hoja de trabajo. <a>Abrir la hoja de trabajo</a>",
 "Readings cleared.":
   "Lecturas borradas.",
+"Close":
+  "Cerrar",
+"Change the drive voltage in steps of {#} V":
+  "Cambia el voltaje de excitación en pasos de {#} V",
 "U + Wz on the axis":
   "U + Wz en el eje",
-"the envelope of the wave; dark is a node":
-  "la envolvente de la onda; lo oscuro es un nodo",
+"lower ← U → higher":
+  "menor ← U → mayor",
+"the envelope of the wave; dark is a node; beads move {#} times slower than real":
+  "la envolvente de la onda; lo oscuro es un nodo; las cuentas se mueven {#} veces más lento que en la realidad",
 "-{#} pJ":
   "-{#} pJ",
 "{#}% of the deepest U; gravity not included":
@@ -261,5 +265,9 @@ VDI18N.add('es', 'demo/acoustic-levitation', {
 "Falls: water needs {#} V":
   "Cae: el agua necesita {#} V",
 "3D needs WebGL and three.js, which did not load; the flat slice shows the same physics.":
-  "El 3D necesita WebGL y three.js, que no se cargaron; el corte plano muestra la misma física."
+  "El 3D necesita WebGL y three.js, que no se cargaron; el corte plano muestra la misma física.",
+"Add a bead":
+  "Añadir una cuenta",
+"the envelope of the wave; dark is a node":
+  "la envolvente de la onda; lo oscuro es un nodo"
 });

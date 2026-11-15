@@ -18,8 +18,6 @@ VDI18N.add('es', 'demo/binding-energy', {
   "⁶²Ni",
 "Nuclear Binding Energy":
   "Energía de enlace nuclear",
-"<a><span>←</span> <span>Compton Scattering</span></a><a><span>Blackbody Radiation</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Dispersión de Compton</span></a><a><span>Radiación de cuerpo negro</span> <span>→</span></a>",
 "How tightly is each nucleus held together? Measured masses give the binding energy per nucleon. It peaks near iron and nickel, so fusing light nuclei and splitting heavy ones both release energy.":
   "¿Qué tan fuertemente se mantiene unido cada núcleo? Las masas medidas dan la energía de enlace por nucleón. Tiene su máximo cerca del hierro y el níquel, así que tanto fusionar núcleos ligeros como dividir núcleos pesados libera energía.",
 "masses: AME2020 · energies in MeV · {#} u = {#} MeV/c²":
@@ -44,6 +42,8 @@ VDI18N.add('es', 'demo/binding-energy', {
   "Intervalo de A",
 "All A":
   "Todos los A",
+"Light":
+  "Ligeros",
 "Near the peak":
   "Cerca del máximo",
 "Plot against":
@@ -104,6 +104,12 @@ VDI18N.add('es', 'demo/binding-energy', {
   "Núclido seleccionado",
 "Mass number A":
   "Número de masa A",
+"<span>Step Z</span>":
+  "<span>Cambia Z</span>",
+"Step Z down":
+  "Bajar Z en uno",
+"Step Z up":
+  "Subir Z en uno",
 "Nuclide":
   "Núclido",
 "<sup>{#}</sup>Ni":
@@ -188,8 +194,6 @@ VDI18N.add('es', 'demo/binding-energy', {
   "Medida",
 "Textbook values a<sub>V</sub> = {#}, a<sub>S</sub> = {#}, a<sub>C</sub> = {#}, a<sub>A</sub> = {#}, a<sub>P</sub> = {#} MeV, from Rohlf, <i>Modern Physics from α to Z⁰</i> (Wiley, {#}). Pairing is + for even Z and even N, − for odd Z and odd N, {#} for odd A. Fit to AME2020 finds the least squares coefficients for every measured nucleus with A ≥ {#}.":
   "Valores de libro de texto a<sub>V</sub> = {#}, a<sub>S</sub> = {#}, a<sub>C</sub> = {#}, a<sub>A</sub> = {#}, a<sub>P</sub> = {#} MeV, de Rohlf, <i>Modern Physics from α to Z⁰</i> (Wiley, {#}). El apareamiento es + para Z par y N par, − para Z impar y N impar, {#} para A impar. Ajuste a AME2020 halla los coeficientes de mínimos cuadrados para cada núcleo medido con A ≥ {#}.",
-"nuclide":
-  "núclido",
 "Data and model":
   "Datos y modelo",
 "Masses: AME2020, M. Wang et al., Chinese Physics C {#}, {#} ({#}), taken from the NUBASE2020 table (F. G. Kondev et al., Chinese Physics C {#}, {#}) as shipped with the pynucastro package. Only ground states with measured masses are shown ({#} nuclides); the {#} values AME2020 estimates from systematics are left out. Stable and naturally occurring nuclides are those NUBASE2020 lists as stable or with a natural abundance.":
@@ -198,6 +202,10 @@ VDI18N.add('es', 'demo/binding-energy', {
   "Las energías de enlace usan excesos de masa atómica, así que los electrones se cuentan con los protones. Esto deja el propio enlace de los electrones en B, a lo más {#} MeV en total para el uranio, un efecto de {#}%. Los valores de Q son para núcleos en reposo en sus estados fundamentales.",
 "<span><i></i>Stable or found in nature</span><span><i></i>Radioactive, measured mass</span><span><i></i>Liquid drop, along its valley Z(A), pairing left out (dashed below A = {#})</span><span><i></i>Toward the peak releases energy</span><span><i></i>Reaction, from reactants to products</span>":
   "<span><i></i>Estable o presente en la naturaleza</span><span><i></i>Radiactivo, masa medida</span><span><i></i>Gota líquida, a lo largo de su valle Z(A), sin apareamiento (punteada debajo de A = {#})</span><span><i></i>Hacia el máximo se libera energía</span><span><i></i>Reacción, de reactivos a productos</span>",
+"<a><span>←</span> <span>Compton Scattering</span></a><a><span>Blackbody Radiation</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Dispersión de Compton</span></a><a><span>Radiación de cuerpo negro</span> <span>→</span></a>",
+"nuclide":
+  "núclido",
 "Liquid drop model, term by term":
   "Modelo de la gota líquida, término por término",
 "contribution to B/A (MeV)":
@@ -234,18 +242,6 @@ VDI18N.add('es', 'demo/binding-energy', {
   "valle de la gota líquida",
 "<span><i></i>Liquid drop valley of stability</span><span>Shaded rows and columns: magic Z and N. Gray cells: half life not listed.</span>":
   "<span><i></i>Valle de estabilidad de la gota líquida</span><span>Filas y columnas sombreadas: Z y N mágicos. Celdas grises: semivida no listada.</span>",
-"neutron number N →":
-  "número de neutrones N →",
-"proton number Z →":
-  "número de protones Z →",
-"{#} MeV per nucleon":
-  "{#} MeV por nucleón",
-"⁶²Ni {#} MeV":
-  "⁶²Ni {#} MeV",
-"Chart of nuclides in 3D: height is B/A, color too":
-  "Carta de nucleidos en 3D: la altura es B/A, y el color también",
-"height above {#} MeV per nucleon, {#} squares per MeV · dark caps: stable · drag to turn, click a column":
-  "altura sobre {#} MeV por nucleón, {#} cuadros por MeV · tapas oscuras: estables · arrastra para girar, haz clic en una columna",
 "{#} protons, {#} neutrons, A = {#}":
   "{#} protones, {#} neutrones, A = {#}",
 "β⁺ decay or electron capture · half life {#} minutes":
@@ -384,6 +380,12 @@ VDI18N.add('es', 'demo/binding-energy', {
   "{#} minutos",
 "<span><i></i>Stable</span><span><i></i>β⁻ decay</span><span><i></i>β⁺ decay or electron capture</span><span><i></i>α decay</span><span><i></i>Spontaneous fission</span><span><i></i>Gives off a proton or neutron; faint: not bound at all</span><span><i></i>Decay mode not known</span><span>Outlined: not in NUBASE2020. Arrows: the main decay path.</span>":
   "<span><i></i>Estable</span><span><i></i>Decaimiento β⁻</span><span><i></i>Decaimiento β⁺ o captura electrónica</span><span><i></i>Decaimiento α</span><span><i></i>Fisión espontánea</span><span><i></i>Emite un protón o un neutrón; tenue: nada ligado</span><span><i></i>Modo de decaimiento desconocido</span><span>Remarcados: no están en NUBASE2020. Flechas: la ruta de decaimiento principal.</span>",
+"neutron number N →":
+  "número de neutrones N →",
+"proton number Z →":
+  "número de protones Z →",
+"{#} MeV per nucleon":
+  "{#} MeV por nucleón",
 "⁵⁸Fe":
   "⁵⁸Fe",
 "⁶⁰Ni":
@@ -450,14 +452,18 @@ VDI18N.add('es', 'demo/binding-energy', {
   "{#} ⁴He → ¹²C",
 "How red giants burn helium: two alphas briefly make ⁸Be, which captures a third before it falls apart. Less energy per kilogram than hydrogen burning, because ⁴He is already tightly bound.":
   "Cómo queman helio las gigantes rojas: dos partículas alfa forman brevemente ⁸Be, que captura una tercera antes de desintegrarse. Menos energía por kilogramo que la combustión de hidrógeno, porque el ⁴He ya está fuertemente ligado.",
+"Close":
+  "Cerrar",
 "Chart of nuclides, colored by half life":
   "Carta de núclidos, coloreada por semivida",
 "half life; stable in ink":
   "semivida; estables en tinta",
-"Light":
-  "Ligeros",
-"Close":
-  "Cerrar",
+"⁶²Ni {#} MeV":
+  "⁶²Ni {#} MeV",
+"Chart of nuclides in 3D: height is B/A, color too":
+  "Carta de nucleidos en 3D: la altura es B/A, y el color también",
+"height above {#} MeV per nucleon, {#} squares per MeV · dark caps: stable · drag to turn, click a column":
+  "altura sobre {#} MeV por nucleón, {#} cuadros por MeV · tapas oscuras: estables · arrastra para girar, haz clic en una columna",
 "e⁺ + ν (or an electron captured)":
   "e⁺ + ν (o un electrón capturado)",
 "Stable · {#}% of natural B":

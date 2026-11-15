@@ -12,6 +12,8 @@ VDI18N.add('es', 'demo/black-holes', {
   "lente delgada, masa puntual",
 "sky and lens star glow: illustrative":
   "brillo del cielo y de la estrella lente: ilustrativo",
+"{#} s = {#} days":
+  "{#} s = {#} días",
 "Light curve: magnification A against time":
   "Curva de luz: amplificación A en función del tiempo",
 "= {#} days at {#} km/s":
@@ -280,6 +282,8 @@ VDI18N.add('es', 'demo/black-holes', {
   "Sobrevives al horizonte.<span>Incluso en r<sub>s</sub> el estiramiento es de solo {#} × {#}⁻¹⁵ g. Cuanto más masivo es el agujero, más suave es su horizonte: ΔA en r<sub>s</sub> disminuye como {#}/M².</span>",
 "sky and lens galaxy glow: illustrative":
   "brillo del cielo y de la galaxia lente: ilustrativo",
+"{#} s = {#} × {#}⁷ yr":
+  "{#} s = {#} × {#}⁷ años",
 "= {#} × {#}⁷ yr at {#} km/s":
   "= {#} × {#}⁷ años a {#} km/s",
 "Off center the source makes two images on opposite sides of the lens: a bright one outside the Einstein ring and a fainter, mirror flipped one inside it. Both are stretched along the ring. Drag an image marker and the source follows.":
@@ -310,10 +314,14 @@ VDI18N.add('es', 'demo/black-holes', {
   "M87* visto desde la Tierra (D = {#} Mpc): diámetro de la sombra {#}√{#} GM/(c²D)",
 "You survive the horizon.<span>Even at r<sub>s</sub> the stretch is only {#} × {#}⁻¹¹ g. The more massive the hole, the gentler its horizon: ΔA at r<sub>s</sub> falls as {#}/M².</span>":
   "Sobrevives al horizonte.<span>Incluso en r<sub>s</sub> el estiramiento es de solo {#} × {#}⁻¹¹ g. Cuanto más masivo es el agujero, más suave es su horizonte: ΔA en r<sub>s</sub> disminuye como {#}/M².</span>",
+"Close":
+  "Cerrar",
 "lens and caustic":
   "lente y cáustica",
 "sky: illustrative":
   "cielo: ilustrativo",
+"{#} s = {#} yr":
+  "{#} s = {#} años",
 "= {#} yr at {#} km/s":
   "= {#} años a {#} km/s",
 "ΔA = {#} × {#}⁻¹¹ g":

@@ -6,6 +6,7 @@ VDI18N.add('en', 'demo/black-holes', [
 "= {#} mas",
 "thin lens, point mass",
 "sky and lens star glow: illustrative",
+"{#} s = {#} days",
 "Light curve: magnification A against time",
 "= {#} days at {#} km/s",
 "Image positions θ against source offset u",
@@ -140,6 +141,7 @@ VDI18N.add('en', 'demo/black-holes', [
 "∞ (ring)",
 "You survive the horizon.<span>Even at r<sub>s</sub> the stretch is only {#} × {#}⁻¹⁵ g. The more massive the hole, the gentler its horizon: ΔA at r<sub>s</sub> falls as {#}/M².</span>",
 "sky and lens galaxy glow: illustrative",
+"{#} s = {#} × {#}⁷ yr",
 "= {#} × {#}⁷ yr at {#} km/s",
 "Off center the source makes two images on opposite sides of the lens: a bright one outside the Einstein ring and a fainter, mirror flipped one inside it. Both are stretched along the ring. Drag an image marker and the source follows.",
 "A {#} M<sub>sun</sub> black hole has r<sub>s</sub> = {#} km. At {#} r<sub>s</sub>, still almost {#} km out, the difference in gravity between your head and feet is about {#} g: you are torn apart long before the horizon. Drag the observer to watch clocks slow and light redden.",
@@ -155,8 +157,10 @@ VDI18N.add('en', 'demo/black-holes', [
 "{#} × {#}⁹ M<sub>sun</sub>",
 "M87* seen from Earth (D = {#} Mpc): shadow diameter {#}√{#} GM/(c²D)",
 "You survive the horizon.<span>Even at r<sub>s</sub> the stretch is only {#} × {#}⁻¹¹ g. The more massive the hole, the gentler its horizon: ΔA at r<sub>s</sub> falls as {#}/M².</span>",
+"Close",
 "lens and caustic",
 "sky: illustrative",
+"{#} s = {#} yr",
 "= {#} yr at {#} km/s",
 "ΔA = {#} × {#}⁻¹¹ g"
 ]);

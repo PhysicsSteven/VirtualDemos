@@ -73,6 +73,7 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); ou
 .seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
 .seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
 .row { display: flex; flex-wrap: wrap; gap: 6px; }
+.zstep { align-items: center; margin-top: 4px; } .zstep .hint { margin: 0 4px 0 0; }
 input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 .ok { color: var(--muted); font-weight: 400; font-size: 0.82rem; }
 .formula { margin: 0; font-family: var(--font-mono); font-size: 0.8rem; overflow-wrap: anywhere; line-height: 1.6; }
@@ -202,6 +203,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <div class="slider-head"><label for="aSl">Mass number A</label><output id="aOut" class="mono" for="aSl"></output></div>
           <input type="range" id="aSl" min="1" max="270" step="1" value="56">
         </div>
+        <!-- stepping Z at one A (helium 3, barium 141 in the handout) was only on the arrow keys of the plot, so a touch screen could
+             not do it: two buttons do the same as up and down (student view, 2026-11-15) -->
+        <div class="row zstep"><span class="hint">Step Z</span><button type="button" class="btn" id="zDn" aria-label="Step Z down">Z −</button><button type="button" class="btn" id="zUp" aria-label="Step Z up">Z +</button></div>
         <dl class="readout">
           <div class="big"><dt>Nuclide</dt><dd id="rNuc">—</dd></div>
           <div><dt>Z, N</dt><dd id="rZN">—</dd></div>
@@ -674,7 +678,19 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       c.globalAlpha = 1;
       const mid = pts[kind === 'fusion' && S.zoom === 'full' ? 30 : 20];
       const txt = kind === 'fusion' ? 'fusion releases energy' : 'fission releases energy';
-      queueLabel(txt, mid[0], mid[1] + 18 * ps, T.alphaInk, 'center', 'top', true);
+      let mx = mid[0], my = mid[1] + 18 * ps, al = 'center';
+      /* the fusion label ran under the ¹²C tag, which hid its first letter ("usion releases energy"): start it just past that tag,
+         or on a narrow plot, where that would reach the fission arrow, hang it below the tail of the arrow (student view, 2026-11-15) */
+      if (kind === 'fusion' && S.zoom === 'full') {
+        const n12 = get(6, 12);
+        if (n12) {
+          c.font = `${11 * ps}px ${T.mono}`; const tagR = box.X(12) + 6 * ps + c.measureText(nm(n12)).width + 9 * ps;
+          c.font = `600 ${11 * ps}px ${T.mono}`; const w = c.measureText(txt).width;
+          mx = Math.max(mx, tagR + w / 2);
+          if (mx + w / 2 > box.X(88)) { mx = pts[0][0] + 12 * ps; my = pts[0][1] + 10 * ps; al = 'left'; }
+        }
+      }
+      queueLabel(txt, mx, my, T.alphaInk, al, 'top', true);
     }
   }
   function rxNuclides() { const s = new Set(); if (!S.rx) return s; const r = REACTIONS[S.rx]; for (const [Z, A] of r.inn.concat(r.out)) { const n = get(Z, A); if (n && n.A > 1) s.add(n); else if (n && n.Z === 1) s.add(n); } return s; }
@@ -1233,6 +1249,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('showAll').addEventListener('change', (e) => { S.all = e.target.checked; custom(); update(); });
   $('arrows').addEventListener('change', (e) => { S.arrows = e.target.checked; custom(); update(); });
   $('aSl').addEventListener('input', (e) => { custom(); setA(+e.target.value); });
+  $('zDn').addEventListener('click', () => { custom(); stepZ(-1); });
+  $('zUp').addEventListener('click', () => { custom(); stepZ(1); });
   $('cBook').addEventListener('click', () => { S.c = BOOK.slice(); custom(); update(); });
   $('cFit').addEventListener('click', () => { S.c = fit(S.on, S.c); custom(); update(); });
   const playBtn = $('play');
