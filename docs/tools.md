@@ -1,6 +1,6 @@
 # Build tools
 
-Moved from CLAUDE.md on 2026-11-01. Only the TeacherKeys path and the last checklist item (a commit message, not a COLLABORATION.md entry) changed.
+Moved from CLAUDE.md on 2026-11-01; checks moved to `docs/checks.md` on 2026-11-15.
 
 - `python3 tools/notes.py <demo> --keys <TeacherKeys clone>/demo-keys` then `python3 tools/notes.py` (notes from `notes/src/<demo>.md`).
 - `python3 tools/courses.py` (course pages, topic pages, openstax.html and index from the map, catalog and topics; `--check` to verify). It also writes `search.js`, `404.html`
@@ -18,36 +18,5 @@ Moved from CLAUDE.md on 2026-11-01. Only the TeacherKeys path and the last check
 - Handout math: `$$...$$` only (kramdown + MathJax); check with `node curriculum/validation/check_math.cjs` after
   `npm install --no-save mathjax-full@3.2.2`. Don't run scripted notation rewrites over keys or guides.
 
-## Checks (2026-11-01)
-All browser checks need `NODE_PATH=/opt/node-tools/node_modules` in the cloud container, and `VD_THREE=<three.min.js r128>` for 3D demos
-(cdnjs is blocked there; `npm pack three@0.128.0`).
-- `node tools/rules.cjs [--keys <TeacherKeys clone>]` runs the house rules (also the pre-commit hook and CI). With `--keys` it also looks for
-  copied answers and for handouts edited since their key PDF was printed (TeacherKeys `worksheet-keys/handout-hashes.json`, written by
-  `fill_key.cjs`). The `constants` rule flags literals in demo code that are close to a value in `demos/lib/constants.js` without equaling it.
-  Added 2026-11-01 from mistakes that recurred: `constants-text` (the same for numbers in worksheets, notes and demo strings),
-  `scripts` (every inline script and .js file parses), `links` (relative links and images resolve) and `generated` (courses.py,
-  theme.py, paper.py and symbols.py `--check`, and notes pages against notes/src when `pip install markdown` has been run). About 9 s in all.
-- `node tools/democheck.cjs <demo> [--fast]` is the one command for a new or changed demo: house rules, map entries (catalog, textbook map,
-  topic), Node tests, harvest and leaks, What's new reminder, `vdcheck --only after` and `--only clip`, and the opening state check.
-  `--fast` skips the browser steps.
-- `node tools/opencheck.cjs <demo>... | --all` checks that the opening state is not at equilibrium: the demo moves on open or the first
-  Play or Release press visibly changes the stage. Pictures go to `/tmp/vdcheck/opencheck`.
-- `node tools/beforeafter.cjs <demo> [--ref origin/main]` writes one picture of the demo before and after a change, desktop and phone,
-  light and dark. Attach it to the reply for any visual fix.
-- `node tools/breakit.cjs <demo>... | --all [--jobs 4]` is the break-it test (Steve 2026-11-09): it uses the demo like a student (zoom out and back
-  in, drag past the edge, keys, Play pressed fast, every slider to its ends, odd numbers and text typed in every box, every select option,
-  checkbox and preset button, Projector, Day and Cool lab, a 400 px phone, Reset all) and probes after every step for page errors, NaN or
-  Infinity on the page, a stage gone blank, sideways scroll on the phone, Reset all that leaves a control changed, and the demo's known
-  values from `tools/breakit/<demo>.cjs` (`checks`: page code returning true or a message; `steps`: extra sequences; see
-  `tools/breakit/derivatives.cjs`). A zoom out and back that does not return is a warning to look at (a zoom limit is fine). About 30 s a
-  demo. Pictures and a JSON report go to `/tmp/vdcheck/breakit/<demo>`. The script finds things that break, not things that are hard to
-  watch, so it is only half the test: the other half is the "watch it like a student" checks in CLAUDE.md (fresh-eyes first minute, time
-  scale on screen, picture matches the physics, worksheet steps still work, controls behave like other demos). A clean breakit run is not a pass alone.
-  It also checks that scroll zoom stays centered (two notches with the pointer off center must match two at the center; Steve
-  2026-11-12). `--zoom-only` runs just the canvas zoom, drag and key steps. On the 4 core cloud box use `--jobs 3` at most; a photo
-  that times out or a harness "page closed" under heavy load is the machine, not the demo: rerun that demo alone.
-- `node tools/perfcheck.cjs <demo>... | --all [--jobs 2] [--seconds 60] [--stress]` is the frame rate decay test (Steve 2026-11-14):
-  it runs the demo at its defaults for a minute (pressing any Fire, Add or Drop button once a second), times every animation frame's
-  script, and fails a demo whose script time a frame doubles past 12 ms, or that freezes; it warns on JS heap or element growth, and
-  reruns the break-it known values at the end to catch drift over a long run. It caught the Charged Particles slowdown fixed in
-  5aaa799 (`--file` tests an older copy of the page). Run it alone on a quiet machine: about 70 minutes for every demo at jobs 2.
+## Checks
+Every check, with one command each and when to run it: `docs/checks.md`. Cloud setup: `bash tools/cloud/setup.sh`.

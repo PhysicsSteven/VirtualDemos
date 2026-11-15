@@ -3,3 +3,5 @@ __pycache__/
 node_modules/
 _build/
 .sass-cache/
+# stray logs from check runs (two slipped into a commit on 2026-11-15)
+/*.log
