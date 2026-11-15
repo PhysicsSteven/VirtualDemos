@@ -145,7 +145,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         <details class="fold"><summary>Lab</summary><div class="foldbody">
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
         <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
-        <details class="more"><summary>More about this</summary><p class="hint">The loop runs at half speed and the cars at a quarter of real speed, so the motion is easy to follow; every number is for real time. Blind hides the force sizes (arrows drawn equal length), a = v²/r, the speed limits and the predictions of what happens, leaving the settings and the motion.</p></details>
+        <details class="more"><summary>More about this</summary><p class="hint">The loop runs at half speed (slow motion ×2) so the motion is easy to follow; everything else runs at real speed. Every number is for real time. Blind hides the force sizes (arrows drawn equal length), a = v²/r, the speed limits and the predictions of what happens, leaving the settings and the motion.</p></details>
         <p class="hint">Motion seen from a turning frame, where the Coriolis and centrifugal forces appear: open <a href="rotating-frames.html">Rotating Frames</a>.</p>
         </div></details>
       </section>
@@ -318,6 +318,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const vbar = stage.querySelector('.viewbar'), my = Math.max(44 * p, vbar ? vbar.offsetTop + vbar.offsetHeight + 4 : 0);
     ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.85; ctx.fillRect(8 * p, my, ctx.measureText(msg).width + 8 * p, 20 * p); ctx.globalAlpha = 1;
     ctx.fillStyle = T.ink; ctx.fillText(msg, 12 * p, my + 4 * p);
+    /* the playback rate on screen, under the status line (student view calls, 2026-11-15) */
+    const rate = timeScale() === 1 ? 'Real time' : 'Slow motion ×2';
+    ctx.font = `${11.5 * p}px ${T.ui}`; ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.85; ctx.fillRect(8 * p, my + 21 * p, ctx.measureText(rate).width + 8 * p, 17 * p); ctx.globalAlpha = 1;
+    ctx.fillStyle = T.muted; ctx.fillText(rate, 12 * p, my + 24 * p);
     // free body diagram
     if (wide) { ctx.strokeStyle = T.line; ctx.beginPath(); ctx.moveTo(sw, 12 * p); ctx.lineTo(sw, H - 12 * p); ctx.stroke(); drawFBD(sw, 0, W - sw, H, q); }
     else { ctx.strokeStyle = T.line; ctx.beginPath(); ctx.moveTo(12 * p, sh); ctx.lineTo(W - 12 * p, sh); ctx.stroke(); drawFBD(0, sh, W, H - sh, q); }
@@ -514,14 +518,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1.5; ctx.setLineDash([5 * p, 5 * p]); ctx.beginPath(); ctx.arc(cx, cy, R, 0, 7); ctx.stroke(); ctx.setLineDash([]);
     } else if (S.preset === 'flat' || S.preset === 'bank' || S.preset === 'speed') {
       // grass, a two lane road whose outer lane the car follows, red and white curbs, trees outside
-      const ri = R - 31 * p, ro = R + 11 * p;
+      const ri = Math.max(p, R - 31 * p), ro = R + 11 * p;   /* never a negative radius while the stage is still being laid out (student view, 2026-11-15) */
       ctx.fillStyle = T.grass; ctx.fillRect(0, 0, rw, rh);
       tufts(rw, 70 * p, rh, p, (x, y) => { const d = Math.hypot(x - cx, y - cy); return d > ri - 8 * p && d < ro + 8 * p; });
       { const rg = ctx.createRadialGradient(cx - R * 0.3, cy - R * 0.3, 0, cx, cy, ro * 1.2); rg.addColorStop(0, window.VDGear ? window.VDGear.mix(T.road, '#ffffff', 0.08) : T.road); rg.addColorStop(1, window.VDGear ? window.VDGear.mix(T.road, '#000000', 0.12) : T.road); ctx.fillStyle = rg; } ctx.beginPath(); ctx.arc(cx, cy, ro, 0, 7); ctx.arc(cx, cy, ri, 7, 0, true); ctx.fill();
       if (S.preset === 'bank') { const gr = ctx.createRadialGradient(cx, cy, ri, cx, cy, ro); gr.addColorStop(0, T.shadow); gr.addColorStop(1, 'rgba(0,0,0,0)'); ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(cx, cy, ro, 0, 7); ctx.arc(cx, cy, ri, 7, 0, true); ctx.fill(); }   // the low, inner edge drawn darker
       for (const rk of [ri, ro]) { const n = Math.max(12, Math.round(2 * Math.PI * rk / (14 * p))); ctx.lineWidth = 4 * p;
         for (let i = 0; i < n; i++) { ctx.strokeStyle = i % 2 ? T.kerb2 : T.kerb; ctx.beginPath(); ctx.arc(cx, cy, rk, i * 2 * Math.PI / n, (i + 1) * 2 * Math.PI / n + 0.002); ctx.stroke(); } }
-      ctx.strokeStyle = T.lane; ctx.lineWidth = 2 * p; ctx.setLineDash([10 * p, 10 * p]); ctx.beginPath(); ctx.arc(cx, cy, R - 10 * p, 0, 7); ctx.stroke(); ctx.setLineDash([]);
+      ctx.strokeStyle = T.lane; ctx.lineWidth = 2 * p; ctx.setLineDash([10 * p, 10 * p]); ctx.beginPath(); ctx.arc(cx, cy, Math.max(p, R - 10 * p), 0, 7); ctx.stroke(); ctx.setLineDash([]);
       const reach = Math.max(rw, rh) * 0.6, placed = [];
       for (const [a, fr, sz] of DECO.trees) {
         const rad = 12 * p * sz, d = ro + 14 * p + rad + fr * reach, x = cx + d * Math.cos(a), y = cy + d * Math.sin(a);
@@ -579,7 +583,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function drawFBD(x0, y0, w, h, q) {
     const p = ps(), bl = S.blind, cx = x0 + w * (S.preset === 'loop' ? 0.5 : 0.62), cy = y0 + h / 2 + 10 * p, Rm = Math.min(w, h) * 0.34, m = S.m;
     ctx.fillStyle = T.muted; ctx.font = `700 ${11 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
-    const view = S.preset === 'string' || S.preset === 'speed' ? 'FROM ABOVE' : S.preset === 'loop' ? 'SIDE VIEW' : S.preset === 'cone' || S.preset === 'rotor' ? 'SIDE VIEW, CENTER TO THE LEFT' : 'SEEN FROM BEHIND, CENTER TO THE LEFT';
+    /* the diagram keeps the center to the left while the ball goes round, so say so: T pointed left while the string on the left pointed up (student view, 2026-11-15) */
+    const view = S.preset === 'string' || S.preset === 'speed' ? 'FROM ABOVE, CENTER TO THE LEFT' : S.preset === 'loop' ? 'SIDE VIEW' : S.preset === 'cone' || S.preset === 'rotor' ? 'SIDE VIEW, CENTER TO THE LEFT' : 'SEEN FROM BEHIND, CENTER TO THE LEFT';
     { /* in another language the heading and its two halves are translated whole first (a longer heading splits where English does not) */
       const I = window.VDI18N, tr = (t) => (I ? I.t(t) : t), full = tr(`FREE BODY DIAGRAM, ${view}`), head = tr('FREE BODY DIAGRAM,'), vw = tr(view);
       const draw = () => { if (ctx.measureText(full).width < w - 28 * p) ctx.fillText(full, x0 + 14 * p, y0 + 12 * p); else { ctx.fillText(head, x0 + 14 * p, y0 + 12 * p); ctx.fillText(vw, x0 + 14 * p, y0 + 26 * p); } };
@@ -601,7 +606,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     else if (!q.stalls) { const ph = S.ang; items = [['mg', T.w, 0, -m * G]]; if (q.N > 0) items.push(['N', T.n, -Math.sin(ph) * q.N, Math.cos(ph) * q.N]); }
     const big = Math.max(...items.map((i) => Math.hypot(i[2], i[3])), S.preset === 'speed' ? m * S.mu * G : S.preset === 'cone' ? q.T : S.preset === 'rotor' ? 0 : m * accel(S.v, S.r), 1e-9), k = Rm / big;
     const L = (fx, fy) => (bl ? [fx / (Math.hypot(fx, fy) || 1) * Rm * 0.6, fy / (Math.hypot(fx, fy) || 1) * Rm * 0.6] : [fx * k, fy * k]);
-    for (const [lab, col, fx, fy] of items) { const [dx, dy] = L(fx, fy); arrow(cx, cy, dx, -dy, col, 3.2 * p, bl ? lab : `${lab} = ${fN(Math.hypot(fx, fy))} N`, lab.startsWith('f') ? 1 : S.preset === 'loop' && lab === 'N' ? -1 : 0); }
+    for (const [lab, col, fx, fy] of items) { const [dx, dy] = L(fx, fy); arrow(cx, cy, dx, -dy, col, 3.2 * p, bl ? lab : `${lab} = ${fN(Math.hypot(fx, fy))} N`, lab.startsWith('f') ? 1 : S.preset === 'loop' ? (lab === 'N' ? -1 : 1) : 0); }
+    /* loop: mg's label to the right of its shaft and N's to the left, so near the top, where both point down, the two labels no longer sit on each other (student view, 2026-11-15) */
     // net force, toward the center (loop: also a tangential part)
     /* below the lowest arrow tip and its label, so the two never overlap; one force alone is its own net force */
     const low = Math.max(0, ...items.map((i) => -L(i[2], i[3])[1])), netY = cy + Math.max(56 * p, low + 34 * p);
@@ -675,8 +681,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('again').addEventListener('click', () => { S.ang = 0; restart(); });
   // a link to #speed (the old Speeding Up on a Curve page) opens this setup
   $('play').addEventListener('click', () => { S.run = !S.run; $('play').textContent = S.run ? 'Pause' : 'Play'; });
-  // shown slower than real time so it stays readable: the loop at half speed, the cars at a quarter
-  const timeScale = () => (S.preset === 'string' || S.preset === 'cone' || S.preset === 'rotor' ? 1 : S.preset === 'loop' ? 0.5 : S.preset === 'speed' ? 1 : 0.25);
+  /* Playback rate: the loop at half speed so it stays readable, everything else at real speed. The flat and banked curves used to run
+     at a quarter, about 80 s a lap, so the car looked parked for the first ten seconds (student view calls, 2026-11-15) */
+  function timeScale() { return S.preset === 'loop' ? 0.5 : 1; }
   let last = performance.now();
   let simClock = 0;   /* simulated time for the stopwatch: it runs at the preset's slow motion rate */
   function frame(now) {
@@ -741,7 +748,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('play').textContent = S.run ? 'Pause' : 'Play';
   /* the banked curve opens in 3D where WebGL works, unless the page asks for the flat view (?view=flat) or the device asks to save data */
   G3.want = new URLSearchParams(location.search).get('view') !== 'flat' && !!window.VD3 && !VD3.lowPower();
-  tokens(); new ResizeObserver(resize).observe(stage); { const hs = location.hash.slice(1), qs = new URLSearchParams(location.search).get('setup'); applyPreset(PRESETS[qs] ? qs : PRESETS[hs] ? hs : 'string'); } resize();
+  tokens(); new ResizeObserver(resize).observe(stage);
+  /* the status line sits under the buttons; when they wrap to a second row (a phone, or the language changes) redraw, so the label is not left hidden behind them while paused (student view, 2026-11-15) */
+  { const vb = stage.querySelector('.viewbar'); if (vb) new ResizeObserver(() => { if (W) draw(); }).observe(vb); } { const hs = location.hash.slice(1), qs = new URLSearchParams(location.search).get('setup'); applyPreset(PRESETS[qs] ? qs : PRESETS[hs] ? hs : 'string'); } resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   requestAnimationFrame(frame);
 })();

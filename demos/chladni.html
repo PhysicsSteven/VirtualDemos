@@ -141,6 +141,10 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); ou
 .vol input { width: 90px; }
 .slider-head label { font-size: 0.88rem; }
 .slider-head output { font-size: 0.85rem; color: var(--muted); text-align: right; }
+/* The driver setting readout "0.40 mm (2.0 N)" broke in the middle beside its label in the narrow setup column; keep each whole and let the readout drop to its own line (student view, 2026-11-15) */
+#waveGrp .slider-head { flex-wrap: wrap; row-gap: 0; }
+#waveGrp .slider-head label, #x0Out { white-space: nowrap; }
+#x0Out { margin-left: auto; }
 input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 .readout dd small { font-size: 0.78rem; font-weight: 400; color: var(--muted); }
 .readout dd.txt { font-family: var(--font-ui); font-weight: 400; font-size: 0.88rem; }
@@ -1589,6 +1593,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     c.strokeStyle = T.accent; c.lineWidth = 2 * ps; c.lineJoin = 'round'; c.beginPath();
     for (let i = 0; i < cv.f.length; i++) { const x = fX(g, cv.f[i]), y = Y(cv.a[i]); i ? c.lineTo(x, y) : c.moveTo(x, y); }
     c.stroke(); c.restore();
+    // the drive frequency
+    const hot = (drag && drag.id === 'f') || (!drag && hoverId === 'f'), x = fX(g, S.f);
+    if (hot) { c.globalAlpha = 0.3; c.strokeStyle = T.pos; c.lineWidth = 7 * ps; c.beginPath(); c.moveTo(x, g.top); c.lineTo(x, g.bot); c.stroke(); c.globalAlpha = 1; }
+    c.strokeStyle = T.pos; c.lineWidth = 1.8 * ps; c.beginPath(); c.moveTo(x, g.top); c.lineTo(x, g.bot); c.stroke();
+    const yd = Y(D.arms); c.fillStyle = T.pos; c.beginPath(); c.arc(x, clamp(yd, g.top, g.bot), 4 * ps, 0, TAU); c.fill();
+    /* Peak labels drawn after the drive line and its dot, so the number of the peak you are tuned to is not crossed out by the red line (student view, 2026-11-15) */
     // peak labels, tallest first, without overlaps
     const peaks = [];
     for (const r of D.res) { if (r.f > D.fmax || r.k < 0) continue; const dr = driveAt(r.f); peaks.push({ f: r.f, a: Math.hypot(dr.Fr, dr.Fi) * rmsAccel(ms.lam2, D.phiP, r.f, D.fs, S.Q, 1, D.M), md: ms.modes[r.k] }); }
@@ -1601,11 +1611,6 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       if (x + w / 2 > g.R || x - w / 2 < g.L) continue;
       placed.push([x, y, w]); halo(c, pk.md.short, x, y, 'center', T.ink, ps * 0.9);
     }
-    // the drive frequency
-    const hot = (drag && drag.id === 'f') || (!drag && hoverId === 'f'), x = fX(g, S.f);
-    if (hot) { c.globalAlpha = 0.3; c.strokeStyle = T.pos; c.lineWidth = 7 * ps; c.beginPath(); c.moveTo(x, g.top); c.lineTo(x, g.bot); c.stroke(); c.globalAlpha = 1; }
-    c.strokeStyle = T.pos; c.lineWidth = 1.8 * ps; c.beginPath(); c.moveTo(x, g.top); c.lineTo(x, g.bot); c.stroke();
-    const yd = Y(D.arms); c.fillStyle = T.pos; c.beginPath(); c.arc(x, clamp(yd, g.top, g.bot), 4 * ps, 0, TAU); c.fill();
     // grip
     const gy = (g.top + g.bot) / 2; c.fillStyle = T.canvas; c.strokeStyle = T.pos; c.lineWidth = 1.4 * ps;
     c.beginPath(); c.roundRect ? c.roundRect(x - 5 * ps, gy - 9 * ps, 10 * ps, 18 * ps, 3 * ps) : c.rect(x - 5 * ps, gy - 9 * ps, 10 * ps, 18 * ps); c.fill(); c.stroke();

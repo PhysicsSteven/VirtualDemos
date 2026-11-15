@@ -2,12 +2,14 @@
 VDI18N.add('es', 'demo/circular-motion', {
 "View from above":
   "Vista desde arriba",
-"FREE BODY DIAGRAM, FROM ABOVE":
-  "DIAGRAMA DE CUERPO LIBRE, DESDE ARRIBA",
+"Real time":
+  "Tiempo real",
+"FREE BODY DIAGRAM, FROM ABOVE, CENTER TO THE LEFT":
+  "DIAGRAMA DE CUERPO LIBRE, DESDE ARRIBA, CENTRO A LA IZQUIERDA",
 "FREE BODY DIAGRAM,":
   "DIAGRAMA DE CUERPO LIBRE,",
-"FROM ABOVE":
-  "DESDE ARRIBA",
+"FROM ABOVE, CENTER TO THE LEFT":
+  "DESDE ARRIBA, CENTRO A LA IZQUIERDA",
 "net = {#} N":
   "neta = {#} N",
 "Arrow lengths to scale; the net force is drawn on its own":
@@ -28,8 +30,6 @@ VDI18N.add('es', 'demo/circular-motion', {
   "Avanza un momento y vuelve a pausar",
 "Step":
   "Paso",
-"Cut the string":
-  "Cortar la cuerda",
 "Divider between the motion and the free body diagram":
   "Divisor entre el movimiento y el diagrama de cuerpo libre",
 "Ball on a string":
@@ -62,8 +62,8 @@ VDI18N.add('es', 'demo/circular-motion', {
   "Tensión T = mv²/r",
 "Period {#}πr/v":
   "Periodo {#}πr/v",
-"The loop runs at half speed and the cars at a quarter of real speed, so the motion is easy to follow; every number is for real time. Blind hides the force sizes (arrows drawn equal length), a = v²/r, the speed limits and the predictions of what happens, leaving the settings and the motion.":
-  "El rizo va a la mitad de la rapidez y los autos a un cuarto de la rapidez real, para que el movimiento sea fácil de seguir; todos los números son para el tiempo real. A ciegas oculta los tamaños de las fuerzas (flechas dibujadas de igual longitud), a = v²/r, los límites de rapidez y las predicciones de lo que pasa, y deja los ajustes y el movimiento.",
+"The loop runs at half speed (slow motion ×{#}) so the motion is easy to follow; everything else runs at real speed. Every number is for real time. Blind hides the force sizes (arrows drawn equal length), a = v²/r, the speed limits and the predictions of what happens, leaving the settings and the motion.":
+  "El rizo va a la mitad de la rapidez (cámara lenta ×{#}) para que el movimiento sea fácil de seguir; todo lo demás va a la rapidez real. Todos los números son para el tiempo real. A ciegas oculta los tamaños de las fuerzas (flechas dibujadas de igual longitud), a = v²/r, los límites de rapidez y las predicciones de lo que pasa, y deja los ajustes y el movimiento.",
 "Motion seen from a turning frame, where the Coriolis and centrifugal forces appear: open <a>Rotating Frames</a>.":
   "El movimiento visto desde un marco que gira, donde aparecen las fuerzas de Coriolis y centrífuga: abre <a>Marcos de referencia en rotación</a>.",
 "outcome":
@@ -132,6 +132,8 @@ VDI18N.add('es', 'demo/circular-motion', {
   "Rapidez máxima de crucero √(μs g r)",
 "Side view":
   "Vista lateral",
+"Slow motion ×{#}":
+  "Cámara lenta ×{#}",
 "FREE BODY DIAGRAM, SIDE VIEW":
   "DIAGRAMA DE CUERPO LIBRE, VISTA LATERAL",
 "SIDE VIEW":
@@ -196,12 +198,22 @@ VDI18N.add('es', 'demo/circular-motion', {
   "Cuando el piso baja",
 "riders stay up":
   "los pasajeros se quedan arriba",
+"Close":
+  "Cerrar",
 "Cut away side view":
   "Vista lateral en corte",
 "Friction holds them up.":
   "La fricción los sostiene.",
 "The banked road in 3D: drag to turn the view":
   "El camino peraltado en 3D: arrastra para girar la vista",
+"FREE BODY DIAGRAM, FROM ABOVE":
+  "DIAGRAMA DE CUERPO LIBRE, DESDE ARRIBA",
+"FROM ABOVE":
+  "DESDE ARRIBA",
+"Cut the string":
+  "Cortar la cuerda",
+"The loop runs at half speed and the cars at a quarter of real speed, so the motion is easy to follow; every number is for real time. Blind hides the force sizes (arrows drawn equal length), a = v²/r, the speed limits and the predictions of what happens, leaving the settings and the motion.":
+  "El rizo va a la mitad de la rapidez y los autos a un cuarto de la rapidez real, para que el movimiento sea fácil de seguir; todos los números son para el tiempo real. A ciegas oculta los tamaños de las fuerzas (flechas dibujadas de igual longitud), a = v²/r, los límites de rapidez y las predicciones de lo que pasa, y deja los ajustes y el movimiento.",
 "Arrow lengths to scale; the net force is drawn below the dot":
   "Longitudes de las flechas a escala; la fuerza neta se dibuja debajo del punto"
 });

@@ -10,10 +10,10 @@ Textbook: OpenStax *University Physics*, Vol. 1, §§4.4 and 6.3. Access for fre
 
 **Using the demo.**
 
-- Five setups: a ball on a string on a table, a car on a flat curve, a car on a banked curve, a car speeding up or braking on a curve, and a ball inside a vertical loop. Each shows the motion, the velocity and acceleration arrows, and a free body diagram.
+- Seven setups: a ball on a string on a table, a car on a flat curve, a car on a banked curve, a car speeding up or braking on a curve, a ball inside a vertical loop, a conical pendulum, and the rotor ride. Each shows the motion, the velocity and acceleration arrows, and a free body diagram.
 - Record reading stores the setup, $$r$$, $$\mu_s$$, the bank angle, $$m$$, the speed and what happens at that speed (the car holds the curve or slides off; on the banked curve, which way friction points; the ball goes round the loop, leaves the track, or stops and slides back). Readings are recorded in the flat curve, banked curve and loop setups. Export to worksheet sends them here.
 - Blind hides the force sizes (the free body diagram shows directions only), $$a = v^2/r$$ and every predicted limit, leaving the settings and the motion. Keep it on for this lab.
-- The cars are shown at a quarter of real speed and the loop at half speed so the motion is easy to follow; every number is for real time.
+- The loop is shown at half speed (slow motion ×2) so the motion is easy to follow; the cars and the other setups run at real speed. Every number is for real time.
 
 **What the demo models.**
 
