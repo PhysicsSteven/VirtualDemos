@@ -63,7 +63,7 @@ A real constant head tank holds a lot of water above the bench: secure it, keep 
 
 **Part 4: a mystery liquid.** Choose the Mystery liquid in the 10 mm pipe and take five laminar readings at small valve settings. Find its viscosity, predict the flow rate at which $$N_R = 2000$$, and then open the valve to that flow and watch the dye.
 
-**Using the virtual apparatus.** Turn Blind on before you start each part. For each reading, set the valve, empty the cylinder, collect for a measured time long enough to give a few hundred millilitres (use ×10 for slow flows), stop, and capture the cylinder volume, the stopwatch time and the pressure drop. Note what the dye is doing each time. Send each part's readings to the worksheet, then clear them before the next part; each part gets its own copy of the Data table.
+**Using the virtual apparatus.** Turn Blind on before you start each part. For each reading, set the valve, empty the cylinder, collect for a measured time long enough to give a few hundred milliliters (use ×10 for slow flows), stop, and capture the cylinder volume, the stopwatch time and the pressure drop. Note what the dye is doing each time. Send each part's readings to the worksheet, then clear them before the next part; each part gets its own copy of the Data table.
 
 ## Data
 
@@ -91,7 +91,7 @@ Use one copy of the table for each part.
 
 ## Uncertainty
 
-The cylinder is read to 1 mL and the stopwatch to 0.01 s, so a reading of a few hundred millilitres over tens of seconds gives $$Q$$ to better than 1%; short collections at high flow rates are the least precise. The gauge reads to 0.1 Pa, which matters most for the smallest laminar pressure drops (a few pascals in Part 1). The pipe radius enters Poiseuille's law to the fourth power, so a 1% error in $$r$$ gives a 4% error in $$\eta$$: in a real experiment the bore is the measurement to make most carefully. The transition Reynolds numbers are not sharp constants; in real pipes they depend on how disturbed the inlet flow is.
+The cylinder is read to 1 mL and the stopwatch to 0.01 s, so a reading of a few hundred milliliters over tens of seconds gives $$Q$$ to better than 1%; short collections at high flow rates are the least precise. The gauge reads to 0.1 Pa, which matters most for the smallest laminar pressure drops (a few pascals in Part 1). The pipe radius enters Poiseuille's law to the fourth power, so a 1% error in $$r$$ gives a 4% error in $$\eta$$: in a real experiment the bore is the measurement to make most carefully. The transition Reynolds numbers are not sharp constants; in real pipes they depend on how disturbed the inlet flow is.
 
 ## Questions
 

@@ -8,6 +8,10 @@ VDI18N.add('es', 'demo/wire-force', {
   "balanza bajo el imán (en cero con I = {#})",
 "Force on a Current":
   "Fuerza sobre una corriente",
+"<a>Magnetic forces and fields</a>":
+  "<a>Fuerzas y campos magnéticos</a>",
+"<a><span>←</span> <span>Charges in Magnetic Fields</span></a><a><span>Displacement Current</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Cargas en campos magnéticos</span></a><a><span>Corriente de desplazamiento</span> <span>→</span></a>",
 "A current in a magnetic field feels a force F = IL × B. Weigh that force on a balance to measure B, then put a loop of wire in the field: the forces on its sides make a torque, and with a commutator the loop becomes a motor.":
   "Una corriente en un campo magnético siente una fuerza F = IL × B. Pesa esa fuerza en una balanza para medir B, luego pon una espira de alambre en el campo: las fuerzas sobre sus lados producen una torca, y con un conmutador la espira se convierte en un motor.",
 "Current balance: a wire between magnet poles on an electronic balance, shown in 3D (drag to turn) or flat from above. Loop: a coil seen from above between the poles, with the forces on its sides and its magnetic moment. Space starts or stops the loop.":
@@ -74,12 +78,8 @@ VDI18N.add('es', 'demo/wire-force', {
   "Registra al menos dos corrientes con L = {#} cm y θ = {#}°.",
 "Blind hides the predicted force, torque and B from the fit, and draws arrows equal length. The balance reading, the meters and the settings stay.":
   "A ciegas oculta la fuerza predicha, la torca y la B del ajuste, y dibuja las flechas de igual longitud. La lectura de la balanza, los medidores y los ajustes se quedan.",
-"Model: uniform field between the poles and zero outside (no fringing); the balance sees the reaction force on the magnet, which equals the force on the wire (Newton's third law). The loop is rectangular, {#} cm by {#} cm, mass {#} g, with a little friction at its axle; the supply holds the current fixed, so back emf is ignored (a real motor's speed is limited mainly by back emf). The loop is shown {#} times slower than real, the motor about {#} times slower; the rotation rate readout is real.":
-  "Modelo: campo uniforme entre los polos y cero afuera (sin efectos de borde); la balanza registra la fuerza de reacción sobre el imán, que es igual a la fuerza sobre el alambre (tercera ley de Newton). La espira es rectangular, de {#} cm por {#} cm, masa {#} g, con un poco de fricción en su eje; la fuente mantiene fija la corriente, así que se ignora la fem inversa (la rapidez de un motor real está limitada sobre todo por la fem inversa). La espira se muestra {#} veces más lenta que en la realidad y el motor unas {#} veces más lento; la lectura de la frecuencia de giro es real.",
-"<a>Magnetic forces and fields</a>":
-  "<a>Fuerzas y campos magnéticos</a>",
-"<a><span>←</span> <span>Charges in Magnetic Fields</span></a><a><span>Displacement Current</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Cargas en campos magnéticos</span></a><a><span>Corriente de desplazamiento</span> <span>→</span></a>",
+"Model: uniform field between the poles and zero outside (no fringing); the balance sees the reaction force on the magnet, which equals the force on the wire (Newton's third law). The loop is rectangular, {#} cm by {#} cm, mass {#} g, with a little friction at its axle; the supply holds the current fixed, so back emf is ignored (a real motor's speed is limited mainly by back emf). The loop is shown slowed by the factor given on the picture (at least {#} times for the swinging loop and {#} times for the motor), chosen so the motion is easy to follow; the rotation rate readout is real.":
+  "Modelo: campo uniforme entre los polos y cero afuera (sin efectos de borde); la balanza registra la fuerza de reacción sobre el imán, que es igual a la fuerza sobre el alambre (tercera ley de Newton). La espira es rectangular, de {#} cm por {#} cm, masa {#} g, con un poco de fricción en su eje; la fuente mantiene fija la corriente, así que se ignora la fem inversa (la rapidez de un motor real está limitada sobre todo por la fem inversa). La espira se muestra más lenta por el factor que se indica en la imagen (al menos {#} veces para la espira que oscila y {#} veces para el motor), elegido para que el movimiento sea fácil de seguir; la lectura de la frecuencia de giro es real.",
 "TARE":
   "TARA",
 "B = {#} T, from N to S":
@@ -100,6 +100,8 @@ VDI18N.add('es', 'demo/wire-force', {
   "Solo cuenta la parte del alambre que cruza el campo: F = ILB sin θ. Con θ = {#} la corriente va a lo largo de B y no hay ninguna fuerza.",
 "Seen from above: the loop turns about an axis pointing out of the page.":
   "Visto desde arriba: la espira gira alrededor de un eje que apunta hacia fuera de la página.",
+"Shown slowed ×{#}; the rotation rate readout is the real one":
+  "Se muestra ×{#} más lento; la lectura de la frecuencia de giro es la real",
 "Forces on the two sides across the field point opposite ways: a couple with torque τ = NIAB sin θ that turns μ toward B. Released, the loop swings about μ ∥ B and settles there, like a compass needle.":
   "Las fuerzas sobre los dos lados que cruzan el campo apuntan en sentidos opuestos: un par con torca τ = NIAB sin θ que gira μ hacia B. Al soltarla, la espira oscila alrededor de μ ∥ B y se queda ahí, como la aguja de una brújula.",
 "τ = μ × B, |τ| = NIAB sin θ · U = −μ·B":
@@ -128,8 +130,12 @@ VDI18N.add('es', 'demo/wire-force', {
   "lectura, fila {#}",
 "Row {#} captured.":
   "Fila {#} capturada.",
+"Close":
+  "Cerrar",
 "{#} turns, {#} cm square":
   "{#} vueltas, {#} cm de lado",
 "commutator and brushes":
-  "conmutador y escobillas"
+  "conmutador y escobillas",
+"Model: uniform field between the poles and zero outside (no fringing); the balance sees the reaction force on the magnet, which equals the force on the wire (Newton's third law). The loop is rectangular, {#} cm by {#} cm, mass {#} g, with a little friction at its axle; the supply holds the current fixed, so back emf is ignored (a real motor's speed is limited mainly by back emf). The loop is shown {#} times slower than real, the motor about {#} times slower; the rotation rate readout is real.":
+  "Modelo: campo uniforme entre los polos y cero afuera (sin efectos de borde); la balanza registra la fuerza de reacción sobre el imán, que es igual a la fuerza sobre el alambre (tercera ley de Newton). La espira es rectangular, de {#} cm por {#} cm, masa {#} g, con un poco de fricción en su eje; la fuente mantiene fija la corriente, así que se ignora la fem inversa (la rapidez de un motor real está limitada sobre todo por la fem inversa). La espira se muestra {#} veces más lenta que en la realidad y el motor unas {#} veces más lento; la lectura de la frecuencia de giro es real."
 });

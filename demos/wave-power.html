@@ -55,7 +55,9 @@ table.rows input:focus { border-color: var(--accent); }
 /* In scene controls: the function generator and the tray of slotted masses sit on a shelf over the bottom left of the picture,
    the vibrator is dragged along the table, masses are dragged onto the hanger. On phones the shelf drops below the picture. */
 .scene { position: absolute; inset: 0; }
-.shelf { position: absolute; left: 12px; bottom: 12px; right: 190px; z-index: 2; display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px; pointer-events: none; }
+/* right 170px and the card 360px wide: at 1280 by 720 the generator and the tray fit on one row, so the generator no longer covers the
+   Set up card's absorber buttons and length slider (student view, 2026-11-15) */
+.shelf { position: absolute; left: 12px; bottom: 12px; right: 170px; z-index: 2; display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px; pointer-events: none; }
 .shelf > * { pointer-events: auto; }
 .gen { background: var(--box); color: #eeeae4; border-radius: 10px; padding: 10px 12px; display: flex; flex-direction: column; gap: 8px; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.25); }
 .gen-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
@@ -97,7 +99,7 @@ table.rows input:focus { border-color: var(--accent); }
 /* folded rail sections: secondary options behind their heading (layout redesign) */
 /* Wave power: the Set up card over the top left of the picture fades while the vibrator runs (as in the pendulum demo);
    the generator has a second quantity, the amplitude, with its own knob and slider. */
-.card { position: absolute; z-index: 2; left: 12px; top: 52px; width: min(330px, calc(100% - 24px)); display: flex; flex-direction: column; gap: 6px;
+.card { position: absolute; z-index: 2; left: 12px; top: 52px; width: min(360px, calc(100% - 24px)); display: flex; flex-direction: column; gap: 6px;
   padding: 8px 10px; background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--line); border-radius: 10px; transition: opacity 0.35s ease, visibility 0.35s; }
 .card-title { font-size: 0.78rem; font-weight: 700; color: var(--muted); }
 .card .chips button { font-size: 0.8rem; padding: 3px 8px; }
@@ -371,7 +373,10 @@ table.rows input:focus { border-color: var(--accent); }
   const meterW = () => (S.running ? absorberPower(Fnow(), S.L) : 0);
   const fmtP = (w) => (w * 1000).toPrecision(4);
 
-  function applyPreset(name) { const c = PRESETS[name]; S.preset = name; if (c.str === 'U' && S.str !== 'U') S.unknownMu = newUnknownMu(); S.str = c.str; S.abs = c.abs; S.L = c.L; S.f = c.f; S.A = c.A; S.masses = c.masses.slice(); S.plot = c.plot; stopPulse(); upd(); }
+  function applyPreset(name) { const c = PRESETS[name]; S.preset = name; if (c.str === 'U' && S.str !== 'U') S.unknownMu = newUnknownMu(); S.str = c.str; S.abs = c.abs; S.L = c.L; S.f = c.f; S.A = c.A; S.masses = c.masses.slice(); S.plot = c.plot; stopPulse();
+    /* a free or fixed end takes no energy out: stop a running vibrator, as the absorber buttons do (the meter read Infinity mW) (student view, 2026-11-15) */
+    if (ABSORBERS[S.abs].pulseOnly && S.running) { setRun(false); capStatus(PULSE_ONLY); }
+    upd(); }
   const can = $('can'), ctx = can.getContext('2d'), scene = $('scene'), shelf = $('shelf'), card = $('card'), GEO = {};
   let W = 0, Hh = 0, dpr = 1, T = null;
   function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
@@ -556,7 +561,9 @@ table.rows input:focus { border-color: var(--accent); }
     let gr = ctx.createLinearGradient(0, ry, 0, ry + rh); gr.addColorStop(0, Gr.mix(T.rule.startsWith('#') ? T.rule : '#f1e3b5', '#ffffff', 0.25)); gr.addColorStop(1, T.rule);
     ctx.fillStyle = gr; ctx.beginPath(); ctx.roundRect(vx, ry, S.L * ppm, rh, 1.5 * q); ctx.fill(); ctx.strokeStyle = 'rgba(0,0,0,0.25)'; ctx.lineWidth = 1; ctx.stroke();
     ctx.strokeStyle = T.ink; ctx.lineWidth = 0.8; for (let i = 0; i <= Math.round(S.L * 100); i++) { const x = vx + i / 100 * ppm, big = i % 10 === 0, mid = i % 5 === 0; if (!big && ppm < 250) continue; ctx.globalAlpha = big ? 0.85 : 0.5; ctx.beginPath(); ctx.moveTo(x, ry); ctx.lineTo(x, ry + (big ? 6 : mid ? 4 : 2.5) * q); ctx.stroke(); ctx.globalAlpha = 1; if (big && (!narrow || i % 20 === 0) && i < Math.round(S.L * 100) - 4) txt(String(i / 100), x + 2 * q, ry + 9 * q, { s: 7.5 * Math.sqrt(q / p), m: 1, c: T.muted, plate: 1 }); }
-    Gr.label(ctx, `L = ${S.L.toFixed(2)} m`, (vx + ax) / 2, tableY + edge + 16 * p, { a: 'center', s: 11 * p, w: 600, c: T.ink });
+    /* under the bench, or on its front edge where the mass tray on the shelf would cover it (Spanish at 1280 by 720) (student view, 2026-11-15) */
+    const lY = overlay && tableY + edge + 24 * p > shelfR.top - sceneTop ? tableY + edge / 2 : tableY + edge + 16 * p;
+    Gr.label(ctx, `L = ${S.L.toFixed(2)} m`, (vx + ax) / 2, lY, { a: 'center', s: 11 * p, w: 600, c: T.ink });
     /* pulley on a rod clamped to the bench edge */
     const bx = px - 2 * q;
     Gr.rod(ctx, bx, sy + pr, bx, tableY + 4 * q, 3.2 * q);
@@ -662,10 +669,11 @@ table.rows input:focus { border-color: var(--accent); }
         txt(on && S.abs === 'matched' ? 'energy per meter, ½μy_t² + ½Ty_x² (dashed: its average)' : 'energy per meter, ½μy_t² + ½Ty_x²', sx(0), laneT - 6 * p, { s: 9, c: T.muted });
       }
     }
-    Gr.label(ctx, pul ? `sideways motion drawn ×${Math.round(yScale / ppm)}, slowed ×${Math.round(PULSE_CROSS * vNow / S.L)}` : `sideways motion drawn ×${Math.round(yScale / ppm)}, slowed as by a strobe`, W - 10 * p, Hh - 10 * p, { a: 'right', s: 9 * p });
+    Gr.label(ctx, pul ? `sideways motion drawn ×${Math.round(yScale / ppm)}, slowed ×${Math.round(PULSE_CROSS * vNow / S.L)}` : on && !reduce ? `sideways motion drawn ×${Math.round(yScale / ppm)}, slowed ×${Math.round(2 * S.f)}` : `sideways motion drawn ×${Math.round(yScale / ppm)}, slowed as by a strobe`, W - 10 * p, Hh - 10 * p, { a: 'right', s: 9 * p });
   }
 
   let roT = 0;
+  /* the steady wave is shown at 0.5 cycles a second, so it is slowed 2f times; the label at the bottom right says so (student view, 2026-11-15) */
   function tick(dt) {
     if (S.running && !reduce) { S.phase = (S.phase + dt * TAU * 0.5) % TAU; draw(); }
     if (S.pulseT != null) {
@@ -691,7 +699,7 @@ table.rows input:focus { border-color: var(--accent); }
   const p0 = new URLSearchParams(location.search).get('setup'); applyPreset(PRESETS[p0] ? p0 : 'amp'); renderRows(); resize();
   /* the vibrator opens stopped (the Set up card stays until the first Start); ?run=1 starts it on open for a link */
   const run0 = new URLSearchParams(location.search).get('run');
-  if (run0 === '1') setRun(true, false);   /* otherwise it opens still until Start the vibrator (Steve: no demo starts on its own) */
+  if (run0 === '1' && !ABSORBERS[S.abs].pulseOnly) setRun(true, false);   /* otherwise it opens still until Start the vibrator (Steve: no demo starts on its own) */
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   let last = performance.now(), acc = 0;
   VD.howTo({ src: 'media/how-this-works/wave-power.mp4', poster: 'media/how-this-works/wave-power.jpg' });
