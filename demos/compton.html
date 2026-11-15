@@ -634,6 +634,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     c.font = `${10.5 * ps}px ${T.ui}`; c.fillStyle = T.muted; c.textAlign = 'left'; c.textBaseline = 'bottom';
     c.fillText(capped ? 'Drawn wavelengths: λ not to scale, λ′ shortened' : 'Drawn wavelengths: λ not to scale, λ′/λ to scale', x0, box.y + box.h - 10 * ps);
+    /* the time scale on the stage (student view, 2026-11-15) */
+    c.fillText('Photons slowed enormously to be seen', x0, box.y + box.h - 26 * ps);
     c.textAlign = 'right'; if (box.w >= 560) c.fillText('electron at rest, free', box.x + box.w - 12 * ps, box.y + box.h - 10 * ps);
     c.restore();
   }
@@ -741,7 +743,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       placed.push({ x0: x - hw, x1: x + hw, y0: top(), y1: top() + h });
       label(c, txt, x, y, col, al || 'center', bl || 'middle', true);
     };
-    lab('X-ray tube, Mo anode', Q([XT, 0, ZB + 0.19]), T.ink, 'center', 'bottom');
+    /* the source label followed the energy: it said "X-ray tube, Mo anode" for a cesium gamma ray or a green laser too (student view, 2026-11-15) */
+    const nmS = s.lam / 1000, srcName = Math.abs(S.E / SOURCES.mo.E - 1) < 1e-6 ? 'X-ray tube, Mo anode' : nmS > 750 ? 'infrared source' : nmS >= 380 ? 'light source' : nmS >= 10 ? 'ultraviolet source' : S.E < 100 ? 'X-ray tube' : 'gamma ray source';
+    lab(srcName, Q([XT, 0, ZB + 0.19]), T.ink, 'center', 'bottom');
     lab('graphite', Q([0, -0.03, ZB + 0.03]), T.ink, 'center', 'bottom');
     lab(`θ = ${fmtDeg(S.th)}`, Q([0.13 * Math.cos(a / 2), 0.13 * Math.sin(a / 2), 0.004]), PC.cout);
     lab('crystal and ionization chamber', Q([0.2 * Math.cos(a), 0.2 * Math.sin(a), ZB + 0.06]), T.muted, 'center', 'bottom');
@@ -751,7 +755,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     label(c, `λ′ = ${fmtL(s.lamP)}`, x0, y, PC.cout, 'left', 'middle', true, 12); y += 18 * ps;
     label(c, `Δλ = ${hideDl() ? 'hidden' : fmtL(s.dlam)}`, x0, y, T.ink, 'left', 'middle', true, 12);
     c.font = `${10.5 * ps}px ${T.ui}`; c.fillStyle = T.muted; c.textAlign = 'left'; c.textBaseline = 'bottom';
-    if (box.w < 520) c.fillText(PC.real ? 'True color of the light.' : 'X-rays in false color.', x0, box.y + box.h - 10 * ps); else c.fillText(VD3.turnText(PC.real ? 'Colors: true color of the light. Drag the arm to set θ, drag elsewhere to turn.' : 'X-rays in false color, as in the Flat view. Drag the arm to set θ, drag elsewhere to turn.'), x0, box.y + box.h - 10 * ps);
+    /* the time scale on the stage: a photon crossing in about 3 s is slowed enormously (student view, 2026-11-15) */
+    label(c, 'Photons slowed enormously to be seen', x0, y + 18 * ps, T.muted, 'left', 'middle', false, 10);
+    c.font = `${10.5 * ps}px ${T.ui}`; c.fillStyle = T.muted; c.textAlign = 'left'; c.textBaseline = 'bottom';
+    /* gamma rays were called X-rays here (student view, 2026-11-15) */
+    const gam = !PC.real && S.E >= 100;
+    if (box.w < 520) c.fillText(PC.real ? 'True color of the light.' : gam ? 'Gamma rays in false color.' : 'X-rays in false color.', x0, box.y + box.h - 10 * ps); else c.fillText(VD3.turnText(PC.real ? 'Colors: true color of the light. Drag the arm to set θ, drag elsewhere to turn.' : gam ? 'Gamma rays in false color, as in the Flat view. Drag the arm to set θ, drag elsewhere to turn.' : 'X-rays in false color, as in the Flat view. Drag the arm to set θ, drag elsewhere to turn.'), x0, box.y + box.h - 10 * ps);
     c.restore();
   }
   function armHandle() {

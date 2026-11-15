@@ -4,6 +4,8 @@ VDI18N.add('es', 'demo/compton', {
   "color falso",
 "Drawn wavelengths: λ not to scale, λ′/λ to scale":
   "Longitudes de onda dibujadas: λ no está a escala, λ′/λ sí está a escala",
+"Photons slowed enormously to be seen":
+  "Fotones frenados enormemente para que se vean",
 "Momentum: p = p′ + pₑ, tip to tail":
   "Cantidad de movimiento: p = p′ + pₑ, punta con cola",
 "Energy: rest energy bar not to scale":
@@ -259,5 +261,27 @@ VDI18N.add('es', 'demo/compton', {
 "{#} × {#}⁻¹⁴ keV <span>rounding: {#} × {#}⁻¹⁶ of E</span>":
   "{#} × {#}⁻¹⁴ keV <span>redondeo: {#} × {#}⁻¹⁶ de E</span>",
 "A photon from electron positron annihilation carries exactly m<sub>e</sub>c² = {#} keV, so its wavelength is λ<sub>C</sub> itself.":
-  "Un fotón de la aniquilación electrón positrón lleva exactamente m<sub>e</sub>c² = {#} keV, así que su longitud de onda es la propia λ<sub>C</sub>."
+  "Un fotón de la aniquilación electrón positrón lleva exactamente m<sub>e</sub>c² = {#} keV, así que su longitud de onda es la propia λ<sub>C</sub>.",
+"Close":
+  "Cerrar",
+"Change the scattering angle by {#} degree (Shift for {#} degrees)":
+  "Cambia el ángulo de dispersión {#} grado (Shift para {#} grados)",
+"gamma ray source":
+  "fuente de rayos gamma",
+"infrared source":
+  "fuente infrarroja",
+"light source":
+  "fuente de luz",
+"ultraviolet source":
+  "fuente ultravioleta",
+"X-ray tube":
+  "Tubo de rayos X",
+"Gamma rays in false color.":
+  "Rayos gamma en color falso.",
+"Gamma rays in false color, as in the Flat view. Drag the arm to set θ, drag elsewhere to turn.":
+  "Rayos gamma en color falso, como en la vista Plano. Arrastra el brazo para fijar θ; arrastra en otro lugar para girar.",
+"X-rays in false color, as in the Flat view. Drag the arm to set θ, drag elsewhere to turn.":
+  "Rayos X en color falso, como en la vista Plano. Arrastra el brazo para fijar θ; arrastra en otro lugar para girar.",
+"Colors: true color of the light. Drag the arm to set θ, drag elsewhere to turn.":
+  "Colores: el color real de la luz. Arrastra el brazo para fijar θ; arrastra en otro lugar para girar."
 });

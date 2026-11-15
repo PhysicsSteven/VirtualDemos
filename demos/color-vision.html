@@ -486,6 +486,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (const ph of S.photons) { ctx.fillStyle = css(ph.col, ph.dead ? Math.max(0, 1 - ph.dead * 3) : 1); ctx.beginPath(); ctx.arc(ph.x, ph.y, 3.2 * p, 0, 2 * Math.PI); ctx.fill(); }
     thought(head());
     ctx.fillStyle = T.rMuted; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText('A dark room', geo.x0 + 10 * p, geo.y0 + 8 * p);
+    /* the photons' time scale on the stage, not only in the model text (student view, 2026-11-15) */
+    if (S.view === 'photon') ctx.fillText('Photons slowed enormously; each dot is one photon', geo.x0 + 10 * p, geo.y0 + 21 * p);
     ctx.restore();
     drawSpectrum();
   }
@@ -500,7 +502,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   /* Paints: four pots, the mixed paint on a board under the bulb, and the eye looking at it */
   function drawPaint() {
     const p = geo.p, { x0, y0, rw, rh } = geo, [ex, ey] = geo.eye, bulbCol = cvRGB(cvXYZ(cvBulb(S.lit)).map((v) => v * 0.9));
-    const bx0 = x0 + rw * 0.27, bw = Math.max(60 * p, Math.min(rw * 0.26, ex - geo.R * 1.4 - bx0 - 14 * p)), by0 = y0 + rh * 0.34, bh = rh * 0.52, lx = bx0 + bw / 2, ly = y0 + 22 * p;
+    const bx0 = x0 + rw * 0.27, bw = Math.max(60 * p, Math.min(rw * 0.26, ex - geo.R * 1.4 - bx0 - 14 * p)), by0 = y0 + rh * 0.34, bh = rh * 0.52, lx = bx0 + bw / 2;
+    /* on a narrow stage the bulb sat on the corner title: drop it below the title when they would meet (student view, 2026-11-15) */
+    ctx.font = `${10 * p}px ${T.ui}`; const ly = y0 + (x0 + 10 * p + ctx.measureText('Paints, mixed in the pot').width > lx - 18 * p ? 36 : 22) * p;
     /* the bulb and its light falling on the board */
     const cone = ctx.createLinearGradient(0, ly, 0, by0); cone.addColorStop(0, css(bulbCol, 0.16)); cone.addColorStop(1, css(bulbCol, 0.03));
     ctx.fillStyle = cone; ctx.beginPath(); ctx.moveTo(lx - 8 * p, ly); ctx.lineTo(bx0 - 6 * p, by0); ctx.lineTo(bx0 + bw + 6 * p, by0); ctx.lineTo(lx + 8 * p, ly); ctx.fill();

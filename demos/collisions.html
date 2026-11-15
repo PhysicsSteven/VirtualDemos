@@ -3325,9 +3325,17 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   function ovl3Table(B, off, off0, atStart, bInfo, zA) {
     const p = P();
     if (isFinite(run.tc) && (!B || t >= run.tc) && (t >= run.tc - 1e-9 || atStart) && OV.W > 360) {
-      const r2 = run.bodies[1].pos(run.tc), n = run.n; tag('line of centers', [r2[0] + n[0] * 0.22, r2[1] + n[1] * 0.22, 0.004], 'left', T.equi, 11, 600, 6, 4);
+      /* puck 2 leaves along n and ran over this label at the +n end: put it at the far end behind puck 1 instead, unless puck 1
+         bounces back that way (student view, 2026-11-15) */
+      const r1 = run.bodies[0].pos(run.tc), r2 = run.bodies[1].pos(run.tc), n = run.n, v1a = run.bodies[0].vel(run.tc + 1e-3);
+      if (v1a[0] * n[0] + v1a[1] * n[1] > -1e-6) tag('line of centers', [r1[0] - n[0] * 0.22, r1[1] - n[1] * 0.22, 0.004], n[0] > 0 ? 'right' : 'left', T.equi, 11, 600, n[0] > 0 ? -6 : 6, 4);
+      else tag('line of centers', [r2[0] + n[0] * 0.22, r2[1] + n[1] * 0.22, 0.004], 'left', T.equi, 11, 600, 6, 4);
     }
-    if (bInfo) tag(`b = ${fx(bInfo.bb * 100, 1)} cm`, [(bInfo.foot[0] + p.r2[0]) / 2, (bInfo.foot[1] + p.r2[1]) / 2, 0.03], 'right', T.ink, 11.5, 600, -8, 4);
+    /* the b label sits where the pucks meet: hide it while puck 1 comes in and while a moving puck is under it, so it doesn't
+       pile up with the CM and speed labels at the collision (student view, 2026-11-15) */
+    const bAt = bInfo && [(bInfo.foot[0] + p.r2[0]) / 2, (bInfo.foot[1] + p.r2[1]) / 2];
+    const bUnder = bAt && !atStart && ((isFinite(run.tc) && t < run.tc) || run.bodies.some((b) => { const r = b.pos(t), r0 = b.pos(0); return Math.hypot(r[0] - r0[0], r[1] - r0[1]) > 0.002 && Math.hypot(r[0] - bAt[0], r[1] - bAt[1]) < b.size + 0.2; }));
+    if (bInfo && !bUnder) tag(`b = ${fx(bInfo.bb * 100, 1)} cm`, [bAt[0], bAt[1], 0.03], 'right', T.ink, 11.5, 600, -8, 4);
     if (S.layers.cm) { const c = cmAt(t); tag('CM', [c[0], c[1], 0.03], 'left', T.equi, 11, 700, 9, 14); }
     run.bodies.forEach((b, i) => {
       const r = b.pos(t), v = b.vel(t), u = [v[0] - off.v[0], v[1] - off.v[1]];

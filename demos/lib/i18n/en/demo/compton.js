@@ -2,6 +2,7 @@
 VDI18N.add('en', 'demo/compton', [
 "false color",
 "Drawn wavelengths: λ not to scale, λ′/λ to scale",
+"Photons slowed enormously to be seen",
 "Momentum: p = p′ + pₑ, tip to tail",
 "Energy: rest energy bar not to scale",
 "Before",
@@ -12,7 +13,6 @@ VDI18N.add('en', 'demo/compton', [
 "shifted λ′",
 "intensity",
 "Compton Scattering",
-"<a><span>←</span> <span>Doppler Effect and Shock Waves</span></a><a><span>Nuclear Binding Energy</span> <span>→</span></a>",
 "A photon bounces off a free electron and leaves with a longer wavelength. The shift depends only on the angle, as it must if light carries momentum in lumps, like a particle.",
 "<span>E = hc/λ</span> · <span>hc = {#} keV·pm</span> · <span>m<sub>e</sub>c² = {#} keV</span> · <span>λ<sub>C</sub> = h/m<sub>e</sub>c = {#} pm</span>",
 "Time controls",
@@ -75,6 +75,7 @@ VDI18N.add('en', 'demo/compton', [
 "Photon colors: visible light is drawn in its true color. X-rays and gamma rays have no color, so they use a false color scale: the incoming photon is blue and the scattered photon shifts toward red in proportion to Δλ, reaching red at the largest possible shift, {#}λ<sub>C</sub> at {#}°. Because Δλ depends only on the angle, a given angle gives the same color at every energy.",
 "Angular distribution: the Klein–Nishina formula for unpolarized photons on free electrons, summed over final polarizations. Photons are sampled from it by rejection.",
 "<span><i></i>Incoming photon, momentum p</span> <span><i></i>Scattered photon, p′</span> <span><i></i>Recoil electron, p<sub>e</sub></span>",
+"<a><span>←</span> <span>Doppler Effect and Shock Waves</span></a><a><span>Nuclear Binding Energy</span> <span>→</span></a>",
 "X-ray tube, Mo anode",
 "graphite",
 "crystal and ionization chamber",
@@ -129,5 +130,9 @@ VDI18N.add('en', 'demo/compton', [
 "-{#} × {#}⁻³⁵ keV/c <span>rounding: {#} × {#}⁻³² of p</span>",
 "-{#} × {#}⁻¹⁹ keV <span>rounding: {#} × {#}⁻¹⁷ of E</span>",
 "{#} × {#}⁻¹⁴ keV <span>rounding: {#} × {#}⁻¹⁶ of E</span>",
-"A photon from electron positron annihilation carries exactly m<sub>e</sub>c² = {#} keV, so its wavelength is λ<sub>C</sub> itself."
+"A photon from electron positron annihilation carries exactly m<sub>e</sub>c² = {#} keV, so its wavelength is λ<sub>C</sub> itself.",
+"Close",
+"Change the scattering angle by {#} degree (Shift for {#} degrees)",
+"gamma ray source",
+"Gamma rays in false color."
 ]);

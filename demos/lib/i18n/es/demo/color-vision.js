@@ -8,8 +8,8 @@ VDI18N.add('es', 'demo/color-vision', {
   "Señales de los conos",
 "Color Vision":
   "Visión del color",
-"<a><span>←</span> <span>Build a Microscope or Telescope</span></a><a><span>Double Slit, One Particle at a Time</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Construye un microscopio o un telescopio</span></a><a><span>Doble rendija, una partícula a la vez</span> <span>→</span></a>",
+"<a><span>←</span> <span>Build a Microscope or Telescope</span></a><a><span>Telescope Aberrations</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Construye un microscopio o un telescopio</span></a><a><span>Aberraciones de telescopios</span> <span>→</span></a>",
 "Your eye has three kinds of cones, and every color you see is just how strongly light excites each of them. Mix red, green and blue lamps, compare a single wavelength, put a filter in front of a white bulb, stack colored filters in any of the beams, mix paints, or light a stage with colored lamps.":
   "Tu ojo tiene tres tipos de conos, y cada color que ves es simplemente qué tan fuerte la luz excita a cada uno. Mezcla lámparas roja, verde y azul, compara una sola longitud de onda, pon un filtro frente a un foco blanco, apila filtros de color en cualquiera de los haces, mezcla pinturas o ilumina un escenario con lámparas de colores.",
 "Light source":
@@ -258,6 +258,8 @@ VDI18N.add('es', 'demo/color-vision', {
   "Verde y azul: M y S responden. Compara con la configuración de {#} nm puro.",
 "Pure {#} nm light. Mix it from the lamps and the match asks for negative red: no positive mix of these three lamps reaches a color this pure, which is why screens cannot show the rainbow's cyan.":
   "Luz pura de {#} nm. Mézclala con las lámparas y la igualación pide rojo negativo: ninguna mezcla positiva de estas tres lámparas alcanza un color tan puro, y por eso las pantallas no pueden mostrar el cian del arcoíris.",
+"Photons slowed enormously; each dot is one photon":
+  "Fotones frenados enormemente; cada punto es un fotón",
 "Photons from daylight through a green filter: every photon outside {#} to {#} nm is absorbed at the filter, and only green ones reach the eye.":
   "Fotones de luz de día a través de un filtro verde: cada fotón fuera de {#} a {#} nm es absorbido en el filtro, y solo los verdes llegan al ojo.",
 "A {#} nm wide filter at {#} nm, the sodium yellow. About a tenth of the light gets through (Y = {#}), and its color is nearly that of the single {#} nm wavelength.":
@@ -336,6 +338,8 @@ VDI18N.add('es', 'demo/color-vision', {
   "el telón de fondo azul, iluminado por el rojo y el verde (en la sombra del azul)",
 "stage lamps red {#}%, green {#}%, blue {#}%: the blue backdrop, lit by red and green (in the shadow of blue)":
   "lámparas del escenario roja {#}%, verde {#}%, azul {#}%: el telón de fondo azul, iluminado por el rojo y el verde (en la sombra del azul)",
+"Close":
+  "Cerrar",
 "the red backdrop, lit by red and green (in the shadow of blue)":
   "el telón de fondo rojo, iluminado por el rojo y el verde (en la sombra del azul)",
 "#ff002c":
@@ -361,5 +365,7 @@ VDI18N.add('es', 'demo/color-vision', {
 "Light, cones (dashed), R (dots)":
   "Luz, conos (discontinuas), R (puntos)",
 "Light (solid), cones (dashed)":
-  "Luz (continua), conos (discontinuas)"
+  "Luz (continua), conos (discontinuas)",
+"<a><span>←</span> <span>Build a Microscope or Telescope</span></a><a><span>Double Slit, One Particle at a Time</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Construye un microscopio o un telescopio</span></a><a><span>Doble rendija, una partícula a la vez</span> <span>→</span></a>"
 });
