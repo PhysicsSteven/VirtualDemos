@@ -184,8 +184,8 @@ VDI18N.add('es', 'demo/e-over-m', {
   "Aceptado (CODATA): {#} × {#}¹¹ C/kg",
 "−{#}% from the slope":
   "−{#}% respecto a la pendiente",
-"The procedure took five readings at the voltages and currents of the sample data in the PASCO manual ({#} V, {#} A up to {#} V, {#} A), eye lined up on each edge, and filled the table (marked *, simulated readings scattered by {#} mm, one standard deviation). The slope of 2V against (Br)² is e/m. Add your own readings to the same table.":
-  "El procedimiento tomó cinco lecturas a los voltajes y corrientes de los datos de muestra del manual de PASCO ({#} V, {#} A hasta {#} V, {#} A), con el ojo alineado en cada borde, y llenó la tabla (marcadas con *, lecturas simuladas dispersas {#} mm, una desviación estándar). La pendiente de 2V en función de (Br)² es e/m. Agrega tus propias lecturas a la misma tabla.",
+"The procedure took seven readings at the settings the worksheet uses ({#} V, {#} A up to {#} V, {#} A), eye lined up on each edge, and filled the table (marked *, simulated readings scattered by {#} mm, one standard deviation). The slope of 2V against (Br)² is e/m. Add your own readings to the same table.":
+  "El procedimiento tomó siete lecturas en los ajustes de la hoja de trabajo ({#} V, {#} A hasta {#} V, {#} A), con el ojo alineado en cada borde, y llenó la tabla (marcadas con *, lecturas simuladas dispersas {#} mm, una desviación estándar). La pendiente de 2V en función de (Br)² es e/m. Agrega tus propias lecturas a la misma tabla.",
 "3D view needs WebGL: a front view along the coil axis":
   "La vista 3D necesita WebGL: una vista frontal a lo largo del eje de las bobinas",
 "Drag the V and I knobs up or down.":

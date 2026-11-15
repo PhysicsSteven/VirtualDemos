@@ -20,7 +20,7 @@ Students should know the magnetic force qv × B, circular motion and energy cons
 2. **A circle.** Ask Q1 first. Show the view through the front coil: the beam and its reflection only line up when your eye is straight in front of the edge you read. Read the left side, move the eye, read the right side.
 3. **More voltage, bigger circle** and **More current, smaller circle.** Predict the new radius each time (Q2) before switching.
 4. **Tilt the tube: a helix.** Part of the velocity is along B and is untouched. Ask why a tilted tube spoils the measurement (Q5).
-5. **Measure e/m.** Five simulated readings at the settings of the manual's sample data fill the table; have students add their own and compare the fit with the accepted value.
+5. **Measure e/m.** Seven simulated readings at the worksheet's settings fill the table; have students add their own and compare the fit with the accepted value.
 
 ## Questions
 

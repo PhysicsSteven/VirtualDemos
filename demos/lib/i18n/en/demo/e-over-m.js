@@ -93,8 +93,7 @@ VDI18N.add('en', 'demo/e-over-m', [
 "Mean of the rows ± standard deviation",
 "Accepted (CODATA): {#} × {#}¹¹ C/kg",
 "−{#}% from the slope",
-"The procedure took five readings at the voltages and currents of the sample data in the PASCO manual ({#} V, {#} A up to {#} V, {#} A), eye lined up on each edge, and filled the table (marked *, simulated readings scattered by {#} mm, one standard deviation). The slope of 2V against (Br)² is e/m. Add your own readings to the same table.",
-"Close",
+"The procedure took seven readings at the settings the worksheet uses ({#} V, {#} A up to {#} V, {#} A), eye lined up on each edge, and filled the table (marked *, simulated readings scattered by {#} mm, one standard deviation). The slope of 2V against (Br)² is e/m. Add your own readings to the same table.",
 "3D view needs WebGL: a front view along the coil axis",
 "Drag the V and I knobs up or down."
 ]);

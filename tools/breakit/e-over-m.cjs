@@ -39,7 +39,7 @@ module.exports = {
         const want = q.ok ? (q.em / 1e11).toFixed(3) : '—'; if (td.textContent !== want) return 'row ' + (i + 1) + ' e/m shows ' + td.textContent + ', physics ' + want; }
       return true; })()` },
     { name: "presets sit at their settings, and 150 V, 1.5 A closes into a circle about 3.7 cm in radius", fn: `(() => { ${pre}
-      const want = { rest: [190, 0, 0], circle: [150, 1.5, 0], morev: [200, 1.5, 0], morei: [150, 2, 0], helix: [150, 1.5, 12], measure: [120, 1.4, 0] }[S.preset];
+      const want = { rest: [190, 0, 0], circle: [150, 1.5, 0], morev: [200, 1.5, 0], morei: [150, 2, 0], helix: [150, 1.5, 12], measure: [200, 2, 0] }[S.preset];
       if (!want || S.V !== want[0] || S.I !== want[1] || S.tilt !== want[2]) return true;
       if (S.preset === 'circle') { const r = C.radiusUniform(150, C.bCenter(C.N_TURNS, 1.5, C.A_TRUE)) * 100; if (r < 3.65 || r > 3.75) return 'r at 150 V, 1.5 A is ' + r.toFixed(3) + ' cm, the hint says about 3.7'; }
       if (S.preset === 'morev' && !near(C.radiusUniform(200, 1) / C.radiusUniform(150, 1), Math.sqrt(200 / 150), 1e-12)) return 'r does not grow as sqrt V';

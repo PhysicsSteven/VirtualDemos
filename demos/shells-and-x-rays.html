@@ -939,7 +939,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('baCtl').hidden = S.view !== 'build'; $('fillRow').hidden = S.view === 'build'; $('stage').classList.toggle('build', S.view === 'build');
     for (const b of document.querySelectorAll('#ptable button')) if (S.view === 'build') b.setAttribute('aria-pressed', String(+b.dataset.z === BA.p));
   }
-  const MYSTERY_POOL = XRAY.map((r) => r[0]).filter((z) => z >= 20 && z <= 60);
+  const MYSTERY_POOL = XRAY.map((r) => r[0]).filter((z) => z >= 21 && z <= 44);   /* Steve 2026-11-15: the bare Moseley law (3/4)(13.6 eV)(Z − 1)² rounds one too high from Z = 45 on, and calcium's fit lands at 20.5 */
   function newTarget(quiet) { const x = S.xr; let z; do { z = MYSTERY_POOL[Math.floor(Math.random() * MYSTERY_POOL.length)]; } while (z === x.mys); if (!quiet && x.mysN) x.lastMys = x.mys; x.mys = z; x.mysN++; }
   const PRESETS = {
     neon: { view: 'shells', hint: 'Neon, Z = 10: the first shell holds 2 electrons and the second 8, both full. Step down with − electron and up again: each new electron takes the lowest free place that leaves no two electrons with the same four quantum numbers.', set: () => Object.assign(S.sh, { Z: 10, fill: 'real' }) },
