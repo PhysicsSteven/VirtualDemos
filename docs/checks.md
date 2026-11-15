@@ -43,7 +43,7 @@ read the results, instead of running the long checks in the session.
   keys whose demo or worksheet changed in the last 8 days, plus `rules.cjs --keys`. Run workflow: changed, all, or slugs.
   TeacherKeys is private, so this uses Actions minutes (a run of every key is about 7 hours of them): prefer changed or slugs.
 - Reading results: `gh run list -R PhysicsSteven/VirtualDemos -L 5`, then `gh run view <id> --log-failed`. Each run's Summary
-  page lists the failures (and for keys, what moved); `gh run download <id>` fetches the pictures, reports and new key files.
+  page lists the failures (and for keys, what moved); the pictures, reports and new key files are the run's downloads (on its GitHub page; `gh run download` is blocked in cloud sessions).
   A failed run also emails Steve. Moved keys still need the judgment in "Keys after a demo change" below.
 - Still by hand: watching like a student (judging the pictures), the odd sequences break-it can't script, and videos.
 

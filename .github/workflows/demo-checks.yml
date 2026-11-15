@@ -84,7 +84,12 @@ jobs:
           status=0
           case "$KIND" in
             democheck) for d in $DEMOS; do node tools/democheck.cjs "$d" 2>&1 | tee -a check.log || status=1; done ;;
-            breakit)   node tools/breakit.cjs $DEMOS --jobs 3 2>&1 | tee -a check.log || status=1
+            breakit)   # two at a time: GitHub's 4 core machines draw 3D in software, and three at once timed out photos
+                       node tools/breakit.cjs $DEMOS --jobs 2 2>&1 | tee -a check.log || status=1
+                       # a failure under load is often the machine (docs/checks.md): rerun the failed demos alone, and that verdict stands
+                       again=$(grep -E '^FAIL ' check.log | awk '{print $2}' | sort -u | tr '\n' ' ')
+                       if [ -n "$again" ]; then echo "== rerunning alone: $again" | tee -a check.log; status=0
+                         node tools/breakit.cjs $again 2>&1 | tee rerun.log | sed 's/^/rerun: /' | tee -a check.log || status=1; fi
                        if [ "$MODE" = all ]; then node tools/opencheck.cjs $DEMOS 2>&1 | tee -a check.log || status=1; fi ;;
             perfcheck) node tools/perfcheck.cjs $DEMOS 2>&1 | tee -a check.log || status=1 ;;
           esac
@@ -92,7 +97,7 @@ jobs:
             echo "### ${{ matrix.name }}"
             if [ $status = 0 ]; then echo "All passed."; else echo "Something failed. The lines that matter:"; fi
             echo '```'
-            grep -iE '^(fail|warn) |^ {3}(fail|warn)|^Error|failed' check.log | head -60 || true
+            grep -iE '^(rerun: )?((fail|warn) |\s{3}(fail|warn))|^Error|failed|rerunning' check.log | head -60 || true
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
           exit $status

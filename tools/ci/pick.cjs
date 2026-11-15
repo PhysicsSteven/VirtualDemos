@@ -46,7 +46,7 @@ const split = (list, per) => { const n = Math.max(1, Math.ceil(list.length / per
 const jobs = [];
 if (demos.length) {
   const add = (kind, per) => split(demos, per).forEach((g, i, all) => jobs.push({ kind, name: kind + (all.length > 1 ? ' ' + (i + 1) + ' of ' + all.length : ''), demos: g.join(' ') }));
-  if (mode === 'all') { add('breakit', 26); add('perfcheck', 20); }   /* 6 and 8 jobs, each about 15 to 25 minutes */
+  if (mode === 'all') { add('breakit', 14); add('perfcheck', 20); }   /* 11 and 8 jobs, each about 20 to 30 minutes */
   else { add('democheck', 8); add('breakit', 30); add('perfcheck', 20); }
 }
 process.stdout.write(JSON.stringify({ mode, demos, jobs }) + '\n');
