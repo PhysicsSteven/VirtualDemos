@@ -264,8 +264,6 @@ VDI18N.add('es', 'demo/bz-reaction', {
   "La caja excitable (ε, q, f, φ citados) con tamaño de patrón D = {#}, iniciada con bloques aleatorios de {#} unidades de estados a lo largo de un pulso de excitación. Se forman muchas espirales pequeñas que se amontonan entre sí; el campo se vuelve más grueso solo lentamente. Coloreada por fase de oscilación, se vuelve un mosaico de tres colores. Este es el modelo real; para el modelo de juguete que inspiró el aspecto, elige Modelo de juguete en Medio de la caja.",
 "color: oscillation phase · red, green, blue for each third of the local period":
   "color: fase de oscilación · rojo, verde, azul para cada tercio del periodo local",
-"Δx/√D = {#}<br><small>coarse: patterns are less accurate</small>":
-  "Δx/√D = {#}<br><small>gruesa: los patrones son menos precisos</small>",
 "The scan steps k_f from {#} to {#} × {#}⁻⁴ s⁻¹. One peak height splits into {#}, then {#}, then {#}, then a smear: period doubling to chaos. Drag k_f on the diagram and watch the next peak map.":
   "El barrido cambia k_f paso a paso de {#} a {#} × {#}⁻⁴ s⁻¹. Una altura de pico se divide en {#}, luego en {#}, luego en {#}, y luego en una mancha: duplicación de periodo hacia el caos. Arrastra k_f en el diagrama y observa el mapa del pico siguiente.",
 "scaled concentrations · flow rate k_f in s⁻¹ · time in s":
@@ -334,6 +332,8 @@ VDI18N.add('es', 'demo/bz-reaction', {
   "<span><i></i>primer tercio del periodo después de un frente</span><span><i></i>segundo tercio</span><span><i></i>último tercio</span><span><i></i>menos de dos frentes hasta ahora</span>",
 "{#}<br><small>grid check: -{#} % from a {#}× finer grid</small>":
   "{#}<br><small>comprobación de malla: -{#} % respecto a una malla {#}× más fina</small>",
+"Δx/√D = {#}<br><small>coarse: patterns are less accurate</small>":
+  "Δx/√D = {#}<br><small>gruesa: los patrones son menos precisos</small>",
 "Excitable dish: at rest until a wave arrives. A broken wave is curling into a spiral.":
   "Caja excitable: en reposo hasta que llega una onda. Una onda rota se está enrollando en una espiral.",
 "Oscillatory dish: the beaker chemistry with every point oscillating on its own, started from random blocks of phases. Large blocks leave spirals; small blocks fall into step.":
@@ -344,8 +344,8 @@ VDI18N.add('es', 'demo/bz-reaction', {
   "Modelo de juguete, no química BZ: la regla de piedra, papel o tijera de Turner produce un campo denso de espirales en tres colores.",
 "{#} flow rates, each run for {#} min of reactor time":
   "{#} tasas de flujo, cada corrida durante {#} min de tiempo del reactor",
-"settling":
-  "asentándose",
+"Close":
+  "Cerrar",
 "x (HBrO₂)":
   "x (HBrO₂)",
 "Phase portrait: z against x (3D view needs three.js)":
@@ -353,5 +353,7 @@ VDI18N.add('es', 'demo/bz-reaction', {
 "built by a scan":
   "construido por un barrido",
 "Press a Scan button to build this diagram":
-  "Pulsa un botón de Barrido para construir este diagrama"
+  "Pulsa un botón de Barrido para construir este diagrama",
+"settling":
+  "asentándose"
 });

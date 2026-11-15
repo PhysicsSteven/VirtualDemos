@@ -6,8 +6,8 @@ VDI18N.add('es', 'demo/bragg-peak', {
   "protones, {#} MeV",
 "sideways squeezed ×{#}":
   "comprimido de lado ×{#}",
-"dose: {#} → {#} % of the peak, then more":
-  "dosis: {#} → {#} % del pico, luego más",
+"dose: {#} → {#} % of the peak":
+  "dosis: {#} → {#} % del pico",
 "dose (% of the peak)":
   "dosis (% del pico)",
 "depth (cm)":
@@ -16,10 +16,6 @@ VDI18N.add('es', 'demo/bragg-peak', {
   "protones, {#} MeV, agua",
 "The Bragg Peak":
   "El pico de Bragg",
-"<a>{#} · Proton therapy</a>":
-  "<a>{#} · Terapia con protones</a>",
-"<a><span>←</span> <span>Nuclear Reactions, Fission and Fusion</span></a><a><span>Proton Therapy QA</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Reacciones nucleares, fisión y fusión</span></a><a><span>Control de calidad en terapia con protones</span> <span>→</span></a>",
 "A proton beam puts most of its dose down just before it stops. Move the peak with the beam energy, see it in water, muscle, fat and bone, stack energy layers into a spread out Bragg peak that covers a target, and compare it with a clinical {#} MV photon beam.":
   "Un haz de protones deposita la mayor parte de su dosis justo antes de detenerse. Mueve el pico con la energía del haz, míralo en agua, músculo, grasa y hueso, apila capas de energía en un pico de Bragg extendido que cubra un blanco, y compáralo con un haz clínico de fotones de {#} MV.",
 "depth in cm · E in MeV":
@@ -160,6 +156,10 @@ VDI18N.add('es', 'demo/bragg-peak', {
   "curva ajustada (%)",
 "Varian VitalBeam, {#} MV, {#} × {#} cm² field, SSD {#} cm, in water: Chowdhury, Rabby, Ahmed, Akter and Rahman, Int. J. Radiol. Radiat. Ther. {#}({#}), {#} ({#}), Table {#}. Their Table {#} gives the British Journal of Radiology Supplement {#} reference values: d_max {#} cm, D10 {#} %, d80 {#} cm.":
   "Varian VitalBeam, {#} MV, campo de {#} × {#} cm², SSD {#} cm, en agua: Chowdhury, Rabby, Ahmed, Akter y Rahman, Int. J. Radiol. Radiat. Ther. {#}({#}), {#} ({#}), tabla {#}. Su tabla {#} da los valores de referencia del Suplemento {#} del British Journal of Radiology: d_max {#} cm, D10 {#} %, d80 {#} cm.",
+"<a>{#} · Proton therapy</a>":
+  "<a>{#} · Terapia con protones</a>",
+"<a><span>←</span> <span>Nuclear Reactions, Fission and Fusion</span></a><a><span>Proton Therapy QA</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Reacciones nucleares, fisión y fusión</span></a><a><span>Control de calidad en terapia con protones</span> <span>→</span></a>",
 "medium":
   "medio",
 "dose (%)":
@@ -194,10 +194,12 @@ VDI18N.add('es', 'demo/bragg-peak', {
   "{#} cm a {#} cm",
 "{#} % of the target's mean":
   "{#} % de la media del blanco",
-"{#} MV photons (fit)":
-  "Fotones de {#} MV (ajuste)",
-"measured (Chowdhury {#})":
-  "medida (Chowdhury {#})",
+"protons":
+  "protones",
+"layers":
+  "capas",
+"measured":
+  "medido",
 "Mean dose in front of the target":
   "Dosis media delante del blanco",
 "protons {#} %, photons {#} %":
@@ -296,12 +298,16 @@ VDI18N.add('es', 'demo/bragg-peak', {
   "Un haz de fotones de {#} MV, {#} × {#} cm², SSD {#} cm, en agua. La dosis se acumula durante los primeros {#} cm a medida que los electrones puestos en movimiento por los fotones avanzan, y luego cae lentamente, alrededor de {#} % por cm, a través de todo el paciente.",
 "One {#} MeV proton in water, with a window magnified onto the track around it. Each electron it passes is pulled toward its path while it goes by, for a time of about 2b/v, so the sideways kick is Δp = FΔt ∝ {#}/v and the energy the electron takes, Δp²/2mₑ, grows as {#}/v². Everyday drag grows with speed; this loss grows as the proton slows. Press Send a proton and watch the arrows and colors grow, while the reach b_max, beyond which electrons are only nudged and let go, closes in. The graph multiplies the two.":
   "Un protón de {#} MeV en agua, con una ventana ampliada sobre la trayectoria a su alrededor. Cada electrón junto al que pasa es jalado hacia su trayectoria mientras pasa, durante un tiempo de unos 2b/v, así que el impulso lateral es Δp = FΔt ∝ {#}/v y la energía que toma el electrón, Δp²/2mₑ, crece como {#}/v². El arrastre cotidiano crece con la rapidez; esta pérdida crece a medida que el protón se frena. Pulsa Enviar un protón y observa cómo crecen las flechas y los colores, mientras el alcance b_max, más allá del cual los electrones solo reciben un leve empujón y se sueltan, se cierra. La gráfica multiplica los dos.",
-"depth {#} cm · {#} MeV · v = {#} c":
-  "profundidad {#} cm · {#} MeV · v = {#} c",
+"depth {#} cm":
+  "profundidad {#} cm",
 "The same proton with {#} cm to go. Its speed falls fast here, so each kick, and the dose, rises steeply: the Bragg peak. In the last {#} MeV (under {#} mm) the proton starts to catch electrons and lose them again, so its average charge drops, and the reach b_max shrinks toward the closest distance b_min: the loss per cm peaks and then falls, and the proton stops as a hydrogen atom.":
   "El mismo protón cuando le faltan {#} cm. Su rapidez baja rápido aquí, así que cada impulso, y la dosis, sube abruptamente: el pico de Bragg. En los últimos {#} MeV (en menos de {#} mm) el protón empieza a capturar electrones y a perderlos de nuevo, así que su carga promedio baja, y el alcance b_max se reduce hacia la distancia mínima b_min: la pérdida por cm llega a un pico y luego cae, y el protón se detiene como un átomo de hidrógeno.",
 "Go on":
   "Continuar",
+"Close":
+  "Cerrar",
+"Move the detector depth (Shift for {#} cm steps); in Why it peaks, move along the proton track":
+  "Mueve la profundidad del detector (Shift para pasos de {#} cm); en Por qué hay un pico, avanza a lo largo de la trayectoria del protón",
 "{#} MeV into muscle (icrp)":
   "{#} MeV en músculo (icrp)",
 "{#} MeV into adipose tissue (icrp)":
@@ -314,8 +320,14 @@ VDI18N.add('es', 'demo/bragg-peak', {
   "alcance",
 "energy lost per cm":
   "energía perdida por cm",
-"protons":
-  "protones",
-"layers":
-  "capas"
+"depth {#} cm · {#} MeV · v = {#} c":
+  "profundidad {#} cm · {#} MeV · v = {#} c",
+"dose: {#} → {#} % of the peak, then more":
+  "dosis: {#} → {#} % del pico, luego más",
+"{#} MV photons (fit)":
+  "Fotones de {#} MV (ajuste)",
+"measured (Chowdhury {#})":
+  "medida (Chowdhury {#})",
+"slow motion: {#} s here is {#} ns of real time":
+  "cámara lenta: {#} s aquí son {#} ns de tiempo real"
 });

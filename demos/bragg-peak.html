@@ -101,10 +101,11 @@
         <div id="zBox"><div class="slider-head"><label for="sZ">Detector depth</label><output id="oZ" class="mono" for="sZ"></output></div><input type="range" id="sZ" min="0" max="40" step="0.01" data-unit="cm"></div>
         <label class="check" id="layersBox"><input type="checkbox" id="chkLayers" checked><span>Show each energy layer</span></label>
       </div>
-      <p class="why-note" id="whyNote" hidden></p>
       <div class="plotbox" id="plotbox">
         <canvas id="plot" role="img" aria-label="Graph of the dose against depth: the proton depth dose, the energy layers of a spread out peak, the 6 MV photon depth dose and the target, with the detector depth marked. Drag on the graph to move the detector."></canvas>
       </div>
+      <!-- below the graph, not between the panes: the divider's grip sat on the note's text (student view, 2026-11-15) -->
+      <p class="why-note" id="whyNote" hidden></p>
     </div>
 
     <aside class="rail">
@@ -401,10 +402,15 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     G.label(ctx, `z = ${lenTxt(S.z)}`, xd + (xd > b.x1 - 110 * p ? -6 : 6) * p, top + lip / 2 + 1, { a: xd > b.x1 - 110 * p ? 'right' : 'left', s: 11 * p, w: 600, m: true, c: T.ink, alpha: 1 });
     G.label(ctx, ky < sx * 0.99 ? `sideways squeezed ×${f(ky / sx, 2)}` : 'to scale', b.x1 + wall, Math.max(ey + eh / 2, railY - 18 * p), { a: 'right', s: 10 * p });
     if (tissue) G.label(ctx, M().name, b.x0 + 6 * p, b.y0 + 12 * p, { s: 10.5 * p, c: d ? '#f8f5f2' : '#352c21', w: 700, alpha: 1 });
+    /* the time scale of the moving protons or photons: they enter at 0.55 tank lengths a second against βc (student view, 2026-11-15) */
+    if (S.run && S.parts.length) { const v0 = (S.view === 'compare' && S.show === 'photons' ? 1 : S.beta[100]) * 2.99792458e10 / (S.zmax * 0.55);
+      G.label(ctx, `slow motion: 1 s here is ${f(1e9 / v0, 1)} ns of real time`, b.x0 + 6 * p, b.y0 + (tissue ? 27 : 12) * p, { s: 10 * p, c: d ? '#f8f5f2' : '#352c21', alpha: 0.9 }); }
     /* the wash key */
     const kx = b.x0 + 10 * p, kw = Math.min(150 * p, (b.x1 - b.x0) * 0.35), ky0 = b.y1 - 16 * p;
-    for (let i = 0; i < 60; i++) { const c = washColor(0.1 + 1.1 * i / 59); ctx.fillStyle = `rgb(${c})`; ctx.fillRect(kx + i * kw / 60, ky0, kw / 60 + 0.5, 7 * p); }
-    G.label(ctx, S.view === 'pristine' ? 'dose: 10 → 100 % of the peak, then more' : 'dose: 10 → 100 % of the target dose → 120 %', kx, ky0 - 7 * p, { s: 10 * p, c: d ? '#f8f5f2' : '#352c21', alpha: 0.9 });
+    /* one energy is scaled to its own peak, so nothing goes past 100 %: its key stops at red rather than saying "then more" (student view, 2026-11-15) */
+    const kTop = S.view === 'pristine' ? 1 : 1.2, kw2 = S.view === 'pristine' ? kw * 0.9 / 1.1 : kw;
+    for (let i = 0; i < 60; i++) { const c = washColor(0.1 + (kTop - 0.1) * i / 59); ctx.fillStyle = `rgb(${c})`; ctx.fillRect(kx + i * kw2 / 60, ky0, kw2 / 60 + 0.5, 7 * p); }
+    G.label(ctx, S.view === 'pristine' ? 'dose: 10 → 100 % of the peak' : 'dose: 10 → 100 % of the target dose → 120 %', kx, ky0 - 7 * p, { s: 10 * p, c: d ? '#f8f5f2' : '#352c21', alpha: 0.9 });
   }
   function niceTicks(a, b, n) { const span = b - a, raw = span / n, mag = Math.pow(10, Math.floor(Math.log10(raw))), st = [1, 2, 5, 10].map((k) => k * mag).find((k) => span / k <= n) || 10 * mag; const out = []; for (let v = Math.ceil(a / st) * st; v <= b + 1e-9; v += st) out.push(+v.toPrecision(10)); return out; }
 
@@ -439,9 +445,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (const cc of S.view === 'compare' ? [S.D, S.P] : [S.D]) { pctx.fillStyle = T.det; pctx.beginPath(); pctx.arc(xd, Y(readAt(cc.z || z, cc.n, S.z)), (cc === c ? 4.5 : 3) * p, 0, 7); pctx.fill(); }
     /* legend */
     pctx.textAlign = 'left'; pctx.textBaseline = 'middle'; pctx.font = `${11 * p}px ${T.ui}`; let lx = L + 6 * p; const ly = top - 13 * p;
-    const key = (col, dash, txt, dot) => { if (lx + 60 * p > PW) return; pctx.strokeStyle = col; pctx.lineWidth = 2 * p; pctx.setLineDash(dash || []); pctx.beginPath(); pctx.moveTo(lx, ly); pctx.lineTo(lx + 18 * p, ly); pctx.stroke(); pctx.setLineDash([]);
+    /* the setup card can hang over the graph's top right on a wide screen: the legend stops short of it, with the short names when the long ones do not fit (student view, 2026-11-15) */
+    const cr = $('setupCard').getBoundingClientRect(), gr = $('plot').getBoundingClientRect(), over = innerWidth > 820 && cr.height > 0 && cr.bottom > gr.top + ly && cr.left < gr.right, lim = over ? cr.left - gr.left - 6 * p : PW;
+    const fullTxt = S.view === 'pristine' ? [`protons, ${sig(S.e, 4)} MeV, ${M().name.toLowerCase()}`] : [`protons, ${S.L.length} energy layers`].concat(S.layers ? ['each layer, weighted'] : [], S.view === 'compare' ? ['6 MV photons (fit)', 'measured (Chowdhury 2024)'] : []);
+    const narrow = PW < 560 || lx + fullTxt.reduce((a, t) => a + 36 * p + pctx.measureText(t).width, 0) > lim;
+    const key = (col, dash, txt, dot) => { if (lx + 60 * p > lim) return; pctx.strokeStyle = col; pctx.lineWidth = 2 * p; pctx.setLineDash(dash || []); pctx.beginPath(); pctx.moveTo(lx, ly); pctx.lineTo(lx + 18 * p, ly); pctx.stroke(); pctx.setLineDash([]);
       if (dot) { pctx.fillStyle = col; pctx.beginPath(); pctx.arc(lx + 9 * p, ly, 3.5 * p, 0, 7); pctx.fill(); } pctx.fillStyle = T.ink; pctx.fillText(txt, lx + 22 * p, ly); lx += 22 * p + pctx.measureText(txt).width + 14 * p; };
-    const narrow = PW < 560;
     key(T.proton, null, S.view === 'pristine' ? (narrow ? 'protons' : `protons, ${sig(S.e, 4)} MeV, ${M().name.toLowerCase()}`) : (narrow ? 'protons' : `protons, ${S.L.length} energy layers`));
     if (S.view !== 'pristine' && S.layers) key(T.layer, null, narrow ? 'layers' : 'each layer, weighted');
     if (S.view === 'compare') { key(T.photon, [7 * p, 4 * p], narrow ? '6 MV' : '6 MV photons (fit)'); key(T.photon, null, narrow ? 'measured' : 'measured (Chowdhury 2024)', true); }
@@ -727,6 +736,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     function enter(on) {
       $('dimSeg').hidden = !on; $('whyNote').hidden = !on; $('stage').dataset.why = on ? '1' : '';
+      $('plotbox').classList.toggle('why', on);   /* the graph's height changes: a class change tells the divider to move with it, also when a setup in the rail switches the view (student view, 2026-11-15) */
       if (on && !view) view = VD3K.view({ seg: '#dimSeg', init, status: (m) => { $('dimMsg').textContent = m; },
         change: (v3) => { if (S3) S3.el.hidden = !v3; can.style.pointerEvents = v3 ? 'none' : ''; dirty = true; draw(); } });
       if (S3) S3.el.hidden = !(on && view && view.is3d()); can.style.pointerEvents = on && view && view.is3d() ? 'none' : '';

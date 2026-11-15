@@ -876,7 +876,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   }
 
   // ---------- state ----------
-  const S = { mode: 'beaker', preset: 'osc', playing: !reduce, rateIdx: { beaker: 2, dish: 2, dosc: 3, dgf: 2, dtoy: 3, flow: 2 } };
+  const S = { mode: 'beaker', preset: 'osc', playing: !reduce, rateIdx: { beaker: 2, dish: 2, dosc: 3, dgf: 2, dtoy: 3, flow: 1 } };   /* flow opens at 23× real time: at 46× the reactor's 25 to 30 s cycle flashed twice a second (student view, 2026-11-15) */
   const RATES = { beaker: [0.5, 1, 2, 4, 8, 16], dish: [0.5, 1, 2, 3, 5, 8], dosc: [1, 2, 4, 8, 12, 16], dgf: [10, 20, 40, 80, 160, 320], dtoy: [5, 10, 20, 30, 60, 120], flow: [0.005, 0.01, 0.02, 0.04, 0.08, 0.15] };
   const rateKey = () => S.mode !== 'dish' ? S.mode : DS.medium === 'excite' ? 'dish' : 'd' + DS.medium;
   const rate = () => RATES[rateKey()][S.rateIdx[rateKey()]];
@@ -996,7 +996,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   }
   function vesselBlock(k, W, H, fill, o) {
     // vessel at upper left, a text block to its right; returns the bottom of the block
-    const ctx = ctxs[k], s = ps(k), top = 54 * s, hv = clamp(H * 0.36, 120 * s, 250 * s);
+    /* below the control strip, which grew to two rows (Step, speed) and hid the vessel's top and the x and y lines (student view, 2026-11-15) */
+    const ctl = document.querySelector('#paneA .stage-ctl'), ctlB = ctl && ctl.offsetHeight ? ctl.offsetTop + ctl.offsetHeight + 8 : 0;
+    const ctx = ctxs[k], s = ps(k), top = Math.max(54 * s, ctlB), hv = clamp(H * 0.36, 120 * s, 250 * s);
     const vw = clamp(hv * 0.78, 90 * s, W * 0.34), cx = 30 * s + vw / 2 + (o.flow ? 24 * s : 0);
     drawVessel(ctx, k, cx, top + (o.flow ? 18 * s : 0), vw, hv - (o.flow ? 18 * s : 0), fill, o);
     let tx = cx + vw / 2 + (o.flow ? 56 : 26) * s;
@@ -2162,6 +2164,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   flStart(false);
   const ro = new ResizeObserver(() => resize());
   for (const id of ['paneA', 'paneB', 'paneC']) ro.observe($(id));
+  new ResizeObserver(() => { dirty.A = true; }).observe(document.querySelector('#paneA .stage-ctl'));   /* the vessel sits below the strip: redraw when it gains a row, also while paused (student view, 2026-11-15) */
   setPlaying(!reduce);
   applyPreset('osc');
   setPlaying(!reduce);
