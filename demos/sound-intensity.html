@@ -275,7 +275,7 @@ table.rows input:focus { border-color: var(--accent); }
     /* the sphere through the meter: the source's power is spread over its area 4πr² */
     const rr = S.r * sc; ctx.globalAlpha = 1; ctx.strokeStyle = T.fit; ctx.lineWidth = 1.5 * p; ctx.setLineDash([6 * p, 5 * p]); ctx.beginPath(); ctx.arc(sx, sy, rr, -Math.PI / 2, Math.PI / 2); ctx.stroke(); ctx.setLineDash([]);
     const la = -Math.PI / 4, lx = sx + rr * Math.cos(la), ly = sy + rr * Math.sin(la);
-    if (ly > 60 * p) { ctx.fillStyle = T.fitInk; ctx.font = `700 ${12 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText(`sphere area 4πr² = ${f(4 * Math.PI * S.r * S.r, S.r < 3 ? 2 : 0)} m²`, Math.min(lx + 6 * p, W - 230 * p), ly - 4 * p); }
+    if (ly > 60 * p) { ctx.fillStyle = T.fitInk; ctx.font = `700 ${12 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText(`sphere area 4πr² = ${f(4 * Math.PI * S.r * S.r, S.r < 3 ? 2 : 0)} m²`, Math.min(Math.max(lx + 6 * p, X(S.r) + 10 * z), W - 230 * p), ly - 4 * p); }   /* kept right of the meter's microphone: at 0.5 m and 1 m it was written across it (student view, 2026-11-15) */
     ctx.restore(); ctx.globalAlpha = 1;
     /* speaker A on its stand, and B beside it (drawn behind) */
     /* a loudspeaker on a tripod stand: pole, three legs, a cabinet with a tweeter over a woofer, facing the meter */
@@ -290,7 +290,7 @@ table.rows input:focus { border-color: var(--accent); }
         ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx + cw / 2, yy, r, 0, 7); ctx.fill(); ctx.strokeStyle = 'rgba(255,255,255,0.15)'; ctx.lineWidth = 1; ctx.stroke(); };
       cone(y - 12 * z, 5 * z); cone(y + 10 * z, 9 * z);
       Gr.label(ctx, lab, cx + cw / 2, cy - 9 * z, { a: 'center', s: 11 * p, w: 700, c: T.ink, alpha: 0.85 }); };
-    if (S.bOn) spk(sx - 26 * z, sy + 4 * z, T.spkB, 'B');
+    if (S.bOn) spk(Math.max(sx - 26 * z, 24 * z + 6 * p), sy + 4 * z, T.spkB, 'B');   /* B's cabinet kept on the stage: on a tall stage it was cut off at the left edge (student view, 2026-11-15) */
     spk(sx, sy, T.spk, S.mystery ? 'A ?' : 'A');
     /* the meter on its tripod at r */
     const mx = X(S.r), my = sy;
@@ -311,6 +311,8 @@ table.rows input:focus { border-color: var(--accent); }
     ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(mx, gy + 2 * p); ctx.lineTo(mx, ty + 16 * p); ctx.stroke();
     ctx.fillStyle = T.ink; ctx.font = `700 ${13 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
     ctx.fillText(`r = ${f(S.r, 1)} m`, 14 * p, 14 * p);
+    /* the speakers and meter are drawn a few metres wide on a 32 m tape: say so (student view, 2026-11-15) */
+    ctx.save(); ctx.fillStyle = T.muted; ctx.globalAlpha = 0.85; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillText('speakers and meter not to scale', W - 12 * p, gy - 4 * p); ctx.restore();
     ctx.fillStyle = T.muted; ctx.globalAlpha = 0.85; ctx.font = `${11 * p}px ${T.mono}`; ctx.fillText(`A: ${S.mystery ? 'mystery' : pw(pA())}${S.bOn ? `   B: ${pw(pB())}` : ''}${S.bg ? `   background ${S.bg} dB` : ''}`, 14 * p, 32 * p); ctx.globalAlpha = 1;
   }
   function readouts() {

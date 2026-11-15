@@ -6,6 +6,7 @@ VDI18N.add('en', 'demo/sound-intensity', [
 "the same power through {#}, {#} and {#} squares: I ∝ {#}/r²",
 "sphere area {#}πr² = {#} m²",
 "SOUND LEVEL METER",
+"speakers and meter not to scale",
 "Sound Intensity and Decibels",
 "<a><span>←</span> <span>Ultrasound: Echoes and Blood Flow</span></a><a><span>Room Acoustics and the Anechoic Chamber</span> <span>→</span></a>",
 "A loudspeaker in an open field spreads its power P over a sphere, so the intensity falls as I = P/({#}πr²). The sound level meter reads β = {#} log(I/I₀) in decibels: every doubling of the distance takes off {#} dB. Add a second source and find out why two {#} dB sources make {#} dB, not {#}.",

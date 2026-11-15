@@ -36,8 +36,6 @@ VDI18N.add('es', 'demo/sound-waves', {
   "Al inicio",
 "Whole course":
   "Todo el recorrido",
-"Clap":
-  "Palmada",
 "Strike":
   "Golpear",
 "3D or flat":
@@ -162,8 +160,6 @@ VDI18N.add('es', 'demo/sound-waves', {
   "Nivel sonoro β",
 "<span>Δp is largest where s passes through zero: the pressure wave is {#}° (a quarter wavelength) behind the displacement.</span>":
   "<span>Δp es máximo donde s pasa por cero: la onda de presión va {#}° (un cuarto de longitud de onda) detrás del desplazamiento.</span>",
-"Record reading":
-  "Registrar esta lectura",
 "No readings yet. Clap, then record.":
   "Aún no hay lecturas. Da una palmada y luego registra.",
 "Δt against d for the recorded readings, with a least squares line and its residuals.":
@@ -324,6 +320,8 @@ VDI18N.add('es', 'demo/sound-waves', {
   "<span>oculto: gas desconocido</span>",
 "Six lanes {#} km long, all tapped at the same instant, in real time. The pulse in diamond arrives after {#} s and the one in steel after {#} s, when the sound in air has gone only {#} m; air takes {#} s. Change the lanes, the course or the playback speed, then strike again. A mystery material hides its name and speed: time it and look it up.":
   "Seis carriles de {#} km de largo, todos golpeados en el mismo instante, en tiempo real. El pulso en el diamante llega después de {#} s y el del acero después de {#} s, cuando el sonido en el aire ha recorrido solo {#} m; el aire tarda {#} s. Cambia los carriles, el recorrido o la velocidad de reproducción, y golpea otra vez. Un material misterioso oculta su nombre y su rapidez: cronométralo y búscalo.",
+"Close":
+  "Cerrar",
 "{#} Argon":
   "{#} Argón",
 "Lane {#}: Argon":
@@ -414,8 +412,8 @@ VDI18N.add('es', 'demo/sound-waves', {
   "<span>oculto: misterio</span><br><span>golpea para cronometrarlo</span>",
 "The last mystery material was {name}, v = {v} m/s. A new one is in its lane.":
   "El último material misterioso era {name}, v = {v} m/s. Hay uno nuevo en su carril.",
-"The last mystery material was blood, v = {#} m/s. A new one is in its lane.":
-  "El último material misterioso era sangre, v = {#} m/s. Hay uno nuevo en su carril.",
+"The last mystery material was steel ({#}% carbon), v = {#} m/s. A new one is in its lane.":
+  "El último material misterioso era acero ({#}% de carbono), v = {#} m/s. Hay uno nuevo en su carril.",
 "A new unknown gas fills the room.":
   "Un nuevo gas desconocido llena el cuarto.",
 "a {#} m person is {#} px tall":
@@ -426,8 +424,12 @@ VDI18N.add('es', 'demo/sound-waves', {
   "<span>oculto: misterio</span><br><span>en camino</span>",
 "The unknown gas had v = {#} m/s at {#} °C (γ = {#}, M = {#} g/mol).":
   "El gas desconocido tenía v = {#} m/s a {#} °C (γ = {#}, M = {#} g/mol).",
-"Close":
-  "Cerrar",
+"Clap":
+  "Palmada",
+"Record reading":
+  "Registrar esta lectura",
+"The last mystery material was blood, v = {#} m/s. A new one is in its lane.":
+  "El último material misterioso era sangre, v = {#} m/s. Hay uno nuevo en su carril.",
 "The last mystery material was copper (annealed), v = {#} m/s. A new one is in its lane.":
   "El último material misterioso era cobre (recocido), v = {#} m/s. Hay uno nuevo en su carril.",
 "<span>hidden: mystery</span><br><span>arrived at {#} ms</span>":

@@ -18,8 +18,8 @@ VDI18N.add('es', 'demo/spacetime', {
   "Dibujado en S",
 "The world at ct = {#} yr, as S sees it":
   "El mundo en ct = {#} años, como lo ve S",
-"Play to run it · icons not to scale, squashed by {#}/γ along x":
-  "Inicia para correrlo · íconos no a escala, comprimidos por {#}/γ a lo largo de x",
+"Play to run it, {#} s = {#} yr · icons not to scale, squashed by {#}/γ along x":
+  "Inicia para correrlo, {#} s = {#} años · íconos no a escala, comprimidos por {#}/γ a lo largo de x",
 "Spacetime Diagrams":
   "Diagramas de espaciotiempo",
 "<span><a><span>Speed of Light</span> <span>→</span></a></span>":
@@ -248,6 +248,12 @@ VDI18N.add('es', 'demo/spacetime', {
   "La franja sombreada es la hoja de universo de una varilla de {#} al de largo en su propio marco, que se mueve a {#}c. Marca ambos extremos al mismo tiempo de S (azul) y mide {#} al. Márcalos al mismo tiempo de S′ (rojo) y mide {#}. Una longitud es una distancia entre eventos simultáneos, y los marcos no coinciden en qué eventos son simultáneos.",
 "none selected":
   "ninguno seleccionado",
+"{#} ly in S":
+  "{#} al en S",
+"{#} ly in S′":
+  "{#} al en S′",
+"rod, {#} ly long":
+  "varilla, {#} al de largo",
 "The traveler leaves at {#}c and turns around at T, {#} years after leaving by the home clock. Home ages {#} years, the traveler {#}. The purple lines are the traveler's lines of simultaneity, one per traveler year. At the turnaround they swing across the home worldline, skipping {#} years of home time. The turn breaks the symmetry.":
   "El viajero sale a {#}c y da la vuelta en T, {#} años después de salir según el reloj de casa. En casa pasan {#} años, para el viajero {#}. Las líneas moradas son las líneas de simultaneidad del viajero, una por cada año del viajero. En la vuelta barren la línea de universo de casa, saltándose {#} años del tiempo de casa. La vuelta rompe la simetría.",
 "Event T at ct {#}, x {#}":
@@ -280,8 +286,8 @@ VDI18N.add('es', 'demo/spacetime', {
   "ahora, ct = −{#} años",
 "The world at ct = −{#} yr, as S sees it":
   "El mundo en ct = −{#} años, como lo ve S",
-"moves with the now line · icons not to scale, squashed by {#}/γ along x":
-  "se mueve con la línea del ahora · íconos no a escala, comprimidos por {#}/γ a lo largo de x",
+"moves with the now line, {#} s = {#} yr · icons not to scale, squashed by {#}/γ along x":
+  "se mueve con la línea del ahora, {#} s = {#} años · íconos no a escala, comprimidos por {#}/γ a lo largo de x",
 "Event D at ct {#}, x {#}":
   "Evento D en ct {#}, x {#}",
 "B to D":
@@ -292,16 +298,20 @@ VDI18N.add('es', 'demo/spacetime', {
   "futuro de B",
 "past of B":
   "pasado de B",
-"Play to run it · icons squashed by {#}/γ along x":
-  "Inicia para correrlo · íconos comprimidos por {#}/γ a lo largo de x",
+"Play to run it, {#} s = {#} yr":
+  "Inicia para correrlo, {#} s = {#} años",
+"icons not to scale, squashed by {#}/γ along x":
+  "íconos no a escala, comprimidos por {#}/γ a lo largo de x",
 "Drawn in S′: its axes are square, S is tilted":
   "Dibujado en S′: sus ejes son perpendiculares, S está inclinado",
-"{#} ly in S":
-  "{#} al en S",
-"{#} ly in S′":
-  "{#} al en S′",
-"rod, {#} ly long":
-  "varilla, {#} al de largo",
 "now, ct = {#} yr":
-  "ahora, ct = {#} años"
+  "ahora, ct = {#} años",
+"Play to run it · icons not to scale, squashed by {#}/γ along x":
+  "Inicia para correrlo · íconos no a escala, comprimidos por {#}/γ a lo largo de x",
+"moves with the now line · icons not to scale, squashed by {#}/γ along x":
+  "se mueve con la línea del ahora · íconos no a escala, comprimidos por {#}/γ a lo largo de x",
+"Play to run it · icons squashed by {#}/γ along x":
+  "Inicia para correrlo · íconos comprimidos por {#}/γ a lo largo de x",
+"moves with the now line, {#} s = {#} yr":
+  "se mueve con la línea del ahora, {#} s = {#} años"
 });

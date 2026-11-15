@@ -12,6 +12,8 @@ VDI18N.add('es', 'demo/sound-intensity', {
   "área de la esfera {#}πr² = {#} m²",
 "SOUND LEVEL METER":
   "SONÓMETRO",
+"speakers and meter not to scale":
+  "bocinas y sonómetro fuera de escala",
 "Sound Intensity and Decibels":
   "Intensidad del sonido y decibeles",
 "<a><span>←</span> <span>Ultrasound: Echoes and Blood Flow</span></a><a><span>Room Acoustics and the Anechoic Chamber</span> <span>→</span></a>":

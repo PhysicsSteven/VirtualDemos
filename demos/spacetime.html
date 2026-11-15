@@ -403,6 +403,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const scr = (td, xd) => [sx(xd), sy(td)];
   const scrLab = (t, x) => { const [td, xd] = toD(t, x); return scr(td, xd); };
   const unscr = (px, py) => [V.ct + (H / 2 - py) / V.s, V.cx + (px - W / 2) / V.s];  // [td, xd]
+  /* years of ct per second of Play: about nine seconds to cross the view, never slower than 1 yr/s */
+  const playRate = () => { const b = viewBounds(); return Math.max(1, (b.t1 - b.t0) / 9); };
   function viewBounds() {
     return { x0: V.cx - W / 2 / V.s, x1: V.cx + W / 2 / V.s, t0: V.ct - H / 2 / V.s, t1: V.ct + H / 2 / V.s };
   }
@@ -754,8 +756,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.lineCap = 'butt';
     const mid = [(A[0] + B[0]) / 2, (A[1] + B[1]) / 2];
     const side = b > 0 ? -1 : 1;
-    text(`home clock jumps`, mid[0] + side * 30 * ps, mid[1] - 8 * ps, C.twin, { align: side < 0 ? 'right' : 'left', size: 10.5, weight: 600 });
-    text(`${fmt(tE1, 1)} → ${fmt(tE2, 1)} yr`, mid[0] + side * 30 * ps, mid[1] + 8 * ps, C.twin, { align: side < 0 ? 'right' : 'left', size: 10.5, weight: 600 });
+    /* both lines above the jump's middle: at ct = T the selected turnaround's ct tag covered them (student view, 2026-11-15) */
+    text(`home clock jumps`, mid[0] + side * 30 * ps, mid[1] - 34 * ps, C.twin, { align: side < 0 ? 'right' : 'left', size: 10.5, weight: 600 });
+    text(`${fmt(tE1, 1)} → ${fmt(tE2, 1)} yr`, mid[0] + side * 30 * ps, mid[1] - 20 * ps, C.twin, { align: side < 0 ? 'right' : 'left', size: 10.5, weight: 600 });
     void R;
     ctx.restore();
   }
@@ -988,9 +991,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const fr = moving ? 'S′' : 'S';
     ctx.fillText(`The world at ct${moving ? '′' : ''} = ${fmt(T, 1)} yr, as ${fr} sees it`, x0 + 10 * ps, y0 + 7 * ps);
     ctx.font = font(9); ctx.fillStyle = quiet; ctx.textAlign = 'right';
-    const note = `${nowOn ? 'moves with the now line' : 'Play to run it'} · icons not to scale, squashed by 1/γ along x`;
-    if (W >= 700) ctx.fillText(note, x0 + w - 10 * ps, y0 + 7 * ps);
-    else { ctx.textAlign = 'left'; ctx.fillText(note.replace(' · icons not to scale,', ' · icons'), x0 + 10 * ps, y0 + 20 * ps); }
+    /* the playing rate on screen, as the loop runs it (student view, 2026-11-15) */
+    const rate = playRate(), run = `${nowOn ? 'moves with the now line' : 'Play to run it'}, 1 s = ${fmt(rate, rate < 10 ? 1 : 0)} yr`;
+    if (W >= 700) ctx.fillText(`${run} · icons not to scale, squashed by 1/γ along x`, x0 + w - 10 * ps, y0 + 7 * ps);
+    else { ctx.textAlign = 'left'; ctx.fillText(run, x0 + 10 * ps, y0 + 20 * ps); ctx.fillText('icons not to scale, squashed by 1/γ along x', x0 + 10 * ps, y0 + 32 * ps); }
     /* light from events already passed */
     for (const e of S.events) {
       const [td, xd] = toD(e.t, e.x), d = T - td;
@@ -1400,7 +1404,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     if (playing) {
       const b = viewBounds();
-      nowT += dt * Math.max(1, (b.t1 - b.t0) / 9);
+      nowT += dt * playRate();
       if (nowT > b.t1 + 0.5) nowT = b.t0;
       dirty = true;
     }

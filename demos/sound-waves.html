@@ -567,6 +567,9 @@ details.more[open] summary { margin-bottom: 6px; }
       const mid = y0 + gH / 2; ctx.fillStyle = dk ? 'rgba(255,255,255,0.02)' : 'rgba(255,255,255,0.7)'; ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.beginPath(); ctx.roundRect(x0 + 0.5, y0 + 0.5, x1 - x0, gH, 6 * p); ctx.fill(); ctx.stroke();
       ctx.strokeStyle = T.gridStrong; ctx.beginPath(); ctx.moveTo(x0, mid); ctx.lineTo(x1, mid); ctx.stroke();
       ctx.strokeStyle = col; ctx.lineWidth = 2 * p; ctx.beginPath(); for (let i = 0; i <= N; i++) { const xm = SPAN * i / N, y = mid - fn(xm) * gH * 0.42; i ? ctx.lineTo(x0 + xm * ppm, y) : ctx.moveTo(x0 + xm * ppm, y); } ctx.stroke();
+      /* a backing behind each label: the moving curve ran through them at its peaks (student view, 2026-11-15) */
+      const back = (s, x, f, a) => { if (!s) return; ctx.font = f; const w = ctx.measureText(s).width + 6 * p; ctx.save(); ctx.globalAlpha = 0.85; ctx.fillStyle = T.canvas; ctx.fillRect(a ? x - w + 3 * p : x - 3 * p, y0 + 3 * p, w, 14 * p); ctx.restore(); };
+      back(label, x0 + 6 * p, `700 ${10 * p}px ${T.ui}`, 0); back(unit, x1 - 6 * p, `${9 * p}px ${T.mono}`, 1);
       txt(label, x0 + 6 * p, y0 + 10 * p, { s: 10, b: 1, c: col }); txt(unit, x1 - 6 * p, y0 + 10 * p, { s: 9, a: 'right', m: 1, c: T.muted });
     };
     graph(gTop, 'displacement s (right is positive)', `±${S.s.toFixed(1)} μm`, (xm) => displacement(Wv, 1, xm, t), T.accent);
