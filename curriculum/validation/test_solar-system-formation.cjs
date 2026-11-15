@@ -2,7 +2,7 @@
 // Building a Solar System: the collapse (Ulrich infall), the disk's temperature and frost line, oligarchic growth and aluminum 26 melting.
 const assert = require('node:assert');
 const { core } = require('./demo_source.cjs');
-const c = core('solar-system-formation', 'AU,GM,M_SUN,M_EARTH,R_STAR,orbitPeriod,omegaOf,diskRadius,spinUp,fallTime,makeCloud,stepCloud,parcel,cloudCounts,T1,CONDENSE,diskT,lineAt,frostLine,solidsAt,sigmaSolid,sigmaGas,diskMass,ICE_FACTOR,B_HILL,CORE_GAS,N_START,isoMass,growTime,hillGap,makeGrowth,growTo,growthSummary,MELT,heatLeft,hOfT,TofH,meltFrac,meltRun,STORY,settleRadius,ringRange,storyGrowth,storyBodies,impactState,finalOf,DISK_IN,DISK_OUT,omegaOf');
+const c = core('solar-system-formation', 'condenseT,lineAtP,frostLineP,solidsAtP,nebulaP,iceH2O,waterCheck,AU,GM,M_SUN,M_EARTH,R_STAR,orbitPeriod,omegaOf,diskRadius,spinUp,fallTime,makeCloud,stepCloud,parcel,cloudCounts,T1,CONDENSE,diskT,lineAt,frostLine,solidsAt,sigmaSolid,sigmaGas,diskMass,ICE_FACTOR,B_HILL,CORE_GAS,N_START,isoMass,growTime,hillGap,makeGrowth,growTo,growthSummary,MELT,heatLeft,hOfT,TofH,meltFrac,meltRun,STORY,settleRadius,ringRange,storyGrowth,storyBodies,impactState,finalOf,DISK_IN,DISK_OUT,omegaOf');
 
 let n = 0;
 const near = (a, b, tol, w) => assert(Math.abs(a - b) <= tol * Math.abs(b), `${w || ''}: expected ${b}, got ${a}`);
@@ -59,6 +59,48 @@ group('disk: T = 280 K (r/AU)^(−1/2) (L/L☉)^(1/4) (Hayashi 1981); frost line
 group('minimum mass nebula: solids 7.1 and 30 g/cm² at 1 AU inside and beyond the frost line (ratio 4.2), gas 1700; gas mass 0.0130 solar masses from 0.35 to 36 AU', () => {
   near(c.sigmaSolid(1, 1, 1), 7.1, 1e-12); near(c.sigmaSolid(4, 1, 1), 30 / 8, 1e-12); near(c.ICE_FACTOR, 4.225, 1e-3); near(c.sigmaGas(2, 3), 3 * 1700 / Math.pow(2, 1.5), 1e-12);
   near(c.diskMass(1), 0.0130, 3e-3, 'disk mass'); near(c.diskMass(3), 3 * c.diskMass(1), 1e-12);
+});
+
+group('pressure: 10⁻⁴ bar gives Lodders\' table exactly; ices follow their vapor pressure; rock and metal 10⁴/T = a − b log P; FeS fixed; the frost line moves out where the gas is thinner', () => {
+  /* at the table's own pressure every value and every line is unchanged, bit for bit, so the worksheet's readings do not move */
+  for (const x of c.CONDENSE) { assert.equal(c.condenseT(x, 1e-4), x.T, x.k); assert.equal(c.condenseT(x, Math.pow(10, -4)), x.T, x.k + ' via 10^-4'); assert.equal(c.lineAtP(x, 1, 1e-4), c.lineAt(x.T, 1), x.k + ' line'); }
+  assert.equal(c.frostLineP(1, 1e-4), c.frostLine(1)); assert.equal(c.frostLineP(4, 1e-4), c.frostLine(4));
+  for (const r of [0.02, 0.03, 0.4, 1, 2, 4, 5.2, 30, 60]) for (const L of [1, 4]) assert.equal(c.solidsAtP(r, L, 1e-4).map((x) => x.k).join(), c.solidsAt(r, L).map((x) => x.k).join(), `solids at ${r} AU`);
+  const W = c.CONDENSE.find((x) => x.k === 'water'), byK = (k) => c.CONDENSE.find((x) => x.k === k);
+  /* water ice: p_sat(T) / p_sat(182 K) = P / 10⁻⁴ bar (Murphy and Koop 2005) */
+  for (const P of [1e-2, 1e-6, 1e-8]) near(c.iceH2O(c.condenseT(W, P)) / c.iceH2O(182), P / 1e-4, 1e-9, `water at ${P}`);
+  near(c.condenseT(W, 1e-6), 160.1, 1e-3, 'water at 10⁻⁶ bar'); near(c.condenseT(W, 1e-2), 210.8, 1e-3, 'water at 10⁻² bar');
+  /* Clausius and Clapeyron: d ln p_sat / d(1/T) = −L/R, the heat of sublimation of ice 51 kJ/mol near 180 K (Murphy and Koop 2005, eq. 5) */
+  const T1 = c.condenseT(W, 1e-4 * 1.01), slope = Math.log(1.01) / (1 / 182 - 1 / T1); near(slope * 8.314462618, 51000, 0.02, 'heat of sublimation');
+  /* the check: the Sun's oxygen less rock, half the water frozen, 177 K at 10⁻⁴ bar, within 5 K of Lodders' 182 K */
+  near(c.waterCheck(1e-4), 177.4, 1e-3, 'water from solar abundances'); assert(Math.abs(c.waterCheck(1e-4) - 182) < 5);
+  near(c.waterCheck(1e-6) - c.waterCheck(1e-4), c.condenseT(W, 1e-6) - 182, 0.05, 'same shift with pressure');
+  /* rock and metal: the slope b of 10⁴/T against log₁₀ P; iron and olivine fits give 1359 and 1357 K at 10⁻⁴ bar (Lodders 1357, 1354) */
+  for (const [k, b] of [['metal', 0.48], ['rock', 0.37]]) { const x = byK(k); near(1e4 / c.condenseT(x, 1e-6) - 1e4 / x.T, 2 * b, 1e-9, k); }
+  near(1e4 / (5.44 + 0.48 * 4), 1358.7, 1e-4, 'iron fit at 10⁻⁴ bar'); near(1e4 / (5.89 + 0.37 * 4), 1356.9, 1e-4, 'olivine fit at 10⁻⁴ bar');
+  const cor = (P) => 1e4 / (5.014 - 0.2179 * Math.log10(P) + 0.002264 * Math.log10(P) ** 2);
+  near(1e4 / c.condenseT(byK('cai'), 1e-6) - 1e4 / 1653, 1e4 / cor(1e-6) - 1e4 / cor(1e-4), 1e-9, 'corundum'); near(cor(1e-4), 1688.7, 1e-4, 'corundum fit at 10⁻⁴ bar');
+  /* iron condenses before olivine at high pressure, after it at low (they cross near Lodders' 10⁻⁴ bar) */
+  assert(c.condenseT(byK('metal'), 1e-2) > c.condenseT(byK('rock'), 1e-2)); assert(c.condenseT(byK('metal'), 1e-6) < c.condenseT(byK('rock'), 1e-6));
+  for (const P of [1e-8, 1e-2]) assert.equal(c.condenseT(byK('fes'), P), 664, 'FeS does not move');
+  /* every solid but FeS condenses colder at lower pressure */
+  for (const x of c.CONDENSE) if (x.k !== 'fes') { let prev = Infinity; for (let e = -2; e >= -8; e -= 0.5) { const T = c.condenseT(x, Math.pow(10, e)); assert(T < prev, `${x.k} at 10^${e}`); prev = T; } }
+  /* the frost line moves out as the pressure drops: 1.76 AU at 10⁻² bar, 2.37 at 10⁻⁴, 3.06 at 10⁻⁶ */
+  near(c.frostLineP(1, 1e-2), 1.764, 1e-3); near(c.frostLineP(1, 1e-6), 3.060, 1e-3); let prev = 0;
+  /* the Frost line, denser gas setup's numbers (10⁻³ bar): water 195 K, frost line 2.05 AU, iron 1425 K before olivine 1406 K */
+  near(c.condenseT(W, 1e-3), 195.4, 1e-3); near(c.frostLineP(1, 1e-3), 2.054, 1e-3); near(c.condenseT(byK('metal'), 1e-3), 1425.3, 1e-4); near(c.condenseT(byK('rock'), 1e-3), 1405.5, 1e-4);
+  for (let e = -2; e >= -8; e -= 0.25) { const r = c.frostLineP(1, Math.pow(10, e)); assert(r > prev, `frost line at 10^${e}`); prev = r; }
+  /* the nebula's midplane pressure: Σ c_s Ω/√(2π), 1.35 × 10⁻⁵ bar at 1 AU (Hayashi's rounded 1.4 × 10⁻⁹ g/cm³ at 280 K: 1.39 × 10⁻⁵), ∝ r^(−13/4) L^(1/8) f */
+  near(c.nebulaP(1, 1), 1.347e-5, 1e-3, 'P at 1 AU'); near(c.nebulaP(1, 1), 1.4e-9 * 1.380649e-16 * 280 / (2.34 * 1.66053906892e-24) / 1e6, 0.04, 'Hayashi density');
+  near(c.nebulaP(10, 1) / c.nebulaP(1, 1), Math.pow(10, -3.25), 1e-12, 'r^(-13/4)'); near(c.nebulaP(1, 16) / c.nebulaP(1, 1), 16 ** 0.125, 1e-12, 'L^(1/8)'); near(c.nebulaP(1, 1, 3), 3 * c.nebulaP(1, 1), 1e-12, 'f');
+  /* in the nebula's own pressure the frost line is at 3.26 AU, where the disk and the condensation temperature are both 155 K */
+  const fn = c.frostLineP(1, 'neb'); near(fn, 3.263, 1e-3, 'frost line in the nebula'); near(c.diskT(fn, 1), c.condenseT(W, c.nebulaP(fn, 1)), 1e-6, 'meets there');
+  near(c.diskT(fn, 1), 155.0, 1e-3, 'at 155 K'); near(c.nebulaP(2.367, 1), 8.2e-7, 0.01, 'P at 2.37 AU');
+  assert.equal(c.solidsAtP(3, 1, 'neb').map((x) => x.k).join(), 'cai,rock,metal,fes', 'no ice at 3 AU in the nebula'); assert(c.solidsAtP(3, 1, 1e-4).some((x) => x.k === 'water'), 'ice at 3 AU at 10⁻⁴ bar');
+  /* a brighter Sun: hotter and (L^(1/8)) denser, the line farther out still */
+  assert(c.frostLineP(4, 'neb') > 2 * fn * 0.99 && c.frostLineP(4, 'neb') < 2.5 * fn);
+  /* FeS's line in the nebula is where the disk is at 664 K, as at any pressure */
+  near(c.lineAtP(byK('fes'), 1, 'neb'), c.lineAt(664, 1), 1e-9, 'FeS line');
 });
 
 group('isolation mass 0.16 Earth masses at 1 AU for Σ = 10 g/cm² and b = 10 (Kokubo and Ida 2002); M_iso ∝ Σ^(3/2) a^(3/4) for Σ ∝ a^(−3/2)', () => {

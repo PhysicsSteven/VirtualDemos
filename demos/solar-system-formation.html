@@ -101,6 +101,8 @@
         <div id="boxDisk" hidden>
           <div><div class="slider-head"><label for="sDist">Probe distance r</label><output id="oDist" class="mono" for="sDist"></output></div><input type="range" id="sDist" min="0" max="3000" step="1"></div>
           <p class="note">Drag the probe in the picture too.</p>
+          <div><div class="slider-head"><label for="sPres">Gas pressure</label><output id="oPres" class="mono" for="sPres" translate="no"></output></div><input type="range" id="sPres" min="-8" max="-3" step="0.1"></div>
+          <label class="check"><input type="checkbox" id="chkNeb"><span>The nebula's own pressure (falls outward)</span></label>
         </div>
         <div id="boxPlanets" hidden>
           <div><div class="slider-head"><label for="sF">Disk mass</label><output id="oF" class="mono" for="sF"></output></div><input type="range" id="sF" min="0.5" max="10" step="0.5"></div>
@@ -127,6 +129,8 @@
           <button type="button" data-p="nospin" aria-pressed="false">No spin</button>
           <button type="button" data-p="today" aria-pressed="false">Frost line, today's Sun</button>
           <button type="button" data-p="bright" aria-pressed="false">Frost line, bright young Sun</button>
+          <button type="button" data-p="nebulaP" aria-pressed="false">Frost line, the nebula's own pressure</button>
+          <button type="button" data-p="denseP" aria-pressed="false">Frost line, denser gas</button>
           <button type="button" data-p="mmsn" aria-pressed="false">Minimum mass disk</button>
           <button type="button" data-p="heavy" aria-pressed="false">Three times heavier disk</button>
           <button type="button" data-p="early" aria-pressed="false">Gas gone early</button>
@@ -168,6 +172,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         <details class="more"><summary>The model and its formulas</summary>
           <p class="formula">Collapse: R<sub>d</sub> = Ω₀² r₀⁴ / GM, spin up (r₀/R<sub>d</sub>)², Ω₀ = 2π/P₀</p>
           <p class="formula">Disk: T = 280 K (r/1 AU)<sup>−1/2</sup> (L/L☉)<sup>1/4</sup>; solids 7.1 (inside the frost line) or 30 (beyond it) × (r/1 AU)<sup>−3/2</sup> g/cm², gas 1700 × (r/1 AU)<sup>−3/2</sup> g/cm²</p>
+          <p class="formula">Pressure: midplane P = Σ<sub>gas</sub> c<sub>s</sub> Ω/√(2π) = 1.35 × 10⁻⁵ bar (r/1 AU)<sup>−13/4</sup>; ices: p<sub>sat</sub>(T) = p<sub>sat</sub>(T₀) × P/10⁻⁴ bar; rock and metal: 10⁴/T = 10⁴/T₀ − b log₁₀(P/10⁻⁴ bar), b = 0.37 (olivine), 0.48 (iron); T₀ from Lodders at 10⁻⁴ bar</p>
           <p class="formula">Growth: M<sub>iso</sub> = (2π a² b Σ)<sup>3/2</sup> (2/3M☉)<sup>1/2</sup>, b = 10; T<sub>grow</sub> = 1.7 × 10⁵ yr (M/10²⁶ g)<sup>1/3</sup> (Σ₁/10 g cm⁻²)<sup>−1</sup> (a/1 AU)²</p>
           <p class="formula">Melting: heating 3 × 10⁻⁷ W/kg × e<sup>−t/1.034 Myr</sup> (²⁶Al half life 0.717 Myr); conduction to a surface at 180 K</p>
           <p class="hint" id="about"></p></details>
@@ -265,7 +270,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
      is an approximation; it places the frost line within about a factor of two of where the asteroid belt shows it today.
      Condensation: the temperature at which half of each element is in solids, from a gas of solar composition at a total pressure
      of 10⁻⁴ bar (Lodders 2003, ApJ 591, 1220, Table 8; the same values in Lodders, Palme and Gail 2009, Table 1). The pressure in the
-     disk varies, which shifts these by tens of kelvins; that is left out. */
+     disk varies, which shifts these by tens of kelvins: condenseT below gives each at another pressure (the Frost line stage). */
   const T1 = 280;
   const CONDENSE = [
     { k: 'cai', name: 'Calcium and aluminum oxides', short: 'Ca, Al oxides', T: 1653, ice: false },
@@ -288,6 +293,73 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const sigmaGas = (r, f) => f * 1700 * Math.pow(r, -1.5);
   /* the gas disk's mass from DISK_IN to DISK_OUT in solar masses (0.0130 for f = 1) */
   const diskMass = (f) => 2 * Math.PI * f * 1700 * 10 * AU * AU * 2 * (Math.sqrt(DISK_OUT) - Math.sqrt(DISK_IN)) / M_SUN;
+
+  /* ---------- 2b. Pressure: each solid condenses at a lower temperature where the gas is thinner (added 2026-11-15) ----------
+     The nebula's midplane pressure: the gas of the minimum mass nebula (sigmaGas) in a layer of scale height H = c_s/Ω, so that
+     ρ = Σ/(√(2π) H) and P = ρ c_s² = Σ c_s Ω/√(2π), with c_s² = kT/(μ m_u), the disk temperature diskT and μ = 2.34 for gas of the
+     Sun's makeup (Hayashi 1981). It is 1.35 × 10⁻⁵ bar at 1 AU (Hayashi's rounded midplane density, 1.4 × 10⁻⁹ g/cm³, at 280 K gives
+     1.39 × 10⁻⁵) and falls as r^(−13/4); the same power laws are carried inside 0.35 AU, as the temperature law is.
+     k = 1.380649e-23 J/K (exact) and m_u = 1.66053906892e-27 kg (CODATA 2022).
+     How each condensation temperature moves, anchored at Lodders' 10⁻⁴ bar value (so 10⁻⁴ bar gives the table exactly):
+     - Ices: a solid that forms from one gas, vapor ⇌ ice, condenses where that gas's partial pressure, its mole fraction x times P,
+       equals the ice's vapor pressure p_sat(T). The mole fraction is fixed by the gas's makeup, so at a new total pressure P the
+       temperature T solves p_sat(T) = p_sat(T₀) P/(10⁻⁴ bar). Water ice: Murphy and Koop 2005 (Q. J. R. Meteorol. Soc. 131, 1539,
+       eq. 7, fitted above 110 K and carried on below it), the formula Giant Planets uses. As a check (waterCheck, in the tests): the
+       Sun's oxygen less what rock takes (one O for each Mg, two for each Si; Asplund et al. 2009, ARA&A 47, 481, log ε 8.69, 7.60,
+       7.51), carbon as methane, as at equilibrium this cold, and half the water frozen give 177 K at 10⁻⁴ bar, within 5 K of Lodders'
+       182 K (her gas and her accounting differ a little). Methane ice and ammonia: the ice vapor pressure fits of Fray and
+       Schmitt 2009 (Planet. Space Sci. 57, 2053) as tabulated by Mousis et al. 2014 (A&A 570, A35, Table 3), as in Giant Planets.
+       Lodders' ammonia condenses as the hydrate NH₃·H₂O, whose curve is steeper or shallower than pure ammonia ice's by the
+       difference in their heats; pure ammonia ice's curve stands in for it here.
+     - Rock and metal: these form in reactions of several gases (Mg + SiO + 3 H₂O → Mg₂SiO₄ + 3 H₂, for olivine), so the fits are of
+       the form 10⁴/T = a − b log₁₀(P/bar), and only the slope b is taken from them: iron metal b = 0.48 and forsterite (olivine)
+       b = 0.37 (Visscher, Lodders and Fegley 2010, ApJ 716, 1060, eqs. 2 and 18; at 10⁻⁴ bar they give 1359 K and 1357 K for the
+       first metal and olivine, against Lodders' 1357 K and 1354 K), and corundum for the calcium and aluminum oxides,
+       10⁴/T = 5.014 − 0.2179 log₁₀ P + 0.002264 (log₁₀ P)² (Wakeford et al. 2017, MNRAS 464, 4247, eq. 4, for P below 0.1 bar;
+       1689 K at 10⁻⁴ bar against Lodders' 1677 K). The fits are for the first solid to appear; the same slope is used for the 50 %
+       point. They were made for the atmospheres of brown dwarfs and hot planets, and are carried down to the nebula's lower
+       pressures here; full condensation codes find a drop of the same size, about 360 K over five powers of ten in pressure for
+       the elements other than sulfur (Timmermann et al. 2023, A&A 676, A52); iron here drops 330 K from 10⁻⁴ to 10⁻⁹ bar.
+     - Iron sulfide forms as Fe (solid) + H₂S → FeS + H₂: one gas molecule on each side, so the total pressure cancels out of the
+       balance and its 664 K does not move.
+     Each line is where the disk's temperature equals the condensation temperature at the pressure there. */
+  const P_REF = 1e-4, K_B = 1.380649e-23, M_U = 1.66053906892e-27, MU_GAS = 2.34;
+  const nebulaP = (r, L, f = 1) => { const cs = Math.sqrt(K_B * diskT(r, L) / (MU_GAS * M_U)), om = Math.sqrt(GM_SI / Math.pow(r * AU, 3));
+    return sigmaGas(r, f) * 10 * cs * om / Math.sqrt(2 * Math.PI) / 1e5; };   /* bar; Σ in kg/m² is 10 times g/cm² */
+  const iceH2O = (T) => 1e-5 * Math.exp(9.550426 - 5723.265 / T + 3.53068 * Math.log(T) - 0.00728332 * T);   /* bar, Murphy and Koop 2005 */
+  const fsP = (A, T) => Math.exp(A.reduce((s, a, i) => s + a / Math.pow(T, i), 0));   /* bar, Fray and Schmitt 2009 */
+  const PRESS = {
+    cai: { b: 0.2179, c: 0.002264 }, rock: { b: 0.37, c: 0 }, metal: { b: 0.48, c: 0 }, fes: { b: 0, c: 0 },
+    water: { vp: iceH2O }, nh3: { vp: (T) => fsP([15.96, -3.537e3, -3.31e4, 1.742e6, -2.995e7], T) }, ch4: { vp: (T) => fsP([10.51, -1110, -4341, 1.035e5, -7.91e5], T) },
+  };
+  /* c's condensation temperature (K) at total pressure P (bar) */
+  function condenseT(c, P) {
+    const dx = Math.log10(P / P_REF); if (Math.abs(dx) < 1e-12) return c.T;
+    const q = PRESS[c.k];
+    if (q.vp) { const want = Math.log(q.vp(c.T)) + dx * Math.LN10; let lo = c.T / 4, hi = c.T * 4;
+      for (let i = 0; i < 80; i++) { const m = 0.5 * (lo + hi); if (Math.log(q.vp(m)) < want) lo = m; else hi = m; } return 0.5 * (lo + hi); }
+    const x0 = Math.log10(P_REF), x = x0 + dx;
+    return 1 / (1 / c.T + 1e-4 * (-q.b * (x - x0) + q.c * (x * x - x0 * x0)));
+  }
+  /* pr: the pressure, a number in bar the same everywhere, or 'neb' for the nebula's midplane pressure at each distance */
+  const pressAt = (r, L, pr) => (pr === 'neb' ? nebulaP(r, L) : pr);
+  const condenseAt = (c, r, L, pr) => condenseT(c, pressAt(r, L, pr));
+  function lineAtP(c, L, pr) {
+    if (pr !== 'neb') return lineAt(condenseT(c, pr), L);
+    let lo = Math.log(1e-3), hi = Math.log(1e4);   /* the disk is hotter than the condensation temperature inside the line, colder beyond */
+    for (let i = 0; i < 80; i++) { const m = 0.5 * (lo + hi), r = Math.exp(m); if (diskT(r, L) > condenseAt(c, r, L, pr)) lo = m; else hi = m; }
+    return Math.exp(0.5 * (lo + hi));
+  }
+  const WATER = CONDENSE.find((c) => c.k === 'water');
+  const frostLineP = (L, pr) => lineAtP(WATER, L, pr);
+  const solidsAtP = (r, L, pr) => { const T = diskT(r, L); return CONDENSE.filter((c) => condenseAt(c, r, L, pr) >= T); };
+  /* the check on water's anchor: per hydrogen atom, Asplund et al. 2009 log ε of He 10.93, C 8.43, O 8.69, Mg 7.60, Si 7.51; molecules
+     H₂ (0.5 less two for each CH₄ and one for each H₂O), He, CH₄ and H₂O, 0.5 − C + He in all; T where half the water is frozen at
+     total pressure P (bar) */
+  function waterCheck(P) {
+    const e = (le) => Math.pow(10, le - 12), O = e(8.69) - e(7.60) - 2 * e(7.51), x = O / (0.5 - e(8.43) + e(10.93));
+    let lo = 100, hi = 300; for (let i = 0; i < 80; i++) { const m = 0.5 * (lo + hi); if (iceH2O(m) < 0.5 * x * P) lo = m; else hi = m; } return 0.5 * (lo + hi);
+  }
 
   /* ---------- 3. Planetesimals grow: oligarchic growth to the isolation mass ----------
      The model of Kokubo and Ida (2000, Icarus 143, 15; 2002, ApJ 581, 666): the largest bodies ("oligarchs") end up spaced about
@@ -455,8 +527,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     slow: { st: 'collapse', r0: 5000, P0: 16, spin: true, hint: 'The same cloud turning four times more slowly: the disk comes out 4² = 16 times smaller, about 2.4 AU in radius.' },
     fast: { st: 'collapse', r0: 5000, P0: 2, spin: true, hint: 'The same cloud turning twice as fast: the disk comes out 2² = 4 times larger, about 160 AU in radius.' },
     nospin: { st: 'collapse', r0: 5000, P0: 4, spin: false, hint: 'A cloud with no spin at all: every parcel falls straight onto the young Sun and no disk forms. Spin is what makes the disk.' },
-    today: { st: 'disk', L: 1, r: 1, hint: 'The disk lit by a Sun as bright as today\'s. Rock and metal are solid almost everywhere; water freezes only beyond the frost line, 2.37 AU out in this model.' },
-    bright: { st: 'disk', L: 4, r: 1, hint: 'A young Sun four times as bright as today (young stars are brighter while they contract). The temperature everywhere rises by 4^(1/4) = 1.41 times, so the frost line moves out by 4^(1/2) = 2 times.' },
+    today: { st: 'disk', L: 1, r: 1, pr: -4, neb: false, hint: 'The disk lit by a Sun as bright as today\'s. Rock and metal are solid almost everywhere; water freezes only beyond the frost line, 2.37 AU out in this model, with the gas at 10⁻⁴ bar everywhere.' },
+    bright: { st: 'disk', L: 4, r: 1, pr: -4, neb: false, hint: 'A young Sun four times as bright as today (young stars are brighter while they contract). The temperature everywhere rises by 4^(1/4) = 1.41 times, so the frost line moves out by 4^(1/2) = 2 times.' },
+    nebulaP: { st: 'disk', L: 1, r: 3, pr: -4, neb: true, hint: 'The same disk with the pressure its own gas makes in the midplane of Hayashi\'s nebula: 1.35 × 10⁻⁵ bar at 1 AU, falling as r^(−13/4) to 8.2 × 10⁻⁷ bar at 2.37 AU. In thinner gas, water stays a vapor down to a colder temperature (155 K at the line instead of 182 K), so the frost line moves out from 2.37 to 3.26 AU. The probe sits at 3 AU: beyond the line at 10⁻⁴ bar, inside it now.' },
+    denseP: { st: 'disk', L: 1, r: 1, pr: -3, neb: false, hint: 'Gas ten times denser than in Lodders\' table, 10⁻³ bar everywhere. Every solid but iron sulfide condenses hotter: water at 195 K, so the frost line moves in to 2.05 AU, and iron metal at 1425 K, now before olivine (1406 K). Iron sulfide forms as iron + hydrogen sulfide → iron sulfide + hydrogen, one gas molecule taken for one given back, so the pressure does not move its 664 K.' },
     mmsn: { st: 'planets', L: 1, f: 1, gas: 3, hint: 'Hayashi\'s minimum mass solar nebula: just enough solids to make today\'s planets, with gas that lasts 3 million years, the middle of what young star clusters show (Haisch, Lada and Lada 2001). No core reaches 10 Earth masses in time, so no giant forms.' },
     heavy: { st: 'planets', L: 1, f: 3, gas: 3, hint: 'Three times the minimum mass: cores beyond the frost line reach 10 Earth masses while the gas is still there and become giants. The rocky bodies inside the frost line stay small.' },
     early: { st: 'planets', L: 1, f: 3, gas: 1, hint: 'The heavier disk, but its gas is blown away after 1 million years: the cores are not big enough in time, and no giant forms.' },
@@ -465,7 +539,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     small: { st: 'melt', R: 3, tf: 0.5, hint: 'A planetesimal only 3 km in radius, formed early: heat leaks out of a small body faster than aluminum 26 makes it, so it stays cool.' },
     vesta: { st: 'melt', R: 263, tf: 1, hint: 'A body the size of the asteroid Vesta (mean radius 263 km), formed 1 million years after the first solids. Vesta did melt and has an iron core (Dawn mission, Russell et al. 2012).' },
   };
-  const S = { st: 'story', follow: 'system', preset: 'story', r0: 5000, P0: 4, spin: true, L: 1, r: 1, f: 1, gas: 3, R: 50, tf: 0.5, speed: 1, run: false, blind: false };
+  const S = { st: 'story', follow: 'system', preset: 'story', r0: 5000, P0: 4, spin: true, L: 1, r: 1, pr: -4, neb: false, f: 1, gas: 3, R: 50, tf: 0.5, speed: 1, run: false, blind: false };
   const NPARC = 1400;
   const CL = { C: null, view: 1, done: false, rate: 0 };          /* collapse */
   const GR = { D: null, t: 1e3, tau: 0, done: false };     /* growth: t in years; tau a display clock for the orbits */
@@ -561,6 +635,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     return { X, Y };
   }
   const fmtNum = (v) => (v >= 1 ? grp(v) : String(+v.toPrecision(3)));
+  /* a pressure in bar as 10⁻⁴ bar or 3.2 × 10⁻⁵ bar */
+  const SUP = { '-': '⁻', 0: '⁰', 1: '¹', 2: '²', 3: '³', 4: '⁴', 5: '⁵', 6: '⁶', 7: '⁷', 8: '⁸', 9: '⁹' };
+  const fmtBar = (P) => { let e = Math.floor(Math.log10(P) + 1e-9), m = P / Math.pow(10, e); if (m >= 9.95) { m /= 10; e++; } const pw = `10${String(e).split('').map((d) => SUP[d]).join('')}`;
+    return `${Math.abs(m - 1) < 0.05 ? pw : `${m.toFixed(1)} × ${pw}`} bar`; };
+  /* the gas pressure the frost line stage uses (the other stages keep Lodders' 10⁻⁴ bar), and where each solid's line falls then */
+  const prNow = () => (S.st === 'disk' ? (S.neb ? 'neb' : Math.pow(10, S.pr)) : P_REF);
+  const LINES = { key: '', r: {} };
+  const lineOf = (c) => { const pr = prNow(), key = `${S.L}|${pr}`; if (key !== LINES.key) { LINES.key = key; LINES.r = {}; } return LINES.r[c.k] ?? (LINES.r[c.k] = lineAtP(c, S.L, pr)); };
   let probeX = null;   /* the probe line's mapping in the flat disk graph, for dragging */
   function graphBox() { const p = P(), phone = W < 640; return { x: (phone ? 58 : 74) * p, y: 36 * p, w: W - (phone ? 70 : 100) * p - (W > 820 ? 300 : 0), h: H - 96 * p }; }
   function drawDiskFlat() {
@@ -570,19 +652,33 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* the background colored by the disk's temperature at each distance */
     for (let i = 0; i < b.w; i += 2) { const r = 0.03 * Math.pow(100 / 0.03, i / b.w), c = heatRGB(diskT(r, S.L)); ctx.fillStyle = rgb(c, K.dark ? 0.32 : 0.22); ctx.fillRect(b.x + i, b.y, 2.5, b.h); }
     /* each condensation temperature, and where the disk reaches it */
-    let prevY = -1e9;
-    for (const c of CONDENSE) { const y = Y(c.T), rl = lineAt(c.T, S.L); ctx.strokeStyle = c.ice ? K.ice : K.rock; ctx.lineWidth = 1.2 * p; ctx.setLineDash([5 * p, 4 * p]); ctx.beginPath(); ctx.moveTo(b.x, y); ctx.lineTo(b.x + b.w, y); ctx.stroke(); ctx.setLineDash([]);
+    /* at one pressure everywhere each is a level line; at the nebula's own pressure, which falls outward, each condensation
+       temperature falls outward too, and the label gives its value where it meets the disk (the dot) */
+    let prevY = -1e9; const pr = prNow(), neb = pr === 'neb', rEnd = 100, boxes = [];
+    const wid = (t, s, w) => { ctx.save(); ctx.font = `${w} ${s * p}px ${K.ui}`; const m = ctx.measureText(t).width; ctx.restore(); return m; };
+    for (const c of CONDENSE) { const rl = lineOf(c), Tl = neb ? condenseAt(c, rl, S.L, pr) : condenseT(c, pr), y = Y(neb ? condenseAt(c, rEnd, S.L, pr) : Tl), yl = Y(Tl);
+      ctx.strokeStyle = c.ice ? K.ice : K.rock; ctx.lineWidth = 1.2 * p; ctx.setLineDash([5 * p, 4 * p]); ctx.beginPath();
+      if (neb) for (let i = 0; i <= 60; i++) { const r = 0.03 * Math.pow(rEnd / 0.03, i / 60), q = Y(condenseAt(c, r, S.L, pr)); i ? ctx.lineTo(X(r), q) : ctx.moveTo(X(r), q); }
+      else { ctx.moveTo(b.x, y); ctx.lineTo(b.x + b.w, y); }
+      ctx.stroke(); ctx.setLineDash([]);
       const below = y - prevY < 14 * p; prevY = y;
-      label(ctx, `${narrowPhone() ? c.short : c.name} ${c.T} K`, b.x + b.w - 6 * p, below ? y + 9 * p : y - 8 * p, { a: 'right', col: c.ice ? K.ice : K.rock, s: 10.5 });
-      if (rl > 0.03 && rl < 100) { ctx.fillStyle = c.ice ? K.ice : K.rock; ctx.beginPath(); ctx.arc(X(rl), y, 3.5 * p, 0, 2 * Math.PI); ctx.fill(); } }
+      const txt = neb && !(rl > 0.03 && rl < 100) ? (narrowPhone() ? c.short : c.name) : `${narrowPhone() ? c.short : c.name} ${Math.round(Tl)} K`, ly = below ? y + 9 * p : y - 8 * p;
+      label(ctx, txt, b.x + b.w - 6 * p, ly, { a: 'right', col: c.ice ? K.ice : K.rock, s: 10.5 }); boxes.push([b.x + b.w - 6 * p - wid(txt, 10.5, 600), ly, b.x + b.w, 13 * p]); if (!neb) boxes.push([b.x, y, b.x + b.w, 8 * p]);
+      if (rl > 0.03 && rl < 100) { ctx.fillStyle = c.ice ? K.ice : K.rock; ctx.beginPath(); ctx.arc(X(rl), yl, 3.5 * p, 0, 2 * Math.PI); ctx.fill(); } }
     /* the disk's temperature */
     ctx.strokeStyle = K.ink; ctx.lineWidth = 2.4 * p; ctx.beginPath();
     for (let i = 0; i <= 200; i++) { const r = 0.03 * Math.pow(100 / 0.03, i / 200), x = X(r), y = Y(diskT(r, S.L)); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); } ctx.stroke();
     /* the frost line */
-    const fl = frostLine(S.L);
+    const fl = lineOf(WATER);
     if (!S.blind) { ctx.strokeStyle = K.ice; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(X(fl), b.y); ctx.lineTo(X(fl), b.y + b.h); ctx.stroke();
-      label(ctx, `frost line ${sig(fl, 3)} AU`, X(fl) + 6 * p, b.y + 16 * p, { col: K.ice, w: 700 });
-      label(ctx, 'rock and metal only', X(fl) - 6 * p, b.y + 34 * p, { a: 'right', col: K.rock, s: 10.5 }); label(ctx, 'rock, metal and ice', X(fl) + 6 * p, b.y + 34 * p, { col: K.ice, s: 10.5 }); }
+      /* at the top, or lower down where the condensation labels or the probe's label would be in the way (on phones) */
+      const ft = `frost line ${sig(fl, 3)} AU`, Tq = diskT(S.r, S.L), fq = X(S.r) > b.x + b.w * 0.62, pt = `probe: ${sig(S.r, 3)} AU, ${sig(Tq, 3)} K`, pw = wid(pt, 11.5, 700);
+      boxes.push([fq ? X(S.r) - 9 * p - pw : X(S.r) + 9 * p, Y(Tq) - 14 * p, fq ? X(S.r) - 9 * p : X(S.r) + 9 * p + pw, 13 * p]);
+      const rows = (yF) => [[X(fl) + 6 * p, yF, X(fl) + 6 * p + wid(ft, 11.5, 700)], [X(fl) - 6 * p - wid('rock and metal only', 10.5, 600), yF + 18 * p, X(fl) - 6 * p], [X(fl) + 6 * p, yF + 18 * p, X(fl) + 6 * p + wid('rock, metal and ice', 10.5, 600)]];
+      const hits = (yF) => rows(yF).some(([a, y, c]) => boxes.some(([a2, y2, c2, tol]) => a < c2 && a2 < c && Math.abs(y - y2) < tol));
+      let yF = b.y + 16 * p; for (let v = yF; v < b.y + b.h - 70 * p; v += 3 * p) if (!hits(v)) { yF = v; break; }
+      label(ctx, ft, X(fl) + 6 * p, yF, { col: K.ice, w: 700 });
+      label(ctx, 'rock and metal only', X(fl) - 6 * p, yF + 18 * p, { a: 'right', col: K.rock, s: 10.5 }); label(ctx, 'rock, metal and ice', X(fl) + 6 * p, yF + 18 * p, { col: K.ice, s: 10.5 }); }
     /* today's planets along the bottom */
     for (const [n, a] of PLANETS) { const x = X(a); ctx.fillStyle = K.muted; ctx.beginPath(); ctx.arc(x, b.y + b.h - 8 * p, 3 * p, 0, 2 * Math.PI); ctx.fill();
       if (!narrowPhone() || ['Earth', 'Jupiter', 'Neptune'].includes(n)) { ctx.save(); ctx.translate(x, b.y + b.h - 15 * p); ctx.rotate(-Math.PI / 2); label(ctx, n, 0, 0, { col: K.muted, s: 10, w: 400 }); ctx.restore(); } }
@@ -590,6 +686,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const xp = X(S.r), Tp = diskT(S.r, S.L); ctx.strokeStyle = K.probe; ctx.lineWidth = 2.2 * p; ctx.beginPath(); ctx.moveTo(xp, b.y); ctx.lineTo(xp, b.y + b.h); ctx.stroke();
     ctx.fillStyle = K.probe; ctx.beginPath(); ctx.arc(xp, Y(Tp), 5 * p, 0, 2 * Math.PI); ctx.fill();
     ctx.restore();
+    /* the gas pressure the lines are drawn for, above the graph */
+    label(ctx, neb ? (narrowPhone() ? 'gas pressure: the nebula\'s, falling outward' : 'gas pressure: the nebula\'s midplane, falling outward; each number is the temperature at its dot') : VDI18N.t('gas pressure: {p} everywhere', { p: fmtBar(pr) }), b.x, b.y - 13 * p, { col: K.muted, s: 10.5, w: 400 });
     const flip = xp > b.x + b.w * 0.62;
     label(ctx, `probe: ${sig(S.r, 3)} AU, ${sig(Tp, 3)} K`, flip ? xp - 9 * p : xp + 9 * p, Y(Tp) - 14 * p, { a: flip ? 'right' : 'left', col: K.probe, w: 700 });
     if (S.st !== 'story') label(ctx, 'drag the probe', xp + (flip ? -9 : 9) * p, b.y + b.h - 40 * p, { a: flip ? 'right' : 'left', col: K.probe, s: 10, w: 400 });
@@ -741,7 +839,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     } else if (S.st === 'disk' || S.st === 'planets') {
       const key = `${S.st}|${S.L}|${S.st === 'planets' ? Math.round(gasLeft() * 20) : 1}`;
       if (key !== g.key) { g.key = key; paintDisk(S.st === 'planets' ? 0.25 + 0.6 * gasLeft() : 1); }
-      for (const c of CONDENSE) { const rl = lineAt(c.T, S.L), rr = g.rings[c.k]; rr.visible = rl > 0.1 && rl < 100 && (S.st === 'disk' || c.k === 'water') && !(S.blind && c.k === 'water'); rr.scale.setScalar(RHO(rl)); }
+      for (const c of CONDENSE) { const rl = lineOf(c), rr = g.rings[c.k]; rr.visible = rl > 0.1 && rl < 100 && (S.st === 'disk' || c.k === 'water') && !(S.blind && c.k === 'water'); rr.scale.setScalar(RHO(rl)); }
       g.probe.visible = g.pring.visible = S.st === 'disk'; g.probe.position.set(RHO(S.r), 0, 0); g.pring.scale.setScalar(RHO(S.r));
       if (S.st === 'planets') drawBodies3();
       dist = 2.9;
@@ -757,7 +855,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const C = CL.C; if (C.st[0] !== 2) { const q = pr([C.p[0] / CL.view, C.p[1] / CL.view, C.p[2] / CL.view]); label(ctx, 'tracked parcel', q[0] + 12 * p, q[1] - 10 * p, { col: '#fb923c', haloCol: halo, w: 700 }); }
       label(ctx, `picture ${fmtAU(2 * CL.view)} across · drag to turn`, 14 * p, H - 18 * p, { col: lc, haloCol: halo, s: 10.5, w: 400 });
     } else if (S.st === 'disk' || S.st === 'planets') {
-      for (const c of CONDENSE) { const rr = g.rings[c.k]; if (!rr.visible || RHO(lineAt(c.T, S.L)) < 0.3) continue; const q = pr([0, -RHO(lineAt(c.T, S.L)), 0]); label(ctx, c.k === 'water' ? `frost line ${sig(frostLine(S.L), 3)} AU` : c.short, q[0], q[1] + 12 * p, { a: 'center', col: c.ice ? '#8cc8ff' : '#e0b08a', haloCol: halo, s: c.k === 'water' ? 11.5 : 10, w: c.k === 'water' ? 700 : 500 }); }
+      for (const c of CONDENSE) { const rr = g.rings[c.k]; if (!rr.visible || RHO(lineOf(c)) < 0.3) continue; const q = pr([0, -RHO(lineOf(c)), 0]); label(ctx, c.k === 'water' ? `frost line ${sig(lineOf(WATER), 3)} AU` : c.short, q[0], q[1] + 12 * p, { a: 'center', col: c.ice ? '#8cc8ff' : '#e0b08a', haloCol: halo, s: c.k === 'water' ? 11.5 : 10, w: c.k === 'water' ? 700 : 500 }); }
       if (S.st === 'disk') { const q = pr([RHO(S.r), 0, 0.14]); label(ctx, `${sig(S.r, 3)} AU · ${sig(diskT(S.r, S.L), 3)} K`, q[0], q[1] - 12 * p, { a: 'center', col: '#fb923c', haloCol: halo, w: 700 }); }
       for (const [n, a] of PLANETS) { if (narrowPhone() && !['Earth', 'Jupiter', 'Neptune'].includes(n)) continue; const az = G3.o.th - Math.PI / 2, q = pr([RHO(a) * Math.cos(az), RHO(a) * Math.sin(az), 0]); ctx.fillStyle = 'rgba(237,230,221,0.75)'; ctx.beginPath(); ctx.arc(q[0], q[1], 2.2 * p, 0, 2 * Math.PI); ctx.fill(); ctx.save(); ctx.translate(q[0], q[1] - 6 * p); ctx.rotate(-Math.PI / 2); label(ctx, n, 0, 0, { col: 'rgba(237,230,221,0.85)', haloCol: halo, s: 9.5, w: 400 }); ctx.restore(); }
       label(ctx, narrowPhone() ? 'log scale: 0.1 AU (center) to 100 AU (edge)' : 'distances on a log scale: 0.1 AU at the center to 100 AU at the edge · drag to turn', 14 * p, H - 18 * p, { col: lc, haloCol: halo, s: 10.5, w: 400 });
@@ -975,7 +1073,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     if (c === 'impacts') return impactCaption();
     if (c === 'moon') return moonCaption();
-    if (c === 'disk') return VDI18N.t('The young Sun warms the disk: hotter near it, colder far out. Inside the frost line ({fl} AU) only rock and metal can be solid; beyond it water freezes too, and there is about four times more solid material.', { fl: sig(fl, 3) });
+    if (c === 'disk') return VDI18N.t('The young Sun warms the disk: hotter near it, colder far out. Inside the frost line ({fl} AU) only rock and metal can be solid; beyond it water freezes too, and there is about four times more solid material. The line uses condensation at 10⁻⁴ bar; the disk\'s own thinner gas would put it at {fn} AU (the Frost line stage shows why).', { fl: sig(fl, 3), fn: sig(frostLineP(STORY.L, 'neb'), 3) });
     const s = growthSummary({ B: SY.B.filter((b) => b.a < fl) }), giants = SY.B.filter((b) => b.giant).length;
     if (SY.gt < 3e4) return VDI18N.t('Dust grains stick together into planetesimals, kilometers across. The model starts with {n} of them, spread through the disk like its solids.', { n: N_START });
     if (SY.gt < STORY.tGas * 0.8) return giants ? VDI18N.t('A core beyond the frost line reached {m} Earth masses while the gas was still there: its gravity pulls in hydrogen and helium, and it becomes a giant planet.', { m: CORE_GAS })
@@ -1270,7 +1368,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function storyReadouts(dd) {
     const c = CHAPTERS[SY.ch].k, fl = frostLine(STORY.L); let h = dd('Chapter', `${SY.ch + 1} of ${CHAPTERS.length}: ${CHAPTERS[SY.ch].title}`, 'wide') + dd('Time since the cloud began to fall', yrs(storyTime()));
     if (c === 'cloud') { const n = cloudCounts(SY.C); h += dd('Parcels falling, in the disk, on the young Sun', `${n.fall}, ${n.disk}, ${n.sun}`, 'wide') + dd('Disk radius (prediction)', fmtAU(diskRadius(STORY.r0, STORY.P0))) + dd('View across', fmtAU(+sig(2 * SY.view, 2))); }
-    else if (c === 'disk') h += dd('Frost line', `${sig(fl, 3)} AU`) + dd('Temperature at 1 AU', `${sig(diskT(1, STORY.L), 3)} K`) + dd('Solids at 1 AU, at 5.2 AU', `${sig(sigmaSolid(1, STORY.f, STORY.L), 2)}, ${sig(sigmaSolid(5.2, STORY.fOut, STORY.L), 2)} g/cm²`, 'wide');
+    else if (c === 'disk') { const fn = frostLineP(STORY.L, 'neb');
+      h += dd('Frost line', `${sig(fl, 3)} AU`) + dd('Temperature at 1 AU', `${sig(diskT(1, STORY.L), 3)} K`) + dd('Solids at 1 AU, at 5.2 AU', `${sig(sigmaSolid(1, STORY.f, STORY.L), 2)}, ${sig(sigmaSolid(5.2, STORY.fOut, STORY.L), 2)} g/cm²`, 'wide')
+        + dd('Gas pressure in the midplane', VDI18N.t('{a} at 1 AU, {b} at the frost line', { a: fmtBar(nebulaP(1, STORY.L, STORY.f)), b: fmtBar(nebulaP(fl, STORY.L, STORY.f)) }), 'wide')
+        + dd('Frost line at the midplane\'s own pressure', VDI18N.t('{r} AU, where water freezes at {T} K', { r: sig(fn, 3), T: sig(condenseT(WATER, nebulaP(fn, STORY.L, STORY.f)), 3) }), 'wide'); }
     else if (c === 'moon') { const D = MOON(); if (!D) return h; const S1 = D.summary, end = SY.mt >= D.frames[D.frames.length - 1][0];
       h += dd('Time after contact', hoursAfter(SY.mt)) + dd('Earth and Theia', `${D.setup.Mt} and ${D.setup.Mi} Earth masses`) + dd('Particles', grp(D.n));
       if (end) h += dd('Disk around Earth', `${sig(S1.disk, 2)} Moon masses`) + dd('Escaped', `${sig(S1.escaped, 2)} Moon masses`) + dd('Moon it would make', `${sig(S1.moon, 2)} Moon masses`) + dd('Angular momentum', `${sig(S1.L, 3)} times today's Earth and Moon`, 'wide');
@@ -1299,10 +1400,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         + dd('Parcels falling, in the disk, on the Sun', `${n.fall}, ${n.disk}, ${n.sun} (${Math.round(100 * n.sun / C.n)} % on the Sun)`, 'wide')
         + dd('Predicted disk radius R<sub>d</sub> = Ω₀²r₀⁴/GM', B ? hide : S.spin ? fmtAU(rd) : 'no disk') + dd('Predicted spin up (r₀/R<sub>d</sub>)²', B ? hide : S.spin ? `${grp(spinUp(S.r0, S.P0))} times` : '—');
     } else if (S.st === 'disk') {
-      const T = diskT(S.r, S.L), sol = solidsAt(S.r, S.L);
+      const T = diskT(S.r, S.L), pr = prNow(), sol = solidsAtP(S.r, S.L, pr), Pp = pressAt(S.r, S.L, pr);
       h += dd('Young Sun\'s brightness L', `${sig(S.L, 2)} × today's`) + dd('Probe distance r', `${sig(S.r, 3)} AU`) + dd('Temperature there', `${sig(T, 3)} K`)
+        + dd('Gas pressure there', pr === 'neb' ? VDI18N.t('{p} (the nebula\'s midplane)', { p: fmtBar(Pp) }) : VDI18N.t('{p} (set by hand, the same everywhere)', { p: fmtBar(Pp) }), 'wide')
+        + dd('Water freezes there below', `${sig(condenseT(WATER, Pp), 3)} K`)
         + dd('Solids that form there', sol.length ? sol.map((c) => c.name).join(', ') : 'none: too hot for any solid', 'wide')
-        + dd('Frost line (water freezes beyond)', B ? hide : `${sig(frostLine(S.L), 3)} AU`) + dd('Solids in the disk there (minimum mass)', `${sig(sigmaSolid(S.r, 1, S.L), 3)} g/cm²`) + dd('Gas in the disk there', `${sig(sigmaGas(S.r, 1), 3)} g/cm²`);
+        + dd('Frost line (water freezes beyond)', B ? hide : `${sig(lineOf(WATER), 3)} AU`) + dd('Solids in the disk there (minimum mass)', `${sig(sigmaSolid(S.r, 1, S.L), 3)} g/cm²`) + dd('Gas in the disk there', `${sig(sigmaGas(S.r, 1), 3)} g/cm²`);
     } else if (S.st === 'planets') {
       const s = growthSummary(GR.D), d = (b) => (b ? `${sig(b.m, 3)} Earth masses at ${sig(b.a, 3)} AU` : '—');
       h += dd('Disk mass', `${sig(S.f, 2)} × the minimum (${sig(diskMass(S.f), 2)} solar masses of gas)`, 'wide') + dd('Gas lasts', `${sig(S.gas, 2)} million yr`) + dd('Time', yrs(GR.t))
@@ -1329,7 +1432,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function sync() {
     const set = (id, v, txt) => { $('s' + id).value = v; $('o' + id).textContent = txt; };
     set('R0', S.r0, `${grp(S.r0)} AU`); set('P0', S.P0, `${sig(S.P0, 3)} Myr`); $('chkNoSpin').checked = !S.spin; $('sP0').disabled = !S.spin;
-    set('L', S.L, `${sig(S.L, 2)} × today`); set('Dist', valOfDist(S.r), `${sig(S.r, 3)} AU`); set('F', S.f, `${sig(S.f, 2)} × minimum`); set('Gas', S.gas, `${sig(S.gas, 2)} Myr`);
+    set('L', S.L, `${sig(S.L, 2)} × today`); set('Dist', valOfDist(S.r), `${sig(S.r, 3)} AU`);
+    set('Pres', S.pr, S.neb ? VDI18N.t('nebula') : fmtBar(Math.pow(10, S.pr))); $('chkNeb').checked = S.neb; $('sPres').disabled = S.neb; set('F', S.f, `${sig(S.f, 2)} × minimum`); set('Gas', S.gas, `${sig(S.gas, 2)} Myr`);
     set('Rad', valOfRad(S.R), `${sig(S.R, 3)} km`); set('Tf', S.tf, `${sig(S.tf, 2)} Myr`);
     $('boxStory').hidden = S.st !== 'story'; $('selFollow').value = S.follow; $('selChapter').value = String(SY.ch); $('boxCollapse').hidden = S.st !== 'collapse'; $('boxSun').hidden = !(S.st === 'disk' || S.st === 'planets'); $('boxDisk').hidden = S.st !== 'disk'; $('boxPlanets').hidden = S.st !== 'planets'; $('boxMelt').hidden = S.st !== 'melt';
     $('cardTitle').textContent = CARD[S.st];
@@ -1348,7 +1452,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function goStage(st, keep) { S.st = st; if (!keep) S.run = false; dirty3 = true; if (g3) g3.key = ''; sync(); setRun(false); redraw(); }
   function applyPreset(k, opening) {
     const c = PRESETS[k]; S.preset = k;
-    for (const key of ['r0', 'P0', 'spin', 'L', 'r', 'f', 'gas', 'R', 'tf', 'follow']) if (c[key] != null) S[key] = c[key];
+    for (const key of ['r0', 'P0', 'spin', 'L', 'r', 'pr', 'neb', 'f', 'gas', 'R', 'tf', 'follow']) if (c[key] != null) S[key] = c[key];
     $('presetHint').textContent = c.hint; resetStage(c.st); S.st = c.st; sync(); goStage(c.st); if (c.st !== 'disk' && !reduce && !opening) setRun(true);
   }
   for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
@@ -1358,6 +1462,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   onSlider('sR0', (v) => { S.r0 = v; }, 'collapse'); onSlider('sP0', (v) => { S.P0 = v; }, 'collapse');
   $('chkNoSpin').addEventListener('change', (e) => { S.spin = !e.target.checked; custom(); resetCollapse(); sync(); setRun(false); redraw(); });
   onSlider('sL', (v) => { S.L = v; if (S.st === 'planets') resetGrowth(); else GR.D = null; }); onSlider('sDist', (v) => { S.r = distOf(v); });
+  onSlider('sPres', (v) => { S.pr = v; dirty3 = true; }); $('chkNeb').addEventListener('change', (e) => { S.neb = e.target.checked; custom(); dirty3 = true; sync(); redraw(); });
   onSlider('sF', (v) => { S.f = v; }, 'planets'); onSlider('sGas', (v) => { S.gas = v; }, 'planets');
   onSlider('sRad', (v) => { S.R = radOf(v); }, 'melt'); onSlider('sTf', (v) => { S.tf = v; }, 'melt');
   $('play').addEventListener('click', () => { if (finished()) return; setRun(!S.run); });
@@ -1421,8 +1526,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       if (!q.settled) return 'The tracked parcel has not settled in the disk yet: let the collapse finish (or press To the end).';
       return { stage: 'collapse', r0_AU: String(S.r0), P0_Myr: S.spin ? sig(S.P0, 3) : 'none', rdisk_AU: sig(q.s, 3), Pdisk_yr: sig(q.period, 3), t_yr: String(Math.round(C.t)) };
     }
-    if (S.st === 'disk') { const sol = solidsAt(S.r, S.L);
-      return { stage: 'disk', L_Lsun: sig(S.L, 2), r_AU: sig(S.r, 3), T_K: sig(diskT(S.r, S.L), 3), solids: sol.length ? sol.map((c) => c.name.toLowerCase()).join(', ') : 'none', frost_AU: sig(frostLine(S.L), 3) }; }
+    if (S.st === 'disk') { const pr = prNow(), sol = solidsAtP(S.r, S.L, pr);
+      return { stage: 'disk', L_Lsun: sig(S.L, 2), r_AU: sig(S.r, 3), T_K: sig(diskT(S.r, S.L), 3), solids: sol.length ? sol.map((c) => c.name.toLowerCase()).join(', ') : 'none', frost_AU: sig(lineOf(WATER), 3),
+        P_bar: Number(pressAt(S.r, S.L, pr).toPrecision(2)).toString(), pressure: pr === 'neb' ? 'nebula' : 'set' }; }
     if (S.st === 'planets') { const s = growthSummary(GR.D);
       return { stage: 'planets', f: sig(S.f, 2), gas_Myr: sig(S.gas, 2), t_Myr: sig(GR.t / 1e6, 3), rock_Me: s.rock ? sig(s.rock.m, 3) : '', rock_AU: s.rock ? sig(s.rock.a, 3) : '', ice_Me: s.ice ? sig(s.ice.m, 3) : '', ice_AU: s.ice ? sig(s.ice.a, 3) : '', giants: String(s.giants) }; }
     const run = ML.run;
@@ -1430,7 +1536,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     return { stage: 'melt', R_km: sig(S.R, 3), tf_Myr: sig(S.tf, 2), heat_MJkg: sig(heatLeft(S.tf) / 1e6, 3), peak_K: String(Math.round(run.peak)), core: run.core ? `yes, at ${sig(run.coreAt, 3)} Myr` : 'no' };
   };
   Object.defineProperty(window, 'vdShowCols', { configurable: true, get: showCols });
-  $('about').textContent = 'The whole story runs the stages\' models one after another for one cloud (5000 AU in radius, turning once every 4 million years), with a disk that has the minimum mass inside the frost line and three times it beyond (with the minimum mass there, no core reaches 10 Earth masses before the gas is gone: the timescale problem of making Jupiter this way), drawn in true distances; the bodies are drawn far larger than to scale and their orbits turn slowly on the screen, not at their real rate. Chapter 4 replays one run of an N-body simulation made for this page (tools/solar-system-formation/nbody.c), one of three with different random starts, the one that ends most like our planets (the other two end with one and with two rocky planets): the 22 rocky protoplanets left when the gas is gone, with small random eccentricities and tilts (Kokubo, Genda and Ida 2006), and Jupiter and Saturn started full grown on today\'s orbits, for 150 million years. Every body pulls on every other (a Wisdom and Holman integrator, with close passes followed step by step); bodies that touch merge whole, keeping mass and momentum, and the impact speed and angle are recorded. Real impacts also spray debris and some bodies bounce off; models that include this end with much the same planets (Chambers 2013). Models like this one usually make Mars too big: the small Mars problem (Raymond et al. 2009), still being worked on. The orbit sizes, eccentricities and tilts on the screen come from the run; the directions of the orbits and where each body sits on its orbit are for the picture only. Chapter 5 is a smoothed particle hydrodynamics run made for this page (tools/solar-system-formation/sph.c), at low resolution like the first such simulations (Benz, Slattery and Cameron 1986; recent ones use millions of particles): the standard impact of Canup and Asphaug (2001), a body of 0.11 Earth masses hitting one of 0.89 at 45° from head on with no speed of its own far away. Each body has an iron core of 30 % of its mass under a rock mantle, first left to settle into balance; pressure comes from the Tillotson equation of state with the iron and granite values of Melosh (1989); rock pulled apart has no strength; an artificial viscosity turns the shock\'s motion into heat. Positions between saved frames are interpolated around the spin axis. After 24 hours the disk is the material on orbits that stay clear of Earth (its radius from its mass at Earth\'s mean density), and the Moon\'s mass is the estimate of Ida, Canup and Stewart (1997) from the disk\'s mass and angular momentum. The Moon at the end is drawn, not simulated: it gathers just outside the Roche limit within about a year (Kokubo, Ida and Makino 2000). Follow picks the rocky planet nearest a planet\'s orbit at the end of the run (the biggest one within 30 % of it), the protoplanets it was built from, their starting planetesimals, and the cloud\'s gas that settles in their rings (the gas settles at j²/GM; the disk\'s later spreading is left out, so this marks where the material landed, not every place it went). The four stages: Collapse: the infall model of Ulrich (1976): parcels fall in the pull of the young Sun alone, keep their spin about the axis, lose their up and down motion where streams from above and below meet in the midplane, and settle on circular orbits; the cloud\'s own gravity and pressure, magnetic fields and the disk\'s later spreading are left out. Disk: Hayashi\'s (1981) minimum mass solar nebula, with the temperature of a dark grain in full sunlight (a real disk is hotter in its dense middle near the Sun), and condensation temperatures from Lodders (2003) at 10⁻⁴ bar. Growth: oligarchic growth (Kokubo and Ida 2000, 2002): neighbors closer than 10 mutual Hill radii join once the growth time to their joint mass has passed, so bodies end between one and two times the isolation mass (whole bodies join); a core of 10 Earth masses that forms while the gas lasts becomes a giant (how much gas it gathers is not modeled); the later giant impacts, the giants\' pull on their neighbors and migration are left out. Iron cores: heating by aluminum 26 and conduction in a solid ball formed all at once (values from Johansen et al. 2023); a molten cell loses any further heat, standing in for the stirring of a magma ocean.';
+  $('about').textContent = 'The whole story runs the stages\' models one after another for one cloud (5000 AU in radius, turning once every 4 million years), with a disk that has the minimum mass inside the frost line and three times it beyond (with the minimum mass there, no core reaches 10 Earth masses before the gas is gone: the timescale problem of making Jupiter this way), drawn in true distances; the bodies are drawn far larger than to scale and their orbits turn slowly on the screen, not at their real rate. Chapter 4 replays one run of an N-body simulation made for this page (tools/solar-system-formation/nbody.c), one of three with different random starts, the one that ends most like our planets (the other two end with one and with two rocky planets): the 22 rocky protoplanets left when the gas is gone, with small random eccentricities and tilts (Kokubo, Genda and Ida 2006), and Jupiter and Saturn started full grown on today\'s orbits, for 150 million years. Every body pulls on every other (a Wisdom and Holman integrator, with close passes followed step by step); bodies that touch merge whole, keeping mass and momentum, and the impact speed and angle are recorded. Real impacts also spray debris and some bodies bounce off; models that include this end with much the same planets (Chambers 2013). Models like this one usually make Mars too big: the small Mars problem (Raymond et al. 2009), still being worked on. The orbit sizes, eccentricities and tilts on the screen come from the run; the directions of the orbits and where each body sits on its orbit are for the picture only. Chapter 5 is a smoothed particle hydrodynamics run made for this page (tools/solar-system-formation/sph.c), at low resolution like the first such simulations (Benz, Slattery and Cameron 1986; recent ones use millions of particles): the standard impact of Canup and Asphaug (2001), a body of 0.11 Earth masses hitting one of 0.89 at 45° from head on with no speed of its own far away. Each body has an iron core of 30 % of its mass under a rock mantle, first left to settle into balance; pressure comes from the Tillotson equation of state with the iron and granite values of Melosh (1989); rock pulled apart has no strength; an artificial viscosity turns the shock\'s motion into heat. Positions between saved frames are interpolated around the spin axis. After 24 hours the disk is the material on orbits that stay clear of Earth (its radius from its mass at Earth\'s mean density), and the Moon\'s mass is the estimate of Ida, Canup and Stewart (1997) from the disk\'s mass and angular momentum. The Moon at the end is drawn, not simulated: it gathers just outside the Roche limit within about a year (Kokubo, Ida and Makino 2000). Follow picks the rocky planet nearest a planet\'s orbit at the end of the run (the biggest one within 30 % of it), the protoplanets it was built from, their starting planetesimals, and the cloud\'s gas that settles in their rings (the gas settles at j²/GM; the disk\'s later spreading is left out, so this marks where the material landed, not every place it went). The four stages: Collapse: the infall model of Ulrich (1976): parcels fall in the pull of the young Sun alone, keep their spin about the axis, lose their up and down motion where streams from above and below meet in the midplane, and settle on circular orbits; the cloud\'s own gravity and pressure, magnetic fields and the disk\'s later spreading are left out. Disk: Hayashi\'s (1981) minimum mass solar nebula, with the temperature of a dark grain in full sunlight (a real disk is hotter in its dense middle near the Sun), and condensation temperatures from Lodders (2003) at 10⁻⁴ bar. Pressure (the Frost line stage only; the other stages and the whole story keep the 10⁻⁴ bar values): the gas pressure can be set by hand, the same everywhere, or taken from the nebula\'s midplane, P = Σ c_s Ω/√(2π) for the minimum mass gas at the disk\'s temperature (μ = 2.34), 1.35 × 10⁻⁵ bar at 1 AU falling as r^(−13/4), carried inside 0.35 AU like the temperature law. Each condensation temperature is moved from Lodders\' 10⁻⁴ bar value. An ice condenses where its gas\'s partial pressure, a fixed fraction of the total, reaches the ice\'s vapor pressure: water ice from Murphy and Koop (2005), methane and ammonia from Fray and Schmitt (2009), with pure ammonia ice standing in for the ammonia water ice Lodders finds. Rock and metal form in reactions of several gases and move as 10⁴/T = a − b log₁₀ P, with the slopes of Visscher, Lodders and Fegley (2010) for iron (b = 0.48) and olivine (b = 0.37) and of Wakeford et al. (2017) for corundum; these fits are for the first solid to appear, made for brown dwarf and hot planet atmospheres, and are carried down to lower pressures here. Iron sulfide (Fe + H₂S → FeS + H₂) takes one gas molecule for one given back, so pressure does not move it. Growth: oligarchic growth (Kokubo and Ida 2000, 2002): neighbors closer than 10 mutual Hill radii join once the growth time to their joint mass has passed, so bodies end between one and two times the isolation mass (whole bodies join); a core of 10 Earth masses that forms while the gas lasts becomes a giant (how much gas it gathers is not modeled); the later giant impacts, the giants\' pull on their neighbors and migration are left out. Iron cores: heating by aluminum 26 and conduction in a solid ball formed all at once (values from Johansen et al. 2023); a molten cell loses any further heat, standing in for the stirring of a magma ocean.';
 
   /* ---------- run, size, theme ---------- */
   const redraw = () => { draw(); readouts(); clock(); };

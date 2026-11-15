@@ -3,6 +3,10 @@
    the settling), and while it is still falling (before the midplane) its energy is constant; the Predicted disk radius readout is
    Ω₀²r₀⁴/GM. Disk: the temperature readout is 280 K (L)^(1/4) / √r, the frost line (T = 182 K) is where the probe's T reads 182 K, and
    the isolation mass readout matches the formula and the cited 0.16 Earth masses at 1 AU for Σ = 10 g/cm².
+   Disk pressure (2026-11-15): at another gas pressure the frost line readout is where the disk's temperature meets water ice's
+   condensation temperature there, found here on its own: Murphy and Koop's vapor pressure p(T) = p(182 K) P/10⁻⁴ bar, and the
+   nebula's midplane P = Σ c_s Ω/√(2π) (Σ = 1700 g/cm² r^(−3/2), μ = 2.34); the Water freezes readout is that temperature at the
+   probe's pressure; and the solids list has water exactly when the probe is colder than it.
    Planets: joining planetesimals keeps the total mass and the total angular momentum (Σ m√a); each body is a contiguous run of the
    900 starting planetesimals. Melting: the center temperature stays between the surface temperature and the fully molten 1982 K,
    the hottest so far is at least the current one, the molten percent follows T, and the heat readout is H₀ τ e^(−t_f/τ). */
@@ -34,13 +38,29 @@ module.exports = {
       if (S.st !== 'disk' && S.st !== 'planets') return true;
       const T = (r) => 280 * Math.pow(S.L, 0.25) / Math.sqrt(r), frost = Math.pow(280 * Math.pow(S.L, 0.25) / 182, 2);
       if (Math.abs(T(frost) - 182) > 1e-9) return 'T at the frost line is ' + T(frost);
-      if (!S.blind) { const f = rdOut('Frost line'); if (f != null && !/hidden/.test(f) && !near(num(f), frost, 6e-3)) return 'frost line readout "' + f + '" but 280 L^¼/182)² = ' + frost; }
+      const lodders = S.st === 'planets' || (!S.neb && Math.abs(S.pr + 4) < 1e-9);
+      if (!S.blind && lodders) { const f = rdOut('Frost line'); if (f != null && !/hidden/.test(f) && !near(num(f), frost, 6e-3)) return 'frost line readout "' + f + '" but 280 L^¼/182)² = ' + frost; }
       if (S.st === 'disk') { const t = rdOut('Temperature there'); if (t != null && !near(num(t), T(S.r), 6e-3)) return 'T readout "' + t + '" but 280 L^¼/√r = ' + T(S.r) + ' at r = ' + S.r; }
       if (S.st === 'planets' && !S.blind) { const t = rdOut('Isolation mass'); if (t != null && !/hidden/.test(t)) {
         const Ms = GMSI / 6.6743e-11, iso = (a, sig) => Math.pow(2 * Math.PI * (a * AU) ** 2 * 10 * sig * 10, 1.5) * Math.sqrt(2 / (3 * Ms)) / 5.9722e24;
         const sg = (a) => S.f * (a < frost ? 7.1 : 30) * Math.pow(a, -1.5), m = t.match(/([\\d.e+-]+), ([\\d.e+-]+)/);
         if (!m || !near(+m[1], iso(1, sg(1)), 0.03) || !near(+m[2], iso(5.2, sg(5.2)), 0.03)) return 'isolation mass readout "' + t + '", expected ' + iso(1, sg(1)) + ', ' + iso(5.2, sg(5.2));
         if (!near(iso(1, 10), 0.16, 2e-2)) return 'isolation mass at 1 AU, Σ = 10 g/cm² is ' + iso(1, 10) + ', the page cites 0.16'; } }
+      return true; })()` },
+    { name: "disk pressure: frost line where T_disk meets water's condensation T at the gas pressure (Murphy and Koop; nebula Σ c_s Ω/√2π); Water freezes readout; ice in the solids list", fn: `(() => { ${pre}
+      if (S.st !== 'disk') return true;
+      const ice = (T) => 1e-5 * Math.exp(9.550426 - 5723.265 / T + 3.53068 * Math.log(T) - 0.00728332 * T);
+      const Tw = (P) => { let lo = 40, hi = 800; for (let i = 0; i < 90; i++) { const m = (lo + hi) / 2; if (ice(m) < ice(182) * P / 1e-4) lo = m; else hi = m; } return (lo + hi) / 2; };
+      const Td = (r) => 280 * Math.pow(S.L, 0.25) / Math.sqrt(r);
+      const Pneb = (r) => { const cs = Math.sqrt(1.380649e-23 * Td(r) / (2.34 * 1.66053906892e-27)), om = Math.sqrt(GMSI / Math.pow(r * AU, 3)); return 1700 * Math.pow(r, -1.5) * 10 * cs * om / Math.sqrt(2 * Math.PI) / 1e5; };
+      const Pat = (r) => (S.neb ? Pneb(r) : Math.pow(10, S.pr));
+      let lo = Math.log(1e-3), hi = Math.log(1e4); for (let i = 0; i < 90; i++) { const m = (lo + hi) / 2, r = Math.exp(m); if (Td(r) > Tw(Pat(r))) lo = m; else hi = m; }
+      const fl = Math.exp((lo + hi) / 2);
+      if (!S.neb && Math.abs(S.pr + 4) < 1e-9 && !near(fl, Math.pow(280 * Math.pow(S.L, 0.25) / 182, 2), 1e-6)) return 'at 10⁻⁴ bar the frost line should be at 182 K: ' + fl;
+      if (!S.blind) { const f = rdOut('Frost line'); if (f != null && !/hidden/.test(f) && !near(num(f), fl, 6e-3)) return 'frost line readout "' + f + '" but T_disk meets water ice at ' + fl + ' AU (' + (S.neb ? 'nebula' : 'P = 10^' + S.pr) + ')'; }
+      const w = rdOut('Water freezes there'), Tp = Tw(Pat(S.r)); if (w != null && !near(num(w), Tp, 6e-3)) return 'Water freezes readout "' + w + '" but ' + Tp + ' K at the probe';
+      const so = rdOut('Solids that form there');
+      if (so != null && Math.abs(Td(S.r) - Tp) > 0.05 && /Water ice/.test(so) !== (Td(S.r) < Tp)) return 'solids "' + so + '" but the probe is at ' + Td(S.r) + ' K and water freezes below ' + Tp + ' K';
       return true; })()` },
     { name: "planets: joining keeps total mass and angular momentum Σ m√a; each body is a contiguous run of the 900 starters", fn: `(() => { ${pre}
       const D = SS.GR.D; if (!D || !D.B.length) return true;
@@ -66,6 +86,15 @@ module.exports = {
     { name: 'every preset in turn run to the end (To the end), then back to the story', fn: `(async () => {
       const pause = (ms) => new Promise((r) => setTimeout(r, ms));
       for (const b of document.querySelectorAll('#presets button')) { b.click(); await pause(150); const s = document.getElementById('skip'); if (s && !s.hidden) s.click(); await pause(200); }
+      document.querySelector('#presets [data-p=story]').click(); await pause(300);
+    })()` },
+    { name: 'disk pressure: the pressure slider to both ends and back, the nebula pressure on and off, the probe dragged across, the pressure presets', fn: `(async () => {
+      const pause = (ms) => new Promise((r) => setTimeout(r, ms)), set = (id, v) => { const e = document.getElementById(id); e.value = v; e.dispatchEvent(new Event('input', { bubbles: true })); };
+      document.querySelector('#presets [data-p=today]').click(); await pause(200);
+      for (const v of [-3, -8, -5.3, -4]) { set('sPres', v); await pause(150); for (const d of [0, 1500, 3000]) { set('sDist', d); await pause(80); } }
+      const nb = document.getElementById('chkNeb'); nb.click(); await pause(200); set('sL', 10); await pause(150); set('sDist', 2000); await pause(150); set('sL', 0.5); await pause(150); nb.click(); await pause(200);
+      for (const p of ['nebulaP', 'denseP', 'bright', 'today']) { document.querySelector('#presets [data-p=' + p + ']').click(); await pause(250); }
+      const ff = document.querySelector('[data-dim="flat"]'); if (ff) { ff.click(); await pause(200); document.querySelector('#presets [data-p=nebulaP]').click(); await pause(300); document.querySelector('[data-dim="3d"]').click(); await pause(200); }
       document.querySelector('#presets [data-p=story]').click(); await pause(300);
     })()` },
     { name: 'collapse: change spin and radius to extremes mid run, no spin on and off, speed to the fastest', fn: `(async () => {
