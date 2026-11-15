@@ -341,6 +341,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (VG) VG.label(ctx, 'c', gx + gw + 6 * p, gy + gh / 2, { s: 12 * p, w: 700, c: T.ink });
     if (VG) VG.label(ctx, `${f(s.beta, 6)} c`, gx + 52 * p, gy - 16 * p, { s: 10.5 * p, m: 1, c: T.ink });
     if (VG) VG.label(ctx, `${PARTICLES[S.mom.part].name.toLowerCase()}, t = ${sig(S.mom.t, 5)} ns`, R, H * 0.08, { a: 'right', s: 11 * p, m: 1, c: T.ink });
+    /* the clock here runs in nanoseconds, so "1×" is not real time: say how slow it plays (student view, 2026-11-15) */
+    if (VG) VG.label(ctx, `slow motion: 1 s on screen = ${sig(momRate() * 0.5 * S.speed, 2)} ns`, R, H * 0.08 + 17 * p, { a: 'right', s: 10 * p, m: 1, c: T.muted });
   }
 
   // ---------- the electron flight view ----------
@@ -405,6 +407,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     c.save(); c.translate(12 * p, Tp + ph / 2); c.rotate(-Math.PI / 2); c.textBaseline = 'middle'; c.fillText(yl, 0, 0); c.restore();
     return { X, Y, L, Tp, pw, ph };
   }
+  /* Newton's line stops where it leaves the top of the graph, instead of running flat along the top edge, which looked like his
+     speed levels off (student view, 2026-11-15) */
+  function upto(pts, top) { const o = []; for (let i = 0; i < pts.length; i++) { const q = pts[i]; if (q[1] <= top) { o.push(q); continue; } const a = pts[i - 1]; if (a && a[1] < top) o.push([a[0] + (q[0] - a[0]) * (top - a[1]) / (q[1] - a[1]), top]); break; } return o; }
   function line(c, A, pts, col, w, dash) { c.strokeStyle = col; c.lineWidth = w; c.setLineDash(dash || []); c.beginPath(); pts.forEach((q, i) => (i ? c.lineTo(A.X(q[0]), A.Y(q[1])) : c.moveTo(A.X(q[0]), A.Y(q[1])))); c.stroke(); c.setLineDash([]); }
   function dot(c, A, x, y, col, p) { c.fillStyle = col; c.beginPath(); c.arc(A.X(x), A.Y(y), 4.5 * p, 0, 7); c.fill(); }
   function key(c, A, items, p) { let y = A.Tp + 10 * p; c.font = `${10.5 * p}px ${T.ui}`; c.textAlign = 'left'; c.textBaseline = 'middle'; for (const [t, col, dash] of items) { c.strokeStyle = col; c.lineWidth = 2 * p; c.setLineDash(dash || []); c.beginPath(); c.moveTo(A.L + 10 * p, y); c.lineTo(A.L + 34 * p, y); c.stroke(); c.setLineDash([]); c.fillStyle = T.ink; c.fillText(t, A.L + 40 * p, y); y += 16 * p; } }
@@ -420,14 +425,15 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       key(c, A, [[S.vel.mystery ? 'relativity, this rocket' : `relativity, rocket at ${f(v, 2)}c`, T.rel], ['Galileo: u′ + v', T.newt, [6, 4]]], p);
     } else if (S.view === 'mom') {
       const tEnd = momEnd(), A = axes(c, [0, tEnd], [0, 1.5], 'time t (ns)', 'speed (c)', p), rel = [], nw = [];
-      for (let i = 0; i <= 200; i++) { const t = tEnd * i / 200, s = steady(S.mom.part, S.mom.E, t * 1e-9); if (t <= S.mom.t + 1e-12) rel.push([t, s.beta]); nw.push([t, Math.min(1.5, s.newton)]); }
-      line(c, A, [[0, 1], [tEnd, 1]], T.muted, 1, [2, 3]); line(c, A, nw, T.newt, 2 * p, [6, 4]); if (rel.length > 1) line(c, A, rel, T.rel, 2.4 * p);
+      for (let i = 0; i <= 200; i++) { const t = tEnd * i / 200, s = steady(S.mom.part, S.mom.E, t * 1e-9); if (t <= S.mom.t + 1e-12) rel.push([t, s.beta]); nw.push([t, s.newton]); }
+      line(c, A, [[0, 1], [tEnd, 1]], T.muted, 1, [2, 3]); line(c, A, upto(nw, 1.5), T.newt, 2 * p, [6, 4]); if (rel.length > 1) line(c, A, rel, T.rel, 2.4 * p);
       dot(c, A, S.mom.t, mState().beta, T.rel, p);
       key(c, A, [['relativity: p = γmv = Ft', T.rel], ['Newton: v = Ft/m', T.newt, [6, 4]]], p);
     } else {
-      const P = PARTICLES[ePart()], s = eState(), xm = Math.max(4, s.K / P.mc2 * 1.2), A = axes(c, [0, xm], [0, 2], 'kinetic energy K / mc²', 'v²/c²', p), rel = [], nw = [];
-      for (let i = 0; i <= 200; i++) { const k = xm * i / 200, g = 1 + k; rel.push([k, 1 - 1 / (g * g)]); nw.push([k, Math.min(2, 2 * k)]); }
-      line(c, A, [[0, 1], [xm, 1]], T.muted, 1, [2, 3]); line(c, A, nw, T.newt, 2 * p, [6, 4]); line(c, A, rel, T.rel, 2.4 * p);
+      /* the mystery particle keeps a fixed K/mc² range: a range set by its K gave away its mass (student view, 2026-11-15) */
+      const P = PARTICLES[ePart()], s = eState(), xm = S.en.mystery ? 4 : Math.max(4, s.K / P.mc2 * 1.2), A = axes(c, [0, xm], [0, 2], 'kinetic energy K / mc²', 'v²/c²', p), rel = [], nw = [];
+      for (let i = 0; i <= 200; i++) { const k = xm * i / 200, g = 1 + k; rel.push([k, 1 - 1 / (g * g)]); nw.push([k, 2 * k]); }
+      line(c, A, [[0, 1], [xm, 1]], T.muted, 1, [2, 3]); line(c, A, upto(nw, 2), T.newt, 2 * p, [6, 4]); line(c, A, rel, T.rel, 2.4 * p);
       if (S.en.shots && !S.en.mystery) dot(c, A, s.K / P.mc2, s.beta * s.beta, T.rel, p);
       key(c, A, [['relativity: K = (γ − 1)mc²', T.rel], ['Newton: K = ½mv²', T.newt, [6, 4]]], p);
     }

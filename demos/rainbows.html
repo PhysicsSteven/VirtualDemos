@@ -507,8 +507,16 @@
     /* elevation scale and the horizon */
     ctx.strokeStyle = 'rgba(238,231,222,0.35)'; ctx.lineWidth = 1 * p; ctx.beginPath(); ctx.moveTo(0, geo.yh); ctx.lineTo(W, geo.yh); ctx.stroke();
     ctx.fillStyle = 'rgba(238,231,222,0.75)'; ctx.font = `${10.5 * p}px ${mono()}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
-    for (let e = -60; e <= 60; e += 10) { const y = geo.yh - e * geo.s; if (y < 8 * p || y > geo.sky.h - 8 * p) continue; ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(8 * p, y); ctx.stroke(); ctx.fillText(`${e}°`, 11 * p, y); }
-    ctx.fillText('horizon', 48 * p, geo.yh - 9 * p);
+    /* tick labels stop short of the "Sun … up" line at the bottom, and "horizon" goes where no bow foot stands on it: the feet sit
+       where cos az = cos θ / cos h (they covered it at the left on the presets) (student view, 2026-11-15) */
+    for (let e = -60; e <= 60; e += 10) { const y = geo.yh - e * geo.s; if (y < 8 * p || y > geo.sky.h - 8 * p) continue; ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(8 * p, y); ctx.stroke(); if (y < geo.sky.h - 28 * p) ctx.fillText(`${e}°`, 11 * p, y); }
+    {
+      const tw = ctx.measureText('horizon').width, feet = [];
+      for (const th of [BOWS[1].y, BOWS[2].y]) { const c = Math.cos(th * DEG) / Math.cos(S.h * DEG); if (c <= 1) { const a = d(Math.acos(c)); feet.push(geo.cx - a * geo.s, geo.cx + a * geo.s); } }
+      const clear = (x) => feet.every((fx) => fx < x - 3 * geo.s - 4 * p || fx > x + tw + 3 * geo.s + 4 * p);
+      const hx = [48 * p, W - 12 * p - tw, geo.cx - 12 * p - tw].find(clear);
+      ctx.fillText('horizon', hx === undefined ? 48 * p : hx, geo.yh - 9 * p);
+    }
     if (S.marks) {
       for (const [th, lab] of [[BOWS[1].y, 'primary'], [BOWS[2].y, 'secondary']]) {
         ctx.strokeStyle = 'rgba(246,243,238,0.55)'; ctx.setLineDash([5 * p, 5 * p]); ctx.lineWidth = 1 * p; ctx.beginPath(); let on = false;

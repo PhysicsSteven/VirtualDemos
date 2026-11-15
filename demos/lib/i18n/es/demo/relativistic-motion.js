@@ -28,8 +28,6 @@ VDI18N.add('es', 'demo/relativistic-motion', {
   "Galileo: u′ + v",
 "Velocity, Momentum and Energy Near c":
   "Velocidad, momento y energía cerca de c",
-"<a><span>←</span> <span>Magnetism from Relativity</span></a><a><span>Doppler Effect and Shock Waves</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Magnetismo a partir de la relatividad</span></a><a><span>Efecto Doppler y ondas de choque</span> <span>→</span></a>",
 "Fire a probe from a fast rocket and time it between two beacons: the speeds do not simply add. Push a particle with a steady force and watch its momentum grow without limit while its speed creeps up to c. Accelerate electrons through millions of volts and time their flight, as Bertozzi did in {#}.":
   "Dispara una sonda desde un cohete rápido y mídela entre dos balizas: las velocidades no simplemente se suman. Empuja una partícula con una fuerza constante y observa cómo su momento crece sin límite mientras su rapidez se acerca poco a poco a c. Acelera electrones con millones de volts y mide su tiempo de vuelo, como lo hizo Bertozzi en {#}.",
 "speeds in units of c · times in s":
@@ -136,6 +134,8 @@ VDI18N.add('es', 'demo/relativistic-motion', {
   "Fuerza constante: una partícula parte del reposo en un campo eléctrico uniforme E dentro de un tubo de vacío largo y recto, así que la fuerza F = qE sobre ella es la misma a cualquier rapidez (el campo es estático; se omite la energía que radia la carga acelerada: en cualquier tiempo que alcanza el botón Paso es menor que {#} parte en {#}¹⁰ del trabajo realizado). La segunda ley de Newton en su forma de momento, F = dp/dt, se cumple en relatividad con p = γmv (§{#}), así que p = Ft exactamente. La rapidez sigue v/c = kt/√({#} + (kt)²) con k = F/(mc), y la distancia es x = (mc²/F)(√({#} + (kt)²) − {#}). Las lecturas son los valores del modelo en el tiempo del reloj; el reloj avanza más lento para que la corrida dure unos {#} s a {#}×. Las energías en reposo son valores de CODATA {#}.",
 "Electron flight: modeled on W. Bertozzi, \"Speed and kinetic energy of relativistic electrons\", Am. J. Phys. {#}, {#} ({#}), who timed electrons from {#} to {#} MeV over {#} m. A particle of charge qe accelerated from rest through V megavolts gains K = qV MeV (§{#}). Its speed follows from K = (γ − {#})mc², and the time of flight between the two pickups, {#} m apart, is shown to {#} ns. A magnet of uniform field B then bends it in a circle of radius r = p/(qeB), with pc = √(K² + 2Kmc²); the ruler reads r to {#} cm. The pictures of the bend and the bunch are not to scale. The particle is not slowed by anything in the tube. Muons are timed as if none decayed in flight: their mean life is {#} μs, so about {#}% would decay over the {#} m at {#} MV, under {#}% from {#} MV up, but {#}% at {#} MV and more than half at {#} MV. The mystery particle is one of the electron, muon, proton or deuteron.":
   "Vuelo de electrones: modelado según W. Bertozzi, \"Speed and kinetic energy of relativistic electrons\", Am. J. Phys. {#}, {#} ({#}), quien midió el tiempo de electrones de {#} a {#} MeV a lo largo de {#} m. Una partícula de carga qe acelerada desde el reposo con V megavolts gana K = qV MeV (§{#}). Su rapidez se obtiene de K = (γ − {#})mc², y el tiempo de vuelo entre los dos sensores, separados {#} m, se muestra con precisión de {#} ns. Luego un imán de campo uniforme B la curva en un círculo de radio r = p/(qeB), con pc = √(K² + 2Kmc²); la regla lee r con precisión de {#} cm. Los dibujos de la curva y del paquete no están a escala. Nada en el tubo frena a la partícula. Los muones se miden como si ninguno decayera en vuelo: su vida media es de {#} μs, así que cerca de {#}% decaería en los {#} m a {#} MV, menos de {#}% de {#} MV en adelante, pero {#}% a {#} MV y más de la mitad a {#} MV. La partícula misteriosa es el electrón, el muon, el protón o el deuterón.",
+"<a><span>←</span> <span>Magnetism from Relativity</span></a><a><span>Doppler Effect and Shock Waves</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Magnetismo a partir de la relatividad</span></a><a><span>Efecto Doppler y ondas de choque</span> <span>→</span></a>",
 "{#} ls":
   "{#} sl",
 "ACCELERATOR":
@@ -156,6 +156,8 @@ VDI18N.add('es', 'demo/relativistic-motion', {
   "Newton",
 "electron, t = {#} ns":
   "electrón, t = {#} ns",
+"slow motion: {#} s on screen = {#} ns":
+  "cámara lenta: {#} s en pantalla = {#} ns",
 "time t (ns)":
   "tiempo t (ns)",
 "speed (c)":
@@ -252,6 +254,8 @@ VDI18N.add('es', 'demo/relativistic-motion', {
   "misterio (carga de magnitud e)",
 "Fire a bunch first, so the pickups can time it.":
   "Dispara primero un paquete, para que los sensores midan su tiempo.",
+"Close":
+  "Cerrar",
 "muon":
   "muon",
 "Muon, mc² = {#} MeV":

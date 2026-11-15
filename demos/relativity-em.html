@@ -1499,6 +1499,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.strokeStyle = T.gridStrong; ctx.beginPath(); ctx.moveTo(L, T0); ctx.lineTo(L, B0); ctx.lineTo(Rr, B0); ctx.stroke();
     ctx.textAlign = 'right'; ctx.fillText(rMax.toFixed(1), L - 4, T0); ctx.fillText('0', L - 4, B0);
     ctx.textAlign = 'center'; ctx.fillText(tMax.toFixed(2), Rr - 8, B0 + 9 * ps); ctx.fillText('0', L, B0 + 9 * ps);
+    /* the run lasts under a nanosecond: say how slowed it plays (student view, 2026-11-15) */
+    ctx.fillText(`slow motion: 1 s = ${(RATE * 1e9).toFixed(2)} ns`, (L + Rr) / 2, B0 + 9 * ps);
     // r against τ from the lab integration (solid) and from the charge frame integration (dots): the same curve
     ctx.strokeStyle = T.force; ctx.lineWidth = 2.2 * ps; ctx.beginPath();
     RUN.lab.forEach((p, i) => { if (i % step) return; const a = X(p.tau * 1e9), b = Y(p.z * 100); i ? ctx.lineTo(a, b) : ctx.moveTo(a, b); }); ctx.stroke();
