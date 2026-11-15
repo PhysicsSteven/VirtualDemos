@@ -2,6 +2,7 @@ name: Demo checks (democheck, break-it, frame rate)
 # Runs the browser checks from docs/checks.md on GitHub's machines, so they cost no Claude usage (2026-11-15).
 # - Every push and pull request: the demos that changed get democheck, break-it and perfcheck.
 #   A change to the shared library (demos/lib/*.js or *.css) or to a check script checks every demo instead.
+#   A commit message with [check all] in it checks every demo too.
 # - Every Sunday morning, and from the Actions tab ("Run workflow"): every demo, or the demos you type.
 # Results: the run's Summary page lists each failure; pictures and reports are in the run's "vdcheck-..." downloads.
 on:
@@ -41,8 +42,9 @@ jobs:
           INPUT: ${{ github.event.inputs.demos }}
           BASE: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
           HEAD_SHA: ${{ github.sha }}
+          MESSAGE: ${{ github.event.head_commit.message }}
         run: |
-          if [ "$EVENT" = schedule ]; then ARGS=--all; elif [ "$EVENT" = workflow_dispatch ]; then ARGS="${INPUT:-all}"; else ARGS=; fi
+          if [ "$EVENT" = schedule ] || [[ "$MESSAGE" == *"[check all]"* ]]; then ARGS=--all; elif [ "$EVENT" = workflow_dispatch ]; then ARGS="${INPUT:-all}"; else ARGS=; fi
           # a push to main compares with the commit before the push; a new branch or a pull request compares with main
           if [ "$EVENT" = push ] && [ "${GITHUB_REF_NAME}" != main ]; then BASE=origin/main; fi
           node tools/ci/pick.cjs $ARGS > pick.json

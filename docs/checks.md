@@ -37,7 +37,7 @@ GitHub Actions runs the scripted checks on its own machines, so they cost no Cla
 read the results, instead of running the long checks in the session.
 - **Demo checks** (`.github/workflows/demo-checks.yml`, this repo): on every push and pull request, the demos that changed get
   democheck, break-it and perfcheck (`tools/ci/pick.cjs` picks them; a change to `demos/lib/*.js` or `*.css` or to a check script
-  checks every demo). Every Sunday at 9:17 UTC, every demo gets break-it, opencheck and perfcheck in parallel jobs. Actions tab,
+  checks every demo, and so does a commit message containing [check all]). Every Sunday at 9:17 UTC, every demo gets break-it, opencheck and perfcheck in parallel jobs. Actions tab,
   Demo checks, Run workflow: type demos, or all. The repo is public, so this is free with no limit.
 - **Key checks** (`.github/workflows/key-checks.yml`, TeacherKeys): every Monday at 10:41 UTC, `rekey.sh` (never `--apply`) on the
   keys whose demo or worksheet changed in the last 8 days, plus `rules.cjs --keys`. Run workflow: changed, all, or slugs.
