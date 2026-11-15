@@ -450,7 +450,7 @@ table.rows input:focus { border-color: var(--accent); }
     scene.add(bench, wall, tubeG, stand, beaker, ball);
     g3d = { rd, el, scene, cam, hemi, sun, benchM, wallM, standM, darkM, glassM, liqM, markM, gateM, ledOff, ledOn, ballM, ball, rc, rulerT, rulerM, tubeG, stand, beaker, mesh, upZ, sig: '', leds: [] };
     can.addEventListener('wheel', (e) => { if (!use3()) e.stopImmediatePropagation(); }, { passive: true });
-    VD3.orbit(can, G3.o, () => { if (use3()) draw(); }, { grab: () => !use3(), phMin: 0.3, phMax: 1.55, zMin: 0.6, zMax: 4, keys: false });
+    VD3.orbit(can, G3.o, () => { if (use3()) draw(); }, { active: () => use3(), /* wheel, keys and pinch leave the hidden 3D camera alone while Flat shows (student view calls, 2026-11-15) */ grab: () => !use3(), phMin: 0.3, phMax: 1.55, zMin: 0.6, zMax: 4, keys: false });
     return true;
   }
   /* the tube, marks, gates, ruler, stand and beaker, rebuilt when the tube's width changes */

@@ -606,7 +606,7 @@ table.rows input:focus { border-color: var(--accent); }
     };
     for (const k of pulsePackets(L)) packet(k);
     /* on two lines: on one it ran off the panel's left edge ("ulse and echoes") (student view calls, 2026-11-15) */
-    txt('pulse and echoes', tx - 14 * p, y + h - 22 * p, { a: 'right', s: 9, c: T.ink }); txt('shown 20 000× slower', tx - 14 * p, y + h - 10 * p, { a: 'right', s: 9, c: T.ink });
+    txt('pulse and echoes', tx - 14 * p, y + h - 22 * p, { a: 'right', s: 9, c: T.ink }); txt('shown 20,000× slower', tx - 14 * p, y + h - 10 * p, { a: 'right', s: 9, c: T.ink });
   }
   function drawVessel(x, y, w, h, p) {
     const Gr0 = window.VDGear;
@@ -918,9 +918,9 @@ table.rows input:focus { border-color: var(--accent); }
       tag(S.absorb ? (S.preset === 'atten' ? `absorbs ${am.toFixed(2)} dB/cm` : 'absorption on, each tissue its own') : 'absorption off', x, y, { a: leftTags ? 'right' : 'left', s: 10, b: false, c: S.absorb ? T.ink : T.muted });
     }
     const lam = flow ? MEDIA.blood.c / (S.f0 * 1e6) * 1000 : MEDIA.muscle.c / (S.f0 * 1e6) * 1000;
-    const cap = L.nar ? [flow ? (S.mysteryV ? `To scale, except the blood cells (enlarged, slowed) and the wavefronts (4 mm apart; really ${lam.toFixed(2)} mm).` : `To scale, except the blood cells (enlarged, ${FLOW_SLOW}× slower) and the wavefronts (4 mm apart; really ${lam.toFixed(2)} mm).`) : `To scale, except the pulse: 20 000× slower, crests at least 1.5 mm apart (really ${lam.toFixed(2)} mm).`, 'Drag the screen for the cursor; drag elsewhere to turn.']
+    const cap = L.nar ? [flow ? (S.mysteryV ? `To scale, except the blood cells (enlarged, slowed) and the wavefronts (4 mm apart; really ${lam.toFixed(2)} mm).` : `To scale, except the blood cells (enlarged, ${FLOW_SLOW}× slower) and the wavefronts (4 mm apart; really ${lam.toFixed(2)} mm).`) : `To scale, except the pulse: 20,000× slower, crests at least 1.5 mm apart (really ${lam.toFixed(2)} mm).`, 'Drag the screen for the cursor; drag elsewhere to turn.']
       : flow ? [S.mysteryV ? `Block, artery (8 mm across, 3 cm down), transducer and scanner to scale. Blood cells drawn enlarged and slowed; wavefronts drawn 4 mm apart (really c/f₀ = ${lam.toFixed(2)} mm).` : `Block, artery (8 mm across, 3 cm down), transducer and scanner to scale. Blood cells drawn enlarged and ${FLOW_SLOW}× slower; wavefronts drawn 4 mm apart (really c/f₀ = ${lam.toFixed(2)} mm).`, 'Drag the screen to move the cursor; drag elsewhere to turn.']
-      : [`Block, transducer and scanner to scale (depth in cm on the cut face). Pulse and echoes shown 20 000× slower, their crests at least 1.5 mm apart (really c/f₀ = ${lam.toFixed(2)} mm in muscle).`, 'Drag the screen to move the cursor; drag elsewhere to turn.'];
+      : [`Block, transducer and scanner to scale (depth in cm on the cut face). Pulse and echoes shown 20,000× slower, their crests at least 1.5 mm apart (really c/f₀ = ${lam.toFixed(2)} mm in muscle).`, 'Drag the screen to move the cursor; drag elsewhere to turn.'];
     if (S.preset === 'atten' && S.absorb && !L.nar) { const eb = echoesNow().find((e) => e.to === 'bone'), am = alphaDb('muscle', S.f0);
       if (eb) cap.splice(1, 0, `Absorption in muscle ${ATTEN.muscle} dB/(cm·MHz) × ${S.f0} MHz = ${am.toFixed(2)} dB/cm, so the bone echo loses 2 × ${am.toFixed(2)} × ${S.water.toFixed(1)} = ${eb.lossDb.toFixed(1)} dB down and back.`); }
     ctx.font = `${10 * p}px ${T.ui}`; ctx.fillStyle = T.muted; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';

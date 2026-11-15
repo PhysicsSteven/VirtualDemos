@@ -500,7 +500,7 @@ table.rows input:focus { border-color: var(--accent); }
     scene.add(bench, balance, plinth, magnet, field, stand, hang, loopG, fW, fMag, fS1, fS2, muA, arc, dots, leads);
     g3 = { r, el, scene, cam, hemi, sun, benchM, balM, lcdCv, lcdTex, balance, plinth, woodM, nM, sM, steelM, fieldM, field, stand, hang, cuM, holdM, coil, coilM, loopG, comm, brushes, forceM, muM, fW, fMag, fS1, fS2, muA, arc, arcM, dots, dotM, redM, blackM, leads, mesh, box, rod, mat4: new THREE.Matrix4(), path: [] };
     can.addEventListener('wheel', (e) => { if (!use3()) e.stopImmediatePropagation(); }, { passive: true });
-    VD3.orbit(can, G3.o, () => { if (use3()) draw(); }, { grab: () => !use3(), phMin: 0.3, phMax: 1.45, zMin: 0.6, zMax: 2.6 });
+    VD3.orbit(can, G3.o, () => { if (use3()) draw(); }, { active: () => use3(), /* wheel, keys and pinch leave the hidden 3D camera alone while Flat shows (student view calls, 2026-11-15) */ grab: () => !use3(), phMin: 0.3, phMax: 1.45, zMin: 0.6, zMax: 2.6 });
     can.addEventListener('pointerup', () => { if (!use3()) can.style.cursor = ''; });
     return true;
   }

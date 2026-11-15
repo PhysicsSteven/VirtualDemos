@@ -124,8 +124,8 @@ VDI18N.add('es', 'demo/ultrasound', {
   "Modelo: las rapideces y las impedancias acústicas del aire, el agua, la sangre, la grasa, el músculo y el hueso son de OpenStax College Physics §{#} (Ultrasonido); el hueso varía de {#} a {#} × {#}⁶ kg/(m²·s) y se elige {#} × {#}⁶. Un quiste lleno de líquido se toma como agua. Cada pulso dura tres ciclos a media altura (elegido). Cada frontera devuelve una parte r = (Z₂ − Z₁)/(Z₂ + Z₁) de la presión (una r negativa invierte el eco), y en la ida y la vuelta el pulso pierde {#} − r² en cada frontera de arriba. Se omiten: los ecos que rebotan más de una vez y el ensanchamiento del haz; la absorción en el tejido también se omite salvo que Absorción esté activada (en un cuerpo real los ecos profundos son mucho más débiles, y los ecógrafos aumentan la ganancia con la profundidad). El gel acopla el transductor a la piel sin eco. Doppler: la sangre oye la frecuencia corrida f₀(c + u)/c y la devuelve como una fuente en movimiento, así que el ecógrafo recibe f₀(c + u)/(c − u), con u = v cos θ y c = {#} m/s en la sangre; el espectro se toma sobre {#} ms de eco (elegido), lo que da a cada línea un ancho de unos {#} Hz. Las células dibujadas en el vaso van más lentas; el sonido que oyes es el corrimiento mismo, como lo reproduce un ecógrafo. Datos simulados, sin ruido. Absorción, cuando se activa en Laboratorio (y en la configuración Atenuación en músculo): cada eco además pierde {#}αd dB en la ida y la vuelta por cada capa encima de él, con α en dB por cm por MHz a {#} MHz según Culjat et al., Ultrasound Med. Biol. {#}, {#} ({#}): agua {#}, sangre {#}, grasa {#}, músculo {#}, hueso (cortical) {#}. α se toma como proporcional a f en el tejido y a f² en el agua; el pulso se trata como de una sola frecuencia, así que se omite la disminución de su frecuencia central con la profundidad. La compensación de ganancia en el tiempo amplifica cada momento del eco en {#}α₀f₀d dB para la profundidad d que supone el ecógrafo a {#} m/s.",
 "transducer, {#} MHz":
   "transductor, {#} MHz",
-"Block, transducer and scanner to scale (depth in cm on the cut face). Pulse and echoes shown {#} {#}× slower, their crests at least {#} mm apart (really c/f₀ = {#} mm in muscle).":
-  "Bloque, transductor y ecógrafo a escala (profundidad en cm en la cara del corte). El pulso y los ecos se muestran {#} {#}× más lentos, con sus crestas separadas al menos {#} mm (en realidad c/f₀ = {#} mm en músculo).",
+"Block, transducer and scanner to scale (depth in cm on the cut face). Pulse and echoes shown {#}× slower, their crests at least {#} mm apart (really c/f₀ = {#} mm in muscle).":
+  "Bloque, transductor y ecógrafo a escala (profundidad en cm en la cara del corte). El pulso y los ecos se muestran {#}× más lentos, con sus crestas separadas al menos {#} mm (en realidad c/f₀ = {#} mm en músculo).",
 "Drag the screen to move the cursor; drag elsewhere to turn.":
   "Arrastra la pantalla para mover el cursor; arrastra en otro lugar para girar.",
 "echo amplitude (envelope)":
@@ -138,8 +138,8 @@ VDI18N.add('es', 'demo/ultrasound', {
   "pulso",
 "pulse and echoes":
   "pulso y ecos",
-"shown {#} {#}× slower":
-  "mostrados {#} {#}× más lentos",
+"shown {#}× slower":
+  "mostrados {#}× más lentos",
 "echo, r = {#}":
   "eco, r = {#}",
 "echo pressure (radio frequency trace)":
@@ -210,8 +210,6 @@ VDI18N.add('es', 'demo/ultrasound', {
   "La rapidez de la sangre está oculta. Mide el corrimiento a tres o más ángulos y calcula la rapidez con cada uno; deberían coincidir. Nuevo flujo misterioso elige otro.",
 "Start the scanner first.":
   "Primero enciende el ecógrafo.",
-"Close":
-  "Cerrar",
 "The last cyst's top was {#} cm down. A new one is hidden.":
   "La parte superior del último quiste estaba a {#} cm de profundidad. Hay uno nuevo oculto.",
 "The last mystery flow was {#} m/s. A new one is running.":
@@ -226,6 +224,12 @@ VDI18N.add('es', 'demo/ultrasound', {
   "Arrastra la pantalla para el cursor; arrastra en otro lugar para girar.",
 "Shift of the fastest blood":
   "Corrimiento de la sangre más rápida",
+"Block, transducer and scanner to scale (depth in cm on the cut face). Pulse and echoes shown {#} {#}× slower, their crests at least {#} mm apart (really c/f₀ = {#} mm in muscle).":
+  "Bloque, transductor y ecógrafo a escala (profundidad en cm en la cara del corte). El pulso y los ecos se muestran {#} {#}× más lentos, con sus crestas separadas al menos {#} mm (en realidad c/f₀ = {#} mm en músculo).",
+"shown {#} {#}× slower":
+  "mostrados {#} {#}× más lentos",
+"Close":
+  "Cerrar",
 "pulse and echoes shown {#} {#}× slower":
   "pulso y ecos mostrados {#} {#}× más lentos",
 "Record reading":

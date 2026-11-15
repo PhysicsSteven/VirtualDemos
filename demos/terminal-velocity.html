@@ -457,7 +457,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const larrW = mkArrow(wM), larrD = mkArrow(dM); lab.add(larrW, larrD);
     g3 = { rd, el, cam, sky, lab, skyDome, domeM, dc, hemi, sun, ground, diver, canopy, specks, speckM, arrW, arrD, larrW, larrD, wM, dM, clouds, wallM, stack, rod, boom, clip, cone, Y: new THREE.Vector3(0, 1, 0) };
     can.addEventListener('wheel', (e) => { if (!use3()) e.stopImmediatePropagation(); }, { passive: true });
-    VD3.orbit(can, G3.o, () => { if (use3()) draw(); }, { grab: () => !use3(), phMin: 0.15, phMax: 2.6, zMin: 0.4, zMax: 6, keys: false });
+    VD3.orbit(can, G3.o, () => { if (use3()) draw(); }, { active: () => use3(), /* wheel, keys and pinch leave the hidden 3D camera alone while Flat shows (student view calls, 2026-11-15) */ grab: () => !use3(), phMin: 0.15, phMax: 2.6, zMin: 0.4, zMax: 6, keys: false });
     return true;
   }
   function theme3() {
