@@ -391,7 +391,9 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
     if (!T || !W) return;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
     const p = ps(), F = fly(), q = F.at(S.t), bl = S.blind, wide = W > 640;
-    const colW = wide ? W * SPL.f() : W, top = 96 * p, bot = H - 30 * p;   /* phones: the rocket takes the whole width */
+    /* the status line starts below the button strip, which is taller on phones (it covered the top of "Engine on") (student view, 2026-11-15) */
+    const vbar = document.querySelector('.viewbar'), hy = Math.max(46 * p, vbar ? vbar.offsetTop + vbar.offsetHeight + 3 : 0);
+    const colW = wide ? W * SPL.f() : W, top = Math.max(96 * p, hy + 50 * p), bot = H - 30 * p;   /* phones: the rocket takes the whole width */
     // altitude column: scale to the highest point reached (or the burnout height in space)
     const yMax = Math.max(100, isFinite(F.yTop) ? F.yTop : F.yBurnout * 1.05), Yp = (y) => bot - (bot - top) * Math.min(1, y / yMax);
     const rx = colW * 0.62, ry = Yp(q.y), rw = 18 * p, rh = 58 * p, fuelFrac = Math.max(0, ((S.p.two ? q.m2 : q.m) - S.p.md) / Math.max(1, S.p.mf));
@@ -448,9 +450,14 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
     }
     // status
     ctx.fillStyle = T.ink; ctx.font = `600 ${12.5 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
-    const st = !F.lifts && S.p.g ? 'Thrust never beats the weight: it never leaves the pad.' : q.landed ? 'Back on the ground.' : q.onPad && S.t > 0 && q.burning ? 'Burning on the pad: thrust is less than the weight.' : q.burning ? 'Engine on' : S.t > 0 ? 'Engine off: coasting' : 'Ready';
-    ctx.fillText(st, 10 * p, 46 * p, colW - 14 * p);
-    ctx.font = `700 ${14 * p}px ${T.mono}`; ctx.fillText(`t = ${n0(S.t, 1)} s`, 10 * p, 64 * p);
+    /* before Launch it said "Engine on" (q.burning is true at t = 0); now Ready until the clock starts (student view, 2026-11-15) */
+    const st = !F.lifts && S.p.g ? 'Thrust never beats the weight: it never leaves the pad.' : q.landed ? 'Back on the ground.' : S.t === 0 && !S.run ? 'Ready' : q.onPad && S.t > 0 && q.burning ? 'Burning on the pad: thrust is less than the weight.' : q.burning ? 'Engine on' : S.t > 0 ? 'Engine off: coasting' : 'Ready';
+    ctx.fillText(st, 10 * p, hy, colW - 14 * p);
+    ctx.font = `700 ${14 * p}px ${T.mono}`; const clk = `t = ${n0(S.t, 1)} s`; ctx.fillText(clk, 10 * p, hy + 18 * p);
+    {   /* the time scale on screen: the flight is sped up so it lasts about 25 s, and the factor was only in More about this (student view, 2026-11-15) */
+      const sp = rate(F), cx = 10 * p + ctx.measureText(clk).width + 8 * p;
+      ctx.font = `${10.5 * p}px ${T.ui}`; ctx.fillStyle = T.muted; ctx.fillText(sp > 1.001 ? `1 s = ${n0(sp, sp < 10 ? 1 : 0)} s of flight` : (window.VDI18N ? VDI18N.t('real time') : 'real time'), cx, hy + 20.5 * p, Math.max(20 * p, colW - cx - 4 * p));
+    }
     // graphs: v(t) and m(t)
     const gx0 = wide ? colW + 50 * p : 50 * p, gx1 = W - 14 * p, gy0 = 64 * p, pane = (bot - gy0 - 30 * p) / 2;
     const tEnd = Math.max(F.tb * 1.15, isFinite(F.tTop) ? Math.min(F.tTop * 1.05, F.tb * 6) : F.tb * 1.15, 1);
@@ -522,7 +529,13 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
     const F = fly(), q = F.at(S.t), bl = S.blind, dd = (a, b, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`;
     let h = dd('Thrust u × burn rate', `${n0(F.thrust / 1000, 0)} kN`) + dd('Weight at launch m₀g', S.p.g ? `${n0(F.m0 * G / 1000, 0)} kN` : '0 (no gravity)') + dd('Burn time', `${n0(F.tb, 1)} s`) + dd('Mass now', `${n0(q.m)} kg`);
     h += dd('Speed now', `${n0(q.v, 0)} m/s`) + dd('Height now', `${q.y >= 1000 ? n0(q.y / 1000, 2) + ' km' : n0(q.y) + ' m'}`) + dd('Acceleration now', `${n0(q.a, 1)} m/s²`);
-    if (bl) h += '<div class="wide"><dt>Rocket equation, burnout speed and height</dt><dd class="ok">hidden in Blind</dd></div>';
+    if (bl) {
+      h += '<div class="wide"><dt>Rocket equation, burnout speed and height</dt><dd class="ok">hidden in Blind</dd></div>';
+      /* Part 5 of the worksheet records the separation time and speed and the burnout speed in Blind, and the flight runs ×10, too fast to
+         pause on the instant: once the flight has passed them they show as the flight log, like Record reading for one stage (student view, 2026-11-15) */
+      if (S.p.two && S.t >= F.t1) h += dd(window.VDI18N ? VDI18N.t('Separation (flight log)') : 'Separation (flight log)', `at ${n0(F.t1, 1)} s, ${n0(F.vSep)} m/s`, true);
+      if (S.p.two && S.t >= F.tb) h += dd(window.VDI18N ? VDI18N.t('Speed at burnout (flight log)') : 'Speed at burnout (flight log)', `${n0(F.vBurnout)} m/s`, true);
+    }
     else {
       if (S.p.two) h += dd('First stage u ln(m₀/m₁)', `${n0(F.dv1)} m/s`) + dd('Upper stage u ln(m₂/m_dry)', `${n0(F.dv2)} m/s`) + dd('One stage carrying the empty casing: u ln(m₀/(m_dry + casing))', `${n0(F.dvSingle)} m/s`, true) + dd('Separation', `at ${n0(F.t1, 1)} s, ${n0(F.vSep)} m/s`, true);
       h += dd(S.p.two ? 'Rocket equation, both stages' : 'Rocket equation u ln(m₀/m_dry)', `${n0(F.dvIdeal)} m/s`, true) + dd('Speed at burnout', `${n0(F.vBurnout)} m/s`) + dd('Lost to gravity', S.p.g ? `${n0(F.dvIdeal - F.vBurnout)} m/s` : '0');
@@ -545,12 +558,13 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
   function setRun(on) { S.run = on; card.away(on); $('go').textContent = on ? 'Pause' : S.t > 0 ? 'Play' : 'Launch'; $('go').classList.toggle('attn', !on); }
   $('go').addEventListener('click', () => { const F = fly(); if (!S.run && S.t >= endTime(F)) S.t = 0; setRun(!S.run); });
   $('again').addEventListener('click', restart);
+  const rate = (F) => Math.max(1, endTime(F) / 25);   /* seconds of flight per second on screen */
   const endTime = (F) => Math.max(F.tb * 1.15, isFinite(F.tTop) ? Math.min(F.tTop * 1.05, F.tb * 6) : F.tb * 1.15, 1);
   let last = performance.now();
   function frame(now) {
     const dt = Math.min(0.05, (now - last) / 1000); last = now;
     if (S.run && !reduce) amb += dt;
-    if (S.run) { const F = fly(), speed = Math.max(1, endTime(F) / 25); S.t = Math.min(endTime(F), S.t + dt * speed); if (S.t >= endTime(F)) setRun(false); draw(); readouts(); }
+    if (S.run) { const F = fly(), speed = rate(F); S.t = Math.min(endTime(F), S.t + dt * speed); if (S.t >= endTime(F)) setRun(false); draw(); readouts(); }
     requestAnimationFrame(frame);
   }
   can.addEventListener('keydown', (e) => { if (e.key === ' ') $('go').click(); else if (e.key === 'r' || e.key === 'R') restart(); else return; e.preventDefault(); });

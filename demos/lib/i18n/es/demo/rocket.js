@@ -2,8 +2,10 @@
 VDI18N.add('es', 'demo/rocket', {
 "fuel":
   "combustible",
-"Engine on":
-  "Motor encendido",
+"Ready":
+  "Listo",
+"{#} s = {#} s of flight":
+  "{#} s = {#} s de vuelo",
 "speed v (m/s)":
   "rapidez v (m/s)",
 "dashed: u ln(m₀/m), no gravity":
@@ -96,6 +98,8 @@ VDI18N.add('es', 'demo/rocket', {
   "combustión (kg/s)",
 "v cutoff (m/s)":
   "v al apagar (m/s)",
+"Engine on":
+  "Motor encendido",
 "The same rocket from the ground. Thrust {#} kN against a {#} kN weight. Gravity takes g × (burn time) off the speed: compare the burnout speed with u ln(m₀/m).":
   "El mismo cohete desde el suelo. Empuje de {#} kN contra un peso de {#} kN. La gravedad le quita g × (tiempo de combustión) a la rapidez: compara la rapidez al fin de la combustión con u ln(m₀/m).",
 "Highest point (constant g, no air)":
@@ -129,5 +133,11 @@ VDI18N.add('es', 'demo/rocket', {
 "Rocket equation, both stages":
   "Ecuación del cohete, ambas etapas",
 "Readings are for a one stage rocket, as in the worksheet: switch off Two stages to record.":
-  "Las lecturas son para un cohete de una etapa, como en la hoja de trabajo: desactiva Dos etapas para registrar."
+  "Las lecturas son para un cohete de una etapa, como en la hoja de trabajo: desactiva Dos etapas para registrar.",
+"Close":
+  "Cerrar",
+"Separation (flight log)":
+  "Separación (registro de vuelo)",
+"Speed at burnout (flight log)":
+  "Rapidez al fin de la combustión (registro de vuelo)"
 });

@@ -24,8 +24,6 @@ VDI18N.add('es', 'demo/room-acoustics', {
   "Vista en planta de una sala con un altavoz y un micrófono sobre su línea central, y debajo una gráfica: el decaimiento de un aplauso, o el nivel sonoro en función de la distancia. Arrastra el micrófono para cambiar su distancia r al altavoz. Las flechas izquierda y derecha lo mueven {#} m (con Shift, {#} m); C aplaude.",
 "Time controls":
   "Controles de tiempo",
-"Clap":
-  "Aplaudir",
 "<span>Speed</span>":
   "<span>Rapidez</span>",
 "Clap speed":
@@ -235,5 +233,11 @@ VDI18N.add('es', 'demo/room-acoustics', {
 "hidden: the panels are a mystery":
   "oculto: los paneles son un misterio",
 "{#} mystery panels":
-  "{#} paneles misteriosos"
+  "{#} paneles misteriosos",
+"Close":
+  "Cerrar",
+"Move the microphone away from or toward the loudspeaker by {#} m (Shift: {#} m)":
+  "Aleja o acerca el micrófono a la bocina {#} m (Shift: {#} m)",
+"Clap":
+  "Aplaudir"
 });

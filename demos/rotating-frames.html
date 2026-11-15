@@ -396,10 +396,19 @@
       if (q === geo.panels[geo.panels.length - 1]) { const x0 = q.x + 12 * p, y0 = q.y + 50 * p; ctx.strokeStyle = T.muted; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x0 + 10 * sc, y0); ctx.stroke();
         ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${mono()}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText('10 N per kg', x0, y0 - 4 * p); }
     }
-    if (st.t >= b.tEnd - 1e-9 && isFinite(b.tEnd)) { ctx.fillStyle = T.ink; ctx.font = `${11 * p}px ${mono()}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillText('off the edge', P[0], P[1] - 10 * p); }
+    /* the label sat above the ball, so a ball leaving near the door wrote it over "door"; it now sits just inside the rim on a
+       backing, clear of the door and the turning arrow outside the rim (student view, 2026-11-15) */
+    if (st.t >= b.tEnd - 1e-9 && isFinite(b.tEnd)) { ctx.font = `${11 * p}px ${mono()}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      const lab = window.VDI18N ? VDI18N.t('off the edge') : 'off the edge', ux = (P[0] - cx) / R, uy = (P[1] - cy) / R, tw = ctx.measureText(lab).width, lx = P[0] - ux * (tw / 2 + 12 * p), ly = P[1] - uy * 18 * p;
+      ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.8; ctx.fillRect(lx - tw / 2 - 3 * p, ly - 8 * p, tw + 6 * p, 16 * p); ctx.globalAlpha = 1;
+      ctx.fillStyle = T.ink; ctx.fillText(lab, lx, ly); }
     ctx.restore();
   }
-  function drawTable() { const st = ballAt(S.t); for (const q of geo.panels) drawPanel(q, st); if (geo.panels.length === 2) { ctx.strokeStyle = T.line; ctx.lineWidth = 1; const q = geo.panels[1]; ctx.beginPath(); if (q.x > 0) { ctx.moveTo(q.x, 0); ctx.lineTo(q.x, H); } else { ctx.moveTo(0, q.y); ctx.lineTo(W, q.y); } ctx.stroke(); } }
+  function drawTable() { const st = ballAt(S.t); for (const q of geo.panels) drawPanel(q, st);
+    /* the time scale on the stage, as the pendulum has it ("time ×1000"): the turntable's clock and whether it runs at a quarter
+       speed were only in the rail (student view, 2026-11-15) */
+    { const q = geo.panels[0], p = geo.p, one = geo.panels.length === 1 && q.k === 'table'; ctx.fillStyle = T.muted; ctx.font = `${10.5 * p}px ${mono()}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+      const tt = f(S.t, 2); ctx.fillText(S.slow ? (window.VDI18N ? VDI18N.t('slow motion ×1/4, t = {tt} s', { tt }) : `slow motion ×1/4, t = ${tt} s`) : `real time, t = ${tt} s`, q.x + 12 * p, q.y + q.h - (one ? 26 : 10) * p, q.w - 24 * p); } if (geo.panels.length === 2) { ctx.strokeStyle = T.line; ctx.lineWidth = 1; const q = geo.panels[1]; ctx.beginPath(); if (q.x > 0) { ctx.moveTo(q.x, 0); ctx.lineTo(q.x, H); } else { ctx.moveTo(0, q.y); ctx.lineTo(W, q.y); } ctx.stroke(); } }
 
   // ---------- Foucault, flat ----------
   const fastSwing = () => S.x / fou().period > 1.5;   /* more than a swing and a half each second: draw the swing as a band */

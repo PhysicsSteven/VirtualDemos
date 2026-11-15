@@ -412,10 +412,18 @@ table.mat td.num { font-family: var(--font-mono); text-align: right; }
   window.__ra = { S, model, measure, f, P_SRC, srcPos, rMax, wedgeMax, MATERIALS, BANDS, roomModel, placePanels, sabineT, eyringT, directDose, splFromW, wedgeCutoff, wedgeAlpha, PANEL_W, PANEL_H };
 
   // ---------- drawing ----------
+  /* the width of the title and the line under it: at 1280 the Clap and Speed buttons sat on top of them ("The room: 9.0 m × 7.0", "floor: concrete floo"),
+     so the title goes under the view buttons whenever it would run into them, as it already did on narrow pictures (student view, 2026-11-15) */
+  function titleW(p) {
+    const m = model(); ctx.save(); ctx.font = `700 ${13 * p}px ${T.ui}`;
+    const a = ctx.measureText(`${G3.on && g3 ? 'The room' : 'Plan view'}: ${f(S.L, 1)} m × ${f(S.W, 1)} m, ${f(S.H, 1)} m high`).width; ctx.font = `${11 * p}px ${T.mono}`;
+    const b = ctx.measureText(S.walls === 'wedges' ? `free space between the wedge tips ${f(m.L, 2)} × ${f(m.W, 2)} × ${f(m.H, 2)} m` : `floor: ${MATERIALS[S.floor].name.toLowerCase()}`).width;
+    ctx.restore(); return Math.max(a, b);
+  }
   function regions() {
     const p = ps(), rk = $('rack'), abs = getComputedStyle(rk).position === 'absolute';
     const x0 = abs ? rk.offsetLeft + rk.offsetWidth + 16 * p : 14 * p, x1 = W - 14 * p;
-    const gh = Math.max(150 * p, H * 0.36), vb = document.querySelector('.viewbar'), ty = x1 - x0 < 520 * p ? Math.max(66 * p, vb.offsetTop + vb.offsetHeight + 22 * p) : 24 * p, planTop = ty + 28 * p, planBot = H - gh - 34 * p;   /* on a narrow picture the title goes under the view buttons, which can wrap to two rows */
+    const gh = Math.max(150 * p, H * 0.36), vb = document.querySelector('.viewbar'), ty = x1 - x0 < 520 * p || titleW(p) > vb.offsetLeft - x0 - 8 * p ? Math.max(66 * p, vb.offsetTop + vb.offsetHeight + 22 * p) : 24 * p, planTop = ty + 28 * p, planBot = H - gh - 34 * p;   /* on a narrow picture the title goes under the view buttons, which can wrap to two rows */
     return { p, x0, x1, ty, planTop, planBot, gx0: x0 + 44 * p, gx1: x1 - 6 * p, gy0: H - gh + 4 * p, gy1: H - 30 * p };
   }
   function draw() {
@@ -535,13 +543,14 @@ table.mat td.num { font-family: var(--font-mono); text-align: right; }
     ctx.strokeStyle = T.ray; ctx.lineWidth = 2 * p; ctx.beginPath(); let first = true;
     for (let i = 0; i * dt < tEnd && i < db.length; i++) { const v = db[i]; if (!isFinite(v) || v < yMin) break; first ? ctx.moveTo(PX(i * dt), PY(v)) : ctx.lineTo(PX(i * dt), PY(v)); first = false; }
     ctx.stroke();
-    const dc = res.dec, nar = R.gx1 - R.gx0 < 560 * R.p, ly = R.gy0 + (nar ? 22 : 8) * R.p;   /* on a narrow graph the T line goes under the key */
+    const dc = res.dec, nar = R.gx1 - R.gx0 < 560 * R.p, ly = R.gy0 + 22 * R.p;   /* the T line goes under the key */
     if (isFinite(dc.T)) { ctx.strokeStyle = T.fit; ctx.setLineDash([6 * p, 4 * p]); ctx.lineWidth = 1.5 * p; const tA = Math.max(0, -dc.icpt / dc.slope), tB = (-60 - dc.icpt) / dc.slope;
       ctx.beginPath(); ctx.moveTo(PX(tA), PY(0)); ctx.lineTo(PX(Math.min(tB, tEnd)), PY(dc.icpt + dc.slope * Math.min(tB, tEnd))); ctx.stroke(); ctx.setLineDash([]);
       ctx.fillStyle = T.ink; ctx.font = `700 ${13 * p}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.fillText(`T = ${f(dc.T, 2)} s (measured, T20)`, R.gx1 - 8 * p, ly); }
     else { ctx.fillStyle = T.ink; ctx.font = `700 ${12 * p}px ${T.ui}`; ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.fillText('No reverberation: only the direct sound arrives', R.gx1 - 8 * p, ly); }
-    ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
-    ctx.fillText(nar ? 'bars: energy every 5 ms · blue: Schroeder · dashed: fit' : 'bars: energy arriving every 5 ms · blue: decay curve (Schroeder) · dashed: fit −5 to −25 dB', R.gx0 + 6 * p, R.gy0 + 6 * p);
+    /* the key sat at the top left, where every decay starts at 0 dB, so the blue curve ran through its words; the top right is always clear (student view, 2026-11-15) */
+    ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'right'; ctx.textBaseline = 'top';
+    ctx.fillText(nar ? 'bars: energy every 5 ms · blue: Schroeder · dashed: fit' : 'bars: energy arriving every 5 ms · blue: decay curve (Schroeder) · dashed: fit −5 to −25 dB', R.gx1 - 8 * p, R.gy0 + 6 * p);
     if (anim) { ctx.strokeStyle = T.mic; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(PX(anim.t), R.gy0); ctx.lineTo(PX(anim.t), R.gy1); ctx.stroke(); }
   }
   const niceStep = (s) => { const e = Math.pow(10, Math.floor(Math.log10(s))), q = s / e; return (q < 1.5 ? 1 : q < 3.5 ? 2 : q < 7.5 ? 5 : 10) * e; };

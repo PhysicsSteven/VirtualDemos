@@ -1,7 +1,8 @@
 /* English strings of demo/rocket, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'demo/rocket', [
 "fuel",
-"Engine on",
+"Ready",
+"{#} s = {#} s of flight",
 "speed v (m/s)",
 "dashed: u ln(m₀/m), no gravity",
 "mass m (kg)",
@@ -48,6 +49,7 @@ VDI18N.add('en', 'demo/rocket', [
 "fuel (kg)",
 "burn (kg/s)",
 "v cutoff (m/s)",
+"Engine on",
 "The same rocket from the ground. Thrust {#} kN against a {#} kN weight. Gravity takes g × (burn time) off the speed: compare the burnout speed with u ln(m₀/m).",
 "Highest point (constant g, no air)",
 "{#} km at {#} s",
@@ -64,5 +66,8 @@ VDI18N.add('en', 'demo/rocket', [
 "Separation",
 "at {#} s, {#} m/s",
 "Rocket equation, both stages",
-"Readings are for a one stage rocket, as in the worksheet: switch off Two stages to record."
+"Readings are for a one stage rocket, as in the worksheet: switch off Two stages to record.",
+"Close",
+"Separation (flight log)",
+"Speed at burnout (flight log)"
 ]);

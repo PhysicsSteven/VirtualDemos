@@ -8,6 +8,8 @@ VDI18N.add('es', 'demo/rotating-frames', {
   "Visto subido en la plataforma giratoria",
 "the room turns clockwise past you":
   "la sala gira en sentido horario frente a ti",
+"real time, t = {#} s":
+  "tiempo real, t = {#} s",
 "Rotating Frames":
   "Marcos en rotación",
 "Roll a ball across a turning merry go round and watch it twice: from the room it goes straight, from the turntable it curves away, pushed by the Coriolis and centrifugal forces that only a rider feels. Then go to the Earth, which is a turntable too: a Foucault pendulum's swing turns once in a sidereal day divided by the sine of the latitude.":
@@ -180,14 +182,6 @@ VDI18N.add('es', 'demo/rotating-frames', {
   "Oscilaciones hasta ahora",
 "Plane turned, measured":
   "Giro del plano, medido",
-"no horizontal force":
-  "sin fuerza horizontal",
-"Coriolis":
-  "Coriolis",
-"centrifugal":
-  "centrífuga",
-"{#} N per kg":
-  "{#} N por kg",
 "Now a rider at the edge aims straight at the center and throws at {#} m/s. The rider is moving sideways at Ωr = {#} m/s when the ball leaves the hand, so in the room the ball goes off {#}° to the side of the aim, at {#} m/s, and passes {#} m from the center. The rider sees it curve to the right of where it was aimed: the Coriolis force, at right angles to the ball's motion on the table.":
   "Ahora alguien subido en el borde apunta directamente al centro y lanza a {#} m/s. Esa persona se mueve de lado a Ωr = {#} m/s cuando la pelota sale de su mano, así que en la sala la pelota sale {#}° desviada de la puntería, a {#} m/s, y pasa a {#} m del centro. Quien va subido la ve curvarse a la derecha de donde apuntó: la fuerza de Coriolis, perpendicular al movimiento de la pelota sobre la mesa.",
 "A ball sent out from the middle at {#} m/s. It starts with no sideways motion, so in the room it goes straight out along a radius. On the table it curves back against the turning, to the right: the table runs ahead underneath it. Turn on the force arrows: the Coriolis arrow is always at right angles to the motion seen on the table.":
@@ -196,8 +190,6 @@ VDI18N.add('es', 'demo/rotating-frames', {
   "Una pelota en reposo sobre la mesa a medio camino del borde se suelta (sin fricción que la sostenga). En la sala simplemente sigue en línea recta con la rapidez que le dio la mesa, Ωr = {#} m/s. Quien va subido la ve salir recto hacia afuera, jalada por la fuerza centrífuga, y luego curvarse a medida que la fuerza de Coriolis crece con su rapidez.",
 "A fast turntable ({#} turns a minute) and a slow ball, {#} m/s, thrown by a rider at the middle. In the room it is still a straight line out from the middle; seen from the table it winds out in a spiral, {#} turns before it reaches the edge, because the table turns under it while it moves out.":
   "Una plataforma rápida ({#} vueltas por minuto) y una pelota lenta, {#} m/s, lanzada por alguien subido en el centro. En la sala sigue siendo una línea recta desde el centro; vista desde la mesa se enrolla hacia afuera en espiral, {#} vueltas antes de llegar al borde, porque la mesa gira debajo de ella mientras se aleja.",
-"the room turns counterclockwise past you":
-  "la sala gira en sentido antihorario frente a ti",
 "The same throw with the turntable turning clockwise. The path seen on the table now curves to the left. On the Earth, seen from above the North Pole the ground turns counterclockwise and moving things are turned to the right; seen from above the South Pole it turns clockwise, and they are turned to the left.":
   "El mismo lanzamiento con la plataforma girando en sentido horario. La trayectoria vista sobre la mesa ahora se curva a la izquierda. En la Tierra, vista desde arriba del Polo Norte, el suelo gira en sentido antihorario y las cosas en movimiento se desvían a la derecha; vista desde arriba del Polo Sur gira en sentido horario, y se desvían a la izquierda.",
 "−{#} turns/min, clockwise":
@@ -228,8 +220,6 @@ VDI18N.add('es', 'demo/rotating-frames', {
   "{#}° S, sin λ = −{#}",
 "{#}° per hour, counterclockwise":
   "{#}° por hora, sentido antihorario",
-"Earth spun {#}× faster, time ×{#}":
-  "Tierra girando {#}× más rápido, tiempo ×{#}",
 "The Earth spun {#} times faster than it really does, and time at its real rate, so each swing curves visibly. Let go from rest at the side, the bob traces a star: it comes back to rest at a point on each swing, and between those it curves to the right (northern hemisphere), never quite through the middle.":
   "La Tierra girando {#} veces más rápido de lo que realmente gira, y el tiempo a su tasa real, así que cada oscilación se curva visiblemente. Soltada desde el reposo en un lado, la lenteja traza una estrella: vuelve al reposo en un punto en cada oscilación, y entre ellos se curva a la derecha (hemisferio norte), sin pasar nunca exactamente por el centro.",
 "{#} rad/s ({#} × real)":
@@ -238,10 +228,28 @@ VDI18N.add('es', 'demo/rotating-frames', {
   "La misma Tierra acelerada, pero ahora la lenteja se empuja desde el centro. Cada oscilación pasa justo por el centro y se curva a la derecha en los extremos: una roseta de lazos, que gira en el mismo sentido que la estrella.",
 "A {#} m pendulum in the same place swings every {#} s instead of {#} s, yet its plane turns just as fast, once in {#} h: the turning comes from the Earth under it, not from the pendulum. Long, heavy pendulums are used because they keep swinging for hours and are less upset by drafts and a slightly uneven start.":
   "Un péndulo de {#} m en el mismo lugar oscila cada {#} s en lugar de {#} s, y aun así su plano gira igual de rápido, una vez en {#} h: el giro viene de la Tierra debajo de él, no del péndulo. Se usan péndulos largos y pesados porque siguen oscilando durante horas y les afectan menos las corrientes de aire y un inicio ligeramente desigual.",
+"Go on":
+  "Continuar",
+"Close":
+  "Cerrar",
+"no horizontal force":
+  "sin fuerza horizontal",
+"Coriolis":
+  "Coriolis",
+"centrifugal":
+  "centrífuga",
+"{#} N per kg":
+  "{#} N por kg",
+"the room turns counterclockwise past you":
+  "la sala gira en sentido antihorario frente a ti",
+"Earth spun {#}× faster, time ×{#}":
+  "Tierra girando {#}× más rápido, tiempo ×{#}",
+"off the edge":
+  "se sale del borde",
+"slow motion ×1/4, t = {tt} s":
+  "cámara lenta ×1/4, t = {tt} s",
 "plane turned {#}° clockwise":
   "el plano giró {#}° en sentido horario",
 "elapsed {#} min":
-  "transcurrido {#} min",
-"Go on":
-  "Continuar"
+  "transcurrido {#} min"
 });
