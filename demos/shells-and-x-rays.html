@@ -608,15 +608,21 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (!x) return; const EK = x.kedge, EL3 = EK - x.ka1, EL2 = EK - x.ka2, EM3 = EK - x.kb1;
     const Y = (Eb) => yTop + (yK - yTop) * Math.sqrt(Eb / EK);   /* square root scale, so the outer levels can be seen */
     lbl('inner levels of the target atom', lx, 20 * p, { s: 11 * p, w: 700, c: T.ink });
-    const lev = (Eb, name, dy = 0) => { ctx.strokeStyle = T.ink; ctx.lineWidth = 1.6 * p; ctx.beginPath(); ctx.moveTo(lx, Y(Eb)); ctx.lineTo(lx + lw * 0.62, Y(Eb)); ctx.stroke();
-      lbl(myst || S.blind ? name : `${name}  ${f(Eb / 1000, 3)} keV`, lx + lw * 0.64, Y(Eb) + dy, { s: 10 * p, m: true }); };
-    ctx.strokeStyle = T.grid; ctx.beginPath(); ctx.moveTo(lx, yTop); ctx.lineTo(lx + lw * 0.62, yTop); ctx.stroke(); lbl('ionized (0)', lx + lw * 0.64, yTop, { s: 10 * p, m: true });
+    /* the arrows' lengths are not the photon energies on this scale, so say so; and end the level lines where their labels begin, so a
+       label pushed in from the edge on a phone does not sit on its own line (student view, 2026-11-15) */
+    lbl('square root energy scale', lx, 33 * p, { s: 9.5 * p, c: T.muted });
+    const levTxt = (Eb, name) => myst || S.blind ? name : `${name}  ${f(Eb / 1000, 3)} keV`;
+    ctx.save(); ctx.font = `400 ${10 * p}px ${T.mono}`; const labW = Math.max(...[[EK, 'K'], [EL2, 'L₂'], [EL3, 'L₃'], [EM3, 'M₃']].map(([e, n]) => ctx.measureText(levTxt(e, n)).width), ctx.measureText('ionized (0)').width); ctx.restore();
+    const xe = Math.min(lx + lw * 0.62, W - 6 * p - labW - lw * 0.02), lr = (xe - lx) / 0.62;   /* line end, and the width the arrows spread over */
+    const lev = (Eb, name, dy = 0) => { ctx.strokeStyle = T.ink; ctx.lineWidth = 1.6 * p; ctx.beginPath(); ctx.moveTo(lx, Y(Eb)); ctx.lineTo(xe, Y(Eb)); ctx.stroke();
+      lbl(levTxt(Eb, name), xe + lw * 0.02, Y(Eb) + dy, { s: 10 * p, m: true }); };
+    ctx.strokeStyle = T.grid; ctx.beginPath(); ctx.moveTo(lx, yTop); ctx.lineTo(xe, yTop); ctx.stroke(); lbl('ionized (0)', xe + lw * 0.02, yTop, { s: 10 * p, m: true });
     lev(EM3, 'M₃'); lev(EL3, 'L₃'); lev(EK, 'K'); lev(EL2, 'L₂', 14 * p);
     const on = lines.length > 0;
     ctx.save(); ctx.globalAlpha = on ? 0.95 : 0.25;
-    arrow(ctx, lx + lw * 0.16, Y(EL3), lx + lw * 0.16, Y(EK) - 3, T.ka, 2 * p); lbl('Kα₁', lx + lw * 0.16 - 4 * p, (Y(EL3) + Y(EK)) / 2, { a: 'right', s: 10 * p, c: T.ka });
-    arrow(ctx, lx + lw * 0.30, Y(EL2), lx + lw * 0.30, Y(EK) - 3, T.ka, 1.4 * p); lbl('Kα₂', lx + lw * 0.30 - 4 * p, (Y(EL2) + Y(EK)) / 2 + 12 * p, { a: 'right', s: 10 * p, c: T.ka });
-    arrow(ctx, lx + lw * 0.46, Y(EM3), lx + lw * 0.46, Y(EK) - 3, T.kb, 1.6 * p); lbl('Kβ₁', lx + lw * 0.46 + 4 * p, (Y(EM3) + Y(EK)) / 2, { s: 10 * p, c: T.kb });
+    arrow(ctx, lx + lr * 0.16, Y(EL3), lx + lr * 0.16, Y(EK) - 3, T.ka, 2 * p); lbl('Kα₁', lx + lr * 0.16 - 4 * p, (Y(EL3) + Y(EK)) / 2, { a: 'right', s: 10 * p, c: T.ka });
+    arrow(ctx, lx + lr * 0.30, Y(EL2), lx + lr * 0.30, Y(EK) - 3, T.ka, 1.4 * p); lbl('Kα₂', lx + lr * 0.30 - 4 * p, (Y(EL2) + Y(EK)) / 2 + 12 * p, { a: 'right', s: 10 * p, c: T.ka });
+    arrow(ctx, lx + lr * 0.46, Y(EM3), lx + lr * 0.46, Y(EK) - 3, T.kb, 1.6 * p); lbl('Kβ₁', lx + lr * 0.46 + 4 * p, (Y(EM3) + Y(EK)) / 2, { s: 10 * p, c: T.kb });
     ctx.restore();
     lbl(on ? 'electrons have enough energy to empty the K shell' : `below the K edge${myst || S.blind ? '' : ` (${f(EK / 1000, 3)} keV)`}: no K lines`, lx, Hh - 14 * p, { s: 10.5 * p, c: on ? T.ink : T.down });
   }
@@ -804,7 +810,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     lab(myst ? 'target: mystery' : `target: ${byZ(Z)[2].toLowerCase()}`, Q([XA + 0.02, -0.02, ZT + 0.035]));
     if (!bq) lab(`electrons, ${f(kV, 1)} keV each`, Q([(XC + XA) / 2 - 0.01, 0, ZT + 0.055]), { c: T.up });
     if (!bq) lab('X-rays to the spectrometer (graph below)', Q([XA, -0.085, ZT - 0.045]));
-    lab('copper anode, cooled', Q([0.155, 0, ZT + 0.035]));
+    if (!bq) lab('copper anode, cooled', Q([0.155, 0, ZT + 0.035]));   /* in the chamber view the anode is at the pane's edge and its label was cut to "copp" (student view, 2026-11-15) */
     if (!bq) lab(`high voltage supply, ${f(kV, 1)} kV`, Q([-0.2, 0.14, 0.1]), { w: 700 });
     lbl('electrons and X-rays slowed down for the eye', 10 * p, 16 * p, { s: 10 * p });
     ctx.restore();

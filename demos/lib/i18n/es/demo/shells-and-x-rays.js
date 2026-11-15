@@ -796,6 +796,8 @@ VDI18N.add('es', 'demo/shells-and-x-rays', {
   "electrones y rayos X más lentos para que el ojo los siga",
 "inner levels of the target atom":
   "niveles internos del átomo del blanco",
+"square root energy scale":
+  "escala de energía en raíz cuadrada",
 "ionized ({#})":
   "ionizado ({#})",
 "Kα₁":
@@ -904,6 +906,8 @@ VDI18N.add('es', 'demo/shells-and-x-rays', {
   "Al (mm)",
 "sheets (mm)":
   "láminas (mm)",
+"Close":
+  "Cerrar",
 "target: aluminum":
   "blanco: aluminio",
 "target: silicon":
@@ -1038,12 +1042,12 @@ VDI18N.add('es', 'demo/shells-and-x-rays', {
   "¹¹C⁺: radiactivo, semivida de {#} minutos.",
 "¹²C²⁺: stable, {#}% of natural C.":
   "¹²C²⁺: estable, {#}% del C natural.",
-"Tin":
-  "Estaño",
+"Titanium":
+  "Titanio",
 "The last mystery target was {el} (Z = {z}).":
   "El último blanco misterioso era {el} (Z = {z}).",
-"The last mystery target was tin (Z = {#}).":
-  "El último blanco misterioso era estaño (Z = {#}).",
+"The last mystery target was titanium (Z = {#}).":
+  "El último blanco misterioso era titanio (Z = {#}).",
 "air kerma chamber":
   "cámara de kerma en aire",
 "filter and sheets to scale":
@@ -1054,6 +1058,10 @@ VDI18N.add('es', 'demo/shells-and-x-rays', {
   "aún no hay láminas",
 "filter and sheets to scale; the reading is the air kerma relative to no sheets":
   "filtro y láminas a escala; la lectura es el kerma en aire relativo a sin láminas",
+"Tin":
+  "Estaño",
+"The last mystery target was tin (Z = {#}).":
+  "El último blanco misterioso era estaño (Z = {#}).",
 "The last mystery target was molybdenum (Z = {#}).":
   "El último blanco misterioso era molibdeno (Z = {#})."
 });
