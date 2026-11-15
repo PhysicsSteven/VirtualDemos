@@ -726,6 +726,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
 
   function roundRect(ctx, x, y, w, h, r) { ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x, y, w, h, r) : ctx.rect(x, y, w, h); }
+  /* the Sun's name on a backing of the plot's own color, so it stays readable where it lands on the cluster's or the real stars' dots (student view calls, 2026-11-15) */
+  function sunTag(ctx, T, x, y, ps) {
+    const w = ctx.measureText('Sun').width, h = 13 * ps;
+    ctx.save(); ctx.globalAlpha = 0.85; ctx.fillStyle = T.canvas; ctx.fillRect(x - 2 * ps, y - h / 2, w + 4 * ps, h); ctx.restore();
+    ctx.fillStyle = T.ink; ctx.fillText('Sun', x, y);
+  }
   function pill(ctx, T, text, x, y, color) {
     ctx.font = `600 ${12 * ps}px ${monoFont()}`;
     const tw = ctx.measureText(text).width + 14 * ps, th = 21 * ps;
@@ -792,7 +798,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     { const x = RX(0.656), y = RY(REAL_MV_SUN);
       ctx.strokeStyle = T.ink; ctx.lineWidth = 1.3 * ps; ctx.beginPath(); ctx.arc(x, y, 5 * ps, 0, 2 * Math.PI); ctx.fillStyle = T.canvas; ctx.fill(); ctx.stroke();
       ctx.beginPath(); ctx.arc(x, y, 1.4 * ps, 0, 2 * Math.PI); ctx.fillStyle = T.ink; ctx.fill();
-      ctx.font = `700 ${11 * ps}px ${ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText('Sun', x + 8 * ps, y); }
+      ctx.font = `700 ${11 * ps}px ${ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; sunTag(ctx, T, x + 8 * ps, y, ps); }
     if (sel && sel.BV != null) { const x = RX(sel.BV), y = RY(sel.MV); ctx.beginPath(); ctx.arc(x, y, 8 * ps, 0, 2 * Math.PI); ctx.lineWidth = 2.2 * ps; ctx.strokeStyle = T.accent; ctx.stroke(); pill(ctx, T, sel.name, x, y, T.accent); }
     ctx.restore();
     if (S.realSet === 'both') {   /* key for the rings */
@@ -918,10 +924,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       ctx.beginPath(); ctx.arc(x, y, 5 * ps, 0, 2 * Math.PI); ctx.fillStyle = T.canvas; ctx.fill(); ctx.stroke();
       ctx.beginPath(); ctx.arc(x, y, 1.4 * ps, 0, 2 * Math.PI); ctx.fillStyle = T.ink; ctx.fill();
       ctx.font = `700 ${11 * ps}px ${ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
-      ctx.fillText('Sun', x + 8 * ps, y + 9 * ps);
+      if (S.mode === 'single') sunTag(ctx, T, x + 8 * ps, y + 9 * ps, ps);
     }
 
     if (S.mode === 'single') drawTrack(ctx, T); else drawCluster(ctx, T);
+    /* a cluster's dots are drawn after the Sun: its name goes on top of them (student view calls, 2026-11-15) */
+    if (S.mode !== 'single') { ctx.font = `700 ${11 * ps}px ${ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; sunTag(ctx, T, X(lg(TSUN)) + 8 * ps, Y(0) + 9 * ps, ps); }
     ctx.restore();
 
     ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.strokeRect(G.x0 + 0.5, G.y0 + 0.5, G.x1 - G.x0 - 1, G.y1 - G.y0 - 1);

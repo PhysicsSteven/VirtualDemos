@@ -8,6 +8,7 @@ VDI18N.add('en', 'demo/heat-engines', [
 "gas pushes the piston out: W > {#} →",
 "Q {#}→{#} = area under = +{#} kJ",
 "Q net = W net = area",
+"S (J/K), S = {#} at {#} K, {#} kPa",
 "Energy per cycle",
 "hot side",
 "cold side",
@@ -33,6 +34,7 @@ VDI18N.add('en', 'demo/heat-engines', [
 "Fast",
 "Next leg",
 "Leg {#}→{#}: isothermal expansion at {#} K <small>· touching the hot reservoir</small>",
+"not to time: {#} s a leg",
 "Cylinder picture",
 "PV diagram of the cycle with the piston cylinder under it, the T–S diagram, and the energy flow per cycle. Drag a corner of the cycle, or the grip in the middle of a leg, to reshape it. Keys: {#} to {#} pick a corner, arrow keys move it, space plays or pauses, N goes to the next leg, R runs the cycle the other way.",
 "Divider between the PV diagram and the TS diagram",
@@ -169,7 +171,6 @@ VDI18N.add('en', 'demo/heat-engines', [
 "cold side at {#} K: heat flows into the gas",
 "Run backward, this cycle takes in heat while the gas is as warm as {#} K and gives heat off while it is as cool as {#} K. No pair of fixed reservoirs fits that, so it cannot work as a refrigerator between a cold space and a warmer room. A refrigerator must take its heat in where the gas is coldest, as the reversed Carnot cycle does.",
 "Leg {#}→{#}: isothermal expansion at {#} K",
-"Close",
 "W {#}→{#} = {#}: no volume change",
 "cold side: heat flows into the gas",
 "piston held still: W = {#}",
@@ -177,5 +178,5 @@ VDI18N.add('en', 'demo/heat-engines', [
 "hot side: heat flows out of the gas",
 "Leg {#}→{#}: isobaric compression, cooling",
 "Entropy at the corners: −{#}, −{#}, {#}, −{#} J/K. Summing ΔS over the legs gives zero to rounding: S is a state function, so it returns to its starting value.",
-"cold reservoir at {#} K: heat flows into the gas"
+"hot reservoir: heat flows out of the gas"
 ]);

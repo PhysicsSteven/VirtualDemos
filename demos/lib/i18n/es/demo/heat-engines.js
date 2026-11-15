@@ -16,6 +16,8 @@ VDI18N.add('es', 'demo/heat-engines', {
   "Q {#}→{#} = área bajo la curva = +{#} kJ",
 "Q net = W net = area":
   "Q neto = W neto = área",
+"S (J/K), S = {#} at {#} K, {#} kPa":
+  "S (J/K), S = {#} a {#} K, {#} kPa",
 "Energy per cycle":
   "Energía por ciclo",
 "hot side":
@@ -66,6 +68,8 @@ VDI18N.add('es', 'demo/heat-engines', {
   "Siguiente tramo",
 "Leg {#}→{#}: isothermal expansion at {#} K <small>· touching the hot reservoir</small>":
   "Tramo {#}→{#}: expansión isotérmica a {#} K <small>· en contacto con el depósito caliente</small>",
+"not to time: {#} s a leg":
+  "no a escala de tiempo: {#} s por tramo",
 "Cylinder picture":
   "Imagen del cilindro",
 "PV diagram of the cycle with the piston cylinder under it, the T–S diagram, and the energy flow per cycle. Drag a corner of the cycle, or the grip in the middle of a leg, to reshape it. Keys: {#} to {#} pick a corner, arrow keys move it, space plays or pauses, N goes to the next leg, R runs the cycle the other way.":
@@ -338,8 +342,6 @@ VDI18N.add('es', 'demo/heat-engines', {
   "Recorrido al revés, este ciclo recibe calor incluso cuando el gas está a {#} K y cede calor incluso cuando está a solo {#} K. Ningún par de depósitos fijos se ajusta a eso, así que no puede funcionar como refrigerador entre un espacio frío y un cuarto más caliente. Un refrigerador debe recibir su calor donde el gas está más frío, como lo hace el ciclo de Carnot invertido.",
 "Leg {#}→{#}: isothermal expansion at {#} K":
   "Tramo {#}→{#}: expansión isotérmica a {#} K",
-"Close":
-  "Cerrar",
 "W {#}→{#} = {#}: no volume change":
   "W {#}→{#} = {#}: sin cambio de volumen",
 "cold side: heat flows into the gas":
@@ -354,6 +356,10 @@ VDI18N.add('es', 'demo/heat-engines', {
   "Tramo {#}→{#}: compresión isobárica, enfriamiento",
 "Entropy at the corners: −{#}, −{#}, {#}, −{#} J/K. Summing ΔS over the legs gives zero to rounding: S is a state function, so it returns to its starting value.":
   "Entropía en las esquinas: −{#}, −{#}, {#}, −{#} J/K. La suma de ΔS en los tramos da cero salvo redondeo: S es una función de estado, así que regresa a su valor inicial.",
+"hot reservoir: heat flows out of the gas":
+  "depósito caliente: el calor fluye fuera del gas",
+"Close":
+  "Cerrar",
 "cold reservoir at {#} K: heat flows into the gas":
   "depósito frío a {#} K: el calor fluye hacia el gas",
 "<a><span>←</span> <span>Heat Capacities of Gases</span></a><a><span>Entropy and the Second Law</span> <span>→</span></a>":

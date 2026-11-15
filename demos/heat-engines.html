@@ -62,6 +62,7 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 10px; border-bottom: 1px solid var(--line); }
 .count { margin-left: auto; font-size: 0.86rem; font-weight: 600; min-width: 0; overflow-wrap: anywhere; text-align: right; }
 .count small { font-weight: 400; color: var(--muted); font-size: 0.8rem; }
+.pace { color: var(--muted); font-size: 0.8rem; white-space: nowrap; }   /* the playback rate after the leg (student view calls, 2026-11-15) */
 #can { touch-action: none; outline: none; }
 #can:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
 button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
@@ -155,7 +156,7 @@ select { font: inherit; font-size: 0.82rem; color: var(--ink); background: var(-
           <button type="button" data-s="2" aria-pressed="false">Fast</button>
         </div>
         <div class="seg" role="group" aria-label="Cylinder picture" id="dimSeg"><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
-        <span class="count" id="count" aria-live="off"></span>
+        <span class="count" id="count" aria-live="off"></span><small class="pace" id="pace"></small>
       </div>
       <div class="pane" id="pane">
         <canvas id="can" tabindex="0" aria-label="PV diagram of the cycle with the piston cylinder under it, the T–S diagram, and the energy flow per cycle. Drag a corner of the cycle, or the grip in the middle of a leg, to reshape it. Keys: 1 to 6 pick a corner, arrow keys move it, space plays or pauses, N goes to the next leg, R runs the cycle the other way."></canvas>
@@ -1158,7 +1159,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     });
     /* the two lines of text, the same as the flat strip */
     let wt = L.t === 'V' ? 'piston held still: W = 0' : L.b.V > L.a.V ? 'gas pushes the piston out: W > 0  →' : '←  piston pushes the gas in: W < 0';
-    const fh = 13 * ps * u;
+    /* the text in a label sprite is 0.62 of its height: 21 px sprites give 13 px text, readable beside the flat labels (student view calls, 2026-11-15) */
+    const fh = 21 * ps * u;
     const put = (lab, text, x, z, c) => { lab.set(text); const a = lab.scale.x / lab.scale.y; lab.scale.set(a * fh, fh, 1); lab.material.color.set(c); lab.position.set(x, 0, z); };
     put(g.top, wt, xp, R3 + 0.012 + fh * 0.9, L.t === 'V' ? T.muted : (L.W > 0 ? T.work : T.ink));
     const wTop = g.top.scale.x; g.top.position.x = Math.min(cam.right - wTop / 2 - 0.01, Math.max(cam.left + wTop / 2 + 0.01, xp));
@@ -1216,7 +1218,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     label(`Q net = W net = area`, clampN(cx0, L + 74 * ps, R - 74 * ps), cy0, T.work, 'center', 'middle', { bold: true, size: 10.5 });
     label('Temperature T (K)', box.x + 10 * ps, box.y + 13 * ps, T.ink, 'left', 'middle', { bold: true, halo: false });
-    label('S (J/K)', R, B + 22 * ps, T.muted, 'right', 'middle', { halo: false, size: 10.5 });
+    /* where S = 0 is, so a negative S is not a puzzle: entropy is counted from the gas at 300 K and 100 kPa (student view calls, 2026-11-15) */
+    label('S (J/K), S = 0 at 300 K, 100 kPa', R, B + 22 * ps, T.muted, 'right', 'middle', { halo: false, size: 10.5 });
   }
 
   // ---------- energy flow per cycle ----------
@@ -1288,6 +1291,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (st.i === curLegCache) return; curLegCache = st.i;
     const L = st.L, note = legNote(L);
     $('count').innerHTML = `Leg ${L.ia + 1}→${L.ib + 1}: ${NAME[L.t].toLowerCase()} ${legWord(L)}${note ? ` <small>· ${note}</small>` : ''}`;
+    /* the playback rate: the legs are not drawn to time, each takes the same 1.8 s at Normal (student view calls, 2026-11-15) */
+    $('pace').textContent = `not to time: ${(LEG_DUR / S.speed).toFixed(1)} s a leg`;
     markNow(st.i);
   }
   let curLegCache = -1;
@@ -1376,13 +1381,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   // ---------- controls ----------
   function setPlaying(p) { playing = p; $('play').textContent = p ? 'Pause' : 'Play'; $('play').classList.toggle('primary', !p); }
-  function nextLeg() { phase = (Math.floor(phase) + 1) % S.edges.length + (playing ? 0 : 0.5); curLegCache = -1; drawAll(); }
+  /* paused, Next leg stops on the corner where the next leg starts, not partway along it (student view calls, 2026-11-15) */
+  function nextLeg() { phase = (Math.floor(phase) + 1) % S.edges.length; curLegCache = -1; drawAll(); }
   $('play').addEventListener('click', () => setPlaying(!playing));
   $('next').addEventListener('click', nextLeg);
   /* Reset puts the gas back at corner 1 and keeps every setting, as Reset does across the site; it used to rebuild the cycle, so
      a moved slider or dragged corner snapped back to the cycle's defaults (Reset all restores those) (student view, 2026-11-15) */
   $('reset').addEventListener('click', () => { phase = 0; curLegCache = -1; drawAll(); });
-  document.querySelectorAll('#speedSeg button').forEach((b) => b.addEventListener('click', () => { S.speed = +b.dataset.s; pressed('speedSeg', 's', b.dataset.s); }));
+  document.querySelectorAll('#speedSeg button').forEach((b) => b.addEventListener('click', () => { S.speed = +b.dataset.s; pressed('speedSeg', 's', b.dataset.s); curLegCache = -1; drawAll(); }));
   document.querySelectorAll('#presets button').forEach((b) => b.addEventListener('click', () => { applyPreset(b.dataset.p); drawAll(); }));
   document.querySelectorAll('#cycles button').forEach((b) => b.addEventListener('click', () => { clearPreset(); setCycle(b.dataset.c); drawAll(); }));
   document.querySelectorAll('#dirSeg button').forEach((b) => b.addEventListener('click', () => { setDir(+b.dataset.d); drawAll(); }));

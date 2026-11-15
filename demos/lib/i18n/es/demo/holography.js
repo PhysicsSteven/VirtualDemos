@@ -96,8 +96,8 @@ VDI18N.add('es', 'demo/holography', {
   "Dirección de la luz",
 "Along the reference beam (θ<sub>r</sub>)":
   "A lo largo del haz de referencia (θ<sub>r</sub>)",
-"From the other side (−θ<sub>r</sub>)":
-  "Desde el otro lado (−θ<sub>r</sub>)",
+"From the other side of the normal (−θ<sub>r</sub>)":
+  "Desde el otro lado de la normal (−θ<sub>r</sub>)",
 "Screen or camera focus z":
   "Enfoque de la pantalla o la cámara z",
 "Detector angle":
@@ -258,6 +258,8 @@ VDI18N.add('es', 'demo/holography', {
   "calculado en {#} puntos, separados {#} nm",
 "traced back":
   "trazada hacia atrás",
+"○ object · + images":
+  "○ objeto · + imágenes",
 "up: {#}× scale":
   "arriba: escala {#}×",
 "three object points":
@@ -265,5 +267,7 @@ VDI18N.add('es', 'demo/holography', {
 "developed plate (dark where more light fell)":
   "placa revelada (oscura donde cayó más luz)",
 "three points, {#} to {#} mm":
-  "tres puntos, de {#} a {#} mm"
+  "tres puntos, de {#} a {#} mm",
+"From the other side (−θ<sub>r</sub>)":
+  "Desde el otro lado (−θ<sub>r</sub>)"
 });

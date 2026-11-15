@@ -31,6 +31,8 @@
 select { font: inherit; font-size: 0.86rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 3px 6px; max-width: 100%; }
 .field { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 0.88rem; }
 .field select { flex: 0 1 auto; min-width: 0; }
+/* the Apparatus list on its own line under its label, so "Sand picture in liquid" is not cut off (student view calls, 2026-11-15) */
+.field.stack { flex-direction: column; align-items: stretch; gap: 3px; }
 .kinds { display: flex; flex-direction: column; gap: 8px; }
 .kind { border: 1px solid var(--line); border-radius: 8px; padding: 6px 8px 8px; display: flex; flex-direction: column; gap: 6px; background: var(--canvas); }
 .kind .khead { display: flex; align-items: center; gap: 8px; }
@@ -77,7 +79,7 @@ select { font: inherit; font-size: 0.86rem; color: var(--ink); background: var(-
       </div>
       <div class="setup-card" id="setupCard" role="group" aria-label="Set up the apparatus">
         <span class="card-title">The apparatus</span>
-        <div class="field"><label for="mode">Apparatus</label><select id="mode">
+        <div class="field stack"><label for="mode">Apparatus</label><select id="mode">
           <option value="drum">Rotating drum</option><option value="shaker">Shaken box</option><option value="shear">Shear box</option><option value="slide">Landslide</option><option value="frame">Sand picture in liquid</option></select></div>
         <div data-m="drum"><div class="slider-head"><label for="sRpm">Turning rate</label><output id="oRpm" for="sRpm"></output></div><input type="range" id="sRpm" min="1" max="240" step="1"></div>
         <div data-m="shaker"><div class="slider-head"><label for="sF">Frequency f</label><output id="oF" for="sF"></output></div><input type="range" id="sF" min="5" max="60" step="1"></div>
@@ -533,7 +535,8 @@ select { font: inherit; font-size: 0.86rem; color: var(--ink); background: var(-
       hint: 'The Brazil nut effect: one 12 mm bead starts at the bottom of a box of 3 mm sand, shaken up and down 20 times a second with a peak acceleration 2.5 g. Every time the box drops away, the sand loosens; small grains fall into the space under the big bead, which cannot fall back. It rises to the top though it is the heaviest bead there. Lower Γ below 1 and nothing happens: the box never drops faster than gravity.' },
     shake2: { mode: 'shaker', f: 20, Gamma: 2.5, start: 'mixed', kinds: [K(240, 3, 0.4, 'blue'), K(30, 7, 0.4, 'orange')],
       hint: 'Many big beads in small ones, shaken. The big ones rise and gather in a layer on top.' },
-    shear: { mode: 'shear', U: 0.5, lid: 0.01, start: 'mixed', kinds: [K(150, 3, 0.4, 'blue'), K(40, 6, 0.4, 'orange')],
+    /* opens in ¼ slow motion: at real time the lid's marks pass about 8 times a second and blur (student view calls, 2026-11-15) */
+    shear: { mode: 'shear', U: 0.5, lid: 0.01, speed: 0.25, start: 'mixed', kinds: [K(150, 3, 0.4, 'blue'), K(40, 6, 0.4, 'orange')],
       hint: 'A layer of beads between a rough floor and a rough lid that slides along at 0.5 m/s and rests on the beads with its weight. The box repeats sideways, so it acts like an endless strip. The layers slide over each other (shear), the gaps open and close, and small beads drop down through them: the big beads end up near the lid. This is what happens at the bottom of a landslide or a debris flow.' },
     slide: { mode: 'slide', alpha: 30, start: 'mixed', kinds: [K(320, 4, 0.5, 'sand', { shape: 'angular', mat: 'sand' }), K(50, 9, 0.5, 'black', { shape: 'angular', mat: 'sand' })],
       hint: 'A pile of angular sand with some large stones, held by a gate at the top of a 30° slope. Start lifts the gate. The pile collapses and slides; inside the flow the small grains sink and the big ones rise to the top, where the flow is fastest, so they reach the front first and pile up at the far end. Lower the slope: below the angle of repose of the sand, part of the pile stays behind.' },

@@ -526,7 +526,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const colG = new THREE.Group(); colG.position.set(0.47, 0.02, 0); heat.add(colG);
     const seg = ['trans', 'rot', 'vib', 'work'].map((k) => { const m = new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.07, 1), new THREE.MeshStandardMaterial({ roughness: 0.6 })); m.geometry.translate(0, 0, 0.5); m.castShadow = true; colG.add(m);
       const lab = VD3K.label(' ', { size: 0.022, color: '#ffffff', bg: 'rgba(33,28,21,0.72)' }); colG.add(lab); return { k, m, lab }; });
-    const colTitle = VD3K.label('where the heat went', { size: 0.02, color: '#968c7f' }); colG.add(colTitle);
+    /* the column's title as large as its share labels, on the same backing (student view calls, 2026-11-15) */
+    const colTitle = VD3K.label('where the heat went', { size: 0.026, color: '#ffffff', bg: 'rgba(33,28,21,0.72)', weight: 700 }); colG.add(colTitle);
     const glass = VD3K.glass(S3, { r: 0.04, len: 0.42, axis: 'z', ends: false, opacity: 0.08 }); glass.position.z = 0.21; colG.add(glass);
     /* --- Rüchardt --- */
     const ru = new THREE.Group();
@@ -666,7 +667,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   let rulerAt = null;   /* the cylinder's scale, for the ruler */
   function redraw() { if (!T || !W) return; if (on3d && G3) render3(); else { ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H); (S.view === 'heat' ? drawHeat : S.view === 'mol' ? drawSim : drawRu)(); } drawCurve(); readouts(); clock(); }
-  function clock() { $('clock').textContent = S.view === 'mol' ? `t = ${f(molPs(), 2)} ps` : `t = ${f(S.view === 'heat' ? S.heat.t : S.ru.t, S.view === 'heat' ? 0 : 2)} s`; }
+  /* the molecules' playback rate beside their clock, 1 s here = 0.5 ps at 1x (student view calls, 2026-11-15) */
+  function clock() { $('clock').textContent = S.view === 'mol' ? `t = ${f(molPs(), 2)} ps · 1 s = ${f(MOL_PS * S.speed, 1)} ps` : `t = ${f(S.view === 'heat' ? S.heat.t : S.ru.t, S.view === 'heat' ? 0 : 2)} s`; }
 
   // ---------- readouts ----------
   function readouts() {
@@ -739,7 +741,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function drop() { Object.assign(S.ru, { t: 0, dropped: true, swings: [], lastCross: null, lastPeriod: null }); setRun(true); }
   for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
   $('viewSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-v]'); if (b && b.dataset.v !== S.view) setView(b.dataset.v); });
-  $('speedSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-s]'); if (b) { S.speed = +b.dataset.s; sync(); } });
+  $('speedSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-s]'); if (b) { S.speed = +b.dataset.s; sync(); clock(); } });
   $('go').addEventListener('click', () => { if (S.view === 'ru' && !S.ru.dropped) { drop(); return; } setRun(!S.run); });
   $('restart').addEventListener('click', () => { if (S.view === 'mol') molReset(); else if (S.view === 'heat') { S.heat.Q = 0; S.heat.t = 0; } else Object.assign(S.ru, { t: 0, dropped: false, swings: [], lastCross: null, lastPeriod: null }); setRun(false); redraw(); });
   $('selGas').addEventListener('change', (e) => { S.heat.gas = e.target.value; if (S.heat.gas === 'mystery') newGas(true); heatChanged(); });

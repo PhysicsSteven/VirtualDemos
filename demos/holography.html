@@ -111,7 +111,7 @@
             <span class="lab">Light the plate</span>
             <div class="seg" role="group" aria-label="Direction of the light" id="sideSeg">
               <button type="button" data-s="same" aria-pressed="true">Along the reference beam (θ<sub>r</sub>)</button>
-              <button type="button" data-s="other" aria-pressed="false">From the other side (−θ<sub>r</sub>)</button>
+              <button type="button" data-s="other" aria-pressed="false">From the other side of the normal (−θ<sub>r</sub>)</button>
             </div>
           </div>
           <div><div class="slider-head"><label for="sZs">Screen or camera focus z</label><output id="oZs" class="mono" for="sZs"></output></div><input type="range" id="sZs" min="-32" max="32" step="0.05"></div>
@@ -572,7 +572,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* the light falling on the plate, from the left */
     const a = thi() * RAD, L = 46 * p, y0 = G.X(PLATE_W / 2), y1 = G.X(-PLATE_W / 2), ym = (y0 + y1) / 2;
     arrow(ctx, pz - L * Math.cos(a) - 16 * p, ym + L * Math.sin(a), pz - 16 * p, ym, rgba(col, 1), 3);
-    label(ctx, `λ₂ = ${S.rc.lam2} nm at ${f(thi(), 1)}°`, pz - L - 16 * p, ym + L * Math.sin(a) + (thi() >= 0 ? 18 : -10) * p, { align: 'right', size: 10.5, color: rgba(col, 1) });
+    /* on a phone the light's label ran off the left of the map: shorter there, and never left of the map's edge (student view calls, 2026-11-15) */
+    const lamT = W < 560 ? `λ₂ ${S.rc.lam2} nm, ${f(thi(), 1)}°` : `λ₂ = ${S.rc.lam2} nm at ${f(thi(), 1)}°`;
+    ctx.font = `${10.5 * p}px ${T.mono}`; const lamW = ctx.measureText(lamT).width;
+    label(ctx, lamT, Math.max(pz - L - 16 * p, zpx0 + 6 * p + lamW), ym + L * Math.sin(a) + (thi() >= 0 ? 18 : -10) * p, { align: 'right', size: 10.5, color: rgba(col, 1) });
     plateGlass(ctx, pz, y0, y1, true);
     /* where the object was, and (Blind off) where thin hologram ray tracing puts the images */
     if (r.obj !== 'plane') for (const q of objectPoints(r.obj, r.zo * 1e-3)) {
@@ -580,7 +583,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       if (!S.blind) for (const sg of [1, -1]) { const im = pointImage(r.lam1 * 1e-9, r.thr, q, S.rc.lam2 * 1e-9, thi(), sg); if (!im || Math.abs(im.z) > G.zr || Math.abs(im.x) > G.xr) continue;
         const ix = G.Z(im.z), iy = G.X(im.x); ctx.strokeStyle = T.accent; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(ix - 7 * p, iy); ctx.lineTo(ix + 7 * p, iy); ctx.moveTo(ix, iy - 7 * p); ctx.lineTo(ix, iy + 7 * p); ctx.stroke(); }
     }
-    if (r.obj !== 'plane') { const q = objectPoints(r.obj, r.zo * 1e-3)[r.obj === 'one' ? 0 : 2]; label(ctx, '○ where the object was' + (S.blind ? '' : ' · + predicted images'), zpx0 + 6 * p, G.X(G.xr) + 34 * p, { size: 10, color: T.muted }); }
+    if (r.obj !== 'plane') { const q = objectPoints(r.obj, r.zo * 1e-3)[r.obj === 'one' ? 0 : 2]; /* on a phone the full legend ran across the plate and over the image marks: shorter there (student view calls, 2026-11-15) */
+      label(ctx, (W < 560 ? '○ object' : '○ where the object was') + (S.blind ? '' : W < 560 ? ' · + images' : ' · + predicted images'), zpx0 + 6 * p, G.X(G.xr) + 34 * p, { size: 10, color: T.muted }); }
     /* the screen or camera focus */
     const zs = G.Z(S.rc.zs * 1e-3); ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 1.4; ctx.setLineDash([6, 4]); ctx.beginPath(); ctx.moveTo(zs, G.X(G.xr)); ctx.lineTo(zs, G.X(-G.xr)); ctx.stroke(); ctx.setLineDash([]);
     label(ctx, S.rc.zs < 0 ? `camera focused ${f(-S.rc.zs, 2)} mm behind the plate` : `screen ${f(S.rc.zs, 2)} mm past the plate`, zs, G.X(-G.xr) + 20 * p, { align: S.rc.zs > 18 ? 'right' : S.rc.zs < -18 ? 'left' : 'center', size: 10.5, color: '#fff' });

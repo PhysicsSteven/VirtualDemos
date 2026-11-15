@@ -127,7 +127,6 @@ VDI18N.add('en', 'demo/granular-flow', [
 "<span>Black {#} mm</span><span>White {#} mm</span>",
 "Settling speed, black {#} mm steel",
 "Settling speed, white {#} mm glass",
-"Close",
 "{#} × real time",
 "Slow motion: with {#} grains the computer manages {#} × real time. Every time and speed shown is the real one in the grains' world; only the playback is slowed.",
 "<span>Blue {#} mm</span><span>Orange {#} mm</span><span>Yellow {#} mm</span>",

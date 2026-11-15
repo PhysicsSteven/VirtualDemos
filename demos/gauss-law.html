@@ -180,6 +180,7 @@ table.rows .empty td { color: var(--muted); font-family: var(--font-ui); white-s
           <button type="button" data-v="slice" aria-pressed="true">Slice</button>
         </div>
         <button type="button" class="btn" id="play">Pause</button>
+        <button type="button" class="btn" id="reset" title="Put the moving charge or surface back where this run started; settings stay">Reset</button>
         <button type="button" class="btn" id="drawBtn" aria-pressed="false" hidden>Draw a surface</button>
         <span class="headline mono" id="headline"></span>
       </div>
@@ -187,7 +188,7 @@ table.rows .empty td { color: var(--muted); font-family: var(--font-ui); white-s
         <div class="pane" id="dPane">
           <canvas id="dCan" tabindex="0" aria-label="Slice through the Gaussian surface and the charges. Drag charges, drag inside the surface to move it, drag its edge or grips to resize it. Keys: N selects the next object, arrow keys move it, plus and minus change a charge or the size, Delete removes a charge, space plays or pauses."></canvas>
           <canvas id="gCan" hidden aria-hidden="true"></canvas>
-          <canvas id="oCan" tabindex="0" hidden aria-label="3D view of the Gaussian surface and the charges. Drag empty space to turn the view, use the wheel or pinch to zoom, double click to reset it. Drag a charge or a grip to move or resize. Keys: N selects the next object, arrow keys move it or change r, plus and minus change a charge or the size, Delete removes a charge, space plays or pauses, the bracket keys turn the view, Page Up and Page Down tilt it, 0 resets it."></canvas>
+          <canvas id="oCan" tabindex="0" hidden aria-label="3D view of the Gaussian surface and the charges. Drag empty space to turn the view, use the wheel or pinch to zoom, double click to reset it. Drag a charge or a grip to move or resize. Keys: N selects the next object, arrow keys move it or change r, plus and minus zoom, Delete removes a charge, space plays or pauses, the bracket keys turn the view, Page Up and Page Down tilt it, 0 resets it."></canvas>
           <p class="toast" id="toast" hidden></p>
         </div>
         <div class="pane" id="pPane" hidden>
@@ -1674,6 +1675,7 @@ table.rows .empty td { color: var(--muted); font-family: var(--font-ui); white-s
     F.ver++; F.qver++; markNum();
     setMode(p.mode);
     setRunning(!reduce);
+    takeHome();
   }
   function setSurf(sf, quiet) {
     if (F.surf !== sf && !quiet) {
@@ -1759,15 +1761,32 @@ table.rows .empty td { color: var(--muted); font-family: var(--font-ui); white-s
       const c = (F.sel && F.sel.kind === 'q' && qById(F.sel.id)) || F.charges[0];
       if (c) { F.motion = { type: 'lis', id: c.id, A: 1.6, B: 1.6 }; anchorMotion(); } else r = false;
     }
+    const was = running;
     running = r; playBtn.textContent = r ? 'Pause' : 'Play'; playBtn.classList.toggle('primary', !r);
     if (!r) { if (mode === 'sym') { setSym('r', symR()); } else markNum(); }
+    if (r && !was && (!home || homeKey() !== pausedKey)) takeHome();   // changed while paused: this is the new start
+    if (!r && was) pausedKey = homeKey();
   }
+  /* Reset: put the moving charges (or the swept Gaussian surface) back where the run started, keeping every setting;
+     the start is the setup as picked, or as the student left it before pressing Play (student view calls, 2026-11-15) */
+  let home = null, pausedKey = '';
+  const homeKey = () => mode + '|' + (mode === 'flux' ? F.charges.map((c) => [c.id, c.x, c.y, c.q].join(',')).join(';') : Ysym.kind + ':' + symR());
+  function takeHome() { home = { mode, kind: Ysym.kind, q: F.charges.map((c) => [c.id, c.x, c.y]), r: symR() }; pausedKey = homeKey(); }
+  function resetRun() {
+    if (home && home.mode === mode) {
+      if (mode === 'flux') { for (const [id, x, y] of home.q) { const c = qById(id); if (c) { c.x = x; c.y = y; } } chargesChanged(); }
+      else if (home.kind === Ysym.kind) setSym('r', home.r);
+    }
+    if (mode === 'flux') anchorMotion(); else symAnchor();
+    if (!running) pausedKey = homeKey();
+  }
+  $('reset').addEventListener('click', resetRun);
   playBtn.addEventListener('click', () => setRunning(!running));
   const userPause = () => { if (running) setRunning(false); };
 
   // ---------- rail controls ----------
   for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
-  for (const b of document.querySelectorAll('#modeSeg button')) b.addEventListener('click', () => { if (b.dataset.m !== mode) { setMode(b.dataset.m); if (mode === 'sym') symAnchor(); else anchorMotion(); } });
+  for (const b of document.querySelectorAll('#modeSeg button')) b.addEventListener('click', () => { if (b.dataset.m !== mode) { setMode(b.dataset.m); if (mode === 'sym') symAnchor(); else anchorMotion(); takeHome(); } });
   for (const b of document.querySelectorAll('#surfSeg button')) b.addEventListener('click', () => setSurf(b.dataset.s));
   $('sR').addEventListener('input', (e) => { F.sph.R = +e.target.value; surfChanged(); });
   $('sW').addEventListener('input', (e) => { F.rect.w = +e.target.value; surfChanged(); });
@@ -2954,6 +2973,8 @@ void main() {
     if (k === '[' || k === ']') { orbit.th += (k === ']' ? -1 : 1) * 0.12; e.preventDefault(); return; }
     if (k === 'PageUp' || k === 'PageDown') { orbit.ph = clamp(orbit.ph + (k === 'PageDown' ? 0.1 : -0.1), 0.12, 1.75); e.preventDefault(); return; }
     if (k === '0') { Object.assign(orbit, ORBIT0); e.preventDefault(); return; }
+    /* + and − zoom the 3D view about its center, as in every 3D view on the site; the Slice view's keys still change a charge or size (student view calls, 2026-11-15) */
+    if (k === '+' || k === '=' || k === '-' || k === '_') { orbit.zoom = clamp(orbit.zoom * ((k === '+' || k === '=') ? 1 / 1.15 : 1.15), 0.55, 2.2); e.preventDefault(); return; }
     keyDrawing(e);
   });
   function setView3d(on) {
@@ -3053,6 +3074,6 @@ void main() {
 })();
 </script>
 <script>/* the shared control panel (demos/lib/vdpanel.js): the time controls in one group at the left of the strip */
-if (window.VD && VD.panel) VD.panel({ reset: false, step: true });</script>
+if (window.VD && VD.panel) VD.panel({ reset: '#reset', step: true });</script>
 </body>
 </html>

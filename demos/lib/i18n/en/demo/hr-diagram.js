@@ -147,7 +147,6 @@ VDI18N.add('en', 'demo/hr-diagram', [
 "ring: within {#} pc",
 "ring: {#} brightest",
 "ring: both",
-"Close",
 "Color B − V, hotter to the left",
 "Surface temperature (K), hot on the left"
 ]);
