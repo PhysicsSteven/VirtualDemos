@@ -82,6 +82,7 @@
     Ssun:   [1361, 'W/m²', 'total solar irradiance at 1 au (nominal)', 'IAU 2015 B3'],
     MbolSun:[4.74, 'mag', 'solar absolute bolometric magnitude', 'IAU 2015 B2'],
     MVsun:  [4.81, 'mag', 'solar absolute V magnitude', 'Willmer 2018'],
+    GMmoon: [4.9028001e12, 'm³/s²', 'Moon mass parameter', 'JPL DE430 (Folkner et al. 2014)'],
     GMearth:[3.986004e14, 'm³/s²', 'Earth mass parameter (nominal)', 'IAU 2015 B3'],
     GMearthWGS:[3.986004418e14, 'm³/s²', 'Earth mass parameter with the atmosphere, the value GPS orbits use', 'WGS 84 (NGA.STND.0036, 2014)'],
     Mearth: [3.986004e14 / 6.67430e-11, 'kg', 'Earth mass, GM/G', 'IAU 2015 B3 with CODATA 2022 G'],

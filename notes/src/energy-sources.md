@@ -16,7 +16,7 @@ Students need units of energy (J, kWh) and the idea of efficiency. The chart is 
 
 ## Running it in class
 
-1. **Rank first.** Blind on, a household's 30 kWh for a day as electricity: ask for a ranking of the sources by mass needed. Reveal: 3.8 mg of uranium, 6.7 kg of gasoline, 150 kg of batteries, 120 tonnes of water through a 100 m dam, 3600 tonnes of air at 10 m/s.
+1. **Rank first.** Blind on, a household's 30 kWh for a day as electricity: ask for a ranking of the sources by mass needed. Reveal: 3.8 mg of uranium, 6.7 kg of gasoline, 150 kg of batteries, 120 tonnes of water through a 100 m dam, 2,400 tonnes of air at 10 m/s.
 2. **Heat vs electricity.** Uncheck "Delivered as electricity": every fuel mass drops by the factor 1/0.35. The battery and the renewables do not change.
 3. **TNT vs food.** TNT 74 kg, food fat 8.2 kg for the same energy (as electricity). Discuss power: energy per second, not per kilogram.
 4. **Wind speed.** Double the wind speed and the air needed drops by 4 (½v² per kg); per second through a rotor it delivers 8 times the power (more air arrives too).
@@ -45,5 +45,5 @@ Students need units of energy (J, kWh) and the idea of efficiency. The chart is 
 - Energy per kilogram: typical higher heating values (natural gas 55, gasoline 46, coal 27, dry wood 18 MJ/kg; samples vary). Food from the Atwater factors 9 and 4 kcal/g. TNT 4.184 MJ/kg by definition. Lithium ion cells about 200 Wh/kg.
 - Uranium: 200 MeV per fission (thermal fission of U-235 releases about 200 MeV in total, some of it to neutrinos), 1 kg = (1000/235) mol of nuclei, all fissioned. Real fuel is a few percent U-235 and is not fully burned.
 - Fuels delivering electricity are divided by the power station efficiency; batteries deliver electricity directly.
-- Hydro: gh per kilogram at 90% turbine efficiency. Wind: the kinetic energy ½v² per kilogram of air passing through the rotor times the Betz limit 16/27. Solar: 20% panels at the average irradiance set on the slider, including nights.
+- Hydro: gh per kilogram at 90% turbine efficiency. Wind: at the Betz limit the air crosses the rotor at 2v/3 and leaves at v/3, so each kilogram passing through the rotor gives up 8/9 of its kinetic energy ½v² (the Betz 16/27 is the share of the power the free wind carries through the rotor's area). Solar: 20% panels at the average irradiance set on the slider, including nights.
 - No national energy statistics are used.

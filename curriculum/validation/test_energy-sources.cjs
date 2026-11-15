@@ -10,5 +10,5 @@ group('uranium: 200 MeV per fission gives 8.2 × 10¹³ J/kg, three million time
 group('masses: 1 kWh of heat is 78 g of gasoline; as electricity at 35% it takes 224 g', () => {
   near(c.massNeeded(c.KWH, 46e6, 'heat', false, 0.35), 0.07826, 1e-3); near(c.massNeeded(c.KWH, 46e6, 'heat', true, 0.35), 0.2236, 1e-3); near(c.massNeeded(c.KWH, 0.7e6, 'elec', true, 0.35), 5.143, 1e-3);
 });
-group('hydro, wind, solar', () => { near(c.hydroPerKg(100), 882.9, 1e-12); near(c.windPerKg(10), 50 * 16 / 27, 1e-12); near(c.solarArea(30 * c.KWH, 200), 30 * c.KWH / (40 * 86400), 1e-12); });
+group('hydro, wind, solar', () => { near(c.hydroPerKg(100), 882.9, 1e-12); near(c.windPerKg(10), 50 * 8 / 9, 1e-12); near(30 * c.KWH / c.windPerKg(10) / 1000, 2430, 1e-12); near(c.solarArea(30 * c.KWH, 200), 30 * c.KWH / (40 * 86400), 1e-12); });
 console.log(`${n} energy sources test groups passed`);

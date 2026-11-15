@@ -56,7 +56,7 @@ On a real bench, a fast wheel stores a lot of energy. Keep fingers, hair and loo
 
 **Part 1: spin scan, steady start.** Use the solid disk with $$d = 0.10\ \text{m}$$ and the axle level. Start it precessing at the steady rate, so there is no dip or wobble. Measure the period at 1000, 1500, 2000, 3000, 4000 and 6000 rpm. Wait for the gate to show a period for each spin before you capture it. Send these readings to the worksheet as one series, then clear the demo's readings.
 
-**Part 2: released from rest.** Repeat the same six spins with the same wheel and $$d$$, but release the wheel from rest. Watch the tilt trace under the picture for the dip and the wobble at each spin. Send this series, then clear.
+**Part 2: released from rest.** Repeat the same six spins with the same wheel and $$d$$, but release the wheel from rest. Watch the tilt trace under the picture for the dip and the wobble at each spin. Capture the first period the gate shows at each spin, and write down the next two periods as well: at low spin they change from turn to turn. Send this series, then clear.
 
 **Part 3: lever arm scan.** Go back to the steady start, solid disk, level axle, 3000 rpm. Measure the period at $$d$$ = 0.05, 0.08, 0.11, 0.14, 0.17 and 0.20 m. Send this series, then clear.
 

@@ -23,6 +23,6 @@ VDI18N.add('en', 'notes/energy-sources', [
 "Energy per kilogram: typical higher heating values (natural gas {#}, gasoline {#}, coal {#}, dry wood {#} MJ/kg; samples vary). Food from the Atwater factors {#} and {#} kcal/g. TNT {#} MJ/kg by definition. Lithium ion cells about {#} Wh/kg.",
 "Uranium: {#} MeV per fission (thermal fission of U-{#} releases about {#} MeV in total, some of it to neutrinos), {#} kg = ({#}/{#}) mol of nuclei, all fissioned. Real fuel is a few percent U-{#} and is not fully burned.",
 "Fuels delivering electricity are divided by the power station efficiency; batteries deliver electricity directly.",
-"Hydro: gh per kilogram at {#}% turbine efficiency. Wind: the kinetic energy ½v² per kilogram of air passing through the rotor times the Betz limit {#}/{#}. Solar: {#}% panels at the average irradiance set on the slider, including nights.",
+"Hydro: gh per kilogram at {#}% turbine efficiency. Wind: at the Betz limit the air crosses the rotor at 2v/{#} and leaves at v/{#}, so each kilogram passing through the rotor gives up {#}/{#} of its kinetic energy ½v² (the Betz {#}/{#} is the share of the power the free wind carries through the rotor's area). Solar: {#}% panels at the average irradiance set on the slider, including nights.",
 "No national energy statistics are used."
 ]);

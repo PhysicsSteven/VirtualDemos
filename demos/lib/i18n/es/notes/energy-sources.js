@@ -46,8 +46,10 @@ VDI18N.add('es', 'notes/energy-sources', {
   "Uranio: {#} MeV por fisión (la fisión térmica de U-{#} libera unos {#} MeV en total, parte de ellos a neutrinos), {#} kg = ({#}/{#}) mol de núcleos, todos fisionados. El combustible real tiene un pequeño porcentaje de U-{#} y no se quema por completo.",
 "Fuels delivering electricity are divided by the power station efficiency; batteries deliver electricity directly.":
   "Los combustibles que entregan electricidad se dividen entre la eficiencia de la central eléctrica; las baterías entregan electricidad directamente.",
-"Hydro: gh per kilogram at {#}% turbine efficiency. Wind: the kinetic energy ½v² per kilogram of air passing through the rotor times the Betz limit {#}/{#}. Solar: {#}% panels at the average irradiance set on the slider, including nights.":
-  "Hidroeléctrica: gh por kilogramo con una eficiencia de turbina de {#}%. Eólica: la energía cinética ½v² por kilogramo de aire que pasa por el rotor por el límite de Betz {#}/{#}. Solar: paneles de {#}% con la irradiancia promedio fijada en el deslizador, incluidas las noches.",
+"Hydro: gh per kilogram at {#}% turbine efficiency. Wind: at the Betz limit the air crosses the rotor at 2v/{#} and leaves at v/{#}, so each kilogram passing through the rotor gives up {#}/{#} of its kinetic energy ½v² (the Betz {#}/{#} is the share of the power the free wind carries through the rotor's area). Solar: {#}% panels at the average irradiance set on the slider, including nights.":
+  "Hidroeléctrica: gh por kilogramo con {#}% de eficiencia de turbina. Eólica: en el límite de Betz el aire cruza el rotor a 2v/{#} y sale a v/{#}, así que cada kilogramo que pasa por el rotor cede {#}/{#} de su energía cinética ½v² (el {#}/{#} de Betz es la fracción de la potencia que el viento libre lleva a través del área del rotor). Solar: paneles al {#}% con la irradiancia promedio fijada en el control deslizante, incluidas las noches.",
 "No national energy statistics are used.":
-  "No se usan estadísticas nacionales de energía."
+  "No se usan estadísticas nacionales de energía.",
+"Hydro: gh per kilogram at {#}% turbine efficiency. Wind: the kinetic energy ½v² per kilogram of air passing through the rotor times the Betz limit {#}/{#}. Solar: {#}% panels at the average irradiance set on the slider, including nights.":
+  "Hidroeléctrica: gh por kilogramo con una eficiencia de turbina de {#}%. Eólica: la energía cinética ½v² por kilogramo de aire que pasa por el rotor por el límite de Betz {#}/{#}. Solar: paneles de {#}% con la irradiancia promedio fijada en el deslizador, incluidas las noches."
 });
