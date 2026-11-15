@@ -224,6 +224,8 @@ VDI18N.add('es', 'demo/holography', {
   "La placa tiene el holograma hecho en la vista Registrar: {#} nm, referencia a {#}°, tres puntos a entre {#} y {#} mm. Cámbialo ahí.",
 "Image of the middle point, predicted":
   "Imagen del punto central, predicha",
+"λ₂ = {#} nm at −{#}°":
+  "λ₂ = {#} nm a −{#}°",
 "The simplest hologram: the object wave is a plane wave straight on (θo = {#}, from a mirror), the reference comes in at {#}°, both {#} nm. The plate records straight fringes, d = λ/sin {#}° = {#} μm apart: a diffraction grating. Light it again along the reference and three beams leave it: straight through, the image beam (a copy of the object wave, straight on) and the conjugate. Find each with the detector. Then change the wavelength: the image beam swings, as the grating equation says.":
   "El holograma más sencillo: la onda objeto es una onda plana de frente (θo = {#}, de un espejo), la referencia llega a {#}°, ambas de {#} nm. La placa registra franjas rectas, separadas d = λ/sin {#}° = {#} μm: una rejilla de difracción. Ilumínala otra vez a lo largo de la referencia y salen tres haces: el que pasa derecho, el haz imagen (una copia de la onda objeto, de frente) y el conjugado. Encuentra cada uno con el detector. Luego cambia la longitud de onda: el haz imagen gira, como dice la ecuación de la rejilla.",
 "The plate holds the hologram made in the Record view: {#} nm, reference at {#}°, a plane object wave at {#}°. Change it there.":
@@ -246,14 +248,16 @@ VDI18N.add('es', 'demo/holography', {
   "El holograma del punto iluminado solo por el haz de referencia (el objeto ya no está). Detrás de la placa la luz se traza hacia atrás: una cámara enfocada {#} mm detrás de la placa ve un punto nítido exactamente donde estaba el objeto. Esa es la imagen virtual. Mueve el enfoque de la cámara y observa cómo se difumina el punto. El haz que pasa derecho y el haz conjugado salen a otros ángulos.",
 "The same hologram lit from the other side of the normal, at −{#}°. Now the conjugate wave is a copy of the object wave run backwards: it converges to a real image {#} mm past the plate, where a screen catches a sharp point. The image beam goes off steeply instead.":
   "El mismo holograma iluminado desde el otro lado de la normal, a −{#}°. Ahora la onda conjugada es una copia de la onda objeto recorrida hacia atrás: converge en una imagen real {#} mm más allá de la placa, donde una pantalla capta un punto nítido. El haz imagen sale en cambio muy inclinado.",
-"λ₂ = {#} nm at −{#}°":
-  "λ₂ = {#} nm a −{#}°",
 "Three points at {#}, {#} and {#} mm recorded at {#} nm, viewed with {#} nm light. The fringes are the same, but each bends the shorter wavelength less, so the images come out farther from the plate (about {#}/{#} times as far) and shifted sideways. A white light source would smear the image into a rainbow, which is why a thin hologram is viewed with the laser it was made with.":
   "Tres puntos a {#}, {#} y {#} mm registrados a {#} nm, vistos con luz de {#} nm. Las franjas son las mismas, pero cada una desvía menos la longitud de onda más corta, así que las imágenes quedan más lejos de la placa (unas {#}/{#} veces más lejos) y desplazadas hacia un lado. Una fuente de luz blanca convertiría la imagen en un arcoíris borroso, por eso un holograma delgado se observa con el láser con el que se hizo.",
 "z = −{#} mm, x = −{#} mm (virtual)":
   "z = −{#} mm, x = −{#} mm (virtual)",
+"Close":
+  "Cerrar",
 "computed on {#} points, {#} nm apart":
   "calculado en {#} puntos, separados {#} nm",
+"traced back":
+  "trazada hacia atrás",
 "up: {#}× scale":
   "arriba: escala {#}×",
 "three object points":

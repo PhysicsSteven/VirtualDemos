@@ -1379,7 +1379,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function nextLeg() { phase = (Math.floor(phase) + 1) % S.edges.length + (playing ? 0 : 0.5); curLegCache = -1; drawAll(); }
   $('play').addEventListener('click', () => setPlaying(!playing));
   $('next').addEventListener('click', nextLeg);
-  $('reset').addEventListener('click', () => { phase = playing ? 0 : 0.5; if (S.preset) applyPreset(S.preset); else setCycle(S.cycle); drawAll(); });
+  /* Reset puts the gas back at corner 1 and keeps every setting, as Reset does across the site; it used to rebuild the cycle, so
+     a moved slider or dragged corner snapped back to the cycle's defaults (Reset all restores those) (student view, 2026-11-15) */
+  $('reset').addEventListener('click', () => { phase = 0; curLegCache = -1; drawAll(); });
   document.querySelectorAll('#speedSeg button').forEach((b) => b.addEventListener('click', () => { S.speed = +b.dataset.s; pressed('speedSeg', 's', b.dataset.s); }));
   document.querySelectorAll('#presets button').forEach((b) => b.addEventListener('click', () => { applyPreset(b.dataset.p); drawAll(); }));
   document.querySelectorAll('#cycles button').forEach((b) => b.addEventListener('click', () => { clearPreset(); setCycle(b.dataset.c); drawAll(); }));

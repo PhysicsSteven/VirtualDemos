@@ -566,7 +566,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* the traced back half: where the light seems to come from */
     const pz = G.Z(0); ctx.fillStyle = 'rgba(20,17,12,0.32)'; ctx.fillRect(zpx0, G.X(G.xr), pz - zpx0, G.X(-G.xr) - G.X(G.xr));
     ctx.strokeStyle = 'rgba(223,214,202,0.35)'; ctx.setLineDash([4, 4]); ctx.strokeRect(zpx0 + 0.5, G.X(G.xr) + 0.5, pz - zpx0 - 1, G.X(-G.xr) - G.X(G.xr) - 1); ctx.setLineDash([]);
-    label(ctx, 'traced back: where the light seems to come from', zpx0 + 6 * p, G.X(G.xr) + 16 * p, { size: 10 });
+    /* on a phone the long label ran past the plate into the light leaving it (student view, 2026-11-15) */
+    label(ctx, W >= 560 ? 'traced back: where the light seems to come from' : 'traced back', zpx0 + 6 * p, G.X(G.xr) + 16 * p, { size: 10 });
     if (W >= 560) label(ctx, 'light leaving the plate', pz + 12 * p, G.X(G.xr) + 16 * p, { size: 10 });
     /* the light falling on the plate, from the left */
     const a = thi() * RAD, L = 46 * p, y0 = G.X(PLATE_W / 2), y1 = G.X(-PLATE_W / 2), ym = (y0 + y1) / 2;
@@ -595,14 +596,17 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const sc = screenNow(), l = A.x + 12 * p, rr = A.x + A.w - 10 * p, t = A.y + 26 * p, b = A.y + A.h - 22 * p, xr = 9e-3, X = (x) => l + (x + xr) / (2 * xr) * (rr - l);
     let mx = sc.peakI || 1; const Y = (v) => b - Math.sqrt(v / mx) * (b - t);
     c.strokeStyle = 'rgba(223,214,202,0.25)'; c.beginPath(); c.moveTo(l, b); c.lineTo(rr, b); c.stroke();
-    c.strokeStyle = rgba(col, 1); c.lineWidth = 1.2; c.beginPath(); const npx = Math.round(rr - l);
-    for (let i = 0; i < npx; i++) { const x0 = -xr + i / npx * 2 * xr, n0 = Math.round(x0 / sc.dx + sc.N / 2), n1 = Math.round((x0 + 2 * xr / npx) / sc.dx + sc.N / 2); let v = 0; for (let n = n0; n < n1; n++) if (sc.I[n] > v) v = sc.I[n]; i ? c.lineTo(l + i, Y(v)) : c.moveTo(l + i, Y(v)); }
+    c.strokeStyle = rgba(col, 1); c.lineWidth = 1.2; c.beginPath(); const npx = Math.round(rr - l), ink = [];
+    for (let i = 0; i < npx; i++) { const x0 = -xr + i / npx * 2 * xr, n0 = Math.round(x0 / sc.dx + sc.N / 2), n1 = Math.round((x0 + 2 * xr / npx) / sc.dx + sc.N / 2); let v = 0; for (let n = n0; n < n1; n++) if (sc.I[n] > v) v = sc.I[n]; ink.push(b - Y(v)); i ? c.lineTo(l + i, Y(v)) : c.moveTo(l + i, Y(v)); }
     c.stroke();
+    /* the zoom box goes on the emptier side of the plot, so it never hides a beam (student view, 2026-11-15) */
+    const inkIn = (a, z) => { let m = 0; for (let i = Math.max(0, Math.floor(a)); i < Math.min(ink.length, z); i++) m += ink[i]; return m; };
     txt(c, S.rc.zs < 0 ? `camera focused at z = ${f(S.rc.zs, 2)} mm (√ scale)` : `screen at z = ${f(S.rc.zs, 2)} mm (√ scale)`, l, A.y + 16 * p, { size: 10.5, color: T.muted });
-    for (let x = -8; x <= 8; x += 4) txt(c, `${String(x).replace('-', '−')}`, X(x * 1e-3), b + 14 * p, { size: 9.5, align: 'center', color: T.muted });
+    /* no tick label at +8: it ran into the unit and read "x8(mm)" (student view, 2026-11-15) */
+    for (let x = -8; x <= 4; x += 4) txt(c, `${String(x).replace('-', '−')}`, X(x * 1e-3), b + 14 * p, { size: 9.5, align: 'center', color: T.muted });
     txt(c, 'x (mm)', rr, b + 14 * p, { size: 9.5, align: 'right', color: T.muted });
     /* zoom on the brightest point: ±40 μm */
-    const zw = Math.min(A.w * 0.36, 170 * p), zh = (b - t) * 0.62, zx = rr - zw, zy = t, half = 40e-6;
+    const zw = Math.min(A.w * 0.36, 170 * p), zh = (b - t) * 0.62, zx = inkIn(npx - zw, npx) > inkIn(0, zw) ? l : rr - zw, zy = t, half = 40e-6;
     c.fillStyle = 'rgba(29,24,17,0.92)'; c.fillRect(zx, zy, zw, zh); c.strokeStyle = 'rgba(223,214,202,0.4)'; c.strokeRect(zx + 0.5, zy + 0.5, zw - 1, zh - 1);
     c.strokeStyle = rgba(col, 1); c.lineWidth = 1.4; c.beginPath();
     for (let i = 0; i <= 120; i++) { const x = sc.peakX - half + i / 120 * 2 * half, fn = x / sc.dx + sc.N / 2, n = Math.floor(fn), u = fn - n, v = sc.I[n] * (1 - u) + sc.I[n + 1] * u, yy = zy + zh - 4 - v / mx * (zh - 14 * p); i ? c.lineTo(zx + i / 120 * zw, yy) : c.moveTo(zx, yy); }
@@ -619,10 +623,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       for (const [k, nm] of [['zero', 'zero order'], ['image', 'image'], ['conj', 'conjugate']]) { if (!isFinite(ba[k])) continue; const x = TH(ba[k]); c.strokeStyle = T.accent; c.beginPath(); c.moveTo(x, t2 + 4); c.lineTo(x, t2 + 14); c.stroke(); txt(c, nm, x, t2 + 2, { size: 9, align: 'center', color: T.accent }); } }
     const dx = TH(S.rc.det); c.strokeStyle = '#fff'; c.lineWidth = 1.4; c.setLineDash([5, 3]); c.beginPath(); c.moveTo(dx, t2); c.lineTo(dx, b2); c.stroke(); c.setLineDash([]);
     /* zoom: ±1° around the detector, 0.01° bins */
-    const zw2 = Math.min(B.w * 0.36, 170 * p), zh2 = (b2 - t2) * 0.62, zx2 = l2 + 4 * p, zy2 = t2 + 10 * p, Z1 = angleHist(RECON, S.rc.det - 1, S.rc.det + 1, 0.01); let zm = 0; for (const v of Z1) if (v > zm) zm = v;
+    let inkL = 0, inkR = 0; const span = Math.min(B.w * 0.36, 170 * p) / (r2 - l2) * 180;   /* the zoom box goes on the emptier side (student view, 2026-11-15) */
+    for (let i = 0; i < HIST.length; i++) { const a = -90 + i * 0.1; if (a < -90 + span) inkL += lg(HIST[i]); else if (a > 90 - span) inkR += lg(HIST[i]); }
+    const zw2 = Math.min(B.w * 0.36, 170 * p), zh2 = (b2 - t2) * 0.62, zx2 = inkL > inkR ? r2 - zw2 - 4 * p : l2 + 4 * p, zy2 = t2 + 10 * p, Z1 = angleHist(RECON, S.rc.det - 1, S.rc.det + 1, 0.01); let zm = 0; for (const v of Z1) if (v > zm) zm = v;
     c.fillStyle = 'rgba(29,24,17,0.92)'; c.fillRect(zx2, zy2, zw2, zh2); c.strokeStyle = 'rgba(223,214,202,0.4)'; c.strokeRect(zx2 + 0.5, zy2 + 0.5, zw2 - 1, zh2 - 1);
     c.fillStyle = rgba(col, 1); for (let i = 0; i < Z1.length; i++) { const hh = zm > 0 ? Z1[i] / zm * (zh2 - 16 * p) : 0; c.fillRect(zx2 + i / Z1.length * zw2, zy2 + zh2 - 2 - hh, Math.max(1, zw2 / Z1.length), hh); }
-    const sl0 = zx2 + (0.5 - 0.025) * zw2, sl1 = zx2 + (0.5 + 0.025) * zw2; c.fillStyle = 'rgba(255,255,255,0.18)'; c.fillRect(sl0, zy2, sl1 - sl0, zh2);
+    /* the slit is 0.05° wide (detPower), so ±0.025° of the 2° shown: it was drawn twice as wide (student view, 2026-11-15) */
+    const sl0 = zx2 + (0.5 - 0.0125) * zw2, sl1 = zx2 + (0.5 + 0.0125) * zw2; c.fillStyle = 'rgba(255,255,255,0.18)'; c.fillRect(sl0, zy2, sl1 - sl0, zh2);
     txt(c, `detector slit, ${f(S.rc.det, 2)}° ± 1° shown`, zx2 + 4 * p, zy2 + 11 * p, { size: 9, color: T.muted });
   }
 

@@ -526,8 +526,9 @@ select { font: inherit; font-size: 0.86rem; color: var(--ink); background: var(-
       hint: 'The same drum as Two sizes with every grain a third as wide, so nine times as many: 2340 glass grains 1 mm across and 585 grains 2 mm across, the same fill. The small grains filter down through the gaps in the flowing layer just as before, so the fine ones gather in a core and the coarse ones ride round it: in a seeded run the orange line (coarse grains, distance from the middle of the bed) is 5 mm above the other after 6 s and 9 mm above it after 20 s. With this many grains the computer plays it in slow motion, a tenth of real time or slower, depending on the computer; the clock and the graph show the real times.' },
     drumRough: { mode: 'drum', rpm: 15, start: 'mixed', kinds: [K(160, 4, 0.9, 'red', { shape: 'angular', mat: 'sand' }), K(160, 4, 0.1, 'white')],
       hint: 'Same size, different roughness: rough angular grains (red, μ = 0.9) and smooth round beads (white, μ = 0.1). The smooth beads slip and roll more easily, and over several turns they drift a little toward the outside of the bed while the rough grains keep to the middle. Friction and shape sort far more weakly than size does: compare the graph with two sizes.' },
-    drumFast: { mode: 'drum', rpm: 200, start: 'mixed', kinds: [K(260, 3, 0.4, 'blue'), K(65, 6, 0.4, 'orange')],
-      hint: 'At 200 turns per minute ω²R/g = 3.1: the wall pushes the beads round harder than gravity can pull them off at the top, and they ride round as a ring stuck to the wall, as in a spin dryer. The critical rate √(g/R), 113 turns per minute here, is the least at which a bead moving with the wall can stay on at the top; the beads slip on the wall and on each other, so here they need more (at 130 they still tumble). Lower the rate and find where they fall away.' },
+    /* opens in ¼ slow motion: at real time 200 rpm laps 3.3 times a second and the six spokes strobe at 60 frames/s (student view, 2026-11-15) */
+    drumFast: { mode: 'drum', rpm: 200, speed: 0.25, start: 'mixed', kinds: [K(260, 3, 0.4, 'blue'), K(65, 6, 0.4, 'orange')],
+      hint: 'At 200 turns per minute ω²R/g = 3.1: the wall pushes the beads round harder than gravity can pull them off at the top, and they ride round as a ring stuck to the wall, as in a spin dryer. The critical rate √(g/R), 113 turns per minute here, is the least at which a bead moving with the wall can stay on at the top; the beads slip on the wall and on each other, so here they need more (at 130 they still tumble). Lower the rate and find where they fall away. This setup plays in ¼ slow motion so the eye can follow a turn; the clock shows the real time.' },
     brazil: { mode: 'shaker', f: 20, Gamma: 2.5, start: 'big', kinds: [K(1, 12, 0.4, 'orange'), K(330, 3, 0.4, 'sand', { mat: 'sand' })],
       hint: 'The Brazil nut effect: one 12 mm bead starts at the bottom of a box of 3 mm sand, shaken up and down 20 times a second with a peak acceleration 2.5 g. Every time the box drops away, the sand loosens; small grains fall into the space under the big bead, which cannot fall back. It rises to the top though it is the heaviest bead there. Lower Γ below 1 and nothing happens: the box never drops faster than gravity.' },
     shake2: { mode: 'shaker', f: 20, Gamma: 2.5, start: 'mixed', kinds: [K(240, 3, 0.4, 'blue'), K(30, 7, 0.4, 'orange')],
@@ -734,7 +735,9 @@ select { font: inherit; font-size: 0.86rem; color: var(--ink); background: var(-
   function setRun(on) { S.run = on; card.away(on); S.rate = 1; S.wallStart = performance.now(); S.simStart = S.set ? S.set.s.t : 0;
     const s = S.set && S.set.s; $('go').textContent = on ? 'Pause' : s && s.t > 0 ? 'Play' : S.mode === 'slide' ? 'Open the gate' : S.mode === 'frame' ? 'Flip and run' : 'Play';
     $('go').classList.toggle('attn', !on); }
-  function applyPreset(key) { const c = PRESETS[key];
+  function applyPreset(key) { const c = PRESETS[key], was = PRESETS[S.preset];
+    /* a setup may open in slow motion; leaving it goes back to real time (student view, 2026-11-15) */
+    if (c.speed) S.speed = c.speed; else if (was && was.speed) S.speed = 1;
     Object.assign(S, { preset: key, mode: c.mode, start: c.start, kinds: c.kinds.map((k) => Object.assign({}, k)) });
     for (const q of ['rpm', 'f', 'Gamma', 'U', 'lid', 'alpha', 'liquid']) if (c[q] != null) S[q] = c[q];
     $('presetHint').textContent = c.hint; sync(); kindsUI(); build(); setRun(false); drawAll(); }
@@ -755,10 +758,11 @@ select { font: inherit; font-size: 0.86rem; color: var(--ink); background: var(-
   $('flip').addEventListener('click', () => { gfFlip(S.set); if (!S.run) setRun(true); });
   $('reset').addEventListener('click', () => { setRun(false); build(); drawAll(); });
   can.addEventListener('keydown', (e) => { if (e.key === ' ') { $('go').click(); e.preventDefault(); } });
+  /* the slow motion note compares with the chosen speed, so ½ or ¼ chosen by hand is not blamed on the computer (student view, 2026-11-15) */
   function status() {
     const s = S.set && S.set.s, P = s && s.pend, n = S.kinds.reduce((a, k) => a + k.n, 0);
     const extra = P ? `Settling ${n} grains into the apparatus: ${Math.round(100 * (1 - P.left / P.of))} %. The clock starts at zero once they are at rest.`
-      : S.run && S.rate < 0.8 ? `Slow motion: with ${n} grains the computer manages ${f(S.rate, 2)} × real time. Every time and speed shown is the real one in the grains' world; only the playback is slowed.` : '';
+      : S.run && S.rate < 0.8 * S.speed ? `Slow motion: with ${n} grains the computer manages ${f(S.rate, 2)} × real time. Every time and speed shown is the real one in the grains' world; only the playback is slowed.` : '';
     $('status').textContent = [S.msg || '', extra].filter(Boolean).join(' '); }
   function drawAll() { draw(); readouts(); drawPlot(); legend(); }
 

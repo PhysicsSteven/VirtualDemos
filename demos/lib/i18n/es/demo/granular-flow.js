@@ -182,8 +182,8 @@ VDI18N.add('es', 'demo/granular-flow', {
   "<span>Arena {#} mm</span><span>Naranja {#} mm</span>",
 "Settling {#} grains into the apparatus: {#} %. The clock starts at zero once they are at rest.":
   "Asentando {#} granos en el aparato: {#} %. El reloj empieza en cero una vez que están en reposo.",
-"At {#} turns per minute ω²R/g = {#}: the wall pushes the beads round harder than gravity can pull them off at the top, and they ride round as a ring stuck to the wall, as in a spin dryer. The critical rate √(g/R), {#} turns per minute here, is the least at which a bead moving with the wall can stay on at the top; the beads slip on the wall and on each other, so here they need more (at {#} they still tumble). Lower the rate and find where they fall away.":
-  "A {#} vueltas por minuto ω²R/g = {#}: la pared empuja las cuentas en su giro con más fuerza de la que la gravedad puede usar para despegarlas arriba, y giran como un anillo pegado a la pared, como en una secadora centrífuga. El ritmo crítico √(g/R), aquí {#} vueltas por minuto, es el mínimo con el que una cuenta que se mueve con la pared puede mantenerse pegada arriba; las cuentas resbalan sobre la pared y entre sí, así que aquí necesitan más (a {#} todavía caen). Baja el ritmo y encuentra dónde se desprenden.",
+"At {#} turns per minute ω²R/g = {#}: the wall pushes the beads round harder than gravity can pull them off at the top, and they ride round as a ring stuck to the wall, as in a spin dryer. The critical rate √(g/R), {#} turns per minute here, is the least at which a bead moving with the wall can stay on at the top; the beads slip on the wall and on each other, so here they need more (at {#} they still tumble). Lower the rate and find where they fall away. This setup plays in ¼ slow motion so the eye can follow a turn; the clock shows the real time.":
+  "A {#} vueltas por minuto ω²R/g = {#}: la pared empuja las cuentas en su giro con más fuerza de la que la gravedad puede usar para despegarlas arriba, y giran como un anillo pegado a la pared, como en una secadora centrífuga. El ritmo crítico √(g/R), aquí {#} vueltas por minuto, es el mínimo con el que una cuenta que se mueve con la pared puede mantenerse pegada arriba; las cuentas resbalan sobre la pared y entre sí, así que aquí necesitan más (a {#} todavía caen). Baja el ritmo y encuentra dónde se desprenden. Este montaje corre en «Cámara lenta ¼» para que el ojo pueda seguir una vuelta; el reloj muestra el tiempo real.",
 "The Brazil nut effect: one {#} mm bead starts at the bottom of a box of {#} mm sand, shaken up and down {#} times a second with a peak acceleration {#} g. Every time the box drops away, the sand loosens; small grains fall into the space under the big bead, which cannot fall back. It rises to the top though it is the heaviest bead there. Lower Γ below {#} and nothing happens: the box never drops faster than gravity.":
   "El efecto nuez de Brasil: una cuenta de {#} mm empieza en el fondo de una caja de arena de {#} mm, agitada hacia arriba y hacia abajo {#} veces por segundo con una aceleración pico de {#} g. Cada vez que la caja baja, la arena se afloja; los granos pequeños caen al espacio bajo la cuenta grande, que no puede volver a bajar. Sube hasta arriba aunque es la cuenta más pesada. Baja Γ por debajo de {#} y no pasa nada: la caja nunca baja más rápido que la gravedad.",
 "<span>Orange {#} mm</span><span>Sand {#} mm</span>":
@@ -254,6 +254,8 @@ VDI18N.add('es', 'demo/granular-flow', {
   "Rapidez de sedimentación, acero negro de {#} mm",
 "Settling speed, white {#} mm glass":
   "Rapidez de sedimentación, vidrio blanco de {#} mm",
+"Close":
+  "Cerrar",
 "{#} × real time":
   "{#} × tiempo real",
 "Slow motion: with {#} grains the computer manages {#} × real time. Every time and speed shown is the real one in the grains' world; only the playback is slowed.":
@@ -261,5 +263,7 @@ VDI18N.add('es', 'demo/granular-flow', {
 "<span>Blue {#} mm</span><span>Orange {#} mm</span><span>Yellow {#} mm</span>":
   "<span>Azul {#} mm</span><span>Naranja {#} mm</span><span>Amarillo {#} mm</span>",
 "Settling speed, yellow {#} mm glass":
-  "Rapidez de sedimentación, vidrio amarillo de {#} mm"
+  "Rapidez de sedimentación, vidrio amarillo de {#} mm",
+"At {#} turns per minute ω²R/g = {#}: the wall pushes the beads round harder than gravity can pull them off at the top, and they ride round as a ring stuck to the wall, as in a spin dryer. The critical rate √(g/R), {#} turns per minute here, is the least at which a bead moving with the wall can stay on at the top; the beads slip on the wall and on each other, so here they need more (at {#} they still tumble). Lower the rate and find where they fall away.":
+  "A {#} vueltas por minuto ω²R/g = {#}: la pared empuja las cuentas en su giro con más fuerza de la que la gravedad puede usar para despegarlas arriba, y giran como un anillo pegado a la pared, como en una secadora centrífuga. El ritmo crítico √(g/R), aquí {#} vueltas por minuto, es el mínimo con el que una cuenta que se mueve con la pared puede mantenerse pegada arriba; las cuentas resbalan sobre la pared y entre sí, así que aquí necesitan más (a {#} todavía caen). Baja el ritmo y encuentra dónde se desprenden."
 });
