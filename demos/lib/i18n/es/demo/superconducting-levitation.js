@@ -30,6 +30,10 @@ VDI18N.add('es', 'demo/superconducting-levitation', {
   "Soltar",
 "Let the puck warm up":
   "Dejar que el disco se caliente",
+"Slow motion ×{#}":
+  "Cámara lenta ×{#}",
+"Real time":
+  "Tiempo real",
 "Held in your hand":
   "Sujeto con la mano",
 "Cross section of a superconducting puck in liquid nitrogen with a magnet above it, the currents in the puck and the magnetic field lines. Drag the magnet up or down; the arrow keys move it too.":
@@ -138,20 +142,22 @@ VDI18N.add('es', 'demo/superconducting-levitation', {
   "Agarrar el imán",
 "Free":
   "Libre",
-"YBCO puck, warm":
-  "Disco de YBCO, caliente",
+"Close":
+  "Cerrar",
+"YBCO puck, warm (not superconducting)":
+  "Disco de YBCO, caliente (no es superconductor)",
 "Pour in liquid nitrogen":
   "Verter nitrógeno líquido",
 "puck is warm":
   "el disco está caliente",
 "current in and out of the page; outlined: at jc":
   "corriente que entra y sale de la página; con contorno: en jc",
-"YBCO puck, warm (not superconducting)":
-  "Disco de YBCO, caliente (no es superconductor)",
 "Free; the puck is warm":
   "Libre; el disco está caliente",
 "The magnet fell to the bench. Grab it to put it back in your hand.":
   "El imán cayó sobre la mesa. Agárralo para ponerlo de nuevo en tu mano.",
 "fell off":
-  "se cayó"
+  "se cayó",
+"YBCO puck, warm":
+  "Disco de YBCO, caliente"
 });

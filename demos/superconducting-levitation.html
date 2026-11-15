@@ -67,6 +67,8 @@
       <div class="stage-ctl" id="strip">
         <button type="button" class="spin attn" id="go" data-vd-key="play">Let go</button>
         <button type="button" class="btn" id="temp">Let the puck warm up</button>
+        <!-- the run is shown in slow motion by default: in real time a dropped magnet bounces about seven times a second, too fast to follow (student view, 2026-11-15) -->
+        <div class="seg" role="group" aria-label="Playback rate" id="rateSeg"><button type="button" data-rate="0.1" aria-pressed="true">Slow motion ×10</button><button type="button" data-rate="1" aria-pressed="false">Real time</button></div>
         <div class="seg" role="group" aria-label="Perspective" id="dimSeg"><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
         <span class="note mono" id="note" role="status"></span>
       </div>
@@ -286,7 +288,7 @@
     weak: { side: 'above', cool: 'far', at: 30, free: false, jc: 7, dia: 10, len: 5, Br: 1.3, PD: 30, PH: 10,
       hint: 'The same drop as the first setup, onto a puck with a tenth of the critical current density (10⁷ A/m²). Near the bottom of each bounce some rings reach jc (outlined), flux moves, and energy is lost, so the bounces die away and the magnet settles. Compare the energy lost with the first setup, where it stays zero.' } };
 
-  const S = { side: 'above', hand: 30, held: true, z: 0, v: 0, t: 0, jcLog: 8, dia: 10, len: 5, Br: 1.3, PD: 30, PH: 10, preset: 'drop', blind: false, lines: true, fell: false, curve: [] };
+  const S = { side: 'above', hand: 30, held: true, z: 0, v: 0, t: 0, jcLog: 8, dia: 10, len: 5, Br: 1.3, PD: 30, PH: 10, preset: 'drop', blind: false, lines: true, fell: false, curve: [], rate: 0.1 };   /* rate: model seconds per screen second */
   let MD = null;   /* the model */
   const can = $('can'), ctx = can.getContext('2d'), cv = $('curve'), cx = cv.getContext('2d');
   let W = 0, H = 0, CW = 0, CH = 0, dpr = 1, T = null, view3 = null, g3 = null, linesKey = '', linesSegs = [], linesAt = 0;
@@ -328,12 +330,13 @@
 
   /* ---------- time ---------- */
   const DT = 1e-3, HAND_V = 0.05;   /* time step 1 ms; the hand moves the magnet at up to 50 mm/s */
+  let acc = 0;   /* model time not yet stepped, so slow motion (a fraction of a step per frame) keeps the rate exact */
   function advance(dt) {
     const m = massOf(), l2 = MD.o.l / 2, gmax = 0.06;
-    let n = Math.round(dt / DT);
+    acc += dt; let n = Math.floor(acc / DT + 1e-9); acc = Math.max(0, acc - n * DT);
     while (n-- > 0) {
       if (S.held) {
-        const target = l2 + S.hand / 1000, d = target - S.z, s = Math.sign(d) * Math.min(Math.abs(d), HAND_V * DT);
+        const target = l2 + S.hand / 1000, d = target - S.z, s = Math.sign(d) * Math.min(Math.abs(d), HAND_V * DT / S.rate);   /* the hand keeps its on-screen pace in slow motion; a held magnet's currents depend only on where it is (student view, 2026-11-15) */
         if (s) { S.z += s; step(MD, S.z); }
       } else if (!S.fell) {
         let a = force(MD) / m + sgnG() * G; S.v += a * DT / 2; S.z += S.v * DT;
@@ -423,11 +426,16 @@
       ctx.fillStyle = T.ink; ctx.font = `600 ${12 * p}px ${T.mono}`; ctx.textBaseline = 'middle'; { const gt = `gap ${f(gap() * 1000, 1)} mm`, fit = xg + 8 * p + ctx.measureText(gt).width < W - 4; ctx.textAlign = fit ? 'left' : 'right'; ctx.fillText(gt, fit ? xg + 8 * p : xg - 6 * p, (y0 + y1) / 2); }
       if (S.held) { /* the hand's grip: a tab on the far face */
         const yh = Y(zt + 0.002 * (1)), xs = X(0); ctx.fillStyle = T.hand; ctx.globalAlpha = 0.85; ctx.beginPath(); ctx.roundRect(xs - 9 * p, Math.min(yh, Y(zt)) - (flip ? 0 : 14 * p), 18 * p, 14 * p + Math.abs(yh - Y(zt)), 4 * p); ctx.fill(); ctx.globalAlpha = 1;
-        ctx.fillStyle = T.grip_ink; ctx.font = `${11 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.fillText('held', xs, flip ? Y(zt) + 22 * p : Y(zt) - 22 * p); }
+        /* the word sat half on the tab, dark ink cut by its edge: now it goes just past the tab, in the hand's color with a halo (student view, 2026-11-15) */
+        const yl = flip ? Math.max(yh, Y(zt)) + 22 * p : Math.min(yh, Y(zt)) - 22 * p; ctx.font = `600 ${11 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.save(); ctx.lineJoin = 'round'; ctx.lineWidth = 3.5 * p; ctx.strokeStyle = T.canvas; ctx.globalAlpha = 0.85; ctx.strokeText('held', xs, yl); ctx.restore(); ctx.fillStyle = T.hand_ink; ctx.fillText('held', xs, yl); }
     }
     /* labels */
     ctx.font = `${11.5 * p}px ${T.ui}`; ctx.textBaseline = 'middle'; ctx.fillStyle = T.muted; ctx.textAlign = 'left';
-    ctx.textAlign = 'center'; ctx.fillText(MD.sc ? 'YBCO puck at 77 K' : 'YBCO puck, warm (not superconducting)', X(0), flip ? H - 12 * p : Y(V.bot) + 10 * p); ctx.textAlign = 'left';   /* hanging: the legend is above the puck, so the label goes at the foot */
+    ctx.textAlign = 'center'; { const pl = MD.sc ? 'YBCO puck at 77 K' : 'YBCO puck, warm (not superconducting)', py = flip ? Y(-Hp - 0.003) : Y(V.bot) + 10 * p;
+      /* hanging: the label sits on the foam holder just above the puck, not at the stage's foot under the magnet (student view, 2026-11-15) */
+      if (flip) { ctx.save(); ctx.lineJoin = 'round'; ctx.lineWidth = 3.5 * p; ctx.strokeStyle = T.canvas; ctx.globalAlpha = 0.8; ctx.strokeText(pl, X(0), py); ctx.restore(); }
+      ctx.fillText(pl, X(0), py); } ctx.textAlign = 'left';
     if (MD.sc && !over) { const lx = 12 * p, ly = 16 * p; ctx.fillStyle = T.cur_a; ctx.fillRect(lx, ly - 5 * p, 10 * p, 10 * p); ctx.fillStyle = T.cur_b; ctx.fillRect(lx + 12 * p, ly - 5 * p, 10 * p, 10 * p);
       ctx.fillStyle = T.muted; ctx.fillText(W < 640 ? 'current in and out of the page; outlined: at jc' : 'current into and out of the page (deeper color: larger); outlined rings carry jc', lx + 28 * p, ly); }
   }
@@ -571,6 +579,8 @@
   for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
   $('go').addEventListener('click', () => { if (S.held) setHeld(false); else { const was = S.fell; S.hand = Math.min(40, Math.max(0, was ? 30 : gap() * 1000)); if (was) { S.fell = false; S.z = MD.o.l / 2 + 0.04; step(MD, S.z); } setHeld(true); sync(); } redraw(); });
   $('temp').addEventListener('click', () => setCold(!MD.sc));
+  for (const b of document.querySelectorAll('#rateSeg button')) b.addEventListener('click', () => { S.rate = +b.dataset.rate; acc = 0;
+    for (const o of document.querySelectorAll('#rateSeg button')) o.setAttribute('aria-pressed', String(o === b)); });
   $('clearCurve').addEventListener('click', () => { S.curve = []; record(); drawCurve(); });
   $('sHand').addEventListener('input', (e) => { S.hand = +e.target.value; $('oHand').textContent = `${f(S.hand, 1)} mm`; });
   for (const [id, k] of [['Dia', 'dia'], ['Len', 'len'], ['Br', 'Br'], ['PD', 'PD'], ['PH', 'PH'], ['Jc', 'jcLog']]) $('s' + id).addEventListener('change', (e) => { S[k] = +e.target.value; changedSetup(); });
@@ -593,7 +603,7 @@
   function frame(now) {
     const dt = Math.min(0.04, (now - last) / 1000); last = now;
     const moving = !S.held || Math.abs(MD.o.l / 2 + S.hand / 1000 - S.z) > 1e-7;
-    if (moving && !S.fell) advance(dt);
+    if (moving && !S.fell) advance(dt * S.rate);
     if (moving || use3()) { draw(); drawCurve(); readouts(); }
     requestAnimationFrame(frame);
   }

@@ -15,6 +15,8 @@ VDI18N.add('en', 'demo/superconducting-levitation', [
 "Time controls",
 "Let go",
 "Let the puck warm up",
+"Slow motion ×{#}",
+"Real time",
 "Held in your hand",
 "Cross section of a superconducting puck in liquid nitrogen with a magnet above it, the currents in the puck and the magnetic field lines. Drag the magnet up or down; the arrow keys move it too.",
 "Graph: the force of the puck on the magnet against the gap between them, traced as the magnet moves.",
@@ -69,12 +71,13 @@ VDI18N.add('en', 'demo/superconducting-levitation', [
 "A field cooled magnet floating over the puck. Let the puck warm up past its critical temperature (about {#} K for YBCO): the currents die, the magnet falls onto the puck, and the field passes straight through. Pour the nitrogen back with the magnet resting there and it is pinned at that gap instead.",
 "Grab the magnet",
 "Free",
-"YBCO puck, warm",
+"Close",
+"YBCO puck, warm (not superconducting)",
 "Pour in liquid nitrogen",
 "puck is warm",
 "current in and out of the page; outlined: at jc",
-"YBCO puck, warm (not superconducting)",
 "Free; the puck is warm",
 "The magnet fell to the bench. Grab it to put it back in your hand.",
-"fell off"
+"fell off",
+"YBCO puck, warm"
 ]);
