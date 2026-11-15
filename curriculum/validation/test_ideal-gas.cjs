@@ -2,7 +2,7 @@
 // Gas in a Box: the hard disk gas and the two gas setups (masses, sizes, divider, hole, unfolded mean square displacement).
 const assert = require('node:assert');
 const { core } = require('./demo_source.cjs');
-const c = core('ideal-gas', 'KB,M,U_KG,LX,LY,R,NMAX,DIV_X,HOLE_Y,makeGas,pair,step,wallEmit,wallHit,track,tempOf,mixStats,meanSpeed2D,effusionRate,meanFreePath2D');
+const c = core('ideal-gas', 'KB,M,U_KG,LX,LY,R,NMAX,DIV_X,HOLE_Y,makeGas,pair,step,wallEmit,wallHit,track,tempOf,mixStats,meanSpeed2D,effusionRate,meanFreePath2D,SIGMA,VDW,TBOIL,NA,ATM,meanFreePath3D,meanSpeed3D,bHardSphere,zVdw,hardDiskZ,hardDiskChi,boxCrowding');
 let n = 0;
 const near = (a, b, tol, w) => assert(Math.abs(a - b) <= tol * Math.max(1e-300, Math.abs(b)), `${w || ''}: expected ${b}, got ${a}`);
 function group(name, f) { f(); n++; console.log('PASS', name); }
@@ -142,6 +142,67 @@ group('a moving thermal wall: heat is the energy change in the wall frame, and h
   /* a wall at rest: no work, all of it heat, as before */
   const H = { vx: new Float64Array([200]), vy: new Float64Array([0]), m: new Float64Array([mi]), wallT: [0, 300, 0, 0], acc: [1, 1, 1, 1], heat: [0, 0, 0, 0], rand: () => 0.5 };
   c.wallHit(H, 0, 1, 0, -1, 0); near(H.heat[1], 0.5 * mi * (H.vx[0] ** 2 + H.vy[0] ** 2) - e0, 1e-12, 'wall at rest');
+});
+
+/* Real molecule sizes (chemistry item 6) */
+group('real sizes: the model disk of the setups stays 0.50 nm; σ from Svehla 1962 in nm, helium smallest and CO₂ largest', () => {
+  assert.strictEqual(c.R, 0.25);
+  assert.deepStrictEqual(JSON.parse(JSON.stringify(c.SIGMA)), { h2: 0.2827, he: 0.2551, n2: 0.3798, ar: 0.3542, co2: 0.3941 });
+  const v = Object.values(c.SIGMA); assert(Math.min(...v) === c.SIGMA.he && Math.max(...v) === c.SIGMA.co2);
+});
+group('van der Waals b of the CRC table is RTc/8Pc (critical points from Wolfram ChemicalData), within 1%', () => {
+  const R = c.NA * c.KB, crit = { h2: [32.97, 1.293e6], he: [5.19, 0.227e6], n2: [126.21, 3.39e6], ar: [150.87, 4.898e6], co2: [304.12, 7.39e6] };
+  for (const k in crit) near(c.VDW[k][1], R * crit[k][0] / (8 * crit[k][1]) * 1e3, 0.01, k);
+  /* and RTc a = 27/64 R²Tc²/Pc, the other van der Waals critical relation, within 2% */
+  for (const k in crit) near(c.VDW[k][0], 27 / 64 * R * R * crit[k][0] ** 2 / crit[k][1] * 10, 0.02, k + ' a');
+});
+group('3D hard spheres: λ = kT/(√2 πd²P), b = (2/3)πN_A d³; argon at 300 K and 1 atm 73.4 nm, b 0.0560 L/mol (measured 0.0320)', () => {
+  near(c.meanFreePath3D(300, 0.3542, c.ATM), 73.40, 1e-3, 'λ argon');
+  near(c.meanFreePath3D(600, 0.3542, c.ATM), 2 * c.meanFreePath3D(300, 0.3542, c.ATM), 1e-12, 'λ ∝ T');
+  near(c.meanFreePath3D(300, 0.3542, 2 * c.ATM), c.meanFreePath3D(300, 0.3542, c.ATM) / 2, 1e-12, 'λ ∝ 1/P');
+  near(c.meanFreePath3D(300, 0.2551, c.ATM) / c.meanFreePath3D(300, 0.3941, c.ATM), (0.3941 / 0.2551) ** 2, 1e-12, 'λ ∝ 1/d²');
+  near(c.bHardSphere(0.3542), 0.05605, 1e-3, 'b argon');
+  near(c.meanSpeed3D(300, 39.948 * c.U_KG), 398.8, 1e-3, 'mean speed argon');
+  /* hard sphere b is 4 times the volume of a mole of molecules */
+  near(c.bHardSphere(0.3), 4 * c.NA * Math.PI / 6 * (0.3e-9) ** 3 * 1e3, 1e-12, '4 × molecular volume');
+});
+group('van der Waals PV/NkT: 1 as P → 0 and at the Boyle temperature a/Rb; above 1 for He, H₂ and below for N₂, Ar, CO₂ at 300 K, 1 atm', () => {
+  const R = c.NA * c.KB;
+  for (const k in c.VDW) {
+    near(c.zVdw(k, 300, 1e-6), 1, 1e-10, k + ' P → 0');
+    const TB = c.VDW[k][0] * 0.1 / (R * c.VDW[k][1] * 1e-3); near(c.zVdw(k, TB, c.ATM), 1, 1e-12, k + ' Boyle');
+  }
+  for (const k of ['he', 'h2']) assert(c.zVdw(k, 300, c.ATM) > 1, k);
+  for (const k of ['n2', 'ar', 'co2']) assert(c.zVdw(k, 300, c.ATM) < 1, k);
+  near(c.zVdw('co2', 300, c.ATM), 0.99578, 1e-4, 'CO₂');
+  assert(c.TBOIL.he < c.TBOIL.h2 && c.TBOIL.h2 < c.TBOIL.n2 && c.TBOIL.n2 < c.TBOIL.ar && c.TBOIL.ar < c.TBOIL.co2);
+});
+group('hard disk equation of state: Z → 1 + 2η (the exact 2D second virial coefficient πd²/2), χ → 1 + 25η/16; the box formula without walls is Z', () => {
+  const e = 1e-6; near((c.hardDiskZ(e) - 1) / e, 2, 1e-5, 'dZ/dη'); near((c.hardDiskChi(e) - 1) / e, 25 / 16, 1e-5, 'dχ/dη');
+  const big = c.boxCrowding(4e6, 0.5, 1e5, 1e5);
+  near(big.pRatio, c.hardDiskZ(4e6 * Math.PI * 0.25 / 4 / 1e10), 1e-4, 'large box');
+  near(c.boxCrowding(1, 0.5, 50, 30).mfpThin, c.meanFreePath2D(1 / (49.5 * 29.5), 0.5), 1e-12, 'thin limit');
+});
+/* one gas of N disks of diameter d at 300 K from a grid, run for t ps after 200 ps to settle */
+function sizeRun(N, d, mu, t, s0) {
+  seed = s0; const G = c.makeGas(), m = mu * c.U_KG; G.r.fill(d / 2); G.m.fill(m);
+  const sg = Math.sqrt(c.KB * 300 / m), cols = Math.ceil(Math.sqrt(N * 50 / 30)), rows = Math.ceil(N / cols);
+  for (let i = 0; i < N; i++) { G.px[i] = 50 / cols * (i % cols + 0.5); G.py[i] = 30 / rows * (Math.floor(i / cols) + 0.5); G.vx[i] = sg * gauss(); G.vy[i] = sg * gauss(); }
+  const dt = 0.4 * (d / 2) / (2.5 * sg) * 1e3;
+  for (let x = 0; x < 200; x += dt) c.step(G, N, dt);
+  G.imp = 0; G.lt = 0; G.coll = 0; G.path = 0; G.tc = 0;
+  for (let x = 0; x < t; x += dt) c.step(G, N, dt);
+  const T = c.tempOf(G, N);
+  return { ratio: G.imp / (G.lt * 1e-21) / (N * c.KB * T / 1500e-18), mfp: G.path / (2 * G.coll), z: 2 * G.coll / (N * G.tc), v: G.path / (N * G.tc), b: c.boxCrowding(N, d, 50, 30) };
+}
+group('the box: P / (NkT/A) within 1.5% of the hard disk formula, mean free path 0 to 5% longer than 1/(2√2 n d χ) (crowded 0.50 nm disks; CO₂ and helium at real size)', () => {
+  /* 2026-11-15 runs of 3000 ps: P 0.3 to 0.7% under the formula, mean free path 1.9 to 2.5% longer */
+  for (const [N, d, mu] of [[400, 0.5, 39.948], [300, 0.3941, 44.009], [300, 0.2551, 4.0026]]) {
+    const r = sizeRun(N, d, mu, 500, 4242);
+    near(r.ratio, r.b.pRatio, 0.015, `P ratio N ${N} d ${d}`);
+    assert(r.mfp > r.b.mfp && r.mfp < 1.05 * r.b.mfp, `mean free path ${r.mfp} against ${r.b.mfp}`);
+    near(r.z * r.mfp, r.v, 1e-12, 'collision rate × mean free path = mean speed');
+  }
 });
 
 console.log(`${n} groups passed`);

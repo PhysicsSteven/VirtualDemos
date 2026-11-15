@@ -12,6 +12,10 @@ VDI18N.add('es', 'demo/ideal-gas', {
   "Maxwell-Boltzmann 2D a {#} K",
 "Gas in a Box":
   "Gas en una caja",
+"<a>The kinetic theory of gases</a>":
+  "<a>La teoría cinética de los gases</a>",
+"<a><span>←</span> <span>Blackbody Radiation</span></a><a><span>Heat Capacities of Gases</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Radiación de cuerpo negro</span></a><a><span>Capacidades caloríficas de los gases</span> <span>→</span></a>",
 "Pressure and temperature come from molecules hitting the walls. Push the piston and watch the gas heat up.":
   "La presión y la temperatura vienen de las moléculas que chocan con las paredes. Empuja el pistón y observa cómo se calienta el gas.",
 "argon, m = {#}×{#}⁻²⁶ kg":
@@ -86,6 +90,8 @@ VDI18N.add('es', 'demo/ideal-gas', {
   "Paredes frías",
 "Hot wall, cold wall":
   "Pared caliente, pared fría",
+"Real molecule sizes":
+  "Tamaños reales de las moléculas",
 "Two gases and a divider":
   "Dos gases y un divisor",
 "Two gases mix":
@@ -128,8 +134,30 @@ VDI18N.add('es', 'demo/ideal-gas', {
   "Rapidez cuadrática media",
 "rms speed of a real (3D) gas at this T, √(3kT/m)":
   "Rapidez cuadrática media de un gas real (3D) a esta T, √(3kT/m)",
+"Molecule size":
+  "Tamaño de las moléculas",
+"Diameter d":
+  "Diámetro d",
+"{#} nm (model disk)":
+  "{#} nm (disco modelo)",
+"Collisions per molecule":
+  "Choques por molécula",
+"Mean free path, measured · 2D formula":
+  "Camino libre medio, medido · fórmula 2D",
+"P above NkT/A, measured · hard disk formula":
+  "P arriba de NkT/A, medida · fórmula de discos duros",
+"Real gas at this T and {#} atm: mean free path kT/(√{#} πσ²P) · collisions per molecule":
+  "Gas real a esta T y {#} atm: camino libre medio kT/(√{#} πσ²P) · choques por molécula",
+"{#} nm · {#} per ns":
+  "{#} nm · {#} por ns",
+"van der Waals b: from σ, ({#}/{#})πN<sub>A</sub>σ³ · measured (CRC table)":
+  "b de van der Waals: a partir de σ, ({#}/{#})πN<sub>A</sub>σ³ · medida (tabla del CRC)",
+"Real gas at this T and {#} atm: PV/NkT from van der Waals a and b":
+  "Gas real a esta T y {#} atm: PV/NkT con a y b de van der Waals",
 "T comes from the kinetic energy: in two dimensions the average is ⟨KE⟩ = kT. P measured is the momentum the molecules deliver to the walls, per unit wall length per unit time, averaged over about a second. In 2D, pressure is force per length (N/m).":
   "T viene de la energía cinética: en dos dimensiones el promedio es ⟨EC⟩ = kT. P medida es el momento que las moléculas entregan a las paredes, por unidad de longitud de pared por unidad de tiempo, promediado durante cerca de un segundo. En 2D, la presión es fuerza por longitud (N/m).",
+"Molecule size. With Real sizes, every gas is a hard disk as wide as its Lennard-Jones collision diameter σ, found from the gas's measured viscosity (Svehla {#}, NASA TR R-{#}, as tabulated by Poling, Prausnitz and O'Connell {#}): helium {#} nm, hydrogen {#} nm, argon {#} nm, nitrogen {#} nm, carbon dioxide {#} nm. The setups other than Real molecule sizes, and the worksheets, use one disk {#} nm across for every gas. Real molecules are soft, so a hard disk of diameter σ is an approximation: the size that matters shrinks a little as T rises, and N₂ and CO₂ are rods, not disks. The mean free path is the distance a molecule travels between collisions, measured as the distance all the molecules travel divided by twice the number of collisions. The measured readings add up since the gas last changed (a setup, gas, size, N, T or walls, or the piston moving), so they steady the longer the gas runs: with {#} molecules, P measured over {#} seconds wanders by about {#}%. Its 2D formula, {#}/({#}√{#} n d χ), uses n = N/(W − d)(H − d), the area the centers can reach, and χ = ({#} − {#}η/{#})/({#} − η)², how much more often crowded disks meet (Henderson {#}), where η is the fraction of the area the disks cover; the measured value runs about {#} to {#}% longer, because a disk next to a wall has neighbors on one side only. P above NkT/A is measured the same way, from P measured and NkT/A over the same time. Its hard disk formula is Henderson's equation of state Z = ({#} + η²/{#})/({#} − η)² with the area the centers can reach, times (W + H − 2d)/(W + H) because the disks touch each wall only along its length less d; it leaves out a slight gathering of disks at the walls and so comes out a few tenths of a percent high. A real gas is three dimensional, with the mean free path kT/(√{#} πσ²P) for hard spheres and the mean speed √(8kT/πm). At {#} atm it is far thinner than the box: its molecules fill less than a thousandth of the space, where the disks in the box cover {#} to {#}% of its area, so they travel tens of nanometers between collisions and P sits within a fraction of a percent of NkT/V. Hard spheres of diameter σ would have a van der Waals b of ({#}/{#})πN<sub>A</sub>σ³, four times the volume of the molecules. The measured b (CRC Handbook, found from the critical point as RT<sub>c</sub>/8P<sub>c</sub>) is about half of that for argon, nitrogen and carbon dioxide, since the van der Waals equation is only a rough model of a real gas there; for helium and hydrogen the two agree within about {#}%. The last reading adds the attraction a, which hard disks lack: PV/NkT ≈ {#} + (b − a/RT)P/RT. Size pushes P up and attraction pulls it down, so at room temperature helium and hydrogen sit just above {#} and argon, nitrogen and carbon dioxide just below. Below its boiling point (for carbon dioxide, where it turns to frost) a real gas at {#} atm would condense, so those readings show a dash.":
+  "Tamaño de las moléculas. Con Tamaños reales, cada gas es un disco duro tan ancho como su diámetro de colisión de Lennard-Jones σ, obtenido de la viscosidad medida del gas (Svehla {#}, NASA TR R-{#}, según la tabla de Poling, Prausnitz y O'Connell {#}): helio {#} nm, hidrógeno {#} nm, argón {#} nm, nitrógeno {#} nm, dióxido de carbono {#} nm. Las configuraciones distintas de Tamaños reales de las moléculas, y las hojas de trabajo, usan un disco de {#} nm de diámetro para todos los gases. Las moléculas reales son blandas, así que un disco duro de diámetro σ es una aproximación: el tamaño que cuenta se reduce un poco al subir T, y el N₂ y el CO₂ son varillas, no discos. El camino libre medio es la distancia que recorre una molécula entre choques, medida como la distancia que recorren todas las moléculas dividida entre el doble del número de choques. Las lecturas medidas se acumulan desde el último cambio del gas (una configuración, el gas, el tamaño, N, T o las paredes, o el pistón en movimiento), así que se estabilizan mientras más tiempo corre el gas: con {#} moléculas, la P medida en {#} segundos varía cerca de {#}%. Su fórmula 2D, {#}/({#}√{#} n d χ), usa n = N/(W − d)(H − d), el área que pueden alcanzar los centros, y χ = ({#} − {#}η/{#})/({#} − η)², cuánto más seguido se encuentran los discos apretados (Henderson {#}), donde η es la fracción del área que cubren los discos; el valor medido sale cerca de {#} a {#}% más largo, porque un disco junto a una pared tiene vecinos de un solo lado. P arriba de NkT/A se mide igual, con la P medida y NkT/A en el mismo tiempo. Su fórmula de discos duros es la ecuación de estado de Henderson Z = ({#} + η²/{#})/({#} − η)² con el área que pueden alcanzar los centros, multiplicada por (W + H − 2d)/(W + H) porque los discos tocan cada pared solo a lo largo de su longitud menos d; deja fuera una ligera acumulación de discos junto a las paredes y por eso sale unas décimas de por ciento alta. Un gas real es tridimensional, con el camino libre medio kT/(√{#} πσ²P) para esferas duras y la rapidez media √(8kT/πm). A {#} atm es mucho menos denso que la caja: sus moléculas ocupan menos de una milésima del espacio, mientras que los discos de la caja cubren de {#} a {#}% de su área, así que recorren decenas de nanómetros entre choques y P queda a una fracción de por ciento de NkT/V. Esferas duras de diámetro σ tendrían una b de van der Waals de ({#}/{#})πN<sub>A</sub>σ³, cuatro veces el volumen de las moléculas. La b medida (CRC Handbook, obtenida del punto crítico como RT<sub>c</sub>/8P<sub>c</sub>) es cerca de la mitad de eso para el argón, el nitrógeno y el dióxido de carbono, porque la ecuación de van der Waals es solo un modelo aproximado de un gas real ahí; para el helio y el hidrógeno las dos coinciden dentro de cerca de {#}%. La última lectura agrega la atracción a, que los discos duros no tienen: PV/NkT ≈ {#} + (b − a/RT)P/RT. El tamaño sube P y la atracción la baja, así que a temperatura ambiente el helio y el hidrógeno quedan justo arriba de {#} y el argón, el nitrógeno y el dióxido de carbono justo abajo. Debajo de su punto de ebullición (para el dióxido de carbono, donde se vuelve escarcha) un gas real a {#} atm se condensaría, así que esas lecturas muestran una raya.",
 "A molecule is on the side its center is on. Time and the mean square displacement start when the divider opens (or is closed again). The displacement counts a bounce off a wall or the divider as if the molecule went on into a mirror image of the box: a box with mirror walls behaves exactly like an endless gas made of mirror copies of it, so this is how far the molecule wanders in that endless gas, and the walls do not cap it. T is from the kinetic energy, ⟨½mv²⟩ = kT.":
   "Una molécula está del lado en que está su centro. El tiempo y el desplazamiento cuadrático medio empiezan cuando se abre el divisor (o se vuelve a cerrar). El desplazamiento cuenta un rebote en una pared o en el divisor como si la molécula siguiera hacia una imagen especular de la caja: una caja con paredes de espejo se comporta exactamente como un gas infinito hecho de copias especulares de ella, así que esto es cuánto se aleja la molécula en ese gas infinito, y las paredes no lo limitan. T viene de la energía cinética, ⟨½mv²⟩ = kT.",
 "Two gases":
@@ -148,6 +176,10 @@ VDI18N.add('es', 'demo/ideal-gas', {
   "Argón",
 "Carbon dioxide CO₂":
   "Dióxido de carbono CO₂",
+"All {#} nm":
+  "Todas de {#} nm",
+"Real sizes":
+  "Tamaños reales",
 "Starting speeds":
   "Rapideces iniciales",
 "Equal speeds":
@@ -200,14 +232,10 @@ VDI18N.add('es', 'demo/ideal-gas', {
   "Estela del trazador",
 "<span><i></i>2D Maxwell-Boltzmann curve at measured T</span> <span><i></i>Tracer path; click a molecule to follow it</span> <span><i></i>Piston, the movable right wall</span>":
   "<span><i></i>Curva de Maxwell-Boltzmann 2D a la T medida</span> <span><i></i>Trayectoria del trazador; haz clic en una molécula para seguirla</span> <span><i></i>Pistón, la pared derecha móvil</span>",
-"Molecules are hard disks {#} nm across, a bit larger than real argon (about {#} nm), drawn at that size or larger. Every gas on the Gas card is the same disk; only the mass changes. A real gas moves in three dimensions, where the average kinetic energy is ({#}/{#})kT, so its rms speed is √(3kT/m): √({#}/{#}) = {#} times the 2D gas's √(2kT/m) at the same T. Their finite size makes P run a few percent above NkT/A, more when the box is crowded.":
-  "Las moléculas son discos duros de {#} nm de diámetro, un poco más grandes que el argón real (cerca de {#} nm), dibujadas de ese tamaño o más grandes. Todos los gases de la tarjeta Gas son el mismo disco; solo cambia la masa. Un gas real se mueve en tres dimensiones, donde la energía cinética promedio es ({#}/{#})kT, así que su rapidez cuadrática media es √(3kT/m): √({#}/{#}) = {#} veces la √(2kT/m) del gas 2D a la misma T. Su tamaño finito hace que P quede unos pocos por ciento arriba de NkT/A, más cuando la caja está llena.",
+"With All {#} nm (every setup but Real molecule sizes), molecules are hard disks {#} nm across, larger than real argon (σ = {#} nm), drawn at that size or larger, and every gas on the Gas card is the same disk: only the mass changes. With Real sizes, each gas has its own diameter; when the box is drawn small, every disk is drawn larger by the same factor as the {#} nm disk, so their sizes still compare truly. A real gas moves in three dimensions, where the average kinetic energy is ({#}/{#})kT, so its rms speed is √(3kT/m): √({#}/{#}) = {#} times the 2D gas's √(2kT/m) at the same T. Their finite size makes P run a few percent above NkT/A, more when the box is crowded.":
+  "Con Todas de {#} nm (todas las configuraciones menos Tamaños reales de las moléculas), las moléculas son discos duros de {#} nm de diámetro, más grandes que el argón real (σ = {#} nm), dibujadas de ese tamaño o más grandes, y todos los gases de la tarjeta Gas son el mismo disco: solo cambia la masa. Con Tamaños reales, cada gas tiene su propio diámetro; cuando la caja se dibuja pequeña, todos los discos se dibujan más grandes por el mismo factor que el disco de {#} nm, así que sus tamaños se siguen comparando bien. Un gas real se mueve en tres dimensiones, donde la energía cinética promedio es ({#}/{#})kT, así que su rapidez cuadrática media es √(3kT/m): √({#}/{#}) = {#} veces la √(2kT/m) del gas 2D a la misma T. Su tamaño finito hace que P quede unos pocos por ciento arriba de NkT/A, más cuando la caja está llena.",
 "Record the run":
   "Grabar la ejecución",
-"<a>The kinetic theory of gases</a>":
-  "<a>La teoría cinética de los gases</a>",
-"<a><span>←</span> <span>Blackbody Radiation</span></a><a><span>Heat Capacities of Gases</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Radiación de cuerpo negro</span></a><a><span>Capacidades caloríficas de los gases</span> <span>→</span></a>",
 "PRESSURE":
   "PRESIÓN",
 "measured from wall hits":
@@ -218,14 +246,14 @@ VDI18N.add('es', 'demo/ideal-gas', {
   "TEMPERATURA",
 "from mean kinetic energy":
   "a partir de la energía cinética media",
+"{#} per ns":
+  "{#} por ns",
 "Fast molecules ({#} K) start on the left and slow ones ({#} K) on the right. Collisions mix them until the whole box sits at one temperature, near {#} K.":
   "Las moléculas rápidas ({#} K) empiezan a la izquierda y las lentas ({#} K) a la derecha. Los choques las mezclan hasta que toda la caja queda a una sola temperatura, cerca de {#} K.",
 "Drag the right wall inward and watch T rise. Halve the area slowly and T about doubles, since T × A stays constant for a 2D gas. Then pull the wall back out.":
   "Arrastra la pared derecha hacia dentro y observa cómo sube T. Reduce el área a la mitad despacio y T casi se duplica, ya que T × A se mantiene constante para un gas 2D. Luego jala la pared de vuelta hacia fuera.",
 "← drag the wall":
   "← arrastra la pared",
-"+{#} off scale →":
-  "+{#} fuera de escala →",
 "Only {#} molecules. Collisions are rare, so the spike takes much longer to relax, and the measured pressure jumps around more.":
   "Solo {#} moléculas. Los choques son raros, así que el pico tarda mucho más en relajarse, y la presión medida salta más.",
 "The gas at {#} K. The rms speed is about {#} m/s instead of {#} m/s at room temperature, but they never stop: speeds still spread out into a Maxwell-Boltzmann curve, and the walls still feel a pressure. Slow motion follows T is on, so the playback runs about {#} times faster than Fixed rate (the clock says by how much): the gas only looks lively. T stays at {#} K because the collisions conserve energy. Switch to Fixed rate to see how sluggish the gas really is. Classically, motion only stops at exactly {#} K.":
@@ -234,14 +262,20 @@ VDI18N.add('es', 'demo/ideal-gas', {
   "{#} ns por segundo",
 "{#} nN/m":
   "{#} nN/m",
-"t = {#} ps playback {#}× faster than Fixed rate":
-  "t = {#} ps reproducción {#}× más rápida que Ritmo fijo",
 "{#} zJ":
   "{#} zJ",
+"— (condenses at {#} atm)":
+  "— (se condensa a {#} atm)",
+"t = {#} ps playback {#}× faster than Fixed rate":
+  "t = {#} ps reproducción {#}× más rápida que Ritmo fijo",
 "The walls are held at {#} K. Every molecule that hits a wall leaves as if from a gas at {#} K, so the {#} K gas gives heat to the walls and cools until T settles near {#} K; Q counts the heat. Then push the piston: the walls carry off the work you do, and T stays near {#} K (an isothermal squeeze) instead of rising. Switch the walls to Insulated and compare.":
   "Las paredes se mantienen a {#} K. Cada molécula que choca con una pared sale como si viniera de un gas a {#} K, así que el gas a {#} K cede calor a las paredes y se enfría hasta que T se asienta cerca de {#} K; Q cuenta el calor. Luego empuja el pistón: las paredes se llevan el trabajo que haces, y T se mantiene cerca de {#} K (una compresión isotérmica) en lugar de subir. Cambia las paredes a Aislada y compara.",
 "The left wall is held at {#} K and the piston at {#} K; the top and bottom are insulated. The gas never settles to one temperature: molecules carry energy from the hot wall across to the cold one, the left half stays warmer than the right, and once the flow is steady the heat in at the left matches the heat out at the piston, so Q for all the walls stops changing. Pick each wall to read its own Q.":
   "La pared izquierda se mantiene a {#} K y el pistón a {#} K; arriba y abajo están aisladas. El gas nunca se asienta en una sola temperatura: las moléculas llevan energía de la pared caliente a la fría, la mitad izquierda se mantiene más cálida que la derecha, y una vez que el flujo es constante el calor que entra por la izquierda iguala al que sale por el pistón, así que Q de todas las paredes deja de cambiar. Elige cada pared para leer su propio Q.",
+"carbon dioxide, m = {#}×{#}⁻²⁶ kg":
+  "dióxido de carbono, m = {#}×{#}⁻²⁶ kg",
+"Carbon dioxide with its real collision diameter, σ = {#} nm, from its viscosity. Under Measurements, Molecule size reads how often each molecule collides, how far it goes between collisions, and how far P sits above NkT/A, each beside its formula. Choose helium ({#} nm) on the Gas card and the disks shrink: longer free paths and P closer to ideal, though each helium atom still collides more often, because at the same T it moves {#} times faster. The last readings are for the real gas at this T and {#} atm, which is far thinner than the box.":
+  "Dióxido de carbono con su diámetro de colisión real, σ = {#} nm, obtenido de su viscosidad. En Mediciones, Tamaño de las moléculas da qué tan seguido choca cada molécula, cuánto avanza entre choques y cuánto queda P arriba de NkT/A, cada una junto a su fórmula. Elige helio ({#} nm) en la tarjeta Gas y los discos se encogen: caminos libres más largos y P más cerca del ideal, aunque cada átomo de helio choca más seguido, porque a la misma T se mueve {#} veces más rápido. Las últimas lecturas son del gas real a esta T y {#} atm, que es mucho menos denso que la caja.",
 "Two gases share the box, kept apart by a divider. Open it and watch them mix, spread out, and leak through a small hole.":
   "Dos gases comparten la caja, separados por un divisor. Ábrelo y observa cómo se mezclan, se dispersan y se escapan por un orificio pequeño.",
 "Click a molecule to mark it, use two fingers to turn. Gas A is blue and gas B red; the model gas is two dimensional, its molecules drawn to scale.":
@@ -270,10 +304,6 @@ VDI18N.add('es', 'demo/ideal-gas', {
   "B a la izquierda",
 "half of each gas":
   "la mitad de cada gas",
-"closed":
-  "cerrado",
-"divider closed":
-  "divisor cerrado",
 "Helium mass ({#} u) on the left and argon mass ({#} u) on the right, the same size and temperature. Remove the divider: the light molecules move faster and spread faster.":
   "Masa del helio ({#} u) a la izquierda y masa del argón ({#} u) a la derecha, mismo tamaño y misma temperatura. Quita el divisor: las moléculas ligeras se mueven más rápido y se dispersan más rápido.",
 "mean square displacement (nm²)":
@@ -286,6 +316,10 @@ VDI18N.add('es', 'demo/ideal-gas', {
   "{#} moléculas con la masa del helio ({#} u) a la izquierda, nada a la derecha, y un orificio de {#} nm de ancho, más pequeño que la distancia que recorre una molécula entre choques (cerca de {#} nm aquí). Abre el orificio y cuenta qué tan rápido se escapa el gas. Luego haz que el gas A sea argón ({#} u) y repite: la ley de Graham dice que la tasa va como {#}/√m.",
 "Hot argon ({#} K) on the left and cold argon ({#} K) on the right. Remove the divider: the gases mix, and collisions bring both sides to one temperature.":
   "Argón caliente ({#} K) a la izquierda y argón frío ({#} K) a la derecha. Quita el divisor: los gases se mezclan, y los choques llevan a ambos lados a una sola temperatura.",
+"closed":
+  "cerrado",
+"divider closed":
+  "divisor cerrado",
 "Q from the piston":
   "Q del pistón",
 "Q from the top":
@@ -300,12 +334,10 @@ VDI18N.add('es', 'demo/ideal-gas', {
   "orificio, {#} nm",
 "time since the divider opened (ps)":
   "tiempo desde que se abrió el divisor (ps)",
-"hole {#} nm":
-  "orificio {#} nm",
-"t = {#} ps since opening":
-  "t = {#} ps desde la apertura",
 "removed":
   "quitado",
+"t = {#} ps since opening":
+  "t = {#} ps desde la apertura",
 "A curve at {#} K":
   "Curva de A a {#} K",
 "B curve at {#} K":
@@ -314,6 +346,10 @@ VDI18N.add('es', 'demo/ideal-gas', {
   "M-B a {#} K",
 "t = {#} ns playback {#}× faster than Fixed rate":
   "t = {#} ns reproducción {#}× más rápida que Ritmo fijo",
+"+{#} off scale →":
+  "+{#} fuera de escala →",
+"hole {#} nm":
+  "orificio {#} nm",
 "−{#} zJ":
   "−{#} zJ",
 "+{#} zJ":

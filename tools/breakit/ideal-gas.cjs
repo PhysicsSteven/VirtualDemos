@@ -3,7 +3,10 @@
    constant (elastic collisions); the readouts equal the physics of the live state (N, A = width x 30 nm, P ideal = N k T / A, rms of
    a 3D gas = sqrt(3/2) x the 2D rms, the molecular mass); with the walls held at a temperature the energy change equals the heat Q
    when the piston is at rest; the setups open at their stated temperatures. Two gases: molecules stay in the box, and a closed divider
-   keeps each side's molecules on their side. */
+   keeps each side's molecules on their side. Molecule size (2026-11-15): every disk has the radius of the size switch (0.25 nm for
+   All 0.50 nm and every setup but Real molecule sizes; σ/2 of the chosen gas, Svehla 1962, for Real sizes), and the size readouts
+   equal their formulas at the live state (2D mean free path with Henderson's χ, the hard disk P excess, the 3D λ = kT/(√2 πσ²P) at
+   1 atm, b = (2/3)πN_A σ³). */
 const KB = 1.380649e-23;
 const common = `const I = window.__ig; if (!I || !I.GS) return true; const G = I.GS, N = I.N;
   const rd = (id) => document.getElementById(id).textContent.replace(/\\u2212/g, '-');
@@ -66,13 +69,46 @@ module.exports = {
       const ratio = parseFloat(rd('rRatio')); if (!isFinite(ratio)) return true;
       const phi = N * Math.PI * G.r[0] ** 2 / (G.wallX * 30), hi = 1 / (1 - phi) ** 2 * 1.15 + 0.1;
       return ratio > 0.8 && ratio < hi ? true : 'P / P ideal = ' + ratio + ' (expected between 0.8 and ' + hi.toFixed(2) + ' at packing ' + phi.toFixed(3) + ')'; })()` },
+    { name: "molecule size: every disk has the switch's radius, a setup other than Real molecule sizes gives 0.50 nm, and the size readouts equal their formulas", fn: `(() => { ${common}
+      if (!one || document.getElementById('readSize').hidden || document.body.classList.contains('blind')) return true;
+      const SIG = { h2: 0.2827, he: 0.2551, n2: 0.3798, ar: 0.3542, co2: 0.3941 }, chip = document.querySelector('#gasChips [aria-pressed=true]'), gas = chip ? chip.dataset.gas : 'ar';
+      const real = document.querySelector('#sizeSeg [data-s=real]').getAttribute('aria-pressed') === 'true', r = real ? SIG[gas] / 2 : 0.25, bad = [];
+      for (let i = 0; i < N; i++) if (G.r[i] !== r) { bad.push('molecule ' + i + ' has radius ' + G.r[i] + ', want ' + r); break; }
+      const pre = document.querySelector('#presets [aria-pressed=true]');
+      if (pre && pre.dataset.p !== 'real' && real) bad.push('setup ' + pre.dataset.p + ' is on Real sizes');
+      if (pre && pre.dataset.p === 'real' && !real) bad.push('Real molecule sizes is on the model disk');
+      const T = I.stats.T, d = 2 * r;
+      if (!settled('size', [N, G.wallX, T, G.m[0], r].join('|'))) return bad.length ? bad.join('; ') : true;
+      if (parseFloat(rd('rD')) !== +d.toFixed(real ? 3 : 2)) bad.push('d shows ' + rd('rD') + ', want ' + d);
+      const Af = (G.wallX - d) * (30 - d), n = N / Af, eta = n * Math.PI * d * d / 4, chi = (1 - 7 * eta / 16) / (1 - eta) ** 2;
+      const lam = 1 / (2 * Math.SQRT2 * n * d * chi), lamShown = parseFloat(rd('rL').split('·')[1]);
+      if (!near(lamShown, lam, 0.006)) bad.push('2D mean free path shows ' + lamShown + ', formula ' + lam);
+      const ex = (G.wallX * 30 / Af * (1 + eta * eta / 8) / (1 - eta) ** 2 * (G.wallX + 30 - 2 * d) / (G.wallX + 30) - 1) * 100, exShown = parseFloat(rd('rEx').split('·')[1]);
+      if (Math.abs(exShown - ex) > 0.051) bad.push('hard disk excess shows ' + exShown + '%, formula ' + ex.toFixed(2) + '%');
+      const Tb = { h2: 20.35, he: 4.216, n2: 77.36, ar: 87.45, co2: 194.65 }[gas], s = SIG[gas] * 1e-9;
+      if (T >= Tb) { const l3 = ${KB} * T / (Math.SQRT2 * Math.PI * s * s * 101325) * 1e9, sh = parseFloat(rd('rL3')); if (!near(sh, l3, 0.006)) bad.push('3D mean free path shows ' + sh + ', formula ' + l3); }
+      else if (!/condenses/.test(document.getElementById('rL3').textContent) && !/condensa/.test(document.getElementById('rL3').textContent)) bad.push('below the boiling point the 3D readings should be a dash');
+      const b = 2 / 3 * Math.PI * 6.02214076e23 * s ** 3 * 1e3; if (!near(parseFloat(rd('rB')), b, 0.002)) bad.push('b shows ' + rd('rB') + ', (2/3)πN_A σ³ = ' + b);
+      return bad.length ? bad.join('; ') : true; })()` },
     { name: "a setup opens at its stated temperature (before it has run)", fn: `(() => { ${common}
       const b = document.querySelector('#presets [aria-pressed=true]'); if (!one || !b || G.lt > 2000) return true;
-      const want = { relax: 300, hotcold: 400, compress: 300, dilute: 300, cold: 0.01, walls: 300, flow: 250 }[b.dataset.p];
+      const want = { relax: 300, hotcold: 400, compress: 300, dilute: 300, cold: 0.01, walls: 300, flow: 250, real: 300 }[b.dataset.p];
       const tol = G.wallT.some((t) => t > 0) ? 0.03 : 1e-6;
       return near(I.stats.T, want, tol) || G.wallX !== 50 ? true : b.dataset.p + ' opens at T = ' + I.stats.T + ' K, stated ' + want + ' K'; })()` },
   ],
   steps: [
+    { name: 'molecule sizes: Real molecule sizes, every gas at real size, crowd to 400 and squeeze, cold and hot, back to All 0.50 nm, then a setup', fn: `(async () => {
+      const pause = (ms) => new Promise((r) => setTimeout(r, ms)), $ = (id) => document.getElementById(id);
+      const set = (id, v) => { $(id).value = v; $(id).dispatchEvent(new Event('input', { bubbles: true })); };
+      if ($('play').textContent === 'Play') $('play').click();
+      document.querySelector('#presets [data-p=real]').click(); await pause(600);
+      for (const g of ['he', 'h2', 'n2', 'ar', 'co2']) { document.querySelector('#gasChips [data-gas=' + g + ']').click(); await pause(400); }
+      set('nIn', 400); await pause(300); set('sIn', 1000); set('wIn', 15); await pause(800); set('tIn', 0); await pause(400); set('tIn', 1000); await pause(400);
+      document.querySelector('#gasChips [data-gas=he]').click(); await pause(600);
+      document.querySelector('#sizeSeg [data-s=model]').click(); await pause(400); document.querySelector('#sizeSeg [data-s=real]').click(); await pause(400);
+      set('wIn', 50); await pause(600);
+      document.querySelector('#presets [data-p=relax]').click(); await pause(600);
+    })()` },
     { name: 'compress to 15 nm, add molecules to 400, switch gas and walls mid run, then back to 50 nm', fn: `(async () => {
       const pause = (ms) => new Promise((r) => setTimeout(r, ms)), $ = (id) => document.getElementById(id);
       const set = (id, v) => { $(id).value = v; $(id).dispatchEvent(new Event('input', { bubbles: true })); };
