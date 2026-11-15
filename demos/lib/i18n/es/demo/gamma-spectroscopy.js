@@ -232,6 +232,8 @@ VDI18N.add('es', 'demo/gamma-spectroscopy', {
   "Tiempo vivo programado",
 "Off":
   "Apagado",
+"<span>Clock</span>":
+  "<span>Reloj</span>",
 "Clock speed":
   "Velocidad del reloj",
 "PMT gain, relative to {#} V":
@@ -432,16 +434,14 @@ VDI18N.add('es', 'demo/gamma-spectroscopy', {
   "Tu propia configuración. Elige un experimento de arriba para volver a uno conocido.",
 "net {#} ± {#}":
   "neta {#} ± {#}",
-"net {#}k ± {#}":
-  "neta {#}k ± {#}",
-"Live {#} <small>s</small> · Real {#} <small>s</small> · Dead {#}<small>%</small> · {#}k <small>counts</small> · <small>clock</small> ×{#}":
-  "Vivo {#} <small>s</small> · Real {#} <small>s</small> · Muerto {#}<small>%</small> · {#}k <small>cuentas</small> · <small>reloj</small> ×{#}",
 "{#} ± {#} ch":
   "{#} ± {#} canales",
 "calibrate first":
   "calibra primero",
-"Cursor ch {#} counts {#}k":
-  "Cursor canal {#} cuentas {#}k",
+"net {#}k ± {#}":
+  "neta {#}k ± {#}",
+"Live {#} <small>s</small> · Real {#} <small>s</small> · Dead {#}<small>%</small> · {#}k <small>counts</small> · <small>clock</small> ×{#}":
+  "Vivo {#} <small>s</small> · Real {#} <small>s</small> · Muerto {#}<small>%</small> · {#}k <small>cuentas</small> · <small>reloj</small> ×{#}",
 "NaI(Tl) {#}″ × {#}″":
   "NaI(Tl) {#}″ × {#}″",
 "{#} V (over {#} V)":
@@ -458,8 +458,6 @@ VDI18N.add('es', 'demo/gamma-spectroscopy', {
   "Resolución en función de la energía",
 "Needs a calibration. Counting statistics of the photoelectrons alone give a slope of −{#}/{#}; the constant term in this model ({#}%) flattens it at high energy.":
   "Necesita una calibración. La estadística de conteo de los fotoelectrones por sí sola da una pendiente de −{#}/{#}; el término constante de este modelo ({#}%) la aplana a alta energía.",
-"Live {#} <small>s</small> · Real {#} <small>s</small> · Dead {#}<small>%</small> · {#}M <small>counts</small> · <small>clock</small> ×{#}":
-  "Vivo {#} <small>s</small> · Real {#} <small>s</small> · Muerto {#}<small>%</small> · {#}M <small>cuentas</small> · <small>reloj</small> ×{#}",
 "Acquire":
   "Adquirir",
 "Close":
@@ -492,6 +490,8 @@ VDI18N.add('es', 'demo/gamma-spectroscopy', {
   "molibdeno: x = {#} mm, ρx = {#} g/cm² (ρ = {#} g/cm³)",
 "tin: x = {#} mm, ρx = {#} g/cm² (ρ = {#} g/cm³)":
   "estaño: x = {#} mm, ρx = {#} g/cm² (ρ = {#} g/cm³)",
+"Live {#} <small>s</small> · Real {#} <small>s</small> · Dead {#}<small>%</small> · {#}M <small>counts</small> · <small>clock</small> ×{#}":
+  "Vivo {#} <small>s</small> · Real {#} <small>s</small> · Muerto {#}<small>%</small> · {#}M <small>cuentas</small> · <small>reloj</small> ×{#}",
 "Hide true activity":
   "Ocultar la actividad real",
 "Remove row {#}":
@@ -510,6 +510,8 @@ VDI18N.add('es', 'demo/gamma-spectroscopy', {
   "log₁₀ d (cm)",
 "log₁₀ net rate":
   "log₁₀ tasa neta",
+"Cursor ch {#} counts {#}k":
+  "Cursor canal {#} cuentas {#}k",
 "Live {#} <small>s</small> · Real {#} <small>s</small> · Dead {#}<small>%</small> · {#} <small>counts</small>":
   "Vivo {#} <small>s</small> · Real {#} <small>s</small> · Muerto {#}<small>%</small> · {#} <small>cuentas</small>",
 "Clear table":

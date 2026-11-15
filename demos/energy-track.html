@@ -340,8 +340,10 @@
       hint: 'A loop the loop. At the top of the loop the track can only push down, so the skater needs v² ≥ gR there (R the radius of the track at the top). Started from this height it makes it round, back up the far ramp, and through the loop again backwards.' },
     lowloop: { pts: LOOP, f: 0.14, mu: 0, g: 'earth', stick: false,
       hint: 'The same loop, started lower. Near the top the track would have to pull the skater in, which it cannot, so the skater leaves the track and falls across the loop as a projectile. Turn on Stick to the track and it goes round.' },
-    jump: { pts: [[0.5, 6.5], [3, 2], [6, 0.8], [8, 1.4], [9.2, 2.6]], f: 0.05, mu: 0, g: 'earth', stick: false,
-      hint: 'A ramp that ends in a kicker. Off the end the skater flies as a projectile: K and U still add to the total in the air. It reaches the wall at the right edge of the park, which stops its sideways motion, then drops to the ground; at the wall and on landing the lost kinetic energy goes into thermal energy, so the bars show each bump.' },
+    /* a lower, shorter ramp and kicker: from a 6.5 m start the skater hit the wall 0.5 s after take off; from 2.9 m it flies
+       about 1 s and lands on the ground at x ≈ 10 m, short of the wall (student view calls, 2026-11-15) */
+    jump: { pts: [[0.5, 3.2], [2.5, 1.0], [4.5, 0.5], [6.1, 0.9], [7.0, 1.8]], f: 0.05, mu: 0, g: 'earth', stick: false,
+      hint: 'A ramp that ends in a kicker. Off the end the skater flies as a projectile: K and U still add to the total in the air. It lands on the ground about a second later, and the downward speed goes into thermal energy, so the bars show the bump. With no friction it then slides on until the wall at the right edge stops it.' },
     hump: { pts: HUMP, f: 0.02, mu: 0, g: 'earth', stick: false,
       hint: 'A hump with a tight top. Coming up to the top the track curves away faster than the skater can follow (N would drop below zero), so the skater leaves the track, flies over the top and lands on the far ramp.' },
     rails: { pts: HUMP, f: 0.02, mu: 0, g: 'earth', stick: true,

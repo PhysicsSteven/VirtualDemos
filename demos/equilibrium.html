@@ -231,6 +231,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'), accent: g('--accent'),
       w: g('--w'), sup: g('--sup'), tn: g('--tn'), fr: g('--fr'), beam: g('--beam'), load: g('--load'), ok: g('--own-ok'),
       sky: g('--sky'), skyLow: g('--sky-low'), hill: g('--hill'), grass: g('--grass'), grassDark: g('--grass-dark'), brick: g('--brick'), brickAlt: g('--brick-alt'), mortar: g('--mortar'), floor: g('--floor'), floorLine: g('--floor-line'), siding: g('--siding'), sidingLine: g('--siding-line'), metal: g('--metal'), metalDark: g('--metal-dark'), woodDark: g('--wood-dark'), grain: g('--own-grain'), panel: g('--panel'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; }
+  /* how far an unbalanced seesaw is drawn tipped, rad: at least 0.12 (7°) so "tips left side down" is plain to see even for a small
+     net torque (the default 12 kg·m was drawn 2.6°, nearly level), up to 0.2, short of the 0.25 at which an end meets the ground
+     in 3D (student view calls, 2026-11-15) */
+  const seesawTilt = (tau) => Math.min(0.2, 0.12 + Math.abs(tau) / 400 * 0.08);
   const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
   const f = (v, d = 1) => (!isFinite(v) ? '—' : (Math.abs(v) < 0.5 * 10 ** -d ? (0).toFixed(d) : v.toFixed(d)).replace('-', '−'));
 
@@ -322,7 +326,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.fillStyle = T.ink; ctx.font = `600 ${13 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
     if (S.preset === 'seesaw') {
       const r = seesaw(v.mb, [{ m: v.m1, x: v.x1 }, { m: v.m2, x: v.x2 }]), sc = (W - 80 * p) / 6, cx = W / 2, cy = H * 0.55;
-      const tilt = bl || r.balanced ? 0 : Math.sign(r.tau) * Math.min(0.16, Math.abs(r.tau) / 400 * 0.16 + 0.04);
+      /* never steeper than the angle at which an end meets the grass (46 px below the pivot) (student view calls, 2026-11-15) */
+      const tilt = bl || r.balanced ? 0 : Math.sign(r.tau) * Math.min(seesawTilt(r.tau), Math.asin(Math.min(1, 46 * p / (2.5 * sc))));
       geo = { kind: 'seesaw', cx, cy, sc, tilt };
       // a playground: sky, a low hill, grass; the seesaw stands on a metal A-frame
       const gy = cy + 46 * p; sky(gy);
@@ -582,7 +587,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const L = (Fv) => (bl ? 0.17 * span : Fv * k), put = (i, tail, vec, mt, wid, lab, col) => { const e = arrow3(i, tail, vec, mt, wid); if (e) out.push([e, lab, col]); };
     g.hits = []; g.axis = null;
     if (P === 'seesaw') {
-      const r = seesaw(v.mb, [{ m: v.m1, x: v.x1 }, { m: v.m2, x: v.x2 }]), tilt = bl || r.balanced ? 0 : Math.sign(r.tau) * Math.min(0.16, Math.abs(r.tau) / 400 * 0.16 + 0.04), a = -tilt;
+      const r = seesaw(v.mb, [{ m: v.m1, x: v.x1 }, { m: v.m2, x: v.x2 }]), tilt = bl || r.balanced ? 0 : Math.sign(r.tau) * seesawTilt(r.tau), a = -tilt;
       g.beam.rotation.y = a; const W3 = (x, z) => [x * Math.cos(a) + z * Math.sin(a), 0, HP - x * Math.sin(a) + z * Math.cos(a)];
       verdictMsg = bl ? 'Is it balanced?' : r.balanced ? 'Balanced: the torques cancel.' : `Not balanced: it tips ${r.tau > 0 ? 'left side down' : 'right side down'}.`;
       k = 0.3 * span / Math.max(v.m1 * G, v.m2 * G, r.P, v.mb * G, 1e-9);
@@ -979,7 +984,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   function setPos(which, px) {
     const g = geo; if (!g) return;
-    setVal(which, g.kind === 'seesaw' ? (px - g.cx) / g.sc : g.kind === 'plank' || g.kind === 'sign' ? (px - g.X(0)) / g.sc : (px - g.footX) / (g.wallX - g.footX));
+    setVal(which, g.kind === 'seesaw' ? (px - g.cx) / (g.sc * Math.cos(g.tilt)) /* along the tipped beam (student view calls, 2026-11-15) */ : g.kind === 'plank' || g.kind === 'sign' ? (px - g.X(0)) / g.sc : (px - g.footX) / (g.wallX - g.footX));
   }
   can.addEventListener('pointerdown', (e) => {
     if (S.preset === 'sandbox') { sbeDown(e); return; }

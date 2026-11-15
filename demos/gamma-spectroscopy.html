@@ -297,11 +297,13 @@ sub, sup { line-height: 0; }
             <option value="0">Off</option><option value="10">10 s</option><option value="30">30 s</option><option value="60">60 s</option><option value="100">100 s</option>
             <option value="120">120 s</option><option value="300">300 s</option><option value="600">600 s</option><option value="1800">1800 s</option>
           </select>
+          <!-- the speed switch had no visible name; the name and the switch wrap as one (student view calls, 2026-11-15) -->
+          <div class="row"><span class="lab" aria-hidden="true">Clock</span>
           <div class="seg" role="group" aria-label="Clock speed">
             <button type="button" data-sp="1" aria-pressed="false">×1</button>
             <button type="button" data-sp="10" aria-pressed="true">×10</button>
             <button type="button" data-sp="100" aria-pressed="false">×100</button>
-          </div>
+          </div></div>
         </div>
         <dl class="readout">
           <div><dt>PMT gain, relative to 900 V</dt><dd id="rGain">—</dd></div>
@@ -1009,18 +1011,20 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   // ---------- presets ----------
   // Presets follow ORTEC Experiment 3 (AN34) on the department's apparatus; all use the manual's gain (661.7 keV near channel 475 of 2048).
+  /* the setups with a 60 to 120 s preset live time open at clock ×10, not ×100: at ×100 the whole spectrum appeared in under a
+     second and a student never saw it build up; now it takes 6 to 12 s. The 300 s unknown stays at ×100 (3 s) (student view calls, 2026-11-15) */
   const PRESETS = {
-    cal: { src: 'cs137', d: 2, ptime: 120, speed: 100, mark: true, ana: 'cal',
+    cal: { src: 'cs137', d: 2, ptime: 120, speed: 10, mark: true, ana: 'cal',
       hint: 'ORTEC Experiment 3.1. ¹³⁷Cs is 2 cm from the crystal and the gain is set as in the manual: 661.7 keV near channel 475 of 2048, full scale about 2.87 MeV. Acquire, then in mark peak mode click the 661.7 keV peak and add 661.657 keV. Switch the source to Co-60, Clear, acquire, and mark 1173.228 and 1332.492 keV. Na-22 (511.0, 1274.537), Co-57 (122.061) and Mn-54 (834.848) add points. Keep the HV and gain fixed, then turn on the keV axis and check the residuals.' },
     unk: { src: 'unk', d: 5, ptime: 300, speed: 100, ana: 'cal', calibrate: true,
       hint: 'ORTEC Experiment 3.2. A source from the RSS8 set with its label covered. The detector was calibrated with Cs-137 and Co-60 earlier (points in the calibration list), so the axis can show keV. Acquire, measure the energy of each photopeak, and compare with the line list in the Model section. Some sources have more than one nuclide. Reveal the answer when you are done.' },
     cs: { src: 'cs137', back: 'fe', d: 5, ptime: 0, speed: 10, ana: 'cal', lin: true, view: [0, 1024],
       hint: 'ORTEC Experiment 3.3. ¹³⁷Cs 5 cm from the crystal. The tall peak is the 661.7 keV photopeak, where the photon gave all its energy to the crystal. Below it the Compton continuum ends at the Compton edge, 2E²/(mₑc² + 2E) = 477.3 keV, where the counts fall most steeply. The bump near 190 keV is the backscatter peak: photons scattered back from the steel plate behind the source carry E/(1 + 2E/mₑc²) = 184.3 keV at exactly 180°, a little more at the smaller angles the plate also allows. Switch the backing to lead: lead absorbs most scattered photons on their way out, so the bump shrinks, and lead K X-rays appear near 75 keV. The barium K X-rays make the peak near 32 keV. For the ⁶⁰Co sum peak (2505.7 keV), choose Co-60 and move the source to 1 cm.' },
-    act: { src: 'csref', d: 4, ptime: 60, speed: 100, roi: [600, 728], ana: 'act', view: [0, 1024],
+    act: { src: 'csref', d: 4, ptime: 60, speed: 10, roi: [600, 728], ana: 'act', view: [0, 1024],
       hint: 'ORTEC Experiment 3.5. The ¹³⁷Cs standard, 5.00 µCi ± 5%, is 4 cm from the crystal with a region of interest on the 661.7 keV peak. Acquire 60 s live and Add to table. Then choose Cs-137 from the RSS8 set, keep the distance and the region, Clear, acquire 60 s live, and Add to table. The activity is A = 5.00 µCi × (net rate of the source)/(net rate of the standard); the Activity plot does this and carries the 5% certificate uncertainty. Show true activity to check. The ¹³⁷Cs part of the mixed Cs/Zn source can be measured the same way.' },
-    pb: { src: 'cs137', d: 5, ptime: 60, speed: 100, mat: 'pb', roi: [600, 728], ana: 'att', view: [0, 1024],
+    pb: { src: 'cs137', d: 5, ptime: 60, speed: 10, mat: 'pb', roi: [600, 728], ana: 'att', view: [0, 1024],
       hint: 'ORTEC Experiment 3.7. ¹³⁷Cs 5 cm from the crystal with a region of interest on the 661.7 keV photopeak. Acquire 60 s live with no lead and Add to table. Add a lead absorber to the stack, Clear, acquire for the same live time, Add to table, and keep going in steps of about 1000 to 1600 mg/cm² until the rate falls below a quarter of the first one. The Attenuation plot fits ln(rate) against mass thickness; the slope is −μ/ρ. XCOM gives 0.110 cm²/g for lead at 661.7 keV (the manual quotes 0.105).' },
-    pe: { src: 'co57h', d: 10, ptime: 100, speed: 100, mat: 'ta', roi: [100, 152], ana: 'att', view: [0, 256],
+    pe: { src: 'co57h', d: 10, ptime: 100, speed: 10, mat: 'ta', roi: [100, 152], ana: 'att', view: [0, 256],
       hint: 'ORTEC Experiment 3.9. The 20 µCi ⁵⁷Co source 10 cm from the crystal; keep the input rate between 2000 and 8000 per second, and never closer than 4 cm. The region of interest covers the 122.1 keV peak; the 136.5 keV line (11% of decays) is not resolved from it, so the measured μ/ρ comes out a little below the 122 keV value. Acquire 100 s live with no foils and Add to table, then add foils of one element until the rate about halves, acquire for the same live time, and Add to table. Repeat for Al, Fe, Cu, Mo, Sn, Ta and lead: μ/ρ grows steeply with Z, roughly as Z⁴ to Z⁵.' }
   };
   function applyPreset(name) {

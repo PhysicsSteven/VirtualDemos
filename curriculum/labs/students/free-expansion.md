@@ -16,7 +16,7 @@ Textbook: OpenStax *University Physics*, Vol. 2, §§4.1 and 4.7. Access for fre
 - The disks bounce off the walls and each other without losing energy, so the total kinetic energy, and the temperature, stay the same. Removing the partition does no work and lets no heat in or out.
 - The shares of time are counted from the first moment the count on the left falls to half or less, so the first rush out of the left half is left out. The meters show the count on the left now, the share of the counted time that all the molecules have been on the left, and the time since the partition was removed.
 - The graphs show the count on the left against time, and the share of time spent at each count. The dots on the second graph are the share of all left or right arrangements that put n on the left; Blind hides them.
-- This is a picture of the idea: the disks are far bigger and fewer than real molecules, and time runs on the model's own clock. The speed buttons run it 1, 10 or 100 times faster.
+- This is a picture of the idea: the disks are far bigger and fewer than real molecules, and time runs on the model's own clock. At 1× the model clock runs 0.5 s each second (the line above the stage says so); the speed buttons run it 1, 10 or 100 times faster.
 - Record reading stores the share of time at every count, one row per count, for the run so far. Export to worksheet sends the readings to the Data table below; Clear starts a new series, which goes into a new copy of the table.
 - Reset puts the partition back with a fresh arrangement.
 
