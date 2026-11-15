@@ -146,12 +146,14 @@ VDI18N.add('es', 'demo/spectra', {
   "Dónde están los átomos de hidrógeno, en función de la temperatura superficial de la estrella. Las líneas de Balmer necesitan átomos en el nivel n = {#}.",
 "Chart of hydrogen level populations against temperature, log scales. Drag sideways or use the left and right arrow keys to change the temperature.":
   "Gráfica de las poblaciones de los niveles del hidrógeno en función de la temperatura, escalas logarítmicas. Arrastra hacia los lados o usa las flechas izquierda y derecha para cambiar la temperatura.",
-"<span><i></i>share of all hydrogen on n = {#}, N₂/N<sub>total</sub></span> <span><i></i>N₂/N₁, Boltzmann</span> <span><i></i>share still neutral, N<sub>I</sub>/N<sub>total</sub>, Saha</span> <span>up the side: shares and ratios, log scale</span>":
-  "<span><i></i>fracción de todo el hidrógeno en n = {#}, N₂/N<sub>total</sub></span> <span><i></i>N₂/N₁, Boltzmann</span> <span><i></i>fracción aún neutra, N<sub>I</sub>/N<sub>total</sub>, Saha</span> <span>eje vertical: fracciones y razones, escala logarítmica</span>",
-"The star's visible spectrum: its blackbody brightness curve at this temperature over a strip of its colors, with hydrogen's Balmer absorption lines cut deeper when more atoms sit on level n = {#}.":
-  "El espectro visible de la estrella: su curva de brillo de cuerpo negro a esta temperatura sobre una franja de sus colores, con las líneas de absorción de Balmer del hidrógeno más hondas cuando hay más átomos en el nivel n = {#}.",
+"<span><i></i>share of all hydrogen on n = {#}, N₂/N<sub>total</sub></span> <span><i></i>N₂/N₁, Boltzmann</span> <span><i></i>share still neutral, N<sub>I</sub>/N<sub>total</sub>, Saha</span> <span><i></i>share of all titanium bound in TiO molecules</span> <span>up the side: shares and ratios, log scale</span>":
+  "<span><i></i>fracción de todo el hidrógeno en n = {#}, N₂/N<sub>total</sub></span> <span><i></i>N₂/N₁, Boltzmann</span> <span><i></i>fracción aún neutra, N<sub>I</sub>/N<sub>total</sub>, Saha</span> <span><i></i>fracción de todo el titanio unido en moléculas de TiO</span> <span>eje vertical: fracciones y razones, escala logarítmica</span>",
+"The star's visible spectrum: its blackbody brightness curve at this temperature over a strip of its colors, with hydrogen's Balmer absorption lines cut deeper when more atoms sit on level n = {#}, and in cool stars the bands of titanium oxide.":
+  "El espectro visible de la estrella: su curva de brillo de cuerpo negro a esta temperatura sobre una franja de sus colores, con las líneas de absorción de Balmer del hidrógeno más hondas cuando hay más átomos en el nivel n = {#}, y en las estrellas frías las bandas del óxido de titanio.",
 "The star's own light: a blackbody at its surface temperature (Planck's law), with hydrogen's Balmer lines taken out of it. Cool stars are dim in the violet, hot stars in the red. Line depths are drawn on a log scale of line strength, not as measured profiles.":
   "La luz propia de la estrella: un cuerpo negro a su temperatura superficial (ley de Planck), con las líneas de Balmer del hidrógeno restadas. Las estrellas frías son tenues en el violeta y las calientes en el rojo. La profundidad de cada línea se dibuja en escala logarítmica de su intensidad, no como un perfil medido.",
+"Below about {#} K, molecules survive in the gas. Titanium oxide (TiO) cuts dark bands into the spectrum, each with a sharp edge on its violet side that fades toward the red: the mark of an M star. Band depths are drawn on a log scale of the share of titanium in TiO, from {#}⁻² of its share at {#} K (barely there) to its share at {#} K (darkest).":
+  "Por debajo de unos {#} K, las moléculas sobreviven en el gas. El óxido de titanio (TiO) corta bandas oscuras en el espectro, cada una con un borde nítido en su lado violeta que se desvanece hacia el rojo: la marca de una estrella M. La profundidad de las bandas se dibuja en escala logarítmica de la fracción del titanio en TiO, desde {#}⁻² de su fracción a {#} K (apenas visible) hasta su fracción a {#} K (lo más oscuro).",
 "λ in air (nm)":
   "λ en aire (nm)",
 "Oscillator strength f":
@@ -166,8 +168,8 @@ VDI18N.add('es', 'demo/spectra', {
   "La secuencia espectral",
 "The same calculation for six stars, coolest at the top, at this electron pressure. Click a row to go to that star.":
   "El mismo cálculo para seis estrellas, la más fría arriba, a esta presión electrónica. Haz clic en una fila para ir a esa estrella.",
-"Spectra of six stars from {#} to {#} K, each its blackbody colors with hydrogen's Balmer lines, which are darkest for the A star near {#} K.":
-  "Espectros de seis estrellas de {#} a {#} K, cada uno con sus colores de cuerpo negro y las líneas de Balmer del hidrógeno, que son más oscuras en la estrella A, cerca de {#} K.",
+"Spectra of six stars from {#} to {#} K, each its blackbody colors with hydrogen's Balmer lines, which are darkest for the A star near {#} K, and titanium oxide bands, which are darkest in the coolest star.":
+  "Espectros de seis estrellas de {#} a {#} K, cada uno con sus colores de cuerpo negro y las líneas de Balmer del hidrógeno, que son más oscuras en la estrella A, cerca de {#} K, y las bandas del óxido de titanio, que son más oscuras en la estrella más fría.",
 "Models of the hydrogen atom":
   "Modelos del átomo de hidrógeno",
 "One lamp shines the same photons up into six atoms, oldest model on the left. Under each, the light it gives off, against hydrogen's real lines.":
@@ -648,6 +650,8 @@ VDI18N.add('es', 'demo/spectra', {
   "Intercambiar",
 "Pick top":
   "Elegir arriba",
+"Cool M star, {#} K":
+  "Estrella M fría, {#} K",
 "M star, {#} K":
   "Estrella M, {#} K",
 "The Sun, {#} K":
@@ -668,10 +672,16 @@ VDI18N.add('es', 'demo/spectra', {
   "Fracción de todo el hidrógeno en n = {#}, N₂/N<sub>total</sub>",
 "Balmer lines strongest at, this P<sub>e</sub>":
   "Líneas de Balmer más intensas a, con esta P<sub>e</sub>",
+"Titanium bound in TiO, N<sub>TiO</sub>/N<sub>Ti, total</sub>":
+  "Titanio unido en TiO, N<sub>TiO</sub>/N<sub>Ti, total</sub>",
 "A Balmer line is absorbed by a hydrogen atom whose electron already sits on level n = {#}. In a cool star almost every atom is on n = {#} (Boltzmann factor), and in a hot star almost every atom has lost its electron (Saha equation). Only in between are there many atoms on n = {#}: the Balmer lines are strongest in A stars, near {#} K.":
   "Una línea de Balmer la absorbe un átomo de hidrógeno cuyo electrón ya está en el nivel n = {#}. En una estrella fría casi todos los átomos están en n = {#} (factor de Boltzmann), y en una estrella caliente casi todos los átomos han perdido su electrón (ecuación de Saha). Solo en medio hay muchos átomos en n = {#}: las líneas de Balmer son más intensas en las estrellas A, cerca de {#} K.",
 "Model, as in Carroll and Ostlie, <i>An Introduction to Modern Astrophysics</i> (2nd ed., §{#}): Boltzmann N₂/N₁ = (g₂/g₁) e<sup>−(E₂−E₁)/kT</sup> with g<sub>n</sub> = 2n² and E₂ − E₁ = ¾ × {#} eV; Saha N<sub>II</sub>/N<sub>I</sub> = (2kTZ<sub>II</sub>/(P<sub>e</sub>Z<sub>I</sub>)) ({#}πm<sub>e</sub>kT/h²)<sup>{#}/{#}</sup> e<sup>−χ/kT</sup> with χ = {#} eV. Approximations: partition functions Z<sub>I</sub> = {#} (ground level only) and Z<sub>II</sub> = {#} (a bare proton); neutral atoms counted as N₁ + N₂; the electron pressure is held fixed (Carroll and Ostlie use {#} N/m², where the peak falls near {#} K) while a real atmosphere's changes with T; line strength also depends on things this model leaves out, so the strip under the chart only shows which way the lines go. The strip is the star's continuum, a blackbody at T by Planck's law (each color's brightness relative to the brightest in the strip), and each Balmer line is drawn darker on a log scale of f λ² N₂/N<sub>total</sub>, the strength of a weak line (f is the line's oscillator strength from n = {#}, NIST: Hα {#}, Hβ {#}, Hγ {#}, Hδ {#}, Hε {#}), from {#}⁻⁴ of Hα's at the peak (barely there) to Hα at the peak (black). Strong lines saturate, so in a real A star the higher lines are darker than this shows. Constants CODATA {#}.":
   "Modelo, como en Carroll y Ostlie, <i>An Introduction to Modern Astrophysics</i> (2.ª ed., §{#}): Boltzmann N₂/N₁ = (g₂/g₁) e<sup>−(E₂−E₁)/kT</sup> con g<sub>n</sub> = 2n² y E₂ − E₁ = ¾ × {#} eV; Saha N<sub>II</sub>/N<sub>I</sub> = (2kTZ<sub>II</sub>/(P<sub>e</sub>Z<sub>I</sub>)) ({#}πm<sub>e</sub>kT/h²)<sup>{#}/{#}</sup> e<sup>−χ/kT</sup> con χ = {#} eV. Aproximaciones: funciones de partición Z<sub>I</sub> = {#} (solo el nivel base) y Z<sub>II</sub> = {#} (un protón desnudo); los átomos neutros se cuentan como N₁ + N₂; la presión electrónica se mantiene fija (Carroll y Ostlie usan {#} N/m², con la que el máximo cae cerca de {#} K) mientras que la de una atmósfera real cambia con T; la intensidad de las líneas depende también de cosas que este modelo deja fuera, así que la franja bajo la gráfica solo muestra hacia dónde van las líneas. La franja es el continuo de la estrella, un cuerpo negro a T según la ley de Planck (el brillo de cada color relativo al más brillante de la franja), y cada línea de Balmer se dibuja más oscura en una escala logarítmica de f λ² N₂/N<sub>total</sub>, la intensidad de una línea débil (f es la fuerza de oscilador de la línea desde n = {#}, NIST: Hα {#}, Hβ {#}, Hγ {#}, Hδ {#}, Hε {#}), desde {#}⁻⁴ de la de Hα en el máximo (apenas visible) hasta Hα en el máximo (negro). Las líneas intensas se saturan, así que en una estrella A real las líneas más altas son más oscuras de lo que se muestra aquí. Constantes CODATA {#}.",
+"Titanium oxide. In a cool star's atmosphere, atoms also join into molecules, and a molecule breaks apart again when the gas is hot enough: TiO ⇌ Ti + O takes D₀ = {#} eV. Chemical equilibrium (the law of mass action, the molecular form of the Saha equation) sets the balance: p<sub>Ti</sub>p<sub>O</sub>/p<sub>TiO</sub> = K(T), which climbs steeply with temperature like e<sup>−D₀/kT</sup>. Titanium also loses an electron easily ({#} eV), so in the Sun most of it is Ti⁺, which this model lets form no TiO. Carbon monoxide forms first and takes all the carbon, and in the coolest stars water takes much of the rest of the oxygen; titanium is rare (one atom for every {#} million hydrogen atoms), yet its oxide absorbs so strongly that its bands rule the spectrum of an M star.":
+  "Óxido de titanio. En la atmósfera de una estrella fría, los átomos también se unen en moléculas, y una molécula se rompe de nuevo cuando el gas está lo bastante caliente: TiO ⇌ Ti + O requiere D₀ = {#} eV. El equilibrio químico (la ley de acción de masas, la forma molecular de la ecuación de Saha) fija el balance: p<sub>Ti</sub>p<sub>O</sub>/p<sub>TiO</sub> = K(T), que sube muy rápido con la temperatura, como e<sup>−D₀/kT</sup>. Además, el titanio pierde un electrón con facilidad ({#} eV), así que en el Sol casi todo está como Ti⁺, que en este modelo no forma TiO. El monóxido de carbono se forma primero y se lleva todo el carbono, y en las estrellas más frías el agua se lleva buena parte del oxígeno restante; el titanio es escaso (un átomo por cada {#} millones de átomos de hidrógeno), pero su óxido absorbe con tanta fuerza que sus bandas dominan el espectro de una estrella M.",
+"TiO model: dissociation and ionization constants K(T) for H₂, CO, OH, H₂O, TiO, TiO₂ and Ti ⇌ Ti⁺ + e⁻ from the NIST-JANAF Thermochemical Tables (Chase {#}), fitted to {#} dex from {#} to {#} K and extended in a straight line in {#}/T above {#} K; solar abundances by number from Asplund et al. {#} (H {#}, He {#}, C {#}, O {#}, Ti {#} on the log ε scale); the gas pressure held at {#}⁴ N/m² ({#} bar), a round value for a stellar photosphere (an M dwarf's is higher, an M giant's lower; ten times the pressure makes more TiO), and the electron pressure from the slider for titanium's ionization. Left out: every other element and molecule, hydrogen's ionization, and dust. Band heads (air wavelengths, all degraded to the red): the α system {#}, {#}, {#}, {#}, {#}, {#} and {#} nm (Pearse and Gaydon, <i>The Identification of Molecular Spectra</i>, {#}) and {#} nm (Gray, <i>A Digital Spectral Classification Atlas</i>); β {#} and {#} nm (Phillips {#}); γ′ {#} nm (Pavlenko et al. {#}) and {#}, {#} and {#} nm; γ {#}, {#} and {#} nm (Valenti, Piskunov and Johns-Krull {#}) and {#}, {#}, {#} and {#} nm (Pearse and Gaydon). Every band is drawn the same depth and shape, a sharp head fading to the red over about {#} nm; real bands differ in strength, are made of thousands of lines and saturate. The depth scale is a display choice: it makes the bands fade out near {#} K, a K7 star, where real spectra first show TiO (at K7 \"the TiO {#} bandhead can just barely be detected\", Gray). A real M star's light also differs from a blackbody, because the bands themselves take so much of it.":
+  "Modelo del TiO: constantes de disociación e ionización K(T) de H₂, CO, OH, H₂O, TiO, TiO₂ y Ti ⇌ Ti⁺ + e⁻ tomadas de las tablas termoquímicas NIST-JANAF (Chase {#}), ajustadas a {#} dex de {#} a {#} K y extendidas en línea recta en {#}/T por encima de {#} K; abundancias solares en número de Asplund et al. {#} (H {#}, He {#}, C {#}, O {#}, Ti {#} en la escala log ε); la presión del gas fija en {#}⁴ N/m² ({#} bar), un valor redondo para una fotósfera estelar (la de una enana M es mayor y la de una gigante M menor; diez veces más presión da más TiO), y la presión electrónica del control deslizante para la ionización del titanio. Se omiten: todos los demás elementos y moléculas, la ionización del hidrógeno y el polvo. Cabezas de banda (longitudes de onda en aire, todas degradadas hacia el rojo): el sistema α {#}, {#}, {#}, {#}, {#}, {#} y {#} nm (Pearse y Gaydon, <i>The Identification of Molecular Spectra</i>, {#}) y {#} nm (Gray, <i>A Digital Spectral Classification Atlas</i>); β {#} y {#} nm (Phillips {#}); γ′ {#} nm (Pavlenko et al. {#}) y {#}, {#} y {#} nm; γ {#}, {#} y {#} nm (Valenti, Piskunov y Johns-Krull {#}) y {#}, {#}, {#} y {#} nm (Pearse y Gaydon). Cada banda se dibuja con la misma profundidad y forma, una cabeza nítida que se desvanece hacia el rojo en unos {#} nm; las bandas reales difieren en intensidad, están hechas de miles de líneas y se saturan. La escala de profundidad es una elección de dibujo: hace que las bandas se desvanezcan cerca de {#} K, una estrella K7, donde los espectros reales empiezan a mostrar TiO (en K7 \"apenas se detecta la cabeza de banda {#} del TiO\", Gray). La luz de una estrella M real también difiere de la de un cuerpo negro, porque las propias bandas se llevan tanta de ella.",
 "Lamp color":
   "Color de la lámpara",
 "Lyman α":
@@ -798,6 +808,8 @@ VDI18N.add('es', 'demo/spectra', {
   "temperatura superficial T (K), escala logarítmica",
 "↑ share in n = {#}":
   "↑ fracción en n = {#}",
+"TiO":
+  "TiO",
 "peak {#} K":
   "máximo {#} K",
 "brightness, relative to the brightest color shown":
@@ -810,8 +822,8 @@ VDI18N.add('es', 'demo/spectra', {
   "Hδ",
 "Hε":
   "Hε",
-"Change the star's surface temperature and watch the share of hydrogen atoms that can absorb Balmer lines.":
-  "Cambia la temperatura superficial de la estrella y observa la fracción de átomos de hidrógeno que pueden absorber líneas de Balmer.",
+"Change the star's surface temperature and watch the share of hydrogen atoms that can absorb Balmer lines, and, in the coolest stars, the titanium oxide bands.":
+  "Cambia la temperatura superficial de la estrella y observa la fracción de átomos de hidrógeno que pueden absorber líneas de Balmer y, en las estrellas más frías, las bandas del óxido de titanio.",
 "Six historical models of hydrogen under the same lamp. Pick a color and see which atoms answer, and with what light.":
   "Seis modelos históricos del hidrógeno bajo la misma lámpara. Elige un color y mira qué átomos responden, y con qué luz.",
 "brightness, relative":
@@ -826,18 +838,16 @@ VDI18N.add('es', 'demo/spectra', {
   "Cerrar",
 "2p, lives {#} ns":
   "2p, vive {#} ns",
+"4d, lives {#} ns":
+  "4d, vive {#} ns",
+"Six models of the hydrogen atom under one photon beam at {#} nm. Billiard ball: a hard, solid sphere; Plum pudding: rings at {#} nm; Classical orbit: t = {#} ps of {#}; Bohr: n = {#}, E = -{#} eV; de Broglie: n = {#}, E = -{#} eV; Schrödinger: 4d, lives {#} ns.":
+  "Seis modelos del átomo de hidrógeno bajo un mismo haz de fotones a {#} nm. Bola de billar: una esfera dura y sólida; Budín de pasas: oscila a {#} nm; Órbita clásica: t = {#} ps de {#}; Bohr: n = {#}, E = -{#} eV; de Broglie: n = {#}, E = -{#} eV; Schrödinger: 4d, vive {#} ns.",
 "bare proton":
   "protón desnudo",
 "ionized from n = {#}":
   "ionizado desde n = {#}",
-"Six models of the hydrogen atom under one photon beam at {#} nm. Billiard ball: a hard, solid sphere; Plum pudding: rings at {#} nm; Classical orbit: t = {#} ps of {#}; Bohr: n = {#}, E = -{#} eV; de Broglie: n = {#}, E = -{#} eV; Schrödinger: ionized from n = {#}.":
-  "Seis modelos del átomo de hidrógeno bajo un mismo haz de fotones a {#} nm. Bola de billar: una esfera dura y sólida; Budín de pasas: oscila a {#} nm; Órbita clásica: t = {#} ps de {#}; Bohr: n = {#}, E = -{#} eV; de Broglie: n = {#}, E = -{#} eV; Schrödinger: ionizado desde n = {#}.",
-"6g, lives {#} ns":
-  "6g, vive {#} ns",
-"5f, lives {#} ns":
-  "5f, vive {#} ns",
-"Six models of the hydrogen atom under one photon beam at {#} nm. Billiard ball: a hard, solid sphere; Plum pudding: rings at {#} nm; Classical orbit: t = {#} ps of {#}; Bohr: n = {#}, E = -{#} eV; de Broglie: n = {#}, E = -{#} eV; Schrödinger: 5f, lives {#} ns.":
-  "Seis modelos del átomo de hidrógeno bajo un mismo haz de fotones a {#} nm. Bola de billar: una esfera dura y sólida; Budín de pasas: oscila a {#} nm; Órbita clásica: t = {#} ps de {#}; Bohr: n = {#}, E = -{#} eV; de Broglie: n = {#}, E = -{#} eV; Schrödinger: 5f, vive {#} ns.",
+"Six models of the hydrogen atom under one photon beam at {#} nm. Billiard ball: a hard, solid sphere; Plum pudding: rings at {#} nm; Classical orbit: t = {#} ps of {#}; Bohr: ionized from n = {#}; de Broglie: ionized from n = {#}; Schrödinger: ionized from n = {#}.":
+  "Seis modelos del átomo de hidrógeno bajo un mismo haz de fotones a {#} nm. Bola de billar: una esfera dura y sólida; Budín de pasas: oscila a {#} nm; Órbita clásica: t = {#} ps de {#}; Bohr: ionizado desde n = {#}; de Broglie: ionizado desde n = {#}; Schrödinger: ionizado desde n = {#}.",
 "<b>{#} correct</b>. {#} more to find: some lines still have no match.":
   "<b>{#} correctos</b>. Faltan {#} por encontrar: algunas líneas aún no tienen pareja.",
 "The answer: <b>Hydrogen, Sodium, Magnesium, Calcium, Iron</b>. A real stellar spectrum has thousands more lines, mostly from iron, but these five make the strongest features in sunlight. The letters on the strip are the names Fraunhofer gave the darkest solar lines.":
@@ -864,6 +874,14 @@ VDI18N.add('es', 'demo/spectra', {
   "La luz de una estrella reunida por un telescopio y dispersada por el espectroscopio. La franja de abajo es la vista en el ocular.",
 "Starlight through a telescope and a hand spectroscope":
   "La luz de una estrella a través de un telescopio y un espectroscopio de mano",
+"Six models of the hydrogen atom under one photon beam at {#} nm. Billiard ball: a hard, solid sphere; Plum pudding: rings at {#} nm; Classical orbit: t = {#} ps of {#}; Bohr: n = {#}, E = -{#} eV; de Broglie: n = {#}, E = -{#} eV; Schrödinger: ionized from n = {#}.":
+  "Seis modelos del átomo de hidrógeno bajo un mismo haz de fotones a {#} nm. Bola de billar: una esfera dura y sólida; Budín de pasas: oscila a {#} nm; Órbita clásica: t = {#} ps de {#}; Bohr: n = {#}, E = -{#} eV; de Broglie: n = {#}, E = -{#} eV; Schrödinger: ionizado desde n = {#}.",
+"6g, lives {#} ns":
+  "6g, vive {#} ns",
+"5f, lives {#} ns":
+  "5f, vive {#} ns",
+"Six models of the hydrogen atom under one photon beam at {#} nm. Billiard ball: a hard, solid sphere; Plum pudding: rings at {#} nm; Classical orbit: t = {#} ps of {#}; Bohr: n = {#}, E = -{#} eV; de Broglie: n = {#}, E = -{#} eV; Schrödinger: 5f, lives {#} ns.":
+  "Seis modelos del átomo de hidrógeno bajo un mismo haz de fotones a {#} nm. Bola de billar: una esfera dura y sólida; Budín de pasas: oscila a {#} nm; Órbita clásica: t = {#} ps de {#}; Bohr: n = {#}, E = -{#} eV; de Broglie: n = {#}, E = -{#} eV; Schrödinger: 5f, vive {#} ns.",
 "<span><i></i>hydrogen's lines (NIST, matched by the Rydberg formula)</span><span><i></i>light this atom gave off, each bar in its own color</span><span>strip from {#} to {#} nm, log scale; the rainbow band is visible light</span>":
   "<span><i></i>líneas del hidrógeno (NIST, reproducidas por la fórmula de Rydberg)</span><span><i></i>luz que emitió este átomo, cada barra en su propio color</span><span>franja de {#} a {#} nm, escala logarítmica; la banda de arcoíris es la luz visible</span>",
 "ionized, electron gone":
@@ -884,8 +902,6 @@ VDI18N.add('es', 'demo/spectra', {
   "Seis modelos del átomo de hidrógeno bajo un mismo haz de fotones a {#} nm. Bola de billar: una esfera dura y sólida; Budín de pasas: oscila a {#} nm; Órbita clásica: t = {#} ps de {#}; Bohr: n = {#}, E = -{#} eV; de Broglie: n = {#}, E = -{#} eV; Schrödinger: 2p, vive {#} ns.",
 "Six models of the hydrogen atom under one photon beam at {#} nm. Billiard ball: a hard, solid sphere; Plum pudding: rings at {#} nm; Classical orbit: t = {#} ps of {#}; Bohr: ionized, electron gone; de Broglie: n = {#}, E = -{#} eV; Schrödinger: 1s, lives stable.":
   "Seis modelos del átomo de hidrógeno bajo un mismo haz de fotones a {#} nm. Bola de billar: una esfera dura y sólida; Budín de pasas: oscila a {#} nm; Órbita clásica: t = {#} ps de {#}; Bohr: ionizado, sin electrón; de Broglie: n = {#}, E = -{#} eV; Schrödinger: 1s, estable.",
-"4d, lives {#} ns":
-  "4d, vive {#} ns",
 "Six models of the hydrogen atom under one photon beam at {#} nm. Billiard ball: a hard, solid sphere; Plum pudding: rings at {#} nm; Classical orbit: t = {#} ps of {#}; Bohr: n = {#}, E = -{#} eV; de Broglie: ionized, electron gone; Schrödinger: 4d, lives {#} ns.":
   "Seis modelos del átomo de hidrógeno bajo un mismo haz de fotones a {#} nm. Bola de billar: una esfera dura y sólida; Budín de pasas: oscila a {#} nm; Órbita clásica: t = {#} ps de {#}; Bohr: n = {#}, E = -{#} eV; de Broglie: ionizado, sin electrón; Schrödinger: 4d, vive {#} ns.",
 "Six models of the hydrogen atom under one photon beam at {#} nm. Billiard ball: a hard, solid sphere; Plum pudding: rings at {#} nm; Classical orbit: t = {#} ps of {#}; Bohr: ionized, electron gone; de Broglie: ionized, electron gone; Schrödinger: 1s, lives stable.":

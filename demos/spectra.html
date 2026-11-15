@@ -342,9 +342,10 @@ table.lines tr.on td { background: color-mix(in srgb, var(--accent) 16%, transpa
         <h2 id="starTitle">Hydrogen in a star's atmosphere</h2>
         <p class="hint" style="margin: 4px 0 8px;">Where the hydrogen atoms are, against the star's surface temperature. Balmer lines need atoms on level n = 2.</p>
         <canvas id="cStars" class="starchart" tabindex="0" role="application" aria-label="Chart of hydrogen level populations against temperature, log scales. Drag sideways or use the left and right arrow keys to change the temperature."></canvas>
-        <p class="hint starkey"><span><i style="border-top: 3px solid var(--pos);"></i>share of all hydrogen on n = 2, N₂/N<sub>total</sub></span> <span><i style="border-top: 2px dashed var(--equi);"></i>N₂/N₁, Boltzmann</span> <span><i style="border-top: 2px dotted var(--neg);"></i>share still neutral, N<sub>I</sub>/N<sub>total</sub>, Saha</span> <span>up the side: shares and ratios, log scale</span></p>
-        <canvas id="cBalmer" class="balmer" role="img" aria-label="The star's visible spectrum: its blackbody brightness curve at this temperature over a strip of its colors, with hydrogen's Balmer absorption lines cut deeper when more atoms sit on level n = 2."></canvas>
+        <p class="hint starkey"><span><i style="border-top: 3px solid var(--pos);"></i>share of all hydrogen on n = 2, N₂/N<sub>total</sub></span> <span><i style="border-top: 2px dashed var(--equi);"></i>N₂/N₁, Boltzmann</span> <span><i style="border-top: 2px dotted var(--neg);"></i>share still neutral, N<sub>I</sub>/N<sub>total</sub>, Saha</span> <span><i style="border-top: 3px solid var(--good);"></i>share of all titanium bound in TiO molecules</span> <span>up the side: shares and ratios, log scale</span></p>
+        <canvas id="cBalmer" class="balmer" role="img" aria-label="The star's visible spectrum: its blackbody brightness curve at this temperature over a strip of its colors, with hydrogen's Balmer absorption lines cut deeper when more atoms sit on level n = 2, and in cool stars the bands of titanium oxide."></canvas>
         <p class="hint" style="margin: 4px 0 0;">The star's own light: a blackbody at its surface temperature (Planck's law), with hydrogen's Balmer lines taken out of it. Cool stars are dim in the violet, hot stars in the red. Line depths are drawn on a log scale of line strength, not as measured profiles.</p>
+        <p class="hint" style="margin: 4px 0 0;">Below about 4000 K, molecules survive in the gas. Titanium oxide (TiO) cuts dark bands into the spectrum, each with a sharp edge on its violet side that fades toward the red: the mark of an M star. Band depths are drawn on a log scale of the share of titanium in TiO, from 10⁻² of its share at 3000 K (barely there) to its share at 3000 K (darkest).</p>
         <table class="linetab" aria-describedby="lineTabNote">
           <thead><tr><th scope="col">Line</th><th scope="col">λ in air (nm)</th><th scope="col" class="colf">Oscillator strength f</th><th scope="col">Strength, relative to Hα at its peak</th><th scope="col" style="width: 30%;">Log scale, 10⁻⁴ to 1</th></tr></thead>
           <tbody id="lineTab"></tbody>
@@ -352,7 +353,7 @@ table.lines tr.on td { background: color-mix(in srgb, var(--accent) 16%, transpa
         <p class="hint" id="lineTabNote" style="margin: 4px 0 0;">A weak line's strength goes as f λ² N₂/N<sub>total</sub>: how readily one atom on n = 2 absorbs that color, times the share of atoms on n = 2. Strong lines saturate, so real lines grow more slowly than this.</p>
         <h3 class="seqh">The spectral sequence</h3>
         <p class="hint" style="margin: 0 0 6px;">The same calculation for six stars, coolest at the top, at this electron pressure. Click a row to go to that star.</p>
-        <canvas id="cSeq" class="seqcv" role="img" aria-label="Spectra of six stars from 3,500 to 20,000 K, each its blackbody colors with hydrogen's Balmer lines, which are darkest for the A star near 9,500 K."></canvas>
+        <canvas id="cSeq" class="seqcv" role="img" aria-label="Spectra of six stars from 3,500 to 20,000 K, each its blackbody colors with hydrogen's Balmer lines, which are darkest for the A star near 9,500 K, and titanium oxide bands, which are darkest in the coolest star."></canvas>
       </section>
 
       <section class="card" id="modelsCard" aria-labelledby="modelsTitle" hidden>
@@ -392,6 +393,7 @@ table.lines tr.on td { background: color-mix(in srgb, var(--accent) 16%, transpa
         </div>
         <div id="starsBox" hidden>
           <div class="chips" id="starPresets">
+            <button type="button" data-t="3000" aria-pressed="false">Cool M star, 3000 K</button>
             <button type="button" data-t="3500" aria-pressed="false">M star, 3500 K</button>
             <button type="button" data-t="5772" aria-pressed="false">The Sun, 5772 K</button>
             <button type="button" data-t="9500" aria-pressed="false">A star, 9500 K</button>
@@ -410,10 +412,13 @@ table.lines tr.on td { background: color-mix(in srgb, var(--accent) 16%, transpa
             <div><dt>Ionized, N<sub>II</sub>/N<sub>I</sub></dt><dd id="sRion">—</dd></div>
             <div class="wide"><dt>Share of all hydrogen in n = 2, N₂/N<sub>total</sub></dt><dd id="sF2">—</dd></div>
             <div class="wide"><dt>Balmer lines strongest at, this P<sub>e</sub></dt><dd id="sPeak">—</dd></div>
+            <div class="wide"><dt>Titanium bound in TiO, N<sub>TiO</sub>/N<sub>Ti, total</sub></dt><dd id="sTiO">—</dd></div>
           </dl>
           <details class="more"><summary>More about this</summary>
             <p class="hint">A Balmer line is absorbed by a hydrogen atom whose electron already sits on level n = 2. In a cool star almost every atom is on n = 1 (Boltzmann factor), and in a hot star almost every atom has lost its electron (Saha equation). Only in between are there many atoms on n = 2: the Balmer lines are strongest in A stars, near 10,000 K.</p>
             <p class="hint">Model, as in Carroll and Ostlie, <i>An Introduction to Modern Astrophysics</i> (2nd ed., §8.1): Boltzmann N₂/N₁ = (g₂/g₁) e<sup>−(E₂−E₁)/kT</sup> with g<sub>n</sub> = 2n² and E₂ − E₁ = ¾ × 13.598 eV; Saha N<sub>II</sub>/N<sub>I</sub> = (2kTZ<sub>II</sub>/(P<sub>e</sub>Z<sub>I</sub>)) (2πm<sub>e</sub>kT/h²)<sup>3/2</sup> e<sup>−χ/kT</sup> with χ = 13.598 eV. Approximations: partition functions Z<sub>I</sub> = 2 (ground level only) and Z<sub>II</sub> = 1 (a bare proton); neutral atoms counted as N₁ + N₂; the electron pressure is held fixed (Carroll and Ostlie use 20 N/m², where the peak falls near 9900 K) while a real atmosphere's changes with T; line strength also depends on things this model leaves out, so the strip under the chart only shows which way the lines go. The strip is the star's continuum, a blackbody at T by Planck's law (each color's brightness relative to the brightest in the strip), and each Balmer line is drawn darker on a log scale of f λ² N₂/N<sub>total</sub>, the strength of a weak line (f is the line's oscillator strength from n = 2, NIST: Hα 0.641, Hβ 0.119, Hγ 0.0447, Hδ 0.0221, Hε 0.0127), from 10⁻⁴ of Hα's at the peak (barely there) to Hα at the peak (black). Strong lines saturate, so in a real A star the higher lines are darker than this shows. Constants CODATA 2022.</p>
+            <p class="hint">Titanium oxide. In a cool star's atmosphere, atoms also join into molecules, and a molecule breaks apart again when the gas is hot enough: TiO ⇌ Ti + O takes D₀ = 6.88 eV. Chemical equilibrium (the law of mass action, the molecular form of the Saha equation) sets the balance: p<sub>Ti</sub>p<sub>O</sub>/p<sub>TiO</sub> = K(T), which climbs steeply with temperature like e<sup>−D₀/kT</sup>. Titanium also loses an electron easily (6.83 eV), so in the Sun most of it is Ti⁺, which this model lets form no TiO. Carbon monoxide forms first and takes all the carbon, and in the coolest stars water takes much of the rest of the oxygen; titanium is rare (one atom for every 11 million hydrogen atoms), yet its oxide absorbs so strongly that its bands rule the spectrum of an M star.</p>
+            <p class="hint">TiO model: dissociation and ionization constants K(T) for H₂, CO, OH, H₂O, TiO, TiO₂ and Ti ⇌ Ti⁺ + e⁻ from the NIST-JANAF Thermochemical Tables (Chase 1998), fitted to 0.002 dex from 2000 to 6000 K and extended in a straight line in 1/T above 6000 K; solar abundances by number from Asplund et al. 2009 (H 12, He 10.93, C 8.43, O 8.69, Ti 4.95 on the log ε scale); the gas pressure held at 10⁴ N/m² (0.1 bar), a round value for a stellar photosphere (an M dwarf's is higher, an M giant's lower; ten times the pressure makes more TiO), and the electron pressure from the slider for titanium's ionization. Left out: every other element and molecule, hydrogen's ionization, and dust. Band heads (air wavelengths, all degraded to the red): the α system 458.4, 462.6, 476.1, 480.4, 495.5, 516.7 and 575.9 nm (Pearse and Gaydon, <i>The Identification of Molecular Spectra</i>, 1941) and 544.8 nm (Gray, <i>A Digital Spectral Classification Atlas</i>); β 559.7 and 562.9 nm (Phillips 1950); γ′ 619.25 nm (Pavlenko et al. 2020) and 656.9, 659.6 and 662.9 nm; γ 665.2, 668.1 and 671.4 nm (Valenti, Piskunov and Johns-Krull 1998) and 705.5, 708.8, 712.6 and 719.8 nm (Pearse and Gaydon). Every band is drawn the same depth and shape, a sharp head fading to the red over about 8 nm; real bands differ in strength, are made of thousands of lines and saturate. The depth scale is a display choice: it makes the bands fade out near 4000 K, a K7 star, where real spectra first show TiO (at K7 "the TiO 5448 bandhead can just barely be detected", Gray). A real M star's light also differs from a blackbody, because the bands themselves take so much of it.</p>
           </details>
         </div>
         <div id="modelsBox" hidden>
@@ -541,6 +546,80 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (let i = 0; i < 90; i++) { const c = b - r * (b - a), d = a + r * (b - a); if (hsShares(Math.exp(c), Pe).f2 > hsShares(Math.exp(d), Pe).f2) b = d; else a = c; }
     return Math.exp((a + b) / 2);
   }
+/* Titanium oxide in cool stars (2026-11-15, chemistry item 3): how much of a star's titanium is bound in TiO molecules, from
+   chemical equilibrium (the law of mass action, Guldberg and Waage, which for gases is the molecular Saha equation) at a fixed gas
+   pressure. Each reaction AB ⇌ A + B has a dissociation constant K = p_A p_B / p_AB (N/m² to the power Δn). K comes from the
+   NIST-JANAF Thermochemical Tables (Chase 1998, 4th ed., J. Phys. Chem. Ref. Data Monograph 9), as copied in chemcat 1.0.0
+   (Cubillos and Blecic): ΔG°(T) = Σν[ΔfH°(298.15 K) − T·(−(G° − H°₂₉₈)/T)], log₁₀K = −ΔG°/(RT ln 10) + 5Δn (1 bar = 10⁵ N/m²).
+   The tables run to 6000 K; log₁₀K is fitted here as a quartic in θ = 5040/T over 2000 to 6000 K (largest misfit 0.0014 dex,
+   checked in test_tio_in_stars.cjs), and above 6000 K extended in a straight line in θ (van 't Hoff), where TiO is long gone.
+   JANAF's TiO gives D₀ = 470.920 + 246.790 − 53.934 kJ/mol = 6.88 eV, within the measured 6.87 ± 0.07 eV (Naulin, Hedgecock
+   and Costes 1997, as quoted by Andreazza et al. 2012, MNRAS 427, 833). Ti ⇌ Ti⁺ + e⁻ uses JANAF's Ti⁺ and electron tables (the
+   Saha equation with the real partition functions), at the electron pressure on the slider, like hydrogen. */
+const TIO_LOGK = {   /* log₁₀K, coefficients of θ⁰ … θ⁴, from NIST-JANAF (see above) */
+  H2: [11.47418, -4.792689, -0.06121898, 0.04182299, -0.006292143],    /* H₂ ⇌ 2H */
+  CO: [12.85527, -12.11564, 0.5087264, -0.1541594, 0.01862106],         /* CO ⇌ C + O */
+  OH: [11.29135, -5.090324, 0.2421118, -0.06371284, 0.007339187],       /* OH ⇌ O + H */
+  H2O: [23.25177, -10.44003, 0.1998529, -0.04348766, 0.00479754],       /* H₂O ⇌ O + 2H, (N/m²)² */
+  TiO: [12.5252, -8.993541, 1.280216, -0.3914104, 0.04662301],          /* TiO ⇌ Ti + O */
+  TiO2: [25.48329, -16.24512, 1.908348, -0.5969903, 0.07226604],        /* TiO₂ ⇌ Ti + 2O, (N/m²)² */
+  TiI: [9.546573, -8.315808, 0.3642834, -0.04922462, 0.002046619]       /* Ti ⇌ Ti⁺ + e⁻ */
+};
+/* Solar abundances by number, log ε = log₁₀(N/N_H) + 12: Asplund, Grevesse, Sauval and Scott 2009 (ARA&A 47, 481, Table 1) */
+const TIO_EPS = { He: Math.pow(10, 10.93 - 12), C: Math.pow(10, 8.43 - 12), O: Math.pow(10, 8.69 - 12), Ti: Math.pow(10, 4.95 - 12) };
+const TIO_PG = 1e4;   /* gas pressure, N/m² (0.1 bar): a round value for a stellar photosphere, held fixed like P_e */
+function tioLogK(name, T) {
+  const c = TIO_LOGK[name], th = 5040 / T, p = (x) => c[0] + x * (c[1] + x * (c[2] + x * (c[3] + x * c[4])));
+  if (T <= 6000) return p(th);
+  const t1 = 0.84, d1 = c[1] + t1 * (2 * c[2] + t1 * (3 * c[3] + t1 * 4 * c[4]));   /* θ at 6000 K, and dlog₁₀K/dθ there */
+  return p(t1) + d1 * (th - t1);
+}
+/* The gas: H, H₂, He, C, O, CO, OH, H₂O, Ti, Ti⁺, TiO and TiO₂ at temperature T, gas pressure Pg and electron pressure Pe (N/m²).
+   Left out: hydrogen's ionization and the electrons in the gas pressure (both matter only where TiO is long gone), every other
+   element and molecule (N, metals, CO₂, ...), and condensation into dust (below about 2000 K, cooler than any star here).
+   p_H from Pg = p_H + p_H₂ + ε_He·P_N with P_N = p_H + 2p_H₂ (He and the trace elements counted per hydrogen nucleus); then the
+   free oxygen pressure p_O from the oxygen balance, solved by bisection on ln p_O (the balance only grows with p_O). */
+function tioChem(T, Pe, Pg) {
+  Pg = Pg || TIO_PG;
+  const K = {}; for (const k in TIO_LOGK) K[k] = Math.pow(10, tioLogK(k, T));
+  const E = TIO_EPS, a = (1 + 2 * E.He) / K.H2, b = 1 + E.He, pH = 2 * Pg / (b + Math.sqrt(b * b + 4 * a * Pg));
+  const pH2 = pH * pH / K.H2, PN = pH + 2 * pH2;
+  const oSelf = 1 + pH / K.OH + pH * pH / K.H2O, ion = K.TiI / Pe;
+  const tiDen = (pO) => 1 + ion + pO / K.TiO + pO * pO / K.TiO2;
+  const bal = (pO) => { const y = pO / K.CO; return pO * oSelf + E.C * PN * y / (1 + y) + E.Ti * PN * (pO / K.TiO + 2 * pO * pO / K.TiO2) / tiDen(pO) - E.O * PN; };
+  let lo = Math.log(E.O * PN) - 60, hi = Math.log(E.O * PN);
+  for (let i = 0; i < 80; i++) { const m = (lo + hi) / 2; if (bal(Math.exp(m)) > 0) hi = m; else lo = m; }
+  const pO = Math.exp((lo + hi) / 2), D = tiDen(pO), oN = E.O * PN, yC = pO / K.CO;
+  return {
+    pH, pH2, pO,
+    tio: pO / K.TiO / D, ti: 1 / D, tiII: ion / D, tio2: pO * pO / K.TiO2 / D,   /* shares of all titanium */
+    oFree: pO / oN, oCO: E.C * PN * yC / (1 + yC) / oN, oOH: pO * pH / K.OH / oN, oH2O: pO * pH * pH / K.H2O / oN   /* shares of all oxygen */
+  };
+}
+/* TiO band heads drawn on the star's spectrum, air wavelengths in nm. Every head is degraded to the red: a sharp edge on the violet
+   side, the band's thousands of lines trailing off to longer wavelengths. Sources: [PG] R. W. B. Pearse and A. G. Gaydon, The
+   Identification of Molecular Spectra (1941), table of persistent band heads; [G] R. O. Gray, A Digital Spectral Classification
+   Atlas (NED Level 5), §26: "At K7, the TiO 5448 bandhead can just barely be detected"; [Ph] J. G. Phillips 1950, ApJ 111, 314
+   (β system); [V] J. A. Valenti, N. Piskunov and C. M. Johns-Krull 1998, ApJ 498, 851, §4.2.1; [Pa] Ya. V. Pavlenko, S. N. Yurchenko,
+   L. K. McKemmish and J. Tennyson 2020, A&A 642, A77 (B ³Π − X ³Δ (0,0) head). Systems: α = C ³Δ − X ³Δ, β = c ¹Φ − a ¹Δ, γ′ = B ³Π − X ³Δ, γ = A ³Φ − X ³Δ. */
+const TIO_BANDS = [
+  [458.41, 'α', 'PG'], [462.61, 'α', 'PG'], [476.12, 'α', 'PG'], [480.43, 'α', 'PG'], [495.46, 'α', 'PG'], [516.69, 'α', 'PG'],
+  [544.8, 'α', 'G'], [559.708, 'β', 'Ph'], [562.928, 'β', 'Ph'], [575.86, 'α', 'PG'], [619.25, 'γ′', 'Pa'],
+  [656.93, 'γ′', 'V'], [659.62, 'γ′', 'V'], [662.90, 'γ′', 'V'], [665.15, 'γ', 'V'], [668.11, 'γ', 'V'], [671.44, 'γ', 'V'],
+  [705.45, 'γ', 'PG'], [708.79, 'γ', 'PG'], [712.56, 'γ', 'PG'], [719.77, 'γ', 'PG']
+];
+const TIO_TAIL = 8;   /* nm: how far a band's absorption trails to the red, as a sketch (e-folding length) */
+/* how much of the light at λ (nm) the TiO bands let through, for a band depth d from 0 (none) to 1 (darkest drawn) */
+function tioTrans(l, d) {
+  if (!(d > 0)) return 1;
+  let t = 1;
+  for (const [h] of TIO_BANDS) if (l >= h && l < h + 6 * TIO_TAIL) t *= 1 - 0.8 * d * Math.exp(-(l - h) / TIO_TAIL);
+  return t;
+}
+/* band depth on a log scale of the TiO share, from 10⁻² of its share at 3000 K (barely there) to its share at 3000 K (darkest).
+   The range is a display choice: it makes the bands vanish near 4000 K, a K7 star, where "the TiO 5448 bandhead can just barely
+   be detected" (Gray, above). */
+function tioDepth(T, Pe) { const r = tioChem(T, Pe).tio / tioChem(3000, Pe).tio; return Math.max(0, Math.min(1, 1 + Math.log10(Math.max(r, 1e-300)) / 2)); }
 /* Bohr orbits with the de Broglie wave (OpenStax University Physics Vol. 3 §6.4 and §6.6): for a nucleus held
    fixed, the Coulomb force on a circular orbit of radius r gives the speed v = √(ke²/(m_e r)). On Bohr's orbit r = n²a₀ this is
    v = αc/n, so the electron's de Broglie wavelength λ = h/(m_e v) = 2πa₀n and exactly n wavelengths fit around the circumference
@@ -1562,18 +1641,22 @@ function airFromVac(vnm) {
     curve((t) => hsShares(t, ST.Pe).r12, equi, 1.8, [6, 4]);
     curve((t) => 1 / (1 + hsSaha(t, ST.Pe)), neg, 1.8, [2, 3]);
     curve((t) => hsShares(t, ST.Pe).f2, pos, 3, []);
+    const good = tok('--good');
+    curve((t) => tioChem(t, ST.Pe).tio, good, 2.4, []);   /* titanium bound in TiO */
     ctx.restore();
     // labels on the curves
     ctx.font = `700 ${11 * ps}px ${m}`; ctx.textBaseline = 'bottom';
     const pk = hsPeak(ST.Pe), fpk = hsShares(pk, ST.Pe).f2;
     { const yl = (Y(hsShares(HS_T1, ST.Pe).f2) + B) / 2; ctx.fillStyle = pos; ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillText('↑ share in n = 2', R - 6 * ps, yl); }   /* under the hot end of the curve, where nothing else is drawn */
+    { const tx = X(3600), yl = Y(tioChem(3600, ST.Pe).tio); ctx.fillStyle = good; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText('TiO', tx + 4 * ps, yl - 3 * ps); }   /* beside the falling TiO curve, on its cool side */
     // the peak, and the current temperature
     ctx.strokeStyle = pos; ctx.globalAlpha = 0.5; ctx.setLineDash([3 * ps, 3 * ps]); ctx.beginPath(); ctx.moveTo(X(pk), Y(fpk)); ctx.lineTo(X(pk), B); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
     ctx.fillStyle = pos; ctx.font = `${10.5 * ps}px ${m}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText(`peak ${fmtK(Math.round(pk / 10) * 10)}`, X(pk) + 4 * ps, B - 3 * ps);
     const x = X(ST.T);
     ctx.strokeStyle = acc; ctx.lineWidth = 2 * ps; ctx.beginPath(); ctx.moveTo(x, T0); ctx.lineTo(x, B); ctx.stroke();
     const sh = hsShares(ST.T, ST.Pe);
-    for (const [v, col] of [[sh.r12, equi], [1 / (1 + sh.rion), neg], [sh.f2, pos]]) {
+    const tio = tioChem(ST.T, ST.Pe).tio;
+    for (const [v, col] of [[sh.r12, equi], [1 / (1 + sh.rion), neg], [sh.f2, pos], [tio, good]]) {
       const y = Y(v); if (y < T0 || y > B) continue;
       ctx.beginPath(); ctx.arc(x, y, 4.5 * ps, 0, 2 * Math.PI); ctx.fillStyle = col; ctx.fill(); ctx.lineWidth = 1.5 * ps; ctx.strokeStyle = tok('--canvas'); ctx.stroke();
     }
@@ -1583,7 +1666,7 @@ function airFromVac(vnm) {
        brightest color in the strip, shown with the sRGB gamma), with each Balmer line drawn darker on a log scale of its weak line
        strength f λ² N₂/N_total, from 10⁻⁴ of Hα's at the peak (barely there) to Hα at the peak (black). Oscillator strengths
        f from NIST (Wiese and Fuhr 2009). */
-    const bc = $('cBalmer'), [bx, BW, BH] = fit(bc), l0 = 380, l1 = 700;
+    const bc = $('cBalmer'), [bx, BW, BH] = fit(bc), l0 = 380, l1 = 720, tDep = tioDepth(ST.T, ST.Pe);   /* to 720 nm, so the TiO γ bands near 705 nm show */
     const BL = L, BR = BW - 12 * ps, BX = (l) => BL + (l - l0) / (l1 - l0) * (BR - BL);
     const cT = 36 * ps, bandH = Math.max(22 * ps, Math.min(34 * ps, BH * 0.15)), bandB = BH - 20 * ps, bandT = bandB - bandH, cB = bandT - 8 * ps;
     const CY = (v) => cB - v * (cB - cT);
@@ -1594,22 +1677,22 @@ function airFromVac(vnm) {
     const lines = BALMER.map(([nm, l, fo]) => { const rel = fo * l * l * sh.f2 / sA; return { nm, l, fo, rel, depth: Math.max(0, Math.min(1, 1 + Math.log10(Math.max(rel, 1e-300)) / 4)) }; });
     // the strip of colors, each at the star's brightness for that color (sRGB gamma), with the lines cut out
     for (let px = Math.floor(BL); px < BR; px++) {
-      const l = l0 + (px + 0.5 - BL) / (BR - BL) * (l1 - l0), c = lamRGB(l), k = Math.pow(planck(l) / pmax, 1 / 2.2);
+      const l = l0 + (px + 0.5 - BL) / (BR - BL) * (l1 - l0), c = lamRGB(l), k = Math.pow(planck(l) / pmax * tioTrans(l, tDep), 1 / 2.2);
       bx.fillStyle = `rgb(${c.map((v) => Math.round(v * k)).join(',')})`; bx.fillRect(px, bandT, 1, bandH);
     }
     for (const ln of lines) { bx.fillStyle = `rgba(0,0,0,${(0.97 * ln.depth).toFixed(3)})`; bx.fillRect(BX(ln.l) - 2.5 * ps, bandT, 5 * ps, bandH); }
     // grid and axes for the brightness curve
     bx.strokeStyle = grid; bx.lineWidth = 1; bx.beginPath();
-    for (let l = 400; l <= 700; l += 50) { const xg = Math.round(BX(l)) + 0.5; bx.moveTo(xg, cT); bx.lineTo(xg, cB); }
+    for (let l = 400; l <= 700; l += 50) { const xg = Math.round(BX(l)) + 0.5; bx.moveTo(xg, cT); bx.lineTo(xg, cB); }   /* the strip runs to 720 nm */
     for (const v of [0.25, 0.5, 0.75, 1]) { const yg = Math.round(CY(v)) + 0.5; bx.moveTo(BL, yg); bx.lineTo(BR, yg); }
     bx.stroke(); bx.strokeStyle = gridS; bx.strokeRect(BL + 0.5, cT + 0.5, BR - BL - 1, cB - cT - 1);
     bx.fillStyle = muted; bx.font = `${10 * ps}px ${m}`; bx.textAlign = 'right'; bx.textBaseline = 'middle';
     for (const v of [0, 0.5, 1]) bx.fillText(String(v), BL - 5 * ps, CY(v));
     bx.textAlign = 'center'; bx.textBaseline = 'bottom';
-    for (let l = 400; l <= 700; l += 50) if (l < 700 || BW > 480) bx.fillText(String(l), BX(l), cT - 3 * ps);
+    for (let l = 400; l <= 700; l += 50) bx.fillText(String(l), BX(l), cT - 3 * ps);
     bx.textAlign = 'left'; bx.fillText(BW > 480 ? 'brightness, relative to the brightest color shown' : 'brightness, relative', BL, cT - 17 * ps);
-    // the curve: Planck's law, with each Balmer line as a dip
-    const prof = (l) => { let v = planck(l) / pmax; for (const ln of lines) v *= 1 - 0.85 * ln.depth * Math.exp(-Math.pow((l - ln.l) / 1.4, 2)); return v; };
+    // the curve: Planck's law, with each Balmer line as a dip and the TiO bands
+    const prof = (l) => { let v = planck(l) / pmax * tioTrans(l, tDep); for (const ln of lines) v *= 1 - 0.85 * ln.depth * Math.exp(-Math.pow((l - ln.l) / 1.4, 2)); return v; };
     bx.save(); bx.beginPath(); bx.rect(BL, cT, BR - BL, cB - cT); bx.clip();
     bx.beginPath(); bx.moveTo(BL, cB);
     for (let px = BL; px <= BR; px += 0.5) bx.lineTo(px, CY(prof(l0 + (px - BL) / (BR - BL) * (l1 - l0))));
@@ -1620,17 +1703,26 @@ function airFromVac(vnm) {
     // Wien's law: where the star's blackbody peaks
     const lp = 2.897771955e6 / ST.T;
     bx.font = `${10.5 * ps}px ${m}`; bx.fillStyle = acc; bx.textBaseline = 'top';
+    const peakLabel = (t, x, y) => {   /* the peak label on a backing of the canvas color, so a TiO band drawn under it cannot hide it */
+      const w = bx.measureText(t).width, x0 = bx.textAlign === 'right' ? x - w : x;
+      bx.fillStyle = tok('--canvas'); bx.globalAlpha = 0.8; bx.fillRect(x0 - 2 * ps, y - 1 * ps, w + 4 * ps, 13 * ps); bx.globalAlpha = 1;
+      bx.fillStyle = acc; bx.fillText(t, x, y);
+    };
     if (lp >= l0 && lp <= l1) {
       bx.strokeStyle = acc; bx.lineWidth = 1.5 * ps; bx.setLineDash([4 * ps, 3 * ps]); bx.beginPath(); bx.moveTo(BX(lp), cT); bx.lineTo(BX(lp), cB); bx.stroke(); bx.setLineDash([]);
       const t = `peak ${Math.round(lp)} nm`, tw = bx.measureText(t).width; bx.textAlign = BX(lp) + tw + 8 * ps > BR ? 'right' : 'left';
-      bx.fillText(t, BX(lp) + (bx.textAlign === 'right' ? -4 : 4) * ps, cB - 16 * ps);
-    } else if (lp < l0) { bx.textAlign = 'left'; bx.fillText(`← peak ${Math.round(lp)} nm, ultraviolet`, BL + 5 * ps, cB - 16 * ps); }
-    else { bx.textAlign = 'right'; bx.fillText(`peak ${Math.round(lp)} nm, infrared →`, BR - 5 * ps, cB - 16 * ps); }
+      peakLabel(t, BX(lp) + (bx.textAlign === 'right' ? -4 : 4) * ps, cB - 16 * ps);
+    } else if (lp < l0) { bx.textAlign = 'left'; peakLabel(`← peak ${Math.round(lp)} nm, ultraviolet`, BL + 5 * ps, cB - 16 * ps); }
+    else { bx.textAlign = 'right'; peakLabel(`peak ${Math.round(lp)} nm, infrared →`, BR - 5 * ps, cB - 16 * ps); }
     bx.restore();
     // line names under the strip
     bx.font = `${10 * ps}px ${m}`; bx.fillStyle = muted; bx.textAlign = 'center'; bx.textBaseline = 'top';
     { let lx = Infinity; for (const ln of lines) { const tw = bx.measureText(ln.nm).width, x = BX(ln.l); if (x + tw / 2 + 2 * ps < lx) { bx.fillText(ln.nm, x, bandB + 3 * ps); lx = x - tw / 2; } } }   /* skip a name that would overlap its neighbor on a phone */
-    bx.textAlign = 'right'; if (BW > 480) bx.fillText('λ (nm)', BR, bandB + 3 * ps);
+    if (tDep > 0.05) {   /* name the TiO bands at their strongest heads, the γ system near 705 nm and the α system near 517 nm */
+      bx.fillStyle = tok('--good'); bx.textAlign = 'left';
+      for (const h of [705.45, 516.69]) bx.fillText('TiO', BX(h) + 1 * ps, bandB + 3 * ps);
+    }
+    bx.fillStyle = muted; bx.textAlign = 'right'; if (BW > 480 && !(tDep > 0.05)) bx.fillText('λ (nm)', BR, bandB + 3 * ps);
     drawSeq(lamRGB, fpk);
     // the table of line strengths
     const tb = $('lineTab');
@@ -1641,7 +1733,7 @@ function airFromVac(vnm) {
   let seqGeo = null;
   function drawSeq(lamRGB, fpk) {
     const cv = $('cSeq'); if (!cv) return;
-    const [c, W, H] = fit(cv), ps = projScale(), m = mono(), l0 = 380, l1 = 700, L = 96 * ps, R = W - 12 * ps, top = 4 * ps, bot = H - 18 * ps;
+    const [c, W, H] = fit(cv), ps = projScale(), m = mono(), l0 = 380, l1 = 720, L = 96 * ps, R = W - 12 * ps, top = 4 * ps, bot = H - 18 * ps;
     const X = (l) => L + (l - l0) / (l1 - l0) * (R - L), rh = (bot - top) / SEQ_T.length;
     seqGeo = { top, rh };
     c.clearRect(0, 0, W, H);
@@ -1650,8 +1742,9 @@ function airFromVac(vnm) {
       const y0 = top + r * rh + 2 * ps, y1 = top + (r + 1) * rh - 2 * ps;
       const pl = (l) => 1 / (Math.pow(l, 5) * (Math.exp(HS_HC_NMK / (l * T)) - 1));
       let pm = 0; for (let l = l0; l <= l1; l += 2) pm = Math.max(pm, pl(l));
+      const td = tioDepth(T, ST.Pe);
       for (let px = Math.floor(L); px < R; px++) {
-        const l = l0 + (px + 0.5 - L) / (R - L) * (l1 - l0), k = Math.pow(pl(l) / pm, 1 / 2.2), col = lamRGB(l);
+        const l = l0 + (px + 0.5 - L) / (R - L) * (l1 - l0), k = Math.pow(pl(l) / pm * tioTrans(l, td), 1 / 2.2), col = lamRGB(l);
         c.fillStyle = `rgb(${col.map((v) => Math.round(v * k)).join(',')})`; c.fillRect(px, y0, 1, y1 - y0);
       }
       const f2 = hsShares(T, ST.Pe).f2;
@@ -1674,6 +1767,7 @@ function airFromVac(vnm) {
     $('starPeOut').textContent = `${ST.Pe} N/m²`;
     $('sR12').textContent = sci2(sh.r12); $('sRion').textContent = sci2(sh.rion); $('sF2').textContent = sci2(sh.f2);
     $('sPeak').textContent = fmtK(Math.round(hsPeak(ST.Pe) / 10) * 10);
+    $('sTiO').textContent = sci2(tioChem(ST.T, ST.Pe).tio);
     for (const b of document.querySelectorAll('#starPresets button')) b.setAttribute('aria-pressed', String(+b.dataset.t === ST.T));
     drawStars();
   }
@@ -1972,7 +2066,7 @@ function airFromVac(vnm) {
   // ---------- render ----------
   const MODE_HINTS = {
     models: 'Six historical models of hydrogen under the same lamp. Pick a color and see which atoms answer, and with what light.',
-    stars: 'Change the star\'s surface temperature and watch the share of hydrogen atoms that can absorb Balmer lines.',
+    stars: 'Change the star\'s surface temperature and watch the share of hydrogen atoms that can absorb Balmer lines, and, in the coolest stars, the titanium oxide bands.',
     explore: 'Click any element in the table. Hover over a line for its wavelength.',
     compare: 'The top strip keeps your element; click the table to set the bottom one. "Pick top" lets the next click change the top strip instead.',
     mystery: 'The top strip is an unknown spectrum. Click elements in the table to build your guess in the bottom strip, then check it.'
@@ -2095,7 +2189,7 @@ function airFromVac(vnm) {
   window.vdReadingRow = () => {
     if (S.mode === 'stars') {
       const sh = hsShares(ST.T, ST.Pe), g = (v) => +v.toPrecision(4);
-      return { source: 'Hydrogen in stars', T_K: ST.T, Pe_N_m2: ST.Pe, spectral_class: classOfT(ST.T), n2_n1: g(sh.r12), nII_nI: g(sh.rion), neutral_share: g(1 / (1 + sh.rion)), n2_share: g(sh.f2), peak_T_K: Math.round(hsPeak(ST.Pe)) };
+      return { source: 'Hydrogen in stars', T_K: ST.T, Pe_N_m2: ST.Pe, spectral_class: classOfT(ST.T), n2_n1: g(sh.r12), nII_nI: g(sh.rion), neutral_share: g(1 / (1 + sh.rion)), n2_share: g(sh.f2), peak_T_K: Math.round(hsPeak(ST.Pe)), tio_share: g(tioChem(ST.T, ST.Pe).tio) };
     }
     if (S.mode === 'models') return 'The atom models have no readings: read hydrogen\'s lines in Explore.';
     if (S.display === 'continuous' && S.mode !== 'mystery') return 'A continuous spectrum has no lines to read: choose Emission or Absorption.';

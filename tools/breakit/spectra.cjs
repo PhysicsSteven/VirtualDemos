@@ -29,9 +29,31 @@ module.exports = {
       if (Math.abs(parseFloat(T('orW')) - n) > 0.006) return 'waves around shows ' + T('orW') + ' at n = ' + n;
       if (Math.abs(parseFloat(T('orJ')) - n) > 0.006) return 'angular momentum shows ' + T('orJ') + ' at n = ' + n;
       if (Math.abs(parseFloat(T('oOrb')) - n) > 0.006) return 'slider readout ' + T('oOrb') + ' vs value ' + n;
+      return true; })()` },
+    /* Titanium oxide (2026-11-15): the TiO share readout follows the page's own chemistry (tioChem), titanium is conserved, and the
+       known values at the presets, worked in Node (curriculum/validation/test_spectra_tio.cjs): at Pe = 20 N/m², 3000 K gives
+       0.394 of the titanium in TiO, 3500 K 0.0775 and the Sun 9.58 × 10⁻⁷. The hydrogen readouts keep their old values. */
+    { name: "TiO share readout: tioChem, Ti conserved, known values 0.394 / 0.0775 / 9.58e-7 at 3000 / 3500 / 5772 K", fn: `(() => { ${vis}
+      if (!shown('sTiO')) return true;
+      const S = window.__stars && window.__stars.ST; if (!S) return 'no window.__stars';
+      const r = tioChem(S.T, S.Pe), sum = r.tio + r.ti + r.tiII + r.tio2;
+      if (!(Math.abs(sum - 1) < 1e-9)) return 'titanium shares add to ' + sum;
+      const txt = T('sTiO').replace(/ × 10/, 'e').replace(/[⁻⁰¹²³⁴⁵⁶⁷⁸⁹]/g, (c) => ({ '⁻': '-' })[c] || '⁰¹²³⁴⁵⁶⁷⁸⁹'.indexOf(c)), v = parseFloat(txt);
+      if (!(Math.abs(v / r.tio - 1) < 6e-3)) return 'sTiO shows ' + T('sTiO') + ', tioChem gives ' + r.tio;
+      const want = S.Pe === 20 ? ({ 3000: 0.394, 3500: 0.0775, 5772: 9.58e-7 })[S.T] : 0;
+      if (want && Math.abs(v / want - 1) > 3e-3) return 'at ' + S.T + ' K the TiO share shows ' + T('sTiO') + ', known value ' + want;
+      if (S.T === 5772 && S.Pe === 20 && T('sPeak') !== '9,870 K') return 'Balmer peak moved: ' + T('sPeak');
       return true; })()` }
   ],
   steps: [
+    { name: "Hydrogen in stars: every star preset, the electron pressure to both ends, then back to 20 N/m²", fn: `(async () => {
+      const tick = () => new Promise((r) => setTimeout(r, 60));
+      document.querySelector('#modeSeg [data-m=stars]').click(); await tick();
+      for (const b of document.querySelectorAll('#starPresets button')) { b.click(); await tick(); }
+      const pe = document.getElementById('starPe');
+      for (const v of [0, 1000, window.__stars.uFromPe(20)]) { pe.value = v; pe.dispatchEvent(new Event('input', { bubbles: true })); await tick(); }
+      document.querySelector('#starPresets button[data-t="3500"]').click(); await tick();
+    })()` },
     { name: "orbit slider to its minimum, then Helium, then Hydrogen again (hidden card must not draw)", fn: `(async () => {
       const $ = (id) => document.getElementById(id), tick = () => new Promise((r) => setTimeout(r, 60));
       const s = $('sOrb'); s.value = 1; s.dispatchEvent(new Event('input', { bubbles: true })); await tick();
