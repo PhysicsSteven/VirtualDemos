@@ -33,7 +33,7 @@ require('./lib.cjs')({ demo: 'units', title: 'Units, Scales and Estimates' }, as
   state.arrow = { rect: await tbox('#cChain') };
   await r.secs(2.4);
 
-  state.caption = 'Each factor equals 1, so km/h cancels and the answer is 20.0 m/s';
+  state.caption = 'Each factor equals 1, so km/h cancels and the answer is 20 m/s';
   state.arrow = { rect: await tbox('#cOut') };
   r.check.out = await r.text('#cOut');
   await r.secs(3.4);

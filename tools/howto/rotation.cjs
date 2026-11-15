@@ -2,7 +2,7 @@
 // Expected: τ = rF = 16.0 N·m, I = mL²/3 = 4.05 kg·m², α = τ/I = 3.951 rad/s², t to 90° = √(2·(π/2)/α) = 0.892 s, ω = αt = 3.52 rad/s.
 require('./lib.cjs')({ demo: 'rotation', title: 'Rotation and Torque' }, async (r) => {
   const { state, p } = r;
-  const view = await r.box('#view');
+  let view = await r.box('#view');
   /* the push point grip: probe the canvas for the 'move' cursor it shows over the grip */
   const grip = () => p.evaluate(() => { const v = document.querySelector('#view'), q = v.getBoundingClientRect(), hits = [];
     for (let x = q.left; x < q.right; x += 3) for (let y = q.top; y < q.bottom; y += 3) { v.dispatchEvent(new PointerEvent('pointermove', { clientX: x, clientY: y, bubbles: true })); if (v.style.cursor === 'move') hits.push([x, y]); }
@@ -17,6 +17,8 @@ require('./lib.cjs')({ demo: 'rotation', title: 'Rotation and Torque' }, async (
 
   state.caption = 'Sample reading: the first door push, 20 N at 0.80 m, at 90° to the door';
   await r.tick(20);
+  /* the F, r and θ sliders sit low in the rail: bring them into view before pointing at them */
+  await r.scrollRail('#tFOut'); view = await r.box('#view');
   state.arrow = { rect: await r.box('#tFOut') }; await r.secs(1.0);
   state.arrow = { rect: await r.box('#tThOut') }; await r.secs(1.0);
   state.arrow = null;
@@ -27,6 +29,7 @@ require('./lib.cjs')({ demo: 'rotation', title: 'Rotation and Torque' }, async (
   r.check.r = await dragR(0.80);
   r.check.F = await r.text('#tFOut'); r.check.theta = await r.text('#tThOut');
   state.zoom = null;
+  await r.scrollRail('#tROut');
   state.arrow = { rect: await r.box('#tROut') };
   await r.secs(1.4);
   state.arrow = null;

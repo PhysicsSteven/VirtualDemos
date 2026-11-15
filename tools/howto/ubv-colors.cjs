@@ -44,7 +44,7 @@ require('./lib.cjs')({ demo: 'blackbody', title: 'Blackbody Radiation' }, async 
   await r.secs(2.0);
   state.arrow = null; state.zoom = null;
 
-  state.caption = 'Repeat at more temperatures up to 30 000 K, then send the table to the worksheet';
+  state.caption = 'Repeat at more temperatures up to 30,000 K, then send the table to the worksheet';
   const ex = await r.box('.vd-export');
   await r.moveTo(ex[0] + ex[2] / 2, ex[1] + ex[3] / 2 + 4, 0.8);
   state.arrow = { rect: ex };

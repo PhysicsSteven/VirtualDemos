@@ -19,12 +19,14 @@ require('./lib.cjs')({ demo: 'double-slit', title: 'Wave and Particle Duality' }
   /* before the first frame: where on the detector screen a cursor drag lands, as a fraction of the screen range (see double-slit.cjs) */
   const SX = 570, frac = async () => p.evaluate(() => __ds.S.cA / __ds.S.Y);
   await p.check('#meas'); await p.clock.runFor(200);
-  const cal = [];
+  const cal = [], top0 = (await r.box('#can'))[1];
   for (const py of [480, 560]) {
     await p.mouse.move(SX, py + 2); await p.mouse.down(); await p.mouse.move(SX, py, { steps: 2 }); await p.clock.runFor(50); await p.mouse.up();
     await p.clock.runFor(50); cal.push([py, await frac()]);
   }
-  const pyAt = (f) => cal[0][0] + (f - cal[0][1]) * (cal[1][0] - cal[0][0]) / (cal[1][1] - cal[0][1]);
+  /* the drag maps the pointer's height on the screen linearly to the cursor; held relative to the canvas top, since the page may scroll */
+  const slope = (cal[1][0] - cal[0][0]) / (cal[1][1] - cal[0][1]);   /* px per unit of S.cA/S.Y */
+  const pyAt = async (f) => cal[0][0] + (f - cal[0][1]) * slope + (await r.box('#can'))[1] - top0;
   await p.uncheck('#meas'); await p.click('[data-p="electron"]'); await p.evaluate(() => { document.querySelector('.rail').scrollTop = 0; });
   await p.mouse.move(r.W / 2, r.H / 2); await p.clock.runFor(300);
   r.check.cal = cal;
@@ -71,12 +73,13 @@ require('./lib.cjs')({ demo: 'double-slit', title: 'Wave and Particle Duality' }
   r.check.dark = dark;
   const Y = await p.evaluate(() => __ds.S.Y), place = async (id, want) => {
     const cur = await p.evaluate((id) => __ds.S[id] / __ds.S.Y, id);
-    await r.moveTo(SX, pyAt(cur), 0.6);
+    await r.moveTo(SX, await pyAt(cur), 0.6);
     await p.mouse.down(); state.down = true; await r.tick(3);
-    await r.moveTo(SX, pyAt(want / Y), 0.8);
-    for (let i = 0; i < 40; i++) {
+    await r.moveTo(SX, await pyAt(want / Y), 0.8);
+    for (let i = 0; i < 60; i++) {
       const v = await p.evaluate((id) => __ds.S[id], id); if (Math.abs(v - want) < dark.st / 4) break;
-      state.ptr = [SX, state.ptr[1] + (v < want ? -0.2 : 0.2)]; await p.mouse.move(...state.ptr); await r.tick();
+      const d = (want - v) / Y * slope, step = Math.sign(d) * Math.min(4, Math.max(0.2, Math.abs(d) / 2));
+      state.ptr = [SX, state.ptr[1] + step]; await p.mouse.move(...state.ptr); await r.tick();
     }
     await r.tick(3); await p.mouse.up(); state.down = false; await r.tick();
     return r.text(id === 'cA' ? '#cAOut' : '#cBOut');
@@ -86,9 +89,9 @@ require('./lib.cjs')({ demo: 'double-slit', title: 'Wave and Particle Duality' }
   await r.secs(0.5);
   state.zoom = null;
 
-  state.caption = 'Once 20 000 or more electrons have landed, record the reading';
+  state.caption = 'Once 20,000 or more electrons have landed, record the reading';
   state.arrow = { rect: await r.box('#count') };
-  for (let i = 0; i < 300 && +(await r.text('#count')).replace(/\D/g, '') < 20000; i++) await r.tick();
+  for (let i = 0; i < 300 && +(await r.text('#count')).split(' ')[0].replace(/\D/g, '') < 20000; i++) await r.tick();
   await r.secs(0.5);
   state.arrow = null;
   r.check.BA = await r.text('#rBA');

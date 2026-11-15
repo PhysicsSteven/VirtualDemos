@@ -16,7 +16,7 @@ require('./lib.cjs')({ demo: 'resistivity', title: 'Resistivity of a Wire' }, as
   state.caption = 'Sample reading: the Mystery wire, 0.405 mm across, 0.20 A, 20 °C, 0.100 m between the clips';
   await r.secs(3.0);
 
-  state.caption = 'Choose the Mystery wire. It keeps its resistivity hidden';
+  state.caption = 'Choose the Mystery wire, gauge 0.405 mm. It keeps its resistivity hidden';
   await r.click('#mats [data-m="mystery"]');
   r.check.wire = [await r.text('#mats [aria-pressed="true"]'), await r.text('#gauges [aria-pressed="true"]')].join(' | ');
   state.arrow = { rect: await r.box('#gauges [aria-pressed="true"]') };

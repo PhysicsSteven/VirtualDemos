@@ -46,7 +46,7 @@ require('./lib.cjs')({ demo: 'magnetic-force', title: 'Magnetic Motion and the H
   await r.moveTo(tb[0] + tb[2] / 2, tb[1] + tb[3] / 2, 0.6);
   const dtSim = await p.evaluate(() => __mf.tScale) / r.FPS;
   const clickAtLaunch = async () => {
-    for (let i = 0; i < 400; i++) { const ph = (await p.evaluate(() => __mf.simT)) % Tp; if (ph > Tp - 1.5 * dtSim && ph <= Tp - 0.5 * dtSim) break; await r.tick(); }
+    for (let i = 0; i < 400; i++) { const ph = (await p.evaluate(() => __mf.simT)) % Tp; if (ph > Tp - 1.5 * dtSim) break;   /* the last frame before the ring; no upper bound, since a frame can step a little more than dtSim */ await r.tick(); }
     state.click = r.frame; state.down = true; await p.mouse.down(); await r.tick(); await p.mouse.up(); state.down = false; await r.tick(2);
   };
   await clickAtLaunch();

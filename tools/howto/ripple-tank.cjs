@@ -1,6 +1,6 @@
 // How this works: Ripple Tank. Part 1's first reading: plane waves at 6 Hz in water 10 mm deep, A on the first crest past
 // x = 90 mm and B on the last crest before the beach (x = 400 mm), along the middle of the tank; N wavelengths between them.
-// Expected: λ = 44.32 mm at 6 Hz in water 10 mm deep (ω² = (gk + σk³/ρ) tanh(kd)), so B lies about 5λ = 222 mm past A.
+// Expected: λ = 44.32 mm at 6 Hz in water 10 mm deep (ω² = (gk + σk³/ρ) tanh(kd)), so six wavelengths, 266 mm, separate the crests A and B are dragged onto.
 require('./lib.cjs')({ demo: 'ripple-tank', title: 'Ripple Tank', query: '?setup=plane' }, async (r) => {
   const { state, W, p } = r;
   const sc = await r.box('#scene');

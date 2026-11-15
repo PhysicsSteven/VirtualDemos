@@ -3,8 +3,8 @@
 // caliper (1 mm) reads 12.8 cm, where the light meter is lowest (about 1e-5; 2e-5 at 12.7 cm, 1.2e-4 at 12.9 cm).
 require('./lib.cjs')({ demo: 'diffraction-grating', title: 'Single Slit Diffraction', query: '?aperture=single' }, async (r) => {
   const { state, p, W } = r;
-  const can = await r.box('#view');
-  const at = (id) => p.evaluate(([id, cx, cy]) => { const h = __dg.handles().find((k) => k.id === id); return [h.at[0] + cx, h.at[1] + cy]; }, [id, can[0], can[1]]);
+  /* the canvas box is read at each call: scrollRail can scroll the page, and a press off the jaw brings the nearer jaw there */
+  const at = async (id) => { const can = await r.box('#view'); return p.evaluate(([id, cx, cy]) => { const h = __dg.handles().find((k) => k.id === id); return [h.at[0] + cx, h.at[1] + cy]; }, [id, can[0], can[1]]); };
 
   state.caption = 'Sample: the first dark fringe of a slit 5.0 µm wide, red He-Ne laser, wall 1.00 m away';
   await r.secs(3.0);
@@ -19,7 +19,15 @@ require('./lib.cjs')({ demo: 'diffraction-grating', title: 'Single Slit Diffract
   const B = await at('jawB');
   state.zoom = [B[0] - 260, B[1] - 200, 448, 252];
   await r.moveTo(...B, 0.7);
-  r.check.y = await r.dragUntil(-0.6, 0, '#rCal', '12.8 cm');
+  /* drag until jaw B is just past 12.8 cm (a pixel is about 0.7 cm on the stick, so a readout match alone can be stepped over),
+     then the arrow keys (1 mm a press, jaw B is the active jaw) settle it on 12.8 cm */
+  await r.dragWhile(-0.5, 0, () => p.evaluate(() => __dg.S.jawB > 0.1285));
+  for (let i = 0; i < 20; i++) {
+    const v = await p.evaluate(() => Math.round(__dg.S.jawB * 1000));
+    if (v === 128) break;
+    await p.keyboard.press(v < 128 ? 'ArrowRight' : 'ArrowLeft'); await r.tick(3);
+  }
+  r.check.y = await r.text('#rCal');
   await r.secs(0.4);
 
   state.caption = 'The light meter on jaw B reads 0.0000: jaw B is on the dark fringe, y = 12.8 cm';

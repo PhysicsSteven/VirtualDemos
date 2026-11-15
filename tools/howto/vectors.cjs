@@ -1,21 +1,32 @@
-// How this works: Vectors and Relative Motion. Part 1 of the Components worksheet with A = (−5, 2) (the first row,
-// (4, 3), is the opening state, so the second row shows the drag). Expected: |A| = √29 = 5.385, θ = 180° − tan⁻¹(2/5) = 158.2°.
+// How this works: Vectors and Relative Motion. Part 1 of the Components worksheet with A = (−5, 2), dragged from
+// the opening (4, 3) and recorded as the first row. Expected: |A| = √29 = 5.385, θ = 180° − tan⁻¹(2/5) = 158.2°.
 require('./lib.cjs')({ demo: 'vectors', title: 'Vectors and Relative Motion', query: '?setup=comp' }, async (r) => {
   const { state, p } = r;
   const can = await r.box('#can');
-  /* before the first frame: find where on the canvas the tip lands on (−5, 2), by trial drags read off the readout, then
-     reset the setup; none of this is recorded */
-  const comps = async () => (await r.text('#vecOut')).match(/[−-]?\d+\.\d+/g).slice(0, 2).map((t) => +t.replace('−', '-'));
-  const U = 23.6;
-  let tip = [578.5, 401.5], aim = [366, 425];
-  for (let k = 0; k < 4; k++) {
-    await p.mouse.move(...tip); await p.mouse.down(); await p.mouse.move(...aim, { steps: 8 }); await p.mouse.up(); await p.clock.runFor(100);
-    const c = await comps(); tip = [484.1 + c[0] * U, 472.3 - c[1] * U];
-    if (c[0] === -5 && c[1] === 2) break;
-    aim = [aim[0] + (-5 - c[0]) * U, aim[1] - (2 - c[1]) * U];
-  }
+  /* before the first frame: map canvas pixels to grid units from the demo itself. With snapping off, grabbing the tip
+     sets A to the units under the pointer, so: find the tip (4, 3) by scanning, then read A at two pointer positions.
+     The setup is then reset; none of this is recorded */
+  const A = () => p.evaluate(() => window.__v3.S.A.slice());
+  await p.evaluate(() => { window.__v3.S.snap = false; });
+  let grab = null;
+  for (let y = can[1] + 10; y < can[1] + can[3] && !grab; y += 18)
+    for (let x = can[0] + 10; x < can[0] + can[2] && !grab; x += 18) {
+      await p.mouse.move(x, y); await p.mouse.down(); const a = await A(); await p.mouse.up();
+      if (a[0] !== 4 || a[1] !== 3) grab = [x, y];
+      await p.evaluate(() => { window.__v3.S.A = [4, 3]; });
+    }
+  if (!grab) throw new Error('vector tip not found');
+  await p.mouse.move(...grab); await p.mouse.down();
+  await p.mouse.move(grab[0] - 100, grab[1] + 60); const a1 = await A();
+  await p.mouse.move(grab[0] + 50, grab[1] - 40); const a2 = await A(); await p.mouse.up();
+  const kx = 150 / (a2[0] - a1[0]), ky = 100 / (a2[1] - a1[1]);     /* px per unit, both positive */
+  const px = (u, v) => [grab[0] + 50 + (u - a2[0]) * kx, grab[1] - 40 - (v - a2[1]) * ky];
+  /* held relative to the canvas, since ticking Blind can scroll the page */
+  const rel = (q) => [q[0] - can[0], q[1] - can[1]], tipR = rel(px(4, 3)), aimR = rel(px(-5, 2)), aim = px(-5, 2);
+  const at = async (q) => { const c = await r.box('#can'); return [c[0] + q[0], c[1] + q[1]]; };
+  await p.evaluate(() => { window.__v3.S.snap = true; });
   await p.click('#presets [data-p="comp"]'); await p.clock.runFor(200);
-  r.check.aim = aim;
+  r.check.aim = aim; r.check.k = [kx, ky];
 
   state.caption = 'Sample: the vector (−5, 2) from Worksheet 2, Part 1: its size and direction';
   await r.secs(3.0);
@@ -29,9 +40,17 @@ require('./lib.cjs')({ demo: 'vectors', title: 'Vectors and Relative Motion', qu
   await r.secs(0.8);
 
   state.caption = 'Set the vector: drag the tip of A to (−5, 2)';
-  state.zoom = [can[0] + can[2] / 2 - 400, can[1] + 40, 800, 450];
-  await r.moveTo(578.5, 401.5, 0.7);
-  await r.dragTo(...aim, 1.2);
+  const cz = await r.box('#can');
+  state.zoom = [cz[0] + cz[2] / 2 - 400, cz[1] + 40, 800, 450];
+  await r.moveTo(...(await at(tipR)), 0.7);
+  await p.mouse.down(); state.down = true; await r.tick(3);
+  await r.moveTo(...(await at(aimR)), 1.2);
+  for (let i = 0; i < 30; i++) {   /* closed loop on the demo's own value, in case the page shifted */
+    const a = await A(); if (a[0] === -5 && a[1] === 2) break;
+    state.ptr = [state.ptr[0] + Math.sign(-5 - a[0]) * 6, state.ptr[1] - Math.sign(2 - a[1]) * 6]; await p.mouse.move(...state.ptr); await r.tick();
+  }
+  await r.tick(4); await p.mouse.up(); state.down = false; await r.tick();
+  r.check.dragA = await A(); r.check.canAtDrag = await r.box('#can');
   await r.secs(1.0);
 
   state.caption = 'Work out its size and angle by hand, then untick Blind to check';

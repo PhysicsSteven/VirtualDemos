@@ -1,7 +1,7 @@
-// How this works: Terminal Velocity. Part 1: an 85 kg skydiver, spread eagle, from 4000 m in uniform air (ρ = 1.21 kg/m³),
+// How this works: Terminal Velocity. Part 1: an 85 kg skydiver, spread eagle, from 4000 m in uniform air (ρ = 1.204 kg/m³, the textbook rounds it to 1.21),
 // Blind on; readings at t = 0 and t = 1 s with Step 1 s.
-// Expected: v_T = √(2mg/(ρCA)) = √(2·85·9.81/(1.21·1.0·0.70)) = 44.37 m/s; v(1 s) = v_T tanh(g t/v_T) = 9.65 m/s,
-// a = g(1 − v²/v_T²) = 9.35 m/s², fallen y = (v_T²/g) ln cosh(g t/v_T) = 4.86 m.
+// Expected: v_T = √(2mg/(ρCA)) = √(2·85·9.81/(1.204·1.0·0.70)) = 44.48 m/s; v(1 s) = v_T tanh(g t/v_T) = 9.65 m/s,
+// a = g(1 − v²/v_T²) = 9.35 m/s², fallen y = (v_T²/g) ln cosh(g t/v_T) = 4.87 m (4.86 with the textbook's 1.21).
 require('./lib.cjs')({ demo: 'terminal-velocity', title: 'Terminal Velocity' }, async (r) => {
   const { state, p } = r;
 
@@ -34,6 +34,9 @@ require('./lib.cjs')({ demo: 'terminal-velocity', title: 'Terminal Velocity' }, 
   r.check.blind = await p.evaluate(() => document.getElementById('labBlind').checked);
 
   state.caption = 'Step 1 s: the clock moves on exactly one second';
+  /* the Lab step scrolled the page down, and the Step button sits above the picture: scroll back to the top first */
+  const y0 = await p.evaluate(() => scrollY);
+  for (let i = 1; i <= 12; i++) { await p.evaluate(y => window.scrollTo(0, y), y0 * (1 - i / 12) ** 2); await r.tick(); }
   await r.click('#step');
   const sc = await r.box('#scene');
   state.zoom = [sc[0], sc[1], 800, 450];

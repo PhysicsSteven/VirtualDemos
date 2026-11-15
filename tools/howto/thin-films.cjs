@@ -3,19 +3,13 @@
 // the first maximum is a quarter wave, t = λ₀/(4n_f) = 75.2 nm, with R = ((1 − 1.33²)/(1 + 1.33²))² = 7.71%.
 require('./lib.cjs')({ demo: 'thin-films', title: 'Thin Film Interference' }, async (r) => {
   const { state, p } = r;
-  /* before the first frame: where the film's bottom surface sits for a given t, from trial drags read off the demo
-     (t = t_max ((y − y₁)/h)³ in the Rays view); then the setup is put back. None of this is recorded */
-  const GX = 450;
+  /* before the first frame: where the film's bottom surface sits for a given t, from the demo's own ray geometry
+     (t = 2000 nm × (hf/hfMax)³ below the top surface y1 in the Rays view); then the setup is put back */
   await p.click('[data-p="black"]'); await p.clock.runFor(200);
-  const cal = await p.evaluate((x) => {
-    const can = document.querySelector('#can'), out = [], ev = (t, y) => can.dispatchEvent(new PointerEvent(t, { clientX: x, clientY: y, bubbles: true, pointerId: 9 }));
-    for (let y = 340; y < 400 && out.length < 12; y += 1) { ev('pointerdown', y); ev('pointermove', y + 0.5); ev('pointerup', y + 0.5); if (__tf.S.t !== 10) { out.push([y + 0.5, __tf.S.t]); __tf.S.t = 10; } }
-    return [out[0], out[out.length - 1]];
-  }, GX);
-  const c0 = Math.cbrt(cal[0][1] / 2000), c1 = Math.cbrt(cal[1][1] / 2000), hmax = (cal[1][0] - cal[0][0]) / (c1 - c0), y1 = cal[0][0] - c0 * hmax;
-  const yAt = (t) => y1 + hmax * Math.cbrt(t / 2000);
+  const geo = await p.evaluate(() => { const g = __tf.rayGeom(), [cx, cy] = __tf.canvasBox('m'); return { x: cx + g.R.x + g.R.w * 0.7, y1: cy + g.y1, hfMax: g.hfMax, R: [cx + g.R.x, cy + g.R.y, g.R.w, g.R.h] }; });
+  const GX = geo.x, yAt = (t) => geo.y1 + geo.hfMax * Math.cbrt(t / 2000);
+  r.check.geo = geo;
   await p.click('[data-p="two"]'); await p.mouse.move(r.W / 2, r.H / 2); await p.clock.runFor(300);
-  r.check.cal = cal;
 
   state.caption = "Sample: Part 1's first reading, the thinnest soap film that reflects 400 nm most strongly";
   await r.secs(3.0);
