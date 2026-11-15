@@ -26,10 +26,26 @@ to rebuild it (about 10 s).
 | Before and after picture | `node tools/beforeafter.cjs <demo>` | 1 min | every visual fix; attach the picture to the reply |
 | One worksheet key | in TeacherKeys: `bash worksheet-keys/tools/rekey.sh <slug>` (`--apply` to keep; `--reprint` after an answers or handout edit) | 1 to 3 min | when democheck names it, or after a worksheet edit |
 | One video | `bash tools/howto/take.sh <name>` | 5 min | when the demo's controls, layout or defaults changed |
-| CI after a push | `gh run list -R PhysicsSteven/VirtualDemos -L 3` | seconds | after every push; both jobs must pass, then the Pages build |
+| CI after a push | `gh run list -R PhysicsSteven/VirtualDemos -L 5` | seconds | after every push; every workflow must pass, then the Pages build |
 
 Every browser check writes pictures and JSON under `/tmp/vdcheck/` (set `VDCHECK_DIR` when two jobs run at once). The cloud box has
 4 cores: run at most 3 browser jobs at a time, and a photo timeout under load is the machine, not the demo (rerun it alone).
+
+## On GitHub, free (2026-11-15)
+
+GitHub Actions runs the scripted checks on its own machines, so they cost no Claude usage. Let them do the waiting: push, then
+read the results, instead of running the long checks in the session.
+- **Demo checks** (`.github/workflows/demo-checks.yml`, this repo): on every push and pull request, the demos that changed get
+  democheck, break-it and perfcheck (`tools/ci/pick.cjs` picks them; a change to `demos/lib/*.js` or `*.css` or to a check script
+  checks every demo, and so does a commit message containing [check all]). Every Sunday at 9:17 UTC, every demo gets break-it, opencheck and perfcheck in parallel jobs. Actions tab,
+  Demo checks, Run workflow: type demos, or all. The repo is public, so this is free with no limit.
+- **Key checks** (`.github/workflows/key-checks.yml`, TeacherKeys): every Monday at 10:41 UTC, `rekey.sh` (never `--apply`) on the
+  keys whose demo or worksheet changed in the last 8 days, plus `rules.cjs --keys`. Run workflow: changed, all, or slugs.
+  TeacherKeys is private, so this uses Actions minutes (a run of every key is about 7 hours of them): prefer changed or slugs.
+- Reading results: `gh run list -R PhysicsSteven/VirtualDemos -L 5`, then `gh run view <id> --log-failed`. Each run's Summary
+  page lists the failures (and for keys, what moved); the pictures, reports and new key files are the run's downloads (on its GitHub page; `gh run download` is blocked in cloud sessions).
+  A failed run also emails Steve. Moved keys still need the judgment in "Keys after a demo change" below.
+- Still by hand: watching like a student (judging the pictures), the odd sequences break-it can't script, and videos.
 
 ## Watch it like a student (Steve 2026-11-11): what the scripts cannot judge
 
