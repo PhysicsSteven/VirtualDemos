@@ -103,6 +103,15 @@
     /* opt.active(): false while this view is not the one showing (several orbits on one canvas, one per scene): the wheel,
        double click, pinch and keys then leave it alone (rotation's four scenes all zoomed at once; break-it test, 2026-11-09) */
     var on = function () { return !opt.active || opt.active(); };
+    /* the wheel and the - and = keys zoom by steps that undo each other, and within one burst of steps (none more than 1.5 s
+       apart) the steps taken past a limit are remembered, so zooming far out and back in by as many steps comes back to the
+       same view (student view, 2026-11-15: wire-force, ultrasound and terminal-velocity came back zoomed in). The zoom stays a
+       camera distance from the target: it is centered. */
+    var want = null, wantT = 0;
+    var zoomBy = function (f) {
+      var now = Date.now(), base = want != null && now - wantT < 1500 && clamp(want, zMin, zMax) === o.zoom ? want : o.zoom;
+      want = base * f; wantT = now; o.zoom = clamp(want, zMin, zMax);
+    };
     el.style.touchAction = two ? 'pan-y' : 'none'; el.style.cursor = 'grab';
     el.addEventListener('pointerdown', function (e) {
       if (two && e.pointerType === 'touch') return;   /* touches: VD3.touch below */
@@ -120,7 +129,7 @@
     });
     var up = function (e) { pts.delete(e.pointerId); if (!pts.size) mode = null; el.style.cursor = 'grab'; };
     el.addEventListener('pointerup', up); el.addEventListener('pointercancel', up);
-    el.addEventListener('wheel', function (e) { if (!on()) return; e.preventDefault(); o.zoom = clamp(o.zoom / Math.exp(e.deltaY * 0.0012), zMin, zMax); onChange(); }, { passive: false });
+    el.addEventListener('wheel', function (e) { if (!on()) return; e.preventDefault(); zoomBy(1 / Math.exp(e.deltaY * 0.0012)); onChange(); }, { passive: false });
     if (two) VD3.touch(el, { grab: opt.grab, move: function (dx, dy, k) {
       if (!on()) return;
       o.th -= dx * 0.008; o.ph = clamp(o.ph - dy * 0.006, phMin, phMax); o.zoom = clamp(o.zoom * k, zMin, zMax); onChange(); } });
@@ -130,7 +139,7 @@
     if (opt.keys !== false) el.addEventListener('keydown', function (e) {
       if (!on()) return;
       if (e.key === ',' || e.key === '.') o.th += e.key === ',' ? 0.12 : -0.12;
-      else if (e.key === '-' || e.key === '=' || e.key === '+') o.zoom = clamp(o.zoom * (e.key === '-' ? 0.9 : 1.1), zMin, zMax);
+      else if (e.key === '-' || e.key === '=' || e.key === '+') zoomBy(e.key === '-' ? 1 / 1.1 : 1.1);
       else return;
       e.preventDefault(); onChange();
     });

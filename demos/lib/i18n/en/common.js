@@ -1283,5 +1283,6 @@ VDI18N.add('en', 'common', [
 "Warm lab",
 "Cool lab",
 "Warm lab (walnut and amber) or Cool lab (graphite and teal), for the page around each demo. The pictures keep their colors.",
-"Preferences: theme, look, language, Reduce motion, Larger text and Projector, for every page"
+"Preferences: theme, look, language, Reduce motion, Larger text and Projector, for every page",
+"Close"
 ]);

@@ -917,11 +917,20 @@
     function again() { measure(); apply(s.f()); s.place(); }   /* measured first, so a default follows the panes as the CSS has them now */
     window.addEventListener('resize', again);
     new MutationObserver(again).observe(document.documentElement, { attributes: true, attributeFilter: ['data-projector'] });
-    (a.closest('.stage') || c).addEventListener('click', function () { setTimeout(again, 0); });   /* a view switch can show, hide or move a pane */
     var queued = false; function queue() { if (!queued) { queued = true; requestAnimationFrame(function () { queued = false; again(); }); } }
+    /* a view or mode switch can show, hide or move a pane, and that switch may sit in the rail, not the stage (student view,
+       2026-11-15: the grip stayed where it was after a view change from the rail): any click or change on the page, and any
+       size change of a pane, places it again */
+    document.addEventListener('click', function () { setTimeout(queue, 0); }, true);
+    document.addEventListener('change', function () { setTimeout(queue, 0); }, true);
+    if (window.ResizeObserver) { var ro = new ResizeObserver(queue); ro.observe(a); ro.observe(b); }
     new MutationObserver(queue).observe(a, { attributes: true, attributeFilter: ['hidden', 'class'] });   /* a pane shown later (a 3D view once it loads) */
     new MutationObserver(queue).observe(b, { attributes: true, attributeFilter: ['hidden', 'class'] });
     again();
+    /* the layout can settle after this runs (fonts, images, a 3D view sized later), and the grip stayed where it was first put
+       until a resize or click: place it again once the page has loaded (student view, 2026-11-15) */
+    if (document.readyState !== 'complete') window.addEventListener('load', queue); else queue();
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(queue);
     return s;
   };
 

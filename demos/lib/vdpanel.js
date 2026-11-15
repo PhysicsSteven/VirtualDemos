@@ -65,6 +65,7 @@
     ".vd-tg .vd-step.vd-back { --vd-ic: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M9.5 1 3.5 5 9.5 9zM0.7 1h2v8h-2z'/%3E%3C/svg%3E\"); }",
     ".vd-tg .vd-reset { --vd-ic: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10' fill='none' stroke='black' stroke-width='1.4' stroke-linecap='round'%3E%3Cpath d='M2.2 3.2A3.6 3.6 0 1 1 1.4 5.6'/%3E%3Cpath d='M1.6 0.9v2.6h2.6' stroke-linejoin='round'/%3E%3C/svg%3E\"); }",
     '.vd-tg .vd-sep { width: 1px; align-self: stretch; margin: 4px 4px; background: var(--line); }',
+    '.vd-tg .vd-sep[data-vd-off] { display: none; }',
     '.vd-tg .vd-speed { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 4px; min-width: 0; }',
     '.vd-panel > .vd-tg { max-width: 100%; box-sizing: border-box; }',
     '.vd-tg .vd-lab { font-size: 0.78rem; font-weight: 700; color: var(--muted); padding: 0 2px 0 4px; }',
@@ -202,9 +203,30 @@
       });
       var any = [].some.call(g.children, function (c) { return !c.classList.contains('vd-sep') && !c.hidden && getComputedStyle(c).display !== 'none'; });
       g.classList.toggle('vd-empty', !any);
+      seps();
+    }
+    /* a separator shows only between two controls on show on the same line: none beside a hidden Play or Reset ("| |"), and
+       none left at the end or start of a line when the group wraps on a phone (student view, 2026-11-15). Its data-vd-off is
+       not watched, so this never wakes sync again. */
+    function seps() {
+      var kids = [].slice.call(g.children), vis = function (c) { return !c.classList.contains('vd-sep') && !c.hidden && getComputedStyle(c).display !== 'none'; };
+      kids.forEach(function (c) { if (c.classList.contains('vd-sep')) c.setAttribute('data-vd-off', ''); });
+      if (g.classList.contains('vd-empty') || !g.getClientRects().length) return;
+      kids.forEach(function (c, i) {
+        if (!c.classList.contains('vd-sep')) return;
+        var a = null, b = null, j;
+        for (j = i - 1; j >= 0 && !a; j--) if (kids[j].classList.contains('vd-sep')) { if (!kids[j].hasAttribute('data-vd-off')) break; } else if (vis(kids[j])) a = kids[j];
+        for (j = i + 1; j < kids.length && !b; j++) if (!kids[j].classList.contains('vd-sep') && vis(kids[j])) b = kids[j];
+        if (!a || !b) return;
+        c.removeAttribute('data-vd-off');
+        var ra = a.getBoundingClientRect(), rb = b.getBoundingClientRect();
+        if (rb.top >= ra.bottom - 1 || rb.left < ra.left) c.setAttribute('data-vd-off', '');   /* b wrapped to the next line */
+      });
     }
     sync();
     new MutationObserver(sync).observe(g, { attributes: true, attributeFilter: ['hidden', 'style', 'class'], subtree: true });
+    if (window.ResizeObserver) new ResizeObserver(function () { seps(); }).observe(bar);
+    window.addEventListener('resize', seps);
 
     var ends = [].concat(o.end || []).map($).filter(Boolean);
     var dim = bar.querySelector('[data-dim]');

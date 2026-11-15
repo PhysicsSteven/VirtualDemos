@@ -40,8 +40,8 @@
 .steps .chk { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
 .steps input { font: inherit; font-family: var(--font-mono); font-size: 0.84rem; width: 8.5em; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 3px 6px; }
 .steps .say { font-size: 0.8rem; }
-.steps .say.good { color: var(--dose); } .steps .say.bad { color: var(--neg); }
-.readout .warn { color: var(--neg); }
+.steps .say.good { color: var(--dose); } .steps .say.bad { color: var(--red); } /* a wrong answer reads red, not the negative-charge blue (student view, 2026-11-15) */
+.readout .warn { color: var(--red); }
 @media (min-width: 821px) { .bench > .stage { align-self: start; min-height: max(720px, 100%); } }
 :root[data-projector="on"] .bench > .stage { min-height: max(440px, 100%); }
 @media (max-width: 820px) { .scene { min-height: 0; height: 470px; flex: none; } .setup-card { position: static; width: auto; margin: 8px; } }

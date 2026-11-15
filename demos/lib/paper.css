@@ -166,7 +166,9 @@ body.site .facts, body.site .meta, body.site .sub, body.site .n, body.site .how,
 .app .bar p { font-family: var(--sans); font-style: normal; color: var(--ink2); }
 .app .vd-crumbs, .app .vd-crumbs a { font-family: var(--sans); font-weight: 600; }
 .app .rail { background: var(--paper); border: 1px solid var(--line); border-radius: var(--r); box-shadow: var(--shadow-s); }
-.app .rail h2, .app .rail details.fold > summary, .app .card-title, .app .rack-title, .app .shelf-card > .card-title { font: 600 0.7rem var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink2); }
+.app .rail h2, .app .rail details.fold > summary { font: 600 0.7rem var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink2); }
+/* card titles keep their case: they carry units and symbols (µm, Cl⁻, q, ε, f₀, M₁), which capitals change (student view, 2026-11-15) */
+.app .card-title, .app .rack-title, .app .shelf-card > .card-title { font: 600 0.72rem var(--mono); letter-spacing: 0.04em; text-transform: none; color: var(--ink2); }
 .app .rail details.more > summary, .app .hint, .app .status { font-family: var(--sans); color: var(--ink2); }
 .app .readout dt { font-family: var(--sans); font-style: normal; color: var(--ink2); }
 .app .readout dd, .app .units { font-family: var(--mono); }

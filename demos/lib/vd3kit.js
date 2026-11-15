@@ -99,14 +99,16 @@
       if (!force && k === S.key) return; S.key = k;
       var bg = (opt.sky ? null : K.token('--canvas', dk ? '#121820' : '#fbfcfd'));
       if (opt.sky) bg = new THREE.Color(opt.sky); scene.background = bg;
-      var nf = S.fogNF || opt.fog || (opt.fogAt ? [10, 20] : null); scene.fog = nf ? new THREE.Fog(bg, nf[0], nf[1]) : null;
+      var nf = S.fogNF || opt.fog || (opt.fogAt ? (S.fogAtNF || [10, 20]) : null); scene.fog = nf ? new THREE.Fog(bg, nf[0], nf[1]) : null;
       hemi.intensity = dk ? 0.9 : 0.62; sun.intensity = dk ? 0.8 : 0.62; hemi.groundColor = new THREE.Color(dk ? '#2a241d' : '#8c7a60');
       S.fns.forEach(function (fn) { fn(dk); });
     };
     S.render = function () { S.theme(); scene.updateMatrixWorld(); r.render(scene, cam); };
     var tmp = new THREE.Vector3();
     S.project = function (q) { tmp.copy(V(q)).project(cam); return [(tmp.x + 1) / 2 * S.w, (1 - tmp.y) / 2 * S.h, tmp.z]; };
-    S.place = function (o, t, d) { VD3.place(cam, o, V(t), d); if (opt.fogAt && scene.fog) { scene.fog.near = opt.fogAt[0] * d / o.zoom; scene.fog.far = opt.fogAt[1] * d / o.zoom; } };
+    /* remember the fogAt distances, so the fog that S.theme makes on the first frame (or after a theme change) uses them, not 10 to 20
+       (student view, 2026-11-15: a static fogAt demo opened from a link drew its first frame in the wrong fog) */
+    S.place = function (o, t, d) { VD3.place(cam, o, V(t), d); if (opt.fogAt) { S.fogAtNF = [opt.fogAt[0] * d / o.zoom, opt.fogAt[1] * d / o.zoom]; if (scene.fog) { scene.fog.near = S.fogAtNF[0]; scene.fog.far = S.fogAtNF[1]; } } };
     S.fit = function (d, ref) { return d * Math.max(1, (ref || 1.4) / (S.w / Math.max(1, S.h))); };   /* back the camera off on a tall (phone) picture */
     S.orbit = function (target, o, onChange, oo) { return VD3.orbit(target, o, onChange, oo); };
     S.dispose = function (obj) { obj.traverse(function (x) { if (x.geometry) x.geometry.dispose(); }); if (obj.parent) obj.parent.remove(obj); };

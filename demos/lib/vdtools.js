@@ -38,6 +38,9 @@
     ':where(.vdt-btn){font:inherit;font-size:.88rem;font-weight:700;color:var(--ink);background:var(--canvas);border:1px solid var(--line);border-radius:6px;padding:5px 10px;cursor:pointer}',
     '.vdt-btn[aria-expanded="true"]{border-color:var(--accent);color:var(--accent)}',
     '.vdt-float{position:absolute;z-index:6;top:8px;right:8px}',
+    /* a strip floating over the same picture (a .viewbar) wraps before the floating button instead of running under it
+       (student view, 2026-11-15: on phones Tools covered a button of the strip in impulse, induced-electric-field, gps-clocks, huygens) */
+    ':has(> .vdt-float:not([hidden])) > .viewbar{max-width:calc(100% - var(--vdt-room, 96px))}',
     '.vdt-watch{position:absolute;z-index:50;display:flex;flex-direction:column;gap:6px;padding:8px 10px 10px;min-width:178px;background:color-mix(in srgb,var(--surface) 94%,transparent);border:1px solid var(--line);border-radius:10px;box-shadow:0 6px 18px rgba(0,0,0,.18);font:600 .8rem/1.2 var(--font-ui);color:var(--ink);touch-action:none;user-select:none;-webkit-user-select:none}',
     '.vdt-head{display:flex;align-items:center;justify-content:space-between;gap:8px;cursor:grab;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-size:.68rem}',
     '.vdt-head::before{content:"⠿";font-size:.9rem;letter-spacing:0}',
@@ -110,7 +113,13 @@
       if (!s) s = Array.prototype.find.call(document.querySelectorAll('.stage-ctl'), shown) || null;
       if (s) { strip = s; if (btn.parentElement !== s) { btn.classList.remove('vdt-float'); btn.style.cssText = ''; s.appendChild(btn); } return; }
       strip = null;
-      for (i = 0; i < srcs.length; i++) { var e = $el(srcs[i].el); if (shown(e)) { if (btn.parentElement !== e.parentElement) { btn.classList.add('vdt-float'); btn.style.cssText = srcs[i].float || ''; e.parentElement.appendChild(btn); } return; } }
+      for (i = 0; i < srcs.length; i++) { var e = $el(srcs[i].el); if (shown(e)) { if (btn.parentElement !== e.parentElement) { btn.classList.add('vdt-float'); btn.style.cssText = srcs[i].float || ''; e.parentElement.appendChild(btn); } room(); return; } }
+    }
+    /* the room the floating button takes from the right edge of its picture (its label is longer in some languages) */
+    function room() {
+      var p = btn.parentElement; if (!p || btn.hidden) return;
+      var v = Math.max(0, Math.round(p.getBoundingClientRect().right - btn.getBoundingClientRect().left + 8)) + 'px';
+      if (v !== room.v) { room.v = v; p.style.setProperty('--vdt-room', v); }
     }
     home();
     var stage = function () { for (var i = 0; i < srcs.length; i++) { var e = $el(srcs[i].stage); if (shown(e)) return e; } return strip ? strip.parentElement : btn.parentElement; };
