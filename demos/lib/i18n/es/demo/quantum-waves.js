@@ -248,8 +248,8 @@ VDI18N.add('es', 'demo/quantum-waves', {
   "Modelo: pasos de tiempo de Crank–Nicolson en {#} puntos de malla, Δx = {#} pm. La probabilidad que llega a las capas absorbentes más allá de la vista se quita y se cuenta en R o T. Los niveles de energía se obtienen diagonalizando el mismo hamiltoniano de diferencias finitas. La malla hace que la energía cinética y la rapidez de un paquete se lean bajas en (kΔx)²/{#} y (kΔx)²/{#}, menos de {#} % y {#} % en el tope del deslizador de energía; ⟨E⟩ es la energía que la malla conserva.",
 "ψ in 3D: Re ψ up, Im ψ toward you, color is the phase":
   "ψ en 3D: Re ψ hacia arriba, Im ψ hacia ti, el color es la fase",
-"|ψ| is the distance from the axis · gray wall: V(x) · x from −{#} to {#} nm · drag to turn":
-  "|ψ| es la distancia al eje · pared gris: V(x) · x de −{#} a {#} nm · arrastra para girar",
+"|ψ| is the distance from the axis · gray wall: V(x) · drag to turn":
+  "|ψ| es la distancia al eje · pared gris: V(x) · arrastra para girar",
 "brightness |ψ|², color phase":
   "brillo |ψ|², color fase",
 "levels (nx, ny)":
@@ -370,6 +370,10 @@ VDI18N.add('es', 'demo/quantum-waves', {
   "Luz polarizada a lo largo de x con exactamente la energía de ({#},{#}) a ({#},{#}). El electrón sube a ({#},{#}), luego la misma luz lo regresa hacia abajo (emisión estimulada), una y otra vez: oscilaciones de Rabi, un ciclo completo cada h/(eℰ|⟨{#},{#}|x|{#},{#}⟩|).",
 "Light at {#}ħω, exactly the gap to ({#},{#}), yet nothing happens: x only links n to n ± {#}, so in an oscillator light at {#}ħω has no step to drive. Set ħω to {#} eV and the electron climbs the evenly spaced ladder instead of swinging back down.":
   "Luz a {#}ħω, exactamente la brecha hasta ({#},{#}), y sin embargo no pasa nada: x solo conecta n con n ± {#}, así que en un oscilador la luz a {#}ħω no tiene un escalón que impulsar. Pon ħω en {#} eV y el electrón sube por la escalera de niveles igualmente espaciados en vez de regresar hacia abajo.",
+"Close":
+  "Cerrar",
 "|ψ|² as height":
-  "|ψ|² como altura"
+  "|ψ|² como altura",
+"|ψ| is the distance from the axis · gray wall: V(x) · x from −{#} to {#} nm · drag to turn":
+  "|ψ| es la distancia al eje · pared gris: V(x) · x de −{#} a {#} nm · arrastra para girar"
 });

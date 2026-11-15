@@ -124,7 +124,7 @@ VDI18N.add('en', 'demo/quantum-waves', [
 "Color shows the phase of ψ, as on the color wheel: a packet moving right winds through the colors in one order, one moving left in the other order, and a standing wave has blocks of one color that flip by half a turn at each node.",
 "Model: Crank–Nicolson time steps on {#} grid points, Δx = {#} pm. Probability that reaches the absorbing layers beyond the view is removed and counted in R or T. Energy levels come from diagonalizing the same finite difference Hamiltonian. The grid makes a packet's kinetic energy and speed read low by (kΔx)²/{#} and (kΔx)²/{#}, under {#} % and {#} % at the top of the energy slider; ⟨E⟩ is the energy the grid conserves.",
 "ψ in 3D: Re ψ up, Im ψ toward you, color is the phase",
-"|ψ| is the distance from the axis · gray wall: V(x) · x from −{#} to {#} nm · drag to turn",
+"|ψ| is the distance from the axis · gray wall: V(x) · drag to turn",
 "brightness |ψ|², color phase",
 "levels (nx, ny)",
 "tap a level to add or drop it",
@@ -185,5 +185,6 @@ VDI18N.add('en', 'demo/quantum-waves', [
 "ħω",
 "Light polarized along x at exactly the ({#},{#}) to ({#},{#}) energy. The electron climbs to ({#},{#}), then the same light drives it back down (stimulated emission), over and over: Rabi oscillations, one full cycle every h/(eℰ|⟨{#},{#}|x|{#},{#}⟩|).",
 "Light at {#}ħω, exactly the gap to ({#},{#}), yet nothing happens: x only links n to n ± {#}, so in an oscillator light at {#}ħω has no step to drive. Set ħω to {#} eV and the electron climbs the evenly spaced ladder instead of swinging back down.",
+"Close",
 "|ψ|² as height"
 ]);

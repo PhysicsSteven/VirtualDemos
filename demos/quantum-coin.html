@@ -243,6 +243,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       if (N) txt(`${counts[i]}  (${fr.toFixed(3).replace(/^0/, '')})`, cx, y + h - bh - 6 * p, { a: 'center', s: 10 });
     }
     txt(`N = ${N}`, x, y + 10 * p, { s: 10, c: T.muted });
+    if (expect && !S.blind) legend(x + w, y + 10 * p);
+  }
+  /* a key for the gold lines: without it, on an empty chart they read as bars (student view, 2026-11-15) */
+  function legend(xr, y) {
+    const p = geo.p; ctx.font = `${10 * p}px ${T.mono}`; const tw = ctx.measureText('expected').width;
+    ctx.strokeStyle = T.theory; ctx.lineWidth = 3 * p; ctx.beginPath(); ctx.moveTo(xr - tw - 26 * p, y - 3 * p); ctx.lineTo(xr - tw - 8 * p, y - 3 * p); ctx.stroke();
+    txt('expected', xr, y, { a: 'right', s: 10, c: T.muted });
   }
   /* a Bloch sphere: x to the right and slightly down, y into the page, z up */
   function sphere(cx, cy, R, s, n, labels) {
@@ -253,7 +260,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const lz = P([0, 0, 1.18]), lzd = P([0, 0, -1.18]), lx = P([1.22, 0, 0]), ly = P([0, 1.28, 0]);
     txt(labels[0], lz[0], lz[1], { a: 'center', s: 11, c: T.muted }); txt(labels[1], lzd[0], lzd[1] + 10 * p, { a: 'center', s: 11, c: T.muted }); txt('x', lx[0], lx[1] + 4 * p, { a: 'center', s: 11, c: T.muted }); txt('y', ly[0] - 6 * p, ly[1], { a: 'center', s: 11, c: T.muted });
     if (n) { const a = P(n.map((c) => -c * 1.12)), b = P(n.map((c) => c * 1.12)); ctx.strokeStyle = T.theory; ctx.lineWidth = 2 * p; ctx.setLineDash([6 * p, 4 * p]); ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke(); ctx.setLineDash([]);
-      txt('+n', b[0] + 4 * p, b[1], { s: 10, c: T.theory }); }
+      /* +n beside the axis end, square to it, so it clears the |↑z⟩ and x labels (student view, 2026-11-15) */
+      const dx = b[0] - a[0], dy = b[1] - a[1], dl = Math.hypot(dx, dy) || 1;
+      txt('+n', b[0] - dy / dl * 14 * p, b[1] + dx / dl * 14 * p, { a: 'center', bl: 'middle', s: 10, c: T.theory }); }
     const e = P(s), o = [cx, cy], ang = Math.atan2(e[1] - o[1], e[0] - o[0]), hh = 11 * p;
     ctx.strokeStyle = T.ink; ctx.fillStyle = T.ink; ctx.lineWidth = 3 * p; ctx.beginPath(); ctx.moveTo(o[0], o[1]); ctx.lineTo(e[0] - Math.cos(ang) * hh * 0.8, e[1] - Math.sin(ang) * hh * 0.8); ctx.stroke();
     ctx.beginPath(); ctx.moveTo(e[0], e[1]); ctx.lineTo(e[0] - hh * Math.cos(ang - 0.4), e[1] - hh * Math.sin(ang - 0.4)); ctx.lineTo(e[0] - hh * Math.cos(ang + 0.4), e[1] - hh * Math.sin(ang + 0.4)); ctx.closePath(); ctx.fill();
@@ -305,14 +314,15 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     let beams = [cy];
     ctx.lineWidth = 3 * p;
     for (let i = 0; i < g.n; i++) {
-      const mx = g.mx(i), prev = i ? g.mx(i - 1) + g.mw / 2 : geo.x0 + 36 * p, k = i === g.n - 1 ? 'both' : g.m[i].keep;
+      /* the onward beam starts at the end of the previous magnet's stub, as the atoms do; it started at the magnet's edge and drew an X (student view, 2026-11-15) */
+      const mx = g.mx(i), prev = i ? g.mx(i - 1) + g.mw / 2 + Math.min(24 * p, g.step * 0.2) : geo.x0 + 36 * p, k = i === g.n - 1 ? 'both' : g.m[i].keep;
       ctx.strokeStyle = T.muted; for (const y of beams) { ctx.beginPath(); ctx.moveTo(prev, y); ctx.lineTo(mx - g.mw / 2, cy); ctx.stroke(); }
       /* the magnet: pole pieces, axis arrow and its tilt */
       ctx.fillStyle = T.magN; ctx.fillRect(mx - g.mw / 2, cy - 44 * p, g.mw, 26 * p); ctx.fillStyle = T.magS; ctx.fillRect(mx - g.mw / 2, cy + 18 * p, g.mw, 26 * p);
       txt('N', mx, cy - 31 * p, { a: 'center', bl: 'middle', s: 11, b: true, c: T.canvas }); txt('S', mx, cy + 31 * p, { a: 'center', bl: 'middle', s: 11, b: true, c: T.canvas });
       const a = g.m[i].a * QC_D, L = 16 * p; ctx.strokeStyle = T.theory; ctx.lineWidth = 2.5 * p; ctx.beginPath(); ctx.moveTo(mx - Math.sin(a) * L, cy + Math.cos(a) * L); ctx.lineTo(mx + Math.sin(a) * L, cy - Math.cos(a) * L); ctx.stroke();
       ctx.fillStyle = T.theory; ctx.beginPath(); ctx.arc(mx + Math.sin(a) * L, cy - Math.cos(a) * L, 3.5 * p, 0, 2 * Math.PI); ctx.fill();
-      txt(`${g.m[i].a}° from z`, mx, cy + 62 * p, { a: 'center', s: 10, c: T.muted });
+      txt(g.step < 110 * p ? `${g.m[i].a}°` : `${g.m[i].a}° from z`, mx, cy + 62 * p, { a: 'center', s: 10, c: T.muted });
       /* outputs */
       const yU = cy - spread, yD = cy + spread, xo = mx + g.mw / 2, xe = i === g.n - 1 ? g.x1 : xo + Math.min(24 * p, g.step * 0.2);
       ctx.lineWidth = 3 * p;
@@ -339,7 +349,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         ctx.fillStyle = cols[i]; ctx.fillRect(cx - bw / 2, by + bh - h, bw, h);
         if (!S.blind) { const ey = by + bh - ex[i] * (bh - 24 * p); ctx.strokeStyle = T.theory; ctx.lineWidth = 3 * p; ctx.beginPath(); ctx.moveTo(cx - bw / 2 - 6 * p, ey); ctx.lineTo(cx + bw / 2 + 6 * p, ey); ctx.stroke(); }
         txt(lab[i], cx, by + bh + 14 * p, { a: 'center', s: 10, c: T.muted }); if (N) txt(`${v[i]}  (${fr.toFixed(3).replace(/^0/, '')})`, cx, by + bh - h - 6 * p, { a: 'center', s: 10 }); }
-      txt(`atoms from the oven N = ${N}`, x, by + 10 * p, { s: 10, c: T.muted });
+      txt(`atoms from the oven N = ${N}`, x, by + 10 * p, { s: 10, c: T.muted }); if (!S.blind) legend(x + w, by + 10 * p);
     }
   }
   /* an atom's path through the row: points and colours, cut at the magnet whose beam blocked it */
@@ -456,7 +466,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   let last = performance.now();
   function frame(now) {
     const dt = Math.min(0.05, (now - last) / 1000); last = now; let moving = false;
-    if (S.mode === 'coin' && S.last === null && !reduce) { spinA += dt * 9; moving = true; }
+    if (S.mode === 'coin' && S.last === null && !reduce) { spinA += dt * 3;   /* about one flip a second; at 9 rad/s it fluttered three times a second (student view, 2026-11-15) */ moving = true; }
     if (S.dots.length) { for (const d of S.dots) d.t += dt; S.dots = S.dots.filter((d) => d.t < 0 || dotPos(d)); moving = true; }
     if (moving) draw();
     requestAnimationFrame(frame);

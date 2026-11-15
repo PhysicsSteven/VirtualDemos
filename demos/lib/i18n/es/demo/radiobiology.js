@@ -386,6 +386,8 @@ VDI18N.add('es', 'demo/radiobiology', {
   "Cinco fracciones que dan al tejido de respuesta tardía el mismo efecto que {#} Gy en {#}: solo {#} Gy en total ({#} Gy cada una), y el tumor (α/β {#} Gy) recibe una EQD2 de solo {#} Gy. Para un tumor con α/β alto, fracciones más grandes y en menor número pierden efecto sobre el tumor con el mismo efecto tardío.",
 "Late effect held at":
   "Efecto tardío fijado en",
+"{#} Gy in {#}":
+  "{#} Gy en {#}",
 "{#} Gy in {#} fractions of {#} Gy, the hypofractionated arm of the CHHiP trial. With α/β = {#} Gy for prostate cancer its EQD2 is {#} Gy, more than the {#} Gy in {#} fractions it was compared with, while the late responding tissue (α/β {#} Gy) gets {#} Gy against {#}. The trial found {#} Gy in {#} fractions no worse than {#} Gy in {#}.":
   "{#} Gy en {#} fracciones de {#} Gy, el brazo hipofraccionado del ensayo CHHiP. Con α/β = {#} Gy para el cáncer de próstata su EQD2 es {#} Gy, más que los {#} Gy en {#} fracciones con que se comparó, mientras que el tejido de respuesta tardía (α/β {#} Gy) recibe {#} Gy frente a {#}. El ensayo encontró que {#} Gy en {#} fracciones no era peor que {#} Gy en {#}.",
 "Protons at LET_d = {#} keV/µm, as in the entrance plateau, on tissue with (α/β)ₓ = {#} Gy at {#} Gy per fraction: the model gives an RBE of {#}, close to the {#} used in the clinic. Paganetti {#} found averages of about {#} at the entrance, {#} in the middle of a spread out Bragg peak, {#} at its distal edge and {#} in the distal falloff.":
@@ -396,6 +398,8 @@ VDI18N.add('es', 'demo/radiobiology', {
   "A {#} Gy por fracción, la RBE con LET_d = {#} keV/µm y (α/β)ₓ = {#} Gy es {#}, frente a {#} a {#} Gy: la RBE sube al bajar la dosis, hacia RBE_max. Las dosis bajas caen fuera del blanco, donde la LET suele ser más alta.",
 "RBE {#}":
   "RBE {#}",
+"Close":
+  "Cerrar",
 "RBE against LET_d, {#} Gy":
   "RBE en función de LET_d, {#} Gy",
 "{#} Gy, {#} cells per flask":

@@ -354,7 +354,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     curve(top, Ds, (d) => survival(A.a, A.b, d), X, Y, one ? T.cust : T.air, 2.6);
     /* where αD = βD² */
     if (A.b > 0 && A.a / A.b <= DMAX) { const d = A.a / A.b, y = Y(survival(A.a, A.b, d)); ctx.strokeStyle = T.comp; ctx.lineWidth = 1 * p; ctx.setLineDash([3, 3]); ctx.beginPath(); ctx.moveTo(X(d), y); ctx.lineTo(X(d), top.y + top.h); ctx.stroke(); ctx.setLineDash([]);
-      mono(`α/β ${fx(d, 2)} Gy`, X(d) + 4 * p, y + 16 * p, T.muted, 'left'); }
+      /* left of the marker, under the curve's higher part: on the right the falling air curve ran through it (student view, 2026-11-15) */
+      const ab = `α/β ${fx(d, 2)} Gy`, abx = X(d) - 4 * p - tw(ab, 10.5) > top.x + 4 * p ? X(d) - 4 * p : X(d) + 4 * p, aba = abx < X(d) ? 'right' : 'left';
+      ctx.font = `${10.5 * p}px ${T.mono}`; ctx.textAlign = aba; ctx.textBaseline = 'alphabetic'; ctx.lineJoin = 'round'; ctx.strokeStyle = T.canvas; ctx.lineWidth = 4 * p; ctx.strokeText(ab, abx, y + 16 * p);
+      mono(ab, abx, y + 16 * p, T.muted, aba); }
     /* the cursor and the OER bracket */
     const xd = X(S.D); cursorX(top, xd);
     const sA = survival(A.a, A.b, S.D); dot(xd, Y(Math.max(sA, SFMIN)), one ? T.cust : T.air);
@@ -362,7 +365,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       if (S.D > 0.05 && sA > SFMIN) { const dh = doseFor(Hh.a, Hh.b, A.a * S.D + A.b * S.D * S.D), y = Y(sA), x2 = Math.min(X(dh), top.x + top.w);
         ctx.strokeStyle = T.hyp; ctx.lineWidth = 1.4 * p; ctx.beginPath(); ctx.moveTo(xd, y); ctx.lineTo(x2, y); ctx.stroke();
         if (X(dh) <= top.x + top.w) { ctx.beginPath(); ctx.moveTo(x2, y - 5 * p); ctx.lineTo(x2, y + 5 * p); ctx.stroke(); }
-        const lab = `OER ${fx(dh / S.D, 2)}`, lx = Math.min((xd + x2) / 2, top.x + top.w - tw(lab, 10.5, true) / 2 - 4 * p); text(lab, lx, y - 6 * p, T.hyp, 'center', 'alphabetic', 10.5, true); } }
+        const lab = `OER ${fx(dh / S.D, 2)}`, lx = Math.min((xd + x2) / 2, top.x + top.w - tw(lab, 10.5, true) / 2 - 4 * p);
+        /* a halo in the chart's colour: at low dose the label sat on the orange curve and the dashed α curve (student view, 2026-11-15) */
+        ctx.font = `700 ${10.5 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic'; ctx.lineJoin = 'round'; ctx.strokeStyle = T.canvas; ctx.lineWidth = 4 * p; ctx.strokeText(lab, lx, y - 6 * p);
+        text(lab, lx, y - 6 * p, T.hyp, 'center', 'alphabetic', 10.5, true); } }
     const items = one ? [['S = e^(−αD − βD²)', T.cust, 2.6]] : [['In air, 160 mmHg', T.air, 2.6]].concat(mid ? [[`At ${fx(S.p, 1)} mmHg`, T.now, 2.2]] : []).concat([['Without oxygen (hypoxic)', T.hyp, 2.4]]);
     items.push(['e^(−αD), the α part', T.comp, 1.3, [6, 4]]); if (A.b > 0) items.push(['e^(−βD²), the β part', T.comp, 1.3, [2, 3]]);
     legend(items, top.x + 10 * p, top.y + top.h - items.length * 15 * p + 2 * p, 'left', L.narrow ? 9.5 : 10.5); /* bottom left, where the curves never go */
@@ -585,7 +591,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     out.innerHTML = h; }
 
   /* ---------- controls ---------- */
-  const pFromU = (u) => +(P_AIR * u * u).toFixed(2), uFromP = (pp) => Math.sqrt(pp / P_AIR);
+  /* rounded to 0.01 mmHg below 1, 0.1 below 100, then whole mmHg, so the worksheet's 2, 4, 8, 16 and 100 mmHg can be set exactly
+     (they came out 2.01, 3.99, 8.03, 15.98 and 100.11) (student view, 2026-11-15) */
+  const pFromU = (u) => { const v = P_AIR * u * u; return +v.toFixed(v < 1 ? 2 : v < 100 ? 1 : 0); }, uFromP = (pp) => Math.sqrt(pp / P_AIR);
   function sync() { const pane = $('pane'); pane.dataset.v = S.view; pane.dataset.one = S.view === 'surv' && S.cell === 'custom' ? '1' : '0';
     for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.v === S.view));
     for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));

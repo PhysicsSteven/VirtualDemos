@@ -1520,10 +1520,15 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     st.render();
     ctx.clearRect(0, 0, W, H);
     ctx.fillStyle = T.ink; ctx.font = `600 ${11 * ps}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
-    const ty = W < 700 ? 44 * ps : 10 * ps;
-    ctx.fillText(W < 560 ? 'ψ in 3D: Re up, Im toward you' : 'ψ in 3D: Re ψ up, Im ψ toward you, color is the phase', 12 * ps, ty);
+    const t1 = W < 560 ? 'ψ in 3D: Re up, Im toward you' : 'ψ in 3D: Re ψ up, Im ψ toward you, color is the phase';
+    const ty = W < 700 ? 44 * ps : 10 * ps, short = 'color: phase · |ψ|: distance from the axis';
+    /* the longest second line that stays clear of the 3D | Flat switch; at 1280 the full one ran under it (student view, 2026-11-15) */
+    let t2 = W < 560 ? short : `|ψ| is the distance from the axis · gray wall: V(x) · x from ${f1(x0)} to ${f1(x1)} nm · drag to turn`;
+    ctx.fillText(t1, 12 * ps, ty);
     ctx.fillStyle = T.muted; ctx.font = `${10 * ps}px ${T.mono}`;
-    ctx.fillText(W < 560 ? 'color: phase · |ψ|: distance from the axis' : `|ψ| is the distance from the axis · gray wall: V(x) · x from ${f1(x0)} to ${f1(x1)} nm · drag to turn`, 12 * ps, ty + 16 * ps);
+    { const sg = document.querySelector('.wctl'), sr = sg && sg.getBoundingClientRect(), cr = ctx.canvas.getBoundingClientRect();
+      if (ty < 40 * ps && sr && sr.width) for (const c of [t2, '|ψ| is the distance from the axis · gray wall: V(x) · drag to turn', short]) { t2 = c; if (12 * ps + ctx.measureText(c).width < sr.left - cr.left - 6 * ps) break; } }
+    ctx.fillText(t2, 12 * ps, ty + 16 * ps);
   }
   const f1 = (v) => (Math.round(v * 10) / 10).toString().replace('-', '−');
   function drawWave() {
