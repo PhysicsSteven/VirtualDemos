@@ -714,6 +714,17 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   function curve(c, ax, xs, fy, color, w, dash) { c.strokeStyle = color; c.lineWidth = w; c.setLineDash(dash || []); c.beginPath(); let on = false; for (const x of xs) { const y = fy(x); if (!(y > 0) || !isFinite(y)) { on = false; continue; } const px = ax.X(x), py = ax.Y(y); on ? c.lineTo(px, py) : c.moveTo(px, py); on = true; } c.stroke(); c.setLineDash([]); }
   const graphBox = () => { const p = proj(), cardW = W > 820 && $('setupCard').style.display !== 'none' ? 300 : 0; return { x0: 80 * p, x1: Math.max(80 * p + 160, W - cardW - 24 * p), y0: 34 * p, y1: H - 50 * p, p }; };
+  /* a legend line on a graph: on a backing so the points under it stay apart from the words, and split after its colon or
+     shrunk when it would run past the graph's right edge (it was cut off on a phone) (student view, 2026-11-15) */
+  function keyText(txt, x, y, right) {
+    txt = tr(txt); /* translated whole, before any split */
+    const p = proj(), room = right - x - 4 * p; let lines = [txt], w = ctx.measureText(txt).width;
+    if (w > room && txt.includes(': ')) { const i = txt.indexOf(': '); lines = [txt.slice(0, i + 1), txt.slice(i + 2)]; }
+    const font = ctx.font; let wid = Math.max(...lines.map((l) => ctx.measureText(l).width));
+    if (wid > room) { ctx.font = font.replace(/[\d.]+px/, `${Math.max(8.5 * p, parseFloat(font.match(/([\d.]+)px/)[1]) * room / wid).toFixed(1)}px`); wid = Math.min(wid, room); }
+    const fill = ctx.fillStyle; ctx.globalAlpha = 0.5; ctx.fillStyle = T.canvas || '#000'; ctx.fillRect(x - 3 * p, y - 8 * p, wid + 6 * p, 16 * p + (lines.length - 1) * 14 * p); ctx.globalAlpha = 1; ctx.fillStyle = fill;
+    lines.forEach((l, k) => ctx.fillText(l, x, y + k * 14 * p)); ctx.font = font; return (lines.length - 1) * 14 * p;
+  }
   function drawStop() {
     const box = graphBox(), p = box.p, A = P().A, xr = [A * 1, A * 1000], yr = [S.p === 'proton' ? 1 : 10, S.p === 'carbon' ? 1e4 : S.p === 'alpha' ? 3000 : 400];
     const ax = logAxes(ctx, box, xr, yr, `kinetic energy T (MeV), ${P().name.toLowerCase()}`, 'mass stopping power S/ρ (MeV cm²/g)');
@@ -725,7 +736,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const e = T0(), s = V.S(e, S.mat, S.p); ctx.fillStyle = T.det; ctx.beginPath(); ctx.arc(ax.X(e), ax.Y(s), 5 * p, 0, 2 * Math.PI); ctx.fill();
     ctx.restore();
     ctx.font = `${11 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; let ly = box.y0 + 14 * p; const lx = box.x0 + (box.x1 - box.x0) * 0.42;
-    const key = (col, dash, txt) => { ctx.strokeStyle = col; ctx.lineWidth = 2 * p; ctx.setLineDash(dash || []); ctx.beginPath(); ctx.moveTo(lx, ly); ctx.lineTo(lx + 22 * p, ly); ctx.stroke(); ctx.setLineDash([]); ctx.fillStyle = T.ink; ctx.fillText(txt, lx + 28 * p, ly); ly += 17 * p; };
+    const key = (col, dash, txt) => { ctx.strokeStyle = col; ctx.lineWidth = 2 * p; ctx.setLineDash(dash || []); ctx.beginPath(); ctx.moveTo(lx, ly); ctx.lineTo(lx + 22 * p, ly); ctx.stroke(); ctx.setLineDash([]); ctx.fillStyle = T.ink; ly += keyText(txt, lx + 28 * p, ly, box.x1) + 17 * p; };
     key(T.model, null, `${P().name}, ${V.mat(S.mat).name} (Bethe)`); if (S.mat !== 'water') key(T.muted, [5 * p, 4 * p], `${P().name}, water`); if (S.elec) key(T.elec, [2 * p, 3 * p], `Electron, ${V.mat(S.mat).name} (collision only)`);
     ctx.fillStyle = T.det; ctx.font = `600 ${11 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.fillText(`T = ${sig3(e, 4)} MeV: S/ρ = ${sig3(s, 4)} MeV cm²/g`, box.x0 + 8 * p, box.y1 - 12 * p);
   }
@@ -743,7 +754,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const e = T0(), r = V.range(e, S.mat, S.p); ctx.fillStyle = T.det; ctx.beginPath(); ctx.arc(ax.X(e), ax.Y(r), 5 * p, 0, 2 * Math.PI); ctx.fill();
     ctx.restore();
     ctx.font = `${11 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; let ly = box.y0 + 14 * p; const lx = box.x0 + 14 * p;
-    const key = (col, dash, txt, dot) => { if (dot) { ctx.fillStyle = col; ctx.beginPath(); ctx.arc(lx + 11 * p, ly, 4 * p, 0, 2 * Math.PI); ctx.fill(); } else { ctx.strokeStyle = col; ctx.lineWidth = 2 * p; ctx.setLineDash(dash || []); ctx.beginPath(); ctx.moveTo(lx, ly); ctx.lineTo(lx + 22 * p, ly); ctx.stroke(); ctx.setLineDash([]); } ctx.fillStyle = T.ink; ctx.fillText(txt, lx + 28 * p, ly); ly += 17 * p; };
+    const key = (col, dash, txt, dot) => { if (dot) { ctx.fillStyle = col; ctx.beginPath(); ctx.arc(lx + 11 * p, ly, 4 * p, 0, 2 * Math.PI); ctx.fill(); } else { ctx.strokeStyle = col; ctx.lineWidth = 2 * p; ctx.setLineDash(dash || []); ctx.beginPath(); ctx.moveTo(lx, ly); ctx.lineTo(lx + 22 * p, ly); ctx.stroke(); ctx.setLineDash([]); } ctx.fillStyle = T.ink; ly += keyText(txt, lx + 28 * p, ly, box.x1) + 17 * p; };
     key(T.model, null, `${P().name}, ${V.mat(S.mat).name} (Bethe, CSDA)`); if (S.mat !== 'water') key(T.muted, [5 * p, 4 * p], `${P().name}, water`);
     if (S.pstar && S.p === 'proton') { const fit = pstarFit(); key(T.pstar, null, 'NIST PSTAR, protons in water', true); if (!S.blind) key(T.fit, [6 * p, 4 * p], `fit to PSTAR 70 to 230 MeV: R = ${f(fit.alpha * 1000, 3)} × 10⁻³ E^${f(fit.p, 3)}`); else key(T.fit, [6 * p, 4 * p], 'power law fit to PSTAR 70 to 230 MeV'); }
     ctx.fillStyle = T.det; ctx.font = `600 ${11 * p}px ${T.mono}`; ctx.fillText(`T = ${sig3(e, 4)} MeV: R = ${sig3(r, 4)} g/cm² = ${lenTxt(r / V.mat(S.mat).rho)}`, box.x0 + 8 * p, box.y1 - 12 * p);

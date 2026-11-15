@@ -261,6 +261,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     $('out').innerHTML = h;
   }
+  /* the clock and the rate on the stage: the firework and the walk play in real time, and the worksheet records t (student view, 2026-11-15) */
+  function clockTag() { const p = ps(); ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText(`real time · t = ${f(S.t, 2)} s`, 10 * p, Hh - 8 * p); }
   function cross(x, y, col) { const p = ps(); ctx.strokeStyle = col; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.arc(x, y, 9 * p, 0, 7); ctx.moveTo(x - 13 * p, y); ctx.lineTo(x + 13 * p, y); ctx.moveTo(x, y - 13 * p); ctx.lineTo(x, y + 13 * p); ctx.stroke(); ctx.fillStyle = col; ctx.font = `700 ${11 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText('CM', x + 12 * p, y - 8 * p); }
   /* a weight seen from above, sitting on the plate: soft shadow down and right, a lit top face with a turned rim (drawing only) */
   function puck(x, y, r, col) {
@@ -408,6 +410,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (let k = -4; k <= 4; k++) { const q = Q(k, -1.5, -0.12); ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(`${k} m`, q[0], q[1]); }
     if (!S.blind) label(Q(cmx, 0, 2.78), 'center of mass', T.cm, true);
     ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillText('drag to turn, wheel to zoom', W - 10 * p, Hh - 8 * p);
+    clockTag();
   }
   function setView(v) {
     G3.want = v === '3d';
@@ -468,8 +471,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       path(F.whole, 0, Math.min(S.t, F.tTop), T.ink, false);
       if (s > 0) { path((u) => F.at(F.a, u), 0, s, T.m1, false); path((u) => F.at(F.b, u), 0, s, T.m2, false);
         const pa = F.at(F.a, s), pb = F.at(F.b, s); ctx.fillStyle = T.m1; ctx.beginPath(); ctx.arc(X(pa.x), Y(pa.y), (4 + 6 * Math.sqrt(S.ratio)) * p, 0, 7); ctx.fill(); ctx.fillStyle = T.m2; ctx.beginPath(); ctx.arc(X(pb.x), Y(pb.y), (4 + 6 * Math.sqrt(1 - S.ratio)) * p, 0, 7); ctx.fill();
-        if (!S.blind) { ctx.strokeStyle = T.cm; ctx.lineWidth = 1; ctx.setLineDash([2 * p, 3 * p]); ctx.beginPath(); ctx.moveTo(X(pa.x), Y(pa.y)); ctx.lineTo(X(pb.x), Y(pb.y)); ctx.stroke(); ctx.setLineDash([]); cross(X(S.ratio * pa.x + (1 - S.ratio) * pb.x), Y(S.ratio * pa.y + (1 - S.ratio) * pb.y), T.cm); } }
+        if (!S.blind) { ctx.strokeStyle = T.cm; ctx.lineWidth = 1; ctx.setLineDash([2 * p, 3 * p]); ctx.beginPath(); ctx.moveTo(X(pa.x), Y(pa.y)); ctx.lineTo(X(pb.x), Y(pb.y)); ctx.stroke(); ctx.setLineDash([]); cross(X(S.ratio * pa.x + (1 - S.ratio) * pb.x), Y(S.ratio * pa.y + (1 - S.ratio) * pb.y), T.cm); }
+        /* name the pieces, so the sliders' "front piece" can be found on the picture (student view, 2026-11-15) */
+        ctx.font = `700 ${10 * p}px ${T.ui}`; ctx.textBaseline = 'top'; ctx.fillStyle = T.m1; ctx.textAlign = 'left'; ctx.fillText(window.VDI18N ? VDI18N.t('front') : 'front', X(pa.x) + 8 * p, Y(pa.y) + 7 * p);
+        ctx.fillStyle = T.m2; ctx.textAlign = 'right'; ctx.fillText(window.VDI18N ? VDI18N.t('back') : 'back', X(pb.x) - 8 * p, Y(pb.y) + 7 * p); }
       else { const q = F.whole(S.t); ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(X(q.x), Y(q.y), 7 * p, 0, 7); ctx.fill(); }
+      clockTag();
       return;
     }
     // boat
@@ -495,6 +502,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.fillStyle = T.muted; ctx.fillRect(X(-3.6) - 4 * p, wl - 60 * p, 8 * p, 80 * p); ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillText('post', X(-3.6), wl - 62 * p);
     ctx.strokeStyle = T.muted; ctx.lineWidth = 1; for (let k = -4; k <= 4; k++) { ctx.beginPath(); ctx.moveTo(X(k), wl + 30 * p); ctx.lineTo(X(k), wl + 38 * p); ctx.stroke(); ctx.fillText(`${k} m`, X(k), wl + 50 * p); }
     if (!S.blind) { const cm = (S.pm * b.xp + S.bm * b.xb) / (S.pm + S.bm); cross(X(cm), wl - 90 * p, T.cm); ctx.strokeStyle = T.cm; ctx.setLineDash([3 * p, 3 * p]); ctx.beginPath(); ctx.moveTo(X(cm), wl - 80 * p); ctx.lineTo(X(cm), wl + 28 * p); ctx.stroke(); ctx.setLineDash([]); }
+    clockTag();
   }
   /* Readings for the worksheet (tools/readings_panel.py): the readouts of the current setup at this moment. f is the share of the
      total mass in mass 2 (plate, two masses), in the front piece (firework) or in the person (boat). Positions in meters to 1 mm. */

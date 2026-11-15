@@ -4,6 +4,10 @@ VDI18N.add('es', 'demo/center-of-mass', {
   "CM",
 "Center of Mass":
   "Centro de masa",
+"<a>Momentum and collisions</a>":
+  "<a>Momento y colisiones</a>",
+"<a><span>←</span> <span>Impulse and Momentum</span></a><a><span>Rocket Propulsion</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Impulso y momento</span></a><a><span>Propulsión de cohetes</span> <span>→</span></a>",
 "The center of mass is the mass weighted average position. Find it for masses on a plate, then see that it keeps moving as if all the mass were there: a firework's pieces scatter but their center of mass follows the same parabola, and walking on a boat cannot move the center of mass of you and the boat.":
   "El centro de masa es la posición promedio ponderada por la masa. Encuéntralo para masas sobre una placa, y luego observa que sigue moviéndose como si toda la masa estuviera ahí: las piezas de un cohete de fuegos artificiales se dispersan pero su centro de masa sigue la misma parábola, y caminar sobre un bote no puede mover el centro de masa de ti y el bote.",
 "The current setup: masses on a plate that can be dragged, a firework that explodes into two pieces, or a person walking along a boat, with the center of mass marked.":
@@ -60,14 +64,12 @@ VDI18N.add('es', 'demo/center-of-mass', {
   "A ciegas oculta el marcador del centro de masa, sus coordenadas y el desplazamiento predicho del bote.",
 "Model: point masses on a massless plate; the firework is a point mass launched at {#} m/s and {#}° that splits in two at the top of its flight, with no air drag; the boat floats on water with no drag, and the person walks from one end to the other at {#} m/s relative to the boat (boat {#} m long).":
   "Modelo: masas puntuales sobre una placa sin masa; el cohete es una masa puntual lanzada a {#} m/s y {#}° que se divide en dos en la parte más alta de su vuelo, sin arrastre del aire; el bote flota en el agua sin arrastre, y la persona camina de un extremo al otro a {#} m/s respecto al bote (bote de {#} m de largo).",
-"<a>Momentum and collisions</a>":
-  "<a>Momento y colisiones</a>",
-"<a><span>←</span> <span>Impulse and Momentum</span></a><a><span>Rocket Propulsion</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Impulso y momento</span></a><a><span>Propulsión de cohetes</span> <span>→</span></a>",
 "center of mass":
   "centro de masa",
 "drag a mass to move it, drag the table to turn":
   "arrastra una masa para moverla, arrastra la mesa para girar",
+"real time · t = {#} s":
+  "tiempo real · t = {#} s",
 "Launch: at the top the firework splits in two. Each piece follows its own parabola, but their center of mass carries on along the original one until a piece lands.":
   "Lanzamiento: en la parte más alta el cohete se divide en dos. Cada pieza sigue su propia parábola, pero su centro de masa continúa por la original hasta que una pieza cae al suelo.",
 "Split at":
@@ -104,10 +106,16 @@ VDI18N.add('es', 'demo/center-of-mass', {
   "caminó (m)",
 "boat moved (m)":
   "el bote se movió (m)",
+"Close":
+  "Cerrar",
 "person {#} kg":
   "persona {#} kg",
 "boat {#} kg":
   "bote {#} kg",
 "drag to turn, wheel to zoom":
-  "arrastra para girar, rueda para acercar"
+  "arrastra para girar, rueda para acercar",
+"front":
+  "delantera",
+"back":
+  "trasera"
 });

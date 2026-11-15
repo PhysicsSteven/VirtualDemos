@@ -416,6 +416,8 @@ VDI18N.add('es', 'demo/charged-particles', {
   "Protón, Plomo (Bethe, CSDA)",
 "Proton in Lead":
   "Protón en Plomo",
+"fit to PSTAR {#} to {#} MeV:":
+  "ajuste a PSTAR de {#} a {#} MeV:",
 "tracks ({#})":
   "trazas ({#})",
 "Lung tissue":

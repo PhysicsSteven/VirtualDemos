@@ -2,6 +2,8 @@
 VDI18N.add('en', 'demo/center-of-mass', [
 "CM",
 "Center of Mass",
+"<a>Momentum and collisions</a>",
+"<a><span>←</span> <span>Impulse and Momentum</span></a><a><span>Rocket Propulsion</span> <span>→</span></a>",
 "The center of mass is the mass weighted average position. Find it for masses on a plate, then see that it keeps moving as if all the mass were there: a firework's pieces scatter but their center of mass follows the same parabola, and walking on a boat cannot move the center of mass of you and the boat.",
 "The current setup: masses on a plate that can be dragged, a firework that explodes into two pieces, or a person walking along a boat, with the center of mass marked.",
 "Walk",
@@ -30,10 +32,9 @@ VDI18N.add('en', 'demo/center-of-mass', [
 "x_cm = Σmᵢxᵢ / Σmᵢ · M a_cm = F_external",
 "Blind hides the center of mass marker, its coordinates and the predicted boat shift.",
 "Model: point masses on a massless plate; the firework is a point mass launched at {#} m/s and {#}° that splits in two at the top of its flight, with no air drag; the boat floats on water with no drag, and the person walks from one end to the other at {#} m/s relative to the boat (boat {#} m long).",
-"<a>Momentum and collisions</a>",
-"<a><span>←</span> <span>Impulse and Momentum</span></a><a><span>Rocket Propulsion</span> <span>→</span></a>",
 "center of mass",
 "drag a mass to move it, drag the table to turn",
+"real time · t = {#} s",
 "Launch: at the top the firework splits in two. Each piece follows its own parabola, but their center of mass carries on along the original one until a piece lands.",
 "Split at",
 "{#} s, {#} m up",
@@ -52,7 +53,10 @@ VDI18N.add('en', 'demo/center-of-mass', [
 "Predicted boat shift −mL/(m + M)",
 "walked (m)",
 "boat moved (m)",
+"Close",
 "person {#} kg",
 "boat {#} kg",
-"drag to turn, wheel to zoom"
+"drag to turn, wheel to zoom",
+"front",
+"back"
 ]);

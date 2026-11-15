@@ -208,6 +208,7 @@ VDI18N.add('en', 'demo/charged-particles', [
 "Proton in Copper",
 "Proton, Lead (Bethe, CSDA)",
 "Proton in Lead",
+"fit to PSTAR {#} to {#} MeV:",
 "tracks ({#})",
 "Lung tissue",
 "{#}, {#} μm in all",

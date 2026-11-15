@@ -438,8 +438,17 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     txt(ctx, 'scale (cm)', cxs, y0 - 10 * p, { a: 'center', s: 9.5, c: T.muted, b: 1 });
     txt(ctx, `${f(spotR(), 1)} cm`, cxs, y1 + 14 * p, { a: 'center', s: 12, m: 1, b: 1, c: T.laserInk });
     /* the clock */
-    txt(ctx, `t = ${clockR()} s`, 12 * p, 58 * p, { s: 13, m: 1, b: 1 });
-    txt(ctx, `×${S.speed}${S.run ? '' : ' · paused'}`, 12 * p, 76 * p, { s: 10, c: T.muted });
+    /* below the button strip, which wraps to three rows on a phone and hid the rate line there (student view, 2026-11-15) */
+    const vb = document.querySelector('.viewbar'), ty = Math.max(58 * p, (vb ? vb.offsetTop + vb.offsetHeight : 0) + 14 * p);
+    txt(ctx, `t = ${clockR()} s`, 12 * p, ty, { s: 13, m: 1, b: 1 });
+    /* the rate in words, and while the beam sits at rest a cue that nothing will move until the spheres swing: Run at the open
+       otherwise shows a flat line with no hint why (student view, 2026-11-15) */
+    txt(ctx, `×${S.speed}: 1 s = ${S.speed} s${S.run ? '' : ' · paused'}`, 12 * p, ty + 18 * p, { s: 10, c: T.muted });
+    if (Math.abs(S.w) < 1e-9 && S.t >= S.ts + CAV.swing && Math.abs(S.th - restAngle(aOf(S.t))) < 1e-7) {
+      const cue = 'at rest: swing the large spheres to start a swing'; ctx.font = `${10 * p}px ${T.ui}`;
+      ctx.globalAlpha = 0.8; ctx.fillStyle = T.canvas; ctx.fillRect(8 * p, ty + 27 * p, ctx.measureText(cue).width + 8 * p, 14 * p); ctx.globalAlpha = 1;
+      txt(ctx, cue, 12 * p, ty + 34 * p, { s: 10, c: T.muted });
+    }
   }
   /* the strip chart: spot against time, with the turning points */
   function drawChart() {
