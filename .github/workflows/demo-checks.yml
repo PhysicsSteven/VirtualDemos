@@ -1,0 +1,106 @@
+name: Demo checks (democheck, break-it, frame rate)
+# Runs the browser checks from docs/checks.md on GitHub's machines, so they cost no Claude usage (2026-11-15).
+# - Every push and pull request: the demos that changed get democheck, break-it and perfcheck.
+#   A change to the shared library (demos/lib/*.js or *.css) or to a check script checks every demo instead.
+# - Every Sunday morning, and from the Actions tab ("Run workflow"): every demo, or the demos you type.
+# Results: the run's Summary page lists each failure; pictures and reports are in the run's "vdcheck-..." downloads.
+on:
+  push:
+    paths: ['demos/**', 'tools/**', 'curriculum/validation/**', 'curriculum/*.json', '.github/workflows/demo-checks.yml']
+  pull_request:
+    paths: ['demos/**', 'tools/**', 'curriculum/validation/**', 'curriculum/*.json', '.github/workflows/demo-checks.yml']
+  schedule:
+    - cron: '17 9 * * 0'      # Sundays 9:17 UTC (3:17 AM Central)
+  workflow_dispatch:
+    inputs:
+      demos:
+        description: 'Demos to check, separated by spaces (for example: pendulum forces), or all'
+        required: false
+        default: 'all'
+permissions:
+  contents: read
+concurrency:
+  # a newer push to the same branch replaces a run still going; the weekly run and manual runs are never cut short
+  group: demo-checks-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'push' || github.event_name == 'pull_request' }}
+env:
+  PLAYWRIGHT_VERSION: '1.63.0'
+jobs:
+  pick:
+    runs-on: ubuntu-latest
+    outputs:
+      mode: ${{ steps.pick.outputs.mode }}
+      jobs: ${{ steps.pick.outputs.jobs }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - id: pick
+        env:
+          EVENT: ${{ github.event_name }}
+          INPUT: ${{ github.event.inputs.demos }}
+          BASE: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
+          HEAD_SHA: ${{ github.sha }}
+        run: |
+          if [ "$EVENT" = schedule ]; then ARGS=--all; elif [ "$EVENT" = workflow_dispatch ]; then ARGS="${INPUT:-all}"; else ARGS=; fi
+          # a push to main compares with the commit before the push; a new branch or a pull request compares with main
+          if [ "$EVENT" = push ] && [ "${GITHUB_REF_NAME}" != main ]; then BASE=origin/main; fi
+          node tools/ci/pick.cjs $ARGS > pick.json
+          echo "mode=$(node -p 'require("./pick.json").mode')" >> "$GITHUB_OUTPUT"
+          echo "jobs=$(node -p 'JSON.stringify(require("./pick.json").jobs)')" >> "$GITHUB_OUTPUT"
+          node -e 'const j=require("./pick.json"); console.log(j.mode + ": " + (j.demos.join(" ") || "no demo changed"))' | tee -a "$GITHUB_STEP_SUMMARY"
+
+  check:
+    needs: pick
+    if: needs.pick.outputs.mode != 'none'
+    name: ${{ matrix.name }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{ fromJSON(needs.pick.outputs.jobs) }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0          # democheck compares with origin/main
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Playwright and Chromium
+        run: |
+          npm install --no-save --no-package-lock --no-audit --no-fund "playwright@$PLAYWRIGHT_VERSION"
+          npx playwright install --with-deps chromium
+      - name: ${{ matrix.kind }} on ${{ matrix.demos }}
+        env:
+          KIND: ${{ matrix.kind }}
+          DEMOS: ${{ matrix.demos }}
+          MODE: ${{ needs.pick.outputs.mode }}
+          VDCHECK_DIR: ${{ runner.temp }}/vdcheck
+        run: |
+          set -o pipefail
+          status=0
+          case "$KIND" in
+            democheck) for d in $DEMOS; do node tools/democheck.cjs "$d" 2>&1 | tee -a check.log || status=1; done ;;
+            breakit)   node tools/breakit.cjs $DEMOS --jobs 3 2>&1 | tee -a check.log || status=1
+                       if [ "$MODE" = all ]; then node tools/opencheck.cjs $DEMOS 2>&1 | tee -a check.log || status=1; fi ;;
+            perfcheck) node tools/perfcheck.cjs $DEMOS 2>&1 | tee -a check.log || status=1 ;;
+          esac
+          {
+            echo "### ${{ matrix.name }}"
+            if [ $status = 0 ]; then echo "All passed."; else echo "Something failed. The lines that matter:"; fi
+            echo '```'
+            grep -iE '^(fail|warn) |^ {3}(fail|warn)|^Error|failed' check.log | head -60 || true
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+          exit $status
+      - name: Keep the pictures and reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: vdcheck-${{ matrix.kind }}-${{ strategy.job-index }}
+          path: |
+            ${{ runner.temp }}/vdcheck
+            check.log
+          retention-days: 14
+          if-no-files-found: ignore
