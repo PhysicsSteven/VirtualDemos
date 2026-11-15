@@ -70,6 +70,10 @@ VDI18N.add('es', 'demo/seasons', {
   "Duración del día y altura del Sol al mediodía a {#}° N",
 "Reasons for Seasons":
   "Las causas de las estaciones",
+"<a>The sky from Earth</a>":
+  "<a>El cielo desde la Tierra</a>",
+"<a><span>←</span> <span>The Sky and the Celestial Sphere</span></a><a><span>Moon Phases</span> <span>→</span></a>":
+  "<a><span>←</span> <span>El cielo y la esfera celeste</span></a><a><span>Fases de la Luna</span> <span>→</span></a>",
 "Seasons come from the tilt of Earth's axis, not from its distance to the Sun. Earth is closest to the Sun in January. The same orbit and tilt make a solar day longer than one turn against the stars, and make a sundial run ahead of or behind a clock.":
   "Las estaciones se deben a la inclinación del eje de la Tierra, no a su distancia al Sol. La Tierra está más cerca del Sol en enero. La misma órbita y la misma inclinación hacen que un día solar dure más que una vuelta respecto a las estrellas, y que un reloj de sol se adelante o se atrase respecto a un reloj.",
 "Time controls":
@@ -270,10 +274,6 @@ VDI18N.add('es', 'demo/seasons', {
   "cambian la latitud. Mantén",
 "for bigger steps.":
   "para pasos más grandes.",
-"<a>The sky from Earth</a>":
-  "<a>El cielo desde la Tierra</a>",
-"<a><span>←</span> <span>The Sky and the Celestial Sphere</span></a><a><span>Moon Phases</span> <span>→</span></a>":
-  "<a><span>←</span> <span>El cielo y la esfera celeste</span></a><a><span>Fases de la Luna</span> <span>→</span></a>",
 "day {#} · Sun and Earth not to scale":
   "día {#} · el Sol y la Tierra no están a escala",
 "date":
@@ -286,12 +286,6 @@ VDI18N.add('es', 'demo/seasons', {
   "{#} dic · día {#}",
 "On Dec {#} Earth is {#} AU from the Sun, so sunlight is +{#}% compared with {#} AU, everywhere on Earth at once.":
   "El {#} de diciembre la Tierra está a {#} UA del Sol, así que la luz del Sol es +{#}% comparada con {#} UA, en toda la Tierra a la vez.",
-"Jan {#}":
-  "{#} ene",
-"Jan {#} · day {#}":
-  "{#} ene · día {#}",
-"On Jan {#} Earth is {#} AU from the Sun, so sunlight is +{#}% compared with {#} AU, everywhere on Earth at once.":
-  "El {#} de enero la Tierra está a {#} UA del Sol, así que la luz del Sol es +{#}% comparada con {#} UA, en toda la Tierra a la vez.",
 "distant star":
   "estrella lejana",
 "(far off the top: the same direction all year)":
@@ -434,6 +428,10 @@ VDI18N.add('es', 'demo/seasons', {
   "Cerrar",
 "Raise or lower the observer's latitude by half a degree (Shift: {#} degrees)":
   "Sube o baja la latitud del observador medio grado (Shift: {#} grados)",
+"Jan {#} · day {#}":
+  "{#} ene · día {#}",
+"On Jan {#} Earth is {#} AU from the Sun, so sunlight is +{#}% compared with {#} AU, everywhere on Earth at once.":
+  "El {#} de enero la Tierra está a {#} UA del Sol, así que la luz del Sol es +{#}% comparada con {#} UA, en toda la Tierra a la vez.",
 "Feb {#} · day {#}":
   "{#} feb · día {#}",
 "On Feb {#} Earth is {#} AU from the Sun, so sunlight is +{#}% compared with {#} AU, everywhere on Earth at once.":
@@ -474,6 +472,8 @@ VDI18N.add('es', 'demo/seasons', {
   "Hoy el Sol no sale",
 "{#} h {#} m <small>polar night</small>":
   "{#} h {#} min <small>noche polar</small>",
+"Jan {#}":
+  "{#} ene",
 "time {#} h ({#} days)":
   "tiempo {#} h ({#} días)",
 "Earth's real orbit is an ellipse and its axis is tilted, so the Sun's daily step against the stars is not the same all year. A sundial runs fast or slow against a clock by up to about {#} minutes, and solar days in December are about {#} seconds longer than in September.":
@@ -521,5 +521,7 @@ VDI18N.add('es', 'demo/seasons', {
 "On Nov {#} Earth is {#} AU from the Sun, so sunlight is −{#}% compared with {#} AU, everywhere on Earth at once.":
   "El {#} de noviembre la Tierra está a {#} UA del Sol, así que la luz del Sol es −{#}% comparada con {#} UA, en toda la Tierra a la vez.",
 "On Dec {#} Earth is {#} AU from the Sun, so sunlight is −{#}% compared with {#} AU, everywhere on Earth at once.":
-  "El {#} de diciembre la Tierra está a {#} UA del Sol, así que la luz del Sol es −{#}% comparada con {#} UA, en toda la Tierra a la vez."
+  "El {#} de diciembre la Tierra está a {#} UA del Sol, así que la luz del Sol es −{#}% comparada con {#} UA, en toda la Tierra a la vez.",
+"spinning too fast to draw each turn: Pause to see the spot":
+  "gira demasiado rápido para dibujar cada vuelta: pausa para ver el punto"
 });

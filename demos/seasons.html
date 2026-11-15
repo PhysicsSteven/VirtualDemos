@@ -1623,11 +1623,17 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     g.putImageData(out, 0, 0); FACE[key] = c; return c;
   }
+  const spinBlur = () => S.run && S.view === 'orbit' && S.speed > 3;   /* (student view calls, 2026-11-15) */
   function drawPlanet(x, y, r, A, p, big) {
     const toSun = A.orbit + Math.PI;   /* direction from the planet to the Sun */
     const key = S.planet || 'toy', face = faceOf(key);
     ctx.save(); ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.clip();
-    if (face) {
+    /* above 3 turns a second the turning face, the longitude lines and the marked spot strobed (Very fast is 40 turns/s, two
+       thirds of a turn a frame): while it runs that fast the planet is drawn as a blur and the counters carry the turns
+       (student view calls, 2026-11-15) */
+    const blur = spinBlur();
+    if (blur) { ctx.fillStyle = T.planet; ctx.fillRect(x - r, y - r, 2 * r, 2 * r); }
+    else if (face) {
       /* longitude 90° W stands at the marked spot, so the Americas face it; the face turns with the spin (counterclockwise seen from the north) */
       ctx.translate(x, y); ctx.rotate(-(A.spot + (key === 'earth' ? 90 : 0) * Math.PI / 180)); ctx.drawImage(face, -r, -r, 2 * r, 2 * r); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     } else { ctx.fillStyle = T.planet; ctx.fillRect(x - r, y - r, 2 * r, 2 * r); }
@@ -1639,11 +1645,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.fillStyle = rg; ctx.fillRect(x - r, y - r, 2 * r, 2 * r);
     /* longitude lines that turn with the planet, so the spin shows */
     ctx.strokeStyle = 'rgba(255,255,255,0.14)'; ctx.lineWidth = 1;
-    for (let k = 0; k < 6; k++) { const a = A.spot + k * Math.PI / 3; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + sx(a) * r, y + sy(a) * r); ctx.stroke(); }
+    if (blur) for (let k = 1; k < 4; k++) { ctx.beginPath(); ctx.arc(x, y, r * k / 4, 0, 2 * Math.PI); ctx.stroke(); }
+    else for (let k = 0; k < 6; k++) { const a = A.spot + k * Math.PI / 3; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + sx(a) * r, y + sy(a) * r); ctx.stroke(); }
     ctx.restore();
     ctx.strokeStyle = 'rgba(255,255,255,0.35)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.stroke();
     /* the marked spot: a person standing on the equator, head pointing straight up (the zenith) */
     const a = A.spot, bx = x + sx(a) * r, by = y + sy(a) * r, hl = Math.max(8, r * (big ? 0.42 : 0.55));
+    if (blur) return { bx, by, hl };
     ctx.strokeStyle = '#ffffff'; ctx.lineWidth = Math.max(2, 2.4 * p * (big ? 1.3 : 1)); ctx.beginPath(); ctx.moveTo(bx, by); ctx.lineTo(bx + sx(a) * hl, by + sy(a) * hl); ctx.stroke();
     ctx.fillStyle = '#ff5a4f'; ctx.beginPath(); ctx.arc(bx + sx(a) * (hl + 3 * p), by + sy(a) * (hl + 3 * p), Math.max(3.5, 4 * p * (big ? 1.3 : 1)), 0, 2 * Math.PI); ctx.fill();
     return { bx, by, hl };
@@ -1695,6 +1703,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     line(`orbits  ${f(S.t / P.orb, 3)}`, 'rgba(246,243,238,0.7)');
     /* the time scale on screen: the Slow, Fast and Very fast buttons did not say how fast (student view, 2026-11-15) */
     line(`1 s = ${hms(S.speed * Math.abs(P.rot))}`, 'rgba(246,243,238,0.7)');
+    if (spinBlur() && !S.msg) { ctx.fillStyle = '#ffdca3'; ctx.font = `${11 * p}px ${T.ui}`; ctx.fillText('spinning too fast to draw each turn: Pause to see the spot', L, y + 2 * p); }   /* (student view calls, 2026-11-15) */
     if (S.msg) { ctx.fillStyle = '#ffdca3'; ctx.font = `${11 * p}px ${T.ui}`; ctx.fillText(S.msg, L, y + 2 * p); }
     /* legend, bottom left */
     ctx.font = `${11 * p}px ${T.ui}`; ctx.textBaseline = 'bottom'; let yb = H - 10 * p;
@@ -1812,9 +1821,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.beginPath(); ctx.ellipse(cx, cy + 3 * p, R * 1.06, R * 1.06 * sa, 0, 0, 2 * Math.PI); ctx.fillStyle = dark ? '#3d3424' : '#cdbb94'; ctx.fill();
     ctx.beginPath(); ctx.ellipse(cx, cy, R * 1.06, R * 1.06 * sa, 0, 0, 2 * Math.PI); ctx.fillStyle = dark ? '#7d6c4a' : '#efe3c8'; ctx.fill(); ctx.stroke();
     /* hour lines 6 to 18 h apparent solar time: tan θ = sin φ tan H */
-    ctx.font = `${9.5 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; const used = [];
-    for (let hr = 6; hr <= 18; hr++) {
-      const th = sdDial(SD_LAT, 0, (hr - 12) * 15).theta * Math.PI / 180, ux = Math.sin(th), uy = Math.cos(th), a = Pt([ux * 0.18, uy * 0.18, 0]), b = Pt([ux * 0.92, uy * 0.92, 0]), lb = Pt([ux * 1.0, uy * 1.0, 0]);
+    /* the hour numbers crowded near N, and 12 sat under the gnomon and its shadow: the numbers now stand just outside the rim,
+       12 is placed first so a crowded neighbour (11, 1) is the one left out, and N is kept clear (student view calls, 2026-11-15) */
+    ctx.font = `${9.5 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; const nq = Pt([0, 1.34, 0]), used = [[nq[0], nq[1] - 6 * p]];
+    for (const hr of [12, 6, 18, 9, 15, 7, 8, 10, 11, 13, 14, 16, 17]) {
+      const th = sdDial(SD_LAT, 0, (hr - 12) * 15).theta * Math.PI / 180, ux = Math.sin(th), uy = Math.cos(th), a = Pt([ux * 0.18, uy * 0.18, 0]), b = Pt([ux * 0.92, uy * 0.92, 0]), lb = Pt([ux * 1.12, uy * 1.12, 0]);
       ctx.strokeStyle = hr === 12 ? (dark ? '#ffe9b0' : '#3b2c0e') : dark ? 'rgba(250,236,200,0.6)' : 'rgba(90,70,30,0.55)'; ctx.lineWidth = (hr === 12 ? 1.8 : 1) * p; ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke();
       if (!used.some((u) => Math.hypot(u[0] - lb[0], u[1] - lb[1]) < 13 * p)) { used.push(lb); ctx.fillStyle = dark ? '#fff3d0' : '#5a461e'; ctx.fillText(String(hr > 12 ? hr - 12 : hr), lb[0], lb[1]); }
     }
@@ -1831,7 +1842,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     { const q0 = Pt([0, 0, 0]), q1 = Pt([0, L, 0]), q2 = Pt(tip); ctx.fillStyle = dark ? 'rgba(205,197,187,0.8)' : 'rgba(146,138,127,0.8)'; ctx.strokeStyle = dark ? '#eeeae4' : '#50493f'; ctx.lineWidth = 1 * p;
       ctx.beginPath(); ctx.moveTo(q0[0], q0[1]); ctx.lineTo(q1[0], q1[1]); ctx.lineTo(q2[0], q2[1]); ctx.closePath(); ctx.fill(); ctx.stroke(); }
-    ctx.fillStyle = T.muted; ctx.font = `${9.5 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; { const nq = Pt([0, 1.22, 0]); ctx.fillText('N', nq[0], nq[1] - 6 * p); }
+    ctx.fillStyle = T.muted; ctx.font = `${9.5 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText('N', nq[0], nq[1] - 6 * p);
     /* the clock face: the minute hands of the clock (at 12) and of the sundial, 6° a minute */
     const tsun = 12 * 60 + eot, hh = Math.floor(tsun / 60), mm = Math.floor(tsun - hh * 60), ss = Math.round((tsun - hh * 60 - mm) * 60);
     const fix = (h_, m_, s_) => { if (s_ === 60) { s_ = 0; m_++; } if (m_ === 60) { m_ = 0; h_++; } return `${h_}:${String(m_).padStart(2, '0')}:${String(s_).padStart(2, '0')}`; };

@@ -1211,7 +1211,21 @@ window.VD_EARTH = { day: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wB
   // Go to: glide to a stop on the path, faster across many powers of ten, slowing as it arrives
   const STOPS = ZOOM.filter((o) => !o.bg && !o.side);
   $('sGo').innerHTML = '<option value="">Choose a stop…</option>' + STOPS.map((o, i) => `<option value="${i}">${o.name}</option>`).join('');
-  const stopZoom = (o) => (o.go != null ? o.go : Math.log10(o.size / Math.min(0.55, 0.55 * Hh / W)));
+  /* on a wide stage half the Go to stops landed just past their own caption's range, under the next scale's caption: a stop is
+     now kept inside the caption that names it, clear of its fades, as long as the object still fits the width (it stays where it
+     was when that caption's range is narrower than the object) (student view calls, 2026-11-15) */
+  const STOPCAP = { proton: 'A proton', nucleus: 'The nucleus of a carbon', inner: "Carbon's two inner", atom: 'One carbon atom', dna: 'DNA: two',
+    nucleosome: 'In the nucleus, DNA wraps', pore: 'A nuclear pore', cnucleus: 'The cell nucleus', skincell: 'Living skin cells', ridge: 'Fingerprint ridges',
+    tip: 'A fingertip', hand: 'A hand', person: 'A person', everest: 'Mount Everest', sky: 'The atmosphere', earth: 'Earth, 12,742', moon: 'The Moon is',
+    solar: 'The inner planets', planets: 'Out to Neptune', helio: 'The heliosphere', oort: 'The Oort cloud', stars: 'The nearest stars', neigh: 'Stars within',
+    bright: 'Most of the bright', galaxy: 'The Milky Way', local: 'The Local Group', virgo: 'The view turns', laniakea: 'Laniakea', universe: 'The observable' };
+  const stopZoom = (o) => {
+    if (o.go != null) return o.go;
+    const z = Math.log10(o.size / Math.min(0.55, 0.55 * Hh / W)), ls = Math.log10(o.size), c = STOPCAP[o.id] && CAPS.find((q) => q[2].startsWith(STOPCAP[o.id]));
+    if (!c) return z;
+    const zc = Math.max(c[0] + 0.13, Math.min(c[1] - 0.13, z));
+    return zc >= ls - 0.04 ? zc : z;
+  };
   $('sGo').addEventListener('change', (e) => { if (e.target.value === '') return; const z = Math.max(-15.3, Math.min(27, stopZoom(STOPS[+e.target.value]))); S.fly = 0; if (reduce) { S.goto = null; zoomTo(z); } else S.goto = z; });
   function tick(dt) { if (S.goto != null && S.tab === 'scale' && S.view === 'zoom') { const d = S.goto - S.zoom, st = Math.sign(d) * Math.min(Math.abs(d), dt * (0.6 + 1.6 * Math.abs(d))); zoomTo(S.zoom + st); if (Math.abs(d) < 0.003) S.goto = null; }
     if (S.fly && S.tab === 'scale' && S.view === 'zoom') { zoomTo(S.zoom + S.fly * dt * 0.8); $('flyIn').textContent = S.fly === -1 ? 'Pause' : 'Fly in'; $('flyOut').textContent = S.fly === 1 ? 'Pause' : 'Fly out'; if (S.zoom <= -15.3 || S.zoom >= 27) { S.fly = 0; } } else { $('flyIn').textContent = 'Fly in'; $('flyOut').textContent = 'Fly out'; } }

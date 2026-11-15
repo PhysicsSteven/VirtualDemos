@@ -1180,8 +1180,10 @@ function airFromVac(vnm) {
         const lab = L.air < 200 ? `${L.vac.toFixed(1)} nm` : `${L.air.toFixed(1)} nm`;
         ctx.font = `600 ${10.5 * ps}px ${mono()}`;
         const tw = ctx.measureText(lab).width, beside = tw + 16 * ps < dx;
-        const ly = beside ? (y1 + y2) / 2 : Math.max(top, y1 - 12 * ps);
-        const lx = !beside ? x - tw / 2 : x + 9 * ps + tw < right ? x + 9 * ps : x - 9 * ps - tw;
+        /* with no room beside the arrow (Paschen on a phone) the label sat on the crowded upper levels and the arrow heads:
+           when the space just above the arrow is in that crowd it now stands above the n = ∞ line, kept inside the diagram (student view calls, 2026-11-15) */
+        const ly = beside ? (y1 + y2) / 2 : y1 - 20 * ps > Y(-13.5983 / 9) ? y1 - 12 * ps : top - 18 * ps;
+        const lx = !beside ? Math.max(left, Math.min(right - tw - 3 * ps, x - tw / 2)) : x + 9 * ps + tw < right ? x + 9 * ps : x - 9 * ps - tw;
         ctx.textAlign = 'left'; ctx.fillStyle = tok('--surface');
         ctx.fillRect(lx - 3 * ps, ly - 7.5 * ps, tw + 6 * ps, 15 * ps);
         ctx.fillStyle = ink; ctx.fillText(lab, lx, ly);
@@ -1215,10 +1217,13 @@ function airFromVac(vnm) {
     const nu = S.orb, whole = Math.abs(nu - Math.round(nu)) < 1e-9, nMax = Math.max(Math.ceil(nu - 1e-9), S.ni);
     const cx = W / 2, cy = H / 2 + 6 * ps, Rmax = Math.min(W, H) / 2 - 24 * ps, sc = Rmax / (nMax * nMax * BOHR_A0);   /* px per nm */
     ctx.font = `${10 * ps}px ${mono()}`; ctx.textBaseline = 'middle';
-    for (let n = 1; n <= nMax; n++) { const R = n * n * BOHR_A0 * sc, hi = n === S.ni || n === S.series;
+    /* the label of the orbit the wave rides on sat on the wave (n = 3 at the opening): it moves out past the wave's height
+       (student view calls, 2026-11-15) */
+    const Aw = Math.min(10 * ps, 0.22 * nu * nu * BOHR_A0 * sc), Rw = nu * nu * BOHR_A0 * sc;
+    for (let n = 1; n <= nMax; n++) { const R = n * n * BOHR_A0 * sc, hi = n === S.ni || n === S.series, out = Math.abs(R - Rw) < Aw + 8 * ps ? (Rw + Aw - R + 6 * ps) * 0.71 : 0;
       ctx.strokeStyle = hi ? ink : muted; ctx.globalAlpha = hi ? 0.75 : 0.4; ctx.lineWidth = (hi ? 1.6 : 1) * ps; ctx.setLineDash(hi ? [] : [3 * ps, 4 * ps]);
       ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
-      if (R > 14 * ps) { ctx.fillStyle = hi ? ink : muted; ctx.textAlign = 'left'; ctx.fillText(`n = ${n}`, cx + R * 0.71 + 4 * ps, cy - R * 0.71 - 4 * ps); } }
+      if (R > 14 * ps) { ctx.fillStyle = hi ? ink : muted; ctx.textAlign = 'left'; ctx.fillText(`n = ${n}`, cx + R * 0.71 + 4 * ps + out, cy - R * 0.71 - 4 * ps - out); } }
     /* the wave: r(θ) = R + A sin(νθ); the first time round solid, the second dashed, so a wave that does not fit shows its mismatch */
     const R = nu * nu * BOHR_A0 * sc, A = Math.min(10 * ps, 0.22 * R), lap = (k) => { ctx.beginPath(); const N = 720; for (let i = 0; i <= N; i++) { const th = 2 * Math.PI * (k + i / N), rr = R + A * Math.sin(nu * th), x = cx + rr * Math.cos(th), y = cy - rr * Math.sin(th); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); } ctx.stroke(); };
     if (!whole) { ctx.strokeStyle = tok('--danger') || '#d2452b'; ctx.globalAlpha = 0.75; ctx.lineWidth = 1.4 * ps; ctx.setLineDash([4 * ps, 3 * ps]); lap(1); ctx.setLineDash([]); ctx.globalAlpha = 1; }

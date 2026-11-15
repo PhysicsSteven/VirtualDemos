@@ -419,11 +419,10 @@ VDI18N.add('en', 'demo/spectra', [
 "Six models of the hydrogen atom under one photon beam at {#} nm. Billiard ball: a hard, solid sphere; Plum pudding: rings at {#} nm; Classical orbit: t = {#} ps of {#}; Bohr: n = {#}, E = -{#} eV; de Broglie: n = {#}, E = -{#} eV; Schrödinger: 1s, lives stable.",
 "Close",
 "2p, lives {#} ns",
-"4d, lives {#} ns",
-"Six models of the hydrogen atom under one photon beam at {#} nm. Billiard ball: a hard, solid sphere; Plum pudding: rings at {#} nm; Classical orbit: t = {#} ps of {#}; Bohr: n = {#}, E = -{#} eV; de Broglie: n = {#}, E = -{#} eV; Schrödinger: 4d, lives {#} ns.",
 "bare proton",
 "ionized from n = {#}",
-"Six models of the hydrogen atom under one photon beam at {#} nm. Billiard ball: a hard, solid sphere; Plum pudding: rings at {#} nm; Classical orbit: t = {#} ps of {#}; Bohr: ionized from n = {#}; de Broglie: ionized from n = {#}; Schrödinger: ionized from n = {#}.",
+"Six models of the hydrogen atom under one photon beam at {#} nm. Billiard ball: a hard, solid sphere; Plum pudding: rings at {#} nm; Classical orbit: t = {#} ps of {#}; Bohr: n = {#}, E = -{#} eV; de Broglie: ionized from n = {#}; Schrödinger: 1s, lives stable.",
+"Six models of the hydrogen atom under one photon beam at {#} nm. Billiard ball: a hard, solid sphere; Plum pudding: rings at {#} nm; Classical orbit: t = {#} ps of {#}; Bohr: ionized from n = {#}; de Broglie: n = {#}, E = -{#} eV; Schrödinger: ionized from n = {#}.",
 "<b>{#} correct</b>. {#} more to find: some lines still have no match.",
 "The answer: <b>Hydrogen, Sodium, Magnesium, Calcium, Iron</b>. A real stellar spectrum has thousands more lines, mostly from iron, but these five make the strongest features in sunlight. The letters on the strip are the names Fraunhofer gave the darkest solar lines.",
 "Ne",
@@ -436,9 +435,5 @@ VDI18N.add('en', 'demo/spectra', [
 "absorption, as seen in a star",
 "<b>H + Na + Mg + Ca + Fe</b> mystery",
 "Starlight gathered by a telescope and spread out by the spectroscope. The strip below is the view in the eyepiece.",
-"Starlight through a telescope and a hand spectroscope",
-"Six models of the hydrogen atom under one photon beam at {#} nm. Billiard ball: a hard, solid sphere; Plum pudding: rings at {#} nm; Classical orbit: t = {#} ps of {#}; Bohr: n = {#}, E = -{#} eV; de Broglie: n = {#}, E = -{#} eV; Schrödinger: ionized from n = {#}.",
-"6g, lives {#} ns",
-"5f, lives {#} ns",
-"Six models of the hydrogen atom under one photon beam at {#} nm. Billiard ball: a hard, solid sphere; Plum pudding: rings at {#} nm; Classical orbit: t = {#} ps of {#}; Bohr: n = {#}, E = -{#} eV; de Broglie: n = {#}, E = -{#} eV; Schrödinger: 5f, lives {#} ns."
+"Starlight through a telescope and a hand spectroscope"
 ]);

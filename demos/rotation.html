@@ -179,6 +179,8 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <button type="button" class="btn primary" id="act">Push</button>
           <button type="button" class="btn" id="reset">Reset</button>
           <div class="seg" role="group" aria-label="Time scale" id="speedSeg">
+            <!-- 0.02×: the wrench turned 90° in 0.6 s even at 0.1× (student view calls, 2026-11-15) -->
+            <button type="button" data-ts="0.02" aria-pressed="false">0.02×</button>
             <button type="button" data-ts="0.1" aria-pressed="false">0.1×</button>
             <button type="button" data-ts="0.25" aria-pressed="false">¼×</button>
             <button type="button" data-ts="1" aria-pressed="true">1×</button>
@@ -937,7 +939,8 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
 
   const lane = (shape, m, R) => ({ shape, m, R });
   const PRESETS = {
-    wrench: { scene: 'torque', ts: 0.1, hint: 'Torque is r⊥F, the force times its lever arm. Tilt the arrow: only the part of F perpendicular to the handle turns the bolt, and a push along the handle does nothing.',
+    /* the light wrench turns 90° in 0.06 s, 0.6 s on screen at 0.1×: open at 1/50 so the turn takes 3 s (student view calls, 2026-11-15) */
+    wrench: { scene: 'torque', ts: 0.02, hint: 'Torque is r⊥F, the force times its lever arm. Tilt the arrow: only the part of F perpendicular to the handle turns the bolt, and a push along the handle does nothing. Shown at 1/50 speed.',
       apply() { Object.assign(TQ, { obj: 'wrench', L: 0.3, m: 0.4, F: 40, r: 0.27, th: 90, mode: 'follow', sw: null, t: 0, run: false, ghost: null }); } },
     hinge: { scene: 'torque', ts: 1, hint: 'The same 20 N push, close to the hinge. Press Push and compare the swing with the faded one, pushed at the handle: the torque is 5.7 times smaller, so it takes √5.7 ≈ 2.4 times as long to open.',
       apply() {
@@ -947,7 +950,8 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       } },
     race: { scene: 'roll', ts: 1, hint: 'Same mass and radius for all. Press Race: the block slides in first, then the solid sphere, the cylinder, the hollow sphere and the hoop.',
       apply() { RO.beta = 10; RO.D = 2; RO.lanes = [lane('block', 1, 0.1), lane('sphere', 1, 0.1), lane('disk', 1, 0.1), lane('hsphere', 1, 0.1), lane('hoop', 1, 0.1)]; RO.sel = 2; RO.t = 0; RO.run = false; } },
-    mass: { scene: 'roll', ts: 1, hint: 'A heavy, wide cylinder against a light, narrow one, and the same for two hoops. Shape decides the race, through I/mR², and mass and radius cancel out.',
+    /* the 3 cm cylinder reached 11 rev/s at 1× and strobed: open at ¼ like the other fast setups (student view calls, 2026-11-15) */
+    mass: { scene: 'roll', ts: 0.25, hint: 'A heavy, wide cylinder against a light, narrow one, and the same for two hoops. Shape decides the race, through I/mR², and mass and radius cancel out. Shown at ¼ speed.',
       apply() { RO.beta = 10; RO.D = 2; RO.lanes = [lane('disk', 8, 0.15), lane('disk', 0.5, 0.03), lane('hoop', 8, 0.15), lane('hoop', 0.5, 0.03)]; RO.sel = 0; RO.t = 0; RO.run = false; } },
     wheel: { scene: 'floor', ts: 1, hint: 'A hoop already rolling without slipping. The point touching the floor is at rest, the top moves at 2v, and the marked point on the rim traces a cycloid, with a sharp point (a cusp) each time it touches down.',
       apply() { Object.assign(FL, { shape: 'hoop', m: 2, R: 0.3, v0: 0.8, rim0: 0.8, mu: 0.3, t: 0, run: false }); } },

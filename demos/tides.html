@@ -496,11 +496,17 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const d = mr + 14 * PS; ctx.textAlign = Math.abs(tx) < 0.4 ? 'center' : tx > 0 ? 'left' : 'right';
     return [qx + tx * d, qy + ty * (Math.abs(tx) < 0.4 ? d + 4 * PS : d * 0.6)];
   }
-  function clampText(ctx, text, x, y, w, pad) {
+  function clampText(ctx, text, x, y, w, pad, halo) {
     const tw = ctx.measureText(text).width, align = ctx.textAlign;
     let x0 = align === 'right' ? x - tw : align === 'center' ? x - tw / 2 : x;
     x0 = Math.max(pad, Math.min(w - pad - tw, x0));
-    ctx.save(); ctx.textAlign = 'left'; ctx.fillText(text, x0, y); ctx.restore();
+    ctx.save(); ctx.textAlign = 'left'; if (halo) haloText(ctx, text, x0, y); else ctx.fillText(text, x0, y); ctx.restore();
+  }
+  /* the pull view's side and center labels sat on the arrows: they get a halo in the background color, and the near side label
+     moves past its arrow's tip like the far side one (student view calls, 2026-11-15) */
+  function haloText(ctx, text, x, y) {
+    ctx.save(); ctx.lineWidth = 4 * PS; ctx.lineJoin = 'round'; ctx.strokeStyle = T.canvas; ctx.strokeText(text, x, y); ctx.restore();
+    ctx.fillText(text, x, y);
   }
   // title plus muted lines, wrapped to the canvas width; returns the y below the last line
   function caption(ctx, w, title, ...subs) {
@@ -607,11 +613,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const a = pullAt(M_MOON, d, 0, 0);
       arrow(ctx, cx, cy, cx + k * a[0], cy - k * a[1], T.accent, 3 * PS, 10 * PS);
       ctx.fillStyle = T.accent; ctx.font = font(700, 11, 'ui'); ctx.textAlign = 'center'; ctx.textBaseline = 'top';
-      ctx.fillText('center', cx, cy + 8 * PS);
+      haloText(ctx, 'center', cx, cy + 8 * PS);
     } else {
       ctx.fillStyle = T.accent; ctx.beginPath(); ctx.arc(cx, cy, 3.5 * PS, 0, 2 * Math.PI); ctx.fill();
       ctx.font = font(600, 10.5, 'ui'); ctx.textAlign = 'center'; ctx.textBaseline = 'top';
-      ctx.fillText('center: zero', cx, cy + 8 * PS);
+      haloText(ctx, 'center: zero', cx, cy + 8 * PS);
     }
     ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(cx, cy, 2 * PS, 0, 2 * Math.PI); ctx.fill();
 
@@ -620,9 +626,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const nearA = tidal ? tidalAt(M_MOON, d, R_EARTH, 0) : pullAt(M_MOON, d, R_EARTH, 0);
     const farA = tidal ? tidalAt(M_MOON, d, -R_EARTH, 0) : pullAt(M_MOON, d, -R_EARTH, 0);
     ctx.textAlign = 'left'; ctx.textBaseline = 'top';
-    ctx.fillText('near side', cx + Rp + 4 * PS, cy + 8 * PS);
+    clampText(ctx, 'near side', cx + Rp + 4 * PS + Math.max(0, k * nearA[0]), cy + 8 * PS, w, 4 * PS, true);
     ctx.textAlign = 'right';
-    clampText(ctx, 'far side', cx - Rp - 4 * PS + Math.min(0, k * farA[0]), cy + 8 * PS, w, 4 * PS);
+    clampText(ctx, 'far side', cx - Rp - 4 * PS + Math.min(0, k * farA[0]), cy + 8 * PS, w, 4 * PS, true);
     if (tidal) {
       ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
       ctx.fillText('squeezed in', cx, cy - Rp - 8 * PS);
@@ -948,12 +954,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const nearA = tidal ? tidalAt(M_MOON, d, R_EARTH, 0) : pullAt(M_MOON, d, R_EARTH, 0);
     const farA = tidal ? tidalAt(M_MOON, d, -R_EARTH, 0) : pullAt(M_MOON, d, -R_EARTH, 0);
     ctx.font = font(700, 11, 'ui'); ctx.fillStyle = T.muted; ctx.textBaseline = 'top';
-    const [nx, ny] = P3(1, 0, 0), [fx, fy] = P3(-1 + Math.min(0, k * farA[0]), 0, 0), [c0x, c0y] = P3(0, 0, 0);
-    ctx.textAlign = 'left'; clampText(ctx, 'near side', nx + 4 * PS, ny + 8 * PS, w, 4 * PS);
-    ctx.textAlign = 'right'; clampText(ctx, 'far side', fx - 4 * PS, fy + 8 * PS, w, 4 * PS);
-    if (tidal) { const [sx, sy] = P3(0, 0, 1.06); ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillText('squeezed in', sx, sy - 8 * PS); }
+    const [nx, ny] = P3(1 + Math.max(0, k * nearA[0]), 0, 0), [fx, fy] = P3(-1 + Math.min(0, k * farA[0]), 0, 0), [c0x, c0y] = P3(0, 0, 0);
+    ctx.textAlign = 'left'; clampText(ctx, 'near side', nx + 4 * PS, ny + 8 * PS, w, 4 * PS, true);
+    ctx.textAlign = 'right'; clampText(ctx, 'far side', fx - 4 * PS, fy + 8 * PS, w, 4 * PS, true);
+    if (tidal) { const [sx, sy] = P3(0, 0, 1.06); ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; haloText(ctx, 'squeezed in', sx, sy - 8 * PS); }
     ctx.fillStyle = T.accent; ctx.font = font(tidal ? 600 : 700, tidal ? 10.5 : 11, 'ui'); ctx.textAlign = 'center'; ctx.textBaseline = 'top';
-    ctx.fillText(tidal ? 'center: zero' : 'center', c0x, c0y + 8 * PS);
+    haloText(ctx, tidal ? 'center: zero' : 'center', c0x, c0y + 8 * PS);
 
     pullRows(ctx, w, h, tidal, d, nearA, farA);
 

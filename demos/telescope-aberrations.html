@@ -72,6 +72,8 @@
     <div class="stage" id="stage">
       <div class="stage-ctl" id="strip">
         <button type="button" class="spin attn" id="play" data-vd-key="play">Let the air move</button>
+        <!-- Reset rewinds the air to t = 0 and keeps every setting, as on the other demos (student view calls, 2026-11-15) -->
+        <button type="button" class="spin" id="reset" data-vd-key="reset">Reset</button>
         <span class="lab">Zoom</span>
         <div class="seg" role="group" aria-label="Zoom" id="zoomSeg">
           <button type="button" data-z="1" aria-pressed="false">1×</button>
@@ -786,7 +788,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.font = `${11 * p}px ${TK.mono}`; ctx.fillStyle = '#ebe8e5'; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText(`${bar < 1 ? bar : bar.toFixed(0)}″`, ix + 12 * p, iy + s - 20 * p);
     ctx.textAlign = 'right'; ctx.fillText(`${T('Strehl')} ${fx(R.strehl, 2)}`, ix + s - 10 * p, iy + s - 10 * p);
     ctx.textBaseline = 'top'; ctx.fillStyle = '#dfd7cd'; ctx.font = `${10.5 * p}px ${TK.ui}`;
-    const status = R.rays ? T('ray picture: the blur is far wider than diffraction') : E.air === 'ground' && E.expo === 'long' ? (R.done ? `${T('long exposure')}, ${LONG_N} ${T('moments')}` : `${T('exposing')} ${R.frames} / ${LONG_N}`) : E.air === 'ground' ? `${T('snapshot')}, t = ${fx(S.t * 1000, 1)} ms` : '';
+    /* in a mystery the snapshot and long exposure status showed only when the hidden cause was the air, which gave the answer
+       away: a mystery now always shows it, and its clock runs whatever the cause (student view calls, 2026-11-15) */
+    const status = R.rays ? T('ray picture: the blur is far wider than diffraction') : E.air === 'ground' && E.expo === 'long' ? (R.done ? `${T('long exposure')}, ${LONG_N} ${T('moments')}` : `${T('exposing')} ${R.frames} / ${LONG_N}`)
+      : S.mys && E.expo === 'long' ? `${T('long exposure')}, ${LONG_N} ${T('moments')}` : E.air === 'ground' || S.mys ? `${T('snapshot')}, t = ${fx(S.t * 1000, 1)} ms` : '';
     if (status) ctx.fillText(status, ix + s - 10 * p, iy + 10 * p);
     /* the time scale on screen: the moving air is shown slowed down 100 times (student view, 2026-11-15) */
     if (!R.rays && !S.mys && E.air === 'ground' && E.expo !== 'long') ctx.fillText(T('air shown 100 times slower'), ix + s - 10 * p, iy + 24 * p);
@@ -940,6 +945,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('starTest').addEventListener('change', (e) => { S.test = e.target.checked; if (!S.test) { TEST = null; draw(); } else dirty = true; });
   $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; draw(); readouts(); });
   $('play').addEventListener('click', () => { S.run = !S.run; sync(); });
+  $('reset').addEventListener('click', () => { S.run = false; S.t = 0; S.pos = 0; sync(); dirty = true; });   /* (student view calls, 2026-11-15) */
   /* the shared control panel (demos/lib/vdpanel.js): the time controls in one group at the left of the strip */
   if (window.VD && VD.panel) VD.panel({ step: true });
   cans.can.addEventListener('keydown', (e) => { if (e.key === ' ') { $('play').click(); e.preventDefault(); } });
@@ -950,6 +956,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const E = eff();
     if (S.run && E.air === 'ground' && E.expo === 'snap' && !matchMedia('(prefers-reduced-motion: reduce)').matches) { S.t += dt / SLOW; S.pos = S.t * WIND; dirty = true; }
     else if (S.run && E.air === 'ground' && E.expo === 'snap') { S.t += 0.25 / SLOW; S.pos = S.t * WIND; dirty = true; S.run = false; sync(); }
+    else if (S.run && S.mys && E.expo === 'snap' && !dirty) { S.t += dt / SLOW; draw(); }   /* a still image, its clock running (student view calls, 2026-11-15) */
     if (dirty) { recompute(); if (S.mys) puzzleWatch(); }
     requestAnimationFrame(frame); }
   function resize() { dpr = window.devicePixelRatio || 1; const r = $('pane').getBoundingClientRect(); W = r.width; H = r.height; cans.can.width = Math.round(W * dpr); cans.can.height = Math.round(H * dpr);

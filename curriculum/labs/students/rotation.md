@@ -8,7 +8,7 @@ Textbook: OpenStax *University Physics*, Vol. 1, §§10.1 to 10.7 and 11.1 to 11
 <details class="about" markdown="1">
 <summary>About the demo</summary>
 
-**Setups in the demo:** Wrench; Door: push near the hinge; Rolling race; Mass doesn't matter; Rolling wheel: cycloid; Ball thrown without spin; Backspin: it comes back; Yo-yo against a dropped one; Paper roll unwinding; Unwinding cylinder: ⅔g; Skater; Seesaw.
+**Setups in the demo:** Wrench; Door: push near the hinge; Rolling race; Mass doesn't matter; Rolling wheel: cycloid; Ball thrown without spin; Backspin: it comes back; Yo-yo against a dropped one; Paper roll unwinding; Unwinding cylinder: ⅔g; Skater; Seesaw; Clay hits a pinned rod; Sweet spot: no push from the pin; Free rod: it spins and drifts; Bouncy ball off a rod; Disk dropped on a spinning disk.
 
 **Using the demo.**
 
