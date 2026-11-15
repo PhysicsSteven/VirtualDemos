@@ -78,7 +78,7 @@ table.rows input:focus { border-color: var(--accent); }
   <main class="bench">
     <div class="stage" id="stage">
       <canvas id="can" tabindex="0" role="img" aria-label="The current setup: masses on a plate that can be dragged, a firework that explodes into two pieces, or a person walking along a boat, with the center of mass marked."></canvas>
-      <div class="viewbar" id="runBar"><button type="button" class="spin attn" id="go">Launch</button><button type="button" class="spin" id="back">Reset</button></div>
+      <div class="viewbar" id="runBar"><button type="button" class="spin attn" id="go">Launch</button><button type="button" class="spin" id="back">Reset</button><div class="seg" role="group" aria-label="Playback speed" id="spdSeg"><button type="button" data-s="1" aria-pressed="true">×1</button><button type="button" data-s="0.5" aria-pressed="false">×½</button></div></div>
       <div class="viewbar" id="viewBar" style="left: auto; right: 10px;"><div class="seg" role="group" aria-label="View" id="viewSeg"><button type="button" data-view="3d" aria-pressed="false">3D</button><button type="button" data-view="flat" aria-pressed="true">Flat</button></div></div>
       <span class="blindtag" id="blindTag" hidden>Blind</span>
     </div>
@@ -184,7 +184,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const HINT = { plate: 'Drag the masses on a 1.0 m × 0.6 m plate. Predict where the center of mass is, then turn Blind off. A heavier mass pulls it toward itself.',
     fire: 'Launch: at the top the firework splits in two. Each piece follows its own parabola, but their center of mass carries on along the original one until a piece lands.',
     boat: 'The person walks from the back of the boat to the front. No outside horizontal force acts, so the center of mass of person and boat stays put and the boat slides back.' };
-  const S = { mode: 'plate', ms: [{ m: 2, x: 0.25, y: 0.3 }, { m: 1, x: 0.75, y: 0.45 }, { m: 1, x: 0.6, y: 0.12 }], sel: 0, ratio: 0.5, kick: 8, ang: 0, pm: 70, bm: 150, t: 0, run: false, blind: false };
+  const S = { mode: 'plate', ms: [{ m: 2, x: 0.25, y: 0.3 }, { m: 1, x: 0.75, y: 0.45 }, { m: 1, x: 0.6, y: 0.12 }], sel: 0, ratio: 0.5, kick: 8, ang: 0, pm: 70, bm: 150, t: 0, run: false, blind: false, speed: 1 };
   const V0 = 20, TH = 60 * Math.PI / 180, LB = 4.0, WALK = 1.0;
   const COLS = () => [T.m1, T.m2, T.m3, T.m4];
   const can = $('can'), ctx = can.getContext('2d'), stage = $('stage');
@@ -215,6 +215,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const sm = S.ms[S.sel]; if (sm) { $('sMass').value = sm.m; $('oMass').textContent = `${sm.m.toFixed(1)} kg (mass ${S.sel + 1})`; }
     $('sRatio').value = S.ratio; $('oRatio').textContent = S.ratio.toFixed(2); $('sKick').value = S.kick; $('oKick').textContent = `${S.kick} m/s`; $('sAng').value = S.ang; $('oAng').textContent = `${S.ang}° above horizontal`;
     $('sPm').value = S.pm; $('oPm').textContent = `${S.pm} kg`; $('sBm').value = S.bm; $('oBm').textContent = `${S.bm} kg`;
+    for (const b of document.querySelectorAll('#spdSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.s === S.speed));
     $('addM').disabled = S.ms.length >= 4; $('delM').disabled = S.ms.length <= 1;
   }
   const upd = () => { sync(); draw(); readouts(); };
@@ -227,7 +228,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; $('blindTag').hidden = !S.blind; draw(); readouts(); });
   $('go').addEventListener('click', () => { const end = S.mode === 'fire' ? tEndFire() : tEndBoat(); if (S.t >= end) S.t = 0; if (reduce) { S.t = end; S.run = false; upd(); return; } S.run = !S.run; sync(); });
   $('back').addEventListener('click', restart);
-  function tick(dt) { if (!S.run) return; const end = S.mode === 'fire' ? tEndFire() : tEndBoat(); S.t = Math.min(end, S.t + dt); if (S.t >= end) S.run = false; sync(); draw(); readouts(); }
+  /* half speed for pausing at the worksheet's 0.5 s steps; the clock and readouts stay in real seconds (student view calls, 2026-11-15) */
+  $('spdSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-s]'); if (b) { S.speed = +b.dataset.s; sync(); draw(); } });
+  function tick(dt) { if (!S.run) return; const end = S.mode === 'fire' ? tEndFire() : tEndBoat(); S.t = Math.min(end, S.t + dt * S.speed); if (S.t >= end) S.run = false; sync(); draw(); readouts(); }
   // plate geometry
   function plateBox() { const p = ps(), pad = 30 * p, w = Math.min(W - 2 * pad, (Hh - 2 * pad - 40 * p) / 0.6), h = w * 0.6; return { x0: (W - w) / 2, y0: 60 * p + (Hh - 60 * p - h) / 2, w, h, sc: w / 1.0 }; }
   const toPx = (B, a) => [B.x0 + a.x * B.sc, B.y0 + B.h - a.y * B.sc];
@@ -262,7 +265,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('out').innerHTML = h;
   }
   /* the clock and the rate on the stage: the firework and the walk play in real time, and the worksheet records t (student view, 2026-11-15) */
-  function clockTag() { const p = ps(); ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText(`real time · t = ${f(S.t, 2)} s`, 10 * p, Hh - 8 * p); }
+  function clockTag() { const p = ps(); ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText(S.speed === 1 ? `real time · t = ${f(S.t, 2)} s` : `slow motion: 1 s = ${S.speed} s · t = ${f(S.t, 2)} s`, 10 * p, Hh - 8 * p); }
   function cross(x, y, col) { const p = ps(); ctx.strokeStyle = col; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.arc(x, y, 9 * p, 0, 7); ctx.moveTo(x - 13 * p, y); ctx.lineTo(x + 13 * p, y); ctx.moveTo(x, y - 13 * p); ctx.lineTo(x, y + 13 * p); ctx.stroke(); ctx.fillStyle = col; ctx.font = `700 ${11 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText('CM', x + 12 * p, y - 8 * p); }
   /* a weight seen from above, sitting on the plate: soft shadow down and right, a lit top face with a turned rim (drawing only) */
   function puck(x, y, r, col) {

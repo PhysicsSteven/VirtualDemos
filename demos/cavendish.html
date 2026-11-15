@@ -255,7 +255,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (Fshow) txt(ctx, `pull on each small sphere: ${f(Fshow * 1e9, 2)} nN`, 12 * p, capY - 16 * p, { s: 9.5, m: 1, c: T.force, b: 1 });
     txt(ctx, 'A', X(largeSpheres(frameAngle('A'))[0][0]) + RL * sc + 6 * p, Y(largeSpheres(frameAngle('A'))[0][1]) - RL * sc, { s: 10, c: T.muted, b: 1 });
     txt(ctx, 'B', X(largeSpheres(frameAngle('B'))[1][0]) + RL * sc + 6 * p, Y(largeSpheres(frameAngle('B'))[1][1]) - RL * sc, { s: 10, c: T.muted, b: 1 });
-    drawScale(wide ? pw + 40 * p : W - 58 * p, wide ? W - 16 * p : W - 6 * p, 60 * p, H - 30 * p, my);
+    drawScale(wide ? pw + 40 * p : W - 58 * p, wide ? W - 16 * p : W - 6 * p, scaleTop(), H - 30 * p, my);
     drawChart();
   }
   // ---------- grabbing a large sphere: drag it round and let go; the frame then swings to the nearest of A, Away and B ----------
@@ -401,7 +401,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const capY = caption('3D, to scale · beam turn drawn ×20', 'drag a large sphere to swing it, elsewhere to turn', pw);
     if (!S.blind && fl[0] > 1e-13) txt(ctx, `pull on each small sphere: ${f(fl[0] * 1e9, 2)} nN`, 12 * p, capY - 16 * p, { s: 9.5, m: 1, c: T.force, b: 1 });
     const myq = Q(0, 0, MIRROR_Z);
-    drawScale(wide ? pw + 40 * p : W - 58 * p, wide ? W - 16 * p : W - 6 * p, 60 * p, H - 30 * p, myq[1]);
+    drawScale(wide ? pw + 40 * p : W - 58 * p, wide ? W - 16 * p : W - 6 * p, scaleTop(), H - 30 * p, myq[1]);
     drawChart();
   }
   function setView(v) {
@@ -415,6 +415,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     draw();
   }
   $('viewSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-view]'); if (b) setView(b.dataset.view); });
+  /* the scale's top below the button strip where the strip wraps over it (a phone), so Tools no longer hides "scale (cm)"
+     (student view calls, 2026-11-15) */
+  function scaleTop() { const p = ps(), vb = document.querySelector('.viewbar'), tb = vb ? vb.offsetTop + vb.offsetHeight : 0; return Math.max(60 * p, tb > 60 * p ? tb + 22 * p : 0); }
   /* the scale 5.000 m away, seen face on, magnified around the spot */
   function drawScale(x0, x1, y0, y1, yBeam) {
     const p = ps(), w = x1 - x0, cxs = x0 + w / 2, s = spot(S.th) * 100, span = 12, pxcm = (y1 - y0) / span, mid = Math.round(s / 2) * 2;

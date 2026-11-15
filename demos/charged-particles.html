@@ -518,7 +518,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const st = VD3K.stage($('scene'), { before: can, shadow: 0.6, fov: 30, fogAt: [1.8, 3.8] }); if (!st) return false;
     st.el.hidden = true; st.sun.shadow.bias = -0.0005;
     const K = VD3K, M = (o, c) => K.material(st, o, c), sc = st.scene, add = (...a) => { sc.add(...a); return a[0]; };
-    sc.add(K.bench(st, { w: 4, d: 3, y: 0.5 }), K.backdrop(st, { r: 1.8, h: 1.4, y: -0.2 }));
+    /* the wall wraps further round, so its end no longer shows as a dark block at the top right once Fire fades the card
+       (student view calls, 2026-11-15) */
+    sc.add(K.bench(st, { w: 4, d: 3, y: 0.5 }), K.backdrop(st, { r: 1.8, h: 1.4, y: -0.2, arc: Math.PI * 1.3 }));
     const steel = M({ roughness: 0.35, metalness: 0.6 }, ['#b6aea4', '#827b71']), base = M({ roughness: 0.55, metalness: 0.25 }, ['#928a7f', '#443d33']);
     /* the tank: a plinth, glass walls, the water */
     add(K.box(TL + 0.05, TW + 0.05, TB, base, X0 + TL / 2, 0, 0)).castShadow = false;   /* its shadow on the bench, seen through the water, came out in steps */
@@ -653,8 +655,24 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         'The model scatters each track in one plane: each is drawn in its own plane round the beam.', 'Drag the chamber to move it; drag elsewhere to turn the view.'];
     const nw = Math.max(...notes.map((s) => ctx.measureText(s).width)); ctx.globalAlpha = 0.8; ctx.fillStyle = T.surface; ctx.beginPath(); ctx.roundRect(6 * p, 5 * p, nw + 8 * p, (notes.length * 14 + 5) * p, 5 * p); ctx.fill(); ctx.globalAlpha = 1;
     ctx.fillStyle = T.muted; notes.forEach((s, i) => ctx.fillText(s, 10 * p, (8 + 14 * i) * p));
+    layerKey(ctx, 10 * p, (notes.length * 14 + 16) * p, Math.min(fw - 12 * p, 14 * p + nw));
     const kr = fw - 12 * p, kx = kr - 90 * p, ky0 = H - 16 * p; for (let i = 0; i < 60; i++) { ctx.fillStyle = heat(i / 59); ctx.fillRect(kx + i * 1.5 * p, ky0, 1.6 * p, 7 * p); }
     window.VDGear.label(ctx, fw < 520 ? 'track energy: 0 → full · glow: dose' : 'track energy: 0 → full · glow: model dose', kr, ky0 - 7 * p, { a: 'right', s: 10 * p, c: T.ink, alpha: 0.85 });
+  }
+  /* a key to the body layers, a colored square, the tissue and its thickness for each, wrapped to fit between x and right: the
+     thin skin, muscle and bone bands had no name in the 3D view or on the graph (student view calls, 2026-11-15) */
+  function layerKey(c, x, y, right) {
+    const lay = layers(); if (S.slab !== 'body' || !lay.length) return 0;
+    const p = proj(), font = `${10 * p}px ${T.ui}`, rows = [[]]; let cx = x; c.font = font;
+    for (const l of lay) { const nm = tr(layName(l)), ln = lenTxt(l.t), w = 14 * p + c.measureText(nm).width + 4 * p + c.measureText(ln).width + 12 * p;
+      if (cx + w > right && rows[rows.length - 1].length) { rows.push([]); cx = x; } rows[rows.length - 1].push({ l, nm, ln, x: cx }); cx += w; }
+    const wid = Math.max(...rows.map((r) => { const e = r[r.length - 1]; return e.x + 14 * p + c.measureText(e.nm).width + 4 * p + c.measureText(e.ln).width - x; }));
+    c.globalAlpha = 0.8; c.fillStyle = T.surface; c.beginPath(); c.roundRect(x - 4 * p, y - 3 * p, wid + 8 * p, rows.length * 15 * p + 4 * p, 5 * p); c.fill(); c.globalAlpha = 1;
+    c.textAlign = 'left'; c.textBaseline = 'middle';
+    rows.forEach((r, k) => { const yy = y + 6 * p + k * 15 * p; for (const e of r) { const lk = SLAB_LOOK[e.l.m] || [T.slab, T.sedge];
+      c.fillStyle = lk[0]; c.fillRect(e.x, yy - 5 * p, 10 * p, 10 * p); c.strokeStyle = lk[1]; c.lineWidth = 1; c.strokeRect(e.x, yy - 5 * p, 10 * p, 10 * p);
+      c.fillStyle = T.ink; c.fillText(e.nm, e.x + 14 * p, yy); c.fillStyle = T.muted; c.fillText(e.ln, e.x + 14 * p + c.measureText(e.nm).width + 4 * p, yy); } });
+    return rows.length * 15 * p + 4 * p;
   }
   function niceTicks(a, b, n) { const span = b - a, raw = span / n, mag = Math.pow(10, Math.floor(Math.log10(raw))), st = [1, 2, 5, 10].map((k) => k * mag).find((k) => span / k <= n) || 10 * mag; const out = []; for (let v = Math.ceil(a / st) * st; v <= b + 1e-9; v += st) out.push(+v.toPrecision(10)); return out; }
   const unitOf = (zmax) => (zmax >= 1 ? 'cm' : zmax >= 0.1 ? 'mm' : 'μm');
@@ -692,6 +710,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* the detector */
     const xd = L + S.z * sx; pctx.strokeStyle = T.det; pctx.setLineDash([4 * p, 4 * p]); pctx.lineWidth = 1.5 * p; pctx.beginPath(); pctx.moveTo(xd, top); pctx.lineTo(xd, bot); pctx.stroke(); pctx.setLineDash([]);
     const dd = doseAt(D, S.z); pctx.fillStyle = T.det; pctx.beginPath(); pctx.arc(xd, Y(dd), 4 * p, 0, 2 * Math.PI); pctx.fill();
+    layerKey(pctx, L + 8 * p, top + 6 * p, R - 8 * p);
     /* legend */
     pctx.textAlign = 'left'; pctx.textBaseline = 'middle'; pctx.font = `${11 * p}px ${T.ui}`; let lx = L + 6 * p, ly2 = top - 10 * p; const ly = ly2;
     pctx.strokeStyle = T.model; pctx.lineWidth = 2 * p; pctx.beginPath(); pctx.moveTo(lx, ly); pctx.lineTo(lx + 18 * p, ly); pctx.stroke(); pctx.fillStyle = T.ink; pctx.fillText('model (broad beam)', lx + 22 * p, ly);
@@ -706,7 +725,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (let e = Math.floor(Math.log10(xr[0])); e <= Math.ceil(Math.log10(xr[1])); e++) for (const m of [1, 2, 5]) { const v = m * Math.pow(10, e); if (v < xr[0] * 0.999 || v > xr[1] * 1.001) continue;
       const x = X(v); c.globalAlpha = m === 1 ? 1 : 0.5; c.beginPath(); c.moveTo(x, box.y0); c.lineTo(x, box.y1); c.stroke(); c.globalAlpha = 1; c.textAlign = 'center'; c.textBaseline = 'top'; c.fillText(sig3(v, 3), x, box.y1 + 5 * p); }
     for (let e = Math.floor(Math.log10(yr[0])); e <= Math.ceil(Math.log10(yr[1])); e++) for (const m of [1, 2, 5]) { const v = m * Math.pow(10, e); if (v < yr[0] * 0.999 || v > yr[1] * 1.001) continue;
-      const y = Y(v); c.globalAlpha = m === 1 ? 1 : 0.5; c.beginPath(); c.moveTo(box.x0, y); c.lineTo(box.x1, y); c.stroke(); c.globalAlpha = 1; c.textAlign = 'right'; c.textBaseline = 'middle'; c.fillText(sig3(v, 3), box.x0 - 6 * p, y); }
+      const y = Y(v); c.globalAlpha = m === 1 ? 1 : 0.5; c.beginPath(); c.moveTo(box.x0, y); c.lineTo(box.x1, y); c.stroke(); c.globalAlpha = 1; c.textAlign = 'right'; c.textBaseline = 'middle';
+      /* only the powers of ten get a number when a decade is too short for three (a phone) (student view calls, 2026-11-15) */
+      if (m === 1 || Y(1) - Y(10) >= 48 * p) c.fillText(sig3(v, 3), box.x0 - 6 * p, y); }
     c.strokeStyle = T.muted; c.strokeRect(box.x0, box.y0, box.x1 - box.x0, box.y1 - box.y0);
     c.fillStyle = T.ink; c.font = `${11 * p}px ${T.ui}`; c.textAlign = 'center'; c.textBaseline = 'top'; c.fillText(xlab, (box.x0 + box.x1) / 2, box.y1 + 20 * p);
     c.save(); c.translate(box.x0 - 52 * p, (box.y0 + box.y1) / 2); c.rotate(-Math.PI / 2); c.textBaseline = 'middle'; c.fillText(ylab, 0, 0); c.restore();

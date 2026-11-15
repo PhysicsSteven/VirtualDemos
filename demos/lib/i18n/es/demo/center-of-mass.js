@@ -68,8 +68,8 @@ VDI18N.add('es', 'demo/center-of-mass', {
   "centro de masa",
 "drag a mass to move it, drag the table to turn":
   "arrastra una masa para moverla, arrastra la mesa para girar",
-"real time · t = {#} s":
-  "tiempo real · t = {#} s",
+"slow motion: {#} s = {#} s · t = {#} s":
+  "cámara lenta: {#} s = {#} s · t = {#} s",
 "Launch: at the top the firework splits in two. Each piece follows its own parabola, but their center of mass carries on along the original one until a piece lands.":
   "Lanzamiento: en la parte más alta el cohete se divide en dos. Cada pieza sigue su propia parábola, pero su centro de masa continúa por la original hasta que una pieza cae al suelo.",
 "Split at":
@@ -108,6 +108,8 @@ VDI18N.add('es', 'demo/center-of-mass', {
   "el bote se movió (m)",
 "Close":
   "Cerrar",
+"real time · t = {#} s":
+  "tiempo real · t = {#} s",
 "person {#} kg":
   "persona {#} kg",
 "boat {#} kg":
