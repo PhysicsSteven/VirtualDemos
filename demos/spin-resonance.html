@@ -774,12 +774,6 @@ table.rows td.b { font-size: 0.76rem; }
       const i = Math.max(0, slow.filled - 1), x = X(i / 20), y = Y(rec[i] === rec[i] ? rec[i] : 0);
       ctx.fillStyle = T.pos; ctx.beginPath(); ctx.arc(x, y, 3.2 * ps, 0, 2 * Math.PI); ctx.fill();
     }
-    if (!slow.filled) {
-      ctx.font = `${11 * ps}px ${T.ui}`; ctx.fillStyle = T.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      const msg = 'Choose SLOW and press SLOW RUN to record a 25 s sweep', mw = Math.min(pw - 16, ctx.measureText(msg).width + 16);
-      ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.92; ctx.fillRect(px0 + (pw - mw) / 2, py0 + ph / 2 - 11 * ps, mw, 22 * ps); ctx.globalAlpha = 1;
-      ctx.fillStyle = T.ink; ctx.fillText(msg, px0 + pw / 2, py0 + ph / 2, pw - 24);
-    }
     // ruler lines, draggable
     const hot = (id) => (chartDrag && chartDrag.id === id) || (!chartDrag && chartHot.id === id);
     for (const id of [1, 2]) {
@@ -788,6 +782,13 @@ table.rows td.b { font-size: 0.76rem; }
       ctx.beginPath(); ctx.moveTo(x, py0 - 6 * ps); ctx.lineTo(x, py0 + ph); ctx.stroke();
       ctx.fillStyle = T.accent; ctx.beginPath(); ctx.moveTo(x, py0 - 1); ctx.lineTo(x - 6 * ps, py0 - 11 * ps); ctx.lineTo(x + 6 * ps, py0 - 11 * ps); ctx.closePath(); ctx.fill();
       ctx.globalAlpha = 1; ctx.fillStyle = parseInt(String(T.canvas).slice(1, 3), 16) > 128 ? '#ffffff' : T.canvas; ctx.font = `600 ${8.5 * ps}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(String(id), x, py0 - 7.5 * ps);
+    }
+    /* drawn after the ruler lines so the orange ruler no longer cuts through the words (student view, 2026-11-15) */
+    if (!slow.filled) {
+      ctx.font = `${11 * ps}px ${T.ui}`; ctx.fillStyle = T.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      const msg = 'Choose SLOW and press SLOW RUN to record a 25 s sweep', mw = Math.min(pw - 16, ctx.measureText(msg).width + 16);
+      ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.92; ctx.fillRect(px0 + (pw - mw) / 2, py0 + ph / 2 - 11 * ps, mw, 22 * ps); ctx.globalAlpha = 1;
+      ctx.fillStyle = T.ink; ctx.fillText(msg, px0 + pw / 2, py0 + ph / 2, pw - 24);
     }
     const dmm = S.ch.r2 - S.ch.r1, ttxt = `ruler ${dmm.toFixed(1)} mm → ${(dmm / SLOW.paper).toFixed(2)} s`;
     ctx.font = `600 ${10.5 * ps}px ${T.mono}`; ctx.textBaseline = 'middle'; ctx.textAlign = 'left'; ctx.fillStyle = T.accent;

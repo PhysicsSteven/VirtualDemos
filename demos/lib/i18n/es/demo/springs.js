@@ -28,16 +28,14 @@ VDI18N.add('es', 'demo/springs', {
   "Resorte, ½kx²",
 "Total":
   "Total",
-"E₀ − E − ∫bv² dt = −{#} × {#}⁻¹⁷ J":
-  "E₀ − E − ∫bv² dt = −{#} × {#}⁻¹⁷ J",
+"E₀ − E − ∫bv² dt = {#} × {#}⁻¹⁷ J":
+  "E₀ − E − ∫bv² dt = {#} × {#}⁻¹⁷ J",
 "residual (s²)":
   "residuo (s²)",
 "No timed readings yet":
   "Aún no hay lecturas cronometradas",
 "E₀ − E − ∫bv² dt = {#} J":
   "E₀ − E − ∫bv² dt = {#} J",
-"E₀ − E − ∫bv² dt = {#} × {#}⁻¹⁷ J":
-  "E₀ − E − ∫bv² dt = {#} × {#}⁻¹⁷ J",
 "Springs and Oscillations":
   "Resortes y oscilaciones",
 "<a>Oscillations</a>":
@@ -332,6 +330,8 @@ VDI18N.add('es', 'demo/springs', {
   "Traza conservada",
 "Model: ideal massless springs that obey Hooke's law, a frictionless track, a damping force −bv on each block, g = {#} m/s². The curves are the exact solution of the linear equation of motion, not a step by step integration; two coupled blocks (equal masses; outer springs k₁ and k₂, middle spring k_c, the same damping b on each) move as the sum of their two normal modes, found exactly from the {#} × {#} stiffness matrix. Positions are drawn to scale; the block's size grows with its mass but is not to scale. The drawing never shows a spring pressed solid, and the model has no such limit.":
   "Modelo: resortes ideales sin masa que obedecen la ley de Hooke, un riel sin fricción, una fuerza de amortiguamiento −bv en cada bloque, g = {#} m/s². Las curvas son la solución exacta de la ecuación de movimiento lineal, no una integración paso a paso; dos bloques acoplados (masas iguales; resortes exteriores k₁ y k₂, resorte del medio k_c, el mismo amortiguamiento b en cada uno) se mueven como la suma de sus dos modos normales, hallados exactamente a partir de la matriz de rigidez de {#} × {#}. Las posiciones se dibujan a escala; el tamaño del bloque crece con su masa pero no está a escala. El dibujo nunca muestra un resorte comprimido por completo, y el modelo no tiene ese límite.",
+"E₀ − E − ∫bv² dt = −{#} × {#}⁻¹⁷ J":
+  "E₀ − E − ∫bv² dt = −{#} × {#}⁻¹⁷ J",
 "no oil":
   "sin aceite",
 "Chart: x against time":
@@ -344,14 +344,14 @@ VDI18N.add('es', 'demo/springs', {
   "Gráfica de fase de v (m/s) en función de x (m). Ahora −{#}, −{#}.",
 "E₀ − E − ∫bv² dt = −{#} × {#}⁻¹⁶ J":
   "E₀ − E − ∫bv² dt = −{#} × {#}⁻¹⁶ J",
-"E₀ − E − ∫bv² dt = {#} × {#}⁻¹⁶ J":
-  "E₀ − E − ∫bv² dt = {#} × {#}⁻¹⁶ J",
-"Phase plot of v (m/s) against x (m). Now {#}, −{#}.":
-  "Gráfica de fase de v (m/s) en función de x (m). Ahora {#}, −{#}.",
+"Phase plot of v (m/s) against x (m). Now {#}, {#}.":
+  "Gráfica de fase de v (m/s) en función de x (m). Ahora {#}, {#}.",
 "Energy bars":
   "Barras de energía",
 "Normal modes of the rig: each mode's frequency, its shape (how far and which way each block moves), and its amplitude in the motion now. Click a mode, or press its number ({#} for mode {#}), to start the rig in that mode alone.":
   "Modos normales del montaje: la frecuencia de cada modo, su forma (cuánto y en qué sentido se mueve cada bloque) y su amplitud en el movimiento actual. Haz clic en un modo, o pulsa su número ({#} para el modo {#}), para iniciar el montaje solo en ese modo.",
+"E₀ − E − ∫bv² dt = {#} × {#}⁻¹⁶ J":
+  "E₀ − E − ∫bv² dt = {#} × {#}⁻¹⁶ J",
 "Gravity stretches the spring by mg/k to a new equilibrium. Measured from there, the motion is the same SHM with the same ω₀ = √(k/m): gravity moves the center, not the period. Spring and gravitational PE trade back and forth while the total stays fixed.":
   "La gravedad estira el resorte en mg/k hasta un nuevo equilibrio. Medido desde ahí, el movimiento es el mismo MAS con la misma ω₀ = √(k/m): la gravedad mueve el centro, no el periodo. La energía potencial del resorte y la gravitacional se intercambian mientras el total se mantiene fijo.",
 "Static stretch mg/k":
@@ -420,8 +420,6 @@ VDI18N.add('es', 'demo/springs', {
   "Desfase δ de x respecto a la fuerza impulsora",
 "gold dot: amplitude of the last full cycle":
   "punto dorado: amplitud del último ciclo completo",
-"Phase plot of v (m/s) against x (m). Now {#}, {#}.":
-  "Gráfica de fase de v (m/s) en función de x (m). Ahora {#}, {#}.",
 "Both blocks start displaced the same way, so the middle spring never stretches: mode {#} at ω₁ = √(k/m). Press Mode {#}: the blocks move opposite and the middle spring adds stiffness, ω₂ = √((k + 2k_c)/m). Then make k₂ different from k₁ and press the mode buttons again: the modes become lopsided.":
   "Ambos bloques empiezan desplazados en el mismo sentido, así que el resorte del medio nunca se estira: modo {#} con ω₁ = √(k/m). Pulsa Modo {#}: los bloques se mueven en sentidos opuestos y el resorte del medio añade rigidez, ω₂ = √((k + 2k_c)/m). Luego haz k₂ distinta de k₁ y vuelve a pulsar los botones de los modos: los modos quedan desiguales.",
 "x₁ = q₁ + q₂, x₂ = q₁ − q₂; each q oscillates at its own ω with its own amplitude.":
@@ -632,8 +630,12 @@ VDI18N.add('es', 'demo/springs', {
   "Aún no hay lecturas con fuerza impulsora",
 "dashed: predicted A(ω), current settings":
   "discontinua: A(ω) predicha, valores actuales",
-"E₀ − E − ∫bv² dt = {#} × {#}⁻¹⁵ J":
-  "E₀ − E − ∫bv² dt = {#} × {#}⁻¹⁵ J",
+"E₀ − E − ∫bv² dt = {#} × {#}⁻¹⁸ J":
+  "E₀ − E − ∫bv² dt = {#} × {#}⁻¹⁸ J",
+"E₀ − E − ∫bv² dt = −{#} × {#}⁻¹⁸ J":
+  "E₀ − E − ∫bv² dt = −{#} × {#}⁻¹⁸ J",
+"Phase plot of v (m/s) against x (m). Now {#}, −{#}.":
+  "Gráfica de fase de v (m/s) en función de x (m). Ahora {#}, −{#}.",
 "Below rest (cm) against time (s)":
   "Bajo el reposo (cm) contra el tiempo (s)",
 "Energy now, from the rig at rest":
@@ -650,6 +652,8 @@ VDI18N.add('es', 'demo/springs', {
   "N, fila {#}",
 "t s, row {#}":
   "t s, fila {#}",
+"E₀ − E − ∫bv² dt = {#} × {#}⁻¹⁵ J":
+  "E₀ − E − ∫bv² dt = {#} × {#}⁻¹⁵ J",
 "Phase plot of v (m/s) against x (m). Now −{#}, {#}.":
   "Gráfica de fase de v (m/s) en función de x (m). Ahora −{#}, {#}."
 });

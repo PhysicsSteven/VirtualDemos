@@ -17,6 +17,7 @@ VDI18N.add('en', 'demo/speed-of-light', [
 "D = {#} m, not to scale",
 "Top view",
 "Δs′ = 4AD²ω / c(D + B)",
+"MR, turn drawn slowed",
 "MOTOR SPEED",
 "rev/s",
 "CW",

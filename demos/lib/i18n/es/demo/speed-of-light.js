@@ -34,6 +34,8 @@ VDI18N.add('es', 'demo/speed-of-light', {
   "Vista superior",
 "Δs′ = 4AD²ω / c(D + B)":
   "Δs′ = 4AD²ω / c(D + B)",
+"MR, turn drawn slowed":
+  "MR, giro dibujado más lento",
 "MOTOR SPEED":
   "VELOCIDAD DEL MOTOR",
 "rev/s":
@@ -212,18 +214,14 @@ VDI18N.add('es', 'demo/speed-of-light', {
   "Una tabla ya llena por el procedimiento: reposo, y luego {#}, {#} y {#} rev/s en cada sentido, leídas como lo haría un estudiante cuidadoso. Son lecturas simuladas en el banco de esta semilla. La pendiente de la lectura en función de la velocidad con signo da c.",
 "D = {#} m, B = {#} m, A = {#} m, simulated reading":
   "D = {#} m, B = {#} m, A = {#} m, lectura simulada",
-"{#} sim *":
-  "{#} sim *",
+"{#} sim":
+  "{#} sim",
 "rest":
   "reposo",
 "Speed meter row {#}, rev/s":
   "Medidor de velocidad fila {#}, rev/s",
 "Micrometer row {#}, mm":
   "Micrómetro fila {#}, mm",
-"Rows marked sim are simulated readings made by the procedure on this seed's bench, not yours. Rows marked * were taken at another D, B or A and are left out of the fit.":
-  "Las filas marcadas sim son lecturas simuladas hechas por el procedimiento en el banco de esta semilla, no las tuyas. Las filas marcadas * se tomaron con otros D, B o A y quedan fuera del ajuste.",
-"{#} sim":
-  "{#} sim",
 "Rows marked sim are simulated readings made by the procedure on this seed's bench, not yours.":
   "Las filas marcadas sim son lecturas simuladas hechas por el procedimiento en el banco de esta semilla, no las tuyas.",
 "Slope k ({#} readings)":
@@ -240,6 +238,18 @@ VDI18N.add('es', 'demo/speed-of-light', {
   "c aceptada = {#} {#} {#} m/s (exacta)",
 "yours −{#} %, {#} σ":
   "el tuyo −{#} %, {#} σ",
+"Close":
+  "Cerrar",
+"Speed the mirror up or down by {#} revolutions per second (Shift: ten times as much)":
+  "Sube o baja la velocidad del espejo en {#} revoluciones por segundo (Shift: diez veces más)",
+"Move the crosshair by {#} mm (Shift: {#} mm)":
+  "Mueve la retícula {#} mm (Shift: {#} mm)",
+"Move the crosshair by {#} mm":
+  "Mueve la retícula {#} mm",
 "yours +{#} %, {#} σ":
-  "la tuya +{#} %, {#} σ"
+  "la tuya +{#} %, {#} σ",
+"{#} sim *":
+  "{#} sim *",
+"Rows marked sim are simulated readings made by the procedure on this seed's bench, not yours. Rows marked * were taken at another D, B or A and are left out of the fit.":
+  "Las filas marcadas sim son lecturas simuladas hechas por el procedimiento en el banco de esta semilla, no las tuyas. Las filas marcadas * se tomaron con otros D, B o A y quedan fuera del ajuste."
 });

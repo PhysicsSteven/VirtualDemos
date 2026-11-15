@@ -1069,7 +1069,8 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     if (r < 1) return `slow motion ×${+(1 / r).toFixed(1)}`;
     return `fast forward ×${r}`;
   }
-  function fmtE(v) { if (!isFinite(v)) return '—'; const a = Math.abs(v); return a >= 1 || a === 0 ? `${sig(v, 3)} J` : a >= 1e-3 ? `${sig(v * 1e3, 3)} mJ` : `${sig(v * 1e6, 3)} µJ`; }
+  /* rounding noise (1e-20 J in an exact mode) printed as 0.000000000 µJ: below a nanojoule show 0 J (student view, 2026-11-15) */
+  function fmtE(v) { if (!isFinite(v)) return '—'; if (Math.abs(v) < 1e-9) v = 0; const a = Math.abs(v); return a >= 1 || a === 0 ? `${sig(v, 3)} J` : a >= 1e-3 ? `${sig(v * 1e3, 3)} mJ` : `${sig(v * 1e6, 3)} µJ`; }
   const deg = (r) => `${(r * 180 / Math.PI).toFixed(1).replace('-', '−')}°`;
   function nice(raw) { const p = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p; return (m < 1.5 ? 1 : m < 3 ? 2 : m < 7 ? 5 : 10) * p; }
 
@@ -2058,7 +2059,8 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     sg = { kind: '3d', s: Math.sqrt(dd2) / 0.1, toM: (p, id) => { const o = id === 'm2' ? Pc2 : P0; return ((p[0] - o[0]) * ddx + (p[1] - o[1]) * ddy) / dd2 * 0.1; } };
     /* the chart */
     if (!narrow) {
-      const far = vert ? Q(Pmap(aLo - 0.03, LP3 - 0.004)) : Q(Pmap(pw1, LP3 + 0.01)), al = vert ? 'left' : 'right', fx0 = vert ? Math.max(8, far[0]) : Math.min(W - 8, far[0]);
+      /* hanging: the title ran left to right into the k label and its grip; end it at the chart's left edge instead, over the open space beside the stand (student view, 2026-11-15) */
+      const far = vert ? Q(Pmap(aLo - 0.03, LP3 - 0.004)) : Q(Pmap(pw1, LP3 + 0.01)), al = 'right', fx0 = vert ? Math.max(8 + richWidth(ctx, 'Chart, x against time', fs * 0.8, 600), far[0] - 4 * ps) : Math.min(W - 8, far[0]);
       ctx.textBaseline = 'alphabetic';
       labelBox(ctx, vert ? 'Chart, x against time' : 'Chart: x against time', fx0, ylim(far[1] - 6 * ps - fs * 1.1), al, T.muted, fs * 0.8, 600);
       labelBox(ctx, vert ? `paper at ${sig(vp * 100, 2)} cm/s` : `x to scale, paper at ${sig(vp * 100, 2)} cm/s`, fx0, ylim(far[1] - 6 * ps), al, T.muted, fs * 0.8, 400);
@@ -2129,7 +2131,10 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     if (circInfo) {
       const lab = g.beta > 0 ? 'angle ω_d t + φ, radius shrinks as e^(−bt/2m)' : 'angle ω_0 t + φ, radius A', wl = richWidth(ctx, lab, fs * 0.85, 400);
       const q = vert ? Lp(xeq - ph.R, 0, circInfo.cz) : circInfo.top;
-      ctx.textBaseline = 'alphabetic'; labelBox(ctx, lab, clamp(q[0], wl / 2 + 6, W - wl / 2 - 6), ylim(q[1] - 8 * ps), 'center', T.muted, fs * 0.85, 400);
+      /* hanging: centered on the circle the words spread left over the jar and the moving cylinder; start them at the circle's left edge (student view, 2026-11-15) */
+      const qL = vert ? Lp(xeq, 0, circInfo.cz - ph.R) : null;
+      ctx.textBaseline = 'alphabetic'; if (vert) labelBox(ctx, lab, clamp(Math.min(qL[0], q[0]), 6, W - wl - 6), ylim(q[1] - 8 * ps), 'left', T.muted, fs * 0.85, 400);
+      else labelBox(ctx, lab, clamp(q[0], wl / 2 + 6, W - wl / 2 - 6), ylim(q[1] - 8 * ps), 'center', T.muted, fs * 0.85, 400);
     }
     if (!narrow && !cp) { ctx.fillStyle = T.muted; ctx.font = `${fs * 0.78}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText(`${vert ? 'Steel cylinder' : 'Steel block'} to scale for ${fx(m, 2)} kg${cut ? `; the ${cm(dTrue)} stretch is drawn as ${cm(d)}` : ''}. Drag it to pull it; drag elsewhere to turn the view.`, 10 * ps, ctlH + 4 * ps); }
   }
@@ -2959,7 +2964,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     $('live').textContent = $('capStatus').textContent;
   }
   $('labUnknown').addEventListener('change', (e) => setUnknown(e.target.checked));
-  $('newUnknown').addEventListener('click', () => { const old = S.unk.k; do setUnknown(true); while (S.unk.k === old); capStatus('A new unknown spring. Earlier rows used a different k.'); });
+  $('newUnknown').addEventListener('click', () => { if (!S.unk) return; /* hidden then, but a scripted click (the harvest) threw (student view, 2026-11-15) */ const old = S.unk.k; do setUnknown(true); while (S.unk.k === old); capStatus('A new unknown spring. Earlier rows used a different k.'); });
   // Reduce motion: pauses the run and stops the plots gliding; Play still runs it
   $('tMotion').checked = reduce;
   $('tMotion').addEventListener('change', (e) => {
@@ -4428,7 +4433,11 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
 })();
 </script>
 <script>/* dividers between the panes (VD.splitPanes in demos/lib/vd.js); a browser with an older cached vd.js keeps the panes as they are */
-(function () { if (!window.VD || !VD.splitPanes) return; var q = function (s) { return document.querySelector(s); }; VD.splitPanes(q("#cPane"), q("#ePane"), { key: 'energy', label: 'Divider between the springs and the energy bars' }); VD.splitPanes(q("#cPane"), q("#pPane"), { key: 'plot', label: 'Divider between the springs and the graph' }); })();</script>
+(function () { if (!window.VD || !VD.splitPanes) return; var q = function (s) { return document.querySelector(s); }; VD.splitPanes(q("#cPane"), q("#ePane"), { key: 'energy', label: 'Divider between the springs and the energy bars' }); VD.splitPanes(q("#cPane"), q("#pPane"), { key: 'plot', label: 'Divider between the springs and the graph' });
+  /* the panes settle after this script runs, which left the divider grips inside the 3D view (one sat on the x label) until the first click: place them again once the page has loaded (student view, 2026-11-15) */
+  var again = function () { window.dispatchEvent(new Event('resize')); };
+  if (document.readyState === 'complete') setTimeout(again, 0); else window.addEventListener('load', function () { setTimeout(again, 0); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(again); })();</script>
 <script>/* the shared control panel (demos/lib/vdpanel.js): the time controls in one group at the left of the strip */
 if (window.VD && VD.panel) VD.panel({ speed: '#sRate', clock: '#tclock', step: true });</script>
 </body>

@@ -1119,7 +1119,8 @@ table.rows tr.sim td { background: color-mix(in srgb, var(--equi) 9%, transparen
     const ls = (projOn() ? 0.062 : 0.05), on = S.labels;
     const L = G.labels, put = (o, p, txt) => { o.sp.visible = on; if (!on) return; if (txt) G.setLabel(o, txt); o.sp.position.copy(p); const asp = 768 / 96; o.sp.scale.set(ls * asp, ls, 1); };
     put(L.laser, V(b.xLas - 0.15, 0, H0 + 0.06)); put(L.L1, V(b.xL1, 0, H0 + 0.05)); put(L.BS, V(b.xBS, -0.29, H0 + 0.045));
-    put(L.L2, V(b.xL2, 0, H0 + 0.065)); put(L.MR, V(0, 0, H0 + 0.055)); put(L.MF, V(b.pMF.x, b.pMF.y, H0 + 0.085));
+    put(L.L2, V(b.xL2, 0, H0 + 0.065)); /* the 3D mirror turns about 1 rev/s on screen while the readout says up to 1000 rev/s: say so on the mirror itself (student view, 2026-11-15) */
+    put(L.MR, V(0, 0, H0 + 0.055), (S.view !== 'slow' && S.revs) ? 'MR, turn drawn slowed' : 'MR'); put(L.MF, V(b.pMF.x, b.pMF.y, H0 + 0.085));
     put(L.ctl, V(CBX(), -0.2, 0.135)); put(L.D, V(brkAt.x, brkAt.y, H0 + 0.05), `D = ${S.D.toFixed(2)} m, not to scale`);
     // grips
     G.l2Grip.position.set(b.xL2, 0, 0.052); G.l1Grip.position.set(b.xL1, 0, 0.052); G.mfGrip.position.set(b.pMF.x, b.pMF.y, 0.03);

@@ -294,6 +294,12 @@ VDI18N.add('es', 'demo/spin-resonance', {
   "Tapa azul: una varilla de PTFE. Flúor, sin hidrógeno: la línea queda a una frecuencia más baja.",
 "No peak: the resonance is outside the {#}% sweep. Turn FREQ slowly while you watch CH2 until the peak moves onto the ramp. Then check SENS.":
   "Sin pico: la resonancia está fuera del barrido del {#}%. Gira FREQ lentamente mientras observas CH2 hasta que el pico entre en la rampa. Luego revisa SENS.",
+"Close":
+  "Cerrar",
+"Pick channel marker {#} or {#}":
+  "Elige el marcador del canal {#} o {#}",
+"Pick ruler line {#} or {#}":
+  "Elige la línea de la regla {#} o {#}",
 "CH1 {#} V/div DC":
   "CH1 {#} V/div DC",
 "CH2 {#} V/div DC":
