@@ -854,7 +854,10 @@ table.rows button { font: inherit; font-size: 0.8rem; background: none; border: 
     // dimension line
     ctx.strokeStyle = T.muted; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(x0, yT - 14 * ls); ctx.lineTo(x1, yT - 14 * ls); ctx.moveTo(x0, yT - 18 * ls); ctx.lineTo(x0, yT - 10 * ls); ctx.moveTo(x1, yT - 18 * ls); ctx.lineTo(x1, yT - 10 * ls); ctx.stroke();
     tag(`L = ${cm(L)}`, (x0 + x1) / 2, yT - 14 * ls, T.ink, 'center', 'middle', true, 10.5);
-    title([`${kind === 'open' ? 'Pipe open at both ends' : 'Pipe closed at the right end'}: mode n = ${n}, ${fmtHz(D.pf)}`, `${kind === 'open' ? 'Open pipe' : 'Closed pipe'}: n = ${n}, ${fmtHz(D.pf)}`], 14 * ls, 8 * ls, W - 28 * ls);
+    /* the air moves at F_VIS on screen whatever the note: say so, as the string view does (student view, 2026-11-15) */
+    const slow = pick([`slow motion: 1 s on screen = ${(F_VIS / D.pf * 1000).toFixed(2)} ms of real time`, `1 s here = ${(F_VIS / D.pf * 1000).toFixed(2)} ms`], W * 0.4, 10, false), slowW = ctx.measureText(slow).width;
+    tag(slow, W - 14 * ls, 8 * ls, T.muted, 'right', 'top', false, 10);
+    title([`${kind === 'open' ? 'Pipe open at both ends' : 'Pipe closed at the right end'}: mode n = ${n}, ${fmtHz(D.pf)}`, `${kind === 'open' ? 'Open pipe' : 'Closed pipe'}: n = ${n}, ${fmtHz(D.pf)}`], 14 * ls, 8 * ls, W - 28 * ls - slowW - 12 * ls);
     if (x1 + 40 * ls < W) tag(kind === 'open' ? 'open' : 'closed', x1 + 8 * ls, g.pc, T.muted, 'left', 'middle', false, 10);
     tag('open', x0 - 6 * ls, g.pc, T.muted, 'right', 'middle', false, 10);
     tag(pick(['air parcels, shaded red where compressed, blue where rarefied (diameter not to scale)', (window.VDI18N ? VDI18N.t('air parcels (diameter not to scale)') : 'air parcels (diameter not to scale)'), (window.VDI18N ? VDI18N.t('air parcels') : 'air parcels')], W - 28 * ls, 9.5, false), 14 * ls, yB + 26 * ls, T.muted, 'left', 'top', false, 9.5);
@@ -1041,8 +1044,11 @@ table.rows button { font: inherit; font-size: 0.8rem; background: none; border: 
     ctx.stroke(); ctx.setLineDash([]); ctx.restore();
     ctx.font = font(10); ctx.fillStyle = T.muted; ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.fillText(`harmonic n (fₙ = n × ${fmtHz(D.f1)})`, R, bot + 17 * ls);
     const when = live ? `, ${ST.tr.toFixed(1)} s after the pluck` : '';
-    title([S.spec === 'force' ? `Spectrum of the force on the bridge, n·bₙ (what you hear)${when}` : `Spectrum of the string shape, bₙ${when}`, S.spec === 'force' ? `Bridge force spectrum${when}` : `Shape spectrum${when}`, S.spec === 'force' ? 'Bridge force' : 'Shape'], 14 * ls, g.hS + 8 * ls, W - 28 * ls);
-    tag(pick([`${live ? 'outline: at the pluck · ' : ''}dashed: ${S.spec === 'force' ? '1/n' : '1/n²'} envelope · × = exactly zero`, `dashed ${S.spec === 'force' ? '1/n' : '1/n²'} · × = 0`, '× = 0'], (R - L) * 0.62, 9.5, false), R, top - 6 * ls, T.equi, 'right', 'bottom', false, 9.5);
+    /* the title and the legend share a row: the title gets only the room the legend leaves, so the long bridge force title no longer
+       runs into the legend (student view, 2026-11-15) */
+    const legend = pick([`${live ? 'outline: at the pluck · ' : ''}dashed: ${S.spec === 'force' ? '1/n' : '1/n²'} envelope · × = exactly zero`, `dashed ${S.spec === 'force' ? '1/n' : '1/n²'} · × = 0`, '× = 0'], (R - L) * 0.62, 9.5, false), legendW = ctx.measureText(legend).width;
+    title([S.spec === 'force' ? `Spectrum of the force on the bridge, n·bₙ (what you hear)${when}` : `Spectrum of the string shape, bₙ${when}`, S.spec === 'force' ? `Bridge force spectrum${when}` : `Shape spectrum${when}`, S.spec === 'force' ? 'Bridge force' : 'Shape'], 14 * ls, g.hS + 8 * ls, R - legendW - 16 * ls - 14 * ls);
+    tag(legend, R, top - 6 * ls, T.equi, 'right', 'bottom', false, 9.5);
   }
 
   // =====================================================================
@@ -1119,6 +1125,7 @@ table.rows button { font: inherit; font-size: 0.8rem; background: none; border: 
     if (base - yW > 34 * ls) tag(`water ${S.fill}%`, cx, (yW + base) / 2 + 6 * ls, T.ink, 'center', 'middle', false, 10);
     title(['Helmholtz resonator: the neck air bounces on the body air', 'Helmholtz resonator'], 14 * ls, 8 * ls, g.bw - 28 * ls);
     tag(blow ? `blowing: ${fmtHz(D.fH)}, ${noteTxt(D.fH)}` : 'click the grip at the mouth, or Blow across the top', 14 * ls, 28 * ls, blow ? T.accent : T.muted, 'left', 'top', true, 10.5);
+    if (blow) tag(pick([`slow motion: 1 s on screen = ${(F_VIS / D.fH * 1000).toFixed(2)} ms of real time`, `1 s here = ${(F_VIS / D.fH * 1000).toFixed(2)} ms`], g.bw - 28 * ls, 10, false), 14 * ls, 44 * ls, T.muted, 'left', 'top', false, 10);   /* the neck air bounces at F_VIS on screen (student view, 2026-11-15) */
     void xd;
     drawBottlePlot(g);
   }

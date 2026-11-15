@@ -5,7 +5,7 @@ VDI18N.add('en', 'demo/resistivity', [
 "each dot is {#}¹⁷ electrons; I/(e × {#}¹⁷) = {#} per s",
 "drift v_d = {#} mm/s",
 "electrons drift ←, current I →",
-"Potential along the wire",
+"Potential along the wire, {#} to {#} V",
 "slope E = ρI/A = {#} V/m",
 "ΔV = {#} V",
 "the voltmeter",
@@ -119,6 +119,7 @@ VDI18N.add('en', 'demo/resistivity', [
 "Blind hides ρ, α, the wire's resistance per meter, and ρ and α from the fits, leaving the meters, the rule and the settings. The Mystery wire always hides its own values. Inside the wire, Blind also hides J, v_d, the transit time, I/e, the expected count and the collision time; the count, the drift so far and the real time stay, so v_d can be measured. In the Wire view, Blind hides the drift speed, the expected dot rate and the slope E of the potential (the Mystery wire hides E too).",
 "Model: R = ρL/A with ρ linear in temperature; the voltmeter is ideal (four wire, so the clips and leads add nothing) and the current is set by a constant current supply. Resistivities are handbook values at {#} °C; real alloys vary by a few percent.",
 "across the clips",
+"Potential along the wire",
 "The wire on the rule is drawn {#} times thicker than it is; the magnified piece is to scale. Drag a clip to set L, drag elsewhere to turn.",
 "Inside the nichrome wire ({#} mm across)",
 "A region {#} nm long, {#} nm high and {#} nm deep (its height is {#}/{#} of the wire's diameter): all {#} free electrons in it (blue) and the ions (gray).",
@@ -168,6 +169,10 @@ VDI18N.add('en', 'demo/resistivity', [
 "YBCO (yttrium barium copper oxide), the {#} ceramic: superconducting below {#} K, above the {#} K of liquid nitrogen.",
 "Record at least two temperatures of this wire at L = {#} m.",
 "YBCO ceramic, cooling",
+"simulated readings, sped up: {#} K per second",
 "Stop cooling",
+"Close",
+"Slide the movable clip along the wire by half a centimeter (Shift: {#} cm)",
+"Move the probe over the sheet by {#} cm (Shift: {#} cm)",
 "Inside the mystery wire wire ({#} mm across)"
 ]);

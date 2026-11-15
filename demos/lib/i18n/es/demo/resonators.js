@@ -8,8 +8,6 @@ VDI18N.add('es', 'demo/resonators', {
   "ΔL = {#} cm",
 "Resonators":
   "Resonadores",
-"<a><span>←</span> <span>Sound Waves and the Speed of Sound</span></a><a><span>Kundt's Tube</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Ondas sonoras y la rapidez del sonido</span></a><a><span>Tubo de Kundt</span> <span>→</span></a>",
 "What sets the pitch of an instrument? The size of its resonator and the speed of the wave inside it. Find the speed of sound with a resonance tube, pluck a string to see which harmonics it gets, and blow across a bottle whose note follows its volume, not its height.":
   "¿Qué fija el tono de un instrumento? El tamaño de su resonador y la rapidez de la onda dentro de él. Encuentra la rapidez del sonido con un tubo de resonancia, pulsa una cuerda para ver qué armónicos recibe y sopla sobre una botella cuya nota sigue a su volumen, no a su altura.",
 "f in Hz · c in m/s · lengths in cm or m · tension in N · μ in g/m":
@@ -228,6 +226,8 @@ VDI18N.add('es', 'demo/resonators', {
   "Tubos: ondas planas unidimensionales en un tubo rígido; un extremo abierto refleja como si el tubo fuera ΔL = {#}a más largo (extremo sin brida, Levine y Schwinger {#}, válido para ka ≪ {#}); un extremo cerrado o la superficie del agua es rígido. Tubo de resonancia: la fuente fija la presión en el extremo abierto efectivo; el nivel es la amplitud de presión en el agua, {#}/|cos(k̃(L + ΔL))| con número de onda complejo k̃ = ({#}πf/c)({#} − i/2Q) y un solo factor de calidad Q para todas las resonancias, que representa las pérdidas en las paredes y por radiación (los tubos reales tienen Q de decenas); sus picos quedan unos (L + ΔL)/4Q² por encima de las posiciones de resonancia, a lo más {#} mm con Q = {#} en un tubo de {#} m. Cuerdas: cuerda ideal flexible con extremos fijos y sin rigidez; pulsación triangular, coeficientes de Fourier exactos, {#} modos dibujados; cada modo decae como e^(−t/τₙ) con τₙ = τ₁/n, un modelo ilustrativo en el que las pérdidas crecen con la frecuencia. La cuerda frotada con arco es el movimiento ideal de Helmholtz, bₙ ∝ {#}/n². Botella: resonador de Helmholtz concentrado, válido mientras la botella sea mucho más pequeña que la longitud de onda; correcciones de extremo del cuello {#}a por fuera (sin brida) y {#}a por dentro (con brida), L_eff = L + {#}a; el cuerpo se dibuja como un cilindro y se ignora el volumen del hombro; la comparación con el tubo cerrado usa c/{#}(H + {#}a) con H la altura del espacio de aire incluido el cuello.",
 "Animations are slowed so the lowest mode is drawn at {#} Hz; the sound plays at the true frequencies.":
   "Las animaciones van más lentas para que el modo más bajo se dibuje a {#} Hz; el sonido se reproduce a las frecuencias verdaderas.",
+"<a><span>←</span> <span>Sound Waves and the Speed of Sound</span></a><a><span>Kundt's Tube</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Ondas sonoras y la rapidez del sonido</span></a><a><span>Tubo de Kundt</span> <span>→</span></a>",
 "Your own setup. Pick a preset to start again from one of the teaching cases.":
   "Tu propia configuración. Elige una predefinida para empezar de nuevo desde uno de los casos de enseñanza.",
 "<span><i></i>String, the sum of {#} modes</span><span><i></i>Single modes; bridge force spectrum</span><span><i></i>String shape spectrum bₙ</span><span><i></i>Envelope {#}/n² (shape) or {#}/n (force)</span>":
@@ -276,6 +276,8 @@ VDI18N.add('es', 'demo/resonators', {
   "El mismo tubo de {#} cm con un extremo cerrado: solo caben los armónicos impares, y la nota más grave queda más o menos una octava debajo de la del tubo abierto (no exactamente, porque las correcciones de extremo difieren). Cambia a Tubo abierto y compara las dos filas de la escalera; prueba Todos los modos para oír el sonido hueco del tubo cerrado.",
 "Modes {#} to {#} of this pipe together with amplitude {#}/n, at their exact frequencies: all harmonics for the open pipe, odd ones only for the closed pipe. The level is capped well below full scale. Small speakers cannot play the lowest notes; headphones work best. Sound stops when you leave the page.":
   "Los modos {#} a {#} de este tubo juntos con amplitud {#}/n, a sus frecuencias exactas: todos los armónicos para el tubo abierto, solo los impares para el tubo cerrado. El nivel está limitado muy por debajo del máximo. Las bocinas pequeñas no pueden reproducir las notas más graves; los audífonos funcionan mejor. El sonido se detiene cuando sales de la página.",
+"slow motion: {#} s on screen = {#} ms of real time":
+  "cámara lenta: {#} s en pantalla = {#} ms de tiempo real",
 "Pipe closed at the right end: mode n = {#}, {#} Hz":
   "Tubo cerrado en el extremo derecho: modo n = {#}, {#} Hz",
 "closed":
@@ -300,16 +302,14 @@ VDI18N.add('es', 'demo/resonators', {
   "Pulsada a la mitad, la forma de la cuerda es simétrica respecto al centro, y cada modo par tiene ahí un nodo: b₂, b₄, b₆ son exactamente cero. Mueve el punto de pulsación a L/{#} y en cambio desaparece cada tercer armónico.",
 "Plucked string, sum of {#} modes: f₁ = {#} Hz, E4":
   "Cuerda pulsada, suma de {#} modos: f₁ = {#} Hz, E4",
-"slow motion: {#} s on screen = {#} ms of real time":
-  "cámara lenta: {#} s en pantalla = {#} ms de tiempo real",
 "Spectrum of the string shape, bₙ, {#} s after the pluck":
   "Espectro de la forma de la cuerda, bₙ, {#} s después de la pulsación",
 "outline: at the pluck · dashed: {#}/n² envelope · × = exactly zero":
   "contorno: al pulsar · punteada: envolvente {#}/n² · × = exactamente cero",
 "Typical high E string: {#} mm steel at {#} N on a {#} mm scale gives E4, {#} Hz. Plucked about a fifth of the way from the bridge, as a guitarist often does; a pluck close to the bridge is brighter. Try the low E string too.":
   "Cuerda típica de Mi agudo: acero de {#} mm a {#} N en una escala de {#} mm da E4, {#} Hz. Pulsada a más o menos un quinto del camino desde el puente, como suele hacer un guitarrista; una pulsación cerca del puente suena más brillante. Prueba también la cuerda de Mi grave.",
-"Spectrum of the force on the bridge, n·bₙ (what you hear), {#} s after the pluck":
-  "Espectro de la fuerza sobre el puente, n·bₙ (lo que oyes), {#} s después de la pulsación",
+"Bridge force spectrum, {#} s after the pluck":
+  "Espectro de la fuerza en el puente, {#} s después de la pulsación",
 "outline: at the pluck · dashed: {#}/n envelope · × = exactly zero":
   "contorno: al pulsar · punteada: envolvente {#}/n · × = exactamente cero",
 "A {#} mL bottle with an {#} cm neck: the Helmholtz formula gives about {#} Hz. A closed pipe as tall as the air space would sound about three times higher. Turn on the sound and blow.":
@@ -322,6 +322,8 @@ VDI18N.add('es', 'demo/resonators', {
   "Se vierte agua mientras soplas. La nota sube como {#}/√V y asciende abruptamente cerca del borde; la estimación del tubo sigue una curva distinta. Arrastra el nivel del agua o el marcador de la gráfica para detenerte en cualquier punto.",
 "blowing: {#} Hz, A2 +{#}¢":
   "soplando: {#} Hz, A2 +{#}¢",
+"Close":
+  "Cerrar",
 "blowing: {#} Hz, A♯{#} −{#}¢":
   "soplando: {#} Hz, A♯{#} −{#}¢",
 "blowing: {#} Hz, A♯{#} +{#}¢":
@@ -382,12 +384,16 @@ VDI18N.add('es', 'demo/resonators', {
   "soplando: {#} Hz, C4 −{#}¢",
 "blowing: {#} Hz, C4 +{#}¢":
   "soplando: {#} Hz, C4 +{#}¢",
-"Note against water level":
-  "Nota en función del nivel del agua",
 "blowing: {#} Hz, D4 −{#}¢":
   "soplando: {#} Hz, D4 −{#}¢",
 "blowing: {#} Hz, E4 +{#}¢":
   "soplando: {#} Hz, E4 +{#}¢",
+"blowing: {#} Hz, F4 −{#}¢":
+  "soplando: {#} Hz, F4 −{#}¢",
+"Note against water level":
+  "Nota en función del nivel del agua",
+"{#} s here = {#} ms":
+  "{#} s aquí = {#} ms",
 "Closed pipe: n = {#}, {#} Hz":
   "Tubo cerrado: n = {#}, {#} Hz",
 "dots: nodes":
@@ -396,24 +402,22 @@ VDI18N.add('es', 'demo/resonators', {
   "Frecuencias permitidas",
 "Plucked string":
   "Cuerda pulsada",
-"{#} s here = {#} ms":
-  "{#} s aquí = {#} ms",
-"Bridge force spectrum, {#} s after the pluck":
-  "Espectro de la fuerza en el puente, {#} s después de la pulsación",
+"Bridge force":
+  "Fuerza en el puente",
 "dashed {#}/n · × = {#}":
   "punteada {#}/n · × = {#}",
 "Level against water position":
   "Nivel en función de la posición del agua",
 "ΔL":
   "ΔL",
-"Shape spectrum, {#} s after the pluck":
-  "Espectro de la forma, {#} s después de la pulsación",
 "dashed {#}/n² · × = {#}":
   "punteada {#}/n² · × = {#}",
-"Bridge force spectrum":
-  "Espectro de la fuerza en el puente",
 "Level":
   "Nivel",
-"Bridge force":
-  "Fuerza en el puente"
+"Spectrum of the force on the bridge, n·bₙ (what you hear), {#} s after the pluck":
+  "Espectro de la fuerza sobre el puente, n·bₙ (lo que oyes), {#} s después de la pulsación",
+"Shape spectrum, {#} s after the pluck":
+  "Espectro de la forma, {#} s después de la pulsación",
+"Bridge force spectrum":
+  "Espectro de la fuerza en el puente"
 });

@@ -514,10 +514,13 @@ table.rows input:focus { border-color: var(--accent); }
     if (pBot - pTop > 64 * p) {
       VG.panel(ctx, 8 * p, pTop, W - 16 * p, pBot - pTop);
       const vs = potScale(), yA = pTop + 28 * p, yB = pBot - 12 * p, Y = (v) => yB - (yB - yA) * v / vs, xa = X(WIRE_A), xb = X(WIRE_B), V0 = potAt(0), VL = potAt(S.L);
-      txt('Potential along the wire', 16 * p, pTop + 13 * p, { w: 700, s: 12 });
+      /* the scale's top value sits left of the axis; where it is too wide for the margin (0.05 V was cut off at the stage edge),
+         it joins the title instead (student view, 2026-11-15) */
+      const vsLab = `${sci(potScale(), 2)} V`, vsFits = (() => { ctx.save(); ctx.font = `400 ${9.5 * p}px ${T.mono}`; const w = ctx.measureText(vsLab).width; ctx.restore(); return X(WIRE_A) - 4 * p - w >= 10 * p; })();
+      txt(vsFits ? 'Potential along the wire' : `Potential along the wire, 0 to ${vsLab}`, 16 * p, pTop + 13 * p, { w: 700, s: 12 });
       if (!hidden() && !narrow) txt(`slope E = ρI/A = ${sci(S.I * resistance(M(), 1, d(), S.T), 3)} V/m`, W - 16 * p, pTop + 13 * p, { a: 'right', s: 10.5, c: T.muted, m: true });
       ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(xa, yB); ctx.lineTo(xb, yB); ctx.moveTo(xa, yA); ctx.lineTo(xa, yB); ctx.stroke();
-      txt(`${sci(vs, 2)} V`, xa - 4 * p, yA, { a: 'right', s: 9.5, c: T.muted, m: true }); txt('0', xa - 4 * p, yB, { a: 'right', s: 9.5, c: T.muted, m: true });
+      if (vsFits) txt(vsLab, xa - 4 * p, yA, { a: 'right', s: 9.5, c: T.muted, m: true }); txt('0', xa - 4 * p, yB, { a: 'right', s: 9.5, c: T.muted, m: true });
       ctx.save(); ctx.strokeStyle = T.grid; ctx.setLineDash([2 * p, 3 * p]); ctx.beginPath(); ctx.moveTo(xa, yA); ctx.lineTo(xb, yA); ctx.stroke(); ctx.restore();
       const g = ctx.createLinearGradient(0, Y(potAt(WIRE_A)), 0, yB); g.addColorStop(0, VG.mix(T.accent, T.canvas, 0.55)); g.addColorStop(1, VG.mix(T.accent, T.canvas, 0.92));
       ctx.fillStyle = g; ctx.beginPath(); ctx.moveTo(xa, yB); ctx.lineTo(xa, Y(potAt(WIRE_A))); ctx.lineTo(xb, yB); ctx.closePath(); ctx.fill();
@@ -744,7 +747,17 @@ table.rows input:focus { border-color: var(--accent); }
     /* the potential wall */
     const vs = potScale(), Z = (v) => ZW + HWALL * v / vs, wa = Q([WIRE_A, YWALL, Z(potAt(WIRE_A))]), ws = Q([WIRE_B, YWALL, Z(vs)]);
     halo('Potential along the wire', [wa[0], wa[1] - 12 * p], { w: 700, s: 11.5, c: T.accent });
-    if (!narrow) for (const q of ghostLines(vs)) { const gq = Q([q.x, YWALL, Z(q.v)]); halo(`${q.dm.toFixed(3)} mm`, [gq[0] + 4 * p, gq[1] + (q.cut ? 8 : -6) * p], { s: 9, c: T.muted }); } halo(`${sci(vs, 2)} V`, [ws[0] + 4 * p, ws[1]], { s: 9.5, c: T.muted, m: true });
+    /* a gauge label where its line leaves the scale can land on the words under the magnified piece: then it slides down its own
+       line until it is clear of them (student view, 2026-11-15) */
+    const wordsBox = (() => { ctx.save(); ctx.font = `400 ${11 * p}px ${T.ui}`; const w0 = ctx.measureText(ml[0]).width; ctx.font = `400 ${10.5 * p}px ${T.ui}`; const w1 = ctx.measureText(ml[1]).width; ctx.restore();
+      const w = Math.max(w0, w1) / 2 + 4 * p; return narrow ? null : [mb[0] - w, mb[1], mb[0] + w, mb[1] + 30 * p]; })();
+    const clearOf = (x, y, s) => { if (!wordsBox) return true; ctx.save(); ctx.font = `400 ${9 * p}px ${T.ui}`; const w = ctx.measureText(s).width; ctx.restore();
+      return x + w < wordsBox[0] || x > wordsBox[2] || y + 6 * p < wordsBox[1] || y - 6 * p > wordsBox[3]; };
+    if (!narrow) for (const q of ghostLines(vs)) {
+      const gq = Q([q.x, YWALL, Z(q.v)]), ge = Q([WIRE_B, YWALL, ZW]), s = `${q.dm.toFixed(3)} mm`; let at = [gq[0] + 4 * p, gq[1] + (q.cut ? 8 : -6) * p];
+      for (let f = 0.05; f < 0.8 && !clearOf(at[0], at[1], s); f += 0.05) at = [gq[0] + (ge[0] - gq[0]) * f + 4 * p, gq[1] + (ge[1] - gq[1]) * f + 8 * p];
+      halo(s, at, { s: 9, c: T.muted });
+    } halo(`${sci(vs, 2)} V`, [ws[0] + 4 * p, ws[1]], { s: 9.5, c: T.muted, m: true });
     const ta = Q([S.L + 0.03, YWALL, Z(potAt(0))]), tb = Q([S.L + 0.03, YWALL, Z(potAt(S.L))]), right = ta[0] < W - 140 * p;
     ctx.strokeStyle = T.ink; ctx.lineWidth = 1.4 * p; ctx.beginPath(); ctx.moveTo(ta[0], ta[1]); ctx.lineTo(tb[0], tb[1]); ctx.stroke();
     halo(`ΔV = ${vShown()} V`, [ta[0] + (right ? 6 : -6) * p, (ta[1] + tb[1]) / 2], { w: 700, a: right ? 'left' : 'right', m: true });
@@ -1159,9 +1172,10 @@ table.rows input:focus { border-color: var(--accent); }
     h += dd('State', R === 0 ? 'superconducting: R = 0' : 'normal', true);
     $('coldOut').innerHTML = h;
   }
+  const coldRate = () => Math.max(0.3, 0.22 * CS.Tk);   /* K per second of screen time: fast when warm, slow near the bottom */
   function coldStep(dt) {
     if (!CS.dir) return;
-    const rate = Math.max(0.3, 0.22 * CS.Tk);   /* K per second of screen time: fast when warm, slow near the bottom */
+    const rate = coldRate();
     CS.Tk = Math.min(T_ROOM, Math.max(T_MIN, CS.Tk + CS.dir * rate * dt));
     CS.acc += dt; if (CS.acc > 0.08) { CS.acc = 0; CS.pts.push([CS.Tk, coldR(CS.Tk)]); }
     if ((CS.dir < 0 && CS.Tk <= T_MIN) || (CS.dir > 0 && CS.Tk >= T_ROOM)) { CS.pts.push([CS.Tk, coldR(CS.Tk)]); CS.dir = 0; coldSync(); }
@@ -1195,7 +1209,7 @@ table.rows input:focus { border-color: var(--accent); }
     const tx = dx + dw + 16 * p; ctx.textAlign = 'left'; ctx.fillStyle = T.ink; ctx.font = `700 ${22 * p}px ${T.mono}`; ctx.fillText(`${CS.Tk >= 20 ? CS.Tk.toFixed(1) : CS.Tk.toFixed(2)} K`, tx, dy + 4 * p);
     ctx.font = `${12 * p}px ${T.ui}`; ctx.fillStyle = T.muted; ctx.fillText(`${m.name}${CS.dir < 0 ? ', cooling' : CS.dir > 0 ? ', warming' : ''}`, tx, dy + 34 * p);
     ctx.fillStyle = coldR(CS.Tk) === 0 ? T.accent : T.ink; ctx.font = `700 ${13 * p}px ${T.ui}`; ctx.fillText(coldR(CS.Tk) === 0 ? 'R = 0: superconducting' : `R = ${sci(coldR(CS.Tk), 3)} Ω`, tx, dy + 54 * p);
-    ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.fillText('simulated readings', tx, dy + 74 * p);
+    ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.fillText(CS.dir ? `simulated readings, sped up: ${sig(coldRate(), 2)} K per second` : 'simulated readings', tx, dy + 74 * p);   /* the time scale on screen (student view, 2026-11-15) */
     /* plots: full range and a close view of the low end */
     const top = dy + dh + 14 * p, ph = H - top - 12 * p, gw = narrow ? W - 32 * p : (W - 44 * p) / 2;
     const tz = m.tc ? Math.max(12, Math.ceil(m.tc * 1.6 / 2) * 2) : 30, zMax = Math.max(...[1, 2, 4, 6, 8, 10, 12, 15, 20, 30, 40].map((t) => coldR(t)).filter((_, i, a) => [1, 2, 4, 6, 8, 10, 12, 15, 20, 30, 40][i] <= tz)) || Rroom;

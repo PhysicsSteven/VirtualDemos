@@ -10,8 +10,8 @@ VDI18N.add('es', 'demo/resistivity', {
   "deriva v_d = {#} mm/s",
 "electrons drift ←, current I →":
   "los electrones derivan ←, la corriente I →",
-"Potential along the wire":
-  "Potencial a lo largo del alambre",
+"Potential along the wire, {#} to {#} V":
+  "Potencial a lo largo del alambre, de {#} a {#} V",
 "slope E = ρI/A = {#} V/m":
   "pendiente E = ρI/A = {#} V/m",
 "ΔV = {#} V":
@@ -238,6 +238,8 @@ VDI18N.add('es', 'demo/resistivity', {
   "Modelo: R = ρL/A con ρ lineal en la temperatura; el voltímetro es ideal (cuatro hilos, así que las pinzas y los cables no agregan nada) y la corriente la fija una fuente de corriente constante. Las resistividades son valores de manual a {#} °C; las aleaciones reales varían unos cuantos por ciento.",
 "across the clips":
   "entre las pinzas",
+"Potential along the wire":
+  "Potencial a lo largo del alambre",
 "The wire on the rule is drawn {#} times thicker than it is; the magnified piece is to scale. Drag a clip to set L, drag elsewhere to turn.":
   "El alambre sobre la regla se dibuja {#} veces más grueso de lo que es; el tramo ampliado está a escala. Arrastra una pinza para fijar L, arrastra en otro lugar para girar.",
 "Inside the nichrome wire ({#} mm across)":
@@ -336,8 +338,16 @@ VDI18N.add('es', 'demo/resistivity', {
   "Registra al menos dos temperaturas de este alambre con L = {#} m.",
 "YBCO ceramic, cooling":
   "Cerámica YBCO, enfriándose",
+"simulated readings, sped up: {#} K per second":
+  "lecturas simuladas, aceleradas: {#} K por segundo",
 "Stop cooling":
   "Detener el enfriamiento",
+"Close":
+  "Cerrar",
+"Slide the movable clip along the wire by half a centimeter (Shift: {#} cm)":
+  "Desliza la pinza móvil a lo largo del alambre medio centímetro (Shift: {#} cm)",
+"Move the probe over the sheet by {#} cm (Shift: {#} cm)":
+  "Mueve la punta sobre la lámina {#} cm (Shift: {#} cm)",
 "Inside the mystery wire wire ({#} mm across)":
   "Dentro del alambre misterioso ({#} mm de diámetro)"
 });
