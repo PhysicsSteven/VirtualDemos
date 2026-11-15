@@ -565,8 +565,15 @@ details.more[open] summary { margin-bottom: 6px; }
       ctx.save(); ctx.shadowColor = dk ? 'rgba(0,0,0,0.5)' : 'rgba(43,34,22,0.14)'; ctx.shadowBlur = 14 * p; ctx.shadowOffsetY = 4 * p;
       ctx.fillStyle = T.surface; ctx.beginPath(); ctx.roundRect(zL, zTop, zR - zL, zH, 8 * p); ctx.fill(); ctx.restore(); ctx.strokeStyle = T.line; ctx.beginPath(); ctx.roundRect(zL + 0.5, zTop + 0.5, zR - zL, zH, 8 * p); ctx.stroke();
       const zFloor = zTop + zH - 30 * p, zx = (m) => zL + (m - zx0) * zppm;
+      /* the caption wraps by pieces instead of running off the close up on a phone, and names the strobe's slow motion: the gas
+         really moves f times a second, the lines move 0.6 times a second (student view, 2026-11-15) */
+      const zPieces = [`close up: 16 cm of tube around the pointer, x = ${(S.x * 100).toFixed(1)} cm`];
+      if (ring) { zPieces.push('Blue band: how far the gas moves; lines: layers of gas'); if (!reduce) zPieces.push(`motion magnified and slowed as by a strobe: ${Math.round(f)} Hz shown at 0.6 Hz`); }
+      const zLines = []; let zHead = 20; { ctx.save(); ctx.font = `400 ${9 * p}px ${getComputedStyle(document.documentElement).getPropertyValue('--font-ui')}`;
+        let lx = zL + 8 * p, row = 0; for (const t of zPieces) { const w = ctx.measureText(t).width; if (lx > zL + 8 * p && lx + w > zR - 8 * p) { row++; lx = zL + 8 * p; } zLines.push([t, lx, zTop + (11 + 11 * row) * p]); lx += w + 12 * p; }
+        ctx.restore(); zHead = 20 + 11 * row; }
       ctx.save(); ctx.beginPath(); ctx.rect(zL, zTop, zR - zL, zH); ctx.clip();
-      if (ring) { const zc = (zTop + 20 * p + zFloor) / 2; drawAir(zx, Math.max(0, zx0), Math.min(S.l, S.x + half), zc, (zFloor - zTop - 20 * p) / 2, true, f, v); }
+      if (ring) { const zc = (zTop + zHead * p + zFloor) / 2; drawAir(zx, Math.max(0, zx0), Math.min(S.l, S.x + half), zc, (zFloor - zTop - zHead * p) / 2, true, f, v); }
       drawDust(zx(0), zppm, zFloor, Math.max(0, zx0), Math.min(S.l, S.x + half), 0.0005, 3.2 * p, zL, Math.min(zR, zx(S.l)));
       if (S.l < S.x + half) { ctx.fillStyle = T.metal; ctx.fillRect(zx(S.l), zTop + 4 * p, 8 * p, zFloor - zTop - 4 * p); }
       if (zx0 < 0) { ctx.fillStyle = T.box; ctx.fillRect(zx(0) - 8 * p, zTop + 4 * p, 8 * p, zFloor - zTop - 4 * p); }
@@ -574,7 +581,7 @@ details.more[open] summary { margin-bottom: 6px; }
       for (let mm = Math.ceil(zx0 * 1000); mm <= (S.x + half) * 1000; mm++) { const x = zx(mm / 1000), big = mm % 10 === 0, mid = mm % 5 === 0; ctx.beginPath(); ctx.moveTo(x, zFloor + 2 * p); ctx.lineTo(x, zFloor + (big ? 12 : mid ? 8 : 5) * p); ctx.stroke(); if (big && mm >= 0) txt(String(mm / 10), x, zFloor + 20 * p, { s: 9, a: 'center', m: 1 }); }
       ctx.strokeStyle = T.accent; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(zx(S.x), zTop); ctx.lineTo(zx(S.x), zFloor + 14 * p); ctx.stroke();
       ctx.restore();
-      Gr.label(ctx, `close up: 16 cm of tube around the pointer, x = ${(S.x * 100).toFixed(1)} cm` + (ring ? '. Blue band: how far the gas moves; lines: layers of gas, motion magnified and slowed as by a strobe' : ''), zL + 8 * p, zTop + 11 * p, { s: 9 * p, alpha: 0.8 });
+      for (const [t, lx, ly] of zLines) Gr.label(ctx, t, lx, ly, { s: 9 * p, alpha: 0.8 });
     }
   }
 

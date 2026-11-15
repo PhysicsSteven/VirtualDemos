@@ -73,6 +73,8 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 10px; border-bottom: 1px solid var(--line); }
 .count { margin-left: auto; font-size: 0.9rem; font-weight: 600; white-space: nowrap; }
 .count small { font-weight: 400; color: var(--muted); font-size: 0.8rem; }
+/* the time scale on the stage, beside the clock (it was only in the closed Playback fold) (student view, 2026-11-15) */
+.rate { font-size: 0.8rem; color: var(--muted); white-space: nowrap; padding-left: 8px; border-left: 1px solid var(--line); }
 #can { touch-action: none; outline: none; }
 #gl3 { pointer-events: none; }
 #can:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
@@ -171,6 +173,7 @@ details.hall[open] > summary { margin-bottom: 8px; }
         <button type="button" class="btn" id="clear" hidden>Clear</button>
         <span class="blindtag" id="blindTag" hidden>Blind</span>
         <span class="count mono" id="count" aria-live="off"></span>
+        <span class="rate mono" id="rateTag" title="Playback speed: how much simulated time passes in one real second (Playback in the panel changes it)"></span>
       </div>
       <div class="pane" id="pane">
         <canvas id="gl3" aria-hidden="true" hidden></canvas>
@@ -2807,6 +2810,8 @@ details.hall[open] > summary { margin-bottom: 8px; }
     else if (S.mode === 'bottle') { $('count').innerHTML = `t = ${si(simT, 's')}`; botReadouts(false); }
     else if (S.mode === 'hall') { $('count').innerHTML = HS.I > 0 && HS.B > 0 ? `t = ${trim(Math.min(HS.tt, 999).toFixed(2))} <small>τ</small>` : '<small>no current or no field</small>'; hallStageReadouts(); }
     else { $('count').innerHTML = `t = ${si(simT, 's')}`; cycReadouts(false); }
+    /* Blind leaves it out, as in Playback (one second is a quarter period in the free setups); the Hall strip runs in units of τ */
+    { const rt = $('rateTag'), on = !LAB.blind && S.mode !== 'hall'; rt.hidden = !on; if (on) rt.textContent = `1 s here = ${si(tScale * 2 ** S.play, 's', 3)}`; }
     $('timerOut').textContent = timerText(); $('timerOut').classList.toggle('timer-run', LAB.tRun);
     const R = rulerNow(); $('rulerOut').textContent = R ? R.txt : S.mode === 'free' && S.f.view3d && LAB.ruler ? 'not in 3D' : 'off';
   }

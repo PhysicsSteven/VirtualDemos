@@ -232,18 +232,18 @@ VDI18N.add('es', 'demo/lasers', {
   "Neón a {#} K (M = {#} u), λ = {#} nm en el vacío. Un modo emite láser donde la ganancia supera la pérdida. El ensanchamiento Doppler es inhomogéneo: cada modo usa su propio grupo de átomos, así que varios modos emiten a la vez. Las alturas de los modos son ilustrativas, proporcionales a qué tan por encima del umbral está la ganancia; los modos reales compiten y las barras ignoran la quema de huecos y el hundimiento de Lamb.",
 "Rate equations for one cavity mode and a uniform medium; no spatial hole burning, no thermal effects. Nd:YAG is an ideal four level laser and ruby an ideal three level laser: pump bands and the Nd lower level empty instantly. Rod {#} cm long, mode radius {#} mm, cavity {#} cm with refractive index {#}, {#}% internal loss per round trip, β = {#}⁻⁹ of spontaneous emission into the mode. Doping ({#} at.% Nd, {#} wt.% Cr₂O₃), cross sections and lifetimes as in Koechner. Real ruby lasers are flash pumped in pulses; running one continuously at these powers would overheat it.":
   "Ecuaciones de tasa para un modo de la cavidad y un medio uniforme; sin quema espacial de huecos, sin efectos térmicos. El Nd:YAG es un láser ideal de cuatro niveles y el rubí un láser ideal de tres niveles: las bandas de bombeo y el nivel inferior del Nd se vacían al instante. Barra de {#} cm de largo, radio del modo {#} mm, cavidad de {#} cm con índice de refracción {#}, {#}% de pérdida interna por viaje redondo, β = {#}⁻⁹ de la emisión espontánea hacia el modo. Dopaje ({#} at.% Nd, {#} wt.% Cr₂O₃), secciones eficaces y vidas medias como en Koechner. Los láseres de rubí reales se bombean con lámpara de destello en pulsos; operar uno de forma continua a estas potencias lo sobrecalentaría.",
-"{#} × {#}⁻¹⁰ W out":
-  "{#} × {#}⁻¹⁰ W de salida",
 "POWER METER":
   "POWER METER",
 "to scale: mirrors {#} cm apart, rod {#} cm long, beam {#} mm in radius; drawn photons follow log q":
   "a escala: espejos separados {#} cm, barra de {#} cm de largo, haz de {#} mm de radio; los fotones dibujados siguen log q",
 "{#} nm diodes":
   "diodos de {#} nm",
-"{#} × {#}⁻¹⁰ W out, {#} nm (infrared, drawn red)":
-  "{#} × {#}⁻¹⁰ W de salida, {#} nm (infrarrojo, dibujado en rojo)",
+"{#} × {#}⁻¹¹ W out, {#} nm (infrared, drawn red)":
+  "{#} × {#}⁻¹¹ W de salida, {#} nm (infrarrojo, dibujado en rojo)",
 "pump W = {#} W_th":
   "bombeo W = {#} W_th",
+"{#} × {#}⁻¹⁰ W out, {#} nm (infrared, drawn red)":
+  "{#} × {#}⁻¹⁰ W de salida, {#} nm (infrarrojo, dibujado en rojo)",
 "medium":
   "medio",
 "P_abs (W)":
@@ -292,8 +292,8 @@ VDI18N.add('es', 'demo/lasers', {
   "Una transición entre dos niveles con degeneraciones iguales, así que B₁₂ = B₂₁. La razón térmica es el factor de Boltzmann; la razón de tasas estimulada/espontánea usa la densidad de energía de Planck a la misma temperatura. Las animaciones no están a escala: las longitudes de onda, las rapideces y los tiempos se eligen para que se vean.",
 "{#} mW out, {#} nm (infrared, drawn red)":
   "{#} mW de salida, {#} nm (infrarrojo, dibujado en rojo)",
-"{#} µW out, {#} nm (infrared, drawn red)":
-  "{#} µW de salida, {#} nm (infrarrojo, dibujado en rojo)",
+"{#} W out, {#} nm (infrared, drawn red)":
+  "{#} W de salida, {#} nm (infrarrojo, dibujado en rojo)",
 "Ruby: three level":
   "Rubí: tres niveles",
 "Cr³⁺ ions in sapphire; energy in eV":
@@ -394,12 +394,16 @@ VDI18N.add('es', 'demo/lasers', {
   "La línea del láser de dióxido de carbono en el infrarrojo lejano, {#} eV por fotón: a temperatura ambiente hay aproximadamente {#}% tantas moléculas en el nivel superior como en el inferior.",
 "The ammonia inversion line used in the first maser (Gordon, Zeiger and Townes, {#}). hν/kT is only {#} at room temperature, so N₂/N₁ is close to {#} but still below it; the maser had to sort excited molecules out with an electric field.":
   "La línea de inversión del amoniaco usada en el primer máser (Gordon, Zeiger y Townes, {#}). hν/kT es solo {#} a temperatura ambiente, así que N₂/N₁ es cercano a {#} pero sigue por debajo; el máser tenía que separar las moléculas excitadas con un campo eléctrico.",
+"Close":
+  "Cerrar",
 "NH₃, {#} GHz; B₁₂ = B₂₁, so stimulated/absorption = N₂/N₁":
   "NH₃, {#} GHz; B₁₂ = B₂₁, así que estimulada/absorción = N₂/N₁",
 "t = {#} ms · window {#} ms":
   "t = {#} ms · ventana {#} ms",
 "t = {#} ms <small>since switch on</small>":
   "t = {#} ms <small>desde el encendido</small>",
-"{#} × {#}⁻¹¹ W out, {#} nm (infrared, drawn red)":
-  "{#} × {#}⁻¹¹ W de salida, {#} nm (infrarrojo, dibujado en rojo)"
+"{#} × {#}⁻¹⁰ W out":
+  "{#} × {#}⁻¹⁰ W de salida",
+"{#} µW out, {#} nm (infrared, drawn red)":
+  "{#} µW de salida, {#} nm (infrarrojo, dibujado en rojo)"
 });

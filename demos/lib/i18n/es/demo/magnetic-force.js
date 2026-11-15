@@ -34,6 +34,10 @@ VDI18N.add('es', 'demo/magnetic-force', {
   "Ajustar la vista",
 "Fire {#}":
   "Disparar {#}",
+"Playback speed: how much simulated time passes in one real second (Playback in the panel changes it)":
+  "Velocidad de reproducción: cuánto tiempo simulado pasa en un segundo real (Reproducción en el panel lo cambia)",
+"{#} s here = {#} ns":
+  "{#} s aquí = {#} ns",
 "A charged particle moving in magnetic and electric fields, with a plot. In the free setups, drag the arrow tip to set the launch velocity, drag the launch ring to move it, drag the edges of the field rectangle, drag the two ends of the ruler, drag empty space to pan and use the wheel to zoom. Keys: S picks what the arrow keys move (launch velocity, launch ring, ruler ends, rectangle edges, E direction), arrows move it and Shift moves it farther, M shows the ruler, T starts and stops the timer, C captures a reading, space plays or pauses, R restarts, F fits the view or fires, plus and minus zoom. In the 3D view, drag or use the arrow keys to turn the view.":
   "Una partícula cargada que se mueve en campos magnéticos y eléctricos, con una gráfica. En las configuraciones libres, arrastra la punta de la flecha para fijar la velocidad de lanzamiento, arrastra el anillo de lanzamiento para moverlo, arrastra los bordes del rectángulo del campo, arrastra los dos extremos de la regla, arrastra un espacio vacío para desplazar la vista y usa la rueda para acercar. Teclas: S elige qué mueven las flechas (velocidad de lanzamiento, anillo de lanzamiento, extremos de la regla, bordes del rectángulo, dirección de E), las flechas lo mueven y Shift lo mueve más lejos, M muestra la regla, T inicia y detiene el cronómetro, C registra una lectura, espacio inicia o pausa, R reinicia, F ajusta la vista o dispara, más y menos acercan o alejan. En la vista 3D, arrastra o usa las flechas para girar la vista.",
 "With the free setups, the arrow keys first turn the launch velocity (left and right) and change its speed (up and down). Press S for the next item and Shift+S for the one before: the launch ring, ruler end A, ruler end B, each edge of the field rectangle and the E direction dial. Arrow keys move the selected item one screen pixel, Shift+arrow ten. M shows or hides the ruler, T starts or stops the timer, C captures a reading. In the velocity selector, mass spectrometer and cyclotron, up and down change the slit, the spread or the frequency, F fires {#} particles and C clears.":
@@ -370,6 +374,8 @@ VDI18N.add('es', 'demo/magnetic-force', {
   "Un protón y un electrón con la misma energía cinética, {#} eV, en {#} mT. Se curvan en sentidos opuestos. El círculo del electrón es {#} veces más pequeño (r ∝ √(mK) con igual K) y el electrón da {#} vueltas por cada vuelta del protón (T ∝ m).",
 "×{#} · {#} s here = {#} µs":
   "×{#} · {#} s aquí = {#} µs",
+"{#} s here = {#} µs":
+  "{#} s aquí = {#} µs",
 "center drifts at E/B":
   "el centro deriva a E/B",
 "B = {#} mT ⊗ into page · E = {#} kV/m":
@@ -480,8 +486,6 @@ VDI18N.add('es', 'demo/magnetic-force', {
   "{#} MeV <span>unas {#} vueltas a 2qV por vuelta</span>",
 "v/c = {#}, γ = {#} <span>the true cyclotron frequency there is f<sub>c</sub>/γ, {#}% lower</span>":
   "v/c = {#}, γ = {#} <span>la frecuencia de ciclotrón real ahí es f<sub>c</sub>/γ, {#}% menor</span>",
-"{#} keV <span>from the source to the gap edge: {#} qV</span>":
-  "{#} keV <span>de la fuente al borde del hueco: {#} qV</span>",
 "predicted mirror point":
   "punto de espejo predicho",
 "coil":
@@ -570,6 +574,8 @@ VDI18N.add('es', 'demo/magnetic-force', {
   "cronómetro {#} µs",
 "{#} × {#}⁵ to {#} × {#}⁵ m/s <span>±{#}% about E/B</span>":
   "{#} × {#}⁵ a {#} × {#}⁵ m/s <span>±{#}% alrededor de E/B</span>",
+"{#} keV <span>from the source to the gap edge: {#} qV</span>":
+  "{#} keV <span>de la fuente al borde del hueco: {#} qV</span>",
 "B₀ = {#} mT · coils {#} cm apart":
   "B₀ = {#} mT · bobinas a {#} cm entre sí",
 "n-type germanium, {#} mm thick":
@@ -643,5 +649,9 @@ VDI18N.add('es', 'demo/magnetic-force', {
 "Readings cleared.":
   "Lecturas borradas.",
 "Row {#} deleted.":
-  "Fila {#} eliminada."
+  "Fila {#} eliminada.",
+"{#} s here = {#} ps":
+  "{#} s aquí = {#} ps",
+"{#} s here = {#} ms":
+  "{#} s aquí = {#} ms"
 });

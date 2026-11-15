@@ -11,7 +11,6 @@ VDI18N.add('en', 'demo/kundts-tube', [
 "Stroke a metal rod clamped at its middle and it rings at the frequency whose half wavelength is the rod. A disc on its end drives the gas in a glass tube; slide the plunger until the tube resonates and the cork dust gathers in heaps at the nodes, half a wavelength apart. One frequency, two wavelengths: the speed of sound in the gas and in the metal.",
 "v_rod = 2L f/n · v_gas = {#} d f",
 "A metal rod clamped in a stand, with a disc on its right end inside a glass tube of gas closed by a plunger. Cork dust lies along the tube; a meter rule runs under it, with a pointer, and a close up of the tube around the pointer is drawn below. A frequency counter shows the ringing frequency. S strokes the rod; left and right move the pointer by {#} mm (Shift {#} cm).",
-"Stroke the rod",
 "<span>Keep it ringing</span>",
 "Spread the dust",
 "Drag the plunger",
@@ -61,6 +60,8 @@ VDI18N.add('en', 'demo/kundts-tube', [
 "<span>Blind: hide the speeds and the predictions</span>",
 "Model: the rod is thin (its width is much less than a wavelength), so its longitudinal waves travel at v = √(E/ρ), with typical handbook E and ρ (chosen): steel {#} GPa and {#} kg/m³, aluminum {#} GPa and {#}, brass {#} GPa and {#}, copper {#} GPa and {#}, glass {#} GPa and {#}. Its ends are free, the clamp holds a node, and it rings in the lowest mode that allows that, n = {#} at the middle and n = {#} at L/{#}; the disc's mass and the clamp's width are left out. The counter shows f to {#} Hz. The gas is ideal at {#} Pa, v = √(γRT/M) (air γ = {#}, M = {#} g/mol; helium and argon γ = {#}/{#}, {#} and {#} g/mol). The disc drives the gas as a piston and the plunger is rigid; a small loss, {#} per meter in amplitude (chosen), sets how sharp the resonance is. Shown is the steady state. The dust is a picture (numbers chosen): a grain at rest is shaken loose where the air there moves more than {#} times the disc does at a full stroke, and then slides toward the nearest node, faster where the motion is larger, until the air under it moves less than {#} times the disc's. Off resonance the tube is quieter, so only the dust in its loudest places dances and shifts a little; at resonance all of it gathers in sharp heaps at the nodes. Real dust also forms fine ridges, which are left out. The rod dies away in about {#} s (chosen). Simulated data with no noise.",
 "{#} × the disc's ({#} dB)",
+"Blue band: how far the gas moves; lines: layers of gas",
+"motion magnified and slowed as by a strobe: {#} Hz shown at {#} Hz",
 "unknown",
 "<span>hidden: unknown rod</span>",
 "clamp at L/{#}",
@@ -77,8 +78,8 @@ VDI18N.add('en', 'demo/kundts-tube', [
 "Slope d (cm)",
 "Intercept (cm)",
 "v_gas = {#} d f",
+"Close",
 "A new unknown rod is in the clamp.",
 "<span>These rows mix rods, gases or temperatures: clear and record one series.</span>",
-"close up: {#} cm of tube around the pointer, x = {#} cm. Blue band: how far the gas moves; lines: layers of gas, motion magnified and slowed as by a strobe",
 "The unknown rod had v = {#} m/s."
 ]);

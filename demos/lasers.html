@@ -764,8 +764,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     c.globalAlpha = 1;
     // captions last
     const cap = kind === 'abs' ? 'photon used up; atom excited' : kind === 'spont' ? 'random direction, random phase' : 'two photons: same direction, frequency, phase, polarization';
+    /* the stimulated emission caption ran past its panel at 1280 px: shrink it to fit, down to 7.5 px (student view, 2026-11-15) */
+    c.font = `${10 * ps}px ${T.mono}`; const capW = c.measureText(cap).width, capS = Math.max(7.5, Math.min(10, 10 * (b.w - 16 * ps) / Math.max(1, capW)));
     LBOX = b;
-    label(c, cap, b.x + b.w / 2, bot + 8 * ps, T.muted, 'center', 'middle', false, 10);
+    label(c, cap, b.x + b.w / 2, bot + 8 * ps, T.muted, 'center', 'middle', false, capS);
     LBOX = null;
     text(c, 'hν = E₂ − E₁', lx, (y2 + ay) / 2 - 4 * ps, T.pos, 'left', 'middle', 10, 'mono');
     c.restore();
@@ -1068,8 +1070,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     label(c, 'mirror, R = 1', a[0], a[1] - 8 * ps, T.muted, 'center', 'bottom', false, 10);
     label(c, `output mirror R = ${S.R.toFixed(3)}`, b[0], b[1] - 8 * ps, T.ink, 'center', 'bottom', true, 10);
     label(c, `${P.m.name} rod`, r[0], r[1] - 6 * ps, T.equi, 'center', 'bottom', true, 10);
-    label(c, P.m.key === 'nd' ? '808 nm diodes' : 'flash lamp', pp[0], pp[1] + 6 * ps, S.med === 'nd' ? T.accent : T.elec, 'center', 'top', false, 9.5);
-    label(c, `${fmtPow(po)} out, ${P.m.key === 'nd' ? '1064 nm (infrared, drawn red)' : '694.3 nm'}`, Math.min(o[0], box.x + box.w - 10 * ps), o[1] + 4 * ps, T.pos, 'right', 'top', true, 10);
+    const wD = label(c, P.m.key === 'nd' ? '808 nm diodes' : 'flash lamp', pp[0], pp[1] + 6 * ps, S.med === 'nd' ? T.accent : T.elec, 'center', 'top', false, 9.5);
+    /* the output label covered the pump's label ("808 nm diodes"): when they would overlap, it drops below it (student view, 2026-11-15) */
+    const outTxt = `${fmtPow(po)} out, ${P.m.key === 'nd' ? '1064 nm (infrared, drawn red)' : '694.3 nm'}`, outX = Math.min(o[0], box.x + box.w - 10 * ps);
+    c.font = `600 ${10 * ps}px ${T.mono}`; const wO = c.measureText(outTxt).width;
+    let outY = o[1] + 4 * ps; if (outX - wO - 6 < pp[0] + wD / 2 && outX > pp[0] - wD / 2 && Math.abs(outY - (pp[1] + 6 * ps)) < 13.5 * ps) outY = pp[1] + 6 * ps + 15 * ps;
+    label(c, outTxt, outX, outY, T.pos, 'right', 'top', true, 10);
     /* the pump track stays a handle on the picture */
     const g = cavGeom(), ty = g.trackY, wf = S.W / MEDIA[S.med].Wmax, pumpCol = S.med === 'nd' ? T.accent : T.elec, x0 = g.rx0, x1 = g.rx1;
     c.strokeStyle = T.gridStrong; c.lineWidth = 3 * ps; c.lineCap = 'round'; c.beginPath(); c.moveTo(x0, ty); c.lineTo(x1, ty); c.stroke();

@@ -22,8 +22,6 @@ VDI18N.add('es', 'demo/kundts-tube', {
   "v_rod = 2L f/n · v_gas = {#} d f",
 "A metal rod clamped in a stand, with a disc on its right end inside a glass tube of gas closed by a plunger. Cork dust lies along the tube; a meter rule runs under it, with a pointer, and a close up of the tube around the pointer is drawn below. A frequency counter shows the ringing frequency. S strokes the rod; left and right move the pointer by {#} mm (Shift {#} cm).":
   "Una varilla metálica sujeta en un soporte, con un disco en su extremo derecho dentro de un tubo de vidrio con gas cerrado por un émbolo. Hay polvo de corcho a lo largo del tubo; debajo corre una regla de un metro, con un indicador, y abajo se dibuja un acercamiento del tubo alrededor del indicador. Un contador de frecuencia muestra la frecuencia de vibración. S frota la varilla; izquierda y derecha mueven el indicador {#} mm (Shift {#} cm).",
-"Stroke the rod":
-  "Frotar la varilla",
 "<span>Keep it ringing</span>":
   "<span>Mantenerla vibrando</span>",
 "Spread the dust":
@@ -122,6 +120,10 @@ VDI18N.add('es', 'demo/kundts-tube', {
   "Modelo: la varilla es delgada (su ancho es mucho menor que una longitud de onda), así que sus ondas longitudinales viajan a v = √(E/ρ), con E y ρ típicos de manual (elegidos): acero {#} GPa y {#} kg/m³, aluminio {#} GPa y {#}, latón {#} GPa y {#}, cobre {#} GPa y {#}, vidrio {#} GPa y {#}. Sus extremos están libres, la sujeción mantiene un nodo, y vibra en el modo más bajo que lo permite, n = {#} en el centro y n = {#} en L/{#}; se omiten la masa del disco y el ancho de la sujeción. El contador muestra f con precisión de {#} Hz. El gas es ideal a {#} Pa, v = √(γRT/M) (aire γ = {#}, M = {#} g/mol; helio y argón γ = {#}/{#}, {#} y {#} g/mol). El disco impulsa el gas como un pistón y el émbolo es rígido; una pequeña pérdida, {#} por metro en amplitud (elegida), fija qué tan aguda es la resonancia. Se muestra el estado estacionario. El polvo es un dibujo (números elegidos): un grano en reposo se suelta donde el aire se mueve más de {#} veces lo que se mueve el disco en un frotamiento completo, y luego se desliza hacia el nodo más cercano, más rápido donde el movimiento es mayor, hasta que el aire debajo de él se mueve menos de {#} veces lo que se mueve el disco. Fuera de resonancia el tubo está más callado, así que solo el polvo de sus lugares más intensos baila y se desplaza un poco; en resonancia todo se junta en montículos definidos en los nodos. El polvo real también forma estrías finas, que se omiten. La varilla deja de vibrar en unos {#} s (elegido). Datos simulados sin ruido.",
 "{#} × the disc's ({#} dB)":
   "{#} × el del disco ({#} dB)",
+"Blue band: how far the gas moves; lines: layers of gas":
+  "Banda azul: cuánto se mueve el gas; líneas: capas de gas",
+"motion magnified and slowed as by a strobe: {#} Hz shown at {#} Hz":
+  "movimiento ampliado y ralentizado como con un estroboscopio: {#} Hz mostrados a {#} Hz",
 "unknown":
   "desconocida",
 "<span>hidden: unknown rod</span>":
@@ -154,12 +156,16 @@ VDI18N.add('es', 'demo/kundts-tube', {
   "Ordenada al origen (cm)",
 "v_gas = {#} d f":
   "v_gas = {#} d f",
+"Close":
+  "Cerrar",
 "A new unknown rod is in the clamp.":
   "Hay una nueva varilla desconocida en la sujeción.",
 "<span>These rows mix rods, gases or temperatures: clear and record one series.</span>":
   "<span>Estas filas mezclan varillas, gases o temperaturas: borra y registra una sola serie.</span>",
-"close up: {#} cm of tube around the pointer, x = {#} cm. Blue band: how far the gas moves; lines: layers of gas, motion magnified and slowed as by a strobe":
-  "acercamiento: {#} cm de tubo alrededor del indicador, x = {#} cm. Banda azul: cuánto se mueve el gas; líneas: capas de gas, movimiento ampliado y ralentizado como con un estroboscopio",
 "The unknown rod had v = {#} m/s.":
-  "La varilla desconocida tenía v = {#} m/s."
+  "La varilla desconocida tenía v = {#} m/s.",
+"Stroke the rod":
+  "Frotar la varilla",
+"close up: {#} cm of tube around the pointer, x = {#} cm. Blue band: how far the gas moves; lines: layers of gas, motion magnified and slowed as by a strobe":
+  "acercamiento: {#} cm de tubo alrededor del indicador, x = {#} cm. Banda azul: cuánto se mueve el gas; líneas: capas de gas, movimiento ampliado y ralentizado como con un estroboscopio"
 });
