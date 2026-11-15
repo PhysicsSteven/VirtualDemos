@@ -12,7 +12,7 @@ Textbook: OpenStax *University Physics*, Vol. 1, §13.2. Access for free at http
 
 **Using the demo.**
 
-- A 1.000 kg mass hangs from a spring scale at the chosen height and latitude. If the height is above the ground, imagine the scale held up on a tall tower that turns with the planet. The picture shows the gravity arrow and the centrifugal term (drawn up to 100 times longer so it shows; its label gives the factor), and a graph of g against height.
+- A 1.000 kg mass hangs from a spring scale at the chosen height and latitude. If the height is above the ground, imagine the scale held up on a tall tower that turns with the planet. The picture shows the gravity arrow and the centrifugal term (drawn up to 100 times longer so it shows; its label gives the factor; far from the planet both arrows are drawn longer still, and the gravity label gives that factor too), and a graph of g against height.
 - The readouts give the distance from the center r, gravity alone $$GM/r^2$$, and, with the planet's rotation included, the centrifugal term, the effective g (what the scale feels) and the tilt of a plumb line. At sea level on Earth they also give the real Earth's value from the WGS 84 standard formula.
 - Readouts are to 0.0001 m/s². Record reading stores the planet, height, latitude, r and both values of g; Export to worksheet sends the readings to the Data table below; Clear starts a new series, which goes into a new copy of the table.
 - Blind hides g, the scale reading and the percentages. Nothing can be recorded while Blind is on.

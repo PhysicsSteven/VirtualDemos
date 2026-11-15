@@ -106,8 +106,6 @@ VDI18N.add('en', 'demo/optics-bench', [
 "<span><i></i>Light rays</span> <span><i></i>Faint reflection at a glass face</span> <span><i></i>Rays traced back to a virtual image</span> <span><i></i>Principal ray: parallel to the axis</span> <span><i></i>Principal ray: through the center (C for a mirror)</span> <span><i></i>Principal ray: through the focal point F</span> <span><i></i>Lens or mirror extended, where a principal ray misses it</span> <span><i></i>White light, split from {#} to {#} nm</span>",
 "Lenses follow the ideal thin lens rule. Mirrors use the exact spherical surface, so rays far from the axis, or from an object point off the axis, focus slightly differently from the mirror equation. With Adjustable n, dispersion is a few times stronger than in ordinary crown glass so the spectrum is easy to see; the real materials (crown N-BK7, flint F2, fused silica, water, diamond) use their published Sellmeier formulas (Schott; Malitson {#}; Daimon and Masumura {#}; Peter {#}), and with monochrome light they take n at {#} nm. The screen picture is built from rays traced in the plane of the drawing, turned about the lens axis for the rest of the object. A refracting surface bends each ray by Snell's law exactly, with no dispersion; its two media fill the bench on either side (a curved surface is the end of a long rod, its aperture an opaque stop on the face), and other elements are traced as if in air. Microscope and telescope readouts take the eye relaxed (final image at infinity) and the near point at {#} cm.",
 "Dispersion in a raindrop, and the bows it makes in the sky: open <a>Rainbows</a>.",
-"virtual image",
-"Virtual, upright, enlarged",
 "A camera: a {#} cm lens makes a real, inverted, smaller image of an object {#} cm away on the sensor (the screen) {#} cm behind it. Move the object closer and the sensor must move back to stay in focus. For blur, the f-number and a phone lens, use the Camera mode of The Eye.",
 "objective",
 "eyepiece",
@@ -125,6 +123,7 @@ VDI18N.add('en', 'demo/optics-bench', [
 "Signs: d<sub>o</sub> > {#} for a real object in n<sub>{#}</sub>. d<sub>i</sub> > {#} for a real image on the far side (in n<sub>{#}</sub>) and d<sub>i</sub> &lt; {#} for a virtual one on the object's side. R > {#} when the center of curvature is on the far side. m &lt; {#} means inverted.",
 "Exact edge ray (h = {#} cm) crosses the axis at",
 "A fish in water (n = {#}) seen through a flat surface, here standing upright: the eye is on the right, in air.",
+"virtual image",
 "∞ (flat)",
 "Virtual, upright, same size",
 "White light through a flint glass lens, f = {#} cm at {#} nm. The glass bends violet more than red, so violet ({#} nm) focuses {#} cm nearer the lens than red ({#} nm): chromatic aberration. The spot on the screen has a colored fringe. Click the lens to switch to crown glass or an ideal lens.",
@@ -159,5 +158,6 @@ VDI18N.add('en', 'demo/optics-bench', [
 "Diamond, n₁ = {#}",
 "The quickest path has no worksheet table yet: the readouts and the graph give the times.",
 "Close",
-"t (ns) against x (cm)"
+"t (ns) against x (cm)",
+"Virtual, upright, enlarged"
 ]);

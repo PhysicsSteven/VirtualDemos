@@ -1,7 +1,49 @@
 /* demo/moon-phases in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/moon-phases', {
+"Earth's shadow":
+  "Sombra de la Tierra",
+"Sunlight":
+  "Luz del Sol",
+"Waxing crescent":
+  "Creciente",
+"First quarter":
+  "Cuarto creciente",
+"Waxing gibbous":
+  "Gibosa creciente",
+"Full":
+  "Llena",
+"Waning gibbous":
+  "Gibosa menguante",
+"Third quarter":
+  "Cuarto menguante",
+"Waning crescent":
+  "Menguante",
+"Day {#} of {#} · Waxing crescent":
+  "Día {#} de {#} · Creciente",
+"Seen from above the North Pole, not to scale":
+  "Vista desde arriba del Polo Norte, no a escala",
+"View from Earth":
+  "Vista desde la Tierra",
+"Northern Hemisphere, facing south":
+  "Hemisferio norte, mirando al sur",
+"east":
+  "este",
+"west":
+  "oeste",
+"Waxing crescent, {#}% lit":
+  "Creciente, {#}% iluminada",
+"Sky clock":
+  "Reloj del cielo",
+"Moon up, {#}° high":
+  "Luna arriba, a {#}° de altura",
+"Sunset":
+  "Puesta del Sol",
 "Moon Phases":
   "Fases de la Luna",
+"<a>The sky from Earth</a>":
+  "<a>El cielo desde la Tierra</a>",
+"<a><span>←</span> <span>Reasons for Seasons</span></a><a><span>Retrograde Motion and World Models</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Las causas de las estaciones</span></a><a><span>Movimiento retrógrado y modelos del mundo</span> <span>→</span></a>",
 "Sunlight always lights half the Moon. The phase is how much of that lit half faces Earth. Drag the Moon around its orbit.":
   "La luz del Sol siempre ilumina la mitad de la Luna. La fase es cuánto de esa mitad iluminada mira hacia la Tierra. Arrastra la Luna alrededor de su órbita.",
 "synodic month {#} d · sidereal {#} d · orbit tilt {#}° · nodes {#} yr":
@@ -36,12 +78,8 @@ VDI18N.add('es', 'demo/moon-phases', {
   "<a>Hoja de trabajo {#}: Fases de la Luna y temporadas de eclipses (Astro {#})</a>",
 "New moon":
   "Luna nueva",
-"First quarter":
-  "Cuarto creciente",
 "Full moon":
   "Luna llena",
-"Waning crescent":
-  "Menguante",
 "Eclipse season":
   "Temporada de eclipses",
 "Sidereal vs synodic":
@@ -56,6 +94,8 @@ VDI18N.add('es', 'demo/moon-phases', {
   "Días desde la luna nueva",
 "Elongation E":
   "Elongación E",
+"{#}° east":
+  "{#}° al este",
 "Moonrise ≈":
   "Salida de la Luna ≈",
 "Highest ≈":
@@ -66,8 +106,6 @@ VDI18N.add('es', 'demo/moon-phases', {
   "Fracción iluminada f = ({#} − cos E)/{#}, donde E es el ángulo de la Luna respecto al Sol visto desde la Tierra.",
 "<strong>Not Earth's shadow.</strong> A common idea is that phases come from Earth's shadow falling on the Moon. They do not. The Sun always lights half the Moon; we see different amounts of that lit half. Earth's shadow points away from the Sun and reaches the Moon only at full moon, during a lunar eclipse.":
   "<strong>No es la sombra de la Tierra.</strong> Una idea común es que las fases vienen de la sombra de la Tierra que cae sobre la Luna. No es así. El Sol siempre ilumina la mitad de la Luna; nosotros vemos distintas porciones de esa mitad iluminada. La sombra de la Tierra apunta en dirección contraria al Sol y llega a la Luna solo en luna llena, durante un eclipse de Luna.",
-"Sky clock":
-  "Reloj del cielo",
 "Observer's local time":
   "Hora local del observador",
 "Rise and set times are approximate: an observer on the equator at an equinox, with the Moon on the celestial equator. Latitude and the Moon's tilted orbit shift real times by an hour or more, and the Moon rises about {#} minutes later each day.":
@@ -96,8 +134,6 @@ VDI18N.add('es', 'demo/moon-phases', {
   "Deriva de la línea de los nodos respecto a las estrellas",
 "The Moon's orbit is tilted {#}° to the ecliptic, so most new and full moons pass above or below the Sun line. An eclipse needs a new or full moon close to a node: the Sun within about {#} to {#}° of a node for a solar eclipse, about {#}° for an umbral lunar eclipse. The Sun passes a node every {#} days, giving two eclipse seasons a year. The nodes slide westward, once around in {#} years, so seasons come about {#} days earlier each year.":
   "La órbita de la Luna está inclinada {#}° respecto a la eclíptica, así que la mayoría de las lunas nuevas y llenas pasan por encima o por debajo de la línea del Sol. Un eclipse necesita una luna nueva o llena cerca de un nodo: el Sol a menos de unos {#} a {#}° de un nodo para un eclipse de Sol, unos {#}° para un eclipse de Luna umbral. El Sol pasa por un nodo cada {#} días, lo que da dos temporadas de eclipses al año. Los nodos se deslizan hacia el oeste, una vuelta completa en {#} años, así que las temporadas llegan unos {#} días antes cada año.",
-"Earth's shadow":
-  "Sombra de la Tierra",
 "Phase ring":
   "Anillo de fases",
 "Elongation":
@@ -112,42 +148,6 @@ VDI18N.add('es', 'demo/moon-phases', {
   "para una décima.",
 "plays or pauses.":
   "inicia o pausa.",
-"Sunlight":
-  "Luz del Sol",
-"Waxing crescent":
-  "Creciente",
-"Waxing gibbous":
-  "Gibosa creciente",
-"Full":
-  "Llena",
-"Waning gibbous":
-  "Gibosa menguante",
-"Third quarter":
-  "Cuarto menguante",
-"Day {#} of {#} · Waxing crescent":
-  "Día {#} de {#} · Creciente",
-"Seen from above the North Pole, not to scale":
-  "Vista desde arriba del Polo Norte, no a escala",
-"View from Earth":
-  "Vista desde la Tierra",
-"Northern Hemisphere, facing south":
-  "Hemisferio norte, mirando al sur",
-"east":
-  "este",
-"west":
-  "oeste",
-"Waxing crescent, {#}% lit":
-  "Creciente, {#}% iluminada",
-"Moon up, {#}° high":
-  "Luna arriba, a {#}° de altura",
-"Sunset":
-  "Puesta del Sol",
-"{#}° east":
-  "{#}° al este",
-"<a>The sky from Earth</a>":
-  "<a>El cielo desde la Tierra</a>",
-"<a><span>←</span> <span>Reasons for Seasons</span></a><a><span>Retrograde Motion and World Models</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Las causas de las estaciones</span></a><a><span>Movimiento retrógrado y modelos del mundo</span> <span>→</span></a>",
 "Not to scale · blue dot: you, {#}:{#}":
   "No a escala · punto azul: tú, {#}:{#}",
 "days":
@@ -156,6 +156,10 @@ VDI18N.add('es', 'demo/moon-phases', {
   "iluminada (%)",
 "eclipse":
   "eclipse",
+"Day {#} of {#} · First quarter":
+  "Día {#} de {#} · Cuarto creciente",
+"First quarter, {#}% lit":
+  "Cuarto creciente, {#}% iluminada",
 "Day {#} of {#} · Waxing gibbous":
   "Día {#} de {#} · Gibosa creciente",
 "Waxing gibbous, {#}% lit":
@@ -164,20 +168,26 @@ VDI18N.add('es', 'demo/moon-phases', {
   "Sin dibujar la inclinación de la órbita: casi todas las lunas llenas no tocan la sombra de la Tierra",
 "Day {#} of {#} · Full moon":
   "Día {#} de {#} · Luna llena",
-"Orbit tilt not drawn:":
-  "Sin dibujar la inclinación de la órbita:",
-"most full moons miss Earth's shadow":
-  "casi todas las lunas llenas no tocan la sombra de la Tierra",
 "Full moon, {#}% lit":
   "Luna llena, {#}% iluminada",
-"Moon below horizon":
-  "Luna bajo el horizonte",
-"{#}° west":
-  "{#}° al oeste",
 "Day {#} of {#} · Waning gibbous":
   "Día {#} de {#} · Gibosa menguante",
 "Waning gibbous, {#}% lit":
   "Gibosa menguante, {#}% iluminada",
+"Below the horizon now: not visible":
+  "Bajo el horizonte ahora: no se ve",
+"Moon below horizon":
+  "Luna bajo el horizonte",
+"{#}° west":
+  "{#}° al oeste",
+"Day {#} of {#} · Third quarter":
+  "Día {#} de {#} · Cuarto menguante",
+"Third quarter, {#}% lit":
+  "Cuarto menguante, {#}% iluminada",
+"Day {#} of {#} · Waning crescent":
+  "Día {#} de {#} · Menguante",
+"Waning crescent, {#}% lit":
+  "Menguante, {#}% iluminada",
 "New moon: the lit half faces away from Earth. The Moon is up with the Sun all day and lost in its glare.":
   "Luna nueva: la mitad iluminada mira en dirección contraria a la Tierra. La Luna está arriba junto con el Sol todo el día y se pierde en su resplandor.",
 "Day {#} of {#} · New moon":
@@ -186,18 +196,14 @@ VDI18N.add('es', 'demo/moon-phases', {
   "Luna nueva, {#}% iluminada",
 "First quarter: {#}° east of the Sun. We see half of the lit half, so {#}% lit, on the right. It rises near noon and is high in the south at sunset.":
   "Cuarto creciente: {#}° al este del Sol. Vemos la mitad de la mitad iluminada, así que está {#}% iluminada, del lado derecho. Sale cerca del mediodía y está alta en el sur a la puesta del Sol.",
-"Day {#} of {#} · First quarter":
-  "Día {#} de {#} · Cuarto creciente",
-"First quarter, {#}% lit":
-  "Cuarto creciente, {#}% iluminada",
 "Full moon: opposite the Sun, so the whole lit half faces us. It rises at sunset, is highest at midnight, and sets at sunrise. It usually passes just above or below Earth's shadow.":
   "Luna llena: opuesta al Sol, así que toda la mitad iluminada mira hacia nosotros. Sale a la puesta del Sol, está en lo más alto a medianoche y se pone a la salida del Sol. Por lo general pasa justo por encima o por debajo de la sombra de la Tierra.",
+"Orbit tilt not drawn:":
+  "Sin dibujar la inclinación de la órbita:",
+"most full moons miss Earth's shadow":
+  "casi todas las lunas llenas no tocan la sombra de la Tierra",
 "Waning crescent: lit on the left (east), the side toward the Sun, which is still below the eastern horizon. It rises around {#} a.m. and is seen before dawn.":
   "Menguante: iluminada del lado izquierdo (este), el lado hacia el Sol, que todavía está bajo el horizonte este. Sale alrededor de las {#} a. m. y se ve antes del amanecer.",
-"Day {#} of {#} · Waning crescent":
-  "Día {#} de {#} · Menguante",
-"Waning crescent, {#}% lit":
-  "Menguante, {#}% iluminada",
 "Hide tilted orbit and nodes":
   "Ocultar la órbita inclinada y los nodos",
 "The line of nodes points almost at the Sun, so this new moon crosses the ecliptic: a solar eclipse is possible. Press Next full for a lunar eclipse, then keep stepping to watch the season end and the next one arrive about {#} days later.":
@@ -234,8 +240,14 @@ VDI18N.add('es', 'demo/moon-phases', {
   "Alrededor del Sol",
 "Earth moved {#}°":
   "La Tierra avanzó {#}°",
+"Close":
+  "Cerrar",
+"Change the time of day by {#} minutes (Shift for {#} hour)":
+  "Cambia la hora del día en {#} minutos (Shift para {#} hora)",
 "N. Hemisphere, facing S":
   "Hemisferio N, mirando al S",
+"below horizon now":
+  "bajo el horizonte ahora",
 "Day":
   "Día",
 "Night":

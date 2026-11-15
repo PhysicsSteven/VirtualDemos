@@ -209,7 +209,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       <section>
         <h2>Time</h2>
         <div>
-          <div class="slider-head"><label for="day">Days since new moon</label><output id="dayOut" class="mono" for="day">3.0 d</output></div>
+          <div class="slider-head"><label for="day">Days since new moon</label><output id="dayOut" class="mono" for="day">3.00 d</output></div>
           <input type="range" id="day" min="0" max="29.53" step="0.01" value="3">
         </div>
       </section>
@@ -350,6 +350,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   const INIT = { T: 3, phiN0: 70, hour: 18, speed: 2 };
+  let startT = INIT.T;   /* where Reset rewinds to (student view calls, 2026-11-15) */
   const S = { T: INIT.T, phiN0: INIT.phiN0, hour: INIT.hour, speed: INIT.speed, playing: !reduce,
               eclipse: false, sidereal: false, shadow: true, ring: true, arc: true };
 
@@ -1015,6 +1016,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.globalAlpha = 1;
     ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.font = font(700, 13, 'ui');
     ctx.fillText(phaseName(e) + ', ' + (100 * f).toFixed(0) + '% lit', w / 2, h - 12 * PS);
+    /* the disc shows the phase at any hour; say when the Moon is below the horizon and cannot be seen (student view calls, 2026-11-15) */
+    if (90 - angDist((S.hour - 12) * 15, e) <= 0.5) {
+      ctx.fillStyle = T.onSky; ctx.globalAlpha = 0.8; ctx.font = font(600, 10.5, 'ui');
+      ctx.fillText(w < 260 * PS ? 'below horizon now' : 'Below the horizon now: not visible', w / 2, h - 29 * PS); ctx.globalAlpha = 1;
+    }
   }
 
   // ---------- sky clock ----------
@@ -1107,7 +1113,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     R_.transit.textContent = fmtHM(transitH(e));
     R_.set.textContent = fmtHM(setH(e));
     if (document.activeElement !== dayIn) dayIn.value = d.toFixed(2);
-    $('dayOut').textContent = d.toFixed(1) + ' d';
+    $('dayOut').textContent = d.toFixed(2) + ' d';   /* the slider steps 0.01 d, so its readout shows two decimals (a worksheet sets 3.69 d; student view calls, 2026-11-15) */
     if (document.activeElement !== hourIn) hourIn.value = S.hour;
     $('hourOut').textContent = fmtHM(S.hour);
     if (S.eclipse) {
@@ -1216,9 +1222,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (ev.key === 'ArrowRight' || ev.key === 'ArrowUp') S.T += step;
     else if (ev.key === 'ArrowLeft' || ev.key === 'ArrowDown') S.T -= step;
     else if (ev.key === ' ') { ev.preventDefault(); setPlaying(!S.playing); return; }
+    else if (M3.on && (ev.key === '-' || ev.key === '=' || ev.key === '+')) { ev.preventDefault(); zoom3(ev.key === '-' ? 0.9 : 1.1); return; }
     else return;
     ev.preventDefault(); if (S.playing) setPlaying(false); setPreset(null); requestDraw();
   });
+  /* the 3D view zooms with the wheel and the - and + keys, about the view's center, as across the site (student view calls, 2026-11-15) */
+  function zoom3(k) { M3.o.zoom = Math.max(0.6, Math.min(2.5, M3.o.zoom * k)); requestDraw(); }
+  mainEl.addEventListener('wheel', (ev) => { if (!M3.on) return; ev.preventDefault(); zoom3(1 / Math.exp(ev.deltaY * 0.0012)); }, { passive: false });
 
   const skyEl = V.sky.el;
   function moveSky(p) {
@@ -1316,7 +1326,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   };
   function applyPreset(name) {
     const p = PRE[name];
-    S.T = p.T; S.hour = p.hour;
+    S.T = p.T; startT = p.T; S.hour = p.hour;
     if (p.phiN0 !== undefined) S.phiN0 = p.phiN0;
     setEclipse(!!p.eclipse);
     setLayer('tSid', !!p.sidereal);
@@ -1326,12 +1336,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
 
-  $('reset').addEventListener('click', () => {
-    S.T = INIT.T; S.phiN0 = INIT.phiN0; S.hour = INIT.hour; setSpeed(INIT.speed);
-    setEclipse(false); setLayer('tShadow', true); setLayer('tRing', true); setLayer('tArc', true); setLayer('tSid', false);
-    setPreset(null); $('presetHint').textContent = 'Pick a setup, or drag the Moon around its orbit and watch the view from Earth change.';
-    setPlaying(!reduce);
-  });
+  /* Reset rewinds the run to where it started (the page's opening day, or the last setup's) and keeps every setting, as Reset does
+     across the site; Reset all puts the settings back (student view calls, 2026-11-15) */
+  $('reset').addEventListener('click', () => { S.T = startT; requestDraw(); });
 
   // projector mode
   const projBtn = $('proj');
@@ -1359,7 +1366,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       requestDraw();
     }
   });
-  V.main.el.addEventListener('dblclick', () => { M3.o.th = -Math.PI / 2; M3.o.ph = M3.home || 0.98; requestDraw(); });
+  V.main.el.addEventListener('dblclick', () => { M3.o.th = -Math.PI / 2; M3.o.ph = M3.home || 0.98; M3.o.zoom = 1; requestDraw(); });
 
   // ---------- boot ----------
   { const ro = new ResizeObserver(resize); ro.observe($('stage')); $('stage').querySelectorAll('.pane').forEach((p) => ro.observe(p)); }   /* the panes too: a divider resizes them inside a stage that keeps its size */

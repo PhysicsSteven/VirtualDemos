@@ -492,7 +492,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     converging: () => [mk('object', -22, 0, { h: 3, rays: 9, spread: 11, rot: -5.5 }), mk('lens', 8, 0, { f: 10, ap: 12 }), mk('screen', 23, 0, { h: 10 })],
     camera:     () => [mk('object', -35, 0, { h: 5, rays: 9, spread: 3.3, rot: -8.1 }), mk('lens', 0, 0, { f: 5, ap: 4 }), mk('screen', 5.83, 0, { h: 4 })],
     magnifier:  () => [mk('object', -2, 0, { h: 2, rays: 9, spread: 40, rot: -10 }), mk('lens', 4, 0, { f: 12, ap: 12 })],
-    concave:    () => [mk('object', -16, 0, { h: 3, rays: 9, spread: 7.5, rot: -5.6 }), mk('mirror', 14, 0, { R: 24, ap: 8 })],
+    /* object 1.5 cm tall (was 3), fan still aimed at the mirror's center: at 3 cm the principal ray through C met the extended
+       mirror 12 cm below the axis, off the bench (student view calls, 2026-11-15) */
+    concave:    () => [mk('object', -16, 0, { h: 1.5, rays: 9, spread: 7.5, rot: -2.9 }), mk('mirror', 14, 0, { R: 24, ap: 8 })],
     lenswhite:  () => [mk('beam', -24, 0, { w: 8, rays: 9, white: true }), mk('lens', -8, 0, { f: 20, ap: 10, glass: 'f2' }), mk('screen', 12, 0, { h: 6 })],
     mirrorwhite: () => [mk('beam', -24, 0, { w: 6, rays: 7, white: true }), mk('mirror', 14, 0, { R: 40, ap: 10 })],
     telescope:  () => [mk('beam', -22, 0, { w: 6, rays: 7, rot: 3 }), mk('lens', -14, 0, { f: 16, ap: 10 }), mk('lens', 7, 0, { f: 5, ap: 8 })],

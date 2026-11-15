@@ -1650,6 +1650,10 @@ table.rows button:hover { color: var(--pos); }
     const dyn = S.scene === 'buoy' && !S.P.buoy.scale;
     $('tclock').firstChild.textContent = dyn ? `t = ${fx(t, 2)} s` : S.scene === 'venturi' ? 'steady flow' : S.scene === 'torr' ? 'steady jet' : '';
     $('rateTag').textContent = fmtRate(S.rate);
+    /* no playback rate where nothing moves (Depth, Pascal, barometer, a block on the spring scale; student view calls, 2026-11-15) */
+    const moves = dyn || S.scene === 'venturi' || S.scene === 'torr';
+    if ($('rateTag').hidden === moves) $('rateTag').hidden = !moves;
+    if ($('rateSeg').hidden === moves) $('rateSeg').hidden = !moves;
   }
 
   // ---------- readouts ----------
@@ -2245,9 +2249,11 @@ table.rows button:hover { color: var(--pos); }
     if (!compact) y = wrapText(ctx, F.note + (S.blind ? '' : '. ' + F.model.txt), x0, y + 2 * ls, maxW, 10.5 * ls, T.muted);
     const L = 58 * ls, R = W - 20 * ls, bot = H - 34 * ls, top = y + 20 * ls;
     if (bot - top < 60 * ls) return;
-    const stripH = Math.max((compact ? 26 : 36) * ls, (bot - top) * 0.24), mainBot = bot - stripH - 24 * ls, stripTop = bot - stripH;
-    const xs = F.xs, ys = F.ys;
-    const xmax = xs.length ? Math.max(...xs) : 1, xmin = xs.length ? Math.min(...xs) : 0;
+    /* until there is a fit, no residual strip (its axis read 0.000 three times) and the x axis spans what this scene can
+       reach, not 0 to 1 (student view calls, 2026-11-15) */
+    const stripH = Math.max((compact ? 26 : 36) * ls, (bot - top) * 0.24), mainBot = f ? bot - stripH - 24 * ls : bot, stripTop = bot - stripH;
+    const xs = F.xs, ys = F.ys, xEmpty = F.kind === 'depth' ? S.P.press.D : F.kind === 'buoy' ? 1000 : 4;
+    const xmax = xs.length ? Math.max(...xs) : xEmpty / 1.08, xmin = xs.length ? Math.min(...xs) : 0;
     const xr = [Math.min(0, xmin), xmax > 0 ? xmax * 1.08 : 1];
     const lineY = (k, x) => k.a + k.b * x, cand = ys.slice();
     if (f) cand.push(lineY(f, xr[0]), lineY(f, xr[1]));
@@ -2255,7 +2261,7 @@ table.rows button:hover { color: var(--pos); }
     let y0 = cand.length ? Math.min(...cand) : 0, y1 = cand.length ? Math.max(...cand) : 1;
     if (y1 - y0 < 1e-9) { y0 -= 1; y1 += 1; }
     const pad = (y1 - y0) * 0.1; y0 -= pad; y1 += pad;
-    const A = axes(ctx, L, R, top, mainBot, xr, [y0, y1], '', F.ylab, ls, { noX: true });
+    const A = f ? axes(ctx, L, R, top, mainBot, xr, [y0, y1], '', F.ylab, ls, { noX: true }) : axes(ctx, L, R, top, mainBot, xr, [y0, y1], F.xlab, F.ylab, ls);
     ctx.save(); ctx.beginPath(); ctx.rect(L, top, R - L, mainBot - top); ctx.clip();
     if (!S.blind) { ctx.strokeStyle = T.equi; ctx.lineWidth = 1.6 * ps; ctx.setLineDash([6 * ps, 4 * ps]); ctx.beginPath(); ctx.moveTo(A.X(xr[0]), A.Y(lineY(F.model, xr[0]))); ctx.lineTo(A.X(xr[1]), A.Y(lineY(F.model, xr[1]))); ctx.stroke(); ctx.setLineDash([]); }
     if (f) { ctx.strokeStyle = T.ink; ctx.lineWidth = 2 * ps; ctx.beginPath(); ctx.moveTo(A.X(xr[0]), A.Y(lineY(f, xr[0]))); ctx.lineTo(A.X(xr[1]), A.Y(lineY(f, xr[1]))); ctx.stroke(); }
@@ -2264,6 +2270,7 @@ table.rows button:hover { color: var(--pos); }
     for (let i = 0; i < xs.length; i++) { ctx.beginPath(); ctx.arc(A.X(xs[i]), A.Y(ys[i]), 4.5 * ps, 0, 2 * Math.PI); ctx.fill(); }
     if (!f) labelBox(ctx, xs.length ? 'Record another reading to fit a line.' : 'No readings for this fit yet: press Record reading.', (L + R) / 2, (top + mainBot) / 2, 'center', T.muted, 11.5 * ls, 700);
     else labelBox(ctx, S.blind ? 'dots: your readings; line: least squares fit' : 'dots: your readings; line: least squares fit; dashed: model', R - 6 * ls, mainBot - 8 * ls, 'right', T.muted, 10.5 * ls);
+    if (!f) return;
     // residual strip
     // residual axis: ±1.3 times the largest residual, but not narrower than 1% of the plotted y range (an exact fit shows a flat strip)
     const rmax = f && f.res.length ? Math.max(...f.res.map(Math.abs)) : 0, rh = Math.max(rmax * 1.3, 0.01 * (y1 - y0)), rr = [-rh, rh];
@@ -2696,6 +2703,31 @@ table.rows button:hover { color: var(--pos); }
       const tx = g.position.x;
       return { t: [tx + (q.scale ? -0.04 : 0), 0, q.scale ? 0.36 : 0.27], d: over ? 1.95 : q.scale ? 1.6 : 1.4, b, k, off, show };
     }
+    /* the level tag runs right from the tank wall and could cross the block; then it moves below the block, and below the
+       W tag when that is in the way (student view calls, 2026-11-15) */
+    function blockRect(b) {   /* the block's outline on screen */
+      const L = b.p.L, q = b.q, X = g.position.x; let r = null;
+      for (const cx of [-1, 1]) for (const cy of [-1, 1]) for (const cz of [0, 1]) {
+        const p = G3.S.project([X + q.xb + cx * L / 2, cy * L / 2, TB + bs.zb + cz * L]); if (p[2] > 1) continue;
+        r = r ? [Math.min(r[0], p[0]), Math.min(r[1], p[1]), Math.max(r[2], p[0]), Math.max(r[3], p[1])] : [p[0], p[1], p[0], p[1]];
+      }
+      return r;
+    }
+    function clearOfBlock(txt, at, dy, o) {
+      const { b, k, off, show } = o, ls = OV.ls, L = b.p.L, q = b.q, X = g.position.x, size = 11 * ls, tp = G3.S.project(at);
+      if (tp[2] > 1) return dy;
+      const w = richWidth(OV.ctx, txt, size, 400), box = (y) => [tp[0] - 3, y - size * 0.95, tp[0] + w + 3, y + size * 0.37];
+      const hit = (a, r) => a[0] < r[2] && a[2] > r[0] && a[1] < r[3] && a[3] > r[1];
+      const r = blockRect(b);
+      if (!r || !hit(box(tp[1] + dy * ls), r)) return dy;
+      let y = r[3] + size * 0.95 + 4 * ls;
+      if (show) {
+        const wt = `W = ${fN(b.W)}`, wp = G3.S.project([X + q.xb - off, -L / 2 - 0.006, TB + bs.zb + L / 2 - b.W * k]), ww = richWidth(OV.ctx, wt, 12 * ls, 700);
+        const wr = [wp[0] - 6 * ls - ww - 3, wp[1] - 7.4 * ls, wp[0] - 6 * ls + 3, wp[1] + 8.4 * ls];
+        if (hit(box(y), wr)) y = wr[3] + size * 0.95 + 4 * ls;
+      }
+      return (y - tp[1]) / ls;
+    }
     function ovl(o) {
       const { b, k, off, show } = o, q = b.q, L = b.p.L, X = g.position.x, Z = TB, yf = -L / 2 - 0.006;
       const P3 = (x, y, z) => [x + X, y, z + Z];
@@ -2707,7 +2739,10 @@ table.rows button:hover { color: var(--pos); }
           const at = P3(q.xb + off, yf, bs.zb + b.s / 2 + b.FB * k), sg = handles3.find((h) => h.id === 'size'); let dy = 4;
           if (sg) { const tp = G3.S.project(at), gp = G3.S.project(sg.at(sg.v)), ls = OV.ls, ty = tp[1] + 4 * ls;
             if (gp[2] <= 1 && gp[0] > tp[0] - 4 * ls && gp[0] < tp[0] + 130 * ls && Math.abs(gp[1] - ty) < 20 * ls) dy = ((gp[1] - 21 * ls > 52 * ls ? gp[1] - 21 * ls : gp[1] + 21 * ls) - tp[1]) / ls; }
-          tag(`F_B = ${fN(b.FB)}`, at, 'left', T.vcol, 12, 700, null, 6, dy);
+          /* a short F_B arrow ends inside the block: its tag then starts right of the block (student view calls, 2026-11-15) */
+          let dx = 6; const br = blockRect(b), tp = G3.S.project(at), ls = OV.ls;
+          if (br && tp[2] <= 1 && tp[0] + 6 * ls < br[2] && tp[1] + dy * ls > br[1] && tp[1] + (dy - 12) * ls < br[3]) dx = (br[2] - tp[0]) / ls + 6;
+          tag(`F_B = ${fN(b.FB)}`, at, 'left', T.vcol, 12, 700, null, dx, dy);
         }
         if (b.T > 1e-6) tag(`T = ${fN(b.T)}`, P3(q.xb + off * 2.2, yf, bs.zb + L + b.T * k * 0.6), 'left', T.xcol, 12, 700, null, 8, 4);
         if (b.N > 1e-6) tag(`N = ${fN(b.N)}`, P3(q.xb + off * 2.2, yf, bs.zb + b.N * k * 0.5), 'left', T.xcol, 12, 700, null, 8, 4);
@@ -2719,7 +2754,9 @@ table.rows button:hover { color: var(--pos); }
         const dh = b.hs - b.hs0, at = P3(-TANK.W / 2 + 0.07, -TANK.D / 2, Math.min(b.hs, b.hs0)), bg = handles3.find((h) => h.id === 'block');
         /* below the level line, unless the round block grip is there: then above it */
         let dy = 16; if (bg) { const tp = G3.S.project(at), gp = G3.S.project(bg.at(bg.v)), ls = OV.ls; if (gp[2] <= 1 && Math.abs(gp[1] - (tp[1] + 16 * ls)) < 16 * ls && gp[0] > tp[0] - 10 * ls) dy = -14; }
-        tag(`level ${dh >= 0 ? 'up' : 'down'} ${fx(Math.abs(dh) * 1000, 1)} mm = V_{sub}/A`, at, 'left', T.muted, 11, 400, null, 0, dy);
+        const lt = `level ${dh >= 0 ? 'up' : 'down'} ${fx(Math.abs(dh) * 1000, 1)} mm = V_{sub}/A`;
+        dy = clearOfBlock(lt, at, dy, o);
+        tag(lt, at, 'left', T.muted, 11, 400, null, 0, dy);
       }
       if (q.scale) {
         tag(`scale ${fx(b.T, 2)} N`, P3(q.xb + 0.03, -0.012, q.zh + 0.12), 'left', T.xcol, 12.5, 700, T.mono, 8, 4);

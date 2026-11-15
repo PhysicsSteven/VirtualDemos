@@ -92,6 +92,8 @@ VDI18N.add('es', 'demo/gravity-near-earth', {
   "g ef",
 "{#} kg on a spring scale held up on a tower at this height":
   "{#} kg en una báscula de resorte sostenida sobre una torre a esta altura",
+"the scale is on a tower; a satellite here falls freely: its scale reads {#}":
+  "la báscula está en una torre; un satélite aquí cae libremente: su báscula marca {#}",
 "In orbit at this height":
   "En órbita a esta altura",
 "<span>the same scale reads {#}: the craft and the mass fall together</span>":
@@ -100,6 +102,8 @@ VDI18N.add('es', 'demo/gravity-near-earth', {
   "Rapidez de órbita circular aquí",
 "Orbit period":
   "Periodo de la órbita",
+"gravity {#} N ×{#}":
+  "gravedad {#} N ×{#}",
 "GM = {#} × {#}¹² m³/s² · R = {#} km":
   "GM = {#} × {#}¹² m³/s² · R = {#} km",
 "GM = {#} × {#}¹³ m³/s² · R = {#} km":
@@ -117,5 +121,7 @@ VDI18N.add('es', 'demo/gravity-near-earth', {
 "turning shown far faster than real · drag the scale out or in · drag elsewhere to turn":
   "el giro se muestra mucho más rápido que en la realidad · arrastra la báscula hacia fuera o hacia dentro · arrastra en otro lugar para girar",
 "turning sped up: {#} s = {#} h of real time":
-  "giro acelerado: {#} s = {#} h de tiempo real"
+  "giro acelerado: {#} s = {#} h de tiempo real",
+"scale on a tower; in orbit it reads {#}":
+  "báscula en una torre; en órbita marca {#}"
 });

@@ -802,13 +802,17 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (m === 'count' && !S.surf) { S.sKey = 'mare'; S.preset = 'mare'; S.Dc = SURF.mare.Dc; buildSurface(); $('presetHint').textContent = SURF.mare.why; }
     if (m === 'cool' && !quiet) { S.preset = 'today'; S.t = 4.5; $('presetHint').textContent = PRESETS.today.hint; }
     if (m === 'impact' && !quiet) { $('presetHint').textContent = (PRESETS[S.preset] && PRESETS[S.preset].mode === 'impact') ? PRESETS[S.preset].hint : ''; }
+    if (m === 'count') toFlat();
     dirty3 = true; last3 = ''; sync(); redraw();
   }
+  /* counting is done by clicking in the Flat view, so Count craters switches to Flat by itself; 3D stays one click away (student view calls, 2026-11-15) */
+  function toFlat() { if (view3 && view3.is3d()) view3.set('flat'); }
   function applyPreset(k) {
     const c = PRESETS[k]; if (!c) return; S.preset = k; S.mode = c.mode; S.run = false;
     if (c.mode === 'impact') { Object.assign(S, { body: c.body, rho: c.rho, L: c.L, v: c.v, th: c.th }); recrater(); S.anim = 1; animPre = 1; }
     else if (c.mode === 'count') { S.sKey = c.surf; S.seed = 1; S.mystery = null; if (c.surf !== 'mystery') S.Dc = SURF[c.surf].Dc; buildSurface(); if (c.surf === 'mystery') S.Dc = S.mystery.Dc; }
     else { S.t = c.t; }
+    if (c.mode === 'count') toFlat();
     $('presetHint').textContent = c.hint; dirty3 = true; last3 = ''; sync(); redraw();
   }
   for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
@@ -893,7 +897,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   recrater(); applyPreset(first);
   new ResizeObserver(resize).observe($('scene')); new ResizeObserver(resize).observe(pl.parentElement); resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
-  view3 = VD3K.view({ seg: '#dimSeg', init: init3D, change: () => { if (g3) g3.S3.el.hidden = !use3(); dirty3 = true; last3 = ''; redraw(); }, status: () => {}, start: '3d' });
+  view3 = VD3K.view({ seg: '#dimSeg', init: init3D, change: () => { if (g3) g3.S3.el.hidden = !use3(); dirty3 = true; last3 = ''; redraw(); }, status: () => {}, start: S.mode === 'count' ? 'flat' : '3d' });   /* a counting setup opens Flat (student view calls, 2026-11-15) */
   /* Copy link carries the counting surface (which preset, its random set, the mystery) and the craters marked on it */
   if (window.VD && VD.share && VD.share.picture) VD.share.picture('c', {
     get: () => { if (S.mode !== 'count' || !S.surf) return ''; const idx = []; S.surf.list.forEach((c, i) => { if (S.marks.has(c)) idx.push(i); });
@@ -901,7 +905,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     set: (str) => { const o = VD.share.unpack(str); if (!o || !SURF[o.k] && o.k !== 'mystery') return; S.mode = 'count'; S.sKey = o.k; S.preset = o.k; S.seed = Math.max(1, Math.round(+o.s || 1));
       if (o.k === 'mystery' && Array.isArray(o.q) && o.q.length === 5) S.mystery = { body: o.q[0] === 'mars' ? 'mars' : 'moon', T: +o.q[1], L: +o.q[2], Dmin: +o.q[3], Dc: +o.q[4], name: 'Mystery surface', why: '' }; else S.mystery = null;
       const keepDc = S.Dc; buildSurface(); S.Dc = keepDc; if (Array.isArray(o.m)) for (const i of o.m) if (S.surf.list[i]) S.marks.add(S.surf.list[i]);
-      $('presetHint').textContent = PRESETS[o.k].hint; sync(); redraw(); } });
+      toFlat(); $('presetHint').textContent = PRESETS[o.k].hint; sync(); redraw(); } });
   /* one video per worksheet: Worksheet 2 (Mars) counts Martian craters, Worksheet 1 drops an asteroid on the Moon */
   const howVid = () => { const ws = new URLSearchParams(location.search).get('ws'); return ws === 'intro-mars-ages' || (!ws && S.mode === 'count' && S.cBody === 'mars') ? 'craters-mars' : 'craters'; };
   VD.howTo({ src: () => `media/how-this-works/${howVid()}.mp4`, poster: () => `media/how-this-works/${howVid()}.jpg`,

@@ -10,7 +10,7 @@ Student worksheet · Astro 2203
 
 **Using the demo.**
 
-- A 1.000 kg mass hangs from a spring scale at the chosen height and latitude. If the height is above the ground, imagine the scale held up on a tall tower that turns with the planet. The picture shows the gravity arrow and a graph of g against height.
+- A 1.000 kg mass hangs from a spring scale at the chosen height and latitude. If the height is above the ground, imagine the scale held up on a tall tower that turns with the planet. The picture shows the gravity arrow (far from the planet it is drawn longer so it shows; its label gives the factor) and a graph of g against height.
 - The readouts give the distance from the planet's center r, the pull of gravity alone, and the scale reading g: what the scale feels once the planet's spin is included. At sea level on Earth they also give the real Earth's value from the standard formula for its shape (WGS 84).
 - Record reading stores the planet, the height, the latitude, r and both values of g. Export to worksheet sends the readings to the Data table below; Clear starts a new series, which goes into a new copy of the table.
 - Each planet is a uniform sphere with its measured mass and mean radius (Earth 6371 km, the Moon 1737.4 km, Mars 3389.5 km), turning once a day. The real Earth is slightly flattened at the poles, which a sphere leaves out.
