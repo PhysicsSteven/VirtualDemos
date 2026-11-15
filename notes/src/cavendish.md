@@ -15,7 +15,7 @@ Students should know Newton's law of gravitation, torque, and the period of a to
 
 ## Running it in class
 
-1. **Open the page.** It starts settled in A and swings the spheres to B. Ask Q1 while the spot sets off: the force arrows show 0.87 nN on each small sphere, the net of both large spheres.
+1. **Open the page.** It opens settled in A with the clock at zero. Swing the spheres to B, start the clock and ask Q1 while the spot sets off: the force arrows show 0.87 nN on each small sphere, the net of both large spheres.
 2. **Watch the swing.** At ×100 a full swing takes under 4 s. The spot oscillates about the new resting line, 5.66 cm below the old one, and dies away by e every 720 s. Ask Q2.
 3. **Turning points.** Run to a few turning points and show that they are half a period apart and that three successive ones give the resting position (Q3).
 4. **Find G.** With ΔS and T, Q4. Then switch Blind off to compare with the model's G.

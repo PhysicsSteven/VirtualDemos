@@ -29,5 +29,5 @@ VDI18N.add('en', 'notes/circular-motion', [
 "Loop: frictionless sliding (no rolling energy); speed from energy conservation, N = m(v²/r + g cos φ) with φ from the bottom; the ball leaves the track where N = {#} and then moves as a projectile.",
 "Conical pendulum: a point bob on a massless string, T cos θ = mg and T sin θ = mv²/r, so ω² = g/h with h = L cos θ and the period is {#}π√(h/g); after a cut it moves as a projectile until it reaches the floor. Drawn in oblique projection (depth squeezed to {#}), to scale; runs at real speed.",
 "Barrel ride: riders as points on the wall, N = mv²/R toward the center, static friction up to μs N holding mg once the floor drops; a rider who slips slides with a = g − μ v²/R, sliding friction taken equal to μs. The floor falls freely {#} m and stops (scenery). Real speed.",
-"After release the object moves in a straight line (string, car) or a parabola (loop). Cars are shown at a quarter of real speed and the loop at half; readouts are real."
+"After release the object moves in a straight line (string, car) or a parabola (loop). The loop is shown at half speed (slow motion ×{#}) and everything else at real speed; readouts are for real time."
 ]);

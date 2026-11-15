@@ -69,7 +69,7 @@ Keep masses and signed velocities as raw data. Calculate momentum, energy and re
 ## Analysis
 
 1. Plot final total momentum against initial total momentum. Compare the fitted slope/intercept with conservation.
-2. For each bumper, plot separation speed against approach speed. Infer $$e$$ from the slope.
+2. For the bumper used in the mass and speed scan, plot separation speed against approach speed and infer $$e$$ from the slope. For each bumper in the comparison, calculate $$e$$ from its run.
 3. Plot kinetic energy lost against $$\tfrac12\mu(u_1-u_2)^2$$ for one bumper. Compare its slope with $$1-e^2$$.
 4. Calculate the center of mass velocity and separate the system's overall translation from relative motion.
 

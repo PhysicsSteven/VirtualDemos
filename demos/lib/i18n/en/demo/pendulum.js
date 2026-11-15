@@ -47,7 +47,7 @@ VDI18N.add('en', 'demo/pendulum', [
 "Large swings",
 "Swinging rod",
 "On the Moon",
-"A {#} m pendulum on Earth, released at {#}°. Its period is {#} s, and a \"seconds pendulum\" (one second per swing) is very nearly {#} m long. Change L and record a reading at each length to measure g.",
+"A {#} m pendulum on Earth, released at {#}°. Its small angle period {#}π√(L/g) is {#} s; at {#}° the photogate reads a little longer, {#} s. A \"seconds pendulum\" (one second per swing) is very nearly {#} m long. Change L and record a reading at each length to measure g.",
 "Phase portrait",
 "Almost straight up",
 "Over the top",

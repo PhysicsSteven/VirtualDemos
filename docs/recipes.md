@@ -36,9 +36,12 @@ In the TeacherKeys clone, with the local site running (`setup.sh --site`):
 
     bash worksheet-keys/tools/rekey.sh <slug>            # shows data cells and key words that moved
     bash worksheet-keys/tools/rekey.sh <slug> --apply    # keeps the new data, key .json and PDF
+    bash worksheet-keys/tools/rekey.sh <slug> --reprint  # no capture: reprints from the committed data (answers or handout edit)
 
 If an answer a student would quote moved, rework it in `worksheet-keys/<course>/<slug>-answers.json` from the rounded values
-the worksheet shows (compute every "within N %" claim), then `--apply`. Ignore last digit changes (Steve 2026-11-08). A demo
+the worksheet shows (compute every "within N %" claim), then `--apply`. Ignore last digit changes (Steve 2026-11-08). Many
+keys hold tables typed by hand or a random Mystery draw the capture does not repeat; `--apply` then refuses (it would empty
+committed cells), so merge the new data by hand or `--reprint`. A demo
 key (`demo-keys/answers/<demo>.md`) is rebuilt with `python3 tools/notes.py <demo> --keys $TEACHERKEYS/demo-keys` from this
 repo. Commit TeacherKeys separately, with the reason. Two threads editing TeacherKeys at once conflict in the PDFs and
 `handout-hashes.json`: keep key work in one thread.
@@ -47,7 +50,7 @@ repo. Commit TeacherKeys separately, with the reason. Two threads editing Teache
 
 1. Edit `curriculum/labs/students/<slug>.md` (rules in `docs/handouts.md`: steps state the task, not the control).
 2. `bash tools/cloud/setup.sh --site` rebuilds it; open `http://127.0.0.1:8765/VirtualDemos/curriculum/labs/students/<slug>.html`.
-3. `rekey.sh <slug> --apply` reprints its key so `rules.cjs --keys` stays clean.
+3. `rekey.sh <slug> --reprint` reprints its key so `rules.cjs --keys` stays clean.
 
 ## Retake one How this works video
 

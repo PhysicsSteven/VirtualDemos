@@ -229,7 +229,7 @@ table.rows input:focus { border-color: var(--accent); }
   const csvCell = (v) => { const s = v == null ? '' : String(v); return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; };
   function readingsCSV(rows, meta) {
     const L = ['# Stress and Strain virtual wire: captured readings (simulated data)', `# demo version,${meta.version}`, `# material,${csvCell(meta.material)}`,
-      `# wire_length_m,${LEN}`, `# g_m_per_s2,${G}`, '# model,"idealized stress-strain curve: elastic to the yield stress, smooth hardening to the tensile strength, unloading parallel to the elastic line"',
+      `# wire_length_m,${LEN.toFixed(3)}`, `# g_m_per_s2,${G}`, '# model,"idealized stress-strain curve: elastic to the yield stress, smooth hardening to the tensile strength, unloading parallel to the elastic line"',
       '# rounding,"mass to 0.1 kg, diameter to 0.05 mm, extension to 0.001 mm; F_N = m g; edited cells exported as typed"', '# noise,none', 'row,m_kg,d_mm,dL_mm,F_N'];
     rows.forEach((r, i) => { const m = cellNum(r.m); L.push([i + 1, r.m, r.d, r.dL, isFinite(m) ? +(m * G).toPrecision(6) : ''].map(csvCell).join(',')); });
     return L.join('\n') + '\n';

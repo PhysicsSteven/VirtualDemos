@@ -65,7 +65,7 @@ On a real projectile bench, keep the landing area clear and follow the instructo
 
 **Using the virtual apparatus.** Start with air resistance off, set the launch speed, angle and height, and hide the predictions and answers before you launch. Show time dots at an interval you choose, and record the time and position at each dot you use. Send each scan to the worksheet before clearing, so the trajectory and the range scan each get their own copy of the Data table. Fit the trajectory in the worksheet: a quadratic for $$y$$ against $$t$$ and a straight line for $$x$$ against $$t$$. The Data table has no $$\sin 2\theta$$ column, so fit $$R$$ against $$\sin 2\theta$$ in the demo before you clear the range scan. Every recorded row keeps its shot's settings, so do not mix launch speeds in one range fit. For drag, turn air resistance on and record the air density and the ball's settings.
 
-**Many launches.** A real launcher never fires two shots exactly alike. With air resistance off, a baseball at 40 m/s from the ground, and a spread of 1.0° in angle and 1.0% in speed, fire 10 launches, then 90 more, then 900 more, and record the number of launches, the mean range, the standard deviation and the standard error after each. Repeat at 30°. Record these in Table 2 by hand.
+**Many launches.** A real launcher never fires two shots exactly alike. With air resistance off, a baseball at 40 m/s and 45° from the ground, and a spread of 1.0° in angle and 1.0% in speed, fire 10 launches, then 90 more, then 900 more, and record the number of launches, the mean range, the standard deviation and the standard error after each. Repeat at 30°. Record these in Table 2 by hand.
 
 ## Data
 

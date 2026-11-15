@@ -753,7 +753,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const $ = (id) => document.getElementById(id);
     let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
     const PRESETS = {
-      simple: { rod: false, L: 1.0, A: 8, m: 0.2, g: 9.81, hint: 'A 1.00 m pendulum on Earth, released at 8°. Its period is 2.006 s, and a "seconds pendulum" (one second per swing) is very nearly 1 m long. Change L and record a reading at each length to measure g.' },
+      simple: { rod: false, L: 1.0, A: 8, m: 0.2, g: 9.81, hint: 'A 1.00 m pendulum on Earth, released at 8°. Its small angle period 2π√(L/g) is 2.006 s; at 8° the photogate reads a little longer, 2.009 s. A "seconds pendulum" (one second per swing) is very nearly 1 m long. Change L and record a reading at each length to measure g.' },
       mass: { rod: false, L: 1.0, A: 8, m: 2.0, g: 9.81, hint: 'A heavy bob: change the mass from 2 kg to 50 g and watch the period. Gravity pulls harder on a heavier bob, but it also has more inertia, and the two cancel exactly.' },
       big: { rod: false, L: 1.0, A: 90, m: 0.2, g: 9.81, hint: 'Released at 90°, the period is 18% longer than 2π√(L/g). The small angle formula assumes sin θ ≈ θ; record T at several angles and plot T against θ₀ to see how large swings depart from it.' },
       rod: { rod: true, L: 1.0, A: 8, m: 0.5, g: 9.81, hint: 'A uniform 1.00 m rod swinging from one end has a shorter period than a 1.00 m simple pendulum: its mass is spread along it. It swings like a simple pendulum 2L/3 long: T = 2π√(2L/3g).' },

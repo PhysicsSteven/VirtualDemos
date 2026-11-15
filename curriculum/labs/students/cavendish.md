@@ -33,7 +33,7 @@ Newton's law of gravitation says that two spheres of masses $$M$$ and $$m$$ with
 
 $$F = \frac{GMm}{r^2}.$$
 
-For laboratory masses this force is about a billionth of their weight, so it is measured with a **torsion balance**. A light beam of length $$2l$$ carries a small sphere of mass $$m$$ at each end and hangs from a thin fiber. When each large sphere is brought beside a small one, on opposite sides of the beam, both forces turn the beam the same way, with a torque $$\tau = 2Fl$$. The beam turns until the fiber's restoring torque $$\kappa\theta$$ balances it:
+For laboratory masses this force is a few billionths of the small sphere's weight, so it is measured with a **torsion balance**. A light beam of length $$2l$$ carries a small sphere of mass $$m$$ at each end and hangs from a thin fiber. When each large sphere is brought beside a small one, on opposite sides of the beam, both forces turn the beam the same way, with a torque $$\tau = 2Fl$$. The beam turns until the fiber's restoring torque $$\kappa\theta$$ balances it:
 
 $$\kappa\theta = 2l\,\frac{GMm}{r^2}.$$
 

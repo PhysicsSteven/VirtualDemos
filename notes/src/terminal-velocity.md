@@ -17,7 +17,7 @@ Students should know Newton's second law and the drag force D = ½ρCAv² (§6.4
 
 1. **Jump.** Ask Q1 before pressing Jump, then let it run: the drag arrow grows until it matches the weight, and the curve flattens at 44.5 m/s.
 2. **How fast does it get there?** Pause near t = 4.5 s (v_T/g) and ask Q2.
-3. **Head first.** Switch to Head first on the way down: the speed climbs again, to 98 m/s for the textbook's 75 kg diver. Ask Q3. Switch back and watch it fall back to 44 m/s.
+3. **Head first.** Switch to Head first on the way down: the speed climbs again, to 105 m/s for the 85 kg diver (the Head first setup has the textbook's 75 kg diver, 98 m/s, who slows to 42 m/s spread eagle). Ask Q3. Switch back and watch it fall back to 44 m/s.
 4. **Parachute.** Run the Parachute setup at ×5. Ask Q4 while it opens; the largest deceleration is shown when Blind is off.
 5. **Coffee filters.** Drop one filter, then four (Q5). The graph keeps the earlier falls in gray for comparison.
 6. **Thin air.** Run Thin air, from 10 km, and ask Q6 when the speed starts to fall.

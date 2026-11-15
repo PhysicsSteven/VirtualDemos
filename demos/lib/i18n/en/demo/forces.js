@@ -65,6 +65,7 @@ VDI18N.add('en', 'demo/forces', [
 "<span>Show the net force</span>",
 "<span>Show third law partners: the forces the block exerts</span>",
 "Work and energy since release",
+"Displacement since release, |Δs|",
 "By gravity, W_g",
 "By friction, W_f",
 "By the push F, W_F",

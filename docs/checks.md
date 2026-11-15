@@ -24,7 +24,7 @@ to rebuild it (about 10 s).
 | Frame rate over time | `node tools/perfcheck.cjs <demo>` (`--seconds 60`) | 70 s a demo | anything that animates, adds particles or tracks; run it alone |
 | Opening state | `node tools/opencheck.cjs <demo>` | 20 s | part of democheck; alone after a default change |
 | Before and after picture | `node tools/beforeafter.cjs <demo>` | 1 min | every visual fix; attach the picture to the reply |
-| One worksheet key | in TeacherKeys: `bash worksheet-keys/tools/rekey.sh <slug>` (`--apply` to keep) | 1 to 3 min | when democheck names it, or after a worksheet edit |
+| One worksheet key | in TeacherKeys: `bash worksheet-keys/tools/rekey.sh <slug>` (`--apply` to keep; `--reprint` after an answers or handout edit) | 1 to 3 min | when democheck names it, or after a worksheet edit |
 | One video | `bash tools/howto/take.sh <name>` | 5 min | when the demo's controls, layout or defaults changed |
 | CI after a push | `gh run list -R PhysicsSteven/VirtualDemos -L 3` | seconds | after every push; both jobs must pass, then the Pages build |
 

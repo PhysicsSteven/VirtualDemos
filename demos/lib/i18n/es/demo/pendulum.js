@@ -94,8 +94,8 @@ VDI18N.add('es', 'demo/pendulum', {
   "Varilla oscilante",
 "On the Moon":
   "En la Luna",
-"A {#} m pendulum on Earth, released at {#}°. Its period is {#} s, and a \"seconds pendulum\" (one second per swing) is very nearly {#} m long. Change L and record a reading at each length to measure g.":
-  "Un péndulo de {#} m en la Tierra, soltado a {#}°. Su periodo es {#} s, y un \"péndulo de segundos\" (un segundo por oscilación) mide casi exactamente {#} m. Cambia L y registra una lectura en cada longitud para medir g.",
+"A {#} m pendulum on Earth, released at {#}°. Its small angle period {#}π√(L/g) is {#} s; at {#}° the photogate reads a little longer, {#} s. A \"seconds pendulum\" (one second per swing) is very nearly {#} m long. Change L and record a reading at each length to measure g.":
+  "Un péndulo de {#} m en la Tierra, soltado a {#}°. Su periodo de ángulo pequeño {#}π√(L/g) es {#} s; a {#}° la fotocompuerta marca un poco más, {#} s. Un \"péndulo de segundos\" (un segundo por oscilación) mide casi exactamente {#} m. Cambia L y registra una lectura en cada longitud para medir g.",
 "Phase portrait":
   "Retrato de fase",
 "Almost straight up":

@@ -8,14 +8,14 @@ VDI18N.add('es', 'ws/circular-motion', {
   "Límites de rapidez en curvas y rizos | VirtualDemos",
 "Speed Limits on Curves and Loops":
   "Límites de rapidez en curvas y rizos",
-"Five setups: a ball on a string on a table, a car on a flat curve, a car on a banked curve, a car speeding up or braking on a curve, and a ball inside a vertical loop. Each shows the motion, the velocity and acceleration arrows, and a free body diagram.":
-  "Cinco configuraciones: una pelota atada a una cuerda sobre una mesa, un auto en una curva plana, un auto en una curva peraltada, un auto que acelera o frena en una curva y una pelota dentro de un rizo vertical. Cada una muestra el movimiento, las flechas de velocidad y aceleración, y un diagrama de cuerpo libre.",
+"Seven setups: a ball on a string on a table, a car on a flat curve, a car on a banked curve, a car speeding up or braking on a curve, a ball inside a vertical loop, a conical pendulum, and the rotor ride. Each shows the motion, the velocity and acceleration arrows, and a free body diagram.":
+  "Siete configuraciones: una pelota atada a una cuerda sobre una mesa, un auto en una curva plana, un auto en una curva peraltada, un auto que acelera o frena en una curva, una pelota dentro de un rizo vertical, un péndulo cónico y el juego del rotor. Cada una muestra el movimiento, las flechas de velocidad y aceleración, y un diagrama de cuerpo libre.",
 "Record reading stores the setup, \\(r\\), \\(\\mu_s\\), the bank angle, \\(m\\), the speed and what happens at that speed (the car holds the curve or slides off; on the banked curve, which way friction points; the ball goes round the loop, leaves the track, or stops and slides back). Readings are recorded in the flat curve, banked curve and loop setups. Export to worksheet sends them here.":
   "Registrar lectura guarda la configuración, \\(r\\), \\(\\mu_s\\), el ángulo de peralte, \\(m\\), la rapidez y lo que pasa a esa rapidez (el auto se mantiene en la curva o se derrapa; en la curva peraltada, hacia dónde apunta la fricción; la pelota da la vuelta al rizo, se despega de la pista o se detiene y resbala de regreso). Las lecturas se registran en las configuraciones de curva plana, curva peraltada y rizo. Exportar a la hoja las envía aquí.",
 "Blind hides the force sizes (the free body diagram shows directions only), \\(a = v^2/r\\) and every predicted limit, leaving the settings and the motion. Keep it on for this lab.":
   "A ciegas oculta las magnitudes de las fuerzas (el diagrama de cuerpo libre muestra solo las direcciones), \\(a = v^2/r\\) y todos los límites predichos, y deja los ajustes y el movimiento. Mantenlo activado en este laboratorio.",
-"The cars are shown at a quarter of real speed and the loop at half speed so the motion is easy to follow; every number is for real time.":
-  "Los autos se muestran a un cuarto de su rapidez real y el rizo a la mitad para que el movimiento sea fácil de seguir; todos los números son para el tiempo real.",
+"The loop is shown at half speed (slow motion ×{#}) so the motion is easy to follow; the cars and the other setups run at real speed. Every number is for real time.":
+  "El rizo se muestra a la mitad de la rapidez (cámara lenta ×{#}) para que el movimiento sea fácil de seguir; los autos y las demás configuraciones van a rapidez real. Todos los números son para tiempo real.",
 "Point objects, \\(g = 9.81\\ \\text{m/s}^2\\). Cars: static friction from the road up to \\(\\mu_s N\\), no air resistance, no rolling resistance. The loop is frictionless and the ball is treated as sliding (no rotational energy). The ball on a string moves on a frictionless table.":
   "Objetos puntuales, \\(g = 9.81\\ \\text{m/s}^2\\). Autos: fricción estática del camino hasta \\(\\mu_s N\\), sin resistencia del aire ni resistencia a la rodadura. El rizo no tiene fricción y la pelota se trata como si se deslizara (sin energía de rotación). La pelota atada a la cuerda se mueve sobre una mesa sin fricción.",
 "The speed slider moves in steps of {#} m/s, so a limit can be found to within one step.":
@@ -119,5 +119,9 @@ VDI18N.add('es', 'ws/circular-motion', {
 "Speed at the top of the loop":
   "Rapidez en la parte alta del rizo",
 "Circular Motion":
-  "Movimiento circular"
+  "Movimiento circular",
+"Five setups: a ball on a string on a table, a car on a flat curve, a car on a banked curve, a car speeding up or braking on a curve, and a ball inside a vertical loop. Each shows the motion, the velocity and acceleration arrows, and a free body diagram.":
+  "Cinco configuraciones: una pelota atada a una cuerda sobre una mesa, un auto en una curva plana, un auto en una curva peraltada, un auto que acelera o frena en una curva y una pelota dentro de un rizo vertical. Cada una muestra el movimiento, las flechas de velocidad y aceleración, y un diagrama de cuerpo libre.",
+"The cars are shown at a quarter of real speed and the loop at half speed so the motion is easy to follow; every number is for real time.":
+  "Los autos se muestran a un cuarto de su rapidez real y el rizo a la mitad para que el movimiento sea fácil de seguir; todos los números son para el tiempo real."
 });

@@ -130,6 +130,8 @@ VDI18N.add('es', 'demo/forces', {
   "<span>Mostrar los pares de la tercera ley: las fuerzas que ejerce el bloque</span>",
 "Work and energy since release":
   "Trabajo y energía desde que se soltó",
+"Displacement since release, |Δs|":
+  "Desplazamiento desde que se soltó, |Δs|",
 "By gravity, W_g":
   "De la gravedad, W_g",
 "By friction, W_f":

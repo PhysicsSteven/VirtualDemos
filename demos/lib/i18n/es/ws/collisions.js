@@ -62,8 +62,8 @@ VDI18N.add('es', 'ws/collisions', {
   "Conserva las masas y las velocidades con signo como datos sin procesar. Calcula el momento, la energía y la restitución después.",
 "Plot final total momentum against initial total momentum. Compare the fitted slope/intercept with conservation.":
   "Grafica el momento total final en función del momento total inicial. Compara la pendiente y la ordenada al origen ajustadas con la conservación.",
-"For each bumper, plot separation speed against approach speed. Infer \\(e\\) from the slope.":
-  "Para cada parachoques, grafica la rapidez de separación en función de la rapidez de acercamiento. Infiere \\(e\\) a partir de la pendiente.",
+"For the bumper used in the mass and speed scan, plot separation speed against approach speed and infer \\(e\\) from the slope. For each bumper in the comparison, calculate \\(e\\) from its run.":
+  "Para el parachoques usado en el barrido de masas y rapideces, grafica la rapidez de separación en función de la rapidez de acercamiento e infiere \\(e\\) a partir de la pendiente. Para cada parachoques de la comparación, calcula \\(e\\) a partir de su corrida.",
 "Plot kinetic energy lost against \\(\\tfrac12\\mu(u_1-u_2)^2\\) for one bumper. Compare its slope with \\(1-e^2\\).":
   "Grafica la energía cinética perdida en función de \\(\\tfrac12\\mu(u_1-u_2)^2\\) para un parachoques. Compara su pendiente con \\(1-e^2\\).",
 "Calculate the center of mass velocity and separate the system’s overall translation from relative motion.":

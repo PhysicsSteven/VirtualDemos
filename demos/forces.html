@@ -364,7 +364,7 @@ table.rows input:focus { border-color: var(--accent); }
   function applyPreset(k) {
     const c = PRESETS[k]; S.preset = k; mark(); $('presetHint').textContent = c.hint;
     const keep = S.mystery ? { ms: S.p.ms, mk: S.p.mk } : {};
-    S.p = { n: 4, ...c.p, ...keep }; S.s = c.s; S.v = 0; S.lastGate = null; S.work = { g: 0, F: 0, f: 0, T: 0 }; setRun(false); S.timing = null;
+    S.p = { n: 4, ...c.p, ...keep }; S.s = c.s; S.sRel = c.s; S.v = 0; S.lastGate = null; S.work = { g: 0, F: 0, f: 0, T: 0 }; setRun(false); S.timing = null;
     S.atwood = !!c.atwood; S.tackle = !!c.tackle; setPane(c.close ? 'close' : S.close && !S.atwood && !S.tackle ? 'close' : 'fbd'); S.heat = 0; atwoodControls(); if ((S.atwood || S.tackle) && G3.on) setView('flat'); sync(); draw(); readouts();
   }
   /* Atwood's machine: the ramp turned upright (θ = 90°), so the forces are the same code: N = 0, no friction, the string straight up.
@@ -403,13 +403,13 @@ table.rows input:focus { border-color: var(--accent); }
   function rateTag(st, x, y) { if (!S.run) return; const p = ps(), w = ctx.measureText(st).width; ctx.save(); ctx.font = `${11 * p}px ${T.ui}`; ctx.fillStyle = T.muted; ctx.fillText('real time', x + w + 10 * p, y + 2 * p); ctx.restore(); }
   function setRun(on) { S.run = on; $('go').textContent = on ? 'Hold' : 'Release'; $('go').classList.toggle('attn', !on); }
   $('go').addEventListener('click', () => { S.timing = null; if (!S.run && S.v === 0) clearWork(); setRun(!S.run); });
-  function clearWork() { S.work = { g: 0, F: 0, f: 0, T: 0 }; S.v0 = S.v; }
+  function clearWork() { S.work = { g: 0, F: 0, f: 0, T: 0 }; S.v0 = S.v; S.sRel = S.s; }
   $('back').addEventListener('click', () => { S.s = PRESETS[S.preset] ? PRESETS[S.preset].s : 1.2; S.v = 0; S.timing = null; clearWork(); setRun(false); draw(); readouts(); });
   $('timed').addEventListener('click', () => {
     if (S.tackle) return;
     const fz = forces(S.p, 0), top = LEN - 0.45, bottom = 0.45;
     S.v = 0; S.s = fz.D < 0 || fz.a <= 0 ? top : bottom;   // start at the end it will move away from
-    S.timing = { s0: S.s, t: 0, done: false }; S.lastGate = null; S.work = { g: 0, F: 0, f: 0, T: 0 }; setRun(true); draw(); readouts();
+    S.timing = { s0: S.s, t: 0, done: false }; S.lastGate = null; S.work = { g: 0, F: 0, f: 0, T: 0 }; S.sRel = S.s; setRun(true); draw(); readouts();
   });
   /* Block and tackle: S.s is the load's height above the floor. Steps of constant acceleration; the work each force does is added
      as it moves (the hand's F n Δy, gravity's −mg Δy); landing on the floor or reaching the top takes the kinetic energy left */
@@ -969,7 +969,8 @@ table.rows input:focus { border-color: var(--accent); }
     let w;
     if (bl) w = '<div class="wide"><dt>Work, kinetic energy and power</dt><dd class="ok">hidden in Blind</dd></div>';
     else {
-      w = dd('By gravity, W_g', J(Wk.g)) + dd('By friction, W_f', J(Wk.f));
+      /* the worksheet's work check reads the displacement at the moment Hold is pressed (deep check 2026-11-15) */
+      w = dd('Displacement since release, |Δs|', `${f(Math.abs(S.s - (S.sRel ?? S.s)), 3)} m`, true) + dd('By gravity, W_g', J(Wk.g)) + dd('By friction, W_f', J(Wk.f));
       if (S.p.F > 0) w += dd('By the push F, W_F', J(Wk.F));
       if (S.p.m2 > 0) w += dd('By the string, W_T', J(Wk.T));
       w += dd('By the normal force', '0 J') + (Wk.stop ? dd('By the stop at the end of the ramp', J(Wk.stop)) : '') + dd('Total work on the block', J(sum + (Wk.stop || 0))) + dd('Kinetic energy ½mv² now', J(K)) + dd('Thermal energy from friction, −W_f', J(-Wk.f));

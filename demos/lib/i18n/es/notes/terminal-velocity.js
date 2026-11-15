@@ -2,16 +2,6 @@
 VDI18N.add('es', 'notes/terminal-velocity', {
 "Terminal Velocity: teaching notes":
   "Velocidad terminal: notas para el docente",
-"Site":
-  "Sitio",
-"Virtual Physics Demos":
-  "Demos virtuales de física",
-"Library":
-  "Biblioteca",
-"<a>Demos</a><a>OpenStax</a><a>Notes</a>":
-  "<a>Demos</a><a>OpenStax</a><a>Notas</a>",
-"<a><b>For a class</b> Courses</a>":
-  "<a><b>Para una clase</b> Cursos</a>",
 "Terminal Velocity":
   "Velocidad terminal",
 "Intro mechanics (drag)":
@@ -28,8 +18,8 @@ VDI18N.add('es', 'notes/terminal-velocity', {
   "<strong>Salto.</strong> Haz la P1 antes de pulsar Saltar, luego déjala correr: la flecha del arrastre crece hasta igualar el peso, y la curva se aplana en {#} m/s.",
 "<strong>How fast does it get there?</strong> Pause near t = {#} s (v_T/g) and ask Q2.":
   "<strong>¿Qué tan rápido llega?</strong> Pausa cerca de t = {#} s (v_T/g) y haz la P2.",
-"<strong>Head first.</strong> Switch to Head first on the way down: the speed climbs again, to {#} m/s for the textbook's {#} kg diver. Ask Q3. Switch back and watch it fall back to {#} m/s.":
-  "<strong>De cabeza.</strong> Cambia a De cabeza durante la bajada: la rapidez sube de nuevo, a {#} m/s para el paracaidista de {#} kg del libro. Haz la P3. Regresa y observa cómo baja de nuevo a {#} m/s.",
+"<strong>Head first.</strong> Switch to Head first on the way down: the speed climbs again, to {#} m/s for the {#} kg diver (the Head first setup has the textbook's {#} kg diver, {#} m/s, who slows to {#} m/s spread eagle). Ask Q3. Switch back and watch it fall back to {#} m/s.":
+  "<strong>De cabeza.</strong> Cambia a De cabeza durante la bajada: la rapidez sube de nuevo, a {#} m/s para el paracaidista de {#} kg (la configuración De cabeza tiene al paracaidista de {#} kg del libro, {#} m/s, que frena a {#} m/s con los brazos extendidos). Haz la P3. Regresa y observa cómo baja de nuevo a {#} m/s.",
 "<strong>Parachute.</strong> Run the Parachute setup at ×{#}. Ask Q4 while it opens; the largest deceleration is shown when Blind is off.":
   "<strong>Paracaídas.</strong> Ejecuta la configuración Paracaídas a ×{#}. Haz la P4 mientras se abre; la mayor desaceleración se muestra cuando A ciegas está desactivado.",
 "<strong>Coffee filters.</strong> Drop one filter, then four (Q5). The graph keeps the earlier falls in gray for comparison.":
@@ -58,8 +48,8 @@ VDI18N.add('es', 'notes/terminal-velocity', {
   "<strong>\"La rapidez terminal se alcanza rápido y exactamente.\"</strong> El acercamiento es gradual: alrededor de {#} s y {#} m para quedar a menos de {#}% en el caso del paracaidista con los brazos extendidos, y en aire enrarecido nunca es un solo número.",
 "Down positive, m dv/dt = mg − ½ρ(CA)v|v|, g = {#} m/s²; buoyancy and added mass left out, a straight vertical fall. RK4 with steps of at most {#} ms and v_T/(100g); it matches v_T tanh(gt/v_T) to {#} part in {#}⁹, and landing is found by bisection.":
   "Hacia abajo positivo, m dv/dt = mg − ½ρ(CA)v|v|, g = {#} m/s²; se omiten el empuje y la masa añadida, una caída vertical recta. RK4 con pasos de a lo más {#} ms y v_T/(100g); coincide con v_T tanh(gt/v_T) a {#} parte en {#}⁹, y el aterrizaje se encuentra por bisección.",
-"Uniform air ρ = {#} kg/m³ (the textbook's); the thin air option is the International Standard Atmosphere below {#} km (U.S. Standard Atmosphere {#}).":
-  "Aire uniforme ρ = {#} kg/m³ (el del libro); la opción de aire enrarecido es la Atmósfera Estándar Internacional por debajo de {#} km (U.S. Standard Atmosphere {#}).",
+"Uniform air ρ = {#} kg/m³ (dry air at {#} °C; the textbook rounds it to {#}); the thin air option is the International Standard Atmosphere below {#} km (U.S. Standard Atmosphere {#}).":
+  "Aire uniforme ρ = {#} kg/m³ (aire seco a {#} °C; el libro lo redondea a {#}); la opción de aire enrarecido es la Atmósfera Estándar Internacional por debajo de {#} km (Atmósfera Estándar de EE. UU. {#}).",
 "Skydiver: C = {#} and A = {#} m² spread eagle, C = {#} and A = {#} m² head first (the textbook's Table {#} and examples); position changes take {#} s at a steady rate of change of CA.":
   "Paracaidista: C = {#} y A = {#} m² con los brazos extendidos, C = {#} y A = {#} m² de cabeza (la Tabla {#} y los ejemplos del libro); los cambios de posición tardan {#} s con una tasa de cambio de CA constante.",
 "Canopy: flat circular, {#} m flat diameter, C = {#} on the flat area (Scher and Young, NASA TN D-{#}, {#}), CA = {#} m²; {#} s line stretch, {#} s fill with CA growing in proportion to time (model choices), body upright under it.":
@@ -69,5 +59,17 @@ VDI18N.add('es', 'notes/terminal-velocity', {
 "Pair with <strong>Projectile Range</strong> (the same drag force on a ball in flight) and the <strong>Falling Ball Viscometer</strong> (Stokes' law, where the drag is proportional to v, §{#}).":
   "Combínala con <strong>Alcance de proyectiles</strong> (la misma fuerza de arrastre sobre una pelota en vuelo) y el <strong>Viscosímetro de bola descendente</strong> (ley de Stokes, donde el arrastre es proporcional a v, §{#}).",
 "Homework: Haldane's mouse. A body scaled down by {#} in every length has {#}/{#} of the weight and {#}/{#} of the area. By what factor does its terminal speed change?":
-  "Tarea: el ratón de Haldane. Un cuerpo reducido {#} veces en cada longitud tiene {#}/{#} del peso y {#}/{#} del área. ¿En qué factor cambia su rapidez terminal?"
+  "Tarea: el ratón de Haldane. Un cuerpo reducido {#} veces en cada longitud tiene {#}/{#} del peso y {#}/{#} del área. ¿En qué factor cambia su rapidez terminal?",
+"Site":
+  "Sitio",
+"Virtual Physics Demos":
+  "Demos virtuales de física",
+"Library":
+  "Biblioteca",
+"<a>Demos</a><a>OpenStax</a><a>Notes</a>":
+  "<a>Demos</a><a>OpenStax</a><a>Notas</a>",
+"<a><b>For a class</b> Courses</a>":
+  "<a><b>Para una clase</b> Cursos</a>",
+"Uniform air ρ = {#} kg/m³ (the textbook's); the thin air option is the International Standard Atmosphere below {#} km (U.S. Standard Atmosphere {#}).":
+  "Aire uniforme ρ = {#} kg/m³ (el del libro); la opción de aire enrarecido es la Atmósfera Estándar Internacional por debajo de {#} km (U.S. Standard Atmosphere {#})."
 });
