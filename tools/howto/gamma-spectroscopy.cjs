@@ -1,5 +1,5 @@
 // How this works: Gamma Spectroscopy, worksheet "Gamma Spectroscopy: Calibrating a Detector". The first reading: the Energy
-// calibration setup (cesium 137 at 2 cm, 120 s live, shown at ×100), Clear, Acquire, Mark peak off, a region of interest dragged
+// calibration setup (cesium 137 at 2 cm, 120 s live, shown at clock ×10 since 44e8f91), Clear, Acquire, Mark peak off, a region of interest dragged
 // across the photopeak (about ±1.3 FWHM, as the key's), Record reading. Expected (key row 1): centroid 473.94 ± 0.06 channels,
 // net 59394 counts, FWHM 31.9 channels; the setup puts 661.7 keV near channel 475 of 2048. Counts are random, so a run differs
 // by a few hundred counts and a few hundredths of a channel.
@@ -33,7 +33,7 @@ require('./lib.cjs')({ demo: 'gamma-spectroscopy', title: 'Gamma Spectroscopy' }
   await r.click('[data-p="cal"]');
   await r.secs(0.6);
 
-  state.caption = 'Clear the spectrum and acquire 120 s of live time (the run is shown at ×100)';
+  state.caption = 'Clear the spectrum and acquire 120 s of live time (the clock runs at ×10)';
   await r.click('#clr');
   await r.tick(3);
   if ((await r.text('#acq')) !== 'Stop') await r.click('#acq');

@@ -10,7 +10,10 @@ require('./lib.cjs')({ demo: 'rocket', title: 'Rocket Propulsion' }, async (r) =
   state.caption = 'Sample reading: one flight in deep space with 1,000 kg of fuel';
   await r.secs(3.0);
 
-  state.caption = 'Set the fuel: drag the fuel mass slider down to 1,000 kg';
+  state.caption = 'Set the fuel: open Masses, exhaust speed, burn rate, then drag the fuel mass to 1,000 kg';
+  /* the card's sliders sit in a fold that opens closed since the student view pass (05e58d1) */
+  await r.click('#setupFold > summary');
+  await r.tick(6);
   const card = await r.box('#setupCard');
   state.zoom = [card[0] - 140, card[1] - 60, 560, 315];
   await r.moveTo(...(await thumb('#sMf')), 0.8);

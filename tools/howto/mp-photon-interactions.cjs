@@ -40,7 +40,7 @@ require('./lib.cjs')({ demo: 'photon-interactions', title: 'Photon Interactions 
   await r.secs(1.4);
   state.arrow = null; state.zoom = null;
 
-  state.caption = 'Record the reading. Then go on at 30, 100, 300, 1000, 3000 and 10 000 keV';
+  state.caption = 'Record the reading. Then go on at 30, 100, 300, 1000, 3000 and 10,000 keV';
   await r.scrollRail('.vd-readings .vd-rec');
   await r.click('.vd-readings .vd-rec');
   await r.tick(4);

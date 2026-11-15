@@ -1,17 +1,17 @@
 // How this works: Energy and Power of a Wave. Part 1's first reading: String B (μ = 1.20 g/m), 1.20 m, 200 g hanging, matched
-// absorber, 20 Hz, A = 0.50 mm. Expected: T = 0.200 × 9.81 = 1.962 N, P = ½ √(Tμ) ω² A² = ½ × 0.048522 × (40π)² × (0.50 mm)²
-// = 0.09578 mW.
+// absorber, 20 Hz, A = 1.00 mm (the setup opens at 1.00 mm since 1cbc3ea; the key's row 2). Expected: T = 0.200 × 9.81 = 1.962 N,
+// P = ½ √(Tμ) ω² A² = ½ × 0.048522 × (40π)² × (1.00 mm)² = 0.3831 mW (row 1, 0.50 mm, gives 0.09578 mW).
 require('./lib.cjs')({ demo: 'wave-power', title: 'Energy and Power of a Wave' }, async (r) => {
   const { state, W } = r;
   const can = await r.box('#can');
 
-  state.caption = 'Sample reading: the power on String B at 20 Hz and 0.50 mm amplitude';
+  state.caption = 'Sample reading: the power on String B at 20 Hz and 1.00 mm amplitude';
   await r.secs(3.0);
 
   state.caption = 'The opening setup is Part 1: String B, matched absorber, 200 g hanging';
   state.zoom = [can[0], can[1] + 20, 800, 450];
   for (const s of ['#strings [data-s="B"]', '#absorber [data-a="matched"]', '#massList']) { state.arrow = { rect: await r.box(s) }; await r.secs(1.1); }
-  state.caption = 'The function generator is at 20.0 Hz and 0.50 mm';
+  state.caption = 'The function generator is at 20.0 Hz and 1.00 mm';
   for (const s of ['#oF', '#oA']) { state.arrow = { rect: await r.box(s) }; await r.secs(1.1); }
   state.arrow = null; state.zoom = null;
 
