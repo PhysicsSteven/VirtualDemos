@@ -292,5 +292,20 @@
     },
   };
 
+  /* Bose–Einstein Condensation (2026-11-15). h²/(2π k_B) in u·µm²·nK, from the constants the question gives */
+  const H2_2PIK = Math.pow(6.62607015e-34, 2) / (2 * Math.PI * 1.380649e-23 * 1.66053906892e-27) * 1e21;
+  C['bose-einstein-condensation'] = {
+    items: {
+      'analysis-1': { expect: (D) => H2_2PIK / D.slope(1, 0) },
+      'analysis-6': { expect: (D) => Math.sqrt(-D.intercept(2, 0) / D.slope(2, 0)) },
+    },
+    cells: [
+      { table: 1, col: '1/T', from: (r) => 1 / r.n('Temperature') },
+      { table: 1, col: 'λ_T² (µm²)', from: (r) => Math.pow(r.n('Thermal wavelength'), 2) },
+      { table: 2, col: 'T² (nK²)', from: (r) => Math.pow(r.n('Temperature'), 2) },
+      { table: 2, col: '1 − (T/T_c)²', from: (r) => 100 * Math.max(0, 1 - Math.pow(r.n('Temperature') / r.n('T_c'), 2)) },
+    ],
+  };
+
   window.VD_WS_CHECKS = C;
 })();

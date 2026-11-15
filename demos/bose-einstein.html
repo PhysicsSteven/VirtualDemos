@@ -118,6 +118,27 @@
         <h2>Readouts</h2>
         <dl class="readout" id="out"></dl>
       </section>
+      <!-- vd-readings --><section class="vd-readings" data-ws="bose-einstein-condensation" data-title="Bose–Einstein Condensation" data-demo="bose-einstein">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings ('+(typeof window.vdDataNote==='function'&&window.vdDataNote()?'catalog data':'simulated data')+')','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:(typeof window.vdDataNote==='function'&&window.vdDataNote())||'Simulated data from the '+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
       <section>
         <details class="fold"><summary>Lab</summary><div class="foldbody">
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the condensate count, to predict it from the overlap</span></label>
@@ -691,7 +712,7 @@
   $('speed').addEventListener('click', (e) => { const b = e.target.closest('[data-sp]'); if (!b) return; S.speed = +b.dataset.sp; sync(); });
   $('sceneSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-scene]'); if (!b) return; S.scene = b.dataset.scene; sync(); redraw(); });
   $('colorSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-color]'); if (!b) return; S.color = b.dataset.color; sync(); redraw(); });
-  $('sT').addEventListener('input', (e) => { S.preset = 'custom'; setT(TMIN * 10 ** +e.target.value); S.T0 = S.T; sync(); redraw(); });
+  $('sT').addEventListener('input', (e) => { S.preset = 'custom'; setT(VD.nice(TMIN * 10 ** +e.target.value)); S.T0 = S.T; sync(); redraw(); });
   $('sN').addEventListener('input', (e) => { S.N = +e.target.value; $('oN').textContent = String(S.N); });
   $('sN').addEventListener('change', (e) => { S.N = +e.target.value; changedGas(); });
   $('sL').addEventListener('input', (e) => { S.L = +e.target.value; $('oL').textContent = `${f(S.L, 1)} µm`; });
@@ -706,6 +727,31 @@
   $('chkLevels').addEventListener('change', (e) => { S.marks = e.target.checked; redraw(); });
   $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; redraw(); });
   can.addEventListener('keydown', (e) => { if (e.key === ' ') { $('play').click(); e.preventDefault(); } });
+  /* exact values typed into the readouts beside the sliders; the temperature slider sticks to round values (VD.nice) */
+  const tNKs = (t) => (t * 1e9).toFixed(t < 1e-8 ? 2 : t < 1e-7 ? 1 : 0), tNK = (t) => +tNKs(t);   /* the temperature as fmtT shows it, in nK */
+  VD.typeIn($('oT'), { get: () => tNK(S.T), seed: () => String(tNK(S.T)), set: (v) => { S.preset = 'custom'; setT(v * 1e-9); S.T0 = S.T; sync(); redraw(); }, min: 1, max: 1000, step: 0.01, unit: 'nK', label: 'Temperature', knobs: [$('sT')] });
+  VD.typeIn($('oN'), { get: () => S.N, set: (v) => { S.N = v; changedGas(); }, min: 10, max: 400, step: 10, unit: '', label: 'Number of atoms', knobs: [$('sN')] });
+  VD.typeIn($('oL'), { get: () => S.L, set: (v) => { S.L = v; changedGas(); }, min: 2, max: 20, step: 0.5, unit: 'µm', label: 'Box side', knobs: [$('sL')] });
+  VD.typeIn($('oF'), { get: () => S.f, set: (v) => { S.f = v; ladTop = 0; changedGas(); }, min: 10, max: 200, step: 5, unit: 'Hz', label: 'Trap frequency', knobs: [$('sF')] });
+
+  /* ---------- readings for the worksheet ----------
+     One row per Record reading, with the values exactly as the readouts round them. Box rows go to the worksheet's first table,
+     trap rows to its second (worksheet.js FROM_DEMO), so one series cannot mix the two. */
+  const BOX_COLS = [['T_nK', 'T (nK)'], ['lambda_um', 'λ_T (µm)'], ['overlap', 'Nλ²/L²'], ['N0', 'N₀']];
+  const TRAP_COLS = [['T_nK', 'T (nK)'], ['N0', 'N₀'], ['frac_pct', 'N₀/N (%)'], ['Tc_nK', 'T_c (nK)']];
+  window.vdVersion = 'bose-einstein@2026-11-15';
+  Object.defineProperty(window, 'vdShowCols', { configurable: true, get: () => { const r = window.vdRows ? window.vdRows() : []; return (r.length ? r[0].container === 'trap' : S.trap) ? TRAP_COLS : BOX_COLS; } });
+  window.vdReadingRow = () => {
+    if (S.blind) return (window.VDI18N ? VDI18N.t('Blind hides the ground state count. Turn Blind off (Lab section) to record readings.') : 'Blind hides the ground state count. Turn Blind off (Lab section) to record readings.');
+    const rows = window.vdRows ? window.vdRows() : [], here = S.trap ? 'trap' : 'box';
+    if (rows.length && rows[0].container !== here) return rows[0].container === 'trap' ? (window.VDI18N ? VDI18N.t('These readings are from the harmonic trap: export them to the worksheet or clear them first.') : 'These readings are from the harmonic trap: export them to the worksheet or clear them first.') : (window.VDI18N ? VDI18N.t('These readings are from the box: export them to the worksheet or clear them first.') : 'These readings are from the box: export them to the worksheet or clear them first.');
+    /* text, so that each value keeps the digits the readout shows (0.70, 1.00) */
+    const n0 = f(O.n0, O.n0 < 10 ? 2 : 1), pct = f(O.frac * 100, 1), Td = markT();
+    const row = { container: here, atom: ATOMS[S.atom].name, N: String(S.N) };
+    if (S.trap) return Object.assign(row, { f_Hz: String(S.f), T_nK: tNKs(S.T), N0: n0, frac_pct: pct, Tc_nK: tNKs(Td) });
+    return Object.assign(row, { L_um: f(S.L, 1), T_nK: tNKs(S.T), lambda_um: O.lambda >= 1e-6 ? (O.lambda * 1e6).toFixed(2) : (Math.round(O.lambda * 1e9) / 1000).toFixed(3),
+      overlap: f(O.nLambda2, O.nLambda2 < 0.1 ? 3 : 2), touch_nK: tNKs(Td), N0: n0, frac_pct: pct });
+  };
 
   let last = performance.now(), acc = 0;
   function frame(now) {
@@ -735,6 +781,7 @@
   new ResizeObserver(resize).observe($('pane')); resize();
   view3 = VD3K.view({ seg: '#dimSeg', init: init3D, start: '3d', change: () => { if (g3) g3.S3.el.hidden = !use3(); redraw(); }, status: (m) => { S.msg = m; $('note').textContent = m; } });
   if (window.VD && VD.panel) VD.panel({ play: '#play', reset: '#reset', speed: '#speed', end: ['#dimSeg'] });
+  VD.howTo({ src: 'media/how-this-works/bose-einstein-condensation.mp4', poster: 'media/how-this-works/bose-einstein-condensation.jpg' });
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   requestAnimationFrame(frame);
 })();

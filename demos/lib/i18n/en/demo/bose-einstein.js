@@ -21,6 +21,7 @@ VDI18N.add('en', 'demo/bose-einstein', [
 "Condensate fraction",
 "A square box of atoms seen in perspective. Each atom is a wave packet drawn as a bump; the ladder on the left shows which energy level each atom is in, and the thermometer on the right the temperature. Drag to turn the view; Space plays or pauses.",
 "<span>Temperature</span>",
+"Temperature: click, or press Enter, to type a value",
 "Temperature, logarithmic from {#} nanokelvin to {#} microkelvin",
 "Cool down",
 "Warm up",
@@ -38,8 +39,11 @@ VDI18N.add('en', 'demo/bose-einstein', [
 "Hydrogen ({#} u)",
 "Helium {#} (metastable) ({#} u)",
 "Number of atoms N",
+"Number of atoms: click, or press Enter, to type a value",
 "Box side L",
+"Box side: click, or press Enter, to type a value",
 "Trap frequency f",
+"Trap frequency: click, or press Enter, to type a value",
 "The picture",
 "<span>The picture</span>",
 "<span>Color</span>",
@@ -77,6 +81,8 @@ VDI18N.add('en', 'demo/bose-einstein', [
 "The harmonic trap: the same ideal gas in a round two dimensional trap of frequency f, levels E = ħω(nx + ny + {#}) with level q = nx + ny holding q + {#} states, summed exactly. Unlike the infinite box, an infinite gas in a two dimensional trap does condense, below kT_c = ħω√(6N)/π, with N(T/T_c)² atoms left in the excited levels (Bagnato and Kleppner, Phys. Rev. A {#}, {#}, {#}); the exact count for N atoms is a little smaller near T_c and rounds the corner. Each excited atom swings along x and y with the amplitude of its level, ℓ√(2n + {#}), ℓ = √(ħ/mω); the condensate is the ground state, a Gaussian of width ℓ. The velocity view adds the thermal atoms of every place in the trap: −ln({#} − e^(−(mv²/2kT + x))), normalized with the dilogarithm.",
 "box {#} µm on a side",
 "Drag to turn the view",
+"T (nK)",
+"Nλ²/L²",
 "velocity, ±{#} mm/s each way",
 "√(2kT/m) = {#} mm/s",
 "how many atoms move at each velocity: the broad hill is the thermal gas, the spike the condensate",
@@ -122,5 +128,8 @@ VDI18N.add('en', 'demo/bose-einstein', [
 "hidden: predict it",
 "trap of {#} Hz, {#} µm across",
 "Blind: the curve is hidden. Predict where it rises from the overlap of the packets.",
-"Sodium {#}, N = {#}, L = {#} µm: the exact Bose–Einstein count for this box"
+"Sodium {#}, N = {#}, L = {#} µm: the exact Bose–Einstein count for this box",
+"Blind hides the ground state count. Turn Blind off (Lab section) to record readings.",
+"These readings are from the harmonic trap: export them to the worksheet or clear them first.",
+"These readings are from the box: export them to the worksheet or clear them first."
 ]);

@@ -266,6 +266,7 @@ HANDOUT_TOPIC = {
     'orbital-magnetic-moment': 'The Orbital Magnetic Moment', 'stern-gerlach': 'The Stern–Gerlach Experiment', 'zeeman-effect': 'The Zeeman Effect',
     'periodic-table': 'Shells and the Periodic Table', 'x-ray-spectra': "X-Ray Spectra and Moseley's Law",
     'meissner-effect': 'The Meissner Effect and the Critical Field',
+    'bose-einstein-condensation': 'Bose–Einstein Condensation',
     'exoplanets': 'Finding Exoplanets',
     # astro, 2026-10-24
     'seasons': 'Sunlight Through the Year', 'moon-phases': 'Phases and the Lunar Month', 'lagrange-points': 'Orbits Near the Lagrange Points',

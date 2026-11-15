@@ -42,6 +42,8 @@ VDI18N.add('es', 'demo/bose-einstein', {
   "Una caja cuadrada de átomos vista en perspectiva. Cada átomo es un paquete de ondas dibujado como un montículo; la escalera de la izquierda muestra en qué nivel de energía está cada átomo, y el termómetro de la derecha, la temperatura. Arrastra para girar la vista; la barra espaciadora reproduce o pausa.",
 "<span>Temperature</span>":
   "<span>Temperatura</span>",
+"Temperature: click, or press Enter, to type a value":
+  "Temperatura: haz clic, o presiona Enter, para escribir un valor",
 "Temperature, logarithmic from {#} nanokelvin to {#} microkelvin":
   "Temperatura, logarítmica de {#} nanokelvin a {#} microkelvin",
 "Cool down":
@@ -76,10 +78,16 @@ VDI18N.add('es', 'demo/bose-einstein', {
   "Helio {#} (metaestable) ({#} u)",
 "Number of atoms N":
   "Número de átomos N",
+"Number of atoms: click, or press Enter, to type a value":
+  "Número de átomos: haz clic, o presiona Enter, para escribir un valor",
 "Box side L":
   "Lado de la caja L",
+"Box side: click, or press Enter, to type a value":
+  "Lado de la caja: haz clic, o presiona Enter, para escribir un valor",
 "Trap frequency f":
   "Frecuencia de la trampa f",
+"Trap frequency: click, or press Enter, to type a value":
+  "Frecuencia de la trampa: haz clic, o presiona Enter, para escribir un valor",
 "The picture":
   "La imagen",
 "<span>The picture</span>":
@@ -154,6 +162,10 @@ VDI18N.add('es', 'demo/bose-einstein', {
   "caja de {#} µm por lado",
 "Drag to turn the view":
   "Arrastra para girar la vista",
+"T (nK)":
+  "T (nK)",
+"Nλ²/L²":
+  "Nλ²/L²",
 "velocity, ±{#} mm/s each way":
   "velocidad, ±{#} mm/s hacia cada lado",
 "√(2kT/m) = {#} mm/s":
@@ -245,5 +257,11 @@ VDI18N.add('es', 'demo/bose-einstein', {
 "Blind: the curve is hidden. Predict where it rises from the overlap of the packets.":
   "A ciegas: la curva está oculta. Predice dónde sube a partir del traslape de los paquetes.",
 "Sodium {#}, N = {#}, L = {#} µm: the exact Bose–Einstein count for this box":
-  "Sodio {#}, N = {#}, L = {#} µm: la cuenta exacta de Bose–Einstein para esta caja"
+  "Sodio {#}, N = {#}, L = {#} µm: la cuenta exacta de Bose–Einstein para esta caja",
+"Blind hides the ground state count. Turn Blind off (Lab section) to record readings.":
+  "A ciegas oculta el conteo del estado base. Desactiva A ciegas (sección Laboratorio) para registrar lecturas.",
+"These readings are from the harmonic trap: export them to the worksheet or clear them first.":
+  "Estas lecturas son de la trampa armónica: expórtalas a la hoja o bórralas primero.",
+"These readings are from the box: export them to the worksheet or clear them first.":
+  "Estas lecturas son de la caja: expórtalas a la hoja o bórralas primero."
 });

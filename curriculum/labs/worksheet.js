@@ -507,6 +507,14 @@
     /* Reading | Sample | Temperature T (K) | Applied field B (mT) | Moment m (mA·m²) | Field at the equator (mT) | T² (K²) */
     'meissner-effect': { demo: 'Superconductors and the Meissner Effect', cols: ['row', (r) => `${r.sample}, ${r.model}`, 'T_K', 'B_mT', 'm_mAm2', 'B_eq_mT', null] },
   });
+  /* Bose–Einstein Condensation demo (2026-11-15): box readings fill Table 1, harmonic trap readings Table 2 */
+  MODERN.push('bose-einstein-condensation'); ENABLED.push('bose-einstein-condensation');
+  Object.assign(FROM_DEMO, {
+    /* Table 1: Reading | Atom | Atoms N | Box side L (µm) | T (nK) | λ_T (µm) | Overlap Nλ_T²/L² | Packets touch at (nK) | N₀ | N₀/N (%) | 1/T | λ_T²
+       Table 2: Reading | Atom | Atoms N | Trap frequency f (Hz) | T (nK) | N₀ | N₀/N (%) | T_c (nK) | T² | 1 − (T/T_c)² */
+    'bose-einstein-condensation': { demo: 'Bose–Einstein Condensation', cols: ['row', 'atom', 'N', 'L_um', 'T_nK', 'lambda_um', 'overlap', 'touch_nK', 'N0', 'frac_pct', null, null],
+      alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.container === 'trap'), cols: ['row', 'atom', 'N', 'f_Hz', 'T_nK', 'N0', 'frac_pct', 'Tc_nK', null, null] }] },
+  });
   /* Worksheet sweep, Modern (2026-10-31): a new worksheet for the Alpha decay and Beta decay views of Radioactive Decay */
   MODERN.push('alpha-and-beta-decay'); ENABLED.push('alpha-and-beta-decay');
   Object.assign(FROM_DEMO, {
@@ -860,6 +868,7 @@
   const GRAPH_EVERY_TABLE = ['franck-hertz', 'shear-bulk', 'neutral-attraction', 'terminal-velocity', 'black-holes', 'hr-diagram', 'white-dwarf-cooling', 'ising', 'diffusion', 'critical-mass', 'springs', 'normal-modes', 'ripple-tank', 'intro-retrograde'];
   GRAPH_EVERY_TABLE.push('hydrogen-in-stars');
   GRAPH_EVERY_TABLE.push('atwood');   /* a against x, then 1/a against the total mass */
+  GRAPH_EVERY_TABLE.push('bose-einstein-condensation');   /* λ_T² against 1/T in the box, then N₀/N against T² in the trap */
   GRAPH_EVERY_TABLE.push('intro-aberrations');   /* the graph is of the second table: half light diameter against the star's angle (coma) */
   GRAPH_EVERY_TABLE.push('fluids');   /* density table, then h₂ against h₁ in the U tube */
   GRAPH_EVERY_TABLE.push('rotation');   /* the rolling speed against the launch spin */
