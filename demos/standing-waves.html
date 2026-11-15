@@ -1460,7 +1460,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const h1 = avail * 0.27, h2 = avail * 0.27;
     const aA = top + gap, aB = aA + h1, bA = aB + gap, bB = bA + h2, cA = bB + gap, cB = bot - 4 * ls;
     const fm = (f1 + f2) / 2, zw = 5 / fm;      // close up window
-    const tz0 = t - zw / 2;
+    /* The close up steps in whole cycles of f₁, so tone 1 holds still and tone 2 slides past it at |f₁ − f₂|: centred on the playhead
+       it jumped about a third of a 440 Hz cycle every frame and flickered (student view, 2026-11-15). */
+    const tz0 = Math.round(t * f1) / f1 - zw / 2;
     const Xz = (tt) => Lp + (tt - tz0) / zw * (Rp - Lp), invTz = (px) => tz0 + (px - Lp) / (Rp - Lp) * zw;
     const y1 = (tt) => A1 * Math.cos(TAU * f1 * tt), y2 = (tt) => A2 * Math.cos(TAU * f2 * tt);
     const YA = (v) => (aA + aB) / 2 - v / 1.25 * (aB - aA) / 2, YB = (v) => (bA + bB) / 2 - v / 2.3 * (bB - bA) / 2;
@@ -1472,7 +1474,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     plot(Lp, Rp, (px) => YA(y2(invTz(px))), T.neg, 2.2 * ls, null, 1);
     ctx.restore();
     ctx.save(); ctx.beginPath(); ctx.rect(Lp, bA, Rp - Lp, bB - bA); ctx.clip();
-    const ez = beatEnvelope(t, A1, A2, f1, f2);
+    const ez = beatEnvelope(tz0 + zw / 2, A1, A2, f1, f2);
     hline(Lp, Rp, YB(ez), T.muted, [5 * ls, 4 * ls], 1.1 * ls); hline(Lp, Rp, YB(-ez), T.muted, [5 * ls, 4 * ls], 1.1 * ls);
     plot(Lp, Rp, (px) => { const tt = invTz(px); return YB(y1(tt) + y2(tt)); }, T.ink, 2.6 * ls, null, 1);
     ctx.restore();
@@ -1537,7 +1539,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     tag('Their sum', Lp, bA - 5 * ls, T.ink, 'left', 'bottom', true, 11.5);
     tag(pick([`Sum over ${wl.toFixed(wl < 1 ? 2 : 1)} s, with its envelope; the red playhead sweeps across`, `Sum over ${wl.toFixed(wl < 1 ? 2 : 1)} s, with its envelope`], Rp - Lp), Lp, cA - 5 * ls, T.ink, 'left', 'bottom', true, 11.5);
     // close up time ticks (ms from the playhead)
-    tag(`${(zw * 1e3).toFixed(1)} ms shown`, Rp - 4 * ls, bB - 3 * ls, T.muted, 'right', 'bottom', false, 10);
+    tag(pick([`${(zw * 1e3).toFixed(1)} ms shown, stepped by whole cycles of f₁`, `${(zw * 1e3).toFixed(1)} ms shown`], 0.6 * (Rp - Lp), 10, false), Rp - 4 * ls, bB - 3 * ls, T.muted, 'right', 'bottom', false, 10);
     xTicks(Lp, Rp, tl0, tl0 + wl, cB, 't (s)');
     // amplitude grip
     handles.push({ id: 'A2', cursor: 'ns-resize', color: T.neg, seg: [Rp - 80 * ls, YA(A2), Rp - 4 * ls, YA(A2)], grip: [Rp - 34 * ls, YA(A2)],

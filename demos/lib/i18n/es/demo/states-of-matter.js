@@ -20,6 +20,10 @@ VDI18N.add('es', 'demo/states-of-matter', {
   "energía de enlace U (kJ/mol)",
 "States of Matter":
   "Estados de la materia",
+"<a>Temperature and heat</a>":
+  "<a>Temperatura y calor</a>",
+"<a><span>←</span> <span>Temperature and Heat</span></a><a><span>Superfluid Helium</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Temperatura y calor</span></a><a><span>Helio superfluido</span> <span>→</span></a>",
 "Heat a crystal of argon atoms and watch the bonds between them. While it melts or boils the temperature stops rising: the heat goes into pulling the atoms apart.":
   "Calienta un cristal de átomos de argón y observa los enlaces entre ellos. Mientras se funde o hierve, la temperatura deja de subir: el calor se usa para separar los átomos.",
 "T in K · heat in kJ/mol · time in ns":
@@ -122,10 +126,6 @@ VDI18N.add('es', 'demo/states-of-matter', {
   "Vista Átomos: {#} átomos de argón que se atraen a distancia y se repelen al tocarse (el potencial de Lennard-Jones, con la intensidad de enlace del argón ε/k = {#} K y tamaño σ = {#} nm, cortado en {#} nm). La segunda ley de Newton mueve cada átomo en pasos de {#} fs. La muestra se repite hacia los lados, así que un átomo que sale por un lado vuelve a entrar por el otro, como si fuera parte de una lámina ancha. Un pistón libre presiona hacia abajo con la presión que fijes, y el calentador añade energía a los átomos que tocan el piso. El pistón está idealizado: empuja exactamente con la presión fijada (su manómetro la muestra), sin pesas, de {#} a {#} atm. A baja presión el vapor necesita mucho más espacio, así que la imagen comprime las alturas por encima de {#} nm (una línea discontinua marca dónde) para mantener el pistón a la vista; la lectura Altura de la columna es la altura real. La columna termina en {#} nm, así que a {#} atm el vapor la llena y luego el volumen queda fijo. La temperatura es la energía cinética promedio de los átomos (KE = {#}/{#} kT por átomo); la energía de enlace U es su energía potencial, negativa porque los átomos enlazados tienen menos energía que los separados. El calor añadido es igual al cambio en KE + U + PV: la primera ley a presión constante. La corrida dura nanosegundos, así que el calentador es mucho más potente que una estufa. Dos cosas alejan las temperaturas de las del argón real, {#} K (fusión) y {#} K (ebullición a {#} atm). Las configuraciones usan {#} atm, no {#} atm, para que el vapor se quede cerca de la muestra (a {#} atm necesitaría más de diez veces el espacio), y un líquido hierve más caliente a mayor presión: por eso aquí la ebullición ocurre muy por encima de {#} K. Y la muestra mide solo unos nanómetros de grosor, con muchos átomos en una superficie, y cada átomo siente solo a los átomos a menos de {#} nm, así que se mantiene unida con menos firmeza que un matraz de argón: se funde por debajo de {#} K y sus calores latentes son menores. La forma de la curva de calentamiento, y adónde va el calor, son iguales. Una muestra pequeña también puede sobrecalentarse un momento antes de que se forme el primer vapor, y luego regresar a la meseta de ebullición; los líquidos reales también lo hacen (sobrecalentamiento). Las temperaturas y energías en pantalla son promedios de los últimos {#} ns. La vista plana muestra una rebanada de {#} nm de grosor a través del centro de la muestra, con los átomos de atrás tenues; la vista 3D los muestra todos.",
 "Beaker view: a sample heated at a constant power P in a perfectly insulated beaker open to the air at {#} atm, so all of the heat goes into the sample (none into the glass or the room) and the vapor leaves. Specific heats and latent heats are from OpenStax University Physics Volume {#}, Tables {#} and {#}: ice {#} J/kg·°C, water {#}, ethanol {#}; water melts at {#} °C with Lf = {#} kJ/kg and boils at {#} °C with Lv = {#} kJ/kg; ethanol boils at {#} °C with Lv = {#} kJ/kg. Each stage takes heat Q = mcΔT or Q = mL, delivered at Q = Pt. Evaporation below the boiling point is neglected. The balance is tared, so it reads the sample only. The covered beaker beside it is the same sample on the same hot plate with a lid: until it boils the two match, then its vapor condenses on the lid and runs back, so nothing leaves and its balance keeps reading the whole mass (mass is conserved; only the open beaker loses the vapor). The lid passes the heat on to the room, which is not modeled, so the covered sample stays at the boiling point. Ice is drawn as cubes that shrink as they melt, their total volume following the mass of ice left.":
   "Vista Vaso de precipitados: una muestra calentada a una potencia constante P en un vaso perfectamente aislado y abierto al aire a {#} atm, así que todo el calor va a la muestra (nada al vidrio ni a la habitación) y el vapor se va. Los calores específicos y latentes son de OpenStax University Physics Volumen {#}, tablas {#} y {#}: hielo {#} J/kg·°C, agua {#}, etanol {#}; el agua se funde a {#} °C con Lf = {#} kJ/kg y hierve a {#} °C con Lv = {#} kJ/kg; el etanol hierve a {#} °C con Lv = {#} kJ/kg. Cada etapa toma un calor Q = mcΔT o Q = mL, entregado a razón de Q = Pt. Se desprecia la evaporación por debajo del punto de ebullición. La balanza está tarada, así que solo lee la muestra. El vaso tapado al lado es la misma muestra sobre la misma parrilla con una tapa: hasta que hierve, los dos coinciden; luego su vapor se condensa en la tapa y escurre de regreso, así que nada sale y su balanza sigue leyendo toda la masa (la masa se conserva; solo el vaso abierto pierde el vapor). La tapa pasa el calor a la habitación, lo cual no se modela, así que la muestra tapada se queda en el punto de ebullición. El hielo se dibuja como cubos que se encogen al fundirse, con su volumen total siguiendo la masa de hielo que queda.",
-"<a>Temperature and heat</a>":
-  "<a>Temperatura y calor</a>",
-"<a><span>←</span> <span>Temperature and Heat</span></a><a><span>Superfluid Helium</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Temperatura y calor</span></a><a><span>Helio superfluido</span> <span>→</span></a>",
 "The atoms in 3D: drag to turn, wheel or pinch to zoom, double click to reset.":
   "Los átomos en 3D: arrastra para girar, rueda o pellizca para hacer zoom, doble clic para restablecer.",
 "balance (tared)":
@@ -182,6 +182,8 @@ VDI18N.add('es', 'demo/states-of-matter', {
   "{#} g de etanol a {#} °C sobre la misma parrilla. Hierve a {#} °C, y su calor latente de vaporización es {#} kJ/kg, menos de la mitad de los {#} kJ/kg del agua, así que se evapora mucho antes.",
 "Row {#} captured.":
   "Fila {#} capturada.",
+"Close":
+  "Cerrar",
 "open":
   "abierto",
 "covered":
@@ -194,6 +196,8 @@ VDI18N.add('es', 'demo/states-of-matter', {
   "hirviendo a {#} °C",
 "boiling":
   "ebullición",
+"slow motion: 1 s here = {n} ns":
+  "cámara lenta: 1 s aquí = {n} ns",
 "<a><span>←</span> <span>Temperature and Heat</span></a><a><span>Blackbody Radiation</span> <span>→</span></a>":
   "<a><span>←</span> <span>Temperatura y calor</span></a><a><span>Radiación de cuerpo negro</span> <span>→</span></a>"
 });

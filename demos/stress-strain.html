@@ -416,7 +416,8 @@ table.rows input:focus { border-color: var(--accent); }
     const floorM = M({ roughness: 0.9 }), floor = mesh(new THREE.PlaneGeometry(3, 1.6), floorM, false, true); floor.position.set(0, -0.4, 0);
     /* the I-beam across the top, fixed to the wall */
     const beamM = M({ roughness: 0.55, metalness: 0.5 }), beam = new THREE.Group();
-    for (const [w, h, z] of [[0.16, 0.012, 0.006], [0.012, 0.09, 0.057], [0.16, 0.012, 0.108]]) { const b = mesh(new THREE.BoxGeometry(1.0, w, h), beamM); b.position.z = z; beam.add(b); }
+    /* beam 0.56 m long (was 1.0 m), so the whole of it fits the narrow 3D column instead of running off its left edge (student view, 2026-11-15) */
+    for (const [w, h, z] of [[0.16, 0.012, 0.006], [0.012, 0.09, 0.057], [0.16, 0.012, 0.108]]) { const b = mesh(new THREE.BoxGeometry(0.56, w, h), beamM); b.position.z = z; beam.add(b); }
     beam.position.set(0, 0.2, ZT); beam.children.forEach((b) => { b.position.y = 0; });
     const metalM = M({ roughness: 0.4, metalness: 0.7 }), darkM = M({ roughness: 0.5, metalness: 0.6 });
     const bracket = mesh(new THREE.BoxGeometry(0.06, 0.32, 0.02), darkM); bracket.position.set(0, 0.04, ZT - 0.01);
@@ -448,7 +449,7 @@ table.rows input:focus { border-color: var(--accent); }
     g.wallT.needsUpdate = true;
     g.scene.background = col3(T.wall, '#f5f2ef'); g.floorM.color = col3(T.floor, '#e2dfda'); g.beamM.color = col3(T.beam, '#7b8794'); g.metalM.color = col3(T.metal, '#b5aea4'); g.darkM.color = col3(T.metalDark, '#726a60');
     g.wireM.color = col3(T.wire, '#8a6a3c'); g.massM.color = col3(T.mass, '#857b6d'); g.brassM.color = col3('#c9a24a', '#c9a24a');
-    g.hemi.intensity = dk ? 0.5 : 0.7; g.sun.intensity = dk ? 0.6 : 0.75; g.hsig = '';
+    g.hemi.intensity = dk ? 0.8 : 0.8; g.sun.intensity = dk ? 0.8 : 0.8; g.hsig = '';   /* brighter: in Night the rig was hard to make out (student view, 2026-11-15) */
   }
   function dialFace(dLmm) {
     const c = g3.fc.getContext('2d'), R = 128;
@@ -499,7 +500,7 @@ table.rows input:focus { border-color: var(--accent); }
     dialFace(q.dL * 1000);
     const tgt = new THREE.Vector3(0.03, 0, 0.72), tv = Math.tan(g.cam.fov * Math.PI / 360), top = 96 * ps(), f2 = Math.max(0.3, (H0 - top - bot) / H0);
     g.cam.setViewOffset(W0, H0, 0, -(top - bot) / 2, W0, H0);
-    VD3.place(g.cam, G3.o, tgt, Math.max(0.7 / (tv * f2), 0.2 / (tv * g.cam.aspect)) + 0.3);
+    VD3.place(g.cam, G3.o, tgt, Math.max(0.7 / (tv * f2), 0.34 / (tv * g.cam.aspect)) + 0.3);   /* framed wider: 0.34 m each side, was 0.2 (student view, 2026-11-15) */
     g.cam.updateProjectionMatrix(); g.scene.updateMatrixWorld(); g.rd.render(g.scene, g.cam);
     const v = new THREE.Vector3();
     return { Q: (x, y, z) => { v.set(x, y, z).project(g.cam); return [x0 + (v.x + 1) / 2 * W0, y0 + (1 - v.y) / 2 * H0]; }, zEnd, sz };
@@ -667,6 +668,9 @@ table.rows input:focus { border-color: var(--accent); }
     const ue = Math.round(cubeStrain(F, m.B) * 1e7) / 10; return { mode, F, ue, stress: bulkDp(F), strain: -((1 + ue * 1e-6) ** 3 - 1), exact: -volStrain(F, m.B) };
   }
   function setForce(kN) {
+    /* the press only exists in Shear and Bulk; its slider and Release button are hidden in Tension, where only a script (the i18n
+       harvest) can fire them, and sbM() had no sample to read (student view, 2026-11-15) */
+    if (S.test === 'tension') return;
     S.F = Math.max(0, Math.min(fmax(), Math.round(kN * 2) / 2 * 1000));
     const q = sbNow(); S.sbMax = Math.max(S.sbMax || 0, q.exact);
     $('sF').value = S.F / 1000; $('oF').textContent = `${f(S.F / 1000, 2)} kN`; draw(); readouts();

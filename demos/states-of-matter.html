@@ -420,6 +420,8 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
   const S = { view: 'atoms', preset: 'crystal', run: false, cover2: true, speed: 4, dim: 'flat', heat: 1, pow: 4, Patm: 17, bonds: true, color: 'speed', blind: false,
     md: null, kind: 'crystal', T0: 40, base: null, W: 0, avg: null, hist: [], ph: null, phAvg: [1, 0, 0], frame: 0, lastHist: 0, perStep: 0.5,
     bk: { sub: 'water', m: 200, W: 500, T0: -20, t: 0, hist: [] }, rows: { atoms: [], beaker: [] }, series: { atoms: 0, beaker: 0 } };
+  const speedOf = { atoms: S.speed, beaker: 1 };   /* each view's own speed (setView) */
+  let nsRate = 0;                                   /* measured ns of atom time per real second (clock) */
   const can = $('can'), ctx = can.getContext('2d'), cur = $('curve'), cctx = cur.getContext('2d');
   let W = 0, H = 0, dpr = 1, CW = 0, CH = 0, T = null;
   const f = (v, d = 2) => (!isFinite(v) ? '—' : v.toFixed(d).replace('-', '−'));
@@ -883,9 +885,12 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
     if (S.view === 'atoms') {
       if (S.dim === '3d' && G3.ok) { ctx.clearRect(0, 0, W, H); draw3D(); drawSplit(proj()); if (S.md.h > ZB && window.VDGear) VDGear.label(ctx, `height squeezed above the dashed line · piston ${f(S.md.h * NM, 1)} nm up`, 14 * proj(), 16 * proj(), { s: 11 * proj() }); }
       else drawAtomsFlat();
+      if (nsRate > 0 && window.VDGear) { const q = proj(); VDGear.label(ctx, typeof VDI18N === 'object' ? VDI18N.t('slow motion: 1 s here = {n} ns', { n: f(nsRate, 3) }) : `slow motion: 1 s here = ${f(nsRate, 3)} ns`, 14 * q, H - 16 * q, { s: 11 * q }); }
     } else drawBeaker();
     drawCurve(); readouts(); clock();
   }
+  /* The atoms' pace depends on how many steps this computer manages per frame, so the stage shows the measured rate once it has run
+     (student view, 2026-11-15). */
   function clock() { $('clock').textContent = S.view === 'atoms' ? `t = ${f(S.md.t * TAU_PS / 1000, 3)} ns` : `t = ${f(S.bk.t, 0)} s`; }
   let last = performance.now();
   function frame(now) {
@@ -893,7 +898,8 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
     if (S.run) {
       if (S.view === 'atoms') {
         const want = 8 * S.speed, budget = 14, n = Math.max(2, Math.min(want, Math.floor(budget / Math.max(0.05, S.perStep))));
-        const t0 = performance.now(); advanceAtoms(n); S.perStep += ((performance.now() - t0) / n - S.perStep) * 0.1;
+        const t0 = performance.now(), md0 = S.md.t; advanceAtoms(n); S.perStep += ((performance.now() - t0) / n - S.perStep) * 0.1;
+        if (dt > 0) { const r = (S.md.t - md0) * TAU_PS / 1000 / dt; nsRate = nsRate ? nsRate + (r - nsRate) * 0.05 : r; }
         if (++S.frame % 8 === 0) { S.ph = mdPhases(S.md); const sh = shares(S.ph); S.phAvg = S.phAvg.map((v, k) => v + (sh[k] - v) * 0.25); }
         S.nb = mdBonds(S.md);
       } else {
@@ -913,7 +919,11 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
 
   // ---------- controls ----------
   function setRun(on) { S.run = on; $('go').textContent = on ? 'Pause' : (S.view === 'atoms' ? S.md.t > 0 : S.bk.t > 0) ? 'Play' : 'Play'; $('go').classList.toggle('attn', !on); redraw(); }
+  /* Each view keeps its own speed: the Beaker view inherited the atoms' 4× as 50×, so Ice to steam warmed the ice in a third of a
+     second and melted it in under 3 s. The Beaker view opens at 5× (student view, 2026-11-15). */
   function setView(v) {
+    if (v !== S.view) { speedOf[S.view] = S.speed; S.speed = speedOf[v]; }
+    for (const x of document.querySelectorAll('#speedSeg button')) x.setAttribute('aria-pressed', String(+x.dataset.s === S.speed));
     S.view = v; for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.v === v));
     $('cardAtoms').hidden = v !== 'atoms'; $('cardBeaker').hidden = v !== 'beaker'; $('dimSeg').hidden = v !== 'atoms';
     $('units').textContent = v === 'atoms' ? 'T in K · heat in kJ/mol · time in ns' : 'T in °C · mass in g · time in s';
@@ -948,7 +958,7 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
   for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
   $('viewSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-v]'); if (b && b.dataset.v !== S.view) setView(b.dataset.v); });
   $('dimSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-d]'); if (b) setDim(b.dataset.d); });
-  $('speedSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-s]'); if (b) { S.speed = +b.dataset.s; sync(); } });
+  $('speedSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-s]'); if (b) { S.speed = +b.dataset.s; nsRate = 0; sync(); } });
   $('heatSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-h]'); if (b) { S.heat = +b.dataset.h; custom(); redraw(); } });
   $('colorSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-c]'); if (b) { S.color = b.dataset.c; sync(); legend(); redraw(); } });
   $('subSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-sub]'); if (b) { S.bk.sub = b.dataset.sub; S.bk.T0 = b.dataset.sub === 'water' ? -20 : 20; S.bk.t = 0; custom(); setRun(false); } });

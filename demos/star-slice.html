@@ -3290,12 +3290,21 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const pr = S.D.presets[k]; if (!pr) return;
     setPlaying(false);
     S.hold = false; $('tHold').checked = false;
-    S.log = pr.log; $('tLog').checked = pr.log;
+    /* A moment that needs the flat view's zoom (Strongest burning, Core collapse) showed an empty black cut face in 3D, where the
+       camera cannot zoom in that far: there Log radius goes on and the hint says so (student view, 2026-11-15). */
+    const log3 = !pr.log && pr.zoom > 0.5 && view === '3d' && V3.ok;
+    S.log = pr.log || log3; $('tLog').checked = S.log;
     setMode(pr.mode, true);
     S.zoomDec = pr.zoom;
     setMoment(pr.idx);
     S.preset = k;
     $('presetHint').textContent = pr.hint;
+    if (log3) {
+      const sp = document.createElement('span');
+      sp.textContent = ' ' + (typeof VDI18N === 'object' ? VDI18N.t('In 3D the camera cannot zoom in this far, so Log radius is on and the cut faces are not to scale; Flat with Log radius off zooms in to scale.')
+        : 'In 3D the camera cannot zoom in this far, so Log radius is on and the cut faces are not to scale; Flat with Log radius off zooms in to scale.');
+      $('presetHint').appendChild(sp);
+    }
     markAll();
   }
 

@@ -222,8 +222,8 @@ VDI18N.add('es', 'demo/standing-waves', {
   "Su suma",
 "Sum over {#} s, with its envelope; the red playhead sweeps across":
   "Suma durante {#} s, con su envolvente; el cabezal rojo la recorre",
-"{#} ms shown":
-  "{#} ms mostrados",
+"{#} ms shown, stepped by whole cycles of f₁":
+  "{#} ms mostrados, avanzando en ciclos completos de f₁",
 "Two pure tones added; nothing else. The close up strips show about five cycles; the long strip is too dense to resolve single cycles, so it shows the band the signal fills.":
   "Dos tonos puros sumados; nada más. Las franjas de acercamiento muestran unos cinco ciclos; la franja larga es demasiado densa para distinguir ciclos individuales, así que muestra la banda que llena la señal.",
 "<span><i></i>Tone {#}</span><span><i></i>Tone {#}</span><span><i></i>Their sum</span><span><i></i>Envelope and beat period</span><span><i></i>Playhead (shown in the close up)</span>":
@@ -282,10 +282,16 @@ VDI18N.add('es', 'demo/standing-waves', {
   "Reproduce los armónicos de la cuerda pulsada con sus amplitudes bₙ, sostenidos sin decaer. Mueve el punto de pulsación y escucha cómo cambia el timbre. El sonido se detiene cuando sales de la página.",
 "Tones at {#} and {#} Hz drift in and out of step, so the loudness swells and fades {#} times a second: f_beat = |f₁ − f₂|. Musicians tune by ear this way, adjusting until the beats slow down and stop.":
   "Tonos de {#} y {#} Hz entran y salen de fase, así que la sonoridad crece y se desvanece {#} veces por segundo: f_beat = |f₁ − f₂|. Los músicos afinan de oído así, ajustando hasta que los batidos se hacen lentos y se detienen.",
+"Close":
+  "Cerrar",
+"Pick harmonic {#} to {#} on the string":
+  "Elige un armónico del {#} al {#} en la cuerda",
 "T_beat = {#} ms":
   "T_beat = {#} ms",
 "Sum over {#} s, with its envelope":
   "Suma durante {#} s, con su envolvente",
+"{#} ms shown":
+  "{#} ms mostrados",
 "Pulse {#}, moving right →":
   "Pulso {#}, hacia la derecha →",
 "Pulse {#}, moving left ←":
