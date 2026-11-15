@@ -42,6 +42,12 @@
     RyeV:   [13.605693122990, 'eV', 'Rydberg energy', 'CODATA 2022'],
     RH:     [10967758.34, '1/m', 'Rydberg constant for hydrogen R∞/(1 + m_e/m_p)', 'from CODATA 2022'],
     lambdaC:[2.42631023538e-12, 'm', 'electron Compton wavelength', 'CODATA 2022'],
+    re:     [2.8179403205e-15, 'm', 'classical electron radius', 'CODATA 2022'],
+    hc_eVnm:[1239.841984332, 'eV nm', 'hc (the same number in keV pm)', 'exact (derived)'],
+    mmuMeV: [105.6583755, 'MeV', 'muon rest energy', 'CODATA 2022'],
+    mdMeV:  [1875.612945, 'MeV', 'deuteron rest energy', 'CODATA 2022'],
+    maMeV:  [3727.3794118, 'MeV', 'alpha particle rest energy', 'CODATA 2022'],
+    tauMu:  [2.1969811e-6, 's', 'muon mean life', 'PDG 2024'],
     /* atomic masses, AME2020 (Wang et al. 2021, Chinese Phys. C 45, 030003), rounded to 7 or 8 figures; used by Bose–Einstein Condensation */
     mRb87u: [86.909181, 'u', 'atomic mass of rubidium 87', 'AME2020'],
     mNa23u: [22.989769, 'u', 'atomic mass of sodium 23', 'AME2020'],

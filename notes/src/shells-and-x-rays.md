@@ -37,7 +37,7 @@ Students should know the four quantum numbers of the hydrogen atom and the Bohr 
 
 **Q6.** Molybdenum's K edge is 20.00 keV. Why are there no K lines at 15 kV, while the continuous spectrum is there at any voltage?
 
-**Q7.** A mystery target's Kα₁ line is at 40.03 pm. Find its atomic number.
+**Q7.** A mystery target's Kα₁ line is at 78.59 pm. Find its atomic number. (For a cesium target, Kα₁ at 40.03 pm, the same formula gives 56.1, one too high: see below.)
 
 ## Common misconceptions
 
@@ -55,5 +55,5 @@ Students should know the four quantum numbers of the hydrogen atom and the Bohr 
 
 ## Going further
 
-- Plot √f of Kα₁ against Z for several targets and fit a line: the slope is close to √(3/4 × 13.6 eV/h) and the line crosses zero near Z = 1, as the Bohr model with one electron screening the nucleus predicts.
+- Plot √f of Kα₁ against Z for several targets and fit a line: the slope is close to √(3/4 × 13.6 eV/h) and the line crosses zero near Z = 1, as the Bohr model with one electron screening the nucleus predicts. The measured Kα₁ energies rise a little faster than (Z − 1)², so Z = 1 + √(E/10.2 eV) from the bare law rounds one too high from Z = 45 on (silver gives 47.6, cesium 56.1); a fit through known targets, as in the worksheet, gets the mystery target right.
 - Pair with **Spectra Explorer** for the optical lines of the same atoms, and with **Atoms in a Magnetic Field** for what m_l and m_s mean.

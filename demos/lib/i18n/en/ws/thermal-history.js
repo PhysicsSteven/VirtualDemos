@@ -22,7 +22,7 @@ VDI18N.add('en', 'ws/thermal-history', [
 "How fast does \\(T\\) fall with time? The Friedmann equation says the expansion rate is set by the energy density. While radiation dominates, \\(a \\propto t^{1/2}\\), and while matter dominates, \\(a \\propto t^{2/3}\\). So \\(T\\) is a power law in \\(t\\) in each era, with a different power.",
 "About {#} {#} years after the Big Bang the universe had cooled to about {#} K, and electrons and nuclei combined into atoms. The universe became transparent, and the radiation of that moment, stretched by a factor of about {#}, is the cosmic microwave background we see today (§{#}).",
 "Find the threshold temperature \\(T = mc^2/k\\) for protons (\\(mc^2\\) = {#} MeV) and for electrons ({#} MeV).",
-"The book says photons decoupled at about {#} K. What is \\(kT\\) there in eV? Compare it with the {#} eV needed to ionize hydrogen.",
+"Photons decoupled at about {#} K (the book's timeline says atoms form when the universe cools below {#} K). What is \\(kT\\) there in eV? Compare it with the {#} eV needed to ionize hydrogen.",
 "Show that if \\(a \\propto t^{n}\\) then \\(T \\propto t^{-n}\\). What slope do you expect on a graph of \\(\\log_{10} T\\) against \\(\\log_{10} t\\) in the radiation era and in the matter era?",
 "By what factor has the number of photons in each cubic centimeter fallen since decoupling at \\(z\\) = {#}?",
 "<strong>The whole history.</strong> In the Thermal history view, record a reading at \\(t\\) = {#}⁻⁴⁰ s and at every fifth power of ten after it up to {#}¹⁰ s ({#}⁻³⁵ s, {#}⁻³⁰ s, …), then at every power of ten from {#}¹¹ s to {#}¹⁷ s, and finally at today (the right end of the slider).",

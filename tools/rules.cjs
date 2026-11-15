@@ -183,6 +183,7 @@ const CONST_ALLOW = {      /* 'file literal': reason */
   'dosimetry.html 273.2': 'AAPM TG-51 writes the temperature correction with 273.2',
   'giant-planets.html 1898.13e24': 'NASA Planetary Fact Sheet value, cited on the page',
   'exoplanets.html 86.71': 'HD 209458 b inclination in degrees (Torres et al. 2008), not a rubidium mass',
+  'giant-planets.html 1880': 'Titan mean density in kg/m³ (JPL), not the deuteron rest energy',
 };
 /* Too close to everyday numbers to compare (they stay in the file to be used): */
 const CONST_SKIP = new Set(['g', 'g0', 'T0', 'Tsun', 'Ssun', 'MbolSun', 'MVsun', 'yrSid', 'yrDays', 'day', 'daySid', 'dayStel', 'sound20',

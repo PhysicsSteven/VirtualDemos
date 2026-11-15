@@ -16,7 +16,7 @@ Students should know the de Broglie relation p = h/λ, E = p²/2m for a free par
 
 ## Running it in class
 
-1. **Free particle.** Watch Δx grow while Δp stays at 196 eV/c; the uncertainty product starts at 0.506 ħ. The readouts describe only the part still in view, so pause before the packet reaches the right edge (after that, its leading part is being absorbed and Δp and ⟨p⟩ drift down).
+1. **Free particle.** Watch Δx grow while Δp stays near 197 eV/c; the uncertainty product starts at 0.500 ħ. The readouts describe only the part still in view, so pause before the packet reaches the right edge (after that, its leading part is being absorbed and Δp and ⟨p⟩ drift down).
 2. **Step.** Ask Q1 first. E₀ = 0.6 eV over a 0.4 eV step: about 9% reflects. Then drag E₀ below 0.4 eV and relaunch: everything comes back, after a brief dip into the step.
 3. **Barrier.** ⟨E⟩ = 0.30 eV, V₀ = 0.5 eV, a = 0.5 nm: once the packet splits, T ≈ 33%. Then set **Barrier width a** to 1.00 nm (Q3).
 4. **Square well.** With **Walls** on **Infinite**, it starts in the superposition of n = 1 and n = 2, sloshing with the 3.67 fs beat. Click the **n=2** level chip to drop it, leaving n = 1 alone: |ψ|² freezes and only the color turns (Q5). Click **n=2** again to bring the sloshing back.

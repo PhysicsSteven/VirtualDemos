@@ -45,7 +45,7 @@ About 380 000 years after the Big Bang the universe had cooled to about 3000 K, 
 ## Before the lab
 
 1. Find the threshold temperature $$T = mc^2/k$$ for protons ($$mc^2$$ = 938.3 MeV) and for electrons (0.511 MeV).
-2. The book says photons decoupled at about 3000 K. What is $$kT$$ there in eV? Compare it with the 13.6 eV needed to ionize hydrogen.
+2. Photons decoupled at about 3000 K (the book's timeline says atoms form when the universe cools below 4000 K). What is $$kT$$ there in eV? Compare it with the 13.6 eV needed to ionize hydrogen.
 3. Show that if $$a \propto t^{n}$$ then $$T \propto t^{-n}$$. What slope do you expect on a graph of $$\log_{10} T$$ against $$\log_{10} t$$ in the radiation era and in the matter era?
 4. By what factor has the number of photons in each cubic centimeter fallen since decoupling at $$z$$ = 1090?
 

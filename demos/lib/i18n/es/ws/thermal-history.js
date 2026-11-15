@@ -44,8 +44,8 @@ VDI18N.add('es', 'ws/thermal-history', {
   "Unos {#} {#} años después del Big Bang el universo se había enfriado a unos {#} K, y los electrones y los núcleos se combinaron en átomos. El universo se volvió transparente, y la radiación de ese momento, estirada por un factor de unos {#}, es el fondo cósmico de microondas que vemos hoy (§{#}).",
 "Find the threshold temperature \\(T = mc^2/k\\) for protons (\\(mc^2\\) = {#} MeV) and for electrons ({#} MeV).":
   "Encuentra la temperatura umbral \\(T = mc^2/k\\) para los protones (\\(mc^2\\) = {#} MeV) y para los electrones ({#} MeV).",
-"The book says photons decoupled at about {#} K. What is \\(kT\\) there in eV? Compare it with the {#} eV needed to ionize hydrogen.":
-  "El libro dice que los fotones se desacoplaron a unos {#} K. ¿Cuánto vale \\(kT\\) ahí en eV? Compáralo con los {#} eV necesarios para ionizar el hidrógeno.",
+"Photons decoupled at about {#} K (the book's timeline says atoms form when the universe cools below {#} K). What is \\(kT\\) there in eV? Compare it with the {#} eV needed to ionize hydrogen.":
+  "Los fotones se desacoplaron a unos {#} K (la cronología del libro dice que los átomos se forman cuando el universo se enfría por debajo de {#} K). ¿Cuánto vale \\(kT\\) ahí en eV? Compáralo con los {#} eV necesarios para ionizar el hidrógeno.",
 "Show that if \\(a \\propto t^{n}\\) then \\(T \\propto t^{-n}\\). What slope do you expect on a graph of \\(\\log_{10} T\\) against \\(\\log_{10} t\\) in the radiation era and in the matter era?":
   "Muestra que si \\(a \\propto t^{n}\\) entonces \\(T \\propto t^{-n}\\). ¿Qué pendiente esperas en una gráfica de \\(\\log_{10} T\\) en función de \\(\\log_{10} t\\) en la era de la radiación y en la era de la materia?",
 "By what factor has the number of photons in each cubic centimeter fallen since decoupling at \\(z\\) = {#}?":

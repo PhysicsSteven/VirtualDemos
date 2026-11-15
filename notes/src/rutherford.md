@@ -53,7 +53,7 @@ Students should know Coulomb's law and conservation of energy. Angular momentum 
 - Each alpha follows the exact Coulomb (hyperbolic) orbit, θ = 2 arctan(D/2b), with the closest approach r_min = (D/2)(1 + √(1 + (2b/D)²)). Nonrelativistic mechanics is fine: v/c is at most about 0.074.
 - The beam fires alphas at random b with uniform density over the beam's cross section. Counts are binned per steradian and compared with the Rutherford cross section, dσ/dΩ = (D/4)² / sin⁴(θ/2).
 - The plum pudding atom is a uniform sphere of positive charge with point electrons ignored; the alpha takes a small random kick from each atom it crosses, and the kicks add like a random walk.
-- An option lets the nucleus recoil (lab frame); with it off, the nucleus is fixed.
+- The nucleus is held fixed. A readout shows the lab angle and the closest approach when the nucleus is free to recoil (the two body correction): at the same b the angle changes by under 1% even for aluminum.
 - The Projectile control swaps the alpha for an antialpha, the antihelium 4 nucleus: the same mass, charge −2e. The orbit is then the hyperbola branch around the nucleus, with r_min = (|D|/2)(1/sin(θ/2) − 1) instead of (|D|/2)(1/sin(θ/2) + 1). Antialphas are real but have never been made as a beam, so this is a thought experiment; a real one reaching the nucleus would annihilate, which the demo only flags. A negative ion would not work as a negative probe: its extra electron is bound by about an electron volt and is stripped in the first atomic layers of the foil.
 - The aluminum preset marks where the strong force would act (the alpha reaching the nuclear radius 1.2 A^⅓ fm). The demo does not model nuclear forces; it shows where the Rutherford formula stops applying.
 
