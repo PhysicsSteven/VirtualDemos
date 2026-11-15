@@ -189,5 +189,5 @@ VDI18N.add('es', 'ws/bose-einstein-condensation', {
 "Heading of column M":
   "Encabezado de la columna M",
 "Column M":
-  "Columna M",
+  "Columna M"
 });
