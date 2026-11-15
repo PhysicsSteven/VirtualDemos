@@ -36,6 +36,8 @@ VDI18N.add('es', 'demo/fluids', {
   "Soltar de nuevo",
 "<span>Playback rate</span>":
   "<span>Ritmo de reproducción</span>",
+"slow motion ×{#}":
+  "cámara lenta ×{#}",
 "Cavitation: pressure would fall below vapor pressure; model invalid":
   "Cavitación: la presión bajaría por debajo de la presión de vapor; el modelo no es válido",
 "Graph for the current scene: pressure against depth, forces on the vessels, column heights, forces on the block, pressure along the pipe, or jet range against hole depth. Show data table in the Lab section lists the plotted values.":
@@ -228,8 +230,6 @@ VDI18N.add('es', 'demo/fluids', {
   "El tanque, el bloque y el vaso están a escala. Arrastra para girar, desplaza para acercar, doble clic para volver; arrastra un agarre para cambiar un valor.",
 "level up {#} mm = V":
   "el nivel sube {#} mm = V",
-"slow motion ×{#}":
-  "cámara lenta ×{#}",
 "depth (m)":
   "profundidad (m)",
 "absolute pressure":
@@ -488,6 +488,8 @@ VDI18N.add('es', 'demo/fluids', {
   "aceite vegetal, {#} kg/m³",
 "Readings and fits work in the Depth, Buoyancy and Venturi scenes.":
   "Las lecturas y los ajustes funcionan en las escenas Profundidad, Flotación y Venturi.",
+"Close":
+  "Cerrar",
 "Choose a metal first.":
   "Primero elige un metal.",
 "Record reading works in the Depth, Buoyancy and Venturi scenes.":

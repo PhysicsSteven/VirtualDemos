@@ -575,7 +575,9 @@ table.rows button:hover { color: var(--pos); }
   const PRESETS = {
     depth: { scene: 'press', liq: 'water', p: { D: 2, pd: 1.2, px: 0.62 }, gmode: 'abs',
       hint: 'Every meter of water adds 9.8 kPa, about a tenth of an atmosphere, so 10.3 m of water doubles the pressure. Switch to Gauge, then to mercury: the same depth adds 13.6 times as much.' },
-    float: { scene: 'buoy', liq: 'water', p: { rho: 500, L: 10, mat: 'wood', h0: 0.3, zeta: 0.12, scale: false, over: false, z0: 0.48, xb: 0 },
+    /* rate 0.5: the 10 cm pine block bobs with a period of 2π√(s/g) = 0.45 s, over twice a second at real time, and its first plunge
+       is over in half a second; at half speed a bob takes 0.9 s and the settling about 6 s, which the eye can follow (student view, 2026-11-15) */
+    float: { scene: 'buoy', liq: 'water', rate: 0.5, p: { rho: 500, L: 10, mat: 'wood', h0: 0.3, zeta: 0.12, scale: false, over: false, z0: 0.48, xb: 0 },
       hint: 'A floating block settles with a fraction ρ_obj/ρ_fluid of its height under the surface, here half. Try Steel or Ice, or slide the density through 1000 kg/m³: the block sinks once it is denser than the water.' },
     iceberg: { scene: 'buoy', liq: 'sea', p: { rho: 917, L: 20, mat: 'ice', h0: 0.26, zeta: 0.1, scale: false, over: false, z0: 0.43, xb: 0 },
       hint: 'Ice in seawater floats with 917/1025 = 89.5% of its volume under the surface: only about a tenth of an iceberg shows. The same holds for any shape, not only a cube.' },
@@ -1857,7 +1859,7 @@ table.rows button:hover { color: var(--pos); }
       const q = S.P.buoy;
       if (q.mat === 'myst') { mystApply(q); $('mystGuess').value = ''; $('mystStat').textContent = ''; }
       if (q.scale) q.zh = TANK.spout + 0.06 + STR + q.L / 100;
-      setRate(1); bs = null; buoyReset(false);
+      setRate(c.rate || 1); bs = null; buoyReset(false);
       if (reduce) settleBuoy();
     }
     if (c.scene === 'venturi') { seedParts(); setRate(0.25); }

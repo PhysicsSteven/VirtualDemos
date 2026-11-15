@@ -80,8 +80,10 @@ VDI18N.add('es', 'demo/gravity-near-earth', {
   "la báscula marca {#} N",
 "path in one day":
   "camino en un día",
-"turning shown far faster than real · drag the scale out or in · drag elsewhere to turn":
-  "el giro se muestra mucho más rápido que en la realidad · arrastra la báscula hacia fuera o hacia dentro · arrastra en otro lugar para girar",
+"drag the scale out or in · drag elsewhere to turn":
+  "arrastra la báscula hacia fuera o hacia dentro · arrastra en otro lugar para girar",
+"turning sped up: {#} s = {#} min of real time":
+  "giro acelerado: {#} s = {#} min de tiempo real",
 "Lat (°)":
   "Lat (°)",
 "GM/r²":
@@ -109,5 +111,11 @@ VDI18N.add('es', 'demo/gravity-near-earth', {
 "points away from the planet":
   "apunta en dirección contraria al planeta",
 "{#} N: above the geostationary radius the mass floats up against the tower":
-  "{#} N: por encima del radio geoestacionario la masa flota hacia arriba contra la torre"
+  "{#} N: por encima del radio geoestacionario la masa flota hacia arriba contra la torre",
+"Close":
+  "Cerrar",
+"turning shown far faster than real · drag the scale out or in · drag elsewhere to turn":
+  "el giro se muestra mucho más rápido que en la realidad · arrastra la báscula hacia fuera o hacia dentro · arrastra en otro lugar para girar",
+"turning sped up: {#} s = {#} h of real time":
+  "giro acelerado: {#} s = {#} h de tiempo real"
 });
