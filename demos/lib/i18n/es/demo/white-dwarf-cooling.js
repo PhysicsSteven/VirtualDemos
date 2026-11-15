@@ -2,8 +2,8 @@
 VDI18N.add('es', 'demo/white-dwarf-cooling', {
 "Luminosity against cooling age":
   "Luminosidad en función de la edad de enfriamiento",
-"log scales":
-  "escalas logarítmicas",
+"log scales · age ×{#} every {#} s":
+  "escalas logarítmicas · edad ×{#} cada {#} s",
 "{#} Myr":
   "{#} millones de años",
 "cooling age t (yr)":
@@ -272,12 +272,18 @@ VDI18N.add('es', 'demo/white-dwarf-cooling', {
   "Tu propia configuración. Elige una configuración de arriba para volver a una conocida.",
 "L &lt; {#} × {#}⁻⁴ L<sub>sun</sub>":
   "L &lt; {#} × {#}⁻⁴ L<sub>sun</sub>",
+"Close":
+  "Cerrar",
 "{#} Myr · {#} × {#}⁷ K":
   "{#} millones de años · {#} × {#}⁷ K",
 "{#} Myr · {#} L":
   "{#} millones de años · {#} L",
+"{#} × {#}⁻¹ L<sub>sun</sub>":
+  "{#} × {#}⁻¹ L<sub>sun</sub>",
+"log scales":
+  "escalas logarítmicas",
 "{#} Myr · {#} × {#}⁻¹ L":
   "{#} millones de años · {#} × {#}⁻¹ L",
-"{#} × {#}⁻¹ L<sub>sun</sub>":
-  "{#} × {#}⁻¹ L<sub>sun</sub>"
+"age ×{#} every {#} s":
+  "edad ×{#} cada {#} s"
 });

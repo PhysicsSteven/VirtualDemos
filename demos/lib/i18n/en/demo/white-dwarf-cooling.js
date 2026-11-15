@@ -1,7 +1,7 @@
 /* English strings of demo/white-dwarf-cooling, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'demo/white-dwarf-cooling', [
 "Luminosity against cooling age",
-"log scales",
+"log scales · age ×{#} every {#} s",
 "{#} Myr",
 "cooling age t (yr)",
 "{#} yr · {#} L",
@@ -136,8 +136,8 @@ VDI18N.add('en', 'demo/white-dwarf-cooling', [
 "dots: simulated from this model, not Gaia data",
 "Your own setup. Pick a setup above to return to a known one.",
 "L &lt; {#} × {#}⁻⁴ L<sub>sun</sub>",
+"Close",
 "{#} Myr · {#} × {#}⁷ K",
 "{#} Myr · {#} L",
-"{#} Myr · {#} × {#}⁻¹ L",
 "{#} × {#}⁻¹ L<sub>sun</sub>"
 ]);

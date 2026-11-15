@@ -784,7 +784,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function title(c, box, txt, sub) {
     c.fillStyle = T.ink; c.font = `600 ${11.5 * PS}px ${T.mono}`; c.textAlign = 'left'; c.textBaseline = 'bottom';
     c.fillText(txt, box.tx, box.T - 9 * PS);
-    if (sub) { const w = c.measureText(txt).width; c.fillStyle = T.muted; c.font = `${10.5 * PS}px ${T.mono}`; if (box.tx + w + 14 * PS + c.measureText(sub).width < box.R) c.fillText(sub, box.tx + w + 12 * PS, box.T - 9 * PS); }
+    if (sub) { const w = c.measureText(txt).width; c.fillStyle = T.muted; c.font = `${10.5 * PS}px ${T.mono}`;
+      /* sub may list fallbacks, longest first: the first that fits is drawn (student view, 2026-11-15) */
+      for (const t of [].concat(sub)) if (box.tx + w + 14 * PS + c.measureText(t).width < box.R) { c.fillText(t, box.tx + w + 12 * PS, box.T - 9 * PS); break; } }
   }
   const tickPow = (e) => (e === 0 ? '1' : e === 1 ? '10' : `10${sup(e)}`);
 
@@ -816,7 +818,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function drawCool(nw) {
     const c = ctx, box = coolGeom(), ps = PS; GEO.cool = box;
     const yr = box.yr, Lmode = S.plot === 'L';
-    title(c, box, Lmode ? 'Luminosity against cooling age' : 'Core temperature against cooling age', 'log scales');
+    /* the clock rate on screen: the age grows tenfold every 1/(decades per second) seconds (student view, 2026-11-15) */
+    const every = (1 / SPEEDS[S.speed]).toFixed(1);
+    title(c, box, Lmode ? 'Luminosity against cooling age' : 'Core temperature against cooling age', [`log scales · age ×10 every ${every} s`, `age ×10 every ${every} s`, 'log scales']);
     // grid
     c.font = `${10.5 * ps}px ${T.mono}`; c.fillStyle = T.muted; c.textAlign = 'right'; c.textBaseline = 'middle';
     for (let e = Math.ceil(yr[0]); e <= Math.floor(yr[1]); e++) {
@@ -1300,7 +1304,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('tPop').addEventListener('change', (e) => { S.pop = e.target.checked; custom(); popDirty = true; rebuild(); });
   const setPlot = (p) => { S.plot = p; syncUI(); dirty = true; };
   $('yL').addEventListener('click', () => setPlot('L')); $('yT').addEventListener('click', () => setPlot('T'));
-  for (const b of document.querySelectorAll('[data-s]')) b.addEventListener('click', () => { S.speed = +b.dataset.s; syncUI(); });
+  for (const b of document.querySelectorAll('[data-s]')) b.addEventListener('click', () => { S.speed = +b.dataset.s; syncUI(); dirty = true; });   /* redraw the rate in the plot title (student view, 2026-11-15) */
   const playBtn = $('play');
   function setPlaying(on) { playing = on; playBtn.textContent = on ? 'Pause' : 'Play'; playBtn.classList.toggle('primary', !on); if (on && S.lt >= LT_MAX - 1e-6) S.lt = LT_MIN; holdT = 0;
     if (!on) { $('age').value = S.lt; readouts(); } }   /* readouts refresh every 100 ms while playing; on Pause they show the age where it stopped (break-it test, 2026-11-14) */
