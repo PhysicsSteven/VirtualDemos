@@ -1023,14 +1023,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function drawDarkLabels(T) {
     const ps = projScale(), { out } = refDarks(), y = G.lit.y0 + 1 * ps;
     const spaced = out.filter((o) => o.onScreen && X(o.y) > 20 && X(o.y) < W - 20).sort((p, q) => Math.abs(p.m) - Math.abs(q.m) || p.m - q.m);
-    const taken = [];
+    const taken = [[], []];   /* a label that does not fit goes on a second row (student view calls, 2026-11-15) */
     for (const o of spaced) {
       const x = X(o.y), txt = `m=${minus(o.m)}`;
       ctx.font = `600 ${9.5 * ps}px ` + monoFont();
       const hw = ctx.measureText(txt).width / 2 + 7 * ps;
-      if (taken.some(([a, b]) => x + hw > a && x - hw < b)) continue;
-      taken.push([x - hw, x + hw]);
-      tag(txt, x, y, T.gold, T, { size: 9.5, base: 'top', alpha: 0.9 });
+      const row = taken.findIndex((r) => !r.some(([a, b]) => x + hw > a && x - hw < b)); if (row < 0) continue;
+      taken[row].push([x - hw, x + hw]);
+      tag(txt, x, y + row * 16 * ps, T.gold, T, { size: 9.5, base: 'top', alpha: 0.9 });
     }
     const ly = G.lit.y1 - 9 * ps;
     if (!out.length) tag('no dark fringe: the slit is narrower than λ', W / 2, ly, T.muted, T, { size: 9.5 });
@@ -1043,20 +1043,27 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const ps = projScale(), { out } = refOrders(), y = G.lit.y0 + 1 * ps, sd = srcDef();
     // label the orders nearest the center first, then outward while there is room
     const spaced = out.filter((o) => o.onScreen && X(o.y) > 20 && X(o.y) < W - 20).sort((p, q) => Math.abs(p.m) - Math.abs(q.m) || p.m - q.m);
-    const taken = [];
+    /* a label that does not fit beside its neighbours goes on a second row: with white light at 300 lines/mm the wall showed
+       m=0 then m=2, and m=±1 had no label (student view calls, 2026-11-15) */
+    const taken = [[], []];
     for (const o of spaced) {
       const x = X(o.y), txt = o.missing ? `m=${minus(o.m)} missing` : `m=${minus(o.m)}`;
       ctx.font = `600 ${9.5 * ps}px ` + monoFont();
       const hw = ctx.measureText(txt).width / 2 + 7 * ps;
-      if (taken.some(([a, b]) => x + hw > a && x - hw < b)) continue;
-      taken.push([x - hw, x + hw]);
-      tag(txt, x, y, o.missing ? T.gold : T.ink, T, { size: 9.5, base: 'top', alpha: 0.9 });
+      const row = taken.findIndex((r) => !r.some(([a, b]) => x + hw > a && x - hw < b)); if (row < 0) continue;
+      taken[row].push([x - hw, x + hw]);
+      tag(txt, x, y + row * 16 * ps, o.missing ? T.gold : T.ink, T, { size: 9.5, base: 'top', alpha: 0.9 });
     }
     // orders beyond the edges of the view
     const offR = out.filter((o) => o.onScreen && X(o.y) >= W - 20), offL = out.filter((o) => o.onScreen && X(o.y) <= 20);
     const ly = G.lit.y1 - 9 * projScale();
-    if (offR.length) tag(`m ≥ ${offR[0].m} off view →`, W - 12 * ps, ly, T.muted, T, { size: 9.5, align: 'right' });
-    if (offL.length) tag(`← m ≤ ${minus(offL[offL.length - 1].m)} off view`, 12 * ps, ly, T.muted, T, { size: 9.5, align: 'left' });
+    /* the off view tags are placed first and drawn last, so the white light overlap tag and its bracket can keep clear of them
+       (on a phone they sat on top of each other) (student view calls, 2026-11-15) */
+    const offTags = [];
+    if (offR.length) offTags.push([`m ≥ ${offR[0].m} off view →`, W - 12 * ps, 'right']);
+    if (offL.length) offTags.push([`← m ≤ ${minus(offL[offL.length - 1].m)} off view`, 12 * ps, 'left']);
+    ctx.font = `600 ${9.5 * ps}px ` + monoFont();
+    const offSpan = offTags.map(([t, x, al]) => { const w = ctx.measureText(t).width + 8 * ps; return al === 'right' ? [x - w, x] : [x, x + w]; });
     // white light: where orders 2 and 3 overlap
     if (sd.continuum && S.mode !== 'measure') {
       const d = PH.d, al = PH.al, a2 = orderInfo(2, 700e-9, d, al, S.L), b3 = orderInfo(3, 400e-9, d, al, S.L);
@@ -1066,10 +1073,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
           ctx.strokeStyle = T.gold; ctx.lineWidth = 1.5 * ps; ctx.beginPath();
           ctx.moveTo(xa, yy - 5 * ps); ctx.lineTo(xa, yy); ctx.lineTo(xb, yy); ctx.lineTo(xb, yy - 5 * ps); ctx.stroke();
           const tx = clamp((xa + xb) / 2, 70 * ps, W - 70 * ps);
-          tag('orders 2 and 3 overlap', tx, yy - 8 * ps, T.gold, T, { size: 9.5, base: 'bottom' });
+          ctx.font = `600 ${9.5 * ps}px ` + monoFont();
+          const hw = ctx.measureText('orders 2 and 3 overlap').width / 2 + 4 * ps;
+          const hit = offSpan.some(([a, b]) => tx + hw > a && tx - hw < b);
+          tag('orders 2 and 3 overlap', tx, yy - 8 * ps - (hit ? 16 * ps : 0), T.gold, T, { size: 9.5, base: 'bottom' });
         }
       }
     }
+    for (const [t, x, al] of offTags) tag(t, x, ly, T.muted, T, { size: 9.5, align: al });
   }
   function drawJaws(T) {
     const ps = projScale(), y0 = G.lit.y0 + 16 * ps, y1 = G.face.y1 - G.ruler;

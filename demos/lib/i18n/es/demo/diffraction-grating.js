@@ -14,6 +14,8 @@ VDI18N.add('es', 'demo/diffraction-grating', {
   "N = {#} rendijas iluminadas",
 "Diffraction Grating":
   "Rejilla de difracción",
+"<a><span>←</span> <span>Double Slit, One Particle at a Time</span></a><a><span>Thin Film Interference</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Doble rendija, una partícula a la vez</span></a><a><span>Interferencia en películas delgadas</span> <span>→</span></a>",
 "Shine a laser, a gas lamp or white light through a grating. Bright orders land on the wall where d sin θ = mλ: measure them to find the wavelength.":
   "Haz pasar un láser, una lámpara de gas o luz blanca por una rejilla. Los órdenes brillantes caen en la pared donde d sin θ = mλ: mídelos para hallar la longitud de onda.",
 "λ in nm · d in µm · L in m · y in cm · θ from the straight through beam":
@@ -160,8 +162,6 @@ VDI18N.add('es', 'demo/diffraction-grating', {
   "Rendija única: I = I₀[sin β/β]², β = πa(sin θ − sin θ<sub>i</sub>)/λ, la misma fórmula de campo lejano con N = {#}, y franjas oscuras en a(sin θ − sin θ<sub>i</sub>) = mλ. El campo lejano requiere que L sea mucho mayor que a²/λ, menos de {#} mm para cada rendija de aquí, así que se cumple en cualquier L de la mesa. Para una rendija de solo unas cuantas longitudes de onda de ancho, esta fórmula escalar es en sí una aproximación (omite la polarización de la luz).",
 "Lamp light passes a slit and a lens to make a parallel beam (a real lamp is too faint to project; in lab you look through the grating). Line data: NIST Handbook of Basic Atomic Spectroscopic Data (J. E. Sansonetti and W. C. Martin), strong neutral lines from {#} to {#} nm, air wavelengths; brightness on a log scale so weak lines stay visible. White light: the CIE D65 daylight spectrum (CIE {#}:{#}) from {#} to {#} nm. Colors from the CIE {#} color matching functions (Wyman, Sloan and Shirley fit) in sRGB.":
   "La luz de la lámpara pasa por una rendija y una lente para formar un haz paralelo (una lámpara real es demasiado tenue para proyectarse; en el laboratorio se mira a través de la rejilla). Datos de las líneas: NIST Handbook of Basic Atomic Spectroscopic Data (J. E. Sansonetti y W. C. Martin), líneas neutras intensas de {#} a {#} nm, longitudes de onda en el aire; brillo en escala logarítmica para que las líneas débiles sigan visibles. Luz blanca: el espectro de luz de día CIE D65 (CIE {#}:{#}) de {#} a {#} nm. Colores a partir de las funciones de igualación de color CIE {#} (ajuste de Wyman, Sloan y Shirley) en sRGB.",
-"<a><span>←</span> <span>Double Slit, One Particle at a Time</span></a><a><span>Thin Film Interference</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Doble rendija, una partícula a la vez</span></a><a><span>Interferencia en películas delgadas</span> <span>→</span></a>",
 "Unknown laser: its wavelength is hidden. Measure it.":
   "Láser desconocido: su longitud de onda está oculta. Mídela.",
 "needs a single wavelength":
@@ -184,12 +184,12 @@ VDI18N.add('es', 'demo/diffraction-grating', {
   "Luz blanca de una rendija y una lente: un espectro de luz de día (CIE D65) con todas las longitudes de onda de {#} a {#} nm.",
 "Each order is a rainbow with violet nearest the center. Orders {#} and {#} overlap: {#} × {#} nm = {#} nm is more than {#} × {#} nm = {#} nm, so second order red lands beyond third order violet.":
   "Cada orden es un arcoíris con el violeta más cerca del centro. Los órdenes {#} y {#} se traslapan: {#} × {#} nm = {#} nm es más que {#} × {#} nm = {#} nm, así que el rojo de segundo orden cae más allá del violeta de tercer orden.",
+"orders {#} and {#} overlap":
+  "los órdenes {#} y {#} se traslapan",
 "m ≥ {#} off view →":
   "m ≥ {#} fuera de la vista →",
 "← m ≤ −{#} off view":
   "← m ≤ −{#} fuera de la vista",
-"orders {#} and {#} overlap":
-  "los órdenes {#} y {#} se traslapan",
 "White light":
   "Luz blanca",
 "Hydrogen: the visible Balmer lines, {#}, {#}, {#} and {#} nm.":
@@ -277,5 +277,7 @@ VDI18N.add('es', 'demo/diffraction-grating', {
 "I / I₀ zoomed: center to dark fringe {#} · a = {#} µm":
   "I / I₀ ampliada: del centro a la franja oscura {#} · a = {#} µm",
 "Enter L in meters, y in centimeters (both positive) and a whole order number m ≥ {#}.":
-  "Escribe L en metros, y en centímetros (ambos positivos) y un número de orden entero m ≥ {#}."
+  "Escribe L en metros, y en centímetros (ambos positivos) y un número de orden entero m ≥ {#}.",
+"Close":
+  "Cerrar"
 });

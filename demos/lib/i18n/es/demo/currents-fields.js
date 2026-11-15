@@ -248,12 +248,8 @@ VDI18N.add('es', 'demo/currents-fields', {
   "z = {#} cm, ρ = {#} cm · {#}° desde +z",
 "B<sub>center</sub> = {#} µT <small>μ₀nI = {#} µT</small>":
   "B<sub>center</sub> = {#} µT <small>μ₀nI = {#} µT</small>",
-"Near half of each turn drawn faint · drag to turn the view":
-  "La mitad cercana de cada vuelta se dibuja tenue · arrastra para girar la vista",
 "One long straight wire with its current out of the page. The field lines are circles, counterclockwise by the right hand rule. B = μ₀I/({#}πr) falls off as {#}/r, so the circles spread apart farther out. Drag the probe to check.":
   "Un alambre largo y recto con su corriente saliendo de la página. Las líneas de campo son círculos, en sentido antihorario por la regla de la mano derecha. B = μ₀I/({#}πr) decae como {#}/r, así que los círculos se separan más lejos del alambre. Arrastra la sonda para comprobarlo.",
-"Drag to turn the view · move things in the flat view":
-  "Arrastra para girar la vista · mueve las cosas en la vista plana",
 "<span>Wire {#}</span><span>+{#} A</span><span>({#}, {#}) cm</span>":
   "<span>Alambre {#}</span><span>+{#} A</span><span>({#}, {#}) cm</span>",
 "Add a second wire to see a force.":
@@ -272,6 +268,8 @@ VDI18N.add('es', 'demo/currents-fields', {
   "Alrededor de cualquier lazo cerrado, ∮B·dl = μ₀I<sub>enc</sub>. Dos alambres atraviesan este lazo ({#} A saliendo, {#} A entrando). Arrastra el lazo sobre el tercer alambre: B a lo largo del lazo cambia, pero ∮B·dl cambia solo cuando un alambre cruza el lazo.",
 "<span><i></i>Field line</span><span><i></i>|B|, stronger is darker</span><span><i></i>Compass, red end along B</span><span><i></i>Force on a wire, per meter</span><span><i></i><i></i>Loop: B along or against its direction</span><span><i></i>Grip: drag to move or resize</span>":
   "<span><i></i>Línea de campo</span><span><i></i>|B|, más intenso es más oscuro</span><span><i></i>Brújula, extremo rojo a lo largo de B</span><span><i></i>Fuerza sobre un alambre, por metro</span><span><i></i><i></i>Lazo: B a favor o en contra de su sentido</span><span><i></i>Control: arrastra para mover o cambiar el tamaño</span>",
+"Drag to turn the view · move things in the flat view":
+  "Arrastra para girar la vista · mueve las cosas en la vista plana",
 "<span>Wire {#}</span><span>−{#} A</span><span>(-{#}, -{#}) cm · F/L {#} µN/m</span>":
   "<span>Alambre {#}</span><span>−{#} A</span><span>(-{#}, -{#}) cm · F/L {#} µN/m</span>",
 "Net on wire {#}":
@@ -288,6 +286,8 @@ VDI18N.add('es', 'demo/currents-fields', {
   "∮B·dl = {#} µT·m <small>μ₀I<sub>enc</sub> = {#} µT·m</small>",
 "A circular loop seen edge on: at the top the current comes out of the page, at the bottom it goes in. Every field line threads the loop and closes around the outside. At the center B = μ₀I/(2R).":
   "Una espira circular vista de canto: arriba la corriente sale de la página, abajo entra. Cada línea de campo pasa a través de la espira y se cierra por fuera. En el centro B = μ₀I/(2R).",
+"Near half of each turn drawn faint · drag to turn the view":
+  "La mitad cercana de cada vuelta se dibuja tenue · arrastra para girar la vista",
 "{#} (one loop)":
   "{#} (una espira)",
 "With one turn the length L does not matter. Raise N to stack more turns along the length.":
@@ -306,6 +306,8 @@ VDI18N.add('es', 'demo/currents-fields', {
   "μ₀nI = {#} mT",
 "N = {#}, L = {#} cm, R = {#} cm, I = {#} A, iron core":
   "N = {#}, L = {#} cm, R = {#} cm, I = {#} A, núcleo de hierro",
+"{#} mT at z = {#} cm":
+  "{#} mT en z = {#} cm",
 "{#} mT <span>exact/ideal {#}</span>":
   "{#} mT <span>exacto/ideal {#}</span>",
 "{#} mT <span>{#} of the center</span>":
@@ -364,6 +366,8 @@ VDI18N.add('es', 'demo/currents-fields', {
   "Ángulo (°)",
 "Oersted":
   "Oersted",
+"Close":
+  "Cerrar",
 "μ₀nI = -{#} nT":
   "μ₀nI = -{#} nT",
 "-{#} nT at z = {#} cm":
@@ -380,8 +384,8 @@ VDI18N.add('es', 'demo/currents-fields', {
   "μ₀nI = -{#} µT",
 "N = {#}, L = {#} cm, R = {#} cm, I = −{#} A, iron core":
   "N = {#}, L = {#} cm, R = {#} cm, I = −{#} A, núcleo de hierro",
-"-{#} µT at z = {#} cm":
-  "-{#} µT en z = {#} cm",
+"-{#} mT at z = {#} cm":
+  "-{#} mT en z = {#} cm",
 "-{#} µT <span>exact/ideal {#}</span>":
   "-{#} µT <span>exacto/ideal {#}</span>",
 "-{#} mT <span>{#} of the center</span>":
@@ -411,5 +415,7 @@ VDI18N.add('es', 'demo/currents-fields', {
 "{#} µT <span>rings: {#} µT</span>":
   "{#} µT <span>anillos: {#} µT</span>",
 "Field lines followed through the helix's own field":
-  "Líneas de campo seguidas a través del propio campo de la hélice"
+  "Líneas de campo seguidas a través del propio campo de la hélice",
+"-{#} µT at z = {#} cm":
+  "-{#} µT en z = {#} cm"
 });

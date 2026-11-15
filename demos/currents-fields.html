@@ -650,7 +650,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       hint: 'A circular loop seen edge on: at the top the current comes out of the page, at the bottom it goes in. Every field line threads the loop and closes around the outside. At the center B = μ₀I/(2R).' },
     sol: { scene: 'side', sol: { N: 30, L: 24, R: 3, I: 5 }, sprobe: [0, 1.2],
       hint: 'Many loops side by side. Inside a long solenoid the field is nearly uniform, close to μ₀nI with n = N/L, and outside it is weak. At each end it drops to about half. Shorten it to watch it turn into a loop.' },
-    emag: { scene: 'side', sol: { N: 40, L: 10, R: 1, I: 2, core: true }, sprobe: [8, 0], sup: 'dc',
+    /* the probe opens at the center, where Part 6 of the worksheet reads it; at z = 8 cm it sat off the drawing and only its
+       B label showed, pinned to the edge (student view calls, 2026-11-15) */
+    emag: { scene: 'side', sol: { N: 40, L: 10, R: 1, I: 2, core: true }, sprobe: [0, 0], sup: 'dc',
       hint: 'An electromagnet: 40 turns on a soft iron rod 10 cm long and 2 cm across, on a 2 A battery. The iron makes the field about 18 times what the coil gives alone, and the compasses line up with it like the field of a bar magnet. Take the core out, switch to the AC supply, or make the rod short and fat to see the gain fall.' }
   };
   const S = {
@@ -1338,9 +1340,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (sol.core && sol.N > 1) {   /* the iron core inside the turns, see through so the field lines show */
       const x0 = X(-sol.L / 2), x1 = X(sol.L / 2), y0 = Y(sol.R * 0.82), y1 = Y(-sol.R * 0.82);
       c.fillStyle = T.muted; c.globalAlpha = 0.22; c.fillRect(x0, y0, x1 - x0, y1 - y0); c.globalAlpha = 0.7; c.strokeStyle = T.muted; c.lineWidth = 1.2; c.strokeRect(x0, y0, x1 - x0, y1 - y0); c.globalAlpha = 1;
-      label(c, 'iron', x1 - 4 * ks, y0 + fsz(11) + 2 * ks, { size: fsz(10.5), color: T.muted, align: 'right', weight: 400 });
     }
     if (S.show.compass) drawNeedles(c);
+    /* the "iron" tag goes on after the compasses, which used to cover it (student view calls, 2026-11-15) */
+    if (sol.core && sol.N > 1) label(c, 'iron', X(sol.L / 2) - 4 * ks, Y(sol.R * 0.82) + fsz(11) + 2 * ks, { size: fsz(10.5), color: T.muted, align: 'right', weight: 400 });
     // outline of the coil and its axis label
     if (sol.N === 1) {   // the loop itself, seen nearly edge on
       c.strokeStyle = T.muted; c.lineWidth = 1.2; c.setLineDash([4, 4]); c.beginPath(); c.ellipse(X(0), V.cy, 0.2 * sol.R * V.s, sol.R * V.s, 0, 0, TWO_PI); c.stroke(); c.setLineDash([]);
