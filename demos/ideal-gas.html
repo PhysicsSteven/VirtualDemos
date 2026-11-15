@@ -1012,12 +1012,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const notches = [0, 1].map(() => { const b = new THREE.Mesh(new THREE.BoxGeometry(0.016, 0.036, 0.0025), notchM); b.visible = false; S.scene.add(b); return b; });
     const therm = VD3K.meter(S, { label: 'TEMPERATURE', sub: 'from mean kinetic energy', w: 0.15, h: 0.09 });
     therm.position.set(-0.16, -0.04, 0.045); S.scene.add(therm);
-    S.scene.add(VD3K.cable([-0.16, -0.03, 0.03], [-0.006, 0, Z0 + 0.04], { sag: 0.03, color: 0xb8382a }));
-    const wLab = VD3K.label('50.0 nm', { size: 0.024, color: '#968c7f' }), hLab = VD3K.label('30 nm', { size: 0.024, color: '#968c7f' });
+    const tCable = VD3K.cable([-0.16, -0.03, 0.03], [-0.006, 0, Z0 + 0.04], { sag: 0.03, color: 0xb8382a }); S.scene.add(tCable);
+    /* the width and height labels a little larger, so they can be read at 1280 (student view, 2026-11-15) */
+    const wLab = VD3K.label('50.0 nm', { size: 0.03, color: '#968c7f' }), hLab = VD3K.label('30 nm', { size: 0.03, color: '#968c7f' });
     hLab.position.set(-0.04, -0.02, Z0 + LY * K3 / 2); S.scene.add(wLab, hLab);
     const follow = VD3K.follow({ x: 0.25, y: 0, z: Z0 + 0.15 }, 0.1);
     let pScale = 0;
-    G3 = { S, wallMat, facePlate, gScale: 1, gScaleB: 1, gas, gasB, divs, collar, rWall, gRod, holeLab, notches, mark, trailL, flashes, piston, face, pRod, knob, gauge, therm, wLab, follow, next: 0, setScale: (v) => { pScale = v; }, get pScale() { return pScale; } };
+    G3 = { S, wallMat, facePlate, gScale: 1, gScaleB: 1, gas, gasB, divs, collar, rWall, gRod, holeLab, notches, mark, trailL, flashes, piston, face, pRod, knob, gauge, therm, tCable, wLab, follow, next: 0, setScale: (v) => { pScale = v; }, get pScale() { return pScale; } };
     S.orbit(S.el, o3, () => { dirty = true; }, { grab: grab3, zMin: 0.6, zMax: 3 });
     S.el.addEventListener('pointermove', move3); S.el.addEventListener('pointerup', up3); S.el.addEventListener('pointercancel', up3);
     G3.hit = (side, at, dp) => {
@@ -1072,6 +1073,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     g.divs.forEach((d) => { d.visible = two && GS.div > 0; });
     for (const o of [g.face, g.pRod, g.knob, g.collar, g.gauge, g.gRod]) o.visible = !two;   /* no piston or pressure gauge with two gases */
+    /* nor the thermometer: wired to the left wall it read the mean of both gases (375 K in Hot meets cold, with 600 K on its side);
+       the rail gives T left · right and T of A · of B (student view, 2026-11-15) */
+    g.therm.visible = g.tCable.visible = !two;
     g.rWall.visible = two;
     g.holeLab.visible = two && GS.div === 1;
     g.notches.forEach((b, k) => { b.visible = g.holeLab.visible; b.position.set(DIV_X * K3, 0, Z0 + (HOLE_Y + (k ? 0.5 : -0.5) * GS.hole) * K3); });
@@ -1093,7 +1097,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     g.knob.material.emissive = new THREE.Color(drag3 ? '#895a14' : '#000000');
     for (let w = 0; w < 4; w++) { const wg = wallGlow(w); g.wallMat[w].emissive.set(wg ? wg.color : '#000000'); g.wallMat[w].emissiveIntensity = wg ? 0.25 + 0.5 * wg.k : 0; }
     g.facePlate.visible = !two; g.facePlate.position.x = wx + 0.002;
-    g.wLab.set(GS.wallX.toFixed(1) + ' nm'); g.wLab.position.set(wx / 2, -0.02, Z0 - 0.03);
+    /* on the front of the base: at y = -0.02 the width label sat inside the base and never showed (student view, 2026-11-15) */
+    g.wLab.set(GS.wallX.toFixed(1) + ' nm'); g.wLab.position.set(wx / 2, -0.062, Z0 - 0.03);
     const showT = showTrail && tracer < N;
     g.mark.visible = showT; g.trailL.visible = showT && trail.length > 1;
     if (showT) {
@@ -1249,9 +1254,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('cap3d').textContent = CAP[on ? 1 : 0];
     $('unitsGas').textContent = on ? 'two gases, masses in u' : gasUnits();
     if (!on) { GS.div = 0; GS.ux = null; GS.m.fill(M); GS.r.fill(R); GS.kind.fill(0); rMin = R; }
-    window.vdShowCols = on ? [['t_ps', 't (ps)'], ['A_right', 'A right'], ['B_left', 'B left'], ['msd_A_nm2', 'MSD A (nm²)']]
-      : [['T_K', 'T (K)'], ['A_nm2', 'A (nm²)'], ['P_mN_per_m', 'P (mN/m)']];
+    window.vdShowCols = on ? [['t_ps', 't (ps)'], ['A_right', 'A right'], ['B_left', 'B left'], ['msd_A_nm2', 'MSD A (nm²)']] : oneCols();
     if (window.vdRenderReadings) window.vdRenderReadings(); /* the headings follow the mode before the first reading */
+    /* the pane divider's grip is placed again: the gas cards and the taller picture move the edge between the panes, and the grip
+       stayed where it was, on the line of text under the box (student view, 2026-11-15) */
+    requestAnimationFrame(() => window.dispatchEvent(new Event('resize')));
     $('hist').setAttribute('aria-label', on ? 'Graph of the two gases: counts on the far side, mean square displacement, or speeds, against time since the divider opened.' : 'Histogram of molecular speeds with the two dimensional Maxwell-Boltzmann curve overlaid.');
     resize();
   }
@@ -1620,7 +1627,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   // ---------- readings (tools/readings_panel.py) ----------
   window.vdVersion = 'ideal-gas@2026-10-24';
-  window.vdShowCols = [['T_K', 'T (K)'], ['A_nm2', 'A (nm²)'], ['P_mN_per_m', 'P (mN/m)']];
+  /* the columns shown under Readings follow the worksheet: Astro 2203's atmospheres worksheet records the gas and its speeds, so
+     five gases at 300 K no longer show as five alike rows of T, A and P (student view, 2026-11-15) */
+  function oneCols() {
+    return VD.ws('') === 'intro-atmospheres' ? [['gas', 'Gas'], ['T_K', 'T (K)'], ['rms_m_s', 'rms 2D (m/s)'], ['rms3_m_s', 'rms 3D (m/s)']]
+      : [['T_K', 'T (K)'], ['A_nm2', 'A (nm²)'], ['P_mN_per_m', 'P (mN/m)']];
+  }
+  window.vdShowCols = oneCols();
   /* a two gas row: time since the divider opened, the counts on each side, each gas's mean square displacement, the temperature on
      each side, and the settings */
   const rowTwo = (sm) => ({ t_ps: sm.t, A_left: sm.aL, A_right: sm.aR, B_left: sm.bL, B_right: sm.bR,

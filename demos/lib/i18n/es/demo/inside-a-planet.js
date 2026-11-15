@@ -186,6 +186,10 @@ VDI18N.add('es', 'demo/inside-a-planet', {
   "ρ̄ del modelo",
 "C/MR²":
   "C/MR²",
+"surface temp.":
+  "temp. de la superficie",
+"core temp.":
+  "temp. del núcleo",
 "Earth, cut in half: the mantle churning":
   "La Tierra, cortada a la mitad: el manto agitándose",
 "time in the model (millions of years)":
@@ -196,6 +200,8 @@ VDI18N.add('es', 'demo/inside-a-planet', {
   "rapidez de la superficie (izquierda)",
 "heat out, × a still mantle (right)":
   "calor que sale, × un manto inmóvil (derecha)",
+"Earth: water makes the cold lid weak enough to break (here a yield stress of {#} in the model's units), so it breaks into plates that sink back into the mantle and move along with the flow below. The surface speed rises and falls as plates speed up and slow down.":
+  "Tierra: el agua hace la tapa fría lo bastante débil para romperse (aquí un esfuerzo de fluencia de {#} en las unidades del modelo), así que se rompe en placas que se hunden de vuelta en el manto y se mueven junto con el flujo de abajo. La rapidez de la superficie sube y baja según las placas aceleran y frenan.",
 "The mantle":
   "El manto",
 "Half of a planet's mantle cut through the poles, colored by temperature, with arrows for the flow and for the surface's motion. Space starts or pauses.":
@@ -294,12 +300,6 @@ VDI18N.add('es', 'demo/inside-a-planet', {
   "La Luna cortada a la mitad: un núcleo de radio {#} km dentro de un manto.",
 "Earth: half the mantle, cut through the poles":
   "Tierra: la mitad del manto, cortada por los polos",
-"surface temp.":
-  "temp. de la superficie",
-"core temp.":
-  "temp. del núcleo",
-"Earth: water makes the cold lid weak enough to break (here a yield stress of {#} in the model's units), so it breaks into plates that sink back into the mantle and move along with the flow below. The surface speed rises and falls as plates speed up and slow down.":
-  "Tierra: el agua hace la tapa fría lo bastante débil para romperse (aquí un esfuerzo de fluencia de {#} en las unidades del modelo), así que se rompe en placas que se hunden de vuelta en el manto y se mueven junto con el flujo de abajo. La rapidez de la superficie sube y baja según las placas aceleran y frenan.",
 "Venus: half the mantle, cut through the poles":
   "Venus: la mitad del manto, cortada por los polos",
 "Venus: dry rock is strong, so the cold lid never breaks. It stays one shell while the mantle churns underneath; only small cold drips fall from its base. Less heat gets out than through moving plates, so the inside runs hotter. Venus's Ra is set {#} times Earth's: g d³ for its gravity ({#} m/s²) and mantle depth ({#} km).":
@@ -329,5 +329,7 @@ VDI18N.add('es', 'demo/inside-a-planet', {
 "Your own mantle.":
   "Tu propio manto.",
 "core: {#} km, {#} {#} kg/m³":
-  "núcleo: {#} km, {#} {#} kg/m³"
+  "núcleo: {#} km, {#} {#} kg/m³",
+"t = {#} Myr · about {#} Myr per second":
+  "t = {#} millones de años · unos {#} millones de años por segundo"
 });

@@ -12,10 +12,6 @@ VDI18N.add('es', 'demo/ideal-gas', {
   "Maxwell-Boltzmann 2D a {#} K",
 "Gas in a Box":
   "Gas en una caja",
-"<a>The kinetic theory of gases</a>":
-  "<a>La teoría cinética de los gases</a>",
-"<a><span>←</span> <span>Blackbody Radiation</span></a><a><span>Heat Capacities of Gases</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Radiación de cuerpo negro</span></a><a><span>Capacidades caloríficas de los gases</span> <span>→</span></a>",
 "Pressure and temperature come from molecules hitting the walls. Push the piston and watch the gas heat up.":
   "La presión y la temperatura vienen de las moléculas que chocan con las paredes. Empuja el pistón y observa cómo se calienta el gas.",
 "argon, m = {#}×{#}⁻²⁶ kg":
@@ -208,6 +204,10 @@ VDI18N.add('es', 'demo/ideal-gas', {
   "Las moléculas son discos duros de {#} nm de diámetro, un poco más grandes que el argón real (cerca de {#} nm), dibujadas de ese tamaño o más grandes. Todos los gases de la tarjeta Gas son el mismo disco; solo cambia la masa. Un gas real se mueve en tres dimensiones, donde la energía cinética promedio es ({#}/{#})kT, así que su rapidez cuadrática media es √(3kT/m): √({#}/{#}) = {#} veces la √(2kT/m) del gas 2D a la misma T. Su tamaño finito hace que P quede unos pocos por ciento arriba de NkT/A, más cuando la caja está llena.",
 "Record the run":
   "Grabar la ejecución",
+"<a>The kinetic theory of gases</a>":
+  "<a>La teoría cinética de los gases</a>",
+"<a><span>←</span> <span>Blackbody Radiation</span></a><a><span>Heat Capacities of Gases</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Radiación de cuerpo negro</span></a><a><span>Capacidades caloríficas de los gases</span> <span>→</span></a>",
 "PRESSURE":
   "PRESIÓN",
 "measured from wall hits":
@@ -224,6 +224,8 @@ VDI18N.add('es', 'demo/ideal-gas', {
   "Arrastra la pared derecha hacia dentro y observa cómo sube T. Reduce el área a la mitad despacio y T casi se duplica, ya que T × A se mantiene constante para un gas 2D. Luego jala la pared de vuelta hacia fuera.",
 "← drag the wall":
   "← arrastra la pared",
+"+{#} off scale →":
+  "+{#} fuera de escala →",
 "Only {#} molecules. Collisions are rare, so the spike takes much longer to relax, and the measured pressure jumps around more.":
   "Solo {#} moléculas. Los choques son raros, así que el pico tarda mucho más en relajarse, y la presión medida salta más.",
 "The gas at {#} K. The rms speed is about {#} m/s instead of {#} m/s at room temperature, but they never stop: speeds still spread out into a Maxwell-Boltzmann curve, and the walls still feel a pressure. Slow motion follows T is on, so the playback runs about {#} times faster than Fixed rate (the clock says by how much): the gas only looks lively. T stays at {#} K because the collisions conserve energy. Switch to Fixed rate to see how sluggish the gas really is. Classically, motion only stops at exactly {#} K.":
@@ -232,10 +234,10 @@ VDI18N.add('es', 'demo/ideal-gas', {
   "{#} ns por segundo",
 "{#} nN/m":
   "{#} nN/m",
-"{#} zJ":
-  "{#} zJ",
 "t = {#} ps playback {#}× faster than Fixed rate":
   "t = {#} ps reproducción {#}× más rápida que Ritmo fijo",
+"{#} zJ":
+  "{#} zJ",
 "The walls are held at {#} K. Every molecule that hits a wall leaves as if from a gas at {#} K, so the {#} K gas gives heat to the walls and cools until T settles near {#} K; Q counts the heat. Then push the piston: the walls carry off the work you do, and T stays near {#} K (an isothermal squeeze) instead of rising. Switch the walls to Insulated and compare.":
   "Las paredes se mantienen a {#} K. Cada molécula que choca con una pared sale como si viniera de un gas a {#} K, así que el gas a {#} K cede calor a las paredes y se enfría hasta que T se asienta cerca de {#} K; Q cuenta el calor. Luego empuja el pistón: las paredes se llevan el trabajo que haces, y T se mantiene cerca de {#} K (una compresión isotérmica) en lugar de subir. Cambia las paredes a Aislada y compara.",
 "The left wall is held at {#} K and the piston at {#} K; the top and bottom are insulated. The gas never settles to one temperature: molecules carry energy from the hot wall across to the cold one, the left half stays warmer than the right, and once the flow is steady the heat in at the left matches the heat out at the piston, so Q for all the walls stops changing. Pick each wall to read its own Q.":
@@ -268,6 +270,10 @@ VDI18N.add('es', 'demo/ideal-gas', {
   "B a la izquierda",
 "half of each gas":
   "la mitad de cada gas",
+"closed":
+  "cerrado",
+"divider closed":
+  "divisor cerrado",
 "Helium mass ({#} u) on the left and argon mass ({#} u) on the right, the same size and temperature. Remove the divider: the light molecules move faster and spread faster.":
   "Masa del helio ({#} u) a la izquierda y masa del argón ({#} u) a la derecha, mismo tamaño y misma temperatura. Quita el divisor: las moléculas ligeras se mueven más rápido y se dispersan más rápido.",
 "mean square displacement (nm²)":
@@ -280,10 +286,6 @@ VDI18N.add('es', 'demo/ideal-gas', {
   "{#} moléculas con la masa del helio ({#} u) a la izquierda, nada a la derecha, y un orificio de {#} nm de ancho, más pequeño que la distancia que recorre una molécula entre choques (cerca de {#} nm aquí). Abre el orificio y cuenta qué tan rápido se escapa el gas. Luego haz que el gas A sea argón ({#} u) y repite: la ley de Graham dice que la tasa va como {#}/√m.",
 "Hot argon ({#} K) on the left and cold argon ({#} K) on the right. Remove the divider: the gases mix, and collisions bring both sides to one temperature.":
   "Argón caliente ({#} K) a la izquierda y argón frío ({#} K) a la derecha. Quita el divisor: los gases se mezclan, y los choques llevan a ambos lados a una sola temperatura.",
-"closed":
-  "cerrado",
-"divider closed":
-  "divisor cerrado",
 "Q from the piston":
   "Q del pistón",
 "Q from the top":
@@ -315,5 +317,9 @@ VDI18N.add('es', 'demo/ideal-gas', {
 "−{#} zJ":
   "−{#} zJ",
 "+{#} zJ":
-  "+{#} zJ"
+  "+{#} zJ",
+"rms 2D (m/s)":
+  "rms 2D (m/s)",
+"rms 3D (m/s)":
+  "rms 3D (m/s)"
 });

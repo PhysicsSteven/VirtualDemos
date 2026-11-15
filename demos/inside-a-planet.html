@@ -744,7 +744,18 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     $('out').innerHTML = h;
   }
-  function clock() { $('clock').textContent = S.mode === 'convect' && B ? `t = ${fs(timeMyr(S.cp, B.t))} Myr` : ''; }
+  /* while it runs the clock also gives the pace, measured over the last second: the model takes as many steps as the computer
+     allows, so the rate is not fixed (student view, 2026-11-15) */
+  const pace = { t: 0, myr: 0, rate: 0 };
+  function clock() {
+    if (!(S.mode === 'convect' && B)) { $('clock').textContent = ''; return; }
+    const now = performance.now(), myr = timeMyr(S.cp, B.t);
+    if (!S.run) pace.rate = 0;
+    else if (!pace.t || myr < pace.myr) { pace.t = now; pace.myr = myr; }
+    else if (now - pace.t >= 1000) { pace.rate = ((myr - pace.myr) * 1000) / (now - pace.t); pace.t = now; pace.myr = myr; }
+    if (!S.run) pace.t = 0;
+    $('clock').textContent = S.run && pace.rate > 0 ? `t = ${fs(myr)} Myr · about ${fs(pace.rate)} Myr per second` : `t = ${fs(myr)} Myr`;
+  }
 
   /* ---------- controls ---------- */
   const card = VD.setupCard($('setupCard'));
@@ -796,7 +807,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const lastPreset = {};
   function setMode(m) {
     if (m === S.mode) return; lastPreset[S.mode] = S.preset;
-    if (m === 'convect' && B) { S.mode = m; S.preset = lastPreset.convect || 'custom'; setRun(false); sync(); dirty3 = true; redraw(); return; }
+    /* back to a run already made; the first visit opens Earth: moving plates, not the boot mantle (a setup no button names, with the
+       Layers setup's About text still showing) (student view, 2026-11-15) */
+    if (m === 'convect' && B && lastPreset.convect) { S.mode = m; S.preset = lastPreset.convect || 'custom'; setRun(false); sync(); dirty3 = true; redraw(); return; }
     applyPreset(lastPreset[m] && lastPreset[m] !== 'custom' ? lastPreset[m] : MODE_FIRST[m]);
   }
   for (const b of document.querySelectorAll('#modeSeg button')) b.addEventListener('click', () => setMode(b.dataset.mode));
@@ -914,6 +927,36 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     dirty3 = false;
     S3.render();
+    /* Convection in 3D: the flow, the surface's motion and the color key, as in the flat picture, on the cut face (the face is the
+       slab and its mirror image below). The worksheet asks students to watch the orange surface arrows, and 3D, the view a page
+       opens in, showed none (student view, 2026-11-15) */
+    if (S.mode === 'convect' && B && S3.cam.position.y < 0) {
+      const rcf = MANTLE[S.cp].rc / MANTLE[S.cp].R, o0 = S3.project([0, 0, 0]), o1 = S3.project([1, 0, 0]), Rpx = Math.max(20, Math.hypot(o1[0] - o0[0], o1[1] - o0[1]));
+      /* screen point of box (X, Z), moved dx along the box's x and dz up, on the slab (sg = 1) or its mirror (sg = −1) */
+      const P3 = (X, Z, sg, dx, dz) => { const th = Math.PI * (1 - X / B.A), r = rcf + Z * (1 - rcf), sn = Math.sin(th), cs = Math.cos(th);
+        return S3.project([r * cs + dx * sn + dz * cs, -0.001, sg * (r * sn - dx * cs + dz * sn)]); };
+      const ar = (X, Z, sg, ux, uz, k, col, wdt, head) => { const a = P3(X, Z, sg, -k * ux, -k * uz), b = P3(X, Z, sg, k * ux, k * uz); arrow(ctx, a[0], a[1], b[0], b[1], col, wdt, head); };
+      let vmax = 1e-9; for (let q = 0; q < B.u.length; q++) vmax = Math.max(vmax, Math.hypot(B.u[q], B.w[q]));
+      if (S.flow && vmax > 1e-6) {
+        const nx = Math.max(8, Math.round((Math.PI * Rpx * (1 + rcf)) / 2 / (34 * p))), nz = 5;
+        for (let a = 0; a < nx; a++) for (let b = 0; b < nz; b++) {
+          const X = ((a + 0.5) / nx) * B.A, Z = (b + 0.5) / nz, u = sample(B.u, X, Z), w = sample(B.w, X, Z), v = Math.hypot(u, w), sv = v / vmax;
+          if (sv < 0.06) continue;
+          const k = (7.5 * p * Math.sqrt(sv)) / Rpx;
+          for (const sg of [1, -1]) ar(X, Z, sg, u / v, w / v, k, 'rgba(255,255,255,0.85)', 1.4 * p, 5 * p);
+        }
+      }
+      let umax = 0; for (let i = 0; i < B.nx; i++) umax = Math.max(umax, Math.abs(B.u[i * B.nz + B.NZ]));
+      if (speedCmYr(S.cp, umax) > 0.05) for (let a = 0; a < 14; a++) {
+        const X = ((a + 0.5) / 14) * B.A, u = sample(B.u, X, 1), sv = Math.abs(u) / umax; if (sv < 0.15) continue;
+        const k = (8 * p * sv) / Rpx, out = (9 * p) / Rpx / (1 - rcf);
+        for (const sg of [1, -1]) ar(X, 1 + out, sg, Math.sign(u), 0, k, K.accent, 2 * p, 6 * p);
+      }
+      const kx = area().x0 + 14 * p, ky = 34 * p, kw = 150 * p, kh = 8 * p, L = S.look === 'eta' ? LUT_E : LUT_T;
+      for (let i = 0; i < kw; i++) { const k = Math.round((i / kw) * 255) * 3; ctx.fillStyle = `rgb(${L[k]},${L[k + 1]},${L[k + 2]})`; ctx.fillRect(kx + i, ky, 1.5, kh); }
+      label(ctx, S.look === 'eta' ? 'runny' : 'surface temp.', kx, ky + kh + 9 * p, { size: 10, col: '#cfc6ba', haloCol: '#0b0906' });
+      label(ctx, S.look === 'eta' ? 'stiff' : 'core temp.', kx + kw, ky + kh + 9 * p, { size: 10, col: '#cfc6ba', haloCol: '#0b0906', a: 'right' });
+    }
     /* words over the picture */
     if (!crustMode) {
       const P = S.mode === 'layers' ? PLANETS[S.lp] : PLANETS[S.cp], rcf = S.mode === 'layers' ? S.rc / P.R : MANTLE[S.cp].rc / MANTLE[S.cp].R;
