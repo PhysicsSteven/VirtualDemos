@@ -412,7 +412,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         ctx.fillStyle = col; ctx.strokeStyle = T.muted; ctx.lineWidth = 1; ctx.beginPath(); ctx.roundRect(lx, ly - 3 * p, 14 * p, 6 * p, 3 * p); ctx.fill(); ctx.stroke();
         txt(nm, lx + 18 * p, ly, { s: 10, c: nm.includes('broken') ? T.pos : T.muted }); lx += (ctx.measureText(nm).width / p + 34) * p; } }
     /* clamp meters: one around the hot wire, one around hot and neutral together (it reads their difference, as a GFCI does) */
-    const m1x = narrow ? xs + 0.5 * (ox - xs) : xs + 0.62 * (ox - xs);
+    const m1x = narrow ? xs + 0.5 * (ox - xs) : xs + 0.78 * (ox - xs);   /* clear of the person's head, which hid this meter's label (student view, 2026-11-15) */
     clampMeter(m1x, yH, 3 * p, 7 * p, m1x - 27 * p, bot + 30 * p, hide ? '- - -' : amps(r.Ihot), 'on the hot wire');
     const m2y = yG + Math.max(16 * p, (oy - yG) * 0.32);
     clampMeter((xH + xN) / 2, m2y, 11 * p, 3.4 * p, Math.min(ox + 48 * p, W - 60 * p), m2y - 8 * p, hide ? '- - -' : amps(r.leak), narrow ? 'hot − neutral' : 'hot minus neutral');
@@ -505,8 +505,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       if (S.skin === 'wet') { ctx.fillStyle = T.accent; for (const [dx, dy] of [[-4, -8], [3, -2], [-1, 5]]) { ctx.beginPath(); ctx.arc(hand[0] + dx * p, hand[1] + dy * p, 2 * p, 0, 7); ctx.fill(); } }
       flow([hand, elbow, [fx + 12 * p, hy + 32 * p], [fx, hy + 70 * p], [fx, floorY]], r.Ibody, 1);
       const bI = r.Ibody;
-      txt(hide ? 'through the person: ?' : `through the person: ${amps(bI)}`, Math.max(fx, 90 * p), hy - 28 * p, { a: 'center', s: 11, b: 1, c: bI >= 5e-3 ? T.pos : T.ink });
+      const bt = hide ? 'through the person: ?' : `through the person: ${amps(bI)}`;
+      /* wide: ends just right of the head, so it no longer sits on the hot wire's clamp meter (student view, 2026-11-15) */
+      if (narrow) txt(bt, Math.max(fx, 90 * p), hy - 28 * p, { a: 'center', s: 11, b: 1, c: bI >= 5e-3 ? T.pos : T.ink });
+      else { ctx.font = `700 ${11 * p}px ${T.ui}`; txt(bt, Math.max(fx + 20 * p, ctx.measureText(bt).width + 8 * p), hy - 28 * p, { a: 'right', s: 11, b: 1, c: bI >= 5e-3 ? T.pos : T.ink }); }
     }
+    /* the time scale of the swinging dots: 60 Hz drawn at 0.8 Hz (student view, 2026-11-15) */
+    if (!reduce && !S.tripped) txt(narrow ? 'slow motion ×75' : 'dots: slow motion ×75 (60 Hz drawn at 0.8 Hz)', 12 * p, floorY + (Hh - floorY) / 2, { s: 10, c: dk ? T.ink : T.muted });
     /* status banner */
     const by0 = floorY + (Hh - floorY) / 2;
     const banner = S.tripped ? `Power off: ${S.tripped}` : !S.blind ? `hot ${amps(r.Ihot)}` : '';

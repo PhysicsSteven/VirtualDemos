@@ -54,6 +54,8 @@ VDI18N.add('es', 'demo/hr-diagram', {
   "<span>Rapidez</span>",
 "{#} Gyr <small>age</small>":
   "{#} mil millones de años <small>edad</small>",
+"· {#} s ≈ {#} Myr":
+  "· {#} s ≈ {#} millones de años",
 "Hertzsprung Russell diagram. Drag the star along its track to change its age. Left and right arrow keys change the age, up and down change the mass, space plays or pauses.":
   "Diagrama de Hertzsprung Russell. Arrastra la estrella a lo largo de su trayectoria para cambiar su edad. Las flechas izquierda y derecha cambian la edad, arriba y abajo cambian la masa, espacio inicia o pausa.",
 "The star drawn to scale next to the Sun or the Earth, and its radius on a logarithmic scale.":
@@ -200,6 +202,8 @@ VDI18N.add('es', 'demo/hr-diagram', {
   "Todo lo que viene después de la secuencia principal es una trayectoria esquemática: las formas son correctas, los números son aproximados y las duraciones se fijan como fracciones del tiempo de vida en la secuencia principal. Las trayectorias reales dependen de la composición, la rotación, las binarias y la pérdida de masa. La división entre estrellas de neutrones y agujeros negros cerca de {#} M<sub>sun</sub> es incierta.",
 "The background stars are generated to follow the real distribution of nearby and bright stars, not a catalog.":
   "Las estrellas de fondo se generan para seguir la distribución real de las estrellas cercanas y brillantes, no un catálogo.",
+"· {#} s ≈ {#} Gyr":
+  "· {#} s ≈ {#} mil millones de años",
 "A {#} M<sub>sun</sub> red dwarf at {#} Gyr, the age of the universe. This scaling gives a main sequence life of about {#}×{#}¹¹ yr, and detailed models that let convection mix the whole star give about {#}¹² yr. It outlives the universe so far: no red dwarf has ever left the main sequence.":
   "Una enana roja de {#} M<sub>sun</sub> a {#} mil millones de años, la edad del universo. Esta escala da una vida en la secuencia principal de unos {#}×{#}¹¹ años, y los modelos detallados que dejan que la convección mezcle toda la estrella dan unos {#}¹² años. Sobrevive al universo hasta ahora: ninguna enana roja ha dejado nunca la secuencia principal.",
 "Helium white dwarf, in the far future":
@@ -220,6 +224,8 @@ VDI18N.add('es', 'demo/hr-diagram', {
   "Una estrella de {#} M<sub>sun</sub> vive unos {#} millones de años, casi mil veces menos que el Sol. Cruza hasta supergigante roja y termina en una supernova por colapso del núcleo que deja una estrella de neutrones; sale del diagrama.",
 "{#} yr <small>age</small>":
   "{#} años <small>edad</small>",
+"· {#} s ≈ {#} kyr":
+  "· {#} s ≈ {#} mil años",
 "Supernova, then a neutron star":
   "Supernova, y luego una estrella de neutrones",
 "Main sequence: {#}% of the time before it becomes a supernova. That is why most stars we see are main sequence stars.":
@@ -288,6 +294,8 @@ VDI18N.add('es', 'demo/hr-diagram', {
   "anillo: {#} más brillantes",
 "ring: both":
   "anillo: ambas",
+"Close":
+  "Cerrar",
 "Color B − V, hotter to the left":
   "Color B − V, más caliente hacia la izquierda",
 "Surface temperature (K), hot on the left":

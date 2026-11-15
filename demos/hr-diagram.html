@@ -898,7 +898,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       let ang = Math.atan2(Y(b.ll) - Y(a.ll), X(b.lt) - X(a.lt));
       if (ang > Math.PI / 2) ang -= Math.PI; else if (ang < -Math.PI / 2) ang += Math.PI;
       ctx.save(); ctx.translate(X(a.lt), Y(a.ll) + 16 * ps); ctx.rotate(ang); ctx.fillText('Main sequence', 0, 0); ctx.restore();
-      ctx.fillText('Giants', X(lg(4300)), Y(2.6));
+      ctx.fillText('Giants', X(lg(4300)), Y(2.3));   /* was 2.6, under the Sun's Helium flash label (student view, 2026-11-15) */
       ctx.fillText('Supergiants', X(lg(7000)), Y(6.0));
       ctx.fillText('White dwarfs', X(lg(16000)), Y(-3.6));
       ctx.restore();
@@ -994,7 +994,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       ctx.save(); ctx.strokeStyle = T.accent; ctx.lineWidth = 1.5 * ps; ctx.setLineDash([3 * ps, 3 * ps]);
       ctx.beginPath(); ctx.arc(x, y, 12 * ps, 0, 2 * Math.PI); ctx.stroke(); ctx.restore();
       ctx.fillStyle = T.accent; ctx.font = `600 ${11 * ps}px ${mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
-      ctx.fillText(`Turnoff ${fmtM(toM)}`, x - 16 * ps, y);
+      ctx.fillText(`Turnoff ${fmtM(toM)}`, x - 10 * ps, y - 18 * ps);   /* above left, where the turned-off stars were, not on the Main sequence label (student view, 2026-11-15) */
     }
     const ring = rgbHex(T.ink);
     for (const c of CL) {
@@ -1167,7 +1167,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       $('ageOut').textContent = fmtAge(st.age);
       $('rPhase').textContent = st.p.name;
       $('rAge').textContent = fmtAge(st.age);
-      $('count').innerHTML = fmtAge(st.age) + ' <small>age</small>';
+      /* the pace of Play here, from how the stretched stage maps to real age (student view, 2026-11-15) */
+      const sa = Math.max(0, S.s - 5e-4), sb = Math.min(1, S.s + 5e-4), rate = (stateAtS(tr, sb).age - stateAtS(tr, sa).age) / (sb - sa) * S.speed / 45;
+      $('count').innerHTML = fmtAge(st.age) + ' <small>age</small>' + (st.p.gone || !(rate > 0) ? '' : ` <small id="paceOut">· 1 s ≈ ${fmtAge(rate)}</small>`);
       $('rLeft').textContent = st.p.wd ? 'cools forever' : st.p.gone ? '—' : fmtAge(st.left);
       $('rL').textContent = st.p.gone ? '—' : fmtL(st.L);
       $('rT').textContent = st.p.gone ? '—' : fmtT(st.Te);
@@ -1203,7 +1205,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       for (const c of CL) { const k = c.st.p.key; if (k === 'ms') nMS++; else if (c.st.p.gone) nSN++; else if (k === 'wd' || k === 'knee') nWD++; else nG++; }
       $('cageOut').textContent = fmtAge(S.cAge);
       $('cAge').textContent = fmtAge(S.cAge);
-      $('count').innerHTML = fmtAge(S.cAge) + ' <small>cluster age</small>';
+      /* Play steps the cluster age evenly in log age: 1 s of Play is this many years now (student view, 2026-11-15) */
+      $('count').innerHTML = fmtAge(S.cAge) + ' <small>cluster age</small>' + ` <small id="paceOut">· 1 s ≈ ${fmtAge(S.cAge * Math.log(CA1 / CA0) * S.speed / 30)}</small>`;
       $('cTo').textContent = toM > 25 ? '> 25 M☉' : fmtM(toM);
       $('cToT').textContent = toM > 25 ? '—' : fmtT(10 ** msPoint(Math.max(toM, 0.4), 1).lt);
       $('cMS').textContent = nMS; $('cGi').textContent = nG; $('cWD').textContent = nWD; $('cSN').textContent = nSN;
@@ -1270,7 +1273,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     else { S.cAge = CA0; cageIn.value = 0; S.selAuto = true; updateCluster(); }
     schedule();
   });
-  for (const b of document.querySelectorAll('#speed button')) b.addEventListener('click', () => { S.speed = +b.dataset.v; setPressed('#speed', 'v', b.dataset.v); });
+  for (const b of document.querySelectorAll('#speed button')) b.addEventListener('click', () => { S.speed = +b.dataset.v; setPressed('#speed', 'v', b.dataset.v); schedule(); });   /* refresh the 1 s ≈ pace (student view, 2026-11-15) */
 
   // ---------- modes and presets ----------
   function setMass(M) {

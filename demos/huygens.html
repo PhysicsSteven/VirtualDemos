@@ -313,11 +313,15 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   // ---------- drawing ----------
   function txt(s, x, y, o = {}) { const p = ps(); ctx.fillStyle = o.c || T.ink; ctx.font = `${o.b ? '700 ' : ''}${(o.s || 11) * p}px ${o.m ? T.mono : T.ui}`; ctx.textAlign = o.a || 'left'; ctx.textBaseline = o.bl || 'middle'; ctx.fillText(s, x, y); }
+  /* the bottom of the floating Play strip and Tools button on the picture (CSS px), so the rate, the clock and the top medium's
+     name are drawn below them, not hidden under them (student view, 2026-11-15) */
+  let ctlAt = -1e9, ctlV = 0;
+  function ctlB() { const now = performance.now(); if (now - ctlAt < 500) return ctlV; ctlAt = now; const sr = stage.getBoundingClientRect(); let b = 0; for (const e of stage.querySelectorAll('.viewbar, .stage-ctl, button')) { const r = e.getBoundingClientRect(); if (r.height && r.top - sr.top < 80) b = Math.max(b, r.bottom - sr.top); } return (ctlV = b); }   /* measured at most twice a second */
   function drawRace() {
-    const p = ps(), narrow = W < 620, x0 = (narrow ? 86 : 130) * p, x1 = W - (narrow ? 16 : 120) * p, top = 44 * p, lh = Math.min(58 * p, (Hh - top - 40 * p) / LANES.length);
+    const p = ps(), narrow = W < 620, x0 = (narrow ? 86 : 130) * p, x1 = W - (narrow ? 16 : 120) * p, cb = ctlB(), top = Math.max(44 * p, cb + 30 * p), lh = Math.min(58 * p, (Hh - top - 40 * p) / LANES.length);
     const tv = transitTime(1, S.L), tmax = transitTime(MEDIA.diamond.n, S.L), slow = 3.5 / tv, t = S.t / slow;   /* vacuum lane in 3.5 s */
-    const e9 = Math.floor(Math.log10(slow)), SUP = '⁰¹²³⁴⁵⁶⁷⁸⁹'; txt(`time slowed down ${(slow / 10 ** e9).toFixed(1)} × 10${String(e9).split('').map((ch) => SUP[+ch]).join('')} times`, 12 * p, 18 * p, { s: 10, c: T.muted });
-    txt(`t = ${si(Math.min(t, tmax * 1.05), 's', 3)}`, W - 12 * p, 18 * p, { a: 'right', s: 12, b: 1, m: 1 });
+    const e9 = Math.floor(Math.log10(slow)), SUP = '⁰¹²³⁴⁵⁶⁷⁸⁹'; txt(`time slowed down ${(slow / 10 ** e9).toFixed(1)} × 10${String(e9).split('').map((ch) => SUP[+ch]).join('')} times`, 12 * p, ctlB() + 14 * p, { s: 10, c: T.muted });
+    txt(`t = ${si(Math.min(t, tmax * 1.05), 's', 3)}`, W - 12 * p, ctlB() + 14 * p, { a: 'right', s: 12, b: 1, m: 1 });
     LANES.forEach((k, i) => {
       const m = MEDIA[k], y = top + i * lh, yc = y + lh / 2, frac = Math.min(1, t / transitTime(m.n, S.L));
       ctx.fillStyle = k === 'vacuum' ? T.canvas : T.lane; ctx.globalAlpha = k === 'vacuum' ? 1 : Math.min(1, 0.35 + 0.35 * (m.n - 1)); ctx.fillRect(x0, y + 4 * p, x1 - x0, lh - 8 * p); ctx.globalAlpha = 1;
@@ -332,7 +336,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function drawConstruct() {
     const p = ps(), u = Math.min(W, Hh) / 10, step = 1.6 * u, cycle = 2.2, ph = (S.t % cycle) / cycle, grow = Math.min(1, ph / 0.7), n = Math.floor(S.t / cycle) % 4, front0 = W * 0.18 + n * step;
     ctx.fillStyle = T.m1; ctx.fillRect(0, 0, W, Hh);
-    txt(S.shape === 'plane' ? 'a straight front moving to the right' : 'a curved front spreading from a point', 12 * p, 18 * p, { s: 10, c: T.muted });
+    txt(S.shape === 'plane' ? 'a straight front moving to the right' : 'a curved front spreading from a point', 12 * p, Hh - 14 * p, { s: 10, c: T.muted });   /* was under the Play strip (student view, 2026-11-15) */
     if (S.shape === 'plane') {
       const ys = Array.from({ length: S.nW }, (_, i) => Hh * 0.12 + (Hh * 0.76) * (S.nW === 1 ? 0.5 : i / (S.nW - 1)));
       ctx.strokeStyle = T.front; ctx.lineWidth = 3 * p; ctx.beginPath(); ctx.moveTo(front0, Hh * 0.08); ctx.lineTo(front0, Hh * 0.92); ctx.stroke(); txt('front now', front0, Hh * 0.95, { a: 'center', s: 10, c: T.front });
@@ -359,7 +363,6 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.fillStyle = T.m1; ctx.fillRect(0, 0, W, oy); ctx.fillStyle = S.mirror ? T.relief : T.m2; ctx.fillRect(0, oy, W, Hh - oy);
     if (S.mirror) { ctx.fillStyle = T.mirror; ctx.fillRect(0, oy, W, 5 * p); }
     else { ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(0, oy); ctx.lineTo(W, oy); ctx.stroke(); }
-    txt(`${MEDIA[S.m1].name}, n = ${n1}`, 12 * p, 16 * p, { s: 11, b: 1 }); txt(S.mirror ? 'Mirror' : `${MEDIA[S.m2].name}, n = ${n2}`, 12 * p, oy + 18 * p, { s: 11, b: 1 });
     /* normal */
     ctx.strokeStyle = T.muted; ctx.setLineDash([4 * p, 4 * p]); ctx.lineWidth = 1 * p; ctx.beginPath(); ctx.moveTo(ox, oy - 4.5 * u); ctx.lineTo(ox, oy + 4.5 * u); ctx.stroke(); ctx.setLineDash([]);
     /* the leading front's distance D grows one wavelength per second; it starts well up and to the left */
@@ -394,6 +397,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (!S.blind && (S.mirror || S.showRefl)) arrow(ox, oy, ox + s1 * L * 0.8, oy - c1 * L * 0.8, T.refl);
     if (!S.mirror && th2 === null && !S.blind) txt('no front can touch all the wavelets: total internal reflection', W / 2, Hh - 16 * p, { a: 'center', s: 11, b: 1, c: T.trans });
     txt('fronts one wavelength apart, wavelength drawn hugely enlarged', W - 10 * p, Hh - 34 * p, { a: 'right', s: 9, c: T.muted });
+    /* the two media's names last, on their own colour, so no front runs through them (student view, 2026-11-15) */
+    for (const [t, y, bg] of [[`${MEDIA[S.m1].name}, n = ${n1}`, ctlB() + 14 * p, T.m1], [S.mirror ? 'Mirror' : `${MEDIA[S.m2].name}, n = ${n2}`, oy + 18 * p, S.mirror ? T.relief : T.m2]]) {
+      ctx.font = `700 ${11 * p}px ${T.ui}`; ctx.fillStyle = bg; ctx.globalAlpha = 0.85; ctx.fillRect(8 * p, y - 9 * p, ctx.measureText(t).width + 8 * p, 18 * p); ctx.globalAlpha = 1; txt(t, 12 * p, y, { s: 11, b: 1 }); }
   }
   let img = null, imgW = 0, imgH = 0;
   const rgb = (hex) => { const h = hex.replace('#', ''); return [0, 2, 4].map((i) => parseInt(h.slice(i, i + 2), 16)); };
@@ -522,8 +528,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function drawRace3() {
     const p = ps(), Q = render3(); ctx.clearRect(0, 0, W, Hh); if (!Q) return;
     const narrow = W < 620, tv = transitTime(1, S.L), tmax = transitTime(MEDIA.diamond.n, S.L), slow = 3.5 / tv, t = S.t / slow;
-    const e9 = Math.floor(Math.log10(slow)), SUP = '⁰¹²³⁴⁵⁶⁷⁸⁹'; txt(`time slowed down ${(slow / 10 ** e9).toFixed(1)} × 10${String(e9).split('').map((ch) => SUP[+ch]).join('')} times`, 12 * p, 18 * p, { s: 10, c: T.muted });
-    txt(`t = ${si(Math.min(t, tmax * 1.05), 's', 3)}`, W - 12 * p, 18 * p, { a: 'right', s: 12, b: 1, m: 1 });
+    const e9 = Math.floor(Math.log10(slow)), SUP = '⁰¹²³⁴⁵⁶⁷⁸⁹'; txt(`time slowed down ${(slow / 10 ** e9).toFixed(1)} × 10${String(e9).split('').map((ch) => SUP[+ch]).join('')} times`, 12 * p, ctlB() + 14 * p, { s: 10, c: T.muted });
+    txt(`t = ${si(Math.min(t, tmax * 1.05), 's', 3)}`, W - 12 * p, ctlB() + 14 * p, { a: 'right', s: 12, b: 1, m: 1 });
     LANES.forEach((k, i) => {
       const m = MEDIA[k], y = LANE_Y(i), a = Q([0.02, y, ZC + 0.05]), b = Q([1.1, y, ZC + 0.03]), frac = Math.min(1, t / transitTime(m.n, S.L));
       const s1 = `${m.name}  n = ${m.n}`; ctx.font = `700 ${(narrow ? 9.5 : 10.5) * p}px ${T.ui}`; const lw = ctx.measureText(s1).width + 12 * p;

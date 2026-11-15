@@ -20,6 +20,8 @@ VDI18N.add('es', 'demo/household-wiring', {
   "fase menos neutro",
 "Lamp":
   "Lámpara",
+"dots: slow motion ×{#} ({#} Hz drawn at {#} Hz)":
+  "puntos: cámara lenta ×{#} ({#} Hz dibujados a {#} Hz)",
 "hot {#} mA":
   "fase {#} mA",
 "Household Wiring and Electrical Safety":
@@ -174,16 +176,12 @@ VDI18N.add('es', 'demo/household-wiring', {
   "a través de la persona: {#} mA",
 "Same fault with a wet hand: {#} mA, above the let go threshold, and the {#} A breaker still does nothing. Turn on the GFCI: it sees {#} mA missing from the neutral and trips.":
   "La misma falla con la mano mojada: {#} mA, por encima del umbral para poder soltarse, y el interruptor de {#} A sigue sin hacer nada. Activa el GFCI: ve que faltan {#} mA en el neutro y se dispara.",
-"a shock you feel; sustained muscle contraction starts at {#} to {#} mA":
-  "una descarga que se siente; la contracción muscular sostenida empieza entre {#} y {#} mA",
 "sustained muscle contraction: may not be able to let go ({#} to {#} mA and above)":
   "contracción muscular sostenida: puede que no logre soltarse (de {#} a {#} mA y más)",
-"painful (pain starts near {#} mA) and the muscles stay locked":
-  "dolorosa (el dolor empieza cerca de {#} mA) y los músculos siguen bloqueados",
-"ventricular fibrillation possible, often fatal ({#} to {#} mA and above)":
-  "posible fibrilación ventricular, a menudo mortal (de {#} a {#} mA y más)",
 "Space heater":
   "Calefactor",
+"Close":
+  "Cerrar",
 "Power off: breaker (thermal, after {#} s of overload)":
   "Sin energía: interruptor (térmico, después de {#} s de sobrecarga)",
 "tripped: breaker (thermal, after {#} s of overload)":
@@ -191,5 +189,13 @@ VDI18N.add('es', 'demo/household-wiring', {
 "hot − neutral":
   "fase − neutro",
 "worn cord":
-  "cable gastado"
+  "cable gastado",
+"slow motion ×{#}":
+  "cámara lenta ×{#}",
+"a shock you feel; sustained muscle contraction starts at {#} to {#} mA":
+  "una descarga que se siente; la contracción muscular sostenida empieza entre {#} y {#} mA",
+"painful (pain starts near {#} mA) and the muscles stay locked":
+  "dolorosa (el dolor empieza cerca de {#} mA) y los músculos siguen bloqueados",
+"ventricular fibrillation possible, often fatal ({#} to {#} mA and above)":
+  "posible fibrilación ventricular, a menudo mortal (de {#} a {#} mA y más)"
 });

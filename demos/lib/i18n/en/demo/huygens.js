@@ -91,5 +91,7 @@ VDI18N.add('en', 'demo/huygens', [
 "{#} wavelengths",
 "First dark direction, sin θ = λ/a",
 "For sound at {#} Hz (λ = {#} m)",
-"For yellow light (λ = {#} nm)"
+"For yellow light (λ = {#} nm)",
+"Close",
+"Turn the angle of the incoming wave by {#} degree (Boundary view)"
 ]);

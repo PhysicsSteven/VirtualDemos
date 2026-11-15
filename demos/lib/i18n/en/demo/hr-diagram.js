@@ -27,6 +27,7 @@ VDI18N.add('en', 'demo/hr-diagram', [
 "Step",
 "<span>Speed</span>",
 "{#} Gyr <small>age</small>",
+"· {#} s ≈ {#} Myr",
 "Hertzsprung Russell diagram. Drag the star along its track to change its age. Left and right arrow keys change the age, up and down change the mass, space plays or pauses.",
 "The star drawn to scale next to the Sun or the Earth, and its radius on a logarithmic scale.",
 "Divider between the HR diagram and the scale",
@@ -100,6 +101,7 @@ VDI18N.add('en', 'demo/hr-diagram', [
 "Main sequence: L ≈ M⁴ for {#} to {#} M<sub>sun</sub> and {#} M³·⁵ above ({#} M²·³ below), R ≈ M⁰·⁸ below {#} M<sub>sun</sub> and M⁰·⁵⁷ above, lifetime t ≈ {#}¹⁰ yr × M⁻²·⁵. These fits describe a star midway through its main sequence; here it brightens by about a factor of {#} from start to end.",
 "Everything after the main sequence is a schematic track: the shapes are right, the numbers are approximate, and durations are set as fractions of the main sequence lifetime. Real tracks depend on composition, rotation, binaries and mass loss. The split between neutron stars and black holes near {#} M<sub>sun</sub> is uncertain.",
 "The background stars are generated to follow the real distribution of nearby and bright stars, not a catalog.",
+"· {#} s ≈ {#} Gyr",
 "A {#} M<sub>sun</sub> red dwarf at {#} Gyr, the age of the universe. This scaling gives a main sequence life of about {#}×{#}¹¹ yr, and detailed models that let convection mix the whole star give about {#}¹² yr. It outlives the universe so far: no red dwarf has ever left the main sequence.",
 "Helium white dwarf, in the far future",
 "Main sequence lifetime by this scaling: {#} Gyr, longer than the {#} Gyr age of the universe.",
@@ -110,6 +112,7 @@ VDI18N.add('en', 'demo/hr-diagram', [
 "{#} Myr <small>age</small>",
 "A {#} M<sub>sun</sub> star lives about {#} Myr, nearly a thousand times shorter than the Sun. It crosses to a red supergiant and ends in a core collapse supernova that leaves a neutron star; it leaves the diagram.",
 "{#} yr <small>age</small>",
+"· {#} s ≈ {#} kyr",
 "Supernova, then a neutron star",
 "Main sequence: {#}% of the time before it becomes a supernova. That is why most stars we see are main sequence stars.",
 "The Sun as a white dwarf. Its radius is fixed, so it slides down the constant radius line while it cools and reddens. Compare its radius with the Earth below. Try other masses: heavier white dwarfs are smaller and sit on lower radius lines.",
@@ -144,6 +147,7 @@ VDI18N.add('en', 'demo/hr-diagram', [
 "ring: within {#} pc",
 "ring: {#} brightest",
 "ring: both",
+"Close",
 "Color B − V, hotter to the left",
 "Surface temperature (K), hot on the left"
 ]);
