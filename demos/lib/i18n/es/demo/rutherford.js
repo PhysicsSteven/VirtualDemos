@@ -10,6 +10,10 @@ VDI18N.add('es', 'demo/rutherford', {
   "Desviación θ en función del parámetro de impacto b",
 "b = D/{#} gives {#}°":
   "b = D/{#} da {#}°",
+"slow motion: {#} s here = {k} s":
+  "cámara lenta: {#} s aquí = {k} s",
+"slow motion: {#} s here = {#} × {#}⁻²¹ s":
+  "cámara lenta: {#} s aquí = {#} × {#}⁻²¹ s",
 "Rutherford Scattering":
   "Dispersión de Rutherford",
 "<a>Photons and matter waves</a>":
@@ -246,6 +250,8 @@ VDI18N.add('es', 'demo/rutherford', {
   "Solo ángulos pequeños. Las barras siguen la gaussiana de muchas desviaciones aleatorias pequeñas; su ancho crece como la raíz cuadrada del espesor de la lámina.",
 "Al nucleus, Z = {#}":
   "Núcleo de Al, Z = {#}",
+"slow motion: {#} s here = {#} × {#}⁻²² s":
+  "cámara lenta: {#} s aquí = {#} × {#}⁻²² s",
 "reaches the nucleus":
   "llega al núcleo",
 "Aluminum, Z = {#}, at {#} MeV. The Coulomb repulsion is weak, so an alpha with a small impact parameter reaches the nucleus. There the strong force acts and pure Rutherford scattering fails, as was found for aluminum in the early 1920s. Try Beam to see which angles are affected.":
@@ -276,6 +282,8 @@ VDI18N.add('es', 'demo/rutherford', {
   "θ = {#}° ({#} µrad): demasiado pequeña para verse",
 "aluminum nucleus at this scale: {#} px across":
   "núcleo de aluminio a esta escala: {#} px de diámetro",
+"slow motion: {#} s here = {#} × {#}⁻¹⁷ s":
+  "cámara lenta: {#} s aquí = {#} × {#}⁻¹⁷ s",
 "Deflection by one atom, θ (µrad)":
   "Desviación por un átomo, θ (µrad)",
 "Deflection by this atom (exact motion inside the sphere, toward its center)":
@@ -300,6 +308,8 @@ VDI18N.add('es', 'demo/rutherford', {
   "este núcleo a esta escala: {#} px de diámetro",
 "{#} (est.)":
   "{#} (est.)",
+"Close":
+  "Cerrar",
 "custom leaf":
   "hoja personalizada",
 "Counts per bin against θ":
@@ -314,10 +324,14 @@ VDI18N.add('es', 'demo/rutherford', {
   "la pantalla en realidad está a ~{#} cm (~{#}⁷× más lejos):",
 "each antialpha lands at its final angle θ":
   "cada antialfa llega a su ángulo final θ",
+"slow motion: {#} s here = {#} × {#}⁻²⁰ s":
+  "cámara lenta: {#} s aquí = {#} × {#}⁻²⁰ s",
 "ring of radius b around the beam axis":
   "anillo de radio b alrededor del eje del haz",
 "all leave on a cone, θ = {#}°":
   "todas salen en un cono, θ = {#}°",
 "drag the drawing to turn it":
-  "arrastra el dibujo para girarlo"
+  "arrastra el dibujo para girarlo",
+"slow motion: 1 s here = {k} s":
+  "cámara lenta: 1 s aquí = {k} s"
 });

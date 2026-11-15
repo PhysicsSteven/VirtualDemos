@@ -121,6 +121,7 @@ VDI18N.add('en', 'demo/rotation-curves', [
 "{#} yr per second",
 "{#} M<sub>sun</sub> <small>(G = {#} AU (km/s)²/M<sub>sun</sub>)</small>",
 "{#} yr = {#} days",
+"t = {#} <small>yr</small>",
 "Stars and gas of a Milky Way like galaxy, nothing else. Their curve peaks near {#} kpc and then falls, heading for Kepler's r^−{#}/{#}. The measured speeds (circles) stay near {#} to {#} km/s out to {#} kpc.",
 "{#}% <small>halo off</small>",
 "Central density ρ<sub>{#}</sub>",
@@ -138,6 +139,5 @@ VDI18N.add('en', 'demo/rotation-curves', [
 "Shift of the line's edge at +r, Δλ = λ₀v/c (λ₀ = {#} nm)",
 "no emission here",
 "<small>Hα gas ends at {#} kpc</small>",
-"Hα light comes from gas lit by young stars, so it fades beyond about four disk scale lengths (drawn to there). Switch to {#} cm to follow the neutral hydrogen much farther out, where the dark matter dominates.",
-"t = {#} <small>yr</small>"
+"Hα light comes from gas lit by young stars, so it fades beyond about four disk scale lengths (drawn to there). Switch to {#} cm to follow the neutral hydrogen much farther out, where the dark matter dominates."
 ]);

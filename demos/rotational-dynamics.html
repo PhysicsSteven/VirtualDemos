@@ -284,7 +284,8 @@ table.rows input:focus { border-color: var(--accent); }
     }
     ctx.save(); ctx.translate(cx, cy); ctx.rotate(th);   // clockwise on the screen: the string leaves the top of the spool towards the pulley on the right
     // degree ticks near the rim and the bolts of the hub turn with the table
-    ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.beginPath(); for (let k = 0; k < 36; k++) { const a = k * Math.PI / 18, r0 = R * (k % 9 ? 0.93 : 0.88); ctx.moveTo(r0 * Math.cos(a), r0 * Math.sin(a)); ctx.lineTo(R * 0.98 * Math.cos(a), R * 0.98 * Math.sin(a)); } ctx.stroke();
+    ctx.globalAlpha = 1 - blurAmt(M, tt, 10);   // the marks fade while they turn too fast to follow (student view, 2026-11-15)
+    ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.beginPath(); for (let k = 0; k < 36; k++) { const a = k * Math.PI / 18, r0 = R * (k % 9 ? 0.93 : 0.88); ctx.moveTo(r0 * Math.cos(a), r0 * Math.sin(a)); ctx.lineTo(R * 0.98 * Math.cos(a), R * 0.98 * Math.sin(a)); } ctx.stroke(); ctx.globalAlpha = 1;
     ctx.fillStyle = T.metalDark; for (let k = 0; k < 6; k++) { const a = (k + 0.5) * Math.PI / 3, rb = sr + 9 * p; ctx.beginPath(); ctx.arc(rb * Math.cos(a), rb * Math.sin(a), 1.8 * p, 0, 7); ctx.fill(); }
     ctx.strokeStyle = T.mark; ctx.lineWidth = 3 * p; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(R * 0.95, 0); ctx.stroke();
     ctx.fillStyle = T.obj; ctx.strokeStyle = T.obj;
@@ -354,6 +355,14 @@ table.rows input:focus { border-color: var(--accent); }
   const Z0 = ZS - RP - 0.06, HX = XP + RP, FLOOR = -0.9;      // the hook's height at rest, the line the mass falls down, the floor
   const L0 = 0.55, PITCH = 0.0014, RSTR = 0.0007, ZB = ZS - 0.0068;   // string wound on at the start (m), turns' pitch, drawn string radius, bottom of the winding
   let g3 = null;
+  // how far a pattern that repeats every `period` degrees blurs at the table's present speed and frame rate:
+  // none below a fifth of a period a frame, nearly gone by half a period, where it would alias (student view, 2026-11-15)
+  let frameDt = 1 / 60;
+  function blurAmt(M, tt, period) {
+    if (!S.run || !M.moves) return 0;
+    const perFrame = M.alpha * tt * 180 / Math.PI * Math.max(1 / 60, frameDt);
+    return 0.92 * Math.max(0, Math.min(1, (perFrame / period - 0.2) / 0.25));
+  }
   function init3D() {
     G3.tried = true;
     const st = VD3K.stage($('scene'), { before: can, fov: 30, near: 0.02, far: 20, shadow: 0.9 }); if (!st) return false;
@@ -382,6 +391,15 @@ table.rows input:focus { border-color: var(--accent); }
     const sideCv = document.createElement('canvas'); sideCv.width = 1024; sideCv.height = 32; const sideTex = new THREE.CanvasTexture(sideCv);
     const platTopM = M({ map: platTex, roughness: 0.38, metalness: 0.35 }), platSideM = M({ map: sideTex, roughness: 0.35, metalness: 0.4 });
     const plat = mesh(cyl(0.13, 0.13, 0.012, 128), [platSideM, platTopM, platSideM], true, true); plat.position.z = 0.006; table.add(plat);
+    /* motion blur for the strobe sectors and degree marks: at 60 frames a second the 10° marks and 15° sectors jumped about
+       a whole period a frame near the end of a run and seemed to stand still or turn backwards; above a few degrees a frame
+       these rings fade to their average shade, as a fast wheel looks to the eye. The red line stays sharp (student view, 2026-11-15) */
+    const blurM = (o) => M({ roughness: 0.38, metalness: 0.35, transparent: true, opacity: 0, depthWrite: false, ...o });
+    const blurS = mesh(new THREE.RingGeometry(0.13 * 0.885, 0.13 * 0.985, 128), blurM({}), false, true); blurS.position.z = 0.0123;
+    const blurT = mesh(new THREE.RingGeometry(0.13 * 0.755, 0.13 * 0.875, 128), blurM({}), false, true); blurT.position.z = 0.0123;
+    const blurSideG = new THREE.CylinderGeometry(0.1303, 0.1303, 0.0122, 128, 1, true); blurSideG.rotateX(Math.PI / 2);
+    const blurSide = mesh(blurSideG, blurM({ roughness: 0.35, metalness: 0.4 }), false, true); blurSide.position.z = 0.006;
+    for (const b of [blurS, blurT, blurSide]) { b.visible = false; table.add(b); }
     const hubCol = mesh(cyl(0.008, 0.008, 0.04, 20), metalM, true); hubCol.position.z = 0.012 + 0.02; table.add(hubCol);
     const hubCap = mesh(cyl(0.016, 0.018, 0.006, 32), darkM, true); hubCap.position.z = 0.015; table.add(hubCap);
     const spoolCore = mesh(cyl(1, 1, 1, 40), metalM, true), flangeA = mesh(cyl(1, 1, 0.002, 48), darkM, true), flangeB = mesh(cyl(1, 1, 0.002, 48), darkM, true);
@@ -441,7 +459,7 @@ table.rows input:focus { border-color: var(--accent); }
     scr.add(box(0.07, 0.05, 0.008, darkM, 0, 0, 0), box(0.012, 0.012, 0.03, darkM, 0, 0.01, 0.008), box(0.29, 0.016, 0.185, darkM, 0, 0, 0.022));
     const screen = new THREE.Mesh(new THREE.PlaneGeometry(0.274, 0.171), new THREE.MeshBasicMaterial({ map: trTex, toneMapped: false })); screen.rotation.x = Math.PI / 2; screen.position.set(0, -0.0085, 0.1145); scr.add(screen);
     const wire = { m: M({ roughness: 0.6, color: 0x2e2a24 }), mesh: null };
-    g3 = { st, r: st.r, el: st.el, scene, cam: st.cam, metalM, darkM, platCv, platTex, sideCv, sideTex, table, spoolCore, flangeA, flangeB, flMark, strM, objM, loads, arrowM, coil, segA, segC, rig, pulley, hanger, brassM, steelM, gates, gate0, gate1, ruleG, ruleArms, timer, trCv, trTex, wire, f: K.follow({ x: 0.12, y: 0, z: -0.12 }, 0.08) };
+    g3 = { st, r: st.r, el: st.el, scene, cam: st.cam, metalM, darkM, platCv, platTex, sideCv, sideTex, table, blurS, blurT, blurSide, spoolCore, flangeA, flangeB, flMark, strM, objM, loads, arrowM, coil, segA, segC, rig, pulley, hanger, brassM, steelM, gates, gate0, gate1, ruleG, ruleArms, timer, trCv, trTex, wire, f: K.follow({ x: 0.12, y: 0, z: -0.12 }, 0.08) };
     st.onTheme(theme3);
     can.addEventListener('wheel', (e) => { if (!G3.on) e.stopImmediatePropagation(); }, { passive: true });
     VD3.orbit(can, G3.o, () => { if (!S.run) draw(); }, { grab: () => !G3.on, phMin: 0.35, phMax: 1.5, zMin: 0.55, zMax: 2.6 });
@@ -462,6 +480,7 @@ table.rows input:focus { border-color: var(--accent); }
     c.strokeStyle = T.mark; c.lineWidth = 16; c.lineCap = 'round'; c.beginPath(); c.moveTo(R + 40, R); c.lineTo(R + R * 0.86, R); c.stroke(); c.lineCap = 'butt';
     g.platTex.needsUpdate = true;
     const s = g.sideCv.getContext('2d'); for (let k = 0; k < 24; k++) { s.fillStyle = k % 2 ? (dk ? '#ebe6e0' : '#f8f6f4') : (dk ? '#201b15' : '#2d2720'); s.fillRect(k * 1024 / 24, 0, 1024 / 24 + 1, 32); } g.sideTex.needsUpdate = true;
+    g.blurS.material.color = col(dk ? '#85807a' : '#928e8a', '#928e8a'); g.blurSide.material.color = g.blurS.material.color; g.blurT.material.color = col(T.plat, '#dad3ca');   // the sectors' and the marks' average shades
     G3.sig = ''; G3.tr = '';
   }
   // the slotted masses on the hanger: rebuilt only when the pieces change; the gates follow the hanger's bottom
@@ -523,6 +542,9 @@ table.rows input:focus { border-color: var(--accent); }
   function render3(M, tt, y, th) {
     const g = g3, st = g.st; st.size(W, Hh);
     g.table.rotation.z = -th;   // the string leaves the +y side of the spool towards +x, so the table turns clockwise seen from above
+    const bS = blurAmt(M, tt, 30), bT = blurAmt(M, tt, 10);   // sectors repeat every 30°, marks every 10°
+    g.blurS.material.opacity = g.blurSide.material.opacity = bS; g.blurS.visible = g.blurSide.visible = bS > 0;
+    g.blurT.material.opacity = bT; g.blurT.visible = bT > 0;
     for (const k in g.loads) g.loads[k].visible = S.obj === k;
     g.loads.pair.children.forEach((c) => { c.position.x = 0; c.position.y = c.userData.s * S.d; });
     const sz = ZS - 0.05;   // spool center height on the table: the string leaves it level
@@ -613,7 +635,7 @@ table.rows input:focus { border-color: var(--accent); }
   $('wind').addEventListener('click', wind);
   let last = performance.now();
   function frame(now) {
-    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    const dt = Math.min(0.05, (now - last) / 1000); last = now; frameDt += 0.2 * (dt - frameDt);
     if (S.run) { const M = mot(); S.t += dt; if (!M.moves || S.t >= M.t) { S.t = Math.min(S.t, M.t); S.done = M.moves; setRun(false); } draw(); readouts(); }
     requestAnimationFrame(frame);
   }

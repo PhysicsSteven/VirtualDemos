@@ -57,7 +57,8 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 :root[data-projector="on"] body { font-size: 1.25rem; }
 .bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
 .units { color: var(--muted); font-size: 0.8rem; }
-.stage { position: relative; min-height: 540px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); display: grid; grid-template-rows: auto minmax(0, 1fr); }
+.stage { position: relative; min-height: 540px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); display: grid; grid-template-rows: auto minmax(0, 1fr); grid-template-columns: minmax(0, 1fr); }
+/* the column may shrink below the canvas's last drawn width, so a narrowed window or a turned phone lays the stage out again (student view, 2026-11-15) */
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 10px; border-bottom: 1px solid var(--line); }
 .count { margin-left: auto; font-size: 0.9rem; font-weight: 600; white-space: nowrap; }
 .count small { font-weight: 400; color: var(--muted); font-size: 0.8rem; }
@@ -707,6 +708,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function resize() {
     dpr = window.devicePixelRatio || 1;
     const r = pane.getBoundingClientRect();
+    if (r.width < 60 || r.height < 60) return;   // a passing zero width while the page lays out, now that the column can shrink; the observer calls again
     W = r.width; Hh = r.height;
     can.width = Math.max(1, Math.round(W * dpr)); can.height = Math.max(1, Math.round(Hh * dpr));
     can.style.width = W + 'px'; can.style.height = Hh + 'px';
@@ -852,7 +854,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     if (S.model === 'plum') {
       const t = tgt(), px = 2 * Rnuc() * g.sc;
-      label(c, `${t.sym ? t.name.toLowerCase() : 'this'} nucleus at this scale: ${px.toPrecision(2)} px across`, s.x + s.w - 10 * ps, s.y + s.h - 16 * ps, T.muted, 'right', 'middle');
+      /* one line up when it would run into the scale bar's length ("500 pm" did in the beam view) (student view, 2026-11-15) */
+      const txt = `${t.sym ? t.name.toLowerCase() : 'this'} nucleus at this scale: ${px.toPrecision(2)} px across`, Lb = nice(s.w * 0.22 / g.sc);
+      c.font = `${11 * ps}px ${T.mono}`;
+      const barEnd = s.x + 20 * ps + Lb * g.sc + c.measureText(fmtLen(Lb, 3)).width, clash = s.x + s.w - 10 * ps - c.measureText(txt).width < barEnd + 12 * ps;
+      label(c, txt, s.x + s.w - 10 * ps, s.y + s.h - (clash ? (S.mode === 'beam' ? 36 : 52) : 16) * ps, T.muted, 'right', 'middle');
     }
     drawScaleBar(g);
     c.restore();
@@ -955,6 +961,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     c.moveTo(x0, y0 - 4 * ps); c.lineTo(x0, y0); c.lineTo(x0 + px, y0); c.lineTo(x0 + px, y0 - 4 * ps); c.stroke();
     c.fillStyle = T.ink; c.font = `${11 * ps}px ${T.mono}`; c.textAlign = 'left'; c.textBaseline = 'bottom';
     c.fillText(fmtLen(L, 3) + (S.mode === 'beam' && S.model === 'nuc' ? ', inside the dashed circle' : ''), x0 + px + 6 * ps, y0 + 3 * ps);
+    /* the time scale of the one alpha's flight: its path, in fm at v₀, takes single.dur seconds on screen (student view, 2026-11-15) */
+    if (S.mode !== 'beam' && single && single.dur > 0) {
+      const k = (single.t1 - single.t0) * 1e-15 / (speedC(S.K) * C_MS) / single.dur, e = Math.floor(Math.log10(k)), m = k / Math.pow(10, e);
+      c.fillStyle = T.muted; c.font = `${10.5 * ps}px ${T.mono}`;
+      const tx = `${m.toFixed(1)} × 10${supNum(e)}`;   // the exponent in superscript digits, filled in after the lookup
+      c.fillText(window.VDI18N ? VDI18N.t('slow motion: 1 s here = {k} s', { k: tx }) : `slow motion: 1 s here = ${tx} s`, x0, y0 - 10 * ps);
+    }
   }
   // the nucleus as its Z protons and A − Z neutrons, k px per fm, slowly turning
   function paintNucleus(c, X, Y, k, M0) {

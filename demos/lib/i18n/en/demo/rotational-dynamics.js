@@ -67,6 +67,8 @@ VDI18N.add('en', 'demo/rotational-dynamics', [
 "hidden: work them out from your timings",
 "Record at least two drops (different m or r) with this load: mystery.",
 "Release and let the mass fall the full {#} m first.",
+"Close",
+"Hang another {#} g mass or take off the last mass",
 "hanger {#} g + {#} g + {#} g = {#} g",
 "hanger {#} g = {#} g",
 "hidden for the Mystery object"
