@@ -34,6 +34,8 @@ VDI18N.add('es', 'demo/rocket', {
   "Prepara el cohete. Arrastra, o usa las flechas, para mover esta tarjeta; doble clic la regresa a su lugar",
 "Set up the rocket":
   "Prepara el cohete",
+"Masses, exhaust speed, burn rate":
+  "Masas, rapidez de escape, tasa de combustión",
 "Mass without fuel (dry)":
   "Masa sin combustible (seca)",
 "Fuel mass":

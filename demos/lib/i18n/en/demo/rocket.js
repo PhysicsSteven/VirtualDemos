@@ -17,6 +17,7 @@ VDI18N.add('en', 'demo/rocket', [
 "Divider between the rocket and the graphs",
 "Set up the rocket. Drag, or use the arrow keys, to move this card; double click to put it back",
 "Set up the rocket",
+"Masses, exhaust speed, burn rate",
 "Mass without fuel (dry)",
 "Fuel mass",
 "Exhaust speed u (relative to the rocket)",

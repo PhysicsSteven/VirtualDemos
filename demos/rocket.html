@@ -11,8 +11,11 @@
 <script src="lib/vd3.js"></script>
 <style>.bench { position: relative; }
 /* the Set up card on the picture: it fades away while the run plays and comes back on pause or when the run ends */
-.setup-card { position: absolute; z-index: 3; left: 300px; top: 64px; width: 250px; display: flex; flex-direction: column; gap: 8px; padding: 8px 10px; background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12); transition: opacity 0.35s ease, visibility 0.35s; }
+/* placed over the top of the rocket column, not over the speed graph's axis and predicted curve (student view calls, 2026-11-15) */
+.setup-card { position: absolute; z-index: 3; left: 96px; top: 100px; width: 250px; display: flex; flex-direction: column; gap: 8px; padding: 8px 10px; background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12); transition: opacity 0.35s ease, visibility 0.35s; }
 .setup-title { font-size: 0.72rem; font-weight: 700; color: var(--muted); }
+.setup-fold summary { cursor: pointer; font-size: 0.8rem; } .setup-fold[open] summary { margin-bottom: 8px; }
+.setup-body { display: flex; flex-direction: column; gap: 8px; }
 .setup-card .slider-head label, .setup-card .slider-head output { font-size: 0.78rem; }
 .setup-card.away { opacity: 0; visibility: hidden; }
 @media (prefers-reduced-motion: reduce) { .setup-card { transition: none; } }
@@ -90,6 +93,8 @@
 
     <div class="setup-card" id="setupCard" role="group" aria-labelledby="setupTitle">
       <span class="setup-title" id="setupTitle">Set up the rocket</span>
+      <!-- opens folded so the card hides neither the rocket nor the graphs; open it for the sliders (student view calls, 2026-11-15) -->
+      <details class="setup-fold" id="setupFold"><summary>Masses, exhaust speed, burn rate</summary><div class="setup-body">
       <div><div class="slider-head"><label for="sM0">Mass without fuel (dry)</label><output id="oM0" for="sM0"></output></div><input type="range" id="sM0" min="200" max="5000" step="100"></div>
       <div><div class="slider-head"><label for="sMf">Fuel mass</label><output id="oMf" for="sMf"></output></div><input type="range" id="sMf" min="0" max="20000" step="250"></div>
       <div><div class="slider-head"><label for="sU">Exhaust speed u (relative to the rocket)</label><output id="oU" for="sU"></output></div><input type="range" id="sU" min="500" max="4500" step="100"></div>
@@ -98,6 +103,7 @@
         <div><div class="slider-head"><label for="sMc">First stage empty casing</label><output id="oMc" for="sMc"></output></div><input type="range" id="sMc" min="200" max="5000" step="100"></div>
         <div><div class="slider-head"><label for="sMf1">First stage fuel</label><output id="oMf1" for="sMf1"></output></div><input type="range" id="sMf1" min="0" max="20000" step="250"></div>
       </div>
+      </div></details>
     </div>
 
     <aside class="rail">
@@ -555,6 +561,8 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
   function applyPreset(k) { S.preset = k; S.p = { ...PRESETS[k] }; $('presetHint').textContent = PRESETS[k].hint; mark(); restart(); }
   for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
   const card = VD.setupCard($('setupCard'), { within: '#stage' });
+  /* phones show the card under the picture, where it hides nothing: open there (student view calls, 2026-11-15) */
+  try { if (matchMedia('(max-width: 820px)').matches) $('setupFold').open = true; } catch (_) {}
   function setRun(on) { S.run = on; card.away(on); $('go').textContent = on ? 'Pause' : S.t > 0 ? 'Play' : 'Launch'; $('go').classList.toggle('attn', !on); }
   $('go').addEventListener('click', () => { const F = fly(); if (!S.run && S.t >= endTime(F)) S.t = 0; setRun(!S.run); });
   $('again').addEventListener('click', restart);
