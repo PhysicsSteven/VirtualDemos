@@ -232,8 +232,6 @@ VDI18N.add('en', 'demo/molecules', [
 "about {#} meV (at {#} cm)",
 "passes through (no electric dipole to push on)",
 "passes through (no electronic absorption at this wavelength)",
-"no electronic absorption at this wavelength",
-"passes: {why}",
 "ultraviolet",
 "no absorption above {#} nm (starts near {#} nm)",
 "{#} (no IR)",
@@ -264,13 +262,14 @@ VDI18N.add('en', 'demo/molecules', [
 "Blue light at {#} nm on NO₂, the brown gas of smog. The photon lifts an electron but has less energy than the {#} eV bond, so the molecule glows instead of breaking. Below {#} nm (switch to ultraviolet) it breaks into NO + O.",
 "an electron is lifted; it glows",
 "Molecules and light has nothing to record: it shows what each kind of light does.",
-"Close",
 "Change the separation of the atoms in {#} nanometer steps, the level in Energy levels, or the cursor in the HCl spectrum (Shift for bigger steps)",
 "UV, vis",
 "electron",
 "sizes in proportion to measured radii; the scale gives the separation",
 "turns faster (rotation)",
 "passes through (no vibration at this wavenumber)",
-"no vibration at this wavenumber",
-"no dipole"
+"NO",
+"no dipole",
+"no electronic absorption at this wavelength",
+"passes: {why}"
 ]);

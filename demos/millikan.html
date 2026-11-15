@@ -58,6 +58,7 @@
     <div class="stage" id="stage">
       <div class="stage-ctl">
         <button type="button" class="spin attn" id="play">Play</button>
+        <button type="button" class="btn" id="reset" title="Back to t = 0 with the same drops; settings and readings stay">Reset</button><!-- the run had no Reset, only Spray drops (student view calls, 2026-11-15) -->
         <button type="button" class="btn" id="spray">Spray drops</button>
         <div class="seg" role="group" aria-label="Plates" id="polSeg">
           <button type="button" data-pol="0" aria-pressed="true">Plates off</button>
@@ -569,10 +570,18 @@
   }
   function setRun(on) { S.run = on; $('play').textContent = on ? 'Pause' : S.t > 0 ? 'Play' : 'Play'; $('play').classList.toggle('attn', !on); }
   function applyPreset(k) {
-    const c = PRESETS[k]; S.preset = k; Object.assign(S, { pol: c.pol, V: c.V, T: c.T, p: c.p, L: c.L, auto: c.auto, ion: c.ion, spd: c.spd, t: 0, drops: [], pick: -1, last: null, gate: null });
+    const c = PRESETS[k]; S.preset = k; S.base = k; Object.assign(S, { pol: c.pol, V: c.V, T: c.T, p: c.p, L: c.L, auto: c.auto, ion: c.ion, spd: c.spd, t: 0, drops: [], pick: -1, last: null, gate: null });
     S.rnd = mkRng(c.seed); S.sw = { on: false, t: 0 }; $('swGo').textContent = 'Start stopwatch';
     air = mkAir(S.T, S.p * 1e3); spray(c.n, c.rFix); pickBest(c.want);
     $('presetHint').textContent = c.hint; setRun(false); sync(); showLast(); readouts(); renderRows(); say('');
+  }
+  /* Reset: the run back to t = 0 with the setup's own drops (same seed), keeping every control and the readings, as Reset does
+     across the site (student view calls, 2026-11-15) */
+  function resetRun() {
+    const c = PRESETS[S.base] || PRESETS.fall;
+    Object.assign(S, { t: 0, drops: [], pick: -1, last: null, gate: null }); S.rnd = mkRng(c.seed);
+    S.sw = { on: false, t: 0 }; $('swGo').textContent = 'Start stopwatch'; $('watch').textContent = '0.00 s';
+    spray(c.n, c.rFix); pickBest(c.want); setRun(false); sync(); showLast(); readouts(); draw(); say('Back to t = 0 with the same drops.');
   }
   function airChanged() { S.preset = 'custom'; air = mkAir(S.T, S.p * 1e3); refreshDrops(); sync(); readouts(); renderRows(); }
 
@@ -588,6 +597,7 @@
   $('cAuto').addEventListener('change', (e) => { S.auto = e.target.checked; S.gate = null; draw(); });
   $('cIon').addEventListener('change', (e) => { S.ion = e.target.checked; draw(); });
   $('play').addEventListener('click', () => setRun(!S.run));
+  $('reset').addEventListener('click', resetRun);
   $('spray').addEventListener('click', () => { spray(8); say('Eight more drops sprayed in through the hole.'); readouts(); draw(); });
   $('swGo').addEventListener('click', () => { if (S.sw.on) stopWatch(); else { if (!S.drops[S.pick]) { say('Follow a drop first.'); return; } startWatch(); if (!S.run) setRun(true); } });
   $('swClear').addEventListener('click', () => { S.sw = { on: false, t: 0 }; $('swGo').textContent = 'Start stopwatch'; $('watch').textContent = '0.00 s'; });
@@ -657,6 +667,6 @@
 })();
 </script>
 <script>/* the shared control panel (demos/lib/vdpanel.js): the time controls in one group at the left of the strip */
-if (window.VD && VD.panel) VD.panel({ reset: false, speed: '#spdSeg', step: true });</script>
+if (window.VD && VD.panel) VD.panel({ reset: '#reset', speed: '#spdSeg', step: true });</script>
 </body>
 </html>

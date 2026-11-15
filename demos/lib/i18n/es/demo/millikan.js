@@ -6,8 +6,6 @@ VDI18N.add('es', 'demo/millikan', {
   "atomizador",
 "telescope":
   "telescopio",
-"plates off":
-  "placas apagadas",
 "plates {#} mm apart, not to scale":
   "placas separadas {#} mm, no a escala",
 "through the telescope · lines {#} mm apart":
@@ -30,6 +28,8 @@ VDI18N.add('es', 'demo/millikan', {
   "Avanza un momento y vuelve a pausar",
 "Step":
   "Paso",
+"Back to t = {#} with the same drops; settings and readings stay":
+  "De vuelta a t = {#} con las mismas gotas; los ajustes y las lecturas se conservan",
 "<span>Speed</span>":
   "<span>Rapidez</span>",
 "Spray drops":
@@ -144,10 +144,6 @@ VDI18N.add('es', 'demo/millikan', {
   "{#} kV/m hacia abajo",
 "{#} kV/m up":
   "{#} kV/m hacia arriba",
-"top −":
-  "arriba −",
-"top +":
-  "arriba +",
 "Top plate + at {#} V: the field points down, so negatively charged drops are pushed up and the ones with enough charge rise. Positive drops fall faster. Time the followed drop with the plates on; with its fall time too, the table works out its charge.":
   "Placa superior + a {#} V: el campo apunta hacia abajo, así que las gotas con carga negativa son empujadas hacia arriba y las que tienen suficiente carga suben. Las gotas positivas caen más rápido. Mide el tiempo de la gota seguida con las placas encendidas; con su tiempo de caída también, la tabla calcula su carga.",
 "Millikan's balancing method: turn the voltage until the followed drop stays still, then record the hold. Then q = m′g d / V, with the mass from the drop's fall speed. Brownian motion keeps it from ever being perfectly still.":
@@ -163,5 +159,11 @@ VDI18N.add('es', 'demo/millikan', {
 "One small drop, radius {#} µm: it falls only about {#} µm/s and jiggles as air molecules knock it about (Brownian motion). Time it over {#} mm several times and see how the times scatter.":
   "Una gota pequeña, de radio {#} µm: cae solo unos {#} µm/s y se sacude cuando las moléculas del aire la golpean (movimiento browniano). Mide su tiempo en {#} mm varias veces y ve cómo se dispersan los tiempos.",
 "Close":
-  "Cerrar"
+  "Cerrar",
+"plates off":
+  "placas apagadas",
+"top −":
+  "arriba −",
+"top +":
+  "arriba +"
 });

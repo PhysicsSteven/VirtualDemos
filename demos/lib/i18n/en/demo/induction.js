@@ -170,7 +170,6 @@ VDI18N.add('en', 'demo/induction', [
 "hidden: measure it",
 "ball",
 "reading (mg)",
-"Close",
 "Move the tip of the rod by {#} millimeter (Shift for {#} centimeter)",
 "glass rod +{#} nC",
 "Drag the rod, either sphere, or the ground wand",

@@ -398,7 +398,7 @@ table.rows input:focus { border-color: var(--accent); }
     walk: { hint: 'Move the cart so that its position graph follows the dashed target. Flat parts mean stand still; steeper parts mean move faster.' }
   };
   const D_N = 100, D_H = 0.1;      /* Draw a graph: 100 pieces of 0.1 s, a 10 s run */
-  const S = { stop: false, sd: { vA: 15, vB: 30, tr: 0.67, b: 6.5 }, drawOn: false, dr: { kind: 'v', v: shapeVals('tri', 'v', D_N + 1, D_H), a: shapeVals('sine', 'a', D_N, D_H), x0: -6, v0: 0 }, ramps: false, rp: { ang: [-20, 0, 30], v0: 0, target: null }, two: false, B: { x0: -6, v0: 2, a: 0 }, vert: false, preset: 'const', x0: -6, v0: 2, segs: [{ a: 0, T: 6 }, { a: 0, T: 0 }, { a: 0, T: 0 }], t: 0, blind: false, tan: true, area: true, dots: false, rows: [],
+  const S = { stop: false, sd: { vA: 15, vB: 30, tr: 0.67, b: 6.5 }, drawOn: false, dr: { kind: 'v', v: shapeVals('sine', 'v', D_N + 1, D_H) /* opened on the triangle the worksheet asks students to draw, answers on screen: a sine now (student view calls, 2026-11-15) */, a: shapeVals('sine', 'a', D_N, D_H), x0: -6, v0: 0 }, ramps: false, rp: { ang: [-20, 0, 30], v0: 0, target: null }, two: false, B: { x0: -6, v0: 2, a: 0 }, vert: false, preset: 'const', x0: -6, v0: 2, segs: [{ a: 0, T: 6 }, { a: 0, T: 0 }, { a: 0, T: 0 }], t: 0, blind: false, tan: true, area: true, dots: false, rows: [],
     walk: { pts: null, vel: false, run: false, t: 0, xs: [], x: 0, key: 0, score: null } };
   const WALK_T = 10, WALK_DT = 0.02, X_LIM = 10, RAMP_L = 3, RAMP_T = 12, G = 9.81;
   const rampBuild = () => rampRun(S.rp.ang, RAMP_L, S.rp.v0, RAMP_T, G);
@@ -551,7 +551,7 @@ table.rows input:focus { border-color: var(--accent); }
        (hidden whenever the cart was in the left third, and on a phone always), so the hall track is made just tall enough for the
        arrows (with Two cars, car B's lane) to clear the bar's bottom edge (student view, 2026-11-15) */
     const vb = document.querySelector('.viewbar'), cr = can.getBoundingClientRect(), vr = vb ? vb.getBoundingClientRect() : null, ck = $('clock').getBoundingClientRect(), barB = Math.max(vr && vr.height ? vr.bottom - cr.top : 0, ck.height ? ck.bottom - cr.top : 0, 0);
-    const p = ps(), pad = 12 * p, trackH0 = S.vert ? 44 * p : S.ramps ? Math.max(96, Math.min(150, H * 0.2)) * p * 0.9 : Math.max(Math.max(96, Math.min(150, H * 0.2)) * p * 0.9, (barB + (S.two ? -2 : 46) * p) / 0.62), trackH = trackH0 + (S.two && !S.vert ? 54 * p : 0) + (S.ramps ? Math.min(110, H * 0.12) * p : 0), left = (S.vert ? 150 : 58) * p, right = W - 14 * p;
+    const p = ps(), pad = 12 * p, trackH0 = S.vert ? 44 * p : S.ramps ? Math.max(96, Math.min(150, H * 0.2)) * p * 0.9 : Math.max(Math.max(96, Math.min(150, H * 0.2)) * p * 0.9, (barB + (S.two ? -2 : 46) * p) / 0.62), trackH = trackH0 + (S.two && !S.vert ? (S.stop ? 54 : 70) * p : 0) /* Two cars: B's lane 16 px higher, see drawTrack (student view calls, 2026-11-15) */ + (S.ramps ? Math.min(110, H * 0.12) * p : 0), left = (S.vert ? 150 : 58) * p, right = W - 14 * p;
     const top = trackH + 6 * p, gap = 8 * p, gh = (H - top - 30 * p - 2 * gap) / 3;
     const blind = S.blind && S.preset !== 'walk' && !S.drawOn;
     const panes = blind ? [{ k: 'x', y0: top, h: H - top - 30 * p }] : ['x', 'v', 'a'].map((k, i) => ({ k, y0: top + i * (gh + gap), h: gh }));
@@ -659,7 +659,7 @@ table.rows input:focus { border-color: var(--accent); }
     const s = st(S.t), cx = X(Math.max(xr.lo, Math.min(xr.hi, walk && S.walk.run ? S.walk.x : s.x)));
     const cw = 34 * p, ch = 16 * p;
     if (runB) {   /* car B on the far lane, a little smaller, behind car A */
-      const b = stateAt(runB, S.t), bx = X(Math.max(xr.lo, Math.min(xr.hi, b.x))), by = ty - 40 * p, bw = cw * 0.86, bh = ch * 0.86;
+      const b = stateAt(runB, S.t), bx = X(Math.max(xr.lo, Math.min(xr.hi, b.x))), by = ty - (S.stop ? 40 : 56) * p /* Two cars: car A's a arrow ran along car B's rail and wheels; B's lane now sits above A's arrows (student view calls, 2026-11-15) */, bw = cw * 0.86, bh = ch * 0.86;
       if (!S.stop) { ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(tx0, by + 9 * p); ctx.lineTo(tx1, by + 9 * p); ctx.stroke(); }   /* car B's own rail, behind car A's */
       ctx.fillStyle = T.b; ctx.beginPath(); ctx.roundRect(bx - bw / 2, by - bh + 4 * p, bw, bh, 4 * p); ctx.fill();
       ctx.fillStyle = T.shine; ctx.fillRect(bx - bw / 2 + 4 * p, by - bh + 6 * p, bw - 8 * p, 2.5 * p);

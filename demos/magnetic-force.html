@@ -168,7 +168,7 @@ details.hall[open] > summary { margin-bottom: 8px; }
       <div class="stage-ctl">
         <button type="button" class="btn" id="play">Pause</button>
         <button type="button" class="btn" id="restart">Reset</button>
-        <button type="button" class="btn" id="fit">Fit view</button>
+        <button type="button" class="btn" id="fit">Reset view</button><!-- one name in every view, as on the rest of the site; it was "Fit view" in Free particle (student view calls, 2026-11-15) -->
         <button type="button" class="btn" id="fire" hidden>Fire 20</button>
         <button type="button" class="btn" id="clear" hidden>Clear</button>
         <span class="blindtag" id="blindTag" hidden>Blind</span>
@@ -2827,7 +2827,7 @@ details.hall[open] > summary { margin-bottom: 8px; }
     if (m === 'hall') $('hallDet').open = true;
     if (LAB.shown && LAB.shown !== rowKind()) renderTable();
     $('hallBoxWrap').hidden = m === 'hall';
-    $('fit').hidden = !(m === 'free' || m === 'bottle' || m === 'hall'); $('fit').textContent = m === 'free' ? 'Fit view' : 'Reset view'; $('fire').hidden = !(m === 'sel' || m === 'spec'); $('clear').hidden = !(m === 'sel' || m === 'spec');
+    $('fit').hidden = !(m === 'free' || m === 'bottle' || m === 'hall'); $('fire').hidden = !(m === 'sel' || m === 'spec'); $('clear').hidden = !(m === 'sel' || m === 'spec');
     const pk = m === 'free' ? S.f.part : m === 'sel' ? S.sel.part : m === 'bottle' ? S.bot.part : S.cyc.part;
     for (const b of document.querySelectorAll('#parts button')) {
       const k = b.dataset.k;

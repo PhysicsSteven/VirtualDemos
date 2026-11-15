@@ -772,7 +772,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.save(); ctx.strokeStyle = T.grid; ctx.fillStyle = T.muted; ctx.font = `${9 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
     for (let um = 3.2; um <= 3.9; um += W < 560 ? 0.2 : 0.1) { const nu = 1e4 / um; if (nu < SP_LO || nu > SP_HI) continue; const x = A.X(nu); ctx.beginPath(); ctx.moveTo(x, Tp); ctx.lineTo(x, Tp - 5 * p); ctx.stroke(); ctx.fillText(`${um.toFixed(1)} μm`, x, Tp - 6 * p); }
     ctx.restore();
-    if (!S.blind) { const sp = 2 * 10.4 * w / (SP_HI - SP_LO); if (sp > 22 * p) for (const l of d.L) if (l.iso === 'H35Cl' && l.S > 0.06) lab(ctx, lineName(l), A.X(l.nu), A.Y(Math.min(1.05, absorb(d.L, l.nu, S.sp.res) / d.mx)) - 8 * p, { a: 'center', s: 8.5, m: true });
+    if (!S.blind) { const sp = 2 * 10.4 * w / (SP_HI - SP_LO); /* a line name the cursor would cross ("R(0)" under the cursor at the opening) sits just to the left of the cursor instead (student view calls, 2026-11-15) */
+      const xc = A.X(S.sp.nu);
+      if (sp > 22 * p) for (const l of d.L) if (l.iso === 'H35Cl' && l.S > 0.06) { const xl = A.X(l.nu), hit = Math.abs(xl - xc) < 14 * p; lab(ctx, lineName(l), hit ? xc - 4 * p : xl, A.Y(Math.min(1.05, absorb(d.L, l.nu, S.sp.res) / d.mx)) - 8 * p, { a: hit ? 'right' : 'center', s: 8.5, m: true }); }
       const c0 = nuVib(MOLS.HCl); ctx.save(); ctx.setLineDash([3 * p, 3 * p]); ctx.strokeStyle = T.theory; ctx.beginPath(); ctx.moveTo(A.X(c0), A.Y(0)); ctx.lineTo(A.X(c0), A.Y(0.75)); ctx.stroke(); ctx.restore(); lab(ctx, 'band center', A.X(c0), A.Y(0.8), { a: 'center', c: T.theory, s: 9 }); }
     for (const q of rowsOf('sp')) { const x = A.X(+q.nu_cm); ctx.fillStyle = T.ink; ctx.beginPath(); ctx.moveTo(x, A.Y(0) + 1); ctx.lineTo(x - 4 * p, A.Y(0) + 8 * p); ctx.lineTo(x + 4 * p, A.Y(0) + 8 * p); ctx.closePath(); ctx.fill(); }
     const x = A.X(S.sp.nu); ctx.save(); ctx.strokeStyle = T.cursor; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(x, Tp); ctx.lineTo(x, Tp + h); ctx.stroke(); ctx.restore();
@@ -785,7 +787,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const lo = Math.max(SP_LO, S.sp.nu - half), hi = Math.min(SP_HI, lo + 2 * half), lo2 = hi - 2 * half;
     const A = axes(c, L, Tp, w, h, [lo2, hi], [0, 1.12], 'wavenumber (cm⁻¹), close up around the cursor', 'absorbance', CH, { sy: 0.25 });
     if (!S.blind) for (const l of d.L) if (l.nu > lo2 && l.nu < hi && l.S > 0.003) { c.strokeStyle = l.iso === 'H35Cl' ? T.accent : T.iso; c.globalAlpha = 0.6; c.lineWidth = 1.5 * p; c.beginPath(); c.moveTo(A.X(l.nu), A.Y(0)); c.lineTo(A.X(l.nu), A.Y(0) - 10 * p); c.stroke(); c.globalAlpha = 1;
-      if (A.X(2) - A.X(0) > 70 * p) lab(c, `${l.iso === 'H35Cl' ? 'H³⁵Cl' : 'H³⁷Cl'} ${lineName(l)}`, A.X(l.nu), Tp + 6 * p, { a: 'center', s: 8.5, c: l.iso === 'H35Cl' ? T.accent : T.iso }); }
+      /* a name the cursor line would cross starts just right of the cursor (student view calls, 2026-11-15) */
+      if (A.X(2) - A.X(0) > 70 * p) { const xl = A.X(l.nu), xc = A.X(S.sp.nu), hit = Math.abs(xl - xc) < 30 * p;
+        lab(c, `${l.iso === 'H35Cl' ? 'H³⁵Cl' : 'H³⁷Cl'} ${lineName(l)}`, hit ? xc + 5 * p : xl, Tp + 6 * p, { a: hit ? 'left' : 'center', s: 8.5, c: l.iso === 'H35Cl' ? T.accent : T.iso }); } }
     plotLine(c, A, (nu) => absorb(d.L, nu, S.sp.res) / d.mx, lo2, hi, T.accent, 2);
     const x = A.X(S.sp.nu); c.save(); c.strokeStyle = T.cursor; c.lineWidth = 2 * p; c.beginPath(); c.moveTo(x, Tp); c.lineTo(x, Tp + h); c.stroke(); c.restore();
     dot(c, x, A.Y(spRel(S.sp.nu)), 4.5 * p, T.cursor);

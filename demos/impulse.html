@@ -278,7 +278,8 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
   function readouts() {
     const st = stats(), dd = (a, v, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${v}</dd></div>`, shown = S.t >= tHit() + st.c.tc;
     let h = dd('Velocity before v₁', `${f(st.v1, 3)} m/s`) + dd('Velocity after v₂', shown ? `${f(st.v2, 3)} m/s` : '—');
-    h += dd('Samples in the contact', String(S.pts.filter((q) => q[1] > 0).length)) + dd('Contact time', shown ? `${f(st.c.tc * 1000, 1)} ms` : '—');
+    /* the count is shown only once the contact is over, like v₂ and Δt; before the hit it read 33 (student view calls, 2026-11-15) */
+    h += dd('Samples in the contact', shown ? String(S.pts.filter((q) => q[1] > 0).length) : '—') + dd('Contact time', shown ? `${f(st.c.tc * 1000, 1)} ms` : '—');
     if (S.blind) h += '<div class="wide"><dt>Area, peak force and momentum change</dt><dd class="ok">hidden in Blind: work them out from the graph</dd></div>';
     else if (shown) {
       h += dd('Area under F(t) (impulse on the sensor)', `${f(st.area, 4)} N·s`, true) + dd('Cart momentum change m(v₂ − v₁)', `${f(S.m * (st.v2 - st.v1), 4)} kg·m/s`, true);

@@ -1693,7 +1693,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   function rGeom() {
     const ps = projScale(), W = RW, H = RH;
-    const pad = { L: 50 * ps, R: 16 * ps, T: 46 * ps, B: 30 * ps };
+    /* T 46 -> 52: the first ⟨r⟩/Bohr tag touched the title on a phone (student view calls, 2026-11-15) */
+    const pad = { L: 50 * ps, R: 16 * ps, T: 52 * ps, B: 30 * ps };
     const cs = radialCurves();
     let xMax = 0, yMax = 0;
     for (const c of cs) { xMax = Math.max(xMax, c.st.r995); yMax = Math.max(yMax, c.st.pPeak); }
@@ -1714,9 +1715,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const xs = niceStep(xMax / (W < 520 ? 4 : 8)), ys = niceStep(yMax / 3);
     ctx.lineWidth = 1; ctx.font = `${10.5 * ps}px ${T.mono}`; ctx.fillStyle = T.muted;
     ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    /* a tick number is skipped when it would touch the "r / a₀" axis name ("20r / a₀" on a phone) (student view calls, 2026-11-15) */
+    ctx.font = `italic ${10.5 * ps}px ${T.mono}`; const rNameW = ctx.measureText('r / a₀').width; ctx.font = `${10.5 * ps}px ${T.mono}`;
     for (let v = 0; v <= xMax + 1e-9; v += xs) {
       const x = X(v); ctx.strokeStyle = T.grid; ctx.beginPath(); ctx.moveTo(x, pad.T); ctx.lineTo(x, H - pad.B); ctx.stroke();
-      if (x < W - pad.R - 44 * ps) ctx.fillText(+v.toFixed(6), x, H - pad.B + 5);
+      const tk = String(+v.toFixed(6));
+      if (x + ctx.measureText(tk).width / 2 < W - pad.R - rNameW - 8 * ps) ctx.fillText(tk, x, H - pad.B + 5);
     }
     ctx.textAlign = 'right'; ctx.fillStyle = T.ink; ctx.font = `italic ${10.5 * ps}px ${T.mono}`;
     ctx.fillText('r / a₀', W - pad.R, H - pad.B + 5);

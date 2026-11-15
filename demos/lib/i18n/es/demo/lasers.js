@@ -102,8 +102,8 @@ VDI18N.add('es', 'demo/lasers', {
   "Tres niveles frente a cuatro niveles",
 "Cavity modes of a He–Ne laser":
   "Modos de la cavidad de un láser de He–Ne",
-"The pump switches on at t = {#}. The inversion climbs past threshold before the light has built up from spontaneous emission, so the photons overshoot, empty the inversion below threshold and die back: the spikes ring down to the steady output. The first spikes come farther apart; as they die down their spacing settles toward the linearized period {#}/f<sub>R</sub>.":
-  "El bombeo se enciende en t = {#}. La inversión sube más allá del umbral antes de que la luz se acumule a partir de la emisión espontánea, así que los fotones se pasan, vacían la inversión por debajo del umbral y se apagan: los picos se amortiguan hasta la salida estable. Los primeros picos están más separados; conforme se amortiguan, su separación tiende al periodo linealizado {#}/f<sub>R</sub>.",
+"The pump switches on at t = {#}. The inversion climbs past threshold before the light has built up from spontaneous emission, so the photons overshoot, empty the inversion below threshold and die back: the spikes ring down to the steady output. The first spikes come farther apart; as they die down their spacing settles toward the linearized period {#}/f<sub>R</sub>. At {#} µs/s the spikes flash by several times a second: once they start, pick {#} µs/s to follow them one at a time.":
+  "El bombeo se enciende en t = {#}. La inversión sube más allá del umbral antes de que la luz se acumule a partir de la emisión espontánea, así que los fotones se pasan, vacían la inversión por debajo del umbral y se apagan: los picos se amortiguan hasta la salida estable. Los primeros picos están más separados; conforme se amortiguan, su separación tiende al periodo linealizado {#}/f<sub>R</sub>. A {#} µs/s los picos pasan varias veces por segundo: cuando empiecen, elige {#} µs/s para seguirlos uno por uno.",
 "Two level atom":
   "Átomo de dos niveles",
 "Transition":
@@ -242,12 +242,12 @@ VDI18N.add('es', 'demo/lasers', {
   "{#} × {#}⁻¹¹ W de salida, {#} nm (infrarrojo, dibujado en rojo)",
 "pump W = {#} W_th":
   "bombeo W = {#} W_th",
-"{#} × {#}⁻¹⁰ W out, {#} nm (infrared, drawn red)":
-  "{#} × {#}⁻¹⁰ W de salida, {#} nm (infrarrojo, dibujado en rojo)",
 "medium":
   "medio",
 "P_abs (W)":
   "P_abs (W)",
+"{#} × {#}⁻¹⁰ W out, {#} nm (infrared, drawn red)":
+  "{#} × {#}⁻¹⁰ W de salida, {#} nm (infrarrojo, dibujado en rojo)",
 "t = {#} µs · window {#} µs":
   "t = {#} µs · ventana {#} µs",
 "{#} ms per second":
@@ -292,8 +292,6 @@ VDI18N.add('es', 'demo/lasers', {
   "Una transición entre dos niveles con degeneraciones iguales, así que B₁₂ = B₂₁. La razón térmica es el factor de Boltzmann; la razón de tasas estimulada/espontánea usa la densidad de energía de Planck a la misma temperatura. Las animaciones no están a escala: las longitudes de onda, las rapideces y los tiempos se eligen para que se vean.",
 "{#} mW out, {#} nm (infrared, drawn red)":
   "{#} mW de salida, {#} nm (infrarrojo, dibujado en rojo)",
-"{#} W out, {#} nm (infrared, drawn red)":
-  "{#} W de salida, {#} nm (infrarrojo, dibujado en rojo)",
 "Ruby: three level":
   "Rubí: tres niveles",
 "Cr³⁺ ions in sapphire; energy in eV":
@@ -362,8 +360,8 @@ VDI18N.add('es', 'demo/lasers', {
   "Arrastra el punto de operación a lo largo de la curva de salida, o la agarradera de bombeo bajo la barra. Por debajo del umbral la salida es solo emisión espontánea, demasiado pequeña para verse; por encima, la salida sube en línea recta mientras la inversión se queda fija en N<sub>th</sub>: la ganancia es igual a la pérdida.",
 "t = {#} ns <small>since switch on</small>":
   "t = {#} ns <small>desde el encendido</small>",
-"{#} × {#}⁻¹² W out":
-  "{#} × {#}⁻¹² W de salida",
+"{#} × {#}⁻¹⁰ W out":
+  "{#} × {#}⁻¹⁰ W de salida",
 "Ruby laser, three level":
   "Láser de rubí, tres niveles",
 "Ruby rod (Cr³⁺)":
@@ -386,6 +384,8 @@ VDI18N.add('es', 'demo/lasers', {
   "dN/dt = W<sub>p</sub>(N<sub>t</sub> − N) − (N + N<sub>t</sub>)/τ − 2K N q<br>dq/dt = K N q − q/τ<sub>c</sub> + β N₂/τ<br>N = N₂ − N₁, N₂ = (N<sub>t</sub> + N)/{#}",
 "N is the inversion and q the number of photons in the cavity mode. K = σc/(AL) = {#} × {#}⁻⁹ s⁻¹, from the cross section σ = {#} × {#}⁻²⁰ cm², mode area A and cavity length L. τ<sub>c</sub> = t<sub>rt</sub>/(−ln R − ln {#}), with t<sub>rt</sub> = 2L/c = {#} ns. Above threshold, setting both derivatives to zero gives N = N<sub>th</sub> exactly and q growing in proportion to the pump. f<sub>R</sub> = √(ω₀² − γ²/{#})/{#}π with ω₀² = 2K q₀/τ<sub>c</sub>, γ = W<sub>p</sub> + {#}/τ + 2K q₀.":
   "N es la inversión y q el número de fotones en el modo de la cavidad. K = σc/(AL) = {#} × {#}⁻⁹ s⁻¹, a partir de la sección eficaz σ = {#} × {#}⁻²⁰ cm², el área del modo A y la longitud de la cavidad L. τ<sub>c</sub> = t<sub>rt</sub>/(−ln R − ln {#}), con t<sub>rt</sub> = 2L/c = {#} ns. Por encima del umbral, igualar ambas derivadas a cero da exactamente N = N<sub>th</sub> y q creciendo en proporción al bombeo. f<sub>R</sub> = √(ω₀² − γ²/{#})/{#}π con ω₀² = 2K q₀/τ<sub>c</sub>, γ = W<sub>p</sub> + {#}/τ + 2K q₀.",
+"{#} × {#}⁻¹² W out":
+  "{#} × {#}⁻¹² W de salida",
 "A {#} cm He–Ne cavity has modes every c/2L = {#} MHz; the Doppler broadened gain is about {#} GHz wide, so about three modes lase. Drag the comb (a change of L by a fraction of a wavelength, as when the tube warms up) and watch modes hop in and out.":
   "Una cavidad de He–Ne de {#} cm tiene modos cada c/2L = {#} MHz; la ganancia ensanchada por Doppler mide unos {#} GHz de ancho, así que emiten unos tres modos. Arrastra el peine (un cambio de L de una fracción de longitud de onda, como cuando el tubo se calienta) y observa cómo los modos entran y salen.",
 "The near infrared Nd:YAG line, {#} eV per photon.":
@@ -402,8 +402,10 @@ VDI18N.add('es', 'demo/lasers', {
   "t = {#} ms · ventana {#} ms",
 "t = {#} ms <small>since switch on</small>":
   "t = {#} ms <small>desde el encendido</small>",
-"{#} × {#}⁻¹⁰ W out":
-  "{#} × {#}⁻¹⁰ W de salida",
+"The pump switches on at t = {#}. The inversion climbs past threshold before the light has built up from spontaneous emission, so the photons overshoot, empty the inversion below threshold and die back: the spikes ring down to the steady output. The first spikes come farther apart; as they die down their spacing settles toward the linearized period {#}/f<sub>R</sub>.":
+  "El bombeo se enciende en t = {#}. La inversión sube más allá del umbral antes de que la luz se acumule a partir de la emisión espontánea, así que los fotones se pasan, vacían la inversión por debajo del umbral y se apagan: los picos se amortiguan hasta la salida estable. Los primeros picos están más separados; conforme se amortiguan, su separación tiende al periodo linealizado {#}/f<sub>R</sub>.",
+"{#} W out, {#} nm (infrared, drawn red)":
+  "{#} W de salida, {#} nm (infrarrojo, dibujado en rojo)",
 "{#} µW out, {#} nm (infrared, drawn red)":
   "{#} µW de salida, {#} nm (infrarrojo, dibujado en rojo)"
 });

@@ -1327,6 +1327,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     drawField(v, g);
     /* the spheres */
     const smax = Math.max(1e-30, ...[...S.shade.A.rim || [], ...S.shade.B.rim || []].map(Math.abs));
+    /* a label on a faint backing in the stage color, so field lines and the wand don't run through it (student view calls, 2026-11-15) */
+    const names = [], backed = (t, x, y, o) => {
+      ctx.save(); ctx.font = `${o.w || 400} ${o.s}px ${o.m ? T.mono : T.ui}`;
+      const tw = ctx.measureText(t).width, x0 = o.a === 'right' ? x - tw : o.a === 'center' ? x - tw / 2 : x;
+      ctx.globalAlpha = 0.85; ctx.fillStyle = T.canvas; ctx.beginPath(); ctx.roundRect(x0 - 3 * p, y - o.s * 0.62, tw + 6 * p, o.s * 1.24, 3 * p); ctx.fill(); ctx.restore();
+      VG.label(ctx, t, x, y, o);
+    };
     for (const [id, Sp] of [['A', g.A], ['B', g.B]]) {
       const x = X(Sp.c), y = Y(0), r = Sp.r * sc; if (x - r > W + 20) continue;
       if (id === 'B' && S.gap > B_SHOW) continue;
@@ -1340,8 +1347,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       /* the sphere's name and (unless Blind) its net charge, under it beside the stand */
       /* B's name and charge drop one line when the spheres stand close on a narrow stage, where A's charge ran into B's name (student view, 2026-11-15) */
       const ly = id === 'B' && !S.blind && X(g.B.c) - X(g.A.c) < 110 * p ? Math.max(y + r + 24 * p, Y(0) + g.A.r * sc + 41 * p) : y + r + 24 * p;
-      VG.label(ctx, id, x - 8 * p, ly, { a: 'right', s: 13 * p, w: 700, c: T.ink });
-      if (!S.blind) { const Q = id === 'A' ? sol.QA : sol.QB; VG.label(ctx, `${f(Q / NC, 2)} nC`, x + 8 * p, ly, { a: 'left', s: 12 * p, w: 600, m: true, c: T.ink }); }
+      /* drawn after the wand, on a faint backing, so the resting wand (phone) and the field lines don't cover them (student view calls, 2026-11-15) */
+      names.push(() => { backed(id, x - 8 * p, ly, { a: 'right', s: 13 * p, w: 700, c: T.ink });
+        if (!S.blind) { const Q = id === 'A' ? sol.QA : sol.QB; backed(`${f(Q / NC, 2)} nC`, x + 8 * p, ly, { a: 'left', s: 12 * p, w: 600, m: true, c: T.ink }); } });
       /* where the field at the surface passes air's breakdown field */
       const pk = id === 'A' ? sol.peakA : sol.peakB;
       if (pk && Math.abs(pk.sigma) / EPS0 > E_BREAK) {
@@ -1392,6 +1400,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       if (S.wand.on) paths['g' + S.wand.on] = [...lead, m1, T0, [X(S.wand.on === 'A' ? g.A.c : g.B.c), Y(0)]];
       if (!S.wand.on && !gw && !S.wand.p && W > 520) VG.label(ctx, 'ground wand', T0[0] - 4 * p, T0[1] + 12 * p, { a: 'right', s: 10 * p, c: T.muted });
     }
+    for (const nm of names) nm();
     /* electrons on the move (drawn slowed down) */
     for (const d of S.dots) {
       if (d.t < 0) continue; const pts = paths[d.k]; if (!pts) continue;
@@ -1411,7 +1420,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.fillStyle = T.neg; ctx.beginPath(); ctx.arc(kx + 4 * p, ky + 39 * p, 3 * p, 0, 7); ctx.fill();
     VG.label(ctx, `electrons, 1 dot = ${f(QDOT / NC, 2)} nC, slowed`, kx + 12 * p, ky + 39 * p, { s: 9 * p, c: T.muted });
     /* with no rod on the stage there is no rod to drag: point to the rod buttons instead (student view, 2026-11-15) */
-    if (W > 760 && (S.step <= 0 && !S.drag)) VG.label(ctx, S.rod ? 'Drag the rod, either sphere, or the ground wand' : 'Pick a rod (Glass + or Rubber −), or drag a sphere or the wand', (330 * p + kx) / 2, 26 * p, { a: 'center', s: 10.5 * p, c: T.muted });
+    if (W > 760 && (S.step <= 0 && !S.drag)) backed(S.rod ? 'Drag the rod, either sphere, or the ground wand' : 'Pick a rod (Glass + or Rubber −), or drag a sphere or the wand', (330 * p + kx) / 2, 26 * p, { a: 'center', s: 10.5 * p, c: T.muted });
     S.view = v; S.paths = paths; S.wandAt = { tip: wp.tip, dir: wp.dir };
   }
 

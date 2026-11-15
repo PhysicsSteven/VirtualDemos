@@ -464,10 +464,6 @@ VDI18N.add('es', 'demo/molecules', {
   "pasa (no hay dipolo eléctrico que empujar)",
 "passes through (no electronic absorption at this wavelength)":
   "pasa (no hay absorción electrónica a esta longitud de onda)",
-"no electronic absorption at this wavelength":
-  "no hay absorción electrónica a esta longitud de onda",
-"passes: {why}":
-  "pasa: {why}",
 "ultraviolet":
   "ultravioleta",
 "no absorption above {#} nm (starts near {#} nm)":
@@ -528,8 +524,6 @@ VDI18N.add('es', 'demo/molecules', {
   "se eleva un electrón; brilla",
 "Molecules and light has nothing to record: it shows what each kind of light does.":
   "Moléculas y luz no tiene nada que registrar: muestra lo que hace cada tipo de luz.",
-"Close":
-  "Cerrar",
 "Change the separation of the atoms in {#} nanometer steps, the level in Energy levels, or the cursor in the HCl spectrum (Shift for bigger steps)":
   "Cambia la separación de los átomos en pasos de {#} nanómetros, el nivel en Niveles de energía o el cursor en el espectro de HCl (Shift para pasos más grandes)",
 "UV, vis":
@@ -542,10 +536,18 @@ VDI18N.add('es', 'demo/molecules', {
   "gira más rápido (rotación)",
 "passes through (no vibration at this wavenumber)":
   "pasa (no hay vibración a este número de onda)",
-"no vibration at this wavenumber":
-  "no hay vibración a este número de onda",
+"NO":
+  "NO",
 "no dipole":
   "sin dipolo",
+"no electronic absorption at this wavelength":
+  "no hay absorción electrónica a esta longitud de onda",
+"passes: {why}":
+  "pasa: {why}",
+"Close":
+  "Cerrar",
+"no vibration at this wavenumber":
+  "no hay vibración a este número de onda",
 "<span>Infrared light through a cell of HCl gas: the absorption around {#} μm. Drag the cursor across the band.</span>":
   "<span>Luz infrarroja a través de una celda con gas HCl: la absorción alrededor de {#} μm. Arrastra el cursor a lo largo de la banda.</span>",
 "{#} meV":
