@@ -75,7 +75,8 @@ module.exports = {
       if (!near(val(txt('cFrf'), 'Hz'), fc * c.det, 1e-3)) return 'f_RF shows ' + txt('cFrf') + ', f_c·det = ' + fc * c.det;
       const kt = /^(.*?eV)/.exec(txt('cKmax')); if (kt && vis('cKmax') && !near(val(kt[1], 'eV') * QE, Kmax, 1e-3)) return 'K_max shows ' + kt[1] + ', (qBR)²/2m = ' + Kmax / QE + ' eV';
       if (c.det === 1 && M.cyc.log) { const L = M.cyc.log, qV = Math.abs(q) * c.V * 1000;
-        for (let i = 2; i < L.length; i++) { const g = L[i].K - L[i - 1].K; if (Math.abs(g - qV) > 1e-6 * qV) return 'crossing ' + i + ' adds ' + g / QE + ' eV, qV = ' + qV / QE + ' eV'; } }
+        for (let i = 2; i < L.length; i++) { if (L[i].out) continue;   /* the exit point adds nothing; it is not a gap crossing (2026-11-14) */
+          const g = L[i].K - L[i - 1].K; if (Math.abs(g - qV) > 1e-6 * qV) return 'crossing ' + i + ' adds ' + g / QE + ' eV, qV = ' + qV / QE + ' eV'; } }
       return true; })()` },
     { name: "bottle: |v| stays at the start value; B₀ is the field set; the loss cone is asin(1/√R)", fn: `(() => { ${pre}
       if (S.mode !== 'bottle' || !M.bot || !M.botM || !M.bot.P) return true;

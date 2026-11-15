@@ -36,6 +36,7 @@ const TYPES = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/cs
   '.png': 'image/png', '.jpg': 'image/jpeg', '.webp': 'image/webp', '.mp4': 'video/mp4', '.bin': 'application/octet-stream' };
 const SKIP_BTN = /export|worksheet|handout|download|print|copy|share|record|full ?screen|preferences|language|tools|help|about|how this works|reset all/i;
 const TIMING = argv.includes('--timing');
+const ZOOM_ONLY = argv.includes('--zoom-only');   /* only the canvas zoom, drag and key steps (a quick sweep of the zoom rules) */
 const ODD = ['', '0', '-1', '1e9', '-1e9', '1e-9', 'abc'];
 const ODD_TEXT = ['', 'abc', '((', '1/0', 'x^1000', 'sqrt(-1)', '9'.repeat(40)];
 
@@ -144,7 +145,7 @@ async function runDemo(browser, cmp, base, d) {
     e.value = v; e.dispatchEvent(new Event('input', { bubbles: true })); e.dispatchEvent(new Event('change', { bubbles: true }));
   }, [key, v]);
 
-  try {
+  try { run: {
     await probe('open');
     /* the main canvas: zoom far out and back in, drag and back, keys */
     if (canvasSel) {
@@ -159,6 +160,25 @@ async function runDemo(browser, cmp, base, d) {
         for (let i = 0; i < 4; i++) { await page.mouse.wheel(0, -120); await page.waitForTimeout(40); }
         await page.waitForTimeout(400); const near = await probe('zoomed back in 4 notches');
         if (!moving && near) { const [dn] = await compare(cmp, before, near); if (dn > 0.02) warn('zoom out 4 notches and back', 'the picture differs from before by ' + (100 * dn).toFixed(1) + ' %: a short zoom out and back in does not return', near); }
+        /* scroll zoom stays centered on the view (house rule, Steve 2026-11-12): two notches in with the pointer near a corner
+           must give the same picture as two notches in with the pointer at the center */
+        if (!moving && before) {
+          const zin = async (x, y) => { await page.mouse.move(x, y); for (let i = 0; i < 2; i++) { await page.mouse.wheel(0, -120); await page.waitForTimeout(60); }
+            await page.waitForTimeout(300); const s = await shot(); for (let i = 0; i < 2; i++) { await page.mouse.wheel(0, 120); await page.waitForTimeout(60); } await page.waitForTimeout(300); return s; };
+          /* center, corner, center again: a picture that drifts on its own (a slow orbit, a spinning wheel) changes between the two
+             center zooms as well, so the corner zoom counts only when it differs much more than they differ from each other */
+          /* the off center point must be on the canvas itself, not on a panel or card lying over it (those take the wheel) */
+          const corner = await page.evaluate(([sel, pts]) => { const c = document.querySelector(sel);
+            for (const [x, y] of pts) { const e = document.elementFromPoint(x, y); if (e === c) return [x, y]; } return null; },
+            [canvasSel, [[0.2, 0.25], [0.8, 0.25], [0.8, 0.75], [0.2, 0.75], [0.3, 0.35], [0.7, 0.35], [0.65, 0.65], [0.35, 0.65]].map(([u, v]) => [box.x + box.width * u, box.y + box.height * v])]);
+          const atCenter0 = corner && await zin(cx, cy), atCorner = corner && await zin(corner[0], corner[1]), atCenter = corner && await zin(cx, cy);
+          /* both zooms must change the picture: over a part of the canvas that doesn't zoom (a graph beside a 3D view) the wheel does nothing */
+          if (atCorner && atCenter && atCenter0 && (await compare(cmp, before, atCenter))[0] > 0.02 && (await compare(cmp, before, atCorner))[0] > 0.02) {
+            const [dz] = await compare(cmp, atCorner, atCenter), [dd] = await compare(cmp, atCenter0, atCenter);
+            if (dz > 0.03 && dz > 2 * dd + 0.02) warn('scroll zoom with the pointer near a corner', 'the zoomed picture differs by ' + (100 * dz).toFixed(1) + ' % from the same zoom with the pointer at the center: the zoom may follow the pointer (house rule: centered)', atCorner);
+          }
+          await page.mouse.move(cx, cy);
+        }
         for (let i = 0; i < 60; i++) { await page.mouse.wheel(0, 120); await page.waitForTimeout(10); }
         await page.waitForTimeout(250); await probe('zoomed far out (60 wheel notches)');
         for (let i = 0; i < 60; i++) { await page.mouse.wheel(0, -120); await page.waitForTimeout(10); }
@@ -180,6 +200,7 @@ async function runDemo(browser, cmp, base, d) {
         await probe('keys on the canvas');
       }
     }
+    if (ZOOM_ONLY) break run;
     /* Play ten times fast */
     const play = await page.$('#play, #go, #run, #start, #playBtn');
     if (play && await play.isVisible()) { for (let i = 0; i < 10; i++) await play.click({ timeout: 2000 }).catch(() => {}); await page.waitForTimeout(400); await probe('Play pressed ten times fast'); }
@@ -228,7 +249,7 @@ async function runDemo(browser, cmp, base, d) {
       const s = await probe('Reset all');
       if (off.length) found.push({ level: 'FAIL', step: 'Reset all', what: 'did not restore ' + off.slice(0, 4).join('; ') + (off.length > 4 ? ' and ' + (off.length - 4) + ' more' : ''), picture: null });
     }
-  } catch (e) { found.push({ level: 'FAIL', step: 'harness', what: 'could not finish: ' + e.message.split('\n')[0], picture: null }); }
+  } } catch (e) { found.push({ level: 'FAIL', step: 'harness', what: 'could not finish: ' + e.message.split('\n')[0], picture: null }); }
   await ctx.close().catch(() => {});
   const r = { demo: d, seconds: Math.round((Date.now() - t0) / 1000), steps, controls: opening.length, findings: found };
   fs.writeFileSync(path.join(dir, 'report.json'), JSON.stringify(r, null, 1));

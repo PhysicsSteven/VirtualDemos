@@ -18,6 +18,7 @@ module.exports = {
       if (b.zb < -1e-9) return 'block bottom ' + b.zb + ' is below the tank floor';
       if (b.Vw < -1e-12 || b.caught < -1e-12) return 'negative water: Vw ' + b.Vw + ', caught ' + b.caught;
       const n = F.buoyNow(), L = q.L / 100;
+      if (n.FB === 0) return true;     /* out of the liquid at rest: held in the hand by a drag, not floating (break-it run 2026-11-14) */
       if (!near(n.W, q.rho * L ** 3 * G, 1e-9)) return 'W ' + n.W + ' != ρ L³ g';
       if (!near(n.FB, rho * G * L * L * n.s, 1e-9)) return 'F_B ' + n.FB + ' != ρ_f g L² s';
       if (n.s < -1e-12 || n.s > L + 1e-12) return 'submerged depth ' + n.s + ' outside 0..L';
@@ -28,6 +29,7 @@ module.exports = {
       if (S.scene !== 'buoy' || S.P.buoy.scale || S.blind) return true; const q = S.P.buoy, b = F.bs;
       if (Math.abs(b.v) > 1e-4 || q.rho >= rho || b.zb <= 1e-6) return true;     /* only a settled floater */
       const n = F.buoyNow(), L = q.L / 100;
+      if (n.FB === 0) return true;     /* out of the liquid at rest: held in the hand by a drag, not floating (break-it run 2026-11-14) */
       if (Math.abs(n.W - n.FB) > 2e-3 * n.W) return 'floating at rest but W = ' + n.W + ', F_B = ' + n.FB;
       if (!near(n.s / L, q.rho / rho, 2e-3)) return 'fraction under ' + n.s / L + ', ρ_obj/ρ_f = ' + q.rho / rho;
       return true; })()` },

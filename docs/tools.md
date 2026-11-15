@@ -43,3 +43,11 @@ All browser checks need `NODE_PATH=/opt/node-tools/node_modules` in the cloud co
   demo. Pictures and a JSON report go to `/tmp/vdcheck/breakit/<demo>`. The script finds things that break, not things that are hard to
   watch, so it is only half the test: the other half is the "watch it like a student" checks in CLAUDE.md (fresh-eyes first minute, time
   scale on screen, picture matches the physics, worksheet steps still work, controls behave like other demos). A clean breakit run is not a pass alone.
+  It also checks that scroll zoom stays centered (two notches with the pointer off center must match two at the center; Steve
+  2026-11-12). `--zoom-only` runs just the canvas zoom, drag and key steps. On the 4 core cloud box use `--jobs 3` at most; a photo
+  that times out or a harness "page closed" under heavy load is the machine, not the demo: rerun that demo alone.
+- `node tools/perfcheck.cjs <demo>... | --all [--jobs 2] [--seconds 60] [--stress]` is the frame rate decay test (Steve 2026-11-14):
+  it runs the demo at its defaults for a minute (pressing any Fire, Add or Drop button once a second), times every animation frame's
+  script, and fails a demo whose script time a frame doubles past 12 ms, or that freezes; it warns on JS heap or element growth, and
+  reruns the break-it known values at the end to catch drift over a long run. It caught the Charged Particles slowdown fixed in
+  5aaa799 (`--file` tests an older copy of the page). Run it alone on a quiet machine: about 70 minutes for every demo at jobs 2.
