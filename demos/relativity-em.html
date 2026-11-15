@@ -548,7 +548,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const Ez = W.lamNet * K2 / r;            // λ/(2πε₀ r)
     const By = -MU0 * W.I / (2 * Math.PI * r);  // μ₀I/(2πr); x̂ × ẑ = −ŷ
     const FE = q * Ez, FM = q * uq * C0 * By;   // q(u × B)_z = q u By
-    return Object.assign(W, { uq, gq: gammaOf(uq), Ez, By, cBy: C0 * By, FE, FM, F: FE + FM });
+    /* F = FE + FM = q λ₀ γf v K2 (f + uq)/r, and f + uq = u(1 − f²)/(1 − uf) exactly, so F = q λ₀ v u K2/(r γf (1 − uf)).
+       Summing FE + FM lost 3 digits for a copper wire (u ~ 1e−13 c seen from f = 0.9: two terms of size f cancel to u(1 − f²)),
+       so F uses the closed form; FE and FM are still each exact (2026-11-15) */
+    const F = q * lam0 * v * u * K2 / (r * W.gf * (1 - u * f));
+    return Object.assign(W, { uq, gq: gammaOf(uq), Ez, By, cBy: C0 * By, FE, FM, F });
   }
   // Lab frame, directly: B = μ₀I/(2πr) and F = quB
   function labForce(lam0, v, u, q, r) {
@@ -822,6 +826,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('su').disabled = S.lock;
     if (S.lock) $('su').value = S.v;
     for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.v === S.view));
+    /* Field transform has no clock: hide Play/Pause (and the panel's Step with it) there (student view, 2026-11-15) */
+    $('play').hidden = S.view === 'xform';
     for (const b of document.querySelectorAll('#frameSeg button')) b.setAttribute('aria-pressed', String(b.dataset.f === S.frame));
     for (const b of document.querySelectorAll('#scaleSeg button')) b.setAttribute('aria-pressed', String(b.dataset.s === S.scale));
     for (const b of document.querySelectorAll('#qSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.q === S.qs));
@@ -1687,7 +1693,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     setArrow(Mg.vR, [xr, 0, R + 0.5], [Math.sign(st.ur) || 1, 0, 0], mLen(st.ur));
     setArrow(Mg.vM, [xm, 0, 1.45], [-Math.sign(f) || 1, 0, 0], mLen(f));
     const sp = (v) => (S.mscale === 'slow' ? (Math.abs(v * C0) < 0.005 ? 'at rest' : minus((v * C0).toFixed(2)) + ' m/s') : (Math.abs(v) < 5e-4 ? 'at rest' : fb(v, 2)));
-    labels.push({ p: [xr, 0, R + 0.95], t: 'loop ' + sp(st.ur), c: T.ink, a: 'l', pri: 2 });
+    /* level with the loop's velocity arrow but behind its tail (the arrow starts at xr), not on it (student view, 2026-11-15) */
+    labels.push({ p: [xr, 0, R + 0.5], t: 'loop ' + sp(st.ur), c: T.ink, a: st.ur < 0 ? 'l' : 'r', dx: st.ur < 0 ? 10 : -10, pri: 2 });
     labels.push({ p: [xm, 0, 2.0], t: 'magnet ' + sp(-f), c: T.ink, a: 'r', pri: 2, dx: -4 });
     labels.push({ p: [xm + 2 / gf, 0, 0], t: 'N', c: T.pos, a: 'l', dx: 4, pri: 1 });
     labels.push({ p: [xm - 2 / gf, 0, 0], t: 'S', c: T.neg, a: 'r', dx: -4, pri: 1 });

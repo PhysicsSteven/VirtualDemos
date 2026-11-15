@@ -97,6 +97,14 @@ test('real copper wire: 1 A in 1 mm²',()=>{
  console.log('   v_d =',W.vd.toExponential(4),'m/s; γ−1 =',R.gm1(W.b).toExponential(3),'; λ′ =',Q.lamNet.toExponential(3),'C/m; one e per',(e/Q.lamNet).toFixed(1),'m');
 });
 
+test('real copper wire seen from fast frames: F = F_lab/(γf(1 − fu)) to full precision',()=>{
+ // u ~ 1e−13 c: from f = ±0.9 the electric and magnetic parts are each of size f and cancel to u(1 − f²); summing them
+ // lost 3 digits (5e−4, the break-it failure of 2026-11-15), so F must come from the closed form
+ for(const I of [0.1,1,10,20]){const W=R.copperWire(I,1e-6),r=0.02,L=R.wireForce(W.lam0,W.b,W.b,-e,r,0);
+  for(const f of [0.9,-0.9,0.3,-0.3,0.999,W.b]){const X=R.wireForce(W.lam0,W.b,W.b,-e,r,f);close(X.F,L.F/(g(f)*(1-f*W.b)),1e-12);
+   close(X.FE+X.FM,X.F,1e-12,1e-12*Math.abs(X.FE));}}   // the parts still add up to F within their own rounding
+});
+
 test('field transformation: round trip, invariants, composition of boosts',()=>{
  let seed=7;const rnd=()=>{seed=(seed*16807)%2147483647;return seed/2147483647*2-1;};
  for(let k=0;k<200;k++){
