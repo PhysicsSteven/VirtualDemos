@@ -51,7 +51,7 @@ VDI18N.add('en', 'ws/intro-atmospheres', [
 "CO₂, row {#}",
 "Moon, day side",
 "Titan (Saturn’s moon)",
-"Escape speeds: NASA’s planetary fact sheets; Titan’s from its mass and radius in NASA’s Saturnian satellite fact sheet. Temperatures: NASA’s mean temperatures for Earth, Mars and Jupiter (Jupiter’s where the pressure is {#} bar); the hottest day side for Mercury (NASA) and the Moon (the Diviner instrument, Williams and others {#}); Titan’s surface from the Huygens probe (Fulchignoni and others {#}).",
+"Escape speeds: NASA’s planetary fact sheets; Titan’s from its mass and radius in NASA’s Saturnian satellite fact sheet. Temperatures: NASA’s mean temperatures for Earth and Jupiter (Jupiter’s where the pressure is {#} bar); the hottest day side for Mercury (NASA) and the Moon (the Diviner instrument, Williams and others {#}); Titan’s surface from the Huygens probe (Fulchignoni and others {#}); Mars, the average at the Viking {#} landing site, where NASA’s Mars fact sheet gives a daily range of {#} to {#} K (the same value Planet Temperatures uses).",
 "Part {#}: divide the rms speed at {#} K by the rms speed at {#} K. The temperature went up {#} times; how many times faster did the molecules get? Compare with √{#}.",
 "Part {#}: fill in the last column, {#} ÷ √(mass), in the second copy of the table. Graph the rms speed of a real gas against {#} ÷ √(mass). Is it a straight line through the origin? What does that tell you about how speed depends on mass?",
 "Part {#}: how many times faster than carbon dioxide does hydrogen move? Compare with your guess in Before the lab {#}.",

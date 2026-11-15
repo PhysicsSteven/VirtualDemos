@@ -24,7 +24,7 @@ Use crater counts to put ages on four regions of Mars, find when Mars was most a
 
 ## Background
 
-**The crater clock.** A surface collects craters as it ages, so the number of craters per square kilometer tells its age. On the Moon the clock is calibrated with rocks of known age brought back by Apollo and Luna. Nobody has yet brought back a rock from a known place on Mars, so the Martian clock is the lunar one adjusted for how often asteroids hit Mars compared with the Moon. Its ages are less certain than the Moon's, by a few hundred million years for old surfaces.
+**The crater clock.** A surface collects craters as it ages, so the number of craters per square kilometer tells its age. On the Moon the clock is calibrated with rocks of known age brought back by Apollo and Luna. Nobody has yet brought back a rock from a known place on Mars, so the Martian clock is the lunar one adjusted for how often asteroids hit Mars compared with the Moon. Its ages are less certain than the Moon's: by up to about a factor of 2 for young surfaces, and by a few hundred million years for old ones.
 
 **Mars's three eras.** Geologists split Mars's history by its crater counts into the Noachian (heavily cratered, older than about 3.7 billion years, when water flowed), the Hesperian (about 3.7 to 3.0 billion years ago, with widespread lava and floods) and the Amazonian (the last 3 billion years, cold and dry, with fewer craters).
 
@@ -81,7 +81,7 @@ No hazards in the virtual lab.
 
 ## Uncertainty
 
-A count of N craters is uncertain by about √N. For your count on the Olympus Mons caldera, work out √N and the age the clock gives for N + √N and N − √N craters (use the graph, or count a New surface). The Martian clock itself is uncertain by a few hundred million years for old surfaces. Which matters more for the Olympus Mons caldera, the counting or the clock? Which for the southern highlands?
+A count of N craters is uncertain by about √N. For your count on the Olympus Mons caldera, work out √N and the age the clock gives for N + √N and N − √N craters (use the graph, or count a New surface). The Martian clock itself is uncertain by up to about a factor of 2 for young surfaces and by a few hundred million years for old ones. Which matters more for the Olympus Mons caldera, the counting or the clock? Which for the southern highlands?
 
 ## Questions
 

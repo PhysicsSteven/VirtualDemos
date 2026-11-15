@@ -66,11 +66,11 @@ No hazards in the virtual lab.
 | Mercury, day side | 4.3 | 700 | | | | |
 | Moon, day side | 2.4 | 390 | | | | |
 | Earth | 11.2 | 288 | | | | |
-| Mars | 5.0 | 208 | | | | |
+| Mars | 5.0 | 214 | | | | |
 | Jupiter | 59.5 | 163 | | | | |
 | Titan (Saturn's moon) | 2.64 | 94 | | | | |
 
-Escape speeds: NASA's planetary fact sheets; Titan's from its mass and radius in NASA's Saturnian satellite fact sheet. Temperatures: NASA's mean temperatures for Earth, Mars and Jupiter (Jupiter's where the pressure is 1 bar); the hottest day side for Mercury (NASA) and the Moon (the Diviner instrument, Williams and others 2017); Titan's surface from the Huygens probe (Fulchignoni and others 2005).
+Escape speeds: NASA's planetary fact sheets; Titan's from its mass and radius in NASA's Saturnian satellite fact sheet. Temperatures: NASA's mean temperatures for Earth and Jupiter (Jupiter's where the pressure is 1 bar); the hottest day side for Mercury (NASA) and the Moon (the Diviner instrument, Williams and others 2017); Titan's surface from the Huygens probe (Fulchignoni and others 2005); Mars, the average at the Viking 1 landing site, where NASA's Mars fact sheet gives a daily range of 184 to 242 K (the same value Planet Temperatures uses).
 
 ## Analysis
 

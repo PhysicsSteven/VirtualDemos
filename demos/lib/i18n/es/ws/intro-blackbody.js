@@ -8,8 +8,8 @@ VDI18N.add('es', 'ws/intro-blackbody', {
   "Fracción visible (%)",
 "Spectral class":
   "Clase espectral",
-"Color":
-  "Color",
+"Traditional color":
+  "Color tradicional",
 "Star Colors and Temperatures | VirtualDemos":
   "Colores y temperaturas de las estrellas | VirtualDemos",
 "Star Colors and Temperatures":
@@ -58,8 +58,8 @@ VDI18N.add('es', 'ws/intro-blackbody', {
   "<span>E</span>Fracción visible (%)",
 "<span>F</span>Spectral class":
   "<span>F</span>Clase espectral",
-"<span>G</span>Color":
-  "<span>G</span>Color",
+"<span>G</span>Traditional color":
+  "<span>G</span>Color tradicional",
 "Peak wavelength (nm), row {#}":
   "Longitud de onda del pico (nm), fila {#}",
 "Light from each square meter (W/m²), row {#}":
@@ -68,8 +68,8 @@ VDI18N.add('es', 'ws/intro-blackbody', {
   "Fracción visible (%), fila {#}",
 "Spectral class, row {#}":
   "Clase espectral, fila {#}",
-"Color, row {#}":
-  "Color, fila {#}",
+"Traditional color, row {#}":
+  "Color tradicional, fila {#}",
 "For each of your readings, multiply the peak wavelength by the temperature. Is the product the same every time? Compare with the {#} nm·K of the Background.":
   "Para cada una de tus lecturas, multiplica la longitud de onda del pico por la temperatura. ¿El producto es el mismo cada vez? Compara con los {#} nm·K de los Antecedentes.",
 "In Part {#} the temperature went up four times. Divide the peak wavelength at {#} K by the one at {#} K. Is the peak four times shorter at the higher temperature, as Wien’s law says?":
@@ -96,6 +96,10 @@ VDI18N.add('es', 'ws/intro-blackbody', {
   "Respuestas del prelaboratorio, las dos copias de la tabla, las respuestas de las secciones de análisis e incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Blackbody Radiation":
   "Radiación de cuerpo negro",
+"<span>G</span>Color":
+  "<span>G</span>Color",
+"Color, row {#}":
+  "Color, fila {#}",
 "The strip under the chart shows the color your eye would see. The readouts give the wavelength of the peak, the spectral class and color of a star at that temperature, the light given off by each square meter of surface, the share of it that is visible light, and, for a star, its luminosity (its total light output) compared with the Sun’s.":
   "La franja bajo la gráfica muestra el color que vería tu ojo. Las lecturas dan la longitud de onda del pico, la clase espectral y el color de una estrella a esa temperatura, la luz que emite cada metro cuadrado de superficie, la fracción de ella que es luz visible y, para una estrella, su luminosidad (su emisión total de luz) comparada con la del Sol."
 });

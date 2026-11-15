@@ -83,7 +83,7 @@ No hazards in the virtual lab.
 
 ## Uncertainty
 
-A count of N craters is uncertain by about √N, because where the asteroids land is random. Take your Mare Tranquillitatis count, work out √N, and find the age the clock gives for N + √N and for N − √N craters (choose New surface and count again, or use the graph). How many million years is the age uncertain by? Which surface in Part 2 had the fewest craters counted, and why is its age the least certain?
+A count of N craters is uncertain by about √N, because where the asteroids land is random. Take your Mare Tranquillitatis count, work out √N, and find the age the clock gives for N + √N and for N − √N craters (choose New surface and count again, or use the graph). How many million years is the age uncertain by? Which surface in Part 2 had the fewest craters counted, and why is its age the least certain as a fraction of its age?
 
 ## Questions
 

@@ -51,7 +51,7 @@ No hazards in the virtual lab.
 
 ## Data
 
-| Reading | Temperature T (K) | Peak wavelength (nm) | Light from each square meter (W/m²) | Visible share (%) | Spectral class | Color |
+| Reading | Temperature T (K) | Peak wavelength (nm) | Light from each square meter (W/m²) | Visible share (%) | Spectral class | Traditional color |
 |---|---|---|---|---|---|---|
 | | | | | | | |
 | | | | | | | |
