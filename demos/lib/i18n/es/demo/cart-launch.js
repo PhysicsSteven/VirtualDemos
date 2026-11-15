@@ -4,6 +4,10 @@ VDI18N.add('es', 'demo/cart-launch', {
   "carrito",
 "seen from the ground":
   "visto desde el suelo",
+"slow motion ×{#}":
+  "cámara lenta ×{#}",
+"· slow motion ×{#}":
+  "· cámara lenta ×{#}",
 "position along the track (m) against time after launch: cart solid, ball dashed":
   "posición a lo largo de la pista (m) en función del tiempo después del lanzamiento: carrito en línea continua, pelota en línea discontinua",
 "Ball Launched from a Moving Cart":
@@ -146,12 +150,16 @@ VDI18N.add('es', 'demo/cart-launch', {
   "Desplazamiento del carrito a lo largo de la pista",
 "The cart rolls freely down the incline and speeds up, and the launcher points perpendicular to the track. Does the ball still land in the cart?":
   "El carrito rueda libremente hacia abajo por el plano inclinado y acelera, y el lanzador apunta perpendicular a la pista. ¿La pelota sigue cayendo en el carrito?",
+"· real time":
+  "· tiempo real",
 "cart at rest in this view":
   "carrito en reposo en esta vista",
 "seen from the cart: velocities relative to the cart":
   "visto desde el carrito: velocidades relativas al carrito",
 "Launch the ball and let it land, then record the launch.":
   "Lanza la pelota y deja que caiga, luego registra el lanzamiento.",
+"Close":
+  "Cerrar",
 "position (m) vs time: cart solid, ball dashed":
   "posición (m) en función del tiempo: carrito en línea continua, pelota en línea discontinua",
 "to scale · drag to turn":

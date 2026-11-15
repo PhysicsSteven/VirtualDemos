@@ -715,7 +715,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       ctx.fillStyle = '#f6efe4'; ctx.font = `${11.5 * ps}px ${T.mono}`; /* light text on the dark ceiling beam (both themes) */
       const sag = sagOf(K).d;
       const txt = `S = ${fm(S.S)}   span ${fm(K.dx)}   sag ${fm(sag)}`;
-      ctx.fillText(W < 440 ? `S = ${fm(S.S)}   sag ${fm(sag)}` : txt, 10 * ps, 13 * ps);
+      const shown = W < 440 ? `S = ${fm(S.S)}   sag ${fm(sag)}` : txt;
+      /* the support A's hanger screw sits in the beam under this line and cut through "sag": a patch of beam color behind the text
+         keeps it readable wherever A is (student view, 2026-11-15) */
+      if (VG) { const keep = ctx.fillStyle; ctx.fillStyle = VG.dark() ? '#50473c' : '#746a5c'; ctx.fillRect(4 * ps, 2 * ps, ctx.measureText(shown).width + 12 * ps, 20 * ps); ctx.fillStyle = keep; }
+      ctx.fillText(shown, 10 * ps, 13 * ps);
       if (semiInfo && W > 560) { ctx.textAlign = 'right'; ctx.fillStyle = '#ffb3a3'; ctx.fillText(semiInfo, W - 10 * ps, 13 * ps); }
     }
   }

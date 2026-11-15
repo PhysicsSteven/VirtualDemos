@@ -20,6 +20,10 @@ VDI18N.add('es', 'demo/catenary', {
   "ambas → ∞ cuando d → {#}",
 "Hanging Chains and Arches":
   "Cadenas colgantes y arcos",
+"<a>Static equilibrium and elasticity</a>":
+  "<a>Equilibrio estático y elasticidad</a>",
+"<a><span>←</span> <span>GPS Clocks and Relativity</span></a><a><span>Static Equilibrium</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Relojes GPS y relatividad</span></a><a><span>Equilibrio estático</span> <span>→</span></a>",
 "A chain hanging under its own weight takes the shape of a hyperbolic cosine, the catenary. Turn it upside down and you have the arch that stands in pure compression.":
   "Una cadena que cuelga bajo su propio peso toma la forma de un coseno hiperbólico, la catenaria. Dale la vuelta y tienes el arco que se sostiene en compresión pura.",
 "SI units · lengths in m, forces in N · g = {#} m/s²":
@@ -144,10 +148,6 @@ VDI18N.add('es', 'demo/catenary', {
   "<span><i></i>Fuerzas sobre el tramo elegido</span> <span><i></i>Peso</span> <span><i></i>Parábola o arco Gateway</span> <span><i></i>Directriz</span>",
 "Model: a perfectly flexible chain that does not stretch, with uniform mass per length λ, at rest. The curve is the exact catenary y = a cosh((x − x₀)/a) + c through both supports with arc length S. The links are drawn for looks; the chain is treated as continuous. Arch: rigid blocks, uniform weight per length, no friction limit considered. Keys on the drawing: {#} and {#} supports, {#} middle grip, {#} and {#} markers, arrows move, shift moves farther, + and − change S.":
   "Modelo: una cadena perfectamente flexible que no se estira, con masa por unidad de longitud λ uniforme, en reposo. La curva es la catenaria exacta y = a cosh((x − x₀)/a) + c que pasa por ambos apoyos con longitud de arco S. Los eslabones se dibujan solo por estética; la cadena se trata como continua. Arco: bloques rígidos, peso por unidad de longitud uniforme, sin considerar un límite de fricción. Teclas sobre el dibujo: {#} y {#} apoyos, {#} agarre central, {#} y {#} marcadores, las flechas mueven, Shift mueve más lejos, + y − cambian S.",
-"<a>Static equilibrium and elasticity</a>":
-  "<a>Equilibrio estático y elasticidad</a>",
-"<a><span>←</span> <span>GPS Clocks and Relativity</span></a><a><span>Static Equilibrium</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Relojes GPS y relatividad</span></a><a><span>Equilibrio estático</span> <span>→</span></a>",
 "With one support lower, the lowest point moves toward it, and the higher support carries more of the weight. Pull the low support up and in: once the vertex leaves the span, the chain runs downhill all the way to the lower support.":
   "Con un apoyo más bajo, el punto más bajo se mueve hacia él, y el apoyo más alto carga más del peso. Sube el apoyo bajo y acércalo: una vez que el vértice sale del claro, la cadena va cuesta abajo todo el camino hasta el apoyo más bajo.",
 "level supports only":
@@ -198,6 +198,8 @@ VDI18N.add('es', 'demo/catenary', {
   "compresión máxima",
 "Drag the grip up or the marker on the graph to the left. As the sag goes to zero, the tension grows like λgΔx²/(8d) and never stops growing. No chain, however strong, can hang perfectly straight.":
   "Arrastra el agarre hacia arriba o el marcador de la gráfica hacia la izquierda. Cuando la flecha tiende a cero, la tensión crece como λgΔx²/(8d) y nunca deja de crecer. Ninguna cadena, por fuerte que sea, puede colgar perfectamente recta.",
+"Close":
+  "Cerrar",
 "S = {#} m sag {#} m":
   "S = {#} m flecha {#} m"
 });

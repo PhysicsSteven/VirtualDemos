@@ -141,7 +141,7 @@ table.rows input:focus { border-color: var(--accent); }
         
         
         
-        <div><div class="slider-head"><label>Playback</label></div><div class="seg" id="speed"><button type="button" data-k="1" aria-pressed="true">×1</button><button type="button" data-k="0.5" aria-pressed="false">×½</button><button type="button" data-k="0.25" aria-pressed="false">×¼</button></div></div>
+        <div><div class="slider-head"><label>Playback</label></div><div class="seg" id="speed"><button type="button" data-k="1" aria-pressed="false">×1</button><button type="button" data-k="0.5" aria-pressed="true">×½</button><button type="button" data-k="0.25" aria-pressed="false">×¼</button></div></div>
       </section>
 
       <section>
@@ -249,7 +249,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     brake: { v: 1.2, u: 4, ac: -1.5, phi: 0, hint: 'The cart brakes from the moment of launch. The ball keeps going forward.' },
     incline: { v: 0.5, u: 4, ac: 0, phi: 15, hint: 'The cart rolls freely down the incline and speeds up, and the launcher points perpendicular to the track. Does the ball still land in the cart?' },
   };
-  const S = { preset: 'steady', v: 1.2, u: 4, ac: 0, phiDeg: 15, t: 0, tPre: 0.8, running: false, paused: false, k: 1, frame: 'ground', blind: false, heldAtTop: false, hist: [] };
+  const S = { preset: 'steady', v: 1.2, u: 4, ac: 0, phiDeg: 15, t: 0, tPre: 0.8, running: false, paused: false, k: 0.5, frame: 'ground', blind: false, heldAtTop: false, hist: [] };
   const P = () => ({ v: S.v, u: S.u, ac: S.preset === 'incline' ? 0 : S.ac, phi: S.preset === 'incline' ? S.phiDeg * Math.PI / 180 : 0 });
   const can = $('can'), ctx = can.getContext('2d'), stage = $('stage');
   let W = 0, Hh = 0, dpr = 1, T = null;
@@ -263,6 +263,14 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
   const f = (v, d = 2) => (!isFinite(v) ? '—' : (Math.abs(v) < 0.5 * 10 ** -d ? 0 : v).toFixed(d).replace('-', '−'));
   const tPre = () => { const p = P(); return p.phi > 0 ? Math.min(0.5, p.v / (G * Math.sin(p.phi))) : 0.5; };
   const tEnd = () => landing(P()).t + 0.4;
+  /* the flight lasts 2u/g = 0.8 s at the defaults, too quick to follow at ×1, so the run opens at ×½ and the stage names the playback
+     rate beside the frame caption; the clock and every readout stay in real seconds (student view, 2026-11-15) */
+  const rateCap = () => { const tr = (s) => (window.VDI18N ? VDI18N.t(s) : s); return S.k === 1 ? tr('real time') : S.k === 0.5 ? tr('slow motion ×2') : tr('slow motion ×4'); };
+  function drawCaption(cam, capX, capY) {
+    const cap = cam ? 'seen from the cart: velocities relative to the cart' : 'seen from the ground';
+    ctx.fillText(cap, capX, capY);
+    ctx.fillText(`· ${rateCap()}`, capX + ctx.measureText(cap).width + 6 * ps(), capY);
+  }
 
   function setPreset(name) {
     const q = PRESETS[name]; S.preset = name; S.v = q.v; S.u = q.u; S.ac = q.ac; if (q.phi) S.phiDeg = q.phi; reset(); sync();
@@ -291,7 +299,7 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
   $('go').addEventListener('click', launch);
   $('pause').addEventListener('click', () => { if (!S.running) return; S.paused = !S.paused; if (!S.paused) $('predict').hidden = true; syncBtns(); readouts(); });
   $('reset').addEventListener('click', reset);
-  $('speed').addEventListener('click', (e) => { const b = e.target.closest('[data-k]'); if (!b) return; S.k = +b.dataset.k; for (const x of $('speed').children) x.setAttribute('aria-pressed', String(x === b)); });
+  $('speed').addEventListener('click', (e) => { const b = e.target.closest('[data-k]'); if (!b) return; S.k = +b.dataset.k; for (const x of $('speed').children) x.setAttribute('aria-pressed', String(x === b)); draw(); });
   $('frame').addEventListener('click', (e) => { const b = e.target.closest('[data-f]'); if (!b) return; S.frame = b.dataset.f; for (const x of $('frame').children) x.setAttribute('aria-pressed', String(x === b)); draw(); readouts(); });
   for (const id of ['cbV', 'cbC', 'cbG', 'cbS', 'cbP']) $(id).addEventListener('change', draw);
   $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; $('blindTag').hidden = !S.blind; if (!S.blind) $('predict').hidden = true; draw(); readouts(); });
@@ -552,7 +560,7 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
     }
     const capX = 14 * p, capY = barBottom() + 6 * p;
     ctx.fillStyle = T.muted; ctx.font = `${11 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
-    ctx.fillText(cam ? 'seen from the cart: velocities relative to the cart' : 'seen from the ground', capX, capY);
+    drawCaption(cam, capX, capY);
     if (t > 0 && !hidden() && t >= L.t) {
       ctx.fillStyle = L.kind === 'caught' ? T.vy : T.g; ctx.font = `700 ${13 * p}px ${T.ui}`; ctx.fillText(L.kind === 'caught' ? 'Back in the launcher' : L.kind === 'cart' ? 'Missed the launcher' : 'Missed the cart', capX, capY + 16 * p);
       if (L.kind !== 'caught') {   /* the bracket's length, at the bracket */
@@ -716,7 +724,7 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
     /* top left under the buttons: the instrument panel sits at the top right */
     const capX = 14 * p, capY = barBottom() + 6 * p;
     ctx.fillStyle = T.muted; ctx.font = `${11 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
-    ctx.fillText(cam ? 'seen from the cart: velocities relative to the cart' : 'seen from the ground', capX, capY);
+    drawCaption(cam, capX, capY);
     if (t > 0 && !hidden() && t >= L.t) { ctx.fillStyle = L.kind === 'caught' ? T.vy : T.g; ctx.font = `700 ${13 * p}px ${T.ui}`; ctx.fillText(L.kind === 'caught' ? 'Back in the launcher' : L.kind === 'cart' ? 'Missed the launcher' : 'Missed the cart', capX, capY + 16 * p); }
     plot(48 * p, sceneBot + 44 * p, W - 64 * p, plotH - 52 * p);
   }

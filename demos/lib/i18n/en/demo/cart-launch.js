@@ -2,6 +2,8 @@
 VDI18N.add('en', 'demo/cart-launch', [
 "cart",
 "seen from the ground",
+"slow motion ×{#}",
+"· slow motion ×{#}",
 "position along the track (m) against time after launch: cart solid, ball dashed",
 "Ball Launched from a Moving Cart",
 "<a>Kinematics</a>",
@@ -73,9 +75,11 @@ VDI18N.add('en', 'demo/cart-launch', [
 "Ball moves along the track",
 "Cart moves along the track",
 "The cart rolls freely down the incline and speeds up, and the launcher points perpendicular to the track. Does the ball still land in the cart?",
+"· real time",
 "cart at rest in this view",
 "seen from the cart: velocities relative to the cart",
 "Launch the ball and let it land, then record the launch.",
+"Close",
 "position (m) vs time: cart solid, ball dashed",
 "to scale · drag to turn"
 ]);
