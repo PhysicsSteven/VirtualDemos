@@ -269,7 +269,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     glass: { name: 'Glass', c: 840, col: '#a9d3dc' }, granite: { name: 'Concrete, granite', c: 840, col: '#9a958c' },
     water: { name: 'Water', c: 4186, col: '#4f9fd8', liquid: true }, ethanol: { name: 'Ethanol', c: 2450, col: '#b9d9ec', liquid: true },
     glycerin: { name: 'Glycerin', c: 2410, col: '#d9e6c4', liquid: true }, mercury: { name: 'Mercury', c: 139, col: '#c0b9af', liquid: true } };
-  const MYSTERY_POOL = ['copper', 'steel', 'lead', 'silver', 'gold', 'glass'];
+  const MYSTERY_POOL = ['copper', 'steel', 'lead', 'silver', 'gold'];   /* metals only: the worksheet asks to name the metal (Steve 2026-11-15) */
   const CONDUCT = { /* k in W/(m·°C), Table 1.5 */
     diamond: { name: 'Diamond', k: 2000 }, silver: { name: 'Silver', k: 420 }, copper: { name: 'Copper', k: 390 }, gold: { name: 'Gold', k: 318 },
     aluminum: { name: 'Aluminum', k: 220 }, steel: { name: 'Steel iron', k: 80 }, stainless: { name: 'Steel (stainless)', k: 14 }, ice: { name: 'Ice', k: 2.2 },

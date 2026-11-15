@@ -24,7 +24,7 @@ VDI18N.add('en', 'ws/thermal-equilibrium', [
 "Hot metal blocks and hot water can burn. In a real lab use tongs and an insulated container, and let samples cool before handling.",
 "<strong>Hot metal, cool water.</strong> Start with the Hot metal, cool water setup. Run the clock and record both temperatures about every {#} s for the first two minutes and then about every {#} s until they agree to {#} °C. Send the readings to the worksheet.",
 "<strong>A longer bar.</strong> Send the readings to the worksheet and clear them, then double the bar’s length and repeat. Send this run to a new copy of the table.",
-"<strong>Mystery block.</strong> Pick the Mystery block setup, run it to equilibrium and record the starting temperatures and the final temperature. Repeat with a different water mass or starting temperature to check your result.",
+"<strong>Mystery block.</strong> Pick the Mystery block setup, run it to equilibrium and record the starting temperatures and the final temperature. Repeat with a different water mass or starting temperature to check your result. If your specific heat sits close to two values in Table {#}, repeat with much less water: the block then warms the water more, and the two metals give final temperatures you can tell apart.",
 "<span>B</span>Time \\(t\\) (s)",
 "<span>F</span>\\(\\ln(T_A - T_B)\\) (difference in °C)",
 "T_A (°C), row {#}",

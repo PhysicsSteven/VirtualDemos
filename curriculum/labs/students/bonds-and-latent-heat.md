@@ -75,7 +75,7 @@ Record the piston pressure and heater power for each copy of the table.
 4. Fit $$T$$ against $$Q$$ for the solid before it starts to melt. Find its molar heat capacity, $$C = 1/\text{slope}$$, and compare it with $$3R$$.
 5. Graph $$U$$ against $$Q$$. Compare its slope on the plateaus with its slope where the solid and the liquid warm up. What fraction of the heat goes into the bonds on each part?
 6. Compare the boiling temperature at 28 atm with the one at 17 atm.
-7. Real argon melts at 83.8 K and boils at 87.3 K at 1 atm, with latent heats of 1.18 kJ/mol and 6.53 kJ/mol. Compare your values with these, and give two reasons this small simulated sample differs.
+7. Real argon melts at 83.8 K and boils at 87.3 K at 1 atm, with latent heats of 1.18 kJ/mol and 6.43 kJ/mol. Compare your values with these, and give two reasons this small simulated sample differs.
 
 ## Uncertainty
 

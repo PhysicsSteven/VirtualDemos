@@ -55,7 +55,7 @@ Hot metal blocks and hot water can burn. In a real lab use tongs and an insulate
 
 **A longer bar.** Send the readings to the worksheet and clear them, then double the bar's length and repeat. Send this run to a new copy of the table.
 
-**Mystery block.** Pick the Mystery block setup, run it to equilibrium and record the starting temperatures and the final temperature. Repeat with a different water mass or starting temperature to check your result.
+**Mystery block.** Pick the Mystery block setup, run it to equilibrium and record the starting temperatures and the final temperature. Repeat with a different water mass or starting temperature to check your result. If your specific heat sits close to two values in Table 1.3, repeat with much less water: the block then warms the water more, and the two metals give final temperatures you can tell apart.
 
 ## Data
 

@@ -48,8 +48,8 @@ VDI18N.add('es', 'ws/thermal-equilibrium', {
   "<strong>Metal caliente, agua fría.</strong> Empieza con la configuración Metal caliente, agua fría. Pon a correr el reloj y registra ambas temperaturas más o menos cada {#} s durante los primeros dos minutos y luego más o menos cada {#} s hasta que coincidan a {#} °C. Envía las lecturas a la hoja de trabajo.",
 "<strong>A longer bar.</strong> Send the readings to the worksheet and clear them, then double the bar’s length and repeat. Send this run to a new copy of the table.":
   "<strong>Una barra más larga.</strong> Envía las lecturas a la hoja de trabajo y bórralas, luego duplica la longitud de la barra y repite. Envía esta corrida a una nueva copia de la tabla.",
-"<strong>Mystery block.</strong> Pick the Mystery block setup, run it to equilibrium and record the starting temperatures and the final temperature. Repeat with a different water mass or starting temperature to check your result.":
-  "<strong>Bloque misterioso.</strong> Elige la configuración Bloque misterioso, ejecútala hasta el equilibrio y registra las temperaturas iniciales y la temperatura final. Repite con otra masa de agua u otra temperatura inicial para comprobar tu resultado.",
+"<strong>Mystery block.</strong> Pick the Mystery block setup, run it to equilibrium and record the starting temperatures and the final temperature. Repeat with a different water mass or starting temperature to check your result. If your specific heat sits close to two values in Table {#}, repeat with much less water: the block then warms the water more, and the two metals give final temperatures you can tell apart.":
+  "<strong>Bloque misterioso.</strong> Elige la configuración Bloque misterioso, ejecútala hasta el equilibrio y registra las temperaturas iniciales y la temperatura final. Repite con otra masa de agua u otra temperatura inicial para comprobar tu resultado. Si tu calor específico queda cerca de dos valores de la Tabla {#}, repite con mucho menos agua: así el bloque calienta más el agua, y los dos metales dan temperaturas finales que puedes distinguir.",
 "<span>B</span>Time \\(t\\) (s)":
   "<span>B</span>Tiempo \\(t\\) (s)",
 "<span>F</span>\\(\\ln(T_A - T_B)\\) (difference in °C)":
@@ -129,5 +129,7 @@ VDI18N.add('es', 'ws/thermal-equilibrium', {
 "Time constant":
   "Constante de tiempo",
 "Temperature and Heat (Equilibrium)":
-  "Temperatura y calor (Equilibrio)"
+  "Temperatura y calor (Equilibrio)",
+"<strong>Mystery block.</strong> Pick the Mystery block setup, run it to equilibrium and record the starting temperatures and the final temperature. Repeat with a different water mass or starting temperature to check your result.":
+  "<strong>Bloque misterioso.</strong> Elige la configuración Bloque misterioso, ejecútala hasta el equilibrio y registra las temperaturas iniciales y la temperatura final. Repite con otra masa de agua u otra temperatura inicial para comprobar tu resultado."
 });
