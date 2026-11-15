@@ -10,12 +10,18 @@ VDI18N.add('es', 'demo/induction-at-work', {
   "luz apagada",
 "EMF of the coil and capacitor voltage":
   "FEM de la bobina y voltaje del capacitor",
+"t (s) · real time":
+  "t (s) · tiempo real",
 "— EMF ε":
   "— FEM ε",
 "— capacitor":
   "— capacitor",
 "Induction at Work":
   "La inducción en acción",
+"<a>Induction and inductance</a>":
+  "<a>Inducción e inductancia</a>",
+"<a><span>←</span> <span>Faraday's and Lenz's Laws</span></a><a><span>Induced Electric Fields</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Leyes de Faraday y de Lenz</span></a><a><span>Campos eléctricos inducidos</span> <span>→</span></a>",
 "Three everyday devices that run on Faraday's law. Shake a magnet through a coil to charge a flashlight, draw with a magnetic pen on a grid of wires, and swipe a card's magnetic stripe past a reading head. In each one a changing flux makes an EMF.":
   "Tres aparatos cotidianos que funcionan con la ley de Faraday. Agita un imán a través de una bobina para cargar una linterna, dibuja con una pluma magnética sobre una malla de alambres y pasa la banda magnética de una tarjeta frente a un cabezal lector. En cada uno, un flujo que cambia produce una FEM.",
 "The chosen device: a shake flashlight with a magnet sliding through a coil, a graphics tablet with a grid of wires under a magnetic pen, or a card sliding past a reading head, with a plot of the induced EMF.":
@@ -84,6 +90,8 @@ VDI18N.add('es', 'demo/induction-at-work', {
   "Corriente de carga",
 "Capacitor voltage":
   "Voltaje del capacitor",
+"Light":
+  "Luz",
 "switched off":
   "apagada",
 "Energy from your hand":
@@ -106,10 +114,6 @@ VDI18N.add('es', 'demo/induction-at-work', {
   "Modelo de la tableta: la punta de la pluma tiene un pequeño imán de NdFeB ({#} T, {#} mm de diámetro, {#} mm de largo, m = {#} A·m²) apuntando hacia abajo, {#} mm arriba de alambres separados {#} mm. El circuito de cada alambre se cierra lejos, así que el flujo que encierra es el que atraviesa un semiplano, Φ = −μ₀m u/({#}π(u² + h²)) para una pluma a una distancia u del alambre, y la FEM es −dΦ/dt. La tableta encuentra la pluma ajustando esta forma a los cinco alambres con señal más fuerte; ignora señales menores que {#} µV (un umbral de detección elegido, sin ruido eléctrico agregado). Las tabletas pasivas reales funcionan distinto en un aspecto: el campo de la pluma se hace alternar, así que una pluma quieta se sigue viendo.",
 "Card model: track {#} of a magnetic stripe, {#} bits per inch (ISO/IEC {#}), recorded in F2F: the magnetization flips at every bit boundary and once more in the middle of a {#}. Digits are {#} bits, least significant first, with odd parity, between the start sentinel ; and end sentinel ? (the check character after it is left out). Each flip passing the head gives a pulse of EMF ∝ v g²/((x − x_k)² + g²) with g = {#} mm (a chosen head resolution); EMF is shown relative to a single pulse at {#} m/s. The decoder keeps time from the pulses themselves, which is why an uneven swipe still reads.":
   "Modelo de la tarjeta: la pista {#} de una banda magnética, {#} bits por pulgada (ISO/IEC {#}), grabada en F2F: la magnetización se invierte en cada frontera de bit y una vez más a la mitad de un {#}. Los dígitos son de {#} bits, el menos significativo primero, con paridad impar, entre el centinela de inicio ; y el centinela de fin ? (se omite el carácter de verificación que va después). Cada inversión que pasa por el cabezal da un pulso de FEM ∝ v g²/((x − x_k)² + g²) con g = {#} mm (una resolución del cabezal elegida); la FEM se muestra relativa a un solo pulso a {#} m/s. El decodificador lleva el tiempo a partir de los propios pulsos, y por eso un deslizamiento irregular aún se lee.",
-"<a>Induction and inductance</a>":
-  "<a>Inducción e inductancia</a>",
-"<a><span>←</span> <span>Faraday's and Lenz's Laws</span></a><a><span>Induced Electric Fields</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Leyes de Faraday y de Lenz</span></a><a><span>Campos eléctricos inducidos</span> <span>→</span></a>",
 "magnet, stroke ±{#} cm":
   "imán, carrera ±{#} cm",
 "rectifier and capacitor":
@@ -176,6 +180,8 @@ VDI18N.add('es', 'demo/induction-at-work', {
   "cada bit mide {#} mm",
 "EMF in the head (relative units)":
   "FEM en el cabezal (unidades relativas)",
+"t (ms) · slow motion, {#} s = {#} ms":
+  "t (ms) · cámara lenta, {#} s = {#} ms",
 "EMF":
   "FEM",
 "The stripe holds tiny magnetized regions. As they pass the head, each flip of magnetization changes the flux in the head’s coil and gives a pulse. Swipe faster and the pulses are taller and closer together.":
@@ -192,6 +198,8 @@ VDI18N.add('es', 'demo/induction-at-work', {
   "deslizamiento en curso",
 "The swipe speeds up and slows down by {#} %. The pulses bunch and spread, yet the number still reads, because F2F carries its own clock: every bit starts with a flip.":
   "El deslizamiento se acelera y se frena ±{#} %. Los pulsos se juntan y se separan, y aun así el número se lee, porque F2F lleva su propio reloj: cada bit empieza con una inversión.",
+"Close":
+  "Cerrar",
 "TEST CARD":
   "TARJETA DE PRUEBA",
 "track {#}: ;{#}?":
@@ -206,14 +214,12 @@ VDI18N.add('es', 'demo/induction-at-work', {
   "los {#} mm de la pista {#} en el cabezal, {#}× a lo largo de la banda",
 "scope":
   "osciloscopio",
-"{#} nJ":
-  "{#} nJ",
 "on, {#} mA, {#} mW":
   "encendida, {#} mA, {#} mW",
 "-{#} mJ":
   "-{#} mJ",
-"Light":
-  "Luz",
-"Close":
-  "Cerrar"
+"{#} nJ":
+  "{#} nJ",
+"t (s) · fast forward, {#} s = {#} s":
+  "t (s) · avance rápido, {#} s = {#} s"
 });

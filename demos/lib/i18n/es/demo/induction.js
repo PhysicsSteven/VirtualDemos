@@ -8,8 +8,8 @@ VDI18N.add('es', 'demo/induction', {
   "densidad superficial de carga σ, µC/m²",
 "electrons, {#} dot = {#} nC, slowed":
   "electrones, {#} punto = {#} nC, ralentizados",
-"Drag the rod, either sphere, or the ground wand":
-  "Arrastra la varilla, cualquiera de las esferas o la varilla de tierra",
+"Pick a rod (Glass + or Rubber −), or drag a sphere or the wand":
+  "Elige Vidrio + o Hule −, o arrastra una esfera o la varilla",
 "Charging by Induction":
   "Carga por inducción",
 "<a>Charge and electric fields</a>":
@@ -340,8 +340,14 @@ VDI18N.add('es', 'demo/induction', {
   "esfera",
 "reading (mg)":
   "lectura (mg)",
+"Close":
+  "Cerrar",
+"Move the tip of the rod by {#} millimeter (Shift for {#} centimeter)":
+  "Mueve la punta de la varilla {#} milímetro (Shift para {#} centímetro)",
 "glass rod +{#} nC":
   "varilla de vidrio +{#} nC",
+"Drag the rod, either sphere, or the ground wand":
+  "Arrastra la varilla, cualquiera de las esferas o la varilla de tierra",
 "The rubbed rod, {#} nC (almost nothing: shown as +{#} nC), is near sphere A. Ground a sphere or pull B away to charge them.":
   "La varilla frotada, {#} nC (casi nada: se muestra como +{#} nC), está cerca de la esfera A. Conecta una esfera a tierra o aleja B para cargarlas.",
 "Rod tip to A's surface d":
