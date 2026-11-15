@@ -1058,7 +1058,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   // ---------- acquisition ----------
   function start() { if (S.ptime > 0 && spec.live >= S.ptime - 1e-9) { spec = newSpec(); } acquiring = true; acqBtn(); }
-  function stop() { acquiring = false; acqBtn(); }
+  function stop() { acquiring = false; acqBtn(); liveReadouts(); }   /* the readouts refresh on a 150 ms timer while counting; on Stop they show the final spectrum at once (break-it test, 2026-11-14) */
   function acqBtn() { const b = $('acq'); b.textContent = acquiring ? 'Stop' : 'Acquire'; b.classList.toggle('rec', !acquiring); b.classList.toggle('primary', acquiring); }
   function clearSpec() { spec = newSpec(); cand = null; allReadouts(); }
 

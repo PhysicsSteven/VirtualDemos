@@ -494,7 +494,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* the model dose as a glow along the beam, as wide as a pencil beam spreads by multiple scattering */
     ctx.save(); ctx.beginPath(); ctx.rect(b.x0, b.y0, b.x1 - b.x0, b.y1 - b.y0); ctx.clip();
     const pk = peak(), cols = Math.max(40, Math.round((b.x1 - b.x0) / (3 * p))), glowC = d ? [255, 150, 70] : [236, 96, 24];
-    for (let i = 0; i < cols; i++) { const z0 = i / cols * S.zmax, z1 = (i + 1) / cols * S.zmax, u = doseAt(S.D, (z0 + z1) / 2) / pk.d; if (u < 0.01) continue;
+    for (let i = 0; i < cols; i++) { const z0 = i / cols * S.zmax, z1 = (i + 1) / cols * S.zmax, u = doseAt(S.D, (z0 + z1) / 2) / pk.d; if (!(u >= 0.01)) continue;   /* !(u >= …) also skips NaN: no dose at all gives 0/0 (break-it test, 2026-11-14) */
       const hw = Math.min((b.y1 - b.y0) / 2, Math.max(5 * p, 3 * spreadAt((z0 + z1) / 2) * ky)), g = ctx.createLinearGradient(0, cy - hw, 0, cy + hw), a = (d ? 0.6 : 0.5) * Math.min(1, u);
       g.addColorStop(0, `rgba(${glowC},0)`); g.addColorStop(0.5, `rgba(${glowC},${a})`); g.addColorStop(1, `rgba(${glowC},0)`);
       const xa = Math.round(b.x0 + z0 * sx), xb = Math.round(b.x0 + z1 * sx); ctx.fillStyle = g; ctx.fillRect(xa, cy - hw, xb - xa, 2 * hw); }
@@ -577,7 +577,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function glowTexture() {
     const cv = g3.glowCv, c = cv.getContext('2d'), w = cv.width, h = cv.height, pk = peak(), dk = dark(), col = dk ? [255, 150, 70] : [236, 96, 24], ky = sc3() * (S.wide ? 5 : 1), n = 256;
     c.clearRect(0, 0, w, h);
-    for (let i = 0; i < n; i++) { const z0 = i / n * S.zmax, z1 = (i + 1) / n * S.zmax, u = doseAt(S.D, (z0 + z1) / 2) / pk.d; if (u < 0.01) continue;
+    for (let i = 0; i < n; i++) { const z0 = i / n * S.zmax, z1 = (i + 1) / n * S.zmax, u = doseAt(S.D, (z0 + z1) / 2) / pk.d; if (!(u >= 0.01)) continue;   /* !(u >= …) also skips NaN: no dose at all gives 0/0 (break-it test, 2026-11-14) */
       const hw = Math.min(h / 2, Math.max(4, 3 * spreadAt((z0 + z1) / 2) * ky / HZ * h / 2)), g = c.createLinearGradient(0, h / 2 - hw, 0, h / 2 + hw), a = (dk ? 0.55 : 0.4) * Math.min(1, u);
       g.addColorStop(0, `rgba(${col},0)`); g.addColorStop(0.5, `rgba(${col},${a})`); g.addColorStop(1, `rgba(${col},0)`);
       const xa = Math.floor(i / n * w), xb = Math.ceil((i + 1) / n * w); c.fillStyle = g; c.fillRect(xa, h / 2 - hw, xb - xa, 2 * hw); }

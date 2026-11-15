@@ -1302,7 +1302,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('yL').addEventListener('click', () => setPlot('L')); $('yT').addEventListener('click', () => setPlot('T'));
   for (const b of document.querySelectorAll('[data-s]')) b.addEventListener('click', () => { S.speed = +b.dataset.s; syncUI(); });
   const playBtn = $('play');
-  function setPlaying(on) { playing = on; playBtn.textContent = on ? 'Pause' : 'Play'; playBtn.classList.toggle('primary', !on); if (on && S.lt >= LT_MAX - 1e-6) S.lt = LT_MIN; holdT = 0; }
+  function setPlaying(on) { playing = on; playBtn.textContent = on ? 'Pause' : 'Play'; playBtn.classList.toggle('primary', !on); if (on && S.lt >= LT_MAX - 1e-6) S.lt = LT_MIN; holdT = 0;
+    if (!on) { $('age').value = S.lt; readouts(); } }   /* readouts refresh every 100 ms while playing; on Pause they show the age where it stopped (break-it test, 2026-11-14) */
   playBtn.addEventListener('click', () => setPlaying(!playing));
   $('restart').addEventListener('click', () => { setAge(LT_MIN); if (!playing && !reduce) setPlaying(true); });
 

@@ -89,7 +89,9 @@ async function runDemo(browser, cmp, base, d) {
   let shots = 0, steps = 0;
   page.on('pageerror', (e) => errs.push('page error: ' + e.message.split('\n')[0]));
   page.on('console', (m) => { if (m.type() === 'error' && !/fonts\.g|ERR_FAILED|Failed to load resource/.test(m.text())) errs.push('console error: ' + m.text().split('\n')[0]); });
-  page.on('dialog', (dl) => dl.dismiss().catch(() => {}));
+  /* dialogs are dismissed, except Reset all's "clears the readings you recorded" question, which a student answers yes to */
+  let acceptDialog = false;
+  page.on('dialog', (dl) => (acceptDialog ? dl.accept() : dl.dismiss()).catch(() => {}));
   page.on('popup', (p) => p.close().catch(() => {}));
   const t0 = Date.now();
   await page.goto(base + 'demos/' + d + '.html', { waitUntil: 'load' });
@@ -243,7 +245,7 @@ async function runDemo(browser, cmp, base, d) {
     /* Reset all puts every control back */
     const ra = await page.$('#vdReset');
     if (ra && await ra.isVisible()) {
-      await ra.click(); await page.waitForTimeout(600);
+      acceptDialog = true; await ra.click(); await page.waitForLoadState('load').catch(() => {}); await page.waitForTimeout(600); acceptDialog = false;
       const now = await page.evaluate(CONTROLS), was = new Map(opening.map((c) => [c.key, c.value]));
       const off = now.filter((c) => was.has(c.key) && !live.has(c.key) && String(was.get(c.key)) !== String(c.value)).map((c) => c.key + ' is ' + JSON.stringify(c.value) + ', opened at ' + JSON.stringify(was.get(c.key)));
       const s = await probe('Reset all');
