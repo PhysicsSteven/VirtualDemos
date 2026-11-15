@@ -90,7 +90,8 @@ table.rows input:focus { border-color: var(--accent); }
 /* too narrow for the panel beside the viewbar and the Tools button: it drops below them, over the empty track */
 @media (min-width: 821px) and (max-width: 1100px) { .instr { left: 240px; top: 52px; } }
 /* the viewbar wraps before it reaches the Tools button; where it wraps to two rows the panel sits below both */
-@media (min-width: 821px) { .viewbar { max-width: calc(100% - 96px); } }
+/* at every width: on a 400 px phone the Tools button sat on top of the ×1/20 speed button (student view, 2026-11-15) */
+.viewbar { max-width: calc(100% - 96px); }
 @media (min-width: 821px) and (max-width: 920px) { .instr { top: 92px; } }
 @media (max-width: 820px) { .instr { position: static; margin: 0; max-width: none; justify-content: center; } }
 </style>
@@ -262,11 +263,11 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
   $('go').addEventListener('click', () => { if (S.done) reset(); if (reduce) { S.t = tEnd(); S.done = true; draw(); readouts(); return; } setRun(!S.run); });
   $('back').addEventListener('click', reset);
   can.addEventListener('keydown', (e) => { if (e.key === ' ') { $('go').click(); e.preventDefault(); } });
+  const nearHit = () => Math.abs(S.t - tHit()) < C().tc + 0.05 || (S.t > tHit() && S.t < tHit() + C().tc);
   function tick(dt) {
     if (!S.run) return;
     // slow motion only near the hit, so the approach does not drag
-    const near = Math.abs(S.t - tHit()) < C().tc + 0.05 || (S.t > tHit() && S.t < tHit() + C().tc);
-    S.t += dt * (near ? S.speed : 1);
+    S.t += dt * (nearHit() ? S.speed : 1);
     if (S.t >= tEnd()) { S.t = tEnd(); S.done = true; setRun(false); }
     draw(); readouts();
   }
@@ -442,7 +443,9 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
     ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     if (comp > 0 && !S.blind) { const a = Q(comp / 2, 0, AXZ + 0.032); a[1] = Math.max(a[1], yTop); ctx.fillStyle = T.ink; ctx.font = `700 ${11 * p}px ${T.mono}`; ctx.fillText(`${S.bump === 'clay' ? 'squashed' : 'pushed in'} ${f(comp * 1000, 1)} mm`, a[0], a[1]); }
     if (Math.abs(cs.v) > 1e-6) { const [ax, ay0] = Q(cs.x - CL / 2, 0, 0.09), ay = Math.max(ay0, yTop + 14 * p), L = cs.v * 60 * p; ctx.strokeStyle = T.vel; ctx.fillStyle = T.vel; ctx.lineWidth = 2.5 * p; ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(ax + L, ay); ctx.stroke();
-      const s = Math.sign(L); ctx.beginPath(); ctx.moveTo(ax + L + s * 7 * p, ay); ctx.lineTo(ax + L, ay - 5 * p); ctx.lineTo(ax + L, ay + 5 * p); ctx.closePath(); ctx.fill(); ctx.font = `700 ${11 * p}px ${T.mono}`; ctx.fillStyle = T.velInk; ctx.fillText(`${f(cs.v, 3)} m/s`, ax, ay - 12 * p); }
+      const s = Math.sign(L); ctx.beginPath(); ctx.moveTo(ax + L + s * 7 * p, ay); ctx.lineTo(ax + L, ay - 5 * p); ctx.lineTo(ax + L, ay + 5 * p); ctx.closePath(); ctx.fill(); ctx.font = `700 ${11 * p}px ${T.mono}`;
+      /* a halo, so the speed stays readable where it is pushed down onto the cart on a phone (student view, 2026-11-15) */
+      ctx.lineWidth = 3 * p; ctx.lineJoin = 'round'; ctx.strokeStyle = T.canvas; ctx.strokeText(`${f(cs.v, 3)} m/s`, ax, ay - 12 * p); ctx.fillStyle = T.velInk; ctx.fillText(`${f(cs.v, 3)} m/s`, ax, ay - 12 * p); }
     ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillText('drag to turn, wheel to zoom', W - 10 * p, h3 - 6 * p);
   }
   function draw() {
@@ -524,6 +527,8 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
     ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText(`force sensor (N) against time, ${S.rate >= 1000 ? S.rate / 1000 + ' kHz' : S.rate + ' Hz'} samples`, gx0, gy0 - 4);
     ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillText(f(Fh, Fh < 10 ? 2 : 0), gx0 - 3, Yg(Fh)); ctx.fillText('0', gx0 - 3, Yg(0));
     ctx.textBaseline = 'top'; ctx.fillText(`${f((t1 - t0) * 1000, 0)} ms shown`, gx0 + gw, gy0 + gh + 3);
+    /* the approach plays in real time and only the hit in slow motion, so say when it is slowed (student view, 2026-11-15) */
+    if (S.run && S.speed < 1 && nearHit()) { ctx.fillStyle = T.accent; ctx.font = `700 ${11 * p}px ${T.ui}`; ctx.fillText(`slow motion ×1/${Math.round(1 / S.speed)}`, gx0 + gw - 6 * p, gy0 + 6 * p); }
     const vis = S.pts.filter((q) => q[0] >= t0 && q[0] <= t1 && q[0] <= S.t);
     if (vis.length) {
       if (!S.blind) { ctx.fillStyle = T.force; ctx.globalAlpha = 0.18; ctx.beginPath(); ctx.moveTo(Xg(vis[0][0]), Yg(0)); for (const [t, F] of vis) ctx.lineTo(Xg(t), Yg(F)); ctx.lineTo(Xg(vis[vis.length - 1][0]), Yg(0)); ctx.closePath(); ctx.fill(); ctx.globalAlpha = 1; }

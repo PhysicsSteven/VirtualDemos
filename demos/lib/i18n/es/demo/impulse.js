@@ -93,5 +93,7 @@ VDI18N.add('es', 'demo/impulse', {
 "force sensor (N) against time, {#} Hz samples":
   "sensor de fuerza (N) en función del tiempo, muestras a {#} Hz",
 "Launch the cart and let it bounce off first.":
-  "Lanza el carrito y déjalo rebotar primero."
+  "Lanza el carrito y déjalo rebotar primero.",
+"slow motion ×{#}/{#}":
+  "cámara lenta ×{#}/{#}"
 });

@@ -21,6 +21,8 @@
 .stage canvas { position: absolute; inset: 0; display: block; outline: none; }
 .stage canvas:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
 .viewbar { position: absolute; top: 10px; left: 10px; z-index: 2; display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+/* wrap before the Tools button: on a 400 px phone Tools sat on top of the Flat button (student view, 2026-11-15) */
+.stage > .viewbar, .stage > .viewbar.vd-made { max-width: calc(100% - 96px); }
 .blindtag { position: absolute; right: 10px; bottom: 8px; z-index: 3; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--canvas); background: var(--ink); border-radius: 5px; padding: 3px 8px; }
 .btn { font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
 .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--canvas); font-weight: 700; }
@@ -446,7 +448,8 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
     let ne = 0; if (S.ring && !S.blind) for (let i = 0; i < 16; i++) { const th = i / 16 * 2 * Math.PI - S.ringPhase, br = ext * 0.012; g.m4.makeScale(br, br, br).setPosition(S.cx + pr * Math.cos(th), S.cy + pr * Math.sin(th), 0); g.elec.setMatrixAt(ne++, g.m4); }
     g.elec.count = ne; g.elec.instanceMatrix.needsUpdate = true;
     g.dirM.color = col3(S.ring ? T.cur : T.path, '#a7740b');
-    g.dirs.forEach((c, k) => { const th = k ? 3 * Math.PI / 2 : Math.PI / 2, s = ext * 0.03; c.position.set(S.cx + pr * Math.cos(th), S.cy + pr * Math.sin(th), 0.001); c.scale.set(s * 0.6, s, s * 0.6); c.rotation.set(0, 0, th + Math.PI); });
+    g.dirs.forEach((c, k) => { const th = k ? 3 * Math.PI / 2 : Math.PI / 2, s = ext * 0.03; c.position.set(S.cx + pr * Math.cos(th), S.cy + pr * Math.sin(th), 0.001); c.scale.set(s * 0.6, s, s * 0.6); c.rotation.set(0, 0, th); });
+    /* the cone's tip is +y, so a turn of th points it counterclockwise, the way the path is followed; th + π pointed both cones clockwise, against the flat view and the readouts (student view, 2026-11-15) */
     g.r.render(g.scene, g.cam);
     const tmp = new THREE.Vector3();
     return (q) => { tmp.set(q[0], q[1], q[2]).project(g.cam); return [x0 + (tmp.x + 1) / 2 * w, y0 + (1 - tmp.y) / 2 * h, tmp.z]; };
@@ -477,7 +480,14 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
     const slow = 6 / window_(S.w);
     if (narrow) { const vh = Math.min(W, Hh * 0.5); drawView(0, 0, W, vh, f); const ph = (Hh - vh - 16 * p) / 2; drawIt(8 * p, vh + 4 * p, W - 8 * p, vh + ph, f); drawEr(8 * p, vh + ph + 10 * p, W - 8 * p, Hh - 8 * p, f); }
     else { const vw = W * SPL.f(); drawView(0, 0, vw, Hh, f); const ph = (Hh - 30 * p) / 2; drawIt(vw + 6 * p, 10 * p, W - 10 * p, 10 * p + ph, f); drawEr(vw + 6 * p, 20 * p + ph, W - 10 * p, Hh - 10 * p, f); }
-    txt(S.w.kind === 'steady' ? 'steady current' : `time slowed down ${Math.round(slow).toLocaleString('en-US')} times`, 10 * p, 14 * p, { s: 10, c: T.muted });
+    /* below the Play/Step/Reset bar: at the top corner the bar covered this time scale (student view, 2026-11-15);
+       beside the bar's last row when it fits there (a phone), so it stays clear of the "B up" label */
+    const rateS = S.w.kind === 'steady' ? 'steady current' : `time slowed down ${Math.round(slow).toLocaleString('en-US')} times`;
+    const vb = stage.querySelector('.viewbar'), lastK = vb && vb.lastElementChild;
+    let tx = 12 * p, ty = vb && vb.offsetHeight ? vb.offsetTop + vb.offsetHeight + 10 * p : 14 * p;
+    if (lastK && lastK.offsetWidth) { ctx.font = `700 ${10.5 * p}px ${T.ui}`; const bx = vb.offsetLeft + lastK.offsetLeft + lastK.offsetWidth + 10 * p;
+      if (bx + ctx.measureText(rateS).width < (narrow ? W : W * SPL.f()) - 90 * p) { tx = bx; ty = vb.offsetTop + lastK.offsetTop + lastK.offsetHeight / 2; } }
+    txt(rateS, tx, ty, { s: 10.5, b: 1, c: T.muted });
   }
 
   function tick(dt) {

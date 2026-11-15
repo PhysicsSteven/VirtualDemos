@@ -46,5 +46,7 @@ VDI18N.add('en', 'demo/impulse', [
 "A soft spring: a long, low force. Same bounciness as the stiff one.",
 "Clay: the cart barely bounces back (e = {#}), so the impulse is smaller.",
 "force sensor (N) against time, {#} Hz samples",
-"Launch the cart and let it bounce off first."
+"Launch the cart and let it bounce off first.",
+"Close",
+"slow motion ×{#}/{#}"
 ]);

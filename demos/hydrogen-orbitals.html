@@ -692,6 +692,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('tagSub').textContent = stB
       ? `ΔE = ${minus(dE().toFixed(2))} eV · beat ${isFinite(beatT()) ? beatT().toFixed(3) + ' fs' : 'none'}`
       : `n = ${S.n}, l = ${S.l}, m = ${minus(S.m)} · E = ${minus(st.E.toFixed(3))} eV`;
+    /* the playback rate on its own line, 1 s on screen = beat/4 × speed: the clock showed t but not how slowed it is (student view, 2026-11-15) */
+    if (stB && isFinite(beatT())) { const rl = document.createElement('div'); rl.textContent = `slow motion: 1 s = ${(beatT() / 4 * S.speed).toPrecision(3)} fs`; $('tagSub').appendChild(rl); }
     $('rE').textContent = minus(st.E.toFixed(3)) + ' eV';
     $('rQ').textContent = `${S.n}, ${S.l}, ${minus(S.m)}`;
     $('rRad').textContent = String(S.n - S.l - 1) + (st.nodes.length !== S.n - S.l - 1 ? ' (found ' + st.nodes.length + ')' : '');
@@ -1907,6 +1909,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   for (const b of document.querySelectorAll('#speedSeg button')) b.addEventListener('click', () => {
     S.speed = +b.dataset.s;
     for (const c of document.querySelectorAll('#speedSeg button')) c.setAttribute('aria-pressed', String(c === b));
+    updateReadouts();   /* the rate in the stage tag follows the speed (student view, 2026-11-15) */
   });
   function updateClock() {
     if (!mixActive() || !isFinite(beatT())) return;

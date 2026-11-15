@@ -69,5 +69,6 @@ VDI18N.add('en', 'demo/induced-electric-field', [
 "{#} nWb",
 "I rises steadily from {#} to I₀ in a time {#}/α, then stays",
 "Ramp: α = {#}/(rise time)",
+"Close",
 "Drag the path; drag elsewhere to turn."
 ]);

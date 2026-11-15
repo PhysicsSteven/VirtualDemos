@@ -258,6 +258,8 @@ VDI18N.add('es', 'demo/hydrogen-orbitals', {
   "Activa un segundo estado para ver moverse la nube.",
 "ψ = (ψ<sub>A</sub> e<sup>−iE<sub>A</sub>t/ħ</sup> + ψ<sub>B</sub> e<sup>−iE<sub>B</sub>t/ħ</sup>)/√{#}, evolved exactly. The two parts interfere, and the pattern repeats once per beat period. Colors drop the common phase e<sup>−iE<sub>A</sub>t/ħ</sup>, which nothing can measure.":
   "ψ = (ψ<sub>A</sub> e<sup>−iE<sub>A</sub>t/ħ</sup> + ψ<sub>B</sub> e<sup>−iE<sub>B</sub>t/ħ</sup>)/√{#}, evolucionada de forma exacta. Las dos partes interfieren y el patrón se repite una vez por periodo de batido. Los colores omiten la fase común e<sup>−iE<sub>A</sub>t/ħ</sup>, que nada puede medir.",
+"orbital":
+  "orbital",
 "<span>Points</span>":
   "<span>Puntos</span>",
 "Number of points":
@@ -310,8 +312,6 @@ VDI18N.add('es', 'demo/hydrogen-orbitals', {
   "Las distancias usan el radio de Bohr a₀ para un núcleo infinitamente pesado. Las energías usan {#} eV, el valor medido para el hidrógeno, que incluye la pequeña corrección por el movimiento del protón.",
 "The Bohr model puts the electron on a circle of radius n²a₀. Here the electron has no orbit, only a probability cloud, and the energies still come out as −{#} eV/n². Compare with the Bohr model in <a>Spectra Explorer</a>.":
   "El modelo de Bohr pone al electrón en un círculo de radio n²a₀. Aquí el electrón no tiene órbita, solo una nube de probabilidad, y aun así las energías salen −{#} eV/n². Compara con el modelo de Bohr en <a>Explorador de espectros</a>.",
-"orbital":
-  "orbital",
 "A cut through the nucleus. Dashed lines are nodes, where ψ = {#}. Hover to read |ψ|². Try the xy plane for orbitals that vanish in the xz plane.":
   "Un corte que pasa por el núcleo. Las líneas punteadas son nodos, donde ψ = {#}. Pasa el cursor para leer |ψ|². Prueba el plano xy para los orbitales que se anulan en el plano xz.",
 "s along x = y":
@@ -374,6 +374,8 @@ VDI18N.add('es', 'demo/hydrogen-orbitals', {
   "Mitad 1s y mitad 2p<sub>z</sub>. Las dos partes interfieren, así que la nube oscila arriba y abajo a lo largo de z una vez cada h/ΔE = {#} fs. Esa carga oscilante emite la línea Lyman α a {#} nm.",
 "ΔE = {#} eV · beat {#} fs":
   "ΔE = {#} eV · batido {#} fs",
+"slow motion: {#} s = {#} fs":
+  "cámara lenta: {#} s = {#} fs",
 "Yes. The center of the electron cloud (gold dot) moves back and forth on a line, so the atom radiates at λ = {#} nm.":
   "Sí. El centro de la nube electrónica (punto dorado) se mueve de un lado a otro sobre una línea, así que el átomo emite a λ = {#} nm.",
 "phase":
