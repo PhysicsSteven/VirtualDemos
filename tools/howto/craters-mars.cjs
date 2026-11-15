@@ -11,9 +11,16 @@ require('./lib.cjs')({ demo: 'craters', title: 'Craters, Cooling and Surface Age
   state.caption = 'Sample reading: date the southern highlands of Mars by counting craters';
   await r.secs(2.6);
 
-  state.caption = 'Switch to Flat, where the craters can be marked';
-  await r.click('#dimSeg button[data-dim="flat"]');
-  await r.secs(1.0);
+  /* counting opens in the Flat view since 2026-11-15; click Flat only if the demo opened in 3D */
+  const flat = '#dimSeg button[data-dim="flat"]';
+  if (await p.evaluate((s) => document.querySelector(s).getAttribute('aria-pressed') === 'true' || document.querySelector(s).classList.contains('on'), flat)) {
+    state.caption = 'Counting opens in Flat, where the craters can be marked';
+    state.arrow = { rect: await r.box(flat) }; await r.secs(1.4); state.arrow = null;
+  } else {
+    state.caption = 'Switch to Flat, where the craters can be marked';
+    await r.click(flat);
+    await r.secs(1.0);
+  }
 
   /* the craters to count, as the demo decides them, in rows so the pointer sweeps across the field */
   const list = await p.evaluate(() => { const S = window.__cr.S, L = S.surf.L;

@@ -1,8 +1,9 @@
 // How this works: Circular Apertures and Resolution, Astro 2203 worksheet "intro-resolution". Part 1's first reading: Hubble and
 // two stars (550 nm, mirror 2.40 m), the cursor at the midpoint, the stars moved closer until the brightness midway is 0.735 or
-// less at the smallest distance. Expected (Airy pattern of each star, I₀ one star's peak): 0.56 ly gives Δθ = 0.56/2.0e6 = 0.2800
-// µrad and I/I₀ = 0.7322; 0.55 ly gives 0.7613, too bright, so the answer is 0.56 ly. The rule: 1.22 λ/D = 1.22 × 550/2.40/1000
-// = 0.2796 µrad.
+// less at the smallest distance. The stars are 2.48 million ly away (the Andromeda galaxy's distance, since 2026-11-15).
+// Expected (Airy pattern of each star, I₀ one star's peak, read from the demo): 0.70 ly gives Δθ = 0.70/2.48e6 = 0.2823 µrad and
+// I/I₀ = 0.7192; 0.69 ly gives 0.7425, too bright, so the answer is 0.70 ly. The rule: 1.22 λ/D = 1.22 × 550/2.40/1000 = 0.2796 µrad,
+// which the demo turns into 0.693 ly at 2.48 million ly.
 require('./lib.cjs')({ demo: 'resolution', title: 'Resolving Stars with a Telescope', query: '?ws=intro-resolution' }, async (r) => {
   const { state, p, W } = r;
   const scrollTo = async (y, s) => { const y0 = await p.evaluate(() => scrollY), n = Math.round(s * r.FPS);
@@ -24,16 +25,16 @@ require('./lib.cjs')({ demo: 'resolution', title: 'Resolving Stars with a Telesc
   const cv = await r.box('#curve');
   state.zoom = [cv[0], cv[1] + 20, 900, 506];
   await r.moveTo(...(await thumb('#sSep')), 0.7);
-  await r.dragWhile(-1, 0, async () => (await sep()) > 0.60);
+  await r.dragWhile(-1, 0, async () => (await sep()) > 0.74);
   state.arrow = { rect: await r.box('#wrapSep .slider-head') };
   await r.secs(1.0);
 
-  state.caption = 'Then step with the arrow keys: at 0.55 ly the middle is too bright, 0.7613';
-  for (let i = 0; i < 8 && (await sep()) > 0.555; i++) { await p.keyboard.press('ArrowLeft'); await r.secs(0.45); }
+  state.caption = 'Then step with the arrow keys: at 0.69 ly the middle is too bright, 0.7425';
+  for (let i = 0; i < 8 && (await sep()) > 0.695; i++) { await p.keyboard.press('ArrowLeft'); await r.secs(0.45); }
   r.check.over = [await r.text('#oSep'), (await mid()).toFixed(4)];
   await r.secs(1.6);
 
-  state.caption = 'Step back to 0.56 ly: 0.7322, the smallest distance at 0.735 or less, just resolved';
+  state.caption = 'Step back to 0.70 ly: 0.7192, the smallest distance at 0.735 or less, just resolved';
   await p.keyboard.press('ArrowRight');
   await r.secs(0.4);
   r.check.sep = [await r.text('#oSep'), (await mid()).toFixed(4)];

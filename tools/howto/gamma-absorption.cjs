@@ -1,5 +1,5 @@
 // How this works: Gamma Spectroscopy, worksheet "Absorbing Gamma Rays: Shielding and Distance". The first readings: the Absorption
-// coefficient setup (cesium 137 at 5 cm, its region of interest on the 661.7 keV photopeak, 60 s live shown at ×100), no lead, then
+// coefficient setup (cesium 137 at 5 cm, its region of interest on the 661.7 keV photopeak, 60 s live shown at ×10, the clock the setup opens at since 2026-11-15), no lead, then
 // the 1124 mg/cm² sheet, each acquired after Clear and recorded. Expected (key rows 1 and 2): 162.74 and 142.79 counts per second;
 // narrow beam attenuation with μ/ρ = 0.110 cm²/g (XCOM) predicts a ratio e^(−0.110 × 1.124) = 0.884. Counts are random, and each visit draws the source activity between 0.8 and 1.2 times its label, so the rates differ from the key by up to about 20% while their ratio does not.
 require('./lib.cjs')({ demo: 'gamma-spectroscopy', title: 'Gamma Spectroscopy' }, async (r) => {
@@ -34,17 +34,17 @@ require('./lib.cjs')({ demo: 'gamma-spectroscopy', title: 'Gamma Spectroscopy' }
   state.ptr = [700, 420]; await p.mouse.move(...state.ptr);
 
   state.caption = 'Sample readings: cesium 137 with no lead, then through one lead sheet';
-  await r.secs(2.4);
+  await r.secs(2.0);
 
   state.caption = 'Choose Absorption coefficient. The region of interest is on the photopeak';
   await r.click('[data-p="pb"]');
   await r.secs(0.8);
 
-  state.caption = 'Clear, and acquire 60 s of live time with no lead (shown at ×100)';
+  state.caption = 'Clear, and acquire 60 s of live time with no lead (shown at ×10)';
   await acquire();
   r.check.r1 = await p.evaluate(() => JSON.stringify(window.vdReadingRow()));
   state.caption = 'Record the reading: the net rate in the region';
-  await record(1.6);
+  await record(1.4);
 
   state.caption = 'Add the 1124 mg/cm² lead sheet, Clear, acquire again, and record';
   await r.scrollRail('#pbChips');
@@ -52,8 +52,8 @@ require('./lib.cjs')({ demo: 'gamma-spectroscopy', title: 'Gamma Spectroscopy' }
   await r.secs(0.6);
   await acquire();
   r.check.r2 = await p.evaluate(() => JSON.stringify(window.vdReadingRow()));
-  await record(1.6);
+  await record(1.4);
 
   state.caption = 'Go on through the stacks up to 14.0 g/cm², then send the table to the worksheet';
-  await exportEnd(2.4);
+  await exportEnd(2.0);
 });

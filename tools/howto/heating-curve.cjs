@@ -38,7 +38,7 @@ require('./lib.cjs')({ demo: 'states-of-matter', title: 'Heating Curve and Laten
   await r.secs(2.2);
   state.arrow = null; state.zoom = null;
 
-  state.caption = 'Pick the 5× clock and Start. The ice warms at a steady rate';
+  state.caption = 'Pick the 5× clock and press Play. The ice warms at a steady rate';
   await pageTo(0);
   await r.click('#speedSeg [data-s="1"]');
   await r.click('#go');

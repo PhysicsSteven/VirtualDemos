@@ -9,10 +9,10 @@ require('./lib.cjs')({ demo: 'magnetic-force', title: 'Magnetic Motion and the H
   /* Blind on before the first frame (its box is in the Lab fold at the foot of the sidebar); the video points at what it hides */
   await p.evaluate(() => { const c = document.querySelector('#labBlind'); c.checked = true; c.dispatchEvent(new Event('change', { bubbles: true })); });
   await p.evaluate(() => { document.querySelector('.rail').scrollTop = 0; const t = document.getElementById('vdTools'); if (t) t.style.visibility = 'hidden'; });   /* the measuring tools never appear */
-  /* pan the drawing up (drag on empty space), so the launch ring at the foot of the circle stays clear of the captions */
-  await p.mouse.move(can[0] + 600, can[1] + 300); await p.mouse.down(); await p.mouse.move(can[0] + 600, can[1] + 185, { steps: 8 }); await p.mouse.up();
-  await p.clock.runFor(200);
   const hp = async (id) => { const h = (await p.evaluate(() => __mf.handles())).find((q) => q.id === id); return [can[0] + h.pt[0], can[1] + h.pt[1]]; };
+  /* the launch ring sits at the foot of the circle, near the bottom of the window, and Circular motion has no pan (only Free
+     particle does), so the timing step puts its caption at the top (state.capTop) to keep the ring in view */
+  r.check.launchY = (await hp('launch'))[1];
 
   state.caption = 'Sample reading: a proton at 1.0 × 10⁵ m/s in 0.10 T. Measure its radius and period';
   await r.secs(3.0);
@@ -41,6 +41,7 @@ require('./lib.cjs')({ demo: 'magnetic-force', title: 'Magnetic Motion and the H
   state.arrow = null; state.zoom = null;
 
   state.caption = 'Time one turn: start the timer at the launch ring, stop it one turn later';
+  state.capTop = true;
   await r.scrollRail('#timerBtn');
   const tb = await r.box('#timerBtn'), Tp = 2 * Math.PI * 1.67262192595e-27 / (1.602176634e-19 * 0.1);
   await r.moveTo(tb[0] + tb[2] / 2, tb[1] + tb[3] / 2, 0.6);
@@ -56,7 +57,7 @@ require('./lib.cjs')({ demo: 'magnetic-force', title: 'Magnetic Motion and the H
   r.check.timer = await r.text('#timerOut');
   state.arrow = { rect: await r.box('#timerOut') };
   await r.secs(1.4);
-  state.arrow = null;
+  state.arrow = null; state.capTop = false;
 
   state.caption = 'Capture the reading. It goes into the table';
   await r.scrollRail('#capture');
