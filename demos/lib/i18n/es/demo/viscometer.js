@@ -132,6 +132,8 @@ VDI18N.add('es', 'demo/viscometer', {
   "Modelo: arrastre F = {#}πηrv × K(d/D) × C_D N_R/{#}, con la curva de arrastre estándar de Clift, Grace y Weber ({#} + 3N_R/{#} de Oseen por debajo de N_R = {#}) y el factor de pared K de Haberman y Sayre para una esfera en el eje de un tubo en flujo lento (la K que aplicas). A N_R mayores las paredes importan menos: el factor se debilita según Di Felice ({#}), cuyo ajuste cubre N_R hasta aproximadamente {#}. El movimiento de la esfera incluye el empuje y la masa agregada ½ρ_f V. Densidades en kg/m³: acero {#}, vidrio {#}, nailon {#}. Líquidos a {#} °C: glicerol {#} y η = {#} Pa·s; aceite de ricino {#} y {#} Pa·s; aceite de motor (SAE {#} típico) {#} y {#} Pa·s; agua {#} y {#} mPa·s.",
 "tube {#} mm wide, ball {#} mm, to scale":
   "tubo de {#} mm de ancho, esfera de {#} mm, a escala",
+"t = {#} s since release, shown ×{#} (slow motion)":
+  "t = {#} s desde que se soltó, mostrado ×{#} (cámara lenta)",
 "t = {#} s since release, shown ×{#}":
   "t = {#} s desde que se soltó, mostrado ×{#}",
 "Water, {#} °C: ρ = {#} kg/m³, η = {#} mPa·s. Fully open, the valve passes {#} mL/s through the {#} mm pipe.":
@@ -226,12 +228,16 @@ VDI18N.add('es', 'demo/viscometer', {
   "Agua: unas {#} veces menos viscosa que el glicerol. Aquí todas las esferas caen demasiado rápido para la ley de Stokes; mira lo que dan los tiempos.",
 "Collect some water in the cylinder first.":
   "Primero recolecta algo de agua en la probeta.",
-"The valve was moved after this water was collected. Empty the cylinder and collect again.":
-  "La válvula se movió después de recolectar esta agua. Vacía la probeta y recolecta de nuevo.",
+"Close":
+  "Cerrar",
+"Open or close the outlet valve by {#} percent (Shift: {#} percent)":
+  "Abre o cierra la válvula de salida {#} por ciento (Shift: {#} por ciento)",
 "Mystery liquid (water and glycerol) · {#} mm pipe · dye a straight thread":
   "Líquido misterioso (agua y glicerol) · tubería de {#} mm · colorante en un hilo recto",
 "<span>no: inertia dominates (drag {#} times Stokes')</span>":
   "<span>no: domina la inercia (arrastre {#} veces el de Stokes)</span>",
 "Mystery liquid: it was η = {#} mPa·s.":
-  "Líquido misterioso: era η = {#} mPa·s."
+  "Líquido misterioso: era η = {#} mPa·s.",
+"The valve was moved after this water was collected. Empty the cylinder and collect again.":
+  "La válvula se movió después de recolectar esta agua. Vacía la probeta y recolecta de nuevo."
 });

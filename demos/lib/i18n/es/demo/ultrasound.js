@@ -136,16 +136,18 @@ VDI18N.add('es', 'demo/ultrasound', {
   "Apagar el ecógrafo",
 "pulse":
   "pulso",
-"pulse and echoes shown {#} {#}× slower":
-  "pulso y ecos mostrados {#} {#}× más lentos",
+"pulse and echoes":
+  "pulso y ecos",
+"shown {#} {#}× slower":
+  "mostrados {#} {#}× más lentos",
 "echo, r = {#}":
   "eco, r = {#}",
 "echo pressure (radio frequency trace)":
   "presión del eco (traza de radiofrecuencia)",
-"off the top: lower the gain":
-  "se sale por arriba: baja la ganancia",
 "echo, r = -{#}":
   "eco, r = -{#}",
+"off the top: lower the gain":
+  "se sale por arriba: baja la ganancia",
 "water":
   "agua",
 "air":
@@ -224,6 +226,8 @@ VDI18N.add('es', 'demo/ultrasound', {
   "Arrastra la pantalla para el cursor; arrastra en otro lugar para girar.",
 "Shift of the fastest blood":
   "Corrimiento de la sangre más rápida",
+"pulse and echoes shown {#} {#}× slower":
+  "pulso y ecos mostrados {#} {#}× más lentos",
 "Record reading":
   "Registrar esta lectura",
 "To scale, except the blood cells (enlarged, {#}× slower) and the wavefronts ({#} mm apart; really {#} mm).":

@@ -122,6 +122,11 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 .mticks span[aria-pressed="true"]::before { border-color: var(--accent); }
 .mticks span:hover { color: var(--ink); }
 #morph.off { opacity: 0.55; }
+/* off the slider (a preset that is not one of the instruments, or edited bars), the thumb still sat at the last instrument and read
+   as "this is the trumpet": it is drawn as an empty dashed ring on a plain track instead (student view calls, 2026-11-15) */
+#morph.off { -webkit-appearance: none; appearance: none; height: 16px; background: linear-gradient(var(--muted), var(--muted)) center / 100% 3px no-repeat; border-radius: 2px; }
+#morph.off::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 14px; height: 14px; border-radius: 50%; background: var(--canvas); border: 2px dashed var(--muted); }
+#morph.off::-moz-range-thumb { width: 10px; height: 10px; border-radius: 50%; background: var(--canvas); border: 2px dashed var(--muted); }
 .morph-out { display: block; font-weight: 700; font-size: 0.95rem; color: var(--accent); margin-bottom: 4px; }
 .morph-out.custom { color: var(--muted); font-weight: 400; }
 
@@ -1160,7 +1165,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
     }
     const kindTxt = kind === 'string' ? 'string modes' : kind === 'open' ? 'air displacement in a pipe open at both ends' : 'air displacement in a pipe closed at the top: odd modes only';
-    const title = pick([`Harmonic ladder: ${kindTxt}, slowed so f₁ is drawn at 0.5 Hz`, `Ladder: ${kindTxt}`, kind === 'closed' ? 'Ladder: closed pipe, odd only' : `Ladder: ${kind === 'string' ? 'string' : 'open pipe'}`], W - 40 * ls, 11, true);
+    /* on a phone the title fell back to one without the slowing: the shorter titles keep it (student view calls, 2026-11-15) */
+    const shortTxt = kind === 'closed' ? 'Ladder: closed pipe, odd only' : `Ladder: ${kind === 'string' ? 'string' : 'open pipe'}`;
+    const title = pick([`Harmonic ladder: ${kindTxt}, slowed so f₁ is drawn at 0.5 Hz`, `Ladder: ${kindTxt}, f₁ slowed to 0.5 Hz`, `${shortTxt}, f₁ slowed to 0.5 Hz`, `${shortTxt}, slowed`, `Ladder: ${kindTxt}`, shortTxt], W - 40 * ls, 11, true);
     tag(title, 18 * ls, r.y + 15 * ls, T.ink, 'left', 'middle', true, 11);
   }
 

@@ -12,7 +12,7 @@ The demo opens as the eye. Choose **Camera** under **Instrument** to work with t
 
 **Using the demo.**
 
-- Choose Camera at the top of the panel. Pick the 50 mm lens or the phone camera, the aperture (f-number, 50 mm lens only), the object distance, and the distance from the lens to the sensor. Arrow keys on the picture move the object.
+- Choose Camera at the top of the panel. Pick the 50 mm lens or the phone camera, the aperture (f-number, 50 mm lens only), the object distance, and the distance from the lens to the sensor. Drag the object along the scale, or use the arrow keys on the picture, to move it.
 - The top strip shows the object on a log scale of distance, with the range of distances that are in focus. The enlarged camera below is to scale; the rays come from the point of the object on the axis, and the colored mark on the sensor is the blur spot. The photo on the right is what the sensor records, reduced to fit, with a 1:1 crop of the center of the star (one screen pixel per sensor pixel).
 - The readouts give the blur spot's size on the sensor in micrometers and in pixels. Record reading stores the camera, the f-number, the object distance, the lens to sensor distance and the blur; Export to worksheet sends the readings here.
 - Blind hides the image distance from the lens equation, the range in focus and the sharp or blurred label, and turns off Autofocus, leaving the blur readings and the photo.

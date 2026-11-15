@@ -19,7 +19,7 @@
 .bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; }
 .bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 12px; }
 .stage { position: relative; min-height: 480px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
-.stage canvas { position: absolute; inset: 0; display: block; outline: none; }
+.stage canvas { position: absolute; inset: 0; display: block; outline: none; touch-action: pan-y; }   /* horizontal drags move the object (student view calls, 2026-11-15) */
 .stage canvas:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
 .viewbar { position: absolute; top: 10px; left: 10px; z-index: 2; display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
 .blindtag { position: absolute; right: 10px; bottom: 8px; z-index: 3; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--canvas); background: var(--ink); border-radius: 5px; padding: 3px 8px; }
@@ -73,7 +73,7 @@ table.rows input:focus { border-color: var(--accent); }
 
   <main class="bench">
     <div class="stage" id="stage">
-      <canvas id="can" tabindex="0" role="img" aria-label="Top: distances from the eye on a logarithmic scale, with the object, the glasses, the near and far points and the image the glasses make. Bottom: the eye enlarged, with rays from the object passing the glasses and the eye's lens to the retina. Arrow keys move the object."></canvas>
+      <canvas id="can" tabindex="0" role="img" aria-label="Top: distances from the eye on a logarithmic scale, with the object, the glasses, the near and far points and the image the glasses make. Bottom: the eye enlarged, with rays from the object passing the glasses and the eye's lens to the retina. Drag the object along the scale, or use the arrow keys."></canvas>
       <span class="blindtag" id="blindTag" hidden>Blind</span>
     </div>
 
@@ -316,6 +316,22 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   can.addEventListener('keydown', (e) => { const d = { ArrowRight: -1, ArrowUp: 1, ArrowLeft: 1, ArrowDown: -1 }[e.key]; if (!d) return; e.preventDefault();
     if (S.mode === 'camera') { S.dc = dOf(Math.max(0, Math.min(101, vOf(S.dc) + d))); upd(); return; }
     S.d = dOf(Math.max(0, Math.min(101, vOf(S.d) + d))); changed(); });
+  /* The object arrow on the distance scale looked like something to drag, and now it is: drag it along the scale. It moves in the
+     slider's own steps, so every distance it reaches is one the slider reaches (student view calls, 2026-11-15) */
+  const scaleGeo = () => { const p = ps(), topH = Math.max(130 * p, Hh * (S.mode === 'camera' ? 0.28 : 0.3)), x0 = 24 * p, x1 = W - 30 * p, lo = Math.log10(0.05), hi = Math.log10(20);
+    return { p, y: topH * 0.62, x0, x1, X: (d) => (!isFinite(d) ? x0 : x1 - (Math.log10(d) - lo) / (hi - lo) * (x1 - x0 - 24 * p)),
+      dAt: (x) => 10 ** (lo + (x1 - x) / (x1 - x0 - 24 * p) * (hi - lo)) }; };
+  const objD = () => (S.mode === 'camera' ? S.dc : S.d);
+  const onObj = (e) => { const r = can.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top, g = scaleGeo();
+    return Math.abs(x - g.X(objD())) < 14 * g.p && y > g.y - 54 * g.p && y < g.y + 10 * g.p; };
+  let dragObj = false;
+  const dragTo = (e) => { const r = can.getBoundingClientRect(), x = e.clientX - r.left, g = scaleGeo();
+    const v = x < (g.x0 + g.X(dOf(100))) / 2 ? 101 : vOf(g.dAt(x)), d = dOf(v);
+    if (S.mode === 'camera') { if (vOf(S.dc) !== v) { S.dc = d; upd(); } } else if (vOf(S.d) !== v) { S.d = d; changed(); } };
+  can.addEventListener('pointerdown', (e) => { if (!onObj(e)) return; dragObj = true; can.setPointerCapture(e.pointerId); can.style.cursor = 'grabbing'; e.preventDefault(); });
+  can.addEventListener('pointermove', (e) => { if (dragObj) { dragTo(e); return; } can.style.cursor = onObj(e) ? 'grab' : ''; });
+  const endObj = () => { if (!dragObj) return; dragObj = false; can.style.cursor = ''; };
+  can.addEventListener('pointerup', endObj); can.addEventListener('pointercancel', endObj);
 
   function readoutsCam() {
     const q = camState(), dd = (a, v, w, c) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd${c ? ` class="${c}"` : ''}>${v}</dd></div>`, HID = '<span class="ok">hidden in Blind</span>';
@@ -510,6 +526,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* sensor and blur spot */
     const sh = c.sensorW / 2 * k; ctx.fillStyle = '#4c6f3b'; ctx.fillRect(xS, cy - sh, 4 * p, 2 * sh); txt('sensor', xS + 8 * p, cy - sh + 8 * p, { s: 9, c: T.ink, b: 1 });
     { const b = Math.max(q.blur * k, 2 * p); ctx.fillStyle = q.sharp ? T.np : T.pos; ctx.fillRect(xS - 2 * p, cy - b / 2, 8 * p, b); }
+    /* a blur of a few hundred micrometers is only a few screen pixels here, so the rays seemed to meet on the sensor while the
+       picture said "blurred": say where they do meet (student view calls, 2026-11-15) */
+    if (!q.sharp && !S.blind) txt(!(q.di > 0) || !isFinite(q.di) ? 'the rays never meet: the object is inside f' : q.di > S.ds ? 'the rays meet behind the sensor' : 'the rays meet in front of the sensor', xS + 30 * p, cy + 14 * p, { s: 9, b: 1, c: T.pos });
     /* dimension: lens to sensor */
     const ydim = cy + hb + (wide ? 26 : 34) * p; ctx.strokeStyle = T.muted; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(xL, ydim); ctx.lineTo(xS, ydim); ctx.moveTo(xL, ydim - 4 * p); ctx.lineTo(xL, ydim + 4 * p); ctx.moveTo(xS, ydim - 4 * p); ctx.lineTo(xS, ydim + 4 * p); ctx.stroke();
     txt(`d_s = ${fmtMM(S.ds)}`, (xL + xS) / 2, ydim + 12 * p, { a: 'center', s: 10, m: 1 });

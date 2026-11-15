@@ -34,8 +34,8 @@ VDI18N.add('es', 'demo/the-eye', {
   "El ojo enfoca cambiando la potencia de su cristalino. Acerca y aleja un objeto y observa cómo se acomoda el ojo, encuentra los puntos cercano y lejano de ojos normales, miopes, hipermétropes y mayores, y receta los lentes que los corrigen. Cambia a Cámara para ver cómo enfoca una cámara, moviendo su lente.",
 "P in diopters, {#} D = {#} m⁻¹":
   "P en dioptrías, {#} D = {#} m⁻¹",
-"Top: distances from the eye on a logarithmic scale, with the object, the glasses, the near and far points and the image the glasses make. Bottom: the eye enlarged, with rays from the object passing the glasses and the eye's lens to the retina. Arrow keys move the object.":
-  "Arriba: distancias al ojo en escala logarítmica, con el objeto, los lentes, los puntos cercano y lejano y la imagen que forman los lentes. Abajo: el ojo ampliado, con rayos del objeto que pasan por los lentes y por el cristalino hasta la retina. Las flechas mueven el objeto.",
+"Top: distances from the eye on a logarithmic scale, with the object, the glasses, the near and far points and the image the glasses make. Bottom: the eye enlarged, with rays from the object passing the glasses and the eye's lens to the retina. Drag the object along the scale, or use the arrow keys.":
+  "Arriba: distancias al ojo en escala logarítmica, con el objeto, los lentes, los puntos cercano y lejano y la imagen que forman los lentes. Abajo: el ojo ampliado, con rayos del objeto que pasan por los lentes y por el cristalino hasta la retina. Arrastra el objeto a lo largo de la escala, o usa las flechas.",
 "<a>Worksheet {#}: The Eye</a>":
   "<a>Hoja de trabajo {#}: El ojo</a>",
 "<a>Worksheet {#}: The Camera</a>":
@@ -140,6 +140,8 @@ VDI18N.add('es', 'demo/the-eye', {
   "apertura f/{#}: {#} mm",
 "sensor":
   "sensor",
+"the rays meet behind the sensor":
+  "los rayos se juntan detrás del sensor",
 "what the sensor records (reduced)":
   "lo que registra el sensor (reducido)",
 "{#}:{#} crop":
@@ -201,5 +203,11 @@ VDI18N.add('es', 'demo/the-eye', {
 "The glasses’ image, seen by the eye":
   "La imagen de los lentes, vista por el ojo",
 "behind the eye (converging light)":
-  "detrás del ojo (luz convergente)"
+  "detrás del ojo (luz convergente)",
+"Top: distances from the eye on a logarithmic scale, with the object, the glasses, the near and far points and the image the glasses make. Bottom: the eye enlarged, with rays from the object passing the glasses and the eye's lens to the retina. Arrow keys move the object.":
+  "Arriba: distancias al ojo en escala logarítmica, con el objeto, los lentes, los puntos cercano y lejano y la imagen que forman los lentes. Abajo: el ojo ampliado, con rayos del objeto que pasan por los lentes y por el cristalino hasta la retina. Las flechas mueven el objeto.",
+"the rays meet in front of the sensor":
+  "los rayos se juntan delante del sensor",
+"the rays never meet: the object is inside f":
+  "los rayos nunca se juntan: el objeto está dentro de f"
 });

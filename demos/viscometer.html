@@ -103,7 +103,7 @@ table.rows input:focus { border-color: var(--accent); }
       <canvas id="can" tabindex="0" role="img" aria-label="A tall glass tube of liquid with two timing marks 0.200 m apart and a ball falling through it, with the gate timer. Space drops the ball, R takes it out."></canvas>
       <div class="viewbar"><button type="button" class="spin attn" id="go">Drop the ball</button><button type="button" class="spin" id="back">Take it out</button>
         <button type="button" class="spin attn" id="collect" hidden>Start collecting</button><button type="button" class="spin" id="empty" hidden>Empty the cylinder</button>
-        <div class="seg" role="group" aria-label="Playback speed" id="speedSeg"><button type="button" data-s="1" aria-pressed="true">×1</button><button type="button" data-s="10" aria-pressed="false">×10</button><button type="button" data-s="100" aria-pressed="false">×100</button></div><div class="seg" role="group" aria-label="View" id="viewSeg"><button type="button" data-view="3d" aria-pressed="false">3D</button><button type="button" data-view="flat" aria-pressed="true">Flat</button></div></div>
+        <!-- ×0.1: a 2 mm steel ball in water fell past both marks in under a second at ×1 (student view calls, 2026-11-15) --><div class="seg" role="group" aria-label="Playback speed" id="speedSeg"><button type="button" data-s="0.1" aria-pressed="false">×0.1</button><button type="button" data-s="1" aria-pressed="true">×1</button><button type="button" data-s="10" aria-pressed="false">×10</button><button type="button" data-s="100" aria-pressed="false">×100</button></div><div class="seg" role="group" aria-label="View" id="viewSeg"><button type="button" data-view="3d" aria-pressed="false">3D</button><button type="button" data-view="flat" aria-pressed="true">Flat</button></div></div>
       <span class="blindtag" id="blindTag" hidden>Blind</span>
       </div>
       <div class="tray" id="tray" role="group" aria-labelledby="trayTitle">
@@ -415,7 +415,7 @@ table.rows input:focus { border-color: var(--accent); }
     ctx.fillStyle = T.ink; ctx.font = `700 ${15 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
     const vb = document.querySelector('#scene .viewbar'), tx = 14 * p, ty = Math.max(54 * p, vb ? vb.offsetTop + vb.offsetHeight + 10 : 0);
     let txt = 'timer: —'; if (S.t1 != null) txt = S.done ? `timer: ${S.gate.dt.toFixed(2)} s from A to B` : `timer: ${(S.t - S.t1).toFixed(2)} s`;
-    ctx.fillText(txt, tx, ty); ctx.font = `${12 * p}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.fillText(`t = ${S.t.toFixed(2)} s since release${S.speed > 1 ? `, shown ×${S.speed}` : ''}`, tx, ty + 20 * p);
+    ctx.fillText(txt, tx, ty); ctx.font = `${12 * p}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.fillText(`t = ${S.t.toFixed(2)} s since release${S.speed !== 1 ? `, shown ×${S.speed}${S.speed < 1 ? ' (slow motion)' : ''}` : ''}`, tx, ty + 20 * p);
     if (up()) { ctx.fillStyle = T.mark; ctx.fillText('lighter than the liquid: it rises', tx, ty + 38 * p); }
   }
   // ---------- 3D view of the falling ball tube (three.js through demos/lib/vd3.js); the flat view stays (Flat button, or ?view=flat) ----------

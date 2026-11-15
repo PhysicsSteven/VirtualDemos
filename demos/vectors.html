@@ -439,7 +439,11 @@
       if (S.comp && !bl) {
         shadowBand(O, [A[0], 0], T.A); shadowBand(O, [0, A[1]], T.A);
         sArrow(ctx, X(0), Y(0), X(A[0]), Y(0), T.A, 2.4 * p, { dashed: true }); sArrow(ctx, X(A[0]), Y(0), X(A[0]), Y(A[1]), T.A, 2.4 * p, { dashed: true });
-        pill(`A_x = ${f(A[0], 1)}`, X(A[0] / 2), Y(0) + (A[1] >= 0 ? 18 : -18) * p, T.A); pill(`A_y = ${f(A[1], 1)}`, X(A[0]) + (A[0] >= 0 ? 44 : -44) * p, Y(A[1] / 2), T.A);
+        /* on a phone the A_y pill and the θ pill overlapped: A_y moves out, away from the θ pill, until they clear (student view calls, 2026-11-15) */
+        let ayX = X(A[0]) + (A[0] >= 0 ? 44 : -44) * p; const ayT = `A_y = ${f(A[1], 1)}`;
+        if (mag(A) > 0) { const th = angleDeg(A) * Math.PI / 180, r = 36 * p, tq = pillBox(`θ = ${f(angleDeg(A), 1)}°`, X(0) + (r + 34 * p) * Math.cos(th / 2), Y(0) - (r + 16 * p) * Math.sin(th / 2)), dir = A[0] >= 0 ? 1 : -1;
+          for (let k = 0; k < 40; k++) { const aq = pillBox(ayT, ayX, Y(A[1] / 2)); if (aq.x1 + 4 * p < tq.x0 || aq.x0 > tq.x1 + 4 * p || aq.y1 + 2 * p < tq.y0 || aq.y0 > tq.y1 + 2 * p) break; ayX += dir * 4 * p; } }
+        pill(`A_x = ${f(A[0], 1)}`, X(A[0] / 2), Y(0) + (A[1] >= 0 ? 18 : -18) * p, T.A); pill(ayT, ayX, Y(A[1] / 2), T.A);
       } else if (S.comp) { ctx.strokeStyle = T.A; ctx.setLineDash([4 * p, 4 * p]); ctx.lineWidth = 1.4 * p; ctx.beginPath(); ctx.moveTo(X(A[0]), Y(A[1])); ctx.lineTo(X(A[0]), Y(0)); ctx.moveTo(X(A[0]), Y(A[1])); ctx.lineTo(X(0), Y(A[1])); ctx.stroke(); ctx.setLineDash([]); }
       if (!bl && mag(A) > 0) { const th = angleDeg(A) * Math.PI / 180, r = 36 * p; angleArc(X(0), Y(0), r, 0, th, T.equi); pill(`θ = ${f(angleDeg(A), 1)}°`, X(0) + (r + 34 * p) * Math.cos(th / 2), Y(0) - (r + 16 * p) * Math.sin(th / 2), T.equi); }
       /* the name A on the counterclockwise side of the arrow: vec() puts it on the clockwise side, where the θ arc and its pill are,
@@ -540,6 +544,12 @@
     c.restore();
   }
   /* a value tag: rounded, on paper, edged in its color */
+  /* where pill() puts a pill: its box after it is kept on the sheet (student view calls, 2026-11-15) */
+  function pillBox(txt, x, y) {
+    const p = ps(); ctx.font = `700 ${12.5 * p}px ${T.ui}`; const w = ctx.measureText(window.VDI18N ? VDI18N.t(txt) : txt).width + 12 * p, h = 20 * p;
+    x = Math.max(w / 2 + 6 * p, Math.min(W - w / 2 - 6 * p, x)); y = Math.max(h / 2 + 6 * p, Math.min(H - h / 2 - 6 * p, y));
+    return { x0: x - w / 2, x1: x + w / 2, y0: y - h / 2, y1: y + h / 2 };
+  }
   function pill(txt, x, y, col) {
     const p = ps(); ctx.font = `700 ${12.5 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     const w = ctx.measureText(txt).width + 12 * p, h = 20 * p;

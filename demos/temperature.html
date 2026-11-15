@@ -564,9 +564,19 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const gb = ctx.createLinearGradient(xa, 0, xb, 0); gb.addColorStop(0, tcol(st.TA)); gb.addColorStop(1, tcol(st.TB));
     if (VG) VG.rod(ctx, xa, barY, xb, barY, br, { color: (CONDUCT[e.bar] && SPECIFIC[e.bar]) ? SPECIFIC[e.bar].col : e.bar === 'stainless' ? '#aca59b' : e.bar === 'glass' ? '#bfe0e8' : '#b8c0ca' });
     ctx.save(); ctx.globalAlpha = 0.55; ctx.fillStyle = gb; ctx.fillRect(xa, barY - br, xb - xa, 2 * br); ctx.restore();
-    if (VG) VG.label(ctx, `${CONDUCT[e.bar].name.split(' (')[0].toLowerCase()} bar, ${f(e.L * 100, 0)} cm`, (xa + xb) / 2, barY + br + 12 * p, { a: 'center', s: 10.5 * p });
-    block(cA, floor, sA, keyA, st.TA, e.a === 'mystery' ? 'A: mystery' : `A: ${SPECIFIC[keyA].name.toLowerCase()}`);
-    block(cB, floor, sB, e.b, st.TB, `B: ${SPECIFIC[e.b].name.toLowerCase()}`);
+    const nameA = e.a === 'mystery' ? 'A: mystery' : `A: ${SPECIFIC[keyA].name.toLowerCase()}`, nameB = `B: ${SPECIFIC[e.b].name.toLowerCase()}`;
+    if (VG) { /* on a phone the blocks are small and the bar's name landed on the foam floor; then it goes under the floor, between
+                 the block names (or a row below them when they leave no room) (student view calls, 2026-11-15) */
+      const bl = `${CONDUCT[e.bar].name.split(' (')[0].toLowerCase()} bar, ${f(e.L * 100, 0)} cm`; let ly = barY + br + 12 * p;
+      if (ly + 7 * p > floor) {
+        const tr = (t) => (window.VDI18N ? VDI18N.t(t) : t); ctx.save(); ctx.font = `700 ${12 * p}px ${T.ui}`; const wa = ctx.measureText(tr(nameA)).width, wb = ctx.measureText(tr(nameB)).width;
+        ctx.font = `400 ${10.5 * p}px ${T.ui}`; const wl = ctx.measureText(tr(bl)).width; ctx.restore();
+        ly = floor + 12 + 12 * p; if ((xa + xb) / 2 - wl / 2 < cA + wa / 2 + 6 * p || (xa + xb) / 2 + wl / 2 > cB - wb / 2 - 6 * p) ly += 15 * p;
+      }
+      VG.label(ctx, bl, (xa + xb) / 2, ly, { a: 'center', s: 10.5 * p });
+    }
+    block(cA, floor, sA, keyA, st.TA, nameA);
+    block(cB, floor, sB, e.b, st.TB, nameB);
     if (S.chunks) eqChunks(st, cA, cB, sA, sB, floor, p);
     /* heat flow arrow, width by the power */
     const P = st.P, mx = (xa + xb) / 2, len = Math.min(70 * p, (xb - xa) * 0.35);
@@ -713,9 +723,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* the temperature profile drawn across the scene: flat in the air far away, a drop across each film, straight in each layer */
     const tmin = Math.min(c.Tin, c.Tout) - 5, tmax = Math.max(c.Tin, c.Tout) + 5, ty = (t) => bot - 20 * p - (t - tmin) / (tmax - tmin) * (bot - top - 60 * p);
     ctx.save(); ctx.strokeStyle = T.curve; ctx.lineWidth = 2.5 * p; ctx.beginPath();
-    const filmW = 28 * p; ctx.moveTo(0, ty(c.Tin)); ctx.lineTo(wx0 - (w.T[0] !== w.T[1] ? filmW : 0), ty(c.Tin)); ctx.lineTo(wx0, ty(w.Ts_in));
-    let xx = wx0; for (let i = 0; i < w.layers.length; i++) { xx += w.layers[i].d * sc; ctx.lineTo(xx, ty(w.T[i + 2])); }
-    ctx.lineTo(wx1 + (w.Ts_out !== c.Tout ? filmW : 0), ty(c.Tout)); ctx.lineTo(W, ty(c.Tout)); ctx.stroke(); ctx.restore();
+    const filmW = 28 * p, prof = [[0, ty(c.Tin)], [wx0 - (w.T[0] !== w.T[1] ? filmW : 0), ty(c.Tin)], [wx0, ty(w.Ts_in)]];
+    let xx = wx0; for (let i = 0; i < w.layers.length; i++) { xx += w.layers[i].d * sc; prof.push([xx, ty(w.T[i + 2])]); }
+    prof.push([wx1 + (w.Ts_out !== c.Tout ? filmW : 0), ty(c.Tout)], [W, ty(c.Tout)]);
+    prof.forEach((q, i) => (i ? ctx.lineTo(q[0], q[1]) : ctx.moveTo(q[0], q[1]))); ctx.stroke(); ctx.restore();
     if (VG) { VG.label(ctx, `${f(c.Tin, 0)} °C`, 10 * p, ty(c.Tin) - 10 * p, { s: 11 * p, m: true, c: T.ink }); VG.label(ctx, `${f(c.Tout, 0)} °C`, W - 10 * p, ty(c.Tout) - 10 * p, { s: 11 * p, m: true, a: 'right', c: T.ink }); }
     /* heat flow arrows through */
     const aw = Math.max(1.5, Math.min(9, 1.5 + Math.log10(1 + Math.abs(w.P)) * 2.5)) * p, ay = rods ? wy0 - 26 * p : top + 30 * p;
@@ -741,7 +752,15 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const xp = wx0 + c.x * total * sc, tp = w.at(c.x * total);
     ctx.strokeStyle = dark() ? '#f3eee8' : '#342d24'; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(xp, wy0 - 4); ctx.lineTo(xp, ty(tp)); ctx.stroke();
     ctx.fillStyle = T.accent; ctx.beginPath(); ctx.arc(xp, ty(tp), 5 * p, 0, 7); ctx.fill();
-    thermoLCD(Math.max(4, Math.min(W - 104 * p, xp - 50 * p)), Math.max(4, (rods ? wy1 + 30 * p : top + 44 * p)), 96 * p, 24 * p, `${f(tp, 2)} °C`, 'probe');
+    /* with rods the probe's display sat right on the profile's kink at the joint, hiding the probe's dot; it now takes the place
+       beside the stem that the profile line crosses least (student view calls, 2026-11-15) */
+    let lcd = [Math.max(4, Math.min(W - 104 * p, xp - 50 * p)), Math.max(4, (rods ? wy1 + 30 * p : top + 44 * p))];
+    if (rods) {
+      const hits = (bx, by) => { let n = 0; for (let i = 1; i < prof.length; i++) for (let k = 0; k <= 40; k++) { const u = k / 40, qx = prof[i - 1][0] + u * (prof[i][0] - prof[i - 1][0]), qy = prof[i - 1][1] + u * (prof[i][1] - prof[i - 1][1]); if (qx > bx - 6 * p && qx < bx + 102 * p && qy > by - 6 * p && qy < by + 30 * p) n++; } return n; };
+      const cands = [lcd, [xp + 8 * p, wy1 + 8 * p], [xp - 104 * p, wy1 + 8 * p], [xp + 8 * p, wy1 + 40 * p], [xp - 104 * p, wy1 + 40 * p]].map((q) => [Math.max(4, Math.min(W - 100 * p, q[0])), q[1]]);
+      lcd = cands.reduce((a, q) => (hits(q[0], q[1]) < hits(a[0], a[1]) ? q : a));
+    }
+    thermoLCD(lcd[0], lcd[1], 96 * p, 24 * p, `${f(tp, 2)} °C`, 'probe');
     if (VG) VG.label(ctx, rods ? 'two rods 1.00 cm across, end to end, insulated along their sides' : `${f(c.A, c.A < 1 ? 3 : 2)} m² of wall, seen edge on`, W / 2, by + 16 * p, { a: 'center', s: 11 * p });
   }
   function drawCv() {
@@ -873,7 +892,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const w = wallState(coWall()), tot = Math.max(w.thick, 1e-6) * 1000, pts = [[0, w.Ts_in]]; let x = 0; w.layers.forEach((l, i) => { x += l.d; pts.push([x * 1000, w.T[i + 2]]); });
       xs = [0, tot]; ys = [Math.min(S.co.Tin, S.co.Tout) - 3, Math.max(S.co.Tin, S.co.Tout) + 3];
       series = [{ pts: pts.map((q) => [q[0], q[1]]), col: T.curve, w: 2.2 }, { pts: [[S.co.x * tot, w.at(S.co.x * w.thick)]], col: T.accent, dots: true, ring: true }];
-      xl = 'depth into the wall from the inside face (mm)'; yl = 'T (°C)';
+      xl = S.co.build === 'rods' ? 'distance along the rods from the left end (mm)' : 'depth into the wall from the inside face (mm)';   /* the rods are not a wall (student view calls, 2026-11-15) */ yl = 'T (°C)';
     }
     if (!(xs[1] > xs[0])) xs[1] = xs[0] + 1; if (!(ys[1] > ys[0])) ys[1] = ys[0] + 1;
     const X = (v) => L + (v - xs[0]) / (xs[1] - xs[0]) * pw, Y = (v) => Tp + ph - (v - ys[0]) / (ys[1] - ys[0]) * ph;

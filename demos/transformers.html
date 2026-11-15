@@ -466,18 +466,23 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const [x, y, bw, bh] = boxes[k]; c.fillStyle = dark() ? '#0b1310' : '#f3f7f4'; c.beginPath(); c.roundRect(x, y, bw, bh, 8); c.fill();
       c.strokeStyle = T.grid; c.lineWidth = 1; for (let i = 1; i < 8; i++) { c.beginPath(); c.moveTo(x + bw * i / 8, y); c.lineTo(x + bw * i / 8, y + bh); c.stroke(); }
       for (let i = 1; i < 4; i++) { c.beginPath(); c.moveTo(x, y + bh * i / 4); c.lineTo(x + bw, y + bh * i / 4); c.stroke(); }
-      c.strokeStyle = T.gridStrong; c.beginPath(); c.moveTo(x, y + bh / 2); c.lineTo(x + bw, y + bh / 2); c.stroke();
+      /* the traces' peaks ran under the legend box (i_P was hidden there) and the troughs under the caption: the traces now swing
+         between the two, about their own zero line (student view calls, 2026-11-15) */
+      c.font = `600 ${10.5 * p}px ${T.mono}`; const labs = set.map(([nm, X]) => `${nm} peak ${si(Math.SQRT2 * cabs(X), units[k], 4)}`), lw = Math.max(...labs.map((t) => c.measureText(t).width)) + 12;
+      const gapL = 18 * p, oneRow = narrow && lw * 2 + gapL < bw - 8;   /* a phone's short boxes: the legend on one row */
+      const yT = y + (oneRow ? 14 * p : 2 * 14 * p) + 16, yB = y + bh - 16 * p, yc = (yT + yB) / 2, half = (yB - yT) / 2;
+      c.strokeStyle = T.gridStrong; c.beginPath(); c.moveTo(x, yc); c.lineTo(x + bw, yc); c.stroke();
       /* each trace is scaled to its own peak, so phases can be compared; the legend gives the peaks */
       set.forEach(([nm, X, col], j) => {
         const pk = Math.SQRT2 * cabs(X);
         if (pk === 0) return;
         c.strokeStyle = col; c.lineWidth = 2 * p; c.beginPath();
-        for (let i = 0; i <= 240; i++) { const u = i / 240, tt = t0 - 2 / (w / (2 * Math.PI)) * (1 - u), v = inst(X, w, tt) / pk, xx = x + bw * u, yy = y + bh / 2 - v * (bh / 2 - 8) * (j ? 0.78 : 0.92); i ? c.lineTo(xx, yy) : c.moveTo(xx, yy); }
+        for (let i = 0; i <= 240; i++) { const u = i / 240, tt = t0 - 2 / (w / (2 * Math.PI)) * (1 - u), v = inst(X, w, tt) / pk, xx = x + bw * u, yy = yc - v * half * (j ? 0.85 : 1); i ? c.lineTo(xx, yy) : c.moveTo(xx, yy); }
         c.stroke();
       });
-      c.font = `600 ${10.5 * p}px ${T.mono}`; const labs = set.map(([nm, X]) => `${nm} peak ${si(Math.SQRT2 * cabs(X), units[k], 4)}`), lw = Math.max(...labs.map((t) => c.measureText(t).width)) + 12;
-      c.fillStyle = dark() ? 'rgba(11,19,16,0.85)' : 'rgba(243,247,244,0.88)'; c.beginPath(); c.roundRect(x + 4, y + 4, lw, 2 * 14 * p + 6, 5); c.fill();
-      labs.forEach((t, j) => { c.fillStyle = set[j][2] === T.ip ? T.ipInk : set[j][2] === T.is ? T.isInk : set[j][2]; c.textBaseline = 'top'; c.textAlign = 'left'; c.fillText(t, x + 10, y + 8 + j * 14 * p); });
+      c.font = `600 ${10.5 * p}px ${T.mono}`;
+      c.fillStyle = dark() ? 'rgba(11,19,16,0.85)' : 'rgba(243,247,244,0.88)'; c.beginPath(); c.roundRect(x + 4, y + 4, oneRow ? 2 * lw + gapL - 12 : lw, (oneRow ? 14 : 2 * 14) * p + 6, 5); c.fill();
+      labs.forEach((t, j) => { c.fillStyle = set[j][2] === T.ip ? T.ipInk : set[j][2] === T.is ? T.isInk : set[j][2]; c.textBaseline = 'top'; c.textAlign = 'left'; c.fillText(t, x + 10 + (oneRow ? j * (lw + gapL - 12) : 0), y + 8 + (oneRow ? 0 : j * 14 * p)); });
       c.fillStyle = T.muted; c.font = `${10 * p}px ${T.ui}`; c.textAlign = 'right'; c.textBaseline = 'bottom'; c.fillText(bw < 360 ? 'two cycles, each trace to its own peak' : 'two cycles · each trace scaled to its own peak', x + bw - 6, y + bh - 4);
     });
   }

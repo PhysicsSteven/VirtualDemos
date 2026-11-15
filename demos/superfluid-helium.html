@@ -230,7 +230,8 @@
   if (typeof document === 'undefined') return;
 
   const $ = (id) => document.getElementById(id), TGAS = 293.15;   /* the pumped gas reaches the pump at room temperature, 20 °C */
-  const SPEEDS = { pump: [1, 10, 60], fountain: [1, 1, 1], film: [1, 100, 1000], torsion: [1, 2, 5], he3: [60, 300, 1200] };
+  /* Pump down opened at ×10, where the lambda point came after about 14 s; ×20 brings it at about 7 s (student view calls, 2026-11-15) */
+  const SPEEDS = { pump: [1, 20, 60], fountain: [1, 1, 1], film: [1, 100, 1000], torsion: [1, 2, 5], he3: [60, 300, 1200] };
   const HE3_N = 0.05, HE3_T0 = 0.020, HE3_XMAX = 0.75, HE3_TMIN = 1.0e-3;   /* the model stops at 1.0 mK: below it the solid's spins begin to order */   /* moles in the cell, starting temperature (K), where squeezing stops */
   /* the torsion pendulum (this demo's own apparatus, after Andronikashvili 1946): 40 aluminum disks 35.0 mm across, 10 µm thick, 0.20 mm apart */
   const DISK = { n: 40, r: 0.0175, t: 10e-6, gap: 0.20e-3, rhoAl: 2700 };   /* aluminum 2.70 g/cm³ */

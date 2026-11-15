@@ -518,9 +518,11 @@ table.rows input:focus { border-color: var(--accent); }
     const overlay = getComputedStyle(shelf).position === 'absolute', bottom = overlay ? shelf.getBoundingClientRect().top - can.getBoundingClientRect().top - 12 * p : Hh - 12 * p;
     /* body panel on the left (on top on phones), screen on the right (below) */
     let bx, by, bw, bh, sx, sy, sw, sh;
-    const top = 52 * p;
-    if (!narrow) { bx = 14 * p; by = top; bw = Math.min(360 * p, W * 0.36); bh = Math.max(160, bottom - by); sx = bx + bw + 30 * p; sy = top + 10 * p; sw = W - sx - 16 * p; sh = Math.max(140, bottom - sy - 22 * p); }
-    else { bx = 14 * p; by = top; bw = W - 28 * p; bh = (bottom - top) * 0.5; sx = 44 * p; sy = by + bh + 26 * p; sw = W - sx - 14 * p; sh = bottom - sy - 22 * p; }
+    /* the transducer stands 48 px above the body panel and its top was hidden under Start/Stop the scanner: the body panel starts
+       lower than the screen (student view calls, 2026-11-15) */
+    const top = 52 * p, drop = 44 * p;
+    if (!narrow) { bx = 14 * p; by = top + drop; bw = Math.min(360 * p, W * 0.36); bh = Math.max(160, bottom - by); sx = bx + bw + 30 * p; sy = top + 10 * p; sw = W - sx - 16 * p; sh = Math.max(140, bottom - sy - 22 * p); }
+    else { bx = 14 * p; by = top + drop; bw = W - 28 * p; bh = (bottom - top) * 0.5 - drop; sx = 44 * p; sy = by + bh + 26 * p; sw = W - sx - 14 * p; sh = bottom - sy - 22 * p; }
     if (S.mode === 'echo') drawBody(bx, by, bw, bh, p); else drawVessel(bx, by, bw, bh, p);
     drawScreen(sx, sy, sw, sh, p);
     /* the Set up card sits over the screen's empty top right when the body panel is on the left, so the body stays in view */
@@ -603,7 +605,8 @@ table.rows input:focus { border-color: var(--accent); }
       if (name && !S.blind) txt(name, tx + bw / 2 + 19 * p, yc, { s: 9.5, c: a < 0 ? T.pos : T.accent, b: 1 });
     };
     for (const k of pulsePackets(L)) packet(k);
-    txt('pulse and echoes shown 20 000× slower', tx - 14 * p, y + h - 10 * p, { a: 'right', s: 9, c: T.ink });
+    /* on two lines: on one it ran off the panel's left edge ("ulse and echoes") (student view calls, 2026-11-15) */
+    txt('pulse and echoes', tx - 14 * p, y + h - 22 * p, { a: 'right', s: 9, c: T.ink }); txt('shown 20 000× slower', tx - 14 * p, y + h - 10 * p, { a: 'right', s: 9, c: T.ink });
   }
   function drawVessel(x, y, w, h, p) {
     const Gr0 = window.VDGear;

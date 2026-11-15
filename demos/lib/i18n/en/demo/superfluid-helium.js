@@ -148,6 +148,8 @@ VDI18N.add('en', 'demo/superfluid-helium', [
 "The same squeeze with eight times the heat leaking in. Freezing removes heat at a rate n(R ln {#} − S_liquid)T per unit of solid fraction; as T falls this cooling power shrinks, and the cell stops cooling where it equals the heat leak.",
 "column {#} cm",
 "would hold {#} cm: spouts",
+"helium II: superfluid, no bubbles",
+"after {#} min",
 "column height: hidden",
 "Blind: the column height is hidden",
 "hidden"

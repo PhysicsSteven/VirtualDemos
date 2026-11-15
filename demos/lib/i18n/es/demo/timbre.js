@@ -362,8 +362,6 @@ VDI18N.add('es', 'demo/timbre', {
   "Paquete de ondas en agua profunda: crestas a v_p, envolvente a v_g",
 "Wave packet on ripples: crests at v_p, envelope at v_g":
   "Paquete de ondas en ondas capilares: crestas a v_p, envolvente a v_g",
-"Wave packet on a bar, or a particle: crests at v_p, envelope at v_g":
-  "Paquete de ondas en una barra, o una partícula: crestas a v_p, envolvente a v_g",
 "Run {run} recorded ({name}): {rows} rows so far.":
   "Corrida {run} registrada ({name}): {rows} filas hasta ahora.",
 "Run {#} recorded (Vowels): {#} rows so far.":
@@ -376,18 +374,20 @@ VDI18N.add('es', 'demo/timbre', {
   "Cerrar",
 "Turn the picked harmonic's phase {#} degrees one way or the other":
   "Gira la fase del armónico elegido {#} grados hacia un lado o hacia el otro",
+"Wave packet on a bar, or a particle: crests at v_p, envelope at v_g":
+  "Paquete de ondas en una barra, o una partícula: crestas a v_p, envolvente a v_g",
 "Run {#} recorded (Wave packet): {#} rows so far.":
   "Corrida {#} registrada (Paquete de ondas): {#} filas hasta ahora.",
 "Packet: bar or particle":
   "Paquete: barra o partícula",
-"Ladder: closed pipe, odd only":
-  "Escalera: tubo cerrado, solo impares",
+"Ladder: closed pipe, odd only, slowed":
+  "Escalera: tubo cerrado, solo impares, ralentizada",
 "Harmonic bars: drag to set":
   "Barras de armónicos: arrastra para fijar",
-"Ladder: string modes":
-  "Escalera: modos de la cuerda",
-"Ladder: open pipe":
-  "Escalera: tubo abierto",
+"Ladder: string modes, f₁ slowed to {#} Hz":
+  "Escalera: modos de la cuerda, f₁ ralentizada a {#} Hz",
+"Ladder: open pipe, f₁ slowed to {#} Hz":
+  "Escalera: tubo abierto, f₁ ralentizada a {#} Hz",
 "closed pipe":
   "tubo cerrado",
 "displacement ξ":
@@ -404,6 +404,24 @@ VDI18N.add('es', 'demo/timbre', {
   "Paquete: agua profunda",
 "Packet: ripples":
   "Paquete: ondas capilares",
+"Ladder: closed pipe, odd only":
+  "Escalera: tubo cerrado, solo impares",
+"Ladder: string modes":
+  "Escalera: modos de la cuerda",
+"Ladder: open pipe":
+  "Escalera: tubo abierto",
 "Wave in space, moving right: the sum of {#} harmonic":
-  "Onda en el espacio, moviéndose a la derecha: la suma de {#} armónico"
+  "Onda en el espacio, moviéndose a la derecha: la suma de {#} armónico",
+"Ladder: string, slowed":
+  "Escalera: cuerda, ralentizada",
+"Ladder: open pipe, slowed":
+  "Escalera: tubo abierto, ralentizada",
+"Ladder: string, f₁ slowed to {#} Hz":
+  "Escalera: cuerda, f₁ ralentizada a {#} Hz",
+"Ladder: closed pipe, odd only, f₁ slowed to {#} Hz":
+  "Escalera: tubo cerrado, solo impares, f₁ ralentizada a {#} Hz",
+"Ladder: air displacement in a pipe open at both ends, f₁ slowed to {#} Hz":
+  "Escalera: desplazamiento del aire en un tubo abierto en ambos extremos, f₁ ralentizada a {#} Hz",
+"Ladder: air displacement in a pipe closed at the top: odd modes only, f₁ slowed to {#} Hz":
+  "Escalera: desplazamiento del aire en un tubo cerrado arriba: solo modos impares, f₁ ralentizada a {#} Hz"
 });

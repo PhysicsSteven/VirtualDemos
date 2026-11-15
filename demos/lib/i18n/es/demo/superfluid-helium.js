@@ -296,12 +296,18 @@ VDI18N.add('es', 'demo/superfluid-helium', {
   "columna {#} cm",
 "would hold {#} cm: spouts":
   "sostendría {#} cm: brota",
+"helium II: superfluid, no bubbles":
+  "helio II: superfluido, sin burbujas",
+"after {#} min":
+  "después de {#} min",
 "column height: hidden":
   "altura de la columna: oculta",
 "Blind: the column height is hidden":
   "A ciegas: la altura de la columna está oculta",
 "hidden":
   "oculta",
+"solid {#} %":
+  "sólido {#} %",
 "Below {#} K liquid helium becomes a superfluid: it stops boiling, flows through powder no gas could pass, climbs out of its beaker as a thin film, and part of it refuses to turn with a spinning stack of disks. Four experiments, computed from measured properties of helium.":
   "Por debajo de {#} K el helio líquido se vuelve superfluido: deja de hervir, fluye a través de polvo por el que ningún gas podría pasar, trepa fuera de su vaso como una película delgada y una parte de él se niega a girar con una pila de discos que gira. Cuatro experimentos, calculados a partir de propiedades medidas del helio."
 });
