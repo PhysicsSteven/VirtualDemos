@@ -50,7 +50,7 @@ No hazards in the virtual lab.
 
 Keep the cursor at the midpoint between the stars (0 µrad) for every reading.
 
-**Part 1. Mirror size.** Choose Hubble and two stars (550 nm, mirror 2.40 m). Move the stars closer together or farther apart until you find the smallest distance between them for which the brightness midway is 0.735 or less: there the two stars are just resolved. Record a reading. Do the same with mirrors of 0.50, 1.00, 4.00 and 10.0 m (each Keck telescope's mirror is 10 m across). Send the readings to the worksheet, then clear them.
+**Part 1. Mirror size.** Choose Hubble and two stars (550 nm, mirror 2.40 m). Move the stars closer together or farther apart until you find the smallest distance between them for which the brightness midway is 0.735 or less: there the two stars are just resolved. Record a reading. Do the same with mirrors of 0.50, 1.00, 4.00 and 10.0 m (each Keck telescope's mirror is 10 m across; zoom to 16× for the 10.0 m mirror). Send the readings to the worksheet, then clear them.
 
 **Part 2. Color.** Set the mirror back to 2.40 m. Find the smallest resolved distance between the stars in the same way for violet light (405 nm) and red light (650 nm), recording a reading for each. Send the readings to the worksheet.
 

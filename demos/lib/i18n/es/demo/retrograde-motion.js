@@ -16,8 +16,6 @@ VDI18N.add('es', 'demo/retrograde-motion', {
   "Virgo",
 "Libra":
   "Libra",
-"Scorpius":
-  "Escorpio",
 "Sagittarius":
   "Sagitario",
 "Capricornus":
@@ -80,6 +78,8 @@ VDI18N.add('es', 'demo/retrograde-motion', {
   "Avanzar un día (Shift: diez días)",
 "Forward one day":
   "Avanzar un día",
+"Back to the start date of this setup, keeping every setting":
+  "Regresa a la fecha de inicio de esta configuración, sin cambiar ningún ajuste",
 "<span>Speed</span>":
   "<span>Rapidez</span>",
 "Days per second":
@@ -226,8 +226,6 @@ VDI18N.add('es', 'demo/retrograde-motion', {
   "tamaño angular = {#} arcsin(R/Δ), R el radio del planeta, Δ su distancia",
 "Model: the real sky. Each planet on Kepler's ellipse with JPL's approximate elements (Standish, valid {#} to {#}); against a full ephemeris the directions are good to {#}° for Mercury and Venus, {#}° for Mars and {#}° for Jupiter and Saturn. Light travel time, aberration and nutation are left out, and the stars stay on the J2000 grid (precession, {#}° a century, is left out). Dates are Terrestrial Time, about a minute from UTC.":
   "Modelo: el cielo real. Cada planeta en la elipse de Kepler con los elementos aproximados del JPL (Standish, válidos de {#} a {#}); comparadas con una efeméride completa, las direcciones son buenas hasta {#}° para Mercurio y Venus, {#}° para Marte y {#}° para Júpiter y Saturno. Se dejan fuera el tiempo de viaje de la luz, la aberración y la nutación, y las estrellas se quedan en la cuadrícula J2000 (se deja fuera la precesión, {#}° por siglo). Las fechas están en Tiempo Terrestre, a cerca de un minuto de UTC.",
-"Drag to turn, wheel to zoom. Planet sizes not to scale; the stars are a sphere about Earth.":
-  "Arrastra para girar, usa la rueda para acercar. Tamaños de los planetas no a escala; las estrellas son una esfera alrededor de la Tierra.",
 "TAURUS":
   "TAURO",
 "Pleiades":
@@ -244,16 +242,10 @@ VDI18N.add('es', 'demo/retrograde-motion', {
   "{#}° en λ",
 "{#} Sep {#} · Copernicus's circles":
   "{#} sep {#} · círculos de Copérnico",
+"Drag to turn, wheel to zoom. Planet sizes not to scale; the stars are a sphere about Earth.":
+  "Arrastra para girar, usa la rueda para acercar. Tamaños de los planetas no a escala; las estrellas son una esfera alrededor de la Tierra.",
 "equant":
   "ecuante",
-"epicycle":
-  "epiciclo",
-"deferent":
-  "deferente",
-"Earth at rest. Ptolemy's distances: Mars out to":
-  "La Tierra en reposo. Distancias de Ptolomeo: Marte hasta",
-"{#} Earth radii, the Sun at {#}.":
-  "{#} radios terrestres, el Sol a {#}.",
 "drawn {#}× its smallest":
   "dibujado {#}× su mínimo",
 "Ptolemy's epicycles, Earth at rest":
@@ -302,8 +294,6 @@ VDI18N.add('es', 'demo/retrograde-motion', {
   "{#} abr {#}",
 "{#} Apr {#} · Kepler (real sky)":
   "{#} abr {#} · Kepler (cielo real)",
-"Ophiuchus":
-  "Ofiuco",
 "CAPRICORNUS":
   "CAPRICORNIO",
 "LIBRA":
@@ -334,6 +324,8 @@ VDI18N.add('es', 'demo/retrograde-motion', {
   "Máxima elongación",
 "{#} Jan {#}":
   "{#} ene {#}",
+"Ophiuchus":
+  "Ofiuco",
 "{#} Jan {#} · Kepler (real sky)":
   "{#} ene {#} · Kepler (cielo real)",
 "OPHIUCHUS":
@@ -342,8 +334,6 @@ VDI18N.add('es', 'demo/retrograde-motion', {
   "VIRGO",
 "Every opposition of Mars from {#} to {#}, numbered. They come every {#} days on average (the synodic period), so Earth goes around the Sun a little more than twice between them, and each opposition happens about {#}° farther east, in the next constellation or two. Close oppositions ({#}, {#}, {#}) come where Mars is near perihelion.":
   "Cada oposición de Marte de {#} a {#}, numerada. Ocurren cada {#} días en promedio (el periodo sinódico), así que la Tierra da un poco más de dos vueltas al Sol entre una y otra, y cada oposición ocurre unos {#}° más al este, en la siguiente constelación o en la que sigue. Las oposiciones cercanas ({#}, {#}, {#}) ocurren cuando Marte está cerca del perihelio.",
-"Earth held still (Tycho Brahe's system).":
-  "La Tierra fija (sistema de Tycho Brahe).",
 "SCUTUM":
   "ESCUDO",
 "SERPENS CAUDA":
@@ -374,8 +364,6 @@ VDI18N.add('es', 'demo/retrograde-motion', {
   "{#}° al este del Sol (cielo vespertino)",
 "{#} Nov {#} · Kepler (real sky)":
   "{#} nov {#} · Kepler (cielo real)",
-"Earth at rest. Ptolemy's distances: Venus out to":
-  "La Tierra en reposo. Distancias de Ptolomeo: Venus hasta",
 "inferior conj. Jan {#}":
   "conj. inferior {#} ene",
 "Venus: {#}% lit, crescent":
@@ -388,8 +376,6 @@ VDI18N.add('es', 'demo/retrograde-motion', {
   "{#} nov {#} · epiciclos de Ptolomeo",
 "Close":
   "Cerrar",
-"Earth at rest. Ptolemy's distances: Mercury out to":
-  "La Tierra en reposo. Distancias de Ptolomeo: Mercurio hasta",
 "inferior conj. Oct {#}":
   "conj. inferior {#} oct",
 "greatest elong. Nov {#}":
@@ -398,6 +384,8 @@ VDI18N.add('es', 'demo/retrograde-motion', {
   "conj. inferior {#} dic",
 "Mercury: {#}% lit, crescent":
   "Mercurio: {#}% iluminado, creciente",
+"Scorpius":
+  "Escorpio",
 "CANIS MINOR":
   "CAN MENOR",
 "SEXTANS":
@@ -406,8 +394,6 @@ VDI18N.add('es', 'demo/retrograde-motion', {
   "Betelgeuse",
 "Procyon":
   "Proción",
-"Earth at rest. Ptolemy's distances: Jupiter out to":
-  "La Tierra en reposo. Distancias de Ptolomeo: Júpiter hasta",
 "CETUS":
   "BALLENA",
 "Hamal":
@@ -416,8 +402,6 @@ VDI18N.add('es', 'demo/retrograde-motion', {
   "oposición {#} dic",
 "westward (retrograde), −{#}°/day":
   "hacia el oeste (retrógrado), −{#}°/día",
-"Earth at rest. Ptolemy's distances: Saturn out to":
-  "La Tierra en reposo. Distancias de Ptolomeo: Saturno hasta",
 "CORONA AUSTRINA":
   "CORONA AUSTRAL",
 "LUPUS":
@@ -426,8 +410,14 @@ VDI18N.add('es', 'demo/retrograde-motion', {
   "MICROSCOPIO",
 "PISCIS AUSTRINUS":
   "PEZ AUSTRAL",
-"EQUULEUS":
-  "CABALLITO",
+"epicycle":
+  "epiciclo",
+"deferent":
+  "deferente",
+"Earth at rest. Ptolemy's distances: Venus out to":
+  "La Tierra en reposo. Distancias de Ptolomeo: Venus hasta",
+"{#} Earth radii, the Sun at {#}.":
+  "{#} radios terrestres, el Sol a {#}.",
 "{#} Nov {#} · Copernicus's circles":
   "{#} nov {#} · círculos de Copérnico",
 "AURIGA":
@@ -440,6 +430,10 @@ VDI18N.add('es', 'demo/retrograde-motion', {
   "Fomalhaut",
 "CORVUS":
   "CUERVO",
+"EQUULEUS":
+  "CABALLITO",
+"Earth held still (Tycho Brahe's system).":
+  "La Tierra fija (sistema de Tycho Brahe).",
 "AQUILA":
   "ÁGUILA",
 "CRATER":
@@ -452,6 +446,14 @@ VDI18N.add('es', 'demo/retrograde-motion', {
   "ESCULTOR",
 "TELESCOPIUM":
   "TELESCOPIO",
+"Earth at rest. Ptolemy's distances: Mars out to":
+  "La Tierra en reposo. Distancias de Ptolomeo: Marte hasta",
+"Earth at rest. Ptolemy's distances: Mercury out to":
+  "La Tierra en reposo. Distancias de Ptolomeo: Mercurio hasta",
+"Earth at rest. Ptolemy's distances: Jupiter out to":
+  "La Tierra en reposo. Distancias de Ptolomeo: Júpiter hasta",
+"Earth at rest. Ptolemy's distances: Saturn out to":
+  "La Tierra en reposo. Distancias de Ptolomeo: Saturno hasta",
 "PERSEUS":
   "PERSEO",
 "COMA BERENICES":

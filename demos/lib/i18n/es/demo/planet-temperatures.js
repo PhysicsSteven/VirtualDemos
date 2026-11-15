@@ -4,8 +4,8 @@ VDI18N.add('es', 'demo/planet-temperatures', {
   "zona habitable",
 "Earth · {#} K":
   "Tierra · {#} K",
-"sizes and orbit speed not to scale":
-  "tamaños y velocidad orbital no a escala",
+"sizes not to scale · {#} s = {#} days":
+  "tamaños no a escala · {#} s = {#} días",
 "ENERGY BUDGET PER m², WHOLE PLANET":
   "BALANCE DE ENERGÍA POR m², TODO EL PLANETA",
 "starlight in":
@@ -166,6 +166,8 @@ VDI18N.add('es', 'demo/planet-temperatures', {
   "Distancia al centro R",
 "Born how long ago":
   "Nacida hace cuánto tiempo",
+"Born how long ago: click, or press Enter, to type a value":
+  "Hace cuánto nació: haz clic, o presiona Enter, para escribir un valor",
 "The model's assumptions":
   "Las suposiciones del modelo",
 "The chance that Earth's own history of nearby supernovae would have sterilized it":
@@ -370,6 +372,8 @@ VDI18N.add('es', 'demo/planet-temperatures', {
   "TRAPPIST-{#}",
 "TRAPPIST-{#} e · {#} K":
   "TRAPPIST-{#} e · {#} K",
+"sizes not to scale · {#} s = {#} day":
+  "tamaños no a escala · {#} s = {#} día",
 "heat radiation to space":
   "radiación térmica al espacio",
 "greenhouse off: all the heat radiation escapes":
@@ -392,6 +396,8 @@ VDI18N.add('es', 'demo/planet-temperatures', {
   "Nota",
 "The zone formulas hold from {#} to {#} K; the edges use {#} K.":
   "Las fórmulas de la zona valen de {#} a {#} K; los bordes usan {#} K.",
+"sizes and orbit speed not to scale":
+  "tamaños y velocidad orbital no a escala",
 "distances to scale · star and planet sizes are not":
   "distancias a escala · tamaños de la estrella y el planeta no",
 "Model: the planet absorbs the starlight on its disk that it does not reflect and radiates heat like a blackbody from the area that shares the heat. Approximations: one temperature for that whole area (real planets are warmer at the equator and on the day side); no heat from inside the planet (Jupiter gives out about as much again of its own); the greenhouse is one number e, chosen to match a measured temperature, standing for the simple layer models; real air also carries heat up by convection, and clouds and ice change the albedo as the temperature changes, which the model holds fixed. Each planet sits at its average distance on a circle. Under the star assumes the star straight overhead and no heat carried into the ground or away. The habitable zone edges come from detailed climate models (Kopparapu et al. {#}), not from this balance: inside the zone a planet like Earth, with enough carbon dioxide and water, could keep liquid water at its surface. The air rule uses the model temperature at the ground; gas escapes from the top of an atmosphere, which can be much hotter (on Earth it is, which is why Earth loses hydrogen and helium), and the solar wind strips some air too, so the rule is a rough guide.":
@@ -401,5 +407,17 @@ VDI18N.add('es', 'demo/planet-temperatures', {
 "distances to scale · sizes and orbit speed are not":
   "distancias a escala · tamaños y velocidad orbital no",
 "drag the planet in or out · drag elsewhere to turn · sizes and orbit speed not to scale":
-  "arrastra el planeta hacia dentro o hacia fuera · arrastra en otro lugar para girar · tamaños y velocidad orbital no a escala"
+  "arrastra el planeta hacia dentro o hacia fuera · arrastra en otro lugar para girar · tamaños y velocidad orbital no a escala",
+"sizes not to scale · {#} s = {#} hours":
+  "tamaños no a escala · {#} s = {#} horas",
+"sizes not to scale · {#} s = {#} years":
+  "tamaños no a escala · {#} s = {#} años",
+"distances to scale · sizes are not · {#} s = {#} days":
+  "distancias a escala · tamaños no · {#} s = {#} días",
+"distances to scale · sizes are not · {#} s = {#} day":
+  "distancias a escala · tamaños no · {#} s = {#} día",
+"drag the planet in or out · drag elsewhere to turn · sizes not to scale · {#} s = {#} days":
+  "arrastra el planeta hacia dentro o hacia fuera · arrastra en otro lugar para girar · tamaños no a escala · {#} s = {#} días",
+"drag the planet in or out · drag elsewhere to turn · sizes not to scale · {#} s = {#} day":
+  "arrastra el planeta hacia dentro o hacia fuera · arrastra en otro lugar para girar · tamaños no a escala · {#} s = {#} día"
 });

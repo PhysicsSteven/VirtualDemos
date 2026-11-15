@@ -1300,12 +1300,18 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (p.cPos !== undefined) S.cPos = p.cPos;
     setMu(SYS[p.sys].mu, p.sys);
     markPreset(name);
+    /* the JWST and SOHO loops, 0.003 AU wide, are lost on the 3D surface: this setup opens Flat (student view calls, 2026-11-15) */
+    if (name === 'jwst' && L3.on && L3.view) L3.view.set('flat');
     for (const q of p.make(S.mu, CL, LPT)) addParticle(q.s, { swarm: q.swarm, col: q.col });
     if (!sel || !S.follow) setC(cOfPos(S.cPos), false);
     syncFrame(); syncLaunch(); readouts(); drawAll();
   }
   for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => { applyPreset(b.dataset.p); if (!reduce) setPlaying(true); });
   for (const b of document.querySelectorAll('#systems button')) b.addEventListener('click', () => { custom(); S.view = S.view === 'free' || S.view === 'follow' ? 'whole' : S.view; setMu(SYS[b.dataset.s].mu, b.dataset.s); });
+  /* a typed mass ratio: the slider moves 0.026 in log μ a pixel, so an exact μ needed the arrow keys (student view calls, 2026-11-15) */
+  VD.typeIn($('muOut'), { label: 'Mass ratio μ', min: 1e-7, max: 0.5, step: 1e-10, get: () => S.mu, seed: () => String(+S.mu.toPrecision(6)),
+    set: (v) => { custom(); let mu = v, sys = 'custom'; for (const k of Object.keys(SYS)) if (Math.abs(Math.log10(SYS[k].mu) - Math.log10(v)) < 0.0008) { mu = SYS[k].mu; sys = k; }
+      $('mu').value = Math.log10(mu); setMu(Math.min(0.5, mu), sys); } });
   $('mu').addEventListener('input', (e) => {
     custom();
     let mu = VD.nice(Math.pow(10, +e.target.value)), sys = 'custom'; /* VD.nice: lands on 0.03, not 0.0299916 */
@@ -1614,11 +1620,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     c.setTransform(dpr, 0, 0, dpr, 0, 0); c.clearRect(0, 0, W, H);
     const P3 = (x, y) => L3.S.project([x, y, hz(x, y)]);
     /* the bodies on screen, and a size note in the caption for each one drawn larger than it is */
-    const big = [], bods = [], [R1, R2] = radii();
+    const big = [], bods = [], balls = [], [R1, R2] = radii();
     for (const [b, name, R, r] of [[L3.b1, sys.m1, R1, L3.R[0]], [L3.b2, sys.m2, R2, L3.R[1]]]) {
       const p = b.position, q = L3.S.project([p.x, p.y, p.z]), qb = L3.S.project([p.x, p.y, p.z - r]);
       if (!(q[2] < 1 && q[0] > 0 && q[0] < W && q[1] > 0 && q[1] < H)) continue;
       bods.push([name, q[0], Math.max(q[1], qb[1]) + 8 * ps]);
+      { const rs = Math.max(6 * ps, Math.abs(qb[1] - q[1]) + 3 * ps); balls.push([q[0] - rs, q[1] - rs, q[0] + rs, q[1] + rs]); }   /* the ball itself, kept clear of point names (student view calls, 2026-11-15) */
       const n = String(+(r / R).toPrecision(2)), body = I ? I.t(name) : name;
       if (r > 1.5 * R) big.push(!sys.aKm ? (I ? VDI18N.t('body sizes made up') : 'body sizes made up') : I ? VDI18N.t('{body} drawn {n} times its true size', { body, n }) : `${body} drawn ${n} times its true size`);
     }
@@ -1636,13 +1643,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       if (side && Math.abs(xc - x) > 2) return false;   /* no room beside the point: the caller places it another way */
       /* off any label already written (on a phone L5's name met the Sun's): moved up a row, then down, else left out */
       const box = (xx, yy) => { const t = base === 'bottom' ? yy - lh : yy; return [xx - w, t, xx + w, t + lh]; };
-      const free = (b) => b[0] >= 0 && b[2] <= W && !used.some((u) => b[0] < u[2] && b[2] > u[0] && b[1] < u[3] && b[3] > u[1]);
+      const free = (b) => b[0] >= 0 && b[2] <= W && !used.some((u) => b[0] < u[2] && b[2] > u[0] && b[1] < u[3] + 2 * ps && b[3] > u[1] - 2 * ps);   /* a 2 px gap: on a phone L5's name touched the Sun's (student view calls, 2026-11-15) */
       const r = lh + 2 * ps, tries = []; for (const d of [0, -r, r, 2 * r, -2 * r]) for (const e of [0, w * 0.7, -w * 0.7]) tries.push([Math.max(w, Math.min(W - w, xc + e)), y + d]);
       const at = tries.find(([xx, yy]) => free(box(xx, yy)) && (base === 'bottom' ? yy : yy + lh) <= capTop);
       if (!at) return true;
       used.push(box(...at)); label(c, txt, at[0], at[1], col, 'center', base, bold); return true;
     };
-    const used = [];
+    const used = balls.slice();
     const labRaw = (...a) => (I ? I.raw(() => lab(...a)) : lab(...a));   /* text already translated whole */
     for (const [name, x, y] of bods) lab(name, x, y, T.ink, 'top', false);   /* each body's name just below its ball, first so the point names keep off it */
     /* L1 and L2 close together on the screen (a light partner seen from afar): one label for both, so the two never print on top of each other */

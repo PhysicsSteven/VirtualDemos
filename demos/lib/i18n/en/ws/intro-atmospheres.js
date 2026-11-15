@@ -25,7 +25,7 @@ VDI18N.add('en', 'ws/intro-atmospheres', [
 "If a gas is heated from {#} K to {#} K, four times the temperature, how many times faster does it move? Use the formula.",
 "Guess: why does the Moon, at the same distance from the Sun as Earth, have no air?",
 "<strong>Part {#}: hotter is faster.</strong> Choose Relax to equilibrium, then Argon. Set the temperature to {#} K, choose Random (thermal) starting speeds, and let the gas run for a few seconds so the histogram settles onto the curve. Record a reading. Do the same at {#} K and {#} K. Send the three readings to the worksheet, then clear them.",
-"<strong>Part {#}: lighter is faster.</strong> Set the temperature back to {#} K. Choose each gas in turn (hydrogen, helium, nitrogen, argon, carbon dioxide), let it settle for a few seconds, and record a reading. Watch the histogram spread out for the light gases. Send the five readings to the worksheet; they go into a second copy of the table.",
+"<strong>Part {#}: lighter is faster.</strong> Set the temperature back to {#} K. Choose each gas in turn (hydrogen, helium, nitrogen, argon, carbon dioxide), let it settle for a few seconds, and record a reading. Watch the speed axis stretch for the light gases: the histogram keeps its shape while the speeds it covers grow. Send the five readings to the worksheet; they go into a second copy of the table.",
 "<strong>Part {#}: who keeps what.</strong> With your Part {#} readings, fill in the second table below. For each body and each gas, first find the gas’s rms speed at that body’s temperature: rms speed at T = rms speed at {#} K × √(T ÷ {#}). Then divide the escape speed by it.",
 "<span>B</span>Gas",
 "<span>C</span>Mass of one molecule (u)",

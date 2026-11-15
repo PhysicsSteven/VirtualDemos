@@ -24,6 +24,14 @@ module.exports = {
       if (Math.abs(g('Greenhouse warming') - (st.ts - st.tb)) > 0.11) return 'warming readout ' + rd('Greenhouse warming') + ', model ' + (st.ts - st.tb);
       if (!near(g('compared with Earth'), st.rel, 6e-3)) return 'ratio readout ' + rd('compared with Earth') + ', model ' + st.rel;
       return true; })()` },
+    /* Kepler orbit timing (student view calls, 2026-11-15) */
+    { name: "the planet laps in its Kepler time P = √(a³/M) yr, shown in 2 to 40 s, with the rate printed", fn: `(() => { ${base}
+      if (!P.orbitRate) return 'no orbitRate';
+      const o = P.orbitRate(), K = 365.256363004 * Math.sqrt(S.d ** 3 / S.M), lap = o.P / o.r;
+      if (!near(o.P, K, 1e-12)) return 'period ' + o.P + ' d, Kepler ' + K;
+      if (!(lap >= 2 - 1e-9 && lap <= 40 + 1e-9)) return 'one orbit takes ' + lap + ' s on screen';
+      if (!/^1 s = [\\d.]+ (day|days|hours|years)$/.test(P.rateText())) return 'rate text ' + P.rateText();
+      return true; })()` },
     { name: "habitable zone edges are ordered and the Sun's match Kopparapu 2014", fn: `(() => { ${base}
       const z = P.hzEdges(S.L, S.T);
       if (!(z.rv < z.rg && z.rg < z.mg && z.mg <= z.em)) return 'edges out of order ' + JSON.stringify(z);

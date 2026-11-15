@@ -53,7 +53,7 @@ No hazards in the virtual lab. Polonium 210 is a strong alpha emitter, dangerous
 
 ## Procedure
 
-The demo starts running as soon as it opens and whenever you choose a setup, and choosing a number of nuclei starts a new sample: pause it and Reset before the first reading, so it starts from t = 0. Play at a slow speed and pause at each time; the reading stores the time on the clock. Clear throws away readings not yet sent, so Export each series before you Clear it.
+The demo starts running as soon as it opens and whenever you choose a setup, and choosing a number of nuclei starts a new sample: pause it and Reset before the first reading, so it starts from t = 0. Both chain setups open at the slow ¼× speed; pause at each time; the reading stores the time on the clock. Clear throws away readings not yet sent, so Export each series before you Clear it.
 
 **Bismuth 210 to polonium 210.** With 10 000 nuclei, hide the expected curves. Record a reading at the start, every 5 d to 60 d, then every 20 d to 300 d.
 

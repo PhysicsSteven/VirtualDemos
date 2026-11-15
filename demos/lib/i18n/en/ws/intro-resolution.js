@@ -25,7 +25,7 @@ VDI18N.add('en', 'ws/intro-resolution', [
 "If the mirror were twice as wide, what would happen to that angle? If the light had a shorter wavelength?",
 "Radio waves are much longer than light waves. Predict: does a radio dish need to be larger or smaller than an optical mirror to see the same detail?",
 "Keep the cursor at the midpoint between the stars ({#} µrad) for every reading.",
-"<strong>Part {#}. Mirror size.</strong> Choose Hubble and two stars ({#} nm, mirror {#} m). Move the stars closer together or farther apart until you find the smallest distance between them for which the brightness midway is {#} or less: there the two stars are just resolved. Record a reading. Do the same with mirrors of {#}, {#}, {#} and {#} m (each Keck telescope’s mirror is {#} m across). Send the readings to the worksheet, then clear them.",
+"<strong>Part {#}. Mirror size.</strong> Choose Hubble and two stars ({#} nm, mirror {#} m). Move the stars closer together or farther apart until you find the smallest distance between them for which the brightness midway is {#} or less: there the two stars are just resolved. Record a reading. Do the same with mirrors of {#}, {#}, {#} and {#} m (each Keck telescope’s mirror is {#} m across; zoom to {#}× for the {#} m mirror). Send the readings to the worksheet, then clear them.",
 "<strong>Part {#}. Color.</strong> Set the mirror back to {#} m. Find the smallest resolved distance between the stars in the same way for violet light ({#} nm) and red light ({#} nm), recording a reading for each. Send the readings to the worksheet.",
 "<span>C</span>Wavelength λ (nm)",
 "<span>D</span>Mirror diameter D (m)",

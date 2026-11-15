@@ -80,6 +80,8 @@ VDI18N.add('es', 'demo/lagrange-points', {
   "Sol–Júpiter",
 "Mass ratio μ":
   "Cociente de masas μ",
+"Mass ratio μ: click, or press Enter, to type a value":
+  "Razón de masas μ: haz clic, o presiona Enter, para escribir un valor",
 "Separation a":
   "Separación a",
 "Period P":
@@ -234,8 +236,6 @@ VDI18N.add('es', 'demo/lagrange-points', {
   "Dos órbitas de Lyapunov planas, alrededor de L1 (el vecindario de SOHO) y de L2 (el del JWST), cada una de unas {#} UA de ancho y {#} UA de largo. L1 y L2 son puntos silla: después de dos o tres vueltas el diminuto error numérico ha crecido lo suficiente para que cada partícula se vaya. El JWST enciende sus propulsores cada tres semanas, más o menos, para mantenerse.",
 "Two body estimate about Sun, ignoring Earth":
   "Estimación de dos cuerpos alrededor del Sol, ignorando la Tierra",
-"{#} × {#}⁻¹⁶ <span>after {#} P = {#} d</span>":
-  "{#} × {#}⁻¹⁶ <span>después de {#} P = {#} d</span>",
 "L2 · Queqiao":
   "L2 · Queqiao",
 "Near Moon":
@@ -294,8 +294,8 @@ VDI18N.add('es', 'demo/lagrange-points', {
   "después de {#} P = {#} años",
 "t = {#} <small>P</small> · {#} yr":
   "t = {#} <small>P</small> · {#} yr",
-"{#} × {#}⁻¹⁶ <span>after {#} P = {#} yr</span>":
-  "{#} × {#}⁻¹⁶ <span>después de {#} P = {#} años</span>",
+"{#} <span>after {#} P = {#} yr</span>":
+  "{#} <span>después de {#} P = {#} años</span>",
 "after {#} P":
   "después de {#} P",
 "Near m₂":
@@ -334,6 +334,8 @@ VDI18N.add('es', 'demo/lagrange-points', {
   "Partículas en reposo a {#}⁻⁵ a de L1, a cada lado, y a {#}⁻³ a de L4. L1 es un punto silla: la desviación crece por un factor e cada {#}/λ, en la lectura de arriba, y cae una hacia cada masa. Con μ = {#}, por encima del {#} de Routh, incluso L4 es inestable: esa partícula también se aleja en espiral.",
 "Two body estimate about m₁, ignoring m₂":
   "Estimación de dos cuerpos alrededor de m₁, ignorando m₂",
+"{#} a from m₂, speed {#} × {#}⁻⁶ a·n in the rotating frame":
+  "{#} a de m₂, rapidez {#} × {#}⁻⁶ a·n en el marco en rotación",
 "L4 · {#} TK7":
   "L4 · {#} TK7",
 "Your own setup. Pick a setup above to return to a known one.":
@@ -360,12 +362,12 @@ VDI18N.add('es', 'demo/lagrange-points', {
   "Rapidez de lanzamiento respecto a m₁",
 "{#} × {#}⁻¹³ <span>after {#} P = {#} d</span>":
   "{#} × {#}⁻¹³ <span>después de {#} P = {#} d</span>",
-"{#} <span>after {#} P = {#} yr</span>":
-  "{#} <span>después de {#} P = {#} años</span>",
+"{#} × {#}⁻¹⁶ <span>after {#} P = {#} d</span>":
+  "{#} × {#}⁻¹⁶ <span>después de {#} P = {#} d</span>",
+"{#} × {#}⁻¹⁶ <span>after {#} P = {#} yr</span>":
+  "{#} × {#}⁻¹⁶ <span>después de {#} P = {#} años</span>",
 "{#} × {#}⁻¹⁶ <span>after {#} P</span>":
   "{#} × {#}⁻¹⁶ <span>tras {#} P</span>",
-"{#} a from m₂, speed {#} × {#}⁻⁶ a·n in the rotating frame":
-  "{#} a de m₂, rapidez {#} × {#}⁻⁶ a·n en el marco en rotación",
 "body sizes made up":
   "tamaños de los cuerpos inventados",
 "{#} × {#}⁻¹⁵ <span>after {#} P = {#} d</span>":

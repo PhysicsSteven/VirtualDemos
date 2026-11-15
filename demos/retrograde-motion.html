@@ -45,6 +45,7 @@
 .datebox { display: flex; gap: 6px; align-items: center; }
 .datebox input { flex: 1 1 auto; min-width: 0; }
 .pane.sky { grid-column: 1 / -1; border-top: 1px solid var(--line); }
+#sky { touch-action: pan-y; }   /* sideways touch drags move the strip (student view calls, 2026-11-15) */
 .evrow { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
 .evrow select { flex: 1 1 140px; }
 .swatch.sight { border-color: var(--sight); } .swatch.trail { border-color: var(--trail); } .swatch.real { border-color: var(--real); border-top-style: dashed; }
@@ -85,6 +86,8 @@
         <button type="button" class="spin attn" id="play">Play</button>
         <button type="button" class="btn" id="back" title="Back one day (Shift: ten days)" aria-label="Back one day">◀ 1 day</button>
         <button type="button" class="btn" id="fwd" title="Forward one day (Shift: ten days)" aria-label="Forward one day">1 day ▶</button>
+        <!-- Reset, as on every other demo: back to the setup's start date, settings kept (student view calls, 2026-11-15) -->
+        <button type="button" class="btn" id="reset" title="Back to the start date of this setup, keeping every setting">Reset</button>
         <div class="seg" role="group" aria-label="Days per second" id="speedSeg"><span class="seglabel">days/s</span>
           <button type="button" data-s="2" aria-pressed="false">2</button><button type="button" data-s="8" aria-pressed="true">8</button><button type="button" data-s="30" aria-pressed="false">30</button><button type="button" data-s="120" aria-pressed="false">120</button></div>
         <div class="seg" role="group" aria-label="Perspective" id="dimSeg"><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
@@ -518,7 +521,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (glow) { const g = ctx.createRadialGradient(x, y, 0, x, y, r * glow); g.addColorStop(0, col); g.addColorStop(1, 'rgba(0,0,0,0)'); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r * glow, 0, 2 * Math.PI); ctx.fill(); }
     ctx.fillStyle = col; ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.fill();
   }
-  function label(ctx, s, x, y, col, p, align) { ctx.font = `600 ${11.5 * p}px ${T.ui}`; ctx.fillStyle = col; ctx.textAlign = align || 'left'; ctx.textBaseline = 'middle'; ctx.fillText(s, x, y); }
+  /* a label near the picture's edge is slid in, so it is never cut (on a phone the Sun's name ran off the edge) (student view calls, 2026-11-15) */
+  function label(ctx, s, x, y, col, p, align) { ctx.font = `600 ${11.5 * p}px ${T.ui}`; ctx.fillStyle = col; ctx.textAlign = align || 'left'; ctx.textBaseline = 'middle';
+    const w = ctx.measureText(s).width, Wc = ctx.canvas.clientWidth || 0;
+    if (Wc > w + 8) { if (ctx.textAlign === 'left') x = Math.max(3, Math.min(Wc - 3 - w, x)); else if (ctx.textAlign === 'right') x = Math.max(3 + w, Math.min(Wc - 3, x)); }
+    ctx.fillText(s, x, y); }
   let tagsAt = [];   /* ring tags already placed in this drawing, so tags that land together do not pile up */
   function ringTag(ctx, n, x, y, p, col) { if (tagsAt.some((q) => Math.hypot(q[0] - x, q[1] - y) < 15 * p)) return; tagsAt.push([x, y]); numberTag(ctx, n, x, y, p, col); }
   function numberTag(ctx, n, x, y, p, col) {
@@ -821,12 +828,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     Object.assign(S, { preset: key, planet: pr.k, model: pr.m, frame: pr.fr, t0: pr.t0, t1: pr.t1, step: pr.step || 0, marks: pr.marks || null, speed: pr.speed, follow: !!pr.follow, whole: !!pr.whole, trail: pr.trail || 0, lastEv: null });
     L.ahead = !pr.whole; $('chkAhead').checked = L.ahead;
     if (!keepDate) S.jd = pr.t0;
+    S.start = pr.t0;   /* where Reset goes back to (student view calls, 2026-11-15) */
     aim3D();
     setRun(false); cache = null; ensure(); frameSky(); hintFor(); syncControls(); $('evNote').textContent = ''; dirty3 = true; redraw();
   }
   function custom(newWindow) {
     S.preset = 'custom';
-    if (newWindow) { const syn = synodic(S.planet); S.t0 = Math.max(VALID[0], S.jd - 0.3 * syn); S.t1 = Math.min(VALID[1], S.jd + 0.45 * syn); S.step = Math.round(syn / 18); S.marks = null; cache = null; ensure(); frameSky(); }
+    if (newWindow) { S.start = S.jd; const syn = synodic(S.planet); S.t0 = Math.max(VALID[0], S.jd - 0.3 * syn); S.t1 = Math.min(VALID[1], S.jd + 0.45 * syn); S.step = Math.round(syn / 18); S.marks = null; cache = null; ensure(); frameSky(); }
     hintFor(); syncControls(); dirty3 = true; redraw();
   }
   function redraw() { ensure(); drawTop(); drawSky(); drawScope(); readouts(); }
@@ -837,6 +845,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   /* the shared control panel (demos/lib/vdpanel.js): Play, a day back or forward, Speed and the date in one group */
   if (window.VD && VD.panel) VD.panel({ speed: '#speedSeg', steps: ['#back', '#fwd'], clock: '#clock' });
   $('back').addEventListener('click', (e) => stepDays(e.shiftKey ? -10 : -1));
+  /* Reset: pause and go back to the start date (the setup's own, or where a new planet's window began); nothing else changes */
+  $('reset').addEventListener('click', () => { setRun(false); S.jd = clamp(S.start !== undefined ? S.start : S.t0, VALID[0], VALID[1]); S.lastEv = null; $('evNote').textContent = ''; ensure(); if (S.follow) frameSky(); dirty3 = true; redraw(); });
   $('fwd').addEventListener('click', (e) => stepDays(e.shiftKey ? 10 : 1));
   for (const b of document.querySelectorAll('#speedSeg button')) b.addEventListener('click', () => { S.speed = +b.dataset.s; syncControls(); });
   for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
@@ -862,9 +872,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   top.addEventListener('keydown', (e) => { if (e.key === 'ArrowRight' || e.key === 'ArrowUp') { stepDays(e.shiftKey ? 10 : 1); e.preventDefault(); } else if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') { stepDays(e.shiftKey ? -10 : -1); e.preventDefault(); } else if (e.key === ' ') { $('play').click(); e.preventDefault(); } });
   /* the sky strip: drag to look along it, wheel or + and − to zoom */
   let drag = null;
-  sky.addEventListener('pointerdown', (e) => { if (e.pointerType === 'touch') return; drag = { x: e.clientX, c: S.center }; sky.setPointerCapture(e.pointerId); });
+  /* touch drags too: the strip takes sideways drags and leaves up and down to the page's scroll (touch-action: pan-y); the handout
+     says to drag the strip, and phones could not (student view calls, 2026-11-15) */
+  sky.addEventListener('pointerdown', (e) => { drag = { x: e.clientX, c: S.center }; try { sky.setPointerCapture(e.pointerId); } catch (_) { /* not capturable */ } });
   sky.addEventListener('pointermove', (e) => { if (!drag || !skyMap) return; S.follow = false; S.center = norm(drag.c + (e.clientX - drag.x) / skyMap.pxd); drawSky(); });
   sky.addEventListener('pointerup', () => { drag = null; });
+  sky.addEventListener('pointercancel', () => { drag = null; });
   const zoom = (k) => { S.span = clamp(S.span * k, 10, 360); drawSky(); };
   sky.addEventListener('wheel', (e) => { e.preventDefault(); zoom(Math.exp(e.deltaY * 0.0012)); }, { passive: false });
   sky.addEventListener('keydown', (e) => { if (e.key === '+' || e.key === '=') zoom(1 / 1.15); else if (e.key === '-') zoom(1.15); else if (e.key === 'ArrowLeft') { S.follow = false; S.center = norm(S.center + S.span * 0.05); drawSky(); } else if (e.key === 'ArrowRight') { S.follow = false; S.center = norm(S.center - S.span * 0.05); drawSky(); } else return; e.preventDefault(); });

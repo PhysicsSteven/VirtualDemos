@@ -1763,6 +1763,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const c = cfg();
     S.T = c.species.filter((s) => s.T !== undefined).map((s) => s.T);
     S.custom = false;
+    /* each setup opens at its own speed: the two chains at ¼×, where the short half life (²¹⁰Bi 5.01 d, ¹³²I 2.30 h) takes about
+       1.5 s instead of 0.4 s; every other setup at 1× (student view calls, 2026-11-15) */
+    setMult(name === 'bi210' || name === 'te132' ? 0.25 : 1);
     for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === name));
     $('presetHint').textContent = c.hint;
     newRun(false);
@@ -1781,9 +1784,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   for (const b of document.querySelectorAll('#scaleSeg button')) b.addEventListener('click', () => {
     S.logY = b.dataset.l === '1'; for (const o of document.querySelectorAll('#scaleSeg button')) o.setAttribute('aria-pressed', String(o === b));
   });
-  for (const b of document.querySelectorAll('#speedSeg button')) b.addEventListener('click', () => {
-    S.mult = +b.dataset.s; for (const o of document.querySelectorAll('#speedSeg button')) o.setAttribute('aria-pressed', String(o === b));
-  });
+  function setMult(m) { S.mult = m; for (const o of document.querySelectorAll('#speedSeg button')) o.setAttribute('aria-pressed', String(+o.dataset.s === m)); }
+  for (const b of document.querySelectorAll('#speedSeg button')) b.addEventListener('click', () => setMult(+b.dataset.s));
   const playBtn = $('play');
   function setRunning(r) {
     if (r && sim) {

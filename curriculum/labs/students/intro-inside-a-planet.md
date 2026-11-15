@@ -51,7 +51,7 @@ No hazards in the virtual lab.
 
 **Part 2: five worlds.** Choose each of the setups Mercury, Venus, Earth (core and mantle), Mars and Moon in turn, and record one reading of each without changing anything. Then choose Earth if it were rock all through and record a reading. Send the six readings to the worksheet (they fill the second Data table), then clear them.
 
-**Part 3: plates or a lid.** Choose Convection and the setup Earth: moving plates, and start it (4 steps a frame makes it run faster). When the clock passes 3000 Myr, record a reading; record two more at about 4000 and 5000 Myr. Do the same for Venus: one stiff lid and Mars: plumes that stay put. While each runs, watch the orange arrows at the surface and where the hot rock rises. Send the nine readings to the worksheet (they fill the third Data table), then clear them.
+**Part 3: plates or a lid.** Choose Convection and the setup Earth: moving plates, and press Play (4 steps a frame makes it run faster). When the clock passes 3000 Myr, record a reading; record two more at about 3300 and 3600 Myr. Do the same for Venus: one stiff lid and Mars: plumes that stay put. While each runs, watch the orange arrows at the surface and where the hot rock rises. Send the nine readings to the worksheet (they fill the third Data table), then clear them.
 
 **Part 4: floating crust.** Choose Floating crust and the setup Continent and ocean floor, and record a reading (it records both blocks). Then set the continent's crust to 20, 50 and 70 km thick and record a reading at each. Send the readings to the worksheet (they fill the fourth Data table).
 

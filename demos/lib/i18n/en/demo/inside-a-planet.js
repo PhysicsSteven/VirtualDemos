@@ -89,6 +89,7 @@ VDI18N.add('en', 'demo/inside-a-planet', [
 "core",
 "mantle",
 "Earth, cut in half",
+"every world drawn the same size",
 "planet",
 "core (km)",
 "ρ̄ model",

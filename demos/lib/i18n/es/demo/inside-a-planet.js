@@ -178,6 +178,8 @@ VDI18N.add('es', 'demo/inside-a-planet', {
   "manto",
 "Earth, cut in half":
   "La Tierra, cortada a la mitad",
+"every world drawn the same size":
+  "cada mundo dibujado del mismo tamaño",
 "planet":
   "planeta",
 "core (km)":

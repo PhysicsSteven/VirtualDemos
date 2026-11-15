@@ -357,14 +357,16 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       hint: 'Earth with the 278 ppm of carbon dioxide its air held in 1750, against 420 ppm today. Less CO₂ lets more heat radiation out: the forcing is 5.35 ln(278/420) = −2.21 W/m², and with nothing else changing the planet comes out 0.66 K cooler. That is the response with no feedbacks; with water vapor, ice and clouds responding the real change is roughly three times larger. Measured warming from 1850 to 1900 to the decade 2011 to 2020 is 1.09 K (IPCC 2021), from all causes together.' },
     co2x2: { body: 'Earth', star: 'Sun', L: 1, T: 5772, d: 1, a: 0.294, sp: 'whole', gh: true, e: 'earth', co2: 2 * CO2_PRE, v: 11.186, col: '#3a78c0', meas: null,
       hint: 'Twice the 1750 carbon dioxide: 556 ppm. Against today\'s 420 ppm the forcing is 1.50 W/m², and the model warms by 0.45 K with no feedbacks; doubling from 278 ppm is 3.71 W/m² and 1.1 K. The IPCC (2021) puts the full warming for a doubling, with water vapor, ice and clouds responding, at about 3 K (likely 2.5 to 4 K): the feedbacks roughly triple it.' },
-    /* Proxima: T_eff 2900 K and log L/L☉ = −2.82 from Pavlenko et al. 2017 (A&A 606, A49); orbit from Suárez Mascareño et al. 2025 */
-    proxima: { body: 'Proxima Centauri b', star: 'Proxima Centauri', L: Math.pow(10, -2.82), T: 2900, d: 0.04848, a: 0.294, sp: 'whole', gh: false, e: 1, v: 11.186, col: '#b87a5a', meas: null,
+    /* Proxima: T_eff 2900 K and log L/L☉ = −2.82 from Pavlenko et al. 2017 (A&A 606, A49); orbit from Suárez Mascareño et al. 2025;
+       mass 0.1221 M☉ from Mann et al. 2015 (ApJ 804, 64), for the orbit time only (student view calls, 2026-11-15) */
+    proxima: { body: 'Proxima Centauri b', star: 'Proxima Centauri', M: 0.1221, rate: 1, L: Math.pow(10, -2.82), T: 2900, d: 0.04848, a: 0.294, sp: 'whole', gh: false, e: 1, v: 11.186, col: '#b87a5a', meas: null,
       hint: 'The nearest star to the Sun, a red dwarf with 0.15 % of the Sun\'s light (log L = −2.82, 2900 K), and its planet b, 0.0485 AU out, 20 times closer than Earth to the Sun. Its albedo, air and size are unknown: the setup borrows Earth\'s albedo and escape speed, with no greenhouse.' },
-    trappist: { body: 'TRAPPIST-1 e', star: 'TRAPPIST-1', L: Math.pow(10, -3.26), T: 2566, d: 0.02925, a: 0.294, sp: 'whole', gh: false, e: 1, v: 11.186 * Math.sqrt(0.692 / 0.920), col: '#a5947d', meas: null,
+    /* TRAPPIST-1 mass 0.0898 M☉ from Mann et al. 2019 (ApJ 871, 63), for the orbit time only (student view calls, 2026-11-15) */
+    trappist: { body: 'TRAPPIST-1 e', star: 'TRAPPIST-1', M: 0.0898, rate: 1, L: Math.pow(10, -3.26), T: 2566, d: 0.02925, a: 0.294, sp: 'whole', gh: false, e: 1, v: 11.186 * Math.sqrt(0.692 / 0.920), col: '#a5947d', meas: null,
       hint: 'TRAPPIST-1, a red dwarf with 0.055 % of the Sun\'s light (log L = −3.26, 2566 K), has seven Earth sized planets. Planet e, 0.0293 AU out, has 0.692 Earth masses and 0.920 Earth radii, so its escape speed is 9.70 km/s. Albedo borrowed from Earth, no greenhouse. The star is just below the 2600 K where the zone formulas start, so the edges use 2600 K.' },
   };
   const S = { preset: 'earth', body: 'Earth', star: 'Sun', L: 1, T: 5772, d: 1, a: 0.294, sp: 'whole', gh: true, e: 0.6, v: 11.186, col: '#3a78c0', meas: null, co2: CO2_NOW, co2On: true,
-    chart: 'temp', spread: false, orbits: true, run: true, blind: false, ang: 0.7 };
+    chart: 'temp', spread: false, orbits: true, run: true, blind: false, ang: 0.7, M: 1, rate: 20 };
   const p0 = { L: 1, d: 1, a: 0.294 };
   const sysC = $('sys'), budC = $('bud'), chC = $('chart'), sctx = sysC.getContext('2d'), bctx = budC.getContext('2d'), cctx = chC.getContext('2d');
   let K = null, dpr = 1, SW = 0, SH = 0, BW = 0, BH = 0, CW = 0, CH = 0, view3 = null, g3 = null;
@@ -481,7 +483,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const au = nice(Lr.Rv / 3), w = au * s, x0 = SW - w - 16 * p, y0 = SH - 16 * p;
     c.strokeStyle = 'rgba(233,224,212,0.85)'; c.lineWidth = 1.5; c.beginPath(); c.moveTo(x0, y0 - 4); c.lineTo(x0, y0); c.lineTo(x0 + w, y0); c.lineTo(x0 + w, y0 - 4); c.stroke();
     label(c, `${sig(au, 2)} AU`, x0 + w / 2, y0 - 10 * p, { a: 'center', col: 'rgba(233,224,212,0.95)', w: 400, s: 10.5 });
-    label(c, SW - Lr.card < 480 ? 'sizes and orbit speed not to scale' : 'distances to scale · sizes and orbit speed are not', Lr.card + 14 * p, SH - 14 * p, { col: 'rgba(193,184,172,0.9)', w: 400, s: 10 });
+    label(c, SW - Lr.card < 480 ? `sizes not to scale · ${rateText()}` : `distances to scale · sizes are not · ${rateText()}`, Lr.card + 14 * p, SH - 14 * p, { col: 'rgba(193,184,172,0.9)', w: 400, s: 10 });
   }
   /* the light from the star spreading: a 1 m² patch at d is 4 m² at 2d (a wedge whose width doubles) */
   function spreadFlat(c, cx, cy, s) {
@@ -560,8 +562,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       label(c, `1 m² at d: ${sig(flux(S.L, S.d), 4)} W/m²`, a1[0], a1[1] + 14 * p, { a: 'center', col: '#ffd77a', s: 10.5 });
       label(c, `spread over 4 m² at 2d: ${sig(flux(S.L, 2 * S.d), 4)} W/m²`, a2[0], a2[1] + 14 * p, { a: 'center', col: '#ffd77a', s: 10.5 }); }
     /* the not to scale note is kept, shortened, where the full hint has no room (the 1280 view showed none) (student view, 2026-11-15) */
-    if (SW - Lr.card > 600) label(c, 'drag the planet in or out · drag elsewhere to turn · sizes and orbit speed not to scale', Lr.card + 14 * p, SH - 14 * p, { col: 'rgba(193,184,172,0.9)', w: 400, s: 10 });
-    else label(c, 'sizes and orbit speed not to scale', Lr.card + 14 * p, SH - 14 * p, { col: 'rgba(193,184,172,0.9)', w: 400, s: 10 });
+    if (SW - Lr.card > 600) label(c, `drag the planet in or out · drag elsewhere to turn · sizes not to scale · ${rateText()}`, Lr.card + 14 * p, SH - 14 * p, { col: 'rgba(193,184,172,0.9)', w: 400, s: 10 });
+    else label(c, `sizes not to scale · ${rateText()}`, Lr.card + 14 * p, SH - 14 * p, { col: 'rgba(193,184,172,0.9)', w: 400, s: 10 });
   }
   function drawSys() { if (!K || !SW) return; sctx.setTransform(dpr, 0, 0, dpr, 0, 0); if (use3()) drawSys3(); else drawSysFlat(); }
 
@@ -743,7 +745,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   function applyPreset(k) {
     const c = PRESETS[k]; S.preset = k;
-    Object.assign(S, { body: c.body, star: c.star, L: c.L, T: c.T, d: c.d, a: c.a, sp: c.sp, gh: c.gh, v: c.v, col: c.col, meas: c.meas });
+    Object.assign(S, { M: c.M || 1, rate: c.rate || 20, body: c.body, star: c.star, L: c.L, T: c.T, d: c.d, a: c.a, sp: c.sp, gh: c.gh, v: c.v, col: c.col, meas: c.meas });
     if (c.e === 'match') S.e = eFor(tBare(c.L, c.d, c.a, c.sp), c.meas.v);
     else if (c.e === 'earth') { const E = PRESETS.earth; S.e = eFor(tBare(E.L, E.d, E.a, E.sp), E.meas.v); }
     else S.e = c.e;
@@ -944,6 +946,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   for (const b of document.querySelectorAll('#galPresets button')) b.addEventListener('click', () => galPreset(b.dataset.g));
   const gnum = (id, fn) => $(id).addEventListener('input', (e) => { fn(+e.target.value); galChanged(); });
   gnum('gR', (v) => { GS.R = v; GS.pre = 'custom'; }); gnum('gAgo', (v) => { GS.ago = v; GS.pre = 'custom'; });
+  /* a typed birth time, so 4.57 Gyr and any other value can be set exactly (the slider moves by 0.05) (student view calls, 2026-11-15) */
+  typed('oGAgo', { get: () => GS.ago, set: (v) => { GS.ago = v; GS.pre = 'custom'; galChanged(); }, min: 0, max: 12, step: 0.01, unit: 'Gyr', label: 'Born how long ago' });
   gnum('gPE', (v) => { GS.pE = v; }); gnum('gG', (v) => { GS.g = v; }); gnum('gLife', (v) => { GS.tLife = v; });
   function galAt(e, start) {
     const r = galC.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top, d = gG.disk, m = gG.map;
@@ -997,10 +1001,19 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   /* ---------- run, size, theme ---------- */
   const redraw = () => { if (GS.on) { drawGal(); galReadouts(); return; } drawSys(); drawBud(); drawChart(); readouts(); };
+  /* the planet goes round in its Kepler time, P = √(a³/M) sidereal years (a in AU, M the star's mass in solar masses), at a fixed
+     rate for each star: 1 s = 20 days for the Sun (Mercury laps in 4.4 s, Earth in 18 s, Mars in 34 s), 1 s = 1 day for the red
+     dwarfs (Proxima b 11 s, TRAPPIST-1 e 6 s). A planet dragged so close it would lap in under 2 s, or so far it would take over
+     40 s, gets a slower or faster rate, and the rate in use is always printed on the picture. A star made with the sliders keeps the
+     setup star's mass (student view calls, 2026-11-15) */
+  const YR_SID = 365.256363004;   /* sidereal year in days, demos/lib/constants.js yrSid */
+  function orbitRate() { const P = YR_SID * Math.sqrt(Math.pow(S.d, 3) / S.M); return { P, r: Math.min(P / 2, Math.max(P / 40, S.rate)) }; }
+  function rateText() { const r = orbitRate().r, n = (v) => (Math.abs(v - Math.round(v)) < 1e-9 ? String(Math.round(v)) : sig(v, 2));
+    return r >= 730 ? `1 s = ${n(r / YR_SID)} years` : r >= 1 ? (r === 1 ? '1 s = 1 day' : `1 s = ${n(r)} days`) : `1 s = ${n(r * 24)} hours`; }
   let last = performance.now();
   function frame(now) {
     const dt = Math.min(0.1, (now - last) / 1000); last = now;
-    if (S.run && !reduce() && !drag) { S.ang += dt * 0.35 * Math.min(4, Math.pow(Math.max(0.3, S.d / Math.max(1e-3, Math.sqrt(S.L))), -0.5)); drawSys(); }
+    if (S.run && !reduce() && !drag) { const o = orbitRate(); S.ang += dt * 2 * Math.PI * o.r / o.P; drawSys(); }
     requestAnimationFrame(frame);
   }
   function resize() { dpr = window.devicePixelRatio || 1;
@@ -1029,7 +1042,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     title: () => (howVid() === 'galactic-habitable-zone' ? 'How this works: the Galactic habitable zone' : 'How this works') });
   galPreset('sun');
   if (qs.get('view') === 'galaxy' || VD.ws('') === 'galactic-habitable-zone') setScale(true);
-  window.__pt = { GS, setScale, galPreset, ghzFactors, ghzGrid, S, PRESETS, applyPreset, state, redraw, sync, flux, tBare, tSurf, hzEdges, set: (o) => { Object.assign(S, o); sync(); redraw(); }, planetPx };
+  window.__pt = { orbitRate, rateText, GS, setScale, galPreset, ghzFactors, ghzGrid, S, PRESETS, applyPreset, state, redraw, sync, flux, tBare, tSurf, hzEdges, set: (o) => { Object.assign(S, o); sync(); redraw(); }, planetPx };
   requestAnimationFrame(frame);
 })();
 </script>

@@ -292,6 +292,5 @@ VDI18N.add('en', 'demo/radioactive-decay', [
 "ln N falls by λ = {#} per Myr",
 "bin = {#} Myr",
 "Potential energy of the alpha",
-"{#} yr ± {#} yr <span>true age {#} yr</span>",
 "parent gone"
 ]);

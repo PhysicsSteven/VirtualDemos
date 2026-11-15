@@ -728,9 +728,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (let k = 0; k < 8; k++) {
       const hit = tagBoxes.find((b) => x0 - 3 * ps < b[2] && x0 + w + 3 * ps > b[0] && y - hh < b[3] && y + hh > b[1]);
       if (!hit) break;
+      /* an unselected lens's F or F′ that would land on another lens's F or F′ is left out (its dot stays): on a phone they
+         stacked into a column under the eyepiece; selecting the lens shows them (student view calls, 2026-11-15) */
+      if (o.skipIfHit && hit[4]) { ctx.restore(); return; }
       y = up ? hit[1] - hh - 1 * ps : hit[3] + hh + 1 * ps;
     }
-    tagBoxes.push([x0 - 3 * ps, y - hh, x0 + w + 3 * ps, y + hh]);
+    tagBoxes.push([x0 - 3 * ps, y - hh, x0 + w + 3 * ps, y + hh, !!o.skipIfHit]);
     ctx.fillStyle = T.halo; ctx.beginPath(); ctx.rect(x0 - 3 * ps, y - fs / 2 - 2 * ps, w + 6 * ps, fs + 4 * ps); ctx.fill();
     ctx.textAlign = 'left'; ctx.fillStyle = color; ctx.fillText(text, x0, y + 0.5); ctx.restore();
   }
@@ -782,7 +785,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (const sg of [-1, 1]) {
       const fxp = X(e.z + sg * Math.abs(e.f)); if (fxp < -20 || fxp > W + 20) continue;
       ctx.fillStyle = selected ? T.sel : T.muted; ctx.beginPath(); ctx.arc(fxp, view.cy, (selected ? 4.5 : 3) * ps, 0, 7); ctx.fill();
-      if (selected || view.s * Math.abs(e.f) > 26 * ps) tag(sg > 0 ? (e.f > 0 ? 'F′' : 'F') : (e.f > 0 ? 'F' : 'F′'), fxp, view.cy + 13 * ps, selected ? T.sel : T.muted, { size: 10 });
+      if (selected || view.s * Math.abs(e.f) > 26 * ps) tag(sg > 0 ? (e.f > 0 ? 'F′' : 'F') : (e.f > 0 ? 'F' : 'F′'), fxp, view.cy + 13 * ps, selected ? T.sel : T.muted, { size: 10, skipIfHit: !selected });
     }
     tag(e.name, x, view.cy - r - 14 * ps, selected ? T.sel : T.muted, { size: 10, weight: selected ? 700 : 600 });
   }
@@ -889,7 +892,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       arrow(x, view.cy, x, Y(c.h), T.img, 2.4, !c.real || !formed);
       tag(`image ${i + 1}${!c.real ? ', virtual' : formed ? '' : ' (would form)'}`, x, Y(c.h) + (c.h > 0 ? -12 : 12) * ps, T.img, { size: 10 });
     });
-    if (m.chain.length && !isFinite(m.zF)) tag('final image at infinity', X(m.chain[m.chain.length - 1].lens.z) + 6 * ps, view.cy - 38 * ps, T.img, { size: 10, align: 'left' });
+    /* above the last lens's name, clear of the lens and the eye (it sat across the Magnifier's rim and the eye at 1280) (student view calls, 2026-11-15) */
+    if (m.chain.length && !isFinite(m.zF)) { const L = m.chain[m.chain.length - 1].lens; tag('final image at infinity', X(L.z), Math.max(12 * ps, view.cy - L.D / 2 * view.s - 30 * ps), T.img, { size: 10 }); }
     /* the exit pupil */
     const pu = m.pu;
     if (pu && isFinite(pu.ex.z) && isFinite(pu.ex.D)) {

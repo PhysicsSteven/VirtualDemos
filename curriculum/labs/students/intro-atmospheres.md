@@ -47,7 +47,7 @@ No hazards in the virtual lab.
 
 **Part 1: hotter is faster.** Choose Relax to equilibrium, then Argon. Set the temperature to 100 K, choose Random (thermal) starting speeds, and let the gas run for a few seconds so the histogram settles onto the curve. Record a reading. Do the same at 300 K and 1000 K. Send the three readings to the worksheet, then clear them.
 
-**Part 2: lighter is faster.** Set the temperature back to 300 K. Choose each gas in turn (hydrogen, helium, nitrogen, argon, carbon dioxide), let it settle for a few seconds, and record a reading. Watch the histogram spread out for the light gases. Send the five readings to the worksheet; they go into a second copy of the table.
+**Part 2: lighter is faster.** Set the temperature back to 300 K. Choose each gas in turn (hydrogen, helium, nitrogen, argon, carbon dioxide), let it settle for a few seconds, and record a reading. Watch the speed axis stretch for the light gases: the histogram keeps its shape while the speeds it covers grow. Send the five readings to the worksheet; they go into a second copy of the table.
 
 **Part 3: who keeps what.** With your Part 2 readings, fill in the second table below. For each body and each gas, first find the gas's rms speed at that body's temperature: rms speed at T = rms speed at 300 K × √(T ÷ 300). Then divide the escape speed by it.
 
