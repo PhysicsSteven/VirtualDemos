@@ -82,6 +82,7 @@ VDI18N.add('en', 'demo/gyroscope', [
 "wheel {#} turns/s: a blur to the eye (Slow motion or Strobe shows it turn)",
 "level",
 "Hold",
+"slow motion: {#}/{#} of real time",
 "wheel {#} turns/s: a blur to the eye",
 "slow motion: wheel {#} turns/s, shown at {#}",
 "Less spin, less angular momentum: the same torque turns it faster, and the dip (down to {#}° below level) and the wobble are large. At the top of each wobble the axle stops for an instant (a cusp). The average rate is now {#}% below Mgd/(I_s ω_s): the simple formula needs fast spin.",
@@ -96,6 +97,7 @@ VDI18N.add('en', 'demo/gyroscope', [
 "The same friction from a still tip (the wheel on bearings): now it drags against the precession, holding it back, and the axle sinks at about {#}° a second until it falls, after about {#} s.",
 "{#} mN·m (holds back the precession)",
 "Release it and let the gate time at least one full turn round the post.",
+"Close",
 "−{#} mN·m (holds back the precession)",
 "(Slow motion shows it turn)",
 "strobe {#} flashes/s · wheel {#} turns/s"

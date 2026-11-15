@@ -170,6 +170,9 @@ table.rows input:focus { border-color: var(--accent); }
 (() => {
   // ==CORE START==
   const G = 9.81, MW = 0.5, RW = 0.06, GY_VERSION = 'gyroscope@2026-10-22';
+  /* drawn lengths (m) of the torque and weight arrows from the wheel's center. Both lie in the wheel's plane, and at 9 and 7 cm, against
+     a 6 cm wheel, they hid inside it: the 3D view showed the word Mg under the wheel with no arrow (student view, 2026-11-15) */
+  const VEC_T = 0.12, VEC_W = 0.12;
   const KS = { disk: 0.5, rim: 0.905 };   // I_s = k M R²
   // moments of the wheel+axle about the pivot: I_s about the axle, I_1 about a horizontal line through the pivot (lamina: I_diam = I_s/2, plus Md²)
   function tops(k, d) { const Is = k * MW * RW * RW; return { Is, I1: Is / 2 + MW * d * d, Mgd: MW * G * d }; }
@@ -303,7 +306,7 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
       const gq = Q([S.d + 0.035, 0, -postH]); ctx.fillStyle = T.accent; ctx.font = `700 ${10 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; if (gq[2] < 1) halo('gate', gq[0] + 4, gq[1] + 2);
       if (S.vecs && c.w3 > 0 && !S.fell) {
         const tau = cross(C, [0, 0, -MW * G]), tm = Math.hypot(...tau) || 1;
-        lab(C.map((x, i) => x + e[i] * 0.16), 'L', T.Lv, C); lab(C.map((x, i) => x + tau[i] / tm * 0.09), 'τ = dL/dt', T.tauInk, C); lab([C[0], C[1], C[2] - 0.07], 'Mg', T.muted, C);
+        lab(C.map((x, i) => x + e[i] * 0.16), 'L', T.Lv, C); lab(C.map((x, i) => x + tau[i] / tm * VEC_T), 'τ = dL/dt', T.tauInk, C); lab([C[0], C[1], C[2] - VEC_W], 'Mg', T.muted, C);
       }
       const st = strobeNow(c), cb = $('camBar'); cb.style.bottom = `${Hh - h3 + 8}px`;
       if (st) { ctx.font = `${10.5 * p}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom';
@@ -377,8 +380,8 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
     if (S.vecs && c.w3 > 0 && !S.fell) {
       const Lsc = 0.16, tau = cross(C, [0, 0, -MW * G]), tmag = Math.hypot(...tau) || 1;
       arrow(wc, P(...C.map((x, i) => x + e[i] * Lsc)), T.Lv, 3 * p, 'L');
-      arrow(wc, P(...C.map((x, i) => x + tau[i] / tmag * 0.09)), T.tau, 2.5 * p, 'τ = dL/dt');
-      const mg = P(C[0], C[1], C[2] - 0.07); arrow(wc, mg, T.muted, 1.5 * p, 'Mg');
+      arrow(wc, P(...C.map((x, i) => x + tau[i] / tmag * VEC_T)), T.tau, 2.5 * p, 'τ = dL/dt');
+      const mg = P(C[0], C[1], C[2] - VEC_W); arrow(wc, mg, T.muted, 1.5 * p, 'Mg');
     }
     }
     if (G3.on && g3) { strip3(c, p, stripH); return; }
@@ -632,7 +635,7 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
     g.spinA.visible = show; g.spinA.position.z = S.d + 0.016;
     trace3(g.tipTr, (d) => d + 0.03, 0.0022, G3.cTip, !reduce); trace3(g.lTr, (d) => d + 0.16, 0.0016, G3.cL, !reduce && show);
     const C = e.map((x) => x * S.d), tau = cross(C, [0, 0, -MW * G]);
-    setArrow(g.aL, C, show ? e : [0, 0, 0], 0.16); setArrow(g.aT, C, show ? tau : [0, 0, 0], 0.09); setArrow(g.aW, C, show ? [0, 0, -1] : [0, 0, 0], 0.07);
+    setArrow(g.aL, C, show ? e : [0, 0, 0], 0.16); setArrow(g.aT, C, show ? tau : [0, 0, 0], VEC_T); setArrow(g.aW, C, show ? [0, 0, -1] : [0, 0, 0], VEC_W);
     g.S3.render();
     return (q) => g.S3.project(q);
   }
@@ -643,14 +646,16 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
      faster, the wheel is drawn blurred, as the eye sees a real one. Slow motion divides the rate the screen shows by 10. */
   const shownRate = (c) => c.w3 * (S.slow ? 0.1 : 1);
   const followable = (c) => !reduce && shownRate(c) * S.fdt < 0.7;
-  function spinNote(c) {
+  /* the clock's rate, always on screen above the spin note: it runs in real time unless Slow motion is on (student view, 2026-11-15) */
+  function spinNote(c) { const n = spinNote1(c), r = S.slow ? 'slow motion: 1/10 of real time' : 'real time'; return n ? `${r}\n${n}` : r; }
+  function spinNote1(c) {
     if (!(c.w3 > 0) || S.fell) return '';
     const f = c.w3 / (2 * Math.PI), fx = (v) => (v < 10 ? v.toFixed(2) : v.toFixed(1));
     if (followable(c)) return S.slow ? `slow motion: wheel ${fx(f)} turns/s, shown at ${fx(f / 10)}` : '';
     return `wheel ${fx(f)} turns/s: a blur to the eye${G3.on ? ' (Slow motion or Strobe shows it turn)' : S.slow ? '' : ' (Slow motion shows it turn)'}`;
   }
   /* the note on two lines where one does not fit (a phone): the hint in brackets goes on the second */
-  const noteLines = (t, w) => { const i = t.indexOf(' ('); return i > 0 && ctx.measureText(t).width > w ? [t.slice(0, i), t.slice(i + 1)] : [t]; };
+  const noteLines = (t, w) => t.split('\n').flatMap((u) => { const i = u.indexOf(' ('); return i > 0 && ctx.measureText(u).width > w ? [u.slice(0, i), u.slice(i + 1)] : [u]; });
   function strobeNow(c) {
     if (!STROBE.on || !(c.w3 > 0)) return null;
     const f = c.w3 / (2 * Math.PI); if (f <= 0.5) return null;

@@ -564,6 +564,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const VIEW_RINGS = { jupiter: 3.4, saturn: 3.3, uranus: 4.0, neptune: 3.2 }, VIEW_MOONS = { jupiter: 28, saturn: 22, uranus: 24.5, neptune: 16, mars: 8.2, pluto: 16.5 };
   const CONJ = { jupiter: [[0, 1], [1, 2]], saturn: [[1, 3], [0, 2]], uranus: [], neptune: [], mars: [], pluto: [] };
   const SPEED = { planets: 3600, rings: 3600, moons: 86400, io: 21600, clouds: 3600 };
+  /* Moons view: choosing Mars at 1 day a second sent Phobos round three times a second, a blur; Mars opens at 1 hour a second
+     (Phobos 7.7 s a turn) and Pluto at 6 hours a second, as their setups do (student view, 2026-11-15) */
+  const MOON_SPEED = { mars: 3600, pluto: 21600 };
   const PRESETS = {
     giants: { mode: 'planets', planet: 'jupiter', sel: 'jupiter', earth: true, hint: 'Jupiter, Saturn, Uranus and Neptune side by side at their true sizes, with Earth for scale, seen from a little above the plane of their orbits and each with its axis at its real tilt. The bars below compare their mean densities with water. Click a planet for its numbers.' },
     float: { mode: 'planets', planet: 'saturn', sel: 'saturn', earth: true, hint: 'Saturn has 95 times Earth\'s mass but 764 times its volume, so its mean density is 0.687 g/cm³, less than water\'s 1.00 g/cm³. It is the only planet that would float, if there were a tub big enough. It also turns in 10.7 hours, and the fast spin and low density make it the flattest planet: its equator is 9.8 % wider than its poles.' },
@@ -861,8 +864,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const Ed = kepE(st.M, ex), fd = 2 * Math.atan2(Math.sqrt(1 + ex) * Math.sin(Ed / 2), Math.sqrt(1 - ex) * Math.cos(Ed / 2)), rd = aE * (1 - ex * Math.cos(Ed));
     const ix = L.cx + rd * Math.cos(fd) * L.s, iy = L.cy - rd * Math.sin(fd) * L.s;
     ctx.fillStyle = '#e7c85a'; ctx.beginPath(); ctx.arc(ix, iy, 5 * pp, 0, 2 * Math.PI); ctx.fill();
-    label('Io', ix + 8, iy - 8, { w: 700 }); label('closest', L.cx + aE * (1 - ex) * L.s - 4, L.cy + 14, { a: 'right', col: K.muted, w: 400, size: 10 }); label('farthest', L.cx - aE * (1 + ex) * L.s + 4, L.cy + 14, { col: K.muted, w: 400, size: 10 });
-    label(S.exag ? `Orbit drawn ${f(ex / Math.max(S.e, 1e-9), 0)} times more oval than it is` : 'Orbit to scale', 16 * pp, 18 * pp, { col: K.muted, w: 400, size: 10 });
+    /* a circle has no closest or farthest point, and at e = 0 the caption read "drawn 0 times more oval": it keeps the factor the
+       exaggeration uses, 60 (student view, 2026-11-15) */
+    label('Io', ix + 8, iy - 8, { w: 700 }); if (S.e > 0) { label('closest', L.cx + aE * (1 - ex) * L.s - 4, L.cy + 14, { a: 'right', col: K.muted, w: 400, size: 10 }); label('farthest', L.cx - aE * (1 + ex) * L.s + 4, L.cy + 14, { col: K.muted, w: 400, size: 10 }); }
+    label(S.exag ? `Orbit drawn ${f(S.e > 0 ? ex / S.e : 60, 0)} times more oval than it is` : 'Orbit to scale', 16 * pp, 18 * pp, { col: K.muted, w: 400, size: 10 });
     if (S.exag && S.e === 0) label('e = 0: a circle', 16 * pp, 34 * pp, { col: K.muted, w: 400, size: 10 });
     /* right: Io close up, its long axis toward Jupiter, its surface turning at a steady rate (a marked mountain) */
     const R0 = narrow() ? Math.min(avail * 0.2, H * 0.14) : Math.min(avail * 0.16, H * 0.22), C = narrow() ? { x: avail * 0.5, y: H * 0.75 } : { x: avail * 0.72, y: H * 0.5 };
@@ -881,8 +886,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const jA = Math.PI + st.f + (S.exag ? (st.f - st.M) * (swing - 1) : 0), ax = C.x + R0 * 1.9 * Math.cos(jA), ay = C.y - R0 * 1.9 * Math.sin(jA);
     ctx.save(); ctx.strokeStyle = K.accent; ctx.lineWidth = 2 * pp; ctx.beginPath(); ctx.moveTo(C.x + R0 * 1.3 * Math.cos(jA), C.y - R0 * 1.3 * Math.sin(jA)); ctx.lineTo(ax, ay); ctx.stroke(); ctx.restore();
     label('to Jupiter', ax + 6 * Math.cos(jA), ay - 10 * Math.sin(jA) - 4, { a: Math.cos(jA) < 0 ? 'right' : 'left', col: K.accent, w: 700, size: 11 });
-    label(S.exag ? 'Io close up: stretch and sway exaggerated' : 'Io close up, to scale: the stretch is too small to see', C.x, C.y - R0 * 2.1 - 16, { a: 'center', col: K.muted, w: 400, size: 10 });
-    label('▲ a mountain fixed on Io', C.x, C.y - R0 * 2.1, { a: 'center', col: K.muted, w: 400, size: 10 });
+    /* the captions sit beyond the reach of the arrow and its "to Jupiter" label, which wrote over them each time Io was at the far
+       side of its orbit and the arrow pointed up (student view, 2026-11-15) */
+    label(S.exag ? 'Io close up: stretch and sway exaggerated' : 'Io close up, to scale: the stretch is too small to see', C.x, C.y - R0 * 1.9 - 46 * pp, { a: 'center', col: K.muted, w: 400, size: 10 });
+    label('▲ a mountain fixed on Io', C.x, C.y - R0 * 1.9 - 30 * pp, { a: 'center', col: K.muted, w: 400, size: 10 });
     void base; void dirJ; void ang;
   }
 
@@ -1203,7 +1210,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function setRun(on) { S.run = on; card.away(false); $('play').textContent = on ? 'Pause' : 'Play'; $('play').classList.toggle('attn', !on); }
   for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
   for (const b of document.querySelectorAll('#modeSeg button')) b.addEventListener('click', () => { custom(); setRun(false); S.t = 0; setMode(b.dataset.mode); });
-  $('selPlanet').addEventListener('change', (e) => { if (S.mode !== 'moons' && !GIANTS.includes(e.target.value)) { sync(); return; } custom(); S.planet = e.target.value; S.moon = 0; S.cm = null; if (S.mode === 'clouds') S.lp = Math.log(CLOUD_PL[S.planet].bottom * 0.999); if (S.mode === 'rings') pileReset(); S.t = 0; setRun(false); sync(); readouts(); clock(); draw(); });
+  $('selPlanet').addEventListener('change', (e) => { if (S.mode !== 'moons' && !GIANTS.includes(e.target.value)) { sync(); return; } custom(); S.planet = e.target.value; S.moon = 0; S.cm = null; if (S.mode === 'moons') S.speed = MOON_SPEED[S.planet] || SPEED.moons; if (S.mode === 'clouds') S.lp = Math.log(CLOUD_PL[S.planet].bottom * 0.999); if (S.mode === 'rings') pileReset(); S.t = 0; setRun(false); sync(); readouts(); clock(); draw(); });
   $('chkEarth').addEventListener('change', (e) => { custom(); S.earth = e.target.checked; if (!S.earth && S.sel === 'earth') S.sel = 'jupiter'; readouts(); draw(); });
   $('sRho').addEventListener('input', (e) => { custom(); S.rho = +e.target.value; pileReset(); setRun(false); sync(); readouts(); clock(); draw(); });
   for (const b of document.querySelectorAll('[data-rho]')) b.addEventListener('click', () => { custom(); S.rho = +b.dataset.rho; pileReset(); setRun(false); sync(); readouts(); clock(); draw(); });

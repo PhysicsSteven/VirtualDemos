@@ -995,8 +995,15 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
 
   function resize() {
     dpr = window.devicePixelRatio || 1;
-    const r1 = mainPane.getBoundingClientRect(), r2 = chartPane.getBoundingClientRect();
+    const r1 = mainPane.getBoundingClientRect(), r2 = chartPane.getBoundingClientRect(), W0 = W, H0 = H;
     W = r1.width; H = r1.height; CW = r2.width; CH = r2.height;
+    /* a view that is not fitted automatically (the sandbox, or one zoomed by hand) keeps the same point at the middle of the picture
+       and shrinks or grows with it: it used to keep its old pixel center, so a narrower window (a phone turned, the 400 px phone check)
+       left the sandbox's star and planets off the right edge with their names piled on top of each other (student view, 2026-11-15) */
+    if (!autoView && W0 > 0 && H0 > 0 && W > 0 && H > 0 && (W !== W0 || H !== H0)) {
+      const k = Math.min(W / W0, H / H0);
+      for (const v of [V, VT]) { v.cx = W / 2 + (v.cx - W0 / 2) * k; v.cy = H / 2 + (v.cy - H0 / 2) * k; v.s *= k; }
+    }
     for (const [c, w, h] of [[view, W, H], [chart, CW, CH]]) {
       c.width = Math.round(w * dpr); c.height = Math.round(h * dpr);
       c.style.width = w + 'px'; c.style.height = h + 'px';
@@ -1093,6 +1100,19 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(ex, ey); ctx.stroke();
     if (L > head) arrowHead(ctx, x1, y1, ang, head);
   }
+  /* the wedge areas are written last on the picture and skip any place another word already holds: drawn first, they sat on top of
+     "empty focus", "aphelion", the star's mass and the Mercury spin count (student view, 2026-11-15). text() records each box while
+     lblBoxes is a list. */
+  let lblBoxes = null;
+  function wedgeLabels(ctx, T, ps, list) {
+    ctx.font = `600 ${10 * ps}px ${T.mono}`;
+    for (const [s, x, y] of list) {
+      const hw = ctx.measureText(s).width / 2 + 2 * ps, hh = 7 * ps;
+      if (lblBoxes && lblBoxes.some((b) => x + hw > b[0] && x - hw < b[2] && y + hh > b[1] && y - hh < b[3])) continue;
+      text(ctx, T, s, x, y, 'center', 'middle', T.ink, 10 * ps, 600);
+    }
+    lblBoxes = null;
+  }
   function text(ctx, T, str, x, y, align, base, color, size, weight, box) {
     ctx.font = `${weight || 600} ${size}px ${T.mono}`;
     const tw = ctx.measureText(str).width, cw = ctx.canvas.width / dpr, ch = ctx.canvas.height / dpr, pad = 4 * T.ps;
@@ -1102,6 +1122,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     let top = base === 'top' ? y : base === 'bottom' ? y - size : y - size / 2;
     const ct = Math.max(pad, Math.min(ch - pad - size, top));
     y += ct - top; top = ct;
+    if (lblBoxes) lblBoxes.push([left - 3 * T.ps, top - 2 * T.ps, left + tw + 3 * T.ps, top + size + 2 * T.ps]);
     if (box) {
       ctx.fillStyle = T.canvas; ctx.strokeStyle = T.line; ctx.lineWidth = 1;
       ctx.beginPath();
@@ -1156,7 +1177,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     if (S.layers.space) spaceBackdrop(ctx);
     else { ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H); }
-    const A = S.A, elA = elements(A), elL = elements(S.launch);
+    const A = S.A, elA = elements(A), elL = elements(S.launch), wl = []; lblBoxes = [];
 
     // AU grid
     const spanX = W / V.s;
@@ -1203,7 +1224,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
         if (px < 0 || px > W || py < 0 || py > H) continue;
         const [ssx, ssy] = toPx(0, 0);
         if (Math.hypot(px - ssx, py - ssy) < 40 * ps) continue;
-        text(ctx, T, Math.abs(wd.area).toPrecision(3), px, py, 'center', 'middle', T.ink, 10 * ps, 600);
+        wl.push([Math.abs(wd.area).toPrecision(3), px, py]);
       }
     }
 
@@ -1378,6 +1399,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     const y0 = clockY();
     text(ctx, T, 't = ' + fmtT(S.t), 12 * ps, y0, 'left', 'top', T.ink, 13 * ps, 700);
     text(ctx, T, statusText(A, elA), 12 * ps, y0 + 18 * ps, 'left', 'top', T.muted, 11 * ps, 600);
+    wedgeLabels(ctx, T, ps, wl);
   }
   /* Newton's laws on planet A (layers Gravity force and Straight path with no gravity): the pull of the star per kilogram,
      GM/r² toward it, drawn to one scale for the run (half the circular speed circle at the launch point), but never longer than
@@ -2625,8 +2647,8 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     ctx.beginPath(); ctx.arc(p[0], p[1], r, 0, TAU); ctx.lineWidth = 1 * ps; ctx.strokeStyle = T.muted; ctx.stroke();
     ctx.beginPath(); ctx.moveTo(p[0], p[1]); ctx.lineTo(p[0] + ux * r, p[1] + uy * r); ctx.lineWidth = 2.4 * ps; ctx.strokeStyle = T.ink; ctx.stroke();
     ctx.beginPath(); ctx.arc(p[0] + ux * r, p[1] + uy * r, 3 * ps, 0, TAU); ctx.fillStyle = T.ink; ctx.fill();
-    const n = S.t / P;
-    text(ctx, T, n.toFixed(2) + ' orbits · ' + (1.5 * n).toFixed(2) + ' turns', p[0], p[1] + r + 6 * ps, 'center', 'top', T.ink, 10 * ps, 600, true);
+    const n = S.t / P;   /* "spins", not "turns": on the opening picture "3.11 turns" read as turns of the orbit (student view, 2026-11-15) */
+    text(ctx, T, n.toFixed(2) + ' orbits · ' + (1.5 * n).toFixed(2) + ' spins', p[0], p[1] + r + 6 * ps, 'center', 'top', T.ink, 10 * ps, 600, true);
   }
 
   // ---------- 3D view (three.js through demos/lib/vd3kit.js) ----------
@@ -2880,6 +2902,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   function labels3D(elA, elL) {
     const T = Object.assign(tokens(), SPACE), ps = T.ps, ctx = vctx, A = S.A, L = S.launch, k = T3.k;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
+    const wl = []; lblBoxes = [];
     const fs = 11 * ps, inView = (p) => p[2] < 1 && p[0] > -40 && p[0] < W + 40 && p[1] > -40 && p[1] < H + 40;
     const s0 = P3(0, 0), pxPerAU = Math.abs(P3(1 / k * 0.1, 0)[0] - s0[0]) * 10 * k;
     // wedge areas, inside completed wedges that are large enough on the picture
@@ -2889,7 +2912,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       if (Math.abs(a2) / 2 < 2600 * ps * ps) continue;
       const mid = wd.pts[Math.floor(wd.pts.length / 2)], m = P3(mid[0] * 0.62, mid[1] * 0.62);
       if (!inView(m) || Math.hypot(m[0] - s0[0], m[1] - s0[1]) < 40 * ps) continue;
-      text(ctx, T, Math.abs(wd.area).toPrecision(3), m[0], m[1], 'center', 'middle', T.ink, 10 * ps, 600);
+      wl.push([Math.abs(wd.area).toPrecision(3), m[0], m[1]]);
     }
     // foci, axis, apsides
     let aBox = null, perLab = null;
@@ -2961,6 +2984,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     const notes = W < 560 * ps ? [g, 'Star and planets far larger than to scale.', 'Drag the arrow tip to launch; drag elsewhere to turn.']
       : [(g ? g + ' ' : '') + 'Star and planets drawn far larger than to scale.', 'Drag the arrow tip to launch; drag elsewhere to turn.'];
     notes.filter(Boolean).reverse().forEach((l, i) => text(ctx, T, l, 12 * ps, H - (12 + 16 * i) * ps - botPad(), 'left', 'bottom', T.muted, (W < 400 ? 9 : 10) * ps, 400));
+    wedgeLabels(ctx, T, ps, wl);
   }
   // dragging on the 3D picture: the arrow tip, the launch marker or a ruler point; anything else turns the view (VD3.orbit)
   const evPx3 = (e) => { const r = T3.S.el.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };

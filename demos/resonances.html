@@ -909,11 +909,11 @@ onmessage = (e) => { const d = e.data;
     let ymax, title;
     if (many) { ymax = Math.max(10, Math.ceil(Math.max(...hist.v, 0) * 1.25 / 5) * 5); title = `bodies thrown out so far (of ${sys.n})`; }
     else if (S.scene === 'belt') { ymax = 0.5; title = 'eccentricity e of the asteroid'; }
-    else { ymax = 75; title = 'distance from Neptune (AU)'; }
+    else { ymax = Math.max(75, Math.ceil(Math.max(...hist.v, 0) / 25) * 25); title = 'distance from Neptune (AU)'; }   /* was a fixed 75 AU: Pluto gets 80 AU from Neptune, so its curve was cut flat at the top and looked as if it stayed at 75 (student view, 2026-11-15) */
     const X = (t) => x0 + t / tmax * w, Y = (v) => y0 + h * (1 - v / ymax);
     px.font = `${10.5 * p}px ${K.mono}`; px.strokeStyle = K.line; px.lineWidth = 1; px.beginPath(); px.moveTo(x0, y0); px.lineTo(x0, y0 + h); px.lineTo(x0 + w, y0 + h); px.stroke();
     const tick = (v, d) => { const y = Y(v); px.fillStyle = K.muted; px.textAlign = 'right'; px.textBaseline = 'middle'; px.fillText(fx(v, d), x0 - 5, y); };
-    if (many) for (let v = 0; v <= ymax; v += ymax / 5) tick(v, 0); else if (S.scene === 'belt') for (let v = 0; v <= 0.5 + 1e-9; v += 0.1) tick(v, 1); else for (let v = 0; v <= 75; v += 25) tick(v, 0);
+    if (many) for (let v = 0; v <= ymax; v += ymax / 5) tick(v, 0); else if (S.scene === 'belt') for (let v = 0; v <= 0.5 + 1e-9; v += 0.1) tick(v, 1); else for (let v = 0; v <= ymax; v += 25) tick(v, 0);
     const nMax = Math.max(2, Math.floor(w / (58 * p))); let ts = Math.pow(10, Math.floor(Math.log10(tmax / nMax))); for (const k of [2, 2.5, 2]) if (tmax / ts > nMax) ts *= k;
     for (let t = 0; t <= tmax; t += ts) { const lb = fint(t), x = Math.min(X(t), PW - 2 - px.measureText(lb).width / 2); px.fillStyle = K.muted; px.textAlign = 'center'; px.textBaseline = 'top'; px.fillText(lb, x, y0 + h + 5 * p); }
     px.fillStyle = K.muted; px.textAlign = 'center'; px.textBaseline = 'bottom'; px.fillText('time (years)', x0 + w / 2, PH - 2);
@@ -1014,7 +1014,7 @@ onmessage = (e) => { const d = e.data;
   function draw3() {
     const g = g3, S3 = g.S3, narrow = W < 821, cardW = narrow ? 0 : $('setupCard').offsetWidth + 28;
     S3.size(W, H); S3.cam.setViewOffset(W, H, cardW / 2, 0, W, H);
-    S3.place(G3.o, [0, 0, 0], S3.fit(2.9, 1.3));
+    S3.place(G3.o, [0, 0, 0], S3.fit(3.3, 1.3));   /* backed off from 2.9: at 1280 the near side of Jupiter's orbit ran under the graphs, so Jupiter vanished off the bottom once a turn (student view, 2026-11-15) */
     const nepS = S.scene === 'neptune', R = nepS ? Math.max(35, S.X ? S.xa * (1 + S.xe) + 3 : 0) : SCENES[S.scene].R, k = 1 / R;
     Object.values(g.orbits).forEach((l) => { l.visible = false; }); Object.values(g.labels).forEach((l) => { l.visible = false; });
     for (const m of [g.planet, g.body, g.ura, g.nepB, g.jup, g.sat, g.xB]) m.visible = false;

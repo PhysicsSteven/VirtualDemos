@@ -6,15 +6,15 @@ Student worksheet · Astro 2203
 <details class="about" markdown="1">
 <summary>About the demo</summary>
 
-**Setups in the demo:** Four giants to scale; Saturn would float; Uranus on its side; Saturn's rings and the Roche limit; A moon torn into a ring; A rock moon survives; Rings shear; Gaps, shepherds and Mimas; Io, Europa, Ganymede 1:2:4; Europa stretches Io's orbit; Enceladus and Dione 2:1; Triton goes backward; Mars weighed by Phobos; Pluto and Charon; Io's tides heat it; Io on a circle.
+**Setups in the demo:** Four giants to scale; Saturn would float; Uranus on its side; Saturn's rings and the Roche limit; A moon torn into a ring; A rock moon survives; Rings shear; Gaps, shepherds and Mimas; Io, Europa, Ganymede 1:2:4; Europa stretches Io's orbit; Enceladus and Dione 2:1; Triton goes backward; Mars weighed by Phobos; Pluto and Charon; Io's tides heat it; Io on a circle; Jupiter's three cloud decks; Where the Galileo probe fell; Saturn's clouds lie deeper; Uranus has no ammonia cloud; Neptune's methane clouds; A wetter Jupiter.
 
 **Using the demo.**
 
-- The strip across the top switches between four views: Planets, Rings, Moons and Io. Each can be shown flat or in 3D; drag the 3D view to turn it.
+- The strip across the top switches between five views: Planets, Rings, Moons, Io's tides and Clouds. All but Clouds can be shown flat or in 3D; drag the 3D view to turn it. This worksheet uses the first four.
 - **Planets** shows Jupiter, Saturn, Uranus and Neptune side by side at their true sizes, each tipped at its real axial tilt, with Earth for scale if you like. The bars underneath compare the planets' mean densities with water's. Click a planet for its numbers.
 - **Rings** looks down on a planet's rings from above its north pole, to scale. A test moon, a loose pile of 200 boulders held together only by its own gravity, orbits at the distance you set, and its density can be anything from fluffy ice to rock. The orange circle is the Roche limit for that density. Start the clock to see whether the moon holds together; the readouts give the share of the moon still in its largest piece and how many orbits it has made. You can also paint a straight line across the rings and watch it wind up.
 - **Moons** shows a planet's main moons on their real orbits, starting from where they were at noon on 1 January 2000 for Jupiter and Saturn. Each moon is drawn 20 times bigger than it really is and colored by its density. Choose a moon on the card for its distance, period and density. For Jupiter, Moons pull on each other computes the four big moons step by step, each pulled by Jupiter and by the other three, and graphs how oval Io's orbit is.
-- **Io** follows Io on its slightly oval orbit, with a close up of Io stretched by Jupiter's tide. The card sets how oval the orbit is (its eccentricity $$e$$), and the readouts give the tidal heating.
+- **Io's tides** follows Io on its slightly oval orbit, with a close up of Io stretched by Jupiter's tide. The card sets how oval the orbit is (its eccentricity $$e$$), and the readouts give the tidal heating.
 - Record reading stores the numbers for the view on show. Export to worksheet sends the readings to the matching Data table below (Moons readings to the first table, Planets, Rings and Io readings to the tables named for them); Clear starts a new series, which goes into a new copy of the table.
 
 </details>
@@ -53,7 +53,7 @@ No hazards in the virtual lab.
 
 **Part 3: tearing a moon apart.** In the Rings view, choose Saturn and give the test moon the density of solid ice, 0.92 g/cm³. Put it at 3.0 Saturn radii, start the clock and let it make 3 orbits. Pause and record a reading. Reset, then repeat with the moon at 2.0, 1.6, 1.5 and 1.4 Saturn radii. Then make the moon rock, 3.0 g/cm³, put it at 1.5 Saturn radii and record a reading after 3 orbits. Send the readings to the worksheet, then clear them.
 
-**Part 4: Io's tidal heating.** In the Io view, record a reading with Io's orbit at eccentricity 0, 0.002, 0.004 (Io's real value), 0.006 and 0.008. Send the readings to the worksheet.
+**Part 4: Io's tidal heating.** In the Io's tides view, record a reading with Io's orbit at eccentricity 0, 0.002, 0.004 (Io's real value), 0.006 and 0.008. Send the readings to the worksheet.
 
 ## Data
 

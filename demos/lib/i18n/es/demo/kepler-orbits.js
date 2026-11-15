@@ -12,8 +12,8 @@ VDI18N.add('es', 'demo/kepler-orbits', {
   "circular {#}",
 "escape {#} km/s":
   "escape {#} km/s",
-"{#} orbits · {#} turns":
-  "{#} órbitas · {#} giros",
+"{#} orbits · {#} spins":
+  "{#} órbitas · {#} vueltas sobre su eje",
 "star and planet not to scale":
   "estrella y planeta no a escala",
 "Bound: ellipse":
@@ -394,8 +394,6 @@ VDI18N.add('es', 'demo/kepler-orbits', {
   "La rapidez de lanzamiento es igual a la rapidez circular, así que la punta de la flecha queda sobre el círculo dorado y los dos focos se juntan en la estrella. Prueba {#} o {#} veces ese valor.",
 "Launch at {#} times the escape speed. Energy is positive, the path is a hyperbola and the planet leaves for good at a finite speed v∞.":
   "Lanzamiento a {#} veces la rapidez de escape. La energía es positiva, la trayectoria es una hipérbola y el planeta se va para siempre con una rapidez finita v∞.",
-"Energy bars, in MJ/kg: Kinetic {#}, Potential −{#}, Total {#}.":
-  "Barras de energía, en MJ/kg: cinética {#}, potencial −{#}, total {#}.",
 "This orbit is not closed, so it has no period":
   "Esta órbita no es cerrada, así que no tiene periodo",
 "Newton’s laws make the orbit. The only force on the planet is the star’s gravity, F = GMm/r², pulling toward the star (the green arrow). With no force the planet would go straight on (the dashed line), as the first law says; the pull bends its path and speeds it up or slows it down, as the second law says. Gravity is the only force, so the total energy E = ½mv² − GMm/r stays the same while kinetic and potential energy trade back and forth (the chart below). The launch speed against the escape speed √(2GM/r) sets the sign of E: below it E &lt; {#} and the path closes (a circle at v = √(GM/r), else an ellipse); at it E = {#} and the path is a parabola; above it E > {#} and the path is a hyperbola. Launched sideways, e = |{#}(v₀/v<sub>esc</sub>)² − {#}|. To see a probe go from bound to unbound, try Sandbox, then Gravity assist past Jupiter.":
@@ -584,8 +582,8 @@ VDI18N.add('es', 'demo/kepler-orbits', {
   "residuo (años²)",
 "{#}×{#}⁻¹⁵ of the mean ({#} wedges)":
   "{#}×{#}⁻¹⁵ de la media ({#} cuñas)",
-"{#}×{#}⁻¹⁶ of the mean ({#} wedges)":
-  "{#}×{#}⁻¹⁶ de la media ({#} cuñas)",
+"Energy bars, in MJ/kg: Kinetic {#}, Potential −{#}, Total {#}.":
+  "Barras de energía, en MJ/kg: cinética {#}, potencial −{#}, total {#}.",
 "{#}×{#}⁻¹⁶ of |E|":
   "{#}×{#}⁻¹⁶ de |E|",
 "−{#}×{#}⁻¹⁶ of |E|":
@@ -608,14 +606,16 @@ VDI18N.add('es', 'demo/kepler-orbits', {
   "{#} MJ/kg: no ligada, sale del sistema solar",
 "Orbit around Star":
   "Órbita alrededor de Estrella",
+"Kepler's third law: orbital period against semi major axis on log scales, with the planets of the solar system and the current orbit.":
+  "Tercera ley de Kepler: periodo orbital en función del semieje mayor en escalas logarítmicas, con los planetas del sistema solar y la órbita actual.",
+"{#}×{#}⁻¹⁶ of the mean ({#} wedges)":
+  "{#}×{#}⁻¹⁶ de la media ({#} cuñas)",
 "{#} of |E|":
   "{#} de |E|",
 "{#}×{#}⁻¹⁵ of |E|":
   "{#}×{#}⁻¹⁵ de |E|",
 "{#}×{#}⁻¹⁴ of |E|":
   "{#}×{#}⁻¹⁴ de |E|",
-"Kepler's third law: orbital period against semi major axis on log scales, with the planets of the solar system and the current orbit.":
-  "Tercera ley de Kepler: periodo orbital en función del semieje mayor en escalas logarítmicas, con los planetas del sistema solar y la órbita actual.",
 "total E = K + U":
   "total E = K + U",
 "{#}×{#}⁻⁸ of |E|":
