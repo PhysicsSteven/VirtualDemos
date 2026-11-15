@@ -1062,7 +1062,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const out = [];
     if (S.driver === 'force') D.ms.modes.forEach((md, k) => { if (!md.rigid && isDriven(k)) { const f = modeF(md); if (f >= F_MIN && f <= D.fmax) out.push({ f, k }); } });
     else for (const L of driveResonances(D.ms.lam2, D.phiP, D.Lc, D.wA, D.M / MD, D.fmax / D.fs)) { const f = L * D.fs; if (f >= F_MIN) out.push({ f, k: dominant(f) }); }
-    return out.sort((a, b) => a.f - b.f);
+    out.sort((a, b) => a.f - b.f);
+    /* a square drumhead's (m, n) and (n, m) modes share one frequency: one resonance, listed once, under the mode the drive
+       excites more (2026-11-15: 405.39 Hz was listed twice) */
+    const list = [];
+    for (const r of out) { const q = list[list.length - 1];
+      if (q && r.f - q.f <= 1e-9 * r.f) { if (Math.abs(D.phiP[r.k] || 0) > Math.abs(D.phiP[q.k] || 0)) list[list.length - 1] = r; } else list.push(r); }
+    return list;
   }
   /* a drumhead's drive is a mean over a pad or the whole head, so far smaller numbers still drive a mode */
   function isDriven(k) { return Math.abs(D.phiP[k]) >= (drum() ? 0.01 : DRIVEN); }

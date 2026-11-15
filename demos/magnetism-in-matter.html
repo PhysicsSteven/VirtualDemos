@@ -274,7 +274,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function upd() { sync(); readouts(); draw(); }
   const userChange = () => { S.preset = ''; };
   $('presets').addEventListener('click', (e) => { const b = e.target.closest('[data-p]'); if (b) applyPreset(b.dataset.p); });
-  $('mats').addEventListener('click', (e) => { const b = e.target.closest('[data-m]'); if (!b) return; userChange(); S.sweep = null; setMat(b.dataset.m); pushTrace(S.I); upd(); });
+  $('mats').addEventListener('click', (e) => { const b = e.target.closest('[data-m]'); if (!b) return; userChange(); if (S.sweep) S.I = Math.round(S.I / 0.005) * 0.005; /* a stopped sweep lands between slider steps: snap to the slider so I, the slider and B₀ = μ₀nI agree */ S.sweep = null; setMat(b.dataset.m); pushTrace(S.I); upd(); });
   $('sI').addEventListener('input', (e) => { userChange(); S.sweep = null; setI(+e.target.value); upd(); });
   $('sN').addEventListener('input', (e) => { userChange(); const n = +e.target.value; if (n === S.n) return; S.n = n; S.trace = []; if (S.mat === 'iron') ironTo(S.iron, S.n * 100 * S.I); pushTrace(S.I); upd(); });
   $('sweepBtn').addEventListener('click', () => { userChange(); if (S.sweep && !S.sweep.decay) S.sweep = null; else startSweep(false); upd(); });
