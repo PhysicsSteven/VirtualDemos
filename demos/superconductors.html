@@ -312,7 +312,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       sc.add(VD3K.cable([xm + 0.02, y + 0.02, 0.03], [-(CR + 0.1) * KR, 0.0, zTop], { via: [[xm + 0.06, y * 0.4, 0.01], [-(AS + 0.9) * KR, 0.02, 0.02], [-(AS + 0.9) * KR, 0.02, zTop - 0.02]], color: 0x3b342c, rad: 0.0018 })); return m; };
     const meters = { m: mk('MAGNETOMETER', 'mA·m²', -0.1), b: mk('HALL PROBE', 'mT', 0.03), t: mk('THERMOMETER', 'K', 0.16) };
     g3 = { S3, app, sphM, turn, lines, lineM, ghostM, meters };
-    VD3.orbit(can, G3.o, () => { if (use3()) draw(); }, { grab: () => !use3(), phMin: 0.5, phMax: 1.5, zMin: 0.6, zMax: 3 });
+    /* active: in Flat the wheel scrolled nothing and zoomed the hidden 3D view; now it scrolls the page there (student view, 2026-11-15) */
+    VD3.orbit(can, G3.o, () => { if (use3()) draw(); }, { grab: () => !use3(), active: () => use3(), phMin: 0.5, phMax: 1.5, zMin: 0.5, zMax: 3 });   /* zMin 0.5: four wheel notches out and back in came back zoomed in, stopped at 0.6 (student view, 2026-11-15) */
     can.style.touchAction = ''; can.style.cursor = '';
     return true;
   }
@@ -354,7 +355,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     lab(S.m === 'mystery' ? 'mystery metal' : METALS[S.m].name.split(' (')[0].toLowerCase(), A(0, 0, -1.25), { w: 700 });
     lab(`B = ${f(S.B, 2)} mT`, A(-(AS - 0.6) * ca, -(AS - 0.6) * sa, ZS - 0.4), { w: 700 });
     const ym = { m: -0.1, b: 0.03, t: 0.16 }, mlab = { m: 'magnetometer, mA·m²', b: 'Hall probe at equator, mT', t: 'thermometer, K' };
-    if (!narrow) for (const k in ym) { const y = ym[k], q = S3.project([xm3 - 0.03 * (y + 0.1) / 0.13, y, 0.03]), q2 = S3.project([xm3 - 0.03 * (y + 0.1) / 0.13 + 0.055, y, 0.03]); lab(mlab[k], [q2[0] + 4 * p, q[1]], { c: T.muted, s: 10 * p, a: 'left' }); }
+    /* on a phone the meters showed bare numbers: they keep their unit there, as the names don't fit (student view, 2026-11-15) */
+    const munit = { m: 'mA·m²', b: 'mT', t: 'K' };
+    for (const k in ym) { const y = ym[k], q = S3.project([xm3 - 0.03 * (y + 0.1) / 0.13, y, 0.03]), q2 = S3.project([xm3 - 0.03 * (y + 0.1) / 0.13 + 0.055, y, 0.03]); lab(narrow ? munit[k] : mlab[k], [q2[0] + 4 * p, q[1]], { c: T.muted, s: 10 * p, a: 'left' }); }
     if (!narrow) { lab('Hall probe', A(1.9 * ca, 1.9 * sa, -0.45)); lab('pickup coil', A(-1.25 * ca, -1.25 * sa, 1.6), { c: T.muted }); lab('cryostat', A(0, 0, ZS + 1.65), { c: T.muted }); lab('solenoid', A(AS * ca, AS * sa, -ZS - 0.4), { c: T.muted }); }
   }
 

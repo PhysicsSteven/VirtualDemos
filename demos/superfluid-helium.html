@@ -428,15 +428,15 @@
     const mY = b.y + b.h + 14 * p, mw = Math.min(b.w, 150 * p);
     meter(b.x, mY, mw, 28 * p, `${f(C3.T * 1000, C3.T < 0.01 ? 3 : 2)} mK`, 'thermometer in the cell');
     meter(b.x, mY + 54 * p, mw, 28 * p, `${f(meltP(C3.T) / 1e6, 5)} MPa`, 'pressure');
-    if (narrow) return;
-    /* the phase diagram: pressure against log temperature */
-    const gx = b.x + b.w + 70 * p, gy = 40 * p, gw = W - gx - 20 * p, gh = H - gy - 60 * p, lt0 = Math.log10(5e-4), lt1 = Math.log10(1.0);
+    /* the phase diagram: pressure against log temperature. On a phone it was left out, leaving half the picture empty and no way to
+       see where the cell is heading; it now fits beside the cell with shorter labels (student view, 2026-11-15) */
+    const gx = b.x + b.w + (narrow ? 34 : 70) * p, gy = 40 * p, gw = W - gx - (narrow ? 10 : 20) * p, gh = H - gy - 60 * p, lt0 = Math.log10(5e-4), lt1 = Math.log10(1.0);
     const X = (t) => gx + (Math.log10(t) - lt0) / (lt1 - lt0) * gw, Y = (P) => gy + gh - P / 4.2e6 * gh;
     ctx.strokeStyle = T.line; ctx.lineWidth = 1 * p; ctx.strokeRect(gx, gy, gw, gh);
     ctx.font = `${10 * p}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
-    for (const t of [1e-3, 1e-2, 0.1, 1]) { ctx.beginPath(); ctx.moveTo(X(t), gy); ctx.lineTo(X(t), gy + gh); ctx.stroke(); ctx.fillText(t >= 1 ? '1 K' : t >= 0.1 ? '100 mK' : t >= 0.01 ? '10 mK' : '1 mK', X(t), gy + gh + 4 * p); }
+    for (const t of [1e-3, 1e-2, 0.1, 1]) { ctx.beginPath(); ctx.moveTo(X(t), gy); ctx.lineTo(X(t), gy + gh); ctx.stroke(); ctx.fillText(t >= 1 ? '1 K' : t >= 0.1 ? (narrow ? '0.1 K' : '100 mK') : t >= 0.01 ? '10 mK' : '1 mK', X(t), gy + gh + 4 * p); }
     ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; for (let P = 0; P <= 4e6 + 1; P += 1e6) { ctx.beginPath(); ctx.moveTo(gx, Y(P)); ctx.lineTo(gx + gw, Y(P)); ctx.stroke(); ctx.fillText(`${P / 1e6}`, gx - 4 * p, Y(P)); }
-    label('pressure (MPa)', gx + 6 * p, gy - 12 * p, { s: 10.5 }); label('temperature (log scale)', gx + gw / 2, gy + gh + 22 * p, { a: 'center', s: 10.5 });
+    label('pressure (MPa)', narrow ? gx - 24 * p : gx + 6 * p, gy - 12 * p, { s: 10.5 }); label(narrow ? 'temperature' : 'temperature (log scale)', gx + gw / 2, gy + gh + 22 * p, { a: 'center', s: 10.5 });
     /* superfluid: below Tc(P), up to the melting pressure */
     ctx.fillStyle = T.he2; ctx.beginPath(); ctx.moveTo(X(5e-4), Y(0)); for (let P = 0; P <= HE3_A.P; P += 5e4) ctx.lineTo(X(tcHe3(P)), Y(P)); ctx.lineTo(X(HE3_A.T), Y(HE3_A.P)); ctx.lineTo(X(5e-4), Y(HE3_A.P)); ctx.closePath(); ctx.fill();
     ctx.strokeStyle = T.he_edge; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(X(HE3_PCP.T), Y(HE3_PCP.P)); ctx.lineTo(X(HE3_AB.T), Y(HE3_AB.P)); ctx.stroke();
@@ -444,9 +444,9 @@
     ctx.fillStyle = T.bubble; ctx.globalAlpha = 0.18; ctx.beginPath(); ctx.moveTo(X(HE3_NEEL.T), Y(4.2e6)); for (let lt = Math.log10(HE3_NEEL.T); lt <= 0; lt += 0.01) ctx.lineTo(X(10 ** lt), Y(meltP(10 ** lt))); ctx.lineTo(X(1), Y(4.2e6)); ctx.closePath(); ctx.fill(); ctx.globalAlpha = 1;
     ctx.strokeStyle = T.ink; ctx.lineWidth = 2 * p; ctx.beginPath(); for (let lt = Math.log10(HE3_NEEL.T); lt <= 0; lt += 0.005) { const t = 10 ** lt; if (lt === Math.log10(HE3_NEEL.T)) ctx.moveTo(X(t), Y(meltP(t))); else ctx.lineTo(X(t), Y(meltP(t))); } ctx.stroke();
     label('solid', X(0.03), Y(3.85e6), { a: 'center', c: T.ink, w: 700 }); label('normal liquid', X(0.05), Y(1.5e6), { a: 'center', c: T.ink, w: 700 });
-    label('superfluid B', X(7e-4), Y(1.0e6), { a: 'left', c: T.ink, w: 700, s: 10.5 }); label('A', X(2.05e-3), Y(3.05e6), { a: 'center', c: T.ink, w: 700, s: 10.5 });
-    label('melting curve (PLTS-2000)', X(0.2), Y(meltP(0.2)) + 14 * p, { a: 'center', s: 10.5 });
-    label(`minimum: ${f(HE3_MIN.P / 1e6, 3)} MPa at ${f(HE3_MIN.T * 1000, 0)} mK`, X(HE3_MIN.T), Y(HE3_MIN.P) + 28 * p, { a: 'center', s: 10 });
+    label(narrow ? 'B' : 'superfluid B', X(7e-4), Y(1.0e6), { a: 'left', c: T.ink, w: 700, s: 10.5 }); label('A', X(2.05e-3), Y(3.05e6), { a: 'center', c: T.ink, w: 700, s: 10.5 });
+    if (!narrow) label('melting curve (PLTS-2000)', X(0.2), Y(meltP(0.2)) + 14 * p, { a: 'center', s: 10.5 });
+    if (!narrow) label(`minimum: ${f(HE3_MIN.P / 1e6, 3)} MPa at ${f(HE3_MIN.T * 1000, 0)} mK`, X(HE3_MIN.T), Y(HE3_MIN.P) + 28 * p, { a: 'center', s: 10 });
     ctx.fillStyle = T.heat; ctx.beginPath(); ctx.arc(X(C3.T), Y(meltP(C3.T)), 5 * p, 0, 7); ctx.fill(); ctx.strokeStyle = T.canvas; ctx.lineWidth = 1.5 * p; ctx.stroke();
     label('the cell', X(C3.T) + 9 * p, Y(meltP(C3.T)) - 12 * p, { c: T.heat, w: 700, s: 10.5 });
   }

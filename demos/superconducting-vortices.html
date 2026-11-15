@@ -309,6 +309,13 @@
     const um = 1e-6 / LAMBDA * g.sc   /* one micrometer */, sbx = g.X(WX) - um, sby = g.Y(LY) + 22 * p; ctx.strokeStyle = T.ink; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(sbx, sby); ctx.lineTo(sbx + um, sby); ctx.stroke();
     label('1 µm', sbx + um / 2, sby + 11 * p, { a: 'center', s: 10.5 });
     label(`${st.x.length} vortices = ${st.x.length} flux quanta`, g.X(0), narrow ? sby + 28 * p : sby + 4 * p, { c: T.ink, s: 11 });
+    /* a key: nothing on the picture said the rings are the defects and the dots the vortices (student view, 2026-11-15) */
+    { const ky = narrow ? sby : sby + 4 * p, t1 = 'vortex', t2 = 'defect (pin)'; ctx.font = `${11 * p}px ${T.ui}`;
+      const w1 = ctx.measureText(t1).width, w2 = ctx.measureText(t2).width, showPin = S.pins && st.o.fp > 0, wAll = 14 * p + w1 + (showPin ? 26 * p + w2 : 0);
+      let kx = narrow ? g.X(0) : g.X(WX / 2) - wAll / 2;
+      ctx.fillStyle = T.vortex; ctx.strokeStyle = T.vortex_edge; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.arc(kx + 4 * p, ky, r, 0, 7); ctx.fill(); ctx.stroke();
+      label(t1, kx + 12 * p, ky, { c: T.ink, s: 11 });
+      if (showPin) { kx += 26 * p + w1; ctx.strokeStyle = T.pin; ctx.lineWidth = 1 * p; ctx.beginPath(); ctx.arc(kx + 4 * p, ky, Math.max(3 * p, RP * g.sc), 0, 7); ctx.stroke(); label(t2, kx + 12 * p + Math.max(0, RP * g.sc - 4 * p), ky, { c: T.ink, s: 11 }); } }
   }
   function axes(o) {
     const p = proj(), L = 58 * p, R = 14 * p, Tp = 26 * p, B = 30 * p, w = CW - L - R, h = CH - Tp - B;
@@ -357,7 +364,10 @@
     for (const b of document.querySelectorAll('#spdSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.s === S.spd));
     for (const b of document.querySelectorAll('#graphSeg button')) b.setAttribute('aria-pressed', String(b.dataset.g === S.graph));
     $('play').textContent = S.play ? 'Pause' : 'Play'; $('play').classList.toggle('attn', !S.play);
-    const ramp = Math.abs(fromMT(S.target) - S.Ba) > 1e-9; $('note').textContent = ramp ? (fromMT(S.target) > S.Ba ? 'field rising' : 'field falling') : 'field steady';
+    /* the speed buttons named no rate, so the note gives the ramp in mT per second of screen time, from the measured frame rate:
+       ×3 takes the field to 90 mT in about 3 s (student view, 2026-11-15) */
+    const ramp = Math.abs(fromMT(S.target) - S.Ba) > 1e-9, rate = Math.round(mT(RAMP * 0.05) * SPEEDS[S.spd] * fps);
+    $('note').textContent = ramp ? (fromMT(S.target) > S.Ba ? `field rising ${rate} mT/s` : `field falling ${rate} mT/s`) : 'field steady';
   }
   function redraw() { draw(true); drawCurve(); readouts(); }
   function applyPreset(k) {
@@ -382,8 +392,9 @@
   $('labMap').addEventListener('change', (e) => { S.map = e.target.checked; redraw(); });
   $('labPins').addEventListener('change', (e) => { S.pins = e.target.checked; redraw(); });
 
-  let frameNo = 0;
-  function frame() {
+  let frameNo = 0, lastT = 0, fps = 60;
+  function frame(now) {
+    if (now && lastT && now - lastT > 4 && now - lastT < 250) fps += (1000 / (now - lastT) - fps) * 0.03; lastT = now || 0;
     if (S.play) { advance(SPEEDS[S.spd]); frameNo++; draw(frameNo % 3 === 0); drawCurve(); readouts(); sync(); }
     requestAnimationFrame(frame);
   }

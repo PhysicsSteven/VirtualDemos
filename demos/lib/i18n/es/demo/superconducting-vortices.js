@@ -6,6 +6,10 @@ VDI18N.add('es', 'demo/superconducting-vortices', {
   "Placa de YBCO vista a lo largo del campo (el campo sale de la pantalla)",
 "{#} vortices = {#} flux quanta":
   "{#} vórtices = {#} cuantos de flujo",
+"vortex":
+  "vórtice",
+"defect (pin)":
+  "defecto (anclaje)",
 "position across the slab (µm)":
   "posición a lo largo de la placa (µm)",
 "field inside (mT)":
@@ -36,8 +40,8 @@ VDI18N.add('es', 'demo/superconducting-vortices', {
   "A lo largo de la placa",
 "Field inside against applied":
   "Campo adentro contra campo aplicado",
-"field rising":
-  "el campo sube",
+"field rising {#} mT/s":
+  "el campo sube {#} mT/s",
 "A slab of superconductor seen along the magnetic field, with the vortices as bright spots of field and the pinning defects as small rings.":
   "Una placa de superconductor vista a lo largo del campo magnético, con los vórtices como puntos brillantes de campo y los defectos de anclaje como pequeños anillos.",
 "Graph of the field inside the slab.":
@@ -120,8 +124,8 @@ VDI18N.add('es', 'demo/superconducting-vortices', {
   "Sin ningún defecto. Los vórtices entran y se reparten por la placa hasta que el campo adentro es igual en todas partes, y se acomodan en una red triangular, cada uno con seis vecinos: la red de Abrikosov. Su separación se deduce de un cuanto de flujo por vórtice.",
 "The field was raised to {#} mT (computed before the page shows it) and now falls to zero. Vortices near the faces leave, but the defects keep the rest. The field never reached the middle on the way up, so the trapped field now peaks part way in from each face and falls to zero at both faces. This trapped flux is what holds a magnet over a superconductor that was cooled with the magnet near it.":
   "El campo se subió a {#} mT (calculado antes de que la página lo muestre) y ahora baja a cero. Los vórtices cerca de las caras salen, pero los defectos retienen el resto. El campo nunca llegó al centro durante la subida, así que el campo atrapado ahora alcanza su máximo a cierta distancia de cada cara y cae a cero en ambas caras. Este flujo atrapado es lo que sostiene un imán sobre un superconductor que se enfrió con el imán cerca.",
-"field falling":
-  "el campo baja",
+"field falling {#} mT/s":
+  "el campo baja {#} mT/s",
 "The slab was cooled in {#} mT, so vortices are everywhere inside at that density (a little disordered by the defects). Now the applied field goes to zero: only vortices near the faces leave, and most of the flux stays trapped, highest in the middle and sloping down to the faces: the roof shape of the Bean model.":
   "La placa se enfrió en {#} mT, así que hay vórtices por todo el interior con esa densidad (algo desordenados por los defectos). Ahora el campo aplicado va a cero: solo salen los vórtices cerca de las caras, y la mayor parte del flujo queda atrapado, más alto en el centro y con pendiente hacia las caras: la forma de techo del modelo de Bean.",
 "Three times stronger pins: the slopes are steeper, so the field gets less far in and the critical current density is higher. Strong pinning is what engineers add to wires for magnets.":
@@ -133,5 +137,9 @@ VDI18N.add('es', 'demo/superconducting-vortices', {
 "outside":
   "exterior",
 "YBCO slab, field out of the screen":
-  "Placa de YBCO, campo saliendo de la pantalla"
+  "Placa de YBCO, campo saliendo de la pantalla",
+"field rising":
+  "el campo sube",
+"field falling":
+  "el campo baja"
 });
