@@ -419,7 +419,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     g3 = { st, room, mats, ray, rayM, person, key: '' };
     can.addEventListener('wheel', (e) => { if (!use3()) e.stopImmediatePropagation(); }, { passive: true });
     can.addEventListener('dblclick', (e) => { if (!use3()) e.stopImmediatePropagation(); });
-    VD3.orbit(can, G3.o, () => { if (use3()) draw(); }, { phMin: 0.35, phMax: 1.45, zMin: 0.45, zMax: 2.8, grab: () => !use3() });
+    VD3.orbit(can, G3.o, () => { if (use3()) draw(); }, { active: () => use3(), /* wheel, keys and pinch leave the hidden 3D camera alone while Flat shows (student view calls, 2026-11-15) */ phMin: 0.35, phMax: 1.45, zMin: 0.45, zMax: 2.8, grab: () => !use3() });
     return true;
   }
   function build3() {

@@ -498,7 +498,7 @@
     const app = new THREE.Group(); sc.add(app);
     const cyl = (r, h, m, seg) => { const c = mesh(new THREE.CylinderGeometry(r, r, h, seg || 48), m, true); c.rotation.x = Math.PI / 2; return c; };
     g3 = { S3, app, M, mesh, cyl, foam, puckM, magM, nM, ln2M, lineM: new THREE.LineBasicMaterial({ transparent: true, opacity: 0.8 }), built: '' };
-    VD3.orbit(can, G3.o, () => { if (use3()) draw(); }, { grab: () => !use3(), phMin: 0.45, phMax: 1.5, zMin: 0.5, zMax: 3 });
+    VD3.orbit(can, G3.o, () => { if (use3()) draw(); }, { active: () => use3(), /* wheel, keys and pinch leave the hidden 3D camera alone while Flat shows (student view calls, 2026-11-15) */ grab: () => !use3(), phMin: 0.45, phMax: 1.5, zMin: 0.5, zMax: 3 });
     can.style.touchAction = 'pan-y';
     return true;
   }

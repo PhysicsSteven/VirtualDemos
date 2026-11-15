@@ -429,7 +429,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const beamM = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.4, side: THREE.DoubleSide, depthWrite: false });
     const sheets = new THREE.Group(); sc.add(sheets);
     g3 = { S3, rail, mouthM, plate, cv, tex, beamM, sheets, key: '' };
-    VD3.orbit(can, G3.o, () => { if (use3()) redraw(); }, { grab: () => !use3(), phMin: 0.35, phMax: 1.45, zMin: 0.6, zMax: 3 });
+    VD3.orbit(can, G3.o, () => { if (use3()) redraw(); }, { active: () => use3(), /* wheel, keys and pinch leave the hidden 3D camera alone while Flat shows (student view calls, 2026-11-15) */ grab: () => !use3(), phMin: 0.35, phMax: 1.45, zMin: 0.6, zMax: 3 });
     can.style.touchAction = ''; can.style.cursor = '';
     return true;
   }

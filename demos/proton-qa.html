@@ -521,7 +521,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     g3 = { st, dev, lampM, lasers, vlas, beam, beamM, spot, scrCv, scrTex, mE, mS, cable: null, keyD: '', keyS: '', cart: [cx, cy] };
     can.addEventListener('wheel', (e) => { if (!use3()) e.stopImmediatePropagation(); }, { passive: true });
     can.addEventListener('dblclick', (e) => { if (!use3()) e.stopImmediatePropagation(); });
-    VD3.orbit(can, G3.o, () => { if (use3()) draw(); }, { phMin: 0.5, phMax: 1.5, zMin: 0.5, zMax: 2.6, grab: () => !use3() });
+    VD3.orbit(can, G3.o, () => { if (use3()) draw(); }, { active: () => use3(), /* wheel, keys and pinch leave the hidden 3D camera alone while Flat shows (student view calls, 2026-11-15) */ phMin: 0.5, phMax: 1.5, zMin: 0.5, zMax: 2.6, grab: () => !use3() });
     return true;
   }
   function draw3() {

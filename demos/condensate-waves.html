@@ -497,7 +497,7 @@
     for (let j = 0; j < DG - 1; j++) for (let i = 0; i < DG - 1; i++) { const a = j * DG + i, b = a + 1, c = a + DG, d = c + 1; idx.push(a, b, d, a, d, c); } g.setIndex(idx);
     const surf = new THREE.Mesh(g, new THREE.MeshStandardMaterial({ vertexColors: true, side: THREE.DoubleSide, roughness: 0.55, metalness: 0.05 })); surf.frustumCulled = false; sc.add(surf);
     g3 = { S3, surf };
-    VD3.orbit(can, G3.o, () => { if (use3()) draw(); }, { grab: () => !use3(), phMin: 0.25, phMax: 1.45, zMin: 0.6, zMax: 2.5 });
+    VD3.orbit(can, G3.o, () => { if (use3()) draw(); }, { active: () => use3(), /* wheel, keys and pinch leave the hidden 3D camera alone while Flat shows (student view calls, 2026-11-15) */ grab: () => !use3(), phMin: 0.25, phMax: 1.45, zMin: 0.6, zMax: 2.5 });
     can.style.touchAction = 'pan-y';
     return true;
   }
