@@ -192,12 +192,12 @@ VDI18N.add('es', 'demo/ising', {
   "Activa Barrer h, o elige Histéresis",
 "T = {#}, well below T<sub>c</sub>. One domain fills the lattice; single spins blink against it and flip back. m sits on the Onsager value, {#}.":
   "T = {#}, muy por debajo de T<sub>c</sub>. Un solo dominio llena la red; espines sueltos parpadean contra él y vuelven a voltearse. m está en el valor de Onsager, {#}.",
-"Cluster updates, h = {#} only":
-  "Actualizaciones por cúmulos, solo h = {#}",
 "Onsager ±{#}":
   "Onsager ±{#}",
 "Onsager −{#}":
   "Onsager −{#}",
+"Cluster updates, h = {#} only":
+  "Actualizaciones por cúmulos, solo h = {#}",
 "T = {#}, far above T<sub>c</sub>. Neighbors only slightly prefer to agree: small patches form and dissolve, and m wanders near zero, here by about {#}/√N, less on a larger lattice.":
   "T = {#}, muy por encima de T<sub>c</sub>. Los vecinos prefieren coincidir solo un poco: se forman manchas pequeñas que se disuelven, y m vaga cerca de cero, aquí en unos {#}/√N, menos en una red más grande.",
 "Onsager: m = {#} here":
@@ -226,6 +226,8 @@ VDI18N.add('es', 'demo/ising', {
   "Baño térmico saca cada nuevo espín de su probabilidad de Boltzmann dados sus vecinos. Cambia menos espines por barrido que Metropolis a T alta.",
 "sweep {#} <small>paused</small>":
   "barrido {#} <small>en pausa</small>",
+"Close":
+  "Cerrar",
 "discarding, {#} of {#} sweeps":
   "descartando, {#} de {#} barridos",
 "sweep {#} <small>{#} sweeps/s · measuring</small>":

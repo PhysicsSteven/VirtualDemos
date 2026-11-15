@@ -1373,7 +1373,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     tcField: { hint: 'T_c with a small field, h = −0.2, that favors down spins (navy). The field breaks the tie between up and down, so the lattice settles mostly down, with small up islands that come and go, and there is no sharp transition. Set h = 0 to see the critical point itself, or choose At T_c.',
       set: { T: TC, h: -0.2, J: 1, L: 128, method: 'metropolis', start: 'random', speed: 3, tab: 'time', stagger: false } },
     tc: { hint: 'Exactly at T_c = 2/ln(1 + √2). Domains of every size, inside each other: zoom in and it looks the same. Wolff updates flip whole clusters to beat critical slowing down; tick Show the last Wolff cluster to see one.',
-      set: { T: TC, h: 0, J: 1, L: 256, method: 'wolff', start: 'random', speed: 3, tab: 'time', stagger: false } },
+      set: { T: TC, h: 0, J: 1, L: 256, method: 'wolff', start: 'random', speed: 0, warm: 20, tab: 'time', stagger: false } },   /* 20 sweeps run before the first picture, then 1 sweep/s: at 10 sweeps/s each Wolff sweep could flip the largest cluster, so the lattice swapped gold and navy several times a second (student view calls, 2026-11-15) */
     quench: { hint: 'A random lattice (infinite T) dropped to T = 1.2. Domains coarsen: their size grows roughly as the square root of the sweeps. Sometimes stripes wrap around the lattice and last a very long time.',
       set: { T: 1.2, h: 0, J: 1, L: 256, method: 'metropolis', start: 'random', speed: 4, tab: 'time', stagger: false } },
     hyst: { hint: 'T = 1.5 with h swept between ±1 at 0.002 per sweep. The lattice stays magnetized against the field until a domain nucleates, near h = ∓0.5 here (it varies a little from loop to loop). Slower sweeps give a narrower loop.',
@@ -1389,6 +1389,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     S.hSweep = !!s.hSweep; if (s.hRate) S.hRate = s.hRate; if (s.hDir) S.hDir = s.hDir;
     S.L = s.L; methNote(''); rebuildTables(); exactCache = null;
     resetSpins(s.start);
+    for (let i = 0; i < (s.warm || 0); i++) doSweep();   /* equilibrated unseen; the sweeps still count and stay in the time series (student view calls, 2026-11-15) */
     document.querySelectorAll('#presets button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.p === p)));
     $('presetHint').innerHTML = pr.hint.replace(/T_c/g, 'T<sub>c</sub>').replace(/m_s/g, 'm<sub>s</sub>');
     dirty.ui = dirty.lat = dirty.plot = true;
