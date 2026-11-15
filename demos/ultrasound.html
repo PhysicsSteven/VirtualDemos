@@ -319,7 +319,7 @@ table.rows input:focus { border-color: var(--accent); }
   const newCystDepth = () => (30 + Math.floor(Math.random() * 61)) / 10;   /* cm, 3.0 to 9.0, top of the cyst */
   const newFlowSpeed = () => (20 + Math.floor(Math.random() * 101)) / 100; /* m/s, 0.20 to 1.20 */
   const S = { preset: 'layers', mode: 'echo', f0: 3.5, water: 8, cyst: newCystDepth(), theta: 60, v: 0.5, prof: 'plug', mysteryV: 0, tb: 'full', gain: 1, range: 5000, curT: 20, curF: 1000,
-    running: false, blind: false, depth: false, phase: 0, rows: [], series: 0, listen: false, absorb: false, tgc: 0 };
+    running: false, blind: false, depth: false, phase: 0, cellX: 0, rows: [], series: 0, listen: false, absorb: false, tgc: 0 };
   const PRESETS = {
     layers: { mode: 'echo', f0: 3.5, hint: 'Under the gel: 1.5 cm of fat, 3.0 cm of muscle, 1.0 cm of bone and muscle again. Start the scanner and put the cursor on the middle (the peak) of each echo. Which boundary sends back the most, and why? Which echo comes back upside down (zoom in)?' },
     water: { mode: 'echo', f0: 3.5, water: 8, hint: 'A tank of water above a pocket of air, which sends back almost everything. Measure the echo time at six or more water depths from 2 to 14 cm. The slope of t against depth is 2/c: work out the speed of sound in water.' },
@@ -509,6 +509,7 @@ table.rows input:focus { border-color: var(--accent); }
   let TXS = 1;   /* text scale: 1 on the page, larger when the same drawing code paints a texture for the 3D view */
   function txt(s, x, y, o = {}) { const p = ps() * TXS; ctx.fillStyle = o.c || T.ink; ctx.font = `${o.b ? '700 ' : ''}${(o.s || 11) * p}px ${o.m ? T.mono : T.ui}`; ctx.textAlign = o.a || 'left'; ctx.textBaseline = o.bl || 'middle'; if (o.halo) { ctx.save(); ctx.strokeStyle = T.canvas; ctx.lineWidth = 3 * ps(); ctx.lineJoin = 'round'; ctx.strokeText(s, x, y); ctx.restore(); } ctx.fillText(s, x, y); }
   const DEPTH_MAX = 0.15;   /* m shown in the body panel */
+  const FLOW_SLOW = 50;    /* the blood cells drawn 50× slower than the blood: 1 cm/s on screen at 0.50 m/s (student view, 2026-11-15) */
   function draw() {
     if (!T || !W) return;
     if (G3.on && g3) { draw3(); return; }
@@ -612,8 +613,9 @@ table.rows input:focus { border-color: var(--accent); }
     txt('fat', x + 6 * p, y + cm(0.5) * ppm, { s: 10 }); txt('muscle', x + 6 * p, y + cm(1.6) * ppm, { s: 10 });
     { const g = ctx.createLinearGradient(0, vy - R, 0, vy + R); g.addColorStop(0, Gr0.mix(T.blood.startsWith('#') ? T.blood : '#b0413e', '#000000', 0.35)); g.addColorStop(0.3, T.blood); g.addColorStop(0.7, T.blood); g.addColorStop(1, Gr0.mix(T.blood.startsWith('#') ? T.blood : '#b0413e', '#000000', 0.35)); ctx.fillStyle = g; } ctx.fillRect(x, vy - R, w, 2 * R);
     ctx.strokeStyle = 'rgba(80,10,10,0.45)'; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(x, vy - R); ctx.lineTo(x + w, vy - R); ctx.moveTo(x, vy + R); ctx.lineTo(x + w, vy + R); ctx.stroke(); txt('artery: blood flows ←', x + w - 6 * p, vy + R + 10 * p, { a: 'right', s: 10, b: 1 });
-    /* moving cells, slowed: plug flow all at v, laminar at vmax(1 − r²/R²) */
-    if (!reduce) { ctx.fillStyle = '#ffd7d2'; for (let i = 0; i < 26; i++) { const fr = ((i * 0.6180339) % 1) * 2 - 1, sp = S.prof === 'lam' ? 1 - fr * fr : 1, xx = x + ((((i * 0.37) - S.phase * 0.08 * sp) % 1) + 1) % 1 * w;
+    /* moving cells, slowed: plug flow all at v, laminar at vmax(1 − r²/R²); S.cellX is how far the fastest blood has gone on the
+       slowed clock (tick), so the cells now move faster when v is raised; they moved at one pace whatever v was (student view, 2026-11-15) */
+    if (!reduce) { ctx.fillStyle = '#ffd7d2'; const pw = w / ppm; for (let i = 0; i < 26; i++) { const fr = ((i * 0.6180339) % 1) * 2 - 1, sp = S.prof === 'lam' ? 1 - fr * fr : 1, xx = x + ((((i * 0.37) - S.cellX * sp / pw) % 1) + 1) % 1 * w;
       ctx.beginPath(); ctx.arc(xx, vy + fr * R * 0.85, 2.2 * p, 0, 7); ctx.fill(); } }
     /* beam at θ to the flow, hitting the artery under the middle of the panel; the flow is toward the transducer */
     const th = S.theta * PI / 180, hx = x + w * 0.55, d = vy - y, tx = hx - d / Math.tan(th);
@@ -629,6 +631,7 @@ table.rows input:focus { border-color: var(--accent); }
     ctx.restore();
     ctx.strokeStyle = T.line; ctx.strokeRect(x + 0.5, y + 0.5, w, h);
     if (tx < x) txt('transducer off the panel to the left', x + 6 * p, y - 10 * p, { s: 9, c: T.muted });
+    if (!reduce) txt(S.mysteryV ? 'blood cells drawn slowed (speed hidden)' : `blood cells shown ${FLOW_SLOW}× slower`, x + w - 6 * p, y + h - 10 * p, { a: 'right', s: 9, c: T.ink });   /* (student view, 2026-11-15) */
   }
   function drawScreen(x, y, w, h, p) {
     /* the scanner's monitor: a bezel round a dark screen */
@@ -879,7 +882,7 @@ table.rows input:focus { border-color: var(--accent); }
     }
     if (g3.cells.visible) {
       const R = cm(0.4), vz = bh - cm(3), N = 40;
-      for (let i = 0; i < N; i++) { const fr = ((i * 0.6180339) % 1) * 2 - 1, sp = S.prof === 'lam' ? 1 - fr * fr : 1, fx = ((((i * 0.37) - S.phase * 0.08 * sp) % 1) + 1) % 1;
+      for (let i = 0; i < N; i++) { const fr = ((i * 0.6180339) % 1) * 2 - 1, sp = S.prof === 'lam' ? 1 - fr * fr : 1, fx = ((((i * 0.37) - S.cellX * sp / FW) % 1) + 1) % 1;
         g3.cells.put(i, L.bx - FW / 2 + 0.002 + fx * (FW - 0.004), yf + 0.0004, vz + fr * R * 0.85); }
       g3.cells.show(N); g3.cells.done();
     }
@@ -912,8 +915,8 @@ table.rows input:focus { border-color: var(--accent); }
       tag(S.absorb ? (S.preset === 'atten' ? `absorbs ${am.toFixed(2)} dB/cm` : 'absorption on, each tissue its own') : 'absorption off', x, y, { a: leftTags ? 'right' : 'left', s: 10, b: false, c: S.absorb ? T.ink : T.muted });
     }
     const lam = flow ? MEDIA.blood.c / (S.f0 * 1e6) * 1000 : MEDIA.muscle.c / (S.f0 * 1e6) * 1000;
-    const cap = L.nar ? [flow ? `To scale, except the blood cells (enlarged, slowed) and the wavefronts (4 mm apart; really ${lam.toFixed(2)} mm).` : `To scale, except the pulse: 20 000× slower, crests at least 1.5 mm apart (really ${lam.toFixed(2)} mm).`, 'Drag the screen for the cursor; drag elsewhere to turn.']
-      : flow ? [`Block, artery (8 mm across, 3 cm down), transducer and scanner to scale. Blood cells drawn enlarged and slowed; wavefronts drawn 4 mm apart (really c/f₀ = ${lam.toFixed(2)} mm).`, 'Drag the screen to move the cursor; drag elsewhere to turn.']
+    const cap = L.nar ? [flow ? (S.mysteryV ? `To scale, except the blood cells (enlarged, slowed) and the wavefronts (4 mm apart; really ${lam.toFixed(2)} mm).` : `To scale, except the blood cells (enlarged, ${FLOW_SLOW}× slower) and the wavefronts (4 mm apart; really ${lam.toFixed(2)} mm).`) : `To scale, except the pulse: 20 000× slower, crests at least 1.5 mm apart (really ${lam.toFixed(2)} mm).`, 'Drag the screen for the cursor; drag elsewhere to turn.']
+      : flow ? [S.mysteryV ? `Block, artery (8 mm across, 3 cm down), transducer and scanner to scale. Blood cells drawn enlarged and slowed; wavefronts drawn 4 mm apart (really c/f₀ = ${lam.toFixed(2)} mm).` : `Block, artery (8 mm across, 3 cm down), transducer and scanner to scale. Blood cells drawn enlarged and ${FLOW_SLOW}× slower; wavefronts drawn 4 mm apart (really c/f₀ = ${lam.toFixed(2)} mm).`, 'Drag the screen to move the cursor; drag elsewhere to turn.']
       : [`Block, transducer and scanner to scale (depth in cm on the cut face). Pulse and echoes shown 20 000× slower, their crests at least 1.5 mm apart (really c/f₀ = ${lam.toFixed(2)} mm in muscle).`, 'Drag the screen to move the cursor; drag elsewhere to turn.'];
     if (S.preset === 'atten' && S.absorb && !L.nar) { const eb = echoesNow().find((e) => e.to === 'bone'), am = alphaDb('muscle', S.f0);
       if (eb) cap.splice(1, 0, `Absorption in muscle ${ATTEN.muscle} dB/(cm·MHz) × ${S.f0} MHz = ${am.toFixed(2)} dB/cm, so the bone echo loses 2 × ${am.toFixed(2)} × ${S.water.toFixed(1)} = ${eb.lossDb.toFixed(1)} dB down and back.`); }
@@ -923,7 +926,8 @@ table.rows input:focus { border-color: var(--accent); }
     if (getComputedStyle(card).position === 'absolute') card.style.left = `${Math.max(12, W - 342 * p)}px`;
   }
 
-  function tick(dt) { if (S.running && !reduce) { S.phase = (S.phase + dt * TAU * 0.25) % TAU; draw(); } }
+  /* the blood cells move at v slowed FLOW_SLOW times (tick); a hidden mystery speed is drawn at 0.50 m/s (student view, 2026-11-15) */
+  function tick(dt) { if (S.running && !reduce) { S.phase = (S.phase + dt * TAU * 0.25) % TAU; if (S.mode === 'flow') S.cellX += dt * (S.mysteryV ? 0.5 : vNow()) / FLOW_SLOW; draw(); } }
   function resize() { dpr = window.devicePixelRatio || 1; const rc = scene.getBoundingClientRect(); W = rc.width; Hh = rc.height; can.width = Math.round(W * dpr); can.height = Math.round(Hh * dpr); can.style.width = W + 'px'; can.style.height = Hh + 'px'; setRun(S.running); }
   const retheme = () => { tokens(); draw(); };
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}

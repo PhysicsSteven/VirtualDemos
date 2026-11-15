@@ -459,7 +459,8 @@ table.rows input:focus { border-color: var(--accent); }
     const Gr = window.VDGear; Gr.backdrop(ctx, W, Hh);
     const overlay = getComputedStyle(shelf).position === 'absolute', shelfTop = overlay ? shelf.getBoundingClientRect().top - can.getBoundingClientRect().top : Hh;
     /* the floor fills the picture above the shelf, keeping the room's shape; the speakers' wall on the left */
-    const padL = 46 * p, padT = 50 * p, availW = W - padL - 14 * p, availH0 = Math.max(120, shelfTop - padT - 24 * p), ppm0 = Math.min(availW / ROOM_X, availH0 / ROOM_Y);
+    const padL = 46 * p, padT = 60 * p,   /* 60: the y (m) label and the wave rate label sat under the Walk button at 50 (student view, 2026-11-15) */
+      availW = W - padL - 14 * p, availH0 = Math.max(120, shelfTop - padT - 24 * p), ppm0 = Math.min(availW / ROOM_X, availH0 / ROOM_Y);
     /* the Sandbox tray: a column right of the floor when the card floats to the right with room to spare, otherwise a strip under the floor */
     GEO.trayCol = S.sand && getComputedStyle(card).position === 'absolute' && W - (padL + ROOM_X * ppm0) - 24 * p >= 300 + 84 * p;
     const availH = S.sand && !GEO.trayCol ? Math.max(120, availH0 - 58 * p) : availH0, ppm = Math.min(availW / ROOM_X, availH / ROOM_Y);
@@ -526,7 +527,10 @@ table.rows input:focus { border-color: var(--accent); }
     const lbl = dbText(level(P(S.mx, S.my))); ctx.font = `600 ${11 * p}px ${T.mono}`; const lw = ctx.measureText(lbl).width + 10 * p;
     ctx.fillStyle = Gr.dark() ? 'rgba(23,19,14,0.82)' : 'rgba(255,255,255,0.86)'; ctx.beginPath(); ctx.roundRect(mx + 12 * p, my - 22 * p, lw, 18 * p, 4 * p); ctx.fill();
     txt(lbl, mx + 17 * p, my - 13 * p, { s: 11, b: 1, m: 1 });
-    if (S.view === 'waves' && !reduce) Gr.label(ctx, 'waves slowed about 1000 times', x0 + fw, fy - 10 * p, { a: 'right', s: 9 * p, alpha: 0.75 });
+    /* the waves cycle 0.6 times a second on screen (tick), so the slow down is f/0.6: about 170 times at 100 Hz, 3300 at 2000 Hz; it
+       read "about 1000" at every frequency, and the number would give the mystery frequency away (student view, 2026-11-15) */
+    if (S.view === 'waves' && !reduce) { const slow = fNow() / 0.6, k = 10 ** (Math.floor(Math.log10(slow)) - 1);
+      Gr.label(ctx, S.mystery ? 'waves slowed down' : `waves slowed about ${Math.round(slow / k) * k} times`, x0 + fw, fy - 10 * p, { a: 'right', s: 9 * p, alpha: 0.75 }); }
     if (S.view === 'loud') Gr.label(ctx, 'loudness map: darker is louder (50 to 85 dB)', x0 + fw, fy - 10 * p, { a: 'right', s: 9 * p, alpha: 0.75 });
     mic.style.left = `${mx}px`; mic.style.top = `${my}px`;
   }

@@ -442,7 +442,9 @@
         pill(`A_x = ${f(A[0], 1)}`, X(A[0] / 2), Y(0) + (A[1] >= 0 ? 18 : -18) * p, T.A); pill(`A_y = ${f(A[1], 1)}`, X(A[0]) + (A[0] >= 0 ? 44 : -44) * p, Y(A[1] / 2), T.A);
       } else if (S.comp) { ctx.strokeStyle = T.A; ctx.setLineDash([4 * p, 4 * p]); ctx.lineWidth = 1.4 * p; ctx.beginPath(); ctx.moveTo(X(A[0]), Y(A[1])); ctx.lineTo(X(A[0]), Y(0)); ctx.moveTo(X(A[0]), Y(A[1])); ctx.lineTo(X(0), Y(A[1])); ctx.stroke(); ctx.setLineDash([]); }
       if (!bl && mag(A) > 0) { const th = angleDeg(A) * Math.PI / 180, r = 36 * p; angleArc(X(0), Y(0), r, 0, th, T.equi); pill(`θ = ${f(angleDeg(A), 1)}°`, X(0) + (r + 34 * p) * Math.cos(th / 2), Y(0) - (r + 16 * p) * Math.sin(th / 2), T.equi); }
-      origin(); vec(O, A, T.A, 'A', 3.6 * p); handle(A, T.A, S.sel === 'A');
+      /* the name A on the counterclockwise side of the arrow: vec() puts it on the clockwise side, where the θ arc and its pill are,
+         and the pill covered it (student view, 2026-11-15) */
+      origin(); vec(O, A, T.A, '', 3.6 * p); if (mag(A) > 0) { const L = Math.hypot(A[0], A[1]), d = 16 * p; vname('A', (X(0) + X(A[0])) / 2 - A[1] / L * d, (Y(0) + Y(A[1])) / 2 - A[0] / L * d, T.A); } handle(A, T.A, S.sel === 'A');
     } else if (S.preset === 'add') {
       const tailB = S.h2t ? A : O, R = add(A, B);
       if (!bl) { ctx.strokeStyle = T.muted; ctx.globalAlpha = 0.7; ctx.setLineDash([5 * p, 4 * p]); ctx.lineWidth = 1.4 * p; ctx.beginPath(); ctx.moveTo(X(A[0]), Y(A[1])); ctx.lineTo(X(R[0]), Y(R[1])); ctx.lineTo(X(B[0]), Y(B[1])); if (S.h2t) { ctx.lineTo(X(0), Y(0)); } ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1; }
@@ -582,7 +584,8 @@
     if (R.profile === 'banks') { ctx.strokeStyle = T.B; ctx.globalAlpha = 0.5; ctx.lineWidth = 1; ctx.beginPath(); for (let y = 0; y <= WIDTH; y += 1) { const L = al * currentAt(R.u, y, WIDTH, 'banks') / 4; y ? ctx.lineTo(px0 + L, Y(y)) : ctx.moveTo(px0 + L, Y(y)); } ctx.stroke(); ctx.globalAlpha = 1; }
     ctx.fillStyle = T.muted; ctx.font = `${10.5 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
     for (let x = -40; x <= 100; x += 20) { ctx.fillRect(X(x) - 0.5, Y(0), 1, 6 * p); ctx.fillText(`${x} m`.replace('-', '−'), X(x) + 3 * p, Y(0) + 12 * p); }
-    ctx.textAlign = 'right'; ctx.fillText(W < 640 ? 'current →' : `river 60 m wide · current → ${R.profile === 'banks' ? '(slower near the banks)' : '(the same everywhere)'}`, X(108), Y(WIDTH) - 12 * p); ctx.textAlign = 'left';
+    /* on the near bank under the distance marks: on the far bank at the right the key covered it (student view, 2026-11-15) */
+    ctx.fillText(W < 640 ? 'current →' : `river 60 m wide · current → ${R.profile === 'banks' ? '(slower near the banks)' : '(the same everywhere)'}`, X(-46), Y(0) + 30 * p);
     // dock on the near bank, flag straight across
     ctx.fillStyle = T.dock; ctx.fillRect(X(-4), Y(0), X(4) - X(-4), 7 * p); ctx.strokeStyle = 'rgba(0,0,0,0.25)'; ctx.lineWidth = 1; for (let x = -4; x <= 4; x += 1.6) { ctx.beginPath(); ctx.moveTo(X(x), Y(0)); ctx.lineTo(X(x), Y(0) + 7 * p); ctx.stroke(); }
     ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(X(0), Y(WIDTH)); ctx.lineTo(X(0), Y(WIDTH) - 18 * p); ctx.stroke(); ctx.fillStyle = T.B; ctx.beginPath(); ctx.moveTo(X(0), Y(WIDTH) - 18 * p); ctx.lineTo(X(0) + 11 * p, Y(WIDTH) - 14 * p); ctx.lineTo(X(0), Y(WIDTH) - 10 * p); ctx.closePath(); ctx.fill();
@@ -610,9 +613,12 @@
     const keys = [[T.A, 'boat relative to the water'], [T.B, 'water relative to the shore']].concat(bl ? [] : [[T.R, 'boat relative to the shore (the sum)']]);
     ctx.font = `600 ${11.5 * p}px ${T.ui}`; ctx.textBaseline = 'middle'; ctx.textAlign = 'left';
     const kw = Math.max(...keys.map((q) => ctx.measureText(q[1]).width)) + 40 * p, kx = W - kw - 10 * p;
-    const ky = W < 640 ? 54 * p : 50 * p; ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.9; ctx.beginPath(); ctx.roundRect(kx - 8 * p, ky, kw + 8 * p, keys.length * 19 * p + 22 * p, 8 * p); ctx.fill(); ctx.globalAlpha = 1; ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.stroke();
+    const ky = W < 640 ? 54 * p : 50 * p; ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.9; ctx.beginPath(); ctx.roundRect(kx - 8 * p, ky, kw + 8 * p, keys.length * 19 * p + 36 * p, 8 * p); ctx.fill(); ctx.globalAlpha = 1; ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.stroke();
     keys.forEach(([c, t], i) => { const y = ky + 10 * p + i * 19 * p; ctx.strokeStyle = c; ctx.lineWidth = 3 * p; ctx.beginPath(); ctx.moveTo(kx, y); ctx.lineTo(kx + 26 * p, y); ctx.stroke(); ctx.fillStyle = T.ink; ctx.fillText(t, kx + 34 * p, y); });
     ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.fillText('Arrows at the boat show 8 s of motion', kx, ky + 10 * p + keys.length * 19 * p);
+    /* the boat and the water run 4× real time (frame), so a 24 s crossing takes 6 s while the landing pill gives the real 24 s; the
+       rate was not on screen (student view, 2026-11-15) */
+    ctx.fillText(reduce ? 'Shown in real time' : 'Shown 4× faster than real time', kx, ky + 24 * p + keys.length * 19 * p);
     if (R.landed && !bl) pill(`landed ${f(res.drift, 1)} m ${res.drift >= 0 ? 'downstream' : 'upstream'} after ${f(res.t, 1)} s`, X(res.drift), Y(WIDTH) - 18 * p, T.ink);
   }
   // ---------- force table ----------
@@ -1312,7 +1318,7 @@
     LEAVES.forEach(([x0, y, rot], i) => { const u = currentAt(R.u, y, WIDTH, R.profile), x = ((x0 + u * R.clock - xL) % span + span) % span + xL; Q.setFromAxisAngle(new THREE.Vector3(0, 0, 1), rot + R.clock * 0.05); M.compose(Pv.set(x, y, 0.04), Q, Sv.set(1.6, 0.8, 1)); V3.leaf.setMatrixAt(i, M); });
     V3.leaf.instanceMatrix.needsUpdate = true;
     const keys = [[T.A, 'boat relative to the water'], [T.B, 'water relative to the shore']].concat(bl ? [] : [[T.R, 'boat relative to the shore (the sum)']]);
-    const kh = keys.map(([c, t]) => `<span><i style="--c:${c}"></i>${t}</span>`).join('') + '<small>Arrows show 8 s of motion</small>' + (R.landed && !bl ? `<span class="landed">landed ${f(res.drift, 1)} m ${res.drift >= 0 ? 'downstream' : 'upstream'} after ${f(res.t, 1)} s</span>` : '');
+    const kh = keys.map(([c, t]) => `<span><i style="--c:${c}"></i>${t}</span>`).join('') + '<small>Arrows show 8 s of motion</small>' + `<small>${reduce ? 'Shown in real time' : 'Shown 4× faster than real time'}</small>` /* (student view, 2026-11-15) */ + (R.landed && !bl ? `<span class="landed">landed ${f(res.drift, 1)} m ${res.drift >= 0 ? 'downstream' : 'upstream'} after ${f(res.t, 1)} s</span>` : '');
     if (V3.keyHtml !== kh) { V3.keyHtml = kh; $('v3Key').innerHTML = kh; }
   }
   const coarse3 = (() => { try { return matchMedia('(pointer: coarse)').matches; } catch (_) { return false; } })();

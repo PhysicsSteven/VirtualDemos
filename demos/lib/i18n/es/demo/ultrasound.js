@@ -140,12 +140,12 @@ VDI18N.add('es', 'demo/ultrasound', {
   "pulso y ecos mostrados {#} {#}× más lentos",
 "echo, r = {#}":
   "eco, r = {#}",
-"echo, r = -{#}":
-  "eco, r = -{#}",
 "echo pressure (radio frequency trace)":
   "presión del eco (traza de radiofrecuencia)",
 "off the top: lower the gain":
   "se sale por arriba: baja la ganancia",
+"echo, r = -{#}":
+  "eco, r = -{#}",
 "water":
   "agua",
 "air":
@@ -182,6 +182,8 @@ VDI18N.add('es', 'demo/ultrasound', {
   "Músculo con hueso debajo, y la absorción en el músculo activada. El eco del hueso se debilita cuanto más profundo está y cuanto más alta es la frecuencia. Pon el cursor en el pico del eco del hueso y lee su nivel en dB a varias profundidades y frecuencias: la pendiente del nivel en función de la profundidad es −{#}αf₀.",
 "artery: blood flows ←":
   "arteria: la sangre fluye ←",
+"blood cells shown {#}× slower":
+  "células sanguíneas mostradas {#}× más lentas",
 "Doppler shift (kHz)":
   "Corrimiento Doppler (kHz)",
 "Angle θ":
@@ -198,6 +200,8 @@ VDI18N.add('es', 'demo/ultrasound', {
   "Una arteria a {#} cm de profundidad, con el haz a {#}° del flujo y la sangre moviéndose a {#} m/s. Enciende el ecógrafo, pon el cursor en el pico del espectro y calcula la rapidez a partir del corrimiento. Luego cambia θ: el corrimiento cambia, la rapidez no. Prueba el flujo suave: el espectro se extiende de {#} al corrimiento de la sangre más rápida.",
 "Cursor shift":
   "Corrimiento en el cursor",
+"blood cells drawn slowed (speed hidden)":
+  "células sanguíneas dibujadas más lentas (rapidez oculta)",
 "hidden":
   "oculta",
 "The blood speed is hidden. Measure the shift at three or more angles and work out the speed from each; they should agree. New mystery flow picks another.":
@@ -221,5 +225,11 @@ VDI18N.add('es', 'demo/ultrasound', {
 "Shift of the fastest blood":
   "Corrimiento de la sangre más rápida",
 "Record reading":
-  "Registrar esta lectura"
+  "Registrar esta lectura",
+"To scale, except the blood cells (enlarged, {#}× slower) and the wavefronts ({#} mm apart; really {#} mm).":
+  "A escala, excepto las células sanguíneas (ampliadas, {#}× más lentas) y los frentes de onda (separados {#} mm; en realidad {#} mm).",
+"Block, artery ({#} mm across, {#} cm down), transducer and scanner to scale. Blood cells drawn enlarged and {#}× slower; wavefronts drawn {#} mm apart (really c/f₀ = {#} mm).":
+  "Bloque, arteria ({#} mm de ancho, {#} cm de profundidad), transductor y ecógrafo a escala. Células sanguíneas dibujadas ampliadas y {#}× más lentas; frentes de onda dibujados a {#} mm entre sí (en realidad c/f₀ = {#} mm).",
+"Block, artery ({#} mm across, {#} cm down), transducer and scanner to scale. Blood cells drawn enlarged and slowed; wavefronts drawn {#} mm apart (really c/f₀ = {#} mm).":
+  "Bloque, arteria ({#} mm de ancho, {#} cm de profundidad), transductor y ecógrafo a escala. Células sanguíneas dibujadas ampliadas y más lentas; frentes de onda dibujados a {#} mm entre sí (en realidad c/f₀ = {#} mm)."
 });

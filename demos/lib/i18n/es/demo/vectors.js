@@ -158,6 +158,8 @@ VDI18N.add('es', 'demo/vectors', {
   "bote respecto a la orilla (la suma)",
 "Arrows at the boat show {#} s of motion":
   "Las flechas en el bote muestran {#} s de movimiento",
+"Shown {#}× faster than real time":
+  "Mostrado {#}× más rápido que en tiempo real",
 "The boat aims across, but the water carries it downstream. Its velocity relative to the shore is the vector sum. Aim upstream to land straight across; the crossing then takes longer.":
   "El bote apunta al otro lado, pero el agua lo arrastra río abajo. Su velocidad respecto a la orilla es la suma vectorial. Apunta río arriba para llegar justo enfrente; entonces el cruce tarda más.",
 "The river crossing in 3D: the boat, the banks and the velocity arrows. Space starts or stops the boat; drag to turn the view, comma and period turn it.":
@@ -182,8 +184,8 @@ VDI18N.add('es', 'demo/vectors', {
   "Rumbo para llegar justo enfrente",
 "{#}° upstream":
   "{#}° río arriba",
-"<span><i></i>boat relative to the water</span><span><i></i>water relative to the shore</span><span><i></i>boat relative to the shore (the sum)</span><small>Arrows show {#} s of motion</small>":
-  "<span><i></i>bote respecto al agua</span><span><i></i>agua respecto a la orilla</span><span><i></i>bote respecto a la orilla (la suma)</span><small>Las flechas muestran {#} s de movimiento</small>",
+"<span><i></i>boat relative to the water</span><span><i></i>water relative to the shore</span><span><i></i>boat relative to the shore (the sum)</span><small>Arrows show {#} s of motion</small><small>Shown {#}× faster than real time</small>":
+  "<span><i></i>bote respecto al agua</span><span><i></i>agua respecto a la orilla</span><span><i></i>bote respecto a la orilla (la suma)</span><small>Las flechas muestran {#} s de movimiento</small><small>Mostrado {#}× más rápido que en tiempo real</small>",
 "To scale: the river is {#} m wide and the boat {#} m long. Drag to turn, scroll to zoom, double click to reset the view.":
   "A escala: el río tiene {#} m de ancho y el bote {#} m de largo. Arrastra para girar, desplaza para hacer zoom, doble clic para restablecer la vista.",
 "Pin out: the ring runs toward the rim":
@@ -226,6 +228,12 @@ VDI18N.add('es', 'demo/vectors', {
   "<span>{#} g</span><span>{#} g</span><span>{#} g</span><span>{#} g</span><span></span><span>ΣF neta</span>",
 "<span>Pin out: the ring slides off center</span><small>Arrows: the table's radius is {#} N</small>":
   "<span>Sin perno: el anillo se desliza fuera del centro</span><small>Flechas: el radio de la mesa es {#} N</small>",
+"Close":
+  "Cerrar",
+"Turn the picked string's pulley by {#} degree (Shift: {#} degrees)":
+  "Girar la polea de la cuerda elegida {#} grado (Shift: {#} grados)",
+"Add or remove {#} g of mass on the picked string (Shift: {#} g)":
+  "Agregar o quitar {#} g de masa en la cuerda elegida (Shift: {#} g)",
 "equilibrant of strings {#} to {#}":
   "equilibrante de las cuerdas {#} a {#}",
 "Ring off center, against the pin":
@@ -267,5 +275,15 @@ VDI18N.add('es', 'demo/vectors', {
 "<span>Pin out: the ring stays centered</span><small>Arrows: the table's radius is {#} N</small>":
   "<span>Sin perno: el anillo se queda centrado</span><small>Flechas: el radio de la mesa es {#} N</small>",
 "current →":
-  "corriente →"
+  "corriente →",
+"<span><i></i>boat relative to the water</span><span><i></i>water relative to the shore</span><span><i></i>boat relative to the shore (the sum)</span><small>Arrows show {#} s of motion</small>":
+  "<span><i></i>bote respecto al agua</span><span><i></i>agua respecto a la orilla</span><span><i></i>bote respecto a la orilla (la suma)</span><small>Las flechas muestran {#} s de movimiento</small>",
+"<span><i></i>boat relative to the water</span><span><i></i>water relative to the shore</span><span><i></i>boat relative to the shore (the sum)</span><small>Arrows show {#} s of motion</small><small>Shown in real time</small>":
+  "<span><i></i>bote respecto al agua</span><span><i></i>agua respecto a la orilla</span><span><i></i>bote respecto a la orilla (la suma)</span><small>Las flechas muestran {#} s de movimiento</small><small>Mostrado en tiempo real</small>",
+"<span><i></i>boat relative to the water</span><span><i></i>water relative to the shore</span><small>Arrows show {#} s of motion</small><small>Shown {#}× faster than real time</small>":
+  "<span><i></i>bote respecto al agua</span><span><i></i>agua respecto a la orilla</span><small>Las flechas muestran {#} s de movimiento</small><small>Mostrado {#}× más rápido que en tiempo real</small>",
+"<span><i></i>boat relative to the water</span><span><i></i>water relative to the shore</span><small>Arrows show {#} s of motion</small><small>Shown in real time</small>":
+  "<span><i></i>bote respecto al agua</span><span><i></i>agua respecto a la orilla</span><small>Las flechas muestran {#} s de movimiento</small><small>Mostrado en tiempo real</small>",
+"Shown in real time":
+  "Mostrado en tiempo real"
 });

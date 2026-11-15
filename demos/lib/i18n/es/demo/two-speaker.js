@@ -106,8 +106,6 @@ VDI18N.add('es', 'demo/two-speaker', {
   "Borrar la traza",
 "Each walk draws the level against the sideways position y along the walk line. Dips are the quiet lines; stop the walk, put the microphone in a dip and record it.":
   "Cada recorrido dibuja el nivel en función de la posición lateral y a lo largo de la línea de recorrido. Los mínimos son las líneas silenciosas; detén el recorrido, pon el micrófono en un mínimo y regístralo.",
-"Record reading":
-  "Registrar esta lectura",
 "No readings yet. Put the microphone somewhere, then record.":
   "Aún no hay lecturas. Pon el micrófono en algún lugar y luego registra.",
 "Record stores the frequency, the separation, the microphone's place (x from the speakers' wall, y sideways from the middle), the tape distances r₁ and r₂ from each speaker, and the sound level.":
@@ -144,6 +142,8 @@ VDI18N.add('es', 'demo/two-speaker', {
   "La bocina {#} está conectada al revés, así que empuja cuando la bocina {#} jala. Justo al frente, donde r₁ = r₂, ahora hay silencio: las líneas fuertes y silenciosas se intercambiaron. Por eso no se deben intercambiar los dos cables de una bocina.",
 "Find the quiet spots along the walk line at several frequencies. At each frequency the path difference r₂ − r₁ = (m + ½)λ grows by one wavelength from one quiet spot to the next, so the slope of r₂ − r₁ against m is λ, and fλ is the speed of sound. Try another air temperature.":
   "Encuentra los puntos silenciosos a lo largo de la línea de recorrido a varias frecuencias. A cada frecuencia la diferencia de camino r₂ − r₁ = (m + ½)λ crece una longitud de onda de un punto silencioso al siguiente, así que la pendiente de r₂ − r₁ en función de m es λ, y fλ es la rapidez del sonido. Prueba otra temperatura del aire.",
+"waves slowed down":
+  "ondas desaceleradas",
 "covered":
   "cubierta",
 "— covered —":
@@ -162,6 +162,12 @@ VDI18N.add('es', 'demo/two-speaker', {
   "mapa de sonoridad: más oscuro es más fuerte ({#} a {#} dB)",
 "The Sandbox is for exploring: pick one of the other setups to record readings for the worksheet.":
   "La Caja de arena es para explorar: elige una de las otras configuraciones para registrar lecturas para la hoja de trabajo.",
+"Close":
+  "Cerrar",
+"Move the microphone {#} cm (Shift: {#} cm)":
+  "Mover el micrófono {#} cm (Shift: {#} cm)",
+"Move the picked speaker {#} cm (Shift: {#} cm)":
+  "Mover la bocina elegida {#} cm (Shift: {#} cm)",
 "The last mystery frequency was {#} Hz. A new one is playing.":
   "La última frecuencia misteriosa era {#} Hz. Ahora suena una nueva.",
 "wired backwards":
@@ -169,5 +175,7 @@ VDI18N.add('es', 'demo/two-speaker', {
 "Microphone at x {#} m, y -{#} m, silent: drag it, or use the arrow keys to move it {#} cm (Shift, {#} cm)":
   "Micrófono en x {#} m, y -{#} m, silencio: arrástralo, o usa las flechas para moverlo {#} cm (Shift, {#} cm)",
 "r₃, to speaker {#}":
-  "r₃, a la bocina {#}"
+  "r₃, a la bocina {#}",
+"Record reading":
+  "Registrar esta lectura"
 });
