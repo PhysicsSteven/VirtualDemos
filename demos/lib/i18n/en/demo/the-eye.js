@@ -95,6 +95,7 @@ VDI18N.add('en', 'demo/the-eye', [
 "OpenStax Example {#}: a +{#} D lens {#} cm from the eye makes an image of the book {#} cm in front of the glasses, {#} m from the eye, at the near point.",
 "With age the lens stiffens and the range of accommodation shrinks, so the near point recedes (here to {#} m). Distant vision is fine, but reading needs a converging lens. Press Prescribe for reading.",
 "Blur (px)",
+"Close",
 "glasses +{#} D",
 "enlarged view of the eye: lens to retina {#} cm, pupil {#} mm",
 "blurred: spot {#} mm across",

@@ -496,7 +496,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       ctx.fillStyle = 'rgba(255,255,255,0.25)'; ctx.fillRect(x + 2, y + 2, s - 4, 2);
       ctx.strokeStyle = 'rgba(0,0,0,0.3)'; ctx.lineWidth = 1; ctx.strokeRect(x + 0.5, y + 0.5, s - 1, s - 1);
     }
-    if (label) { ctx.fillStyle = '#2a2219'; ctx.font = `700 ${12 * proj()}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(label, cx, by + 6); }
+    /* the name goes under the box's 12 px foam floor, in the page's ink: it sat half on the foam and half on the bench, dark on
+       dark in Night, so "A: aluminum" read as cut off (student view, 2026-11-15) */
+    if (label) { ctx.fillStyle = T.ink; ctx.font = `700 ${12 * proj()}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(label, cx, by + 12 + 6 * proj()); }
   }
   /* Heat drawn as dots, each carrying a fixed energy (a 1, 2, 5 step chosen so a few leave each second), so the number of dots that
      have crossed is the heat that has flowed: in Equilibrium a dot leaves each time the heat out of A passes another step, and in
@@ -535,7 +537,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       for (let i = 0; i < n; i++) { const c = i % cols, rr = Math.floor(i / cols); ctx.beginPath(); ctx.arc(x0 + gap * (c + 0.5), y1 - gap * (rr + 0.5), r, 0, 7); ctx.fill(); }
     };
     ctx.save(); ctx.fillStyle = T.hot; ctx.globalAlpha = 0.9; dots(cA, sA, nA); dots(cB, sB, nB); ctx.restore();
-    if (VG) VG.label(ctx, `energy chunks: each dot in a block ${fmtJ(Ec)} (from 0 °C) · A ${nA} + B ${nB} = ${nA + nB}`, W / 2, floor + 26 * p, { a: 'center', s: 10.5 * p, c: T.hot });
+    if (VG) { /* below the block names; translated whole, then split at the dot when wider than the stage (a phone, where it ran off both edges) (student view, 2026-11-15) */
+      const s = `energy chunks: each dot in a block ${fmtJ(Ec)} (from 0 °C) · A ${nA} + B ${nB} = ${nA + nB}`, tr = window.VDI18N ? VDI18N.t(s) : s;
+      ctx.save(); ctx.font = `400 ${10.5 * p}px ${T.ui}`; const wide = ctx.measureText(tr).width > W - 16; ctx.restore();
+      const parts = wide ? tr.split(' · ') : [tr], draw = () => parts.forEach((t, i) => VG.label(ctx, t, W / 2, floor + 40 * p + i * 13 * p, { a: 'center', s: 10.5 * p, c: T.hot }));
+      if (window.VDI18N) VDI18N.raw(draw); else draw();
+    }
   }
   function drawEq() {
     const p = proj(), by = scene(0.78), e = S.eq, st = eqNow(), keyA = e.a === 'mystery' ? e.mys : e.a;
@@ -696,7 +703,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       if (L.mat === 'foam') { ctx.strokeStyle = 'rgba(168,161,152,0.35)'; for (let i = 0; i < 80; i++) { ctx.beginPath(); ctx.arc(x + ((i * 37) % 100) / 100 * lw, wy0 + ((i * 71) % 100) / 100 * (wy1 - wy0), 3 * p, 0, 7); ctx.stroke(); } }
       ctx.restore();
       ctx.strokeStyle = 'rgba(0,0,0,0.25)'; ctx.lineWidth = 1; ctx.strokeRect(x + 0.5, wy0 + 0.5, lw - 1, wy1 - wy0 - 1);
-      if (lw > 34 * p && VG) { ctx.save(); ctx.translate(x + lw / 2, wy1 - 14 * p); ctx.rotate(-Math.PI / 2); VG.label(ctx, `${CONDUCT[L.mat].name.split(' (')[0]} ${g6(L.d * 1000)} mm`, 0, 0, { s: 10 * p, c: '#2a2a2a', a: 'left' }); ctx.restore(); }
+      /* a rod is only 1 cm thick: its name, written up the rod, ran off it in dark ink onto the dark wall ("Alumi"), so a rod's
+         name goes along it when it fits (student view, 2026-11-15) */
+      const nm = `${CONDUCT[L.mat].name.split(' (')[0]} ${g6(L.d * 1000)} mm`;
+      if (rods && VG) { ctx.save(); ctx.font = `400 ${10 * p}px ${T.ui}`; const fits = ctx.measureText(nm).width < lw - 8 * p; ctx.restore(); if (fits) VG.label(ctx, nm, x + lw / 2, (wy0 + wy1) / 2, { s: 10 * p, c: '#2a2a2a', a: 'center' }); }
+      else if (lw > 34 * p && VG) { ctx.save(); ctx.translate(x + lw / 2, wy1 - 14 * p); ctx.rotate(-Math.PI / 2); VG.label(ctx, `${CONDUCT[L.mat].name.split(' (')[0]} ${g6(L.d * 1000)} mm`, 0, 0, { s: 10 * p, c: '#2a2a2a', a: 'left' }); ctx.restore(); }
       x += lw;
     }
     /* the temperature profile drawn across the scene: flat in the air far away, a drop across each film, straight in each layer */
@@ -1001,6 +1012,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (!(window.vdRows && window.vdRows().length)) { window.vdShowCols = SHOW[v]; window.dispatchEvent(new Event('load')); }   /* the Readings section redraws its table headings on load */
     $('units').textContent = UNITS[v]; can.setAttribute('aria-label', LABEL[v]);
     const st = isStatic(); $('go').hidden = st; $('restart').hidden = st; $('speedSeg').hidden = st;
+    $('clock').hidden = st;   /* the clock is blank in a view with no time, and its padding left an empty pill above the stage (student view, 2026-11-15) */
     $('s300').hidden = v !== 'cv'; if (v !== 'cv' && S.speed === 300) S.speed = 60;
     if ($('vdHowTo')) $('vdHowTo').hidden = v === 'ch';     /* no worksheet, so no video, for the energy chain */
     setRun(false); sync(); redraw();

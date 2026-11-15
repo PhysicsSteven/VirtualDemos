@@ -358,7 +358,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* object */
     const xo = X(S.d); ctx.strokeStyle = T.ink; ctx.fillStyle = T.ink; ctx.lineWidth = 2.5 * p; ctx.beginPath(); ctx.moveTo(xo, y); ctx.lineTo(xo, y - 30 * p); ctx.stroke(); ctx.beginPath(); ctx.moveTo(xo, y - 36 * p); ctx.lineTo(xo - 5 * p, y - 28 * p); ctx.lineTo(xo + 5 * p, y - 28 * p); ctx.fill();
     txt(`object, ${fmtD(S.d)}`, Math.max(x0 + 40 * p, Math.min(x1 - 60 * p, xo)), y - 46 * p, { a: 'center', s: 10, b: 1 });
-    if (S.wear && st.V !== 0) { const dI = -1 / st.V; if (dI > 0) { const xi = X(dI); ctx.strokeStyle = T.virt; ctx.setLineDash([4 * p, 3 * p]); ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(xi, y); ctx.lineTo(xi, y - 24 * p); ctx.stroke(); ctx.setLineDash([]); txt('image made by the glasses', xi, y + 40 * p, { a: 'center', s: 9, c: T.virt }); } }
+    if (S.wear && st.V !== 0) { const dI = -1 / st.V; if (dI > 0) { const xi = X(dI); ctx.strokeStyle = T.glass; ctx.setLineDash([4 * p, 3 * p]); ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(xi, y); ctx.lineTo(xi, y - 16 * p); ctx.stroke(); ctx.setLineDash([]);
+      /* in the glasses' blue and bold: in the axis caption's gray, one line under it, it read as more of the
+         caption ("distance from the eye (log scale) image made by the glasses"), and the mark stops under the near point's label, which it used to cross (student view, 2026-11-15) */
+      txt('image made by the glasses', Math.max(x0 + 60 * p, Math.min(x1 - 60 * p, xi)), y + 40 * p, { a: 'center', s: 9, c: T.glass, b: 1 }); } }
   }
   function drawEye(x0, y0, w, h, st) {
     const p = ps(), cy = y0 + h / 2, k = Math.min(w * 0.5 / RETINA, h * 0.7 / 0.024), xL = Math.min(x0 + w * 0.42, x0 + w - 48 * p - RETINA * k), xR = xL + RETINA * k, R = 0.012 * k;

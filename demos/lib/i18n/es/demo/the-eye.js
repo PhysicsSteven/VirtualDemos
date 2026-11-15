@@ -190,6 +190,8 @@ VDI18N.add('es', 'demo/the-eye', {
   "Con la edad el cristalino se endurece y el intervalo de acomodación se reduce, así que el punto cercano se aleja (aquí a {#} m). La visión lejana está bien, pero leer necesita una lente convergente. Pulsa Recetar para leer.",
 "Blur (px)":
   "Desenfoque (px)",
+"Close":
+  "Cerrar",
 "glasses +{#} D":
   "lentes +{#} D",
 "enlarged view of the eye: lens to retina {#} cm, pupil {#} mm":
