@@ -233,7 +233,9 @@ table.rows input:focus { border-color: var(--accent); }
     const lo = Math.floor(Math.log10(Math.min(...R.map((r) => r.kg)))) - 1, hi = Math.ceil(Math.log10(Math.max(...R.map((r) => r.kg)))) + 1, X = (kg) => x0 + (x1 - x0) * (Math.log10(kg) - lo) / (hi - lo);
     ctx.fillStyle = T.ink; ctx.font = `700 ${13 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText(W < 560 ? `Mass for ${kwhText(10 ** S.lg)}${S.elec ? ' of electricity' : ' of heat'}` : `Mass needed to deliver ${kwhText(10 ** S.lg)}${S.elec ? ` of electricity (power stations at ${Math.round(S.eta * 100)}%)` : ' of heat'}`, 14 * p, 16 * p);
     ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.fillText('logarithmic scale: each grid line is ten times the last', 14 * p, 36 * p);
-    for (let e = lo; e <= hi; e++) { const x = X(10 ** e); ctx.strokeStyle = T.grid; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(x, top - 6 * p); ctx.lineTo(x, top + rowH * R.length); ctx.stroke(); ctx.fillStyle = T.muted; ctx.font = `${9 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; if ((e - lo) % Math.max(1, Math.ceil((hi - lo) * 70 * p / (x1 - x0))) === 0) ctx.fillText(massText(10 ** e), x, top + rowH * R.length + 4 * p); }
+    /* a tick label that would overlap the one before is left out, and the last is kept inside the stage: long ones ("1.0 × 10⁶ tonnes") overlapped and were cut off (student view, 2026-11-15) */
+    let tEnd = -Infinity;
+    for (let e = lo; e <= hi; e++) { const x = X(10 ** e); ctx.strokeStyle = T.grid; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(x, top - 6 * p); ctx.lineTo(x, top + rowH * R.length); ctx.stroke(); ctx.fillStyle = T.muted; ctx.font = `${9 * p}px ${T.mono}`; ctx.textBaseline = 'top'; if ((e - lo) % Math.max(1, Math.ceil((hi - lo) * 70 * p / (x1 - x0))) === 0) { const t = massText(10 ** e), w = ctx.measureText(t).width, xl = Math.min(x - w / 2, W - 4 * p - w); if (xl > tEnd + 8 * p) { ctx.textAlign = 'left'; ctx.fillText(t, xl, top + rowH * R.length + 4 * p); tEnd = xl + w; } } }
     R.forEach((r, i) => {
       const y = top + i * rowH, col = T[r.col];
       if (i % 2 === 0) { ctx.fillStyle = T.grid; ctx.globalAlpha = 0.35; ctx.fillRect(0, y, W, rowH); ctx.globalAlpha = 1; }   /* banded rows */
@@ -243,7 +245,9 @@ table.rows input:focus { border-color: var(--accent); }
           ctx.fillStyle = bg; ctx.globalAlpha = 0.92; ctx.beginPath(); ctx.roundRect(x0, by, bw, bh, [0, Math.min(4 * p, bh / 2), Math.min(4 * p, bh / 2), 0]); ctx.fill(); ctx.globalAlpha = 1;
           ctx.fillStyle = 'rgba(255,255,255,0.3)'; ctx.fillRect(x0, by + 1, Math.max(0, bw - 4 * p), Math.max(1, bh * 0.12)); } }
       ctx.fillStyle = T.ink; ctx.font = `${11 * p}px ${T.ui}`; ctx.textBaseline = 'middle';
-      if (lab) { ctx.textAlign = 'right'; ctx.fillText(r.n, x0 - 8 * p, y + rowH / 2); ctx.textAlign = 'left'; if (!S.blind) ctx.fillText(massText(r.kg), Math.min(X(r.kg) + 6 * p, x1 - 70 * p), y + rowH / 2); }
+      if (lab) { ctx.textAlign = 'right'; ctx.fillText(r.n, x0 - 8 * p, y + rowH / 2); ctx.textAlign = 'left'; if (!S.blind) { const mt = massText(r.kg), xe = X(r.kg);
+          /* a label that would run past the edge goes inside the bar's end in dark ink, not over it (student view, 2026-11-15) */
+          if (xe + 6 * p + ctx.measureText(mt).width > W - 4 * p) { ctx.textAlign = 'right'; ctx.fillStyle = '#16130f'; ctx.fillText(mt, xe - 6 * p, y + rowH / 2); } else ctx.fillText(mt, xe + 6 * p, y + rowH / 2); } }
       else { ctx.textAlign = 'left'; ctx.fillText(`${r.n}${S.blind ? '' : `: ${massText(r.kg)}`}`, x0 + 4 * p, y + rowH / 2); }
     });
   }

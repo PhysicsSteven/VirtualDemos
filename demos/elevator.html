@@ -426,7 +426,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       /* force arrows beside the person, as in the flat view: 1 mg = 40 px */
       const k = 40 * p / (S.m * G);
       arrow(r.side[0], r.side[1], r.side[1] + S.m * G * k, T.Wc, 'mg', 1);
-      if (!S.blind) arrow(r.side[0] + 24 * p, r.sideFeet[1], r.sideFeet[1] - N * k, T.N, 'N', 1);
+      /* N sits far enough right that its line clears the mg label even when N > mg (student view, 2026-11-15) */
+      if (!S.blind) arrow(r.side[0] + 32 * p, r.sideFeet[1], r.sideFeet[1] - N * k, T.N, 'N', 1);
       ctx.font = `700 ${12 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; const lab = S.blind ? '?? kg' : `${f(N / G, 1)} kg`, lw = ctx.measureText(lab).width + 8 * p;
       ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.85; ctx.fillRect(r.disp[0] - lw / 2, r.disp[1] + 4 * p, lw, 17 * p); ctx.globalAlpha = 1; ctx.fillStyle = T.ink; ctx.fillText(lab, r.disp[0], r.disp[1] + 6 * p);
       ctx.restore();
@@ -487,7 +488,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     // force arrows on the person (beside the figure): weight from the center down, N from the feet up; 1 mg = 40 px
     const k = 40 * p / (S.m * G), N = scaleN(S.m, st.a), ax = cx + cw * 0.72;
     arrow(ax, hip, hip + S.m * G * k, T.Wc, 'mg', 1);
-    if (!S.blind) arrow(ax + 22 * p, feet, feet - N * k, T.N, 'N', 1);
+    if (!S.blind) arrow(ax + 30 * p, feet, feet - N * k, T.N, 'N', 1);   /* was 22 px: the N line ran through the mg label (student view, 2026-11-15) */
     // scale display
     ctx.fillStyle = T.ink; ctx.font = `700 ${12 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
     ctx.fillText(S.blind ? '?? kg' : `${f(N / G, 1)} kg`, px, floorY + 2 * p);

@@ -800,7 +800,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const p = ps(), narrow = W < 640, paneW = narrow ? 0 : Math.min(230 * p, W * 0.3), sideW = W - paneW - 24 * p, sideH = narrow ? Hh * 0.36 : Hh - 24 * p;
     const xMin = INKX0 - 0.002, xMax = INK.L + INK.D + (narrow ? 0.0045 : 0.002), sc = Math.min(sideW / (xMax - xMin), (sideH - 60 * p) / 0.0068);   /* px per meter, same in x and y */
     const ox = 12 * p - xMin * sc, oy = 30 * p + (sideH - 40 * p) * 0.68, X = (x) => ox + x * sc, Y = (y) => oy - y * sc;
-    txt('Side view, to scale, slow motion', 12 * p, 22 * p, { b: 1 });
+    /* the slow motion factor: a printed drop's real flight from the nozzle to the paper against FLIGHT s on screen (student view, 2026-11-15) */
+    txt(`Side view, to scale, slow motion × 1/${+(FLIGHT * S.v / (INK.L + INK.D - INKX0)).toPrecision(2)}`, 12 * p, 22 * p, { b: 1 });
     /* nozzle and ink line */
     if (window.VDGear && /^#[0-9a-f]{6}$/i.test(T.belt)) window.VDGear.box(ctx, X(xMin) - 4 * p, Y(0.0008), X(INKX0) - X(xMin) + 4 * p, 0.0016 * sc, { color: T.belt, r: 3 * p });
     else { ctx.fillStyle = T.belt; ctx.beginPath(); ctx.roundRect(X(xMin) - 4 * p, Y(0.0008), X(INKX0) - X(xMin) + 4 * p, 0.0016 * sc, 3 * p); ctx.fill(); }
@@ -841,9 +842,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const fx0 = narrow ? 12 * p : W - paneW - 6 * p, fy0 = narrow ? sideH + 12 * p : 34 * p, fw = narrow ? W - 24 * p : paneW, fh = narrow ? Hh - sideH - 24 * p : Hh - 46 * p;
     txt('The paper, face on', fx0, fy0 - 12 * p, { b: 1 });
     ctx.fillStyle = T.paper; ctx.strokeStyle = T.line; ctx.fillRect(fx0, fy0, fw, fh); ctx.strokeRect(fx0 + 0.5, fy0 + 0.5, fw - 1, fh - 1);
-    const fsc = Math.min((fh - 30 * p) / 0.0052, fw / 0.004), fyz = fy0 + fh - 20 * p - 0.001 * fsc, FY = (y) => fyz - y * fsc, colW = 0.0002 * fsc;
+    const fsc = Math.min((fh - 30 * p) / 0.0052, fw / 0.004), fyz = fy0 + fh - 20 * p - 0.001 * fsc, FY = (y) => fyz - y * fsc, colW0 = 0.0002 * fsc;
     ctx.strokeStyle = T.muted; ctx.lineWidth = 1; for (let mm = -1; mm <= 4; mm += 0.5) { const y = FY(mm / 1000); if (y < fy0 + 4 * p) continue; ctx.beginPath(); ctx.moveTo(fx0, y); ctx.lineTo(fx0 + (mm % 1 ? 5 : 10) * p, y); ctx.stroke(); if (!(mm % 1)) txt(`${mm} mm`, fx0 + 13 * p, y, { c: T.muted, s: 9, m: 1 }); }
-    const maxCol = Math.max(0, ...S.paper.map((d) => d.col)), shift = Math.max(0, (maxCol + 2) * colW - (fw - 60 * p));   /* the paper slides left as it fills */
+    const maxCol = Math.max(0, ...S.paper.map((d) => d.col));
+    /* columns close up (to 0.4 of their width at most) so a whole printed word fits the window; the mm scale is unchanged (student view, 2026-11-15) */
+    const colW = Math.max(0.4 * colW0, Math.min(colW0, (fw - 60 * p) / (maxCol + 2))), shift = Math.max(0, (maxCol + 2) * colW - (fw - 60 * p));   /* the paper slides left as it fills */
     ctx.save(); ctx.beginPath(); ctx.rect(fx0 + 50 * p, fy0, fw - 52 * p, fh); ctx.clip(); ctx.fillStyle = T.inkDrop;
     for (const d of S.paper) { ctx.beginPath(); ctx.arc(fx0 + 56 * p + d.col * colW - shift, FY(d.y), Math.max(1.5 * p, colW * 0.42), 0, 7); ctx.fill(); }
     ctx.restore();
@@ -853,7 +856,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   /* ---------- Shuffle and spark ---------- */
   function drawShuffle() {
     const p = ps(), narrow = W < 640, sceneH = Hh * (narrow ? 0.5 : 0.58), h = S.sh, V = bodyV(h.Q), Qm = shuffleLimit(), frac = Math.min(1, Math.abs(h.Q) / Qm), dS = sparkGap(V);
-    txt(narrow ? 'Not to scale; the inset is' : 'The person and the door not to scale; the round inset is to scale', 12 * p, 16 * p, { b: 1, s: narrow ? 10 : 11 });
+    txt(narrow ? 'Not to scale; the inset is to scale' :  /* the phone title had lost its last words (student view, 2026-11-15) */ 'The person and the door not to scale; the round inset is to scale', 12 * p, 16 * p, { b: 1, s: narrow ? 10 : 11 });
     const floorY = sceneH - 12 * p, unit = Math.min((sceneH - 40 * p) / 2.0, W / (narrow ? 3.1 : 4.4));   /* px per "meter" of the sketch */
     /* floor, rug, wall and door */
     ctx.fillStyle = T.relief; ctx.fillRect(0, floorY, W, sceneH - floorY);
@@ -933,9 +936,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     txt('grounded plate', Xf(0.5), Yf(1) - 14 * p, { a: 'center', c: T.muted, s: 10 }); txt('grounded plate', Xf(0.5), Yf(-1) + 16 * p, { a: 'center', c: T.muted, s: 10 });
     /* wire with a corona glow */
     ctx.strokeStyle = T.spark; ctx.globalAlpha = 0.25; ctx.lineWidth = 7 * p; ctx.beginPath(); ctx.moveTo(x0, yc); ctx.lineTo(x1, yc); ctx.stroke(); ctx.globalAlpha = 1;
-    ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(x0, yc); ctx.lineTo(x1, yc); ctx.stroke(); txt('charging wire (high voltage)', x0 + 6 * p, yc - 10 * p, { c: T.muted, s: 10 });
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(x0, yc); ctx.lineTo(x1, yc); ctx.stroke(); txt('charging wire (high voltage, negative)', x0 + 6 * p, yc - 10 * p, { c: T.muted, s: 10 });
     /* field arrows from wire to plates (wire negative in most industrial units: field points toward the wire) */
     ctx.strokeStyle = T.field; ctx.globalAlpha = 0.25; ctx.lineWidth = 1 * p; for (let i = 1; i < 8; i++) { const x = Xf(i / 8); for (const sgn of [1, -1]) { ctx.beginPath(); ctx.moveTo(x, Yf(sgn * 0.92)); ctx.lineTo(x, Yf(sgn * 0.15)); ctx.lineTo(x - 3 * p, Yf(sgn * 0.15) - sgn * 5 * p); ctx.moveTo(x, Yf(sgn * 0.15)); ctx.lineTo(x + 3 * p, Yf(sgn * 0.15) - sgn * 5 * p); ctx.stroke(); } } ctx.globalAlpha = 1;
+    /* name the arrows: they are the field, and the negative particles move against it, out to the plates (student view, 2026-11-15) */
+    txt('field E', Xf(1 / 8) + 5 * p, Yf(0.6), { c: T.muted, s: 9.5 });
     /* gas arrows */
     txt('gas', 4 * p, yc + 22 * p, { c: T.muted, s: 10 }); txt('in →', 4 * p, yc + 36 * p, { c: T.muted, s: 10 });
     /* the smoke's concentration along the channel, c/c₀ = exp(−w x/(u s)) (Deutsch, the same model as the efficiency): hidden in Blind like the efficiency */

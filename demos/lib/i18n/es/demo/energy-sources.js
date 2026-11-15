@@ -84,10 +84,10 @@ VDI18N.add('es', 'demo/energy-sources', {
   "Masa necesaria para entregar {#} Wh de electricidad (centrales al {#}%)",
 "{#} × {#}⁵ tonnes":
   "{#} × {#}⁵ toneladas",
-"{#} × {#}⁷ tonnes":
-  "{#} × {#}⁷ toneladas",
 "{#} × {#}⁶ tonnes":
   "{#} × {#}⁶ toneladas",
+"Close":
+  "Cerrar",
 "Mass for {#} kWh of electricity":
   "Masa para {#} kWh de electricidad",
 "Uranium {#} (fissioned): {#} g":
@@ -145,5 +145,7 @@ VDI18N.add('es', 'demo/energy-sources', {
 "Air at {#} m/s through a wind turbine: {#} tonnes":
   "Aire a {#} m/s a través de una turbina eólica: {#} toneladas",
 "Water falling {#} m (hydro): {#} tonnes":
-  "Agua que cae {#} m (hidroeléctrica): {#} toneladas"
+  "Agua que cae {#} m (hidroeléctrica): {#} toneladas",
+"{#} × {#}⁷ tonnes":
+  "{#} × {#}⁷ toneladas"
 });

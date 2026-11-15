@@ -22,10 +22,6 @@ VDI18N.add('es', 'demo/electrostatics-at-work', {
   "E = {#} dentro",
 "Electrostatics at Work":
   "La electrostática en acción",
-"<a>Electric potential</a>":
-  "<a>Potencial eléctrico</a>",
-"<a><span>←</span> <span>Gauss's Law</span></a><a><span>Capacitors and Dielectrics</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Ley de Gauss</span></a><a><span>Capacitores y dieléctricos</span> <span>→</span></a>",
 "Four machines that run on electric charge: a Van de Graaff generator charging its dome until the air breaks down, an ink jet printer steering charged drops onto paper, a smokestack precipitator pulling charged dust out of a gas flow, and a person shuffling across a rug to spark at a doorknob.":
   "Cuatro máquinas que funcionan con carga eléctrica: un generador de Van de Graaff que carga su domo hasta que el aire se rompe, una impresora de inyección de tinta que dirige gotas cargadas al papel, un precipitador de chimenea que saca el polvo cargado de un flujo de gas, y una persona que arrastra los pies sobre un tapete hasta sacar una chispa en una perilla.",
 "A Van de Graaff generator: a belt in an insulating column charges a metal dome; a grounded wand stands beside it. Below, graphs of the dome voltage against time and of the field against distance from the center.":
@@ -156,10 +152,14 @@ VDI18N.add('es', 'demo/electrostatics-at-work', {
   "A ciegas oculta Q, V, el campo en la superficie, V_max y el tiempo hasta la chispa, y los números de las gráficas: predice primero cómo cambian V_max y el tiempo de carga con R.",
 "Model: the dome is an isolated conducting sphere far from everything else, so C = {#}πε₀R, V = kQ/R and the surface field is V/R. The belt delivers a constant current and nothing leaks away until the surface field reaches {#} MV/m (dry air at {#} atm, approximate; damp air, dust and a rough surface spark sooner). A spark is drawn as emptying the dome completely; a real one leaves a little charge. The column and base are not part of the calculation. Hung up, the wand is far away and left out. Picked up, its brass ball (radius {#} cm, joined to earth) is part of the calculation wherever you drag it: the dome and the ball are both conducting spheres, so the field outside them is exactly that of Kelvin image charges on the line between their centers (worked out afresh at every position; the ball's rod, handle and lead are left out). The ball takes on an opposite charge, the field in the gap grows, and air breaks down where the field first reaches {#} MV/m, on the dome or on the small ball. That is the textbook rule and a good guide for a gap no wider than about the ball's radius; across a wider gap a real discharge starts as a faint glow (corona) at the ball and the voltage can climb further before a spark jumps, so the breakdown voltage shown is then a lower limit. A gap under {#} mm counts as touching: the dome is grounded through the wand. Blue dots in the lead are electrons, each {#}/{#} of the dome's Q_max, moving far slower than real ones.":
   "Modelo: el domo es una esfera conductora aislada lejos de todo lo demás, así que C = {#}πε₀R, V = kQ/R y el campo en la superficie es V/R. La banda entrega una corriente constante y nada se escapa hasta que el campo en la superficie llega a {#} MV/m (aire seco a {#} atm, aproximado; el aire húmedo, el polvo y una superficie rugosa producen chispa antes). Una chispa se dibuja como si vaciara el domo por completo; una real deja un poco de carga. La columna y la base no son parte del cálculo. Colgada, la varilla está lejos y se omite. Tomada, su esfera de latón (radio {#} cm, unida a tierra) es parte del cálculo dondequiera que la arrastres: el domo y la esfera son ambos esferas conductoras, así que el campo fuera de ellas es exactamente el de las cargas imagen de Kelvin sobre la línea entre sus centros (recalculado en cada posición; se omiten la barra, el mango y el cable de la esfera). La esfera adquiere una carga opuesta, el campo en el hueco crece, y el aire se rompe donde el campo llega primero a {#} MV/m, en el domo o en la esfera pequeña. Esa es la regla del libro y una buena guía para un hueco no más ancho que más o menos el radio de la esfera; en un hueco más ancho una descarga real empieza como un brillo tenue (corona) en la esfera y el voltaje puede subir más antes de que salte una chispa, así que el voltaje de ruptura mostrado es entonces un límite inferior. Un hueco menor de {#} mm cuenta como contacto: el domo se conecta a tierra a través de la varilla. Los puntos azules en el cable son electrones, cada uno {#}/{#} de la Q_max del domo, moviéndose mucho más despacio que los reales.",
+"<a>Electric potential</a>":
+  "<a>Potencial eléctrico</a>",
+"<a><span>←</span> <span>Gauss's Law</span></a><a><span>Capacitors and Dielectrics</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Ley de Gauss</span></a><a><span>Capacitores y dieléctricos</span> <span>→</span></a>",
 "To scale. Beads stand for the dome's charge and lines leave it radially, both in proportion to Q. Drag to turn.":
   "A escala. Las cuentas representan la carga del domo y las líneas salen de él radialmente, ambas en proporción a Q. Arrastra para girar.",
-"Side view, to scale, slow motion":
-  "Vista lateral, a escala, en cámara lenta",
+"Side view, to scale, slow motion × {#}/{#}":
+  "Vista lateral, a escala, en cámara lenta × {#}/{#}",
 "nozzle":
   "boquilla",
 "charging electrode":
@@ -204,10 +204,14 @@ VDI18N.add('es', 'demo/electrostatics-at-work', {
   "Electrones por gota q/e",
 "Top view of one channel (not to scale): {#} m wide, {#} m long":
   "Vista superior de un canal (no a escala): {#} m de ancho, {#} m de largo",
-"charging wire (high voltage)":
-  "alambre de carga (alto voltaje)",
+"charging wire (high voltage, negative)":
+  "alambre de carga (alto voltaje, negativo)",
+"field E":
+  "campo E",
 "gas":
   "gas",
+"in →":
+  "entra →",
 "stack":
   "chimenea",
 "Collection efficiency against particle diameter":
@@ -296,8 +300,10 @@ VDI18N.add('es', 'demo/electrostatics-at-work', {
   "calcetines de lana",
 "Stop motor":
   "Detener el motor",
-"Not to scale; the inset is":
-  "No a escala; el recuadro sí",
+"Close":
+  "Cerrar",
+"Not to scale; the inset is to scale":
+  "No a escala; el recuadro sí está a escala",
 "knob":
   "perilla",
 "charger":
@@ -305,5 +311,11 @@ VDI18N.add('es', 'demo/electrostatics-at-work', {
 "grounded":
   "a tierra",
 "Top view, not to scale: {#} m by {#} m":
-  "Vista superior, no a escala: {#} m por {#} m"
+  "Vista superior, no a escala: {#} m por {#} m",
+"Side view, to scale, slow motion":
+  "Vista lateral, a escala, en cámara lenta",
+"charging wire (high voltage)":
+  "alambre de carga (alto voltaje)",
+"Not to scale; the inset is":
+  "No a escala; el recuadro sí"
 });

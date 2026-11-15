@@ -90,6 +90,8 @@ VDI18N.add('es', 'demo/elevator', {
   "<span>acelerando al subir</span>",
 "speeding up going up":
   "acelerando al subir",
+"Close":
+  "Cerrar",
 "<span>constant speed up</span>":
   "<span>subiendo a velocidad constante</span>",
 "<span>free fall: the cable has snapped</span>":
