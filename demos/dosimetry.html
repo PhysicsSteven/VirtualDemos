@@ -90,7 +90,7 @@
         <canvas id="can" tabindex="0" role="img" aria-label="A photon beam entering water, the electrons it sets moving, and the collision kerma and absorbed dose against depth. Drag in the picture or the graph to move the depth probe."></canvas>
       </div>
       <div class="setup-card" id="setupCard" role="group" aria-label="Set up the beam and the measurement">
-        <span class="card-title" id="cardTitle">Set up, then press Start</span>
+        <span class="card-title" id="cardTitle">Set up, then press Play</span><!-- the button is Play, not Start (student view, 2026-11-15) -->
         <div id="boxKerma">
           <div><div class="slider-head"><label for="sE">Photon energy hν</label><output id="oE" class="mono" for="sE"></output></div><input type="range" id="sE" min="0" max="1" step="0.001"></div>
           <div class="chips" role="group" aria-label="Photon energy"><button type="button" data-e="0.5" aria-pressed="false">0.5 MeV</button><button type="button" data-e="1.25" aria-pressed="false">⁶⁰Co 1.25 MeV</button><button type="button" data-e="2" aria-pressed="false">2 MeV</button><button type="button" data-e="4" aria-pressed="false">4 MeV</button></div>
@@ -443,7 +443,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
     T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid') || g('--line'), surface: g('--surface'), accent: g('--accent'),
-      water: g('--water'), waterInk: g('--water-ink'), water2: g('--water2'), photon: g('--photon'), elec: g('--elec'), kerma: g('--kerma'), dose: g('--dose'), mc: g('--mc'), ion: g('--ion'), neg: g('--neg'), beam: g('--beam'),
+      water: g('--water'), waterInk: g('--water-ink'), water2: g('--water2'), photon: g('--photon'), elec: g('--elec'), kerma: g('--kerma'), dose: g('--dose'), mc: g('--mc'), ion: g('--pos'), neg: g('--neg'), /* ions in the site's charge colors, red + and blue −: paper.css sets --neg blue, so --ion (blue) drew both kinds of ion the same color (student view, 2026-11-15) */ beam: g('--beam'),
       mono: g('--font-mono'), ui: g('--font-ui') }; }
 
   /* ---------- Kerma view ---------- */
@@ -1043,7 +1043,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.view === v));
     $('boxKerma').hidden = v !== 'kerma'; $('boxChamber').hidden = v !== 'chamber'; $('boxCal').hidden = v !== 'cal'; $('stepsSec').hidden = v !== 'cal';
     $('play').hidden = v !== 'kerma'; $('restart').hidden = v !== 'kerma';
-    $('cardTitle').textContent = v === 'kerma' ? 'Set up, then press Start' : v === 'chamber' ? 'Set up the chamber, then read it' : 'Calibrate: deliver, read, correct';
+    $('clock').hidden = v !== 'kerma';   /* an empty clock kept an empty time controls frame on the strip in the other views (student view, 2026-11-15) */
+    $('cardTitle').textContent = v === 'kerma' ? 'Set up, then press Play' : v === 'chamber' ? 'Set up the chamber, then read it' : 'Calibrate: deliver, read, correct';
     can.setAttribute('aria-label', v === 'kerma' ? 'A photon beam entering water, the electrons it sets moving, and the collision kerma and absorbed dose against depth. Drag in the picture or the graph to move the depth probe.'
       : v === 'chamber' ? 'A Farmer ion chamber cut along its axis, with ion pairs drifting to the electrodes, and the chamber reading against voltage.'
       : 'A water phantom under the beam, the chamber at the reference depth, the electrometer, thermometer and barometer.');

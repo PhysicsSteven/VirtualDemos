@@ -25,7 +25,7 @@ VDI18N.add('en', 'demo/e-over-m', [
 "Circle <small>back to the gun</small>",
 "The e/m apparatus in 3D: Helmholtz coils, the glass bulb with the glowing beam, the mirrored scale on the rear coil, the power supply and your eye. Drag to turn, scroll to zoom. Drag the V and I knobs up or down, the tube socket sideways, the eye along its rail. Keys: up and down set V, left and right set I, shift for bigger steps; [ and ] turn the tube; comma and period move the eye; space pauses.",
 "Front view of the e/m apparatus: Helmholtz coils, the glass bulb with the beam, and the power supply. Drag the V and I knobs up or down. Keys: up and down set the voltage, left and right the coil current, shift for bigger steps.",
-"Drag to turn the view, scroll to zoom. Drag the V and I knobs up or down, the tube socket sideways, and the eye along its rail.",
+"Drag to turn the view, scroll to zoom. Drag the V and I knobs up or down, the tube socket sideways, and the eye along its rail. The moving dots show only which way the electrons go: a real one goes round in {#} to {#} ns.",
 "View through the front coil onto the mirrored scale behind the bulb. The beam and its reflection in the mirror line up only when your eye is straight in front of the beam. Drag the eye along the bottom, and drag the reading pointers L and R onto the beam. Keys: E selects the eye, L or R a pointer; left and right move it, shift for bigger steps.",
 "Divider between the tube and the scale",
 "No field: a straight beam",

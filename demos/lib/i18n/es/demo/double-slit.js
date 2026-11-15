@@ -44,8 +44,8 @@ VDI18N.add('es', 'demo/double-slit', {
   "Cambia entre el banco en perspectiva y la vista superior",
 "3D view":
   "Vista 3D",
-"{#} <small>detected</small>":
-  "{#} <small>detectadas</small>",
+"{#} <small>detected, {#} per second</small>":
+  "{#} <small>detectadas, {#} por segundo</small>",
 "Double slit apparatus, in perspective on a darkened bench or seen from above, the detector screen seen face on, and a histogram of where particles landed. Drag a slit up or down to change the separation d, drag its outer edge to change the width a, click a slit to close or open it. In the 3D view, drag elsewhere on the bench to turn it. Keys: space streams or pauses, F fires one, C clears, {#} and {#} close or open a slit, W toggles the which slit detector, up and down change d, left and right change a, plus and minus zoom the screen, V switches between the 3D view and the top view, and the bracket keys turn the 3D view.":
   "Aparato de doble rendija, en perspectiva sobre un banco oscurecido o visto desde arriba, la pantalla detectora vista de frente y un histograma de dónde llegaron las partículas. Arrastra una rendija hacia arriba o hacia abajo para cambiar la separación d, arrastra su borde exterior para cambiar el ancho a, y haz clic en una rendija para cerrarla o abrirla. En la vista 3D, arrastra en otra parte del banco para girarlo. Teclas: espacio emite en flujo o pausa, F dispara una, C borra, {#} y {#} cierran o abren una rendija, W activa o desactiva el detector de rendija, arriba y abajo cambian d, izquierda y derecha cambian a, más y menos acercan la pantalla, V cambia entre la vista 3D y la vista superior, y las teclas de corchete giran la vista 3D.",
 "Divider between the apparatus and the screen":
@@ -218,6 +218,8 @@ VDI18N.add('es', 'demo/double-slit', {
   "Tu propia configuración. Elige una predefinida para volver a un experimento conocido.",
 "Turn on the cursors (Measure) and put them on two fringes first.":
   "Activa primero los cursores (Medir) y ponlos sobre dos franjas.",
+"{#} <small>detected</small>":
+  "{#} <small>detectadas</small>",
 "<a><span>←</span> <span>Color Vision</span></a><a><span>Diffraction Grating</span> <span>→</span></a>":
   "<a><span>←</span> <span>Visión del color</span></a><a><span>Rejilla de difracción</span> <span>→</span></a>"
 });

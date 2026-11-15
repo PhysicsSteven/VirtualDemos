@@ -20,8 +20,6 @@ VDI18N.add('es', 'demo/e-over-m', {
   "e/m del electrón",
 "<a>Photons and matter waves</a>":
   "<a>Fotones y ondas de materia</a>",
-"<a><span>←</span> <span>Double Slit, One Particle at a Time</span></a><a><span>Millikan Oil Drop</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Doble rendija, una partícula a la vez</span></a><a><span>Gota de aceite de Millikan</span> <span>→</span></a>",
 "Electrons from a {#} to {#} V gun bend into a glowing circle in the field of a pair of Helmholtz coils. Read the radius on the mirrored scale without parallax and measure the charge to mass ratio of the electron.":
   "Los electrones de un cañón de {#} a {#} V se curvan en un círculo brillante en el campo de un par de bobinas de Helmholtz. Lee el radio en la escala de espejo sin paralaje y mide la razón carga a masa del electrón.",
 "r in cm · B in mT · e/m = 2V/(B²r²) · B = ({#}/{#})<sup>{#}/{#}</sup>μ₀NI/a":
@@ -50,8 +48,8 @@ VDI18N.add('es', 'demo/e-over-m', {
   "El aparato e/m en 3D: bobinas de Helmholtz, el bulbo de vidrio con el haz brillante, la escala de espejo en la bobina trasera, la fuente y tu ojo. Arrastra para girar, desplaza para hacer zoom. Arrastra las perillas V e I arriba o abajo, el soporte del tubo hacia los lados, el ojo a lo largo de su riel. Teclas: arriba y abajo fijan V, izquierda y derecha fijan I, Shift para pasos más grandes; [ y ] giran el tubo; coma y punto mueven el ojo; espacio pausa.",
 "Front view of the e/m apparatus: Helmholtz coils, the glass bulb with the beam, and the power supply. Drag the V and I knobs up or down. Keys: up and down set the voltage, left and right the coil current, shift for bigger steps.":
   "Vista frontal del aparato e/m: bobinas de Helmholtz, el bulbo de vidrio con el haz, y la fuente. Arrastra las perillas V e I arriba o abajo. Teclas: arriba y abajo fijan el voltaje, izquierda y derecha la corriente de las bobinas, Shift para pasos más grandes.",
-"Drag to turn the view, scroll to zoom. Drag the V and I knobs up or down, the tube socket sideways, and the eye along its rail.":
-  "Arrastra para girar la vista, desplaza para hacer zoom. Arrastra las perillas V e I arriba o abajo, el soporte del tubo hacia los lados y el ojo a lo largo de su riel.",
+"Drag to turn the view, scroll to zoom. Drag the V and I knobs up or down, the tube socket sideways, and the eye along its rail. The moving dots show only which way the electrons go: a real one goes round in {#} to {#} ns.":
+  "Arrastra para girar la vista, desplaza para hacer zoom. Arrastra las perillas V e I arriba o abajo, el soporte del tubo hacia los lados y el ojo a lo largo de su riel. Los puntos que se mueven solo muestran hacia dónde van los electrones: uno real da la vuelta en {#} a {#} ns.",
 "View through the front coil onto the mirrored scale behind the bulb. The beam and its reflection in the mirror line up only when your eye is straight in front of the beam. Drag the eye along the bottom, and drag the reading pointers L and R onto the beam. Keys: E selects the eye, L or R a pointer; left and right move it, shift for bigger steps.":
   "Vista a través de la bobina frontal hacia la escala de espejo detrás del bulbo. El haz y su reflejo en el espejo se alinean solo cuando tu ojo está justo frente al haz. Arrastra el ojo a lo largo de la parte inferior, y arrastra los indicadores de lectura L y R sobre el haz. Teclas: E selecciona el ojo, L o R un indicador; izquierda y derecha lo mueven, Shift para pasos más grandes.",
 "Divider between the tube and the scale":
@@ -191,5 +189,9 @@ VDI18N.add('es', 'demo/e-over-m', {
 "3D view needs WebGL: a front view along the coil axis":
   "La vista 3D necesita WebGL: una vista frontal a lo largo del eje de las bobinas",
 "Drag the V and I knobs up or down.":
-  "Arrastra las perillas V e I arriba o abajo."
+  "Arrastra las perillas V e I arriba o abajo.",
+"<a><span>←</span> <span>Double Slit, One Particle at a Time</span></a><a><span>Millikan Oil Drop</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Doble rendija, una partícula a la vez</span></a><a><span>Gota de aceite de Millikan</span> <span>→</span></a>",
+"Drag to turn the view, scroll to zoom. Drag the V and I knobs up or down, the tube socket sideways, and the eye along its rail.":
+  "Arrastra para girar la vista, desplaza para hacer zoom. Arrastra las perillas V e I arriba o abajo, el soporte del tubo hacia los lados y el ojo a lo largo de su riel."
 });

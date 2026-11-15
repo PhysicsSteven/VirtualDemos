@@ -1694,7 +1694,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const now = performance.now();
     while (rateLog.length && now - rateLog[0] > 1000) rateLog.shift();
     const txt = nHits.toLocaleString('en-US');
-    $('count').innerHTML = `${txt} <small>detected</small>`;
+    /* the stream rate on the stage too, so the pace is visible without the rail (student view, 2026-11-15) */
+    $('count').innerHTML = streaming && (S.open[0] || S.open[1]) ? `${txt} <small>detected, ${RATES[S.rate]} per second</small>` : `${txt} <small>detected</small>`;
     $('rN').textContent = txt + (nHits >= CAP ? ' (full)' : '');
     $('rRate').textContent = String(rateLog.length);
   }

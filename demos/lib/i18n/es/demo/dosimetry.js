@@ -48,10 +48,10 @@ VDI18N.add('es', 'demo/dosimetry', {
   "Un haz de fotones que entra al agua, los electrones que pone en movimiento, y la kerma de colisión y la dosis absorbida en función de la profundidad. Arrastra en la imagen o en la gráfica para mover la sonda de profundidad.",
 "Set up the beam and the measurement":
   "Prepara el haz y la medición",
-"Set up, then press Start. Drag, or use the arrow keys, to move this card; double click to put it back":
-  "Prepara y luego pulsa Comenzar. Arrastra, o usa las flechas, para mover esta tarjeta; doble clic la regresa a su lugar",
-"Set up, then press Start":
-  "Prepara y luego pulsa Comenzar",
+"Set up, then press Play. Drag, or use the arrow keys, to move this card; double click to put it back":
+  "Prepara y luego pulsa Iniciar. Arrastra, o usa las flechas, para mover esta tarjeta; doble clic la regresa a su lugar",
+"Set up, then press Play":
+  "Prepara y luego pulsa Iniciar",
 "Photon energy hν":
   "Energía del fotón hν",
 "⁶⁰Co {#} MeV":
@@ -427,5 +427,9 @@ VDI18N.add('es', 'demo/dosimetry', {
 "cobalt {#} unit":
   "unidad de cobalto {#}",
 "{#} cm × {#} cm; source drawn nearer than {#} cm.":
-  "{#} cm × {#} cm; la fuente se dibuja más cerca que {#} cm."
+  "{#} cm × {#} cm; la fuente se dibuja más cerca que {#} cm.",
+"Set up, then press Start. Drag, or use the arrow keys, to move this card; double click to put it back":
+  "Prepara y luego pulsa Comenzar. Arrastra, o usa las flechas, para mover esta tarjeta; doble clic la regresa a su lugar",
+"Set up, then press Start":
+  "Prepara y luego pulsa Comenzar"
 });

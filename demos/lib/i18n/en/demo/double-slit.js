@@ -22,7 +22,7 @@ VDI18N.add('en', 'demo/double-slit', [
 "Fire {#}",
 "Switch between the bench in perspective and the top view",
 "3D view",
-"{#} <small>detected</small>",
+"{#} <small>detected, {#} per second</small>",
 "Double slit apparatus, in perspective on a darkened bench or seen from above, the detector screen seen face on, and a histogram of where particles landed. Drag a slit up or down to change the separation d, drag its outer edge to change the width a, click a slit to close or open it. In the 3D view, drag elsewhere on the bench to turn it. Keys: space streams or pauses, F fires one, C clears, {#} and {#} close or open a slit, W toggles the which slit detector, up and down change d, left and right change a, plus and minus zoom the screen, V switches between the 3D view and the top view, and the bracket keys turn the 3D view.",
 "Divider between the apparatus and the screen",
 "<a>Worksheet {#}: Young's Double Slit</a>",
@@ -108,5 +108,7 @@ VDI18N.add('en', 'demo/double-slit', [
 "Each electron is now recorded at slit {#} or slit {#} (the flash). The fringes vanish: red and blue hits each form a single slit pattern and they simply add. Lower the efficiency η and partial fringes return.",
 "which slit detectors",
 "Your own setup. Pick a preset to return to a known experiment.",
-"Turn on the cursors (Measure) and put them on two fringes first."
+"Turn on the cursors (Measure) and put them on two fringes first.",
+"Close",
+"Close or open slit {#} or slit {#}"
 ]);
