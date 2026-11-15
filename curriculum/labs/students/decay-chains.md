@@ -57,7 +57,7 @@ The demo starts running as soon as it opens and whenever you choose a setup, and
 
 **Bismuth 210 to polonium 210.** With 10 000 nuclei, hide the expected curves. Record a reading at the start, every 5 d to 60 d, then every 20 d to 300 d.
 
-**Tellurium 132 to iodine 132.** Export and Clear the readings, then choose the tellurium chain with 10 000 nuclei. Record a reading at the start, every 1 h to 12 h, then every 12 h to 192 h.
+**Tellurium 132 to iodine 132.** Export and Clear the readings, then choose the tellurium chain (the setup named Short daughter, long parent) with 10 000 nuclei. Record a reading at the start, every 1 h to 12 h, then every 12 h to 192 h.
 
 ## Data
 

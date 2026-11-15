@@ -57,7 +57,7 @@ Use the Galaxy view, with the model's assumptions at their opening values, for P
 
 **Part 1. Across the disk.** Choose The Sun. Keep the birth time at the Sun's, and record a reading at distances from the center of 2, 4, 6, 8.2, 10, 12, 14 and 16 kpc. Send the readings to the worksheet.
 
-**Part 2. Through time.** Clear the readings and choose The Sun again. Keep the distance at 8.2 kpc, and record a reading for stars born 0.5, 1, 2, 3, 4.57, 6, 8, 10 and 12 billion years ago. Send the readings to the worksheet.
+**Part 2. Through time.** Clear the readings and choose The Sun again. Keep the distance at 8.2 kpc, and record a reading for stars born 0.5, 1, 2, 3, 4.57, 6, 8, 10 and 12 billion years ago (the slider moves in steps of 0.05, so take the 4.57 reading as The Sun opens). Send the readings to the worksheet.
 
 **Part 3. The assumptions.** Clear the readings and choose The Sun. Record a reading at the opening assumptions. Then, one at a time, record readings with the chance that Earth's supernovae sterilize at 0.1 and 0.9, the gradient at −0.03 and −0.09 dex/kpc, and the time complex life needs at 2 and 6 billion years, returning each to its opening value before changing the next. Send the readings to the worksheet.
 

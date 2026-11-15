@@ -4,8 +4,8 @@ VDI18N.add('es', 'demo/planet-temperatures', {
   "zona habitable",
 "Earth · {#} K":
   "Tierra · {#} K",
-"distances to scale · star and planet sizes are not":
-  "distancias a escala · tamaños de la estrella y el planeta no",
+"sizes and orbit speed not to scale":
+  "tamaños y velocidad orbital no a escala",
 "ENERGY BUDGET PER m², WHOLE PLANET":
   "BALANCE DE ENERGÍA POR m², TODO EL PLANETA",
 "starlight in":
@@ -354,6 +354,8 @@ VDI18N.add('es', 'demo/planet-temperatures', {
   "Una estrella nacida hace mil millones de años cerca del Sol: sus planetas no han tenido el tiempo que le tomó a la vida compleja en la Tierra.",
 "A star born {#} billion years ago near the Sun, when the gas held fewer heavy elements.":
   "Una estrella nacida hace {#} mil millones de años cerca del Sol, cuando el gas tenía menos elementos pesados.",
+"Close":
+  "Cerrar",
 "dashed: the zone, {#} to {#} kpc ({#}%)":
   "punteada: la zona, {#} a {#} kpc ({#}%)",
 "Where and when they were born":
@@ -390,8 +392,14 @@ VDI18N.add('es', 'demo/planet-temperatures', {
   "Nota",
 "The zone formulas hold from {#} to {#} K; the edges use {#} K.":
   "Las fórmulas de la zona valen de {#} a {#} K; los bordes usan {#} K.",
+"distances to scale · star and planet sizes are not":
+  "distancias a escala · tamaños de la estrella y el planeta no",
 "Model: the planet absorbs the starlight on its disk that it does not reflect and radiates heat like a blackbody from the area that shares the heat. Approximations: one temperature for that whole area (real planets are warmer at the equator and on the day side); no heat from inside the planet (Jupiter gives out about as much again of its own); the greenhouse is one number e, chosen to match a measured temperature, standing for the simple layer models; real air also carries heat up by convection, and clouds and ice change the albedo as the temperature changes, which the model holds fixed. Each planet sits at its average distance on a circle. Under the star assumes the star straight overhead and no heat carried into the ground or away. The habitable zone edges come from detailed climate models (Kopparapu et al. {#}), not from this balance: inside the zone a planet like Earth, with enough carbon dioxide and water, could keep liquid water at its surface. The air rule uses the model temperature at the ground; gas escapes from the top of an atmosphere, which can be much hotter (on Earth it is, which is why Earth loses hydrogen and helium), and the solar wind strips some air too, so the rule is a rough guide.":
   "Modelo: el planeta absorbe la luz estelar sobre su disco que no refleja y radia calor como un cuerpo negro desde el área que reparte el calor. Aproximaciones: una sola temperatura para toda esa área (los planetas reales son más cálidos en el ecuador y en el lado de día); sin calor interno del planeta (Júpiter emite de suyo casi otro tanto); el efecto invernadero es un solo número e, elegido para reproducir una temperatura medida, que representa los modelos sencillos de capas; el aire real también sube calor por convección, y las nubes y el hielo cambian el albedo al cambiar la temperatura, lo que el modelo mantiene fijo. Cada planeta está a su distancia media en un círculo. Bajo la estrella supone la estrella justo encima y que no se lleva calor al suelo ni a ninguna parte. Los bordes de la zona habitable vienen de modelos climáticos detallados (Kopparapu y colaboradores {#}), no de este balance: dentro de la zona un planeta como la Tierra, con suficiente dióxido de carbono y agua, podría mantener agua líquida en su superficie. La regla del aire usa la temperatura del modelo en el suelo; el gas escapa desde la parte alta de una atmósfera, que puede estar mucho más caliente (en la Tierra lo está, y por eso la Tierra pierde hidrógeno y helio), y el viento solar también arranca algo de aire, así que la regla es una guía aproximada.",
 "Mars, {#} AU, Bond albedo {#}. With no greenhouse the balance gives {#} K; the average surface is about {#} K. Its thin carbon dioxide air ({#} mbar) adds only about {#} K.":
-  "Marte, {#} UA, albedo de Bond {#}. Sin efecto invernadero el balance da {#} K; la superficie promedio está a unos {#} K. Su delgado aire de dióxido de carbono ({#} mbar) añade solo unos {#} K."
+  "Marte, {#} UA, albedo de Bond {#}. Sin efecto invernadero el balance da {#} K; la superficie promedio está a unos {#} K. Su delgado aire de dióxido de carbono ({#} mbar) añade solo unos {#} K.",
+"distances to scale · sizes and orbit speed are not":
+  "distancias a escala · tamaños y velocidad orbital no",
+"drag the planet in or out · drag elsewhere to turn · sizes and orbit speed not to scale":
+  "arrastra el planeta hacia dentro o hacia fuera · arrastra en otro lugar para girar · tamaños y velocidad orbital no a escala"
 });

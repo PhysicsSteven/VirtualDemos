@@ -27,7 +27,7 @@ const demos = (argv.includes('--all') ? fs.readdirSync(path.join(ROOT, 'demos'))
 if (!demos.length) { console.error('usage: node tools/watch.cjs demo... | --all [--jobs N] [--out DIR]'); process.exit(2); }
 const TYPES = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.svg': 'image/svg+xml',
   '.png': 'image/png', '.jpg': 'image/jpeg', '.webp': 'image/webp', '.mp4': 'video/mp4', '.bin': 'application/octet-stream' };
-const SKIP = /export|worksheet|handout|download|print|copy|share|record|full ?screen|preferences|language|tools|help|about|how this works|reset|clear|undo|delete|remove|fire|add|drop|step|pause|play|release|start|run\b|go\b|stop|zoom|fit|[+−-]$/i;
+const SKIP = /^(export|worksheet|handout|download|print|copy|share|record|full ?screen|preferences|language|tools|help|about|how this works|reset|clear|undo|delete|remove|fire|add|drop|step|pause|play|release|start|run\b|go\b|stop|zoom|fit)\b|^[+−-]$/i;
 
 function serve() {
   const s = http.createServer((req, res) => {

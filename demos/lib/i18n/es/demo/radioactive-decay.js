@@ -44,6 +44,8 @@ VDI18N.add('es', 'demo/radioactive-decay', {
   "Desintegración β",
 "t = {#} steps":
   "t = {#} pasos",
+"{#} s = {#} step":
+  "{#} s = {#} paso",
 "Elute the generator now (the same as Elute now under Parent and daughter)":
   "Eluir el generador ahora (lo mismo que Eluir ahora en Madre e hija)",
 "Elute":
@@ -224,10 +226,6 @@ VDI18N.add('es', 'demo/radioactive-decay', {
   "Datación de la cuadrícula a partir de su conteo",
 "N₀ is the carbon {#} a living sample has. The method assumes the atmospheric carbon {#} level was the same in the past; real dates are corrected with a calibration curve.":
   "N₀ es el carbono {#} que tiene una muestra viva. El método supone que el nivel de carbono {#} en la atmósfera era el mismo en el pasado; las fechas reales se corrigen con una curva de calibración.",
-"parents":
-  "madres",
-"daughters":
-  "hijas",
 "±{#}σ band":
   "Banda de ±{#}σ",
 "Half lives":
@@ -238,8 +236,12 @@ VDI18N.add('es', 'demo/radioactive-decay', {
   "<span><i></i>Esta muestra</span> <span><i></i>Esperado, N₀e<sup>−λt</sup> o Bateman</span> <span><i></i>Esperado ±{#}σ</span> <span><i></i>Corridas anteriores, mismos ajustes</span> <span><i></i>Desintegraciones contadas en cada intervalo de tiempo</span> <span><i></i>Vidas medias completas</span> <span><i></i>Edad al desintegrarse de un núcleo seguido</span>",
 "Model: each step of length Δt, every nucleus draws one random number and changes with the exact probability for that time, p = {#} − e<sup>−λΔt</sup>. For a chain the step uses the Bateman probabilities, so a parent can even pass through the daughter within one step. The sample therefore follows the expected curves at any step size.":
   "Modelo: en cada paso de duración Δt, cada núcleo saca un número aleatorio y cambia con la probabilidad exacta para ese tiempo, p = {#} − e<sup>−λΔt</sup>. Para una cadena el paso usa las probabilidades de Bateman, así que una madre puede incluso pasar por la hija dentro de un solo paso. Por eso la muestra sigue las curvas esperadas con cualquier tamaño de paso.",
-"t = {#} step":
-  "t = {#} paso",
+"parents":
+  "madres",
+"daughters":
+  "hijas",
+"{#} s = {#} steps":
+  "{#} s = {#} pasos",
 "{#}% <span>of {#}; expected {#}%</span>":
   "{#}% <span>de {#}; esperado {#}%</span>",
 "¹⁴⁶Sm":
@@ -380,6 +382,8 @@ VDI18N.add('es', 'demo/radioactive-decay', {
   "Los seres vivos toman carbono {#} del aire. Después de la muerte no se repone, así que la fracción que queda indica la edad. Prueba la tarea de datación de abajo.",
 "t = {#} yr":
   "t = {#} años",
+"{#} s = {#} yr":
+  "{#} s = {#} años",
 "activity in decays per yr":
   "actividad en desintegraciones por año",
 "press Play, then date the grid":
@@ -394,8 +398,6 @@ VDI18N.add('es', 'demo/radioactive-decay', {
   "{#} ± {#} años es la evaluación actual (NUBASE2020). Muchos libros de texto todavía dan el valor anterior de {#} años (la vida media de Cambridge); los laboratorios de radiocarbono todavía reportan las edades con los {#} años de Libby por convención y luego las calibran. También puedes arrastrar el marcador de T½ en la gráfica de N(t).",
 "A piece of charcoal has <b>{#}%</b> of the carbon {#} a living sample has. How old is it?":
   "Un trozo de carbón tiene <b>{#}%</b> del carbono {#} que tiene una muestra viva. ¿Qué edad tiene?",
-"{#} yr ± {#} yr <span>true age {#} yr</span>":
-  "{#} años ± {#} años <span>edad real {#} años</span>",
 "Iodine {#} treats thyroid disease and is a fallout product. After {#} half lives, about {#} days, the activity has dropped to {#}/{#} of its start.":
   "El yodo {#} trata enfermedades de la tiroides y es un producto de la lluvia radiactiva. Después de {#} vidas medias, unos {#} días, la actividad ha bajado a {#}/{#} de la inicial.",
 "<i></i>¹³¹Xe":
@@ -530,6 +532,8 @@ VDI18N.add('es', 'demo/radioactive-decay', {
   "El potasio {#} fecha rocas: al fundirse, la roca deja escapar el gas argón, y una vez que se solidifica, el argón que produce la desintegración queda atrapado. Las rocas más antiguas de las tierras altas lunares se solidificaron hace unos {#} mil millones de años, unas {#} vidas medias: observa qué pocos de los núcleos de potasio {#} iniciales seguirían ahí.",
 "t = {#} Gyr":
   "t = {#} Gyr",
+"{#} s = {#} Gyr":
+  "{#} s = {#} Gyr",
 "<i></i>⁴⁰Ca, ⁴⁰Ar":
   "<i></i>⁴⁰Ca, ⁴⁰Ar",
 "activity in decays per Gyr":
@@ -548,6 +552,8 @@ VDI18N.add('es', 'demo/radioactive-decay', {
   "{#} Myr",
 "t = {#} Myr":
   "t = {#} Myr",
+"{#} s = {#} Myr":
+  "{#} s = {#} Myr",
 "<i></i>²⁶Al":
   "<i></i>²⁶Al",
 "<i></i>²⁶Mg":
@@ -578,8 +584,12 @@ VDI18N.add('es', 'demo/radioactive-decay', {
   "intervalo = {#} Myr",
 "Potential energy of the alpha":
   "Energía potencial de la alfa",
+"{#} yr ± {#} yr <span>true age {#} yr</span>":
+  "{#} años ± {#} años <span>edad real {#} años</span>",
 "parent gone":
   "la madre se acabó",
+"t = {#} step":
+  "t = {#} paso",
 "t in steps, yr, d or h by setup · λ = ln {#} / T½":
   "t en pasos, años, d o h según la configuración · λ = ln {#} / T½",
 "{#} yr is the textbook value (the Cambridge half life). The current evaluation is {#} ± {#} yr; radiocarbon labs still quote ages with Libby’s {#} yr by convention and then calibrate. You can also drag the T½ marker on the N(t) plot.":

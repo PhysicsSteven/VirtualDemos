@@ -2,7 +2,7 @@
 VDI18N.add('en', 'demo/planet-temperatures', [
 "habitable zone",
 "Earth · {#} K",
-"distances to scale · star and planet sizes are not",
+"sizes and orbit speed not to scale",
 "ENERGY BUDGET PER m², WHOLE PLANET",
 "starlight in",
 "reflected",
@@ -177,6 +177,7 @@ VDI18N.add('en', 'demo/planet-temperatures', [
 "A star born {#} billion years ago, {#} kpc out: quiet, but short of the heavy elements that make rocky planets.",
 "A star born a billion years ago near the Sun: its planets have not had the time complex life took on Earth.",
 "A star born {#} billion years ago near the Sun, when the gas held fewer heavy elements.",
+"Close",
 "dashed: the zone, {#} to {#} kpc ({#}%)",
 "Where and when they were born",
 "Enough metals",

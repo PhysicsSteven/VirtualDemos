@@ -71,6 +71,8 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 .stage-ctl > * { pointer-events: auto; }
 .stage-ctl .btn { padding: 4px 10px; font-size: 0.84rem; }
 .tclock { margin-left: auto; font-size: 0.86rem; font-weight: 600; color: var(--ink); background: color-mix(in srgb, var(--canvas) 85%, transparent); padding: 2px 6px; border-radius: 6px; white-space: nowrap; }
+.tclock .trate { font-weight: 400; color: var(--muted); }   /* the time scale beside the clock (student view, 2026-11-15) */
+.tclock .trate::before { content: ' · '; }
 .g3elute { position: absolute; z-index: 3; padding: 4px 10px; font-size: 0.84rem; transform: translate(-50%, -100%); white-space: nowrap; }
 .plot-ctl { position: absolute; top: 8px; right: 10px; z-index: 3; }
 .plot-ctl .seg button { font-size: 0.78rem; padding: 3px 9px; }
@@ -194,7 +196,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
             <button type="button" data-s="16" aria-pressed="false">16×</button>
           </div>
           <div class="seg dimseg" role="group" aria-label="Perspective" id="dimSeg" hidden><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
-          <span class="tclock mono" id="tclock">t = 0</span>
+          <span class="tclock mono" id="tclock"><span id="tclockT">t = 0</span><span class="trate" id="tRate"></span></span>
         </div>
         <button type="button" class="btn g3elute" id="eluteScene" hidden title="Elute the generator now (the same as Elute now under Parent and daughter)">Elute</button>
       </div>
@@ -1569,7 +1571,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function updateReadouts(full) {
     if (!sim) return;
     const t = tNow(), N0 = S.N0, ns = nSp(), f = expFr(t);
-    $('tclock').textContent = 't = ' + fmtT(t);
+    /* the clock with its time scale, as the Alpha decay view shows it: nothing said how fast a run goes (student view, 2026-11-15) */
+    $('tclockT').textContent = 't = ' + fmtT(t); $('tRate').textContent = '1 s = ' + fmtT(stepsPerSec * S.mult * dt);
     $('rT').textContent = fmtT(t);
     $('rHLlab').textContent = ns === 2 ? `Half lives of ${spName(0)}` : 'Half lives elapsed';
     $('rHL').textContent = (t / S.T[0]).toFixed(t / S.T[0] >= 10 ? 1 : 2);
