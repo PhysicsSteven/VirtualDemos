@@ -52,7 +52,7 @@ Students should know Q = mcΔT and the Celsius and Kelvin scales. The demo has f
 ## Physics behind the demo
 
 - **Equilibrium.** Heat flows through the bar at P = kA(T_A − T_B)/L (the bar's own heat capacity is neglected), so the difference decays as exp(−t/τ) with 1/τ = (kA/L)(1/C_A + 1/C_B). The box is perfectly insulated.
-- **Thermometer.** P = nRT/V for an ideal gas at fixed volume. The glass does not expand and the tube holds no gas. The baths are ITS-90 fixed points at 1 atm: nitrogen boils at 77.355 K, solid CO₂ sublimes at −78.464 °C, water boils at 99.974 °C.
+- **Thermometer.** P = nRT/V for an ideal gas at fixed volume. The glass does not expand and the tube holds no gas. The bath temperatures are on ITS-90 at 1 atm: nitrogen boils at 77.355 K, solid CO₂ sublimes at −78.464 °C, water boils at 99.974 °C.
 - **Expansion.** L = L₀[1 + α(T − 20 °C)] with the textbook's average α. The flask level is h = (ΔV_liquid − ΔV_flask)/A with β_Pyrex = 9 × 10⁻⁶ /°C. Water uses Tanaka et al. (Metrologia 38, 301, 2001) for its density, so it reproduces the minimum volume at 3.98 °C.
 - **Conduction.** Steady state only: P = AΔT/ΣR with R = d/k for each layer and the ASHRAE air film resistances (0.12 m²·°C/W for still indoor air, 0.030 in a 24 km/h wind, 0.044 in a 12 km/h wind). A still air layer added to **Window** is conduction only; a real gap also carries heat by convection and radiation, so real double glazing passes about twice what the demo shows.
 

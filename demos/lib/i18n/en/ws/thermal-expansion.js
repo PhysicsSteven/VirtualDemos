@@ -6,7 +6,7 @@ VDI18N.add('en', 'ws/thermal-expansion', [
 "Thermal Expansion | VirtualDemos",
 "Thermal Expansion",
 "<strong>Setups in the demo:</strong> Rod in a water bath; Water near {#} °C (these two use the Expansion view, the subject of this worksheet); Hot metal, cool water; Mystery block; Gas thermometer; House wall in winter (the other three worksheets; a fifth worksheet, on cooling, uses the Cooling view).",
-"<strong>Rod and dial gauge.</strong> A rod {#} m long at {#} °C lies in a water jacket, one end against a fixed block and the other against a dial gauge. The gauge reads the change in length from {#} °C, to {#} mm. The picture shows the rod’s end moving {#} times more than it does.",
+"<strong>Rod and dial gauge.</strong> A rod {#} m long at {#} °C lies in a water jacket, one end against a fixed block and the other against a dial gauge. The gauge reads the change in length from {#} °C, to {#} mm. The picture exaggerates how far the rod’s end moves; read the gauge for the value.",
 "The rod’s length follows \\(L = L_0[1 + \\alpha(T - 20\\ ^\\circ\\mathrm{C})]\\) with \\(\\alpha\\) from the textbook’s Table {#}, an average over ordinary temperatures, so the response is exactly linear here.",
 "<strong>Flask and capillary.</strong> {#} mL of liquid fills a Pyrex flask to the zero mark of a thin tube of bore {#} mm at {#} °C. The level in the tube, read to {#} mm, shows the liquid’s expansion less the flask’s.",
 "The liquids expand with \\(\\beta\\) from Table {#}, except water, whose volume follows its measured density (Tanaka and others, <em>Metrologia</em> {#}, valid from {#} to {#} °C). The flask expands with \\(\\beta = 9\\times10^{-6}\\) /°C (Pyrex, Table {#}); the tube’s own expansion is neglected.",

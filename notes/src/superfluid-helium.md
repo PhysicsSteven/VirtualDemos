@@ -11,11 +11,11 @@ time: 15 to 25 minutes
 
 ## Before class
 
-Students should know latent heat, vapor pressure and entropy. The demo has five experiments, every number from measured helium properties (Donnelly and Barenghi 1998): **Pump down** (a dewar of 100 g of helium at 4.22 K under a pump), **Fountain** (a tube with a powder plug and a heater), **Creeping film** (a beaker hanging in a 1.40 K bath) **Spinning disks** (Andronikashvili's stack of 40 aluminum disks on a torsion fiber) and **Helium 3** (a cell squeezed so part of it freezes). Speed buttons run time faster.
+Students should know latent heat, vapor pressure and entropy. The demo has five experiments, every number from measured helium properties (Donnelly and Barenghi 1998): **Pump down** (a dewar of 100 g of helium at 4.22 K under a pump), **Fountain** (a tube with a powder plug and a heater), **Creeping film** (a beaker hanging in a 1.40 K bath) **Spinning disks** (a stack of 40 aluminum disks on a torsion fiber, after Andronikashvili) and **Helium 3** (a cell squeezed so part of it freezes). Speed buttons run time faster.
 
 ## Running it in class
 
-1. **Pump down through the lambda point.** Ask Q1. The temperature falls quickly at first, the bubbles stop at 2.1768 K, and the graph pauses there because the heat capacity peaks. With a 5.0 L/s pump and a 20 mW heat leak it takes about 2.3 minutes, and about 30 % of the liquid boils away (Q2).
+1. **Pump down through the lambda point.** Ask Q1. The temperature falls quickly at first, the bubbles stop at 2.1768 K, and the graph pauses there because the heat capacity peaks. With a 5.0 L/s pump and a 20 mW heat leak it takes about 2.3 minutes, and about 25 % of the liquid boils away to get there (Q2).
 2. **A bigger pump.** Four times the speed reaches the lambda point four times sooner and ends colder.
 3. **Fountain.** At 1.40 K a 5.0 mK rise inside the tube holds a column 6.75 cm high; at 1.60 K and 10.0 mK it would hold 29.2 cm, so it spouts out of the 12 cm tube (Q3).
 4. **Film.** The beaker empties itself at a steady rate (Q4): a straight line on the graph. Pushed down into the bath, an empty beaker fills itself.
@@ -26,7 +26,7 @@ Students should know latent heat, vapor pressure and entropy. The demo has five 
 
 **Q1.** What happens to the bath's temperature and to the bubbles as the pump lowers the pressure? Predict what changes at 2.1768 K.
 
-**Q2.** The latent heat is about 90 J/mol and the heat capacity about 10 J/(mol·K) on average between 4.22 K and 2.18 K. Estimate the fraction of the liquid that boils away to cool the rest to the lambda point, with no heat leak.
+**Q2.** The latent heat is about 90 J/mol and the heat capacity about 12 J/(mol·K) on average between 4.22 K and 2.18 K. Estimate the fraction of the liquid that boils away to cool the rest to the lambda point, with no heat leak.
 
 **Q3.** The fountain pressure is ΔP = ρSΔT, so the column it holds is h = SΔT/g. At 1.60 K, S = 281.5 J/(kg·K). How high a column does a 1.0 mK rise hold?
 
@@ -48,7 +48,7 @@ Students should know latent heat, vapor pressure and entropy. The demo has five 
 
 - Vapor pressure from the ITS-90 helium equations (BIPM), matching Donnelly and Barenghi Table 17.3 within 0.1 %. Entropy, heat capacity, latent heat, density and ρn/ρ are their tabulated values, with monotone cubic interpolation between rows (in ln S for the entropy).
 - Pump down: the pump takes gas at room temperature, ṅ = SpP/(RT); the bath obeys nC dT/dt = Q − Lṅ, with a 20 mW heat leak. The bubbles are drawn to show boiling, not computed.
-- Fountain: H. London's relation dP = ρS dT integrated over the temperature rise, with ρ taken constant (it varies by under 0.4 %).
+- Fountain: H. London's relation dP = ρS dT integrated over the temperature rise, with ρ taken constant (it varies by under 0.7 % from 1.2 to 2.17 K).
 - Film: the Rollin film transfer rate of 7.5 × 10⁻⁵ cm³/s per cm of the narrowest perimeter below 1.5 K (Daunt and Mendelssohn 1939), independent of the height difference; the film is drawn far thicker than its 30 nm.
 - Helium 3: melting pressure from the PLTS-2000 equation (BIPM), which defines the A and A to B points on the melting curve; the superfluid boundary at lower pressure is Greywall's (1986), converted to PLTS-2000. Cooling by freezing uses entropy balance with S_solid = R ln 2 and S_liquid = γT; the liquid's drop in entropy below the superfluid transition and the solid's ordering near 0.9 mK are left out, so the model stops at 1.0 mK.
 - Spinning disks: the period is 2π√((I_disks + (ρn/ρ)I_He)/κ), with the fiber chosen to give 20.00 s for the bare disks.

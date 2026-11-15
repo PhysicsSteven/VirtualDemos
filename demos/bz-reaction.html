@@ -551,7 +551,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   }
 
   // ---------- 3. Flow reactor: Györgyi and Field (1992) three variable model ----------
-  // Rate constants and parameters as tabulated in Bartoszewski et al. (Sci. Rep. 10, 21782, 2020; arXiv:2005.03325):
+  // Rate constants and parameters as tabulated in Buchlovská Nagyová, Jansík and Lampart (Sci. Rep. 10, 21030, 2020, doi:10.1038/s41598-020-77874-6; preprint arXiv:2005.03325):
   // x = [HBrO2]/X0, z = [Ce(IV)]/Z0, v = [BrMA]/V0, τ = t/T0; [Br−] from its steady state.
   const GF = { k1: 4.0e6, k2: 2.0, k3: 3000, k4: 55.2, k5: 7000, k6: 0.09, k7: 0.23, A: 0.1, M: 0.25, H: 0.26, C: 0.000833, alpha: 666.7, beta: 0.3478 };
   function gfMake(kf, P) {

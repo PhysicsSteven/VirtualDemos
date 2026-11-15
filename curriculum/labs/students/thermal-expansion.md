@@ -12,7 +12,7 @@ Textbook: OpenStax *University Physics*, Vol. 2, §1.3. Access for free at https
 
 **Using the demo.**
 
-- **Rod and dial gauge.** A rod 1.000 m long at 20.0 °C lies in a water jacket, one end against a fixed block and the other against a dial gauge. The gauge reads the change in length from 20.0 °C, to 0.001 mm. The picture shows the rod's end moving 4000 times more than it does.
+- **Rod and dial gauge.** A rod 1.000 m long at 20.0 °C lies in a water jacket, one end against a fixed block and the other against a dial gauge. The gauge reads the change in length from 20.0 °C, to 0.001 mm. The picture exaggerates how far the rod's end moves; read the gauge for the value.
 - The rod's length follows $$L = L_0[1 + \alpha(T - 20\ ^\circ\mathrm{C})]$$ with $$\alpha$$ from the textbook's Table 1.2, an average over ordinary temperatures, so the response is exactly linear here.
 - **Flask and capillary.** 5.000 mL of liquid fills a Pyrex flask to the zero mark of a thin tube of bore 1.00 mm at 20.0 °C. The level in the tube, read to 0.1 mm, shows the liquid's expansion less the flask's.
 - The liquids expand with $$\beta$$ from Table 1.2, except water, whose volume follows its measured density (Tanaka and others, *Metrologia* 2001, valid from 0 to 40 °C). The flask expands with $$\beta = 9\times10^{-6}$$ /°C (Pyrex, Table 1.2); the tube's own expansion is neglected.
