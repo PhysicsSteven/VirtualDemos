@@ -4,10 +4,14 @@ VDI18N.add('es', 'demo/string-density', {
   "amplitud (mm)",
 "vibrator":
   "vibrador",
-"sideways motion drawn ×{#}, slowed as by a strobe":
-  "movimiento lateral dibujado ×{#}, ralentizado como con un estroboscopio",
+"up and down motion drawn ×{#}, shown {#} times slower, as by a strobe":
+  "movimiento hacia arriba y hacia abajo dibujado ×{#}, mostrado {#} veces más lento, como con un estroboscopio",
 "Linear Density of a String":
   "Densidad lineal de una cuerda",
+"<a>First lab: waves on a string</a>":
+  "<a>Primer laboratorio: ondas en una cuerda</a>",
+"<a><span>←</span> <span>Standing Waves</span></a><a><span>Charging by Induction</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Ondas estacionarias</span></a><a><span>Carga por inducción</span> <span>→</span></a>",
 "A string runs from a vibrator over a pulley to a hanging mass. Hang masses at a fixed frequency, or sweep the frequency with a fixed mass, find the resonances and count the loops. A straight line through your readings gives the string's mass per meter, μ.":
   "Una cuerda va de un vibrador, pasando por una polea, a una masa colgante. Cuelga masas a una frecuencia fija, o barre la frecuencia con una masa fija, encuentra las resonancias y cuenta los vientres. Una recta a través de tus lecturas da la masa por metro de la cuerda, μ.",
 "A string on a lab table, from a vibrator on the left to a pulley at the table's edge on the right, with a hanger of slotted masses below the pulley. A meter rule runs under the string. Left and right arrows change the driver frequency by {#} Hz (with Shift, {#} Hz); up adds a {#} g mass, down takes off the last mass; space pauses.":
@@ -102,8 +106,6 @@ VDI18N.add('es', 'demo/string-density', {
   "Borrar la traza",
 "Each frequency you try adds a point: the largest amplitude on the string. The peaks are the resonances.":
   "Cada frecuencia que pruebas agrega un punto: la mayor amplitud en la cuerda. Los picos son las resonancias.",
-"Record reading":
-  "Registrar esta lectura",
 "No readings yet. Find a resonance, then record.":
   "Aún no hay lecturas. Encuentra una resonancia y luego registra.",
 "What to plot":
@@ -120,12 +122,8 @@ VDI18N.add('es', 'demo/string-density', {
   "Registrar guarda L, m, T, f y el número de vientres n (puedes corregir n en la tabla). f contra n a una masa: pendiente v/2L, así que μ = T/(4L² · pendiente²). T contra {#}/n² a una frecuencia: pendiente 4L²f²μ, así que μ = pendiente/(4L²f²). Ambas rectas deberían pasar cerca del origen.",
 "<span>Blind: hide μ and the predictions</span>":
   "<span>A ciegas: ocultar μ y las predicciones</span>",
-"Model: the string obeys the wave equation with a light damping force in proportion to its velocity, chosen so every resonance is {#} Hz wide at half power. The vibrator moves its end up and down {#} mm (chosen); the pulley end does not move. Shown is the steady state: the second or so a real string takes to build up or die down is skipped. T = mg with g = {#} m/s²: the pulley has no friction, the hanging mass is at rest, and the string past the pulley, its stretch and its sag are left out. String A, B and C have μ = {#}, {#} and {#} g/m (chosen); an unknown string has {#} to {#} g/m. Damping lowers each resonance by less than {#}% above {#} Hz. The drawing exaggerates the sideways motion and slows it down, as a strobe would. Simulated data, no noise: your precision is how well you find each peak.":
-  "Modelo: la cuerda obedece la ecuación de onda con una fuerza de amortiguamiento ligera proporcional a su velocidad, elegida para que cada resonancia tenga {#} Hz de ancho a media potencia. El vibrador mueve su extremo hacia arriba y hacia abajo {#} mm (elegido); el extremo de la polea no se mueve. Se muestra el estado estacionario: se omite el segundo, más o menos, que una cuerda real tarda en crecer o en apagarse. T = mg con g = {#} m/s²: la polea no tiene fricción, la masa colgante está en reposo, y se omiten la cuerda más allá de la polea, su estiramiento y su comba. Las cuerdas A, B y C tienen μ = {#}, {#} y {#} g/m (elegidas); una cuerda desconocida tiene de {#} a {#} g/m. El amortiguamiento baja cada resonancia menos de {#}% por encima de {#} Hz. El dibujo exagera el movimiento lateral y lo ralentiza, como lo haría un estroboscopio. Datos simulados, sin ruido: tu precisión depende de qué tan bien encuentres cada pico.",
-"<a>First lab: waves on a string</a>":
-  "<a>Primer laboratorio: ondas en una cuerda</a>",
-"<a><span>←</span> <span>Standing Waves</span></a><a><span>Charging by Induction</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Ondas estacionarias</span></a><a><span>Carga por inducción</span> <span>→</span></a>",
+"Model: the string obeys the wave equation with a light damping force in proportion to its velocity, chosen so every resonance is {#} Hz wide at half power. The vibrator moves its end up and down {#} mm (chosen); the pulley end does not move. Shown is the steady state: the second or so a real string takes to build up or die down is skipped. T = mg with g = {#} m/s²: the pulley has no friction, the hanging mass is at rest, and the string past the pulley, its stretch and its sag are left out. String A, B and C have μ = {#}, {#} and {#} g/m (chosen); an unknown string has {#} to {#} g/m. Damping lowers each resonance by less than {#}% above {#} Hz. The drawing exaggerates the up and down motion and slows it down, as a strobe would. Simulated data, no noise: your precision is how well you find each peak.":
+  "Modelo: la cuerda obedece la ecuación de onda con una fuerza de amortiguamiento ligera proporcional a su velocidad, elegida para que cada resonancia tenga {#} Hz de ancho a media potencia. El vibrador mueve su extremo hacia arriba y hacia abajo {#} mm (elegido); el extremo de la polea no se mueve. Se muestra el estado estacionario: se omite el segundo, más o menos, que una cuerda real tarda en crecer o en apagarse. T = mg con g = {#} m/s²: la polea no tiene fricción, la masa colgante está en reposo, y se omiten la cuerda más allá de la polea, su estiramiento y su comba. Las cuerdas A, B y C tienen μ = {#}, {#} y {#} g/m (elegidas); una cuerda desconocida tiene de {#} a {#} g/m. El amortiguamiento baja cada resonancia menos de {#}% por encima de {#} Hz. El dibujo exagera el movimiento hacia arriba y hacia abajo y lo ralentiza, como lo haría un estroboscopio. Datos simulados, sin ruido: tu precisión depende de qué tan bien encuentres cada pico.",
 "masses drawn as {#} cm discs of {#} g/cm³":
   "pesas dibujadas como discos de {#} cm de {#} g/cm³",
 "hanger {#} g = {#} g":
@@ -152,6 +150,12 @@ VDI18N.add('es', 'demo/string-density', {
   "Una cuerda desconocida excitada a {#} Hz: μ está oculta. Encuentra la masa para tantos patrones de vientres como puedas, grafica T contra {#}/n² y calcula μ a partir de la pendiente.",
 "The unknown string had μ = {#} g/m.":
   "La cuerda desconocida tenía μ = {#} g/m.",
+"Close":
+  "Cerrar",
+"Raise or lower the driver frequency by {#} Hz (Shift: {#} Hz)":
+  "Sube o baja la frecuencia del excitador {#} Hz (Shift: {#} Hz)",
+"Add a {#} g mass or take off the last mass":
+  "Agrega una pesa de {#} g o quita la última pesa",
 "A new unknown string is on the apparatus.":
   "Hay una nueva cuerda desconocida en el aparato.",
 "add masses, L {#} m":
@@ -159,5 +163,13 @@ VDI18N.add('es', 'demo/string-density', {
 "n, row {#}":
   "n, fila {#}",
 "Row {#} recorded. Check n against the loops you see.":
-  "Fila {#} registrada. Compara n con los vientres que ves."
+  "Fila {#} registrada. Compara n con los vientres que ves.",
+"sideways motion drawn ×{#}, slowed as by a strobe":
+  "movimiento lateral dibujado ×{#}, ralentizado como con un estroboscopio",
+"Record reading":
+  "Registrar esta lectura",
+"Model: the string obeys the wave equation with a light damping force in proportion to its velocity, chosen so every resonance is {#} Hz wide at half power. The vibrator moves its end up and down {#} mm (chosen); the pulley end does not move. Shown is the steady state: the second or so a real string takes to build up or die down is skipped. T = mg with g = {#} m/s²: the pulley has no friction, the hanging mass is at rest, and the string past the pulley, its stretch and its sag are left out. String A, B and C have μ = {#}, {#} and {#} g/m (chosen); an unknown string has {#} to {#} g/m. Damping lowers each resonance by less than {#}% above {#} Hz. The drawing exaggerates the sideways motion and slows it down, as a strobe would. Simulated data, no noise: your precision is how well you find each peak.":
+  "Modelo: la cuerda obedece la ecuación de onda con una fuerza de amortiguamiento ligera proporcional a su velocidad, elegida para que cada resonancia tenga {#} Hz de ancho a media potencia. El vibrador mueve su extremo hacia arriba y hacia abajo {#} mm (elegido); el extremo de la polea no se mueve. Se muestra el estado estacionario: se omite el segundo, más o menos, que una cuerda real tarda en crecer o en apagarse. T = mg con g = {#} m/s²: la polea no tiene fricción, la masa colgante está en reposo, y se omiten la cuerda más allá de la polea, su estiramiento y su comba. Las cuerdas A, B y C tienen μ = {#}, {#} y {#} g/m (elegidas); una cuerda desconocida tiene de {#} a {#} g/m. El amortiguamiento baja cada resonancia menos de {#}% por encima de {#} Hz. El dibujo exagera el movimiento lateral y lo ralentiza, como lo haría un estroboscopio. Datos simulados, sin ruido: tu precisión depende de qué tan bien encuentres cada pico.",
+"up and down motion drawn ×{#}":
+  "movimiento hacia arriba y hacia abajo dibujado ×{#}"
 });

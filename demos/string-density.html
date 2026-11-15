@@ -334,7 +334,7 @@ table.rows input:focus { border-color: var(--accent); }
     unknownm: { method: 'm', str: 'U', L: 1.2, f: 60, masses: [], hint: 'An unknown string driven at 60 Hz: μ is hidden. Find the mass for as many loop patterns as you can, plot T against 1/n² and work out μ from the slope.' }
   };
   const METHOD_HINT = { f: 'Keep the mass fixed and change f: resonances at fₙ = n f₁, evenly spaced.', m: 'Keep f fixed and change the mass: n loops when T = μ(2Lf/n)², so each extra loop needs much less mass.' };
-  $('modelHint').textContent = 'Model: the string obeys the wave equation with a light damping force in proportion to its velocity, chosen so every resonance is 0.60 Hz wide at half power. The vibrator moves its end up and down 0.50 mm (chosen); the pulley end does not move. Shown is the steady state: the second or so a real string takes to build up or die down is skipped. T = mg with g = 9.81 m/s²: the pulley has no friction, the hanging mass is at rest, and the string past the pulley, its stretch and its sag are left out. String A, B and C have μ = 0.40, 1.20 and 3.60 g/m (chosen); an unknown string has 0.50 to 3.00 g/m. Damping lowers each resonance by less than 0.05% above 10 Hz. The drawing exaggerates the sideways motion and slows it down, as a strobe would. Simulated data, no noise: your precision is how well you find each peak.';
+  $('modelHint').textContent = 'Model: the string obeys the wave equation with a light damping force in proportion to its velocity, chosen so every resonance is 0.60 Hz wide at half power. The vibrator moves its end up and down 0.50 mm (chosen); the pulley end does not move. Shown is the steady state: the second or so a real string takes to build up or die down is skipped. T = mg with g = 9.81 m/s²: the pulley has no friction, the hanging mass is at rest, and the string past the pulley, its stretch and its sag are left out. String A, B and C have μ = 0.40, 1.20 and 3.60 g/m (chosen); an unknown string has 0.50 to 3.00 g/m. Damping lowers each resonance by less than 0.05% above 10 Hz. The drawing exaggerates the up and down motion and slows it down, as a strobe would. Simulated data, no noise: your precision is how well you find each peak.';
   const muNow = () => (S.str === 'U' ? S.unknownMu : STRINGS[S.str].mu);
   const massG = () => HANGER_G + S.masses.reduce((a, b) => a + b, 0);
   const Tnow = () => tension(massG() / 1000);
@@ -536,6 +536,9 @@ table.rows input:focus { border-color: var(--accent); }
 
   // ---------- drawing ----------
   function txt(s, x, y, o = {}) { const p = ps(); ctx.fillStyle = o.c || T.ink; ctx.font = `${o.b ? '700 ' : ''}${(o.s || 11) * p}px ${o.m ? T.mono : T.ui}`; ctx.textAlign = o.a || 'left'; ctx.textBaseline = o.bl || 'middle'; ctx.fillText(s, x, y); }
+  /* the drawn string swings SHOW_HZ times a second whatever f is, so the caption says how many times slower than the real string
+     that is, and calls the motion up and down, as the model text does ("sideways" read as left and right) (student view, 2026-11-15) */
+  const SHOW_HZ = 0.7, motionNote = (ex) => (reduce ? `up and down motion drawn ×${ex}` : `up and down motion drawn ×${ex}, shown ${Math.round(S.f / SHOW_HZ)} times slower, as by a strobe`);
   function draw() {
     if (!T || !W) return;
     if (use3()) { draw3(); return; }
@@ -587,7 +590,8 @@ table.rows input:focus { border-color: var(--accent); }
     const ly = Math.min(Hh - 24 * p, y + 16 * p);
     txt(`${massG()} g`, hx, ly, { a: 'center', s: 11, b: 1, m: 1 });
     txt(`T = ${Tn.toFixed(3)} N`, hx, ly + 14 * p, { a: 'center', s: 10, m: 1, c: T.muted });
-    txt(`sideways motion drawn ×${Math.round(yScale / ppm)}, slowed as by a strobe`, W - 10 * p, Hh - 10 * p, { a: 'right', s: 9, c: T.muted });
+    /* top right as in 3D when the shelf is over the picture: at the bottom it fell under the stage's edge (student view, 2026-11-15) */
+    txt(motionNote(Math.round(yScale / ppm)), W - 10 * p, overlay ? 54 * p : Hh - 10 * p, { a: 'right', s: 9, c: T.muted });
   }
 
   /* ---------- 3D view: the bench in meters, z up, the string in the x z plane from the vibrator (x = −L) to the top of the pulley (x = 0) ---------- */
@@ -696,7 +700,7 @@ table.rows input:focus { border-color: var(--accent); }
     const lx = hb.x1 + 10 * p, ly = Math.min(Hh - 30 * p, hb.y1 - 6 * p), right = lx + 70 * p > W;
     txt(`${massG()} g`, right ? hb.x0 - 10 * p : lx, ly, { a: right ? 'right' : 'left', s: 11, b: 1, m: 1 });
     txt(`T = ${Tn.toFixed(3)} N`, right ? hb.x0 - 10 * p : lx, ly + 14 * p, { a: right ? 'right' : 'left', s: 10, m: 1, c: T.muted });
-    { const ny = overlay ? 54 * p : Hh - 23 * p; txt(`sideways motion drawn ×${EX3}, slowed as by a strobe`, W - 12 * p, ny, { a: 'right', s: 9, c: T.muted }); txt('masses drawn as 5 cm discs of 8 g/cm³', W - 12 * p, ny + 13 * p, { a: 'right', s: 9, c: T.muted }); }
+    { const ny = overlay ? 54 * p : Hh - 23 * p; txt(motionNote(EX3), W - 12 * p, ny, { a: 'right', s: 9, c: T.muted }); txt('masses drawn as 5 cm discs of 8 g/cm³', W - 12 * p, ny + 13 * p, { a: 'right', s: 9, c: T.muted }); }
   }
   /* where a pointer meets the vertical plane of the string, as a bench x (m) */
   function hit3x(e) {
@@ -714,7 +718,7 @@ table.rows input:focus { border-color: var(--accent); }
     can.style.cursor = ''; draw();
   }
   $('dimSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-dim]'); if (b) setDim(b.dataset.dim); });
-  function tick(dt) { if (S.running && !reduce) { S.phase = (S.phase + dt * TAU * 0.7) % TAU; draw(); } }
+  function tick(dt) { if (S.running && !reduce) { S.phase = (S.phase + dt * TAU * SHOW_HZ) % TAU; draw(); } }
   function resize() { dpr = window.devicePixelRatio || 1; const rc = scene.getBoundingClientRect(); W = rc.width; Hh = rc.height; can.width = Math.round(W * dpr); can.height = Math.round(Hh * dpr); can.style.width = W + 'px'; can.style.height = Hh + 'px'; draw(); drawResp(); fit(); }
   const retheme = () => { tokens(); draw(); drawResp(); fit(); };
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}

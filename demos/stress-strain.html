@@ -353,7 +353,8 @@ table.rows input:focus { border-color: var(--accent); }
         ctx.fillStyle = T.metalDark; ctx.fillRect(bx - 5 * p, top + wl - 6 * p, 10 * p, 8 * p); ctx.fillRect(bx, armY - 1.5 * p, 44 * p, 3 * p);   // lower clamp and the arm the gauge rests on
         if (S.m > 0) {
           const sz = Math.min(60, 18 + Math.sqrt(S.m) * 6) * p; slotted(bx, top + wl, sz, sz * 0.8, p, true);
-          ctx.fillStyle = T.canvas; ctx.font = `700 ${11 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(`${f(S.m, 1)} kg`, bx, top + wl + sz * 0.4);
+          /* beside the stack, as in 3D: on it, the hanger rod ran through the text and small stacks were narrower than it (student view, 2026-11-15) */
+          ctx.fillStyle = T.ink; ctx.font = `700 ${11 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(`${f(S.m, 1)} kg`, bx + sz / 2 + 6 * p, top + wl + sz * 0.4);
         }
       }
     }
@@ -381,7 +382,8 @@ table.rows input:focus { border-color: var(--accent); }
       for (let i = 1; i <= 100; i++) { const ep = (Mm.eu - Mm.su / Mm.Y) * i / 100, s = flow(Mm, ep); ctx.lineTo(X(ep + s / Mm.Y), Y(s)); }
       ctx.lineTo(X(Mm.ef), Y(Mm.su)); ctx.stroke(); ctx.setLineDash([]);
       ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
-      ctx.fillText('yield', X(Mm.sy / Mm.Y) + 4 * p, Y(Mm.sy) - 2 * p); ctx.fillText('tensile strength', X(Mm.eu) - 30 * p, Y(Mm.su) - 3 * p); ctx.fillText('fracture', X(Mm.ef) - 46 * p, Y(Mm.su) + 14 * p);
+      /* yield label below and right of the knee: above it, the loading line ran through the word (student view, 2026-11-15) */
+      ctx.textBaseline = 'top'; ctx.fillText('yield', X(Mm.sy / Mm.Y) + 6 * p, Y(Mm.sy) + 4 * p); ctx.textBaseline = 'bottom'; ctx.fillText('tensile strength', X(Mm.eu) - 30 * p, Y(Mm.su) - 3 * p); ctx.fillText('fracture', X(Mm.ef) - 46 * p, Y(Mm.su) + 14 * p);
     }
     ctx.strokeStyle = T.s; ctx.lineWidth = 2.5 * p; ctx.beginPath(); S.path.forEach(([e, s], i) => (i ? ctx.lineTo(X(e), Y(s)) : ctx.moveTo(X(e), Y(s)))); ctx.stroke();
     if (!S.broke) { ctx.fillStyle = T.s; ctx.beginPath(); ctx.arc(X(q.e), Y(q.s), 5 * p, 0, 7); ctx.fill(); }
@@ -808,7 +810,8 @@ table.rows input:focus { border-color: var(--accent); }
     VG.box(ctx, ex - 40 * p, jy - 7 * p, 36 * p, 14 * p, { color: '#4c443b', r: 3, shadow: false });
     VG.rod(ctx, sxp, jy, ex - 40 * p, jy, 1.8 * p, { color: '#e4e0da' });
     VG.lcd(ctx, ex - 82 * p, jy - 58 * p, 94 * p, 22 * p, `${f(q.dx, 1)} µm`);
-    VG.label(ctx, ww > 480 ? 'displacement sensor' : 'sensor', ex - 22 * p, jy + 16 * p, { a: 'center', s: 9.5 * p });
+    /* label under its readout, above the post: below the sensor it ran across the post and off the stage edge (student view, 2026-11-15) */
+    VG.label(ctx, ww > 480 ? 'displacement sensor' : 'sensor', ex - 35 * p, jy - 27 * p, { a: 'center', s: 9.5 * p });
     // forces: F on the top plate, and the equal and opposite push of the stop on the base
     if (q.F > 0) { const aL = 18 * p + 46 * p * q.F / SH_FMAX; arrow(x0 + bs * 0.2 + sx, yt - pl - 12 * p, x0 + bs * 0.2 + sx + aL, yt - pl - 12 * p, T.pl, 3 * p); arrow(x0 + bs * 0.8, yb + pl + 12 * p, x0 + bs * 0.8 - aL, yb + pl + 12 * p, T.pl, 3 * p);
       VG.label(ctx, 'F', x0 + bs * 0.2 + sx + aL + 6 * p, yt - pl - 12 * p, { c: T.pl, w: 700, s: 12 * p }); VG.label(ctx, '−F', x0 + bs * 0.8 - aL - 18 * p, yb + pl + 12 * p, { c: T.pl, w: 700, s: 12 * p }); }
@@ -862,7 +865,8 @@ table.rows input:focus { border-color: var(--accent); }
       ctx.fillStyle = T.metal; ctx.beginPath(); ctx.arc(gx, gy, 20 * p, 0, 7); ctx.fill(); ctx.fillStyle = T.gaugeFace; ctx.beginPath(); ctx.arc(gx, gy, 17 * p, 0, 7); ctx.fill();
       const am = -Math.PI / 2 + 2 * Math.PI * (q.pdx % 1); ctx.strokeStyle = T.needle; ctx.lineWidth = 1.6 * p; ctx.beginPath(); ctx.moveTo(gx, gy); ctx.lineTo(gx + 15 * p * Math.cos(am), gy + 15 * p * Math.sin(am)); ctx.stroke();
       VG.lcd(ctx, gx - 46 * p, gy - 50 * p, 92 * p, 22 * p, `${f(q.pdx, 3)} mm`);
-      if (ww > 480) VG.label(ctx, 'h₀ = 10.00 cm', xi - wt - 6 * p, (colTop0 + bot) / 2, { a: 'right', s: 10 * p });
+      /* left of the press column, which used to cross the text (student view, 2026-11-15) */
+      if (ww > 480) VG.label(ctx, 'h₀ = 10.00 cm', xL - 28 * p, (colTop0 + bot) / 2, { a: 'right', s: 10 * p });
     }
     VG.label(ctx, liquid ? (m.hidden ? 'mystery liquid' : m.name) : 'oil', cx, pistY + 6 * p, { a: 'center', bl: 'top', s: 10 * p, w: 700, c: '#31291f' });
   }

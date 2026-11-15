@@ -18,6 +18,10 @@ VDI18N.add('es', 'demo/stress-strain', {
   "fractura",
 "Stress and Strain":
   "Esfuerzo y deformación",
+"<a>Static equilibrium and elasticity</a>":
+  "<a>Equilibrio estático y elasticidad</a>",
+"<a><span>←</span> <span>Static Equilibrium</span></a><a><span>Fluids: Pressure, Buoyancy and Flow</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Equilibrio estático</span></a><a><span>Fluidos: presión, flotación y flujo</span> <span>→</span></a>",
 "Hang a load on a long thin wire and read how much it stretches. Stress F/A over strain ΔL/L is Young's modulus, as long as the wire springs back. Load it past its yield point and it stays longer; keep going and it breaks.":
   "Cuelga una carga de un alambre largo y delgado y lee cuánto se estira. El esfuerzo F/A entre la deformación ΔL/L es el módulo de Young, siempre que el alambre recupere su longitud. Cárgalo más allá de su punto de fluencia y se queda más largo; sigue y se rompe.",
 "wire {#} m long · g = {#} m/s²":
@@ -126,10 +130,6 @@ VDI18N.add('es', 'demo/stress-strain', {
   "Pruebas de corte y volumétrica: solo elásticas lineales, con los módulos de corte y volumétrico de OpenStax University Physics Vol. {#}, Tabla {#} (valores aproximados; el Metal misterioso es la aleación de la prueba de tensión y el Líquido misterioso es inventado). Corte: un cubo de {#} cm pegado entre dos placas de acero, con su base fija y su placa superior empujada hacia un lado; el bloque se deforma en corte de manera uniforme (se ignoran la flexión y la deformación propia de las placas). Volumétrica: una celda rígida de acero con un diámetro interior de {#} cm; un líquido la llena hasta {#} cm de profundidad bajo el pistón, o un cubo metálico de {#} cm con una galga extensométrica está en aceite dentro de ella. El aumento de presión es F/A del pistón, y ΔV/V₀ = −Δp/B exactamente en el modelo; los líquidos reales se vuelven un poco más rígidos al subir la presión, lo que el modelo omite. Los esfuerzos se mantienen en {#} MPa o menos, donde estos metales siguen siendo elásticos en corte (el plomo se excluye de la prueba de corte porque fluiría); el vidrio y el granito reales son frágiles y podrían agrietarse cerca del extremo superior de ese intervalo. Comprimir desde todos lados, como en la prueba volumétrica, no hace que un metal fluya.",
 "Blind in Shear and Bulk hides the moduli, the stress and strain readouts and the material line, leaving the load cell and the displacement or strain readings.":
   "A ciegas en Corte y Volumétrica oculta los módulos, las lecturas de esfuerzo y deformación y la recta del material, y deja la celda de carga y las lecturas de desplazamiento o deformación.",
-"<a>Static equilibrium and elasticity</a>":
-  "<a>Equilibrio estático y elasticidad</a>",
-"<a><span>←</span> <span>Static Equilibrium</span></a><a><span>Fluids: Pressure, Buoyancy and Flow</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Equilibrio estático</span></a><a><span>Fluidos: presión, flotación y flujo</span> <span>→</span></a>",
 "LOAD CELL":
   "CELDA DE CARGA",
 "displacement sensor":
@@ -246,6 +246,8 @@ VDI18N.add('es', 'demo/stress-strain', {
   "Agua, volumétrica",
 "Row {#} captured.":
   "Fila {#} capturada.",
+"Close":
+  "Cerrar",
 "Record at least two rows on this wire (Mystery metal, d = {#} mm). The fit uses only rows from the wire now hanging; New wire starts a new fit.":
   "Registra al menos dos filas con este alambre (Metal misterioso, d = {#} mm). El ajuste usa solo filas del alambre que cuelga ahora; Alambre nuevo empieza un ajuste nuevo.",
 "Stress, strain, Y, yield and strength":
