@@ -24,7 +24,7 @@ See how an asteroid's size sets the size and shape of its crater, use crater cou
 
 ## Background
 
-**Craters.** An asteroid hits at many kilometers per second, so it carries an enormous energy for its size. It blasts out a crater far wider than itself, typically 10 to 20 times its own diameter. In weak gravity (the Moon) the same asteroid makes a bigger crater than in strong gravity (Earth).
+**Craters.** An asteroid hits at many kilometers per second, so it carries an enormous energy for its size. It blasts out a crater far wider than itself, typically 10 to 30 times its own diameter. In weak gravity (the Moon) the same asteroid makes a bigger crater than in strong gravity (Earth).
 
 **The crater clock.** Asteroids keep falling, so a surface collects craters as it ages: the older the surface, the more craters it has. Counting the craters on a patch of ground, and dividing by its area, gives the number of craters per square kilometer. The Apollo and Luna missions brought back rocks whose ages are known from radioactive dating, from places whose craters had been counted; together they calibrate the clock. The clock is not a straight line: billions of years ago impacts were far more frequent.
 

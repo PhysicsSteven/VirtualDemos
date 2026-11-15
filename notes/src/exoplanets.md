@@ -16,7 +16,7 @@ Students should know Kepler's third law and the idea of a Doppler shift. Turn on
 
 ## Running it in class
 
-1. **Hot Jupiter.** Let one orbit play. Point to the two signals: a 1.15% dip (11,498 ppm) lasting 3.61 h every 4.19 d, and a star swinging at K = 55.2 m/s. The dip comes as the star's velocity crosses zero from away to toward us: the star is then behind the center of mass, moving across our line of sight. Switch the light curve to **Zoom on transit** to show the rounded bottom.
+1. **Hot Jupiter.** Let one orbit play. Point to the two signals: a 1.39% dip at mid transit (13,950 ppm; the (R_p/R_s)² readout is 11,498 ppm, and limb darkening makes the middle deeper) lasting 3.61 h every 4.19 d, and a star swinging at K = 55.2 m/s. The dip comes as the star's velocity crosses zero from away to toward us: the star is then behind the center of mass, moving across our line of sight. Switch the light curve to **Zoom on transit** to show the rounded bottom.
 2. **Not edge on.** Ask Q1 first. Then press it: "no transit from here", but the velocity curve is still there with K = 47.8 m/s. From the **Hot Jupiter** preset, hold the down arrow (Shift for 1° steps) on the top view and watch **Transits?** change from yes to grazing to no near i = 84°.
 3. **Earth and Sun.** 84 ppm for 13.1 h once a year, and K = 0.089 m/s. Raise **Noise** slowly; both signals vanish into the scatter long before the slider reaches the end. Read the **Transit probability**, 0.47%.
 4. **Jupiter and Sun.** K = 12.5 m/s, but the period is 11.9 yr and the transit probability is 0.089%. Ask what kind of planets a survey lasting a few years will find first.

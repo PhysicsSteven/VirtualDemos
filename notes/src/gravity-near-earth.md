@@ -12,14 +12,14 @@ time: 10 to 20 minutes
 
 ## Before class
 
-Students need Newton's law of gravitation. The left panel shows the planet with its axis vertical and a 1 kg mass at the chosen height and latitude, with arrows for gravity and the centrifugal term (drawn 100 times longer so it shows). The right panel plots GM/(R + h)² against height, with the near surface line. **Blind** hides g and the percentages for predictions.
+Students need Newton's law of gravitation. The left panel shows the planet with its axis vertical and a 1 kg mass at the chosen height and latitude, with arrows for gravity and the centrifugal term (drawn 100 times longer near the surface so it shows, and less farther out, at its true length from the GPS height outward; its label gives the factor). The right panel plots GM/(R + h)² against height, with the near surface line. **Blind** hides g and the percentages for predictions.
 
 ## Running it in class
 
 1. **Predict.** Turn on Blind. Ask what fraction of surface gravity acts at the space station's height. Typical guesses are zero or "a little". Then show 88.5%.
 2. **Small heights.** Everest (8849 m): 9.7930 m/s², 0.28% less. The near surface line is accurate to 0.0006% here.
 3. **Large heights.** At GPS orbit g is 0.57 m/s²; at geostationary orbit 0.22 m/s², and the orbit period there is one sidereal day.
-4. **Latitude.** At sea level move from 0° to 90°: the effective g rises from 9.7864 to 9.8203 m/s² in the sphere model. Compare with the real Earth's 9.7803 and 9.8322 (WGS 84): the flattening adds more than the spin.
+4. **Latitude.** At sea level move from 0° to 90°: the effective g rises from 9.7864 to 9.8203 m/s² in the sphere model. Compare with the real Earth's 9.7803 and 9.8322 (WGS 84): the flattening adds about 0.018 m/s² to the spin's 0.034 m/s² difference between equator and pole.
 5. **Moon and Mars.** 1.62 and 3.73 m/s² at the surface.
 
 ## Questions

@@ -33,7 +33,7 @@ group('the Moon’s latitude β = i sin(E − node) peaks at the 5.145° tilt; z
 group('eclipse limits from the shadow geometry (Meeus ch. 54): umbra and penumbra at the Moon’s distance with the usual 2% atmosphere enlargement', () => {
   const piM = c.R_EARTH_DEG, piS = 8.794 / 3600, sS = 0.2666;                       // lunar and solar parallax, Sun’s semidiameter (°)
   near(c.UMBRA_DEG, 1.02 * (piM + piS - sS), 0.03, 'umbra radius');
-  near(c.PENUMBRA_DEG, 1.02 * (piM + piS + sS), 0.03, 'penumbra radius');
+  near(c.PENUMBRA_DEG, 1.02 * (piM + piS + sS), 0.005, 'penumbra radius');
   near(c.R_MOON_DEG, 0.2725 * c.R_EARTH_DEG, 2e-3, 'Moon radius / Earth radius = 0.2725');
   // a lunar eclipse needs |β| < umbra + Moon; a solar eclipse |β| < π_M + s_S + s_M
   near(c.UMBRAL_LIMIT_BETA, c.UMBRA_DEG + c.R_MOON_DEG, 1e-15); near(c.SOLAR_LIMIT_BETA, piM + sS + c.R_MOON_DEG, 2e-3);

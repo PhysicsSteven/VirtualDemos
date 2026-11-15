@@ -69,7 +69,7 @@ Fill in λ × f for each reading.
 
 ## Uncertainty
 
-The demo's speed of light is computed from measured constants and agrees with the exact value to about one part in ten billion, so λ × f should come out the same in every reading to all the digits shown. If one of your products differs, where could the difference come from? (Think about rounding when you multiply.)
+The demo's speed of light is computed from measured constants and agrees with the exact value to better than one part in a trillion, so λ × f should come out the same in every reading to all the digits shown. If one of your products differs, where could the difference come from? (Think about rounding when you multiply.)
 
 ## Questions
 

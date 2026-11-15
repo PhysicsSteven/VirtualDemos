@@ -14,8 +14,8 @@ VDI18N.add('es', 'ws/intro-kepler', {
   "Las leyes de Kepler de Mercurio a Plutón | VirtualDemos",
 "Kepler’s Laws from Mercury to Pluto":
   "Las leyes de Kepler de Mercurio a Plutón",
-"<strong>Setups in the demo:</strong> Earth; Mars; Mercury; Halley’s comet; Vesta; Ceres; Apophis; Pluto; Binary star; Circular orbit; Escape; Sandbox.":
-  "<strong>Configuraciones en la demo:</strong> Tierra; Marte; Mercurio; Cometa Halley; Vesta; Ceres; Apofis; Plutón; Estrella binaria; Órbita circular; Escape; Caja de arena.",
+"<strong>Setups in the demo:</strong> Earth; Mars; Mercury; Halley’s comet; Vesta; Ceres; Apophis; Pluto; Binary star; Circular orbit; Escape; Bound and unbound; Sandbox.":
+  "<strong>Configuraciones en la demo:</strong> Tierra; Marte; Mercurio; Cometa Halley; Vesta; Ceres; Apofis; Plutón; Estrella binaria; Órbita circular; Escape; Ligadas y no ligadas; Caja de arena.",
 "The view shows an object orbiting the Sun, drawn to scale, with its path traced behind it. Each setup starts the object on its real orbit: the planets, Pluto and the comet from standard values, and Vesta, Ceres and Apophis from their orbits in the JPL Small Body Database.":
   "La vista muestra un objeto que orbita el Sol, dibujado a escala, con su camino trazado detrás. Cada configuración inicia el objeto en su órbita real: los planetas, Plutón y el cometa con valores estándar, y Vesta, Ceres y Apofis con sus órbitas de la JPL Small Body Database.",
 "The timer runs on simulated time, so it only counts while the demo is playing. Reset puts the object back where it started, with the clock at zero.":
@@ -62,8 +62,8 @@ VDI18N.add('es', 'ws/intro-kepler', {
   "Coloca el punto {#} de la regla en el perihelio, el punto de la órbita más cercano al Sol, y el punto {#} en el afelio, el punto más lejano. Cada configuración, salvo el cometa Halley, inicia el objeto en su perihelio; el cometa empieza en su afelio. Acerca la vista en cada extremo de la órbita para colocar los puntos exactamente sobre el camino.",
 "Time one full orbit: zero the timer, start it, play the demo, and pause when the object is back where it started. Then stop the timer.":
   "Mide el tiempo de una órbita completa: pon el cronómetro en cero, inícialo, pon la demo en marcha y pausa cuando el objeto vuelva a donde empezó. Luego detén el cronómetro.",
-"Capture the reading.":
-  "Captura la lectura.",
+"Record a reading.":
+  "Registra una lectura.",
 "Send all eight readings to the worksheet.":
   "Envía las ocho lecturas a la hoja de trabajo.",
 "<span>A</span>Object":
@@ -136,6 +136,8 @@ VDI18N.add('es', 'ws/intro-kepler', {
   "Distancia en el perihelio, la más cercana al Sol",
 "Kepler Orbits":
   "Órbitas de Kepler",
+"Capture the reading.":
+  "Captura la lectura.",
 "The view shows an object orbiting the Sun, drawn to scale, with its path traced behind it. Each setup starts the object on its real orbit: the planets and the comet from standard values, and Vesta, Ceres, Apophis and Pluto from their orbits in the JPL Small Body Database.":
   "La vista muestra un objeto que orbita el Sol, dibujado a escala, con su camino trazado detrás. Cada configuración inicia el objeto en su órbita real: los planetas y el cometa con valores estándar, y Vesta, Ceres, Apofis y Plutón con sus órbitas de la JPL Small Body Database."
 });

@@ -334,10 +334,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // angular sizes at the Moon's distance, seen from Earth's center (degrees)
   const R_EARTH_DEG = 0.951;        // Earth's radius (lunar parallax)
   const R_MOON_DEG = 0.259;
-  const UMBRA_DEG = 0.70, PENUMBRA_DEG = 1.27;
+  const UMBRA_DEG = 0.70, PENUMBRA_DEG = 1.24; /* 1.02 (π_Moon + π_Sun + s_Sun) = 1.02 (0.951 + 0.0024 + 0.2666) */
   const SOLAR_LIMIT_BETA = R_EARTH_DEG + 0.267 + R_MOON_DEG;   // 1.48°
   const UMBRAL_LIMIT_BETA = UMBRA_DEG + R_MOON_DEG;            // 0.96°
-  const PEN_LIMIT_BETA = PENUMBRA_DEG + R_MOON_DEG;            // 1.53°
+  const PEN_LIMIT_BETA = PENUMBRA_DEG + R_MOON_DEG;            // 1.50°
 
   const $ = (id) => document.getElementById(id);
   /* the measuring tools: a stopwatch on the simulated clock, in days */

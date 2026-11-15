@@ -200,7 +200,7 @@ VDI18N.add('en', 'demo/rotation', [
 "move it,",
 "releases or holds the beam.",
 "Torques about the pivot",
-"τ from A = −m g x",
+"τ from A = −m g x cos φ",
 "τ from B",
 "τ from C",
 "Net torque",

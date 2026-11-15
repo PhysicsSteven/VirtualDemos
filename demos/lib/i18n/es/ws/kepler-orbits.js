@@ -16,8 +16,8 @@ VDI18N.add('es', 'ws/kepler-orbits', {
   "Tercera ley de Kepler",
 "Textbook: OpenStax <em>University Physics</em>, Vol. {#}, §§{#} and {#}–{#}. Access for free at https://openstax.org/details/books/university-physics-volume-{#}.":
   "Libro de texto: OpenStax <em>University Physics</em>, Vol. {#}, §§{#} y {#}–{#}. Acceso gratuito en https://openstax.org/details/books/university-physics-volume-{#}.",
-"<strong>Setups in the demo:</strong> Earth; Mars; Mercury; Halley’s comet; Vesta; Ceres; Apophis; Pluto; Circular orbit; Escape; Sandbox.":
-  "<strong>Configuraciones en la demo:</strong> Tierra; Marte; Mercurio; Cometa Halley; Vesta; Ceres; Apophis; Plutón; Órbita circular; Escape; Caja de arena.",
+"<strong>Setups in the demo:</strong> Earth; Mars; Mercury; Halley’s comet; Vesta; Ceres; Apophis; Pluto; Circular orbit; Escape; Bound and unbound; Sandbox.":
+  "<strong>Configuraciones en la demo:</strong> Tierra; Marte; Mercurio; Cometa Halley; Vesta; Ceres; Apophis; Plutón; Órbita circular; Escape; Ligadas y no ligadas; Caja de arena.",
 "Drag the arrow tip to set speed and direction. Drag the hollow marker to move the launch point. The tip snaps to the gold circular and red escape circles; hold":
   "Arrastra la punta de la flecha para fijar la rapidez y la dirección. Arrastra el marcador hueco para mover el punto de lanzamiento. La punta se ajusta a los círculos dorado (circular) y rojo (escape); mantén pulsada",
 "to place it freely.":

@@ -539,7 +539,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     [90, 228], [90, 230], [90, 232], [92, 234], [92, 238], [94, 238], [96, 244], [98, 252]];
   /* beta decay: Q from atomic mass excesses. β⁻: Δ(Z, A) − Δ(Z + 1, A). β⁺: Δ(Z, A) − Δ(Z − 1, A) − 2mₑc². MeV. The kinetic energy
      shared by the electron (or positron) and the antineutrino (or neutrino) is Q less the recoil of the daughter, at most
-     Q²/2Mc² ≈ 0.4 keV for the neutron and under 0.1 keV for the others, which is left out. */
+     (Q² + 2Q mₑc²)/2Mc² ≈ 0.75 keV for the neutron and under 0.1 keV for the others, which is left out. */
   const betaQ = (Z, A, plus) => (plus ? (nb(Z, A)[2] - nb(Z - 1, A)[2]) / 1000 - 2 * ME_MEV : (nb(Z, A)[2] - nb(Z + 1, A)[2]) / 1000);
   /* the allowed spectrum (Krane §9.2): N(T) ∝ F(Z_d, T) p E (Q − T)², p and E the electron's momentum and total energy;
      F the nonrelativistic Fermi function 2πη/(1 − e^(−2πη)), η = ±Z_d α E/(pc) (+ for β⁻, − for β⁺). Finite nuclear size,

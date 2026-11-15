@@ -36,7 +36,7 @@ VDI18N.add('en', 'ws/intro-em-spectrum', [
 "How many times longer is the wavelength of your {#}⁸ Hz radio wave than that of your visible light? How many times lower is its frequency?",
 "Convert the wavelength of your visible reading to nanometers (multiply meters by {#}⁹). What color is it?",
 "Compare the wavelength of your {#}²⁰ Hz gamma ray with the size of an atom, about {#}⁻¹⁰ m. Which is smaller, and by how many times?",
-"The demo’s speed of light is computed from measured constants and agrees with the exact value to about one part in ten billion, so λ × f should come out the same in every reading to all the digits shown. If one of your products differs, where could the difference come from? (Think about rounding when you multiply.)",
+"The demo’s speed of light is computed from measured constants and agrees with the exact value to better than one part in a trillion, so λ × f should come out the same in every reading to all the digits shown. If one of your products differs, where could the difference come from? (Think about rounding when you multiply.)",
 "Hydrogen gas in space gives off radio waves with a wavelength of {#} cm ({#} m). What is their frequency? Radio astronomers map our galaxy with them.",
 "A microwave oven works at {#} × {#}⁹ Hz. What is the wavelength of its microwaves, in centimeters?",
 "Earth’s atmosphere lets visible light and many radio waves through to the ground, but it blocks most ultraviolet, X-rays and gamma rays, and much of the infrared. Use the strip under the spectrum, and the “Reaches the ground?” readout, to check this. Which kinds of telescopes can work on the ground, and which have to go above the atmosphere? Why do infrared telescopes on the ground sit on high, dry mountains?",

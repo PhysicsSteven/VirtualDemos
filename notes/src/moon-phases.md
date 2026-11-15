@@ -52,7 +52,7 @@ Students need only the idea that the Moon orbits Earth in about a month and the 
 - **Illuminated** is f = (1 − cos E)/2. The phase name is "new", "first quarter", "full" or "third quarter" within 6° of those angles, and crescent or gibbous in between.
 - Rise, transit and set times assume an observer on the equator at an equinox with the Moon on the celestial equator: rise = 06:00 + E/15° per hour, highest 6 hours later, set 12 hours later. Latitude and the tilted orbit shift real times by an hour or more.
 - The **View from Earth** is for a Northern Hemisphere observer facing south, with the terminator drawn upright. In the Southern Hemisphere the picture flips left to right.
-- Eclipse view: the orbit is tilted 5.145° and the line of nodes turns westward once in 18.6 years, which makes the eclipse year 346.6 days. The flag uses the Moon's height above the ecliptic β = 5.145° × sin(angle from the ascending node). A solar eclipse is possible when |β| < 1.48° at new moon; an umbral lunar eclipse when |β| < 0.96° at full moon, and a penumbral one when |β| < 1.53°.
+- Eclipse view: the orbit is tilted 5.145° and the line of nodes turns westward once in 18.6 years, which makes the eclipse year 346.6 days. The flag uses the Moon's height above the ecliptic β = 5.145° × sin(angle from the ascending node). A solar eclipse is possible when |β| < 1.48° at new moon; an umbral lunar eclipse when |β| < 0.96° at full moon, and a penumbral one when |β| < 1.50°.
 - Sizes and distances are not to scale; the real Moon is about 30 Earth diameters away.
 
 ## Going further

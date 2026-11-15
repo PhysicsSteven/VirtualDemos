@@ -39,7 +39,7 @@ $$\frac{1}{P_{\text{syn}}} = \frac{1}{P_{\text{sid}}} - \frac{1}{P_{\text{year}}
 
 **Rising.** The sky turns 15° per hour. In the demo's model the Sun rises at 06:00 and a Moon $$E$$ degrees east of the Sun rises $$E/(15°/\text{h})$$ later.
 
-**Eclipses.** The Moon's orbit is tilted 5.145° to Earth's orbit (the ecliptic), so at most new and full moons the Moon passes above or below the Sun or Earth's shadow. An eclipse needs a new or full moon close to one of the nodes, where the two orbits cross. The Moon's height above the ecliptic is $$\beta = 5.145° \sin(E - \phi_N)$$, with $$\phi_N$$ the angle of the ascending node from the Sun line. In the demo a solar eclipse is possible when $$\lvert\beta\rvert < 1.48°$$ at new moon, an umbral lunar eclipse when $$\lvert\beta\rvert < 0.96°$$ at full moon, and a faint penumbral one when $$\lvert\beta\rvert < 1.53°$$.
+**Eclipses.** The Moon's orbit is tilted 5.145° to Earth's orbit (the ecliptic), so at most new and full moons the Moon passes above or below the Sun or Earth's shadow. An eclipse needs a new or full moon close to one of the nodes, where the two orbits cross. The Moon's height above the ecliptic is $$\beta = 5.145° \sin(E - \phi_N)$$, with $$\phi_N$$ the angle of the ascending node from the Sun line. In the demo a solar eclipse is possible when $$\lvert\beta\rvert < 1.48°$$ at new moon, an umbral lunar eclipse when $$\lvert\beta\rvert < 0.96°$$ at full moon, and a faint penumbral one when $$\lvert\beta\rvert < 1.50°$$.
 
 ## Before the lab
 

@@ -8,7 +8,7 @@ VDI18N.add('en', 'ws/kepler-orbits', [
 "Kepler’s Third Law | VirtualDemos",
 "Kepler’s Third Law",
 "Textbook: OpenStax <em>University Physics</em>, Vol. {#}, §§{#} and {#}–{#}. Access for free at https://openstax.org/details/books/university-physics-volume-{#}.",
-"<strong>Setups in the demo:</strong> Earth; Mars; Mercury; Halley’s comet; Vesta; Ceres; Apophis; Pluto; Circular orbit; Escape; Sandbox.",
+"<strong>Setups in the demo:</strong> Earth; Mars; Mercury; Halley’s comet; Vesta; Ceres; Apophis; Pluto; Circular orbit; Escape; Bound and unbound; Sandbox.",
 "Drag the arrow tip to set speed and direction. Drag the hollow marker to move the launch point. The tip snaps to the gold circular and red escape circles; hold",
 "to place it freely.",
 "Focus the orbit view, then use the arrow keys (",

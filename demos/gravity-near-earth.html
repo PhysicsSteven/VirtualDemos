@@ -448,7 +448,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     placeIcon(cx, cy, r, la, sc);
     const mg = ctx.createRadialGradient(mx - 1.6 * p, my - 1.6 * p, 0.5 * p, mx, my, 5 * p); mg.addColorStop(0, T.canvas); mg.addColorStop(1, T.mass);
     ctx.fillStyle = mg; ctx.beginPath(); ctx.arc(mx, my, 5 * p, 0, 7); ctx.fill(); ctx.strokeStyle = T.ink; ctx.lineWidth = 0.8 * p; ctx.stroke();
-    // force arrows on the 1 kg mass (scaled so 10 N is 70 px); centrifugal exaggerated ×100 so it shows
+    // force arrows on the 1 kg mass (scaled so 10 N is 70 px); centrifugal stretched by cxf (×100 near the surface) so it shows
     const k = 7 * p, gx = -Math.cos(la), gy = Math.sin(la);
     arrow(mx, my, mx + gx * E.grav * k, my + gy * E.grav * k, T.gv, S.blind ? 'gravity' : `gravity ${f(E.grav, 2)} N`);
     if (S.spin && E.cent > 0) arrow(mx, my, mx + E.cent * k * cxf(E), my, T.cv, `centrifugal ×${cxf(E)}`);

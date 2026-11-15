@@ -37,7 +37,7 @@ Three parts, chosen above the picture. **Make a crater**: target Moon, Mercury, 
 
 ## Common misconceptions
 
-- **"The crater is the size of the asteroid."** It is 10 to 30 times wider: the asteroid's energy, not its size, digs the crater, and an asteroid at 18 km/s carries over 40 times the energy of its own mass of TNT.
+- **"The crater is the size of the asteroid."** It is 10 to 30 times wider: the asteroid's energy, not its size, digs the crater, and an asteroid at 18 km/s carries nearly 40 times the energy of its own mass of TNT.
 - **"Craters are volcanic."** Some were thought so until the 1960s; their shapes, their sizes from meters to basins, their rays and shocked minerals show impact.
 - **"Impacts happen at a steady rate."** The rate has been about steady for the last 3 Gyr, but was far higher before about 3.5 Gyr ago; that is why the highlands are so crowded and the maria are not.
 - **"The Moon is cold because it is far from the Sun."** It is the same distance from the Sun as Earth; it lost its internal heat because it is small.

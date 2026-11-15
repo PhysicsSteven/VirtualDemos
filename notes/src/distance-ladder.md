@@ -38,7 +38,7 @@ Students should know what an arcsecond is and the magnitude scale (5 magnitudes 
 
 **Q6.** Suppose Cepheids are really 0.10 mag brighter than assumed (a = −4.15, not −4.05), and the supernova calibration, which comes from Cepheids, shifts by the same amount. By what factor does every distance on the Hubble diagram change, and what happens to H₀ = 69.4 km/s/Mpc? Check with **Leavitt law zero point a** in rung 4.
 
-**Q7.** The fit gives 1/H₀ = 14.0 Gyr. Why is this a natural estimate of the age of the universe, and why is it not exactly the age? Separately: why measure parallaxes of nearby Milky Way Cepheids so carefully when the goal is galaxies hundreds of Mpc away?
+**Q7.** The fit gives 1/H₀ = 14.1 Gyr. Why is this a natural estimate of the age of the universe, and why is it not exactly the age? Separately: why measure parallaxes of nearby Milky Way Cepheids so carefully when the goal is galaxies hundreds of Mpc away?
 
 ## Common misconceptions
 

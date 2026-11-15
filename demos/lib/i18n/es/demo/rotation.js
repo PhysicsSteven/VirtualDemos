@@ -400,8 +400,8 @@ VDI18N.add('es', 'demo/rotation', {
   "suelta o sujeta la viga.",
 "Torques about the pivot":
   "Torcas respecto al pivote",
-"τ from A = −m g x":
-  "τ de A = −m g x",
+"τ from A = −m g x cos φ":
+  "τ de A = −m g x cos φ",
 "τ from B":
   "τ de B",
 "τ from C":
