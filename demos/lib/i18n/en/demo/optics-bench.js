@@ -103,7 +103,7 @@ VDI18N.add('en', 'demo/optics-bench', [
 "Show image",
 "Faint reflection",
 "{#} cm grid",
-"<span><i></i>Light rays</span> <span><i></i>Faint reflection at a glass face</span> <span><i></i>Rays traced back to a virtual image</span> <span><i></i>Principal ray: parallel to the axis</span> <span><i></i>Principal ray: through the center (C for a mirror)</span> <span><i></i>Principal ray: through the focal point F</span> <span><i></i>White light, split from {#} to {#} nm</span>",
+"<span><i></i>Light rays</span> <span><i></i>Faint reflection at a glass face</span> <span><i></i>Rays traced back to a virtual image</span> <span><i></i>Principal ray: parallel to the axis</span> <span><i></i>Principal ray: through the center (C for a mirror)</span> <span><i></i>Principal ray: through the focal point F</span> <span><i></i>Lens or mirror extended, where a principal ray misses it</span> <span><i></i>White light, split from {#} to {#} nm</span>",
 "Lenses follow the ideal thin lens rule. Mirrors use the exact spherical surface, so rays far from the axis, or from an object point off the axis, focus slightly differently from the mirror equation. With Adjustable n, dispersion is a few times stronger than in ordinary crown glass so the spectrum is easy to see; the real materials (crown N-BK7, flint F2, fused silica, water, diamond) use their published Sellmeier formulas (Schott; Malitson {#}; Daimon and Masumura {#}; Peter {#}), and with monochrome light they take n at {#} nm. The screen picture is built from rays traced in the plane of the drawing, turned about the lens axis for the rest of the object. A refracting surface bends each ray by Snell's law exactly, with no dispersion; its two media fill the bench on either side (a curved surface is the end of a long rod, its aperture an opaque stop on the face), and other elements are traced as if in air. Microscope and telescope readouts take the eye relaxed (final image at infinity) and the near point at {#} cm.",
 "Dispersion in a raindrop, and the bows it makes in the sky: open <a>Rainbows</a>.",
 "virtual image",
@@ -115,6 +115,7 @@ VDI18N.add('en', 'demo/optics-bench', [
 "Parallel, at −{#}° (in at {#}°)",
 "Click the prism and choose a real material to see its true dispersion; the editor lists n from {#} to {#} nm and the spread of colors at minimum deviation.",
 "Refracts out",
+"The beam aims at the center of a glass half disc (n = {#}), so it crosses the curved face without bending. It meets the flat face at {#}° inside, below the critical angle of {#}°, so most of the light gets out. Click the beam and turn it with its round knob or the Angle slider until the angle inside passes {#}°: the outgoing ray vanishes and all the light reflects.",
 "A {#} cm objective and a {#} cm eyepiece, tube length {#} cm. The object sits {#} cm from the objective, just outside its F.",
 "objective's image",
 "Two lenses: the Microscope readouts below follow the image through both.",
@@ -157,5 +158,6 @@ VDI18N.add('en', 'demo/optics-bench', [
 "Flint glass, n₁ = {#}",
 "Diamond, n₁ = {#}",
 "The quickest path has no worksheet table yet: the readouts and the graph give the times.",
+"Close",
 "t (ns) against x (cm)"
 ]);

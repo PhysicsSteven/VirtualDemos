@@ -489,6 +489,19 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     x0 = Math.max(pad, Math.min(w - pad - tw, x0));
     ctx.save(); ctx.textAlign = 'left'; if (halo) { ctx.lineJoin = 'round'; ctx.lineWidth = 3 * PS; ctx.strokeStyle = halo; ctx.strokeText(text, x0, y); } ctx.fillText(text, x0, y); ctx.restore();
   }
+  /* the orbit is drawn flat until the eclipse view tilts it, so near full moon the Moon sits in the drawn shadow while 100% lit;
+     say so on the picture, since "phases are Earth's shadow" is the idea students bring (student view, 2026-11-15) */
+  function tiltNote(ctx, w, y, halo, split) {   // split: two lines (the flat view's orbit top comes close)
+    if (S.eclipse || !S.shadow || angDist(E(), 180) > 30) return;
+    ctx.save(); ctx.fillStyle = T.equi; ctx.font = font(600, 11.5, 'ui'); ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    const one = "Orbit tilt not drawn: most full moons miss Earth's shadow";
+    const lines = !split && ctx.measureText(one).width < w - 24 * PS ? [one] : ['Orbit tilt not drawn:', "most full moons miss Earth's shadow"];
+    lines.forEach((t, i) => {
+      if (halo) { ctx.lineJoin = 'round'; ctx.lineWidth = 3 * PS; ctx.strokeStyle = halo; ctx.strokeText(t, 12 * PS, y + i * 15 * PS); }
+      ctx.fillText(t, 12 * PS, y + i * 15 * PS);
+    });
+    ctx.restore();
+  }
   function sunRays(ctx, xFrom, xTo, ys, label) {
     ctx.save();
     ctx.strokeStyle = T.equi; ctx.fillStyle = T.equi; ctx.lineWidth = 1.6 * PS; ctx.globalAlpha = 0.85;
@@ -647,6 +660,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.fillText('Day ' + dayOf().toFixed(1) + ' of 29.53 · ' + phaseName(e), 12 * PS, 10 * PS);
     ctx.fillStyle = T.muted; ctx.font = font(400, 11.5, 'ui');
     ctx.fillText('Seen from above the North Pole, not to scale', 12 * PS, 30 * PS);
+    tiltNote(ctx, w, 48 * PS, null, true);
 
     if (S.eclipse) {
       const st = eclipseState();
@@ -958,6 +972,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.globalAlpha = 1; ctx.fillStyle = T.muted; ctx.font = font(400, 11.5, 'ui');
     ctx.save(); ctx.lineJoin = 'round'; ctx.lineWidth = 3 * PS; ctx.strokeStyle = 'rgba(4,6,11,0.85)'; ctx.strokeText('Not to scale · blue dot: you, ' + fmtHM(S.hour), 12 * PS, 30 * PS); ctx.restore();
     ctx.fillText('Not to scale · blue dot: you, ' + fmtHM(S.hour), 12 * PS, 30 * PS);
+    tiltNote(ctx, w, 48 * PS, 'rgba(4,6,11,0.85)');
     if (S.eclipse) {
       const st = eclipseState(), py = 50 * PS;
       if (st.k === 'solar') pill(ctx, 12 * PS, py, st.text, T.equi, T.onCharge, 'left');

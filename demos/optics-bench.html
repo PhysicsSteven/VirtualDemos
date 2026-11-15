@@ -114,6 +114,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 .swatch.p1 { --c: var(--lab-p1); }
 .swatch.p2 { --c: var(--lab-p2); }
 .swatch.p3 { --c: var(--lab-p3); }
+.swatch.lensext { --c: var(--muted); }
+.swatch.lensext::after { border-top-style: dashed; }   /* (student view, 2026-11-15) */
 .spectrum { flex: none; width: 28px; height: 12px; border-radius: 3px; background: var(--lab-bg); position: relative; }
 .spectrum::after { content: ""; position: absolute; left: 4px; right: 4px; top: 3px; bottom: 3px; border-radius: 2px; background: linear-gradient(90deg, #9b6bff, #4f86ff, #22c8dc, #4bd463, #ffd23a, #ff8a3a, #ff4a4a); }
 
@@ -341,6 +343,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
           <span><i class="swatch p1"></i>Principal ray: parallel to the axis</span>
           <span><i class="swatch p2"></i>Principal ray: through the center (C for a mirror)</span>
           <span><i class="swatch p3"></i>Principal ray: through the focal point F</span>
+          <span><i class="swatch lensext"></i>Lens or mirror extended, where a principal ray misses it</span>
           <span><i class="spectrum"></i>White light, split from 400 to 700 nm</span>
         </div>
         <details class="more"><summary>More about this</summary><p class="hint">Lenses follow the ideal thin lens rule. Mirrors use the exact spherical surface, so rays far from the axis, or from an object point off the axis, focus slightly differently from the mirror equation. With Adjustable n, dispersion is a few times stronger than in ordinary crown glass so the spectrum is easy to see; the real materials (crown N-BK7, flint F2, fused silica, water, diamond) use their published Sellmeier formulas (Schott; Malitson 1965; Daimon and Masumura 2007; Peter 1923), and with monochrome light they take n at 589 nm. The screen picture is built from rays traced in the plane of the drawing, turned about the lens axis for the rest of the object. A refracting surface bends each ray by Snell's law exactly, with no dispersion; its two media fill the bench on either side (a curved surface is the end of a long rod, its aperture an opaque stop on the face), and other elements are traced as if in air. Microscope and telescope readouts take the eye relaxed (final image at infinity) and the near point at 25 cm.</p></details>
@@ -1893,6 +1896,29 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const PC = [T.p1, T.p2, T.p3];
     ctx.save();
     if (R) { ctx.beginPath(); ctx.rect(0, 0, W, R.top); ctx.clip(); }
+    /* a principal ray that misses the lens or mirror bends where the element would be if it were larger (the textbook
+       construction); draw that extension dashed so the ray does not seem to bend in empty air (student view, 2026-11-15) */
+    if (im.E && fr.principal.length) {
+      const E = im.E, w = frameOf(E).w, half = E.ap / 2, pr = primsOf(E, true)[0];
+      const offOf = (q) => dot([q[0] - E.x, q[1] - E.y], w);
+      ctx.save(); ctx.setLineDash([5 * ps, 4 * ps]); ctx.strokeStyle = T.muted; ctx.lineWidth = 1.4 * ps; ctx.globalAlpha = 0.85;
+      for (const p of fr.principal) {
+        if (!p.hits.length || p.hits[0] !== E || p.pts.length < 2) continue;
+        const q = p.pts[1], off = offOf(q);
+        if (Math.abs(off) <= half + 1e-6) continue;
+        const sg = Math.sign(off);
+        if (pr.type === 'seg') polyline([[E.x + w[0] * sg * half, E.y + w[1] * sg * half], q]);
+        else {
+          const aq = Math.atan2(q[1] - pr.c[1], q[0] - pr.c[0]), da = Math.atan2(Math.sin(aq - pr.a0), Math.cos(aq - pr.a0)), pts = [];
+          for (let k = 0; k <= 48; k++) {
+            const a = pr.a0 + da * k / 48, P = [pr.c[0] + pr.r * Math.cos(a), pr.c[1] + pr.r * Math.sin(a)];
+            if (Math.abs(offOf(P)) >= half) pts.push(P);
+          }
+          if (pts.length > 1) polyline(pts);
+        }
+      }
+      ctx.restore();
+    }
     for (const p of fr.principal) {
       const i = +p.tag.slice(2);
       ctx.save(); ctx.lineJoin = 'round';
@@ -2250,6 +2276,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     shapelens: 'A house 3 cm tall and 2.4 cm deep lying on the bench, 15.8 to 18.2 cm from an 8 cm lens. Each point of it is imaged on its own: the real image is inverted, and its depth is m₁m₂ times the object depth, not m times. Choose another corner in the editor to see its rays, or move the house toward F and watch the depth stretch.',
     shapemag: 'A letter F 2 cm tall, 4.3 to 5.5 cm from a 10 cm lens, inside F: a magnifier. The virtual image is upright and 2.2 times as tall, but 3.9 times as deep (m₁m₂), so it looks stretched along the axis.',
     fermat: 'Light from the lamp A reaches B. Of all the paths it could take, straight to a point P on the line and straight on to B, it takes the quickest. Drag P (or use the slider) and watch the time: it is least where n₁ sin θ₁ = n₂ sin θ₂, which is Snell\'s law. A lifeguard who runs faster than she swims picks the same kind of path to a swimmer.',
+    /* the setup opens below the critical angle, so a student who picked it saw no total internal reflection and no word on
+       what to change (student view, 2026-11-15) */
+    tir: 'The beam aims at the center of a glass half disc (n = 1.50), so it crosses the curved face without bending. It meets the flat face at 30° inside, below the critical angle of 41.8°, so most of the light gets out. Click the beam and turn it with its round knob or the Angle slider until the angle inside passes 41.8°: the outgoing ray vanishes and all the light reflects.',
     mirrorwhite: 'White light on a concave mirror, R = 40 cm, f = 20 cm. Reflection turns every color by the same angle, so all the colors meet at one focus. This is one reason every large modern telescope is a reflector.'
   };
 
