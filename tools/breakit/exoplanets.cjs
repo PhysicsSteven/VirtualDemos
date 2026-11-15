@@ -3,7 +3,8 @@
    rDur equal D; the RV semi amplitude (max |v| over the curve = K(1 + e|cos ω|), K = K of the formula); brightness stays in [0, 1] and is 1
    when there is no transit; at e = 0 the deepest point of a transit is at t = 0; two stars: momentum balance m1·v1 + m2·v2 = 0 about γ, K1
    from the masses, and out of eclipse the brightness is exactly 1; the cited presets (51 Peg b, Earth, Jupiter) give their real period,
-   depth and K when untouched. */
+   depth and K when untouched; transmission spectrum (2026-11-15): H = kT/(μ m_u g), g from the planet, the windows at (Rp/Rs)², the tallest
+   band 2·2RpH/Rs², features scaling as 1/μ, a cloud top above every band giving a flat spectrum. */
 const base = `const X = window.__exo; if (!X || !X.D || !X.P) return true;
   const D = X.D, P = X.P, B = X.B, TAU = 2 * Math.PI, DEG = Math.PI / 180, GMS = 1.32712440018e20, GME = 3.986004418e14, AU = 1.495978707e11, DAY = 86400;
   const near = (g, w, t) => Math.abs(g - w) <= t * Math.max(Math.abs(w), 1e-300);
@@ -63,8 +64,41 @@ module.exports = {
       if (!D.transits && !D.ecl2) for (const p of D.lcOrbit) if (p[1] !== 1) return 'no eclipse but brightness ' + p[1];
       for (const p of D.lcOrbit) if (!(p[1] > 0 && p[1] <= 1 + 1e-12)) return 'binary brightness ' + p[1];
       return true; })()` },
+    { name: "transmission spectrum: H = kT/(μ m_u g) with g = GMp/Rp², readouts agree, windows at (Rp/Rs)², tallest band ≈ 2·2RpH/Rs², 1/μ scaling", fn: `(() => { ${base}
+      if (X.BIN || hid || !X.atm) return true;
+      const A = X.atm(), Rp = P.rp * 6.371e6, g = GME * P.mp / (Rp * Rp), mu = X.ATM[X.ATMS.gas].mu, H = 1.380649e-23 * X.ATMS.teq / (mu * 1.66053906892e-27 * g);
+      if (!near(A.g, g, 1e-12)) return 'g ' + A.g + ' vs ' + g;
+      if (!near(A.H, H, 1e-12)) return 'H ' + A.H + ' vs kT/(μ m_u g) ' + H;
+      const hk = num('atmH'); if (!near(hk, H / 1000, 6e-3) && !near(hk, Math.round(H / 1000), 1e-9)) return 'atmH shows ' + hk + ' km, H = ' + H / 1000;
+      if (!(Math.abs(A.lo - D.depth) <= 0.02 * A.est + 1e-12)) return 'windows ' + A.lo + ' but (Rp/Rs)² ' + D.depth;
+      if (!(A.hi >= A.lo)) return 'spectrum max below min';
+      for (const p of A.curve) if (!isFinite(p[1]) || p[1] < D.depth * (1 - 1e-12)) return 'depth ' + p[1] + ' at ' + p[0] + ' µm below (Rp/Rs)²';
+      if (document.getElementById('atmWarn').hidden !== (A.H < 0.1 * A.Rp)) return 'the H ≪ Rp warning shows wrongly';
+      if (X.ATMS.cloud === 0 && A.H < 0.01 * A.Rp) {   /* the estimate is first order in H/Rp */
+        if (!near(A.peak, A.est, 0.08)) return 'tallest band ' + A.peak + ' vs 2·2RpH/Rs² ' + A.est;
+        if (!near(A.estH2 / A.est, mu / 2.33, 1e-9)) return 'feature ratio not μ/2.33';
+      }
+      if (X.ATMS.cloud >= 6 && A.hi - A.lo > 1e-15) return 'cloud top above every band but the spectrum is not flat';
+      return true; })()` },
   ],
   steps: [
+    { name: 'spectrum: every gas, temperature and cloud extremes, real planets, drag and keys on the spectrum', fn: `(async () => {
+      const pause = (ms) => new Promise((r) => setTimeout(r, ms)), q = (s) => document.querySelector(s), X = window.__exo;
+      const set = async (id, v) => { const el = document.getElementById(id); el.value = v === 'min' ? el.min : v === 'max' ? el.max : v; el.dispatchEvent(new Event('input', { bubbles: true })); await pause(150); };
+      for (const p of ['wasp39', 'hd209', 'gj1214']) { q('#presets [data-p=' + p + ']').click(); await pause(250); }
+      q('#cloud').value = 0; q('#cloud').dispatchEvent(new Event('input', { bubbles: true })); await pause(150);
+      for (const g of ['h2o', 'n2', 'co2', 'h2he']) { q('#atmGas [data-g=' + g + ']').click(); await pause(150); for (const v of ['min', 'max', 1000]) await set('teq', v); }
+      for (const v of ['max', 'min', 2.5]) await set('cloud', v);
+      const c = document.getElementById('lc'), r = c.getBoundingClientRect();
+      for (const fx of [0, 0.5, 1, -0.2, 1.3]) { c.dispatchEvent(new PointerEvent('pointerdown', { clientX: r.left + r.width * fx, clientY: r.top + r.height / 2, pointerId: 1, bubbles: true })); c.dispatchEvent(new PointerEvent('pointerup', { pointerId: 1, bubbles: true })); await pause(100); }
+      c.focus(); for (const k of ['ArrowRight', 'ArrowLeft']) for (let j = 0; j < 40; j++) c.dispatchEvent(new KeyboardEvent('keydown', { key: k, shiftKey: true, bubbles: true }));
+      await pause(200); if (!(X.specLam >= 0.3 && X.specLam <= 20)) throw Error('cursor wavelength ' + X.specLam);
+      for (const id of ['mp', 'rp']) for (const v of ['min', 'max']) await set(id, v);
+      q('#presets [data-p=tilt]').click(); await pause(250);
+      q('#kindSeg [data-k=bin]').click(); await pause(300); q('#kindSeg [data-k=planet]').click(); await pause(300);
+      X.setLc('spec'); X.newMystery(); await pause(300); if (X.lcMode === 'spec') throw Error('a mystery left the spectrum showing');
+      q('#presets [data-p=hotj]').click(); await pause(250); X.setLc('orbit'); await pause(200);
+    })()` },
     { name: 'preset switch mid run in both kinds, extremes of a, mass and tilt, then back', fn: `(async () => {
       const pause = (ms) => new Promise((r) => setTimeout(r, ms)), q = (s) => document.querySelector(s);
       const set = async (id, f) => { const el = document.getElementById(id); el.value = f === 'min' ? el.min : f === 'max' ? el.max : f; el.dispatchEvent(new Event('input', { bubbles: true })); await pause(200); };

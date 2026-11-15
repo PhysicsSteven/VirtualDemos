@@ -182,9 +182,12 @@ const CONST_DATA = new Set(['lib/sky-bsc.js', 'lib/sky-dist.js', 'lib/nubase.js'
 const CONST_ALLOW = {      /* 'file literal': reason */
   'dosimetry.html 273.2': 'AAPM TG-51 writes the temperature correction with 273.2',
   'giant-planets.html 1898.13e24': 'NASA Planetary Fact Sheet value, cited on the page',
+  'exoplanets.html 86.71': 'HD 209458 b inclination in degrees (Torres et al. 2008), not a rubidium mass',
 };
 /* Too close to everyday numbers to compare (they stay in the file to be used): */
-const CONST_SKIP = new Set(['g', 'g0', 'T0', 'Tsun', 'Ssun', 'MbolSun', 'MVsun', 'yrSid', 'yrDays', 'day', 'daySid', 'dayStel', 'sound20']);
+const CONST_SKIP = new Set(['g', 'g0', 'T0', 'Tsun', 'Ssun', 'MbolSun', 'MVsun', 'yrSid', 'yrDays', 'day', 'daySid', 'dayStel', 'sound20',
+  /* 2.33 and 28.014 sit near ordinary numbers (2.3548 FWHM factor, 28.03 ns); test_exoplanets.cjs checks the demo's copies equal them */
+  'muSolarH2', 'MN2u']);
 rule('constants', 'Physical constants in demo code match demos/lib/constants.js (CODATA 2022, IAU, cited values), exactly or rounded.',
   'demos/*.html and demos/lib/*.js code', () => {
   const VDC = require(path.join(ROOT, 'demos/lib/constants.js')), T = Object.entries(VDC.table).filter(([k]) => !CONST_SKIP.has(k));

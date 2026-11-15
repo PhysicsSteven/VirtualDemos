@@ -58,6 +58,10 @@ VDI18N.add('es', 'demo/exoplanets', {
   "Acercar al tránsito",
 "Zoom on secondary":
   "Acercar al secundario",
+"Transmission spectrum: the transit depth at each wavelength":
+  "Espectro de transmisión: la profundidad del tránsito en cada longitud de onda",
+"Spectrum":
+  "Espectro",
 "Radial velocity curve of the star in meters per second against time. Drag across to move in time.":
   "Curva de velocidad radial de la estrella en metros por segundo en función del tiempo. Arrastra a lo largo para moverte en el tiempo.",
 "Divider between the orbit and what the telescope sees":
@@ -84,6 +88,12 @@ VDI18N.add('es', 'demo/exoplanets', {
   "No de canto",
 "TRAPPIST-{#} like":
   "Tipo TRAPPIST-{#}",
+"WASP-{#} b":
+  "WASP-{#} b",
+"HD {#} b":
+  "HD {#} b",
+"GJ {#} b":
+  "GJ {#} b",
 "Sun and red dwarf":
   "Sol y enana roja",
 "Twin stars":
@@ -134,6 +144,52 @@ VDI18N.add('es', 'demo/exoplanets', {
   "Radio R<sub>p</sub>",
 "{#} M<sub>J</sub> = {#} M<sub>E</sub> and {#} R<sub>J</sub> = {#} R<sub>E</sub>. Both sliders are logarithmic.":
   "{#} M<sub>J</sub> = {#} M<sub>E</sub> y {#} R<sub>J</sub> = {#} R<sub>E</sub>. Ambos deslizadores son logarítmicos.",
+"Atmosphere":
+  "Atmósfera",
+"Press <b>Spectrum</b> above the light curve: the transit depth at each wavelength.":
+  "Presiona <b>Espectro</b> arriba de la curva de luz: la profundidad del tránsito en cada longitud de onda.",
+"What the atmosphere is made of":
+  "De qué está hecha la atmósfera",
+"Hydrogen and helium":
+  "Hidrógeno y helio",
+"Steam":
+  "Vapor de agua",
+"Nitrogen":
+  "Nitrógeno",
+"Carbon dioxide":
+  "Dióxido de carbono",
+"Equilibrium temperature T<sub>eq</sub>":
+  "Temperatura de equilibrio T<sub>eq</sub>",
+"Cloud top":
+  "Cima de las nubes",
+"clear":
+  "despejado",
+"Mean molecular weight μ":
+  "Peso molecular medio μ",
+"Gravity g = GM<sub>p</sub>/R<sub>p</sub>²":
+  "Gravedad g = GM<sub>p</sub>/R<sub>p</sub>²",
+"Scale height H = kT/(μ m<sub>u</sub> g)":
+  "Altura de escala H = kT/(μ m<sub>u</sub> g)",
+"Feature size ≈ {#} × 2R<sub>p</sub>H/R<sub>s</sub>²":
+  "Tamaño de los rasgos ≈ {#} × 2R<sub>p</sub>H/R<sub>s</sub>²",
+"{#} ppm":
+  "{#} ppm",
+"Tallest band above the windows":
+  "Banda más alta sobre las ventanas",
+"{#} ppm (H₂O, {#} µm)":
+  "{#} ppm (H₂O, {#} µm)",
+"Spectrum cursor: wavelength":
+  "Cursor del espectro: longitud de onda",
+"Transit depth there":
+  "Profundidad del tránsito ahí",
+"The scale height is more than a tenth of the planet's radius. The model assumes H is much smaller than R<sub>p</sub>; an atmosphere this loosely held would escape to space.":
+  "La altura de escala es más de una décima parte del radio del planeta. El modelo supone que H es mucho menor que R<sub>p</sub>; una atmósfera tan poco ligada escaparía al espacio.",
+"<b>Light molecules make big features.</b> In transit, starlight passes through the ring of air at the planet's edge. Where a molecule absorbs, the air is opaque higher up, so the planet looks bigger at that wavelength. The height scale is H = kT/(μ m<sub>u</sub> g): hot air, low gravity and light molecules give a tall, puffy atmosphere. Hydrogen and helium (μ = {#}) give features {#} times bigger than carbon dioxide (μ = {#}) at the same T and g. That is how JWST tells a puffy hot Jupiter from a compact rocky world.":
+  "<b>Las moléculas ligeras dan rasgos grandes.</b> En el tránsito, la luz de la estrella atraviesa el anillo de aire en el borde del planeta. Donde una molécula absorbe, el aire es opaco más arriba, así que el planeta se ve más grande en esa longitud de onda. La escala de altura es H = kT/(μ m<sub>u</sub> g): el aire caliente, la gravedad baja y las moléculas ligeras dan una atmósfera alta y esponjada. El hidrógeno y el helio (μ = {#}) dan rasgos {#} veces más grandes que el dióxido de carbono (μ = {#}) con la misma T y g. Así distingue el JWST un Júpiter caliente esponjado de un mundo rocoso compacto.",
+"Gravity comes from the planet's mass and radius: change the mass to change g without changing the transit depth. Drag across the spectrum, or use the arrow keys on it, to read the depth at one wavelength; the telescope view then draws the atmosphere's ring at that wavelength, thickened as it says.":
+  "La gravedad sale de la masa y el radio del planeta: cambia la masa para cambiar g sin cambiar la profundidad del tránsito. Arrastra a lo largo del espectro, o usa las flechas sobre él, para leer la profundidad en una longitud de onda; la vista del telescopio dibuja entonces el anillo de la atmósfera en esa longitud de onda, engrosado como lo indica.",
+"Model: z(λ) = H ln(σ(λ)/σ<sub>ref</sub>), the altitude where a grazing ray becomes opaque in an isothermal atmosphere (Lecavelier des Etangs et al. {#}; de Wit and Seager {#}), and depth ((R<sub>p</sub> + z)/R<sub>s</sub>)². The bands sit at their real wavelengths (Na {#} nm; H₂O {#}, {#}, {#} and {#} µm; CH₄ {#} µm; CO₂ {#} and {#} µm; and others), but their shapes are schematic: each is a smooth bump, and the strongest band of each gas is {#} scale heights tall, the typical n for a clear atmosphere (Kreidberg {#}). So the heights scale exactly as H, but the detailed shapes are not real cross sections. The continuum is Rayleigh scattering, whose slope is exact where it dominates (the radius falls by 4H for each factor of e in wavelength), on a flat floor standing for weaker absorption. R<sub>p</sub> from the slider is the radius in the windows between bands, the one the light curve uses. In a hydrogen atmosphere methane gives way to carbon monoxide above about {#} K (a smooth switch; Lodders and Fegley {#}). Clouds are gray and opaque: nothing below the cloud top is seen, the cloud top becomes the windows' level, and only bands that reach above it show (the cloud top slider is in scale heights above the clear windows). Ignored: temperature changing with height, the change of g with height, refraction, the planet's night side glow, and the star's spots.":
+  "Modelo: z(λ) = H ln(σ(λ)/σ<sub>ref</sub>), la altura a la que un rayo rasante se vuelve opaco en una atmósfera isotérmica (Lecavelier des Etangs et al. {#}; de Wit y Seager {#}), y profundidad ((R<sub>p</sub> + z)/R<sub>s</sub>)². Las bandas están en sus longitudes de onda reales (Na {#} nm; H₂O {#}, {#}, {#} y {#} µm; CH₄ {#} µm; CO₂ {#} y {#} µm; y otras), pero sus formas son esquemáticas: cada una es una joroba suave, y la banda más fuerte de cada gas mide {#} alturas de escala, la n típica de una atmósfera despejada (Kreidberg {#}). Así las alturas escalan exactamente como H, pero las formas detalladas no son secciones eficaces reales. El continuo es la dispersión de Rayleigh, cuya pendiente es exacta donde domina (el radio baja 4H por cada factor e en longitud de onda), sobre un piso plano que representa absorciones más débiles. R<sub>p</sub> del deslizador es el radio en las ventanas entre bandas, el que usa la curva de luz. En una atmósfera de hidrógeno el metano da paso al monóxido de carbono por encima de unos {#} K (un cambio suave; Lodders y Fegley {#}). Las nubes son grises y opacas: no se ve nada debajo de su cima, la cima de las nubes pasa a ser el nivel de las ventanas, y solo se ven las bandas que suben más allá (el deslizador de la cima de las nubes está en alturas de escala sobre las ventanas despejadas). Se ignoran: el cambio de la temperatura con la altura, el cambio de g con la altura, la refracción, el brillo del lado nocturno del planeta y las manchas de la estrella.",
 "Orbit":
   "Órbita",
 "Semi major axis a":
@@ -182,8 +238,6 @@ VDI18N.add('es', 'demo/exoplanets', {
   "<b>Los eclipses dan los tamaños y las temperaturas; las dos curvas de velocidad dan las masas.</b> El eclipse más profundo oculta a la estrella con la superficie más brillante. Los tiempos de los cuatro contactos, con la rapidez de las estrellas, dan ambos radios, y el fondo plano de un eclipse total es la luz de la estrella que queda a la vista.",
 "Transit depth (R<sub>p</sub>/R<sub>s</sub>)²":
   "Profundidad del tránsito (R<sub>p</sub>/R<sub>s</sub>)²",
-"{#} ppm":
-  "{#} ppm",
 "RV semi amplitude K":
   "Semiamplitud de la VR K",
 "Transit duration":
@@ -250,12 +304,6 @@ VDI18N.add('es', 'demo/exoplanets', {
   "ambos, con fondo plano",
 "sizes to scale":
   "tamaños a escala",
-"{#} s = {#} h":
-  "{#} s = {#} h",
-"{#} s = {#} d":
-  "{#} s = {#} d",
-"{#} s = {#} yr":
-  "{#} s = {#} a",
 "slow motion · {#} s = {#} h":
   "cámara lenta · {#} s = {#} h",
 "From far away, Earth dims the Sun by {#} ppm for {#} hours once a year and moves it at only {#} cm/s. Add a little noise and both signals disappear.":
@@ -282,6 +330,12 @@ VDI18N.add('es', 'demo/exoplanets', {
   "sin eclipse",
 "A tiny, cool star about {#}% the size of the Sun. An Earth sized planet blocks {#}% of its light, {#} times deeper than Earth crossing the Sun.":
   "Una estrella diminuta y fría, de cerca del {#}% del tamaño del Sol. Un planeta del tamaño de la Tierra bloquea el {#}% de su luz, {#} veces más que la Tierra al pasar frente al Sol.",
+"WASP-{#} b, a hot Saturn: low gravity and a hydrogen atmosphere give a scale height near {#} km, so its bands are large. In {#} JWST saw carbon dioxide at {#} µm in its spectrum, the first clear detection in an exoplanet (JWST Transiting Exoplanet Community ERS Team {#}). The spectrum view opens at {#} µm.":
+  "WASP-{#} b, un Saturno caliente: su gravedad baja y su atmósfera de hidrógeno dan una altura de escala cercana a {#} km, así que sus bandas son grandes. En {#} el JWST vio dióxido de carbono a {#} µm en su espectro, la primera detección clara en un exoplaneta (JWST Transiting Exoplanet Community ERS Team {#}). La vista del espectro abre en {#} µm.",
+"HD {#} b, the first planet seen to transit, and the first with an atmosphere detected: Hubble saw it block an extra {#} ± {#} ppm of light in the sodium lines at {#} nm (Charbonneau et al. {#}). The spectrum view opens at {#} nm.":
+  "HD {#} b, el primer planeta que se vio transitar y el primero con una atmósfera detectada: el Hubble vio que bloquea {#} ± {#} ppm más de luz en las líneas del sodio a {#} nm (Charbonneau et al. {#}). La vista del espectro abre en {#} nm.",
+"GJ {#} b, between Earth and Neptune in size, around a small red dwarf. Hubble found its spectrum flat (Kreidberg et al. {#}): clouds or haze high up hide the bands. Lower the cloud top to see what a clear hydrogen atmosphere would show.":
+  "GJ {#} b, de tamaño entre la Tierra y Neptuno, alrededor de una pequeña enana roja. El Hubble encontró su espectro plano (Kreidberg et al. {#}): nubes o bruma muy arriba ocultan las bandas. Baja la cima de las nubes para ver lo que mostraría una atmósfera de hidrógeno despejada.",
 "Two stars like the Sun, edge on. The two eclipses are equally deep, because the two surfaces are equally bright, and the two velocity curves are mirror images with the same K.":
   "Dos estrellas como el Sol, de canto. Los dos eclipses son igual de profundos, porque las dos superficies son igual de brillantes, y las dos curvas de velocidad son imágenes especulares con la misma K.",
 "grazing":
@@ -318,6 +372,34 @@ VDI18N.add('es', 'demo/exoplanets', {
   "Revelado: M₁ = {#} M<sub>sun</sub>, R₁ = {#} R<sub>sun</sub>, T₁ = {#} K; M₂ = {#} M<sub>sun</sub>, R₂ = {#} R<sub>sun</sub>, T₂ = {#} K; a = {#} UA, i = {#}°, γ = −{#} km/s.",
 "time from mid transit":
   "tiempo desde la mitad del tránsito",
+"{#} scale heights up":
+  "{#} alturas de escala arriba",
+"none: flat":
+  "ninguna: plano",
+"clouds hide the atmosphere at {lam} µm":
+  "las nubes ocultan la atmósfera en {lam} µm",
+"atmosphere at {lam} µm, to scale":
+  "atmósfera en {lam} µm, a escala",
+"atmosphere at {lam} µm, {f} times thicker":
+  "atmósfera en {lam} µm, {f} veces más gruesa",
+"Transit depth (ppm) against wavelength":
+  "Profundidad del tránsito (ppm) contra longitud de onda",
+"No transit from here, so no starlight passes through the atmosphere":
+  "No hay tránsito desde aquí, así que la luz de la estrella no atraviesa la atmósfera",
+"wavelength, log scale":
+  "longitud de onda, escala logarítmica",
+"dashed: hydrogen and helium, same T and g · band shapes schematic":
+  "línea discontinua: hidrógeno y helio, misma T y g · formas de banda esquemáticas",
+"dashed: H₂ + He":
+  "discontinua: H₂ + He",
+"band shapes schematic, heights exact in H":
+  "formas de banda esquemáticas, alturas exactas en H",
+"bands schematic":
+  "bandas esquemáticas",
+"{#} s = {#} h":
+  "{#} s = {#} h",
+"{#} s = {#} d":
+  "{#} s = {#} d",
 "slow motion":
   "cámara lenta",
 "Revealed: M₁ = {#} M<sub>sun</sub>, R₁ = {#} R<sub>sun</sub>, T₁ = {#} K; M₂ = {#} M<sub>sun</sub>, R₂ = {#} R<sub>sun</sub>, T₂ = {#} K; a = {#} AU, i = {#}°, γ = {#} km/s.":

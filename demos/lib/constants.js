@@ -85,6 +85,13 @@
     GMjup:  [1.2668653e17, 'm³/s²', 'Jupiter mass parameter (nominal)', 'IAU 2015 B3'],
     Mjup:   [1.2668653e17 / 6.67430e-11, 'kg', 'Jupiter mass, GM/G', 'IAU 2015 B3 with CODATA 2022 G'],
     Rjup:   [7.1492e7, 'm', 'Jupiter equatorial radius (nominal)', 'IAU 2015 B3'],
+    /* mean molecular weights of planetary atmospheres (Finding Exoplanets transmission spectra, 2026-11-15). Molecules from the
+       CIAAW 2021 standard atomic weights (H 1.008, C 12.011, N 14.007, O 15.999); solar H2 + He gas from the present day solar mass
+       fractions X = 0.7381, Y = 0.2485, Z = 0.0134 (Asplund et al. 2009, ARA&A 47, 481), hydrogen as H2: 1/(X/2.016 + Y/4.0026 + Z/17) */
+    muSolarH2:[2.33, 'u', 'mean molecular weight of solar composition H2 + He gas', 'Asplund et al. 2009 mass fractions'],
+    MH2Ou:  [18.015, 'u', 'molecular weight of water', 'CIAAW 2021'],
+    MN2u:   [28.014, 'u', 'molecular weight of nitrogen N2', 'CIAAW 2021'],
+    MCO2u:  [44.009, 'u', 'molecular weight of carbon dioxide', 'CIAAW 2021'],
   };
   const VDC = {};
   for (const k in T) VDC[k] = T[k][0];

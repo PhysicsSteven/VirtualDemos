@@ -57,4 +57,45 @@ group('two stars: radii from the contact times (straight line approximation)', (
   near(r2.big, 1, 1e-4, 'wide R₁'); near(r2.small, 0.3, 1e-4, 'wide R₂');
 });
 
+group('transmission spectra: scale height and molecular weight', () => {
+  const t = core('exoplanets', 'K_B,M_U,scaleHeight,N_FEATURE,ATM,altH,specDepth,featureEst,specCurve,ch4Frac,RAY_LAM,SPEC_LO,SPEC_HI,R_SUN');
+  const VDC = require('../../demos/lib/constants.js');
+  /* constants equal constants.js */
+  abs(t.K_B, VDC.kB, 0, 'k_B'); abs(t.M_U, VDC.u, 0, 'm_u');
+  abs(t.ATM.h2he.mu, VDC.muSolarH2, 0, 'μ H2 + He'); abs(t.ATM.h2o.mu, VDC.MH2Ou, 0, 'μ H2O'); abs(t.ATM.n2.mu, VDC.MN2u, 0, 'μ N2'); abs(t.ATM.co2.mu, VDC.MCO2u, 0, 'μ CO2');
+  /* Earth's air at 288 K: H = kT/(μ m_u g) = 8.43 km (the textbook 8.4 km) */
+  abs(t.scaleHeight(288, VDC.Mair * 1000, VDC.g) / 1000, 8.43, 0.01, 'H of air at 288 K');
+  /* H ∝ T/(μ g) */
+  near(t.scaleHeight(2000, 2.33, 10) / t.scaleHeight(1000, 2.33, 10), 2, 1e-12, 'H ∝ T');
+  near(t.scaleHeight(1000, 2.33, 20) / t.scaleHeight(1000, 2.33, 10), 0.5, 1e-12, 'H ∝ 1/g');
+  /* the hot Jupiter WASP-39 b (Mancini 2018): g = 4.26 m/s², H near 980 km */
+  const RJ = 7.1492e7, Rp = 1.279 * RJ, g = 1.26686534e17 * 0.281 / (Rp * Rp);
+  abs(g, 4.26, 0.01, 'WASP-39 b gravity'); abs(t.scaleHeight(1166, 2.33, g) / 1000, 977, 3, 'WASP-39 b H');
+  /* the tallest band of every gas is N_FEATURE scale heights above the windows (at its center, within 5% from overlaps) */
+  for (const gas of Object.keys(t.ATM)) {
+    const top = Math.max(...t.ATM[gas].bands.map((b) => t.altH(b[1], gas, 500, 0)));
+    abs(top, t.N_FEATURE, 0.1, `tallest ${gas} band`);
+  }
+  /* features shrink as 1/μ: from H2 + He to CO2 at the same T and g, 44.009/2.33 = 18.9 times */
+  const Rs = 0.939 * t.R_SUN, peak = (gas) => { const H = t.scaleHeight(1166, t.ATM[gas].mu, g), c = t.specCurve(Rp, Rs, H, gas, 1166, 0), lo = Math.min(...c.map((p) => p[1])); return Math.max(...t.ATM[gas].bands.map((b) => t.specDepth(b[1], Rp, Rs, H, gas, 1166, 0))) - lo; };
+  near(peak('h2he') / peak('co2'), 44.009 / 2.33, 0.03, 'feature ratio H2 + He / CO2');
+  abs(44.009 / 2.33, 18.9, 0.05, 'μ ratio');
+  /* and the feature agrees with the estimate n·2 R_p H/R_s² to a few percent (the second order term (H/R_s)² and overlaps) */
+  near(peak('h2he'), t.featureEst(Rp, Rs, t.scaleHeight(1166, 2.33, g)), 0.06, 'feature size vs n·2RpH/Rs²');
+  /* Rayleigh slope: far blue of every band, dz/d ln λ → −4H */
+  const z1 = t.altH(0.1, 'co2', 300, 0), z2 = t.altH(0.1 * Math.E, 'co2', 300, 0); abs(z1 - z2, 4, 0.1, 'Rayleigh slope −4H per e fold');
+  /* an opaque cloud deck above every band flattens the spectrum completely */
+  const flat = t.specCurve(Rp, Rs, 1e6, 'h2he', 1166, 6); abs(Math.max(...flat.map((p) => p[1])) - Math.min(...flat.map((p) => p[1])), 0, 1e-15, 'cloudy spectrum is flat');
+  /* with no atmosphere (H = 0) the depth is the light curve's (R_p/R_s)² at every wavelength */
+  abs(t.specDepth(1.4, Rp, Rs, 0, 'h2he', 1166, 0), (Rp / Rs) ** 2, 1e-18, 'H = 0');
+  /* methane shows below about 1,000 K and gives way to CO above */
+  assert(t.ch4Frac(600) > 0.99 && t.ch4Frac(1400) < 0.01, 'CH4 switch'); abs(t.ch4Frac(1000), 0.5, 1e-12, 'CH4 midpoint');
+  assert(t.altH(3.3, 'h2he', 600, 0) > 1.9 && t.altH(3.3, 'h2he', 1500, 0) < 0.5, 'the 3.3 µm methane band comes and goes with T');
+  /* the band positions asked for are where the bands are */
+  for (const [gas, lam] of [['h2o', 1.4], ['h2o', 1.9], ['h2o', 2.7], ['co2', 4.3], ['co2', 15], ['h2he', 0.589], ['h2he', 3.3]]) {
+    const at = t.altH(lam, gas, 500, 0), off = Math.min(t.altH(lam * 0.85, gas, 500, 0), t.altH(lam * 1.15, gas, 500, 0)); assert(at > off + 0.5, `band at ${lam} µm in ${gas}: ${at} vs ${off}`);
+  }
+  assert(t.SPEC_LO === 0.3 && t.SPEC_HI === 20, 'range');
+});
+
 console.log(`${n} groups passed`);

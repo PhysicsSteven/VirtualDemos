@@ -214,6 +214,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
             <button type="button" data-lc="orbit" aria-pressed="true">Full orbit</button>
             <button type="button" data-lc="zoom" aria-pressed="false" id="lcZoom">Zoom on transit</button>
             <button type="button" data-lc="zoom2" aria-pressed="false" class="binOnly">Zoom on secondary</button>
+            <button type="button" data-lc="spec" aria-pressed="false" class="planetOnly mysHide" id="lcSpec" title="Transmission spectrum: the transit depth at each wavelength">Spectrum</button>
           </div>
         </div>
       </div>
@@ -233,6 +234,9 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <button type="button" data-p="ecc" aria-pressed="false">Eccentric planet</button>
           <button type="button" data-p="tilt" aria-pressed="false">Not edge on</button>
           <button type="button" data-p="trappist" aria-pressed="false">TRAPPIST-1 like</button>
+          <button type="button" data-p="wasp39" aria-pressed="false">WASP-39 b</button>
+          <button type="button" data-p="hd209" aria-pressed="false">HD 209458 b</button>
+          <button type="button" data-p="gj1214" aria-pressed="false">GJ 1214 b</button>
         </div>
         <div class="chips binOnly" id="binPresets">
           <button type="button" data-b="redd" aria-pressed="true">Sun and red dwarf</button>
@@ -323,6 +327,40 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
         </div>
         <details class="more"><summary>More about this</summary>
           <p class="hint">1 M<sub>J</sub> = 318 M⊕ and 1 R<sub>J</sub> = 11.2 R⊕. Both sliders are logarithmic.</p>
+        </details>
+      </section>
+
+      <section class="mysHide planetOnly" id="atmSec">
+        <h2>Atmosphere</h2>
+        <p class="hint">Press <b>Spectrum</b> above the light curve: the transit depth at each wavelength.</p>
+        <div class="chips" id="atmGas" role="group" aria-label="What the atmosphere is made of">
+          <button type="button" data-g="h2he" aria-pressed="true">Hydrogen and helium</button>
+          <button type="button" data-g="h2o" aria-pressed="false">Steam</button>
+          <button type="button" data-g="n2" aria-pressed="false">Nitrogen</button>
+          <button type="button" data-g="co2" aria-pressed="false">Carbon dioxide</button>
+        </div>
+        <div>
+          <div class="slider-head"><label for="teq">Equilibrium temperature T<sub>eq</sub></label><output id="teqOut" class="mono" for="teq"></output></div>
+          <input type="range" id="teq" min="50" max="2500" step="1">
+        </div>
+        <div>
+          <div class="slider-head"><label for="cloud">Cloud top</label><output id="cloudOut" class="mono" for="cloud"></output></div>
+          <input type="range" id="cloud" min="0" max="6" step="0.5" value="0">
+        </div>
+        <dl class="readout">
+          <div><dt>Mean molecular weight μ</dt><dd id="atmMu">—</dd></div>
+          <div><dt>Gravity g = GM<sub>p</sub>/R<sub>p</sub>²</dt><dd id="atmG">—</dd></div>
+          <div class="big"><dt>Scale height H = kT/(μ m<sub>u</sub> g)</dt><dd id="atmH">—</dd></div>
+          <div><dt>Feature size ≈ 2 × 2R<sub>p</sub>H/R<sub>s</sub>²</dt><dd id="atmEst">—</dd></div>
+          <div class="big"><dt>Tallest band above the windows</dt><dd id="atmPeak">—</dd></div>
+          <div><dt>Spectrum cursor: wavelength</dt><dd id="atmLam">—</dd></div>
+          <div><dt>Transit depth there</dt><dd id="atmDepth">—</dd></div>
+        </dl>
+        <p class="hint warn" id="atmWarn" hidden>The scale height is more than a tenth of the planet's radius. The model assumes H is much smaller than R<sub>p</sub>; an atmosphere this loosely held would escape to space.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint"><b>Light molecules make big features.</b> In transit, starlight passes through the ring of air at the planet's edge. Where a molecule absorbs, the air is opaque higher up, so the planet looks bigger at that wavelength. The height scale is H = kT/(μ m<sub>u</sub> g): hot air, low gravity and light molecules give a tall, puffy atmosphere. Hydrogen and helium (μ = 2.33) give features 18.9 times bigger than carbon dioxide (μ = 44.0) at the same T and g. That is how JWST tells a puffy hot Jupiter from a compact rocky world.</p>
+          <p class="hint">Gravity comes from the planet's mass and radius: change the mass to change g without changing the transit depth. Drag across the spectrum, or use the arrow keys on it, to read the depth at one wavelength; the telescope view then draws the atmosphere's ring at that wavelength, thickened as it says.</p>
+          <p class="hint">Model: z(λ) = H ln(σ(λ)/σ<sub>ref</sub>), the altitude where a grazing ray becomes opaque in an isothermal atmosphere (Lecavelier des Etangs et al. 2008; de Wit and Seager 2013), and depth ((R<sub>p</sub> + z)/R<sub>s</sub>)². The bands sit at their real wavelengths (Na 589 nm; H₂O 1.4, 1.9, 2.7 and 6.3 µm; CH₄ 3.3 µm; CO₂ 4.3 and 15 µm; and others), but their shapes are schematic: each is a smooth bump, and the strongest band of each gas is 2 scale heights tall, the typical n for a clear atmosphere (Kreidberg 2018). So the heights scale exactly as H, but the detailed shapes are not real cross sections. The continuum is Rayleigh scattering, whose slope is exact where it dominates (the radius falls by 4H for each factor of e in wavelength), on a flat floor standing for weaker absorption. R<sub>p</sub> from the slider is the radius in the windows between bands, the one the light curve uses. In a hydrogen atmosphere methane gives way to carbon monoxide above about 1,000 K (a smooth switch; Lodders and Fegley 2002). Clouds are gray and opaque: nothing below the cloud top is seen, the cloud top becomes the windows' level, and only bands that reach above it show (the cloud top slider is in scale heights above the clear windows). Ignored: temperature changing with height, the change of g with height, refraction, the planet's night side glow, and the star's spots.</p>
         </details>
       </section>
 
@@ -592,6 +630,70 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   /* star 2's temperature from the brightness f in a total eclipse of star 2 (only star 1 in view): f = L1/(L1 + L2) */
   const ebT2 = (T1, R1, R2, f) => T1 * Math.pow((1 / f - 1) * (R1 * R1) / (R2 * R2), 0.25);
+
+  // ---------- transmission spectroscopy (chemistry item 5, 2026-11-15) ----------
+  /* In transit, starlight grazing the planet's limb crosses a long chord of its atmosphere. Where a molecule absorbs strongly the
+     atmosphere is opaque higher up, so the planet looks bigger at that wavelength. For an isothermal atmosphere in hydrostatic
+     balance the effective altitude is z(λ) = H ln(σ(λ)/σ_ref) + constant, with σ the total cross section per molecule and
+     H = k T/(μ m_u g) the scale height (Lecavelier des Etangs et al. 2008, A&A 481, L83; de Wit & Seager 2013, Science 342, 1473).
+     The transit depth at λ is ((R_p + z(λ))/R_s)²; a feature n scale heights tall adds about n·2 R_p H/R_s², with n ≈ 2 for a cloud
+     free atmosphere at low resolution (Kreidberg 2018, Handbook of Exoplanets, arXiv:1709.05941, eq. 3).
+     What is schematic: the band shapes. Each band is a Gaussian in ln λ at its real position, with a peak height h (in scale heights
+     above the continuum) chosen so that the strongest band of every gas is N_FEATURE = 2 scale heights tall, as Kreidberg's n. So
+     every feature scales exactly as H: from hydrogen and helium (μ = 2.33) to carbon dioxide (μ = 44.0) they shrink 18.9 times.
+     The continuum is Rayleigh scattering, σ ∝ λ⁻⁴ (exact slope: dz/d ln λ = −4H, Lecavelier des Etangs 2008), added to a gray floor
+     that stands for collision induced absorption and weak lines. A cloud deck is gray and opaque: z = max(z_gas, z_cloud). */
+  const K_B = 1.380649e-23;              /* Boltzmann constant, exact (constants.js kB) */
+  const M_U = 1.66053906892e-27;         /* atomic mass constant, CODATA 2022 (constants.js u) */
+  const scaleHeight = (T, mu, g) => K_B * T / (mu * M_U * g);        /* m */
+  const N_FEATURE = 2;                   /* scale heights in the tallest band of each gas (Kreidberg 2018: n ≈ 2) */
+  const RAY_LAM = 0.55;                  /* µm where the Rayleigh cross section equals the gray floor (schematic) */
+  /* methane gives way to carbon monoxide in a hot hydrogen gas: CO and CH4 are equally abundant near 1,100 K at 1 bar in solar
+     composition gas (Lodders & Fegley 2002, Icarus 155, 393), and at lower temperature at the millibar pressures a transit probes.
+     Schematic: a smooth switch centered on 1,000 K, 50 K wide; a band's cross section is multiplied by the fraction, so its height
+     changes by H ln(fraction) as the mixing ratio would. */
+  const CH4_T = 1000, CH4_DT = 50;
+  const ch4Frac = (T) => 1 / (1 + Math.exp((T - CH4_T) / CH4_DT));
+  /* μ: solar H2 + He gas 2.33 (mass fractions X = 0.7381, Y = 0.2485, Z = 0.0134, Asplund et al. 2009; constants.js muSolarH2),
+     H2O 18.015, N2 28.014, CO2 44.009 (CIAAW 2021 standard atomic weights; constants.js MH2Ou, MN2u, MCO2u).
+     Bands: [molecule, center (µm), peak height h (scale heights), width (σ in ln λ), which of CH4 or CO it follows]. Positions:
+     Na D 0.589 µm, K 0.768 µm (NIST ASD, the D1 and D2 pairs), O2 A band 0.76 µm, H2O 0.94, 1.15, 1.4, 1.9, 2.7 and 6.3 µm, CH4 2.3, 3.3 and 7.7 µm,
+     CO 4.6 µm, CO2 1.6, 2.0, 2.7, 4.3 and 15 µm, O3 9.6 µm (HITRAN band centers, rounded; Kaltenegger & Traub 2009, ApJ 698, 519 for the bands in
+     Earth's transmission spectrum). Heights below 2 are schematic and relative. */
+  const ATM = {
+    h2he: { mu: 2.33, bands: [['Na', 0.589, 1.5, 0.012], ['K', 0.768, 1.0, 0.012], ['H₂O', 1.15, 1.0, 0.04], ['H₂O', 1.4, 1.6, 0.045],
+      ['H₂O', 1.9, 1.7, 0.045], ['CH₄', 2.3, 1.2, 0.03, 'ch4'], ['H₂O', 2.7, 2, 0.05], ['CH₄', 3.3, 2, 0.035, 'ch4'], ['CO₂', 4.3, 1.8, 0.03],
+      ['CO', 4.6, 1.2, 0.025, 'co'], ['H₂O', 6.3, 2, 0.06], ['CH₄', 7.7, 1.6, 0.04, 'ch4'], ['CO₂', 15, 1.4, 0.05]] },
+    h2o: { mu: 18.015, bands: [['H₂O', 0.94, 0.8, 0.035], ['H₂O', 1.15, 1.1, 0.04], ['H₂O', 1.4, 1.6, 0.045], ['H₂O', 1.9, 1.7, 0.045],
+      ['H₂O', 2.7, 2, 0.05], ['H₂O', 6.3, 2, 0.06]] },
+    n2: { mu: 28.014, bands: [['O₂', 0.76, 0.8, 0.01], ['H₂O', 1.4, 1.0, 0.045], ['H₂O', 1.9, 1.0, 0.045], ['H₂O', 2.7, 1.4, 0.05],
+      ['CO₂', 4.3, 2, 0.03], ['H₂O', 6.3, 1.5, 0.06], ['O₃', 9.6, 1.4, 0.03], ['CO₂', 15, 2, 0.05]] },
+    co2: { mu: 44.009, bands: [['CO₂', 1.6, 0.8, 0.025], ['CO₂', 2.0, 1.2, 0.03], ['CO₂', 2.7, 1.6, 0.04], ['CO₂', 4.3, 2, 0.035],
+      ['CO₂', 15, 2, 0.06]] }
+  };
+  const SPEC_LO = 0.3, SPEC_HI = 20;     /* µm, the wavelengths drawn (Hubble's blue end to JWST MIRI) */
+  /* altitude of the effective radius above the windows, in scale heights, at λ (µm), for gas g at T (K), with a cloud top `cloud`
+     scale heights above the clear continuum (0: clear, since the gas itself is never below 0). A cloud deck becomes the new floor:
+     the windows are then at the cloud top, and only what rises above it shows. R_p (the slider, the light curve's radius) is always
+     the radius in the windows. */
+  function bandWeight(b, T) { return b[4] === 'ch4' ? ch4Frac(T) : b[4] === 'co' ? 1 - ch4Frac(T) : 1; }
+  function altH(lam, gas, T, cloud) {
+    let s = 1 + Math.pow(RAY_LAM / lam, 4);
+    for (const b of ATM[gas].bands) { const x = Math.log(lam / b[1]) / b[3]; if (x * x < 80) s += (Math.exp(b[2]) - 1) * bandWeight(b, T) * Math.exp(-0.5 * x * x); }
+    return Math.max(Math.log(s), cloud || 0) - (cloud || 0);
+  }
+  /* transit depth at λ: R_p is the continuum radius (m), H the scale height (m), R_s the star's radius (m) */
+  const specDepth = (lam, Rp, Rs, H, gas, T, cloud) => Math.pow((Rp + H * altH(lam, gas, T, cloud)) / Rs, 2);
+  /* the usual estimate of a feature's size in transit depth, n·2 R_p H/R_s² */
+  const featureEst = (Rp, Rs, H, n = N_FEATURE) => n * 2 * Rp * H / (Rs * Rs);
+  /* the spectrum sampled in ln λ, with extra points across every band so narrow lines (Na, K) are resolved: [[λ µm, depth], ...] */
+  function specCurve(Rp, Rs, H, gas, T, cloud) {
+    const L = [];
+    for (let j = 0; j <= 700; j++) L.push(SPEC_LO * Math.pow(SPEC_HI / SPEC_LO, j / 700));
+    for (const b of ATM[gas].bands) for (let j = -12; j <= 12; j++) { const l = b[1] * Math.exp(j * b[3] / 4); if (l > SPEC_LO && l < SPEC_HI) L.push(l); }
+    L.sort((x, y) => x - y);
+    return L.map((l) => [l, specDepth(l, Rp, Rs, H, gas, T, cloud)]);
+  }
   // ==CORE END==
 
   // ---------- state ----------
@@ -603,15 +705,38 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     jupiter:  { ms: 1, rs: 1, mp: MJ, rp: 11.21, a: 5.203, e: 0.048, inc: 90, w: 90 },
     ecc:      { ms: 1.0, rs: 1.0, mp: 4.1 * MJ, rp: RJ, a: 0.45, e: 0.8, inc: 89.6, w: 301 },
     tilt:     { ms: 1.11, rs: 1.15, mp: 0.47 * MJ, rp: 1.2 * RJ, a: 0.0527, e: 0, inc: 60, w: 90 },
-    trappist: { ms: 0.09, rs: 0.119, mp: 0.69, rp: 0.92, a: 0.0293, e: 0, inc: 89.7, w: 90 }
+    trappist: { ms: 0.09, rs: 0.119, mp: 0.69, rp: 0.92, a: 0.0293, e: 0, inc: 89.7, w: 90 },
+    /* real planets for the transmission spectra (2026-11-15). WASP-39 b: Mancini et al. 2018 (A&A 613, A41), from the NASA Exoplanet
+       Archive; HD 209458 b: Torres, Winn and Holman 2008 (ApJ 677, 1324); GJ 1214 b: Cloutier et al. 2021 (AJ 162, 174). */
+    wasp39:   { ms: 0.913, rs: 0.939, mp: 0.281 * MJ, rp: 1.279 * RJ, a: 0.04828, e: 0, inc: 87.32, w: 90 },
+    hd209:    { ms: 1.119, rs: 1.155, mp: 0.685 * MJ, rp: 1.359 * RJ, a: 0.04707, e: 0, inc: 86.71, w: 90 },
+    gj1214:   { ms: 0.178, rs: 0.215, mp: 8.17, rp: 2.742, a: 0.0149, e: 0, inc: 88.7, w: 90 }
   };
+  /* each system's atmosphere: gas, equilibrium temperature (K) and cloud top (scale heights above the continuum; 0 is clear).
+     T_eq for the made up systems is the zero albedo, full redistribution value T_s √(R_s/2a) for a star of the Sun's 5,772 K; Earth
+     255 K (albedo 0.294, as in Planet Temperatures); Jupiter 110 K (NSSDCA Jupiter fact sheet, black body temperature);
+     TRAPPIST-1 like 246 K (TRAPPIST-1 e, zero albedo, Delrez et al. 2018); the real planets from the papers above (Mancini 2018
+     1,166 K; Torres 2008 1,449 K; Cloutier 2021 596 K). GJ 1214 b's flat spectrum (Kreidberg et al. 2014, Nature 505, 69) needs high
+     clouds: 6 scale heights here, above every band. */
+  const teqSunLike = (rs, a) => Math.round(T_SUN * Math.sqrt(rs * R_SUN / (2 * a * AU)) / 10) * 10;
+  const ATM_PRESET = {
+    hotj: { gas: 'h2he', teq: teqSunLike(1.15, 0.0527), cloud: 0 }, tilt: { gas: 'h2he', teq: teqSunLike(1.15, 0.0527), cloud: 0 },
+    ecc: { gas: 'h2he', teq: teqSunLike(1, 0.45), cloud: 0 }, earth: { gas: 'n2', teq: 255, cloud: 0 }, jupiter: { gas: 'h2he', teq: 110, cloud: 0 },
+    trappist: { gas: 'n2', teq: 246, cloud: 0 }, wasp39: { gas: 'h2he', teq: 1166, cloud: 0, lam: 4.3 }, hd209: { gas: 'h2he', teq: 1449, cloud: 0, lam: 0.589 },
+    gj1214: { gas: 'h2he', teq: 596, cloud: 6, lam: 1.4 }
+  };
+  const ATMS = Object.assign({}, ATM_PRESET.hotj);
+  let specLam = 1.4;            /* µm, the spectrum cursor */
   const HINTS = {
     hotj: 'A giant planet very close to its star: a deep, short transit every four days and a big, fast wobble. 51 Peg b itself does not transit; it is turned edge on here so both methods work.',
     earth: 'From far away, Earth dims the Sun by 84 ppm for 13 hours once a year and moves it at only 9 cm/s. Add a little noise and both signals disappear.',
     jupiter: 'Jupiter swings the Sun at about 12.5 m/s, easy for a good spectrograph if you wait 12 years. Its 1% transit lines up for only about 0.1% of random viewers.',
     ecc: 'A stretched orbit makes the velocity curve lopsided: a sharp swing at periastron, then a long slow drift. Like HD 80606 b, which has e = 0.93; the slider stops at 0.8.',
     tilt: 'The same hot Jupiter tilted to i = 60°. It passes above the star, so there is no transit, but the star still wobbles along our line of sight and K only drops by sin i.',
-    trappist: 'A tiny, cool star about 12% the size of the Sun. An Earth sized planet blocks 0.5% of its light, 60 times deeper than Earth crossing the Sun.'
+    trappist: 'A tiny, cool star about 12% the size of the Sun. An Earth sized planet blocks 0.5% of its light, 60 times deeper than Earth crossing the Sun.',
+    wasp39: 'WASP-39 b, a hot Saturn: low gravity and a hydrogen atmosphere give a scale height near 1,000 km, so its bands are large. In 2022 JWST saw carbon dioxide at 4.3 µm in its spectrum, the first clear detection in an exoplanet (JWST Transiting Exoplanet Community ERS Team 2023). The spectrum view opens at 4.3 µm.',
+    hd209: 'HD 209458 b, the first planet seen to transit, and the first with an atmosphere detected: Hubble saw it block an extra 232 ± 57 ppm of light in the sodium lines at 589 nm (Charbonneau et al. 2002). The spectrum view opens at 589 nm.',
+    gj1214: 'GJ 1214 b, between Earth and Neptune in size, around a small red dwarf. Hubble found its spectrum flat (Kreidberg et al. 2014): clouds or haze high up hide the bands. Lower the cloud top to see what a clear hydrogen atmosphere would show.'
   };
   let D = null;                 // derived quantities and sampled curves
   let simClock = 0;            /* simulated time that does not wrap each orbit, s, for the stopwatch */
@@ -771,6 +896,25 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const ph = near(D.transits && Math.abs(t) <= D.zh ? D.obsZoom : BIN && D.ecl2 && Math.abs(t - D.tsec) <= D.zh2 ? D.obsZoom2 : D.obsOrbit), rv = near(D.obsOrbit);
     return { t: ph[0], f: ph[1] + sf * ph[3], v: rv[2] + sv * rv[4], tv: rv[0], v2: BIN ? rv[5] + sv * rv[6] : 0 };
   }
+
+  /* the atmosphere of the current planet: gravity, scale height, the spectrum, and the same planet with hydrogen and helium for
+     comparison; recomputed only when something it depends on changes */
+  let ATMC = null;
+  function atm() {
+    const key = [P.mp, P.rp, P.rs, ATMS.gas, ATMS.teq, ATMS.cloud].join();
+    if (ATMC && ATMC.key === key) return ATMC;
+    const Rp = P.rp * R_EARTH, Rs = P.rs * R_SUN, g = GM_EARTH * P.mp / (Rp * Rp), mu = ATM[ATMS.gas].mu;
+    const H = scaleHeight(ATMS.teq, mu, g), Hh2 = scaleHeight(ATMS.teq, ATM.h2he.mu, g);
+    const curve = specCurve(Rp, Rs, H, ATMS.gas, ATMS.teq, ATMS.cloud);
+    const ghost = ATMS.gas === 'h2he' ? null : specCurve(Rp, Rs, Hh2, 'h2he', ATMS.teq, ATMS.cloud);
+    let lo = Infinity, hi = -Infinity; for (const p of curve) { lo = Math.min(lo, p[1]); hi = Math.max(hi, p[1]); }
+    /* the tallest band: the deepest band center above the windows (the lowest depth in the spectrum) */
+    let peak = 0, peakBand = null;
+    for (const b of ATM[ATMS.gas].bands) { const d = specDepth(b[1], Rp, Rs, H, ATMS.gas, ATMS.teq, ATMS.cloud) - lo; if (d > peak + 1e-15) { peak = d; peakBand = b; } }
+    ATMC = { key, Rp, Rs, g, mu, H, Hh2, curve, ghost, lo, hi, peak, peakBand, est: featureEst(Rp, Rs, H), estH2: featureEst(Rp, Rs, Hh2) };
+    return ATMC;
+  }
+  const atmDepthAt = (lam) => { const A = atm(); return specDepth(lam, A.Rp, A.Rs, A.H, ATMS.gas, ATMS.teq, ATMS.cloud); };
 
   // ---------- formatting ----------
   const minus = (s) => s.replace(/-/g, '−');
@@ -1001,6 +1145,20 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.save(); ctx.strokeStyle = T.muted; ctx.lineWidth = 1 * S; ctx.globalAlpha = 0.9; ctx.setLineDash([4 * S, 4 * S]);
     if (!hidden()) halfPath(true); ctx.restore();
     if (!behind && !hidden()) drawPlanet();
+    /* Spectrum view: the atmosphere's ring at the cursor's wavelength, its thickness z(λ) multiplied by a power of ten chosen so the
+       hydrogen and helium version of this planet would show 2 scale heights as about a third of the planet's drawn radius
+       (1, 2 or 5 times a power of ten, the next up) */
+    if (lcMode === 'spec' && !BIN && !behind && !hidden() && D.transits) {
+      const A = atm(), z = A.H * altH(specLam, ATMS.gas, ATMS.teq, ATMS.cloud);
+      const want = Math.max(rpPx / 3, 5 * S), base = N_FEATURE * A.Hh2 * sc;
+      const F = base >= want ? 1 : niceStep(want / base);
+      const rr = rpPx + z * sc * F;
+      ctx.save(); ctx.fillStyle = T.accent; ctx.globalAlpha = 0.45; ctx.beginPath(); ctx.arc(px, py, rr, 0, TAU); ctx.arc(px, py, rpPx, 0, TAU, true); ctx.fill();
+      ctx.globalAlpha = 1; ctx.strokeStyle = T.accent; ctx.lineWidth = 1 * S; ctx.beginPath(); ctx.arc(px, py, rr, 0, TAU); ctx.stroke(); ctx.restore();
+      const o = { lam: sig(specLam, 3), f: comma(F) }; const VDI18N = I18();
+      const lt = z * sc * F < 0.5 && ATMS.cloud > 0 ? VDI18N.t('clouds hide the atmosphere at {lam} µm', o) : F === 1 ? VDI18N.t('atmosphere at {lam} µm, to scale', o) : VDI18N.t('atmosphere at {lam} µm, {f} times thicker', o);
+      label(ctx, T, lt, Math.min(Math.max(px, 100 * S), W - 100 * S), Math.max(py - rr - 10 * S, padT + 4 * S), 'center', T.accent, `600 ${10.5 * S}px ${mono}`);
+    }
 
     const f11 = `600 ${11 * S}px ${mono}`;
     ctx.save(); ctx.font = f11; ctx.fillStyle = T.muted; ctx.textBaseline = 'bottom'; ctx.textAlign = 'left';
@@ -1068,7 +1226,81 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const x = X(t); ctx.beginPath(); ctx.moveTo(x, pad.t); ctx.lineTo(x, pad.t + ph); ctx.stroke(); ctx.restore();
   }
 
+  /* the transmission spectrum: transit depth against wavelength (log scale), drawn in the light curve's pane */
+  const SPEC_TICKS = [0.3, 0.5, 1, 2, 3, 5, 10, 20];
+  /* canvas words of the spectrum view, written for the translation harvest (demos/lib/i18n.md: a state the harvest does not reach) */
+  const I18 = () => (window.VDI18N && window.VDI18N.t ? window.VDI18N : { t: (t, o = {}) => t.replace(/\{(\w+)\}/g, (m, k) => o[k]) });
+  function drawSpec(T) {
+    const [ctx, W, H] = begin('lc', T), S = T.S, mono = monoFont();
+    const VDI18N = I18();
+    const pad = { l: 66 * S, r: 12 * S, t: (W < 560 ? 70 : 34) * S, b: 22 * S };
+    const pw = W - pad.l - pad.r, ph = H - pad.t - pad.b;
+    const X = (l) => pad.l + Math.log(l / SPEC_LO) / Math.log(SPEC_HI / SPEC_LO) * pw;
+    CH.lc = { x0: pad.l, x1: W - pad.r, spec: true };
+    ctx.font = `700 ${11.5 * S}px ${uiFont()}`; ctx.fillStyle = T.muted; ctx.textAlign = 'left';
+    ctx.fillText(VDI18N.t('Transit depth (ppm) against wavelength'), pad.l, pad.t - 8 * S);
+    if (!D.transits) {
+      label(ctx, T, VDI18N.t('No transit from here, so no starlight passes through the atmosphere'), W / 2, pad.t + ph / 2, 'center', T.ink, `700 ${12 * S}px ${uiFont()}`);
+      return;
+    }
+    const A = atm();
+    /* the vertical scale: at least the hydrogen and helium feature size, so a heavy gas's small bands look small */
+    let hi = A.hi, lo = A.lo;
+    if (A.ghost) for (const p of A.ghost) { hi = Math.max(hi, p[1]); lo = Math.min(lo, p[1]); }
+    const span = Math.max(hi - lo, A.estH2);
+    const yLo = lo - 0.4 * span, yHi = lo + 1.35 * span;
+    const Y = (d) => pad.t + (yHi - d) / (yHi - yLo) * ph;
+    const ys = niceStep(span * 1e6 / 2.5);
+    ctx.lineWidth = 1; ctx.strokeStyle = T.grid; ctx.beginPath();
+    const yt = [];
+    for (let v = Math.ceil(yLo * 1e6 / ys) * ys; v <= yHi * 1e6 + 1e-9; v += ys) { yt.push(v); const py = Math.round(Y(v / 1e6)) + 0.5; ctx.moveTo(pad.l, py); ctx.lineTo(pad.l + pw, py); }
+    const xt = SPEC_TICKS.filter((l, j) => pw > 300 * S || ![0.3, 3].includes(l));
+    for (const l of xt) { const px = Math.round(X(l)) + 0.5; ctx.moveTo(px, pad.t); ctx.lineTo(px, pad.t + ph); }
+    ctx.stroke();
+    ctx.strokeStyle = T.gridStrong; ctx.beginPath(); ctx.moveTo(pad.l + 0.5, pad.t); ctx.lineTo(pad.l + 0.5, pad.t + ph); ctx.lineTo(pad.l + pw, pad.t + ph + 0.5); ctx.stroke();
+    ctx.font = `${10.5 * S}px ${mono}`; ctx.fillStyle = T.muted; ctx.textBaseline = 'top';
+    xt.forEach((l, j) => { const x = X(l); ctx.textAlign = j === xt.length - 1 ? 'right' : 'center'; ctx.fillText(String(l) + (j === xt.length - 1 ? ' µm' : ''), x, pad.t + ph + 4 * S); });
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    const dp = Math.max(0, Math.ceil(-Math.log10(ys) - 1e-9));
+    for (const v of yt) ctx.fillText(dp ? v.toFixed(dp) : comma(v), pad.l - 6 * S, Y(v / 1e6));
+    ctx.font = `${10.5 * S}px ${uiFont()}`; ctx.textAlign = 'right'; ctx.textBaseline = 'alphabetic';
+    const tw = (ctx.font = `700 ${11.5 * S}px ${uiFont()}`, ctx.measureText(VDI18N.t('Transit depth (ppm) against wavelength')).width);
+    ctx.font = `${10.5 * S}px ${uiFont()}`;
+    const xn = VDI18N.t('wavelength, log scale');
+    if (tw + ctx.measureText(xn).width + 16 * S < pw) ctx.fillText(xn, pad.l + pw, pad.t - 8 * S);
+
+    ctx.save(); ctx.beginPath(); ctx.rect(pad.l, pad.t - 2, pw, ph + 4); ctx.clip();
+    /* the light curve's depth, (R_p/R_s)², the radius in the windows */
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1 * S; ctx.setLineDash([2 * S, 4 * S]);
+    ctx.beginPath(); ctx.moveTo(pad.l, Y(D.depth)); ctx.lineTo(pad.l + pw, Y(D.depth)); ctx.stroke(); ctx.setLineDash([]);
+    if (A.ghost) {
+      ctx.strokeStyle = T.muted; ctx.globalAlpha = 0.8; ctx.lineWidth = 1.2 * S; ctx.setLineDash([5 * S, 4 * S]);
+      polyline(ctx, A.ghost, X, Y); ctx.setLineDash([]); ctx.globalAlpha = 1;
+    }
+    ctx.strokeStyle = T.field; ctx.lineWidth = 2.2 * S; ctx.lineJoin = 'round';
+    polyline(ctx, A.curve, X, Y);
+    /* the cursor */
+    const cx = X(specLam), cy = Y(atmDepthAt(specLam));
+    ctx.strokeStyle = T.accent; ctx.lineWidth = 1.5 * S; ctx.beginPath(); ctx.moveTo(cx, pad.t); ctx.lineTo(cx, pad.t + ph); ctx.stroke();
+    ctx.fillStyle = T.accent; ctx.beginPath(); ctx.arc(cx, cy, 3.5 * S, 0, TAU); ctx.fill();
+    ctx.restore();
+
+    /* the molecules' names over their bands, tallest first, skipping one that would overlap a name already placed */
+    const f10 = `600 ${10.5 * S}px ${mono}`, placed = [];
+    ctx.font = f10;
+    const bands = ATM[ATMS.gas].bands.map((b) => [b, atmDepthAt(b[1])]).filter(([b, d]) => d - lo > 0.3 * span && bandWeight(b, ATMS.teq) > 0.3).sort((p, q) => q[1] - p[1]);
+    for (const [b, d] of bands) {
+      const x = X(b[1]), w = ctx.measureText(b[0]).width + 6, y = Math.max(pad.t + 6 * S, Y(d) - 9 * S);
+      if (placed.some((q) => Math.abs(q[0] - x) < (q[1] + w) / 2 + 2 && Math.abs(q[2] - y) < 13 * S) || x - w / 2 < pad.l || x + w / 2 > W - 2) continue;
+      placed.push([x, w, y]); label(ctx, T, b[0], x, y, 'center', T.ink, f10);
+    }
+    const fb = `${10 * S}px ${mono}`, yb = pad.t + ph - 8 * S;
+    label(ctx, T, '(R_p/R_s)²', pad.l + 4 * S, Math.min(Y(D.depth) + 9 * S, yb), 'left', T.muted, fb);
+    label(ctx, T, (A.ghost ? (pw > 420 * S ? VDI18N.t('dashed: hydrogen and helium, same T and g · band shapes schematic') : VDI18N.t('dashed: H₂ + He')) : (pw > 420 * S ? VDI18N.t('band shapes schematic, heights exact in H') : VDI18N.t('bands schematic'))), pad.l + pw - 4 * S, yb, 'right', T.muted, fb);
+  }
+
   function drawLC(T) {
+    if (lcMode === 'spec' && !BIN) { drawSpec(T); return; }
     const [ctx, W, H] = begin('lc', T), S = T.S;
     const pad = { l: 66 * S, r: 12 * S, t: (W < 560 ? 70 : 34) * S, b: 22 * S };   // narrow: title goes under the span buttons
     const z2 = BIN && lcMode === 'zoom2', zoom = lcMode === 'zoom' || z2, mid = z2 ? D.tsec : 0, hz = z2 ? D.zh2 : D.zh;
@@ -1217,6 +1449,21 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     if (hidden()) for (const id of ['rDepth', 'rK', 'rDur', 'rProb', 'rMsini', 'rRho']) { $(id).innerHTML = '<span class="ok">hidden</span>'; $(id).className = ''; }
     if (BIN) binReadouts(now, m, hrs);
+    else atmReadouts();
+  }
+  const fmtKmH = (h) => (h >= 1e4 ? comma(h / 1000) : sig(h / 1000, 3)) + ' km';
+  function atmReadouts() {
+    const A = atm();
+    $('teqOut').textContent = comma(ATMS.teq) + ' K';
+    $('cloudOut').textContent = ATMS.cloud === 0 ? 'clear' : sig(ATMS.cloud, 2) + ' scale heights up';
+    $('atmMu').textContent = String(A.mu);
+    $('atmG').textContent = sig(A.g, 3) + ' m/s²';
+    $('atmH').textContent = fmtKmH(A.H);
+    $('atmEst').textContent = fmtPpm(A.est * 1e6);
+    $('atmPeak').textContent = A.peak * 1e6 < 0.05 ? 'none: flat' : `${fmtPpm(A.peak * 1e6)} (${A.peakBand[0]}, ${sig(A.peakBand[1], 3)} µm)`;
+    $('atmLam').textContent = sig(specLam, 3) + ' µm';
+    $('atmWarn').hidden = A.H < 0.1 * A.Rp;
+    $('atmDepth').textContent = D.transits ? fmtPpm(atmDepthAt(specLam) * 1e6) : 'no transit';
   }
   const fmtKm = (v) => minus((v > 0.0005 ? '+' : '') + (v / 1000).toFixed(Math.abs(v) < 1e4 ? 2 : 1)) + ' km/s';
   const pct = (x) => (x < 1e-6 ? '0' : sig(x * 100, 3)) + '%';
@@ -1318,6 +1565,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const a = +(0.03 + 0.07 * r()).toPrecision(3), b = 0.5 * r(), inc = Math.round(Math.acos(b * rs * R_SUN / (a * AU)) / DEG * 100) / 100;
     Object.assign(P, { ms, rs, mp, rp, a, e: 0, inc, w: 90, noise: 0.12 });
     MYS = { n: (MYS ? MYS.n : 0) + 1, revealed: false }; sysName = 'mystery';
+    if (lcMode === 'spec') { lcMode = 'orbit'; setPressed('#lcSeg', 'lc', 'orbit'); }   /* the atmosphere is not part of the mystery */
     document.body.classList.add('mys'); for (const id of ['ms', 'rs', 'noise']) $(id).disabled = true;
     showModel = false; $('tModel').disabled = true; $('mysReveal').disabled = false;
     setPressed('#presets', 'p', null); $('presetHint').textContent = 'A mystery system: see the Mystery system section.';
@@ -1339,9 +1587,19 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   $('mysNew').addEventListener('click', newMystery);
   $('mysReveal').addEventListener('click', revealMystery);
+  function syncAtm() { $('teq').value = ATMS.teq; $('cloud').value = ATMS.cloud; setPressed('#atmGas', 'g', ATMS.gas); }
+  function setAtm(o) { Object.assign(ATMS, o); syncAtm(); schedule(); }
+  for (const b of document.querySelectorAll('#atmGas button')) b.addEventListener('click', () => setAtm({ gas: b.dataset.g }));
+  $('teq').addEventListener('input', (e) => setAtm({ teq: +e.target.value }));
+  $('cloud').addEventListener('input', (e) => setAtm({ cloud: +e.target.value }));
+  function setSpecLam(l) { specLam = +Math.min(SPEC_HI, Math.max(SPEC_LO, l)).toPrecision(4); schedule(); }
   function applyPreset(name) {
     endMystery(); sysName = name;
     Object.assign(P, PRESETS[name]);
+    const at = ATM_PRESET[name];
+    setAtm({ gas: at.gas, teq: at.teq, cloud: at.cloud });
+    /* the real planets open on their spectrum, at the feature they are known for */
+    if (at.lam) { specLam = at.lam; lcMode = 'spec'; setPressed('#lcSeg', 'lc', 'spec'); }
     setPressed('#presets', 'p', name);
     $('presetHint').textContent = HINTS[name];
     syncSliders(); D = null; tau = 0; changed();
@@ -1388,7 +1646,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     setPressed('#kindSeg', 'k', BIN ? 'bin' : 'planet');
     $('lcZoom').textContent = BIN ? 'Eclipse of star 1' : 'Zoom on transit';
     document.querySelector('#lcSeg [data-lc="zoom2"]').textContent = 'Eclipse of star 2';
-    if (!BIN && lcMode === 'zoom2') { lcMode = 'orbit'; setPressed('#lcSeg', 'lc', 'orbit'); }
+    if ((!BIN && lcMode === 'zoom2') || (BIN && lcMode === 'spec')) { lcMode = 'orbit'; setPressed('#lcSeg', 'lc', 'orbit'); }
     $('mysReveal').textContent = BIN ? 'Reveal the stars' : 'Reveal the planet';
     $('mysNote').textContent = BIN ? BIN_NOTE : PLAN_NOTE;
     window.vdShowCols = BIN ? [['t_h', 't (h)'], ['brightness', 'brightness'], ['v1_km_s', 'v₁ (km/s)'], ['v2_km_s', 'v₂ (km/s)']] : PLANET_COLS;
@@ -1420,6 +1678,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function chartAt(k, e) {
     const r = cv[k].getBoundingClientRect(), c = CH[k];
     const u = Math.min(1, Math.max(0, (e.clientX - r.left - c.x0) / (c.x1 - c.x0)));
+    if (c.spec) { setSpecLam(SPEC_LO * Math.pow(SPEC_HI / SPEC_LO, u)); return; }
     setT(c.t0 + u * (c.t1 - c.t0));
   }
   function bindScrub(k, fn) {
@@ -1435,6 +1694,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   function onKey(e) {
     const big = e.shiftKey;
+    if (CH.lc.spec && e.currentTarget === cv.lc && (e.key === 'ArrowRight' || e.key === 'ArrowLeft')) {   /* the spectrum: arrows move the wavelength cursor */
+      setSpecLam(specLam * Math.exp((e.key === 'ArrowRight' ? 1 : -1) * (big ? 0.1 : 0.01))); e.preventDefault(); return;
+    }
     const stepT = (lcMode !== 'orbit' && e.currentTarget === cv.lc ? 2 * (lcMode === 'zoom2' ? D.zh2 : D.zh) : D.Per) / (big ? 20 : 200);
     if (e.key === 'ArrowRight') setT(nowT() + stepT);
     else if (e.key === 'ArrowLeft') setT(nowT() - stepT);
@@ -1655,6 +1917,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   try { if (matchMedia('(prefers-reduced-motion: reduce)').matches) playing = false; } catch (_) {}
   $('play').textContent = playing ? 'Pause' : 'Play';
   Object.assign(P, PRESETS.hotj, { noise: 0 });
+  syncAtm();
   $('presetHint').textContent = HINTS.hotj;
   syncSliders();
   derive(); tau = 0.03 * D.Per; dirty = false;
@@ -1676,7 +1939,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(schedule);
 
   // readings for the worksheet: the cursor's time and what the instruments read there
-  const SYSNAME = { hotj: 'Hot Jupiter', earth: 'Earth and Sun', jupiter: 'Jupiter and Sun', ecc: 'Eccentric planet', tilt: 'Not edge on', trappist: 'TRAPPIST-1 like', custom: 'Own system' };
+  const SYSNAME = { hotj: 'Hot Jupiter', earth: 'Earth and Sun', jupiter: 'Jupiter and Sun', ecc: 'Eccentric planet', tilt: 'Not edge on', trappist: 'TRAPPIST-1 like', wasp39: 'WASP-39 b', hd209: 'HD 209458 b', gj1214: 'GJ 1214 b', custom: 'Own system' };
   window.vdVersion = 'exoplanets@2026-10-31';
   const PLANET_COLS = [['t_h', 't (h)'], ['drop_ppm', 'drop (ppm)'], ['v_m_s', 'v (m/s)']];
   window.vdShowCols = PLANET_COLS;
@@ -1708,7 +1971,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   if (VD.ws('') === 'eclipsing-binary' || /[?&]kind=bin\b/.test(location.search)) setKind(true);
 
   // exposed for testing
-  window.__exo = { P, B, get D() { return D; }, derive, flux, blocked, PRESETS, BPRESETS, applyPreset, applyBin, setKind, get BIN() { return BIN; }, meas, newMystery, revealMystery, setT: (t) => setT(t), nowT, get MYS() { return MYS; }, schedule, setPlaying, setLc: (k) => document.querySelector(`#lcSeg [data-lc="${k}"]`).click() };
+  window.__exo = { P, B, get D() { return D; }, derive, flux, blocked, PRESETS, BPRESETS, applyPreset, applyBin, setKind, get BIN() { return BIN; }, meas, newMystery, revealMystery, setT: (t) => setT(t), nowT, get MYS() { return MYS; }, schedule, setPlaying, setLc: (k) => document.querySelector(`#lcSeg [data-lc="${k}"]`).click(),
+    ATMS, ATM, atm, altH, specDepth, scaleHeight, setAtm, setSpecLam, get specLam() { return specLam; }, get lcMode() { return lcMode; } };
 })();
 </script>
 </body>
