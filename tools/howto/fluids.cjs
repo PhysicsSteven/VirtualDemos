@@ -27,14 +27,18 @@ require('./lib.cjs')({ demo: 'fluids', title: 'Fluids: Pressure, Buoyancy and Fl
 
   state.caption = 'Set the depth: drag the probe up to 0.20 m on the ruler';
   state.zoom = [can[0] + 130, can[1] + 20, 640, 360];
-  await r.moveTo(474, 458, 0.8);
+  const pr = await p.evaluate(() => __fl.h3pt('probe'));   /* the probe's grip, wherever the 3D view puts it */
+  await r.moveTo(pr[0], pr[1], 0.8);
   await p.mouse.down(); state.down = true; await r.tick(3);
-  await r.moveTo(474, 375, 1.0);
+  const su = await p.evaluate(() => __fl.h3pt('surf')), h0 = await p.evaluate(() => __fl.S.P.press.pd);
+  await r.moveTo(pr[0], su[1] + (pr[1] - su[1]) * 0.2 / h0, 1.0);   /* most of the way; settle() finishes it */
   r.check.h = await settle('#s_press_pdo', 0.20, 0, -1);
   await r.secs(0.6);
   r.check.P = await r.text('#readBox');
   state.caption = 'Read the gauge: ρgh for this depth';
-  state.arrow = { rect: [578, 368, 84, 38] };   /* the gauge's label, drawn in the 3D view */
+  /* the gauge's label, drawn over the 3D view 18 and 34 px below the dial's center point (fluids.html ovl) */
+  const gl = await p.evaluate(() => { const c = __fl.g3.S.project([0.62 / 2 + 0.26, 0, 0.78 + 0.014 - 0.125]), q = document.querySelector('#sCan').getBoundingClientRect(); return [q.left + c[0], q.top + c[1]]; });
+  state.arrow = { rect: [gl[0] - 46, gl[1] + 8, 92, 36] };
   await r.secs(2.6);
   state.arrow = null; state.zoom = null;
 

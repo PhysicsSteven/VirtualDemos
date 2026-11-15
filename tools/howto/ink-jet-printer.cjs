@@ -4,6 +4,7 @@
 const MU = 'µ';
 require('./lib.cjs')({ demo: 'electrostatics-at-work', title: 'Ink Jet Printer' }, async (r) => {
   const { state, p, W } = r;
+  await p.click('button[data-s="ink"]'); await p.clock.runFor(300);   /* the page opens on the Van de Graaff generator */
   const slide = async (sel) => { const sl = await r.box(sel), v = await p.evaluate((s) => { const e = document.querySelector(s); return (e.value - e.min) / (e.max - e.min); }, sel); return [sl[0] + 8 + (sl[2] - 16) * v, sl[1] + sl[3] / 2]; };
   const can = await r.box('#can');
   const side = [can[0], can[1] + 158, 680, 382.5];          /* the nozzle, the plates, the gutter and the paper's edge */

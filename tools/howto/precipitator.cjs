@@ -5,6 +5,7 @@
 const MU = 'µ';
 require('./lib.cjs')({ demo: 'electrostatics-at-work', title: 'Smoke Precipitator' }, async (r) => {
   const { state, p, W } = r;
+  await p.click('button[data-s="esp"]'); await p.clock.runFor(300);   /* the page opens on the Van de Graaff generator */
   const slide = async (sel) => { const sl = await r.box(sel), v = await p.evaluate((s) => { const e = document.querySelector(s); return (e.value - e.min) / (e.max - e.min); }, sel); return [sl[0] + 8 + (sl[2] - 16) * v, sl[1] + sl[3] / 2]; };
   const counts = async () => { const m = (await r.text('#out')).match(/(\d+) \/ (\d+)/); return [+m[1], +m[2]]; };
   const row = (re) => p.evaluate((src) => { const ds = [...document.querySelectorAll('#out > div')]; return ds.findIndex((d) => new RegExp(src).test(d.textContent)) + 1; }, re);

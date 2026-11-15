@@ -5,8 +5,9 @@
 // so the marks on the true crossings give 28.5 and 50.0 mm (the beam's small simulated tilt moves the two sides a little).
 require('./lib.cjs')({ demo: 'electron-diffraction', title: 'Electron Diffraction and de Broglie Waves' }, async (r) => {
   const { state, p, W } = r;
-  const scr = await r.box('#scr');
-  const handle = (ring, id) => p.evaluate(([ring, id, x0, y0]) => { const h = __ed.scrHandles().find((k) => k.ring === ring && k.id === id); return [h.pt[0] + x0, h.pt[1] + y0]; }, [ring, id, scr[0], scr[1]]);
+  let scr = await r.box('#scr');
+  /* the screen's place is read each time: setting the voltage can scroll the page */
+  const handle = (ring, id) => p.evaluate(([ring, id]) => { const h = __ed.scrHandles().find((k) => k.ring === ring && k.id === id), q = document.querySelector('#scr').getBoundingClientRect(); return [h.pt[0] + q.left, h.pt[1] + q.top]; }, [ring, id]);
   /* where each ruler mark belongs: the true crossings on the glass, snapped to the ruler's 0.5 mm (read without drawing a frame) */
   const truth = () => p.evaluate(() => { const S = __ed.S, keep = JSON.parse(JSON.stringify(S.marks)); __ed.placeMarks(null); const t = JSON.parse(JSON.stringify(S.marks.arc)); S.marks = keep; __ed.setRing(S.ring); return t; });
   const mark = (ring, id) => p.evaluate(([ring, id]) => __ed.S.marks.arc[ring][id], [ring, id]);
@@ -22,14 +23,12 @@ require('./lib.cjs')({ demo: 'electron-diffraction', title: 'Electron Diffractio
   state.caption = 'Sample: both ring diameters at 2.50 kV, read with the flexible ruler';
   await r.secs(2.6);
 
-  state.caption = 'Turn on Blind (in Instrument) and stop the voltage sweep';
+  state.caption = 'Turn on Blind (in Instrument)';
   await r.scrollRail('details.fold:has(#blind) > summary');
   await r.click('details.fold:has(#blind) > summary');
   await r.tick(3);
   await r.scrollRail('#blind');
   await r.click('#blind');
-  await r.tick(6);
-  await r.click('#sweep');
   await r.tick(6);
 
   state.caption = 'Set the high voltage: drag its slider to 2.50 kV';
@@ -44,6 +43,7 @@ require('./lib.cjs')({ demo: 'electron-diffraction', title: 'Electron Diffractio
   state.arrow = null;
 
   const t = await truth(); r.check.target = t;
+  await p.evaluate(() => window.scrollTo(0, 0)); scr = await r.box('#scr');
   state.caption = 'Inner ring: drag ruler marks A and B onto the middle of the glowing band on each side';
   state.zoom = [scr[0] - 110, scr[1] + 150, 560, 315];
   r.check.a1 = await setMark(1, 'a', t[1].a);
