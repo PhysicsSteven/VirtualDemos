@@ -451,6 +451,7 @@ VDI18N.add('en', 'demo/celestial-sphere', [
 "Dec {#}, {#}, {#}:{#} <small>UTC+{#}</small>",
 "altitude +{#}°, azimuth {#}° <small>ENE</small>",
 "Madrid, Spain, at {#}° N, at {#}:{#} on the December solstice (UTC+{#}, the time zone nearest its longitude; Spain itself keeps UTC+{#}). The Sun is {#}° below the horizon and the Moon, {#}% lit, is high in the sky. Press Go to the antipode: {#}° S, {#}° E is on the North Island of New Zealand, where at the same moment it is {#}:{#} the next morning in midsummer, the Sun is {#}° up and the Moon is down. The half of the sky under Madrid's horizon is the half over New Zealand's. The Sun climbs to {#}° there today and only {#}° in Madrid.",
+"Close",
 "Alioth <small>ε UMa</small>",
 "{#}° <small>NNE</small>",
 "Alioth there",

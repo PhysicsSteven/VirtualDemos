@@ -32,7 +32,7 @@ VDI18N.add('en', 'demo/craters', [
 "Asteroid diameter L",
 "Angle from the ground",
 "Count craters at least this wide",
-"Click or tap each crater at least as wide as the purple circle to mark it; click again to unmark.",
+"In the Flat view, click or tap each crater at least as wide as the purple circle to mark it; click again to unmark.",
 "Clear marks",
 "Show the right count",
 "The same kind of surface, with a new random set of craters",
@@ -199,7 +199,10 @@ VDI18N.add('en', 'demo/craters', [
 "A surface on the Moon or Mars at an age the demo keeps secret, until you show the right count. Count it, then read its age from the clock.",
 "Soon after they formed, all three are hot inside and lose heat fast through thin lids.",
 "Most of the Moon's maria erupted {#} to {#} Gyr ago, that is {#} to {#} Gyr after the planets formed. Already the Moon's lid is thicker than Earth's and growing fast.",
+"t = {#} Gyr · {#} Gyr/s",
+"Close",
 "heat flow (mW/m²)",
 "dots: measured today (Earth average; Moon at Apollo {#} and {#})",
-"temperature inside (K)"
+"temperature inside (K)",
+"timing not to scale"
 ]);

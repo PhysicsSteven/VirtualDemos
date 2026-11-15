@@ -55,7 +55,7 @@ No hazards in the virtual lab. If you go outside to compare with the real sky, s
 
 **The Moon through a week.** Choose The Moon through a month (Ruston, January 9, 2027, 6:30 pm) with the Moon selected. Write down the Moon's right ascension and how much of it is lit. Then step ahead six days, to 6:30 pm on January 15, and write them down again. No table for this part: put the numbers in your answer to Analysis 5.
 
-**The pole through the ages.** Choose Precession of the pole, which starts paused with the north celestial pole selected. Set the year to 3000 BC, then 2027, then AD 14000, and each time write down the star nearest the pole and how far it is from the pole. No table for this part either: put the numbers in your answer to Analysis 6.
+**The pole through the ages.** Choose Precession of the pole, which starts paused with the north celestial pole selected. Set the year to 3000 BC (the setup opens at the left end of the Year slider, 3001 BC, which is close enough), then 2027, then AD 14000, and each time write down the star nearest the pole and how far it is from the pole. No table for this part either: put the numbers in your answer to Analysis 6.
 
 ## Data
 

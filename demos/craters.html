@@ -102,7 +102,7 @@
           <p class="note" id="surfName"></p>
           <div class="pick"><label for="selDc">Count craters at least this wide</label><select id="selDc">
             <option value="0.1">0.1 km</option><option value="0.25">0.25 km</option><option value="0.5">0.5 km</option><option value="1">1 km</option><option value="2">2 km</option><option value="4">4 km</option><option value="8">8 km</option><option value="16">16 km</option></select></div>
-          <p class="note">Click or tap each crater at least as wide as the purple circle to mark it; click again to unmark.</p>
+          <p class="note">In the Flat view, click or tap each crater at least as wide as the purple circle to mark it; click again to unmark.</p><!-- marking works only in Flat; the page opens in 3D (student view, 2026-11-15) -->
           <div class="btnrow"><button type="button" class="btn" id="clearMarks">Clear marks</button><button type="button" class="btn" id="showCount">Show the right count</button><button type="button" class="btn" id="newSurf" title="The same kind of surface, with a new random set of craters">New surface</button></div>
         </div>
         <div id="coolBox" hidden>
@@ -347,6 +347,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       moon: g('--curve-moon'), mars: g('--curve-mars'), earth: g('--curve-earth'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif', dark: VD3.dark() }; }
 
   /* ---------- state ---------- */
+  const COOL_RATE = 0.3;   /* Gyr of model time each second of Run */
   const LMIN = 10, LMAX = 400e3;   /* the diameter slider runs on a log scale from 10 m to 400 km */
   const Lof = (s) => LMIN * Math.pow(LMAX / LMIN, s / 1000), sOf = (L) => Math.round(1000 * Math.log(L / LMIN) / Math.log(LMAX / LMIN));
   const S = { mode: 'impact', preset: 'small', body: 'moon', rho: 3000, L: 500, v: 18, th: 45, anim: 1, run: false,
@@ -539,6 +540,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       label(ctx, `asteroid to scale: L = ${km(C.L)}`, mid + 1.6 * C.D * xs * 0.82 - rpx - 6 * p, base - 14 * p - rpx, { a: 'right', col: K.mark, s: 10.5 }); }
     void u;
     label(ctx, ex === 1 ? 'cross section, true shape' : `cross section, heights drawn ${ex} times larger`, 12 * p, y0 + 2 * p, { col: K.muted, w: 400, s: 10.5 });
+    if (s < 1) label(ctx, VDI18N.t('timing not to scale'), aw - 12 * p, y0 + 2 * p, { a: 'right', col: K.muted, w: 400, s: 10.5 });   /* (student view, 2026-11-15) */
   }
   function drawCountFlat() {
     const p = proj(), cw = cardW(), aw = W - cw, side = Math.min(aw - 24 * p, H - 24 * p), ox = (aw - side) / 2, oy = (H - side) / 2;
@@ -739,6 +741,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const parts = [impactEx() === 1 ? 'true heights' : `heights drawn ${impactEx()} times larger`, 'drag to turn'];
       if (S.anim >= 1 && !S.blind) parts.push(`D = ${km(C.D)}`);
       if (S.anim >= 1) parts.push(RAYS[S.body] ? 'bright ejecta and rays drawn, not computed' : 'bright ejecta drawn, not computed');
+      else parts.push(VDI18N.t('timing not to scale'));   /* the fall and the crater's growth always take about 3 s, whatever the size (student view, 2026-11-15) */
       const cap = parts.map((t) => VDI18N.t(t)).join(' · ');
       VDI18N.raw(() => caption(ctx, cap));
     }
@@ -773,7 +776,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('out').innerHTML = h;
   }
   function clock() {
-    $('clock').textContent = S.mode === 'impact' ? `${BODIES[S.body].name} · g = ${BODIES[S.body].g} m/s²` : S.mode === 'count' ? `${marked()} marked` : `t = ${f(S.t, 2)} Gyr after forming`;
+    $('clock').textContent = S.mode === 'impact' ? `${BODIES[S.body].name} · g = ${BODIES[S.body].g} m/s²` : S.mode === 'count' ? `${marked()} marked` : S.run ? `t = ${f(S.t, 2)} Gyr · ${COOL_RATE} Gyr/s` : `t = ${f(S.t, 2)} Gyr after forming`;   /* the rate while it runs, short enough for a phone (student view, 2026-11-15) */
   }
 
   /* ---------- controls ---------- */
@@ -874,7 +877,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       if (S.anim >= 1) { S.run = false; sync(); readouts(); }
       draw(); drawPlot();
     } else if (S.run && S.mode === 'cool') {
-      S.t = Math.min(4.5, S.t + dt * 0.3); if (S.t >= 4.5) S.run = false; sync(); redraw();
+      S.t = Math.min(4.5, S.t + dt * COOL_RATE); if (S.t >= 4.5) S.run = false; sync(); redraw();
     }
     requestAnimationFrame(frame);
   }
