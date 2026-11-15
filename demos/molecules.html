@@ -154,7 +154,8 @@
           <div class="wide"><button type="button" class="btn" id="mlRun">Pause</button><button type="button" class="btn" id="mlFresh">A fresh molecule</button></div>
         </div>
         <div class="shelf-card" id="cardSp" role="group" aria-label="The spectrometer" hidden>
-          <span class="card-title">Infrared light through a cell of HCl gas: the absorption around 3.5 μm. Drag the cursor across the band.</span>
+          <!-- card titles are set in capitals, which turned μm into "MM": the unit is spelled out (student view, 2026-11-15) -->
+          <span class="card-title">Infrared light through a cell of HCl gas: the absorption around 3.5 micrometers. Drag the cursor across the band.</span>
           <div><div class="slider-head"><label for="sNu">Cursor</label><output id="oNu" class="mono" for="sNu"></output></div><input type="range" id="sNu" min="2560" max="3140" step="0.01"></div>
           <div><div class="slider-head"><label for="sT">Gas temperature T</label><output id="oT" class="mono" for="sT"></output></div><input type="range" id="sT" min="50" max="1000" step="10"></div>
           <div><div class="slider-head"><label for="sRes">Resolution (line width)</label><output id="oRes" class="mono" for="sRes"></output></div><input type="range" id="sRes" min="0.1" max="4" step="0.05"></div>
@@ -913,7 +914,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const said = { calm: ML.why ? tr('passes: {why}', { why: tr(ML.why) }) : tr('waiting for a photon'), turn: tr('absorbed: the molecule turns faster'), shake: ML.mode ? tr('absorbed: the {mode} ({nu} cm⁻¹) starts', { mode: tr(mlLabel[ML.mode.kind]), nu: ML.mode.nu }) : tr('absorbed'), glow: tr('absorbed: an electron is lifted, the molecule glows'), break: tr('absorbed: the bond breaks, {name} → {parts}', { name: m.name, parts: m.fname.join(' + ') }) }[ML.st];
     const said1 = () => lab(ctx, tr('{name}: {said}', { name: m.name, said }), W / 2, H - 34 * p, { a: 'center', c: T.ink, w: 700, s: 11.5 });
     if (window.VDI18N) VDI18N.raw(said1); else said1();
-    lab(ctx, ML.st === 'turn' || ML.st === 'shake' || ML.st === 'glow' ? 'it gives a photon back soon, in any direction' : 'bond lengths and angles to scale; atoms and the motion not; slowed', W / 2, H - 16 * p, { a: 'center', c: T.muted, s: 9.5 });
+    /* the note that the motion is slowed vanished exactly while the molecule moved: keep it (student view, 2026-11-15) */
+    lab(ctx, ML.st === 'turn' || ML.st === 'shake' || ML.st === 'glow' ? 'it gives a photon back soon, in any direction; the motion slowed' : 'bond lengths and angles to scale; atoms and the motion not; slowed', W / 2, H - 16 * p, { a: 'center', c: T.muted, s: 9.5 });
     MAP.pane = null;
   }
   function curveLight() {
@@ -941,7 +943,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       c.beginPath(); c.moveTo(x, lane(1) - lh / 2); c.lineTo(x, lane(1) + lh / 2); c.stroke(); c.restore();
       lab(c, `${md.nu}`, x, lane(1) + lh / 2 + 7 * p, { a: 'center', s: 8.5, c: md.ir ? T.accent : T.muted, m: true });
     }
-    if (!narrow) lab(c, 'solid: absorbs infrared; dashed: no dipole change, does not absorb (cm⁻¹)', X(1.4e6), lane(1), { s: 8.5, c: T.muted });
+    /* one line ran off the right edge at 1280: two shorter lines (student view, 2026-11-15) */
+    if (!narrow) { lab(c, 'solid: absorbs infrared (cm⁻¹)', X(1.4e6), lane(1) - 6 * p, { s: 8.5, c: T.muted }); lab(c, 'dashed: no dipole change, no absorption', X(1.4e6), lane(1) + 6 * p, { s: 8.5, c: T.muted }); }
     /* rotation lines */
     if (m.dip > 0) { c.fillStyle = 'rgba(60,170,110,0.5)'; c.fillRect(X(3e5), lane(2) - lh / 2, X(1e8) - X(3e5), lh); lab(c, narrow ? `${m.dip} D` : `rotational lines, dipole ${m.dip} D`, X(1.2e6), lane(2), { s: 9.5, c: T.ink }); }
     else lab(c, narrow ? 'no dipole' : 'no electric dipole: no rotational lines', X(1.2e6), lane(2), { s: 9.5, c: T.muted });

@@ -136,6 +136,8 @@ VDI18N.add('es', 'demo/molecules', {
   "<span>Una lámpara envía fotones a una molécula. Elige la luz y la molécula; observa si gira, vibra, brilla o se rompe.</span>",
 "<span>Light</span>":
   "<span>Luz</span>",
+"Light":
+  "Luz",
 "Microwave":
   "Microondas",
 "Infrared":
@@ -152,8 +154,8 @@ VDI18N.add('es', 'demo/molecules', {
   "Una molécula nueva",
 "The spectrometer":
   "El espectrómetro",
-"<span>Infrared light through a cell of HCl gas: the absorption around {#} μm. Drag the cursor across the band.</span>":
-  "<span>Luz infrarroja a través de una celda con gas HCl: la absorción alrededor de {#} μm. Arrastra el cursor a lo largo de la banda.</span>",
+"<span>Infrared light through a cell of HCl gas: the absorption around {#} micrometers. Drag the cursor across the band.</span>":
+  "<span>Luz infrarroja a través de una celda con gas HCl: la absorción alrededor de {#} micrómetros. Arrastra el cursor a lo largo de la banda.</span>",
 "Cursor":
   "Cursor",
 "Gas temperature T":
@@ -316,8 +318,6 @@ VDI18N.add('es', 'demo/molecules', {
   "Rama R (Δl = +{#})",
 "PHOTON, CM⁻¹":
   "FOTÓN, CM⁻¹",
-"{#} meV":
-  "{#} meV",
 "PHOTON ENERGY":
   "ENERGÍA DEL FOTÓN",
 "WAVELENGTH":
@@ -354,8 +354,6 @@ VDI18N.add('es', 'demo/molecules', {
   "Número de onda del fotón",
 "hf (n = {#} → {#})":
   "hf (n = {#} → {#})",
-"{#} cm⁻¹, {#} meV":
-  "{#} cm⁻¹, {#} meV",
 "Moment of inertia I":
   "Momento de inercia I",
 "wavenumber (cm⁻¹)":
@@ -422,8 +420,10 @@ VDI18N.add('es', 'demo/molecules', {
   "gira",
 "breaks below {#} nm":
   "se rompe por debajo de {#} nm",
-"solid: absorbs infrared; dashed: no dipole change, does not absorb (cm⁻¹)":
-  "continua: absorbe infrarrojo; punteada: sin cambio de dipolo, no absorbe (cm⁻¹)",
+"solid: absorbs infrared (cm⁻¹)":
+  "continua: absorbe infrarrojo (cm⁻¹)",
+"dashed: no dipole change, no absorption":
+  "punteada: sin cambio de dipolo, no absorbe",
 "no electric dipole: no rotational lines":
   "sin dipolo eléctrico: sin líneas rotacionales",
 "wavelength λ · photon energy E = hc/λ":
@@ -454,8 +454,8 @@ VDI18N.add('es', 'demo/molecules', {
   "flexión",
 "absorbed: the {mode} ({nu} cm⁻¹) starts":
   "absorbido: empieza {mode} ({nu} cm⁻¹)",
-"it gives a photon back soon, in any direction":
-  "pronto devuelve un fotón, en cualquier dirección",
+"it gives a photon back soon, in any direction; the motion slowed":
+  "pronto devuelve un fotón, en cualquier dirección; movimiento en cámara lenta",
 "microwave, on a rotational line":
   "microondas, en una línea rotacional",
 "about {#} meV (at {#} cm)":
@@ -464,6 +464,10 @@ VDI18N.add('es', 'demo/molecules', {
   "pasa (no hay dipolo eléctrico que empujar)",
 "passes through (no electronic absorption at this wavelength)":
   "pasa (no hay absorción electrónica a esta longitud de onda)",
+"no electronic absorption at this wavelength":
+  "no hay absorción electrónica a esta longitud de onda",
+"passes: {why}":
+  "pasa: {why}",
 "ultraviolet":
   "ultravioleta",
 "no absorption above {#} nm (starts near {#} nm)":
@@ -472,10 +476,6 @@ VDI18N.add('es', 'demo/molecules', {
   "{#} (sin IR)",
 "rotational lines, dipole {#} D":
   "líneas rotacionales, dipolo {#} D",
-"no electronic absorption at this wavelength":
-  "no hay absorción electrónica a esta longitud de onda",
-"passes: {why}":
-  "pasa: {why}",
 "breaks: NO + O":
   "se rompe: NO + O",
 "breaks: O₂ + O":
@@ -528,6 +528,10 @@ VDI18N.add('es', 'demo/molecules', {
   "se eleva un electrón; brilla",
 "Molecules and light has nothing to record: it shows what each kind of light does.":
   "Moléculas y luz no tiene nada que registrar: muestra lo que hace cada tipo de luz.",
+"Close":
+  "Cerrar",
+"Change the separation of the atoms in {#} nanometer steps, the level in Energy levels, or the cursor in the HCl spectrum (Shift for bigger steps)":
+  "Cambia la separación de los átomos en pasos de {#} nanómetros, el nivel en Niveles de energía o el cursor en el espectro de HCl (Shift para pasos más grandes)",
 "UV, vis":
   "UV, vis",
 "electron":
@@ -538,12 +542,18 @@ VDI18N.add('es', 'demo/molecules', {
   "gira más rápido (rotación)",
 "passes through (no vibration at this wavenumber)":
   "pasa (no hay vibración a este número de onda)",
+"no vibration at this wavenumber":
+  "no hay vibración a este número de onda",
 "no dipole":
   "sin dipolo",
-"Light":
-  "Luz",
-"Close":
-  "Cerrar",
-"Change the separation of the atoms in {#} nanometer steps, the level in Energy levels, or the cursor in the HCl spectrum (Shift for bigger steps)":
-  "Cambia la separación de los átomos en pasos de {#} nanómetros, el nivel en Niveles de energía o el cursor en el espectro de HCl (Shift para pasos más grandes)"
+"<span>Infrared light through a cell of HCl gas: the absorption around {#} μm. Drag the cursor across the band.</span>":
+  "<span>Luz infrarroja a través de una celda con gas HCl: la absorción alrededor de {#} μm. Arrastra el cursor a lo largo de la banda.</span>",
+"{#} meV":
+  "{#} meV",
+"{#} cm⁻¹, {#} meV":
+  "{#} cm⁻¹, {#} meV",
+"solid: absorbs infrared; dashed: no dipole change, does not absorb (cm⁻¹)":
+  "continua: absorbe infrarrojo; punteada: sin cambio de dipolo, no absorbe (cm⁻¹)",
+"it gives a photon back soon, in any direction":
+  "pronto devuelve un fotón, en cualquier dirección"
 });

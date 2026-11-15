@@ -359,6 +359,13 @@
     const g = ctx.createLinearGradient(0, y, 0, y + h); g.addColorStop(0, T.metalHi); g.addColorStop(0.5, T.metal); g.addColorStop(1, T.metalLo);
     ctx.fillStyle = g; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x, y, w, h, 3) : ctx.rect(x, y, w, h); ctx.fill();
   }
+  /* the apparatus view keeps a 260 px minimum height, so on a 1280 by 800 screen the floating Set up card covers its lower part:
+     the bottom of the view that is not under the card (student view, 2026-11-15) */
+  function visBottom(b) {
+    const p = proj(), cd = $('setupCard'); let yb = b.y + b.h;
+    if (cd && getComputedStyle(cd).position === 'absolute') { const cr = cd.getBoundingClientRect(), kr = can.getBoundingClientRect(); if (cr.height > 0 && cr.left - kr.left < b.x + b.w && cr.top - kr.top < yb) yb = Math.max(b.y + 80 * p, cr.top - kr.top - 4 * p); }
+    return yb;
+  }
   function drawApparatus(b) {
     const p = proj(), cx = b.x + b.w * 0.5, pw = Math.min(b.w * 0.62, 260 * p), gap = Math.max(60, Math.min(b.h * 0.34, 150 * p)), cy = b.y + Math.max(0, (b.h - gap - 160 * p) / 2) + gap / 2 + 76 * p;
     const yT = cy - gap / 2, yB = cy + gap / 2, th = 12 * p;
@@ -400,7 +407,8 @@
     if (S.ion) { ctx.fillStyle = T.gate; ctx.beginPath(); ctx.arc(cx - pw / 2 + 8 * p, yB - 10 * p, 5 * p, 0, 7); ctx.fill(); ctx.textAlign = 'left'; ctx.fillText('ionizing source on', cx - pw / 2 + 16 * p, yB - 10 * p); }
     /* supply */
     const bx = cx - 78 * p, by = yB + th + 22 * p, bw = 156 * p, bh = 46 * p;
-    if (by + bh < b.y + b.h) {
+    if (by + bh + 20 * p > visBottom(b)) { ctx.fillStyle = T.muted; ctx.textAlign = 'center'; ctx.fillText(`plates ${f(MK_D * 1e3, 2)} mm apart, not to scale`, cx, yB + th + 12 * p); } /* no room above the Set up card for the meter: keep the scale note readable (student view, 2026-11-15) */
+    else {
       ctx.fillStyle = T.box; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(bx, by, bw, bh, 6) : ctx.rect(bx, by, bw, bh); ctx.fill();
       ctx.fillStyle = '#0d1a12'; ctx.fillRect(bx + 10 * p, by + 10 * p, 82 * p, 26 * p);
       ctx.fillStyle = T.lcd; ctx.font = `${15 * p}px ${T.mono}`; ctx.textAlign = 'right'; ctx.fillText(`${S.pol === 0 ? 0 : S.V} V`, bx + 88 * p, by + 23 * p);
@@ -487,7 +495,11 @@
       ctx.font = `${11 * p}px ${T.sans}`; lab('E', [-0.006, 0.012, ZC]);
     }
     if (S.ion) lab('ionizing source on', [-PR * 0.45, PR * 0.85, ZT + PT + 0.004], T.gate);
-    ctx.textAlign = 'center'; ctx.fillStyle = T.muted; ctx.fillText('gap and drop places to scale; drops enlarged', b.x + b.w / 2, b.y + b.h - 26 * p); ctx.fillText('dashed square: the telescope’s view', b.x + b.w / 2, b.y + b.h - 11 * p);
+    /* the view keeps a 260 px minimum, so on a 1280 by 800 screen the Set up card covered these two lines: put them just above the card (student view, 2026-11-15) */
+    const yb = visBottom(b);
+    { const c1 = 'gap and drop places to scale; drops enlarged', c2 = 'dashed square: the telescope’s view', cw = Math.max(ctx.measureText(c1).width, ctx.measureText(c2).width) + 10; /* a backing so the note reads over the light floor in Day (student view, 2026-11-15) */
+      ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.72; ctx.fillRect(b.x + b.w / 2 - cw / 2, yb - 35 * p, cw, 32 * p); ctx.globalAlpha = 1;
+      ctx.textAlign = 'center'; ctx.fillStyle = T.muted; ctx.fillText(c1, b.x + b.w / 2, yb - 26 * p); ctx.fillText(c2, b.x + b.w / 2, yb - 11 * p); }
     ctx.restore();
   }
   function scopeGeom(b) { const p = proj(), R = Math.max(40, Math.min(b.w, b.h - 36 * p) / 2 - 12 * p); return { cx: b.x + b.w / 2, cy: b.y + b.h / 2 + 16 * p, R: R, k: (2 * R) / FOV }; }

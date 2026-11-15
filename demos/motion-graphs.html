@@ -55,6 +55,8 @@ table.rows input:focus { border-color: var(--accent); }
   .stage { min-height: 0; height: 640px; max-height: 92vh; }
   .chips button, .btn, .proj, .spin { min-height: 36px; }
 }
+/* on a phone the clock covered the Tools button: it drops below the Play bar, and the track makes room for it (student view, 2026-11-15) */
+@media (max-width: 520px) { .clock { top: 60px; } }
 /* folded rail sections: secondary options behind their heading (layout redesign) */
 </style>
 <link rel="stylesheet" id="vd-look" href="lib/look.css">
@@ -545,7 +547,11 @@ table.rows input:focus { border-color: var(--accent); }
 
   // ---------- layout and scales ----------
   function layout() {
-    const p = ps(), pad = 12 * p, trackH0 = S.vert ? 44 * p : Math.max(96, Math.min(150, H * 0.2)) * p * 0.9, trackH = trackH0 + (S.two && !S.vert ? 54 * p : 0) + (S.ramps ? Math.min(110, H * 0.12) * p : 0), left = (S.vert ? 150 : 58) * p, right = W - 14 * p;
+    /* the Play bar and the clock float over the top of the track: on the opening setup the cart's v and a arrows sat under them
+       (hidden whenever the cart was in the left third, and on a phone always), so the hall track is made just tall enough for the
+       arrows (with Two cars, car B's lane) to clear the bar's bottom edge (student view, 2026-11-15) */
+    const vb = document.querySelector('.viewbar'), cr = can.getBoundingClientRect(), vr = vb ? vb.getBoundingClientRect() : null, ck = $('clock').getBoundingClientRect(), barB = Math.max(vr && vr.height ? vr.bottom - cr.top : 0, ck.height ? ck.bottom - cr.top : 0, 0);
+    const p = ps(), pad = 12 * p, trackH0 = S.vert ? 44 * p : S.ramps ? Math.max(96, Math.min(150, H * 0.2)) * p * 0.9 : Math.max(Math.max(96, Math.min(150, H * 0.2)) * p * 0.9, (barB + (S.two ? -2 : 46) * p) / 0.62), trackH = trackH0 + (S.two && !S.vert ? 54 * p : 0) + (S.ramps ? Math.min(110, H * 0.12) * p : 0), left = (S.vert ? 150 : 58) * p, right = W - 14 * p;
     const top = trackH + 6 * p, gap = 8 * p, gh = (H - top - 30 * p - 2 * gap) / 3;
     const blind = S.blind && S.preset !== 'walk' && !S.drawOn;
     const panes = blind ? [{ k: 'x', y0: top, h: H - top - 30 * p }] : ['x', 'v', 'a'].map((k, i) => ({ k, y0: top + i * (gh + gap), h: gh }));
