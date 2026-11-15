@@ -693,7 +693,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     else if (S.chk === 'output') drawOutputPanel(pctx, L, R, top, bot, r, p);
     else if (S.chk === 'range') drawRangePanel(pctx, L, R, top, bot, r, p);
     else drawSpotPanel(pctx, L, R, top, bot, r, p);
-    if (!narrow) gauges(pctx, PW - gw - 10 * p, top - 12 * p, gw - 10 * p, r, p, busy);
+    /* the Morning QA card (machine faults) reaches below the room picture at 1280 by 800 and hid the gauges' heading:
+       start the gauges below the card's bottom edge where it overlaps them (student view, 2026-11-15) */
+    let gTop = top - 12 * p;
+    { const cr = $('setupCard').getBoundingClientRect(), pr = plot.getBoundingClientRect();
+      if (cr.height && getComputedStyle($('setupCard')).position === 'absolute' && cr.right > pr.left + PW - gw - 10 * p && cr.bottom > pr.top)
+        gTop = Math.max(gTop, Math.min(cr.bottom - pr.top + 14 * p, PH2 - 30 * p - 3 * 40 * p - 24 * p)); }
+    if (!narrow) gauges(pctx, PW - gw - 10 * p, gTop, gw - 10 * p, r, p, busy);
   }
   function draw() { if (!T || !W) return; const three = use3(); if (g3) g3.st.el.hidden = !three; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     if (three) { ctx.clearRect(0, 0, W, H); draw3(); } else { ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H); drawRoom(); } drawPlot(); }

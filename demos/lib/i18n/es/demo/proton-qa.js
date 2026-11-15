@@ -366,6 +366,10 @@ VDI18N.add('es', 'demo/proton-qa', {
   "midiendo",
 "Gamma":
   "Gamma",
+"Close":
+  "Cerrar",
+"Plan: Disc, {#} cm across, {#} to {#} cm deep":
+  "Plan: Disco, {#} cm de diámetro, de {#} a {#} cm de profundidad",
 "patient plan":
   "plan del paciente",
 "Measured":
@@ -381,7 +385,5 @@ VDI18N.add('es', 'demo/proton-qa', {
 "Roughly to scale; beam drawn as a line.":
   "Más o menos a escala; el haz se dibuja como una línea.",
 "Drag to turn.":
-  "Arrastra para girar.",
-"Plan: Disc, {#} cm across, {#} to {#} cm deep":
-  "Plan: Disco, {#} cm de diámetro, de {#} a {#} cm de profundidad"
+  "Arrastra para girar."
 });

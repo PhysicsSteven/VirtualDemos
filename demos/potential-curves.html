@@ -1333,7 +1333,11 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   function updateReadouts(full) {
     if (!st) return;
     const un = units(), x = st.x, U = P.U(x), K = 0.5 * P.m * st.v * st.v, F = -P.dU(x);
-    $('tclock').textContent = 't = ' + sci(st.t, st.t >= 100 ? 4 : 3).replace(/^(\d+)$/, '$1') + ' ' + un.t;
+    /* the clock names its rate: the speed buttons read 1× while the coaster runs at 2 s per second and the molecule at
+       0.5 ps per second, so a student could not tell real time from slow motion (student view, 2026-11-15) */
+    const rr = cfg().rate * S.mult;
+    const rate = un.t === 's' ? (rr === 1 ? 'real time' : rr < 1 ? `slow motion: 1 s = ${rr} s` : `1 s = ${rr} s`) : `slow motion: 1 s = ${rr} ${un.t}`;
+    $('tclock').textContent = 't = ' + sci(st.t, st.t >= 100 ? 4 : 3).replace(/^(\d+)$/, '$1') + ' ' + un.t + ' · ' + rate;
     $('rE').textContent = fU(S.E);
     $('rX').textContent = fX(x);
     $('rU').textContent = fU(U);
