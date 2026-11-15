@@ -47,7 +47,7 @@ test('cool gas: CO takes all the carbon (C/O = 0.55), so TiO forms from the oxyg
   near(r.oCO, C.TIO_EPS.C / C.TIO_EPS.O, 1e-3);
   assert(r.oH2O > 0.2, `water holds ${r.oH2O} of the oxygen at 3000 K`);
 });
-test('TiO is strong in M stars, weak in K stars, gone in the Sun and hotter stars (Pe = 20 N/m², Pg = 10⁴ N/m²)', () => {
+test('TiO is strong in M stars, weak in K stars, gone in the Sun and hotter stars (Pe = 20 N/m², Pg = 1.17 × 10⁴ N/m², FALC)', () => {
   const f = (T) => C.tioChem(T, 20).tio;
   assert(f(3000) > 0.3 && f(3000) < 0.5, `3000 K ${f(3000)}`);
   assert(f(3500) > 0.05 && f(3500) < 0.1, `3500 K ${f(3500)}`);

@@ -32,15 +32,15 @@ module.exports = {
       return true; })()` },
     /* Titanium oxide (2026-11-15): the TiO share readout follows the page's own chemistry (tioChem), titanium is conserved, and the
        known values at the presets, worked in Node (curriculum/validation/test_spectra_tio.cjs): at Pe = 20 N/m², 3000 K gives
-       0.394 of the titanium in TiO, 3500 K 0.0775 and the Sun 9.58 × 10⁻⁷. The hydrogen readouts keep their old values. */
-    { name: "TiO share readout: tioChem, Ti conserved, known values 0.394 / 0.0775 / 9.58e-7 at 3000 / 3500 / 5772 K", fn: `(() => { ${vis}
+       0.3956 of the titanium in TiO, 3500 K 0.0856 and the Sun 1.12 × 10⁻⁶ (gas pressure 1.17 × 10⁴ N/m², FALC). The hydrogen readouts keep their old values. */
+    { name: "TiO share readout: tioChem, Ti conserved, known values 0.3956 / 0.0856 / 1.12e-6 at 3000 / 3500 / 5772 K", fn: `(() => { ${vis}
       if (!shown('sTiO')) return true;
       const S = window.__stars && window.__stars.ST; if (!S) return 'no window.__stars';
       const r = tioChem(S.T, S.Pe), sum = r.tio + r.ti + r.tiII + r.tio2;
       if (!(Math.abs(sum - 1) < 1e-9)) return 'titanium shares add to ' + sum;
       const txt = T('sTiO').replace(/ × 10/, 'e').replace(/[⁻⁰¹²³⁴⁵⁶⁷⁸⁹]/g, (c) => ({ '⁻': '-' })[c] || '⁰¹²³⁴⁵⁶⁷⁸⁹'.indexOf(c)), v = parseFloat(txt);
       if (!(Math.abs(v / r.tio - 1) < 6e-3)) return 'sTiO shows ' + T('sTiO') + ', tioChem gives ' + r.tio;
-      const want = S.Pe === 20 ? ({ 3000: 0.394, 3500: 0.0775, 5772: 9.58e-7 })[S.T] : 0;
+      const want = S.Pe === 20 ? ({ 3000: 0.3956, 3500: 0.08555, 5772: 1.119e-6 })[S.T] : 0;
       if (want && Math.abs(v / want - 1) > 3e-3) return 'at ' + S.T + ' K the TiO share shows ' + T('sTiO') + ', known value ' + want;
       if (S.T === 5772 && S.Pe === 20 && T('sPeak') !== '9,870 K') return 'Balmer peak moved: ' + T('sPeak');
       return true; })()` }
