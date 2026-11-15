@@ -271,11 +271,17 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const p = geo.p, sq = spin ? Math.abs(Math.cos(spin)) : 1;
     ctx.fillStyle = T.coinEdge; ctx.beginPath(); ctx.ellipse(cx, cy + 3 * p, r, r * sq, 0, 0, 2 * Math.PI); ctx.fill();
     ctx.fillStyle = T.coin; ctx.beginPath(); ctx.ellipse(cx, cy, r, r * sq, 0, 0, 2 * Math.PI); ctx.fill();
+    if (face === 'HT') {
+      /* an unmeasured quantum coin held still, half H and half T: spinning suggested a superposition is a coin flipping fast (student view calls, 2026-11-15) */
+      ctx.strokeStyle = '#3d2c06'; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(cx, cy - r * 0.8); ctx.lineTo(cx, cy + r * 0.8); ctx.stroke();
+      txt('H', cx - r * 0.42, cy + 1, { a: 'center', bl: 'middle', s: r / p * 0.6, b: true, c: '#3d2c06' });
+      txt('T', cx + r * 0.42, cy + 1, { a: 'center', bl: 'middle', s: r / p * 0.6, b: true, c: '#3d2c06' });
+      return;
+    }
     if (face && sq > 0.3) txt(face, cx, cy + 1, { a: 'center', bl: 'middle', s: r / p * 0.9, b: true, c: '#3d2c06' });
   }
 
   // ---------- the three pictures ----------
-  let spinA = 0;
   function drawCoins() {
     const p = geo.p, half = geo.w / 2, top = geo.y0 + 6 * p, r = Math.min(46 * p, half * 0.22), cy = top + 40 * p + r;
     txt('Ordinary coin', geo.x0 + half * 0.5, top + 16 * p, { a: 'center', s: 12, b: true, ui: true });
@@ -283,7 +289,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const lc = S.last ? S.last[0] : null, lq = S.last ? S.last[1] : null;
     coin(geo.x0 + half * 0.5, cy, r, lc === null ? '?' : lc ? 'H' : 'T', 0);
     txt(lc === null ? 'face decided by the toss' : 'it was this before you looked', geo.x0 + half * 0.5, cy + r + 20 * p, { a: 'center', s: 10, c: T.muted, ui: true });
-    coin(geo.x0 + half * 1.5, cy, r, lq === null ? '' : lq ? 'H' : 'T', lq === null ? spinA : 0);
+    coin(geo.x0 + half * 1.5, cy, r, lq === null ? 'HT' : lq ? 'H' : 'T', 0);
     const am = qcAmps(S.tq, S.fq), b2 = am.b[0] ** 2 + am.b[1] ** 2;
     txt(lq === null ? `a = ${f(am.a, 3)}   b = ${f(Math.sqrt(b2), 3)} e^(i${S.fq}°)` : 'measured: now in this state', geo.x0 + half * 1.5, cy + r + 20 * p, { a: 'center', s: 10, c: T.muted });
     const by = cy + r + 44 * p, bh = geo.y0 + geo.h - by - 24 * p;
@@ -466,7 +472,6 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   let last = performance.now();
   function frame(now) {
     const dt = Math.min(0.05, (now - last) / 1000); last = now; let moving = false;
-    if (S.mode === 'coin' && S.last === null && !reduce) { spinA += dt * 3;   /* about one flip a second; at 9 rad/s it fluttered three times a second (student view, 2026-11-15) */ moving = true; }
     if (S.dots.length) { for (const d of S.dots) d.t += dt; S.dots = S.dots.filter((d) => d.t < 0 || dotPos(d)); moving = true; }
     if (moving) draw();
     requestAnimationFrame(frame);

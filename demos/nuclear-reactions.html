@@ -846,7 +846,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       lcdBox(mx, 162 * p, mw, mh, isFinite(st.k) ? f(st.k, 3) : '—', 'k, mean so far');
       lcdBox(mx, 228 * p, mw, mh, CHN.last ? `${f(100 * CHN.last.leak / c.N, 1)}%` : '—', 'leaked out');
       lab(cpCaption(), W * 0.04, by + 16 * p, { c: T.ink, m: true });
-      lab(`a neutron fired in every ${CP_GAP} s, seen from the side · nuclei drawn far larger than to scale · 1 s here is ${f(CP_V * c.R / V_N * 1e9, 1)} ns`, W * 0.04, by + 32 * p, { s: 9.5 * p });
+      /* the picture runs whether or not Play is on (Play runs the generations), so say so (student view calls, 2026-11-15) */
+      lab(`${reduce ? '' : 'sample chain, always running · '}a neutron fired in every ${CP_GAP} s, seen from the side · nuclei drawn far larger than to scale · 1 s here is ${f(CP_V * c.R / V_N * 1e9, 1)} ns`, W * 0.04, by + 32 * p, { s: 9.5 * p });
       return;
     }
     /* generations: the family tree of the first neutrons in each generation */
@@ -920,7 +921,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     lab(`${MAT[c.mat].name}, ${f(sphereMass(MAT[c.mat], c.R), 1)} kg, R = ${f(c.R, 2)} cm`, 14 * p, 16 * p, { c: T.ink, w: 700 });
     lab(W < 620 ? 'drag to turn' : `a neutron fired in every ${CP_GAP} s · red: the nucleus each neutron will strike · orange: fission fragments · drag to turn`, 14 * p, 32 * p, { c: T.muted });
     /* the 3D view (the default) showed no time scale and no scale note, which only the flat view had (student view, 2026-11-15) */
-    lab(`1 s here is ${f(CP_V * c.R / V_N * 1e9, 1)} ns${W < 620 ? '' : ' · nuclei drawn far larger than to scale'}`, 14 * p, 48 * p, { c: T.muted });
+    /* the picture runs whether or not Play is on (Play runs the generations), so say so (student view calls, 2026-11-15) */
+    lab(`${reduce ? '' : 'sample chain, always running · '}1 s here is ${f(CP_V * c.R / V_N * 1e9, 1)} ns${W < 620 ? '' : ' · nuclei drawn far larger than to scale'}`, 14 * p, 48 * p, { c: T.muted });
     lab(cpCaption(), 14 * p, H - 14 * p, { c: T.ink, m: true });
     if (W < 620) return;
     const mx = W - 160 * p, mw = 130 * p, mh = 28 * p, sk = kStats(CHN.ks);

@@ -550,9 +550,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* RBE against dose per fraction */
     const a = L.a, ds = range(0.1, 10, 200), Xa = linAx(0, 10, a.x, a.x + a.w), abs = [[2, T.late], [10, T.tumor]], ya = Math.max(...abs.map(([ab]) => rbe(0.1, S.L, ab)), rbe(0.1, S.L, S.ab)) * 1.08, Ya = linAx(0.9, Math.max(ya, 1.3), a.y + a.h, a.y);
     frame(a); linY(a, Ya, 1, Math.max(ya, 1.3), ya > 3 ? 0.5 : ya > 1.9 ? 0.2 : 0.1, 'RBE', 1); linX(a, Xa, 0, 10, 2, 'Proton dose per fraction (Gy)'); title(a, `RBE against dose at LET_d ${fx(S.L, 1)} keV/µm`);
-    for (const [ab, c] of abs) curve(a, ds, (q) => rbe(q, S.L, ab), Xa, Ya, c, 1.8, [5, 3]);
+    /* a reference line with the chosen (α/β)ₓ lies under the main curve, so it leaves the plot and the legend (student view calls, 2026-11-15) */
+    const refs = abs.filter(([ab]) => Math.abs(ab - S.ab) > 1e-9);
+    for (const [ab, c] of refs) curve(a, ds, (q) => rbe(q, S.L, ab), Xa, Ya, c, 1.8, [5, 3]);
     curve(a, ds, (q) => rbe(q, S.L, S.ab), Xa, Ya, T.bio, 2.6); cursorX(a, Xa(S.rD)); dot(Xa(S.rD), Ya(rbe(S.rD, S.L, S.ab)), T.bio, 4.5);
-    legend([[`(α/β)ₓ ${fx(S.ab, 1)} Gy`, T.bio, 2.6], ['(α/β)ₓ 2 Gy', T.late, 1.8, [5, 3]], ['(α/β)ₓ 10 Gy', T.tumor, 1.8, [5, 3]]], a.x + a.w - 8 * p, a.y + 16 * p, 'right', 9.5);
+    legend([[`(α/β)ₓ ${fx(S.ab, 1)} Gy`, T.bio, 2.6], ...refs.map(([ab, c]) => [`(α/β)ₓ ${ab} Gy`, c, 1.8, [5, 3]])], a.x + a.w - 8 * p, a.y + 16 * p, 'right', 9.5);
     /* the dose per fraction as photons would need it */
     const b = L.b, r = rbe(S.rD, S.L, S.ab), bars = [['Proton dose', S.rD, T.phys], ['× 1.1', 1.1 * S.rD, T.clin], [`× ${fx(r, 3)}`, r * S.rD, T.bio]], bmax = Math.max(...bars.map((q) => q[1])) * 1.2, Yb = linAx(0, bmax, b.y + b.h, b.y);
     frame(b); linY(b, Yb, 0, bmax, bmax > 20 ? 5 : bmax > 8 ? 2 : bmax > 3 ? 1 : 0.5, 'Gy', bmax > 3 ? 0 : 1); title(b, 'Photon dose for the same effect');

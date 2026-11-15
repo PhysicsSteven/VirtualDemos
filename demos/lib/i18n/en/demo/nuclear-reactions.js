@@ -251,7 +251,7 @@ VDI18N.add('en', 'demo/nuclear-reactions', [
 "K, MEAN SO FAR",
 "LEAKED OUT",
 "{#} fired in, {#} fissions, longest chain {#} generations · {#} neutrons in flight",
-"a neutron fired in every {#} s, seen from the side · nuclei drawn far larger than to scale · {#} s here is {#} ns",
+"sample chain, always running · a neutron fired in every {#} s, seen from the side · nuclei drawn far larger than to scale · {#} s here is {#} ns",
 "generation",
 "radius R (cm)",
 "k (recorded)",

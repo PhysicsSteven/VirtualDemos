@@ -145,9 +145,12 @@ VDI18N.add('en', 'demo/ripple-tank', [
 "A slice through the tank from the side, under the bar's plane waves: each dot is a bit of water. {#} Hz waves on water {#} mm deep: the depth is more than half a wavelength, so this is deep water. Every bit of water goes round a circle, forward under a crest and back under a trough, and the circles shrink fast with depth (to e^(−ks) of the surface's): half a wavelength down the water is almost still. The wave moves on; the water does not.",
 "{#} Hz waves on water only {#} mm deep, a tenth of a wavelength (the usual rule calls water shallow below a twentieth, so this is on the way there). The circles are squashed into flat ellipses that reach all the way to the floor: the bits of water at the floor slide back and forth without rising at all, and the side to side motion hardly changes with depth. Change the depth and the frequency and watch the ellipses round out as kd grows.",
 "in between (λ/{#} < d < λ/{#})",
+"Close",
+"Move the chosen end of the measuring line (Shift: {#} mm)",
 "t = {#} s · real time",
 "{#} mm · to scale · wave height 2A = {#} mm",
 "{#} mm · to scale",
 "the motion of the water drawn {#} times larger",
-"wave height 2A = {#} mm"
+"wave height 2A = {#} mm",
+"t = {#} s · this device keeps up at {#}/{#}"
 ]);

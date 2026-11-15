@@ -502,8 +502,8 @@ VDI18N.add('es', 'demo/nuclear-reactions', {
   "ESCAPARON",
 "{#} fired in, {#} fissions, longest chain {#} generations · {#} neutrons in flight":
   "{#} disparados, {#} fisiones, cadena más larga {#} generaciones · {#} neutrones en vuelo",
-"a neutron fired in every {#} s, seen from the side · nuclei drawn far larger than to scale · {#} s here is {#} ns":
-  "se dispara un neutrón cada {#} s, visto de lado · núcleos dibujados mucho más grandes que a escala · {#} s aquí son {#} ns",
+"sample chain, always running · a neutron fired in every {#} s, seen from the side · nuclei drawn far larger than to scale · {#} s here is {#} ns":
+  "cadena de muestra, siempre en marcha · se dispara un neutrón cada {#} s, visto de lado · núcleos dibujados mucho más grandes que a escala · {#} s aquí son {#} ns",
 "generation":
   "generación",
 "radius R (cm)":
@@ -1318,6 +1318,8 @@ VDI18N.add('es', 'demo/nuclear-reactions', {
   "A escala. Fotones más lentos; se dibujan unos cuantos de los",
 "heading for the meter drawn. Drag to turn.":
   "que van hacia el medidor. Arrastra para girar.",
+"a neutron fired in every {#} s, seen from the side · nuclei drawn far larger than to scale · {#} s here is {#} ns":
+  "se dispara un neutrón cada {#} s, visto de lado · núcleos dibujados mucho más grandes que a escala · {#} s aquí son {#} ns",
 "Fire":
   "Disparar",
 "¹⁸F (PET), {#} MBq, a patient resting after the injection":
@@ -1331,5 +1333,9 @@ VDI18N.add('es', 'demo/nuclear-reactions', {
 "{#} s here is {#} ns · nuclei drawn far larger than to scale":
   "{#} s aquí son {#} ns · núcleos dibujados mucho más grandes que a escala",
 "{#} s here is {#} ns":
-  "{#} s aquí son {#} ns"
+  "{#} s aquí son {#} ns",
+"sample chain, always running · {#} s here is {#} ns · nuclei drawn far larger than to scale":
+  "cadena de muestra, siempre en marcha · {#} s aquí son {#} ns · núcleos dibujados mucho más grandes que a escala",
+"sample chain, always running · {#} s here is {#} ns":
+  "cadena de muestra, siempre en marcha · {#} s aquí son {#} ns"
 });

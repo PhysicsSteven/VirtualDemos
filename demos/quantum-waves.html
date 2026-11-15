@@ -1509,12 +1509,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const yt = curTop(), key = x0 + '|' + x1 + '|' + yt + '|' + S.preset + '|' + Vf(0) + '|' + Vf(x0 / 3) + '|' + Vf(x1 / 3);
     if (key !== G3.potKey) {
       G3.potKey = key; const P = [], hz = span * 0.16, yb = hz * 1.1;
-      G3.axis.geometry.dispose(); G3.axis.geometry = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(x0, 0, 0), new THREE.Vector3(x1, 0, 0)]);
+      /* short Im ψ and Re ψ axes at the left end, so their labels name a line and sit clear of the x axis (student view calls, 2026-11-15) */
+      G3.axis.geometry.dispose(); G3.axis.geometry = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(x0, -hz * 0.8, 0), new THREE.Vector3(x0, 0, 0), new THREE.Vector3(x0, 0, hz * 0.8), new THREE.Vector3(x0, 0, 0), new THREE.Vector3(x1, 0, 0)]);
       /* the potential as a wall behind the ribbon, its height V on the energy diagram's scale */
       for (let c = 0; c < n - 1; c++) { const xa = x0 + span * c / (n - 1), xb = x0 + span * (c + 1) / (n - 1), va = Math.min(Vf(xa), 2 * yt) / yt * hz, vb = Math.min(Vf(xb), 2 * yt) / yt * hz;
         if (va <= 0 && vb <= 0) continue; P.push(xa, yb, -hz, xb, yb, -hz, xb, yb, vb - hz, xa, yb, -hz, xb, yb, vb - hz, xa, yb, va - hz); }
       G3.pot.geometry.dispose(); G3.pot.geometry = new THREE.BufferGeometry(); G3.pot.geometry.setAttribute('position', new THREE.Float32BufferAttribute(P, 3));
-      G3.lab[0].position.set(x0, 0, hz * 1.15); G3.lab[1].position.set(x0, -hz * 1.15, 0); G3.lab[2].position.set(x1 + span * 0.03, 0, 0);
+      G3.lab[0].position.set(x0 - span * 0.05, 0, hz * 0.75); G3.lab[1].position.set(x0, -hz, 0); G3.lab[2].position.set(x1 + span * 0.03, 0, 0);
     }
     st.place(G3.o, new THREE.Vector3((x0 + x1) / 2, 0, 0), span * 1.25 * Math.max(1, 1.6 * H / W));
     st.render();
@@ -1745,7 +1746,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const pct = (v) => (v * 100).toFixed(v < 0.01 ? 2 : 1) + '%';
   function updateReadouts(full) {
     const o = lastObs; if (!o) return;
-    $('tclock').textContent = 't = ' + (t >= 100 ? t.toFixed(0) : t.toFixed(1)) + ' fs';
+    /* the playback rate next to t, not only in the side panel (student view calls, 2026-11-15) */
+    { const rs = speedBase * S.mult; $('tclock').textContent = 't = ' + (t >= 100 ? t.toFixed(0) : t.toFixed(1)) + ' fs · 1 s = ' + (rs >= 10 ? rs.toFixed(0) : rs >= 1 ? rs.toFixed(1) : rs.toPrecision(2)) + ' fs'; }
     if (o.norm > 1e-6) {
       $('rX').textContent = o.x.toFixed(2) + ' nm';
       $('rDx').textContent = o.dx.toFixed(3) + ' nm';
@@ -1962,6 +1964,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('stepBtn').addEventListener('click', () => { setRunning(false); advance(speedBase / 30); lastObs = observe(sim, split()); updateReadouts(); });
   for (const b of document.querySelectorAll('#speedSeg button')) b.addEventListener('click', () => {
     S.mult = +b.dataset.s; for (const o of document.querySelectorAll('#speedSeg button')) o.setAttribute('aria-pressed', String(o === b));
+    updateReadouts();
   });
 
   // measurement
@@ -2508,7 +2511,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('q2E').textContent = f4(e) + ' eV'; $('q2dE').textContent = f4(Math.sqrt(Math.max(0, e2 - e * e))) + ' eV';
     $('q2X').textContent = f3(Q.dipoleMean(Z.w.X, Z.cr, Z.ci)) + ' nm'; $('q2Y').textContent = f3(Q.dipoleMean(Z.w.Y, Z.cr, Z.ci)) + ' nm';
     $('q2LzRow').hidden = Z.kind !== 'circle'; $('q2Lz').textContent = f3(lz / n) + ' ħ';
-    $('q2N').textContent = n.toFixed(6); $('tclock2').textContent = 't = ' + Z.t.toFixed(1) + ' fs';
+    $('q2N').textContent = n.toFixed(6); $('tclock2').textContent = 't = ' + Z.t.toFixed(1) + ' fs · 1 s = ' + +(Z.speed * Z.mult).toFixed(1) + ' fs';   /* the playback rate by t (student view calls, 2026-11-15) */
     const Es = [...new Set(Z.sel.map((j) => +Z.w.states[j].E.toFixed(9)))];
     $('q2Beat').textContent = !Z.field.on && Es.length === 2 ? (HPL / Math.abs(Es[1] - Es[0])).toFixed(2) + ' fs' : '—';
     // the chosen states with their energies and probabilities now
@@ -2579,7 +2582,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   playBtn.addEventListener('click', () => setRunning(!Z.running));
   $('step2').addEventListener('click', () => { setRunning(false); stepTo(Z.t + Z.speed / 10); sample(); readouts(); draw(); });
   $('reset2').addEventListener('click', () => { const on = Z.field.on; restart(); Z.field.on = on; syncField(); });
-  for (const b of document.querySelectorAll('#speed2 button')) b.addEventListener('click', () => { Z.mult = +b.dataset.s; for (const o of document.querySelectorAll('#speed2 button')) o.setAttribute('aria-pressed', String(o === b)); });
+  for (const b of document.querySelectorAll('#speed2 button')) b.addEventListener('click', () => { Z.mult = +b.dataset.s; for (const o of document.querySelectorAll('#speed2 button')) o.setAttribute('aria-pressed', String(o === b)); readouts(); });
   for (const b of document.querySelectorAll('#presets2 button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
   ['q2s1', 'q2s2', 'q2s3'].forEach((id) => $(id).addEventListener('input', (e) => {
     const k = e.target.dataset.key; Z.p[k] = +e.target.value; delete Z.p.chain; Z.preset = 'custom';

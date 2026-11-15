@@ -61,7 +61,7 @@ No hazards in the virtual lab.
 
 **The finite well.** Clear again and pick Square well with Walls set to Finite. With a depth of 0.50 eV and a width of 2.00 nm, record a reading. Then make the well 0.20 eV deep and record again. Send this run to a third copy.
 
-**Motion of a superposition.** Pick Square well, infinite walls, 1.00 nm wide, with the levels n = 1 and n = 2 chosen. Play it at ¼× speed and time ten swings of the packet from one side to the other and back, using the clock. Then pick Double well (levels 1 and 2 chosen), play it and time one full trip of the electron from the left well to the right well and back. Write both in the second table.
+**Motion of a superposition.** Pick Square well, infinite walls, 1.00 nm wide, with the levels n = 1 and n = 2 chosen. Play it at 1× speed and time ten swings of the packet from one side to the other and back, using the clock. Then pick Double well (levels 1 and 2 chosen), play it and time one full trip of the electron from the left well to the right well and back. Write both in the second table.
 
 ## Data
 

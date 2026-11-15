@@ -756,6 +756,8 @@ VDI18N.add('es', 'demo/particles', {
   "Un evento de práctica con las trazas etiquetadas y sin dispersión de burbujas. Un π⁻ produce un K⁰ y un Λ⁰ al final de su traza; las partículas neutras no dejan trazas, y un Λ⁰ decae en un protón y un π⁻ (una V). Ajusta un círculo a cada traza de la V, mide el ángulo de apertura y encuentra la masa del Λ⁰.",
 "Unlabelled events with {#} mm bubble scatter. Each V is a K⁰_S → π⁺ π⁻ or a Λ⁰ → p π⁻. Measure both tracks and the opening angle, work out the invariant mass with each mass hypothesis, and decide which parent it was.":
   "Eventos sin etiquetar con {#} mm de dispersión de burbujas. Cada V es un K⁰_S → π⁺ π⁻ o un Λ⁰ → p π⁻. Mide ambas trazas y el ángulo de apertura, calcula la masa invariante con cada hipótesis de masa y decide cuál fue la partícula madre.",
+"Close":
+  "Cerrar",
 "Remove neutral pion":
   "Quitar pion neutro",
 "Remove pion":

@@ -780,7 +780,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     arr.push(id); S.rx.ex = ''; S.preset = 'custom'; if (side === 'a' && arr.length === 2) setEnergy(S.rx.en); renderRx(); sync();
   }
   function say(m) { const s = document.querySelector('.vd-readings .status'); if (s) s.textContent = m; }
-  function chipHtml(id, side, i) { const p = BY[id]; return `<span class="chip" style="--c:${colOf(p)}">${p.html}<button type="button" data-rm="${side}:${i}" aria-label="Remove ${esc(p.name)}">×</button></span>`; }
+  /* the name in one span: as bare flex items "π" and its <sup> sat apart on the baseline, "π −" (student view calls, 2026-11-15) */
+  function chipHtml(id, side, i) { const p = BY[id]; return `<span class="chip" style="--c:${colOf(p)}"><span>${p.html}</span><button type="button" data-rm="${side}:${i}" aria-label="Remove ${esc(p.name)}">×</button></span>`; }
   function renderRx() {
     const r = S.rx, c = rxCheck(), bl = S.blind;
     $('sideA').innerHTML = '<span class="cap">Before (one particle decays, or two collide)</span>' + r.a.map((id, i) => chipHtml(id, 'a', i)).join('');
@@ -879,8 +880,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       if (VG) VG.ball(ctx, x, y, qr, c); else { ctx.fillStyle = c; ctx.beginPath(); ctx.arc(x, y, qr, 0, 7); ctx.fill(); }
       ctx.save(); ctx.fillStyle = '#ffffff'; ctx.font = `700 ${Math.round(qr * 0.95)}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.shadowColor = 'rgba(0,0,0,0.5)'; ctx.shadowBlur = 3; ctx.fillText(s.f, x, y + 1);
       if (s.anti) { ctx.fillRect(x - qr * 0.28, y - qr * 0.52, qr * 0.56, Math.max(1.5, qr * 0.09)); } ctx.restore();
-      /* spin arrow */
-      const ax = x + qr * 1.45, a0 = s.up ? y + qr * 0.7 : y - qr * 0.7, a1 = s.up ? y - qr * 0.7 : y + qr * 0.7;
+      /* spin arrow, on the outer side of the quark: inside, a meson's arrow lay across the gluon spring (student view calls, 2026-11-15) */
+      const ax = x + (x - bx < -0.2 * R ? -1 : 1) * qr * 1.45, a0 = s.up ? y + qr * 0.7 : y - qr * 0.7, a1 = s.up ? y - qr * 0.7 : y + qr * 0.7;
       ctx.save(); ctx.strokeStyle = T.ink; ctx.fillStyle = T.ink; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(ax, a0); ctx.lineTo(ax, a1); ctx.stroke();
       ctx.beginPath(); ctx.moveTo(ax, a1); ctx.lineTo(ax - 5 * p, a1 + (s.up ? 7 : -7) * p); ctx.lineTo(ax + 5 * p, a1 + (s.up ? 7 : -7) * p); ctx.closePath(); ctx.fill(); ctx.restore();
       lab((s.anti ? 'anti' : '') + ({ r: 'red', g: 'green', b: 'blue' })[s.col], x, y + qr + 12 * p, { a: 'center', s: 9.5 * p }); });
@@ -943,7 +944,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const D = S.dt;
   function newEvent() { D.ev = makeEvent(D.n, D.B, D.pb, D.sig); clearMarks(); }
   function clearMarks() { D.fits = { '+': [], '-': [] }; D.ang = []; }
-  function view() { const p = proj(), base = Math.min(W - 16, H - 16) / (2 * DET.R + 10); const s = base * D.zoom; return { s, ox: W / 2 - D.cx * s, oy: H / 2 + D.cy * s, p }; }
+  /* on a narrow stage the event plate took the top of the window: the chamber sits below it there (student view calls, 2026-11-15) */
+  function view() { const p = proj(), top = W < 560 ? 62 * p : 0, base = Math.min(W - 16, H - 16 - top) / (2 * DET.R + 10); const s = base * D.zoom; return { s, ox: W / 2 - D.cx * s, oy: H / 2 + top / 2 + D.cy * s, p }; }
   const toScr = (v, x, y) => [v.ox + x * v.s, v.oy - y * v.s], toWorld = (v, X, Y) => [(X - v.ox) / v.s, (v.oy - Y) / v.s];
   const fitOf = (sg) => (D.fits[sg].length >= 3 ? fitCircle(D.fits[sg]) : null);
   const angle = () => (D.ang.length === 3 ? angleAt(D.ang[0], D.ang[1], D.ang[2]) : null);

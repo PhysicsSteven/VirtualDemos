@@ -378,6 +378,7 @@ VDI18N.add('en', 'demo/particles', [
 "π⁻ beam",
 "A practice event with the tracks labeled and no bubble scatter. A π⁻ makes a K⁰ and a Λ⁰ at the end of its track; the neutrals leave no tracks, and a Λ⁰ decays into a proton and a π⁻ (a V). Fit a circle to each track of the V, measure the opening angle, and find the Λ⁰ mass.",
 "Unlabelled events with {#} mm bubble scatter. Each V is a K⁰_S → π⁺ π⁻ or a Λ⁰ → p π⁻. Measure both tracks and the opening angle, work out the invariant mass with each mass hypothesis, and decide which parent it was.",
+"Close",
 "Remove neutral pion",
 "Remove pion",
 "Remove antiproton",

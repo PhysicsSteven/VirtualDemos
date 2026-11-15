@@ -182,6 +182,12 @@ VDI18N.add('es', 'demo/white-dwarf-cooling', {
   "Las estrellas se forman a ritmo constante a lo largo de la edad del disco, con masas de Salpeter de {#} a {#} M<sub>sun</sub> y vidas en la secuencia principal de {#} mil millones de años (M/M<sub>sun</sub>)<sup>−{#}</sup>. Cada una deja una enana blanca de {#} M<sub>i</sub> + {#} M<sub>sun</sub> (Kalirai et al. {#}) que se enfría según las trayectorias de esta página. Los puntos y el histograma son simulados con este modelo, no son datos de Gaia.",
 "Real white dwarf counts drop sharply below about {#}<sup>−{#}</sup> L<sub>sun</sub> (Liebert, Dahn &amp; Monet {#}): none has had time to fade further. Detailed cooling models turn that cutoff into an age for the local disk of about {#} to {#} Gyr (Winget et al. {#}, {#} ± {#} Gyr; Leggett, Ruiz &amp; Bergeron {#}, {#} ± {#} Gyr).":
   "Los conteos reales de enanas blancas caen abruptamente por debajo de unos {#}<sup>−{#}</sup> L<sub>sun</sub> (Liebert, Dahn &amp; Monet {#}): ninguna ha tenido tiempo de apagarse más. Los modelos de enfriamiento detallados convierten ese corte en una edad del disco local de unos {#} a {#} mil millones de años (Winget et al. {#}, {#} ± {#} mil millones de años; Leggett, Ruiz &amp; Bergeron {#}, {#} ± {#} mil millones de años).",
+"M (M<sub>sun</sub>)":
+  "M (M<sub>sun</sub>)",
+"t (yr)":
+  "t (años)",
+"L (L<sub>sun</sub>)":
+  "L (L<sub>sun</sub>)",
 "<b>Core.</b> Isothermal at T<sub>c</sub>, with the density profile of a zero temperature Chandrasekhar white dwarf (ideal degenerate electrons, μ<sub>e</sub> = {#}, no Coulomb corrections), held fixed as it cools. Carbon/oxygen is {#}:{#} by mass. The radius stays fixed; real hot white dwarfs are a few percent larger.":
   "<b>Núcleo.</b> Isotérmico a T<sub>c</sub>, con el perfil de densidad de una enana blanca de Chandrasekhar a temperatura cero (electrones degenerados ideales, μ<sub>e</sub> = {#}, sin correcciones de Coulomb), fijo mientras se enfría. El carbono/oxígeno es {#}:{#} en masa. El radio se mantiene fijo; las enanas blancas calientes reales son unos cuantos por ciento más grandes.",
 "<b>Envelope.</b> The textbook Kramers opacity relation with Shapiro and Teukolsky's envelope X = {#}, Y = {#}, Z = {#}. Real envelopes are hydrogen or helium, and detailed models are brighter at a given T<sub>c</sub>; this relation is the largest simplification here. Neutrino cooling, which dominates for hot white dwarfs above about {#} K, is left out, and so is any energy from contraction.":
@@ -194,20 +200,14 @@ VDI18N.add('es', 'demo/white-dwarf-cooling', {
   "<b>Diagrama HR.</b> Esquemático: cada enana blanca es un cuerpo negro visto a través de bandas planas (BP {#} a {#} nm, RP {#} a {#} nm, G {#} a {#} nm), con puntos cero fijados por el Sol (M<sub>G</sub> = {#}, G<sub>BP</sub> − G<sub>RP</sub> = {#}). Los espectros reales de las enanas blancas y las bandas de Gaia desplazan estos colores unas décimas de magnitud.",
 "<span><i></i>Core all liquid</span> <span><i></i>Core freezing or solid</span> <span><i></i>Crystallization begins</span> <span><i></i>This white dwarf now</span> <span><i></i>Mestel law, ideal ions, L ∝ t<sup>−{#}/{#}</sup></span> <span><i></i>Same, without latent heat</span> <span><i></i>Tracks for {#} to {#} M<sub>sun</sub></span> <span><i></i>Disk age (population on)</span> <span><i></i>Simulated white dwarf</span>":
   "<span><i></i>Núcleo todo líquido</span> <span><i></i>Núcleo congelándose o sólido</span> <span><i></i>Empieza la cristalización</span> <span><i></i>Esta enana blanca ahora</span> <span><i></i>Ley de Mestel, iones ideales, L ∝ t<sup>−{#}/{#}</sup></span> <span><i></i>Igual, sin calor latente</span> <span><i></i>Trayectorias de {#} a {#} M<sub>sun</sub></span> <span><i></i>Edad del disco (población activada)</span> <span><i></i>Enana blanca simulada</span>",
-"R = {#} km · quarter cut away":
-  "R = {#} km · un cuarto recortado",
-"M (M<sub>sun</sub>)":
-  "M (M<sub>sun</sub>)",
-"t (yr)":
-  "t (años)",
-"L (L<sub>sun</sub>)":
-  "L (L<sub>sun</sub>)",
 "Core temperature against cooling age":
   "Temperatura del núcleo en función de la edad de enfriamiento",
 "{#} yr · {#} × {#}⁷ K":
   "{#} años · {#} × {#}⁷ K",
 "Mestel: T":
   "Mestel: T",
+"R = {#} km · quarter cut away":
+  "R = {#} km · un cuarto recortado",
 "Mestel’s model: ideal gas ions and L ∝ M T<sub>c</sub>^{#}. The heat is U = ({#}/{#})NkT<sub>c</sub>, and integrating dU/dt = −L gives t = ({#}/{#})U/L at late times, so L ∝ t^−{#}/{#}. Once it has forgotten its starting temperature the curve lies on the dashed line and the slope reads −{#}.":
   "Modelo de Mestel: iones de gas ideal y L ∝ M T<sub>c</sub>^{#}. El calor es U = ({#}/{#})NkT<sub>c</sub>, e integrar dU/dt = −L da t = ({#}/{#})U/L a tiempos tardíos, así que L ∝ t^−{#}/{#}. Una vez que ha olvidado su temperatura inicial, la curva queda sobre la línea punteada y la pendiente marca −{#}.",
 "{#} Myr <small>cooling age</small>":
@@ -274,16 +274,22 @@ VDI18N.add('es', 'demo/white-dwarf-cooling', {
   "L &lt; {#} × {#}⁻⁴ L<sub>sun</sub>",
 "Close":
   "Cerrar",
-"{#} Myr · {#} × {#}⁷ K":
-  "{#} millones de años · {#} × {#}⁷ K",
 "{#} Myr · {#} L":
   "{#} millones de años · {#} L",
-"{#} × {#}⁻¹ L<sub>sun</sub>":
-  "{#} × {#}⁻¹ L<sub>sun</sub>",
-"log scales":
-  "escalas logarítmicas",
 "{#} Myr · {#} × {#}⁻¹ L":
   "{#} millones de años · {#} × {#}⁻¹ L",
+"{#} × {#}⁻¹ L<sub>sun</sub>":
+  "{#} × {#}⁻¹ L<sub>sun</sub>",
+"{#} Myr · {#} × {#}⁻² L":
+  "{#} millones de años · {#} × {#}⁻² L",
+"{#} × {#}⁻² L<sub>sun</sub>":
+  "{#} × {#}⁻² L<sub>sun</sub>",
+"{#} Myr · {#} × {#}⁷ K":
+  "{#} millones de años · {#} × {#}⁷ K",
+"log scales":
+  "escalas logarítmicas",
 "age ×{#} every {#} s":
-  "edad ×{#} cada {#} s"
+  "edad ×{#} cada {#} s",
+"age ×{#} per {#} s":
+  "edad ×{#} en {#} s"
 });

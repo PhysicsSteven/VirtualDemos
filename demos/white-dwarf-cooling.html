@@ -820,7 +820,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const yr = box.yr, Lmode = S.plot === 'L';
     /* the clock rate on screen: the age grows tenfold every 1/(decades per second) seconds (student view, 2026-11-15) */
     const every = (1 / SPEEDS[S.speed]).toFixed(1);
-    title(c, box, Lmode ? 'Luminosity against cooling age' : 'Core temperature against cooling age', [`log scales · age ×10 every ${every} s`, `age ×10 every ${every} s`, 'log scales']);
+    title(c, box, Lmode ? 'Luminosity against cooling age' : 'Core temperature against cooling age', [`log scales · age ×10 every ${every} s`, `age ×10 every ${every} s`, `age ×10 per ${every} s`, 'log scales']);   /* the short rate before 'log scales': a phone showed no rate (student view calls, 2026-11-15) */
     // grid
     c.font = `${10.5 * ps}px ${T.mono}`; c.fillStyle = T.muted; c.textAlign = 'right'; c.textBaseline = 'middle';
     for (let e = Math.ceil(yr[0]); e <= Math.floor(yr[1]); e++) {
@@ -1207,7 +1207,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
 
   W3.view = VD3K.view({
-    seg: '#viewSeg', init: init3D,
+    seg: '#viewSeg', init: init3D, start: 'flat',   /* the quarter cut away read as a lemon shape: open on the flat slice (student view calls, 2026-11-15) */
     status: () => {},
     change: (v) => { W3.on = v; if (W3.S) W3.S.el.style.display = v ? '' : 'none'; dirty = true; if (typeof drawAll === 'function' && T) drawAll(); }
   });
@@ -1433,7 +1433,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (!gridReady()) gridStep(8);
     if (playing && !drag) {
       if (S.lt < LT_MAX) { S.lt = Math.min(LT_MAX, S.lt + SPEEDS[S.speed] * dt); dirty = true; }
-      else { holdT += dt; if (holdT > 1.6) { S.lt = LT_MIN; holdT = 0; dirty = true; } }
+      else setPlaying(false);   /* stop at the end of the axis: it looped back to 10⁴ yr after 1.6 s, so a setup's freezing front vanished (student view calls, 2026-11-15) */
       if (ts - lastRead > 100) { $('age').value = S.lt; readouts(); lastRead = ts; }
     }
     if (dirty) drawAll();

@@ -54,7 +54,7 @@ No hazards in the virtual lab.
 
 **At launch.** Start with Free particle. With the demo paused, set packet widths of about 0.30, 0.50, 0.75, 1.0, 1.5, 2.0 and 3.0 nm and record a reading at each, at t = 0. (Launch packet starts the packet moving, so don't use it here.)
 
-**Spreading.** Clear the readings. With the demo paused, set the width to 0.50 nm and record a reading at t = 0. Then play it, pause at about 5, 10, 15, 20, 25, 30 and 40 fs and record a reading each time. Send this run to a new copy of the table.
+**Spreading.** Clear the readings. With the demo paused, set the width to 0.50 nm and record a reading at t = 0. Then play it at ¼× speed (or press Step), pause at about 5, 10, 15, 20, 25, 30 and 40 fs and record a reading each time. Send this run to a new copy of the table.
 
 **Measuring position.** At about 20 fs, press Measure 200 copies a few times and compare the histogram with $$\lvert\psi\rvert^2$$. Then press Measure x once, and note what happens to the packet and to Δx and Δp.
 
