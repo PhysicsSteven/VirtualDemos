@@ -4,6 +4,8 @@ VDI18N.add('es', 'demo/magnetic-moments', {
   "Órbita de Bohr como espira de corriente",
 "n = {#}: radius {#} nm (drawn the same size for every n)":
   "n = {#}: radio {#} nm (dibujada del mismo tamaño para cada n)",
+"slow motion: one turn here takes {#} s, really T = {#}πr/v = {#} fs":
+  "cámara lenta: aquí una vuelta tarda {#} s, en realidad T = {#}πr/v = {#} fs",
 "current I (opposite to the electron)":
   "corriente I (opuesta al electrón)",
 "I = e/T = {#} × {#}⁻³ A · A = πr² = {#} × {#}⁻²¹ m²":
@@ -16,14 +18,16 @@ VDI18N.add('es', 'demo/magnetic-moments', {
   "sin campo: z es cualquier eje elegido",
 "l = {#}: no orbital angular momentum, no orbital moment":
   "l = {#}: sin momento angular orbital, sin momento orbital",
-"U = m_l μ_B B = {#} meV":
-  "U = m_l μ_B B = {#} meV",
 "field B (T)":
   "campo B (T)",
 "energy shift U (meV)":
   "corrimiento de energía U (meV)",
 "Atoms in a Magnetic Field":
   "Átomos en un campo magnético",
+"<a>Atomic structure</a>":
+  "<a>Estructura atómica</a>",
+"<a><span>←</span> <span>Radioactive Decay</span></a><a><span>Spin Resonance</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Decaimiento radiactivo</span></a><a><span>Resonancia de espín</span> <span>→</span></a>",
 "An electron going round a nucleus is a tiny current loop, so an atom is a tiny magnet. Its moment can only point in certain directions: watch a beam of silver atoms split in two, and spectral lines split in a magnet.":
   "Un electrón que gira alrededor de un núcleo es una diminuta espira de corriente, así que un átomo es un diminuto imán. Su momento solo puede apuntar en ciertas direcciones: observa cómo un haz de átomos de plata se divide en dos, y cómo las líneas espectrales se desdoblan en un imán.",
 "B in T · U in meV":
@@ -34,8 +38,6 @@ VDI18N.add('es', 'demo/magnetic-moments', {
   "Stern–Gerlach",
 "Zeeman effect":
   "Efecto Zeeman",
-"Clear the screen":
-  "Limpiar la pantalla",
 "An electron orbit drawn as a current loop, with its angular momentum and magnetic moment arrows, beside the vector model of the orbital angular momentum in a magnetic field.":
   "Una órbita electrónica dibujada como espira de corriente, con las flechas de su momento angular y su momento magnético, junto al modelo vectorial del momento angular orbital en un campo magnético.",
 "Graph of the energy shift of each m_l level against the magnetic field.":
@@ -144,10 +146,6 @@ VDI18N.add('es', 'demo/magnetic-moments', {
   "Ángulo de L respecto a B",
 "Energy shift U":
   "Corrimiento de energía U",
-"{#} meV":
-  "{#} meV",
-"U (meV)":
-  "U (meV)",
 "<span>Blind: hide the computed moments, spot positions and line shifts (read them with the cursor)</span>":
   "<span>A ciegas: ocultar los momentos calculados, las posiciones de las manchas y los corrimientos de las líneas (léelos con el cursor)</span>",
 "Orbit: a hydrogen electron in Bohr's model (OpenStax Vol. {#} §{#}) with the nucleus taken as infinitely heavy: radius n²a₀, speed αc/n. Passing any point once per period, it makes a current I = e/T round the loop; the loop's moment is μ = IA, and μ/L = e/(2m_e) for every orbit, so μ = n μ_B (§{#}). The quantum picture beside it uses the same n with any allowed l and m_l: |L| = √(l(l+{#})) ħ, L_z = m_l ħ, μ_z = −m_l μ_B, and in a field B the energy shift U = m_l μ_B B. Spin is left out in this view. L is drawn precessing about B; the real precession, at the Larmor frequency eB/({#}πm_e) ({#} GHz at {#} T), is far too fast to see, so the picture turns slowly.":
@@ -158,10 +156,6 @@ VDI18N.add('es', 'demo/magnetic-moments', {
   "Efecto Zeeman: cada nivel se corre g m μ_B B en un campo B. Aparece una componente por cada par de subniveles superior e inferior con Δm = {#} (luz π) o ±{#} (luz σ), con intensidad relativa dada por el cuadrado de un símbolo 3j. Perpendicular al campo, las componentes π cuentan completas y las σ a la mitad; a lo largo del campo no hay componentes π. Con g = {#} en ambos niveles (la línea singlete del cadmio, o el hidrógeno sin espín como en §{#}) cada componente cae en una de tres longitudes de onda, λ₀ y λ₀ ± λ²μ_B B/(hc): el efecto Zeeman normal. Las líneas D del sodio, cuyos niveles tienen espín, se desdoblan en cuatro y seis componentes (el efecto Zeeman anómalo). Los valores de g provienen de la fórmula de Landé con el factor g del electrón y g_L = {#}. El espectrómetro da a cada componente una forma gaussiana de {#} pm de ancho (FWHM), más fina que la de un espectrómetro de rejilla real; los desdoblamientos Zeeman se miden con un étalon de Fabry–Perot o una placa de Lummer. Se omiten el ancho Doppler, la estructura hiperfina y los corrimientos isotópicos, y el campo es uniforme sobre la lámpara.",
 "Data: constants from CODATA {#}. Wavelengths from the NIST Handbook of Basic Atomic Spectroscopic Data (Cd {#} nm and Na {#} and {#} nm in air) and the NIST Atomic Spectra Database (H Lyman α {#} nm in vacuum). Ground levels from the NIST Atomic Spectra Database; atomic masses are IUPAC standard atomic weights. The {#} field gradient is about the size Stern and Gerlach report (Z. Phys. {#}, {#}).":
   "Datos: constantes de CODATA {#}. Longitudes de onda del NIST Handbook of Basic Atomic Spectroscopic Data (Cd {#} nm y Na {#} y {#} nm en aire) y de la NIST Atomic Spectra Database (H Lyman α {#} nm en el vacío). Niveles base de la NIST Atomic Spectra Database; las masas atómicas son los pesos atómicos estándar de la IUPAC. El gradiente de campo de {#} es aproximadamente del tamaño que reportan Stern y Gerlach (Z. Phys. {#}, {#}).",
-"<a>Atomic structure</a>":
-  "<a>Estructura atómica</a>",
-"<a><span>←</span> <span>Radioactive Decay</span></a><a><span>Spin Resonance</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Decaimiento radiactivo</span></a><a><span>Resonancia de espín</span> <span>→</span></a>",
 "oven {#} K":
   "horno {#} K",
 "slits":
@@ -268,6 +262,8 @@ VDI18N.add('es', 'demo/magnetic-moments', {
   "I = e/T = {#} × {#}⁻⁵ A · A = πr² = {#} × {#}⁻¹⁹ m²",
 "μ = IA = {#} × {#}⁻²³ A·m² = {#} μ_B":
   "μ = IA = {#} × {#}⁻²³ A·m² = {#} μ_B",
+"precession slowed: really {#} GHz (Larmor)":
+  "precesión frenada: en realidad {#} GHz (Larmor)",
 "angle to z: θ = {#}°":
   "ángulo respecto a z: θ = {#}°",
 "A 3d electron (n = {#}, l = {#}) in a {#} T field. Quantum mechanics allows only five directions for L: L_z = −{#}ħ to +{#}ħ. Each has its own energy U = m_l μ_B B. Step m_l and B and watch the energy levels fan out.":
@@ -292,6 +288,8 @@ VDI18N.add('es', 'demo/magnetic-moments', {
   "misterioso",
 "The red line of cadmium, seen across the field of an electromagnet. With no field it is a single line; in a field it splits into three, evenly spaced by λ²μ_B B/(hc). Measure the spacing for several fields.":
   "La línea roja del cadmio, vista perpendicular al campo de un electroimán. Sin campo es una sola línea; en un campo se desdobla en tres, igualmente espaciadas por λ²μ_B B/(hc). Mide la separación para varios campos.",
+"Close":
+  "Cerrar",
 "upper, l = {#}":
   "superior, l = {#}",
 "lower, l = {#}":
@@ -306,14 +304,20 @@ VDI18N.add('es', 'demo/magnetic-moments', {
   "D₂ del sodio",
 "Sodium D₁":
   "D₁ del sodio",
+"to spectrometer":
+  "al espectrómetro",
+"shift from {#} nm (pm)":
+  "corrimiento desde {#} nm (pm)",
 "Bohr orbit":
   "Órbita de Bohr",
+"slowed: real T = {#} fs":
+  "frenado: T real = {#} fs",
 "current I":
   "corriente I",
-"θ = {#}° · U = m_l μ_B B = {#} meV":
-  "θ = {#}° · U = m_l μ_B B = {#} meV",
 "Quantum picture":
   "Imagen cuántica",
+"precession slowed":
+  "precesión frenada",
 "face of the screen":
   "cara de la pantalla",
 "count along z":
@@ -321,5 +325,15 @@ VDI18N.add('es', 'demo/magnetic-moments', {
 "no field":
   "sin campo",
 "l = {#}: no moment":
-  "l = {#}: sin momento"
+  "l = {#}: sin momento",
+"U = m_l μ_B B = {#} meV":
+  "U = m_l μ_B B = {#} meV",
+"Clear the screen":
+  "Limpiar la pantalla",
+"{#} meV":
+  "{#} meV",
+"U (meV)":
+  "U (meV)",
+"θ = {#}° · U = m_l μ_B B = {#} meV":
+  "θ = {#}° · U = m_l μ_B B = {#} meV"
 });

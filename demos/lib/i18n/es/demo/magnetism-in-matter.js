@@ -86,6 +86,8 @@ VDI18N.add('es', 'demo/magnetism-in-matter', {
   "El dibujo dentro del núcleo es una caricatura. Los átomos paramagnéticos se dibujan con su alineación exagerada (la alineación real es diminuta, pues μB está muy por debajo de kT), y los átomos diamagnéticos con sus momentos inducidos exagerados. El hierro se dibuja como dominios: la fracción que apunta a lo largo del campo es ({#} + M/M_s)/{#}, que es el promedio correcto pero no las formas reales de los dominios, que además giran.",
 "{#} turns per cm (fewer drawn). Cut open along the axis; drag to turn.":
   "{#} vueltas por cm (se dibujan menos). Cortado a lo largo del eje; arrastra para girar.",
+"Alignment of the atoms drawn exaggerated.":
+  "Alineación de los átomos dibujada exagerada.",
 "Core":
   "Núcleo",
 "Bismuth: diamagnetic, χ = -{#} × {#}⁻⁵":
@@ -142,10 +144,14 @@ VDI18N.add('es', 'demo/magnetism-in-matter', {
   "Tungsteno: paramagnético, χ = {#} × {#}⁻⁵",
 "Copper: diamagnetic, χ = -{#} × {#}⁻⁶":
   "Cobre: diamagnético, χ = -{#} × {#}⁻⁶",
+"Close":
+  "Cerrar",
 "coil, B₀":
   "bobina, B₀",
 "core, B":
   "núcleo, B",
 "Cut open along the axis; drag to turn.":
-  "Cortado a lo largo del eje; arrastra para girar."
+  "Cortado a lo largo del eje; arrastra para girar.",
+"Induced moments drawn exaggerated.":
+  "Momentos inducidos dibujados exagerados."
 });

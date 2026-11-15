@@ -389,7 +389,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (let v = -Math.floor(yMax / ys) * ys; v <= yMax * (1 + 1e-9); v += ys) { const y = Y(v / yUnit[1]); ctx.moveTo(x0, y); ctx.lineTo(x1, y); } ctx.stroke();
     ctx.strokeStyle = T.gridStrong; ctx.beginPath(); ctx.moveTo(X(0), y0); ctx.lineTo(X(0), y1); ctx.moveTo(x0, Y(0)); ctx.lineTo(x1, Y(0)); ctx.stroke();
     for (let v = -Math.floor(xMax / xs) * xs; v <= xMax + 1e-12; v += xs) if (Math.abs(v) > 1e-12) txt(`${+v.toPrecision(3)}`, X(v / 1e3), y1 + 10 * p, { a: 'center', s: 9, c: T.muted });
-    for (let v = -Math.floor(yMax / ys) * ys; v <= yMax * (1 + 1e-9); v += ys) txt(`${+v.toPrecision(3)}`, x0 - 4 * p, Y(v / yUnit[1]), { a: 'right', s: 9, c: T.muted });
+    /* a tick number at the very top ran into the axis name "B − B₀ (nT)": skip it there (student view, 2026-11-15) */
+    for (let v = -Math.floor(yMax / ys) * ys; v <= yMax * (1 + 1e-9); v += ys) { const yt = Y(v / yUnit[1]); if (yt > y0 + 16 * p) txt(`${+v.toPrecision(3)}`, x0 - 4 * p, yt, { a: 'right', s: 9, c: T.muted }); }
     txt('B₀ (mT)', x1, y1 + 22 * p, { a: 'right', s: 9, c: T.muted }); txt(`${ferro ? 'B' : 'B − B₀'} (${yUnit[0]})`, x0 - 40 * p, y0 + 4 * p, { s: 9, c: T.muted, bl: 'top' });
     if (ferro) { /* OpenStax Figure 12.25 points */
       ctx.strokeStyle = T.mark; ctx.lineWidth = 1.6 * p; for (const [b0, b] of [[1e-4, 0.60], [6e-4, 1.5]]) if (b0 * 1e3 <= xMax) { ctx.strokeRect(X(b0) - 4 * p, Y(b) - 4 * p, 8 * p, 8 * p); }
@@ -458,7 +459,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* the cut face: the flat view's cartoon, drawn into the texture */
     const tx = g.tctx, keep = ctx; tx.setTransform(1, 0, 0, 1, 0, 0); tx.fillStyle = ({ none: T.canvas, para: T.para, dia: T.dia, ferro: T.iron })[m.kind] || T.canvas; if (S.mat === 'water') tx.fillStyle = T.water; tx.fillRect(0, 0, TW, TH);
     ctx = tx; drawCore(0, 0, TW, TH, m, f, 1.25); ctx = keep; g.tex.needsUpdate = true;
-    const asp = w / Math.max(1, h), span = Math.max(0.5, (L3 + (W < 620 ? 0.45 : 0.85)) / asp);
+    const asp = w / Math.max(1, h), span = Math.max(0.5, (L3 + (W < 620 ? 0.62 : 0.85)) / asp);   /* 0.45 cut the B arrow off at the stage edge on phones (student view, 2026-11-15) */
     VD3.place(g.cam, G3.o, new THREE.Vector3(0.06, 0, -0.03), span / (2 * Math.tan(15 * Math.PI / 180)));
     g.stripe.offset.x = -G3.curPh;
     g.bArrow.visible = f.B0 !== 0; g.bArrow.rotation.z = f.B0 < 0 ? Math.PI : 0; g.bArrow.position.x = f.B0 < 0 ? L3 / 2 + 0.26 : L3 / 2 + 0.06;
@@ -472,6 +473,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (S.I !== 0) txt(`I = ${Math.abs(S.I).toFixed(3)} A${S.I < 0 ? ', reversed' : ''}`, x0 + 2 * p, y0 + 4 * p, { s: 10, b: 1, c: T.coilInk });
     if (f.B0 !== 0) { const b = Q([L3 / 2 + 0.16, 0, 0.05]); txt('B', b[0], b[1], { a: 'center', s: 11, b: 1 }); }
     txt(W < 620 ? 'Cut open along the axis; drag to turn.' : `${S.n} turns per cm (fewer drawn). Cut open along the axis; drag to turn.`, x0 + w - 4 * p, y0 + h - 8 * p, { a: 'right', s: 9, c: T.muted });
+    /* the atoms' alignment (para) and induced moments (dia) are drawn far larger than χ ~ 10⁻⁵ allows: say so on the stage (student view, 2026-11-15) */
+    if ((m.kind === 'para' || m.kind === 'dia') && !S.blind) txt(m.kind === 'para' ? 'Alignment of the atoms drawn exaggerated.' : 'Induced moments drawn exaggerated.', x0 + w - 4 * p, y0 + h - 21 * p, { a: 'right', s: 9, c: T.muted });
   }
   function setDim(v) {
     if (v === '3d' && !G3.ok) {

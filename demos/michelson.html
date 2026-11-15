@@ -434,7 +434,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* M1 on its stage, the micrometer behind it */
     if (VG) { VG.box(c, X(m1x + 4), Y(-30), 26 * k, 60 * k, { color: '#645a4c', r: 3 * k }); VG.box(c, X(112), Y(-40), 70 * k, 80 * k, { color: '#4e463c', r: 4 * k, shadow: false }); VG.box(c, X(m1x + 4), Y(-30), 26 * k, 60 * k, { color: '#776a58', r: 3 * k, shadow: false }); }
     c.fillStyle = '#ebe4da'; c.fillRect(X(m1x), Y(-16), 4 * k, 32 * k); c.fillStyle = 'rgba(255,255,255,0.75)'; c.fillRect(X(m1x), Y(-16), 1.2 * k, 32 * k);
-    lab('M₁', X(m1x + 2), Y(-26));
+    lab('M₁', X(m1x + 2), Y(-48));   /* above the stage: at Y(-26) the label sat on the mount's edge and the beam (student view, 2026-11-15) */
     const mbx = 186, mby = 0;   /* the micrometer: barrel, thimble with its scale */
     if (VG) { VG.rod(c, X(mbx - 8), Y(mby), X(mbx + 10), Y(mby), 6 * k, { color: '#c5beb5' }); VG.rod(c, X(mbx + 10), Y(mby), X(mbx + 40), Y(mby), 10 * k, { color: '#d5d0ca' }); }
     else { c.fillStyle = '#d5d0ca'; c.fillRect(X(mbx + 10), Y(mby - 10), 30 * k, 20 * k); }

@@ -290,6 +290,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const nar = W < 560 * p;
     lbl(nar ? 'Bohr orbit' : 'Bohr orbit as a current loop', cx, 22 * p, { a: 'center', s: 12 * p, w: 700, c: T.ink });
     lbl(nar ? `n = ${o.n}: r = ${f(b.r * 1e9, 4)} nm` : `n = ${o.n}: radius ${f(b.r * 1e9, 4)} nm (drawn the same size for every n)`, cx, 40 * p, { a: 'center', s: 10.5 * p });
+    /* the turn on screen is slowed down by about 10¹⁶: say so, with the real period (student view, 2026-11-15) */
+    const tTurn = 2 * Math.PI * Math.sqrt(o.n) / 2.2;
+    lbl(nar ? `slowed: real T = ${f(b.T * 1e15, 3)} fs` : `slow motion: one turn here takes ${f(tTurn, 1)} s, really T = 2πr/v = ${f(b.T * 1e15, 3)} fs`, cx, 56 * p, { a: 'center', s: 10 * p, c: T.accent });
     ctx.save(); ctx.strokeStyle = T.orbit; ctx.lineWidth = 2.5 * p; ctx.beginPath(); ctx.ellipse(cx, cy, R, ry, 0, 0, 7); ctx.stroke(); ctx.restore();
     /* nucleus */
     if (VG) VG.ball(ctx, cx, cy, 7 * p, '#c0432a', { glint: 1 }); else { ctx.fillStyle = T.mom; ctx.beginPath(); ctx.arc(cx, cy, 7 * p, 0, 7); ctx.fill(); }
@@ -326,6 +329,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const a = o.prec, tx = vx + rho * sc * Math.cos(a), ty = vy - zT * sc + rho * sc * tilt * Math.sin(a);
       arrow(ctx, vx, vy, tx, ty, T.orbit, 3 * p); lbl('L', tx + 8 * p, ty, { s: 13 * p, w: 700, c: T.orbit });
       const mx = vx - (tx - vx) * 0.7, my = vy - (ty - vy) * 0.7; arrow(ctx, vx, vy, mx, my, T.mom, 2.4 * p); lbl('μ', mx - 14 * p, my, { s: 13 * p, w: 700, c: T.momInk });
+      /* the precession is drawn slowed too (student view, 2026-11-15) */
+      if (o.B > 0) lbl(nar ? 'precession slowed' : `precession slowed: really ${f(E * o.B / (4 * Math.PI * ME) / 1e9, 3)} GHz (Larmor)`, vx, 56 * p, { a: 'center', s: 10 * p, c: T.accent });
       if (!S.blind && !nar) lbl(`angle to z: θ = ${f(q.theta * 180 / Math.PI, 2)}°`, vx, Hh - 48 * p, { a: 'center', s: 10.5 * p, m: true, c: T.ink });
     } else lbl(nar ? 'l = 0: no moment' : 'l = 0: no orbital angular momentum, no orbital moment', vx, vy + sc * 1.2, { a: 'center', s: 11 * p });
     if (!S.blind && !nar) lbl(`U = m_l μ_B B = ${f(q.U / E * 1000, 4)} meV`, vx, Hh - 31 * p, { a: 'center', s: 10.5 * p, m: true, c: T.ink });
@@ -488,7 +493,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     c.fillStyle = T.muted; c.textAlign = 'center'; c.fillText(CW < 600 ? 'count along z' : `atoms counted along z (${s.dots.length} so far)`, px0 + pw / 2, by + boxH + 6);
     /* cursor */
     const yC = by + boxH / 2 - s.cur * zpx; c.strokeStyle = T.accent; c.lineWidth = 1.5; c.beginPath(); c.moveTo(bx, yC); c.lineTo(px0 + pw, yC); c.stroke();
-    c.fillStyle = T.accent; c.textAlign = 'left'; c.textBaseline = 'bottom'; c.fillText(`cursor z = ${f(s.cur * 1000, 4)} mm`, px0 + 6, yC - 2);
+    /* a backdrop so the cursor reading stays readable over the count bars (student view, 2026-11-15) */
+    const cTxt = `cursor z = ${f(s.cur * 1000, 4)} mm`; c.font = `${10 * p}px ${T.mono}`; const cw = c.measureText(cTxt).width;
+    c.fillStyle = T.canvas; c.globalAlpha = 0.85; c.fillRect(px0 + 3, yC - 4 - 12 * p, cw + 6, 12 * p + 2); c.globalAlpha = 1;
+    c.fillStyle = T.accent; c.textAlign = 'left'; c.textBaseline = 'bottom'; c.fillText(cTxt, px0 + 6, yC - 2);
     cur.dataset.half = half; cur.dataset.by = by; cur.dataset.boxH = boxH;
   }
   function niceStep(r) { const q = Math.pow(10, Math.floor(Math.log10(r))), m = r / q; return (m < 1.5 ? 1 : m < 3.5 ? 2 : m < 7.5 ? 5 : 10) * q; }
@@ -505,7 +513,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.save(); ctx.shadowColor = lc; ctx.shadowBlur = 18 * p; ctx.fillStyle = lc; ctx.globalAlpha = 0.85; ctx.beginPath(); ctx.ellipse(cx, cy, 10 * p, 22 * p, 0, 0, 7); ctx.fill(); ctx.restore();
     if (z.B > 0) arrow(ctx, cx + 64 * p, cy + 26 * p, cx + 64 * p, cy - 26 * p, T.field, 2 * p);
     lbl(`B = ${f(z.B, 2)} T`, cx + 72 * p, cy, { s: 11 * p, c: T.field });
-    if (z.look === 'across') { arrow(ctx, cx + 20 * p, cy, cx + 120 * p, cy + 70 * p, T.muted, 1.5 * p); lbl('to the spectrometer (across B)', cx + 40 * p, cy + 92 * p, { s: 10 * p }); }
+    /* at phone width the long labels ran into the level diagram: shorter ones, and the legend on two rows (student view, 2026-11-15) */
+    const nar = W < 560 * p;
+    if (z.look === 'across') { arrow(ctx, cx + 20 * p, cy, cx + 120 * p, cy + 70 * p, T.muted, 1.5 * p); lbl(nar ? 'to spectrometer' : 'to the spectrometer (across B)', nar ? cx : cx + 40 * p, cy + 92 * p, { s: 10 * p, a: nar ? 'center' : 'left' }); }
     else { arrow(ctx, cx, cy - 20 * p, cx, cy - 30 * p - ph - 34 * p, T.muted, 1.5 * p); lbl('to the spectrometer (along B, through a hole in the pole)', cx, cy - 30 * p - ph - 44 * p, { a: 'center', s: 10 * p }); }
     lbl(ln.name, W * 0.5, 20 * p, { a: 'center', s: 11.5 * p, w: 700, c: T.ink });
     /* right: energy levels split into m sublevels (spacing drawn larger than life), with one vertical arrow per component,
@@ -521,8 +531,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const list = r.all.slice().sort((u, v) => u.shift_pm - v.shift_pm || u.mu - v.mu), xa = lx0 + 90 * p, xb = lx1 - 54 * p;
     list.forEach((c, i) => { const x = list.length === 1 ? (xa + xb) / 2 : xa + (xb - xa) * i / (list.length - 1), col = c.q === 0 ? T.pi : c.q > 0 ? T.sp : T.sm;
       ctx.save(); ctx.globalAlpha = 0.9; arrow(ctx, x, yOf(ln.up, r.gu, yU, c.mu) + 3 * p, x, yOf(ln.lo, r.gl, yL, c.ml) - 3 * p, col, 1.8 * p); ctx.restore(); });
-    lbl('Δm = 0 (π)', lx0, Hh - 20 * p, { s: 10 * p, c: T.pi }); lbl('Δm = +1 (σ)', lx0 + 90 * p, Hh - 20 * p, { s: 10 * p, c: T.sp }); lbl('Δm = −1 (σ)', lx0 + 180 * p, Hh - 20 * p, { s: 10 * p, c: T.sm });
-    lbl('level spacing drawn larger than life', lx1, Hh - 20 * p, { a: 'right', s: 10 * p });
+    if (nar) { const x0 = 12 * p, yl = Hh - 40 * p;
+      lbl('Δm = 0 (π)', x0, yl, { s: 10 * p, c: T.pi }); lbl('Δm = +1 (σ)', x0 + 0.34 * (W - 24 * p), yl, { s: 10 * p, c: T.sp }); lbl('Δm = −1 (σ)', x0 + 0.68 * (W - 24 * p), yl, { s: 10 * p, c: T.sm });
+      lbl('level spacing drawn larger than life', W / 2, yl + 16 * p, { a: 'center', s: 10 * p });
+    } else { const yl = Hh - 30 * p;
+      lbl('Δm = 0 (π)', lx0, yl, { s: 10 * p, c: T.pi }); lbl('Δm = +1 (σ)', lx0 + 90 * p, yl, { s: 10 * p, c: T.sp }); lbl('Δm = −1 (σ)', lx0 + 180 * p, yl, { s: 10 * p, c: T.sm });
+      lbl('level spacing drawn larger than life', lx1, yl, { a: 'right', s: 10 * p }); }
   }
   const fmtM = (m) => { const r2 = Math.round(2 * m); if (r2 % 2 === 0) return String(r2 / 2).replace('-', '−'); return `${r2 < 0 ? '−' : ''}${Math.abs(r2)}/2`; };
   const ZW_PM = 0.20;   /* FWHM of the spectrometer's line shape, pm */
@@ -533,7 +547,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const X = (v) => L + (v + span) / (2 * span) * pw;
     c.strokeStyle = T.grid; c.fillStyle = T.muted; c.font = `${10 * p}px ${T.mono}`; c.textAlign = 'center'; c.textBaseline = 'top';
     const st = niceStep(span / 3); for (let v = -Math.floor(span / st) * st; v <= span + 1e-9; v += st) { c.beginPath(); c.moveTo(X(v), Tp); c.lineTo(X(v), Tp + ph); c.stroke(); c.fillText(String(+v.toFixed(3)).replace('-', '−'), X(v), Tp + ph + 4); }
-    c.textBaseline = 'bottom'; c.fillText(`wavelength shift from ${LINES[z.line].lam} nm (pm); longer wavelength to the right`, L + pw / 2, CH - 2);
+    c.textBaseline = 'bottom'; c.fillText(CW < 600 ? `shift from ${LINES[z.line].lam} nm (pm)` : `wavelength shift from ${LINES[z.line].lam} nm (pm); longer wavelength to the right`, L + pw / 2, CH - 2);   /* the long label was cut off on phones (student view, 2026-11-15) */
     const sig = ZW_PM / 2.3548, prof = (x) => r.comps.reduce((a, q) => a + q.rel * Math.exp(-0.5 * Math.pow((x - q.shift_pm) / sig, 2)), 0);
     let ymax = 0; const N = 600, ys = []; for (let i = 0; i <= N; i++) { const x = -span + 2 * span * i / N, y = prof(x); ys.push(y); ymax = Math.max(ymax, y); }
     c.save(); c.beginPath(); c.rect(L, Tp, pw, ph); c.clip(); c.strokeStyle = T.ink; c.lineWidth = 2 * p; c.beginPath();
