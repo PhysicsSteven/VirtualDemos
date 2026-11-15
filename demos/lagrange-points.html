@@ -576,7 +576,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   const PRESETS = {
     jwst: { sys: 'se', view: 'near', speed: 2, follow: true,
-      hint: 'Two planar Lyapunov orbits, about L1 (SOHO’s neighborhood) and L2 (JWST’s), each about 0.004 AU across. L1 and L2 are saddles: after two or three loops the tiny numerical error has grown enough that each particle leaves. JWST fires its thrusters about every three weeks to stay.',
+      hint: 'Two planar Lyapunov orbits, about L1 (SOHO’s neighborhood) and L2 (JWST’s), each about 0.003 AU wide and 0.008 AU long. L1 and L2 are saddles: after two or three loops the tiny numerical error has grown enough that each particle leaves. JWST fires its thrusters about every three weeks to stay.',
       make(mu) { const out = []; for (const [w, A, col] of [['L1', -0.0011, 1], ['L2', 0.0012, 0]]) { const ly = lyapunov(mu, w, A); if (ly) out.push({ s: [ly.x0, 0, 0, ly.vy0], col }); } return out; } },
     em: { sys: 'em', view: 'whole', speed: 3, follow: true,
       hint: 'C is between C(L2) and C(L1): the neck at L1 is open but L2 is closed. The particle, released at rest on its own zero velocity curve, wanders between Earth and the Moon and back, and can never leave the shaded boundary.',
@@ -601,7 +601,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     horseshoe: { sys: 'sj', view: 'whole', speed: 6, follow: true,
       hint: 'Start on a circular orbit 1% outside Jupiter’s, opposite it. The particle drifts slowly backward, is turned around before it reaches Jupiter, drifts the other way past L3, and turns again: a horseshoe enclosing L3, L4 and L5. Saturn’s moons Janus and Epimetheus swap orbits like this every four years.',
       make(mu) { return [{ s: circ(mu, 1.01, 180), col: 0 }]; } },
-    l1: { sys: 'x', view: 'whole', speed: 3, follow: true,
+    /* speed 2 (0.2 P per second), was 0.5: the L1 pair leaves in about 2 s instead of under 1 s, and once caught they loop
+       about m₂ (0.17 P a loop) about once a second instead of three times (student view, 2026-11-15) */
+    l1: { sys: 'x', view: 'whole', speed: 2, follow: true,
       hint: 'Particles at rest 10⁻⁵ a from L1, on either side, and 10⁻³ a from L4. L1 is a saddle: the offset grows by a factor e every 1/λ, readout above, and one falls toward each mass. With μ = 0.1, above Routh’s 0.0385, even L4 is unstable: that particle spirals away too.',
       make(mu, CL, L) { return [{ s: [L.L1.x + 1e-5, 0, 0, 0], col: 1 }, { s: [L.L4.x + 1e-3, L.L4.y, 0, 0], col: 2 }, { s: [L.L1.x - 1e-5, 0, 0, 0], col: 0 }]; } }
   };
@@ -1352,7 +1354,17 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   playBtn.addEventListener('click', () => setPlaying(!playing));
   /* the shared control panel (demos/lib/vdpanel.js): the time controls in one group at the left of the strip */
   if (window.VD && VD.panel) VD.panel({ speed: '#sp', step: true });
-  $('reset').addEventListener('click', () => { if (S.preset) applyPreset(S.preset); else { const keep = parts.map((p) => ({ s: p.s0, swarm: p.swarm, col: p.col })); t = 0; lastDrawT = null; parts = []; sel = null; for (const q of keep) addParticle(q.s, q); syncLaunch(); readouts(); drawAll(); } });
+  /* Reset puts the run back to t = 0 and keeps the settings, as in every other demo: it used to re-apply the setup, which
+     also put back its time speed and frame, so a student who slowed Comet meets Jupiter lost the slower speed (student
+     view, 2026-11-15) */
+  function resetPreset() {
+    const f = S.frame, sR = S.speedR, sS = S.speedS;
+    applyPreset(S.preset);
+    S.speedR = sR; S.speedS = sS;
+    if (f !== S.frame) setFrame(f);
+    S.speed = S[S.frame === 'rot' ? 'speedR' : 'speedS']; $('sp').value = S.speed; readouts();
+  }
+  $('reset').addEventListener('click', () => { if (S.preset) resetPreset(); else { const keep = parts.map((p) => ({ s: p.s0, swarm: p.swarm, col: p.col })); t = 0; lastDrawT = null; parts = []; sel = null; for (const q of keep) addParticle(q.s, q); syncLaunch(); readouts(); drawAll(); } });
   function clearParts() { parts = []; sel = null; custom(); syncLaunch(); readouts(); drawAll(); }
   $('clear').addEventListener('click', clearParts);
 

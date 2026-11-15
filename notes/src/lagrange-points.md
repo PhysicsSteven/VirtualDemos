@@ -19,7 +19,7 @@ Students should know Newton's gravity, circular orbits and Kepler's third law, a
 1. **Jupiter's Trojans.** This is the opening setup: pause, ask Q1, then press **Reset** and play. A swarm of 140 test asteroids starts at rest near L4 and L5. None falls off; each swings around its point in a tadpole, about 150 years per swing.
 2. **Comet meets Jupiter.** This one opens in the Sun centered frame. A comet on an ellipse from 2.6 AU to 5.7 AU passes close to Jupiter three times in its first 2.5 Jupiter orbits; each pass reshapes its orbit (perihelion 2.6 AU, then 3.6 AU, then 1.5 AU, then 2.1 AU in the rail). Ask Q7. Then press **Rotating frame**: the same path, and the Jacobi constant has not changed at all.
 3. **Horseshoe orbit.** A particle on a circular orbit 1% outside Jupiter's drifts backward, turns around before reaching Jupiter, and drifts the other way past L3. Ask Q6.
-4. **Sun–Earth: JWST at L2.** Two planar orbits around L1 and L2, each about 0.004 AU across, last two or three loops and then leave. Read the e-folding times in the rail (23 d at L1, 23.4 d at L2) and ask Q4.
+4. **Sun–Earth: JWST at L2.** Two planar orbits around L1 and L2, each about 0.003 AU wide and 0.008 AU long, last two or three loops and then leave. Read the e-folding times in the rail (23 d at L1, 23.4 d at L2) and ask Q4.
 5. **Earth–Moon.** C is between C(L2) and C(L1): the particle wanders between Earth and the Moon through L1 but cannot get out past L2. Drag the gold curve (or **Jacobi constant C**) and read **Where a particle with this C can go** (Q5).
 6. **Unstable L1.** μ = 0.1. Particles 10⁻⁵ a either side of L1 leave, one toward each mass; with μ above 0.0385 the one near L4 spirals away too. Ask Q3.
 

@@ -714,12 +714,23 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const X = (z) => (z - view.z0) * view.s;
   const Y = (y) => view.cy - y * view.s;
   const Zof = (px) => view.z0 + px / view.s;
+  /* Labels drawn this frame, so a later one steps away from the axis instead of landing on an earlier one: "final image at
+     infinity", "eye", "Eyepiece", "retina" and "image 1" piled up near the eye in the telescopes and the microscope
+     (student view, 2026-11-15) */
+  let tagBoxes = [];
   function tag(text, x, y, color, o = {}) {
     const ps = proj(), fs = (o.size || 11) * ps;
     ctx.save(); ctx.font = `${o.weight || 600} ${fs}px ${T.mono}`; ctx.textAlign = o.align || 'center'; ctx.textBaseline = 'middle';
     const w = ctx.measureText(text).width;
     let x0 = ctx.textAlign === 'center' ? x - w / 2 : ctx.textAlign === 'right' ? x - w : x;
     x0 = Math.max(4 * ps, Math.min(W - w - 4 * ps, x0));   /* keep the label on the picture */
+    const hh = fs / 2 + 2 * ps, up = y < view.cy;
+    for (let k = 0; k < 8; k++) {
+      const hit = tagBoxes.find((b) => x0 - 3 * ps < b[2] && x0 + w + 3 * ps > b[0] && y - hh < b[3] && y + hh > b[1]);
+      if (!hit) break;
+      y = up ? hit[1] - hh - 1 * ps : hit[3] + hh + 1 * ps;
+    }
+    tagBoxes.push([x0 - 3 * ps, y - hh, x0 + w + 3 * ps, y + hh]);
     ctx.fillStyle = T.halo; ctx.beginPath(); ctx.rect(x0 - 3 * ps, y - fs / 2 - 2 * ps, w + 6 * ps, fs + 4 * ps); ctx.fill();
     ctx.textAlign = 'left'; ctx.fillStyle = color; ctx.fillText(text, x0, y + 0.5); ctx.restore();
   }
@@ -792,8 +803,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       ctx.fillStyle = lg; ctx.fillRect(x - 40 * ps, view.cy - 30 * ps, 60 * ps, 60 * ps);
       ctx.fillStyle = 'rgba(200,225,245,0.35)'; ctx.fillRect(x - 1.5 * ps, view.cy - 18 * ps, 3 * ps, 36 * ps);
       arrow(x, view.cy, x, Math.min(top, view.cy - 1), selected ? T.sel : T.a, 2.4, false);
+      post(o.z, view.cy + 18 * ps);   /* the post first, so it does not cross out the label (student view, 2026-11-15) */
       tag('object', x, view.cy + 26 * ps, selected ? T.sel : T.muted, { size: 10 });
-      post(o.z, view.cy + 18 * ps);
     } else {
       const x = X(Math.min(...parts().map((e) => e.z), S.zV)) - 60 * ps;
       tag(o.tex === 'moon' ? '← light from the Moon' : '← light from a far sign', Math.max(70 * ps, x), view.cy + Math.max(...parts().map((e) => e.D / 2), 1) * view.s + 22 * ps, T.muted, { size: 10 });
@@ -893,7 +904,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   function draw() {
     if (!T || !W || !model) return;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); tagBoxes = [];
     const G = window.VDGear; if (G && G.backdrop) G.backdrop(ctx, W, H); else { ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H); }
     const ps = proj();
     /* the axis */
