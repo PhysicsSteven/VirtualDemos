@@ -493,7 +493,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       L.apM = new THREE.MeshBasicMaterial({ color: 0x000000 }); const ap = new THREE.Mesh(new THREE.CircleGeometry(0.009, 20).rotateY(Math.PI / 2), L.apM); ap.position.set(-0.026, 0, ZC); L.grp.add(ap); }
     g3 = { r, el, scene, cam, hemi, sun, floorM, tableM, lanes, leds };
     can.addEventListener('wheel', (e) => { if (!use3()) e.stopImmediatePropagation(); }, { passive: true });
-    VD3.orbit(can, G3.o, () => { if (use3()) draw(); }, { grab: () => !use3(), phMin: 0.35, phMax: 1.45, zMin: 0.6, zMax: 3 });
+    VD3.orbit(can, G3.o, () => { if (use3()) draw(); }, { active: () => use3(), /* wheel, keys and pinch leave the hidden 3D camera alone while Flat shows (student view calls, 2026-11-15) */ grab: () => !use3(), phMin: 0.35, phMax: 1.45, zMin: 0.6, zMax: 3 });
     return true;
   }
   const col3 = (s, fb) => { try { return new THREE.Color(s || fb); } catch (_) { return new THREE.Color(fb); } };
