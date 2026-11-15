@@ -842,9 +842,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (cmBox) boxes.push(cmBox);
     /* a label past the arrow's tip, stepped further along the arrow until it clears the crates and the other labels, and kept in the picture */
     const lab = (x, y, name, F, col, up) => { const t = lbl(name, F), dir = up ? -1 : 1; ctx.font = `700 ${11.5 * p}px ${T.ui}`; const w = ctx.measureText(t).width + 6 * p, hh = 16 * p;
-      let ty = y + dir * (Lf(F) + 13 * p); const xb = Math.max(2 * p, Math.min(Ws - w - 2 * p, x - w / 2)), hit = () => boxes.some((b) => xb < b[0] + b[2] && xb + w > b[0] && ty - hh / 2 < b[1] + b[3] && ty + hh / 2 > b[1]);
+      let ty = y + dir * (Lf(F) + 13 * p); let xb = Math.max(2 * p, Math.min(Ws - w - 2 * p, x - w / 2)); const hit = () => boxes.some((b) => xb < b[0] + b[2] && xb + w > b[0] && ty - hh / 2 < b[1] + b[3] && ty + hh / 2 > b[1]);
       for (let n = 0; n < 10 && hit(); n++) ty += dir * 17 * p;
-      ty = Math.max(hh / 2 + 40 * p, Math.min(Hs - hh / 2 - 2 * p, ty)); boxes.push([xb, ty - hh / 2, w, hh]);
+      ty = Math.max(hh / 2 + 40 * p, Math.min(Hs - hh / 2 - 2 * p, ty));
+      /* kept in the picture it can land on a label already there (on a phone w and beam overlapped at the floor): slide it sideways
+         past that label, staying in the picture (student view, 2026-11-15) */
+      for (let n = 0; n < 4 && hit(); n++) { const b = boxes.find((q) => xb < q[0] + q[2] && xb + w > q[0] && ty - hh / 2 < q[1] + q[3] && ty + hh / 2 > q[1]);
+        const right = b[0] + b[2] + 2 * p, left = b[0] - w - 2 * p; xb = right + w <= Ws - 2 * p && (x >= b[0] + b[2] / 2 || left < 2 * p) ? right : Math.max(2 * p, left); }
+      boxes.push([xb, ty - hh / 2, w, hh]);
       ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.85; ctx.fillRect(xb, ty - hh / 2, w, hh); ctx.globalAlpha = 1; ctx.fillStyle = col; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(t, xb + 3 * p, ty); };
     const arr = (x, y, F, col, lw, up) => { const L = Lf(F); arrow(x, y, 0, up ? -L : L, col, lw); };
     for (const st of stacks.values()) { const M = st.items.reduce((s0, q) => s0 + q.m, 0), [ax, ay] = toScr(X(st.x), st.mid); arr(ax, ay, M * G, T.w, 3 * p); lab(ax, ay, 'w', M * G, T.w); }

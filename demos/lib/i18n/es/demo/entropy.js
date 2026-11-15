@@ -68,8 +68,8 @@ VDI18N.add('es', 'demo/entropy', {
   "Todas las moléculas empiezan a la izquierda.",
 "The two solids":
   "Los dos sólidos",
-"<span>Two Einstein solids in contact share q quanta of energy, each quantum ε</span>":
-  "<span>Dos sólidos de Einstein en contacto comparten q cuantos de energía, cada cuanto ε</span>",
+"<span>Two Einstein solids in contact share <span>q</span> quanta of energy, each quantum <span>ε</span></span>":
+  "<span>Dos sólidos de Einstein en contacto comparten <span>q</span> cuantos de energía, cada cuanto <span>ε</span></span>",
 "Oscillators in solid A":
   "Osciladores en el sólido A",
 "Oscillators in solid B":
@@ -322,6 +322,8 @@ VDI18N.add('es', 'demo/entropy', {
   "Un refrigerador que mueve {#} J de un congelador a {#} K a una habitación a {#} K sin ningún trabajo. El enunciado de Clausius dice que no existe tal refrigerador.",
 "refrigerator":
   "refrigerador",
+"Close":
+  "Cerrar",
 "Reset puts the partition back.":
   "Reiniciar vuelve a poner la partición.",
 "ΔS hot":
@@ -338,6 +340,10 @@ VDI18N.add('es', 'demo/entropy', {
   "refrigerador",
 "Drag to turn, double click to go back. Arrow widths in proportion to the energy; not to scale.":
   "Arrastra para girar, doble clic para regresar. Anchos de flecha proporcionales a la energía; no a escala.",
+"<span>Two Einstein solids in contact share q quanta of energy, each quantum <span>ε</span></span>":
+  "<span>Dos sólidos de Einstein en contacto comparten q cuantos de energía, cada cuanto <span>ε</span></span>",
+"<span>Two Einstein solids in contact share q quanta of energy, each quantum ε</span>":
+  "<span>Dos sólidos de Einstein en contacto comparten q cuantos de energía, cada cuanto ε</span>",
 "Start over puts the partition back.":
   "Empezar de nuevo vuelve a poner la partición."
 });

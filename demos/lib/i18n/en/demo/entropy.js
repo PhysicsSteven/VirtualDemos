@@ -34,7 +34,7 @@ VDI18N.add('en', 'demo/entropy', [
 "Remove the partition",
 "All the molecules start on the left.",
 "The two solids",
-"<span>Two Einstein solids in contact share q quanta of energy, each quantum ε</span>",
+"<span>Two Einstein solids in contact share <span>q</span> quanta of energy, each quantum <span>ε</span></span>",
 "Oscillators in solid A",
 "Oscillators in solid B",
 "Quanta of energy q",

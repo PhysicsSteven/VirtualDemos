@@ -8,10 +8,6 @@ VDI18N.add('es', 'demo/equilibrium', {
   "pivote P = {#} N",
 "Static Equilibrium":
   "Equilibrio estático",
-"<a>Static equilibrium and elasticity</a>":
-  "<a>Equilibrio estático y elasticidad</a>",
-"<a><span>←</span> <span>Hanging Chains and Arches</span></a><a><span>Stress and Strain</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Cadenas colgantes y arcos</span></a><a><span>Esfuerzo y deformación</span> <span>→</span></a>",
 "An object stays still only if the forces on it add to zero and the torques about any point add to zero. Drag the loads and watch the support forces share the weight, until one of them would have to pull and the object tips.":
   "Un objeto permanece quieto solo si las fuerzas sobre él suman cero y las torcas respecto a cualquier punto suman cero. Arrastra las cargas y observa cómo las fuerzas de los soportes se reparten el peso, hasta que una de ellas tendría que jalar y el objeto se vuelca.",
 "A structure with every force on it drawn as an arrow to scale. Drag a load along the beam (in 3D, drag elsewhere to turn the view). Left and right arrow keys move the selected load; Tab picks the next one with {#} and {#}.":
@@ -50,8 +46,6 @@ VDI18N.add('es', 'demo/equilibrium', {
   "Agregar un soporte",
 "Add {#} kg":
   "Agregar {#} kg",
-"Remove the selected part":
-  "Quitar la parte seleccionada",
 "On the picture: [ and ] pick a part, the arrow keys move it (Shift for bigger steps), Delete removes it, and Space lets go or holds the beam.":
   "Sobre la imagen: [ y ] eligen una parte, las flechas la mueven (Shift para pasos más grandes), Supr la quita, y Espacio suelta o sostiene la viga.",
 "Settings":
@@ -82,6 +76,10 @@ VDI18N.add('es', 'demo/equilibrium', {
   "ΣF<sub>x</sub> = {#} · ΣF<sub>y</sub> = {#} · Στ = {#} respecto a cualquier punto",
 "Blind hides the support forces, tension, friction, the torques and whether it will stay, and draws every arrow the same length. The masses and positions stay. Beams and ladders are rigid and uniform; strings and cables are massless; the pivot and hinge are frictionless.":
   "A ciegas oculta las fuerzas de los soportes, la tensión, la fricción, las torcas y si se mantendrá, y dibuja todas las flechas de la misma longitud. Las masas y las posiciones se quedan. Las vigas y las escaleras son rígidas y uniformes; las cuerdas y los cables no tienen masa; el pivote y la bisagra no tienen fricción.",
+"<a>Static equilibrium and elasticity</a>":
+  "<a>Equilibrio estático y elasticidad</a>",
+"<a><span>←</span> <span>Hanging Chains and Arches</span></a><a><span>Stress and Strain</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Cadenas colgantes y arcos</span></a><a><span>Esfuerzo y deformación</span> <span>→</span></a>",
 "Arrow lengths are to scale with force. Lengths in meters; people are sized by mass as a guide only. Drag a load to move it; drag elsewhere to turn.":
   "Las longitudes de las flechas están a escala con la fuerza. Longitudes en metros; el tamaño de las personas según su masa es solo orientativo. Arrastra una carga para moverla; arrastra en otro lugar para girar.",
 "In equilibrium: both supports push up.":
@@ -218,10 +216,14 @@ VDI18N.add('es', 'demo/equilibrium', {
   "Se quitó la parte seleccionada.",
 "The Sandbox is for exploring: pick one of the other setups to record readings for the worksheet.":
   "La Caja de arena es para explorar: elige una de las otras configuraciones para registrar lecturas para la hoja de trabajo.",
+"Close":
+  "Cerrar",
 "Balanced: the center of mass is right over the support.":
   "Equilibrada: el centro de masa está justo sobre el soporte.",
 "Hold it level again":
   "Sostenerla horizontal de nuevo",
 "Let go.":
-  "Soltar."
+  "Soltar.",
+"Remove the selected part":
+  "Quitar la parte seleccionada"
 });

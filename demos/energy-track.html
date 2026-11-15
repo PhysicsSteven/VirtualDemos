@@ -341,7 +341,7 @@
     lowloop: { pts: LOOP, f: 0.14, mu: 0, g: 'earth', stick: false,
       hint: 'The same loop, started lower. Near the top the track would have to pull the skater in, which it cannot, so the skater leaves the track and falls across the loop as a projectile. Turn on Stick to the track and it goes round.' },
     jump: { pts: [[0.5, 6.5], [3, 2], [6, 0.8], [8, 1.4], [9.2, 2.6]], f: 0.05, mu: 0, g: 'earth', stick: false,
-      hint: 'A ramp that ends in a kicker. Off the end the skater flies as a projectile: K and U still add to the total in the air. On landing, the downward speed goes into thermal energy, so the bars show the bump.' },
+      hint: 'A ramp that ends in a kicker. Off the end the skater flies as a projectile: K and U still add to the total in the air. It reaches the wall at the right edge of the park, which stops its sideways motion, then drops to the ground; at the wall and on landing the lost kinetic energy goes into thermal energy, so the bars show each bump.' },
     hump: { pts: HUMP, f: 0.02, mu: 0, g: 'earth', stick: false,
       hint: 'A hump with a tight top. Coming up to the top the track curves away faster than the skater can follow (N would drop below zero), so the skater leaves the track, flies over the top and lands on the far ramp.' },
     rails: { pts: HUMP, f: 0.02, mu: 0, g: 'earth', stick: true,
@@ -386,13 +386,18 @@
     if (!on && S.st) readouts();   /* readouts refresh every 100 ms while running: on Pause show the state it stopped in, not one up to 100 ms old (break-it test, 2026-11-09) */ }
   function step(dt) {
     const p = P(); let left = dt * S.speed;
-    while (left > 1e-12) { const h = Math.min(ET_H, left); const ev = etStep(S.st, p, h); left -= h; for (const e of ev) note(e); }
+    /* off the end of the track the step returns 'end' then 'leave': say "Off the end", not "the track would have had to pull" (student view, 2026-11-15) */
+    while (left > 1e-12) { const h = Math.min(ET_H, left); const ev = etStep(S.st, p, h); left -= h; for (const e of ev) if (!(e === 'leave' && ev.includes('end'))) note(e); }
     S.histT += dt * S.speed;
     if (S.histT >= 1 / 30) { S.histT = 0; const E = energies(); S.hist.push([S.st.t, E.K, E.U, E.Th]); while (S.hist.length && S.hist[0][0] < S.st.t - GW) S.hist.shift(); }
   }
-  const SAY = { leave: 'Left the track: the track would have had to pull (N < 0).', end: 'Off the end of the track.', land: 'Landed on the track: the speed across it went into thermal energy.',
-    ground: 'Landed on the ground: the downward speed went into thermal energy.', wall: 'Stopped by the wall.', stop: 'At rest: friction holds the skater here.' };
-  function note(e) { if (e === 'end') return; S.msg = SAY[e] || ''; status(); }
+  /* the event lines are shown only mid-run, where the harvest never looks: written as VDI18N.t('...') so the harvest reads them
+     from the source, looked up when shown (student view, 2026-11-15) */
+  const SAY = ((VDI18N) => ({ leave: () => VDI18N.t('Left the track: the track would have had to pull (N < 0).'), end: () => VDI18N.t('Off the end of the track.'),
+    land: () => VDI18N.t('Landed on the track: the speed across it went into thermal energy.'),
+    ground: () => VDI18N.t('Landed on the ground: the downward speed went into thermal energy.'), wall: () => VDI18N.t('Stopped by the wall.'),
+    stop: () => VDI18N.t('At rest: friction holds the skater here.') }))({ t: (s) => (typeof window.VDI18N === 'object' ? window.VDI18N.t(s) : s) });
+  function note(e) { S.msg = SAY[e] ? SAY[e]() : ''; status(); }
   function status() { $('status').textContent = S.msg || (S.run ? '' : 'Press Play to let the skater go.'); }
   function energies() { const e = etEnergy(S.st, P()), m = S.m; return { K: e.K * m, U: e.U * m, Th: e.Th * m }; }
   function normalNow() {

@@ -114,8 +114,8 @@ VDI18N.add('es', 'demo/energy-track', {
   "Un rizo completo. En la parte superior del rizo la pista solo puede empujar hacia abajo, así que el patinador necesita ahí v² ≥ gR (R el radio de la pista en la parte superior). Si empieza desde esta altura, da la vuelta completa, sube la rampa del otro lado y vuelve a pasar por el rizo hacia atrás.",
 "The same loop, started lower. Near the top the track would have to pull the skater in, which it cannot, so the skater leaves the track and falls across the loop as a projectile. Turn on Stick to the track and it goes round.":
   "El mismo rizo, empezando más abajo. Cerca de la parte superior la pista tendría que jalar al patinador hacia adentro, lo que no puede hacer, así que el patinador se sale de la pista y cae a través del rizo como un proyectil. Activa Pegado a la pista y da la vuelta completa.",
-"A ramp that ends in a kicker. Off the end the skater flies as a projectile: K and U still add to the total in the air. On landing, the downward speed goes into thermal energy, so the bars show the bump.":
-  "Una rampa que termina en un trampolín. Al salir del extremo el patinador vuela como un proyectil: K y U siguen sumando el total en el aire. Al aterrizar, la rapidez hacia abajo se convierte en energía térmica, así que las barras muestran el golpe.",
+"A ramp that ends in a kicker. Off the end the skater flies as a projectile: K and U still add to the total in the air. It reaches the wall at the right edge of the park, which stops its sideways motion, then drops to the ground; at the wall and on landing the lost kinetic energy goes into thermal energy, so the bars show each bump.":
+  "Una rampa que termina en un trampolín. Al salir del extremo el patinador vuela como un proyectil: K y U siguen sumando el total en el aire. Llega a la pared del lado derecho del parque, que detiene su movimiento horizontal, y luego cae al suelo; en la pared y al aterrizar, la energía cinética perdida se convierte en energía térmica, así que las barras muestran cada golpe.",
 "A hump with a tight top. Coming up to the top the track curves away faster than the skater can follow (N would drop below zero), so the skater leaves the track, flies over the top and lands on the far ramp.":
   "Una joroba con la cima muy cerrada. Al subir hacia la cima, la pista se curva más rápido de lo que el patinador puede seguir (N quedaría por debajo de cero), así que el patinador se sale de la pista, vuela sobre la cima y aterriza en la rampa del otro lado.",
 "The same hump with the skater on rails, like a roller coaster car. The rails can pull as well as push, so the skater stays on: N goes negative (the readout shows it) over the top, and the skater climbs the far ramp to its starting height.":
@@ -123,5 +123,21 @@ VDI18N.add('es', 'demo/energy-track', {
 "The valley on the Moon, g = {#} m/s². The skater turns around at the same heights as on Earth (the heights depend only on energy per unit weight), but everything happens √({#}/{#}) = {#} times slower.":
   "El valle en la Luna, g = {#} m/s². El patinador da la vuelta a las mismas alturas que en la Tierra (las alturas dependen solo de la energía por unidad de peso), pero todo ocurre √({#}/{#}) = {#} veces más lento.",
 "A plain track to start from. Drag the grips to reshape it, drag points from the tray onto it to add bends ({#} points at most), and drag a grip onto the bin to take it away.":
-  "Una pista sencilla para empezar. Arrastra las agarraderas para cambiar su forma, arrastra puntos desde la bandeja para agregar curvas ({#} puntos como máximo), y arrastra una agarradera al bote de basura para quitarla."
+  "Una pista sencilla para empezar. Arrastra las agarraderas para cambiar su forma, arrastra puntos desde la bandeja para agregar curvas ({#} puntos como máximo), y arrastra una agarradera al bote de basura para quitarla.",
+"Close":
+  "Cerrar",
+"Left the track: the track would have had to pull (N < 0).":
+  "Se salió de la pista: la pista habría tenido que jalar (N < 0).",
+"Off the end of the track.":
+  "Salió por el extremo de la pista.",
+"Landed on the track: the speed across it went into thermal energy.":
+  "Aterrizó en la pista: la rapidez perpendicular a ella se convirtió en energía térmica.",
+"Landed on the ground: the downward speed went into thermal energy.":
+  "Aterrizó en el suelo: la rapidez hacia abajo se convirtió en energía térmica.",
+"Stopped by the wall.":
+  "Lo detuvo la pared.",
+"At rest: friction holds the skater here.":
+  "En reposo: la fricción sostiene aquí al patinador.",
+"A ramp that ends in a kicker. Off the end the skater flies as a projectile: K and U still add to the total in the air. On landing, the downward speed goes into thermal energy, so the bars show the bump.":
+  "Una rampa que termina en un trampolín. Al salir del extremo el patinador vuela como un proyectil: K y U siguen sumando el total en el aire. Al aterrizar, la rapidez hacia abajo se convierte en energía térmica, así que las barras muestran el golpe."
 });
