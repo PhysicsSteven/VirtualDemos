@@ -1068,6 +1068,140 @@
     if (window.VDPrefs && VDPrefs.get().reduceMotion) syncMotion();
   }
 
+  /* Screen reader layer (Steve unparked the screen reader pass, 2026-11-16: the site should work with a screen reader and the keyboard,
+     well enough for an honest VPAT). Three pieces, checked by tools/srcheck.cjs, which reads Chrome's accessibility tree:
+
+     VD.say(text[, { now }]): one shared polite live region (#vdLive) for the page. Text (a string or an array of sentences, each its own
+     block so i18n.js translates it with its numbers) is announced once; a repeat of the same words is announced again. Calls within
+     250 ms are joined. { now: true } skips the wait.
+
+     VD.describe(el, fn[, o]): what the picture el shows now, in words. fn() returns a sentence, or an array of sentences or
+     { t: sentence, live: false } items, written from the demo's own state (never from text on the page). The words become el's
+     description (aria-describedby on a hidden block), refreshed every second while the page is on show, so a screen reader reads the
+     current state whenever it reaches the picture. After the student changes something (a slider, a button, a key or a drag on the
+     picture, a type in), the sentences that changed are announced once things settle (o.wait ms, default 700); items marked
+     live: false (a value that runs on by itself, the time) are in the description but never announced. A hidden Describe the picture
+     button after el (it shows while focused) reads the whole description on demand. o.label names it. Returns { el, text(), refresh(),
+     say() }; el.vdDescribe is the same. Keep each sentence short, with the value and its unit: "Period 2.01 s." Write English; the
+     page walker translates each sentence, numbers as {#}.
+
+     VD.a11y() (run by itself at load and again after 2 s): every range input whose readout (output for= its id) shows a unit gets
+     that readout as its aria-valuetext, kept in step, so a slider says "1.00 m" rather than "1" (a demo that sets aria-valuetext
+     itself is left alone); every canvas with a name and no role gets one (application when it takes the keyboard, else img); and
+     two skip links (to the picture, to the controls) go first on the page, shown while focused. */
+  var liveEl = null, liveQ = [], liveT = 0, liveLast = '';
+  function liveRegion() {
+    if (liveEl && liveEl.isConnected) return liveEl;
+    liveEl = document.createElement('div'); liveEl.id = 'vdLive'; liveEl.className = 'vd-sr'; liveEl.setAttribute('aria-live', 'polite');
+    liveEl.setAttribute('aria-atomic', 'true'); liveEl.setAttribute('data-vd-noshare', ''); (document.body || document.documentElement).appendChild(liveEl);
+    return liveEl;
+  }
+  function sentences(x) {
+    return (Array.isArray(x) ? x : [x]).map(function (s) { return s && typeof s === 'object' ? s : { t: s }; })
+      .filter(function (s) { return s.t != null && String(s.t).trim(); }).map(function (s) { return { t: String(s.t).replace(/\s+/g, ' ').trim(), live: s.live !== false }; });
+  }
+  function fillSpans(box, list) {
+    box.textContent = '';
+    list.forEach(function (s) { var d = document.createElement('div'); d.textContent = s.t + ' '; box.appendChild(d); });   /* a block each: i18n.js looks each sentence up on its own, numbers as {#} */
+  }
+  VD.say = function (text, o) {
+    var list = sentences(text); if (!list.length) return;
+    liveQ = liveQ.concat(list); clearTimeout(liveT);
+    liveT = setTimeout(function () {
+      var r = liveRegion(), q = liveQ, k = q.map(function (s) { return s.t; }).join(' '); liveQ = [];
+      if (k === liveLast) { r.textContent = ''; setTimeout(function () { fillSpans(r, q); }, 60); }   /* the same words again: clear first, so they are read again */
+      else fillSpans(r, q);
+      liveLast = k;
+    }, o && o.now ? 0 : 250);
+  };
+  var descN = 0, describers = [];
+  VD.describe = function (el, fn, o) {
+    if (!el || typeof fn !== 'function') return null;
+    o = o || {}; if (el.vdDescribe) { el.vdDescribe.fn = fn; el.vdDescribe.refresh(); return el.vdDescribe; }
+    var id = 'vdDesc' + (++descN), box = document.createElement('div'); box.id = id; box.className = 'vd-sr'; box.setAttribute('data-vd-noshare', '');
+    el.insertAdjacentElement('afterend', box);
+    var by = (el.getAttribute('aria-describedby') || '').split(/\s+/).filter(Boolean); by.push(id); el.setAttribute('aria-describedby', by.join(' '));
+    var last = [], told = null, waitT = 0;
+    var api = { el: el, fn: fn };
+    var get = function () { var v; try { v = api.fn(); } catch (e) { v = []; } return sentences(v); };
+    api.text = function () { return get().map(function (s) { return s.t; }).join(' '); };
+    api.refresh = function () {
+      var now = get(), k = now.map(function (s) { return s.t; }).join('\n');
+      if (k !== last.map(function (s) { return s.t; }).join('\n')) fillSpans(box, now);
+      last = now; if (told === null) told = now; return now;
+    };
+    api.say = function () { var now = api.refresh(); told = now; VD.say(now.map(function (s) { return s.t; })); };
+    api.changed = function () {   /* after an input settles: announce the sentences that changed since the last announcement */
+      clearTimeout(waitT);
+      waitT = setTimeout(function () {
+        if (document.querySelector('.vd-typein, .vd-typefloat')) return;
+        var now = api.refresh(), was = {}; (told || []).forEach(function (s) { was[s.t] = 1; });
+        var fresh = now.filter(function (s) { return s.live && !was[s.t]; }).map(function (s) { return s.t; });
+        told = now; if (fresh.length) VD.say(fresh);
+      }, o.wait || 700);
+    };
+    var btn = document.createElement('button'); btn.type = 'button'; btn.className = 'vd-sr-btn'; btn.setAttribute('data-vd-noshare', '');
+    btn.textContent = o.label || (window.VDI18N ? VDI18N.t('Describe the picture') : 'Describe the picture');
+    btn.addEventListener('click', function () { api.say(); });
+    box.insertAdjacentElement('afterend', btn);
+    el.vdDescribe = api; describers.push(api); api.refresh();
+    srWatch();
+    return api;
+  };
+  var watching = false;
+  function srWatch() {
+    if (watching) return; watching = true;
+    var poke = function (e) {
+      var t = e.target; if (t && t.closest && t.closest('.vd-sr-btn, dialog, .vd-howto')) return;
+      if (e.type === 'keyup' && !/^(Arrow|Page|Home|End|Enter| $|[a-zA-Z0-9+\-=,.\[\]])/.test(e.key || '')) return;
+      describers.forEach(function (d) { if (d.el.isConnected) d.changed(); });
+    };
+    ['input', 'change', 'pointerup', 'keyup', 'click', 'wheel'].forEach(function (k) { document.addEventListener(k, poke, { capture: true, passive: true }); });
+    setInterval(function () { if (document.hidden) return; describers.forEach(function (d) { if (d.el.isConnected) d.refresh(); }); }, 1000);
+  }
+  var UNITLESS = /^[\s\d.,−\-+eE×·^⁰¹²³⁴⁵⁶⁷⁸⁹⁻]*$/;
+  function valueText(inp) {
+    if (inp.vdVT || (inp.hasAttribute('aria-valuetext') && !inp.vdVTmine)) return;
+    var out = inp.id && document.querySelector('output[for~="' + (window.CSS && CSS.escape ? CSS.escape(inp.id) : inp.id) + '"]'); if (!out) return;
+    inp.vdVT = true;
+    var sync = function () {
+      var s = out.textContent.replace(/\s+/g, ' ').trim();
+      if (!s || UNITLESS.test(s)) { if (inp.vdVTmine) { inp.removeAttribute('aria-valuetext'); inp.vdVTmine = false; } return; }
+      if (inp.getAttribute('aria-valuetext') !== s) { inp.setAttribute('aria-valuetext', s); inp.vdVTmine = true; }
+    };
+    sync();
+    if (window.MutationObserver) new MutationObserver(sync).observe(out, { childList: true, characterData: true, subtree: true });
+    inp.addEventListener('input', function () { setTimeout(sync, 0); });
+  }
+  function skipLinks() {
+    if (document.querySelector('.vd-skip')) return;
+    var stage = document.querySelector('.bench > .stage:not([hidden])') || document.querySelector('.bench .stage:not([hidden])'), rail = document.querySelector('aside.rail');
+    var VDI18N = window.VDI18N || { t: function (s) { return s; } }, first = document.body.firstChild;
+    [[stage, VDI18N.t('Skip to the picture')], [rail, VDI18N.t('Skip to the controls')]].forEach(function (p) {
+      if (!p[0]) return;
+      var a = document.createElement('a'); a.className = 'vd-skip'; a.href = '#'; a.id = p[0] === stage ? 'vdSkipPic' : 'vdSkipCtl';   /* an id each, so i18n.js reads each link as its own string */ a.textContent = p[1]; a.setAttribute('data-vd-noshare', '');
+      a.addEventListener('click', function (e) {
+        e.preventDefault();
+        var to = p[0] === stage ? (document.querySelector('.bench > .stage:not([hidden])') || stage) : p[0];
+        var f = to.querySelector('canvas[tabindex], [role="application"], button:not([disabled]), input, select, [tabindex="0"]');
+        if (!f) { if (!to.hasAttribute('tabindex')) to.setAttribute('tabindex', '-1'); f = to; }
+        f.focus(); if (f.scrollIntoView) f.scrollIntoView({ block: 'nearest' });
+      });
+      document.body.insertBefore(a, first);
+    });
+  }
+  VD.a11y = function () {
+    if (!document.body) return;
+    document.querySelectorAll('input[type="range"]').forEach(valueText);
+    document.querySelectorAll('canvas').forEach(function (c) {
+      if (c.hasAttribute('role') || c.closest('[aria-hidden="true"], button, [role="button"], [role="slider"]')) return;
+      if (!c.hasAttribute('aria-label') && !c.hasAttribute('aria-labelledby')) return;
+      c.setAttribute('role', c.tabIndex >= 0 ? 'application' : 'img');
+    });
+    skipLinks(); liveRegion();
+  };
+  function a11yStart() { VD.a11y(); setTimeout(VD.a11y, 2000); }
+
   function wire() {
     document.querySelectorAll('.vd-qr[data-url]').forEach(VD.qr);
     var r = document.getElementById('vdReset'); if (r) VD.reset(r);
@@ -1077,6 +1211,7 @@
     if (proj) downloadButton(proj);
     if (!VD.pictureSize.grip) VD.pictureSize();
     if (proj) { window.addEventListener('keydown', keys); if (document.readyState === 'complete') shareStart(); else window.addEventListener('load', shareStart); }
+    if (document.readyState === 'complete') a11yStart(); else window.addEventListener('load', a11yStart);
     if (proj) { var ps = function () { if (!ps.ran) { ps.ran = true; setTimeout(prefsStart, 0); } }; if (document.readyState === 'complete') ps(); else window.addEventListener('load', ps); }
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', wire); else wire();
