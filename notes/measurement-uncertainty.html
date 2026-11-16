@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="../demos/lib/theme.js"></script>
+<title>Measurement Uncertainty: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+@media screen { :root[data-theme="dark"] {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; overflow-wrap: break-word; }   /* a long file name breaks instead of pushing a phone sideways */
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+<link rel="stylesheet" id="vd-paper" href="../demos/lib/paper.css">
+</head>
+<body class="notes">
+<header class="top" aria-label="Site"><a class="brand" href="../index.html"><svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><ellipse cx="16" cy="16" rx="13" ry="6" fill="none" stroke="currentColor" stroke-width="1.8" transform="rotate(-30 16 16)"/><ellipse cx="16" cy="16" rx="13" ry="6" fill="none" stroke="currentColor" stroke-width="1.8" transform="rotate(30 16 16)"/><circle cx="16" cy="16" r="2.6" fill="currentColor"/></svg>Virtual Physics Demos</a><nav class="tabs" aria-label="Library"><a class="tab" href="../index.html#topics">Demos</a><a class="tab" href="../openstax.html">OpenStax</a><a class="tab" href="index.html" aria-current="page">Notes</a></nav><span class="hfind"></span><span data-vd-theme></span><a class="courses" href="../courses.html"><b>For a class</b> Courses</a></header>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Measurement Uncertainty</h1><ul class="meta"><li><a href="../demos/measurement-uncertainty.html">Open the demo</a></li><li>Physics I (Vol 1 1.6 and 15.4) and any lab course</li><li>10 to 25 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>Random error shows up as scatter and shrinks when you average: the standard error of the mean is s/√n. A bias produces no scatter at all, so repeating can never reveal it or reduce it.</li>
+<li>How you design a measurement matters as much as how often you repeat it. Timing 10 swings at once beats timing one swing 10 times, and a fit over a range of lengths exposes a length offset that any number of repeats at one length hides.</li>
+<li>An instrument with no visible scatter (the photogate) still has an uncertainty: its resolution.</li>
+<li>An approximation in the model (the small angle formula) is a bias too.</li>
+</ul>
+<h2>Before class</h2>
+<p>Use Projector mode. The demo opens on Hand timing, one swing. Every instrument error is simulated and labeled on the page; say so to the class. Blind in the Lab fold hides g and the predicted periods, so students can work them out. Reveal (also in the Lab fold) shows what a real experiment never tells you: the true length, the true period and each timing's error. The random draws repeat when the page is reloaded, so a class run gives the same numbers every time you rehearse it.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>One swing by hand.</strong> Press Release and let the class watch one timing. Ask what the next timing will read. Press Repeat 10 times and look at the dot plot: the mean, the ± s lines and the narrow ± s/√n band (Q1).</li>
+<li><strong>Ten swings by hand.</strong> Press Hand timing, 10 swings, then Repeat 10 times. The period's scatter is about ten times smaller (Q2).</li>
+<li><strong>The photogate.</strong> Press Photogate and Repeat 10 times: one tall stack of identical readings. Ask what uncertainty to quote (Q3).</li>
+<li><strong>A bias.</strong> Press Length read to the bottom of the bob, time 10 swings at seven lengths (L +20 cm, 16× speed), and switch the graph to T² against L. The line misses the origin; ask where it crosses T² = 0 and why (Q4).</li>
+<li><strong>Big swings.</strong> Press Big swings, 40° and compare g from the small angle formula with 9.81 m/s² (Q5).</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Ten hand timings of one swing of a 1.000 m pendulum have a mean of 2.012 s and s = 0.071 s. What is the standard error? About how many of the ten single timings would you expect within ± s of the mean? Report the period as mean ± standard error.</p></div>
+
+<div class="q"><p><strong>Q2.</strong> Each stopwatch press is early or late by a random amount with a standard deviation of 0.05 s. What is the standard deviation of a timed interval? Of the period, when the interval is 10 swings? How many single swing timings would you have to average to do as well as one timing of 10 swings?</p></div>
+
+<div class="q"><p><strong>Q3.</strong> Ten photogate timings all read 2.007 s. What uncertainty do you quote for the period, and for g from L = 1.000 ± 0.0005 m?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> Every length is read to the bottom of a 6.0 cm bob. Show that the data still lie on a straight line in T² against L, and find its slope and where it crosses T² = 0. What value of g does a single length of 1.00 m give with the small angle formula?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> Released from 40°, the period is 1.0313 times 2π√(L/g). By what percentage is g from the small angle formula too low? Would timing more swings help?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"More repeats fix everything."</strong> Repeats shrink random error only. The bottom of the bob mistake gives a perfectly repeatable wrong answer.</li>
+<li><strong>"No scatter means no uncertainty."</strong> Identical photogate readings still carry half the last digit.</li>
+<li><strong>"s is the uncertainty of the mean."</strong> s describes one reading; the mean's uncertainty is s/√n.</li>
+<li><strong>"A good straight line proves the measurement right."</strong> The offset data fit a straight line just as well; only the intercept gives the mistake away. A big release angle shifts every point by the same factor and leaves no trace in the residuals at all.</li>
+</ul>
+<h2>How the demo works</h2>
+<ul>
+<li>The pendulum is exact: a point bob on a light string with no drag, g = 9.81 m/s², and the period at any angle from the arithmetic geometric mean (the complete elliptic integral). The swing on screen is the full equation θ″ = −(g/L) sin θ, stepped with fourth order Runge–Kutta.</li>
+<li>Hand stopwatch: each of the two presses is early or late by a random amount from a normal distribution with standard deviation 0.05 s (cut off at four standard deviations); a delay common to both presses cancels and is left out. The display reads to 0.01 s. Photogate: exact, rounded to 0.001 s.</li>
+<li>Lengths are set as meter stick readings, in whole centimeters. Read to the bottom of the bob, the true length is the reading minus 3.0 cm.</li>
+<li>Random draws come from a seeded generator: the same steps from the same draw set give the same numbers. New random draws in the Lab fold moves to the next set.</li>
+<li>The Analysis section uses the standard error of the mean (or half the timer's last digit divided by N, if larger) and half a millimeter for the length, and an unweighted least squares line with a free intercept for the fit.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>. © 2026 Steven Anderson. All rights reserved; see the <a href="../LICENSE.html">terms of use</a>.</footer>
+</main>
+</body>
+</html>

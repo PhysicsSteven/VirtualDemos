@@ -2721,7 +2721,8 @@
       "requirement": "required",
       "status": "usable",
       "demos": [
-        "units"
+        "units",
+        "measurement-uncertainty"
       ],
       "unit": "measurements-vectors",
       "note": "Units, Scales and Estimates (2026-10-22, Claude). Significant figures: sig figs, decimal places and the combination rules. Covered by the standalone worksheet estimation-and-evidence; no demo apparatus is claimed. Original student work, private guide, and reference/source checks completed 2026-10-22; classroom acceptance remains open.",
@@ -4061,7 +4062,8 @@
       "requirement": "required",
       "status": "usable",
       "demos": [
-        "pendulum"
+        "pendulum",
+        "measurement-uncertainty"
       ],
       "unit": "oscillations",
       "note": "Pendulums: simple and physical (rod) pendulums, photogate period, g from T² against L, Mystery planet; exact period at any amplitude with the phase portrait; double pendulum normal modes and chaos."
@@ -9917,6 +9919,33 @@
       ],
       "title": "Pendulums",
       "url": "demos/pendulum.html"
+    },
+    {
+      "demo": "measurement-uncertainty",
+      "course": [
+        "physics-1"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "1.6",
+          "title": "Significant Figures"
+        },
+        {
+          "vol": 1,
+          "sec": "15.4",
+          "title": "Pendulums"
+        }
+      ],
+      "role": "lab",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "New 2026-11-16 (Claude, from an outside review Steve asked to act on): measurement uncertainty and experimental design with a pendulum. Simulated hand stopwatch (two presses, each normal with standard deviation 0.05 s) or photogate (0.001 s); 1, 5, 10 or 20 swings per timing; length read to the bob’s center or (simulated mistake) its bottom, 3.0 cm too long; release angle 2° to 60° with the exact period. Repeat 10 times, dot plot with mean, s and s/√n, T² against L fit with a free intercept and residuals, propagated uncertainty in g, Reveal what the simulation hid. Seeded draws.",
+      "handouts": [
+        "measurement-uncertainty"
+      ],
+      "title": "Measurement Uncertainty",
+      "url": "demos/measurement-uncertainty.html"
     },
     {
       "demo": "photoelectric",

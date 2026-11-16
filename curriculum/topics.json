@@ -11,6 +11,7 @@
      "blurb": "Position, velocity and acceleration, projectiles and circular motion.",
      "demos": [
       "units",
+      "measurement-uncertainty",
       "vectors",
       "motion-graphs",
       "projectile-drag",
@@ -104,6 +105,7 @@
      "demos": [
       "springs",
       "pendulum",
+      "measurement-uncertainty",
       "standing-waves",
       "string-density",
       "wave-power",

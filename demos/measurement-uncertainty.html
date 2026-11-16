@@ -1,0 +1,616 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="lib/theme.js"></script>
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
+<title>Measurement Uncertainty</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css: the lab bench colors, the stage with its strip, picture and shelf of cards */
+:root { --bob: #2b60b5; --bob-dark: #173a72; --string: #6b5f50; --wall: #f7f4f1; --wall-line: #eeeae5; --beam: #8a6236; --beam-dark: #5e4528;
+  --stick: #e9c46a; --stick-edge: #a8822a; --stick-ink: #3d3326; --gate: #4c4338; --led: #c0392b; --watch: #3a3a3a; --lcd: #dfe8d2; --lcd-ink: #1f2a17;
+  --dot: #b0452f; --mean: #2a2118; --true: #a7740b; --mu-band: rgba(176, 69, 47, 0.16); --fit: #2b60b5; --sim: #8c3b8f; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bob: #69a0ff; --bob-dark: #2a5296; --string: #b4aa9c; --wall: #231c14; --wall-line: #2c241b; --beam: #8f6d45; --beam-dark: #5e4528;
+  --stick: #b8964a; --stick-edge: #7d6228; --stick-ink: #1d170f; --gate: #645a4e; --led: #ff6b5a; --watch: #6a6a6a; --lcd: #c9d6b8; --lcd-ink: #17200f;
+  --dot: #ff8a70; --mean: #f1e9de; --true: #e2b350; --mu-band: rgba(255, 138, 112, 0.2); --fit: #69a0ff; --sim: #d9a0dc; } }
+:root[data-theme="dark"] { --bob: #69a0ff; --bob-dark: #2a5296; --string: #b4aa9c; --wall: #231c14; --wall-line: #2c241b; --beam: #8f6d45; --beam-dark: #5e4528;
+  --stick: #b8964a; --stick-edge: #7d6228; --stick-ink: #1d170f; --gate: #645a4e; --led: #ff6b5a; --watch: #6a6a6a; --lcd: #c9d6b8; --lcd-ink: #17200f;
+  --dot: #ff8a70; --mean: #f1e9de; --true: #e2b350; --mu-band: rgba(255, 138, 112, 0.2); --fit: #69a0ff; --sim: #d9a0dc; }
+.stage { position: relative; display: flex; flex-direction: column; min-height: min-content; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+:root[data-projector="on"] .stage { min-height: min-content; }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.stage-ctl .note { margin-left: auto; font-size: 0.8rem; color: var(--muted); }
+.pane { position: relative; flex: 1 1 auto; min-height: 480px; }
+.pane canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; touch-action: none; }
+.pane canvas:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+.shelf { display: flex; flex-wrap: wrap; align-items: stretch; gap: 12px; padding: 10px; border-top: 1px solid var(--line); background: var(--surface); }
+.shelf-card { flex: 1 1 230px; display: grid; grid-template-columns: minmax(0, 1fr); align-content: start; gap: 8px 16px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--canvas); }
+.shelf-card > .card-title { font-size: 0.78rem; font-weight: 700; color: var(--muted); }
+.shelf-card > .wide { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; }
+.shelf-card .lab { font-size: 0.8rem; color: var(--muted); }
+.shelf-card .slider-head output { white-space: nowrap; }
+.shelf-card .btnrow .btn { font-size: 0.78rem; padding: 3px 8px; }
+.simtag { font-size: 0.74rem; color: var(--sim); margin: 0; }
+.simtag.plain { color: var(--muted); }
+.rail details.more > p + p { margin-top: 6px; }
+#ana .wide dd { font-size: 0.95rem; }
+.ana-head { margin: 4px 0 0; font-size: 0.8rem; font-weight: 700; color: var(--muted); }
+@media (max-width: 820px) { .pane { min-height: 0; height: 520px; flex: none; } .shelf-card { flex: 1 1 100%; } .shelf-card .btnrow .btn { min-height: 36px; } }
+@media (max-width: 520px) { .stage-ctl .note { margin-left: 0; } .pane { height: 680px; } }
+</style>
+<link rel="stylesheet" id="vd-paper" href="lib/paper.css">
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Measurement Uncertainty</h1>
+      <p>Measure g with a pendulum, and find out what your data can and cannot tell you. Time the swings by hand or with a photogate, time one swing or many, read the length to the right place or the wrong one, and release from a small angle or a big one. Random scatter shrinks when you repeat; a bias does not.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">SI units</div>
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/measurement-uncertainty.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/measurement-uncertainty.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM12 2h2v1h-2zM16 2h1v1h-1zM18 2h2v1h-2zM21 2h5v1h-5zM30 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM11 3h4v1h-4zM18 3h1v1h-1zM20 3h1v1h-1zM23 3h2v1h-2zM27 3h1v1h-1zM29 3h2v1h-2zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h2v1h-2zM15 4h1v1h-1zM17 4h1v1h-1zM23 4h1v1h-1zM28 4h3v1h-3zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h1v1h-1zM13 5h1v1h-1zM16 5h1v1h-1zM19 5h1v1h-1zM21 5h1v1h-1zM24 5h1v1h-1zM27 5h4v1h-4zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h2v1h-2zM13 6h1v1h-1zM15 6h1v1h-1zM18 6h1v1h-1zM21 6h3v1h-3zM25 6h1v1h-1zM27 6h2v1h-2zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h3v1h-3zM16 7h2v1h-2zM28 7h3v1h-3zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h2v1h-2zM13 9h1v1h-1zM15 9h2v1h-2zM20 9h4v1h-4zM26 9h1v1h-1zM28 9h1v1h-1zM2 10h1v1h-1zM4 10h5v1h-5zM13 10h1v1h-1zM16 10h2v1h-2zM19 10h1v1h-1zM24 10h6v1h-6zM32 10h5v1h-5zM3 11h4v1h-4zM9 11h1v1h-1zM11 11h2v1h-2zM15 11h1v1h-1zM17 11h2v1h-2zM20 11h3v1h-3zM24 11h2v1h-2zM30 11h1v1h-1zM33 11h1v1h-1zM36 11h2v1h-2zM3 12h1v1h-1zM5 12h1v1h-1zM7 12h4v1h-4zM14 12h1v1h-1zM16 12h1v1h-1zM19 12h2v1h-2zM23 12h1v1h-1zM28 12h2v1h-2zM32 12h3v1h-3zM36 12h3v1h-3zM2 13h2v1h-2zM5 13h2v1h-2zM9 13h1v1h-1zM12 13h1v1h-1zM14 13h3v1h-3zM18 13h1v1h-1zM20 13h4v1h-4zM25 13h2v1h-2zM32 13h3v1h-3zM38 13h1v1h-1zM6 14h4v1h-4zM11 14h2v1h-2zM14 14h1v1h-1zM16 14h1v1h-1zM19 14h1v1h-1zM21 14h2v1h-2zM24 14h1v1h-1zM26 14h13v1h-13zM2 15h1v1h-1zM6 15h2v1h-2zM9 15h2v1h-2zM12 15h1v1h-1zM14 15h3v1h-3zM18 15h2v1h-2zM22 15h4v1h-4zM30 15h1v1h-1zM33 15h1v1h-1zM5 16h1v1h-1zM7 16h2v1h-2zM11 16h2v1h-2zM14 16h2v1h-2zM17 16h2v1h-2zM22 16h3v1h-3zM28 16h4v1h-4zM33 16h3v1h-3zM38 16h1v1h-1zM2 17h1v1h-1zM4 17h4v1h-4zM10 17h1v1h-1zM12 17h7v1h-7zM21 17h3v1h-3zM25 17h1v1h-1zM28 17h1v1h-1zM31 17h4v1h-4zM37 17h1v1h-1zM2 18h2v1h-2zM5 18h1v1h-1zM8 18h1v1h-1zM14 18h1v1h-1zM16 18h4v1h-4zM21 18h1v1h-1zM24 18h1v1h-1zM26 18h7v1h-7zM34 18h1v1h-1zM36 18h1v1h-1zM38 18h1v1h-1zM3 19h1v1h-1zM11 19h2v1h-2zM15 19h3v1h-3zM20 19h2v1h-2zM23 19h1v1h-1zM25 19h1v1h-1zM30 19h1v1h-1zM37 19h1v1h-1zM5 20h4v1h-4zM10 20h2v1h-2zM17 20h2v1h-2zM22 20h3v1h-3zM26 20h1v1h-1zM28 20h3v1h-3zM33 20h3v1h-3zM37 20h2v1h-2zM2 21h2v1h-2zM6 21h2v1h-2zM9 21h1v1h-1zM11 21h2v1h-2zM16 21h2v1h-2zM20 21h1v1h-1zM23 21h3v1h-3zM28 21h3v1h-3zM32 21h1v1h-1zM38 21h1v1h-1zM8 22h1v1h-1zM10 22h4v1h-4zM15 22h1v1h-1zM17 22h1v1h-1zM19 22h1v1h-1zM21 22h1v1h-1zM24 22h6v1h-6zM31 22h2v1h-2zM34 22h3v1h-3zM2 23h1v1h-1zM5 23h1v1h-1zM12 23h1v1h-1zM14 23h1v1h-1zM18 23h2v1h-2zM21 23h1v1h-1zM23 23h1v1h-1zM25 23h1v1h-1zM27 23h2v1h-2zM30 23h2v1h-2zM35 23h1v1h-1zM37 23h1v1h-1zM2 24h1v1h-1zM4 24h7v1h-7zM14 24h2v1h-2zM17 24h1v1h-1zM22 24h2v1h-2zM26 24h10v1h-10zM37 24h2v1h-2zM2 25h2v1h-2zM7 25h1v1h-1zM9 25h5v1h-5zM15 25h1v1h-1zM17 25h2v1h-2zM20 25h6v1h-6zM29 25h1v1h-1zM31 25h4v1h-4zM37 25h1v1h-1zM6 26h3v1h-3zM11 26h2v1h-2zM14 26h2v1h-2zM17 26h1v1h-1zM20 26h3v1h-3zM24 26h5v1h-5zM30 26h5v1h-5zM36 26h2v1h-2zM2 27h1v1h-1zM4 27h1v1h-1zM6 27h2v1h-2zM9 27h2v1h-2zM14 27h5v1h-5zM20 27h4v1h-4zM25 27h1v1h-1zM28 27h1v1h-1zM30 27h1v1h-1zM33 27h1v1h-1zM2 28h1v1h-1zM4 28h1v1h-1zM6 28h3v1h-3zM10 28h1v1h-1zM12 28h1v1h-1zM16 28h1v1h-1zM27 28h4v1h-4zM33 28h2v1h-2zM37 28h2v1h-2zM2 29h1v1h-1zM5 29h2v1h-2zM9 29h1v1h-1zM11 29h2v1h-2zM15 29h1v1h-1zM18 29h1v1h-1zM22 29h2v1h-2zM31 29h4v1h-4zM37 29h1v1h-1zM2 30h1v1h-1zM4 30h11v1h-11zM19 30h1v1h-1zM26 30h12v1h-12zM10 31h1v1h-1zM12 31h1v1h-1zM14 31h1v1h-1zM17 31h6v1h-6zM25 31h2v1h-2zM29 31h2v1h-2zM34 31h2v1h-2zM2 32h7v1h-7zM12 32h1v1h-1zM15 32h3v1h-3zM19 32h1v1h-1zM22 32h2v1h-2zM26 32h1v1h-1zM28 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM36 32h3v1h-3zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h1v1h-1zM12 33h1v1h-1zM15 33h6v1h-6zM23 33h3v1h-3zM30 33h1v1h-1zM34 33h2v1h-2zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h2v1h-2zM15 34h1v1h-1zM18 34h1v1h-1zM21 34h2v1h-2zM24 34h2v1h-2zM27 34h1v1h-1zM29 34h6v1h-6zM36 34h2v1h-2zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h2v1h-2zM13 35h2v1h-2zM17 35h1v1h-1zM20 35h3v1h-3zM25 35h1v1h-1zM30 35h3v1h-3zM34 35h1v1h-1zM36 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM10 36h3v1h-3zM15 36h4v1h-4zM20 36h1v1h-1zM24 36h1v1h-1zM28 36h2v1h-2zM31 36h1v1h-1zM37 36h2v1h-2zM2 37h1v1h-1zM8 37h1v1h-1zM12 37h2v1h-2zM17 37h1v1h-1zM21 37h3v1h-3zM28 37h1v1h-1zM30 37h1v1h-1zM32 37h1v1h-1zM34 37h1v1h-1zM38 37h1v1h-1zM2 38h7v1h-7zM10 38h1v1h-1zM12 38h1v1h-1zM16 38h2v1h-2zM19 38h1v1h-1zM21 38h1v1h-1zM24 38h5v1h-5zM31 38h2v1h-2zM34 38h5v1h-5z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl" id="strip">
+        <button type="button" class="spin attn" id="go" data-vd-key="play">Release</button>
+        <div class="seg" role="group" aria-label="Speed" id="speed"><button type="button" data-sp="1" aria-pressed="true">1×</button><button type="button" data-sp="4" aria-pressed="false">4×</button><button type="button" data-sp="16" aria-pressed="false">16×</button></div>
+        <button type="button" class="btn" id="rep" title="Time the same swings 10 more times at once, as if you had released and timed it 10 times">Repeat 10 times</button>
+        <div class="seg" role="group" aria-label="Graph" id="viewSeg"><button type="button" data-view="rep" aria-pressed="true">Repeated timings</button><button type="button" data-view="fit" aria-pressed="false">T² against L</button></div>
+        <span class="note mono" id="note" role="status"></span>
+      </div>
+      <div class="pane" id="pane">
+        <canvas id="can" tabindex="0" role="application" aria-label="A pendulum hanging beside a meter stick, with a timer, and a graph of your timings. Drag the bob sideways to set the release angle and up or down to set the length. Space releases or stops the pendulum, left and right arrows change the release angle by 1 degree, up and down change the length by 1 cm (with Shift, 10 cm)."></canvas>
+      </div>
+      <div class="shelf" id="shelf">
+        <div class="shelf-card" role="group" aria-label="The pendulum">
+          <span class="card-title">The pendulum</span>
+          <div><div class="slider-head"><label for="sL">Length L, as read on the meter stick</label><output id="oL" class="mono" for="sL"></output></div><input type="range" id="sL" min="0.2" max="2" step="0.01"></div>
+          <div class="btnrow"><button type="button" class="btn" data-step="L" data-d="-0.01">L −1 cm</button><button type="button" class="btn" data-step="L" data-d="0.01">L +1 cm</button><button type="button" class="btn" data-step="L" data-d="0.2">L +20 cm</button></div>
+          <div><div class="slider-head"><label for="sA">Release angle θ₀</label><output id="oA" class="mono" for="sA"></output></div><input type="range" id="sA" min="2" max="60" step="1"></div>
+        </div>
+        <div class="shelf-card" role="group" aria-label="The timer">
+          <span class="card-title">The timer</span>
+          <div class="wide"><span class="lab">Timer</span><div class="seg" role="group" aria-label="Timer" id="timerSeg"><button type="button" data-timer="hand" aria-pressed="true">Hand stopwatch</button><button type="button" data-timer="gate" aria-pressed="false">Photogate</button></div></div>
+          <div class="wide"><span class="lab">Swings per timing N</span><div class="seg" role="group" aria-label="Swings per timing" id="nSeg"><button type="button" data-n="1" aria-pressed="true">1</button><button type="button" data-n="5" aria-pressed="false">5</button><button type="button" data-n="10" aria-pressed="false">10</button><button type="button" data-n="20" aria-pressed="false">20</button></div></div>
+          <p class="simtag" id="timerTag"></p>
+        </div>
+        <div class="shelf-card" role="group" aria-label="The meter stick">
+          <span class="card-title">The meter stick</span>
+          <div class="wide"><span class="lab">Read the length to</span><div class="seg" role="group" aria-label="Read the length to" id="markSeg"><button type="button" data-mark="center" aria-pressed="true">Center of the bob</button><button type="button" data-mark="bottom" aria-pressed="false">Bottom of the bob</button></div></div>
+          <p class="simtag" id="markTag"></p>
+        </div>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/measurement-uncertainty.html" target="measurement-uncertainty-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="one" aria-pressed="true">Hand timing, one swing</button>
+          <button type="button" data-p="ten" aria-pressed="false">Hand timing, 10 swings</button>
+          <button type="button" data-p="gate" aria-pressed="false">Photogate</button>
+          <button type="button" data-p="range" aria-pressed="false">A range of lengths</button>
+          <button type="button" data-p="bottom" aria-pressed="false">Length read to the bottom of the bob</button>
+          <button type="button" data-p="big" aria-pressed="false">Big swings, 40°</button>
+        </div>
+        <details class="more" open><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <!-- vd-readings --><section class="vd-readings" data-ws="measurement-uncertainty" data-title="Measurement Uncertainty" data-demo="measurement-uncertainty">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings ('+(typeof window.vdDataNote==='function'&&window.vdDataNote()?'catalog data':'simulated data')+')','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:(typeof window.vdDataNote==='function'&&window.vdDataNote())||'Simulated data from '+(/^The /.test(title)?'':'the ')+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
+      <section>
+        <h2>Analysis</h2>
+        <dl class="readout" id="ana"></dl>
+        <p class="hint" id="anaHint"></p>
+      </section>
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide g and the predicted periods, to work them out yourself</span></label>
+        <label class="check"><input type="checkbox" id="labReveal"><span>Reveal what the simulation hid: the true length, the true period and each timing's error</span></label>
+        <div class="wide"><span class="lab mono" id="drawSet"></span> <button type="button" class="btn" id="newDraw">New random draws</button></div>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="formula">T = 2π√(L/g) / AGM(1, cos(θ₀/2)), T₀ = 2π√(L/g), g = 4π²L/T² = 4π²/slope</p>
+          <p class="formula">s = √(Σ(Tᵢ − T̄)²/(n − 1)), standard error s/√n, δg/g = √((δL/L)² + (2δT/T)²)</p>
+          <p class="hint" id="about1"></p>
+          <p class="hint" id="about2"></p>
+          <p class="hint" id="about3"></p>
+          <p class="hint" id="about4"></p>
+        </details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  /* A point bob on a light inextensible string, no drag, uniform g. The period at any release angle is exact:
+     T = 2π√(L/g) · 2K(sin(θ₀/2))/π = 2π√(L/g) / AGM(1, cos(θ₀/2)) (complete elliptic integral K through the
+     arithmetic geometric mean). The instruments are where the uncertainty comes from, and their errors are SIMULATED:
+     - Hand stopwatch: each press (start and stop) comes early or late by a random amount, normal with standard deviation
+       PRESS_SIGMA (cut off at four standard deviations); a delay common to both presses cancels, so only the spread is modeled.
+       The display rounds to 0.01 s.
+     - Photogate: no reaction time; it rounds to 0.001 s.
+     - Meter stick: lengths are set on a stick marked in millimeters. Read to the bottom of the bob, every reading is longer
+       than the true length (pivot to bob center) by the bob's radius, BOB_D/2: a fixed offset, the same at every length.
+     Random draws come from a seeded generator (mulberry32), so the same steps from the same draw set give the same numbers. */
+  const G_EARTH = 9.81;          /* m/s², demos/lib/constants.js g */
+  const BOB_D = 0.06;            /* bob diameter, m */
+  const PRESS_SIGMA = 0.05;      /* s, standard deviation of one stopwatch press */
+  const L_RES = 0.001;           /* m, the meter stick's smallest division */
+  const TIMERS = { hand: { res: 0.01, dec: 2 }, gate: { res: 0.001, dec: 3 } };
+  function agm(a, b) { for (let i = 0; i < 60 && Math.abs(a - b) > 1e-15 * a; i++) { const an = (a + b) / 2; b = Math.sqrt(a * b); a = an; } return (a + b) / 2; }
+  function periodSmall(L, g) { return 2 * Math.PI * Math.sqrt(L / g); }
+  function periodExact(L, g, th0) { return periodSmall(L, g) / agm(1, Math.cos(th0 / 2)); }
+  function trueLength(Lread, mark) { return mark === 'bottom' ? Lread - BOB_D / 2 : Lread; }
+  function mulberry32(seed) { let a = seed >>> 0; return () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+  function gauss(r) { const u = 1 - r(), v = r(); const z = Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); return Math.max(-4, Math.min(4, z)); }
+  function roundTo(x, res) { return Math.round(x / res) * res; }
+  /* decimals of the period t/N: the timer's own, plus one for each factor of ten in N */
+  function periodDecimals(timer, N) { return TIMERS[timer].dec + Math.ceil(Math.log10(N) - 1e-9); }
+  /* one timing of N swings: o = { L (meter stick reading, m), th0 (deg), mark, timer, N, g }, r the random generator */
+  function timeSwings(o, r) {
+    const Lt = trueLength(o.L, o.mark), T = periodExact(Lt, o.g, o.th0 * Math.PI / 180), tTrue = o.N * T;
+    let e1 = 0, e2 = 0; if (o.timer === 'hand') { e1 = PRESS_SIGMA * gauss(r); e2 = PRESS_SIGMA * gauss(r); }
+    const t = roundTo(tTrue + e2 - e1, TIMERS[o.timer].res);
+    return { Ltrue: Lt, Ttrue: T, tTrue, e1, e2, err: t - tTrue, t, T: t / o.N };
+  }
+  function stats(xs) {
+    const n = xs.length; if (!n) return { n: 0 };
+    const mean = xs.reduce((a, b) => a + b, 0) / n;
+    const s = n > 1 ? Math.sqrt(xs.reduce((a, x) => a + (x - mean) * (x - mean), 0) / (n - 1)) : NaN;
+    return { n, mean, s, se: n > 1 ? s / Math.sqrt(n) : NaN };
+  }
+  /* least squares line y = m x + b with a free intercept, the standard errors of m and b, and the residuals */
+  function linfit(xs, ys) {
+    const n = xs.length; if (n < 2) return null;
+    const mx = xs.reduce((a, b) => a + b, 0) / n, my = ys.reduce((a, b) => a + b, 0) / n;
+    let sxx = 0, sxy = 0; for (let i = 0; i < n; i++) { sxx += (xs[i] - mx) ** 2; sxy += (xs[i] - mx) * (ys[i] - my); }
+    if (!(sxx > 0)) return null;
+    const m = sxy / sxx, b = my - m * mx, res = xs.map((x, i) => ys[i] - (m * x + b));
+    const ss = res.reduce((a, e) => a + e * e, 0), s2 = n > 2 ? ss / (n - 2) : NaN;
+    return { n, m, b, sm: Math.sqrt(s2 / sxx), sb: Math.sqrt(s2 * (1 / n + mx * mx / sxx)), res, xint: -b / m };
+  }
+  function gFromPeriod(L, T) { return 4 * Math.PI * Math.PI * L / (T * T); }
+  function gUncertainty(L, dL, T, dT) { return gFromPeriod(L, T) * Math.sqrt((dL / L) ** 2 + (2 * dT / T) ** 2); }
+  /* the period's uncertainty from repeated timings: the standard error of the mean, but never less than half the timer's last
+     digit divided by N (identical readings still carry the timer's resolution) */
+  function periodUncertainty(st, timer, N) { const floor = TIMERS[timer].res / 2 / N; return st.n > 1 && st.se > floor ? st.se : floor; }
+  /* the motion for the picture: θ'' = −(g/L) sin θ, one fourth order Runge–Kutta step */
+  function rk4(y, h, w2) {
+    const f = (s) => [s[1], -w2 * Math.sin(s[0])];
+    const k1 = f(y), k2 = f([y[0] + h / 2 * k1[0], y[1] + h / 2 * k1[1]]), k3 = f([y[0] + h / 2 * k2[0], y[1] + h / 2 * k2[1]]), k4 = f([y[0] + h * k3[0], y[1] + h * k3[1]]);
+    return [y[0] + h / 6 * (k1[0] + 2 * k2[0] + 2 * k3[0] + k4[0]), y[1] + h / 6 * (k1[1] + 2 * k2[1] + 2 * k3[1] + k4[1])];
+  }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  /* English text with numbers filled in; i18n.js translates it where it is shown (numbers match its {#} patterns) */
+  const T_ = (s, ...v) => s.replace(/\{(\d+)\}/g, (m, i) => v[+i]);
+  const f = (v, d = 3) => (!isFinite(v) ? '—' : v.toFixed(d).replace('-', '−'));
+  const DEG = Math.PI / 180;
+  const PRESETS = {
+    one: { timer: 'hand', N: 1, L: 1, A: 5, mark: 'center', view: 'rep',
+      hint: 'A hand stopwatch times one swing of a 1.000 m pendulum. Press Release and watch one timing, then press Repeat 10 times. The timings scatter by several hundredths of a second, because each press of the stopwatch comes a little early or late (simulated). The mean of many timings is closer to the true period than most single timings are.' },
+    ten: { timer: 'hand', N: 10, L: 1, A: 5, mark: 'center', view: 'rep',
+      hint: 'The same stopwatch, but each timing covers 10 swings. The two press errors are the same size as before, but they are now shared by 10 periods, so the scatter of the period t/N is 10 times smaller. Ten swings timed once beats one swing timed ten times.' },
+    gate: { timer: 'gate', N: 1, L: 1, A: 5, mark: 'center', view: 'rep',
+      hint: 'A photogate has no reaction time. Every timing of the same pendulum reads the same to 0.001 s, so repeating it adds nothing: the uncertainty left is the resolution, half of the last digit.' },
+    range: { timer: 'hand', N: 10, L: 0.4, A: 5, mark: 'center', view: 'fit',
+      hint: 'Time 10 swings at each of several lengths from 0.40 m to 1.60 m (L +20 cm moves up a step), then look at T² against L. The slope is 4π²/g. A fit uses every point at once, and the residuals show whether a straight line describes the data.' },
+    bottom: { timer: 'hand', N: 10, L: 0.4, A: 5, mark: 'bottom', view: 'fit',
+      hint: 'Every length is read to the bottom of the bob instead of its center (simulated mistake). Each reading is too long by the same amount. Repeat as often as you like: the error does not shrink. Fit T² against L at several lengths and look at the intercept.' },
+    big: { timer: 'gate', N: 1, L: 1, A: 40, mark: 'center', view: 'rep',
+      hint: 'Released from 40°, the pendulum takes about 3 % longer per swing than 2π√(L/g), because sin θ is smaller than θ at large angles. Using the small angle formula then gives a g about 6 % too low, however precisely you time it.' },
+  };
+  const S = { preset: 'one', L: 1, A: 5, timer: 'hand', N: 1, mark: 'center', view: 'rep', speed: 1, blind: false, reveal: false,
+    run: false, y: [5 * DEG, 0], t: 0, job: null, done: false, last: null, seed: 1, rng: mulberry32(1), pending: [], msg: '' };
+  const can = $('can'), ctx = can.getContext('2d');
+  let W = 0, H = 0, dpr = 1, TK = null, geo = null, fitCache = null;
+
+  function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    TK = {}; for (const k of ['canvas', 'ink', 'muted', 'line', 'grid', 'accent', 'surface', 'bob', 'bob-dark', 'string', 'wall', 'wall-line', 'beam', 'beam-dark', 'stick', 'stick-edge', 'stick-ink', 'gate', 'led', 'watch', 'lcd', 'lcd-ink', 'dot', 'mean', 'true', 'mu-band', 'fit', 'sim', 'font-mono', 'font-ui']) TK[k.replace(/-(\w)/g, (m, c) => c.toUpperCase())] = g('--' + k);
+    TK.fontUi = TK.fontUi || 'sans-serif'; TK.fontMono = TK.fontMono || 'monospace'; }
+  const proj = () => document.documentElement.getAttribute('data-projector') === 'on';
+  const setup = () => ({ L: S.L, th0: S.A, mark: S.mark, timer: S.timer, N: S.N, g: G_EARTH });
+  const Ltrue = () => trueLength(S.L, S.mark);
+  const Tnow = () => periodExact(Ltrue(), G_EARTH, S.A * DEG);
+
+  /* ---------- the readings: one row per timing, with the values as the timer and meter stick show them ---------- */
+  function rowOf(j) {
+    const dec = periodDecimals(S.timer, S.N), T = j.t / S.N;
+    return { L_m: S.L.toFixed(3), theta0_deg: String(S.A), timer: S.timer === 'hand' ? 'stopwatch' : 'photogate', swings: String(S.N),
+      t_s: j.t.toFixed(TIMERS[S.timer].dec), T_s: T.toFixed(dec), T2_s2: ((+T.toFixed(dec)) ** 2).toFixed(dec), read_to: S.mark };
+  }
+  const rows = () => (window.vdRows ? window.vdRows() : []);
+  const sameSetup = (r) => r.L_m === S.L.toFixed(3) && r.theta0_deg === String(S.A) && r.timer === (S.timer === 'hand' ? 'stopwatch' : 'photogate') && r.swings === String(S.N) && r.read_to === S.mark;
+  function record(js) {
+    for (const j of js) S.pending.push(rowOf(j));
+    const b = document.querySelector('.vd-readings .vd-rec'); if (b) b.click();
+    analysis(); draw();
+  }
+  window.vdVersion = 'measurement-uncertainty@2026-11-16';
+  window.vdShowCols = [['L_m', 'L (m)'], ['swings', 'N'], ['t_s', 't (s)'], ['T_s', 'T = t/N (s)']];
+  window.vdReadingRow = () => {
+    if (!S.pending.length) return T_('Each timing is recorded by itself when it ends. Press Release, or Repeat 10 times, to time the swings.');
+    const out = S.pending.slice(); S.pending = []; return out;
+  };
+
+  /* ---------- running a timing ---------- */
+  function startJob() {
+    S.job = timeSwings(setup(), S.rng); S.t = 0; S.y = [S.A * DEG, 0]; S.done = false; S.last = null;
+  }
+  function release() { if (S.run) { stop(); return; } startJob(); setRun(true); }
+  function stop() { setRun(false); S.y = [S.A * DEG, 0]; S.t = 0; if (S.job && !S.done) S.job = null; redraw(); }
+  function setRun(on) { S.run = on; const b = $('go'); b.textContent = on ? 'Stop' : 'Release'; b.classList.toggle('attn', !on); }
+  function repeat10() {
+    if (S.run) stop();
+    const js = []; for (let i = 0; i < 10; i++) js.push(timeSwings(setup(), S.rng));
+    S.last = js[js.length - 1]; S.job = null; S.done = true; record(js); readouts();
+  }
+  /* times of the start and stop presses after release: the bob first passes the bottom a quarter period after release */
+  function pressTimes(j) { const q = j.Ttrue / 4; return { start: q + j.e1, stop: q + S.N * j.Ttrue + j.e2 }; }
+  function shownTime() {   /* what the timer's display shows now */
+    const j = S.job; if (!j) return S.last ? S.last.t : 0;
+    const p = pressTimes(j), q = j.Ttrue / 4;
+    if (S.timer === 'gate') { if (S.t < q) return 0; if (S.done) return j.t; return roundTo(S.t - q, TIMERS.gate.res); }
+    if (S.t < p.start) return 0; if (S.done) return j.t; return Math.floor((S.t - p.start) / 0.01) * 0.01;
+  }
+  function swingsDone() { const j = S.job; if (!j) return S.last ? S.N : 0; const q = j.Ttrue / 4; return Math.max(0, Math.min(S.N, Math.floor((S.t - q) / j.Ttrue + 1e-9))); }
+  function advance(dt) {
+    const j = S.job, w2 = G_EARTH / Ltrue(); let left = dt;
+    while (left > 1e-12) { const h = Math.min(left, 0.002); S.y = rk4(S.y, h, w2); left -= h; }
+    S.t += dt;
+    if (j && !S.done) { const end = S.timer === 'hand' ? pressTimes(j).stop : j.Ttrue / 4 + S.N * j.Ttrue; if (S.t >= end) { S.done = true; S.last = j; record([j]); readouts(); } }
+  }
+
+  /* ---------- drawing ---------- */
+  const SPL = !(window.VD && VD.split) ? { f: () => (W > 640 ? 0.5 : 0.56), place() {}, set() {} } : VD.split(can, { key: 'graph', axis: () => (W > 640 ? 'x' : 'y'), def: (a) => (a === 'x' ? 0.5 : 0.56), min: 0.32, max: 0.72, snaps: [0.5, 2 / 3], label: 'Divider between the pendulum and the graph', onChange: () => redraw() });
+  function areas() {
+    const side = W > 640, fr = SPL.f();
+    return side ? { p: [0, 0, Math.round(W * fr), H], g: [Math.round(W * fr), 0, W - Math.round(W * fr), H] } : { p: [0, 0, W, Math.round(H * fr)], g: [0, Math.round(H * fr), W, H - Math.round(H * fr)] };
+  }
+  function draw() {
+    if (!TK || !W) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = TK.canvas; ctx.fillRect(0, 0, W, H);
+    const A = areas(); drawBench(...A.p); drawGraph(...A.g);
+    ctx.strokeStyle = TK.line; ctx.lineWidth = 1; ctx.beginPath();
+    if (W > 640) { ctx.moveTo(A.g[0] + 0.5, 0); ctx.lineTo(A.g[0] + 0.5, H); } else { ctx.moveTo(0, A.g[1] + 0.5); ctx.lineTo(W, A.g[1] + 0.5); }
+    ctx.stroke(); SPL.place();
+  }
+  function txt(s, x, y, o = {}) { const p = proj() ? 1.25 : 1; ctx.font = `${o.bold ? 700 : 400} ${(o.size || 12) * p}px ${o.mono ? TK.fontMono : TK.fontUi}`; ctx.fillStyle = o.color || TK.ink; ctx.textAlign = o.align || 'left'; ctx.textBaseline = o.base || 'alphabetic'; ctx.fillText(s, x, y); }
+  function drawBench(x0, y0, w, h) {
+    const p = proj() ? 1.25 : 1;
+    ctx.save(); ctx.beginPath(); ctx.rect(x0, y0, w, h); ctx.clip();
+    ctx.fillStyle = TK.wall; ctx.fillRect(x0, y0, w, h);
+    ctx.strokeStyle = TK.wallLine; ctx.lineWidth = 1; for (let yy = y0 + 40; yy < y0 + h; yy += 40) { ctx.beginPath(); ctx.moveTo(x0, yy + 0.5); ctx.lineTo(x0 + w, yy + 0.5); ctx.stroke(); }
+    /* the scale follows the pendulum: it fills the height, and a big swing stays inside the width */
+    const Lt = Ltrue(), r = BOB_D / 2, topY = y0 + 30 * p, timerW = 150 * p;
+    const swing = Math.max(Lt * Math.sin(Math.max(S.A, 12) * DEG), 0.12);
+    const drag = geo && geo.freeze ? geo.sc : null;
+    const sc = drag || Math.min((h - 30 * p - 46 * p) / (Math.max(S.L, Lt) + r + 0.04), (w / 2 - 26 * p) / (swing + r + 0.02));
+    const px = x0 + Math.max(w / 2, Math.min(w - (swing + r) * sc - 16 * p, w / 2 + 30 * p)), py = topY;
+    geo = { sc, px, py, freeze: drag ? true : false, x0, y0, w, h };
+    /* support beam and clamp */
+    ctx.fillStyle = TK.beam; ctx.fillRect(x0 + 10, y0 + 8 * p, w - 20, 14 * p); ctx.fillStyle = TK.beamDark; ctx.fillRect(x0 + 10, y0 + 20 * p, w - 20, 3 * p);
+    ctx.fillStyle = TK.beamDark; ctx.fillRect(px - 9 * p, py - 8 * p, 18 * p, 10 * p);
+    /* the meter stick, hanging from the beam beside the string at rest */
+    const stickW = 22 * p, stickX = px - Math.max(r * sc + 8 * p, 14 * p) - stickW, stickLen = Math.min(2.1, Math.ceil((Math.max(S.L, Lt) + 0.08) * 10) / 10);
+    ctx.fillStyle = TK.stick; ctx.strokeStyle = TK.stickEdge; ctx.lineWidth = 1; ctx.fillRect(stickX, py, stickW, stickLen * sc); ctx.strokeRect(stickX + 0.5, py + 0.5, stickW - 1, stickLen * sc - 1);
+    const step = sc * 0.01 >= 4 ? 0.01 : sc * 0.05 >= 4 ? 0.05 : 0.1;
+    ctx.strokeStyle = TK.stickInk; ctx.fillStyle = TK.stickInk;
+    for (let k = 0; k * step <= stickLen + 1e-9; k++) {
+      const v = k * step, yy = py + v * sc, big = Math.abs(v * 10 - Math.round(v * 10)) < 1e-6, mid = !big && Math.abs(v * 20 - Math.round(v * 20)) < 1e-6;
+      ctx.beginPath(); ctx.moveTo(stickX, yy + 0.5); ctx.lineTo(stickX + (big ? 10 : mid ? 7 : 4) * p, yy + 0.5); ctx.stroke();
+      if (big && k > 0 && (sc * 0.1 > 22 * p || Math.round(v * 10) % 2 === 0)) txt(String(Math.round(v * 100)), stickX + stickW - 2 * p, yy + 4 * p, { size: 9, align: 'right', mono: true, color: TK.stickInk });
+    }
+    txt('cm', stickX + stickW / 2, py + stickLen * sc + 12 * p, { size: 9, align: 'center', color: TK.muted });
+    /* the bob at rest (dashed), where the length was read, and the reading */
+    const restY = py + Lt * sc, rpx = Math.max(r * sc, 6 * p), readY = py + S.L * sc;
+    ctx.setLineDash([3 * p, 3 * p]); ctx.strokeStyle = TK.muted; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(px, restY, rpx, 0, 2 * Math.PI); ctx.stroke(); ctx.setLineDash([]);
+    const mc = S.mark === 'bottom' ? TK.sim : TK.accent;
+    ctx.strokeStyle = mc; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(px + rpx + 6 * p, readY); ctx.lineTo(stickX - 6 * p, readY); ctx.stroke();
+    ctx.fillStyle = mc; ctx.beginPath(); ctx.moveTo(stickX - 6 * p, readY); ctx.lineTo(stickX - 13 * p, readY - 4 * p); ctx.lineTo(stickX - 13 * p, readY + 4 * p); ctx.fill();
+    const lx = stickX - 16 * p;
+    if (lx - x0 > 90 * p) { txt(T_('reads {0} m', S.L.toFixed(3)), lx, readY + 4 * p, { size: 12, mono: true, bold: true, color: mc, align: 'right' });
+      txt(S.mark === 'bottom' ? T_('to the bob\'s bottom') : T_('to the bob\'s center'), lx, readY + 18 * p, { size: 10, color: TK.muted, align: 'right' }); }
+    /* string and bob */
+    const th = S.y[0], bx = px + Lt * sc * Math.sin(th), by = py + Lt * sc * Math.cos(th);
+    ctx.strokeStyle = TK.string; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(bx, by); ctx.stroke();
+    const gr = ctx.createRadialGradient(bx - rpx * 0.35, by - rpx * 0.4, rpx * 0.1, bx, by, rpx); gr.addColorStop(0, TK.surface || '#fff'); gr.addColorStop(0.35, TK.bob); gr.addColorStop(1, TK.bobDark);
+    ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(bx, by, rpx, 0, 2 * Math.PI); ctx.fill();
+    geo.bob = [bx, by, rpx];
+    /* the release angle, while held */
+    if (!S.run && S.A >= 2) { ctx.strokeStyle = TK.muted; ctx.lineWidth = 1; ctx.setLineDash([2 * p, 3 * p]); ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(px, py + Math.min(Lt * sc, 70 * p) + 10 * p); ctx.stroke(); ctx.setLineDash([]);
+      const ar = Math.min(Lt * sc * 0.45, 46 * p); ctx.beginPath(); ctx.arc(px, py, ar, Math.PI / 2 - S.A * DEG, Math.PI / 2); ctx.stroke();
+      txt(`θ₀ = ${S.A}°`, px + ar * Math.sin(S.A * DEG) + 8 * p, py + ar * Math.cos(S.A * DEG) + 4 * p, { size: 11, mono: true, color: TK.muted }); }
+    /* the photogate straddles the bottom of the swing */
+    if (S.timer === 'gate') {
+      const gy = restY, gw = Math.max(rpx * 2 + 16 * p, 30 * p);
+      ctx.fillStyle = TK.gate; ctx.fillRect(px - gw / 2 - 8 * p, gy - 3 * p, 8 * p, 26 * p); ctx.fillRect(px + gw / 2, gy - 3 * p, 8 * p, 26 * p); ctx.fillRect(px - gw / 2 - 8 * p, gy + 19 * p, gw + 16 * p, 7 * p);
+      const blocked = Math.abs(bx - px) < rpx; ctx.strokeStyle = blocked ? TK.led : TK.muted; ctx.globalAlpha = 0.8; ctx.lineWidth = 1; ctx.setLineDash([2, 2]); ctx.beginPath(); ctx.moveTo(px - gw / 2, gy); ctx.lineTo(px + gw / 2, gy); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
+      ctx.fillStyle = blocked ? TK.led : TK.muted; ctx.beginPath(); ctx.arc(px - gw / 2 - 4 * p, gy + 6 * p, 2.5 * p, 0, 2 * Math.PI); ctx.fill();
+    }
+    /* the timer's display, top left */
+    const tx = x0 + 12 * p, ty = y0 + 34 * p, tw = Math.min(timerW, px - x0 - 30 * p), th2 = 64 * p;
+    if (tw > 90 * p) {
+      ctx.fillStyle = TK.watch; roundRect(tx, ty, tw, th2, 10 * p); ctx.fill();
+      if (S.timer === 'hand') { ctx.fillRect(tx + tw / 2 - 7 * p, ty - 7 * p, 14 * p, 8 * p); }
+      ctx.fillStyle = TK.lcd; roundRect(tx + 8 * p, ty + 8 * p, tw - 16 * p, 30 * p, 4 * p); ctx.fill();
+      txt(shownTime().toFixed(TIMERS[S.timer].dec), tx + tw - 14 * p, ty + 30 * p, { size: 19, mono: true, bold: true, align: 'right', color: TK.lcdInk });
+      txt(S.timer === 'hand' ? T_('stopwatch, s') : T_('photogate, s'), tx + tw / 2, ty + 54 * p, { size: 10, align: 'center', color: '#f2efe9' });
+      const n = swingsDone();
+      txt(S.run || S.last ? (S.N === 1 ? T_('{0} of 1 swing timed', n) : T_('{0} of {1} swings timed', n, S.N)) : S.N === 1 ? T_('1 swing per timing') : T_('{0} swings per timing', S.N), tx, ty + th2 + 16 * p, { size: 11, color: TK.muted });
+      if (S.timer === 'hand') txt(T_('Simulated hand timing'), tx, ty + th2 + 31 * p, { size: 10, color: TK.sim });
+      if (S.reveal && S.last && !S.blind) {
+        txt(T_('true {0} s, error {1} s', (S.N * S.last.Ttrue).toFixed(4), f(S.last.err, 3)), tx, ty + th2 + 46 * p, { size: 10, mono: true, color: TK.true });
+      }
+    }
+    ctx.restore();
+  }
+  function roundRect(x, y, w, h, r) { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
+  function niceStep(span, n) { const raw = span / n, e = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / e; return (m < 1.5 ? 1 : m < 3 ? 2 : m < 7 ? 5 : 10) * e; }
+  function decOf(step) { return Math.max(0, -Math.floor(Math.log10(step) + 1e-9)); }
+  function drawGraph(x0, y0, w, h) {
+    ctx.save(); ctx.beginPath(); ctx.rect(x0, y0, w, h); ctx.clip();
+    if (S.view === 'rep') drawRepeats(x0, y0, w, h); else drawFit(x0, y0, w, h);
+    ctx.restore();
+  }
+  function axisBox(x0, y0, w, h, o) {   /* frame, grid, ticks; returns the mapping */
+    const p = proj() ? 1.25 : 1, L = x0 + (o.left || 54) * p, R = x0 + w - 14 * p, T = y0 + (o.top || 34) * p, B = y0 + h - (o.bottom || 40) * p;
+    const X = (v) => L + (v - o.x0) / (o.x1 - o.x0) * (R - L), Y = (v) => B - (v - o.y0) / (o.y1 - o.y0) * (B - T);
+    ctx.strokeStyle = TK.grid; ctx.lineWidth = 1;
+    const xs = niceStep(o.x1 - o.x0, Math.max(2, Math.floor((R - L) / (70 * p)))), ys = niceStep(o.y1 - o.y0, Math.max(2, Math.floor((B - T) / (40 * p))));
+    for (let v = Math.ceil(o.x0 / xs - 1e-9) * xs; v <= o.x1 + 1e-12; v += xs) { const xx = Math.round(X(v)) + 0.5; ctx.beginPath(); ctx.moveTo(xx, T); ctx.lineTo(xx, B); ctx.stroke(); txt(f(v, o.xd != null ? o.xd : decOf(xs)), xx, B + 14 * p, { size: 10, align: 'center', mono: true, color: TK.muted }); }
+    for (let v = Math.ceil(o.y0 / ys - 1e-9) * ys; v <= o.y1 + 1e-12; v += ys) { const yy = Math.round(Y(v)) + 0.5; ctx.beginPath(); ctx.moveTo(L, yy); ctx.lineTo(R, yy); ctx.stroke(); txt(f(Math.abs(v) < ys * 1e-6 ? 0 : v, decOf(ys)), L - 5 * p, yy + 3 * p, { size: 10, align: 'right', mono: true, color: TK.muted }); }
+    ctx.strokeStyle = TK.line; ctx.strokeRect(L + 0.5, T + 0.5, R - L - 1, B - T - 1);
+    if (o.xl) txt(o.xl, (L + R) / 2, B + 30 * p, { size: 11, align: 'center', color: TK.muted });
+    if (o.yl) { ctx.save(); ctx.translate(x0 + 13 * p, (T + B) / 2); ctx.rotate(-Math.PI / 2); txt(o.yl, 0, 0, { size: 11, align: 'center', color: TK.muted }); ctx.restore(); }
+    return { X, Y, L, R, T, B, p };
+  }
+  function drawRepeats(x0, y0, w, h) {
+    const p = proj() ? 1.25 : 1, grp = rows().filter(sameSetup), Ts = grp.map((r) => +r.T_s), st = stats(Ts), dec = periodDecimals(S.timer, S.N), bin = Math.pow(10, -dec);
+    txt(T_('Repeated timings at this setup'), x0 + 14 * p, y0 + 20 * p, { size: 13, bold: true });
+    if (!st.n) { txt(T_('No timings at this setup yet.'), x0 + w / 2, y0 + h / 2 - 8 * p, { size: 12, align: 'center', color: TK.muted }); txt(T_('Press Release, or Repeat 10 times.'), x0 + w / 2, y0 + h / 2 + 10 * p, { size: 12, align: 'center', color: TK.muted }); return; }
+    const sp = isFinite(st.s) ? st.s : 0, half = Math.max(4 * sp, 8 * bin, (S.timer === 'hand' ? 0.02 : 0.002) / S.N);
+    let lo = st.mean - half, hi = st.mean + half;
+    const showTrue = S.reveal && !S.blind, Tt = Tnow(); if (showTrue) { lo = Math.min(lo, Tt - bin * 2); hi = Math.max(hi, Tt + bin * 2); }
+    for (const v of Ts) { lo = Math.min(lo, v - bin); hi = Math.max(hi, v + bin); }
+    /* stacks of dots, one stack per value the timer can show */
+    const counts = new Map(); for (const v of Ts) { const k = Math.round(v / bin); counts.set(k, (counts.get(k) || 0) + 1); }
+    const maxc = Math.max(...counts.values());
+    const ax = axisBox(x0, y0, w, h, { x0: lo, x1: hi, y0: 0, y1: Math.max(4, maxc + 1), xl: T_('Period T = t/N (s)'), yl: T_('Number of timings'), top: 64 });
+    /* the ±s range and the ±standard error band around the mean */
+    if (st.n > 1) {
+      ctx.fillStyle = TK.muBand; ctx.fillRect(ax.X(st.mean - st.se), ax.T, ax.X(st.mean + st.se) - ax.X(st.mean - st.se), ax.B - ax.T);
+      ctx.strokeStyle = TK.muted; ctx.setLineDash([5 * p, 4 * p]); ctx.lineWidth = 1;
+      for (const v of [st.mean - st.s, st.mean + st.s]) { ctx.beginPath(); ctx.moveTo(ax.X(v), ax.T); ctx.lineTo(ax.X(v), ax.B); ctx.stroke(); }
+      ctx.setLineDash([]);
+    }
+    const colW = Math.max(3, Math.min(12 * p, (ax.X(lo + bin) - ax.X(lo)) * 0.9)), rowH = (ax.B - ax.T) / Math.max(4, maxc + 1), rad = Math.max(2, Math.min(colW / 2, rowH / 2 - 0.5, 6 * p));
+    ctx.fillStyle = TK.dot;
+    for (const [k, c] of counts) for (let i = 0; i < c; i++) { ctx.beginPath(); ctx.arc(ax.X(k * bin), ax.Y(i + 0.5), rad, 0, 2 * Math.PI); ctx.fill(); }
+    ctx.strokeStyle = TK.mean; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(ax.X(st.mean), ax.T); ctx.lineTo(ax.X(st.mean), ax.B); ctx.stroke();
+    if (showTrue) { ctx.strokeStyle = TK.true; ctx.setLineDash([2 * p, 3 * p]); ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(ax.X(Tt), ax.T); ctx.lineTo(ax.X(Tt), ax.B); ctx.stroke(); ctx.setLineDash([]); }
+    /* the key, above the plot */
+    const ky = y0 + 38 * p; let kx = x0 + 14 * p;
+    const key = (draw1, label, color) => { draw1(kx, ky); txt(label, kx + 20 * p, ky + 4 * p, { size: 10.5, color: color || TK.ink }); ctx.font = `${10.5 * p}px ${TK.fontUi}`; kx += 28 * p + ctx.measureText(label).width; if (kx > x0 + w - 90 * p) { kx = x0 + 14 * p; } };
+    key((x, y) => { ctx.strokeStyle = TK.mean; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + 14 * p, y); ctx.stroke(); }, T_('mean {0} s', st.mean.toFixed(dec + 1)));
+    if (st.n > 1) {
+      key((x, y) => { ctx.strokeStyle = TK.muted; ctx.lineWidth = 1; ctx.setLineDash([4 * p, 3 * p]); ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + 14 * p, y); ctx.stroke(); ctx.setLineDash([]); }, T_('± s = {0} s', st.s.toFixed(dec + 1)));
+      key((x, y) => { ctx.fillStyle = TK.muBand; ctx.fillRect(x, y - 5 * p, 14 * p, 10 * p); }, T_('± s/√n = {0} s', st.se.toFixed(dec + 1)));
+    }
+    if (showTrue) key((x, y) => { ctx.strokeStyle = TK.true; ctx.lineWidth = 2 * p; ctx.setLineDash([2 * p, 3 * p]); ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + 14 * p, y); ctx.stroke(); ctx.setLineDash([]); }, T_('true period'), TK.true);
+    txt(T_('n = {0}', st.n), ax.R - 4 * p, ax.T + 14 * p, { size: 11, align: 'right', mono: true, color: TK.muted });
+  }
+  function drawFit(x0, y0, w, h) {
+    const p = proj() ? 1.25 : 1, rs = rows(), xs = rs.map((r) => +r.L_m), ys = rs.map((r) => +r.T2_s2);
+    txt(T_('T² against L, every reading'), x0 + 14 * p, y0 + 20 * p, { size: 13, bold: true });
+    if (!rs.length) { txt(T_('No readings yet.'), x0 + w / 2, y0 + h / 2 - 8 * p, { size: 12, align: 'center', color: TK.muted }); txt(T_('Time the swings at several lengths.'), x0 + w / 2, y0 + h / 2 + 10 * p, { size: 12, align: 'center', color: TK.muted }); return; }
+    const fit = fitAll(), hTop = Math.round(h * 0.64), xmax = Math.max(0.5, ...xs) * 1.08, ymax = Math.max(1, ...ys) * 1.1;
+    const ax = axisBox(x0, y0, w, hTop, { x0: 0, x1: xmax, y0: 0, y1: ymax, xl: '', yl: T_('T² (s²)'), top: 34, bottom: 22 });
+    if (fit) {
+      ctx.strokeStyle = TK.fit; ctx.lineWidth = 1.6 * p; const xa = Math.max(0, fit.xint > 0 ? fit.xint : 0), xb = xmax;
+      ctx.beginPath(); ctx.moveTo(ax.X(xa), ax.Y(fit.m * xa + fit.b)); ctx.lineTo(ax.X(xb), ax.Y(fit.m * xb + fit.b)); ctx.stroke();
+      if (fit.xint > 0 && fit.xint < xmax) { ctx.fillStyle = TK.fit; ctx.beginPath(); ctx.arc(ax.X(fit.xint), ax.Y(0), 3.5 * p, 0, 2 * Math.PI); ctx.fill(); }
+      const ref = S.reveal && !S.blind; if (ref) { ctx.strokeStyle = TK.true; ctx.setLineDash([2 * p, 3 * p]); ctx.beginPath(); ctx.moveTo(ax.X(0), ax.Y(0)); ctx.lineTo(ax.X(xmax), ax.Y(4 * Math.PI * Math.PI / G_EARTH * xmax)); ctx.stroke(); ctx.setLineDash([]);
+        txt(T_('true L against true T²'), ax.R - 4 * p, ax.T + 14 * p, { size: 10, align: 'right', color: TK.true }); }
+    }
+    ctx.fillStyle = TK.dot; for (let i = 0; i < xs.length; i++) { ctx.beginPath(); ctx.arc(ax.X(xs[i]), ax.Y(ys[i]), 3.5 * p, 0, 2 * Math.PI); ctx.fill(); }
+    if (!fit) { txt(T_('A fit needs readings at two or more lengths.'), (ax.L + ax.R) / 2, ax.T + 16 * p, { size: 11, align: 'center', color: TK.muted }); }
+    /* residuals below */
+    const rr = fit ? fit.res : [], rmax = Math.max(1e-3, ...rr.map(Math.abs)) * 1.3;
+    const ax2 = axisBox(x0, y0 + hTop, w, h - hTop, { x0: 0, x1: xmax, y0: -rmax, y1: rmax, xl: T_('Length L as read (m)'), yl: T_('Residual (s²)'), top: 8, bottom: 40 });
+    ctx.strokeStyle = TK.fit; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(ax2.L, ax2.Y(0)); ctx.lineTo(ax2.R, ax2.Y(0)); ctx.stroke();
+    if (fit) { ctx.fillStyle = TK.dot; for (let i = 0; i < xs.length; i++) { ctx.beginPath(); ctx.arc(ax2.X(xs[i]), ax2.Y(rr[i]), 3 * p, 0, 2 * Math.PI); ctx.fill(); } }
+  }
+  function fitAll() { const rs = rows(); if (fitCache && fitCache.key === rs.length + ':' + rs.map((r) => r.L_m + r.T2_s2).join()) return fitCache.fit;
+    const xs = rs.map((r) => +r.L_m), ys = rs.map((r) => +r.T2_s2), fit = new Set(xs).size >= 2 && xs.length >= 3 ? linfit(xs, ys) : null;
+    fitCache = { key: rs.length + ':' + rs.map((r) => r.L_m + r.T2_s2).join(), fit }; return fit; }
+
+  /* ---------- readouts and analysis ---------- */
+  const dd = (a, b, c) => `<div${c ? ' class="wide"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`;
+  /* a value with its uncertainty: the uncertainty to two figures when it starts with 1 or 2, else one, and the value to match */
+  function pm(v, u, unit) {
+    if (!isFinite(v)) return '—'; if (!(u > 0) || !isFinite(u)) return `${f(v, 3)} ${unit}`;
+    const e = Math.floor(Math.log10(u)), lead = u / 10 ** e, sig = lead < 3 ? 2 : 1, d = Math.max(0, sig - 1 - e);
+    return `${f(v, d)} ± ${f(u, d)} ${unit}`;
+  }
+  function readouts() {
+    const dec = periodDecimals(S.timer, S.N), last = S.last;
+    let h = dd(T_('Meter stick reading L'), `${S.L.toFixed(3)} m`) + dd(T_('Release angle θ₀'), `${S.A}°`)
+      + dd(T_('Timer'), S.timer === 'hand' ? T_('stopwatch, 0.01 s') : T_('photogate, 0.001 s')) + dd(T_('Swings per timing N'), String(S.N));
+    h += dd(T_('Last timing t'), last ? `${last.t.toFixed(TIMERS[S.timer].dec)} s` : '—') + dd(T_('Period T = t/N'), last ? `${(last.t / S.N).toFixed(dec)} s` : '—');
+    if (!S.blind) h += dd(T_('Small angle prediction 2π√(L/g), with L as read'), `${periodSmall(S.L, G_EARTH).toFixed(4)} s`, true);
+    if (S.reveal && !S.blind) h += dd(T_('True length, pivot to bob center'), `${Ltrue().toFixed(3)} m`) + dd(T_('True period at θ₀'), `${Tnow().toFixed(4)} s`)
+      + dd(T_('Last timing\'s error'), last ? `${f(last.err, 3)} s` : '—');
+    $('out').innerHTML = h;
+  }
+  function analysis() {
+    const grp = rows().filter(sameSetup), st = stats(grp.map((r) => +r.T_s)), dec = periodDecimals(S.timer, S.N);
+    let h = `<p class="ana-head">${T_('This setup (L = {0} m, θ₀ = {1}°, N = {2})', S.L.toFixed(3), S.A, S.N)}</p>`;
+    if (!st.n) { h += dd(T_('Timings'), '0', true); }
+    else {
+      const dT = periodUncertainty(st, S.timer, S.N), dL = L_RES / 2;
+      h += dd(T_('Timings n'), String(st.n)) + dd(T_('Mean period T̄'), `${st.mean.toFixed(dec + 1)} s`)
+        + dd(T_('Standard deviation s'), st.n > 1 ? `${st.s.toFixed(dec + 1)} s` : '—') + dd(T_('Standard error s/√n'), st.n > 1 ? `${st.se.toFixed(dec + 1)} s` : '—')
+        + dd(T_('g = 4π²L/T̄²'), S.blind ? T_('hidden: work it out') : pm(gFromPeriod(S.L, st.mean), gUncertainty(S.L, dL, st.mean, dT), 'm/s²'), true);
+    }
+    const fit = fitAll(), n = rows().length;
+    h += `<p class="ana-head">${T_('Fit of T² against L, every reading ({0})', n)}</p>`;
+    if (!fit) h += dd(T_('Fit'), T_('needs readings at two or more lengths'), true);
+    else {
+      const g = 4 * Math.PI * Math.PI / fit.m, dg = isFinite(fit.sm) ? g * fit.sm / fit.m : NaN;
+      h += dd(T_('Slope'), pm(fit.m, fit.sm, 's²/m')) + dd(T_('Intercept'), pm(fit.b, fit.sb, 's²'))
+        + dd(T_('g = 4π²/slope'), S.blind ? T_('hidden: work it out') : pm(g, dg, 'm/s²'), true)
+        + dd(T_('Length where the line reaches T² = 0'), S.blind ? T_('hidden: work it out') : pm(fit.xint * 100, isFinite(fit.sb) ? Math.abs(fit.sb / fit.m) * 100 : NaN, 'cm'), true);
+    }
+    $('ana').innerHTML = h;
+    $('anaHint').textContent = S.timer === 'hand' ? T_('The period\'s uncertainty is the standard error of the mean, or half the stopwatch\'s last digit divided by N if that is larger; the length\'s is half a millimeter.') : T_('The period\'s uncertainty is the standard error of the mean, or half the photogate\'s last digit divided by N if that is larger; the length\'s is half a millimeter.');
+  }
+  function sync() {
+    $('sL').value = S.L; $('oL').textContent = `${S.L.toFixed(3)} m`; $('sA').value = S.A; $('oA').textContent = `${S.A}°`;
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
+    for (const b of document.querySelectorAll('#timerSeg button')) b.setAttribute('aria-pressed', String(b.dataset.timer === S.timer));
+    for (const b of document.querySelectorAll('#nSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.n === S.N));
+    for (const b of document.querySelectorAll('#markSeg button')) b.setAttribute('aria-pressed', String(b.dataset.mark === S.mark));
+    for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.view === S.view));
+    for (const b of document.querySelectorAll('#speed button')) b.setAttribute('aria-pressed', String(+b.dataset.sp === S.speed));
+    $('timerTag').textContent = S.timer === 'hand' ? T_('Simulated: each press of the stopwatch is early or late by a random amount (standard deviation 0.05 s). The display reads to 0.01 s.') : T_('Simulated: the photogate times each swing exactly and rounds to 0.001 s.');
+    $('markTag').textContent = S.mark === 'bottom' ? T_('Simulated mistake: the length is read to the bottom of the bob, 3.0 cm below its center, so every reading is 3.0 cm too long.') : T_('The length runs from the pivot to the center of the bob (diameter 6.0 cm), read to the nearest millimeter.');
+    $('markTag').classList.toggle('plain', S.mark !== 'bottom');
+    $('drawSet').textContent = T_('Random draw set {0}', S.seed);
+  }
+  function redraw() { draw(); readouts(); analysis(); $('note').textContent = S.msg || (S.run ? '' : T_('Drag the bob to set θ₀ and L')); if (descr) descr.changed(); }
+  function changed() { S.preset = 'custom'; if (S.run) stop(); S.y = [S.A * DEG, 0]; S.job = null; S.last = null; S.done = false; sync(); redraw(); }
+  function applyPreset(k) {
+    const c = PRESETS[k]; if (S.run) setRun(false);
+    Object.assign(S, { preset: k, timer: c.timer, N: c.N, L: c.L, A: c.A, mark: c.mark, view: c.view, y: [c.A * DEG, 0], t: 0, job: null, last: null, done: false });
+    $('presetHint').textContent = T_(c.hint); sync(); redraw();
+  }
+
+  /* ---------- controls ---------- */
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  $('go').addEventListener('click', () => { release(); redraw(); });
+  $('rep').addEventListener('click', () => { repeat10(); redraw(); });
+  $('speed').addEventListener('click', (e) => { const b = e.target.closest('[data-sp]'); if (!b) return; S.speed = +b.dataset.sp; sync(); });
+  $('viewSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-view]'); if (!b) return; S.view = b.dataset.view; sync(); redraw(); });
+  $('timerSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-timer]'); if (!b) return; S.timer = b.dataset.timer; changed(); });
+  $('nSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-n]'); if (!b) return; S.N = +b.dataset.n; changed(); });
+  $('markSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-mark]'); if (!b) return; S.mark = b.dataset.mark; changed(); });
+  const clampL = (v) => Math.max(0.2, Math.min(2, Math.round(v * 100) / 100)), clampA = (v) => Math.max(2, Math.min(60, Math.round(v)));
+  $('sL').addEventListener('input', (e) => { S.L = clampL(+e.target.value); changed(); });
+  $('sA').addEventListener('input', (e) => { S.A = clampA(+e.target.value); changed(); });
+  for (const b of document.querySelectorAll('[data-step]')) b.addEventListener('click', () => { if (b.dataset.step === 'L') S.L = clampL(S.L + +b.dataset.d); else S.A = clampA(S.A + +b.dataset.d); changed(); });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; redraw(); });
+  $('labReveal').addEventListener('change', (e) => { S.reveal = e.target.checked; redraw(); });
+  $('newDraw').addEventListener('click', () => { S.seed += 1; S.rng = mulberry32(S.seed); sync(); });
+  /* a delete or Clear in the Readings section changes the analysis */
+  document.querySelector('.vd-readings').addEventListener('click', () => setTimeout(() => { fitCache = null; analysis(); draw(); }, 0));
+  VD.typeIn($('oL'), { get: () => S.L, set: (v) => { S.L = clampL(v); changed(); }, min: 0.2, max: 2, step: 0.01, unit: 'm', label: 'Length L', knobs: [$('sL')] });
+  VD.typeIn($('oA'), { get: () => S.A, set: (v) => { S.A = clampA(v); changed(); }, min: 2, max: 60, step: 1, unit: '°', label: 'Release angle', knobs: [$('sA')] });
+  can.addEventListener('keydown', (e) => {
+    if (e.key === ' ') { $('go').click(); e.preventDefault(); return; }
+    if (S.run) return;
+    const big = e.shiftKey ? 10 : 1;
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { S.A = clampA(S.A + (e.key === 'ArrowRight' ? 1 : -1)); changed(); e.preventDefault(); }
+    if (e.key === 'ArrowUp' || e.key === 'ArrowDown') { S.L = clampL(S.L + (e.key === 'ArrowDown' ? 0.01 : -0.01) * big); changed(); e.preventDefault(); }
+  });
+  /* drag the bob: sideways sets θ₀, along the string sets L (the scale holds still while dragging) */
+  let drag = null;
+  const local = (e) => { const r = can.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+  can.addEventListener('pointerdown', (e) => {
+    if (S.run || !geo || !geo.bob) return; const [x, y] = local(e), [bx, by, br] = geo.bob;
+    if (Math.hypot(x - bx, y - by) > Math.max(br + 14, 28)) return;
+    drag = { x0: x, y0: y, mode: null }; geo.freeze = true; try { can.setPointerCapture(e.pointerId); } catch (_) {} e.preventDefault();
+  });
+  can.addEventListener('pointermove', (e) => {
+    if (!drag) { if (geo && geo.bob && !S.run) { const [x, y] = local(e), [bx, by, br] = geo.bob; can.style.cursor = Math.hypot(x - bx, y - by) <= Math.max(br + 14, 28) ? 'grab' : ''; } return; }
+    const [x, y] = local(e), dx = x - geo.px, dy = y - geo.py;
+    if (!drag.mode) { if (Math.hypot(x - drag.x0, y - drag.y0) < 6) return; const th = S.A * DEG, mx = x - drag.x0, my = y - drag.y0; drag.mode = Math.abs(mx * Math.sin(th) + my * Math.cos(th)) > Math.abs(mx * Math.cos(th) - my * Math.sin(th)) ? 'L' : 'A'; }
+    if (drag.mode === 'A') S.A = clampA(Math.atan2(Math.abs(dx), Math.max(1, dy)) / DEG);
+    else { const d = Math.hypot(dx, dy) / geo.sc; S.L = clampL(S.mark === 'bottom' ? d + BOB_D / 2 : d); }
+    S.preset = 'custom'; S.y = [S.A * DEG, 0]; S.job = null; S.last = null; sync(); redraw();
+  });
+  const up = () => { if (!drag) return; drag = null; if (geo) geo.freeze = false; redraw(); };
+  can.addEventListener('pointerup', up); can.addEventListener('pointercancel', up);
+
+  let last = performance.now(), acc = 0;
+  function frame(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    if (S.run) { advance(dt * S.speed); draw(); acc += dt; if (acc > 0.25) { acc = 0; readouts(); } }
+    requestAnimationFrame(frame);
+  }
+  function resize() { dpr = window.devicePixelRatio || 1; const r = $('pane').getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); redraw(); }
+  const retheme = () => { tokens(); redraw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'data-look'] });
+  VD.projector({ onChange: resize });
+
+  $('about1').textContent = T_('The pendulum: a point bob on a light string that does not stretch, a frictionless pivot, no air drag, g = 9.81 m/s². Its period at any release angle is exact, T = 2π√(L/g) divided by the arithmetic geometric mean of 1 and cos(θ₀/2) (the same as 2π√(L/g) · 2K(sin(θ₀/2))/π, with K the complete elliptic integral). The swing you watch is the full equation θ″ = −(g/L) sin θ, stepped with fourth order Runge–Kutta.');
+  $('about2').textContent = T_('The instruments, and every error in them, are simulated. Hand stopwatch: each of the two presses (start as the bob passes the bottom, stop N swings later) is early or late by a random amount drawn from a normal distribution with standard deviation 0.05 s, cut off at four standard deviations, so a timing is off by about 0.07 s whatever N is; a reaction delay common to both presses cancels and is left out. The display reads to 0.01 s. Real reaction scatter varies from person to person. Photogate: times each swing exactly and rounds to 0.001 s, so repeated photogate timings are identical.');
+  $('about3').textContent = T_('The meter stick reads to the nearest millimeter; the slider sets the reading in whole centimeters. Read to the bottom of the bob (diameter 6.0 cm), every reading is 3.0 cm longer than the true length from the pivot to the bob\'s center. Random draws come from a seeded generator, so the same steps from the same draw set give the same timings; New random draws moves to the next set.');
+  $('about4').textContent = T_('The Analysis section: the mean, the standard deviation s (with n − 1) and the standard error s/√n of the periods timed at the present setup; g = 4π²L/T̄² with δg/g = √((δL/L)² + (2δT/T)²). The fit is an unweighted least squares line through every reading with a free intercept, with the usual standard errors of the slope and intercept; g = 4π²/slope. The small angle formula is what the Analysis uses, so a big release angle shows up as a bias in g.');
+
+  window.__mu = { S, PRESETS, applyPreset, timeSwings, periodExact, periodSmall, trueLength, stats, linfit, fitAll, repeat10, release, advance, gFromPeriod, rows };
+  let descr = null;
+  tokens();
+  { const q = new URLSearchParams(location.search).get('setup'); applyPreset(PRESETS[q] ? q : 'one'); }
+  new ResizeObserver(resize).observe($('pane')); resize();
+  if (window.VD && VD.panel) VD.panel({ play: '#go', reset: false, speed: '#speed', also: ['#rep'] });
+  /* what the picture shows now, for a screen reader (VD.describe) */
+  if (window.VD && VD.describe) descr = VD.describe(can, () => {
+    const grp = rows().filter(sameSetup), st = stats(grp.map((r) => +r.T_s));
+    return [
+      T_('A pendulum {0} m long as read on the meter stick, read to the {1} of the bob, released from {2}°.', S.L.toFixed(3), S.mark === 'bottom' ? T_('bottom') : T_('center'), S.A),
+      S.timer === 'hand' ? T_('A hand stopwatch times {0} swings at a time.', S.N) : T_('A photogate times {0} swings at a time.', S.N),
+      S.run ? T_('Swinging: {0} of {1} swings timed.', swingsDone(), S.N) : T_('Held at the release angle.'),
+      S.last ? T_('Last timing {0} s.', S.last.t.toFixed(TIMERS[S.timer].dec)) : T_('No timing yet.'),
+      S.view === 'rep' ? (st.n ? T_('The graph shows {0} timings at this setup, mean period {1} s.', st.n, st.mean.toFixed(periodDecimals(S.timer, S.N) + 1)) : T_('The graph of repeated timings is empty.')) : T_('The graph shows T² against L for {0} readings, with the residuals below.', rows().length),
+    ];
+  });
+  VD.howTo({ src: 'media/how-this-works/measurement-uncertainty.mp4', poster: 'media/how-this-works/measurement-uncertainty.jpg' });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

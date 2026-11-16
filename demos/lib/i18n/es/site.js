@@ -3966,6 +3966,24 @@ VDI18N.add('es', 'site', {
   "<span>OpenStax Vol. {#} · Cap. {#} · Vol. {#} · Cap. {#}, {#}–{#}, {#}</span>",
 "Interference and diffraction demos":
   "Demos de interferencia y difracción",
+"Measurement Uncertainty":
+  "Incertidumbre de medición",
+"Measure g with a pendulum and judge what the data can tell you: time it by hand or with a photogate, one swing or many, repeat, read the length to the right place or the wrong one, and release from small or big angles. Random scatter, resolution, bias, propagation, fits and residuals, with every instrument error simulated and labeled.":
+  "Mide g con un péndulo y juzga qué pueden decirte los datos: cronométralo a mano o con una fotocompuerta, una oscilación o varias, repite, lee la longitud en el lugar correcto o en el equivocado, y suelta desde ángulos pequeños o grandes. Dispersión aleatoria, resolución, sesgo, propagación, ajustes y residuos, con cada error de los instrumentos simulado y señalado como tal.",
+"<a>Measurement Uncertainty</a><span>Lab</span>":
+  "<a>Incertidumbre de medición</a><span>Laboratorio</span>",
+"<a>Physics I</a><a>Kinematics</a><a>Oscillations and waves</a><a>Worksheet: Random Scatter and Bias</a><span><span>{#}:{#}</span> <span>{#}:{#}</span></span>":
+  "<a>Física I</a><a>Cinemática</a><a>Oscilaciones y ondas</a><a>Hoja de trabajo: Dispersión aleatoria y sesgo</a><span><span>{#}:{#}</span> <span>{#}:{#}</span></span>",
+"<a>Measurement Uncertainty</a>":
+  "<a>Incertidumbre de medición</a>",
+"<a>Open demo</a> <a>Worksheet: Random Scatter and Bias</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Dispersión aleatoria y sesgo</a> <a>Notas</a>",
+"Also used in this unit: <a>Pendulums</a> <span>(card under <a>Rotation and angular momentum</a>; {#}:{#})</span> · <a>Measurement Uncertainty</a> <span>(card under <a>Measurements and vectors</a>; {#}:{#})</span>":
+  "También se usa en esta unidad: <a>Péndulos</a> <span>(tarjeta en <a>Rotación y momento angular</a>; {#}:{#})</span> · <a>Incertidumbre de medición</a> <span>(tarjeta en <a>Mediciones y vectores</a>; {#}:{#})</span>",
+"<a>Units, Scales and Estimates</a> · <a>Measurement Uncertainty</a>":
+  "<a>Unidades, escalas y estimaciones</a> · <a>Incertidumbre de medición</a>",
+"<a>Pendulums</a> · <a>Measurement Uncertainty</a>":
+  "<a>Péndulos</a> · <a>Incertidumbre de medición</a>",
 "Cool a gas of atoms in a box from {#} µK toward absolute zero: each atom's wave packet grows to the thermal de Broglie wavelength, the packets overlap, and the atoms pile into one shared ground state. Exact Bose–Einstein occupations of the box levels, an energy ladder, the phase of the wavefunction as color, the velocity picture of {#} and the condensate fraction curve.":
   "Enfría un gas de átomos en una caja desde {#} µK hacia el cero absoluto: el paquete de ondas de cada átomo crece hasta la longitud de onda térmica de De Broglie, los paquetes se traslapan y los átomos se acumulan en un único estado fundamental compartido. Ocupaciones exactas de Bose–Einstein de los niveles de la caja, una escalera de energías, la fase de la función de onda como color, la imagen de velocidades de {#} y la curva de la fracción condensada.",
 "<span>{#}:{#}</span><span>Instantaneous Velocity and Speed</span><span><a>Motion Graphs</a></span>":

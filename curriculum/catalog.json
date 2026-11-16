@@ -852,6 +852,21 @@
      ]
     },
     {
+     "demo": "measurement-uncertainty",
+     "title": "Measurement Uncertainty",
+     "desc": "Measure g with a pendulum and judge what the data can tell you: time it by hand or with a photogate, one swing or many, repeat, read the length to the right place or the wrong one, and release from small or big angles. Random scatter, resolution, bias, propagation, fits and residuals, with every instrument error simulated and labeled.",
+     "tags": [
+      "measurement uncertainty",
+      "random error",
+      "systematic error",
+      "standard error",
+      "error propagation",
+      "residuals",
+      "experimental design",
+      "measuring g"
+     ]
+    },
+    {
      "demo": "rotational-dynamics",
      "title": "Rotational Dynamics",
      "desc": "A falling mass spins a turntable. Time the drop, find the angular acceleration, and measure moments of inertia from a plot of torque against angular acceleration.",

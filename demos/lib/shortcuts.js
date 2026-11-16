@@ -28,6 +28,10 @@ window.VD_SHORTCUTS = {
   ],
   "bose-einstein": [],
   "condensate-waves": [],
+  "measurement-uncertainty": [
+    ["← →", "Change the release angle θ₀ by 1°", "on the picture"],
+    ["↑ ↓", "Make the pendulum shorter (↑) or longer (↓) by 1 cm (Shift for 10 cm)", "on the picture"]
+  ],
   "derivatives": [
     ["← →", "Move the point along the curve (Shift for bigger steps)", "on the picture"],
     ["+ −", "Zoom in or out (or scroll over the graph)", "on the picture"]

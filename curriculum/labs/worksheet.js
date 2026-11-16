@@ -34,7 +34,8 @@
     'cavendish' /* torsion balance, The Cavendish Experiment demo, 2026-10-24 */,
     'terminal-velocity' /* skydiver and coffee filters, Terminal Velocity demo, 2026-10-24 */,
     'atwood' /* Atwood's machine setup of the Forces and Friction demo, 2026-10-31 */,
-    'normal-modes' /* chain of ten and grid of pucks, Springs Sandbox, 2026-10-31 */];
+    'normal-modes' /* chain of ten and grid of pucks, Springs Sandbox, 2026-10-31 */,
+    'measurement-uncertainty' /* random scatter and bias in g, Measurement Uncertainty demo, 2026-11-16 */];
   const ENABLED = PHYSICS_I.slice();
   /* Readings a demo hands over with its Export to worksheet button (localStorage key vd-handoff:<worksheet>). For each worksheet:
      the demo's name and, for each column of the worksheet's first data table, what fills it: a column of the demo's CSV, '#name' for
@@ -44,6 +45,8 @@
   const sig = (v) => (isFinite(v) && v !== '' ? String(+(+v).toPrecision(6)) : '');
   const FROM_DEMO = {
     pendulum: { demo: 'Pendulums', cols: ['row', 'type', 'L_m', 'theta0_deg', 'm_kg', 'T_s', 'T2_s2', null] },
+    /* Row | L as read (m) | θ₀ (°) | Timer | Swings N | Time t (s) | Period T = t/N (s) | T² (s²) | Length read to */
+    'measurement-uncertainty': { demo: 'Measurement Uncertainty', cols: ['row', 'L_m', 'theta0_deg', 'timer', 'swings', 't_s', 'T_s', 'T2_s2', 'read_to'] },
     /* Bumper | m (kg) | v_before (m/s) | v_after (m/s) | Rate (Hz) | Area A (N s) | Δp (kg m/s, the student's) | Peak (N) | Contact time (s, from the demo's ms) */
     impulse: { demo: 'Impulse and Momentum', cols: [both('row', 'bumper'), 'm_kg', 'v_before_m_per_s', 'v_after_m_per_s', 'rate_Hz', 'area_N_s', null, 'peak_N', (r) => (r.contact_ms !== '' && r.contact_ms != null ? (+r.contact_ms / 1000).toFixed(4) : '')] },
     collisions: { demo: 'Collisions', cols: [both('row', 'bumper'), 'm1_kg', 'm2_kg', 'u1_m_per_s', 'u2_m_per_s', 'v1_after_m_per_s', 'v2_after_m_per_s'] },
