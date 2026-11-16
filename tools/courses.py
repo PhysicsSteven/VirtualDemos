@@ -198,7 +198,7 @@ HANDOUT_TOPIC = {
     'force-table': 'Force Table',
     'vectors': 'Components, Sums and Products',
     'static-equilibrium': 'Support Forces and Cable Tension', 'catenary': 'Tension in a Hanging Chain',
-    'double-pendulum': 'Normal Modes and Chaos', 'eddy-currents': 'Eddy Current Braking',
+    'double-pendulum': 'Normal Modes and Chaos', 'spherical-pendulum': 'Spherical Pendulum', 'eddy-currents': 'Eddy Current Braking',
     'heating-curve': 'Heating Curve and Latent Heat', 'bonds-and-latent-heat': 'Bonds, Temperature and Latent Heat',
     'thermal-equilibrium': 'Thermal Equilibrium', 'gas-thermometer': 'Gas Thermometer and Absolute Zero', 'thermal-expansion': 'Thermal Expansion',
     'heat-conduction': 'Heat Conduction Through Layers', 'heat-capacities-of-gases': 'Heat Capacities of Gases', 'ruchardt': "Rüchardt's Ball",

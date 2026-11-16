@@ -9921,7 +9921,8 @@
       "note": "New 2026-10-22 (Claude). Bob on a string or uniform rod; length, release angle, mass, Earth/Moon/Mars/Mystery planet, optional air drag; RK4 motion; photogate to 0.001 s; Capture, CSV, T² against L fit for g, T against θ₀ with the exact curve; Blind. Full student/private instructor package written and numerically checked 2026-10-22. Mystery fit answer hiding requires Blind; strict source-fit check fails without it. Browser/classroom acceptance pending. String-bob lab restricted to release angles at or below 90 degrees; above-horizontal release requires slack-string dynamics or a rigid support. Claude 2026-10-22: fitted answers now hidden for the Mystery option as well as in Blind. Claude 2026-10-24: Pendulums and Chaos (double-pendulum) merged in as the Exact period and Double pendulum scenes (pendulum.html?scene=phase, ?scene=double; the old double-pendulum.html redirects there), with its handout as the second worksheet.",
       "handouts": [
         "pendulum",
-        "double-pendulum"
+        "double-pendulum",
+        "spherical-pendulum"
       ],
       "title": "Pendulums",
       "url": "demos/pendulum.html"

@@ -424,6 +424,8 @@ VDI18N.add('es', 'demo/pendulum', {
   "oscilación (s)",
 "turn (°)":
   "giro (°)",
+"round (s)":
+  "vuelta (s)",
 "No readings yet. Play, let it swing a few times, record.":
   "Aún no hay lecturas. Reproduce, deja que oscile unas cuantas veces y registra.",
 "Record reading stores the setup and what the run has measured so far: the narrowest and widest swings, the time from one widest point to the next (one swing), how far round the bob went in that time and how much more than half a turn that is (the turn of the orbit), and the time of the last full turn round the vertical. Let it run a few swings first.":
@@ -432,8 +434,8 @@ VDI18N.add('es', 'demo/pendulum', {
   "<span>A ciegas: ocultar las predicciones exactas</span>",
 "<span>Trace the path on the bench</span>":
   "<span>Trazar la trayectoria sobre la mesa</span>",
-"Model: a point bob on a light rigid rod of length L, hung from a frictionless ball joint so it can swing in any direction, no air drag, g = {#} m/s². A rod, not a string, so the bob can go above the pivot's level: a string goes slack wherever v²/L + g cos θ < {#} (the readout says when). Released at θ₀ from straight down, from rest except for a sideways push, given as a multiple of the speed that carries it round a steady circle at θ₀ (a conical pendulum), sin θ₀ √(gL/cos θ₀).":
-  "Modelo: una lenteja puntual en una varilla rígida ligera de longitud L, colgada de una articulación de rótula sin fricción para que pueda oscilar en cualquier dirección, sin resistencia del aire, g = {#} m/s². Una varilla, no un hilo, para que la lenteja pueda subir por encima del nivel del pivote: un hilo se afloja donde v²/L + g cos θ < {#} (la lectura indica cuándo). Soltada con θ₀ desde la vertical hacia abajo, desde el reposo salvo por un empujón lateral, dado como múltiplo de la rapidez que la lleva por un círculo uniforme a θ₀ (un péndulo cónico), sin θ₀ √(gL/cos θ₀).",
+"Model: a point bob on a light rigid rod of length L, hung from a frictionless ball joint so it can swing in any direction, no air drag, g = {#} m/s². A rod, not a string. Even so, for every start these sliders allow the pull per kg along the rod, v²/L + g cos θ = 2E/L + 3g cos θ, stays positive all the way round (it is least at the widest angle), so a string would follow the same path; the readout would say if a string ever went slack. Released at θ₀ from straight down, from rest except for a sideways push, given as a multiple of the speed that carries it round a steady circle at θ₀ (a conical pendulum), sin θ₀ √(gL/cos θ₀).":
+  "Modelo: una lenteja puntual en una varilla rígida ligera de longitud L, colgada de una articulación de rótula sin fricción para que pueda oscilar en cualquier dirección, sin resistencia del aire, g = {#} m/s². Una varilla, no un hilo. Aun así, para cada inicio que permiten estos deslizadores, la tracción por kg a lo largo de la varilla, v²/L + g cos θ = 2E/L + 3g cos θ, se mantiene positiva en toda la vuelta (es mínima en el ángulo más abierto), así que un hilo seguiría la misma trayectoria; la lectura indicaría si un hilo llegara a aflojarse. Soltada con θ₀ desde la vertical hacia abajo, desde el reposo salvo por un empujón lateral, dado como múltiplo de la rapidez que la lleva por un círculo uniforme a θ₀ (un péndulo cónico), sin θ₀ √(gL/cos θ₀).",
 "Two quantities stay fixed: the energy E and L_z, the angular momentum about the vertical through the pivot (gravity and the rod's pull have no torque about that line). Per unit mass, ½L²θ'² + U_eff(θ) = E with U_eff(θ) = L_z²/(2L² sin²θ) − gL cos θ, so θ rocks between the two angles where U_eff = E, drawn on the lower right plot, while φ' = L_z/(L² sin²θ) never changes sign. The widest and narrowest swings, the time from one widest point to the next and the turn round the vertical in that time come from the cubic in u = cos θ, exactly (an elliptic integral for the time).":
   "Dos cantidades permanecen fijas: la energía E y L_z, el momento angular respecto a la vertical que pasa por el pivote (la gravedad y la tensión de la varilla no ejercen torque respecto a esa línea). Por unidad de masa, ½L²θ'² + U_eff(θ) = E con U_eff(θ) = L_z²/(2L² sin²θ) − gL cos θ, así que θ oscila entre los dos ángulos donde U_eff = E, dibujados en la gráfica inferior derecha, mientras que φ' = L_z/(L² sin²θ) nunca cambia de signo. Las oscilaciones más abierta y más cerrada, el tiempo de un punto más abierto al siguiente y el giro alrededor de la vertical en ese tiempo salen de la cúbica en u = cos θ, de forma exacta (una integral elíptica para el tiempo).",
 "For a small swing the path is almost an ellipse, but not quite: each widest point comes a little more than half a turn after the last, so the ellipse turns slowly the same way the bob goes round. Airy ({#}) found the rate Ω ≈ ({#}/{#}) a b √(g/L) for an ellipse with angular half axes a and b. A real Foucault pendulum must start with no sideways motion at all, or this turning swamps the Earth's.":
@@ -592,8 +594,8 @@ VDI18N.add('es', 'demo/pendulum', {
   "Las longitudes salen de la fórmula de oscilación pequeña.",
 "Almost a swing in one plane: a push only a tenth of the circle speed. The plane of the swing still turns, about {#}° each swing, because the path is a thin ellipse, not a line. A Foucault pendulum must be started with no sideways motion at all, or this turning hides the Earth's rotation.":
   "Casi una oscilación en un solo plano: un empujón de apenas una décima de la rapidez del círculo. El plano de oscilación aun así gira, unos {#}° por oscilación, porque la trayectoria es una elipse delgada, no una línea. Un péndulo de Foucault debe iniciarse sin ningún movimiento lateral, o este giro oculta la rotación de la Tierra.",
-"Released at {#}° with twice the circle speed: the bob is flung outward and up, to {#}° from straight down, above the pivot's level. Only a rod can do this: a string would go slack up there (the Orbit readout says when). The orbit turns {#}° each swing.":
-  "Soltada a {#}° con el doble de la rapidez del círculo: la lenteja sale lanzada hacia fuera y hacia arriba, hasta {#}° de la vertical hacia abajo, por encima del nivel del pivote. Solo una varilla puede hacer esto: un hilo se aflojaría allá arriba (la lectura de Órbita indica cuándo). La órbita gira {#}° por oscilación.",
+"Released at {#}° with twice the circle speed: the bob is flung outward and up, to {#}° from straight down, above the pivot's level. It still moves fast enough up there that a string would stay taut: the Rod tension readout stays positive all the way round. The orbit turns {#}° each swing.":
+  "Soltada a {#}° con el doble de la rapidez del círculo: la lenteja sale lanzada hacia fuera y hacia arriba, hasta {#}° de la vertical hacia abajo, por encima del nivel del pivote. Allá arriba todavía se mueve lo bastante rápido para que un hilo siguiera tenso: la lectura de tensión en la varilla se mantiene positiva en toda la vuelta. La órbita gira {#}° por oscilación.",
 "Plot":
   "Gráfica",
 "Capture T at several release angles at one length.":
@@ -724,6 +726,8 @@ VDI18N.add('es', 'demo/pendulum', {
   "copia más lejana",
 "nearby orbit, renormalized":
   "órbita cercana, renormalizada",
+"{#} × {#}⁻¹⁶ <span>of E</span>":
+  "{#} × {#}⁻¹⁶ <span>de E</span>",
 "λ ≈ {#} s⁻¹ (estimate)":
   "λ ≈ {#} s⁻¹ (estimación)",
 "Angles now θ₁ = −{#}° and θ₂ = −{#}°, time {#} s.":
@@ -786,8 +790,6 @@ VDI18N.add('es', 'demo/pendulum', {
   "aquí una cuerda se aflojaría",
 "axis turned {a}°":
   "el eje giró {a}°",
-"{#} × {#}⁻¹⁶ <span>of E</span>":
-  "{#} × {#}⁻¹⁶ <span>de E</span>",
 "Describe the picture":
   "Describir la imagen",
 "Time controls":
