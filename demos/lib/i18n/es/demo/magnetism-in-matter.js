@@ -92,8 +92,8 @@ VDI18N.add('es', 'demo/magnetism-in-matter', {
   "Núcleo",
 "Bismuth: diamagnetic, χ = -{#} × {#}⁻⁵":
   "Bismuto: diamagnético, χ = -{#} × {#}⁻⁵",
-"Bismuth is diamagnetic: the field induces moments that oppose it, so B is a little smaller than B₀ (χ = −{#} × {#}⁻⁵). Every material is diamagnetic; in a paramagnet the aligned atomic moments simply win.":
-  "El bismuto es diamagnético: el campo induce momentos que se le oponen, así que B es un poco menor que B₀ (χ = −{#} × {#}⁻⁵). Todo material es diamagnético; en un paramagnético simplemente ganan los momentos atómicos alineados.",
+"Bismuth is diamagnetic: the field induces moments that oppose it, so B is a little smaller than B₀ (χ = −{#} × {#}⁻⁵, the value in OpenStax Table {#}; measured values for bismuth are about −{#} × {#}⁻⁴, ten times larger). Every material is diamagnetic; in a paramagnet the aligned atomic moments simply win.":
+  "El bismuto es diamagnético: el campo induce momentos que se le oponen, así que B es un poco menor que B₀ (χ = −{#} × {#}⁻⁵, el valor de la Tabla {#} de OpenStax; los valores medidos para el bismuto son de alrededor de −{#} × {#}⁻⁴, diez veces mayores). Todo material es diamagnético; en un paramagnético simplemente ganan los momentos atómicos alineados.",
 "pushed toward the weaker field":
   "empujado hacia el campo más débil",
 "To float it: |B dB/dz| = μ₀ρg/|χ| (ρ = {#} kg/m³)":

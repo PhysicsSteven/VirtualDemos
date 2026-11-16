@@ -18,7 +18,7 @@ Textbook: OpenStax *University Physics*, Vol. 2, §§11.4–11.5 and 11.7. Acces
 
 **What the demo models.**
 
-- Model: uniform field between the poles and zero outside (no fringing); the balance sees the reaction force on the magnet, which equals the force on the wire (Newton's third law). The loop is rectangular, 4 cm by 4 cm, mass 20 g, with a little friction at its axle; the supply holds the current fixed, so back emf is ignored (a real motor's speed is limited mainly by back emf). The loop is shown 4 times slower than real, the motor about 30 times slower; the rotation rate readout is real.
+- Model: uniform field between the poles and zero outside (no fringing); the balance sees the reaction force on the magnet, which equals the force on the wire (Newton's third law). The loop is rectangular, 4 cm by 4 cm, mass 20 g, with a little friction at its axle; the supply holds the current fixed, so back emf is ignored (a real motor's speed is limited mainly by back emf). The loop is shown slowed by the factor given on the picture (at least 4 times for the swinging loop and 20 times for the motor), chosen so the motion is easy to follow; the rotation rate readout is real.
 
 </details>
 

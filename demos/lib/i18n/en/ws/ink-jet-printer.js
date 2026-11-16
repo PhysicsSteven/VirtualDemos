@@ -42,7 +42,7 @@ VDI18N.add('en', 'ws/ink-jet-printer', [
 "Drop mass (ng), row {#}",
 "Height on the paper y (mm), row {#}",
 "Gravity’s part (μm), row {#}",
-"Graph \\(y\\) against \\(q\\) for Part {#}. Find the slope and compare it with the Background’s formula. Which drops went into the gutter, and why? What is the largest charge that does not hit a plate?",
+"Graph \\(y\\) against \\(q\\) for Part {#}. Find the slope and compare it with the Background’s formula. Which drops went into the gutter, and why? Work out the largest charge that does not hit a plate (it is beyond the charge slider’s range).",
 "For Part {#}, graph \\(y\\) against \\(V\\): is it a straight line through the origin? For the speeds, work out \\(yv^2\\) for each: is it the same, as the Background predicts?",
 "For Part {#}, use your Part {#} line to find each unknown charge from its height, and the number of electrons it corresponds to. Then turn Blind off and check.",
 "The Rayleigh limit for a {#} μm water drop is about {#} pC. How close do the printer’s charges come to it?",

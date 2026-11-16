@@ -141,7 +141,6 @@ VDI18N.add('en', 'demo/standing-waves', [
 "<span><i></i>String</span><span><i></i>Shape at release</span><span><i></i>Nodes</span><span><i></i>Mode amplitudes</span>",
 "Plays the plucked string's harmonics with their amplitudes bₙ, held without decay. Move the pluck point and hear the tone color change. Sound stops when you leave the page.",
 "Tones at {#} and {#} Hz drift in and out of step, so the loudness swells and fades {#} times a second: f_beat = |f₁ − f₂|. Musicians tune by ear this way, adjusting until the beats slow down and stop.",
-"Close",
 "Pick harmonic {#} to {#} on the string",
 "T_beat = {#} ms",
 "Sum over {#} s, with its envelope",

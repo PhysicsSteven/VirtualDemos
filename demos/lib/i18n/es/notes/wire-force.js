@@ -50,6 +50,6 @@ VDI18N.add('es', 'notes/wire-force', {
   "La espira mide {#} cm × {#} cm, masa {#} g, momento de inercia ma²/{#} respecto a su eje, con una pequeña fricción viscosa en el eje. Torca τ = −NIAB sin θ hacia μ ∥ B.",
 "The supply holds the current fixed, so back emf is ignored; a real motor's speed is limited mainly by back emf, not friction. The commutator reverses the current each time μ lines up with B.":
   "La fuente mantiene fija la corriente, así que se ignora la fuerza contraelectromotriz; la rapidez de un motor real está limitada sobre todo por la fuerza contraelectromotriz, no por la fricción. El conmutador invierte la corriente cada vez que μ se alinea con B.",
-"The loop is shown {#} times slower than real, the motor about {#} times slower; the rotation rate readout is real.":
-  "La espira se muestra {#} veces más lenta que en la realidad, el motor unas {#} veces más lento; la lectura de la frecuencia de giro es real."
+"The loop is shown slowed by the factor printed on the picture, chosen so the motion is easy to follow: {#} times for Loop: torque and {#} times for DC motor at their defaults, and never less than {#} and {#} times. The rotation rate readout is real.":
+  "La espira se muestra más lenta por el factor que se indica en la imagen, elegido para que el movimiento sea fácil de seguir: {#} veces en Espira: torca y {#} veces en Motor de CD con sus valores iniciales, y nunca menos de {#} y {#} veces. La lectura de la frecuencia de giro es real."
 });

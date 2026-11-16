@@ -46,7 +46,7 @@ VDI18N.add('en', 'demo/magnetism-in-matter', [
 "Alignment of the atoms drawn exaggerated.",
 "Core",
 "Bismuth: diamagnetic, χ = -{#} × {#}⁻⁵",
-"Bismuth is diamagnetic: the field induces moments that oppose it, so B is a little smaller than B₀ (χ = −{#} × {#}⁻⁵). Every material is diamagnetic; in a paramagnet the aligned atomic moments simply win.",
+"Bismuth is diamagnetic: the field induces moments that oppose it, so B is a little smaller than B₀ (χ = −{#} × {#}⁻⁵, the value in OpenStax Table {#}; measured values for bismuth are about −{#} × {#}⁻⁴, ten times larger). Every material is diamagnetic; in a paramagnet the aligned atomic moments simply win.",
 "pushed toward the weaker field",
 "To float it: |B dB/dz| = μ₀ρg/|χ| (ρ = {#} kg/m³)",
 "That is, at B = {#} T, a field that falls by",
@@ -72,7 +72,6 @@ VDI18N.add('en', 'demo/magnetism-in-matter', [
 "B − B₀ against B₀: zero for an empty coil",
 "Tungsten: paramagnetic, χ = {#} × {#}⁻⁵",
 "Copper: diamagnetic, χ = -{#} × {#}⁻⁶",
-"Close",
 "coil, B₀",
 "core, B",
 "Cut open along the axis; drag to turn."

@@ -5,7 +5,7 @@ VDI18N.add('en', 'notes/coulomb-sandbox', [
 "E is the vector sum of the kq/r² fields; V is the plain number sum of the kq/r. Vectors can cancel where numbers do not, and the other way round.",
 "E = {#} and V = {#} are different conditions: on the dipole's midline V = {#} where E is strong; at the like pair's midpoint E = {#} where V is large.",
 "Field lines start on + and end on − charges or at infinity, in number proportional to charge. They cross equipotentials at right angles, pointing downhill in V; where equipotentials crowd, |E| ≈ ΔV/Δs is large.",
-"Students need Coulomb's law, vector components and potential. Grid squares are {#} cm and charges are in nC ({#} nC gives {#} V at {#} cm). Every Setups button puts the probe at ({#}, {#}) cm, so its readouts are ready before anyone hovers.",
+"Students need Coulomb's law, vector components and potential. Grid squares are {#} cm and charges are in nC ({#} nC gives {#} V at {#} cm). Every Setups button puts the probe at ({#}, {#}) cm, so its readouts are ready before anyone hovers; Arc and Ring in the map put it at the center ({#}, {#}).",
 "<strong>Dipole.</strong> Ask Q1 first, then show the probe: V = {#} V, |E| = {#} kV/m, {#}° from +x. Hover along the dashed V = {#} line: V stays zero while |E| changes.",
 "<strong>Like pair.</strong> Ask for a prediction of E halfway between the charges, then hover there: |E| drops to zero while V is about {#} kV.",
 "<strong>3D landscape</strong>, then <strong>Spin</strong>. Positive charges are hills, negative ones wells; equipotentials are contour lines and field lines run straight downhill. The like pair's midpoint is a saddle (Q5).",

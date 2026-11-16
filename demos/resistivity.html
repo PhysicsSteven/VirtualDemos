@@ -269,7 +269,7 @@ table.rows input:focus { border-color: var(--accent); }
 <script>
 (() => {
   // ==CORE START==
-  const RS_VERSION = 'resistivity@2026-10-22';
+  const RS_VERSION = 'resistivity@2026-11-15';
   // resistivity at 20 °C (Ω·m) and its temperature coefficient α (1/K); handbook values
   const MATS = {
     nichrome: { name: 'Nichrome', rho: 1.10e-6, alpha: 0.0004 },
@@ -789,7 +789,7 @@ table.rows input:focus { border-color: var(--accent); }
 
   // ---------- inside the wire ----------
   const nFree = () => FREE[S.mat].n, vdNow = () => driftSpeed(S.I, nFree(), area(d()));
-  const EL = { xs: [], ys: [], dx: [], dy: [], s: 0, t: 0, count: 0, trail: [], trailU: [], ux: 0, uy: 0, playing: true, last: 0, raf: 0, N: 0 };   /* ux, uy: the marked electron's random path, not wrapped (nm) */
+  const EL = { xs: [], cu: [], ys: [], dx: [], dy: [], s: 0, t: 0, count: 0, trail: [], trailU: [], ux: 0, uy: 0, playing: true, last: 0, raf: 0, N: 0 };   /* ux, uy: the marked electron's random path, not wrapped (nm) */
   const BW = BOX.w * 1e9, BH = BOX.h * 1e9;   /* nm */
   function isoDir() { const z = 2 * Math.random() - 1, ph = 2 * Math.PI * Math.random(), r = Math.sqrt(1 - z * z); return [r * Math.cos(ph), r * Math.sin(ph)]; }
   function resetElectrons() {
@@ -799,12 +799,13 @@ table.rows input:focus { border-color: var(--accent); }
   }
   function resetCount() {   /* the drift so far is folded into the positions, so nothing jumps */
     for (let i = 0; i < EL.xs.length; i++) EL.xs[i] = wrap(EL.xs[i] + EL.s, BW);
+    EL.cu = EL.xs.slice();   /* positions moved by the drift only: the counter counts what the drift carries across */
     EL.s = 0; EL.t = 0; EL.count = 0; EL.trail = []; EL.trailU = []; EL.ux = EL.xs[0] || 0; EL.uy = EL.ys[0] || 0; countOut();
   }
   const wrap = (v, w) => v - w * Math.floor(v / w);
   function stepInside(dt) {   /* dt: seconds on screen */
     const ds = -vdNow() * 1e9 * dt / DRIFT_SLOW;   /* nm; electrons move toward −x, against the current */
-    EL.count += netCrossings(EL.xs, EL.s, EL.s + ds, BW / 2, BW); EL.s += ds; EL.t += dt / DRIFT_SLOW;
+    EL.count += netCrossings(EL.cu, EL.s, EL.s + ds, BW / 2, BW); EL.s += ds; EL.t += dt / DRIFT_SLOW;
     if ($('inRandom').checked) {
       const dtr = dt / RANDOM_SLOW, step = fermiSpeed(nFree()) * 1e9 * dtr, pc = 1 - Math.exp(-dtr / collisionTime(nFree(), rhoAt(M(), S.T)));
       for (let i = 0; i < EL.N; i++) {

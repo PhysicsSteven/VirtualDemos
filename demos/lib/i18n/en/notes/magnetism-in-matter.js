@@ -23,6 +23,6 @@ VDI18N.add('en', 'notes/magnetism-in-matter', [
 "<strong>\"χ for iron is a constant of the material.\"</strong> For iron it depends on the field and on its history.",
 "<strong>\"Turning the current off unmagnetizes the core.\"</strong> Hysteresis leaves a remanent field; demagnetizing needs a shrinking alternating field (or heating).",
 "Long solenoid, core filling it: B₀ = μ₀nI, B = ({#} + χ)B₀, μ = ({#} + χ)μ₀. Susceptibilities from OpenStax Table {#}.",
-"Levitation: force per volume (χ/μ₀) B dB/dz; balance with ρg. Densities at {#} °C from the CRC Handbook (water {#}, copper {#}, bismuth {#} kg/m³); g = {#} m/s².",
+"Levitation: force per volume (χ/μ₀) B dB/dz; balance with ρg. Densities at {#} °C from the CRC Handbook (water {#}, copper {#}, bismuth {#} kg/m³); g = {#} m/s². Bismuth uses OpenStax Table {#}'s χ = −{#} × {#}⁻⁵; measured values are about −{#} × {#}⁻⁴, ten times larger, which would make bismuth about twice as easy to float as water rather than five times harder.",
 "Iron: Jiles and Atherton model ({#}) with M_s = {#} × {#}⁶ A/m (Kittel) and chosen a = {#} A/m, k = {#} A/m, α = {#} × {#}⁻⁴, c = {#}, fitted to the two points of OpenStax Figure {#} (model {#} T and {#} T against {#} T and {#} T). The model gives a remanence of {#} T and a coercive field of {#} A/m for a ±{#} A/m loop; these are properties of the chosen parameters, not of a measured sample. The drawings inside the core are cartoons, with exaggeration stated on the page."
 ]);

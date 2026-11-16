@@ -642,7 +642,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       hint: () => `A red laser pointer, 650 nm. Its 5 mW squeezed into a 1 mm wide beam gives I = ${fmtSI(laserI(), 'W/m²')}, nearly five times sunlight, so E₀ = ${fmtSI(E0ofI(laserI()), 'V/m')}. The wave oscillates ${fmtSci(C / 650e-9)} times a second.` },
     sun: { mode: 'wave', f: C / 500e-9, E0: E0ofI(SOLAR), psi: 0, delta: 0,
       ctx: () => 'Sunlight at Earth: I = 1361 W/m², the solar constant. Real sunlight is unpolarized and spread over many wavelengths; the demo shows one linearly polarized wave at 500 nm with the same mean intensity.',
-      hint: () => `Sunlight at Earth's distance, 1361 W/m². That takes E₀ = ${fmtSI(E0ofI(SOLAR), 'V/m')} but B₀ is only ${fmtSI(B0of(E0ofI(SOLAR)), 'T')}, about a tenth of Earth's own magnetic field. The radiation pressure is ${fmtSI(pAbs(SOLAR), 'Pa')} absorbed, ${fmtSI(pRefl(SOLAR), 'Pa')} reflected: what pushes a solar sail.` },
+      hint: () => `Sunlight at Earth's distance, 1361 W/m². That takes E₀ = ${fmtSI(E0ofI(SOLAR), 'V/m')} but B₀ is only ${fmtSI(B0of(E0ofI(SOLAR)), 'T')}, about a fifteenth of Earth's own magnetic field. The radiation pressure is ${fmtSI(pAbs(SOLAR), 'Pa')} absorbed, ${fmtSI(pRefl(SOLAR), 'Pa')} reflected: what pushes a solar sail.` },
     circ: { mode: 'wave', f: C / 550e-9, E0: 1000, psi: 45, delta: -90,
       hint: () => 'Equal x and y components a quarter period apart (ψ = 45°, δ = −90°). At one instant the E tips form a helix along z; at one place E keeps its length and turns clockwise as you face the wave: right circular. Change δ for elliptical states; δ = 0 or ±180° gives linear.' },
     radio: { mode: 'wave', f: RADIO.f, E0: E0ofI(radioI()), psi: 0, delta: 0,

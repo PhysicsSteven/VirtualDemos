@@ -1669,7 +1669,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const w1 = v / (2 * w.f1), w2 = v / (2 * w.f2), s2 = w.flip ? -1 : 1, tm = (WXB - WXA + (w1 + w2) / 2) / (2 * v);
       $('rwPw').textContent = `${w1.toFixed(2)} and ${w2.toFixed(2)} m`;
       $('rwPmeet').textContent = `x = ${((WXA + WXB) / 2 + (w2 - w1) / 4).toFixed(2)} m, ${tm.toFixed(2)} s after they are sent`;
-      $('rwPsum').textContent = `A₁ ${s2 > 0 ? '+' : '−'} A₂ = ${(w.A1 + s2 * w.A2).toFixed(2)} cm`;
+      /* the simulated string's height at the meeting point and moment (the sum of the two pulses there), not the formula A₁ ± A₂ */
+      const xm = (WXA + WXB) / 2 + (w2 - w1) / 4, ym = twoPulses(xm, tm, w.A1, w.A2, w.f1, w.f2, v, WXA, WXB, s2);
+      $('rwPsum').textContent = `${(ym[0] + ym[1]).toFixed(2)} cm`;
     }
     const dA = Math.abs(w.A1 - w.A2);
     $('rwSWR').textContent = w.A1 + w.A2 === 0 ? '—' : dA < 1e-9 ? '∞' : ((w.A1 + w.A2) / dA).toFixed(2);

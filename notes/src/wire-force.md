@@ -47,4 +47,4 @@ Students should know the right hand rule for F = qv × B. All views are from abo
 - The balance reads Δm = F_z/g with F_z the vertical force on the wire, since the magnet receives −F; rounding 0.01 g.
 - The loop is 4 cm × 4 cm, mass 20 g, moment of inertia ma²/6 about its axis, with a small viscous friction at the axle. Torque τ = −NIAB sin θ toward μ ∥ B.
 - The supply holds the current fixed, so back emf is ignored; a real motor's speed is limited mainly by back emf, not friction. The commutator reverses the current each time μ lines up with B.
-- The loop is shown 4 times slower than real, the motor about 30 times slower; the rotation rate readout is real.
+- The loop is shown slowed by the factor printed on the picture, chosen so the motion is easy to follow: 10 times for Loop: torque and 20 times for DC motor at their defaults, and never less than 4 and 20 times. The rotation rate readout is real.

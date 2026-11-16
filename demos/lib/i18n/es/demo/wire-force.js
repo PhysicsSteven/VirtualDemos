@@ -135,7 +135,5 @@ VDI18N.add('es', 'demo/wire-force', {
 "{#} turns, {#} cm square":
   "{#} vueltas, {#} cm de lado",
 "commutator and brushes":
-  "conmutador y escobillas",
-"Model: uniform field between the poles and zero outside (no fringing); the balance sees the reaction force on the magnet, which equals the force on the wire (Newton's third law). The loop is rectangular, {#} cm by {#} cm, mass {#} g, with a little friction at its axle; the supply holds the current fixed, so back emf is ignored (a real motor's speed is limited mainly by back emf). The loop is shown {#} times slower than real, the motor about {#} times slower; the rotation rate readout is real.":
-  "Modelo: campo uniforme entre los polos y cero afuera (sin efectos de borde); la balanza registra la fuerza de reacción sobre el imán, que es igual a la fuerza sobre el alambre (tercera ley de Newton). La espira es rectangular, de {#} cm por {#} cm, masa {#} g, con un poco de fricción en su eje; la fuente mantiene fija la corriente, así que se ignora la fem inversa (la rapidez de un motor real está limitada sobre todo por la fem inversa). La espira se muestra {#} veces más lenta que en la realidad y el motor unas {#} veces más lento; la lectura de la frecuencia de giro es real."
+  "conmutador y escobillas"
 });

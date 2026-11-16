@@ -57,7 +57,7 @@ Use a battery voltage of 10 V and $$R_s = 1000\ \Omega$$ per square throughout. 
 
 **Part 1: Two bars.** Measure the potential along the middle of the sheet, $$y = 8.00$$ cm, at $$x = 2, 4, 6, \ldots, 22$$ cm (eleven readings). Then measure it at $$x = 12.00$$ cm with $$y = 2.00$$ cm and $$y = 14.00$$ cm.
 
-**Part 2: Two dots.** Measure the potential along the line joining the dots, $$y = 8.00$$ cm, at $$x = 8, 9, 10, \ldots, 16$$ cm. Then map two equipotentials: at each height $$y = 4.00$$, $$8.00$$ and $$12.00$$ cm, find the $$x$$ where the potential is $$7.00 \pm 0.01$$ V and where it is $$3.00 \pm 0.01$$ V, and record each point.
+**Part 2: Two dots.** Measure the potential along the line joining the dots, $$y = 8.00$$ cm, at $$x = 8, 9, 10, \ldots, 16$$ cm. Then map two equipotentials: at each height $$y = 4.00$$, $$8.00$$ and $$12.00$$ cm, find the $$x$$ where the potential is $$7.00 \pm 0.02$$ V and where it is $$3.00 \pm 0.02$$ V, and record each point (the probe may land a few hundredths of a centimeter off the height: record the $$y$$ it shows).
 
 **Part 3: Shape and resistance.** Record one reading, with the probe at $$(9.00, 8.00)$$ cm, in each layout: Two bars, Narrow neck, Two dots, Slot between dots, Bar and dot and Silver ring.
 
@@ -92,7 +92,7 @@ Make one copy of this table for each of Parts 1 to 3.
 
 ## Uncertainty
 
-The readings are simulated and noise free. The potential is reported to 1 mV and the field and current to four significant figures; an equipotential point found to $$\pm 0.01$$ V is located to about 0.1 mm where the field is 50 to 100 V/m. The sheet is a grid of 0.25 cm squares, so round electrodes and cut edges are made of squares and the map within a square or two of them is not that of a smooth shape. On a real board, include the voltmeter's resolution, the probe's contact area, and nonuniform paper: commercial conducting paper varies by several percent in $$R_s$$ across a sheet.
+The readings are simulated and noise free. The potential is reported to 1 mV and the field and current to four significant figures; an equipotential point found to $$\pm 0.02$$ V is located to about 0.2 to 0.4 mm where the field is 50 to 100 V/m. The sheet is a grid of 0.25 cm squares, so round electrodes and cut edges are made of squares and the map within a square or two of them is not that of a smooth shape. On a real board, include the voltmeter's resolution, the probe's contact area, and nonuniform paper: commercial conducting paper varies by several percent in $$R_s$$ across a sheet.
 
 ## Questions
 

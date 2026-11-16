@@ -408,8 +408,8 @@ VDI18N.add('es', 'demo/em-waves', {
   "Un apuntador láser rojo de {#} mW con un haz de {#} mm de ancho: I = P/(πr²) = {#} kW/m².",
 "slowed {#}×{#}¹⁵ times":
   "desacelerada {#}×{#}¹⁵ veces",
-"Sunlight at Earth's distance, {#} W/m². That takes E₀ = {#} kV/m but B₀ is only {#} µT, about a tenth of Earth's own magnetic field. The radiation pressure is {#} µPa absorbed, {#} µPa reflected: what pushes a solar sail.":
-  "Luz solar a la distancia de la Tierra, {#} W/m². Eso requiere E₀ = {#} kV/m pero B₀ es solo {#} µT, cerca de una décima del propio campo magnético de la Tierra. La presión de radiación es {#} µPa absorbida, {#} µPa reflejada: lo que empuja una vela solar.",
+"Sunlight at Earth's distance, {#} W/m². That takes E₀ = {#} kV/m but B₀ is only {#} µT, about a fifteenth of Earth's own magnetic field. The radiation pressure is {#} µPa absorbed, {#} µPa reflected: what pushes a solar sail.":
+  "Luz solar a la distancia de la Tierra, {#} W/m². Eso requiere E₀ = {#} kV/m pero B₀ es solo {#} µT, cerca de una quinceava parte del propio campo magnético de la Tierra. La presión de radiación es {#} µPa absorbida, {#} µPa reflejada: lo que empuja una vela solar.",
 "Visible (green)<i></i>":
   "Visible (verde)<i></i>",
 "Sunlight at Earth: I = {#} W/m², the solar constant. Real sunlight is unpolarized and spread over many wavelengths; the demo shows one linearly polarized wave at {#} nm with the same mean intensity.":

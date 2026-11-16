@@ -79,7 +79,7 @@ Never point a camera, or look through any lens, at the Sun. The simulation has n
 | | | | | | | | | | | |
 | | | | | | | | | | | |
 
-Use $$1/d = 0$$ for an object far away. Fill in the last column yourself for Part 4.
+Use $$1/d = 0$$ for an object far away. Fill in $$1/d$$, $$1/d_s$$ and $$d_i$$ yourself, and the last column for Part 4.
 
 ## Analysis
 

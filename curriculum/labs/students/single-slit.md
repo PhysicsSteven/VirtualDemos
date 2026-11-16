@@ -54,7 +54,7 @@ There are no hazards in the simulation. A real laser can damage the eye: never l
 
 Open the demo with the single slit, choose the He-Ne laser (632.8 nm) and switch to Measure. Keep the slit square to the beam and $$L = 1.00$$ m unless a part says otherwise. For each reading put jaw A on the center of the bright middle band (0 on the stick) and jaw B where the part says, and record.
 
-**Part 1: dark fringes against m.** With $$a = 5.0$$ µm, put jaw B on each dark fringe on the positive side that the wall shows ($$m$$ = 1 to 5 on a computer screen; a phone may show only up to 4), typing $$m$$ in the order box each time. Send the readings to the worksheet and clear them.
+**Part 1: dark fringes against m.** With $$a = 5.0$$ µm, put jaw B on each dark fringe from $$m$$ = 1 to 5 on the positive side (a phone may show only up to 4), typing $$m$$ in the order box each time. Send the readings to the worksheet and clear them.
 
 **Part 2: the first dark fringe against slit width.** Measure the first dark fringe ($$m = 1$$) for $$a$$ = 2.0, 3.0, 4.0, 5.0, 6.0, 8.0, 10.0 and 15.0 µm. Send the readings and clear them.
 

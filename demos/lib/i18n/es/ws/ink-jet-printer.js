@@ -84,8 +84,8 @@ VDI18N.add('es', 'ws/ink-jet-printer', {
   "Altura en el papel y (mm), fila {#}",
 "Gravity’s part (μm), row {#}":
   "Parte de la gravedad (μm), fila {#}",
-"Graph \\(y\\) against \\(q\\) for Part {#}. Find the slope and compare it with the Background’s formula. Which drops went into the gutter, and why? What is the largest charge that does not hit a plate?":
-  "Grafica \\(y\\) contra \\(q\\) para la Parte {#}. Encuentra la pendiente y compárala con la fórmula de los Antecedentes. ¿Qué gotas fueron al canal de recolección, y por qué? ¿Cuál es la mayor carga que no choca con una placa?",
+"Graph \\(y\\) against \\(q\\) for Part {#}. Find the slope and compare it with the Background’s formula. Which drops went into the gutter, and why? Work out the largest charge that does not hit a plate (it is beyond the charge slider’s range).":
+  "Grafica \\(y\\) contra \\(q\\) para la Parte {#}. Encuentra la pendiente y compárala con la fórmula de los Antecedentes. ¿Qué gotas fueron al canal de recolección, y por qué? Calcula la mayor carga que no choca con una placa (queda fuera del rango del control de carga).",
 "For Part {#}, graph \\(y\\) against \\(V\\): is it a straight line through the origin? For the speeds, work out \\(yv^2\\) for each: is it the same, as the Background predicts?":
   "Para la Parte {#}, grafica \\(y\\) contra \\(V\\): ¿es una recta que pasa por el origen? Para las rapideces, calcula \\(yv^2\\) para cada una: ¿es igual, como predicen los Antecedentes?",
 "For Part {#}, use your Part {#} line to find each unknown charge from its height, and the number of electrons it corresponds to. Then turn Blind off and check.":

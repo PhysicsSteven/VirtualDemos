@@ -45,5 +45,5 @@ Students need B₀ = μ₀nI for a long solenoid and the idea of a magnetic dipo
 ## Physics behind the demo
 
 - Long solenoid, core filling it: B₀ = μ₀nI, B = (1 + χ)B₀, μ = (1 + χ)μ₀. Susceptibilities from OpenStax Table 12.2.
-- Levitation: force per volume (χ/μ₀) B dB/dz; balance with ρg. Densities at 20 °C from the CRC Handbook (water 998.2, copper 8960, bismuth 9780 kg/m³); g = 9.81 m/s².
+- Levitation: force per volume (χ/μ₀) B dB/dz; balance with ρg. Densities at 20 °C from the CRC Handbook (water 998.2, copper 8960, bismuth 9780 kg/m³); g = 9.81 m/s². Bismuth uses OpenStax Table 12.2's χ = −1.7 × 10⁻⁵; measured values are about −1.7 × 10⁻⁴, ten times larger, which would make bismuth about twice as easy to float as water rather than five times harder.
 - Iron: Jiles and Atherton model (1986) with M_s = 1.707 × 10⁶ A/m (Kittel) and chosen a = 80 A/m, k = 300 A/m, α = 2.0 × 10⁻⁴, c = 0.4, fitted to the two points of OpenStax Figure 12.25 (model 0.56 T and 1.51 T against 0.60 T and 1.5 T). The model gives a remanence of 1.72 T and a coercive field of 204 A/m for a ±2000 A/m loop; these are properties of the chosen parameters, not of a measured sample. The drawings inside the core are cartoons, with exaggeration stated on the page.

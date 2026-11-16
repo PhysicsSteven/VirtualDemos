@@ -11,7 +11,7 @@ time: 15 to 25 minutes
 
 ## Before class
 
-Students need Coulomb's law, vector components and potential. Grid squares are 1 cm and charges are in nC (1 nC gives 899 V at 1 cm). Every Setups button puts the probe at (0, 2.5) cm, so its readouts are ready before anyone hovers.
+Students need Coulomb's law, vector components and potential. Grid squares are 1 cm and charges are in nC (1 nC gives 899 V at 1 cm). Every Setups button puts the probe at (0, 2.5) cm, so its readouts are ready before anyone hovers; Arc and Ring in the map put it at the center (0, 0).
 
 ## Running it in class
 

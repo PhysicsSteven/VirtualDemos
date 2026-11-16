@@ -25,5 +25,5 @@ VDI18N.add('en', 'notes/wire-force', [
 "The balance reads Δm = F_z/g with F_z the vertical force on the wire, since the magnet receives −F; rounding {#} g.",
 "The loop is {#} cm × {#} cm, mass {#} g, moment of inertia ma²/{#} about its axis, with a small viscous friction at the axle. Torque τ = −NIAB sin θ toward μ ∥ B.",
 "The supply holds the current fixed, so back emf is ignored; a real motor's speed is limited mainly by back emf, not friction. The commutator reverses the current each time μ lines up with B.",
-"The loop is shown {#} times slower than real, the motor about {#} times slower; the rotation rate readout is real."
+"The loop is shown slowed by the factor printed on the picture, chosen so the motion is easy to follow: {#} times for Loop: torque and {#} times for DC motor at their defaults, and never less than {#} and {#} times. The rotation rate readout is real."
 ]);

@@ -20,8 +20,8 @@ VDI18N.add('es', 'ws/camera', {
   "Libro de texto: OpenStax <em>University Physics</em>, Vol. {#}, §{#} (la cámara) y §{#} (lentes delgadas). Acceso gratuito en https://openstax.org/details/books/university-physics-volume-{#}.",
 "The demo opens as the eye. Choose <strong>Camera</strong> under <strong>Instrument</strong> to work with the camera; you can switch back to the eye at any time.":
   "La demo abre como el ojo. Elige <strong>Cámara</strong> en <strong>Instrumento</strong> para trabajar con la cámara; puedes regresar al ojo en cualquier momento.",
-"Choose Camera at the top of the panel. Pick the {#} mm lens or the phone camera, the aperture (f-number, {#} mm lens only), the object distance, and the distance from the lens to the sensor. Arrow keys on the picture move the object.":
-  "Elige Cámara en la parte superior del panel. Elige la lente de {#} mm o la cámara de teléfono, la apertura (número f, solo para la lente de {#} mm), la distancia al objeto y la distancia de la lente al sensor. Las flechas en la imagen mueven el objeto.",
+"Choose Camera at the top of the panel. Pick the {#} mm lens or the phone camera, the aperture (f-number, {#} mm lens only), the object distance, and the distance from the lens to the sensor. Drag the object along the scale, or use the arrow keys on the picture, to move it.":
+  "Elige Cámara en la parte superior del panel. Elige la lente de {#} mm o la cámara de teléfono, la apertura (número f, solo para la lente de {#} mm), la distancia al objeto y la distancia de la lente al sensor. Arrastra el objeto a lo largo de la escala, o usa las flechas en la imagen, para moverlo.",
 "The top strip shows the object on a log scale of distance, with the range of distances that are in focus. The enlarged camera below is to scale; the rays come from the point of the object on the axis, and the colored mark on the sensor is the blur spot. The photo on the right is what the sensor records, reduced to fit, with a {#}:{#} crop of the center of the star (one screen pixel per sensor pixel).":
   "La franja superior muestra el objeto en una escala logarítmica de distancia, con el intervalo de distancias que están enfocadas. La cámara ampliada de abajo está a escala; los rayos vienen del punto del objeto sobre el eje, y la marca de color en el sensor es la mancha de desenfoque. La foto de la derecha es lo que registra el sensor, reducida para que quepa, con un recorte {#}:{#} del centro de la estrella (un píxel de pantalla por píxel del sensor).",
 "The readouts give the blur spot’s size on the sensor in micrometers and in pixels. Record reading stores the camera, the f-number, the object distance, the lens to sensor distance and the blur; Export to worksheet sends the readings here.":
@@ -102,8 +102,8 @@ VDI18N.add('es', 'ws/camera', {
   "d_i según la ecuación de la lente (mm), fila {#}",
 "{#}/N, row {#}":
   "{#}/N, fila {#}",
-"Use \\(1/d = 0\\) for an object far away. Fill in the last column yourself for Part {#}.":
-  "Usa \\(1/d = 0\\) para un objeto muy lejano. Llena tú mismo la última columna para la Parte {#}.",
+"Use \\(1/d = 0\\) for an object far away. Fill in \\(1/d\\), \\(1/d_s\\) and \\(d_i\\) yourself, and the last column for Part {#}.":
+  "Usa \\(1/d = 0\\) para un objeto muy lejano. Llena tú mismo \\(1/d\\), \\(1/d_s\\) y \\(d_i\\), y la última columna para la Parte {#}.",
 "For Part {#}, graph \\(1/d_s\\) against \\(1/d\\). Find the slope and intercept, and from the intercept the focal length. Is the slope \\(-1\\)? How far does the lens move between focusing far away and at {#} cm?":
   "Para la Parte {#}, grafica \\(1/d_s\\) en función de \\(1/d\\). Encuentra la pendiente y la ordenada al origen, y a partir de la ordenada al origen la distancia focal. ¿Es la pendiente \\(-1\\)? ¿Cuánto se mueve la lente entre enfocar muy lejos y a {#} cm?",
 "For Part {#}, compare your \\(d_s\\) at {#} cm and at {#} m with the textbook’s {#} mm and {#} mm. What is the phone lens’s whole focusing travel from {#} cm to far away, and how does it compare with the {#} mm lens’s travel over the same range? Explain the difference using the lens equation.":

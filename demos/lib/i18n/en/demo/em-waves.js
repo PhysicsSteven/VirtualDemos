@@ -204,7 +204,7 @@ VDI18N.add('en', 'demo/em-waves', [
 "Visible (red)<i></i>",
 "A {#} mW red laser pointer with a {#} mm wide beam: I = P/(πr²) = {#} kW/m².",
 "slowed {#}×{#}¹⁵ times",
-"Sunlight at Earth's distance, {#} W/m². That takes E₀ = {#} kV/m but B₀ is only {#} µT, about a tenth of Earth's own magnetic field. The radiation pressure is {#} µPa absorbed, {#} µPa reflected: what pushes a solar sail.",
+"Sunlight at Earth's distance, {#} W/m². That takes E₀ = {#} kV/m but B₀ is only {#} µT, about a fifteenth of Earth's own magnetic field. The radiation pressure is {#} µPa absorbed, {#} µPa reflected: what pushes a solar sail.",
 "Visible (green)<i></i>",
 "Sunlight at Earth: I = {#} W/m², the solar constant. Real sunlight is unpolarized and spread over many wavelengths; the demo shows one linearly polarized wave at {#} nm with the same mean intensity.",
 "Right circular (clockwise)",

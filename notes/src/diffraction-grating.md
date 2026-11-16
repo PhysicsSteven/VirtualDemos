@@ -20,7 +20,7 @@ Students should know wave superposition and path difference (the double slit). 6
 
 1. **Red laser through 600 lines/mm.** Spots at m = 0, ±1 and ±2 on the wall; the **Orders** table gives 22.3° and 49.4°. Ask Q1, then press the **1000** grating button. Point out that y = L tan θ, so the second order at 49.4° lands far out (116.7 cm at L = 1 m).
 2. **Measure the wavelength.** A laser of unknown color, L = 0.80 m. Students put jaw A on the m = 0 spot and jaw B on m = 1, press **Use bench values**, then **Compute and check**. The result shows the exact and small angle values side by side. Q2.
-3. **Green, red and blue together.** One beam, three spots in each order, red farthest out; only blue reaches a third order. Ask Q3.
+3. **Green, red and blue together.** One beam, three spots in each order, red farthest out; green and blue reach a third order, red does not. Ask Q3.
 4. **White light rainbows and overlapping orders.** At 300 lines/mm each order is a spectrum with violet inside and the center stays white. The second and third orders overlap. Q4.
 5. **Hydrogen lamp spectrum.** The four Balmer lines repeat in every order. Use the wavelength chips above the **Orders** table to read each line's position. For astronomy, this is the pattern a spectrograph records from a star or nebula. Try the **Na** lamp for Q6.
 6. **CD as a grating.** The track pitch of a CD acts as a 625 lines/mm grating; press **DVD** to compare. Q7. If time allows, set **Illuminated slits N** to 5 and choose **0 to 1st order** on the plot: between orders there are N − 1 zeros and N − 2 small maxima, and the orders sharpen as N grows.

@@ -171,7 +171,6 @@ VDI18N.add('en', 'demo/resistivity', [
 "YBCO ceramic, cooling",
 "simulated readings, sped up: {#} K per second",
 "Stop cooling",
-"Close",
 "Slide the movable clip along the wire by half a centimeter (Shift: {#} cm)",
 "Move the probe over the sheet by {#} cm (Shift: {#} cm)",
 "Inside the mystery wire wire ({#} mm across)"

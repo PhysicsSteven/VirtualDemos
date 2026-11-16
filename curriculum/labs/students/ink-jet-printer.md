@@ -69,7 +69,7 @@ Real continuous ink jet printers use kilovolts on the deflection plates; keep co
 
 ## Analysis
 
-1. Graph $$y$$ against $$q$$ for Part 1. Find the slope and compare it with the Background's formula. Which drops went into the gutter, and why? What is the largest charge that does not hit a plate?
+1. Graph $$y$$ against $$q$$ for Part 1. Find the slope and compare it with the Background's formula. Which drops went into the gutter, and why? Work out the largest charge that does not hit a plate (it is beyond the charge slider's range).
 2. For Part 2, graph $$y$$ against $$V$$: is it a straight line through the origin? For the speeds, work out $$yv^2$$ for each: is it the same, as the Background predicts?
 3. For Part 3, use your Part 1 line to find each unknown charge from its height, and the number of electrons it corresponds to. Then turn Blind off and check.
 4. The Rayleigh limit for a 60 μm water drop is about 3.3 pC. How close do the printer's charges come to it?
