@@ -141,5 +141,19 @@ VDI18N.add('es', 'ws/intro-celestial-sphere', {
 "<span>G</span>Altitude (°)":
   "<span>G</span>Altura (°)",
 "Graph Polaris’s altitude against latitude. What are the slope and the intercept of the line? Explain them using the Background and your answers to Before the lab {#}.":
-  "Grafica la altura de Polaris en función de la latitud. ¿Cuáles son la pendiente y la ordenada al origen de la recta? Explícalas usando el Fondo y tus respuestas en Antes del laboratorio {#}."
+  "Grafica la altura de Polaris en función de la latitud. ¿Cuáles son la pendiente y la ordenada al origen de la recta? Explícalas usando el Fondo y tus respuestas en Antes del laboratorio {#}.",
+"Lit (%)":
+  "Iluminada (%)",
+"Year":
+  "Año",
+"<span>B</span>Date":
+  "<span>B</span>Fecha",
+"<span>F</span>Lit (%)":
+  "<span>F</span>Iluminada (%)",
+"Date, row {#}":
+  "Fecha, fila {#}",
+"<span>B</span>Year":
+  "<span>B</span>Año",
+"Year, row {#}":
+  "Año, fila {#}"
 });

@@ -195,5 +195,7 @@ VDI18N.add('es', 'demo/household-wiring', {
 "painful (pain starts near {#} mA) and the muscles stay locked":
   "dolorosa (el dolor empieza cerca de {#} mA) y los músculos siguen bloqueados",
 "ventricular fibrillation possible, often fatal ({#} to {#} mA and above)":
-  "posible fibrilación ventricular, a menudo mortal (de {#} a {#} mA y más)"
+  "posible fibrilación ventricular, a menudo mortal (de {#} a {#} mA y más)",
+"Close":
+  "Cerrar"
 });

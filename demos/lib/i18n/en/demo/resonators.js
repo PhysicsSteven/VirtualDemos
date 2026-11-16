@@ -202,5 +202,8 @@ VDI18N.add('en', 'demo/resonators', [
 "Level",
 "Time controls",
 "Run for a moment and pause again",
-"Step"
+"Step",
+"blowing: {#} Hz, D4 −{#}¢",
+"blowing: {#} Hz, E4 +{#}¢",
+"blowing: {#} Hz, F4 −{#}¢"
 ]);

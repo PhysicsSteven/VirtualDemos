@@ -87,5 +87,7 @@ VDI18N.add('es', 'demo/galton-board', {
 "Drop at least two balls before recording.":
   "Suelta al menos dos bolas antes de registrar.",
 "Stop":
-  "Detener"
+  "Detener",
+"Close":
+  "Cerrar"
 });

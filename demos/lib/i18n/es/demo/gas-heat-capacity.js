@@ -321,5 +321,9 @@ VDI18N.add('es', 'demo/gas-heat-capacity', {
 "The last mystery gas was neon.":
   "El último gas misterioso fue neón.",
 "<a><span>←</span> <span>Gas in a Box</span></a><a><span>Heat Engine Cycles</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Gas en una caja</span></a><a><span>Ciclos de máquinas térmicas</span> <span>→</span></a>"
+  "<a><span>←</span> <span>Gas en una caja</span></a><a><span>Ciclos de máquinas térmicas</span> <span>→</span></a>",
+"Close":
+  "Cerrar",
+"hydrogen":
+  "hidrógeno"
 });

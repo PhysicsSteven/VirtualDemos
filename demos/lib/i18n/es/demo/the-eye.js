@@ -205,5 +205,7 @@ VDI18N.add('es', 'demo/the-eye', {
 "the rays meet in front of the sensor":
   "los rayos se juntan delante del sensor",
 "the rays never meet: the object is inside f":
-  "los rayos nunca se juntan: el objeto está dentro de f"
+  "los rayos nunca se juntan: el objeto está dentro de f",
+"Close":
+  "Cerrar"
 });

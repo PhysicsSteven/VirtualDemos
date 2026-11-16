@@ -273,5 +273,7 @@ VDI18N.add('es', 'demo/relativistic-motion', {
 "bend radius —":
   "radio de curvatura —",
 "bend radius — · radius over {#} cm, drawn at {#} cm":
-  "radio de curvatura — · radio mayor que {#} cm, dibujado a {#} cm"
+  "radio de curvatura — · radio mayor que {#} cm, dibujado a {#} cm",
+"Close":
+  "Cerrar"
 });

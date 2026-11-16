@@ -135,5 +135,7 @@ VDI18N.add('es', 'demo/energy-track', {
 "Stopped by the wall.":
   "Lo detuvo la pared.",
 "At rest: friction holds the skater here.":
-  "En reposo: la fricción sostiene aquí al patinador."
+  "En reposo: la fricción sostiene aquí al patinador.",
+"Close":
+  "Cerrar"
 });

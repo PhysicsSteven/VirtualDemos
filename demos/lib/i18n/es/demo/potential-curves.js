@@ -325,5 +325,21 @@ VDI18N.add('es', 'demo/potential-curves', {
 "Period":
   "Periodo",
 "−{#}×{#}⁻¹² <span>of the energy scale</span>":
-  "−{#}×{#}⁻¹² <span>de la escala de energía</span>"
+  "−{#}×{#}⁻¹² <span>de la escala de energía</span>",
+"Close":
+  "Cerrar",
+"−{#} pN":
+  "−{#} pN",
+"−{#} meV":
+  "−{#} meV",
+"{#} meV":
+  "{#} meV",
+"U (meV)":
+  "U (meV)",
+"E = −{#} meV":
+  "E = −{#} meV",
+"E (meV)":
+  "E (meV)",
+"t = {#} s · {#} s = {#} s":
+  "t = {#} s · {#} s = {#} s"
 });

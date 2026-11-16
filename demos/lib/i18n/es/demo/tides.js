@@ -271,5 +271,7 @@ VDI18N.add('es', 'demo/tides', {
 "<span><i></i>Ocean, height exaggerated</span> <span><i></i>Moon's bulge alone</span> <span><i></i>Sun's bulge alone</span> <span><i></i>The city on the equator, with its tide mark</span>":
   "<span><i></i>Océano, altura exagerada</span> <span><i></i>Abultamiento de la Luna solo</span> <span><i></i>Abultamiento del Sol solo</span> <span><i></i>La ciudad en el ecuador, con su marca de marea</span>",
 "<span><i></i>Ocean, height exaggerated</span> <span><i></i>Moon's bulge alone</span> <span><i></i>Sun's bulge alone</span> <span><i></i>The city, on the equator</span>":
-  "<span><i></i>Océano, altura exagerada</span> <span><i></i>Abultamiento de la Luna solo</span> <span><i></i>Abultamiento del Sol solo</span> <span><i></i>La ciudad, en el ecuador</span>"
+  "<span><i></i>Océano, altura exagerada</span> <span><i></i>Abultamiento de la Luna solo</span> <span><i></i>Abultamiento del Sol solo</span> <span><i></i>La ciudad, en el ecuador</span>",
+"Close":
+  "Cerrar"
 });

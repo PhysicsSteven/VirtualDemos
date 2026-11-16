@@ -317,5 +317,7 @@ VDI18N.add('es', 'demo/thin-films', {
 "Both reflections flip, so the flips cancel: bright when 2n_f t cos θ_t = mλ, dark when it is (m + ½)λ.":
   "Ambas reflexiones se invierten, así que las inversiones se cancelan: brillante cuando 2n_f t cos θ_t = mλ, oscura cuando es (m + ½)λ.",
 "{#}% <span>less than with no film</span>":
-  "{#}% <span>menos que sin película</span>"
+  "{#}% <span>menos que sin película</span>",
+"Close":
+  "Cerrar"
 });

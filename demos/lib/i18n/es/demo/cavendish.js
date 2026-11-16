@@ -115,5 +115,9 @@ VDI18N.add('es', 'demo/cavendish', {
 "swinging to position A":
   "girando a la posición A",
 "Wait until the large spheres have finished swinging.":
-  "Espera a que las esferas grandes terminen de girar."
+  "Espera a que las esferas grandes terminen de girar.",
+"Close":
+  "Cerrar",
+"×{#} · paused":
+  "×{#} · en pausa"
 });

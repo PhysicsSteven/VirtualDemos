@@ -172,5 +172,6 @@ VDI18N.add('en', 'demo/ideal-gas', [
 "Time controls",
 "Run for a moment and pause again",
 "Step",
-"Helium"
+"Helium",
+"+{#} off scale →"
 ]);

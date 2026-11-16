@@ -630,6 +630,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
 
   const $ = (id) => document.getElementById(id);
+  /* readout pieces that change with the numbers go through VDI18N.t, so they are harvested from this source and translated (a stand in when the library is missing) */
+  const VDI18N = window.VDI18N || { t: (s, v) => s.replace(/\{(\w+)\}/g, (a, k) => (v && v[k] != null ? String(v[k]) : a)) };
   const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
   const snap = (v, st) => +(Math.round(v / st) * st).toFixed(4);
@@ -1451,7 +1453,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         <div class="wide big"><dt>B at the center, exact sum over turns</dt><dd>${fmtB(bc, 4)}</dd></div>
         <div class="wide big"><dt>Long solenoid μ₀nI</dt><dd>${fmtB(id, 4)} <span class="ok">exact/ideal ${(bc / id).toFixed(4)}</span></dd></div>
         <div class="wide"><dt>Current sheet at the center, μ₀nI(cos θ₁ − cos θ₂)/2</dt><dd>${fmtB(sheetAxis(sol, 0), 4)}</dd></div>
-        <div class="wide"><dt>B at an end (z = L/2), exact</dt><dd>${fmtB(be, 4)} <span class="ok">${(be / bc).toFixed(3)} of the center</span></dd></div>`;
+        <div class="wide"><dt>B at an end (z = L/2), exact</dt><dd>${fmtB(be, 4)} <span class="ok">${VDI18N.t('{r} of the center', { r: (be / bc).toFixed(3) })}</span></dd></div>`;
       $('sideHint').textContent = 'θ₁ and θ₂ are the angles from the +z axis to the rims of the two ends, seen from the point on the axis. A long solenoid has θ₁ → 0 and θ₂ → 180°, giving μ₀nI.';
     }
     if (S.sup === 'ac') sh += `<div class="wide"><dt>AC supply: current now I₀ sin 2πft</dt><dd>${fmtI(+coilI(sol).toFixed(2)).replace('+', '')} <span class="ok">I₀ = ${fmtI(sol.I).replace('+', '')}, f = ${S.acF.toFixed(1)} Hz, t = ${S.acT.toFixed(1)} s</span></dd></div>`;
@@ -1462,7 +1464,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         <div class="wide big"><dt>Field with the core ÷ coil alone, 1 + ML/(NI)</dt><dd>${c.gain.toFixed(2)} <span class="ok">(μ<sub>r</sub> − 1)/(1 + (μ<sub>r</sub> − 1)N<sub>d</sub> = ${c.chi.toFixed(2)}${c.sat ? '; the iron is saturated' : ''}</span></dd></div>`; }
     if (helixOn()) {
       const H = helixNow(), bh = helixBAt(H, 0, 0, 0)[2], d = 2 * sol.R, ar = helixAround(H, d, 48), fw = finiteWireB(fieldI(sol), sol.L, d);
-      sh += `<div class="wide big"><dt>One helix: B at the center, Biot–Savart along the wire</dt><dd>${fmtB(bh, 4)} <span class="ok">rings: ${fmtB(bc, 4)}</span></dd></div>
+      sh += `<div class="wide big"><dt>One helix: B at the center, Biot–Savart along the wire</dt><dd>${fmtB(bh, 4)} <span class="ok">${VDI18N.t('rings: {b}', { b: fmtB(bc, 4) })}</span></dd></div>
         <div class="wide"><dt>One helix: field circling the coil at ρ = 2R beside its middle, averaged round the circle</dt><dd>${fmtB(ar, 3)}</dd></div>
         <div class="wide"><dt>A straight wire as long as the coil carrying I, at the same distance: μ₀I/(4πd) · L/√((L/2)² + d²)</dt><dd>${fmtB(fw, 3)}</dd></div>`;
     }
@@ -1485,8 +1487,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const hl = $('headline');
     if (S.scene === 'side') {
       const sol = S.sol, bc = axisExact(sol, 0);
-      hl.innerHTML = sol.N === 1 ? `B<sub>center</sub> = ${fmtB(bc, 4)} <small>μ₀I/(2R) = ${fmtB(loopCenter(sol.R, coilI(sol)), 4)}</small>`
-        : `B<sub>center</sub> = ${fmtB(bc, 4)} <small>μ₀nI = ${fmtB(idealSol(sol), 4)}</small>`;
+      hl.innerHTML = sol.N === 1 ? `B<sub>${VDI18N.t('center')}</sub> = ${fmtB(bc, 4)} <small>μ₀I/(2R) = ${fmtB(loopCenter(sol.R, coilI(sol)), 4)}</small>`
+        : `B<sub>${VDI18N.t('center')}</sub> = ${fmtB(bc, 4)} <small>μ₀nI = ${fmtB(idealSol(sol), 4)}</small>`;
     } else if (S.amp) {
       const A = ampere();
       hl.innerHTML = A.on ? '∮B·dl undefined <small>a wire is on the loop</small>' : `∮B·dl = ${fmtC(A.num.v)} <small>μ₀I<sub>enc</sub> = ${fmtC(MU0 * A.Ienc)}</small>`;

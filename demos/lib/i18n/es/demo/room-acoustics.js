@@ -235,5 +235,9 @@ VDI18N.add('es', 'demo/room-acoustics', {
 "{#} mystery panels":
   "{#} paneles misteriosos",
 "Move the microphone away from or toward the loudspeaker by {#} m (Shift: {#} m)":
-  "Aleja o acerca el micrófono a la bocina {#} m (Shift: {#} m)"
+  "Aleja o acerca el micrófono a la bocina {#} m (Shift: {#} m)",
+"Close":
+  "Cerrar",
+"Clap":
+  "Aplaudir"
 });

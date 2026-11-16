@@ -221,5 +221,9 @@ VDI18N.add('es', 'demo/double-slit', {
 "Fire some particles":
   "Dispara algunas partículas",
 "<a><span>←</span> <span>Color Vision</span></a><a><span>Diffraction Grating</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Visión del color</span></a><a><span>Rejilla de difracción</span> <span>→</span></a>"
+  "<a><span>←</span> <span>Visión del color</span></a><a><span>Rejilla de difracción</span> <span>→</span></a>",
+"Close":
+  "Cerrar",
+"{#} <small>detected</small>":
+  "{#} <small>detectadas</small>"
 });

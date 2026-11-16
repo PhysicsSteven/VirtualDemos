@@ -95,5 +95,9 @@ VDI18N.add('es', 'ws/intro-blackbody', {
 "Prelab answers, the two table copies, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.":
   "Respuestas del prelaboratorio, las dos copias de la tabla, las respuestas de las secciones de análisis e incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
 "Blackbody Radiation":
-  "Radiación de cuerpo negro"
+  "Radiación de cuerpo negro",
+"<span>G</span>Color":
+  "<span>G</span>Color",
+"Color, row {#}":
+  "Color, fila {#}"
 });

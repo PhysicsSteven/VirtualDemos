@@ -365,5 +365,7 @@ VDI18N.add('es', 'demo/color-vision', {
 "Light (solid), cones (dashed)":
   "Luz (continua), conos (discontinuas)",
 "<a><span>←</span> <span>Build a Microscope or Telescope</span></a><a><span>Double Slit, One Particle at a Time</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Construye un microscopio o un telescopio</span></a><a><span>Doble rendija, una partícula a la vez</span> <span>→</span></a>"
+  "<a><span>←</span> <span>Construye un microscopio o un telescopio</span></a><a><span>Doble rendija, una partícula a la vez</span> <span>→</span></a>",
+"Close":
+  "Cerrar"
 });

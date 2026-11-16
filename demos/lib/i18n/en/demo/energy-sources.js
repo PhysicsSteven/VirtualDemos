@@ -70,5 +70,6 @@ VDI18N.add('en', 'demo/energy-sources', [
 "TNT: {#} kg",
 "Lithium ion battery: {#} kg",
 "Air at {#} m/s through a wind turbine: {#} tonnes",
-"Water falling {#} m (hydro): {#} tonnes"
+"Water falling {#} m (hydro): {#} tonnes",
+"{#} × {#}⁶ tonnes"
 ]);

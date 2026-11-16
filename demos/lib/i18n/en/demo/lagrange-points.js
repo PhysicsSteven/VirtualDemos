@@ -182,5 +182,6 @@ VDI18N.add('en', 'demo/lagrange-points', [
 "Run for a moment and pause again",
 "Step",
 "Zoom in",
-"Zoom out"
+"Zoom out",
+"{#} × {#}⁻¹³ <span>after {#} P = {#} d</span>"
 ]);

@@ -315,5 +315,7 @@ VDI18N.add('es', 'demo/spin-resonance', {
 "Meter reading row {#}, kHz":
   "Lectura del medidor fila {#}, kHz",
 "Reading row {#}, s":
-  "Lectura fila {#}, s"
+  "Lectura fila {#}, s",
+"Close":
+  "Cerrar"
 });

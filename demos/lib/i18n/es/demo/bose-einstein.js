@@ -261,5 +261,7 @@ VDI18N.add('es', 'demo/bose-einstein', {
 "These readings are from the harmonic trap: export them to the worksheet or clear them first.":
   "Estas lecturas son de la trampa armónica: expórtalas a la hoja o bórralas primero.",
 "These readings are from the box: export them to the worksheet or clear them first.":
-  "Estas lecturas son de la caja: expórtalas a la hoja o bórralas primero."
+  "Estas lecturas son de la caja: expórtalas a la hoja o bórralas primero.",
+"Close":
+  "Cerrar"
 });

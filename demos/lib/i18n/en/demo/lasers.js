@@ -199,5 +199,6 @@ VDI18N.add('en', 'demo/lasers', [
 "t = {#} ms <small>since switch on</small>",
 "Time controls",
 "Run for a moment and pause again",
-"Step"
+"Step",
+"{#} × {#}⁻¹⁰ W out"
 ]);

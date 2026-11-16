@@ -1055,5 +1055,11 @@ VDI18N.add('es', 'demo/shells-and-x-rays', {
 "no sheets yet":
   "aún no hay láminas",
 "filter and sheets to scale; the reading is the air kerma relative to no sheets":
-  "filtro y láminas a escala; la lectura es el kerma en aire relativo a sin láminas"
+  "filtro y láminas a escala; la lectura es el kerma en aire relativo a sin láminas",
+"Close":
+  "Cerrar",
+"Titanium":
+  "Titanio",
+"Tin":
+  "Estaño"
 });

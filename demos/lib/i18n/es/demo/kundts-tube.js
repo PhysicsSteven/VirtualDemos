@@ -163,5 +163,7 @@ VDI18N.add('es', 'demo/kundts-tube', {
 "The unknown rod had v = {#} m/s.":
   "La varilla desconocida tenía v = {#} m/s.",
 "Stroke the rod":
-  "Frotar la varilla"
+  "Frotar la varilla",
+"Close":
+  "Cerrar"
 });

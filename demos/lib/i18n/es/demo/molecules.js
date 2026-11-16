@@ -545,5 +545,15 @@ VDI18N.add('es', 'demo/molecules', {
 "<span>Infrared light through a cell of HCl gas: the absorption around {#} μm. Drag the cursor across the band.</span>":
   "<span>Luz infrarroja a través de una celda con gas HCl: la absorción alrededor de {#} μm. Arrastra el cursor a lo largo de la banda.</span>",
 "it gives a photon back soon, in any direction":
-  "pronto devuelve un fotón, en cualquier dirección"
+  "pronto devuelve un fotón, en cualquier dirección",
+"bend":
+  "flexión",
+"NO":
+  "NO",
+"Close":
+  "Cerrar",
+"{#} meV":
+  "{#} meV",
+"{#} cm⁻¹, {#} meV":
+  "{#} cm⁻¹, {#} meV"
 });

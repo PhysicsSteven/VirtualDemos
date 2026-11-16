@@ -573,5 +573,39 @@ VDI18N.add('es', 'demo/distance-ladder', {
 "calibrates":
   "calibra",
 "early April":
-  "principios de abril"
+  "principios de abril",
+"Close":
+  "Cerrar",
+"Night":
+  "Noche",
+"early May":
+  "principios de mayo",
+"early June":
+  "principios de junio",
+"early July":
+  "principios de julio",
+"mid January":
+  "mediados de enero",
+"mid April":
+  "mediados de abril",
+"mid May":
+  "mediados de mayo",
+"mid June":
+  "mediados de junio",
+"mid July":
+  "mediados de julio",
+"mid August":
+  "mediados de agosto",
+"mid October":
+  "mediados de octubre",
+"late April":
+  "finales de abril",
+"late May":
+  "finales de mayo",
+"late June":
+  "finales de junio",
+"late July":
+  "finales de julio",
+"late August":
+  "finales de agosto"
 });

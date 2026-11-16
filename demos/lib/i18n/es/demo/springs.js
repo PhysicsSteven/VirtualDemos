@@ -647,5 +647,7 @@ VDI18N.add('es', 'demo/springs', {
 "t s, row {#}":
   "t s, fila {#}",
 "E₀ − E − ∫bv² dt = {#} × {#}⁻¹⁵ J":
-  "E₀ − E − ∫bv² dt = {#} × {#}⁻¹⁵ J"
+  "E₀ − E − ∫bv² dt = {#} × {#}⁻¹⁵ J",
+"Close":
+  "Cerrar"
 });

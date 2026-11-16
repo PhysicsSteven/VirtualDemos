@@ -329,5 +329,9 @@ VDI18N.add('es', 'demo/inside-a-planet', {
 "Your own mantle.":
   "Tu propio manto.",
 "t = {#} Myr · about {#} Myr per second":
-  "t = {#} millones de años · unos {#} millones de años por segundo"
+  "t = {#} millones de años · unos {#} millones de años por segundo",
+"Close":
+  "Cerrar",
+"core: {#} km, {#} {#} kg/m³":
+  "núcleo: {#} km, {#} {#} kg/m³"
 });

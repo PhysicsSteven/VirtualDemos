@@ -199,5 +199,7 @@ VDI18N.add('es', 'demo/catenary', {
 "Drag the grip up or the marker on the graph to the left. As the sag goes to zero, the tension grows like λgΔx²/(8d) and never stops growing. No chain, however strong, can hang perfectly straight.":
   "Arrastra el agarre hacia arriba o el marcador de la gráfica hacia la izquierda. Cuando la flecha tiende a cero, la tensión crece como λgΔx²/(8d) y nunca deja de crecer. Ninguna cadena, por fuerte que sea, puede colgar perfectamente recta.",
 "S = {#} m sag {#} m":
-  "S = {#} m flecha {#} m"
+  "S = {#} m flecha {#} m",
+"Close":
+  "Cerrar"
 });

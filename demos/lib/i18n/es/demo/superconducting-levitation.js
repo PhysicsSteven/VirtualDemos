@@ -157,5 +157,7 @@ VDI18N.add('es', 'demo/superconducting-levitation', {
 "fell off":
   "se cayó",
 "YBCO puck, warm":
-  "Disco de YBCO, caliente"
+  "Disco de YBCO, caliente",
+"Close":
+  "Cerrar"
 });

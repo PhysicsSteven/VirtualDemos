@@ -603,5 +603,49 @@ VDI18N.add('es', 'demo/magnetic-force', {
 "No rows to export yet.":
   "Todavía no hay filas para exportar.",
 "Readings cleared.":
-  "Lecturas borradas."
+  "Lecturas borradas.",
+"Fit view":
+  "Ajustar la vista",
+"Close":
+  "Cerrar",
+"-{#} pV":
+  "-{#} pV",
+"V_H = -{#} pV":
+  "V_H = -{#} pV",
+"Side view":
+  "Vista lateral",
+"K (meV)":
+  "K (meV)",
+"×{#} · {#} s here = {#} ps":
+  "×{#} · {#} s aquí = {#} ps",
+"{#} GeV <span>about {#} turns at 2qV per turn</span>":
+  "{#} GeV <span>unas {#} vueltas a 2qV por vuelta</span>",
+"{#} meV":
+  "{#} meV",
+"+{#} meV":
+  "+{#} meV",
+"{#} pV":
+  "{#} pV",
+"hit a coil":
+  "chocó con una bobina",
+"I (A)":
+  "I (A)",
+"B<sub>z</sub> (T)":
+  "B<sub>z</sub> (T)",
+"t (m)":
+  "t (m)",
+"V<sub>H</sub> (V)":
+  "V<sub>H</sub> (V)",
+"α (°)":
+  "α (°)",
+"B₀ (T)":
+  "B₀ (T)",
+"Row {#} captured.":
+  "Fila {#} registrada.",
+"Row {#} deleted.":
+  "Fila {#} eliminada.",
+"{#} s here = {#} ps":
+  "{#} s aquí = {#} ps",
+"{#} s here = {#} ms":
+  "{#} s aquí = {#} ms"
 });

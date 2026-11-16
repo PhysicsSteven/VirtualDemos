@@ -313,5 +313,7 @@ VDI18N.add('es', 'demo/instrument-builder', {
 "An instrument built by hand and shared by a link. Press a preset to start again from a ready made one.":
   "Un instrumento armado a mano y compartido con un enlace. Pulsa una configuración predefinida para empezar de nuevo desde una ya hecha.",
 "A {#} cm objective, {#} cm across, and a {#} cm eyepiece, {#} cm apart (f₁ + f₂): parallel light from the Moon leaves parallel and M = −f₁/f₂ = −{#}, upside down. The exit pupil is the objective's image, {#} mm across, {#} cm behind the eyepiece.":
-  "Un objetivo de {#} cm, de {#} cm de diámetro, y un ocular de {#} cm, separados {#} cm (f₁ + f₂): la luz paralela de la Luna sale paralela y M = −f₁/f₂ = −{#}, invertida. La pupila de salida es la imagen del objetivo, de {#} mm de diámetro, {#} cm detrás del ocular."
+  "Un objetivo de {#} cm, de {#} cm de diámetro, y un ocular de {#} cm, separados {#} cm (f₁ + f₂): la luz paralela de la Luna sale paralela y M = −f₁/f₂ = −{#}, invertida. La pupila de salida es la imagen del objetivo, de {#} mm de diámetro, {#} cm detrás del ocular.",
+"Close":
+  "Cerrar"
 });

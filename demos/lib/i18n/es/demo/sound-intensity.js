@@ -115,5 +115,7 @@ VDI18N.add('es', 'demo/sound-intensity', {
 "A: mystery background {#} dB":
   "A: misteriosa fondo {#} dB",
 "The sources play independent noise, so their intensities add: I = I_A + I_B + I_background, and β = {#} log(I/I₀). Two loudspeakers playing the same tone would interfere instead (OpenStax section {#}, Interference of Waves). The background is a steady noise of the chosen level, the same everywhere. The meter shows the level to {#} dB, as a real meter does; the pressure amplitude uses ρ = {#} kg/m³ and v = {#} m/s.":
-  "Las fuentes emiten ruido independiente, así que sus intensidades se suman: I = I_A + I_B + I_background, y β = {#} log(I/I₀). Dos bocinas que tocan el mismo tono interferirían en cambio (OpenStax sección {#}, Interferencia de ondas). El fondo es un ruido constante del nivel elegido, igual en todas partes. El sonómetro muestra el nivel con precisión de {#} dB, como un sonómetro real; la amplitud de presión usa ρ = {#} kg/m³ y v = {#} m/s."
+  "Las fuentes emiten ruido independiente, así que sus intensidades se suman: I = I_A + I_B + I_background, y β = {#} log(I/I₀). Dos bocinas que tocan el mismo tono interferirían en cambio (OpenStax sección {#}, Interferencia de ondas). El fondo es un ruido constante del nivel elegido, igual en todas partes. El sonómetro muestra el nivel con precisión de {#} dB, como un sonómetro real; la amplitud de presión usa ρ = {#} kg/m³ y v = {#} m/s.",
+"Close":
+  "Cerrar"
 });

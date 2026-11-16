@@ -141,5 +141,11 @@ VDI18N.add('es', 'demo/energy-sources', {
 "Air at {#} m/s through a wind turbine: {#} tonnes":
   "Aire a {#} m/s a través de una turbina eólica: {#} toneladas",
 "Water falling {#} m (hydro): {#} tonnes":
-  "Agua que cae {#} m (hidroeléctrica): {#} toneladas"
+  "Agua que cae {#} m (hidroeléctrica): {#} toneladas",
+"{#} × {#}⁶ tonnes":
+  "{#} × {#}⁶ toneladas",
+"Close":
+  "Cerrar",
+"{#} × {#}⁷ tonnes":
+  "{#} × {#}⁷ toneladas"
 });

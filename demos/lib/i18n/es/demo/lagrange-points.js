@@ -365,5 +365,11 @@ VDI18N.add('es', 'demo/lagrange-points', {
 "{#} × {#}⁻¹⁶ <span>after {#} P</span>":
   "{#} × {#}⁻¹⁶ <span>tras {#} P</span>",
 "body sizes made up":
-  "tamaños de los cuerpos inventados"
+  "tamaños de los cuerpos inventados",
+"Close":
+  "Cerrar",
+"{#} × {#}⁻¹³ <span>after {#} P = {#} d</span>":
+  "{#} × {#}⁻¹³ <span>después de {#} P = {#} d</span>",
+"{#} × {#}⁻¹⁵ <span>after {#} P = {#} d</span>":
+  "{#} × {#}⁻¹⁵ <span>después de {#} P = {#} d</span>"
 });

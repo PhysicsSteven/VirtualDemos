@@ -249,5 +249,7 @@ VDI18N.add('es', 'demo/speed-of-light', {
 "{#} sim *":
   "{#} sim *",
 "Rows marked sim are simulated readings made by the procedure on this seed's bench, not yours. Rows marked * were taken at another D, B or A and are left out of the fit.":
-  "Las filas marcadas sim son lecturas simuladas hechas por el procedimiento en el banco de esta semilla, no las tuyas. Las filas marcadas * se tomaron con otros D, B o A y quedan fuera del ajuste."
+  "Las filas marcadas sim son lecturas simuladas hechas por el procedimiento en el banco de esta semilla, no las tuyas. Las filas marcadas * se tomaron con otros D, B o A y quedan fuera del ajuste.",
+"Close":
+  "Cerrar"
 });

@@ -173,5 +173,7 @@ VDI18N.add('es', 'demo/quantum-coin', {
 "Send some atoms through first.":
   "Envía algunos átomos primero.",
 "down":
-  "abajo"
+  "abajo",
+"Close":
+  "Cerrar"
 });

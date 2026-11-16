@@ -119,5 +119,7 @@ VDI18N.add('es', 'demo/gravity-near-earth', {
 "turning sped up: {#} s = {#} h of real time":
   "giro acelerado: {#} s = {#} h de tiempo real",
 "scale on a tower; in orbit it reads {#}":
-  "báscula en una torre; en órbita marca {#}"
+  "báscula en una torre; en órbita marca {#}",
+"Close":
+  "Cerrar"
 });

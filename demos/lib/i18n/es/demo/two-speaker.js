@@ -175,5 +175,7 @@ VDI18N.add('es', 'demo/two-speaker', {
 "r₃, to speaker {#}":
   "r₃, a la bocina {#}",
 "Record reading":
-  "Registrar esta lectura"
+  "Registrar esta lectura",
+"Close":
+  "Cerrar"
 });

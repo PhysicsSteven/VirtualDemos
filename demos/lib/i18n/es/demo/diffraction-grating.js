@@ -277,5 +277,7 @@ VDI18N.add('es', 'demo/diffraction-grating', {
 "I / I₀ zoomed: center to dark fringe {#} · a = {#} µm":
   "I / I₀ ampliada: del centro a la franja oscura {#} · a = {#} µm",
 "Enter L in meters, y in centimeters (both positive) and a whole order number m ≥ {#}.":
-  "Escribe L en metros, y en centímetros (ambos positivos) y un número de orden entero m ≥ {#}."
+  "Escribe L en metros, y en centímetros (ambos positivos) y un número de orden entero m ≥ {#}.",
+"Close":
+  "Cerrar"
 });

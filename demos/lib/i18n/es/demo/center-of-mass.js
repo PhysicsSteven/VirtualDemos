@@ -117,5 +117,7 @@ VDI18N.add('es', 'demo/center-of-mass', {
 "front":
   "delantera",
 "back":
-  "trasera"
+  "trasera",
+"Close":
+  "Cerrar"
 });

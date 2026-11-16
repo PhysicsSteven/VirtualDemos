@@ -239,5 +239,65 @@ VDI18N.add('es', 'ws/pendulum', {
 "Updating replaces the demo's columns in copy {n} with these readings; your other columns and notes stay.":
   "Actualizar reemplaza las columnas de la demo en la copia {n} con estas lecturas; tus otras columnas y notas se conservan.",
 "Updating replaces the demo's columns in copy {#} with these readings; your other columns and notes stay.":
-  "Actualizar reemplaza las columnas de la demo en la copia {#} con estas lecturas; tus otras columnas y notas se conservan."
+  "Actualizar reemplaza las columnas de la demo en la copia {#} con estas lecturas; tus otras columnas y notas se conservan.",
+"quadratic":
+  "cuadrático",
+"power law":
+  "ley de potencia",
+"exponential":
+  "exponencial",
+"logarithm":
+  "logaritmo",
+"sine":
+  "seno",
+"damped sine":
+  "seno amortiguado",
+"Gaussian":
+  "gaussiana",
+"single slit":
+  "rendija única",
+"Unit: {unit}":
+  "Unidad: {unit}",
+"Unit: m":
+  "Unidad: m",
+"Unit: m/s²":
+  "Unidad: m/s²",
+"Saving…":
+  "Guardando…",
+"=SQRT(-{#})":
+  "=SQRT(-{#})",
+"=LN({#})":
+  "=LN({#})",
+"Column {c}, row {n}":
+  "Columna {c}, fila {n}",
+"Column {n}":
+  "Columna {n}",
+"Column I":
+  "Columna I",
+"Copy {n}:":
+  "Copia {n}:",
+"Copy {#}:":
+  "Copia {#}:",
+"{y} against {x}":
+  "{y} en función de {x}",
+"{title}, {n} points":
+  "{title}, {n} puntos",
+"residual":
+  "residuo",
+"slope":
+  "pendiente",
+"intercept":
+  "ordenada al origen",
+"<b>slope: </b>({#} ± {#})<br><b>intercept: </b>({#} ± {#})":
+  "<b>pendiente: </b>({#} ± {#})<br><b>ordenada al origen: </b>({#} ± {#})",
+"fit:":
+  "ajuste:",
+"{form}, with y = {y} and x = {x}":
+  "{form}, con y = {y} y x = {x}",
+"{n} rows, sent {when}.":
+  "{n} filas, enviadas el {when}.",
+"Not now":
+  "Ahora no",
+"{#} row, sent {when}.":
+  "{#} fila, enviada el {when}."
 });

@@ -4077,5 +4077,17 @@ VDI18N.add('es', 'site', {
 "Review the units <a>Week {#} · Topics {#} and {#}: Intro, star charts, the Sun and the Moon</a> · <a>Week {#} · Topic {#}: Planetary motion, the Copernican revolution and gravity</a> · <a>Week {#} · Topic {#}: Telescopes, light and the electromagnetic spectrum</a>. Their demos: <a>The Sky and the Celestial Sphere</a> · <a>Units, Scales and Estimates</a> · <a>Reasons for Seasons</a> · <a>Moon Phases</a> · <a>Gyroscope Precession</a> · <a>Kepler's Laws</a> · <a>Retrograde Motion and World Models</a> · <a>Gravity Near Earth</a> · <a>Build a Microscope or Telescope</a> · <a>Optics Bench</a> · <a>Circular Apertures and Resolution</a> · <a>Blackbody Radiation</a> · <a>Spectra Explorer</a> · <a>Electromagnetic Waves</a>":
   "Repasa las unidades <a>Semana {#} · Temas {#} y {#}: Introducción, cartas estelares, el Sol y la Luna</a> · <a>Semana {#} · Tema {#}: Movimiento planetario, la revolución copernicana y la gravedad</a> · <a>Semana {#} · Tema {#}: Telescopios, la luz y el espectro electromagnético</a>. Sus demos: <a>El cielo y la esfera celeste</a> · <a>Unidades, escalas y estimaciones</a> · <a>Las razones de las estaciones</a> · <a>Fases de la Luna</a> · <a>Precesión del giroscopio</a> · <a>Leyes de Kepler</a> · <a>Movimiento retrógrado y modelos del mundo</a> · <a>Gravedad cerca de la Tierra</a> · <a>Construye un microscopio o un telescopio</a> · <a>Banco óptico</a> · <a>Aberturas circulares y resolución</a> · <a>Radiación de cuerpo negro</a> · <a>Explorador de espectros</a> · <a>Ondas electromagnéticas</a>",
 "<a>Circular Apertures and Resolution</a> · <a>Diffraction Grating</a>":
-  "<a>Aberturas circulares y resolución</a> · <a>Rejilla de difracción</a>"
+  "<a>Aberturas circulares y resolución</a> · <a>Rejilla de difracción</a>",
+"<b>Physics</b>":
+  "<b>Física</b>",
+"{#} topics · {#} demos":
+  "{#} temas · {#} demos",
+"Close":
+  "Cerrar",
+"<time>November {#}, {#}</time>":
+  "<time>{#1} de noviembre de {#2}</time>",
+"<a>Open demo</a>":
+  "<a>Abrir demo</a>",
+"<time>October {#}, {#}</time>":
+  "<time>{#} de octubre de {#}</time>"
 });

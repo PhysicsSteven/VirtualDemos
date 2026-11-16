@@ -509,5 +509,17 @@ VDI18N.add('es', 'demo/gamma-spectroscopy', {
 "log₁₀ net rate":
   "log₁₀ tasa neta",
 "<a><span>←</span> <span>Superconductors and the Meissner Effect</span></a><a><span>Nuclear Reactions, Fission and Fusion</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Superconductores y el efecto Meissner</span></a><a><span>Reacciones nucleares, fisión y fusión</span> <span>→</span></a>"
+  "<a><span>←</span> <span>Superconductores y el efecto Meissner</span></a><a><span>Reacciones nucleares, fisión y fusión</span> <span>→</span></a>",
+"Close":
+  "Cerrar",
+"Cursor ch {#} counts {#}k":
+  "Cursor canal {#} cuentas {#}k",
+"Live {#} <small>s</small> · Real {#} <small>s</small> · Dead {#}<small>%</small> · {#} <small>counts</small>":
+  "Vivo {#} <small>s</small> · Real {#} <small>s</small> · Muerto {#}<small>%</small> · {#} <small>cuentas</small>",
+"Clear table":
+  "Borrar la tabla",
+"Live {#} <small>s</small> · Real {#} <small>s</small> · Dead {#}<small>%</small> · {#}k <small>counts</small>":
+  "Vivo {#} <small>s</small> · Real {#} <small>s</small> · Muerto {#}<small>%</small> · {#}k <small>cuentas</small>",
+"Live {#} <small>s</small> · Real {#} <small>s</small> · Dead {#}<small>%</small> · {#}M <small>counts</small>":
+  "Vivo {#} <small>s</small> · Real {#} <small>s</small> · Muerto {#}<small>%</small> · {#}M <small>cuentas</small>"
 });

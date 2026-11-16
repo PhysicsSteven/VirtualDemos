@@ -331,5 +331,7 @@ VDI18N.add('es', 'demo/rutherford', {
 "drag the drawing to turn it":
   "arrastra el dibujo para girarlo",
 "slow motion: 1 s here = {k} s":
-  "cámara lenta: 1 s aquí = {k} s"
+  "cámara lenta: 1 s aquí = {k} s",
+"Close":
+  "Cerrar"
 });

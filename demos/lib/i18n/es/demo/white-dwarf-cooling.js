@@ -277,5 +277,19 @@ VDI18N.add('es', 'demo/white-dwarf-cooling', {
 "{#} × {#}⁻¹ L<sub>sun</sub>":
   "{#} × {#}⁻¹ L<sub>sun</sub>",
 "{#} Myr · {#} × {#}⁷ K":
-  "{#} millones de años · {#} × {#}⁷ K"
+  "{#} millones de años · {#} × {#}⁷ K",
+"Close":
+  "Cerrar",
+"{#} Myr · {#} × {#}⁻¹ L":
+  "{#} millones de años · {#} × {#}⁻¹ L",
+"{#} Myr · {#} × {#}⁻² L":
+  "{#} millones de años · {#} × {#}⁻² L",
+"{#} × {#}⁻² L<sub>sun</sub>":
+  "{#} × {#}⁻² L<sub>sun</sub>",
+"log scales":
+  "escalas logarítmicas",
+"age ×{#} every {#} s":
+  "edad ×{#} cada {#} s",
+"age ×{#} per {#} s":
+  "edad ×{#} en {#} s"
 });

@@ -406,5 +406,8 @@ VDI18N.add('en', 'demo/circuits', [
 "U₀ + W − U − heat = {#} × {#}⁻¹⁸ J",
 "Time controls",
 "Run for a moment and pause again",
-"Step"
+"Step",
+"<span>V1</span><span>in</span><span>{#} mA</span><span>A1</span><span>out</span><span>{#} mA</span><span>in</span><span></span><span>{#} mA</span><span>out</span><span></span><span>{#} mA</span>",
+"−{#} fV",
+"V = IR: {#} V = {#} µA × {#} kΩ"
 ]);

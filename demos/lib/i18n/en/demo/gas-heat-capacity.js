@@ -159,5 +159,6 @@ VDI18N.add('en', 'demo/gas-heat-capacity', [
 "Time controls",
 "Run for a moment and pause again",
 "Step",
-"<span>Speed</span>"
+"<span>Speed</span>",
+"hydrogen"
 ]);

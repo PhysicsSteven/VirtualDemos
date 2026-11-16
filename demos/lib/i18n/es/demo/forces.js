@@ -289,5 +289,7 @@ VDI18N.add('es', 'demo/forces', {
 "At the stop: the push of the stop is not drawn":
   "En el tope: no se dibuja el empuje del tope",
 "Sliding: the bumps catch and tear past each other.":
-  "Deslizándose: las irregularidades se enganchan y se arrancan al pasar unas por otras."
+  "Deslizándose: las irregularidades se enganchan y se arrancan al pasar unas por otras.",
+"Moving":
+  "En movimiento"
 });

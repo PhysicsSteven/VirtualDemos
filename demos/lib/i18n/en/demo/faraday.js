@@ -384,5 +384,9 @@ VDI18N.add('en', 'demo/faraday', [
 "Time controls",
 "Run for a moment and pause again",
 "Step",
-"Real time"
+"Real time",
+"ind",
+"−{#} mC",
+"{#} pJ",
+"{#} nN·m"
 ]);

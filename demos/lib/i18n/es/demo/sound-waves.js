@@ -427,5 +427,9 @@ VDI18N.add('es', 'demo/sound-waves', {
 "Helium":
   "Helio",
 "Record reading":
-  "Registrar esta lectura"
+  "Registrar esta lectura",
+"Close":
+  "Cerrar",
+"Clap":
+  "Palmada"
 });

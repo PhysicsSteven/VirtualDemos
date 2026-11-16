@@ -403,5 +403,9 @@ VDI18N.add('es', 'demo/lasers', {
 "{#} W out, {#} nm (infrared, drawn red)":
   "{#} W de salida, {#} nm (infrarrojo, dibujado en rojo)",
 "{#} µW out, {#} nm (infrared, drawn red)":
-  "{#} µW de salida, {#} nm (infrarrojo, dibujado en rojo)"
+  "{#} µW de salida, {#} nm (infrarrojo, dibujado en rojo)",
+"{#} × {#}⁻¹⁰ W out":
+  "{#} × {#}⁻¹⁰ W de salida",
+"Close":
+  "Cerrar"
 });

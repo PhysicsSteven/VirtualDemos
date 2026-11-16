@@ -699,5 +699,13 @@ VDI18N.add('es', 'demo/solar-system-formation', {
 "giant planet":
   "planeta gigante",
 "Melting: heating {#} × {#}⁻⁷ W/kg × e<sup>−t/{#} Myr</sup>; conduction to a surface at {#} K":
-  "Fusión: calentamiento {#} × {#}⁻⁷ W/kg × e<sup>−t/{#} Ma</sup>; conducción hacia una superficie a {#} K"
+  "Fusión: calentamiento {#} × {#}⁻⁷ W/kg × e<sup>−t/{#} Ma</sup>; conducción hacia una superficie a {#} K",
+"Close":
+  "Cerrar",
+"Done":
+  "Listo",
+"view about {d} across":
+  "vista de unos {d} de ancho",
+"gone":
+  "ya no"
 });

@@ -155,5 +155,7 @@ VDI18N.add('es', 'demo/superconductors', {
 "The last mystery metal was gallium (Ga).":
   "El último metal misterioso era galio (Ga).",
 "<a><span>←</span> <span>Circuits</span></a><a><span>Gamma Spectroscopy</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Circuitos</span></a><a><span>Espectroscopía gamma</span> <span>→</span></a>"
+  "<a><span>←</span> <span>Circuitos</span></a><a><span>Espectroscopía gamma</span> <span>→</span></a>",
+"Zinc (Zn)":
+  "Zinc (Zn)"
 });

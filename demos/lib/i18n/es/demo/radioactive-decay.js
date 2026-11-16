@@ -589,5 +589,21 @@ VDI18N.add('es', 'demo/radioactive-decay', {
 "t = {#} step":
   "t = {#} paso",
 "ln N falls by λ = {#} per h":
-  "ln N baja λ = {#} por h"
+  "ln N baja λ = {#} por h",
+"Close":
+  "Cerrar",
+"⁹⁹Mo {#}":
+  "⁹⁹Mo {#}",
+"⁹⁹ᵐTc {#}":
+  "⁹⁹ᵐTc {#}",
+"⁹⁹Tc {#}":
+  "⁹⁹Tc {#}",
+"T½ ⁹⁹Mo":
+  "T½ ⁹⁹Mo",
+"T½ ⁹⁹ᵐTc":
+  "T½ ⁹⁹ᵐTc",
+"bin = {#} h":
+  "intervalo = {#} h",
+"⁹⁹Mo decays":
+  "desintegraciones de ⁹⁹Mo"
 });

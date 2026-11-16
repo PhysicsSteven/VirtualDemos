@@ -1325,5 +1325,11 @@ VDI18N.add('es', 'demo/nuclear-reactions', {
 "sample chain, always running · {#} s here is {#} ns · nuclei drawn far larger than to scale":
   "cadena de muestra, siempre en marcha · {#} s aquí son {#} ns · núcleos dibujados mucho más grandes que a escala",
 "sample chain, always running · {#} s here is {#} ns":
-  "cadena de muestra, siempre en marcha · {#} s aquí son {#} ns"
+  "cadena de muestra, siempre en marcha · {#} s aquí son {#} ns",
+"Close":
+  "Cerrar",
+"Fire":
+  "Disparar",
+"{#} s here is {#} ns":
+  "{#} s aquí son {#} ns"
 });

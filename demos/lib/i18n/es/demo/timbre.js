@@ -405,5 +405,7 @@ VDI18N.add('es', 'demo/timbre', {
 "Ladder: closed pipe, odd only":
   "Escalera: tubo cerrado, solo impares",
 "Wave in space, moving right: the sum of {#} harmonic":
-  "Onda en el espacio, moviéndose a la derecha: la suma de {#} armónico"
+  "Onda en el espacio, moviéndose a la derecha: la suma de {#} armónico",
+"Close":
+  "Cerrar"
 });

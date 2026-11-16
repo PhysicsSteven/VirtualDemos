@@ -207,5 +207,7 @@ VDI18N.add('es', 'demo/wave-power', {
 "Raise or lower the vibrator amplitude by {#} mm":
   "Sube o baja la amplitud del vibrador en {#} mm",
 "{#}: too steep for the linear model, lower A or f":
-  "{#}: demasiado empinada para el modelo lineal, baja A o f"
+  "{#}: demasiado empinada para el modelo lineal, baja A o f",
+"Close":
+  "Cerrar"
 });

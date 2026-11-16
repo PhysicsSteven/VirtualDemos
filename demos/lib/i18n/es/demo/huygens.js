@@ -185,5 +185,7 @@ VDI18N.add('es', 'demo/huygens', {
 "For yellow light (λ = {#} nm)":
   "Para luz amarilla (λ = {#} nm)",
 "Turn the angle of the incoming wave by {#} degree (Boundary view)":
-  "Gira el ángulo de la onda incidente {#} grado (vista Frontera)"
+  "Gira el ángulo de la onda incidente {#} grado (vista Frontera)",
+"Close":
+  "Cerrar"
 });

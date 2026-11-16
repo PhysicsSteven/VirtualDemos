@@ -452,5 +452,9 @@ VDI18N.add('en', 'demo/rotation', [
 "Lost in the hit",
 "L = −{#} kg·m²/s = mud",
 "Angular momentum about the pin at t = {#} s: ball −{#}, rod {#}, total −{#} kg·m²/s (mud = −{#} before the hit). Momentum along the ball's path +{#} before, −{#} kg·m/s after.",
-"Compared with the start, over the last {#} s: I, ω, kinetic energy and L as ratios. Now I is {#} times, ω {#} times and the kinetic energy {#} times their starting values; L stays at {#}."
+"Compared with the start, over the last {#} s: I, ω, kinetic energy and L as ratios. Now I is {#} times, ω {#} times and the kinetic energy {#} times their starting values; L stays at {#}.",
+"I ratio",
+"ω ratio",
+"KE ratio",
+"L ratio"
 ]);

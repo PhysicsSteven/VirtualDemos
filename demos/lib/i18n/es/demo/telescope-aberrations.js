@@ -415,5 +415,7 @@ VDI18N.add('es', 'demo/telescope-aberrations', {
 "long exposure, {#} moments":
   "exposición larga, {#} momentos",
 "Adaptive optics bends a thin mirror to cancel whatever blur it can measure, so it helps many problems a little. But was the cause the air?":
-  "La óptica adaptativa dobla un espejo delgado para cancelar cualquier difuminado que pueda medir, así que ayuda un poco con muchos problemas. Pero ¿la causa era el aire?"
+  "La óptica adaptativa dobla un espejo delgado para cancelar cualquier difuminado que pueda medir, así que ayuda un poco con muchos problemas. Pero ¿la causa era el aire?",
+"Close":
+  "Cerrar"
 });

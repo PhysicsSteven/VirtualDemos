@@ -217,5 +217,7 @@ VDI18N.add('es', 'demo/photoelectric', {
 "Cu cathode (emitter)":
   "Cátodo de Cu (emisor)",
 "hf < φ : no electrons":
-  "hf < φ : sin electrones"
+  "hf < φ : sin electrones",
+"Close":
+  "Cerrar"
 });

@@ -167,5 +167,7 @@ VDI18N.add('es', 'demo/condensate-waves', {
 "<span>Speed</span>":
   "<span>Velocidad</span>",
 "<a>Photons and matter waves</a>":
-  "<a>Fotones y ondas de materia</a>"
+  "<a>Fotones y ondas de materia</a>",
+"Close":
+  "Cerrar"
 });

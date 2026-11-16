@@ -161,5 +161,7 @@ VDI18N.add('es', 'demo/cart-launch', {
 "position (m) vs time: cart solid, ball dashed":
   "posición (m) en función del tiempo: carrito en línea continua, pelota en línea discontinua",
 "to scale · drag to turn":
-  "a escala · arrastra para girar"
+  "a escala · arrastra para girar",
+"Close":
+  "Cerrar"
 });

@@ -269,5 +269,7 @@ VDI18N.add('en', 'demo/molecules', [
 "no dipole",
 "absorbed: the {mode} ({nu} cm⁻¹) starts",
 "Light",
-"yes"
+"yes",
+"bend",
+"NO"
 ]);

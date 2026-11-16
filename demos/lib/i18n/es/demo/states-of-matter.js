@@ -203,5 +203,7 @@ VDI18N.add('es', 'demo/states-of-matter', {
 "slow motion: 1 s here = {n} ns":
   "cámara lenta: 1 s aquí = {n} ns",
 "<a><span>←</span> <span>Temperature and Heat</span></a><a><span>Blackbody Radiation</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Temperatura y calor</span></a><a><span>Radiación de cuerpo negro</span> <span>→</span></a>"
+  "<a><span>←</span> <span>Temperatura y calor</span></a><a><span>Radiación de cuerpo negro</span> <span>→</span></a>",
+"Close":
+  "Cerrar"
 });

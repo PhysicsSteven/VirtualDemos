@@ -363,5 +363,7 @@ VDI18N.add('es', 'demo/induction', {
 "Metal ball, {#} cm radius · molecules drawn huge":
   "Esfera metálica, {#} cm de radio · moléculas dibujadas enormes",
 "Mystery insulator ball, {#} cm radius · molecules drawn huge":
-  "Esfera de aislante misterioso, {#} cm de radio · moléculas dibujadas enormes"
+  "Esfera de aislante misterioso, {#} cm de radio · moléculas dibujadas enormes",
+"Close":
+  "Cerrar"
 });

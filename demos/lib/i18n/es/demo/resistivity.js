@@ -347,5 +347,7 @@ VDI18N.add('es', 'demo/resistivity', {
 "Move the probe over the sheet by {#} cm (Shift: {#} cm)":
   "Mueve la punta sobre la lámina {#} cm (Shift: {#} cm)",
 "Inside the mystery wire wire ({#} mm across)":
-  "Dentro del alambre misterioso ({#} mm de diámetro)"
+  "Dentro del alambre misterioso ({#} mm de diámetro)",
+"Close":
+  "Cerrar"
 });

@@ -201,5 +201,7 @@ VDI18N.add('es', 'demo/transformers', {
 "two cycles, each trace to its own peak":
   "dos ciclos, cada traza a su propio máximo",
 "{#} {#} km of a pair of {#} cm wires":
-  "{#} {#} km de un par de cables de {#} cm"
+  "{#} {#} km de un par de cables de {#} cm",
+"Close":
+  "Cerrar"
 });

@@ -487,5 +487,7 @@ VDI18N.add('es', 'demo/photon-interactions', {
 "{#} photons":
   "{#} fotones",
 "Sample photons colored by energy; each stops in a filter with the chance {#} − e^(−μx) at its energy. Slowed down.":
-  "Fotones de muestra coloreados por energía; cada uno se detiene en un filtro con probabilidad {#} − e^(−μx) a su energía. Ralentizado."
+  "Fotones de muestra coloreados por energía; cada uno se detiene en un filtro con probabilidad {#} − e^(−μx) a su energía. Ralentizado.",
+"Close":
+  "Cerrar"
 });

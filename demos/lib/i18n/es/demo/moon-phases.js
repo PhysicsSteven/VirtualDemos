@@ -241,5 +241,11 @@ VDI18N.add('es', 'demo/moon-phases', {
 "N. Hemisphere, facing S":
   "Hemisferio N, mirando al S",
 "below horizon now":
-  "bajo el horizonte ahora"
+  "bajo el horizonte ahora",
+"Close":
+  "Cerrar",
+"Day":
+  "Día",
+"Night":
+  "Noche"
 });

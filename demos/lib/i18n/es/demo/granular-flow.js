@@ -263,5 +263,7 @@ VDI18N.add('es', 'demo/granular-flow', {
 "Settling speed, yellow {#} mm glass":
   "Rapidez de sedimentación, vidrio amarillo de {#} mm",
 "At {#} turns per minute ω²R/g = {#}: the wall pushes the beads round harder than gravity can pull them off at the top, and they ride round as a ring stuck to the wall, as in a spin dryer. The critical rate √(g/R), {#} turns per minute here, is the least at which a bead moving with the wall can stay on at the top; the beads slip on the wall and on each other, so here they need more (at {#} they still tumble). Lower the rate and find where they fall away.":
-  "A {#} vueltas por minuto ω²R/g = {#}: la pared empuja las cuentas en su giro con más fuerza de la que la gravedad puede usar para despegarlas arriba, y giran como un anillo pegado a la pared, como en una secadora centrífuga. El ritmo crítico √(g/R), aquí {#} vueltas por minuto, es el mínimo con el que una cuenta que se mueve con la pared puede mantenerse pegada arriba; las cuentas resbalan sobre la pared y entre sí, así que aquí necesitan más (a {#} todavía caen). Baja el ritmo y encuentra dónde se desprenden."
+  "A {#} vueltas por minuto ω²R/g = {#}: la pared empuja las cuentas en su giro con más fuerza de la que la gravedad puede usar para despegarlas arriba, y giran como un anillo pegado a la pared, como en una secadora centrífuga. El ritmo crítico √(g/R), aquí {#} vueltas por minuto, es el mínimo con el que una cuenta que se mueve con la pared puede mantenerse pegada arriba; las cuentas resbalan sobre la pared y entre sí, así que aquí necesitan más (a {#} todavía caen). Baja el ritmo y encuentra dónde se desprenden.",
+"Close":
+  "Cerrar"
 });

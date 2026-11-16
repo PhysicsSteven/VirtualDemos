@@ -299,5 +299,7 @@ VDI18N.add('es', 'demo/resonances', {
 "Move planet X (its distance, mass and where it is in {#}) to make Uranus's leftover drift as small as you can. The direction comes out well even when the distance is wrong.":
   "Mueve el planeta X (su distancia, su masa y dónde está en {#}) para hacer la deriva restante de Urano lo más pequeña posible. La dirección sale bien aunque la distancia esté mal.",
 "The run stops at {#} years. The real gaps took millions of years to empty.":
-  "La ejecución se detiene a los {#} años. Los huecos reales tardaron millones de años en vaciarse."
+  "La ejecución se detiene a los {#} años. Los huecos reales tardaron millones de años en vaciarse.",
+"Close":
+  "Cerrar"
 });

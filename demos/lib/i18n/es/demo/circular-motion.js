@@ -205,5 +205,9 @@ VDI18N.add('es', 'demo/circular-motion', {
 "The banked road in 3D: drag to turn the view":
   "El camino peraltado en 3D: arrastra para girar la vista",
 "Cut the string":
-  "Cortar la cuerda"
+  "Cortar la cuerda",
+"Close":
+  "Cerrar",
+"FROM ABOVE":
+  "DESDE ARRIBA"
 });

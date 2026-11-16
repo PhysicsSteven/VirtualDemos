@@ -61,5 +61,13 @@ VDI18N.add('es', 'notes/terminal-velocity', {
 "Homework: Haldane's mouse. A body scaled down by {#} in every length has {#}/{#} of the weight and {#}/{#} of the area. By what factor does its terminal speed change?":
   "Tarea: el ratón de Haldane. Un cuerpo reducido {#} veces en cada longitud tiene {#}/{#} del peso y {#}/{#} del área. ¿En qué factor cambia su rapidez terminal?",
 "Virtual Physics Demos":
-  "Demos virtuales de física"
+  "Demos virtuales de física",
+"Site":
+  "Sitio",
+"Library":
+  "Biblioteca",
+"<a>Demos</a><a>OpenStax</a><a>Notes</a>":
+  "<a>Demos</a><a>OpenStax</a><a>Notas</a>",
+"<a><b>For a class</b> Courses</a>":
+  "<a><b>Para una clase</b> Cursos</a>"
 });

@@ -769,5 +769,15 @@ VDI18N.add('es', 'demo/faraday', {
 "Step":
   "Paso",
 "Real time":
-  "Tiempo real"
+  "Tiempo real",
+"ind":
+  "ind",
+"Close":
+  "Cerrar",
+"{#} pJ":
+  "{#} pJ",
+"{#} nN·m":
+  "{#} nN·m",
+"−{#} mC":
+  "−{#} mC"
 });

@@ -141,5 +141,7 @@ VDI18N.add('es', 'demo/rotational-dynamics', {
 "hanger {#} g = {#} g":
   "portapesas {#} g = {#} g",
 "hidden for the Mystery object":
-  "oculto para el objeto misterioso"
+  "oculto para el objeto misterioso",
+"Close":
+  "Cerrar"
 });

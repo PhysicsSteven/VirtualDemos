@@ -223,5 +223,7 @@ VDI18N.add('es', 'demo/equilibrium', {
 "Let go.":
   "Soltar.",
 "Remove the selected part":
-  "Quitar la parte seleccionada"
+  "Quitar la parte seleccionada",
+"Close":
+  "Cerrar"
 });

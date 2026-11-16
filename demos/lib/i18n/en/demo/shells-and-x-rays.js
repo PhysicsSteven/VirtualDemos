@@ -527,5 +527,6 @@ VDI18N.add('en', 'demo/shells-and-x-rays', [
 "filter and sheets to scale",
 "filter: {#} mm Al",
 "no sheets yet",
-"filter and sheets to scale; the reading is the air kerma relative to no sheets"
+"filter and sheets to scale; the reading is the air kerma relative to no sheets",
+"Titanium"
 ]);

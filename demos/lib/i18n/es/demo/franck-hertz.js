@@ -225,5 +225,7 @@ VDI18N.add('es', 'demo/franck-hertz', {
 "Let the sweep finish first.":
   "Deja que termine el barrido primero.",
 "no collisions":
-  "sin colisiones"
+  "sin colisiones",
+"Close":
+  "Cerrar"
 });

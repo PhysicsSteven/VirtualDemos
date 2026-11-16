@@ -473,5 +473,21 @@ VDI18N.add('es', 'demo/seasons', {
 "Earth's real orbit is an ellipse and its axis is tilted, so the Sun's daily step against the stars is not the same all year. A sundial runs fast or slow against a clock by up to about {#} minutes, and solar days in December are about {#} seconds longer than in September.":
   "La órbita real de la Tierra es una elipse y su eje está inclinado, así que el paso diario del Sol respecto a las estrellas no es igual todo el año. Un reloj de sol se adelanta o se atrasa respecto a un reloj hasta unos {#} minutos, y los días solares de diciembre son unos {#} segundos más largos que los de septiembre.",
 "spinning too fast to draw each turn: Pause to see the spot":
-  "gira demasiado rápido para dibujar cada vuelta: pausa para ver el punto"
+  "gira demasiado rápido para dibujar cada vuelta: pausa para ver el punto",
+"Close":
+  "Cerrar",
+"Jan {#}":
+  "{#} ene",
+"time {#} h ({#} days)":
+  "tiempo {#} h ({#} días)",
+"Apr {#} · day {#}":
+  "{#} abr · día {#}",
+"May {#} · day {#}":
+  "{#} may · día {#}",
+"Aug {#} · day {#}":
+  "{#} ago · día {#}",
+"Sep {#} · day {#}":
+  "{#} sep · día {#}",
+"Oct {#} · day {#}":
+  "{#} oct · día {#}"
 });

@@ -467,5 +467,7 @@ VDI18N.add('es', 'demo/collisions', {
 "Drag a cart from the tray onto the track.":
   "Arrastra un carrito de la bandeja al riel.",
 "No carts yet.":
-  "Aún no hay carritos."
+  "Aún no hay carritos.",
+"Close":
+  "Cerrar"
 });

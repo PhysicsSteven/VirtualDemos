@@ -619,5 +619,9 @@ VDI18N.add('es', 'demo/kepler-orbits', {
 "Your readings: T² against a³, star mass {#} M☉":
   "Tus lecturas: T² en función de a³, masa de la estrella {#} M☉",
 "Second planet: unbound, e = {#}, speed {#} km/s.":
-  "Segundo planeta: no ligado, e = {#}, rapidez {#} km/s."
+  "Segundo planeta: no ligado, e = {#}, rapidez {#} km/s.",
+"Close":
+  "Cerrar",
+"{#}×{#}⁻⁸ of |E|":
+  "{#}×{#}⁻⁸ de |E|"
 });

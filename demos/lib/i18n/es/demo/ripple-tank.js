@@ -301,5 +301,7 @@ VDI18N.add('es', 'demo/ripple-tank', {
 "the motion of the water drawn {#} times larger":
   "el movimiento del agua dibujado {#} veces más grande",
 "wave height 2A = {#} mm":
-  "altura de la onda 2A = {#} mm"
+  "altura de la onda 2A = {#} mm",
+"Close":
+  "Cerrar"
 });

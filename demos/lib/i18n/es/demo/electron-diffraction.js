@@ -325,5 +325,11 @@ VDI18N.add('es', 'demo/electron-diffraction', {
 "3D view needs WebGL: a flat drawing of the tube":
   "La vista 3D necesita WebGL: un dibujo plano del tubo",
 "Drag the kV knob or the bar magnet up and down.":
-  "Arrastra la perilla de kV o el imán de barra hacia arriba y abajo."
+  "Arrastra la perilla de kV o el imán de barra hacia arriba y abajo.",
+"Close":
+  "Cerrar",
+"Sweep V":
+  "Barrer V",
+"{#} kV <small>sweeping</small>":
+  "{#} kV <small>barriendo</small>"
 });

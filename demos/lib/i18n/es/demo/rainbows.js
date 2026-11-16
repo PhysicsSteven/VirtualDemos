@@ -199,5 +199,7 @@ VDI18N.add('es', 'demo/rainbows', {
 "least D {#}°, bow {#}°":
   "D mínima {#}°, arcoíris {#}°",
 "Brightness against θ (primary peak = {#})":
-  "Brillo en función de θ (pico del primario = {#})"
+  "Brillo en función de θ (pico del primario = {#})",
+"Close":
+  "Cerrar"
 });

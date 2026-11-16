@@ -138,5 +138,8 @@ VDI18N.add('en', 'demo/white-dwarf-cooling', [
 "Step",
 "<span>Speed</span>",
 "Helium",
-"{#} Myr"
+"{#} Myr",
+"{#} Myr · {#} × {#}⁻¹ L",
+"{#} Myr · {#} × {#}⁻² L",
+"{#} × {#}⁻² L<sub>sun</sub>"
 ]);

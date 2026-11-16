@@ -343,5 +343,7 @@ VDI18N.add('es', 'demo/gauss-law', {
 "Run for a moment and pause again":
   "Avanza un momento y vuelve a pausar",
 "Step":
-  "Paso"
+  "Paso",
+"Close":
+  "Cerrar"
 });

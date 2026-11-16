@@ -409,5 +409,13 @@ VDI18N.add('es', 'demo/resonators', {
 "Shape spectrum, {#} s after the pluck":
   "Espectro de la forma, {#} s después de la pulsación",
 "Bridge force spectrum":
-  "Espectro de la fuerza en el puente"
+  "Espectro de la fuerza en el puente",
+"Close":
+  "Cerrar",
+"blowing: {#} Hz, D4 −{#}¢":
+  "soplando: {#} Hz, D4 −{#}¢",
+"blowing: {#} Hz, E4 +{#}¢":
+  "soplando: {#} Hz, E4 +{#}¢",
+"blowing: {#} Hz, F4 −{#}¢":
+  "soplando: {#} Hz, F4 −{#}¢"
 });

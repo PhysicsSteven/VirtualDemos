@@ -303,5 +303,7 @@ VDI18N.add('es', 'demo/standing-waves', {
 "Wave {#}, moving left ←":
   "Onda {#}, hacia la izquierda ←",
 "Steady amplitude (log scale)":
-  "Amplitud estacionaria (escala logarítmica)"
+  "Amplitud estacionaria (escala logarítmica)",
+"Close":
+  "Cerrar"
 });

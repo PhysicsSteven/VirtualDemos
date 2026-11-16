@@ -589,5 +589,13 @@ VDI18N.add('es', 'demo/solids', {
 "{#} levels":
   "{#} niveles",
 "Re ψ, band {#}, k = {#} π/a, E = {#} eV":
-  "Re ψ, banda {#}, k = {#} π/a, E = {#} eV"
+  "Re ψ, banda {#}, k = {#} π/a, E = {#} eV",
+"Close":
+  "Cerrar",
+"Ge {#}":
+  "Ge {#}",
+"Si {#}":
+  "Si {#}",
+"GaAs {#}":
+  "GaAs {#}"
 });

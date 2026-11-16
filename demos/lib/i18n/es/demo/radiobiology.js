@@ -409,5 +409,7 @@ VDI18N.add('es', 'demo/radiobiology', {
 "Effect of oxygen at {#} Gy":
   "Efecto del oxígeno a {#} Gy",
 "{#} × {#} Gy = {#} Gy, {#} week":
-  "{#} × {#} Gy = {#} Gy, {#} semana"
+  "{#} × {#} Gy = {#} Gy, {#} semana",
+"Close":
+  "Cerrar"
 });

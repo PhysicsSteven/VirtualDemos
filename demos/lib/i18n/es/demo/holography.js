@@ -265,5 +265,7 @@ VDI18N.add('es', 'demo/holography', {
 "developed plate (dark where more light fell)":
   "placa revelada (oscura donde cayó más luz)",
 "three points, {#} to {#} mm":
-  "tres puntos, de {#} a {#} mm"
+  "tres puntos, de {#} a {#} mm",
+"Close":
+  "Cerrar"
 });

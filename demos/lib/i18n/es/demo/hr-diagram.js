@@ -297,5 +297,7 @@ VDI18N.add('es', 'demo/hr-diagram', {
 "Color B − V, hotter to the left":
   "Color B − V, más caliente hacia la izquierda",
 "Surface temperature (K), hot on the left":
-  "Temperatura superficial (K), caliente a la izquierda"
+  "Temperatura superficial (K), caliente a la izquierda",
+"Close":
+  "Cerrar"
 });

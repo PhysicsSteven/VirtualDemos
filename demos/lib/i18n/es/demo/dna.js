@@ -217,5 +217,7 @@ VDI18N.add('es', 'demo/dna', {
 "<span><i></i>strand {#}</span><span><i></i>strand {#}</span>":
   "<span><i></i>hebra {#}</span><span><i></i>hebra {#}</span>",
 "B-DNA and A-DNA · {#} bp · CGCGAATTCGCG":
-  "ADN B y ADN A · {#} pb · CGCGAATTCGCG"
+  "ADN B y ADN A · {#} pb · CGCGAATTCGCG",
+"Close":
+  "Cerrar"
 });

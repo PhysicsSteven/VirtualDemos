@@ -277,5 +277,7 @@ VDI18N.add('es', 'demo/rotation-curves', {
 "<small>Hα gas ends at {#} kpc</small>":
   "<small>el gas Hα termina a {#} kpc</small>",
 "Hα light comes from gas lit by young stars, so it fades beyond about four disk scale lengths (drawn to there). Switch to {#} cm to follow the neutral hydrogen much farther out, where the dark matter dominates.":
-  "La luz Hα viene del gas iluminado por estrellas jóvenes, así que se desvanece más allá de unas cuatro longitudes de escala del disco (dibujado hasta ahí). Cambia a {#} cm para seguir el hidrógeno neutro mucho más lejos, donde domina la materia oscura."
+  "La luz Hα viene del gas iluminado por estrellas jóvenes, así que se desvanece más allá de unas cuatro longitudes de escala del disco (dibujado hasta ahí). Cambia a {#} cm para seguir el hidrógeno neutro mucho más lejos, donde domina la materia oscura.",
+"Close":
+  "Cerrar"
 });

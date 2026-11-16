@@ -133,5 +133,7 @@ VDI18N.add('es', 'demo/wire-force', {
 "{#} turns, {#} cm square":
   "{#} vueltas, {#} cm de lado",
 "commutator and brushes":
-  "conmutador y escobillas"
+  "conmutador y escobillas",
+"Close":
+  "Cerrar"
 });

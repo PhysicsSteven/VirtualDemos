@@ -877,5 +877,7 @@ VDI18N.add('es', 'demo/particles', {
 "Your prediction: weak. ✗ does not match.":
   "Tu predicción: débil. ✗ no coincide.",
 "Your prediction: forbidden. ✗ does not match.":
-  "Tu predicción: prohibida. ✗ no coincide."
+  "Tu predicción: prohibida. ✗ no coincide.",
+"Close":
+  "Cerrar"
 });

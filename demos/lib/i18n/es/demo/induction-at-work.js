@@ -217,5 +217,9 @@ VDI18N.add('es', 'demo/induction-at-work', {
 "-{#} mJ":
   "-{#} mJ",
 "t (s) · fast forward, {#} s = {#} s":
-  "t (s) · avance rápido, {#} s = {#} s"
+  "t (s) · avance rápido, {#} s = {#} s",
+"Close":
+  "Cerrar",
+"{#} nJ":
+  "{#} nJ"
 });

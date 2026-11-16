@@ -279,5 +279,9 @@ VDI18N.add('es', 'demo/compton', {
 "X-rays in false color, as in the Flat view. Drag the arm to set θ, drag elsewhere to turn.":
   "Rayos X en color falso, como en la vista Plano. Arrastra el brazo para fijar θ; arrastra en otro lugar para girar.",
 "Colors: true color of the light. Drag the arm to set θ, drag elsewhere to turn.":
-  "Colores: el color real de la luz. Arrastra el brazo para fijar θ; arrastra en otro lugar para girar."
+  "Colores: el color real de la luz. Arrastra el brazo para fijar θ; arrastra en otro lugar para girar.",
+"Close":
+  "Cerrar",
+"X-ray tube":
+  "Tubo de rayos X"
 });

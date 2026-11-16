@@ -323,5 +323,7 @@ VDI18N.add('es', 'demo/black-holes', {
 "= {#} yr at {#} km/s":
   "= {#} años a {#} km/s",
 "ΔA = {#} × {#}⁻¹¹ g":
-  "ΔA = {#} × {#}⁻¹¹ g"
+  "ΔA = {#} × {#}⁻¹¹ g",
+"Close":
+  "Cerrar"
 });

@@ -529,5 +529,7 @@ VDI18N.add('es', 'demo/relativity-em', {
 "Charge's frame: the wire is positively charged. Only the <span>electric field</span> pushes the charge, which starts at rest here.<small>B is still there, but cannot push a charge at rest. Once the charge picks up speed toward the wire, B adds a small sideways push.</small><small>Real speeds: drift {#} μm/s, far too slow to see.</small>":
   "Marco de la carga: el alambre tiene carga positiva. Solo el <span>campo eléctrico</span> empuja a la carga, que aquí parte del reposo.<small>B sigue ahí, pero no puede empujar a una carga en reposo. Cuando la carga adquiere rapidez hacia el alambre, B agrega un pequeño empuje lateral.</small><small>Rapideces reales: deriva de {#} μm/s, demasiado lenta para verse.</small>",
 "magnetic force {#}×{#}⁻¹⁷ N":
-  "fuerza magnética {#}×{#}⁻¹⁷ N"
+  "fuerza magnética {#}×{#}⁻¹⁷ N",
+"Close":
+  "Cerrar"
 });

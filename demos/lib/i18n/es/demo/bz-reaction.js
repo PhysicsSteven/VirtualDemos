@@ -351,5 +351,9 @@ VDI18N.add('es', 'demo/bz-reaction', {
 "built by a scan":
   "construido por un barrido",
 "Press a Scan button to build this diagram":
-  "Pulsa un botón de Barrido para construir este diagrama"
+  "Pulsa un botón de Barrido para construir este diagrama",
+"Close":
+  "Cerrar",
+"settling":
+  "asentándose"
 });

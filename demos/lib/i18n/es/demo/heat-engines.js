@@ -361,5 +361,7 @@ VDI18N.add('es', 'demo/heat-engines', {
 "The gasoline engine as an air standard cycle. Its efficiency η = {#} − r<sup>{#}−γ</sup> depends only on the compression ratio r. Raise r and watch η climb, though it stays well below the Carnot limit for its {#} K to {#} K span.":
   "El motor de gasolina como ciclo de aire estándar. Su eficiencia η = {#} − r<sup>{#}−γ</sup> depende solo de la razón de compresión r. Aumenta r y observa cómo sube η, aunque se queda muy por debajo del límite de Carnot para su intervalo de {#} K a {#} K.",
 "{#}→{#} compression stroke, {#}→{#} the spark burns the fuel so fast that the volume barely changes, {#}→{#} power stroke, {#}→{#} exhaust and fresh intake, modeled as cooling at constant volume. Drag leg {#}→{#} sideways to change r.":
-  "{#}→{#} carrera de compresión, {#}→{#} la chispa quema el combustible tan rápido que el volumen apenas cambia, {#}→{#} carrera de potencia, {#}→{#} escape y admisión de aire fresco, modelados como enfriamiento a volumen constante. Arrastra el tramo {#}→{#} hacia los lados para cambiar r."
+  "{#}→{#} carrera de compresión, {#}→{#} la chispa quema el combustible tan rápido que el volumen apenas cambia, {#}→{#} carrera de potencia, {#}→{#} escape y admisión de aire fresco, modelados como enfriamiento a volumen constante. Arrastra el tramo {#}→{#} hacia los lados para cambiar r.",
+"Close":
+  "Cerrar"
 });

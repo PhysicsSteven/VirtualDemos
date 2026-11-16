@@ -463,5 +463,7 @@ VDI18N.add('es', 'demo/binding-energy', {
 "height above {#} MeV per nucleon, {#} squares per MeV · dark caps: stable · drag to turn, click a column":
   "altura sobre {#} MeV por nucleón, {#} cuadros por MeV · tapas oscuras: estables · arrastra para girar, haz clic en una columna",
 "e⁺ + ν (or an electron captured)":
-  "e⁺ + ν (o un electrón capturado)"
+  "e⁺ + ν (o un electrón capturado)",
+"Close":
+  "Cerrar"
 });

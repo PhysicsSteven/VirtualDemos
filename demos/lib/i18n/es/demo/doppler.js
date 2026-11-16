@@ -241,5 +241,7 @@ VDI18N.add('es', 'demo/doppler', {
 "no light yet":
   "aún no llega luz",
 "transverse: f′/f ≈ 1/γ":
-  "transversal: f′/f ≈ 1/γ"
+  "transversal: f′/f ≈ 1/γ",
+"Close":
+  "Cerrar"
 });

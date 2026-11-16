@@ -249,5 +249,7 @@ VDI18N.add('es', 'demo/rotating-frames', {
 "plane turned {#}° clockwise":
   "el plano giró {#}° en sentido horario",
 "elapsed {#} min":
-  "transcurrido {#} min"
+  "transcurrido {#} min",
+"Close":
+  "Cerrar"
 });

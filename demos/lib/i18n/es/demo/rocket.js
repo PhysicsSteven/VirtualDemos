@@ -139,5 +139,7 @@ VDI18N.add('es', 'demo/rocket', {
 "Separation (flight log)":
   "Separación (registro de vuelo)",
 "Speed at burnout (flight log)":
-  "Rapidez al fin de la combustión (registro de vuelo)"
+  "Rapidez al fin de la combustión (registro de vuelo)",
+"Close":
+  "Cerrar"
 });

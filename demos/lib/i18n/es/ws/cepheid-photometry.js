@@ -191,5 +191,7 @@ VDI18N.add('es', 'ws/cepheid-photometry', {
 "Heading of column M":
   "Encabezado de la columna M",
 "Column M":
-  "Columna M"
+  "Columna M",
+"Night":
+  "Noche"
 });

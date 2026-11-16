@@ -923,5 +923,21 @@ VDI18N.add('es', 'demo/rotation', {
 "Hold the loose end of a roll of paper and let the roll go, beside a roll that is just dropped. The paper leaves from the outside of the roll, so I/mR² is only a little over ½ and it falls at about {#} g.":
   "Sujeta el extremo suelto de un rollo de papel y suelta el rollo, junto a un rollo que simplemente se deja caer. El papel sale por fuera del rollo, así que I/mR² es solo un poco mayor que ½ y cae a unos {#} g.",
 "A solid cylinder with the string wound on its surface falls at exactly ⅔g, whatever its mass and radius; a thin ring falls at ½g.":
-  "Un cilindro sólido con la cuerda enrollada en su superficie cae exactamente con ⅔g, sea cual sea su masa y su radio; un anillo delgado cae con ½g."
+  "Un cilindro sólido con la cuerda enrollada en su superficie cae exactamente con ⅔g, sea cual sea su masa y su radio; un anillo delgado cae con ½g.",
+"Close":
+  "Cerrar",
+"I ratio":
+  "cociente de I",
+"ω ratio":
+  "cociente de ω",
+"KE ratio":
+  "cociente de EC",
+"L ratio":
+  "cociente de L",
+"dashed: r = {#} m":
+  "punteado: r = {#} m",
+"τ at θ = {#}° (N·m)":
+  "τ a θ = {#}° (N·m)",
+"Look":
+  "Aspecto"
 });

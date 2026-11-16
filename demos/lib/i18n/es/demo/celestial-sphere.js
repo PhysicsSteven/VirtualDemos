@@ -2601,5 +2601,7 @@ VDI18N.add('es', 'demo/celestial-sphere', {
 "β Vir (clicked)":
   "β Vir (con clic)",
 "β Vir there":
-  "β Vir allá"
+  "β Vir allá",
+"Close":
+  "Cerrar"
 });

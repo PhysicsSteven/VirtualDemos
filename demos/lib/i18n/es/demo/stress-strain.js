@@ -253,5 +253,7 @@ VDI18N.add('es', 'demo/stress-strain', {
 "hidden: work them out":
   "ocultos: calcúlalos",
 "sensor":
-  "sensor"
+  "sensor",
+"Close":
+  "Cerrar"
 });

@@ -409,5 +409,7 @@ VDI18N.add('es', 'demo/craters', {
 "heights drawn {#} times larger":
   "alturas dibujadas {#} veces más grandes",
 "bright ejecta drawn, not computed":
-  "eyección clara dibujada, no calculada"
+  "eyección clara dibujada, no calculada",
+"Close":
+  "Cerrar"
 });

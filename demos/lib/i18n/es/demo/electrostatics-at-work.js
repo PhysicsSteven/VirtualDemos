@@ -313,5 +313,9 @@ VDI18N.add('es', 'demo/electrostatics-at-work', {
 "Side view, to scale, slow motion":
   "Vista lateral, a escala, en cámara lenta",
 "Not to scale; the inset is":
-  "No a escala; el recuadro sí"
+  "No a escala; el recuadro sí",
+"Close":
+  "Cerrar",
+"last {#} s":
+  "últimos {#} s"
 });

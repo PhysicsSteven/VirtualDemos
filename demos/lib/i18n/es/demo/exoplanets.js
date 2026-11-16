@@ -395,5 +395,15 @@ VDI18N.add('es', 'demo/exoplanets', {
 "bands schematic":
   "bandas esquemáticas",
 "Revealed: M₁ = {#} M<sub>sun</sub>, R₁ = {#} R<sub>sun</sub>, T₁ = {#} K; M₂ = {#} M<sub>sun</sub>, R₂ = {#} R<sub>sun</sub>, T₂ = {#} K; a = {#} AU, i = {#}°, γ = {#} km/s.":
-  "Revelado: M₁ = {#} M<sub>sun</sub>, R₁ = {#} R<sub>sun</sub>, T₁ = {#} K; M₂ = {#} M<sub>sun</sub>, R₂ = {#} R<sub>sun</sub>, T₂ = {#} K; a = {#} UA, i = {#}°, γ = {#} km/s."
+  "Revelado: M₁ = {#} M<sub>sun</sub>, R₁ = {#} R<sub>sun</sub>, T₁ = {#} K; M₂ = {#} M<sub>sun</sub>, R₂ = {#} R<sub>sun</sub>, T₂ = {#} K; a = {#} UA, i = {#}°, γ = {#} km/s.",
+"Close":
+  "Cerrar",
+"{#} s = {#} h":
+  "{#} s = {#} h",
+"{#} s = {#} d":
+  "{#} s = {#} d",
+"slow motion":
+  "cámara lenta",
+"To Earth, {#}° up":
+  "Hacia la Tierra, {#}° arriba"
 });

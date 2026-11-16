@@ -235,5 +235,7 @@ VDI18N.add('es', 'demo/ising', {
 "Press Play or Step":
   "Pulsa Iniciar o Paso",
 "m against h · T = {#}, L = {#}":
-  "m contra h · T = {#}, L = {#}"
+  "m contra h · T = {#}, L = {#}",
+"Close":
+  "Cerrar"
 });

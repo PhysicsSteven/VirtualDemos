@@ -465,5 +465,7 @@ VDI18N.add('es', 'demo/units', {
 "Running product after each factor, low to high (the answer is hidden in Blind)":
   "Producto acumulado después de cada factor, de bajo a alto (la respuesta está oculta en A ciegas)",
 "Mount Everest: {#} m high":
-  "Monte Everest: {#} m de altura"
+  "Monte Everest: {#} m de altura",
+"Close":
+  "Cerrar"
 });

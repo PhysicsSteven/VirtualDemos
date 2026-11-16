@@ -553,5 +553,7 @@ VDI18N.add('es', 'demo/temperature', {
 "<span>Speed</span>":
   "<span>Rapidez</span>",
 "distance along the rods from the left end (mm)":
-  "distancia a lo largo de las varillas desde el extremo izquierdo (mm)"
+  "distancia a lo largo de las varillas desde el extremo izquierdo (mm)",
+"Close":
+  "Cerrar"
 });

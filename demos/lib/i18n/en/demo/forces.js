@@ -144,5 +144,6 @@ VDI18N.add('en', 'demo/forces', [
 "Stopped at the end. Press Put back.",
 "At the stop: the push of the stop is not drawn",
 "Sliding: the bumps catch and tear past each other.",
-"Time controls"
+"Time controls",
+"Moving"
 ]);

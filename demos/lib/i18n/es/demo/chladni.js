@@ -339,5 +339,7 @@ VDI18N.add('es', 'demo/chladni', {
 "Drumhead · T = {#} N/m":
   "Parche · T = {#} N/m",
 "Sprinkle fresh sand":
-  "Espolvorear arena nueva"
+  "Espolvorear arena nueva",
+"Close":
+  "Cerrar"
 });

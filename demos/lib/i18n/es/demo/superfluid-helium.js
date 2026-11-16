@@ -305,5 +305,7 @@ VDI18N.add('es', 'demo/superfluid-helium', {
 "Blind: the column height is hidden":
   "A ciegas: la altura de la columna está oculta",
 "hidden":
-  "oculta"
+  "oculta",
+"solid {#} %":
+  "sólido {#} %"
 });

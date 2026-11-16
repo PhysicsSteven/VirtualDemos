@@ -237,5 +237,7 @@ VDI18N.add('es', 'demo/viscometer', {
 "Mystery liquid: it was η = {#} mPa·s.":
   "Líquido misterioso: era η = {#} mPa·s.",
 "The valve was moved after this water was collected. Empty the cylinder and collect again.":
-  "La válvula se movió después de recolectar esta agua. Vacía la probeta y recolecta de nuevo."
+  "La válvula se movió después de recolectar esta agua. Vacía la probeta y recolecta de nuevo.",
+"Close":
+  "Cerrar"
 });

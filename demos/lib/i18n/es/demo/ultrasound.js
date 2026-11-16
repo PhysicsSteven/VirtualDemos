@@ -233,5 +233,9 @@ VDI18N.add('es', 'demo/ultrasound', {
 "Block, artery ({#} mm across, {#} cm down), transducer and scanner to scale. Blood cells drawn enlarged and {#}× slower; wavefronts drawn {#} mm apart (really c/f₀ = {#} mm).":
   "Bloque, arteria ({#} mm de ancho, {#} cm de profundidad), transductor y ecógrafo a escala. Células sanguíneas dibujadas ampliadas y {#}× más lentas; frentes de onda dibujados a {#} mm entre sí (en realidad c/f₀ = {#} mm).",
 "Block, artery ({#} mm across, {#} cm down), transducer and scanner to scale. Blood cells drawn enlarged and slowed; wavefronts drawn {#} mm apart (really c/f₀ = {#} mm).":
-  "Bloque, arteria ({#} mm de ancho, {#} cm de profundidad), transductor y ecógrafo a escala. Células sanguíneas dibujadas ampliadas y más lentas; frentes de onda dibujados a {#} mm entre sí (en realidad c/f₀ = {#} mm)."
+  "Bloque, arteria ({#} mm de ancho, {#} cm de profundidad), transductor y ecógrafo a escala. Células sanguíneas dibujadas ampliadas y más lentas; frentes de onda dibujados a {#} mm entre sí (en realidad c/f₀ = {#} mm).",
+"shown {#} {#}× slower":
+  "mostrados {#} {#}× más lentos",
+"Close":
+  "Cerrar"
 });

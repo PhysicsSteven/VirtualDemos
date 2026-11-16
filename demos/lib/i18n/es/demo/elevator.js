@@ -95,5 +95,7 @@ VDI18N.add('es', 'demo/elevator', {
 "<span>free fall: the cable has snapped</span>":
   "<span>caída libre: se rompió el cable</span>",
 "<span>safety brakes stopping the car</span>":
-  "<span>los frenos de seguridad detienen la cabina</span>"
+  "<span>los frenos de seguridad detienen la cabina</span>",
+"Close":
+  "Cerrar"
 });

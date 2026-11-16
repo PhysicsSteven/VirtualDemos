@@ -125,5 +125,15 @@ VDI18N.add('es', 'ws/relativistic-momentum', {
 "Distance traveled":
   "Distancia recorrida",
 "Velocity, Momentum and Energy Near c (Steady force)":
-  "Velocidad, momento y energía cerca de c (Fuerza constante)"
+  "Velocidad, momento y energía cerca de c (Fuerza constante)",
+"<span>B</span>Time \\(t\\) (ns)":
+  "<span>B</span>Tiempo \\(t\\) (ns)",
+"<span>C</span>Distance \\(x\\) (m)":
+  "<span>C</span>Distancia \\(x\\) (m)",
+"<span>D</span>Speed \\(v\\) (c)":
+  "<span>D</span>Rapidez \\(v\\) (c)",
+"<span>E</span>\\(\\gamma\\)":
+  "<span>E</span>\\(\\gamma\\)",
+"<span>F</span>\\(\\gamma v\\) (c)":
+  "<span>F</span>\\(\\gamma v\\) (c)"
 });

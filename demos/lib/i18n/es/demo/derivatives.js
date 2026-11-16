@@ -195,5 +195,7 @@ VDI18N.add('es', 'demo/derivatives', {
 "f curves downward: f″ < 0":
   "f se curva hacia abajo: f″ < 0",
 "Your own function. Every setup above can be edited in the box, too.":
-  "Tu propia función. Cada configuración de arriba también se puede editar en la caja."
+  "Tu propia función. Cada configuración de arriba también se puede editar en la caja.",
+"Close":
+  "Cerrar"
 });

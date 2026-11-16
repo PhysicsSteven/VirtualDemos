@@ -343,5 +343,7 @@ VDI18N.add('es', 'demo/resolution', {
 "Numbers: the textbook's Example {#}, Hubble ({#} m mirror, {#} nm, stars at {#} million light years) and its Chapter {#} Problem {#} on the eye ({#} mm pupil, {#} nm, headlights {#} m apart); {#} ly = {#} × {#}¹⁵ m. Real eyes do worse than diffraction allows: normal ({#}/{#}) acuity is about one minute of arc, {#} µrad, because of aberrations and the spacing of the receptors on the retina. The cursor reads to {#}/{#} of the view, and I/I₀ is the intensity there relative to the central peak of one source alone.":
   "Números: el Ejemplo {#} del libro de texto, Hubble (espejo de {#} m, {#} nm, estrellas a {#} millones de años luz) y su Problema {#} del Capítulo {#} sobre el ojo (pupila de {#} mm, {#} nm, faros separados {#} m); {#} a. l. = {#} × {#}¹⁵ m. Los ojos reales lo hacen peor de lo que permite la difracción: la agudeza normal ({#}/{#}) es de cerca de un minuto de arco, {#} µrad, por las aberraciones y la separación de los receptores en la retina. El cursor lee hasta {#}/{#} de la vista, e I/I₀ es la intensidad ahí relativa al pico central de una sola fuente.",
 "{#}: <span>just resolved</span>":
-  "{#}: <span>apenas resueltas</span>"
+  "{#}: <span>apenas resueltas</span>",
+"Close":
+  "Cerrar"
 });

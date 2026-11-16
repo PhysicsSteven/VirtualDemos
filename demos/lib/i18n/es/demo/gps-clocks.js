@@ -107,5 +107,7 @@ VDI18N.add('es', 'demo/gps-clocks', {
 "second clock: {#} h − {#} ps":
   "segundo reloj: {#} h − {#} ps",
 "second clock: {#} h − {#} μs":
-  "segundo reloj: {#} h − {#} μs"
+  "segundo reloj: {#} h − {#} μs",
+"Close":
+  "Cerrar"
 });

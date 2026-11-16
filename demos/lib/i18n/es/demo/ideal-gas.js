@@ -345,5 +345,17 @@ VDI18N.add('es', 'demo/ideal-gas', {
 "t = {#} ns playback {#}× faster than Fixed rate":
   "t = {#} ns reproducción {#}× más rápida que Ritmo fijo",
 "hole {#} nm":
-  "orificio {#} nm"
+  "orificio {#} nm",
+"Close":
+  "Cerrar",
+"+{#} off scale →":
+  "+{#} fuera de escala →",
+"−{#} zJ":
+  "−{#} zJ",
+"+{#} zJ":
+  "+{#} zJ",
+"rms 2D (m/s)":
+  "rms 2D (m/s)",
+"rms 3D (m/s)":
+  "rms 3D (m/s)"
 });

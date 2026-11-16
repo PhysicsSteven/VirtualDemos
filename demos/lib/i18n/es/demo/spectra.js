@@ -879,5 +879,13 @@ VDI18N.add('es', 'demo/spectra', {
 "electron ringing":
   "electrón oscilando",
 "collapsed; a fresh ato":
-  "colapsó; un átomo nue"
+  "colapsó; un átomo nue",
+"Close":
+  "Cerrar",
+"6g, lives {#} ns":
+  "6g, vive {#} ns",
+"5f, lives {#} ns":
+  "5f, vive {#} ns",
+"6d, lives {#} ns":
+  "6d, vive {#} ns"
 });

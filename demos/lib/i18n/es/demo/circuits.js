@@ -815,5 +815,17 @@ VDI18N.add('es', 'demo/circuits', {
 "Step":
   "Paso",
 "<span>A1</span><span>ideal ammeter</span><span>{#} V</span><span>R1</span><span>rise, IR</span><span>+{#} V</span><span>L1</span><span>rise, L dI/dt</span><span>+{#} V</span><span>C1</span><span>drop, Q/C</span><span>−{#} V</span><span>V1</span><span>− to +: v(t)</span><span>{#} V</span><span>sum</span><span></span><span>−{#} × {#}⁻¹⁶ V</span>":
-  "<span>A1</span><span>amperímetro ideal</span><span>{#} V</span><span>R1</span><span>subida, IR</span><span>+{#} V</span><span>L1</span><span>subida, L dI/dt</span><span>+{#} V</span><span>C1</span><span>caída, Q/C</span><span>−{#} V</span><span>V1</span><span>− a +: v(t)</span><span>{#} V</span><span>suma</span><span></span><span>−{#} × {#}⁻¹⁶ V</span>"
+  "<span>A1</span><span>amperímetro ideal</span><span>{#} V</span><span>R1</span><span>subida, IR</span><span>+{#} V</span><span>L1</span><span>subida, L dI/dt</span><span>+{#} V</span><span>C1</span><span>caída, Q/C</span><span>−{#} V</span><span>V1</span><span>− a +: v(t)</span><span>{#} V</span><span>suma</span><span></span><span>−{#} × {#}⁻¹⁶ V</span>",
+"<span>V1</span><span>in</span><span>{#} mA</span><span>A1</span><span>out</span><span>{#} mA</span><span>in</span><span></span><span>{#} mA</span><span>out</span><span></span><span>{#} mA</span>":
+  "<span>V1</span><span>entra</span><span>{#} mA</span><span>A1</span><span>sale</span><span>{#} mA</span><span>entra</span><span></span><span>{#} mA</span><span>sale</span><span></span><span>{#} mA</span>",
+"−{#} fV":
+  "−{#} fV",
+"Close":
+  "Cerrar",
+"V = IR: {#} V = {#} µA × {#} kΩ":
+  "V = IR: {#} V = {#} µA × {#} kΩ",
+"<span>V1</span><span>in</span><span>{#} µA</span><span>A1</span><span>out</span><span>{#} µA</span><span>in</span><span></span><span>{#} µA</span><span>out</span><span></span><span>{#} µA</span>":
+  "<span>V1</span><span>entra</span><span>{#} µA</span><span>A1</span><span>sale</span><span>{#} µA</span><span>entra</span><span></span><span>{#} µA</span><span>sale</span><span></span><span>{#} µA</span>",
+"in − out = {#} A":
+  "entra − sale = {#} A"
 });

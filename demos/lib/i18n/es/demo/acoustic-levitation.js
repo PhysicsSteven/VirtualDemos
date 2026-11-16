@@ -267,5 +267,9 @@ VDI18N.add('es', 'demo/acoustic-levitation', {
 "3D needs WebGL and three.js, which did not load; the flat slice shows the same physics.":
   "El 3D necesita WebGL y three.js, que no se cargaron; el corte plano muestra la misma física.",
 "the envelope of the wave; dark is a node":
-  "la envolvente de la onda; lo oscuro es un nodo"
+  "la envolvente de la onda; lo oscuro es un nodo",
+"Close":
+  "Cerrar",
+"Add a bead":
+  "Añadir una cuenta"
 });

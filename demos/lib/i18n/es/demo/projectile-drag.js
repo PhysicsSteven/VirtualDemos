@@ -533,5 +533,7 @@ VDI18N.add('es', 'demo/projectile-drag', {
 "t = {#} days":
   "t = {#} días",
 "{#} days ({#} times round)":
-  "{#} días ({#} vueltas)"
+  "{#} días ({#} vueltas)",
+"Close":
+  "Cerrar"
 });

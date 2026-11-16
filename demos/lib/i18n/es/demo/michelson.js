@@ -175,5 +175,7 @@ VDI18N.add('es', 'demo/michelson', {
 "to scale, but mirror travel ×{#}, tilt ×{#}":
   "a escala, pero recorrido del espejo ×{#}, inclinación ×{#}",
 "Light":
-  "Luz"
+  "Luz",
+"Close":
+  "Cerrar"
 });

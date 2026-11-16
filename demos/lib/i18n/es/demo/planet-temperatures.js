@@ -407,5 +407,7 @@ VDI18N.add('es', 'demo/planet-temperatures', {
 "drag the planet in or out · drag elsewhere to turn · sizes not to scale · {#} s = {#} days":
   "arrastra el planeta hacia dentro o hacia fuera · arrastra en otro lugar para girar · tamaños no a escala · {#} s = {#} días",
 "drag the planet in or out · drag elsewhere to turn · sizes not to scale · {#} s = {#} day":
-  "arrastra el planeta hacia dentro o hacia fuera · arrastra en otro lugar para girar · tamaños no a escala · {#} s = {#} día"
+  "arrastra el planeta hacia dentro o hacia fuera · arrastra en otro lugar para girar · tamaños no a escala · {#} s = {#} día",
+"Close":
+  "Cerrar"
 });

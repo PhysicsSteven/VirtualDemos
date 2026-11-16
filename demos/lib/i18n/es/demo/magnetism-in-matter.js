@@ -151,5 +151,7 @@ VDI18N.add('es', 'demo/magnetism-in-matter', {
 "Cut open along the axis; drag to turn.":
   "Cortado a lo largo del eje; arrastra para girar.",
 "Induced moments drawn exaggerated.":
-  "Momentos inducidos dibujados exagerados."
+  "Momentos inducidos dibujados exagerados.",
+"Close":
+  "Cerrar"
 });

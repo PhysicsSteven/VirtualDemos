@@ -327,5 +327,11 @@ VDI18N.add('es', 'demo/magnetic-moments', {
 "U = m_l μ_B B = {#} meV":
   "U = m_l μ_B B = {#} meV",
 "Clear the screen":
-  "Limpiar la pantalla"
+  "Limpiar la pantalla",
+"Close":
+  "Cerrar",
+"{#} meV":
+  "{#} meV",
+"U (meV)":
+  "U (meV)"
 });

@@ -321,5 +321,9 @@ VDI18N.add('es', 'demo/blackbody', {
 "<a><span>←</span> <span>States of Matter</span></a><a><span>Gas in a Box</span> <span>→</span></a>":
   "<a><span>←</span> <span>Estados de la materia</span></a><a><span>Gas en una caja</span> <span>→</span></a>",
 "Wavelength λ (nm)":
-  "Longitud de onda λ (nm)"
+  "Longitud de onda λ (nm)",
+"Close":
+  "Cerrar",
+"NaN":
+  "NaN"
 });

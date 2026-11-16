@@ -283,5 +283,7 @@ VDI18N.add('es', 'demo/vectors', {
 "<span><i></i>boat relative to the water</span><span><i></i>water relative to the shore</span><small>Arrows show {#} s of motion</small><small>Shown in real time</small>":
   "<span><i></i>bote respecto al agua</span><span><i></i>agua respecto a la orilla</span><small>Las flechas muestran {#} s de movimiento</small><small>Mostrado en tiempo real</small>",
 "Shown in real time":
-  "Mostrado en tiempo real"
+  "Mostrado en tiempo real",
+"Close":
+  "Cerrar"
 });

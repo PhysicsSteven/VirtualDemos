@@ -8,6 +8,8 @@ VDI18N.add('es', 'demo/currents-fields', {
   "sale",
 "in":
   "entra",
+"{r} of the center":
+  "{r} del centro",
 "Magnetic Fields of Currents":
   "Campos magnéticos de corrientes",
 "<a>Magnetic forces and fields</a>":
@@ -240,6 +242,8 @@ VDI18N.add('es', 'demo/currents-fields', {
   "Plano que contiene al eje · z hacia la derecha · cuadrícula {#} cm",
 "{#} µT at z = {#} cm":
   "{#} µT en z = {#} cm",
+"center":
+  "centro",
 "B<sub>z</sub> (along the axis)":
   "B<sub>z</sub> (a lo largo del eje)",
 "B<sub>ρ</sub> (away from the axis)":
@@ -250,6 +254,8 @@ VDI18N.add('es', 'demo/currents-fields', {
   "B<sub>center</sub> = {#} µT <small>μ₀nI = {#} µT</small>",
 "One long straight wire with its current out of the page. The field lines are circles, counterclockwise by the right hand rule. B = μ₀I/({#}πr) falls off as {#}/r, so the circles spread apart farther out. Drag the probe to check.":
   "Un alambre largo y recto con su corriente saliendo de la página. Las líneas de campo son círculos, en sentido antihorario por la regla de la mano derecha. B = μ₀I/({#}πr) decae como {#}/r, así que los círculos se separan más lejos del alambre. Arrastra la sonda para comprobarlo.",
+"Drag to turn the view · move things in the flat view":
+  "Arrastra para girar la vista · mueve las cosas en la vista plana",
 "<span>Wire {#}</span><span>+{#} A</span><span>({#}, {#}) cm</span>":
   "<span>Alambre {#}</span><span>+{#} A</span><span>({#}, {#}) cm</span>",
 "Add a second wire to see a force.":
@@ -268,8 +274,6 @@ VDI18N.add('es', 'demo/currents-fields', {
   "Alrededor de cualquier lazo cerrado, ∮B·dl = μ₀I<sub>enc</sub>. Dos alambres atraviesan este lazo ({#} A saliendo, {#} A entrando). Arrastra el lazo sobre el tercer alambre: B a lo largo del lazo cambia, pero ∮B·dl cambia solo cuando un alambre cruza el lazo.",
 "<span><i></i>Field line</span><span><i></i>|B|, stronger is darker</span><span><i></i>Compass, red end along B</span><span><i></i>Force on a wire, per meter</span><span><i></i><i></i>Loop: B along or against its direction</span><span><i></i>Grip: drag to move or resize</span>":
   "<span><i></i>Línea de campo</span><span><i></i>|B|, más intenso es más oscuro</span><span><i></i>Brújula, extremo rojo a lo largo de B</span><span><i></i>Fuerza sobre un alambre, por metro</span><span><i></i><i></i>Lazo: B a favor o en contra de su sentido</span><span><i></i>Control: arrastra para mover o cambiar el tamaño</span>",
-"Drag to turn the view · move things in the flat view":
-  "Arrastra para girar la vista · mueve las cosas en la vista plana",
 "<span>Wire {#}</span><span>−{#} A</span><span>(-{#}, -{#}) cm · F/L {#} µN/m</span>":
   "<span>Alambre {#}</span><span>−{#} A</span><span>(-{#}, -{#}) cm · F/L {#} µN/m</span>",
 "Net on wire {#}":
@@ -288,16 +292,6 @@ VDI18N.add('es', 'demo/currents-fields', {
   "Una espira circular vista de canto: arriba la corriente sale de la página, abajo entra. Cada línea de campo pasa a través de la espira y se cierra por fuera. En el centro B = μ₀I/(2R).",
 "Near half of each turn drawn faint · drag to turn the view":
   "La mitad cercana de cada vuelta se dibuja tenue · arrastra para girar la vista",
-"{#} (one loop)":
-  "{#} (una espira)",
-"With one turn the length L does not matter. Raise N to stack more turns along the length.":
-  "Con una sola vuelta la longitud L no importa. Aumenta N para apilar más vueltas a lo largo de la longitud.",
-"B at the center, exact":
-  "B en el centro, exacto",
-"On the axis at the probe's z: μ₀IR²/({#}(R²+z²)<sup>{#}/{#}</sup>)":
-  "Sobre el eje en la z de la sonda: μ₀IR²/({#}(R²+z²)<sup>{#}/{#}</sup>)",
-"B<sub>center</sub> = {#} µT <small>μ₀I/(2R) = {#} µT</small>":
-  "B<sub>center</sub> = {#} µT <small>μ₀I/(2R) = {#} µT</small>",
 "An electromagnet: {#} turns on a soft iron rod {#} cm long and {#} cm across, on a {#} A battery. The iron makes the field about {#} times what the coil gives alone, and the compasses line up with it like the field of a bar magnet. Take the core out, switch to the AC supply, or make the rod short and fat to see the gain fall.":
   "Un electroimán: {#} vueltas sobre una varilla de hierro dulce de {#} cm de largo y {#} cm de diámetro, con una batería de {#} A. El hierro hace que el campo sea unas {#} veces el que da la bobina sola, y las brújulas se alinean con él como con el campo de un imán de barra. Quita el núcleo, cambia a la fuente de CA, o haz la varilla corta y gruesa para ver cómo baja la ganancia.",
 "on the axis (mT)":
@@ -338,6 +332,8 @@ VDI18N.add('es', 'demo/currents-fields', {
   "Siguiendo líneas de campo a través de la hélice: {#} de {#}",
 "One helix of wire, near half cut away · drag to turn the view":
   "Una hélice de alambre, con la mitad cercana recortada · arrastra para girar la vista",
+"rings: {b}":
+  "anillos: {b}",
 "One helix: B at the center, Biot–Savart along the wire":
   "Una hélice: B en el centro, Biot–Savart a lo largo del alambre",
 "{#} mT <span>rings: {#} mT</span>":
@@ -413,5 +409,19 @@ VDI18N.add('es', 'demo/currents-fields', {
 "{#} µT <span>rings: {#} µT</span>":
   "{#} µT <span>anillos: {#} µT</span>",
 "Field lines followed through the helix's own field":
-  "Líneas de campo seguidas a través del propio campo de la hélice"
+  "Líneas de campo seguidas a través del propio campo de la hélice",
+"{#} (one loop)":
+  "{#} (una espira)",
+"With one turn the length L does not matter. Raise N to stack more turns along the length.":
+  "Con una sola vuelta la longitud L no importa. Aumenta N para apilar más vueltas a lo largo de la longitud.",
+"B at the center, exact":
+  "B en el centro, exacto",
+"On the axis at the probe's z: μ₀IR²/({#}(R²+z²)<sup>{#}/{#}</sup>)":
+  "Sobre el eje en la z de la sonda: μ₀IR²/({#}(R²+z²)<sup>{#}/{#}</sup>)",
+"B<sub>center</sub> = {#} µT <small>μ₀I/(2R) = {#} µT</small>":
+  "B<sub>center</sub> = {#} µT <small>μ₀I/(2R) = {#} µT</small>",
+"Close":
+  "Cerrar",
+"-{#} µT at z = {#} cm":
+  "-{#} µT en z = {#} cm"
 });

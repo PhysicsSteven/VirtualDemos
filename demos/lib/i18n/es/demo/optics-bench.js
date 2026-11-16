@@ -317,5 +317,7 @@ VDI18N.add('es', 'demo/optics-bench', {
 "t (ns) against x (cm)":
   "t (ns) contra x (cm)",
 "Virtual, upright, enlarged":
-  "Virtual, derecha, aumentada"
+  "Virtual, derecha, aumentada",
+"Close":
+  "Cerrar"
 });

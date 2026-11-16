@@ -199,5 +199,7 @@ VDI18N.add('es', 'demo/gyroscope', {
 "(Slow motion shows it turn)":
   "(Cámara lenta la muestra girar)",
 "strobe {#} flashes/s · wheel {#} turns/s":
-  "estroboscopio {#} destellos/s · rueda {#} vueltas/s"
+  "estroboscopio {#} destellos/s · rueda {#} vueltas/s",
+"Close":
+  "Cerrar"
 });

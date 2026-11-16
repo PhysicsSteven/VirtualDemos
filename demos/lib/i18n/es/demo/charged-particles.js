@@ -425,5 +425,9 @@ VDI18N.add('es', 'demo/charged-particles', {
 "all off or {#} cm: only water":
   "todas apagadas o de {#} cm: solo agua",
 "stopped":
-  "detenido"
+  "detenido",
+"Close":
+  "Cerrar",
+"Fire":
+  "Disparar"
 });

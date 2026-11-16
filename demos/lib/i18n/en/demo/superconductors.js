@@ -76,5 +76,6 @@ VDI18N.add('en', 'demo/superconductors', [
 "zero resistance: holding the flux it had",
 "Gallium (Ga)",
 "The last mystery metal was {metal}.",
-"The last mystery metal was gallium (Ga)."
+"The last mystery metal was gallium (Ga).",
+"Zinc (Zn)"
 ]);

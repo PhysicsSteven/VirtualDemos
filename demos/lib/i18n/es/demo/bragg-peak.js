@@ -323,5 +323,9 @@ VDI18N.add('es', 'demo/bragg-peak', {
 "measured (Chowdhury {#})":
   "medida (Chowdhury {#})",
 "slow motion: {#} s here is {#} ns of real time":
-  "cámara lenta: {#} s aquí son {#} ns de tiempo real"
+  "cámara lenta: {#} s aquí son {#} ns de tiempo real",
+"depth {#} cm":
+  "profundidad {#} cm",
+"Close":
+  "Cerrar"
 });

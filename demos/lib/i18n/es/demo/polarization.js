@@ -293,5 +293,7 @@ VDI18N.add('es', 'demo/polarization', {
 "Not to scale · slowed 2 × 10¹⁵ times · drag a mount":
   "No está a escala · ralentizado 2 × 10¹⁵ veces · arrastra una montura",
 "Light travels left to right. Disks and fields are drawn as seen facing the oncoming beam.":
-  "La luz viaja de izquierda a derecha. Los discos y los campos se dibujan como se ven de frente al haz que llega."
+  "La luz viaja de izquierda a derecha. Los discos y los campos se dibujan como se ven de frente al haz que llega.",
+"Close":
+  "Cerrar"
 });

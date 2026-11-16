@@ -383,5 +383,7 @@ VDI18N.add('es', 'demo/proton-qa', {
 "Roughly to scale; beam drawn as a line.":
   "Más o menos a escala; el haz se dibuja como una línea.",
 "Drag to turn.":
-  "Arrastra para girar."
+  "Arrastra para girar.",
+"Close":
+  "Cerrar"
 });

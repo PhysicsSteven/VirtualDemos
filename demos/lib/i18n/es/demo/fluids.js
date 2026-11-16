@@ -551,5 +551,7 @@ VDI18N.add('es', 'demo/fluids', {
 "Your readings: buoyant force W − T against submerged volume, seawater. Not enough readings to fit.":
   "Tus lecturas: fuerza de flotación W − T en función del volumen sumergido, agua de mar. No hay suficientes lecturas para ajustar.",
 "Range against hole depth, H = {#} m, R = {#}√(h(H − h))":
-  "Alcance en función de la profundidad del orificio, H = {#} m, R = {#}√(h(H − h))"
+  "Alcance en función de la profundidad del orificio, H = {#} m, R = {#}√(h(H − h))",
+"Close":
+  "Cerrar"
 });
