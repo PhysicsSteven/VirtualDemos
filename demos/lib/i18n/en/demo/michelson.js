@@ -97,5 +97,11 @@ VDI18N.add('en', 'demo/michelson', [
 "Sodium's two yellow lines, {#} nm apart. Their fringes drift in and out of step, so the rings fade and come back every {#} mm of mirror travel.",
 "The light is a sodium lamp with its two D lines.",
 "The wavelength in the room's air is {#} nm and {#} nm.",
-"to scale, but mirror travel ×{#}, tilt ×{#}"
+"to scale, but mirror travel ×{#}, tilt ×{#}",
+"The light is a green He–Ne laser.",
+"The light is the green line of a mercury lamp.",
+"The light is white light.",
+"The fringe counter is not used with white light.",
+"A gas cell is in the fixed arm, at {#} kPa.",
+"The fixed mirror is tilted {#}′ left and right and {#}′ up and down."
 ]);

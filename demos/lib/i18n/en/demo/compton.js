@@ -117,6 +117,9 @@ VDI18N.add('en', 'demo/compton', [
 "{#} × {#}⁻¹⁹ keV/c <span>rounding: {#} × {#}⁻¹⁶ of p</span>",
 "-{#} × {#}⁻¹⁹ keV <span>rounding: {#} × {#}⁻¹⁶ of E</span>",
 "A green laser pointer, {#} nm, E = {#} eV: a million times less than m<sub>e</sub>c², so the shift is lost in the width of the line.",
+"A photon of energy {#} eV, wavelength {#} nm, scatters off an electron at rest.",
+"The scattered photon has wavelength λ′ = {#} nm.",
+"The electron gets kinetic energy T = {#} × {#}⁻⁵ eV, {#}% of the photon energy.",
 "Energy, to scale",
 "A {#} keV gamma ray has λ = {#} pm, shorter than λ<sub>C</sub>. At {#}° the wavelength more than doubles and the photon keeps only {#} keV; the electron leaves with {#} keV at {#} c.",
 "{#} × {#}⁻¹⁴ keV/c <span>rounding: {#} × {#}⁻¹⁷ of p</span>",
@@ -141,6 +144,9 @@ VDI18N.add('en', 'demo/compton', [
 "The electron gets kinetic energy T = {#} keV, {#}% of the photon energy.",
 "{#} photons sampled.",
 "Change the scattering angle by {#} degree (Shift for {#} degrees)",
+"The plot shows where photons go: Klein–Nishina total cross section {#} σ_T.",
 "gamma ray source",
-"Gamma rays in false color."
+"Gamma rays in false color.",
+"A photon of energy {#} MeV, wavelength {#} pm, scatters off an electron at rest.",
+"The plot shows the electron energies: the Compton edge is at {#} × {#}⁻⁵ eV."
 ]);

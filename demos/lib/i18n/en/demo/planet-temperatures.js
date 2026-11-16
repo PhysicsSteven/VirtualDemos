@@ -182,6 +182,8 @@ VDI18N.add('en', 'demo/planet-temperatures', [
 "{#} to {#} kpc, born {#} to {#} Gyr ago",
 "Share of all stars ever born that could have complex life",
 "Of those, older than the Sun",
+"The heat is shared over the day side.",
+"Below, a chart of gas molecule speeds against temperature, compared with escape speeds.",
 "Mercury, {#} AU from the Sun, Bond albedo {#}, no air. It turns so slowly (one solar day lasts {#} Earth days) that each spot faces the Sun for weeks, so the setup looks at the spot with the Sun overhead. The fact sheet gives {#} to {#} K on the sunward side; at its mean distance the model gives about {#} K there, and Mercury's orbit takes it from {#} to {#} AU.",
 "Venus, {#} AU, Bond albedo {#}: its clouds reflect most of the sunlight, so with no greenhouse it would be colder than Earth ({#} K). Its surface is {#} K. The greenhouse setting that matches lets only about {#} % of the ground's heat radiation escape, as if about {#} layers of air each trapped all of it: {#} bar of carbon dioxide.",
 "The Moon, {#} AU from the Sun, Bond albedo {#}, no air. A lunar day lasts {#} Earth days, so the ground under a high Sun comes close to balance: about {#} K in the model against {#} K measured at the equator. At night it falls to {#} K: with no air nothing holds the heat.",
@@ -191,13 +193,12 @@ VDI18N.add('en', 'demo/planet-temperatures', [
 "Twice the {#} carbon dioxide: {#} ppm. Against today's {#} ppm the forcing is {#} W/m², and the model warms by {#} K with no feedbacks; doubling from {#} ppm is {#} W/m² and {#} K. The IPCC ({#}) puts the full warming for a doubling, with water vapor, ice and clouds responding, at about {#} K (likely {#} to {#} K): the feedbacks roughly triple it.",
 "The nearest star to the Sun, a red dwarf with {#} % of the Sun's light (log L = −{#}, {#} K), and its planet b, {#} AU out, {#} times closer than Earth to the Sun. Its albedo, air and size are unknown: the setup borrows Earth's albedo and escape speed, with no greenhouse.",
 "TRAPPIST-{#}, a red dwarf with {#} % of the Sun's light (log L = −{#}, {#} K), has seven Earth sized planets. Planet e, {#} AU out, has {#} Earth masses and {#} Earth radii, so its escape speed is {#} km/s. Albedo borrowed from Earth, no greenhouse. The star is just below the {#} K where the zone formulas start, so the edges use {#} K.",
-"The greenhouse is off.",
-"Below, a chart of gas molecule speeds against temperature, compared with escape speeds.",
 "A star born {#} billion years ago, {#} kpc from the center: plenty of metals, but many more supernovae nearby.",
 "[Fe/H] = −{#}",
 "A star born {#} billion years ago, {#} kpc out: quiet, but short of the heavy elements that make rocky planets.",
 "A star born a billion years ago near the Sun: its planets have not had the time complex life took on Earth.",
 "A star born {#} billion years ago near the Sun, when the gas held fewer heavy elements.",
+"The greenhouse is off.",
 "The orbit is paused.",
 "dashed: the zone, {#} to {#} kpc ({#}%)",
 "Where and when they were born",
@@ -218,5 +219,6 @@ VDI18N.add('en', 'demo/planet-temperatures', [
 "no greenhouse",
 "Note",
 "The zone formulas hold from {#} to {#} K; the edges use {#} K.",
-"The heat is at the spot under the star."
+"The heat is at the spot under the star.",
+"The planet is closer than the inner edge of the habitable zone: too hot."
 ]);

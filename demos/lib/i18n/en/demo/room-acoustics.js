@@ -110,7 +110,6 @@ VDI18N.add('en', 'demo/room-acoustics', [
 "floor: audience on wooden chairs, {#} per m²",
 "A {#} m × {#} m × {#} m hall whose floor is covered by an audience on wooden chairs, {#} people per m². People are good absorbers: compare T with the floor bare (Concrete), and at {#} Hz, where they absorb much less.",
 "Audience on wooden chairs, {#} per m² [audience_wooden_chairs_2_m2]",
-"The floor is covered by an audience.",
 "distance from the speaker r (m), each step a doubling",
 "level L (dB)",
 "dots: recorded readings · ring: the microphone now · dashed: free field, −{#} dB per doubling",
@@ -126,12 +125,13 @@ VDI18N.add('en', 'demo/room-acoustics', [
 "Absorption and predictions",
 "hidden: the panels are a mystery",
 "The panel material is a mystery.",
+"The absorption and the predictions are hidden, because the panels are a mystery.",
 "The graph shows the sound level against distance.",
 "Level at the microphone {#} dB.",
-"The absorption and the predictions are hidden, because the panels are a mystery.",
+"Measuring.",
 "{#} mystery panels",
 "Move the microphone away from or toward the loudspeaker by {#} m (Shift: {#} m)",
 "Critical distance {#} m.",
 "The walls are covered in absorbing wedges {#} m deep.",
-"Measuring."
+"The floor is covered by an audience."
 ]);

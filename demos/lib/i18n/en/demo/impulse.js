@@ -50,12 +50,13 @@ VDI18N.add('en', 'demo/impulse', [
 "Velocity before {#} m/s.",
 "The cart has not reached the bumper yet.",
 "A soft spring: a long, low force. Same bounciness as the stiff one.",
+"The bumper is a soft spring.",
 "Clay: the cart barely bounces back (e = {#}), so the impulse is smaller.",
 "force sensor (N) against time, {#} Hz samples",
 "The bumper is clay.",
 "Launch the cart and let it bounce off first.",
 "slow motion ×{#}/{#}",
-"The bumper is a soft spring.",
+"The cart is still in contact with the bumper.",
 "Area under F(t) (impulse on the sensor)",
 "Cart momentum change m(v₂ − v₁)",
 "Peak force",
@@ -70,6 +71,5 @@ VDI18N.add('en', 'demo/impulse', [
 "The run is finished.",
 "Area, peak force and momentum change",
 "hidden in Blind: work them out from the graph",
-"The area, peak force and momentum change are hidden while Blind is on.",
-"The cart is still in contact with the bumper."
+"The area, peak force and momentum change are hidden while Blind is on."
 ]);

@@ -139,6 +139,9 @@ VDI18N.add('en', 'demo/standing-waves', [
 "Harmonic n = {#}: f₃ = {#} v/2L = {#} Hz, λ₃ = 2L/{#} = {#} m",
 "A guitar's low E string, {#} m long at about {#} N, sounds E2 at {#} Hz. Harmonic n fits n half wavelengths between the fixed ends, so fₙ = n v/2L = n f₁. Pick other harmonics, or drag the bridge to shorten the string, as a fret does.",
 "Plays a pure tone at f₃ = {#} Hz. Sound stops when you leave the page.",
+"A string {#} m long, fixed at both ends, at a tension of {#} N and a linear density of {#} g/m.",
+"The wave speed is {#} m/s and the fundamental frequency f₁ is {#} Hz.",
+"The string vibrates in harmonic {#}: frequency {#} Hz, wavelength {#} m, with {#} nodes counting the two ends.",
 "Driven at f = {#} Hz (f/f₁ = {#})",
 "dashed: steady state envelope",
 "Steady amplitude against drive frequency (log scale)",
@@ -158,8 +161,15 @@ VDI18N.add('en', 'demo/standing-waves', [
 "Pulse {#}, moving right →",
 "Pulse {#}, moving left ←",
 "out unchanged",
+"Two single pulses on a rope, one moving right and one moving left at {#} m/s, and the rope, which is their sum.",
+"Pulse {#} is {#} cm high and {#} m wide.",
+"The peaks pass each other at x = {#} m.",
 "Plucked at d = {#}/{#} of L",
+"The string is plucked {#} m from one end, which is {#} of its length, to a height of {#} mm, and let go.",
 "Wave {#}, moving right →",
 "Wave {#}, moving left ←",
-"Steady amplitude (log scale)"
+"Steady amplitude (log scale)",
+"A driver near one end shakes the string at {#} Hz, with a quality factor Q = {#} for mode {#}.",
+"The steady amplitude is {#} mm.",
+"The damping time is {#} ms."
 ]);

@@ -91,9 +91,9 @@ VDI18N.add('en', 'demo/two-speaker', [
 "backwards",
 "Function generator, to every speaker",
 "loudness map: darker is louder ({#} to {#} dB)",
-"The Sandbox is for exploring: pick one of the other setups to record readings for the worksheet.",
 "{#} speakers stand in the room.",
 "The microphone hears silence here.",
+"The Sandbox is for exploring: pick one of the other setups to record readings for the worksheet.",
 "Move the microphone {#} cm (Shift: {#} cm)",
 "Move the picked speaker {#} cm (Shift: {#} cm)",
 "The last mystery frequency was {#} Hz. A new one is playing.",
@@ -102,5 +102,7 @@ VDI18N.add('en', 'demo/two-speaker', [
 "wired backwards",
 "Microphone at x {#} m, y -{#} m, silent: drag it, or use the arrow keys to move it {#} cm (Shift, {#} cm)",
 "The microphone is {#} m from the wall and -{#} m sideways.",
-"r₃, to speaker {#}"
+"r₃, to speaker {#}",
+"Speaker {#} is at x = {#} m, y = {#} m, in phase.",
+"Speaker {#} is at x = {#} m, y = -{#} m, in phase."
 ]);

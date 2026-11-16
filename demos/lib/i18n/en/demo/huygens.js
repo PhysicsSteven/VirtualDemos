@@ -84,6 +84,10 @@ VDI18N.add('en', 'demo/huygens', [
 "The front reaches the left of the mirror first, so wavelets there have been growing longest. Their tangent is the reflected front, leaving at the same angle the incident front arrived at.",
 "Upper medium: n₁, v₁",
 "Angle of reflection",
+"A plane wave in air, n = {#}, meets a mirror.",
+"Angle of incidence {#}°.",
+"The angle of reflection is {#}°.",
+"The reflected wave is shown.",
 "In glass the wavelets grow only {#}/{#} as fast, so the part of the front already in the glass falls behind and the front turns: the ray bends toward the normal. This is how Huygens derived Snell’s law (OpenStax Example {#}).",
 "Lower medium: n₂, v₂",
 "Angle of refraction θ₂",
@@ -105,5 +109,11 @@ VDI18N.add('en', 'demo/huygens', [
 "Turn the angle of the incoming wave by {#} degree (Boundary view)",
 "A straight wavefront moves to the right.",
 "{#} wavelets start on the front.",
-"Each wavelet grows at the wave speed, and the next front is the line tangent to them all."
+"Each wavelet grows at the wave speed, and the next front is the line tangent to them all.",
+"A plane wave in air, n = {#}, meets crown glass, n = {#}.",
+"Angle of refraction {#}°.",
+"There is no critical angle, because light slows down.",
+"The reflected wave is not shown.",
+"A plane wave in crown glass, n = {#}, meets air, n = {#}.",
+"Critical angle {#}°."
 ]);

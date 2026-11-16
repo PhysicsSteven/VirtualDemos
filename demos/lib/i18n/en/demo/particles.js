@@ -432,6 +432,13 @@ VDI18N.add('en', 'demo/particles', [
 "antired",
 "antigreen",
 "antiblue",
+"Quarks view: up to three quarks held together by gluons, with the eightfold way chart of hadrons beside them.",
+"Quark {#}: strange, red, spin up.",
+"Quark {#}: strange, green, spin up.",
+"Quark {#}: strange, blue, spin up.",
+"The colors add to a color neutral whole.",
+"Charge −{#} e, baryon number +{#}, strangeness −{#}, spin {#}/{#}.",
+"This is the omega, with a mass of {#} MeV/c².",
 "Beam kinetic energy K (e⁺ on e⁻ at rest)",
 "A e⁺ beam with K = {#} GeV on a e⁻ at rest: center of mass energy W = {#} MeV. Threshold for these products: K = {#} TeV.",
 "<span>✗ not at the resonance</span>",
@@ -439,5 +446,10 @@ VDI18N.add('en', 'demo/particles', [
 "Your prediction: strong. ✗ does not match.",
 "Your prediction: electromagnetic. ✓ matches.",
 "Your prediction: weak. ✗ does not match.",
-"Your prediction: forbidden. ✗ does not match."
+"Your prediction: forbidden. ✗ does not match.",
+"Quark {#}: up, red, spin up.",
+"Quark {#}: up, green, spin up.",
+"Quark {#}: down, blue, spin down.",
+"Charge +{#} e, baryon number +{#}, strangeness {#}, spin {#}/{#}.",
+"This is the proton, with a mass of {#} MeV/c²."
 ]);

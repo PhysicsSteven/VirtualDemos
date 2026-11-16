@@ -67,5 +67,11 @@ VDI18N.add('en', 'demo/gps-clocks', [
 "−{#} ps/day",
 "second clock: {#} h − {#} ps",
 "second clock: {#} h − {#} μs",
-"A clock at rest on a tower {#} km above the ground, seen from above the North Pole."
+"A clock at rest on a tower {#} km above the ground, seen from above the North Pole.",
+"A clock at rest on a tower {#} m above the ground, seen from above the North Pole.",
+"Gravity effect {#} ps per day.",
+"Speed effect −{#} ps per day.",
+"Net gain {#} ps per day.",
+"The second clock is ahead by −{#} μs.",
+"Net gain −{#} μs per day."
 ]);

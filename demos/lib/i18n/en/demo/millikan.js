@@ -79,14 +79,17 @@ VDI18N.add('en', 'demo/millikan', [
 "dashed square: the telescope’s view",
 "{#} kV/m down",
 "{#} kV/m up",
+"The top plate is negative at {#} V, a field of {#} kV/m pointing up.",
 "Top plate + at {#} V: the field points down, so negatively charged drops are pushed up and the ones with enough charge rise. Positive drops fall faster. Time the followed drop with the plates on; with its fall time too, the table works out its charge.",
 "Millikan's balancing method: turn the voltage until the followed drop stays still, then record the hold. Then q = m′g d / V, with the mass from the drop's fall speed. Brownian motion keeps it from ever being perfectly still.",
 "ionizing source on",
 "The ionizing source makes ions in the air, and now and then a drop picks one up: its speed with the plates on jumps. Start a new row for the same drop and time it again. The change in charge is always a whole number of e, which is Millikan's strongest evidence.",
+"The top plate is positive at {#} V, a field of {#} kV/m pointing down.",
+"The ionizing source is on.",
+"It is rising.",
+"It is between the two timing lines.",
 "Time several drops, each falling and then with the plates on. The dot plot below the telescope gathers their charges: they bunch at {#}, {#}, {#} ... times one value, e = {#} × {#}⁻¹⁹ C.",
 "At {#} kPa the mean free path of the air is more than twice as long, so the drops slip through it and fall faster than Stokes's law says. Work out the charges with and without the slip correction (Lab) and see which bunch at whole numbers of e.",
 "One small drop, radius {#} µm: it falls only about {#} µm/s and jiggles as air molecules knock it about (Brownian motion). Time it over {#} mm several times and see how the times scatter.",
-"{#} drop is in view.",
-"The top plate is negative at {#} V, a field of {#} kV/m pointing up.",
-"The top plate is positive at {#} V, a field of {#} kV/m pointing down."
+"{#} drop is in view."
 ]);

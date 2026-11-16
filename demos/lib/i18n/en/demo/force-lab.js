@@ -52,9 +52,11 @@ VDI18N.add('en', 'demo/force-lab', [
 "The distance between centers is r = {#} pm.",
 "The force on each body is {#} × {#}⁻⁸ N, equal in size and opposite in direction.",
 "Recorded r = {#} pm.",
-"Arrow lengths grow with log F (not to scale).",
 "{#} distance recorded.",
+"Arrow lengths grow with log F (not to scale).",
 "Two charges on a ruler {#} cm long: q₁ = +{#} μC at {#} cm, q₂ = −{#} μC at {#} cm.",
 "The distance between centers is r = {#} cm.",
-"The force on each body is {#} × {#}¹ N, equal in size and opposite in direction."
+"The force on each body is {#} × {#}¹ N, equal in size and opposite in direction.",
+"Two charges on a ruler {#} cm long: q₁ = +{#} μC at {#} cm, q₂ = +{#} μC at {#} cm.",
+"The two bodies repel each other."
 ]);

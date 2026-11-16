@@ -64,6 +64,8 @@ VDI18N.add('en', 'demo/rocket', [
 "At hundreds of kilometers gravity is noticeably weaker than {#} m/s², so this height is only a rough figure.",
 "Twice the fuel but a slow burn: thrust {#} kN is less than the {#} kN launch weight. The engine fires but the rocket sits on the pad, burning fuel until it is light enough to rise. That fuel is wasted: it never helped the rocket move.",
 "Time waiting on the pad",
+"Gravity is on, launching from the ground.",
+"The rocket waits {#} s on the pad before it lifts.",
 "Same fuel and exhaust speed as Launch from the ground, burned over {#} s instead of {#} s. The rocket equation gives the same Δv, but gravity pulls for longer, so it ends up slower and lower. Rockets burn fast for this reason.",
 "t (s) · dashed vertical lines: separation, burnout",
 "The same {#} {#} kg at launch and the same {#} kg of fuel as one stage would carry, split in two. The first stage burns {#} kg, its {#} kg casing falls away, and the {#} kg upper stage burns the last {#} kg. With no gravity that gives u ln({#}/{#}) + u ln({#}) = {#} m/s; one stage carrying the empty casing to the end gets only u ln({#}/{#}) = {#} m/s. Watch the mass graph drop at separation.",
@@ -73,10 +75,10 @@ VDI18N.add('en', 'demo/rocket', [
 "Separation",
 "at {#} s, {#} m/s",
 "Rocket equation, both stages",
-"Readings are for a one stage rocket, as in the worksheet: switch off Two stages to record.",
 "A two stage rocket, with graphs of its speed and mass against time.",
 "The first stage has a {#} kg casing and {#} kg of fuel.",
-"Gravity is on, launching from the ground.",
+"Readings are for a one stage rocket, as in the worksheet: switch off Two stages to record.",
+"The rocket is burning.",
 "Separation (flight log)",
 "Speed at burnout (flight log)"
 ]);

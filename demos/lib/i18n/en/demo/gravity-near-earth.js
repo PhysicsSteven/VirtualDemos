@@ -62,6 +62,8 @@ VDI18N.add('en', 'demo/gravity-near-earth', [
 "Circular orbit speed here",
 "Orbit period",
 "gravity {#} N ×{#}",
+"The mass is {#} km above the surface.",
+"The near surface line is not shown at this height.",
 "GM = {#} × {#}¹² m³/s² · R = {#} km",
 "GM = {#} × {#}¹³ m³/s² · R = {#} km",
 "−{#} m/s² <span>(negative: the net acceleration points away from the planet)</span>",
@@ -69,8 +71,9 @@ VDI18N.add('en', 'demo/gravity-near-earth', [
 "points away from the planet",
 "{#} N: above the geostationary radius the mass floats up against the tower",
 "The planet is Mars.",
-"The mass is {#} km above the surface.",
 "The effective g is −{#} m/s².",
 "The scale reads {#} N: the net acceleration points away from the planet.",
-"The near surface line is not shown at this height."
+"The mass is {#} m above the surface.",
+"The near surface line g₀({#} − 2h/R) gives {#} m/s², an error of −{#}%.",
+"The planet is the Moon."
 ]);

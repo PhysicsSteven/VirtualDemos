@@ -48,6 +48,8 @@ VDI18N.add('en', 'demo/galton-board', [
 "A right bounce is rare (p = {#}), like a rare event counted in {#} tries. The pile is lopsided, so the normal curve fits badly near {#}; the binomial still fits.",
 "{#} rows: drop a few hundred and the histogram matches the normal curve with mean {#} and standard deviation √{#} = {#}. Bins {#} to {#}, within one standard deviation of the middle, should hold {#}% of the balls; the {#}% rule is for a continuous variable, and here the edge bins count in full.",
 "Drop at least two balls before recording.",
+"Balls are falling.",
 "Stop",
-"Balls are streaming."
+"Balls are streaming.",
+"A board with {#} row of pegs and {#} bins underneath, numbered {#} and {#} from the left."
 ]);

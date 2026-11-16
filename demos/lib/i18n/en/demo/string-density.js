@@ -88,11 +88,11 @@ VDI18N.add('en', 'demo/string-density', [
 "Resonance with {#} loops, fₙ = n v/2L",
 "An unknown string with {#} g hanging: μ is hidden. Find at least four resonances, plot f against n and work out μ from the slope. New unknown string picks another.",
 "<span>hidden: unknown string</span>",
+"The string is the unknown string.",
+"The linear density, the wave speed and the predictions are hidden for the unknown string.",
 "An unknown string driven at {#} Hz: μ is hidden. Find the mass for as many loop patterns as you can, plot T against {#}/n² and work out μ from the slope.",
 "The unknown string had μ = {#} g/m.",
-"The string is the unknown string.",
 "The string shows {#} loops.",
-"The linear density, the wave speed and the predictions are hidden for the unknown string.",
 "A plot of the largest amplitude against hanging mass for the {#} values you have tried.",
 "The largest amplitude so far is {#} mm, at {#} g.",
 "A plot of T against {#} over n squared for {#} recorded readings.",
@@ -101,5 +101,9 @@ VDI18N.add('en', 'demo/string-density', [
 "A new unknown string is on the apparatus.",
 "add masses, L {#} m",
 "n, row {#}",
-"Row {#} recorded. Check n against the loops you see."
+"Row {#} recorded. Check n against the loops you see.",
+"The mass for {#} loops at this frequency is {#} g.",
+"The resonance with {#} loops is at {#} Hz.",
+"The string is String A.",
+"The string is String C."
 ]);

@@ -69,9 +69,6 @@ VDI18N.add('en', 'demo/wire-force', [
 "U = −μ·B now",
 "A commutator reverses the current each time μ lines up with B (the loop's plane across the field), so the torque keeps the same sense and the loop keeps turning: a DC motor. The torque is not steady; it is largest when the plane of the loop lies along B.",
 "−{#} mJ",
-"I, row {#}",
-"reading, row {#}",
-"Row {#} captured.",
 "A square coil of {#} turns, seen from above between the poles, with the forces on its sides and its magnetic moment.",
 "A commutator reverses the current each half turn, so this is a motor.",
 "The loop is held.",
@@ -79,8 +76,13 @@ VDI18N.add('en', 'demo/wire-force', [
 "The torque now is {#} mN·m.",
 "The moment is {#}° from the field.",
 "The loop turns at {#} rev/s.",
+"I, row {#}",
+"reading, row {#}",
+"Row {#} captured.",
 "The loop is released.",
 "{#} turns, {#} cm square",
 "commutator and brushes",
-"{#} readings captured."
+"{#} readings captured.",
+"There is no commutator.",
+"The torque now is −{#} mN·m."
 ]);

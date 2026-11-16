@@ -130,6 +130,7 @@ VDI18N.add('en', 'demo/tides', [
 "Plot of the water level at the city over two days, and the daily tidal range over a month.",
 "The Moon's phase marker is at day {#}.",
 "in {#} min<small>at {#}:{#}</small>",
+"The water level at the city is −{#} m.",
 "Sun ▸",
 "Every point on Earth is pulled toward the Moon, the near side a little harder ({#}% at today's distance). Switch to Tidal pull: subtracting the pull on Earth's center leaves arrows pointing out on the near and far sides and in around the sides.",
 "center",
@@ -152,7 +153,8 @@ VDI18N.add('en', 'demo/tides', [
 "Neap tide: bulges at right angles",
 "Watch the crater on the Moon: it always points at Earth, because the Moon turns once on its axis in each orbit, {#} days. Switch The Moon's spin to Not at all and the crater keeps pointing the same way among the stars; half an orbit later it points away from Earth.",
 "The Moon is not turning, so its crater keeps its direction among the stars.",
-"The water level at the city is −{#} m.",
 "Move the time forward or back {#} minutes",
+"The next high tide comes in {#} min, at {#}:{#}.",
+"The arrows show the pull of the Moon at each place on Earth.",
 "The Sun is included."
 ]);

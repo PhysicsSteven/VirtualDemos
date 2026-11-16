@@ -717,7 +717,7 @@ table.rows input:focus { border-color: var(--accent); }
       out.push(hp ? 'The predicted power is hidden.' : `The predicted power is ${fmtP(travelingPower(S.f, S.A / 1000, Tn, mu))} mW.`);
       if (S.abs !== 'matched') out.push(`The absorber sends back amplitude ${Math.abs(F.r).toFixed(2)} of each wave.`);
       out.push(S.running ? `The vibrator is running and the power meter reads ${fmtP(meterW())} mW.` : 'The vibrator is stopped, so the power meter reads zero.');
-      if (S.pulseT != null) out.push({ t: 'A pulse is travelling along the string.', live: false });
+      if (S.pulseT != null) out.push({ t: 'A pulse is traveling along the string.', live: false });
       if (kA > 0.2) out.push('The string is too steep for the linear model: lower the amplitude or the frequency.');
       return out;
     });

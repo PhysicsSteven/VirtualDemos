@@ -99,8 +99,6 @@ VDI18N.add('en', 'demo/the-eye', [
 "OpenStax §{#}: a phone lens of f = {#} mm. A selfie at {#} cm focuses {#} mm behind the lens, a person {#} m away at {#} mm: the whole focusing range is a few hundredths of a millimeter. Many phones still move the lens that little with a tiny motor; others keep it fixed and rely on the large depth of field.",
 "{#} µm = {#} pixels: sharp",
 "{#} cm to far away (∞)",
-"far away (∞)",
-"This eye has its far point at {#} cm. Even fully relaxed it is too strong for distant light, which focuses in front of the retina. Bring the object closer than {#} cm and it becomes sharp.",
 "The camera is: Phone camera.",
 "It has a lens of focal length {#} mm, in front of a sensor.",
 "The aperture is f/{#}.",
@@ -110,6 +108,8 @@ VDI18N.add('en', 'demo/the-eye', [
 "The image is sharp.",
 "The sharp image forms {#} mm behind the lens.",
 "Objects from {#} cm to far away (∞) are sharp.",
+"far away (∞)",
+"This eye has its far point at {#} cm. Even fully relaxed it is too strong for distant light, which focuses in front of the retina. Bring the object closer than {#} cm and it becomes sharp.",
 "OpenStax Example {#}: a −{#} D lens {#} cm from the eye makes a distant object’s image {#} cm in front of the glasses, which is {#} cm from the eye, at the far point. The eye sees that image sharply.",
 "This eye’s near point is {#} m. A book at {#} cm needs more power than the eye has, and its image would form behind the retina.",
 "OpenStax Example {#}: a +{#} D lens {#} cm from the eye makes an image of the book {#} cm in front of the glasses, {#} m from the eye, at the near point.",
@@ -123,5 +123,8 @@ VDI18N.add('en', 'demo/the-eye', [
 "The eye is older, drawn enlarged under a scale of distances from the eye.",
 "The eye wears glasses of +{#} D.",
 "The object is blurred, with a spot {#} mm across.",
-"The glasses for reading at {#} cm would be +{#} D."
+"The glasses for reading at {#} cm would be +{#} D.",
+"The camera is: {#} mm lens, full frame.",
+"The image is blurred.",
+"Objects from {#} m to far away (∞) are sharp."
 ]);

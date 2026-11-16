@@ -44,5 +44,6 @@ VDI18N.add('en', 'demo/eddy-currents', [
 "Rings: the current in the wall, brighter where it is larger, dots turning its way.",
 "Pipe",
 "Drop the magnets and let them reach the bottom of the metal pipes first: each pipe's timer stops when its magnet does.",
+"The magnets are falling.",
 "Aluminum →"
 ]);
