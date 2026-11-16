@@ -189,7 +189,8 @@ async function harvest(list) {
   for (const pg of list) {
     const ctx = await browserFor(br);
     const order = new Map(), errors = [];
-    const grab = async (page) => { const s = await page.evaluate(() => Object.keys(window.__vdI18nSeen || {})).catch(() => []); for (const k of s) if (!order.has(k)) order.set(k, order.size); };
+    /* a picture's screen reader description (vd.js VD.describe) refreshes once a second by itself: refresh it first, so every state is seen */
+    const grab = async (page) => { const s = await page.evaluate(async () => { document.querySelectorAll('canvas, svg, div, section').forEach((e) => { if (e.vdDescribe) e.vdDescribe.refresh(); }); await new Promise((r) => setTimeout(r, 30)); return Object.keys(window.__vdI18nSeen || {}); }).catch(() => []); for (const k of s) if (!order.has(k)) order.set(k, order.size); };
     for (const u of urlOf(pg)) {
       const page = await ctx.newPage();
       page.on('pageerror', (e) => errors.push(u + ': ' + e.message));
