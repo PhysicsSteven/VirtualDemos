@@ -930,6 +930,55 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const howVid = () => { const ws = new URLSearchParams(location.search).get('ws'); return ws === 'intro-mars-ages' || (!ws && S.mode === 'count' && S.cBody === 'mars') ? 'craters-mars' : 'craters'; };
   VD.howTo({ src: () => `media/how-this-works/${howVid()}.mp4`, poster: () => `media/how-this-works/${howVid()}.jpg`,
     title: () => (howVid() === 'craters-mars' ? 'How this works: Dating the Surface of Mars' : 'How this works: Craters and the Ages of the Moon\'s Surface') });
+  /* what the pictures show now, for a screen reader (VD.describe): the main picture by mode, then the graph */
+  if (window.VD && VD.describe) {
+    const bodyName = (k) => (k === 'mars' ? 'Mars' : 'the Moon');
+    VD.describe(can, () => {
+      if (S.mode === 'impact') {
+        const B = S.blind, T = BODIES[S.body];
+        return [
+          `Impact view: an asteroid ${km(C.L)} across, ${S.rho} kg/m³, hits ${T.name} at ${S.v} km/s at an impact angle of ${S.th}°.`,
+          `Gravity there is ${T.g} m/s².`,
+          S.run ? 'The asteroid is falling.' : S.anim >= 1 ? 'The crater is finished.' : 'The asteroid is waiting to drop.',
+          `Impact energy ${sig(C.Mt, 3).replace(/ × 10\^(−?\d+)/, ' × 10 to the power $1')} megatons of TNT.`,
+          B ? 'The crater size is hidden.' : `Final crater ${km(C.D)} wide and ${km(C.d)} deep, ${f(C.D / C.L, 1)} times the asteroid.`,
+          B ? 'The crater shape is hidden.' : C.form === 'simple' ? 'The crater is a simple bowl.' : C.form === 'complex' ? 'The crater is complex, with a flat floor, terraces and a central peak.' : 'The crater is a basin with a ring of peaks.'
+        ];
+      }
+      if (S.mode === 'count') {
+        const n = marked(), A = areaKm2(), a = ageFrom(S.cBody, S.Dc, n / A);
+        return [
+          S.sKey === 'mystery' ? `Counting view: a mystery surface on ${bodyName(S.cBody)}, ${S.surf.L} km on a side.` : `Counting view: ${S.surf.name} on ${bodyName(S.cBody)}, ${S.surf.L} km on a side.`,
+          `Count craters at least ${S.Dc} km wide.`,
+          n ? `You have marked ${n} craters, ${sig(n / A, 3)} per km².` : 'You have marked no craters.',
+          S.blind ? 'The age from your count is hidden.' : n ? (a == null ? 'Your count is older than 4.5 Gyr, more than the clock allows.' : `Age from your count ${f(a, 2)} Gyr.`) : 'There is no age yet.',
+          S.show && !S.blind ? `The right count is ${trueCount()}.` : 'The right count is hidden.'
+        ];
+      }
+      const rows = ['moon', 'mars', 'earth'].map((k) => `${PLANETS[k].name} lid ${Math.round(at(k, S.t).lid / 1000)} km, inside ${Math.round(at(k, S.t).T)} K`);
+      return [
+        'Cooling view: the Moon, Mars and Earth cut open to show how hot they are inside, drawn to scale.',
+        S.run ? 'The model is running.' : 'The model is paused.',
+        { t: `${f(S.t, 2)} Gyr after the planets formed.`, live: !S.run },
+        ...rows.map((t, i) => ({ t: t + '.', live: !S.run }))
+      ];
+    });
+    VD.describe(pl, () => {
+      if (S.mode === 'count') {
+        const n = marked() / areaKm2(), a = n > 0 ? ageFrom(S.cBody, S.Dc, n) : null;
+        return [
+          `Graph of the crater clock for ${bodyName(S.cBody)}: craters at least ${S.Dc} km per km² on a log scale rises with the age of the surface, from 0 to 4.5 Gyr.`,
+          n > 0 ? `Your count is a dashed line at ${sig(n, 3)} per km²${S.blind ? '' : a == null ? ', above the clock at 4.5 Gyr' : `, reaching the clock at ${f(a, 2)} Gyr`}.` : 'You have no count to show yet.'
+        ];
+      }
+      if (S.mode === 'cool') {
+        const nm = { lid: 'cold lid thickness in km', q: 'heat flow in mW/m²', T: 'inside temperature in K' }[S.plot];
+        return [`Graph of ${nm} against time since the planets formed, 0 to 4.5 Gyr, one curve each for the Moon, Mars and Earth.`, { t: `A dashed line marks ${f(S.t, 2)} Gyr.`, live: !S.run }];
+      }
+      return [`Graph of final crater diameter against asteroid diameter on ${BODIES[S.body].name}, both on log scales, rising as a line.`,
+        S.blind ? 'This asteroid is not marked, because the crater size is hidden.' : `This asteroid is marked at ${km(C.L)} across and a crater ${km(C.D)} wide.`];
+    });
+  }
   window.__cr = { S, PRESETS, SURF, applyPreset, setMode, drop, finish, redraw, sync, buildSurface, trueCount, crater, surface, density, ageFrom, at, cooling, field: () => field,
     markAll: () => { S.marks = new Set(S.surf.list.filter((c) => !c.gone && c.D >= S.Dc && inField(c))); redraw(); }, set: (o) => { Object.assign(S, o); sync(); redraw(); },
     px: (x, y) => { const b = can.getBoundingClientRect(); return [b.left + field.x + x * field.s, b.top + field.y + y * field.s]; } };

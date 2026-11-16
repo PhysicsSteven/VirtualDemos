@@ -1322,6 +1322,34 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   /* Readings section (Pull on Earth view): the Moon's distance and the accelerations, in μm/s² (10⁻⁶ m/s²) to four significant figures */
   const um4 = (a) => (a * 1e6).toPrecision(4);
+  /* what the pictures show now, for a screen reader (VD.describe): the main picture by view, and the plot */
+  if (window.VD && VD.describe) {
+    const run = () => (S.playing ? 'Playing.' : 'Paused.');
+    VD.describe($('main'), () => {
+      const d = dM();
+      if (S.view === 'pull') {
+        const pull = G * M_MOON / (d * d), ax = tidalAxial(M_MOON, d);
+        return [`Pull view: Earth with the Moon ${S.dR.toFixed(1)} Earth radii away, ${fmtKm(d / 1000)} km.`,
+          S.arrows === 'tidal' ? 'The arrows show the tidal pull, the pull of the Moon minus its pull at the center of Earth.' : 'The arrows show the pull of the Moon at each place on Earth.',
+          `The Moon pulls at the center of Earth with ${sci(pull)} m/s², ${sci(pull / G0)} g.`,
+          `The tidal pull along the line to the Moon is ${sci(ax)} m/s², ${sci(ax / G0)} g, stretching Earth toward and away from the Moon.`,
+          `Compared with the real distance, the pull is ${((DR0 / S.dR) ** 2).toFixed(2)} times as big and the tidal pull is ${((DR0 / S.dR) ** 3).toFixed(2)} times as big.`];
+      }
+      const am = Am(), asr = tideAmp(M_SUN, D_SUN), rg = S.sun ? dailyRange(phiM(), am, asr) : 1.5 * am, hi = findHighs(26);
+      return ['Ocean view: Earth with its ocean bulges, the Moon in orbit, and a city on the coast.',
+        S.sun ? 'The Sun is included.' : 'The Sun is not included.',
+        run(), { t: `The Moon's phase is at day ${S.tp.toFixed(1)} of the month.`, live: !S.playing },
+        `The city's local time is ${fmtHM(S.hour)}.`,
+        { t: `The water level at the city is ${fmtM(cityLevelAt(0))}.`, live: !S.playing },
+        hi.length ? { t: `The next high tide comes in ${fmtDur(hi[0])}, at ${fmtHM(S.hour + hi[0])}.`, live: !S.playing } : '',
+        `The Moon's tide has an amplitude of ${am.toFixed(3)} m, and the daily range is ${rg.toFixed(2)} m.`,
+        S.spin === 'locked' ? 'The Moon turns once per orbit, so the same side faces Earth.' : 'The Moon is not turning, so its crater keeps its direction among the stars.'];
+    });
+    VD.describe($('plot'), () => {
+      if (S.view === 'pull') return ['Plot of the pull and the tidal pull against the distance of the Moon, both growing as the Moon comes closer.', `A marker is at ${S.dR.toFixed(1)} Earth radii.`];
+      return ['Plot of the water level at the city over two days, and the daily tidal range over a month.', { t: `The Moon's phase marker is at day ${S.tp.toFixed(1)}.`, live: !S.playing }];
+    });
+  }
   window.vdVersion = 'tides@2026-10-24';
   window.vdShowCols = [['d_RE', 'd (R_E)'], ['pull_um_s2', 'Pull'], ['tidal_near_um_s2', 'Near'], ['tidal_far_um_s2', 'Far']];
   window.vdReadingRow = () => {

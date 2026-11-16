@@ -16,6 +16,8 @@ VDI18N.add('es', 'demo/craters', {
   "asteroide a escala: L = {#} m",
 "cross section, true shape":
   "corte transversal, forma real",
+"Describe the picture":
+  "Describir la imagen",
 "Craters, Cooling and Surface Ages":
   "Cráteres, enfriamiento y edades de superficies",
 "<a>Planets and their surfaces</a>":
@@ -42,6 +44,18 @@ VDI18N.add('es', 'demo/craters', {
   "Enfriamiento",
 "The picture: a crater and the asteroid that made it, a cratered surface to count, or three planets cut open to show how hot they are inside.":
   "La imagen: un cráter y el asteroide que lo hizo, una superficie con cráteres para contar, o tres planetas abiertos para mostrar qué tan calientes están por dentro.",
+"Impact view: an asteroid {#} m across, {#} kg/m³, hits Moon at {#} km/s at an impact angle of {#}°.":
+  "Vista de impacto: un asteroide de {#} m de diámetro y {#} kg/m³ golpea la Luna a {#} km/s con un ángulo de impacto de {#}°.",
+"Gravity there is {#} m/s².":
+  "Allí la gravedad es de {#} m/s².",
+"The crater is finished.":
+  "El cráter está terminado.",
+"Impact energy {#} × {#} to the power {#} megatons of TNT.":
+  "Energía del impacto: {#} × {#} elevado a {#} megatones de TNT.",
+"Final crater {#} km wide and {#} km deep, {#} times the asteroid.":
+  "Cráter final de {#} km de ancho y {#} km de profundidad, {#} veces el asteroide.",
+"The crater is a simple bowl.":
+  "El cráter es un cuenco simple.",
 "Set up the impact, the surface or the cooling planets":
   "Prepara el impacto, la superficie o los planetas que se enfrían",
 "The asteroid and the target. Drag, or use the arrow keys, to move this card; double click to put it back":
@@ -90,6 +104,10 @@ VDI18N.add('es', 'demo/craters', {
   "Temperatura interior",
 "Graph: the crater clock, or the cooling of the three planets.":
   "Gráfica: el reloj de cráteres, o el enfriamiento de los tres planetas.",
+"Graph of final crater diameter against asteroid diameter on Moon, both on log scales, rising as a line.":
+  "Gráfica del diámetro final del cráter contra el diámetro del asteroide en la Luna, ambos en escala logarítmica, que sube como una línea.",
+"This asteroid is marked at {#} m across and a crater {#} km wide.":
+  "Este asteroide está marcado con {#} m de diámetro y un cráter de {#} km de ancho.",
 "<a>Worksheet {#}: Craters and the Ages of the Moon's Surface (Astro {#})</a>":
   "<a>Hoja de trabajo {#}: Los cráteres y las edades de la superficie de la Luna (Astro {#})</a>",
 "<a>Worksheet {#}: Dating the Surface of Mars (Astro {#})</a>":
@@ -182,6 +200,14 @@ VDI18N.add('es', 'demo/craters', {
   "blanco",
 "shape":
   "forma",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
+"count if at least {#} km wide":
+  "cuéntalo si mide al menos {#} km de ancho",
+"Mare Tranquillitatis (Apollo {#}) · field {#} × {#} km · sunlight from the left":
+  "Mare Tranquillitatis (Apolo {#}) · campo de {#} × {#} km · luz solar desde la izquierda",
 "{#} per km²":
   "{#} por km²",
 "{#} per {#} km²":
@@ -202,10 +228,6 @@ VDI18N.add('es', 'demo/craters', {
   "el reloj de cráteres de la Luna (Neukum, Ivanov y Hartmann {#})",
 "A dark lava plain. The basalts Apollo {#} brought back from it are {#} to {#} Gyr old; this surface is set at {#} Gyr, about the age Neukum and others gave this site in their calibration of the clock.":
   "Una llanura oscura de lava. Los basaltos que trajo de ella el Apolo {#} tienen de {#} a {#} Ga; esta superficie se fija en {#} Ga, cerca de la edad que Neukum y colaboradores dieron a este sitio en su calibración del reloj.",
-"Count the craters":
-  "Cuenta los cráteres",
-"Mare Tranquillitatis (Apollo {#}), the Moon":
-  "Mare Tranquillitatis (Apolo {#}), la Luna",
 "Mare Tranquillitatis (Apollo {#})":
   "Mare Tranquillitatis (Apolo {#})",
 "Field":
@@ -228,14 +250,16 @@ VDI18N.add('es', 'demo/craters', {
   "{#} cráteres esperados",
 "{#} marked":
   "{#} marcados",
-"Moon: lid {#} km":
-  "Luna: tapa de {#} km",
-"Mars: lid {#} km":
-  "Marte: tapa de {#} km",
-"Earth: lid {#} km":
-  "Tierra: tapa de {#} km",
-"{#} Gyr after forming · sizes to scale · drag to turn":
-  "{#} Ga después de formarse · tamaños a escala · arrastra para girar",
+"Count the craters":
+  "Cuenta los cráteres",
+"Mare Tranquillitatis (Apollo {#}), the Moon":
+  "Mare Tranquillitatis (Apolo {#}), la Luna",
+"lid {#} km":
+  "tapa de {#} km",
+"{#} K inside":
+  "{#} K en el interior",
+"{#} Gyr after forming · sizes to scale · gray: the cold lid, to scale · core in brown (not heated in the model)":
+  "{#} Ga después de formarse · tamaños a escala · gris: la tapa fría, a escala · núcleo en café (no se calienta en el modelo)",
 "time since the planets formed (billions of years); today is {#}":
   "tiempo desde que se formaron los planetas (miles de millones de años); hoy es {#}",
 "cold lid (km)":
@@ -260,12 +284,30 @@ VDI18N.add('es', 'demo/craters', {
   "* km² de superficie por cada {#} km³ de manto",
 "t = {#} Gyr after forming":
   "t = {#} Ga después de formarse",
-"lid {#} km":
-  "tapa de {#} km",
-"{#} K inside":
-  "{#} K en el interior",
-"{#} Gyr after forming · sizes to scale · gray: the cold lid, to scale · core in brown (not heated in the model)":
-  "{#} Ga después de formarse · tamaños a escala · gris: la tapa fría, a escala · núcleo en café (no se calienta en el modelo)",
+"Cooling view: the Moon, Mars and Earth cut open to show how hot they are inside, drawn to scale.":
+  "Vista de enfriamiento: la Luna, Marte y la Tierra cortados para mostrar qué tan calientes están por dentro, dibujados a escala.",
+"The model is paused.":
+  "El modelo está en pausa.",
+"{#} Gyr after the planets formed.":
+  "{#} Ga después de que se formaron los planetas.",
+"Moon lid {#} km, inside {#} K.":
+  "Luna: tapa de {#} km, interior a {#} K.",
+"Mars lid {#} km, inside {#} K.":
+  "Marte: tapa de {#} km, interior a {#} K.",
+"Earth lid {#} km, inside {#} K.":
+  "Tierra: tapa de {#} km, interior a {#} K.",
+"Graph of cold lid thickness in km against time since the planets formed, {#} to {#} Gyr, one curve each for the Moon, Mars and Earth.":
+  "Gráfica del grosor de la tapa fría en km contra el tiempo desde que se formaron los planetas, de {#} a {#} Ga, con una curva para la Luna, otra para Marte y otra para la Tierra.",
+"A dashed line marks {#} Gyr.":
+  "Una línea discontinua marca {#} Ga.",
+"Moon: lid {#} km":
+  "Luna: tapa de {#} km",
+"Mars: lid {#} km":
+  "Marte: tapa de {#} km",
+"Earth: lid {#} km":
+  "Tierra: tapa de {#} km",
+"{#} Gyr after forming · sizes to scale · drag to turn":
+  "{#} Ga después de formarse · tamaños a escala · arrastra para girar",
 "craters on Earth from {#} kg/m³ asteroids at {#} km/s, {#}° (Collins, Melosh and Marcus {#})":
   "cráteres en la Tierra por asteroides de {#} kg/m³ a {#} km/s, {#}° (Collins, Melosh y Marcus {#})",
 "Meteor Crater in Arizona is {#} km wide and about {#} years old. An iron asteroid {#} m across at {#} km/s makes a crater about that size here. Earth's air slows and breaks up small asteroids, which this demo leaves out.":
@@ -286,6 +328,12 @@ VDI18N.add('es', 'demo/craters', {
   "Tycho tiene {#} km de ancho, con paredes en terrazas y un pico central. En la Luna todo cráter de más de unos {#} km de ancho ha colapsado de esta forma (cráter complejo).",
 "complex: flat floor, terraces, central peak":
   "complejo: fondo plano, terrazas, pico central",
+"Impact view: an asteroid {#} km across, {#} kg/m³, hits Moon at {#} km/s at an impact angle of {#}°.":
+  "Vista de impacto: un asteroide de {#} km de diámetro y {#} kg/m³ golpea la Luna a {#} km/s con un ángulo de impacto de {#}°.",
+"The crater is complex, with a flat floor, terraces and a central peak.":
+  "El cráter es complejo, con fondo plano, terrazas y un pico central.",
+"This asteroid is marked at {#} km across and a crater {#} km wide.":
+  "Este asteroide está marcado con {#} km de diámetro y un cráter de {#} km de ancho.",
 "Copernicus is {#} km wide, {#} Gyr old, with a central peak and terraced walls.":
   "Copérnico tiene {#} km de ancho, {#} Ga de edad, con un pico central y paredes en terrazas.",
 "Chicxulub, buried under Mexico's Yucatán, is about {#} km wide and {#} million years old; its impact ended the age of dinosaurs. A rocky asteroid about {#} km across at {#} km/s gives a crater that size here, with a ring of peaks inside.":
@@ -324,8 +372,6 @@ VDI18N.add('es', 'demo/craters', {
   "Los cuencos colapsan arriba de (Marte)",
 "Mars · g = {#} m/s²":
   "Marte · g = {#} m/s²",
-"count if at least {#} km wide":
-  "cuéntalo si mide al menos {#} km de ancho",
 "Lunar highlands · field {#} × {#} km · sunlight from the left":
   "Tierras altas lunares · campo de {#} × {#} km · luz solar desde la izquierda",
 "{#} per {#}⁶ km²":
@@ -336,8 +382,22 @@ VDI18N.add('es', 'demo/craters', {
   "Las tierras altas son la corteza más antigua de la Luna; sus rocas tienen de {#} a {#} Ga. Esta superficie se fija en {#} Ga. Se han formado tantos cráteres que los nuevos borran a los viejos: el conteo se queda corto respecto al reloj, y la edad que lees sale demasiado joven (la superficie está saturada).",
 "Lunar highlands":
   "Tierras altas lunares",
-"Mare Tranquillitatis (Apollo {#}) · field {#} × {#} km · sunlight from the left":
-  "Mare Tranquillitatis (Apolo {#}) · campo de {#} × {#} km · luz solar desde la izquierda",
+"Counting view: Lunar highlands on the Moon, {#} km on a side.":
+  "Vista de conteo: las tierras altas lunares, en la Luna, de {#} km por lado.",
+"Count craters at least {#} km wide.":
+  "Cuenta los cráteres de al menos {#} km de ancho.",
+"You have marked no craters.":
+  "No has marcado ningún cráter.",
+"There is no age yet.":
+  "Todavía no hay edad.",
+"The right count is hidden.":
+  "El conteo correcto está oculto.",
+"Graph of the crater clock for the Moon: craters at least {#} km per km² on a log scale rises with the age of the surface, from {#} to {#} Gyr.":
+  "Gráfica del reloj de cráteres de la Luna: los cráteres de al menos {#} km por km², en escala logarítmica, aumentan con la edad de la superficie, de {#} a {#} Ga.",
+"You have no count to show yet.":
+  "Todavía no tienes un conteo que mostrar.",
+"Counting view: Mare Tranquillitatis (Apollo {#}) on the Moon, {#} km on a side.":
+  "Vista de conteo: Mare Tranquillitatis (Apolo {#}), en la Luna, de {#} km por lado.",
 "Floor of Alphonsus crater · field {#} × {#} km · sunlight from the left":
   "Fondo del cráter Alphonsus · campo de {#} × {#} km · luz solar desde la izquierda",
 "Alphonsus, {#} km wide, is older than the Imbrium basin ({#} Gyr), whose ejecta scored it. Its floor is set at {#} Gyr here, an assumed age for an old crater.":
@@ -346,6 +406,8 @@ VDI18N.add('es', 'demo/craters', {
   "Fondo del cráter Alphonsus, la Luna",
 "Floor of Alphonsus crater":
   "Fondo del cráter Alphonsus",
+"Counting view: Floor of Alphonsus crater on the Moon, {#} km on a side.":
+  "Vista de conteo: el fondo del cráter Alphonsus, en la Luna, de {#} km por lado.",
 "Floor of Copernicus crater · field {#} × {#} km · sunlight from the left":
   "Fondo del cráter Copérnico · campo de {#} × {#} km · luz solar desde la izquierda",
 "Copernicus, {#} km wide, formed about {#} Gyr ago: Apollo {#} picked up pieces of its rays. Only a few small craters have formed on its floor since.":
@@ -354,6 +416,8 @@ VDI18N.add('es', 'demo/craters', {
   "Fondo del cráter Copérnico, la Luna",
 "Floor of Copernicus crater":
   "Fondo del cráter Copérnico",
+"Counting view: Floor of Copernicus crater on the Moon, {#} km on a side.":
+  "Vista de conteo: el fondo del cráter Copérnico, en la Luna, de {#} km por lado.",
 "Floor of Tycho crater · field {#} × {#} km · sunlight from the left":
   "Fondo del cráter Tycho · campo de {#} × {#} km · luz solar desde la izquierda",
 "Tycho, {#} km wide, is about {#} Gyr old (a landslide its impact set off, sampled by Apollo {#}). Its floor is nearly bare.":
@@ -362,6 +426,8 @@ VDI18N.add('es', 'demo/craters', {
   "Fondo del cráter Tycho, la Luna",
 "Floor of Tycho crater":
   "Fondo del cráter Tycho",
+"Counting view: Floor of Tycho crater on the Moon, {#} km on a side.":
+  "Vista de conteo: el fondo del cráter Tycho, en la Luna, de {#} km por lado.",
 "Mars: southern highlands (Noachian) · field {#} × {#} km · sunlight from the left":
   "Marte: tierras altas del sur (Noéico) · campo de {#} × {#} km · luz solar desde la izquierda",
 "the crater clock for Mars (Hartmann and Neukum {#}, Ivanov {#})":
@@ -388,6 +454,10 @@ VDI18N.add('es', 'demo/craters', {
   "Los fondos de la caldera de la cima del Olympus Mons dan conteos de unos {#} a {#} Ga (Neukum y colaboradores {#}). Fijado en {#} Ga: en Marte fluyó lava en el último pequeño porcentaje de su historia.",
 "Mars: Olympus Mons summit caldera":
   "Marte: caldera de la cima del Olympus Mons",
+"Counting view: Mars: Olympus Mons summit caldera on Mars, {#} km on a side.":
+  "Vista de conteo: Marte, la caldera de la cima del Monte Olimpo, en Marte, de {#} km por lado.",
+"Graph of the crater clock for Mars: craters at least {#} km per km² on a log scale rises with the age of the surface, from {#} to {#} Gyr.":
+  "Gráfica del reloj de cráteres de Marte: los cráteres de al menos {#} km por km², en escala logarítmica, aumentan con la edad de la superficie, de {#} a {#} Ga.",
 "Mystery surface · field {#} × {#} km · sunlight from the left":
   "Superficie misteriosa · campo de {#} × {#} km · luz solar desde la izquierda",
 "A surface on the Moon or Mars at an age the demo keeps secret, until you show the right count. Count it, then read its age from the clock.":
@@ -398,12 +468,30 @@ VDI18N.add('es', 'demo/craters', {
   "La mayoría de los mares lunares hicieron erupción hace {#} a {#} Ga, es decir, {#} a {#} Ga después de que se formaron los planetas. La tapa de la Luna ya es más gruesa que la de la Tierra y crece rápido.",
 "t = {#} Gyr · {#} Gyr/s":
   "t = {#} Ga · {#} Ga/s",
+"The model is running.":
+  "El modelo está en marcha.",
 "heat flow (mW/m²)":
   "flujo de calor (mW/m²)",
 "dots: measured today (Earth average; Moon at Apollo {#} and {#})":
   "puntos: medidos hoy (promedio de la Tierra; Luna en los sitios del Apolo {#} y {#})",
 "temperature inside (K)":
   "temperatura interior (K)",
+"Impact view: an asteroid {#} m across, {#} kg/m³, hits Earth at {#} km/s at an impact angle of {#}°.":
+  "Vista de impacto: un asteroide de {#} m de diámetro y {#} kg/m³ golpea la Tierra a {#} km/s con un ángulo de impacto de {#}°.",
+"Impact energy {#} megatons of TNT.":
+  "Energía del impacto: {#} megatones de TNT.",
+"Final crater {#} km wide and {#} m deep, {#} times the asteroid.":
+  "Cráter final de {#} km de ancho y {#} m de profundidad, {#} veces el asteroide.",
+"Graph of final crater diameter against asteroid diameter on Earth, both on log scales, rising as a line.":
+  "Gráfica del diámetro final del cráter contra el diámetro del asteroide en la Tierra, ambos en escala logarítmica, que sube como una línea.",
+"Impact view: an asteroid {#} km across, {#} kg/m³, hits Mercury at {#} km/s at an impact angle of {#}°.":
+  "Vista de impacto: un asteroide de {#} km de diámetro y {#} kg/m³ golpea Mercurio a {#} km/s con un ángulo de impacto de {#}°.",
+"The crater is a basin with a ring of peaks.":
+  "El cráter es una cuenca con un anillo de picos.",
+"Graph of final crater diameter against asteroid diameter on Mercury, both on log scales, rising as a line.":
+  "Gráfica del diámetro final del cráter contra el diámetro del asteroide en Mercurio, ambos en escala logarítmica, que sube como una línea.",
+"Counting view: Mars: northern plains (Hesperian) on Mars, {#} km on a side.":
+  "Vista de conteo: Marte, las llanuras del norte (Hespérico), en Marte, de {#} km por lado.",
 "timing not to scale":
   "tiempos fuera de escala",
 "heights drawn {#} times larger":

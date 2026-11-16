@@ -1,5 +1,11 @@
 /* demo/dna in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/dna', {
+"Describe the picture":
+  "Describir la imagen",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "DNA in 3D":
   "ADN en 3D",
 "<a>Chemistry and biology</a>":
@@ -26,6 +32,28 @@ VDI18N.add('es', 'demo/dna', {
   "Molécula completa",
 "DNA double helix in 3D. Drag to turn, scroll to zoom. Arrow keys turn, plus and minus zoom, {#} shows the whole molecule, S spins.":
   "Doble hélice de ADN en 3D. Arrastra para girar, usa la rueda para acercar. Las flechas giran, más y menos acercan o alejan, {#} muestra la molécula completa, S hace girar.",
+"A B-DNA double helix of {#} base pairs.":
+  "Una doble hélice de ADN B de {#} pares de bases.",
+"Strand {#}, from the {#}′ end, is CGCGAATTCGCG.":
+  "La cadena {#}, desde el extremo {#}′, es CGCGAATTCGCG.",
+"Drawn as ball and stick, colored by element.":
+  "Dibujada con esferas y varillas, coloreada por elemento.",
+"No pair is selected.":
+  "No hay ningún par seleccionado.",
+"Hydrogen bonds are shown.":
+  "Se muestran los puentes de hidrógeno.",
+"The grooves are not marked.":
+  "Los surcos no están marcados.",
+"{#} of the {#} pairs are G·C, {#}%.":
+  "{#} de los {#} pares son G·C, {#}%.",
+"Length {#} nm, with {#} turns.":
+  "Longitud de {#} nm, con {#} vueltas.",
+"Average rise {#} Å and twist {#}° per pair.":
+  "Elevación promedio de {#} Å y giro de {#}° por par.",
+"Estimated melting temperature {#} °C.":
+  "Temperatura de fusión estimada: {#} °C.",
+"The helix is spinning.":
+  "La hélice está girando.",
 "Dickerson dodecamer":
   "Dodecámero de Dickerson",
 "B-DNA · {#} bp · CGCGAATTCGCG":
@@ -164,6 +192,8 @@ VDI18N.add('es', 'demo/dna', {
   "<b>Otros números.</b> Los radios de las esferas llenas son los radios de van der Waals de Bondi (J. Phys. Chem. {#}, {#}, {#}): C {#}, N {#}, O {#}, P {#} Å. La masa molar suma los residuos de nucleótidos (dA {#}, dC {#}, dG {#}, dT {#} g/mol) menos {#} g/mol por hebra para hebras sin fosfato {#}′, como en este modelo. T<sub>m</sub> usa los parámetros unificados de vecinos más cercanos de SantaLucia, PNAS {#}, {#} ({#}), con la corrección por sal ΔS += {#} (N − {#}) ln[Na<sup>+</sup>], concentración total de hebras {#} µM, y sin magnesio. Es una estimación para una transición de dos estados de dúplex cortos.",
 "<span><i></i>A</span><span><i></i>T</span><span><i></i>G</span><span><i></i>C</span><span><i></i>hydrogen bond</span>":
   "<span><i></i>A</span><span><i></i>T</span><span><i></i>G</span><span><i></i>C</span><span><i></i>puente de hidrógeno</span>",
+"Drawn as cartoon, colored by element.":
+  "Dibujada en caricatura, coloreada por elemento.",
 "Looking down the helix axis at pair {#}, G·C, with the other pairs cut away. Count the dashed hydrogen bonds: three for G·C, two for A·T (click pair {#} in the strands panel).":
   "Mirando a lo largo del eje de la hélice hacia el par {#}, G·C, con los demás pares recortados. Cuenta los puentes de hidrógeno punteados: tres para G·C, dos para A·T (haz clic en el par {#} del panel de hebras).",
 "<span><i></i>A</span><span><i></i>T</span><span><i></i>G</span><span><i></i>C</span><span><i></i>backbone</span><span><i></i>hydrogen bond</span>":
@@ -172,6 +202,12 @@ VDI18N.add('es', 'demo/dna', {
   "{#}: G·C (G4 en la hebra {#}, C21 en la hebra {#})",
 "One base pair":
   "Un par de bases",
+"Drawn as ball and stick, colored by base.":
+  "Dibujada con esferas y varillas, coloreada por base.",
+"Pair {#} is selected, G with C, with {#} hydrogen bonds.":
+  "Está seleccionado el par {#}, G con C, con {#} puentes de hidrógeno.",
+"The helix is not spinning.":
+  "La hélice no está girando.",
 "Space filling with the two strands colored. The backbones wind around the outside and leave two grooves of different widths, where proteins read the edges of the bases.":
   "Esferas llenas con las dos hebras coloreadas. Los esqueletos se enrollan por fuera y dejan dos surcos de distinto ancho, donde las proteínas leen los bordes de las bases.",
 "<span><i></i>strand {#}</span><span><i></i>strand {#}</span><span><i></i>minor groove</span><span><i></i>major groove</span>":
@@ -194,6 +230,16 @@ VDI18N.add('es', 'demo/dna', {
   "ADN B",
 "A-DNA":
   "ADN A",
+"Two models of the same {#} base pair sequence: B DNA on top and A DNA below.":
+  "Dos modelos de la misma secuencia de {#} pares de bases: ADN B arriba y ADN A abajo.",
+"Strand {#}, from the {#}′ end, is GCGATCGCGATCGCGATCGC.":
+  "La cadena {#}, desde el extremo {#}′, es GCGATCGCGATCGCGATCGC.",
+"Drawn as cartoon, colored by base.":
+  "Dibujada en caricatura, coloreada por base.",
+"Length {#} nm and {#} nm, with {#} and {#} turns.":
+  "Longitudes de {#} nm y {#} nm, con {#} y {#} vueltas.",
+"Average rise {#} Å and {#} Å and twist {#}° and {#}° per pair.":
+  "Elevación promedio de {#} Å y {#} Å, y giro de {#}° y {#}° por par.",
 "A promoter element, TATAAAAG, read through the minor groove by the TATA binding protein. A·T pairs have only two hydrogen bonds: compare the melting temperature with the GC rich preset.":
   "Un elemento promotor, TATAAAAG, leído a través del surco menor por la proteína de unión a TATA. Los pares A·T tienen solo dos puentes de hidrógeno: compara la temperatura de fusión con la configuración Rico en GC.",
 "<span><i></i>A</span><span><i></i>T</span><span><i></i>G</span><span><i></i>C</span><span><i></i>backbone</span><span><i></i>hydrogen bond</span><span><i></i>minor groove</span><span><i></i>major groove</span>":
@@ -206,16 +252,34 @@ VDI18N.add('es', 'demo/dna', {
   "Todos son pares G·C con tres puentes de hidrógeno cada uno. La temperatura de fusión es mucho más alta que para la misma longitud de A·T. Nota: la geometría aquí es la misma hélice uniforme; solo cambia la estimación.",
 "B-DNA · {#} bp · GCGGCGCCGCGGCCGCGGCG":
   "ADN B · {#} pb · GCGGCGCCGCGGCCGCGGCG",
+"Strand {#}, from the {#}′ end, is GCGGCGCCGCGGCCGCGGCG.":
+  "La cadena {#}, desde el extremo {#}′, es GCGGCGCCGCGGCCGCGGCG.",
 "A-DNA · {#} bp · GCGGCGCCGCGGCCGCGGCG":
   "ADN A · {#} pb · GCGGCGCCGCGGCCGCGGCG",
 "B-DNA and A-DNA · {#} bp · GCGGCGCCGCGGCCGCGGCG":
   "ADN B y ADN A · {#} pb · GCGGCGCCGCGGCCGCGGCG",
 "<span><i></i>strand {#}</span><span><i></i>strand {#}</span><span><i></i>hydrogen bond</span>":
   "<span><i></i>hebra {#}</span><span><i></i>hebra {#}</span><span><i></i>puente de hidrógeno</span>",
+"Drawn as ball and stick, colored by strand.":
+  "Dibujada con esferas y varillas, coloreada por cadena.",
 "Your sequence":
   "Tu secuencia",
 "<span><i></i>strand {#}</span><span><i></i>strand {#}</span>":
   "<span><i></i>hebra {#}</span><span><i></i>hebra {#}</span>",
+"Drawn as cartoon, colored by strand.":
+  "Dibujada en caricatura, coloreada por cadena.",
+"Strand {#}, from the {#}′ end, is CGCGAATTCGCGCGAATTCGCG.":
+  "La cadena {#}, desde el extremo {#}′, es CGCGAATTCGCGCGAATTCGCG.",
+"Drawn as space filling, colored by strand.":
+  "Dibujada con relleno de espacio, coloreada por cadena.",
+"Hydrogen bonds are not shown.":
+  "No se muestran los puentes de hidrógeno.",
+"The minor and major grooves are marked.":
+  "Los surcos menor y mayor están marcados.",
+"Strand {#}, from the {#}′ end, is GCCTATAAAAGGGCTGCG.":
+  "La cadena {#}, desde el extremo {#}′, es GCCTATAAAAGGGCTGCG.",
+"A A-DNA double helix of {#} base pairs.":
+  "Una doble hélice de ADN A de {#} pares de bases.",
 "B-DNA and A-DNA · {#} bp · CGCGAATTCGCG":
   "ADN B y ADN A · {#} pb · CGCGAATTCGCG",
 "Close":

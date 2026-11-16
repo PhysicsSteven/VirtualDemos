@@ -1809,6 +1809,49 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   VD.howTo({ src: 'media/how-this-works/black-holes.mp4', poster: 'media/how-this-works/black-holes.jpg' });
   /* Near the hole and Ray traced readings go to the Near a Black Hole worksheet (split 2026-11-16) */
   window.vdWorksheet = () => VD.ws(S.view === 'near' || S.view === 'ray' ? 'black-holes-near' : 'black-holes');
+  /* what the picture shows now, for a screen reader (VD.describe): one canvas, three views. The values that run on while it plays are not announced */
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    const Mv = M(), rs = rsOf(Mv), mass = fmtMass(Mv, false).replace('M_{sun}', 'solar masses'), run = playing ? 'Playing.' : 'Paused.';
+    if (S.view === 'lens') {
+      const DL = Math.pow(10, S.logDL), DS = Math.pow(10, S.logDS), te = thetaE(Mv, DL * KPC, DS * KPC), u = Math.hypot(S.bx, S.by), [tp, tm] = images(u), pt = u > 1e-6;
+      return [
+        `Lensing view: a point mass of ${mass}, ${fmtDist(DL)} away, bends the light of a source ${fmtDist(DS)} away.`,
+        S.shape === 'gal' ? 'The source is a galaxy.' : 'The source is a star disk.',
+        `Source radius ${S.rho.toFixed(3)} Einstein angles.`,
+        `Einstein angle ${fmtAngle(te)}, event time scale ${fmtTime(tEsec())}.`,
+        run,
+        { t: `Source offset ${u.toFixed(3)} Einstein angles from the lens.`, live: !playing },
+        pt ? { t: `Two images: one ${tp.toFixed(3)} Einstein angles from the lens on the side of the source, and one ${Math.abs(tm).toFixed(3)} on the opposite side.`, live: !playing } : null,
+        pt ? { t: `The images are magnified ${mu(tp).toFixed(3)} and ${Math.abs(mu(tm)).toFixed(3)} times.`, live: !playing }
+           : { t: 'The source is straight behind the lens, so the light forms an Einstein ring.', live: !playing },
+        { t: pt ? `Point source brightening ${Apoint(u).toFixed(3)}.` : 'Point source brightening is infinite.', live: !playing }
+      ];
+    }
+    if (S.view === 'ray') {
+      ensureTable();
+      const ob = S.obj && OBJ[S.obj] && Math.abs(Math.log10(OBJ[S.obj].M) - S.logM) < 0.006 ? OBJ[S.obj] : null;
+      return [
+        `Ray traced view: a black hole of ${mass} seen from ${trim(ro().toPrecision(3))} Schwarzschild radii, a distance of ${fmtLen(ro() * rs)}.`,
+        `Schwarzschild radius ${fmtLen(rs)}.`,
+        S.rayStars ? 'Background stars are on.' : 'Background stars are off.',
+        S.disk ? 'The illustrative disk is on.' : 'The illustrative disk is off.',
+        `The black shadow is ${fmtDeg(table.ac)} in angular radius${ro() < 1.5 ? ', more than half the sky' : ''}.`,
+        isFinite(ringA) ? `The Einstein ring for a source straight behind is ${fmtDeg(ringA)} in radius.` : 'There is no Einstein ring in view.',
+        ob ? `Seen from Earth, ${ob.name} has a shadow diameter of ${fmtAngle(shadowDiam(Mv, ob.D))}.` : '',
+        { t: `The galaxy is ${fmtDeg(Math.hypot(S.gx, S.gy))} from the center of the view.`, live: !playing }
+      ];
+    }
+    const r = nearR(), rate = clockRate(r), zz = onePlusZ(r), dA = tidal(Mv, r * rs, L_PERSON), dAh = tidal(Mv, rs, L_PERSON);
+    return [
+      `Near the hole view: an observer hovers at ${trim(r.toPrecision(4))} Schwarzschild radii, a distance of ${fmtLen(r * rs)}, from a black hole of ${mass}.`,
+      `Schwarzschild radius ${fmtLen(rs)}, photon sphere ${fmtLen(1.5 * rs)}, innermost stable orbit ${fmtLen(3 * rs)}.`,
+      run,
+      `The observer's clock runs at ${rate.toFixed(4)} of a far away clock.`,
+      `Light from the observer reaches a far away viewer stretched by 1 + z = ${sci(zz, 4)}.`,
+      `Tidal stretch across a 2 m person here is ${fmtAcc(dA)}.`,
+      dAh > LETHAL ? (dA > LETHAL ? 'Torn apart here.' : 'Safe here, but a person is torn apart before reaching the horizon.') : 'A person survives the horizon.'
+    ];
+  });
   window.vdReadingRow = () => {
     const Mv = M(), rs = rsOf(Mv), setup = S.preset ? SETUP[S.preset] : 'Own setup', base = { view: { lens: 'Lensing', ray: 'Ray traced', near: 'Near the hole' }[S.view], setup, M_Msun: g6(Mv), rs_km: g6(rs / 1e3) };
     if (S.view === 'lens') {

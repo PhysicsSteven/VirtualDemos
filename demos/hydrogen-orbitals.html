@@ -2049,6 +2049,39 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   { const q = new URLSearchParams(location.search).get('setup'); applyPreset(PRESETS[q] ? q : '3dz2'); }
   curFit = targetFit;
   setView('3d');
+  /* what the pictures show now, for a screen reader (VD.describe): the state, its nodes, any superposition, then the radial graph; the 3D cloud is described once it exists */
+  function srState() {
+    const nm = nameText(nameOf(S.n, S.l, S.m, S.real)), st = stA, out = [];
+    if (stB) out.push(`A superposition of ${nm} and ${nameText(nameOf(S.B.n, S.B.l, S.B.m, S.real))}.`);
+    else out.push(`Hydrogen ${nm} orbital, with n = ${S.n}, l = ${S.l} and m = ${S.m}.`);
+    out.push(`Energy ${st.E.toFixed(3)} eV.`);
+    const rn = S.n - S.l - 1;
+    out.push(rn ? `${rn} radial ${rn === 1 ? 'node' : 'nodes'}, at ${st.nodes.map((r) => r.toFixed(2)).join(', ')} Bohr radii.` : 'No radial nodes.');
+    out.push(S.l ? `${S.l} angular ${S.l === 1 ? 'node' : 'nodes'}.` : 'No angular nodes.');
+    out.push(`Mean radius ${st.rMeanExact.toFixed(1)} Bohr radii, most probable radius ${st.rMP.toFixed(2)} Bohr radii.`);
+    if (stB) {
+      const d = dE(), T = beatT();
+      out.push(`Energy difference ${Math.abs(d).toFixed(3)} eV.`);
+      out.push(isFinite(T) ? `The cloud oscillates with a beat period of ${T.toFixed(3)} fs, radiating at ${fmtLam(HC / Math.abs(d))}.` : 'The two states have the same energy, so the cloud does not move.');
+      if (isFinite(T)) out.push(dip && dip.amp > 1e-3 ? `The center of the cloud moves ${dip.amp.toFixed(3)} Bohr radii each way, so the atom radiates.` : 'The center of the cloud stays at the nucleus, so the atom does not radiate as a dipole.');
+    } else if (S.mix) out.push('Choose a state B different from A.');
+    return out;
+  }
+  function srMain(slice) {
+    const out = srState();
+    if (slice) out.splice(1, 0, `Slice view: the probability density in the ${S.plane === 'xz' ? 'xz' : S.plane === 'xy' ? 'xy' : 'x equals y'} plane through the nucleus.`);
+    else out.splice(1, 0, `3D cloud of ${S.count.toLocaleString('en-US')} points.`);
+    if (!slice && MZ.on) out.push({ t: `${MZ.k.toLocaleString('en-US')} ${MZ.k === 1 ? 'position' : 'positions'} measured.`, live: false });
+    if (stB) { out.push(S.playing ? 'Playing.' : 'Paused.'); out.push({ t: `Time ${S.t.toFixed(3)} fs.`, live: false }); }
+    return out;
+  }
+  if (window.VD && VD.describe) {
+    if (G.ready) VD.describe(G.el, () => srMain(false));
+    VD.describe(sliceCan, () => srMain(true));
+    VD.describe($('rCan'), () => [`Radial probability P(r) against r in Bohr radii for ${nameText(nameOf(S.n, S.l, S.m, S.real))}.`,
+      stA.nodes.length ? `The curve is zero at ${stA.nodes.length} radial ${stA.nodes.length === 1 ? 'node' : 'nodes'}, at ${stA.nodes.map((r) => r.toFixed(2)).join(', ')} Bohr radii.` : 'The curve has no radial nodes.',
+      `It peaks at ${stA.rMP.toFixed(2)} Bohr radii, and the mean radius is ${stA.rMeanExact.toFixed(1)} Bohr radii.`]);
+  }
   VD.howTo({ src: 'media/how-this-works/hydrogen-atom.mp4', poster: 'media/how-this-works/hydrogen-atom.jpg' });
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { dirty.radial = true; dirty.slice = true; schedule(); });
 })();

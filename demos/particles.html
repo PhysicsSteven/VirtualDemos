@@ -1199,6 +1199,35 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   window.__pq = { S, D, setView, applyPreset, loadExample, redraw, sync, renderRx, qkChanged, newEvent, makeEvent, fitCircle, dtMeasure, rxCheck, view, toScr, placePoint, goEvent };
   const HOW = { 'particle-reactions': 'Conservation Laws for Particle Reactions', 'quark-model': 'Building Hadrons from Quarks', 'invariant-mass': 'Weighing a Particle You Cannot See' }, howWs = () => WS[S.view] || 'invariant-mass';
+  /* what the picture shows now, for a screen reader (VD.describe): the picture is only on show in the Quarks and Bubble chamber views */
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    if (S.view === 'qk') {
+      const b = qkBuild(), bl = S.blind, live = S.qk.slots.filter((s) => s.f), COL = { r: 'red', g: 'green', b: 'blue' };
+      const out = ['Quarks view: up to three quarks held together by gluons, with the eightfold way chart of hadrons beside them.'];
+      if (!live.length) out.push('No quarks are chosen yet.');
+      live.forEach((s, i) => out.push(`Quark ${S.qk.slots.indexOf(s) + 1}: ${s.anti ? 'anti ' : ''}${QUARKS[s.f].name}, ${s.anti ? 'anti' : ''}${COL[s.col]}, spin ${s.up ? 'up' : 'down'}.`));
+      if (live.length) {
+        out.push(b.kind === 'none' ? 'These quarks do not make a hadron.' : b.neutral ? 'The colors add to a color neutral whole.' : 'The colors do not add to a color neutral whole.');
+        if (bl) out.push('The charge, spin and hadron are hidden.');
+        else {
+          if (b.kind !== 'none') out.push(`Charge ${sgn(b.Q)} e, baryon number ${sgn(b.B)}, strangeness ${sgn(b.S)}, spin ${spinTxt(b.J)}.`);
+          out.push(b.matches.length && b.neutral ? `This is the ${b.matches.map((id) => BY[id].name).join(' or ')}, with a mass of ${b.matches.map((id) => `${BY[id].m} MeV/c²`).join(' or ')}.` : 'No hadron in the list matches.');
+        }
+      }
+      return out;
+    }
+    if (S.view === 'dt') {
+      const m = dtMeasure(), bl = S.blind, nf = (sg) => D.fits[sg].length;
+      const out = [`Bubble chamber view: event ${D.n}, a neutral particle that decays into two charged tracks, in a magnetic field of ${f(D.B, 1)} T.`,
+        `Marked on the positive track: ${nf('+')} of 3 points. Marked on the negative track: ${nf('-')} of 3 points.`];
+      out.push(m.fp ? `Positive track radius ${f(m.fp.r, 1)} cm.` : 'The positive track has no fitted radius yet.');
+      out.push(m.fm ? `Negative track radius ${f(m.fm.r, 1)} cm.` : 'The negative track has no fitted radius yet.');
+      out.push(m.th != null ? `Opening angle ${f(m.th * 180 / Math.PI, 1)}°.` : 'The opening angle is not measured yet.');
+      out.push(bl ? 'The momenta and masses are hidden.' : m.Mpp != null ? `Momenta ${f(m.pp, 0)} and ${f(m.pm, 0)} MeV/c, mass ${f(m.Mpp, 0)} MeV/c² if both are pions, ${f(m.Mppi, 0)} MeV/c² if the positive track is a proton.` : 'The momenta and masses need both tracks and the angle.');
+      return out;
+    }
+    return [];
+  });
   VD.howTo({ src: () => `media/how-this-works/${howWs()}.mp4`, poster: () => `media/how-this-works/${howWs()}.jpg`, title: () => `How this works: ${HOW[howWs()]}` });
   requestAnimationFrame(frame);
 })();

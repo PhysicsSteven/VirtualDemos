@@ -1,5 +1,7 @@
 /* demo/tides in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/tides', {
+"Describe the picture":
+  "Describir la imagen",
 "d = {#} Earth radii":
   "d = {#} radios terrestres",
 "center: zero":
@@ -58,8 +60,22 @@ VDI18N.add('es', 'demo/tides', {
   "Imagen",
 "Main view. In the pull view, drag the Moon left or right to change its distance; arrow keys change the distance. In the ocean view, drag the Moon around its orbit or drag the city around Earth; left and right arrows move the Moon a day, up and down arrows change the time by {#} minutes. Space plays or pauses. In the 3D picture, drag anywhere else to turn the view; the wheel or a pinch zooms.":
   "Vista principal. En la vista de la atracción, arrastra la Luna a la izquierda o a la derecha para cambiar su distancia; las flechas cambian la distancia. En la vista del océano, arrastra la Luna alrededor de su órbita o arrastra la ciudad alrededor de la Tierra; las flechas izquierda y derecha mueven la Luna un día, arriba y abajo cambian la hora en {#} minutos. Espacio inicia o pausa. En la imagen 3D, arrastra en cualquier otro lugar para girar la vista; la rueda o un pellizco acercan.",
+"Pull view: Earth with the Moon {#} Earth radii away, {#} km.":
+  "Vista de atracción: la Tierra con la Luna a {#} radios terrestres, {#} km.",
+"The arrows show the tidal pull, the pull of the Moon minus its pull at the center of Earth.":
+  "Las flechas muestran la atracción de marea: la atracción de la Luna menos su atracción en el centro de la Tierra.",
+"The Moon pulls at the center of Earth with {#} × {#}⁻⁵ m/s², {#} × {#}⁻⁶ g.":
+  "La Luna atrae el centro de la Tierra con {#} × {#}⁻⁵ m/s², {#} × {#}⁻⁶ g.",
+"The tidal pull along the line to the Moon is {#} × {#}⁻⁶ m/s², {#} × {#}⁻⁷ g, stretching Earth toward and away from the Moon.":
+  "La atracción de marea a lo largo de la línea hacia la Luna es de {#} × {#}⁻⁶ m/s², {#} × {#}⁻⁷ g, y estira la Tierra hacia la Luna y en sentido contrario.",
+"Compared with the real distance, the pull is {#} times as big and the tidal pull is {#} times as big.":
+  "En comparación con la distancia real, la atracción es {#} veces mayor y la atracción de marea es {#} veces mayor.",
 "Plot. In the pull view it shows how the pull and the tidal pull grow as the Moon comes closer; drag the marker to change the distance. In the ocean view it shows the city's water level over two days and the daily tidal range over a month; drag the day marker to change the Moon's phase.":
   "Gráfica. En la vista de la atracción muestra cómo crecen la atracción y la atracción de marea al acercarse la Luna; arrastra el marcador para cambiar la distancia. En la vista del océano muestra el nivel del agua en la ciudad durante dos días y el intervalo de marea diario durante un mes; arrastra el marcador del día para cambiar la fase de la Luna.",
+"Plot of the pull and the tidal pull against the distance of the Moon, both growing as the Moon comes closer.":
+  "Gráfica de la atracción y la atracción de marea contra la distancia de la Luna; las dos crecen cuando la Luna se acerca.",
+"A marker is at {#} Earth radii.":
+  "Hay un marcador en {#} radios terrestres.",
 "Divider between the Earth and Moon and the graph":
   "Divisor entre la Tierra y la Luna y la gráfica",
 "<a>Worksheet {#}: Tidal Forces</a>":
@@ -184,6 +200,12 @@ VDI18N.add('es', 'demo/tides', {
   "Cercano",
 "Far":
   "Lejano",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
+"{#} RE":
+  "{#} RT",
 "move the Moon a day (":
   "mueven la Luna un día (",
 "a tenth),":
@@ -222,6 +244,30 @@ VDI18N.add('es', 'demo/tides', {
   "punteado: con el Sol",
 "in {#} h {#} min<small>at {#}:{#}</small>":
   "en {#} h {#} min<small>a las {#}:{#}</small>",
+"Ocean view: Earth with its ocean bulges, the Moon in orbit, and a city on the coast.":
+  "Vista del océano: la Tierra con sus abultamientos oceánicos, la Luna en órbita y una ciudad en la costa.",
+"The Sun is not included.":
+  "El Sol no está incluido.",
+"Playing.":
+  "En marcha.",
+"The Moon's phase is at day {#} of the month.":
+  "La fase de la Luna está en el día {#} del mes.",
+"The city's local time is {#}:{#}.":
+  "La hora local de la ciudad es {#}:{#}.",
+"The water level at the city is +{#} m.":
+  "El nivel del agua en la ciudad es de +{#} m.",
+"The next high tide comes in {#} h {#} min, at {#}:{#}.":
+  "La siguiente marea alta llega en {#} h {#} min, a las {#}:{#}.",
+"The Moon's tide has an amplitude of {#} m, and the daily range is {#} m.":
+  "La marea de la Luna tiene una amplitud de {#} m, y el intervalo diario es de {#} m.",
+"The Moon turns once per orbit, so the same side faces Earth.":
+  "La Luna gira una vez por órbita, así que el mismo lado mira a la Tierra.",
+"Plot of the water level at the city over two days, and the daily tidal range over a month.":
+  "Gráfica del nivel del agua en la ciudad durante dos días y del intervalo diario de marea durante un mes.",
+"The Moon's phase marker is at day {#}.":
+  "El marcador de la fase de la Luna está en el día {#}.",
+"in {#} min<small>at {#}:{#}</small>":
+  "en {#} min<small>a las {#}:{#}</small>",
 "Sun ▸":
   "Sol ▸",
 "Every point on Earth is pulled toward the Moon, the near side a little harder ({#}% at today's distance). Switch to Tidal pull: subtracting the pull on Earth's center leaves arrows pointing out on the near and far sides and in around the sides.":
@@ -264,10 +310,16 @@ VDI18N.add('es', 'demo/tides', {
   "Marea muerta: los abultamientos en ángulo recto",
 "Watch the crater on the Moon: it always points at Earth, because the Moon turns once on its axis in each orbit, {#} days. Switch The Moon's spin to Not at all and the crater keeps pointing the same way among the stars; half an orbit later it points away from Earth.":
   "Observa el cráter de la Luna: siempre apunta a la Tierra, porque la Luna gira una vez sobre su eje en cada órbita, {#} días. Cambia El giro de la Luna a Nada y el cráter sigue apuntando en la misma dirección entre las estrellas; media órbita después apunta en sentido contrario a la Tierra.",
-"in {#} min<small>at {#}:{#}</small>":
-  "en {#} min<small>a las {#}:{#}</small>",
+"Paused.":
+  "En pausa.",
+"The Moon is not turning, so its crater keeps its direction among the stars.":
+  "La Luna no gira, así que su cráter conserva su dirección entre las estrellas.",
+"The water level at the city is −{#} m.":
+  "El nivel del agua en la ciudad es de −{#} m.",
 "Move the time forward or back {#} minutes":
   "Mover el tiempo {#} minutos hacia delante o hacia atrás",
+"The Sun is included.":
+  "El Sol está incluido.",
 "<span><i></i>Ocean, height exaggerated</span> <span><i></i>Moon's bulge alone</span> <span><i></i>Sun's bulge alone</span> <span><i></i>The city on the equator, with its tide mark</span>":
   "<span><i></i>Océano, altura exagerada</span> <span><i></i>Abultamiento de la Luna solo</span> <span><i></i>Abultamiento del Sol solo</span> <span><i></i>La ciudad en el ecuador, con su marca de marea</span>",
 "<span><i></i>Ocean, height exaggerated</span> <span><i></i>Moon's bulge alone</span> <span><i></i>Sun's bulge alone</span> <span><i></i>The city, on the equator</span>":

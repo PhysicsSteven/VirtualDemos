@@ -1,5 +1,7 @@
 /* demo/black-holes in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/black-holes', {
+"Describe the picture":
+  "Describir la imagen",
 "Einstein ring θ":
   "Anillo de Einstein θ",
 "lens; caustic at its center":
@@ -24,6 +26,10 @@ VDI18N.add('es', 'demo/black-holes', {
   "u, en unidades de θ",
 "θ = ±{#}: the Einstein ring":
   "θ = ±{#}: el anillo de Einstein",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "Black Holes and Lensing":
   "Agujeros negros y lentes gravitacionales",
 "<a><span>←</span> <span>GPS Clocks and Relativity</span></a><a><span>Lagrange Points</span> <span>→</span></a>":
@@ -50,6 +56,24 @@ VDI18N.add('es', 'demo/black-holes', {
   "<a>Hoja de trabajo {#}: Lentes gravitacionales</a>",
 "<a>Worksheet {#}: Near a Black Hole</a>":
   "<a>Hoja de trabajo {#}: Cerca de un agujero negro</a>",
+"Lensing view: a point mass of {#} solar masses, {#} kpc away, bends the light of a source {#} kpc away.":
+  "Vista de lente: una masa puntual de {#} masas solares, a {#} kpc, desvía la luz de una fuente que está a {#} kpc.",
+"The source is a star disk.":
+  "La fuente es un disco estelar.",
+"Source radius {#} Einstein angles.":
+  "Radio de la fuente: {#} ángulos de Einstein.",
+"Einstein angle {#} mas, event time scale {#} days.":
+  "Ángulo de Einstein: {#} mas; escala de tiempo del evento: {#} días.",
+"Playing.":
+  "En marcha.",
+"Source offset {#} Einstein angles from the lens.":
+  "La fuente está desplazada {#} ángulos de Einstein de la lente.",
+"Two images: one {#} Einstein angles from the lens on the side of the source, and one {#} on the opposite side.":
+  "Dos imágenes: una a {#} ángulos de Einstein de la lente, del lado de la fuente, y otra a {#} del lado opuesto.",
+"The images are magnified {#} and {#} times.":
+  "Las imágenes se amplifican {#} y {#} veces.",
+"Point source brightening {#}.":
+  "Aumento de brillo de una fuente puntual: {#}.",
 "Einstein ring":
   "Anillo de Einstein",
 "Two images":
@@ -68,6 +92,8 @@ VDI18N.add('es', 'demo/black-holes', {
   "Masa M",
 "{#} M<sub>sun</sub>":
   "{#} M<sub>sol</sub>",
+"{#} Msun":
+  "{#} Msol",
 "Schwarzschild radius r<sub>s</sub> = 2GM/c²":
   "Radio de Schwarzschild r<sub>s</sub> = 2GM/c²",
 "Photon sphere {#} r<sub>s</sub>":
@@ -106,6 +132,8 @@ VDI18N.add('es', 'demo/black-holes', {
   "Disco uniforme",
 "Source radius ρ":
   "Radio de la fuente ρ",
+"{#} θE":
+  "{#} θE",
 "Along the track, x = (t − t₀)/t<sub>E</sub>":
   "A lo largo de la trayectoria, x = (t − t₀)/t<sub>E</sub>",
 "Track offset u₀":
@@ -134,6 +162,8 @@ VDI18N.add('es', 'demo/black-holes', {
   "Observador cerca del agujero",
 "Observer distance r<sub>o</sub>":
   "Distancia del observador r<sub>o</sub>",
+"{#} rs = {#} km":
+  "{#} rs = {#} km",
 "Galaxy angular radius":
   "Radio angular de la galaxia",
 "Stars and Milky Way band":
@@ -272,6 +302,18 @@ VDI18N.add('es', 'demo/black-holes', {
   "Sgr A*",
 "lethal, roughly above {#} g":
   "letal, aproximadamente por encima de {#} g",
+"Near the hole view: an observer hovers at {#} Schwarzschild radii, a distance of {#} km, from a black hole of {#} solar masses.":
+  "Vista cerca del agujero: un observador flota a {#} radios de Schwarzschild, a una distancia de {#} km, de un agujero negro de {#} masas solares.",
+"Schwarzschild radius {#} km, photon sphere {#} km, innermost stable orbit {#} km.":
+  "Radio de Schwarzschild: {#} km; esfera de fotones: {#} km; órbita estable más interna: {#} km.",
+"The observer's clock runs at {#} of a far away clock.":
+  "El reloj del observador avanza a {#} del ritmo de un reloj lejano.",
+"Light from the observer reaches a far away viewer stretched by {#} + z = {#}.":
+  "La luz del observador llega a un espectador lejano estirada por {#} + z = {#}.",
+"Tidal stretch across a {#} m person here is {#} × {#}⁶ m/s² = {#} × {#}⁵ g.":
+  "El estiramiento de marea sobre una persona de {#} m aquí es {#} × {#}⁶ m/s² = {#} × {#}⁵ g.",
+"Torn apart here.":
+  "Aquí se desgarra.",
 "A background galaxy sits exactly behind a massive galaxy, here treated as a point mass of {#}¹² M<sub>sun</sub> halfway to a source {#} Gpc away. Light passes on every side and arrives as an Einstein ring of radius θ<sub>E</sub> ≈ {#}″, about {#}″ across. Drag the true position off center and the ring breaks into two arcs.":
   "Una galaxia de fondo está exactamente detrás de una galaxia masiva, tratada aquí como una masa puntual de {#}¹² M<sub>sol</sub> a medio camino de una fuente a {#} Gpc. La luz pasa por todos los lados y llega como un anillo de Einstein de radio θ<sub>E</sub> ≈ {#}″, de unos {#}″ de diámetro. Arrastra la posición real fuera del centro y el anillo se rompe en dos arcos.",
 "{#} × {#}¹² M<sub>sun</sub>":
@@ -284,6 +326,10 @@ VDI18N.add('es', 'demo/black-holes', {
   "∞ (anillo)",
 "You survive the horizon.<span>Even at r<sub>s</sub> the stretch is only {#} × {#}⁻¹⁵ g. The more massive the hole, the gentler its horizon: ΔA at r<sub>s</sub> falls as {#}/M².</span>":
   "Sobrevives al horizonte.<span>Incluso en r<sub>s</sub> el estiramiento es de solo {#} × {#}⁻¹⁵ g. Cuanto más masivo es el agujero, más suave es su horizonte: ΔA en r<sub>s</sub> disminuye como {#}/M².</span>",
+"{#} × {#}¹² Msun":
+  "{#} × {#}¹² Msol",
+"{#} rs = {#} pc":
+  "{#} rs = {#} pc",
 "sky and lens galaxy glow: illustrative":
   "brillo del cielo y de la galaxia lente: ilustrativo",
 "{#} s = {#} × {#}⁷ yr":
@@ -308,6 +354,10 @@ VDI18N.add('es', 'demo/black-holes', {
   "{#} nm <span>infrarrojo o más largo, invisible al ojo</span>",
 "You survive the horizon.<span>Even at r<sub>s</sub> the stretch is only {#} × {#}⁻⁴ g. The more massive the hole, the gentler its horizon: ΔA at r<sub>s</sub> falls as {#}/M².</span>":
   "Sobrevives al horizonte.<span>Incluso en r<sub>s</sub> el estiramiento es de solo {#} × {#}⁻⁴ g. Cuanto más masivo es el agujero, más suave es su horizonte: ΔA en r<sub>s</sub> disminuye como {#}/M².</span>",
+"{#} × {#}⁶ Msun":
+  "{#} × {#}⁶ Msol",
+"{#} rs = {#} AU":
+  "{#} rs = {#} UA",
 "ΔA = {#} × {#}⁻⁵ g":
   "ΔA = {#} × {#}⁻⁵ g",
 "M87*, {#} billion M<sub>sun</sub> (EHT {#}). In units of r<sub>s</sub> every Schwarzschild black hole looks the same, so this is the view from {#} r<sub>s</sub> of any of them. From Earth the shadow of M87* spans about {#} µas, close to the {#} µas ring the Event Horizon Telescope imaged.":
@@ -318,6 +368,24 @@ VDI18N.add('es', 'demo/black-holes', {
   "M87* visto desde la Tierra (D = {#} Mpc): diámetro de la sombra {#}√{#} GM/(c²D)",
 "You survive the horizon.<span>Even at r<sub>s</sub> the stretch is only {#} × {#}⁻¹¹ g. The more massive the hole, the gentler its horizon: ΔA at r<sub>s</sub> falls as {#}/M².</span>":
   "Sobrevives al horizonte.<span>Incluso en r<sub>s</sub> el estiramiento es de solo {#} × {#}⁻¹¹ g. Cuanto más masivo es el agujero, más suave es su horizonte: ΔA en r<sub>s</sub> disminuye como {#}/M².</span>",
+"{#} × {#}⁹ Msun":
+  "{#} × {#}⁹ Msol",
+"Ray traced view: a black hole of {#} × {#}⁹ solar masses seen from {#} Schwarzschild radii, a distance of {#} AU.":
+  "Vista de trazado de rayos: un agujero negro de {#} × {#}⁹ masas solares visto desde {#} radios de Schwarzschild, a una distancia de {#} UA.",
+"Schwarzschild radius {#} AU.":
+  "Radio de Schwarzschild: {#} UA.",
+"Background stars are on.":
+  "Las estrellas de fondo están activadas.",
+"The illustrative disk is off.":
+  "El disco ilustrativo está desactivado.",
+"The black shadow is {#}° in angular radius.":
+  "La sombra negra tiene un radio angular de {#}°.",
+"The Einstein ring for a source straight behind is {#}° in radius.":
+  "El anillo de Einstein para una fuente justo detrás tiene un radio de {#}°.",
+"Seen from Earth, M87* has a shadow diameter of {#} µas.":
+  "Visto desde la Tierra, M87* tiene una sombra de {#} µas de diámetro.",
+"The galaxy is {#}° from the center of the view.":
+  "La galaxia está a {#}° del centro de la vista.",
 "lens and caustic":
   "lente y cáustica",
 "sky: illustrative":
@@ -328,6 +396,14 @@ VDI18N.add('es', 'demo/black-holes', {
   "= {#} años a {#} km/s",
 "ΔA = {#} × {#}⁻¹¹ g":
   "ΔA = {#} × {#}⁻¹¹ g",
+"Near the hole view: an observer hovers at {#} Schwarzschild radii, a distance of {#} AU, from a black hole of {#} × {#}⁹ solar masses.":
+  "Vista cerca del agujero: un observador flota a {#} radios de Schwarzschild, a una distancia de {#} UA, de un agujero negro de {#} × {#}⁹ masas solares.",
+"Schwarzschild radius {#} AU, photon sphere {#} AU, innermost stable orbit {#} AU.":
+  "Radio de Schwarzschild: {#} UA; esfera de fotones: {#} UA; órbita estable más interna: {#} UA.",
+"Tidal stretch across a {#} m person here is {#} × {#}⁻¹⁰ m/s² = {#} × {#}⁻¹¹ g.":
+  "El estiramiento de marea sobre una persona de {#} m aquí es {#} × {#}⁻¹⁰ m/s² = {#} × {#}⁻¹¹ g.",
+"A person survives the horizon.":
+  "Una persona sobrevive al horizonte.",
 "Close":
   "Cerrar"
 });

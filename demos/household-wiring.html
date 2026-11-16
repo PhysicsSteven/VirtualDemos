@@ -294,6 +294,26 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   /* a reading for the Readings section (tools/readings_panel.py): the setup and what the meters show now; once a device has tripped,
      what they showed just before it opened */
   const sig = (v, n = 4) => +(+v).toPrecision(n);
+  /* what the picture shows now, for a screen reader (VD.describe): the circuit, the protection, the readings (Blind hides the currents) */
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    const r = now(), hide = S.blind && !S.tripped, names = { lamp: 'a lamp', toaster: 'a toaster', kettle: 'a kettle', heater: 'a space heater' };
+    const out = [
+      `A wall cut open: a service panel with a ${S.rating} A breaker feeds ${S.len} m of ${S.gauge} gauge wire, hot, neutral and ground, to an outlet.`,
+      S.loads.length ? `Plugged in: ${S.loads.map((k) => names[k]).join(', ')}.` : 'Nothing is plugged in.',
+      S.fault === 'short' ? 'Worn insulation lets the hot wire touch the neutral.' : S.fault === 'case' ? 'The hot wire touches the metal case of the toaster.' : 'There is no fault.',
+      S.ground ? 'The ground wire is connected.' : 'The ground wire is broken.',
+      S.gfci ? 'A GFCI is on.' : 'There is no GFCI.',
+      S.touch ? `A person touches the toaster case, with ${S.skin} skin.` : 'No one touches the toaster.',
+      S.tripped ? `Tripped: ${S.tripped}.` : S.over > 0 ? 'Overloaded, not yet tripped.' : 'The protection is closed.'
+    ];
+    if (hide) out.push('Blind is on, so the currents, the heating and the shock effect are hidden.');
+    else {
+      out.push(`Current in the hot wire ${amps(r.Ihot)}, in the neutral ${amps(r.Ineu)}, in the ground wire ${amps(r.Ignd)}.`);
+      if (S.touch) out.push(`Current through the person ${amps(r.Ibody)}.`, `Effect on the person: ${shockEffect(r.Ibody)}.`);
+    }
+    out.push(`Voltage at the outlet ${S.tripped ? '0' : r.Vout.toFixed(1)} V, power to the appliances ${S.loads.reduce((a, k) => a + (r.loadP[k] || 0), 0).toFixed(0)} W.`);
+    return out;
+  });
   window.vdVersion = HW_VERSION;
   window.__hw = { S, now, state, solveCircuit };   /* debug hook for tools/breakit/household-wiring.cjs (break-it test, 2026-11-09) */
   window.vdShowCols = [['I_hot_A', 'Hot (A)'], ['V_outlet_V', 'Outlet (V)'], ['protection', 'Protection']];

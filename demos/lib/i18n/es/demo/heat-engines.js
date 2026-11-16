@@ -1,5 +1,7 @@
 /* demo/heat-engines in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/heat-engines', {
+"Describe the picture":
+  "Describir la imagen",
 "W net = {#} kJ":
   "W neto = {#} kJ",
 "clockwise: engine":
@@ -216,6 +218,26 @@ VDI18N.add('es', 'demo/heat-engines', {
   "Q_in (J)",
 "W_net (J)":
   "W_net (J)",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
+"Carnot cycle on a PV diagram with {#} corners, run clockwise as an engine.":
+  "Ciclo de Carnot en un diagrama PV con {#} esquinas, recorrido en sentido horario como motor.",
+"{#} mol of monatomic gas, γ = {#}/{#}.":
+  "{#} mol de gas monoatómico, γ = {#}/{#}.",
+"Temperature from {#} K to {#} K.":
+  "Temperatura de {#} K a {#} K.",
+"Heat in {#} kJ, heat out {#} kJ, net work {#} kJ.":
+  "Calor que entra: {#} kJ; calor que sale: {#} kJ; trabajo neto: {#} kJ.",
+"Efficiency {#}%, and the Carnot limit is {#}%.":
+  "Eficiencia de {#}%, y el límite de Carnot es {#}%.",
+"Playing.":
+  "En marcha.",
+"Now on leg {#} of {#}, expansion at {#} K.":
+  "Ahora en el tramo {#} de {#}, expansión a {#} K.",
+"Pressure {#} kPa, volume {#} L, temperature {#} K.":
+  "Presión de {#} kPa, volumen de {#} L, temperatura de {#} K.",
 "W {#}→{#} = area under the leg = −{#} kJ":
   "W {#}→{#} = área bajo el tramo = −{#} kJ",
 "insulated: no heat flows, Q = {#}":
@@ -342,6 +364,16 @@ VDI18N.add('es', 'demo/heat-engines', {
   "Recorrido al revés, este ciclo recibe calor incluso cuando el gas está a {#} K y cede calor incluso cuando está a solo {#} K. Ningún par de depósitos fijos se ajusta a eso, así que no puede funcionar como refrigerador entre un espacio frío y un cuarto más caliente. Un refrigerador debe recibir su calor donde el gas está más frío, como lo hace el ciclo de Carnot invertido.",
 "Leg {#}→{#}: isothermal expansion at {#} K":
   "Tramo {#}→{#}: expansión isotérmica a {#} K",
+"Your own cycle on a PV diagram with {#} corners, run counterclockwise as a refrigerator or heat pump.":
+  "Tu propio ciclo en un diagrama PV con {#} esquinas, recorrido en sentido antihorario como refrigerador o bomba de calor.",
+"{#} mol of diatomic gas, γ = {#}/{#}.":
+  "{#} mol de gas diatómico, γ = {#}/{#}.",
+"Heat from the cold side {#} kJ, heat to the hot side {#} kJ, work in {#} kJ.":
+  "Calor del lado frío: {#} kJ; calor al lado caliente: {#} kJ; trabajo que entra: {#} kJ.",
+"Refrigerator COP {#}.":
+  "COP del refrigerador: {#}.",
+"Paused.":
+  "En pausa.",
 "W {#}→{#} = {#}: no volume change":
   "W {#}→{#} = {#}: sin cambio de volumen",
 "cold side: heat flows into the gas":
@@ -350,12 +382,26 @@ VDI18N.add('es', 'demo/heat-engines', {
   "pistón inmóvil: W = {#}",
 "Leg {#}→{#}: isochoric heating":
   "Tramo {#}→{#}: calentamiento isocórico",
+"Now on leg {#} of {#}, heating.":
+  "Ahora en el tramo {#} de {#}, calentamiento.",
 "hot side: heat flows out of the gas":
   "lado caliente: el calor sale del gas",
 "Leg {#}→{#}: isobaric compression, cooling":
   "Tramo {#}→{#}: compresión isobárica, enfriamiento",
+"Now on leg {#} of {#}, compression, cooling.":
+  "Ahora en el tramo {#} de {#}, compresión y enfriamiento.",
 "Entropy at the corners: −{#}, −{#}, {#}, −{#} J/K. Summing ΔS over the legs gives zero to rounding: S is a state function, so it returns to its starting value.":
   "Entropía en las esquinas: −{#}, −{#}, {#}, −{#} J/K. La suma de ΔS en los tramos da cero salvo redondeo: S es una función de estado, así que regresa a su valor inicial.",
+"Diesel cycle on a PV diagram with {#} corners, run clockwise as an engine.":
+  "Ciclo Diésel en un diagrama PV con {#} esquinas, recorrido en sentido horario como motor.",
+"Now on leg {#} of {#}, compression.":
+  "Ahora en el tramo {#} de {#}, compresión.",
+"Stirling cycle on a PV diagram with {#} corners, run clockwise as an engine.":
+  "Ciclo Stirling en un diagrama PV con {#} esquinas, recorrido en sentido horario como motor.",
+"The ideal regenerator is on.":
+  "El regenerador ideal está activado.",
+"Now on leg {#} of {#}, compression at {#} K.":
+  "Ahora en el tramo {#} de {#}, compresión a {#} K.",
 "<a><span>←</span> <span>Heat Capacities of Gases</span></a><a><span>Entropy and the Second Law</span> <span>→</span></a>":
   "<a><span>←</span> <span>Capacidades caloríficas de los gases</span></a><a><span>Entropía y la segunda ley</span> <span>→</span></a>",
 "The gasoline engine as an air standard cycle. Its efficiency η = {#} − r<sup>{#}−γ</sup> depends only on the compression ratio r. Raise r and watch η climb, though it stays well below the Carnot limit for its {#} K to {#} K span.":

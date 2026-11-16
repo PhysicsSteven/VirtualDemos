@@ -14,6 +14,12 @@ VDI18N.add('es', 'demo/sound-intensity', {
   "SONÓMETRO",
 "speakers and meter not to scale":
   "bocinas y sonómetro fuera de escala",
+"Describe the picture":
+  "Describir la imagen",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "Sound Intensity and Decibels":
   "Intensidad del sonido y decibeles",
 "<a><span>←</span> <span>Ultrasound: Echoes and Blood Flow</span></a><a><span>Room Acoustics and the Anechoic Chamber</span> <span>→</span></a>":
@@ -24,6 +30,24 @@ VDI18N.add('es', 'demo/sound-intensity', {
   "I₀ = {#}⁻¹² W/m², campo libre",
 "A loudspeaker on a stand at the left of an open field and a sound level meter on a tripod over a measuring tape. Drag the meter along the tape to change the distance r. Left and right arrows move it by {#} m (with Shift, {#} m); page up and page down double or halve r.":
   "Una bocina sobre un soporte a la izquierda de un campo abierto y un sonómetro sobre un tripié encima de una cinta métrica. Arrastra el sonómetro a lo largo de la cinta para cambiar la distancia r. Las flechas izquierda y derecha lo mueven {#} m (con Shift, {#} m); Re Pág y Av Pág duplican o reducen a la mitad r.",
+"A loudspeaker on a stand at the left of an open field, and a sound level meter on a tripod over a measuring tape.":
+  "Una bocina sobre un soporte a la izquierda de un campo abierto y un sonómetro sobre un tripié, junto a una cinta métrica.",
+"The meter is {#} m from the speaker, and the tape is {#} m long.":
+  "El sonómetro está a {#} m de la bocina, y la cinta mide {#} m.",
+"Source A has a power of {#} mW.":
+  "La fuente A tiene una potencia de {#} mW.",
+"Source B is off.":
+  "La fuente B está apagada.",
+"There is no background noise.":
+  "No hay ruido de fondo.",
+"The meter reads {#} dB.":
+  "El sonómetro marca {#} dB.",
+"Total intensity {#} × {#}⁻⁴ W/m², pressure amplitude {#} × {#}⁻¹ Pa.":
+  "Intensidad total de {#} × {#}⁻⁴ W/m², amplitud de presión de {#} × {#}⁻¹ Pa.",
+"Source A alone gives {#} dB.":
+  "La fuente A sola da {#} dB.",
+"No readings are recorded.":
+  "No hay lecturas registradas.",
 "Set up the sources and the meter":
   "Prepara las fuentes y el sonómetro",
 "<span>Set up</span>":
@@ -74,6 +98,12 @@ VDI18N.add('es', 'demo/sound-intensity', {
   "Aún no hay lecturas. Coloca el sonómetro y luego registra.",
 "The recorded levels against distance, with r doubling at each grid line, a least squares line and its residuals.":
   "Los niveles registrados en función de la distancia, con r duplicándose en cada línea de la cuadrícula, una recta de mínimos cuadrados y sus residuos.",
+"Graph of the recorded levels in dB against the distance r on a doubling scale, with a least squares line and its residuals.":
+  "Gráfica de los niveles registrados en dB contra la distancia r en una escala de duplicación, con una recta de mínimos cuadrados y sus residuos.",
+"No points are plotted for these sources.":
+  "No hay puntos graficados para estas fuentes.",
+"Record at least two distances with these sources to see the line.":
+  "Registra al menos dos distancias con estas fuentes para ver la recta.",
 "Record at least two distances with these sources.":
   "Registra al menos dos distancias con estas fuentes.",
 "Each reading stores r, the sources and the meter's level. The graph puts r on a doubling scale (log₂ r), so the inverse square law is a straight line; its slope is the change in level per doubling. It uses the readings taken with the sources as they are set now.":
@@ -94,6 +124,12 @@ VDI18N.add('es', 'demo/sound-intensity', {
   "Dos fuentes de {#} mW una junto a la otra. Lee el nivel con solo A, solo B y ambas: dos fuentes independientes iguales dan el doble de intensidad, que son solo {#} dB más, a cualquier distancia.",
 "Source B alone":
   "Solo la fuente B",
+"Source B is on, with a power of {#} mW.":
+  "La fuente B está encendida, con una potencia de {#} mW.",
+"Total intensity {#} × {#}⁻⁵ W/m², pressure amplitude {#} × {#}⁻¹ Pa.":
+  "Intensidad total de {#} × {#}⁻⁵ W/m², amplitud de presión de {#} × {#}⁻¹ Pa.",
+"Source B alone gives {#} dB.":
+  "La fuente B sola da {#} dB.",
 "A {#} mW source and a {#} mW source, {#} dB quieter. Switch B on and off: it adds only {#} dB. A source {#} dB below another hardly changes the level.":
   "Una fuente de {#} mW y una de {#} mW, {#} dB más débil. Enciende y apaga B: añade solo {#} dB. Una fuente {#} dB por debajo de otra casi no cambia el nivel.",
 "The {#} mW source with a steady {#} dB background. Near the speaker the background does not matter; far away the level falls more slowly toward {#} dB ({#} dB at {#} m, where the source alone gives {#} dB). Find where the {#} dB per doubling rule starts to fail.":
@@ -108,8 +144,18 @@ VDI18N.add('es', 'demo/sound-intensity', {
   "oculta: la fuente es un misterio",
 "A mystery":
   "A misteriosa",
+"Source A is a mystery: its power is hidden.":
+  "La fuente A es un misterio: su potencia está oculta.",
+"{#} reading is recorded.":
+  "Hay {#} lectura registrada.",
+"{#} point is plotted for these sources.":
+  "Hay {#} punto graficado para estas fuentes.",
 "Move the meter toward or away from the speaker by {#} m (Shift: {#} m)":
   "Acerca o aleja el medidor de la bocina {#} m (Shift: {#} m)",
+"{#} readings are recorded.":
+  "Hay {#} lecturas registradas.",
+"{#} points are plotted for these sources.":
+  "Hay {#} puntos graficados para estas fuentes.",
 "same power, {#}, {#}, {#} squares: I ∝ {#}/r²":
   "misma potencia, {#}, {#}, {#} cuadros: I ∝ {#}/r²",
 "A: mystery background {#} dB":

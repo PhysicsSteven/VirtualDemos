@@ -1,5 +1,11 @@
 /* demo/particles in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/particles', {
+"Describe the picture":
+  "Describir la imagen",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "Particles, Quarks and Conservation Laws":
   "Partículas, quarks y leyes de conservación",
 "<a>Particle physics and cosmology</a>":
@@ -656,6 +662,18 @@ VDI18N.add('es', 'demo/particles', {
   "Haz clic en el vértice de la V",
 "Click points along the negative track ({#} or more); drag to pan":
   "Haz clic en puntos a lo largo de la traza negativa ({#} o más); arrastra para desplazar",
+"Bubble chamber view: event {#}, a neutral particle that decays into two charged tracks, in a magnetic field of {#} T.":
+  "Vista de cámara de burbujas: evento {#}, una partícula neutra que decae en dos trazas cargadas, en un campo magnético de {#} T.",
+"Marked on the positive track: {#} of {#} points. Marked on the negative track: {#} of {#} points.":
+  "Marcados en la traza positiva: {#} de {#} puntos. Marcados en la traza negativa: {#} de {#} puntos.",
+"The positive track has no fitted radius yet.":
+  "La traza positiva todavía no tiene un radio ajustado.",
+"The negative track has no fitted radius yet.":
+  "La traza negativa todavía no tiene un radio ajustado.",
+"The opening angle is not measured yet.":
+  "Todavía no se mide el ángulo de apertura.",
+"The momenta and masses need both tracks and the angle.":
+  "Los momentos y las masas necesitan las dos trazas y el ángulo.",
 "Example {#}a: a free neutron decays to a proton, an electron and an electron antineutrino. Check every conservation law, then say which interaction does it and why. Try removing the antineutrino.":
   "Ejemplo {#}a: un neutrón libre decae en un protón, un electrón y un antineutrino electrónico. Verifica cada ley de conservación y luego di qué interacción lo produce y por qué. Prueba a quitar el antineutrino.",
 "Remove neutron":

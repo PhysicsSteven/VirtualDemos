@@ -2340,6 +2340,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       buildCut();
       bind3D(el);
       glc = el;
+      if (window.VD && VD.describe) VD.describe(el, () => (view === '3d' && V3.ok ? srPic() : []));
       el.addEventListener('webglcontextlost', (e) => { e.preventDefault(); fail3D('The 3D view stopped (the browser dropped its WebGL context), so the flat slice is shown.'); });
       resize3D();
       return true;
@@ -3802,6 +3803,28 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   else $('msg').textContent = 'No datasets are embedded in this page. Use Load MESA file to open a .json.gz from extract_profiles.py.';
   /* for the break-it test (tools/breakit/star-slice.cjs) */
   window.__ss = { S, cur, disp, RSUN_KM, sci, grp, fmtRsun, get view() { return view; } };
+  /* what the picture shows now, for a screen reader (VD.describe): the star at the saved moment on show, from the run's own numbers; the 3D view is described when it is created */
+  function srPic() {
+    const D = S.D, mo = cur();
+    if (!D || !mo) return ['The star is still loading.'];
+    const MODE = { glow: 'glow', comp: 'element', temp: 'temperature', dens: 'density', burn: 'burning', phase: 'phase', gam: 'gamma' };
+    const out = [`A cross section of the star from the run ${D.label}.`,
+      view === '3d' && V3.ok ? `The star is shown in 3D, with a wedge of ${S.cut}° cut away to show the inside.` : 'The star is shown as a flat slice through its center.',
+      `The color shows ${MODE[S.mode] || S.mode}.`, S.log ? 'The radius is on a log scale.' : 'The radius is on a linear scale.',
+      { t: `Saved moment ${S.idx + 1} of ${D.N}.`, live: !S.playing }, S.playing ? 'Playing.' : 'Paused.',
+      { t: `Stage, inferred from the abundances: ${mo.stage}.`, live: !S.playing },
+      { t: mo.age != null ? `Age ${fmtAge(mo.age)}.` : '', live: !S.playing },
+      { t: `Mass ${sci(mo.M, 4)} M☉, radius ${fmtRsun(mo.R)}.`, live: !S.playing }];
+    if (mo.L != null) out.push({ t: `Luminosity ${sci(mo.L, 4)} L☉.`, live: !S.playing });
+    if (mo.Teff != null) out.push({ t: `Surface temperature ${grp(mo.Teff)} K.`, live: !S.playing });
+    const cc = [['H', mo.cH], ['He', mo.cHe], ['C', mo.cC], ['O', mo.cO]].filter((x) => x[1] != null);
+    if (cc.length) out.push({ t: `Center mass fractions: ${cc.map(([k, v]) => k + ' ' + sci(v, 3)).join(', ')}.`, live: !S.playing });
+    out.push({ t: mo.convZones.some((z) => z.core) ? 'There is a convective core.' : 'There is no convective core.', live: !S.playing });
+    const BR = [...new Set((mo.burn || []).map((b) => b.name))];
+    out.push({ t: BR.length ? `Burning regions: ${BR.join(', ')}.` : 'No burning region.', live: !S.playing });
+    return out;
+  }
+  if (window.VD && VD.describe) VD.describe(cv, () => (view === '3d' && V3.ok ? [] : srPic()));
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(markAll);
 })();
 </script>

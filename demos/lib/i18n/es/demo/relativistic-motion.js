@@ -26,8 +26,12 @@ VDI18N.add('es', 'demo/relativistic-motion', {
   "relatividad, cohete a {#}c",
 "Galileo: u′ + v":
   "Galileo: u′ + v",
+"Describe the picture":
+  "Describir la imagen",
 "Velocity, Momentum and Energy Near c":
   "Velocidad, momento y energía cerca de c",
+"<a><span>←</span> <span>Magnetism from Relativity</span></a><a><span>Doppler Effect and Shock Waves</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Magnetismo a partir de la relatividad</span></a><a><span>Efecto Doppler y ondas de choque</span> <span>→</span></a>",
 "Fire a probe from a fast rocket and time it between two beacons: the speeds do not simply add. Push a particle with a steady force and watch its momentum grow without limit while its speed creeps up to c. Accelerate electrons through millions of volts and time their flight, as Bertozzi did in {#}.":
   "Dispara una sonda desde un cohete rápido y mídela entre dos balizas: las velocidades no simplemente se suman. Empuja una partícula con una fuerza constante y observa cómo su momento crece sin límite mientras su rapidez se acerca poco a poco a c. Acelera electrones con millones de volts y mide su tiempo de vuelo, como lo hizo Bertozzi en {#}.",
 "speeds in units of c · times in s":
@@ -46,8 +50,26 @@ VDI18N.add('es', 'demo/relativistic-motion', {
   "Vuelo de electrones",
 "A rocket in space passes a launch mark and fires a probe forward; two beacons {#} light seconds apart time the probe and the rocket. Space launches or pauses.":
   "Un cohete en el espacio pasa una marca de lanzamiento y dispara una sonda hacia adelante; dos balizas separadas {#} segundos luz miden el tiempo de la sonda y del cohete. Espacio lanza o pausa.",
+"A rocket in space passes a launch mark, then fires a probe forward. Two beacons, {#} light seconds apart, time the probe and the rocket.":
+  "Un cohete en el espacio pasa una marca de lanzamiento y luego dispara una sonda hacia adelante. Dos balizas, separadas {#} segundos luz, miden el tiempo de la sonda y del cohete.",
+"Rocket speed {#}c.":
+  "Rapidez del cohete: {#}c.",
+"The probe is launched at {#}c relative to the rocket.":
+  "La sonda se lanza a {#}c respecto al cohete.",
+"Paused.":
+  "En pausa.",
+"{#} s on the clock.":
+  "{#} s en el reloj.",
+"The probe has not reached beacon B yet.":
+  "La sonda todavía no llega a la baliza B.",
+"The rocket has not reached beacon B yet.":
+  "El cohete todavía no llega a la baliza B.",
+"The probe moves at {#}c relative to the ground, where Galileo's sum would give {#}c.":
+  "La sonda se mueve a {#}c respecto al suelo, donde la suma de Galileo daría {#}c.",
 "Graph of the ground speed against the launch speed, with the Galilean sum for comparison.":
   "Gráfica de la rapidez respecto a tierra en función de la rapidez de lanzamiento, con la suma galileana para comparar.",
+"Graph of the ground speed of the probe against the launch speed, with the relativistic curve staying below c and the Galilean sum for comparison.":
+  "Gráfica de la rapidez de la sonda respecto al suelo contra la rapidez de lanzamiento, con la curva relativista que se queda por debajo de c y la suma galileana para comparar.",
 "The rocket and the probe":
   "El cohete y la sonda",
 "<span>Beacons A and B, {#} light seconds apart, at rest in the ground frame</span>":
@@ -134,8 +156,6 @@ VDI18N.add('es', 'demo/relativistic-motion', {
   "Fuerza constante: una partícula parte del reposo en un campo eléctrico uniforme E dentro de un tubo de vacío largo y recto, así que la fuerza F = qE sobre ella es la misma a cualquier rapidez (el campo es estático; se omite la energía que radia la carga acelerada: en cualquier tiempo que alcanza el botón Paso es menor que {#} parte en {#}¹⁰ del trabajo realizado). La segunda ley de Newton en su forma de momento, F = dp/dt, se cumple en relatividad con p = γmv (§{#}), así que p = Ft exactamente. La rapidez sigue v/c = kt/√({#} + (kt)²) con k = F/(mc), y la distancia es x = (mc²/F)(√({#} + (kt)²) − {#}). Las lecturas son los valores del modelo en el tiempo del reloj; el reloj avanza más lento para que la corrida dure unos {#} s a {#}×. Las energías en reposo son valores de CODATA {#}.",
 "Electron flight: modeled on W. Bertozzi, \"Speed and kinetic energy of relativistic electrons\", Am. J. Phys. {#}, {#} ({#}), who timed electrons from {#} to {#} MeV over {#} m. A particle of charge qe accelerated from rest through V megavolts gains K = qV MeV (§{#}). Its speed follows from K = (γ − {#})mc², and the time of flight between the two pickups, {#} m apart, is shown to {#} ns. A magnet of uniform field B then bends it in a circle of radius r = p/(qeB), with pc = √(K² + 2Kmc²); the ruler reads r to {#} cm. The pictures of the bend and the bunch are not to scale. The particle is not slowed by anything in the tube. Muons are timed as if none decayed in flight: their mean life is {#} μs, so about {#}% would decay over the {#} m at {#} MV, under {#}% from {#} MV up, but {#}% at {#} MV and more than half at {#} MV. The mystery particle is one of the electron, muon, proton or deuteron.":
   "Vuelo de electrones: modelado según W. Bertozzi, \"Speed and kinetic energy of relativistic electrons\", Am. J. Phys. {#}, {#} ({#}), quien midió el tiempo de electrones de {#} a {#} MeV a lo largo de {#} m. Una partícula de carga qe acelerada desde el reposo con V megavolts gana K = qV MeV (§{#}). Su rapidez se obtiene de K = (γ − {#})mc², y el tiempo de vuelo entre los dos sensores, separados {#} m, se muestra con precisión de {#} ns. Luego un imán de campo uniforme B la curva en un círculo de radio r = p/(qeB), con pc = √(K² + 2Kmc²); la regla lee r con precisión de {#} cm. Los dibujos de la curva y del paquete no están a escala. Nada en el tubo frena a la partícula. Los muones se miden como si ninguno decayera en vuelo: su vida media es de {#} μs, así que cerca de {#}% decaería en los {#} m a {#} MV, menos de {#}% de {#} MV en adelante, pero {#}% a {#} MV y más de la mitad a {#} MV. La partícula misteriosa es el electrón, el muon, el protón o el deuterón.",
-"<a><span>←</span> <span>Magnetism from Relativity</span></a><a><span>Doppler Effect and Shock Waves</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Magnetismo a partir de la relatividad</span></a><a><span>Efecto Doppler y ondas de choque</span> <span>→</span></a>",
 "{#} ls":
   "{#} sl",
 "ACCELERATOR":
@@ -146,6 +166,10 @@ VDI18N.add('es', 'demo/relativistic-motion', {
   "{#} m entre los sensores",
 "magnet":
   "imán",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "force F = {#} × {#}⁻¹³ N on the particle, the same all the way":
   "fuerza F = {#} × {#}⁻¹³ N sobre la partícula, la misma en todo el camino",
 "distance from the start (m)":
@@ -254,10 +278,28 @@ VDI18N.add('es', 'demo/relativistic-motion', {
   "misterio (carga de magnitud e)",
 "Fire a bunch first, so the pickups can time it.":
   "Dispara primero un paquete, para que los sensores midan su tiempo.",
+"Bunches of particles are accelerated through a voltage, timed over {#} m, and bent in a magnetic field.":
+  "Paquetes de partículas se aceleran con un voltaje, se les mide el tiempo en {#} m y se curvan en un campo magnético.",
+"The particle is a mystery particle with a charge of magnitude e.":
+  "La partícula es una partícula misteriosa con una carga de magnitud e.",
+"Accelerating voltage {#} MV, so the kinetic energy is {#} MeV.":
+  "Voltaje de aceleración de {#} MV, así que la energía cinética es de {#} MeV.",
+"No bunch has been timed yet.":
+  "Todavía no se mide el tiempo de ningún paquete.",
+"The magnetic field is {#} T.":
+  "El campo magnético es de {#} T.",
+"The speed, γ and momentum are hidden.":
+  "La rapidez, γ y el momento están ocultos.",
+"Graph of v squared over c squared against kinetic energy over mc squared, with the relativistic curve leveling off below {#} and the Newtonian line rising past it.":
+  "Gráfica de v al cuadrado sobre c al cuadrado contra la energía cinética sobre mc al cuadrado, con la curva relativista que se aplana por debajo de {#} y la recta newtoniana que sube más allá.",
 "muon":
   "muon",
 "Muon, mc² = {#} MeV":
   "Muon, mc² = {#} MeV",
+"The particle is a Muon, with a rest energy of {#} MeV.":
+  "La partícula es un muón, con una energía en reposo de {#} MeV.",
+"Speed {#}c, γ = {#}, momentum pc {#} MeV.":
+  "Rapidez de {#}c, γ = {#}, momento pc de {#} MeV.",
 "proton":
   "protón",
 "Proton, mc² = {#} MeV":
@@ -272,6 +314,18 @@ VDI18N.add('es', 'demo/relativistic-motion', {
   "Partícula alfa, mc² = {#} MeV",
 "bend radius —":
   "radio de curvatura —",
+"A Electron with a rest energy of {#} MeV is pushed from rest by a steady electric field of {#} MV/m.":
+  "Un electrón con una energía en reposo de {#} MeV es empujado desde el reposo por un campo eléctrico constante de {#} MV/m.",
+"The force is {#} × {#}⁻¹³ N.":
+  "La fuerza es de {#} × {#}⁻¹³ N.",
+"Time {#} ns, distance {#} m.":
+  "Tiempo de {#} ns, distancia de {#} m.",
+"Speed {#}c.":
+  "Rapidez de {#}c.",
+"Momentum {#} MeV/c, γ = {#}, and Newton's speed would be {#}c.":
+  "Momento de {#} MeV/c, γ = {#}, y la rapidez de Newton sería de {#}c.",
+"Graph of speed in units of c against time in ns, with the relativistic curve leveling off below c and the Newtonian line rising past it.":
+  "Gráfica de la rapidez en unidades de c contra el tiempo en ns, con la curva relativista que se aplana por debajo de c y la recta newtoniana que sube más allá.",
 "bend radius — · radius over {#} cm, drawn at {#} cm":
   "radio de curvatura — · radio mayor que {#} cm, dibujado a {#} cm",
 "Close":

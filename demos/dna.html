@@ -1232,6 +1232,30 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   setSpin(!reduce);
   applyPreset('dickerson');
   if (reduce) setSpin(false);
+  /* what the 3D view shows now, for a screen reader (VD.describe): the molecule, how it is drawn, the selected pair, the readings */
+  if (window.VD && VD.describe && G.ready) VD.describe(G.el, () => {
+    const n = S.seq.length, m = models[0], gc = [...S.seq].filter((c) => c === 'G' || c === 'C').length, t = meltTemp(S.seq, S.na, S.ct);
+    const VIEW = { ball: 'ball and stick', space: 'space filling', cartoon: 'cartoon' }, COL = { element: 'element', base: 'base', strand: 'strand' };
+    const fm = (fn) => models.map((mm) => fn(mm)).join(' and ');
+    const avg = (mm, k) => mm.steps.length ? mm.steps.reduce((a, st) => a + st[k], 0) / mm.steps.length : null;
+    const out = [
+      models.length > 1 ? `Two models of the same ${n} base pair sequence: B DNA on top and A DNA below.` : `A ${FORMS[S.form].name} double helix of ${n} base pairs.`,
+      n > 24 ? `The first 24 bases of strand 1, from the 5′ end, are ${S.seq.slice(0, 24)}.` : `Strand 1, from the 5′ end, is ${S.seq}.`,
+      `Drawn as ${VIEW[S.view]}, colored by ${COL[S.color]}.`,
+      S.show.hb && S.view !== 'space' ? 'Hydrogen bonds are shown.' : 'Hydrogen bonds are not shown.',
+      S.show.gr ? 'The minor and major grooves are marked.' : 'The grooves are not marked.',
+      `${gc} of the ${n} pairs are G·C, ${(100 * gc / n).toFixed(0)}%.`,
+      `Length ${fm((mm) => (n * mm.rise / 10).toFixed(2) + ' nm')}, with ${fm((mm) => (n * mm.twist / 360).toFixed(2))} turns.`,
+      `Average rise ${fm((mm) => (avg(mm, 'rise') ?? mm.rise).toFixed(2) + ' Å')} and twist ${fm((mm) => (avg(mm, 'twist') ?? mm.twist).toFixed(1) + '°')} per pair.`,
+      n >= 2 ? `Estimated melting temperature ${t.tm.toFixed(1)} °C.` : 'No melting temperature for one base.'
+    ];
+    if (S.sel) {
+      const k = S.sel.pair, sm = S.sel.model, b1 = sm.seq[k], b2 = COMP[b1];
+      out.splice(3, 0, `Pair ${k + 1} is selected, ${b1} with ${b2}, with ${sm.hb.filter((h) => h.pair === k).length} hydrogen bonds.`);
+    } else out.splice(3, 0, 'No pair is selected.');
+    out.push({ t: S.spin ? 'The helix is spinning.' : 'The helix is not spinning.', live: false });
+    return out;
+  });
 })();
 </script>
 </body>

@@ -20,6 +20,8 @@ VDI18N.add('es', 'demo/early-universe', {
   "de Sitter",
 "today":
   "hoy",
+"Describe the picture":
+  "Describir la imagen",
 "The Big Bang and the Early Universe":
   "El Big Bang y el universo temprano",
 "<a>Particle physics and cosmology</a>":
@@ -54,8 +56,34 @@ VDI18N.add('es', 'demo/early-universe', {
   "Perspectiva de la vista de expansión",
 "A patch of the universe full of galaxies, drawn to a fixed ruler in megaparsecs. Click a galaxy to watch from it. Space plays or pauses.":
   "Una región del universo llena de galaxias, dibujada con una regla fija en megapársecs. Haz clic en una galaxia para observar desde ella. Espacio inicia o pausa.",
+"Expansion view: a patch of the universe in the Planck ΛCDM model, with a Hubble constant of {#} km/s/Mpc.":
+  "Vista de expansión: una porción del universo en el modelo ΛCDM de Planck, con una constante de Hubble de {#} km/s/Mpc.",
+"You are watching from the Milky Way.":
+  "Estás observando desde la Vía Láctea.",
+"Paused.":
+  "En pausa.",
+"{#} Gyr from today, scale factor {#}.":
+  "{#} Ga a partir de hoy, factor de escala {#}.",
+"The scale factor is at least {#}, so there is no redshift.":
+  "El factor de escala es al menos {#}, así que no hay corrimiento al rojo.",
+"Galaxy A is {#} Mpc away.":
+  "La galaxia A está a {#} Mpc.",
+"Galaxy B is {#} Mpc away.":
+  "La galaxia B está a {#} Mpc.",
+"Galaxy C is {#} Mpc away.":
+  "La galaxia C está a {#} Mpc.",
+"Galaxy D is {#} Mpc away.":
+  "La galaxia D está a {#} Mpc.",
+"Galaxy E is {#} Mpc away.":
+  "La galaxia E está a {#} Mpc.",
+"Hubble parameter {#} km/s/Mpc.":
+  "Parámetro de Hubble: {#} km/s/Mpc.",
 "The graph for the view.":
   "La gráfica de la vista.",
+"Graph of the scale factor against time from today for the four models.":
+  "Gráfica del factor de escala contra el tiempo a partir de hoy para los cuatro modelos.",
+"A marker is at {#} Gyr.":
+  "Hay un marcador en {#} Ga.",
 "The model universe":
   "El universo modelo",
 "<span>A model universe: galaxies fixed in space that stretches by the scale factor a(t)</span>":
@@ -164,6 +192,10 @@ VDI18N.add('es', 'demo/early-universe', {
   "Fondo de microondas: la radiación que quedó del desacoplamiento en z ≈ {#} (Planck {#}: z* = {#}), cuando el universo estaba a unos {#} K. La longitud de onda de cada fotón se estira por el mismo factor ({#} + z), y un cuerpo negro a T estirado así es exactamente un cuerpo negro a T/({#} + z), así que el espectro conserva su forma y T = T₀({#} + z) con T₀ = {#} K (Fixsen {#}). Ley de Wien λ_max T = {#} × {#}⁻³ m·K (§{#}; por unidad de frecuencia el máximo está en ν = {#} GHz × T/K); densidad de fotones ({#}ζ({#})/π²)(kT/ħc)³ = {#} por cm³ hoy. Los cuadros son el espectro del monopolo de COBE FIRAS (Fixsen et al. {#}, Tabla {#}, de NASA LAMBDA): la columna {#} es un cuerpo negro de {#} K más el residuo medido, y las barras de error (en kJy/sr) son demasiado pequeñas para verse en la gráfica principal, así que el panel de la derecha muestra los residuos. Para cuerpos negros a temperaturas cotidianas, consulta la demo Radiación de cuerpo negro.",
 "drag to turn · click a galaxy in the middle layer to watch from it":
   "arrastra para girar · haz clic en una galaxia de la capa del medio para observar desde ella",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "time since the Big Bang t (s)":
   "tiempo desde el Big Bang t (s)",
 "temperature T (K)":
@@ -216,6 +248,22 @@ VDI18N.add('es', 'demo/early-universe', {
   "Era de los átomos",
 "t = {#} × {#}⁵ years":
   "t = {#} × {#}⁵ años",
+"Thermal history view: the universe {#} × {#}⁵ years after the Big Bang.":
+  "Vista de historia térmica: el universo {#} × {#}⁵ años después del Big Bang.",
+"Temperature {#} K, kT of {#} meV.":
+  "Temperatura de {#} K, kT de {#} meV.",
+"Redshift z = {#}.":
+  "Corrimiento al rojo z = {#}.",
+"Era: Age of atoms.":
+  "Era: la era de los átomos.",
+"The eras are marked.":
+  "Las eras están marcadas.",
+"The thresholds are marked.":
+  "Los umbrales están marcados.",
+"Graph of g star, how many kinds of particles share the energy, against time since the Big Bang on a log scale.":
+  "Gráfica de g asterisco, cuántos tipos de partículas se reparten la energía, contra el tiempo desde el Big Bang en escala logarítmica.",
+"A marker is at {#} × {#}⁵ years.":
+  "Hay un marcador en {#} × {#}⁵ años.",
 "proton":
   "protón",
 "neutron":
@@ -354,6 +402,20 @@ VDI18N.add('es', 'demo/early-universe', {
   "El fondo de microondas hoy: un cuerpo negro a {#} K con su máximo en {#} GHz (una longitud de onda de unos {#} mm). Los cuadros son las mediciones de COBE FIRAS (Fixsen et al. {#}); la gráfica de abajo las muestra contra la curva de cuerpo negro y, a la derecha, sus diminutas diferencias respecto a ella.",
 "The Microwave background view has no readings to record: use its readouts, or record temperatures in the Thermal history view.":
   "La vista Fondo de microondas no tiene lecturas para registrar: usa sus lecturas en pantalla, o registra temperaturas en la vista Historia térmica.",
+"Microwave background view: the blackbody spectrum of the early universe, with the COBE FIRAS measurements.":
+  "Vista del fondo de microondas: el espectro de cuerpo negro del universo temprano, con las mediciones de COBE FIRAS.",
+"Temperature {#} K.":
+  "Temperatura de {#} K.",
+"{#} Gyr after the Big Bang.":
+  "{#} Ga después del Big Bang.",
+"The spectrum today is also drawn.":
+  "También se dibuja el espectro de hoy.",
+"Peak wavelength {#} mm.":
+  "Longitud de onda del pico: {#} mm.",
+"Graph of intensity in MJy per steradian against wavenumber, with the COBE FIRAS points and a second panel of their residuals.":
+  "Gráfica de la intensidad en MJy por estereorradián contra el número de onda, con los puntos de COBE FIRAS y un segundo panel con sus residuos.",
+"The blackbody curve at {#} K is drawn.":
+  "Se dibuja la curva de cuerpo negro a {#} K.",
 "FIRAS; line: {#} K":
   "FIRAS; línea: {#} K",
 "TIME":
@@ -362,6 +424,12 @@ VDI18N.add('es', 'demo/early-universe', {
   "NEUTRONS",
 "HELIUM {#}":
   "HELIUM {#}",
+"Expansion view: a patch of the universe in the Matter only model, with a Hubble constant of {#} km/s/Mpc.":
+  "Vista de expansión: una porción del universo en el modelo de solo materia, con una constante de Hubble de {#} km/s/Mpc.",
+"{#} thousand years after the Big Bang.":
+  "{#} miles de años después del Big Bang.",
+"Peak wavelength {#} nm.":
+  "Longitud de onda del pico: {#} nm.",
 "Expansion: galaxies sit at fixed places in space (comoving positions) and space stretches by the scale factor a(t), with a = {#} today, so every distance between galaxies is a times its value today and every galaxy moves away from every other at v = H d, with H = (da/dt)/a (§{#}). The galaxies are a jittered grid one every {#} Mpc, drawn to a fixed ruler; real galaxies also have their own peculiar motions of a few hundred km/s, left out here, and galaxies did not exist before about z = {#}. a(t) comes from the Friedmann equation H² = H₀²(Ω_r/a⁴ + Ω_m/a³ + Ω_k/a² + Ω_Λ), integrated numerically. Planck ΛCDM uses the Planck {#} values H₀ = {#} km/s/Mpc and Ω_m = {#}, radiation from photons at T₀ = {#} K (Fixsen {#}) and three neutrino species (N_eff = {#}), and Ω_Λ = {#} − Ω_m − Ω_r = {#} so that it is flat; it treats the neutrinos as massless and gives an age of {#} Gyr (Planck: {#} ± {#}). Matter only gives {#}/(3H₀), the empty (Milne) universe {#}/H₀, and de Sitter, with only a cosmological constant, has no beginning. Every model has the same H₀ today. For measuring H₀ from real galaxy redshifts, see the Cosmic Distance Ladder demo.":
   "Expansión: las galaxias están en lugares fijos del espacio (posiciones comóviles) y el espacio se estira según el factor de escala a(t), con a = {#} hoy, así que cada distancia entre galaxias es a veces su valor de hoy y cada galaxia se aleja de todas las demás a v = H d, con H = (da/dt)/a (§{#}). Las galaxias forman una cuadrícula con pequeñas perturbaciones, una cada {#} Mpc, dibujada con una regla fija; las galaxias reales también tienen sus propios movimientos peculiares de unos cientos de km/s, que aquí se omiten, y las galaxias no existían antes de alrededor de z = {#}. a(t) viene de la ecuación de Friedmann H² = H₀²(Ω_r/a⁴ + Ω_m/a³ + Ω_k/a² + Ω_Λ), integrada numéricamente. ΛCDM de Planck usa los valores de Planck {#} H₀ = {#} km/s/Mpc y Ω_m = {#}, radiación de fotones a T₀ = {#} K (Fixsen {#}) y tres especies de neutrinos (N_eff = {#}), y Ω_Λ = {#} − Ω_m − Ω_r = {#} para que sea plano; trata a los neutrinos como sin masa y da una edad de {#} mil millones de años (Planck: {#} ± {#}). Solo materia da {#}/(3H₀), el universo vacío (de Milne) {#}/H₀, y de Sitter, con solo una constante cosmológica, no tiene comienzo. Todos los modelos tienen la misma H₀ hoy. Para medir H₀ a partir de corrimientos al rojo de galaxias reales, consulta la demo Escalera de distancias cósmicas.",
 "Close":

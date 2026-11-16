@@ -988,6 +988,47 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const howVid = () => ({ ex: 'cosmic-expansion', th: 'thermal-history', bbn: 'big-bang-helium', cmb: 'thermal-history' })[S.view];
   VD.howTo({ src: () => `media/how-this-works/${howVid()}.mp4`, poster: () => `media/how-this-works/${howVid()}.jpg` });
 
+  /* what the pictures show now, for a screen reader (VD.describe): the main picture by view, and the graph */
+  if (window.VD && VD.describe) {
+    const run = () => (S.run ? 'Playing.' : 'Paused.'), B = () => S.blind;
+    VD.describe(can, () => {
+      if (S.view === 'ex') {
+        const E = X(), a = aNow(), h0 = homeG(), m = E.m;
+        const out = [`Expansion view: a patch of the universe in the ${MODEL_NAME[S.ex.model]} model, with a Hubble constant of ${f(S.ex.H0, 1)} km/s/Mpc.`,
+          S.ex.home[0] === 0 && S.ex.home[1] === 0 ? 'You are watching from the Milky Way.' : 'You are watching from a galaxy you chose.', run()];
+        if (a <= 0) return out.concat([{ t: `${f(S.ex.tau, 2)} Gyr from today, before this model's Big Bang.`, live: !S.run }]);
+        out.push({ t: `${f(S.ex.tau, 2)} Gyr from today, scale factor ${f(a, 4)}.`, live: !S.run });
+        out.push(a < 1 ? { t: `Redshift z = ${f(1 / a - 1, 3)}.`, live: !S.run } : { t: 'The scale factor is at least 1, so there is no redshift.', live: !S.run });
+        MARKED.forEach(([nm, i, j]) => out.push({ t: `Galaxy ${nm} is ${f(properDist(a, galaxyAt(i, j), h0), 2)} Mpc away.`, live: !S.run }));
+        out.push(B() ? 'The Hubble parameter and the speeds are hidden.' : { t: `Hubble parameter ${f(Hof(m, a), 2)} km/s/Mpc.`, live: !S.run });
+        return out;
+      }
+      if (S.view === 'th') {
+        const ts = Math.pow(10, S.th.logt), Tk = tempAt(K, ts);
+        return [`Thermal history view: the universe ${tWords(ts)} after the Big Bang.`, `Temperature ${sci(Tk, 4)} K, kT of ${eV(KB_EV * Tk)}.`, `Redshift z = ${sci(1 / thA(Tk) - 1, 4)}.`, `Era: ${eraAt(ts)[0]}.`,
+          S.th.eras ? 'The eras are marked.' : 'The eras are not marked.', S.th.thr ? 'The thresholds are marked.' : 'The thresholds are not marked.'];
+      }
+      if (S.view === 'bbn') {
+        const r = bbn(bbnOpt(), K), ts = bbnT(), cc = sampleCount(NUC, bbnOpt(), K, ts);
+        const out = [`Big Bang helium view: a sample of 2000 nucleons at ${tWords(ts)} after the Big Bang.`, run(), `Neutrons freeze out at ${f(r.tf, 2)} s, and deuterium forms at ${S.bbn.tD} s.`,
+          `Neutrons at freeze out in the sample: ${cc.nF}.`, ts >= r.tD ? `Neutrons left when deuterium forms: ${cc.nD}, with ${cc.He} helium 4 nuclei.` : 'Deuterium has not formed yet.'];
+        if (ts >= r.tD) out.push(`Helium mass fraction from the sample ${f(cc.Y, 4)}.`);
+        out.push(B() ? 'The predicted neutron to proton ratios and helium fraction are hidden.' : `Predicted helium mass fraction ${f(r.Y, 4)}, observed 0.245 plus or minus 0.004.`);
+        return out;
+      }
+      const Tk = cmbT(), a = 1 / (1 + S.cmb.z), age = LCDM0.age + tauAt(LCDM0, a);
+      return ['Microwave background view: the blackbody spectrum of the early universe, with the COBE FIRAS measurements.', run(), { t: `Redshift z = ${S.cmb.z}.`, live: !S.run },
+        { t: `Temperature ${f(Tk, Tk < 100 ? 4 : 1)} K.`, live: !S.run }, { t: age < 0.01 ? `${f(age * 1e6, 0)} thousand years after the Big Bang.` : `${f(age, 3)} Gyr after the Big Bang.`, live: !S.run },
+        S.cmb.today ? 'The spectrum today is also drawn.' : 'The spectrum today is not drawn.',
+        B() ? 'The peak wavelength, photon density and best fit are hidden.' : `Peak wavelength ${WIEN_B / Tk >= 1e-3 ? f(WIEN_B / Tk * 1e3, 3) + ' mm' : f(WIEN_B / Tk * 1e9, 0) + ' nm'}.`];
+    });
+    VD.describe(cur, () => {
+      if (S.view === 'ex') return ['Graph of the scale factor against time from today for the four models.', { t: `A marker is at ${f(S.ex.tau, 2)} Gyr.`, live: !S.run }];
+      if (S.view === 'th') return ['Graph of g star, how many kinds of particles share the energy, against time since the Big Bang on a log scale.', `A marker is at ${tWords(Math.pow(10, S.th.logt))}.`];
+      if (S.view === 'bbn') return [`Graph of the neutron share n over n plus p against time on a log scale, ${B() ? 'without the theory curves' : 'with the equilibrium and the freeze out curves'}, and the sample of 2000 nucleons as dots.`];
+      return ['Graph of intensity in MJy per steradian against wavenumber, with the COBE FIRAS points and a second panel of their residuals.', B() ? 'The theory curve is hidden.' : 'The blackbody curve at 2.7255 K is drawn.'];
+    });
+  }
   window.__eu = { S, setView, applyPreset, setRun, redraw, sync, advance, bbnTrace, buildExpansion, X, aNow, K: () => K, E3 };
   requestAnimationFrame(frame);
 })();

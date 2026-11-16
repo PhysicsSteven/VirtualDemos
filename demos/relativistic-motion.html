@@ -717,6 +717,41 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   new ResizeObserver(resize).observe($('pane')); new ResizeObserver(resize).observe(cur.parentElement); resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   window.__rm = { S, setView, applyPreset, setRun, redraw, sync, finishVel, stepMom, fire, newRocket, newPart, momEnd, momStep };
+  /* what the pictures show now, for a screen reader (VD.describe): the picture by view, and the graph (Blind hides the graph and the derived values) */
+  if (window.VD && VD.describe) {
+    const run = () => (S.run ? 'Playing.' : 'Paused.');
+    VD.describe(can, () => {
+      if (S.view === 'vel') {
+        const h = S.vel, v = rocketV(), u = probeU(), pd = passed(u, h.t), rd = passed(v, h.t), hid = S.blind || h.mystery;
+        return ['A rocket in space passes a launch mark, then fires a probe forward. Two beacons, 3 light seconds apart, time the probe and the rocket.',
+          h.mystery ? 'The rocket speed is hidden.' : `Rocket speed ${f(v, 2)}c.`,
+          h.light ? 'The rocket fires a light pulse instead of a probe.' : `The probe is launched at ${f(h.u, 2)}c relative to the rocket.`, run(),
+          { t: `${f(h.t, 2)} s on the clock.`, live: false },
+          pd ? `${h.light ? 'The light pulse' : 'The probe'} took ${f(pd.dt, 4)} s to go from beacon A to beacon B.` : `${h.light ? 'The light pulse' : 'The probe'} has not reached beacon B yet.`,
+          rd ? `The rocket took ${f(rd.dt, 4)} s from beacon A to beacon B.` : v > 0 ? 'The rocket has not reached beacon B yet.' : 'The rocket is at rest and never reaches beacon B.',
+          hid ? 'The ground speed of the probe and the Galilean sum are hidden.' : `The probe moves at ${f(u, 4)}c relative to the ground, where Galileo's sum would give ${f(galileo(v, launchU()), 4)}c.`];
+      }
+      if (S.view === 'mom') {
+        const s = mState(), P = PARTICLES[S.mom.part];
+        return [`A ${P.name} with a rest energy of ${sig(P.mc2, 6)} MeV is pushed from rest by a steady electric field of ${f(S.mom.E, 1)} MV/m.`, `The force is ${sci(s.F, 4)} N.`, run(),
+          { t: `Time ${sig(S.mom.t, 5)} ns, distance ${sig(s.x, 5)} m.`, live: false }, { t: `Speed ${f(s.beta, 6)}c.`, live: false },
+          S.blind ? 'The momentum, γ and Newton\'s speed are hidden.' : { t: `Momentum ${sig(s.p_MeV, 5)} MeV/c, γ = ${f(s.gamma, 5)}, and Newton's speed would be ${f(s.newton, 4)}c.`, live: false }];
+      }
+      const s = eState(), h = S.en, P = PARTICLES[ePart()], hid = S.blind || h.mystery;
+      return ['Bunches of particles are accelerated through a voltage, timed over 8.400 m, and bent in a magnetic field.',
+        h.mystery ? 'The particle is a mystery particle with a charge of magnitude e.' : `The particle is a ${P.name}, with a rest energy of ${sig(P.mc2, 6)} MeV.`,
+        `Accelerating voltage ${VOLTS[h.vi]} MV, so the kinetic energy is ${sig(s.K, 5)} MeV.`,
+        h.shots ? `${h.shots} ${h.shots === 1 ? 'bunch has' : 'bunches have'} been timed.` : 'No bunch has been timed yet.',
+        h.shots ? `The last bunch took ${f(s.t_ns, 2)} ns over 8.400 m, and bent with a radius of ${f(s.r_m * 100, 2)} cm in ${f(h.B, 2)} T.` : `The magnetic field is ${f(h.B, 2)} T.`,
+        hid ? 'The speed, γ and momentum are hidden.' : `Speed ${f(s.beta, 6)}c, γ = ${f(s.gamma, 5)}, momentum pc ${sig(s.pc, 5)} MeV.`];
+    });
+    VD.describe(cur, () => {
+      if (S.blind) return ['The graph is hidden.'];
+      if (S.view === 'vel') return ['Graph of the ground speed of the probe against the launch speed, with the relativistic curve staying below c and the Galilean sum for comparison.'];
+      if (S.view === 'mom') return ['Graph of speed in units of c against time in ns, with the relativistic curve leveling off below c and the Newtonian line rising past it.'];
+      return ['Graph of v squared over c squared against kinetic energy over mc squared, with the relativistic curve leveling off below 1 and the Newtonian line rising past it.'];
+    });
+  }
   const HOW = { vel: 'Adding Velocities Near c', mom: 'Momentum Under a Steady Force', en: "Bertozzi's Electrons" };
   VD.howTo({ src: () => `media/how-this-works/${WS[S.view]}.mp4`, poster: () => `media/how-this-works/${WS[S.view]}.jpg`, title: () => `How this works: ${HOW[S.view]}` });
   requestAnimationFrame(frame);

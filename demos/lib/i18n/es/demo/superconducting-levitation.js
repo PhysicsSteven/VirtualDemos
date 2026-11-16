@@ -1,5 +1,7 @@
 /* demo/superconducting-levitation in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/superconducting-levitation', {
+"Describe the picture":
+  "Describir la imagen",
 "gap {#} mm":
   "separación {#} mm",
 "held":
@@ -16,6 +18,10 @@ VDI18N.add('es', 'demo/superconducting-levitation', {
   "positiva: empuja el imán hacia arriba",
 "the magnet's weight":
   "el peso del imán",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "Superconducting Levitation and Flux Pinning":
   "Levitación superconductora y anclaje de flujo",
 "<a>Condensed matter physics</a>":
@@ -40,6 +46,8 @@ VDI18N.add('es', 'demo/superconducting-levitation', {
   "Corte transversal de un disco superconductor en nitrógeno líquido con un imán encima, las corrientes en el disco y las líneas del campo magnético. Arrastra el imán hacia arriba o hacia abajo; también lo mueves con las teclas de flecha.",
 "Graph: the force of the puck on the magnet against the gap between them, traced as the magnet moves.":
   "Gráfica: la fuerza del disco sobre el imán contra la separación entre ambos, trazada mientras el imán se mueve.",
+"Graph of the force of the puck on the magnet against the gap between them, traced as the magnet moves, with the weight as a dashed line.":
+  "Gráfica de la fuerza del disco sobre el imán contra la distancia entre ambos, trazada mientras el imán se mueve, con el peso como línea discontinua.",
 "Clear graph":
   "Borrar gráfica",
 "The magnet and the hand holding it":
@@ -122,6 +130,28 @@ VDI18N.add('es', 'demo/superconducting-levitation', {
   "Disco de YBCO a {#} K, en nitrógeno líquido",
 "field lines in the plane facing you":
   "líneas de campo en el plano que ves de frente",
+"Cross section of a superconducting puck with a magnet above it.":
+  "Corte transversal de un disco superconductor con un imán encima.",
+"The puck is cold, in liquid nitrogen at {#} K, so currents flow in it.":
+  "El disco está frío, en nitrógeno líquido a {#} K, así que circulan corrientes en él.",
+"The magnet is {#} mm across and {#} mm tall, with a mass of {#} g.":
+  "El imán mide {#} mm de diámetro y {#} mm de alto, con una masa de {#} g.",
+"The puck is {#} mm across and {#} mm thick.":
+  "El disco mide {#} mm de diámetro y {#} mm de grosor.",
+"The gap between them is {#} mm.":
+  "La distancia entre ambos es de {#} mm.",
+"The magnet is held by the hand.":
+  "La mano sostiene el imán.",
+"Its weight is {#} mN.":
+  "Su peso es de {#} mN.",
+"The puck pushes the magnet away with {#} mN.":
+  "El disco empuja al imán con {#} mN.",
+"The force divided by the weight is {#}.":
+  "La fuerza dividida entre el peso es {#}.",
+"{#} of the {#} current rings are at the critical current.":
+  "{#} de los {#} anillos de corriente están en la corriente crítica.",
+"Magnetic field lines are drawn.":
+  "Se dibujan las líneas de campo magnético.",
 "positive: pushes the magnet away; negative: pulls it toward the puck":
   "positiva: aleja el imán; negativa: lo jala hacia el disco",
 "pull needed to hold its weight":
@@ -136,12 +166,18 @@ VDI18N.add('es', 'demo/superconducting-levitation', {
   "El disco se enfrió con el imán sujeto a {#} mm sobre él (enfriado con campo), de modo que el flujo del imán quedó congelado en su interior. En ese punto el disco no ejerce ninguna fuerza. Suéltalo: el imán se hunde un poco hasta que el empuje iguala su peso. Ahora sube o baja la mano: el disco jala el imán de regreso hacia la separación a la que se enfrió, desde cualquiera de los dos lados. Eso es el anclaje de flujo.",
 "The puck is turned over and the magnet held {#} mm under it while the puck was cooled. Let go: the magnet drops a little, the frozen flux pulls back, and it hangs in midair under the puck. A plain diamagnet can only push; only pinned flux can pull.":
   "El disco está volteado y el imán se sujetó a {#} mm debajo de él mientras el disco se enfriaba. Suéltalo: el imán cae un poco, el flujo congelado lo jala de regreso y queda suspendido en el aire debajo del disco. Un diamagneto común solo puede empujar; solo el flujo anclado puede jalar.",
+"Cross section of a superconducting puck turned over, with a magnet below it.":
+  "Corte transversal de un disco superconductor volteado, con un imán debajo.",
 "A field cooled magnet floating over the puck. Let the puck warm up past its critical temperature (about {#} K for YBCO): the currents die, the magnet falls onto the puck, and the field passes straight through. Pour the nitrogen back with the magnet resting there and it is pinned at that gap instead.":
   "Un imán enfriado con campo que flota sobre el disco. Deja que el disco se caliente por encima de su temperatura crítica (unos {#} K para el YBCO): las corrientes desaparecen, el imán cae sobre el disco y el campo lo atraviesa sin obstáculo. Si vuelves a verter el nitrógeno con el imán apoyado ahí, queda anclado a esa separación.",
 "Grab the magnet":
   "Agarrar el imán",
 "Free":
   "Libre",
+"The magnet is free.":
+  "El imán está libre.",
+"The magnet moves at {#} mm/s.":
+  "El imán se mueve a {#} mm/s.",
 "YBCO puck, warm (not superconducting)":
   "Disco de YBCO, caliente (no es superconductor)",
 "Pour in liquid nitrogen":
@@ -152,10 +188,20 @@ VDI18N.add('es', 'demo/superconducting-levitation', {
   "corriente que entra y sale de la página; con contorno: en jc",
 "Free; the puck is warm":
   "Libre; el disco está caliente",
+"The puck is warm, so it is not a superconductor.":
+  "El disco está tibio, así que no es superconductor.",
+"There are no currents in the puck.":
+  "No hay corrientes en el disco.",
+"The puck pulls the magnet toward it with {#} mN.":
+  "El disco jala al imán hacia él con {#} mN.",
+"The force divided by the weight is −{#}.":
+  "La fuerza dividida entre el peso es −{#}.",
 "The magnet fell to the bench. Grab it to put it back in your hand.":
   "El imán cayó sobre la mesa. Agárralo para ponerlo de nuevo en tu mano.",
 "fell off":
   "se cayó",
+"The magnet fell off the puck.":
+  "El imán se cayó del disco.",
 "YBCO puck, warm":
   "Disco de YBCO, caliente",
 "Close":

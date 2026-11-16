@@ -421,6 +421,33 @@ table.rows input:focus { border-color: var(--accent); }
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   VD.projector({ onChange: resize });
   tokens(); new ResizeObserver(resize).observe($('scene')); applyPreset('inverse'); renderRows(); resize();
+  /* what the pictures show now, for a screen reader (VD.describe): the field, the meter and the sources; then the graph of recorded levels */
+  if (window.VD && VD.describe) {
+    VD.describe(can, () => {
+      const out = ['A loudspeaker on a stand at the left of an open field, and a sound level meter on a tripod over a measuring tape.',
+        `The meter is ${f(S.r, 1)} m from the speaker, and the tape is ${S.view} m long.`,
+        S.mystery ? 'Source A is a mystery: its power is hidden.' : `Source A has a power of ${pw(pA())}.`,
+        S.bOn ? `Source B is on, with a power of ${pw(pB())}.` : 'Source B is off.',
+        S.bg ? `The background level is ${S.bg} dB.` : 'There is no background noise.',
+        `The meter reads ${f(reading(), 1)} dB.`];
+      if (S.blind) out.push('Blind is on, so the intensities, each source level and the pressure amplitude are hidden.');
+      else {
+        const IA = intensity(pA(), S.r), IB = pB() ? intensity(pB(), S.r) : 0, Ib = S.bg ? intensityOf(S.bg) : 0, I = IA + IB + Ib;
+        out.push(`Total intensity ${sci(I)} W/m², pressure amplitude ${sci(pressureAmp(I))} Pa.`);
+        if (!S.mystery) out.push(`Source A alone gives ${f(levelOf(IA), 2)} dB.`);
+        if (S.bOn) out.push(`Source B alone gives ${f(levelOf(IB), 2)} dB.`);
+      }
+      out.push(S.rows.length ? `${S.rows.length} ${S.rows.length === 1 ? 'reading is' : 'readings are'} recorded.` : 'No readings are recorded.');
+      return out;
+    });
+    VD.describe($('fitCan'), () => {
+      const pts = S.rows.filter((r) => r.key === srcKey()).map((r) => [Math.log2(+r.r), +r.L]), F = pts.length >= 2 ? fitLine(pts.map((q) => q[0]), pts.map((q) => q[1])) : null;
+      const out = ['Graph of the recorded levels in dB against the distance r on a doubling scale, with a least squares line and its residuals.',
+        pts.length ? `${pts.length} ${pts.length === 1 ? 'point is' : 'points are'} plotted for these sources.` : 'No points are plotted for these sources.'];
+      out.push(F ? `The line falls ${f(-F.b, 2)} dB for each doubling of the distance, and its level at 1 m is ${f(F.a, 1)} dB.` : 'Record at least two distances with these sources to see the line.');
+      return out;
+    });
+  }
   /* How this works: a short video of one sample reading, Part 1 at 0.5 m (made by tools/howto/) */
   VD.howTo({ src: 'media/how-this-works/sound-intensity.mp4', poster: 'media/how-this-works/sound-intensity.jpg' });
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);

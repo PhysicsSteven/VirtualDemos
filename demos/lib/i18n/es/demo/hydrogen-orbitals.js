@@ -1,5 +1,7 @@
 /* demo/hydrogen-orbitals in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/hydrogen-orbitals', {
+"Describe the picture":
+  "Describir la imagen",
 "proton, not to scale":
   "protón, no a escala",
 "Radial probability P(r)":
@@ -20,8 +22,22 @@ VDI18N.add('es', 'demo/hydrogen-orbitals', {
   "r en a₀ = {#} nm · E en eV · t en fs",
 "Probability cloud in 3D. Drag to orbit, scroll to zoom. Arrow keys orbit, plus and minus zoom, {#} resets the view, C cuts the cloud open, M measures.":
   "Nube de probabilidad en 3D. Arrastra para girar, desplaza para acercar. Las flechas giran, más y menos acercan, {#} restablece la vista, C abre un corte en la nube, M mide.",
+"Hydrogen 3dz² orbital, with n = {#}, l = {#} and m = {#}.":
+  "Orbital 3dz² del hidrógeno, con n = {#}, l = {#} y m = {#}.",
+"3D cloud of {#} points.":
+  "Nube 3D de {#} puntos.",
+"Energy -{#} eV.":
+  "Energía de −{#} eV.",
+"No radial nodes.":
+  "No hay nodos radiales.",
+"{#} angular nodes.":
+  "{#} nodos angulares.",
+"Mean radius {#} Bohr radii, most probable radius {#} Bohr radii.":
+  "Radio medio de {#} radios de Bohr, radio más probable de {#} radios de Bohr.",
 "Slice through the atom: probability density |ψ|² in a plane through the nucleus, with nodal lines dashed. Hover to read values; or use the arrow keys to move the readout point (Shift for bigger steps), Home to return it to the nucleus, Escape to hide it.":
   "Corte a través del átomo: densidad de probabilidad |ψ|² en un plano que pasa por el núcleo, con las líneas nodales punteadas. Pasa el cursor para leer valores, o usa las flechas para mover el punto de lectura (Shift para pasos más grandes), Inicio para regresarlo al núcleo y Escape para ocultarlo.",
+"Slice view: the probability density in the xz plane through the nucleus.":
+  "Vista de corte: la densidad de probabilidad en el plano xz que pasa por el núcleo.",
 "3D cloud":
   "Nube 3D",
 "Slice":
@@ -46,6 +62,12 @@ VDI18N.add('es', 'demo/hydrogen-orbitals', {
   "La vista 3D no pudo cargar su biblioteca gráfica. Revisa tu conexión y vuelve a cargar la página. La vista de corte funciona sin ella.",
 "Radial probability distribution P(r) = r²|R(r)|² against r in Bohr radii, with the mean radius, the Bohr model radius and the radial nodes marked. Hover to read values; or use the left and right arrow keys to move the readout along r (Shift for bigger steps), Home and End to jump to the ends, Escape to hide it.":
   "Distribución de probabilidad radial P(r) = r²|R(r)|² en función de r en radios de Bohr, con el radio medio, el radio del modelo de Bohr y los nodos radiales marcados. Pasa el cursor para leer valores, o usa las flechas izquierda y derecha para mover la lectura a lo largo de r (Shift para pasos más grandes), Inicio y Fin para saltar a los extremos y Escape para ocultarla.",
+"Radial probability P(r) against r in Bohr radii for 3dz².":
+  "Probabilidad radial P(r) contra r en radios de Bohr para 3dz².",
+"The curve has no radial nodes.":
+  "La curva no tiene nodos radiales.",
+"It peaks at {#} Bohr radii, and the mean radius is {#} Bohr radii.":
+  "Tiene su pico en {#} radios de Bohr, y el radio medio es de {#} radios de Bohr.",
 "Divider between the orbital and the radial graph":
   "Divisor entre el orbital y la gráfica radial",
 "Presets":
@@ -314,10 +336,16 @@ VDI18N.add('es', 'demo/hydrogen-orbitals', {
   "El modelo de Bohr pone al electrón en un círculo de radio n²a₀. Aquí el electrón no tiene órbita, solo una nube de probabilidad, y aun así las energías salen −{#} eV/n². Compara con el modelo de Bohr en <a>Explorador de espectros</a>.",
 "orbital":
   "orbital",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "A cut through the nucleus. Dashed lines are nodes, where ψ = {#}. Hover to read |ψ|². Try the xy plane for orbitals that vanish in the xz plane.":
   "Un corte que pasa por el núcleo. Las líneas punteadas son nodos, donde ψ = {#}. Pasa el cursor para leer |ψ|². Prueba el plano xy para los orbitales que se anulan en el plano xz.",
 "s along x = y":
   "s a lo largo de x = y",
+"Slice view: the probability density in the x equals y plane through the nucleus.":
+  "Vista de corte: la densidad de probabilidad en el plano x = y que pasa por el núcleo.",
 "The ground state. The cloud is densest right at the nucleus, yet P(r) peaks at exactly one Bohr radius, because a shell farther out holds more volume.":
   "El estado fundamental. La nube es más densa justo en el núcleo, pero P(r) tiene su máximo exactamente en un radio de Bohr, porque una capa más alejada contiene más volumen.",
 "An s state has l = {#} and only m = {#}. It is spherical.":
@@ -428,6 +456,26 @@ VDI18N.add('es', 'demo/hydrogen-orbitals', {
   "Nodos radiales en r = {#}, {#} a₀. Nodos angulares: {#} plano (el plano xy).",
 "A 4pz":
   "A 4pz",
+"A superposition of 4pz and 2pz.":
+  "Una superposición de 4pz y 2pz.",
+"{#} radial nodes, at {#}, {#} Bohr radii.":
+  "{#} nodos radiales, en {#}, {#} radios de Bohr.",
+"{#} angular node.":
+  "{#} nodo angular.",
+"Energy difference {#} eV.":
+  "Diferencia de energía de {#} eV.",
+"The cloud oscillates with a beat period of {#} fs, radiating at {#} nm.":
+  "La nube oscila con un periodo de pulsación de {#} fs y radia en {#} nm.",
+"The center of the cloud stays at the nucleus, so the atom does not radiate as a dipole.":
+  "El centro de la nube se queda en el núcleo, así que el átomo no radia como dipolo.",
+"Paused.":
+  "En pausa.",
+"Time {#} fs.":
+  "Tiempo: {#} fs.",
+"Radial probability P(r) against r in Bohr radii for 4pz.":
+  "Probabilidad radial P(r) contra r en radios de Bohr para 4pz.",
+"The curve is zero at {#} radial nodes, at {#}, {#} Bohr radii.":
+  "La curva vale cero en {#} nodos radiales, en {#}, {#} radios de Bohr.",
 "m = {#}, 4dz²":
   "m = {#}, 4dz²",
 "m = {#}, 4dxz":
@@ -600,16 +648,86 @@ VDI18N.add('es', 'demo/hydrogen-orbitals', {
   "B = 6h m = {#} (igual que A)",
 "With m = {#} the complex state is real, the same as the real orbital.":
   "Con m = {#} el estado complejo es real, igual que el orbital real.",
+"A superposition of 6h m = {#} and 2p m = {#}.":
+  "Una superposición de 6h m = {#} y 2p m = {#}.",
+"Radial probability P(r) against r in Bohr radii for 6h m = {#}.":
+  "Probabilidad radial P(r) contra r en radios de Bohr para 6h m = {#}.",
 "log":
   "log",
+"Playing.":
+  "En marcha.",
+"A superposition of 6h m = {#} and 2s.":
+  "Una superposición de 6h m = {#} y 2s.",
+"A superposition of 6h m = {#} and 3p m = {#}.":
+  "Una superposición de 6h m = {#} y 3p m = {#}.",
+"The cloud oscillates with a beat period of {#} fs, radiating at {#} μm.":
+  "La nube oscila con un periodo de pulsación de {#} fs y radia en {#} μm.",
+"A superposition of 6h m = {#} and 3d m = +{#}.":
+  "Una superposición de 6h m = {#} y 3d m = +{#}.",
 "Yes. The center of the electron cloud (gold dot) moves back and forth on a line, so the atom radiates at λ = {#} μm.":
   "Sí. El centro de la nube electrónica (punto dorado) se mueve de un lado a otro sobre una línea, así que el átomo emite a λ = {#} μm.",
+"A superposition of 6h m = {#} and 4d m = −{#}.":
+  "Una superposición de 6h m = {#} y 4d m = −{#}.",
+"A superposition of 6h m = {#} and 4f m = −{#}.":
+  "Una superposición de 6h m = {#} y 4f m = −{#}.",
+"A superposition of 6h m = {#} and 5s.":
+  "Una superposición de 6h m = {#} y 5s.",
+"The center of the cloud moves {#} Bohr radii each way, so the atom radiates.":
+  "El centro de la nube se mueve {#} radios de Bohr hacia cada lado, así que el átomo radia.",
+"A superposition of 6h m = {#} and 5d m = {#}.":
+  "Una superposición de 6h m = {#} y 5d m = {#}.",
+"A superposition of 6h m = {#} and 5f m = −{#}.":
+  "Una superposición de 6h m = {#} y 5f m = −{#}.",
+"A superposition of 6h m = {#} and 5g m = −{#}.":
+  "Una superposición de 6h m = {#} y 5g m = −{#}.",
 "Yes. The center of the electron cloud (gold dot) moves around a circle, so the atom radiates at λ = {#} μm.":
   "Sí. El centro de la nube electrónica (punto dorado) se mueve en un círculo, así que el átomo emite a λ = {#} μm.",
+"A superposition of 6h m = {#} and 5g m = +{#}.":
+  "Una superposición de 6h m = {#} y 5g m = +{#}.",
 "The two states have the same energy, so nothing moves: the cloud is stationary.":
   "Los dos estados tienen la misma energía, así que nada se mueve: la nube es estacionaria.",
+"A superposition of 6h m = {#} and 6d m = −{#}.":
+  "Una superposición de 6h m = {#} y 6d m = −{#}.",
+"The two states have the same energy, so the cloud does not move.":
+  "Los dos estados tienen la misma energía, así que la nube no se mueve.",
+"A superposition of 6h m = {#} and 6f m = −{#}.":
+  "Una superposición de 6h m = {#} y 6f m = −{#}.",
+"A superposition of 6h m = {#} and 6f m = +{#}.":
+  "Una superposición de 6h m = {#} y 6f m = +{#}.",
+"A superposition of 6h m = {#} and 6g m = +{#}.":
+  "Una superposición de 6h m = {#} y 6g m = +{#}.",
+"A superposition of 6h m = {#} and 6h m = −{#}.":
+  "Una superposición de 6h m = {#} y 6h m = −{#}.",
+"A superposition of 6h m = {#} and 6h m = +{#}.":
+  "Una superposición de 6h m = {#} y 6h m = +{#}.",
 "{#} positions measured":
   "{#} posiciones medidas",
+"{#} positions measured.":
+  "{#} posiciones medidas.",
 "= r²|R(r)|², per a₀":
-  "= r²|R(r)|², por a₀"
+  "= r²|R(r)|², por a₀",
+"A superposition of 1s and 2pz.":
+  "Una superposición de 1s y 2pz.",
+"No angular nodes.":
+  "No hay nodos angulares.",
+"Radial probability P(r) against r in Bohr radii for 1s.":
+  "Probabilidad radial P(r) contra r en radios de Bohr para 1s.",
+"A superposition of 3dz² and 2pz.":
+  "Una superposición de 3dz² y 2pz.",
+"A superposition of 5pz and 2pz.":
+  "Una superposición de 5pz y 2pz.",
+"{#} radial nodes, at {#}, {#}, {#} Bohr radii.":
+  "{#} nodos radiales, en {#}, {#}, {#} radios de Bohr.",
+"Radial probability P(r) against r in Bohr radii for 5pz.":
+  "Probabilidad radial P(r) contra r en radios de Bohr para 5pz.",
+"The curve is zero at {#} radial nodes, at {#}, {#}, {#} Bohr radii.":
+  "La curva vale cero en {#} nodos radiales, en {#}, {#}, {#} radios de Bohr.",
+"A superposition of 6pz and 2pz.":
+  "Una superposición de 6pz y 2pz.",
+"{#} radial nodes, at {#}, {#}, {#}, {#} Bohr radii.":
+  "{#} nodos radiales, en {#}, {#}, {#}, {#} radios de Bohr.",
+"Radial probability P(r) against r in Bohr radii for 6pz.":
+  "Probabilidad radial P(r) contra r en radios de Bohr para 6pz.",
+"The curve is zero at {#} radial nodes, at {#}, {#}, {#}, {#} Bohr radii.":
+  "La curva vale cero en {#} nodos radiales, en {#}, {#}, {#}, {#} radios de Bohr."
 });

@@ -619,6 +619,28 @@
   $('about3').textContent = 'Approximations: the magnet stays on the axis and upright (side to side motion and tilting are left out, so the sideways stability of pinning is not shown); jc does not depend on the field (the Bean model); flux creep, the puck\'s grain structure and the lower critical field are left out; there is no air drag, so with no ring at jc a bouncing magnet keeps bouncing. Cooling and warming happen in an instant. Doubling the number of rings each way changes the forces by under 5 %.';
   $('about4').textContent = 'Values: NdFeB magnet density 7.5 g/cm³ and remanence 1.30 T (sintered grade N42; makers give 1.28 to 1.32 T). jc = 1 × 10⁸ A/m² (10⁴ A/cm²) is typical of melt textured YBCO at 77 K in low fields; real pucks range from about 10⁷ to over 10⁹ A/m². g = 9.81 m/s². YBCO\'s critical temperature: 93 K in its discovery report (Wu et al., Phys. Rev. Lett. 58, 908, 1987); liquid nitrogen boils at 77 K at one atmosphere.';
 
+  /* what the pictures show now, for a screen reader (VD.describe): the puck, the magnet and the force; then the force against gap graph (Blind hides the force) */
+  if (window.VD && VD.describe) {
+    VD.describe(can, () => {
+      if (!MD) return [];
+      const Wt = massOf() * G, F = force(MD), mm = (v) => `${f(v * 1000, 2)} mm`;
+      const out = [S.side === 'above' ? 'Cross section of a superconducting puck with a magnet above it.' : 'Cross section of a superconducting puck turned over, with a magnet below it.',
+        MD.sc ? 'The puck is cold, in liquid nitrogen at 77 K, so currents flow in it.' : 'The puck is warm, so it is not a superconductor.',
+        `The magnet is ${f(S.dia, 1)} mm across and ${f(S.len, 1)} mm tall, with a mass of ${f(massOf() * 1000, 2)} g.`,
+        `The puck is ${S.PD} mm across and ${f(S.PH, 1)} mm thick.`,
+        S.fell ? 'The magnet fell off the puck.' : `The gap between them is ${mm(gap())}.`,
+        S.held ? 'The magnet is held by the hand.' : 'The magnet is free.',
+        { t: S.held ? '' : `The magnet moves at ${f(Math.abs(S.v) * 1000, 1)} mm/s.`, live: false },
+        `Its weight is ${f(Wt * 1000, 2)} mN.`];
+      if (S.blind) out.push('The force of the puck on the magnet is hidden.');
+      else out.push({ t: F >= 0 ? `The puck pushes the magnet away with ${f(F * 1000, 2)} mN.` : `The puck pulls the magnet toward it with ${f(-F * 1000, 2)} mN.`, live: !!S.held }, { t: `The force divided by the weight is ${f(F / Wt, 2)}.`, live: !!S.held });
+      out.push(MD.sc ? `${MD.nSat} of the ${MD.n} current rings are at the critical current.` : 'There are no currents in the puck.');
+      out.push(S.lines ? 'Magnetic field lines are drawn.' : 'Magnetic field lines are not drawn.');
+      return out;
+    });
+    VD.describe(cv, () => S.blind ? ['The graph is hidden, so the force is not shown.']
+      : ['Graph of the force of the puck on the magnet against the gap between them, traced as the magnet moves, with the weight as a dashed line.']);
+  }
   window.__lev = { S, get MD() { return MD; }, applyPreset, advance, force: () => force(MD), gap, massOf, moveTo, setHeld, setCold };
   tokens();
   { const q = new URLSearchParams(location.search).get('setup'); applyPreset(PRESETS[q] ? q : 'drop'); }
