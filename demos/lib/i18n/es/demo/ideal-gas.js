@@ -1,5 +1,7 @@
 /* demo/ideal-gas in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/ideal-gas', {
+"Describe the picture":
+  "Describir la imagen",
 "speed (m/s)":
   "rapidez (m/s)",
 "bin {#} m/s":
@@ -24,6 +26,24 @@ VDI18N.add('es', 'demo/ideal-gas', {
   "· altura de la caja {#} nm · {#} s en pantalla =",
 "Gas in a box. Drag the right wall to compress or expand the gas. Arrow keys move the wall, space plays or pauses. Click a molecule to follow it.":
   "Gas en una caja. Arrastra la pared derecha para comprimir o expandir el gas. Las flechas del teclado mueven la pared, espacio inicia o pausa. Haz clic en una molécula para seguirla.",
+"A two dimensional box of gas {#} nm wide and {#} nm high, with {#} molecules.":
+  "Una caja bidimensional de gas de {#} nm de ancho y {#} nm de alto, con {#} moléculas.",
+"The gas is argon.":
+  "El gas es argón.",
+"The molecules are disks {#} nm across.":
+  "Las moléculas son discos de {#} nm de diámetro.",
+"All the walls are insulated.":
+  "Todas las paredes están aisladas.",
+"Running.":
+  "En marcha.",
+"Temperature {#} K.":
+  "Temperatura {#} K.",
+"Pressure ideal {#} nN/m.":
+  "Presión ideal {#} nN/m.",
+"Mean speed {#} m/s, rms speed {#} m/s.":
+  "Rapidez media {#} m/s, rapidez rms {#} m/s.",
+"The left and right arrow keys move the right wall, and Space plays or pauses.":
+  "Las flechas izquierda y derecha mueven la pared derecha, y Espacio reproduce o pausa.",
 "Time controls":
   "Controles de tiempo",
 "Run for a moment and pause again":
@@ -62,6 +82,10 @@ VDI18N.add('es', 'demo/ideal-gas', {
   "<i></i>Gas B, mitad derecha",
 "Histogram of molecular speeds with the two dimensional Maxwell-Boltzmann curve overlaid.":
   "Histograma de las rapideces moleculares con la curva de Maxwell-Boltzmann bidimensional superpuesta.",
+"Histogram of molecular speeds, in m/s, with the number of molecules per bin, and the two dimensional Maxwell Boltzmann curve over it.":
+  "Histograma de las rapideces moleculares, en m/s, con el número de moléculas por intervalo, y encima la curva de Maxwell Boltzmann bidimensional.",
+"The speed axis runs to {#} m/s.":
+  "El eje de rapidez llega hasta {#} m/s.",
 "Mixing":
   "Mezcla",
 "Spreading":
@@ -246,14 +270,24 @@ VDI18N.add('es', 'demo/ideal-gas', {
   "TEMPERATURA",
 "from mean kinetic energy":
   "a partir de la energía cinética media",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "{#} per ns":
   "{#} por ns",
+"Pressure measured {#} µN/m, ideal {#} µN/m.":
+  "Presión medida {#} µN/m, ideal {#} µN/m.",
+"Paused.":
+  "En pausa.",
 "Fast molecules ({#} K) start on the left and slow ones ({#} K) on the right. Collisions mix them until the whole box sits at one temperature, near {#} K.":
   "Las moléculas rápidas ({#} K) empiezan a la izquierda y las lentas ({#} K) a la derecha. Los choques las mezclan hasta que toda la caja queda a una sola temperatura, cerca de {#} K.",
 "Drag the right wall inward and watch T rise. Halve the area slowly and T about doubles, since T × A stays constant for a 2D gas. Then pull the wall back out.":
   "Arrastra la pared derecha hacia dentro y observa cómo sube T. Reduce el área a la mitad despacio y T casi se duplica, ya que T × A se mantiene constante para un gas 2D. Luego jala la pared de vuelta hacia fuera.",
 "← drag the wall":
   "← arrastra la pared",
+"+{#} off scale →":
+  "+{#} fuera de escala →",
 "Only {#} molecules. Collisions are rare, so the spike takes much longer to relax, and the measured pressure jumps around more.":
   "Solo {#} moléculas. Los choques son raros, así que el pico tarda mucho más en relajarse, y la presión medida salta más.",
 "The gas at {#} K. The rms speed is about {#} m/s instead of {#} m/s at room temperature, but they never stop: speeds still spread out into a Maxwell-Boltzmann curve, and the walls still feel a pressure. Slow motion follows T is on, so the playback runs about {#} times faster than Fixed rate (the clock says by how much): the gas only looks lively. T stays at {#} K because the collisions conserve energy. Switch to Fixed rate to see how sluggish the gas really is. Classically, motion only stops at exactly {#} K.":
@@ -320,6 +354,24 @@ VDI18N.add('es', 'demo/ideal-gas', {
   "cerrado",
 "divider closed":
   "divisor cerrado",
+"A box {#} nm wide and {#} nm high with a divider in the middle, and two gases.":
+  "Una caja de {#} nm de ancho y {#} nm de alto con un divisor en medio, y dos gases.",
+"Gas A, on the left, has {#} molecules of mass {#} u, diameter {#} nm, at {#} K.":
+  "El gas A, a la izquierda, tiene {#} moléculas de masa {#} u, diámetro {#} nm, a {#} K.",
+"Gas B, on the right, has {#} molecules of mass {#} u, diameter {#} nm, at {#} K.":
+  "El gas B, a la derecha, tiene {#} moléculas de masa {#} u, diámetro {#} nm, a {#} K.",
+"The divider is closed.":
+  "El divisor está cerrado.",
+"Gas A has {#} molecules on the left and {#} on the right.":
+  "El gas A tiene {#} moléculas a la izquierda y {#} a la derecha.",
+"Gas B has {#} molecules on the left and {#} on the right.":
+  "El gas B tiene {#} moléculas a la izquierda y {#} a la derecha.",
+"Graph of the number of molecules of gas A on the right and gas B on the left, against the time since the divider opened, in ps.":
+  "Gráfica del número de moléculas del gas A a la derecha y del gas B a la izquierda, contra el tiempo desde que se abrió el divisor, en ps.",
+"Dashed lines mark half of each gas.":
+  "Las líneas de rayas marcan la mitad de cada gas.",
+"The divider has not been opened yet.":
+  "Todavía no se ha abierto el divisor.",
 "Q from the piston":
   "Q del pistón",
 "Q from the top":
@@ -336,20 +388,32 @@ VDI18N.add('es', 'demo/ideal-gas', {
   "quitado",
 "t = {#} ps since opening":
   "t = {#} ps desde la apertura",
+"The divider is removed.":
+  "El divisor está quitado.",
+"Time since the divider opened {#} ps.":
+  "Tiempo desde que se abrió el divisor: {#} ps.",
+"Mean square displacement of gas A {#} nm².":
+  "Desplazamiento cuadrático medio del gas A: {#} nm².",
+"Mean square displacement of gas B {#} nm².":
+  "Desplazamiento cuadrático medio del gas B: {#} nm².",
+"Now {#} of gas A are on the right and {#} of gas B are on the left.":
+  "Ahora hay {#} moléculas del gas A a la derecha y {#} del gas B a la izquierda.",
 "A curve at {#} K":
   "Curva de A a {#} K",
 "B curve at {#} K":
   "Curva de B a {#} K",
 "M-B at {#} K":
   "M-B a {#} K",
+"Pressure ideal {#} µN/m.":
+  "Presión ideal {#} µN/m.",
 "t = {#} ns playback {#}× faster than Fixed rate":
   "t = {#} ns reproducción {#}× más rápida que Ritmo fijo",
+"Pressure measured {#} nN/m, ideal {#} nN/m.":
+  "Presión medida {#} nN/m, ideal {#} nN/m.",
 "hole {#} nm":
   "orificio {#} nm",
 "Close":
   "Cerrar",
-"+{#} off scale →":
-  "+{#} fuera de escala →",
 "−{#} zJ":
   "−{#} zJ",
 "+{#} zJ":

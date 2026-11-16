@@ -1718,6 +1718,65 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     e.preventDefault();
   });
 
+  /* what the pictures show now, for a screen reader (VD.describe): the box of gas, then the graph beside it */
+  if (window.VD && VD.describe) {
+    const GAS_IS = { h2: 'The gas is hydrogen.', he: 'The gas is helium.', n2: 'The gas is nitrogen.', ar: 'The gas is argon.', co2: 'The gas is carbon dioxide.' };
+    const WALL_HELD = (w, T) => (w === 0 ? `The left wall is held at ${fmtK(T)}.` : w === 1 ? `The piston wall is held at ${fmtK(T)}.` : w === 2 ? `The bottom wall is held at ${fmtK(T)}.` : `The top wall is held at ${fmtK(T)}.`);
+    VD.describe($('box'), () => {
+      if (two) {
+        const s = ms2 || mixStats(GS, N, px, py);
+        return [
+          `A box ${LX} nm wide and ${LY} nm high with a divider in the middle, and two gases.`,
+          `Gas A, on the left, has ${TWO.A.n} molecules of mass ${TWO.A.m} u, diameter ${TWO.A.d.toFixed(2)} nm, at ${TWO.A.T} K.`,
+          `Gas B, on the right, has ${TWO.B.n} molecules of mass ${TWO.B.m} u, diameter ${TWO.B.d.toFixed(2)} nm, at ${TWO.B.T} K.`,
+          GS.div === 1 ? 'The divider is closed.' : GS.div === 2 ? `The divider has a hole ${GS.hole.toFixed(1)} nm wide.` : 'The divider is removed.',
+          running ? 'Running.' : 'Paused.',
+          run.open ? { t: `Time since the divider opened ${fmtPs(run.t)}.`, live: false } : null,
+          { t: `Gas A has ${s.left[0]} molecules on the left and ${s.right[0]} on the right.`, live: false },
+          { t: `Gas B has ${s.left[1]} molecules on the left and ${s.right[1]} on the right.`, live: false },
+          run.open && s.n[0] ? { t: `Mean square displacement of gas A ${fmtMsd(s.msd[0])}.`, live: false } : null,
+          run.open && s.n[1] ? { t: `Mean square displacement of gas B ${fmtMsd(s.msd[1])}.`, live: false } : null
+        ];
+      }
+      const pm = pMeasured(), pi = pIdeal(), [a, b] = fmtPair(pm, pi), held = [0, 1, 2, 3].filter((w) => GS.wallT[w] > 0), Q = (GS.heat[0] + GS.heat[1] + GS.heat[2] + GS.heat[3]) / 1e-21;
+      return [
+        `A two dimensional box of gas ${Math.round(GS.wallX)} nm wide and ${LY} nm high, with ${N} molecules.`,
+        GAS_IS[gasKey],
+        sizeMode === 'real' ? `The molecules are hard disks ${(2 * rNow()).toFixed(3)} nm across, the size for this gas.` : `The molecules are disks ${(2 * rNow()).toFixed(2)} nm across.`,
+        GS.wallTarget !== GS.wallX ? `The right wall is moving toward ${GS.wallTarget.toFixed(1)} nm.` : null,
+        ...held.map((w) => WALL_HELD(w, GS.wallT[w])),
+        held.length ? null : 'All the walls are insulated.',
+        running ? 'Running.' : 'Paused.',
+        { t: `Temperature ${fmtK(stats.T)}.`, live: false },
+        { t: simT > 0 ? `Pressure measured ${a}, ideal ${b}.` : `Pressure ideal ${b}.`, live: false },
+        { t: `Mean speed ${fmtSpeed(stats.mean)}, rms speed ${fmtSpeed(stats.rms)}.`, live: false },
+        held.length ? { t: `Heat into the gas ${Math.abs(Q) < 0.05 ? '0.0' : (Q > 0 ? '+' : '−') + Math.abs(Q).toPrecision(3)} zJ.`, live: false } : null,
+        'The left and right arrow keys move the right wall, and Space plays or pauses.'
+      ];
+    });
+    VD.describe($('hist'), () => {
+      if (!two) return [
+        'Histogram of molecular speeds, in m/s, with the number of molecules per bin, and the two dimensional Maxwell Boltzmann curve over it.',
+        { t: `The speed axis runs to ${vAxis} m/s.`, live: false },
+        { t: `Mean speed ${fmtSpeed(stats.mean)}, rms speed ${fmtSpeed(stats.rms)}.`, live: false }
+      ];
+      const S2 = run.samples, l = S2[S2.length - 1];
+      if (graph === 'speeds') return [
+        'Histogram of the speeds of each gas, in m/s, with the two dimensional Maxwell Boltzmann curve for each at its own temperature.',
+        { t: `Gas A is at ${fmtK(tempOf(GS, N, (i) => GS.kind[i] === 0))} and gas B at ${fmtK(tempOf(GS, N, (i) => GS.kind[i] === 1))}.`, live: false }
+      ];
+      if (graph === 'msd') return [
+        'Graph of the mean square displacement of each gas, in nm², against the time since the divider opened, in ps.',
+        run.open && l ? { t: `Now gas A is at ${fmtMsd(l.msdA)} and gas B at ${fmtMsd(l.msdB)}.`, live: false } : 'The divider has not been opened yet.'
+      ];
+      return [
+        'Graph of the number of molecules of gas A on the right and gas B on the left, against the time since the divider opened, in ps.',
+        'Dashed lines mark half of each gas.',
+        run.open && l ? { t: `Now ${l.aR} of gas A are on the right and ${l.bL} of gas B are on the left.`, live: false } : 'The divider has not been opened yet.'
+      ];
+    });
+  }
+
   // theme changes
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', refreshTokens); } catch (_) {}
   new MutationObserver(refreshTokens).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'class', 'style'] });
