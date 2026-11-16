@@ -1,5 +1,7 @@
 /* demo/center-of-mass in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/center-of-mass', {
+"Describe the picture":
+  "Describir la imagen",
 "CM":
   "CM",
 "Center of Mass":
@@ -12,6 +14,16 @@ VDI18N.add('es', 'demo/center-of-mass', {
   "El centro de masa es la posición promedio ponderada por la masa. Encuéntralo para masas sobre una placa, y luego observa que sigue moviéndose como si toda la masa estuviera ahí: las piezas de un cohete de fuegos artificiales se dispersan pero su centro de masa sigue la misma parábola, y caminar sobre un bote no puede mover el centro de masa de ti y el bote.",
 "The current setup: masses on a plate that can be dragged, a firework that explodes into two pieces, or a person walking along a boat, with the center of mass marked.":
   "La configuración actual: masas sobre una placa que se pueden arrastrar, un cohete de fuegos artificiales que explota en dos piezas, o una persona que camina a lo largo de un bote, con el centro de masa marcado.",
+"A plate {#} m wide and {#} m tall with {#} masses on it.":
+  "Una placa de {#} m de ancho y {#} m de alto con {#} masas encima.",
+"Mass {#} is {#} kg at x = {#} m, y = {#} m.":
+  "La masa {#} es de {#} kg y está en x = {#} m, y = {#} m.",
+"Mass {#} is selected.":
+  "La masa {#} está seleccionada.",
+"Total mass {#} kg.":
+  "Masa total {#} kg.",
+"Center of mass at x = {#} m, y = {#} m.":
+  "Centro de masa en x = {#} m, y = {#} m.",
 "Walk":
   "Caminar",
 "Masses on a plate":
@@ -68,6 +80,10 @@ VDI18N.add('es', 'demo/center-of-mass', {
   "centro de masa",
 "drag a mass to move it, drag the table to turn":
   "arrastra una masa para moverla, arrastra la mesa para girar",
+"Skip to the picture":
+  "Ir a la imagen",
+"Skip to the controls":
+  "Ir a los controles",
 "slow motion: {#} s = {#} s · t = {#} s":
   "cámara lenta: {#} s = {#} s · t = {#} s",
 "Launch: at the top the firework splits in two. Each piece follows its own parabola, but their center of mass carries on along the original one until a piece lands.":
@@ -106,6 +122,20 @@ VDI18N.add('es', 'demo/center-of-mass', {
   "caminó (m)",
 "boat moved (m)":
   "el bote se movió (m)",
+"A person of {#} kg walks along a boat of {#} kg, {#} m long, beside a fixed post.":
+  "Una persona de {#} kg camina a lo largo de un bote de {#} kg y {#} m de largo, junto a un poste fijo.",
+"At the start.":
+  "Al inicio.",
+"The person has walked {#} m along the boat and the boat has moved {#} m.":
+  "La persona ha caminado {#} m a lo largo del bote y el bote se ha movido {#} m.",
+"Center of mass at x = −{#} m.":
+  "Centro de masa en x = −{#} m.",
+"Time {#} s.":
+  "Tiempo {#} s.",
+"Running.":
+  "En marcha.",
+"The person has walked {#} m along the boat and the boat has moved −{#} m.":
+  "La persona ha caminado {#} m a lo largo del bote y el bote se ha movido −{#} m.",
 "real time · t = {#} s":
   "tiempo real · t = {#} s",
 "person {#} kg":

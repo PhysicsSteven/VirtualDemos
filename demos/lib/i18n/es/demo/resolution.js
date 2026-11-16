@@ -14,6 +14,8 @@ VDI18N.add('es', 'demo/resolution', {
   "posición (mm)",
 "first dark ring, {#} λ/D":
   "primer anillo oscuro, {#} λ/D",
+"Describe the picture":
+  "Describir la imagen",
 "Circular Apertures and Resolution":
   "Aperturas circulares y resolución",
 "<a><span>←</span> <span>Michelson Interferometer</span></a><a><span>Electron Diffraction</span> <span>→</span></a>":
@@ -38,6 +40,22 @@ VDI18N.add('es', 'demo/resolution', {
   "vista de {#} mm de ancho",
 "A laser beam through a pinhole onto a screen. Beside it, the pattern on the screen.":
   "Un haz láser a través de un agujero sobre una pantalla. Al lado, el patrón en la pantalla.",
+"A laser beam through a pinhole onto a screen.":
+  "Un haz láser que pasa por un orificio y llega a una pantalla.",
+"The wavelength is {#} nm.":
+  "La longitud de onda es de {#} nm.",
+"The aperture is {#} µm across.":
+  "La abertura mide {#} µm de ancho.",
+"The screen is {#} m away.":
+  "La pantalla está a {#} m.",
+"There is one source, on the axis.":
+  "Hay una fuente, sobre el eje.",
+"The first dark ring is at {#} microradians.":
+  "El primer anillo oscuro está a {#} microradianes.",
+"The view is zoomed {#} times.":
+  "La vista tiene un acercamiento de {#} veces.",
+"The cursor is at {#} mm, where the relative intensity is {#}.":
+  "El cursor está en {#} mm, donde la intensidad relativa es {#}.",
 "Intensity along the line through the sources. Drag or use the arrow keys to move the cursor.":
   "Intensidad a lo largo de la línea que pasa por las fuentes. Arrastra o usa las flechas para mover el cursor.",
 "Set up the light, the aperture and the sources":
@@ -136,6 +154,10 @@ VDI18N.add('es', 'demo/resolution', {
   "láser de {#} nm",
 "cursor":
   "cursor",
+"Skip to the picture":
+  "Ir a la imagen",
+"Skip to the controls":
+  "Ir a los controles",
 "two point sources":
   "dos fuentes puntuales",
 "Δθ = {#} µrad (drawn much larger)":
@@ -196,6 +218,18 @@ VDI18N.add('es', 'demo/resolution', {
   "separados {#} m, a {#} km",
 "Farthest distance for resolving the headlights":
   "Distancia máxima para resolver los faros",
+"A car's headlights at night, seen by an eye.":
+  "Los faros de un auto de noche, vistos por un ojo.",
+"The aperture is {#} mm across.":
+  "La abertura mide {#} mm de ancho.",
+"There are two sources, {#} microradians apart.":
+  "Hay dos fuentes, separadas {#} microradianes.",
+"They are headlights {#} m apart, {#} km away.":
+  "Son faros separados {#} m, a {#} km de distancia.",
+"The sources are resolved by Rayleigh’s criterion.":
+  "Las fuentes se resuelven según el criterio de Rayleigh.",
+"The cursor is at {#} µrad, where the relative intensity is {#}.":
+  "El cursor está en {#} µrad, donde la intensidad relativa es {#}.",
 "two stars {#} ly apart":
   "dos estrellas separadas {#} a. l.",
 "{#} million ly away":
@@ -326,18 +360,62 @@ VDI18N.add('es', 'demo/resolution', {
   "campo cercano (Fresnel), pocas zonas",
 "near field, disk":
   "campo cercano, disco",
+"A wide laser beam on a small opaque disk, and its shadow.":
+  "Un haz láser ancho sobre un disco opaco pequeño, y su sombra.",
+"The disk is {#} mm across.":
+  "El disco mide {#} mm de ancho.",
+"The screen is {#} m behind it.":
+  "La pantalla está {#} m detrás.",
+"The Fresnel number is {#}.":
+  "El número de Fresnel es {#}.",
+"The disk covers {#} Fresnel zones.":
+  "El disco cubre {#} zonas de Fresnel.",
+"At the center the relative intensity is {#}.":
+  "En el centro la intensidad relativa es {#}.",
+"The screen is still.":
+  "La pantalla está quieta.",
 "Fresnel zones":
   "Zonas de Fresnel",
 "I/I₀ (I₀: the beam with nothing in it)":
   "I/I₀ (I₀: el haz sin nada en él)",
 "I/I₀ (I₀: one source's peak)":
   "I/I₀ (I₀: el pico de una sola fuente)",
+"A laser beam through a pinhole of unknown size.":
+  "Un haz láser que pasa por un orificio de tamaño desconocido.",
+"The pinhole size is unknown.":
+  "El tamaño del orificio es desconocido.",
+"The first dark ring is hidden.":
+  "El primer anillo oscuro está oculto.",
 "dip {#} % below the peaks":
   "caída de {#} % bajo los picos",
+"Two distant point sources seen through a lens with an iris.":
+  "Dos fuentes puntuales lejanas vistas a través de una lente con un iris.",
+"A {#} mm camera lens imaging two distant points onto its sensor.":
+  "Una lente de cámara de {#} mm que forma la imagen de dos puntos lejanos en su sensor.",
+"The lens is at f/{#}, {#} mm across.":
+  "La lente está en f/{#}, de {#} mm de ancho.",
+"The two images are {#} micrometers apart on the sensor.":
+  "Las dos imágenes están separadas {#} micrómetros en el sensor.",
+"The cursor is at {#} µm, where the relative intensity is {#}.":
+  "El cursor está en {#} µm, donde la intensidad relativa es {#}.",
+"A wide laser beam through a round hole, the screen close behind it.":
+  "Un haz láser ancho que pasa por un agujero redondo, con la pantalla muy cerca detrás.",
+"The hole is {#} mm across.":
+  "El agujero mide {#} mm de ancho.",
+"The hole holds {#} Fresnel zones.":
+  "El agujero contiene {#} zonas de Fresnel.",
 "{#}: <span>not resolved</span>":
   "{#}: <span>no resueltas</span>",
 "no dip: one peak":
   "sin caída: un solo pico",
+"Two stars {#} million light years away, seen by a telescope.":
+  "Dos estrellas a {#} millones de años luz, vistas por un telescopio.",
+"The aperture is {#} m across.":
+  "La abertura mide {#} m de ancho.",
+"They are stars {#} light years apart, {#} million light years away.":
+  "Son estrellas separadas {#} años luz, a {#} millones de años luz de distancia.",
+"The sources are not resolved by Rayleigh’s criterion.":
+  "Las fuentes no se resuelven según el criterio de Rayleigh.",
 "{#}× exposure: the peaks are cut off":
   "exposición {#}×: los picos quedan recortados",
 "Numbers: the textbook's Example {#}, Hubble ({#} m mirror, {#} nm, stars at {#} million light years) and its Chapter {#} Problem {#} on the eye ({#} mm pupil, {#} nm, headlights {#} m apart); {#} ly = {#} × {#}¹⁵ m. Real eyes do worse than diffraction allows: normal ({#}/{#}) acuity is about one minute of arc, {#} µrad, because of aberrations and the spacing of the receptors on the retina. The cursor reads to {#}/{#} of the view, and I/I₀ is the intensity there relative to the central peak of one source alone.":

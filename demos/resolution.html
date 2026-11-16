@@ -816,7 +816,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   function tube(pts, r, mat) { const m = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), Math.max(8, pts.length * 2), r, 6, false), mat); return m; }
   function init3() {
-    S3 = VD3K.stage($('pane'), { fov: 32, near: 0.05, far: 80, fogAt: null }); if (!S3) return false;
+    S3 = VD3K.stage($('pane'), { fov: 32, near: 0.05, far: 80, fogAt: null }); if (!S3) return false; if (window.VD && VD.describe) VD.describe(S3.el, () => (S3.el.hidden ? [] : descRes()));
     const el = S3.el; el.removeAttribute('aria-hidden'); el.setAttribute('role', 'img'); el.setAttribute('aria-label', 'The pattern as a landscape: height is brightness'); el.tabIndex = 0;
     const G = G3 = { grp: new THREE.Group() }; S3.scene.add(G.grp);
     /* the detector: a dark plate under the surface */
@@ -967,6 +967,33 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   v3 = VD3K.view({ seg: '#dimSeg', init: init3, status: (m) => { $('status3').textContent = m; },
     change: (on) => { on3 = on; can.hidden = on; if (S3) S3.el.hidden = !on; key3 = ''; apKey = ''; redraw(); } });
   new ResizeObserver(resize).observe($('pane')); new ResizeObserver(resize).observe(cur.parentElement); resize();
+  /* what the picture shows now, for a screen reader (VD.describe): the setup, the aperture, the sources and the pattern; a mystery pinhole's size and the Blind answers stay hidden */
+  function descRes() {
+    const st = ST(), c = C(), D = Dnow(), lam = lamNow(), n = nNow(), sep = sepAngle(), th1 = rayleigh(D, lam), hidden = S.blind || isMys(), o = [];
+    o.push(`${st.title}.`, `The wavelength is ${c.lam} nm.`);
+    if (isFr()) {
+      const L = c.L, NF = fresnelNumber(D, lam, L), disk = isDisk();
+      o.push(disk ? `The disk is ${f(D * 1e3, 2)} mm across.` : `The hole is ${f(D * 1e3, 2)} mm across.`, `The screen is ${f(L, 2)} m behind it.`, `The Fresnel number is ${f(NF, 3)}.`);
+      o.push(S.blind ? 'The number of Fresnel zones is hidden.' : disk ? `The disk covers ${f(zonesInHole(D, lam, L), 3)} Fresnel zones.` : `The hole holds ${f(zonesInHole(D, lam, L), 3)} Fresnel zones.`);
+      o.push(`At the center the relative intensity is ${f(fresnelI(D, lam, L, 0, disk, 4), 4)}.`);
+      o.push(sweep ? 'The screen is moving.' : 'The screen is still.');
+    } else {
+      o.push(isMys() ? 'The pinhole size is unknown.' : S.setup === 'camera' ? `The lens is at f/${c.N}, ${f(D * 1e3, 2)} mm across.` : `The aperture is ${f(D * st.Dk, st.Ddec)} ${st.Du} across.`);
+      if (st.kind === 'screen' && S.setup !== 'camera') o.push(`The screen is ${f(c.L, 2)} m away.`);
+      if (n === 2) {
+        o.push(`There are two sources, ${g3(sep * 1e6)} microradians apart.`);
+        if (S.setup === 'eye') o.push(`They are headlights 1.30 m apart, ${f(c.sepv, 2)} km away.`);
+        if (S.setup === 'telescope') o.push(`They are stars ${f(c.sepv, 2)} light years apart, 2.48 million light years away.`);
+        if (S.setup === 'camera') o.push(`The two images are ${f(c.sepv, 1)} micrometers apart on the sensor.`);
+        if (S.blind) o.push('Whether the sources are resolved is hidden.');
+        else { const ratio = sep / th1; o.push(Math.abs(ratio - 1) < 0.01 ? 'The sources are just resolved by Rayleigh’s criterion.' : ratio > 1 ? 'The sources are resolved by Rayleigh’s criterion.' : 'The sources are not resolved by Rayleigh’s criterion.'); }
+      } else o.push('There is one source, on the axis.');
+      o.push(hidden ? 'The first dark ring is hidden.' : `The first dark ring is at ${g3(th1 * 1e6)} microradians.`);
+    }
+    o.push(`The view is zoomed ${c.zoom} times.`, `The cursor is at ${fmtPos(c.cur)}, where the relative intensity is ${f(Iexact(c.cur), 4)}.`);
+    return o;
+  }
+  if (window.VD && VD.describe) VD.describe(can, () => (can.hidden ? [] : descRes()));
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   /* How this works: a short video of one sample reading from the worksheet, made by tools/howto/ */
   const howVid = () => (VD.ws('') === 'intro-resolution' ? 'intro-resolution' : 'resolution');   /* Astro 2203's worksheet has its own video */

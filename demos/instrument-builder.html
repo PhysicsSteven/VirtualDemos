@@ -1345,6 +1345,39 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   tokens(); new ResizeObserver(resize).observe($('pane'));
   let first = 'microscope'; try { const q = new URLSearchParams(location.search).get('setup'); if (q && PRESETS[q]) first = q; } catch (_) {}
   applyPreset(first); resize();
+  /* what the pictures show now, for a screen reader (VD.describe): the parts on the rail in order, the object, the viewer, the readings unless Blind hides them */
+  if (window.VD && VD.describe) {
+    VD.describe(can, () => {
+      const m = model; if (!m) return [];
+      const o = [], cam = S.viewer === 'camera', who = cam ? 'camera' : 'eye', ob = S.obj, blind = S.blind;
+      o.push(ob.kind === 'near' ? `An object ${fx(ob.h * 10, 1)} mm tall at ${fx(ob.z, 1)} cm on an optical rail marked in centimeters.` : ob.tex === 'moon' ? 'The Moon, far away, so its light arrives as parallel beams.' : `A distant sign ${sig(2 * deg(ob.a), 2)}° across, so its light arrives as parallel beams.`);
+      const ps = parts();
+      if (!ps.length) o.push('There are no lenses or stops on the rail.');
+      else ps.forEach((e, i) => o.push(e.kind === 'lens'
+        ? `Part ${i + 1} is ${e.name}, a ${e.f > 0 ? 'converging' : 'diverging'} lens with focal length ${fx(e.f, 2)} cm and diameter ${fx(e.D * 10, 1)} mm, at ${fx(e.z, 1)} cm.`
+        : `Part ${i + 1} is ${e.name}, a stop ${fx(e.D * 10, 1)} mm across, at ${fx(e.z, 1)} cm.`));
+      o.push(cam ? `A camera with f/${F_NUMBERS[S.Ni]} looks through it from ${fx(S.zV, 1)} cm.` : `An eye with a ${fx(S.pupil * 10, 1)} mm pupil looks through it from ${fx(S.zV, 1)} cm.`);
+      o.push(S.sel ? 'A part is selected.' : 'No part is selected.');
+      if (blind) { o.push('The magnification and the image readings are hidden.'); }
+      else {
+        if (ps.length) o.push(`Angular magnification ${sig(m.M, 3)}.`);
+        if (m.chain.length) { const last = m.chain[m.chain.length - 1], dist = S.zV - m.zF;
+          o.push(!isFinite(m.zF) ? 'The final image is at infinity.' : `The final image is ${last.real ? 'real' : 'virtual'}, ${dist > 0 ? fx(dist, 1) + ' cm in front of' : fx(-dist, 1) + ' cm behind'} the ${who}.`); }
+      }
+      if (m.pu && isFinite(m.pu.ex.D)) o.push(`Exit pupil ${fx(m.pu.ex.D * 10, 2)} mm.`);
+      if (m.hf && !blind) o.push(`Apparent field of view ${m.hf.open ? 'over ' : ''}${sig(2 * deg(m.obj.kind === 'near' ? Math.abs(m.M) * m.hf.field / NEAR_POINT : Math.abs(m.M) * m.hf.field), 3)}°.`);
+      else if (!m.hf && ps.length) o.push('No light gets through.');
+      o.push(`Image brightness ${m.bright >= 0.995 ? '100' : sig(100 * m.bright, 2)} % of the bare ${who}.`);
+      o.push(m.vo.sharp ? 'The image is in focus.' : 'The image is blurred.');
+      return o;
+    }, { label: 'Describe the optical rail' });
+    VD.describe($('vThru'), () => {
+      const m = model; if (!m) return [];
+      if (S.blind) return ['The view through the instrument. The magnification is hidden.'];
+      return ['The view through the instrument.', m.els.length ? (m.M < 0 ? 'The image is upside down.' : 'The image is upright.') : 'There are no lenses, so this is the bare view.', `Angular magnification ${sig(m.M, 3)}.`, m.vo.sharp ? 'The image is in focus.' : 'The image is blurred.'];
+    });
+    VD.describe($('vBare'), () => ['The view without the instrument, at the same angular scale, always upright.']);
+  }
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   window.vdModel = () => model;
 

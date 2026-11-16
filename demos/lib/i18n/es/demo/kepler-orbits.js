@@ -1,5 +1,7 @@
 /* demo/kepler-orbits in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/kepler-orbits', {
+"Describe the picture":
+  "Describir la imagen",
 "empty focus":
   "foco vacío",
 "aphelion {#} AU":
@@ -48,8 +50,28 @@ VDI18N.add('es', 'demo/kepler-orbits', {
   "UA · año · M<sub>sun</sub> · G = {#}π² UA³/(M<sub>sun</sub>·año²) · {#} UA/año = {#} km/s",
 "Orbit view. Drag the arrow tip to set the launch velocity, drag the hollow launch marker to move the launch point, drag empty space to pan, scroll to zoom. With Ruler on, click or drag to place ruler points {#} and {#}. Keys: the arrow keys move the arrow tip (launch velocity) (Shift for small steps); M switches what they move; {#} and {#} pick a ruler point; plus and minus zoom; space plays or pauses; F fits the view.":
   "Vista de la órbita. Arrastra la punta de la flecha para fijar la velocidad de lanzamiento, arrastra el marcador hueco para mover el punto de lanzamiento, arrastra el espacio vacío para desplazar la vista, desplaza la rueda para acercar. Con Regla activada, haz clic o arrastra para colocar los puntos {#} y {#} de la regla. Teclas: las flechas mueven la punta de la flecha (velocidad de lanzamiento) (Shift para pasos pequeños); M cambia lo que mueven; {#} y {#} eligen un punto de la regla; más y menos acercan o alejan; espacio inicia o pausa; F ajusta la vista.",
+"A star of {#} solar mass sits at the center, seen from above.":
+  "Una estrella de {#} masa solar está en el centro, vista desde arriba.",
+"Setup: Mercury.":
+  "Configuración: Mercurio.",
+"The planet was launched {#} AU from the star at {#} km/s, and escape speed there is {#} km/s.":
+  "El planeta se lanzó a {#} UA de la estrella con {#} km/s, y la rapidez de escape ahí es de {#} km/s.",
+"Running.":
+  "En marcha.",
+"The orbit is an ellipse.":
+  "La órbita es una elipse.",
+"Semi major axis {#} AU, eccentricity {#}, period {#} yr.":
+  "Semieje mayor {#} UA, excentricidad {#}, periodo {#} años.",
+"Perihelion speed {#} km/s, aphelion speed {#} km/s.":
+  "Rapidez en el perihelio {#} km/s, rapidez en el afelio {#} km/s.",
+"Time {#} d, distance from the star {#} AU, speed {#} km/s.":
+  "Tiempo {#} d, distancia a la estrella {#} UA, rapidez {#} km/s.",
+"Time controls":
+  "Controles de tiempo",
 "Forward one frame at this time speed":
   "Un cuadro adelante a esta rapidez del tiempo",
+"Step":
+  "Paso",
 "Time speed":
   "Rapidez del tiempo",
 "{#} yr/s":
@@ -68,6 +90,10 @@ VDI18N.add('es', 'demo/kepler-orbits', {
   "Hipérbola",
 "Kepler's third law: orbital period against semi major axis on log scales, with the planets of the solar system and the current orbit. Show data table in the Lab section lists the plotted values.":
   "Tercera ley de Kepler: periodo orbital en función del semieje mayor en escalas logarítmicas, con los planetas del sistema solar y la órbita actual. Mostrar la tabla de datos, en la sección Laboratorio, lista los valores graficados.",
+"Third law chart: period against semi major axis on log scales. The solar system planets lie on a straight line, P² = a³/M.":
+  "Gráfica de la tercera ley: periodo contra semieje mayor en escalas logarítmicas. Los planetas del sistema solar caen sobre una recta, P² = a³/M.",
+"This orbit is the point at a = {#} AU, P = {#} yr.":
+  "Esta órbita es el punto en a = {#} UA, P = {#} años.",
 "Divider between the orbit and the third law chart":
   "Divisor entre la órbita y la gráfica de la tercera ley",
 "<a>Worksheet {#}: Kepler's Third Law</a>":
@@ -334,6 +360,12 @@ VDI18N.add('es', 'demo/kepler-orbits', {
   "Arrastra la punta de la flecha para lanzar; arrastra en otra parte para girar.",
 "Grid squares {#} AU. Star and planets drawn far larger than to scale.":
   "Cuadros de la cuadrícula de {#} UA. Estrella y planetas dibujados mucho más grandes que a escala.",
+"Skip to the picture":
+  "Ir a la imagen",
+"Skip to the controls":
+  "Ir a los controles",
+"{#} Msun":
+  "{#} Msol",
 "Energy bars, in MJ/kg: Kinetic {#}, Potential −{#}, Total −{#}.":
   "Barras de energía, en MJ/kg: Cinética {#}, Potencial −{#}, Total −{#}.",
 "Energy per kilogram of the planet: bars for kinetic, potential and total energy now, and the three against time since the launch. The total stays flat. Show data table in the Lab section lists the plotted values.":
@@ -370,6 +402,8 @@ VDI18N.add('es', 'demo/kepler-orbits', {
   "E > {#}: no ligada, una hipérbola",
 "Nearly a circle: e = {#}, so the empty focus sits almost on top of the Sun. Earth is only {#}% closer at perihelion, in early January.":
   "Casi un círculo: e = {#}, así que el foco vacío queda casi encima del Sol. La Tierra está solo un {#}% más cerca en el perihelio, a principios de enero.",
+"Setup: Earth.":
+  "Configuración: Tierra.",
 "e = {#} is enough to pull the foci apart. Mars moves ({#} + e)/({#} − e) = {#} times faster at perihelion than at aphelion.":
   "e = {#} basta para separar los focos. Marte se mueve ({#} + e)/({#} − e) = {#} veces más rápido en el perihelio que en el afelio.",
 "Launched at aphelion, {#} AU out, at under {#} km/s. It spends most of its {#} years far away and whips around the Sun in a few months.":
@@ -428,6 +462,18 @@ VDI18N.add('es', 'demo/kepler-orbits', {
   "Arrastra una estrella desde la bandeja de abajo",
 "Two or more bodies needed":
   "Se necesitan dos cuerpos o más",
+"The sandbox: stars, planets and moons that all pull on one another, seen from above.":
+  "El área libre: estrellas, planetas y lunas que se atraen entre sí, vistos desde arriba.",
+"There are {#} bodies.":
+  "Hay {#} cuerpos.",
+"Paused.":
+  "En pausa.",
+"Time {#} d.":
+  "Tiempo {#} d.",
+"Chart of the kinetic, potential and total energy of the whole system against time.":
+  "Gráfica de la energía cinética, potencial y total de todo el sistema contra el tiempo.",
+"The lines are drawn once the bodies move.":
+  "Las líneas se dibujan cuando los cuerpos se mueven.",
 "The target is {#}° ahead of you on the same circle. Try a forward burn first and watch: you rise into a bigger, slower orbit and fall behind. Then Reset and burn backward instead: the smaller orbit is quicker. With {#} km/s backward your orbit takes {#}/{#} of a year, so after one lap, back at its farthest point, you meet the target: coast there and burn {#} km/s forward to match its speed.":
   "El objetivo está {#}° delante de ti en el mismo círculo. Prueba primero un impulso hacia adelante y observa: subes a una órbita más grande y más lenta y te quedas atrás. Luego Reiniciar e impulsa hacia atrás: la órbita más pequeña es más rápida. Con {#} km/s hacia atrás tu órbita tarda {#}/{#} de año, así que tras una vuelta, de regreso en su punto más lejano, te encuentras con el objetivo: avanza sin motor hasta ahí e impulsa {#} km/s hacia adelante para igualar su rapidez.",
 "Ship":
@@ -526,6 +572,14 @@ VDI18N.add('es', 'demo/kepler-orbits', {
   "Vista de la órbita. Arrastra la punta de la flecha para fijar la velocidad de lanzamiento, arrastra el marcador hueco para mover el punto de lanzamiento, arrastra el espacio vacío para desplazar la vista, desplaza la rueda para acercar. Con Regla activada, haz clic o arrastra para colocar los puntos {#} y {#} de la regla. Teclas: las flechas mueven el punto elegido de la regla (Shift para pasos pequeños); M cambia lo que mueven; {#} y {#} eligen un punto de la regla; más y menos acercan o alejan; espacio inicia o pausa; F ajusta la vista.",
 "Plot of your captured readings, period squared against semi major axis cubed, with a least squares line (slope and intercept) and a residual strip below it. Show data table in the Lab section lists the plotted values.":
   "Gráfica de tus lecturas capturadas, el periodo al cuadrado en función del semieje mayor al cubo, con una recta de mínimos cuadrados (pendiente y ordenada al origen) y una franja de residuos debajo. Mostrar la tabla de datos, en la sección Laboratorio, lista los valores graficados.",
+"The probe is {#} AU from Jupiter, at {#} km/s relative to Jupiter.":
+  "La sonda está a {#} UA de Júpiter, a {#} km/s respecto a Júpiter.",
+"The probe is bound to the Sun.":
+  "La sonda está ligada al Sol.",
+"Total energy −{#}×{#}³⁸ J.":
+  "Energía total −{#}×{#}³⁸ J.",
+"Chart of the probe’s energy per kilogram against time: its energy around the Sun, and its kinetic energy relative to Jupiter.":
+  "Gráfica de la energía por kilogramo de la sonda contra el tiempo: su energía alrededor del Sol y su energía cinética respecto a Júpiter.",
 "Change in E since the start (numerical error)":
   "Cambio en E desde el inicio (error numérico)",
 "{#}×{#}⁻¹¹ of |E|":
@@ -534,6 +588,8 @@ VDI18N.add('es', 'demo/kepler-orbits', {
   "{#}×{#}⁻¹⁰ de |E|",
 "{#}×{#}⁻⁹ of |E|":
   "{#}×{#}⁻⁹ de |E|",
+"Time {#} yr.":
+  "Tiempo {#} años.",
 "Pick ruler point {#} or {#} and move it with the arrow keys":
   "Elige el punto {#} o {#} de la regla y muévelo con las flechas",
 "Stop timer":
@@ -556,6 +612,10 @@ VDI18N.add('es', 'demo/kepler-orbits', {
   "cuerpo",
 "second planet":
   "segundo planeta",
+"A second planet has semi major axis {#} AU and period {#} yr.":
+  "Un segundo planeta tiene semieje mayor de {#} UA y periodo de {#} años.",
+"The timer shows {#} yr.":
+  "El cronómetro marca {#} años.",
 "Me":
   "Me",
 "Ma":
@@ -568,24 +628,58 @@ VDI18N.add('es', 'demo/kepler-orbits', {
   "{#} años (corriendo)",
 "Second planet: a = {#} AU, e = {#}, P = {#} yr, speed {#} km/s.":
   "Segundo planeta: a = {#} UA, e = {#}, P = {#} años, rapidez {#} km/s.",
-"Energy bars, in MJ/kg: Kinetic {#}, Potential −{#}, Total {#}.":
-  "Barras de energía, en MJ/kg: cinética {#}, potencial −{#}, total {#}.",
+"Setup: Pluto.":
+  "Configuración: Plutón.",
+"Total energy −{#}×{#}³⁵ J.":
+  "Energía total −{#}×{#}³⁵ J.",
+"The selected body is Ship, {#}×{#}⁻²⁶ solar masses.":
+  "El cuerpo seleccionado es la nave, {#}×{#}⁻²⁶ masas solares.",
+"It is {#} AU from Star, moving at {#} km/s around it.":
+  "Está a {#} UA de la estrella y se mueve a {#} km/s a su alrededor.",
+"Its orbit around Star has semi major axis {#} AU, eccentricity {#} and period {#} yr.":
+  "Su órbita alrededor de la estrella tiene semieje mayor de {#} UA, excentricidad de {#} y periodo de {#} años.",
+"The ship is {#} AU from the target, with a relative speed of {#} km/s.":
+  "La nave está a {#} UA del objetivo, con una rapidez relativa de {#} km/s.",
+"Burns so far: {#}, {#} km/s in all.":
+  "Encendidos hasta ahora: {#}, {#} km/s en total.",
+"Total energy −{#}×{#}¹³ J.":
+  "Energía total −{#}×{#}¹³ J.",
+"The selected body is Earth, {#}×{#}⁻⁶ solar masses.":
+  "El cuerpo seleccionado es la Tierra, {#}×{#}⁻⁶ masas solares.",
 "Your readings, T² against a³ for star mass {#} M<sub>sun</sub>. Not enough readings to fit.":
   "Tus lecturas, T² en función de a³ para una masa de la estrella de {#} M<sub>sun</sub>. No hay suficientes lecturas para ajustar.",
 "T² (yr²)":
   "T² (años²)",
 "residual (yr²)":
   "residuo (años²)",
+"Setup: Bound and unbound.":
+  "Configuración: ligada y no ligada.",
+"Chart of the planet’s kinetic, potential and total energy per kilogram, in MJ/kg.":
+  "Gráfica de la energía cinética, potencial y total del planeta por kilogramo, en MJ/kg.",
+"Kinetic {#} MJ/kg, potential −{#} MJ/kg, total −{#} MJ/kg.":
+  "Cinética {#} MJ/kg, potencial −{#} MJ/kg, total −{#} MJ/kg.",
+"{#}×{#}⁻¹⁶ of the mean ({#} wedges)":
+  "{#}×{#}⁻¹⁶ del promedio ({#} sectores)",
+"The launch is one you set yourself.":
+  "El lanzamiento es uno que tú mismo definiste.",
+"The orbit is a hyperbola: the planet is unbound.":
+  "La órbita es una hipérbola: el planeta no está ligado.",
+"Eccentricity {#}.":
+  "Excentricidad {#}.",
+"Speed far away {#} km/s.":
+  "Rapidez lejos de la estrella {#} km/s.",
+"Kinetic {#} MJ/kg, potential −{#} MJ/kg, total {#} MJ/kg.":
+  "Cinética {#} MJ/kg, potencial −{#} MJ/kg, total {#} MJ/kg.",
+"Energy bars, in MJ/kg: Kinetic {#}, Potential −{#}, Total {#}.":
+  "Barras de energía, en MJ/kg: cinética {#}, potencial −{#}, total {#}.",
 "{#}×{#}⁻¹⁵ of the mean ({#} wedges)":
   "{#}×{#}⁻¹⁵ de la media ({#} cuñas)",
-"Energy bars, in MJ/kg: Kinetic {#}, Potential −{#}, Total {#}×{#}^-{#}.":
-  "Barras de energía, en MJ/kg: cinética {#}, potencial −{#}, total {#}×{#}^-{#}.",
-"{#}×{#}⁻¹⁶ of |E|":
-  "{#}×{#}⁻¹⁶ de |E|",
+"The selected body is Probe, {#}×{#}⁻²⁶ solar masses.":
+  "El cuerpo seleccionado es la sonda, {#}×{#}⁻²⁶ masas solares.",
 "−{#}×{#}⁻¹⁶ of |E|":
   "−{#}×{#}⁻¹⁶ de |E|",
-"{#} of |E|":
-  "{#} de |E|",
+"{#}×{#}⁻¹⁶ of |E|":
+  "{#}×{#}⁻¹⁶ de |E|",
 "−{#}×{#}⁻¹⁵ of |E|":
   "−{#}×{#}⁻¹⁵ de |E|",
 "−{#}×{#}⁻¹⁴ of |E|":
@@ -598,22 +692,30 @@ VDI18N.add('es', 'demo/kepler-orbits', {
   "Órbita alrededor de Júpiter",
 "not bound: it escapes":
   "no ligada: escapa",
+"It is {#} AU from Jupiter, moving at {#} km/s around it.":
+  "Está a {#} UA de Júpiter y se mueve a {#} km/s a su alrededor.",
+"It is not bound to Jupiter.":
+  "No está ligada a Júpiter.",
 "ε > {#}: unbound":
   "ε > {#}: no ligada",
 "{#} MJ/kg: unbound, it leaves the solar system":
   "{#} MJ/kg: no ligada, sale del sistema solar",
 "Orbit around Star":
   "Órbita alrededor de Estrella",
+"It is not bound to Star.":
+  "No está ligada a la estrella.",
+"The probe is unbound: it leaves the solar system.":
+  "La sonda no está ligada: sale del sistema solar.",
 "{#}×{#}⁻¹⁵ of |E|":
   "{#}×{#}⁻¹⁵ de |E|",
 "{#}×{#}⁻¹⁴ of |E|":
   "{#}×{#}⁻¹⁴ de |E|",
 "Kepler's third law: orbital period against semi major axis on log scales, with the planets of the solar system and the current orbit.":
   "Tercera ley de Kepler: periodo orbital en función del semieje mayor en escalas logarítmicas, con los planetas del sistema solar y la órbita actual.",
-"Time controls":
-  "Controles de tiempo",
-"Step":
-  "Paso",
+"Energy bars, in MJ/kg: Kinetic {#}, Potential −{#}, Total {#}×{#}^-{#}.":
+  "Barras de energía, en MJ/kg: cinética {#}, potencial −{#}, total {#}×{#}^-{#}.",
+"{#} of |E|":
+  "{#} de |E|",
 "total E = K + U":
   "total E = K + U",
 "Your readings: T² against a³, star mass {#} M☉":

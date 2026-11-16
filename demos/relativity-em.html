@@ -1984,12 +1984,45 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     requestAnimationFrame(loop);
   }
 
+  /* what the picture shows now, for a screen reader (VD.describe): the view on show, in the observer's frame; values that move as the charge runs are never announced */
+  function describeRel() {
+    const o = [], v = S.view, settled = !boost.active;
+    if (v === 'wire') {
+      const N = wireNow(), { P, W } = N, real = S.scale === 'real', FEm = Math.hypot(...N.FE), FMm = Math.hypot(...N.FM), Fm = Math.hypot(N.FE[0] + N.FM[0], N.FE[1] + N.FM[1]);
+      o.push(real ? `A copper wire carrying ${S.I} A, to scale, with a test charge ${S.r} cm away.` : `A long straight wire with ions at rest in the lab and electrons drifting along it, with a test charge ${S.r} cm away.`);
+      o.push(real ? `The electrons drift at ${fq(P.cw.vd, 'm/s', 3)}.` : `The electrons drift at ${fb(P.v)} in the lab.`);
+      o.push(S.qs < 0 ? 'The test charge is an electron.' : 'The test charge is positive.', Math.abs(P.u) < 1e-300 ? 'The test charge is not moving along the wire.' : real ? `The test charge moves at ${fq(P.u * C0, 'm/s', 3)} along the wire in the lab.` : `The test charge moves at ${fb(P.u)} along the wire in the lab.`);
+      o.push(!settled ? 'The view is changing frames.' : S.frame === 'lab' ? 'The view is in the lab frame, where the ions are at rest.' : 'The view is in the charge’s frame, where the charge starts at rest.');
+      o.push(Math.abs(W.lamNet) < 1e-30 ? 'In this frame the wire is neutral.' : W.lamNet > 0 ? `In this frame the wire is positively charged, ${fq(W.lamNet, 'C/m', real ? 3 : 4, true)}.` : `In this frame the wire is negatively charged, ${fq(W.lamNet, 'C/m', real ? 3 : 4, true)}.`);
+      o.push({ t: `The electric field at the charge is ${fq(Math.abs(N.Ez), 'V/m', 4)} and the magnetic field is ${fq(Math.abs(N.By), 'T', 4)}.`, live: false });
+      if (Fm === 0) o.push({ t: 'There is no force on the charge.', live: false });
+      else o.push({ t: `The force on the charge is ${fq(Fm, 'N', 4)}, ${N.FE[1] + N.FM[1] > 0 ? 'away from' : 'toward'} the wire.`, live: false }, { t: FMm <= 1e-9 * Fm ? 'The force is all electric.' : FEm <= 1e-9 * Fm ? 'The force is all magnetic.' : `The force is ${Math.round(100 * FEm / (FEm + FMm))} % electric and ${Math.round(100 * FMm / (FEm + FMm))} % magnetic.`, live: false });
+    } else if (v === 'magnet') {
+      const st = mState(fCur), slow = S.mscale === 'slow', st0 = mState(0), emf = motionalEMF(MAG, QM, RB, st0.x, st0.b, 48);
+      o.push('A cylindrical magnet 4.0 cm long and a conducting ring 2.0 cm in radius on its axis, moving relative to each other.');
+      o.push(!settled ? 'The view is changing frames.' : S.frame === 'lab' ? 'The view is in the magnet’s frame, where the magnet is at rest and the ring moves.' : 'The view is in the ring’s frame, where the ring is at rest and the magnet moves.');
+      o.push(slow ? `The ring moves at ${minus((st0.b * C0).toFixed(2))} m/s relative to the magnet.` : `The ring moves at ${fb(st0.b)} relative to the magnet.`, `The ring is ${f2(S.mz)} cm from the magnet’s center along the axis.`);
+      o.push({ t: `The flux through the ring is ${fq(st.flux, 'Wb', 4)}.`, live: false });
+      o.push({ t: `The EMF around the ring is ${fq(emf, 'V', 4, true)}.`, live: false });
+    } else if (v === 'point') {
+      const b = S.bp, g = gammaOf(b), q = 1e-9, ahead = movingCharge(q, b, 1, 0, 0), side = movingCharge(q, b, 0, 1, 0);
+      o.push('A point charge of 1 nC moving in a straight line, with its electric and magnetic field.');
+      o.push(`It moves at ${fb(b)}, so γ = ${g.toFixed(3)}.`, `The electric field 1 m ahead is ${fq(Math.hypot(...ahead.E), 'V/m', 4)}, and 1 m to the side it is ${fq(Math.hypot(...side.E), 'V/m', 4)}.`, `The magnetic field 1 m to the side is ${fq(Math.hypot(...side.cB) / C0, 'T', 4)}.`);
+    } else {
+      const X = xfFields(), toMT = (x) => x / C0 * 1e6, magE = Math.hypot(...X.E), magB = Math.hypot(...X.cB), magEp = Math.hypot(...X.Ep), magBp = Math.hypot(...X.cBp);
+      o.push('Electric and magnetic field arrows in a frame S, and in a frame S′ moving along x.');
+      o.push(`S′ moves along x at ${fb(S.xb)}, so γ = ${gammaOf(S.xb).toFixed(4)}.`, `The electric field is ${fq(magE * 1e3, 'V/m', 4)} in S and ${fq(magEp * 1e3, 'V/m', 4)} in S′.`, `The magnetic field is ${fq(toMT(magB) * 1e-3, 'T', 4)} in S and ${fq(toMT(magBp) * 1e-3, 'T', 4)} in S′.`);
+    }
+    return o;
+  }
+  const f2 = (x) => (Math.abs(x) < 0.05 ? '0' : minus(x.toFixed(1)));
   tokens();
   /* three.js draws every view, Flat included (Flat is the plain schematic, 3D adds the copper, the supports and the room) */
   VD3.load((ok) => {
     if (!ok || !init3D()) { $('nogl').hidden = false; $('dimSeg').hidden = true; return; }
     recolor(); resize();
     VD3K.view({ seg: '#dimSeg', init: () => true, change: setDim, start: '3d' });
+    if (window.VD && VD.describe && $('gl')) VD.describe($('gl'), describeRel);
   });
   new ResizeObserver(resize).observe($('pane'));
   resize();

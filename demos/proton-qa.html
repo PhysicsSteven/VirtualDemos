@@ -824,6 +824,44 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   view3 = VD3K.view({ seg: '#dimSeg', start: '3d', init: init3, status: (m) => { const st = document.querySelector('.vd-readings .status'); if (st) st.textContent = m; },
     change: (on) => { can.style.cursor = on ? 'grab' : ''; can.style.touchAction = on ? 'pan-y' : 'none'; draw(); } });
   window.vdDemo = { S, V, full, applyPreset, runQA, stepDays, patient, dailyQA, sobp, patientQA, gamma, sigmaAir };
+  /* what the pictures show now, for a screen reader (VD.describe): the room and the QA device, then the results of the run. A mystery machine's cause stays hidden until it is shown. */
+  if (window.VD && VD.describe) {
+    VD.describe(can, () => {
+      const o = [], v = S.view, busy = S.busy > performance.now();
+      o.push('The treatment room: the gantry nozzle points down at the couch.');
+      if (v === 'patient') o.push('On the couch is a water phantom with a 2D array of 1020 ion chambers, measuring the delivered plan.');
+      else o.push({ output: 'On the couch is a water equivalent phantom with an ion chamber, checking the output.', range: 'On the couch is a stack of ion chambers, checking the range.', spots: 'On the couch is a scintillating screen with a camera, checking the spots.' }[S.chk] || 'On the couch is the QA device.');
+      if (v === 'patient') o.push(`The plan is a ${SHAPE_EN[S.shape].toLowerCase()} target, measured at ${f(S.zm, 1)} cm depth.`);
+      else o.push(`The QA energy is ${sig(S.e, 4)} MeV.`);
+      o.push(busy ? 'A run is in progress.' : v === 'daily' ? (S.runs ? `QA runs so far: ${S.runs}.` : 'No QA run yet.') : v === 'drift' ? `Mornings run so far: ${S.days.length}.` : S.G ? 'The patient QA has been measured.' : 'The patient QA has not been run yet.');
+      return o;
+    });
+    VD.describe(plot, () => {
+      const o = [], v = S.view, busy = S.busy > performance.now();
+      if (busy) return ['The results are being measured.'];
+      if (v === 'patient') {
+        if (!S.G || !S.P || !S.Q) return ['No patient QA results yet. Press Run QA.'];
+        const [a, b] = CRIT[S.crit];
+        o.push(`A map of the gamma index over the chamber array at ${f(S.zm, 1)} cm depth, with ${S.G.n} points above 10 % of the maximum dose.`);
+        o.push(`${f(S.G.pass, 1)} % of the points pass at ${a} % and ${b} mm.`, S.G.pass >= 95 ? 'The plane passes the 95 % tolerance.' : 'The plane fails the 95 % tolerance.');
+        o.push(`At 3 % and 3 mm ${f(S.GA['3/3'].pass, 1)} % pass, at 3 % and 2 mm ${f(S.GA['3/2'].pass, 1)} % pass, and at 2 % and 2 mm ${f(S.GA['2/2'].pass, 1)} % pass.`);
+        return o;
+      }
+      const r = latest();
+      if (!r) return [v === 'daily' ? 'No QA results yet. Press Run QA.' : 'No mornings run yet. Press Next day.'];
+      if (v === 'drift') {
+        const ys = S.days.map((q) => ({ output: q.out - 100, range: q.dR, spots: q.err, size: q.ds }[S.chk])), tol = { output: TOL.out, range: TOL.range, spots: TOL.pos, size: TOL.size }[S.chk];
+        const nm = { output: 'output minus baseline in percent', range: 'R90 minus baseline in millimeters', spots: 'largest spot error in millimeters', size: 'spot size minus baseline in percent' }[S.chk];
+        o.push(`A graph of the ${nm} against the day, for ${S.days.length} ${S.days.length === 1 ? 'morning' : 'mornings'}, with the tolerance of ${tol} marked.`);
+        o.push(`The latest value is ${sgn(ys[ys.length - 1], 2)}.`, `${ys.filter((y) => Math.abs(y) > tol).length} of the ${ys.length} mornings are outside the tolerance.`);
+        if (S.fault === 'mystery' && !S.reveal) o.push('What is happening to the machine is hidden.');
+        else o.push(`What is happening: ${faultName(S.sc || scenario(S.fault, S.seed))}.`);
+      } else o.push('The chosen check is drawn beside gauges of the four checks.');
+      o.push(`Output at 2 cm is ${f(r.out, 1)} % of baseline.`, r.pass.out ? 'The output check passes.' : 'The output check fails.', `R90 is ${f(r.R90, 2)} cm, ${sgn(r.dR, 2)} mm from baseline.`, r.pass.range ? 'The range check passes.' : 'The range check fails.',
+        `The largest spot position error is ${f(r.err, 2)} mm.`, r.pass.pos ? 'The spot position check passes.' : 'The spot position check fails.', `The spot size changed by ${sgn(r.ds, 1)} %.`, r.pass.size ? 'The spot size check passes.' : 'The spot size check fails.');
+      return o;
+    });
+  }
   VD.howTo({ src: 'media/how-this-works/proton-qa.mp4', poster: 'media/how-this-works/proton-qa.jpg' });
   requestAnimationFrame(frame);
 })();

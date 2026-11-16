@@ -1136,6 +1136,50 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   VD.projector({ onChange: resize });
   tokens();
   const q = new URLSearchParams(location.search); applyPreset(PRESETS[q.get('setup')] ? q.get('setup') : 'nacl');
+  /* what the pictures show now, for a screen reader (VD.describe): the molecule or spectrum on show, the values the readouts show, Blind hiding the model's answers */
+  if (window.VD && VD.describe) {
+    VD.describe(can, () => {
+      const o = [], B = S.blind;
+      if (S.view === 'ion') { const t = ionTerms(S.ion.r, S.ion.n, S.ion.rep);
+        o.push('A sodium atom and a chlorine atom on a scale in nanometers.', `The separation is ${f(S.ion.r, 3)} nm.`, `The energy of the ion pair is ${f(t.U, 3)} eV, measured from separated neutral atoms.`);
+        o.push(B ? 'Which state has the lower energy is hidden.' : S.ion.r < ionCross() ? 'The ions Na⁺ and Cl⁻ have the lower energy.' : 'The neutral atoms have the lower energy.');
+        o.push(S.ion.rep ? `The repulsion A/rⁿ is on, with n = ${f(S.ion.n, 1)}.` : 'The repulsion is off.');
+        if (!B) o.push(`The transfer of the electron pays off below ${f(ionCross(), 3)} nm.`);
+      } else if (S.view === 'cov') { const m = MOLS[S.cov.mol];
+        o.push(`Two atoms sharing electrons, the molecule ${m.name}, on a scale in nanometers.`, `The separation is ${f(S.cov.r, 3)} nm.`, `The energy is ${f(covU(), 3)} eV, measured from separated neutral atoms.`);
+        if (S.cov.mol === 'H2') o.push(S.cov.spin === 'bond' ? 'The electron spins are opposite, so the bond is bonding.' : 'The electron spins are parallel, so the bond is antibonding.');
+        o.push(B ? 'The bond length and the well depth are hidden.' : `The bond length is ${f(m.re, 4)} nm and the well depth is ${f(De(m), 3)} eV.`);
+      } else if (S.view === 'mo') {
+        o.push('The H₂⁺ molecular orbital: one electron shared by two protons.', S.mo.sign > 0 ? 'The electron is in the bonding orbital.' : 'The electron is in the antibonding orbital.',
+          `The separation is ${f(S.mo.R, 3)} nm, ${f(S.mo.R / A0, 2)} Bohr radii.`, `The energy is ${f(h2pU(S.mo.R, S.mo.sign), 3)} eV.`, `The overlap is ${f(h2pS(S.mo.R), 4)}.`);
+        if (!B) o.push(`The probability density at the midpoint is ${f(h2pMidRatio(S.mo.R, S.mo.sign), 3)} times the two atoms added.`);
+      } else if (S.view === 'lev') { const m = levMol(), tr = levTr();
+        o.push(`The vibration and rotation energy levels of ${m.name}.`, `The transition is vibration 0 to ${S.lev.dv} and rotation ${S.lev.l} to ${S.lev.l + S.lev.dl}.`);
+        o.push(tr.allowed ? 'The transition is allowed.' : `The transition is not allowed: ${tr.why}.`);
+        if (isFinite(tr.nu)) o.push(`The photon has wavenumber ${f(tr.nu, 3)} cm⁻¹ and energy ${f(tr.eV * 1000, 3)} meV.`);
+      } else if (S.view === 'sp') { const l = nearestLine(S.sp.nu);
+        o.push('The infrared absorption band of HCl gas, with a cursor on the spectrum.', `The gas is at ${S.sp.T} K and the resolution is ${f(S.sp.res, 2)} cm⁻¹.`, S.sp.iso === 'both' ? 'The chlorine is natural, both isotopes.' : 'Only the chlorine 35 isotope is shown.');
+        o.push(S.sp.lock ? 'The cursor is locked to peaks.' : 'The cursor moves freely.', `The cursor is at ${f(S.sp.nu, 2)} cm⁻¹, wavelength ${f(1e4 / S.sp.nu, 4)} μm, relative absorbance ${f(spRel(S.sp.nu), 3)}.`);
+        o.push(B ? 'The nearest line name is hidden.' : l ? `The nearest line is ${l.iso === 'H35Cl' ? 'H35Cl' : 'H37Cl'} ${lineName(l)} at ${f(l.nu, 3)} cm⁻¹.` : 'There is no line nearby.');
+      } else { const m = ML_MOLS[ML.mol], nm = mlNm(), r = mlResponse(ML.mol, ML.lamp, ML.lamp === 'mw' ? 0 : ML.x[ML.lamp]);
+        o.push(`Light shines on the molecule ${m.name}.`);
+        o.push(ML.lamp === 'mw' ? 'The light is microwave, on a rotational line.' : ML.lamp === 'ir' ? `The light is infrared at ${f(ML.x.ir, 2)} μm, ${f(1e4 / ML.x.ir, 0)} cm⁻¹.` : ML.lamp === 'vis' ? `The light is visible at ${nm} nm.` : `The light is ultraviolet at ${nm} nm.`);
+        o.push(ML.run ? 'Photons are being sent.' : 'Paused.', { t: `Photons sent: ${ML.sent}.`, live: false });
+        if (B) o.push('What one photon does is hidden.');
+        else o.push({ pass: `One photon passes through: ${r.why}.`, turn: 'One photon makes the molecule rotate faster.', shake: r.mode ? `One photon sets the molecule vibrating: a ${mlLabel[r.mode.kind]} at ${r.mode.nu} cm⁻¹.` : 'One photon sets the molecule vibrating.', glow: 'One photon lifts an electron, and the molecule glows.', break: `One photon breaks the molecule into ${m.fname.join(' and ')}.` }[r.what]);
+      }
+      return o;
+    });
+    VD.describe(cur, () => {
+      const B = S.blind;
+      if (S.view === 'ion') return ['Graph of the energy U in eV against the separation r in nm, from 0.1 to 1.4 nm.', `The marked point is at r = ${f(S.ion.r, 3)} nm, U = ${f(ionTerms(S.ion.r, S.ion.n, S.ion.rep).U, 3)} eV.`, B ? 'The model curves are hidden.' : 'The curves are the Coulomb energy of the ions, the repulsion and their sum.'];
+      if (S.view === 'cov') return ['Graph of the energy U in eV against the separation r in nm, a well with a minimum at the bond length.', `The marked point is at r = ${f(S.cov.r, 3)} nm, U = ${f(covU(), 3)} eV.`, B ? 'The model curves are hidden.' : `The well is ${f(De(MOLS[S.cov.mol]), 3)} eV deep.`];
+      if (S.view === 'mo') return ['Graph of the energy U in eV against the separation R in nm.', `The marked point is at R = ${f(S.mo.R, 3)} nm, U = ${f(h2pU(S.mo.R, S.mo.sign), 3)} eV.`, B ? 'The model curves are hidden.' : 'The dashed curve is the measured one.'];
+      if (S.view === 'lev') return [levMol().polar ? `Graph of the relative strength of the absorption lines of ${levMol().name} against photon wavenumber in cm⁻¹.` : `${levMol().name} has no electric dipole, so it has no absorption lines.`];
+      if (S.view === 'sp') return ['A close up of the spectrum around the cursor: absorbance against wavenumber in cm⁻¹.', `The cursor is at ${f(S.sp.nu, 2)} cm⁻¹.`];
+      return ['The electromagnetic spectrum on a log scale of wavelength, from ultraviolet to microwave, marking where the light on the molecule falls.'];
+    });
+  }
   new ResizeObserver(resize).observe($('pane')); new ResizeObserver(resize).observe(cur.parentElement); resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   window.addEventListener('load', () => setTimeout(redraw, 0));

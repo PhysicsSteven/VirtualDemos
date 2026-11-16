@@ -1,5 +1,7 @@
 /* demo/polarization in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/polarization', {
+"Describe the picture":
+  "Describir la imagen",
 "Light travels left to right. Disks and fields are drawn as seen facing the oncoming beam. Slowed about {#} × {#}¹⁵ times.":
   "La luz viaja de izquierda a derecha. Los discos y los campos se dibujan como se ven de frente al haz que llega. Ralentizado unas {#} × {#}¹⁵ veces.",
 "Light in":
@@ -46,6 +48,20 @@ VDI18N.add('es', 'demo/polarization', {
   "{#} <small>de I₀ de salida</small>",
 "Polarizer bench: the light passes from left to right through up to four elements, each drawn as a disk seen facing the oncoming beam, with the polarization of the light drawn between them and its intensity as a bar. Below are a plot of transmission against the selected element's angle and a plot of transmission through N polarizers. Drag a disk to turn its axis, or drag along a plot. In the reflection view, drag the incoming ray to change the angle of incidence. Keys: left and right select an element, up and down turn it by {#} degree ({#} with shift), A adds a polarizer, Delete removes the selected element, V switches view, space plays or pauses.":
   "Banco de polarizadores: la luz pasa de izquierda a derecha por hasta cuatro elementos, cada uno dibujado como un disco visto de frente al haz que llega, con la polarización de la luz dibujada entre ellos y su intensidad como una barra. Debajo hay una gráfica de la transmisión en función del ángulo del elemento seleccionado y una gráfica de la transmisión a través de N polarizadores. Arrastra un disco para girar su eje, o arrastra a lo largo de una gráfica. En la vista de reflexión, arrastra el rayo incidente para cambiar el ángulo de incidencia. Teclas: izquierda y derecha seleccionan un elemento, arriba y abajo lo giran {#} grado ({#} con Shift), A agrega un polarizador, Supr quita el elemento seleccionado, V cambia de vista, espacio inicia o pausa.",
+"Light passes from left to right through {#} elements on a bench.":
+  "La luz pasa de izquierda a derecha por {#} elementos en un banco.",
+"The input light is unpolarized.":
+  "La luz de entrada no está polarizada.",
+"Element {#} is a polarizer with its transmission axis at {#}°.":
+  "El elemento {#} es un polarizador con su eje de transmisión a {#}°.",
+"After element {#} the light is linear at {#}°, with intensity {#} of I₀.":
+  "Después del elemento {#} la luz es lineal a {#}°, con intensidad {#} de I₀.",
+"Element {#} is selected.":
+  "El elemento {#} está seleccionado.",
+"The light that comes out has intensity {#} of I₀.":
+  "La luz que sale tiene una intensidad de {#} de I₀.",
+"The field animation is running.":
+  "La animación del campo está en marcha.",
 "Divider between the bench and the graphs":
   "Divisor entre el banco y las gráficas",
 "Malus's law":
@@ -192,6 +208,10 @@ VDI18N.add('es', 'demo/polarization', {
   "Elementos",
 "I/I₀ out":
   "I/I₀ de salida",
+"Skip to the picture":
+  "Ir a la imagen",
+"Skip to the controls":
+  "Ir a los controles",
 "n₁ = {#} (air)":
   "n₁ = {#} (aire)",
 "n₂ = {#} (glass)":
@@ -240,6 +260,12 @@ VDI18N.add('es', 'demo/polarization', {
   "Eje rápido",
 "Circular light in: I/I_in = ½ at every angle":
   "Entra luz circular: I/I_in = ½ a cualquier ángulo",
+"The input light is linearly polarized at {#}°.":
+  "La luz de entrada está polarizada linealmente a {#}°.",
+"Element {#} is a quarter wave plate with its fast axis at {#}°.":
+  "El elemento {#} es una placa de cuarto de onda con su eje rápido a {#}°.",
+"After element {#} the light is circular, right handed, with intensity {#} of I₀.":
+  "Después del elemento {#} la luz es circular, derecha, con intensidad {#} de I₀.",
 "{#} · λ/{#} plate: transmission against its angle":
   "{#} · lámina λ/{#}: transmisión en función de su ángulo",
 "A half wave plate delays the slow component by half a cycle, which mirrors the polarization across the fast axis: α becomes {#}θ − α. Fast axis at {#}° turns vertical light to {#}°. Turn the plate and the output turns twice as fast.":
@@ -256,6 +282,24 @@ VDI18N.add('es', 'demo/polarization', {
   "{#} <span>a través de los lentes de sol {#}, {#}% bloqueado</span>",
 "Half wave plate: lossless, I/I_in = {#}; it reverses the handedness of circular light":
   "Lámina de media onda: sin pérdidas, I/I_in = {#}; invierte el sentido de giro de la luz circular",
+"A ray goes from a medium of index {#} into one of index {#} and is partly reflected, with a graph of the reflected fractions beside it.":
+  "Un rayo pasa de un medio de índice {#} a otro de índice {#} y se refleja en parte, con una gráfica de las fracciones reflejadas al lado.",
+"The incoming light is unpolarized.":
+  "La luz incidente no está polarizada.",
+"The angle of incidence is {#}°.":
+  "El ángulo de incidencia es de {#}°.",
+"The refracted ray is at {#}°.":
+  "El rayo refractado está a {#}°.",
+"Brewster's angle is {#}°.":
+  "El ángulo de Brewster es de {#}°.",
+"There is no critical angle.":
+  "No hay ángulo crítico.",
+"The s reflectance is {#} and the p reflectance is {#}.":
+  "La reflectancia s es {#} y la reflectancia p es {#}.",
+"The reflected glare is {#} of the incoming intensity.":
+  "El deslumbramiento reflejado es {#} de la intensidad incidente.",
+"With polarized sunglasses, {#}% of the glare is blocked.":
+  "Con lentes de sol polarizados, se bloquea el {#}% del deslumbramiento.",
 "circular, left (counterclockwise facing the beam)":
   "circular, izquierda (antihoraria de frente al haz)",
 "circular, right (clockwise facing the beam)":
@@ -270,22 +314,38 @@ VDI18N.add('es', 'demo/polarization', {
   "reflexión total interna",
 "θc = {#}°":
   "θc = {#}°",
+"The light is totally internally reflected, so there is no refracted ray.":
+  "La luz se refleja totalmente de forma interna, así que no hay rayo refractado.",
+"The critical angle is {#}°.":
+  "El ángulo crítico es de {#}°.",
 "n₁ = {#} (water)":
   "n₁ = {#} (agua)",
+"The incoming light is polarized in the plane of incidence, the p direction.":
+  "La luz incidente está polarizada en el plano de incidencia, la dirección p.",
 "Turn the picked element by {#} degree (Polarizer bench, Shift for {#})":
   "Gira el elemento elegido {#} grado (Banco de polarizadores, Shift para {#})",
 "Drawn facing the oncoming beam; slowed about {#} × {#}¹⁵ times.":
   "Dibujado de frente al haz que llega; ralentizado unas {#} × {#}¹⁵ veces.",
 "circular left":
   "circular izquierda",
+"Light passes from left to right through {#} element on a bench.":
+  "La luz pasa de izquierda a derecha por {#} elemento en un banco.",
+"The input light is circularly polarized, left handed.":
+  "La luz de entrada está polarizada circularmente, izquierda.",
+"Element {#} is a half wave plate with its fast axis at {#}°.":
+  "El elemento {#} es una placa de media onda con su eje rápido a {#}°.",
 "In":
   "Entrada",
 "unpol.":
   "no pol.",
 "{#} Pol":
   "{#} Pol",
+"After element {#} there is no light.":
+  "Después del elemento {#} no hay luz.",
 "circ. R":
   "circ. D",
+"The incoming light is polarized perpendicular to the plane of incidence, the s direction.":
+  "La luz incidente está polarizada perpendicular al plano de incidencia, la dirección s.",
 "circ. L":
   "circ. I",
 "Not to scale: magnified, slowed about 2 × 10¹⁵ times. Drag a mount to turn it.":

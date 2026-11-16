@@ -1949,6 +1949,38 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   for (const k of ['g', 'n', 'a']) ro.observe(panes[k]);
   ro.observe(stageEl);
   { const q = new URLSearchParams(location.search).get('setup'); applyPreset(PRESETS[q] ? q : 'coin'); }
+  /* what the pictures show now, for a screen reader (VD.describe): the tray of nuclei, the counts against time and the activity. The counts run on by themselves, so they are never announced. */
+  if (window.VD && VD.describe) {
+    const counts = () => {
+      if (!sim) return [];
+      const t = tNow(), ns = nSp(), f = expFr(t), o = [], sg = Math.sqrt(S.N0 * f[0] * (1 - f[0]));
+      o.push({ t: `Time ${fmtT(t)}.`, live: false });
+      for (let i = 0; i <= ns; i++) o.push({ t: `Number of ${spName(i)} nuclei: ${fmtInt(sim.counts[i])}, expected ${fmtNum(S.N0 * f[i])}.`, live: false });
+      if (sg > 1e-9) o.push({ t: `The parents are ${(sim.counts[0] - S.N0 * f[0] >= 0 ? 'above' : 'below')} the expected number by ${Math.abs((sim.counts[0] - S.N0 * f[0]) / sg).toFixed(1)} standard deviations.`, live: false });
+      return o;
+    };
+    VD.describe($('gCan'), () => {
+      if (!sim) return [];
+      const ns = nSp(), o = [];
+      o.push(`A tray of ${fmtInt(S.N0)} nuclei, parents as large balls, with each decay flashing.`);
+      for (let i = 0; i < ns; i++) o.push(`Half life of ${spName(i)}: ${fmtHL(S.T[i])}.`);
+      o.push(`Stable end product: ${spName(ns)}.`);
+      o.push(running ? 'The run is going.' : 'The run is paused.', `The speed is ${S.mult} times.`);
+      if (cfg().generator && !S.custom) o.push(lastElution ? `The generator was last eluted at t = ${fmtT(lastElution.t)}, collecting ${fmtInt(lastElution.n)} nuclei.` : 'The generator has not been eluted yet.');
+      return o.concat(counts());
+    });
+    VD.describe($('nCan'), () => {
+      if (!sim) return [];
+      const o = [S.logY ? 'A graph of the number of nuclei of each kind against time on a log vertical scale, with the expected curves dashed and a one sigma band.' : 'A graph of the number of nuclei of each kind against time on a linear vertical scale, with the expected curves dashed and a one sigma band.'];
+      return o.concat(counts());
+    });
+    VD.describe($('aCan'), () => {
+      if (!sim) return [];
+      const ns = nSp(), o = ['A histogram of the number of decays in each time bin, with the expected number dashed.'];
+      for (let i = 0; i < ns; i++) o.push({ t: `Activity of ${spName(i)}: ${fmtNum(lam[i] * sim.counts[i])} decays per ${cfg().unit}.`, live: false });
+      return o;
+    });
+  }
   setRunning(running);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => drawAll());
   requestAnimationFrame(loop);
@@ -2271,6 +2303,26 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     tb.innerHTML = rows.map(([a, b]) => `<tr><td>${a}</td><td>${b}</td></tr>`).join('');
   }
+  /* what the one nucleus picture shows now, for a screen reader (VD.describe): the nucleus, the model's numbers, the decays so far */
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    const o = [];
+    if (O.view === 'alpha') {
+      const [Z, A] = aZA(), g = aG(), m = aM();
+      o.push(`Alpha decay of ${nuc(Z, A)} into ${nuc(Z - 2, A - 4)} and an alpha particle, with the potential energy against distance and a Geiger–Nuttall plot.`);
+      o.push(`The alpha energy is ${g.Ta.toFixed(4)} MeV and the Coulomb barrier tops out at ${g.VR.toFixed(1)} MeV.`, `The chance of getting out on each hit is about ${sci(Math.pow(10, g.lgP), 2)}.`);
+      o.push(`The model half life is ${fmtDur(Math.pow(10, g.lgT))} and the measured half life is ${fmtDur(Math.pow(10, m.lgT))}.`);
+      o.push(AL.done ? `The nucleus has decayed after ${fmtDur(AL.tDecay)}.` : AL.run ? 'The nucleus is waiting to decay.' : AL.t > 0 ? 'The wait is paused.' : 'The nucleus has not started waiting yet.');
+      if (AL.waits.length) o.push(`You have watched ${AL.waits.length} decays.`);
+    } else {
+      const s = bS(), Q = bQ(), tab = BE.tab; if (!tab) return o;
+      o.push(s.plus ? `Beta plus decay of ${nuc(s.Z, s.A)} into ${nuc(bZd(), s.A)}, a positron and a neutrino, with the energy spectrum of the positrons.` : `Beta minus decay of ${nuc(s.Z, s.A)} into ${nuc(bZd(), s.A)}, an electron and an antineutrino, with the energy spectrum of the electrons.`);
+      o.push(`The Q value is ${keV(Q)}.`, `The mean energy of the spectrum is ${keV(tab.mean)}.`, O.noNu ? 'The neutrino is left out.' : 'The neutrino carries off the rest of the energy.');
+      o.push(BE.run ? 'Decays are running.' : 'Decays are paused.', { t: `Decays so far: ${BE.n}.`, live: false });
+      if (BE.n) o.push({ t: `The mean energy of these decays is ${keV(BE.sumT / BE.n)}.`, live: false });
+      if (BE.last) o.push({ t: `The last decay gave an energy of ${keV(BE.last.Te)}.`, live: false });
+    }
+    return o;
+  });
   const NBr = (Z, A) => C.nb(Z, A);
   function goLabel() {
     const g = $('oneGo');

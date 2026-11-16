@@ -1,7 +1,13 @@
 /* demo/galton-board in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/galton-board', {
+"Describe the picture":
+  "Describir la imagen",
 "bin k: number of right bounces":
   "casilla k: número de rebotes a la derecha",
+"Skip to the picture":
+  "Ir a la imagen",
+"Skip to the controls":
+  "Ir a los controles",
 "Galton Board":
   "Tablero de Galton",
 "<a>The second law of thermodynamics</a>":
@@ -22,6 +28,18 @@ VDI18N.add('es', 'demo/galton-board', {
   "Soltar {#}",
 "A board of pegs in a triangle with bins underneath. Balls fall through the pegs into the bins, and the bins fill into a histogram. Space drops one ball.":
   "Un tablero de clavos en forma de triángulo con casillas debajo. Las bolas caen entre los clavos hasta las casillas, y las casillas se llenan formando un histograma. Espacio suelta una bola.",
+"A board with {#} rows of pegs and {#} bins underneath, numbered {#} to {#} from the left.":
+  "Un tablero con {#} filas de clavijas y {#} cajones abajo, numerados de {#} a {#} desde la izquierda.",
+"A ball bounces right with probability {#} at each peg.":
+  "Una bola rebota a la derecha con probabilidad {#} en cada clavija.",
+"No balls are falling.":
+  "No están cayendo bolas.",
+"The bins are empty.":
+  "Los cajones están vacíos.",
+"Expected mean {#}.":
+  "Media esperada {#}.",
+"Expected spread {#}.":
+  "Dispersión esperada {#}.",
 "Divider between the pegs and the bins":
   "Divisor entre los clavos y las casillas",
 "Set up the board":
@@ -88,6 +106,8 @@ VDI18N.add('es', 'demo/galton-board', {
   "Suelta al menos dos bolas antes de registrar.",
 "Stop":
   "Detener",
+"Balls are streaming.":
+  "Las bolas caen en flujo continuo.",
 "Close":
   "Cerrar"
 });

@@ -20,6 +20,8 @@ VDI18N.add('es', 'demo/instrument-builder', {
   "pupila de salida",
 "{#}° across":
   "{#}° de ancho",
+"Describe the picture":
+  "Describir la imagen",
 "Build a Microscope or Telescope":
   "Construye un microscopio o un telescopio",
 "<a><span>←</span> <span>The Eye</span></a><a><span>Color Vision</span> <span>→</span></a>":
@@ -42,16 +44,48 @@ VDI18N.add('es', 'demo/instrument-builder', {
   "Acercar",
 "The optical rail seen from the side, drawn to scale. Drag a lens, stop, the object or the eye along the rail; drag a selected lens's focal points to change its focal length and its rim to change its size. Drag empty space to pan, the wheel to zoom. Keys: Page Up and Page Down choose a part, arrows move it (Shift for {#} cm), [ and ] change a lens's focal length, Delete removes it.":
   "El riel óptico visto de lado, dibujado a escala. Arrastra una lente, un diafragma, el objeto o el ojo a lo largo del riel; arrastra los puntos focales de una lente seleccionada para cambiar su distancia focal y su borde para cambiar su tamaño. Arrastra en un espacio vacío para desplazar, usa la rueda para acercar. Teclas: Re Pág y Av Pág eligen una pieza, las flechas la mueven (Shift para {#} cm), [ y ] cambian la distancia focal de una lente, Supr la quita.",
+"An object {#} mm tall at −{#} cm on an optical rail marked in centimeters.":
+  "Un objeto de {#} mm de alto en −{#} cm sobre un riel óptico marcado en centímetros.",
+"Part {#} is Objective, a converging lens with focal length {#} cm and diameter {#} mm, at {#} cm.":
+  "La pieza {#} es el objetivo, una lente convergente con distancia focal de {#} cm y diámetro de {#} mm, en {#} cm.",
+"Part {#} is Field stop, a stop {#} mm across, at {#} cm.":
+  "La pieza {#} es el diafragma de campo, una apertura de {#} mm de ancho, en {#} cm.",
+"Part {#} is Eyepiece, a converging lens with focal length {#} cm and diameter {#} mm, at {#} cm.":
+  "La pieza {#} es el ocular, una lente convergente con distancia focal de {#} cm y diámetro de {#} mm, en {#} cm.",
+"An eye with a {#} mm pupil looks through it from {#} cm.":
+  "Un ojo con pupila de {#} mm mira a través de él desde {#} cm.",
+"No part is selected.":
+  "No hay ninguna pieza seleccionada.",
+"Angular magnification −{#}.":
+  "Aumento angular −{#}.",
+"The final image is at infinity.":
+  "La imagen final está en el infinito.",
+"Exit pupil {#} mm.":
+  "Pupila de salida {#} mm.",
+"Apparent field of view {#}°.":
+  "Campo visual aparente {#}°.",
+"Image brightness {#} % of the bare eye.":
+  "Brillo de la imagen {#} % del ojo desnudo.",
+"The image is in focus.":
+  "La imagen está enfocada.",
+"Describe the optical rail":
+  "Describir el riel óptico",
 "Through the instrument":
   "A través del instrumento",
 "What the eye sees through the instrument":
   "Lo que ve el ojo a través del instrumento",
+"The view through the instrument.":
+  "La vista a través del instrumento.",
+"The image is upside down.":
+  "La imagen está invertida.",
 "brightened ×{#} to show it":
   "aclarada ×{#} para mostrarla",
 "Without it, same scale":
   "Sin él, a la misma escala",
 "What the eye sees without the instrument, at the same angular scale":
   "Lo que ve el ojo sin el instrumento, a la misma escala angular",
+"The view without the instrument, at the same angular scale, always upright.":
+  "La vista sin el instrumento, a la misma escala angular, siempre derecha.",
 "the object at the near point, {#} cm":
   "el objeto en el punto cercano, {#} cm",
 "Angular magnification M":
@@ -202,6 +236,10 @@ VDI18N.add('es', 'demo/instrument-builder', {
   "Las lentes son lentes delgadas ideales: un rayo a la altura x sale con su pendiente cambiada en −x/f, así que cada punto de un plano forma una imagen exacta en un punto ({#}/d<sub>o</sub> + {#}/d<sub>i</sub> = {#}/f), sin aberraciones; se dibujan con algo de espesor, pero la luz se desvía en el plano medio. Los ángulos se manejan como pendientes (tan θ). Los rayos se trazan en tres dimensiones y se detienen en el borde de cada lente y de cada diafragma. El ojo es el ojo reducido de la demo El ojo: una lente delgada a {#} cm delante de la retina que se acomoda desde el infinito hasta {#} cm, así que ve con nitidez solo cuando la imagen final está a {#} cm o más delante de él. La cámara tiene una lente de {#} mm, un sensor de {#} × {#} mm y enfoca de {#} cm al infinito. Las imágenes de lo que ven el ojo y la cámara se trazan hacia atrás rayo por rayo desde la retina o el sensor, a través de la pupila y de cada lente, hasta el objeto, así que el desenfoque, el borde del campo y el oscurecimiento salen todos de los rayos; la vista a través del instrumento se aclara para llenar la imagen (el ojo se adapta), y la lectura del brillo dice cuánto. La luz es de un solo color (sin aberración cromática) y se deja fuera la difracción; se indica su límite.",
 "star light":
   "luz de estrella",
+"Skip to the picture":
+  "Ir a la imagen",
+"Skip to the controls":
+  "Ir a los controles",
 "One {#} cm lens with the object, a {#} mm letter, at its focal point: the light leaves parallel, the eye relaxes, and the letter looks {#}/{#} = {#} times bigger than at the near point. Bring the object a little closer to the lens: the image moves in toward {#} cm and M grows a little.":
   "Una lente de {#} cm con el objeto, una letra de {#} mm, en su punto focal: la luz sale en rayos paralelos, el ojo se relaja y la letra se ve {#}/{#} = {#} veces más grande que en el punto cercano. Acerca un poco el objeto a la lente: la imagen se mueve hacia {#} cm y M crece un poco.",
 "Magnifier <span>f {#}</span>":
@@ -228,6 +266,8 @@ VDI18N.add('es', 'demo/instrument-builder', {
   "La Luna llena, de {#}° de diámetro aparente (su diámetro entre su distancia media), muy lejos: su luz llega como haces paralelos. La cara está dibujada a grandes rasgos, lo suficiente para ver hacia dónde está su parte de arriba.",
 "the same object, no instrument":
   "el mismo objeto, sin instrumento",
+"The Moon, far away, so its light arrives as parallel beams.":
+  "La Luna, muy lejos, de modo que su luz llega en haces paralelos.",
 "image {#} (would form)":
   "imagen {#} (se formaría)",
 "A {#} cm objective and a −{#} cm eyepiece, {#} cm apart (f₁ + f₂ with f₂ < {#}): M = −f₁/f₂ = +{#}, upright, and short. Its exit pupil is virtual, inside the tube, so the eye cannot reach it: the eye's own pupil limits the field, which is why Galileo's telescope saw so little sky at once.":
@@ -260,6 +300,16 @@ VDI18N.add('es', 'demo/instrument-builder', {
   "Sin lentes: M = {#} cm/(distancia al ojo)",
 "Blurred: the image is closer than {#} cm.":
   "Borroso: la imagen está a menos de {#} cm.",
+"An object {#} mm tall at {#} cm on an optical rail marked in centimeters.":
+  "Un objeto de {#} mm de alto en {#} cm sobre un riel óptico marcado en centímetros.",
+"There are no lenses or stops on the rail.":
+  "No hay lentes ni aperturas en el riel.",
+"The image is blurred.":
+  "La imagen está borrosa.",
+"There are no lenses, so this is the bare view.":
+  "No hay lentes, así que esta es la vista sin instrumento.",
+"Angular magnification {#}.":
+  "Aumento angular {#}.",
 "The object itself, far away.":
   "El objeto mismo, muy lejos.",
 "No lenses: M = {#}":
@@ -282,6 +332,10 @@ VDI18N.add('es', 'demo/instrument-builder', {
   "La foto de la cámara",
 "Without it, same lens":
   "Sin él, la misma lente",
+"A camera with f/{#} looks through it from {#} cm.":
+  "Una cámara con f/{#} mira a través de él desde {#} cm.",
+"Image brightness {#} % of the bare camera.":
+  "Brillo de la imagen {#} % de la cámara desnuda.",
 "Add a lens first.":
   "Primero agrega una lente.",
 "Lens {#}":
@@ -308,8 +362,20 @@ VDI18N.add('es', 'demo/instrument-builder', {
   "Diafragma {#}",
 "Stop {#}: position z":
   "Diafragma {#}: posición z",
+"Part {#} is Lens {#}, a converging lens with focal length {#} cm and diameter {#} mm, at {#} cm.":
+  "La pieza {#} es la lente {#}, una lente convergente con distancia focal de {#} cm y diámetro de {#} mm, en {#} cm.",
+"Part {#} is Stop {#}, a stop {#} mm across, at {#} cm.":
+  "La pieza {#} es la apertura {#}, una apertura de {#} mm de ancho, en {#} cm.",
+"A part is selected.":
+  "Hay una pieza seleccionada.",
+"The final image is real, {#} cm in front of the camera.":
+  "La imagen final es real, a {#} cm frente a la cámara.",
 "{#}″ (arcseconds), entrance pupil D = {#} mm":
   "{#}″ (segundos de arco), pupila de entrada D = {#} mm",
+"Part {#} is Eyepiece, a diverging lens with focal length −{#} cm and diameter {#} mm, at {#} cm.":
+  "La pieza {#} es el ocular, una lente divergente con distancia focal de −{#} cm y diámetro de {#} mm, en {#} cm.",
+"The image is upright.":
+  "La imagen está derecha.",
 "An instrument built by hand and shared by a link. Press a preset to start again from a ready made one.":
   "Un instrumento armado a mano y compartido con un enlace. Pulsa una configuración predefinida para empezar de nuevo desde una ya hecha.",
 "A {#} cm objective, {#} cm across, and a {#} cm eyepiece, {#} cm apart (f₁ + f₂): parallel light from the Moon leaves parallel and M = −f₁/f₂ = −{#}, upside down. The exit pupil is the objective's image, {#} mm across, {#} cm behind the eyepiece.":

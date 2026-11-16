@@ -14,6 +14,8 @@ VDI18N.add('es', 'demo/millikan', {
   "Cargas calculadas, |q| ({#}⁻¹⁹ C); líneas discontinuas en {#}, {#}, {#} ... × e",
 "Record a drop falling and then with the plates on to put a dot here.":
   "Registra una gota cayendo y luego con las placas encendidas para poner un punto aquí.",
+"Describe the picture":
+  "Describir la imagen",
 "Millikan Oil Drop":
   "Gota de aceite de Millikan",
 "<a>Charge and electric fields</a>":
@@ -46,6 +48,30 @@ VDI18N.add('es', 'demo/millikan', {
   "<span>Fuente ionizante</span>",
 "Left: the oil drop apparatus, two round metal plates with a small hole in the top one, a lamp lighting the gap and a telescope looking in. Right: the view through the telescope, oil drops as bright points against a scale of lines {#} mm apart. Below: a dot plot of the charges worked out so far. Tap a drop to follow it; N picks the next drop; Space starts or pauses.":
   "Izquierda: el aparato de la gota de aceite, dos placas metálicas redondas con un agujero pequeño en la de arriba, una lámpara que ilumina el espacio entre ellas y un telescopio que mira hacia adentro. Derecha: la vista a través del telescopio, gotas de aceite como puntos brillantes sobre una escala de líneas separadas {#} mm. Abajo: un diagrama de puntos de las cargas calculadas hasta ahora. Toca una gota para seguirla; N elige la siguiente gota; Espacio inicia o pausa.",
+"Two round metal plates, {#} mm apart, with oil drops between them seen through a telescope.":
+  "Dos placas metálicas redondas, separadas {#} mm, con gotas de aceite entre ellas vistas por un telescopio.",
+"The plates are off, so there is no field.":
+  "Las placas están apagadas, así que no hay campo.",
+"The ionizing source is off.":
+  "La fuente ionizante está apagada.",
+"Paused.":
+  "En pausa.",
+"{#} drops are in view.":
+  "Hay {#} gotas a la vista.",
+"Following drop {#}.":
+  "Siguiendo la gota {#}.",
+"It is falling.":
+  "Está cayendo.",
+"It is above the upper timing line.":
+  "Está arriba de la línea de cronometraje superior.",
+"The timing lines are {#} mm apart.":
+  "Las líneas de cronometraje están separadas {#} mm.",
+"No time has been measured yet.":
+  "Todavía no se ha medido ningún tiempo.",
+"There are {#} recorded rows.":
+  "Hay {#} filas registradas.",
+"{#} charges have been worked out.":
+  "Se han calculado {#} cargas.",
 "Divider between the apparatus and the telescope":
   "Divisor entre el aparato y el telescopio",
 "<span>Set up</span>":
@@ -140,6 +166,10 @@ VDI18N.add('es', 'demo/millikan', {
   "separación y posición de las gotas a escala; gotas agrandadas",
 "dashed square: the telescope’s view":
   "cuadro punteado: lo que ve el telescopio",
+"Skip to the picture":
+  "Ir a la imagen",
+"Skip to the controls":
+  "Ir a los controles",
 "{#} kV/m down":
   "{#} kV/m hacia abajo",
 "{#} kV/m up":
@@ -158,6 +188,14 @@ VDI18N.add('es', 'demo/millikan', {
   "A {#} kPa el recorrido libre medio del aire es más del doble, así que las gotas se deslizan a través de él y caen más rápido de lo que dice la ley de Stokes. Calcula las cargas con y sin la corrección por deslizamiento (Laboratorio) y ve cuáles se agrupan en números enteros de e.",
 "One small drop, radius {#} µm: it falls only about {#} µm/s and jiggles as air molecules knock it about (Brownian motion). Time it over {#} mm several times and see how the times scatter.":
   "Una gota pequeña, de radio {#} µm: cae solo unos {#} µm/s y se sacude cuando las moléculas del aire la golpean (movimiento browniano). Mide su tiempo en {#} mm varias veces y ve cómo se dispersan los tiempos.",
+"{#} drop is in view.":
+  "Hay {#} gota a la vista.",
+"Running.":
+  "En marcha.",
+"The top plate is negative at {#} V, a field of {#} kV/m pointing up.":
+  "La placa superior es negativa a {#} V, con un campo de {#} kV/m que apunta hacia arriba.",
+"The top plate is positive at {#} V, a field of {#} kV/m pointing down.":
+  "La placa superior es positiva a {#} V, con un campo de {#} kV/m que apunta hacia abajo.",
 "Close":
   "Cerrar",
 "plates off":

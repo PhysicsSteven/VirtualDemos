@@ -1,15 +1,25 @@
 /* English strings of demo/galton-board, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'demo/galton-board', [
+"Describe the picture",
 "bin k: number of right bounces",
+"Skip to the picture",
+"Skip to the controls",
 "Galton Board",
 "<a>The second law of thermodynamics</a>",
 "<a><span>←</span> <span>Entropy and the Second Law</span></a><a><span>Ising Model</span> <span>→</span></a>",
 "Balls fall through rows of pegs and bounce left or right at each one. One ball is unpredictable; thousands pile up into the binomial distribution, and with many rows into a bell curve.",
 "counts",
+"Time controls",
 "Stream",
 "Empty the bins",
 "Drop {#}",
 "A board of pegs in a triangle with bins underneath. Balls fall through the pegs into the bins, and the bins fill into a histogram. Space drops one ball.",
+"A board with {#} rows of pegs and {#} bins underneath, numbered {#} to {#} from the left.",
+"A ball bounces right with probability {#} at each peg.",
+"No balls are falling.",
+"The bins are empty.",
+"Expected mean {#}.",
+"Expected spread {#}.",
 "Divider between the pegs and the bins",
 "Set up the board",
 "<span>The board</span>",
@@ -43,5 +53,5 @@ VDI18N.add('en', 'demo/galton-board', [
 "{#} rows: drop a few hundred and the histogram matches the normal curve with mean {#} and standard deviation √{#} = {#}. Bins {#} to {#}, within one standard deviation of the middle, should hold {#}% of the balls; the {#}% rule is for a continuous variable, and here the edge bins count in full.",
 "Drop at least two balls before recording.",
 "Stop",
-"Time controls"
+"Balls are streaming."
 ]);

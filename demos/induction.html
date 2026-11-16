@@ -1757,6 +1757,57 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   VD.howTo({ src: () => `media/how-this-works/${window.vdWorksheet()}.mp4`, poster: () => `media/how-this-works/${window.vdWorksheet()}.jpg`,
     title: () => (S.preset === 'polar' ? 'How this works: Attracting a Neutral Insulator' : 'How this works: Charging by Induction') });
   tokens(); new ResizeObserver(resize).observe(stage); applyPreset('induce'); resize();
+  /* what the picture shows now, for a screen reader (VD.describe): the setup, the state of the apparatus and the readings unless Blind hides them */
+  const nC = (v, d = 2) => { const t = f(v, d); return `${v > 0 && +t.replace('−', '-') !== 0 ? '+' : ''}${t} nC`; };
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    const o = [], P = S.preset, bl = S.blind;
+    if (P === 'rub') {
+      const Q = S.rubQ, sep = rubSep(S.rubRod, S.rubCloth), A = 2 * Math.PI * RUB_R * RUB_L, sig = Q / A;
+      o.push(`A ${RUB_NAME[S.rubRod]} rod and a ${RUB_NAME[S.rubCloth]} cloth, rubbed together.`);
+      o.push(S.rubAnim ? 'Rubbing now.' : 'Not rubbing.', `Strokes so far: ${S.rubN}.`);
+      if (!sep) o.push('Same material: nothing moves.');
+      else o.push(`In the series, ${RUB_NAME[sep > 0 ? S.rubRod : S.rubCloth]} is above ${RUB_NAME[sep > 0 ? S.rubCloth : S.rubRod]}.`);
+      if (bl) o.push('The charges are hidden.');
+      else o.push(`Charge on the rod ${nC(Q / NC)}.`, `Charge on the cloth ${nC(-Q / NC)}.`, `Field just outside the rod ${f(Math.abs(sig) / EPS0 / 1e6, 2)} MV/m of 3 MV/m.`);
+    } else if (P === 'polar') {
+      const pl = S.pol; if (!pl) return o;
+      const myst = S.pb === 'mystery';
+      o.push('A neutral ball of radius 2.00 cm sits on an insulating post on a balance.', `Ball material: ${pl.m.name}.`);
+      o.push(myst ? 'The dielectric constant is hidden.' : pl.m.kappa === Infinity ? 'The ball is metal, with free charges.' : `The dielectric constant is ${pl.m.kappa}.`);
+      o.push(S.prod || S.pv < 24.95 ? `A rod charged ${nC(S.pq, 0)} is ${f(S.pv, 1)} cm above the ball.` : 'The charged rod is raised out of the way.');
+      o.push(`Balance reading ${(pl.mg === 0 ? 0 : pl.mg).toFixed(2).replace('-', '−')} mg.`, pl.stable ? 'The balance has settled.' : 'The balance is still settling.');
+      if (bl) o.push('The force is hidden.');
+      else o.push(`Pull on the ball ${sci(pl.F * 1e6, 'µN')}.`);
+    } else if (P === 'shapes') {
+      const sys = S.sys, c = S.chk; if (!sys || !c) return o;
+      const nm = { circle: 'a circle', ellipse: 'an ellipse', teardrop: 'a teardrop with a sharp point', ring: 'a hollow ring', box: 'a hollow box, a Faraday cage' }[S.shape];
+      o.push(`A cross section of a long metal conductor shaped like ${nm}, with an external field of ${S.E0} N/C along +x.`);
+      o.push(S.lam ? `A line charge of ${f(S.lam, 1)} nC/m is ${f(S.ld, 1)} cm to the left of it.` : 'There is no line charge.', `The net charge on the conductor is ${f(S.lamC, 1)} nC/m.`);
+      const e = cField(sys, S.ssol, S.probe[0], S.probe[1]);
+      o.push(`The probe is at x = ${f(S.probe[0] / CM, 2)} cm, y = ${f(S.probe[1] / CM, 2)} cm, ${REG[cRegion(sys, S.probe[0], S.probe[1])]}.`, `The field at the probe is ${sci(Math.hypot(e[0], e[1]), 'N/C')}.`);
+      if (bl) o.push('The summary readings are hidden.');
+      else o.push(`Surface charge density runs from ${f(c.smin / 1e-9, 2)} to ${f(c.smax / 1e-9, 2)} nC/m².`, sys.curves.some((q) => q.cavity) ? `Charge on the cavity walls ${f(c.sc.inner / 1e-9, 3)} nC/m.` : 'There is no cavity.');
+    } else if (S.sol) {
+      const sol = S.sol, far = S.gap > B_SHOW, touch = S.gap < 0.1;
+      o.push(far ? 'One metal sphere A of radius 5.0 cm on an insulating stand. Sphere B is far away, out of the picture.' : `Two metal spheres on insulating stands: A of radius 5.0 cm and B of radius ${f(S.rB, 1)} cm.`);
+      if (!far) o.push(touch ? 'The spheres touch.' : S.wire ? `The spheres are ${f(S.gap, 1)} cm apart, joined by a thin wire.` : `The spheres are ${f(S.gap, 1)} cm apart.`);
+      if (S.rod) o.push(`A ${S.kind === 'rubber' ? 'hard rubber' : 'glass'} rod charged ${nC(S.q, 0)} has its tip ${f(S.d, 1)} cm from sphere A.`); else o.push('No charged rod is near.', `The rod charge is set to ${nC(S.q, 0)}.`);
+      o.push(S.gA ? 'Sphere A is grounded.' : 'Sphere A is not grounded.');
+      if (!far) o.push(S.gB ? 'Sphere B is grounded.' : 'Sphere B is not grounded.');
+      if (bl) o.push('The net charges and potentials are hidden.');
+      else { o.push(`Net charge on A ${nC(sol.QA / NC, 2)}.`); if (!far) o.push(`Net charge on B ${nC(sol.QB / NC, 2)}.`); o.push(`Potential of A ${f(sol.VA, 0)} V.`); }
+      if (S.step >= 0) o.push(`Step ${S.step + 1} of ${STEPS[P].length}.`);
+    }
+    return o;
+  });
+  const sigPlotEl = $('sigPlot');
+  if (window.VD && VD.describe && sigPlotEl) VD.describe(sigPlotEl, () => {
+    const c = S.chk; if (S.preset !== 'shapes' || !c) return [];
+    const o = ['Graph of the surface charge density in nC/m² against the angle around the center, from −180° to 180°.'];
+    if (S.sys && S.sys.curves.some((q) => q.cavity)) o.push('A second line shows the cavity walls.');
+    o.push(S.blind ? 'The largest and smallest values are hidden.' : `The density runs from ${f(c.smin / 1e-9, 2)} to ${f(c.smax / 1e-9, 2)} nC/m².`);
+    return o;
+  });
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
 })();
 </script>

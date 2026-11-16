@@ -328,6 +328,24 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   VD.projector({ onChange: resize });
   VD.fitStage();   /* the set up card never hangs off the picture on a short window or in Projector */
   VD.howTo({ src: 'media/how-this-works/galton-board.mp4', poster: 'media/how-this-works/galton-board.jpg' });
+  /* what the picture shows now, for a screen reader (VD.describe): the board, the stream, the bin counts and their statistics */
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    const st = gbStats(S.counts), busy = S.stream || S.balls.length > 0 || S.queue > 0, o = [], N = st.N, off = S.walk ? (v) => 2 * v - S.n : (v) => v, offS = S.walk ? 2 : 1;
+    o.push(S.n === 1 ? 'A board with 1 row of pegs and 2 bins underneath, numbered 0 and 1 from the left.' : `A board with ${S.n} rows of pegs and ${S.n + 1} bins underneath, numbered 0 to ${S.n} from the left.`, `A ball bounces right with probability ${S.p.toFixed(2)} at each peg.`);
+    if (S.walk) o.push('The bins are labeled by net steps, 2k − n.');
+    o.push(S.stream ? 'Balls are streaming.' : S.balls.length || S.queue ? 'Balls are falling.' : 'No balls are falling.');
+    if (!N) o.push('The bins are empty.');
+    else {
+      let top = 0; S.counts.forEach((c, k) => { if (c > S.counts[top]) top = k; });
+      o.push({ t: N === 1 ? '1 ball is in the bins.' : `${N} balls are in the bins.`, live: !busy }, { t: S.counts[top] === 1 ? `The fullest bin is bin ${top} with 1 ball.` : `The fullest bin is bin ${top} with ${S.counts[top]} balls.`, live: !busy });
+      o.push({ t: S.walk ? `Sample mean ${f(off(st.mean))} steps.` : `Sample mean ${f(st.mean)}.`, live: !busy });
+      if (N > 1) o.push({ t: S.walk ? `Sample standard deviation ${f(offS * st.sd)} steps.` : `Sample standard deviation ${f(st.sd)}.`, live: !busy });
+    }
+    if (S.blind) o.push('The expected mean and spread are hidden.');
+    else if (S.walk) o.push(`Expected mean ${f(off(gbMean(S.n, S.p)))} steps.`, `Expected spread ${f(offS * gbSd(S.n, S.p))} steps.`);
+    else o.push(`Expected mean ${f(gbMean(S.n, S.p))}.`, `Expected spread ${f(gbSd(S.n, S.p))}.`);
+    return o;
+  });
   tokens(); new ResizeObserver(resize).observe($('scene'));
   applyPreset('fair'); resize();
   window.__gb = { S, applyPreset, drawAll, drop, step, launch };

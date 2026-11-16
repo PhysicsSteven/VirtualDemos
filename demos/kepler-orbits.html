@@ -3064,6 +3064,78 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   // ---------- boot ----------
   buildAreas();
   loadPreset('mercury');
+  /* what the pictures show now, for a screen reader (VD.describe): the star, the launch and the orbit, or the sandbox's bodies; the chart beside it */
+  const PRESET_SAY = { earth: 'Earth', mars: 'Mars', mercury: 'Mercury', halley: 'Halley’s comet', vesta: 'Vesta', ceres: 'Ceres', apophis: 'Apophis', pluto: 'Pluto', alphacen: 'Binary star', circle: 'Circular orbit', escape: 'Escape', bound: 'Bound and unbound', sandbox: 'Sandbox' };
+  if (window.VD && VD.describe) {
+    VD.describe(view, () => {
+      const o = [], B = S.blind;
+      if (SBK.on && SBK.st) {
+        const bs = SBK.st.bs, b = bs.find((q) => q.id === SBK.sel);
+        o.push('The sandbox: stars, planets and moons that all pull on one another, seen from above.');
+        o.push(bs.length === 1 ? 'There is 1 body.' : `There are ${bs.length} bodies.`, SBK.playing ? 'Running.' : 'Paused.', { t: `Time ${fmtT(SBK.st.t)}.`, live: false });
+        if (b) {
+          o.push(`The selected body is ${b.name}, ${minus(sci(b.m))} solar masses.`);
+          const host = nbHost(bs, b);
+          if (host) { const el = nbElements(b, host); o.push({ t: `It is ${sig(el.r, 4)} AU from ${host.name}, moving at ${sig(el.v * KMS, 4)} km/s around it.`, live: false });
+            if (B) o.push('Its orbit is hidden.'); else if (el.bound) o.push(`Its orbit around ${host.name} has semi major axis ${sig(el.a, 4)} AU, eccentricity ${el.e.toFixed(3)} and period ${fmtT(el.P)}.`); else o.push(`It is not bound to ${host.name}.`); }
+          else o.push('Nothing heavier pulls on it.');
+        }
+        const p = rvPick();
+        if (p) { const d = Math.hypot(p.g.x - p.s.x, p.g.y - p.s.y), vr = Math.hypot(p.g.vx - p.s.vx, p.g.vy - p.s.vy);
+          o.push({ t: `The ship is ${sig(d, 3)} AU from the target, with a relative speed of ${sig(vr * KMS, 3)} km/s.`, live: false }, `Burns so far: ${RV.burns}, ${sig(RV.dv * KMS, 3)} km/s in all.`); }
+        const AS = sbkAssistPick();
+        if (AS) { const v = sbkAssistVals(AS); o.push({ t: `The probe is ${sig(v.dJ, 3)} AU from Jupiter, at ${sig(v.u * KMS, 4)} km/s relative to Jupiter.`, live: false });
+          if (!B) o.push(v.eps < 0 ? 'The probe is bound to the Sun.' : 'The probe is unbound: it leaves the solar system.'); }
+        if (bs.length > 1 && !B) o.push(`Total energy ${minus(sci(sbkTot().E * EJ))} J.`);
+        return o;
+      }
+      const A = S.A; if (!A) return o;
+      const el = elements(A), pl = S.preset ? PRESET_SAY[S.preset] : '';
+      o.push(S.M === 1 ? 'A star of 1 solar mass sits at the center, seen from above.' : `A star of ${S.M.toFixed(2)} solar masses sits at the center, seen from above.`);
+      o.push(pl ? `Setup: ${pl}.` : 'The launch is one you set yourself.');
+      o.push(`The planet was launched ${sig(elements(S.launch).r, 3)} AU from the star at ${kms(elements(S.launch).v)}, and escape speed there is ${kms(elements(S.launch).vesc)}.`);
+      o.push(S.playing ? 'Running.' : 'Paused.');
+      if (A.done === 'hit') o.push('The planet hit the star.');
+      else if (el.radial) o.push('The planet falls straight in.');
+      else if (el.parabolic) o.push('The orbit is a parabola: the planet just escapes.');
+      else if (!el.bound) o.push('The orbit is a hyperbola: the planet is unbound.');
+      else if (el.q < R_HIT) o.push('The orbit is bound, but the planet plunges into the star.');
+      else if (el.e < 1e-3) o.push('The orbit is a circle.');
+      else o.push('The orbit is an ellipse.');
+      if (B) o.push('The semi major axis, eccentricity and period are hidden.');
+      else if (el.bound) o.push(`Semi major axis ${sig(el.a, 4)} AU, eccentricity ${el.e.toFixed(el.e < 0.1 ? 4 : 3)}, period ${fmtT(el.P)}.`, `Perihelion speed ${kms(el.vp)}, aphelion speed ${kms(el.va)}.`);
+      else o.push(`Eccentricity ${el.e.toFixed(3)}.`, `Speed far away ${kms(el.vinf)}.`);
+      o.push({ t: `Time ${fmtT(A.t)}, distance from the star ${sig(el.r, 4)} AU, speed ${kms(el.v)}.`, live: false });
+      if (S.B) { const eb = elements(S.B); o.push(B ? 'A second planet is shown; its orbit is hidden.' : eb.bound ? `A second planet has semi major axis ${sig(eb.a, 3)} AU and period ${fmtT(eb.P)}.` : 'A second planet is unbound.'); }
+      if (S.timer.on || S.timer.acc > 0) o.push({ t: `The timer shows ${timerStr()}.`, live: false });
+      return o;
+    });
+    VD.describe(chart, () => {
+      const o = [];
+      if (SBK.on && SBK.st) {
+        if (sbkAssistPick() && SBK.chart.length && SBK.chart[0].length > 3) return ['Chart of the probe’s energy per kilogram against time: its energy around the Sun, and its kinetic energy relative to Jupiter.'];
+        if (S.blind) return ['Chart of the energy of the whole system. It is hidden.'];
+        o.push('Chart of the kinetic, potential and total energy of the whole system against time.');
+        if (SBK.chart.length < 2) o.push('The lines are drawn once the bodies move.');
+        return o;
+      }
+      const cv = S.blind ? 'fit' : S.cview;
+      if (cv === 'fit') { const F = fitSpec();
+        o.push(`Plot of T² against a³ for your recorded readings, with ${F.xs.length} of the readings used.`);
+        if (F.f) o.push(`The least squares line has slope ${sig(F.f.b, 4)} yr²/AU³ and intercept ${sig(F.f.a, 3)} yr².`); else o.push('There are not enough readings to fit a line yet.');
+        if (!S.blind) o.push(`The model slope is 1/M = ${sig(F.model, 4)} yr²/AU³.`);
+      } else if (cv === 'energy') {
+        o.push('Chart of the planet’s kinetic, potential and total energy per kilogram, in MJ/kg.');
+        const en = energyParts(S.A, mu()), J = KMS * KMS;
+        o.push({ t: `Kinetic ${sig(en.K * J, 4)} MJ/kg, potential ${sig(en.U * J, 4)} MJ/kg, total ${sig((en.K + en.U) * J, 4)} MJ/kg.`, live: false });
+      } else {
+        const el = elements(S.A);
+        o.push('Third law chart: period against semi major axis on log scales. The solar system planets lie on a straight line, P² = a³/M.');
+        o.push(el.bound ? `This orbit is the point at a = ${sig(el.a, 4)} AU, P = ${fmtT(el.P)}.` : 'This orbit is not bound, so it has no point.');
+      }
+      return o;
+    });
+  }
   $('tReduce').checked = reduce;
   setPlaying(!reduce);
   viewLabel(); renderRows(); syncTimer(); syncLab();

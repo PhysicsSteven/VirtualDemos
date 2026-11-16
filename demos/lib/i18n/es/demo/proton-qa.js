@@ -28,6 +28,8 @@ VDI18N.add('es', 'demo/proton-qa', {
   "Mayor error de posición de spot",
 "Spot size − baseline":
   "Tamaño de spot − línea base",
+"Describe the picture":
+  "Describir la imagen",
 "Proton Therapy QA":
   "Control de calidad en protonterapia",
 "<a>{#} · Proton therapy</a>":
@@ -54,6 +56,14 @@ VDI18N.add('es', 'demo/proton-qa', {
   "corrida {#}",
 "The treatment room: the gantry's nozzle points down at the couch, where the QA device sits (a water equivalent phantom with an ion chamber for output, a stack of chambers for range, a scintillating screen and camera for the spots, or a 2D chamber array under water equivalent slabs for patient QA), cabled to the electrometer on a cart.":
   "La sala de tratamiento: la boquilla del gantry apunta hacia abajo a la camilla, donde está el dispositivo de control (un maniquí equivalente a agua con una cámara de ionización para la salida, una pila de cámaras para el alcance, una pantalla centelleadora y una cámara de video para los spots, o un arreglo 2D de cámaras bajo placas equivalentes a agua para el control del paciente), conectado con cables al electrómetro en un carrito.",
+"The treatment room: the gantry nozzle points down at the couch.":
+  "La sala de tratamiento: la boquilla del gantry apunta hacia abajo, a la camilla.",
+"On the couch is a water equivalent phantom with an ion chamber, checking the output.":
+  "Sobre la camilla hay un maniquí equivalente al agua con una cámara de ionización, que verifica la salida.",
+"The QA energy is {#} MeV.":
+  "La energía del control de calidad es de {#} MeV.",
+"QA runs so far: {#}.":
+  "Controles de calidad realizados: {#}.",
 "The QA energy, the machine faults and the patient plan":
   "La energía del control, las fallas de la máquina y el plan del paciente",
 "QA run. Drag, or use the arrow keys, to move this card; double click to put it back":
@@ -136,6 +146,24 @@ VDI18N.add('es', 'demo/proton-qa', {
   "Error de alcance",
 "The QA results: in daily QA and drift, the chosen check (the output chamber's depth dose, the range stack's readings against the baseline, or the spots on the scintillating screen, or the trend over the days) beside gauges of output, range, spot position and spot size against their tolerances; in patient QA, the planned dose, the measured dose at each chamber and the gamma map.":
   "Los resultados del control: en el control diario y en la deriva, la prueba elegida (la dosis en profundidad de la cámara de salida, las lecturas de la pila de alcance contra la línea base, o los spots en la pantalla centelleadora, o la tendencia a lo largo de los días) junto a indicadores de salida, alcance, posición de spot y tamaño de spot contra sus tolerancias; en el control del paciente, la dosis planeada, la dosis medida en cada cámara y el mapa gamma.",
+"The chosen check is drawn beside gauges of the four checks.":
+  "La verificación elegida se dibuja junto a los indicadores de las cuatro verificaciones.",
+"Output at {#} cm is {#} % of baseline.":
+  "La salida a {#} cm es {#} % de la referencia.",
+"The output check passes.":
+  "La verificación de salida es correcta.",
+"R90 is {#} cm, {#} mm from baseline.":
+  "R90 es de {#} cm, a {#} mm de la referencia.",
+"The range check passes.":
+  "La verificación de alcance es correcta.",
+"The largest spot position error is {#} mm.":
+  "El mayor error de posición de un punto es de {#} mm.",
+"The spot position check passes.":
+  "La verificación de posición de los puntos es correcta.",
+"The spot size changed by +{#} %.":
+  "El tamaño del punto cambió +{#} %.",
+"The spot size check passes.":
+  "La verificación del tamaño de los puntos es correcta.",
 "Divider between the gantry and the graph":
   "Divisor entre el gantry y la gráfica",
 "Daily QA, all good":
@@ -230,6 +258,10 @@ VDI18N.add('es', 'demo/proton-qa', {
   "ΔR90 (mm)",
 "spot (mm)":
   "spot (mm)",
+"Skip to the picture":
+  "Ir a la imagen",
+"Skip to the controls":
+  "Ir a los controles",
 "day":
   "día",
 "output − baseline (%)":
@@ -284,6 +316,20 @@ VDI18N.add('es', 'demo/proton-qa', {
   "Pasan con {#} %/{#} mm",
 "{#} % <span>pass</span>":
   "{#} % <span>pasa</span>",
+"On the couch is a water phantom with a 2D array of {#} ion chambers, measuring the delivered plan.":
+  "Sobre la camilla hay un maniquí de agua con una matriz 2D de {#} cámaras de ionización, que mide el plan entregado.",
+"The plan is a square, {#} × {#} cm target, measured at {#} cm depth.":
+  "El plan es un blanco cuadrado de {#} × {#} cm, medido a {#} cm de profundidad.",
+"The patient QA has been measured.":
+  "Ya se midió el control de calidad del paciente.",
+"A map of the gamma index over the chamber array at {#} cm depth, with {#} points above {#} % of the maximum dose.":
+  "Un mapa del índice gamma sobre la matriz de cámaras a {#} cm de profundidad, con {#} puntos por encima del {#} % de la dosis máxima.",
+"{#} % of the points pass at {#} % and {#} mm.":
+  "El {#} % de los puntos pasa con {#} % y {#} mm.",
+"The plane passes the {#} % tolerance.":
+  "El plano cumple la tolerancia de {#} %.",
+"At {#} % and {#} mm {#} % pass, at {#} % and {#} mm {#} % pass, and at {#} % and {#} mm {#} % pass.":
+  "Con {#} % y {#} mm pasa el {#} %, con {#} % y {#} mm pasa el {#} %, y con {#} % y {#} mm pasa el {#} %.",
 "ARRAY SOFTWARE":
   "SOFTWARE DEL ARREGLO",
 "OUT OF TOLERANCE":
@@ -346,6 +392,20 @@ VDI18N.add('es', 'demo/proton-qa', {
   "Los resultados de control de {#} mañanas en una máquina cuya salida sube poco a poco como una décima de por ciento al día, además de su vaivén de un día a otro. Ajusta una recta a la salida en función del día y predice el día en que cruzará la tolerancia de {#} %. Una tendencia detectada a tiempo se corrige en un día planeado, no la mañana en que falla el control.",
 "{#} cm, −{#} mm <span>pass</span>":
   "{#} cm, −{#} mm <span>pasa</span>",
+"Mornings run so far: {#}.":
+  "Mañanas realizadas: {#}.",
+"A graph of the output minus baseline in percent against the day, for {#} mornings, with the tolerance of {#} marked.":
+  "Una gráfica de la salida menos la referencia, en porcentaje, contra el día, para {#} mañanas, con la tolerancia de {#} marcada.",
+"The latest value is +{#}.":
+  "El último valor es +{#}.",
+"{#} of the {#} mornings are outside the tolerance.":
+  "{#} de las {#} mañanas están fuera de la tolerancia.",
+"What is happening: output drifting +{#} % a day.":
+  "Lo que ocurre: la salida deriva +{#} % por día.",
+"The output check fails.":
+  "La verificación de salida falla.",
+"R90 is {#} cm, −{#} mm from baseline.":
+  "R90 es de {#} cm, −{#} mm respecto a la referencia.",
 "Something may be happening to this machine, or nothing at all. Run the mornings, look at every check, and find out which quantity is changing, how fast, and when it will leave its tolerance. New mystery picks another machine; Show the answer tells you what it was.":
   "Puede que algo le esté pasando a esta máquina, o puede que nada. Corre las mañanas, mira cada prueba y averigua qué cantidad está cambiando, qué tan rápido y cuándo saldrá de su tolerancia. Nuevo misterio elige otra máquina; Mostrar la respuesta te dice cuál era.",
 "A patient plan delivered to a water phantom, measured at {#} cm depth (the middle of the {#} to {#} cm target) with a 2D array of {#} ion chambers. Gamma analysis compares each chamber with the plan: within {#} % of the maximum dose, or within {#} mm of a point that has that dose. With a clean delivery every point passes, even at {#} %/{#} mm, although each {#} mm chamber averages the dose over its face and so reads a little low on the steep edges.":
@@ -358,6 +418,8 @@ VDI18N.add('es', 'demo/proton-qa', {
   "El haz llega {#} mm más profundo de lo planeado, medido a {#} cm, en el borde distal empinado del pico extendido, donde la dosis planeada es más o menos el {#} % de la dosis en el blanco. Ahí la dosis cambia como {#} % por milímetro, y el plano falla por mucho. Medido a la mitad del blanco ({#} cm), el mismo error es invisible: el pico extendido es plano ahí. La distancia de concordancia de la gamma está en el plano, así que no perdona ningún error a lo largo del haz.",
 "{#} % <span>fail</span>":
   "{#} % <span>falla</span>",
+"The plane fails the {#} % tolerance.":
+  "El plano no cumple la tolerancia de {#} %.",
 "Spots {#} % larger in air, in an L shaped target. At {#} cm the spots have already spread by multiple scattering, so the error in air is diluted, and the plane passes even at {#} %/{#} mm. The daily spot size check catches this fault; patient QA in one plane does not.":
   "Spots {#} % más grandes en aire, en un blanco con forma de L. A {#} cm los spots ya se ensancharon por dispersión múltiple, así que el error en aire se diluye, y el plano pasa incluso a {#} %/{#} mm. La prueba diaria de tamaño de spot detecta esta falla; el control del paciente en un plano no.",
 "Plan: L shape, {#} × {#} cm, {#} to {#} cm deep":
@@ -366,6 +428,12 @@ VDI18N.add('es', 'demo/proton-qa', {
   "midiendo",
 "Gamma":
   "Gamma",
+"The plan is a l shape, {#} × {#} cm target, measured at {#} cm depth.":
+  "El plan es un blanco en forma de L de {#} × {#} cm, medido a {#} cm de profundidad.",
+"A run is in progress.":
+  "Hay una corrida en curso.",
+"The results are being measured.":
+  "Se están midiendo los resultados.",
 "Plan: Disc, {#} cm across, {#} to {#} cm deep":
   "Plan: Disco, {#} cm de diámetro, de {#} a {#} cm de profundidad",
 "patient plan":
@@ -384,6 +452,10 @@ VDI18N.add('es', 'demo/proton-qa', {
   "Más o menos a escala; el haz se dibuja como una línea.",
 "Drag to turn.":
   "Arrastra para girar.",
+"On the couch is a scintillating screen with a camera, checking the spots.":
+  "Sobre la camilla hay una pantalla centelleante con una cámara, que verifica los puntos.",
+"The spot position check fails.":
+  "La verificación de posición de los puntos falla.",
 "Close":
   "Cerrar"
 });

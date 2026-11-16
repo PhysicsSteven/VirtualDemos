@@ -1,5 +1,7 @@
 /* demo/molecules in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/molecules', {
+"Describe the picture":
+  "Describir la imagen",
 "Cl⁻":
   "Cl⁻",
 "Na⁺":
@@ -24,6 +26,10 @@ VDI18N.add('es', 'demo/molecules', {
   "Na + Cl (átomos neutros)",
 "dashed: ΔE − ke²/r and A/rⁿ":
   "punteadas: ΔE − ke²/r y A/rⁿ",
+"Skip to the picture":
+  "Ir a la imagen",
+"Skip to the controls":
+  "Ir a los controles",
 "Molecules: Bonds and Spectra":
   "Moléculas: enlaces y espectros",
 "<a>Condensed matter physics</a>":
@@ -48,8 +54,26 @@ VDI18N.add('es', 'demo/molecules', {
   "Moléculas y luz",
 "A sodium and a chlorine atom on a scale in nanometers. Drag the sodium, or use the arrow keys, to change their separation.":
   "Un átomo de sodio y uno de cloro sobre una escala en nanómetros. Arrastra el sodio, o usa las flechas, para cambiar su separación.",
+"A sodium atom and a chlorine atom on a scale in nanometers.":
+  "Un átomo de sodio y un átomo de cloro en una escala en nanómetros.",
+"The separation is {#} nm.":
+  "La separación es de {#} nm.",
+"The energy of the ion pair is −{#} eV, measured from separated neutral atoms.":
+  "La energía del par de iones es de −{#} eV, medida desde los átomos neutros separados.",
+"The ions Na⁺ and Cl⁻ have the lower energy.":
+  "Los iones Na⁺ y Cl⁻ tienen la menor energía.",
+"The repulsion A/rⁿ is on, with n = {#}.":
+  "La repulsión A/rⁿ está activada, con n = {#}.",
+"The transfer of the electron pays off below {#} nm.":
+  "La transferencia del electrón conviene por debajo de {#} nm.",
 "The graph for the view: energy against separation, the lines of the spectrum, or a close up of the spectrum around the cursor.":
   "La gráfica de la vista: energía en función de la separación, las líneas del espectro o un acercamiento del espectro alrededor del cursor.",
+"Graph of the energy U in eV against the separation r in nm, from {#} to {#} nm.":
+  "Gráfica de la energía U en eV contra la separación r en nm, de {#} a {#} nm.",
+"The marked point is at r = {#} nm, U = −{#} eV.":
+  "El punto marcado está en r = {#} nm, U = −{#} eV.",
+"The curves are the Coulomb energy of the ions, the repulsion and their sum.":
+  "Las curvas son la energía de Coulomb de los iones, la repulsión y su suma.",
 "The ionic bond":
   "El enlace iónico",
 "<span>Sodium and chlorine: drag the sodium along the scale. Close enough, the electron moves to chlorine and they become the ions Na⁺ and Cl⁻.</span>":
@@ -452,6 +476,24 @@ VDI18N.add('es', 'demo/molecules', {
   "por debajo de {#} nm",
 "{#} photons sent":
   "{#} fotones enviados",
+"Light shines on the molecule CO₂.":
+  "La luz incide sobre la molécula de CO₂.",
+"The light is infrared at {#} μm, {#} cm⁻¹.":
+  "La luz es infrarroja, de {#} μm, {#} cm⁻¹.",
+"Photons are being sent.":
+  "Se están enviando fotones.",
+"Photons sent: {#}.":
+  "Fotones enviados: {#}.",
+"One photon sets the molecule vibrating: a bend at {#} cm⁻¹.":
+  "Un fotón hace vibrar la molécula: una flexión a {#} cm⁻¹.",
+"The electromagnetic spectrum on a log scale of wavelength, from ultraviolet to microwave, marking where the light on the molecule falls.":
+  "El espectro electromagnético en escala logarítmica de longitud de onda, del ultravioleta a las microondas, con la marca de dónde cae la luz que incide sobre la molécula.",
+"bend":
+  "flexión",
+"absorbed: the {mode} ({nu} cm⁻¹) starts":
+  "absorbido: empieza {mode} ({nu} cm⁻¹)",
+"it gives a photon back soon, in any direction; the motion slowed":
+  "pronto devuelve un fotón, en cualquier dirección; movimiento en cámara lenta",
 "microwave, on a rotational line":
   "microondas, en una línea rotacional",
 "about {#} meV (at {#} cm)":
@@ -474,8 +516,16 @@ VDI18N.add('es', 'demo/molecules', {
   "{#} (sin IR)",
 "rotational lines, dipole {#} D":
   "líneas rotacionales, dipolo {#} D",
+"Light shines on the molecule H₂O.":
+  "La luz incide sobre la molécula de H₂O.",
+"The light is ultraviolet at {#} nm.":
+  "La luz es ultravioleta, de {#} nm.",
+"One photon passes through: no electronic absorption at this wavelength.":
+  "Un fotón pasa de largo: no hay absorción electrónica en esta longitud de onda.",
 "breaks: NO + O":
   "se rompe: NO + O",
+"NO":
+  "NO",
 "breaks: O₂ + O":
   "se rompe: O₂ + O",
 "below {#} nm and {#} to {#} nm":
@@ -524,6 +574,12 @@ VDI18N.add('es', 'demo/molecules', {
   "Luz azul a {#} nm sobre NO₂, el gas café del smog. El fotón eleva un electrón pero tiene menos energía que el enlace de {#} eV, así que la molécula brilla en vez de romperse. Por debajo de {#} nm (cambia a ultravioleta) se rompe en NO + O.",
 "an electron is lifted; it glows":
   "se eleva un electrón; brilla",
+"Light shines on the molecule NO₂.":
+  "La luz incide sobre la molécula de NO₂.",
+"The light is visible at {#} nm.":
+  "La luz es visible, de {#} nm.",
+"One photon lifts an electron, and the molecule glows.":
+  "Un fotón excita un electrón y la molécula brilla.",
 "Molecules and light has nothing to record: it shows what each kind of light does.":
   "Moléculas y luz no tiene nada que registrar: muestra lo que hace cada tipo de luz.",
 "Change the separation of the atoms in {#} nanometer steps, the level in Energy levels, or the cursor in the HCl spectrum (Shift for bigger steps)":
@@ -534,6 +590,20 @@ VDI18N.add('es', 'demo/molecules', {
   "electrón",
 "sizes in proportion to measured radii; the scale gives the separation":
   "tamaños en proporción a los radios medidos; la escala da la separación",
+"Two atoms sharing electrons, the molecule H₂, on a scale in nanometers.":
+  "Dos átomos que comparten electrones, la molécula de H₂, en una escala en nanómetros.",
+"The energy is {#} eV, measured from separated neutral atoms.":
+  "La energía es de {#} eV, medida desde los átomos neutros separados.",
+"The electron spins are parallel, so the bond is antibonding.":
+  "Los espines de los electrones son paralelos, así que el enlace es antienlazante.",
+"The bond length is {#} nm and the well depth is {#} eV.":
+  "La longitud de enlace es de {#} nm y la profundidad del pozo es de {#} eV.",
+"Graph of the energy U in eV against the separation r in nm, a well with a minimum at the bond length.":
+  "Gráfica de la energía U en eV contra la separación r en nm, un pozo con un mínimo en la longitud de enlace.",
+"The marked point is at r = {#} nm, U = {#} eV.":
+  "El punto marcado está en r = {#} nm, U = {#} eV.",
+"The well is {#} eV deep.":
+  "El pozo tiene {#} eV de profundidad.",
 "turns faster (rotation)":
   "gira más rápido (rotación)",
 "passes through (no vibration at this wavenumber)":
@@ -544,6 +614,26 @@ VDI18N.add('es', 'demo/molecules', {
   "no hay absorción electrónica a esta longitud de onda",
 "passes: {why}":
   "pasa: {why}",
+"The energy of the ion pair is {#} eV, measured from separated neutral atoms.":
+  "La energía del par de iones es de {#} eV, medida desde los átomos neutros separados.",
+"The neutral atoms have the lower energy.":
+  "Los átomos neutros tienen la menor energía.",
+"The infrared absorption band of HCl gas, with a cursor on the spectrum.":
+  "La banda de absorción infrarroja del gas HCl, con un cursor sobre el espectro.",
+"The gas is at {#} K and the resolution is {#} cm⁻¹.":
+  "El gas está a {#} K y la resolución es de {#} cm⁻¹.",
+"The chlorine is natural, both isotopes.":
+  "El cloro es natural, con ambos isótopos.",
+"The cursor is locked to peaks.":
+  "El cursor está fijado a los picos.",
+"The cursor is at {#} cm⁻¹, wavelength {#} μm, relative absorbance {#}.":
+  "El cursor está en {#} cm⁻¹, longitud de onda {#} μm, absorbancia relativa {#}.",
+"The nearest line is H35Cl R({#}) at {#} cm⁻¹.":
+  "La línea más cercana es H35Cl R({#}) en {#} cm⁻¹.",
+"A close up of the spectrum around the cursor: absorbance against wavenumber in cm⁻¹.":
+  "Un acercamiento del espectro alrededor del cursor: absorbancia contra número de onda en cm⁻¹.",
+"The cursor is at {#} cm⁻¹.":
+  "El cursor está en {#} cm⁻¹.",
 "no vibration at this wavenumber":
   "no hay vibración a este número de onda",
 "<span>Infrared light through a cell of HCl gas: the absorption around {#} μm. Drag the cursor across the band.</span>":

@@ -745,6 +745,40 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   /* How this works: a short video of the speed limit on a flat curve (made by tools/howto/) */
   VD.howTo({ src: 'media/how-this-works/circular-motion.mp4', poster: 'media/how-this-works/circular-motion.jpg' });
   VD.tools({ el: can, strip: '.viewbar', time: () => simClock, scale: () => { if (use3() || S.preset === 'cone' || S.preset === 'rotor') return null; const g = geom(); return { m: S.r / g.R, area: [0, 0, g.sw, g.sh] }; } });
+  /* what the picture shows now, for a screen reader (VD.describe): the setup, whether it moves, the forces and limits unless Blind hides them */
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    const P = S.preset, q = situation(), bl = S.blind, o = [], state = S.run ? 'Running.' : 'Paused.', hid = 'Forces, acceleration and limits are hidden.';
+    const lab = { string: 'A ball on a string goes round a circle on a frictionless table', flat: 'A car goes round a flat curve', bank: 'A car goes round a banked curve',
+      speed: 'A car speeds up or brakes on a flat curve', cone: 'A bob on a string swings round a horizontal circle, a conical pendulum', rotor: 'Riders stand against the wall of a spinning drum, the rotor ride', loop: 'A ball rolls inside a vertical loop' };
+    o.push(lab[P] + '.');
+    if (P === 'cone') o.push(`The string is ${f(S.r, 2)} m long at ${f(S.b, 1)}° from the vertical, with a ${f(S.m, 1)} kg bob.`);
+    else if (P === 'rotor') o.push(`The drum has radius ${f(S.r, 1)} m, the wall moves at ${f(S.v, 1)} m/s, a rider has mass ${f(S.m, 0)} kg and μs = ${f(S.mu, 2)}.`);
+    else if (P === 'loop') o.push(`The loop has radius ${f(S.r, 1)} m and the ball of ${f(S.m, 1)} kg enters at ${f(S.v, 1)} m/s at the bottom.`);
+    else if (P === 'string') o.push(`The radius is ${f(S.r, 1)} m, the speed ${f(S.v, 1)} m/s and the ball's mass ${f(S.m, 1)} kg.`);
+    else {
+      o.push(`The radius is ${f(S.r, 0)} m, the car's mass ${f(S.m, 0)} kg and μs = ${f(S.mu, 2)}.`);
+      if (P === 'bank') o.push(`The road is banked at ${f(S.b, 1)}°.`);
+      o.push(P === 'speed' ? `It starts at ${f(S.v, 1)} m/s and its speed changes at ${f(S.at, 1)} m/s² along the road.` : `The car's speed is ${f(S.v, 1)} m/s.`);
+    }
+    o.push(state);
+    if (P === 'string' || P === 'cone') o.push(S.cut ? 'The string is cut and the object moves off in a straight line.' : 'The string is holding.');
+    if (P === 'rotor') o.push(S.drop ? 'The floor has dropped.' : 'The floor is still in place.');
+    if (P === 'flat' || P === 'bank' || P === 'speed') o.push(S.slid ? 'The car has slid off the curve.' : 'The car is on the curve.');
+    if (P === 'loop') o.push(S.fell ? 'The ball has left the track.' : 'The ball is on the track.');
+    if (bl) o.push(hid);
+    else if (P === 'string') o.push(`Acceleration v²/r = ${f(q.a, 2)} m/s².`, `Tension ${f(q.T, 2)} N.`, `Period ${f(2 * Math.PI * S.r / S.v, 2)} s.`);
+    else if (P === 'flat') o.push(`Friction needed ${f(q.need, 0)} N, most friction available ${f(q.fmax, 0)} N.`, `Top speed ${f(q.vmax, 1)} m/s.`, q.ok ? 'Friction is enough to hold the curve.' : 'Friction is not enough to hold the curve.');
+    else if (P === 'bank') o.push(`Friction needed ${f(Math.abs(q.f), 0)} N${q.f > 1e-6 ? ' down the slope' : q.f < -1e-6 ? ' up the slope' : ''}, most friction available ${f(S.mu * q.N, 0)} N.`, `Normal force ${f(q.N, 0)} N.`, `Ideal speed ${f(q.vIdeal, 1)} m/s.`, `Allowed speeds ${f(q.vmin, 1)} to ${f(q.vmax, 1)} m/s.`);
+    else if (P === 'cone') o.push(`Circle radius ${f(q.r, 3)} m, ${f(q.h, 3)} m below the pivot.`, `Speed ${f(q.v, 2)} m/s, tension ${f(q.T, 2)} N.`, `Period ${f(q.P, 3)} s.`);
+    else if (P === 'rotor') o.push(`Wall push ${f(q.N, 0)} N, most friction ${f(q.fmax, 0)} N, weight ${f(q.need, 0)} N.`, isFinite(q.vmin) ? `Least wall speed ${f(q.vmin, 2)} m/s.` : 'With no friction there is no wall speed that holds a rider.', q.holds ? 'Riders stay up when the floor drops.' : `Riders slide down at ${f(q.aDown, 2)} m/s².`);
+    else if (P === 'speed') {
+      o.push(q.tSlip == null ? 'The car never slips.' : q.tSlip === 0 ? 'The car slips at once.' : `The car slips at ${f(q.tSlip, 2)} s, at ${f(S.v + S.at * q.tSlip, 1)} m/s.`, `Cruising top speed ${f(flatMax(S.mu, S.r), 1)} m/s.`,
+        { t: `Time ${f(S.ts, 2)} s, speed ${f(S.slid ? S.slid.v : q.v, 2)} m/s, acceleration ${f(q.a, 2)} m/s² at ${f(q.ang * 180 / Math.PI, 1)}° from the center.`, live: false });
+    }
+    else o.push(`Weight ${f(S.m * G, 2)} N.`, `Least speed at the bottom to keep contact at the top ${f(q.vmin, 2)} m/s.`, S.v >= q.vmin - 1e-9 ? 'The ball goes round.' : S.v * S.v <= 2 * G * S.r ? 'The ball stops below the side and slides back.' : 'The ball leaves the track.',
+      { t: q.stalls ? 'Speed here 0 m/s.' : `Speed here ${f(q.v, 2)} m/s, normal force ${f(q.N, 2)} N.`, live: false });
+    return o;
+  });
   $('play').textContent = S.run ? 'Pause' : 'Play';
   /* the banked curve opens in 3D where WebGL works, unless the page asks for the flat view (?view=flat) or the device asks to save data */
   G3.want = new URLSearchParams(location.search).get('view') !== 'flat' && !!window.VD3 && !VD3.lowPower();

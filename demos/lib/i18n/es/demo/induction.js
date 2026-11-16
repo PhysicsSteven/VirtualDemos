@@ -10,6 +10,12 @@ VDI18N.add('es', 'demo/induction', {
   "electrones, {#} punto = {#} nC, ralentizados",
 "Pick a rod (Glass + or Rubber −), or drag a sphere or the wand":
   "Elige Vidrio + o Hule −, o arrastra una esfera o la varilla",
+"Describe the picture":
+  "Describir la imagen",
+"Skip to the picture":
+  "Ir a la imagen",
+"Skip to the controls":
+  "Ir a los controles",
 "Charging by Induction":
   "Carga por inducción",
 "<a>Charge and electric fields</a>":
@@ -22,6 +28,26 @@ VDI18N.add('es', 'demo/induction', {
   "esferas de {#} cm de radio · solución exacta con cargas imagen",
 "Two metal spheres on insulating stands, a charged rod on the left and a ground connection. The plus and minus marks around each sphere show its surface charge density: darker marks mean more charge per area.":
   "Dos esferas metálicas sobre soportes aislantes, una varilla cargada a la izquierda y una conexión a tierra. Las marcas de más y menos alrededor de cada esfera muestran su densidad superficial de carga: marcas más oscuras significan más carga por unidad de área.",
+"Two metal spheres on insulating stands: A of radius {#} cm and B of radius {#} cm.":
+  "Dos esferas metálicas sobre soportes aislantes: A de radio {#} cm y B de radio {#} cm.",
+"The spheres touch.":
+  "Las esferas se tocan.",
+"No charged rod is near.":
+  "No hay ninguna varilla cargada cerca.",
+"The rod charge is set to +{#} nC.":
+  "La carga de la varilla está fijada en +{#} nC.",
+"Sphere A is not grounded.":
+  "La esfera A no está conectada a tierra.",
+"Sphere B is not grounded.":
+  "La esfera B no está conectada a tierra.",
+"Net charge on A {#} nC.":
+  "Carga neta de A {#} nC.",
+"Net charge on B {#} nC.":
+  "Carga neta de B {#} nC.",
+"Potential of A {#} V.":
+  "Potencial de A {#} V.",
+"Step {#} of {#}.":
+  "Paso {#} de {#}.",
 "Charged rod":
   "Varilla cargada",
 "<span>Rod</span>":
@@ -318,6 +344,20 @@ VDI18N.add('es', 'demo/induction', {
   "Restado por Tarar",
 "Your own arrangement. Press Reset for the steps.":
   "Tu propio arreglo. Pulsa Reiniciar para los pasos.",
+"A neutral ball of radius {#} cm sits on an insulating post on a balance.":
+  "Una bola neutra de radio {#} cm descansa sobre un poste aislante en una balanza.",
+"Ball material: Polystyrene.":
+  "Material de la bola: poliestireno.",
+"The dielectric constant is {#}.":
+  "La constante dieléctrica es {#}.",
+"The charged rod is raised out of the way.":
+  "La varilla cargada está levantada, fuera del camino.",
+"Balance reading {#} mg.":
+  "Lectura de la balanza {#} mg.",
+"The balance has settled.":
+  "La balanza se estabilizó.",
+"Pull on the ball {#} × {#}⁻² µN.":
+  "Jalón sobre la bola {#} × {#}⁻² µN.",
 "Teflon ball, {#} cm radius · side view to scale · molecules drawn huge":
   "Esfera de teflón, {#} cm de radio · vista lateral a escala · moléculas dibujadas enormes",
 "Nylon ball, {#} cm radius · side view to scale · molecules drawn huge":
@@ -340,6 +380,10 @@ VDI18N.add('es', 'demo/induction', {
   "esfera",
 "reading (mg)":
   "lectura (mg)",
+"Ball material: Mystery insulator.":
+  "Material de la bola: aislante misterioso.",
+"The dielectric constant is hidden.":
+  "La constante dieléctrica está oculta.",
 "Move the tip of the rod by {#} millimeter (Shift for {#} centimeter)":
   "Mueve la punta de la varilla {#} milímetro (Shift para {#} centímetro)",
 "glass rod +{#} nC":
@@ -350,6 +394,12 @@ VDI18N.add('es', 'demo/induction', {
   "La varilla frotada, {#} nC (casi nada: se muestra como +{#} nC), está cerca de la esfera A. Conecta una esfera a tierra o aleja B para cargarlas.",
 "Rod tip to A's surface d":
   "De la punta de la varilla a la superficie de A d",
+"A glass rod charged +{#} nC has its tip {#} cm from sphere A.":
+  "Una varilla de vidrio cargada con +{#} nC tiene su punta a {#} cm de la esfera A.",
+"Net charge on A −{#} nC.":
+  "Carga neta de A −{#} nC.",
+"Net charge on B +{#} nC.":
+  "Carga neta de B +{#} nC.",
 "Polystyrene ball, {#} cm radius · molecules drawn huge":
   "Esfera de poliestireno, {#} cm de radio · moléculas dibujadas enormes",
 "Teflon ball, {#} cm radius · molecules drawn huge":
@@ -358,6 +408,8 @@ VDI18N.add('es', 'demo/induction', {
   "Esfera de nailon, {#} cm de radio · moléculas dibujadas enormes",
 "Pyrex glass ball, {#} cm radius · molecules drawn huge":
   "Esfera de vidrio Pyrex, {#} cm de radio · moléculas dibujadas enormes",
+"Ball material: Pyrex glass.":
+  "Material de la bola: vidrio Pyrex.",
 "Strontium titanate ball, {#} cm radius · molecules drawn huge":
   "Esfera de titanato de estroncio, {#} cm de radio · moléculas dibujadas enormes",
 "Metal ball, {#} cm radius · molecules drawn huge":

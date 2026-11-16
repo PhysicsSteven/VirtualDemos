@@ -1254,7 +1254,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     G3.tried = true;
     const st = VD3K.stage(pane, { before: can, fov: 28, near: 0.02, far: 30, shadow: 0.85 }); if (!st) return false;
     const K = VD3K, scene = st.scene, mat = (o, c) => K.material(st, o, c), M = (o) => new THREE.MeshStandardMaterial(o);
-    st.el.hidden = true; st.sun.shadow.bias = -0.0006;
+    st.el.hidden = true; st.sun.shadow.bias = -0.0006; if (window.VD && VD.describe) VD.describe(st.el, () => (st.el.hidden ? [] : descPol()));
     // the room: a floor, a painted wall with a skirting board, and a lab bench (worktop on a cabinet) under the rail
     const FLOOR = -0.88, mesh = (geo, m, cast, recv) => { const x = new THREE.Mesh(geo, m); x.castShadow = !!cast; x.receiveShadow = !!recv; return x; };
     const floor = mesh(new THREE.PlaneGeometry(14, 14), mat({ roughness: 0.95 }, ['#dbd6d0', '#231e17']), false, true); floor.position.z = FLOOR;
@@ -1489,6 +1489,37 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   tokens();
   applyPreset('malus');
+  /* what the picture shows now, for a screen reader (VD.describe): the input light, each element and the light after it, or the reflection at the surface */
+  function descPol() {
+    const o = [];
+    if (S.view === 'refl') {
+      const F = fresnel(S.n1, S.n2, S.thi * D2R), thB = brewster(S.n1, S.n2) / D2R, thC = critical(S.n1, S.n2) / D2R;
+      const Is = S.rpol === 'p' ? 0 : S.rpol === 's' ? 1 : 0.5, Ip = 1 - Is, R = Is * F.Rs + Ip * F.Rp;
+      o.push(`A ray goes from a medium of index ${S.n1.toFixed(2)} into one of index ${S.n2.toFixed(2)} and is partly reflected, with a graph of the reflected fractions beside it.`);
+      o.push(S.rpol === 'unpol' ? 'The incoming light is unpolarized.' : S.rpol === 's' ? 'The incoming light is polarized perpendicular to the plane of incidence, the s direction.' : 'The incoming light is polarized in the plane of incidence, the p direction.');
+      o.push(`The angle of incidence is ${fmtDeg(S.thi)}.`, F.tir ? 'The light is totally internally reflected, so there is no refracted ray.' : `The refracted ray is at ${fmtDeg(F.tt / D2R)}.`);
+      o.push(`Brewster's angle is ${fmtDeg(thB, 2)}.`, isFinite(thC) ? `The critical angle is ${fmtDeg(thC, 2)}.` : 'There is no critical angle.');
+      o.push(`The s reflectance is ${F.Rs.toFixed(3)} and the p reflectance is ${F.Rp.toFixed(3)}.`, `The reflected glare is ${R.toFixed(4)} of the incoming intensity.`);
+      if (S.glasses) o.push(R > 1e-9 ? `With polarized sunglasses, ${(100 * (1 - Ip * F.Rp / R)).toFixed(0)}% of the glare is blocked.` : 'There is no glare for the sunglasses to block.');
+      return o;
+    }
+    const I0 = states[0].S[0], d0 = describe(states[0].S), last = states[states.length - 1];
+    o.push(S.els.length === 1 ? 'Light passes from left to right through 1 element on a bench.' : S.els.length ? `Light passes from left to right through ${S.els.length} elements on a bench.` : 'Light passes from left to right on a bench with no elements.');
+    o.push(d0.kind === 'unpol' ? 'The input light is unpolarized.' : d0.kind === 'lin' ? `The input light is linearly polarized at ${fmtDeg(d0.ang)}.` : d0.kind === 'circ' ? (d0.hand === 'R' ? 'The input light is circularly polarized, right handed.' : 'The input light is circularly polarized, left handed.') : 'The input light is polarized.');
+    S.els.forEach((el, i) => {
+      o.push(el.type === 'pol' ? `Element ${i + 1} is a polarizer with its transmission axis at ${fmtDeg(el.ang)}.` : el.type === 'hwp' ? `Element ${i + 1} is a half wave plate with its fast axis at ${fmtDeg(el.ang)}.` : `Element ${i + 1} is a quarter wave plate with its fast axis at ${fmtDeg(el.ang)}.`);
+      const d = describe(states[i + 1].S), I = fmtI(states[i + 1].S[0] / I0), k = i + 1;
+      o.push(d.kind === 'dark' ? `After element ${k} there is no light.` : d.kind === 'unpol' ? `After element ${k} the light is unpolarized, with intensity ${I} of I₀.`
+        : d.kind === 'lin' ? `After element ${k} the light is linear at ${fmtDeg(d.ang)}, with intensity ${I} of I₀.`
+        : d.kind === 'circ' ? (d.hand === 'R' ? `After element ${k} the light is circular, right handed, with intensity ${I} of I₀.` : `After element ${k} the light is circular, left handed, with intensity ${I} of I₀.`)
+        : (d.hand === 'R' ? `After element ${k} the light is elliptical, right handed, major axis at ${fmtDeg(d.ang)}, axis ratio ${d.ratio.toFixed(3)}, with intensity ${I} of I₀.` : `After element ${k} the light is elliptical, left handed, major axis at ${fmtDeg(d.ang)}, axis ratio ${d.ratio.toFixed(3)}, with intensity ${I} of I₀.`));
+    });
+    if (S.sel >= 0 && S.sel < S.els.length) o.push(`Element ${S.sel + 1} is selected.`);
+    o.push(`The light that comes out has intensity ${fmtI(last.S[0] / I0)} of I₀.`);
+    o.push(playing ? 'The field animation is running.' : 'The field animation is paused.');
+    return o;
+  }
+  if (window.VD && VD.describe) VD.describe(can, () => (can.hidden || (g3 && !g3.el.hidden) ? [] : descPol()));
   phase = reduce ? 0.6 : 0;
   setPlaying(!reduce);
   /* a reading for the Readings section (tools/readings_panel.py). Bench: the light in, the elements in order, the angle between the

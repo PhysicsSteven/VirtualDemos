@@ -544,6 +544,34 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   /* How this works: a 21 s video of one reading of two masses on the plate (made by tools/howto/) */
   VD.howTo({ src: 'media/how-this-works/center-of-mass.mp4', poster: 'media/how-this-works/center-of-mass.jpg' });
   VD.tools({ el: can, strip: '#runBar', time: () => (S.mode === 'plate' ? null : S.t) });
+  /* what the picture shows now, for a screen reader (VD.describe): the setup, the state, the center of mass unless Blind hides it */
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    const out = [], hid = 'The center of mass is hidden.', run = S.run ? 'Running.' : S.t > 0 ? 'Paused.' : 'At the start.';
+    if (S.mode === 'plate') {
+      const C = centre(S.ms);
+      out.push(`A plate 1.0 m wide and 0.6 m tall with ${S.ms.length} masses on it.`);
+      S.ms.forEach((a, i) => out.push(`Mass ${i + 1} is ${a.m.toFixed(1)} kg at x = ${a.x.toFixed(2)} m, y = ${a.y.toFixed(2)} m.`));
+      out.push(`Mass ${S.sel + 1} is selected.`, `Total mass ${f(C.M, 1)} kg.`);
+      out.push(S.blind ? hid : `Center of mass at x = ${f(C.x, 3)} m, y = ${f(C.y, 3)} m.`);
+    } else if (S.mode === 'fire') {
+      const F = FW(), s = S.t - F.tTop, pa = s > 0 ? F.at(F.a, s) : F.whole(S.t), pb = s > 0 ? F.at(F.b, s) : pa, wh = F.whole(Math.min(S.t, F.tWhole));
+      const cx = S.ratio * pa.x + (1 - S.ratio) * pb.x, cy = S.ratio * pa.y + (1 - S.ratio) * pb.y;
+      out.push(`A firework launched at ${V0} m/s and 60° that splits in two at the top of its path.`,
+        `The front piece has ${S.ratio.toFixed(2)} of the mass and the explosion gives the pieces ${S.kick} m/s relative speed, ${S.ang}° above horizontal.`,
+        `Split at ${f(F.tTop, 2)} s, ${f(F.yTop, 2)} m up.`, run,
+        `Front piece lands at x = ${f(F.at(F.a, F.a.tLand).x, 2)} m, back piece at x = ${f(F.at(F.b, F.b.tLand).x, 2)} m.`);
+      if (S.blind) out.push(hid);
+      else out.push(`Unexploded range ${f(F.whole(F.tWhole).x, 2)} m.`, { t: `Center of the pieces at x = ${f(cx, 2)} m, y = ${f(cy, 2)} m, and the unexploded firework at x = ${f(wh.x, 2)} m, y = ${f(wh.y, 2)} m.`, live: false });
+      out.push({ t: `Time ${f(S.t, 2)} s.`, live: false });
+    } else {
+      const b = boatState(), M = S.pm + S.bm;
+      out.push(`A person of ${S.pm} kg walks along a boat of ${S.bm} kg, ${LB} m long, beside a fixed post.`, run,
+        `The person has walked ${f(b.s, 2)} m along the boat and the boat has moved ${f(b.xb, 3)} m.`);
+      out.push(S.blind ? hid : { t: `Center of mass at x = ${f((S.pm * b.xp + S.bm * b.xb) / M, 3)} m.`, live: false });
+      out.push({ t: `Time ${f(S.t, 2)} s.`, live: false });
+    }
+    return out;
+  });
   $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; });
   tokens(); new ResizeObserver(resize).observe(stage); init(); resize();
   /* opens in 3D where WebGL works, unless the page asks for the flat view (?view=flat) or the device asks to save data */

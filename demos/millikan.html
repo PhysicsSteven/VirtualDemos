@@ -663,6 +663,33 @@
   tokens(); new ResizeObserver(resize).observe($('scene'));
   const q = new URLSearchParams(location.search).get('setup');
   applyPreset(PRESETS[q] ? q : 'fall'); resize();
+  /* what the picture shows now, for a screen reader (VD.describe): the plates, the followed drop, the timing; true charges and radii stay hidden */
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    const o = [], E = Eup(), d = S.drops[S.pick], vis = S.drops.filter(inView).length, h = S.L * 1e-3 / 2;
+    o.push(`Two round metal plates, ${f(MK_D * 1e3, 2)} mm apart, with oil drops between them seen through a telescope.`);
+    o.push(S.pol === 0 ? 'The plates are off, so there is no field.' : `The top plate is ${S.pol > 0 ? 'positive' : 'negative'} at ${S.V} V, a field of ${f(Math.abs(E) / 1e3, 2)} kV/m pointing ${S.pol > 0 ? 'down' : 'up'}.`);
+    o.push(S.ion ? 'The ionizing source is on.' : 'The ionizing source is off.', S.run ? 'Running.' : 'Paused.');
+    o.push(vis === 1 ? '1 drop is in view.' : `${vis} drops are in view.`);
+    if (!d) o.push('No drop is being followed.');
+    else {
+      o.push(`Following drop ${d.id}.`);
+      if (d.gone) o.push('It hit a plate.');
+      else if (!inView(d)) o.push('It is out of view.');
+      else {
+        const v = mkVel(d.dr, d.n * MK_E, E), big = Math.abs(v) > 2e-6;
+        o.push({ t: !big ? 'It is moving very little.' : v > 0 ? 'It is rising.' : 'It is falling.', live: false });
+        if (S.auto) o.push({ t: d.y > h ? 'It is above the upper timing line.' : d.y < -h ? 'It is below the lower timing line.' : 'It is between the two timing lines.', live: false });
+      }
+      if (S.auto) o.push(`The timing lines are ${f(S.L, 1)} mm apart.`);
+    }
+    if (S.sw.on || S.sw.t > 0) o.push({ t: `Stopwatch ${f(S.sw.on ? S.t - S.sw.t0 : S.sw.t, 2)} s.`, live: false });
+    const L = S.last;
+    o.push(L ? `Last time ${f(L.t, 2)} s for drop ${L.id} to ${L.dir > 0 ? 'rise' : 'fall'} ${f(L.L * 1e3, 2)} mm.` : 'No time has been measured yet.');
+    const n = S.rows.filter((r) => { const c = rowCalc(r); return c && c.q !== undefined; }).length;
+    o.push(S.rows.length === 1 ? 'There is 1 recorded row.' : `There are ${S.rows.length} recorded rows.`, n === 1 ? '1 charge has been worked out.' : `${n} charges have been worked out.`);
+    if (S.blind) o.push('The radii, the charges and the lines at whole numbers of e are hidden.');
+    return o;
+  });
   if (window.VD3K) view3 = VD3K.view({ seg: '#dimSeg', init: init3D, change: (on) => { if (g3) g3.S3.el.hidden = !on; draw(); }, status: say });
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   window.__mk = { S, G3, applyPreset, step, record, recordHold, drawAll: () => { draw(); readouts(); renderRows(); }, rowCalc, air: () => air, setPick };
