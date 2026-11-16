@@ -309,7 +309,13 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
     ctx.fillStyle = T.eInk; ctx.font = `600 ${11.5 * p}px ${T.ui}`; ctx.textBaseline = 'top'; ctx.fillText(`E = ${si(n.E, 'V/m')}`, le[0], le[1] + 4 * p);
     ctx.fillStyle = T.loopInk; ctx.font = `700 ${12 * p}px ${T.ui}`; ctx.textBaseline = 'bottom'; ctx.fillText(`loop, r = ${S.r.toFixed(1)} cm`, ll[0], ll[1] - 6 * p);
     ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom';
-    ctx.fillText(W > 560 ? 'Gap drawn 1.2 cm wide (really 2 mm). Green rings: B, brighter where stronger. Drag the purple knob; drag elsewhere to turn.' : 'Gap drawn wider than scale. Drag the knob; drag elsewhere to turn.', W - 10 * p, geo.sceneH - 6 * p);
+    const cap = W > 560 ? 'Gap drawn 1.2 cm wide (really 2 mm). Green rings: B, brighter where stronger. Drag the purple knob; drag elsewhere to turn.' : 'Gap drawn wider than scale. Drag the knob; drag elsewhere to turn.';
+    if (ctx.measureText(cap).width <= W - 20 * p) ctx.fillText(cap, W - 10 * p, geo.sceneH - 6 * p);
+    else {   /* a phone: the caption ran off both edges, so it wraps (translated whole first, then drawn as it is; phone pass 2026-11-16) */
+      const lines = []; let line = '';
+      for (const wd of (window.VDI18N ? VDI18N.t(window.VD3 ? VD3.turnText(cap) : cap) : cap).split(' ')) { const t2 = line ? line + ' ' + wd : wd; if (line && ctx.measureText(t2).width > W - 20 * p) { lines.push(line); line = wd; } else line = t2; } lines.push(line);
+      const draw = () => lines.forEach((ln, i) => ctx.fillText(ln, W - 10 * p, geo.sceneH - 6 * p - (lines.length - 1 - i) * 13 * p)); if (window.VDI18N) VDI18N.raw(draw); else draw();
+    }
   }
   function setDim(v) {
     if (v === '3d' && !G3.ok) {
@@ -378,7 +384,10 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
     for (let r = 0; r <= rmax; r++) ctx.fillText(String(r), L + (R - L) * r / rmax, bot + 4 * p);
     ctx.fillText('r (cm) from the axis', (L + R) / 2, bot + 16 * p);
     ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.font = `700 ${11 * p}px ${T.ui}`; ctx.fillStyle = T.ink;
-    ctx.fillText(`B against r ${inGap() ? 'in the gap (displacement current)' : 'around the wire (conduction current)'}, now`, L, top - 4 * p);
+    { const tt = `B against r ${inGap() ? 'in the gap (displacement current)' : 'around the wire (conduction current)'}, now`; let tw = ctx.measureText(tt).width;
+      /* on a phone the title ran off the right edge: start it further left, then a size smaller (phone pass, 2026-11-16) */
+      if (tw > R - 6 * p) { ctx.font = `700 ${10 * p}px ${T.ui}`; tw = ctx.measureText(tt).width; }
+      ctx.fillText(tt, tw > R - L ? Math.max(6 * p, R - tw) : L, top - 4 * p); }
     if (S.blind) { ctx.fillStyle = T.muted; ctx.font = `${11 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('hidden in Blind', (L + R) / 2, (top + bot) / 2); return; }
     const Bmax = Math.max(1.15 * fieldB(Math.max(n.I, 1e-12), 0.01, false), 1e-18), PX = (r) => L + (R - L) * r / rmax, PY = (B) => bot - (bot - top) * B / Bmax;
     ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.mono}`; ctx.fillText(si(Bmax, 'T', 2), L - 4 * p, top + 6 * p); ctx.fillText('0', L - 4 * p, bot);

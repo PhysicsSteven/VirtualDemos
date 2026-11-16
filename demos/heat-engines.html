@@ -963,7 +963,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     c.beginPath(); c.arc(sx, sy, 6.5 * ps, 0, 2 * Math.PI); c.fill(); c.stroke();
     // labels, last
     let lastY = -1e9, lastX = -1e9;
+    /* on a phone the corner numbers and the W net label could land on an isotherm label or each other: those labels give way
+       (phone pass, 2026-11-16) */
+    const narrow = box.w < 480 * ps, cBox = narrow ? cornerLabels(all.map((pts) => pts.map((p) => [X(p.V), Y(p.P)])), [L, R, Tp, B], true) : [];
+    const hitC = (x0, y0, x1, y1) => cBox.some((q) => x0 < q[2] && x1 > q[0] && y0 < q[3] && y1 > q[1]);
     for (const l of isoLabels) {
+      if (narrow) { c.font = `${9.5 * ps}px ${T.mono}`; const w = c.measureText(l[0]).width, x0 = l[3] === 'right' ? l[1] - w : l[1]; if (hitC(x0 - 3, l[2] - 6 * ps, x0 + w + 3, l[2] + 6 * ps)) continue; }
       if (l[3] === 'right') { if (Math.abs(l[2] - lastY) < 13 * ps) continue; lastY = l[2]; }
       else { if (Math.abs(l[1] - lastX) < 44 * ps) continue; lastX = l[1]; }
       label(l[0], l[1], l[2], T.muted, l[3], 'middle', { size: 9.5, halo: true });
@@ -975,7 +980,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (let j = 0; j < poly.length; j++) { const p = poly[j], q = poly[(j + 1) % poly.length], x1 = X(p.V), y1 = Y(p.P), x2 = X(q.V), y2 = Y(q.P), cr = x1 * y2 - x2 * y1; A += cr; gx += (x1 + x2) * cr; gy += (y1 + y2) * cr; }
     if (Math.abs(A) > 1) { gx /= 3 * A; gy /= 3 * A; } else { gx = cx0; gy = cy0; }
     const wTxt = sum.engine ? `W net = ${fE(sum.Wnet, false)} ${eUnit()}` : `W in = ${fE(-sum.Wnet, false)} ${eUnit()}`;
-    const lx = clampN(gx, L + 70 * ps, R - 70 * ps), ly = clampN(gy, Tp + 18 * ps, B - 30 * ps);
+    const lx = clampN(gx, L + 70 * ps, R - 70 * ps); let ly = clampN(gy, Tp + 18 * ps, B - 30 * ps);
+    if (narrow) { c.font = `600 ${11 * ps}px ${T.mono}`; const hw = Math.max(c.measureText(wTxt).width, 80 * ps) / 2 + 3;
+      for (const dy of [0, 10, -10, 20, -20, 30, -30, 40, -40]) { const y = clampN(gy, Tp + 18 * ps, B - 30 * ps) + dy * ps; if (!hitC(lx - hw, y - 15 * ps, lx + hw, y + 15 * ps) && y >= Tp + 18 * ps && y <= B - 30 * ps) { ly = y; break; } } }
     label(wTxt, lx, ly - 7 * ps, T.work, 'center', 'middle', { bold: true });
     label(sum.engine ? 'clockwise: engine' : 'counterclockwise: refrigerator', lx, ly + 8 * ps, T.work, 'center', 'middle', { size: 10 });
     if (S.under) {
@@ -985,14 +992,17 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       label(wl, clampN(xm, L + tw / 2 + 4, R - tw / 2 - 4), B - 10 * ps, cur.W > 0 ? T.work : T.muted, 'center', 'middle', { size: 10.5 });
     }
     // titles
-    label('Pressure P (kPa)', box.x + 10 * ps, box.y + 13 * ps, T.ink, 'left', 'middle', { bold: true, halo: false });
-    const stTxt = `P = ${fP(st.P)} kPa  V = ${fV(st.V)} L  T = ${fT(st.T)}`;
-    label(stTxt, R, box.y + 13 * ps, T.ink, 'right', 'middle', { halo: false, size: box.w > 520 * ps ? 11 : 10 });
+    const tw0 = label('Pressure P (kPa)', box.x + 10 * ps, box.y + 13 * ps, T.ink, 'left', 'middle', { bold: true, halo: false });
+    const stTxt = `P = ${fP(st.P)} kPa  V = ${fV(st.V)} L  T = ${fT(st.T)}`, stS = box.w > 520 * ps ? 11 : 10;
+    c.font = `${stS * ps}px ${T.mono}`;
+    /* on a phone the state ran into the title: it drops to a second line, just above the plot (phone pass, 2026-11-16) */
+    const stY = box.x + 10 * ps + tw0 + 10 * ps > R - c.measureText(stTxt).width ? box.y + 26 * ps : box.y + 13 * ps;
+    label(stTxt, R, stY, T.ink, 'right', 'middle', { halo: false, size: stS });
     label('V (L)', R, B + 22 * ps, T.muted, 'right', 'middle', { halo: false, size: 10.5 });
   }
   // corner numbers sit outside the loop, along the bisector of the two legs that meet there
-  function cornerLabels(px, bd) {
-    const ps = PS, N = sum.legs.length, near = {};
+  function cornerLabels(px, bd, dry) {
+    const ps = PS, N = sum.legs.length, near = {}, out = [];
     sum.legs.forEach((Lg, i) => {
       const p = px[i], m = p.length - 1, q = Math.min(4, m);
       (near[Lg.ia] = near[Lg.ia] || {}).v = p[0]; near[Lg.ia].b = p[q];
@@ -1004,8 +1014,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const a = u(o.a), b = u(o.b); let ox = -(a[0] + b[0]), oy = -(a[1] + b[1]); let d = Math.hypot(ox, oy);
       if (d < 0.25) { ox = -b[1]; oy = b[0]; d = 1; }
       ox /= d; oy /= d;
-      label(String(j + 1), clampN(vx + ox * 14 * ps, bd[0] + 6 * ps, bd[1] - 6 * ps), clampN(vy + oy * 14 * ps, bd[2] + 7 * ps, bd[3] - 7 * ps), T.ink, 'center', 'middle', { bold: true, size: 12 });
+      const cx = clampN(vx + ox * 14 * ps, bd[0] + 6 * ps, bd[1] - 6 * ps), cy = clampN(vy + oy * 14 * ps, bd[2] + 7 * ps, bd[3] - 7 * ps);
+      if (dry) out.push([cx - 6 * ps, cy - 8 * ps, cx + 6 * ps, cy + 8 * ps]); else label(String(j + 1), cx, cy, T.ink, 'center', 'middle', { bold: true, size: 12 });
     }
+    return out;
   }
   function tempFrac(Tk) { const a = sum.Tmin, b = sum.Tmax; return b - a < 1e-6 ? 0.5 : clampN((Tk - a) / (b - a), 0, 1); }
 
@@ -1165,6 +1177,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     put(g.top, wt, xp, R3 + 0.012 + fh * 0.9, L.t === 'V' ? T.muted : (L.W > 0 ? T.work : T.ink));
     const wTop = g.top.scale.x; g.top.position.x = Math.min(cam.right - wTop / 2 - 0.01, Math.max(cam.left + wTop / 2 + 0.01, xp));
     put(g.bot, txt || ' ', 0.5, -R3 - 0.05 - fh * 0.9, insul ? T.muted : col);
+    /* a label wider than the view (a phone) shrinks to fit, to no less than 10 px text (phone pass, 2026-11-16) */
+    for (const lab of [g.top, g.bot]) { const room = cam.right - cam.left - 0.02; if (lab.scale.x > room) { const k = Math.max(10 / 13, room / lab.scale.x); lab.scale.set(lab.scale.x * k, lab.scale.y * k, 1); } }
+    g.top.position.x = Math.min(cam.right - g.top.scale.x / 2 - 0.01, Math.max(cam.left + g.top.scale.x / 2 + 0.01, xp));
     const wBot = g.bot.scale.x; g.bot.position.x = Math.min(cam.right - wBot / 2 - 0.01, Math.max(cam.left + wBot / 2 + 0.01, 0.5));
     St.theme(); St.scene.updateMatrixWorld(); St.r.render(St.scene, cam);
   }

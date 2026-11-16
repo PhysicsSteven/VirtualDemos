@@ -730,7 +730,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       // the date and title go under the picture on a narrow pane, so only a thin band is kept above it there
       const top = (W < 560 * ps ? (W < 470 ? 48 : 18) : 64) * ps, bot = (W < 560 * ps ? (W < 470 ? 110 : 60) : 26) * ps, k = H / Math.max(1, H - top - bot);
       T3.follow.to(0, 0, 0, true);
-      S3.place(o, [0, 0, 0], half * 1.04 * k);
+      /* on a phone the band kept for the date applies to the height only: the width fit, with room for the names beside the
+         orbit, no longer shrinks with it, so the orbit and its labels are not crowded into the middle (phone pass, 2026-11-16) */
+      S3.place(o, [0, 0, 0], W < 470 ? Math.max(1.3 * rx / (t * asp), (rx * Math.sin(view.el) + 0.3) / t * k) * 1.04 : half * 1.04 * k);
       S3.cam.setViewOffset(W, H, 0, (bot - top) / 2, W, H);
     }
     if (near) S3.cam.clearViewOffset();

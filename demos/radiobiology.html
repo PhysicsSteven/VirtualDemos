@@ -320,7 +320,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (let v = Math.ceil(lo / step - 1e-9) * step; v <= hi + 1e-9; v += step) { const q = X(v); ctx.globalAlpha = 0.6; ctx.beginPath(); ctx.moveTo(q, b.y); ctx.lineTo(q, b.y + b.h); ctx.stroke(); ctx.globalAlpha = 1; mono(fmt ? fmt(v) : v.toFixed(dec), q, b.y + b.h + 13 * p, T.muted, 'center'); }
     if (label) text(label, b.x + b.w / 2, b.y + b.h + 28 * p, T.muted, 'center', 'alphabetic', 10.5); }
   function yLabel(b, label) { const p = proj(); ctx.save(); ctx.translate(b.x - 40 * p, b.y + b.h / 2); ctx.rotate(-Math.PI / 2); text(label, 0, 0, T.muted, 'center', 'middle', 10.5); ctx.restore(); }
-  function title(b, s) { text(s, b.x, b.y - 8 * proj(), T.ink, 'left', 'alphabetic', 11.5, true); }
+  /* a title wider than the room right of its plot's left edge (a phone) starts further left, then steps down to 10 px (phone pass, 2026-11-16) */
+  function title(b, s) { const p = proj(); let sz = 11.5; if (tw(s, sz, true) > W - b.x - 6 * p) sz = Math.max(10, Math.min(11.5, 11.5 * (W - 12 * p) / tw(s, 11.5, true)));
+    const x = Math.max(6 * p, Math.min(b.x, W - 6 * p - tw(s, sz, true))); text(s, x, b.y - 8 * p, T.ink, 'left', 'alphabetic', sz, true); }
   function curve(b, xs, f, X, Y, col, w = 2, dash = null) { const p = proj(); ctx.save(); ctx.beginPath(); ctx.rect(b.x, b.y, b.w, b.h); ctx.clip(); ctx.strokeStyle = col; ctx.lineWidth = w * p; ctx.setLineDash(dash ? dash.map((d) => d * p) : []);
     ctx.beginPath(); let on = false; for (const x of xs) { const v = f(x); if (!isFinite(v)) { on = false; continue; } const px = X(x), py = Y(v); if (on) ctx.lineTo(px, py); else ctx.moveTo(px, py); on = true; } ctx.stroke(); ctx.restore(); }
   function legend(items, x, y, align = 'left', size = 10.5) { const p = proj(), lh = 15 * p, wmax = Math.max(...items.map((it) => tw(it[0], size))) + 34 * p, x0 = align === 'right' ? x - wmax : x;

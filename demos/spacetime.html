@@ -596,6 +596,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     // region names, kept clear of the light line labels: slide them along if needed
     const boxes = lightLabelSpots().map((L) => L.box);
+    /* on a phone the events crowd the region names: they keep clear of each event's dot and letter too (phone pass, 2026-11-16) */
+    if (W < 480) for (const ev of S.events) { const q = scr(...toD(ev.t, ev.x)); boxes.push([q[0] - 13 * ps, q[1] - 16 * ps, q[0] + 26 * ps, q[1] + 13 * ps]); }
     ctx.font = font(10);
     const clear = (pt, str) => {
       const hw = ctx.measureText(str).width / 2 + 3 * ps, hh = 8 * ps;

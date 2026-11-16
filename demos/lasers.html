@@ -630,8 +630,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function title(c, box, txt, sub) {
     const ps = PS;
     c.font = `600 ${12 * ps}px ${T.ui}`; c.fillStyle = T.ink; c.textAlign = 'left'; c.textBaseline = 'top';
-    c.fillText(txt, box.x + 12 * ps, box.y + 10 * ps);
-    if (sub) { c.font = `${10.5 * ps}px ${T.ui}`; c.fillStyle = T.muted; c.fillText(sub, box.x + 12 * ps, box.y + 27 * ps); }
+    /* a title wider than its panel (a phone) steps down a size or two, to no less than 10 px (phone pass, 2026-11-16) */
+    for (const sz of [11, 10]) if (c.measureText(txt).width > box.w - 18 * ps) c.font = `600 ${sz * ps}px ${T.ui}`;
+    if (c.measureText(txt).width <= box.w - 18 * ps) c.fillText(txt, box.x + 12 * ps, box.y + 10 * ps);
+    else {   /* still too wide (a longer language): two lines, translated whole first and drawn as they are */
+      const lines = ['']; for (const wd of (window.VDI18N ? VDI18N.t(txt) : txt).split(' ')) { const t2 = lines[lines.length - 1] ? lines[lines.length - 1] + ' ' + wd : wd; if (lines[lines.length - 1] && lines.length < 2 && c.measureText(t2).width > box.w - 18 * ps) lines.push(wd); else lines[lines.length - 1] = t2; }
+      const draw = () => lines.forEach((ln, i) => c.fillText(ln, box.x + 12 * ps, box.y + (4 + 12 * i) * ps)); if (window.VDI18N) VDI18N.raw(draw); else draw();
+    }
+    if (sub) { c.font = `${10.5 * ps}px ${T.ui}`; if (c.measureText(sub).width > box.w - 18 * ps) c.font = `${10 * ps}px ${T.ui}`; c.fillStyle = T.muted; c.fillText(sub, box.x + 12 * ps, box.y + 27 * ps); }
   }
   // a wave packet along a ray from (x0, y0) in direction (ux, uy); s measured along the ray; phase in radians
   function packet(c, x0, y0, ux, uy, sCenter, lamPx, halfLen, amp, sMin, sMax, col, lw, phase = 0) {
@@ -1064,18 +1070,26 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   function drawCavity3(box) {
     const c = ctx, ps = PS; c.clearRect(box.x, box.y, box.w, box.h);
-    const Q = render3(box); clip(box);
+    const Q = render3(box); clip(box); LBOX = box;   /* labels kept inside the picture (phone pass, 2026-11-16) */
     title(c, box, `${P.m.name} laser, ${P.m.key === 'nd' ? 'four level' : 'three level'}`, box.w > 520 * ps ? 'to scale: mirrors 10 cm apart, rod 1 cm long, beam 0.5 mm in radius; drawn photons follow log q' : 'to scale; drawn photons follow log q');
     const po = pOut(P, sim.q), a = Q([XM0, 0, ZB + 0.024]), b = Q([XM1, 0, ZB + 0.024]), r = Q([0, 0, ZB + RROD + 0.004]), o = Q([XM1 + 0.094, 0, ZB - 0.016]), pp = Q([0, -0.014, ZB - 0.016]);
-    label(c, 'mirror, R = 1', a[0], a[1] - 8 * ps, T.muted, 'center', 'bottom', false, 10);
-    label(c, `output mirror R = ${S.R.toFixed(3)}`, b[0], b[1] - 8 * ps, T.ink, 'center', 'bottom', true, 10);
+    /* on a narrow picture the two mirror labels met: the back mirror's goes up a line (phone pass, 2026-11-16) */
+    const omT = `output mirror R = ${S.R.toFixed(3)}`; c.font = `${10 * ps}px ${T.mono}`; const wMa = c.measureText('mirror, R = 1').width; c.font = `600 ${10 * ps}px ${T.mono}`; const wMb = c.measureText(omT).width;
+    const maUp = Math.max(box.x + 4, a[0] - wMa / 2) + wMa + 8 * ps > Math.min(b[0] + wMb / 2, box.x + box.w - 4) - wMb ? 15 * ps : 0;
+    label(c, 'mirror, R = 1', a[0], a[1] - 8 * ps - maUp, T.muted, 'center', 'bottom', false, 10);
+    label(c, omT, b[0], b[1] - 8 * ps, T.ink, 'center', 'bottom', true, 10);
     label(c, `${P.m.name} rod`, r[0], r[1] - 6 * ps, T.equi, 'center', 'bottom', true, 10);
     const wD = label(c, P.m.key === 'nd' ? '808 nm diodes' : 'flash lamp', pp[0], pp[1] + 6 * ps, S.med === 'nd' ? T.accent : T.elec, 'center', 'top', false, 9.5);
     /* the output label covered the pump's label ("808 nm diodes"): when they would overlap, it drops below it (student view, 2026-11-15) */
     const outTxt = `${fmtPow(po)} out, ${P.m.key === 'nd' ? '1064 nm (infrared, drawn red)' : '694.3 nm'}`, outX = Math.min(o[0], box.x + box.w - 10 * ps);
     c.font = `600 ${10 * ps}px ${T.mono}`; const wO = c.measureText(outTxt).width;
     let outY = o[1] + 4 * ps; if (outX - wO - 6 < pp[0] + wD / 2 && outX > pp[0] - wD / 2 && Math.abs(outY - (pp[1] + 6 * ps)) < 13.5 * ps) outY = pp[1] + 6 * ps + 15 * ps;
-    label(c, outTxt, outX, outY, T.pos, 'right', 'top', true, 10);
+    if (wO <= box.w - 12 * ps) label(c, outTxt, outX, outY, T.pos, 'right', 'top', true, 10);
+    else {   /* wider than the picture (a phone in a longer language): two lines, split after the power (phone pass, 2026-11-16) */
+      const tr = window.VDI18N ? VDI18N.t(outTxt) : outTxt, k = tr.indexOf(', '), l1 = k > 0 ? tr.slice(0, k + 1) : tr, l2 = k > 0 ? tr.slice(k + 2) : '';
+      const draw = () => { label(c, l1, outX, outY, T.pos, 'right', 'top', true, 10); if (l2) label(c, l2, outX, outY + 14 * ps, T.pos, 'right', 'top', true, 10); };
+      if (window.VDI18N) VDI18N.raw(draw); else draw();
+    }
     /* the pump track stays a handle on the picture */
     const g = cavGeom(), ty = g.trackY, wf = S.W / MEDIA[S.med].Wmax, pumpCol = S.med === 'nd' ? T.accent : T.elec, x0 = g.rx0, x1 = g.rx1;
     c.strokeStyle = T.gridStrong; c.lineWidth = 3 * ps; c.lineCap = 'round'; c.beginPath(); c.moveTo(x0, ty); c.lineTo(x1, ty); c.stroke();
@@ -1085,7 +1099,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     gripBars(c, x0 + (x1 - x0) * wf, ty, pumpCol, 'pump', false);
     label(c, `pump W = ${(S.W / P.Wth).toFixed(2)} W_th`, x1 + 12 * ps, ty, pumpCol, 'left', 'middle', true, 10);
     if (x1 - x0 > 120 * ps) label(c, 'threshold', xth, ty + 14 * ps, T.ink, 'center', 'middle', false, 9.5);
-    c.restore();
+    LBOX = null; c.restore();
   }
   let trGeom = null;
   function drawTrace(box) {

@@ -1412,7 +1412,13 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     if (hgl) lb(`Hg ${Math.round(S.lam)} nm filter`, [XF, 0, ZW + 0.024], 0, -10, T.ink, 'center', false, 9.5);
     /* the rate on screen: VS = 0.44 gaps/s per √eV against 5.9 × 10⁵ m/s per √eV across the 14 mm gap (4.2 × 10⁷ gaps/s), so the
        electrons are slowed about 10⁸ times (student view, 2026-11-15) */
-    label(c, narrow ? `tube drawn ${TS}× its size · slowed 10⁸× · drag to turn` : `phototube drawn ${TS} times its size · electrons slowed about 10⁸ times · drag to turn, a knob to set it`, 12 * ps, AH - 8 * ps, T.muted, 'left', 'bottom', false, ps, 9.5);
+    { const cap = narrow ? `tube drawn ${TS}× its size · slowed 10⁸× · drag to turn` : `phototube drawn ${TS} times its size · electrons slowed about 10⁸ times · drag to turn, a knob to set it`;
+      c.font = `${9.5 * ps}px ${T.mono}`;
+      if (c.measureText(cap).width <= AW - 24 * ps) label(c, cap, 12 * ps, AH - 8 * ps, T.muted, 'left', 'bottom', false, ps, 9.5);
+      else {   /* a phone ("use two fingers to turn" is longer): two lines, split at the last dot (phone pass, 2026-11-16) */
+        const tr = window.VDI18N ? VDI18N.t(window.VD3 ? VD3.turnText(cap) : cap) : cap, k = tr.lastIndexOf(' · '), l1 = k > 0 ? tr.slice(0, k) : tr, l2 = k > 0 ? tr.slice(k + 3) : '';
+        const draw = () => { label(c, l1, 12 * ps, AH - (l2 ? 22 : 8) * ps, T.muted, 'left', 'bottom', false, ps, 9.5); if (l2) label(c, l2, 12 * ps, AH - 8 * ps, T.muted, 'left', 'bottom', false, ps, 9.5); }; if (window.VDI18N) VDI18N.raw(draw); else draw();
+      } }
     if (Kmax() <= 0 && S.pow > 0) {
       if (narrow) { lb('hf < φ', [0.024 * TS, 0, ZW + 0.03], 6, -8, T.pos, 'left', true, 12); lb('no electrons', [0.024 * TS, 0, ZW + 0.03], 6, 8, T.pos, 'left', true, 12); }
       else lb('hf < φ : no electrons', [0.024 * TS, 0, ZW + 0.035], 6, 0, T.pos, 'left', true, 13);

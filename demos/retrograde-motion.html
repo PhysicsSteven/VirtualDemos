@@ -679,11 +679,16 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const wide = S.span > 200;   /* the whole zodiac: only its own constellations are named */
     const taken = [];   /* names already written, which the event labels below keep clear of: [middle x, baseline y, width] */
     /* keep the names off the strip's title and the EAST and WEST tags (on a phone they wrote over each other; student view, 2026-11-15) */
+    let ewY = 30 * p;
     const keep = [], clear = (x0, y0, x1, y1) => !keep.some((k) => x0 < k[2] && x1 > k[0] && y0 < k[3] && y1 > k[1]);
-    { const tg = sky.parentElement.querySelector('.tag'), r0 = sky.getBoundingClientRect(); if (tg && r0.width) { const r = tg.getBoundingClientRect(); keep.push([r.left - r0.left - 4, r.top - r0.top - 2, r.right - r0.left + 4, r.bottom - r0.top + 2]); }
+    { const tg = sky.parentElement.querySelector('.tag'), r0 = sky.getBoundingClientRect(); if (tg && r0.width) { const r = tg.getBoundingClientRect(); keep.push([r.left - r0.left - 4, r.top - r0.top - 2, r.right - r0.left + 4, r.bottom - r0.top + 2]);
+        /* on a phone the title wraps onto a second line, which ran into EAST and WEST: they go below it (phone pass, 2026-11-16) */
+        if (r.height > 1.6 * (parseFloat(getComputedStyle(tg).fontSize) || 12)) ewY = Math.max(30 * p, r.bottom - r0.top + 13 * p); }
       const f0 = ctx.font; ctx.font = `700 ${10.5 * p}px ${T.ui}`; const we = ctx.measureText('◀ EAST').width, ww = ctx.measureText('WEST ▶').width; ctx.font = f0;
-      keep.push([4, 30 * p - 11 * p, 12 + we, 30 * p + 3], [W - 12 - ww, 30 * p - 11 * p, W - 4, 30 * p + 3]); }
-    for (const id in SKY.names) { if (wide && !ZODIAC.includes(id) && id !== 'Oph') continue; const nm = SKY.names[id], x = X(nm[1]), y = Y(nm[2]); if (inX(x) && y > 14 && y < H - 18) { const t = nm[0].toUpperCase(), tw = ctx.measureText(t).width; if (!clear(x - tw / 2, y - 9 * p, x + tw / 2, y + 2)) continue; ctx.fillText(t, x, y); taken.push([x, y, tw]); } }
+      keep.push([4, ewY - 11 * p, 12 + we, ewY + 3], [W - 12 - ww, ewY - 11 * p, W - 4, ewY + 3]); }
+    /* on a phone, names cut by the picture's edge are left out, and star names keep off constellation names (phone pass, 2026-11-16) */
+    const ph = W < 480, inW = (x0, x1) => !ph || (x0 > 2 && x1 < W - 2);
+    for (const id in SKY.names) { if (wide && !ZODIAC.includes(id) && id !== 'Oph') continue; const nm = SKY.names[id], x = X(nm[1]), y = Y(nm[2]); if (inX(x) && y > 14 && y < H - 18) { const t = nm[0].toUpperCase(), tw = ctx.measureText(t).width; if (!clear(x - tw / 2, y - 9 * p, x + tw / 2, y + 2) || !inW(x - tw / 2, x + tw / 2)) continue; ctx.fillText(t, x, y); taken.push([x, y, tw]); if (ph) keep.push([x - tw / 2 - 2, y - 10 * p, x + tw / 2 + 2, y + 3]); } }
     /* stars */
     const st = SKY.stars, mlim = wide ? 4.2 : S.span > 120 ? 4.6 : 5.2;
     for (let i = 0; i < st.length; i += 4) {
@@ -691,7 +696,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const r = Math.max(0.55, (2.9 - 0.44 * m)) * (p > 1 ? 1.2 : 1); ctx.fillStyle = bvColor(st[i + 3] / 10); ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.fill();
     }
     ctx.font = `${9.5 * p}px ${T.ui}`; ctx.fillStyle = 'rgba(238,231,222,0.7)'; ctx.textAlign = 'left';
-    if (!wide) for (const [nm, l, b] of SKY.named) { const x = X(l), y = Y(b); if (inX(x) && y > 10 && y < H - 14) { const w = ctx.measureText(nm).width; if (!clear(x + 5, y - 14 * p, x + 5 + w, y - 3)) continue; ctx.fillText(nm, x + 5, y - 5); taken.push([x + 5 + w / 2, y - 5, w]); } }
+    if (!wide) for (const [nm, l, b] of SKY.named) { const x = X(l), y = Y(b); if (inX(x) && y > 10 && y < H - 14) { const w = ctx.measureText(nm).width; if (!clear(x + 5, y - 14 * p, x + 5 + w, y - 3) || !inW(x + 5, x + 5 + w)) continue; ctx.fillText(nm, x + 5, y - 5); taken.push([x + 5 + w / 2, y - 5, w]); } }
     /* the Sun */
     { const x = X(now.sunLam), y = Y(0); if (inX(x)) { dot(ctx, x, y, Math.max(6, 0.27 * pxd) * p, T.sun, 3.4); label(ctx, 'Sun', x + 10 * p, y + 14 * p, T.sun, p); } }
     const line = (c, from, to, col, w, dash) => {
@@ -730,7 +735,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const px = X(now.lam), py = Y(now.beta);
     dot(ctx, px, py, 5.5 * p, COLOR[S.planet], 2.6); label(ctx, EL[S.planet].name, px + 9 * p, py - 11 * p, COLOR[S.planet], p);
     if (Math.abs(now.elong) < (S.planet === 'mercury' ? 10 : 12)) { ctx.fillStyle = T.sun; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.fillText('too near the Sun to see', px, py + 22 * p); }
-    ctx.fillStyle = T.muted; ctx.font = `700 ${10.5 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.fillText('◀ EAST', 8, 30 * p); ctx.textAlign = 'right'; ctx.fillText('WEST ▶', W - 8, 30 * p);
+    ctx.fillStyle = T.muted; ctx.font = `700 ${10.5 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.fillText('◀ EAST', 8, ewY); ctx.textAlign = 'right'; ctx.fillText('WEST ▶', W - 8, ewY);
   }
 
   /* ---------- the telescope ---------- */

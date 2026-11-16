@@ -336,7 +336,12 @@
       if (!S.blind) { cx.strokeStyle = T.lam; cx.setLineDash([5 * A.p, 4 * A.p]); cx.beginPath(); cx.moveTo(A.L, A.ys(mT(S.Ba))); cx.lineTo(A.L + A.w, A.ys(mT(S.Ba))); cx.stroke(); cx.setLineDash([]);
         cx.fillStyle = T.lam_ink; cx.textAlign = 'right'; cx.textBaseline = 'bottom'; cx.fillText('applied field', A.L + A.w - 4 * A.p, A.ys(mT(S.Ba)) - 2 * A.p); }
       cx.fillStyle = T.accent; cx.globalAlpha = 0.75; for (let b = 0; b < NB; b++) { const x0 = A.xs(b * w), x1 = A.xs((b + 1) * w); cx.fillRect(x0 + 1, A.ys(Math.min(120, mT(pr[b]))), x1 - x0 - 2, A.ys(0) - A.ys(Math.min(120, mT(pr[b])))); } cx.globalAlpha = 1;
-      cx.fillStyle = T.accent; cx.textAlign = 'left'; cx.textBaseline = 'top'; cx.fillText('bars: vortices per area × Φ0, in strips across the slab', A.L + 6 * A.p, 6 * A.p);
+      cx.fillStyle = T.accent; cx.textAlign = 'left'; cx.textBaseline = 'top'; { const cap = 'bars: vortices per area × Φ0, in strips across the slab';
+        if (cx.measureText(cap).width <= CW - A.L - 10 * A.p) cx.fillText(cap, A.L + 6 * A.p, 6 * A.p);
+        else {   /* a phone: the caption ran off the right edge, so it takes two lines, split at the comma (phone pass, 2026-11-16) */
+          const tr = window.VDI18N ? VDI18N.t(cap) : cap, k = tr.indexOf(', '), l1 = k > 0 ? tr.slice(0, k + 1) : tr, l2 = k > 0 ? tr.slice(k + 2) : '';
+          const draw = () => { cx.fillText(l1, A.L + 6 * A.p, 2 * A.p); if (l2) cx.fillText(l2, A.L + 6 * A.p, 15 * A.p); }; if (window.VDI18N) VDI18N.raw(draw); else draw();
+        } }
     } else {
       const A = axes({ x0: 0, x1: 100, dx: 20, y0: 0, y1: 100, dy: 20, xl: 'applied field (mT)', yl: 'average field inside (mT)' });
       if (!S.blind) { cx.strokeStyle = T.lam; cx.setLineDash([5 * A.p, 4 * A.p]); cx.beginPath(); cx.moveTo(A.xs(0), A.ys(0)); cx.lineTo(A.xs(100), A.ys(100)); cx.stroke(); cx.setLineDash([]);

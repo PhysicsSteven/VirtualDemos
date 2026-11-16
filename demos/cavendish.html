@@ -396,7 +396,18 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (const q of ['A', 'B']) for (const sp of largeSpheres(frameAngle(q))) { const k = (Math.hypot(sp[0], sp[1]) + RL + 0.008) / Math.hypot(sp[0], sp[1]), s = Q(sp[0] * k, sp[1] * k, -RL - 0.017); txt(ctx, q, s[0], s[1], { s: 10, c: T.muted, b: 1, a: 'center' }); }   /* on the table, beside each ring */
     if (DR.on) dragHint();
     { const lq = Q(LASER[0] + 0.02, LASER[1], LASER[2] - 0.012); txt(ctx, 'laser', lq[0], lq[1] + 8 * p, { a: 'center', s: 9, c: T.muted }); }
-    { const oq = Q(out[0], out[1], out[2]); if (oq[0] > 0 && oq[0] < W) txt(ctx, 'to the scale, 5.000 m', Math.min(oq[0], (wide ? pw : W - 70 * p) - 4 * p), oq[1] - 12 * p, { a: 'right', s: 9, c: T.laserInk, b: 1 }); }
+    { const oq = Q(out[0], out[1], out[2]), lab = 'to the scale, 5.000 m';
+      /* where the button strip covers that spot (a phone), the label runs along the beam instead, ending where the beam meets
+         the strip (phone pass, 2026-11-16) */
+      const cr = can.getBoundingClientRect(), rs = [...document.querySelectorAll('.viewbar > *')].filter((el) => el.offsetParent).map((el) => el.getBoundingClientRect());
+      const hid = (x, y) => x < 0 || x > W || y < 0 || y > H || rs.some((r) => x > r.left - cr.left - 4 * p && x < r.right - cr.left + 4 * p && y > r.top - cr.top - 4 * p && y < r.bottom - cr.top + 4 * p);
+      ctx.font = `700 ${9 * p}px ${T.ui}`; const lw = ctx.measureText(lab).width, lx = Math.min(oq[0], (wide ? pw : W - 70 * p) - 4 * p), ly = oq[1] - 12 * p;
+      if (oq[0] > 0 && oq[0] < W && !hid(lx, ly) && !hid(lx - lw, ly) && !hid(lx - lw / 2, ly)) txt(ctx, lab, lx, ly, { a: 'right', s: 9, c: T.laserInk, b: 1 });
+      else {
+        const mq = Q(0, 0, MIRROR_Z), dx = oq[0] - mq[0], dy = oq[1] - mq[1], len = Math.hypot(dx, dy) || 1; let s = 0;
+        for (let k = 1; k <= 200; k++) { const sk = len * k / 200, x = mq[0] + dx * sk / len, y = mq[1] + dy * sk / len - 6 * p; if (hid(x, y)) break; s = sk; }
+        if (s - 8 * p >= lw) { ctx.save(); ctx.translate(mq[0] + dx * (s - 3 * p) / len, mq[1] + dy * (s - 3 * p) / len); ctx.rotate(Math.atan2(dy, dx)); txt(ctx, lab, 0, -6 * p, { a: 'right', s: 9, c: T.laserInk, b: 1 }); ctx.restore(); }
+      } }
     { const fq = Q(0, 0, 0.09); txt(ctx, 'fiber', fq[0] + 10 * p, fq[1], { s: 9, c: T.muted }); }
     const capY = caption('3D, to scale · beam turn drawn ×20', 'drag a large sphere to swing it, elsewhere to turn', pw);
     if (!S.blind && fl[0] > 1e-13) txt(ctx, `pull on each small sphere: ${f(fl[0] * 1e9, 2)} nN`, 12 * p, capY - 16 * p, { s: 9.5, m: 1, c: T.force, b: 1 });

@@ -521,7 +521,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     lab(ctx, 'nm', xCl + 1.4 * sc + 14 * p, ry + 9 * p, { c: T.muted, s: 9 });
     if (!S.blind) { const xc = xCl + ionCross() * sc; if (ionCross() < 1.4) { ctx.save(); ctx.setLineDash([3 * p, 3 * p]); ctx.strokeStyle = T.ion; ctx.beginPath(); ctx.moveTo(xc, ry - 12 * p); ctx.lineTo(xc, yc - 50 * p); ctx.stroke(); ctx.restore();
       lab(ctx, 'ions below here', xc - 4 * p, yc - 58 * p, { a: 'right', c: T.ionInk, s: 9.5 }); } }
-    lab(ctx, W >= 640 ? 'sizes in proportion to measured radii (Na 186, Cl 99, Na⁺ 102, Cl⁻ 181 pm); the scale gives the separation of the centers' : 'sizes in proportion to measured radii; the scale gives the separation', xCl - 8 * p, 18 * p, { s: 9.5 });
+    { const cap = W >= 640 ? 'sizes in proportion to measured radii (Na 186, Cl 99, Na⁺ 102, Cl⁻ 181 pm); the scale gives the separation of the centers' : 'sizes in proportion to measured radii; the scale gives the separation';
+      ctx.font = `400 ${9.5 * p}px ${T.ui}`;
+      if (ctx.measureText(cap).width <= W - xCl) lab(ctx, cap, xCl - 8 * p, 18 * p, { s: 9.5 });
+      else {   /* a phone: the caption ran off the right edge, so it takes two lines, split after the semicolon (phone pass, 2026-11-16) */
+        const tr = window.VDI18N ? VDI18N.t(cap) : cap, k = tr.indexOf('; '), l1 = k > 0 ? tr.slice(0, k + 1) : tr, l2 = k > 0 ? tr.slice(k + 2) : '';
+        const draw = () => { lab(ctx, l1, xCl - 8 * p, 14 * p, { s: 9.5 }); if (l2) lab(ctx, l2, xCl - 8 * p, 27 * p, { s: 9.5 }); }; if (window.VDI18N) VDI18N.raw(draw); else draw();
+      } }
     if (W >= 640) { const mx = W - 150 * p, mw = 124 * p, mh = 28 * p;
       lcdBox(mx, 40 * p, mw, mh, `${f(r, 3)} nm`, 'separation r');
       lcdBox(mx, 106 * p, mw, mh, `${f(ionU(r, S.ion.n, S.ion.rep), 3)} eV`, 'energy of Na⁺ + Cl⁻');
