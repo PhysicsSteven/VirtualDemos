@@ -23,6 +23,7 @@ to rebuild it (about 10 s).
 | Watch like a student | `node tools/watch.cjs <demo>` then look at `/tmp/vdcheck/watch/<demo>/*.png` | 40 s a demo | any change a student would see; judge the pictures (below) |
 | Frame rate over time | `node tools/perfcheck.cjs <demo>` (`--seconds 60`) | 70 s a demo | anything that animates, adds particles or tracks; run it alone |
 | Opening state | `node tools/opencheck.cjs <demo>` | 20 s | part of democheck; alone after a default change |
+| Start here setups | `node tools/startcheck.cjs [demo]` (`--lang es`; `--link <demo> click:<chip>` makes a setup string) | 15 s a step | after a change to `curriculum/start-here.json` or to a demo with a Start here; look at the pictures |
 | Before and after picture | `node tools/beforeafter.cjs <demo>` | 1 min | every visual fix; attach the picture to the reply |
 | One worksheet key | in TeacherKeys: `bash worksheet-keys/tools/rekey.sh <slug>` (`--apply` to keep; `--reprint` after an answers or handout edit) | 1 to 3 min | when democheck names it, or after a worksheet edit |
 | One video | `bash tools/howto/take.sh <name>` | 5 min | when the demo's controls, layout or defaults changed |

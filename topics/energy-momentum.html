@@ -387,6 +387,25 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
   html:has(.tools .filter) { scroll-padding-top: 108px; }
 }
 
+
+/* activity filter and labels (tools/activities.py) */
+.actfilter { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 6px; margin: 14px 0 4px; }
+.actfilter .afl { font-family: var(--font-mono); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); margin: 0 2px 0 6px; }
+.actfilter .afl:first-child { margin-left: 0; }
+.actfilter button { min-height: 34px; padding: 4px 11px; font: inherit; font-size: 0.86rem; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 999px; cursor: pointer; }
+.actfilter button:hover { border-color: var(--accent); }
+.actfilter button[aria-pressed="true"] { color: var(--canvas); background: var(--accent); border-color: var(--accent); font-weight: 700; }
+.actfilter button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.actfilter .afn { flex: 1 1 100%; margin: 2px 0 0; font-size: 0.85rem; color: var(--muted); min-height: 1.2em; }
+[data-act].af-hide { display: none !important; }
+.find .actfilter + .allnote { margin: 10px 0 22px; }
+.fam.af-hide { display: none; }
+.sh-tag { display: inline-block; margin-right: 6px; padding: 1px 7px; font-size: 0.74rem; font-weight: 700; border-radius: 999px; color: var(--accent); border: 1px solid color-mix(in srgb, var(--accent) 55%, transparent); }
+.links .wsm { display: inline-block; text-decoration: none; font-size: 0.78rem; color: var(--muted); font-weight: 400; margin-left: 5px; }
+.used.needs { font-size: 0.85rem; }
+.used.needs b { font-weight: 700; }
+@media (max-width: 520px) { .actfilter .afl { flex: 1 1 100%; margin-left: 0; } }
+
 </style>
 <link rel="stylesheet" href="demos/lib/paper.css">
 </head>
@@ -413,28 +432,29 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
 <main class="wrap">
   <p class="how">Every demo on this subject, from every course and module, with all of its worksheets. Opened from here, a demo steps through this topic with its previous and next links. The other topics in Mechanics are in the bar above; the <a href="index.html#topics">home page</a> lists them all.</p>
   <section class="unit" aria-label="Energy and momentum demos">
+    <div class="actfilter" role="group" aria-label="Filter by activity"><span class="afl">Activity</span><button type="button" data-af="len:" aria-pressed="true">Any</button><button type="button" data-af="len:start" aria-pressed="false">Start here, 5 min</button><button type="button" data-af="len:explore" aria-pressed="false">Explore, 15 min</button><button type="button" data-af="len:sheet" aria-pressed="false">Worksheet, up to 75 min</button><span class="afl">Math</span><button type="button" data-af="math:" aria-pressed="true">Any</button><button type="button" data-af="math:algebra" aria-pressed="false">Algebra</button><button type="button" data-af="math:calculus" aria-pressed="false">Calculus</button><p class="afn" aria-live="polite"></p></div>
     <ul class="list">
-      <li class="item">
+      <li class="item" data-act="sheet-algebra">
         <a class="pic" href="demos/potential-curves.html?topic=energy-momentum" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/potential-curves-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/potential-curves-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-demo">Demo</span></p>
           <h3><a href="demos/potential-curves.html?topic=energy-momentum">Potential Energy Curves</a></h3>
           <p>Read motion off a graph of U(x): drag the energy line and watch the particle speed up, slow down and turn around. Springs, roller coasters, a double well, a molecule, a pendulum, or a curve you draw yourself, with phase space.</p>
-          <p class="used">In <a href="physics-1.html">Physics I</a></p><p class="used">OpenStax <span class="sec">1:7.1</span> <span class="sec">1:7.3</span> <span class="sec">1:8.1</span> <span class="sec">1:8.2</span> <span class="sec">1:8.3</span> <span class="sec">1:8.4</span></p>
-          <p class="links"><a class="go" href="demos/potential-curves.html?topic=energy-momentum">Open demo</a> <a href="curriculum/labs/students/potential-curves.html">Worksheet: Potential Energy Diagrams</a> <a href="notes/potential-curves.html">Notes</a></p>
+          <p class="used">In <a href="physics-1.html">Physics I</a></p><p class="used">OpenStax <span class="sec">1:7.1</span> <span class="sec">1:7.3</span> <span class="sec">1:8.1</span> <span class="sec">1:8.2</span> <span class="sec">1:8.3</span> <span class="sec">1:8.4</span></p><p class="used needs"><b>Before the worksheet:</b> Potential energy and conservation of energy; force from the slope of U; reading graphs</p>
+          <p class="links"><a class="go" href="demos/potential-curves.html?topic=energy-momentum">Open demo</a> <a href="curriculum/labs/students/potential-curves.html">Worksheet: Potential Energy Diagrams<span class="wsm">50 min · algebra</span></a> <a href="notes/potential-curves.html">Notes</a></p>
         </div>
       </li>
-      <li class="item">
+      <li class="item" data-act="start explore">
         <a class="pic" href="demos/energy-track.html?topic=energy-momentum" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/energy-track-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/energy-track-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-demo">Demo</span></p>
           <h3><a href="demos/energy-track.html?topic=energy-momentum">Energy on a Track</a></h3>
           <p>Shape a track and let a skater go: kinetic, potential and thermal energy trade places while the total stays fixed. Friction, loops, jumps, the U = 0 line you can move, and where the skater leaves the track.</p>
           <p class="used">In <a href="physics-1.html">Physics I</a></p><p class="used">OpenStax <span class="sec">1:6.3</span> <span class="sec">1:7.3</span> <span class="sec">1:8.1</span> <span class="sec">1:8.2</span> <span class="sec">1:8.3</span></p>
-          <p class="links"><a class="go" href="demos/energy-track.html?topic=energy-momentum">Open demo</a> <a href="notes/energy-track.html">Notes</a></p>
+          <p class="links"><a class="go" href="demos/energy-track.html?topic=energy-momentum">Open demo</a> <a href="demos/energy-track.html?start=1&topic=energy-momentum">Start here<span class="wsm">5 min · explore 15 min</span></a> <a href="notes/energy-track.html">Notes</a></p>
         </div>
       </li>
-      <li class="item">
+      <li class="item" data-act="">
         <a class="pic" href="demos/energy-sources.html?topic=energy-momentum" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/energy-sources-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/energy-sources-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-demo">Demo</span></p>
@@ -444,48 +464,84 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
           <p class="links"><a class="go" href="demos/energy-sources.html?topic=energy-momentum">Open demo</a> <a href="notes/energy-sources.html">Notes</a></p>
         </div>
       </li>
-      <li class="item">
+      <li class="item" data-act="sheet-calculus">
         <a class="pic" href="demos/impulse.html?topic=energy-momentum" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/impulse-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/impulse-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-lab">Lab</span></p>
           <h3><a href="demos/impulse.html?topic=energy-momentum">Impulse and Momentum</a></h3>
           <p>Bounce a cart off a force sensor and show that the area under the force against time graph equals its change of momentum. Soft and stiff bumpers give the same impulse with very different forces.</p>
-          <p class="used">In <a href="physics-1.html">Physics I</a></p><p class="used">OpenStax <span class="sec">1:9.1</span> <span class="sec">1:9.2</span></p>
-          <p class="links"><a class="go" href="demos/impulse.html?topic=energy-momentum">Open demo</a> <a href="curriculum/labs/students/impulse.html">Worksheet: Impulse and Momentum</a> <a href="notes/impulse.html">Notes</a></p>
+          <p class="used">In <a href="physics-1.html">Physics I</a></p><p class="used">OpenStax <span class="sec">1:9.1</span> <span class="sec">1:9.2</span></p><p class="used needs"><b>Before the worksheet:</b> Momentum and impulse; Newton&#x27;s second law; area under a force curve</p>
+          <p class="links"><a class="go" href="demos/impulse.html?topic=energy-momentum">Open demo</a> <a href="curriculum/labs/students/impulse.html">Worksheet: Impulse and Momentum<span class="wsm">75 min · calculus</span></a> <a href="notes/impulse.html">Notes</a></p>
         </div>
       </li>
-      <li class="item">
+      <li class="item" data-act="start explore sheet-algebra">
         <a class="pic" href="demos/collisions.html?topic=energy-momentum" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/collisions-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/collisions-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-lab">Lab</span></p>
           <h3><a href="demos/collisions.html?topic=energy-momentum">Collisions and Momentum</a></h3>
           <p>Crash carts on an air track and pucks on an air table: momentum is always conserved, kinetic energy only when the bounce is elastic. Also an explosion and Newton's cradle.</p>
-          <p class="used">In <a href="physics-1.html">Physics I</a></p><p class="used">OpenStax <span class="sec">1:9.1</span> <span class="sec">1:9.2</span> <span class="sec">1:9.3</span> <span class="sec">1:9.4</span> <span class="sec">1:9.5</span> <span class="sec">1:9.6</span></p>
-          <p class="links"><a class="go" href="demos/collisions.html?topic=energy-momentum">Open demo</a> <a href="curriculum/labs/students/collisions.html">Worksheet: Momentum and Collisions</a> <a href="notes/collisions.html">Notes</a></p>
+          <p class="used">In <a href="physics-1.html">Physics I</a></p><p class="used">OpenStax <span class="sec">1:9.1</span> <span class="sec">1:9.2</span> <span class="sec">1:9.3</span> <span class="sec">1:9.4</span> <span class="sec">1:9.5</span> <span class="sec">1:9.6</span></p><p class="used needs"><b>Before the worksheet:</b> Conservation of momentum; elastic and inelastic collisions; kinetic energy; center of mass velocity</p>
+          <p class="links"><a class="go" href="demos/collisions.html?topic=energy-momentum">Open demo</a> <a href="demos/collisions.html?set=labBlind~1&start=1&topic=energy-momentum">Start here<span class="wsm">5 min · explore 15 min</span></a> <a href="curriculum/labs/students/collisions.html">Worksheet: Momentum and Collisions<span class="wsm">75 min · algebra</span></a> <a href="notes/collisions.html">Notes</a></p>
         </div>
       </li>
-      <li class="item">
+      <li class="item" data-act="sheet-algebra">
         <a class="pic" href="demos/center-of-mass.html?topic=energy-momentum" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/center-of-mass-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/center-of-mass-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-demo">Demo</span></p>
           <h3><a href="demos/center-of-mass.html?topic=energy-momentum">Center of Mass</a></h3>
           <p>Find the center of mass of masses on a plate, watch a firework's pieces keep its center of mass on the original parabola, and walk along a boat that slides back.</p>
-          <p class="used">In <a href="physics-1.html">Physics I</a></p><p class="used">OpenStax <span class="sec">1:9.6</span></p>
-          <p class="links"><a class="go" href="demos/center-of-mass.html?topic=energy-momentum">Open demo</a> <a href="curriculum/labs/students/center-of-mass.html">Worksheet: Center of Mass</a> <a href="notes/center-of-mass.html">Notes</a></p>
+          <p class="used">In <a href="physics-1.html">Physics I</a></p><p class="used">OpenStax <span class="sec">1:9.6</span></p><p class="used needs"><b>Before the worksheet:</b> Center of mass; momentum and Newton&#x27;s laws for systems; projectile motion; fitting a line</p>
+          <p class="links"><a class="go" href="demos/center-of-mass.html?topic=energy-momentum">Open demo</a> <a href="curriculum/labs/students/center-of-mass.html">Worksheet: Center of Mass<span class="wsm">80 min · algebra</span></a> <a href="notes/center-of-mass.html">Notes</a></p>
         </div>
       </li>
-      <li class="item">
+      <li class="item" data-act="sheet-algebra">
         <a class="pic" href="demos/rocket.html?topic=energy-momentum" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/rocket-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/rocket-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-demo">Demo</span></p>
           <h3><a href="demos/rocket.html?topic=energy-momentum">Rocket Propulsion</a></h3>
           <p>Burn fuel and watch the rocket get lighter and faster: the rocket equation in deep space, then a launch against gravity, a rocket too heavy to lift off at first, and why a slow burn wastes fuel.</p>
-          <p class="used">In <a href="physics-1.html">Physics I</a></p><p class="used">OpenStax <span class="sec">1:9.7</span></p>
-          <p class="links"><a class="go" href="demos/rocket.html?topic=energy-momentum">Open demo</a> <a href="curriculum/labs/students/rocket.html">Worksheet: The Rocket Equation</a> <a href="notes/rocket.html">Notes</a></p>
+          <p class="used">In <a href="physics-1.html">Physics I</a></p><p class="used">OpenStax <span class="sec">1:9.7</span></p><p class="used needs"><b>Before the worksheet:</b> Momentum conservation; Newton&#x27;s second law; natural logarithm; fitting a line</p>
+          <p class="links"><a class="go" href="demos/rocket.html?topic=energy-momentum">Open demo</a> <a href="curriculum/labs/students/rocket.html">Worksheet: The Rocket Equation<span class="wsm">80 min · algebra</span></a> <a href="notes/rocket.html">Notes</a></p>
         </div>
       </li>
     </ul>
   </section>
+<script>/* activity filter (tools/activities.py) */ (function () {
+  var bar = document.querySelector('.actfilter'); if (!bar) return;
+  var st = { len: '', math: '' }, KEY = 'vd-filter', note = bar.querySelector('.afn');
+  try { var s = JSON.parse(sessionStorage.getItem(KEY) || '{}'); if (s && typeof s === 'object') { st.len = s.len || ''; st.math = s.math || ''; } } catch (_) {}
+  var cards = [].slice.call(document.querySelectorAll('[data-act]'));
+  var fams = [].slice.call(document.querySelectorAll('section.fam'));
+  var match = function (a) {
+    var k = (a || '').split(' ');
+    var sheetOk = function () { return st.math ? k.indexOf('sheet-' + st.math) >= 0 : k.some(function (x) { return x.indexOf('sheet-') === 0; }); };
+    if (st.len === 'start') return k.indexOf('start') >= 0 && st.math !== 'calculus';
+    if (st.len === 'explore') return k.indexOf('explore') >= 0 && st.math !== 'calculus';
+    if (st.len === 'sheet') return sheetOk();
+    if (!st.math) return true;
+    return sheetOk() || (st.math === 'algebra' && k.indexOf('start') >= 0);
+  };
+  var apply = function () {
+    [].forEach.call(bar.querySelectorAll('button'), function (b) { var p = b.getAttribute('data-af').split(':'); b.setAttribute('aria-pressed', String(st[p[0]] === p[1])); });
+    var on = !!(st.len || st.math), n = 0;
+    cards.forEach(function (c) { var ok = !on || match(c.getAttribute('data-act')); c.classList.toggle('af-hide', !ok); if (ok) n++; });
+    fams.forEach(function (f) {
+      var any = [].some.call(f.querySelectorAll('[data-act]'), function (c) { return !c.classList.contains('af-hide'); });
+      f.classList.toggle('af-hide', on && !any);
+      var d = f.querySelector('details.famd');
+      if (d) { if (on && any && !d.open) { d.dataset.af = '1'; d.open = true; } else if (!on && d.dataset.af) { delete d.dataset.af; d.open = false; } }
+    });
+    var VDI18N = window.VDI18N && window.VDI18N.t ? window.VDI18N : { t: function (x, v) { return x.replace('{n}', v ? v.n : ''); } };   /* the literals go into the site catalog */
+    note.textContent = on ? (n === 1 ? VDI18N.t('One demo has an activity like that.') : n ? VDI18N.t('{n} demos have an activity like that.', { n: n })
+      : VDI18N.t('No demo has that combination. A Start here needs no math; try Any.')) : '';
+    try { sessionStorage.setItem(KEY, JSON.stringify(st)); } catch (_) {}
+  };
+  bar.addEventListener('click', function (e) {
+    var b = e.target.closest('button[data-af]'); if (!b) return;
+    var p = b.getAttribute('data-af').split(':'); st[p[0]] = p[1]; apply();
+  });
+  apply();
+})();</script>
   <p class="more"><a href="index.html#topics">Back to all topics</a></p>
 </main>
 <footer>

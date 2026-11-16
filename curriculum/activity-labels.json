@@ -1,0 +1,2005 @@
+{
+ "about": "Labels for every worksheet (2026-11-16): min is student minutes working alone with the demo open (rounded to 5; time audit of 2026-11-16, recounted after the cuts and splits), math is algebra or calculus (calculus only when the student must differentiate, integrate or solve a differential equation), level is intro or upper, needs is what a student should know first (needs_es in Mexican Spanish, a draft), why_math notes the reason for the math call. Read by tools/courses.py (tools/activities.py) for the topic pages, the home page filter and search.",
+ "worksheets": {
+  "ac-circuits": {
+   "min": 80,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Impedance of inductors and capacitors; rms and peak values; reading a resonance curve",
+   "needs_es": "Impedancia de inductores y capacitores; valores rms y pico; leer una curva de resonancia",
+   "why_math": "Plugging into given impedance and resonance formulas"
+  },
+  "ac-power": {
+   "min": 80,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Phase between voltage and current; rms values; power in a resistor; fitting a line",
+   "needs_es": "Fase entre voltaje y corriente; valores rms; potencia en un resistor; ajuste de una recta",
+   "why_math": "Formulas given; uses trig and linear fits"
+  },
+  "ac-reactance": {
+   "min": 75,
+   "math": "calculus",
+   "level": "intro",
+   "needs": "Capacitors and inductors; sinusoidal voltage; rms values; derivatives of sine functions",
+   "needs_es": "Capacitores e inductores; voltaje senoidal; valores rms; derivadas de funciones seno",
+   "why_math": "Differentiate sine to explain phase signs"
+  },
+  "acoustic-levitation": {
+   "min": 70,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Standing waves and nodes; wavelength and frequency; force and weight; fitting a line",
+   "needs_es": "Ondas estacionarias y nodos; longitud de onda y frecuencia; fuerza y peso; ajuste de una recta",
+   "why_math": "Scaling arguments and linear fits only"
+  },
+  "alpha-and-beta-decay": {
+   "min": 75,
+   "math": "algebra",
+   "level": "upper",
+   "needs": "Radioactive decay and half life; quantum tunneling; relativistic energy; logarithms and linear fits",
+   "needs_es": "Decaimiento radiactivo y vida media; efecto túnel cuántico; energía relativista; logaritmos y ajuste lineal",
+   "why_math": "Given formulas, logarithms, limits, linear fits"
+  },
+  "anechoic-chamber": {
+   "min": 75,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Sound intensity and decibels; inverse square law; logarithms; reading a slope from a graph",
+   "needs_es": "Intensidad del sonido y decibeles; ley del inverso del cuadrado; logaritmos; pendiente de una gráfica",
+   "why_math": "Logarithms and plugging into given formulas"
+  },
+  "apparent-weight": {
+   "min": 80,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Newton's second law; free body diagrams; normal force; fitting a line to a graph",
+   "needs_es": "Segunda ley de Newton; diagramas de cuerpo libre; fuerza normal; ajuste de una recta",
+   "why_math": "Linear fit of N = m(g + a)"
+  },
+  "atwood": {
+   "min": 80,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Newton's second law; free body diagrams; tension; constant acceleration; reading a slope",
+   "needs_es": "Segunda ley de Newton; diagramas de cuerpo libre; tensión; aceleración constante; pendiente de una gráfica",
+   "why_math": "Algebra from two force equations; linear fits"
+  },
+  "big-bang-helium": {
+   "min": 75,
+   "math": "algebra",
+   "level": "upper",
+   "needs": "Exponential decay and half life; protons and neutrons; rest energy; natural logarithms",
+   "needs_es": "Decaimiento exponencial y vida media; protones y neutrones; energía en reposo; logaritmos naturales",
+   "why_math": "Exponentials, logs, and linear fits only"
+  },
+  "binding-energy": {
+   "min": 75,
+   "math": "algebra",
+   "level": "upper",
+   "needs": "Mass and energy, E = mc²; nuclear structure; binding energy per nucleon; reading graphs",
+   "needs_es": "Masa y energía, E = mc²; estructura nuclear; energía de enlace por nucleón; leer gráficas",
+   "why_math": "Plugging into given formulas; reading graphs"
+  },
+  "black-holes": {
+   "min": 70,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Gravity and escape speed; angles in radians; logarithmic scales; fitting a line",
+   "needs_es": "Gravedad y velocidad de escape; ángulos en radianes; escalas logarítmicas; ajuste de una recta",
+   "why_math": "Algebra on given magnification formulas"
+  },
+  "black-holes-near": {
+   "min": 65,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Gravity and escape speed; time dilation idea; angles in radians; fitting a line",
+   "needs_es": "Gravedad y velocidad de escape; idea de dilatación del tiempo; ángulos en radianes; ajuste de una recta",
+   "why_math": "Plugging into given formulas; linearizing data"
+  },
+  "blackbody": {
+   "min": 65,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Thermal radiation and temperature; logarithms and power laws; fitting a line to logged data",
+   "needs_es": "Radiación térmica y temperatura; logaritmos y leyes de potencias; ajuste lineal de datos logarítmicos",
+   "why_math": "Log fits of given power laws"
+  },
+  "bonds-and-latent-heat": {
+   "min": 75,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Temperature and kinetic energy; heat and phase changes; first law; reading a slope",
+   "needs_es": "Temperatura y energía cinética; calor y cambios de fase; primera ley; pendiente de una gráfica",
+   "why_math": "Slopes and plugging into given formulas"
+  },
+  "bose-einstein-condensation": {
+   "min": 80,
+   "math": "algebra",
+   "level": "upper",
+   "needs": "de Broglie wavelength; particle in a box; energy levels; Boltzmann factor; fitting a line",
+   "needs_es": "Longitud de onda de de Broglie; partícula en una caja; niveles de energía; factor de Boltzmann; ajuste lineal",
+   "why_math": "Given formulas; linear fits of transformed data"
+  },
+  "camera": {
+   "min": 80,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Thin lens equation; real images; similar triangles; fitting a line to reciprocals",
+   "needs_es": "Ecuación de lentes delgadas; imágenes reales; triángulos semejantes; ajuste lineal de recíprocos",
+   "why_math": "Lens equation and linear fits of reciprocals"
+  },
+  "capacitors": {
+   "min": 80,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Capacitance, C = Q/V; stored energy; series and parallel capacitors; reading a slope",
+   "needs_es": "Capacitancia, C = Q/V; energía almacenada; capacitores en serie y en paralelo; pendiente de una gráfica",
+   "why_math": "Given formulas and linear fits"
+  },
+  "capacitors-spheres": {
+   "min": 75,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Capacitance; Gauss's law results; dielectrics and polarization; electric field strength; fitting a line",
+   "needs_es": "Capacitancia; resultados de la ley de Gauss; dieléctricos y polarización; campo eléctrico; ajuste lineal",
+   "why_math": "Given formulas; maximum found from a parabola"
+  },
+  "catenary": {
+   "min": 80,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Static equilibrium; free body diagrams; tension and components of force; reading a slope",
+   "needs_es": "Equilibrio estático; diagramas de cuerpo libre; tensión y componentes de fuerza; pendiente de una gráfica",
+   "why_math": "Given formulas; cosh never evaluated by student"
+  },
+  "cavendish": {
+   "min": 80,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Newton's law of gravitation; torque; torsion pendulum period; small angle approximation",
+   "needs_es": "Ley de la gravitación de Newton; torque; periodo del péndulo de torsión; aproximación de ángulos pequeños",
+   "why_math": "Plugging into given formulas; linear fits"
+  },
+  "center-of-mass": {
+   "min": 80,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Center of mass; momentum and Newton's laws for systems; projectile motion; fitting a line",
+   "needs_es": "Centro de masa; cantidad de movimiento y leyes de Newton para sistemas; tiro parabólico; ajuste lineal",
+   "why_math": "Weighted averages and linear fits"
+  },
+  "cepheid-photometry": {
+   "min": 80,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Apparent magnitude and logarithms; distance modulus; periodic motion; fitting a sine curve",
+   "needs_es": "Magnitud aparente y logaritmos; módulo de distancia; movimiento periódico; ajuste de una curva senoidal",
+   "why_math": "Logarithms and fitting a sine; no calculus"
+  },
+  "chladni": {
+   "min": 75,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Standing waves and resonance; nodes and antinodes; wave speed; proportional reasoning",
+   "needs_es": "Ondas estacionarias y resonancia; nodos y antinodos; rapidez de onda; razonamiento proporcional",
+   "why_math": "Scaling and ratios; Bessel zeros are given"
+  },
+  "circular-motion": {
+   "min": 80,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Centripetal acceleration; Newton's second law; static friction; energy conservation; fitting a line",
+   "needs_es": "Aceleración centrípeta; segunda ley de Newton; fricción estática; conservación de la energía; ajuste lineal",
+   "why_math": "Algebra, trig, and linear fits of v² data"
+  },
+  "collisions": {
+   "min": 75,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Conservation of momentum; elastic and inelastic collisions; kinetic energy; center of mass velocity",
+   "needs_es": "Conservación de la cantidad de movimiento; choques elásticos e inelásticos; energía cinética; velocidad del centro de masa",
+   "why_math": "Algebra on conservation laws; linear fits"
+  },
+  "color-vision": {
+   "min": 80,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Light and wavelength; additive color mixing; how the eye responds; reading graphs",
+   "needs_es": "Luz y longitud de onda; mezcla aditiva de colores; respuesta del ojo; leer gráficas",
+   "why_math": "Integrals only described; student adds and multiplies"
+  },
+  "compton": {
+   "min": 70,
+   "math": "algebra",
+   "level": "upper",
+   "needs": "Photon energy and momentum; relativistic energy and momentum; conservation laws; fitting a line",
+   "needs_es": "Energía y cantidad de movimiento del fotón; energía y momento relativistas; leyes de conservación; ajuste lineal",
+   "why_math": "Given formulas, trig, and a linear fit"
+  },
+  "convection": {
+   "min": 75,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Heat transfer by convection and radiation; exponential decay; natural logarithms; time constant",
+   "needs_es": "Transferencia de calor por convección y radiación; decaimiento exponencial; logaritmos naturales; constante de tiempo",
+   "why_math": "Solution given; student fits ln of data"
+  },
+  "cosmic-expansion": {
+   "min": 70,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Hubble's law; redshift and recession speed; speed as distance over time; reading a slope",
+   "needs_es": "Ley de Hubble; corrimiento al rojo y rapidez de recesión; rapidez como distancia entre tiempo; pendiente",
+   "why_math": "Differences and slopes; derivative only mentioned"
+  },
+  "coulomb-sandbox": {
+   "min": 80,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Coulomb's law; electric field and potential of point charges; vector addition; fitting a line",
+   "needs_es": "Ley de Coulomb; campo eléctrico y potencial de cargas puntuales; suma de vectores; ajuste lineal",
+   "why_math": "Numerical central difference; no derivatives taken"
+  },
+  "coulomb-sandbox-energy": {
+   "min": 70,
+   "math": "calculus",
+   "level": "intro",
+   "needs": "Electric potential and potential energy; fields of rings and arcs; E = -dV/dz; superposition",
+   "needs_es": "Potencial eléctrico y energía potencial; campos de anillos y arcos; E = -dV/dz; superposición",
+   "why_math": "Maximize ring field by differentiating; E = -dV/dz"
+  },
+  "critical-mass": {
+   "min": 75,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Exponential growth; neutron multiplication; sphere volume and surface area",
+   "needs_es": "Crecimiento exponencial; multiplicación de neutrones; volumen y área de una esfera",
+   "why_math": "logs and exponentials only"
+  },
+  "current-sheet": {
+   "min": 85,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Electric field and potential; equipotentials; resistance and resistivity; reading a slope",
+   "needs_es": "Campo eléctrico y potencial; equipotenciales; resistencia y resistividad; leer una pendiente",
+   "why_math": "fits lines, plugs into given formulas"
+  },
+  "dc-circuits": {
+   "min": 80,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Ohm's law; series and parallel resistors; Kirchhoff's rules; solving simple linear equations",
+   "needs_es": "Ley de Ohm; resistores en serie y en paralelo; reglas de Kirchhoff; resolver ecuaciones lineales sencillas",
+   "why_math": "linear equations and line fit"
+  },
+  "decay-chains": {
+   "min": 75,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Exponential decay and half life; decay constant; natural logarithms; reading a graph",
+   "needs_es": "Decaimiento exponencial y vida media; constante de decaimiento; logaritmos naturales; leer una gráfica",
+   "why_math": "given Bateman solution; plugs in"
+  },
+  "diffraction-grating": {
+   "min": 80,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Interference of waves; path difference; grating equation; sine and tangent",
+   "needs_es": "Interferencia de ondas; diferencia de trayectoria; ecuación de la rejilla; seno y tangente",
+   "why_math": "trig and straight line fit"
+  },
+  "diffusion": {
+   "min": 75,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Kinetic theory of gases; mean free path; random walk; slope from a graph",
+   "needs_es": "Teoría cinética de los gases; trayectoria libre media; caminata aleatoria; leer una pendiente",
+   "why_math": "fits lines, given formulas"
+  },
+  "dispersion": {
+   "min": 75,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Snell's law; index of refraction; wavelength and speed of light; line fits",
+   "needs_es": "Ley de Snell; índice de refracción; longitud de onda y rapidez de la luz; ajuste de rectas",
+   "why_math": "straight line fits, given formulas"
+  },
+  "displacement-current": {
+   "min": 80,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Ampère's law; electric flux; capacitors and RC circuits; reading a slope",
+   "needs_es": "Ley de Ampère; flujo eléctrico; capacitores y circuitos RC; leer una pendiente",
+   "why_math": "given formulas; slopes and plugging in"
+  },
+  "doppler": {
+   "min": 75,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Sound waves; frequency and wave speed; Doppler shift; basic trigonometry",
+   "needs_es": "Ondas sonoras; frecuencia y rapidez de onda; efecto Doppler; trigonometría básica",
+   "why_math": "plugging into given formulas"
+  },
+  "doppler-light": {
+   "min": 70,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Special relativity; time dilation and gamma; Doppler effect; wavelength and frequency",
+   "needs_es": "Relatividad especial; dilatación del tiempo y gamma; efecto Doppler; longitud de onda y frecuencia",
+   "why_math": "algebra with given relativistic formulas"
+  },
+  "double-pendulum": {
+   "min": 90,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Pendulum oscillation and period; angular frequency; coupled oscillators; logarithms; line fits",
+   "needs_es": "Oscilación y periodo del péndulo; frecuencia angular; osciladores acoplados; logaritmos; ajuste de rectas",
+   "why_math": "given equations; linear fits only"
+  },
+  "double-slit": {
+   "min": 80,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Interference of waves; path difference; small angle approximation; reading a slope",
+   "needs_es": "Interferencia de ondas; diferencia de trayectoria; aproximación de ángulos pequeños; leer una pendiente",
+   "why_math": "small angle algebra and line fits"
+  },
+  "e-over-m": {
+   "min": 75,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Magnetic force on a moving charge; circular motion; kinetic energy and voltage",
+   "needs_es": "Fuerza magnética sobre una carga en movimiento; movimiento circular; energía cinética y voltaje",
+   "why_math": "algebra and straight line fit"
+  },
+  "eclipsing-binary": {
+   "min": 75,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Orbits and Kepler's third law; center of mass; luminosity and temperature of stars",
+   "needs_es": "Órbitas y tercera ley de Kepler; centro de masa; luminosidad y temperatura de las estrellas",
+   "why_math": "given formulas; plugging in"
+  },
+  "eddy-currents": {
+   "min": 80,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Faraday's and Lenz's laws; terminal speed; resistivity and conductivity; reading a slope",
+   "needs_es": "Leyes de Faraday y de Lenz; rapidez terminal; resistividad y conductividad; leer una pendiente",
+   "why_math": "given force law; line fits"
+  },
+  "einstein-solids": {
+   "min": 75,
+   "math": "calculus",
+   "level": "intro",
+   "needs": "Energy quanta; counting arrangements with factorials; entropy and temperature; second law",
+   "needs_es": "Cuantos de energía; contar arreglos con factoriales; entropía y temperatura; segunda ley",
+   "why_math": "maximize entropy by differentiating"
+  },
+  "electron-diffraction": {
+   "min": 95,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Wave nature of matter; de Broglie wavelength; Bragg diffraction; kinetic energy and voltage",
+   "needs_es": "Naturaleza ondulatoria de la materia; longitud de onda de De Broglie; difracción de Bragg; energía cinética y voltaje",
+   "why_math": "given formulas; line fits"
+  },
+  "em-waves": {
+   "min": 85,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Electric and magnetic fields; electromagnetic waves; intensity; reading a slope from a graph",
+   "needs_es": "Campos eléctrico y magnético; ondas electromagnéticas; intensidad; leer una pendiente",
+   "why_math": "plugging into given formulas; slopes"
+  },
+  "energy-bands": {
+   "min": 85,
+   "math": "algebra",
+   "level": "upper",
+   "needs": "Quantum energy levels; wave function overlap; Pauli exclusion; natural log and slopes",
+   "needs_es": "Niveles de energía cuánticos; traslape de funciones de onda; principio de exclusión de Pauli; logaritmo natural y pendientes",
+   "why_math": "given cosine formula; log line fit"
+  },
+  "energy-bands-periodic": {
+   "min": 55,
+   "math": "algebra",
+   "level": "upper",
+   "needs": "Schrödinger equation; free electron energy; tunneling; natural logs and line fits",
+   "needs_es": "Ecuación de Schrödinger; energía del electrón libre; efecto túnel; logaritmos naturales y ajuste de rectas",
+   "why_math": "given formulas; log line fit"
+  },
+  "energy-levels": {
+   "min": 75,
+   "math": "algebra",
+   "level": "upper",
+   "needs": "Standing waves; quantized energy of a particle in a box; harmonic oscillator; line fits",
+   "needs_es": "Ondas estacionarias; energía cuantizada de una partícula en una caja; oscilador armónico; ajuste de rectas",
+   "why_math": "given level formulas; line fits"
+  },
+  "estimation-and-evidence": {
+   "min": 80,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Powers of ten; significant figures; constant acceleration kinematics; checking units",
+   "needs_es": "Potencias de diez; cifras significativas; cinemática con aceleración constante; revisar unidades",
+   "why_math": "arithmetic, kinematics formulas"
+  },
+  "exoplanets": {
+   "min": 80,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Kepler's third law; center of mass orbits; density; reading a slope from a graph",
+   "needs_es": "Tercera ley de Kepler; órbitas alrededor del centro de masa; densidad; leer una pendiente",
+   "why_math": "given formulas; slopes and plugging in"
+  },
+  "faraday": {
+   "min": 80,
+   "math": "calculus",
+   "level": "intro",
+   "needs": "Magnetic flux; Faraday's and Lenz's laws; sinusoidal functions; rates of change",
+   "needs_es": "Flujo magnético; leyes de Faraday y de Lenz; funciones senoidales; razones de cambio",
+   "why_math": "differentiate flux to derive emf"
+  },
+  "faraday-mutual-induction": {
+   "min": 75,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Faraday's law; mutual inductance; motional emf; sinusoidal signals and amplitudes",
+   "needs_es": "Ley de Faraday; inductancia mutua; fem de movimiento; señales senoidales y amplitudes",
+   "why_math": "given formulas; plugging in"
+  },
+  "fluids": {
+   "min": 80,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Pressure and depth; Archimedes' principle; continuity and Bernoulli's equation; reading a slope",
+   "needs_es": "Presión y profundidad; principio de Arquímedes; continuidad y ecuación de Bernoulli; leer una pendiente",
+   "why_math": "given formulas; line fits"
+  },
+  "force-table": {
+   "min": 80,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Newton's first law; force vectors and components; sine and cosine; equilibrium",
+   "needs_es": "Primera ley de Newton; vectores de fuerza y componentes; seno y coseno; equilibrio",
+   "why_math": "vector components with trigonometry"
+  },
+  "forces": {
+   "min": 80,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Newton's laws; free body diagrams; friction coefficients; work and kinetic energy; line fits",
+   "needs_es": "Leyes de Newton; diagramas de cuerpo libre; coeficientes de fricción; trabajo y energía cinética; ajuste de rectas",
+   "why_math": "given formulas; transformed line fit"
+  },
+  "franck-hertz": {
+   "min": 80,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Bohr model; energy levels of atoms; electron volts; photon wavelength and energy",
+   "needs_es": "Modelo de Bohr; niveles de energía de los átomos; electronvolts; longitud de onda y energía del fotón",
+   "why_math": "line fits and given formulas"
+  },
+  "free-expansion": {
+   "min": 70,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Ideal gas; counting arrangements with combinations; entropy and the second law; probability",
+   "needs_es": "Gas ideal; contar arreglos con combinaciones; entropía y segunda ley; probabilidad",
+   "why_math": "combinations, logs, plug into formulas"
+  },
+  "fusion-gamow": {
+   "min": 75,
+   "math": "algebra",
+   "level": "upper",
+   "needs": "Coulomb repulsion; quantum tunneling; Maxwell–Boltzmann energy distribution; logarithmic graphs",
+   "needs_es": "Repulsión de Coulomb; efecto túnel cuántico; distribución de energías de Maxwell–Boltzmann; gráficas logarítmicas",
+   "why_math": "log log line fit; given formulas"
+  },
+  "galactic-habitable-zone": {
+   "min": 80,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Fusion makes heavy elements; supernovae harm life; probabilities multiply; reading a graph",
+   "needs_es": "La fusión produce elementos pesados; las supernovas dañan la vida; las probabilidades se multiplican; leer una gráfica",
+   "why_math": "Powers of ten and products of probabilities"
+  },
+  "galton-board": {
+   "min": 70,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Probability of independent events; counting paths; mean and standard deviation",
+   "needs_es": "Probabilidad de eventos independientes; conteo de trayectorias; media y desviación estándar",
+   "why_math": "Binomial formulas, slopes of fitted lines"
+  },
+  "gamma-absorption": {
+   "min": 75,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Exponential decay; inverse square law; natural logarithms and slopes",
+   "needs_es": "Decaimiento exponencial; ley del inverso del cuadrado; logaritmos naturales y pendientes",
+   "why_math": "Logarithms linearize the exponential; slopes only"
+  },
+  "gamma-spectroscopy": {
+   "min": 75,
+   "math": "algebra",
+   "level": "upper",
+   "needs": "Gamma rays from nuclear levels; photon energy; Compton scattering; fitting a line",
+   "needs_es": "Rayos gamma de niveles nucleares; energía del fotón; dispersión Compton; ajuste de una recta",
+   "why_math": "Linear calibration fit and given formulas"
+  },
+  "gas-thermometer": {
+   "min": 65,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Ideal gas law; Kelvin and Celsius scales; fitting a line and extrapolating",
+   "needs_es": "Ley del gas ideal; escalas Kelvin y Celsius; ajustar una recta y extrapolar",
+   "why_math": "Linear fits and extrapolation only"
+  },
+  "gauss-law": {
+   "min": 75,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Electric flux; Gauss's law; spherical symmetry; superposition of charges",
+   "needs_es": "Flujo eléctrico; ley de Gauss; simetría esférica; superposición de cargas",
+   "why_math": "Symmetry reduces flux to field times area"
+  },
+  "gps-clocks": {
+   "min": 80,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Time dilation from speed; gravity slows clocks; circular orbit speed; fitting a line",
+   "needs_es": "Dilatación del tiempo por velocidad; la gravedad atrasa los relojes; rapidez orbital circular; ajuste de una recta",
+   "why_math": "Given approximate formulas, linear fits"
+  },
+  "gravity-near-earth": {
+   "min": 80,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Newton's law of gravitation; centripetal acceleration; fitting a line to transformed data",
+   "needs_es": "Ley de la gravitación de Newton; aceleración centrípeta; ajustar una recta a datos transformados",
+   "why_math": "Linear fits to 1/r² and cos² data"
+  },
+  "gyroscope": {
+   "min": 85,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Torque; angular momentum; moment of inertia; vector directions",
+   "needs_es": "Torca; momento angular; momento de inercia; direcciones de vectores",
+   "why_math": "Given precession formula, line fits"
+  },
+  "hcl-spectrum": {
+   "min": 80,
+   "math": "algebra",
+   "level": "upper",
+   "needs": "Quantized vibration and rotation; selection rule; reduced mass; fitting a line",
+   "needs_es": "Vibración y rotación cuantizadas; regla de selección; masa reducida; ajuste de una recta",
+   "why_math": "Given formulas, linear and quadratic fits"
+  },
+  "hcl-spectrum-light": {
+   "min": 50,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Photon energy E = hc/λ; electric dipole; molecular vibration; greenhouse effect",
+   "needs_es": "Energía del fotón E = hc/λ; dipolo eléctrico; vibración molecular; efecto invernadero",
+   "why_math": "Only photon energy arithmetic"
+  },
+  "heat-capacities-of-gases": {
+   "min": 70,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "First law of thermodynamics; molar heat capacity; equipartition; fitting a line",
+   "needs_es": "Primera ley de la termodinámica; capacidad calorífica molar; equipartición; ajuste de una recta",
+   "why_math": "Given formulas, slopes of fitted lines"
+  },
+  "heat-conduction": {
+   "min": 70,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Conduction of heat; thermal resistance of layers; reading a slope",
+   "needs_es": "Conducción de calor; resistencia térmica de capas; leer una pendiente",
+   "why_math": "Slopes of linear fits only"
+  },
+  "heat-engines": {
+   "min": 80,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "First law; PV diagrams and work; adiabatic and isothermal processes; efficiency",
+   "needs_es": "Primera ley; diagramas PV y trabajo; procesos adiabáticos e isotérmicos; eficiencia",
+   "why_math": "Given formulas, logs and line fits"
+  },
+  "heating-curve": {
+   "min": 75,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Specific heat; latent heat; phase changes; fitting a line",
+   "needs_es": "Calor específico; calor latente; cambios de fase; ajuste de una recta",
+   "why_math": "Slopes of linear fits only"
+  },
+  "holography": {
+   "min": 85,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Interference of waves; diffraction grating; angles and sines; wavelength and color",
+   "needs_es": "Interferencia de ondas; rejilla de difracción; ángulos y senos; longitud de onda y color",
+   "why_math": "Sine formulas and straight line fits"
+  },
+  "household-wiring": {
+   "min": 75,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Ohm's law; electric power P = IV; resistance of a wire; parallel circuits",
+   "needs_es": "Ley de Ohm; potencia eléctrica P = IV; resistencia de un alambre; circuitos en paralelo",
+   "why_math": "Ohm's law and power formulas"
+  },
+  "hr-diagram": {
+   "min": 80,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Blackbody radiation; luminosity, radius and temperature; power laws and logarithms",
+   "needs_es": "Radiación de cuerpo negro; luminosidad, radio y temperatura; leyes de potencia y logaritmos",
+   "why_math": "Log graphs and given formulas"
+  },
+  "hr-diagram-cluster": {
+   "min": 40,
+   "math": "calculus",
+   "level": "intro",
+   "needs": "Main sequence lifetime; star clusters; power laws and logarithms; integrating a power",
+   "needs_es": "Vida en la secuencia principal; cúmulos estelares; leyes de potencia y logaritmos; integrar una potencia",
+   "why_math": "Prelab integrates a power law"
+  },
+  "hubble-law": {
+   "min": 75,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Doppler redshift; recession velocity; reading a slope from a graph",
+   "needs_es": "Corrimiento al rojo Doppler; velocidad de recesión; leer una pendiente en una gráfica",
+   "why_math": "Given formulas and a fitted slope"
+  },
+  "huygens": {
+   "min": 80,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Wave fronts and wavelets; index of refraction; Snell's law; diffraction",
+   "needs_es": "Frentes de onda y ondículas; índice de refracción; ley de Snell; difracción",
+   "why_math": "Snell's law and sine formulas"
+  },
+  "hydrogen-atom": {
+   "min": 75,
+   "math": "algebra",
+   "level": "upper",
+   "needs": "Wave function and probability; hydrogen energy levels; quantum numbers; selection rules",
+   "needs_es": "Función de onda y probabilidad; niveles de energía del hidrógeno; números cuánticos; reglas de selección",
+   "why_math": "Given formulas, standard errors, line fits"
+  },
+  "hydrogen-in-stars": {
+   "min": 80,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Hydrogen energy levels; Boltzmann factor; ionization; exponentials and logarithms",
+   "needs_es": "Niveles de energía del hidrógeno; factor de Boltzmann; ionización; exponenciales y logaritmos",
+   "why_math": "Plugging into Boltzmann and Saha formulas"
+  },
+  "ideal-gas": {
+   "min": 70,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Ideal gas law; kinetic theory of gases; temperature and molecular speed",
+   "needs_es": "Ley del gas ideal; teoría cinética de los gases; temperatura y rapidez molecular",
+   "why_math": "Given formulas, slopes of fitted lines"
+  },
+  "impulse": {
+   "min": 75,
+   "math": "calculus",
+   "level": "intro",
+   "needs": "Momentum and impulse; Newton's second law; area under a force curve",
+   "needs_es": "Cantidad de movimiento e impulso; segunda ley de Newton; área bajo una curva de fuerza",
+   "why_math": "Integrates force pulse numerically as impulse"
+  },
+  "induced-electric-field": {
+   "min": 80,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Faraday's law; magnetic flux; solenoid field; exponential decay of current",
+   "needs_es": "Ley de Faraday; flujo magnético; campo de un solenoide; decaimiento exponencial de la corriente",
+   "why_math": "Given formulas for E and dB/dt"
+  },
+  "induction": {
+   "min": 80,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Conductors and induced charge; grounding; Coulomb's law; charge sharing",
+   "needs_es": "Conductores y carga inducida; conexión a tierra; ley de Coulomb; reparto de carga",
+   "why_math": "Ratios and line fits only"
+  },
+  "induction-at-work": {
+   "min": 80,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Faraday's law; Lenz's law; capacitor energy; simple harmonic motion speed",
+   "needs_es": "Ley de Faraday; ley de Lenz; energía de un capacitor; rapidez en movimiento armónico simple",
+   "why_math": "Given formulas, energy bookkeeping"
+  },
+  "ink-jet-printer": {
+   "min": 80,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Electric force on a charge; projectile motion; electric field between plates",
+   "needs_es": "Fuerza eléctrica sobre una carga; movimiento de proyectiles; campo eléctrico entre placas",
+   "why_math": "Given deflection formula, line fits"
+  },
+  "intro-aberrations": {
+   "min": 70,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Diffraction limit of a telescope; focal ratio; lenses and mirrors; angles in arcseconds",
+   "needs_es": "Límite de difracción de un telescopio; razón focal; lentes y espejos; ángulos en segundos de arco",
+   "why_math": "Given formulas and ratios"
+  },
+  "intro-atmospheres": {
+   "min": 70,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Temperature and molecular speed; escape speed; square roots and ratios",
+   "needs_es": "Temperatura y rapidez molecular; rapidez de escape; raíces cuadradas y cocientes",
+   "why_math": "Square roots and ratios only"
+  },
+  "intro-blackbody": {
+   "min": 60,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Powers and ratios; what temperature and color of a hot object mean",
+   "needs_es": "Potencias y razones; qué significan la temperatura y el color de un objeto caliente",
+   "why_math": "Ratios and fourth powers of given laws"
+  },
+  "intro-celestial-sphere": {
+   "min": 60,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Angles and degrees; latitude and longitude on Earth; why stars rise and set",
+   "needs_es": "Ángulos y grados; latitud y longitud en la Tierra; por qué salen y se ponen las estrellas",
+   "why_math": "Angle arithmetic; line slope and intercept"
+  },
+  "intro-constellations-3d": {
+   "min": 60,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Inverse square law of light; magnitude scale; logarithms on a calculator",
+   "needs_es": "Ley del inverso del cuadrado de la luz; escala de magnitudes; logaritmos en la calculadora",
+   "why_math": "Given logarithm formulas; no derivatives needed"
+  },
+  "intro-craters": {
+   "min": 70,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Surface area and volume of a sphere; impacts and gravity; rates and counting",
+   "needs_es": "Área y volumen de una esfera; impactos y gravedad; tasas y conteos",
+   "why_math": "Ratios, counts and given formulas"
+  },
+  "intro-em-spectrum": {
+   "min": 60,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Wave speed equals wavelength times frequency; scientific notation; metric prefixes",
+   "needs_es": "Rapidez de onda igual a longitud de onda por frecuencia; notación científica; prefijos métricos",
+   "why_math": "Scientific notation and v = λf"
+  },
+  "intro-exoplanets": {
+   "min": 85,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Size and mass ratios; density; inverse square law of light; Kepler's third law",
+   "needs_es": "Razones de tamaño y masa; densidad; ley del inverso del cuadrado de la luz; tercera ley de Kepler",
+   "why_math": "Multi step algebra with given recipe"
+  },
+  "intro-giant-planets": {
+   "min": 80,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Kepler's third law; density; gravity and orbits; graphing a slope",
+   "needs_es": "Tercera ley de Kepler; densidad; gravedad y órbitas; pendiente de una gráfica",
+   "why_math": "Graph slopes and ratios only"
+  },
+  "intro-gravity": {
+   "min": 65,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Newton's law of gravity; inverse square law; mass versus weight; reading a slope",
+   "needs_es": "Ley de la gravitación de Newton; ley del inverso del cuadrado; masa y peso; leer una pendiente",
+   "why_math": "Inverse square plugging in; linear graph"
+  },
+  "intro-inside-a-planet": {
+   "min": 85,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Density as mass over volume; floating and buoyancy; heat flow; reading a graph line",
+   "needs_es": "Densidad como masa entre volumen; flotación; flujo de calor; leer una recta en una gráfica",
+   "why_math": "Linear graph and ratios"
+  },
+  "intro-kepler": {
+   "min": 65,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Ellipses, perihelion and aphelion; Kepler's three laws; graphing a slope",
+   "needs_es": "Elipses, perihelio y afelio; las tres leyes de Kepler; pendiente de una gráfica",
+   "why_math": "Averages, ratios and a linear graph"
+  },
+  "intro-lagrange": {
+   "min": 60,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Newton's law of gravity; orbital period; ratios and unit conversion",
+   "needs_es": "Ley de la gravitación de Newton; periodo orbital; razones y conversión de unidades",
+   "why_math": "Unit conversions and ratios"
+  },
+  "intro-mars-ages": {
+   "min": 65,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Crater counting and surface age; area and density of craters; gravity and impacts",
+   "needs_es": "Conteo de cráteres y edad de la superficie; área y densidad de cráteres; gravedad e impactos",
+   "why_math": "Ratios, square roots and counts"
+  },
+  "intro-mirrors": {
+   "min": 55,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Refraction of light and index of refraction; focal length of lenses and mirrors",
+   "needs_es": "Refracción de la luz e índice de refracción; distancia focal de lentes y espejos",
+   "why_math": "Subtraction and percent of focal lengths"
+  },
+  "intro-moon": {
+   "min": 65,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Moon's orbit and phases; Sun, Earth, Moon geometry; angles per day",
+   "needs_es": "Órbita y fases de la Luna; geometría Sol, Tierra y Luna; ángulos por día",
+   "why_math": "Differences, rates and angle arithmetic"
+  },
+  "intro-parallax": {
+   "min": 65,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Parallax and angle of view; arcseconds; inverse proportions; reading a slope",
+   "needs_es": "Paralaje y ángulo de visión; segundos de arco; proporciones inversas; leer una pendiente",
+   "why_math": "Inverse proportion; linear graph slope"
+  },
+  "intro-planet-temperatures": {
+   "min": 75,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Inverse square law; energy balance; greenhouse effect; escape speed; reading a slope",
+   "needs_es": "Ley del inverso del cuadrado; balance de energía; efecto invernadero; velocidad de escape; leer una pendiente",
+   "why_math": "Ratios and a linear graph"
+  },
+  "intro-precession": {
+   "min": 65,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Torque and angular momentum of a spinning wheel; Earth's axis tilt; period and rate",
+   "needs_es": "Torca y momento angular de una rueda que gira; inclinación del eje de la Tierra; periodo y rapidez",
+   "why_math": "Ratios, rates and a graph shape"
+  },
+  "intro-resolution": {
+   "min": 65,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Light waves and wavelength; diffraction limit 1.22 λ/D; angles in radians",
+   "needs_es": "Ondas de luz y longitud de onda; límite de difracción 1.22 λ/D; ángulos en radianes",
+   "why_math": "Plugging into given resolution formula"
+  },
+  "intro-resonances": {
+   "min": 75,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Kepler's third law; orbital period ratios; gravity between planets; calculator powers",
+   "needs_es": "Tercera ley de Kepler; razones de periodos orbitales; gravedad entre planetas; potencias en la calculadora",
+   "why_math": "Fractional powers by calculator; ratios"
+  },
+  "intro-retrograde": {
+   "min": 70,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Orbital periods; Earth and planet positions from above; synodic period; sky longitude",
+   "needs_es": "Periodos orbitales; posiciones de la Tierra y los planetas vistos desde arriba; periodo sinódico; longitud en el cielo",
+   "why_math": "Given synodic formula; plotting a graph"
+  },
+  "intro-retrograde-venus": {
+   "min": 65,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Phases of Venus; Sun, Earth, Venus geometry; Ptolemy's and Copernicus's models of the sky",
+   "needs_es": "Fases de Venus; geometría Sol, Tierra y Venus; modelos de Ptolomeo y Copérnico del cielo",
+   "why_math": "Percent and angle comparisons only"
+  },
+  "intro-scale": {
+   "min": 65,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Scientific notation; astronomical unit and light year; speed of light as distance over time",
+   "needs_es": "Notación científica; unidad astronómica y año luz; rapidez de la luz como distancia entre tiempo",
+   "why_math": "Scientific notation and unit conversion"
+  },
+  "intro-seasons": {
+   "min": 60,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Tilt of Earth's axis; inverse square law; latitude; angle of sunlight on a surface",
+   "needs_es": "Inclinación del eje de la Tierra; ley del inverso del cuadrado; latitud; ángulo de la luz solar sobre una superficie",
+   "why_math": "Ratios and angle differences"
+  },
+  "intro-seeing": {
+   "min": 60,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Diffraction limit 1.22 λ/D; wavelength of light; how air blurs images",
+   "needs_es": "Límite de difracción 1.22 λ/D; longitud de onda de la luz; cómo el aire desenfoca las imágenes",
+   "why_math": "Plugging into given formulas"
+  },
+  "intro-sidereal-day": {
+   "min": 70,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Rotation and revolution of planets; angles in degrees; converting hours to minutes",
+   "needs_es": "Rotación y traslación de los planetas; ángulos en grados; convertir horas a minutos",
+   "why_math": "Subtraction, ratios and unit conversion"
+  },
+  "intro-solar-system-formation": {
+   "min": 70,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Angular momentum; inverse square law of sunlight; temperature and ice; ratios",
+   "needs_es": "Momento angular; ley del inverso del cuadrado de la luz solar; temperatura y hielo; razones",
+   "why_math": "Ratios and given scaling rules"
+  },
+  "intro-spectra": {
+   "min": 60,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Atoms and electron energy levels; wavelength of light; Kirchhoff's three spectra",
+   "needs_es": "Átomos y niveles de energía de los electrones; longitud de onda de la luz; los tres espectros de Kirchhoff",
+   "why_math": "Mostly conceptual; subtracting wavelengths"
+  },
+  "intro-stellarium-sky": {
+   "min": 75,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Altitude and azimuth; right ascension and declination; latitude and the pole star",
+   "needs_es": "Altura y azimut; ascensión recta y declinación; latitud y la estrella polar",
+   "why_math": "Degree arithmetic and given rules"
+  },
+  "intro-telescope": {
+   "min": 65,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Lenses and focal length; magnification as a ratio; circle area; reading a slope",
+   "needs_es": "Lentes y distancia focal; aumento como razón; área de un círculo; leer una pendiente",
+   "why_math": "Ratios, squares and a linear graph"
+  },
+  "intro-tides": {
+   "min": 65,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Newton's law of gravity; inverse square law; Earth–Moon–Sun geometry; ratios",
+   "needs_es": "Ley de la gravitación de Newton; ley del inverso del cuadrado; geometría Tierra, Luna y Sol; razones",
+   "why_math": "Ratios and given tide formulas"
+  },
+  "invariant-mass": {
+   "min": 80,
+   "math": "algebra",
+   "level": "upper",
+   "needs": "Relativistic energy and momentum; conservation in decays; charged particle circling in a magnetic field",
+   "needs_es": "Energía y momento relativistas; leyes de conservación en decaimientos; trayectoria circular de una partícula cargada en un campo magnético",
+   "why_math": "Algebra with given kinematics; statistics of masses"
+  },
+  "ising": {
+   "min": 80,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Boltzmann probability and entropy; ferromagnetism and the Curie temperature; log log graphs",
+   "needs_es": "Probabilidad de Boltzmann y entropía; ferromagnetismo y temperatura de Curie; gráficas log log",
+   "why_math": "Plugging into given formulas; log fits"
+  },
+  "junction-transistor": {
+   "min": 85,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Diode and resistor circuits; Ohm's law; reading a slope from a log graph",
+   "needs_es": "Circuitos con diodos y resistencias; ley de Ohm; leer una pendiente en una gráfica logarítmica",
+   "why_math": "Exponential diode law, ln graphs, no derivatives"
+  },
+  "kepler-orbits": {
+   "min": 80,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Newton's law of gravitation; ellipses and orbits; angular momentum; fitting a line",
+   "needs_es": "Ley de gravitación de Newton; elipses y órbitas; momento angular; ajuste de una recta",
+   "why_math": "Power law fit, given formulas"
+  },
+  "kundts-tube": {
+   "min": 75,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Standing waves, nodes and antinodes; wave speed and wavelength; speed of sound in gases",
+   "needs_es": "Ondas estacionarias, nodos y antinodos; velocidad y longitud de onda; velocidad del sonido en gases",
+   "why_math": "Wave speed formulas, straight line fits"
+  },
+  "lagrange-points": {
+   "min": 80,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Newton's gravity and circular orbits; the rotating frame; effective potential; log and power fits",
+   "needs_es": "Gravitación de Newton y órbitas circulares; marco giratorio; potencial efectivo; ajustes de potencias",
+   "why_math": "Given formulas, fits to transformed data"
+  },
+  "laser-threshold": {
+   "min": 75,
+   "math": "algebra",
+   "level": "upper",
+   "needs": "Photon energy; energy levels and stimulated emission; standing waves in a cavity",
+   "needs_es": "Energía del fotón; niveles de energía y emisión estimulada; ondas estacionarias en una cavidad",
+   "why_math": "Plugging into formulas, linear fits"
+  },
+  "lattice-energy": {
+   "min": 75,
+   "math": "algebra",
+   "level": "upper",
+   "needs": "Coulomb potential energy; ionic bonding; crystal structure of NaCl; fitting a line",
+   "needs_es": "Energía potencial de Coulomb; enlace iónico; estructura cristalina del NaCl; ajuste de una recta",
+   "why_math": "Series sums and linear fits only"
+  },
+  "lenses-instruments": {
+   "min": 65,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Ray tracing for lenses; the thin lens equation; real and virtual images",
+   "needs_es": "Trazado de rayos en lentes; ecuación de lentes delgadas; imágenes reales y virtuales",
+   "why_math": "Thin lens equation, reciprocal graph"
+  },
+  "lenses-instruments-scopes": {
+   "min": 50,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Thin lens equation; angular magnification; near point of the eye",
+   "needs_es": "Ecuación de lentes delgadas; aumento angular; punto próximo del ojo",
+   "why_math": "Given magnification formulas"
+  },
+  "loops-solenoids": {
+   "min": 80,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Magnetic field of currents; Biot Savart law; Ampère's law; solenoids",
+   "needs_es": "Campo magnético de las corrientes; ley de Biot y Savart; ley de Ampère; solenoides",
+   "why_math": "Given field formulas, symmetry only"
+  },
+  "magnetic-force": {
+   "min": 70,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Magnetic force on a moving charge; circular motion; velocity components",
+   "needs_es": "Fuerza magnética sobre una carga en movimiento; movimiento circular; componentes de la velocidad",
+   "why_math": "Plugging into formulas, linear fits"
+  },
+  "magnetic-force-hall": {
+   "min": 30,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Magnetic force on moving charges; right hand rule; current and drift velocity",
+   "needs_es": "Fuerza magnética sobre cargas en movimiento; regla de la mano derecha; corriente y velocidad de deriva",
+   "why_math": "Linear fit and given Hall formula"
+  },
+  "magnetism-in-matter": {
+   "min": 80,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Magnetic field of a solenoid; magnetic dipoles in materials; susceptibility",
+   "needs_es": "Campo magnético de un solenoide; dipolos magnéticos en los materiales; susceptibilidad",
+   "why_math": "Given formulas, slope of a line"
+  },
+  "magnets-oersted": {
+   "min": 75,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Magnetic poles and field lines; field of a current carrying wire; vector addition",
+   "needs_es": "Polos y líneas de campo magnético; campo de un alambre con corriente; suma de vectores",
+   "why_math": "Tangent graphs, given field formulas"
+  },
+  "main-sequence-fitting": {
+   "min": 80,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Apparent and absolute magnitude; distance modulus; the H-R diagram; quadratic fit",
+   "needs_es": "Magnitud aparente y absoluta; módulo de distancia; diagrama H-R; ajuste cuadrático",
+   "why_math": "Logs, quadratic fit, no calculus tasks"
+  },
+  "measurement-and-units": {
+   "min": 70,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Unit conversion; significant figures; reading a ruler and its uncertainty",
+   "needs_es": "Conversión de unidades; cifras significativas; lectura de una regla y su incertidumbre",
+   "why_math": "Unit conversions and dimension checks"
+  },
+  "measurement-uncertainty": {
+   "min": 75,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Period of a simple pendulum; mean and standard deviation; fitting a line",
+   "needs_es": "Periodo de un péndulo simple; media y desviación estándar; ajuste de una recta",
+   "why_math": "student fits and reads graphs; no calculus steps"
+  },
+  "meissner-effect": {
+   "min": 75,
+   "math": "algebra",
+   "level": "upper",
+   "needs": "Magnetic field and magnetic moment; superconductivity and zero resistance; straight line fits",
+   "needs_es": "Campo y momento magnético; superconductividad y resistencia cero; ajustes de rectas",
+   "why_math": "Given formulas, fit against T squared"
+  },
+  "meter-loading": {
+   "min": 70,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Ohm's law; series and parallel resistors; how voltmeters and ammeters connect",
+   "needs_es": "Ley de Ohm; resistores en serie y en paralelo; cómo se conectan voltímetros y amperímetros",
+   "why_math": "student fits and reads graphs; no calculus steps"
+  },
+  "michelson": {
+   "min": 80,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Interference of light; path difference and phase; index of refraction",
+   "needs_es": "Interferencia de la luz; diferencia de camino y fase; índice de refracción",
+   "why_math": "Counting fringes, linear fits"
+  },
+  "mirrors-refraction": {
+   "min": 80,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Reflection and refraction; the mirror equation; sign conventions for images",
+   "needs_es": "Reflexión y refracción; ecuación de los espejos; convención de signos para imágenes",
+   "why_math": "Given image equations, reciprocal graphs"
+  },
+  "molecular-bonds": {
+   "min": 75,
+   "math": "algebra",
+   "level": "upper",
+   "needs": "Coulomb energy; potential energy curves; exclusion principle; ionic and covalent bonds",
+   "needs_es": "Energía de Coulomb; curvas de energía potencial; principio de exclusión; enlaces iónico y covalente",
+   "why_math": "Plugging into formulas, linear fits"
+  },
+  "moon-phases": {
+   "min": 80,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Orbits of the Moon and Earth; the Moon's phases; angles and basic trigonometry",
+   "needs_es": "Órbitas de la Luna y la Tierra; fases lunares; ángulos y trigonometría básica",
+   "why_math": "Trig in given formulas, linear fits"
+  },
+  "motion-graphs": {
+   "min": 75,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Position, velocity and acceleration; slope and area of graphs; constant acceleration",
+   "needs_es": "Posición, velocidad y aceleración; pendiente y área de gráficas; aceleración constante",
+   "why_math": "Slopes, areas and quadratic fits only"
+  },
+  "mp-bragg-peak": {
+   "min": 80,
+   "math": "algebra",
+   "level": "upper",
+   "needs": "Proton stopping power and range; Bragg peak; photon attenuation; percent depth dose",
+   "needs_es": "Poder de frenado y alcance de protones; pico de Bragg; atenuación de fotones; dosis en profundidad",
+   "why_math": "Power law formulas, linear fits"
+  },
+  "mp-charged-particles": {
+   "min": 50,
+   "math": "calculus",
+   "level": "upper",
+   "needs": "Stopping power and the Bethe formula; range of protons; log log fits; derivatives",
+   "needs_es": "Poder de frenado y fórmula de Bethe; alcance de protones; ajustes log log; derivadas",
+   "why_math": "Derive stopping power from range power law"
+  },
+  "mp-charged-particles-bragg": {
+   "min": 40,
+   "math": "algebra",
+   "level": "upper",
+   "needs": "Stopping power and proton range; Bragg peak; relative stopping power",
+   "needs_es": "Poder de frenado y alcance de protones; pico de Bragg; poder de frenado relativo",
+   "why_math": "Ratios and given formulas only"
+  },
+  "mp-ct-range": {
+   "min": 60,
+   "math": "algebra",
+   "level": "upper",
+   "needs": "CT numbers and electron density; relative stopping power of protons; linear fits",
+   "needs_es": "Números CT y densidad electrónica; poder de frenado relativo de protones; ajustes lineales",
+   "why_math": "Linear fits and ratios"
+  },
+  "mp-ct-range-margins": {
+   "min": 55,
+   "math": "calculus",
+   "level": "upper",
+   "needs": "Bethe stopping power; proton range and water equivalent depth; error propagation",
+   "needs_es": "Poder de frenado de Bethe; alcance de protones y profundidad equivalente en agua; propagación de errores",
+   "why_math": "Partial derivative of Bethe formula shown"
+  },
+  "mp-ct-reconstruction": {
+   "min": 75,
+   "math": "algebra",
+   "level": "upper",
+   "needs": "X-ray attenuation and CT numbers; projections of an image; counting statistics",
+   "needs_es": "Atenuación de rayos X y números CT; proyecciones de una imagen; estadística de conteo",
+   "why_math": "student fits and reads graphs; no calculus steps"
+  },
+  "mp-kerma-equilibrium": {
+   "min": 75,
+   "math": "calculus",
+   "level": "upper",
+   "needs": "Photon attenuation; kerma and absorbed dose; charged particle equilibrium; integrals",
+   "needs_es": "Atenuación de fotones; kerma y dosis absorbida; equilibrio de partícula cargada; integrales",
+   "why_math": "Set up and evaluate dose integral"
+  },
+  "mp-photon-interactions": {
+   "min": 60,
+   "math": "algebra",
+   "level": "upper",
+   "needs": "Photoelectric effect, Compton scattering, pair production; attenuation coefficients; log log graphs",
+   "needs_es": "Efecto fotoeléctrico, dispersión Compton, producción de pares; coeficientes de atenuación; gráficas log log",
+   "why_math": "Tables, ratios and log fits"
+  },
+  "mp-photon-interactions-beams": {
+   "min": 65,
+   "math": "calculus",
+   "level": "upper",
+   "needs": "Exponential attenuation and half value layer; photon interactions; beam hardening; log graphs",
+   "needs_es": "Atenuación exponencial y capa hemirreductora; interacciones de fotones; endurecimiento del haz; gráficas logarítmicas",
+   "why_math": "Derive HVL and slope from differential equation"
+  },
+  "mp-proton-calibration": {
+   "min": 85,
+   "math": "algebra",
+   "level": "upper",
+   "needs": "Ionization chambers; absorbed dose to water; correction factors; uncertainty combination",
+   "needs_es": "Cámaras de ionización; dosis absorbida en agua; factores de corrección; combinación de incertidumbres",
+   "why_math": "First order approximation, reciprocal linear fits"
+  },
+  "mp-proton-qa": {
+   "min": 75,
+   "math": "algebra",
+   "level": "upper",
+   "needs": "Proton range and Bragg peak; percent error and standard deviation; fitting a line",
+   "needs_es": "Alcance del protón y pico de Bragg; error porcentual y desviación estándar; ajuste de una recta",
+   "why_math": "Plug into given formulas, fit lines"
+  },
+  "mp-radiobiology": {
+   "min": 100,
+   "math": "calculus",
+   "level": "upper",
+   "needs": "Exponential decay and natural logs; derivative of a function; fitting a quadratic",
+   "needs_es": "Decaimiento exponencial y logaritmos naturales; derivada de una función; ajuste cuadrático",
+   "why_math": "Differentiates ln S in prelab"
+  },
+  "mp-radiobiology-fractionation": {
+   "min": 75,
+   "math": "algebra",
+   "level": "upper",
+   "needs": "Linear quadratic survival model; solving a quadratic equation; fitting a line",
+   "needs_es": "Modelo lineal cuadrático de supervivencia; resolver una ecuación cuadrática; ajuste de una recta",
+   "why_math": "Algebraic derivation from given formula"
+  },
+  "mp-shielding-barrier": {
+   "min": 75,
+   "math": "calculus",
+   "level": "upper",
+   "needs": "Exponential attenuation of photons; inverse square law; natural logs; integrating an exponential",
+   "needs_es": "Atenuación exponencial de fotones; ley del inverso del cuadrado; logaritmos naturales; integral de una exponencial",
+   "why_math": "Student integrates the decay factor"
+  },
+  "mp-shielding-rooms": {
+   "min": 75,
+   "math": "algebra",
+   "level": "upper",
+   "needs": "Inverse square law; exponential attenuation of radiation; logarithms and tenth value layers",
+   "needs_es": "Ley del inverso del cuadrado; atenuación exponencial de radiación; logaritmos y capas decimirreductoras",
+   "why_math": "Plugging into given shielding formulas"
+  },
+  "mp-technetium-generator": {
+   "min": 75,
+   "math": "calculus",
+   "level": "upper",
+   "needs": "Radioactive decay and half life; exponentials and logs; setting a derivative to zero",
+   "needs_es": "Decaimiento radiactivo y vida media; exponenciales y logaritmos; igualar una derivada a cero",
+   "why_math": "Maximizes N_D by differentiating"
+  },
+  "mp-ultrasound-attenuation": {
+   "min": 75,
+   "math": "calculus",
+   "level": "upper",
+   "needs": "Wave intensity and decibels; exponential decay; logarithms; fitting a line",
+   "needs_es": "Intensidad de ondas y decibeles; decaimiento exponencial; logaritmos; ajuste de una recta",
+   "why_math": "Derives dI/dx from dp/dx"
+  },
+  "mp-x-ray-filtration": {
+   "min": 75,
+   "math": "calculus",
+   "level": "upper",
+   "needs": "Exponential attenuation and half value layer; natural logs; derivative of a log",
+   "needs_es": "Atenuación exponencial y capa hemirreductora; logaritmos naturales; derivada de un logaritmo",
+   "why_math": "Differentiates ln of an integral"
+  },
+  "nearest-brightest": {
+   "min": 80,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Apparent and absolute magnitude; the inverse square law; logarithms; fitting a line",
+   "needs_es": "Magnitud aparente y absoluta; ley del inverso del cuadrado; logaritmos; ajuste de una recta",
+   "why_math": "Logs and line fits only"
+  },
+  "neutral-attraction": {
+   "min": 80,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Coulomb's law and electric field; polarization of insulators; log log graphs",
+   "needs_es": "Ley de Coulomb y campo eléctrico; polarización de aislantes; gráficas log log",
+   "why_math": "Derivative given; plug into formulas"
+  },
+  "normal-modes": {
+   "min": 80,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Masses and springs; simple harmonic motion and frequency; standing waves; sine of an angle",
+   "needs_es": "Masas y resortes; movimiento armónico simple y frecuencia; ondas estacionarias; seno de un ángulo",
+   "why_math": "Given formulas, trig and line fits"
+  },
+  "nuclear-reactions": {
+   "min": 75,
+   "math": "algebra",
+   "level": "upper",
+   "needs": "Conservation of charge and nucleon number; mass energy E = mc²; conservation of momentum",
+   "needs_es": "Conservación de la carga y del número de nucleones; energía de masa E = mc²; conservación del momento",
+   "why_math": "Arithmetic with given formulas"
+  },
+  "numerical-methods": {
+   "min": 75,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Simple harmonic motion; conservation of energy; slopes on log scale graphs",
+   "needs_es": "Movimiento armónico simple; conservación de la energía; pendientes en gráficas logarítmicas",
+   "why_math": "student fits and reads graphs; no calculus steps"
+  },
+  "orbital-magnetic-moment": {
+   "min": 65,
+   "math": "algebra",
+   "level": "upper",
+   "needs": "Current loops and magnetic moment; angular momentum; Bohr model and quantum numbers",
+   "needs_es": "Espiras de corriente y momento magnético; momento angular; modelo de Bohr y números cuánticos",
+   "why_math": "Algebra with given relations, line fits"
+  },
+  "particle-reactions": {
+   "min": 75,
+   "math": "algebra",
+   "level": "upper",
+   "needs": "Conservation laws; relativistic energy and momentum; particle families and interactions",
+   "needs_es": "Leyes de conservación; energía y momento relativistas; familias de partículas e interacciones",
+   "why_math": "Plugging into the threshold formula"
+  },
+  "pendulum": {
+   "min": 70,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Simple harmonic motion and period; reading a slope; squaring data to straighten a graph",
+   "needs_es": "Movimiento armónico simple y periodo; leer una pendiente; elevar al cuadrado para linealizar una gráfica",
+   "why_math": "Differential equation given, not solved"
+  },
+  "periodic-table": {
+   "min": 75,
+   "math": "algebra",
+   "level": "upper",
+   "needs": "Quantum numbers and the exclusion principle; electron shells; ionization energy",
+   "needs_es": "Números cuánticos y principio de exclusión; capas electrónicas; energía de ionización",
+   "why_math": "Counting and plugging into one formula"
+  },
+  "photoelectric": {
+   "min": 75,
+   "math": "algebra",
+   "level": "upper",
+   "needs": "Photon energy E = hf; work function; frequency and wavelength; slope and intercept",
+   "needs_es": "Energía del fotón E = hf; función de trabajo; frecuencia y longitud de onda; pendiente y ordenada al origen",
+   "why_math": "Line fit and unit conversion"
+  },
+  "pipe-flow": {
+   "min": 80,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Fluid pressure and flow rate; viscosity; Poiseuille's law; reading a slope",
+   "needs_es": "Presión y gasto de un fluido; viscosidad; ley de Poiseuille; leer una pendiente",
+   "why_math": "Plug into given laws, fit lines"
+  },
+  "pn-junction": {
+   "min": 80,
+   "math": "algebra",
+   "level": "upper",
+   "needs": "Semiconductors, p type and n type; the exponential Boltzmann factor; natural logs",
+   "needs_es": "Semiconductores tipo p y tipo n; el factor exponencial de Boltzmann; logaritmos naturales",
+   "why_math": "Exp and log, linearized line fits"
+  },
+  "polarization": {
+   "min": 75,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Light as a transverse wave; Malus's law; reflection and refraction; trig functions",
+   "needs_es": "La luz como onda transversal; ley de Malus; reflexión y refracción; funciones trigonométricas",
+   "why_math": "Trig identities and line fits"
+  },
+  "potential-curves": {
+   "min": 50,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Potential energy and conservation of energy; force from the slope of U; reading graphs",
+   "needs_es": "Energía potencial y conservación de la energía; fuerza como pendiente de U; leer gráficas",
+   "why_math": "Slopes estimated from table values"
+  },
+  "precipitator": {
+   "min": 75,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Electric force on a charge; drag on a moving particle; exponentials and natural logs",
+   "needs_es": "Fuerza eléctrica sobre una carga; arrastre sobre una partícula; exponenciales y logaritmos naturales",
+   "why_math": "Logs and line fits only"
+  },
+  "projectile-drag": {
+   "min": 80,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Projectile motion; kinematic equations; air resistance; fitting a quadratic",
+   "needs_es": "Movimiento de proyectiles; ecuaciones cinemáticas; resistencia del aire; ajuste cuadrático",
+   "why_math": "Kinematics formulas and error propagation formula"
+  },
+  "quantum-coin": {
+   "min": 75,
+   "math": "algebra",
+   "level": "upper",
+   "needs": "Probability; superposition and measurement of a two state system; spin; trig functions",
+   "needs_es": "Probabilidad; superposición y medición en un sistema de dos estados; espín; funciones trigonométricas",
+   "why_math": "Squares, cosines and line fits"
+  },
+  "quantum-tunneling": {
+   "min": 75,
+   "math": "algebra",
+   "level": "upper",
+   "needs": "Wave function and the Schrödinger equation idea; barrier and step; exponentials and logs",
+   "needs_es": "Función de onda e idea de la ecuación de Schrödinger; barrera y escalón; exponenciales y logaritmos",
+   "why_math": "Given transmission formulas, log fit"
+  },
+  "quark-model": {
+   "min": 75,
+   "math": "algebra",
+   "level": "upper",
+   "needs": "Quarks, charge, baryon number and strangeness; conservation laws; fitting a line",
+   "needs_es": "Quarks, carga, número bariónico y extrañeza; leyes de conservación; ajuste de una recta",
+   "why_math": "Counting charges and a line fit"
+  },
+  "radiation-dose": {
+   "min": 75,
+   "math": "algebra",
+   "level": "upper",
+   "needs": "Inverse square law; exponential attenuation; natural logs; absorbed and equivalent dose",
+   "needs_es": "Ley del inverso del cuadrado; atenuación exponencial; logaritmos naturales; dosis absorbida y equivalente",
+   "why_math": "Logs and line fits"
+  },
+  "radioactive-decay": {
+   "min": 75,
+   "math": "algebra",
+   "level": "upper",
+   "needs": "Probability and random decay; exponential decay; half life; natural logs",
+   "needs_es": "Probabilidad y decaimiento aleatorio; decaimiento exponencial; vida media; logaritmos naturales",
+   "why_math": "Takes logs of the given result"
+  },
+  "rc-circuits": {
+   "min": 80,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Capacitors and resistors; Kirchhoff's loop rule; exponentials and natural logs",
+   "needs_es": "Capacitores y resistencias; regla de las mallas de Kirchhoff; exponenciales y logaritmos naturales",
+   "why_math": "Given exponentials, log line fits"
+  },
+  "relative-motion": {
+   "min": 70,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Adding velocities in different frames; projectile motion; constant acceleration",
+   "needs_es": "Suma de velocidades en distintos marcos de referencia; movimiento de proyectiles; aceleración constante",
+   "why_math": "Kinematics formulas, line fits"
+  },
+  "relativistic-energy": {
+   "min": 75,
+   "math": "algebra",
+   "level": "upper",
+   "needs": "Relativistic energy and momentum; gamma factor; circular motion in a magnetic field",
+   "needs_es": "Energía y momento relativistas; factor gamma; movimiento circular en un campo magnético",
+   "why_math": "Algebra with given relativity formulas"
+  },
+  "relativistic-momentum": {
+   "min": 75,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Newton's second law as F = dp/dt; kinetic energy and work; reading a slope",
+   "needs_es": "Segunda ley de Newton como F = dp/dt; energía cinética y trabajo; leer una pendiente",
+   "why_math": "Plugging into given formulas, fitting lines"
+  },
+  "relativity-em": {
+   "min": 75,
+   "math": "algebra",
+   "level": "upper",
+   "needs": "Length contraction; relativistic velocity addition; magnetic force on a moving charge",
+   "needs_es": "Contracción de la longitud; suma relativista de velocidades; fuerza magnética sobre una carga en movimiento",
+   "why_math": "Plugging into given formulas, fitting lines"
+  },
+  "resistivity": {
+   "min": 80,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Ohm's law; current as moving charge; fitting a straight line",
+   "needs_es": "Ley de Ohm; corriente como carga en movimiento; ajustar una línea recta",
+   "why_math": "Plugging into given formulas, fitting lines"
+  },
+  "resolution": {
+   "min": 80,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Single slit diffraction; wavelength and angle; small angle approximation",
+   "needs_es": "Difracción por una rendija; longitud de onda y ángulo; aproximación de ángulos pequeños",
+   "why_math": "Plugging into given formulas, fitting lines"
+  },
+  "resonators": {
+   "min": 75,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Standing waves in a pipe; nodes and antinodes; speed of sound; fitting a line",
+   "needs_es": "Ondas estacionarias en un tubo; nodos y antinodos; rapidez del sonido; ajustar una línea",
+   "why_math": "Plugging into given formulas, fitting lines"
+  },
+  "ripple-tank": {
+   "min": 85,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Wave speed v = fλ; two source interference; Snell's law; sines",
+   "needs_es": "Rapidez de onda v = fλ; interferencia de dos fuentes; ley de Snell; seno de un ángulo",
+   "why_math": "Plugging into given formulas, fitting lines"
+  },
+  "rlc-transients": {
+   "min": 80,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Energy in capacitors and inductors; oscillation and damping; natural logarithm",
+   "needs_es": "Energía en capacitores e inductores; oscilación y amortiguamiento; logaritmo natural",
+   "why_math": "Plugging into given formulas, fitting lines"
+  },
+  "rocket": {
+   "min": 80,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Momentum conservation; Newton's second law; natural logarithm; fitting a line",
+   "needs_es": "Conservación del momento lineal; segunda ley de Newton; logaritmo natural; ajustar una línea",
+   "why_math": "Plugging into given formulas, fitting lines"
+  },
+  "room-acoustics": {
+   "min": 75,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Sound level in decibels; sound absorption; reciprocals and fitting a line",
+   "needs_es": "Nivel de sonido en decibeles; absorción del sonido; recíprocos y ajuste de una línea",
+   "why_math": "Plugging into given formulas, fitting lines"
+  },
+  "rotation": {
+   "min": 80,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Torque; angular velocity and acceleration; rolling without slipping; angular momentum",
+   "needs_es": "Torca; velocidad y aceleración angulares; rodamiento sin deslizamiento; momento angular",
+   "why_math": "Plugging into given formulas, fitting lines"
+  },
+  "rotation-curves": {
+   "min": 80,
+   "math": "calculus",
+   "level": "intro",
+   "needs": "Circular orbits and gravity; Doppler shift; integrating a mass density",
+   "needs_es": "Órbitas circulares y gravedad; efecto Doppler; integrar una densidad de masa",
+   "why_math": "Integrates a density over radius to find mass"
+  },
+  "rotational-dynamics": {
+   "min": 85,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Torque and rotational inertia; Newton's second law; free body diagrams; fitting a line",
+   "needs_es": "Torca e inercia rotacional; segunda ley de Newton; diagramas de cuerpo libre; ajustar una línea",
+   "why_math": "Plugging into given formulas, fitting lines"
+  },
+  "ruchardt": {
+   "min": 70,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Adiabatic process; simple harmonic motion; heat capacities; pressure and force",
+   "needs_es": "Proceso adiabático; movimiento armónico simple; capacidades caloríficas; presión y fuerza",
+   "why_math": "Plugging into given formulas, fitting lines"
+  },
+  "rutherford": {
+   "min": 85,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Coulomb force and energy conservation; logarithms; counting statistics",
+   "needs_es": "Fuerza de Coulomb y conservación de la energía; logaritmos; estadística de conteo",
+   "why_math": "Plugging into given formulas, fitting lines"
+  },
+  "sampling-aliasing": {
+   "min": 70,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Frequency and period; harmonics of a tone; sine waves",
+   "needs_es": "Frecuencia y periodo; armónicos de un tono; ondas senoidales",
+   "why_math": "student fits and reads graphs; no calculus steps"
+  },
+  "seasons": {
+   "min": 80,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Earth's tilt and orbit; inverse square law; sine and cosine of an angle",
+   "needs_es": "Inclinación y órbita de la Tierra; ley del inverso del cuadrado; seno y coseno de un ángulo",
+   "why_math": "Plugging into given formulas, fitting lines"
+  },
+  "second-law": {
+   "min": 70,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Entropy as Q/T; heat engines and refrigerators; first law of thermodynamics",
+   "needs_es": "Entropía como Q/T; máquinas térmicas y refrigeradores; primera ley de la termodinámica",
+   "why_math": "Plugging into given formulas, fitting lines"
+  },
+  "semiconductor-doping": {
+   "min": 75,
+   "math": "algebra",
+   "level": "upper",
+   "needs": "Energy bands and band gap; Boltzmann factor; exponentials and logarithms",
+   "needs_es": "Bandas de energía y brecha prohibida; factor de Boltzmann; exponenciales y logaritmos",
+   "why_math": "Plugging into given formulas, fitting lines"
+  },
+  "shear-bulk": {
+   "min": 95,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Stress and strain; Young's modulus; pressure; fitting a line",
+   "needs_es": "Esfuerzo y deformación; módulo de Young; presión; ajustar una línea",
+   "why_math": "Plugging into given formulas, fitting lines"
+  },
+  "single-slit": {
+   "min": 80,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Wave interference; path difference; sine of an angle; fitting a line",
+   "needs_es": "Interferencia de ondas; diferencia de camino; seno de un ángulo; ajustar una línea",
+   "why_math": "Plugging into given formulas, fitting lines"
+  },
+  "sound-intensity": {
+   "min": 75,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Intensity and the inverse square law; decibels; logarithms",
+   "needs_es": "Intensidad y ley del inverso del cuadrado; decibeles; logaritmos",
+   "why_math": "Plugging into given formulas, fitting lines"
+  },
+  "sound-waves": {
+   "min": 75,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Wave speed and wavelength; pressure and displacement; ideal gas; fitting a line",
+   "needs_es": "Rapidez y longitud de onda; presión y desplazamiento; gas ideal; ajustar una línea",
+   "why_math": "Plugging into given formulas, fitting lines"
+  },
+  "spacetime": {
+   "min": 85,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Postulates of relativity; time dilation and length contraction; Lorentz transformation",
+   "needs_es": "Postulados de la relatividad; dilatación del tiempo y contracción de la longitud; transformación de Lorentz",
+   "why_math": "Plugging into given formulas, fitting lines"
+  },
+  "spectra": {
+   "min": 85,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Bohr model of hydrogen; photon energy and wavelength; fitting a line",
+   "needs_es": "Modelo de Bohr del hidrógeno; energía y longitud de onda del fotón; ajustar una línea",
+   "why_math": "Plugging into given formulas, fitting lines"
+  },
+  "speed-of-light": {
+   "min": 75,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Reflection of light; angular speed; lenses and image distance; fitting a line",
+   "needs_es": "Reflexión de la luz; rapidez angular; lentes y distancia imagen; ajustar una línea",
+   "why_math": "Plugging into given formulas, fitting lines"
+  },
+  "spin-resonance": {
+   "min": 75,
+   "math": "algebra",
+   "level": "upper",
+   "needs": "Electron spin and magnetic moment; energy levels in a magnetic field; photon energy",
+   "needs_es": "Espín del electrón y momento magnético; niveles de energía en un campo magnético; energía del fotón",
+   "why_math": "Plugging into given formulas, fitting lines"
+  },
+  "springs": {
+   "min": 75,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Hooke's law; simple harmonic motion; period; fitting a line",
+   "needs_es": "Ley de Hooke; movimiento armónico simple; periodo; ajustar una línea",
+   "why_math": "Plugging into given formulas, fitting lines"
+  },
+  "springs-driven": {
+   "min": 50,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Simple harmonic motion; natural frequency; damping; reading a graph",
+   "needs_es": "Movimiento armónico simple; frecuencia natural; amortiguamiento; leer una gráfica",
+   "why_math": "Plugging into given formulas, fitting lines"
+  },
+  "springs-series-parallel": {
+   "min": 55,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Hooke's law; equilibrium of forces; fitting a line",
+   "needs_es": "Ley de Hooke; equilibrio de fuerzas; ajustar una línea",
+   "why_math": "Plugging into given formulas, fitting lines"
+  },
+  "standing-waves": {
+   "min": 85,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Standing waves on a string; harmonics; wave speed; beats between two tones",
+   "needs_es": "Ondas estacionarias en una cuerda; armónicos; rapidez de onda; pulsaciones entre dos tonos",
+   "why_math": "Plugging into given formulas, fitting lines"
+  },
+  "static-equilibrium": {
+   "min": 75,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Force balance; torque about a point; free body diagrams; trigonometry",
+   "needs_es": "Equilibrio de fuerzas; torca respecto a un punto; diagramas de cuerpo libre; trigonometría",
+   "why_math": "Plugging into given formulas, fitting lines"
+  },
+  "stern-gerlach": {
+   "min": 80,
+   "math": "algebra",
+   "level": "upper",
+   "needs": "Magnetic moment; electron spin and quantized angular momentum; force on a magnetic moment",
+   "needs_es": "Momento magnético; espín del electrón y momento angular cuantizado; fuerza sobre un momento magnético",
+   "why_math": "Plugging into given formulas, fitting lines"
+  },
+  "straight-wire-fields": {
+   "min": 80,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Magnetic field of a current; right hand rule; reading a slope from a graph",
+   "needs_es": "Campo magnético de una corriente; regla de la mano derecha; leer una pendiente en una gráfica",
+   "why_math": "no derivatives or integrals required"
+  },
+  "straight-wire-fields-ampere": {
+   "min": 40,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Magnetic field of a long wire; right hand rule; what a line sum of B means",
+   "needs_es": "Campo magnético de un alambre largo; regla de la mano derecha; qué significa la suma de B a lo largo de una trayectoria",
+   "why_math": "circulation given in the data table"
+  },
+  "stress-strain": {
+   "min": 75,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Stress, strain and Young's modulus; Hooke's law; fitting a line to data",
+   "needs_es": "Esfuerzo, deformación y módulo de Young; ley de Hooke; ajustar una recta a datos",
+   "why_math": "no derivatives or integrals required"
+  },
+  "string-density": {
+   "min": 75,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Standing waves on a string; wave speed and tension; fitting a line to data",
+   "needs_es": "Ondas estacionarias en una cuerda; rapidez de onda y tensión; ajustar una recta a datos",
+   "why_math": "no derivatives or integrals required"
+  },
+  "terminal-velocity": {
+   "min": 90,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Newton's second law; free body diagrams; drag force growing with speed",
+   "needs_es": "Segunda ley de Newton; diagramas de cuerpo libre; fuerza de arrastre que crece con la rapidez",
+   "why_math": "fits on v squared; no integrating the motion"
+  },
+  "the-eye": {
+   "min": 75,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Thin lens equation; image formation by a lens; nearsighted and farsighted vision",
+   "needs_es": "Ecuación de lentes delgadas; formación de imágenes con una lente; miopía e hipermetropía",
+   "why_math": "no derivatives or integrals required"
+  },
+  "thermal-equilibrium": {
+   "min": 75,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Heat and specific heat; conservation of energy; temperature versus heat",
+   "needs_es": "Calor y calor específico; conservación de la energía; temperatura frente a calor",
+   "why_math": "no derivatives or integrals required"
+  },
+  "thermal-expansion": {
+   "min": 75,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Temperature and thermal expansion coefficients; fractional change; reading a slope from a graph",
+   "needs_es": "Temperatura y coeficientes de dilatación térmica; cambio fraccional; leer una pendiente en una gráfica",
+   "why_math": "no derivatives or integrals required"
+  },
+  "thermal-history": {
+   "min": 75,
+   "math": "algebra",
+   "level": "upper",
+   "needs": "Blackbody radiation; expansion and redshift; reading log graphs and slopes",
+   "needs_es": "Radiación de cuerpo negro; expansión y corrimiento al rojo; leer gráficas logarítmicas y pendientes",
+   "why_math": "power law slopes on log graphs only"
+  },
+  "thin-films": {
+   "min": 85,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Wave interference; path difference; phase shift on reflection; index of refraction",
+   "needs_es": "Interferencia de ondas; diferencia de trayectoria; cambio de fase por reflexión; índice de refracción",
+   "why_math": "no derivatives or integrals required"
+  },
+  "tides": {
+   "min": 80,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Newton's law of gravitation; inverse square law; fitting a line to transformed data",
+   "needs_es": "Ley de gravitación de Newton; ley del inverso del cuadrado; ajustar una recta a datos transformados",
+   "why_math": "no derivatives or integrals required"
+  },
+  "timbre": {
+   "min": 75,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Sound waves, frequency and harmonics; decibels; adding waves",
+   "needs_es": "Ondas sonoras, frecuencia y armónicos; decibeles; suma de ondas",
+   "why_math": "no derivatives or integrals required"
+  },
+  "transformers": {
+   "min": 90,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Faraday's law of induction; AC voltage and current; power as V times I",
+   "needs_es": "Ley de Faraday; voltaje y corriente alterna; potencia como V por I",
+   "why_math": "no derivatives or integrals required"
+  },
+  "two-speaker": {
+   "min": 75,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Wave interference; path difference; wavelength, frequency and wave speed",
+   "needs_es": "Interferencia de ondas; diferencia de trayectoria; longitud de onda, frecuencia y rapidez de onda",
+   "why_math": "no derivatives or integrals required"
+  },
+  "ubv-colors": {
+   "min": 80,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Blackbody radiation; magnitudes and color index; Wien's law",
+   "needs_es": "Radiación de cuerpo negro; magnitudes e índice de color; ley de Wien",
+   "why_math": "logarithms and given formulas only"
+  },
+  "ultrasound": {
+   "min": 75,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Speed of sound; echoes and reflection; the Doppler effect",
+   "needs_es": "Rapidez del sonido; ecos y reflexión; efecto Doppler",
+   "why_math": "no derivatives or integrals required"
+  },
+  "uncertainty-principle": {
+   "min": 75,
+   "math": "algebra",
+   "level": "upper",
+   "needs": "Wave functions and wave packets; de Broglie wavelength; position and momentum spreads",
+   "needs_es": "Funciones de onda y paquetes de onda; longitud de onda de de Broglie; dispersión en posición y momento",
+   "why_math": "fits to given formulas; no derivations"
+  },
+  "van-de-graaff": {
+   "min": 80,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Electric potential and capacitance of a sphere; current as charge per time; dielectric breakdown",
+   "needs_es": "Potencial eléctrico y capacitancia de una esfera; corriente como carga por tiempo; ruptura dieléctrica",
+   "why_math": "no derivatives or integrals required"
+  },
+  "vectors": {
+   "min": 95,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Components of a vector; trigonometry; average acceleration; dot and cross products",
+   "needs_es": "Componentes de un vector; trigonometría; aceleración media; productos punto y cruz",
+   "why_math": "no derivatives or integrals required"
+  },
+  "velocity-addition": {
+   "min": 90,
+   "math": "algebra",
+   "level": "upper",
+   "needs": "Special relativity postulates; Galilean velocity addition; Lorentz factor",
+   "needs_es": "Postulados de la relatividad especial; suma galileana de velocidades; factor de Lorentz",
+   "why_math": "plugging into given formulas"
+  },
+  "viscometer": {
+   "min": 85,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Forces on a falling object; buoyancy; viscous drag and Stokes' law",
+   "needs_es": "Fuerzas sobre un cuerpo que cae; flotación; arrastre viscoso y ley de Stokes",
+   "why_math": "no derivatives or integrals required"
+  },
+  "wave-particle-duality": {
+   "min": 85,
+   "math": "algebra",
+   "level": "upper",
+   "needs": "de Broglie wavelength; two slit interference; photons and electrons as quanta",
+   "needs_es": "Longitud de onda de de Broglie; interferencia de doble rendija; fotones y electrones como cuantos",
+   "why_math": "no derivatives or integrals required"
+  },
+  "wave-power": {
+   "min": 75,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Waves on a string; wave speed; energy and power of a wave",
+   "needs_es": "Ondas en una cuerda; rapidez de onda; energía y potencia de una onda",
+   "why_math": "no derivatives or integrals required"
+  },
+  "white-dwarf-cooling": {
+   "min": 75,
+   "math": "algebra",
+   "level": "upper",
+   "needs": "Luminosity and stellar structure; white dwarfs; reading log log graphs and slopes",
+   "needs_es": "Luminosidad y estructura estelar; enanas blancas; leer gráficas log log y pendientes",
+   "why_math": "Mestel law given; power law slope fits"
+  },
+  "wire-force": {
+   "min": 70,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Magnetic force on a current; right hand rule; torque on a loop",
+   "needs_es": "Fuerza magnética sobre una corriente; regla de la mano derecha; torca sobre una espira",
+   "why_math": "no derivatives or integrals required"
+  },
+  "x-ray-diffraction": {
+   "min": 75,
+   "math": "algebra",
+   "level": "intro",
+   "needs": "Wave interference; Bragg's law; electromagnetic spectrum",
+   "needs_es": "Interferencia de ondas; ley de Bragg; espectro electromagnético",
+   "why_math": "no derivatives or integrals required"
+  },
+  "x-ray-spectra": {
+   "min": 75,
+   "math": "algebra",
+   "level": "upper",
+   "needs": "Photon energy and wavelength; Bragg's law; Bohr model energy levels",
+   "needs_es": "Energía y longitud de onda del fotón; ley de Bragg; niveles de energía de Bohr",
+   "why_math": "no derivatives or integrals required"
+  },
+  "zeeman-effect": {
+   "min": 80,
+   "math": "algebra",
+   "level": "upper",
+   "needs": "Atomic energy levels; magnetic moment and spin; angular momentum quantum numbers",
+   "needs_es": "Niveles de energía atómicos; momento magnético y espín; números cuánticos de momento angular",
+   "why_math": "no derivatives or integrals required"
+  }
+ }
+}

@@ -92,8 +92,16 @@
     if (document.getElementById('vd-panel-css')) return;
     var s = mk('style'); s.id = 'vd-panel-css'; s.textContent = CSS; document.head.appendChild(s);
   }
-  /* a Play button whose label says Pause, Stop or Hold is running */
-  function running(b) { return /^\s*(pause|stop|hold|freeze)/i.test(b.textContent || ''); }
+  /* a Play button whose label says Pause, Stop or Hold is running (in English, or translated by i18n.js: 2026-11-16, Spanish
+     "Pausa" showed the Play icon while running) */
+  var RUNW = ['Pause', 'Stop', 'Hold', 'Freeze'];
+  function running(b) {
+    var t = (b.textContent || '').trim().toLowerCase();
+    return RUNW.some(function (w) {
+      var tr = window.VDI18N && VDI18N.lang !== 'en' && VDI18N.t ? String(VDI18N.t(w)).toLowerCase() : '';
+      return t.indexOf(w.toLowerCase()) === 0 || (tr && t.indexOf(tr) === 0);
+    });
+  }
   function mark(b) { b.setAttribute('data-vd-run', running(b) ? 'on' : 'off'); }
 
   /* every button in the group takes the shared button look; a step button's own arrow glyphs give way to the panel's mark

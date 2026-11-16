@@ -16,6 +16,9 @@ import re
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import activities as ACT   # activity labels and Start here (2026-11-16)
+
 ROOT = Path(__file__).resolve().parent.parent
 MAP = ROOT / 'curriculum' / 'textbook-map.json'
 INDEX = ROOT / 'index.html'
@@ -403,10 +406,15 @@ def card(name, demo, unit_secs, cards, notes, cid=None, required=None):
     secs = sorted([s for s in demo['sections'] if (s['vol'], s['sec']) in unit_secs], key=sec_key)
     chips = ''.join(f'<li><span class="sec">{s["vol"]}:{s["sec"]}</span> {esc(s["title"])}</li>' for s in secs)
     links = [f'<a class="go" href="demos/{name}.html{q}">Open demo</a>']
+    lab, sh = ACT.labels(), ACT.start_here()
+    if name in sh:   # Start here, 5 min (2026-11-16)
+        links.append(f'<a href="{ACT.start_href(name, sh[name], "course=" + cid if cid else "")}">Start here<span class="wsm">5 min</span></a>')
     hs = course_handouts(cid, demo)
     for i, h in sorted(enumerate(hs, 1), key=lambda x: x[1] != required):
         tag = '<strong class="req">Required</strong> ' if h == required else ''
-        links.append(f'<a href="curriculum/labs/students/{h}.html">{tag}{esc(course_label(cid, h, i if len(hs) > 1 else None))}</a>')
+        meta = f'<span class="wsm">{ACT.sheet_meta(h, lab.get(h))}</span>' if lab.get(h) else ''
+        tip = f' title="Before this: {esc(lab[h]["needs"])}"' if lab.get(h) else ''
+        links.append(f'<a href="curriculum/labs/students/{h}.html"{tip}>{tag}{esc(course_label(cid, h, i if len(hs) > 1 else None))}{meta}</a>')
     if name in notes:
         links.append(f'<a href="notes/{name}.html">Notes</a>')
     role = 'Lab' if demo['role'] == 'lab' else 'Demo'
@@ -644,8 +652,12 @@ def topic_card(name, demo, topic, where, cards, notes, ctitle):
     modules that use it, and the other topics it is in. Its links open the demo with ?topic= so it steps through this topic."""
     c, q = cards[name], f'?topic={topic["id"]}'
     hs = all_handouts(demo)
+    lab, sh = ACT.labels(), ACT.start_here()
     links = [f'<a class="go" href="demos/{name}.html{q}">Open demo</a>']
-    links += [f'<a href="curriculum/labs/students/{h}.html">{esc(handout_label(h, i if len(hs) > 1 else None))}</a>' for i, h in enumerate(hs, 1)]
+    if name in sh:   # Start here, 5 min (and Explore further, 15 min), 2026-11-16
+        links.append(f'<a href="{ACT.start_href(name, sh[name], "topic=" + topic["id"])}">Start here<span class="wsm">5 min{" · explore 15 min" if sh[name].get("explore") else ""}</span></a>')
+    links += [f'<a href="curriculum/labs/students/{h}.html">{esc(handout_label(h, i if len(hs) > 1 else None))}'
+              + (f'<span class="wsm">{ACT.sheet_meta(h, lab.get(h))}</span>' if lab.get(h) else '') + '</a>' for i, h in enumerate(hs, 1)]
     if name in notes:
         links.append(f'<a href="notes/{name}.html">Notes</a>')
     used = [x for x in demo['course'] if x in ctitle and x not in SAME_AS]
@@ -658,15 +670,20 @@ def topic_card(name, demo, topic, where, cards, notes, ctitle):
     secs = sorted(demo['sections'], key=sec_key)
     if secs:
         rows.append('OpenStax ' + ' '.join(f'<span class="sec">{s["vol"]}:{s["sec"]}</span>' for s in secs[:6]) + (' …' if len(secs) > 6 else ''))
+    needs = [(i, lab[h]['needs']) for i, h in enumerate(hs, 1) if lab.get(h)]
+    if needs:   # what a student should know first, per worksheet
+        rows.append('<b>Before the worksheet' + ('s' if len(needs) > 1 else '') + ':</b> '
+                    + ' · '.join((f'{i}. ' if len(hs) > 1 else '') + esc(n) for i, n in needs))
     role = 'Lab' if demo['role'] == 'lab' else 'Demo'
     flag = DEMO_NOTE.get(demo['status'])
-    return f'''      <li class="item">
+    act = ACT.demo_kinds(name, hs, lab, sh)
+    return f'''      <li class="item" data-act="{act}">
         <a class="pic" href="demos/{name}.html{q}" tabindex="-1" aria-hidden="true">{thumb(name, '')}</a>
         <div class="body">
           <p class="kind"><span class="role role-{demo['role']}">{role}</span>{f'<span class="flag">{flag}</span>' if flag else ''}</p>
           <h3><a href="demos/{name}.html{q}">{esc(c['title'])}</a></h3>
           <p>{c['desc']}</p>
-          {''.join(f'<p class="used">{r}</p>' for r in rows)}
+          {''.join(f'<p class="used{" needs" if r.startswith("<b>Before") else ""}">{r}</p>' for r in rows)}
           <p class="links">{' '.join(links)}</p>
         </div>
       </li>'''
@@ -684,10 +701,12 @@ def topic_page(fam, topic, t, m, cards, notes):   # tab='demos' is passed to pag
     jump = ''.join(f'<li><a href="topics/{x["id"]}.html"{" aria-current=\"page\"" if x is topic else ""}>{esc(x["title"])}</a></li>' for x in fam['topics'])
     items = '\n'.join(topic_card(n, demos[n], topic, where[n], cards, notes, ctitle) for n in names)
     body = f'''  <section class="unit" aria-label="{esc(topic['title'])} demos">
+    {ACT.FILTER_BAR}
     <ul class="list">
 {items}
     </ul>
-  </section>'''
+  </section>
+{ACT.FILTER_JS}'''
     how = ('Every demo on this subject, from every course and module, with all of its worksheets. Opened from here, a demo steps through '
            'this topic with its previous and next links. The other topics in ' + esc(fam['title']) + ' are in the bar above; the '
            '<a href="index.html#topics">home page</a> lists them all.')
@@ -822,6 +841,7 @@ def page_shell(title, sub, lede, facts, jump, body, how, base=False, back=('inde
 {TOPIC_CSS}
 {TILE_CSS}
 {SEARCH_CSS}
+{ACT.FILTER_CSS}
 </style>
 {PAPER_LINK}
 </head>
@@ -1038,6 +1058,7 @@ def tiles(m, cards, t):
 <section class="wrap find" id="topics" aria-labelledby="find-h">
   <h2 id="find-h">Find a demo</h2>
   {SEARCH_BOX}
+  {ACT.FILTER_BAR}
   <p class="allnote">Every demo on the site, by subject. Open a subject to see its demos. A demo can be under more than one topic; each is listed once per subject.</p>
 {ALL_SUBJ}</section>
 {chr(10).join(fams)}
@@ -1055,7 +1076,7 @@ def tiles(m, cards, t):
     <div class="cta"><a class="pbtn primary" href="courses.html">See the courses</a>{clinks}</div>
   </div>
 </section>
-<script src="search.js" defer></script> {FAM_OPEN}
+<script src="search.js" defer></script> {FAM_OPEN} {ACT.FILTER_JS}
 {TILE_END}{SPY}'''
 
 
@@ -1063,8 +1084,11 @@ def demo_card(name, c, d):
     """A demo on the home page: a pasted photograph, the title, two lines of description and its worksheets in handwriting."""
     hs = (d or {}).get('handouts') or []
     ws = f'<span class="ws hand">{len(hs)} worksheet{"s" if len(hs) != 1 else ""}</span>' if hs else ''
-    return (f'    <li><a class="card" href="demos/{name}.html">{thumb(name, "")}'
-            f'<span class="body"><h3>{esc(c["title"])}</h3><p>{c["desc"]}</p>{ws}</span></a></li>')
+    lab, sh = ACT.labels(), ACT.start_here()
+    tag = '<span class="sh-tag">Start here</span>' if name in sh else ''
+    act = ACT.demo_kinds(name, all_handouts(d) if d else [], lab, sh)
+    return (f'    <li data-act="{act}"><a class="card" href="demos/{name}.html">{thumb(name, "")}'
+            f'<span class="body"><h3>{esc(c["title"])}</h3><p>{c["desc"]}</p>{tag}{ws}</span></a></li>')
 
 
 def courses_page(m, cards, t):
@@ -1604,7 +1628,7 @@ def build():
                  f'\n      <li><span><strong>{len(LISTED)}</strong> course{"s" if len(LISTED) != 1 else ""}</span></li>'
                  f'\n      <li><span><strong>{n_topics}</strong> topics</span></li>', idx, count=1)
     idx = re.sub(r'\n/\* course tiles \(tools/courses.py\) \*/.*?\n</style>', '\n</style>', idx, count=1, flags=re.S)
-    idx = idx.replace('\n</style>', TILE_CSS.rstrip() + '\n' + SEARCH_CSS.strip('\n') + '\n</style>', 1)
+    idx = idx.replace('\n</style>', TILE_CSS.rstrip() + '\n' + SEARCH_CSS.strip('\n') + '\n' + ACT.FILTER_CSS.strip('\n') + '\n</style>', 1)
     # the hero picture's list: every catalog demo with both thumbnails (the script picks one at random)
     hero = [[d['demo'], d['title']] for sub in CATALOG_DATA()['subjects'] for d in sub['demos']
             if (ROOT / 'thumbs' / f"{d['demo']}-dark.webp").exists() and (ROOT / 'thumbs' / f"{d['demo']}-light.webp").exists()]
@@ -1613,6 +1637,7 @@ def build():
     out[INDEX] = idx
     out[ROOT / 'search.js'] = search_js(m, cards, t)
     out[ROOT / 'demos' / 'lib' / 'nav.js'] = nav_js(m, cards, t)
+    out[ROOT / 'demos' / 'lib' / 'starthere.js'] = ACT.starthere_js()
     out[ROOT / 'demos' / 'lib' / 'vd.js'] = course_ws_js(m, cards)
     out[ROOT / '404.html'] = notfound_page(m)
     return out

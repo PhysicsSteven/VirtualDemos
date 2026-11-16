@@ -387,6 +387,25 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
   html:has(.tools .filter) { scroll-padding-top: 108px; }
 }
 
+
+/* activity filter and labels (tools/activities.py) */
+.actfilter { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 6px; margin: 14px 0 4px; }
+.actfilter .afl { font-family: var(--font-mono); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); margin: 0 2px 0 6px; }
+.actfilter .afl:first-child { margin-left: 0; }
+.actfilter button { min-height: 34px; padding: 4px 11px; font: inherit; font-size: 0.86rem; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 999px; cursor: pointer; }
+.actfilter button:hover { border-color: var(--accent); }
+.actfilter button[aria-pressed="true"] { color: var(--canvas); background: var(--accent); border-color: var(--accent); font-weight: 700; }
+.actfilter button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.actfilter .afn { flex: 1 1 100%; margin: 2px 0 0; font-size: 0.85rem; color: var(--muted); min-height: 1.2em; }
+[data-act].af-hide { display: none !important; }
+.find .actfilter + .allnote { margin: 10px 0 22px; }
+.fam.af-hide { display: none; }
+.sh-tag { display: inline-block; margin-right: 6px; padding: 1px 7px; font-size: 0.74rem; font-weight: 700; border-radius: 999px; color: var(--accent); border: 1px solid color-mix(in srgb, var(--accent) 55%, transparent); }
+.links .wsm { display: inline-block; text-decoration: none; font-size: 0.78rem; color: var(--muted); font-weight: 400; margin-left: 5px; }
+.used.needs { font-size: 0.85rem; }
+.used.needs b { font-weight: 700; }
+@media (max-width: 520px) { .actfilter .afl { flex: 1 1 100%; margin-left: 0; } }
+
 </style>
 <link rel="stylesheet" href="demos/lib/paper.css">
 </head>
@@ -413,69 +432,106 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
 <main class="wrap">
   <p class="how">Every demo on this subject, from every course and module, with all of its worksheets. Opened from here, a demo steps through this topic with its previous and next links. The other topics in Modern physics are in the bar above; the <a href="index.html#topics">home page</a> lists them all.</p>
   <section class="unit" aria-label="Nuclear and particle physics demos">
+    <div class="actfilter" role="group" aria-label="Filter by activity"><span class="afl">Activity</span><button type="button" data-af="len:" aria-pressed="true">Any</button><button type="button" data-af="len:start" aria-pressed="false">Start here, 5 min</button><button type="button" data-af="len:explore" aria-pressed="false">Explore, 15 min</button><button type="button" data-af="len:sheet" aria-pressed="false">Worksheet, up to 75 min</button><span class="afl">Math</span><button type="button" data-af="math:" aria-pressed="true">Any</button><button type="button" data-af="math:algebra" aria-pressed="false">Algebra</button><button type="button" data-af="math:calculus" aria-pressed="false">Calculus</button><p class="afn" aria-live="polite"></p></div>
     <ul class="list">
-      <li class="item">
+      <li class="item" data-act="sheet-algebra">
         <a class="pic" href="demos/rutherford.html?topic=nuclear-particles" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/rutherford-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/rutherford-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-demo">Demo</span></p>
           <h3><a href="demos/rutherford.html?topic=nuclear-particles">Rutherford Scattering</a></h3>
           <p>Fire alpha particles at a gold nucleus one at a time or as a beam, count them by angle against 1/sin⁴(θ/2), and see why Thomson's plum pudding atom can never send one back.</p>
-          <p class="used">In <a href="modern.html">Modern Physics</a> · <a href="medical-physics.html">Medical Physics</a></p><p class="used">OpenStax <span class="sec">3:6.4</span> <span class="sec">3:10.1</span></p>
-          <p class="links"><a class="go" href="demos/rutherford.html?topic=nuclear-particles">Open demo</a> <a href="curriculum/labs/students/rutherford.html">Worksheet: Rutherford Scattering</a> <a href="notes/rutherford.html">Notes</a></p>
+          <p class="used">In <a href="modern.html">Modern Physics</a> · <a href="medical-physics.html">Medical Physics</a></p><p class="used">OpenStax <span class="sec">3:6.4</span> <span class="sec">3:10.1</span></p><p class="used needs"><b>Before the worksheet:</b> Coulomb force and energy conservation; logarithms; counting statistics</p>
+          <p class="links"><a class="go" href="demos/rutherford.html?topic=nuclear-particles">Open demo</a> <a href="curriculum/labs/students/rutherford.html">Worksheet: Rutherford Scattering<span class="wsm">85 min · algebra</span></a> <a href="notes/rutherford.html">Notes</a></p>
         </div>
       </li>
-      <li class="item">
+      <li class="item" data-act="sheet-algebra">
         <a class="pic" href="demos/binding-energy.html?topic=nuclear-particles" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/binding-energy-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/binding-energy-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-lab">Lab</span></p>
           <h3><a href="demos/binding-energy.html?topic=nuclear-particles">Nuclear Binding Energy</a></h3>
           <p>The curve of binding energy from 2,550 measured AME2020 masses: why fusing light nuclei and splitting heavy ones both release energy, why stars stop at iron, the liquid drop model term by term, magic numbers and the chart of nuclides.</p>
-          <p class="used">In <a href="modern.html">Modern Physics</a> · <a href="medical-physics.html">Medical Physics</a></p><p class="used">OpenStax <span class="sec">3:5.9</span> <span class="sec">3:10.1</span> <span class="sec">3:10.2</span> <span class="sec">3:10.5</span> <span class="sec">3:10.6</span></p>
-          <p class="links"><a class="go" href="demos/binding-energy.html?topic=nuclear-particles">Open demo</a> <a href="curriculum/labs/students/binding-energy.html">Worksheet: The Curve of Binding Energy</a> <a href="notes/binding-energy.html">Notes</a></p>
+          <p class="used">In <a href="modern.html">Modern Physics</a> · <a href="medical-physics.html">Medical Physics</a></p><p class="used">OpenStax <span class="sec">3:5.9</span> <span class="sec">3:10.1</span> <span class="sec">3:10.2</span> <span class="sec">3:10.5</span> <span class="sec">3:10.6</span></p><p class="used needs"><b>Before the worksheet:</b> Mass and energy, E = mc²; nuclear structure; binding energy per nucleon; reading graphs</p>
+          <p class="links"><a class="go" href="demos/binding-energy.html?topic=nuclear-particles">Open demo</a> <a href="curriculum/labs/students/binding-energy.html">Worksheet: The Curve of Binding Energy<span class="wsm">75 min · algebra</span></a> <a href="notes/binding-energy.html">Notes</a></p>
         </div>
       </li>
-      <li class="item">
+      <li class="item" data-act="start explore sheet-algebra sheet-calculus">
         <a class="pic" href="demos/radioactive-decay.html?topic=nuclear-particles" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/radioactive-decay-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/radioactive-decay-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-lab">Lab</span></p>
           <h3><a href="demos/radioactive-decay.html?topic=nuclear-particles">Radioactive Decay</a></h3>
           <p>A grid of nuclei that each decay at random, and a count that halves every half life anyway. Carbon 14 dating, iodine 131 and decay chains where a daughter builds up and dies away.</p>
-          <p class="used">In <a href="modern.html">Modern Physics</a> · <a href="astro-2203.html">Astro 2203</a> · <a href="medical-physics.html">Medical Physics</a> · <a href="astro.html">Astronomy</a></p><p class="used">OpenStax <span class="sec">3:7.6</span> <span class="sec">3:10.3</span> <span class="sec">3:10.4</span></p>
-          <p class="links"><a class="go" href="demos/radioactive-decay.html?topic=nuclear-particles">Open demo</a> <a href="curriculum/labs/students/radioactive-decay.html">Worksheet 1: Measuring a Half Life</a> <a href="curriculum/labs/students/decay-chains.html">Worksheet 2: Parent and Daughter</a> <a href="curriculum/labs/students/alpha-and-beta-decay.html">Worksheet 3: Alpha and Beta Decay</a> <a href="curriculum/labs/students/mp-technetium-generator.html">Worksheet 4: A Technetium Generator (Medical Physics)</a> <a href="notes/radioactive-decay.html">Notes</a></p>
+          <p class="used">In <a href="modern.html">Modern Physics</a> · <a href="astro-2203.html">Astro 2203</a> · <a href="medical-physics.html">Medical Physics</a> · <a href="astro.html">Astronomy</a></p><p class="used">OpenStax <span class="sec">3:7.6</span> <span class="sec">3:10.3</span> <span class="sec">3:10.4</span></p><p class="used needs"><b>Before the worksheets:</b> 1. Probability and random decay; exponential decay; half life; natural logs · 2. Exponential decay and half life; decay constant; natural logarithms; reading a graph · 3. Radioactive decay and half life; quantum tunneling; relativistic energy; logarithms and linear fits · 4. Radioactive decay and half life; exponentials and logs; setting a derivative to zero</p>
+          <p class="links"><a class="go" href="demos/radioactive-decay.html?topic=nuclear-particles">Open demo</a> <a href="demos/radioactive-decay.html?start=1&topic=nuclear-particles">Start here<span class="wsm">5 min · explore 15 min</span></a> <a href="curriculum/labs/students/radioactive-decay.html">Worksheet 1: Measuring a Half Life<span class="wsm">75 min · algebra</span></a> <a href="curriculum/labs/students/decay-chains.html">Worksheet 2: Parent and Daughter<span class="wsm">75 min · algebra</span></a> <a href="curriculum/labs/students/alpha-and-beta-decay.html">Worksheet 3: Alpha and Beta Decay<span class="wsm">75 min · algebra</span></a> <a href="curriculum/labs/students/mp-technetium-generator.html">Worksheet 4: A Technetium Generator (Medical Physics)<span class="wsm">75 min · calculus</span></a> <a href="notes/radioactive-decay.html">Notes</a></p>
         </div>
       </li>
-      <li class="item">
+      <li class="item" data-act="start explore sheet-algebra sheet-calculus">
         <a class="pic" href="demos/nuclear-reactions.html?topic=nuclear-particles" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/nuclear-reactions-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/nuclear-reactions-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-lab">Lab</span></p>
           <h3><a href="demos/nuclear-reactions.html?topic=nuclear-particles">Nuclear Reactions, Fission and Fusion</a></h3>
           <p>Balance a nuclear reaction and weigh it with AME2020 masses to find Q and the threshold energy; grow a chain reaction and find the critical size of a uranium or plutonium sphere; see how the Gamow peak lets the Sun fuse protons at 15 million kelvin; measure the dose from a gamma source with distance and shielding.</p>
-          <p class="used">In <a href="modern.html">Modern Physics</a> · <a href="medical-physics.html">Medical Physics</a></p><p class="used">OpenStax <span class="sec">3:10.4</span> <span class="sec">3:10.5</span> <span class="sec">3:10.6</span> <span class="sec">3:10.7</span></p>
-          <p class="links"><a class="go" href="demos/nuclear-reactions.html?topic=nuclear-particles">Open demo</a> <a href="curriculum/labs/students/nuclear-reactions.html">Worksheet 1: Nuclear Reactions</a> <a href="curriculum/labs/students/critical-mass.html">Worksheet 2: Chain Reactions and Critical Size</a> <a href="curriculum/labs/students/fusion-gamow.html">Worksheet 3: Fusion and the Gamow Peak</a> <a href="curriculum/labs/students/radiation-dose.html">Worksheet 4: Radiation Dose and Shielding</a> <a href="curriculum/labs/students/mp-shielding-barrier.html">Worksheet 5: Shielding a PET Uptake Room (Medical Physics)</a> <a href="notes/nuclear-reactions.html">Notes</a></p>
+          <p class="used">In <a href="modern.html">Modern Physics</a> · <a href="medical-physics.html">Medical Physics</a></p><p class="used">OpenStax <span class="sec">3:10.4</span> <span class="sec">3:10.5</span> <span class="sec">3:10.6</span> <span class="sec">3:10.7</span></p><p class="used needs"><b>Before the worksheets:</b> 1. Conservation of charge and nucleon number; mass energy E = mc²; conservation of momentum · 2. Exponential growth; neutron multiplication; sphere volume and surface area · 3. Coulomb repulsion; quantum tunneling; Maxwell–Boltzmann energy distribution; logarithmic graphs · 4. Inverse square law; exponential attenuation; natural logs; absorbed and equivalent dose · 5. Exponential attenuation of photons; inverse square law; natural logs; integrating an exponential</p>
+          <p class="links"><a class="go" href="demos/nuclear-reactions.html?topic=nuclear-particles">Open demo</a> <a href="demos/nuclear-reactions.html?start=1&topic=nuclear-particles">Start here<span class="wsm">5 min · explore 15 min</span></a> <a href="curriculum/labs/students/nuclear-reactions.html">Worksheet 1: Nuclear Reactions<span class="wsm">75 min · algebra</span></a> <a href="curriculum/labs/students/critical-mass.html">Worksheet 2: Chain Reactions and Critical Size<span class="wsm">75 min · algebra</span></a> <a href="curriculum/labs/students/fusion-gamow.html">Worksheet 3: Fusion and the Gamow Peak<span class="wsm">75 min · algebra</span></a> <a href="curriculum/labs/students/radiation-dose.html">Worksheet 4: Radiation Dose and Shielding<span class="wsm">75 min · algebra</span></a> <a href="curriculum/labs/students/mp-shielding-barrier.html">Worksheet 5: Shielding a PET Uptake Room (Medical Physics)<span class="wsm">75 min · calculus</span></a> <a href="notes/nuclear-reactions.html">Notes</a></p>
         </div>
       </li>
-      <li class="item">
+      <li class="item" data-act="sheet-algebra">
         <a class="pic" href="demos/gamma-spectroscopy.html?topic=nuclear-particles" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/gamma-spectroscopy-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/gamma-spectroscopy-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-lab">Lab</span></p>
           <h3><a href="demos/gamma-spectroscopy.html?topic=nuclear-particles">Gamma Spectroscopy</a></h3>
           <p>A virtual NaI(Tl) spectrometer in a lead castle: set the high voltage and gain, acquire Cs-137, Co-60, Na-22 or Ba-133 spectra on a multichannel analyzer, mark peaks, calibrate, measure resolution and lead attenuation, and identify an unknown source.</p>
-          <p class="used">In <a href="modern.html">Modern Physics</a> · <a href="medical-physics.html">Medical Physics</a></p><p class="used">OpenStax <span class="sec">3:10.3</span> <span class="sec">3:10.7</span> <span class="sec">3:11.4</span></p>
-          <p class="links"><a class="go" href="demos/gamma-spectroscopy.html?topic=nuclear-particles">Open demo</a> <a href="curriculum/labs/students/gamma-spectroscopy.html">Worksheet 1: Calibrating a Detector</a> <a href="curriculum/labs/students/gamma-absorption.html">Worksheet 2: Absorbing Gamma Rays</a> <a href="notes/gamma-spectroscopy.html">Notes</a></p>
+          <p class="used">In <a href="modern.html">Modern Physics</a> · <a href="medical-physics.html">Medical Physics</a></p><p class="used">OpenStax <span class="sec">3:10.3</span> <span class="sec">3:10.7</span> <span class="sec">3:11.4</span></p><p class="used needs"><b>Before the worksheets:</b> 1. Gamma rays from nuclear levels; photon energy; Compton scattering; fitting a line · 2. Exponential decay; inverse square law; natural logarithms and slopes</p>
+          <p class="links"><a class="go" href="demos/gamma-spectroscopy.html?topic=nuclear-particles">Open demo</a> <a href="curriculum/labs/students/gamma-spectroscopy.html">Worksheet 1: Calibrating a Detector<span class="wsm">75 min · algebra</span></a> <a href="curriculum/labs/students/gamma-absorption.html">Worksheet 2: Absorbing Gamma Rays<span class="wsm">75 min · algebra</span></a> <a href="notes/gamma-spectroscopy.html">Notes</a></p>
         </div>
       </li>
-      <li class="item">
+      <li class="item" data-act="start explore sheet-algebra">
         <a class="pic" href="demos/particles.html?topic=nuclear-particles" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/particles-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/particles-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-lab">Lab</span></p>
           <h3><a href="demos/particles.html?topic=nuclear-particles">Particles, Quarks and Conservation Laws</a></h3>
           <p>The Standard Model and its particles with PDG 2024 data; test decays and collisions against the conservation laws and name the force that drives them; build hadrons from colored quarks and predict the Ω⁻; then fit tracks in a bubble chamber and weigh a K⁰ or Λ⁰ from its decay.</p>
-          <p class="used">In <a href="modern.html">Modern Physics</a></p><p class="used">OpenStax <span class="sec">3:11.1</span> <span class="sec">3:11.2</span> <span class="sec">3:11.3</span> <span class="sec">3:11.4</span> <span class="sec">3:11.5</span></p>
-          <p class="links"><a class="go" href="demos/particles.html?topic=nuclear-particles">Open demo</a> <a href="curriculum/labs/students/particle-reactions.html">Worksheet 1: Conservation Laws for Particle Reactions</a> <a href="curriculum/labs/students/quark-model.html">Worksheet 2: Building Hadrons from Quarks</a> <a href="curriculum/labs/students/invariant-mass.html">Worksheet 3: Invariant Mass in a Bubble Chamber</a> <a href="notes/particles.html">Notes</a></p>
+          <p class="used">In <a href="modern.html">Modern Physics</a></p><p class="used">OpenStax <span class="sec">3:11.1</span> <span class="sec">3:11.2</span> <span class="sec">3:11.3</span> <span class="sec">3:11.4</span> <span class="sec">3:11.5</span></p><p class="used needs"><b>Before the worksheets:</b> 1. Conservation laws; relativistic energy and momentum; particle families and interactions · 2. Quarks, charge, baryon number and strangeness; conservation laws; fitting a line · 3. Relativistic energy and momentum; conservation in decays; charged particle circling in a magnetic field</p>
+          <p class="links"><a class="go" href="demos/particles.html?topic=nuclear-particles">Open demo</a> <a href="demos/particles.html?set=exSel~ex112a!labBlind~0!g%3AviewSeg~rx!g%3Apresets~beta&start=1&topic=nuclear-particles">Start here<span class="wsm">5 min · explore 15 min</span></a> <a href="curriculum/labs/students/particle-reactions.html">Worksheet 1: Conservation Laws for Particle Reactions<span class="wsm">75 min · algebra</span></a> <a href="curriculum/labs/students/quark-model.html">Worksheet 2: Building Hadrons from Quarks<span class="wsm">75 min · algebra</span></a> <a href="curriculum/labs/students/invariant-mass.html">Worksheet 3: Invariant Mass in a Bubble Chamber<span class="wsm">80 min · algebra</span></a> <a href="notes/particles.html">Notes</a></p>
         </div>
       </li>
     </ul>
   </section>
+<script>/* activity filter (tools/activities.py) */ (function () {
+  var bar = document.querySelector('.actfilter'); if (!bar) return;
+  var st = { len: '', math: '' }, KEY = 'vd-filter', note = bar.querySelector('.afn');
+  try { var s = JSON.parse(sessionStorage.getItem(KEY) || '{}'); if (s && typeof s === 'object') { st.len = s.len || ''; st.math = s.math || ''; } } catch (_) {}
+  var cards = [].slice.call(document.querySelectorAll('[data-act]'));
+  var fams = [].slice.call(document.querySelectorAll('section.fam'));
+  var match = function (a) {
+    var k = (a || '').split(' ');
+    var sheetOk = function () { return st.math ? k.indexOf('sheet-' + st.math) >= 0 : k.some(function (x) { return x.indexOf('sheet-') === 0; }); };
+    if (st.len === 'start') return k.indexOf('start') >= 0 && st.math !== 'calculus';
+    if (st.len === 'explore') return k.indexOf('explore') >= 0 && st.math !== 'calculus';
+    if (st.len === 'sheet') return sheetOk();
+    if (!st.math) return true;
+    return sheetOk() || (st.math === 'algebra' && k.indexOf('start') >= 0);
+  };
+  var apply = function () {
+    [].forEach.call(bar.querySelectorAll('button'), function (b) { var p = b.getAttribute('data-af').split(':'); b.setAttribute('aria-pressed', String(st[p[0]] === p[1])); });
+    var on = !!(st.len || st.math), n = 0;
+    cards.forEach(function (c) { var ok = !on || match(c.getAttribute('data-act')); c.classList.toggle('af-hide', !ok); if (ok) n++; });
+    fams.forEach(function (f) {
+      var any = [].some.call(f.querySelectorAll('[data-act]'), function (c) { return !c.classList.contains('af-hide'); });
+      f.classList.toggle('af-hide', on && !any);
+      var d = f.querySelector('details.famd');
+      if (d) { if (on && any && !d.open) { d.dataset.af = '1'; d.open = true; } else if (!on && d.dataset.af) { delete d.dataset.af; d.open = false; } }
+    });
+    var VDI18N = window.VDI18N && window.VDI18N.t ? window.VDI18N : { t: function (x, v) { return x.replace('{n}', v ? v.n : ''); } };   /* the literals go into the site catalog */
+    note.textContent = on ? (n === 1 ? VDI18N.t('One demo has an activity like that.') : n ? VDI18N.t('{n} demos have an activity like that.', { n: n })
+      : VDI18N.t('No demo has that combination. A Start here needs no math; try Any.')) : '';
+    try { sessionStorage.setItem(KEY, JSON.stringify(st)); } catch (_) {}
+  };
+  bar.addEventListener('click', function (e) {
+    var b = e.target.closest('button[data-af]'); if (!b) return;
+    var p = b.getAttribute('data-af').split(':'); st[p[0]] = p[1]; apply();
+  });
+  apply();
+})();</script>
   <p class="more"><a href="index.html#topics">Back to all topics</a></p>
 </main>
 <footer>

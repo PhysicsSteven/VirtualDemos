@@ -168,7 +168,7 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "Dragón",
 "Libra":
   "Libra",
-"Ophiucus":
+"Ophiuchus":
   "Ofiuco",
 "Perseus":
   "Perseo",
@@ -1886,7 +1886,7 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "η Oph",
 "β Oph":
   "β Oph",
-"Ophiucus: the {#} stars of the figure lie from {#} to {#} light years away. They only look like a group because they are in nearly the same direction from us. Distances are from parallaxes measured by the Hipparcos satellite; the farther a star, the smaller its parallax, so the farthest distances here are the least certain. M is the absolute magnitude, how bright the star would look from {#} parsecs ({#} light years), with dust left out.":
+"Ophiuchus: the {#} stars of the figure lie from {#} to {#} light years away. They only look like a group because they are in nearly the same direction from us. Distances are from parallaxes measured by the Hipparcos satellite; the farther a star, the smaller its parallax, so the farthest distances here are the least certain. M is the absolute magnitude, how bright the star would look from {#} parsecs ({#} light years), with dust left out.":
   "Ofiuco: las {#} estrellas de la figura están a entre {#} y {#} años luz. Solo parecen un grupo porque están casi en la misma dirección vistas desde aquí. Las distancias provienen de paralajes medidos por el satélite Hipparcos; cuanto más lejos está una estrella, menor es su paralaje, así que las distancias más grandes son las menos seguras. M es la magnitud absoluta, qué tan brillante se vería la estrella a {#} pársecs ({#} años luz), sin tomar en cuenta el polvo.",
 "Rasalhague · {#} ly":
   "Rasalhague · {#} a. l.",
@@ -1902,11 +1902,11 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "κ Oph · {#} a. l.",
 "ε Oph · {#} ly":
   "ε Oph · {#} a. l.",
-"The stars of the constellation Ophiucus placed at their distances from the Sun.":
+"The stars of the constellation Ophiuchus placed at their distances from the Sun.":
   "Las estrellas de la constelación Ofiuco colocadas a sus distancias del Sol.",
 "The selected object is Rasalhague.":
   "El objeto seleccionado es Rasalhague.",
-"It is in the constellation Ophiucus.":
+"It is in the constellation Ophiuchus.":
   "Está en la constelación Ofiuco.",
 "Mirfak <small>α Per</small>":
   "Mirfak <small>α Per</small>",

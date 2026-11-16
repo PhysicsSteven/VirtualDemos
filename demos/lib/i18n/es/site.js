@@ -1,21 +1,11 @@
 /* site in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'site', {
-"Sound Intensity and Decibels":
-  "Intensidad del sonido y decibeles",
-"Virtual Physics Demos":
-  "Demos virtuales de física",
-"Site":
-  "Sitio",
-"Library":
-  "Biblioteca",
-"<a>Demos</a><a>OpenStax</a><a>Notes</a>":
-  "<a>Demos</a><a>OpenStax</a><a>Notas</a>",
+"Bose–Einstein Condensation":
+  "Condensación de Bose–Einstein",
 "See the recent changes to the site":
   "Ve los cambios recientes del sitio",
 "What’s new":
   "Novedades",
-"<a><b>For a class</b> Courses</a>":
-  "<a><b>Para una clase</b> Cursos</a>",
 "<b>Free · open in any browser · nothing to install</b>":
   "<b>Gratis · se abre en cualquier navegador · no hay nada que instalar</b>",
 "Interactive demonstrations for introductory physics and astronomy":
@@ -36,8 +26,8 @@ VDI18N.add('es', 'site', {
   "<span>Celular, laptop o proyector</span>",
 "<a><span>Teaching notes</span></a>":
   "<a><span>Notas para la enseñanza</span></a>",
-"<span>Sound Intensity and Decibels →</span>":
-  "<span>Intensidad del sonido y decibeles →</span>",
+"<span>Bose–Einstein Condensation →</span>":
+  "<span>Condensación de Bose–Einstein →</span>",
 "Teaching with the site":
   "Enseñar con el sitio",
 "Projector mode and a QR code on every demo, so students follow on their phones":
@@ -78,6 +68,24 @@ VDI18N.add('es', 'site', {
   "Buscar en todas las demos",
 "Clear search":
   "Borrar la búsqueda",
+"Filter by activity":
+  "Filtrar por actividad",
+"<span>Activity</span>":
+  "<span>Actividad</span>",
+"Any":
+  "Cualquiera",
+"Start here, {#} min":
+  "Empieza aquí, {#} min",
+"Explore, {#} min":
+  "Explora, {#} min",
+"Worksheet, up to {#} min":
+  "Hoja de trabajo, hasta {#} min",
+"<span>Math</span>":
+  "<span>Matemáticas</span>",
+"Algebra":
+  "Álgebra",
+"Calculus":
+  "Cálculo",
 "Every demo on the site, by subject. Open a subject to see its demos. A demo can be under more than one topic; each is listed once per subject.":
   "Todas las demos del sitio, por materia. Abre una materia para ver sus demos. Una demo puede estar en más de un tema; cada una aparece una sola vez por materia.",
 "Open every subject":
@@ -104,18 +112,26 @@ VDI18N.add('es', 'site', {
   "Unidades, escalas y estimaciones",
 "The first week toolkit: zoom through {#} powers of ten from the observable universe to a proton, exact unit conversions, dimensional analysis, significant figures and Fermi estimates.":
   "Las herramientas de la primera semana: recorre {#} potencias de diez desde el universo observable hasta un protón, conversiones de unidades exactas, análisis dimensional, cifras significativas y estimaciones de Fermi.",
-"<span>{#} worksheets</span>":
-  "<span>{#} hojas de trabajo</span>",
+"<span>Start here</span><span>{#} worksheets</span>":
+  "<span>Empieza aquí</span><span>{#} hojas de trabajo</span>",
+"Measurement Uncertainty":
+  "Incertidumbre de medición",
+"Measure g with a pendulum and judge what the data can tell you: time it by hand or with a photogate, one swing or many, repeat, read the length to the right place or the wrong one, and release from small or big angles. Random scatter, resolution, bias, propagation, fits and residuals, with every instrument error simulated and labeled.":
+  "Mide g con un péndulo y juzga qué pueden decirte los datos: cronométralo a mano o con una fotocompuerta, una oscilación o varias, repite, lee la longitud en el lugar correcto o en el equivocado, y suelta desde ángulos pequeños o grandes. Dispersión aleatoria, resolución, sesgo, propagación, ajustes y residuos, con cada error de los instrumentos simulado y señalado como tal.",
+"<span>{#} worksheet</span>":
+  "<span>{#} hoja de trabajo</span>",
 "Vectors and Relative Motion":
   "Vectores y movimiento relativo",
 "Drag arrow tips to see components, sums, differences, and dot and cross products, steer a boat across a river where its velocity adds to the current's, and balance hanging masses on a force table.":
   "Arrastra las puntas de las flechas para ver componentes, sumas, diferencias y productos punto y cruz, dirige una lancha a través de un río donde su velocidad se suma a la de la corriente y equilibra masas colgantes en una mesa de fuerzas.",
+"<span>{#} worksheets</span>":
+  "<span>{#} hojas de trabajo</span>",
 "Motion Graphs":
   "Gráficas de movimiento",
 "Position, velocity and acceleration graphs of a cart, linked: each is the slope of the one above and the area under it is the change in the one above. Then try to walk a target graph yourself.":
   "Gráficas enlazadas de posición, velocidad y aceleración de un carrito: cada una es la pendiente de la de arriba, y el área bajo ella es el cambio en la de arriba. Luego intenta reproducir caminando una gráfica objetivo.",
-"<span>{#} worksheet</span>":
-  "<span>{#} hoja de trabajo</span>",
+"<span>Start here</span><span>{#} worksheet</span>":
+  "<span>Empieza aquí</span><span>{#} hoja de trabajo</span>",
 "Projectile Range":
   "Alcance de proyectiles",
 "Fire baseballs, ping pong balls, cannonballs and more with and without air resistance, stack up to eight shots of different mass, size, drag or air density, and compare their paths and x, y and speed graphs side by side.":
@@ -144,6 +160,8 @@ VDI18N.add('es', 'site', {
   "Flujo granular: segregación y deslizamientos",
 "Sand of several kinds you choose (number, size, color, roughness, shape, material) in a rotating drum, a shaken box, a shear box, a landslide and a moving sand picture in liquid. Watch the sizes sort: small grains in the core of the drum, the Brazil nut rising, big stones on top of a slide.":
   "Arena de varios tipos que tú eliges (número, tamaño, color, rugosidad, forma, material) en un tambor giratorio, una caja agitada, una caja de corte, un deslizamiento de tierra y un cuadro de arena en movimiento dentro de un líquido. Observa cómo se separan los tamaños: los granos pequeños en el núcleo del tambor, la nuez de Brasil que sube, las piedras grandes encima de un deslizamiento.",
+"<span>Start here</span>":
+  "<span>Empieza aquí</span>",
 "Rotating Frames":
   "Marcos de referencia en rotación",
 "Roll a ball across a turning merry go round and see it from the room and from the turntable: a straight line, or a curve driven by the Coriolis and centrifugal forces. Then the Earth as a turntable: a Foucault pendulum whose swing turns once in a sidereal day divided by the sine of the latitude, flat and in 3D.":
@@ -286,6 +304,8 @@ VDI18N.add('es', 'site', {
   "Tubo de Kundt",
 "Stroke a metal rod and the cork dust in a tube of gas gathers at the nodes: one frequency, two wavelengths, and the speed of sound in both the gas and the metal.":
   "Frota una varilla metálica y el polvo de corcho en un tubo de gas se junta en los nodos: una frecuencia, dos longitudes de onda, y la rapidez del sonido tanto en el gas como en el metal.",
+"Sound Intensity and Decibels":
+  "Intensidad del sonido y decibeles",
 "Walk a sound level meter away from a loudspeaker in an open field: the level drops {#} dB every time the distance doubles, and two equal sources add only {#} dB.":
   "Aleja un sonómetro de una bocina en campo abierto: el nivel baja {#} dB cada vez que la distancia se duplica, y dos fuentes iguales suman solo {#} dB.",
 "Doppler Effect and Shock Waves":
@@ -360,8 +380,6 @@ VDI18N.add('es', 'site', {
   "Helio superfluido",
 "Pump liquid helium below {#} K and its boiling stops; then the fountain effect, a film that creeps out of a beaker, and the spinning disk experiment that measures how much of the liquid is superfluid. From measured properties of helium.":
   "Bombea helio líquido por debajo de {#} K y deja de hervir; luego el efecto fuente, una película que trepa y sale de un vaso de precipitados, y el experimento del disco giratorio que mide qué parte del líquido es superfluida. A partir de propiedades medidas del helio.",
-"Bose–Einstein Condensation":
-  "Condensación de Bose–Einstein",
 "Cool a gas of atoms in a box or a harmonic trap from {#} µK toward absolute zero: each atom's wave packet grows to the thermal de Broglie wavelength, the packets overlap, and the atoms pile into one shared ground state. Exact Bose–Einstein occupations of the box levels, an energy ladder, the phase of the wavefunction as color, the velocity picture of {#} and the condensate fraction curve.":
   "Enfría un gas de átomos en una caja o en una trampa armónica desde {#} µK hacia el cero absoluto: el paquete de onda de cada átomo crece hasta la longitud de onda térmica de de Broglie, los paquetes se traslapan y los átomos se acumulan en un solo estado base compartido. Ocupaciones exactas de Bose–Einstein de los niveles de la caja, una escalera de energías, la fase de la función de onda como color, la imagen de velocidades de {#} y la curva de la fracción condensada.",
 "Electricity and magnetism <span>{#} demos · {#} topics</span>":
@@ -422,8 +440,6 @@ VDI18N.add('es', 'site', {
   "Fuerza sobre una corriente",
 "Weigh the force on a current carrying wire with a magnet on a balance and find B, then see the forces on a loop make a torque, and add a commutator to build a DC motor.":
   "Pesa la fuerza sobre un alambre con corriente con un imán sobre una balanza y encuentra B; luego ve cómo las fuerzas sobre una espira producen una torca y agrega un conmutador para armar un motor de CD.",
-"Magnetic Fields of Currents":
-  "Campos magnéticos de corrientes",
 "Drag wires and watch their fields add and the forces between them, test Ampère's law on any loop with a numerical integral, and bend the current into a loop or a solenoid computed exactly from Biot–Savart.":
   "Arrastra alambres y observa cómo se suman sus campos y las fuerzas entre ellos, pon a prueba la ley de Ampère en cualquier trayectoria cerrada con una integral numérica, y dobla la corriente en una espira o un solenoide calculados exactamente con Biot–Savart.",
 "Magnetism in Matter":
@@ -756,6 +772,10 @@ VDI18N.add('es', 'site', {
   "Números CT y alcance de protones",
 "Calibrate a CT scanner for proton planning: scan a phantom of known plastics, turn CT numbers into stopping power ratios with Schneider's stoichiometric method, test the curve with a mystery tissue in a proton beam, and see how CT number and I value errors move the range in a patient against a {#} % + {#} mm margin.":
   "Calibra un tomógrafo para la planeación con protones: escanea un maniquí de plásticos conocidos, convierte los números CT en cocientes de poder de frenado con el método estequiométrico de Schneider, pon a prueba la curva con un tejido misterioso en un haz de protones y ve cómo los errores en el número CT y en el valor I mueven el alcance en un paciente frente a un margen de {#} % + {#} mm.",
+"CT Image Reconstruction":
+  "Reconstrucción de imágenes de TC",
+"Turn a CT scanner around a phantom and watch its projections fill a sinogram, then rebuild the image by backprojection: simple backprojection blurs every point as {#}/r, and the ramp filter undoes it. See what too few views, a missing range of angles, coarse detector bins and fewer photons do to streaks, sharpness and noise.":
+  "Gira un tomógrafo alrededor de un maniquí y observa cómo sus proyecciones llenan un sinograma; luego reconstruye la imagen por retroproyección: la retroproyección simple difumina cada punto como {#}/r, y el filtro rampa lo corrige. Ve lo que hacen muy pocas vistas, un intervalo de ángulos faltante, celdas de detector gruesas y menos fotones a las rayas, la nitidez y el ruido.",
 "Shielding Rooms":
   "Blindaje de salas",
 "Design the walls of a CT room, a linear accelerator vault with its maze door, and a proton therapy room, and compare how lead, steel, concrete and polyethylene do at each energy.":
@@ -772,6 +792,10 @@ VDI18N.add('es', 'site', {
   "Funciones y sus derivadas",
 "Type or paste any function and see it graphed with its first, second and third derivatives and its integral, updating as you type; slide a point along the curve to see the tangent slope.":
   "Escribe o pega cualquier función y mírala graficada con su primera, segunda y tercera derivada y su integral, actualizándose mientras escribes; desliza un punto por la curva para ver la pendiente de la tangente.",
+"Numerical Methods for Motion":
+  "Métodos numéricos para el movimiento",
+"Run Euler, symplectic Euler, Verlet and RK4 side by side on a spring, a pendulum and an orbit, against the exact motion; watch the energy drift, and plot the error against the time step to find each method's order.":
+  "Ejecuta Euler, Euler simpléctico, Verlet y RK4 lado a lado en un resorte, un péndulo y una órbita, frente al movimiento exacto; observa cómo deriva la energía y grafica el error en función del paso de tiempo para hallar el orden de cada método.",
 "OpenStax University Physics by section":
   "OpenStax Física universitaria por sección",
 "Every section of the free textbook with the demos that serve it.":
@@ -804,6 +828,14 @@ VDI18N.add('es', 'site', {
   "<a>Péndulos</a><span>Laboratorio</span>",
 "<a>Physics I</a><a>Oscillations and waves</a><a>Worksheet {#}: Measuring g</a><a>Worksheet {#}: Normal Modes and Chaos</a><span><span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span></span>":
   "<a>Física I</a><a>Oscilaciones y ondas</a><a>Hoja de trabajo {#}: Medir g</a><a>Hoja de trabajo {#}: Modos normales y caos</a><span><span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span></span>",
+"<a>Measurement Uncertainty</a><span>Lab</span>":
+  "<a>Incertidumbre de medición</a><span>Laboratorio</span>",
+"<a>Physics I</a><a>Kinematics</a><a>Oscillations and waves</a><a>Worksheet: Random Scatter and Bias</a><span><span>{#}:{#}</span> <span>{#}:{#}</span></span>":
+  "<a>Física I</a><a>Cinemática</a><a>Oscilaciones y ondas</a><a>Hoja de trabajo: Dispersión aleatoria y sesgo</a><span><span>{#}:{#}</span> <span>{#}:{#}</span></span>",
+"<a>Numerical Methods for Motion</a><span>Demo</span>":
+  "<a>Métodos numéricos para el movimiento</a><span>Demo</span>",
+"<a>Physics I</a><a>Math for physics</a><a>Worksheet: How Good Is a Computed Motion?</a><span><span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span></span>":
+  "<a>Física I</a><a>Matemáticas para la física</a><a>Hoja de trabajo: ¿Qué tan bueno es un movimiento calculado?</a><span><span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span></span>",
 "<a>Potential Energy Curves</a><span>Demo</span>":
   "<a>Curvas de energía potencial</a><span>Demo</span>",
 "<a>Physics I</a><a>Energy and momentum</a><a>Worksheet: Potential Energy Diagrams</a><span><span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span> …</span>":
@@ -882,8 +914,14 @@ VDI18N.add('es', 'site', {
   "<span>{#}:{#}</span> Cifras significativas",
 "<span>{#}:{#}</span> Solving Problems in Physics":
   "<span>{#}:{#}</span> Resolución de problemas en física",
-"<a>Open demo</a> <a>Worksheet {#}: Units and Dimensions</a> <a>Worksheet {#}: Estimates and Uncertainty</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Unidades y dimensiones</a> <a>Hoja de trabajo {#}: Estimaciones e incertidumbre</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: Units and Dimensions<span>{#} min · algebra</span></a> <a>Worksheet {#}: Estimates and Uncertainty<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Unidades y dimensiones<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Estimaciones e incertidumbre<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<span>Lab</span>":
+  "<span>Laboratorio</span>",
+"<a>Measurement Uncertainty</a>":
+  "<a>Incertidumbre de medición</a>",
+"<a>Open demo</a> <a>Worksheet: Random Scatter and Bias<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Dispersión aleatoria y sesgo<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Vectors and Relative Motion</a>":
   "<a>Vectores y movimiento relativo</a>",
 "<span>{#}:{#}</span> Scalars and Vectors":
@@ -894,12 +932,10 @@ VDI18N.add('es', 'site', {
   "<span>{#}:{#}</span> Álgebra de vectores",
 "<span>{#}:{#}</span> Products of Vectors":
   "<span>{#}:{#}</span> Productos de vectores",
-"<a>Open demo</a> <a>Worksheet {#}: Force Table</a> <a>Worksheet {#}: Components, Sums and Products</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Mesa de fuerzas</a> <a>Hoja de trabajo {#}: Componentes, sumas y productos</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Force Table<span>{#} min · algebra</span></a> <a>Worksheet {#}: Components, Sums and Products<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Mesa de fuerzas<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Componentes, sumas y productos<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Kinematics":
   "Cinemática",
-"<span>Lab</span>":
-  "<span>Laboratorio</span>",
 "<a>Motion Graphs</a>":
   "<a>Gráficas de movimiento</a>",
 "<span>{#}:{#}</span> Position, Displacement, and Average Velocity":
@@ -914,8 +950,8 @@ VDI18N.add('es', 'site', {
   "<span>{#}:{#}</span> Caída libre",
 "<span>{#}:{#}</span> Finding Velocity and Displacement from Acceleration":
   "<span>{#}:{#}</span> Cálculo de la velocidad y el desplazamiento a partir de la aceleración",
-"<a>Open demo</a> <a>Worksheet: Motion Graphs</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Gráficas de movimiento</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Motion Graphs<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Gráficas de movimiento<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Projectile Range</a>":
   "<a>Alcance de proyectiles</a>",
 "<span>{#}:{#}</span> Displacement and Velocity Vectors":
@@ -924,20 +960,20 @@ VDI18N.add('es', 'site', {
   "<span>{#}:{#}</span> Vector de aceleración",
 "<span>{#}:{#}</span> Projectile Motion":
   "<span>{#}:{#}</span> Movimiento de proyectiles",
-"<a>Open demo</a> <a>Worksheet: Projectiles and Air Resistance</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Proyectiles y resistencia del aire</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Projectiles and Air Resistance<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Proyectiles y resistencia del aire<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Ball Launched from a Moving Cart</a>":
   "<a>Pelota lanzada desde un carrito en movimiento</a>",
 "<span>{#}:{#}</span> Relative Motion in One and Two Dimensions":
   "<span>{#}:{#}</span> Movimiento relativo en una y dos dimensiones",
-"<a>Open demo</a> <a>Worksheet: Relative Motion</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Movimiento relativo</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Relative Motion<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Movimiento relativo<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Circular Motion</a>":
   "<a>Movimiento circular</a>",
 "<span>{#}:{#}</span> Uniform and Nonuniform Circular Motion":
   "<span>{#}:{#}</span> Movimiento circular uniforme y no uniforme",
-"<a>Open demo</a> <a>Worksheet: Speed Limits on Curves and Loops</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Límites de rapidez en curvas y rizos</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Speed Limits on Curves and Loops<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Límites de rapidez en curvas y rizos<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Also used in this unit: <a>Vectors and Relative Motion</a> <span>(card under <a>Measurements and vectors</a>; {#}:{#}, {#}:{#}, {#}:{#})</span>":
   "También se usa en esta unidad: <a>Vectores y movimiento relativo</a> <span>(tarjeta en <a>Mediciones y vectores</a>; {#}:{#}, {#}:{#}, {#}:{#})</span>",
 "Forces":
@@ -962,12 +998,12 @@ VDI18N.add('es', 'site', {
   "<span>{#}:{#}</span> Resolución de problemas con las leyes de Newton",
 "<span>{#}:{#}</span> Friction":
   "<span>{#}:{#}</span> Fricción",
-"<a>Open demo</a> <a>Worksheet {#}: Friction and Work</a> <a>Worksheet {#}: Atwood's Machine</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Fricción y trabajo</a> <a>Hoja de trabajo {#}: La máquina de Atwood</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: Friction and Work<span>{#} min · algebra</span></a> <a>Worksheet {#}: Atwood's Machine<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Fricción y trabajo<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: La máquina de Atwood<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Elevator: Apparent Weight</a>":
   "<a>Elevador: peso aparente</a>",
-"<a>Open demo</a> <a>Worksheet: Apparent Weight</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Peso aparente</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Apparent Weight<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Peso aparente<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Inverse Square Force Lab</a>":
   "<a>Laboratorio de fuerza de inverso del cuadrado</a>",
 "<a>Open demo</a> <a>Notes</a>":
@@ -976,6 +1012,8 @@ VDI18N.add('es', 'site', {
   "<a>Flujo granular: segregación y deslizamientos</a>",
 "<span>{#}:{#}</span> Drag Force and Terminal Speed":
   "<span>{#}:{#}</span> Fuerza de arrastre y rapidez terminal",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Notas</a>",
 "<a>Energy on a Track</a>":
   "<a>Energía en una pista</a>",
 "<span>{#}:{#}</span> Centripetal Force":
@@ -984,12 +1022,12 @@ VDI18N.add('es', 'site', {
   "<a>Marcos de referencia en rotación</a>",
 "<a>Terminal Velocity</a>":
   "<a>Velocidad terminal</a>",
-"<a>Open demo</a> <a>Worksheet: Terminal Velocity</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Velocidad terminal</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Terminal Velocity<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Velocidad terminal<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Falling Ball Viscometer</a>":
   "<a>Viscosímetro de esfera que cae</a>",
-"<a>Open demo</a> <a>Worksheet {#}: Viscosity</a> <a>Worksheet {#}: Pipe Flow and Turbulence</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Viscosidad</a> <a>Hoja de trabajo {#}: Flujo en tuberías y turbulencia</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Viscosity<span>{#} min · algebra</span></a> <a>Worksheet {#}: Pipe Flow and Turbulence<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Viscosidad<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Flujo en tuberías y turbulencia<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Also used in this unit: <a>Vectors and Relative Motion</a> <span>(card under <a>Measurements and vectors</a>; {#}:{#})</span> · <a>Circular Motion</a> <span>(card under <a>Kinematics</a>; {#}:{#})</span> · <a>Projectile Range</a> <span>(card under <a>Kinematics</a>; {#}:{#})</span>":
   "También se usa en esta unidad: <a>Vectores y movimiento relativo</a> <span>(tarjeta en <a>Mediciones y vectores</a>; {#}:{#})</span> · <a>Movimiento circular</a> <span>(tarjeta en <a>Cinemática</a>; {#}:{#})</span> · <a>Alcance de proyectiles</a> <span>(tarjeta en <a>Cinemática</a>; {#}:{#})</span>",
 "Work and energy":
@@ -1008,8 +1046,8 @@ VDI18N.add('es', 'site', {
   "<span>{#}:{#}</span> Conservación de la energía",
 "<span>{#}:{#}</span> Potential Energy Diagrams and Stability":
   "<span>{#}:{#}</span> Diagramas de energía potencial y estabilidad",
-"<a>Open demo</a> <a>Worksheet: Potential Energy Diagrams</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Diagramas de energía potencial</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Potential Energy Diagrams<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Diagramas de energía potencial<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Sources of Energy</a>":
   "<a>Fuentes de energía</a>",
 "<span>{#}:{#}</span> Sources of Energy":
@@ -1034,22 +1072,22 @@ VDI18N.add('es', 'site', {
   "<span>{#}:{#}</span> Colisiones en varias dimensiones",
 "<span>{#}:{#}</span> Center of Mass":
   "<span>{#}:{#}</span> Centro de masa",
-"<a>Open demo</a> <a>Worksheet: Momentum and Collisions</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Momento y colisiones</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Momentum and Collisions<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Momento y colisiones<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Impulse and Momentum</a>":
   "<a>Impulso y momento</a>",
-"<a>Open demo</a> <a>Worksheet: Impulse and Momentum</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Impulso y momento</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Impulse and Momentum<span>{#} min · calculus</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Impulso y momento<span>{#} min · cálculo</span></a> <a>Notas</a>",
 "<a>Center of Mass</a>":
   "<a>Centro de masa</a>",
-"<a>Open demo</a> <a>Worksheet: Center of Mass</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Centro de masa</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Center of Mass<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Centro de masa<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Rocket Propulsion</a>":
   "<a>Propulsión de cohetes</a>",
 "<span>{#}:{#}</span> Rocket Propulsion":
   "<span>{#}:{#}</span> Propulsión de cohetes",
-"<a>Open demo</a> <a>Worksheet: The Rocket Equation</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: La ecuación del cohete</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: The Rocket Equation<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: La ecuación del cohete<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Also used in this unit: <a>Granular Flow: Sorting and Landslides</a> <span>(card under <a>Forces</a>; {#}:{#})</span>":
   "También se usa en esta unidad: <a>Flujo granular: segregación y deslizamientos</a> <span>(tarjeta en <a>Fuerzas</a>; {#}:{#})</span>",
 "Rotation and angular momentum":
@@ -1076,24 +1114,24 @@ VDI18N.add('es', 'site', {
   "<span>{#}:{#}</span> Momento angular",
 "<span>{#}:{#}</span> Conservation of Angular Momentum":
   "<span>{#}:{#}</span> Conservación del momento angular",
-"<a>Open demo</a> <a>Worksheet: Torque and Angular Momentum</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Torca y momento angular</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Torque and Angular Momentum<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Torca y momento angular<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Rotational Dynamics</a>":
   "<a>Dinámica de rotación</a>",
 "<span>{#}:{#}</span> Work and Power for Rotational Motion":
   "<span>{#}:{#}</span> Trabajo y potencia en el movimiento de rotación",
-"<a>Open demo</a> <a>Worksheet: Rotational Inertia</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Inercia rotacional</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Rotational Inertia<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Inercia rotacional<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Pendulums</a>":
   "<a>Péndulos</a>",
-"<a>Open demo</a> <a>Worksheet {#}: Measuring g</a> <a>Worksheet {#}: Normal Modes and Chaos</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Medir g</a> <a>Hoja de trabajo {#}: Modos normales y caos</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: Measuring g<span>{#} min · algebra</span></a> <a>Worksheet {#}: Normal Modes and Chaos<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Medir g<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Modos normales y caos<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Gyroscope Precession</a>":
   "<a>Precesión del giroscopio</a>",
 "<span>{#}:{#}</span> Precession of a Gyroscope":
   "<span>{#}:{#}</span> Precesión de un giroscopio",
-"<a>Open demo</a> <a>Worksheet: Gyroscope Precession</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Precesión del giroscopio</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Gyroscope Precession<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Precesión del giroscopio<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Gravitation and orbital mechanics":
   "Gravitación y mecánica orbital",
 "<a>Kepler's Laws</a>":
@@ -1106,30 +1144,30 @@ VDI18N.add('es', 'site', {
   "<span>{#}:{#}</span> Órbitas de satélites y energía",
 "<span>{#}:{#}</span> Kepler's Laws of Planetary Motion":
   "<span>{#}:{#}</span> Leyes de Kepler del movimiento planetario",
-"<a>Open demo</a> <a>Worksheet: Kepler's Third Law</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Tercera ley de Kepler</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Kepler's Third Law<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Tercera ley de Kepler<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>The Cavendish Experiment</a>":
   "<a>El experimento de Cavendish</a>",
 "<span>{#}:{#}</span> Gravitation Near Earth's Surface":
   "<span>{#}:{#}</span> La gravitación cerca de la superficie de la Tierra",
-"<a>Open demo</a> <a>Worksheet: Measuring G</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Medir G</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Measuring G<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Medir G<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Gravity Near Earth</a>":
   "<a>Gravedad cerca de la Tierra</a>",
-"<a>Open demo</a> <a>Worksheet: How g Changes with Height and Latitude</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Cómo cambia g con la altura y la latitud</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: How g Changes with Height and Latitude<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Cómo cambia g con la altura y la latitud<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Tides</a>":
   "<a>Mareas</a>",
 "<span>{#}:{#}</span> Tidal Forces":
   "<span>{#}:{#}</span> Fuerzas de marea",
-"<a>Open demo</a> <a>Worksheet: Tidal Forces</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Fuerzas de marea</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Tidal Forces<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Fuerzas de marea<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>GPS Clocks and Relativity</a>":
   "<a>Relojes GPS y relatividad</a>",
 "<span>{#}:{#}</span> Einstein's Theory of Gravity":
   "<span>{#}:{#}</span> La teoría de la gravedad de Einstein",
-"<a>Open demo</a> <a>Worksheet: GPS Clocks and Relativity</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Relojes GPS y relatividad</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: GPS Clocks and Relativity<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Relojes GPS y relatividad<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Also used in this unit: <a>Inverse Square Force Lab</a> <span>(card under <a>Forces</a>; {#}:{#})</span>":
   "También se usa en esta unidad: <a>Laboratorio de fuerza de inverso del cuadrado</a> <span>(tarjeta en <a>Fuerzas</a>; {#}:{#})</span>",
 "Static equilibrium and elasticity":
@@ -1140,20 +1178,20 @@ VDI18N.add('es', 'site', {
   "<span>{#}:{#}</span> Condiciones del equilibrio estático",
 "<span>{#}:{#}</span> Examples of Static Equilibrium":
   "<span>{#}:{#}</span> Ejemplos de equilibrio estático",
-"<a>Open demo</a> <a>Worksheet: Tension in a Hanging Chain</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Tensión en una cadena colgante</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Tension in a Hanging Chain<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Tensión en una cadena colgante<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Static Equilibrium</a>":
   "<a>Equilibrio estático</a>",
-"<a>Open demo</a> <a>Worksheet: Support Forces and Cable Tension</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Fuerzas de soporte y tensión en cables</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Support Forces and Cable Tension<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Fuerzas de soporte y tensión en cables<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Stress and Strain</a>":
   "<a>Esfuerzo y deformación</a>",
 "<span>{#}:{#}</span> Stress, Strain, and Elastic Modulus":
   "<span>{#}:{#}</span> Esfuerzo, deformación y módulo elástico",
 "<span>{#}:{#}</span> Elasticity and Plasticity":
   "<span>{#}:{#}</span> Elasticidad y plasticidad",
-"<a>Open demo</a> <a>Worksheet {#}: Young's Modulus</a> <a>Worksheet {#}: Shear and Bulk Moduli</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Módulo de Young</a> <a>Hoja de trabajo {#}: Módulos de corte y volumétrico</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Young's Modulus<span>{#} min · algebra</span></a> <a>Worksheet {#}: Shear and Bulk Moduli<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Módulo de Young<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Módulos de corte y volumétrico<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Fluids":
   "Fluidos",
 "<a>Fluids: Pressure, Buoyancy and Flow</a>":
@@ -1170,8 +1208,8 @@ VDI18N.add('es', 'site', {
   "<span>{#}:{#}</span> Dinámica de fluidos",
 "<span>{#}:{#}</span> Bernoulli’s Equation":
   "<span>{#}:{#}</span> Ecuación de Bernoulli",
-"<a>Open demo</a> <a>Worksheet: Pressure, Buoyancy and Flow</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Presión, flotación y flujo</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Pressure, Buoyancy and Flow<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Presión, flotación y flujo<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Also used in this unit: <a>Falling Ball Viscometer</a> <span>(card under <a>Forces</a>; {#}:{#})</span>":
   "También se usa en esta unidad: <a>Viscosímetro de esfera que cae</a> <span>(tarjeta en <a>Fuerzas</a>; {#}:{#})</span>",
 "Oscillations":
@@ -1188,10 +1226,10 @@ VDI18N.add('es', 'site', {
   "<span>{#}:{#}</span> Oscilaciones amortiguadas",
 "<span>{#}:{#}</span> Forced Oscillations":
   "<span>{#}:{#}</span> Oscilaciones forzadas",
-"<a>Open demo</a> <a>Worksheet {#}: Spring Constant</a> <a>Worksheet {#}: Normal Modes</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Constante del resorte</a> <a>Hoja de trabajo {#}: Modos normales</a> <a>Notas</a>",
-"Also used in this unit: <a>Pendulums</a> <span>(card under <a>Rotation and angular momentum</a>; {#}:{#})</span>":
-  "También se usa en esta unidad: <a>Péndulos</a> <span>(tarjeta en <a>Rotación y momento angular</a>; {#}:{#})</span>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: Spring Constant<span>{#} min · algebra</span></a> <a>Worksheet {#}: Driven Oscillator and Resonance<span>{#} min · algebra</span></a> <a>Worksheet {#}: Springs in Series and Parallel<span>{#} min · algebra</span></a> <a>Worksheet {#}: Normal Modes<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Constante del resorte<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Oscilador forzado y resonancia<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Resortes en serie y en paralelo<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Modos normales<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"Also used in this unit: <a>Pendulums</a> <span>(card under <a>Rotation and angular momentum</a>; {#}:{#})</span> · <a>Measurement Uncertainty</a> <span>(card under <a>Measurements and vectors</a>; {#}:{#})</span>":
+  "También se usa en esta unidad: <a>Péndulos</a> <span>(tarjeta en <a>Rotación y momento angular</a>; {#}:{#})</span> · <a>Incertidumbre de medición</a> <span>(tarjeta en <a>Mediciones y vectores</a>; {#}:{#})</span>",
 "<a>Back to the home page</a>":
   "<a>Regresar a la página de inicio</a>",
 "<a>All demos</a> · <a>OpenStax by section</a> · <a>Courses</a> · <a>Teaching notes</a> · <a>Source on GitHub</a>":
@@ -1238,12 +1276,12 @@ VDI18N.add('es', 'site', {
   "<span>{#}:{#}</span> Rapidez de una onda en una cuerda tensa",
 "<span>{#}:{#}</span> Standing Waves and Resonance":
   "<span>{#}:{#}</span> Ondas estacionarias y resonancia",
-"<a>Open demo</a> <a>Worksheet: Standing Waves on a String</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Ondas estacionarias en una cuerda</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Standing Waves on a String<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Ondas estacionarias en una cuerda<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Linear Density of a String</a>":
   "<a>Densidad lineal de una cuerda</a>",
-"<a>Open demo</a> <a>Worksheet: Linear Density of a String</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Densidad lineal de una cuerda</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Linear Density of a String<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Densidad lineal de una cuerda<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Charge and electric fields":
   "Carga y campos eléctricos",
 "<a>Charging by Induction</a>":
@@ -1252,8 +1290,8 @@ VDI18N.add('es', 'site', {
   "<span>{#}:{#}</span> Carga eléctrica",
 "<span>{#}:{#}</span> Conductors, Insulators, and Charging by Induction":
   "<span>{#}:{#}</span> Conductores, aislantes y carga por inducción",
-"<a>Open demo</a> <a>Worksheet {#}: Charging by Induction</a> <a>Worksheet {#}: Attracting a Neutral Insulator</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Carga por inducción</a> <a>Hoja de trabajo {#}: Atraer un aislante neutro</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Charging by Induction<span>{#} min · algebra</span></a> <a>Worksheet {#}: Attracting a Neutral Insulator<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Carga por inducción<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Atraer un aislante neutro<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Millikan Oil Drop</a>":
   "<a>Gota de aceite de Millikan</a>",
 "<a>Coulomb Sandbox</a>":
@@ -1268,8 +1306,8 @@ VDI18N.add('es', 'site', {
   "<span>{#}:{#}</span> Líneas de campo eléctrico",
 "<span>{#}:{#}</span> Electric Dipoles":
   "<span>{#}:{#}</span> Dipolos eléctricos",
-"<a>Open demo</a> <a>Worksheet: Electric Field and Potential</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Campo y potencial eléctricos</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: Electric Field and Potential<span>{#} min · algebra</span></a> <a>Worksheet {#}: Rings, Arcs and Potential Energy<span>{#} min · calculus</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Campo y potencial eléctricos<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Anillos, arcos y energía potencial<span>{#} min · cálculo</span></a> <a>Notas</a>",
 "Flux and Gauss’s law":
   "Flujo y ley de Gauss",
 "<a>Gauss's Law</a>":
@@ -1282,8 +1320,8 @@ VDI18N.add('es', 'site', {
   "<span>{#}:{#}</span> Aplicación de la ley de Gauss",
 "<span>{#}:{#}</span> Conductors in Electrostatic Equilibrium":
   "<span>{#}:{#}</span> Conductores en equilibrio electrostático",
-"<a>Open demo</a> <a>Worksheet: Gauss's Law</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Ley de Gauss</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Gauss's Law<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Ley de Gauss<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Also used in this unit: <a>Charging by Induction</a> <span>(card under <a>Charge and electric fields</a>; {#}:{#})</span>":
   "También se usa en esta unidad: <a>Carga por inducción</a> <span>(tarjeta en <a>Carga y campos eléctricos</a>; {#}:{#})</span>",
 "Electric potential":
@@ -1292,8 +1330,8 @@ VDI18N.add('es', 'site', {
   "<a>Electrostática en acción</a>",
 "<span>{#}:{#}</span> Applications of Electrostatics":
   "<span>{#}:{#}</span> Aplicaciones de la electrostática",
-"<a>Open demo</a> <a>Worksheet {#}: Van de Graaff Generator</a> <a>Worksheet {#}: Ink Jet Printer</a> <a>Worksheet {#}: Electrostatic Precipitator</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Generador de Van de Graaff</a> <a>Hoja de trabajo {#}: Impresora de inyección de tinta</a> <a>Hoja de trabajo {#}: Precipitador electrostático</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Van de Graaff Generator<span>{#} min · algebra</span></a> <a>Worksheet {#}: Ink Jet Printer<span>{#} min · algebra</span></a> <a>Worksheet {#}: Electrostatic Precipitator<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Generador de Van de Graaff<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Impresora de inyección de tinta<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Precipitador electrostático<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Also used in this unit: <a>Coulomb Sandbox</a> <span>(card under <a>Charge and electric fields</a>; {#}:{#}, {#}:{#}, {#}:{#}, {#}:{#}, {#}:{#})</span>":
   "También se usa en esta unidad: <a>Arenero de Coulomb</a> <span>(tarjeta en <a>Carga y campos eléctricos</a>; {#}:{#}, {#}:{#}, {#}:{#}, {#}:{#}, {#}:{#})</span>",
 "<a>Capacitors and Dielectrics</a>":
@@ -1308,8 +1346,8 @@ VDI18N.add('es', 'site', {
   "<span>{#}:{#}</span> Capacitor con un dieléctrico",
 "<span>{#}:{#}</span> Molecular Model of a Dielectric":
   "<span>{#}:{#}</span> Modelo molecular de un dieléctrico",
-"<a>Open demo</a> <a>Worksheet: Capacitance and Dielectrics</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Capacitancia y dieléctricos</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: Capacitance and Dielectrics<span>{#} min · algebra</span></a> <a>Worksheet {#}: Spherical Capacitors, Polarization and Breakdown<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Capacitancia y dieléctricos<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Capacitores esféricos, polarización y ruptura<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Current and resistance":
   "Corriente y resistencia",
 "<a>Circuits</a>":
@@ -1320,8 +1358,8 @@ VDI18N.add('es', 'site', {
   "<span>{#}:{#}</span> Ley de Ohm",
 "<span>{#}:{#}</span> Electrical Energy and Power":
   "<span>{#}:{#}</span> Energía y potencia eléctricas",
-"<a>Open demo</a> <a>Worksheet {#}: Kirchhoff's Rules</a> <a>Worksheet {#}: RC Time Constant</a> <a>Worksheet {#}: RLC Oscillations</a> <a>Worksheet {#}: AC Resonance</a> <a>Worksheet {#}: A Real Diode and the Junction Transistor</a> <a>Worksheet {#}: Reactance and Phase</a> <a>Worksheet {#}: Power in an AC Circuit</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Reglas de Kirchhoff</a> <a>Hoja de trabajo {#}: Constante de tiempo RC</a> <a>Hoja de trabajo {#}: Oscilaciones RLC</a> <a>Hoja de trabajo {#}: Resonancia en CA</a> <a>Hoja de trabajo {#}: Un diodo real y el transistor de unión</a> <a>Hoja de trabajo {#}: Reactancia y fase</a> <a>Hoja de trabajo {#}: Potencia en un circuito de CA</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: Kirchhoff's Rules<span>{#} min · algebra</span></a> <a>Worksheet {#}: RC Time Constant<span>{#} min · algebra</span></a> <a>Worksheet {#}: RLC Oscillations and Damping<span>{#} min · algebra</span></a> <a>Worksheet {#}: AC Resonance<span>{#} min · algebra</span></a> <a>Worksheet {#}: A Real Diode and the Junction Transistor<span>{#} min · algebra</span></a> <a>Worksheet {#}: Reactance and Phase<span>{#} min · calculus</span></a> <a>Worksheet {#}: Power in an AC Circuit<span>{#} min · algebra</span></a> <a>Worksheet {#}: Meter Loading<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Reglas de Kirchhoff<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Constante de tiempo RC<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Oscilaciones RLC y amortiguamiento<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Resonancia en CA<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Un diodo real y el transistor de unión<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Reactancia y fase<span>{#} min · cálculo</span></a> <a>Hoja de trabajo {#}: Potencia en un circuito de CA<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Carga del medidor<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Resistivity of a Wire</a>":
   "<a>Resistividad de un alambre</a>",
 "<span>{#}:{#}</span> Model of Conduction in Metals":
@@ -1330,16 +1368,16 @@ VDI18N.add('es', 'site', {
   "<span>{#}:{#}</span> Resistividad y resistencia",
 "<span>{#}:{#}</span> Superconductors":
   "<span>{#}:{#}</span> Superconductores",
-"<a>Open demo</a> <a>Worksheet {#}: Resistivity</a> <a>Worksheet {#}: Current in a Sheet</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Resistividad</a> <a>Hoja de trabajo {#}: Corriente en una lámina</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Resistivity<span>{#} min · algebra</span></a> <a>Worksheet {#}: Current in a Sheet<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Resistividad<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Corriente en una lámina<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "DC circuits":
   "Circuitos de CD",
 "<a>Household Wiring and Electrical Safety</a>":
   "<a>Instalación eléctrica doméstica y seguridad eléctrica</a>",
 "<span>{#}:{#}</span> Household Wiring and Electrical Safety":
   "<span>{#}:{#}</span> Instalación eléctrica doméstica y seguridad eléctrica",
-"<a>Open demo</a> <a>Worksheet: Household Wiring and Electrical Safety</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Instalación eléctrica doméstica y seguridad eléctrica</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Household Wiring and Electrical Safety<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Instalación eléctrica doméstica y seguridad eléctrica<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Also used in this unit: <a>Circuits</a> <span>(card under <a>Current and resistance</a>; {#}:{#}, {#}:{#}, {#}:{#}, {#}:{#}, {#}:{#})</span>":
   "También se usa en esta unidad: <a>Circuitos</a> <span>(tarjeta en <a>Corriente y resistencia</a>; {#}:{#}, {#}:{#}, {#}:{#}, {#}:{#}, {#}:{#})</span>",
 "Magnetic forces and fields":
@@ -1354,8 +1392,8 @@ VDI18N.add('es', 'site', {
   "<span>{#}:{#}</span> Fuerza magnética sobre un conductor con corriente",
 "<span>{#}:{#}</span> Force and Torque on a Current Loop":
   "<span>{#}:{#}</span> Fuerza y torca sobre una espira de corriente",
-"<a>Open demo</a> <a>Worksheet {#}: Magnets and Oersted's Compass</a> <a>Worksheet {#}: Fields and Forces of Straight Wires</a> <a>Worksheet {#}: Fields of Loops and Solenoids</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Imanes y la brújula de Oersted</a> <a>Hoja de trabajo {#}: Campos y fuerzas de alambres rectos</a> <a>Hoja de trabajo {#}: Campos de espiras y solenoides</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: Magnets and Oersted's Compass<span>{#} min · algebra</span></a> <a>Worksheet {#}: Fields and Forces of Straight Wires<span>{#} min · algebra</span></a> <a>Worksheet {#}: Ampère's Law and Straight Wires<span>{#} min · algebra</span></a> <a>Worksheet {#}: Fields of Loops and Solenoids<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Imanes y la brújula de Oersted<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Campos y fuerzas de alambres rectos<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Ley de Ampère y alambres rectos<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Campos de espiras y solenoides<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Charges in Magnetic Fields</a>":
   "<a>Cargas en campos magnéticos</a>",
 "<span>{#}:{#}</span> Motion of a Charged Particle in a Magnetic Field":
@@ -1364,26 +1402,26 @@ VDI18N.add('es', 'site', {
   "<span>{#}:{#}</span> El efecto Hall",
 "<span>{#}:{#}</span> Applications of Magnetic Forces and Fields":
   "<span>{#}:{#}</span> Aplicaciones de las fuerzas y los campos magnéticos",
-"<a>Open demo</a> <a>Worksheet: Particle Orbits and the Hall Effect</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Órbitas de partículas y el efecto Hall</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: Orbits and the Magnetic Bottle<span>{#} min · algebra</span></a> <a>Worksheet {#}: The Hall Effect<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Órbitas y la botella magnética<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: El efecto Hall<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Force on a Current</a>":
   "<a>Fuerza sobre una corriente</a>",
-"<a>Open demo</a> <a>Worksheet: Magnetic Force on a Wire</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Fuerza magnética sobre un alambre</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Magnetic Force on a Wire<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Fuerza magnética sobre un alambre<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Sources of magnetic fields":
   "Fuentes de campos magnéticos",
 "<a>Displacement Current</a>":
   "<a>Corriente de desplazamiento</a>",
 "<span>{#}:{#}</span> Ampère’s Law":
   "<span>{#}:{#}</span> Ley de Ampère",
-"<a>Open demo</a> <a>Worksheet: Displacement Current</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Corriente de desplazamiento</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Displacement Current<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Corriente de desplazamiento<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Magnetism in Matter</a>":
   "<a>Magnetismo en la materia</a>",
 "<span>{#}:{#}</span> Magnetism in Matter":
   "<span>{#}:{#}</span> Magnetismo en la materia",
-"<a>Open demo</a> <a>Worksheet: Magnetism in Matter</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Magnetismo en la materia</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Magnetism in Matter<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Magnetismo en la materia<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Also used in this unit: <a>Magnetic Fields of Currents</a> <span>(card under <a>Magnetic forces and fields</a>; {#}:{#}, {#}:{#}, {#}:{#}, {#}:{#}, {#}:{#}, {#}:{#})</span>":
   "También se usa en esta unidad: <a>Campos magnéticos de corrientes</a> <span>(tarjeta en <a>Fuerzas y campos magnéticos</a>; {#}:{#}, {#}:{#}, {#}:{#}, {#}:{#}, {#}:{#}, {#}:{#})</span>",
 "Induction and inductance":
@@ -1404,30 +1442,30 @@ VDI18N.add('es', 'site', {
   "<span>{#}:{#}</span> Autoinductancia e inductores",
 "<span>{#}:{#}</span> Energy in a Magnetic Field":
   "<span>{#}:{#}</span> Energía en un campo magnético",
-"<a>Open demo</a> <a>Worksheet: Faraday's Law</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Ley de Faraday</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Faraday's Law<span>{#} min · calculus</span></a> <a>Worksheet {#}: Mutual Induction and Motional emf<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Ley de Faraday<span>{#} min · cálculo</span></a> <a>Hoja de trabajo {#}: Inducción mutua y EMF de movimiento<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Induction at Work</a>":
   "<a>Inducción en acción</a>",
 "<span>{#}:{#}</span> Applications of Electromagnetic Induction":
   "<span>{#}:{#}</span> Aplicaciones de la inducción electromagnética",
-"<a>Open demo</a> <a>Worksheet: Induction at Work</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Inducción en acción</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Induction at Work<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Inducción en acción<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Induced Electric Fields</a>":
   "<a>Campos eléctricos inducidos</a>",
 "<span>{#}:{#}</span> Induced Electric Fields":
   "<span>{#}:{#}</span> Campos eléctricos inducidos",
-"<a>Open demo</a> <a>Worksheet: Induced Electric Fields</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Campos eléctricos inducidos</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Induced Electric Fields<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Campos eléctricos inducidos<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Eddy Currents: Magnet in a Pipe</a>":
   "<a>Corrientes de Foucault: imán en un tubo</a>",
 "<span>{#}:{#}</span> Eddy Currents":
   "<span>{#}:{#}</span> Corrientes de Foucault",
-"<a>Open demo</a> <a>Worksheet: Eddy Current Braking</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Frenado por corrientes de Foucault</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Eddy Current Braking<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Frenado por corrientes de Foucault<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Transformers</a>":
   "<a>Transformadores</a>",
-"<a>Open demo</a> <a>Worksheet: Transformers and Power Lines</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Transformadores y líneas de transmisión</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Transformers and Power Lines<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Transformadores y líneas de transmisión<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Alternating current circuits":
   "Circuitos de corriente alterna",
 "Also used in this unit: <a>Circuits</a> <span>(card under <a>Current and resistance</a>; {#}:{#}, {#}:{#}, {#}:{#}, {#}:{#}, {#}:{#})</span> · <a>Transformers</a> <span>(card under <a>Induction and inductance</a>; {#}:{#})</span>":
@@ -1446,8 +1484,8 @@ VDI18N.add('es', 'site', {
   "<span>{#}:{#}</span> Momento y presión de radiación",
 "<span>{#}:{#}</span> The Electromagnetic Spectrum":
   "<span>{#}:{#}</span> El espectro electromagnético",
-"<a>Open demo</a> <a>Worksheet: Electromagnetic Waves: Fields, Intensity and Pressure</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Ondas electromagnéticas: campos, intensidad y presión</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Electromagnetic Waves: Fields, Intensity and Pressure<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Ondas electromagnéticas: campos, intensidad y presión<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Also used in this unit: <a>Displacement Current</a> <span>(card under <a>Sources of magnetic fields</a>; {#}:{#})</span>":
   "También se usa en esta unidad: <a>Corriente de desplazamiento</a> <span>(tarjeta en <a>Fuentes de campos magnéticos</a>; {#}:{#})</span>",
 "Light and geometric optics":
@@ -1464,8 +1502,8 @@ VDI18N.add('es', 'site', {
   "<span>{#}:{#}</span> Reflexión total interna",
 "<span>{#}:{#}</span> Huygens’s Principle":
   "<span>{#}:{#}</span> Principio de Huygens",
-"<a>Open demo</a> <a>Worksheet: Huygens's Principle</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Principio de Huygens</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Huygens's Principle<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Principio de Huygens<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Optics Bench</a>":
   "<a>Banco óptico</a>",
 "<span>{#}:{#}</span> Dispersion":
@@ -1484,32 +1522,32 @@ VDI18N.add('es', 'site', {
   "<span>{#}:{#}</span> La lupa simple",
 "<span>{#}:{#}</span> Microscopes and Telescopes":
   "<span>{#}:{#}</span> Microscopios y telescopios",
-"<a>Open demo</a> <a>Worksheet {#}: Dispersion</a> <a>Worksheet {#}: Mirrors and Refracting Surfaces</a> <a>Worksheet {#}: Lenses and Optical Instruments</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Dispersión</a> <a>Hoja de trabajo {#}: Espejos y superficies refractoras</a> <a>Hoja de trabajo {#}: Lentes e instrumentos ópticos</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: Dispersion<span>{#} min · algebra</span></a> <a>Worksheet {#}: Mirrors and Refracting Surfaces<span>{#} min · algebra</span></a> <a>Worksheet {#}: Thin Lenses and the Depth of an Image<span>{#} min · algebra</span></a> <a>Worksheet {#}: Magnifiers, Microscopes and Telescopes<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Dispersión<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Espejos y superficies refractoras<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Lentes delgadas y la profundidad de una imagen<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Lupas, microscopios y telescopios<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Rainbows</a>":
   "<a>Arcoíris</a>",
 "<a>Ripple Tank</a>":
   "<a>Tanque de ondas</a>",
-"<a>Open demo</a> <a>Worksheet: Ripple Tank: Wavelength, Refraction and Interference</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Tanque de ondas: longitud de onda, refracción e interferencia</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Ripple Tank: Wavelength, Refraction and Interference<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Tanque de ondas: longitud de onda, refracción e interferencia<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Polarization</a>":
   "<a>Polarización</a>",
 "<span>{#}:{#}</span> Polarization":
   "<span>{#}:{#}</span> Polarización",
-"<a>Open demo</a> <a>Worksheet: Polarization</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Polarización</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Polarization<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Polarización<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>The Eye</a>":
   "<a>El ojo</a>",
 "<span>{#}:{#}</span> The Eye":
   "<span>{#}:{#}</span> El ojo",
-"<a>Open demo</a> <a>Worksheet {#}: The Eye</a> <a>Worksheet {#}: The Camera</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: El ojo</a> <a>Hoja de trabajo {#}: La cámara</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: The Eye<span>{#} min · algebra</span></a> <a>Worksheet {#}: The Camera<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: El ojo<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: La cámara<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Build a Microscope or Telescope</a>":
   "<a>Construye un microscopio o un telescopio</a>",
 "<a>Color Vision</a>":
   "<a>Visión del color</a>",
-"<a>Open demo</a> <a>Worksheet: Cones, Mixing and Filters</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Conos, mezclas y filtros</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Cones, Mixing and Filters<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Conos, mezclas y filtros<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Telescope Aberrations</a>":
   "<a>Aberraciones de telescopios</a>",
 "Wave optics":
@@ -1524,8 +1562,8 @@ VDI18N.add('es', 'site', {
   "<span>{#}:{#}</span> Difracción de una sola rendija",
 "<span>{#}:{#}</span> Double-Slit Diffraction":
   "<span>{#}:{#}</span> Difracción de doble rendija",
-"<a>Open demo</a> <a>Worksheet: Young's Double Slit</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: La doble rendija de Young</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Young's Double Slit<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: La doble rendija de Young<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Diffraction Grating</a>":
   "<a>Rejilla de difracción</a>",
 "<span>{#}:{#}</span> Multiple-Slit Interference":
@@ -1536,36 +1574,36 @@ VDI18N.add('es', 'site', {
   "<span>{#}:{#}</span> Rejillas de difracción",
 "<span>{#}:{#}</span> Circular Apertures and Resolution":
   "<span>{#}:{#}</span> Aberturas circulares y resolución",
-"<a>Open demo</a> <a>Worksheet {#}: Diffraction Grating</a> <a>Worksheet {#}: Single Slit Diffraction</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Rejilla de difracción</a> <a>Hoja de trabajo {#}: Difracción de una sola rendija</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: Diffraction Grating<span>{#} min · algebra</span></a> <a>Worksheet {#}: Single Slit Diffraction<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Rejilla de difracción<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Difracción de una sola rendija<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Thin Film Interference</a>":
   "<a>Interferencia en películas delgadas</a>",
 "<span>{#}:{#}</span> Interference in Thin Films":
   "<span>{#}:{#}</span> Interferencia en películas delgadas",
-"<a>Open demo</a> <a>Worksheet: Thin Film Interference</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Interferencia en películas delgadas</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Thin Film Interference<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Interferencia en películas delgadas<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Michelson Interferometer</a>":
   "<a>Interferómetro de Michelson</a>",
 "<span>{#}:{#}</span> The Michelson Interferometer":
   "<span>{#}:{#}</span> El interferómetro de Michelson",
-"<a>Open demo</a> <a>Worksheet: Michelson Interferometer</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Interferómetro de Michelson</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Michelson Interferometer<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Interferómetro de Michelson<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Circular Apertures and Resolution</a>":
   "<a>Aberturas circulares y resolución</a>",
-"<a>Open demo</a> <a>Worksheet: Circular Apertures and Resolution</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Aberturas circulares y resolución</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Circular Apertures and Resolution<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Aberturas circulares y resolución<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Electron Diffraction</a>":
   "<a>Difracción de electrones</a>",
 "<span>{#}:{#}</span> X-Ray Diffraction":
   "<span>{#}:{#}</span> Difracción de rayos X",
-"<a>Open demo</a> <a>Worksheet {#}: Electron Diffraction and de Broglie Waves</a> <a>Worksheet {#}: X-Ray Diffraction</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Difracción de electrones y ondas de De Broglie</a> <a>Hoja de trabajo {#}: Difracción de rayos X</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Electron Diffraction and de Broglie Waves<span>{#} min · algebra</span></a> <a>Worksheet {#}: X-Ray Diffraction<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Difracción de electrones y ondas de De Broglie<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Difracción de rayos X<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Holography</a>":
   "<a>Holografía</a>",
 "<span>{#}:{#}</span> Holography":
   "<span>{#}:{#}</span> Holografía",
-"<a>Open demo</a> <a>Worksheet: Holography: Fringes and Images</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Holografía: franjas e imágenes</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Holography: Fringes and Images<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Holografía: franjas e imágenes<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Also used in this unit: <a>Ripple Tank</a> <span>(card under <a>Light and geometric optics</a>; {#}:{#}, {#}:{#}, {#}:{#})</span> · <a>Telescope Aberrations</a> <span>(card under <a>Light and geometric optics</a>; {#}:{#})</span>":
   "También se usa en esta unidad: <a>Tanque de ondas</a> <span>(tarjeta en <a>La luz y la óptica geométrica</a>; {#}:{#}, {#}:{#}, {#}:{#})</span> · <a>Aberraciones de telescopios</a> <span>(tarjeta en <a>La luz y la óptica geométrica</a>; {#}:{#})</span>",
 "PHYS {#} · Virtual Physics Demos":
@@ -1682,8 +1720,8 @@ VDI18N.add('es', 'site', {
   "Clase {#} · Resistores y resistividad",
 "Conventional current and the current density J = σE, Ohm’s law and R = ρL/A, how resistance changes with temperature, drift velocity in copper, power, and resistors in series and parallel.":
   "La corriente convencional y la densidad de corriente J = σE, la ley de Ohm y R = ρL/A, cómo cambia la resistencia con la temperatura, la velocidad de deriva en el cobre, la potencia, y resistores en serie y en paralelo.",
-"Also used in this unit: <a>Circuits</a> with <a>Worksheet: Kirchhoff's Rules</a> <span>(card under <a>Lecture {#} · Capacitor circuits</a>; {#}:{#}, {#}:{#}, {#}:{#}, {#}:{#}, {#}:{#})</span>":
-  "También se usa en esta unidad: <a>Circuitos</a> con <a>Hoja de trabajo: Reglas de Kirchhoff</a> <span>(tarjeta en <a>Clase {#} · Circuitos con capacitores</a>; {#}:{#}, {#}:{#}, {#}:{#}, {#}:{#}, {#}:{#})</span>",
+"Also used in this unit: <a>Circuits</a> with <a>Worksheet: Kirchhoff's Rules</a> with <a>Worksheet: Meter Loading</a> <span>(card under <a>Lecture {#} · Capacitor circuits</a>; {#}:{#}, {#}:{#}, {#}:{#}, {#}:{#}, {#}:{#})</span>":
+  "También se usa en esta unidad: <a>Circuitos</a> con <a>Hoja de trabajo: Reglas de Kirchhoff</a> con <a>Hoja de trabajo: Carga del medidor</a> <span>(tarjeta en <a>Clase {#} · Circuitos con capacitores</a>; {#}:{#}, {#}:{#}, {#}:{#}, {#}:{#}, {#}:{#})</span>",
 "Lecture {#} · RC circuits":
   "Clase {#} · Circuitos RC",
 "The loop equation as a differential equation, Q(t) = Q_max({#} − e^(−t/RC)), and the time constant RC, when a capacitor reaches {#} % of its charge.":
@@ -1700,10 +1738,10 @@ VDI18N.add('es', 'site', {
   "El resto del curso, en el orden del programa. La fuerza sobre un alambre, la torca sobre una espira de corriente y su momento dipolar, el efecto Hall y las aplicaciones de las fuerzas magnéticas.",
 "Also used in this unit: <a>Magnetic Fields of Currents</a> <span>(card under <a>Lecture {#} · Magnets, part {#}</a>; {#}:{#}, {#}:{#})</span> · <a>Charges in Magnetic Fields</a> <span>(card under <a>Lecture {#} · Magnets, part {#}</a>; {#}:{#}, {#}:{#})</span>":
   "También se usa en esta unidad: <a>Campos magnéticos de corrientes</a> <span>(tarjeta en <a>Clase {#} · Imanes, parte {#}</a>; {#}:{#}, {#}:{#})</span> · <a>Cargas en campos magnéticos</a> <span>(tarjeta en <a>Clase {#} · Imanes, parte {#}</a>; {#}:{#}, {#}:{#})</span>",
-"Also used in this unit: <a>Magnetic Fields of Currents</a> with <a>Worksheet: Fields and Forces of Straight Wires</a> with <a>Worksheet: Fields of Loops and Solenoids</a> <span>(card under <a>Lecture {#} · Magnets, part {#}</a>; {#}:{#}, {#}:{#}, {#}:{#}, {#}:{#}, {#}:{#}, {#}:{#})</span>":
-  "También se usa en esta unidad: <a>Campos magnéticos de corrientes</a> con <a>Hoja de trabajo: Campos y fuerzas de alambres rectos</a> con <a>Hoja de trabajo: Campos de espiras y solenoides</a> <span>(tarjeta en <a>Clase {#} · Imanes, parte {#}</a>; {#}:{#}, {#}:{#}, {#}:{#}, {#}:{#}, {#}:{#}, {#}:{#})</span>",
-"Also used in this unit: <a>Circuits</a> with <a>Worksheet: RLC Oscillations</a> <span>(card under <a>Lecture {#} · Capacitor circuits</a>; {#}:{#}, {#}:{#}, {#}:{#}, {#}:{#}, {#}:{#})</span>":
-  "También se usa en esta unidad: <a>Circuitos</a> con <a>Hoja de trabajo: Oscilaciones RLC</a> <span>(tarjeta en <a>Clase {#} · Circuitos con capacitores</a>; {#}:{#}, {#}:{#}, {#}:{#}, {#}:{#}, {#}:{#})</span>",
+"Also used in this unit: <a>Magnetic Fields of Currents</a> with <a>Worksheet: Fields and Forces of Straight Wires</a> with <a>Worksheet: Ampère's Law and Straight Wires</a> with <a>Worksheet: Fields of Loops and Solenoids</a> <span>(card under <a>Lecture {#} · Magnets, part {#}</a>; {#}:{#}, {#}:{#}, {#}:{#}, {#}:{#}, {#}:{#}, {#}:{#})</span>":
+  "También se usa en esta unidad: <a>Campos magnéticos de corrientes</a> con <a>Hoja de trabajo: Campos y fuerzas de alambres rectos</a> con <a>Hoja de trabajo: Ley de Ampère y alambres rectos</a> con <a>Hoja de trabajo: Campos de espiras y solenoides</a> <span>(tarjeta en <a>Clase {#} · Imanes, parte {#}</a>; {#}:{#}, {#}:{#}, {#}:{#}, {#}:{#}, {#}:{#}, {#}:{#})</span>",
+"Also used in this unit: <a>Circuits</a> with <a>Worksheet: RLC Oscillations and Damping</a> <span>(card under <a>Lecture {#} · Capacitor circuits</a>; {#}:{#}, {#}:{#}, {#}:{#}, {#}:{#}, {#}:{#})</span>":
+  "También se usa en esta unidad: <a>Circuitos</a> con <a>Hoja de trabajo: Oscilaciones RLC y amortiguamiento</a> <span>(tarjeta en <a>Clase {#} · Circuitos con capacitores</a>; {#}:{#}, {#}:{#}, {#}:{#}, {#}:{#}, {#}:{#})</span>",
 "Also used in this unit: <a>Circuits</a> with <a>Worksheet: AC Resonance</a> with <a>Worksheet: Reactance and Phase</a> with <a>Worksheet: Power in an AC Circuit</a> <span>(card under <a>Lecture {#} · Capacitor circuits</a>; {#}:{#}, {#}:{#}, {#}:{#}, {#}:{#}, {#}:{#})</span> · <a>Transformers</a> <span>(card under <a>Induction and inductance</a>; {#}:{#})</span>":
   "También se usa en esta unidad: <a>Circuitos</a> con <a>Hoja de trabajo: Resonancia en CA</a> con <a>Hoja de trabajo: Reactancia y fase</a> con <a>Hoja de trabajo: Potencia en un circuito de CA</a> <span>(tarjeta en <a>Clase {#} · Circuitos con capacitores</a>; {#}:{#}, {#}:{#}, {#}:{#}, {#}:{#}, {#}:{#})</span> · <a>Transformadores</a> <span>(tarjeta en <a>Inducción e inductancia</a>; {#}:{#})</span>",
 "Modern Physics · Virtual Physics Demos":
@@ -1714,8 +1752,6 @@ VDI18N.add('es', 'site', {
   "Física moderna",
 "Relativity, photons and matter waves, quantum mechanics, atoms, solids, nuclei, particles and cosmology. OpenStax University Physics Volume {#}, chapters {#} to {#}.":
   "Relatividad, fotones y ondas de materia, mecánica cuántica, átomos, sólidos, núcleos, partículas y cosmología. OpenStax Física universitaria volumen {#}, capítulos {#} a {#}.",
-"<a>Photons and matter waves</a>":
-  "<a>Fotones y ondas de materia</a>",
 "<a>Quantum mechanics</a>":
   "<a>Mecánica cuántica</a>",
 "<a>Atomic structure</a>":
@@ -1742,16 +1778,16 @@ VDI18N.add('es', 'site', {
   "<span>{#}:{#}</span> Contracción de la longitud",
 "<span>{#}:{#}</span> The Lorentz Transformation":
   "<span>{#}:{#}</span> La transformación de Lorentz",
-"<a>Open demo</a> <a>Worksheet: Spacetime Diagrams and the Lorentz Transformation</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Diagramas de espacio-tiempo y la transformación de Lorentz</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Spacetime Diagrams and the Lorentz Transformation<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Diagramas de espacio-tiempo y la transformación de Lorentz<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Speed of Light</a>":
   "<a>Rapidez de la luz</a>",
-"<a>Open demo</a> <a>Worksheet: Speed of Light with a Rotating Mirror</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: La rapidez de la luz con un espejo giratorio</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Speed of Light with a Rotating Mirror<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: La rapidez de la luz con un espejo giratorio<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Magnetism from Relativity</a>":
   "<a>Magnetismo a partir de la relatividad</a>",
-"<a>Open demo</a> <a>Worksheet: Magnetism from Relativity</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Magnetismo a partir de la relatividad</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Magnetism from Relativity<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Magnetismo a partir de la relatividad<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Velocity, Momentum and Energy Near c</a>":
   "<a>Velocidad, momento y energía cerca de c</a>",
 "<span>{#}:{#}</span> Relativistic Velocity Transformation":
@@ -1760,64 +1796,64 @@ VDI18N.add('es', 'site', {
   "<span>{#}:{#}</span> Momento relativista",
 "<span>{#}:{#}</span> Relativistic Energy":
   "<span>{#}:{#}</span> Energía relativista",
-"<a>Open demo</a> <a>Worksheet {#}: Adding Velocities Near c</a> <a>Worksheet {#}: Momentum Under a Steady Force</a> <a>Worksheet {#}: Bertozzi's Electrons</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Suma de velocidades cerca de c</a> <a>Hoja de trabajo {#}: Momento bajo una fuerza constante</a> <a>Hoja de trabajo {#}: Los electrones de Bertozzi</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Adding Velocities Near c<span>{#} min · algebra</span></a> <a>Worksheet {#}: Momentum Under a Steady Force<span>{#} min · algebra</span></a> <a>Worksheet {#}: Bertozzi's Electrons<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Suma de velocidades cerca de c<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Momento bajo una fuerza constante<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Los electrones de Bertozzi<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Doppler Effect and Shock Waves</a>":
   "<a>Efecto Doppler y ondas de choque</a>",
 "<span>{#}:{#}</span> Doppler Effect for Light":
   "<span>{#}:{#}</span> Efecto Doppler de la luz",
-"<a>Open demo</a> <a>Worksheet: Doppler Effect for Light</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Efecto Doppler de la luz</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Doppler Effect for Light<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Efecto Doppler de la luz<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Compton Scattering</a>":
   "<a>Dispersión Compton</a>",
-"<a>Open demo</a> <a>Worksheet: Compton Scattering</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Dispersión Compton</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Compton Scattering<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Dispersión Compton<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Nuclear Binding Energy</a>":
   "<a>Energía de enlace nuclear</a>",
-"<a>Open demo</a> <a>Worksheet: The Curve of Binding Energy</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: La curva de energía de enlace</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: The Curve of Binding Energy<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: La curva de energía de enlace<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Photons and matter waves":
   "Fotones y ondas de materia",
 "<a>Blackbody Radiation</a>":
   "<a>Radiación de cuerpo negro</a>",
 "<span>{#}:{#}</span> Blackbody Radiation":
   "<span>{#}:{#}</span> Radiación de cuerpo negro",
-"<a>Open demo</a> <a>Worksheet: Blackbody Radiation</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Radiación de cuerpo negro</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Blackbody Radiation<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Radiación de cuerpo negro<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Photoelectric Effect</a>":
   "<a>Efecto fotoeléctrico</a>",
 "<span>{#}:{#}</span> Photoelectric Effect":
   "<span>{#}:{#}</span> Efecto fotoeléctrico",
-"<a>Open demo</a> <a>Worksheet: Photoelectric Effect and Planck's Constant</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Efecto fotoeléctrico y constante de Planck</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Photoelectric Effect and Planck's Constant<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Efecto fotoeléctrico y constante de Planck<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Spectra Explorer</a>":
   "<a>Explorador de espectros</a>",
 "<span>{#}:{#}</span> Bohr’s Model of the Hydrogen Atom":
   "<span>{#}:{#}</span> Modelo de Bohr del átomo de hidrógeno",
-"<a>Open demo</a> <a>Worksheet: The Hydrogen Spectrum and the Rydberg Constant</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: El espectro del hidrógeno y la constante de Rydberg</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: The Hydrogen Spectrum and the Rydberg Constant<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: El espectro del hidrógeno y la constante de Rydberg<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Franck–Hertz Experiment</a>":
   "<a>Experimento de Franck–Hertz</a>",
-"<a>Open demo</a> <a>Worksheet: Franck–Hertz Experiment</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Experimento de Franck–Hertz</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Franck–Hertz Experiment<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Experimento de Franck–Hertz<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Rutherford Scattering</a>":
   "<a>Dispersión de Rutherford</a>",
-"<a>Open demo</a> <a>Worksheet: Rutherford Scattering</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Dispersión de Rutherford</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Rutherford Scattering<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Dispersión de Rutherford<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<span>{#}:{#}</span> De Broglie’s Matter Waves":
   "<span>{#}:{#}</span> Las ondas de materia de De Broglie",
-"<a>Open demo</a> <a>Worksheet: Electron Diffraction and de Broglie Waves</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Difracción de electrones y ondas de De Broglie</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Electron Diffraction and de Broglie Waves<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Difracción de electrones y ondas de De Broglie<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<span>{#}:{#}</span> Wave-Particle Duality":
   "<span>{#}:{#}</span> Dualidad onda-partícula",
-"<a>Open demo</a> <a>Worksheet: Wave and Particle Duality</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Dualidad onda-partícula</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Wave and Particle Duality<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Dualidad onda-partícula<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Condensates: Interference and Vortices</a>":
   "<a>Condensados: interferencia y vórtices</a>",
 "<a>e/m of the Electron</a>":
   "<a>e/m del electrón</a>",
-"<a>Open demo</a> <a>Worksheet: Charge to Mass Ratio of the Electron</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Razón carga/masa del electrón</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Charge to Mass Ratio of the Electron<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Razón carga/masa del electrón<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Also used in this unit: <a>Compton Scattering</a> <span>(card under <a>Relativity</a>; {#}:{#})</span>":
   "También se usa en esta unidad: <a>Dispersión Compton</a> <span>(tarjeta en <a>Relatividad</a>; {#}:{#})</span>",
 "Quantum mechanics":
@@ -1836,20 +1872,20 @@ VDI18N.add('es', 'site', {
   "<span>{#}:{#}</span> El oscilador armónico cuántico",
 "<span>{#}:{#}</span> The Quantum Tunneling of Particles through Potential Barriers":
   "<span>{#}:{#}</span> El efecto túnel de partículas a través de barreras de potencial",
-"<a>Open demo</a> <a>Worksheet {#}: The Uncertainty Principle</a> <a>Worksheet {#}: Energy Levels in a Box and a Spring</a> <a>Worksheet {#}: Quantum Tunneling</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: El principio de incertidumbre</a> <a>Hoja de trabajo {#}: Niveles de energía en una caja y en un resorte</a> <a>Hoja de trabajo {#}: Efecto túnel cuántico</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: The Uncertainty Principle<span>{#} min · algebra</span></a> <a>Worksheet {#}: Energy Levels in a Box and a Spring<span>{#} min · algebra</span></a> <a>Worksheet {#}: Quantum Tunneling<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: El principio de incertidumbre<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Niveles de energía en una caja y en un resorte<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Efecto túnel cuántico<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Hydrogen Orbitals</a>":
   "<a>Orbitales del hidrógeno</a>",
-"<a>Open demo</a> <a>Worksheet: The Hydrogen Atom</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: El átomo de hidrógeno</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: The Hydrogen Atom<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: El átomo de hidrógeno<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Quantum Coin Toss</a>":
   "<a>Volado cuántico</a>",
-"<a>Open demo</a> <a>Worksheet: Superposition and Measurement</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Superposición y medición</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Superposition and Measurement<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Superposición y medición<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Radioactive Decay</a>":
   "<a>Decaimiento radiactivo</a>",
-"<a>Open demo</a> <a>Worksheet {#}: Measuring a Half Life</a> <a>Worksheet {#}: Parent and Daughter</a> <a>Worksheet {#}: Alpha and Beta Decay</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Medir una vida media</a> <a>Hoja de trabajo {#}: Núcleo padre y núcleo hijo</a> <a>Hoja de trabajo {#}: Decaimiento alfa y beta</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: Measuring a Half Life<span>{#} min · algebra</span></a> <a>Worksheet {#}: Parent and Daughter<span>{#} min · algebra</span></a> <a>Worksheet {#}: Alpha and Beta Decay<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Medir una vida media<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Núcleo padre y núcleo hijo<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Decaimiento alfa y beta<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Also used in this unit: <a>Condensates: Interference and Vortices</a> <span>(card under <a>Photons and matter waves</a>; {#}:{#})</span>":
   "También se usa en esta unidad: <a>Condensados: interferencia y vórtices</a> <span>(tarjeta en <a>Fotones y ondas de materia</a>; {#}:{#})</span>",
 "Atomic structure":
@@ -1860,26 +1896,26 @@ VDI18N.add('es', 'site', {
   "<span>{#}:{#}</span> Momento dipolar magnético orbital del electrón",
 "<span>{#}:{#}</span> Electron Spin":
   "<span>{#}:{#}</span> Espín del electrón",
-"<a>Open demo</a> <a>Worksheet {#}: The Orbital Magnetic Moment</a> <a>Worksheet {#}: The Stern–Gerlach Experiment</a> <a>Worksheet {#}: The Zeeman Effect</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: El momento magnético orbital</a> <a>Hoja de trabajo {#}: El experimento de Stern–Gerlach</a> <a>Hoja de trabajo {#}: El efecto Zeeman</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: The Orbital Magnetic Moment<span>{#} min · algebra</span></a> <a>Worksheet {#}: The Stern–Gerlach Experiment<span>{#} min · algebra</span></a> <a>Worksheet {#}: The Zeeman Effect<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: El momento magnético orbital<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: El experimento de Stern–Gerlach<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: El efecto Zeeman<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Spin Resonance</a>":
   "<a>Resonancia de espín</a>",
-"<a>Open demo</a> <a>Worksheet: Spin Resonance</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Resonancia de espín</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Spin Resonance<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Resonancia de espín<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Shells, the Periodic Table and X-Rays</a>":
   "<a>Capas, la tabla periódica y rayos X</a>",
 "<span>{#}:{#}</span> The Exclusion Principle and the Periodic Table":
   "<span>{#}:{#}</span> El principio de exclusión y la tabla periódica",
 "<span>{#}:{#}</span> Atomic Spectra and X-rays":
   "<span>{#}:{#}</span> Espectros atómicos y rayos X",
-"<a>Open demo</a> <a>Worksheet {#}: Shells and the Periodic Table</a> <a>Worksheet {#}: X-Ray Spectra and Moseley's Law</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Capas y la tabla periódica</a> <a>Hoja de trabajo {#}: Espectros de rayos X y ley de Moseley</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Shells and the Periodic Table<span>{#} min · algebra</span></a> <a>Worksheet {#}: X-Ray Spectra and Moseley's Law<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Capas y la tabla periódica<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Espectros de rayos X y ley de Moseley<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Lasers and Stimulated Emission</a>":
   "<a>Láseres y emisión estimulada</a>",
 "<span>{#}:{#}</span> Lasers":
   "<span>{#}:{#}</span> Láseres",
-"<a>Open demo</a> <a>Worksheet: Laser Threshold, Efficiency and Cavity Modes</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Umbral, eficiencia y modos de cavidad de un láser</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Laser Threshold, Efficiency and Cavity Modes<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Umbral, eficiencia y modos de cavidad de un láser<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Also used in this unit: <a>Hydrogen Orbitals</a> <span>(card under <a>Quantum mechanics</a>; {#}:{#})</span> · <a>Spectra Explorer</a> <span>(card under <a>Photons and matter waves</a>; {#}:{#}, {#}:{#})</span> · <a>Quantum Coin Toss</a> <span>(card under <a>Quantum mechanics</a>; {#}:{#})</span> · <a>Electron Diffraction</a> <span>(card under <a>Photons and matter waves</a>; {#}:{#})</span>":
   "También se usa en esta unidad: <a>Orbitales del hidrógeno</a> <span>(tarjeta en <a>Mecánica cuántica</a>; {#}:{#})</span> · <a>Explorador de espectros</a> <span>(tarjeta en <a>Fotones y ondas de materia</a>; {#}:{#}, {#}:{#})</span> · <a>Volado cuántico</a> <span>(tarjeta en <a>Mecánica cuántica</a>; {#}:{#})</span> · <a>Difracción de electrones</a> <span>(tarjeta en <a>Fotones y ondas de materia</a>; {#}:{#})</span>",
 "Condensed matter physics":
@@ -1890,8 +1926,8 @@ VDI18N.add('es', 'site', {
   "<span>{#}:{#}</span> Tipos de enlaces moleculares",
 "<span>{#}:{#}</span> Molecular Spectra":
   "<span>{#}:{#}</span> Espectros moleculares",
-"<a>Open demo</a> <a>Worksheet {#}: Ionic and Covalent Bonds</a> <a>Worksheet {#}: The Infrared Spectrum of HCl</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Enlaces iónicos y covalentes</a> <a>Hoja de trabajo {#}: El espectro infrarrojo del HCl</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: Ionic and Covalent Bonds<span>{#} min · algebra</span></a> <a>Worksheet {#}: The Infrared Spectrum of HCl<span>{#} min · algebra</span></a> <a>Worksheet {#}: Molecules and Light<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Enlaces iónicos y covalentes<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: El espectro infrarrojo del HCl<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Las moléculas y la luz<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Crystals, Bands and Semiconductors</a>":
   "<a>Cristales, bandas y semiconductores</a>",
 "<span>{#}:{#}</span> Bonding in Crystalline Solids":
@@ -1902,22 +1938,22 @@ VDI18N.add('es', 'site', {
   "<span>{#}:{#}</span> Semiconductores y dopaje",
 "<span>{#}:{#}</span> Semiconductor Devices":
   "<span>{#}:{#}</span> Dispositivos semiconductores",
-"<a>Open demo</a> <a>Worksheet {#}: Lattice Energy of Ionic Crystals</a> <a>Worksheet {#}: Energy Bands</a> <a>Worksheet {#}: Carriers in Doped Silicon</a> <a>Worksheet {#}: The pn Junction and LEDs</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Energía de red de cristales iónicos</a> <a>Hoja de trabajo {#}: Bandas de energía</a> <a>Hoja de trabajo {#}: Portadores en silicio dopado</a> <a>Hoja de trabajo {#}: La unión pn y los LED</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: Lattice Energy of Ionic Crystals<span>{#} min · algebra</span></a> <a>Worksheet {#}: Energy Bands in a Chain of Atoms<span>{#} min · algebra</span></a> <a>Worksheet {#}: Energy Bands in a Periodic Potential<span>{#} min · algebra</span></a> <a>Worksheet {#}: Carriers in Doped Silicon<span>{#} min · algebra</span></a> <a>Worksheet {#}: The pn Junction and LEDs<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Energía de red de cristales iónicos<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Bandas de energía en una cadena de átomos<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Bandas de energía en un potencial periódico<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Portadores en silicio dopado<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: La unión pn y los LED<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<span>{#}:{#}</span> Free Electron Model of Metals":
   "<span>{#}:{#}</span> Modelo del electrón libre de los metales",
 "<span>{#}:{#}</span> Superconductivity":
   "<span>{#}:{#}</span> Superconductividad",
 "<a>Bose–Einstein Condensation</a>":
   "<a>Condensación de Bose–Einstein</a>",
-"<a>Open demo</a> <a>Worksheet: Bose–Einstein Condensation</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Condensación de Bose–Einstein</a> <a>Notas</a>",
-"<a>Open demo</a> <a>Worksheet: A Real Diode and the Junction Transistor</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Un diodo real y el transistor de unión</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Bose–Einstein Condensation<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Condensación de Bose–Einstein<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: A Real Diode and the Junction Transistor<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Un diodo real y el transistor de unión<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Superconductors and the Meissner Effect</a>":
   "<a>Superconductores y el efecto Meissner</a>",
-"<a>Open demo</a> <a>Worksheet: The Meissner Effect and the Critical Field</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: El efecto Meissner y el campo crítico</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: The Meissner Effect and the Critical Field<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: El efecto Meissner y el campo crítico<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Superconducting Levitation and Flux Pinning</a>":
   "<a>Levitación superconductora y anclaje de flujo</a>",
 "<a>Vortices in a Superconductor</a>":
@@ -1930,8 +1966,8 @@ VDI18N.add('es', 'site', {
   "<span>{#}:{#}</span> Decaimiento radiactivo",
 "<span>{#}:{#}</span> Medical Applications and Biological Effects of Nuclear Radiation":
   "<span>{#}:{#}</span> Aplicaciones médicas y efectos biológicos de la radiación nuclear",
-"<a>Open demo</a> <a>Worksheet {#}: Calibrating a Detector</a> <a>Worksheet {#}: Absorbing Gamma Rays</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Calibrar un detector</a> <a>Hoja de trabajo {#}: Absorción de rayos gamma</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Calibrating a Detector<span>{#} min · algebra</span></a> <a>Worksheet {#}: Absorbing Gamma Rays<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Calibrar un detector<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Absorción de rayos gamma<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Nuclear Reactions, Fission and Fusion</a>":
   "<a>Reacciones nucleares, fisión y fusión</a>",
 "<span>{#}:{#}</span> Nuclear Reactions":
@@ -1940,8 +1976,8 @@ VDI18N.add('es', 'site', {
   "<span>{#}:{#}</span> Fisión",
 "<span>{#}:{#}</span> Nuclear Fusion":
   "<span>{#}:{#}</span> Fusión nuclear",
-"<a>Open demo</a> <a>Worksheet {#}: Nuclear Reactions</a> <a>Worksheet {#}: Chain Reactions and Critical Size</a> <a>Worksheet {#}: Fusion and the Gamow Peak</a> <a>Worksheet {#}: Radiation Dose and Shielding</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Reacciones nucleares</a> <a>Hoja de trabajo {#}: Reacciones en cadena y tamaño crítico</a> <a>Hoja de trabajo {#}: La fusión y el pico de Gamow</a> <a>Hoja de trabajo {#}: Dosis de radiación y blindaje</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: Nuclear Reactions<span>{#} min · algebra</span></a> <a>Worksheet {#}: Chain Reactions and Critical Size<span>{#} min · algebra</span></a> <a>Worksheet {#}: Fusion and the Gamow Peak<span>{#} min · algebra</span></a> <a>Worksheet {#}: Radiation Dose and Shielding<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Reacciones nucleares<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Reacciones en cadena y tamaño crítico<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: La fusión y el pico de Gamow<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Dosis de radiación y blindaje<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Star Slice</a>":
   "<a>Corte de una estrella</a>",
 "Also used in this unit: <a>Nuclear Binding Energy</a> <span>(card under <a>Relativity</a>; {#}:{#}, {#}:{#}, {#}:{#}, {#}:{#})</span> · <a>Rutherford Scattering</a> <span>(card under <a>Photons and matter waves</a>; {#}:{#})</span> · <a>Radioactive Decay</a> <span>(card under <a>Quantum mechanics</a>; {#}:{#}, {#}:{#})</span>":
@@ -1960,20 +1996,20 @@ VDI18N.add('es', 'site', {
   "<span>{#}:{#}</span> Aceleradores y detectores de partículas",
 "<span>{#}:{#}</span> The Standard Model":
   "<span>{#}:{#}</span> El modelo estándar",
-"<a>Open demo</a> <a>Worksheet {#}: Conservation Laws for Particle Reactions</a> <a>Worksheet {#}: Building Hadrons from Quarks</a> <a>Worksheet {#}: Invariant Mass in a Bubble Chamber</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Leyes de conservación en reacciones de partículas</a> <a>Hoja de trabajo {#}: Construir hadrones con quarks</a> <a>Hoja de trabajo {#}: Masa invariante en una cámara de burbujas</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: Conservation Laws for Particle Reactions<span>{#} min · algebra</span></a> <a>Worksheet {#}: Building Hadrons from Quarks<span>{#} min · algebra</span></a> <a>Worksheet {#}: Invariant Mass in a Bubble Chamber<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Leyes de conservación en reacciones de partículas<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Construir hadrones con quarks<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Masa invariante en una cámara de burbujas<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Cosmic Distance Ladder</a>":
   "<a>Escalera de distancias cósmicas</a>",
 "<span>{#}:{#}</span> The Big Bang":
   "<span>{#}:{#}</span> El Big Bang",
-"<a>Open demo</a> <a>Worksheet: Measuring the Hubble Constant</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Medir la constante de Hubble</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Measuring the Hubble Constant<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Medir la constante de Hubble<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>The Big Bang and the Early Universe</a>":
   "<a>El Big Bang y el universo temprano</a>",
 "<span>{#}:{#}</span> Evolution of the Early Universe":
   "<span>{#}:{#}</span> Evolución del universo temprano",
-"<a>Open demo</a> <a>Worksheet {#}: Hubble's Law and the Age of the Universe</a> <a>Worksheet {#}: Thermal History of the Universe</a> <a>Worksheet {#}: Helium from the First Three Minutes</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: La ley de Hubble y la edad del universo</a> <a>Hoja de trabajo {#}: Historia térmica del universo</a> <a>Hoja de trabajo {#}: El helio de los primeros tres minutos</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: Hubble's Law and the Age of the Universe<span>{#} min · algebra</span></a> <a>Worksheet {#}: Thermal History of the Universe<span>{#} min · algebra</span></a> <a>Worksheet {#}: Helium from the First Three Minutes<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: La ley de Hubble y la edad del universo<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Historia térmica del universo<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: El helio de los primeros tres minutos<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Also used in this unit: <a>Gamma Spectroscopy</a> <span>(card under <a>Nuclear physics</a>; {#}:{#})</span>":
   "También se usa en esta unidad: <a>Espectroscopía gamma</a> <span>(tarjeta en <a>Física nuclear</a>; {#}:{#})</span>",
 "Astronomy · Virtual Physics Demos":
@@ -2004,108 +2040,108 @@ VDI18N.add('es', 'site', {
   "<span>No está en el libro de texto</span>",
 "<a>The Sky and the Celestial Sphere</a>":
   "<a>El cielo y la esfera celeste</a>",
-"<a>Open demo</a> <a>Worksheet {#}: The Sky and the Celestial Sphere (Astro {#})</a> <a>Worksheet {#}: Constellations in 3D (Astro {#})</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: El cielo y la esfera celeste (Astro {#})</a> <a>Hoja de trabajo {#}: Constelaciones en 3D (Astro {#})</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: The Sky and the Celestial Sphere (Astro {#})<span>{#} min · algebra</span></a> <a>Worksheet {#}: Constellations in 3D (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: El cielo y la esfera celeste (Astro {#})<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Constelaciones en 3D (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Reasons for Seasons</a>":
   "<a>Las razones de las estaciones</a>",
-"<a>Open demo</a> <a>Worksheet {#}: Sunlight Through the Year</a> <a>Worksheet {#}: Why We Have Seasons (Astro {#})</a> <a>Worksheet {#}: Sidereal Days, Solar Days and Sundials (Astro {#})</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: La luz solar a lo largo del año</a> <a>Hoja de trabajo {#}: Por qué tenemos estaciones (Astro {#})</a> <a>Hoja de trabajo {#}: Días siderales, días solares y relojes de sol (Astro {#})</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: Sunlight Through the Year<span>{#} min · algebra</span></a> <a>Worksheet {#}: Why We Have Seasons (Astro {#})<span>{#} min · algebra</span></a> <a>Worksheet {#}: Sidereal Days, Solar Days and Sundials (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: La luz solar a lo largo del año<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Por qué tenemos estaciones (Astro {#})<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Días siderales, días solares y relojes de sol (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Moon Phases</a>":
   "<a>Fases de la Luna</a>",
-"<a>Open demo</a> <a>Worksheet {#}: Phases and the Lunar Month</a> <a>Worksheet {#}: Phases of the Moon and Eclipse Seasons (Astro {#})</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Las fases y el mes lunar</a> <a>Hoja de trabajo {#}: Fases de la Luna y temporadas de eclipses (Astro {#})</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: Phases and the Lunar Month<span>{#} min · algebra</span></a> <a>Worksheet {#}: Phases of the Moon and Eclipse Seasons (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Las fases y el mes lunar<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Fases de la Luna y temporadas de eclipses (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Retrograde Motion and World Models</a>":
   "<a>Movimiento retrógrado y modelos del mundo</a>",
-"<a>Open demo</a> <a>Worksheet: Retrograde Motion and World Models (Astro {#})</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Movimiento retrógrado y modelos del mundo (Astro {#})</a> <a>Notas</a>",
-"<a>Open demo</a> <a>Worksheet: A Spinning Top and the Wandering Pole Star (Astro {#})</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Un trompo y la estrella polar que se desplaza (Astro {#})</a> <a>Notas</a>",
-"<a>Open demo</a> <a>Worksheet: How Big Is the Solar System? (Astro {#})</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: ¿Qué tan grande es el sistema solar? (Astro {#})</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: Retrograde Motion and Synodic Periods (Astro {#})<span>{#} min · algebra</span></a> <a>Worksheet {#}: Venus and the World Models (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Movimiento retrógrado y periodos sinódicos (Astro {#})<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Venus y los modelos del mundo (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: A Spinning Top and the Wandering Pole Star (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Un trompo y la estrella polar que se desplaza (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: How Big Is the Solar System? (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: ¿Qué tan grande es el sistema solar? (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Gravitation and orbits":
   "Gravitación y órbitas",
-"<a>Open demo</a> <a>Worksheet {#}: Kepler's Third Law</a> <a>Worksheet {#}: Kepler's Laws from Mercury to Pluto (Astro {#})</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Tercera ley de Kepler</a> <a>Hoja de trabajo {#}: Las leyes de Kepler de Mercurio a Plutón (Astro {#})</a> <a>Notas</a>",
-"<a>Open demo</a> <a>Worksheet {#}: How g Changes with Height and Latitude</a> <a>Worksheet {#}: Gravity from the Ground to Orbit (Astro {#})</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Cómo cambia g con la altura y la latitud</a> <a>Hoja de trabajo {#}: La gravedad del suelo a la órbita (Astro {#})</a> <a>Notas</a>",
-"<a>Open demo</a> <a>Worksheet {#}: Tidal Forces</a> <a>Worksheet {#}: Tides: Two Bulges, the Moon and the Sun (Astro {#})</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Fuerzas de marea</a> <a>Hoja de trabajo {#}: Mareas: dos abultamientos, la Luna y el Sol (Astro {#})</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: Kepler's Third Law<span>{#} min · algebra</span></a> <a>Worksheet {#}: Kepler's Laws from Earth to Pluto (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Tercera ley de Kepler<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Las leyes de Kepler de la Tierra a Plutón (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: How g Changes with Height and Latitude<span>{#} min · algebra</span></a> <a>Worksheet {#}: Gravity from the Ground to Orbit (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Cómo cambia g con la altura y la latitud<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: La gravedad del suelo a la órbita (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: Tidal Forces<span>{#} min · algebra</span></a> <a>Worksheet {#}: Tides: Two Bulges, the Moon and the Sun (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Fuerzas de marea<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Mareas: dos abultamientos, la Luna y el Sol (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Black Holes and Lensing</a>":
   "<a>Agujeros negros y lentes gravitacionales</a>",
-"<a>Open demo</a> <a>Worksheet: Black Holes and Lensing</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Agujeros negros y lentes gravitacionales</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Gravitational Lensing<span>{#} min · algebra</span></a> <a>Worksheet {#}: Near a Black Hole<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Lentes gravitacionales<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Cerca de un agujero negro<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Lagrange Points</a>":
   "<a>Puntos de Lagrange</a>",
-"<a>Open demo</a> <a>Worksheet {#}: Orbits Near the Lagrange Points</a> <a>Worksheet {#}: Lagrange Points: Trojan Asteroids and Parking Spots in Space (Astro {#})</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Órbitas cerca de los puntos de Lagrange</a> <a>Hoja de trabajo {#}: Puntos de Lagrange: asteroides troyanos y lugares de estacionamiento en el espacio (Astro {#})</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: Orbits Near the Lagrange Points<span>{#} min · algebra</span></a> <a>Worksheet {#}: Lagrange Points: Trojan Asteroids and Parking Spots in Space (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Órbitas cerca de los puntos de Lagrange<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Puntos de Lagrange: asteroides troyanos y lugares de estacionamiento en el espacio (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Finding Exoplanets</a>":
   "<a>Encontrar exoplanetas</a>",
-"<a>Open demo</a> <a>Worksheet {#}: Finding Exoplanets</a> <a>Worksheet {#}: Eclipsing Binary Stars</a> <a>Worksheet {#}: Finding Planets Around Other Stars (Astro {#})</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Encontrar exoplanetas</a> <a>Hoja de trabajo {#}: Estrellas binarias eclipsantes</a> <a>Hoja de trabajo {#}: Encontrar planetas alrededor de otras estrellas (Astro {#})</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: Finding Exoplanets<span>{#} min · algebra</span></a> <a>Worksheet {#}: Eclipsing Binary Stars<span>{#} min · algebra</span></a> <a>Worksheet {#}: Finding Planets Around Other Stars (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Encontrar exoplanetas<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Estrellas binarias eclipsantes<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Encontrar planetas alrededor de otras estrellas (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Planet Temperatures and Habitable Zones</a>":
   "<a>Temperaturas planetarias y zonas habitables</a>",
-"<a>Open demo</a> <a>Worksheet {#}: The Galactic Habitable Zone</a> <a>Worksheet {#}: Planet Temperatures and Habitable Zones (Astro {#})</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: La zona habitable galáctica</a> <a>Hoja de trabajo {#}: Temperaturas planetarias y zonas habitables (Astro {#})</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: The Galactic Habitable Zone<span>{#} min · algebra</span></a> <a>Worksheet {#}: Planet Temperatures and Habitable Zones (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: La zona habitable galáctica<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Temperaturas planetarias y zonas habitables (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Orbital Resonances</a>":
   "<a>Resonancias orbitales</a>",
-"<a>Open demo</a> <a>Worksheet: Orbital Resonances (Astro {#})</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Resonancias orbitales (Astro {#})</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Orbital Resonances (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Resonancias orbitales (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Building a Solar System</a>":
   "<a>Construir un sistema solar</a>",
-"<a>Open demo</a> <a>Worksheet: Building a Solar System (Astro {#})</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Construir un sistema solar (Astro {#})</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Building a Solar System (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Construir un sistema solar (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Giant Planets, Rings and Moons</a>":
   "<a>Planetas gigantes, anillos y lunas</a>",
-"<a>Open demo</a> <a>Worksheet: Giant Planets, Rings and Moons (Astro {#})</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Planetas gigantes, anillos y lunas (Astro {#})</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Giant Planets, Rings and Moons (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Planetas gigantes, anillos y lunas (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Telescopes and light":
   "Telescopios y luz",
-"<a>Open demo</a> <a>Worksheet: Star Colors and Temperatures (Astro {#})</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Colores y temperaturas de las estrellas (Astro {#})</a> <a>Notas</a>",
-"<a>Open demo</a> <a>Worksheet: The Electromagnetic Spectrum (Astro {#})</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: El espectro electromagnético (Astro {#})</a> <a>Notas</a>",
-"<a>Open demo</a> <a>Worksheet: Lenses, Mirrors and Color (Astro {#})</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Lentes, espejos y color (Astro {#})</a> <a>Notas</a>",
-"<a>Open demo</a> <a>Worksheet: Seeing Fine Detail (Astro {#})</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Ver detalles finos (Astro {#})</a> <a>Notas</a>",
-"<a>Open demo</a> <a>Worksheet: Fixing a Blurry Telescope (Astro {#})</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Cómo arreglar un telescopio borroso (Astro {#})</a> <a>Notas</a>",
-"<a>Open demo</a> <a>Worksheet: Fingerprints of the Elements (Astro {#})</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Las huellas digitales de los elementos (Astro {#})</a> <a>Notas</a>",
-"<a>Open demo</a> <a>Worksheet: Building a Telescope (Astro {#})</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Construir un telescopio (Astro {#})</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Star Colors and Temperatures (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Colores y temperaturas de las estrellas (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: The Electromagnetic Spectrum (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: El espectro electromagnético (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Lenses, Mirrors and Color (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Lentes, espejos y color (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Seeing Fine Detail (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Ver detalles finos (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: Fixing a Blurry Telescope (Astro {#})<span>{#} min · algebra</span></a> <a>Worksheet {#}: Seeing and Adaptive Optics (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Cómo arreglar un telescopio borroso (Astro {#})<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Seeing y óptica adaptativa (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Fingerprints of the Elements (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Las huellas digitales de los elementos (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Building a Telescope (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Construir un telescopio (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Stars":
   "Estrellas",
 "<a>Stellar Evolution</a>":
   "<a>Evolución estelar</a>",
-"<a>Open demo</a> <a>Worksheet {#}: Stellar Lives and Cluster Ages</a> <a>Worksheet {#}: The Nearest Stars and the Brightest Stars</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Vidas estelares y edades de cúmulos</a> <a>Hoja de trabajo {#}: Las estrellas más cercanas y las más brillantes</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Stellar Evolution<span>{#} min · algebra</span></a> <a>Worksheet {#}: Star Clusters<span>{#} min · calculus</span></a> <a>Worksheet {#}: The Nearest Stars and the Brightest Stars<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Evolución estelar<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Cúmulos estelares<span>{#} min · cálculo</span></a> <a>Hoja de trabajo {#}: Las estrellas más cercanas y las más brillantes<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>White Dwarf Cooling</a>":
   "<a>Enfriamiento de enanas blancas</a>",
-"<a>Open demo</a> <a>Worksheet: White Dwarf Cooling and Crystallization</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Enfriamiento y cristalización de enanas blancas</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: White Dwarf Cooling and Crystallization<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Enfriamiento y cristalización de enanas blancas<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Galaxies and cosmology":
   "Galaxias y cosmología",
-"<a>Open demo</a> <a>Worksheet {#}: Distances from the Main Sequence</a> <a>Worksheet {#}: Measuring a Cepheid on CCD Images</a> <a>Worksheet {#}: Parallax: Measuring the Distance to a Star (Astro {#})</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Distancias a partir de la secuencia principal</a> <a>Hoja de trabajo {#}: Medir una cefeida en imágenes CCD</a> <a>Hoja de trabajo {#}: Paralaje: medir la distancia a una estrella (Astro {#})</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: Distances from the Main Sequence<span>{#} min · algebra</span></a> <a>Worksheet {#}: Measuring a Cepheid on CCD Images<span>{#} min · algebra</span></a> <a>Worksheet {#}: Parallax: Measuring the Distance to a Star (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Distancias a partir de la secuencia principal<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Medir una cefeida en imágenes CCD<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Paralaje: medir la distancia a una estrella (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Galaxy Rotation Curves</a>":
   "<a>Curvas de rotación galácticas</a>",
-"<a>Open demo</a> <a>Worksheet: Weighing a Galaxy</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Pesar una galaxia</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Weighing a Galaxy<span>{#} min · calculus</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Pesar una galaxia<span>{#} min · cálculo</span></a> <a>Notas</a>",
 "Planets and their surfaces":
   "Los planetas y sus superficies",
 "<a>Craters, Cooling and Surface Ages</a>":
   "<a>Cráteres, enfriamiento y edades de superficies</a>",
-"<a>Open demo</a> <a>Worksheet {#}: Craters and the Ages of the Moon's Surface (Astro {#})</a> <a>Worksheet {#}: Dating the Surface of Mars (Astro {#})</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Los cráteres y las edades de la superficie de la Luna (Astro {#})</a> <a>Hoja de trabajo {#}: Fechar la superficie de Marte (Astro {#})</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: Craters and the Ages of the Moon's Surface (Astro {#})<span>{#} min · algebra</span></a> <a>Worksheet {#}: Dating the Surface of Mars (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Los cráteres y las edades de la superficie de la Luna (Astro {#})<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Fechar la superficie de Marte (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Inside a Planet</a>":
   "<a>El interior de un planeta</a>",
-"<a>Open demo</a> <a>Worksheet: Inside a Planet (Astro {#})</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: El interior de un planeta (Astro {#})</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Inside a Planet (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: El interior de un planeta (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Gas in a Box</a>":
   "<a>Gas en una caja</a>",
-"<a>Open demo</a> <a>Worksheet: Why Small, Hot Planets Lose Their Air (Astro {#})</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Por qué los planetas pequeños y calientes pierden su aire (Astro {#})</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Why Small, Hot Planets Lose Their Air (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Por qué los planetas pequeños y calientes pierden su aire (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Astro {#} · Virtual Physics Demos":
   "Astro {#} · Demos virtuales de física",
 "<b>Solar system astronomy</b>":
@@ -2118,6 +2154,8 @@ VDI18N.add('es', 'site', {
   "<span><strong>{#}</strong> semanas</span>",
 "<span><strong>{#}</strong> tests</span>":
   "<span><strong>{#}</strong> exámenes</span>",
+"<span>Every demo and worksheet, to use without the internet</span>":
+  "<span>Cada demo y hoja de trabajo, para usar sin internet</span>",
 "<a>Week {#}</a>":
   "<a>Semana {#}</a>",
 "<a>Test {#}</a>":
@@ -2130,16 +2168,16 @@ VDI18N.add('es', 'site', {
   "<span>{#} al {#} de dic.</span><span>Obligatoria: <a>Hoja de trabajo: El cielo y la esfera celeste</a></span>",
 "The size of the solar system: distances in astronomical units, light travel times and powers of ten. Positions on the sky, the Sun along the ecliptic and the seasons, the phases of the Moon, eclipses and precession.":
   "El tamaño del sistema solar: distancias en unidades astronómicas, tiempos de viaje de la luz y potencias de diez. Posiciones en el cielo, el Sol a lo largo de la eclíptica y las estaciones, las fases de la Luna, los eclipses y la precesión.",
-"<a>Open demo</a> <a><strong>Required</strong> Worksheet {#}: The Sky and the Celestial Sphere</a> <a>Worksheet {#}: Constellations in 3D</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a><strong>Obligatoria</strong> Hoja de trabajo {#}: El cielo y la esfera celeste</a> <a>Hoja de trabajo {#}: Constelaciones en 3D</a> <a>Notas</a>",
-"<a>Open demo</a> <a>Worksheet: How Big Is the Solar System?</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: ¿Qué tan grande es el sistema solar?</a> <a>Notas</a>",
-"<a>Open demo</a> <a>Worksheet {#}: Why We Have Seasons</a> <a>Worksheet {#}: Sidereal Days, Solar Days and Sundials</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Por qué tenemos estaciones</a> <a>Hoja de trabajo {#}: Días sidéreos, días solares y relojes de sol</a> <a>Notas</a>",
-"<a>Open demo</a> <a>Worksheet: Phases of the Moon and Eclipse Seasons</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Fases de la Luna y temporadas de eclipses</a> <a>Notas</a>",
-"<a>Open demo</a> <a>Worksheet: A Spinning Top and the Wandering Pole Star</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Un trompo y la estrella polar errante</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a><strong>Required</strong> Worksheet {#}: The Sky and the Celestial Sphere<span>{#} min · algebra</span></a> <a>Worksheet {#}: Constellations in 3D<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a><strong>Obligatoria</strong> Hoja de trabajo {#}: El cielo y la esfera celeste<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Constelaciones en 3D<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: How Big Is the Solar System?<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: ¿Qué tan grande es el sistema solar?<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: Why We Have Seasons<span>{#} min · algebra</span></a> <a>Worksheet {#}: Sidereal Days, Solar Days and Sundials<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Por qué tenemos estaciones<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Días sidéreos, días solares y relojes de sol<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Phases of the Moon and Eclipse Seasons<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Fases de la Luna y temporadas de eclipses<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: A Spinning Top and the Wandering Pole Star<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Un trompo y la estrella polar errante<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<span>Worksheet</span>":
   "<span>Hoja de trabajo</span>",
 "<a>Reading the Sky with Stellarium</a>":
@@ -2150,36 +2188,36 @@ VDI18N.add('es', 'site', {
   "<a>Hoja de trabajo: Leer el cielo con Stellarium</a>",
 "Week {#} · Topic {#}: Planetary motion, the Copernican revolution and gravity":
   "Semana {#} · Tema {#}: Movimiento planetario, la revolución copernicana y la gravedad",
-"<span>Dec {#} to {#}</span><span>Required: <a>Worksheet: Kepler's Laws from Mercury to Pluto</a></span>":
-  "<span>{#} al {#} de dic.</span><span>Obligatoria: <a>Hoja de trabajo: Las leyes de Kepler de Mercurio a Plutón</a></span>",
+"<span>Dec {#} to {#}</span><span>Required: <a>Worksheet: Kepler's Laws from Earth to Pluto</a></span>":
+  "<span>{#} al {#} de dic.</span><span>Obligatoria: <a>Hoja de trabajo: Las leyes de Kepler de la Tierra a Plutón</a></span>",
 "From Earth centered models to Kepler’s laws and Newton’s gravity, and weighing the Sun and planets with orbits.":
   "De los modelos centrados en la Tierra a las leyes de Kepler y la gravedad de Newton, y cómo pesar el Sol y los planetas con las órbitas.",
-"<a>Open demo</a> <a><strong>Required</strong> Worksheet: Kepler's Laws from Mercury to Pluto</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a><strong>Obligatoria</strong> Hoja de trabajo: Las leyes de Kepler de Mercurio a Plutón</a> <a>Notas</a>",
-"<a>Open demo</a> <a>Worksheet: Retrograde Motion and World Models</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Movimiento retrógrado y modelos del mundo</a> <a>Notas</a>",
-"<a>Open demo</a> <a>Worksheet: Gravity from the Ground to Orbit</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: La gravedad del suelo a la órbita</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a><strong>Required</strong> Worksheet: Kepler's Laws from Earth to Pluto<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a><strong>Obligatoria</strong> Hoja de trabajo: Las leyes de Kepler de la Tierra a Plutón<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: Retrograde Motion and Synodic Periods<span>{#} min · algebra</span></a> <a>Worksheet {#}: Venus and the World Models<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Movimiento retrógrado y periodos sinódicos<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Venus y los modelos del mundo<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Gravity from the Ground to Orbit<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: La gravedad del suelo a la órbita<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Week {#} · Topic {#}: Telescopes, light and the electromagnetic spectrum":
   "Semana {#} · Tema {#}: Telescopios, la luz y el espectro electromagnético",
 "<span>Dec {#} to Jan {#}, with the Christmas break inside</span><span>Required: <a>Worksheet: Building a Telescope</a></span>":
   "<span>{#} de dic. al {#} de ene., con las vacaciones de Navidad en medio</span><span>Obligatoria: <a>Hoja de trabajo: Construir un telescopio</a></span>",
 "How telescopes gather and resolve light, the spectrum from radio to X rays, thermal radiation and spectral lines.":
   "Cómo los telescopios reúnen y resuelven la luz, el espectro de las ondas de radio a los rayos X, la radiación térmica y las líneas espectrales.",
-"<a>Open demo</a> <a><strong>Required</strong> Worksheet: Building a Telescope</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a><strong>Obligatoria</strong> Hoja de trabajo: Construir un telescopio</a> <a>Notas</a>",
-"<a>Open demo</a> <a>Worksheet: Lenses, Mirrors and Color</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Lentes, espejos y color</a> <a>Notas</a>",
-"<a>Open demo</a> <a>Worksheet: Seeing Fine Detail</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Ver detalles finos</a> <a>Notas</a>",
-"<a>Open demo</a> <a>Worksheet: Fixing a Blurry Telescope</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Cómo arreglar un telescopio borroso</a> <a>Notas</a>",
-"<a>Open demo</a> <a>Worksheet: Star Colors and Temperatures</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Colores y temperaturas de las estrellas</a> <a>Notas</a>",
-"<a>Open demo</a> <a>Worksheet: Fingerprints of the Elements</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Huellas digitales de los elementos</a> <a>Notas</a>",
-"<a>Open demo</a> <a>Worksheet: The Electromagnetic Spectrum</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: El espectro electromagnético</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a><strong>Required</strong> Worksheet: Building a Telescope<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a><strong>Obligatoria</strong> Hoja de trabajo: Construir un telescopio<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Lenses, Mirrors and Color<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Lentes, espejos y color<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Seeing Fine Detail<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Ver detalles finos<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: Fixing a Blurry Telescope<span>{#} min · algebra</span></a> <a>Worksheet {#}: Seeing and Adaptive Optics<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Cómo arreglar un telescopio borroso<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Seeing y óptica adaptativa<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Star Colors and Temperatures<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Colores y temperaturas de las estrellas<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Fingerprints of the Elements<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Huellas digitales de los elementos<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: The Electromagnetic Spectrum<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: El espectro electromagnético<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Test {#}":
   "Examen {#}",
 "<span>Test review</span><span>Wed Jan {#}</span>":
@@ -2192,20 +2230,20 @@ VDI18N.add('es', 'site', {
   "<span>{#} al {#} de ene., después del examen {#}</span><span>Obligatoria: <a>Hoja de trabajo: Temperaturas planetarias y zonas habitables</a></span>",
 "A spinning cloud flattens into a disk and builds planets; what sets a planet’s temperature, and the habitable zone.":
   "Una nube en rotación se aplana en un disco y forma planetas; qué fija la temperatura de un planeta, y la zona habitable.",
-"<a>Open demo</a> <a><strong>Required</strong> Worksheet: Planet Temperatures and Habitable Zones</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a><strong>Obligatoria</strong> Hoja de trabajo: Temperaturas planetarias y zonas habitables</a> <a>Notas</a>",
-"<a>Open demo</a> <a>Worksheet: Building a Solar System</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Construir un sistema solar</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a><strong>Required</strong> Worksheet: Planet Temperatures and Habitable Zones<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a><strong>Obligatoria</strong> Hoja de trabajo: Temperaturas planetarias y zonas habitables<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Building a Solar System<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Construir un sistema solar<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Week {#} · Topic {#}: The Earth and Moon system":
   "Semana {#} · Tema {#}: El sistema Tierra-Luna",
 "<span>Jan {#} to {#}</span><span>Required: <a>Worksheet: Craters and the Ages of the Moon's Surface</a></span>":
   "<span>{#} al {#} de ene.</span><span>Obligatoria: <a>Hoja de trabajo: Los cráteres y las edades de la superficie de la Luna</a></span>",
 "The Moon forming impact, craters and the ages of surfaces, why small worlds cool first, and the geology of the Earth.":
   "El impacto que formó la Luna, los cráteres y las edades de las superficies, por qué los mundos pequeños se enfrían primero, y la geología de la Tierra.",
-"<a>Open demo</a> <a><strong>Required</strong> Worksheet {#}: Craters and the Ages of the Moon's Surface</a> <a>Worksheet {#}: Dating the Surface of Mars</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a><strong>Obligatoria</strong> Hoja de trabajo {#}: Los cráteres y las edades de la superficie de la Luna</a> <a>Hoja de trabajo {#}: Fechar la superficie de Marte</a> <a>Notas</a>",
-"<a>Open demo</a> <a>Worksheet: Tides: Two Bulges, the Moon and the Sun</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Mareas: dos abultamientos, la Luna y el Sol</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a><strong>Required</strong> Worksheet {#}: Craters and the Ages of the Moon's Surface<span>{#} min · algebra</span></a> <a>Worksheet {#}: Dating the Surface of Mars<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a><strong>Obligatoria</strong> Hoja de trabajo {#}: Los cráteres y las edades de la superficie de la Luna<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Fechar la superficie de Marte<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Tides: Two Bulges, the Moon and the Sun<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Mareas: dos abultamientos, la Luna y el Sol<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Also used in this unit: <a>Inside a Planet</a> <span>(card under <a>Week {#} · Topic {#}: Inner planets to Mars I</a>)</span>":
   "También se usa en esta unidad: <a>El interior de un planeta</a> <span>(tarjeta en <a>Semana {#} · Tema {#}: Planetas interiores hasta Marte I</a>)</span>",
 "Week {#} · Topic {#}: Inner planets to Mars I":
@@ -2214,10 +2252,10 @@ VDI18N.add('es', 'site', {
   "<span>{#} al {#} de ene.</span><span>Obligatoria: <a>Hoja de trabajo: El interior de un planeta</a></span>",
 "Mercury, Venus and Mars compared with Earth: spin, atmospheres, greenhouse warming and surfaces.":
   "Mercurio, Venus y Marte comparados con la Tierra: rotación, atmósferas, calentamiento por efecto invernadero y superficies.",
-"<a>Open demo</a> <a><strong>Required</strong> Worksheet: Inside a Planet</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a><strong>Obligatoria</strong> Hoja de trabajo: El interior de un planeta</a> <a>Notas</a>",
-"<a>Open demo</a> <a>Worksheet: Why Small, Hot Planets Lose Their Air</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Por qué los planetas pequeños y calientes pierden su aire</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a><strong>Required</strong> Worksheet: Inside a Planet<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a><strong>Obligatoria</strong> Hoja de trabajo: El interior de un planeta<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Why Small, Hot Planets Lose Their Air<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Por qué los planetas pequeños y calientes pierden su aire<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Also used in this unit: <a>Planet Temperatures and Habitable Zones</a> <span>(card under <a>Week {#} · Topic {#}: Formation of planetary systems</a>)</span> · <a>Kepler's Laws</a> <span>(card under <a>Week {#} · Topic {#}: Planetary motion, the Copernican revolution and gravity</a>)</span> · <a>Craters, Cooling and Surface Ages</a> <span>(card under <a>Week {#} · Topic {#}: The Earth and Moon system</a>)</span>":
   "También se usa en esta unidad: <a>Temperaturas planetarias y zonas habitables</a> <span>(tarjeta en <a>Semana {#} · Tema {#}: Formación de sistemas planetarios</a>)</span> · <a>Leyes de Kepler</a> <span>(tarjeta en <a>Semana {#} · Tema {#}: Movimiento planetario, la revolución copernicana y la gravedad</a>)</span> · <a>Cráteres, enfriamiento y edades de superficies</a> <span>(tarjeta en <a>Semana {#} · Tema {#}: El sistema Tierra-Luna</a>)</span>",
 "Week {#} · Topic {#}: Mars II, geology":
@@ -2238,10 +2276,10 @@ VDI18N.add('es', 'site', {
   "<span>{#} al {#} de feb., con Mardi Gras en medio</span><span>Obligatoria: <a>Hoja de trabajo: Planetas gigantes, anillos y lunas</a></span>",
 "The asteroid belt, the largest asteroids, near Earth asteroids, and how Jupiter shapes small bodies’ orbits. The gas giants, their rings and their moons, and the tidal forces that heat moons and limit rings.":
   "El cinturón de asteroides, los asteroides más grandes, los asteroides cercanos a la Tierra y cómo Júpiter moldea las órbitas de los cuerpos menores. Los gigantes gaseosos, sus anillos y sus lunas, y las fuerzas de marea que calientan lunas y limitan anillos.",
-"<a>Open demo</a> <a><strong>Required</strong> Worksheet: Giant Planets, Rings and Moons</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a><strong>Obligatoria</strong> Hoja de trabajo: Planetas gigantes, anillos y lunas</a> <a>Notas</a>",
-"<a>Open demo</a> <a>Worksheet: Lagrange Points: Trojan Asteroids and Parking Spots in Space</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Puntos de Lagrange: asteroides troyanos y estacionamientos en el espacio</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a><strong>Required</strong> Worksheet: Giant Planets, Rings and Moons<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a><strong>Obligatoria</strong> Hoja de trabajo: Planetas gigantes, anillos y lunas<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Lagrange Points: Trojan Asteroids and Parking Spots in Space<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Puntos de Lagrange: asteroides troyanos y estacionamientos en el espacio<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Also used in this unit: <a>Kepler's Laws</a> <span>(card under <a>Week {#} · Topic {#}: Planetary motion, the Copernican revolution and gravity</a>)</span> · <a>Tides</a> <span>(card under <a>Week {#} · Topic {#}: The Earth and Moon system</a>)</span> · <a>Orbital Resonances</a> <span>(card under <a>Week {#} · Topic {#}: Uranus, Neptune and the Kuiper belt</a>)</span>":
   "También se usa en esta unidad: <a>Leyes de Kepler</a> <span>(tarjeta en <a>Semana {#} · Tema {#}: Movimiento planetario, la revolución copernicana y la gravedad</a>)</span> · <a>Mareas</a> <span>(tarjeta en <a>Semana {#} · Tema {#}: El sistema Tierra-Luna</a>)</span> · <a>Resonancias orbitales</a> <span>(tarjeta en <a>Semana {#} · Tema {#}: Urano, Neptuno y el cinturón de Kuiper</a>)</span>",
 "Week {#} · Topic {#}: Uranus, Neptune and the Kuiper belt":
@@ -2250,8 +2288,8 @@ VDI18N.add('es', 'site', {
   "<span>{#} al {#} de feb.</span><span>Obligatoria: <a>Hoja de trabajo: Resonancias orbitales</a></span>",
 "The ice giants, Uranus’s tipped axis, Pluto and the Kuiper belt, and comets.":
   "Los gigantes de hielo, el eje inclinado de Urano, Plutón y el cinturón de Kuiper, y los cometas.",
-"<a>Open demo</a> <a><strong>Required</strong> Worksheet: Orbital Resonances</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a><strong>Obligatoria</strong> Hoja de trabajo: Resonancias orbitales</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a><strong>Required</strong> Worksheet: Orbital Resonances<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a><strong>Obligatoria</strong> Hoja de trabajo: Resonancias orbitales<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Also used in this unit: <a>Reasons for Seasons</a> <span>(card under <a>Week {#} · Topics {#} and {#}: Intro, star charts, the Sun and the Moon</a>)</span> · <a>Kepler's Laws</a> <span>(card under <a>Week {#} · Topic {#}: Planetary motion, the Copernican revolution and gravity</a>)</span> · <a>Giant Planets, Rings and Moons</a> <span>(card under <a>Week {#} · Topics {#} and {#}: Minor planets, Jupiter and Saturn</a>)</span>":
   "También se usa en esta unidad: <a>Las razones de las estaciones</a> <span>(tarjeta en <a>Semana {#} · Temas {#} y {#}: Introducción, cartas estelares, el Sol y la Luna</a>)</span> · <a>Leyes de Kepler</a> <span>(tarjeta en <a>Semana {#} · Tema {#}: Movimiento planetario, la revolución copernicana y la gravedad</a>)</span> · <a>Planetas gigantes, anillos y lunas</a> <span>(tarjeta en <a>Semana {#} · Temas {#} y {#}: Planetas menores, Júpiter y Saturno</a>)</span>",
 "Week {#} · Topic {#}: Exoplanets":
@@ -2260,10 +2298,10 @@ VDI18N.add('es', 'site', {
   "<span>{#} al {#} de feb., una semana de repaso que termina con el examen {#}</span><span>Sin hoja de trabajo obligatoria</span>",
 "Finding planets around other stars by their pull and their shadows, and what they are made of.":
   "Encontrar planetas alrededor de otras estrellas por su atracción y por sus sombras, y de qué están hechos.",
-"<a>Open demo</a> <a>Worksheet: Finding Planets Around Other Stars</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Encontrar planetas alrededor de otras estrellas</a> <a>Notas</a>",
-"<a>Open demo</a> <a>Worksheet: Parallax: Measuring the Distance to a Star</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Paralaje: medir la distancia a una estrella</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Finding Planets Around Other Stars<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Encontrar planetas alrededor de otras estrellas<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Parallax: Measuring the Distance to a Star<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Paralaje: medir la distancia a una estrella<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Also used in this unit: <a>Planet Temperatures and Habitable Zones</a> <span>(card under <a>Week {#} · Topic {#}: Formation of planetary systems</a>)</span> · <a>Kepler's Laws</a> <span>(card under <a>Week {#} · Topic {#}: Planetary motion, the Copernican revolution and gravity</a>)</span>":
   "También se usa en esta unidad: <a>Temperaturas planetarias y zonas habitables</a> <span>(tarjeta en <a>Semana {#} · Tema {#}: Formación de sistemas planetarios</a>)</span> · <a>Leyes de Kepler</a> <span>(tarjeta en <a>Semana {#} · Tema {#}: Movimiento planetario, la revolución copernicana y la gravedad</a>)</span>",
 "<span>Test review</span><span>Fri Feb {#}</span>":
@@ -2302,14 +2340,14 @@ VDI18N.add('es', 'site', {
   "<span>{#}:{#}</span> Transferencia de calor, calor específico y calorimetría",
 "<span>{#}:{#}</span> Mechanisms of Heat Transfer":
   "<span>{#}:{#}</span> Mecanismos de transferencia de calor",
-"<a>Open demo</a> <a>Worksheet {#}: Thermal Equilibrium</a> <a>Worksheet {#}: Gas Thermometer and Absolute Zero</a> <a>Worksheet {#}: Thermal Expansion</a> <a>Worksheet {#}: Heat Conduction Through Layers</a> <a>Worksheet {#}: Cooling by Convection and Radiation</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Equilibrio térmico</a> <a>Hoja de trabajo {#}: Termómetro de gas y cero absoluto</a> <a>Hoja de trabajo {#}: Dilatación térmica</a> <a>Hoja de trabajo {#}: Conducción de calor a través de capas</a> <a>Hoja de trabajo {#}: Enfriamiento por convección y radiación</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: Thermal Equilibrium<span>{#} min · algebra</span></a> <a>Worksheet {#}: Gas Thermometer and Absolute Zero<span>{#} min · algebra</span></a> <a>Worksheet {#}: Thermal Expansion<span>{#} min · algebra</span></a> <a>Worksheet {#}: Heat Conduction Through Layers<span>{#} min · algebra</span></a> <a>Worksheet {#}: Cooling by Convection and Radiation<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Equilibrio térmico<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Termómetro de gas y cero absoluto<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Dilatación térmica<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Conducción de calor a través de capas<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Enfriamiento por convección y radiación<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>States of Matter</a>":
   "<a>Estados de la materia</a>",
 "<span>{#}:{#}</span> Phase Changes":
   "<span>{#}:{#}</span> Cambios de fase",
-"<a>Open demo</a> <a>Worksheet {#}: Heating Curve and Latent Heat</a> <a>Worksheet {#}: Bonds, Temperature and Latent Heat</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Curva de calentamiento y calor latente</a> <a>Hoja de trabajo {#}: Enlaces, temperatura y calor latente</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Heating Curve and Latent Heat<span>{#} min · algebra</span></a> <a>Worksheet {#}: Bonds, Temperature and Latent Heat<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Curva de calentamiento y calor latente<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Enlaces, temperatura y calor latente<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Superfluid Helium</a>":
   "<a>Helio superfluido</a>",
 "The kinetic theory of gases":
@@ -2322,12 +2360,12 @@ VDI18N.add('es', 'site', {
   "<span>{#}:{#}</span> Capacidad calorífica y equipartición de la energía",
 "<span>{#}:{#}</span> Distribution of Molecular Speeds":
   "<span>{#}:{#}</span> Distribución de las rapideces moleculares",
-"<a>Open demo</a> <a>Worksheet {#}: Gas in a Box</a> <a>Worksheet {#}: Diffusion and Graham's Law</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Gas en una caja</a> <a>Hoja de trabajo {#}: Difusión y ley de Graham</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: Gas in a Box<span>{#} min · algebra</span></a> <a>Worksheet {#}: Diffusion and Graham's Law<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Gas en una caja<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Difusión y ley de Graham<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Heat Capacities of Gases</a>":
   "<a>Capacidades caloríficas de los gases</a>",
-"<a>Open demo</a> <a>Worksheet {#}: Heat Capacities of Gases</a> <a>Worksheet {#}: Rüchardt's Ball</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Capacidades caloríficas de los gases</a> <a>Hoja de trabajo {#}: La esfera de Rüchardt</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: Heat Capacities of Gases<span>{#} min · algebra</span></a> <a>Worksheet {#}: Rüchardt's Ball<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Capacidades caloríficas de los gases<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: La esfera de Rüchardt<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "The first law of thermodynamics":
   "La primera ley de la termodinámica",
 "<a>Heat Engine Cycles</a>":
@@ -2342,8 +2380,8 @@ VDI18N.add('es', 'site', {
   "<span>{#}:{#}</span> Procesos termodinámicos",
 "<span>{#}:{#}</span> Adiabatic Processes for an Ideal Gas":
   "<span>{#}:{#}</span> Procesos adiabáticos de un gas ideal",
-"<a>Open demo</a> <a>Worksheet: Heat Engine Cycles</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Ciclos de máquinas térmicas</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Heat Engine Cycles<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Ciclos de máquinas térmicas<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Also used in this unit: <a>Heat Capacities of Gases</a> <span>(card under <a>The kinetic theory of gases</a>; {#}:{#}, {#}:{#})</span>":
   "También se usa en esta unidad: <a>Capacidades caloríficas de los gases</a> <span>(tarjeta en <a>La teoría cinética de los gases</a>; {#}:{#}, {#}:{#})</span>",
 "The second law of thermodynamics":
@@ -2364,20 +2402,20 @@ VDI18N.add('es', 'site', {
   "<span>{#}:{#}</span> Entropía",
 "<span>{#}:{#}</span> Entropy on a Microscopic Scale":
   "<span>{#}:{#}</span> La entropía a escala microscópica",
-"<a>Open demo</a> <a>Worksheet {#}: Free Expansion</a> <a>Worksheet {#}: Einstein Solids</a> <a>Worksheet {#}: Testing the Second Law</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Expansión libre</a> <a>Hoja de trabajo {#}: Sólidos de Einstein</a> <a>Hoja de trabajo {#}: Poner a prueba la segunda ley</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: Free Expansion<span>{#} min · algebra</span></a> <a>Worksheet {#}: Einstein Solids<span>{#} min · calculus</span></a> <a>Worksheet {#}: Testing the Second Law<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Expansión libre<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Sólidos de Einstein<span>{#} min · cálculo</span></a> <a>Hoja de trabajo {#}: Poner a prueba la segunda ley<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Galton Board</a>":
   "<a>Tablero de Galton</a>",
-"<a>Open demo</a> <a>Worksheet: Chance, the Binomial and the Bell Curve</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: El azar, la binomial y la curva de campana</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Chance, the Binomial and the Bell Curve<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: El azar, la binomial y la curva de campana<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Also used in this unit: <a>Heat Engine Cycles</a> <span>(card under <a>The first law of thermodynamics</a>; {#}:{#}, {#}:{#}, {#}:{#}, {#}:{#}, {#}:{#})</span>":
   "También se usa en esta unidad: <a>Ciclos de máquinas térmicas</a> <span>(tarjeta en <a>La primera ley de la termodinámica</a>; {#}:{#}, {#}:{#}, {#}:{#}, {#}:{#}, {#}:{#})</span>",
 "Beyond the textbook":
   "Más allá del libro de texto",
 "<a>Ising Model</a>":
   "<a>Modelo de Ising</a>",
-"<a>Open demo</a> <a>Worksheet: The Ising Phase Transition</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: La transición de fase de Ising</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: The Ising Phase Transition<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: La transición de fase de Ising<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Acoustics · Virtual Physics Demos":
   "Acústica · Demos virtuales de física",
 "<b>Waves and sound</b>":
@@ -2400,12 +2438,12 @@ VDI18N.add('es', 'site', {
   "<a>Energía y potencia de una onda</a>",
 "<span>{#}:{#}</span> Energy and Power of a Wave":
   "<span>{#}:{#}</span> Energía y potencia de una onda",
-"<a>Open demo</a> <a>Worksheet: Power Carried by a Wave</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Potencia transportada por una onda</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Power Carried by a Wave<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Potencia transportada por una onda<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Two Speaker Interference</a>":
   "<a>Interferencia de dos bocinas</a>",
-"<a>Open demo</a> <a>Worksheet: Two Speaker Interference</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Interferencia de dos bocinas</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Two Speaker Interference<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Interferencia de dos bocinas<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Sound":
   "Sonido",
 "<a>Sound Waves and the Speed of Sound</a>":
@@ -2414,54 +2452,54 @@ VDI18N.add('es', 'site', {
   "<span>{#}:{#}</span> Ondas sonoras",
 "<span>{#}:{#}</span> Speed of Sound":
   "<span>{#}:{#}</span> Rapidez del sonido",
-"<a>Open demo</a> <a>Worksheet: Speed of Sound by Time of Flight</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Rapidez del sonido por tiempo de vuelo</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Speed of Sound by Time of Flight<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Rapidez del sonido por tiempo de vuelo<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Resonators</a>":
   "<a>Resonadores</a>",
 "<span>{#}:{#}</span> Normal Modes of a Standing Sound Wave":
   "<span>{#}:{#}</span> Modos normales de una onda sonora estacionaria",
-"<a>Open demo</a> <a>Worksheet: Speed of Sound</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Rapidez del sonido</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Speed of Sound<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Rapidez del sonido<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Kundt's Tube</a>":
   "<a>Tubo de Kundt</a>",
-"<a>Open demo</a> <a>Worksheet: Kundt's Tube</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Tubo de Kundt</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Kundt's Tube<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Tubo de Kundt<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Ultrasound: Echoes and Blood Flow</a>":
   "<a>Ultrasonido: ecos y flujo sanguíneo</a>",
 "<span>{#}:{#}</span> The Doppler Effect":
   "<span>{#}:{#}</span> El efecto Doppler",
-"<a>Open demo</a> <a>Worksheet: Ultrasound Echoes and Doppler Flow</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Ecos de ultrasonido y flujo Doppler</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Ultrasound Echoes and Doppler Flow<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Ecos de ultrasonido y flujo Doppler<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Sound Intensity and Decibels</a>":
   "<a>Intensidad del sonido y decibeles</a>",
 "<span>{#}:{#}</span> Sound Intensity":
   "<span>{#}:{#}</span> Intensidad del sonido",
-"<a>Open demo</a> <a>Worksheet: Sound Intensity and Decibels</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Intensidad del sonido y decibeles</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Sound Intensity and Decibels<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Intensidad del sonido y decibeles<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Room Acoustics and the Anechoic Chamber</a>":
   "<a>Acústica de salas y la cámara anecoica</a>",
-"<a>Open demo</a> <a>Worksheet {#}: Reverberation Time</a> <a>Worksheet {#}: Anechoic Chamber</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Tiempo de reverberación</a> <a>Hoja de trabajo {#}: Cámara anecoica</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: Reverberation Time<span>{#} min · algebra</span></a> <a>Worksheet {#}: Anechoic Chamber<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Tiempo de reverberación<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Cámara anecoica<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Timbre and Harmonics</a>":
   "<a>Timbre y armónicos</a>",
 "<span>{#}:{#}</span> Sources of Musical Sound":
   "<span>{#}:{#}</span> Fuentes de sonido musical",
-"<a>Open demo</a> <a>Worksheet: Timbre and Harmonics</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Timbre y armónicos</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Timbre and Harmonics<span>{#} min · algebra</span></a> <a>Worksheet {#}: Sampling and Aliasing<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Timbre y armónicos<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Muestreo y aliasing<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<span>{#}:{#}</span> Shock Waves":
   "<span>{#}:{#}</span> Ondas de choque",
-"<a>Open demo</a> <a>Worksheet: Doppler Effect and Shock Waves</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Efecto Doppler y ondas de choque</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Doppler Effect and Shock Waves<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Efecto Doppler y ondas de choque<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Also used in this unit: <a>Two Speaker Interference</a> <span>(card under <a>Waves</a>; {#}:{#})</span> · <a>Standing Waves</a> <span>(card under <a>Waves</a>; {#}:{#})</span>":
   "También se usa en esta unidad: <a>Interferencia de dos bocinas</a> <span>(tarjeta en <a>Ondas</a>; {#}:{#})</span> · <a>Ondas estacionarias</a> <span>(tarjeta en <a>Ondas</a>; {#}:{#})</span>",
 "<a>Chladni Plates</a>":
   "<a>Placas de Chladni</a>",
-"<a>Open demo</a> <a>Worksheet: Chladni Plates</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Placas de Chladni</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Chladni Plates<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Placas de Chladni<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Acoustic Levitation</a>":
   "<a>Levitación acústica</a>",
-"<a>Open demo</a> <a>Worksheet: Acoustic Levitation</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Levitación acústica</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Acoustic Levitation<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Levitación acústica<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Medical Physics · Virtual Physics Demos":
   "Física médica · Demos virtuales de física",
 "<b>Radiation physics and proton therapy</b>":
@@ -2494,12 +2532,12 @@ VDI18N.add('es', 'site', {
   "{#} · Fuentes y decaimiento",
 "Decay laws, the medical isotopes and the ⁹⁹Mo to ⁹⁹ᵐTc generator with transient equilibrium, Q values for isotope production, and the X-ray tube with its filtration and half value layer.":
   "Leyes de decaimiento, los isótopos médicos y el generador de ⁹⁹Mo a ⁹⁹ᵐTc con equilibrio transitorio, valores Q para la producción de isótopos, y el tubo de rayos X con su filtración y su capa hemirreductora.",
-"<a>Open demo</a> <a>Worksheet {#}: A Technetium Generator (Medical Physics)</a> <a>Worksheet {#}: Measuring a Half Life (warm up)</a> <a>Worksheet {#}: Parent and Daughter (warm up)</a> <a>Worksheet {#}: Alpha and Beta Decay (warm up)</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Un generador de tecnecio (Física médica)</a> <a>Hoja de trabajo {#}: Medir una vida media (calentamiento)</a> <a>Hoja de trabajo {#}: Núcleo padre y núcleo hijo (calentamiento)</a> <a>Hoja de trabajo {#}: Decaimiento alfa y beta (calentamiento)</a> <a>Notas</a>",
-"<a>Open demo</a> <a>Worksheet: The Curve of Binding Energy (warm up)</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: La curva de energía de enlace (calentamiento)</a> <a>Notas</a>",
-"<a>Open demo</a> <a>Worksheet {#}: Filtration and Half Value Layer (Medical Physics)</a> <a>Worksheet {#}: Shells and the Periodic Table (warm up)</a> <a>Worksheet {#}: X-Ray Spectra and Moseley's Law (warm up)</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Filtración y capa hemirreductora (Física médica)</a> <a>Hoja de trabajo {#}: Capas y la tabla periódica (calentamiento)</a> <a>Hoja de trabajo {#}: Espectros de rayos X y ley de Moseley (calentamiento)</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: A Technetium Generator (Medical Physics)<span>{#} min · calculus</span></a> <a>Worksheet {#}: Measuring a Half Life (warm up)<span>{#} min · algebra</span></a> <a>Worksheet {#}: Parent and Daughter (warm up)<span>{#} min · algebra</span></a> <a>Worksheet {#}: Alpha and Beta Decay (warm up)<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Un generador de tecnecio (Física médica)<span>{#} min · cálculo</span></a> <a>Hoja de trabajo {#}: Medir una vida media (calentamiento)<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Núcleo padre y núcleo hijo (calentamiento)<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Decaimiento alfa y beta (calentamiento)<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: The Curve of Binding Energy (warm up)<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: La curva de energía de enlace (calentamiento)<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Filtration and Half Value Layer (Medical Physics)<span>{#} min · calculus</span></a> <a>Worksheet {#}: Shells and the Periodic Table (warm up)<span>{#} min · algebra</span></a> <a>Worksheet {#}: X-Ray Spectra and Moseley's Law (warm up)<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Filtración y capa hemirreductora (Física médica)<span>{#} min · cálculo</span></a> <a>Hoja de trabajo {#}: Capas y la tabla periódica (calentamiento)<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Espectros de rayos X y ley de Moseley (calentamiento)<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Also used in this unit: <a>Nuclear Reactions, Fission and Fusion</a> with <a>Worksheet: Nuclear Reactions (warm up)</a> <span>(card under <a>{#} · Protection and shielding</a>)</span>":
   "También se usa en esta unidad: <a>Reacciones nucleares, fisión y fusión</a> con <a>Hoja de trabajo: Reacciones nucleares (calentamiento)</a> <span>(tarjeta en <a>{#} · Protección y blindaje</a>)</span>",
 "{#} · Photon interactions":
@@ -2508,24 +2546,24 @@ VDI18N.add('es', 'site', {
   "Cinemática de Compton y la sección eficaz de Klein–Nishina, coeficientes de atenuación de XCOM, y el efecto fotoeléctrico como repaso.",
 "<a>Photon Interactions in Matter</a>":
   "<a>Interacciones de fotones con la materia</a>",
-"<a>Open demo</a> <a>Worksheet: Photon Interactions in Matter</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Interacciones de fotones con la materia</a> <a>Notas</a>",
-"<a>Open demo</a> <a>Worksheet: Compton Scattering (warm up)</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Dispersión Compton (calentamiento)</a> <a>Notas</a>",
-"<a>Open demo</a> <a>Worksheet {#}: Calibrating a Detector (warm up)</a> <a>Worksheet {#}: Absorbing Gamma Rays (warm up)</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Calibrar un detector (calentamiento)</a> <a>Hoja de trabajo {#}: Absorción de rayos gamma (calentamiento)</a> <a>Notas</a>",
-"<a>Open demo</a> <a>Worksheet: Photoelectric Effect and Planck's Constant (warm up)</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Efecto fotoeléctrico y constante de Planck (calentamiento)</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: Photon Interactions in Matter<span>{#} min · algebra</span></a> <a>Worksheet {#}: Photon Beams in Matter: Attenuation, Buildup and Beam Hardening<span>{#} min · calculus</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Interacciones de fotones con la materia<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Haces de fotones en la materia: atenuación, acumulación y endurecimiento del haz<span>{#} min · cálculo</span></a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Compton Scattering (warm up)<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Dispersión Compton (calentamiento)<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Calibrating a Detector (warm up)<span>{#} min · algebra</span></a> <a>Worksheet {#}: Absorbing Gamma Rays (warm up)<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Calibrar un detector (calentamiento)<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Absorción de rayos gamma (calentamiento)<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Photoelectric Effect and Planck's Constant (warm up)<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Efecto fotoeléctrico y constante de Planck (calentamiento)<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "{#} · Charged particles in matter":
   "{#} · Partículas cargadas en la materia",
 "Single Coulomb scattering, the step that multiple scattering adds up, then stopping power and range.":
   "La dispersión de Coulomb simple, el paso que la dispersión múltiple va sumando, y luego el poder de frenado y el alcance.",
-"<a>Open demo</a> <a>Worksheet: Rutherford Scattering (warm up)</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Dispersión de Rutherford (calentamiento)</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Rutherford Scattering (warm up)<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Dispersión de Rutherford (calentamiento)<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Charged Particles in Matter</a>":
   "<a>Partículas cargadas en la materia</a>",
-"<a>Open demo</a> <a>Worksheet: Stopping Power, Range and the Bragg Peak (Medical Physics)</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Poder de frenado, alcance y el pico de Bragg (Física médica)</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: Stopping Power and Range (Medical Physics)<span>{#} min · calculus</span></a> <a>Worksheet {#}: The Bragg Peak and Slabs (Medical Physics)<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Poder de frenado y alcance (Física médica)<span>{#} min · cálculo</span></a> <a>Hoja de trabajo {#}: El pico de Bragg y las placas (Física médica)<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Also used in this unit: <a>The Bragg Peak</a> <span>(card under <a>{#} · Proton therapy</a>)</span>":
   "También se usa en esta unidad: <a>El pico de Bragg</a> <span>(tarjeta en <a>{#} · Protonterapia</a>)</span>",
 "{#} · Dosimetry and detectors":
@@ -2534,8 +2572,8 @@ VDI18N.add('es', 'site', {
   "Tasa de dosis de una fuente puntual, dosis absorbida frente a dosis equivalente, y un detector de centelleo con su calibración y su resolución.",
 "<a>Dosimetry: Kerma, Equilibrium and the Ion Chamber</a>":
   "<a>Dosimetría: kerma, equilibrio y la cámara de ionización</a>",
-"<a>Open demo</a> <a>Worksheet {#}: Kerma, Dose and Charged Particle Equilibrium (Medical Physics)</a> <a>Worksheet {#}: Calibrating a Proton Beam: TRS-{#} Step by Step (Medical Physics)</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Kerma, dosis y equilibrio de partículas cargadas (Física médica)</a> <a>Hoja de trabajo {#}: Calibrar un haz de protones: el TRS-{#} paso a paso (Física médica)</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: Kerma, Dose and Charged Particle Equilibrium (Medical Physics)<span>{#} min · calculus</span></a> <a>Worksheet {#}: Calibrating a Proton Beam: TRS-{#} Step by Step (Medical Physics)<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Kerma, dosis y equilibrio de partículas cargadas (Física médica)<span>{#} min · cálculo</span></a> <a>Hoja de trabajo {#}: Calibrar un haz de protones: el TRS-{#} paso a paso (Física médica)<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Also used in this unit: <a>Nuclear Reactions, Fission and Fusion</a> with <a>Worksheet: Radiation Dose and Shielding (warm up)</a> <span>(card under <a>{#} · Protection and shielding</a>)</span> · <a>Gamma Spectroscopy</a> <span>(card under <a>{#} · Photon interactions</a>)</span>":
   "También se usa en esta unidad: <a>Reacciones nucleares, fisión y fusión</a> con <a>Hoja de trabajo: Dosis de radiación y blindaje (calentamiento)</a> <span>(tarjeta en <a>{#} · Protección y blindaje</a>)</span> · <a>Espectroscopía gamma</a> <span>(tarjeta en <a>{#} · Interacciones de fotones</a>)</span>",
 "{#} · Radiobiology":
@@ -2544,18 +2582,18 @@ VDI18N.add('es', 'site', {
   "Supervivencia celular, fraccionamiento y la efectividad biológica relativa de los protones.",
 "<a>Radiobiology: Cell Survival and Fractionation</a>":
   "<a>Radiobiología: supervivencia celular y fraccionamiento</a>",
-"<a>Open demo</a> <a>Worksheet: Radiobiology: Cell Survival and Fractionation</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Radiobiología: supervivencia celular y fraccionamiento</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: Radiobiology: Cell Survival, Oxygen and the Clonogenic Assay<span>{#} min · calculus</span></a> <a>Worksheet {#}: Radiobiology: Fractionation and Proton RBE<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Radiobiología: supervivencia celular, oxígeno y ensayo clonogénico<span>{#} min · cálculo</span></a> <a>Hoja de trabajo {#}: Radiobiología: fraccionamiento y RBE de protones<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "{#} · Protection and shielding":
   "{#} · Protección y blindaje",
 "Time, distance and shielding: dose rate from a point source, broad beam transmission and buildup in lead, concrete and water, and a barrier calculation for a PET uptake room with workload, occupancy and the NCRP design goals (Dose view of Nuclear Reactions).":
   "Tiempo, distancia y blindaje: tasa de dosis de una fuente puntual, transmisión de haz ancho y acumulación en plomo, concreto y agua, y el cálculo de una barrera para un cuarto de captación de PET con carga de trabajo, factor de ocupación y los objetivos de diseño del NCRP (vista Dosis de Reacciones nucleares).",
 "<a>Shielding Rooms</a>":
   "<a>Blindaje de salas</a>",
-"<a>Open demo</a> <a>Worksheet: Shielding Rooms: CT, Linac Vault and Proton Room (Medical Physics)</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Blindaje de salas: CT, búnker de linac y sala de protones (Física médica)</a> <a>Notas</a>",
-"<a>Open demo</a> <a>Worksheet {#}: Shielding a PET Uptake Room (Medical Physics)</a> <a>Worksheet {#}: Nuclear Reactions (warm up)</a> <a>Worksheet {#}: Chain Reactions and Critical Size (warm up)</a> <a>Worksheet {#}: Fusion and the Gamow Peak (warm up)</a> <a>Worksheet {#}: Radiation Dose and Shielding (warm up)</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Blindaje de un cuarto de captación de PET (Física médica)</a> <a>Hoja de trabajo {#}: Reacciones nucleares (calentamiento)</a> <a>Hoja de trabajo {#}: Reacciones en cadena y tamaño crítico (calentamiento)</a> <a>Hoja de trabajo {#}: La fusión y el pico de Gamow (calentamiento)</a> <a>Hoja de trabajo {#}: Dosis de radiación y blindaje (calentamiento)</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Shielding Rooms: CT, Linac Vault and Proton Room (Medical Physics)<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Blindaje de salas: CT, búnker de linac y sala de protones (Física médica)<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: Shielding a PET Uptake Room (Medical Physics)<span>{#} min · calculus</span></a> <a>Worksheet {#}: Nuclear Reactions (warm up)<span>{#} min · algebra</span></a> <a>Worksheet {#}: Chain Reactions and Critical Size (warm up)<span>{#} min · algebra</span></a> <a>Worksheet {#}: Fusion and the Gamow Peak (warm up)<span>{#} min · algebra</span></a> <a>Worksheet {#}: Radiation Dose and Shielding (warm up)<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Blindaje de un cuarto de captación de PET (Física médica)<span>{#} min · cálculo</span></a> <a>Hoja de trabajo {#}: Reacciones nucleares (calentamiento)<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Reacciones en cadena y tamaño crítico (calentamiento)<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: La fusión y el pico de Gamow (calentamiento)<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Dosis de radiación y blindaje (calentamiento)<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Also used in this unit: <a>Photon Interactions in Matter</a> <span>(card under <a>{#} · Photon interactions</a>)</span> · <a>Gamma Spectroscopy</a> with <a>Worksheet: Absorbing Gamma Rays (warm up)</a> <span>(card under <a>{#} · Photon interactions</a>)</span>":
   "También se usa en esta unidad: <a>Interacciones de fotones con la materia</a> <span>(tarjeta en <a>{#} · Interacciones de fotones</a>)</span> · <a>Espectroscopía gamma</a> con <a>Hoja de trabajo: Absorción de rayos gamma (calentamiento)</a> <span>(tarjeta en <a>{#} · Interacciones de fotones</a>)</span>",
 "{#} · Proton therapy":
@@ -2564,16 +2602,16 @@ VDI18N.add('es', 'site', {
   "Preparación para las corridas de control de calidad y el recorrido de dosimetría del cuarto año en el centro de protonterapia, con base en su sistema de barrido con haz fino IBA Proteus ONE: el pico de Bragg extendido, el control de calidad matutino y la verificación de planes de pacientes, una calibración del haz según el TRS-{#} y la RBE de los protones.",
 "<a>The Bragg Peak</a>":
   "<a>El pico de Bragg</a>",
-"<a>Open demo</a> <a>Worksheet: The Bragg Peak and the Spread Out Bragg Peak (Medical Physics)</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: El pico de Bragg y el pico de Bragg extendido (Física médica)</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: The Bragg Peak and the Spread Out Bragg Peak (Medical Physics)<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: El pico de Bragg y el pico de Bragg extendido (Física médica)<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Proton Therapy QA</a>":
   "<a>Control de calidad en protonterapia</a>",
-"<a>Open demo</a> <a>Worksheet: Proton Therapy QA: Morning Checks, Drift and Patient Plans (Medical Physics)</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Control de calidad en protonterapia: verificaciones matutinas, deriva y planes de pacientes (Física médica)</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Proton Therapy QA: Morning Checks, Drift and Patient Plans (Medical Physics)<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Control de calidad en protonterapia: verificaciones matutinas, deriva y planes de pacientes (Física médica)<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>CT Numbers and Proton Range</a>":
   "<a>Números CT y alcance de protones</a>",
-"<a>Open demo</a> <a>Worksheet: CT Numbers and Proton Range: Calibration, Stopping Power and Margins (Medical Physics)</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Números CT y alcance de protones: calibración, poder de frenado y márgenes (Física médica)</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: CT Numbers and Proton Range: Calibration and Stopping Power (Medical Physics)<span>{#} min · algebra</span></a> <a>Worksheet {#}: CT Numbers and Proton Range: Range Errors and Margins (Medical Physics)<span>{#} min · calculus</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Números CT y alcance de protones: calibración y poder de frenado (Física médica)<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Números CT y alcance de protones: errores de alcance y márgenes (Física médica)<span>{#} min · cálculo</span></a> <a>Notas</a>",
 "Also used in this unit: <a>Charged Particles in Matter</a> <span>(card under <a>{#} · Charged particles in matter</a>)</span> · <a>Dosimetry: Kerma, Equilibrium and the Ion Chamber</a> with <a>Worksheet: Calibrating a Proton Beam: TRS-{#} Step by Step (Medical Physics)</a> <span>(card under <a>{#} · Dosimetry and detectors</a>)</span> · <a>Radiobiology: Cell Survival and Fractionation</a> <span>(card under <a>{#} · Radiobiology</a>)</span>":
   "También se usa en esta unidad: <a>Partículas cargadas en la materia</a> <span>(tarjeta en <a>{#} · Partículas cargadas en la materia</a>)</span> · <a>Dosimetría: kerma, equilibrio y la cámara de ionización</a> con <a>Hoja de trabajo: Calibrar un haz de protones: el TRS-{#} paso a paso (Física médica)</a> <span>(tarjeta en <a>{#} · Dosimetría y detectores</a>)</span> · <a>Radiobiología: supervivencia celular y fraccionamiento</a> <span>(tarjeta en <a>{#} · Radiobiología</a>)</span>",
 "{#} · Photon and electron beams":
@@ -2584,12 +2622,16 @@ VDI18N.add('es', 'site', {
   "Esta unidad aún no tiene actividades.",
 "{#} · Imaging":
   "{#} · Imagenología",
-"Echo ranging, impedance, tissue attenuation in dB per cm per MHz and Doppler; the Larmor relation for hydrogen. X-ray imaging, MRI and nuclear medicine imaging come in a second phase.":
-  "Medición de distancia por eco, impedancia, atenuación en tejido en dB por cm por MHz y Doppler; la relación de Larmor para el hidrógeno. La imagenología con rayos X, la resonancia magnética y la imagenología de medicina nuclear llegan en una segunda fase.",
-"<a>Open demo</a> <a>Worksheet {#}: Attenuation in Tissue (Medical Physics)</a> <a>Worksheet {#}: Ultrasound Echoes and Doppler Flow (warm up)</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Atenuación en tejido (Física médica)</a> <a>Hoja de trabajo {#}: Ecos de ultrasonido y flujo Doppler (calentamiento)</a> <a>Notas</a>",
-"<a>Open demo</a> <a>Worksheet: Spin Resonance (warm up)</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Resonancia de espín (calentamiento)</a> <a>Notas</a>",
+"Echo ranging, impedance, tissue attenuation in dB per cm per MHz and Doppler; the Larmor relation for hydrogen; CT image reconstruction: projections, the sinogram and filtered backprojection, with streaks, resolution and noise. Projection X-ray imaging, MRI and nuclear medicine imaging come in a second phase.":
+  "Medición de distancias por eco, impedancia, atenuación en tejido en dB por cm por MHz y Doppler; la relación de Larmor para el hidrógeno; reconstrucción de imágenes de TC: proyecciones, el sinograma y la retroproyección filtrada, con rayas, resolución y ruido. La radiografía de proyección, la RM y las imágenes de medicina nuclear llegan en una segunda fase.",
+"<a>Open demo</a> <a>Worksheet {#}: Attenuation in Tissue (Medical Physics)<span>{#} min · calculus</span></a> <a>Worksheet {#}: Ultrasound Echoes and Doppler Flow (warm up)<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Atenuación en tejido (Física médica)<span>{#} min · cálculo</span></a> <a>Hoja de trabajo {#}: Ecos de ultrasonido y flujo Doppler (calentamiento)<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Spin Resonance (warm up)<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Resonancia de espín (calentamiento)<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<a>CT Image Reconstruction</a>":
+  "<a>Reconstrucción de imágenes de TC</a>",
+"<a>Open demo</a> <a>Worksheet: CT Image Reconstruction: From Projections to an Image (Medical Physics)<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Reconstrucción de imágenes de TC: de las proyecciones a una imagen (Física médica)<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "OpenStax University Physics · Virtual Physics Demos":
   "OpenStax Física universitaria · Demos virtuales de física",
 "<b>By textbook section</b>":
@@ -2614,8 +2656,8 @@ VDI18N.add('es', 'site', {
   "Volumen {#}: Mecánica, ondas y sonido",
 "<span>Ch. {#}–{#}</span><span>{#} sections</span><span>{#} with an activity</span><span><a>Free textbook: University Physics Volume {#}</a></span>":
   "<span>Cap. {#}–{#}</span><span>{#} secciones</span><span>{#} con una actividad</span><span><a>Libro de texto gratuito: Física universitaria volumen {#}</a></span>",
-"<span>Chapter {#}</span> Units and Measurement <span>{#} sections · {#} demo</span>":
-  "<span>Capítulo {#}</span> Unidades y medición <span>{#} secciones · {#} demo</span>",
+"<span>Chapter {#}</span> Units and Measurement <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> Unidades y medición <span>{#} secciones · {#} demos</span>",
 "<span>{#}:{#}</span><span>The Scope and Scale of Physics</span><span><a>Units, Scales and Estimates</a></span>":
   "<span>{#}:{#}</span><span>El alcance y la escala de la física</span><span><a>Unidades, escalas y estimaciones</a></span>",
 "<span>{#}:{#}</span><span>Units and Standards</span><span><a>Units, Scales and Estimates</a></span>":
@@ -2626,8 +2668,10 @@ VDI18N.add('es', 'site', {
   "<span>{#}:{#}</span><span>Análisis dimensional</span><span><a>Unidades, escalas y estimaciones</a></span>",
 "<span>{#}:{#}</span><span>Estimates and Fermi Calculations</span><span><a>Units, Scales and Estimates</a></span>":
   "<span>{#}:{#}</span><span>Estimaciones y cálculos de Fermi</span><span><a>Unidades, escalas y estimaciones</a></span>",
-"<span>{#}:{#}</span><span>Significant Figures</span><span><a>Units, Scales and Estimates</a></span>":
-  "<span>{#}:{#}</span><span>Cifras significativas</span><span><a>Unidades, escalas y estimaciones</a></span>",
+"<span>{#}:{#}</span><span>Significant Figures</span>":
+  "<span>{#}:{#}</span><span>Cifras significativas</span>",
+"<a>Units, Scales and Estimates</a> · <a>Measurement Uncertainty</a>":
+  "<a>Unidades, escalas y estimaciones</a> · <a>Incertidumbre de medición</a>",
 "<span>{#}:{#}</span><span>Solving Problems in Physics</span><span><a>Units, Scales and Estimates</a></span>":
   "<span>{#}:{#}</span><span>Resolución de problemas en física</span><span><a>Unidades, escalas y estimaciones</a></span>",
 "<span>Chapter {#}</span> Vectors <span>{#} sections · {#} demo</span>":
@@ -2856,8 +2900,10 @@ VDI18N.add('es', 'site', {
   "<span>{#}:{#}</span><span>Energía en el movimiento armónico simple</span><span><a>Resortes y oscilaciones</a></span>",
 "<span>{#}:{#}</span><span>Comparing Simple Harmonic Motion and Circular Motion</span><span><a>Springs and Oscillations</a></span>":
   "<span>{#}:{#}</span><span>Comparación entre el movimiento armónico simple y el movimiento circular</span><span><a>Resortes y oscilaciones</a></span>",
-"<span>{#}:{#}</span><span>Pendulums</span><span><a>Pendulums</a></span>":
-  "<span>{#}:{#}</span><span>Péndulos</span><span><a>Péndulos</a></span>",
+"<span>{#}:{#}</span><span>Pendulums</span>":
+  "<span>{#}:{#}</span><span>Péndulos</span>",
+"<a>Pendulums</a> · <a>Measurement Uncertainty</a>":
+  "<a>Péndulos</a> · <a>Incertidumbre de medición</a>",
 "<span>{#}:{#}</span><span>Damped Oscillations</span><span><a>Springs and Oscillations</a></span>":
   "<span>{#}:{#}</span><span>Oscilaciones amortiguadas</span><span><a>Resortes y oscilaciones</a></span>",
 "<span>{#}:{#}</span><span>Forced Oscillations</span><span><a>Springs and Oscillations</a></span>":
@@ -3494,6 +3540,8 @@ VDI18N.add('es', 'site', {
   "Mecánica",
 "<a>Functions and Their Derivatives</a>":
   "<a>Funciones y sus derivadas</a>",
+"Numerical Methods for Motion (notes to come)":
+  "Métodos numéricos para el movimiento (notas próximamente)",
 "<a>Belousov–Zhabotinsky Reaction</a>":
   "<a>Reacción de Belousov–Zhabotinsky</a>",
 "Electricity and magnetism":
@@ -3526,30 +3574,60 @@ VDI18N.add('es', 'site', {
   "En <a>Física moderna</a>",
 "OpenStax <span>{#}:{#}</span> <span>{#}:{#}</span>":
   "OpenStax <span>{#}:{#}</span> <span>{#}:{#}</span>",
+"<b>Before the worksheet:</b> Wave function and probability; hydrogen energy levels; quantum numbers; selection rules":
+  "<b>Antes de la hoja de trabajo:</b> Función de onda y probabilidad; niveles de energía del hidrógeno; números cuánticos; reglas de selección",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet: The Hydrogen Atom<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo: El átomo de hidrógeno<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "In <a>Modern Physics</a> · <a>Astro {#}</a> · <a>Astronomy</a>":
   "En <a>Física moderna</a> · <a>Astro {#}</a> · <a>Astronomía</a>",
 "Also under <a>Telescopes and light</a>":
   "También en <a>Telescopios y luz</a>",
 "OpenStax <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span>":
   "OpenStax <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span>",
-"<a>Open demo</a> <a>Worksheet {#}: The Hydrogen Spectrum and the Rydberg Constant</a> <a>Worksheet {#}: Fingerprints of the Elements (Astro {#})</a> <a>Worksheet {#}: Why Balmer Lines Peak in A Stars</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: El espectro del hidrógeno y la constante de Rydberg</a> <a>Hoja de trabajo {#}: Las huellas digitales de los elementos (Astro {#})</a> <a>Hoja de trabajo {#}: Por qué las líneas de Balmer alcanzan su máximo en las estrellas A</a> <a>Notas</a>",
+"<b>Before the worksheets:</b> {#}. Bohr model of hydrogen; photon energy and wavelength; fitting a line · {#}. Atoms and electron energy levels; wavelength of light; Kirchhoff's three spectra · {#}. Hydrogen energy levels; Boltzmann factor; ionization; exponentials and logarithms":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Modelo de Bohr del hidrógeno; energía y longitud de onda del fotón; ajustar una línea · {#}. Átomos y niveles de energía de los electrones; longitud de onda de la luz; los tres espectros de Kirchhoff · {#}. Niveles de energía del hidrógeno; factor de Boltzmann; ionización; exponenciales y logaritmos",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: The Hydrogen Spectrum and the Rydberg Constant<span>{#} min · algebra</span></a> <a>Worksheet {#}: Fingerprints of the Elements (Astro {#})<span>{#} min · algebra</span></a> <a>Worksheet {#}: Why Balmer Lines Peak in A Stars<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: El espectro del hidrógeno y la constante de Rydberg<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Las huellas digitales de los elementos (Astro {#})<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Por qué las líneas de Balmer alcanzan su máximo en las estrellas A<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<b>Before the worksheets:</b> {#}. Current loops and magnetic moment; angular momentum; Bohr model and quantum numbers · {#}. Magnetic moment; electron spin and quantized angular momentum; force on a magnetic moment · {#}. Atomic energy levels; magnetic moment and spin; angular momentum quantum numbers":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Espiras de corriente y momento magnético; momento angular; modelo de Bohr y números cuánticos · {#}. Momento magnético; espín del electrón y momento angular cuantizado; fuerza sobre un momento magnético · {#}. Niveles de energía atómicos; momento magnético y espín; números cuánticos de momento angular",
 "In <a>Modern Physics</a> · <a>Medical Physics</a>":
   "En <a>Física moderna</a> · <a>Física médica</a>",
-"<a>Open demo</a> <a>Worksheet {#}: Shells and the Periodic Table</a> <a>Worksheet {#}: X-Ray Spectra and Moseley's Law</a> <a>Worksheet {#}: Filtration and Half Value Layer (Medical Physics)</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Capas y la tabla periódica</a> <a>Hoja de trabajo {#}: Espectros de rayos X y ley de Moseley</a> <a>Hoja de trabajo {#}: Filtración y capa hemirreductora (Física médica)</a> <a>Notas</a>",
+"<b>Before the worksheets:</b> {#}. Quantum numbers and the exclusion principle; electron shells; ionization energy · {#}. Photon energy and wavelength; Bragg's law; Bohr model energy levels · {#}. Exponential attenuation and half value layer; natural logs; derivative of a log":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Números cuánticos y principio de exclusión; capas electrónicas; energía de ionización · {#}. Energía y longitud de onda del fotón; ley de Bragg; niveles de energía de Bohr · {#}. Atenuación exponencial y capa hemirreductora; logaritmos naturales; derivada de un logaritmo",
+"<a>Open demo</a> <a>Worksheet {#}: Shells and the Periodic Table<span>{#} min · algebra</span></a> <a>Worksheet {#}: X-Ray Spectra and Moseley's Law<span>{#} min · algebra</span></a> <a>Worksheet {#}: Filtration and Half Value Layer (Medical Physics)<span>{#} min · calculus</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Capas y la tabla periódica<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Espectros de rayos X y ley de Moseley<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Filtración y capa hemirreductora (Física médica)<span>{#} min · cálculo</span></a> <a>Notas</a>",
 "OpenStax <span>{#}:{#}</span>":
   "OpenStax <span>{#}:{#}</span>",
+"<b>Before the worksheet:</b> Electron spin and magnetic moment; energy levels in a magnetic field; photon energy":
+  "<b>Antes de la hoja de trabajo:</b> Espín del electrón y momento magnético; niveles de energía en un campo magnético; energía del fotón",
+"<b>Before the worksheet:</b> Photon energy; energy levels and stimulated emission; standing waves in a cavity":
+  "<b>Antes de la hoja de trabajo:</b> Energía del fotón; niveles de energía y emisión estimulada; ondas estacionarias en una cavidad",
+"<b>Before the worksheets:</b> {#}. Coulomb energy; potential energy curves; exclusion principle; ionic and covalent bonds · {#}. Quantized vibration and rotation; selection rule; reduced mass; fitting a line · {#}. Photon energy E = hc/λ; electric dipole; molecular vibration; greenhouse effect":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Energía de Coulomb; curvas de energía potencial; principio de exclusión; enlaces iónico y covalente · {#}. Vibración y rotación cuantizadas; regla de selección; masa reducida; ajuste de una recta · {#}. Energía del fotón E = hc/λ; dipolo eléctrico; vibración molecular; efecto invernadero",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: Ionic and Covalent Bonds<span>{#} min · algebra</span></a> <a>Worksheet {#}: The Infrared Spectrum of HCl<span>{#} min · algebra</span></a> <a>Worksheet {#}: Molecules and Light<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: Enlaces iónicos y covalentes<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: El espectro infrarrojo del HCl<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Las moléculas y la luz<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "OpenStax <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span>":
   "OpenStax <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span>",
+"<b>Before the worksheets:</b> {#}. Coulomb potential energy; ionic bonding; crystal structure of NaCl; fitting a line · {#}. Quantum energy levels; wave function overlap; Pauli exclusion; natural log and slopes · {#}. Schrödinger equation; free electron energy; tunneling; natural logs and line fits · {#}. Energy bands and band gap; Boltzmann factor; exponentials and logarithms · {#}. Semiconductors, p type and n type; the exponential Boltzmann factor; natural logs":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Energía potencial de Coulomb; enlace iónico; estructura cristalina del NaCl; ajuste de una recta · {#}. Niveles de energía cuánticos; traslape de funciones de onda; principio de exclusión de Pauli; logaritmo natural y pendientes · {#}. Ecuación de Schrödinger; energía del electrón libre; efecto túnel; logaritmos naturales y ajuste de rectas · {#}. Bandas de energía y brecha prohibida; factor de Boltzmann; exponenciales y logaritmos · {#}. Semiconductores tipo p y tipo n; el factor exponencial de Boltzmann; logaritmos naturales",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: Lattice Energy of Ionic Crystals<span>{#} min · algebra</span></a> <a>Worksheet {#}: Energy Bands in a Chain of Atoms<span>{#} min · algebra</span></a> <a>Worksheet {#}: Energy Bands in a Periodic Potential<span>{#} min · algebra</span></a> <a>Worksheet {#}: Carriers in Doped Silicon<span>{#} min · algebra</span></a> <a>Worksheet {#}: The pn Junction and LEDs<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: Energía de red de cristales iónicos<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Bandas de energía en una cadena de átomos<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Bandas de energía en un potencial periódico<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Portadores en silicio dopado<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: La unión pn y los LED<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<b>Before the worksheet:</b> Magnetic field and magnetic moment; superconductivity and zero resistance; straight line fits":
+  "<b>Antes de la hoja de trabajo:</b> Campo y momento magnético; superconductividad y resistencia cero; ajustes de rectas",
 "Also under <a>Magnetism</a>":
   "También en <a>Magnetismo</a>",
 "In <a>Thermodynamics</a>":
   "En <a>Termodinámica</a>",
 "Also under <a>Heat and thermodynamics</a>":
   "También en <a>Calor y termodinámica</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Notas</a>",
 "In <a>Modern Physics</a> · <a>Thermodynamics</a>":
   "En <a>Física moderna</a> · <a>Termodinámica</a>",
+"<b>Before the worksheet:</b> de Broglie wavelength; particle in a box; energy levels; Boltzmann factor; fitting a line":
+  "<b>Antes de la hoja de trabajo:</b> Longitud de onda de de Broglie; partícula en una caja; niveles de energía; factor de Boltzmann; ajuste lineal",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet: Bose–Einstein Condensation<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo: Condensación de Bose–Einstein<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Also under <a>Photons and quanta</a>":
   "También en <a>Fotones y cuantos</a>",
 "<a>Back to all topics</a>":
@@ -3574,16 +3652,32 @@ VDI18N.add('es', 'site', {
   "Demos de cargas y campos",
 "In <a>Physics II</a>":
   "En <a>Física II</a>",
+"<b>Before the worksheets:</b> {#}. Conductors and induced charge; grounding; Coulomb's law; charge sharing · {#}. Coulomb's law and electric field; polarization of insulators; log log graphs":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Conductores y carga inducida; conexión a tierra; ley de Coulomb; reparto de carga · {#}. Ley de Coulomb y campo eléctrico; polarización de aislantes; gráficas log log",
 "OpenStax <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span> …":
   "OpenStax <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span> …",
+"<b>Before the worksheets:</b> {#}. Coulomb's law; electric field and potential of point charges; vector addition; fitting a line · {#}. Electric potential and potential energy; fields of rings and arcs; E = -dV/dz; superposition":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Ley de Coulomb; campo eléctrico y potencial de cargas puntuales; suma de vectores; ajuste lineal · {#}. Potencial eléctrico y energía potencial; campos de anillos y arcos; E = -dV/dz; superposición",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: Electric Field and Potential<span>{#} min · algebra</span></a> <a>Worksheet {#}: Rings, Arcs and Potential Energy<span>{#} min · calculus</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: Campo y potencial eléctricos<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Anillos, arcos y energía potencial<span>{#} min · cálculo</span></a> <a>Notas</a>",
 "In <a>Physics I</a> · <a>Physics II</a>":
   "En <a>Física I</a> · <a>Física II</a>",
 "Also under <a>Gravitation and orbits</a>":
   "También en <a>Gravitación y órbitas</a>",
+"<b>Before the worksheet:</b> Electric flux; Gauss's law; spherical symmetry; superposition of charges":
+  "<b>Antes de la hoja de trabajo:</b> Flujo eléctrico; ley de Gauss; simetría esférica; superposición de cargas",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet: Gauss's Law<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo: Ley de Gauss<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<b>Before the worksheets:</b> {#}. Electric potential and capacitance of a sphere; current as charge per time; dielectric breakdown · {#}. Electric force on a charge; projectile motion; electric field between plates · {#}. Electric force on a charge; drag on a moving particle; exponentials and natural logs":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Potencial eléctrico y capacitancia de una esfera; corriente como carga por tiempo; ruptura dieléctrica · {#}. Fuerza eléctrica sobre una carga; movimiento de proyectiles; campo eléctrico entre placas · {#}. Fuerza eléctrica sobre una carga; arrastre sobre una partícula; exponenciales y logaritmos naturales",
 "Also under <a>Circuits</a>":
   "También en <a>Circuitos</a>",
 "OpenStax <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span>":
   "OpenStax <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span>",
+"<b>Before the worksheets:</b> {#}. Capacitance, C = Q/V; stored energy; series and parallel capacitors; reading a slope · {#}. Capacitance; Gauss's law results; dielectrics and polarization; electric field strength; fitting a line":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Capacitancia, C = Q/V; energía almacenada; capacitores en serie y en paralelo; pendiente de una gráfica · {#}. Capacitancia; resultados de la ley de Gauss; dieléctricos y polarización; campo eléctrico; ajuste lineal",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: Capacitance and Dielectrics<span>{#} min · algebra</span></a> <a>Worksheet {#}: Spherical Capacitors, Polarization and Breakdown<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: Capacitancia y dieléctricos<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Capacitores esféricos, polarización y ruptura<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "In <a>Physics II</a> · <a>Modern Physics</a>":
   "En <a>Física II</a> · <a>Física moderna</a>",
 "Chemistry and biology · Virtual Physics Demos":
@@ -3612,10 +3706,20 @@ VDI18N.add('es', 'site', {
   "<span>OpenStax Vol. {#} · Cap. {#}–{#}, {#}–{#} · Vol. {#} · Cap. {#}</span>",
 "Circuits demos":
   "Demos de circuitos",
+"<b>Before the worksheets:</b> {#}. Ohm's law; series and parallel resistors; Kirchhoff's rules; solving simple linear equations · {#}. Capacitors and resistors; Kirchhoff's loop rule; exponentials and natural logs · {#}. Energy in capacitors and inductors; oscillation and damping; natural logarithm · {#}. Impedance of inductors and capacitors; rms and peak values; reading a resonance curve · {#}. Diode and resistor circuits; Ohm's law; reading a slope from a log graph · {#}. Capacitors and inductors; sinusoidal voltage; rms values; derivatives of sine functions · {#}. Phase between voltage and current; rms values; power in a resistor; fitting a line · {#}. Ohm's law; series and parallel resistors; how voltmeters and ammeters connect":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Ley de Ohm; resistores en serie y en paralelo; reglas de Kirchhoff; resolver ecuaciones lineales sencillas · {#}. Capacitores y resistencias; regla de las mallas de Kirchhoff; exponenciales y logaritmos naturales · {#}. Energía en capacitores e inductores; oscilación y amortiguamiento; logaritmo natural · {#}. Impedancia de inductores y capacitores; valores rms y pico; leer una curva de resonancia · {#}. Circuitos con diodos y resistencias; ley de Ohm; leer una pendiente en una gráfica logarítmica · {#}. Capacitores e inductores; voltaje senoidal; valores rms; derivadas de funciones seno · {#}. Fase entre voltaje y corriente; valores rms; potencia en un resistor; ajuste de una recta · {#}. Ley de Ohm; resistores en serie y en paralelo; cómo se conectan voltímetros y amperímetros",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: Kirchhoff's Rules<span>{#} min · algebra</span></a> <a>Worksheet {#}: RC Time Constant<span>{#} min · algebra</span></a> <a>Worksheet {#}: RLC Oscillations and Damping<span>{#} min · algebra</span></a> <a>Worksheet {#}: AC Resonance<span>{#} min · algebra</span></a> <a>Worksheet {#}: A Real Diode and the Junction Transistor<span>{#} min · algebra</span></a> <a>Worksheet {#}: Reactance and Phase<span>{#} min · calculus</span></a> <a>Worksheet {#}: Power in an AC Circuit<span>{#} min · algebra</span></a> <a>Worksheet {#}: Meter Loading<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: Reglas de Kirchhoff<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Constante de tiempo RC<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Oscilaciones RLC y amortiguamiento<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Resonancia en CA<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Un diodo real y el transistor de unión<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Reactancia y fase<span>{#} min · cálculo</span></a> <a>Hoja de trabajo {#}: Potencia en un circuito de CA<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Carga del medidor<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<b>Before the worksheets:</b> {#}. Ohm's law; current as moving charge; fitting a straight line · {#}. Electric field and potential; equipotentials; resistance and resistivity; reading a slope":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Ley de Ohm; corriente como carga en movimiento; ajustar una línea recta · {#}. Campo eléctrico y potencial; equipotenciales; resistencia y resistividad; leer una pendiente",
 "Also under <a>Charges and fields</a>":
   "También en <a>Cargas y campos</a>",
+"<b>Before the worksheet:</b> Ohm's law; electric power P = IV; resistance of a wire; parallel circuits":
+  "<b>Antes de la hoja de trabajo:</b> Ley de Ohm; potencia eléctrica P = IV; resistencia de un alambre; circuitos en paralelo",
 "Also under <a>Induction and EM waves</a>":
   "También en <a>Inducción y ondas EM</a>",
+"<b>Before the worksheet:</b> Faraday's law of induction; AC voltage and current; power as V times I":
+  "<b>Antes de la hoja de trabajo:</b> Ley de Faraday; voltaje y corriente alterna; potencia como V por I",
 "Energy and momentum · Virtual Physics Demos":
   "Energía y momento · Demos virtuales de física",
 "<b>Mechanics</b>":
@@ -3642,8 +3746,20 @@ VDI18N.add('es', 'site', {
   "En <a>Física I</a>",
 "OpenStax <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span>":
   "OpenStax <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span>",
+"<b>Before the worksheet:</b> Potential energy and conservation of energy; force from the slope of U; reading graphs":
+  "<b>Antes de la hoja de trabajo:</b> Energía potencial y conservación de la energía; fuerza como pendiente de U; leer gráficas",
 "In <a>Physics I</a> · <a>Modern Physics</a>":
   "En <a>Física I</a> · <a>Física moderna</a>",
+"<b>Before the worksheet:</b> Momentum and impulse; Newton's second law; area under a force curve":
+  "<b>Antes de la hoja de trabajo:</b> Cantidad de movimiento e impulso; segunda ley de Newton; área bajo una curva de fuerza",
+"<b>Before the worksheet:</b> Conservation of momentum; elastic and inelastic collisions; kinetic energy; center of mass velocity":
+  "<b>Antes de la hoja de trabajo:</b> Conservación de la cantidad de movimiento; choques elásticos e inelásticos; energía cinética; velocidad del centro de masa",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet: Momentum and Collisions<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo: Momento y colisiones<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<b>Before the worksheet:</b> Center of mass; momentum and Newton's laws for systems; projectile motion; fitting a line":
+  "<b>Antes de la hoja de trabajo:</b> Centro de masa; cantidad de movimiento y leyes de Newton para sistemas; tiro parabólico; ajuste lineal",
+"<b>Before the worksheet:</b> Momentum conservation; Newton's second law; natural logarithm; fitting a line":
+  "<b>Antes de la hoja de trabajo:</b> Conservación del momento lineal; segunda ley de Newton; logaritmo natural; ajustar una línea",
 "Equilibrium and materials · Virtual Physics Demos":
   "Equilibrio y materiales · Demos virtuales de física",
 "Equilibrium and materials":
@@ -3654,6 +3770,12 @@ VDI18N.add('es', 'site', {
   "<span>OpenStax Vol. {#} · Cap. {#}</span>",
 "Equilibrium and materials demos":
   "Demos de equilibrio y materiales",
+"<b>Before the worksheet:</b> Force balance; torque about a point; free body diagrams; trigonometry":
+  "<b>Antes de la hoja de trabajo:</b> Equilibrio de fuerzas; torca respecto a un punto; diagramas de cuerpo libre; trigonometría",
+"<b>Before the worksheets:</b> {#}. Stress, strain and Young's modulus; Hooke's law; fitting a line to data · {#}. Stress and strain; Young's modulus; pressure; fitting a line":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Esfuerzo, deformación y módulo de Young; ley de Hooke; ajustar una recta a datos · {#}. Esfuerzo y deformación; módulo de Young; presión; ajustar una línea",
+"<b>Before the worksheet:</b> Static equilibrium; free body diagrams; tension and components of force; reading a slope":
+  "<b>Antes de la hoja de trabajo:</b> Equilibrio estático; diagramas de cuerpo libre; tensión y componentes de fuerza; pendiente de una gráfica",
 "Fluids · Virtual Physics Demos":
   "Fluidos · Demos virtuales de física",
 "Pressure, buoyancy, flow and viscosity.":
@@ -3664,8 +3786,16 @@ VDI18N.add('es', 'site', {
   "Demos de fluidos",
 "In <a>Physics I</a> · <a>Astro {#}</a> · <a>Astronomy</a>":
   "En <a>Física I</a> · <a>Astro {#}</a> · <a>Astronomía</a>",
+"<b>Before the worksheet:</b> Pressure and depth; Archimedes' principle; continuity and Bernoulli's equation; reading a slope":
+  "<b>Antes de la hoja de trabajo:</b> Presión y profundidad; principio de Arquímedes; continuidad y ecuación de Bernoulli; leer una pendiente",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet: Pressure, Buoyancy and Flow<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo: Presión, flotación y flujo<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<b>Before the worksheets:</b> {#}. Forces on a falling object; buoyancy; viscous drag and Stokes' law · {#}. Fluid pressure and flow rate; viscosity; Poiseuille's law; reading a slope":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Fuerzas sobre un cuerpo que cae; flotación; arrastre viscoso y ley de Stokes · {#}. Presión y gasto de un fluido; viscosidad; ley de Poiseuille; leer una pendiente",
 "Also under <a>Forces and Newton's laws</a>":
   "También en <a>Fuerzas y leyes de Newton</a>",
+"<b>Before the worksheet:</b> Newton's second law; free body diagrams; drag force growing with speed":
+  "<b>Antes de la hoja de trabajo:</b> Segunda ley de Newton; diagramas de cuerpo libre; fuerza de arrastre que crece con la rapidez",
 "Forces and Newton's laws · Virtual Physics Demos":
   "Fuerzas y leyes de Newton · Demos virtuales de física",
 "Forces and Newton's laws":
@@ -3676,8 +3806,16 @@ VDI18N.add('es', 'site', {
   "<span>OpenStax Vol. {#} · Cap. {#}–{#}</span>",
 "Forces and Newton's laws demos":
   "Demos de fuerzas y leyes de Newton",
+"<b>Before the worksheets:</b> {#}. Newton's laws; free body diagrams; friction coefficients; work and kinetic energy; line fits · {#}. Newton's second law; free body diagrams; tension; constant acceleration; reading a slope":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Leyes de Newton; diagramas de cuerpo libre; coeficientes de fricción; trabajo y energía cinética; ajuste de rectas · {#}. Segunda ley de Newton; diagramas de cuerpo libre; tensión; aceleración constante; pendiente de una gráfica",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: Friction and Work<span>{#} min · algebra</span></a> <a>Worksheet {#}: Atwood's Machine<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: Fricción y trabajo<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: La máquina de Atwood<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<b>Before the worksheet:</b> Newton's second law; free body diagrams; normal force; fitting a line to a graph":
+  "<b>Antes de la hoja de trabajo:</b> Segunda ley de Newton; diagramas de cuerpo libre; fuerza normal; ajuste de una recta",
 "Also under <a>Kinematics</a>":
   "También en <a>Cinemática</a>",
+"<b>Before the worksheet:</b> Centripetal acceleration; Newton's second law; static friction; energy conservation; fitting a line":
+  "<b>Antes de la hoja de trabajo:</b> Aceleración centrípeta; segunda ley de Newton; fricción estática; conservación de la energía; ajuste lineal",
 "Also under <a>Fluids</a>":
   "También en <a>Fluidos</a>",
 "In <a>Physics I</a> · <a>Astronomy</a>":
@@ -3702,20 +3840,32 @@ VDI18N.add('es', 'site', {
   "Demos de galaxias y cosmología",
 "In <a>Astronomy</a>":
   "En <a>Astronomía</a>",
+"<b>Before the worksheet:</b> Circular orbits and gravity; Doppler shift; integrating a mass density":
+  "<b>Antes de la hoja de trabajo:</b> Órbitas circulares y gravedad; efecto Doppler; integrar una densidad de masa",
 "In <a>Modern Physics</a> · <a>Astronomy</a> · <a>Astro {#}</a>":
   "En <a>Física moderna</a> · <a>Astronomía</a> · <a>Astro {#}</a>",
 "Also under <a>Stars</a>":
   "También en <a>Estrellas</a>",
-"<a>Open demo</a> <a>Worksheet {#}: Measuring the Hubble Constant</a> <a>Worksheet {#}: Parallax: Measuring the Distance to a Star (Astro {#})</a> <a>Worksheet {#}: Distances from the Main Sequence</a> <a>Worksheet {#}: Measuring a Cepheid on CCD Images</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Medir la constante de Hubble</a> <a>Hoja de trabajo {#}: Paralaje: medir la distancia a una estrella (Astro {#})</a> <a>Hoja de trabajo {#}: Distancias a partir de la secuencia principal</a> <a>Hoja de trabajo {#}: Medir una cefeida en imágenes CCD</a> <a>Notas</a>",
+"<b>Before the worksheets:</b> {#}. Doppler redshift; recession velocity; reading a slope from a graph · {#}. Parallax and angle of view; arcseconds; inverse proportions; reading a slope · {#}. Apparent and absolute magnitude; distance modulus; the H-R diagram; quadratic fit · {#}. Apparent magnitude and logarithms; distance modulus; periodic motion; fitting a sine curve":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Corrimiento al rojo Doppler; velocidad de recesión; leer una pendiente en una gráfica · {#}. Paralaje y ángulo de visión; segundos de arco; proporciones inversas; leer una pendiente · {#}. Magnitud aparente y absoluta; módulo de distancia; diagrama H-R; ajuste cuadrático · {#}. Magnitud aparente y logaritmos; módulo de distancia; movimiento periódico; ajuste de una curva senoidal",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: Measuring the Hubble Constant<span>{#} min · algebra</span></a> <a>Worksheet {#}: Parallax: Measuring the Distance to a Star (Astro {#})<span>{#} min · algebra</span></a> <a>Worksheet {#}: Distances from the Main Sequence<span>{#} min · algebra</span></a> <a>Worksheet {#}: Measuring a Cepheid on CCD Images<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: Medir la constante de Hubble<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Paralaje: medir la distancia a una estrella (Astro {#})<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Distancias a partir de la secuencia principal<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Medir una cefeida en imágenes CCD<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "In <a>Modern Physics</a> · <a>Astronomy</a>":
   "En <a>Física moderna</a> · <a>Astronomía</a>",
+"<b>Before the worksheets:</b> {#}. Hubble's law; redshift and recession speed; speed as distance over time; reading a slope · {#}. Blackbody radiation; expansion and redshift; reading log graphs and slopes · {#}. Exponential decay and half life; protons and neutrons; rest energy; natural logarithms":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Ley de Hubble; corrimiento al rojo y rapidez de recesión; rapidez como distancia entre tiempo; pendiente · {#}. Radiación de cuerpo negro; expansión y corrimiento al rojo; leer gráficas logarítmicas y pendientes · {#}. Decaimiento exponencial y vida media; protones y neutrones; energía en reposo; logaritmos naturales",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: Hubble's Law and the Age of the Universe<span>{#} min · algebra</span></a> <a>Worksheet {#}: Thermal History of the Universe<span>{#} min · algebra</span></a> <a>Worksheet {#}: Helium from the First Three Minutes<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: La ley de Hubble y la edad del universo<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Historia térmica del universo<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: El helio de los primeros tres minutos<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<b>Before the worksheets:</b> {#}. Gravity and escape speed; angles in radians; logarithmic scales; fitting a line · {#}. Gravity and escape speed; time dilation idea; angles in radians; fitting a line":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Gravedad y velocidad de escape; ángulos en radianes; escalas logarítmicas; ajuste de una recta · {#}. Gravedad y velocidad de escape; idea de dilatación del tiempo; ángulos en radianes; ajuste de una recta",
 "In <a>Astro {#}</a> · <a>Astronomy</a>":
   "En <a>Astro {#}</a> · <a>Astronomía</a>",
 "Also under <a>Planets and the solar system</a>":
   "También en <a>Planetas y el sistema solar</a>",
-"<a>Open demo</a> <a>Worksheet {#}: Planet Temperatures and Habitable Zones (Astro {#})</a> <a>Worksheet {#}: The Galactic Habitable Zone</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Temperaturas planetarias y zonas habitables (Astro {#})</a> <a>Hoja de trabajo {#}: La zona habitable galáctica</a> <a>Notas</a>",
+"<b>Before the worksheets:</b> {#}. Inverse square law; energy balance; greenhouse effect; escape speed; reading a slope · {#}. Fusion makes heavy elements; supernovae harm life; probabilities multiply; reading a graph":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Ley del inverso del cuadrado; balance de energía; efecto invernadero; velocidad de escape; leer una pendiente · {#}. La fusión produce elementos pesados; las supernovas dañan la vida; las probabilidades se multiplican; leer una gráfica",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: Planet Temperatures and Habitable Zones (Astro {#})<span>{#} min · algebra</span></a> <a>Worksheet {#}: The Galactic Habitable Zone<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: Temperaturas planetarias y zonas habitables (Astro {#})<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: La zona habitable galáctica<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Gravitation and orbits · Virtual Physics Demos":
   "Gravitación y órbitas · Demos virtuales de física",
 "Newton's gravity, Kepler's laws, tides and orbital resonance.":
@@ -3726,12 +3876,36 @@ VDI18N.add('es', 'site', {
   "Demos de gravitación y órbitas",
 "In <a>Physics I</a> · <a>Astronomy</a> · <a>Astro {#}</a>":
   "En <a>Física I</a> · <a>Astronomía</a> · <a>Astro {#}</a>",
+"<b>Before the worksheets:</b> {#}. Newton's law of gravitation; centripetal acceleration; fitting a line to transformed data · {#}. Newton's law of gravity; inverse square law; mass versus weight; reading a slope":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Ley de la gravitación de Newton; aceleración centrípeta; ajustar una recta a datos transformados · {#}. Ley de la gravitación de Newton; ley del inverso del cuadrado; masa y peso; leer una pendiente",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: How g Changes with Height and Latitude<span>{#} min · algebra</span></a> <a>Worksheet {#}: Gravity from the Ground to Orbit (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: Cómo cambia g con la altura y la latitud<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: La gravedad del suelo a la órbita (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<b>Before the worksheet:</b> Newton's law of gravitation; torque; torsion pendulum period; small angle approximation":
+  "<b>Antes de la hoja de trabajo:</b> Ley de la gravitación de Newton; torque; periodo del péndulo de torsión; aproximación de ángulos pequeños",
+"<b>Before the worksheets:</b> {#}. Newton's law of gravitation; ellipses and orbits; angular momentum; fitting a line · {#}. Ellipses, perihelion and aphelion; Kepler's three laws; graphing a slope":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Ley de gravitación de Newton; elipses y órbitas; momento angular; ajuste de una recta · {#}. Elipses, perihelio y afelio; las tres leyes de Kepler; pendiente de una gráfica",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: Kepler's Third Law<span>{#} min · algebra</span></a> <a>Worksheet {#}: Kepler's Laws from Earth to Pluto (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: Tercera ley de Kepler<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Las leyes de Kepler de la Tierra a Plutón (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<b>Before the worksheets:</b> {#}. Newton's law of gravitation; inverse square law; fitting a line to transformed data · {#}. Newton's law of gravity; inverse square law; Earth–Moon–Sun geometry; ratios":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Ley de gravitación de Newton; ley del inverso del cuadrado; ajustar una recta a datos transformados · {#}. Ley de la gravitación de Newton; ley del inverso del cuadrado; geometría Tierra, Luna y Sol; razones",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: Tidal Forces<span>{#} min · algebra</span></a> <a>Worksheet {#}: Tides: Two Bulges, the Moon and the Sun (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: Fuerzas de marea<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Mareas: dos abultamientos, la Luna y el Sol (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "In <a>Astronomy</a> · <a>Astro {#}</a>":
   "En <a>Astronomía</a> · <a>Astro {#}</a>",
+"<b>Before the worksheets:</b> {#}. Newton's gravity and circular orbits; the rotating frame; effective potential; log and power fits · {#}. Newton's law of gravity; orbital period; ratios and unit conversion":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Gravitación de Newton y órbitas circulares; marco giratorio; potencial efectivo; ajustes de potencias · {#}. Ley de la gravitación de Newton; periodo orbital; razones y conversión de unidades",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: Orbits Near the Lagrange Points<span>{#} min · algebra</span></a> <a>Worksheet {#}: Lagrange Points: Trojan Asteroids and Parking Spots in Space (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: Órbitas cerca de los puntos de Lagrange<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Puntos de Lagrange: asteroides troyanos y lugares de estacionamiento en el espacio (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<b>Before the worksheet:</b> Kepler's third law; orbital period ratios; gravity between planets; calculator powers":
+  "<b>Antes de la hoja de trabajo:</b> Tercera ley de Kepler; razones de periodos orbitales; gravedad entre planetas; potencias en la calculadora",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet: Orbital Resonances (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo: Resonancias orbitales (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "In <a>Physics I</a> · <a>Modern Physics</a> · <a>Astronomy</a>":
   "En <a>Física I</a> · <a>Física moderna</a> · <a>Astronomía</a>",
 "Also under <a>Relativity</a>":
   "También en <a>Relatividad</a>",
+"<b>Before the worksheet:</b> Time dilation from speed; gravity slows clocks; circular orbit speed; fitting a line":
+  "<b>Antes de la hoja de trabajo:</b> Dilatación del tiempo por velocidad; la gravedad atrasa los relojes; rapidez orbital circular; ajuste de una recta",
 "Heat and thermodynamics · Virtual Physics Demos":
   "Calor y termodinámica · Demos virtuales de física",
 "<b>Waves and heat</b>":
@@ -3752,16 +3926,40 @@ VDI18N.add('es', 'site', {
   "Todas las demos de este tema, de cada curso y módulo, con todas sus hojas de trabajo. Abierta desde aquí, una demo recorre este tema con sus enlaces de anterior y siguiente. Los demás temas de Ondas y calor están en la barra de arriba; la <a>página de inicio</a> los enlista todos.",
 "Heat and thermodynamics demos":
   "Demos de calor y termodinámica",
+"<b>Before the worksheets:</b> {#}. Specific heat; latent heat; phase changes; fitting a line · {#}. Temperature and kinetic energy; heat and phase changes; first law; reading a slope":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Calor específico; calor latente; cambios de fase; ajuste de una recta · {#}. Temperatura y energía cinética; calor y cambios de fase; primera ley; pendiente de una gráfica",
+"<b>Before the worksheets:</b> {#}. Heat and specific heat; conservation of energy; temperature versus heat · {#}. Ideal gas law; Kelvin and Celsius scales; fitting a line and extrapolating · {#}. Temperature and thermal expansion coefficients; fractional change; reading a slope from a graph · {#}. Conduction of heat; thermal resistance of layers; reading a slope · {#}. Heat transfer by convection and radiation; exponential decay; natural logarithms; time constant":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Calor y calor específico; conservación de la energía; temperatura frente a calor · {#}. Ley del gas ideal; escalas Kelvin y Celsius; ajustar una recta y extrapolar · {#}. Temperatura y coeficientes de dilatación térmica; cambio fraccional; leer una pendiente en una gráfica · {#}. Conducción de calor; resistencia térmica de capas; leer una pendiente · {#}. Transferencia de calor por convección y radiación; decaimiento exponencial; logaritmos naturales; constante de tiempo",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: Thermal Equilibrium<span>{#} min · algebra</span></a> <a>Worksheet {#}: Gas Thermometer and Absolute Zero<span>{#} min · algebra</span></a> <a>Worksheet {#}: Thermal Expansion<span>{#} min · algebra</span></a> <a>Worksheet {#}: Heat Conduction Through Layers<span>{#} min · algebra</span></a> <a>Worksheet {#}: Cooling by Convection and Radiation<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: Equilibrio térmico<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Termómetro de gas y cero absoluto<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Dilatación térmica<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Conducción de calor a través de capas<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Enfriamiento por convección y radiación<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "In <a>Thermodynamics</a> · <a>Astro {#}</a> · <a>Astronomy</a>":
   "En <a>Termodinámica</a> · <a>Astro {#}</a> · <a>Astronomía</a>",
-"<a>Open demo</a> <a>Worksheet {#}: Gas in a Box</a> <a>Worksheet {#}: Diffusion and Graham's Law</a> <a>Worksheet {#}: Why Small, Hot Planets Lose Their Air (Astro {#})</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Gas en una caja</a> <a>Hoja de trabajo {#}: Difusión y ley de Graham</a> <a>Hoja de trabajo {#}: Por qué los planetas pequeños y calientes pierden su aire (Astro {#})</a> <a>Notas</a>",
+"<b>Before the worksheets:</b> {#}. Ideal gas law; kinetic theory of gases; temperature and molecular speed · {#}. Kinetic theory of gases; mean free path; random walk; slope from a graph · {#}. Temperature and molecular speed; escape speed; square roots and ratios":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Ley del gas ideal; teoría cinética de los gases; temperatura y rapidez molecular · {#}. Teoría cinética de los gases; trayectoria libre media; caminata aleatoria; leer una pendiente · {#}. Temperatura y rapidez molecular; rapidez de escape; raíces cuadradas y cocientes",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: Gas in a Box<span>{#} min · algebra</span></a> <a>Worksheet {#}: Diffusion and Graham's Law<span>{#} min · algebra</span></a> <a>Worksheet {#}: Why Small, Hot Planets Lose Their Air (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: Gas en una caja<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Difusión y ley de Graham<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Por qué los planetas pequeños y calientes pierden su aire (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<b>Before the worksheets:</b> {#}. First law of thermodynamics; molar heat capacity; equipartition; fitting a line · {#}. Adiabatic process; simple harmonic motion; heat capacities; pressure and force":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Primera ley de la termodinámica; capacidad calorífica molar; equipartición; ajuste de una recta · {#}. Proceso adiabático; movimiento armónico simple; capacidades caloríficas; presión y fuerza",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: Heat Capacities of Gases<span>{#} min · algebra</span></a> <a>Worksheet {#}: Rüchardt's Ball<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: Capacidades caloríficas de los gases<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: La esfera de Rüchardt<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<b>Before the worksheet:</b> First law; PV diagrams and work; adiabatic and isothermal processes; efficiency":
+  "<b>Antes de la hoja de trabajo:</b> Primera ley; diagramas PV y trabajo; procesos adiabáticos e isotérmicos; eficiencia",
+"<b>Before the worksheets:</b> {#}. Ideal gas; counting arrangements with combinations; entropy and the second law; probability · {#}. Energy quanta; counting arrangements with factorials; entropy and temperature; second law · {#}. Entropy as Q/T; heat engines and refrigerators; first law of thermodynamics":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Gas ideal; contar arreglos con combinaciones; entropía y segunda ley; probabilidad · {#}. Cuantos de energía; contar arreglos con factoriales; entropía y temperatura; segunda ley · {#}. Entropía como Q/T; máquinas térmicas y refrigeradores; primera ley de la termodinámica",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: Free Expansion<span>{#} min · algebra</span></a> <a>Worksheet {#}: Einstein Solids<span>{#} min · calculus</span></a> <a>Worksheet {#}: Testing the Second Law<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: Expansión libre<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Sólidos de Einstein<span>{#} min · cálculo</span></a> <a>Hoja de trabajo {#}: Poner a prueba la segunda ley<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "In <a>Thermodynamics</a> · <a>Modern Physics</a> · <a>Astro {#}</a> · <a>Astronomy</a>":
   "En <a>Termodinámica</a> · <a>Física moderna</a> · <a>Astro {#}</a> · <a>Astronomía</a>",
 "Also under <a>Photons and quanta</a> · <a>Telescopes and light</a>":
   "También en <a>Fotones y cuantos</a> · <a>Telescopios y luz</a>",
-"<a>Open demo</a> <a>Worksheet {#}: Blackbody Radiation</a> <a>Worksheet {#}: Star Colors and Temperatures (Astro {#})</a> <a>Worksheet {#}: Star Colors Through U, B and V Filters</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Radiación de cuerpo negro</a> <a>Hoja de trabajo {#}: Colores y temperaturas de las estrellas (Astro {#})</a> <a>Hoja de trabajo {#}: Colores de las estrellas con los filtros U, B y V</a> <a>Notas</a>",
+"<b>Before the worksheets:</b> {#}. Thermal radiation and temperature; logarithms and power laws; fitting a line to logged data · {#}. Powers and ratios; what temperature and color of a hot object mean · {#}. Blackbody radiation; magnitudes and color index; Wien's law":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Radiación térmica y temperatura; logaritmos y leyes de potencias; ajuste lineal de datos logarítmicos · {#}. Potencias y razones; qué significan la temperatura y el color de un objeto caliente · {#}. Radiación de cuerpo negro; magnitudes e índice de color; ley de Wien",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: Blackbody Radiation<span>{#} min · algebra</span></a> <a>Worksheet {#}: Star Colors and Temperatures (Astro {#})<span>{#} min · algebra</span></a> <a>Worksheet {#}: Star Colors Through U, B and V Filters<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: Radiación de cuerpo negro<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Colores y temperaturas de las estrellas (Astro {#})<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Colores de las estrellas con los filtros U, B y V<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<b>Before the worksheet:</b> Boltzmann probability and entropy; ferromagnetism and the Curie temperature; log log graphs":
+  "<b>Antes de la hoja de trabajo:</b> Probabilidad de Boltzmann y entropía; ferromagnetismo y temperatura de Curie; gráficas log log",
+"<b>Before the worksheet:</b> Probability of independent events; counting paths; mean and standard deviation":
+  "<b>Antes de la hoja de trabajo:</b> Probabilidad de eventos independientes; conteo de trayectorias; media y desviación estándar",
 "Also under <a>Atoms, molecules and solids</a>":
   "También en <a>Átomos, moléculas y sólidos</a>",
 "Induction and EM waves · Virtual Physics Demos":
@@ -3772,18 +3970,50 @@ VDI18N.add('es', 'site', {
   "La ley de Faraday, las corrientes de Foucault, la corriente de desplazamiento y la luz como onda.",
 "Induction and EM waves demos":
   "Demos de inducción y ondas EM",
+"<b>Before the worksheets:</b> {#}. Magnetic flux; Faraday's and Lenz's laws; sinusoidal functions; rates of change · {#}. Faraday's law; mutual inductance; motional emf; sinusoidal signals and amplitudes":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Flujo magnético; leyes de Faraday y de Lenz; funciones senoidales; razones de cambio · {#}. Ley de Faraday; inductancia mutua; fem de movimiento; señales senoidales y amplitudes",
+"<b>Before the worksheet:</b> Faraday's law; magnetic flux; solenoid field; exponential decay of current":
+  "<b>Antes de la hoja de trabajo:</b> Ley de Faraday; flujo magnético; campo de un solenoide; decaimiento exponencial de la corriente",
+"<b>Before the worksheet:</b> Faraday's law; Lenz's law; capacitor energy; simple harmonic motion speed":
+  "<b>Antes de la hoja de trabajo:</b> Ley de Faraday; ley de Lenz; energía de un capacitor; rapidez en movimiento armónico simple",
+"<b>Before the worksheet:</b> Faraday's and Lenz's laws; terminal speed; resistivity and conductivity; reading a slope":
+  "<b>Antes de la hoja de trabajo:</b> Leyes de Faraday y de Lenz; rapidez terminal; resistividad y conductividad; leer una pendiente",
+"<b>Before the worksheet:</b> Ampère's law; electric flux; capacitors and RC circuits; reading a slope":
+  "<b>Antes de la hoja de trabajo:</b> Ley de Ampère; flujo eléctrico; capacitores y circuitos RC; leer una pendiente",
 "In <a>Physics II</a> · <a>Astro {#}</a> · <a>Astronomy</a>":
   "En <a>Física II</a> · <a>Astro {#}</a> · <a>Astronomía</a>",
-"<a>Open demo</a> <a>Worksheet {#}: Electromagnetic Waves: Fields, Intensity and Pressure</a> <a>Worksheet {#}: The Electromagnetic Spectrum (Astro {#})</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Ondas electromagnéticas: campos, intensidad y presión</a> <a>Hoja de trabajo {#}: El espectro electromagnético (Astro {#})</a> <a>Notas</a>",
+"<b>Before the worksheets:</b> {#}. Electric and magnetic fields; electromagnetic waves; intensity; reading a slope from a graph · {#}. Wave speed equals wavelength times frequency; scientific notation; metric prefixes":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Campos eléctrico y magnético; ondas electromagnéticas; intensidad; leer una pendiente · {#}. Rapidez de onda igual a longitud de onda por frecuencia; notación científica; prefijos métricos",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: Electromagnetic Waves: Fields, Intensity and Pressure<span>{#} min · algebra</span></a> <a>Worksheet {#}: The Electromagnetic Spectrum (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: Ondas electromagnéticas: campos, intensidad y presión<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: El espectro electromagnético (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Kinematics · Virtual Physics Demos":
   "Cinemática · Demos virtuales de física",
 "Position, velocity and acceleration, projectiles and circular motion.":
   "Posición, velocidad y aceleración, proyectiles y movimiento circular.",
+"<span>OpenStax Vol {#} · Ch. {#}–{#}, {#}</span>":
+  "<span>OpenStax Vol. {#} · Cap. {#}–{#}, {#}</span>",
 "Kinematics demos":
   "Demos de cinemática",
-"<a>Open demo</a> <a>Worksheet {#}: Units and Dimensions</a> <a>Worksheet {#}: Estimates and Uncertainty</a> <a>Worksheet {#}: How Big Is the Solar System? (Astro {#})</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Unidades y dimensiones</a> <a>Hoja de trabajo {#}: Estimaciones e incertidumbre</a> <a>Hoja de trabajo {#}: ¿Qué tan grande es el sistema solar? (Astro {#})</a> <a>Notas</a>",
+"<b>Before the worksheets:</b> {#}. Unit conversion; significant figures; reading a ruler and its uncertainty · {#}. Powers of ten; significant figures; constant acceleration kinematics; checking units · {#}. Scientific notation; astronomical unit and light year; speed of light as distance over time":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Conversión de unidades; cifras significativas; lectura de una regla y su incertidumbre · {#}. Potencias de diez; cifras significativas; cinemática con aceleración constante; revisar unidades · {#}. Notación científica; unidad astronómica y año luz; rapidez de la luz como distancia entre tiempo",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: Units and Dimensions<span>{#} min · algebra</span></a> <a>Worksheet {#}: Estimates and Uncertainty<span>{#} min · algebra</span></a> <a>Worksheet {#}: How Big Is the Solar System? (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: Unidades y dimensiones<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Estimaciones e incertidumbre<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: ¿Qué tan grande es el sistema solar? (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"Also under <a>Oscillations and waves</a>":
+  "También en <a>Oscilaciones y ondas</a>",
+"<b>Before the worksheet:</b> Period of a simple pendulum; mean and standard deviation; fitting a line":
+  "<b>Antes de la hoja de trabajo:</b> Periodo de un péndulo simple; media y desviación estándar; ajuste de una recta",
+"<b>Before the worksheets:</b> {#}. Newton's first law; force vectors and components; sine and cosine; equilibrium · {#}. Components of a vector; trigonometry; average acceleration; dot and cross products":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Primera ley de Newton; vectores de fuerza y componentes; seno y coseno; equilibrio · {#}. Componentes de un vector; trigonometría; aceleración media; productos punto y cruz",
+"<b>Before the worksheet:</b> Position, velocity and acceleration; slope and area of graphs; constant acceleration":
+  "<b>Antes de la hoja de trabajo:</b> Posición, velocidad y aceleración; pendiente y área de gráficas; aceleración constante",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet: Motion Graphs<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo: Gráficas de movimiento<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<b>Before the worksheet:</b> Projectile motion; kinematic equations; air resistance; fitting a quadratic":
+  "<b>Antes de la hoja de trabajo:</b> Movimiento de proyectiles; ecuaciones cinemáticas; resistencia del aire; ajuste cuadrático",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet: Projectiles and Air Resistance<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo: Proyectiles y resistencia del aire<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<b>Before the worksheet:</b> Adding velocities in different frames; projectile motion; constant acceleration":
+  "<b>Antes de la hoja de trabajo:</b> Suma de velocidades en distintos marcos de referencia; movimiento de proyectiles; aceleración constante",
 "Magnetism · Virtual Physics Demos":
   "Magnetismo · Demos virtuales de física",
 "Magnetism":
@@ -3794,14 +4024,38 @@ VDI18N.add('es', 'site', {
   "<span>OpenStax Vol. {#} · Cap. {#}–{#} · Vol. {#} · Cap. {#}, {#}, {#}</span>",
 "Magnetism demos":
   "Demos de magnetismo",
+"<b>Before the worksheets:</b> {#}. Magnetic force on a moving charge; circular motion; velocity components · {#}. Magnetic force on moving charges; right hand rule; current and drift velocity":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Fuerza magnética sobre una carga en movimiento; movimiento circular; componentes de la velocidad · {#}. Fuerza magnética sobre cargas en movimiento; regla de la mano derecha; corriente y velocidad de deriva",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: Orbits and the Magnetic Bottle<span>{#} min · algebra</span></a> <a>Worksheet {#}: The Hall Effect<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: Órbitas y la botella magnética<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: El efecto Hall<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<b>Before the worksheet:</b> Magnetic force on a current; right hand rule; torque on a loop":
+  "<b>Antes de la hoja de trabajo:</b> Fuerza magnética sobre una corriente; regla de la mano derecha; torca sobre una espira",
+"<b>Before the worksheets:</b> {#}. Magnetic poles and field lines; field of a current carrying wire; vector addition · {#}. Magnetic field of a current; right hand rule; reading a slope from a graph · {#}. Magnetic field of a long wire; right hand rule; what a line sum of B means · {#}. Magnetic field of currents; Biot Savart law; Ampère's law; solenoids":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Polos y líneas de campo magnético; campo de un alambre con corriente; suma de vectores · {#}. Campo magnético de una corriente; regla de la mano derecha; leer una pendiente en una gráfica · {#}. Campo magnético de un alambre largo; regla de la mano derecha; qué significa la suma de B a lo largo de una trayectoria · {#}. Campo magnético de las corrientes; ley de Biot y Savart; ley de Ampère; solenoides",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: Magnets and Oersted's Compass<span>{#} min · algebra</span></a> <a>Worksheet {#}: Fields and Forces of Straight Wires<span>{#} min · algebra</span></a> <a>Worksheet {#}: Ampère's Law and Straight Wires<span>{#} min · algebra</span></a> <a>Worksheet {#}: Fields of Loops and Solenoids<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: Imanes y la brújula de Oersted<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Campos y fuerzas de alambres rectos<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Ley de Ampère y alambres rectos<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Campos de espiras y solenoides<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<b>Before the worksheet:</b> Magnetic field of a solenoid; magnetic dipoles in materials; susceptibility":
+  "<b>Antes de la hoja de trabajo:</b> Campo magnético de un solenoide; dipolos magnéticos en los materiales; susceptibilidad",
+"<b>Before the worksheet:</b> Magnetic force on a moving charge; circular motion; kinetic energy and voltage":
+  "<b>Antes de la hoja de trabajo:</b> Fuerza magnética sobre una carga en movimiento; movimiento circular; energía cinética y voltaje",
+"<b>Before the worksheet:</b> Length contraction; relativistic velocity addition; magnetic force on a moving charge":
+  "<b>Antes de la hoja de trabajo:</b> Contracción de la longitud; suma relativista de velocidades; fuerza magnética sobre una carga en movimiento",
 "Math for physics · Virtual Physics Demos":
   "Matemáticas para física · Demos virtuales de física",
 "Math for physics":
   "Matemáticas para física",
-"Type any function and see its derivatives and its integral graphed with it.":
-  "Escribe cualquier función y mira sus derivadas y su integral graficadas junto con ella.",
+"Type any function and see its derivatives and its integral graphed with it, and watch how a computer solves the equations of motion step by step.":
+  "Escribe cualquier función y ve sus derivadas y su integral graficadas con ella, y observa cómo una computadora resuelve las ecuaciones de movimiento paso a paso.",
+"<span><strong>{#}</strong> worksheet</span>":
+  "<span><strong>{#}</strong> hoja de trabajo</span>",
 "Math for physics demos":
   "Demos de matemáticas para física",
+"<a>Numerical Methods for Motion</a>":
+  "<a>Métodos numéricos para el movimiento</a>",
+"<b>Before the worksheet:</b> Simple harmonic motion; conservation of energy; slopes on log scale graphs":
+  "<b>Antes de la hoja de trabajo:</b> Movimiento armónico simple; conservación de la energía; pendientes en gráficas logarítmicas",
+"<a>Open demo</a> <a>Worksheet: How Good Is a Computed Motion?<span>{#} min · algebra</span></a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: ¿Qué tan bueno es un movimiento calculado?<span>{#} min · álgebra</span></a>",
 "Radiation in medicine · Virtual Physics Demos":
   "Radiación en medicina · Demos virtuales de física",
 "Radiation in medicine":
@@ -3812,12 +4066,48 @@ VDI18N.add('es', 'site', {
   "Demos de radiación en medicina",
 "In <a>Medical Physics</a>":
   "En <a>Física médica</a>",
+"<b>Before the worksheets:</b> {#}. Photoelectric effect, Compton scattering, pair production; attenuation coefficients; log log graphs · {#}. Exponential attenuation and half value layer; photon interactions; beam hardening; log graphs":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Efecto fotoeléctrico, dispersión Compton, producción de pares; coeficientes de atenuación; gráficas log log · {#}. Atenuación exponencial y capa hemirreductora; interacciones de fotones; endurecimiento del haz; gráficas logarítmicas",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: Photon Interactions in Matter<span>{#} min · algebra</span></a> <a>Worksheet {#}: Photon Beams in Matter: Attenuation, Buildup and Beam Hardening<span>{#} min · calculus</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: Interacciones de fotones con la materia<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Haces de fotones en la materia: atenuación, acumulación y endurecimiento del haz<span>{#} min · cálculo</span></a> <a>Notas</a>",
+"<b>Before the worksheets:</b> {#}. Stopping power and the Bethe formula; range of protons; log log fits; derivatives · {#}. Stopping power and proton range; Bragg peak; relative stopping power":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Poder de frenado y fórmula de Bethe; alcance de protones; ajustes log log; derivadas · {#}. Poder de frenado y alcance de protones; pico de Bragg; poder de frenado relativo",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: Stopping Power and Range (Medical Physics)<span>{#} min · calculus</span></a> <a>Worksheet {#}: The Bragg Peak and Slabs (Medical Physics)<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: Poder de frenado y alcance (Física médica)<span>{#} min · cálculo</span></a> <a>Hoja de trabajo {#}: El pico de Bragg y las placas (Física médica)<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<b>Before the worksheets:</b> {#}. Photon attenuation; kerma and absorbed dose; charged particle equilibrium; integrals · {#}. Ionization chambers; absorbed dose to water; correction factors; uncertainty combination":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Atenuación de fotones; kerma y dosis absorbida; equilibrio de partícula cargada; integrales · {#}. Cámaras de ionización; dosis absorbida en agua; factores de corrección; combinación de incertidumbres",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: Kerma, Dose and Charged Particle Equilibrium (Medical Physics)<span>{#} min · calculus</span></a> <a>Worksheet {#}: Calibrating a Proton Beam: TRS-{#} Step by Step (Medical Physics)<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: Kerma, dosis y equilibrio de partículas cargadas (Física médica)<span>{#} min · cálculo</span></a> <a>Hoja de trabajo {#}: Calibrar un haz de protones: el TRS-{#} paso a paso (Física médica)<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<b>Before the worksheets:</b> {#}. Exponential decay and natural logs; derivative of a function; fitting a quadratic · {#}. Linear quadratic survival model; solving a quadratic equation; fitting a line":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Decaimiento exponencial y logaritmos naturales; derivada de una función; ajuste cuadrático · {#}. Modelo lineal cuadrático de supervivencia; resolver una ecuación cuadrática; ajuste de una recta",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: Radiobiology: Cell Survival, Oxygen and the Clonogenic Assay<span>{#} min · calculus</span></a> <a>Worksheet {#}: Radiobiology: Fractionation and Proton RBE<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: Radiobiología: supervivencia celular, oxígeno y ensayo clonogénico<span>{#} min · cálculo</span></a> <a>Hoja de trabajo {#}: Radiobiología: fraccionamiento y RBE de protones<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<b>Before the worksheet:</b> Proton stopping power and range; Bragg peak; photon attenuation; percent depth dose":
+  "<b>Antes de la hoja de trabajo:</b> Poder de frenado y alcance de protones; pico de Bragg; atenuación de fotones; dosis en profundidad",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet: The Bragg Peak and the Spread Out Bragg Peak (Medical Physics)<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo: El pico de Bragg y el pico de Bragg extendido (Física médica)<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<b>Before the worksheet:</b> Proton range and Bragg peak; percent error and standard deviation; fitting a line":
+  "<b>Antes de la hoja de trabajo:</b> Alcance del protón y pico de Bragg; error porcentual y desviación estándar; ajuste de una recta",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet: Proton Therapy QA: Morning Checks, Drift and Patient Plans (Medical Physics)<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo: Control de calidad en protonterapia: verificaciones matutinas, deriva y planes de pacientes (Física médica)<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<b>Before the worksheets:</b> {#}. CT numbers and electron density; relative stopping power of protons; linear fits · {#}. Bethe stopping power; proton range and water equivalent depth; error propagation":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Números CT y densidad electrónica; poder de frenado relativo de protones; ajustes lineales · {#}. Poder de frenado de Bethe; alcance de protones y profundidad equivalente en agua; propagación de errores",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: CT Numbers and Proton Range: Calibration and Stopping Power (Medical Physics)<span>{#} min · algebra</span></a> <a>Worksheet {#}: CT Numbers and Proton Range: Range Errors and Margins (Medical Physics)<span>{#} min · calculus</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: Números CT y alcance de protones: calibración y poder de frenado (Física médica)<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Números CT y alcance de protones: errores de alcance y márgenes (Física médica)<span>{#} min · cálculo</span></a> <a>Notas</a>",
+"<b>Before the worksheet:</b> X-ray attenuation and CT numbers; projections of an image; counting statistics":
+  "<b>Antes de la hoja de trabajo:</b> Atenuación de rayos X y números CT; proyecciones de una imagen; estadística de conteo",
+"<b>Before the worksheet:</b> Inverse square law; exponential attenuation of radiation; logarithms and tenth value layers":
+  "<b>Antes de la hoja de trabajo:</b> Ley del inverso del cuadrado; atenuación exponencial de radiación; logaritmos y capas decimirreductoras",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet: Shielding Rooms: CT, Linac Vault and Proton Room (Medical Physics)<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo: Blindaje de salas: CT, búnker de linac y sala de protones (Física médica)<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "In <a>Acoustics</a> · <a>Medical Physics</a>":
   "En <a>Acústica</a> · <a>Física médica</a>",
 "Also under <a>Sound and acoustics</a>":
   "También en <a>Sonido y acústica</a>",
-"<a>Open demo</a> <a>Worksheet {#}: Ultrasound Echoes and Doppler Flow</a> <a>Worksheet {#}: Attenuation in Tissue (Medical Physics)</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Ecos de ultrasonido y flujo Doppler</a> <a>Hoja de trabajo {#}: Atenuación en tejido (Física médica)</a> <a>Notas</a>",
+"<b>Before the worksheets:</b> {#}. Speed of sound; echoes and reflection; the Doppler effect · {#}. Wave intensity and decibels; exponential decay; logarithms; fitting a line":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Rapidez del sonido; ecos y reflexión; efecto Doppler · {#}. Intensidad de ondas y decibeles; decaimiento exponencial; logaritmos; ajuste de una recta",
+"<a>Open demo</a> <a>Worksheet {#}: Ultrasound Echoes and Doppler Flow<span>{#} min · algebra</span></a> <a>Worksheet {#}: Attenuation in Tissue (Medical Physics)<span>{#} min · calculus</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Ecos de ultrasonido y flujo Doppler<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Atenuación en tejido (Física médica)<span>{#} min · cálculo</span></a> <a>Notas</a>",
 "Nuclear and particle physics · Virtual Physics Demos":
   "Física nuclear y de partículas · Demos virtuales de física",
 "Nuclear and particle physics":
@@ -3828,12 +4118,26 @@ VDI18N.add('es', 'site', {
   "<span>OpenStax Vol. {#} · Cap. {#}–{#}, {#}–{#}</span>",
 "Nuclear and particle physics demos":
   "Demos de física nuclear y de partículas",
+"<b>Before the worksheet:</b> Coulomb force and energy conservation; logarithms; counting statistics":
+  "<b>Antes de la hoja de trabajo:</b> Fuerza de Coulomb y conservación de la energía; logaritmos; estadística de conteo",
+"<b>Before the worksheet:</b> Mass and energy, E = mc²; nuclear structure; binding energy per nucleon; reading graphs":
+  "<b>Antes de la hoja de trabajo:</b> Masa y energía, E = mc²; estructura nuclear; energía de enlace por nucleón; leer gráficas",
 "In <a>Modern Physics</a> · <a>Astro {#}</a> · <a>Medical Physics</a> · <a>Astronomy</a>":
   "En <a>Física moderna</a> · <a>Astro {#}</a> · <a>Física médica</a> · <a>Astronomía</a>",
-"<a>Open demo</a> <a>Worksheet {#}: Measuring a Half Life</a> <a>Worksheet {#}: Parent and Daughter</a> <a>Worksheet {#}: Alpha and Beta Decay</a> <a>Worksheet {#}: A Technetium Generator (Medical Physics)</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Medir una vida media</a> <a>Hoja de trabajo {#}: Núcleo padre y núcleo hijo</a> <a>Hoja de trabajo {#}: Decaimiento alfa y beta</a> <a>Hoja de trabajo {#}: Un generador de tecnecio (Física médica)</a> <a>Notas</a>",
-"<a>Open demo</a> <a>Worksheet {#}: Nuclear Reactions</a> <a>Worksheet {#}: Chain Reactions and Critical Size</a> <a>Worksheet {#}: Fusion and the Gamow Peak</a> <a>Worksheet {#}: Radiation Dose and Shielding</a> <a>Worksheet {#}: Shielding a PET Uptake Room (Medical Physics)</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Reacciones nucleares</a> <a>Hoja de trabajo {#}: Reacciones en cadena y tamaño crítico</a> <a>Hoja de trabajo {#}: La fusión y el pico de Gamow</a> <a>Hoja de trabajo {#}: Dosis de radiación y blindaje</a> <a>Hoja de trabajo {#}: Blindaje de un cuarto de captación de PET (Física médica)</a> <a>Notas</a>",
+"<b>Before the worksheets:</b> {#}. Probability and random decay; exponential decay; half life; natural logs · {#}. Exponential decay and half life; decay constant; natural logarithms; reading a graph · {#}. Radioactive decay and half life; quantum tunneling; relativistic energy; logarithms and linear fits · {#}. Radioactive decay and half life; exponentials and logs; setting a derivative to zero":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Probabilidad y decaimiento aleatorio; decaimiento exponencial; vida media; logaritmos naturales · {#}. Decaimiento exponencial y vida media; constante de decaimiento; logaritmos naturales; leer una gráfica · {#}. Decaimiento radiactivo y vida media; efecto túnel cuántico; energía relativista; logaritmos y ajuste lineal · {#}. Decaimiento radiactivo y vida media; exponenciales y logaritmos; igualar una derivada a cero",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: Measuring a Half Life<span>{#} min · algebra</span></a> <a>Worksheet {#}: Parent and Daughter<span>{#} min · algebra</span></a> <a>Worksheet {#}: Alpha and Beta Decay<span>{#} min · algebra</span></a> <a>Worksheet {#}: A Technetium Generator (Medical Physics)<span>{#} min · calculus</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: Medir una vida media<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Núcleo padre y núcleo hijo<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Decaimiento alfa y beta<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Un generador de tecnecio (Física médica)<span>{#} min · cálculo</span></a> <a>Notas</a>",
+"<b>Before the worksheets:</b> {#}. Conservation of charge and nucleon number; mass energy E = mc²; conservation of momentum · {#}. Exponential growth; neutron multiplication; sphere volume and surface area · {#}. Coulomb repulsion; quantum tunneling; Maxwell–Boltzmann energy distribution; logarithmic graphs · {#}. Inverse square law; exponential attenuation; natural logs; absorbed and equivalent dose · {#}. Exponential attenuation of photons; inverse square law; natural logs; integrating an exponential":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Conservación de la carga y del número de nucleones; energía de masa E = mc²; conservación del momento · {#}. Crecimiento exponencial; multiplicación de neutrones; volumen y área de una esfera · {#}. Repulsión de Coulomb; efecto túnel cuántico; distribución de energías de Maxwell–Boltzmann; gráficas logarítmicas · {#}. Ley del inverso del cuadrado; atenuación exponencial; logaritmos naturales; dosis absorbida y equivalente · {#}. Atenuación exponencial de fotones; ley del inverso del cuadrado; logaritmos naturales; integral de una exponencial",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: Nuclear Reactions<span>{#} min · algebra</span></a> <a>Worksheet {#}: Chain Reactions and Critical Size<span>{#} min · algebra</span></a> <a>Worksheet {#}: Fusion and the Gamow Peak<span>{#} min · algebra</span></a> <a>Worksheet {#}: Radiation Dose and Shielding<span>{#} min · algebra</span></a> <a>Worksheet {#}: Shielding a PET Uptake Room (Medical Physics)<span>{#} min · calculus</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: Reacciones nucleares<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Reacciones en cadena y tamaño crítico<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: La fusión y el pico de Gamow<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Dosis de radiación y blindaje<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Blindaje de un cuarto de captación de PET (Física médica)<span>{#} min · cálculo</span></a> <a>Notas</a>",
+"<b>Before the worksheets:</b> {#}. Gamma rays from nuclear levels; photon energy; Compton scattering; fitting a line · {#}. Exponential decay; inverse square law; natural logarithms and slopes":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Rayos gamma de niveles nucleares; energía del fotón; dispersión Compton; ajuste de una recta · {#}. Decaimiento exponencial; ley del inverso del cuadrado; logaritmos naturales y pendientes",
+"<b>Before the worksheets:</b> {#}. Conservation laws; relativistic energy and momentum; particle families and interactions · {#}. Quarks, charge, baryon number and strangeness; conservation laws; fitting a line · {#}. Relativistic energy and momentum; conservation in decays; charged particle circling in a magnetic field":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Leyes de conservación; energía y momento relativistas; familias de partículas e interacciones · {#}. Quarks, carga, número bariónico y extrañeza; leyes de conservación; ajuste de una recta · {#}. Energía y momento relativistas; leyes de conservación en decaimientos; trayectoria circular de una partícula cargada en un campo magnético",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: Conservation Laws for Particle Reactions<span>{#} min · algebra</span></a> <a>Worksheet {#}: Building Hadrons from Quarks<span>{#} min · algebra</span></a> <a>Worksheet {#}: Invariant Mass in a Bubble Chamber<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: Leyes de conservación en reacciones de partículas<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Construir hadrones con quarks<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Masa invariante en una cámara de burbujas<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Optics · Virtual Physics Demos":
   "Óptica · Demos virtuales de física",
 "<b>Light</b>":
@@ -3846,10 +4150,30 @@ VDI18N.add('es', 'site', {
   "Todas las demos de este tema, de cada curso y módulo, con todas sus hojas de trabajo. Abierta desde aquí, una demo recorre este tema con sus enlaces de anterior y siguiente. Los demás temas de Luz están en la barra de arriba; la <a>página de inicio</a> los enlista todos.",
 "Optics demos":
   "Demos de óptica",
-"<a>Open demo</a> <a>Worksheet {#}: Dispersion</a> <a>Worksheet {#}: Mirrors and Refracting Surfaces</a> <a>Worksheet {#}: Lenses and Optical Instruments</a> <a>Worksheet {#}: Lenses, Mirrors and Color (Astro {#})</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Dispersión</a> <a>Hoja de trabajo {#}: Espejos y superficies refractoras</a> <a>Hoja de trabajo {#}: Lentes e instrumentos ópticos</a> <a>Hoja de trabajo {#}: Lentes, espejos y color (Astro {#})</a> <a>Notas</a>",
+"<b>Before the worksheets:</b> {#}. Snell's law; index of refraction; wavelength and speed of light; line fits · {#}. Reflection and refraction; the mirror equation; sign conventions for images · {#}. Ray tracing for lenses; the thin lens equation; real and virtual images · {#}. Thin lens equation; angular magnification; near point of the eye · {#}. Refraction of light and index of refraction; focal length of lenses and mirrors":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Ley de Snell; índice de refracción; longitud de onda y rapidez de la luz; ajuste de rectas · {#}. Reflexión y refracción; ecuación de los espejos; convención de signos para imágenes · {#}. Trazado de rayos en lentes; ecuación de lentes delgadas; imágenes reales y virtuales · {#}. Ecuación de lentes delgadas; aumento angular; punto próximo del ojo · {#}. Refracción de la luz e índice de refracción; distancia focal de lentes y espejos",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: Dispersion<span>{#} min · algebra</span></a> <a>Worksheet {#}: Mirrors and Refracting Surfaces<span>{#} min · algebra</span></a> <a>Worksheet {#}: Thin Lenses and the Depth of an Image<span>{#} min · algebra</span></a> <a>Worksheet {#}: Magnifiers, Microscopes and Telescopes<span>{#} min · algebra</span></a> <a>Worksheet {#}: Lenses, Mirrors and Color (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: Dispersión<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Espejos y superficies refractoras<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Lentes delgadas y la profundidad de una imagen<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Lupas, microscopios y telescopios<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Lentes, espejos y color (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<b>Before the worksheets:</b> {#}. Thin lens equation; image formation by a lens; nearsighted and farsighted vision · {#}. Thin lens equation; real images; similar triangles; fitting a line to reciprocals":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Ecuación de lentes delgadas; formación de imágenes con una lente; miopía e hipermetropía · {#}. Ecuación de lentes delgadas; imágenes reales; triángulos semejantes; ajuste lineal de recíprocos",
+"<b>Before the worksheet:</b> Lenses and focal length; magnification as a ratio; circle area; reading a slope":
+  "<b>Antes de la hoja de trabajo:</b> Lentes y distancia focal; aumento como razón; área de un círculo; leer una pendiente",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet: Building a Telescope (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo: Construir un telescopio (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "In <a>Astro {#}</a> · <a>Physics II</a> · <a>Astronomy</a>":
   "En <a>Astro {#}</a> · <a>Física II</a> · <a>Astronomía</a>",
+"<b>Before the worksheets:</b> {#}. Diffraction limit of a telescope; focal ratio; lenses and mirrors; angles in arcseconds · {#}. Diffraction limit {#} λ/D; wavelength of light; how air blurs images":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Límite de difracción de un telescopio; razón focal; lentes y espejos; ángulos en segundos de arco · {#}. Límite de difracción {#} λ/D; longitud de onda de la luz; cómo el aire desenfoca las imágenes",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: Fixing a Blurry Telescope (Astro {#})<span>{#} min · algebra</span></a> <a>Worksheet {#}: Seeing and Adaptive Optics (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: Cómo arreglar un telescopio borroso (Astro {#})<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Seeing y óptica adaptativa (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<b>Before the worksheet:</b> Light as a transverse wave; Malus's law; reflection and refraction; trig functions":
+  "<b>Antes de la hoja de trabajo:</b> La luz como onda transversal; ley de Malus; reflexión y refracción; funciones trigonométricas",
+"<b>Before the worksheet:</b> Reflection of light; angular speed; lenses and image distance; fitting a line":
+  "<b>Antes de la hoja de trabajo:</b> Reflexión de la luz; rapidez angular; lentes y distancia imagen; ajustar una línea",
+"<b>Before the worksheet:</b> Light and wavelength; additive color mixing; how the eye responds; reading graphs":
+  "<b>Antes de la hoja de trabajo:</b> Luz y longitud de onda; mezcla aditiva de colores; respuesta del ojo; leer gráficas",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet: Cones, Mixing and Filters<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo: Conos, mezclas y filtros<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "In <a>Physics II</a> · <a>Astronomy</a>":
   "En <a>Física II</a> · <a>Astronomía</a>",
 "Oscillations and waves · Virtual Physics Demos":
@@ -3858,16 +4182,36 @@ VDI18N.add('es', 'site', {
   "Oscilaciones y ondas",
 "Springs and pendulums, waves on strings, interference in a ripple tank.":
   "Resortes y péndulos, ondas en cuerdas, interferencia en un tanque de ondas.",
-"<span>OpenStax Vol {#} · Ch. {#}, {#}–{#} · Vol {#} · Ch. {#}, {#}–{#}</span>":
-  "<span>OpenStax Vol. {#} · Cap. {#}, {#}–{#} · Vol. {#} · Cap. {#}, {#}–{#}</span>",
+"<span>OpenStax Vol {#} · Ch. {#}, {#}, {#}–{#} · Vol {#} · Ch. {#}, {#}–{#}</span>":
+  "<span>OpenStax Vol. {#} · Cap. {#}, {#}, {#}–{#} · Vol. {#} · Cap. {#}, {#}–{#}</span>",
 "Oscillations and waves demos":
   "Demos de oscilaciones y ondas",
+"<b>Before the worksheets:</b> {#}. Hooke's law; simple harmonic motion; period; fitting a line · {#}. Simple harmonic motion; natural frequency; damping; reading a graph · {#}. Hooke's law; equilibrium of forces; fitting a line · {#}. Masses and springs; simple harmonic motion and frequency; standing waves; sine of an angle":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Ley de Hooke; movimiento armónico simple; periodo; ajustar una línea · {#}. Movimiento armónico simple; frecuencia natural; amortiguamiento; leer una gráfica · {#}. Ley de Hooke; equilibrio de fuerzas; ajustar una línea · {#}. Masas y resortes; movimiento armónico simple y frecuencia; ondas estacionarias; seno de un ángulo",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: Spring Constant<span>{#} min · algebra</span></a> <a>Worksheet {#}: Driven Oscillator and Resonance<span>{#} min · algebra</span></a> <a>Worksheet {#}: Springs in Series and Parallel<span>{#} min · algebra</span></a> <a>Worksheet {#}: Normal Modes<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: Constante del resorte<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Oscilador forzado y resonancia<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Resortes en serie y en paralelo<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Modos normales<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<b>Before the worksheets:</b> {#}. Simple harmonic motion and period; reading a slope; squaring data to straighten a graph · {#}. Pendulum oscillation and period; angular frequency; coupled oscillators; logarithms; line fits":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Movimiento armónico simple y periodo; leer una pendiente; elevar al cuadrado para linealizar una gráfica · {#}. Oscilación y periodo del péndulo; frecuencia angular; osciladores acoplados; logaritmos; ajuste de rectas",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: Measuring g<span>{#} min · algebra</span></a> <a>Worksheet {#}: Normal Modes and Chaos<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: Medir g<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Modos normales y caos<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "In <a>Physics II</a> · <a>Acoustics</a>":
   "En <a>Física II</a> · <a>Acústica</a>",
+"<b>Before the worksheet:</b> Standing waves on a string; harmonics; wave speed; beats between two tones":
+  "<b>Antes de la hoja de trabajo:</b> Ondas estacionarias en una cuerda; armónicos; rapidez de onda; pulsaciones entre dos tonos",
+"<b>Before the worksheet:</b> Standing waves on a string; wave speed and tension; fitting a line to data":
+  "<b>Antes de la hoja de trabajo:</b> Ondas estacionarias en una cuerda; rapidez de onda y tensión; ajustar una recta a datos",
 "In <a>Acoustics</a>":
   "En <a>Acústica</a>",
+"<b>Before the worksheet:</b> Waves on a string; wave speed; energy and power of a wave":
+  "<b>Antes de la hoja de trabajo:</b> Ondas en una cuerda; rapidez de onda; energía y potencia de una onda",
 "Also under <a>Interference and diffraction</a>":
   "También en <a>Interferencia y difracción</a>",
+"<b>Before the worksheet:</b> Wave speed v = fλ; two source interference; Snell's law; sines":
+  "<b>Antes de la hoja de trabajo:</b> Rapidez de onda v = fλ; interferencia de dos fuentes; ley de Snell; seno de un ángulo",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet: Ripple Tank: Wavelength, Refraction and Interference<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo: Tanque de ondas: longitud de onda, refracción e interferencia<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<b>Before the worksheet:</b> Wave fronts and wavelets; index of refraction; Snell's law; diffraction":
+  "<b>Antes de la hoja de trabajo:</b> Frentes de onda y ondículas; índice de refracción; ley de Snell; difracción",
 "Planets and the solar system · Virtual Physics Demos":
   "Planetas y el sistema solar · Demos virtuales de física",
 "Planets and the solar system":
@@ -3876,10 +4220,28 @@ VDI18N.add('es', 'site', {
   "Formación, temperaturas, interiores, cráteres, planetas gigantes y exoplanetas.",
 "Planets and the solar system demos":
   "Demos de planetas y el sistema solar",
+"<b>Before the worksheet:</b> Angular momentum; inverse square law of sunlight; temperature and ice; ratios":
+  "<b>Antes de la hoja de trabajo:</b> Momento angular; ley del inverso del cuadrado de la luz solar; temperatura y hielo; razones",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet: Building a Solar System (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo: Construir un sistema solar (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Also under <a>Galaxies and cosmology</a>":
   "También en <a>Galaxias y cosmología</a>",
-"<a>Open demo</a> <a>Worksheet {#}: Finding Exoplanets</a> <a>Worksheet {#}: Finding Planets Around Other Stars (Astro {#})</a> <a>Worksheet {#}: Eclipsing Binary Stars</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Encontrar exoplanetas</a> <a>Hoja de trabajo {#}: Encontrar planetas alrededor de otras estrellas (Astro {#})</a> <a>Hoja de trabajo {#}: Estrellas binarias eclipsantes</a> <a>Notas</a>",
+"<b>Before the worksheet:</b> Density as mass over volume; floating and buoyancy; heat flow; reading a graph line":
+  "<b>Antes de la hoja de trabajo:</b> Densidad como masa entre volumen; flotación; flujo de calor; leer una recta en una gráfica",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet: Inside a Planet (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo: El interior de un planeta (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<b>Before the worksheets:</b> {#}. Surface area and volume of a sphere; impacts and gravity; rates and counting · {#}. Crater counting and surface age; area and density of craters; gravity and impacts":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Área y volumen de una esfera; impactos y gravedad; tasas y conteos · {#}. Conteo de cráteres y edad de la superficie; área y densidad de cráteres; gravedad e impactos",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: Craters and the Ages of the Moon's Surface (Astro {#})<span>{#} min · algebra</span></a> <a>Worksheet {#}: Dating the Surface of Mars (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: Los cráteres y las edades de la superficie de la Luna (Astro {#})<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Fechar la superficie de Marte (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<b>Before the worksheet:</b> Kepler's third law; density; gravity and orbits; graphing a slope":
+  "<b>Antes de la hoja de trabajo:</b> Tercera ley de Kepler; densidad; gravedad y órbitas; pendiente de una gráfica",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet: Giant Planets, Rings and Moons (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo: Planetas gigantes, anillos y lunas (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<b>Before the worksheets:</b> {#}. Kepler's third law; center of mass orbits; density; reading a slope from a graph · {#}. Size and mass ratios; density; inverse square law of light; Kepler's third law · {#}. Orbits and Kepler's third law; center of mass; luminosity and temperature of stars":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Tercera ley de Kepler; órbitas alrededor del centro de masa; densidad; leer una pendiente · {#}. Razones de tamaño y masa; densidad; ley del inverso del cuadrado de la luz; tercera ley de Kepler · {#}. Órbitas y tercera ley de Kepler; centro de masa; luminosidad y temperatura de las estrellas",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: Finding Exoplanets<span>{#} min · algebra</span></a> <a>Worksheet {#}: Finding Planets Around Other Stars (Astro {#})<span>{#} min · algebra</span></a> <a>Worksheet {#}: Eclipsing Binary Stars<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: Encontrar exoplanetas<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Encontrar planetas alrededor de otras estrellas (Astro {#})<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Estrellas binarias eclipsantes<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Photons and quanta · Virtual Physics Demos":
   "Fotones y cuantos · Demos virtuales de física",
 "Photons and quanta":
@@ -3888,10 +4250,28 @@ VDI18N.add('es', 'site', {
   "Efecto fotoeléctrico, dispersión Compton, ondas de materia y paquetes de onda.",
 "Photons and quanta demos":
   "Demos de fotones y cuantos",
-"<a>Open demo</a> <a>Worksheet {#}: Young's Double Slit</a> <a>Worksheet {#}: Wave and Particle Duality</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: La doble rendija de Young</a> <a>Hoja de trabajo {#}: Dualidad onda-partícula</a> <a>Notas</a>",
+"<b>Before the worksheet:</b> Photon energy E = hf; work function; frequency and wavelength; slope and intercept":
+  "<b>Antes de la hoja de trabajo:</b> Energía del fotón E = hf; función de trabajo; frecuencia y longitud de onda; pendiente y ordenada al origen",
+"<b>Before the worksheet:</b> Photon energy and momentum; relativistic energy and momentum; conservation laws; fitting a line":
+  "<b>Antes de la hoja de trabajo:</b> Energía y cantidad de movimiento del fotón; energía y momento relativistas; leyes de conservación; ajuste lineal",
+"<b>Before the worksheets:</b> {#}. Interference of waves; path difference; small angle approximation; reading a slope · {#}. de Broglie wavelength; two slit interference; photons and electrons as quanta":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Interferencia de ondas; diferencia de trayectoria; aproximación de ángulos pequeños; leer una pendiente · {#}. Longitud de onda de de Broglie; interferencia de doble rendija; fotones y electrones como cuantos",
+"<a>Open demo</a> <a>Worksheet {#}: Young's Double Slit<span>{#} min · algebra</span></a> <a>Worksheet {#}: Wave and Particle Duality<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: La doble rendija de Young<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Dualidad onda-partícula<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<b>Before the worksheets:</b> {#}. Wave nature of matter; de Broglie wavelength; Bragg diffraction; kinetic energy and voltage · {#}. Wave interference; Bragg's law; electromagnetic spectrum":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Naturaleza ondulatoria de la materia; longitud de onda de De Broglie; difracción de Bragg; energía cinética y voltaje · {#}. Interferencia de ondas; ley de Bragg; espectro electromagnético",
+"<b>Before the worksheets:</b> {#}. Wave functions and wave packets; de Broglie wavelength; position and momentum spreads · {#}. Standing waves; quantized energy of a particle in a box; harmonic oscillator; line fits · {#}. Wave function and the Schrödinger equation idea; barrier and step; exponentials and logs":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Funciones de onda y paquetes de onda; longitud de onda de de Broglie; dispersión en posición y momento · {#}. Ondas estacionarias; energía cuantizada de una partícula en una caja; oscilador armónico; ajuste de rectas · {#}. Función de onda e idea de la ecuación de Schrödinger; barrera y escalón; exponenciales y logaritmos",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: The Uncertainty Principle<span>{#} min · algebra</span></a> <a>Worksheet {#}: Energy Levels in a Box and a Spring<span>{#} min · algebra</span></a> <a>Worksheet {#}: Quantum Tunneling<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: El principio de incertidumbre<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Niveles de energía en una caja y en un resorte<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Efecto túnel cuántico<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<b>Before the worksheet:</b> Bohr model; energy levels of atoms; electron volts; photon wavelength and energy":
+  "<b>Antes de la hoja de trabajo:</b> Modelo de Bohr; niveles de energía de los átomos; electronvolts; longitud de onda y energía del fotón",
 "Also under <a>Heat and thermodynamics</a> · <a>Telescopes and light</a>":
   "También en <a>Calor y termodinámica</a> · <a>Telescopios y luz</a>",
+"<b>Before the worksheet:</b> Probability; superposition and measurement of a two state system; spin; trig functions":
+  "<b>Antes de la hoja de trabajo:</b> Probabilidad; superposición y medición en un sistema de dos estados; espín; funciones trigonométricas",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet: Superposition and Measurement<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo: Superposición y medición<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Relativity · Virtual Physics Demos":
   "Relatividad · Demos virtuales de física",
 "Spacetime diagrams, time dilation, relativistic momentum and energy.":
@@ -3900,6 +4280,12 @@ VDI18N.add('es', 'site', {
   "<span>OpenStax Vol. {#} · Cap. {#} · Vol. {#} · Cap. {#}, {#}</span>",
 "Relativity demos":
   "Demos de relatividad",
+"<b>Before the worksheet:</b> Postulates of relativity; time dilation and length contraction; Lorentz transformation":
+  "<b>Antes de la hoja de trabajo:</b> Postulados de la relatividad; dilatación del tiempo y contracción de la longitud; transformación de Lorentz",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet: Spacetime Diagrams and the Lorentz Transformation<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo: Diagramas de espacio-tiempo y la transformación de Lorentz<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<b>Before the worksheets:</b> {#}. Special relativity postulates; Galilean velocity addition; Lorentz factor · {#}. Newton's second law as F = dp/dt; kinetic energy and work; reading a slope · {#}. Relativistic energy and momentum; gamma factor; circular motion in a magnetic field":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Postulados de la relatividad especial; suma galileana de velocidades; factor de Lorentz · {#}. Segunda ley de Newton como F = dp/dt; energía cinética y trabajo; leer una pendiente · {#}. Energía y momento relativistas; factor gamma; movimiento circular en un campo magnético",
 "Also under <a>Optics</a>":
   "También en <a>Óptica</a>",
 "Rotation · Virtual Physics Demos":
@@ -3910,8 +4296,16 @@ VDI18N.add('es', 'site', {
   "Torca, momento de inercia, rodadura y precesión.",
 "Rotation demos":
   "Demos de rotación",
-"<a>Open demo</a> <a>Worksheet {#}: Gyroscope Precession</a> <a>Worksheet {#}: A Spinning Top and the Wandering Pole Star (Astro {#})</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Giroscopio y precesión</a> <a>Hoja de trabajo {#}: Un trompo y la estrella polar que se desplaza (Astro {#})</a> <a>Notas</a>",
+"<b>Before the worksheet:</b> Torque; angular velocity and acceleration; rolling without slipping; angular momentum":
+  "<b>Antes de la hoja de trabajo:</b> Torca; velocidad y aceleración angulares; rodamiento sin deslizamiento; momento angular",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet: Torque and Angular Momentum<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo: Torca y momento angular<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<b>Before the worksheet:</b> Torque and rotational inertia; Newton's second law; free body diagrams; fitting a line":
+  "<b>Antes de la hoja de trabajo:</b> Torca e inercia rotacional; segunda ley de Newton; diagramas de cuerpo libre; ajustar una línea",
+"<b>Before the worksheets:</b> {#}. Torque; angular momentum; moment of inertia; vector directions · {#}. Torque and angular momentum of a spinning wheel; Earth's axis tilt; period and rate":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Torca; momento angular; momento de inercia; direcciones de vectores · {#}. Torca y momento angular de una rueda que gira; inclinación del eje de la Tierra; periodo y rapidez",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: Gyroscope Precession<span>{#} min · algebra</span></a> <a>Worksheet {#}: A Spinning Top and the Wandering Pole Star (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: Giroscopio y precesión<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Un trompo y la estrella polar que se desplaza (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "The sky · Virtual Physics Demos":
   "El cielo · Demos virtuales de física",
 "The sky":
@@ -3920,6 +4314,22 @@ VDI18N.add('es', 'site', {
   "Las estaciones, la esfera celeste, las fases de la Luna y el movimiento retrógrado.",
 "The sky demos":
   "Demos del cielo",
+"<b>Before the worksheets:</b> {#}. Earth's tilt and orbit; inverse square law; sine and cosine of an angle · {#}. Tilt of Earth's axis; inverse square law; latitude; angle of sunlight on a surface · {#}. Rotation and revolution of planets; angles in degrees; converting hours to minutes":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Inclinación y órbita de la Tierra; ley del inverso del cuadrado; seno y coseno de un ángulo · {#}. Inclinación del eje de la Tierra; ley del inverso del cuadrado; latitud; ángulo de la luz solar sobre una superficie · {#}. Rotación y traslación de los planetas; ángulos en grados; convertir horas a minutos",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: Sunlight Through the Year<span>{#} min · algebra</span></a> <a>Worksheet {#}: Why We Have Seasons (Astro {#})<span>{#} min · algebra</span></a> <a>Worksheet {#}: Sidereal Days, Solar Days and Sundials (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: La luz solar a lo largo del año<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Por qué tenemos estaciones (Astro {#})<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Días siderales, días solares y relojes de sol (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<b>Before the worksheets:</b> {#}. Angles and degrees; latitude and longitude on Earth; why stars rise and set · {#}. Inverse square law of light; magnitude scale; logarithms on a calculator":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Ángulos y grados; latitud y longitud en la Tierra; por qué salen y se ponen las estrellas · {#}. Ley del inverso del cuadrado de la luz; escala de magnitudes; logaritmos en la calculadora",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: The Sky and the Celestial Sphere (Astro {#})<span>{#} min · algebra</span></a> <a>Worksheet {#}: Constellations in 3D (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: El cielo y la esfera celeste (Astro {#})<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Constelaciones en 3D (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<b>Before the worksheets:</b> {#}. Orbits of the Moon and Earth; the Moon's phases; angles and basic trigonometry · {#}. Moon's orbit and phases; Sun, Earth, Moon geometry; angles per day":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Órbitas de la Luna y la Tierra; fases lunares; ángulos y trigonometría básica · {#}. Órbita y fases de la Luna; geometría Sol, Tierra y Luna; ángulos por día",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: Phases and the Lunar Month<span>{#} min · algebra</span></a> <a>Worksheet {#}: Phases of the Moon and Eclipse Seasons (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: Las fases y el mes lunar<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Fases de la Luna y temporadas de eclipses (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<b>Before the worksheets:</b> {#}. Orbital periods; Earth and planet positions from above; synodic period; sky longitude · {#}. Phases of Venus; Sun, Earth, Venus geometry; Ptolemy's and Copernicus's models of the sky":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Periodos orbitales; posiciones de la Tierra y los planetas vistos desde arriba; periodo sinódico; longitud en el cielo · {#}. Fases de Venus; geometría Sol, Tierra y Venus; modelos de Ptolomeo y Copérnico del cielo",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: Retrograde Motion and Synodic Periods (Astro {#})<span>{#} min · algebra</span></a> <a>Worksheet {#}: Venus and the World Models (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: Movimiento retrógrado y periodos sinódicos (Astro {#})<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Venus y los modelos del mundo (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Sound and acoustics · Virtual Physics Demos":
   "Sonido y acústica · Demos virtuales de física",
 "Sound and acoustics":
@@ -3928,12 +4338,34 @@ VDI18N.add('es', 'site', {
   "Rapidez del sonido, sonoridad, resonancia, timbre, Doppler y ultrasonido.",
 "Sound and acoustics demos":
   "Demos de sonido y acústica",
+"<b>Before the worksheet:</b> Wave speed and wavelength; pressure and displacement; ideal gas; fitting a line":
+  "<b>Antes de la hoja de trabajo:</b> Rapidez y longitud de onda; presión y desplazamiento; gas ideal; ajustar una línea",
+"<b>Before the worksheet:</b> Standing waves, nodes and antinodes; wave speed and wavelength; speed of sound in gases":
+  "<b>Antes de la hoja de trabajo:</b> Ondas estacionarias, nodos y antinodos; velocidad y longitud de onda; velocidad del sonido en gases",
+"<b>Before the worksheet:</b> Intensity and the inverse square law; decibels; logarithms":
+  "<b>Antes de la hoja de trabajo:</b> Intensidad y ley del inverso del cuadrado; decibeles; logaritmos",
 "In <a>Acoustics</a> · <a>Modern Physics</a>":
   "En <a>Acústica</a> · <a>Física moderna</a>",
-"<a>Open demo</a> <a>Worksheet {#}: Doppler Effect and Shock Waves</a> <a>Worksheet {#}: Doppler Effect for Light</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Efecto Doppler y ondas de choque</a> <a>Hoja de trabajo {#}: Efecto Doppler de la luz</a> <a>Notas</a>",
-"Also under <a>Oscillations and waves</a>":
-  "También en <a>Oscilaciones y ondas</a>",
+"<b>Before the worksheets:</b> {#}. Sound waves; frequency and wave speed; Doppler shift; basic trigonometry · {#}. Special relativity; time dilation and gamma; Doppler effect; wavelength and frequency":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Ondas sonoras; frecuencia y rapidez de onda; efecto Doppler; trigonometría básica · {#}. Relatividad especial; dilatación del tiempo y gamma; efecto Doppler; longitud de onda y frecuencia",
+"<a>Open demo</a> <a>Worksheet {#}: Doppler Effect and Shock Waves<span>{#} min · algebra</span></a> <a>Worksheet {#}: Doppler Effect for Light<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Efecto Doppler y ondas de choque<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Efecto Doppler de la luz<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<b>Before the worksheet:</b> Wave interference; path difference; wavelength, frequency and wave speed":
+  "<b>Antes de la hoja de trabajo:</b> Interferencia de ondas; diferencia de trayectoria; longitud de onda, frecuencia y rapidez de onda",
+"<b>Before the worksheets:</b> {#}. Sound waves, frequency and harmonics; decibels; adding waves · {#}. Frequency and period; harmonics of a tone; sine waves":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Ondas sonoras, frecuencia y armónicos; decibeles; suma de ondas · {#}. Frecuencia y periodo; armónicos de un tono; ondas senoidales",
+"<b>Before the worksheet:</b> Standing waves in a pipe; nodes and antinodes; speed of sound; fitting a line":
+  "<b>Antes de la hoja de trabajo:</b> Ondas estacionarias en un tubo; nodos y antinodos; rapidez del sonido; ajustar una línea",
+"<b>Before the worksheets:</b> {#}. Sound level in decibels; sound absorption; reciprocals and fitting a line · {#}. Sound intensity and decibels; inverse square law; logarithms; reading a slope from a graph":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Nivel de sonido en decibeles; absorción del sonido; recíprocos y ajuste de una línea · {#}. Intensidad del sonido y decibeles; ley del inverso del cuadrado; logaritmos; pendiente de una gráfica",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: Reverberation Time<span>{#} min · algebra</span></a> <a>Worksheet {#}: Anechoic Chamber<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: Tiempo de reverberación<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Cámara anecoica<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<b>Before the worksheet:</b> Standing waves and resonance; nodes and antinodes; wave speed; proportional reasoning":
+  "<b>Antes de la hoja de trabajo:</b> Ondas estacionarias y resonancia; nodos y antinodos; rapidez de onda; razonamiento proporcional",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet: Chladni Plates<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo: Placas de Chladni<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<b>Before the worksheet:</b> Standing waves and nodes; wavelength and frequency; force and weight; fitting a line":
+  "<b>Antes de la hoja de trabajo:</b> Ondas estacionarias y nodos; longitud de onda y frecuencia; fuerza y peso; ajuste de una recta",
 "Also under <a>Radiation in medicine</a>":
   "También en <a>Radiación en medicina</a>",
 "Stars · Virtual Physics Demos":
@@ -3944,6 +4376,10 @@ VDI18N.add('es', 'site', {
   "<span>OpenStax Vol. {#} · Cap. {#} · Vol. {#} · Cap. {#}–{#}</span>",
 "Stars demos":
   "Demos de estrellas",
+"<b>Before the worksheets:</b> {#}. Blackbody radiation; luminosity, radius and temperature; power laws and logarithms · {#}. Main sequence lifetime; star clusters; power laws and logarithms; integrating a power · {#}. Apparent and absolute magnitude; the inverse square law; logarithms; fitting a line":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Radiación de cuerpo negro; luminosidad, radio y temperatura; leyes de potencia y logaritmos · {#}. Vida en la secuencia principal; cúmulos estelares; leyes de potencia y logaritmos; integrar una potencia · {#}. Magnitud aparente y absoluta; ley del inverso del cuadrado; logaritmos; ajuste de una recta",
+"<b>Before the worksheet:</b> Luminosity and stellar structure; white dwarfs; reading log log graphs and slopes":
+  "<b>Antes de la hoja de trabajo:</b> Luminosidad y estructura estelar; enanas blancas; leer gráficas log log y pendientes",
 "Telescopes and light · Virtual Physics Demos":
   "Telescopios y luz · Demos virtuales de física",
 "Collecting and resolving light, the spectrum and what it tells us.":
@@ -3952,8 +4388,10 @@ VDI18N.add('es', 'site', {
   "<span>OpenStax Vol. {#} · Cap. {#}, {#} · Vol. {#} · Cap. {#}–{#}, {#}, {#}, {#}</span>",
 "Telescopes and light demos":
   "Demos de telescopios y luz",
-"<a>Open demo</a> <a>Worksheet {#}: Circular Apertures and Resolution</a> <a>Worksheet {#}: Seeing Fine Detail (Astro {#})</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Aberturas circulares y resolución</a> <a>Hoja de trabajo {#}: Ver detalles finos (Astro {#})</a> <a>Notas</a>",
+"<b>Before the worksheets:</b> {#}. Single slit diffraction; wavelength and angle; small angle approximation · {#}. Light waves and wavelength; diffraction limit {#} λ/D; angles in radians":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Difracción por una rendija; longitud de onda y ángulo; aproximación de ángulos pequeños · {#}. Ondas de luz y longitud de onda; límite de difracción {#} λ/D; ángulos en radianes",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: Circular Apertures and Resolution<span>{#} min · algebra</span></a> <a>Worksheet {#}: Seeing Fine Detail (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: Aberturas circulares y resolución<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Ver detalles finos (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Also under <a>Heat and thermodynamics</a> · <a>Photons and quanta</a>":
   "También en <a>Calor y termodinámica</a> · <a>Fotones y cuantos</a>",
 "Interference and diffraction · Virtual Physics Demos":
@@ -3966,24 +4404,490 @@ VDI18N.add('es', 'site', {
   "<span>OpenStax Vol. {#} · Cap. {#} · Vol. {#} · Cap. {#}, {#}–{#}, {#}</span>",
 "Interference and diffraction demos":
   "Demos de interferencia y difracción",
-"Measurement Uncertainty":
-  "Incertidumbre de medición",
-"Measure g with a pendulum and judge what the data can tell you: time it by hand or with a photogate, one swing or many, repeat, read the length to the right place or the wrong one, and release from small or big angles. Random scatter, resolution, bias, propagation, fits and residuals, with every instrument error simulated and labeled.":
-  "Mide g con un péndulo y juzga qué pueden decirte los datos: cronométralo a mano o con una fotocompuerta, una oscilación o varias, repite, lee la longitud en el lugar correcto o en el equivocado, y suelta desde ángulos pequeños o grandes. Dispersión aleatoria, resolución, sesgo, propagación, ajustes y residuos, con cada error de los instrumentos simulado y señalado como tal.",
-"<a>Measurement Uncertainty</a><span>Lab</span>":
-  "<a>Incertidumbre de medición</a><span>Laboratorio</span>",
-"<a>Physics I</a><a>Kinematics</a><a>Oscillations and waves</a><a>Worksheet: Random Scatter and Bias</a><span><span>{#}:{#}</span> <span>{#}:{#}</span></span>":
-  "<a>Física I</a><a>Cinemática</a><a>Oscilaciones y ondas</a><a>Hoja de trabajo: Dispersión aleatoria y sesgo</a><span><span>{#}:{#}</span> <span>{#}:{#}</span></span>",
-"<a>Measurement Uncertainty</a>":
-  "<a>Incertidumbre de medición</a>",
+"<b>Before the worksheet:</b> Wave interference; path difference; phase shift on reflection; index of refraction":
+  "<b>Antes de la hoja de trabajo:</b> Interferencia de ondas; diferencia de trayectoria; cambio de fase por reflexión; índice de refracción",
+"<b>Before the worksheet:</b> Interference of light; path difference and phase; index of refraction":
+  "<b>Antes de la hoja de trabajo:</b> Interferencia de la luz; diferencia de camino y fase; índice de refracción",
+"<b>Before the worksheets:</b> {#}. Interference of waves; path difference; grating equation; sine and tangent · {#}. Wave interference; path difference; sine of an angle; fitting a line":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Interferencia de ondas; diferencia de trayectoria; ecuación de la rejilla; seno y tangente · {#}. Interferencia de ondas; diferencia de camino; seno de un ángulo; ajustar una línea",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: Diffraction Grating<span>{#} min · algebra</span></a> <a>Worksheet {#}: Single Slit Diffraction<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: Rejilla de difracción<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Difracción de una sola rendija<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<b>Before the worksheet:</b> Interference of waves; diffraction grating; angles and sines; wavelength and color":
+  "<b>Antes de la hoja de trabajo:</b> Interferencia de ondas; rejilla de difracción; ángulos y senos; longitud de onda y color",
+"One demo has an activity like that.":
+  "Una demo tiene una actividad así.",
+"{n} demos have an activity like that.":
+  "{n} demos tienen una actividad así.",
+"No demo has that combination. A Start here needs no math; try Any.":
+  "Ninguna demo tiene esa combinación. Un Empieza aquí no necesita matemáticas; prueba Cualquiera.",
+"<span>Fluids: Pressure, Buoyancy and Flow →</span>":
+  "<span>Fluidos: presión, flotación y flujo →</span>",
+"<a>Open demo</a> <a>Worksheet: Momentum and Collisions<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Momento y colisiones<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Spring Constant<span>{#} min · algebra</span></a> <a>Worksheet {#}: Driven Oscillator and Resonance<span>{#} min · algebra</span></a> <a>Worksheet {#}: Springs in Series and Parallel<span>{#} min · algebra</span></a> <a>Worksheet {#}: Normal Modes<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Constante del resorte<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Oscilador forzado y resonancia<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Resortes en serie y en paralelo<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Modos normales<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: The Hydrogen Atom<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: El átomo de hidrógeno<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Superposition and Measurement<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Superposición y medición<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Conservation Laws for Particle Reactions<span>{#} min · algebra</span></a> <a>Worksheet {#}: Building Hadrons from Quarks<span>{#} min · algebra</span></a> <a>Worksheet {#}: Invariant Mass in a Bubble Chamber<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Leyes de conservación en reacciones de partículas<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Construir hadrones con quarks<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Masa invariante en una cámara de burbujas<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Hubble's Law and the Age of the Universe<span>{#} min · algebra</span></a> <a>Worksheet {#}: Thermal History of the Universe<span>{#} min · algebra</span></a> <a>Worksheet {#}: Helium from the First Three Minutes<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: La ley de Hubble y la edad del universo<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Historia térmica del universo<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: El helio de los primeros tres minutos<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"Virtual Physics Demos":
+  "Demos virtuales de física",
+"Site":
+  "Sitio",
+"Library":
+  "Biblioteca",
+"<a>Demos</a><a>OpenStax</a><a>Notes</a>":
+  "<a>Demos</a><a>OpenStax</a><a>Notas</a>",
+"<a><b>For a class</b> Courses</a>":
+  "<a><b>Para una clase</b> Cursos</a>",
+"<span>Sound Intensity and Decibels →</span>":
+  "<span>Intensidad del sonido y decibeles →</span>",
+"Magnetic Fields of Currents":
+  "Campos magnéticos de corrientes",
+"<a>Open demo</a> <a>Worksheet {#}: Units and Dimensions</a> <a>Worksheet {#}: Estimates and Uncertainty</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Unidades y dimensiones</a> <a>Hoja de trabajo {#}: Estimaciones e incertidumbre</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Force Table</a> <a>Worksheet {#}: Components, Sums and Products</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Mesa de fuerzas</a> <a>Hoja de trabajo {#}: Componentes, sumas y productos</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Motion Graphs</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Gráficas de movimiento</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Projectiles and Air Resistance</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Proyectiles y resistencia del aire</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Relative Motion</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Movimiento relativo</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Speed Limits on Curves and Loops</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Límites de rapidez en curvas y rizos</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Friction and Work</a> <a>Worksheet {#}: Atwood's Machine</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Fricción y trabajo</a> <a>Hoja de trabajo {#}: La máquina de Atwood</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Apparent Weight</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Peso aparente</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Terminal Velocity</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Velocidad terminal</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Viscosity</a> <a>Worksheet {#}: Pipe Flow and Turbulence</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Viscosidad</a> <a>Hoja de trabajo {#}: Flujo en tuberías y turbulencia</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Potential Energy Diagrams</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Diagramas de energía potencial</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Momentum and Collisions</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Momento y colisiones</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Impulse and Momentum</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Impulso y momento</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Center of Mass</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Centro de masa</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: The Rocket Equation</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: La ecuación del cohete</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Torque and Angular Momentum</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Torca y momento angular</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Rotational Inertia</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Inercia rotacional</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Measuring g</a> <a>Worksheet {#}: Normal Modes and Chaos</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Medir g</a> <a>Hoja de trabajo {#}: Modos normales y caos</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Gyroscope Precession</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Precesión del giroscopio</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Kepler's Third Law</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Tercera ley de Kepler</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Measuring G</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Medir G</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: How g Changes with Height and Latitude</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Cómo cambia g con la altura y la latitud</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Tidal Forces</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Fuerzas de marea</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: GPS Clocks and Relativity</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Relojes GPS y relatividad</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Tension in a Hanging Chain</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Tensión en una cadena colgante</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Support Forces and Cable Tension</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Fuerzas de soporte y tensión en cables</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Young's Modulus</a> <a>Worksheet {#}: Shear and Bulk Moduli</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Módulo de Young</a> <a>Hoja de trabajo {#}: Módulos de corte y volumétrico</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Pressure, Buoyancy and Flow</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Presión, flotación y flujo</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Spring Constant</a> <a>Worksheet {#}: Normal Modes</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Constante del resorte</a> <a>Hoja de trabajo {#}: Modos normales</a> <a>Notas</a>",
+"Also used in this unit: <a>Pendulums</a> <span>(card under <a>Rotation and angular momentum</a>; {#}:{#})</span>":
+  "También se usa en esta unidad: <a>Péndulos</a> <span>(tarjeta en <a>Rotación y momento angular</a>; {#}:{#})</span>",
+"<a>Open demo</a> <a>Worksheet: Standing Waves on a String</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Ondas estacionarias en una cuerda</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Linear Density of a String</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Densidad lineal de una cuerda</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Charging by Induction</a> <a>Worksheet {#}: Attracting a Neutral Insulator</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Carga por inducción</a> <a>Hoja de trabajo {#}: Atraer un aislante neutro</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Electric Field and Potential</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Campo y potencial eléctricos</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Gauss's Law</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Ley de Gauss</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Van de Graaff Generator</a> <a>Worksheet {#}: Ink Jet Printer</a> <a>Worksheet {#}: Electrostatic Precipitator</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Generador de Van de Graaff</a> <a>Hoja de trabajo {#}: Impresora de inyección de tinta</a> <a>Hoja de trabajo {#}: Precipitador electrostático</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Capacitance and Dielectrics</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Capacitancia y dieléctricos</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Kirchhoff's Rules</a> <a>Worksheet {#}: RC Time Constant</a> <a>Worksheet {#}: RLC Oscillations</a> <a>Worksheet {#}: AC Resonance</a> <a>Worksheet {#}: A Real Diode and the Junction Transistor</a> <a>Worksheet {#}: Reactance and Phase</a> <a>Worksheet {#}: Power in an AC Circuit</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Reglas de Kirchhoff</a> <a>Hoja de trabajo {#}: Constante de tiempo RC</a> <a>Hoja de trabajo {#}: Oscilaciones RLC</a> <a>Hoja de trabajo {#}: Resonancia en CA</a> <a>Hoja de trabajo {#}: Un diodo real y el transistor de unión</a> <a>Hoja de trabajo {#}: Reactancia y fase</a> <a>Hoja de trabajo {#}: Potencia en un circuito de CA</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Resistivity</a> <a>Worksheet {#}: Current in a Sheet</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Resistividad</a> <a>Hoja de trabajo {#}: Corriente en una lámina</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Household Wiring and Electrical Safety</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Instalación eléctrica doméstica y seguridad eléctrica</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Magnets and Oersted's Compass</a> <a>Worksheet {#}: Fields and Forces of Straight Wires</a> <a>Worksheet {#}: Fields of Loops and Solenoids</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Imanes y la brújula de Oersted</a> <a>Hoja de trabajo {#}: Campos y fuerzas de alambres rectos</a> <a>Hoja de trabajo {#}: Campos de espiras y solenoides</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Particle Orbits and the Hall Effect</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Órbitas de partículas y el efecto Hall</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Magnetic Force on a Wire</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Fuerza magnética sobre un alambre</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Displacement Current</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Corriente de desplazamiento</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Magnetism in Matter</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Magnetismo en la materia</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Faraday's Law</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Ley de Faraday</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Induction at Work</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Inducción en acción</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Induced Electric Fields</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Campos eléctricos inducidos</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Eddy Current Braking</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Frenado por corrientes de Foucault</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Transformers and Power Lines</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Transformadores y líneas de transmisión</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Electromagnetic Waves: Fields, Intensity and Pressure</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Ondas electromagnéticas: campos, intensidad y presión</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Huygens's Principle</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Principio de Huygens</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Dispersion</a> <a>Worksheet {#}: Mirrors and Refracting Surfaces</a> <a>Worksheet {#}: Lenses and Optical Instruments</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Dispersión</a> <a>Hoja de trabajo {#}: Espejos y superficies refractoras</a> <a>Hoja de trabajo {#}: Lentes e instrumentos ópticos</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Ripple Tank: Wavelength, Refraction and Interference</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Tanque de ondas: longitud de onda, refracción e interferencia</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Polarization</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Polarización</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: The Eye</a> <a>Worksheet {#}: The Camera</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: El ojo</a> <a>Hoja de trabajo {#}: La cámara</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Cones, Mixing and Filters</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Conos, mezclas y filtros</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Young's Double Slit</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: La doble rendija de Young</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Diffraction Grating</a> <a>Worksheet {#}: Single Slit Diffraction</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Rejilla de difracción</a> <a>Hoja de trabajo {#}: Difracción de una sola rendija</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Thin Film Interference</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Interferencia en películas delgadas</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Michelson Interferometer</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Interferómetro de Michelson</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Circular Apertures and Resolution</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Aberturas circulares y resolución</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Electron Diffraction and de Broglie Waves</a> <a>Worksheet {#}: X-Ray Diffraction</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Difracción de electrones y ondas de De Broglie</a> <a>Hoja de trabajo {#}: Difracción de rayos X</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Holography: Fringes and Images</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Holografía: franjas e imágenes</a> <a>Notas</a>",
+"Also used in this unit: <a>Circuits</a> with <a>Worksheet: Kirchhoff's Rules</a> <span>(card under <a>Lecture {#} · Capacitor circuits</a>; {#}:{#}, {#}:{#}, {#}:{#}, {#}:{#}, {#}:{#})</span>":
+  "También se usa en esta unidad: <a>Circuitos</a> con <a>Hoja de trabajo: Reglas de Kirchhoff</a> <span>(tarjeta en <a>Clase {#} · Circuitos con capacitores</a>; {#}:{#}, {#}:{#}, {#}:{#}, {#}:{#}, {#}:{#})</span>",
+"Also used in this unit: <a>Magnetic Fields of Currents</a> with <a>Worksheet: Fields and Forces of Straight Wires</a> with <a>Worksheet: Fields of Loops and Solenoids</a> <span>(card under <a>Lecture {#} · Magnets, part {#}</a>; {#}:{#}, {#}:{#}, {#}:{#}, {#}:{#}, {#}:{#}, {#}:{#})</span>":
+  "También se usa en esta unidad: <a>Campos magnéticos de corrientes</a> con <a>Hoja de trabajo: Campos y fuerzas de alambres rectos</a> con <a>Hoja de trabajo: Campos de espiras y solenoides</a> <span>(tarjeta en <a>Clase {#} · Imanes, parte {#}</a>; {#}:{#}, {#}:{#}, {#}:{#}, {#}:{#}, {#}:{#}, {#}:{#})</span>",
+"Also used in this unit: <a>Circuits</a> with <a>Worksheet: RLC Oscillations</a> <span>(card under <a>Lecture {#} · Capacitor circuits</a>; {#}:{#}, {#}:{#}, {#}:{#}, {#}:{#}, {#}:{#})</span>":
+  "También se usa en esta unidad: <a>Circuitos</a> con <a>Hoja de trabajo: Oscilaciones RLC</a> <span>(tarjeta en <a>Clase {#} · Circuitos con capacitores</a>; {#}:{#}, {#}:{#}, {#}:{#}, {#}:{#}, {#}:{#})</span>",
+"<a>Photons and matter waves</a>":
+  "<a>Fotones y ondas de materia</a>",
+"<a>Open demo</a> <a>Worksheet: Spacetime Diagrams and the Lorentz Transformation</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Diagramas de espacio-tiempo y la transformación de Lorentz</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Speed of Light with a Rotating Mirror</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: La rapidez de la luz con un espejo giratorio</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Magnetism from Relativity</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Magnetismo a partir de la relatividad</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Adding Velocities Near c</a> <a>Worksheet {#}: Momentum Under a Steady Force</a> <a>Worksheet {#}: Bertozzi's Electrons</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Suma de velocidades cerca de c</a> <a>Hoja de trabajo {#}: Momento bajo una fuerza constante</a> <a>Hoja de trabajo {#}: Los electrones de Bertozzi</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Doppler Effect for Light</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Efecto Doppler de la luz</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Compton Scattering</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Dispersión Compton</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: The Curve of Binding Energy</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: La curva de energía de enlace</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Blackbody Radiation</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Radiación de cuerpo negro</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Photoelectric Effect and Planck's Constant</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Efecto fotoeléctrico y constante de Planck</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: The Hydrogen Spectrum and the Rydberg Constant</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: El espectro del hidrógeno y la constante de Rydberg</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Franck–Hertz Experiment</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Experimento de Franck–Hertz</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Rutherford Scattering</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Dispersión de Rutherford</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Electron Diffraction and de Broglie Waves</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Difracción de electrones y ondas de De Broglie</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Wave and Particle Duality</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Dualidad onda-partícula</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Charge to Mass Ratio of the Electron</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Razón carga/masa del electrón</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: The Uncertainty Principle</a> <a>Worksheet {#}: Energy Levels in a Box and a Spring</a> <a>Worksheet {#}: Quantum Tunneling</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: El principio de incertidumbre</a> <a>Hoja de trabajo {#}: Niveles de energía en una caja y en un resorte</a> <a>Hoja de trabajo {#}: Efecto túnel cuántico</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: The Hydrogen Atom</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: El átomo de hidrógeno</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Superposition and Measurement</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Superposición y medición</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Measuring a Half Life</a> <a>Worksheet {#}: Parent and Daughter</a> <a>Worksheet {#}: Alpha and Beta Decay</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Medir una vida media</a> <a>Hoja de trabajo {#}: Núcleo padre y núcleo hijo</a> <a>Hoja de trabajo {#}: Decaimiento alfa y beta</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: The Orbital Magnetic Moment</a> <a>Worksheet {#}: The Stern–Gerlach Experiment</a> <a>Worksheet {#}: The Zeeman Effect</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: El momento magnético orbital</a> <a>Hoja de trabajo {#}: El experimento de Stern–Gerlach</a> <a>Hoja de trabajo {#}: El efecto Zeeman</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Spin Resonance</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Resonancia de espín</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Shells and the Periodic Table</a> <a>Worksheet {#}: X-Ray Spectra and Moseley's Law</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Capas y la tabla periódica</a> <a>Hoja de trabajo {#}: Espectros de rayos X y ley de Moseley</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Laser Threshold, Efficiency and Cavity Modes</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Umbral, eficiencia y modos de cavidad de un láser</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Ionic and Covalent Bonds</a> <a>Worksheet {#}: The Infrared Spectrum of HCl</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Enlaces iónicos y covalentes</a> <a>Hoja de trabajo {#}: El espectro infrarrojo del HCl</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Lattice Energy of Ionic Crystals</a> <a>Worksheet {#}: Energy Bands</a> <a>Worksheet {#}: Carriers in Doped Silicon</a> <a>Worksheet {#}: The pn Junction and LEDs</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Energía de red de cristales iónicos</a> <a>Hoja de trabajo {#}: Bandas de energía</a> <a>Hoja de trabajo {#}: Portadores en silicio dopado</a> <a>Hoja de trabajo {#}: La unión pn y los LED</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Bose–Einstein Condensation</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Condensación de Bose–Einstein</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: A Real Diode and the Junction Transistor</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Un diodo real y el transistor de unión</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: The Meissner Effect and the Critical Field</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: El efecto Meissner y el campo crítico</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Calibrating a Detector</a> <a>Worksheet {#}: Absorbing Gamma Rays</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Calibrar un detector</a> <a>Hoja de trabajo {#}: Absorción de rayos gamma</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Nuclear Reactions</a> <a>Worksheet {#}: Chain Reactions and Critical Size</a> <a>Worksheet {#}: Fusion and the Gamow Peak</a> <a>Worksheet {#}: Radiation Dose and Shielding</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Reacciones nucleares</a> <a>Hoja de trabajo {#}: Reacciones en cadena y tamaño crítico</a> <a>Hoja de trabajo {#}: La fusión y el pico de Gamow</a> <a>Hoja de trabajo {#}: Dosis de radiación y blindaje</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Conservation Laws for Particle Reactions</a> <a>Worksheet {#}: Building Hadrons from Quarks</a> <a>Worksheet {#}: Invariant Mass in a Bubble Chamber</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Leyes de conservación en reacciones de partículas</a> <a>Hoja de trabajo {#}: Construir hadrones con quarks</a> <a>Hoja de trabajo {#}: Masa invariante en una cámara de burbujas</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Measuring the Hubble Constant</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Medir la constante de Hubble</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Hubble's Law and the Age of the Universe</a> <a>Worksheet {#}: Thermal History of the Universe</a> <a>Worksheet {#}: Helium from the First Three Minutes</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: La ley de Hubble y la edad del universo</a> <a>Hoja de trabajo {#}: Historia térmica del universo</a> <a>Hoja de trabajo {#}: El helio de los primeros tres minutos</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: The Sky and the Celestial Sphere (Astro {#})</a> <a>Worksheet {#}: Constellations in 3D (Astro {#})</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: El cielo y la esfera celeste (Astro {#})</a> <a>Hoja de trabajo {#}: Constelaciones en 3D (Astro {#})</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Sunlight Through the Year</a> <a>Worksheet {#}: Why We Have Seasons (Astro {#})</a> <a>Worksheet {#}: Sidereal Days, Solar Days and Sundials (Astro {#})</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: La luz solar a lo largo del año</a> <a>Hoja de trabajo {#}: Por qué tenemos estaciones (Astro {#})</a> <a>Hoja de trabajo {#}: Días siderales, días solares y relojes de sol (Astro {#})</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Phases and the Lunar Month</a> <a>Worksheet {#}: Phases of the Moon and Eclipse Seasons (Astro {#})</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Las fases y el mes lunar</a> <a>Hoja de trabajo {#}: Fases de la Luna y temporadas de eclipses (Astro {#})</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Retrograde Motion and World Models (Astro {#})</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Movimiento retrógrado y modelos del mundo (Astro {#})</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: A Spinning Top and the Wandering Pole Star (Astro {#})</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Un trompo y la estrella polar que se desplaza (Astro {#})</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: How Big Is the Solar System? (Astro {#})</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: ¿Qué tan grande es el sistema solar? (Astro {#})</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Kepler's Third Law</a> <a>Worksheet {#}: Kepler's Laws from Mercury to Pluto (Astro {#})</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Tercera ley de Kepler</a> <a>Hoja de trabajo {#}: Las leyes de Kepler de Mercurio a Plutón (Astro {#})</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: How g Changes with Height and Latitude</a> <a>Worksheet {#}: Gravity from the Ground to Orbit (Astro {#})</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Cómo cambia g con la altura y la latitud</a> <a>Hoja de trabajo {#}: La gravedad del suelo a la órbita (Astro {#})</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Tidal Forces</a> <a>Worksheet {#}: Tides: Two Bulges, the Moon and the Sun (Astro {#})</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Fuerzas de marea</a> <a>Hoja de trabajo {#}: Mareas: dos abultamientos, la Luna y el Sol (Astro {#})</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Black Holes and Lensing</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Agujeros negros y lentes gravitacionales</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Orbits Near the Lagrange Points</a> <a>Worksheet {#}: Lagrange Points: Trojan Asteroids and Parking Spots in Space (Astro {#})</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Órbitas cerca de los puntos de Lagrange</a> <a>Hoja de trabajo {#}: Puntos de Lagrange: asteroides troyanos y lugares de estacionamiento en el espacio (Astro {#})</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Finding Exoplanets</a> <a>Worksheet {#}: Eclipsing Binary Stars</a> <a>Worksheet {#}: Finding Planets Around Other Stars (Astro {#})</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Encontrar exoplanetas</a> <a>Hoja de trabajo {#}: Estrellas binarias eclipsantes</a> <a>Hoja de trabajo {#}: Encontrar planetas alrededor de otras estrellas (Astro {#})</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: The Galactic Habitable Zone</a> <a>Worksheet {#}: Planet Temperatures and Habitable Zones (Astro {#})</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: La zona habitable galáctica</a> <a>Hoja de trabajo {#}: Temperaturas planetarias y zonas habitables (Astro {#})</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Orbital Resonances (Astro {#})</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Resonancias orbitales (Astro {#})</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Building a Solar System (Astro {#})</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Construir un sistema solar (Astro {#})</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Giant Planets, Rings and Moons (Astro {#})</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Planetas gigantes, anillos y lunas (Astro {#})</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Star Colors and Temperatures (Astro {#})</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Colores y temperaturas de las estrellas (Astro {#})</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: The Electromagnetic Spectrum (Astro {#})</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: El espectro electromagnético (Astro {#})</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Lenses, Mirrors and Color (Astro {#})</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Lentes, espejos y color (Astro {#})</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Seeing Fine Detail (Astro {#})</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Ver detalles finos (Astro {#})</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Fixing a Blurry Telescope (Astro {#})</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Cómo arreglar un telescopio borroso (Astro {#})</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Fingerprints of the Elements (Astro {#})</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Las huellas digitales de los elementos (Astro {#})</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Building a Telescope (Astro {#})</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Construir un telescopio (Astro {#})</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Stellar Lives and Cluster Ages</a> <a>Worksheet {#}: The Nearest Stars and the Brightest Stars</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Vidas estelares y edades de cúmulos</a> <a>Hoja de trabajo {#}: Las estrellas más cercanas y las más brillantes</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: White Dwarf Cooling and Crystallization</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Enfriamiento y cristalización de enanas blancas</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Distances from the Main Sequence</a> <a>Worksheet {#}: Measuring a Cepheid on CCD Images</a> <a>Worksheet {#}: Parallax: Measuring the Distance to a Star (Astro {#})</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Distancias a partir de la secuencia principal</a> <a>Hoja de trabajo {#}: Medir una cefeida en imágenes CCD</a> <a>Hoja de trabajo {#}: Paralaje: medir la distancia a una estrella (Astro {#})</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Weighing a Galaxy</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Pesar una galaxia</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Craters and the Ages of the Moon's Surface (Astro {#})</a> <a>Worksheet {#}: Dating the Surface of Mars (Astro {#})</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Los cráteres y las edades de la superficie de la Luna (Astro {#})</a> <a>Hoja de trabajo {#}: Fechar la superficie de Marte (Astro {#})</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Inside a Planet (Astro {#})</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: El interior de un planeta (Astro {#})</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Why Small, Hot Planets Lose Their Air (Astro {#})</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Por qué los planetas pequeños y calientes pierden su aire (Astro {#})</a> <a>Notas</a>",
+"<a>Open demo</a> <a><strong>Required</strong> Worksheet {#}: The Sky and the Celestial Sphere</a> <a>Worksheet {#}: Constellations in 3D</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a><strong>Obligatoria</strong> Hoja de trabajo {#}: El cielo y la esfera celeste</a> <a>Hoja de trabajo {#}: Constelaciones en 3D</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: How Big Is the Solar System?</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: ¿Qué tan grande es el sistema solar?</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Why We Have Seasons</a> <a>Worksheet {#}: Sidereal Days, Solar Days and Sundials</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Por qué tenemos estaciones</a> <a>Hoja de trabajo {#}: Días sidéreos, días solares y relojes de sol</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Phases of the Moon and Eclipse Seasons</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Fases de la Luna y temporadas de eclipses</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: A Spinning Top and the Wandering Pole Star</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Un trompo y la estrella polar errante</a> <a>Notas</a>",
+"<span>Dec {#} to {#}</span><span>Required: <a>Worksheet: Kepler's Laws from Mercury to Pluto</a></span>":
+  "<span>{#} al {#} de dic.</span><span>Obligatoria: <a>Hoja de trabajo: Las leyes de Kepler de Mercurio a Plutón</a></span>",
+"<a>Open demo</a> <a><strong>Required</strong> Worksheet: Kepler's Laws from Mercury to Pluto</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a><strong>Obligatoria</strong> Hoja de trabajo: Las leyes de Kepler de Mercurio a Plutón</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Retrograde Motion and World Models</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Movimiento retrógrado y modelos del mundo</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Gravity from the Ground to Orbit</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: La gravedad del suelo a la órbita</a> <a>Notas</a>",
+"<a>Open demo</a> <a><strong>Required</strong> Worksheet: Building a Telescope</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a><strong>Obligatoria</strong> Hoja de trabajo: Construir un telescopio</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Lenses, Mirrors and Color</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Lentes, espejos y color</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Seeing Fine Detail</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Ver detalles finos</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Fixing a Blurry Telescope</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Cómo arreglar un telescopio borroso</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Star Colors and Temperatures</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Colores y temperaturas de las estrellas</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Fingerprints of the Elements</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Huellas digitales de los elementos</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: The Electromagnetic Spectrum</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: El espectro electromagnético</a> <a>Notas</a>",
+"<a>Open demo</a> <a><strong>Required</strong> Worksheet: Planet Temperatures and Habitable Zones</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a><strong>Obligatoria</strong> Hoja de trabajo: Temperaturas planetarias y zonas habitables</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Building a Solar System</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Construir un sistema solar</a> <a>Notas</a>",
+"<a>Open demo</a> <a><strong>Required</strong> Worksheet {#}: Craters and the Ages of the Moon's Surface</a> <a>Worksheet {#}: Dating the Surface of Mars</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a><strong>Obligatoria</strong> Hoja de trabajo {#}: Los cráteres y las edades de la superficie de la Luna</a> <a>Hoja de trabajo {#}: Fechar la superficie de Marte</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Tides: Two Bulges, the Moon and the Sun</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Mareas: dos abultamientos, la Luna y el Sol</a> <a>Notas</a>",
+"<a>Open demo</a> <a><strong>Required</strong> Worksheet: Inside a Planet</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a><strong>Obligatoria</strong> Hoja de trabajo: El interior de un planeta</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Why Small, Hot Planets Lose Their Air</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Por qué los planetas pequeños y calientes pierden su aire</a> <a>Notas</a>",
+"<a>Open demo</a> <a><strong>Required</strong> Worksheet: Giant Planets, Rings and Moons</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a><strong>Obligatoria</strong> Hoja de trabajo: Planetas gigantes, anillos y lunas</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Lagrange Points: Trojan Asteroids and Parking Spots in Space</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Puntos de Lagrange: asteroides troyanos y estacionamientos en el espacio</a> <a>Notas</a>",
+"<a>Open demo</a> <a><strong>Required</strong> Worksheet: Orbital Resonances</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a><strong>Obligatoria</strong> Hoja de trabajo: Resonancias orbitales</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Finding Planets Around Other Stars</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Encontrar planetas alrededor de otras estrellas</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Parallax: Measuring the Distance to a Star</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Paralaje: medir la distancia a una estrella</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Thermal Equilibrium</a> <a>Worksheet {#}: Gas Thermometer and Absolute Zero</a> <a>Worksheet {#}: Thermal Expansion</a> <a>Worksheet {#}: Heat Conduction Through Layers</a> <a>Worksheet {#}: Cooling by Convection and Radiation</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Equilibrio térmico</a> <a>Hoja de trabajo {#}: Termómetro de gas y cero absoluto</a> <a>Hoja de trabajo {#}: Dilatación térmica</a> <a>Hoja de trabajo {#}: Conducción de calor a través de capas</a> <a>Hoja de trabajo {#}: Enfriamiento por convección y radiación</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Heating Curve and Latent Heat</a> <a>Worksheet {#}: Bonds, Temperature and Latent Heat</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Curva de calentamiento y calor latente</a> <a>Hoja de trabajo {#}: Enlaces, temperatura y calor latente</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Gas in a Box</a> <a>Worksheet {#}: Diffusion and Graham's Law</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Gas en una caja</a> <a>Hoja de trabajo {#}: Difusión y ley de Graham</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Heat Capacities of Gases</a> <a>Worksheet {#}: Rüchardt's Ball</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Capacidades caloríficas de los gases</a> <a>Hoja de trabajo {#}: La esfera de Rüchardt</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Heat Engine Cycles</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Ciclos de máquinas térmicas</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Free Expansion</a> <a>Worksheet {#}: Einstein Solids</a> <a>Worksheet {#}: Testing the Second Law</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Expansión libre</a> <a>Hoja de trabajo {#}: Sólidos de Einstein</a> <a>Hoja de trabajo {#}: Poner a prueba la segunda ley</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Chance, the Binomial and the Bell Curve</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: El azar, la binomial y la curva de campana</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: The Ising Phase Transition</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: La transición de fase de Ising</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Power Carried by a Wave</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Potencia transportada por una onda</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Two Speaker Interference</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Interferencia de dos bocinas</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Speed of Sound by Time of Flight</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Rapidez del sonido por tiempo de vuelo</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Speed of Sound</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Rapidez del sonido</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Kundt's Tube</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Tubo de Kundt</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Ultrasound Echoes and Doppler Flow</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Ecos de ultrasonido y flujo Doppler</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Sound Intensity and Decibels</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Intensidad del sonido y decibeles</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Reverberation Time</a> <a>Worksheet {#}: Anechoic Chamber</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Tiempo de reverberación</a> <a>Hoja de trabajo {#}: Cámara anecoica</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Timbre and Harmonics</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Timbre y armónicos</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Doppler Effect and Shock Waves</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Efecto Doppler y ondas de choque</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Chladni Plates</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Placas de Chladni</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Acoustic Levitation</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Levitación acústica</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: A Technetium Generator (Medical Physics)</a> <a>Worksheet {#}: Measuring a Half Life (warm up)</a> <a>Worksheet {#}: Parent and Daughter (warm up)</a> <a>Worksheet {#}: Alpha and Beta Decay (warm up)</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Un generador de tecnecio (Física médica)</a> <a>Hoja de trabajo {#}: Medir una vida media (calentamiento)</a> <a>Hoja de trabajo {#}: Núcleo padre y núcleo hijo (calentamiento)</a> <a>Hoja de trabajo {#}: Decaimiento alfa y beta (calentamiento)</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: The Curve of Binding Energy (warm up)</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: La curva de energía de enlace (calentamiento)</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Filtration and Half Value Layer (Medical Physics)</a> <a>Worksheet {#}: Shells and the Periodic Table (warm up)</a> <a>Worksheet {#}: X-Ray Spectra and Moseley's Law (warm up)</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Filtración y capa hemirreductora (Física médica)</a> <a>Hoja de trabajo {#}: Capas y la tabla periódica (calentamiento)</a> <a>Hoja de trabajo {#}: Espectros de rayos X y ley de Moseley (calentamiento)</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Photon Interactions in Matter</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Interacciones de fotones con la materia</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Compton Scattering (warm up)</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Dispersión Compton (calentamiento)</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Calibrating a Detector (warm up)</a> <a>Worksheet {#}: Absorbing Gamma Rays (warm up)</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Calibrar un detector (calentamiento)</a> <a>Hoja de trabajo {#}: Absorción de rayos gamma (calentamiento)</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Photoelectric Effect and Planck's Constant (warm up)</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Efecto fotoeléctrico y constante de Planck (calentamiento)</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Rutherford Scattering (warm up)</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Dispersión de Rutherford (calentamiento)</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Stopping Power, Range and the Bragg Peak (Medical Physics)</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Poder de frenado, alcance y el pico de Bragg (Física médica)</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Kerma, Dose and Charged Particle Equilibrium (Medical Physics)</a> <a>Worksheet {#}: Calibrating a Proton Beam: TRS-{#} Step by Step (Medical Physics)</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Kerma, dosis y equilibrio de partículas cargadas (Física médica)</a> <a>Hoja de trabajo {#}: Calibrar un haz de protones: el TRS-{#} paso a paso (Física médica)</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Radiobiology: Cell Survival and Fractionation</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Radiobiología: supervivencia celular y fraccionamiento</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Shielding Rooms: CT, Linac Vault and Proton Room (Medical Physics)</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Blindaje de salas: CT, búnker de linac y sala de protones (Física médica)</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Shielding a PET Uptake Room (Medical Physics)</a> <a>Worksheet {#}: Nuclear Reactions (warm up)</a> <a>Worksheet {#}: Chain Reactions and Critical Size (warm up)</a> <a>Worksheet {#}: Fusion and the Gamow Peak (warm up)</a> <a>Worksheet {#}: Radiation Dose and Shielding (warm up)</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Blindaje de un cuarto de captación de PET (Física médica)</a> <a>Hoja de trabajo {#}: Reacciones nucleares (calentamiento)</a> <a>Hoja de trabajo {#}: Reacciones en cadena y tamaño crítico (calentamiento)</a> <a>Hoja de trabajo {#}: La fusión y el pico de Gamow (calentamiento)</a> <a>Hoja de trabajo {#}: Dosis de radiación y blindaje (calentamiento)</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: The Bragg Peak and the Spread Out Bragg Peak (Medical Physics)</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: El pico de Bragg y el pico de Bragg extendido (Física médica)</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Proton Therapy QA: Morning Checks, Drift and Patient Plans (Medical Physics)</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Control de calidad en protonterapia: verificaciones matutinas, deriva y planes de pacientes (Física médica)</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: CT Numbers and Proton Range: Calibration, Stopping Power and Margins (Medical Physics)</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Números CT y alcance de protones: calibración, poder de frenado y márgenes (Física médica)</a> <a>Notas</a>",
+"Echo ranging, impedance, tissue attenuation in dB per cm per MHz and Doppler; the Larmor relation for hydrogen. X-ray imaging, MRI and nuclear medicine imaging come in a second phase.":
+  "Medición de distancia por eco, impedancia, atenuación en tejido en dB por cm por MHz y Doppler; la relación de Larmor para el hidrógeno. La imagenología con rayos X, la resonancia magnética y la imagenología de medicina nuclear llegan en una segunda fase.",
+"<a>Open demo</a> <a>Worksheet {#}: Attenuation in Tissue (Medical Physics)</a> <a>Worksheet {#}: Ultrasound Echoes and Doppler Flow (warm up)</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Atenuación en tejido (Física médica)</a> <a>Hoja de trabajo {#}: Ecos de ultrasonido y flujo Doppler (calentamiento)</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Spin Resonance (warm up)</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Resonancia de espín (calentamiento)</a> <a>Notas</a>",
+"<span>Chapter {#}</span> Units and Measurement <span>{#} sections · {#} demo</span>":
+  "<span>Capítulo {#}</span> Unidades y medición <span>{#} secciones · {#} demo</span>",
+"<span>{#}:{#}</span><span>Significant Figures</span><span><a>Units, Scales and Estimates</a></span>":
+  "<span>{#}:{#}</span><span>Cifras significativas</span><span><a>Unidades, escalas y estimaciones</a></span>",
+"<span>{#}:{#}</span><span>Pendulums</span><span><a>Pendulums</a></span>":
+  "<span>{#}:{#}</span><span>Péndulos</span><span><a>Péndulos</a></span>",
+"<a>Open demo</a> <a>Worksheet {#}: The Hydrogen Spectrum and the Rydberg Constant</a> <a>Worksheet {#}: Fingerprints of the Elements (Astro {#})</a> <a>Worksheet {#}: Why Balmer Lines Peak in A Stars</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: El espectro del hidrógeno y la constante de Rydberg</a> <a>Hoja de trabajo {#}: Las huellas digitales de los elementos (Astro {#})</a> <a>Hoja de trabajo {#}: Por qué las líneas de Balmer alcanzan su máximo en las estrellas A</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Shells and the Periodic Table</a> <a>Worksheet {#}: X-Ray Spectra and Moseley's Law</a> <a>Worksheet {#}: Filtration and Half Value Layer (Medical Physics)</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Capas y la tabla periódica</a> <a>Hoja de trabajo {#}: Espectros de rayos X y ley de Moseley</a> <a>Hoja de trabajo {#}: Filtración y capa hemirreductora (Física médica)</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Measuring the Hubble Constant</a> <a>Worksheet {#}: Parallax: Measuring the Distance to a Star (Astro {#})</a> <a>Worksheet {#}: Distances from the Main Sequence</a> <a>Worksheet {#}: Measuring a Cepheid on CCD Images</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Medir la constante de Hubble</a> <a>Hoja de trabajo {#}: Paralaje: medir la distancia a una estrella (Astro {#})</a> <a>Hoja de trabajo {#}: Distancias a partir de la secuencia principal</a> <a>Hoja de trabajo {#}: Medir una cefeida en imágenes CCD</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Planet Temperatures and Habitable Zones (Astro {#})</a> <a>Worksheet {#}: The Galactic Habitable Zone</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Temperaturas planetarias y zonas habitables (Astro {#})</a> <a>Hoja de trabajo {#}: La zona habitable galáctica</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Gas in a Box</a> <a>Worksheet {#}: Diffusion and Graham's Law</a> <a>Worksheet {#}: Why Small, Hot Planets Lose Their Air (Astro {#})</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Gas en una caja</a> <a>Hoja de trabajo {#}: Difusión y ley de Graham</a> <a>Hoja de trabajo {#}: Por qué los planetas pequeños y calientes pierden su aire (Astro {#})</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Blackbody Radiation</a> <a>Worksheet {#}: Star Colors and Temperatures (Astro {#})</a> <a>Worksheet {#}: Star Colors Through U, B and V Filters</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Radiación de cuerpo negro</a> <a>Hoja de trabajo {#}: Colores y temperaturas de las estrellas (Astro {#})</a> <a>Hoja de trabajo {#}: Colores de las estrellas con los filtros U, B y V</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Electromagnetic Waves: Fields, Intensity and Pressure</a> <a>Worksheet {#}: The Electromagnetic Spectrum (Astro {#})</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Ondas electromagnéticas: campos, intensidad y presión</a> <a>Hoja de trabajo {#}: El espectro electromagnético (Astro {#})</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Units and Dimensions</a> <a>Worksheet {#}: Estimates and Uncertainty</a> <a>Worksheet {#}: How Big Is the Solar System? (Astro {#})</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Unidades y dimensiones</a> <a>Hoja de trabajo {#}: Estimaciones e incertidumbre</a> <a>Hoja de trabajo {#}: ¿Qué tan grande es el sistema solar? (Astro {#})</a> <a>Notas</a>",
+"Type any function and see its derivatives and its integral graphed with it.":
+  "Escribe cualquier función y mira sus derivadas y su integral graficadas junto con ella.",
+"<a>Open demo</a> <a>Worksheet {#}: Ultrasound Echoes and Doppler Flow</a> <a>Worksheet {#}: Attenuation in Tissue (Medical Physics)</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Ecos de ultrasonido y flujo Doppler</a> <a>Hoja de trabajo {#}: Atenuación en tejido (Física médica)</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Measuring a Half Life</a> <a>Worksheet {#}: Parent and Daughter</a> <a>Worksheet {#}: Alpha and Beta Decay</a> <a>Worksheet {#}: A Technetium Generator (Medical Physics)</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Medir una vida media</a> <a>Hoja de trabajo {#}: Núcleo padre y núcleo hijo</a> <a>Hoja de trabajo {#}: Decaimiento alfa y beta</a> <a>Hoja de trabajo {#}: Un generador de tecnecio (Física médica)</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Nuclear Reactions</a> <a>Worksheet {#}: Chain Reactions and Critical Size</a> <a>Worksheet {#}: Fusion and the Gamow Peak</a> <a>Worksheet {#}: Radiation Dose and Shielding</a> <a>Worksheet {#}: Shielding a PET Uptake Room (Medical Physics)</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Reacciones nucleares</a> <a>Hoja de trabajo {#}: Reacciones en cadena y tamaño crítico</a> <a>Hoja de trabajo {#}: La fusión y el pico de Gamow</a> <a>Hoja de trabajo {#}: Dosis de radiación y blindaje</a> <a>Hoja de trabajo {#}: Blindaje de un cuarto de captación de PET (Física médica)</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Dispersion</a> <a>Worksheet {#}: Mirrors and Refracting Surfaces</a> <a>Worksheet {#}: Lenses and Optical Instruments</a> <a>Worksheet {#}: Lenses, Mirrors and Color (Astro {#})</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Dispersión</a> <a>Hoja de trabajo {#}: Espejos y superficies refractoras</a> <a>Hoja de trabajo {#}: Lentes e instrumentos ópticos</a> <a>Hoja de trabajo {#}: Lentes, espejos y color (Astro {#})</a> <a>Notas</a>",
+"<span>OpenStax Vol {#} · Ch. {#}, {#}–{#} · Vol {#} · Ch. {#}, {#}–{#}</span>":
+  "<span>OpenStax Vol. {#} · Cap. {#}, {#}–{#} · Vol. {#} · Cap. {#}, {#}–{#}</span>",
+"<a>Open demo</a> <a>Worksheet {#}: Finding Exoplanets</a> <a>Worksheet {#}: Finding Planets Around Other Stars (Astro {#})</a> <a>Worksheet {#}: Eclipsing Binary Stars</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Encontrar exoplanetas</a> <a>Hoja de trabajo {#}: Encontrar planetas alrededor de otras estrellas (Astro {#})</a> <a>Hoja de trabajo {#}: Estrellas binarias eclipsantes</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Young's Double Slit</a> <a>Worksheet {#}: Wave and Particle Duality</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: La doble rendija de Young</a> <a>Hoja de trabajo {#}: Dualidad onda-partícula</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Gyroscope Precession</a> <a>Worksheet {#}: A Spinning Top and the Wandering Pole Star (Astro {#})</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Giroscopio y precesión</a> <a>Hoja de trabajo {#}: Un trompo y la estrella polar que se desplaza (Astro {#})</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Doppler Effect and Shock Waves</a> <a>Worksheet {#}: Doppler Effect for Light</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Efecto Doppler y ondas de choque</a> <a>Hoja de trabajo {#}: Efecto Doppler de la luz</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Circular Apertures and Resolution</a> <a>Worksheet {#}: Seeing Fine Detail (Astro {#})</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Aberturas circulares y resolución</a> <a>Hoja de trabajo {#}: Ver detalles finos (Astro {#})</a> <a>Notas</a>",
 "<a>Open demo</a> <a>Worksheet: Random Scatter and Bias</a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Hoja de trabajo: Dispersión aleatoria y sesgo</a> <a>Notas</a>",
-"Also used in this unit: <a>Pendulums</a> <span>(card under <a>Rotation and angular momentum</a>; {#}:{#})</span> · <a>Measurement Uncertainty</a> <span>(card under <a>Measurements and vectors</a>; {#}:{#})</span>":
-  "También se usa en esta unidad: <a>Péndulos</a> <span>(tarjeta en <a>Rotación y momento angular</a>; {#}:{#})</span> · <a>Incertidumbre de medición</a> <span>(tarjeta en <a>Mediciones y vectores</a>; {#}:{#})</span>",
-"<a>Units, Scales and Estimates</a> · <a>Measurement Uncertainty</a>":
-  "<a>Unidades, escalas y estimaciones</a> · <a>Incertidumbre de medición</a>",
-"<a>Pendulums</a> · <a>Measurement Uncertainty</a>":
-  "<a>Péndulos</a> · <a>Incertidumbre de medición</a>",
 "Cool a gas of atoms in a box from {#} µK toward absolute zero: each atom's wave packet grows to the thermal de Broglie wavelength, the packets overlap, and the atoms pile into one shared ground state. Exact Bose–Einstein occupations of the box levels, an energy ladder, the phase of the wavefunction as color, the velocity picture of {#} and the condensate fraction curve.":
   "Enfría un gas de átomos en una caja desde {#} µK hacia el cero absoluto: el paquete de ondas de cada átomo crece hasta la longitud de onda térmica de De Broglie, los paquetes se traslapan y los átomos se acumulan en un único estado fundamental compartido. Ocupaciones exactas de Bose–Einstein de los niveles de la caja, una escalera de energías, la fase de la función de onda como color, la imagen de velocidades de {#} y la curva de la fracción condensada.",
 "<span>{#}:{#}</span><span>Instantaneous Velocity and Speed</span><span><a>Motion Graphs</a></span>":

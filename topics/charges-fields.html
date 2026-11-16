@@ -387,6 +387,25 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
   html:has(.tools .filter) { scroll-padding-top: 108px; }
 }
 
+
+/* activity filter and labels (tools/activities.py) */
+.actfilter { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 6px; margin: 14px 0 4px; }
+.actfilter .afl { font-family: var(--font-mono); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); margin: 0 2px 0 6px; }
+.actfilter .afl:first-child { margin-left: 0; }
+.actfilter button { min-height: 34px; padding: 4px 11px; font: inherit; font-size: 0.86rem; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 999px; cursor: pointer; }
+.actfilter button:hover { border-color: var(--accent); }
+.actfilter button[aria-pressed="true"] { color: var(--canvas); background: var(--accent); border-color: var(--accent); font-weight: 700; }
+.actfilter button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.actfilter .afn { flex: 1 1 100%; margin: 2px 0 0; font-size: 0.85rem; color: var(--muted); min-height: 1.2em; }
+[data-act].af-hide { display: none !important; }
+.find .actfilter + .allnote { margin: 10px 0 22px; }
+.fam.af-hide { display: none; }
+.sh-tag { display: inline-block; margin-right: 6px; padding: 1px 7px; font-size: 0.74rem; font-weight: 700; border-radius: 999px; color: var(--accent); border: 1px solid color-mix(in srgb, var(--accent) 55%, transparent); }
+.links .wsm { display: inline-block; text-decoration: none; font-size: 0.78rem; color: var(--muted); font-weight: 400; margin-left: 5px; }
+.used.needs { font-size: 0.85rem; }
+.used.needs b { font-weight: 700; }
+@media (max-width: 520px) { .actfilter .afl { flex: 1 1 100%; margin-left: 0; } }
+
 </style>
 <link rel="stylesheet" href="demos/lib/paper.css">
 </head>
@@ -413,28 +432,29 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
 <main class="wrap">
   <p class="how">Every demo on this subject, from every course and module, with all of its worksheets. Opened from here, a demo steps through this topic with its previous and next links. The other topics in Electricity and magnetism are in the bar above; the <a href="index.html#topics">home page</a> lists them all.</p>
   <section class="unit" aria-label="Charges and fields demos">
+    <div class="actfilter" role="group" aria-label="Filter by activity"><span class="afl">Activity</span><button type="button" data-af="len:" aria-pressed="true">Any</button><button type="button" data-af="len:start" aria-pressed="false">Start here, 5 min</button><button type="button" data-af="len:explore" aria-pressed="false">Explore, 15 min</button><button type="button" data-af="len:sheet" aria-pressed="false">Worksheet, up to 75 min</button><span class="afl">Math</span><button type="button" data-af="math:" aria-pressed="true">Any</button><button type="button" data-af="math:algebra" aria-pressed="false">Algebra</button><button type="button" data-af="math:calculus" aria-pressed="false">Calculus</button><p class="afn" aria-live="polite"></p></div>
     <ul class="list">
-      <li class="item">
+      <li class="item" data-act="sheet-algebra">
         <a class="pic" href="demos/induction.html?topic=charges-fields" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/induction-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/induction-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-demo">Demo</span></p>
           <h3><a href="demos/induction.html?topic=charges-fields">Charging by Induction</a></h3>
           <p>Charge two metal spheres without touching them: bring a charged rod near, separate the spheres or ground one, then take the rod away. Every mark on the spheres comes from an exact electrostatics solution.</p>
-          <p class="used">In <a href="physics-2.html">Physics II</a></p><p class="used">OpenStax <span class="sec">2:5.1</span> <span class="sec">2:5.2</span> <span class="sec">2:6.4</span> <span class="sec">2:8.5</span></p>
-          <p class="links"><a class="go" href="demos/induction.html?topic=charges-fields">Open demo</a> <a href="curriculum/labs/students/induction.html">Worksheet 1: Charging by Induction</a> <a href="curriculum/labs/students/neutral-attraction.html">Worksheet 2: Attracting a Neutral Insulator</a> <a href="notes/induction.html">Notes</a></p>
+          <p class="used">In <a href="physics-2.html">Physics II</a></p><p class="used">OpenStax <span class="sec">2:5.1</span> <span class="sec">2:5.2</span> <span class="sec">2:6.4</span> <span class="sec">2:8.5</span></p><p class="used needs"><b>Before the worksheets:</b> 1. Conductors and induced charge; grounding; Coulomb&#x27;s law; charge sharing · 2. Coulomb&#x27;s law and electric field; polarization of insulators; log log graphs</p>
+          <p class="links"><a class="go" href="demos/induction.html?topic=charges-fields">Open demo</a> <a href="curriculum/labs/students/induction.html">Worksheet 1: Charging by Induction<span class="wsm">80 min · algebra</span></a> <a href="curriculum/labs/students/neutral-attraction.html">Worksheet 2: Attracting a Neutral Insulator<span class="wsm">80 min · algebra</span></a> <a href="notes/induction.html">Notes</a></p>
         </div>
       </li>
-      <li class="item">
+      <li class="item" data-act="start explore sheet-algebra sheet-calculus">
         <a class="pic" href="demos/coulomb-sandbox.html?topic=charges-fields" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/coulomb-sandbox-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/coulomb-sandbox-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-lab">Lab</span></p>
           <h3><a href="demos/coulomb-sandbox.html?topic=charges-fields">Coulomb Sandbox</a></h3>
           <p>Drag point charges and watch the field lines, equipotentials and potential update live, as a 2D map or a rotatable 3D landscape.</p>
-          <p class="used">In <a href="physics-2.html">Physics II</a></p><p class="used">OpenStax <span class="sec">2:5.3</span> <span class="sec">2:5.4</span> <span class="sec">2:5.5</span> <span class="sec">2:5.6</span> <span class="sec">2:5.7</span> <span class="sec">2:7.1</span> …</p>
-          <p class="links"><a class="go" href="demos/coulomb-sandbox.html?topic=charges-fields">Open demo</a> <a href="curriculum/labs/students/coulomb-sandbox.html">Worksheet 1: Electric Field and Potential</a> <a href="curriculum/labs/students/coulomb-sandbox-energy.html">Worksheet 2: Rings, Arcs and Potential Energy</a> <a href="notes/coulomb-sandbox.html">Notes</a></p>
+          <p class="used">In <a href="physics-2.html">Physics II</a></p><p class="used">OpenStax <span class="sec">2:5.3</span> <span class="sec">2:5.4</span> <span class="sec">2:5.5</span> <span class="sec">2:5.6</span> <span class="sec">2:5.7</span> <span class="sec">2:7.1</span> …</p><p class="used needs"><b>Before the worksheets:</b> 1. Coulomb&#x27;s law; electric field and potential of point charges; vector addition; fitting a line · 2. Electric potential and potential energy; fields of rings and arcs; E = -dV/dz; superposition</p>
+          <p class="links"><a class="go" href="demos/coulomb-sandbox.html?topic=charges-fields">Open demo</a> <a href="demos/coulomb-sandbox.html?start=1&topic=charges-fields">Start here<span class="wsm">5 min · explore 15 min</span></a> <a href="curriculum/labs/students/coulomb-sandbox.html">Worksheet 1: Electric Field and Potential<span class="wsm">80 min · algebra</span></a> <a href="curriculum/labs/students/coulomb-sandbox-energy.html">Worksheet 2: Rings, Arcs and Potential Energy<span class="wsm">70 min · calculus</span></a> <a href="notes/coulomb-sandbox.html">Notes</a></p>
         </div>
       </li>
-      <li class="item">
+      <li class="item" data-act="">
         <a class="pic" href="demos/force-lab.html?topic=charges-fields" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/force-lab-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/force-lab-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-demo">Demo</span></p>
@@ -444,37 +464,37 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
           <p class="links"><a class="go" href="demos/force-lab.html?topic=charges-fields">Open demo</a> <a href="notes/force-lab.html">Notes</a></p>
         </div>
       </li>
-      <li class="item">
+      <li class="item" data-act="start explore sheet-algebra">
         <a class="pic" href="demos/gauss-law.html?topic=charges-fields" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/gauss-law-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/gauss-law-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-lab">Lab</span></p>
           <h3><a href="demos/gauss-law.html?topic=charges-fields">Gauss&#x27;s Law</a></h3>
           <p>Drag charges in and out of a Gaussian surface of any shape and watch the flux: Q<sub>enc</sub>/ε₀ from a real numerical surface integral, zero for charges outside. Then the sphere, line and plane derivations step by step.</p>
-          <p class="used">In <a href="physics-2.html">Physics II</a></p><p class="used">OpenStax <span class="sec">2:6.1</span> <span class="sec">2:6.2</span> <span class="sec">2:6.3</span> <span class="sec">2:6.4</span></p>
-          <p class="links"><a class="go" href="demos/gauss-law.html?topic=charges-fields">Open demo</a> <a href="curriculum/labs/students/gauss-law.html">Worksheet: Gauss&#x27;s Law</a> <a href="notes/gauss-law.html">Notes</a></p>
+          <p class="used">In <a href="physics-2.html">Physics II</a></p><p class="used">OpenStax <span class="sec">2:6.1</span> <span class="sec">2:6.2</span> <span class="sec">2:6.3</span> <span class="sec">2:6.4</span></p><p class="used needs"><b>Before the worksheet:</b> Electric flux; Gauss&#x27;s law; spherical symmetry; superposition of charges</p>
+          <p class="links"><a class="go" href="demos/gauss-law.html?topic=charges-fields">Open demo</a> <a href="demos/gauss-law.html?start=1&topic=charges-fields">Start here<span class="wsm">5 min · explore 15 min</span></a> <a href="curriculum/labs/students/gauss-law.html">Worksheet: Gauss&#x27;s Law<span class="wsm">75 min · algebra</span></a> <a href="notes/gauss-law.html">Notes</a></p>
         </div>
       </li>
-      <li class="item">
+      <li class="item" data-act="sheet-algebra">
         <a class="pic" href="demos/electrostatics-at-work.html?topic=charges-fields" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/electrostatics-at-work-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/electrostatics-at-work-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-demo">Demo</span></p>
           <h3><a href="demos/electrostatics-at-work.html?topic=charges-fields">Electrostatics at Work</a></h3>
           <p>A Van de Graaff dome charging until the air breaks down, an ink jet printer steering charged drops onto paper, a smokestack precipitator pulling charged dust out of a gas flow, and a shuffle across a rug that ends in a spark at the doorknob.</p>
-          <p class="used">In <a href="physics-2.html">Physics II</a></p><p class="used">OpenStax <span class="sec">2:7.6</span></p>
-          <p class="links"><a class="go" href="demos/electrostatics-at-work.html?topic=charges-fields">Open demo</a> <a href="curriculum/labs/students/van-de-graaff.html">Worksheet 1: Van de Graaff Generator</a> <a href="curriculum/labs/students/ink-jet-printer.html">Worksheet 2: Ink Jet Printer</a> <a href="curriculum/labs/students/precipitator.html">Worksheet 3: Electrostatic Precipitator</a> <a href="notes/electrostatics-at-work.html">Notes</a></p>
+          <p class="used">In <a href="physics-2.html">Physics II</a></p><p class="used">OpenStax <span class="sec">2:7.6</span></p><p class="used needs"><b>Before the worksheets:</b> 1. Electric potential and capacitance of a sphere; current as charge per time; dielectric breakdown · 2. Electric force on a charge; projectile motion; electric field between plates · 3. Electric force on a charge; drag on a moving particle; exponentials and natural logs</p>
+          <p class="links"><a class="go" href="demos/electrostatics-at-work.html?topic=charges-fields">Open demo</a> <a href="curriculum/labs/students/van-de-graaff.html">Worksheet 1: Van de Graaff Generator<span class="wsm">80 min · algebra</span></a> <a href="curriculum/labs/students/ink-jet-printer.html">Worksheet 2: Ink Jet Printer<span class="wsm">80 min · algebra</span></a> <a href="curriculum/labs/students/precipitator.html">Worksheet 3: Electrostatic Precipitator<span class="wsm">75 min · algebra</span></a> <a href="notes/electrostatics-at-work.html">Notes</a></p>
         </div>
       </li>
-      <li class="item">
+      <li class="item" data-act="start explore sheet-algebra">
         <a class="pic" href="demos/capacitors.html?topic=charges-fields" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/capacitors-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/capacitors-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-lab">Lab</span></p>
           <h3><a href="demos/capacitors.html?topic=charges-fields">Capacitors and Dielectrics</a></h3>
           <p>Pull the plates apart and slide in a dielectric with the battery connected or not, and follow Q, V, E, C and the energy, including the work your hand does. Field lines come from a real solution with fringing at the edges.</p>
-          <p class="used">In <a href="physics-2.html">Physics II</a></p><p class="used">Also under <a href="topics/circuits.html">Circuits</a></p><p class="used">OpenStax <span class="sec">2:8.1</span> <span class="sec">2:8.2</span> <span class="sec">2:8.3</span> <span class="sec">2:8.4</span> <span class="sec">2:8.5</span></p>
-          <p class="links"><a class="go" href="demos/capacitors.html?topic=charges-fields">Open demo</a> <a href="curriculum/labs/students/capacitors.html">Worksheet 1: Capacitance and Dielectrics</a> <a href="curriculum/labs/students/capacitors-spheres.html">Worksheet 2: Spherical Capacitors, Polarization and Breakdown</a> <a href="notes/capacitors.html">Notes</a></p>
+          <p class="used">In <a href="physics-2.html">Physics II</a></p><p class="used">Also under <a href="topics/circuits.html">Circuits</a></p><p class="used">OpenStax <span class="sec">2:8.1</span> <span class="sec">2:8.2</span> <span class="sec">2:8.3</span> <span class="sec">2:8.4</span> <span class="sec">2:8.5</span></p><p class="used needs"><b>Before the worksheets:</b> 1. Capacitance, C = Q/V; stored energy; series and parallel capacitors; reading a slope · 2. Capacitance; Gauss&#x27;s law results; dielectrics and polarization; electric field strength; fitting a line</p>
+          <p class="links"><a class="go" href="demos/capacitors.html?topic=charges-fields">Open demo</a> <a href="demos/capacitors.html?start=1&topic=charges-fields">Start here<span class="wsm">5 min · explore 15 min</span></a> <a href="curriculum/labs/students/capacitors.html">Worksheet 1: Capacitance and Dielectrics<span class="wsm">80 min · algebra</span></a> <a href="curriculum/labs/students/capacitors-spheres.html">Worksheet 2: Spherical Capacitors, Polarization and Breakdown<span class="wsm">75 min · algebra</span></a> <a href="notes/capacitors.html">Notes</a></p>
         </div>
       </li>
-      <li class="item">
+      <li class="item" data-act="">
         <a class="pic" href="demos/millikan.html?topic=charges-fields" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/millikan-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/millikan-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-demo">Demo</span></p>
@@ -486,6 +506,42 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
       </li>
     </ul>
   </section>
+<script>/* activity filter (tools/activities.py) */ (function () {
+  var bar = document.querySelector('.actfilter'); if (!bar) return;
+  var st = { len: '', math: '' }, KEY = 'vd-filter', note = bar.querySelector('.afn');
+  try { var s = JSON.parse(sessionStorage.getItem(KEY) || '{}'); if (s && typeof s === 'object') { st.len = s.len || ''; st.math = s.math || ''; } } catch (_) {}
+  var cards = [].slice.call(document.querySelectorAll('[data-act]'));
+  var fams = [].slice.call(document.querySelectorAll('section.fam'));
+  var match = function (a) {
+    var k = (a || '').split(' ');
+    var sheetOk = function () { return st.math ? k.indexOf('sheet-' + st.math) >= 0 : k.some(function (x) { return x.indexOf('sheet-') === 0; }); };
+    if (st.len === 'start') return k.indexOf('start') >= 0 && st.math !== 'calculus';
+    if (st.len === 'explore') return k.indexOf('explore') >= 0 && st.math !== 'calculus';
+    if (st.len === 'sheet') return sheetOk();
+    if (!st.math) return true;
+    return sheetOk() || (st.math === 'algebra' && k.indexOf('start') >= 0);
+  };
+  var apply = function () {
+    [].forEach.call(bar.querySelectorAll('button'), function (b) { var p = b.getAttribute('data-af').split(':'); b.setAttribute('aria-pressed', String(st[p[0]] === p[1])); });
+    var on = !!(st.len || st.math), n = 0;
+    cards.forEach(function (c) { var ok = !on || match(c.getAttribute('data-act')); c.classList.toggle('af-hide', !ok); if (ok) n++; });
+    fams.forEach(function (f) {
+      var any = [].some.call(f.querySelectorAll('[data-act]'), function (c) { return !c.classList.contains('af-hide'); });
+      f.classList.toggle('af-hide', on && !any);
+      var d = f.querySelector('details.famd');
+      if (d) { if (on && any && !d.open) { d.dataset.af = '1'; d.open = true; } else if (!on && d.dataset.af) { delete d.dataset.af; d.open = false; } }
+    });
+    var VDI18N = window.VDI18N && window.VDI18N.t ? window.VDI18N : { t: function (x, v) { return x.replace('{n}', v ? v.n : ''); } };   /* the literals go into the site catalog */
+    note.textContent = on ? (n === 1 ? VDI18N.t('One demo has an activity like that.') : n ? VDI18N.t('{n} demos have an activity like that.', { n: n })
+      : VDI18N.t('No demo has that combination. A Start here needs no math; try Any.')) : '';
+    try { sessionStorage.setItem(KEY, JSON.stringify(st)); } catch (_) {}
+  };
+  bar.addEventListener('click', function (e) {
+    var b = e.target.closest('button[data-af]'); if (!b) return;
+    var p = b.getAttribute('data-af').split(':'); st[p[0]] = p[1]; apply();
+  });
+  apply();
+})();</script>
   <p class="more"><a href="index.html#topics">Back to all topics</a></p>
 </main>
 <footer>

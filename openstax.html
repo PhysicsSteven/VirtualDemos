@@ -386,6 +386,25 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
   html:has(.tools .filter) { scroll-padding-top: 108px; }
 }
 
+
+/* activity filter and labels (tools/activities.py) */
+.actfilter { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 6px; margin: 14px 0 4px; }
+.actfilter .afl { font-family: var(--font-mono); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); margin: 0 2px 0 6px; }
+.actfilter .afl:first-child { margin-left: 0; }
+.actfilter button { min-height: 34px; padding: 4px 11px; font: inherit; font-size: 0.86rem; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 999px; cursor: pointer; }
+.actfilter button:hover { border-color: var(--accent); }
+.actfilter button[aria-pressed="true"] { color: var(--canvas); background: var(--accent); border-color: var(--accent); font-weight: 700; }
+.actfilter button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.actfilter .afn { flex: 1 1 100%; margin: 2px 0 0; font-size: 0.85rem; color: var(--muted); min-height: 1.2em; }
+[data-act].af-hide { display: none !important; }
+.find .actfilter + .allnote { margin: 10px 0 22px; }
+.fam.af-hide { display: none; }
+.sh-tag { display: inline-block; margin-right: 6px; padding: 1px 7px; font-size: 0.74rem; font-weight: 700; border-radius: 999px; color: var(--accent); border: 1px solid color-mix(in srgb, var(--accent) 55%, transparent); }
+.links .wsm { display: inline-block; text-decoration: none; font-size: 0.78rem; color: var(--muted); font-weight: 400; margin-left: 5px; }
+.used.needs { font-size: 0.85rem; }
+.used.needs b { font-weight: 700; }
+@media (max-width: 520px) { .actfilter .afl { flex: 1 1 100%; margin-left: 0; } }
+
 </style>
 <link rel="stylesheet" href="demos/lib/paper.css">
 </head>

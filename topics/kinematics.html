@@ -387,6 +387,25 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
   html:has(.tools .filter) { scroll-padding-top: 108px; }
 }
 
+
+/* activity filter and labels (tools/activities.py) */
+.actfilter { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 6px; margin: 14px 0 4px; }
+.actfilter .afl { font-family: var(--font-mono); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); margin: 0 2px 0 6px; }
+.actfilter .afl:first-child { margin-left: 0; }
+.actfilter button { min-height: 34px; padding: 4px 11px; font: inherit; font-size: 0.86rem; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 999px; cursor: pointer; }
+.actfilter button:hover { border-color: var(--accent); }
+.actfilter button[aria-pressed="true"] { color: var(--canvas); background: var(--accent); border-color: var(--accent); font-weight: 700; }
+.actfilter button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.actfilter .afn { flex: 1 1 100%; margin: 2px 0 0; font-size: 0.85rem; color: var(--muted); min-height: 1.2em; }
+[data-act].af-hide { display: none !important; }
+.find .actfilter + .allnote { margin: 10px 0 22px; }
+.fam.af-hide { display: none; }
+.sh-tag { display: inline-block; margin-right: 6px; padding: 1px 7px; font-size: 0.74rem; font-weight: 700; border-radius: 999px; color: var(--accent); border: 1px solid color-mix(in srgb, var(--accent) 55%, transparent); }
+.links .wsm { display: inline-block; text-decoration: none; font-size: 0.78rem; color: var(--muted); font-weight: 400; margin-left: 5px; }
+.used.needs { font-size: 0.85rem; }
+.used.needs b { font-weight: 700; }
+@media (max-width: 520px) { .actfilter .afl { flex: 1 1 100%; margin-left: 0; } }
+
 </style>
 <link rel="stylesheet" href="demos/lib/paper.css">
 </head>
@@ -413,79 +432,116 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
 <main class="wrap">
   <p class="how">Every demo on this subject, from every course and module, with all of its worksheets. Opened from here, a demo steps through this topic with its previous and next links. The other topics in Mechanics are in the bar above; the <a href="index.html#topics">home page</a> lists them all.</p>
   <section class="unit" aria-label="Kinematics demos">
+    <div class="actfilter" role="group" aria-label="Filter by activity"><span class="afl">Activity</span><button type="button" data-af="len:" aria-pressed="true">Any</button><button type="button" data-af="len:start" aria-pressed="false">Start here, 5 min</button><button type="button" data-af="len:explore" aria-pressed="false">Explore, 15 min</button><button type="button" data-af="len:sheet" aria-pressed="false">Worksheet, up to 75 min</button><span class="afl">Math</span><button type="button" data-af="math:" aria-pressed="true">Any</button><button type="button" data-af="math:algebra" aria-pressed="false">Algebra</button><button type="button" data-af="math:calculus" aria-pressed="false">Calculus</button><p class="afn" aria-live="polite"></p></div>
     <ul class="list">
-      <li class="item">
+      <li class="item" data-act="start explore sheet-algebra">
         <a class="pic" href="demos/units.html?topic=kinematics" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/units-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/units-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-demo">Demo</span></p>
           <h3><a href="demos/units.html?topic=kinematics">Units, Scales and Estimates</a></h3>
           <p>The first week toolkit: zoom through 42 powers of ten from the observable universe to a proton, exact unit conversions, dimensional analysis, significant figures and Fermi estimates.</p>
-          <p class="used">In <a href="physics-1.html">Physics I</a> · <a href="astro-2203.html">Astro 2203</a> · <a href="astro.html">Astronomy</a></p><p class="used">OpenStax <span class="sec">1:1.1</span> <span class="sec">1:1.2</span> <span class="sec">1:1.3</span> <span class="sec">1:1.4</span> <span class="sec">1:1.5</span> <span class="sec">1:1.6</span> …</p>
-          <p class="links"><a class="go" href="demos/units.html?topic=kinematics">Open demo</a> <a href="curriculum/labs/students/measurement-and-units.html">Worksheet 1: Units and Dimensions</a> <a href="curriculum/labs/students/estimation-and-evidence.html">Worksheet 2: Estimates and Uncertainty</a> <a href="curriculum/labs/students/intro-scale.html">Worksheet 3: How Big Is the Solar System? (Astro 2203)</a> <a href="notes/units.html">Notes</a></p>
+          <p class="used">In <a href="physics-1.html">Physics I</a> · <a href="astro-2203.html">Astro 2203</a> · <a href="astro.html">Astronomy</a></p><p class="used">OpenStax <span class="sec">1:1.1</span> <span class="sec">1:1.2</span> <span class="sec">1:1.3</span> <span class="sec">1:1.4</span> <span class="sec">1:1.5</span> <span class="sec">1:1.6</span> …</p><p class="used needs"><b>Before the worksheets:</b> 1. Unit conversion; significant figures; reading a ruler and its uncertainty · 2. Powers of ten; significant figures; constant acceleration kinematics; checking units · 3. Scientific notation; astronomical unit and light year; speed of light as distance over time</p>
+          <p class="links"><a class="go" href="demos/units.html?topic=kinematics">Open demo</a> <a href="demos/units.html?start=1&topic=kinematics">Start here<span class="wsm">5 min · explore 15 min</span></a> <a href="curriculum/labs/students/measurement-and-units.html">Worksheet 1: Units and Dimensions<span class="wsm">70 min · algebra</span></a> <a href="curriculum/labs/students/estimation-and-evidence.html">Worksheet 2: Estimates and Uncertainty<span class="wsm">80 min · algebra</span></a> <a href="curriculum/labs/students/intro-scale.html">Worksheet 3: How Big Is the Solar System? (Astro 2203)<span class="wsm">65 min · algebra</span></a> <a href="notes/units.html">Notes</a></p>
         </div>
       </li>
-      <li class="item">
+      <li class="item" data-act="sheet-algebra">
         <a class="pic" href="demos/measurement-uncertainty.html?topic=kinematics" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/measurement-uncertainty-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/measurement-uncertainty-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-lab">Lab</span></p>
           <h3><a href="demos/measurement-uncertainty.html?topic=kinematics">Measurement Uncertainty</a></h3>
           <p>Measure g with a pendulum and judge what the data can tell you: time it by hand or with a photogate, one swing or many, repeat, read the length to the right place or the wrong one, and release from small or big angles. Random scatter, resolution, bias, propagation, fits and residuals, with every instrument error simulated and labeled.</p>
-          <p class="used">In <a href="physics-1.html">Physics I</a></p><p class="used">Also under <a href="topics/oscillations-waves.html">Oscillations and waves</a></p><p class="used">OpenStax <span class="sec">1:1.6</span> <span class="sec">1:15.4</span></p>
-          <p class="links"><a class="go" href="demos/measurement-uncertainty.html?topic=kinematics">Open demo</a> <a href="curriculum/labs/students/measurement-uncertainty.html">Worksheet: Random Scatter and Bias</a> <a href="notes/measurement-uncertainty.html">Notes</a></p>
+          <p class="used">In <a href="physics-1.html">Physics I</a></p><p class="used">Also under <a href="topics/oscillations-waves.html">Oscillations and waves</a></p><p class="used">OpenStax <span class="sec">1:1.6</span> <span class="sec">1:15.4</span></p><p class="used needs"><b>Before the worksheet:</b> Period of a simple pendulum; mean and standard deviation; fitting a line</p>
+          <p class="links"><a class="go" href="demos/measurement-uncertainty.html?topic=kinematics">Open demo</a> <a href="curriculum/labs/students/measurement-uncertainty.html">Worksheet: Random Scatter and Bias<span class="wsm">75 min · algebra</span></a> <a href="notes/measurement-uncertainty.html">Notes</a></p>
         </div>
       </li>
-      <li class="item">
+      <li class="item" data-act="sheet-algebra">
         <a class="pic" href="demos/vectors.html?topic=kinematics" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/vectors-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/vectors-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-demo">Demo</span></p>
           <h3><a href="demos/vectors.html?topic=kinematics">Vectors and Relative Motion</a></h3>
           <p>Drag arrow tips to see components, sums, differences, and dot and cross products, steer a boat across a river where its velocity adds to the current's, and balance hanging masses on a force table.</p>
-          <p class="used">In <a href="physics-1.html">Physics I</a></p><p class="used">OpenStax <span class="sec">1:2.1</span> <span class="sec">1:2.2</span> <span class="sec">1:2.3</span> <span class="sec">1:2.4</span> <span class="sec">1:4.1</span> <span class="sec">1:4.2</span> …</p>
-          <p class="links"><a class="go" href="demos/vectors.html?topic=kinematics">Open demo</a> <a href="curriculum/labs/students/force-table.html">Worksheet 1: Force Table</a> <a href="curriculum/labs/students/vectors.html">Worksheet 2: Components, Sums and Products</a> <a href="notes/vectors.html">Notes</a></p>
+          <p class="used">In <a href="physics-1.html">Physics I</a></p><p class="used">OpenStax <span class="sec">1:2.1</span> <span class="sec">1:2.2</span> <span class="sec">1:2.3</span> <span class="sec">1:2.4</span> <span class="sec">1:4.1</span> <span class="sec">1:4.2</span> …</p><p class="used needs"><b>Before the worksheets:</b> 1. Newton&#x27;s first law; force vectors and components; sine and cosine; equilibrium · 2. Components of a vector; trigonometry; average acceleration; dot and cross products</p>
+          <p class="links"><a class="go" href="demos/vectors.html?topic=kinematics">Open demo</a> <a href="curriculum/labs/students/force-table.html">Worksheet 1: Force Table<span class="wsm">80 min · algebra</span></a> <a href="curriculum/labs/students/vectors.html">Worksheet 2: Components, Sums and Products<span class="wsm">95 min · algebra</span></a> <a href="notes/vectors.html">Notes</a></p>
         </div>
       </li>
-      <li class="item">
+      <li class="item" data-act="start explore sheet-algebra">
         <a class="pic" href="demos/motion-graphs.html?topic=kinematics" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/motion-graphs-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/motion-graphs-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-lab">Lab</span></p>
           <h3><a href="demos/motion-graphs.html?topic=kinematics">Motion Graphs</a></h3>
           <p>Position, velocity and acceleration graphs of a cart, linked: each is the slope of the one above and the area under it is the change in the one above. Then try to walk a target graph yourself.</p>
-          <p class="used">In <a href="physics-1.html">Physics I</a></p><p class="used">OpenStax <span class="sec">1:3.1</span> <span class="sec">1:3.2</span> <span class="sec">1:3.3</span> <span class="sec">1:3.4</span> <span class="sec">1:3.5</span> <span class="sec">1:3.6</span></p>
-          <p class="links"><a class="go" href="demos/motion-graphs.html?topic=kinematics">Open demo</a> <a href="curriculum/labs/students/motion-graphs.html">Worksheet: Motion Graphs</a> <a href="notes/motion-graphs.html">Notes</a></p>
+          <p class="used">In <a href="physics-1.html">Physics I</a></p><p class="used">OpenStax <span class="sec">1:3.1</span> <span class="sec">1:3.2</span> <span class="sec">1:3.3</span> <span class="sec">1:3.4</span> <span class="sec">1:3.5</span> <span class="sec">1:3.6</span></p><p class="used needs"><b>Before the worksheet:</b> Position, velocity and acceleration; slope and area of graphs; constant acceleration</p>
+          <p class="links"><a class="go" href="demos/motion-graphs.html?topic=kinematics">Open demo</a> <a href="demos/motion-graphs.html?set=sx0~-6!sv0~4!sa0~-1!sT0~8!sa1~0!sT1~0!sa2~0!sT2~0!tTan~1!tArea~1!tDots~0!labBlind~0!g%3Apresets~turn&start=1&topic=kinematics">Start here<span class="wsm">5 min · explore 15 min</span></a> <a href="curriculum/labs/students/motion-graphs.html">Worksheet: Motion Graphs<span class="wsm">75 min · algebra</span></a> <a href="notes/motion-graphs.html">Notes</a></p>
         </div>
       </li>
-      <li class="item">
+      <li class="item" data-act="start explore sheet-algebra">
         <a class="pic" href="demos/projectile-drag.html?topic=kinematics" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/projectile-drag-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/projectile-drag-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-lab">Lab</span></p>
           <h3><a href="demos/projectile-drag.html?topic=kinematics">Projectile Range</a></h3>
           <p>Fire baseballs, ping pong balls, cannonballs and more with and without air resistance, stack up to eight shots of different mass, size, drag or air density, and compare their paths and x, y and speed graphs side by side.</p>
-          <p class="used">In <a href="physics-1.html">Physics I</a></p><p class="used">OpenStax <span class="sec">1:3.4</span> <span class="sec">1:4.1</span> <span class="sec">1:4.2</span> <span class="sec">1:4.3</span> <span class="sec">1:6.4</span></p>
-          <p class="links"><a class="go" href="demos/projectile-drag.html?topic=kinematics">Open demo</a> <a href="curriculum/labs/students/projectile-drag.html">Worksheet: Projectiles and Air Resistance</a> <a href="notes/projectile-drag.html">Notes</a></p>
+          <p class="used">In <a href="physics-1.html">Physics I</a></p><p class="used">OpenStax <span class="sec">1:3.4</span> <span class="sec">1:4.1</span> <span class="sec">1:4.2</span> <span class="sec">1:4.3</span> <span class="sec">1:6.4</span></p><p class="used needs"><b>Before the worksheet:</b> Projectile motion; kinematic equations; air resistance; fitting a quadratic</p>
+          <p class="links"><a class="go" href="demos/projectile-drag.html?topic=kinematics">Open demo</a> <a href="demos/projectile-drag.html?start=1&topic=kinematics">Start here<span class="wsm">5 min · explore 15 min</span></a> <a href="curriculum/labs/students/projectile-drag.html">Worksheet: Projectiles and Air Resistance<span class="wsm">80 min · algebra</span></a> <a href="notes/projectile-drag.html">Notes</a></p>
         </div>
       </li>
-      <li class="item">
+      <li class="item" data-act="sheet-algebra">
         <a class="pic" href="demos/cart-launch.html?topic=kinematics" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/cart-launch-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/cart-launch-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-demo">Demo</span></p>
           <h3><a href="demos/cart-launch.html?topic=kinematics">Ball Launched from a Moving Cart</a></h3>
           <p>A cart fires a ball straight up. At constant speed the ball lands back in the launcher; make the cart speed up or brake and it misses. Watch from the ground or from the cart, with velocity vectors and strobe images.</p>
-          <p class="used">In <a href="physics-1.html">Physics I</a></p><p class="used">OpenStax <span class="sec">1:4.3</span> <span class="sec">1:4.5</span></p>
-          <p class="links"><a class="go" href="demos/cart-launch.html?topic=kinematics">Open demo</a> <a href="curriculum/labs/students/relative-motion.html">Worksheet: Relative Motion</a> <a href="notes/cart-launch.html">Notes</a></p>
+          <p class="used">In <a href="physics-1.html">Physics I</a></p><p class="used">OpenStax <span class="sec">1:4.3</span> <span class="sec">1:4.5</span></p><p class="used needs"><b>Before the worksheet:</b> Adding velocities in different frames; projectile motion; constant acceleration</p>
+          <p class="links"><a class="go" href="demos/cart-launch.html?topic=kinematics">Open demo</a> <a href="curriculum/labs/students/relative-motion.html">Worksheet: Relative Motion<span class="wsm">70 min · algebra</span></a> <a href="notes/cart-launch.html">Notes</a></p>
         </div>
       </li>
-      <li class="item">
+      <li class="item" data-act="sheet-algebra">
         <a class="pic" href="demos/circular-motion.html?topic=kinematics" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/circular-motion-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/circular-motion-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-demo">Demo</span></p>
           <h3><a href="demos/circular-motion.html?topic=kinematics">Circular Motion</a></h3>
           <p>What supplies mv²/r? Whirl a ball on a string and cut it, take a car round a flat or banked curve until it slides, speed up or brake on the curve, and send a ball round a vertical loop, with the free body diagram for each.</p>
-          <p class="used">In <a href="physics-1.html">Physics I</a></p><p class="used">Also under <a href="topics/forces.html">Forces and Newton&#x27;s laws</a></p><p class="used">OpenStax <span class="sec">1:4.4</span> <span class="sec">1:6.3</span></p>
-          <p class="links"><a class="go" href="demos/circular-motion.html?topic=kinematics">Open demo</a> <a href="curriculum/labs/students/circular-motion.html">Worksheet: Speed Limits on Curves and Loops</a> <a href="notes/circular-motion.html">Notes</a></p>
+          <p class="used">In <a href="physics-1.html">Physics I</a></p><p class="used">Also under <a href="topics/forces.html">Forces and Newton&#x27;s laws</a></p><p class="used">OpenStax <span class="sec">1:4.4</span> <span class="sec">1:6.3</span></p><p class="used needs"><b>Before the worksheet:</b> Centripetal acceleration; Newton&#x27;s second law; static friction; energy conservation; fitting a line</p>
+          <p class="links"><a class="go" href="demos/circular-motion.html?topic=kinematics">Open demo</a> <a href="curriculum/labs/students/circular-motion.html">Worksheet: Speed Limits on Curves and Loops<span class="wsm">80 min · algebra</span></a> <a href="notes/circular-motion.html">Notes</a></p>
         </div>
       </li>
     </ul>
   </section>
+<script>/* activity filter (tools/activities.py) */ (function () {
+  var bar = document.querySelector('.actfilter'); if (!bar) return;
+  var st = { len: '', math: '' }, KEY = 'vd-filter', note = bar.querySelector('.afn');
+  try { var s = JSON.parse(sessionStorage.getItem(KEY) || '{}'); if (s && typeof s === 'object') { st.len = s.len || ''; st.math = s.math || ''; } } catch (_) {}
+  var cards = [].slice.call(document.querySelectorAll('[data-act]'));
+  var fams = [].slice.call(document.querySelectorAll('section.fam'));
+  var match = function (a) {
+    var k = (a || '').split(' ');
+    var sheetOk = function () { return st.math ? k.indexOf('sheet-' + st.math) >= 0 : k.some(function (x) { return x.indexOf('sheet-') === 0; }); };
+    if (st.len === 'start') return k.indexOf('start') >= 0 && st.math !== 'calculus';
+    if (st.len === 'explore') return k.indexOf('explore') >= 0 && st.math !== 'calculus';
+    if (st.len === 'sheet') return sheetOk();
+    if (!st.math) return true;
+    return sheetOk() || (st.math === 'algebra' && k.indexOf('start') >= 0);
+  };
+  var apply = function () {
+    [].forEach.call(bar.querySelectorAll('button'), function (b) { var p = b.getAttribute('data-af').split(':'); b.setAttribute('aria-pressed', String(st[p[0]] === p[1])); });
+    var on = !!(st.len || st.math), n = 0;
+    cards.forEach(function (c) { var ok = !on || match(c.getAttribute('data-act')); c.classList.toggle('af-hide', !ok); if (ok) n++; });
+    fams.forEach(function (f) {
+      var any = [].some.call(f.querySelectorAll('[data-act]'), function (c) { return !c.classList.contains('af-hide'); });
+      f.classList.toggle('af-hide', on && !any);
+      var d = f.querySelector('details.famd');
+      if (d) { if (on && any && !d.open) { d.dataset.af = '1'; d.open = true; } else if (!on && d.dataset.af) { delete d.dataset.af; d.open = false; } }
+    });
+    var VDI18N = window.VDI18N && window.VDI18N.t ? window.VDI18N : { t: function (x, v) { return x.replace('{n}', v ? v.n : ''); } };   /* the literals go into the site catalog */
+    note.textContent = on ? (n === 1 ? VDI18N.t('One demo has an activity like that.') : n ? VDI18N.t('{n} demos have an activity like that.', { n: n })
+      : VDI18N.t('No demo has that combination. A Start here needs no math; try Any.')) : '';
+    try { sessionStorage.setItem(KEY, JSON.stringify(st)); } catch (_) {}
+  };
+  bar.addEventListener('click', function (e) {
+    var b = e.target.closest('button[data-af]'); if (!b) return;
+    var p = b.getAttribute('data-af').split(':'); st[p[0]] = p[1]; apply();
+  });
+  apply();
+})();</script>
   <p class="more"><a href="index.html#topics">Back to all topics</a></p>
 </main>
 <footer>

@@ -387,6 +387,25 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
   html:has(.tools .filter) { scroll-padding-top: 108px; }
 }
 
+
+/* activity filter and labels (tools/activities.py) */
+.actfilter { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 6px; margin: 14px 0 4px; }
+.actfilter .afl { font-family: var(--font-mono); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); margin: 0 2px 0 6px; }
+.actfilter .afl:first-child { margin-left: 0; }
+.actfilter button { min-height: 34px; padding: 4px 11px; font: inherit; font-size: 0.86rem; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 999px; cursor: pointer; }
+.actfilter button:hover { border-color: var(--accent); }
+.actfilter button[aria-pressed="true"] { color: var(--canvas); background: var(--accent); border-color: var(--accent); font-weight: 700; }
+.actfilter button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.actfilter .afn { flex: 1 1 100%; margin: 2px 0 0; font-size: 0.85rem; color: var(--muted); min-height: 1.2em; }
+[data-act].af-hide { display: none !important; }
+.find .actfilter + .allnote { margin: 10px 0 22px; }
+.fam.af-hide { display: none; }
+.sh-tag { display: inline-block; margin-right: 6px; padding: 1px 7px; font-size: 0.74rem; font-weight: 700; border-radius: 999px; color: var(--accent); border: 1px solid color-mix(in srgb, var(--accent) 55%, transparent); }
+.links .wsm { display: inline-block; text-decoration: none; font-size: 0.78rem; color: var(--muted); font-weight: 400; margin-left: 5px; }
+.used.needs { font-size: 0.85rem; }
+.used.needs b { font-weight: 700; }
+@media (max-width: 520px) { .actfilter .afl { flex: 1 1 100%; margin-left: 0; } }
+
 </style>
 <link rel="stylesheet" href="demos/lib/paper.css">
 </head>
@@ -413,119 +432,156 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
 <main class="wrap">
   <p class="how">Every demo on this subject, from every course and module, with all of its worksheets. Opened from here, a demo steps through this topic with its previous and next links. The other topics in Waves and heat are in the bar above; the <a href="index.html#topics">home page</a> lists them all.</p>
   <section class="unit" aria-label="Heat and thermodynamics demos">
+    <div class="actfilter" role="group" aria-label="Filter by activity"><span class="afl">Activity</span><button type="button" data-af="len:" aria-pressed="true">Any</button><button type="button" data-af="len:start" aria-pressed="false">Start here, 5 min</button><button type="button" data-af="len:explore" aria-pressed="false">Explore, 15 min</button><button type="button" data-af="len:sheet" aria-pressed="false">Worksheet, up to 75 min</button><span class="afl">Math</span><button type="button" data-af="math:" aria-pressed="true">Any</button><button type="button" data-af="math:algebra" aria-pressed="false">Algebra</button><button type="button" data-af="math:calculus" aria-pressed="false">Calculus</button><p class="afn" aria-live="polite"></p></div>
     <ul class="list">
-      <li class="item">
+      <li class="item" data-act="sheet-algebra">
         <a class="pic" href="demos/states-of-matter.html?topic=heat" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/states-of-matter-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/states-of-matter-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-lab">Lab</span></p>
           <h3><a href="demos/states-of-matter.html?topic=heat">States of Matter</a></h3>
           <p>Heat a crystal of argon atoms under a piston and watch the bonds between them break: the temperature holds still while it melts and again while it boils, because the heat goes into the bonds. A beaker view heats ice to steam with the textbook's specific and latent heats.</p>
-          <p class="used">In <a href="thermo.html">Thermodynamics</a></p><p class="used">OpenStax <span class="sec">2:1.4</span> <span class="sec">2:1.5</span></p>
-          <p class="links"><a class="go" href="demos/states-of-matter.html?topic=heat">Open demo</a> <a href="curriculum/labs/students/heating-curve.html">Worksheet 1: Heating Curve and Latent Heat</a> <a href="curriculum/labs/students/bonds-and-latent-heat.html">Worksheet 2: Bonds, Temperature and Latent Heat</a> <a href="notes/states-of-matter.html">Notes</a></p>
+          <p class="used">In <a href="thermo.html">Thermodynamics</a></p><p class="used">OpenStax <span class="sec">2:1.4</span> <span class="sec">2:1.5</span></p><p class="used needs"><b>Before the worksheets:</b> 1. Specific heat; latent heat; phase changes; fitting a line · 2. Temperature and kinetic energy; heat and phase changes; first law; reading a slope</p>
+          <p class="links"><a class="go" href="demos/states-of-matter.html?topic=heat">Open demo</a> <a href="curriculum/labs/students/heating-curve.html">Worksheet 1: Heating Curve and Latent Heat<span class="wsm">75 min · algebra</span></a> <a href="curriculum/labs/students/bonds-and-latent-heat.html">Worksheet 2: Bonds, Temperature and Latent Heat<span class="wsm">75 min · algebra</span></a> <a href="notes/states-of-matter.html">Notes</a></p>
         </div>
       </li>
-      <li class="item">
+      <li class="item" data-act="start explore sheet-algebra">
         <a class="pic" href="demos/temperature.html?topic=heat" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/temperature-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/temperature-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-lab">Lab</span></p>
           <h3><a href="demos/temperature.html?topic=heat">Temperature and Heat</a></h3>
           <p>Join a hot block to cold water and watch them reach one temperature; calibrate a gas thermometer and extrapolate to absolute zero; measure a rod's expansion and water's odd behavior near 4 °C; and probe the temperature through a layered wall.</p>
-          <p class="used">In <a href="thermo.html">Thermodynamics</a></p><p class="used">OpenStax <span class="sec">2:1.1</span> <span class="sec">2:1.2</span> <span class="sec">2:1.3</span> <span class="sec">2:1.4</span> <span class="sec">2:1.6</span></p>
-          <p class="links"><a class="go" href="demos/temperature.html?topic=heat">Open demo</a> <a href="curriculum/labs/students/thermal-equilibrium.html">Worksheet 1: Thermal Equilibrium</a> <a href="curriculum/labs/students/gas-thermometer.html">Worksheet 2: Gas Thermometer and Absolute Zero</a> <a href="curriculum/labs/students/thermal-expansion.html">Worksheet 3: Thermal Expansion</a> <a href="curriculum/labs/students/heat-conduction.html">Worksheet 4: Heat Conduction Through Layers</a> <a href="curriculum/labs/students/convection.html">Worksheet 5: Cooling by Convection and Radiation</a> <a href="notes/temperature.html">Notes</a></p>
+          <p class="used">In <a href="thermo.html">Thermodynamics</a></p><p class="used">OpenStax <span class="sec">2:1.1</span> <span class="sec">2:1.2</span> <span class="sec">2:1.3</span> <span class="sec">2:1.4</span> <span class="sec">2:1.6</span></p><p class="used needs"><b>Before the worksheets:</b> 1. Heat and specific heat; conservation of energy; temperature versus heat · 2. Ideal gas law; Kelvin and Celsius scales; fitting a line and extrapolating · 3. Temperature and thermal expansion coefficients; fractional change; reading a slope from a graph · 4. Conduction of heat; thermal resistance of layers; reading a slope · 5. Heat transfer by convection and radiation; exponential decay; natural logarithms; time constant</p>
+          <p class="links"><a class="go" href="demos/temperature.html?topic=heat">Open demo</a> <a href="demos/temperature.html?set=labBlind~1&start=1&topic=heat">Start here<span class="wsm">5 min · explore 15 min</span></a> <a href="curriculum/labs/students/thermal-equilibrium.html">Worksheet 1: Thermal Equilibrium<span class="wsm">75 min · algebra</span></a> <a href="curriculum/labs/students/gas-thermometer.html">Worksheet 2: Gas Thermometer and Absolute Zero<span class="wsm">65 min · algebra</span></a> <a href="curriculum/labs/students/thermal-expansion.html">Worksheet 3: Thermal Expansion<span class="wsm">75 min · algebra</span></a> <a href="curriculum/labs/students/heat-conduction.html">Worksheet 4: Heat Conduction Through Layers<span class="wsm">70 min · algebra</span></a> <a href="curriculum/labs/students/convection.html">Worksheet 5: Cooling by Convection and Radiation<span class="wsm">75 min · algebra</span></a> <a href="notes/temperature.html">Notes</a></p>
         </div>
       </li>
-      <li class="item">
+      <li class="item" data-act="start explore sheet-algebra">
         <a class="pic" href="demos/ideal-gas.html?topic=heat" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/ideal-gas-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/ideal-gas-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-demo">Demo</span></p>
           <h3><a href="demos/ideal-gas.html?topic=heat">Gas in a Box</a></h3>
           <p>Watch pressure and temperature emerge from molecules hitting the walls, speeds relax to Maxwell-Boltzmann, and a moving piston heat the gas. Then let two gases mix through a divider: measure diffusion from the mean square displacement and test Graham's law through a small hole.</p>
-          <p class="used">In <a href="thermo.html">Thermodynamics</a> · <a href="astro-2203.html">Astro 2203</a> · <a href="astro.html">Astronomy</a></p><p class="used">OpenStax <span class="sec">2:2.1</span> <span class="sec">2:2.2</span> <span class="sec">2:2.3</span> <span class="sec">2:2.4</span></p>
-          <p class="links"><a class="go" href="demos/ideal-gas.html?topic=heat">Open demo</a> <a href="curriculum/labs/students/ideal-gas.html">Worksheet 1: Gas in a Box</a> <a href="curriculum/labs/students/diffusion.html">Worksheet 2: Diffusion and Graham&#x27;s Law</a> <a href="curriculum/labs/students/intro-atmospheres.html">Worksheet 3: Why Small, Hot Planets Lose Their Air (Astro 2203)</a> <a href="notes/ideal-gas.html">Notes</a></p>
+          <p class="used">In <a href="thermo.html">Thermodynamics</a> · <a href="astro-2203.html">Astro 2203</a> · <a href="astro.html">Astronomy</a></p><p class="used">OpenStax <span class="sec">2:2.1</span> <span class="sec">2:2.2</span> <span class="sec">2:2.3</span> <span class="sec">2:2.4</span></p><p class="used needs"><b>Before the worksheets:</b> 1. Ideal gas law; kinetic theory of gases; temperature and molecular speed · 2. Kinetic theory of gases; mean free path; random walk; slope from a graph · 3. Temperature and molecular speed; escape speed; square roots and ratios</p>
+          <p class="links"><a class="go" href="demos/ideal-gas.html?topic=heat">Open demo</a> <a href="demos/ideal-gas.html?set=nIn~150!tIn~895.4!wIn~50!sIn~25!tColor~1!tTrail~1!g%3Apresets~compress!g%3AstartSeg~thermal&start=1&topic=heat">Start here<span class="wsm">5 min · explore 15 min</span></a> <a href="curriculum/labs/students/ideal-gas.html">Worksheet 1: Gas in a Box<span class="wsm">70 min · algebra</span></a> <a href="curriculum/labs/students/diffusion.html">Worksheet 2: Diffusion and Graham&#x27;s Law<span class="wsm">75 min · algebra</span></a> <a href="curriculum/labs/students/intro-atmospheres.html">Worksheet 3: Why Small, Hot Planets Lose Their Air (Astro 2203)<span class="wsm">70 min · algebra</span></a> <a href="notes/ideal-gas.html">Notes</a></p>
         </div>
       </li>
-      <li class="item">
+      <li class="item" data-act="start explore sheet-algebra">
         <a class="pic" href="demos/gas-heat-capacity.html?topic=heat" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/gas-heat-capacity-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/gas-heat-capacity-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-lab">Lab</span></p>
           <h3><a href="demos/gas-heat-capacity.html?topic=heat">Heat Capacities of Gases</a></h3>
           <p>Heat a gas with its piston locked, then free: the same heat warms it less when it pushes the piston. Measure C_V, C_P and γ, tell an atom from a molecule, and find γ again from a ball bouncing on a flask of gas.</p>
-          <p class="used">In <a href="thermo.html">Thermodynamics</a></p><p class="used">OpenStax <span class="sec">2:2.3</span> <span class="sec">2:3.5</span> <span class="sec">2:3.6</span></p>
-          <p class="links"><a class="go" href="demos/gas-heat-capacity.html?topic=heat">Open demo</a> <a href="curriculum/labs/students/heat-capacities-of-gases.html">Worksheet 1: Heat Capacities of Gases</a> <a href="curriculum/labs/students/ruchardt.html">Worksheet 2: Rüchardt&#x27;s Ball</a> <a href="notes/gas-heat-capacity.html">Notes</a></p>
+          <p class="used">In <a href="thermo.html">Thermodynamics</a></p><p class="used">OpenStax <span class="sec">2:2.3</span> <span class="sec">2:3.5</span> <span class="sec">2:3.6</span></p><p class="used needs"><b>Before the worksheets:</b> 1. First law of thermodynamics; molar heat capacity; equipartition; fitting a line · 2. Adiabatic process; simple harmonic motion; heat capacities; pressure and force</p>
+          <p class="links"><a class="go" href="demos/gas-heat-capacity.html?topic=heat">Open demo</a> <a href="demos/gas-heat-capacity.html?start=1&topic=heat">Start here<span class="wsm">5 min · explore 15 min</span></a> <a href="curriculum/labs/students/heat-capacities-of-gases.html">Worksheet 1: Heat Capacities of Gases<span class="wsm">70 min · algebra</span></a> <a href="curriculum/labs/students/ruchardt.html">Worksheet 2: Rüchardt&#x27;s Ball<span class="wsm">70 min · algebra</span></a> <a href="notes/gas-heat-capacity.html">Notes</a></p>
         </div>
       </li>
-      <li class="item">
+      <li class="item" data-act="sheet-algebra">
         <a class="pic" href="demos/heat-engines.html?topic=heat" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/heat-engines-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/heat-engines-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-demo">Demo</span></p>
           <h3><a href="demos/heat-engines.html?topic=heat">Heat Engine Cycles</a></h3>
           <p>Run an ideal gas around Carnot, Otto, Diesel, Stirling and Brayton cycles, or drag your own: the PV loop's area is the net work, a T–S diagram shows the heat, and no engine beats the Carnot limit. Reverse it for a refrigerator.</p>
-          <p class="used">In <a href="thermo.html">Thermodynamics</a></p><p class="used">OpenStax <span class="sec">2:3.1</span> <span class="sec">2:3.2</span> <span class="sec">2:3.3</span> <span class="sec">2:3.4</span> <span class="sec">2:3.6</span> <span class="sec">2:4.2</span> …</p>
-          <p class="links"><a class="go" href="demos/heat-engines.html?topic=heat">Open demo</a> <a href="curriculum/labs/students/heat-engines.html">Worksheet: Heat Engine Cycles</a> <a href="notes/heat-engines.html">Notes</a></p>
+          <p class="used">In <a href="thermo.html">Thermodynamics</a></p><p class="used">OpenStax <span class="sec">2:3.1</span> <span class="sec">2:3.2</span> <span class="sec">2:3.3</span> <span class="sec">2:3.4</span> <span class="sec">2:3.6</span> <span class="sec">2:4.2</span> …</p><p class="used needs"><b>Before the worksheet:</b> First law; PV diagrams and work; adiabatic and isothermal processes; efficiency</p>
+          <p class="links"><a class="go" href="demos/heat-engines.html?topic=heat">Open demo</a> <a href="curriculum/labs/students/heat-engines.html">Worksheet: Heat Engine Cycles<span class="wsm">80 min · algebra</span></a> <a href="notes/heat-engines.html">Notes</a></p>
         </div>
       </li>
-      <li class="item">
+      <li class="item" data-act="start explore sheet-algebra sheet-calculus">
         <a class="pic" href="demos/entropy.html?topic=heat" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/entropy-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/entropy-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-lab">Lab</span></p>
           <h3><a href="demos/entropy.html?topic=heat">Entropy and the Second Law</a></h3>
           <p>Pull the partition and count why a gas never gathers back; let two Einstein solids share energy and watch heat flow from hot to cold; then test engines and refrigerators against the Kelvin and Clausius statements.</p>
-          <p class="used">In <a href="thermo.html">Thermodynamics</a></p><p class="used">OpenStax <span class="sec">2:4.1</span> <span class="sec">2:4.2</span> <span class="sec">2:4.3</span> <span class="sec">2:4.4</span> <span class="sec">2:4.5</span> <span class="sec">2:4.6</span> …</p>
-          <p class="links"><a class="go" href="demos/entropy.html?topic=heat">Open demo</a> <a href="curriculum/labs/students/free-expansion.html">Worksheet 1: Free Expansion</a> <a href="curriculum/labs/students/einstein-solids.html">Worksheet 2: Einstein Solids</a> <a href="curriculum/labs/students/second-law.html">Worksheet 3: Testing the Second Law</a> <a href="notes/entropy.html">Notes</a></p>
+          <p class="used">In <a href="thermo.html">Thermodynamics</a></p><p class="used">OpenStax <span class="sec">2:4.1</span> <span class="sec">2:4.2</span> <span class="sec">2:4.3</span> <span class="sec">2:4.4</span> <span class="sec">2:4.5</span> <span class="sec">2:4.6</span> …</p><p class="used needs"><b>Before the worksheets:</b> 1. Ideal gas; counting arrangements with combinations; entropy and the second law; probability · 2. Energy quanta; counting arrangements with factorials; entropy and temperature; second law · 3. Entropy as Q/T; heat engines and refrigerators; first law of thermodynamics</p>
+          <p class="links"><a class="go" href="demos/entropy.html?topic=heat">Open demo</a> <a href="demos/entropy.html?start=1&topic=heat">Start here<span class="wsm">5 min · explore 15 min</span></a> <a href="curriculum/labs/students/free-expansion.html">Worksheet 1: Free Expansion<span class="wsm">70 min · algebra</span></a> <a href="curriculum/labs/students/einstein-solids.html">Worksheet 2: Einstein Solids<span class="wsm">75 min · calculus</span></a> <a href="curriculum/labs/students/second-law.html">Worksheet 3: Testing the Second Law<span class="wsm">70 min · algebra</span></a> <a href="notes/entropy.html">Notes</a></p>
         </div>
       </li>
-      <li class="item">
+      <li class="item" data-act="start explore sheet-algebra">
         <a class="pic" href="demos/blackbody.html?topic=heat" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/blackbody-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/blackbody-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-demo">Demo</span></p>
           <h3><a href="demos/blackbody.html?topic=heat">Blackbody Radiation</a></h3>
           <p>Explore thermal emission across temperatures, test Planck’s spectrum, Wien’s displacement law and Stefan–Boltzmann scaling, and connect the results to visible color.</p>
-          <p class="used">In <a href="thermo.html">Thermodynamics</a> · <a href="modern.html">Modern Physics</a> · <a href="astro-2203.html">Astro 2203</a> · <a href="astro.html">Astronomy</a></p><p class="used">Also under <a href="topics/quantum.html">Photons and quanta</a> · <a href="topics/telescopes-light.html">Telescopes and light</a></p><p class="used">OpenStax <span class="sec">2:1.6</span> <span class="sec">3:6.1</span></p>
-          <p class="links"><a class="go" href="demos/blackbody.html?topic=heat">Open demo</a> <a href="curriculum/labs/students/blackbody.html">Worksheet 1: Blackbody Radiation</a> <a href="curriculum/labs/students/intro-blackbody.html">Worksheet 2: Star Colors and Temperatures (Astro 2203)</a> <a href="curriculum/labs/students/ubv-colors.html">Worksheet 3: Star Colors Through U, B and V Filters</a> <a href="notes/blackbody.html">Notes</a></p>
+          <p class="used">In <a href="thermo.html">Thermodynamics</a> · <a href="modern.html">Modern Physics</a> · <a href="astro-2203.html">Astro 2203</a> · <a href="astro.html">Astronomy</a></p><p class="used">Also under <a href="topics/quantum.html">Photons and quanta</a> · <a href="topics/telescopes-light.html">Telescopes and light</a></p><p class="used">OpenStax <span class="sec">2:1.6</span> <span class="sec">3:6.1</span></p><p class="used needs"><b>Before the worksheets:</b> 1. Thermal radiation and temperature; logarithms and power laws; fitting a line to logged data · 2. Powers and ratios; what temperature and color of a hot object mean · 3. Blackbody radiation; magnitudes and color index; Wien&#x27;s law</p>
+          <p class="links"><a class="go" href="demos/blackbody.html?topic=heat">Open demo</a> <a href="demos/blackbody.html?start=1&topic=heat">Start here<span class="wsm">5 min · explore 15 min</span></a> <a href="curriculum/labs/students/blackbody.html">Worksheet 1: Blackbody Radiation<span class="wsm">65 min · algebra</span></a> <a href="curriculum/labs/students/intro-blackbody.html">Worksheet 2: Star Colors and Temperatures (Astro 2203)<span class="wsm">60 min · algebra</span></a> <a href="curriculum/labs/students/ubv-colors.html">Worksheet 3: Star Colors Through U, B and V Filters<span class="wsm">80 min · algebra</span></a> <a href="notes/blackbody.html">Notes</a></p>
         </div>
       </li>
-      <li class="item">
+      <li class="item" data-act="sheet-algebra">
         <a class="pic" href="demos/ising.html?topic=heat" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/ising-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/ising-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-demo">Demo</span></p>
           <h3><a href="demos/ising.html?topic=heat">Ising Model</a></h3>
           <p>Spins on a lattice that each favor their neighbors: cool through T<sub>c</sub> and order appears on its own, with fractal domains at T<sub>c</sub>, hysteresis, and heat capacity and susceptibility measured against Onsager's exact solution.</p>
-          <p class="used">In <a href="thermo.html">Thermodynamics</a></p>
-          <p class="links"><a class="go" href="demos/ising.html?topic=heat">Open demo</a> <a href="curriculum/labs/students/ising.html">Worksheet: The Ising Phase Transition</a> <a href="notes/ising.html">Notes</a></p>
+          <p class="used">In <a href="thermo.html">Thermodynamics</a></p><p class="used needs"><b>Before the worksheet:</b> Boltzmann probability and entropy; ferromagnetism and the Curie temperature; log log graphs</p>
+          <p class="links"><a class="go" href="demos/ising.html?topic=heat">Open demo</a> <a href="curriculum/labs/students/ising.html">Worksheet: The Ising Phase Transition<span class="wsm">80 min · algebra</span></a> <a href="notes/ising.html">Notes</a></p>
         </div>
       </li>
-      <li class="item">
+      <li class="item" data-act="sheet-algebra">
         <a class="pic" href="demos/galton-board.html?topic=heat" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/galton-board-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/galton-board-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-demo">Demo</span></p>
           <h3><a href="demos/galton-board.html?topic=heat">Galton Board</a></h3>
           <p>Balls fall through rows of pegs into bins: one ball is unpredictable, thousands make the binomial distribution and, with many rows, a bell curve. Set the rows and the chance of bouncing right; compare the counts with theory.</p>
-          <p class="used">In <a href="thermo.html">Thermodynamics</a></p><p class="used">OpenStax <span class="sec">2:4.7</span></p>
-          <p class="links"><a class="go" href="demos/galton-board.html?topic=heat">Open demo</a> <a href="curriculum/labs/students/galton-board.html">Worksheet: Chance, the Binomial and the Bell Curve</a> <a href="notes/galton-board.html">Notes</a></p>
+          <p class="used">In <a href="thermo.html">Thermodynamics</a></p><p class="used">OpenStax <span class="sec">2:4.7</span></p><p class="used needs"><b>Before the worksheet:</b> Probability of independent events; counting paths; mean and standard deviation</p>
+          <p class="links"><a class="go" href="demos/galton-board.html?topic=heat">Open demo</a> <a href="curriculum/labs/students/galton-board.html">Worksheet: Chance, the Binomial and the Bell Curve<span class="wsm">70 min · algebra</span></a> <a href="notes/galton-board.html">Notes</a></p>
         </div>
       </li>
-      <li class="item">
+      <li class="item" data-act="start explore">
         <a class="pic" href="demos/superfluid-helium.html?topic=heat" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/superfluid-helium-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/superfluid-helium-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-lab">Lab</span></p>
           <h3><a href="demos/superfluid-helium.html?topic=heat">Superfluid Helium</a></h3>
           <p>Pump liquid helium below 2.1768 K and its boiling stops; then the fountain effect, a film that creeps out of a beaker, and the spinning disk experiment that measures how much of the liquid is superfluid. From measured properties of helium.</p>
           <p class="used">In <a href="thermo.html">Thermodynamics</a></p><p class="used">Also under <a href="topics/atoms-solids.html">Atoms, molecules and solids</a></p><p class="used">OpenStax <span class="sec">2:1.5</span></p>
-          <p class="links"><a class="go" href="demos/superfluid-helium.html?topic=heat">Open demo</a> <a href="notes/superfluid-helium.html">Notes</a></p>
+          <p class="links"><a class="go" href="demos/superfluid-helium.html?topic=heat">Open demo</a> <a href="demos/superfluid-helium.html?start=1&topic=heat">Start here<span class="wsm">5 min · explore 15 min</span></a> <a href="notes/superfluid-helium.html">Notes</a></p>
         </div>
       </li>
-      <li class="item">
+      <li class="item" data-act="start explore sheet-algebra">
         <a class="pic" href="demos/bose-einstein.html?topic=heat" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/bose-einstein-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/bose-einstein-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-lab">Lab</span></p>
           <h3><a href="demos/bose-einstein.html?topic=heat">Bose–Einstein Condensation</a></h3>
           <p>Cool a gas of atoms in a box or a harmonic trap from 1 µK toward absolute zero: each atom's wave packet grows to the thermal de Broglie wavelength, the packets overlap, and the atoms pile into one shared ground state. Exact Bose–Einstein occupations of the box levels, an energy ladder, the phase of the wavefunction as color, the velocity picture of 1995 and the condensate fraction curve.</p>
-          <p class="used">In <a href="modern.html">Modern Physics</a> · <a href="thermo.html">Thermodynamics</a></p><p class="used">Also under <a href="topics/atoms-solids.html">Atoms, molecules and solids</a></p><p class="used">OpenStax <span class="sec">2:2.4</span> <span class="sec">3:9.4</span></p>
-          <p class="links"><a class="go" href="demos/bose-einstein.html?topic=heat">Open demo</a> <a href="curriculum/labs/students/bose-einstein-condensation.html">Worksheet: Bose–Einstein Condensation</a> <a href="notes/bose-einstein.html">Notes</a></p>
+          <p class="used">In <a href="modern.html">Modern Physics</a> · <a href="thermo.html">Thermodynamics</a></p><p class="used">Also under <a href="topics/atoms-solids.html">Atoms, molecules and solids</a></p><p class="used">OpenStax <span class="sec">2:2.4</span> <span class="sec">3:9.4</span></p><p class="used needs"><b>Before the worksheet:</b> de Broglie wavelength; particle in a box; energy levels; Boltzmann factor; fitting a line</p>
+          <p class="links"><a class="go" href="demos/bose-einstein.html?topic=heat">Open demo</a> <a href="demos/bose-einstein.html?start=1&topic=heat">Start here<span class="wsm">5 min · explore 15 min</span></a> <a href="curriculum/labs/students/bose-einstein-condensation.html">Worksheet: Bose–Einstein Condensation<span class="wsm">80 min · algebra</span></a> <a href="notes/bose-einstein.html">Notes</a></p>
         </div>
       </li>
     </ul>
   </section>
+<script>/* activity filter (tools/activities.py) */ (function () {
+  var bar = document.querySelector('.actfilter'); if (!bar) return;
+  var st = { len: '', math: '' }, KEY = 'vd-filter', note = bar.querySelector('.afn');
+  try { var s = JSON.parse(sessionStorage.getItem(KEY) || '{}'); if (s && typeof s === 'object') { st.len = s.len || ''; st.math = s.math || ''; } } catch (_) {}
+  var cards = [].slice.call(document.querySelectorAll('[data-act]'));
+  var fams = [].slice.call(document.querySelectorAll('section.fam'));
+  var match = function (a) {
+    var k = (a || '').split(' ');
+    var sheetOk = function () { return st.math ? k.indexOf('sheet-' + st.math) >= 0 : k.some(function (x) { return x.indexOf('sheet-') === 0; }); };
+    if (st.len === 'start') return k.indexOf('start') >= 0 && st.math !== 'calculus';
+    if (st.len === 'explore') return k.indexOf('explore') >= 0 && st.math !== 'calculus';
+    if (st.len === 'sheet') return sheetOk();
+    if (!st.math) return true;
+    return sheetOk() || (st.math === 'algebra' && k.indexOf('start') >= 0);
+  };
+  var apply = function () {
+    [].forEach.call(bar.querySelectorAll('button'), function (b) { var p = b.getAttribute('data-af').split(':'); b.setAttribute('aria-pressed', String(st[p[0]] === p[1])); });
+    var on = !!(st.len || st.math), n = 0;
+    cards.forEach(function (c) { var ok = !on || match(c.getAttribute('data-act')); c.classList.toggle('af-hide', !ok); if (ok) n++; });
+    fams.forEach(function (f) {
+      var any = [].some.call(f.querySelectorAll('[data-act]'), function (c) { return !c.classList.contains('af-hide'); });
+      f.classList.toggle('af-hide', on && !any);
+      var d = f.querySelector('details.famd');
+      if (d) { if (on && any && !d.open) { d.dataset.af = '1'; d.open = true; } else if (!on && d.dataset.af) { delete d.dataset.af; d.open = false; } }
+    });
+    var VDI18N = window.VDI18N && window.VDI18N.t ? window.VDI18N : { t: function (x, v) { return x.replace('{n}', v ? v.n : ''); } };   /* the literals go into the site catalog */
+    note.textContent = on ? (n === 1 ? VDI18N.t('One demo has an activity like that.') : n ? VDI18N.t('{n} demos have an activity like that.', { n: n })
+      : VDI18N.t('No demo has that combination. A Start here needs no math; try Any.')) : '';
+    try { sessionStorage.setItem(KEY, JSON.stringify(st)); } catch (_) {}
+  };
+  bar.addEventListener('click', function (e) {
+    var b = e.target.closest('button[data-af]'); if (!b) return;
+    var p = b.getAttribute('data-af').split(':'); st[p[0]] = p[1]; apply();
+  });
+  apply();
+})();</script>
   <p class="more"><a href="index.html#topics">Back to all topics</a></p>
 </main>
 <footer>

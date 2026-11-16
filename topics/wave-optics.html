@@ -387,6 +387,25 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
   html:has(.tools .filter) { scroll-padding-top: 108px; }
 }
 
+
+/* activity filter and labels (tools/activities.py) */
+.actfilter { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 6px; margin: 14px 0 4px; }
+.actfilter .afl { font-family: var(--font-mono); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); margin: 0 2px 0 6px; }
+.actfilter .afl:first-child { margin-left: 0; }
+.actfilter button { min-height: 34px; padding: 4px 11px; font: inherit; font-size: 0.86rem; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 999px; cursor: pointer; }
+.actfilter button:hover { border-color: var(--accent); }
+.actfilter button[aria-pressed="true"] { color: var(--canvas); background: var(--accent); border-color: var(--accent); font-weight: 700; }
+.actfilter button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.actfilter .afn { flex: 1 1 100%; margin: 2px 0 0; font-size: 0.85rem; color: var(--muted); min-height: 1.2em; }
+[data-act].af-hide { display: none !important; }
+.find .actfilter + .allnote { margin: 10px 0 22px; }
+.fam.af-hide { display: none; }
+.sh-tag { display: inline-block; margin-right: 6px; padding: 1px 7px; font-size: 0.74rem; font-weight: 700; border-radius: 999px; color: var(--accent); border: 1px solid color-mix(in srgb, var(--accent) 55%, transparent); }
+.links .wsm { display: inline-block; text-decoration: none; font-size: 0.78rem; color: var(--muted); font-weight: 400; margin-left: 5px; }
+.used.needs { font-size: 0.85rem; }
+.used.needs b { font-weight: 700; }
+@media (max-width: 520px) { .actfilter .afl { flex: 1 1 100%; margin-left: 0; } }
+
 </style>
 <link rel="stylesheet" href="demos/lib/paper.css">
 </head>
@@ -413,89 +432,126 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
 <main class="wrap">
   <p class="how">Every demo on this subject, from every course and module, with all of its worksheets. Opened from here, a demo steps through this topic with its previous and next links. The other topics in Light are in the bar above; the <a href="index.html#topics">home page</a> lists them all.</p>
   <section class="unit" aria-label="Interference and diffraction demos">
+    <div class="actfilter" role="group" aria-label="Filter by activity"><span class="afl">Activity</span><button type="button" data-af="len:" aria-pressed="true">Any</button><button type="button" data-af="len:start" aria-pressed="false">Start here, 5 min</button><button type="button" data-af="len:explore" aria-pressed="false">Explore, 15 min</button><button type="button" data-af="len:sheet" aria-pressed="false">Worksheet, up to 75 min</button><span class="afl">Math</span><button type="button" data-af="math:" aria-pressed="true">Any</button><button type="button" data-af="math:algebra" aria-pressed="false">Algebra</button><button type="button" data-af="math:calculus" aria-pressed="false">Calculus</button><p class="afn" aria-live="polite"></p></div>
     <ul class="list">
-      <li class="item">
+      <li class="item" data-act="sheet-algebra">
         <a class="pic" href="demos/huygens.html?topic=wave-optics" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/huygens-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/huygens-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-demo">Demo</span></p>
           <h3><a href="demos/huygens.html?topic=wave-optics">Huygens&#x27;s Principle</a></h3>
           <p>Race light through water, glass and diamond to see v = c/n, then build new wavefronts from wavelets to explain reflection, refraction and Snell's law, total internal reflection, and the spreading of a wave through an opening.</p>
-          <p class="used">In <a href="physics-2.html">Physics II</a></p><p class="used">Also under <a href="topics/oscillations-waves.html">Oscillations and waves</a></p><p class="used">OpenStax <span class="sec">3:1.1</span> <span class="sec">3:1.2</span> <span class="sec">3:1.3</span> <span class="sec">3:1.4</span> <span class="sec">3:1.6</span></p>
-          <p class="links"><a class="go" href="demos/huygens.html?topic=wave-optics">Open demo</a> <a href="curriculum/labs/students/huygens.html">Worksheet: Huygens&#x27;s Principle</a> <a href="notes/huygens.html">Notes</a></p>
+          <p class="used">In <a href="physics-2.html">Physics II</a></p><p class="used">Also under <a href="topics/oscillations-waves.html">Oscillations and waves</a></p><p class="used">OpenStax <span class="sec">3:1.1</span> <span class="sec">3:1.2</span> <span class="sec">3:1.3</span> <span class="sec">3:1.4</span> <span class="sec">3:1.6</span></p><p class="used needs"><b>Before the worksheet:</b> Wave fronts and wavelets; index of refraction; Snell&#x27;s law; diffraction</p>
+          <p class="links"><a class="go" href="demos/huygens.html?topic=wave-optics">Open demo</a> <a href="curriculum/labs/students/huygens.html">Worksheet: Huygens&#x27;s Principle<span class="wsm">80 min · algebra</span></a> <a href="notes/huygens.html">Notes</a></p>
         </div>
       </li>
-      <li class="item">
+      <li class="item" data-act="sheet-algebra">
         <a class="pic" href="demos/double-slit.html?topic=wave-optics" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/double-slit-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/double-slit-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-demo">Demo</span></p>
           <h3><a href="demos/double-slit.html?topic=wave-optics">Double Slit, One Particle at a Time</a></h3>
           <p>Fire photons, electrons or buckyballs through two slits one at a time. Single dots pile up into fringes, and a which slit detector washes them out.</p>
-          <p class="used">In <a href="physics-2.html">Physics II</a> · <a href="modern.html">Modern Physics</a></p><p class="used">Also under <a href="topics/quantum.html">Photons and quanta</a></p><p class="used">OpenStax <span class="sec">3:3.1</span> <span class="sec">3:3.2</span> <span class="sec">3:4.1</span> <span class="sec">3:4.3</span> <span class="sec">3:6.5</span> <span class="sec">3:6.6</span></p>
-          <p class="links"><a class="go" href="demos/double-slit.html?topic=wave-optics">Open demo</a> <a href="curriculum/labs/students/double-slit.html">Worksheet 1: Young&#x27;s Double Slit</a> <a href="curriculum/labs/students/wave-particle-duality.html">Worksheet 2: Wave and Particle Duality</a> <a href="notes/double-slit.html">Notes</a></p>
+          <p class="used">In <a href="physics-2.html">Physics II</a> · <a href="modern.html">Modern Physics</a></p><p class="used">Also under <a href="topics/quantum.html">Photons and quanta</a></p><p class="used">OpenStax <span class="sec">3:3.1</span> <span class="sec">3:3.2</span> <span class="sec">3:4.1</span> <span class="sec">3:4.3</span> <span class="sec">3:6.5</span> <span class="sec">3:6.6</span></p><p class="used needs"><b>Before the worksheets:</b> 1. Interference of waves; path difference; small angle approximation; reading a slope · 2. de Broglie wavelength; two slit interference; photons and electrons as quanta</p>
+          <p class="links"><a class="go" href="demos/double-slit.html?topic=wave-optics">Open demo</a> <a href="curriculum/labs/students/double-slit.html">Worksheet 1: Young&#x27;s Double Slit<span class="wsm">80 min · algebra</span></a> <a href="curriculum/labs/students/wave-particle-duality.html">Worksheet 2: Wave and Particle Duality<span class="wsm">85 min · algebra</span></a> <a href="notes/double-slit.html">Notes</a></p>
         </div>
       </li>
-      <li class="item">
+      <li class="item" data-act="sheet-algebra">
         <a class="pic" href="demos/thin-films.html?topic=wave-optics" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/thin-films-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/thin-films-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-demo">Demo</span></p>
           <h3><a href="demos/thin-films.html?topic=wave-optics">Thin Film Interference</a></h3>
           <p>See why soap bubbles and oil slicks are colored: two reflections from a thin film add or cancel, computed exactly with the reflected color of white light, plus the black film, air wedge fringes, Newton's rings and anti reflection coatings.</p>
-          <p class="used">In <a href="physics-2.html">Physics II</a></p><p class="used">OpenStax <span class="sec">3:3.4</span></p>
-          <p class="links"><a class="go" href="demos/thin-films.html?topic=wave-optics">Open demo</a> <a href="curriculum/labs/students/thin-films.html">Worksheet: Thin Film Interference</a> <a href="notes/thin-films.html">Notes</a></p>
+          <p class="used">In <a href="physics-2.html">Physics II</a></p><p class="used">OpenStax <span class="sec">3:3.4</span></p><p class="used needs"><b>Before the worksheet:</b> Wave interference; path difference; phase shift on reflection; index of refraction</p>
+          <p class="links"><a class="go" href="demos/thin-films.html?topic=wave-optics">Open demo</a> <a href="curriculum/labs/students/thin-films.html">Worksheet: Thin Film Interference<span class="wsm">85 min · algebra</span></a> <a href="notes/thin-films.html">Notes</a></p>
         </div>
       </li>
-      <li class="item">
+      <li class="item" data-act="sheet-algebra">
         <a class="pic" href="demos/michelson.html?topic=wave-optics" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/michelson-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/michelson-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-lab">Lab</span></p>
           <h3><a href="demos/michelson.html?topic=wave-optics">Michelson Interferometer</a></h3>
           <p>Split a laser beam, send the halves to two mirrors and recombine them: count fringes as a micrometer moves one mirror to measure a wavelength, pump the air out of a gas cell to measure its index of refraction, and find equal paths with white light fringes.</p>
-          <p class="used">In <a href="physics-2.html">Physics II</a></p><p class="used">OpenStax <span class="sec">3:3.5</span></p>
-          <p class="links"><a class="go" href="demos/michelson.html?topic=wave-optics">Open demo</a> <a href="curriculum/labs/students/michelson.html">Worksheet: Michelson Interferometer</a> <a href="notes/michelson.html">Notes</a></p>
+          <p class="used">In <a href="physics-2.html">Physics II</a></p><p class="used">OpenStax <span class="sec">3:3.5</span></p><p class="used needs"><b>Before the worksheet:</b> Interference of light; path difference and phase; index of refraction</p>
+          <p class="links"><a class="go" href="demos/michelson.html?topic=wave-optics">Open demo</a> <a href="curriculum/labs/students/michelson.html">Worksheet: Michelson Interferometer<span class="wsm">80 min · algebra</span></a> <a href="notes/michelson.html">Notes</a></p>
         </div>
       </li>
-      <li class="item">
+      <li class="item" data-act="start explore sheet-algebra">
         <a class="pic" href="demos/diffraction-grating.html?topic=wave-optics" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/diffraction-grating-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/diffraction-grating-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-demo">Demo</span></p>
           <h3><a href="demos/diffraction-grating.html?topic=wave-optics">Diffraction Grating</a></h3>
           <p>Shine lasers, an RGB module, white light or H, He, Ne, Hg and Na lamps through gratings from 100 to 1000 lines/mm, a CD or a DVD. See the orders land on the wall, overlapping rainbows and missing orders, then measure a spot with calipers to find the wavelength.</p>
-          <p class="used">In <a href="physics-2.html">Physics II</a></p><p class="used">OpenStax <span class="sec">3:3.2</span> <span class="sec">3:3.3</span> <span class="sec">3:4.1</span> <span class="sec">3:4.2</span> <span class="sec">3:4.3</span> <span class="sec">3:4.4</span> …</p>
-          <p class="links"><a class="go" href="demos/diffraction-grating.html?topic=wave-optics">Open demo</a> <a href="curriculum/labs/students/diffraction-grating.html">Worksheet 1: Diffraction Grating</a> <a href="curriculum/labs/students/single-slit.html">Worksheet 2: Single Slit Diffraction</a> <a href="notes/diffraction-grating.html">Notes</a></p>
+          <p class="used">In <a href="physics-2.html">Physics II</a></p><p class="used">OpenStax <span class="sec">3:3.2</span> <span class="sec">3:3.3</span> <span class="sec">3:4.1</span> <span class="sec">3:4.2</span> <span class="sec">3:4.3</span> <span class="sec">3:4.4</span> …</p><p class="used needs"><b>Before the worksheets:</b> 1. Interference of waves; path difference; grating equation; sine and tangent · 2. Wave interference; path difference; sine of an angle; fitting a line</p>
+          <p class="links"><a class="go" href="demos/diffraction-grating.html?topic=wave-optics">Open demo</a> <a href="demos/diffraction-grating.html?start=1&topic=wave-optics">Start here<span class="wsm">5 min · explore 15 min</span></a> <a href="curriculum/labs/students/diffraction-grating.html">Worksheet 1: Diffraction Grating<span class="wsm">80 min · algebra</span></a> <a href="curriculum/labs/students/single-slit.html">Worksheet 2: Single Slit Diffraction<span class="wsm">80 min · algebra</span></a> <a href="notes/diffraction-grating.html">Notes</a></p>
         </div>
       </li>
-      <li class="item">
+      <li class="item" data-act="start explore sheet-algebra">
         <a class="pic" href="demos/resolution.html?topic=wave-optics" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/resolution-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/resolution-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-lab">Lab</span></p>
           <h3><a href="demos/resolution.html?topic=wave-optics">Circular Apertures and Resolution</a></h3>
           <p>Light through a round hole makes an Airy pattern, computed exactly. Measure its first dark ring on a screen, then bring two point sources together until they blur into one: Rayleigh's criterion for an iris, the eye and a car's headlights, the Hubble telescope and a camera lens stopped down.</p>
-          <p class="used">In <a href="physics-2.html">Physics II</a> · <a href="astro-2203.html">Astro 2203</a> · <a href="astro.html">Astronomy</a></p><p class="used">Also under <a href="topics/telescopes-light.html">Telescopes and light</a></p><p class="used">OpenStax <span class="sec">3:4.5</span></p>
-          <p class="links"><a class="go" href="demos/resolution.html?topic=wave-optics">Open demo</a> <a href="curriculum/labs/students/resolution.html">Worksheet 1: Circular Apertures and Resolution</a> <a href="curriculum/labs/students/intro-resolution.html">Worksheet 2: Seeing Fine Detail (Astro 2203)</a> <a href="notes/resolution.html">Notes</a></p>
+          <p class="used">In <a href="physics-2.html">Physics II</a> · <a href="astro-2203.html">Astro 2203</a> · <a href="astro.html">Astronomy</a></p><p class="used">Also under <a href="topics/telescopes-light.html">Telescopes and light</a></p><p class="used">OpenStax <span class="sec">3:4.5</span></p><p class="used needs"><b>Before the worksheets:</b> 1. Single slit diffraction; wavelength and angle; small angle approximation · 2. Light waves and wavelength; diffraction limit 1.22 λ/D; angles in radians</p>
+          <p class="links"><a class="go" href="demos/resolution.html?topic=wave-optics">Open demo</a> <a href="demos/resolution.html?start=1&topic=wave-optics">Start here<span class="wsm">5 min · explore 15 min</span></a> <a href="curriculum/labs/students/resolution.html">Worksheet 1: Circular Apertures and Resolution<span class="wsm">80 min · algebra</span></a> <a href="curriculum/labs/students/intro-resolution.html">Worksheet 2: Seeing Fine Detail (Astro 2203)<span class="wsm">65 min · algebra</span></a> <a href="notes/resolution.html">Notes</a></p>
         </div>
       </li>
-      <li class="item">
+      <li class="item" data-act="sheet-algebra">
         <a class="pic" href="demos/holography.html?topic=wave-optics" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/holography-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/holography-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-lab">Lab</span></p>
           <h3><a href="demos/holography.html?topic=wave-optics">Holography</a></h3>
           <p>Record the fringes a reference beam and an object's light make on a plate, measure their spacing under a microscope, then light the developed plate again and find the virtual image, the real image and the straight through beam, computed exactly; change the color and watch the images move.</p>
-          <p class="used">In <a href="physics-2.html">Physics II</a></p><p class="used">OpenStax <span class="sec">3:4.7</span></p>
-          <p class="links"><a class="go" href="demos/holography.html?topic=wave-optics">Open demo</a> <a href="curriculum/labs/students/holography.html">Worksheet: Holography: Fringes and Images</a> <a href="notes/holography.html">Notes</a></p>
+          <p class="used">In <a href="physics-2.html">Physics II</a></p><p class="used">OpenStax <span class="sec">3:4.7</span></p><p class="used needs"><b>Before the worksheet:</b> Interference of waves; diffraction grating; angles and sines; wavelength and color</p>
+          <p class="links"><a class="go" href="demos/holography.html?topic=wave-optics">Open demo</a> <a href="curriculum/labs/students/holography.html">Worksheet: Holography: Fringes and Images<span class="wsm">85 min · algebra</span></a> <a href="notes/holography.html">Notes</a></p>
         </div>
       </li>
-      <li class="item">
+      <li class="item" data-act="start explore sheet-algebra">
         <a class="pic" href="demos/ripple-tank.html?topic=wave-optics" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/ripple-tank-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/ripple-tank-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-lab">Lab</span></p>
           <h3><a href="demos/ripple-tank.html?topic=wave-optics">Ripple Tank</a></h3>
           <p>Make waves in a tank of water with dippers or a straight bar, draw your own walls and shallow plates, and watch waves spread through slits, interfere, reflect, refract and focus. Measure wavelength, speed and the angles of the quiet lines.</p>
-          <p class="used">In <a href="physics-2.html">Physics II</a> · <a href="acoustics.html">Acoustics</a></p><p class="used">Also under <a href="topics/oscillations-waves.html">Oscillations and waves</a></p><p class="used">OpenStax <span class="sec">1:16.1</span> <span class="sec">1:16.5</span> <span class="sec">3:1.6</span> <span class="sec">3:3.1</span> <span class="sec">3:3.2</span> <span class="sec">3:4.1</span></p>
-          <p class="links"><a class="go" href="demos/ripple-tank.html?topic=wave-optics">Open demo</a> <a href="curriculum/labs/students/ripple-tank.html">Worksheet: Ripple Tank: Wavelength, Refraction and Interference</a> <a href="notes/ripple-tank.html">Notes</a></p>
+          <p class="used">In <a href="physics-2.html">Physics II</a> · <a href="acoustics.html">Acoustics</a></p><p class="used">Also under <a href="topics/oscillations-waves.html">Oscillations and waves</a></p><p class="used">OpenStax <span class="sec">1:16.1</span> <span class="sec">1:16.5</span> <span class="sec">3:1.6</span> <span class="sec">3:3.1</span> <span class="sec">3:3.2</span> <span class="sec">3:4.1</span></p><p class="used needs"><b>Before the worksheet:</b> Wave speed v = fλ; two source interference; Snell&#x27;s law; sines</p>
+          <p class="links"><a class="go" href="demos/ripple-tank.html?topic=wave-optics">Open demo</a> <a href="demos/ripple-tank.html?set=selSpeed~0.25!selBrush~5!selSrc~bar!sF~8!sDeep~10!sPlate~1.5!sEdge~0!selEdges~beach!labBlind~0!p%3At~eyJwIjoic2xvdyIsImciOnsia2luZCI6ImVkZ2UifSwicyI6W10sIm0iOlsyMDAsMTUwXSwiYSI6WzEwMCwxNTAsMTkwLDE1MF19!g%3Apresets~slow&start=1&topic=wave-optics">Start here<span class="wsm">5 min · explore 15 min</span></a> <a href="curriculum/labs/students/ripple-tank.html">Worksheet: Ripple Tank: Wavelength, Refraction and Interference<span class="wsm">85 min · algebra</span></a> <a href="notes/ripple-tank.html">Notes</a></p>
         </div>
       </li>
     </ul>
   </section>
+<script>/* activity filter (tools/activities.py) */ (function () {
+  var bar = document.querySelector('.actfilter'); if (!bar) return;
+  var st = { len: '', math: '' }, KEY = 'vd-filter', note = bar.querySelector('.afn');
+  try { var s = JSON.parse(sessionStorage.getItem(KEY) || '{}'); if (s && typeof s === 'object') { st.len = s.len || ''; st.math = s.math || ''; } } catch (_) {}
+  var cards = [].slice.call(document.querySelectorAll('[data-act]'));
+  var fams = [].slice.call(document.querySelectorAll('section.fam'));
+  var match = function (a) {
+    var k = (a || '').split(' ');
+    var sheetOk = function () { return st.math ? k.indexOf('sheet-' + st.math) >= 0 : k.some(function (x) { return x.indexOf('sheet-') === 0; }); };
+    if (st.len === 'start') return k.indexOf('start') >= 0 && st.math !== 'calculus';
+    if (st.len === 'explore') return k.indexOf('explore') >= 0 && st.math !== 'calculus';
+    if (st.len === 'sheet') return sheetOk();
+    if (!st.math) return true;
+    return sheetOk() || (st.math === 'algebra' && k.indexOf('start') >= 0);
+  };
+  var apply = function () {
+    [].forEach.call(bar.querySelectorAll('button'), function (b) { var p = b.getAttribute('data-af').split(':'); b.setAttribute('aria-pressed', String(st[p[0]] === p[1])); });
+    var on = !!(st.len || st.math), n = 0;
+    cards.forEach(function (c) { var ok = !on || match(c.getAttribute('data-act')); c.classList.toggle('af-hide', !ok); if (ok) n++; });
+    fams.forEach(function (f) {
+      var any = [].some.call(f.querySelectorAll('[data-act]'), function (c) { return !c.classList.contains('af-hide'); });
+      f.classList.toggle('af-hide', on && !any);
+      var d = f.querySelector('details.famd');
+      if (d) { if (on && any && !d.open) { d.dataset.af = '1'; d.open = true; } else if (!on && d.dataset.af) { delete d.dataset.af; d.open = false; } }
+    });
+    var VDI18N = window.VDI18N && window.VDI18N.t ? window.VDI18N : { t: function (x, v) { return x.replace('{n}', v ? v.n : ''); } };   /* the literals go into the site catalog */
+    note.textContent = on ? (n === 1 ? VDI18N.t('One demo has an activity like that.') : n ? VDI18N.t('{n} demos have an activity like that.', { n: n })
+      : VDI18N.t('No demo has that combination. A Start here needs no math; try Any.')) : '';
+    try { sessionStorage.setItem(KEY, JSON.stringify(st)); } catch (_) {}
+  };
+  bar.addEventListener('click', function (e) {
+    var b = e.target.closest('button[data-af]'); if (!b) return;
+    var p = b.getAttribute('data-af').split(':'); st[p[0]] = p[1]; apply();
+  });
+  apply();
+})();</script>
   <p class="more"><a href="index.html#topics">Back to all topics</a></p>
 </main>
 <footer>

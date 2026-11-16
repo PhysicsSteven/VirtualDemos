@@ -387,6 +387,25 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
   html:has(.tools .filter) { scroll-padding-top: 108px; }
 }
 
+
+/* activity filter and labels (tools/activities.py) */
+.actfilter { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 6px; margin: 14px 0 4px; }
+.actfilter .afl { font-family: var(--font-mono); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); margin: 0 2px 0 6px; }
+.actfilter .afl:first-child { margin-left: 0; }
+.actfilter button { min-height: 34px; padding: 4px 11px; font: inherit; font-size: 0.86rem; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 999px; cursor: pointer; }
+.actfilter button:hover { border-color: var(--accent); }
+.actfilter button[aria-pressed="true"] { color: var(--canvas); background: var(--accent); border-color: var(--accent); font-weight: 700; }
+.actfilter button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.actfilter .afn { flex: 1 1 100%; margin: 2px 0 0; font-size: 0.85rem; color: var(--muted); min-height: 1.2em; }
+[data-act].af-hide { display: none !important; }
+.find .actfilter + .allnote { margin: 10px 0 22px; }
+.fam.af-hide { display: none; }
+.sh-tag { display: inline-block; margin-right: 6px; padding: 1px 7px; font-size: 0.74rem; font-weight: 700; border-radius: 999px; color: var(--accent); border: 1px solid color-mix(in srgb, var(--accent) 55%, transparent); }
+.links .wsm { display: inline-block; text-decoration: none; font-size: 0.78rem; color: var(--muted); font-weight: 400; margin-left: 5px; }
+.used.needs { font-size: 0.85rem; }
+.used.needs b { font-weight: 700; }
+@media (max-width: 520px) { .actfilter .afl { flex: 1 1 100%; margin-left: 0; } }
+
 </style>
 <link rel="stylesheet" href="demos/lib/paper.css">
 </head>
@@ -413,69 +432,106 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
 <main class="wrap">
   <p class="how">Every demo on this subject, from every course and module, with all of its worksheets. Opened from here, a demo steps through this topic with its previous and next links. The other topics in Astronomy are in the bar above; the <a href="index.html#topics">home page</a> lists them all.</p>
   <section class="unit" aria-label="The sky demos">
+    <div class="actfilter" role="group" aria-label="Filter by activity"><span class="afl">Activity</span><button type="button" data-af="len:" aria-pressed="true">Any</button><button type="button" data-af="len:start" aria-pressed="false">Start here, 5 min</button><button type="button" data-af="len:explore" aria-pressed="false">Explore, 15 min</button><button type="button" data-af="len:sheet" aria-pressed="false">Worksheet, up to 75 min</button><span class="afl">Math</span><button type="button" data-af="math:" aria-pressed="true">Any</button><button type="button" data-af="math:algebra" aria-pressed="false">Algebra</button><button type="button" data-af="math:calculus" aria-pressed="false">Calculus</button><p class="afn" aria-live="polite"></p></div>
     <ul class="list">
-      <li class="item">
+      <li class="item" data-act="start explore sheet-algebra">
         <a class="pic" href="demos/seasons.html?topic=sky" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/seasons-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/seasons-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-demo">Demo</span></p>
           <h3><a href="demos/seasons.html?topic=sky">Reasons for Seasons</a></h3>
           <p>Earth's tilted axis, the Sun's path across your sky, day length and sunlight through the year, and why distance from the Sun is not the reason.</p>
-          <p class="used">In <a href="astro.html">Astronomy</a> · <a href="astro-2203.html">Astro 2203</a></p>
-          <p class="links"><a class="go" href="demos/seasons.html?topic=sky">Open demo</a> <a href="curriculum/labs/students/seasons.html">Worksheet 1: Sunlight Through the Year</a> <a href="curriculum/labs/students/intro-seasons.html">Worksheet 2: Why We Have Seasons (Astro 2203)</a> <a href="curriculum/labs/students/intro-sidereal-day.html">Worksheet 3: Sidereal Days, Solar Days and Sundials (Astro 2203)</a> <a href="notes/seasons.html">Notes</a></p>
+          <p class="used">In <a href="astro.html">Astronomy</a> · <a href="astro-2203.html">Astro 2203</a></p><p class="used needs"><b>Before the worksheets:</b> 1. Earth&#x27;s tilt and orbit; inverse square law; sine and cosine of an angle · 2. Tilt of Earth&#x27;s axis; inverse square law; latitude; angle of sunlight on a surface · 3. Rotation and revolution of planets; angles in degrees; converting hours to minutes</p>
+          <p class="links"><a class="go" href="demos/seasons.html?topic=sky">Open demo</a> <a href="demos/seasons.html?set=day~172!lat~32.5!tilt~23.44!tDist~0!tSeasons~1!tPaths~1!tExag~0!tMonths~1!g%3Apresets~june&start=1&topic=sky">Start here<span class="wsm">5 min · explore 15 min</span></a> <a href="curriculum/labs/students/seasons.html">Worksheet 1: Sunlight Through the Year<span class="wsm">80 min · algebra</span></a> <a href="curriculum/labs/students/intro-seasons.html">Worksheet 2: Why We Have Seasons (Astro 2203)<span class="wsm">60 min · algebra</span></a> <a href="curriculum/labs/students/intro-sidereal-day.html">Worksheet 3: Sidereal Days, Solar Days and Sundials (Astro 2203)<span class="wsm">70 min · algebra</span></a> <a href="notes/seasons.html">Notes</a></p>
         </div>
       </li>
-      <li class="item">
+      <li class="item" data-act="start explore sheet-algebra">
         <a class="pic" href="demos/celestial-sphere.html?topic=sky" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/celestial-sphere-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/celestial-sphere-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-demo">Demo</span></p>
           <h3><a href="demos/celestial-sphere.html?topic=sky">The Sky and the Celestial Sphere</a></h3>
           <p>The real night sky from any place and date, seen from outside as a sphere and from the ground: why the stars circle the pole, why the pole's height is your latitude, the Sun and Moon among the stars, eclipses and the wandering pole star.</p>
-          <p class="used">In <a href="astro-2203.html">Astro 2203</a> · <a href="astro.html">Astronomy</a></p>
-          <p class="links"><a class="go" href="demos/celestial-sphere.html?topic=sky">Open demo</a> <a href="curriculum/labs/students/intro-celestial-sphere.html">Worksheet 1: The Sky and the Celestial Sphere (Astro 2203)</a> <a href="curriculum/labs/students/intro-constellations-3d.html">Worksheet 2: Constellations in 3D (Astro 2203)</a> <a href="notes/celestial-sphere.html">Notes</a></p>
+          <p class="used">In <a href="astro-2203.html">Astro 2203</a> · <a href="astro.html">Astronomy</a></p><p class="used needs"><b>Before the worksheets:</b> 1. Angles and degrees; latitude and longitude on Earth; why stars rise and set · 2. Inverse square law of light; magnitude scale; logarithms on a calculator</p>
+          <p class="links"><a class="go" href="demos/celestial-sphere.html?topic=sky">Open demo</a> <a href="demos/celestial-sphere.html?set=place~ruston!sLat~32.5!sLon~-92.6!sYear~2027!sDay~15!sTime~1200!find~star%3A50!tAltAz~0!tEq~1!tEcl~1!tFig~1!tBound~0!tNames~1!tPath~1!tCaps~0!tMoonOrb~0!tPrec~0!tDay~1!labBlind~0!p%3Aview~0_30_120_-1.95_1.12_1_0!g%3AfaceSeg~0&start=1&topic=sky">Start here<span class="wsm">5 min · explore 15 min</span></a> <a href="curriculum/labs/students/intro-celestial-sphere.html">Worksheet 1: The Sky and the Celestial Sphere (Astro 2203)<span class="wsm">60 min · algebra</span></a> <a href="curriculum/labs/students/intro-constellations-3d.html">Worksheet 2: Constellations in 3D (Astro 2203)<span class="wsm">60 min · algebra</span></a> <a href="notes/celestial-sphere.html">Notes</a></p>
         </div>
       </li>
-      <li class="item">
+      <li class="item" data-act="start explore sheet-algebra">
         <a class="pic" href="demos/moon-phases.html?topic=sky" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/moon-phases-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/moon-phases-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-demo">Demo</span></p>
           <h3><a href="demos/moon-phases.html?topic=sky">Moon Phases</a></h3>
           <p>Drag the Moon around Earth and see its phase from the ground, when it rises and sets, and why eclipses only happen in eclipse seasons.</p>
-          <p class="used">In <a href="astro.html">Astronomy</a> · <a href="astro-2203.html">Astro 2203</a></p>
-          <p class="links"><a class="go" href="demos/moon-phases.html?topic=sky">Open demo</a> <a href="curriculum/labs/students/moon-phases.html">Worksheet 1: Phases and the Lunar Month</a> <a href="curriculum/labs/students/intro-moon.html">Worksheet 2: Phases of the Moon and Eclipse Seasons (Astro 2203)</a> <a href="notes/moon-phases.html">Notes</a></p>
+          <p class="used">In <a href="astro.html">Astronomy</a> · <a href="astro-2203.html">Astro 2203</a></p><p class="used needs"><b>Before the worksheets:</b> 1. Orbits of the Moon and Earth; the Moon&#x27;s phases; angles and basic trigonometry · 2. Moon&#x27;s orbit and phases; Sun, Earth, Moon geometry; angles per day</p>
+          <p class="links"><a class="go" href="demos/moon-phases.html?topic=sky">Open demo</a> <a href="demos/moon-phases.html?set=day~7.38!hour~18!tShadow~1!tRing~1!tArc~1!tSid~0!g%3Apresets~first&start=1&topic=sky">Start here<span class="wsm">5 min · explore 15 min</span></a> <a href="curriculum/labs/students/moon-phases.html">Worksheet 1: Phases and the Lunar Month<span class="wsm">80 min · algebra</span></a> <a href="curriculum/labs/students/intro-moon.html">Worksheet 2: Phases of the Moon and Eclipse Seasons (Astro 2203)<span class="wsm">65 min · algebra</span></a> <a href="notes/moon-phases.html">Notes</a></p>
         </div>
       </li>
-      <li class="item">
+      <li class="item" data-act="start explore sheet-algebra">
         <a class="pic" href="demos/retrograde-motion.html?topic=sky" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/retrograde-motion-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/retrograde-motion-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-demo">Demo</span></p>
           <h3><a href="demos/retrograde-motion.html?topic=sky">Retrograde Motion and World Models</a></h3>
           <p>Watch Earth pass Mars while Mars loops backward against the real stars, then make the same sky with Ptolemy's epicycles, Copernicus's circles and Tycho's system, and test them with the phases of Venus.</p>
-          <p class="used">In <a href="astro-2203.html">Astro 2203</a> · <a href="astro.html">Astronomy</a></p>
-          <p class="links"><a class="go" href="demos/retrograde-motion.html?topic=sky">Open demo</a> <a href="curriculum/labs/students/intro-retrograde.html">Worksheet 1: Retrograde Motion and Synodic Periods (Astro 2203)</a> <a href="curriculum/labs/students/intro-retrograde-venus.html">Worksheet 2: Venus and the World Models (Astro 2203)</a> <a href="notes/retrograde-motion.html">Notes</a></p>
+          <p class="used">In <a href="astro-2203.html">Astro 2203</a> · <a href="astro.html">Astronomy</a></p><p class="used needs"><b>Before the worksheets:</b> 1. Orbital periods; Earth and planet positions from above; synodic period; sky longitude · 2. Phases of Venus; Sun, Earth, Venus geometry; Ptolemy&#x27;s and Copernicus&#x27;s models of the sky</p>
+          <p class="links"><a class="go" href="demos/retrograde-motion.html?topic=sky">Open demo</a> <a href="demos/retrograde-motion.html?start=1&topic=sky">Start here<span class="wsm">5 min · explore 15 min</span></a> <a href="curriculum/labs/students/intro-retrograde.html">Worksheet 1: Retrograde Motion and Synodic Periods (Astro 2203)<span class="wsm">70 min · algebra</span></a> <a href="curriculum/labs/students/intro-retrograde-venus.html">Worksheet 2: Venus and the World Models (Astro 2203)<span class="wsm">65 min · algebra</span></a> <a href="notes/retrograde-motion.html">Notes</a></p>
         </div>
       </li>
-      <li class="item">
+      <li class="item" data-act="start explore">
         <a class="pic" href="demos/rainbows.html?topic=sky" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/rainbows-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/rainbows-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-demo">Demo</span></p>
           <h3><a href="demos/rainbows.html?topic=sky">Rainbows</a></h3>
           <p>Follow sunlight through a raindrop and find the ray of least deviation that makes the bow at 42°, then see the sky: the primary and the reversed secondary bow, Alexander's dark band, the Sun's height, and in 3D the cone of drops that makes your own rainbow.</p>
           <p class="used">In <a href="physics-2.html">Physics II</a> · <a href="astro.html">Astronomy</a></p><p class="used">Also under <a href="topics/optics.html">Optics</a></p><p class="used">OpenStax <span class="sec">3:1.5</span></p>
-          <p class="links"><a class="go" href="demos/rainbows.html?topic=sky">Open demo</a> <a href="notes/rainbows.html">Notes</a></p>
+          <p class="links"><a class="go" href="demos/rainbows.html?topic=sky">Open demo</a> <a href="demos/rainbows.html?start=1&topic=sky">Start here<span class="wsm">5 min · explore 15 min</span></a> <a href="notes/rainbows.html">Notes</a></p>
         </div>
       </li>
-      <li class="item">
+      <li class="item" data-act="start explore">
         <a class="pic" href="demos/rotating-frames.html?topic=sky" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/rotating-frames-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/rotating-frames-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-demo">Demo</span></p>
           <h3><a href="demos/rotating-frames.html?topic=sky">Rotating Frames</a></h3>
           <p>Roll a ball across a turning merry go round and see it from the room and from the turntable: a straight line, or a curve driven by the Coriolis and centrifugal forces. Then the Earth as a turntable: a Foucault pendulum whose swing turns once in a sidereal day divided by the sine of the latitude, flat and in 3D.</p>
           <p class="used">In <a href="physics-1.html">Physics I</a> · <a href="astro.html">Astronomy</a></p><p class="used">Also under <a href="topics/forces.html">Forces and Newton&#x27;s laws</a></p><p class="used">OpenStax <span class="sec">1:6.3</span></p>
-          <p class="links"><a class="go" href="demos/rotating-frames.html?topic=sky">Open demo</a> <a href="notes/rotating-frames.html">Notes</a></p>
+          <p class="links"><a class="go" href="demos/rotating-frames.html?topic=sky">Open demo</a> <a href="demos/rotating-frames.html?start=1&topic=sky">Start here<span class="wsm">5 min · explore 15 min</span></a> <a href="notes/rotating-frames.html">Notes</a></p>
         </div>
       </li>
     </ul>
   </section>
+<script>/* activity filter (tools/activities.py) */ (function () {
+  var bar = document.querySelector('.actfilter'); if (!bar) return;
+  var st = { len: '', math: '' }, KEY = 'vd-filter', note = bar.querySelector('.afn');
+  try { var s = JSON.parse(sessionStorage.getItem(KEY) || '{}'); if (s && typeof s === 'object') { st.len = s.len || ''; st.math = s.math || ''; } } catch (_) {}
+  var cards = [].slice.call(document.querySelectorAll('[data-act]'));
+  var fams = [].slice.call(document.querySelectorAll('section.fam'));
+  var match = function (a) {
+    var k = (a || '').split(' ');
+    var sheetOk = function () { return st.math ? k.indexOf('sheet-' + st.math) >= 0 : k.some(function (x) { return x.indexOf('sheet-') === 0; }); };
+    if (st.len === 'start') return k.indexOf('start') >= 0 && st.math !== 'calculus';
+    if (st.len === 'explore') return k.indexOf('explore') >= 0 && st.math !== 'calculus';
+    if (st.len === 'sheet') return sheetOk();
+    if (!st.math) return true;
+    return sheetOk() || (st.math === 'algebra' && k.indexOf('start') >= 0);
+  };
+  var apply = function () {
+    [].forEach.call(bar.querySelectorAll('button'), function (b) { var p = b.getAttribute('data-af').split(':'); b.setAttribute('aria-pressed', String(st[p[0]] === p[1])); });
+    var on = !!(st.len || st.math), n = 0;
+    cards.forEach(function (c) { var ok = !on || match(c.getAttribute('data-act')); c.classList.toggle('af-hide', !ok); if (ok) n++; });
+    fams.forEach(function (f) {
+      var any = [].some.call(f.querySelectorAll('[data-act]'), function (c) { return !c.classList.contains('af-hide'); });
+      f.classList.toggle('af-hide', on && !any);
+      var d = f.querySelector('details.famd');
+      if (d) { if (on && any && !d.open) { d.dataset.af = '1'; d.open = true; } else if (!on && d.dataset.af) { delete d.dataset.af; d.open = false; } }
+    });
+    var VDI18N = window.VDI18N && window.VDI18N.t ? window.VDI18N : { t: function (x, v) { return x.replace('{n}', v ? v.n : ''); } };   /* the literals go into the site catalog */
+    note.textContent = on ? (n === 1 ? VDI18N.t('One demo has an activity like that.') : n ? VDI18N.t('{n} demos have an activity like that.', { n: n })
+      : VDI18N.t('No demo has that combination. A Start here needs no math; try Any.')) : '';
+    try { sessionStorage.setItem(KEY, JSON.stringify(st)); } catch (_) {}
+  };
+  bar.addEventListener('click', function (e) {
+    var b = e.target.closest('button[data-af]'); if (!b) return;
+    var p = b.getAttribute('data-af').split(':'); st[p[0]] = p[1]; apply();
+  });
+  apply();
+})();</script>
   <p class="more"><a href="index.html#topics">Back to all topics</a></p>
 </main>
 <footer>

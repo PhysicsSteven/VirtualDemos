@@ -617,6 +617,11 @@
   if (here && !document.getElementById('vd-nav')) {
     var nv = document.createElement('script'); nv.src = here.replace(/vd\.js([?#].*)?$/, 'nav.js'); nv.id = 'vd-nav'; nv.async = true; document.head.appendChild(nv);
   }
+  /* Start here (2026-11-16): a 5 minute first activity and a 15 minute Explore further in the sidebar, for the demos that have one:
+     demos/lib/starthere.js, written by tools/courses.py from curriculum/start-here.json */
+  if (here && !document.getElementById('vd-start')) {
+    var sh = document.createElement('script'); sh.src = here.replace(/vd\.js([?#].*)?$/, 'starthere.js'); sh.id = 'vd-start'; sh.async = true; document.head.appendChild(sh);
+  }
 
   /* Share this setup: VD.share(btn) makes btn a Copy link button. The link reopens the demo with every setting a student
      changed: the value of each range or number input, select, checkbox and radio that has an id, and the pressed button of
@@ -655,7 +660,9 @@
     var named = {};
     groups.forEach(function (bs, g) {
       if (bs.length < 2) return;
-      var a = g.closest('[id]'), lab = g.getAttribute('aria-label'), base = 'g:' + (a ? a.id : '') + (lab && a !== g ? '.' + lab : '');
+      var a = g.closest('[id]'), lab = g.getAttribute('aria-label'), lo = g['__i18n_aria-label'];
+      if (lo && lo.tr === lab) lab = lo.en;   /* the English label (i18n.js keeps it), so a link works in every language (2026-11-16) */
+      var base = 'g:' + (a ? a.id : '') + (lab && a !== g ? '.' + lab : '');
       var n = named[base] = (named[base] || 0) + 1, k = n > 1 ? base + n : base;
       var bk = function (b, i) { if (b.id) return '#' + b.id; for (var j = 0; j < b.attributes.length; j++) { var at = b.attributes[j]; if (/^data-/.test(at.name) && at.value) return at.value; } return String(i); };
       items.push({ k: k, kind: 'group', bs: bs, key: bk, get: function () { var on = []; for (var i = 0; i < bs.length; i++) if (bs[i].getAttribute('aria-pressed') === 'true') on.push(bk(bs[i], i)); return on.join('+'); } });

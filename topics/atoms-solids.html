@@ -387,6 +387,25 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
   html:has(.tools .filter) { scroll-padding-top: 108px; }
 }
 
+
+/* activity filter and labels (tools/activities.py) */
+.actfilter { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 6px; margin: 14px 0 4px; }
+.actfilter .afl { font-family: var(--font-mono); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); margin: 0 2px 0 6px; }
+.actfilter .afl:first-child { margin-left: 0; }
+.actfilter button { min-height: 34px; padding: 4px 11px; font: inherit; font-size: 0.86rem; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 999px; cursor: pointer; }
+.actfilter button:hover { border-color: var(--accent); }
+.actfilter button[aria-pressed="true"] { color: var(--canvas); background: var(--accent); border-color: var(--accent); font-weight: 700; }
+.actfilter button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.actfilter .afn { flex: 1 1 100%; margin: 2px 0 0; font-size: 0.85rem; color: var(--muted); min-height: 1.2em; }
+[data-act].af-hide { display: none !important; }
+.find .actfilter + .allnote { margin: 10px 0 22px; }
+.fam.af-hide { display: none; }
+.sh-tag { display: inline-block; margin-right: 6px; padding: 1px 7px; font-size: 0.74rem; font-weight: 700; border-radius: 999px; color: var(--accent); border: 1px solid color-mix(in srgb, var(--accent) 55%, transparent); }
+.links .wsm { display: inline-block; text-decoration: none; font-size: 0.78rem; color: var(--muted); font-weight: 400; margin-left: 5px; }
+.used.needs { font-size: 0.85rem; }
+.used.needs b { font-weight: 700; }
+@media (max-width: 520px) { .actfilter .afl { flex: 1 1 100%; margin-left: 0; } }
+
 </style>
 <link rel="stylesheet" href="demos/lib/paper.css">
 </head>
@@ -413,98 +432,99 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
 <main class="wrap">
   <p class="how">Every demo on this subject, from every course and module, with all of its worksheets. Opened from here, a demo steps through this topic with its previous and next links. The other topics in Modern physics are in the bar above; the <a href="index.html#topics">home page</a> lists them all.</p>
   <section class="unit" aria-label="Atoms, molecules and solids demos">
+    <div class="actfilter" role="group" aria-label="Filter by activity"><span class="afl">Activity</span><button type="button" data-af="len:" aria-pressed="true">Any</button><button type="button" data-af="len:start" aria-pressed="false">Start here, 5 min</button><button type="button" data-af="len:explore" aria-pressed="false">Explore, 15 min</button><button type="button" data-af="len:sheet" aria-pressed="false">Worksheet, up to 75 min</button><span class="afl">Math</span><button type="button" data-af="math:" aria-pressed="true">Any</button><button type="button" data-af="math:algebra" aria-pressed="false">Algebra</button><button type="button" data-af="math:calculus" aria-pressed="false">Calculus</button><p class="afn" aria-live="polite"></p></div>
     <ul class="list">
-      <li class="item">
+      <li class="item" data-act="start explore sheet-algebra">
         <a class="pic" href="demos/hydrogen-orbitals.html?topic=atoms-solids" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/hydrogen-orbitals-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/hydrogen-orbitals-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-demo">Demo</span></p>
           <h3><a href="demos/hydrogen-orbitals.html?topic=atoms-solids">Hydrogen Orbitals</a></h3>
           <p>Every hydrogen state up to n = 6 as a 3D cloud sampled from |ψ|², a slice showing its nodes, and its radial probability against the Bohr orbit. Mix 1s and 2p and watch the charge slosh at the Lyman α frequency.</p>
-          <p class="used">In <a href="modern.html">Modern Physics</a></p><p class="used">OpenStax <span class="sec">3:7.1</span> <span class="sec">3:8.1</span></p>
-          <p class="links"><a class="go" href="demos/hydrogen-orbitals.html?topic=atoms-solids">Open demo</a> <a href="curriculum/labs/students/hydrogen-atom.html">Worksheet: The Hydrogen Atom</a> <a href="notes/hydrogen-orbitals.html">Notes</a></p>
+          <p class="used">In <a href="modern.html">Modern Physics</a></p><p class="used">OpenStax <span class="sec">3:7.1</span> <span class="sec">3:8.1</span></p><p class="used needs"><b>Before the worksheet:</b> Wave function and probability; hydrogen energy levels; quantum numbers; selection rules</p>
+          <p class="links"><a class="go" href="demos/hydrogen-orbitals.html?topic=atoms-solids">Open demo</a> <a href="demos/hydrogen-orbitals.html?set=mixOn~0!mixSel~2%2C1%2C0!tAxes~1!tNodes~1!tBohr~1!tSame~0!tR~0!tLock~0!tProton~1!g%3Apresets~1s&start=1&topic=atoms-solids">Start here<span class="wsm">5 min · explore 15 min</span></a> <a href="curriculum/labs/students/hydrogen-atom.html">Worksheet: The Hydrogen Atom<span class="wsm">75 min · algebra</span></a> <a href="notes/hydrogen-orbitals.html">Notes</a></p>
         </div>
       </li>
-      <li class="item">
+      <li class="item" data-act="start explore sheet-algebra">
         <a class="pic" href="demos/spectra.html?topic=atoms-solids" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/spectra-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/spectra-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-demo">Demo</span></p>
           <h3><a href="demos/spectra.html?topic=atoms-solids">Spectra Explorer</a></h3>
           <p>Click any of 99 elements to see its emission or absorption lines, measured by NIST. Includes the Bohr model of hydrogen and a mystery spectrum game, including a star.</p>
-          <p class="used">In <a href="modern.html">Modern Physics</a> · <a href="astro-2203.html">Astro 2203</a> · <a href="astro.html">Astronomy</a></p><p class="used">Also under <a href="topics/telescopes-light.html">Telescopes and light</a></p><p class="used">OpenStax <span class="sec">3:6.4</span> <span class="sec">3:8.1</span> <span class="sec">3:8.5</span></p>
-          <p class="links"><a class="go" href="demos/spectra.html?topic=atoms-solids">Open demo</a> <a href="curriculum/labs/students/spectra.html">Worksheet 1: The Hydrogen Spectrum and the Rydberg Constant</a> <a href="curriculum/labs/students/intro-spectra.html">Worksheet 2: Fingerprints of the Elements (Astro 2203)</a> <a href="curriculum/labs/students/hydrogen-in-stars.html">Worksheet 3: Why Balmer Lines Peak in A Stars</a> <a href="notes/spectra.html">Notes</a></p>
+          <p class="used">In <a href="modern.html">Modern Physics</a> · <a href="astro-2203.html">Astro 2203</a> · <a href="astro.html">Astronomy</a></p><p class="used">Also under <a href="topics/telescopes-light.html">Telescopes and light</a></p><p class="used">OpenStax <span class="sec">3:6.4</span> <span class="sec">3:8.1</span> <span class="sec">3:8.5</span></p><p class="used needs"><b>Before the worksheets:</b> 1. Bohr model of hydrogen; photon energy and wavelength; fitting a line · 2. Atoms and electron energy levels; wavelength of light; Kirchhoff&#x27;s three spectra · 3. Hydrogen energy levels; Boltzmann factor; ionization; exponentials and logarithms</p>
+          <p class="links"><a class="go" href="demos/spectra.html?topic=atoms-solids">Open demo</a> <a href="demos/spectra.html?start=1&topic=atoms-solids">Start here<span class="wsm">5 min · explore 15 min</span></a> <a href="curriculum/labs/students/spectra.html">Worksheet 1: The Hydrogen Spectrum and the Rydberg Constant<span class="wsm">85 min · algebra</span></a> <a href="curriculum/labs/students/intro-spectra.html">Worksheet 2: Fingerprints of the Elements (Astro 2203)<span class="wsm">60 min · algebra</span></a> <a href="curriculum/labs/students/hydrogen-in-stars.html">Worksheet 3: Why Balmer Lines Peak in A Stars<span class="wsm">80 min · algebra</span></a> <a href="notes/spectra.html">Notes</a></p>
         </div>
       </li>
-      <li class="item">
+      <li class="item" data-act="sheet-algebra">
         <a class="pic" href="demos/magnetic-moments.html?topic=atoms-solids" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/magnetic-moments-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/magnetic-moments-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-lab">Lab</span></p>
           <h3><a href="demos/magnetic-moments.html?topic=atoms-solids">Atoms in a Magnetic Field</a></h3>
           <p>An orbiting electron is a tiny current loop. See its moment point only in allowed directions, split a beam of silver atoms into two spots as Stern and Gerlach did, and split spectral lines in a magnet.</p>
-          <p class="used">In <a href="modern.html">Modern Physics</a></p><p class="used">OpenStax <span class="sec">3:8.2</span> <span class="sec">3:8.3</span></p>
-          <p class="links"><a class="go" href="demos/magnetic-moments.html?topic=atoms-solids">Open demo</a> <a href="curriculum/labs/students/orbital-magnetic-moment.html">Worksheet 1: The Orbital Magnetic Moment</a> <a href="curriculum/labs/students/stern-gerlach.html">Worksheet 2: The Stern–Gerlach Experiment</a> <a href="curriculum/labs/students/zeeman-effect.html">Worksheet 3: The Zeeman Effect</a> <a href="notes/magnetic-moments.html">Notes</a></p>
+          <p class="used">In <a href="modern.html">Modern Physics</a></p><p class="used">OpenStax <span class="sec">3:8.2</span> <span class="sec">3:8.3</span></p><p class="used needs"><b>Before the worksheets:</b> 1. Current loops and magnetic moment; angular momentum; Bohr model and quantum numbers · 2. Magnetic moment; electron spin and quantized angular momentum; force on a magnetic moment · 3. Atomic energy levels; magnetic moment and spin; angular momentum quantum numbers</p>
+          <p class="links"><a class="go" href="demos/magnetic-moments.html?topic=atoms-solids">Open demo</a> <a href="curriculum/labs/students/orbital-magnetic-moment.html">Worksheet 1: The Orbital Magnetic Moment<span class="wsm">65 min · algebra</span></a> <a href="curriculum/labs/students/stern-gerlach.html">Worksheet 2: The Stern–Gerlach Experiment<span class="wsm">80 min · algebra</span></a> <a href="curriculum/labs/students/zeeman-effect.html">Worksheet 3: The Zeeman Effect<span class="wsm">80 min · algebra</span></a> <a href="notes/magnetic-moments.html">Notes</a></p>
         </div>
       </li>
-      <li class="item">
+      <li class="item" data-act="sheet-algebra sheet-calculus">
         <a class="pic" href="demos/shells-and-x-rays.html?topic=atoms-solids" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/shells-and-x-rays-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/shells-and-x-rays-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-lab">Lab</span></p>
           <h3><a href="demos/shells-and-x-rays.html?topic=atoms-solids">Shells, the Periodic Table and X-Rays</a></h3>
           <p>Fill orbital boxes one electron at a time and watch the periodic table build up, see where the n + l rule fails, then fire electrons at a target and read its X-ray lines, the Duane–Hunt cutoff and Moseley's law.</p>
-          <p class="used">In <a href="modern.html">Modern Physics</a> · <a href="medical-physics.html">Medical Physics</a></p><p class="used">OpenStax <span class="sec">3:8.4</span> <span class="sec">3:8.5</span></p>
-          <p class="links"><a class="go" href="demos/shells-and-x-rays.html?topic=atoms-solids">Open demo</a> <a href="curriculum/labs/students/periodic-table.html">Worksheet 1: Shells and the Periodic Table</a> <a href="curriculum/labs/students/x-ray-spectra.html">Worksheet 2: X-Ray Spectra and Moseley&#x27;s Law</a> <a href="curriculum/labs/students/mp-x-ray-filtration.html">Worksheet 3: Filtration and Half Value Layer (Medical Physics)</a> <a href="notes/shells-and-x-rays.html">Notes</a></p>
+          <p class="used">In <a href="modern.html">Modern Physics</a> · <a href="medical-physics.html">Medical Physics</a></p><p class="used">OpenStax <span class="sec">3:8.4</span> <span class="sec">3:8.5</span></p><p class="used needs"><b>Before the worksheets:</b> 1. Quantum numbers and the exclusion principle; electron shells; ionization energy · 2. Photon energy and wavelength; Bragg&#x27;s law; Bohr model energy levels · 3. Exponential attenuation and half value layer; natural logs; derivative of a log</p>
+          <p class="links"><a class="go" href="demos/shells-and-x-rays.html?topic=atoms-solids">Open demo</a> <a href="curriculum/labs/students/periodic-table.html">Worksheet 1: Shells and the Periodic Table<span class="wsm">75 min · algebra</span></a> <a href="curriculum/labs/students/x-ray-spectra.html">Worksheet 2: X-Ray Spectra and Moseley&#x27;s Law<span class="wsm">75 min · algebra</span></a> <a href="curriculum/labs/students/mp-x-ray-filtration.html">Worksheet 3: Filtration and Half Value Layer (Medical Physics)<span class="wsm">75 min · calculus</span></a> <a href="notes/shells-and-x-rays.html">Notes</a></p>
         </div>
       </li>
-      <li class="item">
+      <li class="item" data-act="sheet-algebra">
         <a class="pic" href="demos/spin-resonance.html?topic=atoms-solids" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/spin-resonance-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/spin-resonance-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-demo">Demo</span></p>
           <h3><a href="demos/spin-resonance.html?topic=atoms-solids">Spin Resonance</a></h3>
           <p>Tune an electron or proton spin resonance probe, sweep the field, find the absorption peak on the oscilloscope, and measure g for DPPH and the gyromagnetic ratios of hydrogen and fluorine.</p>
-          <p class="used">In <a href="modern.html">Modern Physics</a> · <a href="medical-physics.html">Medical Physics</a></p><p class="used">OpenStax <span class="sec">3:8.3</span></p>
-          <p class="links"><a class="go" href="demos/spin-resonance.html?topic=atoms-solids">Open demo</a> <a href="curriculum/labs/students/spin-resonance.html">Worksheet: Spin Resonance</a> <a href="notes/spin-resonance.html">Notes</a></p>
+          <p class="used">In <a href="modern.html">Modern Physics</a> · <a href="medical-physics.html">Medical Physics</a></p><p class="used">OpenStax <span class="sec">3:8.3</span></p><p class="used needs"><b>Before the worksheet:</b> Electron spin and magnetic moment; energy levels in a magnetic field; photon energy</p>
+          <p class="links"><a class="go" href="demos/spin-resonance.html?topic=atoms-solids">Open demo</a> <a href="curriculum/labs/students/spin-resonance.html">Worksheet: Spin Resonance<span class="wsm">75 min · algebra</span></a> <a href="notes/spin-resonance.html">Notes</a></p>
         </div>
       </li>
-      <li class="item">
+      <li class="item" data-act="sheet-algebra">
         <a class="pic" href="demos/lasers.html?topic=atoms-solids" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/lasers-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/lasers-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-demo">Demo</span></p>
           <h3><a href="demos/lasers.html?topic=atoms-solids">Lasers and Stimulated Emission</a></h3>
           <p>A photon can make an excited atom emit an exact copy of itself. See why there is no laser without population inversion, find the threshold of an Nd:YAG laser, watch it spike as it switches on, compare ruby, Nd:YAG and He–Ne levels, and count cavity modes.</p>
-          <p class="used">In <a href="modern.html">Modern Physics</a></p><p class="used">OpenStax <span class="sec">3:8.6</span></p>
-          <p class="links"><a class="go" href="demos/lasers.html?topic=atoms-solids">Open demo</a> <a href="curriculum/labs/students/laser-threshold.html">Worksheet: Laser Threshold, Efficiency and Cavity Modes</a> <a href="notes/lasers.html">Notes</a></p>
+          <p class="used">In <a href="modern.html">Modern Physics</a></p><p class="used">OpenStax <span class="sec">3:8.6</span></p><p class="used needs"><b>Before the worksheet:</b> Photon energy; energy levels and stimulated emission; standing waves in a cavity</p>
+          <p class="links"><a class="go" href="demos/lasers.html?topic=atoms-solids">Open demo</a> <a href="curriculum/labs/students/laser-threshold.html">Worksheet: Laser Threshold, Efficiency and Cavity Modes<span class="wsm">75 min · algebra</span></a> <a href="notes/lasers.html">Notes</a></p>
         </div>
       </li>
-      <li class="item">
+      <li class="item" data-act="start explore sheet-algebra">
         <a class="pic" href="demos/molecules.html?topic=atoms-solids" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/molecules-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/molecules-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-lab">Lab</span></p>
           <h3><a href="demos/molecules.html?topic=atoms-solids">Molecules: Bonds and Spectra</a></h3>
           <p>Pull a sodium ion from a chloride ion and stretch the bond of H₂ to see what holds molecules together, then climb the ladder of vibration and rotation levels and measure the infrared band of HCl to find its bond length and the stiffness of its bond.</p>
-          <p class="used">In <a href="modern.html">Modern Physics</a></p><p class="used">OpenStax <span class="sec">3:9.1</span> <span class="sec">3:9.2</span></p>
-          <p class="links"><a class="go" href="demos/molecules.html?topic=atoms-solids">Open demo</a> <a href="curriculum/labs/students/molecular-bonds.html">Worksheet 1: Ionic and Covalent Bonds</a> <a href="curriculum/labs/students/hcl-spectrum.html">Worksheet 2: The Infrared Spectrum of HCl</a> <a href="curriculum/labs/students/hcl-spectrum-light.html">Worksheet 3: Molecules and Light</a> <a href="notes/molecules.html">Notes</a></p>
+          <p class="used">In <a href="modern.html">Modern Physics</a></p><p class="used">OpenStax <span class="sec">3:9.1</span> <span class="sec">3:9.2</span></p><p class="used needs"><b>Before the worksheets:</b> 1. Coulomb energy; potential energy curves; exclusion principle; ionic and covalent bonds · 2. Quantized vibration and rotation; selection rule; reduced mass; fitting a line · 3. Photon energy E = hc/λ; electric dipole; molecular vibration; greenhouse effect</p>
+          <p class="links"><a class="go" href="demos/molecules.html?topic=atoms-solids">Open demo</a> <a href="demos/molecules.html?set=sRi~1.2!sN~19!rep~1!labBlind~0!g%3Apresets~naclApart&start=1&topic=atoms-solids">Start here<span class="wsm">5 min · explore 15 min</span></a> <a href="curriculum/labs/students/molecular-bonds.html">Worksheet 1: Ionic and Covalent Bonds<span class="wsm">75 min · algebra</span></a> <a href="curriculum/labs/students/hcl-spectrum.html">Worksheet 2: The Infrared Spectrum of HCl<span class="wsm">80 min · algebra</span></a> <a href="curriculum/labs/students/hcl-spectrum-light.html">Worksheet 3: Molecules and Light<span class="wsm">50 min · algebra</span></a> <a href="notes/molecules.html">Notes</a></p>
         </div>
       </li>
-      <li class="item">
+      <li class="item" data-act="start explore sheet-algebra">
         <a class="pic" href="demos/solids.html?topic=atoms-solids" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/solids-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/solids-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-lab">Lab</span></p>
           <h3><a href="demos/solids.html?topic=atoms-solids">Crystals, Bands and Semiconductors</a></h3>
           <p>Add up every ion in a salt crystal to find its lattice energy, squeeze a chain of atoms until its levels spread into bands, dope silicon and warm it from 20 K to 800 K, then measure a pn junction's current and the colors of LEDs.</p>
-          <p class="used">In <a href="modern.html">Modern Physics</a></p><p class="used">OpenStax <span class="sec">3:9.3</span> <span class="sec">3:9.5</span> <span class="sec">3:9.6</span> <span class="sec">3:9.7</span></p>
-          <p class="links"><a class="go" href="demos/solids.html?topic=atoms-solids">Open demo</a> <a href="curriculum/labs/students/lattice-energy.html">Worksheet 1: Lattice Energy of Ionic Crystals</a> <a href="curriculum/labs/students/energy-bands.html">Worksheet 2: Energy Bands in a Chain of Atoms</a> <a href="curriculum/labs/students/energy-bands-periodic.html">Worksheet 3: Energy Bands in a Periodic Potential</a> <a href="curriculum/labs/students/semiconductor-doping.html">Worksheet 4: Carriers in Doped Silicon</a> <a href="curriculum/labs/students/pn-junction.html">Worksheet 5: The pn Junction and LEDs</a> <a href="notes/solids.html">Notes</a></p>
+          <p class="used">In <a href="modern.html">Modern Physics</a></p><p class="used">OpenStax <span class="sec">3:9.3</span> <span class="sec">3:9.5</span> <span class="sec">3:9.6</span> <span class="sec">3:9.7</span></p><p class="used needs"><b>Before the worksheets:</b> 1. Coulomb potential energy; ionic bonding; crystal structure of NaCl; fitting a line · 2. Quantum energy levels; wave function overlap; Pauli exclusion; natural log and slopes · 3. Schrödinger equation; free electron energy; tunneling; natural logs and line fits · 4. Energy bands and band gap; Boltzmann factor; exponentials and logarithms · 5. Semiconductors, p type and n type; the exponential Boltzmann factor; natural logs</p>
+          <p class="links"><a class="go" href="demos/solids.html?topic=atoms-solids">Open demo</a> <a href="demos/solids.html?start=1&topic=atoms-solids">Start here<span class="wsm">5 min · explore 15 min</span></a> <a href="curriculum/labs/students/lattice-energy.html">Worksheet 1: Lattice Energy of Ionic Crystals<span class="wsm">75 min · algebra</span></a> <a href="curriculum/labs/students/energy-bands.html">Worksheet 2: Energy Bands in a Chain of Atoms<span class="wsm">85 min · algebra</span></a> <a href="curriculum/labs/students/energy-bands-periodic.html">Worksheet 3: Energy Bands in a Periodic Potential<span class="wsm">55 min · algebra</span></a> <a href="curriculum/labs/students/semiconductor-doping.html">Worksheet 4: Carriers in Doped Silicon<span class="wsm">75 min · algebra</span></a> <a href="curriculum/labs/students/pn-junction.html">Worksheet 5: The pn Junction and LEDs<span class="wsm">80 min · algebra</span></a> <a href="notes/solids.html">Notes</a></p>
         </div>
       </li>
-      <li class="item">
+      <li class="item" data-act="sheet-algebra">
         <a class="pic" href="demos/superconductors.html?topic=atoms-solids" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/superconductors-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/superconductors-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-lab">Lab</span></p>
           <h3><a href="demos/superconductors.html?topic=atoms-solids">Superconductors and the Meissner Effect</a></h3>
           <p>Cool a lead sphere in a magnetic field and watch the field lines leave it, unlike a mere perfect conductor; then map the critical field against temperature and identify a mystery metal.</p>
-          <p class="used">In <a href="modern.html">Modern Physics</a></p><p class="used">OpenStax <span class="sec">3:9.8</span></p>
-          <p class="links"><a class="go" href="demos/superconductors.html?topic=atoms-solids">Open demo</a> <a href="curriculum/labs/students/meissner-effect.html">Worksheet: The Meissner Effect and the Critical Field</a> <a href="notes/superconductors.html">Notes</a></p>
+          <p class="used">In <a href="modern.html">Modern Physics</a></p><p class="used">OpenStax <span class="sec">3:9.8</span></p><p class="used needs"><b>Before the worksheet:</b> Magnetic field and magnetic moment; superconductivity and zero resistance; straight line fits</p>
+          <p class="links"><a class="go" href="demos/superconductors.html?topic=atoms-solids">Open demo</a> <a href="curriculum/labs/students/meissner-effect.html">Worksheet: The Meissner Effect and the Critical Field<span class="wsm">75 min · algebra</span></a> <a href="notes/superconductors.html">Notes</a></p>
         </div>
       </li>
-      <li class="item">
+      <li class="item" data-act="">
         <a class="pic" href="demos/superconducting-levitation.html?topic=atoms-solids" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/superconducting-levitation-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/superconducting-levitation-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-lab">Lab</span></p>
@@ -514,7 +534,7 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
           <p class="links"><a class="go" href="demos/superconducting-levitation.html?topic=atoms-solids">Open demo</a> <a href="notes/superconducting-levitation.html">Notes</a></p>
         </div>
       </li>
-      <li class="item">
+      <li class="item" data-act="">
         <a class="pic" href="demos/superconducting-vortices.html?topic=atoms-solids" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/superconducting-vortices-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/superconducting-vortices-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-lab">Lab</span></p>
@@ -524,27 +544,27 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
           <p class="links"><a class="go" href="demos/superconducting-vortices.html?topic=atoms-solids">Open demo</a> <a href="notes/superconducting-vortices.html">Notes</a></p>
         </div>
       </li>
-      <li class="item">
+      <li class="item" data-act="start explore">
         <a class="pic" href="demos/superfluid-helium.html?topic=atoms-solids" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/superfluid-helium-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/superfluid-helium-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-lab">Lab</span></p>
           <h3><a href="demos/superfluid-helium.html?topic=atoms-solids">Superfluid Helium</a></h3>
           <p>Pump liquid helium below 2.1768 K and its boiling stops; then the fountain effect, a film that creeps out of a beaker, and the spinning disk experiment that measures how much of the liquid is superfluid. From measured properties of helium.</p>
           <p class="used">In <a href="thermo.html">Thermodynamics</a></p><p class="used">Also under <a href="topics/heat.html">Heat and thermodynamics</a></p><p class="used">OpenStax <span class="sec">2:1.5</span></p>
-          <p class="links"><a class="go" href="demos/superfluid-helium.html?topic=atoms-solids">Open demo</a> <a href="notes/superfluid-helium.html">Notes</a></p>
+          <p class="links"><a class="go" href="demos/superfluid-helium.html?topic=atoms-solids">Open demo</a> <a href="demos/superfluid-helium.html?start=1&topic=atoms-solids">Start here<span class="wsm">5 min · explore 15 min</span></a> <a href="notes/superfluid-helium.html">Notes</a></p>
         </div>
       </li>
-      <li class="item">
+      <li class="item" data-act="start explore sheet-algebra">
         <a class="pic" href="demos/bose-einstein.html?topic=atoms-solids" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/bose-einstein-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/bose-einstein-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-lab">Lab</span></p>
           <h3><a href="demos/bose-einstein.html?topic=atoms-solids">Bose–Einstein Condensation</a></h3>
           <p>Cool a gas of atoms in a box or a harmonic trap from 1 µK toward absolute zero: each atom's wave packet grows to the thermal de Broglie wavelength, the packets overlap, and the atoms pile into one shared ground state. Exact Bose–Einstein occupations of the box levels, an energy ladder, the phase of the wavefunction as color, the velocity picture of 1995 and the condensate fraction curve.</p>
-          <p class="used">In <a href="modern.html">Modern Physics</a> · <a href="thermo.html">Thermodynamics</a></p><p class="used">Also under <a href="topics/heat.html">Heat and thermodynamics</a></p><p class="used">OpenStax <span class="sec">2:2.4</span> <span class="sec">3:9.4</span></p>
-          <p class="links"><a class="go" href="demos/bose-einstein.html?topic=atoms-solids">Open demo</a> <a href="curriculum/labs/students/bose-einstein-condensation.html">Worksheet: Bose–Einstein Condensation</a> <a href="notes/bose-einstein.html">Notes</a></p>
+          <p class="used">In <a href="modern.html">Modern Physics</a> · <a href="thermo.html">Thermodynamics</a></p><p class="used">Also under <a href="topics/heat.html">Heat and thermodynamics</a></p><p class="used">OpenStax <span class="sec">2:2.4</span> <span class="sec">3:9.4</span></p><p class="used needs"><b>Before the worksheet:</b> de Broglie wavelength; particle in a box; energy levels; Boltzmann factor; fitting a line</p>
+          <p class="links"><a class="go" href="demos/bose-einstein.html?topic=atoms-solids">Open demo</a> <a href="demos/bose-einstein.html?start=1&topic=atoms-solids">Start here<span class="wsm">5 min · explore 15 min</span></a> <a href="curriculum/labs/students/bose-einstein-condensation.html">Worksheet: Bose–Einstein Condensation<span class="wsm">80 min · algebra</span></a> <a href="notes/bose-einstein.html">Notes</a></p>
         </div>
       </li>
-      <li class="item">
+      <li class="item" data-act="">
         <a class="pic" href="demos/condensate-waves.html?topic=atoms-solids" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/condensate-waves-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/condensate-waves-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-lab">Lab</span></p>
@@ -556,6 +576,42 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
       </li>
     </ul>
   </section>
+<script>/* activity filter (tools/activities.py) */ (function () {
+  var bar = document.querySelector('.actfilter'); if (!bar) return;
+  var st = { len: '', math: '' }, KEY = 'vd-filter', note = bar.querySelector('.afn');
+  try { var s = JSON.parse(sessionStorage.getItem(KEY) || '{}'); if (s && typeof s === 'object') { st.len = s.len || ''; st.math = s.math || ''; } } catch (_) {}
+  var cards = [].slice.call(document.querySelectorAll('[data-act]'));
+  var fams = [].slice.call(document.querySelectorAll('section.fam'));
+  var match = function (a) {
+    var k = (a || '').split(' ');
+    var sheetOk = function () { return st.math ? k.indexOf('sheet-' + st.math) >= 0 : k.some(function (x) { return x.indexOf('sheet-') === 0; }); };
+    if (st.len === 'start') return k.indexOf('start') >= 0 && st.math !== 'calculus';
+    if (st.len === 'explore') return k.indexOf('explore') >= 0 && st.math !== 'calculus';
+    if (st.len === 'sheet') return sheetOk();
+    if (!st.math) return true;
+    return sheetOk() || (st.math === 'algebra' && k.indexOf('start') >= 0);
+  };
+  var apply = function () {
+    [].forEach.call(bar.querySelectorAll('button'), function (b) { var p = b.getAttribute('data-af').split(':'); b.setAttribute('aria-pressed', String(st[p[0]] === p[1])); });
+    var on = !!(st.len || st.math), n = 0;
+    cards.forEach(function (c) { var ok = !on || match(c.getAttribute('data-act')); c.classList.toggle('af-hide', !ok); if (ok) n++; });
+    fams.forEach(function (f) {
+      var any = [].some.call(f.querySelectorAll('[data-act]'), function (c) { return !c.classList.contains('af-hide'); });
+      f.classList.toggle('af-hide', on && !any);
+      var d = f.querySelector('details.famd');
+      if (d) { if (on && any && !d.open) { d.dataset.af = '1'; d.open = true; } else if (!on && d.dataset.af) { delete d.dataset.af; d.open = false; } }
+    });
+    var VDI18N = window.VDI18N && window.VDI18N.t ? window.VDI18N : { t: function (x, v) { return x.replace('{n}', v ? v.n : ''); } };   /* the literals go into the site catalog */
+    note.textContent = on ? (n === 1 ? VDI18N.t('One demo has an activity like that.') : n ? VDI18N.t('{n} demos have an activity like that.', { n: n })
+      : VDI18N.t('No demo has that combination. A Start here needs no math; try Any.')) : '';
+    try { sessionStorage.setItem(KEY, JSON.stringify(st)); } catch (_) {}
+  };
+  bar.addEventListener('click', function (e) {
+    var b = e.target.closest('button[data-af]'); if (!b) return;
+    var p = b.getAttribute('data-af').split(':'); st[p[0]] = p[1]; apply();
+  });
+  apply();
+})();</script>
   <p class="more"><a href="index.html#topics">Back to all topics</a></p>
 </main>
 <footer>

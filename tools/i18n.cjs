@@ -84,7 +84,7 @@ const urlOf = (pg) => pg === 'site' ? ['index.html', 'physics-1.html', 'physics-
   : pg.startsWith('demo/') ? ['demos/' + pg.slice(5) + '.html'] : pg.startsWith('ws/') ? ['curriculum/labs/students/' + pg.slice(3) + '.html'] : pg.startsWith('notes/') ? ['notes/' + pg.slice(6) + '.html'] : [];
 /* VDI18N.t('literal') in the page's own source */
 function literals(pg) {
-  const src = pg.startsWith('demo/') ? path.join(ROOT, 'demos', pg.slice(5) + '.html') : null;
+  const src = pg.startsWith('demo/') ? path.join(ROOT, 'demos', pg.slice(5) + '.html') : pg === 'site' ? path.join(ROOT, 'index.html') : null;   /* site: the home page's inline scripts (the activity filter) */
   if (!src || !fs.existsSync(src)) return [];
   const out = [], re = /VDI18N\.t\(\s*(['"])((?:\\.|(?!\1).)*)\1/g; let m;
   const s = fs.readFileSync(src, 'utf8');

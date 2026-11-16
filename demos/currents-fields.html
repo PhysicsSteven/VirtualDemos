@@ -1461,7 +1461,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (S.cs) { const c = S.cs;
       sh += `<div><dt>Core length/diameter L/2R</dt><dd>${(sol.L / (2 * sol.R)).toFixed(2)}</dd></div><div><dt>Demagnetizing factor N<sub>d</sub></dt><dd>${c.Nd.toFixed(4)}</dd></div>
         <div><dt>Coil's H at the center H₀</dt><dd>${Math.abs(c.H0) >= 1e4 ? (c.H0 / 1000).toPrecision(4) + ' kA/m' : c.H0.toPrecision(4) + ' A/m'}</dd></div><div><dt>Iron's magnetization M</dt><dd>${Math.abs(c.M) >= 1e4 ? (c.M / 1000).toPrecision(4) + ' kA/m' : c.M.toPrecision(4) + ' A/m'}</dd></div>
-        <div class="wide big"><dt>Field with the core ÷ coil alone, 1 + ML/(NI)</dt><dd>${c.gain.toFixed(2)} <span class="ok">(μ<sub>r</sub> − 1)/(1 + (μ<sub>r</sub> − 1)N<sub>d</sub> = ${c.chi.toFixed(2)}${c.sat ? '; the iron is saturated' : ''}</span></dd></div>`; }
+        <div class="wide big"><dt>Field with the core ÷ coil alone, 1 + ML/(NI)</dt><dd>${c.gain.toFixed(2)} <span class="ok">(μ<sub>r</sub> − 1)/(1 + (μ<sub>r</sub> − 1)N<sub>d</sub>) = ${c.chi.toFixed(2)}${c.sat ? '; the iron is saturated' : ''}</span></dd></div>`; }
     if (helixOn()) {
       const H = helixNow(), bh = helixBAt(H, 0, 0, 0)[2], d = 2 * sol.R, ar = helixAround(H, d, 48), fw = finiteWireB(fieldI(sol), sol.L, d);
       sh += `<div class="wide big"><dt>One helix: B at the center, Biot–Savart along the wire</dt><dd>${fmtB(bh, 4)} <span class="ok">${VDI18N.t('rings: {b}', { b: fmtB(bc, 4) })}</span></dd></div>

@@ -387,6 +387,25 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
   html:has(.tools .filter) { scroll-padding-top: 108px; }
 }
 
+
+/* activity filter and labels (tools/activities.py) */
+.actfilter { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 6px; margin: 14px 0 4px; }
+.actfilter .afl { font-family: var(--font-mono); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); margin: 0 2px 0 6px; }
+.actfilter .afl:first-child { margin-left: 0; }
+.actfilter button { min-height: 34px; padding: 4px 11px; font: inherit; font-size: 0.86rem; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 999px; cursor: pointer; }
+.actfilter button:hover { border-color: var(--accent); }
+.actfilter button[aria-pressed="true"] { color: var(--canvas); background: var(--accent); border-color: var(--accent); font-weight: 700; }
+.actfilter button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.actfilter .afn { flex: 1 1 100%; margin: 2px 0 0; font-size: 0.85rem; color: var(--muted); min-height: 1.2em; }
+[data-act].af-hide { display: none !important; }
+.find .actfilter + .allnote { margin: 10px 0 22px; }
+.fam.af-hide { display: none; }
+.sh-tag { display: inline-block; margin-right: 6px; padding: 1px 7px; font-size: 0.74rem; font-weight: 700; border-radius: 999px; color: var(--accent); border: 1px solid color-mix(in srgb, var(--accent) 55%, transparent); }
+.links .wsm { display: inline-block; text-decoration: none; font-size: 0.78rem; color: var(--muted); font-weight: 400; margin-left: 5px; }
+.used.needs { font-size: 0.85rem; }
+.used.needs b { font-weight: 700; }
+@media (max-width: 520px) { .actfilter .afl { flex: 1 1 100%; margin-left: 0; } }
+
 </style>
 <link rel="stylesheet" href="demos/lib/paper.css">
 </head>
@@ -413,39 +432,76 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
 <main class="wrap">
   <p class="how">Every demo on this subject, from every course and module, with all of its worksheets. Opened from here, a demo steps through this topic with its previous and next links. The other topics in Mechanics are in the bar above; the <a href="index.html#topics">home page</a> lists them all.</p>
   <section class="unit" aria-label="Rotation demos">
+    <div class="actfilter" role="group" aria-label="Filter by activity"><span class="afl">Activity</span><button type="button" data-af="len:" aria-pressed="true">Any</button><button type="button" data-af="len:start" aria-pressed="false">Start here, 5 min</button><button type="button" data-af="len:explore" aria-pressed="false">Explore, 15 min</button><button type="button" data-af="len:sheet" aria-pressed="false">Worksheet, up to 75 min</button><span class="afl">Math</span><button type="button" data-af="math:" aria-pressed="true">Any</button><button type="button" data-af="math:algebra" aria-pressed="false">Algebra</button><button type="button" data-af="math:calculus" aria-pressed="false">Calculus</button><p class="afn" aria-live="polite"></p></div>
     <ul class="list">
-      <li class="item">
+      <li class="item" data-act="start explore sheet-algebra">
         <a class="pic" href="demos/rotation.html?topic=rotation" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/rotation-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/rotation-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-demo">Demo</span></p>
           <h3><a href="demos/rotation.html?topic=rotation">Rotation and Torque</a></h3>
           <p>Push a door near the hinge and at the handle, race a hoop, disk and sphere down a ramp, throw a ball that skids until it rolls and trace the cycloid of a rolling wheel, race a yo-yo against a dropped one, spin a skater who pulls her arms in, and balance a seesaw.</p>
-          <p class="used">In <a href="physics-1.html">Physics I</a> · <a href="astro-2203.html">Astro 2203</a> · <a href="astro.html">Astronomy</a></p><p class="used">OpenStax <span class="sec">1:10.1</span> <span class="sec">1:10.2</span> <span class="sec">1:10.3</span> <span class="sec">1:10.4</span> <span class="sec">1:10.5</span> <span class="sec">1:10.6</span> …</p>
-          <p class="links"><a class="go" href="demos/rotation.html?topic=rotation">Open demo</a> <a href="curriculum/labs/students/rotation.html">Worksheet: Torque and Angular Momentum</a> <a href="notes/rotation.html">Notes</a></p>
+          <p class="used">In <a href="physics-1.html">Physics I</a> · <a href="astro-2203.html">Astro 2203</a> · <a href="astro.html">Astronomy</a></p><p class="used">OpenStax <span class="sec">1:10.1</span> <span class="sec">1:10.2</span> <span class="sec">1:10.3</span> <span class="sec">1:10.4</span> <span class="sec">1:10.5</span> <span class="sec">1:10.6</span> …</p><p class="used needs"><b>Before the worksheet:</b> Torque; angular velocity and acceleration; rolling without slipping; angular momentum</p>
+          <p class="links"><a class="go" href="demos/rotation.html?topic=rotation">Open demo</a> <a href="demos/rotation.html?start=1&topic=rotation">Start here<span class="wsm">5 min · explore 15 min</span></a> <a href="curriculum/labs/students/rotation.html">Worksheet: Torque and Angular Momentum<span class="wsm">80 min · algebra</span></a> <a href="notes/rotation.html">Notes</a></p>
         </div>
       </li>
-      <li class="item">
+      <li class="item" data-act="sheet-algebra">
         <a class="pic" href="demos/rotational-dynamics.html?topic=rotation" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/rotational-dynamics-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/rotational-dynamics-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-lab">Lab</span></p>
           <h3><a href="demos/rotational-dynamics.html?topic=rotation">Rotational Dynamics</a></h3>
           <p>A falling mass spins a turntable. Time the drop, find the angular acceleration, and measure moments of inertia from a plot of torque against angular acceleration.</p>
-          <p class="used">In <a href="physics-1.html">Physics I</a></p><p class="used">OpenStax <span class="sec">1:10.2</span> <span class="sec">1:10.5</span> <span class="sec">1:10.6</span> <span class="sec">1:10.7</span> <span class="sec">1:10.8</span></p>
-          <p class="links"><a class="go" href="demos/rotational-dynamics.html?topic=rotation">Open demo</a> <a href="curriculum/labs/students/rotational-dynamics.html">Worksheet: Rotational Inertia</a> <a href="notes/rotational-dynamics.html">Notes</a></p>
+          <p class="used">In <a href="physics-1.html">Physics I</a></p><p class="used">OpenStax <span class="sec">1:10.2</span> <span class="sec">1:10.5</span> <span class="sec">1:10.6</span> <span class="sec">1:10.7</span> <span class="sec">1:10.8</span></p><p class="used needs"><b>Before the worksheet:</b> Torque and rotational inertia; Newton&#x27;s second law; free body diagrams; fitting a line</p>
+          <p class="links"><a class="go" href="demos/rotational-dynamics.html?topic=rotation">Open demo</a> <a href="curriculum/labs/students/rotational-dynamics.html">Worksheet: Rotational Inertia<span class="wsm">85 min · algebra</span></a> <a href="notes/rotational-dynamics.html">Notes</a></p>
         </div>
       </li>
-      <li class="item">
+      <li class="item" data-act="start explore sheet-algebra">
         <a class="pic" href="demos/gyroscope.html?topic=rotation" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/gyroscope-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/gyroscope-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-demo">Demo</span></p>
           <h3><a href="demos/gyroscope.html?topic=rotation">Gyroscope Precession</a></h3>
           <p>A spinning wheel held up at one end swings round instead of falling. See the torque turn the angular momentum, and measure how the precession rate depends on the spin.</p>
-          <p class="used">In <a href="physics-1.html">Physics I</a> · <a href="astro-2203.html">Astro 2203</a> · <a href="astro.html">Astronomy</a></p><p class="used">OpenStax <span class="sec">1:11.2</span> <span class="sec">1:11.4</span></p>
-          <p class="links"><a class="go" href="demos/gyroscope.html?topic=rotation">Open demo</a> <a href="curriculum/labs/students/gyroscope.html">Worksheet 1: Gyroscope Precession</a> <a href="curriculum/labs/students/intro-precession.html">Worksheet 2: A Spinning Top and the Wandering Pole Star (Astro 2203)</a> <a href="notes/gyroscope.html">Notes</a></p>
+          <p class="used">In <a href="physics-1.html">Physics I</a> · <a href="astro-2203.html">Astro 2203</a> · <a href="astro.html">Astronomy</a></p><p class="used">OpenStax <span class="sec">1:11.2</span> <span class="sec">1:11.4</span></p><p class="used needs"><b>Before the worksheets:</b> 1. Torque; angular momentum; moment of inertia; vector directions · 2. Torque and angular momentum of a spinning wheel; Earth&#x27;s axis tilt; period and rate</p>
+          <p class="links"><a class="go" href="demos/gyroscope.html?topic=rotation">Open demo</a> <a href="demos/gyroscope.html?set=sW~1500!sD~0.1!sB~0!sF~0!mystery~0!push~1!vecs~1!labBlind~1!g%3Apresets~smooth&start=1&topic=rotation">Start here<span class="wsm">5 min · explore 15 min</span></a> <a href="curriculum/labs/students/gyroscope.html">Worksheet 1: Gyroscope Precession<span class="wsm">85 min · algebra</span></a> <a href="curriculum/labs/students/intro-precession.html">Worksheet 2: A Spinning Top and the Wandering Pole Star (Astro 2203)<span class="wsm">65 min · algebra</span></a> <a href="notes/gyroscope.html">Notes</a></p>
         </div>
       </li>
     </ul>
   </section>
+<script>/* activity filter (tools/activities.py) */ (function () {
+  var bar = document.querySelector('.actfilter'); if (!bar) return;
+  var st = { len: '', math: '' }, KEY = 'vd-filter', note = bar.querySelector('.afn');
+  try { var s = JSON.parse(sessionStorage.getItem(KEY) || '{}'); if (s && typeof s === 'object') { st.len = s.len || ''; st.math = s.math || ''; } } catch (_) {}
+  var cards = [].slice.call(document.querySelectorAll('[data-act]'));
+  var fams = [].slice.call(document.querySelectorAll('section.fam'));
+  var match = function (a) {
+    var k = (a || '').split(' ');
+    var sheetOk = function () { return st.math ? k.indexOf('sheet-' + st.math) >= 0 : k.some(function (x) { return x.indexOf('sheet-') === 0; }); };
+    if (st.len === 'start') return k.indexOf('start') >= 0 && st.math !== 'calculus';
+    if (st.len === 'explore') return k.indexOf('explore') >= 0 && st.math !== 'calculus';
+    if (st.len === 'sheet') return sheetOk();
+    if (!st.math) return true;
+    return sheetOk() || (st.math === 'algebra' && k.indexOf('start') >= 0);
+  };
+  var apply = function () {
+    [].forEach.call(bar.querySelectorAll('button'), function (b) { var p = b.getAttribute('data-af').split(':'); b.setAttribute('aria-pressed', String(st[p[0]] === p[1])); });
+    var on = !!(st.len || st.math), n = 0;
+    cards.forEach(function (c) { var ok = !on || match(c.getAttribute('data-act')); c.classList.toggle('af-hide', !ok); if (ok) n++; });
+    fams.forEach(function (f) {
+      var any = [].some.call(f.querySelectorAll('[data-act]'), function (c) { return !c.classList.contains('af-hide'); });
+      f.classList.toggle('af-hide', on && !any);
+      var d = f.querySelector('details.famd');
+      if (d) { if (on && any && !d.open) { d.dataset.af = '1'; d.open = true; } else if (!on && d.dataset.af) { delete d.dataset.af; d.open = false; } }
+    });
+    var VDI18N = window.VDI18N && window.VDI18N.t ? window.VDI18N : { t: function (x, v) { return x.replace('{n}', v ? v.n : ''); } };   /* the literals go into the site catalog */
+    note.textContent = on ? (n === 1 ? VDI18N.t('One demo has an activity like that.') : n ? VDI18N.t('{n} demos have an activity like that.', { n: n })
+      : VDI18N.t('No demo has that combination. A Start here needs no math; try Any.')) : '';
+    try { sessionStorage.setItem(KEY, JSON.stringify(st)); } catch (_) {}
+  };
+  bar.addEventListener('click', function (e) {
+    var b = e.target.closest('button[data-af]'); if (!b) return;
+    var p = b.getAttribute('data-af').split(':'); st[p[0]] = p[1]; apply();
+  });
+  apply();
+})();</script>
   <p class="more"><a href="index.html#topics">Back to all topics</a></p>
 </main>
 <footer>
