@@ -1835,9 +1835,9 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   function renderGates() {
     $('gateSec').hidden = !hasGates();
     if (!hasGates() || !gd) return;
-    const ev = shownEvents(), arrowCh = (d) => (d < 0 ? '←' : '→');
+    const ev = shownEvents(), arrowCh = (d) => (d < 0 ? '←' : '→');   /* the cart name sits in its own span, so "cart N" translates whichever way the arrow points */
     const html = ev.length ? ev.map((q) => {
-      const head = `<li><span class="g">${q.g}</span><span>cart ${q.i + 1} ${arrowCh(q.dir)}</span>`;
+      const head = `<li><span class="g">${q.g}</span><span><span>cart ${q.i + 1}</span> ${arrowCh(q.dir)}</span>`;
       if (q.phase === 'during') return `${head}<span class="t">${q.rd.msStr} ms</span><span class="v">—</span><span class="bad">The collision happened while this flag was in the beam: not one speed.</span></li>`;
       if (q.phase === 'open') return `${head}<span class="t">—</span><span class="v">—</span><span class="bad">${q.start ? 'The flag was already in the beam at the start.' : 'Still in the beam at the end of the run.'}</span></li>`;
       return `${head}<span class="t">${q.rd.msStr} ms</span><span class="v">${q.rd.speedStr} m/s</span></li>`;

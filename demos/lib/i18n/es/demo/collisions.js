@@ -262,8 +262,8 @@ VDI18N.add('es', 'demo/collisions', {
   "Compuerta B",
 "Air track, gliders, flags and gate positions to scale; the rule is in cm; arrows {#} m per m/s. Drag to turn, scroll to zoom, double click to go back; drag a grip to change a value.":
   "Riel de aire, deslizadores, banderas y posiciones de las compuertas a escala; la regla está en cm; flechas {#} m por m/s. Arrastra para girar, desplaza para hacer zoom, doble clic para volver; arrastra un control para cambiar un valor.",
-"<span>A</span><span>cart {#} →</span><span>{#} ms</span><span>{#} m/s</span>":
-  "<span>A</span><span>carrito {#} →</span><span>{#} ms</span><span>{#} m/s</span>",
+"<span>A</span><span><span>cart {#}</span> →</span><span>{#} ms</span><span>{#} m/s</span>":
+  "<span>A</span><span><span>carrito {#}</span> →</span><span>{#} ms</span><span>{#} m/s</span>",
 "p before (kg·m/s)":
   "p antes (kg·m/s)",
 "p after (kg·m/s)":
@@ -596,8 +596,8 @@ VDI18N.add('es', 'demo/collisions', {
   "El bloque sube {#} cm.",
 "Largest angle {#}°.":
   "Ángulo máximo: {#}°.",
-"<span>B</span><span>cart {#} →</span><span>{#} ms</span><span>{#} m/s</span>":
-  "<span>B</span><span>carrito {#} →</span><span>{#} ms</span><span>{#} m/s</span>",
+"<span>B</span><span><span>cart {#}</span> →</span><span>{#} ms</span><span>{#} m/s</span>":
+  "<span>B</span><span><span>carrito {#}</span> →</span><span>{#} ms</span><span>{#} m/s</span>",
 "Blind: read the velocities from the photogates":
   "A ciegas: lee las velocidades de las fotocompuertas",
 "after: hidden (Blind)":
@@ -612,8 +612,6 @@ VDI18N.add('es', 'demo/collisions', {
   "Los resultados están ocultos mientras A ciegas está activado.",
 "The after bars are hidden while Blind is on.":
   "Las barras de después están ocultas mientras A ciegas está activado.",
-"It shows the run so far.":
-  "Muestra la corrida hasta ahora.",
 "Air table and pucks to scale (holes {#} cm apart); dashed lines: the paths over the whole run; arrows {#} m per m/s. Drag to turn, scroll to zoom, double click to go back; drag a grip to change a value.":
   "Mesa de aire y discos a escala (agujeros a {#} cm de distancia); líneas punteadas: las trayectorias durante toda la corrida; flechas de {#} m por m/s. Arrastra para girar, desplaza para acercar, haz doble clic para volver; arrastra un control para cambiar un valor.",
 "Air table and pucks to scale (holes {#} cm apart); dashed lines: the paths so far; arrows {#} m per m/s. Drag to turn, scroll to zoom, double click to go back; drag a grip to change a value.":
@@ -626,6 +624,8 @@ VDI18N.add('es', 'demo/collisions', {
   "Las flechas después de la colisión están ocultas mientras A ciegas está activado.",
 "The thread is cut and the spring has pushed the carts apart.":
   "El hilo está cortado y el resorte separó los carritos.",
+"It shows the run so far.":
+  "Muestra la corrida hasta ahora.",
 "Balls, strings and frame to scale: {#} cm balls on {#} cm strings, each hung from two strings so it swings in one plane. Drag to turn, scroll to zoom, double click to go back; drag a grip to change a value.":
   "Esferas, cuerdas y marco a escala: esferas de {#} cm en cuerdas de {#} cm, cada una colgada de dos cuerdas para que se balancee en un plano. Arrastra para girar, desplaza para acercar, haz doble clic para volver; arrastra un control para cambiar un valor.",
 "{#} in → {#} out":
@@ -652,6 +652,10 @@ VDI18N.add('es', 'demo/collisions', {
   "Carrito {i}, {m} kg, en x = {x} m, con velcro.",
 "Cart {i}, {m} kg, at x = {x} m.":
   "Carrito {i}, {m} kg, en x = {x} m.",
+"<span>A</span><span>cart {#} →</span><span>{#} ms</span><span>{#} m/s</span>":
+  "<span>A</span><span>carrito {#} →</span><span>{#} ms</span><span>{#} m/s</span>",
+"<span>B</span><span>cart {#} →</span><span>{#} ms</span><span>{#} m/s</span>":
+  "<span>B</span><span>carrito {#} →</span><span>{#} ms</span><span>{#} m/s</span>",
 "{#} m/s at -{#}°":
   "{#} m/s a -{#}°",
 "Cart {#}, {#} kg, at x = −{#} m.":
