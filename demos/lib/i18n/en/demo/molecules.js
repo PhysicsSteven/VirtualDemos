@@ -250,9 +250,6 @@ VDI18N.add('en', 'demo/molecules', [
 "microwave, on a rotational line",
 "about {#} meV (at {#} cm)",
 "passes through (no electric dipole to push on)",
-"bend",
-"absorbed: the {mode} ({nu} cm⁻¹) starts",
-"it gives a photon back soon, in any direction; the motion slowed",
 "passes through (no electronic absorption at this wavelength)",
 "ultraviolet",
 "no absorption above {#} nm (starts near {#} nm)",
@@ -306,7 +303,6 @@ VDI18N.add('en', 'demo/molecules', [
 "passes through (no vibration at this wavenumber)",
 "no dipole",
 "no electronic absorption at this wavelength",
-"passes: {why}"
 "passes: {why}",
 "The energy of the ion pair is {#} eV, measured from separated neutral atoms.",
 "The neutral atoms have the lower energy.",
