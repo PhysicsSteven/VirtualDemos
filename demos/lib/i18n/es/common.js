@@ -2558,8 +2558,6 @@ VDI18N.add('es', 'common', {
   "Cambiar entre un núcleo de helio y uno de carbono y oxígeno",
 "Show or hide the simulated population":
   "Mostrar u ocultar la población simulada",
-"Close":
-  "Cerrar",
 "Look":
   "Aspecto",
 "Warm lab":
@@ -2569,5 +2567,47 @@ VDI18N.add('es', 'common', {
 "Warm lab (walnut and amber) or Cool lab (graphite and teal), for the page around each demo. The pictures keep their colors.":
   "Laboratorio cálido (nogal y ámbar) o Laboratorio frío (grafito y verde azulado), para la página alrededor de cada demostración. Las imágenes conservan sus colores.",
 "Preferences: theme, look, language, Reduce motion, Larger text and Projector, for every page":
-  "Preferencias: tema, aspecto, idioma, Reducir movimiento, Texto más grande y Proyector, para todas las páginas"
+  "Preferencias: tema, aspecto, idioma, Reducir movimiento, Texto más grande y Proyector, para todas las páginas",
+"Close":
+  "Cerrar",
+"Download for offline use":
+  "Descargar para usar sin conexión",
+"Download this demo, its worksheets and videos to use without the internet":
+  "Descarga esta demo, sus hojas de trabajo y videos para usarlos sin internet",
+"Download this course":
+  "Descargar este curso",
+"Every demo and worksheet, to use without the internet":
+  "Cada demo y hoja de trabajo, para usarlas sin internet",
+"Saves this demo, its worksheets and their How this works videos in one zip file that works without the internet.":
+  "Guarda esta demo, sus hojas de trabajo y sus videos de Cómo funciona en un archivo zip que funciona sin internet.",
+"Saves every demo, worksheet and notes page on this course page, with the How this works videos, in one zip file that works without the internet. It is a large file: it can take a few minutes.":
+  "Guarda cada demo, hoja de trabajo y página de notas de esta página del curso, con los videos de Cómo funciona, en un archivo zip que funciona sin internet. Es un archivo grande: puede tardar unos minutos.",
+"To use it, unzip the file (on Windows, right click it and pick Extract All), then open <b>Start here.html</b> in the new folder. Nothing needs installing.":
+  "Para usarlo, descomprime el archivo (en Windows, haz clic derecho y elige Extraer todo) y luego abre <b>Start here.html</b> en la carpeta nueva. No hay que instalar nada.",
+"Download":
+  "Descargar",
+"Collecting the files…":
+  "Reuniendo los archivos…",
+"Collecting the files: {done} of {total}":
+  "Reuniendo los archivos: {done} de {total}",
+"Done ({size} MB). Look in your Downloads folder.":
+  "Listo ({size} MB). Búscalo en tu carpeta de Descargas.",
+"The download did not finish. Check the connection and try again.":
+  "La descarga no terminó. Revisa la conexión e inténtalo de nuevo.",
+"offline copy":
+  "copia sin conexión",
+"Unzip this download first: right click the zip file and pick Extract All (Windows) or double click it (Mac), then open Start here.html in the new folder.":
+  "Primero descomprime esta descarga: haz clic derecho en el archivo zip y elige Extraer todo (Windows) o haz doble clic en él (Mac); luego abre Start here.html en la carpeta nueva.",
+"VirtualDemos, offline copy saved {date}":
+  "VirtualDemos, copia sin conexión guardada el {date}",
+"In this copy":
+  "En esta copia",
+"Everything here works without the internet. Links to pages that are not in this copy open the live site, which also has the newest version:":
+  "Todo aquí funciona sin internet. Los enlaces a páginas que no están en esta copia abren el sitio en línea, que también tiene la versión más reciente:",
+"Worksheet: {title}":
+  "Hoja de trabajo: {title}",
+"Open the demo":
+  "Abrir la demo",
+"Open the course page":
+  "Abrir la página del curso"
 });

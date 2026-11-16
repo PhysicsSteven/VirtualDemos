@@ -26,6 +26,7 @@ to rebuild it (about 10 s).
 | Before and after picture | `node tools/beforeafter.cjs <demo>` | 1 min | every visual fix; attach the picture to the reply |
 | One worksheet key | in TeacherKeys: `bash worksheet-keys/tools/rekey.sh <slug>` (`--apply` to keep; `--reprint` after an answers or handout edit) | 1 to 3 min | when democheck names it, or after a worksheet edit |
 | One video | `bash tools/howto/take.sh <name>` | 5 min | when the demo's controls, layout or defaults changed |
+| Offline copies | `node tools/offlinecheck.cjs <demo>` (`--all`, `--course astro-2203`; needs `--site`) | 1 min a demo, 6 min the course | a change to `demos/lib/vdoffline.js`, to how a demo loads files (a new data file, a script loaded by name, a new outside library), or to the worksheet or course page templates |
 | CI after a push | `gh run list -R PhysicsSteven/VirtualDemos -L 5` | seconds | after every push; every workflow must pass, then the Pages build |
 
 Every browser check writes pictures and JSON under `/tmp/vdcheck/` (set `VDCHECK_DIR` when two jobs run at once). The cloud box has

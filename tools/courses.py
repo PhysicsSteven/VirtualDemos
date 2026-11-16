@@ -548,7 +548,8 @@ def course_page(course, m, cards, notes):
     return page_shell(title, BLURB[cid][0], lede, facts, ''.join(jump), '\n'.join(units), (how or
                       ('Units follow the textbook chapters.' if cid in MODULES else 'Units follow the course schedule.')
                       + ' Section numbers are volume:section in OpenStax University Physics. A demo can appear in more than one unit. Sections with no activity yet are listed under each unit.')
-                      + ' Looking for one subject? Every demo is also under <a href="index.html#topics">All demos by topic</a>.', tab='courses')
+                      + ' Looking for one subject? Every demo is also under <a href="index.html#topics">All demos by topic</a>.', tab='courses',
+                      hero_extra=OFFLINE_BUTTON if cid in OFFLINE else '')
 
 
 TITLE = {'astro-2203': 'Astro 2203'}   # a folded course's name on the page it was folded into
@@ -594,6 +595,16 @@ TOPICS = ROOT / 'curriculum' / 'topics.json'
 # The courses listed on the home page (Steve, 2026-10-28: "in courses we only have Astro 2203 right now", the rest is covered by the
 # topics; new courses get added here as he adds them). The other course pages stay online, unlisted, for Canvas and old links.
 LISTED = ['astro-2203']
+# Download this course (Steve 2026-11-16): a button on these course pages that puts together a zip of every demo, worksheet and
+# notes page the page links to, with the How this works videos, in the browser from the site as it is (demos/lib/vdoffline.js).
+# Start with Astro 2203; add a course id to give another course page the button.
+OFFLINE = {'astro-2203'}
+OFFLINE_BUTTON = ('\n    <p class="dl-course"><button type="button" class="vd-dl-course" id="dlCourse" aria-haspopup="dialog">'
+                  '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2v8M4.5 6.8 8 10.3l3.5-3.5M2.5 11.5v2h11v-2"/></svg>'
+                  'Download this course</button> <span>Every demo and worksheet, to use without the internet</span></p>'
+                  '\n    <script src="demos/lib/vdoffline.js" defer></script>'
+                  '<script>/* tools/courses.py: Download this course (demos/lib/vdoffline.js) */ document.getElementById(\'dlCourse\')'
+                  '.addEventListener(\'click\', function () { if (window.VDOffline) VDOffline.dialog(\'course\'); });</script>')
 VOL_ABOUT = {1: 'Mechanics, waves and sound', 2: 'Thermodynamics, electricity and magnetism', 3: 'Optics and modern physics'}
 
 
@@ -785,7 +796,7 @@ TOPIC_CSS = '''
 '''
 
 
-def page_shell(title, sub, lede, facts, jump, body, how, base=False, back=('index.html', 'Back to the home page'), tab=None):
+def page_shell(title, sub, lede, facts, jump, body, how, base=False, back=('index.html', 'Back to the home page'), tab=None, hero_extra=''):
     """base: the page sits one folder down (topics/<id>.html), so a <base> makes every link resolve from the site root; such a
     page has no #anchor links of its own, since they would resolve against the root too."""
     return f'''<!doctype html>
@@ -816,7 +827,7 @@ def page_shell(title, sub, lede, facts, jump, body, how, base=False, back=('inde
     <p class="eyebrow"><b>{esc(sub)}</b></p>
     <h1>{esc(title)}</h1>
     <p class="lede">{esc(lede)}</p>
-    <ul class="facts">{facts}</ul>
+    <ul class="facts">{facts}</ul>{hero_extra}
   </div>
 </header>
 <nav class="tools" aria-label="Sections">
@@ -864,6 +875,12 @@ def shared_css():
 
 COURSE_CSS = '''
 /* course pages */
+.dl-course { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; margin: 16px 0 0; font-size: 0.92rem; color: var(--muted); }
+.vd-dl-course { display: inline-flex; align-items: center; gap: 8px; font: inherit; font-weight: 700; font-size: 0.95rem; padding: 8px 14px; color: var(--accent); background: color-mix(in srgb, var(--accent) 8%, transparent); border: 1.5px solid var(--accent); border-radius: 9px; cursor: pointer; }
+.vd-dl-course:hover { background: color-mix(in srgb, var(--accent) 16%, transparent); }
+.vd-dl-course:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.vd-dl-course svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+@media print { .dl-course { display: none; } }
 .eyebrow a { color: var(--accent); font-weight: 600; text-underline-offset: 3px; }
 .jump a.opt { border-style: dashed; }
 .how { margin: 22px 0 0; max-width: 75ch; color: var(--muted); font-size: 0.92rem; }

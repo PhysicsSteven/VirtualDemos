@@ -1045,6 +1045,24 @@
     b.addEventListener('click', function () { VD.prefs(); });
     proj.insertAdjacentElement('afterend', b);
   }
+  /* Download for offline use (2026-11-16): a button before Preferences that opens the popup of demos/lib/vdoffline.js, loaded on
+     the first press. It puts together a zip of this demo, its worksheets and their How this works videos from the site as it
+     is now. Not shown on an offline copy itself (file://). */
+  var DL = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2v8M4.5 6.8 8 10.3l3.5-3.5M2.5 11.5v2h11v-2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  VD.offline = function (kind) {
+    if (window.VDOffline) { VDOffline.dialog(kind); return; }
+    window.VDOfflineAsk = kind;
+    if (document.getElementById('vd-offline') || !here) return;
+    var s = document.createElement('script'); s.src = here.replace(/vd\.js([?#].*)?$/, 'vdoffline.js'); s.id = 'vd-offline'; document.head.appendChild(s);
+  };
+  function downloadButton(proj) {
+    if (document.getElementById('vdDownload') || location.protocol === 'file:') return;
+    var b = document.createElement('button'); b.type = 'button'; b.className = 'proj vd-hbtn vd-icon'; b.id = 'vdDownload';
+    b.innerHTML = DL; b.setAttribute('aria-label', 'Download for offline use'); b.setAttribute('aria-haspopup', 'dialog');
+    b.title = 'Download this demo, its worksheets and videos to use without the internet';
+    b.addEventListener('click', function () { VD.offline('demo'); });
+    (document.getElementById('vdPrefs') || proj).insertAdjacentElement('beforebegin', b);
+  }
   function prefsStart() {
     /* the site wide Reduce motion: a demo that reads its box from matchMedia is already set; this catches the rest */
     if (window.VDPrefs && VDPrefs.get().reduceMotion) syncMotion();
@@ -1056,6 +1074,7 @@
     document.querySelectorAll('details.plotfold').forEach(VD.plotfold);
     var proj = document.getElementById('proj'); if (proj && !document.getElementById('vdShare')) headButtons(proj);
     if (proj) prefsButton(proj);
+    if (proj) downloadButton(proj);
     if (!VD.pictureSize.grip) VD.pictureSize();
     if (proj) { window.addEventListener('keydown', keys); if (document.readyState === 'complete') shareStart(); else window.addEventListener('load', shareStart); }
     if (proj) { var ps = function () { if (!ps.ran) { ps.ran = true; setTimeout(prefsStart, 0); } }; if (document.readyState === 'complete') ps(); else window.addEventListener('load', ps); }
