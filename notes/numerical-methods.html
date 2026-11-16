@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="../demos/lib/theme.js"></script>
+<title>Numerical Methods for Motion: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+@media screen { :root[data-theme="dark"] {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; overflow-wrap: break-word; }   /* a long file name breaks instead of pushing a phone sideways */
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+<link rel="stylesheet" id="vd-paper" href="../demos/lib/paper.css">
+</head>
+<body class="notes">
+<header class="top" aria-label="Site"><a class="brand" href="../index.html"><svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><ellipse cx="16" cy="16" rx="13" ry="6" fill="none" stroke="currentColor" stroke-width="1.8" transform="rotate(-30 16 16)"/><ellipse cx="16" cy="16" rx="13" ry="6" fill="none" stroke="currentColor" stroke-width="1.8" transform="rotate(30 16 16)"/><circle cx="16" cy="16" r="2.6" fill="currentColor"/></svg>Virtual Physics Demos</a><nav class="tabs" aria-label="Library"><a class="tab" href="../index.html#topics">Demos</a><a class="tab" href="../openstax.html">OpenStax</a><a class="tab" href="index.html" aria-current="page">Notes</a></nav><span class="hfind"></span><span data-vd-theme></span><a class="courses" href="../courses.html"><b>For a class</b> Courses</a></header>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Numerical Methods for Motion</h1><ul class="meta"><li><a href="../demos/numerical-methods.html">Open the demo</a></li><li>Physics I (Vol 1 13.5, 15.1, 15.2, 15.4) and any course where students write or use simulations</li><li>15 to 30 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>A computer does not solve F = ma; it steps from t to t + h with a rule. Every rule makes an error, and the error of a good rule shrinks as a known power of h, its order: 1 for Euler and symplectic Euler, 2 for Verlet, 4 for RK4.</li>
+<li>Accuracy per step is not the whole story. Euler's energy grows every step, symplectic Euler and Verlet keep it bounded forever, and RK4's drifts slowly, so over long runs Verlet can beat the "better" method.</li>
+<li>An error of the method changes when h changes; a feature of the physics does not. The pendulum's period from 90° is 18% longer than 2π√(L/g) at every step size, so it is physics.</li>
+</ul>
+<h2>Before class</h2>
+<p>Nothing to install. Projector mode makes the four copies readable from the back. Blind (Lab fold) hides the Error against h plot so students can find the slopes themselves. The +1 period and +10 periods buttons take exactly N or 10N steps and pause, so every reading lands on a whole number of periods.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>One period of a spring, 50 steps.</strong> Press the Spring, 50 steps a period setup, then +1 period. Ask which copy is wrong before pointing to the readouts: Euler's block has spiraled out on the phase portrait (Q1).</li>
+<li><strong>Halve the step.</strong> Move Steps per period N to 100 and press +1 period again. Ask students to predict how much each error falls before they read the table (Q2).</li>
+<li><strong>Long runs.</strong> Set N to 20, show the Energy error plot, and press +10 periods several times. RK4's energy error climbs a little every period; Verlet's wobbles in place (Q3).</li>
+<li><strong>Physics or method?</strong> Press Pendulum from 90°. Read Period T (exact). Change N: the period of every copy that stays on the dashed bob does not move (Q4).</li>
+<li><strong>A comet.</strong> Press Comet orbit, e = 0.9: the step that is fine far from the Sun is far too large at perihelion (Q5).</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> At N = 50, Euler's energy after one period of the spring is up by 119%, while the other three rules are within a fraction of a percent. One Euler step multiplies the energy by 1 + (ωh)². Use that to check the 119%, and explain from a sketch of one step on the phase portrait why Euler always lands outside the circle.</p></div>
+
+<div class="q"><p><strong>Q2.</strong> Predict: when N goes from 50 to 100, by what factor should each rule's largest error fall, if the orders are 1, 1, 2 and 4? Then check in the demo. Why does the observed order come out a little off for Euler at these N, and closer to its true value at larger N?</p></div>
+
+<div class="q"><p><strong>Q3.</strong> RK4 is far more accurate per step than Verlet. Over 100 periods at N = 20, which keeps the energy closer to its start, and why does that matter for a simulation of the solar system over a billion years?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> A student's simulation of a pendulum let go from 90° gives a period of 2.37 s, not the 2.01 s of 2π√(L/g). Is the simulation wrong? Describe a test with the demo that tells an error of the method from a real effect.</p></div>
+
+<div class="q"><p><strong>Q5.</strong> In the comet orbit, which rule does worst, and where along the orbit does its error grow? Why would a simulation of a comet use a step that changes along the orbit?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"The computer's answer is exact."</strong> Every step rule makes an error each step; the demo shows its size beside the exact motion.</li>
+<li><strong>"A smaller step always fixes it."</strong> The error falls as h to the order, so a first order rule needs ten times the steps for ten times the accuracy, and rounding sets a floor near 10⁻¹² for RK4.</li>
+<li><strong>"The most accurate method per step is best for every job."</strong> RK4's energy drifts; Verlet's does not. For long runs of orbits or molecules a symplectic rule wins.</li>
+<li><strong>"Anything that changes when I change the program is a bug, anything that doesn't is right."</strong> The pendulum's long period does not change with h because it is real physics; an error of the method always shrinks as h does.</li>
+</ul>
+<h2>How the demo works</h2>
+<ul>
+<li>The same system runs four times, once with each rule, from the same start. The exact motion is not stepped: x = A cos ωt for the spring, Jacobi's elliptic functions for the pendulum (via the arithmetic geometric mean), Kepler's equation solved by Newton's method for the orbit.</li>
+<li>Error is the distance from the exact point on the phase portrait (for the spring √(Δx² + (Δv/ω)²)); the convergence plot uses the largest error over the first period, because at a whole period some errors cancel and would make symplectic Euler look second order.</li>
+<li>Force evaluations count the work: one per step for Euler, symplectic Euler and Verlet (it reuses the end acceleration), four for RK4. A run whose energy is off by a factor of 1,000 is stopped and marked failed.</li>
+<li>These are computed values, not measurements: the same settings always give the same digits.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>. © 2026 Steven Anderson. All rights reserved; see the <a href="../LICENSE.html">terms of use</a>.</footer>
+</main>
+</body>
+</html>
