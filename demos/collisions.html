@@ -3492,7 +3492,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
         const st = SBC.st; if (!st) return [];
         out.push(`A row of ${st.carts.length} carts on an air track with an end stop at each end.`, BL ? 'The coefficient of restitution is hidden.' : `Bumpers e = ${fx(st.e, 2)}.`, runWord(),
           `Collisions so far: ${SBC.n}.`);
-        st.carts.forEach((c, i) => out.push(`Cart ${i + 1}, ${fx(c.m, 2)} kg, at x = ${fx(c.x, 2)} m` + (c.velcro ? ', with velcro.' : '.')));
+        st.carts.forEach((c, i) => out.push((window.VDI18N ? (c.velcro ? VDI18N.t('Cart {i}, {m} kg, at x = {x} m, with velcro.') : VDI18N.t('Cart {i}, {m} kg, at x = {x} m.')) : (c.velcro ? 'Cart {i}, {m} kg, at x = {x} m, with velcro.' : 'Cart {i}, {m} kg, at x = {x} m.')).replace('{i}', i + 1).replace('{m}', fx(c.m, 2)).replace('{x}', fx(c.x, 2))));   /* through VDI18N.t: the screen reader list was English in Spanish */
         if (!BL) out.push(`Total momentum ${fp(sbcMomentum(st))} now and ${fp(sbcMomentum(SBC.st0))} at the start.`, `Kinetic energy ${fK(sbcEnergy(st))} now and ${fK(sbcEnergy(SBC.st0))} at the start.`);
         else out.push('The results are hidden while Blind is on.');
         return out.concat([{ t: `Time ${fx(SBC.t, 2)} s.`, live: false }]);

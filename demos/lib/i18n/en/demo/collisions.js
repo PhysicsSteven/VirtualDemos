@@ -247,6 +247,9 @@ VDI18N.add('en', 'demo/collisions', [
 "Too fast for the pendulum: V = {#} m/s, and V² is more than 4gL, so the block goes over the top and keeps turning. With strings instead of rods it would go slack partway up unless V² ≥ 5gL. A real ballistic pendulum is made heavy enough to swing well below {#}°. Shown at ¼ speed.",
 "goes round",
 "V = mu/(m + M) = {#} m/s, V² = {#} m²/s² ≥ 4gL = {#} m²/s², so it goes over the top.",
+"Five equal carts touching in a row and one coming in: one goes out at the far end, as in Newton's cradle. Drop a second cart on the left to send two in.",
+"A heavy cart drives a light one against the end stop. The light cart rattles back and forth many times, each bounce taking a little of the heavy cart's momentum, until the heavy one turns back. Count the collisions.",
+"Every cart has velcro, so each collision is perfectly inelastic: the carts stick and the train slows from {#} to {#}/{#} to {#}/{#} m/s. Momentum stays, but each joining loses kinetic energy (the bars show where).",
 "A bullet fires into a block that hangs from two rods.",
 "Bullet mass {#} g.",
 "Bullet speed {#} m/s.",
@@ -258,9 +261,6 @@ VDI18N.add('en', 'demo/collisions', [
 "Kinetic energy {#} J before and {#} J just after.",
 "Bars of momentum and kinetic energy now, against the start.",
 "Graph of the block swinging, with the highest point marked.",
-"Five equal carts touching in a row and one coming in: one goes out at the far end, as in Newton's cradle. Drop a second cart on the left to send two in.",
-"A heavy cart drives a light one against the end stop. The light cart rattles back and forth many times, each bounce taking a little of the heavy cart's momentum, until the heavy one turns back. Count the collisions.",
-"Every cart has velcro, so each collision is perfectly inelastic: the carts stick and the train slows from {#} to {#}/{#} to {#}/{#} m/s. Momentum stays, but each joining loses kinetic energy (the bars show where).",
 "One cart between the end stops with e = {#}: each bounce keeps {#}% of the speed and {#}% of the kinetic energy. Drag the e grip to compare.",
 "Drag carts from the tray onto the track, drag the round grip on each arrow to set its velocity, and press Play.",
 "Bumper A fitted.",
@@ -314,8 +314,8 @@ VDI18N.add('en', 'demo/collisions', [
 "The arrows after the collision are hidden while Blind is on.",
 "The thread is cut and the spring has pushed the carts apart.",
 "Balls, strings and frame to scale: {#} cm balls on {#} cm strings, each hung from two strings so it swings in one plane. Drag to turn, scroll to zoom, double click to go back; drag a grip to change a value.",
-"Last collision: {#} in, {#} out, at {#} m/s.",
 "{#} in → {#} out",
+"Last collision: {#} in, {#} out, at {#} m/s.",
 "Total momentum now: −{#} kg·m/s",
 "Possible outcomes: hidden while Blind is on.",
 "The possible outcomes are hidden while Blind is on.",
@@ -323,5 +323,7 @@ VDI18N.add('en', 'demo/collisions', [
 "now: hidden (Blind)",
 "Hidden while Blind is on. Read the rise h from the scale beside the block (its marker stays at the highest point).",
 "The bullet speed is hidden.",
-"The results are hidden while Blind is on. Read the rise from the scale beside the block."
+"The results are hidden while Blind is on. Read the rise from the scale beside the block.",
+"Cart {i}, {m} kg, at x = {x} m, with velcro.",
+"Cart {i}, {m} kg, at x = {x} m."
 ]);

@@ -494,6 +494,12 @@ VDI18N.add('es', 'demo/collisions', {
   "da la vuelta",
 "V = mu/(m + M) = {#} m/s, V² = {#} m²/s² ≥ 4gL = {#} m²/s², so it goes over the top.":
   "V = mu/(m + M) = {#} m/s, V² = {#} m²/s² ≥ 4gL = {#} m²/s², así que pasa por arriba.",
+"Five equal carts touching in a row and one coming in: one goes out at the far end, as in Newton's cradle. Drop a second cart on the left to send two in.":
+  "Cinco carritos iguales que se tocan en fila y uno que llega: sale uno por el otro extremo, como en el péndulo de Newton. Suelta un segundo carrito a la izquierda para enviar dos.",
+"A heavy cart drives a light one against the end stop. The light cart rattles back and forth many times, each bounce taking a little of the heavy cart's momentum, until the heavy one turns back. Count the collisions.":
+  "Un carrito pesado empuja uno ligero contra el tope. El carrito ligero rebota de un lado a otro muchas veces, y cada rebote quita un poco del momento del carrito pesado, hasta que el pesado se regresa. Cuenta las colisiones.",
+"Every cart has velcro, so each collision is perfectly inelastic: the carts stick and the train slows from {#} to {#}/{#} to {#}/{#} m/s. Momentum stays, but each joining loses kinetic energy (the bars show where).":
+  "Cada carrito tiene velcro, así que cada colisión es perfectamente inelástica: los carritos se pegan y el tren se frena de {#} a {#}/{#} a {#}/{#} m/s. El momento se conserva, pero cada unión pierde energía cinética (las barras muestran dónde).",
 "A bullet fires into a block that hangs from two rods.":
   "Una bala se dispara contra un bloque que cuelga de dos varillas.",
 "Bullet mass {#} g.":
@@ -516,12 +522,6 @@ VDI18N.add('es', 'demo/collisions', {
   "Barras de momento y energía cinética ahora, comparadas con el inicio.",
 "Graph of the block swinging, with the highest point marked.":
   "Gráfica del bloque al balancearse, con el punto más alto marcado.",
-"Five equal carts touching in a row and one coming in: one goes out at the far end, as in Newton's cradle. Drop a second cart on the left to send two in.":
-  "Cinco carritos iguales que se tocan en fila y uno que llega: sale uno por el otro extremo, como en el péndulo de Newton. Suelta un segundo carrito a la izquierda para enviar dos.",
-"A heavy cart drives a light one against the end stop. The light cart rattles back and forth many times, each bounce taking a little of the heavy cart's momentum, until the heavy one turns back. Count the collisions.":
-  "Un carrito pesado empuja uno ligero contra el tope. El carrito ligero rebota de un lado a otro muchas veces, y cada rebote quita un poco del momento del carrito pesado, hasta que el pesado se regresa. Cuenta las colisiones.",
-"Every cart has velcro, so each collision is perfectly inelastic: the carts stick and the train slows from {#} to {#}/{#} to {#}/{#} m/s. Momentum stays, but each joining loses kinetic energy (the bars show where).":
-  "Cada carrito tiene velcro, así que cada colisión es perfectamente inelástica: los carritos se pegan y el tren se frena de {#} a {#}/{#} a {#}/{#} m/s. El momento se conserva, pero cada unión pierde energía cinética (las barras muestran dónde).",
 "One cart between the end stops with e = {#}: each bounce keeps {#}% of the speed and {#}% of the kinetic energy. Drag the e grip to compare.":
   "Un carrito entre los topes con e = {#}: cada rebote conserva el {#}% de la rapidez y el {#}% de la energía cinética. Arrastra el control e para comparar.",
 "Drag carts from the tray onto the track, drag the round grip on each arrow to set its velocity, and press Play.":
@@ -628,10 +628,10 @@ VDI18N.add('es', 'demo/collisions', {
   "El hilo está cortado y el resorte separó los carritos.",
 "Balls, strings and frame to scale: {#} cm balls on {#} cm strings, each hung from two strings so it swings in one plane. Drag to turn, scroll to zoom, double click to go back; drag a grip to change a value.":
   "Esferas, cuerdas y marco a escala: esferas de {#} cm en cuerdas de {#} cm, cada una colgada de dos cuerdas para que se balancee en un plano. Arrastra para girar, desplaza para acercar, haz doble clic para volver; arrastra un control para cambiar un valor.",
-"Last collision: {#} in, {#} out, at {#} m/s.":
-  "Última colisión: {#} entran, {#} salen, a {#} m/s.",
 "{#} in → {#} out":
   "{#} entran → {#} salen",
+"Last collision: {#} in, {#} out, at {#} m/s.":
+  "Última colisión: {#} entran, {#} salen, a {#} m/s.",
 "Total momentum now: −{#} kg·m/s":
   "Momento total ahora: −{#} kg·m/s",
 "Possible outcomes: hidden while Blind is on.":
@@ -648,6 +648,10 @@ VDI18N.add('es', 'demo/collisions', {
   "La rapidez de la bala está oculta.",
 "The results are hidden while Blind is on. Read the rise from the scale beside the block.":
   "Los resultados están ocultos mientras A ciegas está activado. Lee el ascenso en la escala junto al bloque.",
+"Cart {i}, {m} kg, at x = {x} m, with velcro.":
+  "Carrito {i}, {m} kg, en x = {x} m, con velcro.",
+"Cart {i}, {m} kg, at x = {x} m.":
+  "Carrito {i}, {m} kg, en x = {x} m.",
 "{#} m/s at -{#}°":
   "{#} m/s a -{#}°",
 "Cart {#}, {#} kg, at x = −{#} m.":
