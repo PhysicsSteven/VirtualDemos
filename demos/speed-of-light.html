@@ -1394,6 +1394,33 @@ table.rows tr.sim td { background: color-mix(in srgb, var(--equi) 9%, transparen
   applyPreset('spin');
   setPlaying(!reduce);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { ctlCache = ''; for (const k in (G.labels || {})) { const o = G.labels[k], t = o.txt; o.txt = null; G.setLabel(o, t); } dirtyAll(); });
+  /* what the pictures show now, for a screen reader (VD.describe): the bench, the microscope and the plot of the readings */
+  const benchWords = (quiet) => {
+    const out = [], live = (t) => ({ t, live: !quiet });
+    out.push('A rotating mirror bench: a laser source S, lenses L1 and L2, a rotating mirror MR, a far mirror MF and a measuring microscope.');
+    out.push(S.revs ? `The mirror MR turns ${S.dir > 0 ? 'clockwise' : 'counterclockwise'} at ${S.revs} rev/s.` : 'The mirror MR is at rest.');
+    out.push(live(`D, from MR to MF, is ${S.D.toFixed(2)} m.`), live(`B, from L2 to MR, is ${S.B.toFixed(3)} m.`), live(`A, from S to L2, is ${A().toFixed(4)} m.`));
+    out.push(live(inFocus() ? 'The image is in focus.' : `The image is ${blurFactor(A(), S.B, S.D).toFixed(1)} times wider than in focus.`));
+    out.push(S.view === 'slow' ? 'The slow motion view shows one pulse out and back, with the mirror rotation exaggerated.' : 'The normal view shows the continuous beam.', S.playing ? 'Playing.' : 'Paused.');
+    if (S.blind) out.push('The pulse time Δt, the turn Δθ and the true shift are hidden.');
+    else out.push(live(`The light takes Δt = ${(dt() * 1e9).toFixed(2)} ns for the round trip.`), live(`The mirror turns Δθ = ${(Math.abs(dth()) * 1e6).toFixed(0)} µrad meanwhile.`), live(`The true image shift from rest is ${fmt(shiftMM(), 4)} mm.`));
+    out.push({ t: `The speed meter reads ${meterShown} rev/s.`, live: false });
+    out.push(S.rows.length ? `${S.rows.length} readings are recorded.` : 'No readings are recorded.');
+    return out;
+  };
+  const eyeWords = () => {
+    const out = ['The measuring microscope: the eyepiece shows the returning image and a crosshair, with the micrometer beside it.'], off = spotShown() - S.mic;
+    out.push(S.digits ? `The micrometer reads ${S.mic.toFixed(3)} mm.` : 'The micrometer reading in digits is hidden.');
+    out.push({ t: Math.abs(off) < 0.0005 ? 'The crosshair is on the center of the image.' : `The center of the image is ${Math.abs(off).toFixed(3)} mm ${off > 0 ? 'to the right of' : 'to the left of'} the crosshair.`, live: false });
+    return out;
+  };
+  const plotWords = () => { const F = fits(), out = [`A plot of the micrometer reading against the signed speed meter reading, CW positive, with ${F.rows.length} points.`];
+    if (F.fit) { out.push(`The least squares line has slope k = ${(F.fit.k * 1e3).toFixed(4)} µm per rev/s.`, `The intercept, the reading at rest, is ${F.fit.a.toFixed(4)} mm.`);
+      if (isFinite(F.c) && !S.blind) out.push(`The fit gives c = ${c8(F.c, 3)} × 10⁸ m/s.`); } else out.push('There is no fit yet.');
+    return out; };
+  if (window.VD && VD.describe) { VD.describe(cans.top, () => benchWords(false)); VD.describe(cans.eye, eyeWords, { label: 'Describe the microscope' }); VD.describe(cans.plot, plotWords, { label: 'Describe the plot' });
+    if ($('gl')) VD.describe($('gl'), () => benchWords(true), { label: 'Describe the 3D bench' });
+    if (!use3D) VD.describe(cans.flat, () => benchWords(true), { label: 'Describe the side view' }); }
   requestAnimationFrame(loop);
 })();
 </script>

@@ -1601,6 +1601,34 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   VD.howTo({ src: () => `media/how-this-works/${howVid()}.mp4`, poster: () => `media/how-this-works/${howVid()}.jpg` });
   setView3(new URLSearchParams(location.search).get('view') !== 'flat' && !!window.VD3 && !VD3.lowPower());
   setPlaying(false);   /* opens still until Play or a setup (Steve: no demo starts on its own) */
+  /* what the picture shows now, for a screen reader (VD.describe): the source, the observer and what the observer receives */
+  const sceneWords = () => {
+    const out = [], r = roots[0], t = S.t.toFixed(S.t < 10 ? 2 : 1);
+    if (!light()) {
+      out.push(`Wavefronts of sound spread from a source emitting ${S.f} Hz, with an observer.`);
+      out.push(S.M > 0 ? `The source moves at Mach ${S.M.toFixed(3)}, ${Math.round(S.M * V_AIR)} m/s, in direction ${S.dir}°.` : 'The source is at rest.');
+      out.push(S.Mo > 0 ? `The observer moves at ${S.Mo.toFixed(3)} of the speed of sound, ${Math.round(S.Mo * V_AIR)} m/s, in direction ${S.odir}°.` : 'The observer is at rest.');
+      out.push(playing ? 'Playing.' : 'Paused.');
+      if (!roots.length) out.push(S.M > 1 ? 'The observer hears silence: outside the Mach cone.' : 'No sound has reached the observer yet.');
+      else {
+        out.push(roots.length === 1 ? `The observer hears ${fmtHz(S.f * r.k)}.` : `The observer hears two sounds, ${fmtHz(S.f * roots[0].k)} and ${fmtHz(S.f * roots[1].k)}.`);
+        if (roots.some((q) => q.k < 0)) out.push('One sound is heard backward.');
+        out.push(roots.length === 1 ? `The ratio f′/f is ${r.k.toFixed(3)}.` : `The ratios f′/f are ${roots[0].k.toFixed(3)} and ${roots[1].k.toFixed(3)}.`);
+      }
+      if (S.M > 1.0005) out.push(`The Mach cone half angle is ${(coneHalfAngle(S.M) / RAD).toFixed(1)}°.`);
+      else if (S.M >= 0.9995) out.push('At Mach 1 the sound piles up in a flat wall at 90°.');
+    } else {
+      out.push(`Wavefronts of light spread from a source emitting ${S.lam.toFixed(1)} nm, with an observer at rest.`);
+      out.push(S.M > 0 ? `The source moves at β = ${S.M.toFixed(3)}, ${Math.round(S.M * C_KMS).toLocaleString('en-US')} km/s, in direction ${S.dir}°.` : 'The source is at rest.');
+      out.push(`γ = ${gammaOf(S.M).toFixed(4)}.`, playing ? 'Playing.' : 'Paused.');
+      if (!roots.length) out.push('No light has reached the observer yet.');
+      else { const lam2 = S.lam / r.k, z = lam2 / S.lam - 1;
+        out.push(`The observer sees ${lam2.toFixed(1)} nm.`, `z = ${z >= 0 ? '+' : '−'}${Math.abs(z).toFixed(4)}.`, `The relativistic ratio f′/f is ${r.k.toFixed(4)}.`); }
+    }
+    out.push({ t: `Time ${t} s.`, live: false });
+    return out;
+  };
+  if (window.VD && VD.describe) VD.describe(can, sceneWords);
   if (reduce) { window.__dop.run(6.5); }   // a meaningful still picture: the source just past the observer, the pitch falling
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => drawAll());
   requestAnimationFrame(loop);

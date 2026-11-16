@@ -1065,6 +1065,41 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   VD3K.view({ seg: '#viewSeg', init: init3D, start: '3d',
     change: (on) => { G3.on = on && !!g3; if (g3) g3.st.el.hidden = !G3.on; can.style.touchAction = G3.on ? 'pan-y' : 'none'; can.style.cursor = G3.on ? 'grab' : ''; draw(); },
     status: (msg) => { const n = $('viewNote'); n.textContent = msg; n.hidden = false; } });
+  /* what the picture shows now, for a screen reader (VD.describe): the setup, its loads and, unless Blind hides them, every force and the verdict */
+  const sceneWords = () => {
+    const v = S.v, bl = S.blind, N = (x) => `${f(x, 1)} N`, out = [];
+    if (S.preset === 'seesaw') { const r = seesaw(v.mb, [{ m: v.m1, x: v.x1 }, { m: v.m2, x: v.x2 }]);
+      out.push(`A seesaw on a central pivot, the beam ${f(v.mb, 0)} kg.`, `A ${f(v.m1, 0)} kg child sits ${f(-v.x1, 2)} m to the left of the pivot.`, `A ${f(v.m2, 0)} kg child sits ${f(v.x2, 2)} m to the right.`);
+      if (bl) out.push('The forces, torques and verdict are hidden.');
+      else out.push(`Torque of the left child ${f(-v.m1 * G * v.x1, 1)} N·m.`, `Torque of the right child ${f(-v.m2 * G * v.x2, 1)} N·m.`, `Net torque ${f(r.tau, 1)} N·m, counterclockwise positive.`, `The pivot pushes up with ${N(r.P)}.`,
+        r.balanced ? 'Balanced: the torques cancel.' : r.tau > 0 ? 'Not balanced: it tips left side down.' : 'Not balanced: it tips right side down.'); }
+    else if (S.preset === 'plank') { const r = plank(v.L, v.mb, v.a, v.b, [{ m: v.m1, x: v.x1 }]);
+      out.push(`A plank ${f(v.L, 1)} m long, mass ${f(v.mb, 0)} kg, rests on two supports.`, `The left support is at ${f(v.a, 2)} m and the right support at ${f(v.b, 2)} m.`, `A painter of ${f(v.m1, 0)} kg stands ${f(v.x1, 2)} m from the left end.`);
+      if (bl) out.push('The forces and verdict are hidden.');
+      else out.push(`The left support pushes up with ${N(r.F1)}.`, `The right support pushes up with ${N(r.F2)}.`, `Total weight ${N(r.W)}.`,
+        r.tips === 'right' ? 'The plank tips about the right support: the left one would have to pull down.' : r.tips === 'left' ? 'The plank tips about the left support: the right one would have to pull down.' : 'In equilibrium: both supports push up.'); }
+    else if (S.preset === 'sign') { const r = sign(v.L, v.ms, v.m1, v.x1, v.h);
+      out.push(`A strut ${f(v.L, 1)} m long, mass ${f(v.ms, 1)} kg, is hinged to a wall and held level by a cable.`, `A sign of ${f(v.m1, 0)} kg hangs ${f(v.x1, 2)} m from the wall.`, `The cable is anchored ${f(v.h, 2)} m above the strut.`);
+      if (bl) out.push('The cable tension and the hinge force are hidden.');
+      else out.push(`The cable makes ${f(r.th * 180 / Math.PI, 1)}° with the strut.`, `Cable tension ${N(r.T)}.`, `The hinge pushes ${N(r.Hx)} horizontally and ${N(r.Hy)} vertically.`); }
+    else if (S.preset === 'ladder') { const r = ladder(v.L, v.mb, v.m1, v.f, v.th, v.mu);
+      out.push(`A ladder ${f(v.L, 1)} m long, mass ${f(v.mb, 0)} kg, leans against a smooth wall at ${f(v.th, 1)}° to the floor.`, `A person of ${f(v.m1, 0)} kg stands ${f(v.f, 2)} of the way up.`, `Floor friction coefficient ${f(v.mu, 2)}.`);
+      if (bl) out.push('The forces and verdict are hidden.');
+      else out.push(`The floor pushes up with ${N(r.N)}.`, `The wall pushes with ${N(r.Nw)}.`, `Friction needed ${N(r.fs)}, most the floor can give ${N(r.fmax)}.`, `It slips below ${f(r.thMin, 1)}° with the person here.`, r.slips ? 'The ladder slips.' : 'The ladder holds: static friction is enough.'); }
+    else { const r = sbeModel(), xs = SBE.sup.map((q) => q.x).sort((a, b) => a - b);
+      out.push(`A beam ${f(v.L, 1)} m long, mass ${f(v.mb, 0)} kg, built on a tray of parts.`, SBE.sup.length ? `${SBE.sup.length} supports, at ${xs.map((x) => f(x, 2)).join(' and ')} m.` : 'No supports.',
+        SBE.loads.length ? `${SBE.loads.length} masses on the beam.` : 'No masses on the beam.', SBE.held ? 'Two posts hold the beam level.' : 'The beam has been let go.');
+      if (bl) out.push('The forces and verdict are hidden.');
+      else { if (SBE.held) out.push('The results below are for when the beam is let go.');
+        out.push(`Total weight ${N(r.W)}.`, `The center of mass is ${f(r.xc, 2)} m from the left end.`);
+        if (!SBE.sup.length) out.push('With no support it falls.');
+        else if (r.F.length === 2) out.push(`The left support pushes up with ${N(r.F[0])}.`, `The right support pushes up with ${N(r.F[1])}.`);
+        else if (r.F.length === 1) out.push(`The support pushes up with ${N(r.F[0])}, and the beam balances.`);
+        if (r.tips && r.F.length === 2) out.push(r.tips === 'right' ? 'The beam tips about the right support.' : 'The beam tips about the left support.');
+        else if (r.tips) out.push(r.tips === 'left' ? 'The beam tips left side down.' : 'The beam tips right side down.'); } }
+    return out;
+  };
+  if (window.VD && VD.describe) VD.describe(can, sceneWords);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
 })();
 </script>

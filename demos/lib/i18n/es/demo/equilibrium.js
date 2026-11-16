@@ -6,12 +6,32 @@ VDI18N.add('es', 'demo/equilibrium', {
   "viga = {#} N",
 "pivot P = {#} N":
   "pivote P = {#} N",
+"Describe the picture":
+  "Describir la imagen",
 "Static Equilibrium":
   "Equilibrio estático",
+"<a>Static equilibrium and elasticity</a>":
+  "<a>Equilibrio estático y elasticidad</a>",
+"<a><span>←</span> <span>Hanging Chains and Arches</span></a><a><span>Stress and Strain</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Cadenas colgantes y arcos</span></a><a><span>Esfuerzo y deformación</span> <span>→</span></a>",
 "An object stays still only if the forces on it add to zero and the torques about any point add to zero. Drag the loads and watch the support forces share the weight, until one of them would have to pull and the object tips.":
   "Un objeto permanece quieto solo si las fuerzas sobre él suman cero y las torcas respecto a cualquier punto suman cero. Arrastra las cargas y observa cómo las fuerzas de los soportes se reparten el peso, hasta que una de ellas tendría que jalar y el objeto se vuelca.",
 "A structure with every force on it drawn as an arrow to scale. Drag a load along the beam (in 3D, drag elsewhere to turn the view). Left and right arrow keys move the selected load; Tab picks the next one with {#} and {#}.":
   "Una estructura con cada fuerza sobre ella dibujada como una flecha a escala. Arrastra una carga a lo largo de la viga (en 3D, arrastra en otro lugar para girar la vista). Las flechas izquierda y derecha mueven la carga seleccionada; Tab elige la siguiente con {#} y {#}.",
+"A seesaw on a central pivot, the beam {#} kg.":
+  "Un sube y baja sobre un pivote central, con la tabla de {#} kg.",
+"A {#} kg child sits {#} m to the left of the pivot.":
+  "Un niño de {#} kg está sentado a {#} m a la izquierda del pivote.",
+"A {#} kg child sits {#} m to the right.":
+  "Un niño de {#} kg está sentado a {#} m a la derecha.",
+"Torque of the left child {#} N·m.":
+  "Torque del niño de la izquierda {#} N·m.",
+"Torque of the right child −{#} N·m.":
+  "Torque del niño de la derecha −{#} N·m.",
+"Net torque {#} N·m, counterclockwise positive.":
+  "Torque neto {#} N·m, positivo en sentido antihorario.",
+"The pivot pushes up with {#} N.":
+  "El pivote empuja hacia arriba con {#} N.",
 "Seesaw":
   "Subibaja",
 "Plank on two supports":
@@ -76,12 +96,12 @@ VDI18N.add('es', 'demo/equilibrium', {
   "ΣF<sub>x</sub> = {#} · ΣF<sub>y</sub> = {#} · Στ = {#} respecto a cualquier punto",
 "Blind hides the support forces, tension, friction, the torques and whether it will stay, and draws every arrow the same length. The masses and positions stay. Beams and ladders are rigid and uniform; strings and cables are massless; the pivot and hinge are frictionless.":
   "A ciegas oculta las fuerzas de los soportes, la tensión, la fricción, las torcas y si se mantendrá, y dibuja todas las flechas de la misma longitud. Las masas y las posiciones se quedan. Las vigas y las escaleras son rígidas y uniformes; las cuerdas y los cables no tienen masa; el pivote y la bisagra no tienen fricción.",
-"<a>Static equilibrium and elasticity</a>":
-  "<a>Equilibrio estático y elasticidad</a>",
-"<a><span>←</span> <span>Hanging Chains and Arches</span></a><a><span>Stress and Strain</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Cadenas colgantes y arcos</span></a><a><span>Esfuerzo y deformación</span> <span>→</span></a>",
 "Arrow lengths are to scale with force. Lengths in meters; people are sized by mass as a guide only. Drag a load to move it; drag elsewhere to turn.":
   "Las longitudes de las flechas están a escala con la fuerza. Longitudes en metros; el tamaño de las personas según su masa es solo orientativo. Arrastra una carga para moverla; arrastra en otro lugar para girar.",
+"Skip to the picture":
+  "Ir a la imagen",
+"Skip to the controls":
+  "Ir a los controles",
 "In equilibrium: both supports push up.":
   "En equilibrio: ambos soportes empujan hacia arriba.",
 "painter = {#} N":
@@ -108,6 +128,18 @@ VDI18N.add('es', 'demo/equilibrium', {
   "Soporte derecho F₂",
 "Total weight":
   "Peso total",
+"A plank {#} m long, mass {#} kg, rests on two supports.":
+  "Una tabla de {#} m de largo y masa {#} kg descansa sobre dos apoyos.",
+"The left support is at {#} m and the right support at {#} m.":
+  "El apoyo izquierdo está en {#} m y el derecho en {#} m.",
+"A painter of {#} kg stands {#} m from the left end.":
+  "Un pintor de {#} kg está de pie a {#} m del extremo izquierdo.",
+"The left support pushes up with {#} N.":
+  "El apoyo izquierdo empuja hacia arriba con {#} N.",
+"The right support pushes up with {#} N.":
+  "El apoyo derecho empuja hacia arriba con {#} N.",
+"Total weight {#} N.":
+  "Peso total {#} N.",
 "Cable at θ = {#}° to the strut":
   "Cable a θ = {#}° del puntal",
 "sign = {#} N":
@@ -216,12 +248,30 @@ VDI18N.add('es', 'demo/equilibrium', {
   "Se quitó la parte seleccionada.",
 "The Sandbox is for exploring: pick one of the other setups to record readings for the worksheet.":
   "La Caja de arena es para explorar: elige una de las otras configuraciones para registrar lecturas para la hoja de trabajo.",
+"A beam {#} m long, mass {#} kg, built on a tray of parts.":
+  "Una viga de {#} m de largo y masa {#} kg, armada con piezas de la bandeja.",
+"{#} supports, at {#} m.":
+  "{#} apoyos, en {#} m.",
+"{#} masses on the beam.":
+  "{#} masas sobre la viga.",
+"Two posts hold the beam level.":
+  "Dos postes mantienen la viga nivelada.",
+"The results below are for when the beam is let go.":
+  "Los resultados siguientes son para cuando se suelta la viga.",
+"The center of mass is {#} m from the left end.":
+  "El centro de masa está a {#} m del extremo izquierdo.",
+"The support pushes up with {#} N, and the beam balances.":
+  "El apoyo empuja hacia arriba con {#} N y la viga queda en equilibrio.",
 "Balanced: the center of mass is right over the support.":
   "Equilibrada: el centro de masa está justo sobre el soporte.",
 "Hold it level again":
   "Sostenerla horizontal de nuevo",
 "Let go.":
   "Soltar.",
+"The beam has been let go.":
+  "Se soltó la viga.",
+"{#} supports, at {#} and {#} m.":
+  "{#} apoyos, en {#} y {#} m.",
 "Remove the selected part":
   "Quitar la parte seleccionada",
 "Close":

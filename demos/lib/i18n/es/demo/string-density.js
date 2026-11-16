@@ -6,6 +6,8 @@ VDI18N.add('es', 'demo/string-density', {
   "vibrador",
 "up and down motion drawn ×{#}, shown {#} times slower, as by a strobe":
   "movimiento hacia arriba y hacia abajo dibujado ×{#}, mostrado {#} veces más lento, como con un estroboscopio",
+"Describe the picture":
+  "Describir la imagen",
 "Linear Density of a String":
   "Densidad lineal de una cuerda",
 "<a>First lab: waves on a string</a>":
@@ -16,6 +18,28 @@ VDI18N.add('es', 'demo/string-density', {
   "Una cuerda va de un vibrador, pasando por una polea, a una masa colgante. Cuelga masas a una frecuencia fija, o barre la frecuencia con una masa fija, encuentra las resonancias y cuenta los vientres. Una recta a través de tus lecturas da la masa por metro de la cuerda, μ.",
 "A string on a lab table, from a vibrator on the left to a pulley at the table's edge on the right, with a hanger of slotted masses below the pulley. A meter rule runs under the string. Left and right arrows change the driver frequency by {#} Hz (with Shift, {#} Hz); up adds a {#} g mass, down takes off the last mass; space pauses.":
   "Una cuerda sobre una mesa de laboratorio, de un vibrador a la izquierda a una polea en el borde de la mesa a la derecha, con un portapesas con pesas ranuradas debajo de la polea. Una regla de un metro corre bajo la cuerda. Las flechas izquierda y derecha cambian la frecuencia del excitador en {#} Hz (con Shift, {#} Hz); arriba agrega una pesa de {#} g, abajo quita la última pesa; espacio pausa.",
+"A string {#} m long runs from a vibrator on the left to a pulley on the right, with a hanger of slotted masses below the pulley.":
+  "Una cuerda de {#} m va de un vibrador a la izquierda a una polea a la derecha, con un portapesas de masas ranuradas bajo la polea.",
+"The string is String B.":
+  "La cuerda es la cuerda B.",
+"The hanging mass, with the hanger, is {#} g.":
+  "La masa colgante, con el portapesas, es {#} g.",
+"The tension is T = mg = {#} N.":
+  "La tensión es T = mg = {#} N.",
+"The driver frequency is {#} Hz.":
+  "La frecuencia del excitador es {#} Hz.",
+"The vibrator is running.":
+  "El vibrador está funcionando.",
+"The largest amplitude is {#} mm.":
+  "La amplitud mayor es {#} mm.",
+"The string shows {#} loop.":
+  "La cuerda muestra {#} lazo.",
+"The linear density is μ = {#} g/m.":
+  "La densidad lineal es μ = {#} g/m.",
+"The wave speed is {#} m/s.":
+  "La rapidez de la onda es {#} m/s.",
+"The resonance with {#} loop is at {#} Hz.":
+  "La resonancia con {#} lazo está en {#} Hz.",
 "Time controls":
   "Controles de tiempo",
 "Run for a moment and pause again":
@@ -102,6 +126,12 @@ VDI18N.add('es', 'demo/string-density', {
   "Respuesta",
 "The largest amplitude on the string at each frequency or mass you have tried.":
   "La mayor amplitud en la cuerda para cada frecuencia o masa que has probado.",
+"A plot of the largest amplitude against frequency for the {#} values you have tried.":
+  "Una gráfica de la amplitud mayor contra la frecuencia para los {#} valores que has probado.",
+"The largest amplitude so far is {#} mm, at {#} Hz.":
+  "La mayor amplitud hasta ahora es {#} mm, a {#} Hz.",
+"Describe the response":
+  "Describir la respuesta",
 "Clear the trace":
   "Borrar la traza",
 "Each frequency you try adds a point: the largest amplitude on the string. The peaks are the resonances.":
@@ -116,6 +146,12 @@ VDI18N.add('es', 'demo/string-density', {
   "T contra {#}/n²",
 "The recorded readings with a least squares line and its residuals.":
   "Las lecturas registradas con una recta de mínimos cuadrados y sus residuos.",
+"A plot of f against n for {#} recorded readings.":
+  "Una gráfica de f contra n para {#} lecturas registradas.",
+"There is no fit yet.":
+  "Todavía no hay ajuste.",
+"Describe the fit":
+  "Describir el ajuste",
 "<span>Record at least two resonances with different n at one mass.</span>":
   "<span>Registra al menos dos resonancias con n distinto a una misma masa.</span>",
 "Record stores L, m, T, f and the number of loops n (you can correct n in the table). f against n at one mass: slope v/2L, so μ = T/(4L² · slope²). T against {#}/n² at one frequency: slope 4L²f²μ, so μ = slope/(4L²f²). Both lines should pass close to the origin.":
@@ -126,6 +162,12 @@ VDI18N.add('es', 'demo/string-density', {
   "Modelo: la cuerda obedece la ecuación de onda con una fuerza de amortiguamiento ligera proporcional a su velocidad, elegida para que cada resonancia tenga {#} Hz de ancho a media potencia. El vibrador mueve su extremo hacia arriba y hacia abajo {#} mm (elegido); el extremo de la polea no se mueve. Se muestra el estado estacionario: se omite el segundo, más o menos, que una cuerda real tarda en crecer o en apagarse. T = mg con g = {#} m/s²: la polea no tiene fricción, la masa colgante está en reposo, y se omiten la cuerda más allá de la polea, su estiramiento y su comba. Las cuerdas A, B y C tienen μ = {#}, {#} y {#} g/m (elegidas); una cuerda desconocida tiene de {#} a {#} g/m. El amortiguamiento baja cada resonancia menos de {#}% por encima de {#} Hz. El dibujo exagera el movimiento hacia arriba y hacia abajo y lo ralentiza, como lo haría un estroboscopio. Datos simulados, sin ruido: tu precisión depende de qué tan bien encuentres cada pico.",
 "masses drawn as {#} cm discs of {#} g/cm³":
   "pesas dibujadas como discos de {#} cm de {#} g/cm³",
+"Skip to the picture":
+  "Ir a la imagen",
+"Skip to the controls":
+  "Ir a los controles",
+"The vibrator is paused.":
+  "El vibrador está en pausa.",
 "hanger {#} g = {#} g":
   "portapesas {#} g = {#} g",
 "The driver stays at {#} Hz and only the {#} g hanger hangs. Add masses until the string jumps into a pattern of loops, then fine tune with the small masses for the largest amplitude and record. More tension, fewer loops: T against {#}/n² is a straight line with slope 4L²f²μ.":
@@ -150,6 +192,18 @@ VDI18N.add('es', 'demo/string-density', {
   "Una cuerda desconocida excitada a {#} Hz: μ está oculta. Encuentra la masa para tantos patrones de vientres como puedas, grafica T contra {#}/n² y calcula μ a partir de la pendiente.",
 "The unknown string had μ = {#} g/m.":
   "La cuerda desconocida tenía μ = {#} g/m.",
+"The string is the unknown string.":
+  "La cuerda es la cuerda desconocida.",
+"The string shows {#} loops.":
+  "La cuerda muestra {#} lazos.",
+"The linear density, the wave speed and the predictions are hidden for the unknown string.":
+  "La densidad lineal, la rapidez de la onda y las predicciones están ocultas para la cuerda desconocida.",
+"A plot of the largest amplitude against hanging mass for the {#} values you have tried.":
+  "Una gráfica de la amplitud mayor contra la masa colgante para los {#} valores que has probado.",
+"The largest amplitude so far is {#} mm, at {#} g.":
+  "La mayor amplitud hasta ahora es {#} mm, con {#} g.",
+"A plot of T against {#} over n squared for {#} recorded readings.":
+  "Una gráfica de T contra {#} sobre n al cuadrado para {#} lecturas registradas.",
 "Raise or lower the driver frequency by {#} Hz (Shift: {#} Hz)":
   "Sube o baja la frecuencia del excitador {#} Hz (Shift: {#} Hz)",
 "Add a {#} g mass or take off the last mass":

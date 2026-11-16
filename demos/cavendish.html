@@ -530,6 +530,25 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   tokens(); startOver(); sync(); new ResizeObserver(resize).observe($('scene')); new ResizeObserver(resize).observe(chart.parentElement); resize(); readouts();
   G3.want = new URLSearchParams(location.search).get('view') !== 'flat' && !!window.VD3 && !VD3.lowPower();
   if (G3.want) setView('3d');
+  /* what the pictures show now, for a screen reader (VD.describe): the balance and the strip chart */
+  const spaceWords = () => {
+    const swinging = S.t < S.ts + CAV.swing, rest = spot(restAngle(aOf(S.t))) * 100;
+    return [`A torsion balance: a beam with two small lead spheres of ${f(CAV.m * 1000, 1)} g hangs from a fiber, and two large lead spheres of ${f(CAV.M, 3)} kg sit on a swivel frame outside the case.`,
+      S.pos === 'away' ? (swinging ? 'The large spheres are swinging to Away.' : 'The large spheres are Away, clear of the small ones.')
+        : swinging ? `The large spheres are swinging to position ${S.pos}.` : `The large spheres are at position ${S.pos}.`,
+      S.run ? `Running at ×${S.speed}.` : S.t > 0 ? 'Paused.' : 'Stopped at time zero.',
+      S.blind ? 'The twist, the forces and the resting positions are hidden.' : `The resting spot with the large spheres here is ${f(rest, 2)} cm.`,
+      { t: `Spot on the scale ${f(spotR(), 1)} cm, clock ${clockR()} s.`, live: false },
+      { t: Math.abs(S.w) < 1e-12 ? 'The spot is stopped.' : S.w > 0 ? 'The spot is moving up the scale.' : 'The spot is moving down the scale.', live: false },
+      S.blind ? 'The twist is hidden.' : { t: `Twist ${f(S.th * 1000, 4)} mrad.`, live: false }];
+  };
+  const chartWords = () => {
+    const out = ['A strip chart of the spot position on the scale, in centimeters, against clock time in seconds.', { t: `${S.trace.length} points are drawn.`, live: false }];
+    if (S.turns.length) { const q = S.turns[S.turns.length - 1]; out.push(`${S.turns.length} turning points are marked.`, `The latest turning point is ${f(q[1] * 100, 1)} cm at ${f(q[0], 0)} s.`); } else out.push('No turning points yet.');
+    out.push({ t: `The spot is at ${f(spotR(), 1)} cm.`, live: false });
+    return out;
+  };
+  if (window.VD && VD.describe) { VD.describe(can, spaceWords); VD.describe(chart, chartWords, { label: 'Describe the chart' }); }
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   requestAnimationFrame(frame);
 })();

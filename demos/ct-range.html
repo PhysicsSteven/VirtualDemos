@@ -885,6 +885,40 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   VD.tools({ el: can, strip: '#strip', stage: '#scene', time: () => null, scale: () => null });
   view3 = VD3K.view({ seg: '#dimSeg', start: '3d', init: init3, status: (m) => { const st = document.querySelector('.vd-readings .status'); if (st) st.textContent = m; },
     change: (on) => { can.style.cursor = on ? 'grab' : ''; can.style.touchAction = on ? 'pan-y' : 'none'; draw(); } });
+  /* what the pictures show now, for a screen reader (VD.describe): the step in progress, and the graph beside it */
+  const sceneWords = () => {
+    const out = [], on = busy();
+    if (S.view === 'scan') { const q = S.meas.find((x) => x.key === S.ins);
+      out.push(`Step 1, the calibration scan: a CT scanner with a ${f(PH_R * 2, 0)} cm phantom in its bore, holding ${INSERTS.length} inserts of known materials.`, `Tube voltage ${S.kv} kV.`,
+        S.win === 'soft' ? 'The image uses the soft tissue window.' : 'The image uses the wide window.', `Region of interest on ${mat(S.ins).name}.`);
+      if (on) out.push('The scanner is scanning.');
+      else out.push(`${mat(S.ins).name} reads ${f(q.hu, 1)} ± ${f(q.sd, 1)} HU, mean and pixel standard deviation.`, `Electron density ${f(q.rhoE, 4)}.`, `Fitted CT number ${f(huModel(S.ins, S.fit), 1)} HU.`);
+      out.push({ t: `This is scan ${S.scans + 1}.`, live: false }); }
+    else if (S.view === 'curve') { const q = wetState(), k = q.k;
+      out.push('Step 2, the curve: a proton beam passes through a slab of tissue in front of a water tank.', `Slab thickness ${f(S.t, 1)} cm.`, `CT tube voltage ${S.kv} kV.`);
+      if (S.tis !== 'mystery') { const hT = huTrue(k, S.kv), r = rsp(V, k), a = S.cS.at(hT), u = S.cU.at(hT);
+        out.push(`The slab is ${mat(k).name}, CT number ${f(hT, 1)} HU.`, `Its stopping power ratio is ${f(r, 4)}.`, `The stoichiometric curve says ${f(a, 4)}, ${sgn(100 * (a / r - 1), 2)} %.`, `The substitute curve says ${f(u, 4)}, ${sgn(100 * (u / r - 1), 2)} %.`);
+        out.push(S.show === 'both' ? 'The graph shows both curves.' : S.show === 'stoich' ? 'The graph shows the stoichiometric curve.' : 'The graph shows the tissue substitute curve.');
+        out.push(S.tef ? 'Teflon is in the tissue substitute curve.' : 'Teflon is left out of the tissue substitute curve.'); }
+      else { const rr = roi(k, S.kv, S.mSeed * 17 + S.myst), cv = S.cS.at(rr.hu);
+        out.push(`The slab is mystery tissue number ${S.myst + 1}.`, S.reveal ? `It is ${mat(k).name}.` : 'Its identity is hidden.', `Its CT number is ${f(rr.hu, 1)} ± ${f(rr.sd, 1)} HU.`, `The stoichiometric curve says a stopping power ratio of ${f(cv, 4)}.`);
+        if (q.w && !on) out.push(`The measured range shift is ${f(q.w.mm, 2)} mm.`, `The measured stopping power ratio is ${f(q.w.mm / 10 / q.t, 4)}.`);
+        else out.push('The range shift has not been measured yet.');
+        out.push(S.reveal ? `Its real stopping power ratio is ${f(rsp(V, k), 4)}.` : 'Its real stopping power ratio is hidden.'); } }
+    else { const P = S.P;
+      out.push('Step 3, range and margins: the beam\'s path through a patient to the target.', `Patient: ${SITES[S.site].name}.`, S.plan === 'subs' ? 'The plan uses the tissue substitute curve.' : 'The plan uses the stoichiometric curve.',
+        `CT number error ${sgn(S.dHU, 0)} HU.`, `Tissue I values off by ${sgn(S.iErr, 1)} %.`, `Distal margin ${f(S.a, 1)} % of the range plus ${f(S.b, 1)} mm.`,
+        `The target's far edge is ${f(P.P.zt1, 2)} cm deep.`, `Planned range ${f(P.R, 2)} cm in water, beam energy ${f(P.E, 1)} MeV.`);
+      if (on) out.push('The beam is on.');
+      else out.push(`The real range is ${sgn(P.err, 2)} mm from the planned one.`, `The real range ends ${sgn(P.over, 1)} mm past the target's far edge.`, P.covered ? 'The target is covered.' : 'Part of the target is missed.'); }
+    return out;
+  };
+  const plotWords = () => {
+    if (S.view === 'scan') return [`A graph of the measured CT number in HU against electron density for the ${S.meas.length} inserts.`, `The fitted line goes through them at ${S.kv} kV.`];
+    if (S.view === 'curve') return ['A graph of stopping power ratio against CT number, with the calibration curves.', S.show === 'both' ? 'Both curves are drawn.' : S.show === 'stoich' ? 'The stoichiometric curve is drawn.' : 'The tissue substitute curve is drawn.'];
+    const P = S.P; return ['A graph of the planned and delivered dose along the beam.', `The target's far edge is ${f(P.P.zt1, 2)} cm deep.`, `The real range ends ${sgn(P.over, 1)} mm past it.`, P.covered ? 'The target is covered.' : 'Part of the target is missed.'];
+  };
+  if (window.VD && VD.describe) { VD.describe(can, sceneWords); VD.describe(plot, plotWords, { label: 'Describe the graph' }); }
   window.vdDemo = { S, V, full, applyPreset, act, doScan, plan, scan, fitSchneider, huTrue, huModel, rsp, mat, wetShift, roi, curveStoich, curveSubs };
   requestAnimationFrame(frame);
 })();

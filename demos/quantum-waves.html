@@ -2137,6 +2137,46 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   { const q = new URLSearchParams(location.search).get('setup'); applyPreset(PRESETS[q] ? q : 'barrier'); }
   const HOWQ = { 'uncertainty-principle': 'The Uncertainty Principle', 'energy-levels': 'Energy Levels in a Box and a Spring', 'quantum-tunneling': 'Quantum Tunneling' };
   VD.howTo({ src: () => `media/how-this-works/${wsFor(S.preset)}.mp4`, poster: () => `media/how-this-works/${wsFor(S.preset)}.jpg`, title: () => `How this works: ${HOWQ[wsFor(S.preset)]}` });
+  /* what the pictures show now, for a screen reader (VD.describe): the potential, the packet or chosen levels, the measurements and R and T */
+  const potWords = () => {
+    const p = S.params;
+    switch (S.preset) {
+      case 'free': return 'There is no potential: a free particle.';
+      case 'step': return `A potential step of height ${p.h.toFixed(2)} eV at x = 0.`;
+      case 'barrier': return `A barrier ${p.h.toFixed(2)} eV high and ${p.w.toFixed(2)} nm wide, centered at x = 0.`;
+      case 'dbar': return `Two barriers, each ${p.h.toFixed(2)} eV high and ${p.w.toFixed(2)} nm wide, ${p.g.toFixed(2)} nm apart.`;
+      case 'fwell': return `A finite well ${p.h.toFixed(2)} eV deep and ${p.w.toFixed(2)} nm wide.`;
+      case 'iwell': return `A box ${p.w.toFixed(2)} nm wide with infinite walls.`;
+      case 'ho': return `A harmonic oscillator with level spacing ħω = ${p.h.toFixed(3)} eV.`;
+      default: return `A double well with a central barrier of ${p.h.toFixed(2)} eV and minima ${p.g.toFixed(2)} nm apart.`;
+    }
+  };
+  const energyWords = () => {
+    const out = ['An energy diagram of an electron: the potential V(x), the mean energy of the electron and the energy levels.', potWords()];
+    const o = lastObs, base = S.preset === 'ho' ? 0 : 1;
+    if (S.mode === 'levels' && S.sel.length) { out.push(`The electron is in ${S.sel.length === 1 ? 'one energy level' : `a mix of ${S.sel.length} energy levels`}.`);
+      S.sel.slice(0, 4).forEach((j) => out.push(`Level n = ${j + base} has energy ${fmtE(eig.vals[j])}.`)); }
+    else { const k = S.packet; out.push(`A wave packet starts at x₀ = ${k.x0.toFixed(2)} nm, with width σ = ${k.sigma.toFixed(2)} nm and energy E₀ = ${k.E0.toFixed(3)} eV.`, k.dir > 0 ? 'It moves to the right.' : 'It moves to the left.'); }
+    out.push(running ? 'Running.' : t > 0 ? 'Paused.' : 'Ready to run.');
+    if (measured) out.push('A position measurement collapsed the wave function.');
+    if (o && o.norm > 1e-6) {
+      out.push(`Mean energy ⟨E⟩ = ${fmtE(o.E)}.`, `Energy spread ΔE = ${fmtE(o.dE)}.`, { t: `Mean position ⟨x⟩ = ${o.x.toFixed(2)} nm.`, live: false }, { t: `Position spread Δx = ${o.dx.toFixed(3)} nm.`, live: false },
+        { t: `Mean momentum ⟨p⟩ = ${fmtP(o.k)}.`, live: false }, { t: `Momentum spread Δp = ${fmtP(o.dk)}.`, live: false }, { t: `The uncertainty product Δx·Δp is ${(o.dx * o.dk).toFixed(3)} ħ.`, live: false });
+      if (cfg().kind === 'scatter' && PIECES[S.preset]) { const L = o.left + absL, Rr = o.right + absR, from = S.packet.x0 < split() ? 1 : -1, Rv = from > 0 ? L : Rr, Tv = from > 0 ? Rr : L;
+        if (measured || !touched) out.push('The packet has not been split yet.'); else out.push(`Reflected ${pct(Rv)}.`, `Transmitted ${pct(Tv)}.`);
+        if (Tpw !== null) out.push(`The transmission for a plane wave at E₀ is ${pct(Tpw)}.`);
+        if (Tavg !== null) out.push(`The transmission averaged over the packet is ${pct(Tavg)}.`); }
+    }
+    out.push({ t: `Time ${t >= 100 ? t.toFixed(0) : t.toFixed(1)} fs.`, live: false });
+    return out;
+  };
+  const waveWords = () => { const o = lastObs;
+    return ['The probability density |ψ|² of the electron against position, filled and colored by the phase of ψ.'].concat(o && o.norm > 1e-6
+      ? [{ t: `It is centered at x = ${o.x.toFixed(2)} nm with spread ${o.dx.toFixed(3)} nm.`, live: false }] : ['There is no probability left in the view.']).concat([{ t: `Time ${t >= 100 ? t.toFixed(0) : t.toFixed(1)} fs.`, live: false }]); };
+  const kWords = () => { const o = lastObs;
+    return ['The probability density |φ(k)|² against wave number k, the momentum picture.'].concat(o && o.norm > 1e-6
+      ? [{ t: `It is centered at momentum ${fmtP(o.k)} with spread ${fmtP(o.dk)}.`, live: false }] : []); };
+  if (window.VD && VD.describe) { VD.describe($('eCan'), energyWords); VD.describe($('wCan'), waveWords, { label: 'Describe the wave function' }); VD.describe($('kCan'), kWords, { label: 'Describe the momentum picture' }); }
   setRunning(running);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => drawAll());
   requestAnimationFrame(loop);
@@ -2646,6 +2686,35 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   requestAnimationFrame(loop);
   if (window.VD3K) G3.view = VD3K.view({ seg: '#dimSeg2', init: init3, change: () => draw(), status: () => {}, start: 'flat' });
   { const q = new URLSearchParams(location.search).get('setup'); if (PRE[q]) { setDim('2d'); applyPreset(q); } }
+  /* what the 2D pictures show now, for a screen reader (VD.describe): the well, the states, the energy and the light */
+  const wellWords = () => {
+    if (!on2 || !Z.w) return ['The two dimensional wells are not shown.'];
+    const p = Z.p, out = [];
+    out.push(Z.kind === 'box' ? `An electron in a box ${(+p.Lx).toFixed(2)} nm wide and ${(+p.Ly).toFixed(2)} nm tall, with hard walls.` : Z.kind === 'circle' ? `An electron in a round box of radius ${(+p.R).toFixed(2)} nm.`
+      : Z.kind === 'osc' ? `An electron in a two dimensional oscillator with ħωx = ${(+p.hx).toFixed(3)} eV and ħωy = ${(+p.hy).toFixed(3)} eV.`
+      : `An electron in a ${p.nw} by ${p.nw} lattice of wells, with barriers ${(+p.V0).toFixed(2)} eV high and ${(+p.g).toFixed(2)} nm wide.`);
+    if (!Z.w || !Z.cr) return out;
+    const P = Z.cr.map((a, j) => a * a + Z.ci[j] * Z.ci[j]); let n = 0, e = 0, e2 = 0, lz = 0;
+    Z.w.states.forEach((s2, j) => { n += P[j]; e += P[j] * s2.E; e2 += P[j] * s2.E * s2.E; if (Z.kind === 'circle') lz += P[j] * s2.m; }); e /= n; e2 /= n;
+    const rows = [...P.keys()].filter((j) => P[j] > 0.01);
+    out.push(rows.length === 1 ? `The electron is in one state, ${Z.w.states[rows[0]].label}.` : `The electron is a mix of ${rows.length} states.`);
+    out.push(Z.running ? 'Running.' : 'Paused.');
+    out.push(`Mean energy ⟨E⟩ = ${f4(e)} eV.`, `Energy spread ΔE = ${f4(Math.sqrt(Math.max(0, e2 - e * e)))} eV.`);
+    const Es = [...new Set(Z.sel.map((j) => +Z.w.states[j].E.toFixed(9)))];
+    if (!Z.field.on && Es.length === 2) out.push(`The beat period is ${(HPL / Math.abs(Es[1] - Es[0])).toFixed(2)} fs.`);
+    if (Z.kind === 'circle') out.push({ t: `Angular momentum ⟨Lz⟩ = ${f3(lz / n)} ħ.`, live: false });
+    out.push({ t: `Mean position ⟨x⟩ = ${f3(Q.dipoleMean(Z.w.X, Z.cr, Z.ci))} nm, ⟨y⟩ = ${f3(Q.dipoleMean(Z.w.Y, Z.cr, Z.ci))} nm.`, live: false });
+    const f = Z.field;
+    if (!f.on) out.push('The light is off.');
+    else { out.push(`The light is on, polarized along ${f.pol}, with photon energy ħω = ${f.hw.toFixed(3)} eV and field strength ${f.F.toFixed(3)} V/nm.`);
+      if (f.to >= 0 && Z.sel.length) { const i = Z.sel[0], dE = Z.w.states[f.to].E - Z.w.states[i].E, x = Q.matEl(f.pol === 'y' ? Z.w.Y : Z.w.X, f.to, i), r = rabiT();
+        out.push(`Tuned to the transition ${Z.w.states[i].label} → ${Z.w.states[f.to].label}, gap ${f4(dE)} eV.`, `The detuning is ${f4(f.hw - dE)} eV.`, x ? `The Rabi period is ${r ? r.toFixed(0) + ' fs' : 'not defined'}.` : 'The light does not link these two states.'); } }
+    out.push({ t: `Time ${Z.t.toFixed(1)} fs.`, live: false });
+    return out;
+  };
+  const levWords = () => !on2 || !Z.w ? [] : [`The energy levels of the well, ${Z.w.states.length} in all, with the lowest at ${f4(Z.w.states[0].E)} eV.`, Z.sel.length === 1 ? '1 level is chosen.' : `${Z.sel.length} levels are chosen.`];
+  if (window.VD && VD.describe) { VD.describe($('q2Can'), wellWords); VD.describe($('q2Lev'), levWords, { label: 'Describe the levels' });
+    VD.describe($('q2Pop'), () => ['The probability of each state against time, for the states that matter most.'], { label: 'Describe the probability plot' }); }
   window.__qw2 = { Z, applyPreset, setDim, toggleState, setField, stepTo, get basis() { return basis; }, get ext() { return ext; } };
 })();
 </script>

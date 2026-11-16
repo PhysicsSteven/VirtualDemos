@@ -1,5 +1,7 @@
 /* demo/gauss-law in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/gauss-law', {
+"Describe the picture":
+  "Describir la imagen",
 "Gaussian sphere, R = {#} cm":
   "Esfera gaussiana, R = {#} cm",
 "Slice z = {#}":
@@ -12,6 +14,10 @@ VDI18N.add('es', 'demo/gauss-law', {
   "enc",
 "Drag to turn · wheel to zoom · double click to reset":
   "Arrastra para girar · rueda para hacer zoom · doble clic para restablecer",
+"Skip to the picture":
+  "Ir a la imagen",
+"Skip to the controls":
+  "Ir a los controles",
 "Gauss's Law":
   "Ley de Gauss",
 "<a>Flux and Gauss’s law</a>":
@@ -22,6 +28,12 @@ VDI18N.add('es', 'demo/gauss-law', {
   "El flujo eléctrico a través de cualquier superficie cerrada es igual a la carga encerrada dividida entre ε₀. Las cargas de afuera también mandan líneas de campo a través de la superficie, pero cada línea que entra vuelve a salir.",
 "lengths in cm · q in nC · E in N/C · Φ in N·m²/C · ε₀ = {#}×{#}⁻¹² C²/(N·m²)":
   "longitudes en cm · q en nC · E en N/C · Φ en N·m²/C · ε₀ = {#}×{#}⁻¹² C²/(N·m²)",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
 "Put the moving charge or surface back where this run started; settings stay":
   "Regresa la carga o la superficie en movimiento a donde empezó esta corrida; los ajustes se quedan",
 "Any surface":
@@ -36,10 +48,34 @@ VDI18N.add('es', 'demo/gauss-law', {
   "Q<sub>enc</sub> = +{#} nC · Φ<sub>E</sub> = {#} N·m²/C<small>∮E·dA numérica = {#} N·m²/C</small>",
 "Slice through the Gaussian surface and the charges. Drag charges, drag inside the surface to move it, drag its edge or grips to resize it. Keys: N selects the next object, arrow keys move it, plus and minus change a charge or the size, Delete removes a charge, space plays or pauses.":
   "Corte a través de la superficie gaussiana y las cargas. Arrastra las cargas, arrastra dentro de la superficie para moverla, arrastra su borde o sus controles para cambiar su tamaño. Teclas: N selecciona el siguiente objeto, las flechas lo mueven, más y menos cambian una carga o el tamaño, Supr quita una carga, espacio inicia o pausa.",
+"A slice through a Gaussian surface and the charges, with the field lines.":
+  "Un corte de una superficie gaussiana y las cargas, con las líneas de campo.",
+"A Gaussian sphere of radius {#} cm.":
+  "Una esfera gaussiana de radio {#} cm.",
+"{#} charge.":
+  "{#} carga.",
+"Charge {#} is +{#} nC at (−{#}, {#}) cm.":
+  "La carga {#} es +{#} nC en (−{#}, {#}) cm.",
+"Charge {#} is inside the surface.":
+  "La carga {#} está dentro de la superficie.",
+"The enclosed charge is +{#} nC.":
+  "La carga encerrada es +{#} nC.",
+"The enclosed charge over ε₀ is {#} N·m²/C.":
+  "La carga encerrada entre ε₀ es {#} N·m²/C.",
+"Field lines crossing the slice: {#} out, {#} in.":
+  "Líneas de campo que cruzan el corte: {#} salen, {#} entran.",
+"The motion is running.":
+  "El movimiento está en marcha.",
 "3D view of the Gaussian surface and the charges. Drag empty space to turn the view, use the wheel or pinch to zoom, double click to reset it. Drag a charge or a grip to move or resize. Keys: N selects the next object, arrow keys move it or change r, plus and minus zoom, Delete removes a charge, space plays or pauses, the bracket keys turn the view, Page Up and Page Down tilt it, {#} resets it.":
   "Vista 3D de la superficie gaussiana y las cargas. Arrastra en un espacio vacío para girar la vista, usa la rueda o pellizca para hacer zoom, doble clic para restablecerla. Arrastra una carga o un control para mover o cambiar el tamaño. Teclas: N selecciona el siguiente objeto, las flechas lo mueven o cambian r, más y menos hacen zoom, Supr quita una carga, espacio inicia o pausa, las teclas de corchete giran la vista, Re Pág y Av Pág la inclinan, {#} la restablece.",
+"Describe the 3D view":
+  "Describir la vista 3D",
 "Plot of the field E against distance with the Gaussian surface marked. Drag the marker or use the left and right arrow keys to move the Gaussian surface. Show data table in the rail lists the plotted values.":
   "Gráfica del campo E en función de la distancia con la superficie gaussiana marcada. Arrastra el marcador o usa las flechas izquierda y derecha para mover la superficie gaussiana. Mostrar la tabla de datos, en el panel, lista los valores graficados.",
+"The plot of E against distance is shown in Symmetry mode.":
+  "La gráfica de E contra la distancia se muestra en el modo Simetría.",
+"Describe the plot":
+  "Describir la gráfica",
 "Charge inside":
   "Carga adentro",
 "Charge outside":
@@ -104,8 +140,8 @@ VDI18N.add('es', 'demo/gauss-law', {
   "Q<sub>enc</sub>/ε₀",
 "Numerical ∮E·dA over the 3D sphere":
   "∮E·dA numérica sobre la esfera 3D",
-"{#} N·m²/C<span>differs from Q<sub>enc</sub>/ε₀ by {#}×{#}⁻¹⁴ N·m²/C, a fraction {#}×{#}⁻¹⁶</span>":
-  "{#} N·m²/C<span>difiere de Q<sub>enc</sub>/ε₀ en {#}×{#}⁻¹⁴ N·m²/C, una fracción de {#}×{#}⁻¹⁶</span>",
+"{#} N·m²/C<span>agrees with Q<sub>enc</sub>/ε₀ to every digit of double precision</span>":
+  "{#} N·m²/C<span>coincide con Q<sub>enc</sub>/ε₀ en todas las cifras de doble precisión</span>",
 "Flux out":
   "Flujo saliente",
 "Flux in":
@@ -178,8 +214,10 @@ VDI18N.add('es', 'demo/gauss-law', {
   "Vista 3D: los puntos de carga dentro de la superficie gaussiana son brillantes, el resto tenues. Con los parches de flujo activados, las tapas del cilindro de la línea y el costado del pastillero se quedan grises: E corre a lo largo de ellos, así que E·dA = {#}.",
 "Model: ideal charge distributions. The line and the plane are infinitely long and wide; the drawing shows only a piece. Arrows on the Gaussian surface have a length proportional to E, capped close to a point or line charge. The ball is an insulator with its charge spread evenly through its volume; its field lines are drawn from the center for simplicity, although in the ball they begin all through the charged volume.":
   "Modelo: distribuciones de carga ideales. La línea y el plano son infinitamente largos y anchos; el dibujo muestra solo una parte. Las flechas sobre la superficie gaussiana tienen una longitud proporcional a E, limitada cerca de una carga puntual o lineal. La esfera maciza es un aislante con su carga repartida uniformemente en su volumen; sus líneas de campo se dibujan desde el centro por simplicidad, aunque en la esfera empiezan en todo el volumen cargado.",
-"{#} N·m²/C<span>agrees with Q<sub>enc</sub>/ε₀ to every digit of double precision</span>":
-  "{#} N·m²/C<span>coincide con Q<sub>enc</sub>/ε₀ en todas las cifras de doble precisión</span>",
+"The numerical flux through the surface is {#} N·m²/C.":
+  "El flujo numérico a través de la superficie es {#} N·m²/C.",
+"{#} N·m²/C<span>differs from Q<sub>enc</sub>/ε₀ by {#}×{#}⁻¹⁴ N·m²/C, a fraction {#}×{#}⁻¹⁶</span>":
+  "{#} N·m²/C<span>difiere de Q<sub>enc</sub>/ε₀ en {#}×{#}⁻¹⁴ N·m²/C, una fracción de {#}×{#}⁻¹⁶</span>",
 "<b>Use the symmetry</b>Seen from its center, the ball looks the same in every direction. So E points straight out or in, and has the same size everywhere on a sphere around the center. Choose that sphere, radius r = {#} cm, as the Gaussian surface.":
   "<b>Usa la simetría</b>Vista desde su centro, la esfera se ve igual en todas direcciones. Así que E apunta directamente hacia afuera o hacia adentro, y tiene la misma magnitud en todos los puntos de una esfera alrededor del centro. Elige esa esfera, de radio r = {#} cm, como superficie gaussiana.",
 "<b>Flux through it</b>E is perpendicular to the sphere and the same size everywhere on it, so the integral is E times the area.<span>Φ = ∮E·dA = E·{#}πr² = E × {#}π({#} m)² = E × {#} m²</span>":
@@ -198,10 +236,26 @@ VDI18N.add('es', 'demo/gauss-law', {
   "Esfera gaussiana r = {#} cm",
 "E = {#} kN/C outward on the Gaussian surface":
   "E = {#} kN/C hacia afuera sobre la superficie gaussiana",
-"(kN/C) against r (cm)":
-  "(kN/C) en función de r (cm)",
 "Plot of E_r against r for a uniformly charged insulating ball with Q = {#} nC and radius R = {#} cm. The Gaussian surface is at r = {#} cm, where E = {#} kN/C. Drag the marker or use the left and right arrow keys to move the Gaussian surface. Show data table in the rail lists the plotted values.":
   "Gráfica de E_r en función de r para una esfera aislante con carga uniforme Q = {#} nC y radio R = {#} cm. La superficie gaussiana está en r = {#} cm, donde E = {#} kN/C. Arrastra el marcador o usa las flechas izquierda y derecha para mover la superficie gaussiana. Mostrar la tabla de datos, en el panel, lista los valores graficados.",
+"(kN/C) against r (cm)":
+  "(kN/C) en función de r (cm)",
+"A uniformly charged ball of total charge +{#} nC and radius {#} cm, with a Gaussian sphere around it.":
+  "Una bola con carga uniforme de carga total +{#} nC y radio {#} cm, con una esfera gaussiana a su alrededor.",
+"The Gaussian sphere has radius {#} cm.":
+  "La esfera gaussiana tiene radio {#} cm.",
+"The flux is {#} N·m²/C.":
+  "El flujo es {#} N·m²/C.",
+"The field E is {#} kN/C.":
+  "El campo E es {#} kN/C.",
+"E points outward.":
+  "E apunta hacia afuera.",
+"A plot of the field E against the distance r, with the Gaussian surface marked.":
+  "Una gráfica del campo E contra la distancia r, con la superficie gaussiana marcada.",
+"E rises in proportion to r inside the ball, up to R = {#} cm, then falls as {#} over r squared.":
+  "E crece en proporción a r dentro de la bola, hasta R = {#} cm, y luego decae como {#} sobre r al cuadrado.",
+"The marker is at {#} cm, where E is {#} kN/C.":
+  "El marcador está en {#} cm, donde E es {#} kN/C.",
 "<i></i><span>+{#} nC</span><span>—</span><span>at (−{#}, {#}) cm, inside, q/ε₀ = {#}</span>":
   "<i></i><span>+{#} nC</span><span>—</span><span>en (−{#}, {#}) cm, adentro, q/ε₀ = {#}</span>",
 "Slice z = {#} through the 3D surface · grid {#} cm":
@@ -234,12 +288,14 @@ VDI18N.add('es', 'demo/gauss-law', {
   "<i></i><span>−{#} nC</span><span>—</span><span>en ({#}, {#}) cm, adentro, q/ε₀ = −{#}</span>",
 "Box {#} × {#} × {#} cm":
   "Caja de {#} × {#} × {#} cm",
-"{#}×{#}⁻¹⁴ N·m²/C <span>≈ {#}</span><span>differs from Q<sub>enc</sub>/ε₀ by {#}×{#}⁻¹⁴ N·m²/C</span>":
-  "{#}×{#}⁻¹⁴ N·m²/C <span>≈ {#}</span><span>difiere de Q<sub>enc</sub>/ε₀ en {#}×{#}⁻¹⁴ N·m²/C</span>",
+"−{#}×{#}⁻¹⁵ N·m²/C <span>≈ {#}</span><span>differs from Q<sub>enc</sub>/ε₀ by {#}×{#}⁻¹⁵ N·m²/C</span>":
+  "−{#}×{#}⁻¹⁵ N·m²/C <span>≈ {#}</span><span>difiere de Q<sub>enc</sub>/ε₀ en {#}×{#}⁻¹⁵ N·m²/C</span>",
 "<i></i><span>+{#} nC</span><span>{#}</span><span>at (−{#}, −{#}) cm, inside, q/ε₀ = {#}</span>":
   "<i></i><span>+{#} nC</span><span>{#}</span><span>en (−{#}, −{#}) cm, adentro, q/ε₀ = {#}</span>",
 "<i></i><span>−{#} nC</span><span>−{#}</span><span>at ({#}, {#}) cm, inside, q/ε₀ = −{#}</span>":
   "<i></i><span>−{#} nC</span><span>−{#}</span><span>en ({#}, {#}) cm, adentro, q/ε₀ = −{#}</span>",
+"{#}×{#}⁻¹⁴ N·m²/C <span>≈ {#}</span><span>differs from Q<sub>enc</sub>/ε₀ by {#}×{#}⁻¹⁴ N·m²/C</span>":
+  "{#}×{#}⁻¹⁴ N·m²/C <span>≈ {#}</span><span>difiere de Q<sub>enc</sub>/ε₀ en {#}×{#}⁻¹⁴ N·m²/C</span>",
 "A uniformly charged insulating ball. Inside, the Gaussian sphere encloses only the fraction (r/R)³ of the charge, so E grows in proportion to r. Outside, E = kQ/r², as if all the charge sat at the center.":
   "Una esfera aislante con carga uniforme. Adentro, la esfera gaussiana encierra solo la fracción (r/R)³ de la carga, así que E crece en proporción a r. Afuera, E = kQ/r², como si toda la carga estuviera en el centro.",
 "none selected":
@@ -296,6 +352,16 @@ VDI18N.add('es', 'demo/gauss-law', {
   "Cualquier forma cerrada: la curva que ves, extendida ± la mitad de la profundidad arriba y abajo del corte, con caras superior e inferior planas. Arrastra los puntos de control, haz doble clic en la curva para agregar uno, selecciona uno y pulsa Supr para quitarlo, o dibuja una superficie nueva.",
 "Your own setup. Pick a setup to return to a known one.":
   "Tu propia configuración. Elige una configuración para volver a una conocida.",
+"An infinite sheet of charge, {#} nC/m², with a Gaussian pillbox through it.":
+  "Una lámina infinita de carga, {#} nC/m², con una caja de píldora gaussiana que la atraviesa.",
+"The caps are {#} cm from the sheet and have radius {#} cm.":
+  "Las tapas están a {#} cm de la lámina y tienen radio {#} cm.",
+"E points away from the sheet on both sides.":
+  "E se aleja de la lámina en ambos lados.",
+"A plot of the field E against the distance h from the sheet, with the Gaussian surface marked.":
+  "Una gráfica del campo E contra la distancia h a la lámina, con la superficie gaussiana marcada.",
+"E has the same size at every distance and points away from the sheet on both sides.":
+  "E tiene el mismo tamaño a cualquier distancia y se aleja de la lámina en ambos lados.",
 "Note":
   "Nota",
 "just left of the sheet":
@@ -326,24 +392,24 @@ VDI18N.add('es', 'demo/gauss-law', {
   "Arrastra para girar",
 "{#} N·m²/C<span>differs from Q<sub>enc</sub>/ε₀ by {#} N·m²/C, a fraction {#}</span>":
   "{#} N·m²/C<span>difiere de Q<sub>enc</sub>/ε₀ en {#} N·m²/C, una fracción de {#}</span>",
-"−{#}×{#}⁻¹⁵ N·m²/C <span>≈ {#}</span><span>differs from Q<sub>enc</sub>/ε₀ by {#}×{#}⁻¹⁵ N·m²/C</span>":
-  "−{#}×{#}⁻¹⁵ N·m²/C <span>≈ {#}</span><span>difiere de Q<sub>enc</sub>/ε₀ en {#}×{#}⁻¹⁵ N·m²/C</span>",
-"{#} N·m²/C <span>≈ {#}</span><span>agrees with Q<sub>enc</sub>/ε₀ to every digit of double precision</span>":
-  "{#} N·m²/C <span>≈ {#}</span><span>coincide con Q<sub>enc</sub>/ε₀ en todas las cifras de doble precisión</span>",
 "{#} values of E_r for a uniformly charged insulating ball with Q = {#} nC and radius R = {#} cm, at even steps across the plot plus the Gaussian surface and R. Positive E_r points outward.":
   "{#} valores de E_r para una esfera aislante con carga uniforme Q = {#} nC y radio R = {#} cm, a pasos iguales a lo largo de la gráfica más la superficie gaussiana y R. E_r positivo apunta hacia afuera.",
 "{#}×{#}⁻¹⁵ N·m²/C <span>≈ {#}</span><span>differs from Q<sub>enc</sub>/ε₀ by {#} N·m²/C, a fraction {#}</span>":
   "{#}×{#}⁻¹⁵ N·m²/C <span>≈ {#}</span><span>difiere de Q<sub>enc</sub>/ε₀ en {#} N·m²/C, una fracción {#}</span>",
+"{#} N·m²/C <span>≈ {#}</span><span>agrees with Q<sub>enc</sub>/ε₀ to every digit of double precision</span>":
+  "{#} N·m²/C <span>≈ {#}</span><span>coincide con Q<sub>enc</sub>/ε₀ en todas las cifras de doble precisión</span>",
+"An infinite line of charge, {#} nC/m, with a Gaussian cylinder around it.":
+  "Una línea infinita de carga, {#} nC/m, con un cilindro gaussiano a su alrededor.",
+"The cylinder has radius {#} cm and length {#} cm.":
+  "El cilindro tiene radio {#} cm y longitud {#} cm.",
+"E points away from the line.":
+  "E se aleja de la línea.",
+"E falls as {#} over r.":
+  "E decae como {#} sobre r.",
 "−{#}×{#}⁻¹⁴ N·m²/C <span>≈ {#}</span><span>differs from Q<sub>enc</sub>/ε₀ by {#}×{#}⁻¹⁴ N·m²/C</span>":
   "−{#}×{#}⁻¹⁴ N·m²/C <span>≈ {#}</span><span>difiere de Q<sub>enc</sub>/ε₀ en {#}×{#}⁻¹⁴ N·m²/C</span>",
 "−{#}×{#}⁻¹⁶ N·m²/C <span>≈ {#}</span><span>differs from Q<sub>enc</sub>/ε₀ by {#}×{#}⁻¹⁶ N·m²/C</span>":
   "−{#}×{#}⁻¹⁶ N·m²/C <span>≈ {#}</span><span>difiere de Q<sub>enc</sub>/ε₀ en {#}×{#}⁻¹⁶ N·m²/C</span>",
-"Time controls":
-  "Controles de tiempo",
-"Run for a moment and pause again":
-  "Avanza un momento y vuelve a pausar",
-"Step":
-  "Paso",
 "Close":
   "Cerrar"
 });

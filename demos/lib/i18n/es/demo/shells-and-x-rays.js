@@ -1,5 +1,7 @@
 /* demo/shells-and-x-rays in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/shells-and-x-rays', {
+"Describe the picture":
+  "Describir la imagen",
 "Neon (Z = {#}): 1s² 2s² 2p⁶":
   "Neón (Z = {#}): 1s² 2s² 2p⁶",
 "electrons in each shell (of 2n²)":
@@ -72,8 +74,28 @@ VDI18N.add('es', 'demo/shells-and-x-rays', {
   "Agregar un electrón",
 "Orbital boxes for every subshell from 1s to 7p, filled with spin up and spin down electrons, and a bar for each shell showing how many electrons it holds out of 2n².":
   "Cajas de orbitales para cada subcapa de 1s a 7p, llenas con electrones de espín arriba y espín abajo, y una barra para cada capa que muestra cuántos electrones contiene de 2n².",
+"Orbital boxes for every subshell from 1s to 7p, filled for Neon, Z = {#}.":
+  "Cajas de orbitales de todas las subcapas de 1s a 7p, llenas para neón, Z = {#}.",
+"The measured configuration is 1s² 2s² 2p⁶.":
+  "La configuración medida es 1s² 2s² 2p⁶.",
+"The n + l rule gives the same configuration.":
+  "La regla n + l da la misma configuración.",
+"Electrons per shell: {#}, {#}.":
+  "Electrones por capa: {#}, {#}.",
+"The outer shell is n = {#}, with {#} electrons.":
+  "La capa exterior es n = {#}, con {#} electrones.",
+"The first ionization energy is {#} eV.":
+  "La primera energía de ionización es {#} eV.",
+"Z_eff = {#}.":
+  "Z_ef = {#}.",
 "Graph of the first ionization energy against atomic number, for Z = {#} to {#}.":
   "Gráfica de la primera energía de ionización en función del número atómico, para Z = {#} a {#}.",
+"A graph of the first ionization energy against atomic number, with the current element marked.":
+  "Una gráfica de la primera energía de ionización contra el número atómico, con el elemento actual marcado.",
+"The current element, Z = {#}, is at {#} eV.":
+  "El elemento actual, Z = {#}, está en {#} eV.",
+"Describe the graph":
+  "Describir la gráfica",
 "Pick an element":
   "Elige un elemento",
 "Pick an element, or add and remove electrons one at a time":
@@ -734,6 +756,10 @@ VDI18N.add('es', 'demo/shells-and-x-rays', {
   "kerma en aire K/K₀",
 "TUBE VOLTAGE":
   "TUBE VOLTAGE",
+"Skip to the picture":
+  "Ir a la imagen",
+"Skip to the controls":
+  "Ir a los controles",
 "not to scale: the nucleus is tens of thousands of times smaller than the atom":
   "no está a escala: el núcleo es decenas de miles de veces más pequeño que el átomo",
 "Carbon":
@@ -846,6 +872,30 @@ VDI18N.add('es', 'demo/shells-and-x-rays', {
   "Cámara y capas hemirreductoras",
 "<span>need the tungsten target at {#} kV or more</span>":
   "<span>requieren el blanco de tungsteno a {#} kV o más</span>",
+"An X-ray tube: electrons hit a target and a spectrometer measures the X-rays.":
+  "Un tubo de rayos X: los electrones golpean un blanco y un espectrómetro mide los rayos X.",
+"The target is Copper, Z = {#}.":
+  "El blanco es cobre, Z = {#}.",
+"Tube voltage {#} kV.":
+  "Voltaje del tubo {#} kV.",
+"The spectrum is plotted against wavelength.":
+  "El espectro se grafica contra la longitud de onda.",
+"The cutoff wavelength is {#} pm.":
+  "La longitud de onda de corte es {#} pm.",
+"The K edge is {#} keV.":
+  "El borde K está en {#} keV.",
+"The Kα₁ line is at {#} pm.":
+  "La línea Kα₁ está en {#} pm.",
+"The Kα₂ line is at {#} pm.":
+  "La línea Kα₂ está en {#} pm.",
+"The Kβ₁ line is at {#} pm.":
+  "La línea Kβ₁ está en {#} pm.",
+"The cursor is at {#} pm, {#} keV.":
+  "El cursor está en {#} pm, {#} keV.",
+"Filtration {#} mm of aluminum.":
+  "Filtración de {#} mm de aluminio.",
+"The chamber and half value layers need the tungsten target at {#} kV or more.":
+  "La cámara y las capas hemirreductoras necesitan el blanco de tungsteno a {#} kV o más.",
 "X-rays to the spectrometer":
   "Rayos X al espectrómetro",
 "high voltage {#} kV":
@@ -906,8 +956,22 @@ VDI18N.add('es', 'demo/shells-and-x-rays', {
   "Al (mm)",
 "sheets (mm)":
   "láminas (mm)",
+"The target is Tungsten, Z = {#}.":
+  "El blanco es tungsteno, Z = {#}.",
+"The spectrum is plotted against photon energy.":
+  "El espectro se grafica contra la energía del fotón.",
+"The chamber reads K/K₀ = {#} with {#} mm of aluminum sheets.":
+  "La cámara marca K/K₀ = {#} con {#} mm de láminas de aluminio.",
+"The first half value layer is {#} mm of aluminum.":
+  "La primera capa hemirreductora es de {#} mm de aluminio.",
+"The second half value layer is {#} mm of aluminum.":
+  "La segunda capa hemirreductora es de {#} mm de aluminio.",
+"The mean photon energy is {#} keV.":
+  "La energía media del fotón es {#} keV.",
 "target: aluminum":
   "blanco: aluminio",
+"The target is Aluminum, Z = {#}.":
+  "El blanco es aluminio, Z = {#}.",
 "target: silicon":
   "blanco: silicio",
 "target: sulfur":
@@ -922,6 +986,8 @@ VDI18N.add('es', 'demo/shells-and-x-rays', {
   "blanco: calcio",
 "target: scandium":
   "blanco: escandio",
+"The target is Scandium, Z = {#}.":
+  "El blanco es escandio, Z = {#}.",
 "target: titanium":
   "blanco: titanio",
 "target: vanadium":
@@ -936,6 +1002,8 @@ VDI18N.add('es', 'demo/shells-and-x-rays', {
   "blanco: cobalto",
 "target: nickel":
   "blanco: níquel",
+"The target is Nickel, Z = {#}.":
+  "El blanco es níquel, Z = {#}.",
 "target: zinc":
   "blanco: zinc",
 "target: gallium":
@@ -946,6 +1014,8 @@ VDI18N.add('es', 'demo/shells-and-x-rays', {
   "blanco: arsénico",
 "target: selenium":
   "blanco: selenio",
+"The target is Selenium, Z = {#}.":
+  "El blanco es selenio, Z = {#}.",
 "target: bromine":
   "blanco: bromo",
 "target: krypton":
@@ -960,6 +1030,8 @@ VDI18N.add('es', 'demo/shells-and-x-rays', {
   "blanco: circonio",
 "target: niobium":
   "blanco: niobio",
+"The target is Molybdenum, Z = {#}.":
+  "El blanco es molibdeno, Z = {#}.",
 "target: ruthenium":
   "blanco: rutenio",
 "target: rhodium":
@@ -974,6 +1046,8 @@ VDI18N.add('es', 'demo/shells-and-x-rays', {
   "blanco: indio",
 "target: tin":
   "blanco: estaño",
+"The target is Tin, Z = {#}.":
+  "El blanco es estaño, Z = {#}.",
 "target: antimony":
   "blanco: antimonio",
 "target: tellurium":
@@ -986,6 +1060,8 @@ VDI18N.add('es', 'demo/shells-and-x-rays', {
   "blanco: cesio",
 "target: barium":
   "blanco: bario",
+"The target is Barium, Z = {#}.":
+  "El blanco es bario, Z = {#}.",
 "target: lanthanum":
   "blanco: lantano",
 "target: cerium":
@@ -1000,6 +1076,8 @@ VDI18N.add('es', 'demo/shells-and-x-rays', {
   "blanco: europio",
 "target: gadolinium":
   "blanco: gadolinio",
+"The target is Gadolinium, Z = {#}.":
+  "El blanco es gadolinio, Z = {#}.",
 "target: terbium":
   "blanco: terbio",
 "target: dysprosium":
@@ -1014,6 +1092,8 @@ VDI18N.add('es', 'demo/shells-and-x-rays', {
   "blanco: iterbio",
 "target: tantalum":
   "blanco: tantalio",
+"The target is Tantalum, Z = {#}.":
+  "El blanco es tántalo, Z = {#}.",
 "target: rhenium":
   "blanco: renio",
 "target: osmium":
@@ -1026,6 +1106,10 @@ VDI18N.add('es', 'demo/shells-and-x-rays', {
   "blanco: oro",
 "target: mercury":
   "blanco: mercurio",
+"The target is Mercury, Z = {#}.":
+  "El blanco es mercurio, Z = {#}.",
+"There are no K lines: the voltage is below the K edge.":
+  "No hay líneas K: el voltaje está por debajo del borde K.",
 "target: thallium":
   "blanco: talio",
 "target: lead":
@@ -1040,12 +1124,22 @@ VDI18N.add('es', 'demo/shells-and-x-rays', {
   "¹¹C⁺: radiactivo, semivida de {#} minutos.",
 "¹²C²⁺: stable, {#}% of natural C.":
   "¹²C²⁺: estable, {#}% del C natural.",
-"Rubidium":
-  "Rubidio",
+"Molybdenum":
+  "Molibdeno",
 "The last mystery target was {el} (Z = {z}).":
   "El último blanco misterioso era {el} (Z = {z}).",
-"The last mystery target was rubidium (Z = {#}).":
-  "El último blanco misterioso era rubidio (Z = {#}).",
+"The last mystery target was molybdenum (Z = {#}).":
+  "El último blanco misterioso fue molibdeno (Z = {#}).",
+"Orbital boxes for every subshell from 1s to 7p, filled for Chromium, Z = {#}.":
+  "Casillas orbitales de todas las subcapas, de 1s a 7p, llenas para el cromo, Z = {#}.",
+"The measured configuration is 1s² 2s² 2p⁶ 3s² 3p⁶ 3d⁵ 4s¹.":
+  "La configuración medida es 1s² 2s² 2p⁶ 3s² 3p⁶ 3d⁵ 4s¹.",
+"The n + l rule gives 1s² 2s² 2p⁶ 3s² 3p⁶ 3d⁴ 4s², which differs.":
+  "La regla n + l da 1s² 2s² 2p⁶ 3s² 3p⁶ 3d⁴ 4s², que es distinta.",
+"Electrons per shell: {#}, {#}, {#}, {#}.":
+  "Electrones por capa: {#}, {#}, {#}, {#}.",
+"The outer shell is n = {#}, with {#} electron.":
+  "La capa exterior es n = {#}, con {#} electrón.",
 "air kerma chamber":
   "cámara de kerma en aire",
 "filter and sheets to scale":
@@ -1056,6 +1150,10 @@ VDI18N.add('es', 'demo/shells-and-x-rays', {
   "aún no hay láminas",
 "filter and sheets to scale; the reading is the air kerma relative to no sheets":
   "filtro y láminas a escala; la lectura es el kerma en aire relativo a sin láminas",
+"Rubidium":
+  "Rubidio",
+"The last mystery target was rubidium (Z = {#}).":
+  "El último blanco misterioso era rubidio (Z = {#}).",
 "Close":
   "Cerrar",
 "Titanium":

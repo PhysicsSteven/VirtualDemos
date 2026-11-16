@@ -970,6 +970,44 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('viewSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-v]'); if (b && b.dataset.v !== S.view) setView(b.dataset.v); });
   $('ptable').addEventListener('click', (e) => { const b = e.target.closest('[data-z]'); if (!b) return; if (S.view === 'build') { const z = +b.dataset.z; baSet(z, commonN(z), z); } else setZ(+b.dataset.z); });
   for (const [id, dp, dn, de] of [['baPm', -1, 0, 0], ['baPp', 1, 0, 0], ['baNm', 0, -1, 0], ['baNp', 0, 1, 0], ['baEm', 0, 0, -1], ['baEp', 0, 0, 1]]) $(id).addEventListener('click', () => baSet(BA.p + dp, BA.n + dn, BA.e + de));
+  /* what the pictures show now, for a screen reader (VD.describe): the element and its shells, the model atom, or the X-ray tube and its spectrum */
+  const sceneWords = () => {
+    const out = [];
+    if (S.view === 'shells') {
+      const Z = S.sh.Z, e = byZ(Z), real = realConfig(Z), rule = ruleConfig(Z), os = outerShell(real), cr = pretty(real), cu = pretty(rule);
+      out.push(`Orbital boxes for every subshell from 1s to 7p, filled for ${e[2]}, Z = ${Z}.`, `The measured configuration is ${cr}.`, cr === cu ? 'The n + l rule gives the same configuration.' : `The n + l rule gives ${cu}, which differs.`);
+      out.push(`Electrons per shell: ${shellCounts(real).filter((k, i, a) => a.slice(i).some((q) => q)).join(', ')}.`, os.count === 1 ? `The outer shell is n = ${os.n}, with 1 electron.` : `The outer shell is n = ${os.n}, with ${os.count} electrons.`);
+      if (S.blind) out.push('The first ionization energy and its graph are hidden.');
+      else if (e[7] == null) out.push('The first ionization energy is not measured.');
+      else out.push(`The first ionization energy is ${f(e[7], 4)} eV.`, `Z_eff = ${f(zEff(e[7], os.n), 3)}.`);
+    } else if (S.view === 'build') {
+      const i = atomInfo(BA.p, BA.n, BA.e), sh = ESHELL(BA.p, BA.e);
+      out.push(`A model atom with ${BA.p} protons, ${BA.n} neutrons and ${BA.e} electrons.`, i.el ? `The element is ${i.el[2]}.` : 'There is no element with this many protons.',
+        i.charge === 0 ? 'The atom is neutral.' : i.charge > 0 ? `The atom is a positive ion with charge +${Math.abs(i.charge)}e.` : `The atom is a negative ion with charge −${Math.abs(i.charge)}e.`, `The mass number is ${i.A}.`);
+      if (i.el) out.push(`The isotope is ${i.A}${i.el[1]}, ${baStatus(i)}.`);
+      if (i.massU) out.push(`The mass of the neutral atom is ${i.massU.toFixed(6)} u${i.est ? ', estimated' : ''}.`);
+      if (BA.e) out.push(`Electrons per shell: ${sh.filter((k, j, a) => a.slice(j).some((q) => q)).join(', ')}.`, `The configuration is ${pretty(ionConfig(BA.p, BA.e))}.`); else out.push('There are no electrons.');
+    } else {
+      const Z = xZ(), x = XR[Z], kV = S.xr.kV, myst = S.xr.target === 'mystery', ln = xrayLines(Z, kV), lmin = lamPm(kV * 1000), cl = S.xr.axis === 'lam' ? S.xr.cur : lamPm(S.xr.cur), q = beamQ(Z, kV), on = S.xr.al > 0 || S.xr.cu > 0;
+      out.push('An X-ray tube: electrons hit a target and a spectrometer measures the X-rays.', myst ? 'The target is a mystery element.' : `The target is ${byZ(Z)[2]}, Z = ${Z}.`, `Tube voltage ${f(kV, 1)} kV.`);
+      out.push(S.xr.axis === 'lam' ? 'The spectrum is plotted against wavelength.' : 'The spectrum is plotted against photon energy.');
+      if (S.blind) out.push('The cutoff wavelength, the K edge, the line energies and the half value layers are hidden.');
+      else { out.push(`The cutoff wavelength is ${f(lmin, 3)} pm.`);
+        if (!myst) out.push(`The K edge is ${f(x.kedge / 1000, 4)} keV.`);
+        if (ln.length) ln.forEach((l) => out.push(`The ${l.name} line is at ${f(lamPm(l.E), 3)} pm.`)); else out.push('There are no K lines: the voltage is below the K edge.'); }
+      out.push(`The cursor is at ${f(cl, 2)} pm, ${f(ePm(cl) / 1000, 4)} keV.`);
+      out.push(S.xr.cu ? `Filtration ${f(S.xr.al, 1)} mm of aluminum plus ${f(S.xr.cu, 2)} mm of copper.` : `Filtration ${f(S.xr.al, 1)} mm of aluminum.`);
+      if (q.none) out.push('The chamber and half value layers need the tungsten target at 20 kV or more.');
+      else { out.push(`The chamber reads K/K₀ = ${f(chamber(Z, kV), 4)} with ${f(S.xr.abs, 1)} mm of aluminum sheets.`);
+        if (!on) out.push('Add filtration to get half value layers.');
+        else { if (S.blind) out.push('The half value layers are hidden.'); else out.push(`The first half value layer is ${f(q.h1, 2)} mm of aluminum.`, `The second half value layer is ${f(q.h2, 2)} mm of aluminum.`);
+          out.push(`The mean photon energy is ${f(q.Em, 1)} keV.`); } }
+    }
+    return out;
+  };
+  const curveWords = () => S.view !== 'shells' ? [] : S.blind ? ['The graph of the first ionization energy against atomic number is hidden.']
+    : ['A graph of the first ionization energy against atomic number, with the current element marked.', byZ(S.sh.Z)[7] == null ? 'The current element has no measured value.' : `The current element, Z = ${S.sh.Z}, is at ${f(byZ(S.sh.Z)[7], 4)} eV.`];
+  if (window.VD && VD.describe) { VD.describe(can, sceneWords); VD.describe(cur, curveWords, { label: 'Describe the graph' }); }
   window.__sx = Object.assign(window.__sx || {}, { BA, baSet, setView });
   $('zDown').addEventListener('click', () => setZ(S.sh.Z - 1)); $('zUp').addEventListener('click', () => setZ(S.sh.Z + 1));
   $('fillSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-f]'); if (b) { S.sh.fill = b.dataset.f; custom(); sync(); redraw(); } });

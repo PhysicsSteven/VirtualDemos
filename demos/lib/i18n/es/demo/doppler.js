@@ -12,6 +12,8 @@ VDI18N.add('es', 'demo/doppler', {
   "f/({#} − M) de frente, acercándose",
 "f/({#} + M) head on, receding":
   "f/({#} + M) de frente, alejándose",
+"Describe the picture":
+  "Describir la imagen",
 "Doppler Effect and Shock Waves":
   "Efecto Doppler y ondas de choque",
 "<a><span>←</span> <span>Timbre and Harmonics</span></a><a><span>Chladni Plates</span> <span>→</span></a>":
@@ -44,6 +46,20 @@ VDI18N.add('es', 'demo/doppler', {
   "3D o plano",
 "Wavefronts spreading from a moving source, with an observer. Below, the frequency the observer receives over time; for light, a plot of received over emitted frequency against speed, and the spectrum. Drag the source or the observer to move them, and drag the round grip at the tip of an arrow to set that velocity. Keys: arrows move the selected object, N selects the other object, plus and minus change its speed, brackets turn its direction, space plays or pauses, R restarts, L switches between sound and light.":
   "Frentes de onda que se extienden desde una fuente en movimiento, con un observador. Abajo, la frecuencia que recibe el observador a lo largo del tiempo; para la luz, una gráfica de la frecuencia recibida entre la emitida en función de la rapidez, y el espectro. Arrastra la fuente o el observador para moverlos, y arrastra el agarre redondo en la punta de una flecha para fijar esa velocidad. Teclas: las flechas mueven el objeto seleccionado, N selecciona el otro objeto, más y menos cambian su rapidez, los corchetes giran su dirección, espacio inicia o pausa, R reinicia, L cambia entre sonido y luz.",
+"Wavefronts of sound spread from a source emitting {#} Hz, with an observer.":
+  "Frentes de onda de sonido salen de una fuente que emite {#} Hz, con un observador.",
+"The source moves at Mach {#}, {#} m/s, in direction {#}°.":
+  "La fuente se mueve a Mach {#}, {#} m/s, en la dirección {#}°.",
+"The observer is at rest.":
+  "El observador está en reposo.",
+"Paused.":
+  "En pausa.",
+"The observer hears {#} Hz.":
+  "El observador oye {#} Hz.",
+"The ratio f′/f is {#}.":
+  "La razón f′/f es {#}.",
+"Time {#} s.":
+  "Tiempo {#} s.",
 "Source and observer":
   "Fuente y observador",
 "<span>Source</span>":
@@ -144,6 +160,10 @@ VDI18N.add('es', 'demo/doppler', {
   "En movimiento",
 "Speed (m/s)":
   "Rapidez (m/s)",
+"Skip to the picture":
+  "Ir a la imagen",
+"Skip to the controls":
+  "Ir a los controles",
 "source":
   "fuente",
 "sees {#} nm":
@@ -174,6 +194,16 @@ VDI18N.add('es', 'demo/doppler', {
   "Cada anillo es una cresta, dibujada cada {#} s del propio reloj de la fuente; las crestas reales de la luz visible están separadas solo unos {#} nm. Un segundo luz es {#} {#} km.",
 "<span>blueshifted: approaching, so no Hubble distance</span>":
   "<span>corrida al azul: se acerca, así que no hay distancia de Hubble</span>",
+"Wavefronts of light spread from a source emitting {#} nm, with an observer at rest.":
+  "Frentes de onda de luz salen de una fuente que emite {#} nm, con un observador en reposo.",
+"The source moves at β = {#}, {#} km/s, in direction {#}°.":
+  "La fuente se mueve a β = {#}, {#} km/s, en la dirección {#}°.",
+"Playing.":
+  "En reproducción.",
+"The observer sees {#} nm.":
+  "El observador ve {#} nm.",
+"The relativistic ratio f′/f is {#}.":
+  "La razón relativista f′/f es {#}.",
 "f({#} + v_o/v) approaching":
   "f({#} + v_o/v) acercándose",
 "f({#} − v_o/v) receding":
@@ -186,6 +216,10 @@ VDI18N.add('es', 'demo/doppler', {
   "t = {#} s <small>· tiempo ×{#}/{#}</small>",
 "source at rest":
   "fuente en reposo",
+"The source is at rest.":
+  "La fuente está en reposo.",
+"The observer moves at {#} of the speed of sound, {#} m/s, in direction {#}°.":
+  "El observador se mueve a {#} de la velocidad del sonido, {#} m/s, en la dirección {#}°.",
 "crests pile up: Mach {#}":
   "las crestas se acumulan: Mach {#}",
 "silent: no sound yet":
@@ -212,10 +246,16 @@ VDI18N.add('es', 'demo/doppler', {
   "A {#} c, γ = {#}. La luz que salió de la fuente mientras esta se movía perpendicular a la línea de visión (θ = {#}°) llega con f′ = f/γ: λ pasa de {#} a {#} nm solo por la dilatación del tiempo. La física clásica no predice ningún corrimiento ahí.",
 "Received frequency f′ against time":
   "Frecuencia recibida f′ contra el tiempo",
-"No sound reaches the observer yet: it is outside the Mach cone.":
-  "Aún no llega sonido al observador: está fuera del cono de Mach.",
 "No sound has reached the observer yet.":
   "Aún no ha llegado sonido al observador.",
+"At Mach {#} the sound piles up in a flat wall at {#}°.":
+  "A Mach {#} el sonido se acumula en una pared plana a {#}°.",
+"No sound reaches the observer yet: it is outside the Mach cone.":
+  "Aún no llega sonido al observador: está fuera del cono de Mach.",
+"The observer hears silence: outside the Mach cone.":
+  "El observador oye silencio: está fuera del cono de Mach.",
+"The Mach cone half angle is {#}°.":
+  "El semiángulo del cono de Mach es {#}°.",
 "observer":
   "observador",
 "Readings record sound only. Choose Sound.":

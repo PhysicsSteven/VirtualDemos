@@ -3069,6 +3069,59 @@ void main() {
   $('oDen').textContent = F.density; $('sDen').value = F.density;
   applyPreset('inside');
   setView3d(true);
+  /* what the pictures show now, for a screen reader (VD.describe): the surface and charges, or the symmetry drawing and the plot of E */
+  const surfWords = () => {
+    const x = F.surf === 'sphere' ? `A Gaussian sphere of radius ${fcm(F.sph.R)}.` : F.surf === 'box' ? `A Gaussian box ${fcm(F.rect.w)} wide, ${fcm(F.rect.h)} tall and ${fcm(F.depth)} deep.`
+      : F.surf === 'cyl' ? `A Gaussian cylinder ${fcm(F.rect.w)} long and ${fcm(F.rect.h)} across.` : `A freeform Gaussian prism ${fcm(F.depth)} deep.`;
+    return x;
+  };
+  const sceneWords = () => {
+    const out = [];
+    if (mode === 'flux') {
+      const enc = enclosed(), G = enc.Q * NC / EPS0, pred = $('tPred').checked;
+      out.push('A slice through a Gaussian surface and the charges, with the field lines.', surfWords());
+      out.push(F.charges.length === 1 ? '1 charge.' : F.charges.length ? `${F.charges.length} charges.` : 'No charges.');
+      F.charges.forEach((c, i) => {
+        out.push({ t: `Charge ${i + 1} is ${fq(c.q)} at (${fcm2(c.x)}, ${fcm2(c.y)}) cm.`, live: false });
+        out.push(c.bnd === 'on' ? `Charge ${i + 1} is on the surface.` : c.inside ? `Charge ${i + 1} is inside the surface.` : `Charge ${i + 1} is outside the surface.`);
+      });
+      out.push(`The enclosed charge is ${fq(enc.Q)}.`);
+      if (bnd === 'on') out.push('The flux has no value because a charge is on the surface.');
+      else { if (pred) out.push(`The enclosed charge over ε₀ is ${fflux(G)}.`);
+        if (num && !onSurface) out.push(`The numerical flux through the surface is ${Math.abs(num.total) < 1e-9 * Math.max(enc.scale, 1e-30) ? '0 N·m²/C' : fflux(num.total)}.`); }
+      out.push({ t: `Field lines crossing the slice: ${lineCount.out} out, ${lineCount.inn} in.`, live: false });
+      out.push(running ? 'The motion is running.' : 'The motion is paused.');
+      return out;
+    }
+    const k = Ysym.kind, r = symR(), surf = symOnShell(), E = symEdraw(r); let Qenc;
+    if (k === 'sphere') { const { sk, Q, R } = Ysym; Qenc = enclosedSphere(sk, Q, R, r);
+      out.push(sk === 'point' ? `A point charge ${fq(Q, 1)} at the center, with a Gaussian sphere around it.` : sk === 'ball' ? `A uniformly charged ball of total charge ${fq(Q, 1)} and radius ${fcm(R)}, with a Gaussian sphere around it.`
+        : `A conducting sphere of total charge ${fq(Q, 1)} and radius ${fcm(R)}, with a Gaussian sphere around it.`, `The Gaussian sphere has radius ${fcm(r)}.`); }
+    else if (k === 'line') { Qenc = Ysym.lam * Ysym.L * CM;
+      out.push(`An infinite line of charge, ${Ysym.lam} nC/m, with a Gaussian cylinder around it.`.replace('-', '−'), `The cylinder has radius ${fcm(r)} and length ${fcm(Ysym.L)}.`); }
+    else { Qenc = Ysym.sig * Math.PI * (Ysym.a * CM) ** 2;
+      out.push(`An infinite sheet of charge, ${Ysym.sig} nC/m², with a Gaussian pillbox through it.`.replace('-', '−'), `The caps are ${fcm(r)} from the sheet and have radius ${fcm(Ysym.a)}.`); }
+    if (surf) out.push('The Gaussian surface lies on the charged surface, so the enclosed charge has no single value.', `The field jumps from 0 to ${fmtSI(Math.abs(E), 'N/C', 3)} across it.`);
+    else { out.push(`The enclosed charge is ${fq(Qenc, 3)}.`, `The flux is ${fflux(Qenc * NC / EPS0)}.`);
+      out.push(`The field E is ${fmtSI(Math.abs(E), 'N/C', 4)}.`);
+      if (E !== 0) out.push(k === 'plane' ? (E > 0 ? 'E points away from the sheet on both sides.' : 'E points toward the sheet on both sides.') : k === 'line' ? (E > 0 ? 'E points away from the line.' : 'E points toward the line.') : (E > 0 ? 'E points outward.' : 'E points inward.')); }
+    return out;
+  };
+  const plotWords = () => {
+    if (mode !== 'sym') return ['The plot of E against distance is shown in Symmetry mode.'];
+    const k = Ysym.kind, r = symR(), surf = symOnShell(), E = symEdraw(r), out = [];
+    out.push(`A plot of the field E against ${k === 'plane' ? 'the distance h from the sheet' : 'the distance r'}, with the Gaussian surface marked.`);
+    if (k === 'sphere') out.push(Ysym.sk === 'point' ? 'E falls as 1 over r squared.' : Ysym.sk === 'ball' ? `E rises in proportion to r inside the ball, up to R = ${fcm(Ysym.R)}, then falls as 1 over r squared.`
+      : `E is zero inside the conductor, jumps at R = ${fcm(Ysym.R)}, then falls as 1 over r squared.`);
+    else if (k === 'line') out.push('E falls as 1 over r.'); else out.push('E has the same size at every distance and points away from the sheet on both sides.');
+    out.push(surf ? `The marker is at ${fcm(r)}, where E jumps from 0 to ${fmtSI(Math.abs(E), 'N/C', 3)}.` : `The marker is at ${fcm(r)}, where E is ${fmtSI(Math.abs(E), 'N/C', 3)}.`);
+    return out;
+  };
+  if (window.VD && VD.describe) {
+    VD.describe($('dCan'), sceneWords);
+    VD.describe($('oCan'), () => sceneWords().map((q) => ({ t: q.t || q, live: false })), { label: 'Describe the 3D view' });   /* the same words, announced once by the slice */
+    VD.describe($('pCan'), plotWords, { label: 'Describe the plot' });
+  }
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { linesKey = ''; drawAll(); });
   requestAnimationFrame(loop);
 })();

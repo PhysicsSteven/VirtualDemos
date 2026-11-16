@@ -14,6 +14,8 @@ VDI18N.add('es', 'demo/speed-of-light', {
   "rev/s con signo, CW +",
 "reading (mm)":
   "lectura (mm)",
+"Describe the picture":
+  "Describir la imagen",
 "Measuring microscope":
   "Microscopio de medición",
 "jitter simulated":
@@ -44,6 +46,10 @@ VDI18N.add('es', 'demo/speed-of-light', {
   "CW",
 "CW CCW":
   "CW CCW",
+"Skip to the picture":
+  "Ir a la imagen",
+"Skip to the controls":
+  "Ir a los controles",
 "Speed of Light":
   "La rapidez de la luz",
 "<a><span>←</span> <span>Spacetime Diagrams</span></a><a><span>GPS Clocks and Relativity</span> <span>→</span></a>":
@@ -76,12 +82,48 @@ VDI18N.add('es', 'demo/speed-of-light', {
   "CW <small>{#} rev/s · D {#} m</small>",
 "The rotating mirror bench in 3D: laser, lens L1, beam splitter and microscope, lens L2, rotating mirror MR with its speed control, and the far mirror MF. Drag to turn, scroll to zoom. Drag L1 or L2 along the rail, MF along the beam, the speed knob up or down, or the micrometer thimble up or down. Keys: up and down change the speed, left and right change D, page up and page down change B, C reverses the motor, V switches the view, space pauses.":
   "El banco de espejo giratorio en 3D: láser, lente L1, divisor de haz y microscopio, lente L2, espejo giratorio MR con su control de velocidad, y el espejo lejano MF. Arrastra para girar, desplaza para acercar. Arrastra L1 o L2 a lo largo del riel, MF a lo largo del haz, la perilla de velocidad hacia arriba o abajo, o el tambor del micrómetro hacia arriba o abajo. Teclas: arriba y abajo cambian la velocidad, izquierda y derecha cambian D, Re Pág y Av Pág cambian B, C invierte el motor, V cambia la vista, espacio pausa.",
+"A rotating mirror bench: a laser source S, lenses L1 and L2, a rotating mirror MR, a far mirror MF and a measuring microscope.":
+  "Un banco de espejo giratorio: una fuente láser S, lentes L1 y L2, un espejo giratorio MR, un espejo lejano MF y un microscopio de medición.",
+"The mirror MR turns clockwise at {#} rev/s.":
+  "El espejo MR gira en sentido horario a {#} rev/s.",
+"D, from MR to MF, is {#} m.":
+  "D, de MR a MF, es {#} m.",
+"B, from L2 to MR, is {#} m.":
+  "B, de L2 a MR, es {#} m.",
+"A, from S to L2, is {#} m.":
+  "A, de S a L2, es {#} m.",
+"The image is in focus.":
+  "La imagen está enfocada.",
+"The normal view shows the continuous beam.":
+  "La vista normal muestra el haz continuo.",
+"Playing.":
+  "En reproducción.",
+"The light takes Δt = {#} ns for the round trip.":
+  "La luz tarda Δt = {#} ns en el viaje de ida y vuelta.",
+"The mirror turns Δθ = {#} µrad meanwhile.":
+  "Mientras tanto el espejo gira Δθ = {#} µrad.",
+"The true image shift from rest is {#} mm.":
+  "El desplazamiento real de la imagen desde el reposo es {#} mm.",
+"The speed meter reads {#} rev/s.":
+  "El medidor de velocidad marca {#} rev/s.",
+"No readings are recorded.":
+  "No hay lecturas registradas.",
+"Describe the 3D bench":
+  "Describir el banco en 3D",
 "Side view of the bench. Drag lens L2 to change B and the far mirror MF to change D. Keys: left and right change B, up and down change D.":
   "Vista lateral del banco. Arrastra la lente L2 para cambiar B y el espejo lejano MF para cambiar D. Teclas: izquierda y derecha cambian B, arriba y abajo cambian D.",
 "Drag to turn the bench, scroll to zoom. Drag L1, L2, the far mirror MF, the speed knob or the micrometer thimble.":
   "Arrastra para girar el banco, desplaza para acercar. Arrastra L1, L2, el espejo lejano MF, la perilla de velocidad o el tambor del micrómetro.",
 "Measuring microscope. The eyepiece shows the returning image and a crosshair; beside it the micrometer. Drag the thimble up or down, or drag the image in the eyepiece sideways, to move the crosshair. Keys: left and right move {#} mm, with shift {#} mm; page up and page down move {#} mm.":
   "Microscopio de medición. El ocular muestra la imagen que regresa y una retícula; a su lado, el micrómetro. Arrastra el tambor hacia arriba o abajo, o arrastra la imagen en el ocular hacia los lados, para mover la retícula. Teclas: izquierda y derecha mueven {#} mm, con Shift {#} mm; Re Pág y Av Pág mueven {#} mm.",
+"The measuring microscope: the eyepiece shows the returning image and a crosshair, with the micrometer beside it.":
+  "El microscopio de medición: el ocular muestra la imagen de regreso y una retícula, con el micrómetro a un lado.",
+"The micrometer reads {#} mm.":
+  "El micrómetro marca {#} mm.",
+"The center of the image is {#} mm to the right of the crosshair.":
+  "El centro de la imagen está {#} mm a la derecha de la retícula.",
+"Describe the microscope":
+  "Describir el microscopio",
 "Top view of the light path, with the path length D not to scale. Drag lens L2 along the bench to change B, drag the far mirror MF along the path to change D. Keys: left and right change B, up and down change D, with shift for bigger steps.":
   "Vista superior de la trayectoria de la luz, con la longitud de trayectoria D no a escala. Arrastra la lente L2 a lo largo del banco para cambiar B, arrastra el espejo lejano MF a lo largo de la trayectoria para cambiar D. Teclas: izquierda y derecha cambian B, arriba y abajo cambian D, con Shift para pasos más grandes.",
 "Divider between the bench and the two views":
@@ -162,6 +204,12 @@ VDI18N.add('es', 'demo/speed-of-light', {
   "Tus distancias medidas, usadas para c (tomadas del banco; edítalas para usar tus propios valores medidos con cinta):",
 "Plot of micrometer reading against signed speed meter reading, CW positive, with a least squares line.":
   "Gráfica de la lectura del micrómetro en función de la lectura con signo del medidor de velocidad, CW positivo, con una recta de mínimos cuadrados.",
+"A plot of the micrometer reading against the signed speed meter reading, CW positive, with {#} points.":
+  "Una gráfica de la lectura del micrómetro contra la lectura del medidor de velocidad con signo, positiva en sentido horario, con {#} puntos.",
+"There is no fit yet.":
+  "Todavía no hay ajuste.",
+"Describe the plot":
+  "Describir la gráfica",
 "<span><i></i>CW</span><span><i></i>CCW</span><span><i></i>At rest</span><span><i></i>Least squares line, slope k</span>":
   "<span><i></i>CW</span><span><i></i>CCW</span><span><i></i>En reposo</span><span><i></i>Recta de mínimos cuadrados, pendiente k</span>",
 "Record at rest, then at several speeds in both directions":
@@ -208,6 +256,12 @@ VDI18N.add('es', 'demo/speed-of-light', {
   "Invertido, el espejo gira en el otro sentido y la imagen se mueve al otro lado de la lectura de reposo (el anillo punteado es la imagen CW). Captura ambas: la diferencia duplica el desplazamiento, con ω = {#}π(f_CW + f_CCW).",
 "CW image":
   "imagen CW",
+"The mirror MR turns counterclockwise at {#} rev/s.":
+  "El espejo MR gira en sentido antihorario a {#} rev/s.",
+"The true image shift from rest is -{#} mm.":
+  "El desplazamiento real de la imagen desde el reposo es -{#} mm.",
+"The center of the image is {#} mm to the left of the crosshair.":
+  "El centro de la imagen está {#} mm a la izquierda de la retícula.",
 "A longer path gives the mirror more time to turn and a longer lever arm, so the shift grows roughly as D² / (D + B). L1 has to move: A comes from the focus condition. Enter D, B and A again if you measure them yourself.":
   "Una trayectoria más larga le da al espejo más tiempo para girar y un brazo de palanca más largo, así que el desplazamiento crece aproximadamente como D² / (D + B). L1 tiene que moverse: A sale de la condición de enfoque. Vuelve a escribir D, B y A si los mides tú mismo.",
 "A table already filled by the procedure: rest, then {#}, {#} and {#} rev/s each way, read as a careful student would. These are simulated readings on this seed's bench. The slope of reading against signed speed gives c.":
@@ -238,14 +292,28 @@ VDI18N.add('es', 'demo/speed-of-light', {
   "c aceptada = {#} {#} {#} m/s (exacta)",
 "yours −{#} %, {#} σ":
   "el tuyo −{#} %, {#} σ",
+"Paused.":
+  "En pausa.",
+"{#} readings are recorded.":
+  "Hay {#} lecturas registradas.",
+"The least squares line has slope k = {#} µm per rev/s.":
+  "La recta de mínimos cuadrados tiene pendiente k = {#} µm por rev/s.",
+"The intercept, the reading at rest, is {#} mm.":
+  "La ordenada al origen, la lectura en reposo, es {#} mm.",
+"The fit gives c = {#} × {#}⁸ m/s.":
+  "El ajuste da c = {#} × {#}⁸ m/s.",
 "Speed the mirror up or down by {#} revolutions per second (Shift: ten times as much)":
   "Sube o baja la velocidad del espejo en {#} revoluciones por segundo (Shift: diez veces más)",
 "Move the crosshair by {#} mm (Shift: {#} mm)":
   "Mueve la retícula {#} mm (Shift: {#} mm)",
 "Move the crosshair by {#} mm":
   "Mueve la retícula {#} mm",
+"The slow motion view shows one pulse out and back, with the mirror rotation exaggerated.":
+  "La vista en cámara lenta muestra un pulso de ida y vuelta, con la rotación del espejo exagerada.",
 "yours +{#} %, {#} σ":
   "la tuya +{#} %, {#} σ",
+"The mirror MR is at rest.":
+  "El espejo MR está en reposo.",
 "{#} sim *":
   "{#} sim *",
 "Rows marked sim are simulated readings made by the procedure on this seed's bench, not yours. Rows marked * were taken at another D, B or A and are left out of the fit.":

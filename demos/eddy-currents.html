@@ -472,6 +472,19 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   tokens(); new ResizeObserver(resize).observe(stage); restart(); resize();
   { const v0 = new URLSearchParams(location.search).get('view'); G3.want = v0 !== 'flat' && !!window.VD3 && !VD3.lowPower(); if (G3.want) setDim('3d'); }
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  /* what the picture shows now, for a screen reader (VD.describe): three pipes, the magnets, the settings and the timers */
+  const sceneWords = () => {
+    const k = ks(), tf = tFall(), done = tf.map((t) => S.t >= t), out = [];
+    out.push('Three vertical pipes, each 1.00 m long, with a magnet inside: one copper, one aluminum and one plastic.');
+    out.push(`Magnet strength ${f(S.m, 2)} A·m².`, `Pipe wall thickness ${f(S.w, 1)} mm.`, `Pipe temperature ${S.T} °C.`);
+    PIPES.forEach((P, i) => out.push(S.blind ? `${P.name}, conductivity ${f(sigmaAt(P, S.T) / 1e6, 1)} MS/m.` : `${P.name}, conductivity ${f(sigmaAt(P, S.T) / 1e6, 1)} MS/m, predicted fall time ${f(tf[i], 2)} s.`));
+    if (S.blind) out.push('The drag constant, the terminal speeds, the predicted times and the heat are hidden.');
+    out.push(S.run ? 'The magnets are falling.' : S.t <= 0 ? 'The magnets are held at the top.' : done.every(Boolean) ? 'All three magnets have reached the bottom.' : 'Paused.');
+    PIPES.forEach((P, i) => { if (done[i]) out.push({ t: `${P.name} timer stopped at ${f(tf[i], 2)} s.`, live: false }); });
+    out.push({ t: `Clock ${f(S.t, 2)} s.`, live: false });
+    return out;
+  };
+  if (window.VD && VD.describe) VD.describe(can, sceneWords);
   requestAnimationFrame(frame);
   window.__ed = { S, restart, sync, draw, readouts, tFall };   /* for the worksheet key capture: set S.t and redraw */
 })();

@@ -1,9 +1,15 @@
 /* demo/quantum-waves in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/quantum-waves', {
+"Describe the picture":
+  "Describir la imagen",
 "Energy (eV)":
   "Energía (eV)",
 "phase of ψ":
   "fase de ψ",
+"Skip to the picture":
+  "Ir a la imagen",
+"Skip to the controls":
+  "Ir a los controles",
 "Quantum Wave Packets":
   "Paquetes de ondas cuánticos",
 "<a>Quantum mechanics</a>":
@@ -16,6 +22,38 @@ VDI18N.add('es', 'demo/quantum-waves', {
   "x en nm · E en eV · t en fs · ħ²/2m = {#} eV·nm²",
 "Energy diagram: the potential V(x), the mean energy of the electron, and energy levels. Keys: left and right arrows move the launch point, up and down change the launch energy, digits pick energy levels, space plays or pauses, M measures position.":
   "Diagrama de energía: el potencial V(x), la energía media del electrón y los niveles de energía. Teclas: las flechas izquierda y derecha mueven el punto de lanzamiento, arriba y abajo cambian la energía de lanzamiento, los dígitos eligen niveles de energía, espacio inicia o pausa, M mide la posición.",
+"An energy diagram of an electron: the potential V(x), the mean energy of the electron and the energy levels.":
+  "Un diagrama de energía de un electrón: el potencial V(x), la energía media del electrón y los niveles de energía.",
+"A barrier {#} eV high and {#} nm wide, centered at x = {#}.":
+  "Una barrera de {#} eV de alto y {#} nm de ancho, centrada en x = {#}.",
+"A wave packet starts at x₀ = -{#} nm, with width σ = {#} nm and energy E₀ = {#} eV.":
+  "Un paquete de ondas parte de x₀ = -{#} nm, con ancho σ = {#} nm y energía E₀ = {#} eV.",
+"It moves to the right.":
+  "Se mueve hacia la derecha.",
+"Ready to run.":
+  "Listo para correr.",
+"Mean energy ⟨E⟩ = {#} eV.":
+  "Energía media ⟨E⟩ = {#} eV.",
+"Energy spread ΔE = {#} eV.":
+  "Dispersión de energía ΔE = {#} eV.",
+"Mean position ⟨x⟩ = -{#} nm.":
+  "Posición media ⟨x⟩ = -{#} nm.",
+"Position spread Δx = {#} nm.":
+  "Dispersión de posición Δx = {#} nm.",
+"Mean momentum ⟨p⟩ = {#} eV/c.":
+  "Momento medio ⟨p⟩ = {#} eV/c.",
+"Momentum spread Δp = {#} eV/c.":
+  "Dispersión de momento Δp = {#} eV/c.",
+"The uncertainty product Δx·Δp is {#} ħ.":
+  "El producto de incertidumbres Δx·Δp es {#} ħ.",
+"The packet has not been split yet.":
+  "El paquete todavía no se ha dividido.",
+"The transmission for a plane wave at E₀ is {#}%.":
+  "La transmisión de una onda plana con E₀ es {#}%.",
+"The transmission averaged over the packet is {#}%.":
+  "La transmisión promediada sobre el paquete es {#}%.",
+"Time {#} fs.":
+  "Tiempo {#} fs.",
 "Time controls":
   "Controles de tiempo",
 "Step":
@@ -24,18 +62,38 @@ VDI18N.add('es', 'demo/quantum-waves', {
   "<span>Rapidez</span>",
 "Wave function: probability density |ψ|² filled and colored by the phase of ψ.":
   "Función de onda: densidad de probabilidad |ψ|² rellena y coloreada según la fase de ψ.",
+"The probability density |ψ|² of the electron against position, filled and colored by the phase of ψ.":
+  "La densidad de probabilidad |ψ|² del electrón contra la posición, rellena y coloreada según la fase de ψ.",
+"It is centered at x = -{#} nm with spread {#} nm.":
+  "Está centrada en x = -{#} nm con dispersión {#} nm.",
+"Describe the wave function":
+  "Describir la función de onda",
 "Perspective of the wave function":
   "Perspectiva de la función de onda",
 "Momentum space: probability density |φ(k)|² against wave number k.":
   "Espacio de momentos: densidad de probabilidad |φ(k)|² en función del número de onda k.",
+"The probability density |φ(k)|² against wave number k, the momentum picture.":
+  "La densidad de probabilidad |φ(k)|² contra el número de onda k, la imagen del momento.",
+"It is centered at momentum {#} eV/c with spread {#} eV/c.":
+  "Está centrada en el momento {#} eV/c con dispersión {#} eV/c.",
+"Describe the momentum picture":
+  "Describir la imagen del momento",
 "The electron in the plane: brightness shows the probability density |ψ|², color the phase of ψ; the outline is the well, the cross is the mean position ⟨x⟩, ⟨y⟩ with its path. Keys: space plays or pauses, {#} to {#} add or drop the lowest states.":
   "El electrón en el plano: el brillo muestra la densidad de probabilidad |ψ|², el color la fase de ψ; el contorno es el pozo, la cruz es la posición media ⟨x⟩, ⟨y⟩ con su trayectoria. Teclas: espacio inicia o pausa, {#} a {#} añaden o quitan los estados más bajos.",
+"The two dimensional wells are not shown.":
+  "Los pozos bidimensionales no se muestran.",
 "Perspective of the 2D picture":
   "Perspectiva de la imagen 2D",
 "Energy levels of the well, degenerate states side by side. Chosen states are bold, and a bar over each level is as long as its probability. Tap a level to add it to the state or drop it; keys {#} to {#} do the same for the lowest nine.":
   "Niveles de energía del pozo, con los estados degenerados lado a lado. Los estados elegidos están en negritas, y una barra sobre cada nivel es tan larga como su probabilidad. Toca un nivel para añadirlo al estado o quitarlo; las teclas {#} a {#} hacen lo mismo con los nueve más bajos.",
+"Describe the levels":
+  "Describir los niveles",
 "Probability of each state against time, for the states that matter most.":
   "Probabilidad de cada estado en función del tiempo, para los estados que más importan.",
+"The probability of each state against time, for the states that matter most.":
+  "La probabilidad de cada estado contra el tiempo, para los estados que más importan.",
+"Describe the probability plot":
+  "Describir la gráfica de probabilidad",
 "Divider between the 2D picture and the energy levels":
   "Divisor entre la imagen 2D y los niveles de energía",
 "Divider between the energy picture and the wave function":
@@ -274,6 +332,22 @@ VDI18N.add('es', 'demo/quantum-waves', {
   "Alto Ly",
 "Hard walls: V = {#} inside, ψ = {#} on the walls.":
   "Paredes rígidas: V = {#} dentro, ψ = {#} en las paredes.",
+"An electron in a box {#} nm wide and {#} nm tall, with hard walls.":
+  "Un electrón en una caja de {#} nm de ancho y {#} nm de alto, con paredes duras.",
+"The electron is a mix of {#} states.":
+  "El electrón es una mezcla de {#} estados.",
+"Running.":
+  "En marcha.",
+"The beat period is {#} fs.":
+  "El periodo de batimiento es {#} fs.",
+"Mean position ⟨x⟩ = {#} nm, ⟨y⟩ = {#} nm.":
+  "Posición media ⟨x⟩ = {#} nm, ⟨y⟩ = {#} nm.",
+"The light is off.":
+  "La luz está apagada.",
+"The energy levels of the well, {#} in all, with the lowest at {#} eV.":
+  "Los niveles de energía del pozo, {#} en total, con el más bajo en {#} eV.",
+"{#} levels are chosen.":
+  "Hay {#} niveles elegidos.",
 "A free packet spreads. Its momentum spread Δp stays the same (until the packet reaches the absorbing edge), but the faster parts run ahead (shorter wavelength, so the colors cycle faster at the front) and Δx keeps growing.":
   "Un paquete libre se dispersa. Su dispersión de momento Δp se mantiene igual (hasta que el paquete llega al borde absorbente), pero las partes más rápidas se adelantan (longitud de onda más corta, así que los colores cambian más rápido al frente) y Δx sigue creciendo.",
 "No potential: V = {#} everywhere. Absorbing layers just beyond the edges of the view swallow the packet as it leaves. Drag the ⟨E⟩ line on the energy diagram to set E₀.":
@@ -342,6 +416,16 @@ VDI18N.add('es', 'demo/quantum-waves', {
   "Una caja redonda de radio R. Los estados (m, k) son J_m(j r/R) e^(imφ), con j el k-ésimo cero de la función de Bessel J_m y E = ħ²j²/2mR². Cada estado lleva momento angular mħ; m y −m comparten una energía. Mezclar m = {#} con m = {#} hace girar el bulto alrededor del círculo.",
 "Hard wall at r = R.":
   "Pared rígida en r = R.",
+"A double well with a central barrier of {#} eV and minima {#} nm apart.":
+  "Un pozo doble con una barrera central de {#} eV y mínimos separados {#} nm.",
+"The electron is in a mix of {#} energy levels.":
+  "El electrón está en una mezcla de {#} niveles de energía.",
+"Level n = {#} has energy {#} eV.":
+  "El nivel n = {#} tiene energía {#} eV.",
+"An electron in a round box of radius {#} nm.":
+  "Un electrón en una caja redonda de radio {#} nm.",
+"Angular momentum ⟨Lz⟩ = {#} ħ.":
+  "Momento angular ⟨Lz⟩ = {#} ħ.",
 "V = ½mωx²x² + ½mωy²y². E = ħωx(nx + ½) + ħωy(ny + ½): with ωx = ωy the nth level holds n + {#} states. ({#},{#}) with ({#},{#}) swings along x at the oscillator's own frequency.":
   "V = ½mωx²x² + ½mωy²y². E = ħωx(nx + ½) + ħωy(ny + ½): con ωx = ωy el n-ésimo nivel contiene n + {#} estados. ({#},{#}) con ({#},{#}) oscila a lo largo de x con la frecuencia propia del oscilador.",
 "ħωx":
@@ -370,8 +454,26 @@ VDI18N.add('es', 'demo/quantum-waves', {
   "Luz polarizada a lo largo de x con exactamente la energía de ({#},{#}) a ({#},{#}). El electrón sube a ({#},{#}), luego la misma luz lo regresa hacia abajo (emisión estimulada), una y otra vez: oscilaciones de Rabi, un ciclo completo cada h/(eℰ|⟨{#},{#}|x|{#},{#}⟩|).",
 "Light at {#}ħω, exactly the gap to ({#},{#}), yet nothing happens: x only links n to n ± {#}, so in an oscillator light at {#}ħω has no step to drive. Set ħω to {#} eV and the electron climbs the evenly spaced ladder instead of swinging back down.":
   "Luz a {#}ħω, exactamente la brecha hasta ({#},{#}), y sin embargo no pasa nada: x solo conecta n con n ± {#}, así que en un oscilador la luz a {#}ħω no tiene un escalón que impulsar. Pon ħω en {#} eV y el electrón sube por la escalera de niveles igualmente espaciados en vez de regresar hacia abajo.",
+"An electron in a two dimensional oscillator with ħωx = {#} eV and ħωy = {#} eV.":
+  "Un electrón en un oscilador bidimensional con ħωx = {#} eV y ħωy = {#} eV.",
+"The electron is in one state, ({#},{#}).":
+  "El electrón está en un solo estado, ({#},{#}).",
+"Mean position ⟨x⟩ = −{#} nm, ⟨y⟩ = {#} nm.":
+  "Posición media ⟨x⟩ = −{#} nm, ⟨y⟩ = {#} nm.",
+"The light is on, polarized along x, with photon energy ħω = {#} eV and field strength {#} V/nm.":
+  "La luz está encendida, polarizada a lo largo de x, con energía de fotón ħω = {#} eV e intensidad de campo {#} V/nm.",
+"{#} level is chosen.":
+  "Hay {#} nivel elegido.",
+"Mean position ⟨x⟩ = −{#} nm, ⟨y⟩ = −{#} nm.":
+  "Posición media ⟨x⟩ = −{#} nm, ⟨y⟩ = −{#} nm.",
+"The light is on, polarized along y, with photon energy ħω = {#} eV and field strength {#} V/nm.":
+  "La luz está encendida, polarizada a lo largo de y, con energía de fotón ħω = {#} eV e intensidad de campo {#} V/nm.",
+"Mean position ⟨x⟩ = {#} nm, ⟨y⟩ = −{#} nm.":
+  "Posición media ⟨x⟩ = {#} nm, ⟨y⟩ = −{#} nm.",
 "|ψ|² as height":
   "|ψ|² como altura",
+"There is no potential: a free particle.":
+  "No hay potencial: una partícula libre.",
 "Close":
   "Cerrar"
 });

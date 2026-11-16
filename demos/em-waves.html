@@ -1896,6 +1896,58 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const howVid = () => (VD.ws('') === 'intro-em-spectrum' ? 'intro-em-spectrum' : 'em-waves');
   VD.howTo({ src: () => `media/how-this-works/${howVid()}.mp4`, poster: () => `media/how-this-works/${howVid()}.jpg`,
     title: () => (howVid() === 'em-waves' ? 'How this works' : 'How this works: the spectrum') });
+  /* what the picture shows now, for a screen reader (VD.describe): the wave, the antenna, the wires in a plane, or the guide or cavity */
+  const PL_SAY = { one: 'One wire carries a current at frequency f.', two: 'Two wires carry currents in phase.', anti: 'Two wires carry currents in opposite phase.',
+    reflector: 'A wire stands in front of a metal sheet.', dish: 'A wire sits at the focus of a metal dish.', slit: 'A wide beam meets a wall with one slit.', twoslit: 'A wide beam meets a wall with two slits.',
+    box: 'A wire sits in a closed metal box.', grid: 'A wide beam meets a grid of metal wires, a polarizer.', narrow: 'A wide beam meets a wall with a slit a quarter wavelength wide.' };
+  const sceneWords = () => {
+    const out = [];
+    if (S.mode === 'plane') {
+      out.push('A map of the electric field in a plane around wires and metal, drawn from a wave simulation.', PL.preset && PL_SAY[PL.preset] ? PL_SAY[PL.preset] : 'Your own arrangement of wires and metal.');
+      out.push(PL.te ? 'The electric field lies in the page.' : 'The electric field is along the wires.');
+      out.push(PL.wires.length ? `${PL.wires.length} wires.` : 'No wires.');
+      if (PL.beam) out.push('A wide beam enters from the left.');
+      out.push(PL.show === 'avg' ? 'The shading shows the average intensity over the last period.' : 'The shading shows the field now.');
+      if (!PL.probe) out.push('No probe is placed.');
+      else { let r = Infinity; for (const w of PL.wires) r = Math.min(r, Math.hypot(w.i - PL.probe.i, w.j - PL.probe.j) / FD_NL);
+        const e2 = PL.avg[plK(PL.probe.i, PL.probe.j)];
+        if (Number.isFinite(r)) out.push(`The probe is ${r.toFixed(2)} wavelengths from the nearest wire.`); else out.push('The probe has no wire to measure from.');
+        if (PL.avgN) { out.push(`The probe reads ⟨E²⟩ = ${e2.toPrecision(3)}.`); if (Number.isFinite(r)) out.push(`The probe reads r⟨E²⟩ = ${(r * e2).toPrecision(3)}.`); } else out.push('The probe needs one period to read ⟨E²⟩.'); }
+      out.push(playing ? 'Playing.' : 'Paused.', { t: `${(PL.F.n / FD_NT).toFixed(1)} periods since the start.`, live: false });
+      return out;
+    }
+    if (S.mode === 'guide') {
+      const cav = GU.kind === 'cavity';
+      out.push(cav ? `A rectangular metal cavity in the ${gNow()} mode.` : `A rectangular waveguide carrying the ${gNow()} mode.`);
+      out.push(`Width a ${gmm(GU.a)}.`, `Height b ${gmm(GU.b)}.`);
+      if (cav) { out.push(`Length d ${gmm(GU.d)}.`, `Resonant frequency ${gHz(gFreq())}.`, `Free space wavelength ${gmm(C / gFreq())}.`); }
+      else { const fc = gFc(), w = gWave();
+        out.push(`Cutoff frequency ${gHz(fc)}.`, `Frequency ${gHz(GU.f)}.`, `Free space wavelength ${gmm(w.lam)}.`);
+        if (w.travels) out.push(`The wave travels with guide wavelength ${gmm(w.lamg)}.`, `Phase speed ${(w.vp / C).toFixed(4)} c.`, `Group speed ${(w.vg / C).toFixed(4)} c.`);
+        else out.push('The frequency is below cutoff, so the wave does not travel.', `The field dies away by a factor e in ${gmm(w.decay)}.`); }
+      out.push(GU.showE ? 'The E field is shown.' : 'The E field is hidden.', GU.showB ? 'The B field is shown.' : 'The B field is hidden.', playing ? 'Playing.' : 'Paused.');
+      return out;
+    }
+    const f = fNow(), lam = lambdaOf(f), bd = bandOf(f);
+    if (S.mode === 'antenna') {
+      out.push('An oscillating dipole antenna with the pattern of its radiation, a donut around the antenna axis.', `Frequency ${fmtSI(f, 'Hz')}.`, `Wavelength ${fmtSI(lam, 'm')}.`,
+        `Direction ${S.dir}° from the dipole axis.`, `The far field intensity there is ${(Math.sin(S.dir * DEG) ** 2).toFixed(3)} of the maximum.`, `The near field reaches out to ${fmtSI(lam / (2 * Math.PI), 'm')}.`,
+        playing ? 'Playing.' : 'Paused.');
+      return out;
+    }
+    const [a, b] = ab(), d = S.delta * DEG, st = polState(a, b, d), E0 = E0Now(), I = intensity(E0);
+    out.push('A plane electromagnetic wave travels along z, with E arrows and B arrows along the axis and an end on view of the E vector.');
+    out.push(`Frequency ${fmtSI(f, 'Hz')}.`, `Wavelength ${fmtSI(lam, 'm')}.`, `Period ${fmtSI(1 / f, 's')}.`, `The band is ${bd.name}.`);
+    if (bd.id === 'vis') out.push(`The color is ${colorName(lam * 1e9)}.`);
+    if (S.ground) out.push(`Does it reach the ground? ${groundOf(lam).why}.`);
+    if (st.kind === 'linear') out.push(`Linear polarization, ${fmtDeg(st.tilt)} from x.`);
+    else if (st.kind === 'circular') out.push(st.hand === 'right' ? 'Right circular polarization: clockwise as you face the wave.' : 'Left circular polarization: counterclockwise as you face the wave.');
+    else out.push(st.hand === 'right' ? 'Elliptical polarization, right handed: clockwise as you face the wave.' : 'Elliptical polarization, left handed: counterclockwise as you face the wave.');
+    out.push(S.pol ? `A polarizer with its axis at ${S.phi}° passes ${malus(a, b, d, S.phi * DEG).toFixed(3)} of the intensity.` : 'There is no polarizer.');
+    out.push(`Amplitude E₀ ${fmtSI(E0, 'V/m')}.`, `Intensity ${fmtSI(I, 'W/m²')}.`, playing ? 'Playing.' : 'Paused.');
+    return out;
+  };
+  if (window.VD && VD.describe) VD.describe(can, sceneWords);
   setPlaying(!reduce);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => draw());
   requestAnimationFrame(loop);

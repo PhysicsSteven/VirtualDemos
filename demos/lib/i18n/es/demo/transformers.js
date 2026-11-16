@@ -18,6 +18,12 @@ VDI18N.add('es', 'demo/transformers', {
   "i_P máxima {#} mA",
 "i_S peak {#} A":
   "i_S máxima {#} A",
+"Describe the picture":
+  "Describir la imagen",
+"Skip to the picture":
+  "Ir a la imagen",
+"Skip to the controls":
+  "Ir a los controles",
 "Transformers":
   "Transformadores",
 "<a>Induction and inductance</a>":
@@ -42,8 +48,44 @@ VDI18N.add('es', 'demo/transformers', {
   "Línea de transmisión",
 "An AC source drives the primary coil of an iron core transformer; the secondary coil feeds a load resistor. Space pauses or plays the animation.":
   "Una fuente de CA alimenta la bobina primaria de un transformador con núcleo de hierro; la bobina secundaria alimenta un resistor de carga. Espacio pausa o inicia la animación.",
+"An AC source drives the primary coil of an iron core transformer; the secondary coil feeds a load resistor.":
+  "Una fuente de CA alimenta la bobina primaria de un transformador de núcleo de hierro; la bobina secundaria alimenta una resistencia de carga.",
+"The primary has {#} turns and the secondary has {#} turns.":
+  "El primario tiene {#} vueltas y el secundario tiene {#} vueltas.",
+"The source is {#} V rms at {#} Hz.":
+  "La fuente es de {#} V rms a {#} Hz.",
+"The load resistance is {#} Ω.":
+  "La resistencia de carga es {#} Ω.",
+"The core is the bench core.":
+  "El núcleo es el núcleo de banco.",
+"The model is ideal.":
+  "El modelo es ideal.",
+"The secondary voltage is {#} V.":
+  "El voltaje secundario es {#} V.",
+"The primary current is {#} mA.":
+  "La corriente primaria es {#} mA.",
+"The secondary current is {#} A.":
+  "La corriente secundaria es {#} A.",
+"The turns ratio N_S/N_P is {#}.":
+  "La razón de vueltas N_S/N_P es {#}.",
+"The power in is {#} W.":
+  "La potencia de entrada es {#} W.",
+"The power out is {#} W.":
+  "La potencia de salida es {#} W.",
+"The efficiency is {#}%.":
+  "La eficiencia es {#}%.",
+"The peak field in the core is {#} mT.":
+  "El campo máximo en el núcleo es {#} mT.",
+"The animation is running, slowed to one cycle every {#} s.":
+  "La animación está en marcha, ralentizada a un ciclo cada {#} s.",
 "Oscilloscope traces of the primary and secondary voltages and currents.":
   "Trazas de osciloscopio de los voltajes y corrientes del primario y del secundario.",
+"The peak primary voltage is {#} V.":
+  "El voltaje primario máximo es {#} V.",
+"The peak secondary voltage is {#} V.":
+  "El voltaje secundario máximo es {#} V.",
+"Describe the traces":
+  "Describir las trazas",
 "The transformer, its source and its load":
   "El transformador, su fuente y su carga",
 "<span>Transformer on the bench: an AC source drives the primary, a resistor loads the secondary</span>":
@@ -178,6 +220,18 @@ VDI18N.add('es', 'demo/transformers', {
   "v_P máximo {#} kV",
 "OpenStax Example {#}: a utility pole transformer steps {#} kV down to {#} V ({#} to {#}). A {#} Ω load takes {#} A at {#} V, {#} kW, while the line side carries only {#} A.":
   "Ejemplo {#} de OpenStax: un transformador de poste reduce {#} kV a {#} V ({#} a {#}). Una carga de {#} Ω toma {#} A a {#} V, {#} kW, mientras que el lado de la línea lleva solo {#} A.",
+"The source is {#} kV rms at {#} Hz.":
+  "La fuente es de {#} kV rms a {#} Hz.",
+"The core is the utility pole core.":
+  "El núcleo es el núcleo de poste de servicio.",
+"The primary current is {#} A.":
+  "La corriente primaria es {#} A.",
+"The power in is {#} kW.":
+  "La potencia de entrada es {#} kW.",
+"The power out is {#} kW.":
+  "La potencia de salida es {#} kW.",
+"The peak primary voltage is {#} kV.":
+  "El voltaje primario máximo es {#} kV.",
 "no load (open)":
   "sin carga (abierto)",
 "real model · k = {#}":
@@ -194,6 +248,30 @@ VDI18N.add('es', 'demo/transformers', {
   "Otra vez el Ejemplo {#} de OpenStax: {#} kW enviados a {#} kV por una línea de {#} Ω son {#} A y pierden ({#} A)²({#} Ω) = {#} W. Envíalos a {#} V en cambio y la línea necesitaría {#} A y perdería {#} MW, más que la potencia enviada. Luego prueba una línea larga a {#} kV.",
 "loss (W)":
   "pérdida (W)",
+"A power line from a {#} kV generator, through a step up transformer, a long line and a step down transformer, to the houses at {#} V.":
+  "Una línea de potencia desde un generador de {#} kV, a través de un transformador elevador, una línea larga y un transformador reductor, hasta las casas a {#} V.",
+"The power sent is {#} kW.":
+  "La potencia enviada es {#} kW.",
+"The transmission voltage is {#} kV.":
+  "El voltaje de transmisión es {#} kV.",
+"The line resistance, both wires, is {#} Ω.":
+  "La resistencia de la línea, con ambos cables, es {#} Ω.",
+"The line current is {#} A.":
+  "La corriente de la línea es {#} A.",
+"The generator current is {#} A.":
+  "La corriente del generador es {#} A.",
+"The line loss is {#} W, {#}% of the power.":
+  "La pérdida en la línea es {#} W, {#}% de la potencia.",
+"The delivered power is {#} kW.":
+  "La potencia entregada es {#} kW.",
+"The voltage in the houses is {#} V.":
+  "El voltaje en las casas es {#} V.",
+"A graph of the share of the power lost in the line against transmission voltage, on log scales.":
+  "Una gráfica de la fracción de la potencia perdida en la línea contra el voltaje de transmisión, en escalas logarítmicas.",
+"The loss falls as {#} over V squared.":
+  "La pérdida decae como {#} sobre V al cuadrado.",
+"The marker is at {#} kV.":
+  "El marcador está en {#} kV.",
 "Share lost against V, P = {#} kW, R = {#} Ω":
   "Fracción perdida contra V, P = {#} kW, R = {#} Ω",
 "the loss falls as {#}/V²":

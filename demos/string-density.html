@@ -732,6 +732,33 @@ table.rows input:focus { border-color: var(--accent); }
   const p0 = new URLSearchParams(location.search).get('setup'); applyPreset(PRESETS[p0] ? p0 : 'sweep'); renderRows(); resize();
   { const v0 = new URLSearchParams(location.search).get('view'); G3.want = v0 !== 'flat' && !!window.VD3 && !VD3.lowPower(); if (G3.want) setDim('3d'); }
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  /* what the pictures show now, for a screen reader (VD.describe): the string and its settings, the response trace and the fit of the readings */
+  const stringWords = () => {
+    const mu = muNow(), Tn = Tnow(), v = waveSpeed(Tn, mu), A = maxAmplitude(S.f, S.L, Tn, mu), n = loopsSeen(S.f, S.L, Tn, mu), nn = Math.max(1, Math.round(2 * S.L * S.f / v)), out = [];
+    out.push(`A string ${S.L.toFixed(2)} m long runs from a vibrator on the left to a pulley on the right, with a hanger of slotted masses below the pulley.`, S.str === 'U' ? 'The string is the unknown string.' : `The string is ${STRINGS[S.str].name}.`);
+    out.push(`The hanging mass, with the hanger, is ${massG()} g.`, `The tension is T = mg = ${Tn.toFixed(4)} N.`, `The driver frequency is ${S.f.toFixed(1)} Hz.`);
+    out.push(S.running ? 'The vibrator is running.' : 'The vibrator is paused.');
+    out.push(`The largest amplitude is ${(A * 1000).toFixed(2)} mm.`, n === 1 ? 'The string shows 1 loop.' : `The string shows ${n} loops.`);
+    if (hideMu()) out.push(S.str === 'U' ? 'The linear density, the wave speed and the predictions are hidden for the unknown string.' : 'The linear density, the wave speed and the predictions are hidden in Blind mode.');
+    else { out.push(`The linear density is μ = ${(mu * 1000).toFixed(2)} g/m.`, `The wave speed is ${v.toFixed(2)} m/s.`);
+      const rf = resonantFreq(nn, S.L, Tn, mu).toFixed(2), mg = (resonantTension(nn, S.L, S.f, mu) / G_LAB * 1000).toFixed(1);
+      out.push(S.method === 'f' ? (nn === 1 ? `The resonance with 1 loop is at ${rf} Hz.` : `The resonance with ${nn} loops is at ${rf} Hz.`) : (nn === 1 ? `The mass for 1 loop at this frequency is ${mg} g.` : `The mass for ${nn} loops at this frequency is ${mg} g.`)); }
+    return out;
+  };
+  const respWords = () => { const pts = S.trace, isF = S.method === 'f', out = [`A plot of the largest amplitude against ${isF ? 'frequency' : 'hanging mass'} for the ${pts.length} values you have tried.`];
+    if (pts.length) { const b = pts.reduce((m, q) => (q[1] > m[1] ? q : m), pts[0]); out.push(`The largest amplitude so far is ${b[1].toFixed(2)} mm, at ${isF ? b[0].toFixed(1) + ' Hz' : b[0] + ' g'}.`); }
+    return out; };
+  const fitWords = () => { const FN = S.plot === 'fn', rows = S.rows.filter((r) => cellNum(r.n) > 0);
+    const pts = rows.map((r) => (FN ? [cellNum(r.n), cellNum(r.f)] : [1 / cellNum(r.n) ** 2, cellNum(r.T)])).filter(([a, b]) => isFinite(a) && isFinite(b));
+    const F = pts.length >= 2 ? fitLine(pts.map((q) => q[0]), pts.map((q) => q[1])) : null, out = [FN ? `A plot of f against n for ${pts.length} recorded readings.` : `A plot of T against 1 over n squared for ${pts.length} recorded readings.`];
+    if (!F) { out.push('There is no fit yet.'); return out; }
+    out.push(`The least squares line has slope ${sig(F.b, 5)} ${FN ? 'Hz' : 'N'}.`, `The intercept is ${sig(F.a, 3)} ${FN ? 'Hz' : 'N'}.`);
+    const Ls = rows.map((r) => r.L), keep = FN ? rows.map((r) => r.m) : rows.map((r) => r.f);
+    if (!same(Ls) || !same(keep)) out.push('These readings mix settings, so μ is not worked out.');
+    else if (hideMu()) out.push('The value of μ from the slope is hidden.');
+    else { const L = cellNum(Ls[0]), mu = FN ? muFromFn(F.b, L, cellNum(rows[0].T)) : muFromTn(F.b, L, cellNum(rows[0].f)); out.push(`The slope gives μ = ${sig(mu * 1000, 4)} g/m.`); }
+    return out; };
+  if (window.VD && VD.describe) { VD.describe(can, stringWords); VD.describe(respCan, respWords, { label: 'Describe the response' }); VD.describe(fitCan, fitWords, { label: 'Describe the fit' }); }
   let last = performance.now(), acc = 0;
   (function loop(now) { const dt = Math.min(0.05, ((now || last) - last) / 1000); last = now || last; acc += dt; if (acc > 1 / 40) { tick(acc); acc = 0; } requestAnimationFrame(loop); })();
 })();

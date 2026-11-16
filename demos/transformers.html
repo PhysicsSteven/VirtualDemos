@@ -641,6 +641,34 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   new ResizeObserver(resize).observe($('pane')); new ResizeObserver(resize).observe(cur.parentElement); resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   window.__tf = { S, applyPreset, setView, sync, redraw, solve, line, trNow, lnNow };
+  /* what the pictures show now, for a screen reader (VD.describe): the transformer or the power line, and the traces or the loss curve */
+  const sceneWords = () => {
+    const bl = S.blind, out = [];
+    if (S.view === 'tr') {
+      const r = trNow(), tr = S.tr;
+      out.push('An AC source drives the primary coil of an iron core transformer; the secondary coil feeds a load resistor.', `The primary has ${tr.Np} turns and the secondary has ${tr.Ns} turns.`,
+        `The source is ${si(cabs(r.Vp), 'V', 4)} rms at ${tr.f} Hz.`, isFinite(tr.RL) ? `The load resistance is ${ohms(tr.RL)}.` : 'No load is connected.');
+      out.push(tr.core === 'pole' ? 'The core is the utility pole core.' : 'The core is the bench core.', tr.model === 'real' ? `The model is the real core and windings, with coupling k = ${tr.k.toFixed(3)}.` : 'The model is ideal.');
+      out.push(`The secondary voltage is ${si(cabs(r.Vs), 'V', 4)}.`, `The primary current is ${si(cabs(r.Ip), 'A', 4)}.`, `The secondary current is ${si(cabs(r.Is), 'A', 4)}.`);
+      if (bl) out.push('The ratios, the powers and the efficiency are hidden.');
+      else out.push(`The turns ratio N_S/N_P is ${plainNum(tr.Ns / tr.Np, 4)}.`, `The power in is ${si(r.Pin, 'W', 4)}.`, `The power out is ${si(r.Pout, 'W', 4)}.`, isFinite(r.eff) ? `The efficiency is ${(100 * r.eff).toFixed(2)}%.` : 'The efficiency is not defined.');
+      out.push(`The peak field in the core is ${si(r.Bpk, 'T', 3)}.`);
+      if (r.Bpk > 1.6) out.push('A real core saturates at this field.');
+      out.push(S.run ? 'The animation is running, slowed to one cycle every 2 s.' : 'The animation is paused.');
+    } else {
+      const L = lnNow(), ln = S.ln;
+      out.push('A power line from a 12 kV generator, through a step up transformer, a long line and a step down transformer, to the houses at 240 V.', `The power sent is ${si(ln.P, 'W', 3)}.`, `The transmission voltage is ${si(ln.VT, 'V', 3)}.`, `The line resistance, both wires, is ${ohms(ln.R)}.`);
+      out.push(`The line current is ${si(L.I, 'A', 4)}.`, `The generator current is ${si(L.Igen, 'A', 4)}.`);
+      if (bl) out.push('The loss, the delivered power and the town voltage are hidden.');
+      else if (!L.ok) out.push('The line cannot carry this power: IR exceeds V.');
+      else out.push(`The line loss is ${si(L.loss, 'W', 4)}, ${(100 * L.frac).toPrecision(4)}% of the power.`, `The delivered power is ${si(L.delivered, 'W', 4)}.`, `The voltage in the houses is ${si(L.Vhouse, 'V', 4)}.`);
+    }
+    return out;
+  };
+  const curveWords = () => { if (S.view === 'tr') { const r = trNow();
+      return ['Oscilloscope traces of the primary and secondary voltages and currents.', `The peak primary voltage is ${si(Math.SQRT2 * cabs(r.Vp), 'V', 3)}.`, `The peak secondary voltage is ${si(Math.SQRT2 * cabs(r.Vs), 'V', 3)}.`]; }
+    return S.blind ? ['The graph of the share of power lost against transmission voltage is hidden.'] : ['A graph of the share of the power lost in the line against transmission voltage, on log scales.', 'The loss falls as 1 over V squared.', `The marker is at ${si(S.ln.VT, 'V', 3)}.`]; };
+  if (window.VD && VD.describe) { VD.describe(can, sceneWords); VD.describe(cur, curveWords, { label: 'Describe the traces' }); }
   requestAnimationFrame(frame);
 })();
 </script>

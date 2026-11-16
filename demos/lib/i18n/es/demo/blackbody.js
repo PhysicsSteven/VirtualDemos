@@ -1,5 +1,7 @@
 /* demo/blackbody in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/blackbody', {
+"Describe the picture":
+  "Describir la imagen",
 "visible":
   "visible",
 "Wavelength λ (μm)":
@@ -56,8 +58,40 @@ VDI18N.add('es', 'demo/blackbody', {
   "Eje de radiancia",
 "Planck spectrum chart. Drag the peak marker sideways to change the temperature. Arrow keys up and down change the temperature, left and right move the peak.":
   "Gráfica del espectro de Planck. Arrastra el marcador del pico hacia los lados para cambiar la temperatura. Las flechas arriba y abajo cambian la temperatura; izquierda y derecha mueven el pico.",
+"A chart of the radiance of a blackbody against wavelength, the Planck curve.":
+  "Una gráfica de la radiancia de un cuerpo negro contra la longitud de onda, la curva de Planck.",
+"Temperature {#} K.":
+  "Temperatura {#} K.",
+"The peak is at {#} nm.":
+  "El pico está en {#} nm.",
+"Flux from the surface {#}×{#}⁷ W/m².":
+  "Flujo desde la superficie {#}×{#}⁷ W/m².",
+"Visible share {#}%.":
+  "Fracción visible {#}%.",
+"Spectral class G.":
+  "Clase espectral G.",
+"Star radius {#} R<sub>sun</sub>.":
+  "Radio de la estrella {#} R<sub>sol</sub>.",
+"The wavelength axis is linear.":
+  "El eje de longitud de onda es lineal.",
+"The radiance axis is linear.":
+  "El eje de radiancia es lineal.",
+"The Rayleigh Jeans curve is hidden.":
+  "La curva de Rayleigh y Jeans está oculta.",
+"No pinned curves.":
+  "No hay curvas fijadas.",
 "The glowing object in its perceived color, its light spread by a prism onto a screen with the ultraviolet, visible and infrared shares, a radiometer reading the flux, and the blackbody color scale from {#} K to {#} K with spectral classes.":
   "El objeto incandescente en su color percibido, su luz dispersada por un prisma sobre una pantalla con las fracciones ultravioleta, visible e infrarroja, un radiómetro que mide el flujo, y la escala de colores del cuerpo negro de {#} K a {#} K con las clases espectrales.",
+"A glowing blackbody at {#} K, its light spread by a prism onto a screen.":
+  "Un cuerpo negro incandescente a {#} K, con su luz abierta por un prisma sobre una pantalla.",
+"Ultraviolet share {#}%.":
+  "Fracción ultravioleta {#}%.",
+"Infrared share {#}%.":
+  "Fracción infrarroja {#}%.",
+"The radiometer reads {#}×{#}⁷ W/m².":
+  "El radiómetro marca {#}×{#}⁷ W/m².",
+"Describe the glowing object":
+  "Describir el objeto incandescente",
 "Divider between the spectrum and the color strip":
   "Divisor entre el espectro y la franja de color",
 "<a>Worksheet {#}: Blackbody Radiation</a>":
@@ -158,6 +192,12 @@ VDI18N.add('es', 'demo/blackbody', {
   "pico (nm)",
 "flux (W/m²)":
   "flujo (W/m²)",
+"Skip to the picture":
+  "Ir a la imagen",
+"Skip to the controls":
+  "Ir a los controles",
+"{#} Rsun":
+  "{#} Rsol",
 "Bλ and the U, B, V filters, each scaled to {#} at its highest":
   "Bλ y los filtros U, B, V, cada uno escalado a {#} en su máximo",
 "Your skin surface at about {#} K peaks near {#} μm, deep in the infrared. Thermal cameras see this glow; your eyes do not. The visible share readout shows how little reaches the visible band: about {#} × {#}⁻²¹ % of the power, far below even the log axis.":
@@ -198,6 +238,22 @@ VDI18N.add('es', 'demo/blackbody', {
   "El fondo cósmico de microondas es el cuerpo negro más perfecto que se conoce, a {#} K. Su pico está cerca de {#} mm, en las microondas. El deslizador se detiene en {#} K, así que esta configuración es un caso especial.",
 "microwaves, no glow":
   "microondas, sin brillo",
+"A chart of the light through the U, B and V filters for a blackbody.":
+  "Una gráfica de la luz de un cuerpo negro a través de los filtros U, B y V.",
+"The peak is at {#} mm.":
+  "El pico está en {#} mm.",
+"Color index B − V = {#}.":
+  "Índice de color B − V = {#}.",
+"Color index U − B = {#}.":
+  "Índice de color U − B = {#}.",
+"No star radius is set.":
+  "No se ha fijado un radio de estrella.",
+"The wavelength axis is logarithmic.":
+  "El eje de longitud de onda es logarítmico.",
+"The radiance axis is logarithmic.":
+  "El eje de radiancia es logarítmico.",
+"The radiometer reads {#}×{#}⁻⁶ W/m².":
+  "El radiómetro marca {#}×{#}⁻⁶ W/m².",
 "Bλ and the U, B, V filters":
   "Bλ y los filtros U, B, V",
 "Color by temperature":
@@ -212,6 +268,10 @@ VDI18N.add('es', 'demo/blackbody', {
   "Radiancia espectral Bλ, escala logarítmica",
 "λmax {#} mm":
   "λmax {#} mm",
+"Spectral class M.":
+  "Clase espectral M.",
+"The radiometer reads {#}×{#}⁶ W/m².":
+  "El radiómetro marca {#}×{#}⁶ W/m².",
 "Slide T and watch the peak shift as {#}/T while the height of the curve climbs much faster.":
   "Desliza T y observa cómo el pico se desplaza como {#}/T mientras la altura de la curva sube mucho más rápido.",
 "λmax {#} μm":
@@ -238,6 +298,14 @@ VDI18N.add('es', 'demo/blackbody', {
   "#ff6800",
 "#ff7600":
   "#ff7600",
+"The peak is at {#} μm.":
+  "El pico está en {#} μm.",
+"Flux from the surface {#}×{#}⁵ W/m².":
+  "Flujo desde la superficie {#}×{#}⁵ W/m².",
+"Ultraviolet share < {#}%.":
+  "Fracción ultravioleta < {#}%.",
+"The radiometer reads {#}×{#}⁵ W/m².":
+  "El radiómetro marca {#}×{#}⁵ W/m².",
 "#ff8200":
   "#ff8200",
 "#ff8f1c":
@@ -272,6 +340,12 @@ VDI18N.add('es', 'demo/blackbody', {
   "blanco",
 "#d1dcff":
   "#d1dcff",
+"Flux from the surface {#}×{#}⁸ W/m².":
+  "Flujo desde la superficie {#}×{#}⁸ W/m².",
+"Spectral class A.":
+  "Clase espectral A.",
+"The radiometer reads {#}×{#}⁸ W/m².":
+  "El radiómetro marca {#}×{#}⁸ W/m².",
 "#c7d5ff":
   "#c7d5ff",
 "#bfd0ff":
@@ -304,12 +378,18 @@ VDI18N.add('es', 'demo/blackbody', {
   "#9cb6ff",
 "Remove pinned curve at {#} K":
   "Quitar la curva fijada a {#} K",
+"{#} pinned curves.":
+  "{#} curvas fijadas.",
+"Visible share < {#}%.":
+  "Fracción visible < {#}%.",
 "π × shaded area = σT⁴ = {#}×{#}⁵ W/m²":
   "π × área sombreada = σT⁴ = {#}×{#}⁵ W/m²",
 "π × shaded area = σT⁴ = {#} W/m²":
   "π × área sombreada = σT⁴ = {#} W/m²",
 "π × shaded area = σT⁴ = {#}×{#}¹¹ W/m²":
   "π × área sombreada = σT⁴ = {#}×{#}¹¹ W/m²",
+"Spectral class K.":
+  "Clase espectral K.",
 "Readings cleared.":
   "Lecturas borradas.",
 "No readings to export.":

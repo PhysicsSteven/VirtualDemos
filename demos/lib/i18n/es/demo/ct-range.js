@@ -26,6 +26,8 @@ VDI18N.add('es', 'demo/ct-range', {
   "ajuste de Schneider",
 "HU = {#} (ρₑ − {#})":
   "HU = {#} (ρₑ − {#})",
+"Describe the picture":
+  "Describir la imagen",
 "CT Numbers and Proton Range":
   "Números CT y alcance de protones",
 "<a>{#} · Proton therapy</a>":
@@ -50,6 +52,22 @@ VDI18N.add('es', 'demo/ct-range', {
   "escaneo {#}",
 "The step in progress: the CT scanner with the calibration phantom and its image, the proton beam line with a slab of tissue in front of a water tank, or the beam's path through a patient to the target.":
   "El paso en curso: el tomógrafo con el maniquí de calibración y su imagen, la línea del haz de protones con una placa de tejido delante de un tanque de agua, o el camino del haz a través de un paciente hasta el blanco.",
+"Step {#}, the calibration scan: a CT scanner with a {#} cm phantom in its bore, holding {#} inserts of known materials.":
+  "Paso {#}, el barrido de calibración: un tomógrafo con un maniquí de {#} cm en su abertura, con {#} insertos de materiales conocidos.",
+"Tube voltage {#} kV.":
+  "Voltaje del tubo {#} kV.",
+"The image uses the wide window.":
+  "La imagen usa la ventana ancha.",
+"Region of interest on B-{#} bone equivalent plastic.":
+  "Región de interés en el plástico equivalente a hueso B-{#}.",
+"B-{#} bone equivalent plastic reads {#} ± {#} HU, mean and pixel standard deviation.":
+  "El plástico equivalente a hueso B-{#} marca {#} ± {#} HU, media y desviación estándar de los píxeles.",
+"Electron density {#}.":
+  "Densidad electrónica {#}.",
+"Fitted CT number {#} HU.":
+  "Número CT ajustado {#} HU.",
+"This is scan {#}.":
+  "Este es el barrido {#}.",
 "The scan, the curve and the plan":
   "El escaneo, la curva y el plan",
 "Calibration scan. Drag, or use the arrow keys, to move this card; double click to put it back":
@@ -148,6 +166,12 @@ VDI18N.add('es', 'demo/ct-range', {
   "Más una distancia fija: haz clic, o pulsa Enter, para escribir un valor",
 "The graph of the step: CT number against electron density for the phantom's inserts, stopping power ratio against CT number with both calibration curves, or the planned and delivered dose along the beam.":
   "La gráfica del paso: número CT en función de la densidad electrónica para los insertos del maniquí, razón de poder de frenado en función del número CT con ambas curvas de calibración, o la dosis planeada y la entregada a lo largo del haz.",
+"A graph of the measured CT number in HU against electron density for the {#} inserts.":
+  "Una gráfica del número CT medido en HU contra la densidad electrónica de los {#} insertos.",
+"The fitted line goes through them at {#} kV.":
+  "La recta ajustada pasa por ellos a {#} kV.",
+"Describe the graph":
+  "Describir la gráfica",
 "Divider between the scan and the graph":
   "Divisor entre el escaneo y la gráfica",
 "<a>Worksheet {#}: CT Numbers and Proton Range: Calibration and Stopping Power (Medical Physics)</a>":
@@ -250,6 +274,10 @@ VDI18N.add('es', 'demo/ct-range', {
   "Aproximadamente a escala; el haz se dibuja como una línea.",
 "Drag to turn the view.":
   "Arrastra para girar la vista.",
+"Skip to the picture":
+  "Ir a la imagen",
+"Skip to the controls":
+  "Ir a los controles",
 "Skeletal muscle, {#} cm":
   "Músculo esquelético, {#} cm",
 "water tank":
@@ -336,6 +364,32 @@ VDI18N.add('es', 'demo/ct-range', {
   "+{#} mm <span>cubierto</span>",
 "Range error from: curve, CT numbers, I values":
   "Error de alcance por: curva, números CT, valores I",
+"Step {#}, range and margins: the beam's path through a patient to the target.":
+  "Paso {#}, alcance y márgenes: el camino del haz a través de un paciente hasta el blanco.",
+"Patient: Brain, lateral beam through the skull.":
+  "Paciente: cerebro, haz lateral a través del cráneo.",
+"The plan uses the stoichiometric curve.":
+  "El plan usa la curva estequiométrica.",
+"CT number error {#} HU.":
+  "Error del número CT {#} HU.",
+"Tissue I values off by {#} %.":
+  "Los valores I del tejido están desviados {#} %.",
+"Distal margin {#} % of the range plus {#} mm.":
+  "Margen distal {#} % del alcance más {#} mm.",
+"The target's far edge is {#} cm deep.":
+  "El borde lejano del blanco está a {#} cm de profundidad.",
+"Planned range {#} cm in water, beam energy {#} MeV.":
+  "Alcance planeado {#} cm en agua, energía del haz {#} MeV.",
+"The real range is −{#} mm from the planned one.":
+  "El alcance real difiere −{#} mm del planeado.",
+"The real range ends +{#} mm past the target's far edge.":
+  "El alcance real termina +{#} mm más allá del borde lejano del blanco.",
+"The target is covered.":
+  "El blanco queda cubierto.",
+"A graph of the planned and delivered dose along the beam.":
+  "Una gráfica de la dosis planeada y entregada a lo largo del haz.",
+"The real range ends +{#} mm past it.":
+  "El alcance real termina +{#} mm más allá.",
 "planned R90 {#} cm":
   "R90 planeado {#} cm",
 "real R90 {#} cm":
@@ -414,6 +468,20 @@ VDI18N.add('es', 'demo/ct-range', {
   "Entrega",
 "beam on":
   "haz encendido",
+"The beam is on.":
+  "El haz está encendido.",
+"The real range ends −{#} mm past it.":
+  "El alcance real termina −{#} mm más allá.",
+"Part of the target is missed.":
+  "Parte del blanco queda sin cubrir.",
+"The real range ends −{#} mm past the target's far edge.":
+  "El alcance real termina −{#} mm más allá del borde lejano del blanco.",
 "Drag to turn.":
-  "Arrastra para girar."
+  "Arrastra para girar.",
+"Patient: Lung tumor, beam through the chest wall.":
+  "Paciente: tumor de pulmón, haz a través de la pared torácica.",
+"The plan uses the tissue substitute curve.":
+  "El plan usa la curva de sustitutos de tejido.",
+"The real range is +{#} mm from the planned one.":
+  "El alcance real difiere +{#} mm del planeado."
 });

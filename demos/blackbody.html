@@ -1440,12 +1440,43 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   applyPreset('sun');
   /* 3D | Flat for the glowing object (?view=3d or ?view=flat; ?view=ubv keeps the default): 3D opens first, flat without WebGL or on a low power device */
   VD3K.view({ seg: '#dimSeg', init: init3, status: (m) => { $('status3').textContent = m; },
-    change: (on) => { on3 = on; strip.hidden = on; if (S3) S3.el.hidden = !on; stage.classList.toggle('d3', on); key3 = ''; schedule(); } });
+    change: (on) => { on3 = on; strip.hidden = on; if (S3) S3.el.hidden = !on; if (on && window.vdDescribe3) window.vdDescribe3(); stage.classList.toggle('d3', on); key3 = ''; schedule(); } });
   if (VD.ws('') === 'ubv-colors' || new URLSearchParams(location.search).get('view') === 'ubv') setView('ubv');
   renderPins();
   { const ro = new ResizeObserver(resize); ro.observe(stage); stage.querySelectorAll('.pane').forEach((p) => ro.observe(p)); }   /* the panes too: a divider resizes them inside a stage that keeps its size */
   resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(schedule);
+
+  /* what the pictures show now, for a screen reader (VD.describe): the chart, and the glowing object with its prism (flat or 3D) */
+  const sayLen = (m) => fmtLen(m);
+  const chartWords = () => {
+    const k = classOf(S.T), out = [];
+    out.push(S.view === 'ubv' ? 'A chart of the light through the U, B and V filters for a blackbody.' : 'A chart of the radiance of a blackbody against wavelength, the Planck curve.');
+    out.push(`Temperature ${fmtT(S.T)}.`);
+    out.push(`The peak is at ${sayLen(wien(S.T))}.`);
+    if (S.view === 'ubv') { const c = ubvColors(S.T), f2 = (v) => (v < 0 ? '−' : '') + Math.abs(v).toFixed(3); out.push(`Color index B − V = ${f2(c.BV)}.`, `Color index U − B = ${f2(c.UB)}.`); }
+    else { out.push(`Flux from the surface ${sci(SIG * Math.pow(S.T, 4), 3)} W/m².`); const vf = visibleFraction(S.T); out.push(vf > 0 ? `Visible share ${vf >= 1e-3 ? (vf * 100).toFixed(vf > 0.1 ? 1 : 2) : sci(vf * 100, 2)}%.` : 'Visible share about 0.'); }
+    if (k) out.push(`Spectral class ${k.c}.`);
+    out.push(S.star ? `Star radius ${fmtR(S.R)}.` : 'No star radius is set.');
+    out.push(S.xMode === 'log' ? 'The wavelength axis is logarithmic.' : 'The wavelength axis is linear.');
+    out.push(S.yMode === 'log' ? 'The radiance axis is logarithmic.' : 'The radiance axis is linear.');
+    out.push(S.rj ? 'The Rayleigh Jeans curve is shown.' : 'The Rayleigh Jeans curve is hidden.');
+    out.push(pins.length ? `${pins.length} pinned curves.` : 'No pinned curves.');
+    return out;
+  };
+  /* the chart's description announces the changes; the object's words are the same facts, so they are never announced twice */
+  const objWords = () => {
+    const T = S.T, uv = uvFraction(T), vis = visibleFraction(T);
+    return [`A glowing blackbody at ${fmtT(T)}, its light spread by a prism onto a screen.`,
+      `Ultraviolet share ${pct(uv)}.`, `Visible share ${pct(vis)}.`, `Infrared share ${pct(Math.max(0, 1 - uv - vis))}.`,
+      `The radiometer reads ${sci(SIG * Math.pow(T, 4), 3)} W/m².`].map((t) => ({ t, live: false }));
+  };
+  if (window.VD && VD.describe) {
+    VD.describe(chart, chartWords);
+    VD.describe(strip, objWords, { label: 'Describe the glowing object' });
+    window.vdDescribe3 = () => { if (S3 && S3.el && !S3.el.vdDescribe) VD.describe(S3.el, objWords, { label: 'Describe the glowing object' }); };
+    window.vdDescribe3();
+  }
 
   // ---------- readings (tools/readings_panel.py) ----------
   /* the reading is taken from the curve itself: the peak is found by a golden section search on B(λ) and the flux is π times the
