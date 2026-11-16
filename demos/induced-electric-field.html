@@ -511,6 +511,26 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
   const p0 = new URLSearchParams(location.search).get('setup'); applyPreset(PRESETS[p0] ? p0 : 'outside'); resize();
   { const v0 = new URLSearchParams(location.search).get('view'); G3.want = v0 !== 'flat' && !!window.VD3 && !VD3.lowPower(); if (G3.want) setDim('3d'); }
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  /* what the picture shows now, for a screen reader (VD.describe): the solenoid, the current, the path and what it measures */
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    const f = physics(), d = pathD(), hide = S.blind, mv = !S.playing, conc = d < 1e-9, Eon = Ephi(S.pa, S.R, f.dB), out = [];
+    out.push(`The end of a long solenoid of radius ${(S.R * 100).toFixed(1)} cm with ${S.n} turns per meter, and a circular path of radius ${(S.pa * 100).toFixed(1)} cm.`);
+    out.push(conc ? 'The path is centered on the solenoid.' : `The path center is ${(d * 100).toFixed(1)} cm from the solenoid axis.`);
+    out.push({ decay: 'The current decays.', ramp: 'The current ramps up and then holds steady.', ac: 'The current alternates.', steady: 'The current is steady.' }[S.w.kind]);
+    out.push(S.playing ? 'Playing.' : 'Paused.');
+    out.push({ t: `Time ${si(S.t, 's')}.`, live: false });
+    out.push({ t: `Current ${si(f.I, 'A')}.`, live: mv });
+    out.push({ t: `Magnetic field inside ${si(f.B, 'T')}, changing at ${si(f.dB, 'T/s')}.`, live: mv });
+    out.push({ t: `Flux through the path ${si(f.Phi, 'Wb')}.`, live: mv });
+    out.push({ t: `The EMF, −dΦ/dt, is ${si(-f.dPhi, 'V')}.`, live: mv });
+    if (hide) out.push('The circulation of E and the field on the path are hidden.');
+    else {
+      out.push({ t: `The circulation of E around the path is ${si(f.circ, 'V')}.`, live: mv });
+      out.push({ t: conc ? `The field on the path is ${si(Math.abs(Eon), 'V/m')}${Eon === 0 ? '.' : Eon > 0 ? ', counterclockwise.' : ', clockwise.'}` : 'The field is not the same all around the path, because the path is off center.', live: mv });
+    }
+    if (S.ring) out.push(hide ? 'The copper ring result is hidden.' : { t: Math.abs(f.circ) < 1e-15 ? 'A copper ring on the path has no net push, so no current.' : `A copper ring on the path is pushed ${f.circ > 0 ? 'counterclockwise' : 'clockwise'}.`, live: mv });
+    return out;
+  });
   let last = performance.now(), acc = 0;
   (function loop(now) { const dt = Math.min(0.05, ((now || last) - last) / 1000); last = now || last; acc += dt; if (acc > 1 / 40) { tick(acc); acc = 0; } requestAnimationFrame(loop); })();
 })();

@@ -2534,6 +2534,7 @@ body[data-nc] #unitsG, body[data-nc] #unitsF, body:not([data-nc]) #ncUnits { dis
     if (!S) return false;
     S.el.classList.add('f3'); S.el.tabIndex = 0; S.el.removeAttribute('aria-hidden');
     S.el.setAttribute('role', 'application');
+    if (window.VD && VD.describe && window.vdFlightDesc) VD.describe(S.el, window.vdFlightDesc);
     S.el.setAttribute('aria-label', 'Field view in 3D of the same shots. Drag the arrow tip to aim and set the speed, drag the launcher hub up or down to set the launch height, drag elsewhere to turn, scroll to zoom. The same keys as the flat view work here.');
     S.sun.shadow.bias = -0.0004; S.sun.shadow.mapSize.set(1024, 1024);
     const std = (o) => new THREE.MeshStandardMaterial(o);
@@ -3319,6 +3320,48 @@ body[data-nc] #unitsG, body[data-nc] #unitsF, body:not([data-nc]) #ncUnits { dis
   resize();
   launch(); // open with a shot in the air (static picture if reduced motion)
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(schedule);
+
+  /* what each picture shows now, for a screen reader (VD.describe): the launch and its result, the graphs, Newton's cannon */
+  if (window.VD && VD.describe) {
+    const shotsLine = () => (shots.length ? `${shots.length} of ${MAX_SHOTS} shots are on the graphs.` : 'No shots yet.');
+    const flightDesc = () => {
+      const out = [`A ${fmtMass(P.m)} ball, ${fmtDiam(P.d)} across, launched at ${P.v.toFixed(1)} m/s and ${P.th.toFixed(1)}° above level, from ${P.h.toFixed(1)} m up.`];
+      out.push(P.drag ? `Air drag is on, with drag coefficient ${P.cd.toFixed(2)} and air density ${P.rho.toFixed(3)} kg/m³.` : 'No air drag, so the path is a parabola.');
+      out.push(anim ? 'A shot is in the air.' : 'No shot is in the air.');
+      if (cur) {
+        out.push(`Range ${fmtM(cur.range)}.`);
+        out.push(`Highest point ${fmtM(Math.max(cur.ymax, P.h))}.`);
+        out.push(`Time of flight ${fmtS(cur.T)}.`);
+        out.push(`Impact at ${fmtV(cur.vImp)}, ${fmtDeg(cur.aImp)} below level.`);
+        out.push(LAB.blind ? 'The vacuum comparison is hidden.' : vac ? `With no air the range would be ${fmtM(vac.range)}.` : '');
+      }
+      if (pinT != null) out.push({ t: `Time cursor at ${pinT.toFixed(2)} s.`, live: false });
+      out.push(shotsLine());
+      return out;
+    };
+    VD.describe(view, flightDesc);
+    window.vdFlightDesc = flightDesc;
+    { const f3 = document.querySelector('canvas.f3'); if (f3) VD.describe(f3, flightDesc); }
+    VD.describe(chart, () => {
+      const out = ['Graphs of horizontal position, height and speed against time for every shot, and range against launch angle.', shotsLine()];
+      const s = sel != null ? shots.find((q) => q.id === sel) : null;
+      if (s) { out.push(`Selected shot ${s.n} has range ${fmtM(s.range)}, highest point ${fmtM(s.ymax)} and flight time ${fmtS(s.T)}.`); out.push(`Its impact speed is ${fmtV(s.vImp)}.`); }
+      if (sw) out.push(`The best launch angle for range, with this drag, is ${fmtDeg(sw.opt)}.`);
+      out.push(LAB.blind ? 'The vacuum curves are hidden.' : `With no air the best angle is ${fmtDeg(vacOptDeg)}.`);
+      if (pinT != null) out.push({ t: `Time cursor at ${pinT.toFixed(2)} s.`, live: false });
+      return out;
+    });
+    VD.describe($('ncView'), () => {
+      const o = ncOrbit(NC.h, NC.v, NC.th), s = ncSel(), out = [`A cannon on a mountain ${Math.round(NC.h / 1000).toLocaleString('en-US')} km above the Earth, firing at ${ncFmtV(NC.v)}, ${NC.th}° above level.`];
+      out.push(NC.air && NC.h < NC_AIR ? 'The shot starts inside the air, which slows it.' : 'The shot starts above the air.');
+      out.push(o.kind === 'lands' ? 'This shot lands on the Earth.' : o.kind === 'orbits' ? 'This shot orbits the Earth and never lands.' : 'This shot escapes and never comes back.');
+      out.push(`Circular orbit speed here ${ncFmtV(o.vc)}, escape speed ${ncFmtV(o.ve)}.`);
+      out.push(NC.shots.length ? `${NC.shots.length} of ${NC_MAX} shots are on the picture.` : 'No shots fired yet.');
+      out.push(NC.playing ? 'Playing.' : 'Paused.');
+      if (s) out.push({ t: `Shot ${s.n} has flown for ${ncFmtT(ncAge(s))}.`, live: false });
+      return out;
+    });
+  }
 
   // exposed for testing
   window.__projectile = { simulate, vacuumShot, sweep, vTerm, kDrag, PRESETS, makeShot, compareSet, compare, launch, loadShot,

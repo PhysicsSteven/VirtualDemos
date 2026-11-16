@@ -647,6 +647,30 @@ table.rows input:focus { border-color: var(--accent); }
   /* vd-knobs: every range input inside .instr gets a knob, and its readout takes a typed value (demos/lib/vd.js) */
   VD.knobs();
   VD.howTo({ src: 'media/how-this-works/wire-force.mp4', poster: 'media/how-this-works/wire-force.jpg' });   /* How this works: one sample reading (tools/howto/) */
+  /* what the picture shows now, for a screen reader (VD.describe): the balance or the loop, and the readings */
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    const out = [];
+    if (!isLoop()) {
+      out.push(`A wire ${f(S.L, 1)} cm long runs between the poles of a magnet that sits on an electronic balance.`);
+      out.push(`The wire makes an angle of ${S.th}° with the field.`);
+      out.push(`The current is ${f(S.I, 1)} A.`);
+      out.push(hideB() ? 'The magnetic field and the predicted force are hidden.' : `The magnetic field is ${f(Bnow(), 2)} T.`);
+      out.push(`The balance reads ${dmShown().replace('-', '−')} g.`);
+      if (!hideB()) out.push(`The predicted force on the wire is ${f(Fwire() * 1000, 2)} mN.`);
+      out.push(S.rows.length ? `${S.rows.length} readings captured.` : 'No readings captured.');
+    } else {
+      const sgn = S.comm ? (Math.sin(S.loop.th) >= 0 ? -1 : 1) : 1, mu = moment(S.N, S.I * sgn), tau = torque(S.N, S.I * sgn, Bnow(), S.loop.th);
+      out.push(`A square coil of ${S.N} turns, seen from above between the poles, with the forces on its sides and its magnetic moment.`);
+      out.push(`The current is ${f(S.I, 1)} A.`);
+      out.push(S.comm ? 'A commutator reverses the current each half turn, so this is a motor.' : 'There is no commutator.');
+      out.push(hideB() ? 'The magnetic field, moment and torque are hidden.' : `The magnetic field is ${f(Bnow(), 2)} T.`);
+      out.push(S.loop.run ? 'The loop is released.' : 'The loop is held.');
+      if (!hideB()) { out.push(`The largest torque is ${f(Math.abs(moment(S.N, S.I)) * Bnow() * 1000, 3)} mN·m.`); out.push({ t: `The torque now is ${f(tau * 1000, 3)} mN·m.`, live: false }); }
+      out.push({ t: `The moment is ${f(((S.loop.th * 180 / Math.PI) % 360 + 540) % 360 - 180, 0)}° from the field.`, live: false });
+      out.push({ t: `The loop turns at ${f(S.loop.w / (2 * Math.PI), 2)} rev/s.`, live: false });
+    }
+    return out;
+  });
   tokens(); new ResizeObserver(resize).observe($('scene')); applyPreset('balance'); renderRows(); resize();
   { const v0 = new URLSearchParams(location.search).get('view'); G3.want = v0 !== 'flat' && !!window.VD3 && !VD3.lowPower(); if (G3.want) setDim('3d'); }
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);

@@ -1462,6 +1462,45 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       L_Lsun: g5(st.L), T_K: g5(st.Te), R_Rsun: g5(st.R), cooling_age_yr: st.cool != null ? g5(st.cool) : '' };
   };
 
+  /* what the diagram and the scale strip show now, for a screen reader (VD.describe) */
+  if (window.VD && VD.describe) {
+    const mg = (v) => (v < 0 ? '−' : '') + Math.abs(v).toFixed(2);
+    const clusterCounts = () => { let nMS = 0, nG = 0, nWD = 0, nSN = 0; for (const c of CL) { const k = c.st.p.key; if (k === 'ms') nMS++; else if (c.st.p.gone) nSN++; else if (k === 'wd' || k === 'knee') nWD++; else nG++; } return { nMS, nG, nWD, nSN }; };
+    VD.describe($('hr'), () => {
+      const out = ['A Hertzsprung Russell diagram: luminosity against surface temperature, with hot stars at the left.'];
+      if (S.mode === 'real') {
+        const k = realStats(REAL), q = realSelected();
+        out.push(`${k.n} real stars in the list, ${k.plotted} plotted.`);
+        out.push(`${k.brighter} are brighter than the Sun and ${k.fainter} are fainter.`);
+        out.push(`Median absolute magnitude ${mg(k.medMV)}.`);
+        if (q) { out.push('The selected star is:', q.name); out.push(q.spect.trim() ? 'Its spectral type is:' : 'Its spectral type is not listed.'); if (q.spect.trim()) out.push(q.spect.trim()); } else out.push('No star selected.');
+        if (q) { out.push(`Apparent magnitude ${mg(q.V)}, absolute magnitude ${mg(q.MV)}.`); if (q.BV != null) out.push(`Color index B − V ${mg(q.BV)}.`); out.push(`Distance ${q.d < 100 ? q.d.toFixed(2) : Math.round(q.d)} pc.`); }
+      } else if (S.mode === 'single') {
+        const tr = S.track, st = stateAtS(tr, S.s);
+        out.push(`One star of ${fmtM(S.M)}, drawn as a marker moving along its track.`);
+        out.push('The star is in this phase:', st.p.name);
+        out.push(S.playing ? 'Playing.' : 'Paused.');
+        if (st.p.gone) out.push('The star has exploded, so it is off the diagram.');
+        else { out.push(`Luminosity ${fmtL(st.L)}.`); out.push(`Surface temperature ${fmtT(st.Te)}.`); out.push(`Radius ${fmtR(st.R)}.`); }
+        out.push({ t: `Age ${fmtAge(st.age)}.`, live: false });
+      } else {
+        const n = clusterCounts(), toM = (S.cAge / 1e10) ** (-1 / 2.5);
+        out.push('A star cluster, with every star born at the same time.');
+        out.push(S.playing ? 'Playing.' : 'Paused.');
+        out.push(toM > 25 ? 'The main sequence turnoff is above 25 solar masses.' : `The main sequence turnoff is at ${fmtM(toM)}.`);
+        out.push(`${n.nMS} stars on the main sequence, ${n.nG} giants, ${n.nWD} white dwarfs and ${n.nSN} exploded.`);
+        out.push({ t: `Cluster age ${fmtAge(S.cAge)}.`, live: false });
+      }
+      return out;
+    });
+    VD.describe($('scale'), () => {
+      if (S.mode === 'real') { const q = realSelected(); return q ? ['The card shows this star:', q.name, `It is ${q.d < 100 ? q.d.toFixed(2) : Math.round(q.d)} pc away.`] : 'No star selected.'; }
+      if (S.mode !== 'single') return 'The strip shows the selected star of the cluster.';
+      const st = stateAtS(S.track, S.s);
+      return st.p.gone ? 'The star has exploded, so nothing is drawn.' : `The strip draws the star to scale next to the Sun or the Earth. Its radius is ${fmtR(st.R)}.`;
+    });
+  }
+
   // exposed for testing
   window.__hr = { realXY: (n) => { const q = REAL.find((x) => x.name === n); const c = hr.getBoundingClientRect(); return q && q.BV != null ? [c.left + RX(q.BV), c.top + RY(q.MV)] : null; }, msL, msR, tMS, teff, radiusOf, ifmr, wdRadius, mestelL, buildTrack, stateAtAge, stateAtS, S, CL };
 })();

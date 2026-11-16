@@ -784,6 +784,18 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   new ResizeObserver(resize).observe($('pane')); resize();
   view3 = VD3K.view({ seg: '#dimSeg', init: init3D, start: '3d', change: () => { if (g3) g3.S3.el.hidden = !use3(); redraw(); }, status: (m) => { S.msg = m; $('note').textContent = m; } });
   if (window.VD && VD.panel) VD.panel({ play: '#play', reset: '#reset', speed: '#speed', end: ['#dimSeg'] });
+  /* what the picture shows now, for a screen reader (VD.describe): the gas, the view, the ground state count, the temperature */
+  if (window.VD && VD.describe) VD.describe(can, () => [
+    `A gas of ${S.N} atoms, ${S.trap ? `in a round harmonic trap of ${S.f} Hz` : `in a square box ${f(S.L, 1)} µm on a side`}.`,
+    'The atom is:', ATOMS[S.atom].name,
+    S.scene === 'box' ? 'The view shows each atom as a wave packet in the box, with an energy ladder at the left.' : S.scene === 'vel' ? 'The view shows how many atoms move at each velocity: a broad hill for the thermal gas and a spike for the condensate.' : 'The view plots the condensate fraction against temperature.',
+    S.run ? (S.cool < 0 ? 'Running, and the gas is cooling.' : S.cool > 0 ? 'Running, and the gas is warming.' : 'Running, at constant temperature.') : S.t > 0 ? 'Paused.' : 'Not started.',
+    `Temperature ${fmtT(S.T)}.`,
+    `Thermal wavelength ${fmtLen(O.lambda)}.`,
+    S.blind ? 'The ground state count is hidden.' : `${f(O.n0, O.n0 < 10 ? 2 : 1)} of ${S.N} atoms are in the ground state, ${f(O.frac * 100, 1)} percent.`,
+    S.trap ? `The transition temperature T_c is ${fmtT(markT())}.` : `The packets touch at ${fmtT(markT())}.`,
+    { t: `Time ${f(S.t * 1000, 2)} ms.`, live: false }
+  ]);
   VD.howTo({ src: 'media/how-this-works/bose-einstein-condensation.mp4', poster: 'media/how-this-works/bose-einstein-condensation.jpg' });
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   requestAnimationFrame(frame);

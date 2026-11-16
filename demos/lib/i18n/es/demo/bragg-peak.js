@@ -14,8 +14,14 @@ VDI18N.add('es', 'demo/bragg-peak', {
   "profundidad (cm)",
 "protons, {#} MeV, water":
   "protones, {#} MeV, agua",
+"Describe the picture":
+  "Describir la imagen",
 "The Bragg Peak":
   "El pico de Bragg",
+"<a>{#} · Proton therapy</a>":
+  "<a>{#} · Terapia con protones</a>",
+"<a><span>←</span> <span>Nuclear Reactions, Fission and Fusion</span></a><a><span>Proton Therapy QA</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Reacciones nucleares, fisión y fusión</span></a><a><span>Control de calidad en terapia con protones</span> <span>→</span></a>",
 "A proton beam puts most of its dose down just before it stops. Move the peak with the beam energy, see it in water, muscle, fat and bone, stack energy layers into a spread out Bragg peak that covers a target, and compare it with a clinical {#} MV photon beam.":
   "Un haz de protones deposita la mayor parte de su dosis justo antes de detenerse. Mueve el pico con la energía del haz, míralo en agua, músculo, grasa y hueso, apila capas de energía en un pico de Bragg extendido que cubra un blanco, y compáralo con un haz clínico de fotones de {#} MV.",
 "depth in cm · E in MeV":
@@ -36,6 +42,16 @@ VDI18N.add('es', 'demo/bragg-peak', {
   "Por qué hay un pico",
 "Side view of a water phantom on a bench: the beam enters from the nozzle on the left and the dose it puts down is drawn as a color wash, with the target outlined in the spread out peak and photon views. A Bragg peak chamber on a scanning carriage marks the detector depth: drag it, or use the arrow keys (Shift: {#} cm) when the picture has the focus.":
   "Vista lateral de un maniquí de agua sobre una mesa: el haz entra desde la boquilla a la izquierda y la dosis que deposita se dibuja como un velo de color, con el blanco delineado en las vistas del pico extendido y de fotones. Una cámara de pico de Bragg en un carro de barrido marca la profundidad del detector: arrástrala, o usa las flechas (Shift: {#} cm) cuando la imagen tenga el foco.",
+"A beam of {#} MeV protons enters water, and the graph shows the dose against depth as a percent of the peak.":
+  "Un haz de protones de {#} MeV entra en agua, y la gráfica muestra la dosis contra la profundidad como porcentaje del pico.",
+"The dose peaks at a depth of {#} cm, and falls to {#} percent at {#} cm.":
+  "La dosis tiene su pico a una profundidad de {#} cm, y baja a {#} por ciento a los {#} cm.",
+"The peak is {#} times the entrance dose.":
+  "El pico es {#} veces la dosis de entrada.",
+"At the detector, {#} cm deep, the dose is {#} percent of the peak.":
+  "En el detector, a {#} cm de profundidad, la dosis es {#} por ciento del pico.",
+"The beam is off.":
+  "El haz está apagado.",
 "The beam, the medium, the target and the detector":
   "El haz, el medio, el blanco y el detector",
 "<span>Beam, medium and target</span>":
@@ -156,14 +172,14 @@ VDI18N.add('es', 'demo/bragg-peak', {
   "curva ajustada (%)",
 "Varian VitalBeam, {#} MV, {#} × {#} cm² field, SSD {#} cm, in water: Chowdhury, Rabby, Ahmed, Akter and Rahman, Int. J. Radiol. Radiat. Ther. {#}({#}), {#} ({#}), Table {#}. Their Table {#} gives the British Journal of Radiology Supplement {#} reference values: d_max {#} cm, D10 {#} %, d80 {#} cm.":
   "Varian VitalBeam, {#} MV, campo de {#} × {#} cm², SSD {#} cm, en agua: Chowdhury, Rabby, Ahmed, Akter y Rahman, Int. J. Radiol. Radiat. Ther. {#}({#}), {#} ({#}), tabla {#}. Su tabla {#} da los valores de referencia del Suplemento {#} del British Journal of Radiology: d_max {#} cm, D10 {#} %, d80 {#} cm.",
-"<a>{#} · Proton therapy</a>":
-  "<a>{#} · Terapia con protones</a>",
-"<a><span>←</span> <span>Nuclear Reactions, Fission and Fusion</span></a><a><span>Proton Therapy QA</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Reacciones nucleares, fisión y fusión</span></a><a><span>Control de calidad en terapia con protones</span> <span>→</span></a>",
 "medium":
   "medio",
 "dose (%)":
   "dosis (%)",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "target":
   "blanco",
 "protons, {#} layers":
@@ -194,6 +210,14 @@ VDI18N.add('es', 'demo/bragg-peak', {
   "{#} cm a {#} cm",
 "{#} % of the target's mean":
   "{#} % de la media del blanco",
+"A spread out peak of {#} proton energy layers in water, with the target from {#} cm to {#} cm deep.":
+  "Un pico extendido de {#} capas de energía de protones en agua, con el blanco de {#} cm a {#} cm de profundidad.",
+"The dose in the target runs from {#} to {#} percent of its mean.":
+  "La dosis en el blanco va de {#} a {#} por ciento de su media.",
+"The entrance dose is {#} percent.":
+  "La dosis de entrada es {#} por ciento.",
+"At the detector, {#} cm deep, the dose is {#} percent of the target's mean.":
+  "En el detector, a {#} cm de profundidad, la dosis es {#} por ciento de la media del blanco.",
 "protons":
   "protones",
 "layers":
@@ -264,6 +288,18 @@ VDI18N.add('es', 'demo/bragg-peak', {
   "profundidad {#} mm",
 "water phantom":
   "maniquí de agua",
+"One proton of {#} MeV enters water and slows down.":
+  "Un protón de {#} MeV entra en agua y se frena.",
+"No proton sent yet.":
+  "Todavía no se envía ningún protón.",
+"Depth {#} mm.":
+  "Profundidad de {#} mm.",
+"Energy left {#} MeV.":
+  "Energía restante de {#} MeV.",
+"Speed {#} times the speed of light.":
+  "Rapidez de {#} veces la rapidez de la luz.",
+"Energy lost {#} MeV per cm.":
+  "Energía perdida de {#} MeV por cm.",
 "The lowest energy the IBA Proteus ONE delivers, {#} MeV, reaches about {#} cm of water (Pidikiti et al. {#}). Shallower targets need a range shifter in the beam, {#} cm water equivalent on that machine. The peak is sharp because straggling grows with the range.":
   "La energía más baja que entrega la IBA Proteus ONE, {#} MeV, llega a unos {#} cm de agua (Pidikiti et al. {#}). Los blancos más superficiales necesitan un desplazador de alcance en el haz, de {#} cm equivalentes en agua en esa máquina. El pico es agudo porque la dispersión de alcance crece con el alcance.",
 "to scale":
@@ -282,6 +318,8 @@ VDI18N.add('es', 'demo/bragg-peak', {
   "En grasa (tejido adiposo, {#} g/cm³) el mismo haz llega más lejos, unos {#} cm, ya que la grasa tiene menos electrones por cm³ que el agua.",
 "protons, {#} MeV, in adipose tissue (icrp)":
   "protones, {#} MeV, en tejido adiposo (icrp)",
+"A beam of {#} MeV protons enters adipose tissue (icrp), and the graph shows the dose against depth as a percent of the peak.":
+  "Un haz de protones de {#} MeV entra en tejido adiposo (icrp), y la gráfica muestra la dosis contra la profundidad como porcentaje del pico.",
 "A target from {#} to {#} cm deep. One energy covers only a few millimeters, so the machine stacks energy layers, each a little shallower, and weights them so the sum is flat across the target. The deepest layer carries the most weight, since every shallower layer adds its own entrance dose there.":
   "Un blanco de {#} a {#} cm de profundidad. Una sola energía cubre solo unos milímetros, así que la máquina apila capas de energía, cada una un poco menos profunda, y las pondera para que la suma sea plana a lo largo del blanco. La capa más profunda lleva el mayor peso, ya que cada capa menos profunda agrega ahí su propia dosis de entrada.",
 "The same layers all with the same weight: the dose climbs towards the front of the target, because each layer's plateau adds to the peaks of the shallower ones. Flat coverage needs the deep layers weighted more.":
@@ -292,18 +330,32 @@ VDI18N.add('es', 'demo/bragg-peak', {
   "Un blanco profundo, de {#} a {#} cm: aquí los picos son más anchos (la dispersión de alcance crece con el alcance), así que las capas se funden de forma más suave, y el borde distal cae menos abruptamente.",
 "One proton field and one {#} MV photon field, both scaled to give the target the same mean dose. Photons give their highest dose near the surface and keep going out the far side; protons give less in front of the target and nothing beyond it. Real photon plans use several fields from different directions to spare the entrance.":
   "Un campo de protones y un campo de fotones de {#} MV, ambos escalados para dar al blanco la misma dosis media. Los fotones dan su dosis más alta cerca de la superficie y siguen saliendo por el lado opuesto; los protones dan menos delante del blanco y nada más allá de él. Los planes reales con fotones usan varios campos desde distintas direcciones para proteger la entrada.",
+"The phantom shows the proton beam.":
+  "El maniquí muestra el haz de protones.",
+"The mean dose in front of the target is {#} percent for protons and {#} percent for photons.":
+  "La dosis media delante del blanco es {#} por ciento para protones y {#} por ciento para fotones.",
+"At the detector, {#} cm deep, protons give {#} percent and photons {#} percent.":
+  "En el detector, a {#} cm de profundidad, los protones dan {#} por ciento y los fotones {#} por ciento.",
 "LINAC":
   "LINAC",
 "A {#} MV photon beam, {#} × {#} cm², SSD {#} cm, in water. The dose builds up over the first {#} cm as the electrons set in motion by the photons travel forward, then falls slowly, by about {#} % per cm, through the whole patient.":
   "Un haz de fotones de {#} MV, {#} × {#} cm², SSD {#} cm, en agua. La dosis se acumula durante los primeros {#} cm a medida que los electrones puestos en movimiento por los fotones avanzan, y luego cae lentamente, alrededor de {#} % por cm, a través de todo el paciente.",
 "One {#} MeV proton in water, with a window magnified onto the track around it. Each electron it passes is pulled toward its path while it goes by, for a time of about 2b/v, so the sideways kick is Δp = FΔt ∝ {#}/v and the energy the electron takes, Δp²/2mₑ, grows as {#}/v². Everyday drag grows with speed; this loss grows as the proton slows. Press Send a proton and watch the arrows and colors grow, while the reach b_max, beyond which electrons are only nudged and let go, closes in. The graph multiplies the two.":
   "Un protón de {#} MeV en agua, con una ventana ampliada sobre la trayectoria a su alrededor. Cada electrón junto al que pasa es jalado hacia su trayectoria mientras pasa, durante un tiempo de unos 2b/v, así que el impulso lateral es Δp = FΔt ∝ {#}/v y la energía que toma el electrón, Δp²/2mₑ, crece como {#}/v². El arrastre cotidiano crece con la rapidez; esta pérdida crece a medida que el protón se frena. Pulsa Enviar un protón y observa cómo crecen las flechas y los colores, mientras el alcance b_max, más allá del cual los electrones solo reciben un leve empujón y se sueltan, se cierra. La gráfica multiplica los dos.",
+"depth {#} cm · {#} MeV · v = {#} c":
+  "profundidad {#} cm · {#} MeV · v = {#} c",
 "The same proton with {#} cm to go. Its speed falls fast here, so each kick, and the dose, rises steeply: the Bragg peak. In the last {#} MeV (under {#} mm) the proton starts to catch electrons and lose them again, so its average charge drops, and the reach b_max shrinks toward the closest distance b_min: the loss per cm peaks and then falls, and the proton stops as a hydrogen atom.":
   "El mismo protón cuando le faltan {#} cm. Su rapidez baja rápido aquí, así que cada impulso, y la dosis, sube abruptamente: el pico de Bragg. En los últimos {#} MeV (en menos de {#} mm) el protón empieza a capturar electrones y a perderlos de nuevo, así que su carga promedio baja, y el alcance b_max se reduce hacia la distancia mínima b_min: la pérdida por cm llega a un pico y luego cae, y el protón se detiene como un átomo de hidrógeno.",
 "Go on":
   "Continuar",
+"The proton is moving.":
+  "El protón se mueve.",
+"Depth {#} cm.":
+  "Profundidad de {#} cm.",
 "Move the detector depth (Shift for {#} cm steps); in Why it peaks, move along the proton track":
   "Mueve la profundidad del detector (Shift para pasos de {#} cm); en Por qué hay un pico, avanza a lo largo de la trayectoria del protón",
+"Paused.":
+  "En pausa.",
 "{#} MeV into muscle (icrp)":
   "{#} MeV en músculo (icrp)",
 "{#} MeV into adipose tissue (icrp)":
@@ -316,8 +368,6 @@ VDI18N.add('es', 'demo/bragg-peak', {
   "alcance",
 "energy lost per cm":
   "energía perdida por cm",
-"depth {#} cm · {#} MeV · v = {#} c":
-  "profundidad {#} cm · {#} MeV · v = {#} c",
 "{#} MV photons (fit)":
   "Fotones de {#} MV (ajuste)",
 "measured (Chowdhury {#})":

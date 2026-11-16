@@ -1971,6 +1971,80 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   /* Two stars from the address: its worksheet (?ws=eclipsing-binary) or ?kind=bin */
   if (VD.ws('') === 'eclipsing-binary' || /[?&]kind=bin\b/.test(location.search)) setKind(true);
 
+  /* what each picture shows now, for a screen reader (VD.describe): the orbit, the telescope's view, the light curve, the velocity curve */
+  if (window.VD && VD.describe) {
+    const hrsT = (x) => minus(sig(Math.abs(x) < 1e-6 ? 0 : x / 3600, 4)) + ' h';
+    const massT = (m) => (m < 30 ? sig(m) + ' Earth masses' : sig(m / MJ) + ' Jupiter masses');
+    const radT = (r) => (r < 4 ? sig(r) + ' Earth radii' : sig(r / RJ) + ' Jupiter radii');
+    const run = () => (playing ? 'Playing.' : 'Paused.');
+    const gasLine = () => ({ h2he: 'The atmosphere is hydrogen and helium.', h2o: 'The atmosphere is steam.', n2: 'The atmosphere is nitrogen.', co2: 'The atmosphere is carbon dioxide.' }[ATMS.gas]);
+    const have = () => { try { ensure(); return !!D; } catch (_) { return false; } };
+    VD.describe(cv.top, () => {
+      if (!have()) return [];
+      const hid = hidden(), out = [];
+      if (BIN) {
+        out.push('Two stars orbit each other.');
+        out.push(`Star 1 has a temperature of ${comma(B.t1)} K.`);
+        out.push(hid ? 'The masses, radii, second temperature and orbit are hidden.' : `Star 1 has ${sig(B.m1)} solar masses and ${sig(B.r1)} solar radii.`);
+        if (!hid) { out.push(`Star 2 has ${sig(B.m2)} solar masses, ${sig(B.r2)} solar radii and a temperature of ${comma(B.t2)} K.`); out.push(`The stars are ${sig(P.a)} AU apart, with an orbit tilt of ${P.inc.toFixed(1)}°.`); }
+      } else {
+        out.push(`A star of ${P.ms.toFixed(2)} solar masses and ${sig(P.rs)} solar radii, with one planet.`);
+        if (hid) out.push('The planet\'s mass, size and orbit are hidden.');
+        else { out.push(`The planet has ${massT(P.mp)} and ${radT(P.rp)}.`); out.push(`Its orbit is ${sig(P.a)} AU wide, with eccentricity ${P.e.toFixed(2)} and a tilt of ${P.inc.toFixed(1)}°.`); }
+      }
+      out.push(`Orbital period ${fmtPeriod(D.Per)}.`);
+      out.push(run());
+      out.push({ t: `Time from mid transit ${hrsT(nowT())}.`, live: false });
+      return out;
+    });
+    VD.describe(cv.side, () => {
+      if (!have()) return [];
+      const hid = hidden(), f = flux(nowT()), out = [];
+      out.push(BIN ? 'The view from far away shows two stars, one passing in front of the other.' : 'The view from far away shows the star disk with the planet next to it.');
+      out.push(hid ? 'Whether the orbit crosses the star is hidden.' : BIN ? (D.transits || D.ecl2 ? (D.full ? 'The stars eclipse each other.' : 'The stars eclipse each other partly.') : 'The stars never eclipse.') : D.transits ? (D.full ? 'The planet crosses the face of the star.' : 'The planet grazes the edge of the star.') : 'The planet misses the star.');
+      out.push({ t: f === 1 ? 'The star is at full brightness.' : `The brightness is down by ${fmtPpm((1 - f) * 1e6)}.`, live: false });
+      return out;
+    });
+    VD.describe(cv.lc, () => {
+      if (!have()) return [];
+      const hid = hidden(), out = [];
+      if (lcMode === 'spec') {
+        const A = atm();
+        out.push('The graph shows the transit depth against wavelength, the transmission spectrum.');
+        out.push(gasLine());
+        out.push(`Temperature ${comma(ATMS.teq)} K.`);
+        out.push(ATMS.cloud === 0 ? 'The sky is clear.' : `Clouds reach ${sig(ATMS.cloud, 2)} scale heights up.`);
+        out.push(`Scale height ${fmtKmH(A.H)}.`);
+        out.push(A.peak * 1e6 < 0.05 ? 'The spectrum is flat.' : `The tallest feature is ${fmtPpm(A.peak * 1e6)}, at ${sig(A.peakBand[1], 3)} µm.`);
+        out.push(D.transits ? `At the cursor, ${sig(specLam, 3)} µm, the transit depth is ${fmtPpm(atmDepthAt(specLam) * 1e6)}.` : 'The planet does not transit, so there is no spectrum.');
+        return out;
+      }
+      out.push(BIN ? 'The graph shows the brightness of the pair against time.' : 'The graph shows the star\'s brightness against time.');
+      out.push(lcMode === 'orbit' ? 'It covers one full orbit.' : lcMode === 'zoom' ? 'It zooms in on the transit.' : 'It zooms in on the secondary eclipse.');
+      if (hid) out.push('The depth and duration of the dips are hidden.');
+      else if (BIN) {
+        out.push(D.transits ? `The eclipse of star 1 is ${pct(D.depth1)} deep.` : 'There is no eclipse of star 1.');
+        out.push(D.ecl2 ? `The eclipse of star 2 is ${pct(D.depth2)} deep.` : 'There is no eclipse of star 2.');
+      } else if (D.transits) { out.push(`The transit dip is ${fmtPpm(D.depth * 1e6)} deep.`); out.push(`The transit lasts ${sig(D.T14 / 3600)} h.`); }
+      else out.push('There is no transit dip.');
+      if (P.noise > 0) out.push('The points carry measurement noise.');
+      const m = meas(nowT());
+      out.push({ t: BIN ? `Brightness now ${m.f.toFixed(4)} of full.` : m.f === 1 ? 'Brightness now at full.' : `Brightness now down by ${fmtPpm((1 - m.f) * 1e6)}.`, live: false });
+      return out;
+    });
+    VD.describe(cv.rv, () => {
+      if (!have()) return [];
+      const hid = hidden(), out = [], m = meas(nowT());
+      out.push(BIN ? 'The graph shows the line of sight velocity of each star against time.' : 'The graph shows the star\'s line of sight velocity against time.');
+      if (hid) out.push('The velocity amplitude is hidden.');
+      else if (BIN) { out.push(`Star 1 swings by ${(D.K / 1000).toFixed(2)} km/s.`); out.push(`Star 2 swings by ${(D.K2 / 1000).toFixed(2)} km/s.`); }
+      else out.push(`The star swings by ${fmtV(D.K)}.`);
+      if (P.e > 0) out.push(`The orbit is stretched, with eccentricity ${P.e.toFixed(2)}.`);
+      out.push({ t: BIN ? `Velocity of star 1 now ${fmtKm(m.v)}, of star 2 ${fmtKm(m.v2)}.` : `Velocity now ${m.v > 0 ? '+' : ''}${fmtV(m.v)}.`, live: false });
+      return out;
+    });
+  }
+
   // exposed for testing
   window.__exo = { P, B, get D() { return D; }, derive, flux, blocked, PRESETS, BPRESETS, applyPreset, applyBin, setKind, get BIN() { return BIN; }, meas, newMystery, revealMystery, setT: (t) => setT(t), nowT, get MYS() { return MYS; }, schedule, setPlaying, setLc: (k) => document.querySelector(`#lcSeg [data-lc="${k}"]`).click(),
     ATMS, ATM, atm, altH, specDepth, scaleHeight, setAtm, setSpecLam, get specLam() { return specLam; }, get lcMode() { return lcMode; } };

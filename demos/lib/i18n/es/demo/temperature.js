@@ -1,5 +1,7 @@
 /* demo/temperature in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/temperature', {
+"Describe the picture":
+  "Describir la imagen",
 "insulated box (no heat in or out)":
   "caja aislada (sin entrada ni salida de calor)",
 "copper bar, {#} cm":
@@ -18,6 +20,10 @@ VDI18N.add('es', 'demo/temperature', {
   "TERMÓMETRO B",
 "time t (s)":
   "tiempo t (s)",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "Temperature and Heat":
   "Temperatura y calor",
 "<a>Temperature and heat</a>":
@@ -28,6 +34,14 @@ VDI18N.add('es', 'demo/temperature', {
   "Pon en contacto un bloque caliente y uno frío y observa cómo llegan a una misma temperatura. Calibra un termómetro de gas, mide cómo se dilatan los sólidos y los líquidos, y sigue el calor a través de una pared.",
 "T in °C · mass in kg · time in s":
   "T en °C · masa en kg · tiempo en s",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
+"<span>Speed</span>":
+  "<span>Rapidez</span>",
 "Equilibrium":
   "Equilibrio",
 "Thermometer":
@@ -44,6 +58,30 @@ VDI18N.add('es', 'demo/temperature', {
   "Cadena",
 "Two blocks in an insulated box joined by a metal bar, each with a thermometer. Space starts or pauses.":
   "Dos bloques en una caja aislada unidos por una barra metálica, cada uno con un termómetro. Espacio inicia o pausa.",
+"Two blocks in an insulated box, joined by a metal bar, each with a thermometer.":
+  "Dos bloques en una caja aislada, unidos por una barra metálica, cada uno con un termómetro.",
+"Block A is:":
+  "El bloque A es:",
+"Block A has a mass of {#} kg and starts at {#} °C.":
+  "El bloque A tiene una masa de {#} kg y empieza a {#} °C.",
+"Block B is:":
+  "El bloque B es:",
+"Block B has a mass of {#} kg and starts at {#} °C.":
+  "El bloque B tiene una masa de {#} kg y empieza a {#} °C.",
+"The bar is:":
+  "La barra es:",
+"The bar is {#} cm long.":
+  "La barra mide {#} cm de largo.",
+"Not started.":
+  "No ha comenzado.",
+"Thermometer A reads {#} °C.":
+  "El termómetro A marca {#} °C.",
+"Thermometer B reads {#} °C.":
+  "El termómetro B marca {#} °C.",
+"Time {#} s.":
+  "Tiempo de {#} s.",
+"The predicted final temperature is {#} °C, with time constant {#} s.":
+  "La temperatura final predicha es de {#} °C, con constante de tiempo de {#} s.",
 "Graph of the readings.":
   "Gráfica de las lecturas.",
 "The two blocks and the bar":
@@ -464,6 +502,24 @@ VDI18N.add('es', 'demo/temperature', {
   "Eficiencia de toda la cadena",
 "Useful energy so far":
   "Energía útil hasta ahora",
+"An energy chain starting with a cyclist.":
+  "Una cadena de energía que empieza con un ciclista.",
+"The converter is a generator.":
+  "El convertidor es un generador.",
+"The user is:":
+  "El usuario es:",
+"Running.":
+  "En marcha.",
+"Power in {#} W.":
+  "Potencia de entrada de {#} W.",
+"Electrical power out of the converter {#} W.":
+  "Potencia eléctrica a la salida del convertidor de {#} W.",
+"Useful power {#} W.":
+  "Potencia útil de {#} W.",
+"Wasted as thermal energy {#} W.":
+  "Desperdiciada como energía térmica: {#} W.",
+"Whole chain efficiency {#}%.":
+  "Eficiencia de toda la cadena de {#}%.",
 "Last mystery bath was — °C.":
   "El último baño misterioso estaba a — °C.",
 "{#} W of sunlight":
@@ -502,6 +558,10 @@ VDI18N.add('es', 'demo/temperature', {
   "Un bloque de {#} kg de un metal desconocido a {#} °C unido a {#} kg de agua a {#} °C. Su calor específico está oculto: encuéntralo a partir de la temperatura final, ya que el calor que pierde el bloque es el calor que gana el agua.",
 "unknown":
   "desconocido",
+"Block A is a mystery material.":
+  "El bloque A es de un material misterioso.",
+"The predicted final temperature and time constant are hidden.":
+  "La temperatura final predicha y la constante de tiempo están ocultas.",
 "A {#} L glass bulb holding {#} mmol of gas, joined to a pressure gauge. Its volume never changes, so its pressure tells its temperature. Put it in baths at known temperatures, wait for the gauge to settle, and plot pressure against temperature: the line points to the temperature where the pressure would be zero.":
   "Un bulbo de vidrio de {#} L con {#} mmol de gas, unido a un manómetro. Su volumen nunca cambia, así que su presión indica su temperatura. Ponlo en baños a temperaturas conocidas, espera a que el manómetro se estabilice y grafica la presión en función de la temperatura: la recta apunta a la temperatura en la que la presión sería cero.",
 "An aluminum rod {#} m long at {#} °C lies in a water jacket with one end against a fixed block and the other against a dial gauge that reads to {#} mm. Change the bath temperature and read how much longer the rod gets.":
@@ -532,10 +592,12 @@ VDI18N.add('es', 'demo/temperature', {
   "Un ciclista hace girar un generador que enciende un foco fluorescente compacto. Cada estación transmite solo parte de lo que recibe: el cuerpo convierte cerca del {#}% de la energía de los alimentos en trabajo, el generador el {#}% del trabajo en electricidad, el foco el {#}% de eso en luz. Solo el {#}% de la energía de los alimentos termina como luz; el resto calienta al ciclista, al generador y al foco. Prueba el Sol sobre una celda solar, o un calentador en lugar del foco.",
 "The energy chain has no worksheet readings: read the numbers from the Readouts.":
   "La cadena de energía no tiene lecturas para la hoja de trabajo: lee los números en Lecturas en pantalla.",
+"Paused.":
+  "En pausa.",
 "The last mystery block was {mat}.":
   "El último bloque misterioso era de {mat}.",
-"The last mystery block was iron, steel.":
-  "El último bloque misterioso era de hierro, acero.",
+"The last mystery block was gold.":
+  "El último bloque misterioso era de oro.",
 "Last mystery bath was {#} °C.":
   "El último baño misterioso estaba a {#} °C.",
 "The last mystery rod was {mat}.":
@@ -544,16 +606,24 @@ VDI18N.add('es', 'demo/temperature', {
   "La última varilla misteriosa era de cobre.",
 "Light bulb (CFL)":
   "Foco (CFL)",
-"Time controls":
-  "Controles de tiempo",
-"Run for a moment and pause again":
-  "Avanza un momento y vuelve a pausar",
-"Step":
-  "Paso",
-"<span>Speed</span>":
-  "<span>Rapidez</span>",
+"An energy chain starting with the Sun shining on a panel.":
+  "Una cadena de energía que empieza con el Sol brillando sobre un panel.",
+"The converter is a solar cell.":
+  "El convertidor es una celda solar.",
+"A flask of liquid with a thin tube rising from its neck.":
+  "Un matraz de líquido con un tubo delgado que sale de su cuello.",
+"The liquid is:":
+  "El líquido es:",
+"The bath is at {#} °C.":
+  "El baño está a {#} °C.",
+"The liquid stands {#} mm above the {#} °C mark.":
+  "El líquido está {#} mm por encima de la marca de {#} °C.",
+"The last mystery block was iron, steel.":
+  "El último bloque misterioso era de hierro, acero.",
 "distance along the rods from the left end (mm)":
   "distancia a lo largo de las varillas desde el extremo izquierdo (mm)",
 "Close":
-  "Cerrar"
+  "Cerrar",
+"Playing.":
+  "En marcha."
 });

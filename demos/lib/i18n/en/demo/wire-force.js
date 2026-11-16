@@ -1,5 +1,6 @@
 /* English strings of demo/wire-force, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'demo/wire-force', [
+"Describe the picture",
 "Seen from above. B points from N to S (to the right).",
 "F on the wire = {#} mN, down (into the page)",
 "balance under the magnet (zeroed at I = {#})",
@@ -8,6 +9,13 @@ VDI18N.add('en', 'demo/wire-force', [
 "<a><span>←</span> <span>Charges in Magnetic Fields</span></a><a><span>Displacement Current</span> <span>→</span></a>",
 "A current in a magnetic field feels a force F = IL × B. Weigh that force on a balance to measure B, then put a loop of wire in the field: the forces on its sides make a torque, and with a commutator the loop becomes a motor.",
 "Current balance: a wire between magnet poles on an electronic balance, shown in 3D (drag to turn) or flat from above. Loop: a coil seen from above between the poles, with the forces on its sides and its magnetic moment. Space starts or stops the loop.",
+"A wire {#} cm long runs between the poles of a magnet that sits on an electronic balance.",
+"The wire makes an angle of {#}° with the field.",
+"The current is {#} A.",
+"The magnetic field is {#} T.",
+"The balance reads −{#} g.",
+"The predicted force on the wire is {#} mN.",
+"No readings captured.",
 "Release the loop",
 "Supply and apparatus",
 "Current I: click, or press Enter, to type a value",
@@ -47,6 +55,8 @@ VDI18N.add('en', 'demo/wire-force', [
 "L = {#} cm in the field",
 "balance, zeroed at I = {#}",
 "Lines across the gap show the uniform field; the dots move with the current to show its direction, not its speed. Drag to turn the view.",
+"Skip to the picture",
+"Skip to the controls",
 "Hold the loop",
 "Only the part of the wire across the field counts: F = ILB sin θ. At θ = {#} the current runs along B and there is no force at all.",
 "Seen from above: the loop turns about an axis pointing out of the page.",
@@ -65,6 +75,15 @@ VDI18N.add('en', 'demo/wire-force', [
 "I, row {#}",
 "reading, row {#}",
 "Row {#} captured.",
+"A square coil of {#} turns, seen from above between the poles, with the forces on its sides and its magnetic moment.",
+"A commutator reverses the current each half turn, so this is a motor.",
+"The loop is held.",
+"The largest torque is {#} mN·m.",
+"The torque now is {#} mN·m.",
+"The moment is {#}° from the field.",
+"The loop turns at {#} rev/s.",
+"The loop is released.",
 "{#} turns, {#} cm square",
-"commutator and brushes"
+"commutator and brushes",
+"{#} readings captured."
 ]);

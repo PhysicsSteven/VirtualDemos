@@ -833,6 +833,39 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   window.vdDemo = { S, V, recompute, full, applyPreset, photonPDD, sobpFacts, pristineFacts, W3 };
   VD.howTo({ src: 'media/how-this-works/bragg-peak.mp4', poster: 'media/how-this-works/bragg-peak.jpg' });
   requestAnimationFrame(frame);
+  /* what the picture shows now, for a screen reader (VD.describe): the beam, the dose curve's key depths, the detector reading */
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    const Mm = M(), out = [];
+    if (S.view === 'why') {
+      const q = W3.st, w = q.w;
+      out.push(`One proton of ${sig(S.e, 4)} MeV enters ${Mm.name.toLowerCase()} and slows down.`);
+      out.push(S.run ? 'The proton is moving.' : S.wu >= 1 ? 'The proton has stopped.' : S.wu > 0 ? 'Paused.' : 'No proton sent yet.');
+      out.push(`Depth ${lenTxt(q.z)}.`);
+      out.push(`Energy left ${q.end ? f(q.T * 1000, 0) + ' keV' : sig(q.T, 4) + ' MeV'}.`);
+      if (w) { out.push(`Speed ${f(w.beta, w.beta < 0.1 ? 4 : 3)} times the speed of light.`); if (!q.end) out.push(`Energy lost ${sig(w.Sl, 4)} MeV per cm.`); }
+      return out;
+    }
+    if (S.view === 'pristine') {
+      const q = pristineFacts();
+      out.push(`A beam of ${sig(S.e, 4)} MeV protons enters ${Mm.name.toLowerCase()}, and the graph shows the dose against depth as a percent of the peak.`);
+      out.push(S.blind ? 'The range, peak depth and falloff are hidden.' : `The dose peaks at a depth of ${lenTxt(q.peak)}, and falls to 80 percent at ${lenTxt(q.R80)}.`);
+      if (!S.blind) out.push(`The peak is ${f(q.pe, 2)} times the entrance dose.`);
+      out.push(S.blind ? 'The dose at the detector is hidden.' : `At the detector, ${lenTxt(S.z)} deep, the dose is ${f(detDose(S.D), 1)} percent of the peak.`);
+    } else {
+      const q = sobpFacts(), cmp = S.view === 'compare';
+      out.push(`A spread out peak of ${S.L.length} proton energy layers in ${Mm.name.toLowerCase()}, with the target from ${lenTxt(S.zp)} to ${lenTxt(S.zd)} deep.`);
+      if (cmp) out.push(S.show === 'photons' ? 'The phantom shows the 6 MV photon beam.' : 'The phantom shows the proton beam.');
+      out.push(S.blind ? 'The dose values are hidden.' : `The dose in the target runs from ${f(100 * q.mn, 1)} to ${f(100 * q.mx, 1)} percent of its mean.`);
+      if (!S.blind) out.push(`The entrance dose is ${f(100 * q.ent, 1)} percent.`);
+      if (cmp && !S.blind) {
+        const pb = meanOver(S.P.z, S.P.n, 0, S.zp);
+        out.push(`The mean dose in front of the target is ${f(100 * q.before, 1)} percent for protons and ${f(100 * pb, 1)} percent for photons.`);
+      }
+      out.push(S.blind ? 'The dose at the detector is hidden.' : cmp ? `At the detector, ${lenTxt(S.z)} deep, protons give ${f(detDose(S.D), 1)} percent and photons ${f(detDose(S.P), 1)} percent.` : `At the detector, ${lenTxt(S.z)} deep, the dose is ${f(detDose(S.D), 1)} percent of the target's mean.`);
+    }
+    out.push(S.run ? 'The beam is on.' : 'The beam is off.');
+    return out;
+  });
 })();
 </script>
 <script>/* dividers between the panes (VD.splitPanes in demos/lib/vd.js); a browser with an older cached vd.js keeps the panes as they are */

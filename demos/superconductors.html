@@ -488,6 +488,31 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   view3 = VD3K.view({ seg: '#dimSeg', init: init3D, change: () => { if (g3) g3.S3.el.hidden = !use3(); draw(); }, status: () => {} });
   window.__sc = { S, now, setT, setB, applyPreset, redraw, sync, METALS, sample, bc, G3 };
+  /* what the pictures show now, for a screen reader (VD.describe): the sample and its field, and the graph */
+  if (window.VD && VD.describe) {
+    VD.describe(can, () => {
+      const st = now(), mys = S.m === 'mystery', k = key(), out = [];
+      out.push(mys ? 'A sphere 10 mm across of a mystery metal, in a cryostat inside a solenoid.' : 'A sphere 10 mm across, in a cryostat inside a solenoid.');
+      if (!mys) out.push('The metal is:', METALS[k].name);
+      out.push(S.model === 'pc' ? 'The sample is an imaginary perfect conductor, with zero resistance and nothing else.' : 'The sample is a real type I superconductor.');
+      out.push(`Temperature ${f(S.T, 2)} K.`);
+      out.push(`Applied field ${f(S.B, 2)} mT.`);
+      out.push({ normal: 'The sample is a normal metal, and the field passes straight through it.', meissner: 'The sample is in the Meissner state, and the field lines go around it.', intermediate: 'The sample is in the intermediate state, and the field partly gets in.', perfect: 'The sample holds the field it had when it was cooled, and the field inside does not change.' }[st.phase]);
+      out.push(st.R0 === 'zero' ? 'Its resistance is zero.' : 'Its resistance is not zero.');
+      out.push(`Magnetic moment ${f(st.moment * 1e3, 3)} mA·m².`);
+      out.push(`The Hall probe at the equator reads ${f(st.Beq, 2)} mT.`);
+      out.push(S.blind ? 'The field inside and the critical field are hidden.' : `The field inside averages ${f(st.Bin, 2)} mT.`);
+      if (!S.blind && !mys) out.push(`The critical field at this temperature is ${f(st.Bc, 2)} mT.`);
+      return out;
+    });
+    VD.describe(pl, () => {
+      const mys = S.m === 'mystery', k = key(), out = [];
+      out.push(S.graph === 'phase' ? 'The graph shows the applied field against temperature, with the critical field curve.' : 'The graph shows the magnetic moment against the applied field.');
+      out.push(`The sample is at ${f(S.T, 2)} K and ${f(S.B, 2)} mT.`);
+      if (S.graph === 'phase') out.push(S.blind || mys ? 'The critical field curve values are hidden.' : `The curve runs from ${METALS[k].Bc0} mT at 0 K down to zero at ${METALS[k].Tc} K.`);
+      return out;
+    });
+  }
   VD.howTo({ src: 'media/how-this-works/meissner-effect.mp4', poster: 'media/how-this-works/meissner-effect.jpg' });
 })();
 </script>

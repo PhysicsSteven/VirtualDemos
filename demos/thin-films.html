@@ -1727,6 +1727,31 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     return row;
   };
 
+  /* what the pictures show now, for a screen reader (VD.describe): the film, the light, the reflectance, the pattern */
+  if (window.VD && VD.describe) {
+    VD.describe($('can'), () => {
+      const q = S.pol === 'p' ? 'p' : 's', f = film(S.n1, S.nf, S.n2, S.t, S.lam, S.th, q), fu = film(S.n1, S.nf, S.n2, S.t, S.lam, S.th, S.pol), cT = f.cf[0], out = [];
+      out.push({ rays: 'Light meets a thin film between two media, and the two reflected rays interfere.', soap: 'A vertical soap film drains, and its colors show the thickness.', wedge: 'A wedge shaped air film between two glass slides shows fringes.', newton: 'A lens on a flat plate shows rings where the air gap grows.' }[S.view]);
+      out.push(`The refractive index is ${S.n1.toFixed(2)} above the film, ${S.nf.toFixed(2)} in the film and ${S.n2.toFixed(2)} below it.`);
+      out.push(S.view === 'rays' ? `The film thickness is ${fmtT(S.t)}.` : `The film thickness at the probe is ${fmtT(S.t)}.`);
+      out.push(`The light comes in at ${S.th}° to the normal.`);
+      out.push(S.light === 'mono' || S.view === 'rays' ? `The wavelength is ${S.lam} nm.` : 'The light is white.');
+      if (f.tirTop) out.push('Total internal reflection at the top means the light never enters the film.');
+      else {
+        out.push(`The path difference is ${(2 * S.nf * S.t * cT / S.lam).toFixed(3)} wavelengths.`);
+        out.push(`The reflectance at ${S.lam} nm is ${pct(fu.R)}.`);
+      }
+      if (S.view === 'wedge' && !f.tirTop) { const a = S.wedge.hw * 1e-6 / (WEDGE_L * 1e-3), dx = S.lam * 1e-9 / (2 * S.nf * cT * a); out.push(`The fringe spacing is ${(dx * 1e3).toFixed(3)} mm.`); }
+      if (S.view === 'soap') out.push(`The probe is ${(S.soap.y * 100).toFixed(0)}% of the way down the film.`);
+      return out;
+    });
+    VD.describe($('sCan'), () => {
+      const fu = film(S.n1, S.nf, S.n2, S.t, S.lam, S.th, S.pol), out = ['The graph shows the reflectance against wavelength from 380 to 780 nm, for the current film.'];
+      out.push(`The marker is at ${S.lam} nm, where the reflectance is ${pct(fu.R)}.`);
+      out.push(`With no film the reflectance there is ${pct(fu.R0)}.`);
+      return out;
+    });
+  }
   VD.howTo({ src: 'media/how-this-works/thin-films.mp4', poster: 'media/how-this-works/thin-films.jpg' });
   tokens();
   applyPreset('two');

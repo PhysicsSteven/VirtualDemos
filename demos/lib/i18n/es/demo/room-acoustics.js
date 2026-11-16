@@ -10,6 +10,8 @@ VDI18N.add('es', 'demo/room-acoustics', {
   "nivel (dB)",
 "Measuring…":
   "Midiendo…",
+"Describe the picture":
+  "Describir la imagen",
 "Clap to record the decay at the microphone.":
   "Aplaude para registrar el decaimiento en el micrófono.",
 "Room Acoustics and the Anechoic Chamber":
@@ -22,6 +24,26 @@ VDI18N.add('es', 'demo/room-acoustics', {
   "c = {#} m/s, aire a {#} °C",
 "Plan view of a room with a loudspeaker and a microphone on its center line, and under it a graph: the decay of a clap, or the sound level against distance. Drag the microphone to change its distance r from the speaker. Left and right arrows move it by {#} m (with Shift, {#} m); C claps.":
   "Vista en planta de una sala con un altavoz y un micrófono sobre su línea central, y debajo una gráfica: el decaimiento de un aplauso, o el nivel sonoro en función de la distancia. Arrastra el micrófono para cambiar su distancia r al altavoz. Las flechas izquierda y derecha lo mueven {#} m (con Shift, {#} m); C aplaude.",
+"A room {#} m long, {#} m wide and {#} m high, with a loudspeaker and a microphone on its center line.":
+  "Un cuarto de {#} m de largo, {#} m de ancho y {#} m de alto, con una bocina y un micrófono sobre su línea central.",
+"Volume {#} m³ and surface area {#} m².":
+  "Volumen de {#} m³ y área de superficie de {#} m².",
+"The walls are hard brick.":
+  "Las paredes son de ladrillo duro.",
+"The floor is concrete.":
+  "El piso es de concreto.",
+"The octave band is {#} Hz.":
+  "La banda de octava es de {#} Hz.",
+"The microphone is {#} m from the speaker.":
+  "El micrófono está a {#} m de la bocina.",
+"The graph shows the decay of a clap.":
+  "La gráfica muestra el decaimiento de un aplauso.",
+"No clap yet.":
+  "Todavía no hay aplauso.",
+"Absorption A = {#} m².":
+  "Absorción A = {#} m².",
+"Sabine reverberation time {#} s, Eyring {#} s.":
+  "Tiempo de reverberación de Sabine de {#} s, de Eyring de {#} s.",
 "Time controls":
   "Controles de tiempo",
 "<span>Speed</span>":
@@ -174,6 +196,10 @@ VDI18N.add('es', 'demo/room-acoustics', {
   "arrastra para girar · arrastra el micrófono para cambiar r",
 "The room in 3D, with the loudspeaker and the microphone on its center line. Drag the microphone to change r; drag elsewhere to turn the view, scroll or pinch to zoom, double click to reset the view. Left and right arrows move the microphone by {#} m (with Shift, {#} m), comma and period turn the view, C claps.":
   "La sala en 3D, con el altavoz y el micrófono sobre su línea central. Arrastra el micrófono para cambiar r; arrastra en otro lugar para girar la vista, usa la rueda o pellizca para hacer zoom, doble clic para restablecer la vista. Las flechas izquierda y derecha mueven el micrófono {#} m (con Shift, {#} m), coma y punto giran la vista, C aplaude.",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "slow motion ×{#}/{#}, t = {#} ms":
   "cámara lenta ×{#}/{#}, t = {#} ms",
 "T = {#} s (measured, T20)":
@@ -186,6 +212,10 @@ VDI18N.add('es', 'demo/room-acoustics', {
   "tiempo real, t = {#} ms",
 "Melamine foam, wedge shaped tile [ceiling_melamine_foam]":
   "Espuma de melamina, placa en forma de cuña [ceiling_melamine_foam]",
+"{#} absorbing panels cover {#} m² of the walls.":
+  "{#} paneles absorbentes cubren {#} m² de las paredes.",
+"The panels are foam.":
+  "Los paneles son de espuma.",
 "free space between the wedge tips {#} × {#} × {#} m":
   "espacio libre entre las puntas de las cuñas {#} × {#} × {#} m",
 "Wedge cutoff f_c = c/4d":
@@ -204,6 +234,8 @@ VDI18N.add('es', 'demo/room-acoustics', {
   "Un salón de {#} m × {#} m × {#} m cuyo piso está cubierto por público en sillas de madera, {#} personas por m². Las personas son buenas absorbentes: compara T con el piso desnudo (Concreto), y a {#} Hz, donde absorben mucho menos.",
 "Audience on wooden chairs, {#} per m² [audience_wooden_chairs_2_m2]":
   "Público en sillas de madera, {#} por m² [audience_wooden_chairs_2_m2]",
+"The floor is covered by an audience.":
+  "El piso está cubierto por un público.",
 "distance from the speaker r (m), each step a doubling":
   "distancia al altavoz r (m), cada paso se duplica",
 "level L (dB)":
@@ -232,12 +264,30 @@ VDI18N.add('es', 'demo/room-acoustics', {
   "Absorción y predicciones",
 "hidden: the panels are a mystery":
   "oculto: los paneles son un misterio",
+"The panel material is a mystery.":
+  "El material de los paneles es un misterio.",
+"The graph shows the sound level against distance.":
+  "La gráfica muestra el nivel de sonido contra la distancia.",
+"Level at the microphone {#} dB.":
+  "Nivel en el micrófono de {#} dB.",
+"The absorption and the predictions are hidden, because the panels are a mystery.":
+  "La absorción y las predicciones están ocultas, porque los paneles son un misterio.",
 "{#} mystery panels":
   "{#} paneles misteriosos",
 "Move the microphone away from or toward the loudspeaker by {#} m (Shift: {#} m)":
   "Aleja o acerca el micrófono a la bocina {#} m (Shift: {#} m)",
+"Critical distance {#} m.":
+  "Distancia crítica de {#} m.",
+"The walls are covered in absorbing wedges {#} m deep.":
+  "Las paredes están cubiertas de cuñas absorbentes de {#} m de profundidad.",
+"Measuring.":
+  "Midiendo.",
 "Close":
   "Cerrar",
 "Clap":
-  "Aplaudir"
+  "Aplaudir",
+"Paused.":
+  "En pausa.",
+"Playing.":
+  "En marcha."
 });

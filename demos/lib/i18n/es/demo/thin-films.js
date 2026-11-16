@@ -1,5 +1,7 @@
 /* demo/thin-films in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/thin-films', {
+"Describe the picture":
+  "Describir la imagen",
 "{#}, {#}, … weaker":
   "{#}, {#}, … más débiles",
 "{#}: none":
@@ -22,6 +24,10 @@ VDI18N.add('es', 'demo/thin-films', {
   "Reflectancia R(λ), t = {#} nm, θ₁ = {#}°",
 "white light reflects as":
   "la luz blanca se refleja como",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "Thin Film Interference":
   "Interferencia en películas delgadas",
 "<a><span>←</span> <span>Diffraction Grating</span></a><a><span>Michelson Interferometer</span> <span>→</span></a>":
@@ -46,8 +52,28 @@ VDI18N.add('es', 'demo/thin-films', {
   "Anillos de Newton",
 "Main view. Rays: a film between two media, the two reflected rays and their waves. Drag the bottom surface to change the thickness t and the start of the incoming ray to change the angle. Soap film, wedge and Newton's rings: the film in its computed colors; drag the probe line to read the thickness there. Keys: up and down change t, left and right change the angle, open and close bracket change the wavelength, space plays or pauses, {#} to {#} pick the view.":
   "Vista principal. Rayos: una película entre dos medios, los dos rayos reflejados y sus ondas. Arrastra la superficie inferior para cambiar el espesor t y el inicio del rayo incidente para cambiar el ángulo. Película de jabón, cuña y anillos de Newton: la película en sus colores calculados; arrastra la línea de la sonda para leer el espesor ahí. Teclas: arriba y abajo cambian t, izquierda y derecha cambian el ángulo, abrir y cerrar corchete cambian la longitud de onda, espacio inicia o pausa, {#} a {#} eligen la vista.",
+"Light meets a thin film between two media, and the two reflected rays interfere.":
+  "La luz encuentra una película delgada entre dos medios, y los dos rayos reflejados interfieren.",
+"The refractive index is {#} above the film, {#} in the film and {#} below it.":
+  "El índice de refracción es {#} arriba de la película, {#} en la película y {#} debajo de ella.",
+"The film thickness is {#} nm.":
+  "El grosor de la película es de {#} nm.",
+"The light comes in at {#}° to the normal.":
+  "La luz llega a {#}° de la normal.",
+"The wavelength is {#} nm.":
+  "La longitud de onda es de {#} nm.",
+"The path difference is {#} wavelengths.":
+  "La diferencia de camino es de {#} longitudes de onda.",
+"The reflectance at {#} nm is {#}%.":
+  "La reflectancia a {#} nm es de {#}%.",
 "Reflectance R against wavelength from {#} to {#} nm for the current film, with the first two reflections only and with no film for comparison. Drag the wavelength marker, or use the left and right arrow keys.":
   "Reflectancia R en función de la longitud de onda de {#} a {#} nm para la película actual, solo con las dos primeras reflexiones y sin película para comparar. Arrastra el marcador de longitud de onda, o usa las flechas izquierda y derecha.",
+"The graph shows the reflectance against wavelength from {#} to {#} nm, for the current film.":
+  "La gráfica muestra la reflectancia contra la longitud de onda de {#} a {#} nm, para la película actual.",
+"The marker is at {#} nm, where the reflectance is {#}%.":
+  "El marcador está en {#} nm, donde la reflectancia es de {#}%.",
+"With no film the reflectance there is {#}%.":
+  "Sin película la reflectancia allí es de {#}%.",
 "Divider between the film and the spectrum":
   "Divisor entre la película y el espectro",
 "Two reflections":
@@ -250,6 +276,12 @@ VDI18N.add('es', 'demo/thin-films', {
   "Curvatura de la lente dibujada {#} veces más profunda; los anillos en la placa están a escala. Arrastra el anillo en la vista del microscopio; arrastra en otro lugar para girar.",
 "Through the microscope, {#} mm across":
   "A través del microscopio, {#} mm de ancho",
+"A lens on a flat plate shows rings where the air gap grows.":
+  "Una lente sobre una placa plana muestra anillos donde crece la separación de aire.",
+"The film thickness at the probe is {#} nm.":
+  "El grosor de la película en la sonda es de {#} nm.",
+"The light is white.":
+  "La luz es blanca.",
 "A vertical soap film drains: thin at the top, thicker below. Each band is a thickness where some colors add and others cancel. The bands creep down and spread as the film thins, and the black film at the top grows. Where the film is thicker than about {#} µm, many orders overlap and the colors fade to pale pinks and greens.":
   "Una película de jabón vertical escurre: delgada arriba, más gruesa abajo. Cada banda es un espesor donde algunos colores se suman y otros se cancelan. Las bandas bajan lentamente y se separan al adelgazarse la película, y la película negra de arriba crece. Donde la película es más gruesa que unos {#} µm, muchos órdenes se superponen y los colores se desvanecen en rosas y verdes pálidos.",
 "{#} cycles <span>destructive</span>":
@@ -276,20 +308,30 @@ VDI18N.add('es', 'demo/thin-films', {
   "marcas: franjas oscuras predichas",
 "Reflectance R(λ), t = {#} µm, θ₁ = {#}°":
   "Reflectancia R(λ), t = {#} µm, θ₁ = {#}°",
+"A wedge shaped air film between two glass slides shows fringes.":
+  "Una película de aire en forma de cuña entre dos portaobjetos de vidrio muestra franjas.",
+"The film thickness at the probe is {#} µm.":
+  "El grosor de la película en la sonda es de {#} µm.",
+"The fringe spacing is {#} mm.":
+  "La separación entre franjas es de {#} mm.",
 "A quarter wave of MgF₂ ({#} nm) on glass. Both reflections flip, so only the path counts: half a wave at {#} nm, and they cancel. R drops from {#}% (bare glass, dotted) to {#}% in the green, and rises toward the ends of the spectrum, which is why coated lenses look faintly purple.":
   "Un cuarto de onda de MgF₂ ({#} nm) sobre vidrio. Ambas reflexiones se invierten, así que solo cuenta el camino: media onda a {#} nm, y se cancelan. R baja de {#}% (vidrio desnudo, punteado) a {#}% en el verde, y sube hacia los extremos del espectro, por eso las lentes con recubrimiento se ven ligeramente moradas.",
 "{#} MgF₂":
   "{#} MgF₂",
+"Both reflections flip, so the flips cancel: bright when 2n_f t cos θ_t = mλ, dark when it is (m + ½)λ.":
+  "Ambas reflexiones se invierten, así que las inversiones se cancelan: brillante cuando 2n_f t cos θ_t = mλ, oscura cuando es (m + ½)λ.",
+"{#}% <span>less than with no film</span>":
+  "{#}% <span>menos que sin película</span>",
 "Oil ({#}) on water ({#}). The top reflection flips (air to oil) and the bottom one does not (oil to the lower index water), the same as a soap film. A {#} nm slick reflects most strongly near {#} nm and least near {#} nm, so it looks yellowish. Drag the thickness and watch the color change.":
   "Aceite ({#}) sobre agua ({#}). La reflexión superior se invierte (de aire a aceite) y la inferior no (de aceite al agua de índice menor), igual que en una película de jabón. Una mancha de {#} nm refleja con más fuerza cerca de {#} nm y con menos cerca de {#} nm, así que se ve amarillenta. Arrastra el espesor y observa cómo cambia el color.",
 "{#} oil":
   "{#} aceite",
 "{#} + {#}: amplitude {#}, mostly constructive":
   "{#} + {#}: amplitud {#}, mayormente constructiva",
-"{#} cycles <span>mostly constructive</span>":
-  "{#} ciclos <span>mayormente constructiva</span>",
 "{#} + {#}: amplitude {#}, mostly destructive":
   "{#} + {#}: amplitud {#}, mayormente destructiva",
+"{#} cycles <span>mostly constructive</span>":
+  "{#} ciclos <span>mayormente constructiva</span>",
 "Reflectance R(λ), t = {#} nm, θ₁ = {#}°, s polarized":
   "Reflectancia R(λ), t = {#} nm, θ₁ = {#}°, polarización s",
 "Reflected waves at λ₀ = {#} nm, p":
@@ -314,10 +356,14 @@ VDI18N.add('es', 'demo/thin-films', {
   "Curvatura dibujada {#}× más profunda. Arrastra el anillo de la derecha.",
 "-{#} cycles <span>destructive</span>":
   "-{#} ciclos <span>destructiva</span>",
-"Both reflections flip, so the flips cancel: bright when 2n_f t cos θ_t = mλ, dark when it is (m + ½)λ.":
-  "Ambas reflexiones se invierten, así que las inversiones se cancelan: brillante cuando 2n_f t cos θ_t = mλ, oscura cuando es (m + ½)λ.",
-"{#}% <span>less than with no film</span>":
-  "{#}% <span>menos que sin película</span>",
 "Close":
-  "Cerrar"
+  "Cerrar",
+"Paused.":
+  "En pausa.",
+"Playing.":
+  "En marcha.",
+"Running.":
+  "En marcha.",
+"Not started.":
+  "No ha comenzado."
 });

@@ -1,5 +1,7 @@
 /* demo/exoplanets in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/exoplanets', {
+"Describe the picture":
+  "Describir la imagen",
 "transit here":
   "tránsito aquí",
 "To Earth, in this plane":
@@ -42,14 +44,42 @@ VDI18N.add('es', 'demo/exoplanets', {
   "Dos estrellas",
 "The orbit, in 3D or from above. Drag the planet to move it along its orbit; in 3D drag elsewhere to turn the view. Left and right arrows step time, up and down change the inclination, space plays or pauses.":
   "La órbita, en 3D o desde arriba. Arrastra el planeta para moverlo a lo largo de su órbita; en 3D arrastra en otra parte para girar la vista. Las flechas izquierda y derecha avanzan el tiempo, arriba y abajo cambian la inclinación, espacio inicia o pausa.",
+"A star of {#} solar masses and {#} solar radii, with one planet.":
+  "Una estrella de {#} masas solares y {#} radios solares, con un planeta.",
+"The planet has {#} Jupiter masses and {#} Jupiter radii.":
+  "El planeta tiene {#} masas de Júpiter y {#} radios de Júpiter.",
+"Its orbit is {#} AU wide, with eccentricity {#} and a tilt of {#}°.":
+  "Su órbita mide {#} UA de ancho, con excentricidad de {#} e inclinación de {#}°.",
+"Orbital period {#} d.":
+  "Periodo orbital de {#} d.",
+"Playing.":
+  "En marcha.",
+"Time from mid transit −{#} h.":
+  "Tiempo desde el centro del tránsito: −{#} h.",
 "Top view, looking down on the orbit":
   "Vista superior, mirando la órbita desde arriba",
 "What a distant telescope sees: the star disk and the planet. Up and down arrows change the inclination.":
   "Lo que ve un telescopio lejano: el disco de la estrella y el planeta. Las flechas arriba y abajo cambian la inclinación.",
+"The view from far away shows the star disk with the planet next to it.":
+  "La vista desde lejos muestra el disco de la estrella con el planeta a su lado.",
+"The planet crosses the face of the star.":
+  "El planeta cruza la cara de la estrella.",
+"The star is at full brightness.":
+  "La estrella está a brillo completo.",
 "What the telescope sees":
   "Lo que ve el telescopio",
 "Transit light curve: relative brightness against time. Drag across to move in time.":
   "Curva de luz del tránsito: brillo relativo en función del tiempo. Arrastra a lo largo para moverte en el tiempo.",
+"The graph shows the star's brightness against time.":
+  "La gráfica muestra el brillo de la estrella contra el tiempo.",
+"It covers one full orbit.":
+  "Abarca una órbita completa.",
+"The transit dip is {#} ppm deep.":
+  "La caída del tránsito es de {#} ppm.",
+"The transit lasts {#} h.":
+  "El tránsito dura {#} h.",
+"Brightness now at full.":
+  "El brillo ahora está completo.",
 "Light curve time span":
   "Intervalo de tiempo de la curva de luz",
 "Full orbit":
@@ -64,6 +94,12 @@ VDI18N.add('es', 'demo/exoplanets', {
   "Espectro",
 "Radial velocity curve of the star in meters per second against time. Drag across to move in time.":
   "Curva de velocidad radial de la estrella en metros por segundo en función del tiempo. Arrastra a lo largo para moverte en el tiempo.",
+"The graph shows the star's line of sight velocity against time.":
+  "La gráfica muestra la velocidad de la estrella en la línea de visión contra el tiempo.",
+"The star swings by {#} m/s.":
+  "La estrella oscila {#} m/s.",
+"Velocity now +{#} m/s.":
+  "Velocidad actual de +{#} m/s.",
 "Divider between the orbit and what the telescope sees":
   "Divisor entre la órbita y lo que ve el telescopio",
 "Divider between the views and the curves":
@@ -274,6 +310,16 @@ VDI18N.add('es', 'demo/exoplanets', {
   "tamaños no a escala · arrastra para girar",
 "drop (ppm)":
   "caída (ppm)",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
+"{#} Msun":
+  "{#} Msun",
+"{#} Rsun":
+  "{#} Rsun",
+"{#} RJ ({#} RE)":
+  "{#} RJ ({#} RE)",
 "Eclipse of star {#}":
   "Eclipse de la estrella {#}",
 "Reveal the stars":
@@ -302,12 +348,46 @@ VDI18N.add('es', 'demo/exoplanets', {
   "{#} UA = {#} R<sub>sun</sub>",
 "both, with flat bottoms":
   "ambos, con fondo plano",
+"{#} AU = {#} Rsun":
+  "{#} UA = {#} Rsun",
 "sizes to scale":
   "tamaños a escala",
 "slow motion · {#} s = {#} h":
   "cámara lenta · {#} s = {#} h",
+"Two stars orbit each other.":
+  "Dos estrellas orbitan una a la otra.",
+"Star {#} has a temperature of {#} K.":
+  "La estrella {#} tiene una temperatura de {#} K.",
+"Star {#} has {#} solar masses and {#} solar radii.":
+  "La estrella {#} tiene {#} masas solares y {#} radios solares.",
+"Star {#} has {#} solar masses, {#} solar radii and a temperature of {#} K.":
+  "La estrella {#} tiene {#} masas solares, {#} radios solares y una temperatura de {#} K.",
+"The stars are {#} AU apart, with an orbit tilt of {#}°.":
+  "Las estrellas están a {#} UA una de otra, con una inclinación orbital de {#}°.",
+"The view from far away shows two stars, one passing in front of the other.":
+  "La vista desde lejos muestra dos estrellas, una pasando frente a la otra.",
+"The stars eclipse each other.":
+  "Las estrellas se eclipsan mutuamente.",
+"The graph shows the brightness of the pair against time.":
+  "La gráfica muestra el brillo del par contra el tiempo.",
+"It zooms in on the transit.":
+  "Acerca el tránsito.",
+"The eclipse of star {#} is {#}% deep.":
+  "El eclipse de la estrella {#} es de {#}% de profundidad.",
+"Brightness now {#} of full.":
+  "Brillo actual de {#} del completo.",
+"The graph shows the line of sight velocity of each star against time.":
+  "La gráfica muestra la velocidad en la línea de visión de cada estrella contra el tiempo.",
+"Star {#} swings by {#} km/s.":
+  "La estrella {#} oscila {#} km/s.",
+"Velocity of star {#} now +{#} km/s, of star {#} −{#} km/s.":
+  "Velocidad actual de la estrella {#}: +{#} km/s; de la estrella {#}: −{#} km/s.",
 "From far away, Earth dims the Sun by {#} ppm for {#} hours once a year and moves it at only {#} cm/s. Add a little noise and both signals disappear.":
   "Desde muy lejos, la Tierra atenúa al Sol {#} ppm durante {#} horas una vez al año y lo mueve a solo {#} cm/s. Añade un poco de ruido y ambas señales desaparecen.",
+"{#} ME":
+  "{#} ME",
+"{#} RE":
+  "{#} RE",
 "Jupiter swings the Sun at about {#} m/s, easy for a good spectrograph if you wait {#} years. Its {#}% transit lines up for only about {#}% of random viewers.":
   "Júpiter mueve al Sol a unos {#} m/s, fácil para un buen espectrógrafo si esperas {#} años. Su tránsito del {#}% se alinea solo para cerca del {#}% de los observadores al azar.",
 "periastron":
@@ -346,12 +426,42 @@ VDI18N.add('es', 'demo/exoplanets', {
   "Una estrella pequeña y caliente y una compañera más grande, más fría y más ligera, más o menos como Algol. Ocultar la estrella caliente da un eclipse profundo; ocultar la fría medio periodo después, uno poco profundo. No exactamente de canto, así que ambos eclipses son parciales.",
 "Two stars a little heavier and a little lighter than the Sun, tilted {#}° from edge on: each eclipse is partial, V shaped with no flat part, so the contact times alone do not give both radii.":
   "Dos estrellas un poco más pesada y un poco más ligera que el Sol, inclinadas {#}° respecto al canto: cada eclipse es parcial, en forma de V sin parte plana, así que los tiempos de contacto por sí solos no dan ambos radios.",
+"The stars eclipse each other partly.":
+  "Las estrellas se eclipsan parcialmente.",
+"The graph shows the transit depth against wavelength, the transmission spectrum.":
+  "La gráfica muestra la profundidad del tránsito contra la longitud de onda, el espectro de transmisión.",
+"The atmosphere is hydrogen and helium.":
+  "La atmósfera es de hidrógeno y helio.",
+"Temperature {#} K.":
+  "Temperatura de {#} K.",
+"Clouds reach {#} scale heights up.":
+  "Las nubes llegan a {#} alturas de escala.",
+"Scale height {#} km.":
+  "Altura de escala de {#} km.",
+"The spectrum is flat.":
+  "El espectro es plano.",
+"At the cursor, {#} µm, the transit depth is {#} ppm.":
+  "En el cursor, a {#} µm, la profundidad del tránsito es de {#} ppm.",
 "An eccentric orbit (e = {#}): the second eclipse does not come half an orbit after the first, the two eclipses last different times, and the velocity curves are lopsided.":
   "Una órbita excéntrica (e = {#}): el segundo eclipse no llega medio periodo después del primero, los dos eclipses duran tiempos distintos y las curvas de velocidad son asimétricas.",
+"Paused.":
+  "En pausa.",
+"The atmosphere is carbon dioxide.":
+  "La atmósfera es de dióxido de carbono.",
+"The orbit is stretched, with eccentricity {#}.":
+  "La órbita es alargada, con excentricidad de {#}.",
 "−{#} ppm":
   "−{#} ppm",
+"Time from mid transit {#} h.":
+  "Tiempo desde el centro del tránsito: {#} h.",
+"The brightness is down by {#} ppm.":
+  "El brillo bajó {#} ppm.",
+"Velocity of star {#} now −{#} km/s, of star {#} −{#} km/s.":
+  "Velocidad actual de la estrella {#}: −{#} km/s; de la estrella {#}: −{#} km/s.",
 "slow motion · {#} s = {#} d":
   "cámara lenta · {#} s = {#} d",
+"Velocity of star {#} now −{#} km/s, of star {#} +{#} km/s.":
+  "Velocidad actual de la estrella {#}: −{#} km/s; de la estrella {#}: +{#} km/s.",
 "A mystery binary: see the Mystery system section.":
   "Una binaria misteriosa: consulta la sección Sistema misterioso.",
 "Mystery binary: star {#}'s spectrum gives T₁ = {#} K. Everything else is hidden, and every measurement has noise ({#}% in brightness, {#} km/s in velocity).":
@@ -364,16 +474,32 @@ VDI18N.add('es', 'demo/exoplanets', {
   "caída de −{#} ppm",
 "{#} ppm drop":
   "caída de {#} ppm",
+"The masses, radii, second temperature and orbit are hidden.":
+  "Las masas, los radios, la segunda temperatura y la órbita están ocultos.",
+"Whether the orbit crosses the star is hidden.":
+  "Si la órbita cruza la estrella está oculto.",
+"The velocity amplitude is hidden.":
+  "La amplitud de la velocidad está oculta.",
 "Revealed: M₁ = {m1} M☉, R₁ = {r1} R☉, T₁ = {t1} K; M₂ = {m2} M☉, R₂ = {r2} R☉, T₂ = {t2} K; a = {a} AU, i = {i}°, γ = {g} km/s.":
   "Revelado: M₁ = {m1} M☉, R₁ = {r1} R☉, T₁ = {t1} K; M₂ = {m2} M☉, R₂ = {r2} R☉, T₂ = {t2} K; a = {a} UA, i = {i}°, γ = {g} km/s.",
 "Revealed: M₁ = {#} M<sub>sun</sub>, R₁ = {#} R<sub>sun</sub>, T₁ = {#} K; M₂ = {#} M<sub>sun</sub>, R₂ = {#} R<sub>sun</sub>, T₂ = {#} K; a = {#} AU, i = {#}°, γ = −{#} km/s.":
   "Revelado: M₁ = {#} M<sub>sun</sub>, R₁ = {#} R<sub>sun</sub>, T₁ = {#} K; M₂ = {#} M<sub>sun</sub>, R₂ = {#} R<sub>sun</sub>, T₂ = {#} K; a = {#} UA, i = {#}°, γ = −{#} km/s.",
+"The points carry measurement noise.":
+  "Los puntos tienen ruido de medición.",
 "time from mid transit":
   "tiempo desde la mitad del tránsito",
 "{#} scale heights up":
   "{#} alturas de escala arriba",
 "none: flat":
   "ninguna: plano",
+"The atmosphere is nitrogen.":
+  "La atmósfera es de nitrógeno.",
+"The sky is clear.":
+  "El cielo está despejado.",
+"The tallest feature is {#} ppm, at {#} µm.":
+  "El rasgo más alto es de {#} ppm, a {#} µm.",
+"Velocity of star {#} now +{#} km/s, of star {#} +{#} km/s.":
+  "Velocidad actual de la estrella {#}: +{#} km/s; de la estrella {#}: +{#} km/s.",
 "clouds hide the atmosphere at {lam} µm":
   "las nubes ocultan la atmósfera en {lam} µm",
 "atmosphere at {lam} µm, to scale":

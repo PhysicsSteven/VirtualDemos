@@ -2192,6 +2192,61 @@ function airFromVac(vnm) {
   /* Hydrogen in stars sends its readings to its own worksheet, hydrogen-in-stars (opened with ?ws=hydrogen-in-stars, or ?mode=stars) */
   window.vdWorksheet = () => VD.ws(S.mode === 'stars' ? 'hydrogen-in-stars' : 'spectra');
   const howVid = () => { const w = window.vdWorksheet(); return w === 'intro-spectra' || w === 'hydrogen-in-stars' ? w : 'spectra'; };
+  /* what the pictures show now, for a screen reader (VD.describe): each strip's lines, the level diagram, the star chart, the atom models */
+  if (window.VD && VD.describe) {
+    const lineSentences = (lines, out) => {
+      lines.slice().sort((x, y) => y.inten - x.inten || x.nm - y.nm).slice(0, 5).forEach((L) => out.push(L.inten ? `A line at ${L.nm.toFixed(1)} nm, intensity ${L.inten}.` : `A line at ${L.nm.toFixed(1)} nm.`));
+    };
+    const dispWord = (d) => (d === 'absorption' ? 'The strip shows dark absorption lines on a bright background.' : d === 'continuous' ? 'The strip shows a continuous spectrum from the lamp alone.' : 'The strip shows bright emission lines on a dark background.');
+    const stripLine = () => (S.view === 'visible' ? 'It covers 380 to 750 nm.' : 'It covers 300 to 1000 nm.');
+    VD.describe($('cA'), () => {
+      const out = [];
+      if (S.mode === 'mystery') {
+        out.push(S.revealed ? 'The spectrum of the mystery mixture, now revealed.' : 'The spectrum of a mystery mixture of gases. Which elements are in it is hidden.');
+        out.push(`It has ${shownA.length} lines.`);
+        lineSentences(shownA, out);
+        out.push(S.revealed ? `The answer is ${S.mystery.join(' and ')}.` : '');
+        return out;
+      }
+      const cont = S.display === 'continuous';
+      out.push('The spectrum of this element:', BY[S.a][2]);
+      out.push(dispWord(S.display)); out.push(stripLine());
+      out.push(cont ? 'There are no lines.' : `It has ${shownA.length} lines.`);
+      if (!cont) { lineSentences(shownA, out); if (S.mark != null) out.push(`The marked line is at ${S.mark.toFixed(2)} nm.`); }
+      return out;
+    });
+    VD.describe($('cB'), () => {
+      const out = [];
+      if (S.mode === 'mystery') {
+        out.push(S.guesses.size ? 'The spectrum of your guess.' : 'No elements guessed yet.');
+        if (S.guesses.size) { out.push(`It has ${shownB.length} lines.`); lineSentences(shownB, out); }
+        return out;
+      }
+      if (S.mode !== 'compare') return [];
+      out.push('The spectrum of the second element:', BY[S.b][2]);
+      out.push(S.display === 'continuous' ? 'There are no lines.' : `It has ${shownB.length} lines.`);
+      if (S.display !== 'continuous') lineSentences(shownB, out);
+      return out;
+    });
+    VD.describe($('cBohr'), () => {
+      const L = hLine(S.ni, S.series);
+      const region = L.air < 380 ? (L.air < 200 ? 'The photon is far ultraviolet.' : 'The photon is ultraviolet.') : L.air > 750 ? 'The photon is infrared.' : 'The photon is visible.';
+      const out = ['Hydrogen energy levels, with the chosen transition drawn as an arrow.', `The electron drops from level n = ${S.ni} to level n = ${S.series}.`, region];
+      out.push(S.blind ? 'The photon energy and wavelength are hidden.' : `The photon energy is ${L.eV.toFixed(2)} eV.`);
+      if (!S.blind) out.push(L.air < 200 ? `The wavelength is ${L.vac.toFixed(1)} nm in vacuum.` : `The wavelength is ${L.air.toFixed(2)} nm.`);
+      return out;
+    });
+    VD.describe($('cStars'), () => {
+      const sh = hsShares(ST.T, ST.Pe);
+      return ['A chart of hydrogen level populations against temperature, on log scales.', `The temperature is ${fmtK(ST.T)}.`, 'The star class is:', classOfT(ST.T), `The electron pressure is ${ST.Pe} N/m².`,
+        `The ratio of atoms excited to n = 2 against n = 1 is ${sci2(sh.r12)}.`, `The ratio of ionized to neutral hydrogen is ${sci2(sh.rion)}.`, `The share of all hydrogen in n = 2 is ${sci2(sh.f2)}.`,
+        `The Balmer lines are strongest at ${fmtK(Math.round(hsPeak(ST.Pe) / 10) * 10)} for this pressure.`];
+    });
+    VD.describe($('cModels'), () => [
+      'Six models of the hydrogen atom side by side under one photon beam, each with a strip of the light it gives off.',
+      AM.white ? 'The beam is white light.' : `The photon wavelength is ${airFromVac(AM.lam).toFixed(1)} nm, with energy ${(AM_HC / AM.lam).toFixed(3)} eV.`,
+      AM.run ? 'Playing.' : 'Paused.', { t: `${AM.sent} photons sent.`, live: false }]);
+  }
   VD.howTo({ src: () => `media/how-this-works/${howVid()}.mp4`, poster: () => `media/how-this-works/${howVid()}.jpg` });
   window.vdReadingRow = () => {
     if (S.mode === 'stars') {

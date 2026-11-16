@@ -1307,6 +1307,22 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   VD.howTo({ src: 'media/how-this-works/franck-hertz.mp4', poster: 'media/how-this-works/franck-hertz.jpg' });
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => drawAll());
   view3 = VD3K.view({ seg: '#dimSeg', init: init3D, change: (on) => { if (g3) g3.S3.el.hidden = !on; drawAll(); }, status: (m) => { const st = document.querySelector('.status'); if (st) st.textContent = m; } });
+  /* what the picture shows now, for a screen reader (VD.describe): the tube, the sweep, the readings, the marked maxima */
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    const hg = S.gas === 'hg', g = G(), m = S.marks.slice().sort((a, b) => a - b), out = [];
+    out.push(hg ? 'A tube of mercury vapor, with electrons accelerated from a hot cathode toward a grid and collected on a plate.' : 'A tube of neon gas, with electrons accelerated from a hot cathode toward a grid and collected on a plate.');
+    if (hg) out.push(`Oven temperature ${S.TC} °C.`);
+    out.push(`Retarding voltage ${S.Ur.toFixed(1)} V.`);
+    out.push(sweeping ? 'The accelerating voltage is sweeping up.' : playing ? 'Playing.' : 'Paused.');
+    out.push({ t: S.U - S.Uc <= 0 ? 'The accelerating voltage is below the contact potential, so no electron gets through.' : `The fastest electrons carry ${(S.U - S.Uc).toFixed(2)} eV.`, live: false });
+    out.push({ t: `Accelerating voltage U = ${S.U.toFixed(2)} V.`, live: false });
+    out.push({ t: `Collector current I = ${currentNow().toFixed(2)} nA.`, live: false });
+    out.push(S.blind ? 'The level energy is hidden.' : hg ? `The first excited level is at ${g.levels[0].toFixed(3)} eV.` : 'The levels are between 18.38 and 18.97 eV.');
+    out.push(m.length ? `${m.length} current maxima marked, at ${m.map((u) => u.toFixed(2)).join(', ')} V.` : 'No current maxima marked.');
+    if (m.length > 1 && !S.blind) { const f = linfit(m.map((_, i) => i + 1), m, g.read), d = hg ? 2 : 1; if (f) out.push(`The fit gives a spacing of ${f.b.toFixed(d + 1)} ± ${f.sb.toFixed(d + 1)} eV.`); }
+    else if (m.length > 1) out.push('The spacing between maxima is hidden.');
+    return out;
+  });
   requestAnimationFrame(loop);
 })();
 </script>

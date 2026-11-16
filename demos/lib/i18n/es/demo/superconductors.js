@@ -24,6 +24,8 @@ VDI18N.add('es', 'demo/superconductors', {
   "campo crítico Bc",
 "field starts to get in, ({#}/{#})Bc":
   "el campo empieza a entrar, ({#}/{#})Bc",
+"Describe the picture":
+  "Describir la imagen",
 "Superconductors and the Meissner Effect":
   "Superconductores y el efecto Meissner",
 "<a>Condensed matter physics</a>":
@@ -36,14 +38,36 @@ VDI18N.add('es', 'demo/superconductors', {
   "T en K · B en mT · momento en mA·m²",
 "A metal sphere in a cryostat inside a solenoid, with the magnetic field lines around and through it, a Hall probe at its equator and a magnetometer.":
   "Una esfera de metal en un criostato dentro de un solenoide, con las líneas de campo magnético alrededor de ella y a través de ella, una sonda Hall en su ecuador y un magnetómetro.",
+"A sphere {#} mm across, in a cryostat inside a solenoid.":
+  "Una esfera de {#} mm de diámetro, en un criostato dentro de un solenoide.",
+"The metal is:":
+  "El metal es:",
+"Lead (Pb)":
+  "Plomo (Pb)",
+"The sample is a real type I superconductor.":
+  "La muestra es un superconductor real de tipo I.",
+"Temperature {#} K.":
+  "Temperatura de {#} K.",
+"Applied field {#} mT.":
+  "Campo aplicado de {#} mT.",
+"The sample is in the Meissner state, and the field lines go around it.":
+  "La muestra está en el estado de Meissner, y las líneas de campo la rodean.",
+"Its resistance is zero.":
+  "Su resistencia es cero.",
+"Magnetic moment −{#} mA·m².":
+  "Momento magnético de −{#} mA·m².",
+"The Hall probe at the equator reads {#} mT.":
+  "La sonda Hall en el ecuador marca {#} mT.",
+"The field inside averages {#} mT.":
+  "El campo interior promedia {#} mT.",
+"The critical field at this temperature is {#} mT.":
+  "El campo crítico a esta temperatura es de {#} mT.",
 "The sample, its temperature and the applied field":
   "La muestra, su temperatura y el campo aplicado",
 "<span>Sample in a cryostat, inside a solenoid</span>":
   "<span>Muestra en un criostato, dentro de un solenoide</span>",
 "Sample: a sphere {#} mm across":
   "Muestra: una esfera de {#} mm de diámetro",
-"Lead (Pb)":
-  "Plomo (Pb)",
 "Tin (Sn)":
   "Estaño (Sn)",
 "Indium (In)":
@@ -70,6 +94,12 @@ VDI18N.add('es', 'demo/superconductors', {
   "Nueva muestra misteriosa",
 "Graph: the applied field against temperature with the critical field curve, or the magnetic moment against the applied field.":
   "Gráfica: el campo aplicado en función de la temperatura con la curva del campo crítico, o el momento magnético en función del campo aplicado.",
+"The graph shows the applied field against temperature, with the critical field curve.":
+  "La gráfica muestra el campo aplicado contra la temperatura, con la curva del campo crítico.",
+"The sample is at {#} K and {#} mT.":
+  "La muestra está a {#} K y {#} mT.",
+"The curve runs from {#} mT at {#} K down to zero at {#} K.":
+  "La curva va de {#} mT a {#} K hasta cero a {#} K.",
 "B against T":
   "B en función de T",
 "Moment against B":
@@ -118,6 +148,10 @@ VDI18N.add('es', 'demo/superconductors', {
   "bobina captadora",
 "equator (mT)":
   "ecuador (mT)",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "moment (mA·m²)":
   "momento (mA·m²)",
 "at {#} K":
@@ -140,6 +174,12 @@ VDI18N.add('es', 'demo/superconductors', {
   "Curvas ocultas para el metal misterioso",
 "A sphere of one of the type I metals in Table {#}, at {#} K (a helium {#} refrigerator). Its name is hidden. Find its critical field at several temperatures, then its Tc and Bc({#}), and say which metal it is.":
   "Una esfera de uno de los metales de tipo I de la Tabla {#}, a {#} K (un refrigerador de helio {#}). Su nombre está oculto. Encuentra su campo crítico a varias temperaturas, luego su Tc y su Bc({#}), y di qué metal es.",
+"A sphere {#} mm across of a mystery metal, in a cryostat inside a solenoid.":
+  "Una esfera de {#} mm de diámetro de un metal misterioso, en un criostato dentro de un solenoide.",
+"Magnetic moment {#} mA·m².":
+  "Momento magnético de {#} mA·m².",
+"The graph shows the magnetic moment against the applied field.":
+  "La gráfica muestra el momento magnético contra el campo aplicado.",
 "indium":
   "indio",
 "mercury":
@@ -148,6 +188,10 @@ VDI18N.add('es', 'demo/superconductors', {
   "aluminio",
 "zero resistance: holding the flux it had":
   "resistencia cero: conserva el flujo que tenía",
+"The sample is an imaginary perfect conductor, with zero resistance and nothing else.":
+  "La muestra es un conductor perfecto imaginario, con resistencia cero y nada más.",
+"The sample holds the field it had when it was cooled, and the field inside does not change.":
+  "La muestra conserva el campo que tenía cuando se enfrió, y el campo interior no cambia.",
 "Gallium (Ga)":
   "Galio (Ga)",
 "The last mystery metal was {metal}.":
@@ -157,5 +201,13 @@ VDI18N.add('es', 'demo/superconductors', {
 "<a><span>←</span> <span>Circuits</span></a><a><span>Gamma Spectroscopy</span> <span>→</span></a>":
   "<a><span>←</span> <span>Circuitos</span></a><a><span>Espectroscopía gamma</span> <span>→</span></a>",
 "Zinc (Zn)":
-  "Zinc (Zn)"
+  "Zinc (Zn)",
+"Paused.":
+  "En pausa.",
+"Playing.":
+  "En marcha.",
+"Running.":
+  "En marcha.",
+"Not started.":
+  "No ha comenzado."
 });

@@ -1,5 +1,7 @@
 /* demo/wire-force in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/wire-force', {
+"Describe the picture":
+  "Describir la imagen",
 "Seen from above. B points from N to S (to the right).":
   "Visto desde arriba. B apunta de N a S (hacia la derecha).",
 "F on the wire = {#} mN, down (into the page)":
@@ -16,6 +18,20 @@ VDI18N.add('es', 'demo/wire-force', {
   "Una corriente en un campo magnético siente una fuerza F = IL × B. Pesa esa fuerza en una balanza para medir B, luego pon una espira de alambre en el campo: las fuerzas sobre sus lados producen una torca, y con un conmutador la espira se convierte en un motor.",
 "Current balance: a wire between magnet poles on an electronic balance, shown in 3D (drag to turn) or flat from above. Loop: a coil seen from above between the poles, with the forces on its sides and its magnetic moment. Space starts or stops the loop.":
   "Balanza de corriente: un alambre entre los polos de un imán sobre una balanza electrónica, en 3D (arrastra para girar) o plano visto desde arriba. Espira: una bobina vista desde arriba entre los polos, con las fuerzas sobre sus lados y su momento magnético. Espacio inicia o detiene la espira.",
+"A wire {#} cm long runs between the poles of a magnet that sits on an electronic balance.":
+  "Un alambre de {#} cm de largo pasa entre los polos de un imán que está sobre una balanza electrónica.",
+"The wire makes an angle of {#}° with the field.":
+  "El alambre forma un ángulo de {#}° con el campo.",
+"The current is {#} A.":
+  "La corriente es de {#} A.",
+"The magnetic field is {#} T.":
+  "El campo magnético es de {#} T.",
+"The balance reads −{#} g.":
+  "La balanza marca −{#} g.",
+"The predicted force on the wire is {#} mN.":
+  "La fuerza predicha sobre el alambre es de {#} mN.",
+"No readings captured.":
+  "No se ha capturado ninguna lectura.",
 "Release the loop":
   "Soltar la espira",
 "Supply and apparatus":
@@ -94,6 +110,10 @@ VDI18N.add('es', 'demo/wire-force', {
   "balanza, en cero con I = {#}",
 "Lines across the gap show the uniform field; the dots move with the current to show its direction, not its speed. Drag to turn the view.":
   "Las líneas a través del entrehierro muestran el campo uniforme; los puntos se mueven con la corriente para mostrar su sentido, no su rapidez. Arrastra para girar la vista.",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "Hold the loop":
   "Detener la espira",
 "Only the part of the wire across the field counts: F = ILB sin θ. At θ = {#} the current runs along B and there is no force at all.":
@@ -130,10 +150,36 @@ VDI18N.add('es', 'demo/wire-force', {
   "lectura, fila {#}",
 "Row {#} captured.":
   "Fila {#} capturada.",
+"A square coil of {#} turns, seen from above between the poles, with the forces on its sides and its magnetic moment.":
+  "Una bobina cuadrada de {#} vueltas, vista desde arriba entre los polos, con las fuerzas sobre sus lados y su momento magnético.",
+"A commutator reverses the current each half turn, so this is a motor.":
+  "Un conmutador invierte la corriente cada media vuelta, así que esto es un motor.",
+"The loop is held.":
+  "La espira está sujeta.",
+"The largest torque is {#} mN·m.":
+  "El torque máximo es de {#} mN·m.",
+"The torque now is {#} mN·m.":
+  "El torque actual es de {#} mN·m.",
+"The moment is {#}° from the field.":
+  "El momento está a {#}° del campo.",
+"The loop turns at {#} rev/s.":
+  "La espira gira a {#} rev/s.",
+"The loop is released.":
+  "La espira está suelta.",
 "{#} turns, {#} cm square":
   "{#} vueltas, {#} cm de lado",
 "commutator and brushes":
   "conmutador y escobillas",
+"{#} readings captured.":
+  "{#} lecturas capturadas.",
 "Close":
-  "Cerrar"
+  "Cerrar",
+"Paused.":
+  "En pausa.",
+"Playing.":
+  "En marcha.",
+"Running.":
+  "En marcha.",
+"Not started.":
+  "No ha comenzado."
 });

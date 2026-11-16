@@ -1161,6 +1161,83 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   VD.projector({ onChange: resize });
   /* How this works: a short video of one sample reading from the worksheet the current view belongs to (SHEETS); made by tools/howto/ */
   const HOWTITLE = { eq: 'Thermal Equilibrium', th: 'Gas Thermometer and Absolute Zero', ex: 'Thermal Expansion', co: 'Heat Conduction Through Layers', cv: 'Cooling by Convection and Radiation' };
+  /* what the picture shows now, for a screen reader (VD.describe): the view's setup, the readings, what Blind hides */
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    const out = [], hid = S.blind, mv = !S.run, W_ = (v) => `${f(v, v < 10 ? 2 : 1)} W`;
+    if (S.view === 'eq') {
+      const st = eqNow(), e = S.eq, mys = e.a === 'mystery';
+      out.push('Two blocks in an insulated box, joined by a metal bar, each with a thermometer.');
+      out.push(mys ? 'Block A is a mystery material.' : 'Block A is:'); if (!mys) out.push(SPECIFIC[e.a].name);
+      out.push(`Block A has a mass of ${f(e.mA, 2)} kg and starts at ${f(e.TA0, 0)} °C.`);
+      out.push('Block B is:'); out.push(SPECIFIC[e.b].name);
+      out.push(`Block B has a mass of ${f(e.mB, 2)} kg and starts at ${f(e.TB0, 0)} °C.`);
+      out.push('The bar is:'); out.push(CONDUCT[e.bar].name);
+      out.push(`The bar is ${f(e.L * 100, 0)} cm long.`);
+      out.push(S.run ? 'Running.' : e.t > 0 ? 'Paused.' : 'Not started.');
+      out.push({ t: `Thermometer A reads ${f(st.TA, 2)} °C.`, live: mv });
+      out.push({ t: `Thermometer B reads ${f(st.TB, 2)} °C.`, live: mv });
+      out.push({ t: `Time ${f(e.t, 0)} s.`, live: false });
+      out.push(hid || mys ? 'The predicted final temperature and time constant are hidden.' : `The predicted final temperature is ${f(st.Tf, 2)} °C, with time constant ${f(st.tau, 1)} s.`);
+    } else if (S.view === 'th') {
+      const th = S.th, P = gasP(th.n * 1e-3, th.Tg), Tb = bathT();
+      out.push('A bulb of gas joined to a pressure gauge, sitting in a bath.');
+      if (th.bath === 'mys') out.push('The bath is a mystery, and its temperature is unknown.'); else { out.push('The bath is:'); out.push(BATHS[th.bath].name); out.push(`The bath is at ${f(Tb, 3)} °C.`); }
+      out.push(`The bulb holds ${th.n} mmol of gas.`);
+      out.push(S.run ? 'Running.' : 'Paused.');
+      out.push({ t: `The pressure gauge reads ${f(P / 1000, 2)} kPa.`, live: mv });
+      out.push(hid ? 'The gas temperature from the ideal gas law is hidden.' : { t: `The gas temperature from the ideal gas law is ${f(gasT(P, th.n * 1e-3), 2)} °C.`, live: mv });
+      out.push({ t: `Time in this bath ${f(th.t, 0)} s.`, live: false });
+    } else if (S.view === 'ex') {
+      const ex = S.ex;
+      if (ex.kind === 'rod') {
+        const k = rodKey(), dl = rodDL(k, ex.T);
+        out.push('A metal rod in a bath, with a dial gauge on its end.');
+        out.push(ex.rod === 'mystery' ? 'The rod is a mystery material.' : 'The rod is:'); if (ex.rod !== 'mystery') out.push(EXPAND[k].name);
+        out.push(`The bath is at ${f(ex.T, 1)} °C.`);
+        out.push(`The dial gauge reads ${f(dl, 3)} mm of expansion.`);
+        out.push(hid || ex.rod === 'mystery' ? 'The expansion coefficient is hidden.' : `The expansion coefficient is ${f(EXPAND[k].a * 1e6, 1)} × 10⁻⁶ per °C.`);
+      } else {
+        const k = ex.liq, hh = capH(k, ex.T);
+        out.push('A flask of liquid with a thin tube rising from its neck.');
+        out.push('The liquid is:'); out.push(LIQUIDS[k].name);
+        out.push(`The bath is at ${f(ex.T, 1)} °C.`);
+        out.push(`The liquid stands ${f(hh, 1)} mm above the 20 °C mark.`);
+      }
+    } else if (S.view === 'co') {
+      const w = wallState(coWall()), c = S.co;
+      out.push(`Heat flows through a wall of ${c.layers.filter((l) => l.d > 0).length} layers, with a probe inside it.`);
+      c.layers.forEach((l, i) => { if (l.d > 0) { out.push(`Layer ${i + 1} is ${l.d} mm thick:`); out.push(CONDUCT[l.mat].name); } });
+      out.push(`The inside is at ${f(c.Tin, 0)} °C and the outside at ${f(c.Tout, 0)} °C.`);
+      out.push(`The area is ${c.A < 0.01 ? f(c.A * 1e4, 3) + ' cm²' : f(c.A, 3) + ' m²'}.`);
+      out.push(`Heat flow ${f(w.P, w.P < 10 ? 3 : 1)} W.`);
+      out.push(`The probe reads ${f(w.at(c.x * w.thick), 2)} °C, ${f(c.x * w.thick * 1000, 1)} mm into the wall.`);
+      out.push(`The inside surface is at ${f(w.Ts_in, 2)} °C and the outside surface at ${f(w.Ts_out, 2)} °C.`);
+      out.push(hid ? 'The total resistance and U value are hidden.' : `Total resistance ${f(w.R, 4)} m²·°C/W, U = ${f(w.U, 3)} W/(m²·°C).`);
+    } else if (S.view === 'cv') {
+      const c = S.cv, par = cvPar(), Tn = cvTemp(c.t), r = coolRates(par, Tn);
+      out.push(`A hot sphere ${f(c.D, 0)} cm across cools in the room air, with a thermocouple in it.`);
+      out.push('The sphere is:'); out.push(SPHERES[c.metal].name);
+      out.push('The surface is:'); out.push(SURFACES[c.surf].name);
+      out.push(`The room air is at ${f(c.Ta, 0)} °C.`);
+      out.push(S.run ? 'Running.' : c.t > 0 ? 'Paused.' : 'Not started.');
+      out.push({ t: `The thermocouple reads ${f(Tn, 2)} °C.`, live: mv });
+      out.push({ t: `Time ${f(c.t, 0)} s.`, live: false });
+      out.push(hid ? 'The heat loss rates are hidden.' : { t: `Heat loss by convection ${f(r.Pc, 3)} W and by radiation ${f(r.Pr, 3)} W.`, live: mv });
+    } else {
+      const c = S.ch, r = chNow(), E = r.useful * c.t;
+      out.push(c.src === 'bike' ? 'An energy chain starting with a cyclist.' : 'An energy chain starting with the Sun shining on a panel.');
+      out.push(c.conv === 'gen' ? 'The converter is a generator.' : 'The converter is a solar cell.');
+      out.push('The user is:'); out.push(CH_USE[c.use].name);
+      out.push(S.run ? 'Running.' : 'Paused.');
+      out.push(`Power in ${W_(r.Pin)}.`);
+      out.push(r.ok1 ? `Electrical power out of the converter ${W_(r.P2)}.` : 'The converter gives no power, because it is the wrong kind of energy.');
+      out.push(r.ok1 && r.ok2 ? `Useful power ${W_(r.useful)}.` : 'The user gets no useful power.');
+      out.push(`Wasted as thermal energy ${W_(r.waste0 + r.waste1 + r.waste2)}.`);
+      if (r.ok1 && r.ok2) out.push(`Whole chain efficiency ${f(r.eff * 100, 2)}%.`);
+      out.push({ t: `Time ${f(c.t, 0)} s.`, live: false });
+    }
+    return out;
+  });
   VD.howTo({ src: () => `media/how-this-works/${SHEETS[S.view]}.mp4`, poster: () => `media/how-this-works/${SHEETS[S.view]}.jpg`, title: () => `How this works: ${HOWTITLE[S.view]}` });
   tokens(); newBath(); S.th.mysN = 0; newRod(); S.ex.mysN = 0; newMystery(true); S.eq.mysN = 0;
   const q = new URLSearchParams(location.search), first = PRESETS[q.get('setup')] ? q.get('setup') : 'hotmetal';

@@ -953,6 +953,31 @@ table.mat td.num { font-family: var(--font-mono); text-align: right; }
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   /* the room opens quiet until Clap (Steve: no demo starts on its own); ?clap=1 claps once in slow motion on open */
   if (new URLSearchParams(location.search).get('clap') === '1' && !reduce) clap(true);
+  /* what the picture shows now, for a screen reader (VD.describe): the room, its surfaces, the measurement and its result */
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    const m = model(), mys = S.walls === 'panels' && S.panel === 'mystery', hide = S.blind || mys, out = [];
+    out.push(`A room ${f(S.L, 1)} m long, ${f(S.W, 1)} m wide and ${f(S.H, 1)} m high, with a loudspeaker and a microphone on its center line.`);
+    out.push(`Volume ${f(m.V, 1)} m³ and surface area ${f(m.S, 1)} m².`);
+    out.push(S.walls === 'hard' ? 'The walls are hard brick.' : S.walls === 'wedges' ? `The walls are covered in absorbing wedges ${f(S.wedge, 2)} m deep.` : `${S.nPanels} absorbing panels cover ${f(m.Sp, 2)} m² of the walls.`);
+    if (S.walls === 'panels') out.push(mys ? 'The panel material is a mystery.' : S.panel === 'foam' ? 'The panels are foam.' : 'The panels are rockwool.');
+    if (S.walls !== 'wedges') out.push(S.floor === 'concrete' ? 'The floor is concrete.' : S.floor === 'carpet' ? 'The floor is carpet.' : 'The floor is covered by an audience.');
+    out.push(`The octave band is ${S.band} Hz.`);
+    out.push(`The microphone is ${f(S.r, 2)} m from the speaker.`);
+    if (S.mode === 'decay') {
+      out.push('The graph shows the decay of a clap.');
+      out.push(!S.clapped ? 'No clap yet.' : S.res ? (isFinite(S.res.dec.T) ? `Measured reverberation time ${f(S.res.dec.T, 2)} s.` : 'The clap shows no decay.') : 'Measuring.');
+    } else {
+      out.push('The graph shows the sound level against distance.');
+      out.push(S.res ? `Level at the microphone ${f(S.res.Ldb, 1)} dB.` : 'Measuring.');
+    }
+    if (hide) out.push(S.blind ? 'The absorption and the predictions are hidden.' : 'The absorption and the predictions are hidden, because the panels are a mystery.');
+    else {
+      out.push(`Absorption A = ${f(m.A, 2)} m².`);
+      out.push(`Sabine reverberation time ${f(sabineT(m.V, m.A), 2)} s, Eyring ${f(eyringT(m.V, m.S, m.abar), 2)} s.`);
+      if (S.mode === 'level') out.push(`Critical distance ${f(Math.sqrt(m.A / (16 * Math.PI)), 2)} m.`);
+    }
+    return out;
+  });
   requestAnimationFrame(frame);
 })();
 </script>
