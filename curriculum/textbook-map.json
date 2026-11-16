@@ -11443,7 +11443,8 @@
       "title": "Timbre and Harmonics",
       "url": "demos/timbre.html",
       "handouts": [
-        "timbre"
+        "timbre",
+        "sampling-aliasing"
       ]
     },
     {

@@ -50,6 +50,8 @@ VDI18N.add('es', 'demo/timbre', {
   "Divisor entre la mesa y las barras de armónicos",
 "Divider between the waveform and the harmonic ladder":
   "Divisor entre la forma de onda y la escalera de armónicos",
+"Divider between the sampled record and the harmonic bars":
+  "Divisor entre el registro muestreado y las barras de armónicos",
 "The fundamental":
   "La fundamental",
 "<span>Fundamental</span>":
@@ -86,6 +88,10 @@ VDI18N.add('es', 'demo/timbre', {
   "Quitar también el armónico {#}",
 "Phase dials under the bars":
   "Cuadrantes de fase bajo las barras",
+"<a>Worksheet {#}: Timbre and Harmonics</a>":
+  "<a>Hoja de trabajo {#}: Timbre y armónicos</a>",
+"<a>Worksheet {#}: Sampling and Aliasing</a>":
+  "<a>Hoja de trabajo {#}: Muestreo y aliasing</a>",
 "Presets":
   "Configuraciones predefinidas",
 "Square wave":
@@ -238,6 +244,86 @@ VDI18N.add('es', 'demo/timbre', {
   "RMS (unidades de barra)",
 "Each harmonic is aₙ sin({#}π fₙ t + φₙ); a dial points along φₙ, measured counterclockwise from the right. Randomizing the phases reshapes the waveform and its peak but leaves every amplitude, the spectrum and the RMS unchanged. A steady tone sounds almost the same: the ear is nearly deaf to phase (Ohm's acoustic law). It is not fully deaf: at a low f₁ (try {#} Hz) several high harmonics share one filter in the cochlea, their phases shape the buzz you hear there, and sharp attacks and clicks depend on phase too.":
   "Cada armónico es aₙ sen({#}π fₙ t + φₙ); un cuadrante apunta según φₙ, medido en sentido antihorario desde la derecha. Hacer aleatorias las fases cambia la forma de onda y su pico pero deja sin cambio cada amplitud, el espectro y el RMS. Un tono estable suena casi igual: el oído es casi sordo a la fase (ley acústica de Ohm). No es del todo sordo: a una f₁ baja (prueba {#} Hz) varios armónicos altos comparten un mismo filtro en la cóclea, sus fases dan forma al zumbido que oyes ahí, y los ataques bruscos y los chasquidos también dependen de la fase.",
+"Sampling and aliasing":
+  "Muestreo y aliasing",
+"Sample the tone with a converter":
+  "Muestrear el tono con un convertidor",
+"Sampling setups":
+  "Configuraciones de muestreo",
+"Too slow for the tone":
+  "Demasiado lento para el tono",
+"Harmonics fold over":
+  "Los armónicos se pliegan",
+"Antialiasing filter":
+  "Filtro antialiasing",
+"Leakage":
+  "Fuga espectral",
+"Noise floor":
+  "Piso de ruido",
+"Tick Sample the tone with a converter, or pick a setup: the waveform becomes the record of samples and the spectrum shows what goes in and what the converter reports.":
+  "Marca Muestrear el tono con un convertidor, o elige una configuración: la forma de onda se vuelve el registro de muestras y el espectro muestra lo que entra y lo que reporta el convertidor.",
+"Sample rate f_s":
+  "Frecuencia de muestreo f_s",
+"Sample rate: click, or press Enter, to type a value":
+  "Frecuencia de muestreo: haz clic, o presiona Enter, para escribir un valor",
+"<span>Samples N</span>":
+  "<span>Muestras N</span>",
+"Samples in the record":
+  "Muestras en el registro",
+"<span>Window</span>":
+  "<span>Ventana</span>",
+"Window":
+  "Ventana",
+"Rectangular":
+  "Rectangular",
+"Hann":
+  "Hann",
+"<span>Join the samples</span>":
+  "<span>Unir las muestras</span>",
+"Join the samples":
+  "Unir las muestras",
+"Straight lines":
+  "Líneas rectas",
+"Smooth":
+  "Suave",
+"Whole cycles in the record":
+  "Ciclos completos en el registro",
+"Antialiasing filter before the converter":
+  "Filtro antialiasing antes del convertidor",
+"Filter cutoff f_c":
+  "Corte del filtro f_c",
+"{#} f_s = {#} Hz (off)":
+  "{#} f_s = {#} Hz (apagado)",
+"Converter noise (RMS)":
+  "Ruido del convertidor (RMS)",
+"New noise":
+  "Nuevo ruido",
+"Nyquist frequency f_s/{#}":
+  "Frecuencia de Nyquist f_s/{#}",
+"Record length N/f_s":
+  "Duración del registro N/f_s",
+"Resolution Δf = f_s/N":
+  "Resolución Δf = f_s/N",
+"Samples per period of f₁":
+  "Muestras por periodo de f₁",
+"Strongest peak":
+  "Pico más fuerte",
+"— <small>sampling off</small>":
+  "— <small>muestreo apagado</small>",
+"Peak level":
+  "Nivel del pico",
+"Bins within {#} dB of the peak":
+  "Bins a menos de {#} dB del pico",
+"Record this reading":
+  "Registrar esta lectura",
+"Each record adds one row: f₁, f_s, N, the window, the filter and the noise, with the strongest peak, its level, the bins within {#} dB of it and the noise floor.":
+  "Cada registro agrega una fila: f₁, f_s, N, la ventana, el filtro y el ruido, con el pico más fuerte, su nivel, los bins a menos de {#} dB de él y el piso de ruido.",
+"A converter measures the signal only at the sample times t = k/f_s. A sine at f and one at f − m f_s, for any whole number m, give exactly the same samples, so the converter cannot tell them apart: it reports the one between {#} and the Nyquist frequency f_s/{#}. That apparent frequency, |f − f_s round(f/f_s)|, is the alias. A digital oscilloscope set to a slow time base samples slowly and can draw a slow wave that is not there; a wagon wheel in a film seems to turn backward for the same reason.":
+  "Un convertidor mide la señal solo en los instantes de muestreo t = k/f_s. Una senoide en f y otra en f − m f_s, para cualquier número entero m, dan exactamente las mismas muestras, así que el convertidor no puede distinguirlas: reporta la que está entre {#} y la frecuencia de Nyquist f_s/{#}. Esa frecuencia aparente, |f − f_s round(f/f_s)|, es el alias. Un osciloscopio digital con una base de tiempo lenta muestrea despacio y puede dibujar una onda lenta que no existe; la rueda de una carreta en una película parece girar hacia atrás por la misma razón.",
+"The cure is to filter before sampling: the antialiasing filter is an eighth order Butterworth low pass, |H| = {#}/√({#} + (f/f_c)¹⁶), so its cutoff must sit below f_s/{#} with room to spare. Once a partial has folded, no later processing can tell it from a real one.":
+  "La solución es filtrar antes de muestrear: el filtro antialiasing es un pasa bajas Butterworth de octavo orden, |H| = {#}/√({#} + (f/f_c)¹⁶), así que su corte debe quedar por debajo de f_s/{#} con margen de sobra. Una vez que un parcial se plegó, ningún procesamiento posterior puede distinguirlo de uno real.",
+"The spectrum is the discrete Fourier transform of the N samples, with bins every Δf = f_s/N = {#}/(record length). A tone that does not fit a whole number of cycles in the record spreads into its neighbors (leakage) and its peak reads low; Whole cycles in the record sets f_s so f₁ fits exactly. The Hann window tapers the ends of the record: wider peaks, but far less leakage. Converter noise is white and simulated; its level per bin falls as {#}/√N, {#} dB for every doubling of N, because the noise power spreads over more bins while a tone stays in one.":
+  "El espectro es la transformada discreta de Fourier de las N muestras, con bins cada Δf = f_s/N = {#}/(duración del registro). Un tono que no cabe en un número entero de ciclos en el registro se reparte en sus vecinos (fuga espectral) y su pico se lee bajo; Ciclos completos en el registro fija f_s para que f₁ quepa exactamente. La ventana de Hann atenúa los extremos del registro: picos más anchos, pero mucha menos fuga. El ruido del convertidor es blanco y simulado; su nivel por bin cae como {#}/√N, {#} dB por cada vez que N se duplica, porque la potencia del ruido se reparte en más bins mientras que un tono se queda en uno.",
 "Record harmonics {#} to {#}":
   "Registrar armónicos {#} a {#}",
 "Each record adds six rows, harmonics {#} to {#} of the tone as it is now: frequency, amplitude relative to the strongest partial, level in dB and phase, with the RMS and the repetition period on the first row.":
@@ -274,8 +360,8 @@ VDI18N.add('es', 'demo/timbre', {
   "Oyes exactamente la suma dibujada: {#} osciladores senoidales, uno por armónico, a las frecuencias, amplitudes y fases dibujadas. Todo el tono se escala a un mismo nivel RMS, {#} dB por debajo de la escala completa con el volumen al máximo, para que las configuraciones se comparen con justicia, y su pico se queda al menos {#} dB por debajo de la escala completa. Las bocinas pequeñas de laptops y teléfonos no pueden tocar las fundamentales más bajas, así que funcionan mejor los audífonos o las bocinas de la sala. El sonido se detiene cuando sales de la página.",
 "<span><i></i>Waveform: the sum, what you hear</span><span><i></i>Harmonic colors, n = {#} (amber) to {#} (teal)</span><span><i></i>Ideal shape (infinitely many harmonics)</span><span><i></i>Repetition period and f₁</span><span><i></i>Above {#} kHz, played {#} dB quieter</span><span><i></i>Ladder: each harmonic as a string mode, amplitude aₙ</span>":
   "<span><i></i>Forma de onda: la suma, lo que oyes</span><span><i></i>Colores de los armónicos, n = {#} (ámbar) a {#} (verde azulado)</span><span><i></i>Forma ideal (infinitos armónicos)</span><span><i></i>Periodo de repetición y f₁</span><span><i></i>Arriba de {#} kHz, tocado {#} dB más bajo</span><span><i></i>Escalera: cada armónico como un modo de la cuerda, amplitud aₙ</span>",
-"Each harmonic is a pure sine, aₙ sin({#}π fₙ t + φₙ), held steady with no attack or decay. Real instruments change their spectrum during every note, and the attack matters a great deal for telling instruments apart. Harmonic n is at fₙ = n f₁; the stiffness slider uses the stiff string result fₙ = n f₁ √(({#} + Bn²)/({#} + B)), scaled so partial {#} stays at f₁. Equal temperament: f = {#} Hz × {#}^(k/{#}), k semitones from A4. The square, sawtooth and triangle presets are the exact Fourier series cut off at {#} harmonics, which causes the ripples near the jumps. The clarinet and flute presets are illustrative spectra chosen to show one feature, not measurements of real instruments. The instrument slider uses five such illustrative spectra (flute, clarinet, oboe, trumpet and bowed string like). It keeps f₁ and the phases and, between two neighbors, mixes each amplitude linearly: aₙ = ({#} − w) aₙ(left) + w aₙ(right), w from {#} to {#}. Real instruments change their spectrum with pitch and loudness; these do not. The ladder shows each partial as a mode of an ideal string or ideal pipe (no end correction), with amplitude aₙ, slowed so f₁ is drawn at {#} Hz. Spectrum levels are {#} log₁₀ aₙ, with {#} dB the top of a bar. Against position, the waveform is a snapshot of a sound wave moving to the right through air at v = {#} m/s ({#} °C), y(x) = s(t − x/v), with λₙ = v/fₙ; the air is taken as lossless and without dispersion, so every harmonic travels at the same speed and the shape moves without changing. The wave packet uses Gaussian amplitudes over harmonics {#} to {#}, and its widths are computed from those {#} terms, not from the Gaussian formula. For the packet in another medium, ω ∝ k^p is scaled so the mean harmonic n̄ (weighted by aₙ²) keeps its air frequency: ωₙ = n̄ (n/n̄)^p ω₁, so v_p = v and v_g = p v at the center; p = {#}/{#} deep water, {#}/{#} capillary ripples, {#} a bending bar or a free quantum particle. The pure power laws hold only far from the crossover between gravity and capillary waves, and the picture repeats every λ₁ because the harmonics do, so a spread packet runs into its neighbors. Vowels use the source and filter model: the sawtooth aₙ = {#}/n (a glottal source falling {#} dB per octave plus {#} dB per octave of radiation from the lips) times three formant resonances in cascade, Hᵢ = Fᵢ²/(Fᵢ² − f² + i f Bᵢ), with aₙ = |H(n f₁)|/n and φₙ = arg H(n f₁). Formants from Peterson and Barney ({#}), averages for women; bandwidths {#}, {#} and {#} Hz assumed; a real vocal tract has more formants and losses this leaves out. The 3D view puts the same model on a lab bench: the string or pipe moves as the sum of the ladder's modes, its displacement magnified (scaled down when the bars add up to a lot) and slowed so f₁ is drawn at {#} Hz; its length does not change with f₁, so nothing there is to scale. In a pipe the air moves along the pipe; dots are slices of air, red where they are squeezed together and blue where they are pulled apart, and the line above plots the displacement ξ upward. The oscilloscope and the spectrum analyzer show the waveform and spectrum of the flat view. The poster names the instrument whose illustrative spectrum is on the bars.":
-  "Cada armónico es una senoide pura, aₙ sen({#}π fₙ t + φₙ), sostenida sin ataque ni decaimiento. Los instrumentos reales cambian su espectro durante cada nota, y el ataque importa mucho para distinguir instrumentos. El armónico n está en fₙ = n f₁; el deslizador de rigidez usa el resultado de la cuerda rígida fₙ = n f₁ √(({#} + Bn²)/({#} + B)), escalado para que el parcial {#} se quede en f₁. Temperamento igual: f = {#} Hz × {#}^(k/{#}), a k semitonos de A4. Las configuraciones de onda cuadrada, diente de sierra y triangular son las series de Fourier exactas cortadas en {#} armónicos, lo que causa las ondulaciones cerca de los saltos. Las configuraciones de clarinete y flauta son espectros ilustrativos elegidos para mostrar una característica, no mediciones de instrumentos reales. El deslizador de instrumentos usa cinco espectros ilustrativos de ese tipo (parecidos a flauta, clarinete, oboe, trompeta y cuerda frotada). Conserva f₁ y las fases y, entre dos vecinos, mezcla cada amplitud linealmente: aₙ = ({#} − w) aₙ(izquierda) + w aₙ(derecha), w de {#} a {#}. Los instrumentos reales cambian su espectro con la altura y la intensidad; estos no. La escalera muestra cada parcial como un modo de una cuerda ideal o de un tubo ideal (sin corrección de extremo), con amplitud aₙ, ralentizado para que f₁ se dibuje a {#} Hz. Los niveles del espectro son {#} log₁₀ aₙ, con {#} dB en la parte de arriba de una barra. En función de la posición, la forma de onda es una instantánea de una onda sonora que se mueve hacia la derecha por el aire a v = {#} m/s ({#} °C), y(x) = s(t − x/v), con λₙ = v/fₙ; el aire se toma sin pérdidas y sin dispersión, así que todos los armónicos viajan a la misma rapidez y la forma se mueve sin cambiar. El paquete de ondas usa amplitudes gaussianas sobre los armónicos {#} a {#}, y sus anchos se calculan a partir de esos {#} términos, no de la fórmula gaussiana. Para el paquete en otro medio, ω ∝ k^p se escala para que el armónico medio n̄ (ponderado por aₙ²) conserve su frecuencia en el aire: ωₙ = n̄ (n/n̄)^p ω₁, así que v_p = v y v_g = p v en el centro; p = {#}/{#} agua profunda, {#}/{#} ondas capilares, {#} una barra en flexión o una partícula cuántica libre. Las leyes de potencia puras solo valen lejos del cruce entre las ondas de gravedad y las capilares, y la imagen se repite cada λ₁ porque los armónicos lo hacen, así que un paquete ensanchado choca con sus vecinos. Las vocales usan el modelo de fuente y filtro: el diente de sierra aₙ = {#}/n (una fuente glotal que cae {#} dB por octava más {#} dB por octava de radiación desde los labios) por tres resonancias formantes en cascada, Hᵢ = Fᵢ²/(Fᵢ² − f² + i f Bᵢ), con aₙ = |H(n f₁)|/n y φₙ = arg H(n f₁). Formantes de Peterson y Barney ({#}), promedios para mujeres; anchos de banda {#}, {#} y {#} Hz supuestos; un tracto vocal real tiene más formantes y pérdidas que esto omite. La vista 3D pone el mismo modelo sobre una mesa de laboratorio: la cuerda o el tubo se mueve como la suma de los modos de la escalera, con su desplazamiento ampliado (reducido cuando las barras suman mucho) y ralentizado para que f₁ se dibuje a {#} Hz; su longitud no cambia con f₁, así que ahí nada está a escala. En un tubo el aire se mueve a lo largo del tubo; los puntos son rebanadas de aire, rojos donde están comprimidos y azules donde están separados, y la línea de arriba grafica el desplazamiento ξ hacia arriba. El osciloscopio y el analizador de espectro muestran la forma de onda y el espectro de la vista plana. El cartel nombra el instrumento cuyo espectro ilustrativo está en las barras.",
+"Each harmonic is a pure sine, aₙ sin({#}π fₙ t + φₙ), held steady with no attack or decay. Real instruments change their spectrum during every note, and the attack matters a great deal for telling instruments apart. Harmonic n is at fₙ = n f₁; the stiffness slider uses the stiff string result fₙ = n f₁ √(({#} + Bn²)/({#} + B)), scaled so partial {#} stays at f₁. Equal temperament: f = {#} Hz × {#}^(k/{#}), k semitones from A4. The square, sawtooth and triangle presets are the exact Fourier series cut off at {#} harmonics, which causes the ripples near the jumps. The clarinet and flute presets are illustrative spectra chosen to show one feature, not measurements of real instruments. The instrument slider uses five such illustrative spectra (flute, clarinet, oboe, trumpet and bowed string like). It keeps f₁ and the phases and, between two neighbors, mixes each amplitude linearly: aₙ = ({#} − w) aₙ(left) + w aₙ(right), w from {#} to {#}. Real instruments change their spectrum with pitch and loudness; these do not. The ladder shows each partial as a mode of an ideal string or ideal pipe (no end correction), with amplitude aₙ, slowed so f₁ is drawn at {#} Hz. Spectrum levels are {#} log₁₀ aₙ, with {#} dB the top of a bar. Against position, the waveform is a snapshot of a sound wave moving to the right through air at v = {#} m/s ({#} °C), y(x) = s(t − x/v), with λₙ = v/fₙ; the air is taken as lossless and without dispersion, so every harmonic travels at the same speed and the shape moves without changing. The wave packet uses Gaussian amplitudes over harmonics {#} to {#}, and its widths are computed from those {#} terms, not from the Gaussian formula. For the packet in another medium, ω ∝ k^p is scaled so the mean harmonic n̄ (weighted by aₙ²) keeps its air frequency: ωₙ = n̄ (n/n̄)^p ω₁, so v_p = v and v_g = p v at the center; p = {#}/{#} deep water, {#}/{#} capillary ripples, {#} a bending bar or a free quantum particle. The pure power laws hold only far from the crossover between gravity and capillary waves, and the picture repeats every λ₁ because the harmonics do, so a spread packet runs into its neighbors. Vowels use the source and filter model: the sawtooth aₙ = {#}/n (a glottal source falling {#} dB per octave plus {#} dB per octave of radiation from the lips) times three formant resonances in cascade, Hᵢ = Fᵢ²/(Fᵢ² − f² + i f Bᵢ), with aₙ = |H(n f₁)|/n and φₙ = arg H(n f₁). Formants from Peterson and Barney ({#}), averages for women; bandwidths {#}, {#} and {#} Hz assumed; a real vocal tract has more formants and losses this leaves out. Sampling: the converter takes the waveform (through the filter when it is on) at t = k/f_s, k = {#} to N − {#}, from t = {#}, with no rounding to levels, and adds simulated white noise of the chosen RMS to each sample. The spectrum is the discrete Fourier transform of the windowed samples, scaled so a sine of amplitude a that fits whole cycles in the record reads a; the noise floor is the RMS of the bins more than {#} bins from every partial. The antialiasing filter is an ideal eighth order Butterworth low pass. The smooth curve and the sound are the ideal reconstruction: each partial at its apparent frequency, with the noise left out. The 3D view puts the same model on a lab bench: the string or pipe moves as the sum of the ladder's modes, its displacement magnified (scaled down when the bars add up to a lot) and slowed so f₁ is drawn at {#} Hz; its length does not change with f₁, so nothing there is to scale. In a pipe the air moves along the pipe; dots are slices of air, red where they are squeezed together and blue where they are pulled apart, and the line above plots the displacement ξ upward. The oscilloscope and the spectrum analyzer show the waveform and spectrum of the flat view. The poster names the instrument whose illustrative spectrum is on the bars.":
+  "Cada armónico es una senoide pura, aₙ sen({#}π fₙ t + φₙ), sostenida sin ataque ni decaimiento. Los instrumentos reales cambian su espectro durante cada nota, y el ataque importa mucho para distinguir instrumentos. El armónico n está en fₙ = n f₁; el deslizador de rigidez usa el resultado de la cuerda rígida fₙ = n f₁ √(({#} + Bn²)/({#} + B)), escalado para que el parcial {#} se quede en f₁. Temperamento igual: f = {#} Hz × {#}^(k/{#}), a k semitonos de A4. Las configuraciones de onda cuadrada, diente de sierra y triangular son las series de Fourier exactas cortadas en {#} armónicos, lo que causa las ondulaciones cerca de los saltos. Las configuraciones de clarinete y flauta son espectros ilustrativos elegidos para mostrar una característica, no mediciones de instrumentos reales. El deslizador de instrumentos usa cinco espectros ilustrativos de ese tipo (parecidos a flauta, clarinete, oboe, trompeta y cuerda frotada). Conserva f₁ y las fases y, entre dos vecinos, mezcla cada amplitud linealmente: aₙ = ({#} − w) aₙ(izquierda) + w aₙ(derecha), w de {#} a {#}. Los instrumentos reales cambian su espectro con la altura y la intensidad; estos no. La escalera muestra cada parcial como un modo de una cuerda ideal o de un tubo ideal (sin corrección de extremo), con amplitud aₙ, ralentizado para que f₁ se dibuje a {#} Hz. Los niveles del espectro son {#} log₁₀ aₙ, con {#} dB en la parte de arriba de una barra. En función de la posición, la forma de onda es una instantánea de una onda sonora que se mueve hacia la derecha por el aire a v = {#} m/s ({#} °C), y(x) = s(t − x/v), con λₙ = v/fₙ; el aire se toma sin pérdidas y sin dispersión, así que todos los armónicos viajan a la misma rapidez y la forma se mueve sin cambiar. El paquete de ondas usa amplitudes gaussianas sobre los armónicos {#} a {#}, y sus anchos se calculan a partir de esos {#} términos, no de la fórmula gaussiana. Para el paquete en otro medio, ω ∝ k^p se escala para que el armónico medio n̄ (ponderado por aₙ²) conserve su frecuencia en el aire: ωₙ = n̄ (n/n̄)^p ω₁, así que v_p = v y v_g = p v en el centro; p = {#}/{#} agua profunda, {#}/{#} ondas capilares, {#} una barra en flexión o una partícula cuántica libre. Las leyes de potencia puras solo valen lejos del cruce entre las ondas de gravedad y las capilares, y la imagen se repite cada λ₁ porque los armónicos lo hacen, así que un paquete ensanchado choca con sus vecinos. Las vocales usan el modelo de fuente y filtro: el diente de sierra aₙ = {#}/n (una fuente glotal que cae {#} dB por octava más {#} dB por octava de radiación desde los labios) por tres resonancias formantes en cascada, Hᵢ = Fᵢ²/(Fᵢ² − f² + i f Bᵢ), con aₙ = |H(n f₁)|/n y φₙ = arg H(n f₁). Formantes de Peterson y Barney ({#}), promedios para mujeres; anchos de banda {#}, {#} y {#} Hz supuestos; un tracto vocal real tiene más formantes y pérdidas que esto omite. Muestreo: el convertidor toma la forma de onda (a través del filtro cuando está encendido) en t = k/f_s, k = {#} a N − {#}, desde t = {#}, sin redondear a niveles, y suma a cada muestra ruido blanco simulado del RMS elegido. El espectro es la transformada discreta de Fourier de las muestras con ventana, escalada para que una senoide de amplitud a que cabe en ciclos completos en el registro se lea a; el piso de ruido es el RMS de los bins a más de {#} bins de cada parcial. El filtro antialiasing es un pasa bajas Butterworth ideal de octavo orden. La curva suave y el sonido son la reconstrucción ideal: cada parcial en su frecuencia aparente, sin el ruido. La vista 3D pone el mismo modelo sobre una mesa de laboratorio: la cuerda o el tubo se mueve como la suma de los modos de la escalera, con su desplazamiento ampliado (reducido cuando las barras suman mucho) y ralentizado para que f₁ se dibuje a {#} Hz; su longitud no cambia con f₁, así que ahí nada está a escala. En un tubo el aire se mueve a lo largo del tubo; los puntos son rebanadas de aire, rojos donde están comprimidos y azules donde están separados, y la línea de arriba grafica el desplazamiento ξ hacia arriba. El osciloscopio y el analizador de espectro muestran la forma de onda y el espectro de la vista plana. El cartel nombra el instrumento cuyo espectro ilustrativo está en las barras.",
 "OSCILLOSCOPE":
   "OSCILOSCOPIO",
 "SPECTRUM ANALYZER":
@@ -380,32 +466,114 @@ VDI18N.add('es', 'demo/timbre', {
   "Una voz: armónicos moldeados por los tres formantes de una vocal.",
 "The formants are at {#} Hz, {#} Hz and {#} Hz.":
   "Los formantes están en {#} Hz, {#} Hz y {#} Hz.",
-"Run {run} recorded ({name}): {rows} rows so far.":
-  "Corrida {run} registrada ({name}): {rows} filas hasta ahora.",
-"Run {#} recorded (Vowels): {#} rows so far.":
-  "Corrida {#} registrada (Vocales): {#} filas hasta ahora.",
+"A pure tone at A4, {#} Hz, sampled {#} times a second: fewer than two samples a cycle. Each sample lands a little later in the cycle than the one before, so the samples trace a slow wave at |{#} − {#}| = {#} Hz, and the spectrum peaks there. This is the wrong frequency a digital oscilloscope shows when its time base is too slow for the signal. Try Smooth, then a sample rate of {#} Hz.":
+  "Un tono puro en La4, {#} Hz, muestreado {#} veces por segundo: menos de dos muestras por ciclo. Cada muestra cae un poco más tarde en el ciclo que la anterior, así que las muestras trazan una onda lenta de |{#} − {#}| = {#} Hz, y el espectro tiene su pico ahí. Esta es la frecuencia equivocada que muestra un osciloscopio digital cuando su base de tiempo es demasiado lenta para la señal. Prueba Suave y luego una frecuencia de muestreo de {#} Hz.",
+"<span><i></i>Sampling: gray, the analog input to the converter</span><span><i></i>Samples joined by straight lines, as a digital scope draws them</span><span><i></i>Smooth curve through the samples (orange), the strongest measured peak</span><span><i></i>Above f_s/{#}: partials there fold back</span><span><i></i>Harmonic colors, n = {#} (amber) to {#} (teal)</span>":
+  "<span><i></i>Muestreo: gris, la entrada analógica al convertidor</span><span><i></i>Muestras unidas por líneas rectas, como las dibuja un osciloscopio digital</span><span><i></i>Curva suave por las muestras (naranja), el pico medido más fuerte</span><span><i></i>Arriba de f_s/{#}: ahí los parciales se pliegan</span><span><i></i>Colores de los armónicos, n = {#} (ámbar) a {#} (verde azulado)</span>",
+"{#} Hz <small>bin {#}</small>":
+  "{#} Hz <small>bin {#}</small>",
+"Each partial: where it lands after sampling":
+  "Cada parcial: dónde cae después del muestreo",
+"appears at":
+  "aparece en",
+"You hear exactly the drawn sum: {#} sine oscillators, one per harmonic, at the drawn frequencies, amplitudes and phases. The whole tone is scaled to one RMS level, {#} dB below full scale at full volume, so the presets compare fairly, and its peak stays at least {#} dB below full scale. Sampling is on: you hear what an ideal converter and playback would give, each partial at its apparent frequency and through the filter when it is on; the converter noise is not played. Small laptop and phone speakers cannot play the lowest fundamentals, so headphones or room speakers work best. Sound stops when you leave the page.":
+  "Oyes exactamente la suma dibujada: {#} osciladores senoidales, uno por armónico, a las frecuencias, amplitudes y fases dibujadas. Todo el tono se escala a un mismo nivel RMS, {#} dB por debajo de la escala completa con el volumen al máximo, para que las configuraciones se comparen con justicia, y su pico se queda al menos {#} dB por debajo de la escala completa. El muestreo está encendido: oyes lo que darían un convertidor y una reproducción ideales, cada parcial en su frecuencia aparente y a través del filtro cuando está encendido; el ruido del convertidor no se reproduce. Las bocinas pequeñas de laptops y teléfonos no pueden tocar las fundamentales más bajas, así que funcionan mejor los audífonos o las bocinas de la sala. El sonido se detiene cuando sales de la página.",
+"Digital record: {#} samples at f_s = {#} Hz":
+  "Registro digital: {#} muestras a f_s = {#} Hz",
+"gray: input · red dots: the samples · black: joined":
+  "gris: entrada · puntos rojos: las muestras · negro: unidas",
+"peak {#} Hz":
+  "pico {#} Hz",
+"Input: each partial at its true frequency (Hz), {#} to −{#} dB":
+  "Entrada: cada parcial en su frecuencia real (Hz), {#} a −{#} dB",
+"Measured: spectrum of the {#} samples, {#} to f_s/{#}":
+  "Medido: espectro de las {#} muestras, {#} a f_s/{#}",
+"Δf = {#} Hz":
+  "Δf = {#} Hz",
+"Spectrum: what goes in, and what the converter reports":
+  "Espectro: lo que entra y lo que reporta el convertidor",
+"The sawtooth at A3, {#} Hz, sampled {#} times a second. The Nyquist frequency is {#} Hz, so harmonics {#} to {#} ({#} to {#} Hz) fold back below it and land between the true harmonics: the measured spectrum has peaks that are not harmonics of {#} Hz. With Sound on, the tone turns harsh and out of tune.":
+  "El diente de sierra en La3, {#} Hz, muestreado {#} veces por segundo. La frecuencia de Nyquist es {#} Hz, así que los armónicos {#} a {#} ({#} a {#} Hz) se pliegan por debajo de ella y caen entre los armónicos verdaderos: el espectro medido tiene picos que no son armónicos de {#} Hz. Con el Sonido encendido, el tono se vuelve áspero y desafinado.",
+"gray: input · samples too close for dots · black: joined":
+  "gris: entrada · muestras demasiado juntas para puntos · negro: unidas",
+"f_s/{#}: above it, partials fold back":
+  "f_s/{#}: arriba de ella, los parciales se pliegan",
+"Input: each partial at its true frequency (kHz), {#} to −{#} dB":
+  "Entrada: cada parcial en su frecuencia real (kHz), {#} a −{#} dB",
+"below −{#} dB":
+  "por debajo de −{#} dB",
+"The same sawtooth through an eighth order antialiasing filter, cutoff {#} f_s = {#} Hz, before the converter. Harmonics above the cutoff are weakened before they can fold, so the false peaks drop by tens of decibels. Those just above f_s/{#} still get through faintly: a real filter needs room between its cutoff and the Nyquist frequency.":
+  "El mismo diente de sierra pasa por un filtro antialiasing de octavo orden, con corte en {#} f_s = {#} Hz, antes del convertidor. Los armónicos arriba del corte se debilitan antes de poder plegarse, así que los picos falsos bajan decenas de decibeles. Los que están justo arriba de f_s/{#} todavía pasan débilmente: un filtro real necesita espacio entre su corte y la frecuencia de Nyquist.",
+"A pure {#} Hz tone, {#} samples at {#} Hz: bins every {#} Hz, and the record holds {#} cycles, so {#} Hz falls between bins {#} and {#}. The peak spreads into many bins (leakage) and reads low. Press Whole cycles in the record, then try the Hann window.":
+  "Un tono puro de {#} Hz, {#} muestras a {#} Hz: bins cada {#} Hz, y el registro contiene {#} ciclos, así que {#} Hz cae entre los bins {#} y {#}. El pico se reparte en muchos bins (fuga espectral) y se lee bajo. Presiona Ciclos completos en el registro y luego prueba la ventana de Hann.",
+"A pure {#} Hz tone with simulated converter noise of RMS {#} bar units and the Hann window. The tone stays near {#} dB while the noise floor sits near the dashed line, {#}σ√(Σw²)/Σw. Double N and the floor drops by {#} dB; press New noise to see how much it scatters.":
+  "Un tono puro de {#} Hz con ruido simulado del convertidor de RMS {#} unidades de barra y la ventana de Hann. El tono se queda cerca de {#} dB mientras el piso de ruido queda cerca de la línea punteada, {#}σ√(Σw²)/Σw. Duplica N y el piso baja {#} dB; presiona Nuevo ruido para ver cuánto se dispersa.",
+"-{#} dB <small>expected -{#} dB</small>":
+  "-{#} dB <small>esperado -{#} dB</small>",
+"expected noise floor":
+  "piso de ruido esperado",
+"The fundamental is {#} Hz, A4.":
+  "La fundamental es {#} Hz, A4.",
+"The harmonics present are {#}.":
+  "Los armónicos presentes son {#}.",
+"The waveform repeats every {#} ms, so the pitch is {#} Hz, A4.":
+  "La forma de onda se repite cada {#} ms, así que el tono es {#} Hz, A4.",
+"Sampling is on: {#} samples at {#} Hz, so the Nyquist frequency is {#} Hz and the bins are {#} Hz apart.":
+  "El muestreo está encendido: {#} muestras a {#} Hz, así que la frecuencia de Nyquist es {#} Hz y los bins están a {#} Hz uno de otro.",
+"Every partial is below the Nyquist frequency.":
+  "Todos los parciales están por debajo de la frecuencia de Nyquist.",
+"The strongest peak in the measured spectrum is at {#} Hz, {#} dB.":
+  "El pico más fuerte del espectro medido está en {#} Hz, {#} dB.",
+"Simulated converter noise of RMS {#} is added; the noise floor is -{#} dB.":
+  "Se agrega ruido simulado del convertidor de RMS {#}; el piso de ruido es -{#} dB.",
+"Your own sampling settings. Pick a setup to start again from one of them.":
+  "Tu propia configuración de muestreo. Elige una configuración para empezar de nuevo desde una de ellas.",
+"The strongest peak in the measured spectrum is at {#} Hz, -{#} dB.":
+  "El pico más fuerte del espectro medido está en {#} Hz, -{#} dB.",
+"gray: input · samples too close for dots · orange: smooth curve":
+  "gris: entrada · muestras demasiado juntas para puntos · naranja: curva suave",
+"Reading {run} recorded: {rows} so far.":
+  "Lectura {run} registrada: {rows} hasta ahora.",
+"Reading {#} recorded: {#} so far.":
+  "Lectura {#} registrada: {#} hasta ahora.",
+"{n} rows sent to the worksheet.":
+  "{n} filas enviadas a la hoja.",
+"Open the worksheet":
+  "Abrir la hoja",
 "{#} rows sent to the worksheet. <a>Open the worksheet</a>":
   "{#} filas enviadas a la hoja de trabajo. <a>Abrir la hoja de trabajo</a>",
 "Readings cleared.":
   "Lecturas borradas.",
-"The ladder is paused.":
-  "La escalera está en pausa.",
+"Custom":
+  "Personalizada",
+"Run {run} recorded ({name}): {rows} rows so far.":
+  "Corrida {run} registrada ({name}): {rows} filas hasta ahora.",
+"Run {#} recorded (Custom): {#} rows so far.":
+  "Corrida {#} registrada (Personalizada): {#} filas hasta ahora.",
 "Turn the picked harmonic's phase {#} degrees one way or the other":
   "Gira la fase del armónico elegido {#} grados hacia un lado o hacia el otro",
-"The harmonics present are {#}.":
-  "Los armónicos presentes son {#}.",
+"{#} kHz <small>bin {#}</small>":
+  "{#} kHz <small>bin {#}</small>",
+"peak {#} kHz":
+  "pico {#} kHz",
+"{#} of the partials are above the Nyquist frequency and fold back below it.":
+  "{#} de los parciales están arriba de la frecuencia de Nyquist y se pliegan por debajo de ella.",
+"The strongest peak in the measured spectrum is at {#} kHz, -{#} dB.":
+  "El pico más fuerte del espectro medido está en {#} kHz, -{#} dB.",
+"The packet has Δx {#} cm and Δk {#} rad/m, a product of {#}.":
+  "El paquete tiene Δx {#} cm y Δk {#} rad/m, con un producto de {#}.",
 "Run {#} recorded (Wave packet): {#} rows so far.":
   "Corrida {#} registrada (Paquete de ondas): {#} filas hasta ahora.",
-"Packet: bar or particle":
-  "Paquete: barra o partícula",
-"Ladder: closed pipe, odd only, slowed":
-  "Escalera: tubo cerrado, solo impares, ralentizada",
+"gray: input · orange: smooth":
+  "gris: entrada · naranja: suave",
+"Input: true frequencies":
+  "Entrada: frecuencias reales",
+"Measured: {#} samples, {#} to f_s/{#}":
+  "Medido: {#} muestras, {#} a f_s/{#}",
+"Spectrum: in and measured":
+  "Espectro: entrada y medido",
 "Harmonic bars: drag to set":
   "Barras de armónicos: arrastra para fijar",
-"Ladder: string modes, f₁ slowed to {#} Hz":
-  "Escalera: modos de la cuerda, f₁ ralentizada a {#} Hz",
-"Ladder: open pipe, f₁ slowed to {#} Hz":
-  "Escalera: tubo abierto, f₁ ralentizada a {#} Hz",
 "closed pipe":
   "tubo cerrado",
 "displacement ξ":
@@ -416,6 +584,10 @@ VDI18N.add('es', 'demo/timbre', {
   "Instrumento = suma de los armónicos de las barras",
 "magnified and slowed, not to scale · drag to turn":
   "ampliado y ralentizado, no a escala · arrastra para girar",
+"Packet: bar or particle":
+  "Paquete: barra o partícula",
+"Ladder: closed pipe, odd only, slowed":
+  "Escalera: tubo cerrado, solo impares, ralentizada",
 "Wave in space, moving right":
   "Onda en el espacio, moviéndose a la derecha",
 "The harmonics present are {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}.":
@@ -424,18 +596,40 @@ VDI18N.add('es', 'demo/timbre', {
   "La fundamental es {#} Hz, D3.",
 "The waveform repeats every {#} ms, so the pitch is {#} Hz, D3.":
   "La forma de onda se repite cada {#} ms, así que el tono es {#} Hz, D3.",
-"The fundamental is {#} Hz, A4.":
-  "La fundamental es {#} Hz, A4.",
 "The harmonics present are {#}, {#}, {#}, {#}, {#}.":
   "Los armónicos presentes son {#}, {#}, {#}, {#}, {#}.",
-"The waveform repeats every {#} ms, so the pitch is {#} Hz, A4.":
-  "La forma de onda se repite cada {#} ms, así que el tono es {#} Hz, A4.",
 "Harmonic {#} is removed.":
   "Se quita el armónico {#}.",
 "Packet: deep water":
   "Paquete: agua profunda",
 "Packet: ripples":
   "Paquete: ondas capilares",
+"The antialiasing filter is on, cutoff {#} Hz.":
+  "El filtro antialiasing está encendido, con corte en {#} Hz.",
+"gray: input · dots: the samples · orange: smooth curve":
+  "gris: entrada · puntos: las muestras · naranja: curva suave",
+"f_s set to {fs}: {m} whole periods of f₁ in the record.":
+  "f_s fijada en {fs}: {m} periodos completos de f₁ en el registro.",
+"f_s set to {#} Hz: {#} whole periods of f₁ in the record.":
+  "f_s fijada en {#} Hz: {#} periodos completos de f₁ en el registro.",
+"Record: {#} samples at {#} Hz":
+  "Registro: {#} muestras a {#} Hz",
+"Measured":
+  "Medido",
+"gray: input · black: samples":
+  "gris: entrada · negro: muestras",
+"Ladder: closed pipe, odd only":
+  "Escalera: tubo cerrado, solo impares",
+"The ladder is paused.":
+  "La escalera está en pausa.",
+"Each harmonic is a pure sine, aₙ sin({#}π fₙ t + φₙ), held steady with no attack or decay. Real instruments change their spectrum during every note, and the attack matters a great deal for telling instruments apart. Harmonic n is at fₙ = n f₁; the stiffness slider uses the stiff string result fₙ = n f₁ √(({#} + Bn²)/({#} + B)), scaled so partial {#} stays at f₁. Equal temperament: f = {#} Hz × {#}^(k/{#}), k semitones from A4. The square, sawtooth and triangle presets are the exact Fourier series cut off at {#} harmonics, which causes the ripples near the jumps. The clarinet and flute presets are illustrative spectra chosen to show one feature, not measurements of real instruments. The instrument slider uses five such illustrative spectra (flute, clarinet, oboe, trumpet and bowed string like). It keeps f₁ and the phases and, between two neighbors, mixes each amplitude linearly: aₙ = ({#} − w) aₙ(left) + w aₙ(right), w from {#} to {#}. Real instruments change their spectrum with pitch and loudness; these do not. The ladder shows each partial as a mode of an ideal string or ideal pipe (no end correction), with amplitude aₙ, slowed so f₁ is drawn at {#} Hz. Spectrum levels are {#} log₁₀ aₙ, with {#} dB the top of a bar. Against position, the waveform is a snapshot of a sound wave moving to the right through air at v = {#} m/s ({#} °C), y(x) = s(t − x/v), with λₙ = v/fₙ; the air is taken as lossless and without dispersion, so every harmonic travels at the same speed and the shape moves without changing. The wave packet uses Gaussian amplitudes over harmonics {#} to {#}, and its widths are computed from those {#} terms, not from the Gaussian formula. For the packet in another medium, ω ∝ k^p is scaled so the mean harmonic n̄ (weighted by aₙ²) keeps its air frequency: ωₙ = n̄ (n/n̄)^p ω₁, so v_p = v and v_g = p v at the center; p = {#}/{#} deep water, {#}/{#} capillary ripples, {#} a bending bar or a free quantum particle. The pure power laws hold only far from the crossover between gravity and capillary waves, and the picture repeats every λ₁ because the harmonics do, so a spread packet runs into its neighbors. Vowels use the source and filter model: the sawtooth aₙ = {#}/n (a glottal source falling {#} dB per octave plus {#} dB per octave of radiation from the lips) times three formant resonances in cascade, Hᵢ = Fᵢ²/(Fᵢ² − f² + i f Bᵢ), with aₙ = |H(n f₁)|/n and φₙ = arg H(n f₁). Formants from Peterson and Barney ({#}), averages for women; bandwidths {#}, {#} and {#} Hz assumed; a real vocal tract has more formants and losses this leaves out. The 3D view puts the same model on a lab bench: the string or pipe moves as the sum of the ladder's modes, its displacement magnified (scaled down when the bars add up to a lot) and slowed so f₁ is drawn at {#} Hz; its length does not change with f₁, so nothing there is to scale. In a pipe the air moves along the pipe; dots are slices of air, red where they are squeezed together and blue where they are pulled apart, and the line above plots the displacement ξ upward. The oscilloscope and the spectrum analyzer show the waveform and spectrum of the flat view. The poster names the instrument whose illustrative spectrum is on the bars.":
+  "Cada armónico es una senoide pura, aₙ sen({#}π fₙ t + φₙ), sostenida sin ataque ni decaimiento. Los instrumentos reales cambian su espectro durante cada nota, y el ataque importa mucho para distinguir instrumentos. El armónico n está en fₙ = n f₁; el deslizador de rigidez usa el resultado de la cuerda rígida fₙ = n f₁ √(({#} + Bn²)/({#} + B)), escalado para que el parcial {#} se quede en f₁. Temperamento igual: f = {#} Hz × {#}^(k/{#}), a k semitonos de A4. Las configuraciones de onda cuadrada, diente de sierra y triangular son las series de Fourier exactas cortadas en {#} armónicos, lo que causa las ondulaciones cerca de los saltos. Las configuraciones de clarinete y flauta son espectros ilustrativos elegidos para mostrar una característica, no mediciones de instrumentos reales. El deslizador de instrumentos usa cinco espectros ilustrativos de ese tipo (parecidos a flauta, clarinete, oboe, trompeta y cuerda frotada). Conserva f₁ y las fases y, entre dos vecinos, mezcla cada amplitud linealmente: aₙ = ({#} − w) aₙ(izquierda) + w aₙ(derecha), w de {#} a {#}. Los instrumentos reales cambian su espectro con la altura y la intensidad; estos no. La escalera muestra cada parcial como un modo de una cuerda ideal o de un tubo ideal (sin corrección de extremo), con amplitud aₙ, ralentizado para que f₁ se dibuje a {#} Hz. Los niveles del espectro son {#} log₁₀ aₙ, con {#} dB en la parte de arriba de una barra. En función de la posición, la forma de onda es una instantánea de una onda sonora que se mueve hacia la derecha por el aire a v = {#} m/s ({#} °C), y(x) = s(t − x/v), con λₙ = v/fₙ; el aire se toma sin pérdidas y sin dispersión, así que todos los armónicos viajan a la misma rapidez y la forma se mueve sin cambiar. El paquete de ondas usa amplitudes gaussianas sobre los armónicos {#} a {#}, y sus anchos se calculan a partir de esos {#} términos, no de la fórmula gaussiana. Para el paquete en otro medio, ω ∝ k^p se escala para que el armónico medio n̄ (ponderado por aₙ²) conserve su frecuencia en el aire: ωₙ = n̄ (n/n̄)^p ω₁, así que v_p = v y v_g = p v en el centro; p = {#}/{#} agua profunda, {#}/{#} ondas capilares, {#} una barra en flexión o una partícula cuántica libre. Las leyes de potencia puras solo valen lejos del cruce entre las ondas de gravedad y las capilares, y la imagen se repite cada λ₁ porque los armónicos lo hacen, así que un paquete ensanchado choca con sus vecinos. Las vocales usan el modelo de fuente y filtro: el diente de sierra aₙ = {#}/n (una fuente glotal que cae {#} dB por octava más {#} dB por octava de radiación desde los labios) por tres resonancias formantes en cascada, Hᵢ = Fᵢ²/(Fᵢ² − f² + i f Bᵢ), con aₙ = |H(n f₁)|/n y φₙ = arg H(n f₁). Formantes de Peterson y Barney ({#}), promedios para mujeres; anchos de banda {#}, {#} y {#} Hz supuestos; un tracto vocal real tiene más formantes y pérdidas que esto omite. La vista 3D pone el mismo modelo sobre una mesa de laboratorio: la cuerda o el tubo se mueve como la suma de los modos de la escalera, con su desplazamiento ampliado (reducido cuando las barras suman mucho) y ralentizado para que f₁ se dibuje a {#} Hz; su longitud no cambia con f₁, así que ahí nada está a escala. En un tubo el aire se mueve a lo largo del tubo; los puntos son rebanadas de aire, rojos donde están comprimidos y azules donde están separados, y la línea de arriba grafica el desplazamiento ξ hacia arriba. El osciloscopio y el analizador de espectro muestran la forma de onda y el espectro de la vista plana. El cartel nombra el instrumento cuyo espectro ilustrativo está en las barras.",
+"Run {#} recorded (Vowels): {#} rows so far.":
+  "Corrida {#} registrada (Vocales): {#} filas hasta ahora.",
+"Ladder: string modes, f₁ slowed to {#} Hz":
+  "Escalera: modos de la cuerda, f₁ ralentizada a {#} Hz",
+"Ladder: open pipe, f₁ slowed to {#} Hz":
+  "Escalera: tubo abierto, f₁ ralentizada a {#} Hz",
 "Describe the picture":
   "Describir la imagen",
 "Time controls":
@@ -448,8 +642,6 @@ VDI18N.add('es', 'demo/timbre', {
   "Saltar a la imagen",
 "Skip to the controls":
   "Saltar a los controles",
-"Ladder: closed pipe, odd only":
-  "Escalera: tubo cerrado, solo impares",
 "Wave in space, moving right: the sum of {#} harmonic":
   "Onda en el espacio, moviéndose a la derecha: la suma de {#} armónico",
 "Close":

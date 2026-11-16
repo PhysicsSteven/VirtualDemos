@@ -236,7 +236,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     </div>
 
     <aside class="rail">
-      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/timbre.html" target="timbre-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
+      <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/timbre.html" target="timbre-worksheet">Worksheet 1: Timbre and Harmonics</a></li><li><a href="../curriculum/labs/students/sampling-aliasing.html" target="sampling-aliasing-worksheet">Worksheet 2: Sampling and Aliasing</a></li></ul></details><!-- /vd-handout -->
       <section>
         <h2>Presets</h2>
         <div class="chips" id="presets">
@@ -352,6 +352,82 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         </dl>
         <details class="more"><summary>More about this</summary>
           <p class="hint">Each harmonic is aₙ sin(2π fₙ t + φₙ); a dial points along φₙ, measured counterclockwise from the right. Randomizing the phases reshapes the waveform and its peak but leaves every amplitude, the spectrum and the RMS unchanged. A steady tone sounds almost the same: the ear is nearly deaf to phase (Ohm's acoustic law). It is not fully deaf: at a low f₁ (try 55 Hz) several high harmonics share one filter in the cochlea, their phases shape the buzz you hear there, and sharp attacks and clicks depend on phase too.</p>
+        </details>
+      </section>
+
+      <section id="smpSec">
+        <h2>Sampling and aliasing</h2>
+        <label class="check"><input type="checkbox" id="smpOn">Sample the tone with a converter</label>
+        <span class="lab" id="smpSetLab">Sampling setups</span>
+        <div class="chips" id="smpSetups" role="group" aria-labelledby="smpSetLab">
+          <button type="button" data-s="slow" aria-pressed="false">Too slow for the tone</button>
+          <button type="button" data-s="fold" aria-pressed="false">Harmonics fold over</button>
+          <button type="button" data-s="filter" aria-pressed="false">Antialiasing filter</button>
+          <button type="button" data-s="leak" aria-pressed="false">Leakage</button>
+          <button type="button" data-s="noise" aria-pressed="false">Noise floor</button>
+        </div>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="smpHint"></p></details>
+        <div>
+          <div class="slider-head"><label for="smpFs">Sample rate f_s</label><output id="smpFsOut" class="mono" for="smpFs"></output></div>
+          <input type="range" id="smpFs" min="2" max="4.681" step="0.001" value="3.903">
+        </div>
+        <div class="inline">
+          <span class="lab">Samples N</span>
+          <div class="seg" role="group" aria-label="Samples in the record" id="smpNSeg">
+            <button type="button" data-n="32" aria-pressed="false">32</button>
+            <button type="button" data-n="64" aria-pressed="false">64</button>
+            <button type="button" data-n="128" aria-pressed="false">128</button>
+            <button type="button" data-n="256" aria-pressed="true">256</button>
+            <button type="button" data-n="512" aria-pressed="false">512</button>
+            <button type="button" data-n="1024" aria-pressed="false">1024</button>
+          </div>
+        </div>
+        <div class="inline">
+          <span class="lab">Window</span>
+          <div class="seg" role="group" aria-label="Window" id="smpWinSeg">
+            <button type="button" data-w="rect" aria-pressed="true">Rectangular</button>
+            <button type="button" data-w="hann" aria-pressed="false">Hann</button>
+          </div>
+        </div>
+        <div class="inline">
+          <span class="lab">Join the samples</span>
+          <div class="seg" role="group" aria-label="Join the samples" id="smpJoinSeg">
+            <button type="button" data-j="lines" aria-pressed="true">Straight lines</button>
+            <button type="button" data-j="smooth" aria-pressed="false">Smooth</button>
+          </div>
+        </div>
+        <button type="button" class="btn" id="smpWhole">Whole cycles in the record</button>
+        <label class="check"><input type="checkbox" id="smpFilt">Antialiasing filter before the converter</label>
+        <div>
+          <div class="slider-head"><label for="smpFc">Filter cutoff f_c</label><output id="smpFcOut" class="mono" for="smpFc"></output></div>
+          <input type="range" id="smpFc" min="0.1" max="0.5" step="0.01" value="0.4">
+        </div>
+        <div>
+          <div class="slider-head"><label for="smpNoise">Converter noise (RMS)</label><output id="smpNoiseOut" class="mono" for="smpNoise"></output></div>
+          <input type="range" id="smpNoise" min="0" max="0.2" step="0.005" value="0">
+        </div>
+        <button type="button" class="btn" id="smpNewNoise">New noise</button>
+        <dl class="readout">
+          <div><dt>Nyquist frequency f_s/2</dt><dd id="rNyq">—</dd></div>
+          <div><dt>Record length N/f_s</dt><dd id="rRec">—</dd></div>
+          <div><dt>Resolution Δf = f_s/N</dt><dd id="rRes">—</dd></div>
+          <div><dt>Samples per period of f₁</dt><dd id="rSpp">—</dd></div>
+          <div><dt>Strongest peak</dt><dd id="rPeakF">—</dd></div>
+          <div><dt>Peak level</dt><dd id="rPeakL">—</dd></div>
+          <div><dt>Bins within 40 dB of the peak</dt><dd id="rWithin">—</dd></div>
+          <div><dt>Noise floor</dt><dd id="rFloor">—</dd></div>
+        </dl>
+        <table class="ftab" id="smpTab"></table>
+        <div class="chips">
+          <button type="button" class="btn" id="smpRec">Record this reading</button>
+          <button type="button" class="btn" id="smpToWs">Export to worksheet</button>
+          <button type="button" class="btn" id="smpClear">Clear</button>
+        </div>
+        <p class="hint" id="smpStatus" role="status">Each record adds one row: f₁, f_s, N, the window, the filter and the noise, with the strongest peak, its level, the bins within 40 dB of it and the noise floor.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">A converter measures the signal only at the sample times t = k/f_s. A sine at f and one at f − m f_s, for any whole number m, give exactly the same samples, so the converter cannot tell them apart: it reports the one between 0 and the Nyquist frequency f_s/2. That apparent frequency, |f − f_s round(f/f_s)|, is the alias. A digital oscilloscope set to a slow time base samples slowly and can draw a slow wave that is not there; a wagon wheel in a film seems to turn backward for the same reason.</p>
+          <p class="hint">The cure is to filter before sampling: the antialiasing filter is an eighth order Butterworth low pass, |H| = 1/√(1 + (f/f_c)¹⁶), so its cutoff must sit below f_s/2 with room to spare. Once a partial has folded, no later processing can tell it from a real one.</p>
+          <p class="hint">The spectrum is the discrete Fourier transform of the N samples, with bins every Δf = f_s/N = 1/(record length). A tone that does not fit a whole number of cycles in the record spreads into its neighbors (leakage) and its peak reads low; Whole cycles in the record sets f_s so f₁ fits exactly. The Hann window tapers the ends of the record: wider peaks, but far less leakage. Converter noise is white and simulated; its level per bin falls as 1/√N, 3 dB for every doubling of N, because the noise power spreads over more bins while a tone stays in one.</p>
         </details>
       </section>
 
@@ -603,12 +679,86 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     for (let n = 1; n <= N; n++) a[n] /= top;
     return { a, ph, scale: top };
   }
+  // ---------- sampling: an analog to digital converter takes the tone at fs samples per second ----------
+  // A sine at f, sampled at fs, gives the same samples as one at f − m fs for every whole number m. The converter cannot tell them
+  // apart, so it reports the one between −fs/2 and fs/2: f′ = f − fs round(f/fs). Its size |f′| is the apparent (alias) frequency,
+  // and a negative f′ means the sine came back with its phase reversed (it folded about a multiple of fs/2).
+  const FS_MIN = 100, FS_MAX = 48000, BW_ORDER = 8;
+  function aliasSigned(f, fs) { return f - fs * Math.round(f / fs); }
+  function aliasFreq(f, fs) { return Math.abs(aliasSigned(f, fs)); }
+  // Butterworth low pass filter of order m and cutoff fc (−3 dB), the analog filter in front of the converter:
+  // H(s) = Π (−pₖ)/(s − pₖ) with poles pₖ = ωc e^(iπ(2k + m − 1)/(2m)), k = 1 to m, so |H(f)| = 1/√(1 + (f/fc)^(2m)) exactly
+  function butterH(f, fc, m) {
+    const u = f / fc;   /* s/ωc = i u */
+    let re = 1, im = 0;
+    for (let k = 1; k <= m; k++) {
+      const th = PI * (2 * k + m - 1) / (2 * m), pr = Math.cos(th), pi = Math.sin(th);
+      /* (−p)/(iu − p) */
+      const nr = -pr, ni = -pi, dr = -pr, di = u - pi, d = dr * dr + di * di;
+      const hr = (nr * dr + ni * di) / d, hi = (ni * dr - nr * di) / d, r2 = re * hr - im * hi; im = re * hi + im * hr; re = r2;
+    }
+    return { mag: Math.hypot(re, im), ph: Math.atan2(im, re) };
+  }
+  // window weights for the record: rectangular (all 1) or Hann, wₖ = ½(1 − cos(2πk/N)), the periodic form used for spectra
+  function windowW(kind, N) { const w = new Float64Array(N); for (let k = 0; k < N; k++) w[k] = kind === 'hann' ? 0.5 - 0.5 * Math.cos(TAU * k / N) : 1; return w; }
+  // reproducible noise: the mulberry32 generator and the Box–Muller transform, so the same seed gives the same record
+  function gaussRng(seed) {
+    let s = seed >>> 0, spare = null;
+    const u = () => { s = (s + 0x6D2B79F5) >>> 0; let t = s; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return (((t ^ (t >>> 14)) >>> 0) + 0.5) / 4294967296; };
+    return () => { if (spare !== null) { const v = spare; spare = null; return v; } const r = Math.sqrt(-2 * Math.log(u())), a = TAU * u(); spare = r * Math.sin(a); return r * Math.cos(a); };
+  }
+  // the record: xₖ = Σ aⱼ sin(2π fⱼ k/fs + φⱼ) + σ zₖ, k = 0 to N − 1, from parts [{ f, a, ph }] (already through the filter)
+  // and converter noise of RMS σ (zₖ standard normal, added after the filter)
+  function sampleRecord(parts, fs, N, sigma, seed) {
+    const x = new Float64Array(N), g = sigma > 0 ? gaussRng(seed || 1) : null;
+    for (let k = 0; k < N; k++) { let v = 0; const t = k / fs; for (const p of parts) v += p.a * Math.sin(TAU * p.f * t + p.ph); x[k] = g ? v + sigma * g() : v; }
+    return x;
+  }
+  // fast Fourier transform, radix 2 in place, Xₖ = Σ xₙ e^(−2πi kn/N); N a power of 2
+  function fft(re, im) {
+    const N = re.length;
+    for (let i = 1, j = 0; i < N; i++) { let b = N >> 1; for (; j & b; b >>= 1) j ^= b; j ^= b; if (i < j) { let t = re[i]; re[i] = re[j]; re[j] = t; t = im[i]; im[i] = im[j]; im[j] = t; } }
+    for (let len = 2; len <= N; len <<= 1) {
+      const ang = -TAU / len, wr = Math.cos(ang), wi = Math.sin(ang), h = len >> 1;
+      for (let i = 0; i < N; i += len) {
+        let cr = 1, ci = 0;
+        for (let k = 0; k < h; k++) {
+          const ar = re[i + k + h] * cr - im[i + k + h] * ci, ai = re[i + k + h] * ci + im[i + k + h] * cr;
+          re[i + k + h] = re[i + k] - ar; im[i + k + h] = im[i + k] - ai; re[i + k] += ar; im[i + k] += ai;
+          const nr = cr * wr - ci * wi; ci = cr * wi + ci * wr; cr = nr;
+        }
+      }
+    }
+  }
+  // amplitude spectrum of a windowed record, bins k = 0 to N/2 at k fs/N: Aₖ = 2|Xₖ|/Σw (|Xₖ|/Σw at 0 and N/2), so a sine of
+  // amplitude a that fits a whole number of cycles in the record reads exactly a in its bin, with either window
+  function ampSpectrum(x, w) {
+    const N = x.length, re = new Float64Array(N), im = new Float64Array(N);
+    let sw = 0; for (let k = 0; k < N; k++) { re[k] = x[k] * w[k]; sw += w[k]; }
+    fft(re, im);
+    const A = new Float64Array(N / 2 + 1);
+    for (let k = 0; k <= N / 2; k++) A[k] = (k === 0 || k === N / 2 ? 1 : 2) * Math.hypot(re[k], im[k]) / sw;
+    return A;
+  }
+  // expected RMS level of white noise of RMS σ in one bin of that spectrum: 2σ √(Σw²)/Σw (2σ/√N for the rectangular window)
+  function noiseBin(sigma, w) { let s1 = 0, s2 = 0; for (let k = 0; k < w.length; k++) { s1 += w[k]; s2 += w[k] * w[k]; } return 2 * sigma * Math.sqrt(s2) / s1; }
+  // what an analyzer reports from a spectrum: the strongest bin, the bins within 40 dB of it, and the measured noise floor, the RMS
+  // level of the bins more than 4 bins from every tone (at its apparent frequency fa) and away from 0 and N/2 (null if fewer than 4)
+  function specStats(A, fs, fas) {
+    const M = A.length - 1, N = 2 * M, df = fs / N;
+    let kp = 0; for (let k = 1; k <= M; k++) if (A[k] > A[kp]) kp = k;
+    let within = 0; const lim = A[kp] * 0.01; for (let k = 0; k <= M; k++) if (A[k] >= lim && A[kp] > 0) within++;
+    let s = 0, n = 0;
+    for (let k = 1; k < M; k++) { if (fas.some((fa) => Math.abs(k - fa / df) <= 4)) continue; s += A[k] * A[k]; n++; }
+    return { kPeak: kp, fPeak: kp * df, aPeak: A[kp], within, floor: n >= 4 ? Math.sqrt(s / n) : null, nFloor: n, df };
+  }
   // ==CORE END==
 
   if (typeof document === 'undefined') {
     globalThis.TIMBRE = { PI, TAU, NH, A4, etFreq, midiFreq, noteOf, partialFreq, idealSeries, idealWave, seriesAt, fourier, gcd, periodInfo,
       rmsOf, peakOf, modeShape, toDb, audioNorm, hfGain, RMS_TARGET, PEAK_MAX, HF_EDGE, HF_GAIN, F_MUTE, INSTRUMENTS, morphPos, morphSpectrum, V_SOUND, packetSeries, packetWidths,
-      MEDIA, dispOmega, packetAt, FORMANT_BW, VOWELS, tractH, vowelSeries };
+      MEDIA, dispOmega, packetAt, FORMANT_BW, VOWELS, tractH, vowelSeries,
+      FS_MIN, FS_MAX, BW_ORDER, aliasSigned, aliasFreq, butterH, windowW, gaussRng, sampleRecord, fft, ampSpectrum, noiseBin, specStats };
     return;
   }
 
@@ -625,7 +775,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     mute1: false, mute2: false, detN: 3, df: 0, B: 0,
     ladder: 'string', periods: 3, showEach: false, showIdeal: true, showDials: true, sel: 1,
     axis: 't', pk: { n0: 8, sig: 1.5 }, med: 'air',
-    vw: { id: 'a', F: VOWELS[4].F.slice(), scale: 1 }
+    vw: { id: 'a', F: VOWELS[4].F.slice(), scale: 1 },
+    /* the converter: on or off, sample rate, samples in the record, window, how the samples are joined, the antialiasing filter
+       (cutoff as a fraction of f_s) and the converter noise (RMS in bar units, with the seed of its generator) */
+    smp: { on: false, fs: 8000, N: 256, win: 'rect', join: 'lines', filt: false, fcr: 0.4, noise: 0, seed: 1 }
   };
   const F_DISP = 0.125;   // in a dispersive medium the packet is drawn slower still: f₁ at 0.125 Hz
   let dispClock = 0;      // display seconds since the packet was made or started again
@@ -734,7 +887,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     'The ladder shows each partial as a mode of an ideal string or ideal pipe (no end correction), with amplitude aₙ, slowed so f₁ is drawn at 0.5 Hz. Spectrum levels are 20 log₁₀ aₙ, with 0 dB the top of a bar. ' +
     'Against position, the waveform is a snapshot of a sound wave moving to the right through air at v = 343.2 m/s (20 °C), y(x) = s(t − x/v), with λₙ = v/fₙ; the air is taken as lossless and without dispersion, so every harmonic travels at the same speed and the shape moves without changing. The wave packet uses Gaussian amplitudes over harmonics 1 to 16, and its widths are computed from those 16 terms, not from the Gaussian formula. ' +
     'For the packet in another medium, ω ∝ k^p is scaled so the mean harmonic n̄ (weighted by aₙ²) keeps its air frequency: ωₙ = n̄ (n/n̄)^p ω₁, so v_p = v and v_g = p v at the center; p = 1/2 deep water, 3/2 capillary ripples, 2 a bending bar or a free quantum particle. The pure power laws hold only far from the crossover between gravity and capillary waves, and the picture repeats every λ₁ because the harmonics do, so a spread packet runs into its neighbors. ' +
-    'Vowels use the source and filter model: the sawtooth aₙ = 1/n (a glottal source falling 12 dB per octave plus 6 dB per octave of radiation from the lips) times three formant resonances in cascade, Hᵢ = Fᵢ²/(Fᵢ² − f² + i f Bᵢ), with aₙ = |H(n f₁)|/n and φₙ = arg H(n f₁). Formants from Peterson and Barney (1952), averages for women; bandwidths 80, 100 and 120 Hz assumed; a real vocal tract has more formants and losses this leaves out.';
+    'Vowels use the source and filter model: the sawtooth aₙ = 1/n (a glottal source falling 12 dB per octave plus 6 dB per octave of radiation from the lips) times three formant resonances in cascade, Hᵢ = Fᵢ²/(Fᵢ² − f² + i f Bᵢ), with aₙ = |H(n f₁)|/n and φₙ = arg H(n f₁). Formants from Peterson and Barney (1952), averages for women; bandwidths 80, 100 and 120 Hz assumed; a real vocal tract has more formants and losses this leaves out. ' +
+    'Sampling: the converter takes the waveform (through the filter when it is on) at t = k/f_s, k = 0 to N − 1, from t = 0, with no rounding to levels, and adds simulated white noise of the chosen RMS to each sample. The spectrum is the discrete Fourier transform of the windowed samples, scaled so a sine of amplitude a that fits whole cycles in the record reads a; the noise floor is the RMS of the bins more than 4 bins from every partial. The antialiasing filter is an ideal eighth order Butterworth low pass. The smooth curve and the sound are the ideal reconstruction: each partial at its apparent frequency, with the noise left out.';
 
   const MODEL3 = 'The 3D view puts the same model on a lab bench: the string or pipe moves as the sum of the ladder\'s modes, its displacement magnified (scaled down when the bars add up to a lot) and slowed so f₁ is drawn at 0.5 Hz; its length does not change with f₁, so nothing there is to scale. In a pipe the air moves along the pipe; dots are slices of air, red where they are squeezed together and blue where they are pulled apart, and the line above plots the displacement ξ upward. The oscilloscope and the spectrum analyzer show the waveform and spectrum of the flat view. The poster names the instrument whose illustrative spectrum is on the bars.';
   // ---------- derived quantities ----------
@@ -764,8 +918,35 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const peakBound = periodic ? peak * 1.02 : sumA;
     D = { a, ns, info, rms, peak, sumA, peakBound, norm: audioNorm(rms, peakBound) };
     if (!holdY) yMax = niceUp(Math.max(0.2, peak * 1.08, morph !== null ? morphPeak(morph) * 1.08 : 0));
+    smpCompute();
     dirty = true;
   }
+  // ---------- sampling: the partials as they reach the converter, the record, its spectrum and what an analyzer reads from it ----------
+  let DS = null;
+  function smpParts() {
+    const sm = S.smp, out = [];
+    for (let n = 1; n <= NH; n++) {
+      const a = D.a[n]; if (!(a > 0)) continue;
+      const f = fOf(n); let g = 1, dp = 0;
+      if (sm.filt) { const h = butterH(f, sm.fcr * sm.fs, BW_ORDER); g = h.mag; dp = h.ph; }
+      out.push({ n, f, a0: a, a: a * g, g, ph: S.ph[n] + dp, fa: aliasFreq(f, sm.fs), fsg: aliasSigned(f, sm.fs), folded: f > sm.fs / 2 });
+    }
+    return out;
+  }
+  function smpCompute() {
+    if (!S.smp.on || !D) { DS = null; return; }
+    const sm = S.smp, parts = smpParts(), w = windowW(sm.win, sm.N);
+    const x = sampleRecord(parts, sm.fs, sm.N, sm.noise, sm.seed), A = ampSpectrum(x, w);
+    const st = specStats(A, sm.fs, parts.map((q) => q.fa));
+    /* the record's scale: the samples and the analog input over the record, the input taken at least 24 times a cycle of its highest partial */
+    let pk = 0; for (const v of x) pk = Math.max(pk, Math.abs(v));
+    const span = sm.N / sm.fs, fTop = parts.reduce((m, q) => Math.max(m, q.f), 0), M = Math.round(clamp(span * fTop * 24, 2000, 60000));
+    for (let i = 0; i <= M && parts.length; i++) { const t = i / M * span; let v = 0; for (const q of parts) v += q.a * Math.sin(TAU * q.f * t + q.ph); pk = Math.max(pk, Math.abs(v)); }
+    const sumA = parts.reduce((m, q) => m + q.a, 0);
+    DS = { parts, x, A, st, w, fTop, floorExp: sm.noise > 0 ? noiseBin(sm.noise, w) : 0, yMax: niceUp(Math.max(0.2, pk * 1.08)), sumA, norm: audioNorm(D.rms, Math.max(sumA, 1e-9)) };
+  }
+  const fsTxt = (v) => (Math.abs(v - Math.round(v)) < 1e-6 ? `${Math.round(v).toLocaleString('en-US')} Hz` : `${v.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Hz`);
+  const dbTxt = (a) => (a > 1e-5 ? `${(Math.abs(toDb(a)) < 0.05 ? 0 : toDb(a)).toFixed(1)} dB` : 'below −100 dB');
   function niceUp(v) { const p = Math.pow(10, Math.floor(Math.log10(v))), m = v / p; return (m <= 1 ? 1 : m <= 1.5 ? 1.5 : m <= 2 ? 2 : m <= 2.5 ? 2.5 : m <= 3 ? 3 : m <= 4 ? 4 : m <= 5 ? 5 : m <= 6 ? 6 : m <= 8 ? 8 : 10) * p; }
   let yMax = 2, holdY = false;
 
@@ -775,7 +956,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   let ctx = can.getContext('2d');   /* swapped for a moment while the 3D instrument screens are drawn */
   /* the divider between the pieces (VD.split, demos/lib/vd.js); a browser with an older cached vd.js keeps the default */
   const SPL3 = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, set() {} })))(can, { key: 'bench', axis: () => (on3d() ? 'y' : null), def: () => (W >= 680 ? 0.66 : 0.58), min: 0.4, max: 0.8, label: 'Divider between the bench and the harmonic bars', onChange: () => { dirty = true; draw(); } });
-  const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, set() {} })))(can, { key: 'top', axis: () => (!on3d() && W >= 680 ? 'y' : null), def: () => 0.44, min: 0.3, max: 0.7, label: 'Divider between the waveform and the harmonic ladder', onChange: () => { dirty = true; draw(); } });
+  const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, set() {} })))(can, { key: 'top', axis: () => (!on3d() && W >= 680 && !S.smp.on ? 'y' : null), def: () => 0.44, min: 0.3, max: 0.7, label: 'Divider between the waveform and the harmonic ladder', onChange: () => { dirty = true; draw(); } });
+  /* sampling: the record and its spectrum take more of the height, with their own divider */
+  const SPLS = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, set() {} })))(can, { key: 'smp', axis: () => (!on3d() && W >= 680 && S.smp.on ? 'y' : null), def: () => 0.62, min: 0.4, max: 0.8, label: 'Divider between the sampled record and the harmonic bars', onChange: () => { dirty = true; draw(); } });
   const proj = () => document.documentElement.getAttribute('data-projector') === 'on';
   function tokens() {
     const cs = getComputedStyle(document.documentElement);
@@ -825,11 +1008,20 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       /* 3D: the bench picture on top (instrument, oscilloscope, spectrum analyzer), the harmonic bars under it */
       const hp = Math.round(H * SPL3.f()), z = { x: 0, y: 0, w: W, h: 0 };
       pic = { x: 0, y: 0, w: W, h: hp }; wave = z; spec = z; lad = z; eq = { x: 0, y: hp, w: W, h: H - hp };
+    } else if (wide && S.smp.on) {
+      /* sampling: the record and its spectrum side by side over the bars; the ladder gives its room to them */
+      const hTop = Math.round(H * SPLS.f()), wW = Math.round(W * 0.5);
+      wave = { x: 0, y: 0, w: wW, h: hTop }; spec = { x: wW, y: 0, w: W - wW, h: hTop };
+      lad = { x: 0, y: hTop, w: W, h: 0 }; eq = { x: 0, y: hTop, w: W, h: H - hTop };
     } else if (wide) {
       const hTop = Math.round(H * SPL.f()), wW = Math.round(W * 0.58);
       wave = { x: 0, y: 0, w: wW, h: hTop }; spec = { x: wW, y: 0, w: W - wW, h: hTop };
       const hl = Math.round((H - hTop) * 0.4);
       lad = { x: 0, y: hTop, w: W, h: hl }; eq = { x: 0, y: hTop + hl, w: W, h: H - hTop - hl };
+    } else if (S.smp.on) {
+      const h1 = Math.round(H * 0.28), h2 = Math.round(H * 0.38);
+      wave = { x: 0, y: 0, w: W, h: h1 }; spec = { x: 0, y: h1, w: W, h: h2 };
+      lad = { x: 0, y: h1 + h2, w: W, h: 0 }; eq = { x: 0, y: h1 + h2, w: W, h: H - h1 - h2 };
     } else {
       const h1 = Math.round(H * 0.25), h2 = Math.round(H * 0.24), h3 = Math.round(H * 0.19);
       wave = { x: 0, y: 0, w: W, h: h1 }; spec = { x: 0, y: h1, w: W, h: h2 };
@@ -1235,12 +1427,173 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     tag(title, 18 * ls, r.y + 10 * ls, T.ink, 'left', 'middle', true, 11);
   }
 
+  // ---------- sampling: the record of samples (waveform panel) and the input and measured spectra (spectrum panel) ----------
+  function drawRecord() {
+    const r = G.wave, L = r.x + 46 * ls, R = r.x + r.w - 14 * ls, top = r.y + 44 * ls, bot = r.y + r.h - 26 * ls;
+    G.periodGrip = null;
+    if (bot - top < 30) return;
+    const sm = S.smp, N = sm.N, fs = sm.fs, span = N / fs, yM = DS.yMax;
+    const X = (t) => L + t / span * (R - L), Y = (v) => (top + bot) / 2 - v / yM * (bot - top) / 2;
+    ctx.font = font(10.5); ctx.fillStyle = T.muted;
+    const yst = nice(yM / (bot - top < 140 ? 1 : 2));
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    for (let v = -Math.floor(yM / yst) * yst; v <= yM + 1e-9; v += yst) {
+      const py = Math.round(Y(v)) + 0.5;
+      ctx.strokeStyle = Math.abs(v) < 1e-9 ? T.gridStrong : T.grid; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(L, py); ctx.lineTo(R, py); ctx.stroke();
+      ctx.fillText(fmtTick(v, yst), L - 6 * ls, py);
+    }
+    const spanU = span * 1e3, xst = nice(spanU / ((R - L) < 360 ? 3 : 6));
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (let v = 0; v <= spanU + 1e-9; v += xst) {
+      const px = Math.round(X(v / 1e3)) + 0.5;
+      ctx.strokeStyle = T.grid; ctx.beginPath(); ctx.moveTo(px, top); ctx.lineTo(px, bot); ctx.stroke();
+      ctx.fillText(fmtTick(v, xst), px, bot + 5 * ls);
+    }
+    ctx.textAlign = 'right'; ctx.fillText('t (ms)', R, bot + 5 * ls + 12 * ls);
+    ctx.save(); ctx.translate(r.x + 11 * ls, (top + bot) / 2); ctx.rotate(-PI / 2); ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('signal (bar units)', 0, 0); ctx.restore();
+    ctx.save(); ctx.beginPath(); ctx.rect(L, top - 4, R - L, bot - top + 8); ctx.clip();
+    if (!DS.parts.length && !sm.noise) { ctx.restore(); tag('Silence: every harmonic is at zero', (L + R) / 2, (top + bot) / 2, T.muted, 'center', 'middle', true, 12); return; }
+    /* the analog input that reaches the converter (through the filter when it is on), at least 16 points a cycle and 4 a pixel */
+    const cpp = DS.fTop * span / (R - L), st = clamp(1 / (cpp * 16 + 1e-9), 0.25, 1);
+    ctx.strokeStyle = T.muted; ctx.globalAlpha = cpp > 0.5 ? 0.4 : 0.8; ctx.lineWidth = 1.2 * ls; ctx.lineJoin = 'round'; ctx.beginPath();
+    for (let px = L; px <= R + 0.01; px += st) { const t = (px - L) / (R - L) * span; let v = 0; for (const q of DS.parts) v += q.a * Math.sin(TAU * q.f * t + q.ph); const py = Y(v); px === L ? ctx.moveTo(px, py) : ctx.lineTo(px, py); }
+    ctx.stroke(); ctx.globalAlpha = 1;
+    const x = DS.x, dt = 1 / fs;
+    if (sm.join === 'smooth') {
+      /* the one curve through the samples with nothing above f_s/2: each partial at its signed alias f′, Σ a sin(2π f′ t + φ) */
+      ctx.strokeStyle = T.accent; ctx.lineWidth = 2.3 * ls; ctx.beginPath();
+      for (let px = L; px <= R + 0.01; px += 0.75) { const t = (px - L) / (R - L) * span; let v = 0; for (const q of DS.parts) v += q.a * Math.sin(TAU * q.fsg * t + q.ph); const py = Y(v); px === L ? ctx.moveTo(px, py) : ctx.lineTo(px, py); }
+      ctx.stroke();
+    } else {
+      /* straight lines from sample to sample, as a digital oscilloscope draws them */
+      ctx.strokeStyle = T.ink; ctx.lineWidth = 2.3 * ls; ctx.beginPath();
+      for (let k = 0; k < N; k++) { const px = X(k * dt), py = Y(x[k]); k ? ctx.lineTo(px, py) : ctx.moveTo(px, py); }
+      ctx.stroke();
+    }
+    const gap = (R - L) / N;
+    if (gap >= 3.5 * ls) {
+      const rad = Math.min(3.4 * ls, gap / 3);
+      ctx.fillStyle = sm.join === 'smooth' ? T.ink : T.pos; ctx.strokeStyle = T.warm; ctx.lineWidth = 1.2 * ls;
+      for (let k = 0; k < N; k++) { ctx.beginPath(); ctx.arc(X(k * dt), Y(x[k]), rad, 0, TAU); ctx.fill(); ctx.stroke(); }
+    }
+    ctx.restore();
+    const title = pick([`Digital record: ${N} samples at f_s = ${fsTxt(fs)}`, `Record: ${N} samples at ${fsTxt(fs)}`, `${N} samples`], r.w - 20 * ls, 11.5, true);
+    ctx.font = font(11.5, true); ctx.fillStyle = T.ink; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText(title, r.x + 12 * ls, r.y + 6 * ls);
+    const dots = gap >= 3.5 * ls ? (sm.join === 'smooth' ? 'dots: the samples' : 'red dots: the samples') : 'samples too close for dots';
+    const how = sm.join === 'smooth' ? `orange: the smooth curve through them${sm.noise ? ', noise left out' : ''}` : 'black: the samples joined, as a digital scope draws them';
+    const sub2 = pick([`gray: the analog input · ${dots} · ${how}`, `gray: input · ${dots} · ${sm.join === 'smooth' ? 'orange: smooth curve' : 'black: joined'}`, `gray: input · ${sm.join === 'smooth' ? 'orange: smooth' : 'black: samples'}`], r.w - 20 * ls, 10, false);
+    ctx.font = font(10); ctx.fillStyle = T.muted; ctx.fillText(sub2, r.x + 12 * ls, r.y + 23 * ls);
+  }
+  function drawDft() {
+    const r = G.spec; G.stems = null;
+    ctx.strokeStyle = T.line; ctx.lineWidth = 1;
+    if (G.wide) { ctx.beginPath(); ctx.moveTo(r.x + 0.5, r.y + 8); ctx.lineTo(r.x + 0.5, r.y + r.h - 8); ctx.stroke(); }
+    else { ctx.beginPath(); ctx.moveTo(8, r.y + 0.5); ctx.lineTo(W - 8, r.y + 0.5); ctx.stroke(); }
+    const L = r.x + 44 * ls, R = r.x + r.w - 14 * ls, sm = S.smp, fs = sm.fs, ny = fs / 2, N = sm.N;
+    const room = r.h - (38 + 34 + 30) * ls;
+    if (room < 80 || R - L < 80) return;
+    const t1 = r.y + 38 * ls, b1 = t1 + Math.round(room * 0.36), t2 = b1 + 34 * ls, b2 = r.y + r.h - 30 * ls;
+    const fIn = Math.max(DS.fTop, ny) * 1.06, X1 = (f) => L + f / fIn * (R - L), Y1 = (db) => t1 + clamp(db / -60, 0, 1) * (b1 - t1);
+    const X2 = (f) => L + f / ny * (R - L), DBM = -100, Y2 = (db) => t2 + clamp(db / DBM, 0, 1) * (b2 - t2);
+    const kHz = (v) => v > 2500;
+    const ticks = (fMax, Xf, yb, small) => {
+      const unit = kHz(fMax) ? 1000 : 1, fst = nice(fMax / unit / ((R - L) < 300 ? 3 : 5));
+      ctx.font = font(small ? 9.5 : 10.5); ctx.fillStyle = T.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+      for (let v = 0; v <= fMax / unit + 1e-9; v += fst) { const px = Math.round(Xf(v * unit)) + 0.5; ctx.fillText(fmtTick(v, fst), px, yb + 3 * ls); }
+      return unit;
+    };
+    /* the upper strip: the partials at their true frequencies (what goes in), with f_s/2 and the zones above it, which fold back */
+    ctx.save(); ctx.beginPath(); ctx.rect(L, t1 - 2, R - L, b1 - t1 + 4); ctx.clip();
+    const xn = X1(ny);
+    if (xn < R) {
+      ctx.strokeStyle = T.pos; ctx.globalAlpha = 0.16; ctx.lineWidth = 1;
+      for (let xx = xn - (b1 - t1); xx < R; xx += 6 * ls) { ctx.beginPath(); ctx.moveTo(xx, b1); ctx.lineTo(xx + (b1 - t1), t1); ctx.stroke(); }
+      ctx.globalAlpha = 1;
+    }
+    for (let m = 1; m * ny <= fIn; m++) {
+      const xm = X1(m * ny); ctx.strokeStyle = m % 2 ? T.pos : T.muted; ctx.lineWidth = (m === 1 ? 1.6 : 1) * ls; ctx.setLineDash(m % 2 ? [4 * ls, 3 * ls] : [1.5 * ls, 3 * ls]);
+      ctx.beginPath(); ctx.moveTo(xm, t1); ctx.lineTo(xm, b1); ctx.stroke(); ctx.setLineDash([]);
+    }
+    ctx.strokeStyle = T.gridStrong; ctx.beginPath(); ctx.moveTo(L, Math.round(b1) + 0.5); ctx.lineTo(R, Math.round(b1) + 0.5); ctx.stroke();
+    if (sm.filt) {
+      ctx.strokeStyle = T.accent; ctx.lineWidth = 1.4 * ls; ctx.setLineDash([5 * ls, 3 * ls]); ctx.beginPath();
+      for (let px = L; px <= R + 0.01; px += 2) { const f = (px - L) / (R - L) * fIn, py = Y1(toDb(Math.max(1e-6, butterH(f, sm.fcr * fs, BW_ORDER).mag))); px === L ? ctx.moveTo(px, py) : ctx.lineTo(px, py); }
+      ctx.stroke(); ctx.setLineDash([]);
+    }
+    const wIn = Math.max(1.6, Math.min(4, (R - L) / fIn * f1() * 0.16)) * ls;
+    for (const q of DS.parts) {
+      const xq = X1(q.f);
+      if (sm.filt && q.g < 0.999) { ctx.strokeStyle = hcol(q.n, 0.6); ctx.lineWidth = 1.2 * ls; ctx.fillStyle = T.warm; ctx.beginPath(); ctx.arc(xq, Y1(toDb(q.a0)), 3 * ls, 0, TAU); ctx.fill(); ctx.stroke(); }
+      const yq = Y1(toDb(Math.max(q.a, 1e-9)));
+      ctx.strokeStyle = hcol(q.n); ctx.lineWidth = wIn; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(xq, b1); ctx.lineTo(xq, yq); ctx.stroke(); ctx.lineCap = 'butt';
+    }
+    ctx.restore();
+    const u1 = ticks(fIn, X1, b1, true);
+    /* lines from each partial to where the converter reports it: straight down below f_s/2, folded back above it */
+    ctx.save(); ctx.setLineDash([3 * ls, 3 * ls]); ctx.lineWidth = 1.1 * ls;
+    for (const q of DS.parts) {
+      if (toDb(Math.max(q.a, 1e-12)) < DBM) continue;
+      ctx.strokeStyle = hcol(q.n, q.folded ? 0.75 : 0.3); ctx.beginPath(); ctx.moveTo(X1(q.f), b1 + 15 * ls); ctx.lineTo(X2(q.fa), t2); ctx.stroke();
+    }
+    ctx.restore();
+    /* the lower strip: the spectrum of the N samples from 0 to f_s/2, what the analyzer reports */
+    const dst = (b2 - t2) < 110 ? 40 : 20;
+    ctx.font = font(10); ctx.fillStyle = T.muted; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    for (let db = 0; db >= DBM; db -= dst) {
+      const py = Math.round(Y2(db)) + 0.5;
+      ctx.strokeStyle = db === 0 ? T.gridStrong : T.grid; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(L, py); ctx.lineTo(R, py); ctx.stroke();
+      ctx.fillText(String(db), L - 6 * ls, py);
+    }
+    ctx.save(); ctx.translate(r.x + 11 * ls, (t2 + b2) / 2); ctx.rotate(-PI / 2); ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('level (dB)', 0, 0); ctx.restore();
+    ctx.save(); ctx.beginPath(); ctx.rect(L - 3, t2 - 8 * ls, R - L + 6, b2 - t2 + 8 * ls + 2); ctx.clip();
+    if (DS.floorExp > 0) {
+      const yf = Y2(toDb(DS.floorExp)); ctx.strokeStyle = T.muted; ctx.lineWidth = 1.2 * ls; ctx.setLineDash([6 * ls, 4 * ls]);
+      ctx.beginPath(); ctx.moveTo(L, yf); ctx.lineTo(R, yf); ctx.stroke(); ctx.setLineDash([]);
+    }
+    const A = DS.A, M = N / 2, df = fs / N, bx = (R - L) / M;
+    ctx.strokeStyle = T.ink;
+    if (bx >= 6 * ls) {
+      ctx.lineWidth = Math.min(3 * ls, bx * 0.5);
+      ctx.beginPath(); for (let k = 0; k <= M; k++) { const px = X2(k * df), py = Y2(toDb(Math.max(A[k], 1e-12))); if (py < b2 - 0.5) { ctx.moveTo(px, b2); ctx.lineTo(px, py); } } ctx.stroke();
+    } else {
+      ctx.lineWidth = 1.4 * ls; ctx.lineJoin = 'round'; ctx.beginPath();
+      for (let k = 0; k <= M; k++) { const px = X2(k * df), py = Y2(toDb(Math.max(A[k], 1e-12))); k ? ctx.lineTo(px, py) : ctx.moveTo(px, py); }
+      ctx.stroke();
+    }
+    for (const q of DS.parts) {
+      if (toDb(Math.max(q.a, 1e-12)) < DBM) continue;
+      const xa = X2(q.fa); ctx.fillStyle = hcol(q.n); ctx.beginPath(); ctx.moveTo(xa - 4 * ls, t2 - 7 * ls); ctx.lineTo(xa + 4 * ls, t2 - 7 * ls); ctx.lineTo(xa, t2); ctx.closePath(); ctx.fill();
+    }
+    const st = DS.st, xp = X2(st.fPeak), yp = Y2(toDb(Math.max(st.aPeak, 1e-12)));
+    if (st.aPeak > 1e-5) { ctx.fillStyle = T.accent; ctx.strokeStyle = T.warm; ctx.lineWidth = 1.3 * ls; ctx.beginPath(); ctx.arc(xp, yp, 4 * ls, 0, TAU); ctx.fill(); ctx.stroke(); }
+    ctx.restore();
+    const u2 = ticks(ny, X2, b2, false);
+    ctx.font = font(10.5); ctx.fillStyle = T.muted; ctx.textAlign = 'right'; ctx.textBaseline = 'top';
+    ctx.fillText(u2 === 1000 ? 'f (kHz)' : 'f (Hz)', R, b2 + 16 * ls);
+    /* labels last, on top */
+    if (xn < R - 30 * ls) tag(pick(['f_s/2: above it, partials fold back', 'f_s/2'], R - xn - 8 * ls, 10, true), xn + 4 * ls, t1 + 1 * ls, T.pos, 'left', 'top', true, 10);
+    else tag('f_s/2', Math.min(xn, R) - 4 * ls, t1 + 1 * ls, T.pos, 'right', 'top', true, 10);
+    if (2 * ny <= fIn && X1(2 * ny) < R - 20 * ls) tag('f_s', X1(2 * ny) + 3 * ls, b1 - 3 * ls, T.muted, 'left', 'bottom', true, 9.5);
+    if (DS.floorExp > 0) tag('expected noise floor', R - 2 * ls, Y2(toDb(DS.floorExp)) - 3 * ls, T.muted, 'right', 'bottom', false, 9.5);
+    if (st.aPeak > 1e-5) { const txt = `peak ${fmtHz(st.fPeak)}`; ctx.font = font(10.5, true); const tw = ctx.measureText(txt).width; tag(txt, clamp(xp + 7 * ls, L, R - tw), Math.max(t2 + 8 * ls, yp), T.brassInk, 'left', 'middle', true, 10.5); }
+    ctx.font = font(10.5, true); ctx.fillStyle = T.ink; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText(pick([`Input: each partial at its true frequency (${u1 === 1000 ? 'kHz' : 'Hz'}), 0 to −60 dB`, 'Input: true frequencies', 'Input'], r.w - 20 * ls, 10.5, true), r.x + 12 * ls, r.y + 22 * ls);
+    tag(pick([`Measured: spectrum of the ${N} samples, 0 to f_s/2`, `Measured: ${N} samples, 0 to f_s/2`, 'Measured'], r.w - 20 * ls - 90 * ls, 10.5, true), r.x + 12 * ls, b1 + 17 * ls, T.ink, 'left', 'top', true, 10.5);
+    tag(`Δf = ${fmtHz(df)}`, R, b1 + 17 * ls, T.muted, 'right', 'top', false, 10);
+    const title = pick(['Spectrum: what goes in, and what the converter reports', 'Spectrum: in and measured', 'Spectrum'], r.w - 20 * ls, 11.5, true);
+    ctx.font = font(11.5, true); ctx.fillStyle = T.ink; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText(title, r.x + 12 * ls, r.y + 6 * ls);
+  }
+
   function draw() {
     if (!T || !W || !H || !D) return;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.fillStyle = T.warm; ctx.fillRect(0, 0, W, H);
     layout();
     if (G.pic) { ctx.clearRect(G.pic.x, G.pic.y, G.pic.w, G.pic.h); draw3(G.pic); drawEq(); }
+    else if (S.smp.on && DS) { drawRecord(); drawDft(); drawEq(); }
     else { drawWave(); drawSpec(); drawLadder(); drawEq(); }
     dirty = false;
   }
@@ -1694,6 +2047,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     k = clamp(Math.round(k / +el.step) * +el.step, +el.min, +el.max);
     S.semi = +k.toFixed(2); el.value = S.semi;
     if (presetId === 'vowel') setVowel();   /* same formants, new harmonics under them */
+    if (smpSetup) smpMark(null);
     recompute(); readouts(); soundDirty = true;
   }
   function syncControls() {
@@ -1737,6 +2091,124 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   });
   $('vF1').addEventListener('input', (e) => { S.vw.F[0] = +e.target.value; S.vw.id = null; vowelNow(); });
   $('vF2').addEventListener('input', (e) => { S.vw.F[1] = +e.target.value; S.vw.id = null; vowelNow(); });
+  // ---------- sampling controls ----------
+  const SMP_SETUPS = {
+    slow: { tone: 'pure', sm: { fs: 460, N: 64, win: 'rect', join: 'lines', filt: false, noise: 0 },
+      hint: 'A pure tone at A4, 440 Hz, sampled 460 times a second: fewer than two samples a cycle. Each sample lands a little later in the cycle than the one before, so the samples trace a slow wave at |440 − 460| = 20 Hz, and the spectrum peaks there. This is the wrong frequency a digital oscilloscope shows when its time base is too slow for the signal. Try Smooth, then a sample rate of 440 Hz.' },
+    fold: { tone: 'saw', sm: { fs: 2000, N: 256, win: 'hann', join: 'lines', filt: false, noise: 0 },
+      hint: 'The sawtooth at A3, 220 Hz, sampled 2,000 times a second. The Nyquist frequency is 1,000 Hz, so harmonics 5 to 16 (1,100 to 3,520 Hz) fold back below it and land between the true harmonics: the measured spectrum has peaks that are not harmonics of 220 Hz. With Sound on, the tone turns harsh and out of tune.' },
+    filter: { tone: 'saw', sm: { fs: 2000, N: 256, win: 'hann', join: 'lines', filt: true, fcr: 0.4, noise: 0 },
+      hint: 'The same sawtooth through an eighth order antialiasing filter, cutoff 0.4 f_s = 800 Hz, before the converter. Harmonics above the cutoff are weakened before they can fold, so the false peaks drop by tens of decibels. Those just above f_s/2 still get through faintly: a real filter needs room between its cutoff and the Nyquist frequency.' },
+    leak: { tone: 'pure', sm: { fs: 8000, N: 64, win: 'rect', join: 'lines', filt: false, noise: 0 },
+      hint: 'A pure 440 Hz tone, 64 samples at 8,000 Hz: bins every 125 Hz, and the record holds 3.52 cycles, so 440 Hz falls between bins 3 and 4. The peak spreads into many bins (leakage) and reads low. Press Whole cycles in the record, then try the Hann window.' },
+    noise: { tone: 'pure', sm: { fs: 8000, N: 256, win: 'hann', join: 'lines', filt: false, noise: 0.05, seed: 1 },
+      hint: 'A pure 440 Hz tone with simulated converter noise of RMS 0.05 bar units and the Hann window. The tone stays near 0 dB while the noise floor sits near the dashed line, 2σ√(Σw²)/Σw. Double N and the floor drops by 3 dB; press New noise to see how much it scatters.' }
+  };
+  const SMP_NAME = {}; for (const b of $('smpSetups').querySelectorAll('[data-s]')) SMP_NAME[b.dataset.s] = b.textContent;
+  let smpSetup = null;
+  function smpMark(id) {
+    smpSetup = id;
+    for (const b of $('smpSetups').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.s === id));
+    $('smpHint').textContent = id ? SMP_SETUPS[id].hint : S.smp.on ? 'Your own sampling settings. Pick a setup to start again from one of them.'
+      : 'Tick Sample the tone with a converter, or pick a setup: the waveform becomes the record of samples and the spectrum shows what goes in and what the converter reports.';
+  }
+  function smpSync() {
+    const sm = S.smp;
+    $('smpOn').checked = sm.on; $('smpFs').value = Math.log10(sm.fs).toFixed(3); $('smpFilt').checked = sm.filt;
+    $('smpFc').value = sm.fcr; $('smpNoise').value = sm.noise;
+    for (const b of $('smpNSeg').children) b.setAttribute('aria-pressed', String(+b.dataset.n === sm.N));
+    for (const b of $('smpWinSeg').children) b.setAttribute('aria-pressed', String(b.dataset.w === sm.win));
+    for (const b of $('smpJoinSeg').children) b.setAttribute('aria-pressed', String(b.dataset.j === sm.join));
+    $('stage').classList.toggle('smp', sm.on);
+    SPL.place(); SPLS.place();
+  }
+  /* any sampling control turns sampling on (and the flat view, where the record is drawn) */
+  function smpSet(ch, keepSetup) {
+    const was = S.smp.on;
+    Object.assign(S.smp, ch);
+    if (S.smp.on && !was) toFlat();
+    if (!keepSetup || S.smp.on !== was) smpMark(keepSetup ? smpSetup : null);
+    smpSync(); buildKey(); recompute(); readouts(); soundDirty = true;
+  }
+  function applySmpSetup(id) {
+    const P = SMP_SETUPS[id];
+    if (P.tone === 'saw') applyPreset('saw');
+    else {
+      clearAll(); S.a[1] = 1; S.mute1 = false; S.mute2 = false; S.df = 0; S.B = 0; S.semi = 0; hoverKey = null;
+      morph = null; syncControls(); markPreset(null); morphUI();
+    }
+    Object.assign(S.smp, { fcr: 0.4, seed: 1 }, P.sm, { on: true });
+    toFlat(); smpSync(); smpMark(id); buildKey(); recompute(); readouts(); soundDirty = true;
+  }
+  $('smpSetups').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) applySmpSetup(b.dataset.s); });
+  $('smpOn').addEventListener('change', (e) => smpSet({ on: e.target.checked }, true));
+  $('smpFs').addEventListener('input', (e) => smpSet({ on: true, fs: clamp(Math.round(Math.pow(10, +e.target.value)), FS_MIN, FS_MAX) }));
+  if (VD.typeIn) VD.typeIn($('smpFsOut'), { label: 'Sample rate', get: () => S.smp.fs, seed: () => String(+S.smp.fs.toFixed(2)), set: (v) => smpSet({ on: true, fs: v }), min: FS_MIN, max: FS_MAX, step: 0.01, unit: 'Hz', knobs: [$('smpFs')] });
+  $('smpNSeg').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) smpSet({ on: true, N: +b.dataset.n }); });
+  $('smpWinSeg').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) smpSet({ on: true, win: b.dataset.w }); });
+  $('smpJoinSeg').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) smpSet({ on: true, join: b.dataset.j }, true); });
+  /* the sample rate that fits a whole number m of periods of f₁ in the N samples, nearest the present rate: f_s = N f₁/m */
+  $('smpWhole').addEventListener('click', () => {
+    const f = f1(), N = S.smp.N; let m = Math.max(1, Math.round(N * f / S.smp.fs)), fs = N * f / m;
+    while (fs > FS_MAX) { m++; fs = N * f / m; }
+    while (fs < FS_MIN && m > 1) { m--; fs = N * f / m; }
+    smpSet({ on: true, fs });
+    $('smpStatus').textContent = tr('f_s set to {fs}: {m} whole periods of f₁ in the record.', { fs: fsTxt(fs), m });
+  });
+  $('smpFilt').addEventListener('change', (e) => smpSet({ on: true, filt: e.target.checked }));
+  $('smpFc').addEventListener('input', (e) => smpSet({ on: true, filt: true, fcr: +e.target.value }));
+  $('smpNoise').addEventListener('input', (e) => smpSet({ on: true, noise: +e.target.value }));
+  $('smpNewNoise').addEventListener('click', () => smpSet({ on: true, seed: S.smp.seed + 1 }, true));
+  function smpReadouts() {
+    const sm = S.smp, f = f1();
+    $('smpFsOut').textContent = fsTxt(sm.fs);
+    $('smpFcOut').textContent = `${sm.fcr.toFixed(2)} f_s = ${fsTxt(sm.fcr * sm.fs)}${sm.filt ? '' : ' (off)'}`;
+    $('smpNoiseOut').textContent = sm.noise ? sm.noise.toFixed(3) : 'none';
+    $('rNyq').textContent = fsTxt(sm.fs / 2);
+    $('rRec').textContent = fmtMs(sm.N / sm.fs);
+    $('rRes').textContent = fmtHz(sm.fs / sm.N);
+    $('rSpp').textContent = (sm.fs / f).toFixed(2);
+    if (!DS) {
+      for (const id of ['rPeakF', 'rPeakL', 'rWithin', 'rFloor']) $(id).innerHTML = '— <small>sampling off</small>';
+      $('smpTab').innerHTML = '';
+      return;
+    }
+    const st = DS.st;
+    $('rPeakF').innerHTML = st.aPeak > 1e-5 ? `${fmtHz(st.fPeak)} <small>bin ${st.kPeak}</small>` : '— <small>no signal</small>';
+    $('rPeakL').textContent = dbTxt(st.aPeak);
+    $('rWithin').textContent = st.aPeak > 1e-5 ? String(st.within) : '—';
+    $('rFloor').innerHTML = st.floor === null ? '— <small>no room between the peaks</small>' : `${dbTxt(st.floor)}${DS.floorExp > 0 ? ` <small>expected ${dbTxt(DS.floorExp)}</small>` : ''}`;
+    $('smpTab').innerHTML = '<caption>Each partial: where it lands after sampling</caption><tr><th>n</th><th>f</th><th>appears at</th><th>level</th></tr>' +
+      (DS.parts.length ? DS.parts.map((q) => `<tr><td><i style="background:${hcol(q.n)}"></i>${q.n}</td><td>${fmtHz(q.f)}</td><td>${fmtHz(q.fa)}${q.folded ? ' ↩' : ''}</td><td>${dbTxt(q.a)}</td></tr>`).join('')
+        : '<tr><td colspan="4">none: silence</td></tr>');
+  }
+  /* readings for the Sampling and Aliasing worksheet: one row per press, every value as the demo computes it */
+  let smpRows = [], smpRuns = 0, smpSeries = Date.now();
+  const smpStatus = (m) => { $('smpStatus').textContent = m; };
+  const smpCSV = () => ['# Timbre and Harmonics demo, sampling (computed values: the tone is synthesized and the converter noise is simulated)',
+    'run,setup,f1_Hz,fs_Hz,N,window,filter,noise_rms,f_peak_Hz,peak_dB,bins_within_40dB,floor_dB', ...smpRows.map((r) => [r.run, r.setup, r.f1, r.fs, r.N, r.win, r.filt, r.noise, r.fp, r.lp, r.within, r.floor].join(','))].join('\n') + '\n';
+  $('smpRec').addEventListener('click', () => {
+    if (!DS) { smpStatus('Tick Sample the tone with a converter first.'); return; }
+    const sm = S.smp, st = DS.st, db = (a) => (a > 1e-5 ? (Math.abs(toDb(a)) < 0.05 ? 0 : toDb(a)).toFixed(1) : 'below -100');
+    smpRuns++;
+    smpRows.push({ run: smpRuns, setup: (smpSetup ? SMP_NAME[smpSetup] : 'Custom').replace(/[,;]/g, ' '), f1: f1().toFixed(2), fs: +sm.fs.toFixed(2), N: sm.N, win: sm.win === 'hann' ? 'Hann' : 'rectangular',
+      filt: sm.filt ? `fc ${(sm.fcr * sm.fs).toFixed(0)} Hz` : 'off', noise: sm.noise.toFixed(3), fp: st.aPeak > 1e-5 ? st.fPeak.toFixed(2) : '', lp: db(st.aPeak), within: st.within, floor: st.floor === null ? '' : db(st.floor) });
+    smpStatus(tr('Reading {run} recorded: {rows} so far.', { run: smpRuns, rows: smpRows.length }));
+  });
+  $('smpClear').addEventListener('click', () => { smpRows = []; smpRuns = 0; smpSeries = Date.now(); smpStatus('Readings cleared.'); });
+  $('smpToWs').addEventListener('click', () => {
+    if (!smpRows.length) { smpStatus('Nothing recorded yet. Press Record this reading first.'); return; }
+    const txt = smpCSV(), data = txt.trim().split('\n').filter((l) => l[0] !== '#');
+    const hand = { v: 1, demo: 'timbre', series: smpSeries, sent: new Date().toISOString(), columns: data[0].split(','), rows: data.slice(1).map((l) => l.split(',')), meta: {},
+      note: 'Computed values from the Timbre and Harmonics demo; the converter noise is simulated.', csv: txt, csvName: 'sampling-readings.csv' };
+    try { localStorage.setItem('vd-handoff:sampling-aliasing', JSON.stringify(hand)); }
+    catch (_) {
+      try { const u = URL.createObjectURL(new Blob([txt], { type: 'text/csv' })), a = document.createElement('a'); a.href = u; a.download = hand.csvName; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 1000); } catch (_) {}
+      smpStatus('This browser blocks storage, so the readings were saved as a CSV file instead.'); return;
+    }
+    smpStatus(tr('{n} rows sent to the worksheet. ', { n: hand.rows.length }));
+    const a = document.createElement('a'); a.href = '../curriculum/labs/students/sampling-aliasing.html'; a.target = 'sampling-aliasing-worksheet'; a.textContent = tr('Open the worksheet'); a.style.color = 'var(--accent)'; $('smpStatus').appendChild(a);
+  });
   $('f1').addEventListener('input', (e) => setSemi(+e.target.value));
   $('morph').addEventListener('input', (e) => setMorph(+e.target.value));
   // keys: arrows step by 0.1 of the way (Shift 0.01), Page Up and Page Down jump to the next instrument
@@ -1790,7 +2262,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       capStatus('This browser blocks storage, so the readings were saved as a CSV file instead.'); return;
     }
     capStatus(`${hand.rows.length} rows sent to the worksheet. `);
-    const a = document.createElement('a'); a.href = '../curriculum/labs/students/timbre.html'; a.target = 'timbre-worksheet'; a.textContent = 'Open the worksheet'; a.style.color = 'var(--accent)'; $('capStatus').appendChild(a);
+    const a = document.createElement('a'); a.href = '../curriculum/labs/students/timbre.html'; a.target = 'timbre-worksheet'; a.textContent = tr('Open the worksheet'); a.style.color = 'var(--accent)'; $('capStatus').appendChild(a);
   });
   $('randPh').addEventListener('click', () => { for (let n = 1; n <= NH; n++) S.ph[n] = Math.round(Math.random() * 72) * PI / 36; /* a phase only change keeps the preset's name: the spectrum is the same */ recompute(); readouts(); soundDirty = true; });
   $('zeroPh').addEventListener('click', () => { for (let n = 1; n <= NH; n++) S.ph[n] = 0; edited(false); });
@@ -1868,20 +2340,26 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const near = (F) => { const n = Math.max(1, Math.min(NH, Math.round(F / f))); return F / f > NH + 0.5 ? `above harmonic ${NH}` : `n = ${n} at ${fmtHz(n * f)}`; };
     $('rNearF1').innerHTML = onV ? near(vw.F[0]) : '— <small>pick a vowel</small>';
     $('rNearF2').innerHTML = onV ? near(vw.F[1]) : '— <small>pick a vowel</small>';
-    pianoMark(); buildTable(); soundHintText();
+    smpReadouts(); pianoMark(); buildTable(); soundHintText();
   }
   function buildKey() {
     if (!T) return;
     const grad = `linear-gradient(90deg, ${[1, 4, 7, 10, 13, 16].map((n) => hcol(n)).join(', ')})`;
     const ladTxt = S.ladder === 'string' ? 'Ladder: each harmonic as a string mode, amplitude aₙ' : S.ladder === 'open' ? 'Ladder: air displacement, pipe open at both ends' : 'Ladder: air displacement, pipe closed at the top (× = no such mode)';
-    $('key').innerHTML = [
+    $('key').innerHTML = (S.smp.on ? [
+      ['env', 'Sampling: gray, the analog input to the converter'],
+      ['ink', 'Samples joined by straight lines, as a digital scope draws them'],
+      ['brass', 'Smooth curve through the samples (orange), the strongest measured peak'],
+      ['hatch', 'Above f_s/2: partials there fold back'],
+      ['ramp', 'Harmonic colors, n = 1 (amber) to 16 (teal)', grad]
+    ] : [
       ['ink', 'Waveform: the sum, what you hear'],
       ['ramp', 'Harmonic colors, n = 1 (amber) to 16 (teal)', grad],
       ['env', 'Ideal shape (infinitely many harmonics)'],
       ['brass', 'Repetition period and f₁'],
       ['hatch', 'Above 8 kHz, played 12 dB quieter'],
       ['ramp', ladTxt, grad]
-    ].map(([c, t, bg]) => `<span><i class="swatch ${c}"${bg ? ` style="background:${bg}"` : ''}></i>${t}</span>`).join('');
+    ]).map(([c, t, bg]) => `<span><i class="swatch ${c}"${bg ? ` style="background:${bg}"` : ''}></i>${t}</span>`).join('');
     $('modelHint').textContent = MODEL + ' ' + MODEL3;
   }
 
@@ -1896,7 +2374,14 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   let soundDirty = false, lastSnd = 0;
   function targets() {
     const out = [];
-    for (let n = 1; n <= NH; n++) { const f = fOf(n); out.push({ n, f, gain: D.a[n] * D.norm * hfGain(f), ph: S.ph[n] }); }
+    /* sampling on: the ideal reconstruction, each partial at its apparent frequency through the filter, scaled so the peak stays safe
+       whatever the folded frequencies do (the bound Σ aₙ|H|); apparent frequencies under 20 Hz are left silent */
+    const sp = DS ? new Map(DS.parts.map((q) => [q.n, q])) : null;
+    for (let n = 1; n <= NH; n++) {
+      const f = fOf(n);
+      if (sp) { const q = sp.get(n), fa = q ? q.fa : aliasFreq(f, S.smp.fs); out.push({ n, f: fa, gain: q && fa >= 20 ? q.a * DS.norm * hfGain(fa) : 0, ph: S.ph[n] }); }
+      else out.push({ n, f, gain: D.a[n] * D.norm * hfGain(f), ph: S.ph[n] });
+    }
     return out;
   }
   const phaseSig = () => S.ph.slice(1).map((p) => p.toFixed(5)).join(',');
@@ -1963,6 +2448,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const rmsFS = D.norm * D.rms, lvl = rmsFS > 0 ? `, ${(-toDb(rmsFS)).toFixed(0)} dB below full scale at full volume` : '';
     $('soundHint').textContent = `You hear exactly the drawn sum: 16 sine oscillators, one per harmonic, at the drawn frequencies, amplitudes and phases. The whole tone is scaled to one RMS level${lvl}, so the presets compare fairly, and its peak stays at least 12 dB below full scale. ` +
       (hf ? `${hf} harmonic${hf > 1 ? 's are' : ' is'} above 8 kHz at this f₁; ${hf > 1 ? 'they play' : 'it plays'} 12 dB quieter to spare your ears. ` : '') +
+      (DS ? 'Sampling is on: you hear what an ideal converter and playback would give, each partial at its apparent frequency and through the filter when it is on; the converter noise is not played. ' : '') +
       'Small laptop and phone speakers cannot play the lowest fundamentals, so headphones or room speakers work best. Sound stops when you leave the page.';
   }
   $('sound').addEventListener('click', () => setSound(!snd.on));
@@ -1975,7 +2461,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     get master() { return snd.masterT; }, get rebuilds() { return snd.rebuilds; },
     voices: () => (snd.bank ? snd.bank.map((v) => ({ n: v.n, f: v.f, gain: v.gain })) : []),
     // the largest sample the set gains can produce at full volume: norm × (peak of the drawn sum, or Σaₙ if inharmonic)
-    peakFullScale: () => D.norm * D.peakBound
+    peakFullScale: () => (DS ? DS.norm * DS.sumA : D.norm * D.peakBound)
   };
 
   // ---------- projector ----------
@@ -2002,7 +2488,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     requestAnimationFrame(loop);
   }
   window.__tb = { S, get g3() { return g3; }, get o3() { return V3.o; }, get scrG() { return V3.scrG; }, get D() { return D; }, get G() { return G; }, get frameMs() { return frameMs; }, get tAnim() { return tAnim; }, set tAnim(v) { tAnim = v; dirty = true; }, get presetId() { return presetId; }, get yMax() { return yMax; }, get dispClock() { return dispClock; }, set dispClock(v) { dispClock = v; dirty = true; },
-    applyPreset, setSemi, setMorph, get morph() { return morph; }, setRunning, recompute, eqGeom, specGeom, waveGeom, fOf, f1, get running() { return running; } };
+    applyPreset, setSemi, setMorph, applySmpSetup, smpSet, get DS() { return DS; }, get morph() { return morph; }, setRunning, recompute, eqGeom, specGeom, waveGeom, fOf, f1, get running() { return running; } };
 
   if (!AC) noAudio();
   buildPiano();
@@ -2010,15 +2496,18 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   recompute();
   tokens();
   applyPreset('saw');
+  smpSync(); smpMark(null);
   setRunning(!reduce);
   readouts();
   view3 = VD3K.view({ seg: '#dimSeg', init: init3, status: (m) => { $('modelHint').textContent = m; },
-    change: (on) => { if (g3) g3.el.hidden = !on; $('stage').classList.toggle('v3d', on); dirty = true; requestAnimationFrame(resize); } });
+    change: (on) => { if (g3) g3.el.hidden = !on; $('stage').classList.toggle('v3d', on); if (on && S.smp.on) smpSet({ on: false }, true); dirty = true; requestAnimationFrame(resize); } });
   new ResizeObserver(resize).observe(pane);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { dirty = true; });
   requestAnimationFrame(loop);
   /* How this works: a short video of one sample reading (made by tools/howto/) */
-  VD.howTo({ src: 'media/how-this-works/timbre.mp4', poster: 'media/how-this-works/timbre.jpg' });
+  /* the Sampling and Aliasing worksheet has its own video: shown while sampling is on, or when that worksheet opened the demo */
+  const howName = () => (S.smp.on || (VD.ws && VD.ws('') === 'sampling-aliasing') ? 'sampling-aliasing' : 'timbre');
+  VD.howTo({ src: () => `media/how-this-works/${howName()}.mp4`, poster: () => `media/how-this-works/${howName()}.jpg` });
   /* what the picture shows now, for a screen reader (VD.describe): the fundamental, the harmonics that sound, and the repetition and pitch */
   if (window.VD && VD.describe) VD.describe(can, () => {
     const f = f1(), I = D.info, out = [], ns = D.ns, SETUP = { packet: 'A wave packet: harmonics with Gaussian amplitudes, plotted against position.', vowel: 'A voice: harmonics shaped by the three formants of a vowel.' };
@@ -2038,7 +2527,14 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     if (I.kind !== 'silent') out.push(`The root mean square amplitude is ${D.rms.toFixed(3)}.`);
     if (presetId === 'vowel') out.push(`The formants are at ${S.vw.F[0]} Hz, ${S.vw.F[1]} Hz and ${S.vw.F[2]} Hz.`);
     if (presetId === 'packet') { const pw = packetWidths(D.a, S.ph, TAU * f / V_SOUND); if (pw) out.push(`The packet has Δx ${pw.dx < 0.1 ? (pw.dx * 100).toFixed(2) + ' cm' : pw.dx.toFixed(3) + ' m'} and Δk ${pw.dk.toFixed(2)} rad/m, a product of ${pw.product.toFixed(3)}.`); }
-    out.push(running ? 'The ladder is running.' : 'The ladder is paused.');
+    if (DS) {
+      const sm = S.smp, nf = DS.parts.filter((q) => q.folded).length;
+      out.push(`Sampling is on: ${sm.N} samples at ${fsTxt(sm.fs)}, so the Nyquist frequency is ${fsTxt(sm.fs / 2)} and the bins are ${fmtHz(sm.fs / sm.N)} apart.`);
+      out.push(nf ? `${nf} of the partials are above the Nyquist frequency and fold back below it.` : 'Every partial is below the Nyquist frequency.');
+      if (DS.st.aPeak > 1e-5) out.push(`The strongest peak in the measured spectrum is at ${fmtHz(DS.st.fPeak)}, ${dbTxt(DS.st.aPeak)}.`);
+      if (sm.filt) out.push(`The antialiasing filter is on, cutoff ${fsTxt(sm.fcr * sm.fs)}.`);
+      if (sm.noise) out.push(`Simulated converter noise of RMS ${sm.noise.toFixed(3)} is added; the noise floor is ${DS.st.floor === null ? 'not measurable' : dbTxt(DS.st.floor)}.`);
+    } else out.push(running ? 'The ladder is running.' : 'The ladder is paused.');
     return out;
   });
 })();

@@ -302,7 +302,8 @@
   /* ==ACOUSTICS START== Acoustics worksheets (acoustics.html) and their demo column maps. */
   const ACOUSTICS = ['resonators', 'timbre', 'acoustic-levitation', 'chladni', 'doppler',
     'sound-waves', 'kundts-tube', 'wave-power', 'two-speaker', 'ultrasound', 'sound-intensity',
-    'room-acoustics' /* Room Acoustics demo, Reverberation time */, 'anechoic-chamber' /* Room Acoustics demo, Level against distance */];
+    'room-acoustics' /* Room Acoustics demo, Reverberation time */, 'anechoic-chamber' /* Room Acoustics demo, Level against distance */,
+    'sampling-aliasing' /* Timbre and Harmonics demo, Sampling and aliasing section, 2026-11-16 */];
   ENABLED.push(...ACOUSTICS);
   /* Room Acoustics rows: the walls (and the floor, unless the room is lined with wedges) in words */
   const roomWalls = (r) => (r.walls === 'panels' ? `${r.panels_n} ${r.panel_material} panels` : r.walls === 'wedges' ? `wedges ${r.wedge_depth_m} m deep` : 'hard walls')
@@ -310,6 +311,8 @@
   Object.assign(FROM_DEMO, {
     resonators: { demo: 'Resonators', cols: ['f_Hz', 'k', null, null, 'L_read_cm', 'spacing_cm', 'x_(2k-1)/4f_ms'] },
     timbre: { demo: 'Timbre and Harmonics', cols: [(r) => `run ${r.run}, ${r.preset}`, 'n', 'f_Hz', 'rel_amplitude', 'level_dB', 'phase_deg', 'notes'] },
+    /* Run | f_s (Hz) | N | Window | Peak frequency (Hz) | Peak level (dB) | Bins within 40 dB | Noise floor (dB) */
+    'sampling-aliasing': { demo: 'Timbre and Harmonics', cols: [(r) => `${r.run}, ${r.setup}`, 'fs_Hz', 'N', 'window', 'f_peak_Hz', 'peak_dB', 'bins_within_40dB', 'floor_dB'] },
     'acoustic-levitation': { demo: 'Acoustic Levitation', cols: ['setup_material', 'radius_mm', 'drive_Vpp', 'phase_deg', 'tracked_trap_z_mm', 'Fmax_over_W', 'notes', null] },
     /* Scan | Shape | Material | Thickness h (mm) | Mode/pattern | Frequency f (Hz) | Nodal sketch or description */
     /* drumhead series (every row a Mylar drumhead) go to the second table: Reading | Drive | T (N/m) | Mode (n, m) | f | f/f01 | j ratio | √T;

@@ -459,6 +459,16 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
         <h2>Oscilloscope</h2>
         <ul class="chlist" id="chList"></ul>
         <label class="check" id="chainLab"><input type="checkbox" id="chain">Add the voltage phasors tip to tail</label>
+        <div class="steprow">
+          <label for="digN">Scope samples per screen</label>
+          <select class="pick" id="digN">
+            <option value="0">Analog: the computed trace</option>
+            <option value="1000">Digital: 1,000</option>
+            <option value="200">Digital: 200</option>
+            <option value="50">Digital: 50</option>
+          </select>
+        </div>
+        <details class="more"><summary>About the digital scope</summary><p class="hint">A digital oscilloscope stores a fixed number of samples per screen and joins them with straight lines, so a slower time base samples more slowly: the sample rate is the samples per screen divided by the time across the screen. When a signal gets fewer than two samples per cycle (its frequency is above half the sample rate, the Nyquist frequency) the trace shows a slower wave that is not in the circuit. That is aliasing. Try LC oscillation: set Playback rate to fast forward, press Whole run, and compare 50 samples per screen with 1,000 as the window grows. Every sample is the circuit's exact value at its instant, taken on a fixed time grid.</p></details>
         <details class="more"><summary>More about this</summary><p class="hint" id="scopeHint">Select a part and press Scope V or Scope I to add a channel. Voltages use the left scale, currents the right.</p></details>
         <button type="button" class="btn" id="csv">Export scope CSV</button>
         <p class="hint" id="csvHint"></p>
@@ -1987,7 +1997,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
 
   // ---------- state ----------
   let els = [], nextId = 1, sel = null, tool = 'select', running = !reduce;
-  const S = { mode: 'dc', preset: 'series', edited: false, kmode: 'loop', chain: false, blind: false, dtab: false, rPlot: 'I', zPlot: 'tri',
+  const S = { mode: 'dc', preset: 'series', edited: false, kmode: 'loop', chain: false, blind: false, dtab: false, rPlot: 'I', zPlot: 'tri', dig: 0,
     layers: { elec: false, ilabels: true, vcolor: false, vlabels: false, plabels: false, field: true } };
   let channels = [];                        // scope channels: { id, q: 'V' or 'I' }
   const undoStack = [], redoStack = [];
@@ -2209,7 +2219,9 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     runInit();
   }
   // back to t = 0: switches as they were at the start, the start state, energies cleared
+  let runSerial = 0;   /* counts restarts from t = 0, so the digital scope's stored samples are thrown away with the old run */
   function runInit() {
+    runSerial++;
     for (const e of els) if (run.start.sw.has(e.id)) { if (e.type === 'sw') e.closed = run.start.sw.get(e.id); else e.pos = run.start.sw.get(e.id); }
     run.sys = buildTransient(els);
     run.t = 0; run.debt = 0; run.E = new Map(); run.M = 0; run.events = [{ t: 0 }]; run.flipDone = false; run.whole = false; run.peak = 0;
@@ -3683,6 +3695,26 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
   }
   // comparison traces on show: Blind hides a setup's own (they name the damping regime), not the ones a student kept
   const shownGhosts = () => (S.blind ? ghosts.filter((g) => !g.preset) : ghosts);
+  // the digital scope: S.dig samples per screen on a fixed time grid, at whole multiples of Δ = window/S.dig (so they do not crawl
+  // as the window scrolls), each the circuit's exact value at its instant: stateAt in a time run, the steady state in AC
+  const digMemo = { key: '', m: new Map() };
+  function digPts(ch, tA, tB) {
+    const d = (tB - tA) / S.dig, timeRun = S.mode === 'time';
+    const key = [S.mode, d.toPrecision(12), timeRun ? runSerial : ''].join('|');
+    if (key !== digMemo.key || (!timeRun && digMemo.sp !== sp) || digMemo.m.size > 40000) { digMemo.key = key; digMemo.sp = sp; digMemo.m = new Map(); }
+    const tEnd = timeRun ? Math.min(tB, run.t) : tB, pts = [], ck = ch.id + ch.q;
+    for (let j = Math.ceil(tA / d - 1e-9); j * d <= tEnd + 1e-12 * d; j++) {
+      const k = ck + ':' + j; let v = digMemo.m.get(k);
+      if (v === undefined) {
+        const t = j * d;
+        if (timeRun) { const st = stateAt(run.segs, t); v = st ? chanAt(st.sys, st.x, ch) : NaN; }
+        else { v = specAt(sp, ch.id, ch.q, t); if (ch.q === 'I' && isSource(ch.id)) v = -v; }
+        digMemo.m.set(k, v);
+      }
+      pts.push([j * d, v]);
+    }
+    return pts;
+  }
   function drawScope() {
     const P = panes.s, c = P.ctx, [W, H] = P.dims; sGeo = null; if (!W || !H) return;
     const ghosts = shownGhosts();
@@ -3738,6 +3770,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
         return { ch, pts };
       });
     }
+    if (S.dig > 0) traces = traces.map((tr) => ({ ch: tr.ch, pts: digPts(tr.ch, tA, tB) }));
     // scales
     let mxV = 0, mnV = 0, mxI = 0, mnI = 0;
     for (const tr of [...traces, ...ghostTr]) for (const p of tr.pts) {
@@ -3809,7 +3842,20 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     // voltages solid; currents dashed on top, like a scope's math channel, so a current in step with a voltage still shows
     for (const tr of traces) if (tr.ch.q === 'V') line(tr.pts, 'V', chColor(tr.ch, true), 2.1 * Math.min(ps, 1.3));
     for (const tr of traces) if (tr.ch.q === 'I') line(tr.pts, 'I', chColor(tr.ch, true), 2.1 * Math.min(ps, 1.3), [7 * Math.min(ps, 1.3), 5 * Math.min(ps, 1.3)]);
+    if (S.dig > 0 && pw / S.dig >= 4) {
+      /* the samples themselves, when there is room to see them */
+      const rd = Math.min(3, pw / S.dig / 3) * Math.min(ps, 1.3);
+      for (const tr of traces) { c.fillStyle = chColor(tr.ch, true); for (const p of tr.pts) { if (!isFinite(p[1])) continue; c.beginPath(); c.arc(Xt(p[0]), Yv(p[1], tr.ch.q), rd, 0, 2 * Math.PI); c.fill(); } }
+    }
     c.restore();
+    if (S.dig > 0) {
+      /* whole sentences through VDI18N.t with named values, so another language gets the sentence, not pieces of it */
+      const dT = (t, v) => (window.VDI18N ? VDI18N.t(t, v) : t.replace(/\{(\w+)\}/g, (a, k) => v[k]));
+      const fsD = S.dig / (tB - tA), msg = dT('digital: {n} samples per screen · f_s = {fs} · f_s/2 = {ny}', { n: S.dig.toLocaleString('en-US'), fs: fmtSI(fsD, 'Hz', 3), ny: fmtSI(fsD / 2, 'Hz', 3) });
+      c.font = `600 ${fs * 0.88}px ${T.mono}`;
+      const short = dT('digital: f_s = {fs}', { fs: fmtSI(fsD, 'Hz', 3) });
+      text(c, c.measureText(msg).width < pw - 12 ? msg : short, x1 - 4, y0 + 9 * k1, fs * 0.88, '#e2c27a', 'right', 600, T.mono);
+    }
     // the present value of each trace: a dot at its end
     for (const tr of traces) {
       const p = tr.pts.filter((q) => q && isFinite(q[1])).pop(); if (!p) continue;
@@ -5479,6 +5525,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     if (run.auto) run.rateIdx = autoRateIdx(run.L);
     scopeScale = null; updateTime();
   });
+  $('digN').addEventListener('change', (ev) => { S.dig = +ev.target.value; scopeScale = null; drawAll(); });
   $('zRun').addEventListener('click', () => { if (!run) return; run.whole = true; run.L = snapL(Math.max(run.t, run.L * 0.1) * 1.05); run.t0v = 0; scopeScale = null; });
   $('keep').addEventListener('click', () => {
     if (!run || !run.sys || !run.sys.ok) return;
