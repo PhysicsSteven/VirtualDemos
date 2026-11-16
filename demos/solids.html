@@ -1040,6 +1040,45 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   new ResizeObserver(resize).observe($('pane')); new ResizeObserver(resize).observe(cur.parentElement); resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   window.__sd = { S, setView, applyPreset, redraw, sync, dpRun, dvI, ledEg, ALPHA };
+  /* what the picture shows now, for a screen reader (VD.describe): the view on show, its setup and the values its worksheet asks for */
+  if (window.VD && VD.describe) {
+    const words = (view) => () => {
+      if (S.view !== view) return [];
+      const out = [];
+      if (view === 'cr') { const s = crSalt(), a = ALPHA[s.st], U = latticeU(a, s.r0, s.n);
+        out.push(`${s.name} crystal in the ${s.st === 'rs' ? 'rock salt' : 'cesium chloride'} structure, drawn in 3D around one reference ion.`, `The nearest neighbor distance is ${f(s.r0, 4)} nm.`,
+          crMethod() === 'cube' ? `The ions are added up in neutral cubes with half width ${S.cr.m} ion spacings.` : `The ions are added up in ${S.cr.K} shells of neighbors.`,
+          `The sum of α so far is ${f(crAlphaNow(), 4)}, and the Madelung constant from the Ewald sum is ${f(a, 4)}.`, `The measured lattice energy is ${s.U} kJ/mol.`);
+        out.push(S.blind ? 'The calculated lattice energy and its comparison with the table are hidden in Blind.' : `The calculated lattice energy is ${f(U * KJMOL_PER_EV, 0)} kJ/mol, ${f(100 * (U * KJMOL_PER_EV / s.U - 1), 1)} % from the table.`); }
+      else if (view === 'bd' && S.bd.model === 'kp') { const K = kpNow(), { k, B, a, E } = K, bd = B[k.n - 1], nx = B[k.n];
+        out.push('An electron in a row of square wells and barriers, with the allowed energy bands and gaps drawn.', `The period is ${f(a, 3)} nm, and the barriers are ${f(k.V0, 1)} eV high and ${f(k.b, 3)} nm wide.`,
+          bd ? `Band ${k.n} runs from ${f(bd[0], 3)} to ${f(bd[1], 3)} eV.` : `Band ${k.n} is not in range.`);
+        if (bd && nx) out.push(`The gap above band ${k.n} is ${f(nx[0] - bd[1], 3)} eV.`);
+        out.push(isFinite(E) ? `At wave number ${f(k.s, 2)} π/a the state energy is ${f(E, 3)} eV.` : 'There is no state at this wave number.', `The bands below the barrier height number ${B.filter((x) => x[1] <= k.V0).length}.`);
+        if (S.blind) out.push('The free electron comparison is hidden in Blind.'); }
+      else if (view === 'bd') { const b = S.bd, F = fillChain(b.N, b.d, b.Z), lv = F.levels, sl = lv.filter((l) => l.band === 's'), pl = lv.filter((l) => l.band !== 's'), fb = bandFill(b.d, b.Z);
+        out.push('A chain of model atoms, with the energy levels against the spacing and the levels at this spacing filled with electrons.', `There are ${b.N} atoms, ${f(b.d, 3)} nm apart, with ${b.Z} electrons each.`,
+          `The s band runs from ${f(sl[0].E, 3)} to ${f(sl[sl.length - 1].E, 3)} eV.`, `The p band runs from ${f(pl[0].E, 3)} to ${f(pl[pl.length - 1].E, 3)} eV.`,
+          F.homo ? `The highest filled level is ${f(F.homo.E, 3)} eV.` : 'No level is filled.', F.lumo ? `The lowest empty place is ${f(F.lumo.E, 3)} eV.` : 'There is no empty place.');
+        out.push(S.blind ? 'Whether a very long chain is a metal or an insulator is hidden in Blind.' : fb.metal ? 'A very long chain has a partly filled band, so it is a metal.' : isFinite(fb.gap) ? `A very long chain has a filled band and a gap of ${f(fb.gap, 3)} eV, so it is an insulator at T = 0.` : 'In a very long chain every band is full.'); }
+      else if (view === 'dp') { const r = dpRun(), nd = dpND(), na = dpNA();
+        out.push('A cryostat holding a semiconductor sample, beside the band diagram with the electrons, holes, impurity levels and Fermi level.', `The sample is ${dpSample()}.`, `The temperature is ${S.dp.T} K.`,
+          `The electron density is ${sci(r.n, 4)} cm⁻³, and the hole density is ${sci(r.p, 4)} cm⁻³.`);
+        if (nd) out.push(`${f(100 * r.NDp / nd, 1)} % of the donors are ionized.`);
+        if (na) out.push(`${f(100 * r.NAm / na, 1)} % of the acceptors are ionized.`);
+        out.push(S.blind ? 'The intrinsic density, the Fermi level and the region are hidden in Blind.' : `The intrinsic density is ${sci(r.ni, 4)} cm⁻³, and the Fermi level is ${f(r.EF, 3)} eV above the valence band.`); }
+      else if (S.dv.kind === 'led') { const E = ledEg(), l = lambdaNm(E);
+        out.push('An LED wired to a battery, with the band diagram across the junction.', S.dv.led === 'any' ? `The band gap is ${f(E, 2)} eV, chosen freely.` : `The LED is ${S.dv.led}, with a band gap of ${f(E, 2)} eV.`, `The spectrometer peak is ${f(l, 0)} nm.`, `The color is ${colourName(l)}.`); }
+      else { const d = S.dv, J = junction('Si', d.T, Math.pow(10, d.ja), Math.pow(10, d.jd), d.V);
+        out.push('A silicon pn junction wired to a battery and a meter, with the depletion region at its middle and the band diagram across it.', `The bias is ${f(d.V, 2)} V, ${d.V > 0 ? 'forward' : d.V < 0 ? 'reverse' : 'zero'}.`, `The temperature is ${d.T} K.`,
+          `The current is ${ampText(dvI())}.`, `The saturation current at this temperature is ${ampText(dvI0())}.`, `The depletion width is ${f(J.W * 1e6, 3)} μm.`);
+        if (S.blind) out.push('The thermal voltage and the built in potential are hidden in Blind.'); else out.push(`The built in potential is ${f(J.Vbi, 3)} V.`); }
+      return out;
+    };
+    VD.describe(canX, words('cr'));
+    const wb = words('bd'), wd = words('dp'), wv = words('dv');
+    VD.describe(can, () => [].concat(wb(), wd(), wv()));
+  }
   const HOW = { cr: ['lattice-energy', 'Lattice Energy of Ionic Crystals'], bd: ['energy-bands', 'Energy Bands in a Chain of Atoms'], dp: ['semiconductor-doping', 'Carriers in Pure and Doped Silicon'], dv: ['pn-junction', 'The pn Junction Diode and LEDs'] };
   VD.howTo({ src: () => `media/how-this-works/${HOW[S.view][0]}.mp4`, poster: () => `media/how-this-works/${HOW[S.view][0]}.jpg`, title: () => `How this works: ${HOW[S.view][1]}` });
   requestAnimationFrame(frame);

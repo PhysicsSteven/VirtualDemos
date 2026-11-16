@@ -2228,6 +2228,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
       hint3d.hidden = false; return;
     }
     view = v;
+    if (v === '3d' && window.VD && VD.describe && G.ready) VD.describe(G.el, sceneWords);
     const is3 = v === '3d';
     base.hidden = over.hidden = is3;
     if (G.ready) G.el.hidden = !is3;
@@ -2291,6 +2292,26 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
       sel = null; setPreset(null); markBase();
     }
   });
+  /* what the picture shows now, for a screen reader (VD.describe): each charge, the probe's readings and the energy */
+  const sceneWords = () => {
+    const o = order(), up = (t) => t.charAt(0).toUpperCase() + t.slice(1), out = [];
+    out.push(view === '3d' ? 'A 3D landscape of the potential: the height is V.' : 'A map of charges in a plane on a 1 cm grid.');
+    if (!o.length) out.push('There are no charges.');
+    o.forEach((c) => out.push(c.kind ? up(bodyText(c)) + '.' : `A charge of ${minus(fmtQ(c.q))} nC at ${posText(c.x, c.y)}.`));
+    if (sel) out.push(sel.kind ? `${o.indexOf(sel) + 1} of ${o.length} is selected.` : `Charge ${o.indexOf(sel) + 1} of ${o.length} is selected.`);
+    out.push(`The probe is at ${posText(probe.x, probe.y)}.`);
+    if (charges.some((c) => c.q)) {
+      const [ex, ey] = field(probe.x, probe.y), d = dirDeg(ex, ey);
+      out.push(`Potential V = ${fmtV(potential(probe.x, probe.y))}.`, `Field |E| = ${fmtE(Math.hypot(ex, ey))}.`);
+      if (d !== null) out.push(`The field points ${d}° from +x.`);
+      const U = potentialEnergy(charges);
+      out.push(blind ? 'The potential energy is hidden.' : U === null ? 'The potential energy is shown for point charges only.' : o.filter((c) => c.q).length >= 2 ? `Potential energy of the charges ${fmtJ(U)}.` : 'There are no pairs of charges, so the potential energy is 0.');
+    } else out.push('There is no charge, so no field.');
+    if (blind) out.push('Blind is on: field lines, equipotentials and shading are hidden.');
+    else if (view === '2d' && layers.equi) out.push(`Equipotential lines are drawn every ${dV} V.`);
+    return out;
+  };
+  if (window.VD && VD.describe) VD.describe(over, sceneWords);
   new ResizeObserver(resize).observe(stage);
   resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(markBase);

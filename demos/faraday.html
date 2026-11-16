@@ -3117,6 +3117,56 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   const ro = new ResizeObserver(resize);
   for (const k of ['s', 'p']) ro.observe(panes[k]);
   applyPreset('push');
+  /* what the pictures show now, for a screen reader (VD.describe): the apparatus with its readings, and the plot */
+  if (window.VD && VD.describe) {
+    const n2 = (v, d) => (+v).toFixed(d).replace('-', '−');
+    VD.describe($('sCan'), () => {
+      const m = S.mode, c = circ, B = blind(), out = [];
+      if (!c) return out;
+      const rd = (t) => ({ t, live: !running });   /* a reading that runs on by itself is kept out of the announcements */
+      if (m === 'magnet') { const q = magP();
+        out.push('A bar magnet on the axis of a coil, which is joined to a resistor and a galvanometer.', `The coil has ${q.N} turns and radius ${n2(S.magnet.a, 1)} cm.`, `The resistance is ${fmtR(q.R)}.`,
+          `The magnet's field B_r is ${n2(q.Br, 1)} T.`, `The magnet moves at ${n2(S.magnet.v, 2)} m/s when pushed or pulled.`, rd(`The magnet's center is ${n2(W.z * 100, 1)} cm from the coil's center.`)); }
+      else if (m === 'gen') { const G = S.gen;
+        out.push('A coil turning between magnet poles, joined to a resistor, with a crank.', `The coil has ${G.N} turns and area ${G.A} cm², in a field of ${n2(G.B, 2)} T.`, `The resistance is ${fmtR(Rnow())}.`,
+          W.motor ? `The motor turns the coil at ${n2(G.w, 1)} rad/s.` : 'The motor is off: turn the crank by hand.', { t: `The coil angle is ${n2(((wrapPi(W.gth) * 180 / Math.PI) + 360) % 360, 0)}°.`, live: false });
+        if (!B && W.motor) out.push(`The peak EMF is ${fmtSI(G.N * G.B * genA() * G.w, 'V', 4)}.`); }
+      else if (m === 'rails') { const r = railP();
+        out.push('A conducting bar slides on rails in a magnetic field pointing into the page, closed by a resistor.', `The field is ${n2(r.B, 2)} T, the rails are ${n2(S.rails.L, 0)} cm apart, and the bar has mass ${n2(S.rails.m, 0)} g.`,
+          `The resistance is ${fmtR(r.R)}.`, rd(`The bar is at ${n2(W.x * 100, 1)} cm, moving at ${n2(W.rv, 3)} m/s.`)); }
+      else if (m === 'self') { const p = S.self, tor = p.shape === 'tor';
+        out.push(tor ? `A toroid of ${p.N} turns, with inner radius ${n2(p.a, 1)} cm, outer radius ${n2(p.b, 1)} cm and height ${n2(p.h, 1)} cm, driven by a current source.`
+          : `A solenoid of ${p.N} turns, ${n2(p.l, 0)} cm long with radius ${n2(p.r, 1)} cm, driven by a current source.`, `The core has relative permeability ${MU_VALUES[p.mi]}.`,
+          `The waveform is ${WAVES.find((w) => w[0] === p.wave)[1]}, with a peak current of ${fmtSI(p.I0, 'A', 3)} and a ramp time of ${fmtSI(p.T, 's', 3)}.`);
+        if (!B) out.push(`The inductance is ${fmtSI(SV.sys.L, 'H', 4)}.`); }
+      else { const cc = S.coils;
+        out.push('Two coaxial coils: the primary is driven by an AC source, and the secondary is closed through a switch and a load resistor.', `The source is ${n2(cc.V0, 1)} V at ${n2(coilF(), 0)} Hz.`,
+          `The primary has ${cc.N1} turns and the secondary ${cc.N2} turns, with radius ${n2(cc.a2, 1)} cm.`, `The secondary is ${n2(cc.d, 1)} cm from the primary.`, `The load resistance is ${fmtR(R_VALUES[cc.Ri])}.`,
+          cc.closed ? 'The secondary switch is closed.' : 'The secondary switch is open.');
+        if (!B) out.push(`The mutual inductance is ${fmtSI(CS.sys.M, 'H', 4)}, and the coupling k = ${CS.sys.k.toFixed(3)}.`); }
+      out.push(running ? 'Running.' : W.t > 0 ? 'Paused.' : 'Not started.');
+      out.push({ t: m === 'coils' ? `Time ${n2(W.t * 1e3, 2)} ms.` : `Time ${fmtT(W.t)}.`, live: false });
+      if (m === 'coils') out.push(rd(`Flux through one secondary turn ${fmtSI(c.phi, 'Wb', 4)}.`), rd(`Secondary EMF ${fmtSI(c.emf, 'V', 4)}.`), rd(`Secondary current ${fmtSI(c.I, 'A', 4)}.`), rd(`Primary current ${fmtSI(c.I1, 'A', 4)}.`));
+      else if (m === 'self') out.push(rd(`Current ${fmtSI(c.I, 'A', 4)}.`), rd(`Back EMF ${fmtSI(c.emf, 'V', 4)}.`), rd(`Stored energy ${fmtSI(c.U, 'J', 4)}.`));
+      else out.push(rd(`Flux through one turn ${fmtSI(c.phi, 'Wb', 4)}.`), rd(`EMF ${fmtSI(c.emf, 'V', 4)}.`), rd(`Current ${fmtSI(c.I, 'A', 4)}.`));
+      return out;
+    });
+    VD.describe($('pCan'), () => {
+      if (!circ) return [];
+      const co = S.mode === 'coils', se = S.mode === 'self', tL = view.wl, tR = view.wl + view.Tw, tu = co ? 1e3 : 1, tn = co ? 'ms' : 's';
+      const keys = se ? [['I', 'current', 'A'], ['emf', 'back EMF', 'V'], ['U', 'stored energy', 'J']] : co ? [['phi', 'secondary flux', 'Wb'], ['emf', 'secondary EMF', 'V'], ['I1', 'primary current', 'A'], ['I', 'secondary current', 'A']]
+        : [['phi', 'flux', 'Wb'], ['emf', 'EMF', 'V'], ['I', 'current', 'A']];
+      const out = [`Plots of ${keys.map((k) => k[1]).join(', ')} against time, from ${n2(tL * tu, co ? 1 : 2)} ${tn} to ${n2(tR * tu, co ? 1 : 2)} ${tn}.`];
+      const idx = []; hist.t.forEach((t, i) => { if (t >= tL && t <= tR) idx.push(i); });
+      if (!idx.length) { out.push('No points are in the window yet.'); return out; }
+      for (const [k, name, unit] of keys) {
+        let bi = idx[0]; for (const i of idx) if (Math.abs(hist[k][i]) > Math.abs(hist[k][bi])) bi = i;
+        out.push({ t: `The largest ${name} in view is ${fmtSI(hist[k][bi], unit, 3)}, at ${n2(hist.t[bi] * tu, co ? 2 : 3)} ${tn}.`, live: false });
+      }
+      if (ghosts.length && !co && !se) out.push(`${ghosts.length} kept ${ghosts.length === 1 ? 'trace is' : 'traces are'} drawn in gray.`);
+      return out;
+    });
+  }
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => drawAll());
   requestAnimationFrame(loop);
 })();

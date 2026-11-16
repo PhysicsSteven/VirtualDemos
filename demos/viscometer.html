@@ -903,6 +903,35 @@ table.rows input:focus { border-color: var(--accent); }
   VD.setupCard($('tray'));   /* the card drags by its title (grip), wherever it floats over the picture */
   tokens(); new ResizeObserver(resize).observe($('scene')); sync(); reset(); renderRows(); resize();
   G3.want = new URLSearchParams(location.search).get('view') !== 'flat' && !!window.VD3 && !VD3.lowPower(); if (G3.want) setView('3d');
+  /* what the picture shows now, for a screen reader (VD.describe): the tube and the ball, or the pipe, with the readings a worksheet asks for */
+  if (window.VD && VD.describe) {
+    VD.describe(can, () => {
+      const out = [];
+      if (S.exp === 'pipe') {
+        const q = pNow();
+        out.push('A tank of liquid drains through a horizontal pipe with a valve, and the flow is collected in a graduated cylinder.', `The liquid is ${P.liq === 'mystery' ? 'a mystery liquid' : q.liq.name}, with density ${q.liq.rho} kg/m³.`,
+          `The pipe is ${(P.D * 1000).toFixed(1)} mm across.`, `The valve is open ${P.valve} %.`, `The pressure drop along the pipe is ${q.dPr.toFixed(1)} Pa.`);
+        out.push(P.coll.on ? 'The cylinder is collecting.' : q.Vr > 0 ? 'The cylinder has stopped collecting.' : 'The cylinder is empty.');
+        out.push({ t: `The cylinder holds ${q.Vr} mL after ${q.tr.toFixed(2)} s.`, live: false });
+        if (pHidden()) out.push(`${P.liq === 'mystery' && !S.blind ? 'The liquid is a mystery' : 'Blind is on'}: the flow rate, speed, Reynolds number and viscosity are hidden.`);
+        else out.push(`The flow rate is ${(q.Q * 1e6).toFixed(2)} mL/s, and the mean speed is ${(q.v * 100).toFixed(2)} cm/s.`, q.Q > 0 ? `The Reynolds number is ${q.Re.toFixed(0)}, so the flow is ${q.reg}.` : 'Nothing flows.', `The viscosity is ${(q.liq.eta * 1000).toFixed(3)} mPa·s.`);
+        out.push(P.rows.length ? `${P.rows.length} rows are captured.` : 'No rows are captured.');
+        return out;
+      }
+      const fl = FL(), vt = terminal(dm(), rhoB(), fl, S.D);
+      out.push('A tall glass tube of liquid with two timing marks 0.200 m apart, a ball above it, and a gate timer.', `The liquid is ${S.myst ? 'a mystery liquid' : fl.name}, with density ${fl.rho} kg/m³.`,
+        `The ball is ${BALLS[S.ball].name.toLowerCase()}, ${S.d.toFixed(1)} mm across, with density ${rhoB()} kg/m³.`, `The tube is ${S.D * 1000} mm wide.`);
+      out.push(up() ? 'The ball is lighter than the liquid, so it rises.' : 'The ball is denser than the liquid, so it sinks.');
+      out.push(S.run ? 'The ball is falling.' : S.done ? 'The ball has passed both marks.' : S.t > 0 ? 'The fall is paused.' : 'The ball is held at the top: press Drop the ball.');
+      out.push({ t: `The ball's speed is ${g3(Math.abs(S.s.v) * 1000)} mm/s.`, live: false });
+      out.push(S.done ? `The timer read ${S.gate.dt.toFixed(2)} s from mark A to mark B.` : 'The timer has no reading yet.');
+      if (hidden()) out.push(`${S.myst && !S.blind ? 'The liquid is a mystery' : 'Blind is on'}: the viscosity, terminal speed, Stokes prediction and Reynolds number are hidden.`);
+      else out.push(`The viscosity is ${fl.eta >= 0.1 ? f(fl.eta, 3) + ' Pa·s' : f(fl.eta * 1000, 2) + ' mPa·s'}.`, `The terminal speed is ${g3(Math.abs(vt) * 1000)} mm/s.`, `Stokes' law alone gives ${g3(Math.abs(stokesV(dm(), rhoB(), fl)) * 1000)} mm/s.`,
+        `The Reynolds number at terminal speed is ${g3(reynolds(fl.rho, vt, dm(), fl.eta))}.`);
+      out.push(S.rows.length ? `${S.rows.length} drops are recorded.` : 'No drops are recorded.');
+      return out;
+    });
+  }
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   requestAnimationFrame(frame);
 })();

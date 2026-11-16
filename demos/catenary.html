@@ -1373,6 +1373,22 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   for (const k of ['m', 'f', 'g']) ro.observe(panes[k]);
   /* How this works: a short video of one sample reading (made by tools/howto/) */
   VD.howTo({ src: 'media/how-this-works/catenary.mp4', poster: 'media/how-this-works/catenary.jpg' });
+  /* what the picture shows now, for a screen reader (VD.describe): the supports, the chain, the sag and the forces */
+  if (window.VD && VD.describe) VD.describe(cans.m, () => {
+    const isArch = arch(), w = S.lam * G, word = isArch ? 'compression' : 'tension', pos = (p) => `${fm(p[0])} across, ${fm(disp(p[1]))} up`;
+    const out = [isArch ? 'An arch: a hanging chain turned upside down, so every block pushes on its neighbors.' : 'A chain hanging from two supports.',
+      `Support A is ${pos(S.A)}.`, `Support B is ${pos(S.B)}.`,
+      `Chain length ${fm(S.S)}, ${sig(S.lam, 3)} kg/m.`];
+    if (K.taut) { out.push('The chain is taut and straight, so no finite force can hold it.'); return out; }
+    const lo = lowest(K), sg = sagOf(K), TA = w * Math.hypot(K.a, K.sA), TB = w * Math.hypot(K.a, K.sB);
+    out.push(`Sag ${fm(sg.d)}, catenary constant a = ${fm(K.a)}.`);
+    out.push(lo.inside ? `The ${isArch ? 'top' : 'lowest point'} is ${fm(lo.x)} across, ${fm(disp(lo.y))} up.` : `The lowest point is at support ${lo.x === K.xa ? 'A' : 'B'}.`);
+    out.push(`Horizontal force H = ${fN(w * K.a)}, the same everywhere.`);
+    out.push(Math.abs(TA - TB) < 1e-9 * TA ? `Largest ${word} ${fN(TA)}, at both supports.` : `Largest ${word} ${fN(Math.max(TA, TB))}, at support ${TA > TB ? 'A' : 'B'}.`);
+    if (S.layers.par && !isArch) { const mg = maxGap(K, parabolaFor(K)); out.push(`A dashed parabola with the same supports and lowest point is drawn; the largest gap is ${fLen(mg.gap)}.`); }
+    if (isArch && S.layers.gw) out.push('The Gateway Arch curve is drawn over the arch.');
+    return out;
+  });
   applyPreset('hang');
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => drawNow());
 })();

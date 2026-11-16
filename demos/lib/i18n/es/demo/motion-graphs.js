@@ -2,6 +2,12 @@
 VDI18N.add('es', 'demo/motion-graphs', {
 "resid.":
   "resid.",
+"Describe the picture":
+  "Describir la imagen",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "Motion Graphs":
   "Gráficas de movimiento",
 "<a>Kinematics</a>":
@@ -14,6 +20,26 @@ VDI18N.add('es', 'demo/motion-graphs', {
   "x en m · v en m/s · a en m/s² · t en s",
 "A cart on a track above graphs of position, velocity and acceleration against time. Drag on a graph, or press the left and right arrow keys, to move the time marker. Space plays or pauses, R starts over. In Walk the graph, drag the cart or hold the left and right arrow keys during a run to move it.":
   "Un carrito en un riel sobre gráficas de posición, velocidad y aceleración en función del tiempo. Arrastra sobre una gráfica, o pulsa las flechas izquierda y derecha, para mover el marcador de tiempo. Espacio inicia o pausa, R empieza de nuevo. En Recorre la gráfica, arrastra el carrito o mantén pulsadas las flechas izquierda y derecha durante una corrida para moverlo.",
+"A cart on a track, with graphs of position, velocity and acceleration against time.":
+  "Un carrito sobre una pista, con gráficas de posición, velocidad y aceleración en función del tiempo.",
+"The cart starts at −{#} m.":
+  "El carrito empieza en −{#} m.",
+"It starts at {#} m/s.":
+  "Empieza con {#} m/s.",
+"Stage {#}: acceleration {#} m/s² for {#} s.":
+  "Etapa {#}: aceleración {#} m/s² durante {#} s.",
+"At the start.":
+  "En el inicio.",
+"Time {#} s.":
+  "Tiempo {#} s.",
+"Position x −{#} m.":
+  "Posición x −{#} m.",
+"Velocity {#} m/s.":
+  "Velocidad {#} m/s.",
+"Acceleration {#} m/s².":
+  "Aceleración {#} m/s².",
+"Distance traveled {#} m.":
+  "Distancia recorrida {#} m.",
 "Time controls":
   "Controles de tiempo",
 "Run for a moment and pause again":
@@ -184,6 +210,14 @@ VDI18N.add('es', 'demo/motion-graphs', {
   "{#}, y (v<sub>B</sub>/v<sub>A</sub>)² = {#}",
 "Brakes on, stopped":
   "Frenos aplicados, detenido",
+"Two cars side by side on a road, with graphs of position, velocity and acceleration against time.":
+  "Dos autos lado a lado en un camino, con gráficas de posición, velocidad y aceleración en función del tiempo.",
+"Car A goes {#} m/s and car B {#} m/s. Each keeps its speed for a {#} s reaction time, then brakes at {#} m/s².":
+  "El auto A va a {#} m/s y el auto B a {#} m/s. Cada uno mantiene su rapidez durante un tiempo de reacción de {#} s y luego frena a {#} m/s².",
+"Position x {#} m.":
+  "Posición x {#} m.",
+"Car B is at {#} m, {#} m from car A.":
+  "El auto B está en {#} m, a {#} m del auto A.",
 "The ball rolls down piece {#}, coasts along the flat, and climbs the steep piece {#} until it stops and comes back. Each piece gives a straight v–t line: its slope is the acceleration along that piece, steeper for a steeper ramp, zero on the flat. With no friction losses the ball comes back to its start height with no speed left and goes again.":
   "La esfera rueda por el tramo {#}, sigue por el tramo plano y sube el tramo empinado {#} hasta detenerse y regresar. Cada tramo da una recta v–t: su pendiente es la aceleración a lo largo de ese tramo, más empinada para una rampa más empinada, cero en el tramo plano. Sin pérdidas por fricción la esfera regresa a su altura inicial sin rapidez y vuelve a empezar.",
 "On the track":
@@ -204,6 +238,22 @@ VDI18N.add('es', 'demo/motion-graphs', {
   "Dibuja en la gráfica v–t. a–t muestra su pendiente, x–t su área sumada a x₀.",
 "Draw on the a–t graph. v–t shows v₀ plus the area under a; x–t, x₀ plus the area under v.":
   "Dibuja en la gráfica a–t. v–t muestra v₀ más el área bajo a; x–t, x₀ más el área bajo v.",
+"A cart on a track, with graphs of position, velocity and acceleration against time, one of which you draw.":
+  "Un carrito sobre una pista, con gráficas de posición, velocidad y aceleración en función del tiempo, una de las cuales tú dibujas.",
+"You draw the acceleration graph; the velocity and position graphs follow from it.":
+  "Tú dibujas la gráfica de aceleración; las gráficas de velocidad y posición se obtienen de ella.",
+"Playing.":
+  "Reproduciendo.",
+"Paused.":
+  "En pausa.",
+"Two cars on a track, with graphs of position, velocity and acceleration against time.":
+  "Dos autos en una pista, con gráficas de posición, velocidad y aceleración en función del tiempo.",
+"Car B starts at −{#} m with velocity {#} m/s and acceleration {#} m/s².":
+  "El auto B empieza en −{#} m con velocidad {#} m/s y aceleración {#} m/s².",
+"Car B is at −{#} m, {#} m from car A.":
+  "El auto B está en −{#} m, a {#} m del auto A.",
+"The cars are side by side at {#} s.":
+  "Los autos están lado a lado en {#} s.",
 "Close":
   "Cerrar"
 });

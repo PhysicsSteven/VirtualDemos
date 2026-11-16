@@ -1,5 +1,7 @@
 /* demo/catenary in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/catenary', {
+"Describe the picture":
+  "Describir la imagen",
 "S = {#} m span {#} m sag {#} m":
   "S = {#} m claro {#} m flecha {#} m",
 "FREE BODY DIAGRAM OF THE CHOSEN PIECE":
@@ -18,6 +20,10 @@ VDI18N.add('es', 'demo/catenary', {
   "H, componente horizontal",
 "both → ∞ as d → {#}":
   "ambas → ∞ cuando d → {#}",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "Hanging Chains and Arches":
   "Cadenas colgantes y arcos",
 "<a>Static equilibrium and elasticity</a>":
@@ -196,10 +202,34 @@ VDI18N.add('es', 'demo/catenary', {
   "COMPRESIÓN MÁXIMA CONTRA FLECHA",
 "largest compression":
   "compresión máxima",
+"An arch: a hanging chain turned upside down, so every block pushes on its neighbors.":
+  "Un arco: una cadena colgante invertida, de modo que cada bloque empuja a sus vecinos.",
+"Support A is −{#} m across, {#} m up.":
+  "El soporte A está a −{#} m en horizontal y {#} m en vertical.",
+"Support B is {#} m across, {#} m up.":
+  "El soporte B está a {#} m en horizontal y {#} m en vertical.",
+"Chain length {#} m, {#} kg/m.":
+  "Longitud de la cadena {#} m, {#} kg/m.",
+"Sag {#} m, catenary constant a = {#} m.":
+  "Flecha {#} m, constante de la catenaria a = {#} m.",
+"The top is {#} m across, {#} m up.":
+  "La cima está a {#} m en horizontal y {#} m en vertical.",
+"Horizontal force H = {#} N, the same everywhere.":
+  "Fuerza horizontal H = {#} N, la misma en todas partes.",
+"Largest compression {#} N, at both supports.":
+  "Compresión máxima {#} N, en ambos soportes.",
+"The Gateway Arch curve is drawn over the arch.":
+  "La curva del Gateway Arch está dibujada sobre el arco.",
 "Drag the grip up or the marker on the graph to the left. As the sag goes to zero, the tension grows like λgΔx²/(8d) and never stops growing. No chain, however strong, can hang perfectly straight.":
   "Arrastra el agarre hacia arriba o el marcador de la gráfica hacia la izquierda. Cuando la flecha tiende a cero, la tensión crece como λgΔx²/(8d) y nunca deja de crecer. Ninguna cadena, por fuerte que sea, puede colgar perfectamente recta.",
 "S = {#} m sag {#} m":
   "S = {#} m flecha {#} m",
+"A chain hanging from two supports.":
+  "Una cadena colgando de dos soportes.",
+"The lowest point is {#} m across, −{#} m up.":
+  "El punto más bajo está a {#} m en horizontal y −{#} m en vertical.",
+"Largest tension {#} N, at both supports.":
+  "Tensión máxima {#} N, en ambos soportes.",
 "Close":
   "Cerrar"
 });

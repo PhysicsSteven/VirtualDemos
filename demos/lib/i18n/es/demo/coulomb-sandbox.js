@@ -1,7 +1,13 @@
 /* demo/coulomb-sandbox in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/coulomb-sandbox', {
+"Describe the picture":
+  "Describir la imagen",
 "s (cm) along y = {#} cm":
   "s (cm) a lo largo de y = {#} cm",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "Coulomb Sandbox":
   "Arenero de Coulomb",
 "<a>Charge and electric fields</a>":
@@ -14,6 +20,24 @@ VDI18N.add('es', 'demo/coulomb-sandbox', {
   "{#} cuadro de la cuadrícula = {#} cm · q en nC · k = {#}×{#}⁹ N·m²/C²",
 "Field map on a {#} cm grid with {#} point charges: +{#} nC at (−{#}, {#}) cm; −{#} nC at ({#}, {#}) cm.":
   "Mapa del campo en una cuadrícula de {#} cm con {#} cargas puntuales: +{#} nC en (−{#}, {#}) cm; −{#} nC en ({#}, {#}) cm.",
+"A map of charges in a plane on a {#} cm grid.":
+  "Un mapa de cargas en un plano, sobre una cuadrícula de {#} cm.",
+"A charge of +{#} nC at (−{#}, {#}) cm.":
+  "Una carga de +{#} nC en (−{#}, {#}) cm.",
+"A charge of −{#} nC at ({#}, {#}) cm.":
+  "Una carga de −{#} nC en ({#}, {#}) cm.",
+"The probe is at ({#}, {#}) cm.":
+  "La sonda está en ({#}, {#}) cm.",
+"Potential V = {#} V.":
+  "Potencial V = {#} V.",
+"Field |E| = {#} kV/m.":
+  "Campo |E| = {#} kV/m.",
+"The field points {#}° from +x.":
+  "El campo apunta a {#}° desde +x.",
+"Potential energy of the charges −{#} μJ.":
+  "Energía potencial de las cargas −{#} μJ.",
+"Equipotential lines are drawn every {#} V.":
+  "Las líneas equipotenciales se dibujan cada {#} V.",
 "2D map":
   "Mapa 2D",
 "3D landscape":
@@ -166,6 +190,8 @@ VDI18N.add('es', 'demo/coulomb-sandbox', {
   "Dir de E °",
 "Potential landscape in 3D. Drag to orbit, scroll to zoom, drag a sphere to move its charge.":
   "Paisaje del potencial en 3D. Arrastra para orbitar, usa la rueda para hacer zoom, arrastra una esfera para mover su carga.",
+"A 3D landscape of the potential: the height is V.":
+  "Un paisaje 3D del potencial: la altura es V.",
 "Drag to orbit · Scroll or pinch to zoom · Drag a sphere to move it · Drag its knob up or down to change its charge · Double click to reset · Keys A D W S Z X, {#} to reset":
   "Arrastra para orbitar · Rueda o pellizco para zoom · Arrastra una esfera para moverla · Arrastra su perilla hacia arriba o abajo para cambiar su carga · Doble clic para restablecer · Teclas A D W S Z X, {#} para restablecer",
 "Potential landscape in 3D, height is V, with {#} point charges: +{#} nC at (−{#}, {#}) cm; −{#} nC at ({#}, {#}) cm. Drag to orbit, scroll to zoom, drag a sphere to move its charge.":
@@ -176,6 +202,12 @@ VDI18N.add('es', 'demo/coulomb-sandbox', {
   "Paisaje del potencial en 3D, la altura es V, con {#} cargas puntuales: +{#} nC en (−{#}, {#}) cm; +{#} nC en ({#}, {#}) cm. Arrastra para orbitar, usa la rueda para hacer zoom, arrastra una esfera para mover su carga.",
 "At the probe, s = {#} cm: Eₛ = {#} V/m −ΔV/Δs = {#} V/m (Δs = {#} cm)":
   "En la sonda, s = {#} cm: Eₛ = {#} V/m −ΔV/Δs = {#} V/m (Δs = {#} cm)",
+"A charge of +{#} nC at ({#}, {#}) cm.":
+  "Una carga de +{#} nC en ({#}, {#}) cm.",
+"A charge of −{#} nC at ({#}, −{#}) cm.":
+  "Una carga de −{#} nC en ({#}, −{#}) cm.",
+"Field |E| = {#} V/m.":
+  "Campo |E| = {#} V/m.",
 "Field map on a {#} cm grid with {#} point charges: +{#} nC at (−{#}, {#}) cm; +{#} nC at ({#}, {#}) cm; −{#} nC at ({#}, −{#}) cm.":
   "Mapa del campo en una cuadrícula de {#} cm con {#} cargas puntuales: +{#} nC en (−{#}, {#}) cm; +{#} nC en ({#}, {#}) cm; −{#} nC en ({#}, −{#}) cm.",
 "Potential landscape in 3D, height is V, with {#} point charges: +{#} nC at (−{#}, {#}) cm; +{#} nC at ({#}, {#}) cm; −{#} nC at ({#}, −{#}) cm. Drag to orbit, scroll to zoom, drag a sphere to move its charge.":
@@ -200,6 +232,10 @@ VDI18N.add('es', 'demo/coulomb-sandbox', {
   "Carga puntual, kQ/r²<small>r desde el centro; el límite lejos</small>",
 "point charges only":
   "solo cargas puntuales",
+"A ring of +{#} nC, radius {#} cm, standing perpendicular to the map, centered at ({#}, {#}) cm, axis {#}° from +x.":
+  "Un anillo de +{#} nC, de radio {#} cm, perpendicular al mapa, centrado en ({#}, {#}) cm, con su eje a {#}° desde +x.",
+"The potential energy is shown for point charges only.":
+  "La energía potencial se muestra solo para cargas puntuales.",
 "Field map on a {#} cm grid with a ring of +{#} nC, radius {#} cm, standing perpendicular to the map, centered at ({#}, {#}) cm, axis {#}° from +x.":
   "Mapa del campo en una cuadrícula de {#} cm con un anillo de +{#} nC, radio {#} cm, perpendicular al mapa, centrado en ({#}, {#}) cm, eje a {#}° desde +x.",
 "Potential landscape in 3D, height is V, with a ring of +{#} nC, radius {#} cm, standing perpendicular to the map, centered at ({#}, {#}) cm, axis {#}° from +x. Drag to orbit, scroll to zoom, drag a sphere to move its charge.":
@@ -232,6 +268,8 @@ VDI18N.add('es', 'demo/coulomb-sandbox', {
   "Solo este arco (exacto)",
 "Arc at its center, 2kλ sin(θ/{#})/R<small>exact at the center only (θ the arc angle)</small>":
   "Arco en su centro, 2kλ sen(θ/{#})/R<small>exacto solo en el centro (θ es el ángulo del arco)</small>",
+"An arc of +{#} nC, radius {#} cm, spanning {#}°, lying in the map, centered at ({#}, {#}) cm, its middle {#}° from +x.":
+  "Un arco de +{#} nC, de radio {#} cm, que abarca {#}°, contenido en el mapa, centrado en ({#}, {#}) cm, con su punto medio a {#}° desde +x.",
 "s (cm) along x = {#} cm":
   "s (cm) a lo largo de x = {#} cm",
 "s (cm) along Arc axis":

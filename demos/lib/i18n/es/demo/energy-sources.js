@@ -30,6 +30,12 @@ VDI18N.add('es', 'demo/energy-sources', {
   "Agua que cae {#} m (hidroeléctrica)",
 "Air at {#} m/s through a wind turbine":
   "Aire a {#} m/s a través de una turbina eólica",
+"Describe the picture":
+  "Describir la imagen",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "Sources of Energy":
   "Fuentes de energía",
 "<a>Work and energy</a>":
@@ -40,6 +46,42 @@ VDI18N.add('es', 'demo/energy-sources', {
   "¿Cuánto combustible, agua, viento o luz solar se necesita para suministrar una cantidad dada de energía? La energía por kilogramo abarca ocho potencias de diez, de una batería al uranio, por eso la elección de la fuente determina todo lo demás.",
 "A logarithmic bar chart of the mass of each energy source needed to deliver the chosen amount of energy, from uranium to a battery, with water and air for hydro and wind.":
   "Una gráfica de barras logarítmica de la masa de cada fuente de energía necesaria para entregar la cantidad de energía elegida, del uranio a una batería, con agua y aire para la hidroeléctrica y la eólica.",
+"A bar chart on a logarithmic scale: the mass of each source needed to deliver {#} kWh.":
+  "Una gráfica de barras en escala logarítmica: la masa de cada fuente necesaria para entregar {#} kWh.",
+"The energy is delivered as electricity, and a heat engine is {#}% efficient.":
+  "La energía se entrega como electricidad, y una máquina térmica tiene una eficiencia de {#}%.",
+"Dam height {#} m, wind speed {#} m/s, sunlight {#} W/m².":
+  "Altura de la presa {#} m, rapidez del viento {#} m/s, luz solar {#} W/m².",
+"The sources are listed from the smallest mass to the largest.":
+  "Las fuentes se enumeran de la menor masa a la mayor.",
+"The smallest mass is Uranium {#} (fissioned): {#} mg.":
+  "La menor masa es Uranio {#} (fisionado): {#} mg.",
+"The largest mass is Air at {#} m/s through a wind turbine: {#} tonnes.":
+  "La mayor masa es Aire a {#} m/s a través de una turbina eólica: {#} toneladas.",
+"Uranium {#} (fissioned): {#} mg":
+  "Uranio {#} (fisionado): {#} mg",
+"Natural gas: {#} kg":
+  "Gas natural: {#} kg",
+"Gasoline: {#} kg":
+  "Gasolina: {#} kg",
+"Food fat: {#} kg":
+  "Grasa de comida: {#} kg",
+"Coal: {#} kg":
+  "Carbón: {#} kg",
+"Dry wood: {#} kg":
+  "Madera seca: {#} kg",
+"Sugar: {#} kg":
+  "Azúcar: {#} kg",
+"TNT: {#} kg":
+  "TNT: {#} kg",
+"Lithium ion battery: {#} kg":
+  "Batería de iones de litio: {#} kg",
+"Water falling {#} m (hydro): {#} tonnes":
+  "Agua que cae {#} m (hidroeléctrica): {#} toneladas",
+"Air at {#} m/s through a wind turbine: {#} tonnes":
+  "Aire a {#} m/s a través de una turbina eólica: {#} toneladas",
+"Solar panel area to collect it in one day at {#} W/m², {#} m².":
+  "Área de panel solar para captarla en un día a {#} W/m²: {#} m².",
 "Energy needed":
   "Energía necesaria",
 "Charge a phone, about {#} Wh":
@@ -84,22 +126,12 @@ VDI18N.add('es', 'demo/energy-sources', {
   "Masa necesaria para entregar {#} Wh de electricidad (centrales al {#}%)",
 "{#} × {#}⁵ tonnes":
   "{#} × {#}⁵ toneladas",
-"Mass for {#} kWh of electricity":
-  "Masa para {#} kWh de electricidad",
+"The smallest mass is Uranium {#} (fissioned): {#} g.":
+  "La menor masa es Uranio {#} (fisionado): {#} g.",
+"The largest mass is Air at {#} m/s through a wind turbine: {#} × {#}⁵ tonnes.":
+  "La mayor masa es Aire a {#} m/s a través de una turbina eólica: {#} × {#}⁵ toneladas.",
 "Uranium {#} (fissioned): {#} g":
   "Uranio {#} (fisionado): {#} g",
-"Natural gas: {#} kg":
-  "Gas natural: {#} kg",
-"Gasoline: {#} kg":
-  "Gasolina: {#} kg",
-"Food fat: {#} kg":
-  "Grasa de comida: {#} kg",
-"Coal: {#} kg":
-  "Carbón: {#} kg",
-"Dry wood: {#} kg":
-  "Madera seca: {#} kg",
-"Sugar: {#} kg":
-  "Azúcar: {#} kg",
 "TNT: {#} tonnes":
   "TNT: {#} toneladas",
 "Lithium ion battery: {#} tonnes":
@@ -108,6 +140,8 @@ VDI18N.add('es', 'demo/energy-sources', {
   "Agua que cae {#} m (hidroeléctrica): {#} × {#}⁴ toneladas",
 "Air at {#} m/s through a wind turbine: {#} × {#}⁵ tonnes":
   "Aire a {#} m/s a través de una turbina eólica: {#} × {#}⁵ toneladas",
+"Mass for {#} kWh of electricity":
+  "Masa para {#} kWh de electricidad",
 "Mass for {#} Wh of electricity":
   "Masa para {#} Wh de electricidad",
 "Uranium {#} (fissioned): {#} × {#}⁻³ mg":
@@ -132,16 +166,12 @@ VDI18N.add('es', 'demo/energy-sources', {
   "Agua que cae {#} m (hidroeléctrica): {#} kg",
 "Air at {#} m/s through a wind turbine: {#} kg":
   "Aire a {#} m/s a través de una turbina eólica: {#} kg",
-"Uranium {#} (fissioned): {#} mg":
-  "Uranio {#} (fisionado): {#} mg",
-"TNT: {#} kg":
-  "TNT: {#} kg",
-"Lithium ion battery: {#} kg":
-  "Batería de iones de litio: {#} kg",
-"Air at {#} m/s through a wind turbine: {#} tonnes":
-  "Aire a {#} m/s a través de una turbina eólica: {#} toneladas",
-"Water falling {#} m (hydro): {#} tonnes":
-  "Agua que cae {#} m (hidroeléctrica): {#} toneladas",
+"A bar chart on a logarithmic scale: the mass of each source needed to deliver {#} Wh.":
+  "Una gráfica de barras en escala logarítmica: la masa de cada fuente necesaria para entregar {#} Wh.",
+"The smallest mass is Uranium {#} (fissioned): {#} × {#}⁻³ mg.":
+  "La menor masa es Uranio {#} (fisionado): {#} × {#}⁻³ mg.",
+"The largest mass is Air at {#} m/s through a wind turbine: {#} kg.":
+  "La mayor masa es Aire a {#} m/s a través de una turbina eólica: {#} kg.",
 "{#} × {#}⁶ tonnes":
   "{#} × {#}⁶ toneladas",
 "Close":

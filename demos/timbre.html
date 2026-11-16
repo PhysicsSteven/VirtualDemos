@@ -2019,6 +2019,28 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   requestAnimationFrame(loop);
   /* How this works: a short video of one sample reading (made by tools/howto/) */
   VD.howTo({ src: 'media/how-this-works/timbre.mp4', poster: 'media/how-this-works/timbre.jpg' });
+  /* what the picture shows now, for a screen reader (VD.describe): the fundamental, the harmonics that sound, and the repetition and pitch */
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    const f = f1(), I = D.info, out = [], ns = D.ns, SETUP = { packet: 'A wave packet: harmonics with Gaussian amplitudes, plotted against position.', vowel: 'A voice: harmonics shaped by the three formants of a vowel.' };
+    out.push(SETUP[presetId] || 'A harmonic synthesizer: a ladder of harmonics with their amplitudes and phases, a spectrum, and the waveform they add up to.');
+    out.push(`The fundamental is ${f.toFixed(2)} Hz, ${noteTxt(f)}.`);
+    if (!ns.length) out.push('Every harmonic is silent.');
+    else {
+      let top = ns[0]; for (const n of ns) if (D.a[n] > D.a[top]) top = n;
+      out.push(`${ns.length} of the ${NH} harmonics have an amplitude above zero, from harmonic ${ns[0]} to harmonic ${ns[ns.length - 1]}.`, `The strongest is harmonic ${top}, with amplitude ${D.a[top].toFixed(2)}.`);
+      if (ns.length <= 8) out.push(`The harmonics present are ${ns.join(', ')}.`);
+    }
+    if (S.mute1) out.push('Harmonic 1 is removed.');
+    if (S.mute2) out.push('Harmonic 2 is removed.');
+    if (S.B) out.push(`The harmonics are stretched by an inharmonicity of ${S.B.toFixed(4)}.`);
+    if (S.df) out.push(`Harmonic ${S.detN} is detuned by ${S.df > 0 ? '+' : '−'}${Math.abs(S.df).toFixed(1)} Hz.`);
+    out.push(I.kind === 'silent' ? 'There is no sound.' : I.kind === 'periodic' ? `The waveform repeats every ${fmtMs(I.T)}, so the pitch is ${fmtHz(I.f)}, ${noteTxt(I.f)}.` : I.kind === 'drift' ? 'The waveform never repeats exactly, and its shape drifts.' : 'The waveform never repeats exactly, and the pitch is unclear.');
+    if (I.kind !== 'silent') out.push(`The root mean square amplitude is ${D.rms.toFixed(3)}.`);
+    if (presetId === 'vowel') out.push(`The formants are at ${S.vw.F[0]} Hz, ${S.vw.F[1]} Hz and ${S.vw.F[2]} Hz.`);
+    if (presetId === 'packet') { const pw = packetWidths(D.a, S.ph, TAU * f / V_SOUND); if (pw) out.push(`The packet has Δx ${pw.dx < 0.1 ? (pw.dx * 100).toFixed(2) + ' cm' : pw.dx.toFixed(3) + ' m'} and Δk ${pw.dk.toFixed(2)} rad/m, a product of ${pw.product.toFixed(3)}.`); }
+    out.push(running ? 'The ladder is running.' : 'The ladder is paused.');
+    return out;
+  });
 })();
 </script>
 <script>/* the shared control panel (demos/lib/vdpanel.js): the time controls in one group at the left of the strip */

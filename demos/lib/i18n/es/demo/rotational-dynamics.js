@@ -4,18 +4,40 @@ VDI18N.add('es', 'demo/rotational-dynamics', {
   "caída de {#} m",
 "timer: {#} s":
   "cronómetro: {#} s",
+"Describe the picture":
+  "Describir la imagen",
 "Rotational Dynamics":
   "Dinámica de rotación",
-"<a>Rotation and angular momentum</a>":
-  "<a>Rotación y momento angular</a>",
-"<a><span>←</span> <span>Rotation and Torque</span></a><a><span>Pendulums</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Rotación y torca</span></a><a><span>Péndulos</span> <span>→</span></a>",
 "A hanging mass unwinds a string from a spool and spins a turntable. The string's torque gives the table an angular acceleration α = τ/I. Time the fall, work out α, and measure the moment of inertia of what you put on the table.":
   "Una masa colgante desenrolla una cuerda de un carrete y hace girar una plataforma giratoria. La torca de la cuerda le da a la plataforma una aceleración angular α = τ/I. Mide el tiempo de la caída, calcula α y mide el momento de inercia de lo que pongas sobre la plataforma.",
 "drop {#} m · g = {#} m/s²":
   "caída {#} m · g = {#} m/s²",
 "A turntable with whatever sits on it and the hanging mass falling as the string unwinds from the spool: in the flat view the table from above and the mass from the side, in the 3D view a lab bench with light gates {#} m apart, a timer and a screen drawing ω against time. Space releases, R winds the string back up, the up arrow hangs a {#} g mass and the down arrow takes off the last mass.":
   "Una plataforma giratoria con lo que tenga encima y la masa colgante que cae mientras la cuerda se desenrolla del carrete: en la vista plana, la plataforma desde arriba y la masa de lado; en la vista 3D, una mesa de laboratorio con fotocompuertas separadas {#} m, un cronómetro y una pantalla que dibuja ω en función del tiempo. Espacio suelta, R vuelve a enrollar la cuerda, la flecha arriba cuelga una masa de {#} g y la flecha abajo quita la última masa.",
+"A turntable that spins as a hanging mass falls and unwinds a string from its spool.":
+  "Una plataforma giratoria que gira mientras una masa colgante cae y desenrolla una cuerda de su carrete.",
+"The turntable is empty.":
+  "La plataforma giratoria está vacía.",
+"The hanging mass is {#} g, and the spool radius is {#} cm.":
+  "La masa colgante es de {#} g, y el radio del carrete es de {#} cm.",
+"Bearing friction is off.":
+  "La fricción del cojinete está apagada.",
+"The mass falls {#} m between the two light gates.":
+  "La masa cae {#} m entre las dos compuertas de luz.",
+"The mass is held at the top: press Release.":
+  "La masa está sujeta arriba: presiona Soltar.",
+"Timer {#} s.":
+  "Cronómetro {#} s.",
+"The moment of inertia of the table and load is {#} × {#}⁻³ kg·m².":
+  "El momento de inercia de la plataforma y la carga es de {#} × {#}⁻³ kg·m².",
+"The mass accelerates at {#} m/s², and the table at {#} rad/s².":
+  "La masa acelera a {#} m/s², y la plataforma a {#} rad/s².",
+"The string tension is {#} N.":
+  "La tensión de la cuerda es de {#} N.",
+"The turntable's angular speed is {#} rad/s.":
+  "La rapidez angular de la plataforma giratoria es de {#} rad/s.",
+"No drops are recorded.":
+  "No hay caídas registradas.",
 "Time controls":
   "Controles de tiempo",
 "Wind it back up":
@@ -88,6 +110,12 @@ VDI18N.add('es', 'demo/rotational-dynamics', {
   "Aún no hay lecturas. Suelta, deja que caiga, captura.",
 "String torque against angular acceleration for the captured rows, with a least squares line and residuals.":
   "Torca de la cuerda en función de la aceleración angular para las filas capturadas, con una recta de mínimos cuadrados y residuos.",
+"A plot of string torque against angular acceleration for the recorded drops, with a least squares line and its residuals.":
+  "Una gráfica del par de la cuerda contra la aceleración angular de las caídas registradas, con una recta de mínimos cuadrados y sus residuos.",
+"No points are plotted yet.":
+  "Todavía no hay puntos graficados.",
+"A fit needs at least two drops with this load.":
+  "Un ajuste necesita al menos dos caídas con esta carga.",
 "Record at least two drops (different m or r) with this load: none.":
   "Registra al menos dos caídas (con m o r distintos) con esta carga: ninguna.",
 "Record reading stores m, r, what is on the table and the timer reading for the {#} m drop ({#} s). From each row: a = 2h/t², α = a/r, and the string's torque τ = m(g − a)r. Plotting τ against α for one load gives a line: slope I, intercept the friction torque.":
@@ -98,6 +126,10 @@ VDI18N.add('es', 'demo/rotational-dynamics', {
   "A ciegas oculta los momentos de inercia, el movimiento predicho, las energías y la I del ajuste, y deja el cronómetro, las masas y los ajustes. El objeto misterioso siempre oculta su I.",
 "Model: a rigid turntable on its axle, a massless string that does not slip on the spool, a massless frictionless pulley, and, when switched on, a constant friction torque at the bearing. Turntable I₀ = {#} × {#}⁻³ kg·m². Disk {#} kg, radius {#} cm; ring {#} kg, radii {#} and {#} cm; two {#} kg masses (small cylinders, {#} cm radius).":
   "Modelo: una plataforma giratoria rígida en su eje, una cuerda sin masa que no se desliza en el carrete, una polea sin masa ni fricción y, al activarla, una torca de fricción constante en el cojinete. Plataforma I₀ = {#} × {#}⁻³ kg·m². Disco de {#} kg, radio {#} cm; anillo de {#} kg, radios {#} y {#} cm; dos masas de {#} kg (cilindros pequeños, radio {#} cm).",
+"<a>Rotation and angular momentum</a>":
+  "<a>Rotación y momento angular</a>",
+"<a><span>←</span> <span>Rotation and Torque</span></a><a><span>Pendulums</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Rotación y torca</span></a><a><span>Péndulos</span> <span>→</span></a>",
 "TIMER":
   "CRONÓMETRO",
 "start gate to stop gate":
@@ -112,6 +144,12 @@ VDI18N.add('es', 'demo/rotational-dynamics', {
   "compuerta de parada",
 "spool r = {#} cm":
   "carrete r = {#} cm",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
+"The mass is falling.":
+  "La masa está cayendo.",
 "A solid disk, {#} kg and {#} cm in radius: I = ½MR².":
   "Un disco sólido de {#} kg y {#} cm de radio: I = ½MR².",
 "Record at least two drops (different m or r) with this load: disk.":
@@ -134,6 +172,10 @@ VDI18N.add('es', 'demo/rotational-dynamics', {
   "Registra al menos dos caídas (con m o r distintos) con esta carga: misterio.",
 "Release and let the mass fall the full {#} m first.":
   "Suelta primero y deja que la masa caiga los {#} m completos.",
+"A mystery object sits on the turntable.":
+  "Un objeto misterioso está sobre la plataforma giratoria.",
+"The load is a mystery: the moment of inertia, the accelerations, the tension and the energy are hidden.":
+  "La carga es un misterio: el momento de inercia, las aceleraciones, la tensión y la energía están ocultos.",
 "Hang another {#} g mass or take off the last mass":
   "Cuelga otra masa de {#} g o quita la última masa",
 "hanger {#} g + {#} g + {#} g = {#} g":

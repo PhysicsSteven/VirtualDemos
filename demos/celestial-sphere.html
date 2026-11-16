@@ -936,7 +936,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
 
   /* ---------- 3D (vd3kit) ---------- */
-  let G3 = null, G3on = false;
+  let G3 = null, G3on = false, outWords = null;   /* outWords: what the outside view shows, in words (the 3D canvas is described with it too) */
   function init3d() {
     const S3 = VD3K.stage($('paneOut'), { before: outLbl, fov: 32, near: 0.05, far: 50, sky: '#05070d' }); if (!S3) return false;
     const T3 = THREE, world = new T3.Group(); S3.scene.add(world);
@@ -994,7 +994,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     g.S.render();
   }
   const view3 = VD3K.view({ seg: '#dimSeg', start: 'flat', init: init3d, status: (m) => { $('outNote').textContent = m; },
-    change: (on) => { G3on = on; outFlat.style.visibility = on ? 'hidden' : 'visible'; outFlat.style.pointerEvents = on ? 'none' : 'auto'; if (G3) G3.S.el.style.display = on ? 'block' : 'none'; dirty = true; } });
+    change: (on) => { G3on = on; outFlat.style.visibility = on ? 'hidden' : 'visible'; outFlat.style.pointerEvents = on ? 'none' : 'auto'; if (G3) { G3.S.el.style.display = on ? 'block' : 'none'; if (on && outWords && window.VD && VD.describe) VD.describe(G3.S.el, outWords); } dirty = true; } });
 
   /* the flat outside view turns the same camera */
   VD3.orbit(outFlat, O, () => { dirty = true; }, { phMin: 0.05, phMax: Math.PI - 0.05, zMin: 0.6, zMax: 3.2 });
@@ -1502,6 +1502,53 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   VD.projector({ onChange: resize });
   tokens(); new ResizeObserver(resize).observe($('paneOut')); new ResizeObserver(resize).observe($('paneSky')); new ResizeObserver(resize).observe($('outNote'));
   notes(); applyPreset('tonight'); resize();
+  /* what each picture shows now, for a screen reader (VD.describe): where and when, what is selected, the Sun and Moon */
+  if (window.VD && VD.describe) {
+    const SPEEDSAY = { m1: 'Time runs at 1 minute each second.', m10: 'Time runs at 10 minutes each second.', h1: 'Time runs at 1 hour each second.',
+      d1: 'Time runs at 1 day each second, at the same clock time every night.', y: 'Time runs at 500 years each second, on the same date and clock time.' };
+    const when = () => {
+      const c = local(S.jd), z = zone();
+      return [S.place === 'custom' ? `The observer is at ${latText(S.lat)}, ${lonText(S.lon)}.` : `The observer is in ${placeName(S.place, S.lat, S.lon)}.`,
+        { t: `Local standard time ${MONTHS[c.m - 1]} ${c.d}, ${yearText(c.y)}, ${hm(c.h)}, UTC${z >= 0 ? '+' : '−'}${Math.abs(z)}.`, live: false },
+        S.run ? SPEEDSAY[S.speed] : 'The clock is paused.'];
+    };
+    const picked = () => {
+      const D = selData(), si = D.si, out = [`The selected object is ${si.name}.`];
+      if (D.con) out.push(`It is in the constellation ${CON[D.con] || D.con}.`);
+      out.push({ t: `Its altitude is ${sgn(D.aa.alt, 1)}°, azimuth ${f(D.aa.az, 1)}°.`, live: false });
+      out.push({ t: D.aa.alt >= 0 ? 'It is above the horizon.' : 'It is below the horizon.', live: false });
+      out.push(`Declination ${sgn(D.rd.dec, 2)}°, right ascension ${f(D.rd.ra, 2)} hours.`);
+      if (si.kind !== 'pole') out.push(S.blind ? 'Its highest and lowest altitudes are hidden.' : `Highest altitude ${sgn(D.cu.hi, 1)}°, lowest ${sgn(D.cu.lo, 1)}°.`);
+      return out;
+    };
+    const sunMoon = () => {
+      const sunA = altAz(K, K.sunT.u).alt, moonA = altAz(K, K.moonT.u).alt;
+      return [{ t: `The Sun's altitude is ${sgn(sunA, 1)}°.`, live: false }, { t: `The Moon is ${f(K.phase.lit * 100, 0)}% lit and ${moonA >= 0 ? 'above' : 'below'} the horizon.`, live: false }];
+    };
+    VD.describe(skyCan, () => [
+      S.view === 'horizon' ? 'The sky seen from the ground, looking toward the horizon.' : S.view === 'dome' ? 'The whole sky seen from the ground, with the zenith in the middle and the horizon at the edge.'
+        : 'A star chart of right ascension and declination, with a dashed line for your meridian.',
+      ...(S.view === 'horizon' ? [`Facing ${compass(S.face)}, centered ${Math.round(S.tilt)}° up, ${Math.round(S.fov)}° across.`] : []),
+      ...when(), ...picked(), ...sunMoon()
+    ]);
+    const quiet = (list) => list.map((x) => (typeof x === 'string' ? { t: x, live: false } : { t: x.t, live: false }));   /* the ground view announces these; the outside view only holds them */
+    outWords = () => DP.on ? [] : [
+      'The celestial sphere seen from outside, with the horizon plane through the observer, the celestial poles and equator, the ecliptic with the Sun, and the Moon.',
+      ...quiet([...when(), ...picked(), ...sunMoon()]),
+      S.blind ? 'The altitude of the north celestial pole is hidden.' : `The north celestial pole is ${sgn(altAz(K, K.P.n).alt, 2)}° above the horizon.`,
+      `The tilt of Earth's axis is ${f(K.P.eps / D2R, 2)}°.`
+    ];
+    VD.describe(outFlat, outWords);
+    VD.describe(outDepth, () => {
+      if (!DP.on) return [];
+      const G = depthGeom();
+      return [`The stars of the constellation ${CON[DP.con]} placed at their distances from the Sun.`,
+        DP.look === 'earth' ? 'The view is from the Sun, as the figure looks in the sky.' : 'The view is from the side, with the Sun on the left.',
+        `${G.known.length} stars have a measured distance.`,
+        G.known.length ? (S.blind ? 'The distances are hidden.' : `They lie from ${lyText(G.near)} to ${lyText(G.far)} light years away.`) : 'No star of this figure has a measured distance.',
+        ...quiet(picked().slice(0, 1))];
+    });
+  }
   { const qs = new URLSearchParams(location.search), con = qs.get('con');
     if (con && SKY.figures.some((fg) => fg[0] === con)) DP.con = con;
     if (qs.get('outside') === 'distances' || wsLock === 'intro-constellations-3d') { setDepth(true); setCon(DP.con); } }

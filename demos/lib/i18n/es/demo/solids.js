@@ -24,6 +24,12 @@ VDI18N.add('es', 'demo/solids', {
   "separación r (nm)",
 "U per ion pair (eV)":
   "U por par de iones (eV)",
+"Describe the picture":
+  "Describir la imagen",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "Crystals, Bands and Semiconductors":
   "Cristales, bandas y semiconductores",
 "<a>Condensed matter physics</a>":
@@ -44,6 +50,18 @@ VDI18N.add('es', 'demo/solids', {
   "Unión",
 "A salt crystal drawn in 3D around one reference ion. Drag to turn it, scroll or pinch to zoom, double click to reset; comma and period turn it.":
   "Un cristal de sal dibujado en 3D alrededor de un ion de referencia. Arrástralo para girarlo, desplaza o pellizca para acercar, doble clic para restablecer; coma y punto lo giran.",
+"NaCl crystal in the rock salt structure, drawn in 3D around one reference ion.":
+  "Cristal de NaCl con estructura de sal de roca, dibujado en 3D alrededor de un ion de referencia.",
+"The nearest neighbor distance is {#} nm.":
+  "La distancia al vecino más cercano es de {#} nm.",
+"The ions are added up in neutral cubes with half width {#} ion spacings.":
+  "Los iones se suman en cubos neutros con medio ancho de {#} espaciamientos iónicos.",
+"The sum of α so far is {#}, and the Madelung constant from the Ewald sum is {#}.":
+  "La suma de α hasta ahora es {#}, y la constante de Madelung de la suma de Ewald es {#}.",
+"The measured lattice energy is {#} kJ/mol.":
+  "La energía reticular medida es de {#} kJ/mol.",
+"The calculated lattice energy is {#} kJ/mol, −{#} % from the table.":
+  "La energía reticular calculada es de {#} kJ/mol, −{#} % respecto a la tabla.",
 "The picture for the view.":
   "La imagen de la vista.",
 "Graphs for the view.":
@@ -446,6 +464,20 @@ VDI18N.add('es', 'demo/solids', {
   "Capa por capa, como en la serie del libro {#} − {#}/√{#} + {#}/√{#} − ...",
 "An electron in a row of square wells and barriers: the Kronig–Penney model":
   "Un electrón en una fila de pozos y barreras cuadrados: el modelo de Kronig–Penney",
+"A silicon pn junction wired to a battery and a meter, with the depletion region at its middle and the band diagram across it.":
+  "Una unión pn de silicio conectada a una batería y a un medidor, con la región de agotamiento en el centro y el diagrama de bandas a lo largo de ella.",
+"The bias is {#} V, forward.":
+  "La polarización es de {#} V, directa.",
+"The temperature is {#} K.":
+  "La temperatura es de {#} K.",
+"The current is {#} μA.":
+  "La corriente es de {#} μA.",
+"The saturation current at this temperature is {#} pA.":
+  "La corriente de saturación a esta temperatura es de {#} pA.",
+"The depletion width is {#} μm.":
+  "El ancho de agotamiento es de {#} μm.",
+"The built in potential is {#} V.":
+  "El potencial interno es de {#} V.",
 "depletion region":
   "región de agotamiento",
 "forward biased":
@@ -538,6 +570,18 @@ VDI18N.add('es', 'demo/solids', {
   "Electrón libre, misma k (zona extendida)",
 "Bands below V₀":
   "Bandas por debajo de V₀",
+"An electron in a row of square wells and barriers, with the allowed energy bands and gaps drawn.":
+  "Un electrón en una fila de pozos y barreras cuadrados, con las bandas de energía permitidas y las brechas dibujadas.",
+"The period is {#} nm, and the barriers are {#} eV high and {#} nm wide.":
+  "El periodo es de {#} nm, y las barreras tienen {#} eV de alto y {#} nm de ancho.",
+"Band {#} runs from {#} to {#} eV.":
+  "La banda {#} va de {#} a {#} eV.",
+"The gap above band {#} is {#} eV.":
+  "La brecha sobre la banda {#} es de {#} eV.",
+"At wave number {#} π/a the state energy is {#} eV.":
+  "Con número de onda {#} π/a, la energía del estado es de {#} eV.",
+"The bands below the barrier height number {#}.":
+  "Las bandas por debajo de la altura de la barrera son {#}.",
 "|ψ|² of band {#} at k = {#} π/a, drawn on its energy E = {#} eV; shaded: allowed bands":
   "|ψ|² de la banda {#} en k = {#} π/a, dibujada sobre su energía E = {#} eV; sombreado: bandas permitidas",
 "Higher, wider barriers: the electron can hardly tunnel from one well to the next, so each band shrinks toward a single level of one well, the tight binding picture of the chain of atoms. Lower V₀ to {#} and the gaps close: a free electron.":
@@ -560,12 +604,24 @@ VDI18N.add('es', 'demo/solids', {
   "Un LED emite luz cuando los electrones caen a través de la banda prohibida, así que la energía del fotón es aproximadamente E_g. Prueba cada material y lee la longitud de onda; luego elige Cualquier banda prohibida y encuentra las brechas que dan rojo, verde y azul.",
 "The spectrometer reading goes in the LED table of the worksheet: write it down by hand.":
   "La lectura del espectrómetro va en la tabla de LED de la hoja de trabajo: anótala a mano.",
+"An LED wired to a battery, with the band diagram across the junction.":
+  "Un LED conectado a una batería, con el diagrama de bandas a lo largo de la unión.",
+"The LED is GaP, with a band gap of {#} eV.":
+  "El LED es de GaP, con una brecha de banda de {#} eV.",
+"The spectrometer peak is {#} nm.":
+  "El pico del espectrómetro está en {#} nm.",
+"The color is green.":
+  "El color es verde.",
 "Germanium and gallium arsenide are pure (intrinsic) here.":
   "Aquí el germanio y el arseniuro de galio son puros (intrínsecos).",
 "peak {#} nm: infrared (invisible)":
   "pico en {#} nm: infrarrojo (invisible)",
 "infrared (invisible)":
   "infrarrojo (invisible)",
+"The LED is GaAs, with a band gap of {#} eV.":
+  "El LED es de GaAs, con una brecha de banda de {#} eV.",
+"The color is infrared (invisible).":
+  "El color es infrarrojo (invisible).",
 "peak {#} nm: ultraviolet (invisible)":
   "pico en {#} nm: ultravioleta (invisible)",
 "ultraviolet (invisible)":
@@ -590,6 +646,20 @@ VDI18N.add('es', 'demo/solids', {
   "NaCl: estructura de NaCl",
 "{#} levels":
   "{#} niveles",
+"A chain of model atoms, with the energy levels against the spacing and the levels at this spacing filled with electrons.":
+  "Una cadena de átomos modelo, con los niveles de energía contra el espaciamiento y los niveles a este espaciamiento llenos de electrones.",
+"There are {#} atoms, {#} nm apart, with {#} electrons each.":
+  "Hay {#} átomos, separados {#} nm, con {#} electrones cada uno.",
+"The s band runs from −{#} to −{#} eV.":
+  "La banda s va de −{#} a −{#} eV.",
+"The p band runs from −{#} to −{#} eV.":
+  "La banda p va de −{#} a −{#} eV.",
+"The highest filled level is −{#} eV.":
+  "El nivel lleno más alto es de −{#} eV.",
+"The lowest empty place is −{#} eV.":
+  "El lugar vacío más bajo es de −{#} eV.",
+"A very long chain has a filled band and a gap of {#} eV, so it is an insulator at T = {#}.":
+  "Una cadena muy larga tiene una banda llena y una brecha de {#} eV, así que es un aislante a T = {#}.",
 "Re ψ, band {#}, k = {#} π/a, E = {#} eV":
   "Re ψ, banda {#}, k = {#} π/a, E = {#} eV",
 "<a>Worksheet {#}: Energy Bands</a>":

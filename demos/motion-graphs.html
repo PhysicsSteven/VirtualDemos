@@ -1048,6 +1048,33 @@ table.rows input:focus { border-color: var(--accent); }
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   /* debug hook for tools/breakit/motion-graphs.cjs (break-it test, 2026-11-09) */
   window.__mg = { S, get run() { return run; }, get runB() { return runB; }, stateAt, meetTimes, distance, stopDist, tMax, st, RAMP_L, G };
+  /* what the picture shows now, for a screen reader (VD.describe): the setup, the time marker, the readings and what the graphs show */
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    const p = S.preset, walk = p === 'walk', draw = S.drawOn, blind = S.blind && !walk && !draw, q = st(S.t), out = [], ax = S.vert ? 'height y' : 'position x';
+    const SCENE = { stop: 'Two cars side by side on a road, with graphs of position, velocity and acceleration against time.', ramps: 'A ball on three ramp pieces, with graphs of position, velocity and acceleration against time.',
+      two: 'Two cars on a track, with graphs of position, velocity and acceleration against time.', walk: 'A cart on a track, with graphs of position, velocity and acceleration against time, and a dashed target for the position graph.',
+      draw: 'A cart on a track, with graphs of position, velocity and acceleration against time, one of which you draw.' };
+    out.push(SCENE[p] || (S.vert ? 'A ball thrown straight up, with graphs of height, velocity and acceleration against time.' : 'A cart on a track, with graphs of position, velocity and acceleration against time.'));
+    if (walk) out.push(S.walk.run ? 'A run is in progress: move the cart so its position follows the dashed target.' : 'Move the cart so that its position graph follows the dashed target.');
+    else if (draw) out.push(S.dr.kind === 'v' ? 'You draw the velocity graph; the acceleration graph shows its slope and the position graph its area.' : 'You draw the acceleration graph; the velocity and position graphs follow from it.');
+    else if (S.stop) out.push(`Car A goes ${fx(S.sd.vA, 1)} m/s and car B ${fx(S.sd.vB, 1)} m/s. Each keeps its speed for a ${fx(S.sd.tr, 2)} s reaction time, then brakes at ${fx(S.sd.b, 1)} m/s².`);
+    else if (S.ramps) out.push(`The three ramp pieces slope ${S.rp.ang.map((a) => fx(a, 0)).join('°, ')}°. The ball starts at ${fx(S.rp.v0, 1)} m/s.`);
+    else {
+      out.push(`The ${S.vert ? 'ball' : 'cart'} starts at ${fx(run.x0, 1)} m.`);
+      if (blind) out.push('The starting velocity and the accelerations are hidden in Blind.');
+      else { out.push(`It starts at ${fx(run.v0, 1)} m/s.`); run.stages.forEach((sg, k) => out.push(`Stage ${k + 1}: acceleration ${fx(sg.a, 1)} m/s² for ${fx(sg.T, 1)} s.`)); }
+    }
+    if (runB && S.two && !S.stop) out.push(blind ? 'Car B is also drawn; its motion is hidden in Blind.' : `Car B starts at ${fx(S.B.x0, 1)} m with velocity ${fx(S.B.v0, 1)} m/s and acceleration ${fx(S.B.a, 1)} m/s².`);
+    out.push(playing ? 'Playing.' : S.t > 0 ? 'Paused.' : 'At the start.');
+    out.push({ t: `Time ${S.t.toFixed(2)} s.`, live: false }, { t: `${ax[0].toUpperCase() + ax.slice(1)} ${fx(q.x, 2)} m.`, live: false });
+    if (blind) out.push('Velocity, acceleration, slopes and areas are hidden in Blind.');
+    else if (!walk) {
+      out.push({ t: `Velocity ${fx(q.v, 2)} m/s.`, live: false }, { t: `Acceleration ${fx(q.a, 2)} m/s².`, live: false }, { t: `Distance traveled ${fx(distance(S.t), 2)} m.`, live: false });
+      if (runB) { const b = stateAt(runB, S.t); out.push({ t: `Car B is at ${fx(b.x, 2)} m, ${fx(b.x - q.x, 2)} m from car A.`, live: false }); }
+      if (runB && !S.stop) { const M = meets(); out.push(M.same ? 'The two motions are the same.' : M.t.length ? `The cars are side by side at ${M.t.map((t) => `${fx(t, 2)} s`).join(' and ')}.` : 'The cars are never side by side in this run.'); }
+    } else if (S.walk.score != null) out.push(`The last run averaged ${fx(S.walk.score, 2)} ${S.walk.vel ? 'm/s' : 'm'} from the target.`);
+    return out;
+  });
   requestAnimationFrame(frame);
 })();
 </script>

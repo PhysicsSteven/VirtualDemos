@@ -10,6 +10,8 @@ VDI18N.add('es', 'demo/viscometer', {
   "cronómetro: —",
 "t = {#} s since release":
   "t = {#} s desde que se soltó",
+"Describe the picture":
+  "Describir la imagen",
 "Falling Ball Viscometer":
   "Viscosímetro de esfera que cae",
 "<a><span>←</span> <span>Terminal Velocity</span></a><a><span>Potential Energy Curves</span> <span>→</span></a>":
@@ -20,6 +22,32 @@ VDI18N.add('es', 'demo/viscometer', {
   "marcas separadas {#} m · {#} °C · g = {#} m/s²",
 "A tall glass tube of liquid with two timing marks {#} m apart and a ball falling through it, with the gate timer. Space drops the ball, R takes it out.":
   "Un tubo de vidrio alto con líquido, dos marcas de tiempo separadas {#} m y una esfera que cae por él, con el cronómetro de compuertas. Espacio deja caer la esfera, R la saca.",
+"A tall glass tube of liquid with two timing marks {#} m apart, a ball above it, and a gate timer.":
+  "Un tubo alto de vidrio con líquido, con dos marcas de tiempo separadas {#} m, una esfera arriba y un cronómetro de compuertas.",
+"The liquid is Glycerol, with density {#} kg/m³.":
+  "El líquido es glicerol, con densidad de {#} kg/m³.",
+"The ball is steel, {#} mm across, with density {#} kg/m³.":
+  "La esfera es de acero, de {#} mm de diámetro, con densidad de {#} kg/m³.",
+"The tube is {#} mm wide.":
+  "El tubo tiene {#} mm de ancho.",
+"The ball is denser than the liquid, so it sinks.":
+  "La esfera es más densa que el líquido, así que se hunde.",
+"The ball is held at the top: press Drop the ball.":
+  "La esfera está sujeta arriba: presiona Soltar la esfera.",
+"The ball's speed is {#} mm/s.":
+  "La rapidez de la esfera es de {#} mm/s.",
+"The timer has no reading yet.":
+  "El cronómetro todavía no tiene lectura.",
+"The viscosity is {#} Pa·s.":
+  "La viscosidad es de {#} Pa·s.",
+"The terminal speed is {#} mm/s.":
+  "La rapidez terminal es de {#} mm/s.",
+"Stokes' law alone gives {#} mm/s.":
+  "La ley de Stokes por sí sola da {#} mm/s.",
+"The Reynolds number at terminal speed is {#}.":
+  "El número de Reynolds a la rapidez terminal es de {#}.",
+"No drops are recorded.":
+  "No hay caídas registradas.",
 "Time controls":
   "Controles de tiempo",
 "Drop the ball":
@@ -132,16 +160,24 @@ VDI18N.add('es', 'demo/viscometer', {
   "Modelo: arrastre F = {#}πηrv × K(d/D) × C_D N_R/{#}, con la curva de arrastre estándar de Clift, Grace y Weber ({#} + 3N_R/{#} de Oseen por debajo de N_R = {#}) y el factor de pared K de Haberman y Sayre para una esfera en el eje de un tubo en flujo lento (la K que aplicas). A N_R mayores las paredes importan menos: el factor se debilita según Di Felice ({#}), cuyo ajuste cubre N_R hasta aproximadamente {#}. El movimiento de la esfera incluye el empuje y la masa agregada ½ρ_f V. Densidades en kg/m³: acero {#}, vidrio {#}, nailon {#}. Líquidos a {#} °C: glicerol {#} y η = {#} Pa·s; aceite de ricino {#} y {#} Pa·s; aceite de motor (SAE {#} típico) {#} y {#} Pa·s; agua {#} y {#} mPa·s.",
 "tube {#} mm wide, ball {#} mm, to scale":
   "tubo de {#} mm de ancho, esfera de {#} mm, a escala",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "t = {#} s since release, shown ×{#} (slow motion)":
   "t = {#} s desde que se soltó, mostrado ×{#} (cámara lenta)",
 "t = {#} s since release, shown ×{#}":
   "t = {#} s desde que se soltó, mostrado ×{#}",
+"The ball is falling.":
+  "La esfera está cayendo.",
 "Water, {#} °C: ρ = {#} kg/m³, η = {#} mPa·s. Fully open, the valve passes {#} mL/s through the {#} mm pipe.":
   "Agua, {#} °C: ρ = {#} kg/m³, η = {#} mPa·s. Totalmente abierta, la válvula deja pasar {#} mL/s por la tubería de {#} mm.",
 "Stop collecting":
   "Dejar de recolectar",
 "Glass ball, d = {#} mm":
   "Esfera de vidrio, d = {#} mm",
+"The ball is glass, {#} mm across, with density {#} kg/m³.":
+  "La esfera es de vidrio, de {#} mm de diámetro, con densidad de {#} kg/m³.",
 "lighter than the liquid: it rises":
   "más ligera que el líquido: sube",
 "Nylon ball, d = {#} mm":
@@ -228,6 +264,24 @@ VDI18N.add('es', 'demo/viscometer', {
   "Agua: unas {#} veces menos viscosa que el glicerol. Aquí todas las esferas caen demasiado rápido para la ley de Stokes; mira lo que dan los tiempos.",
 "Collect some water in the cylinder first.":
   "Primero recolecta algo de agua en la probeta.",
+"A tank of liquid drains through a horizontal pipe with a valve, and the flow is collected in a graduated cylinder.":
+  "Un tanque de líquido se vacía por un tubo horizontal con una válvula, y el flujo se recoge en una probeta graduada.",
+"The liquid is a mystery liquid, with density {#} kg/m³.":
+  "El líquido es un líquido misterioso, con densidad de {#} kg/m³.",
+"The pipe is {#} mm across.":
+  "El tubo tiene {#} mm de diámetro.",
+"The valve is open {#} %.":
+  "La válvula está abierta {#} %.",
+"The pressure drop along the pipe is {#} Pa.":
+  "La caída de presión a lo largo del tubo es de {#} Pa.",
+"The cylinder is empty.":
+  "La probeta está vacía.",
+"The cylinder holds {#} mL after {#} s.":
+  "La probeta contiene {#} mL después de {#} s.",
+"The liquid is a mystery: the flow rate, speed, Reynolds number and viscosity are hidden.":
+  "El líquido es un misterio: el gasto, la rapidez, el número de Reynolds y la viscosidad están ocultos.",
+"No rows are captured.":
+  "No hay filas capturadas.",
 "Open or close the outlet valve by {#} percent (Shift: {#} percent)":
   "Abre o cierra la válvula de salida {#} por ciento (Shift: {#} por ciento)",
 "Mystery liquid (water and glycerol) · {#} mm pipe · dye a straight thread":
@@ -236,6 +290,14 @@ VDI18N.add('es', 'demo/viscometer', {
   "<span>no: domina la inercia (arrastre {#} veces el de Stokes)</span>",
 "Mystery liquid: it was η = {#} mPa·s.":
   "Líquido misterioso: era η = {#} mPa·s.",
+"The liquid is Water, {#} °C, with density {#} kg/m³.":
+  "El líquido es agua, a {#} °C, con densidad de {#} kg/m³.",
+"The flow rate is {#} mL/s, and the mean speed is {#} cm/s.":
+  "El gasto es de {#} mL/s, y la rapidez media es de {#} cm/s.",
+"The Reynolds number is {#}, so the flow is unstable.":
+  "El número de Reynolds es de {#}, así que el flujo es inestable.",
+"The viscosity is {#} mPa·s.":
+  "La viscosidad es de {#} mPa·s.",
 "The valve was moved after this water was collected. Empty the cylinder and collect again.":
   "La válvula se movió después de recolectar esta agua. Vacía la probeta y recolecta de nuevo.",
 "Close":

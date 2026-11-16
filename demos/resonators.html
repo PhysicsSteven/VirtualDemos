@@ -1768,6 +1768,42 @@ table.rows button { font: inherit; font-size: 0.8rem; background: none; border: 
   requestAnimationFrame(loop);
   /* How this works: a short video of one sample reading (made by tools/howto/) */
   VD.howTo({ src: 'media/how-this-works/resonators.mp4', poster: 'media/how-this-works/resonators.jpg' });
+  /* what the pictures show now, for a screen reader (VD.describe): the resonator, its frequency, and the fit of the captured readings */
+  if (window.VD && VD.describe) {
+    VD.describe($('can'), () => {
+      const cc = D.c, out = [], hz = (f) => fmtHz(f);
+      if (S.view === 'pipe' && S.pm === 'tube') {
+        out.push('A vertical resonance tube, open at the top, with a water surface you lower or raise.', `The tube is 100 cm long and ${(S.tdia * 100).toFixed(1)} cm across.`, `The source is ${S.fork} Hz.`,
+          `The air is ${S.tc.toFixed(1)} °C, so sound travels at ${cc.toFixed(1)} m/s.`, `The water surface is ${cm(S.water)} below the top.`, `The response level there is ${levelDb(D.rel).toFixed(1).replace('-', '−')} dB.`);
+        if (S.blind) out.push('The computed response and the true resonance positions are hidden in Blind.');
+        else { out.push(D.res.length ? `${D.res.length} resonances fit in the tube, at ${D.res.map((r) => cm(r.L)).join(', ')}.` : 'No resonance fits in the tube at this frequency.', `Half a wavelength is ${cm(cc / S.fork / 2)}.`); }
+        out.push(S.rows.length ? `${S.rows.length} readings are captured.` : 'No readings are captured.');
+      } else if (S.view === 'pipe') {
+        const kind = S.pm === 'closed' ? 'closed' : 'open';
+        out.push(kind === 'closed' ? 'A pipe closed at one end, with the standing wave drawn inside.' : 'A pipe open at both ends, with the standing wave drawn inside.', `The pipe is ${cm(S.L, 0)} long and ${(S.pdia * 100).toFixed(1)} cm across.`,
+          `The air is ${S.tc.toFixed(1)} °C, so sound travels at ${cc.toFixed(1)} m/s.`, `The mode is k = ${S.k}, harmonic number ${pipeHarmonic(kind, S.k)}.`, `Its frequency is ${hz(D.pf)}.`, `The effective length is ${cm(pipeLeff(kind, S.L, S.pdia / 2))}.`);
+      } else if (S.view === 'string') {
+        out.push('A stretched string fixed at both ends, with its spectrum drawn below.', `The string is ${cm(S.sL)} long, under ${S.sT.toFixed(1)} N, with ${(S.mu * 1e3).toFixed(S.mu < 1e-3 ? 3 : 2)} g/m.`,
+          `The fundamental is ${hz(D.f1)}.`, `Waves travel along it at ${Math.sqrt(S.sT / S.mu).toFixed(0)} m/s.`,
+          S.ex === 'bow' ? 'The string is bowed, so every harmonic is present.' : `The string is plucked ${(sP() * S.sL * 100).toFixed(1)} cm from the end.`);
+        if (S.ex !== 'bow') { const miss = []; for (let n = 1; n <= NSPEC; n++) if (!D.b[n]) miss.push(n); out.push(miss.length ? `The missing harmonics start at n = ${miss.slice(0, 8).join(', ')}.` : `No harmonic up to n = ${NSPEC} is missing.`); }
+      } else {
+        out.push('A bottle with a neck, blown across the top.', `The bottle holds ${(S.vb * 1e3).toFixed(2)} L and is ${S.fill}% full of water.`, `The neck is ${cm(S.neck)} long and ${(S.bdia * 100).toFixed(1)} cm across.`,
+          `The air volume is ${(D.Vair * 1e6).toFixed(0)} mL.`, `The Helmholtz frequency is ${hz(D.fH)}.`, `A closed pipe as tall as the air space would sound at ${fmtHz(D.fP)}.`);
+      }
+      out.push(running ? 'Running.' : 'Paused.');
+      return out;
+    });
+    VD.describe(plot, () => {
+      const { R, fit } = fitNow(), out = [];
+      out.push('A plot of the resonance positions L against (2k − 1)/4f, with a least squares line.');
+      out.push(R.length ? `${R.length} readings are plotted.` : 'No readings are plotted yet.');
+      if (fit) { out.push(`The slope is c = ${fit.c.toFixed(1)} m/s.`, `The intercept is ${(-fit.dL * 100).toFixed(2)} cm, so the end correction is ${(fit.dL * 100).toFixed(2)} cm.`);
+        if (S.blind) out.push('The expected values are hidden in Blind.'); else out.push(`The expected speed of sound is ${D.c.toFixed(1)} m/s.`); }
+      else out.push('A fit needs two readings.');
+      return out;
+    });
+  }
 })();
 </script>
 <script>/* the shared control panel (demos/lib/vdpanel.js): the time controls in one group at the left of the strip */

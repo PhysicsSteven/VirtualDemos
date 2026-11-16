@@ -604,6 +604,33 @@
   { const q = new URLSearchParams(location.search).get('setup'); const k = PRESETS[q] ? q : 'split'; S.preset = k; $('presetHint').textContent = PRESETS[k].hint; Object.assign(S, { N: PRESETS[k].N, W: PRESETS[k].W || 0, eps: PRESETS[k].eps || 0, gam: PRESETS[k].gam || 0, color: PRESETS[k].color }); sync(); prepare(); }
   new ResizeObserver(resize).observe($('pane')); resize();
   view3 = VD3K.view({ seg: '#dimSeg', init: init3D, start: '3d', change: () => { if (g3) g3.S3.el.hidden = !use3(); redraw(); }, status: (m) => { S.msg = m; note(); } });
+  /* what the picture shows now, for a screen reader (VD.describe): the setup, the state and the measured values the worksheet asks for */
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    const c = cfg(), SETUP = { split: 'Two condensates side by side, split by a sheet of light.', collide: 'Two condensates held apart by a barrier in the middle of the trap.',
+      vortex: 'One condensate with a single vortex off center.', pair: 'A condensate with a vortex and an antivortex side by side.', stir: 'A condensate in a stirred, slightly elliptical trap.',
+      breathe: 'A condensate in a trap that was suddenly tightened.', slosh: 'A condensate in a trap that was moved back to the middle.' };
+    const TRACE = { x: 'A graph of the cloud center against time is drawn under the picture.', r: 'A graph of the cloud radius against time is drawn under the picture.',
+      angle: 'A graph of the vortex angle against time is drawn under the picture.', lz: 'A graph of the angular momentum against time is drawn under the picture.' };
+    const out = [SETUP[S.preset] || 'A Bose Einstein condensate of rubidium atoms.', `${S.N.toLocaleString('en-US')} atoms, ${um(2 * c.view)} across the picture.`,
+      S.inter ? 'The atoms repel each other.' : 'The atoms do not interact.',
+      S.color === 'phase' ? 'The color shows the phase of the wavefunction.' : 'The color shows the density.'];
+    if (use3()) out.push('The surface height is the square root of the density.');
+    if (S.W > 0) out.push(`Stirring rate ${f(S.W, 2)} ω, trap ellipticity ${f(S.eps, 2)}.`);
+    if (S.gam > 0) out.push(`Damping γ = ${f(S.gam, 2)}.`);
+    out.push(S.run ? 'Running.' : S.t > 0 ? 'Paused.' : 'Not started: press Play.');
+    out.push({ t: `Time ${ms(S.t)}.`, live: false });
+    if (mom) {
+      const plus = vorts.filter((v) => v.s > 0).length, minus = vorts.length - plus;
+      out.push(vorts.length ? { t: `${plus} counterclockwise and ${minus} clockwise vortices in view.`, live: false } : { t: 'No vortices in view.', live: false });
+      if (S.vort && vorts.length) out.push('The vortices are marked with small rings.');
+    }
+    if (c.fringes) out.push(S.blind ? 'The fringe spacing is hidden.' : isFinite(fringe) ? { t: `Fringe spacing ${um(fringe)}.`, live: false } : 'The clouds are not overlapping yet.');
+    const per = c.trace === 'x' || c.trace === 'r' || c.trace === 'angle' ? period() : NaN;
+    if (c.trace === 'x' || c.trace === 'r') out.push(S.blind ? 'The period is hidden.' : isFinite(per) ? `Measured period ${ms(per)}.` : 'The period needs a few swings to measure.');
+    if (c.trace === 'angle') out.push(S.blind ? 'The time for the vortex to go around is hidden.' : isFinite(per) ? `The vortex goes around in ${f(Math.abs(per) * TU * 1000, 0)} ms.` : 'The time for the vortex to go around needs more time to measure.');
+    if (traceOn() && TRACE[c.trace]) out.push(TRACE[c.trace]);
+    return out;
+  });
   if (window.VD && VD.panel) VD.panel({ play: '#play', reset: '#reset', speed: '#speed', end: ['#dimSeg'] });
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   requestAnimationFrame(frame);

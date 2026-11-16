@@ -1,5 +1,6 @@
 /* English strings of demo/catenary, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'demo/catenary', [
+"Describe the picture",
 "S = {#} m span {#} m sag {#} m",
 "FREE BODY DIAGRAM OF THE CHOSEN PIECE",
 "tip to tail: it closes",
@@ -9,6 +10,8 @@ VDI18N.add('en', 'demo/catenary', [
 "largest tension",
 "H, horizontal part",
 "both → ∞ as d → {#}",
+"Skip to the picture",
+"Skip to the controls",
 "Hanging Chains and Arches",
 "<a>Static equilibrium and elasticity</a>",
 "<a><span>←</span> <span>GPS Clocks and Relativity</span></a><a><span>Static Equilibrium</span> <span>→</span></a>",
@@ -99,5 +102,14 @@ VDI18N.add('en', 'demo/catenary', [
 "LARGEST COMPRESSION AGAINST SAG",
 "largest compression",
 "Drag the grip up or the marker on the graph to the left. As the sag goes to zero, the tension grows like λgΔx²/(8d) and never stops growing. No chain, however strong, can hang perfectly straight.",
-"S = {#} m sag {#} m"
+"An arch: a hanging chain turned upside down, so every block pushes on its neighbors.",
+"Support A is −{#} m across, {#} m up.",
+"Support B is {#} m across, {#} m up.",
+"Chain length {#} m, {#} kg/m.",
+"Sag {#} m, catenary constant a = {#} m.",
+"The top is {#} m across, {#} m up.",
+"Horizontal force H = {#} N, the same everywhere.",
+"Largest compression {#} N, at both supports.",
+"S = {#} m sag {#} m",
+"The Gateway Arch curve is drawn over the arch."
 ]);

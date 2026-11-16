@@ -732,6 +732,38 @@ table.rows input:focus { border-color: var(--accent); }
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   /* debug hook for tools/breakit/rotational-dynamics.cjs (break-it test, 2026-11-09) */
   window.__rd = { S, mot, Itot, Iobj, tf, fromRow };
+  /* what the pictures show now, for a screen reader (VD.describe): the table, its load and the falling mass, and the fit of the recorded drops */
+  if (window.VD && VD.describe) {
+    VD.describe(can, () => {
+      const M = mot(), tt = Math.min(S.t, M.t), out = [], LOAD = { none: 'The turntable is empty.', disk: 'A solid disk of 1.00 kg and radius 10.0 cm sits on the turntable.',
+        ring: 'A ring of 1.00 kg, with outer radius 10.0 cm, sits on the turntable.', mystery: 'A mystery object sits on the turntable.' };
+      out.push('A turntable that spins as a hanging mass falls and unwinds a string from its spool.');
+      out.push(S.obj === 'pair' ? `Two masses of 200 g sit on the turntable, each ${f(S.d * 100, 1)} cm from the axis.` : LOAD[S.obj]);
+      out.push(`The hanging mass is ${f(S.m * 1000, 0)} g, and the spool radius is ${f(S.r * 100, 1)} cm.`);
+      out.push(S.fric ? 'Bearing friction is on.' : 'Bearing friction is off.');
+      out.push(`The mass falls ${f(H, 3)} m between the two light gates.`);
+      if (!M.moves) out.push('The hanging mass is too light to overcome friction, so the turntable does not turn.');
+      out.push(S.run ? 'The mass is falling.' : S.done ? 'The drop is finished.' : S.t > 0 ? 'The drop is paused.' : 'The mass is held at the top: press Release.');
+      out.push({ t: `Timer ${S.done ? M.t.toFixed(3) : f(S.t, 3)} s.`, live: false });
+      if (S.done && M.moves) out.push(`The timed drop was ${M.t.toFixed(3)} s.`);
+      if (hidden()) out.push(`${S.blind ? 'Blind is on' : 'The load is a mystery'}: the moment of inertia, the accelerations, the tension and the energy are hidden.`);
+      else {
+        out.push(`The moment of inertia of the table and load is ${sci(Itot())} kg·m².`, `The mass accelerates at ${f(M.a, 4)} m/s², and the table at ${f(M.alpha, 3)} rad/s².`, `The string tension is ${f(M.T, 4)} N.`);
+        out.push({ t: `The turntable's angular speed is ${f(M.alpha * tt, 2)} rad/s.`, live: false });
+      }
+      out.push(S.rows.length ? `${S.rows.length} drops are recorded.` : 'No drops are recorded.');
+      return out;
+    });
+    VD.describe(fitCan, () => {
+      const key = loadKey(), pts = S.rows.filter((r) => r.load === key).map((r) => { const m = cellNum(r.m), rr = cellNum(r.r), t = cellNum(r.t); if (!(m > 0 && rr > 0 && t > 0)) return null; const q = fromRow(m, rr, t); return [q.alpha, q.tau]; }).filter(Boolean);
+      const F = pts.length >= 2 ? fitLine(pts.map((q) => q[0]), pts.map((q) => q[1])) : null;
+      const out = ['A plot of string torque against angular acceleration for the recorded drops, with a least squares line and its residuals.', pts.length ? `${pts.length} points are plotted.` : 'No points are plotted yet.'];
+      if (!F) { out.push('A fit needs at least two drops with this load.'); return out; }
+      out.push(`The intercept, the friction torque, is ${sci(F.a, 2)} N·m.`);
+      out.push(hidden() ? `The slope is hidden: ${S.blind ? 'Blind is on' : 'the load is a mystery'}.` : `The slope, the moment of inertia of the table and load, is ${sci(F.b, 4)} kg·m².`);
+      return out;
+    });
+  }
   requestAnimationFrame(frame);
 })();
 </script>

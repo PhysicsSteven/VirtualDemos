@@ -2,18 +2,40 @@
 VDI18N.add('es', 'demo/condensate-waves', {
 "Finding the condensate’s ground state…":
   "Buscando el estado base del condensado…",
+"Describe the picture":
+  "Describir la imagen",
 "Finding the condensate’s ground state: {#} %":
   "Buscando el estado base del condensado: {#} %",
 "Condensates: Interference and Vortices":
   "Condensados: interferencia y vórtices",
+"<a>Photons and matter waves</a>":
+  "<a>Fotones y ondas de materia</a>",
 "<a><span>←</span> <span>Double Slit, One Particle at a Time</span></a><a><span>e/m of the Electron</span> <span>→</span></a>":
   "<a><span>←</span> <span>Doble rendija, una partícula a la vez</span></a><a><span>e/m del electrón</span> <span>→</span></a>",
 "A Bose–Einstein condensate is one wave shared by thousands of atoms, so it does what waves do. Release two condensates and they overlap in stripes, like light through two slits. Stir one and it cannot simply turn: it fills with tiny whirlpools, each carrying exactly one quantum of circulation. Every frame here is a solution of the Gross–Pitaevskii equation for rubidium atoms in a flat trap.":
   "Un condensado de Bose–Einstein es una sola onda compartida por miles de átomos, así que hace lo que hacen las ondas. Suelta dos condensados y se traslapan en franjas, como la luz a través de dos rendijas. Agita uno y no puede simplemente girar: se llena de diminutos remolinos, cada uno con exactamente un cuanto de circulación. Cada cuadro aquí es una solución de la ecuación de Gross–Pitaevskii para átomos de rubidio en una trampa plana.",
+"Time controls":
+  "Controles de tiempo",
 "Put the condensate back the way this setup started":
   "Devuelve el condensado a como empezó esta configuración",
+"<span>Speed</span>":
+  "<span>Velocidad</span>",
 "The condensate seen in perspective: the height of the surface is the square root of the atom density, and the color shows the density or the phase of the wavefunction. Vortices are marked with small rings. Drag to turn the view; Space plays or pauses.":
   "El condensado visto en perspectiva: la altura de la superficie es la raíz cuadrada de la densidad de átomos, y el color muestra la densidad o la fase de la función de onda. Los vórtices se marcan con pequeños anillos. Arrastra para girar la vista; la barra espaciadora reproduce o pausa.",
+"Two condensates side by side, split by a sheet of light.":
+  "Dos condensados lado a lado, separados por una lámina de luz.",
+"{#} atoms, {#} µm across the picture.":
+  "{#} átomos, {#} µm de ancho en la imagen.",
+"The atoms repel each other.":
+  "Los átomos se repelen entre sí.",
+"The color shows the density.":
+  "El color muestra la densidad.",
+"Not started: press Play.":
+  "Sin iniciar: presiona Reproducir.",
+"Time {#} ms.":
+  "Tiempo {#} ms.",
+"The clouds are not overlapping yet.":
+  "Las nubes todavía no se traslapan.",
 "The atoms":
   "Los átomos",
 "<span>The atoms</span>":
@@ -80,6 +102,40 @@ VDI18N.add('es', 'demo/condensate-waves', {
   "Aproximaciones: temperatura cero (sin nube térmica) y dos dimensiones. En la configuración de agitación, un amortiguamiento γ, (i − γ)ħ ∂ψ/∂t = Hψ, hace las veces de la nube térmica; sin él la energía se conserva y los vórtices que entran siguen moviéndose y nunca se asientan en una red. El amortiguamiento usado, γ = {#}, es unas cuantas veces mayor que en las nubes reales, lo que hace que la red se forme antes. En vuelo libre, los átomos que llegan al borde de la imagen se eliminan para que nada dé la vuelta por la malla. El espaciamiento de franjas ht/(md) es la fórmula de campo lejano para dos nubes a una distancia d que no interactúan; con la repulsión apagada, las franjas medidas coinciden con ella con una diferencia de pocos por ciento después de unos {#} ms. La repulsión convierte la energía de interacción de las nubes en flujo hacia afuera, que estira la fase de cada nube y ensancha las franjas por un factor casi constante (alrededor de {#} para los {#} átomos de esta configuración; las lecturas muestran ambos).",
 "Sources: rubidium {#} mass from AME2020; the scattering length of the |F = {#}, m_F = {#}⟩ state, {#} a₀, from van Kempen et al., Phys. Rev. Lett. {#}, {#} ({#}); h and the atomic mass unit from CODATA {#}. The experiments: interference of two condensates, Andrews et al., Science {#}, {#} ({#}); vortex lattices in stirred condensates, Madison et al., Phys. Rev. Lett. {#}, {#} ({#}) and Abo-Shaeer et al., Science {#}, {#} ({#}); breathing at exactly {#}ω in two dimensions, Pitaevskii and Rosch, Phys. Rev. A {#}, R853 ({#}); damped Gross–Pitaevskii stirring, Tsubota, Kasamatsu and Ueda, Phys. Rev. A {#}, {#} ({#}).":
   "Fuentes: masa del rubidio {#} de AME2020; la longitud de dispersión del estado |F = {#}, m_F = {#}⟩, {#} a₀, de van Kempen et al., Phys. Rev. Lett. {#}, {#} ({#}); h y la unidad de masa atómica de CODATA {#}. Los experimentos: interferencia de dos condensados, Andrews et al., Science {#}, {#} ({#}); redes de vórtices en condensados agitados, Madison et al., Phys. Rev. Lett. {#}, {#} ({#}) y Abo-Shaeer et al., Science {#}, {#} ({#}); respiración exactamente a {#}ω en dos dimensiones, Pitaevskii y Rosch, Phys. Rev. A {#}, R853 ({#}); agitación de Gross–Pitaevskii amortiguada, Tsubota, Kasamatsu y Ueda, Phys. Rev. A {#}, {#} ({#}).",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
+"The surface height is the square root of the density.":
+  "La altura de la superficie es la raíz cuadrada de la densidad.",
+"Two condensates held apart by a broad barrier in the middle of the trap. Press Play: the barrier is removed and the two halves slide down into the middle of the trap and run through each other. Where they overlap they interfere: fine stripes whose spacing is h divided by the momentum of one cloud relative to the other, closest together when they meet fastest at the center. The repulsion between the atoms bends the stripes into dark grooves that outlive the crossing.":
+  "Dos condensados separados por una barrera ancha en medio de la trampa. Pulsa Iniciar: se retira la barrera y las dos mitades se deslizan hacia el centro de la trampa y se atraviesan una a otra. Donde se traslapan interfieren: franjas finas cuyo espaciamiento es h dividido entre el momento de una nube relativo a la otra, más juntas cuando se encuentran con la mayor rapidez en el centro. La repulsión entre los átomos curva las franjas en surcos oscuros que sobreviven al cruce.",
+"Set a stirring rate to turn the trap.":
+  "Fija una tasa de agitación para girar la trampa.",
+"A condensate with one vortex in it, {#} µm from the middle: a hole where the density goes to zero, around which the phase of the wavefunction winds once through every color. The fluid circles the hole with speed ħ/(mr), so the circulation around it is exactly h/m, one quantum. Press Play: the vortex goes around the center of the trap in the same direction as its own flow, carried by the slope of the density, and faster the farther out it is.":
+  "Un condensado con un vórtice, a {#} µm del centro: un hueco donde la densidad llega a cero, alrededor del cual la fase de la función de onda recorre una vez todos los colores. El fluido circula alrededor del hueco con rapidez ħ/(mr), de modo que la circulación a su alrededor es exactamente h/m, un cuanto. Pulsa Iniciar: el vórtice gira alrededor del centro de la trampa en el mismo sentido que su propio flujo, arrastrado por la pendiente de la densidad, y más rápido cuanto más lejos está.",
+"A vortex (orange ring, turning counterclockwise) and an antivortex (teal ring, clockwise) side by side. Their flows add between them, and each is carried along by the other's flow, so the pair moves in a straight line together, like a smoke ring seen in cross section. Press Play and watch where they go when they reach the thin edge of the cloud.":
+  "Un vórtice (anillo naranja, girando en sentido antihorario) y un antivórtice (anillo verde azulado, en sentido horario) lado a lado. Sus flujos se suman entre ellos, y cada uno es arrastrado por el flujo del otro, así que el par se mueve en línea recta junto, como un anillo de humo visto en sección transversal. Pulsa Iniciar y observa adónde van cuando llegan al borde delgado de la nube.",
+"A condensate in a trap squeezed slightly into an ellipse, and the ellipse turning at {#}ω ({#} turns per second): the picture turns with the stirrer. Press Play. A normal fluid would simply rotate with the trap; a condensate cannot rotate as a body, because its flow must have no curl wherever there are atoms. Instead it wobbles, its edge breaks up, and vortices enter from the outside one after another, then settle into a regular triangular lattice, all turning the same way. The first vortices enter after about {#} trap periods ({#} s of real time; a minute or so here, faster at {#}×); the damping stands in for the thermal cloud that lets the vortices settle. Madison et al. (Paris, {#}) and Abo-Shaeer et al. (MIT, {#}) saw exactly this.":
+  "Un condensado en una trampa ligeramente apretada en forma de elipse, y la elipse gira a {#}ω ({#} vueltas por segundo): la imagen gira con el agitador. Pulsa Iniciar. Un fluido normal simplemente giraría con la trampa; un condensado no puede girar como cuerpo, porque su flujo no debe tener rotacional donde haya átomos. En cambio se bambolea, su borde se rompe, y los vórtices entran desde afuera uno tras otro, y luego se asientan en una red triangular regular, todos girando en el mismo sentido. Los primeros vórtices entran después de unos {#} periodos de la trampa ({#} s de tiempo real; aproximadamente un minuto aquí, más rápido a {#}×); el amortiguamiento hace las veces de la nube térmica que deja que los vórtices se asienten. Madison et al. (París, {#}) y Abo-Shaeer et al. (MIT, {#}) vieron exactamente esto.",
+"The picture turns with the stirrer. Damping (Lab) lets vortices settle.":
+  "La imagen gira con el agitador. El amortiguamiento (Laboratorio) deja que los vórtices se asienten.",
+"A condensate that settled in a trap {#} percent weaker, which is suddenly tightened. Press Play: the cloud squeezes in and bounces back out, over and over. In a flat round harmonic trap this breathing has exactly twice the trap frequency, {#}ω, whatever the number of atoms and however strongly they repel (a hidden symmetry of the two dimensional Gross–Pitaevskii equation, Pitaevskii and Rosch {#}). Turn off the repulsion and compare.":
+  "Un condensado que se asentó en una trampa {#} por ciento más débil, que de pronto se aprieta. Pulsa Iniciar: la nube se comprime y rebota hacia afuera, una y otra vez. En una trampa armónica plana y redonda esta respiración tiene exactamente el doble de la frecuencia de la trampa, {#}ω, sin importar el número de átomos ni cuán fuerte se repelan (una simetría oculta de la ecuación de Gross–Pitaevskii bidimensional, Pitaevskii y Rosch {#}). Apaga la repulsión y compara.",
+"A condensate that settled in a trap centered {#} µm to the right, and the trap is moved back to the middle. Press Play: the whole cloud swings back and forth through the center without changing shape, at exactly the trap frequency ω (Kohn's theorem: in a harmonic trap the center of mass does not feel the interactions at all). Experimenters use this sloshing to measure their trap frequency.":
+  "Un condensado que se asentó en una trampa centrada {#} µm a la derecha, y la trampa se regresa al centro. Pulsa Iniciar: toda la nube oscila de un lado a otro por el centro sin cambiar de forma, exactamente a la frecuencia de la trampa ω (teorema de Kohn: en una trampa armónica el centro de masa no siente las interacciones en absoluto). Los experimentadores usan este vaivén para medir la frecuencia de su trampa.",
+"A condensate in a trap that was moved back to the middle.":
+  "Un condensado en una trampa que se regresó al centro.",
+"Running.":
+  "En marcha.",
+"The period needs a few swings to measure.":
+  "El periodo necesita unas cuantas oscilaciones para medirse.",
+"A graph of the cloud center against time is drawn under the picture.":
+  "Bajo la imagen se dibuja una gráfica del centro de la nube en función del tiempo.",
+"; 1 s here = {r} ms":
+  "; 1 s aquí = {r} ms",
+"; slow motion: 1 s here = {r} ms of real time":
+  "; cámara lenta: 1 s aquí = {r} ms de tiempo real",
 "{#} µm across, seen from above":
   "{#} µm de ancho, vista desde arriba",
 "hue: phase of the wavefunction; dim where there are no atoms":
@@ -114,36 +170,22 @@ VDI18N.add('es', 'demo/condensate-waves', {
   "más brillante: más átomos por área (a escala del punto más denso)",
 "brighter: more atoms per area":
   "más brillante: más átomos por área",
-"Two condensates held apart by a broad barrier in the middle of the trap. Press Play: the barrier is removed and the two halves slide down into the middle of the trap and run through each other. Where they overlap they interfere: fine stripes whose spacing is h divided by the momentum of one cloud relative to the other, closest together when they meet fastest at the center. The repulsion between the atoms bends the stripes into dark grooves that outlive the crossing.":
-  "Dos condensados separados por una barrera ancha en medio de la trampa. Pulsa Iniciar: se retira la barrera y las dos mitades se deslizan hacia el centro de la trampa y se atraviesan una a otra. Donde se traslapan interfieren: franjas finas cuyo espaciamiento es h dividido entre el momento de una nube relativo a la otra, más juntas cuando se encuentran con la mayor rapidez en el centro. La repulsión entre los átomos curva las franjas en surcos oscuros que sobreviven al cruce.",
-"Set a stirring rate to turn the trap.":
-  "Fija una tasa de agitación para girar la trampa.",
 "angle of the vortex around the center (degrees)":
   "ángulo del vórtice alrededor del centro (grados)",
-"A condensate with one vortex in it, {#} µm from the middle: a hole where the density goes to zero, around which the phase of the wavefunction winds once through every color. The fluid circles the hole with speed ħ/(mr), so the circulation around it is exactly h/m, one quantum. Press Play: the vortex goes around the center of the trap in the same direction as its own flow, carried by the slope of the density, and faster the farther out it is.":
-  "Un condensado con un vórtice, a {#} µm del centro: un hueco donde la densidad llega a cero, alrededor del cual la fase de la función de onda recorre una vez todos los colores. El fluido circula alrededor del hueco con rapidez ħ/(mr), de modo que la circulación a su alrededor es exactamente h/m, un cuanto. Pulsa Iniciar: el vórtice gira alrededor del centro de la trampa en el mismo sentido que su propio flujo, arrastrado por la pendiente de la densidad, y más rápido cuanto más lejos está.",
 "Time for the vortex to go around":
   "Tiempo que tarda el vórtice en dar la vuelta",
 "wait":
   "espera",
-"A vortex (orange ring, turning counterclockwise) and an antivortex (teal ring, clockwise) side by side. Their flows add between them, and each is carried along by the other's flow, so the pair moves in a straight line together, like a smoke ring seen in cross section. Press Play and watch where they go when they reach the thin edge of the cloud.":
-  "Un vórtice (anillo naranja, girando en sentido antihorario) y un antivórtice (anillo verde azulado, en sentido horario) lado a lado. Sus flujos se suman entre ellos, y cada uno es arrastrado por el flujo del otro, así que el par se mueve en línea recta junto, como un anillo de humo visto en sección transversal. Pulsa Iniciar y observa adónde van cuando llegan al borde delgado de la nube.",
 "{#} µm across, seen from above, turning with the stirrer":
   "{#} µm de ancho, vista desde arriba, girando con el agitador",
 "angular momentum per atom ⟨L_z⟩/ħ":
   "momento angular por átomo ⟨L_z⟩/ħ",
-"A condensate in a trap squeezed slightly into an ellipse, and the ellipse turning at {#}ω ({#} turns per second): the picture turns with the stirrer. Press Play. A normal fluid would simply rotate with the trap; a condensate cannot rotate as a body, because its flow must have no curl wherever there are atoms. Instead it wobbles, its edge breaks up, and vortices enter from the outside one after another, then settle into a regular triangular lattice, all turning the same way. The first vortices enter after about {#} trap periods ({#} s of real time; a minute or so here, faster at {#}×); the damping stands in for the thermal cloud that lets the vortices settle. Madison et al. (Paris, {#}) and Abo-Shaeer et al. (MIT, {#}) saw exactly this.":
-  "Un condensado en una trampa ligeramente apretada en forma de elipse, y la elipse gira a {#}ω ({#} vueltas por segundo): la imagen gira con el agitador. Pulsa Iniciar. Un fluido normal simplemente giraría con la trampa; un condensado no puede girar como cuerpo, porque su flujo no debe tener rotacional donde haya átomos. En cambio se bambolea, su borde se rompe, y los vórtices entran desde afuera uno tras otro, y luego se asientan en una red triangular regular, todos girando en el mismo sentido. Los primeros vórtices entran después de unos {#} periodos de la trampa ({#} s de tiempo real; aproximadamente un minuto aquí, más rápido a {#}×); el amortiguamiento hace las veces de la nube térmica que deja que los vórtices se asienten. Madison et al. (París, {#}) y Abo-Shaeer et al. (MIT, {#}) vieron exactamente esto.",
-"The picture turns with the stirrer. Damping (Lab) lets vortices settle.":
-  "La imagen gira con el agitador. El amortiguamiento (Laboratorio) deja que los vórtices se asienten.",
 "{#} ω = {#} turns per second":
   "{#} ω = {#} vueltas por segundo",
 "Feynman: one vortex per πħ/(mΩ)":
   "Feynman: un vórtice por πħ/(mΩ)",
 "rms radius √⟨r²⟩ (µm)":
   "radio rms √⟨r²⟩ (µm)",
-"A condensate that settled in a trap {#} percent weaker, which is suddenly tightened. Press Play: the cloud squeezes in and bounces back out, over and over. In a flat round harmonic trap this breathing has exactly twice the trap frequency, {#}ω, whatever the number of atoms and however strongly they repel (a hidden symmetry of the two dimensional Gross–Pitaevskii equation, Pitaevskii and Rosch {#}). Turn off the repulsion and compare.":
-  "Un condensado que se asentó en una trampa {#} por ciento más débil, que de pronto se aprieta. Pulsa Iniciar: la nube se comprime y rebota hacia afuera, una y otra vez. En una trampa armónica plana y redonda esta respiración tiene exactamente el doble de la frecuencia de la trampa, {#}ω, sin importar el número de átomos ni cuán fuerte se repelan (una simetría oculta de la ecuación de Gross–Pitaevskii bidimensional, Pitaevskii y Rosch {#}). Apaga la repulsión y compara.",
 "Breathing period, measured":
   "Periodo de respiración, medido",
 "wait for a few swings":
@@ -152,22 +194,10 @@ VDI18N.add('es', 'demo/condensate-waves', {
   "Esperado π/ω (respiración a {#}ω)",
 "center of the cloud ⟨x⟩ (µm)":
   "centro de la nube ⟨x⟩ (µm)",
-"A condensate that settled in a trap centered {#} µm to the right, and the trap is moved back to the middle. Press Play: the whole cloud swings back and forth through the center without changing shape, at exactly the trap frequency ω (Kohn's theorem: in a harmonic trap the center of mass does not feel the interactions at all). Experimenters use this sloshing to measure their trap frequency.":
-  "Un condensado que se asentó en una trampa centrada {#} µm a la derecha, y la trampa se regresa al centro. Pulsa Iniciar: toda la nube oscila de un lado a otro por el centro sin cambiar de forma, exactamente a la frecuencia de la trampa ω (teorema de Kohn: en una trampa armónica el centro de masa no siente las interacciones en absoluto). Los experimentadores usan este vaivén para medir la frecuencia de su trampa.",
 "Sloshing period, measured":
   "Periodo de oscilación del centro de masa, medido",
 "Kohn: {#}/f, f = ω/{#}π":
   "Kohn: {#}/f, f = ω/{#}π",
-"; 1 s here = {r} ms":
-  "; 1 s aquí = {r} ms",
-"; slow motion: 1 s here = {r} ms of real time":
-  "; cámara lenta: 1 s aquí = {r} ms de tiempo real",
-"Time controls":
-  "Controles de tiempo",
-"<span>Speed</span>":
-  "<span>Velocidad</span>",
-"<a>Photons and matter waves</a>":
-  "<a>Fotones y ondas de materia</a>",
 "Close":
   "Cerrar"
 });

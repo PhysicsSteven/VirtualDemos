@@ -26,6 +26,12 @@ VDI18N.add('es', 'demo/the-eye', {
   "mancha de desenfoque {#} µm = {#}′; una letra {#}/{#} mide {#}′ = {#} µm",
 "sharp":
   "nítida",
+"Describe the picture":
+  "Describir la imagen",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "The Eye":
   "El ojo",
 "<a><span>←</span> <span>Polarization</span></a><a><span>Build a Microscope or Telescope</span> <span>→</span></a>":
@@ -36,6 +42,28 @@ VDI18N.add('es', 'demo/the-eye', {
   "P en dioptrías, {#} D = {#} m⁻¹",
 "Top: distances from the eye on a logarithmic scale, with the object, the glasses, the near and far points and the image the glasses make. Bottom: the eye enlarged, with rays from the object passing the glasses and the eye's lens to the retina. Drag the object along the scale, or use the arrow keys.":
   "Arriba: distancias al ojo en escala logarítmica, con el objeto, los lentes, los puntos cercano y lejano y la imagen que forman los lentes. Abajo: el ojo ampliado, con rayos del objeto que pasan por los lentes y por el cristalino hasta la retina. Arrastra el objeto a lo largo de la escala, o usa las flechas.",
+"The eye is normal, drawn enlarged under a scale of distances from the eye.":
+  "El ojo es normal, dibujado ampliado bajo una escala de distancias desde el ojo.",
+"The near point is {#} cm.":
+  "El punto próximo está a {#} cm.",
+"The far point is at infinity.":
+  "El punto remoto está en el infinito.",
+"The eye's lens can change its power from {#} to {#} D.":
+  "El cristalino del ojo puede cambiar su potencia de {#} a {#} D.",
+"The object is {#} cm.":
+  "El objeto está a {#} cm.",
+"The eye wears no glasses.":
+  "El ojo no usa anteojos.",
+"The object is seen sharp.":
+  "El objeto se ve nítido.",
+"The eye uses {#} D.":
+  "El ojo usa {#} D.",
+"The image forms {#} cm behind the lens, and the retina is at {#} cm.":
+  "La imagen se forma {#} cm detrás del cristalino, y la retina está a {#} cm.",
+"No glasses are needed for distance.":
+  "No se necesitan anteojos para ver de lejos.",
+"No glasses are needed for reading at {#} cm.":
+  "No se necesitan anteojos para leer a {#} cm.",
 "<a>Worksheet {#}: The Eye</a>":
   "<a>Hoja de trabajo {#}: El ojo</a>",
 "<a>Worksheet {#}: The Camera</a>":
@@ -182,6 +210,24 @@ VDI18N.add('es', 'demo/the-eye', {
   "muy lejos (∞)",
 "This eye has its far point at {#} cm. Even fully relaxed it is too strong for distant light, which focuses in front of the retina. Bring the object closer than {#} cm and it becomes sharp.":
   "Este ojo tiene su punto lejano a {#} cm. Aun completamente relajado es demasiado potente para la luz lejana, que se enfoca delante de la retina. Acerca el objeto a menos de {#} cm y se vuelve nítido.",
+"The camera is: Phone camera.":
+  "La cámara es: Cámara de teléfono.",
+"It has a lens of focal length {#} mm, in front of a sensor.":
+  "Tiene una lente de distancia focal {#} mm, frente a un sensor.",
+"The aperture is f/{#}.":
+  "La abertura es f/{#}.",
+"The object is {#} m.":
+  "El objeto está a {#} m.",
+"The lens is {#} mm from the sensor.":
+  "La lente está a {#} mm del sensor.",
+"The blur spot on the sensor is {#} µm, or {#} pixels.":
+  "La mancha borrosa en el sensor es de {#} µm, o {#} píxeles.",
+"The image is sharp.":
+  "La imagen es nítida.",
+"The sharp image forms {#} mm behind the lens.":
+  "La imagen nítida se forma {#} mm detrás de la lente.",
+"Objects from {#} cm to far away (∞) are sharp.":
+  "Los objetos desde {#} cm hasta muy lejos (∞) se ven nítidos.",
 "OpenStax Example {#}: a −{#} D lens {#} cm from the eye makes a distant object’s image {#} cm in front of the glasses, which is {#} cm from the eye, at the far point. The eye sees that image sharply.":
   "Ejemplo {#} de OpenStax: una lente de −{#} D a {#} cm del ojo forma la imagen de un objeto lejano {#} cm delante de los lentes, que está a {#} cm del ojo, en el punto lejano. El ojo ve esa imagen nítida.",
 "This eye’s near point is {#} m. A book at {#} cm needs more power than the eye has, and its image would form behind the retina.":
@@ -202,6 +248,14 @@ VDI18N.add('es', 'demo/the-eye', {
   "La imagen de los lentes, vista por el ojo",
 "behind the eye (converging light)":
   "detrás del ojo (luz convergente)",
+"The eye is older, drawn enlarged under a scale of distances from the eye.":
+  "El ojo es de mayor edad, dibujado ampliado bajo una escala de distancias desde el ojo.",
+"The eye wears glasses of +{#} D.":
+  "El ojo usa anteojos de +{#} D.",
+"The object is blurred, with a spot {#} mm across.":
+  "El objeto se ve borroso, con una mancha de {#} mm de ancho.",
+"The glasses for reading at {#} cm would be +{#} D.":
+  "Los lentes para leer a {#} cm serían de +{#} D.",
 "the rays meet in front of the sensor":
   "los rayos se juntan delante del sensor",
 "the rays never meet: the object is inside f":

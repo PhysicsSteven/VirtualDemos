@@ -583,6 +583,30 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; draw(); });
   tokens(); new ResizeObserver(resize).observe(stage);
   const p0 = new URLSearchParams(location.search).get('setup'); applyPreset(PRESETS[p0] ? p0 : 'normal'); resize();
+  /* what the picture shows now, for a screen reader (VD.describe): the eye or the camera, the object, and whether the image is sharp */
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    const out = [];
+    if (S.mode === 'camera') {
+      const q = camState();
+      out.push(`The camera is: ${q.c.name}.`, `It has a lens of focal length ${(q.c.f * 1000).toFixed(2)} mm, in front of a sensor.`, `The aperture is f/${S.N}.`, `The object is ${fmtD(S.dc)}.`, `The lens is ${fmtMM(S.ds)} from the sensor.`);
+      out.push(`The blur spot on the sensor is ${(q.blur * 1e6).toFixed(1)} µm, or ${q.px.toFixed(1)} pixels.`);
+      if (S.blind) out.push('Whether the image is sharp, the image distance and the range in focus are hidden in Blind.');
+      else { out.push(q.sharp ? 'The image is sharp.' : 'The image is blurred.', q.di > 0 && isFinite(q.di) ? `The sharp image forms ${fmtMM(q.di)} behind the lens.` : 'There is no real image.',
+        isNaN(q.dof.near) ? 'Nothing is sharp at this setting.' : `Objects from ${fmtD(q.dof.near)} to ${fmtD(q.dof.far)} are sharp.`); }
+      return out;
+    }
+    const st = state(), fp = st.FP;
+    out.push(`The eye is ${EYES[S.eye].name.toLowerCase()}, drawn enlarged under a scale of distances from the eye.`, `The near point is ${(st.NP * 100).toFixed(1)} cm.`, !isFinite(fp) ? 'The far point is at infinity.' : fp < 0 ? 'The far point is beyond infinity.' : `The far point is ${fmtD(fp)}.`,
+      `The eye's lens can change its power from ${st.r.Pmin.toFixed(1)} to ${st.r.Pmax.toFixed(1)} D.`, `The object is ${fmtD(S.d)}.`);
+    out.push(S.wear ? `The eye wears glasses of ${fmtP(S.Pg)}.` : 'The eye wears no glasses.');
+    if (S.blind) out.push('Whether the object is seen sharp, the power used, the image position and the prescriptions are hidden in Blind.');
+    else {
+      out.push(st.img.blur < SHARP ? 'The object is seen sharp.' : `The object is blurred, with a spot ${(st.img.blur * 1000).toFixed(2)} mm across.`, `The eye uses ${st.Pt.toFixed(2)} D.`);
+      out.push(!isFinite(st.img.di) ? 'The image forms at infinity.' : st.img.di < 0 ? 'The light still diverges, so there is no image.' : `The image forms ${(st.img.di * 100).toFixed(3)} cm behind the lens, and the retina is at 1.80 cm.`);
+      out.push(isFinite(fp) && fp > 0 ? `The glasses for distance would be ${fmtP(rxFar(fp))}.` : 'No glasses are needed for distance.', st.NP > 0.25 ? `The glasses for reading at 25 cm would be ${fmtP(rxNear(st.NP))}.` : 'No glasses are needed for reading at 25 cm.');
+    }
+    return out;
+  });
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
 })();
 </script>
