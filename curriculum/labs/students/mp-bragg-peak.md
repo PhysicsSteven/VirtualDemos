@@ -11,7 +11,7 @@ Student laboratory · Medical Physics
 **Using the demo.**
 
 - The picture is a side view of a phantom on a bench: a tank of water, or a block of muscle, fat or bone. The beam comes in from the left, and the dose it puts down is drawn as a color wash, from blue at 10 % through green and yellow to red at 100 %, then magenta above it. Beam on shows the particles moving: protons slow down and stop, and photons keep going.
-- **One energy** is a single proton energy, from 70 to 230 MeV, the energies of the IBA Proteus ONE. **Spread out peak** stacks energy layers to cover a target, and **Protons and photons** adds a 6 MV photon beam aimed at the same target. In the last two views the dose is given as a percentage of the target's mean dose.
+- **One energy** is a single proton energy, from 70 to 230 MeV. The IBA Proteus ONE's S2C2 synchrocyclotron extracts 230 MeV and delivers 70 to 226.7 MeV at the patient. **Spread out peak** stacks energy layers to cover a target, and **Protons and photons** adds a 6 MV photon beam aimed at the same target. In the last two views the dose is given as a percentage of the target's mean dose.
 - The detector is a Bragg peak chamber on a scanning carriage. Drag it in the phantom or on the graph, or type a depth. The electrometer and the readouts give the dose there.
 - The setup card sets the medium, the energy and its spread, the target's depths, the spacing of the energy layers and their weights (fitted flat, or all equal), and which beam the phantom shows.
 - Blind (in the Lab fold) hides the ranges, widths and dose ratios in the readouts, so you find them with the detector.

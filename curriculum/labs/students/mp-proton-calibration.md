@@ -105,7 +105,7 @@ No hazards in the virtual lab. In a real treatment room, follow the center's pro
 | $$k_{pol}$$ | | | |
 | $$k_s$$ | | | |
 | $$N_{D,w,Q_0}$$ (Gy/nC) | | 0.6 | certificate (simulated) |
-| $$k_{Q,Q_0}$$ | | 1.4 | TRS-398 data |
+| $$k_{Q,Q_0}$$ | | 1.7 | TRS-398 data |
 | $$D_w$$ for 100 MU (Gy) | | | |
 
 ## Analysis

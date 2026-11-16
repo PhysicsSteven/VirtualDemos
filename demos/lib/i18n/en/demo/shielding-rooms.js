@@ -134,7 +134,7 @@ VDI18N.add('en', 'demo/shielding-rooms', [
 "door",
 "linac, {#} MV",
 "lead: {#} cm",
-"The same primary barrier in lead: about {#} cm instead of about {#} m. Lead saves space, but at megavolt energies the photons interact by Compton scattering, which depends on electrons per gram, nearly the same in every material. Graph the walls against mass per area: lead needs no less mass than concrete, and concrete costs far less. Lead and steel are used where space is short.",
+"The same primary barrier in lead: about {#} cm instead of about {#} m. Lead saves space, but at megavolt energies the photons interact by Compton scattering, which depends on electrons per gram, nearly the same in every material. Graph the walls against mass per area: lead needs nearly as much mass as concrete (about {#} % less), and concrete costs far less. Lead and steel are used where space is short.",
 "An {#} MV beam: more penetrating, so the tenth value layer of concrete grows from {#} to {#} cm and the primary barrier grows by about half a meter. Above {#} MV the beam also makes neutrons in the head, which set the design of the maze door.",
 "needed: B = {#} × {#}⁻⁴",
 "A secondary wall, which only head leakage reaches ({#} % of the beam, in every direction, so U = {#}). With {#} % of the patients treated with IMRT, which needs about three times the monitor units per Gy, the leakage workload is {#} times the dose workload. Even so the wall needs about {#} m of concrete, well under the primary barrier.",

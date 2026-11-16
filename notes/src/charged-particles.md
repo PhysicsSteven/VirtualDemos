@@ -17,8 +17,8 @@ Three views. **Beam in water**: a side view of a water tank with or without a sl
 ## Running it in class
 
 1. **Proton 150 MeV.** Ask Q1. Fire a few dozen tracks, then a few hundred: the orange bars build the same Bragg curve as the model line (R80 at 15.76 cm, the PSTAR range 15.77 cm).
-2. **No straggling.** Ask Q2. The peak grows to about 30 times the entrance dose and sits at the end of range, 15.74 cm.
-3. **Proton 70 MeV** and **Proton 230 MeV.** The peak to entrance ratio falls from 5.9 to 3.7 and the distal edge widens.
+2. **No straggling.** Ask Q2. The peak grows to about 19 times the entrance dose and sits at the end of range, 15.74 cm.
+3. **Proton 70 MeV** and **Proton 230 MeV.** The peak to entrance ratio falls from 6.5 to 3.8 and the distal edge widens.
 4. **Bone in the way.** Ask Q3. The peak moves 1.45 cm toward the surface.
 5. **Carbon 290 MeV/u.** Ask Q4.
 6. **Stopping power curves**, then **Range against PSTAR.** Ask Q5. Add bone and lead to compare.

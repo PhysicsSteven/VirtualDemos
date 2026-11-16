@@ -28,7 +28,7 @@ A proton plan needs the stopping power of every voxel of the patient, but a CT s
 
 $$H = 1000 \left( \frac{\mu}{\mu_w} - 1 \right),$$
 
-in Hounsfield units (HU): water reads 0 and air about −1000. At CT energies (a tube voltage of 80 to 140 kV, mean detected photon energies of 55 to 80 keV) a material's attenuation per unit volume is a sum over its elements,
+in Hounsfield units (HU): water reads 0 and air about −1000. At CT energies (a tube voltage of 80 to 140 kV, mean detected photon energies of about 60 to 85 keV) a material's attenuation per unit volume is a sum over its elements,
 
 $$\mu = \rho N_A \sum_i \frac{w_i}{A_i} \left( Z_i K_{KN} + Z_i^{2.86} K_{coh} + Z_i^{4.62} K_{ph} \right),$$
 
@@ -131,7 +131,7 @@ No hazards in the virtual lab. A real CT scan gives the patient a dose of ionizi
 6. Graph the range error against the CT number error for the brain and for the lung, and fit each with a straight line (with an intercept). Fill in the fits table. Predict the brain's slope from Analysis 4 and the length of tissue the beam crosses, $$\Delta R \approx \Delta H \, (\mathrm{d}\,\mathrm{RSP}/\mathrm{d}H) \, z$$, and compare. Why is the lung's slope so much larger? (Where does the lung beam stop, and what is the stopping power ratio there?)
 7. From the prostate readings, graph the range error against the I value error and fit a straight line. From prelab 2, predict the slope from the prostate's WET of about 21.3 cm, and compare.
 8. Compare the prostate on the substitute curve with the margin. Would a margin of 3.5 % + 1 mm protect against using the wrong calibration method? Look at Brain, no margin: by how much is the target missed, and why is no margin at all never used?
-9. Fill in the budget table from the table in the demo's Lab section, at 1.5 standard deviations, and combine the percentage terms in quadrature, with and without the term for complex lateral inhomogeneities. Compare with 3.5 %. Which of the errors you measured in Parts 2 to 4 are in the budget, and which would a margin never be meant to cover?
+9. Fill in the budget table from the table in the demo's Lab section (each line is one standard deviation), and combine the percentage terms in quadrature, with and without the term for local lateral inhomogeneities. Multiply by 1.5 to give the totals at 1.5 standard deviations, as Paganetti does, and compare with 3.5 % + 1 mm. Which of the errors you measured in Parts 2 to 4 are in the budget, and which would a margin never be meant to cover?
 
 ## Uncertainty
 

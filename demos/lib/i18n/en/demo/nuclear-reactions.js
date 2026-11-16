@@ -379,7 +379,7 @@ VDI18N.add('en', 'demo/nuclear-reactions', [
 "A {#} GBq ¹³⁷Cs source ({#} MeV γ rays) and a dose rate meter at {#} m. Step back and watch the inverse square law, then add lead and find the thickness that halves the dose rate.",
 "A patient given {#} MBq ({#} mCi) of ⁹⁹ᵐTc, treated as a point source, and someone sitting {#} m away for {#} hours. The {#} hour half life means the source fades as you sit there.",
 "solid: broad beam (TG-{#}) · dashed: narrow beam",
-"A PET uptake room: each patient is given {#} MBq ({#} mCi) of ¹⁸F FDG and rests an hour before the scan. The wall is {#} m from the chair and an office is on the other side. With the broad beam on, add lead and compare with the narrow beam: scattered photons build up behind the shield. The barrier calculation below says how thick the wall must be.",
+"A PET uptake room: each patient is given {#} MBq ({#} mCi) of ¹⁸F FDG and rests an hour before the scan. An office is on the other side of the wall, and its nearest occupied spot is {#} m from the chair. With the broad beam on, add lead and compare with the narrow beam: scattered photons build up behind the shield. The barrier calculation below says how thick the wall must be.",
 "shield",
 "broad",
 "Close",

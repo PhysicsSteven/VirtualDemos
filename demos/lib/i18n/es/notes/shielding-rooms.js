@@ -40,8 +40,8 @@ VDI18N.add('es', 'notes/shielding-rooms', {
   "<strong>Q3.</strong> ¿Por qué el laberinto importa mucho más para los neutrones que un poco más de puerta?",
 "<strong>Q4.</strong> Doubling the patients adds about {#} cm of concrete. Why not twice the wall?":
   "<strong>Q4.</strong> Duplicar los pacientes agrega unos {#} cm de concreto. ¿Por qué no el doble de muro?",
-"<strong>\"Lead is always the best shield.\"</strong> Per gram it is far better only where the photoelectric effect matters, at diagnostic energies below a few hundred keV. At megavolt energies it is no better than concrete per gram, and it is useless against fast neutrons.":
-  "<strong>\"El plomo siempre es el mejor blindaje.\"</strong> Por gramo es mucho mejor solo donde importa el efecto fotoeléctrico, a energías de diagnóstico por debajo de unos cientos de keV. A energías de megavolts no es mejor que el concreto por gramo, y no sirve contra los neutrones rápidos.",
+"<strong>\"Lead is always the best shield.\"</strong> Per gram it is far better only where the photoelectric effect matters, at diagnostic energies below a few hundred keV. At megavolt energies it is only a little better than concrete per gram, and it is useless against fast neutrons.":
+  "<strong>\"El plomo siempre es el mejor blindaje.\"</strong> Por gramo es mucho mejor solo donde importa el efecto fotoeléctrico, a energías de diagnóstico por debajo de unos cientos de keV. A energías de megavolts es apenas un poco mejor que el concreto por gramo, y no sirve contra los neutrones rápidos.",
 "<strong>\"Thicker is the same at any energy.\"</strong> The tenth value layer grows with energy, and the first one is larger than the rest because the beam hardens in the wall.":
   "<strong>\"Más grueso es lo mismo a cualquier energía.\"</strong> La capa decirreductora crece con la energía, y la primera es mayor que las demás porque el haz se endurece en el muro.",
 "<strong>\"The door of a vault is a thick lead slab.\"</strong> A long maze does most of the work; at {#} MV a vault door may have only a little lead.":

@@ -114,8 +114,8 @@ VDI18N.add('es', 'demo/photon-interactions', {
   "Semilla aleatoria: haz clic, o presiona Enter, para escribir un valor",
 "New seed":
   "Nueva semilla",
-"A broad parallel beam on a slab that is endless sideways. The narrow beam counts only photons that never interacted; the broad beam counts every photon behind the slab, as air collision kerma (μ_en, which in air is within {#} % of the air kerma).":
-  "Un haz paralelo ancho sobre una placa infinita hacia los lados. El haz estrecho cuenta solo los fotones que nunca interactuaron; el haz ancho cuenta todos los fotones detrás de la placa, como kerma de colisión en aire (μ_en, que en aire está dentro del {#} % del kerma en aire).",
+"A broad parallel beam on a slab that is endless sideways. The narrow beam counts only photons that never interacted; the broad beam counts every photon behind the slab, as air collision kerma (μ_en, which in air is within {#} % of the air kerma up to ⁶⁰Co energies and about {#} % below it at {#} MeV).":
+  "Un haz paralelo ancho sobre una placa infinita hacia los lados. El haz estrecho cuenta solo los fotones que nunca interactuaron; el haz ancho cuenta todos los fotones detrás de la placa, como kerma de colisión en aire (μ_en, que en aire está dentro del {#} % del kerma en aire hasta las energías del ⁶⁰Co y alrededor de {#} % por debajo de él a {#} MeV).",
 "<span>X-ray tube</span>":
   "<span>Tubo de rayos X</span>",
 "{#} kVp":

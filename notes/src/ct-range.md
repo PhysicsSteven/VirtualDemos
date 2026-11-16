@@ -20,10 +20,10 @@ Three views. **Scan the phantom** scans a 20 cm water cylinder with eight insert
 2. **Same phantom, 80 kV.** B-100 rises to about 1081 HU, the fit constants change, and the mean detected photon energy falls from 76.7 to 58.6 keV.
 3. **Both curves**, then **Bone on the substitute curve.** Ask Q2. Muscle is off by +2.7 % on the substitute curve and +0.1 % on the stoichiometric one; cortical bone by +22.6 % and −0.4 %.
 4. **Substitute curve without Teflon.** The bone error falls to −4.0 %: one insert set the whole bone end of the curve.
-5. **Mystery tissue.** Measure the range shift; Mystery 1 is about 9 % below the curve. Ask Q3, then New mystery for the others, which sit within about 2 %.
+5. **Mystery tissue.** Measure the range shift; Mystery 1 sits about 10 % above the curve (the curve reads it 9 % low). Ask Q3, then New mystery for the others, which sit within about 2 %.
 6. **Brain, 3.5 % + 1 mm**, then **Brain, no margin.** With the margin the real R90 lands 4.0 mm past the target; without it the far edge is missed by 0.3 mm.
 7. **Lung tumor**, then **Lung, CT numbers 10 HU high.** Ask Q4. The same rule gives a 15.8 mm margin, and a 10 HU error moves the real R90 4.5 mm deeper.
-8. **Prostate, tissue I values 10 % low**, then **Prostate planned on the substitute curve.** Ask Q5. The I value error costs −2.2 mm; the substitute curve sends the beam 11.2 mm too deep, so the distal falloff lands about 2 cm into the tissue beyond the target.
+8. **Prostate, tissue I values 10 % low**, then **Prostate planned on the substitute curve.** Ask Q5. The I value error costs −2.7 mm (−2.2 mm in all, with the curve's own +0.5 mm); the substitute curve sends the beam 11.2 mm too deep, so the distal falloff lands about 2 cm into the tissue beyond the target.
 
 ## Questions
 
@@ -31,7 +31,7 @@ Three views. **Scan the phantom** scans a 20 cm water cylinder with eight insert
 
 **Q2.** Why does the curve built straight from the plastics miss cortical bone by over 20 %, when the plastics were made to imitate tissue?
 
-**Q3.** The Mystery 1 slab sits about 9 % below the stoichiometric curve. What could make a real tissue miss a curve built from real tissue compositions?
+**Q3.** The Mystery 1 slab sits about 10 % above the stoichiometric curve. What could make a real tissue miss a curve built from real tissue compositions?
 
 **Q4.** Why is the lung margin 15.8 mm when the brain margin, from the same 3.5 % + 1 mm rule, is 4.3 mm?
 

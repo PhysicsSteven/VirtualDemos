@@ -33,7 +33,7 @@ A proton plan is only as good as the machine that delivers it. Every morning, be
 
 TG-224 sets no daily spot size check; centers that trend it use about ±10 % of the baseline (auto trending daily QA program of a ProBeam center, J. Appl. Clin. Med. Phys., 2021, PMC7856486).
 
-The machine here is modeled on the IBA Proteus ONE at Willis-Knighton (Pidikiti et al., J. Appl. Clin. Med. Phys. 19(1), 94, 2018): a C230 cyclotron whose beam is slowed by a degrader of beryllium, graphite and aluminum to any energy from 70 to 226.7 MeV, then scanned across the field by magnets, spot by spot. Its range is defined at R90, the depth past the Bragg peak where the dose falls to 90 % of the peak, and its output is measured at 2 cm depth, in the plateau. Over a year its daily output and spot position varied by less than 2 %.
+The machine here is modeled on the IBA Proteus ONE at Willis-Knighton (Pidikiti et al., J. Appl. Clin. Med. Phys. 19(1), 94, 2018): an S2C2 superconducting synchrocyclotron whose beam is slowed by a degrader of beryllium, graphite and aluminum to any energy from 70 to 226.7 MeV, then scanned across the field by magnets, spot by spot. Its range is defined at R90, the depth past the Bragg peak where the dose falls to 90 % of the peak, and its output is measured at 2 cm depth, in the plateau. Over a year its daily output and spot position varied by less than 2 %.
 
 The range of protons in water follows the Bragg–Kleeman rule
 

@@ -52,11 +52,11 @@ No hazards in the virtual lab. A real generator is shielded in lead, and every e
 
 ## Procedure
 
-The demo starts running when it opens and whenever you choose a number of nuclei: pause it, and choose 10 000 nuclei before the first reading, so the run starts from t = 0 with a freshly eluted column. Play at a slow speed and pause at each time; the reading stores the time on the clock. Clear throws away readings not yet sent, so Export each series before you Clear it. Hide the expected curves in the Display section.
+The demo starts running when it opens: pause it, then choose 10 000 nuclei before the first reading. Choosing a number of nuclei starts a new sample at t = 0 with a freshly eluted column, and a paused demo stays paused. Play at a slow speed and pause at each time; the reading stores the time on the clock. Clear throws away readings not yet sent, so Export each series before you Clear it. Hide the expected curves in the Display section.
 
 **Ingrowth.** Record a reading at the start, every 2 h to 24 h, then every 12 h to 168 h. Do not elute. Export the readings and Clear.
 
-**Daily elutions.** Choose 10 000 nuclei again and pause. Turn on Elute every 24 h. Play to each whole day from 24 h to 168 h; just after each elution (the Last elution readout shows its time), record a reading. Export the readings; they go to Table 2.
+**Daily elutions.** With the demo paused, choose 10 000 nuclei again. Turn on Elute every 24 h. Play to each whole day from 24 h to 168 h; just after each elution (the Last elution readout shows its time), record a reading. Export the readings; they go to Table 2.
 
 ## Data
 
@@ -82,7 +82,7 @@ Work out the last four columns of Table 1 and the last two of Table 2 yourself. 
 
 1. Graph ln N_P against t (Table 1). Find $$\lambda_P$$ and the ⁹⁹Mo half life from the slope, with the standard error, and compare with 65.924 h. (The counts are one sample followed in time, so the standard error understates the real uncertainty; see the Uncertainty section.)
 2. Graph N_D against t. Read the peak time and estimate its uncertainty from the scatter of the points near the peak. Compare with $$t_{\max}$$ from Before the lab question 3.
-3. Graph the pull $$(N_D - N_D^{\text{Bateman}})/\sqrt{N_D^{\text{Bateman}}}$$ against t. If the counts scatter as Poisson counts about the Bateman curve, the pulls would have mean near 0 and standard deviation near 1. Here readings 2 h apart share most of their nuclei, and the counts come from a fixed 10,000, so a standard deviation well below 1 is expected. What do yours show?
+3. Graph the pull $$(N_D - N_D^{\text{Bateman}})/\sqrt{N_D^{\text{Bateman}}}$$ against t. If the counts scatter as Poisson counts about the Bateman curve, the pulls would have mean near 0 and standard deviation near 1. Here readings 2 h apart share most of their nuclei, so neighboring pulls are correlated, and the counts come from a fixed 10,000: over one run the standard deviation is typically a little below 1 (about 0.9), and from run to run it can come out anywhere from about 0.7 to 1.3. What do yours show?
 4. Average A_D/A_P over the readings from 72 h on, with the standard error of the mean. Solve the equilibrium ratio for B with its uncertainty, and say whether your result can tell B = 0.886 from B = 1.
 5. Graph the eluted N_D against N_P (Table 2). Compare the slope, with its standard error, with Y from Before the lab question 5, and the intercept with zero.
 

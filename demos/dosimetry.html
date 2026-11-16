@@ -175,7 +175,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         <label class="check"><input type="checkbox" id="labIcru"><span>Use the ICRU 90 W_air for protons (34.44 eV) in k_Q</span></label>
         <details class="more"><summary>The model and its formulas</summary>
           <p class="formula">K_col(z) = Φ hν (μ_en/ρ) e^(−μz); D(z) = ∫ K_col(z − x) G(x) dx; past the buildup D/K_col = β = ∫ G(x) e^(μx) dx</p>
-          <p class="hint">Primary photons only (a narrow beam view of a broad field, so scattered photons leave), water of density 1.000 g/cm³. μ/ρ and μ_en/ρ are NIST's. Each interaction makes a Compton electron with the Klein–Nishina spectrum and angle; it goes straight along its first direction for its ESTAR CSDA range and leaves its collision stopping power along the way. Real electrons scatter and zig zag, so the real buildup has a different shape: the model is a sketch of the mechanism, not a depth dose for planning (⁶⁰Co: d_max 4.5 mm here; Khan's tables give 0.5 cm measured). Coherent, photoelectric and pair events are left out of the electron spread (1 % of the interactions or less from 0.2 to 2 MeV, 6 % at 4 MeV). The Monte Carlo scores 50 depth bins (0.5 cm bins at depth) in batches of 4000 histories; the readout at the probe is read linearly between the two nearest bin centers, and so is its uncertainty.</p>
+          <p class="hint">Primary photons only (a narrow beam view of a broad field, so scattered photons leave), water of density 1.000 g/cm³. μ/ρ and μ_en/ρ are NIST's. Each interaction makes a Compton electron with the Klein–Nishina spectrum and angle; it goes straight along its first direction for its ESTAR CSDA range and leaves its collision stopping power along the way. Real electrons scatter and zig zag, so the real buildup has a different shape: the model is a sketch of the mechanism, not a depth dose for planning (⁶⁰Co: d_max 4.55 mm here; Khan's tables give 0.5 cm measured). Coherent, photoelectric and pair events are left out of the electron spread (1 % of the interactions or less from 0.2 to 2 MeV, 6 % at 4 MeV): their share of the collision kerma is spread with the Compton electrons' pattern, in the model and in the Monte Carlo alike. The Monte Carlo scores 50 depth bins (0.5 cm bins at depth) in batches of 4000 histories; the readout at the probe is read linearly between the two nearest bin centers, and so is its uncertainty.</p>
           <p class="formula">D_air = M/(ρ_air V) · W_air/e; D_w = D_air s_w,air p_Q (Bragg–Gray)</p>
           <p class="formula">D_w,Q = M k_TP k_pol k_s N_D,w k_Q; k_TP = (273.2 + T)/(273.2 + 20) · 101.325/P; k_pol = (|M₊| + |M₋|)/(2|M|)</p>
           <p class="formula">pulsed: f = ln(1 + u)/u, u = α n₀ d²/((k₁ + k₂) V); continuous: f = 1/(1 + m² d⁴ q/(6V²))</p>
@@ -239,12 +239,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const muRho = (E) => lerpLog(NIST_W, E, 1), muenRho = (E) => lerpLog(NIST_W, E, 2);
   const sColW = (T) => lerpLog(ESTAR_W, T, 1), sRadW = (T) => lerpLog(ESTAR_W, T, 2), csdaW = (T) => lerpLog(ESTAR_W, T, 3);
   const sColA = (T) => lerpLog(ESTAR_A, T, 1);
-  /* kinetic energy left after a path s (g/cm²) for an electron that started with T0: invert the CSDA range table */
+  /* kinetic energy left after a path s (g/cm²) for an electron that started with T0: invert the CSDA range table. csdaW is log–log between
+     rows, so its inverse is log–log in the same rows with the columns swapped (exact, and fast enough for 200 steps per track) */
   function tAfter(T0, s) {
-    const r = csdaW(T0) - s; if (r <= ESTAR_W[0][3]) return 0;
-    let lo = ESTAR_W[0][0], hi = T0;
-    for (let k = 0; k < 40; k++) { const m = Math.sqrt(lo * hi); if (csdaW(m) < r) lo = m; else hi = m; }
-    return Math.sqrt(lo * hi);
+    const r = csdaW(T0) - s, n = ESTAR_W.length; if (r <= ESTAR_W[0][3]) return 0; if (r >= ESTAR_W[n - 1][3]) return ESTAR_W[n - 1][0];
+    let i = 1; while (ESTAR_W[i][3] < r) i++;
+    const a = ESTAR_W[i - 1], b = ESTAR_W[i], t = Math.log(r / a[3]) / Math.log(b[3] / a[3]);
+    return Math.exp(Math.log(a[0]) + t * Math.log(b[0] / a[0]));
   }
 
   /* Klein–Nishina for a free electron. k = E/mc², s = T/E. dσ/dT in cm² per MeV per electron (Attix eq. 7.13 form). */
@@ -285,11 +286,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   /* The depth spread of the energy the electrons deposit, per unit collision kerma: G(x) on a grid of nx steps of dx (cm, water
      1.000 g/cm³). Each Compton electron goes straight along its starting direction (no multiple scattering) for its CSDA range and
-     leaves S_col(T) per cm along the way; the spread is normalised so that ∫G dx = 1, so the collision kerma it carries is conserved. */
+     leaves S_col(T) per cm along the way; the spread is normalized so that ∫G dx = 1, so the collision kerma it carries is conserved.
+     200 steps per track: with 40 the last deposit sat at 39.5/40 of the range and d_max came out 1 % short (deep check 2026-11-15). */
   function kernel(E, nx = 240) {
     const b = comptonBins(E), Rmax = csdaW(tMaxCompton(E)), dx = Rmax / nx, G = new Float64Array(nx + 1);
     for (const x of b) {
-      const R = csdaW(x.T), ns = 40, ds = R / ns;
+      const R = csdaW(x.T), ns = 200, ds = R / ns;
       for (let j = 0; j < ns; j++) {
         const s = (j + 0.5) * ds, T = tAfter(x.T, s), dep = sColW(Math.max(T, 0.01)) * ds * x.w, depth = s * x.c;
         const k = Math.min(nx, Math.floor(depth / dx)); G[k] += dep;
@@ -309,20 +311,25 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   /* past the buildup, D/Kcol is the constant β = ∫ G(x) e^{μx} dx (transient charged particle equilibrium) */
   function beta(E, ker) { const K = ker || kernel(E), mu = muRho(E); let s = 0; for (let k = 0; k <= K.nx; k++) s += K.G[k] * Math.exp(mu * (k + 0.5) * K.dx) * K.dx; return s; }
-  /* depth of the dose maximum on a 0.01 mm grid */
+  /* depth of the dose maximum: on a 0.01 mm grid, then refined to 0.1 µm around the best grid point (the grid alone could put d_max
+     up to 0.005 mm past the electron range at 0.5 MeV) */
   function dmax(E, ker) {
     const K = ker || kernel(E); let best = 0, zb = 0;
-    for (let z = 0; z <= K.Rmax * 1.5; z += 0.001) { const d = dose(E, 1, z, K); if (d > best) { best = d; zb = z; } }
+    for (let i = 0; i * 0.001 <= K.Rmax * 1.5; i++) { const z = i * 0.001, d = dose(E, 1, z, K); if (d > best) { best = d; zb = z; } }
+    const z0 = zb;
+    for (let i = -100; i <= 100; i++) { const z = z0 + i * 1e-5; if (z < 0) continue; const d = dose(E, 1, z, K); if (d > best) { best = d; zb = z; } }
     return zb;
   }
 
   /* ---- Monte Carlo histories for the Kerma view: the same physics sampled photon by photon ----
      Photons enter a broad, uniform beam, interact at depths drawn from e^{−μz} (NIST μ), and each interaction is taken as a Compton
-     scattering with probability μ_C/μ (else it leaves no dose here: coherent, photoelectric and pair events, 1 % of the interactions or less
-     from 0.2 to 2 MeV); the electron energy comes from Klein–Nishina and it deposits along its straight CSDA path as in kernel(). The scattered
-     photon leaves (primary dose only). Bins are h cm thick; batches of B histories give the uncertainty of each bin. */
+     scattering with probability μ_C/μ (coherent, photoelectric and pair events, 1 % of the interactions or less from 0.2 to 2 MeV, start no
+     track); the electron energy comes from Klein–Nishina and it deposits along its straight CSDA path as in kernel(). Every track is weighted by
+     wN = (μ_en/ρ) hν / ((μ_C/ρ) T̄_col), so the mean energy left per photon interaction is NIST's collision kerma, as in the model, where kernel()
+     spreads all of NIST's K_col with the Compton pattern (wN = 1.001 at 1.25 MeV, 1.07 at 4 MeV, where pair events take 6 % of the interactions).
+     The scattered photon leaves (primary dose only). Bins are h cm thick; batches of B histories give the uncertainty of each bin. */
   function mcSetup(E, h, zmax, B = 4000) {
-    const b = comptonBins(E), cdf = [], segs = [], ns = 24; let acc = 0;
+    const b = comptonBins(E), cdf = [], segs = [], ns = 200;   /* the same 200 steps per track as kernel(): with 24 the Monte Carlo sat 1 to 3 % above the model in the buildup */ let acc = 0;
     for (const x of b) {
       acc += x.w; cdf.push(acc); const R = csdaW(x.T), ds = R / ns, list = [];
       let sum = 0;
@@ -332,7 +339,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     for (let i = 0; i < cdf.length; i++) cdf[i] /= acc;
     const nb = Math.ceil(zmax / h), pC = Math.min(1, knTotal(E) * ZA_WATER * NA / muRho(E));
-    return { E, h, zmax, B, nb, cdf, segs, pC, mu: muRho(E), S1: new Float64Array(nb), S2: new Float64Array(nb), cur: new Float64Array(nb), inBatch: 0, batches: 0, n: 0, last: [] };
+    let wc = 0; for (const x of b) wc += x.w * collisionLoss(x.T);
+    const wN = muenRho(E) * E / (pC * muRho(E) * wc / acc);   /* acc = Σ w before the cdf was normalized: wc/acc is the mean collision energy T̄_col */
+    for (const list of segs) for (const sg of list) sg[1] *= wN;
+    return { wN, E, h, zmax, B, nb, cdf, segs, pC, mu: muRho(E), S1: new Float64Array(nb), S2: new Float64Array(nb), cur: new Float64Array(nb), inBatch: 0, batches: 0, n: 0, last: [] };
   }
   /* run n histories; rng() gives uniform numbers in [0, 1). Keeps the last few electron tracks for the picture. */
   function mcRun(st, n, rng, keep = 0) {
@@ -1054,7 +1064,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     co60: { view: 'kerma', E: 1.25, range: 'build', z: 0.2, hint: '⁶⁰Co photons (1.17 and 1.33 MeV, taken as 1.25 MeV). The electrons they set moving reach at most 4.6 mm, so the dose builds up over the first few millimeters while the collision kerma already falls from the surface.' },
     deep: { view: 'kerma', E: 1.25, range: 'deep', z: 10, hint: 'Past the buildup the dose and the collision kerma fall together, e^(−μz), with D/K_col fixed a little above 1: transient charged particle equilibrium. The electrons carry energy from shallower, where the kerma is higher.' },
     low: { view: 'kerma', E: 0.5, range: 'build', z: 0.05, hint: 'At 0.5 MeV the electrons travel less than 1 mm, so the buildup is thin and D/K_col past it is very close to 1.' },
-    high: { view: 'kerma', E: 4, range: 'build', z: 1, hint: 'At 4 MeV the fastest electrons travel 2 cm: the skin gets little dose (the skin sparing of megavoltage beams). About one interaction in 17 (5.7 %) is now not a Compton scattering, mostly pair production, and is left out of the electron spread here.' },
+    high: { view: 'kerma', E: 4, range: 'build', z: 1, hint: 'At 4 MeV the fastest electrons travel 2 cm: the skin gets little dose (the skin sparing of megavoltage beams). About one interaction in 17 (5.7 %) is now not a Compton scattering, mostly pair production: here its share of the collision kerma is spread like the Compton electrons\'.' },
     sat: { view: 'chamber', beamC: 'proton', dpp: 1.0, V: 400, plot: 'sat', hint: 'Protons from a synchrocyclotron arrive in pulses (1 kHz). Some ion pairs made in a pulse meet again before they are collected; the higher the voltage, the fewer. Read the chamber from 50 V to 500 V.' },
     hot: { view: 'chamber', beamC: 'proton', dpp: 8.0, V: 400, plot: 'jaffe', hint: 'Eight times the charge per pulse: recombination grows in step (u is proportional to the dose per pulse), so k_s at 400 V is several times further from 1. 1/M against 1/V is close to a straight line, whose intercept is 1/Q_sat.' },
     cochamber: { view: 'chamber', beamC: 'co60', rate: 1.0, V: 400, plot: 'sat', hint: 'A continuous beam of 1 Gy/min makes so few ions at once that hardly any recombine: k_s at 400 V is 1.00001.' },

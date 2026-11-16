@@ -20,7 +20,7 @@ VDI18N.add('en', 'notes/shielding-rooms', [
 "<strong>Q2.</strong> Lead is nearly six times thinner than concrete at {#} MV. Why are vaults still concrete?",
 "<strong>Q3.</strong> Why does the maze matter so much more for neutrons than a little more door?",
 "<strong>Q4.</strong> Doubling the patients adds about {#} cm of concrete. Why not twice the wall?",
-"<strong>\"Lead is always the best shield.\"</strong> Per gram it is far better only where the photoelectric effect matters, at diagnostic energies below a few hundred keV. At megavolt energies it is no better than concrete per gram, and it is useless against fast neutrons.",
+"<strong>\"Lead is always the best shield.\"</strong> Per gram it is far better only where the photoelectric effect matters, at diagnostic energies below a few hundred keV. At megavolt energies it is only a little better than concrete per gram, and it is useless against fast neutrons.",
 "<strong>\"Thicker is the same at any energy.\"</strong> The tenth value layer grows with energy, and the first one is larger than the rest because the beam hardens in the wall.",
 "<strong>\"The door of a vault is a thick lead slab.\"</strong> A long maze does most of the work; at {#} MV a vault door may have only a little lead.",
 "<strong>\"A proton beam carries less energy, so it needs thinner walls.\"</strong> The dose behind the wall is from secondary neutrons of up to the proton energy, which concrete removes only slowly.",

@@ -4,7 +4,7 @@ const assert = require('node:assert');
 const path = require('node:path');
 const { core } = require('./demo_source.cjs');
 const V = require(path.join(__dirname, '../../demos/lib/vdstop.js'));
-const c = core('proton-qa', 'SIG_AIR,sigmaAir,TOL,NOISE,rng32,pristine,r90,mlic,fitShift,SPOTS,dailyQA,scenario,dayFaults,driftDay,sobp,sigmaAt,planSpots,patientQA,gamma,readAt,CH');
+const c = core('proton-qa', 'SIG_AIR,sigmaAir,TOL,NOISE,rng32,pristine,r90,mlic,fitShift,SPOTS,dailyQA,scenario,dayFaults,driftDay,sobp,sigmaAt,planSpots,patientQA,gamma,readAt,CH,FACE,atPlane');
 
 let n = 0;
 const within = (a, b, d, w) => assert(Math.abs(a - b) <= d, `${w || ''}: expected ${b} ± ${d}, got ${a}`);
@@ -69,6 +69,19 @@ group('patient QA: a flat spread out peak, spots that grow with depth, and gamma
   assert(pass({ pr: 3 }, 11, 3, 3) >= 99.5 && pass({ pr: 3 }, 14.2, 3, 3) < 50, 'range error: invisible mid target, plain on the distal edge');
   const Q = c.patientQA(V, P, 'square', 11, {}, 77); Q.meas = c.CH.map(([x, y]) => { const i = Math.round(x + 130), j = Math.round(y + 130); return Q.plan[j * 261 + i]; });
   const g = c.gamma(Q, 3, 3, 10); assert(g.g.every((v) => !isFinite(v) || v < 0.35), 'a measurement equal to the plan at grid points has Γ near 0');
+});
+
+group('patient QA: the chamber face average is exact for a 4.5 mm disc to second order, and gamma matches a much finer search', () => {
+  const F = c.FACE, w = F.reduce((s, q) => s + q[2], 0), m2 = F.reduce((s, q) => s + q[2] * (q[0] * q[0] + q[1] * q[1]), 0);
+  within(w, 1, 1e-12, 'weights sum to 1'); within(m2, 2.25 * 2.25 / 2, 1e-3, 'mean r² over a disc of radius 2.25 mm is R²/2');
+  /* an independent gamma: the same plan and readings, searched in 0.02 mm steps out to Δd (beyond Δd no point can pass) */
+  const P = c.sobp(V, 8, 14), Q = c.patientQA(V, P, 'square', 11, { px: 2 }, 77);
+  const fine = (dd, dta) => { let n = 0, ok = 0; const h = 0.02, K = Math.ceil(dta / h);
+    for (let k = 0; k < c.CH.length; k++) { const [x, y] = c.CH[k], m = Q.meas[k]; if (!(m >= 10)) continue; n++; let best = Infinity;
+      for (let q = -K; q <= K; q++) for (let p = -K; p <= K; p++) { const r2 = ((p * h) ** 2 + (q * h) ** 2) / (dta * dta); if (r2 >= best) continue;
+        const dv = (m - c.atPlane(Q.plan, x + p * h, y + q * h)) / dd; best = Math.min(best, r2 + dv * dv); }
+      if (best <= 1) ok++; } return 100 * ok / n; };
+  for (const [dd, dta] of [[3, 3], [3, 2], [2, 2]]) within(c.gamma(Q, dd, dta, 10).pass, fine(dd, dta), 0.7, `${dd} %/${dta} mm passing rate against a 0.02 mm search`);
 });
 
 console.log(`${n} groups passed`);

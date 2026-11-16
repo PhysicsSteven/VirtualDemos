@@ -52,7 +52,9 @@ group('kerma and dose: G integrates to 1, D builds up from 0, past the buildup D
   near(c.kcol(1.25, 1e10, 0), 1e10 * 1.25 * 0.02965 * 1.602176634e-10, 1e-12, 'K_col at the surface, Gy');
   near(c.kcol(1.25, 1e10, 10) / c.kcol(1.25, 1e10, 0), Math.exp(-0.6323), 1e-12, 'e^(−μz)');
   near(K.Rmax, 0.4574, 2e-3, '60Co: CSDA range of the 1.04 MeV electron');
-  near(c.dmax(1.25, K), 0.450, 0.01, '60Co d_max of the model');
+  near(c.dmax(1.25, K), 0.455, 0.005, '60Co d_max of the model');
+  /* with 200 steps per track the dose keeps building almost to the end of the longest track (40 steps stopped it at 0.988 R) */
+  for (const E of [0.5, 1.25, 4]) { const Ke = c.kernel(E), r = c.dmax(E, Ke) / Ke.Rmax; assert(r > 0.99 && r <= 1, `d_max/R at ${E} MeV: ${r}`); }
   /* energy conservation: the dose under the curve to a deep depth equals the kerma under it, less what is carried past the end */
   let Ds = 0, Ks = 0; const zz = 30, dz = 0.01; for (let z = dz / 2; z < zz; z += dz) { Ds += c.dose(1.25, 1, z, K) * dz; Ks += c.kcol(1.25, 1, z) * dz; }
   near(Ds, Ks, 2e-3, 'deposited = transferred (collision part)');
@@ -64,6 +66,11 @@ group('Monte Carlo: histories reproduce the model dose past the buildup within t
   const md = c.mcDose(st, 1e10);
   for (const b of md) if (b.z > 0.6 && b.z < 1.1) { const d = c.dose(E, 1e10, b.z, K); assert(Math.abs(b.D - d) < 4 * b.u + 0.004 * d, `bin ${b.z}: MC ${b.D} ± ${b.u}, model ${d}`); }
   assert(md[0].D < 0.3 * md[12].D, 'the first bin is low: the buildup');
+  /* at 4 MeV 6 % of the interactions are not Compton: the tracks are weighted to NIST μ_en, so the Monte Carlo still matches the model
+     (unweighted it sat 7 % low; deep check 2026-11-15) */
+  const K4 = c.kernel(4), st4 = c.mcSetup(4, 0.1, 4.8), r4 = c.rng32(3); c.mcRun(st4, 400000, r4);
+  let s4 = 0, n4 = 0; for (const b of c.mcDose(st4, 1e10)) if (b.z > 2.2) { s4 += b.D / c.dose(4, 1e10, b.z, K4); n4++; }
+  near(s4 / n4, 1, 0.01, 'Monte Carlo against the model past the 4 MeV buildup');
   const g = c.rng32(1); let s = 0, s2 = 0; for (let i = 0; i < 20000; i++) { const x = c.gauss(g); s += x; s2 += x * x; } near(s2 / 20000, 1, 0.03, 'unit Gaussian'); assert(Math.abs(s / 20000) < 0.03);
 });
 

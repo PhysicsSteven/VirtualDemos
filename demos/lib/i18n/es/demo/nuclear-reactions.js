@@ -758,8 +758,8 @@ VDI18N.add('es', 'demo/nuclear-reactions', {
   "Un paciente al que se le dan {#} MBq ({#} mCi) de ⁹⁹ᵐTc, tratado como fuente puntual, y alguien sentado a {#} m durante {#} horas. La vida media de {#} horas hace que la fuente se debilite mientras estás sentado ahí.",
 "solid: broad beam (TG-{#}) · dashed: narrow beam":
   "continua: haz ancho (TG-{#}) · discontinua: haz estrecho",
-"A PET uptake room: each patient is given {#} MBq ({#} mCi) of ¹⁸F FDG and rests an hour before the scan. The wall is {#} m from the chair and an office is on the other side. With the broad beam on, add lead and compare with the narrow beam: scattered photons build up behind the shield. The barrier calculation below says how thick the wall must be.":
-  "Una sala de captación PET: a cada paciente se le dan {#} MBq ({#} mCi) de ¹⁸F FDG y reposa una hora antes del escaneo. La pared está a {#} m de la silla y del otro lado hay una oficina. Con el haz ancho activado, agrega plomo y compara con el haz estrecho: los fotones dispersados se acumulan detrás del blindaje. El cálculo de la barrera de abajo dice qué tan gruesa debe ser la pared.",
+"A PET uptake room: each patient is given {#} MBq ({#} mCi) of ¹⁸F FDG and rests an hour before the scan. An office is on the other side of the wall, and its nearest occupied spot is {#} m from the chair. With the broad beam on, add lead and compare with the narrow beam: scattered photons build up behind the shield. The barrier calculation below says how thick the wall must be.":
+  "Una sala de captación PET: a cada paciente se le dan {#} MBq ({#} mCi) de ¹⁸F FDG y reposa una hora antes del escaneo. Del otro lado de la pared hay una oficina, y su punto ocupado más cercano está a {#} m de la silla. Con el haz ancho activado, agrega plomo y compara con el haz estrecho: los fotones dispersados se acumulan detrás del blindaje. El cálculo de la barrera de abajo dice qué tan gruesa debe ser la pared.",
 "shield":
   "blindaje",
 "broad":

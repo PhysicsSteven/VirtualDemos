@@ -37,7 +37,7 @@ Three rooms. **CT room** computes the scatter air kerma from the week's body and
 
 ## Common misconceptions
 
-- **"Lead is always the best shield."** Per gram it is far better only where the photoelectric effect matters, at diagnostic energies below a few hundred keV. At megavolt energies it is no better than concrete per gram, and it is useless against fast neutrons.
+- **"Lead is always the best shield."** Per gram it is far better only where the photoelectric effect matters, at diagnostic energies below a few hundred keV. At megavolt energies it is only a little better than concrete per gram, and it is useless against fast neutrons.
 - **"Thicker is the same at any energy."** The tenth value layer grows with energy, and the first one is larger than the rest because the beam hardens in the wall.
 - **"The door of a vault is a thick lead slab."** A long maze does most of the work; at 6 MV a vault door may have only a little lead.
 - **"A proton beam carries less energy, so it needs thinner walls."** The dose behind the wall is from secondary neutrons of up to the proton energy, which concrete removes only slowly.

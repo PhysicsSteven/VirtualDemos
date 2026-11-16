@@ -57,7 +57,7 @@ VDI18N.add('en', 'demo/photon-interactions', [
 "Random seed",
 "Random seed: click, or press Enter, to type a value",
 "New seed",
-"A broad parallel beam on a slab that is endless sideways. The narrow beam counts only photons that never interacted; the broad beam counts every photon behind the slab, as air collision kerma (μ_en, which in air is within {#} % of the air kerma).",
+"A broad parallel beam on a slab that is endless sideways. The narrow beam counts only photons that never interacted; the broad beam counts every photon behind the slab, as air collision kerma (μ_en, which in air is within {#} % of the air kerma up to ⁶⁰Co energies and about {#} % below it at {#} MeV).",
 "<span>X-ray tube</span>",
 "{#} kVp",
 "Aluminum filtration",
@@ -204,8 +204,6 @@ VDI18N.add('en', 'demo/photon-interactions', [
 "{#} keV photons from ¹³⁷Cs through {#} cm of water, μt = {#}. The narrow beam keeps e^(−{#}) = {#} % of its photons; behind a broad beam the air kerma is about {#} times that, because scattered photons reach the far side too.",
 "Stop",
 "{#} of {#} photons",
-"Lead, {#} cm",
-"⁶⁰Co photons (one beam at the mean of its two lines, {#} keV) through {#} cm of lead, about two mean free paths. Buildup is smaller in lead than in water at the same μt, since the photons that scatter are soon absorbed by the photoelectric effect.",
 "{#} never interacted",
 "{#} scattered",
 "Photons sent",
@@ -220,6 +218,9 @@ VDI18N.add('en', 'demo/photon-interactions', [
 "Absorbed",
 "Interactions",
 "{#} coherent, {#} incoherent, {#} photoelectric, {#} pair; {#} fluorescence X-rays",
+"{#} photons",
+"Lead, {#} cm",
+"⁶⁰Co photons (one beam at the mean of its two lines, {#} keV) through {#} cm of lead, about two mean free paths. Buildup is smaller in lead than in water at the same μt, since the photons that scatter are soon absorbed by the photoelectric effect.",
 "Ordinary concrete, {#} cm",
 "⁶⁰Co photons through {#} cm of ordinary concrete, μt = {#}: the narrow beam would keep {#} %, but the broad beam air kerma behind the wall is about {#} times that. A shielding calculation that leaves out buildup underestimates the dose.",
 "{#} keV photons through {#} cm of water. Scattered photons lose little energy at this energy, so many survive to the far side: the buildup factor is large even though the slab is only about two mean free paths.",
@@ -241,6 +242,5 @@ VDI18N.add('en', 'demo/photon-interactions', [
 "{#} % of photons pass",
 "Filters drawn {#}× thicker; dosimeter nearer than {#} m.",
 "Sample photons, slowed {#} × {#}⁸ times.",
-"Share in Lead",
-"{#} photons"
+"Share in Lead"
 ]);
