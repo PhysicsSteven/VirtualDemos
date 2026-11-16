@@ -825,6 +825,43 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   VD.projector({ onChange: resize });
+  /* what the pictures show now, for a screen reader (VD.describe): the gyroscope and its tilt trace, then the plot of the recorded readings */
+  if (window.VD && VD.describe) {
+    VD.describe(can, () => {
+      if (!S.sim) return [];
+      const { c, s } = S.sim, tilt = (Math.PI / 2 - s.th) * 180 / Math.PI, still = !S.run;
+      const out = [
+        `A ${S.wheel === 'rim' ? 'rim heavy wheel' : 'solid disk'} of mass 0.500 kg on a horizontal axle, resting on a pivot at the top of a post, with the wheel center ${f(S.d * 100, 0)} cm from the pivot.`,
+        S.rpm > 0 ? `The wheel is set to spin at ${f(S.rpm, 0)} rpm.` : 'The wheel is not spinning.',
+        S.tf > 0 ? `Friction at the pivot is ${f(S.tf, 0)} mN·m.` : 'No friction at the pivot.',
+        S.fell ? 'The axle has fallen.' : S.run ? 'Released and moving.' : S.t > 0 ? 'Held.' : 'Held, ready to release.',
+        { t: `Spin ${f(c.w3, 1)} rad/s, axle tilt ${f(tilt, 2)}°, time ${f(S.t, 2)} s.`, live: false },
+        S.lastP ? { t: `The gate timed the last full turn round the post at ${S.lastP.toFixed(2)} s.`, live: still } : 'The gate has timed no full turn yet.',
+        { t: `Torque Mgd sin θ ${f(c.Mgd * Math.sin(s.th) * 1000, 1)} mN·m.`, live: false }
+      ];
+      if (hiddenI()) out.push(S.mystK != null && !S.blind ? 'The moment of inertia is hidden, so you can find it from your timings.' : 'The moments of inertia, L and the predicted rate are hidden.');
+      else {
+        const ft = c.w3 > 0 ? fastTop(c) : NaN;
+        out.push(`The moment of inertia about the axle is ${sci(c.Is)} kg·m².`);
+        out.push(isFinite(ft) ? `The predicted precession rate is ${f(ft, 3)} rad/s, a period of ${f(2 * Math.PI / ft, 2)} s.` : 'There is no predicted precession rate without spin.');
+      }
+      out.push(S.vecs && c.w3 > 0 && !S.fell ? 'Arrows show the angular momentum L and the torque.' : 'The arrows are hidden.');
+      out.push('A strip below the picture traces the axle tilt over time.');
+      out.push(`${S.rows.length} readings recorded.`);
+      out.push('Press Space to release or hold, and R to reset.');
+      return out;
+    });
+    VD.describe(fitCan, () => {
+      const pts = S.rows.filter((r) => r.wheel === wheelKey() && Math.abs(cellNum(r.d) - S.d) < 1e-9).map((r) => { const rpm = cellNum(r.rpm), P = cellNum(r.P); return rpm > 0 && P > 0 ? [60 / (2 * Math.PI * rpm), 2 * Math.PI / P] : null; }).filter(Boolean);
+      const F = pts.length >= 2 ? fitLine(pts.map((q) => q[0]), pts.map((q) => q[1])) : null;
+      return [
+        'Plot of the precession rate Ω in rad/s against the inverse of the spin rate, in s, for the recorded readings, with a least squares line and its residuals.',
+        pts.length === 1 ? 'The plot has 1 point.' : `The plot has ${pts.length} points.`,
+        F ? `The fitted line has slope ${f(F.b, 3)} s⁻² and intercept ${f(F.a, 4)} rad/s.` : `Record at least two spin rates with this wheel at d = ${f(S.d * 100, 0)} cm.`,
+        F ? (hiddenI() ? 'The moment of inertia from the slope is hidden, so you can work it out.' : `The moment of inertia from the slope is ${sci(MW * G * S.d / F.b, 4)} kg·m².`) : null
+      ];
+    });
+  }
   /* the measuring tools: a stopwatch on the simulated clock */
   /* How this works: one video per worksheet; the Astro 2203 one (intro-precession) when the demo was opened from that worksheet (?ws=) or from
      the Astro 2203 course page (?course=astro-2203, which VD.ws reads too) (made by tools/howto/) */

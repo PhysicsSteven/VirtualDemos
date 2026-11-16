@@ -22,6 +22,8 @@ VDI18N.add('es', 'demo/magnetic-moments', {
   "campo B (T)",
 "energy shift U (meV)":
   "corrimiento de energía U (meV)",
+"Describe the picture":
+  "Describir la imagen",
 "Atoms in a Magnetic Field":
   "Átomos en un campo magnético",
 "<a>Atomic structure</a>":
@@ -40,8 +42,28 @@ VDI18N.add('es', 'demo/magnetic-moments', {
   "Efecto Zeeman",
 "An electron orbit drawn as a current loop, with its angular momentum and magnetic moment arrows, beside the vector model of the orbital angular momentum in a magnetic field.":
   "Una órbita electrónica dibujada como espira de corriente, con las flechas de su momento angular y su momento magnético, junto al modelo vectorial del momento angular orbital en un campo magnético.",
+"A hydrogen electron in the Bohr orbit n = {#}, radius {#} nm, drawn as a current loop, beside the vector model of its angular momentum.":
+  "Un electrón de hidrógeno en la órbita de Bohr n = {#}, de radio {#} nm, dibujado como un lazo de corriente, junto al modelo vectorial de su momento angular.",
+"The angular momentum L points up and the magnetic moment μ points down.":
+  "El momento angular L apunta hacia arriba y el momento magnético μ apunta hacia abajo.",
+"The quantum numbers are l = {#} and m_l = {#}.":
+  "Los números cuánticos son l = {#} y m_l = {#}.",
+"There is no magnetic field.":
+  "No hay campo magnético.",
+"The current is I = {#} × {#}⁻³ A.":
+  "La corriente es I = {#} × {#}⁻³ A.",
+"The magnetic moment is μ = IA = {#} × {#}⁻²⁴ A·m², which is {#} μ_B.":
+  "El momento magnético es μ = IA = {#} × {#}⁻²⁴ A·m², es decir, {#} μ_B.",
+"The length of the quantum angular momentum is {#} ħ and its z part is {#} ħ.":
+  "La magnitud del momento angular cuántico es {#} ħ y su componente z es {#} ħ.",
+"The energy shift is U = m_l μ_B B = {#} meV.":
+  "El corrimiento de energía es U = m_l μ_B B = {#} meV.",
 "Graph of the energy shift of each m_l level against the magnetic field.":
   "Gráfica del corrimiento de energía de cada nivel m_l en función del campo magnético.",
+"Graph of the energy shift of each m_l level, in meV, against the magnetic field, in T.":
+  "Gráfica del corrimiento de energía de cada nivel m_l, en meV, contra el campo magnético, en T.",
+"With l = {#} there is {#} level, from m_l = {#} to {#}.":
+  "Con l = {#} hay {#} nivel, de m_l = {#} a {#}.",
 "The orbit and the field":
   "La órbita y el campo",
 "<span>A hydrogen electron: Bohr orbit n, and the quantum numbers l and m_l of the same level</span>":
@@ -156,6 +178,10 @@ VDI18N.add('es', 'demo/magnetic-moments', {
   "Efecto Zeeman: cada nivel se corre g m μ_B B en un campo B. Aparece una componente por cada par de subniveles superior e inferior con Δm = {#} (luz π) o ±{#} (luz σ), con intensidad relativa dada por el cuadrado de un símbolo 3j. Perpendicular al campo, las componentes π cuentan completas y las σ a la mitad; a lo largo del campo no hay componentes π. Con g = {#} en ambos niveles (la línea singlete del cadmio, o el hidrógeno sin espín como en §{#}) cada componente cae en una de tres longitudes de onda, λ₀ y λ₀ ± λ²μ_B B/(hc): el efecto Zeeman normal. Las líneas D del sodio, cuyos niveles tienen espín, se desdoblan en cuatro y seis componentes (el efecto Zeeman anómalo). Los valores de g provienen de la fórmula de Landé con el factor g del electrón y g_L = {#}. El espectrómetro da a cada componente una forma gaussiana de {#} pm de ancho (FWHM), más fina que la de un espectrómetro de rejilla real; los desdoblamientos Zeeman se miden con un étalon de Fabry–Perot o una placa de Lummer. Se omiten el ancho Doppler, la estructura hiperfina y los corrimientos isotópicos, y el campo es uniforme sobre la lámpara.",
 "Data: constants from CODATA {#}. Wavelengths from the NIST Handbook of Basic Atomic Spectroscopic Data (Cd {#} nm and Na {#} and {#} nm in air) and the NIST Atomic Spectra Database (H Lyman α {#} nm in vacuum). Ground levels from the NIST Atomic Spectra Database; atomic masses are IUPAC standard atomic weights. The {#} magnet ({#} cm long, slits {#} mm wide, a gradient of about {#} T/cm) follows Gerlach and Stern (Z. Phys. {#}, {#}) and the review by Friedrich and Herschbach (Physics Today, December {#}).":
   "Datos: constantes de CODATA {#}. Longitudes de onda del NIST Handbook of Basic Atomic Spectroscopic Data (Cd {#} nm y Na {#} y {#} nm en aire) y de la NIST Atomic Spectra Database (H Lyman α {#} nm en el vacío). Niveles base de la NIST Atomic Spectra Database; las masas atómicas son los pesos atómicos estándar de la IUPAC. El imán de {#} ({#} cm de largo, rendijas de {#} mm de ancho, un gradiente de unos {#} T/cm) sigue a Gerlach y Stern (Z. Phys. {#}, {#}) y la reseña de Friedrich y Herschbach (Physics Today, diciembre de {#}).",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "oven {#} K":
   "horno {#} K",
 "slits":
@@ -256,6 +282,24 @@ VDI18N.add('es', 'demo/magnetic-moments', {
   "λ²μ_B B/(hc)",
 "Cursor shift":
   "Corrimiento en el cursor",
+"You look across the field.":
+  "Miras a través del campo.",
+"The field is B = {#} T.":
+  "El campo es B = {#} T.",
+"The line shows {#} components.":
+  "La línea muestra {#} componentes.",
+"The shifts are −{#}, {#}, {#} pm.":
+  "Los corrimientos son −{#}, {#}, {#} pm.",
+"The step μ_B B is {#} μeV, which is {#} pm.":
+  "El escalón μ_B B es {#} μeV, es decir, {#} pm.",
+"The spectrum around the line, brightness against wavelength shift in picometers.":
+  "El espectro alrededor de la línea, brillo contra corrimiento de longitud de onda en picómetros.",
+"Drag or use the arrow keys to move the cursor.":
+  "Arrastra o usa las teclas de flecha para mover el cursor.",
+"The cursor is at a shift of {#} pm.":
+  "El cursor está en un corrimiento de {#} pm.",
+"The line is split into {#} peaks.":
+  "La línea se divide en {#} picos.",
 "to the spectrometer (along B, through a hole in the pole)":
   "al espectrómetro (a lo largo de B, por un orificio en el polo)",
 "I = e/T = {#} × {#}⁻⁵ A · A = πr² = {#} × {#}⁻¹⁹ m²":
@@ -320,6 +364,10 @@ VDI18N.add('es', 'demo/magnetic-moments', {
   "cara de la pantalla",
 "count along z":
   "conteo a lo largo de z",
+"You look along the field.":
+  "Miras a lo largo del campo.",
+"The shifts are −{#}, {#} pm.":
+  "Los corrimientos son −{#}, {#} pm.",
 "no field":
   "sin campo",
 "l = {#}: no moment":

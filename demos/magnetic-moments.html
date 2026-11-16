@@ -643,7 +643,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('cardOrbit').hidden = v !== 'orbit'; $('cardSg').hidden = v !== 'sg'; $('cardZee').hidden = v !== 'zee';
     $('go').hidden = v !== 'sg'; $('restart').hidden = v !== 'sg';
     $('units').textContent = v === 'orbit' ? 'B in T · U in meV' : v === 'sg' ? 'z in mm · dB/dz in T/m' : 'B in T · shifts in pm';
-    can.setAttribute('aria-label', VIEW_LABEL[v]); cur.setAttribute('aria-label', CURVE_LABEL[v]);
+    can.setAttribute('aria-label', VIEW_LABEL[v]); cur.setAttribute('aria-label', CURVE_LABEL[v]); cur.setAttribute('role', v === 'orbit' ? 'img' : 'application');
     window.vdShowCols = SHOW[v]; if (!(window.vdRows && window.vdRows().length)) window.dispatchEvent(new Event('load'));
     setRun(false); sync(); redraw();
   }
@@ -745,6 +745,70 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   new ResizeObserver(resize).observe($('pane')); new ResizeObserver(resize).observe(cur.parentElement); resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   view3 = VD3K.view({ seg: '#dimSeg', init: init3D, change: () => redraw(), status: () => {} });
+  /* what the pictures show now, for a screen reader (VD.describe): the main picture and the graph under it, for whichever view is on */
+  if (window.VD && VD.describe) {
+    VD.describe(can, () => {
+      if (S.view === 'orbit') {
+        const o = S.orb, b = bohrOrbit(o.n), q = orbital(o.l, o.m, o.B), hid = S.blind;
+        return [
+          `A hydrogen electron in the Bohr orbit n = ${o.n}, radius ${f(b.r * 1e9, 4)} nm, drawn as a current loop, beside the vector model of its angular momentum.`,
+          'The angular momentum L points up and the magnetic moment μ points down.',
+          `The quantum numbers are l = ${o.l} and m_l = ${f(o.m, 0)}.`,
+          o.B > 0 ? `The magnetic field is B = ${f(o.B, 1)} T, pointing up.` : 'There is no magnetic field.',
+          `The current is I = ${sci(b.I, 4)} A.`,
+          hid ? 'The magnetic moment, the angular momentum and the energy shift are hidden.' : `The magnetic moment is μ = IA = ${sci(b.mu, 4)} A·m², which is ${f(b.mu / MU_B, 4)} μ_B.`,
+          `The length of the quantum angular momentum is ${f(Math.sqrt(o.l * (o.l + 1)), 4)} ħ and its z part is ${f(o.m, 0)} ħ.`,
+          !hid && o.l > 0 ? `The angle of L to B is ${f(q.theta * 180 / Math.PI, 2)}°.` : null,
+          hid ? null : `The energy shift is U = m_l μ_B B = ${f(q.U / E * 1000, 4)} meV.`
+        ];
+      }
+      if (S.view === 'sg') {
+        const s = S.sg, a = ATOMS[atomKey()], c = spotCentres(), myst = s.atom === 'mystery';
+        return [
+          'Side view of a Stern–Gerlach apparatus: an oven, two slits, a magnet 3.50 cm long, a drift space and a glass screen.',
+          myst ? 'The atoms in the oven are a mystery.' : 'The oven holds these atoms.',
+          myst ? null : a.name,
+          `The atomic mass is ${g6(a.mass)} u.`,
+          `The field gradient is ${s.G} T/m, the oven is at ${s.T} K, and the drift to the screen is ${s.L2} cm.`,
+          s.sel ? `The velocity selector passes atoms at ${f(c.v, 1)} m/s.` : 'The velocity selector is off.',
+          s.sel ? null : `The speed at the deposit peak is ${f(c.v, 1)} m/s.`,
+          S.run ? 'The beam is running.' : 'The beam is off.',
+          { t: s.dots.length === 1 ? '1 atom has landed on the screen.' : `${s.dots.length} atoms have landed on the screen.`, live: false },
+          S.blind ? 'The number and positions of the spots are hidden.' : a.classical ? `The deposit is one smeared band, from ${f(-c.band * 1000, 4)} to ${f(c.band * 1000, 4)} mm.` : `The screen shows ${c.list.length} spots.`,
+          ...(S.blind || a.classical ? [] : c.list.map((q, i) => (myst ? `Spot ${i + 1} is at z = ${f(q.z * 1000, 4)} mm.` : `Spot ${i + 1} is at z = ${f(q.z * 1000, 4)} mm, with μ_z = ${f(q.muz / MU_B, 4)} μ_B.`)))
+        ];
+      }
+      const z = S.zee, r = zeeman(z.line, z.B, z.look), st = zeemanStep(LINES[z.line].lam, z.B);
+      return [
+        'A discharge lamp between the poles of an electromagnet, and the energy levels of the line split into magnetic sublevels with the allowed transitions.',
+        LINES[z.line].name,
+        z.look === 'along' ? 'You look along the field.' : 'You look across the field.',
+        `The field is B = ${f(z.B, 2)} T.`,
+        S.blind ? 'The number of lines and their shifts are hidden.' : `The line shows ${r.comps.length} components.`,
+        S.blind ? null : `The shifts are ${r.comps.map((q) => f(q.shift_pm, 2)).join(', ')} pm.`,
+        S.blind ? null : `The step μ_B B is ${f(st.dE / E * 1e6, 3)} μeV, which is ${f(st.dLam_pm, 4)} pm.`
+      ];
+    });
+    VD.describe(cur, () => {
+      if (S.view === 'orbit') return [
+        'Graph of the energy shift of each m_l level, in meV, against the magnetic field, in T.',
+        S.blind ? 'The energy shifts are hidden.' : `With l = ${S.orb.l} there ${S.orb.l === 0 ? 'is 1 level' : `are ${2 * S.orb.l + 1} levels`}, from m_l = ${f(-S.orb.l, 0)} to ${f(S.orb.l, 0)}.`
+      ];
+      if (S.view === 'sg') { const s = S.sg;
+        return [
+          'The face of the screen with the atoms that have landed, and their count along z.',
+          'Drag or use the arrow keys to move the cursor.',
+          { t: `The cursor is at z = ${f(s.cur * 1000, 4)} mm.`, live: false }
+        ]; }
+      const z = S.zee, r = zeeman(z.line, z.B, z.look);
+      return [
+        'The spectrum around the line, brightness against wavelength shift in picometers.',
+        'Drag or use the arrow keys to move the cursor.',
+        { t: `The cursor is at a shift of ${f(z.cur, 3)} pm.`, live: false },
+        S.blind ? null : (r.comps.length === 1 ? 'The line is a single peak.' : `The line is split into ${r.comps.length} peaks.`)
+      ];
+    });
+  }
   window.__mm = { S, setView, applyPreset, setRun, redraw, sync, sampleAtom, spotCentres, clearScreen, newAtom, zeeman };
   const HOW = { orbit: 'The Orbital Magnetic Moment', sg: 'The Stern–Gerlach Experiment', zee: 'The Zeeman Effect' };
   VD.howTo({ src: () => `media/how-this-works/${WS[S.view]}.mp4`, poster: () => `media/how-this-works/${WS[S.view]}.jpg`, title: () => `How this works: ${HOW[S.view]}` });

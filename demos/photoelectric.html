@@ -85,6 +85,7 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 .stage { grid-template-columns: minmax(0, 1fr); }
 .stage > .pane { min-width: 0; overflow: hidden; }
 #app { touch-action: none; outline: none; position: relative; z-index: 1; }
+#app:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }   /* the focus mark the 2026-10-25 audit found missing */
 #appPane { position: relative; }
 .pe3 { position: absolute; left: 0; top: 0; z-index: 0; }
 .stage-ctl .vmsg { align-self: center; font-size: 0.78rem; color: var(--muted); }
@@ -1173,6 +1174,42 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     else return;
     e.preventDefault(); syncInputs(); setPreset(null); changed();
   });
+
+  /* what the pictures show now, for a screen reader (VD.describe): the apparatus on the bench, then the two charts */
+  if (window.VD && VD.describe) {
+    const BAND_IS = { ultraviolet: 'The light is ultraviolet.', violet: 'The light is violet.', blue: 'The light is blue.', green: 'The light is green.', yellow: 'The light is yellow.',
+      orange: 'The light is orange.', red: 'The light is red.', infrared: 'The light is infrared.' };
+    const metalName = () => METALS.find((m) => m[0] === S.metal)[1];
+    VD.describe(appC, () => {
+      const hid = !layers.theory;
+      return [
+        'A lamp and monochromator shine light into an evacuated phototube, onto its curved metal cathode, and the electrons go to the central anode wire.',
+        `The wavelength is ${Math.round(S.lam)} nm.`, BAND_IS[bandName(S.lam)],
+        S.pow > 0 ? `The light power is ${S.pow} µW.` : 'The light is off.',
+        'The metal of the cathode is:', metalName(),
+        `Its work function is ${phi().toFixed(2)} eV.`,
+        `The collector voltage is ${S.V >= 0 ? '+' : '−'}${Math.abs(S.V).toFixed(2)} V.`,
+        running ? 'Running.' : 'Paused.',
+        `The photon energy is ${Eph().toFixed(2)} eV, at a frequency of ${sci(freq())} Hz.`,
+        hid ? 'The maximum kinetic energy and the stopping voltage are hidden, so you can work them out.'
+          : Kmax() > 0 ? `The maximum kinetic energy is ${Kmax().toFixed(2)} eV, so the stopping voltage is ${Kmax().toFixed(2)} V.` : 'The photons do not have enough energy to free electrons, so there is no stopping voltage.',
+        S.pow > 0 ? `${sci(photonRate(), 2)} photons arrive each second.` : 'No photons arrive.',
+        `The current is ${fmtI(current(S.V))}.`,
+        'Left and right change the wavelength, up and down change the voltage, Page Up and Page Down change the power, and R reverses the voltage supply.'
+      ];
+    });
+    VD.describe(chC, () => {
+      const fit = fitLine(), hid = !layers.theory;
+      return [
+        'Two charts: the maximum kinetic energy in eV against frequency, and the current against the collector voltage.',
+        hid ? 'The theory curves are hidden.' : (Kmax() > 0 ? `The kinetic energy chart marks ${Kmax().toFixed(2)} eV at the present frequency.` : 'The present frequency is below the threshold, so there is no kinetic energy.'),
+        points.length === 1 ? '1 stopping voltage point is recorded.' : `${points.length} stopping voltage points are recorded.`,
+        fit ? (hid ? 'The fit is hidden.' : `The fit line gives h = ${sci(fit.m * QE / 1e14)} J·s and a work function of ${(-fit.b).toFixed(2)} eV.`) : (points.length ? 'The fit needs 2 points.' : null),
+        S.V < 0 && Kmax() > 0 ? `On the current chart the current falls to zero at −${Kmax().toFixed(2)} V.` : null,
+        `The current at the collector voltage is ${fmtI(current(S.V))}.`
+      ];
+    });
+  }
 
   // projector mode
   const projBtn = $('proj');

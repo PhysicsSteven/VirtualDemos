@@ -965,6 +965,7 @@ table.rows td.b { font-size: 0.76rem; }
     if (!renderer || !renderer.getContext()) return false;
     const el = renderer.domElement; el.id = 'gl'; el.tabIndex = 0;
     el.setAttribute('role', 'application');
+    if (window.vdBenchDescribe) window.vdBenchDescribe(el);
     el.setAttribute('aria-label', 'The spin resonance bench in 3D: console, cell mount with probe, oscilloscope and chart recorder. Drag to turn, scroll to zoom. Drag the SENS screw or FREQ knob up and down; click the Hz selector, the FAST/SLOW switch or SLOW RUN. Keys: up and down turn SENS, left and right turn FREQ, shift for bigger steps; H changes the range, S the run mode, R starts a slow run, E and P switch ESR and PSR.');
     $('p3d').insertBefore(el, $('flat'));
     const scene = new THREE.Scene(), cam = new THREE.PerspectiveCamera(30, 1, 1, 2000); cam.up.set(0, 0, 1);
@@ -1523,6 +1524,65 @@ table.rows td.b { font-size: 0.76rem; }
     if (slow.running && now - lastUI > 200) { syncUI(); lastUI = now; }
     frameMs = 0.9 * frameMs + 0.1 * (performance.now() - t0);
     requestAnimationFrame(loop);
+  }
+  /* what the pictures show now, for a screen reader (VD.describe): the bench, the oscilloscope, the chart recorder and the plot of the readings */
+  if (window.VD && VD.describe) {
+    const RANGE_IS = { LO: 'The Hz selector is on LO.', MID: 'The Hz selector is on MID.', HI: 'The Hz selector is on HI.' };
+    const peaksInView = () => (osc().on ? res().filter((r) => r.B0 >= 0 && r.B0 <= Bmax()).length : 0);
+    const benchFn = () => {
+      const psr = S.cfg === 'psr', o = osc(), d = digits();
+      return [
+        psr ? 'A proton spin resonance bench: the sample in a probe coil in the Zeeman magnet, with a console and an oscilloscope.' : 'An electron spin resonance bench: the sample in a probe coil between scan coils, with a console and an oscilloscope.',
+        'The sample is:', SAMPLES[S.cfg][sample()].name,
+        RANGE_IS[S.range],
+        `The probe frequency is ${(Math.round(nu() / 1e6 * 10 ** d) / 10 ** d).toFixed(d)} MHz.`,
+        `The SENS screw is at ${S.sens[S.cfg].toFixed(2)} turns.`,
+        !o.on ? 'The oscillator is out.' : o.led > 0.98 ? 'The oscillator light is bright.' : 'The oscillator light is dimming.',
+        psr ? `The FREQ dial is at ${S.dial.toFixed(3)}.` : null,
+        psr ? `The sample is at ${S.temp.toFixed(1)} °C, and the Zeeman magnet field is ${(BZ() * 1e3).toFixed(2)} mT.` : null,
+        S.sweep === 'fast' ? 'The sweep is FAST, with a ramp of 40 ms, 20 per second.' : slow.running ? { t: `The sweep is SLOW, at ${Math.max(0, Math.min(25, slow.t - SLOW.lead)).toFixed(1)} of 25 s.`, live: false } : 'The sweep is SLOW, and stopped.',
+        S.playing ? 'Running.' : 'Paused.'
+      ];
+    };
+    VD.describe(cans.flat, benchFn);
+    window.vdBenchDescribe = (el) => VD.describe(el, benchFn);
+    if ($('gl')) window.vdBenchDescribe($('gl'));
+    VD.describe(cans.scope, () => {
+      const sc = S.sc, o = osc(), n = peaksInView();
+      return [
+        'A dual trace oscilloscope. Channel 1 shows the field ramp and channel 2 shows the probe signal.',
+        S.sweep === 'fast' ? 'The ramp repeats 20 times a second.' : 'The ramp is the slow sweep.',
+        `The time base is ${(sc.td * 1000).toFixed(1)} ms per division.`,
+        `Channel 1 is ${sc.v1} V per division and channel 2 is ${sc.v2} V per division.`,
+        !o.on ? 'Channel 2 is flat, because the oscillator is out.' : n === 0 ? 'Channel 2 shows no resonance peak in the sweep.' : n === 1 ? 'Channel 2 shows 1 resonance peak in the sweep.' : `Channel 2 shows ${n} resonance peaks in the sweep.`,
+        sc.measure === 'time' ? `Cursors A and B are ${((sc.B - sc.A) * 1000).toFixed(2)} ms apart.` : `The V cursor is at ${sc.V.toFixed(3)} V.`,
+        sc.measure === 'time' ? `Cursor A is at ${(sc.A * 1000).toFixed(2)} ms and cursor B is at ${(sc.B * 1000).toFixed(2)} ms.` : null
+      ];
+    });
+    VD.describe(cans.chart, () => {
+      const d = S.ch.r2 - S.ch.r1;
+      return [
+        'A chart recorder strip for a slow sweep, 5 mm per second, 1 V full scale.',
+        slow.filled ? 'The strip holds a record of the last slow run.' : 'The strip is empty: run a SLOW sweep to record one.',
+        `The two ruler lines are ${d.toFixed(1)} mm apart, which is ${(d / SLOW.paper).toFixed(2)} s.`
+      ];
+    });
+    VD.describe(cans.plot, () => {
+      const F = fits(), out = ['Plot of the field B against the frequency, from your readings, with a least squares line, its slope and its intercept.'];
+      const rows = S.rows.filter((r) => r.exp === S.cfg).length;
+      out.push(rows === 1 ? 'You have recorded 1 reading in this experiment.' : `You have recorded ${rows} readings in this experiment.`);
+      if (S.cfg === 'esr') {
+        const f = F.e.fit;
+        if (f) { out.push(`The line through ${f.n} points has a slope of ${(f.k * 1e9).toFixed(5)} mT/MHz and an intercept of ${(f.c * 1e3).toFixed(4)} mT.`); out.push(`That gives g = ${gFromSlope(f.k).toFixed(4)}.`); }
+        else out.push('Record readings at LO, MID and HI to fit a line.');
+      } else {
+        const h = F.H.fit, fl = F.F.fit;
+        if (h) out.push(`The proton line has a slope of ${(h.k * 1e9).toFixed(5)} mT/MHz, which gives γ/2π = ${(gammaFromSlope(h.k) / 1e6).toFixed(2)} MHz/T.`);
+        if (fl) out.push(`The fluorine line has a slope of ${(fl.k * 1e9).toFixed(5)} mT/MHz, which gives γ/2π = ${(gammaFromSlope(fl.k) / 1e6).toFixed(2)} MHz/T.`);
+        if (!h && !fl) out.push('Record readings for glycerine and PTFE to fit lines.');
+      }
+      return out;
+    });
   }
   window.__sr = { get frameMs() { return frameMs; }, get scope() { return scopeData; }, S, slow, get inst() { return inst; }, osc, res, nu, BZ, meterValue: () => meterShown, applyPreset, setSens, setDial, setRange, setCfg, setSweep, slowRun, capture, fits, csvTable, csvTraces, scopeHandles, get sg() { return sg; }, get cg() { return cg; }, get gl() { return G.ready; }, setPlaying, advanceSlow,
     pickScreen() { if (!G.ready) return null; const r = G.el.getBoundingClientRect(), o = {}; for (const p of G.pick) { const v = new THREE.Vector3(); p.grip.getWorldPosition(v); v.project(G.cam); o[p.id] = [r.left + (v.x + 1) / 2 * r.width, r.top + (1 - v.y) / 2 * r.height]; } return o; } };

@@ -415,6 +415,46 @@
   $('about3').textContent = 'The faces: outside the slab the applied field is a fixed lattice of vortices at its density, standing for the field there. Vortices come in at a face whenever the strip just inside it holds fewer than the applied field asks for, and leave when pushed across a face or when that strip holds more than the applied field asks for (a pinned vortex stays), so the field at each face equals the applied field: the Bean model\'s boundary condition. The lower critical field, the surface barrier and the slab\'s demagnetizing effects are left out. The view repeats above and below.';
   $('about4').textContent = 'Defects: point defects (oxygen vacancies, for instance) where a vortex\'s energy is lower, modeled as wells 0.2λ across that pull a vortex toward their center with a force up to the pin strength, in units of f0. Their positions are random. The current density from the slopes is |dB/dx|/μ0 from straight line fits to the outer third of the profile on each side (Ampère\'s law). Temperature is not computed: λ is its low temperature value and vortices do not jump out of pins by thermal activation (no flux creep).';
 
+  /* what the pictures show now, for a screen reader (VD.describe): the slab with its vortices and defects, and the graph beside it */
+  const vxN = () => S.st.x.length, vxRamp = () => Math.abs(fromMT(S.target) - S.Ba) > 1e-9;
+  if (window.VD && VD.describe) {
+    VD.describe(can, () => {
+      const st = S.st, N = vxN(), Bav = N / (WX * LY), sl = beanSlope(profile(st, NB), WX / NB), pinsOn = st.o.fp > 0;
+      return [
+        `A slab of YBCO superconductor ${f(WX * LAMBDA * 1e6, 2)} µm wide, seen along the magnetic field, with the outside field on both sides.`,
+        { t: N === 1 ? 'One vortex is drawn, carrying one flux quantum.' : `${N} vortices are drawn, each carrying one flux quantum.`, live: false },
+        !pinsOn ? 'No defects.' : S.pins ? `${st.px.length} defects are drawn as rings, with pin strength ${f(st.o.fp, 1)} f₀.` : `The defects are hidden, with pin strength ${f(st.o.fp, 1)} f₀.`,
+        S.map ? 'The field map is on, brighter where the field is stronger.' : 'The field map is off.',
+        S.play ? 'Running.' : 'Paused.',
+        vxRamp() ? (fromMT(S.target) > S.Ba ? `The applied field is rising toward ${f(S.target, 0)} mT.` : `The applied field is falling toward ${f(S.target, 0)} mT.`) : `The applied field is steady at ${f(S.target, 0)} mT.`,
+        { t: `Applied field now ${f(mT(S.Ba), 1)} mT.`, live: false },
+        { t: `Average field inside ${f(mT(Bav), 1)} mT.`, live: false },
+        S.Ba > 1e-6 ? { t: `Lattice spacing at the applied field ${f(latticeSpacing(S.Ba * BU) * 1e9, 0)} nm.`, live: false } : null,
+        !S.blind && pinsOn && N > 20 ? { t: `Current density from the slopes ${f(Math.max(0, (sl[0] + sl[1]) / 2) * BU / LAMBDA / MU0 / 1e10, 1)} × 10¹⁰ A/m².`, live: false } : null
+      ];
+    });
+    VD.describe(cv, () => {
+      const st = S.st;
+      if (S.graph === 'profile') {
+        const pr = profile(st, NB), mid = (pr[NB / 2 - 1] + pr[NB / 2]) / 2;
+        return [
+          'Bar graph of the field inside the slab, in mT, against position across the slab, in µm.',
+          `The bars are the vortex density in ${NB} strips across the slab.`,
+          !S.blind ? { t: `A dashed line marks the applied field, ${f(mT(S.Ba), 1)} mT.`, live: false } : 'The guide line for the applied field is hidden.',
+          { t: `The field inside is ${f(mT(pr[0]), 1)} mT in the strip at the left face.`, live: false },
+          { t: `The field inside is ${f(mT(mid), 1)} mT in the middle of the slab.`, live: false },
+          { t: `The field inside is ${f(mT(pr[NB - 1]), 1)} mT in the strip at the right face.`, live: false }
+        ];
+      }
+      const h = S.hist, l = h[h.length - 1];
+      return [
+        'Graph of the average field inside, in mT, against the applied field, in mT.',
+        !S.blind ? 'A dashed diagonal line marks inside equal to applied, which is the case with no pinning.' : 'The guide line for no pinning is hidden.',
+        { t: h.length === 1 ? 'The line has 1 point.' : `The line has ${h.length} points.`, live: false },
+        l ? { t: `The latest point is at an applied field of ${f(mT(l[0]), 1)} mT and an average field inside of ${f(mT(l[1]), 1)} mT.`, live: false } : 'No line yet.'
+      ];
+    });
+  }
   window.__vx = { S, applyPreset, advance, profile, beanSlope, BU };
   tokens();
   { const q = new URLSearchParams(location.search).get('setup'); applyPreset(PRESETS[q] ? q : 'bean'); }

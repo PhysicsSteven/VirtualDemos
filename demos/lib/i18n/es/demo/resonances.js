@@ -16,6 +16,8 @@ VDI18N.add('es', 'demo/resonances', {
   "Esto tarda miles de años: prueba la velocidad de {#} años por s",
 "above this it crosses Mars's orbit":
   "por encima de esto cruza la órbita de Marte",
+"Describe the picture":
+  "Describir la imagen",
 "Orbital Resonances":
   "Resonancias orbitales",
 "<a><span>←</span> <span>Planet Temperatures and Habitable Zones</span></a><a><span>Building a Solar System</span> <span>→</span></a>":
@@ -48,6 +50,18 @@ VDI18N.add('es', 'demo/resonances', {
   "Gira con el planeta",
 "The solar system seen from above the plane of the planets: the Sun, the planet that does the pulling, and the small bodies it pulls on, with the orbit of the body being followed and orange marks where the planet has passed it.":
   "El sistema solar visto desde arriba del plano de los planetas: el Sol, el planeta que jala y los cuerpos pequeños sobre los que jala, con la órbita del cuerpo que se sigue y marcas naranjas donde el planeta lo ha rebasado.",
+"The solar system seen from above: the Sun, Jupiter, and an asteroid that Jupiter pulls on, with its orbit.":
+  "El sistema solar visto desde arriba: el Sol, Júpiter y un asteroide sobre el que Júpiter tira, con su órbita.",
+"Paused.":
+  "En pausa.",
+"The time is {#} years.":
+  "El tiempo es {#} años.",
+"The body is {#} AU from the Sun, with an eccentricity of {#}.":
+  "El cuerpo está a {#} UA del Sol, con una excentricidad de {#}.",
+"The body goes round {#} times for each turn of Jupiter.":
+  "El cuerpo da {#} vueltas por cada vuelta de Júpiter.",
+"The largest eccentricity so far is {#}.":
+  "La mayor excentricidad hasta ahora es {#}.",
 "Start an asteroid. Drag, or use the arrow keys, to move this card; double click to put it back":
   "Lanzar un asteroide. Arrastra, o usa las flechas del teclado, para mover esta tarjeta; doble clic para regresarla",
 "Start an asteroid":
@@ -78,8 +92,20 @@ VDI18N.add('es', 'demo/resonances', {
   "<span>Mostrar el Neptuno real</span>",
 "Bar chart: how many real numbered asteroids there are at each distance from the Sun (JPL), with Jupiter's resonances marked, and a dot for each simulated asteroid at its starting distance, as high as the largest eccentricity it has reached. Click a bar to start an asteroid at that distance.":
   "Gráfica de barras: cuántos asteroides numerados reales hay a cada distancia del Sol (JPL), con las resonancias de Júpiter marcadas, y un punto por cada asteroide simulado en su distancia inicial, tan alto como la excentricidad máxima que ha alcanzado. Haz clic en una barra para lanzar un asteroide a esa distancia.",
+"Bar chart of how many real asteroids there are at each distance from the Sun, in AU.":
+  "Gráfica de barras de cuántos asteroides reales hay a cada distancia del Sol, en UA.",
+"Marks show the places of the resonances with Jupiter.":
+  "Las marcas muestran los lugares de las resonancias con Júpiter.",
+"The simulated body starts at {#} AU.":
+  "El cuerpo simulado empieza a {#} UA.",
+"Simulated bodies that are thrown out are marked with a cross.":
+  "Los cuerpos simulados que son expulsados se marcan con una cruz.",
 "Graph against time for the body being followed: its eccentricity, or its distance from the planet.":
   "Gráfica en función del tiempo para el cuerpo que se sigue: su excentricidad, o su distancia al planeta.",
+"Graph of the eccentricity of the asteroid, against time in years.":
+  "Gráfica de la excentricidad del asteroide contra el tiempo en años.",
+"The time so far is {#} years.":
+  "El tiempo transcurrido es {#} años.",
 "Divider between the picture and the graphs":
   "Divisor entre la imagen y las gráficas",
 "Asteroid belt":
@@ -136,6 +162,10 @@ VDI18N.add('es', 'demo/resonances', {
   "e máxima",
 "crossed Mars (yr)":
   "cruzó Marte (años)",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "Pluto":
   "Plutón",
 "distance from the Sun a (AU) · real objects per {#} AU":
@@ -204,12 +234,36 @@ VDI18N.add('es', 'demo/resonances', {
   "{#}″ rms",
 "year {#}":
   "año {#}",
+"The outer solar system seen from above, with Jupiter, Saturn and Uranus, and the year in the corner.":
+  "El sistema solar exterior visto desde arriba, con Júpiter, Saturno y Urano, y el año en la esquina.",
+"Neptune is not drawn.":
+  "Neptuno no está dibujado.",
+"There is no planet X.":
+  "No hay planeta X.",
+"Running.":
+  "En marcha.",
+"The year is {#}.":
+  "El año es {#}.",
+"Uranus is not yet known as a planet.":
+  "Urano todavía no se conoce como planeta.",
+"The leftover drift of Uranus is {#}″ rms.":
+  "La deriva restante de Urano es {#}″ rms.",
+"Graph of where Uranus is seen minus where its fitted orbit puts it, in arcseconds, for each year from {#} to {#}.":
+  "Gráfica de dónde se ve Urano menos dónde lo pone su órbita ajustada, en segundos de arco, para cada año de {#} a {#}.",
+"The fit has no planet X.":
+  "El ajuste no tiene planeta X.",
+"The old sightings, before {#}, are not fitted.":
+  "Las observaciones antiguas, anteriores a {#}, no se ajustan.",
+"The leftover drift is {#}″ rms, and {#}″ rms with no planet X.":
+  "La deriva restante es {#}″ rms, y {#}″ rms sin planeta X.",
 "Jupiter passed here":
   "Júpiter pasó por aquí",
 "Jupiter last passed it":
   "Júpiter lo rebasó por última vez",
 "{#}° from its perihelion (near aphelion)":
   "a {#}° de su perihelio (cerca del afelio)",
+"The closest approach to Jupiter so far is {#} AU.":
+  "El acercamiento máximo a Júpiter hasta ahora es {#} UA.",
 "At {#} AU an asteroid goes round {#} times while Jupiter goes round twice, so the kicks repeat at three places on its orbit. The eccentricity climbs past {#} and the orbit crosses Mars's after about {#} years. Compare the deep gap at {#} AU in the real counts.":
   "A {#} UA un asteroide da {#} vueltas mientras Júpiter da dos, así que los empujones se repiten en tres lugares de su órbita. La excentricidad sube por encima de {#} y la órbita cruza la de Marte tras unos {#} años. Compara con el hueco profundo en {#} UA en los conteos reales.",
 "{#}° from its perihelion":
@@ -238,6 +292,20 @@ VDI18N.add('es', 'demo/resonances', {
   "Cruzaron la órbita de Marte",
 "Scattered by Jupiter":
   "Dispersados por Júpiter",
+"The solar system seen from above, with the Sun, Jupiter and many asteroids.":
+  "El sistema solar visto desde arriba, con el Sol, Júpiter y muchos asteroides.",
+"{#} of {#} are still in play.":
+  "{#} de {#} siguen en juego.",
+"{#} have crossed the orbit of Mars.":
+  "{#} han cruzado la órbita de Marte.",
+"{#} have been scattered by Jupiter.":
+  "Júpiter ha dispersado a {#}.",
+"Each simulated body is a dot at its starting distance, as high as the largest eccentricity it has reached.":
+  "Cada cuerpo simulado es un punto a su distancia inicial, tan alto como la mayor excentricidad que ha alcanzado.",
+"Graph of the number of bodies thrown out so far, against time in years.":
+  "Gráfica del número de cuerpos expulsados hasta ahora contra el tiempo en años.",
+"{#} bodies have been thrown out.":
+  "Se han expulsado {#} cuerpos.",
 "Saturn this way ({#} AU)":
   "Saturno por aquí ({#} UA)",
 "simulated, per {#} AU":
@@ -262,6 +330,8 @@ VDI18N.add('es', 'demo/resonances', {
   "Excentricidad de Júpiter ahora",
 "Saturn's eccentricity now":
   "Excentricidad de Saturno ahora",
+"{#} have come too close to Jupiter or Saturn.":
+  "{#} se han acercado demasiado a Júpiter o Saturno.",
 "Neptune passed here":
   "Neptuno pasó por aquí",
 "closest so far {#} AU":
@@ -270,6 +340,18 @@ VDI18N.add('es', 'demo/resonances', {
   "Neptuno lo rebasó por última vez",
 "The same orbit as Pluto's, started {#}° further round. Now Neptune comes by when the body is near perihelion, inside Neptune's orbit: it meets Neptune and is scattered after about {#} years. Without the resonance Pluto would not have survived.":
   "La misma órbita que la de Plutón, empezada {#}° más adelante. Ahora Neptuno pasa cuando el cuerpo está cerca del perihelio, dentro de la órbita de Neptuno: se encuentra con Neptuno y sale dispersado tras unos {#} años. Sin la resonancia Plutón no habría sobrevivido.",
+"The solar system seen from above: the Sun, Neptune, and a small body that Neptune pulls on, with its orbit.":
+  "El sistema solar visto desde arriba: el Sol, Neptuno y un cuerpo pequeño sobre el que Neptuno tira, con su órbita.",
+"The period of the body is {#} times the period of Neptune.":
+  "El periodo del cuerpo es {#} veces el periodo de Neptuno.",
+"The closest approach to Neptune so far is {#} AU.":
+  "El acercamiento máximo a Neptuno hasta ahora es {#} UA.",
+"Bar chart of how many real Kuiper belt objects there are at each distance from the Sun, in AU.":
+  "Gráfica de barras de cuántos objetos reales del cinturón de Kuiper hay a cada distancia del Sol, en UA.",
+"Marks show the places of the resonances with Neptune.":
+  "Las marcas muestran los lugares de las resonancias con Neptuno.",
+"Graph of the distance of the body from Neptune, in AU, against time in years.":
+  "Gráfica de la distancia del cuerpo a Neptuno, en UA, contra el tiempo en años.",
 "{#} bodies near {#} AU with eccentricities from {#} to {#} and random start angles. Some are caught in the {#}:{#} resonance and stay far from Neptune; the others meet Neptune and are scattered. The real counts show the survivors: the plutinos, piled up at {#} AU.":
   "{#} cuerpos cerca de {#} UA con excentricidades de {#} a {#} y ángulos iniciales al azar. Algunos quedan atrapados en la resonancia {#}:{#} y se mantienen lejos de Neptuno; los demás se encuentran con Neptuno y salen dispersados. Los conteos reales muestran a los sobrevivientes: los plutinos, amontonados en {#} UA.",
 "{#} bodies near {#} AU with eccentricities from {#} to {#} and random start angles.":
@@ -284,6 +366,10 @@ VDI18N.add('es', 'demo/resonances', {
   "{#} cuerpos de {#} a {#} UA con excentricidades de {#} a {#}. Los que tienen órbitas que llegan cerca de Neptuno salen dispersados a menos que una resonancia los proteja, así que tras algunas decenas de miles de años los sobrevivientes con excentricidades grandes están en las resonancias {#}:{#} ({#} UA) y {#}:{#} ({#} UA), como en los conteos reales.",
 "{#} bodies from {#} to {#} AU with eccentricities from {#} to {#}.":
   "{#} cuerpos de {#} a {#} UA con excentricidades de {#} a {#}.",
+"The solar system seen from above, with the Sun, Neptune and many small bodies.":
+  "El sistema solar visto desde arriba, con el Sol, Neptuno y muchos cuerpos pequeños.",
+"{#} have been scattered by Neptune.":
+  "Neptuno ha dispersado a {#}.",
 "Where Uranus is seen minus where its fitted orbit puts it (arcseconds), with planet X":
   "Dónde se ve Urano menos dónde lo pone su órbita ajustada (segundos de arco), con planeta X",
 "open circles: old sightings, not fitted · gray: no planet X":
@@ -298,6 +384,14 @@ VDI18N.add('es', 'demo/resonances', {
   "Planeta X con la órbita de Neptuno (de este modelo el {#} de septiembre de {#}) y su masa ({#} Tierras): casi toda la deriva de Urano desaparece, y lo que queda (menos de {#}″) viene de tratar a Neptuno como si se moviera en una elipse fija.",
 "Move planet X (its distance, mass and where it is in {#}) to make Uranus's leftover drift as small as you can. The direction comes out well even when the distance is wrong.":
   "Mueve el planeta X (su distancia, su masa y dónde está en {#}) para hacer la deriva restante de Urano lo más pequeña posible. La dirección sale bien aunque la distancia esté mal.",
+"Planet X is drawn, {#} Earth masses, {#} AU from the Sun.":
+  "Se dibuja el planeta X, de {#} masas terrestres, a {#} UA del Sol.",
+"An arrow shows the direction of its pull on Uranus.":
+  "Una flecha muestra la dirección de su atracción sobre Urano.",
+"Planet X is {#}° from Neptune's direction in {#}.":
+  "El planeta X está a {#}° de la dirección de Neptuno en {#}.",
+"The fit includes planet X.":
+  "El ajuste incluye el planeta X.",
 "The run stops at {#} years. The real gaps took millions of years to empty.":
   "La ejecución se detiene a los {#} años. Los huecos reales tardaron millones de años en vaciarse.",
 "Close":

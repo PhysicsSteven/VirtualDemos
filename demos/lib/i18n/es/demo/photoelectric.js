@@ -1,5 +1,7 @@
 /* demo/photoelectric in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/photoelectric', {
+"Describe the picture":
+  "Describir la imagen",
 "evacuated phototube":
   "fototubo al vacío",
 "anode (collector)":
@@ -58,6 +60,34 @@ VDI18N.add('es', 'demo/photoelectric', {
   "<span>E = hf = hc/λ</span> · <span>hc = {#} eV·nm</span> · <span>K<sub>max</sub> = hf − φ</span>",
 "Photoelectric apparatus on a lab bench: a lamp and monochromator shine light through the glass of an evacuated phototube onto its curved metal cathode (the emitter), and electrons travel to the central anode wire (the collector). A voltage supply with a reversing switch sets the collector voltage, and a picoammeter reads the current. Drag the knobs to change the wavelength, the light power and the voltage, and click the reversing switch to change the sign of V. Keys: left and right change the wavelength, up and down the voltage (shift for bigger steps), page up and page down the light power, R flips the reversing switch, space pauses.":
   "Aparato fotoeléctrico sobre una mesa de laboratorio: una lámpara y un monocromador hacen pasar luz por el vidrio de un fototubo al vacío hacia su cátodo metálico curvo (el emisor), y los electrones viajan al alambre central del ánodo (el colector). Una fuente de voltaje con un interruptor inversor fija el voltaje del colector, y un picoamperímetro lee la corriente. Arrastra las perillas para cambiar la longitud de onda, la potencia de la luz y el voltaje, y haz clic en el interruptor inversor para cambiar el signo de V. Teclas: izquierda y derecha cambian la longitud de onda, arriba y abajo el voltaje (Shift para pasos más grandes), Re Pág y Av Pág la potencia de la luz, R invierte el interruptor, espacio pausa.",
+"A lamp and monochromator shine light into an evacuated phototube, onto its curved metal cathode, and the electrons go to the central anode wire.":
+  "Una lámpara y un monocromador envían luz a un fototubo al vacío, sobre su cátodo metálico curvo, y los electrones van al alambre central del ánodo.",
+"The wavelength is {#} nm.":
+  "La longitud de onda es {#} nm.",
+"The light is violet.":
+  "La luz es violeta.",
+"The light power is {#} µW.":
+  "La potencia de la luz es {#} µW.",
+"The metal of the cathode is:":
+  "El metal del cátodo es:",
+"Sodium":
+  "Sodio",
+"Its work function is {#} eV.":
+  "Su función de trabajo es {#} eV.",
+"The collector voltage is +{#} V.":
+  "El voltaje del colector es +{#} V.",
+"Running.":
+  "En marcha.",
+"The photon energy is {#} eV, at a frequency of {#} × {#}¹⁴ Hz.":
+  "La energía del fotón es {#} eV, con una frecuencia de {#} × {#}¹⁴ Hz.",
+"The maximum kinetic energy is {#} eV, so the stopping voltage is {#} V.":
+  "La energía cinética máxima es {#} eV, así que el voltaje de frenado es {#} V.",
+"{#} × {#}¹³ photons arrive each second.":
+  "Llegan {#} × {#}¹³ fotones cada segundo.",
+"The current is {#} nA.":
+  "La corriente es {#} nA.",
+"Left and right change the wavelength, up and down change the voltage, Page Up and Page Down change the power, and R reverses the voltage supply.":
+  "Izquierda y derecha cambian la longitud de onda, arriba y abajo cambian el voltaje, Re Pág y Av Pág cambian la potencia, y R invierte la fuente de voltaje.",
 "Time controls":
   "Controles de tiempo",
 "Run for a moment and pause again":
@@ -66,6 +96,14 @@ VDI18N.add('es', 'demo/photoelectric', {
   "Paso",
 "Charts: maximum kinetic energy against frequency, and current against collector voltage.":
   "Gráficas: energía cinética máxima en función de la frecuencia, y corriente en función del voltaje del colector.",
+"Two charts: the maximum kinetic energy in eV against frequency, and the current against the collector voltage.":
+  "Dos gráficas: la energía cinética máxima en eV contra la frecuencia, y la corriente contra el voltaje del colector.",
+"The kinetic energy chart marks {#} eV at the present frequency.":
+  "La gráfica de energía cinética marca {#} eV a la frecuencia actual.",
+"{#} stopping voltage points are recorded.":
+  "Se han registrado {#} puntos de voltaje de frenado.",
+"The current at the collector voltage is {#} nA.":
+  "La corriente con este voltaje del colector es {#} nA.",
 "Divider between the apparatus and the graphs":
   "Divisor entre el aparato y las gráficas",
 "Blue on sodium":
@@ -146,6 +184,10 @@ VDI18N.add('es', 'demo/photoelectric', {
   "Modelo: cada fotón absorbido libera a lo más un electrón, con una energía cinética repartida uniformemente entre {#} y K<sub>max</sub>. Un electrón por cada mil fotones (eficiencia cuántica de {#}%). Las rapideces de los electrones en pantalla están enormemente reducidas; los más rápidos reales se mueven a cientos de km/s.",
 "phototube drawn {#} times its size · electrons slowed about {#}⁸ times · drag to turn, a knob to set it":
   "fototubo dibujado {#} veces su tamaño · electrones ralentizados unas {#}⁸ veces · arrastra para girar, una perilla para ajustarla",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "Full power red light and not a single electron. Each {#} nm photon has only {#} eV, below sodium's work function. Turning up the brightness sends more weak photons, not stronger ones.":
   "Luz roja a toda potencia y ni un solo electrón. Cada fotón de {#} nm tiene solo {#} eV, por debajo de la función de trabajo del sodio. Subir el brillo envía más fotones débiles, no fotones más fuertes.",
 "{#} nm · red":
@@ -166,6 +208,12 @@ VDI18N.add('es', 'demo/photoelectric', {
   "Cátodo de zinc (emisor)",
 "UV, invisible":
   "UV, invisible",
+"The light is ultraviolet.":
+  "La luz es ultravioleta.",
+"Zinc":
+  "Zinc",
+"The photon energy is {#} eV, at a frequency of {#} × {#}¹⁵ Hz.":
+  "La energía del fotón es {#} eV, con una frecuencia de {#} × {#}¹⁵ Hz.",
 "Six stopping voltages found the way a student would: the least negative setting, in {#} V steps, where the meter reads {#} nA.":
   "Seis voltajes de frenado hallados como lo haría un estudiante: el valor menos negativo, en pasos de {#} V, en el que el medidor marca {#} nA.",
 "Six stopping voltages were recorded between {#} and {#} nm. The gold fit line's slope gives Planck's constant, and its intercept gives the work function. Millikan did exactly this in {#}, expecting to disprove Einstein.":
@@ -190,6 +238,20 @@ VDI18N.add('es', 'demo/photoelectric', {
   "Cátodo de cobre (emisor)",
 "Platinum cathode (emitter)":
   "Cátodo de platino (emisor)",
+"The light is yellow.":
+  "La luz es amarilla.",
+"Platinum":
+  "Platino",
+"Paused.":
+  "En pausa.",
+"The photons do not have enough energy to free electrons, so there is no stopping voltage.":
+  "Los fotones no tienen energía suficiente para liberar electrones, así que no hay voltaje de frenado.",
+"{#} × {#}¹⁴ photons arrive each second.":
+  "Llegan {#} × {#}¹⁴ fotones cada segundo.",
+"The present frequency is below the threshold, so there is no kinetic energy.":
+  "La frecuencia actual está por debajo del umbral, así que no hay energía cinética.",
+"The fit line gives h = {#} × {#}⁻³⁴ J·s and a work function of {#} eV.":
+  "La recta del ajuste da h = {#} × {#}⁻³⁴ J·s y una función de trabajo de {#} eV.",
 "Pt cathode (emitter)":
   "Cátodo de Pt (emisor)",
 "lamp + mono":
@@ -206,8 +268,14 @@ VDI18N.add('es', 'demo/photoelectric', {
   "tubo dibujado {#}× su tamaño · ralentizado {#}⁸× · arrastra para girar",
 "Na cathode (emitter)":
   "Cátodo de Na (emisor)",
+"The collector voltage is −{#} V.":
+  "El voltaje del colector es −{#} V.",
+"On the current chart the current falls to zero at -{#} V.":
+  "En la gráfica de corriente, la corriente cae a cero en −{#} V.",
 "Zn cathode (emitter)":
   "Cátodo de Zn (emisor)",
+"The light is green.":
+  "La luz es verde.",
 "Cs cathode (emitter)":
   "Cátodo de Cs (emisor)",
 "K cathode (emitter)":

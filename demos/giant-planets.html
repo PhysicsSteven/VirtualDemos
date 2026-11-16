@@ -1332,6 +1332,83 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const io = MOONS.jupiter[0], J = P('jupiter'), Ed = tidalHeat(IO_K2Q, J.M, io.R, io.a, io.P, S.e);
     return { mode: 'Io', object: 'Io', value: `e ${f(S.e, 4)}`, e: f(S.e, 4), heat_W: Ed ? Ed.toExponential(3) : '0', flux_W_m2: f(Ed / (4 * Math.PI * Math.pow(io.R * 1e3, 2)), 3) };
   };
+  /* what the picture shows now, for a screen reader (VD.describe): the planets, the rings with the test moon, a planet's moons, Io's tide
+     or the cloud decks, whichever the picture is set to show */
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    const hid = S.blind, run = S.run;
+    if (S.mode === 'planets') {
+      const p = P(S.sel), E = PLANETS.earth, q = spinQ(p), vol = p.Req * p.Req * p.Rpol / (E.Req * E.Req * E.Rpol);
+      return [
+        'The giant planets are drawn to the same scale.', S.earth ? 'Earth is drawn beside them for scale.' : 'Earth is not drawn.',
+        'The chosen planet is:', p.name,
+        `Its mass is ${sci(p.M, 4)} kg, which is ${f(p.M / E.M, 2)} Earth masses.`,
+        `Its equatorial radius is ${fmt(p.Req, 0)} km and its polar radius is ${fmt(p.Rpol, 0)} km.`,
+        `${fmt(vol, 0)} Earths would fit inside it.`,
+        `Its mean density is ${f(p.rho / 1000, 3)} g/cm³.`, p.rho < 1000 ? 'It would float in water.' : 'It would not float in water.',
+        p.rot < 0 ? `It turns once in ${f(Math.abs(p.rot), 2)} h, backward.` : `It turns once in ${f(Math.abs(p.rot), 2)} h.`,
+        `Its flattening is ${f(100 * p.f, 2)} %.`, hid ? 'The flattening of a uniform planet is hidden.' : `A uniform planet would flatten ${f(100 * uniformFlattening(q), 2)} %.`,
+        `Its axial tilt is ${f(p.tilt, 2)}°.`, `Its distance from the Sun is ${f(p.aSun * 1e6 / AU_KM, 2)} AU.`,
+        run ? 'The clock is running.' : 'The clock is stopped.',
+        'The left and right arrow keys choose another planet.'
+      ];
+    }
+    if (S.mode === 'rings') {
+      const p = P(S.planet), dF = rocheLimit(p, S.rho, ROCHE_FLUID), dR = rocheLimit(p, S.rho, ROCHE_RIGID), Pm = kepPeriod(p.GM, PL.a) / HOUR;
+      const main = RINGS[S.planet].filter((r) => r[3] > 0.3), r0 = Math.min(...main.map((r) => r[1])), r1 = Math.max(...main.map((r) => r[2]));
+      return [
+        'The planet, its rings and a test moon, seen from above.', 'The planet is:', p.name,
+        `The test moon is a pile of 200 loose balls with a density of ${f(S.rho / 1000, 2)} g/cm³.`,
+        `Its distance is ${fmt(PL.a, 0)} km, which is ${f(S.dist, 2)} planet radii.`,
+        hid ? 'The Roche limits are hidden, so you can work them out.' : `The Roche limit for a fluid moon is ${fmt(dF, 0)} km, which is ${f(dF / p.Req, 2)} planet radii.`,
+        hid ? null : `The limit for a rigid moon is ${fmt(dR, 0)} km, which is ${f(dR / p.Req, 2)} planet radii.`,
+        S.roche ? 'The Roche limits are drawn.' : 'The Roche limits are not drawn.',
+        run ? 'The clock is running.' : 'The clock is stopped.',
+        `The moon's orbital period is ${f(Pm, 2)} h.`,
+        { t: `The moon has made ${f(PL.Om * S.t / (2 * Math.PI), 2)} orbits so far.`, live: false },
+        { t: `The largest piece is ${f(100 * S.piece, 0)} % of the moon.`, live: false },
+        `The bright rings run from ${fmt(r0, 0)} km to ${fmt(r1, 0)} km from the center.`,
+        'The up and down arrow keys change the moon\'s distance.'
+      ];
+    }
+    if (S.mode === 'moons') {
+      const p = P(S.planet), ms = MOONS[S.planet], m = ms[S.moon], GM = gmFromOrbit(m.a, Math.abs(m.P) * DAY);
+      return [
+        'The planet and its moons, seen from above.', 'The planet is:', p.name, 'The chosen moon is:', m.name,
+        `Its distance is ${fmt(m.a, 0)} km, which is ${f(m.a / p.Req, 2)} planet radii.`,
+        m.P < 0 ? `Its period is ${f(Math.abs(m.P), 4)} days, backward.` : `Its period is ${f(Math.abs(m.P), 4)} days.`,
+        hid ? 'The mass worked out from this orbit is hidden.' : `The mass worked out from this orbit is ${sci(GM * 1e9 / G, 4)} kg.`,
+        `The mass from NASA is ${sci(p.M + (m.M || 0), 4)} kg.`,
+        m.rho == null ? null : `Its density is ${f(m.rho / 1000, 2)} g/cm³.`,
+        S.moon > 0 ? `Its period is ${f(Math.abs(m.P / ms[S.moon - 1].P), 3)} times the period of the moon inside it.` : null,
+        run ? 'The clock is running.' : 'The clock is stopped.',
+        'The left and right arrow keys choose another moon.'
+      ];
+    }
+    if (S.mode === 'clouds') {
+      const m = clModel(), i = clAt(m, S.lp), lv = m.lev[i];
+      return [
+        'A side view of the cloud decks in the planet\'s deep air, with the pressure on the vertical axis.', 'The planet is:', P(S.planet).name,
+        `The temperature at 1 bar is ${m.d.T1} K.`,
+        { t: `The marked air parcel is at ${barTxt(lv.P)} and ${f(lv.T, 0)} K.`, live: true },
+        { t: m.z[i] >= 0 ? `It is ${cm1(m.z[i], 0)} km above the 1 bar level.` : `It is ${cm1(-m.z[i], 0)} km below the 1 bar level.`, live: true },
+        hid ? 'The cloud base depths are hidden, so you can work them out.' : null,
+        ...(hid ? [] : CLOUDS.flatMap((k) => { const b = m.bases.find((q) => q.k === k); if (!b) return []; const j = m.lev.findIndex((l) => l.P === b.P);
+          return [`${CL_NAME[k]} cloud base`, `${barTxt(b.P)}, ${f(b.T, 0)} K, ${m.z[j] >= 0 ? `${cm1(m.z[j], 0)} km up` : `${cm1(-m.z[j], 0)} km down`}.`]; })),
+        'The up and down arrow keys move the air parcel.'
+      ];
+    }
+    const io = MOONS.jupiter[0], Ed = tidalHeat(IO_K2Q, P('jupiter').M, io.R, io.a, io.P, S.e), A = 4 * Math.PI * Math.pow(io.R * 1e3, 2), sw = tideSwing(S.e), st = ioState();
+    return [
+      'Io on its orbit round Jupiter, with the tide it raises, seen from above.',
+      `Io's eccentricity is e = ${f(S.e, 4)}.`,
+      S.exag ? 'The orbit\'s shape and Io\'s stretch are exaggerated.' : 'The orbit and the stretch are drawn to scale.',
+      run ? 'The clock is running.' : 'The clock is stopped.',
+      { t: `Io is ${fmt(st.r, 0)} km from Jupiter.`, live: false },
+      `The tide swings by ±${f(100 * sw.stretch, 2)} % and Jupiter's direction rocks by ±${f(sw.sway, 2)}°.`,
+      hid ? 'The tidal heating is hidden, so you can work it out.' : `The tidal heating is ${sci(Ed, 2)} W, which is ${f(Ed / A, 2)} W/m².`,
+      { t: `The stretch now is ${f(st.stretch, 4)}, where the average is 1.`, live: false }
+    ];
+  });
   VD.tools({ el: can, strip: '#strip', stage: '#scene', time: () => S.t, timeUnit: 's',
     scale: () => (view3 && view3.is3d() ? null : S.mode === 'rings' ? { el: can, m: 1e3 / ringsView().s, unit: 'km' } : S.mode === 'moons' ? { el: can, m: 1e3 / moonsView().s, unit: 'km' } : S.mode === 'planets' && planetsHit ? { el: can, m: 1e3 / planetsHit.s, unit: 'km', area: [0, 0, W, planetsHit.top] } : null) });
   VD.howTo({ src: 'media/how-this-works/giant-planets.mp4', poster: 'media/how-this-works/giant-planets.jpg' });

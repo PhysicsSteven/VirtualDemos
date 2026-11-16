@@ -5923,6 +5923,75 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
       changed('edit'); updateRail();
     }
   });
+  /* what the pictures show now, for a screen reader (VD.describe): the board with its parts and meters, then the scope, the energy bars,
+     the resonance curve and the impedance triangle */
+  if (window.VD && VD.describe) {
+    const MODE_IS = { dc: 'DC mode: the steady state, a long time after every switch was set.', time: 'In time mode: the circuit as it changes from t = 0.', ac: 'AC mode: the steady response to sine wave sources, with meters reading rms values.' };
+    const PART_IS = (e) => {
+      const n = e.name || '';
+      switch (e.type) {
+        case 'res': return `Resistor ${n}, ${fmtR(e.R)}.`;
+        case 'bulb': return `Light bulb ${n}, ${fmtR(e.R)}.`;
+        case 'bat': return `Battery ${n}, EMF ${fmtE(e.emf)}.`;
+        case 'ac': return `AC source ${n}, amplitude ${fmtE(e.V0)}, frequency ${fmtF(e.f)}.`;
+        case 'cap': return `Capacitor ${n}, ${fmtVal(e.C, 'F')}.`;
+        case 'ind': return `Inductor ${n}, ${fmtVal(e.L, 'H')}.`;
+        case 'sw': return e.closed ? `Switch ${n} is closed.` : `Switch ${n} is open.`;
+        case 'sw2': return e.pos ? `Two way switch ${n} is in position 2.` : `Two way switch ${n} is in position 1.`;
+        case 'diode': return `Diode ${n}.`;
+        case 'led': return `Light emitting diode ${n}.`;
+        case 'bjt': return `Transistor ${n}, current gain β = ${e.beta}.`;
+        default: return null;
+      }
+    };
+    VD.describe($('can'), () => {
+      const parts = els.filter((e) => e.type !== 'wire' && e.type !== 'am' && e.type !== 'vm' && e.type !== 'probe'), meters = els.filter((e) => e.type === 'am' || e.type === 'vm');
+      const steady = S.mode === 'dc', out = [MODE_IS[S.mode], parts.length === 1 ? 'The board has 1 part.' : `The board has ${parts.length} parts.`];
+      for (const e of parts) out.push(PART_IS(e));
+      for (const m of meters) {
+        const v = meterRead(m), ok = isFinite(v);
+        out.push({ t: !ok ? `Meter ${m.name} has no reading.` : m.type === 'am' ? (S.mode === 'ac' ? `Ammeter ${m.name} reads ${fmtSI(cleanI(v), 'A', 3)} rms.` : `Ammeter ${m.name} reads ${fmtSI(cleanI(v), 'A', 3)}.`)
+          : (S.mode === 'ac' ? `Voltmeter ${m.name} reads ${fmtSI(cleanV(v), 'V', 3)} rms.` : `Voltmeter ${m.name} reads ${fmtSI(cleanV(v), 'V', 3)}.`), live: steady });
+      }
+      if (S.mode === 'time' && run) { out.push(running ? 'The run is going.' : 'The run is paused.'); out.push({ t: `Time t = ${fmtTime(run.t)}.`, live: false }); }
+      return out;
+    });
+    VD.describe($('sCan'), () => {
+      const chs = channels.filter((c) => elById(c.id)), out = [S.mode === 'ac' ? 'Oscilloscope: voltages and currents against time over a few periods.' : 'Oscilloscope: voltages and currents against time.'];
+      out.push(chs.length === 1 ? 'The scope has 1 channel.' : `The scope has ${chs.length} channels.`);
+      chs.forEach((c, i) => out.push(c.q === 'V' ? `Channel ${i + 1} shows the voltage across ${elById(c.id).name}.` : `Channel ${i + 1} shows the current through ${elById(c.id).name}.`));
+      if (cursor) out.push({ t: `The time cursor is at t = ${fmtTime(cursor.t)}.`, live: false });
+      return out;
+    });
+    VD.describe($('eCan'), () => {
+      if (!run || !run.sys || !run.sys.ok) return ['Energy bars since t = 0: no run yet.'];
+      const o = energyTotals();
+      return ['Energy bars since t = 0.', { t: `The sources have done ${fmtSI(o.W, 'J', 3)} of work.`, live: false },
+        run.sys.caps.length ? { t: `The capacitors store ${fmtSI(o.UC, 'J', 3)}.`, live: false } : null, run.sys.inds.length ? { t: `The inductors store ${fmtSI(o.UL, 'J', 3)}.`, live: false } : null,
+        { t: `The resistors have given off ${fmtSI(o.H, 'J', 3)} as heat.`, live: false }];
+    });
+    VD.describe($('rCan'), () => {
+      const src = mainSrc(); if (!src || !reso) return ['Resonance curve: add an AC source to see it.'];
+      const z = zSeen(els, src, src.f), pk = S.blind ? null : reso.peak;
+      return [
+        S.rPlot === 'P' ? 'Graph of the average power from the AC source against frequency, on a log scale.' : S.rPlot === 'X' ? 'Graph of the reactances against frequency, on a log scale.' : 'Graph of the rms current from the AC source against frequency, on a log scale.',
+        `The source frequency marker is at ${fmtF(src.f)}.`,
+        z ? `At that frequency the rms current is ${fmtSI(Math.hypot(z.I[0], z.I[1]) / Math.SQRT2, 'A', 3)}.` : null,
+        S.blind ? 'The model curve and the peak are hidden, so you can find them.' : (pk && S.rPlot === 'I' ? `The curve peaks at ${fmtF(pk.f)}, where the rms current is ${fmtSI(pk.I / Math.SQRT2, 'A', 3)}.` : null),
+        'Drag the marker, or use the left and right arrow keys, to change the frequency.'
+      ];
+    });
+    VD.describe($('zCan'), () => {
+      const src = mainSrc(); if (!src) return ['Impedance triangle: add an AC source.'];
+      const z = zSeen(els, src, src.f); if (!z || !isFinite(z.re)) return ['Impedance triangle: the source sees no steady current.'];
+      const R = z.re, X = z.im, Z = Math.hypot(R, X), phi = Math.atan2(X, R);
+      return [
+        'Impedance triangle: the resistance R and reactance X that the source sees, the impedance Z and the phase angle.',
+        S.blind ? 'The resistance and the reactance are hidden.' : `The resistance is R = ${fmtSI(R, 'Ω', 3)} and the reactance is X = ${fmtSI(X, 'Ω', 3)}.`,
+        `The impedance is |Z| = ${fmtSI(Z, 'Ω', 3)} and the phase angle is φ = ${fmtDeg(phi)}.`
+      ];
+    });
+  }
   tokens();
   { const p = fromHash() || 'series'; S.mode = PRESETS[p].mode; showMode(); applyPreset(p, true); }
   /* the page writes the setup into the address, and Reset all reloads that address: it opened at the last setup, not the one the page

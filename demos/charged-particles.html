@@ -962,6 +962,56 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   tokens(); new ResizeObserver(resize).observe($('scene')); new ResizeObserver(resize).observe($('plotbox'));
   const qs = new URLSearchParams(location.search); applyPreset(PRESETS[qs.get('setup')] ? qs.get('setup') : 'p150'); resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  /* what the pictures show now, for a screen reader (VD.describe): the water tank with its beam, the dose graph under it, and the two curve views */
+  if (window.VD && VD.describe) {
+    const BEAM_IS = { proton: (e) => `A proton beam of ${sig3(e, 4)} MeV enters the water tank from the left.`, alpha: (e) => `An alpha particle beam of ${sig3(e, 4)} MeV enters the water tank from the left.`,
+      carbon: (e) => `A carbon 12 ion beam of ${sig3(e, 4)} MeV enters the water tank from the left.` };
+    VD.describe(can, () => {
+      const Pp = P(), e = T0();
+      if (S.view !== 'beam') {
+        const M = V.mat(S.mat), s = V.S(e, M, Pp), r = V.range(e, M, Pp);
+        return [
+          S.view === 'stop' ? 'Graph of the mass stopping power S/ρ, in MeV cm²/g, against the kinetic energy T, in MeV, on log scales.' : 'Graph of the CSDA range R, in g/cm², against the kinetic energy T, in MeV, on log scales.',
+          'The graph is for this particle and this material.', Pp.name, M.name,
+          S.mat !== 'water' ? 'A dashed gray curve shows water for comparison.' : null,
+          S.view === 'stop' && S.elec ? 'A dotted curve shows electrons, with collision stopping only.' : null,
+          S.view === 'range' && S.pstar && S.p === 'proton' ? 'Dots show the NIST PSTAR ranges for protons in water, with a dashed power law fit.' : null,
+          `A dot marks the beam energy, ${sig3(e, 4)} MeV.`,
+          S.view === 'stop' ? `At that energy the mass stopping power is ${sig3(s, 4)} MeV cm²/g.` : `At that energy the range is ${sig3(r, 4)} g/cm², which is ${lenTxt(r / M.rho)}.`
+        ];
+      }
+      if (!S.D) return [];
+      const pk = peak(), D = S.D, R80 = V.distal(D.z, D.d, 0.8), R90 = V.distal(D.z, D.d, 0.9), dz = doseAt(D, S.z), E = at(D, D.e, S.z), lay = layers(), st = stats(S.ends);
+      return [
+        'Side view of a water tank, with each particle track colored by its energy.',
+        BEAM_IS[S.p](e),
+        S.slab === 'none' ? 'There is no slab before the water.' : S.slab === 'body' ? (lay.length ? 'The beam first crosses these body layers.' : 'The body layers are all off, so there is only water.') : 'The beam first crosses a slab.',
+        ...(S.slab === 'none' ? [] : S.slab === 'body' ? lay.map((l) => layLabel(l)) : [layLabel({ m: S.slab, t: S.t })]),
+        S.str ? 'Range straggling is on.' : 'Range straggling is off.',
+        S.p === 'proton' ? (S.nuc ? 'Nuclear reactions are on.' : 'Nuclear reactions are off.') : null,
+        S.run ? 'Firing.' : 'Not firing.',
+        { t: S.n === 1 ? '1 track has been drawn.' : `${S.n} tracks have been drawn.`, live: false },
+        S.blind ? 'The ranges and the peak depth are hidden, so you can measure them.' : `The dose peaks at a depth of ${lenTxt(pk.z)}.`,
+        S.blind ? null : `The distal 80 % depth is ${lenTxt(R80)} and the distal 90 % depth is ${lenTxt(R90)}.`,
+        S.blind ? null : `The CSDA range in water is ${lenTxt(V.range(e, 'water', Pp))}.`,
+        `The detector chamber is at a depth of ${lenTxt(S.z)}.`,
+        `At the detector the dose is ${f(100 * dz / pk.d, 1)} % of the peak.`,
+        E > 0 ? `The mean energy at the detector is ${sig3(E, 4)} MeV.` : 'The beam has stopped before the detector.',
+        { t: st.n === 1 ? '1 track has stopped.' : `${st.n} tracks have stopped.`, live: false },
+        'The arrow keys move the detector.'
+      ];
+    });
+    VD.describe(plot, () => {
+      if (S.view !== 'beam' || !S.D) return [];
+      const pk = peak(), dz = doseAt(S.D, S.z);
+      return [
+        'Graph of the dose, in percent of the peak, against depth in the water.',
+        'It shows the dose curve of the model, the dose the drawn tracks have put down, and the detector depth.',
+        S.blind ? null : `The model dose peaks at a depth of ${lenTxt(pk.z)}.`,
+        `At the detector depth of ${lenTxt(S.z)} the dose is ${f(100 * dz / pk.d, 1)} % of the peak.`
+      ];
+    });
+  }
   VD.tools({ el: can, strip: '#strip', stage: '#scene', time: () => null, scale: () => (S.view === 'beam' && !S.wide && !use3() ? (() => { const b = tankBox(); return { el: can, m: S.zmax / 100 / (b.x1 - b.x0), area: [b.x0, b.y0, b.x1 - b.x0, b.y1 - b.y0] }; })() : null) });
   /* opens in 3D; ?view=flat, a low power device or no WebGL keep the flat picture (the graph views are always flat) */
   view3 = VD3K.view({ seg: '#dimSeg', start: '3d', init: init3, status: (m) => { const st = document.querySelector('.vd-readings .status'); if (st) st.textContent = m; },

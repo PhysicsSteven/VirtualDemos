@@ -1142,6 +1142,72 @@ onmessage = (e) => { const d = e.data;
   const ro = new ResizeObserver(() => { placeCard(); resize(); }); [$('scene'), $('strip'), hc.parentElement, pc.parentElement].forEach((el) => ro.observe(el)); placeCard(); resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   view3 = VD3K.view({ seg: '#dimSeg', init: init3D, change: () => { if (g3) g3.S3.el.hidden = !use3(); redraw(); }, status: () => {} });
+  /* what the pictures show now, for a screen reader (VD.describe): the sky from above, the bar chart (or the residuals) and the graph against time */
+  if (window.VD && VD.describe) {
+    const runLine = () => (S.run ? 'Running.' : 'Paused.');
+    VD.describe(can, () => {
+      if (!sys && S.scene !== 'neptune') return [];
+      if (S.scene === 'neptune') {
+        const y = S.year;
+        return [
+          'The outer solar system seen from above, with Jupiter, Saturn and Uranus, and the year in the corner.',
+          S.showNep ? 'The real Neptune is drawn.' : 'Neptune is not drawn.',
+          S.X ? `Planet X is drawn, ${S.xm.toFixed(1)} Earth masses, ${S.xa.toFixed(1)} AU from the Sun.` : 'There is no planet X.',
+          S.X ? 'An arrow shows the direction of its pull on Uranus.' : null,
+          runLine(),
+          y >= NF.GALLE - 0.001 ? 'The year is 1846 Sep 23.' : { t: `The year is ${Math.floor(y)}.`, live: false },
+          y < 1781 ? 'Uranus is not yet known as a planet.' : y < 1846 ? 'Uranus has been watched every year since 1781.' : 'Galle finds Neptune.',
+          { t: `The leftover drift of Uranus is ${fx(fit.rms, 1)}″ rms.`, live: false },
+          S.X ? (S.blind ? 'The direction of planet X against Neptune is hidden.' : `Planet X is ${fx(Math.abs(((S.xl - NT.nepX.lon + 540) % 360) - 180), 2)}° from Neptune's direction in 1846.`) : null
+        ];
+      }
+      const sc = SCENES[S.scene], kuiper = S.scene === 'kuiper';
+      if (many) {
+        const left = sys.gone.filter((g) => !g).length, pl2 = sys.gone.filter((g) => g && g.why === 'planet').length, mars = sys.gone.filter((g) => g && g.why === 'mars').length;
+        return [
+          kuiper ? 'The solar system seen from above, with the Sun, Neptune and many small bodies.' : 'The solar system seen from above, with the Sun, Jupiter and many asteroids.',
+          runLine(), { t: `The time is ${fint(sys.t)} years.`, live: false },
+          { t: `${left} of ${sys.n} are still in play.`, live: false },
+          sc.mars ? { t: `${mars} have crossed the orbit of Mars.`, live: false } : null,
+          kuiper ? { t: `${pl2} have been scattered by Neptune.`, live: false } : kwMode ? { t: `${pl2} have come too close to Jupiter or Saturn.`, live: false } : { t: `${pl2} have been scattered by Jupiter.`, live: false }
+        ];
+      }
+      const g = sys.gone[0], el = g ? null : bodyEl(sys, 0), Pp = 2 * Math.PI * Math.pow(sys.pl.a, 1.5) / Math.sqrt(sys.mu), cj = sys.conj[0];
+      return [
+        kuiper ? 'The solar system seen from above: the Sun, Neptune, and a small body that Neptune pulls on, with its orbit.' : 'The solar system seen from above: the Sun, Jupiter, and an asteroid that Jupiter pulls on, with its orbit.',
+        runLine(), { t: `The time is ${fint(sys.t)} years.`, live: false },
+        el ? { t: `The body is ${fx(el.a, kuiper ? 2 : 3)} AU from the Sun, with an eccentricity of ${fx(el.e, 3)}.`, live: false } : null,
+        el && !S.blind ? { t: kuiper ? `The period of the body is ${fx(el.P / Pp, 3)} times the period of Neptune.` : `The body goes round ${fx(Pp / el.P, 3)} times for each turn of Jupiter.`, live: false } : null,
+        S.blind && el ? 'The period ratio is hidden, so you can work it out.' : null,
+        { t: `The largest eccentricity so far is ${fx(sys.emax[0], 3)}.`, live: false },
+        isFinite(sys.dmin[0]) ? { t: kuiper ? `The closest approach to Neptune so far is ${fx(sys.dmin[0], 2)} AU.` : `The closest approach to Jupiter so far is ${fx(sys.dmin[0], 2)} AU.`, live: false } : null,
+        g ? (g.why === 'mars' ? `The asteroid crossed the orbit of Mars at ${fint(g.t)} years.` : g.why === 'planet' ? (kuiper ? `The body was scattered by Neptune at ${fint(g.t)} years.` : `The asteroid was scattered by Jupiter at ${fint(g.t)} years.`) : 'The body has escaped.') : null
+      ];
+    });
+    VD.describe(hc, () => {
+      if (S.scene === 'neptune') return !fit ? [] : [
+        'Graph of where Uranus is seen minus where its fitted orbit puts it, in arcseconds, for each year from 1700 to 1840.',
+        S.X ? 'The fit includes planet X.' : 'The fit has no planet X.',
+        S.useOld ? 'All the sightings are fitted.' : 'The old sightings, before 1781, are not fitted.',
+        { t: `The leftover drift is ${fx(fit.rms, 1)}″ rms, and ${fx(fitAlone.rms, 1)}″ rms with no planet X.`, live: false }
+      ];
+      if (!sys) return [];
+      return [
+        S.scene === 'belt' ? 'Bar chart of how many real asteroids there are at each distance from the Sun, in AU.' : 'Bar chart of how many real Kuiper belt objects there are at each distance from the Sun, in AU.',
+        S.blind ? 'The resonance marks are hidden, so you can find them.' : (S.scene === 'belt' ? 'Marks show the places of the resonances with Jupiter.' : 'Marks show the places of the resonances with Neptune.'),
+        many ? 'Each simulated body is a dot at its starting distance, as high as the largest eccentricity it has reached.' : `The simulated body starts at ${fx(sys.a0[0], 3)} AU.`,
+        'Simulated bodies that are thrown out are marked with a cross.'
+      ];
+    });
+    VD.describe(pc, () => {
+      if (S.scene === 'neptune' || !sys) return [];
+      return [
+        many ? 'Graph of the number of bodies thrown out so far, against time in years.' : S.scene === 'belt' ? 'Graph of the eccentricity of the asteroid, against time in years.' : 'Graph of the distance of the body from Neptune, in AU, against time in years.',
+        { t: `The time so far is ${fint(sys.t)} years.`, live: false },
+        many ? { t: `${sys.gone.filter((g) => g).length} bodies have been thrown out.`, live: false } : { t: `The largest eccentricity so far is ${fx(sys.emax[0], 3)}.`, live: false }
+      ];
+    });
+  }
   VD.tools({ el: can, strip: '#strip', stage: '#scene', time: () => (S.scene === 'neptune' ? null : sys.t), timeUnit: 'yr' });
   VD.howTo({ src: 'media/how-this-works/resonances.mp4', poster: 'media/how-this-works/resonances.jpg' });
   window.__res = { S, get sys() { return sys; }, get kw() { return kwMode ? kwSt : null; }, get kwWorker() { return !!kwWorker; }, get fit() { return fit; }, get NT() { return NT; }, applyPreset, setScene, run, setRun, sync, redraw, build, refit, PRESETS, histGeom,

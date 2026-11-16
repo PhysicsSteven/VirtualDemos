@@ -1,5 +1,7 @@
 /* demo/gyroscope in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/gyroscope', {
+"Describe the picture":
+  "Describir la imagen",
 "gate":
   "compuerta",
 "τ = dL/dt":
@@ -138,6 +140,10 @@ VDI18N.add('es', 'demo/gyroscope', {
   "Aún no hay lecturas. Suelta, deja que la compuerta mida una vuelta, captura.",
 "Precession rate against one over the spin rate for the captured rows, with a least squares line and residuals.":
   "Rapidez de precesión en función de uno sobre la rapidez de giro para las filas capturadas, con una recta de mínimos cuadrados y residuos.",
+"Plot of the precession rate Ω in rad/s against the inverse of the spin rate, in s, for the recorded readings, with a least squares line and its residuals.":
+  "Gráfica de la rapidez de precesión Ω en rad/s contra el inverso de la rapidez de giro, en s, para las lecturas registradas, con una recta de mínimos cuadrados y sus residuos.",
+"The plot has {#} points.":
+  "La gráfica tiene {#} puntos.",
 "Record at least two spin rates with this wheel at d = {#} cm.":
   "Registra al menos dos rapideces de giro con esta rueda a d = {#} cm.",
 "A gate at the front of the post times each full turn of the axle round the post, to {#} s. Record reading stores the spin, d and the last full turn's period P. Plot Ω = {#}π/P against {#}/ω_s for one d: the slope is Mgd/I_s.":
@@ -162,6 +168,36 @@ VDI18N.add('es', 'demo/gyroscope', {
   "rueda {#} vueltas/s: borrosa a la vista (Cámara lenta o Estroboscopio la muestran girar)",
 "level":
   "nivel",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
+"A solid disk of mass {#} kg on a horizontal axle, resting on a pivot at the top of a post, with the wheel center {#} cm from the pivot.":
+  "Un disco sólido de masa {#} kg en un eje horizontal, apoyado en un pivote en lo alto de un poste, con el centro de la rueda a {#} cm del pivote.",
+"The wheel is set to spin at {#} rpm.":
+  "La rueda está ajustada para girar a {#} rpm.",
+"No friction at the pivot.":
+  "Sin fricción en el pivote.",
+"Held, ready to release.":
+  "Sostenido, listo para soltar.",
+"Spin {#} rad/s, axle tilt {#}°, time {#} s.":
+  "Giro {#} rad/s, inclinación del eje {#}°, tiempo {#} s.",
+"The gate has timed no full turn yet.":
+  "La compuerta todavía no ha medido ninguna vuelta completa.",
+"Torque Mgd sin θ {#} mN·m.":
+  "Torca Mgd sen θ {#} mN·m.",
+"The moment of inertia about the axle is {#} × {#}⁻⁴ kg·m².":
+  "El momento de inercia respecto al eje es {#} × {#}⁻⁴ kg·m².",
+"The predicted precession rate is {#} rad/s, a period of {#} s.":
+  "La rapidez de precesión predicha es {#} rad/s, un periodo de {#} s.",
+"Arrows show the angular momentum L and the torque.":
+  "Las flechas muestran el momento angular L y la torca.",
+"A strip below the picture traces the axle tilt over time.":
+  "Una franja bajo la imagen traza la inclinación del eje en el tiempo.",
+"{#} readings recorded.":
+  "{#} lecturas registradas.",
+"Press Space to release or hold, and R to reset.":
+  "Presiona Espacio para soltar o sostener, y R para reiniciar.",
 "Hold":
   "Sujetar",
 "slow motion: {#}/{#} of real time":
@@ -194,12 +230,28 @@ VDI18N.add('es', 'demo/gyroscope', {
   "{#} mN·m (frena la precesión)",
 "Release it and let the gate time at least one full turn round the post.":
   "Suéltala y deja que la compuerta mida al menos una vuelta completa alrededor del poste.",
+"A rim heavy wheel of mass {#} kg on a horizontal axle, resting on a pivot at the top of a post, with the wheel center {#} cm from the pivot.":
+  "Una rueda con masa en el borde, de masa {#} kg, en un eje horizontal, apoyada en un pivote en lo alto de un poste, con el centro de la rueda a {#} cm del pivote.",
+"Friction at the pivot is {#} mN·m.":
+  "La fricción en el pivote es {#} mN·m.",
+"The moment of inertia about the axle is {#} × {#}⁻³ kg·m².":
+  "El momento de inercia respecto al eje es {#} × {#}⁻³ kg·m².",
 "−{#} mN·m (holds back the precession)":
   "−{#} mN·m (frena la precesión)",
+"Released and moving.":
+  "Soltado y en movimiento.",
+"Spin {#} rad/s, axle tilt −{#}°, time {#} s.":
+  "Giro {#} rad/s, inclinación del eje −{#}°, tiempo {#} s.",
 "(Slow motion shows it turn)":
   "(Cámara lenta la muestra girar)",
 "strobe {#} flashes/s · wheel {#} turns/s":
   "estroboscopio {#} destellos/s · rueda {#} vueltas/s",
+"The wheel is not spinning.":
+  "La rueda no gira.",
+"There is no predicted precession rate without spin.":
+  "Sin giro no hay rapidez de precesión predicha.",
+"The arrows are hidden.":
+  "Las flechas están ocultas.",
 "Close":
   "Cerrar"
 });

@@ -1,5 +1,7 @@
 /* demo/elevator in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/elevator', {
+"Describe the picture":
+  "Describir la imagen",
 "scale reading (kg)":
   "lectura de la báscula (kg)",
 "velocity, up + (m/s)":
@@ -14,6 +16,24 @@ VDI18N.add('es', 'demo/elevator', {
   "pisos separados {#} m · g = {#} m/s²",
 "An elevator shaft with the car, a person standing on a scale with the normal force and weight arrows, and graphs of the scale reading and the velocity against time.":
   "Un cubo de elevador con la cabina, una persona de pie sobre una báscula con las flechas de la fuerza normal y del peso, y gráficas de la lectura de la báscula y de la velocidad en función del tiempo.",
+"An elevator car in a shaft with floors {#} to {#}, {#} m apart, and a person of mass {#} kg standing on a scale.":
+  "Una cabina de elevador en un cubo con pisos del {#} al {#}, separados {#} m, y una persona de masa {#} kg de pie sobre una báscula.",
+"Acceleration is limited to {#} m/s², top speed {#} m/s, jerk {#} m/s³.":
+  "La aceleración está limitada a {#} m/s², la rapidez máxima es {#} m/s y la sobreaceleración es {#} m/s³.",
+"No trip has been started.":
+  "No se ha iniciado ningún viaje.",
+"The car is at rest at floor {#}.":
+  "La cabina está en reposo en el piso {#}.",
+"Height {#} m, velocity {#} m/s, acceleration {#} m/s², all up positive.":
+  "Altura {#} m, velocidad {#} m/s, aceleración {#} m/s², todo con hacia arriba positivo.",
+"The person's weight mg is {#} N, drawn as an arrow pointing down.":
+  "El peso mg de la persona es {#} N, dibujado como una flecha hacia abajo.",
+"The scale pushes up with a normal force of {#} N and shows {#} kg.":
+  "La báscula empuja hacia arriba con una fuerza normal de {#} N y marca {#} kg.",
+"The net force N − mg is {#} N, and apparent weight over true weight is {#}.":
+  "La fuerza neta N − mg es {#} N, y el peso aparente entre el peso real es {#}.",
+"Two graphs beside the car plot the scale reading in kg and the velocity in m/s against time.":
+  "Dos gráficas junto a la cabina muestran la lectura de la báscula en kg y la velocidad en m/s en función del tiempo.",
 "Time controls":
   "Controles de tiempo",
 "Run for a moment and pause again":
@@ -84,18 +104,44 @@ VDI18N.add('es', 'demo/elevator', {
   "etapa",
 "scale (kg)":
   "báscula (kg)",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "Floor {#} to floor {#}: {#} s.":
   "Del piso {#} al piso {#}: {#} s.",
 "<span>speeding up going up</span>":
   "<span>acelerando al subir</span>",
 "speeding up going up":
   "acelerando al subir",
+"The current trip takes {#} s.":
+  "El viaje actual dura {#} s.",
+"The car is speeding up going up.":
+  "La cabina acelera mientras sube.",
+"The ride is running.":
+  "El viaje está en marcha.",
 "<span>constant speed up</span>":
   "<span>subiendo a velocidad constante</span>",
+"The car moves up at constant speed.":
+  "La cabina sube con rapidez constante.",
 "<span>free fall: the cable has snapped</span>":
   "<span>caída libre: se rompió el cable</span>",
+"The cable has snapped and the car is in free fall.":
+  "El cable se rompió y la cabina está en caída libre.",
+"Height {#} m, velocity {#} m/s, acceleration −{#} m/s², all up positive.":
+  "Altura {#} m, velocidad {#} m/s, aceleración −{#} m/s², todo con hacia arriba positivo.",
+"The net force N − mg is −{#} N, and apparent weight over true weight is {#}.":
+  "La fuerza neta N − mg es −{#} N, y el peso aparente entre el peso real es {#}.",
 "<span>safety brakes stopping the car</span>":
   "<span>los frenos de seguridad detienen la cabina</span>",
+"The safety brakes are stopping the car.":
+  "Los frenos de seguridad están deteniendo la cabina.",
+"Height {#} m, velocity −{#} m/s, acceleration {#} m/s², all up positive.":
+  "Altura {#} m, velocidad −{#} m/s, aceleración {#} m/s², todo con hacia arriba positivo.",
+"Paused.":
+  "En pausa.",
+"The cable snapped and the safety brakes have stopped the car.":
+  "El cable se rompió y los frenos de seguridad detuvieron la cabina.",
 "Close":
   "Cerrar"
 });

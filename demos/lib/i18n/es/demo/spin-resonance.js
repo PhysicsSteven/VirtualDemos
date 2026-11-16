@@ -1,5 +1,7 @@
 /* demo/spin-resonance in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/spin-resonance', {
+"Describe the picture":
+  "Describir la imagen",
 "CELL MOUNT":
   "SOPORTE DE CELDA",
 "FAST":
@@ -70,6 +72,10 @@ VDI18N.add('es', 'demo/spin-resonance', {
   "CH2 V/DIV",
 "TIME/DIV":
   "TIME/DIV",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "Spin Resonance":
   "Resonancia de espín",
 "<a>Atomic structure</a>":
@@ -108,12 +114,50 @@ VDI18N.add('es', 'demo/spin-resonance', {
   "El banco de resonancia de espín en 3D: consola, soporte de celda con sonda, osciloscopio y registrador gráfico. Arrastra para girar, desplaza para acercar. Arrastra el tornillo SENS o la perilla FREQ hacia arriba y abajo; haz clic en el selector de Hz, el interruptor FAST/SLOW o SLOW RUN. Teclas: arriba y abajo giran SENS, izquierda y derecha giran FREQ, Shift para pasos más grandes; H cambia el intervalo, S el modo de operación, R inicia un barrido lento, E y P cambian entre ESR y PSR.",
 "Flat drawing of the spin resonance bench. Drag the SENS screw or the FREQ knob up and down; click the Hz selector, the FAST or SLOW switch, or SLOW RUN.":
   "Dibujo plano del banco de resonancia de espín. Arrastra el tornillo SENS o la perilla FREQ hacia arriba y abajo; haz clic en el selector de Hz, el interruptor FAST o SLOW, o SLOW RUN.",
+"An electron spin resonance bench: the sample in a probe coil between scan coils, with a console and an oscilloscope.":
+  "Un banco de resonancia de espín electrónico: la muestra en una bobina de prueba entre bobinas de barrido, con una consola y un osciloscopio.",
+"The sample is:":
+  "La muestra es:",
+"DPPH":
+  "DPPH",
+"The Hz selector is on MID.":
+  "El selector de Hz está en MID.",
+"The probe frequency is {#} MHz.":
+  "La frecuencia de la sonda es {#} MHz.",
+"The SENS screw is at {#} turns.":
+  "El tornillo SENS está en {#} vueltas.",
+"The oscillator light is dimming.":
+  "La luz del oscilador se está atenuando.",
+"The sweep is FAST, with a ramp of {#} ms, {#} per second.":
+  "El barrido es FAST, con una rampa de {#} ms, {#} por segundo.",
+"Running.":
+  "En marcha.",
 "Drag to turn the bench, scroll to zoom. Drag the SENS screw and FREQ knob up or down.":
   "Arrastra para girar el banco, desplaza para acercar. Arrastra el tornillo SENS y la perilla FREQ hacia arriba o abajo.",
 "Dual trace oscilloscope. Channel {#} shows the field ramp, channel {#} the probe signal. Drag cursors A and B or the V cursor, or the channel markers {#} and {#} at the left edge. Keys: A, B or V selects a cursor, {#} or {#} a channel marker; arrows move it, with shift for bigger steps; space pauses.":
   "Osciloscopio de doble trazo. El canal {#} muestra la rampa del campo, el canal {#} la señal de la sonda. Arrastra los cursores A y B o el cursor V, o los marcadores de canal {#} y {#} en el borde izquierdo. Teclas: A, B o V elige un cursor, {#} o {#} un marcador de canal; las flechas lo mueven, con Shift para pasos más grandes; espacio pausa.",
+"A dual trace oscilloscope. Channel {#} shows the field ramp and channel {#} shows the probe signal.":
+  "Un osciloscopio de doble traza. El canal {#} muestra la rampa del campo y el canal {#} muestra la señal de la sonda.",
+"The ramp repeats {#} times a second.":
+  "La rampa se repite {#} veces por segundo.",
+"The time base is {#} ms per division.":
+  "La base de tiempo es {#} ms por división.",
+"Channel {#} is {#} V per division and channel {#} is {#} V per division.":
+  "El canal {#} está a {#} V por división y el canal {#} está a {#} V por división.",
+"Channel {#} shows {#} resonance peak in the sweep.":
+  "El canal {#} muestra {#} pico de resonancia en el barrido.",
+"Cursors A and B are {#} ms apart.":
+  "Los cursores A y B están separados {#} ms.",
+"Cursor A is at {#} ms and cursor B is at {#} ms.":
+  "El cursor A está en {#} ms y el cursor B está en {#} ms.",
 "Chart recorder strip for a slow sweep, {#} mm per second, {#} V full scale. Drag the two ruler lines to measure the distance from the start pulse to the peak. Keys: {#} or {#} selects a ruler line, left and right move it, with shift for {#} mm steps.":
   "Tira del registrador gráfico para un barrido lento, {#} mm por segundo, {#} V a escala completa. Arrastra las dos líneas de la regla para medir la distancia del pulso inicial al pico. Teclas: {#} o {#} elige una línea de la regla, izquierda y derecha la mueven, con Shift en pasos de {#} mm.",
+"A chart recorder strip for a slow sweep, {#} mm per second, {#} V full scale.":
+  "Una tira de registrador de gráfica para un barrido lento, {#} mm por segundo, {#} V a escala completa.",
+"The strip is empty: run a SLOW sweep to record one.":
+  "La tira está vacía: haz un barrido SLOW para registrar uno.",
+"The two ruler lines are {#} mm apart, which is {#} s.":
+  "Las dos líneas de la regla están separadas {#} mm, es decir, {#} s.",
 "Divider between the bench and the screens":
   "Divisor entre el banco y las pantallas",
 "Divider between the oscilloscope and the chart recorder":
@@ -220,6 +264,12 @@ VDI18N.add('es', 'demo/spin-resonance', {
   "Registrar lectura guarda la lectura del medidor y tu propia medición con el cursor o la regla, nunca el campo real. Puedes editar ambas. B<sub>max</sub> = {#} mT para ESR, {#} mT para el barrido de PSR.",
 "Plot of B against frequency from your readings, with a least squares line, slope and intercept.":
   "Gráfica de B en función de la frecuencia a partir de tus lecturas, con una recta de mínimos cuadrados, pendiente y ordenada al origen.",
+"Plot of the field B against the frequency, from your readings, with a least squares line, its slope and its intercept.":
+  "Gráfica del campo B contra la frecuencia, a partir de tus lecturas, con una recta de mínimos cuadrados, su pendiente y su ordenada al origen.",
+"You have recorded {#} readings in this experiment.":
+  "Has registrado {#} lecturas en este experimento.",
+"Record readings at LO, MID and HI to fit a line.":
+  "Registra lecturas en LO, MID y HI para ajustar una recta.",
 "Record readings at LO, MID and HI (two or more points fit a line)":
   "Captura lecturas en LO, MID y HI (dos o más puntos se ajustan a una recta)",
 "<span><i></i>Your ESR readings, least squares line (slope and intercept)</span>":
@@ -294,6 +344,22 @@ VDI18N.add('es', 'demo/spin-resonance', {
   "Tapa azul: una varilla de PTFE. Flúor, sin hidrógeno: la línea queda a una frecuencia más baja.",
 "No peak: the resonance is outside the {#}% sweep. Turn FREQ slowly while you watch CH2 until the peak moves onto the ramp. Then check SENS.":
   "Sin pico: la resonancia está fuera del barrido del {#}%. Gira FREQ lentamente mientras observas CH2 hasta que el pico entre en la rampa. Luego revisa SENS.",
+"A proton spin resonance bench: the sample in a probe coil in the Zeeman magnet, with a console and an oscilloscope.":
+  "Un banco de resonancia de espín protónico: la muestra en una bobina de prueba dentro del imán Zeeman, con una consola y un osciloscopio.",
+"Glycerine":
+  "Glicerina",
+"The FREQ dial is at {#}.":
+  "El dial FREQ está en {#}.",
+"The sample is at {#} °C, and the Zeeman magnet field is {#} mT.":
+  "La muestra está a {#} °C, y el campo del imán Zeeman es {#} mT.",
+"Channel {#} shows no resonance peak in the sweep.":
+  "El canal {#} no muestra ningún pico de resonancia en el barrido.",
+"Record readings for glycerine and PTFE to fit lines.":
+  "Registra lecturas de glicerina y PTFE para ajustar rectas.",
+"Paused.":
+  "En pausa.",
+"The V cursor is at {#} V.":
+  "El cursor V está en {#} V.",
 "Pick channel marker {#} or {#}":
   "Elige el marcador del canal {#} o {#}",
 "Pick ruler line {#} or {#}":
@@ -302,12 +368,20 @@ VDI18N.add('es', 'demo/spin-resonance', {
   "CH1 {#} V/div DC",
 "CH2 {#} V/div DC":
   "CH2 {#} V/div DC",
+"Empty reference":
+  "Referencia vacía",
 "SLOW <small>{#} of {#} s</small>":
   "SLOW <small>{#} de {#} s</small>",
-"SLOW sweep: CH1 rises over {#} s, untriggered":
-  "Barrido SLOW: CH1 sube durante {#} s, sin disparo",
 "ramp {#} of {#} s":
   "rampa {#} de {#} s",
+"SLOW sweep: CH1 rises over {#} s, untriggered":
+  "Barrido SLOW: CH1 sube durante {#} s, sin disparo",
+"The sweep is SLOW, at {#} of {#} s.":
+  "El barrido es SLOW, en {#} de {#} s.",
+"The ramp is the slow sweep.":
+  "La rampa es el barrido lento.",
+"The strip holds a record of the last slow run.":
+  "La tira contiene el registro de la última corrida lenta.",
 "PSR, MID, SLOW, chart ruler, t = {#} °C, B20 = {#} mT":
   "PSR, MID, SLOW, regla de la gráfica, t = {#} °C, B20 = {#} mT",
 "<span>{#}</span> Glycerine<br><span>PSR MID SLOW</span>":
@@ -316,6 +390,14 @@ VDI18N.add('es', 'demo/spin-resonance', {
   "Lectura del medidor fila {#}, kHz",
 "Reading row {#}, s":
   "Lectura fila {#}, s",
+"You have recorded {#} reading in this experiment.":
+  "Has registrado {#} lectura en este experimento.",
+"The Hz selector is on HI.":
+  "El selector de Hz está en HI.",
+"The oscillator light is bright.":
+  "La luz del oscilador está brillante.",
+"Polystyrene":
+  "Poliestireno",
 "Close":
   "Cerrar"
 });

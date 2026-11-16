@@ -16,6 +16,8 @@ VDI18N.add('es', 'demo/charged-particles', {
   "modelo (haz amplio)",
 "from the tracks ({#})":
   "a partir de las trazas ({#})",
+"Describe the picture":
+  "Describir la imagen",
 "Charged Particles in Matter":
   "Partículas cargadas en la materia",
 "<a>{#} · Charged particles in matter</a>":
@@ -48,6 +50,36 @@ VDI18N.add('es', 'demo/charged-particles', {
   "{#} trazas",
 "Side view of a water tank: the beam enters from the left, through a slab if one is set, and each particle's track is drawn colored by its energy. A small chamber marks the detector depth: drag it, or use the arrow keys (Shift: {#} cm) when the picture has the focus.":
   "Vista lateral de un tanque de agua: el haz entra por la izquierda, a través de una placa si hay una, y la traza de cada partícula se dibuja coloreada según su energía. Una pequeña cámara marca la profundidad del detector: arrástrala, o usa las flechas (Shift: {#} cm) cuando la imagen tiene el foco.",
+"Side view of a water tank, with each particle track colored by its energy.":
+  "Vista lateral de un tanque de agua, con la trayectoria de cada partícula coloreada según su energía.",
+"A proton beam of {#} MeV enters the water tank from the left.":
+  "Un haz de protones de {#} MeV entra al tanque de agua por la izquierda.",
+"There is no slab before the water.":
+  "No hay placa antes del agua.",
+"Range straggling is on.":
+  "La dispersión del alcance está activada.",
+"Nuclear reactions are on.":
+  "Las reacciones nucleares están activadas.",
+"Not firing.":
+  "Sin disparar.",
+"{#} tracks have been drawn.":
+  "Se han dibujado {#} trayectorias.",
+"The dose peaks at a depth of {#} cm.":
+  "La dosis tiene su pico a una profundidad de {#} cm.",
+"The distal {#} % depth is {#} cm and the distal {#} % depth is {#} cm.":
+  "La profundidad distal al {#} % es {#} cm y la profundidad distal al {#} % es {#} cm.",
+"The CSDA range in water is {#} cm.":
+  "El alcance CSDA en agua es {#} cm.",
+"The detector chamber is at a depth of {#} cm.":
+  "La cámara del detector está a una profundidad de {#} cm.",
+"At the detector the dose is {#} % of the peak.":
+  "En el detector la dosis es {#} % del pico.",
+"The mean energy at the detector is {#} MeV.":
+  "La energía media en el detector es {#} MeV.",
+"{#} tracks have stopped.":
+  "Se han detenido {#} trayectorias.",
+"The arrow keys move the detector.":
+  "Las teclas de flecha mueven el detector.",
 "The beam, the slab and the detector":
   "El haz, la placa y el detector",
 "<span>Beam, slab and detector</span>":
@@ -106,6 +138,14 @@ VDI18N.add('es', 'demo/charged-particles', {
   "<span>Alcances NIST PSTAR y el ajuste</span>",
 "Graph of the dose against depth: the model's Bragg curve, the dose the drawn tracks have put down, and the detector depth.":
   "Gráfica de la dosis en función de la profundidad: la curva de Bragg del modelo, la dosis que han depositado las trazas dibujadas y la profundidad del detector.",
+"Graph of the dose, in percent of the peak, against depth in the water.":
+  "Gráfica de la dosis, en porcentaje del pico, contra la profundidad en el agua.",
+"It shows the dose curve of the model, the dose the drawn tracks have put down, and the detector depth.":
+  "Muestra la curva de dosis del modelo, la dosis que han depositado las trayectorias dibujadas y la profundidad del detector.",
+"The model dose peaks at a depth of {#} cm.":
+  "La dosis del modelo tiene su pico a una profundidad de {#} cm.",
+"At the detector depth of {#} cm the dose is {#} % of the peak.":
+  "A la profundidad del detector, {#} cm, la dosis es {#} % del pico.",
 "Divider between the tracks and the graph":
   "Divisor entre las trazas y la gráfica",
 "<a>Worksheet {#}: Stopping Power and Range (Medical Physics)</a>":
@@ -216,6 +256,10 @@ VDI18N.add('es', 'demo/charged-particles', {
   "dosis (%)",
 "σ ends (cm)":
   "σ finales (cm)",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "kinetic energy T (MeV), proton":
   "energía cinética T (MeV), protón",
 "mass stopping power S/ρ (MeV cm²/g)":
@@ -344,6 +388,12 @@ VDI18N.add('es', 'demo/charged-particles', {
   "Un haz que entra a la cabeza: {#} mm de cuero cabelludo (piel), {#} mm de cráneo (hueso cortical) y luego cerebro. El cráneo quita tanta energía como {#} cm de agua, así que los protones de {#} MeV, cuyo alcance CSDA en agua es {#} cm, se detienen a {#} cm. La capa de cerebro sigue más allá del final del alcance, así que no se llega al agua.",
 "the beam stops in them":
   "el haz se detiene en ellas",
+"The beam first crosses these body layers.":
+  "El haz cruza primero estas capas del cuerpo.",
+"Skin, {#} mm":
+  "Piel, {#} mm",
+"Bone, {#} mm":
+  "Hueso, {#} mm",
 "Alpha particle":
   "Partícula alfa",
 "Alpha particles of {#} MeV per nucleon ({#} MeV) move as fast as {#} MeV protons. Range goes as M/z² at the same speed, and for an alpha M/z² is {#}/{#} of the proton's, so the range is about the same; but the alpha is four times heavier, so its range straggles about half as much compared with its range, and the peak is sharper.":
@@ -360,6 +410,16 @@ VDI18N.add('es', 'demo/charged-particles', {
   "Poder de frenado másico en función de la energía en escalas logarítmicas. Por encima de unos {#} MeV baja casi como {#}/β², luego se nivela y sube lentamente a medida que la partícula se vuelve relativista. Elige un material para comparar; el control de energía mueve el marcador.",
 "CSDA range against energy on log scales, with the NIST PSTAR ranges for protons in water and the Bragg–Kleeman power law R = αE^p fitted to the PSTAR values from {#} to {#} MeV.":
   "Alcance CSDA en función de la energía en escalas logarítmicas, con los alcances NIST PSTAR para protones en agua y la ley de potencias de Bragg–Kleeman R = αE^p ajustada a los valores de PSTAR de {#} a {#} MeV.",
+"Graph of the CSDA range R, in g/cm², against the kinetic energy T, in MeV, on log scales.":
+  "Gráfica del alcance CSDA R, en g/cm², contra la energía cinética T, en MeV, en escalas logarítmicas.",
+"The graph is for this particle and this material.":
+  "La gráfica es para esta partícula y este material.",
+"Dots show the NIST PSTAR ranges for protons in water, with a dashed power law fit.":
+  "Los puntos muestran los alcances NIST PSTAR de protones en agua, con un ajuste de ley de potencias en líneas.",
+"A dot marks the beam energy, {#} MeV.":
+  "Un punto marca la energía del haz, {#} MeV.",
+"At that energy the range is {#} g/cm², which is {#} cm.":
+  "A esa energía el alcance es {#} g/cm², es decir, {#} cm.",
 "kinetic energy T (MeV), alpha particle":
   "energía cinética T (MeV), partícula alfa",
 "Alpha particle, Water (Bethe, CSDA)":
@@ -390,6 +450,8 @@ VDI18N.add('es', 'demo/charged-particles', {
   "Protón, Músculo (ICRP) (Bethe, CSDA)",
 "Proton in Muscle (ICRP)":
   "Protón en Músculo (ICRP)",
+"A dashed gray curve shows water for comparison.":
+  "Una curva gris de rayas muestra el agua para comparar.",
 "Proton, PMMA (acrylic) (Bethe, CSDA)":
   "Protón, PMMA (acrílico) (Bethe, CSDA)",
 "Proton in PMMA (acrylic)":
@@ -422,6 +484,14 @@ VDI18N.add('es', 'demo/charged-particles', {
   "ajuste a PSTAR de {#} a {#} MeV:",
 "tracks ({#})":
   "trazas ({#})",
+"The beam first crosses a slab.":
+  "El haz cruza primero una placa.",
+"Muscle, {#} cm":
+  "Músculo, {#} cm",
+"Graph of the mass stopping power S/ρ, in MeV cm²/g, against the kinetic energy T, in MeV, on log scales.":
+  "Gráfica del poder de frenado másico S/ρ, en MeV cm²/g, contra la energía cinética T, en MeV, en escalas logarítmicas.",
+"At that energy the mass stopping power is {#} MeV cm²/g.":
+  "A esa energía el poder de frenado másico es {#} MeV cm²/g.",
 "Lung tissue":
   "Tejido pulmonar",
 "{#}, {#} μm in all":
@@ -430,6 +500,10 @@ VDI18N.add('es', 'demo/charged-particles', {
   "todas apagadas o de {#} cm: solo agua",
 "stopped":
   "detenido",
+"The body layers are all off, so there is only water.":
+  "Todas las capas del cuerpo están apagadas, así que solo hay agua.",
+"The beam has stopped before the detector.":
+  "El haz se detuvo antes del detector.",
 "Close":
   "Cerrar",
 "Fire":

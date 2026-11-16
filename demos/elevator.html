@@ -512,6 +512,30 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     return { stage: phase(st), m_kg: S.m, t_s: num(S.clock, 2), y_m: num(st.y, 2), v_m_s: num(st.v, 2), a_m_s2: num(st.a, 2), N_N: num(N, 0), scale_kg: num(N / G, 1),
       ratio: num(N / (S.m * G), 3), set_a_m_s2: S.a.toFixed(1), top_speed_m_s: S.vmax.toFixed(1), starts: S.instant ? 'instant' : `jerk ${S.J.toFixed(1)} m/s³` };
   };
+  /* what the picture shows now, for a screen reader (VD.describe): the car, the person on the scale, the forces and the two graphs */
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    const st = now(), N = scaleN(S.m, st.a), mv = moving(), still = !mv || S.paused, fl = st.y / FLOOR, atFloor = Math.abs(fl - Math.round(fl)) < 1e-6, up = st.v > 0;
+    let what;
+    if (S.snapped && st.a === -G) what = 'The cable has snapped and the car is in free fall.';
+    else if (S.snapped && st.a > 0 && !st.done) what = 'The safety brakes are stopping the car.';
+    else if (S.snapped && st.done) what = 'The cable snapped and the safety brakes have stopped the car.';
+    else if (st.done || !S.segs.length) what = atFloor ? `The car is at rest at floor ${Math.round(fl)}.` : 'The car is at rest between floors.';
+    else if (Math.abs(st.a) < 1e-12) what = up ? 'The car moves up at constant speed.' : 'The car moves down at constant speed.';
+    else if ((st.a > 0) === up) what = up ? 'The car is speeding up going up.' : 'The car is speeding up going down.';
+    else what = up ? 'The car is slowing down going up.' : 'The car is slowing down going down.';
+    return [
+      `An elevator car in a shaft with floors 0 to ${TOP}, 3.0 m apart, and a person of mass ${S.m} kg standing on a scale.`,
+      S.instant ? `Acceleration is limited to ${S.a.toFixed(1)} m/s², top speed ${S.vmax.toFixed(1)} m/s, with instant starts and stops.` : `Acceleration is limited to ${S.a.toFixed(1)} m/s², top speed ${S.vmax.toFixed(1)} m/s, jerk ${S.J.toFixed(1)} m/s³.`,
+      S.snapped ? null : S.segs.length ? `The current trip takes ${f(duration(S.segs), 1)} s.` : 'No trip has been started.',
+      what,
+      S.paused ? 'Paused.' : mv ? 'The ride is running.' : null,
+      { t: `Height ${f(st.y, 2)} m, velocity ${f(st.v, 2)} m/s, acceleration ${f(st.a, 2)} m/s², all up positive.`, live: false },
+      `The person's weight mg is ${f(S.m * G, 0)} N, drawn as an arrow pointing down.`,
+      S.blind ? 'The scale reading is hidden, so you can predict it.' : { t: `The scale pushes up with a normal force of ${f(N, 0)} N and shows ${f(N / G, 1)} kg.`, live: still },
+      S.blind ? null : { t: `The net force N − mg is ${f(N - S.m * G, 0)} N, and apparent weight over true weight is ${f(N / (S.m * G), 3)}.`, live: still },
+      'Two graphs beside the car plot the scale reading in kg and the velocity in m/s against time.'
+    ];
+  });
   window.__el = { S, start, now, syncBtns, draw: () => { draw(); readouts(); } };   /* for the worksheet key's capture script */
   function init() { syncBtns(); readouts(); }
   function resize() { dpr = window.devicePixelRatio || 1; const r = stage.getBoundingClientRect(); W = r.width; Hh = r.height; can.width = Math.round(W * dpr); can.height = Math.round(Hh * dpr); can.style.width = W + 'px'; can.style.height = Hh + 'px'; draw(); }
