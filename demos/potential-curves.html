@@ -1945,6 +1945,23 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     if (now - lastRead > 100) { updateReadouts(false); lastRead = now; }
     requestAnimationFrame(loop);
   }
+  /* what the energy diagram shows now, for a screen reader (VD.describe): the system, the energy, where the particle is and what the orbit does; the moving values are not announced */
+  const SR_PRE = { spring: 'A mass on a spring.', coaster: 'A roller coaster on a track.', dwell: 'A particle in a double well.', lj: 'Two argon atoms with a Lennard Jones bond.', pend: 'A pendulum that can swing or go over the top.', custom: 'A potential energy curve you draw yourself.' };
+  if (window.VD && VD.describe) VD.describe(cans.m, () => {
+    if (!st || !info || !P) return [];
+    const un = units(), out = [], x = st.x, U = P.U(x), tp = info.tp, run = (t) => ({ t, live: false });
+    out.push('An energy diagram: the potential energy U against position, the total energy E as a dashed line, and the particle below.', SR_PRE[S.preset] || '');
+    out.push(`The total energy is E = ${fU(S.E)}.`);
+    out.push(running ? 'The particle is moving.' : 'The simulation is paused.');
+    out.push(run(`The particle is at ${un.xs} = ${fX(x)}, where U = ${fU(U)}.`), run(`Its kinetic energy is ${fU(Math.max(0, S.E - U))}.`));
+    if (info.kind === 'rot') out.push('The pendulum goes all the way round, so there are no turning points.');
+    else if (info.kind === 'rest') out.push('The particle is at rest, because E equals U here.');
+    else if (info.kind === 'unbound') out.push(escaped ? 'The particle has escaped and keeps going.' : 'The orbit is open on one side, so the particle escapes.');
+    else out.push(`The turning points are ${un.xs}₁ = ${fX(tp.a)} and ${un.xs}₂ = ${fX(tp.b)}.`);
+    if (info.kind === 'bound' || info.kind === 'rot') out.push(`The period of this orbit is ${fT(info.T)}.`);
+    if (isFinite(info.T0)) out.push(`The small oscillation period at the bottom of the well is ${fT(info.T0)}.`);
+    return out;
+  });
   window.__pc = { get frameMs() { return frameMs; }, get st() { return st; }, get info() { return info; }, get S() { return S; }, get eqs() { return eqs; },
     get P() { return P; }, get dt() { return dt; }, get escaped() { return escaped; }, get handles() { return dragHandles(); }, get tCurve() { return tCurve; }, get on3d() { return on3d; }, view3: () => view3, get objPx() { return G3 && G3.objPx; },
     pix: (x) => [X(x, G2.W), G2.Y(P.U(x))], advance, setRunning, applyPreset, place: (x, E, d) => { place(x, E, d); updateReadouts(true); } };

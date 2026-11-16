@@ -1,5 +1,7 @@
 /* demo/rocket in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/rocket', {
+"Describe the picture":
+  "Describir la imagen",
 "fuel":
   "combustible",
 "Ready":
@@ -26,6 +28,22 @@ VDI18N.add('es', 'demo/rocket', {
   "g = {#} m/s², constante · sin aire",
 "A rocket rising with its exhaust, beside graphs of its speed and mass against time. Space launches or pauses, R starts over.":
   "Un cohete que sube con sus gases de escape, junto a gráficas de su rapidez y su masa en función del tiempo. Espacio lanza o pausa, R vuelve a empezar.",
+"A rocket rising with its exhaust, with graphs of its speed and mass against time.":
+  "Un cohete que sube con su escape, con gráficas de su rapidez y su masa contra el tiempo.",
+"Dry mass {#} kg and fuel mass {#} kg, exhaust speed {#} m/s, burn rate {#} kg/s.":
+  "Masa seca {#} kg y masa de combustible {#} kg, rapidez de escape {#} m/s, tasa de quemado {#} kg/s.",
+"No gravity, in deep space.":
+  "Sin gravedad, en el espacio profundo.",
+"Thrust is {#} kN and the burn time is {#} s.":
+  "El empuje es {#} kN y el tiempo de quemado es {#} s.",
+"The rocket has not launched yet.":
+  "El cohete todavía no despega.",
+"Mass now {#} kg, speed {#} m/s, height {#} m.":
+  "Masa ahora {#} kg, rapidez {#} m/s, altura {#} m.",
+"Time {#} s.":
+  "Tiempo {#} s.",
+"The rocket equation gives {#} m/s, and the speed at burnout is {#} m/s.":
+  "La ecuación del cohete da {#} m/s, y la rapidez al agotarse el combustible es {#} m/s.",
 "Time controls":
   "Controles de tiempo",
 "Divider between the rocket and the graphs":
@@ -100,6 +118,10 @@ VDI18N.add('es', 'demo/rocket', {
   "combustión (kg/s)",
 "v cutoff (m/s)":
   "v al apagar (m/s)",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "Engine on":
   "Motor encendido",
 "The same rocket from the ground. Thrust {#} kN against a {#} kN weight. Gravity takes g × (burn time) off the speed: compare the burnout speed with u ln(m₀/m).":
@@ -136,6 +158,12 @@ VDI18N.add('es', 'demo/rocket', {
   "Ecuación del cohete, ambas etapas",
 "Readings are for a one stage rocket, as in the worksheet: switch off Two stages to record.":
   "Las lecturas son para un cohete de una etapa, como en la hoja de trabajo: desactiva Dos etapas para registrar.",
+"A two stage rocket, with graphs of its speed and mass against time.":
+  "Un cohete de dos etapas, con gráficas de su rapidez y su masa contra el tiempo.",
+"The first stage has a {#} kg casing and {#} kg of fuel.":
+  "La primera etapa tiene una carcasa de {#} kg y {#} kg de combustible.",
+"Gravity is on, launching from the ground.":
+  "La gravedad está activada, con despegue desde el suelo.",
 "Separation (flight log)":
   "Separación (registro de vuelo)",
 "Speed at burnout (flight log)":

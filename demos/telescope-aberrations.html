@@ -981,6 +981,24 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   window.vdShowCols = [['telescope', 'Telescope'], ['focus_mm', 'Focus (mm)'], ['strehl', 'Strehl'], ['hpd_arcsec', 'Half light (″)']];
   /* How this works: a short video of one sample reading from the worksheet, made by tools/howto/ */
   VD.howTo({ src: 'media/how-this-works/intro-aberrations.mp4', poster: 'media/how-this-works/intro-aberrations.jpg', title: 'How this works: fixing a blurry star' });
+  /* what the picture shows now, for a screen reader (VD.describe): the telescope and its star image, with the Strehl ratio and size of the blur; a mystery telescope's cause stays hidden */
+  const SR_LIGHT = { white: 'The camera uses white light, 420 to 660 nm.', F: 'The camera uses blue light at 486 nm.', g550: 'The camera uses green light at 550 nm.', d: 'The camera uses yellow light at 588 nm.', C: 'The camera uses red light at 656 nm.', K: 'The camera uses infrared light at 2.2 µm.' };
+  const SR_SCOPE = { mirror: 'The telescope is a mirror.', lens: 'The telescope is a lens.', hubble: 'The telescope is the Hubble Space Telescope.' };
+  if (window.VD && VD.describe) VD.describe(cans.can, () => {
+    const E = eff(), r = R, out = [];
+    out.push('A telescope and the image of a star it makes.');
+    if (S.mys) out.push('The tube is covered: something blurs the star.', `The aperture is ${g3(E.D * 1000)} mm.`);
+    else {
+      out.push(SR_SCOPE[E.scope] || '', E.scope === 'hubble' ? 'The mirror is 2.40 m across at f/24.' : `The aperture is ${g3(E.D * 1000)} mm at f/${fx(E.N, 1)}.`);
+      out.push(E.air === 'ground' ? `The telescope is on the ground, with seeing r₀ = ${fx(E.r0, 1)} cm at 500 nm.` : 'The telescope is in space.');
+    }
+    out.push(SR_LIGHT[E.filter] || '', `The camera focus is ${sgn(S.focus, S.scopeStep || 3)} mm and the star is ${fx(S.th, 1)}′ from the center of the view.`);
+    if (E.iris < 100) out.push(`The aperture mask uses ${E.iris}% of the diameter.`);
+    if (r) { const jit = E.air === 'ground' && E.expo === 'snap'; out.push({ t: `The Strehl ratio is ${fx(r.strehl, 2)}.`, live: !jit }, { t: `The half light diameter is ${g3(asec(r.hpd * pixelAngle(E.D)))}″.`, live: !jit }); }
+    else out.push('The image is still being computed.');
+    out.push('Below, a plot of brightness along a line through the star, compared with a perfect telescope.');
+    return out;
+  });
   window.__ta = { S, get R() { return R; }, applyPreset, recompute: () => { dirty = true; recompute(); if (S.mys) puzzleWatch(); }, eff, image, wait: () => (longJob && R && !R.done ? false : true) };
 
   /* ---------- about ---------- */

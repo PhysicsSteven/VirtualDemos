@@ -20,6 +20,12 @@ VDI18N.add('es', 'demo/michelson', {
   "dibujado a escala; el recorrido del espejo se dibuja {#} veces más grande y la inclinación {#} veces",
 "fringes counted":
   "franjas contadas",
+"Describe the picture":
+  "Describir la imagen",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "Michelson Interferometer":
   "Interferómetro de Michelson",
 "<a><span>←</span> <span>Thin Film Interference</span></a><a><span>Circular Apertures and Resolution</span> <span>→</span></a>":
@@ -48,6 +54,20 @@ VDI18N.add('es', 'demo/michelson', {
   "<span>Vista superior (arrastra el tambor del micrómetro para girarlo)</span>",
 "Top view of a Michelson interferometer on an optical table: a light source, a beam splitter, a compensator plate, a movable mirror on a micrometer stage, a fixed mirror, a gas cell in the fixed arm and a screen. Arrow keys turn the micrometer.":
   "Vista superior de un interferómetro de Michelson sobre una mesa óptica: una fuente de luz, un divisor de haz, una placa compensadora, un espejo móvil sobre una platina con micrómetro, un espejo fijo, una celda de gas en el brazo fijo y una pantalla. Las flechas giran el micrómetro.",
+"A Michelson interferometer on a table, with the fringes on a screen.":
+  "Un interferómetro de Michelson sobre una mesa, con las franjas en una pantalla.",
+"The light is a red He–Ne laser.":
+  "La luz es un láser rojo de He–Ne.",
+"The wavelength in the room's air is {#} nm.":
+  "La longitud de onda en el aire del cuarto es {#} nm.",
+"The movable mirror's micrometer reads {#} μm.":
+  "El micrómetro del espejo móvil marca {#} μm.",
+"The fringe counter reads {#}, zeroed at {#} μm.":
+  "El contador de franjas marca {#}, puesto en cero en {#} μm.",
+"The fixed mirror has no tilt.":
+  "El espejo fijo no tiene inclinación.",
+"The gas cell is out of the beam.":
+  "La celda de gas está fuera del haz.",
 "The screen, {#} mm across":
   "La pantalla, de {#} mm de ancho",
 "The fringes on the screen.":
@@ -106,6 +126,8 @@ VDI18N.add('es', 'demo/michelson', {
   "Doblete del sodio",
 "A red He–Ne laser ({#} nm in standard air). Zero the counter, turn the micrometer, and note the reading each time the counter reaches {#}, {#}, {#}, … fringes. Each fringe is half a wavelength of mirror travel: {#}Δd = Nλ.":
   "Un láser de He–Ne rojo ({#} nm en aire estándar). Pon el contador en cero, gira el micrómetro y anota la lectura cada vez que el contador llegue a {#}, {#}, {#}, … franjas. Cada franja es media longitud de onda de recorrido del espejo: {#}Δd = Nλ.",
+"Light":
+  "Luz",
 "He–Ne laser, red":
   "Láser de He–Ne, rojo",
 "Wavelength in the room's air":
@@ -154,6 +176,10 @@ VDI18N.add('es', 'demo/michelson', {
   "LÁSER ?",
 "<span>hidden: measure it</span>":
   "<span>oculta: mídela</span>",
+"The light is a mystery laser.":
+  "La luz es un láser misterioso.",
+"The wavelength is hidden: measure it.":
+  "La longitud de onda está oculta: mídela.",
 "A laser of unknown wavelength somewhere in the visible. Measure it the same way. New mystery laser picks another.":
   "Un láser de longitud de onda desconocida en algún lugar del visible. Mídelo de la misma manera. Nuevo láser misterioso elige otro.",
 "gas cell, {#} cm":
@@ -172,10 +198,12 @@ VDI18N.add('es', 'demo/michelson', {
   "La luz blanca forma franjas solo a menos de un micrómetro de caminos iguales, donde las franjas de cada color aún coinciden. Encuentra primero las franjas rectas con el láser rojo, luego cambia a luz blanca y gira el micrómetro despacio.",
 "Sodium's two yellow lines, {#} nm apart. Their fringes drift in and out of step, so the rings fade and come back every {#} mm of mirror travel.":
   "Las dos líneas amarillas del sodio, separadas {#} nm. Sus franjas entran y salen de fase, así que los anillos se desvanecen y reaparecen cada {#} mm de recorrido del espejo.",
+"The light is a sodium lamp with its two D lines.":
+  "La luz es una lámpara de sodio con sus dos líneas D.",
+"The wavelength in the room's air is {#} nm and {#} nm.":
+  "La longitud de onda en el aire del cuarto es {#} nm y {#} nm.",
 "to scale, but mirror travel ×{#}, tilt ×{#}":
   "a escala, pero recorrido del espejo ×{#}, inclinación ×{#}",
-"Light":
-  "Luz",
 "Close":
   "Cerrar"
 });

@@ -1,5 +1,7 @@
 /* demo/telescope-aberrations in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/telescope-aberrations', {
+"Describe the picture":
+  "Describir la imagen",
 "Let the air move":
   "Deja que el aire se mueva",
 "The mirror telescope (side view)":
@@ -74,6 +76,10 @@ VDI18N.add('es', 'demo/telescope-aberrations', {
   "Telescopio",
 "Focal length":
   "Distancia focal",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "Telescope Aberrations":
   "Aberraciones de telescopios",
 "<a><span>←</span> <span>Color Vision</span></a><a><span>Double Slit, One Particle at a Time</span> <span>→</span></a>":
@@ -100,6 +106,22 @@ VDI18N.add('es', 'demo/telescope-aberrations', {
   "<span>Prueba de estrella: antes y después del foco</span>",
 "The telescope and the image of the star it makes.":
   "El telescopio y la imagen de la estrella que forma.",
+"A telescope and the image of a star it makes.":
+  "Un telescopio y la imagen de una estrella que forma.",
+"The telescope is a mirror.":
+  "El telescopio es de espejo.",
+"The aperture is {#} mm at f/{#}.":
+  "La apertura es de {#} mm a f/{#}.",
+"The telescope is on the ground, with seeing r₀ = {#} cm at {#} nm.":
+  "El telescopio está en tierra, con seeing r₀ = {#} cm a {#} nm.",
+"The camera uses green light at {#} nm.":
+  "La cámara usa luz verde de {#} nm.",
+"The camera focus is {#} mm and the star is {#}′ from the center of the view.":
+  "El enfoque de la cámara es {#} mm y la estrella está a {#}′ del centro del campo.",
+"The image is still being computed.":
+  "La imagen todavía se está calculando.",
+"Below, a plot of brightness along a line through the star, compared with a perfect telescope.":
+  "Abajo, una gráfica del brillo a lo largo de una línea que pasa por la estrella, comparada con la de un telescopio perfecto.",
 "Divider between the telescope and the picture of the star":
   "Divisor entre el telescopio y la imagen de la estrella",
 "Brightness along a line through the star, compared with a perfect telescope.":
@@ -202,6 +224,10 @@ VDI18N.add('es', 'demo/telescope-aberrations', {
   "Orden alto ({#} formas)",
 "Divider between the picture and the brightness curve":
   "Divisor entre la imagen y la curva de brillo",
+"<a>Worksheet {#}: Fixing a Blurry Telescope (Astro {#})</a>":
+  "<a>Hoja de trabajo {#}: Arreglar un telescopio borroso (Astro {#})</a>",
+"<a>Worksheet {#}: Seeing and Adaptive Optics (Astro {#})</a>":
+  "<a>Hoja de trabajo {#}: Seeing y óptica adaptativa (Astro {#})</a>",
 "Through moving air":
   "A través de aire en movimiento",
 "Perfect telescope":
@@ -286,6 +312,10 @@ VDI18N.add('es', 'demo/telescope-aberrations', {
   "Hubble: un telescopio Ritchey–Chrétien de {#} m a f/{#} (informe Allen, {#}). Su primario (radio de curvatura {#} m) se fabricó con constante cónica −{#} en lugar de la del diseño, −{#}, unos {#} µm demasiado plano en el borde. Aquí el error es la diferencia de las dos superficies, duplicada al reflejarse; da {#} ondas rms a {#} nm después de enfocar, frente a {#} del informe. La sombra del secundario es {#} del diámetro y los cuatro soportes miden {#} del radio de ancho (el modelo de pupila de Tiny Tim). La óptica correctora se modela como si cancelara el error exactamente. El corrector de coma es ideal: quita la forma de coma del frente de onda en cada posición de la estrella.",
 "Approximations: scalar diffraction and the Fraunhofer limit; each filter is a single wavelength; white light is {#} equally weighted wavelengths from {#} to {#} nm, colored with the CIE {#} color matching functions (the fit of Wyman, Sloan and Shirley {#}) shown in sRGB; the brightest point of the picture is shown white; with Same brightness scale as a perfect telescope, the scale is fixed to the perfect telescope's peak instead, so a blurred star looks dimmer as well as bigger. A mirror telescope's camera is drawn at the prime focus, with no shadow of its own. All data are simulated.":
   "Aproximaciones: difracción escalar y el límite de Fraunhofer; cada filtro es una sola longitud de onda; la luz blanca son {#} longitudes de onda con el mismo peso, de {#} a {#} nm, coloreadas con las funciones de igualación de color CIE {#} (el ajuste de Wyman, Sloan y Shirley {#}) mostradas en sRGB; el punto más brillante de la imagen se muestra blanco; con Misma escala de brillo que un telescopio perfecto, la escala se fija al pico del telescopio perfecto, así que una estrella difuminada se ve más tenue además de más grande. La cámara de un telescopio de espejo se dibuja en el foco primario, sin sombra propia. Todos los datos son simulados.",
+"The Strehl ratio is {#}.":
+  "La razón de Strehl es {#}.",
+"The half light diameter is {#}″.":
+  "El diámetro de media luz es {#}″.",
 "The lens telescope (side view)":
   "El telescopio de lente (vista lateral)",
 "single lens: crown glass":
@@ -294,6 +324,14 @@ VDI18N.add('es', 'demo/telescope-aberrations', {
   "imagen de rayos: el difuminado es mucho más ancho que la difracción",
 "white light":
   "luz blanca",
+"The telescope is the Hubble Space Telescope.":
+  "El telescopio es el Telescopio Espacial Hubble.",
+"The mirror is {#} m across at f/{#}.":
+  "El espejo mide {#} m de diámetro a f/{#}.",
+"The camera uses white light, {#} to {#} nm.":
+  "La cámara usa luz blanca, de {#} a {#} nm.",
+"The camera focus is +{#} mm and the star is {#}′ from the center of the view.":
+  "El enfoque de la cámara es +{#} mm y la estrella está a {#}′ del centro del campo.",
 "Hubble (side view, not to scale)":
   "Hubble (vista lateral, no a escala)",
 "primary mirror, {#} m":
@@ -324,6 +362,10 @@ VDI18N.add('es', 'demo/telescope-aberrations', {
   "Una lente de {#} mm de vidrio crown (N-BK7) a f/{#}, distancia focal {#} mm. El vidrio desvía más la luz azul que la roja, así que el azul enfoca más cerca de la lente y el rojo más lejos. En luz blanca la estrella es un difuminado de colores. Elige un color con el filtro y encuentra su mejor foco: la separación entre los focos azul y rojo es de unos f/V, con V = {#} el número de Abbe del vidrio.",
 "The {#} mm lens made of two glasses cemented together: crown (N-BK7, V = {#}) and flint (F2, V = {#}). The flint lens spreads the colors the opposite way, so the blue F line and the red C line meet at one focus. What remains is a small spread called the secondary spectrum: violet and deep red still focus a little apart, so in white light (every color counted equally) the Strehl ratio stays near {#}, while each single color is sharp.":
   "La lente de {#} mm hecha de dos vidrios pegados: crown (N-BK7, V = {#}) y flint (F2, V = {#}). La lente de flint separa los colores al revés, así que la línea F azul y la línea C roja se juntan en un solo foco. Lo que queda es una pequeña separación llamada espectro secundario: el violeta y el rojo profundo todavía enfocan un poco aparte, así que en luz blanca (con todos los colores contados por igual) la razón de Strehl se queda cerca de {#}, mientras que cada color por separado es nítido.",
+"The telescope is a lens.":
+  "El telescopio es de lente.",
+"The telescope is in space.":
+  "El telescopio está en el espacio.",
 "achromat: crown + flint":
   "acromático: crown + flint",
 "The Hubble Space Telescope as launched in {#}: a {#} m mirror, f/{#}, made with the wrong shape. Its conic constant is −{#} instead of −{#}, so it is about {#} µm too flat at the edge. The camera is at the best focus, {#} mm beyond the focus of rays near the center, yet only a small core holds the light and most of it sits in a halo about {#}″ across.":
@@ -350,8 +392,26 @@ VDI18N.add('es', 'demo/telescope-aberrations', {
   "Solo puedes juzgar por la imagen de la estrella.",
 "Aperture":
   "Abertura",
+"The tube is covered: something blurs the star.":
+  "El tubo está cubierto: algo desenfoca la estrella.",
+"The aperture is {#} mm.":
+  "La apertura es de {#} mm.",
 "Pause the air":
   "Pausar el aire",
+"The camera uses blue light at {#} nm.":
+  "La cámara usa luz azul de {#} nm.",
+"The camera uses infrared light at {#} µm.":
+  "La cámara usa luz infrarroja de {#} µm.",
+"long exposure":
+  "exposición larga",
+"moments":
+  "momentos",
+"long exposure, {#} moments":
+  "exposición larga, {#} momentos",
+"The camera uses yellow light at {#} nm.":
+  "La cámara usa luz amarilla de {#} nm.",
+"The camera uses red light at {#} nm.":
+  "La cámara usa luz roja de {#} nm.",
 "Choose a cause first.":
   "Primero elige una causa.",
 "Right: the camera is out of focus. Turn the focus until the Strehl ratio is {#} or more.":
@@ -372,12 +432,10 @@ VDI18N.add('es', 'demo/telescope-aberrations', {
   "Correcto. Ahora elige la corrección y vuelve a enfocar para tener la estrella más nítida.",
 "Done, but did it help? The cause may be somewhere else.":
   "Listo, pero ¿ayudó? La causa puede estar en otra parte.",
-"This telescope has no mirror: it is a lens telescope.":
-  "Este telescopio no tiene espejo: es un telescopio de lente.",
 "This telescope has no lens to replace: it uses a mirror.":
   "Este telescopio no tiene lente que cambiar: usa un espejo.",
-"Done. Now focus again for the sharpest star.":
-  "Listo. Ahora vuelve a enfocar para tener la estrella más nítida.",
+"Adaptive optics bends a thin mirror to cancel whatever blur it can measure, so it helps many problems a little. But was the cause the air?":
+  "La óptica adaptativa dobla un espejo delgado para cancelar cualquier difuminado que pueda medir, así que ayuda un poco con muchos problemas. Pero ¿la causa era el aire?",
 "Turn the camera focus in and out, or tick Star test. Does some focus make the star sharp? Does the blur look the same on both sides of the focus?":
   "Mueve el enfoque de la cámara hacia adentro y hacia afuera, o marca Prueba de estrella. ¿Algún enfoque hace nítida la estrella? ¿El difuminado se ve igual a ambos lados del foco?",
 "Move the star to the center of the view. Does the blur change?":
@@ -390,32 +448,28 @@ VDI18N.add('es', 'demo/telescope-aberrations', {
   "Tapa el borde de la abertura (usa solo el centro). ¿Qué difuminado se reduce mucho cuando solo se usa el centro del espejo o de la lente?",
 "The answer":
   "La respuesta",
-"The answer: The mirror is a sphere, not a parabola (spherical aberration) (f/{#})":
-  "La respuesta: El espejo es una esfera, no una parábola (aberración esférica) (f/{#})",
-"The answer: The camera is not at the focus (+{#} mm)":
-  "La respuesta: La cámara no está en el foco (+{#} mm)",
+"The answer: The star is far from the center of the view (coma) (f/{#}, {#}′)":
+  "La respuesta: La estrella está lejos del centro del campo (coma) (f/{#}, {#}′)",
+"Done. Now focus again for the sharpest star.":
+  "Listo. Ahora vuelve a enfocar para tener la estrella más nítida.",
 "Solved":
   "Resuelto",
 "Press New mystery for another telescope.":
   "Presiona Nuevo misterio para otro telescopio.",
 "Solved: Strehl ratio {#}. Press New mystery for another telescope.":
   "Resuelto: razón de Strehl {#}. Presiona Nuevo misterio para otro telescopio.",
-"The answer: The star is far from the center of the view (coma) (f/{#}, {#}′)":
-  "La respuesta: La estrella está lejos del centro del campo (coma) (f/{#}, {#}′)",
+"This telescope has no mirror: it is a lens telescope.":
+  "Este telescopio no tiene espejo: es un telescopio de lente.",
+"The answer: The camera is not at the focus (+{#} mm)":
+  "La respuesta: La cámara no está en el foco (+{#} mm)",
+"The answer: The mirror is a sphere, not a parabola (spherical aberration) (f/{#})":
+  "La respuesta: El espejo es una esfera, no una parábola (aberración esférica) (f/{#})",
 "The answer: The mirror is pinched by its clamps (astigmatism) ({#} nm)":
   "La respuesta: Las sujeciones presionan el espejo (astigmatismo) ({#} nm)",
 "The answer: The lens focuses each color at a different place (chromatic aberration)":
   "La respuesta: La lente enfoca cada color en un lugar distinto (aberración cromática)",
 "The answer: Moving air above the telescope (seeing) (r₀ {#} cm)":
   "La respuesta: Aire en movimiento sobre el telescopio (seeing) (r₀ {#} cm)",
-"long exposure":
-  "exposición larga",
-"moments":
-  "momentos",
-"long exposure, {#} moments":
-  "exposición larga, {#} momentos",
-"Adaptive optics bends a thin mirror to cancel whatever blur it can measure, so it helps many problems a little. But was the cause the air?":
-  "La óptica adaptativa dobla un espejo delgado para cancelar cualquier difuminado que pueda medir, así que ayuda un poco con muchos problemas. Pero ¿la causa era el aire?",
 "Close":
   "Cerrar"
 });

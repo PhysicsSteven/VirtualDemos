@@ -935,6 +935,36 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   let note3 = '';
   VD3K.view({ seg: '#dimSeg', init: init3, status: (m) => { note3 = m; capSet(m); },
     change: (on) => { on3d = on; if (G3) G3.S.el.hidden = !on; capSet(on ? cap3(S.view) : note3); redraw(); } });
+  /* what the picture shows now, for a screen reader (VD.describe): the view, the setup, whether it runs, the counts the worksheets read (Blind mode hides the theory values) */
+  const SR_VERD = { idle: 'The device does nothing.', cold: 'The engine also draws heat from the cold reservoir.', kelvin: 'The device breaks the Kelvin statement.', clausius: 'The device breaks the Clausius statement.',
+    beats: 'The device beats Carnot and breaks the second law.', reversible: 'The device is reversible, with total entropy change 0.', allowed: 'The device is allowed, with total entropy change above 0.' };
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    const out = [], run = (t) => ({ t, live: false });
+    if (S.view === 'fe') {
+      const g = S.fe.g, N = g.N;
+      out.push(`A box of ${N} gas molecules, all starting in the left half.`, g.wall ? 'The partition is in place.' : 'The partition is removed.', S.run ? 'Running.' : g.t > 0 ? 'Paused.' : 'Not started.');
+      out.push(run(`On the left now: ${leftCount(g)} of ${N}.`), run(`Time since opened ${f(g.tOpen, 1)} s.`));
+      out.push(g.tCount ? `Share of time all on the left: ${f(g.hist[N] / g.tCount, 5)}.` : 'No time counted yet.');
+      out.push(S.blind ? 'The theory values are hidden.' : `The chance of all on the left is 2^−N = ${sci(Math.pow(2, -N))}.`);
+      out.push('Below, the count on the left over time, and the share of time spent at each count.');
+    } else if (S.view === 'es') {
+      const e = S.es, s = e.s, qB = e.q - s.qA;
+      out.push(`Two Einstein solids share ${e.q} quanta: solid A has ${e.NA} oscillators and solid B has ${e.NB}.`, S.run ? 'Running.' : s.steps > 0 ? 'Paused.' : 'Not started.');
+      out.push(run(`Solid A holds ${s.qA} quanta and solid B holds ${qB}.`), run(`${s.steps} exchanges tried.`));
+      out.push(S.blind ? 'The theory values are hidden.' : `The most likely q_A is ${solidPeak(e.NA, e.NB, e.q)}.`);
+      if (!S.blind) out.push(`kT/ε is ${f(solidT(e.NA, s.qA), 3)} for A and ${f(solidT(e.NB, qB), 3)} for B.`);
+      out.push('Below, the energy in solid A over time, and the number of ways to share it.');
+    } else {
+      const r = dev();
+      out.push(r.mode === 'engine' ? 'A heat engine between a hot reservoir above and a cold reservoir below.' : 'A refrigerator between a hot reservoir above and a cold reservoir below.');
+      out.push(`Hot ${f(r.Th, 0)} K, cold ${f(r.Tc, 0)} K.`, `Heat from hot Q_h = ${f(r.Qh, 1)} J, heat to cold Q_c = ${f(r.Qc, 1)} J, work W = ${f(r.W, 1)} J.`);
+      out.push(r.mode === 'engine' ? (isFinite(r.eff) ? `Efficiency ${f(r.eff, 4)}.` : 'Efficiency is undefined.') : (isFinite(r.cop) ? `COP ${f(r.cop, 3)}.` : 'COP is undefined.'));
+      if (S.blind) out.push('The Carnot limit, the entropy change and the verdict are hidden.');
+      else out.push(r.mode === 'engine' ? `The Carnot efficiency is ${f(r.carnotEff, 4)}.` : `The Carnot COP is ${f(r.carnotCop, 3)}.`, `Entropy change of the universe ${f(r.dS, 4)} J/K.`, SR_VERD[r.verdict] || '');
+      if (S.sl.pair) { const pr = pair(r); out.push(`Paired with a Carnot device: net heat from hot ${f(pr.fromHot, 1)} J, net heat to cold ${f(pr.toCold, 1)} J, net work out ${f(pr.Wnet, 1)} J.`); }
+    }
+    return out;
+  });
   window.__en = { S, setView, applyPreset, setRun, redraw, sync, pull, advance, dev, newGas, newSolid };
   /* How this works: a short video of one sample reading for the worksheet of the view in use (Free Expansion: four molecules after
      2000 s; Einstein Solids: the first reading of the small solids; Testing the Second Law: the 600 K to 300 K engine with W = 0); made by tools/howto/ */

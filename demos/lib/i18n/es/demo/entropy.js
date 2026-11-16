@@ -28,8 +28,14 @@ VDI18N.add('es', 'demo/entropy', {
   "fracción del tiempo",
 "dots: C(N, n)/{#}^N":
   "puntos: C(N, n)/{#}^N",
+"Describe the picture":
+  "Describir la imagen",
 "Entropy and the Second Law":
   "Entropía y la segunda ley",
+"<a>The second law of thermodynamics</a>":
+  "<a>La segunda ley de la termodinámica</a>",
+"<a><span>←</span> <span>Heat Engine Cycles</span></a><a><span>Galton Board</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Ciclos de máquinas térmicas</span></a><a><span>Tablero de Galton</span> <span>→</span></a>",
 "Pull the partition and a gas fills the box, and it never gathers back by itself. Let two solids share energy and heat flows from hot to cold. Both happen because there are far more ways to be spread out. Then test engines and refrigerators against the second law.":
   "Quita la partición y un gas llena la caja, y nunca se vuelve a juntar por sí solo. Deja que dos sólidos compartan energía y el calor fluye de lo caliente a lo frío. Ambas cosas pasan porque hay muchísimas más maneras de estar repartido. Luego pon a prueba motores y refrigeradores frente a la segunda ley.",
 "model gas · the model clock runs {#} s each second":
@@ -50,6 +56,22 @@ VDI18N.add('es', 'demo/entropy', {
   "Segunda ley",
 "A box of gas molecules with a partition down the middle. Space starts or pauses.":
   "Una caja de moléculas de gas con una partición en medio. Espacio inicia o pausa.",
+"A box of {#} gas molecules, all starting in the left half.":
+  "Una caja con {#} moléculas de gas, todas al inicio en la mitad izquierda.",
+"The partition is in place.":
+  "La división está puesta.",
+"Not started.":
+  "Sin empezar.",
+"On the left now: {#} of {#}.":
+  "Ahora en la izquierda: {#} de {#}.",
+"Time since opened {#} s.":
+  "Tiempo desde que se abrió: {#} s.",
+"No time counted yet.":
+  "Todavía no se cuenta tiempo.",
+"The chance of all on the left is {#}^−N = {#}.":
+  "La probabilidad de que todas estén a la izquierda es {#}^−N = {#}.",
+"Below, the count on the left over time, and the share of time spent at each count.":
+  "Abajo, el conteo a la izquierda en el tiempo, y la fracción del tiempo que pasa en cada conteo.",
 "Graphs for the view: the count on the left over time and the share of time spent at each count, or the energy in solid A over time and the number of ways to share it.":
   "Gráficas para la vista: la cuenta a la izquierda en el tiempo y la fracción del tiempo pasada en cada cuenta, o la energía en el sólido A en el tiempo y el número de maneras de repartirla.",
 "The gas":
@@ -156,10 +178,6 @@ VDI18N.add('es', 'demo/entropy', {
   "Sólidos de Einstein (más allá del libro): cada sólido es un conjunto de osciladores cuánticos idénticos, y cada uno tiene un número entero de cuantos de energía ε. Un sólido de N osciladores con q cuantos puede acomodarlos de Ω = C(q + N − {#}, q) maneras, y S = k ln Ω de Boltzmann da su entropía (Schroeder, An Introduction to Thermal Physics, §{#} a §{#}). En cada paso la demo elige dos osciladores al azar y pasa un cuanto del primero al segundo si el primero tiene uno; a la larga todos los arreglos son igualmente probables. La temperatura sale de {#}/T = dS/dU, calculada sobre un cuanto a cada lado. Un sólido sin energía tiene exactamente un arreglo, así que S = {#}: la tercera ley (§{#}).",
 "Second law: a device runs one complete cycle between two reservoirs so large that their temperatures do not change. The first law fixes the third energy from the two you set. The device ends where it started, so only the reservoirs change entropy, by +Q/T for heat they gain and −Q/T for heat they lose (§{#}). A process is allowed if the total is zero (reversible) or positive. The Kelvin and Clausius statements (§{#}) are the special cases with no heat to the cold reservoir or no work. Pairing the device with a Carnot device between the same reservoirs (§{#}, §{#}) shows that any engine better than Carnot could be made into a perfect engine, and any refrigerator better than Carnot into a perfect refrigerator.":
   "Segunda ley: un dispositivo hace un ciclo completo entre dos depósitos tan grandes que sus temperaturas no cambian. La primera ley fija la tercera energía a partir de las dos que pones. El dispositivo termina donde empezó, así que solo los depósitos cambian de entropía, en +Q/T por el calor que ganan y −Q/T por el calor que pierden (§{#}). Un proceso está permitido si el total es cero (reversible) o positivo. Los enunciados de Kelvin y de Clausius (§{#}) son los casos especiales sin calor al depósito frío o sin trabajo. Combinar el dispositivo con un dispositivo de Carnot entre los mismos depósitos (§{#}, §{#}) muestra que cualquier motor mejor que el de Carnot podría convertirse en un motor perfecto, y cualquier refrigerador mejor que el de Carnot en un refrigerador perfecto.",
-"<a>The second law of thermodynamics</a>":
-  "<a>La segunda ley de la termodinámica</a>",
-"<a><span>←</span> <span>Heat Engine Cycles</span></a><a><span>Galton Board</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Ciclos de máquinas térmicas</span></a><a><span>Tablero de Galton</span> <span>→</span></a>",
 "on the left now":
   "a la izquierda ahora",
 "time all on the left":
@@ -182,6 +200,10 @@ VDI18N.add('es', 'demo/entropy', {
   "depósito frío",
 "Drag to turn, scroll to zoom, double click to go back. The disks move in the plane between the glass front and the back wall; the box is in model units, not to scale.":
   "Arrastra para girar, desplaza para acercar, doble clic para regresar. Los discos se mueven en el plano entre el frente de vidrio y la pared del fondo; la caja está en unidades del modelo, no a escala.",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "solid A: {#} quanta":
   "sólido A: {#} cuantos",
 "{#} oscillators":
@@ -264,6 +286,20 @@ VDI18N.add('es', 'demo/entropy', {
   "Veredicto",
 "one cycle":
   "un ciclo",
+"A heat engine between a hot reservoir above and a cold reservoir below.":
+  "Una máquina térmica entre un depósito caliente arriba y uno frío abajo.",
+"Hot {#} K, cold {#} K.":
+  "Caliente {#} K, frío {#} K.",
+"Heat from hot Q_h = {#} J, heat to cold Q_c = {#} J, work W = {#} J.":
+  "Calor del caliente Q_h = {#} J, calor al frío Q_c = {#} J, trabajo W = {#} J.",
+"Efficiency {#}.":
+  "Eficiencia {#}.",
+"The Carnot efficiency is {#}.":
+  "La eficiencia de Carnot es {#}.",
+"Entropy change of the universe {#} J/K.":
+  "Cambio de entropía del universo {#} J/K.",
+"The device is allowed, with total entropy change above {#}.":
+  "El dispositivo está permitido, con cambio total de entropía mayor que {#}.",
 "hot reservoir T_h = {#} K":
   "depósito caliente T_h = {#} K",
 "cold reservoir T_c = {#} K":
@@ -322,6 +358,16 @@ VDI18N.add('es', 'demo/entropy', {
   "Un refrigerador que mueve {#} J de un congelador a {#} K a una habitación a {#} K sin ningún trabajo. El enunciado de Clausius dice que no existe tal refrigerador.",
 "refrigerator":
   "refrigerador",
+"A refrigerator between a hot reservoir above and a cold reservoir below.":
+  "Un refrigerador entre un depósito caliente arriba y uno frío abajo.",
+"COP is undefined.":
+  "El COP no está definido.",
+"The Carnot COP is {#}.":
+  "El COP de Carnot es {#}.",
+"Entropy change of the universe −{#} J/K.":
+  "Cambio de entropía del universo −{#} J/K.",
+"The device breaks the Clausius statement.":
+  "El dispositivo viola el enunciado de Clausius.",
 "Reset puts the partition back.":
   "Reiniciar vuelve a poner la partición.",
 "ΔS hot":
@@ -343,5 +389,17 @@ VDI18N.add('es', 'demo/entropy', {
 "energy in quanta ε · T in ε/k":
   "energía en cuantos ε · T en ε/k",
 "Close":
-  "Cerrar"
+  "Cerrar",
+"Two Einstein solids share {#} quanta: solid A has {#} oscillators and solid B has {#}.":
+  "Dos sólidos de Einstein comparten {#} cuantos: el sólido A tiene {#} osciladores y el sólido B tiene {#}.",
+"Solid A holds {#} quanta and solid B holds {#}.":
+  "El sólido A tiene {#} cuantos y el sólido B tiene {#}.",
+"{#} exchanges tried.":
+  "{#} intercambios probados.",
+"The most likely q_A is {#}.":
+  "El valor más probable de q_A es {#}.",
+"kT/ε is {#} for A and {#} for B.":
+  "kT/ε es {#} para A y {#} para B.",
+"Below, the energy in solid A over time, and the number of ways to share it.":
+  "Abajo, la energía del sólido A en el tiempo, y el número de maneras de repartirla."
 });

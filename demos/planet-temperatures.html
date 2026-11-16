@@ -1042,6 +1042,30 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     title: () => (howVid() === 'galactic-habitable-zone' ? 'How this works: the Galactic habitable zone' : 'How this works') });
   galPreset('sun');
   if (qs.get('view') === 'galaxy' || VD.ws('') === 'galactic-habitable-zone') setScale(true);
+  /* what the pictures show now, for a screen reader (VD.describe): the star and planet with the temperatures and habitable zone (hidden in Blind mode), and the Galaxy view */
+  const SR_ZONE = { hot: 'The planet is closer than the inner edge of the habitable zone: too hot.', optIn: 'The planet is between the optimistic and the conservative inner edges.', cons: 'The planet is inside the conservative habitable zone.',
+    optOut: 'The planet is between the conservative and the optimistic outer edges.', cold: 'The planet is beyond the outer edge of the habitable zone: too cold.' };
+  const SR_SPREAD = { whole: 'The heat is shared over the whole planet.', day: 'The heat is shared over the day side.', sub: 'The heat is at the spot under the star.' };
+  if (window.VD && VD.describe) {
+    VD.describe(sysC, () => {
+      const st = state(), B = S.blind, out = [], z = st.z;
+      out.push('A star, its habitable zone in green, and a planet on its orbit.', `The star has luminosity ${sig(S.L, 3)} times the Sun's and a surface temperature of ${fx(S.T, 0)} K.`, `The planet is ${sig(S.d, 4)} AU from the star, with albedo ${fx(S.a, 3)}.`);
+      out.push(`Starlight at the planet is ${sig(st.Sx, 4)} W/m², ${sig(st.rel, 3)} times Earth's.`, SR_SPREAD[S.sp] || '');
+      out.push(S.gh ? `The greenhouse lets ${sig(eNow(), 3)} of the ground's heat radiation escape to space.` : 'The greenhouse is off.');
+      if (B) out.push('The temperatures and the habitable zone are hidden.');
+      else out.push(`The surface temperature from the model is ${fx(st.ts, 1)} K, and ${fx(st.tb, 1)} K with no greenhouse.`, `The conservative habitable zone runs from ${sig(z.rg, 3)} to ${sig(z.mg, 3)} AU.`, SR_ZONE[st.zone] || '');
+      if (S.body === 'Earth' && S.gh && S.co2On) out.push(`The carbon dioxide in Earth's air is ${S.co2.toLocaleString('en-US')} ppm.`);
+      out.push(S.run ? 'The planet is going round its orbit.' : 'The orbit is paused.');
+      out.push(S.chart === 'temp' ? 'Below, a chart of surface temperature against distance from the star.' : 'Below, a chart of gas molecule speeds against temperature, compared with escape speeds.');
+      return out;
+    });
+    VD.describe(galC, () => {
+      const q = ghzFactors(GS.R, GS.ago, gOpts()), z = ghzNow();
+      return ['The Milky Way seen face on, with a map of where and when stars were born, colored by how many could have complex life today.', `The chosen star is ${fx(GS.R, 1)} kpc from the center and was born ${fx(GS.ago, 2)} Gyr ago.`,
+        `The chance for complex life, all four ingredients together, is P = ${fx(q.p, 3)}.`, `Enough metals for Earths: ${fx(q.pm, 3)}. No giant planet wrecking them: ${fx(q.pk, 3)}.`, `Spared by supernovae: ${fx(q.ps, 3)}. Time for complex life: ${fx(q.pt, 3)}.`,
+        `The zone holding 68% runs from ${fx(z.z68.R[0], 1)} to ${fx(z.z68.R[1], 1)} kpc.`, `${fx(100 * z.share, 1)}% of all stars ever born could have complex life.`];
+    });
+  }
   window.__pt = { orbitRate, rateText, GS, setScale, galPreset, ghzFactors, ghzGrid, S, PRESETS, applyPreset, state, redraw, sync, flux, tBare, tSurf, hzEdges, set: (o) => { Object.assign(S, o); sync(); redraw(); }, planetPx };
   requestAnimationFrame(frame);
 })();

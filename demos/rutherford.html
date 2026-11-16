@@ -1760,6 +1760,27 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (now - lastRead > 150) { countReadouts(); lastRead = now; }
     requestAnimationFrame(loop);
   }
+  /* what the picture shows now, for a screen reader (VD.describe): the target and the particle fired, then one alpha's path or the beam's counts (Blind mode hides D and the closest approach) */
+  const SR_TGT = { au: 'The target is a gold atom.', ag: 'The target is a silver atom.', al: 'The target is an aluminum atom.', custom: 'The target is a custom atom.' };
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    const out = [], t = tgt(), D = Dnow(), plum = S.model === 'plum', neg = S.q === 'neg', run = (x) => ({ t: x, live: false });
+    out.push(plum ? 'Alpha particles pass through a Thomson plum pudding atom, with the positive charge spread through the whole atom.' : neg ? 'Antialpha particles approach a nuclear atom, which attracts them.' : 'Alpha particles approach a target atom with a tiny nucleus.');
+    out.push(SR_TGT[S.target] || '', `The target has charge +${t.Z}e and mass number ${t.A}.`, `The alpha energy is K = ${S.K.toFixed(2)} MeV.`);
+    if (S.mode === 'single') {
+      out.push(`The alpha is aimed with impact parameter b = ${fmtLen(Math.abs(S.b))}.`);
+      if (!plum) {
+        const th = deflect(Math.abs(S.b), D), rm = rMin(Math.abs(S.b), Ds());
+        out.push(`The deflection is θ = ${(th * 180 / Math.PI).toFixed(2)}°.`, S.blind ? 'The closest approach is hidden.' : `The closest approach is ${rm.toPrecision(4)} fm.`);
+      } else out.push(`The deflection by one atom is ${fmtAng(Math.abs(plumExact(Math.abs(S.b), Ds(), atomR())))}.`);
+      out.push(S.blind ? 'The head on distance is hidden.' : `The head on distance is D = ${D.toPrecision(3)} fm.`);
+      out.push('Above the path, a plot of deflection angle against impact parameter.');
+    } else {
+      out.push(`A beam of alphas is fired at ${RATES[S.rate]} per second.`, playing ? 'The beam is running.' : 'The beam is paused.', run(`${fired.toLocaleString('en-US')} alphas fired, ${past90.toLocaleString('en-US')} turned past 90°.`));
+      if (plum) out.push(`The foil is ${nLayers().toLocaleString('en-US')} atoms thick, and the angles spread by ${fmtAng(plumRms())}.`);
+      out.push('A plot shows the counts against angle with the prediction.');
+    }
+    return out;
+  });
   window.__rs = { core: { KC, MA, AMU, headOn, deflect, rMin, bOf, orbit, integrate, recoil, speedC, bTouch, plumExact, plumKick, nucR, massNumber, binFrac, dsdo, Ds, Dnow, tgt, Rnuc, Rcontact, bmax, atomR, nLayers }, get frameMs() { return frameMs; }, get S() { return S; }, get fired() { return fired; }, get past90() { return past90; }, get bins() { return bins; }, get throttled() { return throttled; },
     setRate(i) { S.rate = i; $('rate').value = i; readouts(); }, setPlaying, setQ, setB, handles() { return dragHandles().map((h) => ({ id: h.id, seg: h.seg })); }, fireMany(n) { for (let i = 0; i < n; i++) { if (i < n - 300) { const b = sampleB(S.model === 'nuc' ? bmax() : atomR(), Math.random()); count(S.model === 'nuc' ? deflect(b, Dnow()) : plumFoil(nLayers(), Dnow(), atomR(), Math.random)); } else beamOne(false); } countReadouts(); } };
 

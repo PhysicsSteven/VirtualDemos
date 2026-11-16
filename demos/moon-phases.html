@@ -1394,6 +1394,38 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     title: () => (howVid() === 'intro-moon' ? 'How this works: Phases of the Moon and Eclipse Seasons' : 'How this works: Phases and the Lunar Month') });
 
   // exposed for testing
+  /* what each picture shows now, for a screen reader (VD.describe): the Moon's phase and place on its orbit, the view from Earth, the sky clock.
+     While the clock runs, the values that move by themselves are described but not announced. */
+  const SR_PHASE = { 'New moon': 'The phase is a new moon.', 'First quarter': 'The phase is first quarter.', 'Full moon': 'The phase is a full moon.', 'Third quarter': 'The phase is third quarter.',
+    'Waxing crescent': 'The phase is a waxing crescent.', 'Waxing gibbous': 'The phase is a waxing gibbous.', 'Waning gibbous': 'The phase is a waning gibbous.', 'Waning crescent': 'The phase is a waning crescent.' };
+  const SR_ECL = { solar: 'A solar eclipse is possible.', lunar: 'A lunar eclipse is possible.', pen: 'A faint penumbral lunar eclipse is possible.', none: 'No eclipse is possible now.' };
+  const srLive = (t) => ({ t, live: !S.playing });
+  const srLit = () => (100 * litFrac(E(), S.eclipse ? beta(E(), phiN()) : 0)).toFixed(1);
+  if (window.VD && VD.describe) {
+    VD.describe(V.main.el, () => {
+      const e = E(), out = [];
+      out.push('A top down view: sunlight comes from the right, Earth is at the center, and the Moon travels around its orbit.');
+      out.push(S.playing ? 'The Moon is moving.' : 'The Moon is paused.');
+      out.push(srLive(`Day ${dayOf().toFixed(2)} of the 29.53 day cycle.`), srLive(`The Moon is ${fmtElong(e)} of the Sun.`), srLive(SR_PHASE[phaseName(e)] || ''), srLive(`${srLit()} % of the Moon's face is lit.`));
+      if (S.eclipse) {
+        out.push(`The Moon's orbit is tilted 5.1° to Earth's orbit.`, `The ascending node is ${minus(Math.round(phiN() > 180 ? phiN() - 360 : phiN()))}° from the Sun line.`, srLive(SR_ECL[eclipseState().k] || ''));
+      }
+      return out;
+    });
+    VD.describe(V.moon.el, () => {
+      const e = E();
+      const q = (t) => ({ t, live: false });   /* the top down picture announces the phase; this one only describes it */
+      return ['The Moon as seen from Earth by an observer in the Northern Hemisphere facing south.', q(SR_PHASE[phaseName(e)] || ''), q(`${srLit()} % of the face is lit.`),
+        q(e < 180 ? 'The lit side is on the right.' : 'The lit side is on the left.')];
+    });
+    VD.describe(V.sky.el, () => {
+      const e = E(), a = (S.hour - 12) * 15, sunAlt = 90 - angDist(a, 0), out = [];
+      out.push('An observer on the rotating Earth, with a 24 hour timeline.', S.playing ? 'The clock is running.' : 'The clock is paused.', { t: `The local solar time is ${fmtHM(S.hour)}.`, live: false });
+      out.push({ t: sunAlt > 0.5 ? 'It is day.' : sunAlt > -0.5 ? (S.hour < 12 ? 'It is sunrise.' : 'It is sunset.') : 'It is night.', live: false });
+      out.push(`The Moon rises at ${fmtHM(riseH(e))}, crosses the meridian at ${fmtHM(transitH(e))} and sets at ${fmtHM(setH(e))}.`);
+      return out;
+    });
+  }
   window.__moon = { S, E, phiN, litFrac, beta, riseH, transitH, setH, eclipseState, applyPreset, P_SYN, P_SID, YEAR, EC_YEAR, P_NODE };
 })();
 </script>

@@ -1,5 +1,7 @@
 /* demo/rutherford in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/rutherford', {
+"Describe the picture":
+  "Describir la imagen",
 "Au nucleus, Z = {#}":
   "Núcleo de Au, Z = {#}",
 "zoom ×{#}":
@@ -14,6 +16,10 @@ VDI18N.add('es', 'demo/rutherford', {
   "cámara lenta: {#} s aquí = {k} s",
 "slow motion: {#} s here = {#} × {#}⁻²¹ s":
   "cámara lenta: {#} s aquí = {#} × {#}⁻²¹ s",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "Rutherford Scattering":
   "Dispersión de Rutherford",
 "<a>Photons and matter waves</a>":
@@ -48,6 +54,24 @@ VDI18N.add('es', 'demo/rutherford', {
   "De cerca",
 "Alpha particles approaching a target atom, seen side on, and a plot. In one alpha mode the plot shows the deflection angle against the impact parameter; in beam mode it shows counts against angle with the Rutherford prediction. Drag the handle on the incoming path to change the impact parameter b, or the beam edge to change the beam radius. Keys: up and down change b or the beam radius, space plays or pauses, B switches between one alpha and beam, P switches the atom model, Q switches the projectile between the alpha (charge +2e) and the antialpha (charge −2e), F fires, C clears, V switches the 3D view, and left and right turn it.":
   "Partículas alfa que se acercan a un átomo blanco, vistas de lado, y una gráfica. En el modo de una alfa la gráfica muestra el ángulo de desviación en función del parámetro de impacto; en el modo de haz muestra los conteos en función del ángulo con la predicción de Rutherford. Arrastra el asa sobre la trayectoria de entrada para cambiar el parámetro de impacto b, o el borde del haz para cambiar el radio del haz. Teclas: arriba y abajo cambian b o el radio del haz, espacio inicia o pausa, B cambia entre una alfa y haz, P cambia el modelo del átomo, Q cambia el proyectil entre la alfa (carga +2e) y la antialfa (carga −2e), F dispara, C borra, V cambia la vista 3D, e izquierda y derecha la giran.",
+"Alpha particles approach a target atom with a tiny nucleus.":
+  "Partículas alfa se acercan a un átomo blanco con un núcleo diminuto.",
+"The target is a gold atom.":
+  "El blanco es un átomo de oro.",
+"The target has charge +79e and mass number {#}.":
+  "El blanco tiene carga +79e y número de masa {#}.",
+"The alpha energy is K = {#} MeV.":
+  "La energía alfa es K = {#} MeV.",
+"The alpha is aimed with impact parameter b = {#} fm.":
+  "La alfa se dispara con parámetro de impacto b = {#} fm.",
+"The deflection is θ = {#}°.":
+  "La desviación es θ = {#}°.",
+"The closest approach is {#} fm.":
+  "La máxima aproximación es {#} fm.",
+"The head on distance is D = {#} fm.":
+  "La distancia de choque frontal es D = {#} fm.",
+"Above the path, a plot of deflection angle against impact parameter.":
+  "Sobre la trayectoria, una gráfica del ángulo de desviación contra el parámetro de impacto.",
 "Divider between the foil and the graph":
   "Divisor entre la lámina y la gráfica",
 "Set up the alpha":
@@ -258,6 +282,10 @@ VDI18N.add('es', 'demo/rutherford', {
   "Aluminio, Z = {#}, a {#} MeV. La repulsión de Coulomb es débil, así que una alfa con un parámetro de impacto pequeño llega al núcleo. Ahí actúa la fuerza fuerte y la dispersión de Rutherford pura falla, como se encontró para el aluminio a principios de la década de 1920. Prueba Haz para ver qué ángulos se ven afectados.",
 "The alpha now touches the nucleus.<span>Closest approach {#} fm is inside the contact distance {#} fm. The strong force acts here and pure Rutherford scattering fails; this demo keeps only the Coulomb force.</span>":
   "La alfa ahora toca el núcleo.<span>El acercamiento máximo de {#} fm está dentro de la distancia de contacto de {#} fm. Aquí actúa la fuerza fuerte y la dispersión de Rutherford pura falla; esta demo conserva solo la fuerza de Coulomb.</span>",
+"The target is an aluminum atom.":
+  "El blanco es un átomo de aluminio.",
+"The target has charge +13e and mass number {#}.":
+  "El blanco tiene carga +13e y número de masa {#}.",
 "One antialpha":
   "Una antialfa",
 "Length scale |D| = |zZ|e²/{#}πε₀K (no turning point)":
@@ -308,16 +336,38 @@ VDI18N.add('es', 'demo/rutherford', {
   "este núcleo a esta escala: {#} px de diámetro",
 "{#} (est.)":
   "{#} (est.)",
+"Alpha particles pass through a Thomson plum pudding atom, with the positive charge spread through the whole atom.":
+  "Partículas alfa atraviesan un átomo de pudín de pasas de Thomson, con la carga positiva repartida por todo el átomo.",
+"The target is a custom atom.":
+  "El blanco es un átomo personalizado.",
+"The target has charge +29e and mass number {#}.":
+  "El blanco tiene carga +29e y número de masa {#}.",
+"The alpha is aimed with impact parameter b = {#} pm.":
+  "La alfa se dispara con parámetro de impacto b = {#} pm.",
+"The deflection by one atom is {#}° ({#} µrad).":
+  "La desviación por un átomo es {#}° ({#} µrad).",
 "custom leaf":
   "hoja personalizada",
 "Counts per bin against θ":
   "Conteos por intervalo en función de θ",
 "Press Play to fire antialphas":
   "Pulsa Iniciar para disparar antialfas",
+"A beam of alphas is fired at {#} per second.":
+  "Se dispara un haz de alfas a {#} por segundo.",
+"The beam is running.":
+  "El haz está en marcha.",
+"{#} alphas fired, {#} turned past {#}°.":
+  "{#} alfas disparadas, {#} desviadas más de {#}°.",
+"The foil is {#} atoms thick, and the angles spread by {#}°.":
+  "La lámina tiene {#} átomos de grosor, y los ángulos se dispersan {#}°.",
+"A plot shows the counts against angle with the prediction.":
+  "Una gráfica muestra los conteos contra el ángulo, con la predicción.",
 "antialpha reaches the nucleus:":
   "la antialfa llega al núcleo:",
 "real counts depart here":
   "aquí los conteos reales se desvían",
+"Antialpha particles approach a nuclear atom, which attracts them.":
+  "Partículas antialfa se acercan a un átomo nuclear, que las atrae.",
 "screen really ~{#} cm away (~{#}⁷× farther):":
   "la pantalla en realidad está a ~{#} cm (~{#}⁷× más lejos):",
 "each antialpha lands at its final angle θ":
@@ -330,6 +380,10 @@ VDI18N.add('es', 'demo/rutherford', {
   "todas salen en un cono, θ = {#}°",
 "drag the drawing to turn it":
   "arrastra el dibujo para girarlo",
+"The target is a silver atom.":
+  "El blanco es un átomo de plata.",
+"The target has charge +47e and mass number {#}.":
+  "El blanco tiene carga +47e y número de masa {#}.",
 "slow motion: 1 s here = {k} s":
   "cámara lenta: 1 s aquí = {k} s",
 "Close":

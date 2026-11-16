@@ -570,6 +570,18 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   applyPreset(first);
   new ResizeObserver(resize).observe($('paneTop')); new ResizeObserver(resize).observe($('paneScr')); resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  /* what the picture shows now, for a screen reader (VD.describe): the light, the micrometer and fringe counter, the tilt, the gas cell (the wavelength stays hidden for the mystery laser and in Blind mode) */
+  const SR_SRC = { red: 'The light is a red He–Ne laser.', green: 'The light is a green He–Ne laser.', hg: 'The light is the green line of a mercury lamp.', na: 'The light is a sodium lamp with its two D lines.', white: 'The light is white light.', mystery: 'The light is a mystery laser.' };
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    const out = [], hideLam = S.blind || S.src === 'mystery';
+    out.push('A Michelson interferometer on a table, with the fringes on a screen.', SR_SRC[S.src] || '');
+    if (!isWhite()) out.push(hideLam ? 'The wavelength is hidden: measure it.' : `The wavelength in the room's air is ${lines().map((l) => f(lamInRoom(l.lam), 3)).join(' nm and ')} nm.`);
+    out.push(`The movable mirror's micrometer reads ${f(S.m, 1)} μm.`);
+    out.push(isWhite() ? 'The fringe counter is not used with white light.' : `The fringe counter reads ${S.N}, zeroed at ${f(S.zeroAt, 1)} μm.`);
+    out.push(S.tx === 0 && S.ty === 0 ? 'The fixed mirror has no tilt.' : `The fixed mirror is tilted ${f(S.tx, 2)}′ left and right and ${f(S.ty, 2)}′ up and down.`);
+    out.push(S.cell ? `A gas cell is in the fixed arm, at ${f(S.P, 1)} kPa.` : 'The gas cell is out of the beam.');
+    return out;
+  });
   window.__mi = { S, applyPreset, update, zeroCounter, setMic, sync, redraw, newMystery, centreOrder, lamInRoom, nm1Air, SOURCES, GEO, ROOM,
     setP: (P) => { update(() => { S.P = P; }); sync(); } };
   requestAnimationFrame(frame);

@@ -2,6 +2,9 @@
 VDI18N.add('en', 'demo/force-lab', [
 "Arrow lengths grow with log F (not to scale), so very small and very large forces both show.",
 "Record a few distances to plot them.",
+"Describe the picture",
+"Skip to the picture",
+"Skip to the controls",
 "Inverse Square Force Lab",
 "<a><span>←</span> <span>Elevator: Apparent Weight</span></a><a><span>Granular Flow: Sorting and Landslides</span> <span>→</span></a>",
 "Two masses or two charges on a ruler. Slide them apart, change their size, and read the force on each: always equal and opposite, and four times smaller each time you double the distance.",
@@ -11,6 +14,12 @@ VDI18N.add('en', 'demo/force-lab', [
 "Coulomb, atomic scale",
 "Record this distance",
 "Two bodies on a ruler with the force on each drawn as an arrow. Drag either body along the ruler. Left and right arrow keys move the right body, with Shift for bigger steps.",
+"Two lead balls on a ruler {#} m long: m₁ = {#} kg at {#} m, m₂ = {#} kg at {#} m.",
+"The distance between centers is r = {#} m.",
+"The two bodies attract each other.",
+"The force on each body is {#} × {#}⁻⁶ N, equal in size and opposite in direction.",
+"The arrow lengths grow with the logarithm of the force.",
+"No distances recorded.",
 "Set the two bodies",
 "<span>The two bodies</span>",
 "Mass m₁",
@@ -42,6 +51,13 @@ VDI18N.add('en', 'demo/force-lab', [
 "Double m₁ to {#} kg. The force on both balls doubles, and it is still the same on the small ball as on the big one: each pulls the other equally hard.",
 "+{#} μC and +{#} μC push each other apart with equal forces ({#} N at {#} cm), although one charge is four times the other.",
 "repel",
+"A proton and an electron on a ruler {#} pm long: q₁ = +{#} e at {#} pm, q₂ = −{#} e at {#} pm.",
+"The distance between centers is r = {#} pm.",
+"The force on each body is {#} × {#}⁻⁸ N, equal in size and opposite in direction.",
 "Recorded r = {#} pm.",
-"Arrow lengths grow with log F (not to scale)."
+"Arrow lengths grow with log F (not to scale).",
+"{#} distance recorded.",
+"Two charges on a ruler {#} cm long: q₁ = +{#} μC at {#} cm, q₂ = −{#} μC at {#} cm.",
+"The distance between centers is r = {#} cm.",
+"The force on each body is {#} × {#}¹ N, equal in size and opposite in direction."
 ]);

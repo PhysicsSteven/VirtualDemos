@@ -1,5 +1,7 @@
 /* demo/distance-ladder in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/distance-ladder', {
+"Describe the picture":
+  "Describir la imagen",
 "Parallax":
   "Paralaje",
 "Spectroscopic parallax":
@@ -70,6 +72,22 @@ VDI18N.add('es', 'demo/distance-ladder', {
   "Perspectiva de la vista del paralaje",
 "The distance ladder. A strip at the top shows the distance range of each method on a logarithmic axis; click a bar to open that rung. Below it is the current rung. Parallax: drag Earth around its orbit and drag the ruler ends onto the January and July images of the star. Cepheids: click a Cepheid in the galaxy, then click two peaks of its light curve; drag the detector in the inverse square strip. Type Ia: drag the line to the peak of the light curve. Hubble's law: drag a galaxy sideways to change its distance, click one to see its spectrum, drag the comb of rest wavelengths to match the lines. Keys: space plays or pauses, arrows move the selected item, number keys pick an object.":
   "La escalera de distancias. Una franja arriba muestra el intervalo de distancias de cada método en un eje logarítmico; haz clic en una barra para abrir ese peldaño. Debajo está el peldaño actual. Paralaje: arrastra la Tierra alrededor de su órbita y arrastra los extremos de la regla sobre las imágenes de enero y julio de la estrella. Cefeidas: haz clic en una cefeida de la galaxia y luego en dos picos de su curva de luz; arrastra el detector en la franja del inverso del cuadrado. Tipo Ia: arrastra la línea al pico de la curva de luz. Ley de Hubble: arrastra una galaxia hacia los lados para cambiar su distancia, haz clic en una para ver su espectro, arrastra el peine de longitudes de onda en reposo para que coincida con las líneas. Teclas: espacio inicia o pausa, las flechas mueven el elemento seleccionado, las teclas numéricas eligen un objeto.",
+"At the top, a strip shows the distance range of each method on a logarithmic axis.":
+  "Arriba, una franja muestra el rango de distancias de cada método en un eje logarítmico.",
+"Rung {#}, parallax: Earth orbits the Sun and a nearby star shifts against distant stars.":
+  "Peldaño {#}, paralaje: la Tierra orbita el Sol y una estrella cercana se desplaza frente a las estrellas lejanas.",
+"The star is Proxima Centauri.":
+  "La estrella es Próxima Centauri.",
+"Distance {#} pc, parallax {#}″.":
+  "Distancia {#} pc, paralaje {#}″.",
+"The instrument is Hipparcos, about {#} mas.":
+  "El instrumento es Hipparcos, de unos {#} mas.",
+"Position uncertainty {#} mas.":
+  "Incertidumbre de posición {#} mas.",
+"The ruler has zero length.":
+  "La regla tiene longitud cero.",
+"Earth is moving around its orbit.":
+  "La Tierra se mueve en su órbita.",
 "<a>Worksheet {#}: Measuring the Hubble Constant</a>":
   "<a>Hoja de trabajo {#}: Medición de la constante de Hubble</a>",
 "<a>Worksheet {#}: Parallax: Measuring the Distance to a Star (Astro {#})</a>":
@@ -328,8 +346,14 @@ VDI18N.add('es', 'demo/distance-ladder', {
   "LA ÓRBITA DE LA TIERRA EN 3D, NO A ESCALA",
 "p (mas)":
   "p (mas)",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "early March":
   "principios de marzo",
+"The ruler on the overlaid photos reads {#}″, which gives d = {#} pc.":
+  "La regla sobre las fotos superpuestas marca {#}″, lo que da d = {#} pc.",
 "mid March":
   "mediados de marzo",
 "Spectroscopic parallax (calibrated by rung {#})":
@@ -338,8 +362,6 @@ VDI18N.add('es', 'demo/distance-ladder', {
   "El tipo espectral de una estrella de la secuencia principal da su brillo verdadero M, leído de estrellas cercanas del mismo tipo cuyos paralajes se conocen. Su brillo aparente m da entonces la distancia. Elige una estrella, calcula su distancia y luego compárala con su paralaje.",
 "Real data: every star on the diagram and every target is a Hipparcos star from the HYG database v3.8 (CC BY-SA {#}; distances {#}/parallax, van Leeuwen {#}). The calibration is the mean and spread of M_V of the nearby class V stars of the same half class (for example F5 to F9 V). Extinction is ignored.":
   "Datos reales: cada estrella del diagrama y cada objetivo es una estrella de Hipparcos de la base de datos HYG v3.8 (CC BY-SA {#}; distancias {#}/paralaje, van Leeuwen {#}). La calibración es la media y la dispersión de M_V de las estrellas cercanas de clase V de la misma media clase (por ejemplo, F5 a F9 V). Se ignora la extinción.",
-"late March":
-  "finales de marzo",
 "CALIBRATION: THE {#} HIPPARCOS STARS WITHIN {#} PC (HYG)":
   "CALIBRACIÓN: LAS {#} ESTRELLAS DE HIPPARCOS A MENOS DE {#} PC (HYG)",
 "color B − V (hotter left)":
@@ -534,6 +556,8 @@ VDI18N.add('es', 'demo/distance-ladder', {
   "Paralajes fotográficos desde tierra antes de los años noventa: aproximadamente {#} mas en el mejor caso, así que distancias de cerca del {#}% hasta unos {#} pc.",
 "Gaia (Data Release {#}): roughly {#} mas for bright stars, about {#} mas at 20th magnitude. About {#}% distances to a few kpc for bright stars.":
   "Gaia (Data Release {#}): aproximadamente {#} mas para estrellas brillantes, cerca de {#} mas en magnitud 20. Distancias de cerca del {#}% hasta unos pocos kpc para estrellas brillantes.",
+"The whole ladder: a chart of the distance range of each method on a logarithmic axis, with overlaps where one rung calibrates the next.":
+  "La escalera completa: una gráfica del rango de distancias de cada método en un eje logarítmico, con traslapes donde un peldaño calibra el siguiente.",
 "About {#} Mpc away. Hubble found Cepheids here in {#} and showed it lies far outside the Milky Way.":
   "A unos {#} Mpc. Hubble encontró cefeidas aquí en {#} y mostró que está muy fuera de la Vía Láctea.",
 "About {#} Mpc away (Hubble Space Telescope Key Project). Only long period, bright Cepheids can be seen this far.":
@@ -544,6 +568,8 @@ VDI18N.add('es', 'demo/distance-ladder', {
   "estrella cercana",
 "field {#}″ wide · dashed circles: ±σ = {#} µas (Gaia)":
   "campo de {#}″ de ancho · círculos punteados: ±σ = {#} µas (Gaia)",
+"late March":
+  "finales de marzo",
 "K5–K9 V stars: mean M = {#}, spread {#} ({#} stars)":
   "Estrellas K5–K9 V: M media = {#}, dispersión {#} ({#} estrellas)",
 "TARGET: HIP {#}, K5 V (A REAL STAR)":
@@ -570,8 +596,24 @@ VDI18N.add('es', 'demo/distance-ladder', {
   "SN D, {#} d antes del pico",
 "click the peak of the light curve":
   "haz clic en el pico de la curva de luz",
+"Rung {#}, Hubble's law: velocity v = cz against distance, one point for each galaxy.":
+  "Peldaño {#}, ley de Hubble: velocidad v = cz contra distancia, un punto por cada galaxia.",
+"The diagram shows both Cepheid and Type Ia galaxies.":
+  "El diagrama muestra las galaxias de cefeidas y de tipo Ia.",
+"The fit through {#} galaxies gives H₀ = {#} ± {#} km/s/Mpc.":
+  "El ajuste con {#} galaxias da H₀ = {#} ± {#} km/s/Mpc.",
+"The intercept is {#} km/s and {#}/H₀ = {#} Gyr.":
+  "La ordenada al origen es {#} km/s y {#}/H₀ = {#} Gyr.",
+"Galaxy {#} is selected, at {#} Mpc with redshift z = {#}.":
+  "La galaxia {#} está seleccionada, a {#} Mpc con corrimiento al rojo z = {#}.",
+"The comb of rest wavelengths is at z = {#}, v = {#} km/s.":
+  "El peine de longitudes de onda en reposo está en z = {#}, v = {#} km/s.",
 "calibrates":
   "calibra",
+"The instrument is Gaia, about {#} mas.":
+  "El instrumento es Gaia, de unos {#} mas.",
+"Position uncertainty {#} µas.":
+  "Incertidumbre de posición {#} µas.",
 "early April":
   "principios de abril",
 "Close":

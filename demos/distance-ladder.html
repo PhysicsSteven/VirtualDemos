@@ -2268,6 +2268,61 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     title: () => HOW_TITLE[howVid()] || 'How this works' });
 
   { const rs = document.querySelector('.vd-readings'); if (rs) rs.addEventListener('click', () => setTimeout(() => { dirty = true; }, 0)); }
+  /* what the picture shows now, for a screen reader (VD.describe): the rung that is open, its setup and the numbers its worksheet asks for */
+  const SR_STAR = { proxima: 'The star is Proxima Centauri.', sirius: 'The star is Sirius.', vega: 'The star is Vega.' };
+  const SR_INST = { ground: 'The instrument is ground based, about 10 mas.', hip: 'The instrument is Hipparcos, about 1 mas.', gaia: 'The instrument is Gaia, about 0.02 mas.' };
+  const SR_GAL = { lmc: 'The galaxy is the Large Magellanic Cloud.', m31: 'The galaxy is the Andromeda galaxy, M31.', m100: 'The galaxy is M100 in the Virgo cluster.' };
+  const SR_SET = { both: 'The diagram shows both Cepheid and Type Ia galaxies.', cep: 'The diagram shows the Cepheid galaxies only.', sn: 'The diagram shows the Type Ia galaxies only.' };
+  const srTime = (t) => t <= -16 ? 'The supernova has not exploded yet.' : t < 0 ? `The supernova is ${Math.round(-t)} d before peak.` : `The supernova is ${Math.round(t)} d after peak.`;
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    const out = [], run = (t) => ({ t, live: false });
+    if (S.tab !== 'all') out.push('At the top, a strip shows the distance range of each method on a logarithmic axis.');
+    if (S.tab === 'all') out.push('The whole ladder: a chart of the distance range of each method on a logarithmic axis, with overlaps where one rung calibrates the next.');
+    else if (S.tab === 'par') {
+      const p = parP(), sh = Math.abs(S.par.ruler[1] - S.par.ruler[0]);
+      out.push('Rung 1, parallax: Earth orbits the Sun and a nearby star shifts against distant stars.', SR_STAR[S.par.star] || '', `Distance ${fmtDist(S.par.d)}, parallax ${fmtAng(p)}.`);
+      out.push(SR_INST[S.par.inst] || '', `Position uncertainty ${fmtAng(parSig())}.`);
+      out.push(sh > 0 ? `The ruler on the overlaid photos reads ${fmtAng(sh)}, which gives d = ${fmtDist(2 / sh)}.` : 'The ruler has zero length.');
+      out.push(S.running ? 'Earth is moving around its orbit.' : 'Earth is paused.');
+      const frac = parSig() / p; if (frac >= 1) out.push('The parallax is not measurable with this instrument.'); else if (frac > 0.2) out.push(`Poorly measured: ±${Math.round(frac * 100)}% in distance.`);
+    } else if (S.tab === 'cep') {
+      const cm = cepMeasure(), sv = S.cep.saved[S.cep.gal];
+      out.push('Rung 2, Cepheid variables: a galaxy picture, a light curve, and a strip for the inverse square law.', SR_GAL[S.cep.gal] || '', `Cepheid C${S.cep.sel + 1} is selected, mean apparent magnitude m = ${curCep().m.toFixed(2)}.`);
+      out.push(`The Cepheid calibration offset is ${fmtMag(S.calA)} mag.`);
+      out.push(cm ? `Two peaks chosen: period P = ${cm.P.toFixed(2)} d, M = ${fmtMag(cm.M)}, distance ${fmtDist(cm.d)}.` : 'No two peaks chosen on the light curve yet.');
+      out.push(sv.length === 1 ? '1 Cepheid recorded for this galaxy.' : sv.length ? `${sv.length} Cepheids recorded for this galaxy.` : 'No Cepheids recorded for this galaxy.');
+      out.push(run('The light curve runs in time.'));
+    } else if (S.tab === 'sn') {
+      const sm = snMeasure(), sn = curSN();
+      out.push('Rung 3, Type Ia supernovae: a host galaxy and a light curve.', `Supernova ${sn.name}, redshift z = ${sn.z.toFixed(4)}.`, `The Type Ia calibration is M = ${fmtMag(S.snM)}.`);
+      out.push(sm ? `The line is at peak m = ${sm.m.toFixed(2)}, which gives d = ${fmtDist(sm.d)}.` : 'The peak line is not set.');
+      out.push(run(srTime(S.sn.time)));
+    } else if (S.tab === 'hub') {
+      const fit = hubFit(), hp = HUB[S.hub.sel];
+      out.push("Rung 4, Hubble's law: velocity v = cz against distance, one point for each galaxy.", SR_SET[S.hub.set] || '');
+      out.push(isFinite(fit.H) ? `The fit through ${fit.n} galaxies gives H₀ = ${fit.H.toFixed(1)} ± ${fit.se.toFixed(1)} km/s/Mpc.` : 'There are too few galaxies to fit.');
+      if (isFinite(fit.H)) out.push(`The intercept is ${minus(fit.c.toFixed(0))} km/s and 1/H₀ = ${hubbleTimeGyr(fit.H).toFixed(1)} Gyr.`);
+      out.push(`Galaxy ${S.hub.sel + 1} is selected, at ${sig(hubD(S.hub.sel), 3)} Mpc with redshift z = ${hp.z.toFixed(4)}.`);
+      out.push(`The comb of rest wavelengths is at z = ${S.hub.zc.toFixed(4)}, v = ${grp(velocityFromZ(S.hub.zc))} km/s.`);
+    } else if (S.tab === 'sp') {
+      const m = spMeasure();
+      out.push('Spectroscopic parallax: a diagram of nearby stars, and one target star.', `The target is ${m.t.name}, spectral type ${m.t.spect}, apparent magnitude m = ${m.t.V.toFixed(2)}.`);
+      out.push(`Nearby stars of that type have a mean M = ${m.c.mean.toFixed(2)}, spread ${m.c.sd.toFixed(2)}.`, `That gives m − M = ${m.mu.toFixed(2)} and a distance of ${fmtDist(m.d)}.`);
+      if (S.sp.show) out.push(`Its measured parallax distance is ${fmtDist(m.t.d)}.`); else out.push('The parallax distance is hidden.');
+    } else if (S.tab === 'ms') {
+      const c = curCl(), o = clusterOffset(c.stars, S.ms.mu);
+      out.push('Main sequence fitting: a star cluster is slid up or down onto the main sequence of nearby stars.', `${c.name} is shown.`);
+      out.push(`The shift is m − M = ${S.ms.mu.toFixed(2)}, which gives d = ${fmtDist(distFromModulus(S.ms.mu))}.`, `The mean square offset from the main sequence is ${o.ms.toFixed(3)} mag².`);
+      if (S.ms.show) out.push(`The true distance is ${fmtDist(c.d)}.`); else out.push('The true distance is hidden.');
+    } else {
+      const m = phMeasure(), c = LMC_CEP[S.ph.sel];
+      out.push('Cepheid photometry: a simulated CCD frame with two apertures, one on the Cepheid and one on a comparison star.', `Cepheid C${S.ph.sel + 1}, night ${S.ph.night + 1} of ${c.obs.length}.`);
+      out.push(`Seeing ${m.F.fwhm.toFixed(1)} px, sky ${Math.round(m.a.sky)} counts per pixel.`, m.a.net > 0 ? `The Cepheid aperture holds ${grp(m.a.net)} counts.` : 'The Cepheid aperture is not on a star.');
+      out.push(m.comp ? `The other aperture is on comparison star ${m.comp.name}, V = ${m.comp.V.toFixed(2)}.` : 'The other aperture is not on a comparison star.');
+      out.push(isFinite(m.V) ? `The Cepheid's V magnitude is ${m.V.toFixed(3)} ± ${m.sig.toFixed(3)} mag.` : 'The Cepheid magnitude cannot be found yet.');
+    }
+    return out;
+  });
   window.__dl = { get frameMs() { return frameMs; }, S, HUB, CEP, SNE, hubFit, cepMeasure, snMeasure, applyPreset, openRung, handles: () => handles(), get G() { return G; },
     core: { apparentOffset, distModulus, distFromModulus, leavitt, fitOrigin, fitHubble, hubbleTimeGyr, ridge, clusterOffset, spMeasure, phMeasure }, CL, setNight, setPhCep, setCluster, recenter };
 

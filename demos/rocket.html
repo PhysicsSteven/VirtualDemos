@@ -582,6 +582,20 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
   const r6 = (v) => +(+v).toPrecision(6);
   window.vdVersion = 'rocket@2026-10-24';
   /* debug hook for tools/breakit/rocket.cjs */
+  /* what the picture shows now, for a screen reader (VD.describe): the rocket and its setup, the readings the worksheet asks for (the rocket equation and burnout values stay hidden in Blind mode) */
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    const F = fly(), q = F.at(S.t), bl = S.blind, out = [], run = (t) => ({ t, live: false });
+    out.push(S.p.two ? 'A two stage rocket, with graphs of its speed and mass against time.' : 'A rocket rising with its exhaust, with graphs of its speed and mass against time.');
+    out.push(`Dry mass ${n0(S.p.md)} kg and fuel mass ${n0(S.p.mf)} kg, exhaust speed ${n0(S.p.u)} m/s, burn rate ${n0(S.p.b)} kg/s.`);
+    if (S.p.two) out.push(`The first stage has a ${n0(S.p.mc ?? 1000)} kg casing and ${n0(S.p.mf1 ?? 7000)} kg of fuel.`);
+    out.push(S.p.g ? 'Gravity is on, launching from the ground.' : 'No gravity, in deep space.');
+    out.push(`Thrust is ${n0(F.thrust / 1000, 0)} kN and the burn time is ${n0(F.tb, 1)} s.`);
+    out.push(S.run ? 'The rocket is burning.' : S.t > 0 ? 'The flight is paused.' : 'The rocket has not launched yet.');
+    out.push(run(`Mass now ${n0(q.m)} kg, speed ${n0(q.v, 0)} m/s, height ${q.y >= 1000 ? n0(q.y / 1000, 2) + ' km' : n0(q.y) + ' m'}.`), run(`Time ${n0(S.t, 1)} s.`));
+    out.push(bl ? 'The rocket equation and burnout values are hidden.' : `The rocket equation gives ${n0(F.dvIdeal)} m/s, and the speed at burnout is ${n0(F.vBurnout)} m/s.`);
+    if (S.p.g && F.t0 > 0) out.push(F.lifts ? `The rocket waits ${n0(F.t0, 1)} s on the pad before it lifts.` : 'The rocket never lifts off.');
+    return out;
+  });
   window.__rocket = { S, fly, P, flight, stagedFlight, G, n0, PRESETS, endTime };
   window.vdShowCols = [['m_fuel_kg', 'fuel (kg)'], ['b_kg_s', 'burn (kg/s)'], ['v_cutoff_m_s', 'v cutoff (m/s)']];
   window.vdReadingRow = () => {

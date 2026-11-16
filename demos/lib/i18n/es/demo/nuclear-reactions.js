@@ -30,6 +30,12 @@ VDI18N.add('es', 'demo/nuclear-reactions', {
   "ángulo del detector θ (grados)",
 "K of ¹H (MeV)":
   "K del ¹H (MeV)",
+"Describe the picture":
+  "Describir la imagen",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "Nuclear Reactions, Fission and Fusion":
   "Reacciones nucleares, fisión y fusión",
 "<a>Nuclear physics</a>":
@@ -56,6 +62,24 @@ VDI18N.add('es', 'demo/nuclear-reactions', {
   "Una generación",
 "A scattering chamber: a projectile hits a target nucleus and the products fly apart; a detector sits at angle θ. Space fires.":
   "Una cámara de dispersión: un proyectil choca con un núcleo blanco y los productos salen despedidos; un detector está en el ángulo θ. Espacio dispara.",
+"A scattering chamber: a projectile hits a target nucleus and the products fly apart.":
+  "Una cámara de dispersión: un proyectil golpea un núcleo blanco y los productos salen disparados.",
+"The reaction is α + ¹⁴N → p + ¹⁷O.":
+  "La reacción es α + ¹⁴N → p + ¹⁷O.",
+"Charge is balanced at {#}.":
+  "La carga está balanceada en {#}.",
+"Nucleons are balanced at {#}.":
+  "Los nucleones están balanceados en {#}.",
+"The projectile has kinetic energy {#} MeV.":
+  "El proyectil tiene energía cinética de {#} MeV.",
+"Q = −{#} MeV, so the reaction is endothermic.":
+  "Q = −{#} MeV, así que la reacción es endotérmica.",
+"Energy allows the reaction.":
+  "La energía permite la reacción.",
+"The detector is at θ = {#}°.":
+  "El detector está en θ = {#}°.",
+"The reaction has not been fired yet.":
+  "La reacción todavía no se ha disparado.",
 "Graphs for the view.":
   "Gráficas de la vista.",
 "The reaction":
@@ -546,6 +570,14 @@ VDI18N.add('es', 'demo/nuclear-reactions', {
   "generación {#}",
 "{#} fired in, {#} fissions, longest chain {#} generations · {#} neutron in flight":
   "{#} disparados, {#} fisiones, cadena más larga {#} generaciones · {#} neutrón en vuelo",
+"DOSE RATE":
+  "TASA DE DOSIS",
+"²³⁵U metal, {#} kg, R = {#} cm":
+  "²³⁵U metálico, {#} kg, R = {#} cm",
+"a neutron fired in every {#} s · red: the nucleus each neutron will strike · orange: fission fragments · drag to turn":
+  "se dispara un neutrón cada {#} s · rojo: el núcleo con el que chocará cada neutrón · naranja: fragmentos de fisión · arrastra para girar",
+"sample chain, always running · {#} s here is {#} ns · nuclei drawn far larger than to scale":
+  "cadena de muestra, siempre en marcha · {#} s aquí son {#} ns · núcleos dibujados mucho más grandes que a escala",
 "separation of the two nuclei r (fm)":
   "separación de los dos núcleos r (fm)",
 "potential energy U (both axes logarithmic)":
@@ -608,8 +640,18 @@ VDI18N.add('es', 'demo/nuclear-reactions', {
   "Tiempo medio para que un protón se fusione, densidad del núcleo solar",
 "{#} × {#}⁹ years":
   "{#} × {#}⁹ años",
-"DOSE RATE":
-  "TASA DE DOSIS",
+"Fusion: the Gamow peak where the thermal energy spread and the tunneling chance overlap.":
+  "Fusión: el pico de Gamow, donde se traslapan la distribución de energía térmica y la probabilidad de efecto túnel.",
+"The nuclei are p + p.":
+  "Los núcleos son p + p.",
+"The temperature is {#} × {#}⁷ K, so kT = {#} keV.":
+  "La temperatura es {#} × {#}⁷ K, así que kT = {#} keV.",
+"The Coulomb barrier at contact is {#} keV.":
+  "La barrera de Coulomb en el contacto es {#} keV.",
+"The Gamow peak measured on the curve is at {#} keV, with a width of {#} keV.":
+  "El pico de Gamow medido en la curva está en {#} keV, con un ancho de {#} keV.",
+"The reaction rate ⟨σv⟩ is {#} × {#}⁻⁴³ cm³/s.":
+  "La tasa de reacción ⟨σv⟩ es {#} × {#}⁻⁴³ cm³/s.",
 "¹³⁷Cs, {#} GBq":
   "¹³⁷Cs, {#} GBq",
 "DOSE RATE METER":
@@ -654,6 +696,18 @@ VDI18N.add('es', 'demo/nuclear-reactions', {
   "en reposo",
 "ΣZ {#} → {#} <span>✗</span> · ΣA {#} → {#} <span>✗</span>":
   "ΣZ {#} → {#} <span>✗</span> · ΣA {#} → {#} <span>✗</span>",
+"A radiation source, a shield and a person at a distance.":
+  "Una fuente de radiación, un blindaje y una persona a cierta distancia.",
+"The source is ¹³⁷Cs, with activity {#} MBq.":
+  "La fuente es ¹³⁷Cs, con actividad de {#} MBq.",
+"The distance is {#} m.":
+  "La distancia es {#} m.",
+"There is no shield.":
+  "No hay blindaje.",
+"The equivalent dose rate is {#} µSv/h.":
+  "La tasa de dosis equivalente es {#} µSv/h.",
+"The dose in {#} h is {#} mSv.":
+  "La dosis en {#} h es {#} mSv.",
 "ΣZ {#} → {#} <span>✓</span> · ΣA {#} → {#} <span>✗</span>":
   "ΣZ {#} → {#} <span>✓</span> · ΣA {#} → {#} <span>✗</span>",
 "Each neutron causes a fission with probability k/ν̄; each fission releases ν neutrons":
@@ -764,6 +818,8 @@ VDI18N.add('es', 'demo/nuclear-reactions', {
   "blindaje",
 "broad":
   "ancho",
+"The source is ¹⁸F (PET), with activity {#} MBq.":
+  "La fuente es ¹⁸F (PET), con actividad de {#} MBq.",
 "ΣZ {#} → {#} <span>✗</span> · ΣA {#} → {#} <span>✓</span> · <span>no mass for ²³⁵H</span>":
   "ΣZ {#} → {#} <span>✗</span> · ΣA {#} → {#} <span>✓</span> · <span>sin masa para ²³⁵H</span>",
 "ΣZ {#} → {#} <span>✗</span> · ΣA {#} → {#} <span>✓</span> · <span>no mass for ²³⁵He</span>":
@@ -1316,14 +1372,10 @@ VDI18N.add('es', 'demo/nuclear-reactions', {
   "A escala. Fotones más lentos; se dibujan unos cuantos de los",
 "heading for the meter drawn. Drag to turn.":
   "que van hacia el medidor. Arrastra para girar.",
+"The source is ⁹⁹ᵐTc, with activity {#} MBq.":
+  "La fuente es ⁹⁹ᵐTc, con actividad de {#} MBq.",
 "a neutron fired in every {#} s, seen from the side · nuclei drawn far larger than to scale · {#} s here is {#} ns":
   "se dispara un neutrón cada {#} s, visto de lado · núcleos dibujados mucho más grandes que a escala · {#} s aquí son {#} ns",
-"²³⁵U metal, {#} kg, R = {#} cm":
-  "²³⁵U metálico, {#} kg, R = {#} cm",
-"a neutron fired in every {#} s · red: the nucleus each neutron will strike · orange: fission fragments · drag to turn":
-  "se dispara un neutrón cada {#} s · rojo: el núcleo con el que chocará cada neutrón · naranja: fragmentos de fisión · arrastra para girar",
-"sample chain, always running · {#} s here is {#} ns · nuclei drawn far larger than to scale":
-  "cadena de muestra, siempre en marcha · {#} s aquí son {#} ns · núcleos dibujados mucho más grandes que a escala",
 "sample chain, always running · {#} s here is {#} ns":
   "cadena de muestra, siempre en marcha · {#} s aquí son {#} ns",
 "Close":

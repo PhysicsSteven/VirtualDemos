@@ -1,5 +1,6 @@
 /* English strings of demo/rocket, harvested by tools/i18n.cjs (do not edit by hand: harvest again) */
 VDI18N.add('en', 'demo/rocket', [
+"Describe the picture",
 "fuel",
 "Ready",
 "{#} s = {#} s of flight",
@@ -13,6 +14,15 @@ VDI18N.add('en', 'demo/rocket', [
 "A rocket pushes on its exhaust and the exhaust pushes back. As fuel burns the rocket gets lighter, so the same thrust gives more and more acceleration, and the speed it gains is Δv = u ln(m₀/m).",
 "g = {#} m/s², constant · no air",
 "A rocket rising with its exhaust, beside graphs of its speed and mass against time. Space launches or pauses, R starts over.",
+"A rocket rising with its exhaust, with graphs of its speed and mass against time.",
+"Dry mass {#} kg and fuel mass {#} kg, exhaust speed {#} m/s, burn rate {#} kg/s.",
+"No gravity, in deep space.",
+"Thrust is {#} kN and the burn time is {#} s.",
+"The rocket has not launched yet.",
+"Mass now {#} kg, speed {#} m/s, height {#} m.",
+"Time {#} s.",
+"The rocket equation gives {#} m/s, and the speed at burnout is {#} m/s.",
+"Time controls",
 "Divider between the rocket and the graphs",
 "Set up the rocket. Drag, or use the arrow keys, to move this card; double click to put it back",
 "Set up the rocket",
@@ -49,6 +59,8 @@ VDI18N.add('en', 'demo/rocket', [
 "fuel (kg)",
 "burn (kg/s)",
 "v cutoff (m/s)",
+"Skip to the picture",
+"Skip to the controls",
 "Engine on",
 "The same rocket from the ground. Thrust {#} kN against a {#} kN weight. Gravity takes g × (burn time) off the speed: compare the burnout speed with u ln(m₀/m).",
 "Highest point (constant g, no air)",
@@ -67,7 +79,9 @@ VDI18N.add('en', 'demo/rocket', [
 "at {#} s, {#} m/s",
 "Rocket equation, both stages",
 "Readings are for a one stage rocket, as in the worksheet: switch off Two stages to record.",
+"A two stage rocket, with graphs of its speed and mass against time.",
+"The first stage has a {#} kg casing and {#} kg of fuel.",
+"Gravity is on, launching from the ground.",
 "Separation (flight log)",
-"Speed at burnout (flight log)",
-"Time controls"
+"Speed at burnout (flight log)"
 ]);

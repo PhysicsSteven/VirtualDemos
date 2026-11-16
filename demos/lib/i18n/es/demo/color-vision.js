@@ -6,6 +6,12 @@ VDI18N.add('es', 'demo/color-vision', {
   "Luz que llega al ojo (continua) y sensibilidades de los conos (discontinuas)",
 "Cone signals":
   "Señales de los conos",
+"Describe the picture":
+  "Describir la imagen",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "Color Vision":
   "Visión del color",
 "<a><span>←</span> <span>Build a Microscope or Telescope</span></a><a><span>Telescope Aberrations</span> <span>→</span></a>":
@@ -34,6 +40,18 @@ VDI18N.add('es', 'demo/color-vision', {
   "Mezclarla con las tres lámparas",
 "Lamps in a dark room shine into a person's eye; a bubble shows the color the person sees. Below, the spectrum of the light with the three cone sensitivities, and bars for how strongly each cone type responds.":
   "Lámparas en un cuarto oscuro iluminan el ojo de una persona; una burbuja muestra el color que la persona ve. Abajo, el espectro de la luz con las tres sensibilidades de los conos, y barras de qué tan fuerte responde cada tipo de cono.",
+"Three lamps in a dark room shine into a person's eye.":
+  "Tres lámparas en un cuarto oscuro iluminan el ojo de una persona.",
+"Lamp levels: red {#}%, green {#}%, blue {#}%.":
+  "Niveles de las lámparas: rojo {#}%, verde {#}%, azul {#}%.",
+"Cone signals: L {#}, M {#}, S {#}.":
+  "Señales de los conos: L {#}, M {#}, S {#}.",
+"Brightness Y {#}.":
+  "Brillo Y {#}.",
+"A bubble shows the color seen.":
+  "Una burbuja muestra el color que se ve.",
+"Below, a plot of the light spectrum with the three cone sensitivities, and bars for the cone signals.":
+  "Abajo, una gráfica del espectro de la luz con las tres sensibilidades de los conos, y barras para las señales de los conos.",
 "Divider between the room and the spectrum":
   "Divisor entre el cuarto y el espectro",
 "Set the light":
@@ -246,6 +264,16 @@ VDI18N.add('es', 'demo/color-vision', {
   "{#} × el tamaño real",
 "#00ebe5":
   "#00ebe5",
+"A stage with a performer in front of a backdrop, lit by three lamps in front.":
+  "Un escenario con un artista frente a un telón de fondo, iluminado por tres lámparas al frente.",
+"The performer wears a white costume.":
+  "El artista lleva un traje blanco.",
+"The backdrop is white.":
+  "El telón de fondo es blanco.",
+"Performer {#} m from the backdrop, {#} times life size shadows.":
+  "El artista está a {#} m del telón de fondo; las sombras miden {#} veces el tamaño real.",
+"The ring is on the backdrop.":
+  "El anillo está sobre el telón de fondo.",
 "Red and green with no blue: the L and M cones respond and the S cones hardly at all. That pattern looks yellow, although no light near {#} nm is present.":
   "Rojo y verde sin azul: los conos L y M responden y los conos S casi nada. Ese patrón se ve amarillo, aunque no hay luz cerca de {#} nm.",
 "#fffb00":
@@ -296,6 +324,14 @@ VDI18N.add('es', 'demo/color-vision', {
   "cian {#} : magenta {#}",
 "#543df4":
   "#543df4",
+"A board of mixed paint, lit by daylight.":
+  "Una tabla con pintura mezclada, iluminada por luz del día.",
+"Cyan paint, {#} part.":
+  "Pintura cian, {#} parte.",
+"Magenta paint, {#} part.":
+  "Pintura magenta, {#} parte.",
+"Reflectance at {#}, {#} and {#} nm: {#}, {#}, {#}.":
+  "Reflectancia a {#}, {#} y {#} nm: {#}, {#}, {#}.",
 "All three paints, one part each: every third of the spectrum is absorbed by one of them, and the mix reflects about {#}% everywhere (Y = {#}), a dark muddy gray, not black. Each pigment is only a third of the mix, so each absorbs less than it does alone; real printers add black ink for this reason.":
   "Las tres pinturas, una parte de cada una: cada tercio del espectro es absorbido por una de ellas, y la mezcla refleja alrededor del {#}% en todas partes (Y = {#}), un gris oscuro y turbio, no negro. Cada pigmento es solo un tercio de la mezcla, así que cada uno absorbe menos que solo; por eso las impresoras reales agregan tinta negra.",
 "cyan {#} : magenta {#} : yellow {#}":
@@ -338,6 +374,10 @@ VDI18N.add('es', 'demo/color-vision', {
   "el telón de fondo azul, iluminado por el rojo y el verde (en la sombra del azul)",
 "stage lamps red {#}%, green {#}%, blue {#}%: the blue backdrop, lit by red and green (in the shadow of blue)":
   "lámparas del escenario roja {#}%, verde {#}%, azul {#}%: el telón de fondo azul, iluminado por el rojo y el verde (en la sombra del azul)",
+"The backdrop is blue.":
+  "El telón de fondo es azul.",
+"The performer wears a magenta costume.":
+  "El artista lleva un traje magenta.",
 "the red backdrop, lit by red and green (in the shadow of blue)":
   "el telón de fondo rojo, iluminado por el rojo y el verde (en la sombra del azul)",
 "#ff002c":
@@ -364,6 +404,14 @@ VDI18N.add('es', 'demo/color-vision', {
   "Luz, conos (discontinuas), R (puntos)",
 "Light (solid), cones (dashed)":
   "Luz (continua), conos (discontinuas)",
+"A daylight bulb shines into a person's eye.":
+  "Un foco de luz del día ilumina el ojo de una persona.",
+"A band filter passes {#} to {#} nm.":
+  "Un filtro de banda deja pasar de {#} a {#} nm.",
+"Photons are drawn as dots, slowed enormously.":
+  "Los fotones se dibujan como puntos, enormemente frenados.",
+"Yellow paint, {#} part.":
+  "Pintura amarilla, {#} parte.",
 "<a><span>←</span> <span>Build a Microscope or Telescope</span></a><a><span>Double Slit, One Particle at a Time</span> <span>→</span></a>":
   "<a><span>←</span> <span>Construye un microscopio o un telescopio</span></a><a><span>Doble rendija, una partícula a la vez</span> <span>→</span></a>",
 "Close":

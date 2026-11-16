@@ -2407,6 +2407,61 @@ table.rows button:hover { color: var(--pos); }
     if (now - lastR > 150) { updateReadouts(); renderData(); lastR = now; }
     requestAnimationFrame(loop);
   }
+  /* what the apparatus shows now, for a screen reader (VD.describe): the scene, the setup, the instrument readings the worksheets use
+     (Blind mode and the mystery choices hide what the page hides) */
+  const SR_LIQ = { water: 'The liquid is water, density 1000 kg/m³.', oil: 'The liquid is oil, density 920 kg/m³.', sea: 'The liquid is seawater, density 1025 kg/m³.', hg: 'The liquid is mercury, density 13,595 kg/m³.' };
+  const SR_POUR = { water: 'Water is poured into the left arm.', oil: 'Oil is poured into the left arm.', sea: 'Seawater is poured into the left arm.', hg: 'Mercury is poured into the left arm.', myst: 'A mystery oil is poured into the left arm.' };
+  if (window.VD && VD.describe) VD.describe($('sCan'), () => {
+    const out = [], rho = rhoF(), blind = S.blind, run = (t) => ({ t, live: false }), I = inst();
+    out.push(SR_LIQ[S.liq] || '');
+    if (S.scene === 'press') {
+      const q = S.P.press, abs = S.gmode === 'abs';
+      out.push(`A tank of liquid ${fx(q.D, 2)} m deep with a pressure probe.`, `The probe is ${I.h} m below the surface.`);
+      out.push(abs ? `The gauge reads ${I.P} kPa absolute.` : `The gauge reads ${I.P} kPa gauge.`);
+      if (!blind) out.push(`That is ${fx(hydro(rho, q.pd) / PATM, 3)} atm absolute.`);
+    } else if (S.scene === 'pascal') {
+      const d = pascalData(), h = S.P.pascal.hp;
+      out.push('Four vessels of different shapes, all with the same base, filled to the same height.', `The liquid stands ${fx(h, 2)} m deep in each.`, `The gauge pressure at each base is ${kPa(rho * G * h)}.`, `The force on each base is ${fN(d[0].F)}.`);
+      out.push(`The liquid weighs ${fN(d[0].Wl)} in the straight vessel, ${fN(d[1].Wl)} in the flared one, ${fN(d[2].Wl)} in the narrowing one and ${fN(d[3].Wl)} in the slanted one.`);
+    } else if (S.scene === 'baro') {
+      const q = S.P.baro;
+      if (S.baro === 'baro') {
+        const h = columnHeight(q.Pa * 1000, rho);
+        out.push('A barometer: a closed tube standing in an open dish of liquid.', `The air pressure is ${fx(q.Pa, 1)} kPa.`, h < 2 ? `The liquid column is ${fx(h * 1000, 1)} mm high.` : `The liquid column is ${fx(h, 2)} m high.`);
+      } else if (S.baro === 'mano') {
+        const dh = columnHeight(q.Pg * 1000, rho);
+        out.push('A U tube manometer with one arm open to the air and one connected to a gas.', `The gas gauge pressure is ${fx(q.Pg, 1)} kPa.`, Math.abs(dh) < 0.5 ? `The level difference is ${fx(Math.abs(dh) * 1000, 1)} mm.` : `The level difference is ${fx(Math.abs(dh) * 100, 1)} cm.`);
+        out.push(q.Pg > 0 ? 'The liquid is higher in the open arm.' : q.Pg < 0 ? 'The liquid is higher in the gas arm.' : 'The two levels are equal.');
+      } else {
+        const tw = two();
+        out.push('A U tube holding two liquids that meet at an interface.', SR_POUR[S.pour] || '', `The poured liquid stands ${fx(q.Ho, 1)} cm above the interface.`, `The other liquid stands ${fx(tw.hB * 100, 2)} cm above the interface.`);
+        if (S.pour === 'myst') out.push('The density of the mystery oil is hidden.'); else if (!blind) out.push(`The poured liquid has density ${fx(pourRho(), 0)} kg/m³.`);
+      }
+    } else if (S.scene === 'buoy') {
+      const b = buoyNow(), q = b.q, d = b.hs - bs.zb;
+      out.push(isMyst() ? `Mystery block ${q.myst} in a tank of liquid, its mass and volume unknown.` : `A block of density ${fx(q.rho, 0)} kg/m³ and edge ${fx(q.L, 0)} cm in a tank of liquid.`);
+      out.push(q.scale ? 'The block hangs from a spring scale.' : 'The block floats or sinks freely.', q.over ? 'The tank is a full overflow can, with a beaker catching the spill.' : `The liquid is ${fx(q.h0 * 100, 0)} cm deep.`);
+      out.push(`The block weighs ${I.W} N in air.`);
+      if (q.scale) out.push(`The spring scale reads ${I.T} N.`);
+      out.push(run(`The block bottom is ${I.d} cm below the surface.`));
+      if (q.over) out.push(run(`The beaker holds ${I.Vb} cm³ of water.`));
+      if (!blind && !isMyst()) { out.push(b.p.rhoO < b.p.rhoF ? 'The block is less dense than the liquid, so it floats.' : 'The block is denser than the liquid, so it sinks.'); out.push(run(`The buoyant force is ${fN(b.FB)}.`)); }
+      if (!q.scale && running) out.push({ t: 'The block is moving.', live: false });
+      if (!q.scale) out.push(run(`Time ${fx(t, 2)} s.`));
+    } else if (S.scene === 'venturi') {
+      const q = S.P.venturi, r = venturi(vp());
+      out.push(`A horizontal pipe narrows from ${I.D1} cm to ${I.D2} cm across, with a standpipe at each part.`, `Inlet speed v₁ = ${I.v1} m/s, flow Q = ${I.Q} L/s.`, `The first standpipe stands ${I.h1} cm.`);
+      out.push(r.cav ? 'The liquid would boil at the throat, so the model is not valid.' : I.empty ? 'The second standpipe is empty, below air pressure.' : `The second standpipe stands ${I.h2} cm.`);
+      if (!blind) { out.push(`Throat speed v₂ = ${fx(r.v2, 2)} m/s.`); if (!r.cav) out.push(`The standpipe difference Δh is ${r.dh < 2 ? fx(r.dh * 100, 1) + ' cm' : fx(r.dh, 2) + ' m'}.`); }
+    } else {
+      const q = S.P.torr, tr = torricelli(q.H, q.hh);
+      out.push(`A tank of liquid ${fx(q.H, 2)} m deep with a hole in its side.`, `The hole is ${fx(q.hh, 2)} m below the surface.`, `The jet lands ${fx(tr.R, 3)} m from the tank.`);
+      if (!blind) out.push(`Exit speed ${fx(tr.v, 2)} m/s.`, `The range is largest, ${fx(q.H, 2)} m, for a hole ${fx(q.H / 2, 2)} m deep.`);
+    }
+    if (S.scene !== 'pascal' && S.scene !== 'baro' && S.scene !== 'press') out.push(running ? 'Running.' : 'Paused.');
+    out.push('Below, a graph for this scene.');
+    return out;
+  });
   window.__fl = {
     get frameMs() { return frameMs; }, get t() { return t; }, get S() { return S; }, get bs() { return bs; }, get handles() { return handles; },
     get running() { return running; }, get trace() { return trace; },

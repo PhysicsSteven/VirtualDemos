@@ -4,6 +4,12 @@ VDI18N.add('es', 'demo/force-lab', {
   "La longitud de las flechas crece con log F (no a escala), para que se vean tanto las fuerzas muy pequeñas como las muy grandes.",
 "Record a few distances to plot them.":
   "Registra algunas distancias para graficarlas.",
+"Describe the picture":
+  "Describir la imagen",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "Inverse Square Force Lab":
   "Laboratorio de fuerza de inverso del cuadrado",
 "<a><span>←</span> <span>Elevator: Apparent Weight</span></a><a><span>Granular Flow: Sorting and Landslides</span> <span>→</span></a>":
@@ -22,6 +28,18 @@ VDI18N.add('es', 'demo/force-lab', {
   "Registrar esta distancia",
 "Two bodies on a ruler with the force on each drawn as an arrow. Drag either body along the ruler. Left and right arrow keys move the right body, with Shift for bigger steps.":
   "Dos cuerpos sobre una regla con la fuerza sobre cada uno dibujada como una flecha. Arrastra cualquiera de los cuerpos a lo largo de la regla. Las flechas izquierda y derecha del teclado mueven el cuerpo de la derecha, con Shift para pasos más grandes.",
+"Two lead balls on a ruler {#} m long: m₁ = {#} kg at {#} m, m₂ = {#} kg at {#} m.":
+  "Dos bolas de plomo sobre una regla de {#} m: m₁ = {#} kg en {#} m, m₂ = {#} kg en {#} m.",
+"The distance between centers is r = {#} m.":
+  "La distancia entre centros es r = {#} m.",
+"The two bodies attract each other.":
+  "Los dos cuerpos se atraen.",
+"The force on each body is {#} × {#}⁻⁶ N, equal in size and opposite in direction.":
+  "La fuerza sobre cada cuerpo es {#} × {#}⁻⁶ N, igual en magnitud y de sentido opuesto.",
+"The arrow lengths grow with the logarithm of the force.":
+  "La longitud de las flechas crece con el logaritmo de la fuerza.",
+"No distances recorded.":
+  "No hay distancias registradas.",
 "Set the two bodies":
   "Fija los dos cuerpos",
 "<span>The two bodies</span>":
@@ -84,8 +102,22 @@ VDI18N.add('es', 'demo/force-lab', {
   "+{#} μC y +{#} μC se empujan entre sí con fuerzas iguales ({#} N a {#} cm), aunque una carga es cuatro veces la otra.",
 "repel":
   "se repelen",
+"A proton and an electron on a ruler {#} pm long: q₁ = +{#} e at {#} pm, q₂ = −{#} e at {#} pm.":
+  "Un protón y un electrón sobre una regla de {#} pm: q₁ = +{#} e en {#} pm, q₂ = −{#} e en {#} pm.",
+"The distance between centers is r = {#} pm.":
+  "La distancia entre centros es r = {#} pm.",
+"The force on each body is {#} × {#}⁻⁸ N, equal in size and opposite in direction.":
+  "La fuerza sobre cada cuerpo es {#} × {#}⁻⁸ N, igual en magnitud y de sentido opuesto.",
 "Recorded r = {#} pm.":
   "r registrada = {#} pm.",
 "Arrow lengths grow with log F (not to scale).":
-  "La longitud de las flechas crece con log F (no a escala)."
+  "La longitud de las flechas crece con log F (no a escala).",
+"{#} distance recorded.":
+  "{#} distancia registrada.",
+"Two charges on a ruler {#} cm long: q₁ = +{#} μC at {#} cm, q₂ = −{#} μC at {#} cm.":
+  "Dos cargas sobre una regla de {#} cm: q₁ = +{#} μC en {#} cm, q₂ = −{#} μC en {#} cm.",
+"The distance between centers is r = {#} cm.":
+  "La distancia entre centros es r = {#} cm.",
+"The force on each body is {#} × {#}¹ N, equal in size and opposite in direction.":
+  "La fuerza sobre cada cuerpo es {#} × {#}¹ N, igual en magnitud y de sentido opuesto."
 });

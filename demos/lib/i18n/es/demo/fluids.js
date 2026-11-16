@@ -1,5 +1,7 @@
 /* demo/fluids in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/fluids', {
+"Describe the picture":
+  "Describir la imagen",
 "Water, {#} kg/m³":
   "Agua, {#} kg/m³",
 "Forces on the block (N)":
@@ -228,8 +230,38 @@ VDI18N.add('es', 'demo/fluids', {
   "Modelo: un cubo en un tanque de vidrio de {#} cm de ancho y {#} cm de fondo (área del piso {#} m²), así que el nivel sube V_sub/A. El líquido empuja hacia arriba con ρ_f V_sub g. Movimiento solo vertical, con resistencia lineal F = −b v sobre el bloque mojado (b = {#}ζ√(km), k = la fuerza de flotación por metro hundido, así que ζ es la razón de amortiguamiento de oscilaciones pequeñas) y sin masa añadida, así que los bloques reales oscilan un poco más despacio y la resistencia real del agua crece más rápido que v. El piso detiene el bloque en seco. El dinamómetro se lee con el bloque colgando quieto. Los bloques misteriosos son cubos macizos de metales puros, pintados para que su color no revele nada, con densidades cerca de {#} °C del CRC Handbook.",
 "The tank, block and beaker are to scale. Drag to turn, scroll to zoom, double click to go back; drag a grip to change a value.":
   "El tanque, el bloque y el vaso están a escala. Arrastra para girar, desplaza para acercar, doble clic para volver; arrastra un agarre para cambiar un valor.",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
+"The liquid is water, density {#} kg/m³.":
+  "El líquido es agua, de densidad {#} kg/m³.",
+"A block of density {#} kg/m³ and edge {#} cm in a tank of liquid.":
+  "Un bloque de densidad {#} kg/m³ y arista {#} cm en un tanque de líquido.",
+"The block floats or sinks freely.":
+  "El bloque flota o se hunde libremente.",
+"The liquid is {#} cm deep.":
+  "El líquido tiene {#} cm de profundidad.",
+"The block weighs {#} N in air.":
+  "El bloque pesa {#} N en el aire.",
+"The block bottom is −{#} cm below the surface.":
+  "El fondo del bloque está a −{#} cm bajo la superficie.",
+"The block is less dense than the liquid, so it floats.":
+  "El bloque es menos denso que el líquido, así que flota.",
+"The buoyant force is {#} N.":
+  "La fuerza de flotación es {#} N.",
+"The block is moving.":
+  "El bloque se está moviendo.",
+"Time {#} s.":
+  "Tiempo {#} s.",
+"Running.":
+  "En marcha.",
+"Below, a graph for this scene.":
+  "Abajo, una gráfica de esta escena.",
 "level up {#} mm = V":
   "el nivel sube {#} mm = V",
+"The block bottom is {#} cm below the surface.":
+  "El fondo del bloque está a {#} cm bajo la superficie.",
 "depth (m)":
   "profundidad (m)",
 "absolute pressure":
@@ -432,6 +464,8 @@ VDI18N.add('es', 'demo/fluids', {
   "agua de mar, {#} kg/m³",
 "Ice in seawater floats with {#}/{#} = {#}% of its volume under the surface: only about a tenth of an iceberg shows. The same holds for any shape, not only a cube.":
   "El hielo en agua de mar flota con {#}/{#} = {#}% de su volumen bajo la superficie: solo se ve cerca de una décima de un iceberg. Lo mismo vale para cualquier forma, no solo un cubo.",
+"The liquid is seawater, density {#} kg/m³.":
+  "El líquido es agua de mar, de densidad {#} kg/m³.",
 "scale {#} N":
   "dinamómetro {#} N",
 "displaced water":
@@ -466,14 +500,12 @@ VDI18N.add('es', 'demo/fluids', {
   "Tus lecturas: fuerza de flotación W − T en función del volumen sumergido, agua",
 "{#} of {#} Buoyancy readings used (this liquid). model: slope ρ_f g = {#} N/m³, through the origin":
   "{#} de {#} lecturas de Flotación usadas (este líquido). modelo: pendiente ρ_f g = {#} N/m³, por el origen",
+"submerged volume (cm³)":
+  "volumen sumergido (cm³)",
 "buoyant force (N)":
   "fuerza de flotación (N)",
 "No readings for this fit yet: press Record reading.":
   "Aún no hay lecturas para este ajuste: pulsa Registrar lectura.",
-"submerged volume (cm³)":
-  "volumen sumergido (cm³)",
-"residual (N)":
-  "residuo (N)",
 "Pick a block, A to E. Drag the spring scale up and down to lower the block; in the full overflow can, the water it pushes out runs into the beaker. Each block’s size and metal stay hidden.":
   "Elige un bloque, de A a E. Arrastra el dinamómetro hacia arriba y hacia abajo para bajar el bloque; en el vaso de derrame lleno, el agua que desplaza escurre al vaso. El tamaño y el metal de cada bloque quedan ocultos.",
 "Five metal blocks, A to E, each a different size. Read the spring scale with the block in air: that is its weight W, so its mass is W/g. Then lower it all the way into the full overflow can: the water that runs into the beaker has the block’s own volume. Density is mass over volume; find the nearest metal in the density table and check your answer.":
@@ -486,8 +518,20 @@ VDI18N.add('es', 'demo/fluids', {
   "ρ = m/V: m = W/g con el dinamómetro en el aire; V a partir del agua que un bloque completamente sumergido empuja al vaso.",
 "vegetable oil, {#} kg/m³":
   "aceite vegetal, {#} kg/m³",
+"A tank of liquid {#} m deep with a hole in its side.":
+  "Un tanque de líquido de {#} m de profundidad con un orificio en un lado.",
+"The hole is {#} m below the surface.":
+  "El orificio está {#} m bajo la superficie.",
+"The jet lands {#} m from the tank.":
+  "El chorro cae a {#} m del tanque.",
+"Exit speed {#} m/s.":
+  "Rapidez de salida {#} m/s.",
+"The range is largest, {#} m, for a hole {#} m deep.":
+  "El alcance es máximo, {#} m, para un orificio a {#} m de profundidad.",
 "Readings and fits work in the Depth, Buoyancy and Venturi scenes.":
   "Las lecturas y los ajustes funcionan en las escenas Profundidad, Flotación y Venturi.",
+"Paused.":
+  "En pausa.",
 "Choose a metal first.":
   "Primero elige un metal.",
 "Record reading works in the Depth, Buoyancy and Venturi scenes.":
@@ -504,6 +548,14 @@ VDI18N.add('es', 'demo/fluids', {
   "profundidad h (m)",
 "residual (kPa)":
   "residuo (kPa)",
+"A tank of liquid {#} m deep with a pressure probe.":
+  "Un tanque de líquido de {#} m de profundidad con una sonda de presión.",
+"The probe is {#} m below the surface.":
+  "La sonda está {#} m bajo la superficie.",
+"The gauge reads {#} kPa absolute.":
+  "El manómetro marca {#} kPa absolutos.",
+"That is {#} atm absolute.":
+  "Eso son {#} atm absolutas.",
 "mystery oil":
   "aceite misterioso",
 "mercury":
@@ -532,6 +584,8 @@ VDI18N.add('es', 'demo/fluids', {
   "E, masa y volumen desconocidos",
 "Your readings: buoyant force W − T against submerged volume, mercury. Not enough readings to fit.":
   "Tus lecturas: fuerza de flotación W − T en función del volumen sumergido, mercurio. No hay suficientes lecturas para ajustar.",
+"residual (N)":
+  "residuo (N)",
 "Your readings: buoyant force W − T against submerged volume, mercury":
   "Tus lecturas: fuerza de flotación W − T en función del volumen sumergido, mercurio",
 "Δh = {#} cm":

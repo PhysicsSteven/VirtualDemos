@@ -1470,6 +1470,47 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const q = new URLSearchParams(location.search); applyPreset(PRESETS[q.get('setup')] ? q.get('setup') : 'rxRuth');
   new ResizeObserver(resize).observe($('pane')); new ResizeObserver(resize).observe(cur.parentElement); resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  /* what the picture shows now, for a screen reader (VD.describe): the view, the setup, and the readings the worksheets use (Blind mode hides what the page hides) */
+  const SR_SHIELD = { none: 'There is no shield.', lead: 'The shield is lead.', concrete: 'The shield is ordinary concrete.', water: 'The shield is water.' };
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    const out = [], B = S.blind, live = (t) => ({ t, live: false });
+    if (S.view === 'rx') {
+      const x = S.rx, c = rxCalc();
+      out.push('A scattering chamber: a projectile hits a target nucleus and the products fly apart.', `The reaction is ${eqText()}.`);
+      out.push(c.Zin === c.Zout ? `Charge is balanced at ${c.Zin}.` : `Charge is not balanced: ${c.Zin} before and ${c.Zout} after.`, c.Ain === c.Aout ? `Nucleons are balanced at ${c.Ain}.` : `Nucleons are not balanced: ${c.Ain} before and ${c.Aout} after.`);
+      out.push(x.proj === 'none' ? 'The target is at rest.' : `The projectile has kinetic energy ${f(c.K, 3)} MeV.`);
+      if (c.balanced) { out.push(B ? 'The Q value is hidden.' : `Q = ${f(c.Q, 4)} MeV, ${c.Q >= 0 ? 'so the reaction is exothermic' : 'so the reaction is endothermic'}.`); out.push(c.allowed ? 'Energy allows the reaction.' : 'Energy does not allow the reaction.'); }
+      if (c.kin) out.push(`The detector is at θ = ${x.th}°.`);
+      out.push(x.t > 0 && x.t < 1.5 ? live('The reaction is in progress.') : x.fired ? 'The reaction has been fired.' : 'The reaction has not been fired yet.');
+    } else if (S.view === 'ch') {
+      const ch = S.ch;
+      if (ch.mode === 'sph') {
+        const m = MAT[ch.mat], st = kStats(CHN.ks);
+        out.push('Neutron paths inside a sphere of fissile metal.', `The material is ${m.name}.`, `The radius is R = ${f(ch.R, 2)} cm and the mass is ${f(sphereMass(m, ch.R), 2)} kg.`);
+        out.push(CHN.gen > 0 ? live(`${CHN.gen} generations run.`) : 'No generations run yet.');
+        if (CHN.last) out.push(live(`k this generation is ${f(CHN.last.k, 4)}.`), live(`${f(100 * CHN.last.leak / ch.N, 1)}% of the neutrons leaked out.`));
+        if (isFinite(st.k)) out.push(`The mean k is ${f(st.k, 4)} ± ${f(st.err, 4)}.`);
+        out.push(B ? 'The critical mass is hidden.' : `The bare critical mass from a full calculation is ${m.mcnp} kg.`);
+      } else {
+        const g = CHN.g, n = g.sizes.length - 1;
+        out.push('A tree of neutron generations, each fission freeing more neutrons.', `The multiplication factor is k = ${f(ch.k, 2)}.`, ch.k < 1 ? 'The chain is subcritical.' : ch.k === 1 ? 'The chain is critical.' : 'The chain is supercritical.');
+        out.push(live(`Generation ${n}, with ${g.sizes[n]} neutrons.`), live(`${g.fisTot} fissions so far.`), live(`Energy released ${sci(g.fisTot * E_FISSION * MEV_J, 3)} J.`));
+        if (g.done) out.push(g.sizes[n] === 0 ? 'The chain died out.' : 'The run stopped at the population cap.');
+      }
+      out.push(S.run ? 'Running.' : 'Paused.');
+    } else if (S.view === 'fu') {
+      const F = fuNow();
+      out.push('Fusion: the Gamow peak where the thermal energy spread and the tunneling chance overlap.', `The nuclei are ${F.P.name}.`, `The temperature is ${sci(F.Tk, 3)} K, so kT = ${f(F.kt * 1000, 3)} keV.`);
+      out.push(`The Coulomb barrier at contact is ${f(F.Vc * 1000, 0)} keV.`, `The Gamow peak measured on the curve is at ${f(F.m.E0 * 1000, 3)} keV, with a width of ${f(F.m.fwhm * 1000, 3)} keV.`);
+      out.push(isFinite(F.sv) ? `The reaction rate ⟨σv⟩ is ${sci(F.sv, 3)} cm³/s.` : 'The reaction rate is not modeled at this temperature.');
+    } else {
+      const d = S.do, D = doNow();
+      out.push('A radiation source, a shield and a person at a distance.', `The source is ${D.src.name}, with activity ${sci(D.A / 1e6, 3)} MBq.`, `The distance is ${f(d.r, 2)} m.`);
+      out.push(d.sh === 'none' || d.x === 0 ? 'There is no shield.' : SR_SHIELD[d.sh] || '', d.sh === 'none' || d.x === 0 ? '' : `The shield is ${f(d.x, 1)} cm thick.`);
+      out.push(`The equivalent dose rate is ${sig(D.rate * 1e6, 4)} µSv/h.`, `The dose in ${D.tl} is ${sci(D.dose * 1000, 3)} mSv.`);
+    }
+    return out;
+  });
   window.__nr = { S, CHN, setView, applyPreset, setRun, redraw, sync, chNew, chStep, rxCalc, fire, pickRx, eqText, fuNow, doNow };
   const HOW = { rx: ['nuclear-reactions', 'Nuclear Reactions: Balancing and Weighing'], ch: ['critical-mass', 'Chain Reactions and the Critical Size'], fu: ['fusion-gamow', 'Fusion and the Gamow Peak'], do: ['radiation-dose', 'Radiation Dose: Distance and Shielding'] };
   /* the Dose view with ¹⁸F is the PET uptake room worksheet (Medical Physics); every other source is the Modern one */
