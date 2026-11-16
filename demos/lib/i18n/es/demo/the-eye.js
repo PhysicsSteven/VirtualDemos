@@ -26,12 +26,6 @@ VDI18N.add('es', 'demo/the-eye', {
   "mancha de desenfoque {#} µm = {#}′; una letra {#}/{#} mide {#}′ = {#} µm",
 "sharp":
   "nítida",
-"Describe the picture":
-  "Describir la imagen",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
 "The Eye":
   "El ojo",
 "<a><span>←</span> <span>Polarization</span></a><a><span>Build a Microscope or Telescope</span> <span>→</span></a>":
@@ -192,8 +186,6 @@ VDI18N.add('es', 'demo/the-eye', {
   "Apertura",
 "Lens to sensor d_s":
   "De la lente al sensor d_s",
-"Object distance":
-  "Distancia al objeto",
 "Image distance from {#}/d + {#}/d_i = {#}/f":
   "Distancia a la imagen según {#}/d + {#}/d_i = {#}/f",
 "Sharp from … to … (blur ≤ {#} pixels)":
@@ -206,10 +198,6 @@ VDI18N.add('es', 'demo/the-eye', {
   "{#} µm = {#} pixeles: nítida",
 "{#} cm to far away (∞)":
   "De {#} cm a muy lejos (∞)",
-"far away (∞)":
-  "muy lejos (∞)",
-"This eye has its far point at {#} cm. Even fully relaxed it is too strong for distant light, which focuses in front of the retina. Bring the object closer than {#} cm and it becomes sharp.":
-  "Este ojo tiene su punto lejano a {#} cm. Aun completamente relajado es demasiado potente para la luz lejana, que se enfoca delante de la retina. Acerca el objeto a menos de {#} cm y se vuelve nítido.",
 "The camera is: Phone camera.":
   "La cámara es: Cámara de teléfono.",
 "It has a lens of focal length {#} mm, in front of a sensor.":
@@ -228,6 +216,10 @@ VDI18N.add('es', 'demo/the-eye', {
   "La imagen nítida se forma {#} mm detrás de la lente.",
 "Objects from {#} cm to far away (∞) are sharp.":
   "Los objetos desde {#} cm hasta muy lejos (∞) se ven nítidos.",
+"far away (∞)":
+  "muy lejos (∞)",
+"This eye has its far point at {#} cm. Even fully relaxed it is too strong for distant light, which focuses in front of the retina. Bring the object closer than {#} cm and it becomes sharp.":
+  "Este ojo tiene su punto lejano a {#} cm. Aun completamente relajado es demasiado potente para la luz lejana, que se enfoca delante de la retina. Acerca el objeto a menos de {#} cm y se vuelve nítido.",
 "OpenStax Example {#}: a −{#} D lens {#} cm from the eye makes a distant object’s image {#} cm in front of the glasses, which is {#} cm from the eye, at the far point. The eye sees that image sharply.":
   "Ejemplo {#} de OpenStax: una lente de −{#} D a {#} cm del ojo forma la imagen de un objeto lejano {#} cm delante de los lentes, que está a {#} cm del ojo, en el punto lejano. El ojo ve esa imagen nítida.",
 "This eye’s near point is {#} m. A book at {#} cm needs more power than the eye has, and its image would form behind the retina.":
@@ -256,6 +248,20 @@ VDI18N.add('es', 'demo/the-eye', {
   "El objeto se ve borroso, con una mancha de {#} mm de ancho.",
 "The glasses for reading at {#} cm would be +{#} D.":
   "Los lentes para leer a {#} cm serían de +{#} D.",
+"The camera is: {#} mm lens, full frame.":
+  "La cámara es: lente de {#} mm, cuadro completo.",
+"The image is blurred.":
+  "La imagen está borrosa.",
+"Objects from {#} m to far away (∞) are sharp.":
+  "Los objetos desde {#} m hasta muy lejos (∞) se ven nítidos.",
+"Describe the picture":
+  "Describir la imagen",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
+"Object distance":
+  "Distancia al objeto",
 "the rays meet in front of the sensor":
   "los rayos se juntan delante del sensor",
 "the rays never meet: the object is inside f":

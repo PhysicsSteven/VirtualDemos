@@ -1,7 +1,5 @@
 /* demo/states-of-matter in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/states-of-matter', {
-"Describe the picture":
-  "Describir la imagen",
 "{#} argon atoms · a slice {#} nm thick in front, the rest faint · the sample repeats sideways":
   "{#} átomos de argón · una rebanada de {#} nm de grosor al frente, el resto tenue · la muestra se repite hacia los lados",
 "heater in the floor · heating · piston at {#} atm":
@@ -30,14 +28,6 @@ VDI18N.add('es', 'demo/states-of-matter', {
   "Calienta un cristal de átomos de argón y observa los enlaces entre ellos. Mientras se funde o hierve, la temperatura deja de subir: el calor se usa para separar los átomos.",
 "T in K · heat in kJ/mol · time in ns":
   "T en K · calor en kJ/mol · tiempo en ns",
-"Time controls":
-  "Controles de tiempo",
-"Run for a moment and pause again":
-  "Avanza un momento y vuelve a pausar",
-"Step":
-  "Paso",
-"<span>Speed</span>":
-  "<span>Rapidez</span>",
 "Atoms":
   "Átomos",
 "Beaker":
@@ -138,8 +128,6 @@ VDI18N.add('es', 'demo/states-of-matter', {
   "El calentador agrega calor a {#} kJ por mol por nanosegundo.",
 "Held at the start.":
   "Detenido al inicio.",
-"Temperature {#} K.":
-  "Temperatura {#} K.",
 "Heat added {#} kJ per mole.":
   "Calor agregado {#} kJ por mol.",
 "The atoms are {#} percent solid, {#} percent liquid and {#} percent vapor.":
@@ -150,10 +138,6 @@ VDI18N.add('es', 'demo/states-of-matter', {
   "Energía cinética {#} kJ por mol.",
 "Bond energy −{#} kJ per mole.":
   "Energía de enlace −{#} kJ por mol.",
-"Skip to the picture":
-  "Ir a la imagen",
-"Skip to the controls":
-  "Ir a los controles",
 "balance (tared)":
   "balanza (tarada)",
 "open: the vapor escapes":
@@ -184,6 +168,18 @@ VDI18N.add('es', 'demo/states-of-matter', {
   "Potencia del calentador P",
 "Covered beaker":
   "Vaso tapado",
+"A beaker with {#} g of water on a hot plate, standing on a balance.":
+  "Un vaso con {#} g de agua sobre una parrilla, apoyado en una balanza.",
+"The hot plate gives {#} W.":
+  "La parrilla da {#} W.",
+"Temperature −{#} °C.":
+  "Temperatura −{#} °C.",
+"The balance reads {#} g.":
+  "La balanza marca {#} g.",
+"Heat supplied {#} kJ.":
+  "Calor suministrado {#} kJ.",
+"The ice is warming.":
+  "El hielo se está calentando.",
 "<span><i></i>solid</span><span><i></i>liquid</span><span><i></i>vapor</span>":
   "<span><i></i>sólido</span><span><i></i>líquido</span><span><i></i>vapor</span>",
 "Ethanol, {#} g each · {#} W hot plates · room at {#} atm":
@@ -202,36 +198,26 @@ VDI18N.add('es', 'demo/states-of-matter', {
   "calentador en el piso · enfriando · pistón a {#} atm",
 "Argon vapor at {#} K under {#} atm, with the floor cooling it. The vapor condenses into a liquid on the cold floor, giving out its latent heat while the temperature holds still. A small liquid sample can cool well below its freezing point before a crystal forms (supercooling), so watch the phase shares.":
   "Vapor de argón a {#} K bajo {#} atm, con el piso enfriándolo. El vapor se condensa en un líquido sobre el piso frío, liberando su calor latente mientras la temperatura se queda quieta. Una muestra líquida pequeña puede enfriarse muy por debajo de su punto de congelación antes de que se forme un cristal (subenfriamiento), así que observa las proporciones de las fases.",
-"The floor removes heat at {#} kJ per mole per nanosecond.":
-  "El piso quita calor a {#} kJ por mol por nanosegundo.",
 "{#} g of ice at −{#} °C in an open beaker on a {#} W hot plate, all standing on a balance (tared, so it reads the sample only). Record the temperature and the balance reading as the ice warms, melts, the water warms, and then boils away.":
   "{#} g de hielo a −{#} °C en un vaso abierto sobre una parrilla de {#} W, todo sobre una balanza (tarada, así que solo lee la muestra). Registra la temperatura y la lectura de la balanza mientras el hielo se calienta, se funde, el agua se calienta, y luego se evapora al hervir.",
 "{#} g of ethanol at {#} °C on the same hot plate. It boils at {#} °C, and its latent heat of vaporization is {#} kJ/kg, less than half of water's {#} kJ/kg, so it boils away much sooner.":
   "{#} g de etanol a {#} °C sobre la misma parrilla. Hierve a {#} °C, y su calor latente de vaporización es {#} kJ/kg, menos de la mitad de los {#} kJ/kg del agua, así que se evapora mucho antes.",
-"Row {#} captured.":
-  "Fila {#} capturada.",
 "A beaker with {#} g of ethanol on a hot plate, standing on a balance.":
   "Un vaso con {#} g de etanol sobre una parrilla, colocado sobre una balanza.",
-"The hot plate gives {#} W.":
-  "La parrilla da {#} W.",
 "Temperature {#} °C.":
   "Temperatura {#} °C.",
-"The balance reads {#} g.":
-  "La balanza marca {#} g.",
-"Heat supplied {#} kJ.":
-  "Calor suministrado {#} kJ.",
-"Time {#} s.":
-  "Tiempo {#} s.",
 "The liquid is warming.":
   "El líquido se calienta.",
+"Row {#} captured.":
+  "Fila {#} capturada.",
 "open":
   "abierto",
 "covered":
   "tapado",
 "Where the heat went":
   "Adónde fue el calor",
-"Running.":
-  "En marcha.",
+"The floor removes heat at {#} kJ per mole per nanosecond.":
+  "El piso quita calor a {#} kJ por mol por nanosegundo.",
 "liquid warms":
   "el líquido se calienta",
 "boiling at {#} °C":
@@ -248,6 +234,26 @@ VDI18N.add('es', 'demo/states-of-matter', {
   "sombreado: altura comprimida sobre la línea discontinua · pistón {n} nm arriba",
 "slow motion: 1 s here = {n} ns":
   "cámara lenta: 1 s aquí = {n} ns",
+"Describe the picture":
+  "Describir la imagen",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
+"<span>Speed</span>":
+  "<span>Rapidez</span>",
+"Temperature {#} K.":
+  "Temperatura {#} K.",
+"Skip to the picture":
+  "Ir a la imagen",
+"Skip to the controls":
+  "Ir a los controles",
+"Time {#} s.":
+  "Tiempo {#} s.",
+"Running.":
+  "En marcha.",
 "<a><span>←</span> <span>Temperature and Heat</span></a><a><span>Blackbody Radiation</span> <span>→</span></a>":
   "<a><span>←</span> <span>Temperatura y calor</span></a><a><span>Radiación de cuerpo negro</span> <span>→</span></a>",
 "Close":

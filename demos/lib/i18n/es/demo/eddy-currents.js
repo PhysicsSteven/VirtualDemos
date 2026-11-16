@@ -6,8 +6,6 @@ VDI18N.add('es', 'demo/eddy-currents', {
   "rapidez (m/s)",
 "plastic pipe: free fall, off the top of the scale":
   "tubo de plástico: caída libre, fuera de la escala por arriba",
-"Describe the picture":
-  "Describir la imagen",
 "Eddy Currents: Magnet in a Pipe":
   "Corrientes de Foucault: imán en un tubo",
 "<a>Induction and inductance</a>":
@@ -38,8 +36,6 @@ VDI18N.add('es', 'demo/eddy-currents', {
   "Los imanes están sujetos arriba.",
 "Clock {#} s.":
   "Reloj {#} s.",
-"Time controls":
-  "Controles de tiempo",
 "Drop all three":
   "Soltar los tres",
 "<small>real time</small>":
@@ -90,14 +86,20 @@ VDI18N.add('es', 'demo/eddy-currents', {
   "Anillos: la corriente en la pared, más brillante donde es mayor, con puntos que giran en su sentido.",
 "Pipe":
   "Tubo",
+"Drop the magnets and let them reach the bottom of the metal pipes first: each pipe's timer stops when its magnet does.":
+  "Suelta los imanes y deja que lleguen primero al fondo de los tubos metálicos: el cronómetro de cada tubo se detiene cuando se detiene su imán.",
+"The magnets are falling.":
+  "Los imanes están cayendo.",
+"Aluminum →":
+  "Aluminio →",
+"Describe the picture":
+  "Describir la imagen",
+"Time controls":
+  "Controles de tiempo",
 "Skip to the picture":
   "Ir a la imagen",
 "Skip to the controls":
   "Ir a los controles",
-"Drop the magnets and let them reach the bottom of the metal pipes first: each pipe's timer stops when its magnet does.":
-  "Suelta los imanes y deja que lleguen primero al fondo de los tubos metálicos: el cronómetro de cada tubo se detiene cuando se detiene su imán.",
-"Aluminum →":
-  "Aluminio →",
 "Close":
   "Cerrar",
 "Copper →":

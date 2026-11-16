@@ -14,34 +14,20 @@ VDI18N.add('es', 'demo/energy-track', {
   "Térmica",
 "Total":
   "Total",
-"Describe the picture":
-  "Describir la imagen",
 "Kinetic":
   "Cinética",
 "Potential":
   "Potencial",
 "Energy (J)":
   "Energía (J)",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
 "Energy on a Track":
   "Energía en una pista",
 "<a><span>←</span> <span>Granular Flow: Sorting and Landslides</span></a><a><span>Rotating Frames</span> <span>→</span></a>":
   "<a><span>←</span> <span>Flujo granular: segregación y deslizamientos</span></a><a><span>Marcos de referencia en rotación</span> <span>→</span></a>",
 "Shape a track, let a skater go, and watch kinetic, potential and thermal energy trade places while the total stays fixed. Add friction, loops and jumps; see where the skater leaves the track.":
   "Dale forma a una pista, suelta a un patinador y observa cómo la energía cinética, la potencial y la térmica intercambian lugares mientras el total se mantiene fijo. Agrega fricción, rizos y saltos; observa dónde se sale el patinador de la pista.",
-"Time controls":
-  "Controles de tiempo",
-"Run for a moment and pause again":
-  "Avanza un momento y vuelve a pausar",
-"Step":
-  "Paso",
 "Return skater":
   "Regresar al patinador",
-"<span>Speed</span>":
-  "<span>Rapidez</span>",
 "The skate park: a track with round grips at its points, the skater, the ground and two walls {#} m apart. Drag the skater anywhere and let go; drag a grip to reshape the track; drag a new point from the tray onto the track, or a grip onto the bin to remove it; drag the U = {#} tab on the left to move the zero of potential energy. Space plays or pauses.":
   "El parque de patinaje: una pista con agarraderas redondas en sus puntos, el patinador, el suelo y dos paredes separadas {#} m. Arrastra al patinador a cualquier lugar y suéltalo; arrastra una agarradera para cambiar la forma de la pista; arrastra un punto nuevo desde la bandeja a la pista, o una agarradera al bote de basura para quitarla; arrastra la pestaña U = {#} de la izquierda para mover el cero de la energía potencial. Espacio inicia o pausa.",
 "A skate park {#} m wide with a track through {#} points, {#} m long, and a skater of mass {#} kg.":
@@ -134,10 +120,10 @@ VDI18N.add('es', 'demo/energy-track', {
   "E<sub>th</sub> crece en μN Δs mientras se desliza",
 "Model: the skater is a point mass that slides (no rolling, no air drag). The track is a smooth curve through its points (a natural cubic spline). On the track the motion is found in steps of {#} ms (fourth order Runge–Kutta) and the speed is then set from the energy balance, so K + U + E<sub>th</sub> equals the starting total at every step. Kinetic friction is μN against the motion; at rest the same μ holds the skater on a slope where tanθ ≤ μ. The track pushes but cannot pull: where it would have to pull (N &lt; {#}) the skater leaves it, unless Stick to the track is on. In the air the path is the exact parabola. Landing on the track keeps the speed along the track and turns the speed across it into thermal energy (a perfectly inelastic bump); landing on the ground does the same with the downward speed, and the walls stop the skater. g: Earth {#} m/s², and the Moon {#}, Mars {#} and Jupiter {#} m/s² from the NASA Planetary Fact Sheet.":
   "Modelo: el patinador es una masa puntual que se desliza (sin rodar, sin arrastre del aire). La pista es una curva suave que pasa por sus puntos (un spline cúbico natural). Sobre la pista, el movimiento se calcula en pasos de {#} ms (Runge–Kutta de cuarto orden) y luego la rapidez se fija a partir del balance de energía, así que K + U + E<sub>th</sub> es igual al total inicial en cada paso. La fricción cinética es μN en contra del movimiento; en reposo, la misma μ sostiene al patinador en una pendiente donde tanθ ≤ μ. La pista empuja pero no puede jalar: donde tendría que jalar (N &lt; {#}) el patinador se sale, a menos que Pegado a la pista esté activado. En el aire la trayectoria es la parábola exacta. Al caer sobre la pista se conserva la rapidez a lo largo de la pista y la rapidez perpendicular a ella se convierte en energía térmica (un golpe perfectamente inelástico); al caer al suelo pasa lo mismo con la rapidez hacia abajo, y las paredes detienen al patinador. g: Tierra {#} m/s², y Luna {#}, Marte {#} y Júpiter {#} m/s² según la NASA Planetary Fact Sheet.",
-"Energy bars, in J: Kinetic {#}, Potential {#}, Thermal {#}, Total {#}.":
-  "Barras de energía, en J: Cinética {#}, Potencial {#}, Térmica {#}, Total {#}.",
 "The same valley with μ = {#}. Each swing turns some energy into thermal energy (μN on every meter slid), so the turning points come lower each time and the skater settles near the bottom. The total bar does not change.":
   "El mismo valle con μ = {#}. Cada oscilación convierte algo de energía en energía térmica (μN por cada metro deslizado), así que los puntos de retorno quedan más bajos cada vez y el patinador se asienta cerca del fondo. La barra del total no cambia.",
+"Energy bars, in J: Kinetic {#}, Potential {#}, Thermal {#}, Total {#}.":
+  "Barras de energía, en J: Cinética {#}, Potencial {#}, Térmica {#}, Total {#}.",
 "Two wells with a hill between, its top {#} m up. Started at {#} m the skater crosses the hill and back; drag it lower than the hilltop and it stays in one well. The hill only lets through a skater whose total energy is above U at the top.":
   "Dos pozos con una colina entre ellos, cuya cima está a {#} m de altura. Si empieza a {#} m, el patinador cruza la colina y regresa; arrástralo más abajo de la cima y se queda en un pozo. La colina solo deja pasar a un patinador cuya energía total sea mayor que U en la cima.",
 "A loop the loop. At the top of the loop the track can only push down, so the skater needs v² ≥ gR there (R the radius of the track at the top). Started from this height it makes it round, back up the far ramp, and through the loop again backwards.":
@@ -154,12 +140,12 @@ VDI18N.add('es', 'demo/energy-track', {
   "El valle en la Luna, g = {#} m/s². El patinador da la vuelta a las mismas alturas que en la Tierra (las alturas dependen solo de la energía por unidad de peso), pero todo ocurre √({#}/{#}) = {#} veces más lento.",
 "A plain track to start from. Drag the grips to reshape it, drag points from the tray onto it to add bends ({#} points at most), and drag a grip onto the bin to take it away.":
   "Una pista sencilla para empezar. Arrastra las agarraderas para cambiar su forma, arrastra puntos desde la bandeja para agregar curvas ({#} puntos como máximo), y arrastra una agarradera al bote de basura para quitarla.",
-"Running.":
-  "En marcha.",
 "It shows the last {#} s, up to t = {#} s.":
   "Muestra los últimos {#} s, hasta t = {#} s.",
-"Paused.":
-  "En pausa.",
+"Friction μ = {#}.":
+  "Fricción μ = {#}.",
+"The skater is held on the track, like a roller coaster car on rails.":
+  "El patinador está sujeto a la pista, como un carrito de montaña rusa sobre rieles.",
 "Left the track: the track would have had to pull (N < 0).":
   "Se salió de la pista: la pista habría tenido que jalar (N < 0).",
 "Off the end of the track.":
@@ -172,6 +158,24 @@ VDI18N.add('es', 'demo/energy-track', {
   "Lo detuvo la pared.",
 "At rest: friction holds the skater here.":
   "En reposo: la fricción sostiene aquí al patinador.",
+"Describe the picture":
+  "Describir la imagen",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
+"<span>Speed</span>":
+  "<span>Rapidez</span>",
+"Running.":
+  "En marcha.",
+"Paused.":
+  "En pausa.",
 "Close":
   "Cerrar"
 });

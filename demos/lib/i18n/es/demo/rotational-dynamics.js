@@ -4,10 +4,12 @@ VDI18N.add('es', 'demo/rotational-dynamics', {
   "caída de {#} m",
 "timer: {#} s":
   "cronómetro: {#} s",
-"Describe the picture":
-  "Describir la imagen",
 "Rotational Dynamics":
   "Dinámica de rotación",
+"<a>Rotation and angular momentum</a>":
+  "<a>Rotación y momento angular</a>",
+"<a><span>←</span> <span>Rotation and Torque</span></a><a><span>Pendulums</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Rotación y torca</span></a><a><span>Péndulos</span> <span>→</span></a>",
 "A hanging mass unwinds a string from a spool and spins a turntable. The string's torque gives the table an angular acceleration α = τ/I. Time the fall, work out α, and measure the moment of inertia of what you put on the table.":
   "Una masa colgante desenrolla una cuerda de un carrete y hace girar una plataforma giratoria. La torca de la cuerda le da a la plataforma una aceleración angular α = τ/I. Mide el tiempo de la caída, calcula α y mide el momento de inercia de lo que pongas sobre la plataforma.",
 "drop {#} m · g = {#} m/s²":
@@ -38,8 +40,6 @@ VDI18N.add('es', 'demo/rotational-dynamics', {
   "La rapidez angular de la plataforma giratoria es de {#} rad/s.",
 "No drops are recorded.":
   "No hay caídas registradas.",
-"Time controls":
-  "Controles de tiempo",
 "Wind it back up":
   "Volver a enrollar",
 "Hanging mass m: click a slotted mass to hang it. Drag, or use the arrow keys, to move this card; double click to put it back":
@@ -126,10 +126,6 @@ VDI18N.add('es', 'demo/rotational-dynamics', {
   "A ciegas oculta los momentos de inercia, el movimiento predicho, las energías y la I del ajuste, y deja el cronómetro, las masas y los ajustes. El objeto misterioso siempre oculta su I.",
 "Model: a rigid turntable on its axle, a massless string that does not slip on the spool, a massless frictionless pulley, and, when switched on, a constant friction torque at the bearing. Turntable I₀ = {#} × {#}⁻³ kg·m². Disk {#} kg, radius {#} cm; ring {#} kg, radii {#} and {#} cm; two {#} kg masses (small cylinders, {#} cm radius).":
   "Modelo: una plataforma giratoria rígida en su eje, una cuerda sin masa que no se desliza en el carrete, una polea sin masa ni fricción y, al activarla, una torca de fricción constante en el cojinete. Plataforma I₀ = {#} × {#}⁻³ kg·m². Disco de {#} kg, radio {#} cm; anillo de {#} kg, radios {#} y {#} cm; dos masas de {#} kg (cilindros pequeños, radio {#} cm).",
-"<a>Rotation and angular momentum</a>":
-  "<a>Rotación y momento angular</a>",
-"<a><span>←</span> <span>Rotation and Torque</span></a><a><span>Pendulums</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Rotación y torca</span></a><a><span>Péndulos</span> <span>→</span></a>",
 "TIMER":
   "CRONÓMETRO",
 "start gate to stop gate":
@@ -144,12 +140,6 @@ VDI18N.add('es', 'demo/rotational-dynamics', {
   "compuerta de parada",
 "spool r = {#} cm":
   "carrete r = {#} cm",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
-"The mass is falling.":
-  "La masa está cayendo.",
 "A solid disk, {#} kg and {#} cm in radius: I = ½MR².":
   "Un disco sólido de {#} kg y {#} cm de radio: I = ½MR².",
 "Record at least two drops (different m or r) with this load: disk.":
@@ -158,10 +148,16 @@ VDI18N.add('es', 'demo/rotational-dynamics', {
   "Un anillo con la misma masa y el mismo radio exterior que el disco, pero con su masa lejos del eje: I = ½M(R₁² + R₂²), casi el doble que el disco.",
 "Record at least two drops (different m or r) with this load: ring.":
   "Registra al menos dos caídas (con m o r distintos) con esta carga: anillo.",
+"A ring of {#} kg, with outer radius {#} cm, sits on the turntable.":
+  "Un anillo de {#} kg, con radio exterior de {#} cm, está sobre la plataforma giratoria.",
+"The moment of inertia of the table and load is {#} × {#}⁻² kg·m².":
+  "El momento de inercia de la plataforma y la carga es {#} × {#}⁻² kg·m².",
 "Two {#} kg masses at equal distances from the axis: I grows as d². Slide them out and time the drop again.":
   "Dos masas de {#} kg a distancias iguales del eje: I crece como d². Deslízalas hacia afuera y vuelve a medir el tiempo de la caída.",
 "Record at least two drops (different m or r) with this load: pair at {#} cm.":
   "Registra al menos dos caídas (con m o r distintos) con esta carga: par a {#} cm.",
+"Two masses of {#} g sit on the turntable, each {#} cm from the axis.":
+  "Dos masas de {#} g están sobre la plataforma giratoria, cada una a {#} cm del eje.",
 "An unknown object. Measure the table with and without it and subtract.":
   "Un objeto desconocido. Mide la plataforma con él y sin él, y resta.",
 "I, accelerations, tension and energy":
@@ -170,20 +166,32 @@ VDI18N.add('es', 'demo/rotational-dynamics', {
   "ocultos: calcúlalos a partir de tus tiempos",
 "Record at least two drops (different m or r) with this load: mystery.":
   "Registra al menos dos caídas (con m o r distintos) con esta carga: misterio.",
-"Release and let the mass fall the full {#} m first.":
-  "Suelta primero y deja que la masa caiga los {#} m completos.",
 "A mystery object sits on the turntable.":
   "Un objeto misterioso está sobre la plataforma giratoria.",
 "The load is a mystery: the moment of inertia, the accelerations, the tension and the energy are hidden.":
   "La carga es un misterio: el momento de inercia, las aceleraciones, la tensión y la energía están ocultos.",
+"Release and let the mass fall the full {#} m first.":
+  "Suelta primero y deja que la masa caiga los {#} m completos.",
 "Hang another {#} g mass or take off the last mass":
   "Cuelga otra masa de {#} g o quita la última masa",
 "hanger {#} g + {#} g + {#} g = {#} g":
   "portapesas {#} g + {#} g + {#} g = {#} g",
 "hanger {#} g = {#} g":
   "portapesas {#} g = {#} g",
+"The mass is falling.":
+  "La masa está cayendo.",
 "hidden for the Mystery object":
   "oculto para el objeto misterioso",
+"A solid disk of {#} kg and radius {#} cm sits on the turntable.":
+  "Un disco sólido de {#} kg y radio de {#} cm está sobre la plataforma giratoria.",
+"Describe the picture":
+  "Describir la imagen",
+"Time controls":
+  "Controles de tiempo",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "Close":
   "Cerrar"
 });

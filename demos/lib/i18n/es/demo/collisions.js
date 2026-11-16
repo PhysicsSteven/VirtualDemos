@@ -46,8 +46,6 @@ VDI18N.add('es', 'demo/collisions', {
   "Coeficiente de restitución e = {#}.",
 "Seen from the lab frame.":
   "Visto desde el marco del laboratorio.",
-"Running.":
-  "En marcha.",
 "The carts collide at t = {#} s.":
   "Los carritos chocan en t = {#} s.",
 "After the collision, cart {#} moves at {#} m/s.":
@@ -58,16 +56,8 @@ VDI18N.add('es', 'demo/collisions', {
   "Energía cinética: {#} J antes y {#} J después.",
 "Photogate A is at x = −{#} m and photogate B at x = {#} m.":
   "La fotocompuerta A está en x = −{#} m y la fotocompuerta B en x = {#} m.",
-"Time {#} s.":
-  "Tiempo {#} s.",
 "Describe the collision scene":
   "Describir la escena de la colisión",
-"Time controls":
-  "Controles de tiempo",
-"Run for a moment and pause again":
-  "Avanza un momento y vuelve a pausar",
-"Step":
-  "Paso",
 "Replay":
   "Repetir",
 "<span>Playback rate</span>":
@@ -272,10 +262,6 @@ VDI18N.add('es', 'demo/collisions', {
   "Compuerta B",
 "Air track, gliders, flags and gate positions to scale; the rule is in cm; arrows {#} m per m/s. Drag to turn, scroll to zoom, double click to go back; drag a grip to change a value.":
   "Riel de aire, deslizadores, banderas y posiciones de las compuertas a escala; la regla está en cm; flechas {#} m por m/s. Arrastra para girar, desplaza para hacer zoom, doble clic para volver; arrastra un control para cambiar un valor.",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
 "<span>A</span><span>cart {#} →</span><span>{#} ms</span><span>{#} m/s</span>":
   "<span>A</span><span>carrito {#} →</span><span>{#} ms</span><span>{#} m/s</span>",
 "p before (kg·m/s)":
@@ -426,6 +412,24 @@ VDI18N.add('es', 'demo/collisions', {
   "Modelo: un riel de aire sin fricción de −{#} m a {#} m con un tope en cada extremo; los carritos son rígidos y chocan en un instante. Dos carritos que se encuentran conservan su momento total y se separan con v₂′ − v₁′ = −e(v₂ − v₁), con el mismo e para cada amortiguador; un carrito con velcro se pega al carrito que encuentra (e = {#}), y entonces los dos se mueven como uno. En un tope v′ = −e v. Los tiempos de contacto se calculan de forma exacta (los carritos se mueven a velocidad constante entre colisiones); cuando varios carritos se tocan a la vez, las colisiones se toman un par a la vez, y a los carritos que se siguen acercando a menos de {#} µm/s se les da su velocidad común.",
 "<span><i></i>Cart {#}</span> <span><i></i>Cart {#}</span> <span><i></i>Center of mass, or the total</span> <span><i></i>Bar outline: before <i></i>Filled: after</span>":
   "<span><i></i>Carrito {#}</span> <span><i></i>Carrito {#}</span> <span><i></i>Centro de masa, o el total</span> <span><i></i>Contorno de la barra: antes <i></i>Rellena: después</span>",
+"A row of {#} carts on an air track with an end stop at each end.":
+  "Una fila de {#} carritos sobre un riel de aire con un tope en cada extremo.",
+"Bumpers e = {#}.":
+  "Amortiguadores e = {#}.",
+"Collisions so far: {#}.":
+  "Colisiones hasta ahora: {#}.",
+"Cart {#}, {#} kg, at x = −{#} m.":
+  "Carrito {#}, {#} kg, en x = −{#} m.",
+"Cart {#}, {#} kg, at x = {#} m.":
+  "Carrito {#}, {#} kg, en x = {#} m.",
+"Total momentum {#} kg·m/s now and {#} kg·m/s at the start.":
+  "Momento total: {#} kg·m/s ahora y {#} kg·m/s al inicio.",
+"Kinetic energy {#} J now and {#} J at the start.":
+  "Energía cinética: {#} J ahora y {#} J al inicio.",
+"Bars of momentum and kinetic energy now, against the start.":
+  "Barras de momento y energía cinética ahora, comparadas con el inicio.",
+"Graph of the position of each cart against time, over the last {#} s, with the two end stops.":
+  "Gráfica de la posición de cada carrito contra el tiempo, durante los últimos {#} s, con los dos topes de los extremos.",
 "side view, to scale (bullet drawn larger)":
   "vista lateral, a escala (bala dibujada más grande)",
 "bullet":
@@ -480,6 +484,24 @@ VDI18N.add('es', 'demo/collisions', {
   "Con e = {#} los carritos se pegan y se alejan juntos a la velocidad del centro de masa. El momento total no cambia, pero se pierde la mitad de la energía cinética: ΔK = ½μv_rel², toda la energía del movimiento relativo al centro de masa.",
 "A heavy cart hits a light one at rest. The heavy cart barely slows; the light one leaves at almost twice the incoming speed ({#} times here), v₂′ = 2m₁v₁/(m₁ + m₂). Swap the masses and the light cart bounces back instead.":
   "Un carrito pesado choca con uno ligero en reposo. El carrito pesado apenas se frena; el ligero sale con casi el doble de la rapidez de llegada ({#} veces aquí), v₂′ = 2m₁v₁/(m₁ + m₂). Intercambia las masas y el carrito ligero rebota hacia atrás en su lugar.",
+"Two carts on an air track, pushed apart by a spring. Positive velocity is to the right.":
+  "Dos carritos sobre un riel de aire, separados por un resorte. La velocidad positiva es hacia la derecha.",
+"Cart {#} is {#} kg and cart {#} is {#} kg.":
+  "El carrito {#} es de {#} kg y el carrito {#} es de {#} kg.",
+"Stored spring energy {#} J.":
+  "Energía almacenada en el resorte: {#} J.",
+"The pair starts at rest.":
+  "La pareja empieza en reposo.",
+"A thread holds the spring compressed.":
+  "Un hilo mantiene el resorte comprimido.",
+"Cart {#} moves at −{#} m/s.":
+  "El carrito {#} se mueve a −{#} m/s.",
+"Cart {#} moves at {#} m/s.":
+  "El carrito {#} se mueve a {#} m/s.",
+"Total momentum {#} kg·m/s.":
+  "Momento total: {#} kg·m/s.",
+"Kinetic energy gains {#} J.":
+  "La energía cinética aumenta {#} J.",
 "A school lab version: a {#} g ball fired at {#} m/s into a {#} g catcher on {#} cm rods. The catch keeps m/(m + M) = {#}/{#} = {#}% of the kinetic energy, V = {#} m/s and the catcher rises {#} cm, swinging out {#}°. Shown at ¼ speed.":
   "Una versión de laboratorio escolar: una pelota de {#} g disparada a {#} m/s hacia un receptor de {#} g en varillas de {#} cm. La captura conserva m/(m + M) = {#}/{#} = {#}% de la energía cinética, V = {#} m/s y el receptor sube {#} cm, oscilando {#}°. Se muestra a ¼ de velocidad.",
 "over the top":
@@ -496,8 +518,6 @@ VDI18N.add('es', 'demo/collisions', {
   "Un carrito pesado empuja uno ligero contra el tope. El carrito ligero rebota de un lado a otro muchas veces, y cada rebote quita un poco del momento del carrito pesado, hasta que el pesado se regresa. Cuenta las colisiones.",
 "Every cart has velcro, so each collision is perfectly inelastic: the carts stick and the train slows from {#} to {#}/{#} to {#}/{#} m/s. Momentum stays, but each joining loses kinetic energy (the bars show where).":
   "Cada carrito tiene velcro, así que cada colisión es perfectamente inelástica: los carritos se pegan y el tren se frena de {#} a {#}/{#} a {#}/{#} m/s. El momento se conserva, pero cada unión pierde energía cinética (las barras muestran dónde).",
-"One cart between the end stops with e = {#}: each bounce keeps {#}% of the speed and {#}% of the kinetic energy. Drag the e grip to compare.":
-  "Un carrito entre los topes con e = {#}: cada rebote conserva el {#}% de la rapidez y el {#}% de la energía cinética. Arrastra el control e para comparar.",
 "A bullet fires into a block that hangs from two rods.":
   "Una bala se dispara contra un bloque que cuelga de dos varillas.",
 "Bullet mass {#} g.":
@@ -516,10 +536,10 @@ VDI18N.add('es', 'demo/collisions', {
   "El bloque pasa por encima del punto más alto.",
 "Kinetic energy {#} J before and {#} J just after.":
   "Energía cinética: {#} J antes y {#} J justo después.",
-"Bars of momentum and kinetic energy now, against the start.":
-  "Barras de momento y energía cinética ahora, comparadas con el inicio.",
 "Graph of the block swinging, with the highest point marked.":
   "Gráfica del bloque al balancearse, con el punto más alto marcado.",
+"One cart between the end stops with e = {#}: each bounce keeps {#}% of the speed and {#}% of the kinetic energy. Drag the e grip to compare.":
+  "Un carrito entre los topes con e = {#}: cada rebote conserva el {#}% de la rapidez y el {#}% de la energía cinética. Arrastra el control e para comparar.",
 "Drag carts from the tray onto the track, drag the round grip on each arrow to set its velocity, and press Play.":
   "Arrastra carritos de la bandeja al riel, arrastra el control redondo de cada flecha para fijar su velocidad y pulsa Iniciar.",
 "Bumper A fitted.":
@@ -548,8 +568,6 @@ VDI18N.add('es', 'demo/collisions', {
   "x = ½μ(u₁ − u₂)² con μ = m₁m₂/(m₁ + m₂), la energía cinética del movimiento relativo al centro de masa; y = la energía cinética perdida. Para filas con un solo amortiguador, la pendiente es {#} − e². El ajuste es una recta por mínimos cuadrados y = a + bx con pesos iguales, solo con tus filas capturadas; las filas con una celda vacía se omiten. Los errores estándar provienen de la dispersión de las filas alrededor de la recta, que aquí es solo el redondeo del cronómetro y de la pantalla.",
 "Plot of kinetic energy lost against ½μ(u₁ − u₂)², x: ½μ(u₁ − u₂)² (J), y: K before − K after (J), for {#} captured rows; the residuals are in a strip below. Show data table lists the points.":
   "Gráfica de la energía cinética perdida en función de ½μ(u₁ − u₂)², x: ½μ(u₁ − u₂)² (J), y: K antes − K después (J), para {#} filas capturadas; los residuos están en una franja debajo. Mostrar la tabla de datos lista los puntos.",
-"Paused.":
-  "En pausa.",
 "Pick body {#} or body {#} (1D track, 2D table, and other setups with two bodies)":
   "Elige el cuerpo {#} o el cuerpo {#} (pista 1D, mesa 2D y otras configuraciones con dos cuerpos)",
 "The bullet is in the block.":
@@ -558,24 +576,6 @@ VDI18N.add('es', 'demo/collisions', {
   "Riel, deslizadores, banderas y compuertas a escala; regla en cm. Arrastra para girar; arrastra un control para cambiar un valor.",
 "Table and pucks to scale; dashed: the paths. Drag to turn; drag a grip to change a value.":
   "Mesa y discos a escala; discontinuas: las trayectorias. Arrastra para girar; arrastra un control para cambiar un valor.",
-"Two carts on an air track, pushed apart by a spring. Positive velocity is to the right.":
-  "Dos carritos sobre un riel de aire, separados por un resorte. La velocidad positiva es hacia la derecha.",
-"Cart {#} is {#} kg and cart {#} is {#} kg.":
-  "El carrito {#} es de {#} kg y el carrito {#} es de {#} kg.",
-"Stored spring energy {#} J.":
-  "Energía almacenada en el resorte: {#} J.",
-"The pair starts at rest.":
-  "La pareja empieza en reposo.",
-"A thread holds the spring compressed.":
-  "Un hilo mantiene el resorte comprimido.",
-"Cart {#} moves at −{#} m/s.":
-  "El carrito {#} se mueve a −{#} m/s.",
-"Cart {#} moves at {#} m/s.":
-  "El carrito {#} se mueve a {#} m/s.",
-"Total momentum {#} kg·m/s.":
-  "Momento total: {#} kg·m/s.",
-"Kinetic energy gains {#} J.":
-  "La energía cinética aumenta {#} J.",
 "To scale: {#} cm balls on {#} cm strings. Drag to turn; drag a grip to change a value.":
   "A escala: esferas de {#} cm en cuerdas de {#} cm. Arrastra para girar; arrastra un control para cambiar un valor.",
 "Newton's cradle with {#} balls.":
@@ -594,24 +594,14 @@ VDI18N.add('es', 'demo/collisions', {
   "Arrastra un carrito de la bandeja al riel.",
 "No carts yet.":
   "Aún no hay carritos.",
-"A row of {#} carts on an air track with an end stop at each end.":
-  "Una fila de {#} carritos sobre un riel de aire con un tope en cada extremo.",
-"Bumpers e = {#}.":
-  "Amortiguadores e = {#}.",
-"Collisions so far: {#}.":
-  "Colisiones hasta ahora: {#}.",
-"Total momentum {#} kg·m/s now and {#} kg·m/s at the start.":
-  "Momento total: {#} kg·m/s ahora y {#} kg·m/s al inicio.",
-"Kinetic energy {#} J now and {#} J at the start.":
-  "Energía cinética: {#} J ahora y {#} J al inicio.",
-"Graph of the position of each cart against time, over the last {#} s, with the two end stops.":
-  "Gráfica de la posición de cada carrito contra el tiempo, durante los últimos {#} s, con los dos topes de los extremos.",
 "Kinetic energy loses {#} J.":
   "La energía cinética pierde {#} J.",
 "The block rises {#} cm.":
   "El bloque sube {#} cm.",
 "Largest angle {#}°.":
   "Ángulo máximo: {#}°.",
+"<span>B</span><span>cart {#} →</span><span>{#} ms</span><span>{#} m/s</span>":
+  "<span>B</span><span>carrito {#} →</span><span>{#} ms</span><span>{#} m/s</span>",
 "Blind: read the velocities from the photogates":
   "A ciegas: lee las velocidades de las fotocompuertas",
 "after: hidden (Blind)":
@@ -628,8 +618,6 @@ VDI18N.add('es', 'demo/collisions', {
   "Las barras de después están ocultas mientras A ciegas está activado.",
 "It shows the run so far.":
   "Muestra la corrida hasta ahora.",
-"<span>B</span><span>cart {#} →</span><span>{#} ms</span><span>{#} m/s</span>":
-  "<span>B</span><span>carrito {#} →</span><span>{#} ms</span><span>{#} m/s</span>",
 "Air table and pucks to scale (holes {#} cm apart); dashed lines: the paths over the whole run; arrows {#} m per m/s. Drag to turn, scroll to zoom, double click to go back; drag a grip to change a value.":
   "Mesa de aire y discos a escala (agujeros a {#} cm de distancia); líneas punteadas: las trayectorias durante toda la corrida; flechas de {#} m por m/s. Arrastra para girar, desplaza para acercar, haz doble clic para volver; arrastra un control para cambiar un valor.",
 "Air table and pucks to scale (holes {#} cm apart); dashed lines: the paths so far; arrows {#} m per m/s. Drag to turn, scroll to zoom, double click to go back; drag a grip to change a value.":
@@ -640,16 +628,18 @@ VDI18N.add('es', 'demo/collisions', {
   "Oculto mientras A ciegas está activado. Mide a partir de las gráficas y del movimiento.",
 "The arrows after the collision are hidden while Blind is on.":
   "Las flechas después de la colisión están ocultas mientras A ciegas está activado.",
+"The thread is cut and the spring has pushed the carts apart.":
+  "El hilo está cortado y el resorte separó los carritos.",
 "Balls, strings and frame to scale: {#} cm balls on {#} cm strings, each hung from two strings so it swings in one plane. Drag to turn, scroll to zoom, double click to go back; drag a grip to change a value.":
   "Esferas, cuerdas y marco a escala: esferas de {#} cm en cuerdas de {#} cm, cada una colgada de dos cuerdas para que se balancee en un plano. Arrastra para girar, desplaza para acercar, haz doble clic para volver; arrastra un control para cambiar un valor.",
 "{#} in → {#} out":
   "{#} entran → {#} salen",
 "Last collision: {#} in, {#} out, at {#} m/s.":
   "Última colisión: {#} entran, {#} salen, a {#} m/s.",
-"Possible outcomes: hidden while Blind is on.":
-  "Resultados posibles: ocultos mientras A ciegas está activado.",
 "Total momentum now: −{#} kg·m/s":
   "Momento total ahora: −{#} kg·m/s",
+"Possible outcomes: hidden while Blind is on.":
+  "Resultados posibles: ocultos mientras A ciegas está activado.",
 "The possible outcomes are hidden while Blind is on.":
   "Los resultados posibles están ocultos mientras A ciegas está activado.",
 "bumpers: e hidden":
@@ -662,6 +652,22 @@ VDI18N.add('es', 'demo/collisions', {
   "La rapidez de la bala está oculta.",
 "The results are hidden while Blind is on. Read the rise from the scale beside the block.":
   "Los resultados están ocultos mientras A ciegas está activado. Lee el ascenso en la escala junto al bloque.",
+"Running.":
+  "En marcha.",
+"Time {#} s.":
+  "Tiempo {#} s.",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
+"Paused.":
+  "En pausa.",
 "Close":
   "Cerrar"
 });

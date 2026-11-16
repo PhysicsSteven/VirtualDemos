@@ -1,7 +1,5 @@
 /* demo/lagrange-points in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/lagrange-points', {
-"Describe the picture":
-  "Describir la imagen",
 "L4 · Greek camp":
   "L4 · campo griego",
 "L5 · Trojan camp":
@@ -16,12 +14,6 @@ VDI18N.add('es', 'demo/lagrange-points', {
   "Dos cuerpos giran alrededor de su centro de masa. En el marco que gira con ellos, la gravedad y el efecto centrífugo se equilibran en cinco puntos. Suelta una partícula de prueba y ve a dónde puede ir.",
 "lengths in a · time in P · μ = m₂/(m₁ + m₂) · G(m₁ + m₂) = {#}":
   "longitudes en a · tiempo en P · μ = m₂/(m₁ + m₂) · G(m₁ + m₂) = {#}",
-"Time controls":
-  "Controles de tiempo",
-"Run for a moment and pause again":
-  "Avanza un momento y vuelve a pausar",
-"Step":
-  "Paso",
 "Time speed":
   "Velocidad del tiempo",
 "{#} P per second = {#} yr":
@@ -38,10 +30,6 @@ VDI18N.add('es', 'demo/lagrange-points', {
   "Cerca de Júpiter",
 "Follow":
   "Seguir",
-"Zoom out":
-  "Alejar",
-"Zoom in":
-  "Acercar",
 "Dragging on the 3D picture":
   "Arrastrar sobre la imagen 3D",
 "<span>Drag</span>":
@@ -166,8 +154,6 @@ VDI18N.add('es', 'demo/lagrange-points', {
   "El problema restringido circular de tres cuerpos: dos masas en órbitas circulares alrededor de su centro de masa, y una partícula de prueba demasiado ligera para perturbarlas. El movimiento es solo en su plano orbital. Las naves reales en L1 y L2, como el JWST, siguen órbitas de halo tridimensionales; las órbitas de Lyapunov planas de aquí son sus parientes planas. Se dejan fuera los otros planetas, la atracción del Sol sobre la Luna, la excentricidad de las órbitas reales y la presión de radiación.",
 "The exact equations in the rotating frame, ẍ − {#}ẏ = ∂Ω/∂x and ÿ + {#}ẋ = ∂Ω/∂y, include the Coriolis ({#}ẏ, {#}ẋ) and centrifugal terms. They are integrated with an adaptive Dormand–Prince {#}({#}) method with local error {#}⁻¹² ({#}⁻¹⁰ for the swarm); the drift readout checks it. A particle that touches a body stops there, and one beyond {#} a stops too. The Sun centered view is the same motion transformed exactly, never integrated separately. The Sun–Earth system uses the Earth–Moon barycenter as m₂.":
   "Las ecuaciones exactas en el marco en rotación, ẍ − {#}ẏ = ∂Ω/∂x y ÿ + {#}ẋ = ∂Ω/∂y, incluyen los términos de Coriolis ({#}ẏ, {#}ẋ) y centrífugo. Se integran con un método adaptativo de Dormand–Prince {#}({#}) con error local {#}⁻¹² ({#}⁻¹⁰ para el enjambre); la lectura de la deriva lo comprueba. Una partícula que toca un cuerpo se detiene ahí, y una que pasa de {#} a también se detiene. La vista centrada en el Sol es el mismo movimiento transformado exactamente, nunca integrado por separado. El sistema Sol–Tierra usa el baricentro Tierra–Luna como m₂.",
-"t = {#} <small>P</small> · {#} yr · {#} <small>asteroids</small>":
-  "t = {#} <small>P</small> · {#} años · {#} <small>asteroides</small>",
 "{body} drawn {n} times its true size":
   "{body} se dibuja a {n} veces su tamaño real",
 "Height: −ln({#} + ({#}Ω − C_L4)/s), not to scale":
@@ -184,10 +170,8 @@ VDI18N.add('es', 'demo/lagrange-points', {
   "{point}, cima",
 "period (P)":
   "periodo (P)",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
+"t = {#} <small>P</small> · {#} yr · {#} <small>asteroids</small>":
+  "t = {#} <small>P</small> · {#} años · {#} <small>asteroides</small>",
 "The restricted three body problem in the rotating frame: Sun and Jupiter stay fixed while the five Lagrange points and the test particles are drawn around them.":
   "El problema restringido de tres cuerpos en el marco giratorio: el Sol y Júpiter permanecen fijos mientras se dibujan a su alrededor los cinco puntos de Lagrange y las partículas de prueba.",
 "The masses are Sun and Jupiter, with mass ratio μ = {#} × {#}⁻⁴.":
@@ -198,8 +182,6 @@ VDI18N.add('es', 'demo/lagrange-points', {
   "La vista muestra todo el sistema.",
 "The Jacobi constant of the zero velocity curve is C = {#}.":
   "La constante de Jacobi de la curva de velocidad cero es C = {#}.",
-"Running.":
-  "En marcha.",
 "No particle of your own yet. Click to add one.":
   "Todavía no tienes ninguna partícula propia. Haz clic para agregar una.",
 "A swarm of {#} asteroids is drawn.":
@@ -216,8 +198,6 @@ VDI18N.add('es', 'demo/lagrange-points', {
   "<b>Centrado en el Sol</b>: ejes fijos respecto a las estrellas, el Sol fijo en el centro, Júpiter en su círculo de radio a. Estrictamente el Sol gira alrededor del centro de masa a μa = {#} km, así que este marco acelera un poco y no es del todo inercial. Los caminos siguen siendo exactos: el mismo movimiento que en el marco en rotación, transformado punto por punto. Los puntos de Lagrange se mueven junto con Júpiter. A velocidades del tiempo altas Júpiter se dibuja como un trazo borroso a lo largo de su órbita en vez de saltar, y un enjambre conserva solo la última media órbita de sus estelas.",
 "Launch speed relative to Sun":
   "Rapidez de lanzamiento respecto al Sol",
-"The restricted three body problem in the Sun centered frame: Sun is held at the center and Jupiter circles it.":
-  "El problema restringido de tres cuerpos en el marco centrado en el Sol: el Sol se mantiene en el centro y Júpiter gira a su alrededor.",
 "drag to throw, click to drop":
   "arrastra para lanzar, haz clic para soltar",
 "The view is zoomed in near Jupiter.":
@@ -302,10 +282,6 @@ VDI18N.add('es', 'demo/lagrange-points', {
   "C está entre C(L2) y C(L1): el cuello en L1 está abierto pero L2 está cerrado. La partícula, soltada en reposo sobre su propia curva de velocidad cero, vaga entre la Tierra y la Luna, ida y vuelta, y nunca puede salir del límite sombreado.",
 "Two body estimate about Earth, ignoring Moon":
   "Estimación de dos cuerpos alrededor de la Tierra, ignorando la Luna",
-"{#} × {#}⁻¹⁴ <span>after {#} P = {#} d</span>":
-  "{#} × {#}⁻¹⁴ <span>después de {#} P = {#} d</span>",
-"{#} km from Moon, speed {#} km/s in the rotating frame":
-  "{#} km de la Luna, rapidez {#} km/s en el marco en rotación",
 "{d1} from {m1} and {d2} from {m2}, speed {v} relative to {m1}":
   "{d1} de {m1} y {d2} de {m2}, rapidez {v} respecto a {m1}",
 "Speed {#} km/s relative to Sun; here a circular orbit needs {#} km/s and escape needs {#} km/s.<br><span>Bound</span>: perihelion {#} AU, aphelion {#} AU, period {#} yr; Tisserand T = {#}.":
@@ -316,14 +292,20 @@ VDI18N.add('es', 'demo/lagrange-points', {
   "Centrado en el Sol. Un cometa empieza en una elipse de {#} UA a {#} UA, que cruza la órbita de Júpiter. Cada paso cercano de Júpiter cambia la forma de la órbita: observa en el panel cómo saltan el perihelio y el afelio mientras C se mantiene fija y la T de Tisserand se mantiene cerca de {#}. El cometa 67P, visitado por Rosetta, fue llevado a su órbita actual por un paso cercano de Júpiter en {#}.",
 "Two body estimate about Sun, ignoring Jupiter":
   "Estimación de dos cuerpos alrededor del Sol, ignorando Júpiter",
+"{#} × {#}⁻¹⁴ <span>after {#} P = {#} d</span>":
+  "{#} × {#}⁻¹⁴ <span>después de {#} P = {#} d</span>",
 "Forbidden horseshoe through L4, L3 and L5. The gaps at L1 and L2 are open, so a particle can still leave the Jupiter region.":
   "Herradura prohibida que pasa por L4, L3 y L5. Los pasos en L1 y L2 están abiertos, así que una partícula todavía puede salir de la región de Júpiter.",
 "{#} AU from Jupiter, speed {#} km/s in the rotating frame":
   "{#} UA de Júpiter, rapidez {#} km/s en el marco en rotación",
 "Start on a circular orbit {#}% outside Jupiter’s, opposite it. The particle drifts slowly backward, is turned around before it reaches Jupiter, drifts the other way past L3, and turns again: a horseshoe enclosing L3, L4 and L5. Saturn’s moons Janus and Epimetheus swap orbits like this every four years.":
   "Empieza en una órbita circular {#}% fuera de la de Júpiter, opuesta a él. La partícula se desplaza lentamente hacia atrás, da la vuelta antes de llegar a Júpiter, se desplaza en el otro sentido pasando L3 y vuelve a dar la vuelta: una herradura que encierra L3, L4 y L5. Las lunas de Saturno Jano y Epimeteo intercambian órbitas así cada cuatro años.",
-"{#} × {#}⁻¹⁶ <span>after {#} P = {#} d</span>":
-  "{#} × {#}⁻¹⁶ <span>después de {#} P = {#} d</span>",
+"You added one particle.":
+  "Agregaste una partícula.",
+"The newest particle has Jacobi constant C = {#}.":
+  "La partícula más reciente tiene constante de Jacobi C = {#}.",
+"It is {#} AU from Jupiter.":
+  "Está a {#} UA de Júpiter.",
 "after {#} P":
   "después de {#} P",
 "Near m₂":
@@ -388,8 +370,6 @@ VDI18N.add('es', 'demo/lagrange-points', {
   "Las masas son m₁ y m₂, con razón de masas μ = {#}.",
 "L4 and L5 are unstable, because μ is above {#}.":
   "L4 y L5 son inestables, porque μ es mayor que {#}.",
-"Paused.":
-  "En pausa.",
 "m₁ centered frame: m₁ held fixed, axes fixed to the stars":
   "Marco centrado en m₁: m₁ fijo, ejes fijos respecto a las estrellas",
 "m₁ really circles the center of mass at {#} a":
@@ -404,28 +384,64 @@ VDI18N.add('es', 'demo/lagrange-points', {
   "El problema restringido de tres cuerpos en el marco centrado en m₁: m₁ se mantiene en el centro y m₂ gira a su alrededor.",
 "The view is zoomed in near m₂.":
   "La vista está ampliada cerca de m₂.",
-"{#} × {#}⁻¹³ <span>after {#} P = {#} d</span>":
-  "{#} × {#}⁻¹³ <span>después de {#} P = {#} d</span>",
+"{#} × {#}⁻¹⁶ <span>after {#} P = {#} d</span>":
+  "{#} × {#}⁻¹⁶ <span>después de {#} P = {#} d</span>",
+"The view is zoomed in near Earth.":
+  "La vista está ampliada cerca de la Tierra.",
+"You added {#} particles.":
+  "Agregaste {#} partículas.",
+"The newest particle has Jacobi constant C = {#} + {#} × {#}⁻⁴.":
+  "La partícula más reciente tiene constante de Jacobi C = {#} + {#} × {#}⁻⁴.",
+"It is {#} million km from Earth.":
+  "Está a {#} millones de km de la Tierra.",
+"{#} km from Moon, speed {#} km/s in the rotating frame":
+  "{#} km de la Luna, rapidez {#} km/s en el marco en rotación",
+"The restricted three body problem in the rotating frame: Earth and Moon stay fixed while the five Lagrange points and the test particles are drawn around them.":
+  "El problema restringido de tres cuerpos en el marco rotatorio: la Tierra y la Luna permanecen fijas mientras los cinco puntos de Lagrange y las partículas de prueba se dibujan a su alrededor.",
+"The masses are Earth and Moon, with mass ratio μ = {#}.":
+  "Las masas son la Tierra y la Luna, con razón de masas μ = {#}.",
+"It is {#} km from Moon.":
+  "Está a {#} km de la Luna.",
+"The restricted three body problem in the Sun centered frame: Sun is held at the center and Jupiter circles it.":
+  "El problema restringido de tres cuerpos en el marco centrado en el Sol: el Sol se mantiene en el centro y Júpiter gira a su alrededor.",
 "after {#} P = {#} yr":
   "después de {#} P = {#} años",
 "t = {#} <small>P</small> · {#} yr":
   "t = {#} <small>P</small> · {#} yr",
 "{#} <span>after {#} P = {#} yr</span>":
   "{#} <span>después de {#} P = {#} años</span>",
-"You added {#} particles.":
-  "Agregaste {#} partículas.",
-"The newest particle has Jacobi constant C = {#}.":
-  "La partícula más reciente tiene constante de Jacobi C = {#}.",
-"It is {#} a from m₂.":
-  "Está a {#} a de m₂.",
-"body sizes made up":
-  "tamaños de los cuerpos inventados",
-"{#} × {#}⁻¹⁶ <span>after {#} P = {#} yr</span>":
-  "{#} × {#}⁻¹⁶ <span>después de {#} P = {#} años</span>",
 "{#} × {#}⁻¹⁶ <span>after {#} P</span>":
   "{#} × {#}⁻¹⁶ <span>tras {#} P</span>",
 "{#} a from m₂, speed {#} × {#}⁻⁵ a·n in the rotating frame":
   "{#} a de m₂, rapidez {#} × {#}⁻⁵ a·n en el marco en rotación",
+"It is {#} a from m₂.":
+  "Está a {#} a de m₂.",
+"body sizes made up":
+  "tamaños de los cuerpos inventados",
+"{#} × {#}⁻¹³ <span>after {#} P = {#} d</span>":
+  "{#} × {#}⁻¹³ <span>después de {#} P = {#} d</span>",
+"Describe the picture":
+  "Describir la imagen",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
+"Zoom out":
+  "Alejar",
+"Zoom in":
+  "Acercar",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
+"Running.":
+  "En marcha.",
+"Paused.":
+  "En pausa.",
+"{#} × {#}⁻¹⁶ <span>after {#} P = {#} yr</span>":
+  "{#} × {#}⁻¹⁶ <span>después de {#} P = {#} años</span>",
 "Close":
   "Cerrar",
 "{#} × {#}⁻¹⁵ <span>after {#} P = {#} d</span>":

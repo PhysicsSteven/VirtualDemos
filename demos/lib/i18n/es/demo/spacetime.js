@@ -1,7 +1,5 @@
 /* demo/spacetime in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/spacetime', {
-"Describe the picture":
-  "Describir la imagen",
 "future of O":
   "futuro de O",
 "past of O":
@@ -22,10 +20,6 @@ VDI18N.add('es', 'demo/spacetime', {
   "El mundo en ct = {#} años, como lo ve S",
 "Play to run it, {#} s = {#} yr · icons not to scale, squashed by {#}/γ along x":
   "Inicia para correrlo, {#} s = {#} años · íconos no a escala, comprimidos por {#}/γ a lo largo de x",
-"Skip to the picture":
-  "Ir a la imagen",
-"Skip to the controls":
-  "Ir a los controles",
 "Spacetime Diagrams":
   "Diagramas de espaciotiempo",
 "<span><a><span>Speed of Light</span> <span>→</span></a></span>":
@@ -48,12 +42,6 @@ VDI18N.add('es', 'demo/spacetime', {
   "No hay ningún evento seleccionado.",
 "The animation is paused.":
   "La animación está en pausa.",
-"Time controls":
-  "Controles de tiempo",
-"Run for a moment and pause again":
-  "Avanza un momento y vuelve a pausar",
-"Step":
-  "Paso",
 "Fit view":
   "Ajustar la vista",
 "Diagram view":
@@ -210,6 +198,26 @@ VDI18N.add('es', 'demo/spacetime', {
   "inicia.",
 "Model: exact special relativity in one space dimension with c = {#}, so light covers one light year per year. All coordinates come from the Lorentz transformation. The twin's turnaround is treated as instantaneous.":
   "Modelo: relatividad especial exacta en una dimensión espacial con c = {#}, así que la luz recorre un año luz por año. Todas las coordenadas vienen de la transformación de Lorentz. La vuelta del gemelo se trata como instantánea.",
+"{#} events.":
+  "{#} eventos.",
+"Event O at ct = {#}, x = {#}.":
+  "Evento O en ct = {#}, x = {#}.",
+"Event A at ct = {#}, x = {#}.":
+  "Evento A en ct = {#}, x = {#}.",
+"Event B at ct = {#}, x = {#}.":
+  "Evento B en ct = {#}, x = {#}.",
+"Event C at ct = {#}, x = −{#}.":
+  "Evento C en ct = {#}, x = −{#}.",
+"Event D at ct = −{#}, x = {#}.":
+  "Evento D en ct = −{#}, x = {#}.",
+"Selected: events O and A.":
+  "Seleccionados: eventos O y A.",
+"In S, the time between them is {#} and the distance is {#}.":
+  "En S, el tiempo entre ellos es {#} y la distancia es {#}.",
+"In S′, the time between them is {#} and the distance is {#}.":
+  "En S′, el tiempo entre ellos es {#} y la distancia es {#}.",
+"The interval squared is {#}, so the separation is timelike.":
+  "El intervalo al cuadrado es {#}, así que la separación es de tipo tiempo.",
 "Drawn in S′: its axes are square, S is tilted · grid and numbers in S":
   "Dibujado en S′: sus ejes son perpendiculares, S está inclinado · cuadrícula y números en S",
 "The world at ct′ = {#} yr, as S′ sees it":
@@ -272,6 +280,8 @@ VDI18N.add('es', 'demo/spacetime', {
   "{#} al en S′",
 "rod, {#} ly long":
   "varilla, {#} al de largo",
+"The rod is {#} light years long in S and {#} light years in its own frame.":
+  "La varilla mide {#} años luz en S y {#} años luz en su propio marco.",
 "The traveler leaves at {#}c and turns around at T, {#} years after leaving by the home clock. Home ages {#} years, the traveler {#}. The purple lines are the traveler's lines of simultaneity, one per traveler year. At the turnaround they swing across the home worldline, skipping {#} years of home time. The turn breaks the symmetry.":
   "El viajero sale a {#}c y da la vuelta en T, {#} años después de salir según el reloj de casa. En casa pasan {#} años, para el viajero {#}. Las líneas moradas son las líneas de simultaneidad del viajero, una por cada año del viajero. En la vuelta barren la línea de universo de casa, saltándose {#} años del tiempo de casa. La vuelta rompe la simetría.",
 "Event T at ct {#}, x {#}":
@@ -300,18 +310,10 @@ VDI18N.add('es', 'demo/spacetime', {
   "futuro de A",
 "past of A":
   "pasado de A",
-"{#} events.":
-  "{#} eventos.",
 "Event A at ct = {#}, x = −{#}.":
   "Evento A en ct = {#}, x = −{#}.",
-"Event B at ct = {#}, x = {#}.":
-  "Evento B en ct = {#}, x = {#}.",
-"Event C at ct = {#}, x = −{#}.":
-  "Evento C en ct = {#}, x = −{#}.",
 "Selected: events A and B.":
   "Seleccionados: eventos A y B.",
-"In S, the time between them is {#} and the distance is {#}.":
-  "En S, el tiempo entre ellos es {#} y la distancia es {#}.",
 "In S′, the time between them is −{#} and the distance is {#}.":
   "En S′, el tiempo entre ellos es −{#} y la distancia es {#}.",
 "The interval squared is −{#}, so the separation is spacelike.":
@@ -342,8 +344,6 @@ VDI18N.add('es', 'demo/spacetime', {
   "En S, el tiempo entre ellos es {#} y la distancia es −{#}.",
 "In S′, the time between them is {#} and the distance is −{#}.":
   "En S′, el tiempo entre ellos es {#} y la distancia es −{#}.",
-"The interval squared is {#}, so the separation is timelike.":
-  "El intervalo al cuadrado es {#}, así que la separación es de tipo tiempo.",
 "Play to run it, {#} s = {#} yr":
   "Inicia para correrlo, {#} s = {#} años",
 "icons not to scale, squashed by {#}/γ along x":
@@ -352,6 +352,38 @@ VDI18N.add('es', 'demo/spacetime', {
   "Dibujado en S′: sus ejes son perpendiculares, S está inclinado",
 "The diagram is drawn in the frame S′, which moves at β = {#}.":
   "El diagrama está dibujado en el marco S′, que se mueve con β = {#}.",
+"The Platform clock reads {#} years.":
+  "El reloj de la plataforma marca {#} años.",
+"The Train clock reads {#} years.":
+  "El reloj del tren marca {#} años.",
+"Event R at ct = {#}, x = {#}.":
+  "Evento R en ct = {#}, x = {#}.",
+"Selected: event R.":
+  "Seleccionado: evento R.",
+"The Home clock reads {#} years.":
+  "El reloj de Casa marca {#} años.",
+"The Rocket clock reads {#} years.":
+  "El reloj del cohete marca {#} años.",
+"Event T at ct = {#}, x = {#}.":
+  "Evento T en ct = {#}, x = {#}.",
+"Selected: event T.":
+  "Seleccionado: evento T.",
+"The Home twin clock reads {#} years.":
+  "El reloj del gemelo en Casa marca {#} años.",
+"The Traveler clock reads {#} years.":
+  "El reloj del viajero marca {#} años.",
 "now, ct = {#} yr":
-  "ahora, ct = {#} años"
+  "ahora, ct = {#} años",
+"Describe the picture":
+  "Describir la imagen",
+"Skip to the picture":
+  "Ir a la imagen",
+"Skip to the controls":
+  "Ir a los controles",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso"
 });

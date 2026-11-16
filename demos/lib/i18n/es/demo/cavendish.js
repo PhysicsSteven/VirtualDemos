@@ -18,8 +18,6 @@ VDI18N.add('es', 'demo/cavendish', {
   "en reposo: gira las esferas grandes para iniciar una oscilación",
 "spot (cm)":
   "punto (cm)",
-"Describe the picture":
-  "Describir la imagen",
 "The Cavendish Experiment":
   "El experimento de Cavendish",
 "<a>Gravitation and orbital mechanics</a>":
@@ -46,8 +44,6 @@ VDI18N.add('es', 'demo/cavendish', {
   "El punto está detenido.",
 "Twist {#} mrad.":
   "Torsión {#} mrad.",
-"Time controls":
-  "Controles de tiempo",
 "<span>Playback speed</span>":
   "<span>Rapidez de reproducción</span>",
 "Run to the next turning point":
@@ -118,20 +114,16 @@ VDI18N.add('es', 'demo/cavendish', {
   "Esferas",
 "Spot (cm)":
   "Punto (cm)",
-"Skip to the picture":
-  "Ir a la imagen",
-"Skip to the controls":
-  "Ir a los controles",
 "Running at ×{#}.":
   "En marcha a ×{#}.",
 "swinging to away":
   "girando a retiradas",
 "down the scale":
   "bajando por la escala",
+"away":
+  "retiradas",
 "swinging to position B":
   "girando a la posición B",
-"Wait until the large spheres have finished swinging.":
-  "Espera a que las esferas grandes terminen de girar.",
 "position B":
   "posición B",
 "The large spheres are at position B.":
@@ -144,26 +136,38 @@ VDI18N.add('es', 'demo/cavendish', {
   "vista superior, a escala · giro de la barra dibujado ×{#}",
 "drag a large sphere to swing it":
   "arrastra una esfera grande para girarla",
-"Paused.":
-  "En pausa.",
+"{#} turning points are marked.":
+  "Hay {#} puntos de retorno marcados.",
+"The latest turning point is {#} cm at {#} s.":
+  "El último punto de retorno está en {#} cm a los {#} s.",
+"up the scale":
+  "subiendo por la escala",
+"The spot is moving up the scale.":
+  "El punto se mueve hacia arriba en la escala.",
 "3D, to scale · beam turn drawn ×{#}":
   "3D, a escala · giro de la barra dibujado ×{#}",
 "drag a large sphere to swing it, elsewhere to turn":
   "arrastra una esfera grande para girarla, en otro lugar para rotar la vista",
 "swinging to position A":
   "girando a la posición A",
+"The large spheres are Away, clear of the small ones.":
+  "Las esferas grandes están en Away, lejos de las pequeñas.",
+"Wait until the large spheres have finished swinging.":
+  "Espera a que las esferas grandes terminen de girar.",
 "The large spheres are swinging to position A.":
   "Las esferas grandes se están moviendo a la posición A.",
-"{#} turning points are marked.":
-  "Hay {#} puntos de retorno marcados.",
-"The latest turning point is {#} cm at {#} s.":
-  "El último punto de retorno está en {#} cm a los {#} s.",
 "The large spheres are swinging to position B.":
   "Las esferas grandes se están moviendo a la posición B.",
-"away":
-  "retiradas",
-"up the scale":
-  "subiendo por la escala",
+"Describe the picture":
+  "Describir la imagen",
+"Time controls":
+  "Controles de tiempo",
+"Skip to the picture":
+  "Ir a la imagen",
+"Skip to the controls":
+  "Ir a los controles",
+"Paused.":
+  "En pausa.",
 "Close":
   "Cerrar",
 "×{#} · paused":

@@ -174,8 +174,6 @@ VDI18N.add('es', 'demo/shielding-rooms', {
   "Una gráfica de la transmisión de cada material de pared contra su espesor en mm, en escala logarítmica.",
 "The transmission the wall needs, B = {#}, is drawn across, with each material's required thickness marked.":
   "La transmisión que necesita la pared, B = {#}, se dibuja de lado a lado, con el espesor requerido de cada material marcado.",
-"Describe the plot":
-  "Describir la gráfica",
 "Divider between the room and the graph":
   "Divisor entre la sala y la gráfica",
 "CT room, office next door":
@@ -240,10 +238,6 @@ VDI18N.add('es', 'demo/shielding-rooms', {
   "concreto (mm)",
 "gypsum (mm)":
   "tablaroca (mm)",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
 "A CT room seen from above in 3D: the scanner in the middle, with its walls drawn to scale.":
   "Una sala de TC vista desde arriba en 3D: el escáner en el centro, con sus paredes dibujadas a escala.",
 "concrete: {#} m":
@@ -382,26 +376,54 @@ VDI18N.add('es', 'demo/shielding-rooms', {
   "protones",
 "concrete (cm)":
   "concreto (cm)",
-"To scale, no ceiling. Drag to turn.":
-  "A escala, sin techo. Arrastra para girar.",
-"A plot of the transmission of each wall material against its mass per area in kg/m², on a log scale.":
-  "Una gráfica de la transmisión de cada material de pared contra su masa por área en kg/m², en escala logarítmica.",
 "A {#} MV linac vault seen from above.":
   "Un búnker de acelerador lineal de {#} MV visto desde arriba.",
-"The wall in question is a secondary wall.":
-  "La pared en cuestión es una pared secundaria.",
+"The wall in question is the primary barrier.":
+  "La pared en cuestión es la barrera primaria.",
 "A person stands beyond it, {#} m from the isocenter.":
   "Una persona está al otro lado, a {#} m del isocentro.",
 "Workload {#} Gy a week at the isocenter, {#} % of it given as IMRT.":
   "Carga de trabajo de {#} Gy por semana en el isocentro, {#} % de ella como IMRT.",
-"Without a wall the head leakage at the person gives {#} mSv a week, so the transmission needed is B = {#} × {#}⁻⁴.":
-  "Sin pared, la fuga del cabezal en la persona da {#} mSv por semana, así que la transmisión necesaria es B = {#} × {#}⁻⁴.",
+"The beam points at this wall for {#} of the time.":
+  "El haz apunta a esta pared durante {#} del tiempo.",
+"Without a wall the primary beam at the person gives {#} mSv a week, so the transmission needed is B = {#} × {#}⁻⁶.":
+  "Sin pared, el haz primario en la persona da {#} mSv por semana, así que la transmisión necesaria es B = {#} × {#}⁻⁶.",
 "Steel needs {#} cm.":
   "El acero necesita {#} cm.",
 "Lead needs {#} cm.":
   "El plomo necesita {#} cm.",
+"The transmission the wall needs, B = {#} × {#}⁻⁶, is drawn across, with each material's required thickness marked.":
+  "La transmisión que necesita la pared, B = {#} × {#}⁻⁶, está trazada de lado a lado, con el grosor requerido de cada material marcado.",
+"To scale, no ceiling. Drag to turn.":
+  "A escala, sin techo. Arrastra para girar.",
+"A plot of the transmission of each wall material against its mass per area in kg/m², on a log scale.":
+  "Una gráfica de la transmisión de cada material de pared contra su masa por área en kg/m², en escala logarítmica.",
+"The wall in question is a secondary wall.":
+  "La pared en cuestión es una pared secundaria.",
+"Without a wall the head leakage at the person gives {#} mSv a week, so the transmission needed is B = {#} × {#}⁻⁴.":
+  "Sin pared, la fuga del cabezal en la persona da {#} mSv por semana, así que la transmisión necesaria es B = {#} × {#}⁻⁴.",
 "The transmission the wall needs, B = {#} × {#}⁻⁴, is drawn across, with each material's required thickness marked.":
   "La transmisión que necesita la pared, B = {#} × {#}⁻⁴, se dibuja de lado a lado, con el espesor requerido de cada material marcado.",
+"The wall in question is the maze door.":
+  "La pared en cuestión es la puerta del laberinto.",
+"The maze is {#} m long, and the door has {#} cm of borated polyethylene and {#} cm of lead.":
+  "El laberinto mide {#} m de largo, y la puerta tiene {#} cm de polietileno borado y {#} cm de plomo.",
+"Behind the door the neutrons give {#} mSv a week and the capture gammas {#} mSv a week.":
+  "Detrás de la puerta los neutrones dan {#} mSv por semana y los gammas de captura {#} mSv por semana.",
+"The total is {#} mSv against the goal of {#} mSv: it meets the goal.":
+  "El total es {#} mSv frente a la meta de {#} mSv: cumple la meta.",
+"A plot of the neutron and capture gamma doses at the door against the maze length, with no door shielding, and the goal drawn across.":
+  "Una gráfica de las dosis de neutrones y de gammas de captura en la puerta en función de la longitud del laberinto, sin blindaje en la puerta, con la meta trazada de lado a lado.",
+"The maze is {#} m long.":
+  "El laberinto mide {#} m de largo.",
+"The total is {#} mSv against the goal of {#} mSv: it is over the goal.":
+  "El total es {#} mSv frente a la meta de {#} mSv: rebasa la meta.",
+"Describe the plot":
+  "Describir la gráfica",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "Close":
   "Cerrar"
 });

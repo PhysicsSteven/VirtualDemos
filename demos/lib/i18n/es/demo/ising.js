@@ -10,10 +10,6 @@ VDI18N.add('es', 'demo/ising', {
   "barridos",
 "starting":
   "iniciando",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
 "Ising Model":
   "Modelo de Ising",
 "<a>Beyond the textbook</a>":
@@ -24,12 +20,8 @@ VDI18N.add('es', 'demo/ising', {
   "Espines en una red cuadrada, cada uno favorece la dirección de sus vecinos. Enfría a través de T<sub>c</sub> y el orden aparece solo; en T<sub>c</sub>, dominios de todos los tamaños.",
 "J = {#}, k<sub>B</sub> = {#} · T in J/k<sub>B</sub> · h in J · time in sweeps":
   "J = {#}, k<sub>B</sub> = {#} · T en J/k<sub>B</sub> · h en J · tiempo en barridos",
-"Time controls":
-  "Controles de tiempo",
 "One sweep":
   "Un barrido",
-"Step":
-  "Paso",
 "{#} sweeps/s":
   "{#} barridos/s",
 "Reset the spins":
@@ -56,8 +48,6 @@ VDI18N.add('es', 'demo/ising', {
   "Temperatura T = {#}.",
 "Field h = −{#}.":
   "Campo h = −{#}.",
-"Running.":
-  "En marcha.",
 "{#}% of the spins are up.":
   "{#} % de los espines están hacia arriba.",
 "Magnetization m = {#}.":
@@ -82,8 +72,6 @@ VDI18N.add('es', 'demo/ising', {
   "Gráfica en vivo",
 "Time series: the magnetization per spin and the energy per spin against sweeps, over the last {#} sweeps.":
   "Serie de tiempo: la magnetización por espín y la energía por espín contra los barridos, durante los últimos {#} barridos.",
-"Describe the plot":
-  "Describir la gráfica",
 "Divider between the lattice and the graph":
   "Divisor entre la red y la gráfica",
 "Cold: one domain":
@@ -208,6 +196,10 @@ VDI18N.add('es', 'demo/ising', {
   "Curvas exactas, solo h = {#}: Onsager ({#}) e y c, y la magnetización espontánea m = ({#} − sinh<sup>−{#}</sup>({#}/T))<sup>{#}/{#}</sup> (Yang {#}), para la red infinita; T<sub>c</sub> = {#}/ln({#} + √{#}). Discontinua: la función de partición exacta de Kaufman ({#}) de la red L × L. No se conoce una χ exacta, así que no se dibuja ninguna. Con J = −{#} las mismas curvas valen con m<sub>s</sub> en lugar de m.",
 "Hysteresis: the loop is not an equilibrium property. Its width depends on the sweep rate, L and T; in equilibrium below T<sub>c</sub>, m would jump at h = {#}.":
   "Histéresis: el lazo no es una propiedad de equilibrio. Su ancho depende de la velocidad de barrido, de L y de T; en equilibrio por debajo de T<sub>c</sub>, m saltaría en h = {#}.",
+"Magnetization m = −{#}.":
+  "Magnetización m = −{#}.",
+"Energy per spin e = −{#}.":
+  "Energía por espín e = −{#}.",
 "⟨|m|⟩ or ⟨|mₛ|⟩":
   "⟨|m|⟩ o ⟨|mₛ|⟩",
 "heat capacity c":
@@ -226,12 +218,12 @@ VDI18N.add('es', 'demo/ising', {
   "Activa Barrer h, o elige Histéresis",
 "T = {#}, well below T<sub>c</sub>. One domain fills the lattice; single spins blink against it and flip back. m sits on the Onsager value, {#}.":
   "T = {#}, muy por debajo de T<sub>c</sub>. Un solo dominio llena la red; espines sueltos parpadean contra él y vuelven a voltearse. m está en el valor de Onsager, {#}.",
+"Cluster updates, h = {#} only":
+  "Actualizaciones por cúmulos, solo h = {#}",
 "Onsager ±{#}":
   "Onsager ±{#}",
 "Onsager −{#}":
   "Onsager −{#}",
-"Cluster updates, h = {#} only":
-  "Actualizaciones por cúmulos, solo h = {#}",
 "T = {#}, far above T<sub>c</sub>. Neighbors only slightly prefer to agree: small patches form and dissolve, and m wanders near zero, here by about {#}/√N, less on a larger lattice.":
   "T = {#}, muy por encima de T<sub>c</sub>. Los vecinos prefieren coincidir solo un poco: se forman manchas pequeñas que se disuelven, y m vaga cerca de cero, aquí en unos {#}/√N, menos en una red más grande.",
 "Onsager: m = {#} here":
@@ -248,10 +240,6 @@ VDI18N.add('es', 'demo/ising', {
   "Método de actualización: cúmulos de Wolff.",
 "Field h = {#}.":
   "Campo h = {#}.",
-"Magnetization m = −{#}.":
-  "Magnetización m = −{#}.",
-"Energy per spin e = −{#}.":
-  "Energía por espín e = −{#}.",
 "Exact for an infinite lattice: m = {#}, e = −{#}.":
   "Exacto para una red infinita: m = {#}, e = −{#}.",
 "Dashed lines show the exact Onsager values.":
@@ -268,8 +256,6 @@ VDI18N.add('es', 'demo/ising', {
   "{#} × {#} = {#} espines, periódica · colores alternados",
 "staggered magnetization mₛ(t)":
   "magnetización alternada mₛ(t)",
-"Heat bath draws each new spin from its Boltzmann probability given its neighbors. It changes fewer spins per sweep than Metropolis at high T.":
-  "Baño térmico saca cada nuevo espín de su probabilidad de Boltzmann dados sus vecinos. Cambia menos espines por barrido que Metropolis a T alta.",
 "Antiferromagnet: neighboring spins prefer to point opposite ways.":
   "Antiferromagneto: los espines vecinos prefieren apuntar en sentidos opuestos.",
 "Staggered magnetization mₛ = {#}.":
@@ -278,12 +264,12 @@ VDI18N.add('es', 'demo/ising', {
   "Exacto para una red infinita: mₛ = {#}, e = −{#}.",
 "Time series: the staggered magnetization per spin and the energy per spin against sweeps, over the last {#} sweeps.":
   "Serie de tiempo: la magnetización alternada por espín y la energía por espín contra los barridos, durante los últimos {#} barridos.",
-"sweep {#} <small>paused</small>":
-  "barrido {#} <small>en pausa</small>",
-"Paused.":
-  "En pausa.",
+"Heat bath draws each new spin from its Boltzmann probability given its neighbors. It changes fewer spins per sweep than Metropolis at high T.":
+  "Baño térmico saca cada nuevo espín de su probabilidad de Boltzmann dados sus vecinos. Cambia menos espines por barrido que Metropolis a T alta.",
 "Staggered magnetization mₛ = −{#}.":
   "Magnetización alternada mₛ = −{#}.",
+"sweep {#} <small>paused</small>":
+  "barrido {#} <small>en pausa</small>",
 "discarding, {#} of {#} sweeps":
   "descartando, {#} de {#} barridos",
 "sweep {#} <small>{#} sweeps/s · measuring</small>":
@@ -292,10 +278,36 @@ VDI18N.add('es', 'demo/ising', {
   "Medición detenida: los espines se reiniciaron.",
 "Press Play or Step":
   "Pulsa Iniciar o Paso",
+"The T scan: four small plots against temperature T, the average magnetization, the average energy, the heat capacity and the susceptibility.":
+  "El barrido de T: cuatro gráficas pequeñas contra la temperatura T, la magnetización promedio, la energía promedio, la capacidad calorífica y la susceptibilidad.",
+"No measurements yet.":
+  "Aún no hay mediciones.",
+"The exact curves are drawn for comparison, with a dotted line at the critical temperature.":
+  "Las curvas exactas se dibujan para comparar, con una línea punteada en la temperatura crítica.",
 "m against h · T = {#}, L = {#}":
   "m contra h · T = {#}, L = {#}",
+"The magnetization m against the field h, from −{#} to +{#}, at T = {#} on a {#} by {#} lattice.":
+  "La magnetización m contra el campo h, de −{#} a +{#}, a T = {#} en una red de {#} por {#}.",
+"No loop traced yet: sweep the field.":
+  "Aún no se traza ningún lazo: barre el campo.",
+"The field is sweeping between −{#} and +{#}.":
+  "El campo se barre entre −{#} y +{#}.",
 "Update method: heat bath.":
   "Método de actualización: baño térmico.",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
+"Time controls":
+  "Controles de tiempo",
+"Step":
+  "Paso",
+"Running.":
+  "En marcha.",
+"Describe the plot":
+  "Describir la gráfica",
+"Paused.":
+  "En pausa.",
 "Close":
   "Cerrar"
 });

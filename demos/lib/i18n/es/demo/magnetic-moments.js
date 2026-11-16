@@ -22,8 +22,6 @@ VDI18N.add('es', 'demo/magnetic-moments', {
   "campo B (T)",
 "energy shift U (meV)":
   "corrimiento de energía U (meV)",
-"Describe the picture":
-  "Describir la imagen",
 "Atoms in a Magnetic Field":
   "Átomos en un campo magnético",
 "<a>Atomic structure</a>":
@@ -178,10 +176,6 @@ VDI18N.add('es', 'demo/magnetic-moments', {
   "Efecto Zeeman: cada nivel se corre g m μ_B B en un campo B. Aparece una componente por cada par de subniveles superior e inferior con Δm = {#} (luz π) o ±{#} (luz σ), con intensidad relativa dada por el cuadrado de un símbolo 3j. Perpendicular al campo, las componentes π cuentan completas y las σ a la mitad; a lo largo del campo no hay componentes π. Con g = {#} en ambos niveles (la línea singlete del cadmio, o el hidrógeno sin espín como en §{#}) cada componente cae en una de tres longitudes de onda, λ₀ y λ₀ ± λ²μ_B B/(hc): el efecto Zeeman normal. Las líneas D del sodio, cuyos niveles tienen espín, se desdoblan en cuatro y seis componentes (el efecto Zeeman anómalo). Los valores de g provienen de la fórmula de Landé con el factor g del electrón y g_L = {#}. El espectrómetro da a cada componente una forma gaussiana de {#} pm de ancho (FWHM), más fina que la de un espectrómetro de rejilla real; los desdoblamientos Zeeman se miden con un étalon de Fabry–Perot o una placa de Lummer. Se omiten el ancho Doppler, la estructura hiperfina y los corrimientos isotópicos, y el campo es uniforme sobre la lámpara.",
 "Data: constants from CODATA {#}. Wavelengths from the NIST Handbook of Basic Atomic Spectroscopic Data (Cd {#} nm and Na {#} and {#} nm in air) and the NIST Atomic Spectra Database (H Lyman α {#} nm in vacuum). Ground levels from the NIST Atomic Spectra Database; atomic masses are IUPAC standard atomic weights. The {#} magnet ({#} cm long, slits {#} mm wide, a gradient of about {#} T/cm) follows Gerlach and Stern (Z. Phys. {#}, {#}) and the review by Friedrich and Herschbach (Physics Today, December {#}).":
   "Datos: constantes de CODATA {#}. Longitudes de onda del NIST Handbook of Basic Atomic Spectroscopic Data (Cd {#} nm y Na {#} y {#} nm en aire) y de la NIST Atomic Spectra Database (H Lyman α {#} nm en el vacío). Niveles base de la NIST Atomic Spectra Database; las masas atómicas son los pesos atómicos estándar de la IUPAC. El imán de {#} ({#} cm de largo, rendijas de {#} mm de ancho, un gradiente de unos {#} T/cm) sigue a Gerlach y Stern (Z. Phys. {#}, {#}) y la reseña de Friedrich y Herschbach (Physics Today, diciembre de {#}).",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
 "oven {#} K":
   "horno {#} K",
 "slits":
@@ -344,8 +338,12 @@ VDI18N.add('es', 'demo/magnetic-moments', {
   "inferior, J = {#}/{#}",
 "Sodium D₂":
   "D₂ del sodio",
+"The shifts are −{#}, −{#}, −{#}, {#}, {#}, {#} pm.":
+  "Los corrimientos son −{#}, −{#}, −{#}, {#}, {#}, {#} pm.",
 "Sodium D₁":
   "D₁ del sodio",
+"The shifts are −{#}, −{#}, {#}, {#} pm.":
+  "Los corrimientos son −{#}, −{#}, {#}, {#} pm.",
 "to spectrometer":
   "al espectrómetro",
 "shift from {#} nm (pm)":
@@ -360,10 +358,44 @@ VDI18N.add('es', 'demo/magnetic-moments', {
   "Imagen cuántica",
 "precession slowed":
   "precesión frenada",
+"The magnetic field is B = {#} T, pointing up.":
+  "El campo magnético es B = {#} T, apuntando hacia arriba.",
+"The current is I = {#} × {#}⁻⁵ A.":
+  "La corriente es I = {#} × {#}⁻⁵ A.",
+"The magnetic moment is μ = IA = {#} × {#}⁻²³ A·m², which is {#} μ_B.":
+  "El momento magnético es μ = IA = {#} × {#}⁻²³ A·m², que es {#} μ_B.",
+"The angle of L to B is {#}°.":
+  "El ángulo de L con B es {#}°.",
+"With l = {#} there are {#} levels, from m_l = −{#} to {#}.":
+  "Con l = {#} hay {#} niveles, de m_l = −{#} a {#}.",
 "face of the screen":
   "cara de la pantalla",
 "count along z":
   "conteo a lo largo de z",
+"Side view of a Stern–Gerlach apparatus: an oven, two slits, a magnet {#} cm long, a drift space and a glass screen.":
+  "Vista lateral de un aparato de Stern–Gerlach: un horno, dos rendijas, un imán de {#} cm de largo, un espacio de deriva y una pantalla de vidrio.",
+"The atoms in the oven are a mystery.":
+  "Los átomos del horno son un misterio.",
+"The atomic mass is {#} u.":
+  "La masa atómica es {#} u.",
+"The field gradient is {#} T/m, the oven is at {#} K, and the drift to the screen is {#} cm.":
+  "El gradiente del campo es {#} T/m, el horno está a {#} K y la deriva hasta la pantalla es de {#} cm.",
+"The velocity selector passes atoms at {#} m/s.":
+  "El selector de velocidad deja pasar átomos a {#} m/s.",
+"The beam is off.":
+  "El haz está apagado.",
+"{#} atoms have landed on the screen.":
+  "{#} átomos han llegado a la pantalla.",
+"The screen shows {#} spots.":
+  "La pantalla muestra {#} puntos.",
+"Spot {#} is at z = −{#} mm.":
+  "El punto {#} está en z = −{#} mm.",
+"Spot {#} is at z = {#} mm.":
+  "El punto {#} está en z = {#} mm.",
+"The face of the screen with the atoms that have landed, and their count along z.":
+  "La cara de la pantalla con los átomos que han llegado, y su conteo a lo largo de z.",
+"The cursor is at z = {#} mm.":
+  "El cursor está en z = {#} mm.",
 "You look along the field.":
   "Miras a lo largo del campo.",
 "The shifts are −{#}, {#} pm.":
@@ -372,6 +404,22 @@ VDI18N.add('es', 'demo/magnetic-moments', {
   "sin campo",
 "l = {#}: no moment":
   "l = {#}: sin momento",
+"The oven holds these atoms.":
+  "El horno contiene estos átomos.",
+"The velocity selector is off.":
+  "El selector de velocidad está apagado.",
+"The speed at the deposit peak is {#} m/s.":
+  "La rapidez en el pico del depósito es {#} m/s.",
+"Spot {#} is at z = −{#} mm, with μ_z = −{#} μ_B.":
+  "El punto {#} está en z = −{#} mm, con μ_z = −{#} μ_B.",
+"Spot {#} is at z = {#} mm, with μ_z = {#} μ_B.":
+  "El punto {#} está en z = {#} mm, con μ_z = {#} μ_B.",
+"Describe the picture":
+  "Describir la imagen",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "U = m_l μ_B B = {#} meV":
   "U = m_l μ_B B = {#} meV",
 "Clear the screen":

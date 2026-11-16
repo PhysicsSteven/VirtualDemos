@@ -448,10 +448,6 @@ VDI18N.add('es', 'demo/rotation', {
   "Reducir movimiento: Empujar, Carrera y Soltar saltan directo al final, y la giratoria se detiene; Iniciar todavía la hace correr.",
 "Tables of the values drawn in the charts for this scene, for readers who cannot see the plots.":
   "Tablas de los valores dibujados en las gráficas de esta escena, para quienes no pueden ver las gráficas.",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
 "<span><i></i>Block, slides with no friction</span><span><i></i>Solid sphere, I = ⅖mR²</span><span><i></i>Cylinder, I = ½mR²</span><span><i></i>Hollow sphere, I = ⅔mR²</span><span><i></i>Hoop, I = mR²</span>":
   "<span><i></i>Bloque, desliza sin fricción</span><span><i></i>Esfera sólida, I = ⅖mR²</span><span><i></i>Cilindro, I = ½mR²</span><span><i></i>Esfera hueca, I = ⅔mR²</span><span><i></i>Aro, I = mR²</span>",
 "Same mass and radius for all. Press Race: the block slides in first, then the solid sphere, the cylinder, the hollow sphere and the hoop.":
@@ -502,6 +498,18 @@ VDI18N.add('es', 'demo/rotation', {
   "Distancia rampa abajo en la rampa de {#} m en función del tiempo a β = {#}°, s = ½at², una línea por carril: {#}. Bloque llega abajo a los {#} s, {#}. Esfera sólida llega abajo a los {#} s, {#}. Cilindro llega abajo a los {#} s, {#}. Esfera hueca llega abajo a los {#} s, {#}. Aro llega abajo a los {#} s. Ahora t = {#} s. Mostrar la tabla de datos, en el panel, lista los valores.",
 "Energy of lane {#}, cylinder, at t = {#} s: height lost mgh = {#} J, moving along ½mv² = {#} J, spinning ½Iω² = {#} J. Show data table in the rail lists the values.":
   "Energía del carril {#}, cilindro, en t = {#} s: altura perdida mgh = {#} J, avance ½mv² = {#} J, giro ½Iω² = {#} J. Mostrar la tabla de datos, en el panel, lista los valores.",
+"A ramp {#} m long, tilted {#}°, with {#} lanes and one object at the top of each.":
+  "Una rampa de {#} m de largo, inclinada {#}°, con {#} carriles y un objeto en la parte alta de cada uno.",
+"Lane {#}:":
+  "Carril {#}:",
+"Sliding block":
+  "Bloque que se desliza",
+"I/mR² = {#}, reaches the bottom in {#} s.":
+  "I/mR² = {#}, llega abajo en {#} s.",
+"Lane {#} is selected: a = {#} m/s², speed at the bottom {#} m/s.":
+  "El carril {#} está seleccionado: a = {#} m/s², rapidez al final {#} m/s.",
+"Ready to race.":
+  "Listo para la carrera.",
 "<span><i></i>v, velocity of the center</span><span><i></i>Velocity of points on the rim</span><span><i></i>Path of the marked rim point</span><span><i></i>Kinetic friction at the contact point</span>":
   "<span><i></i>v, velocidad del centro</span><span><i></i>Velocidad de puntos del borde</span><span><i></i>Trayectoria del punto marcado del borde</span><span><i></i>Fricción cinética en el punto de contacto</span>",
 "A solid ball thrown along the floor with no spin. It slides at first: friction slows it and spins it up until v = ωR, after a time 2v₀/({#}μk g). From then on it rolls at {#}/{#} of its launch speed. Shown at ¼ speed.":
@@ -706,6 +714,20 @@ VDI18N.add('es', 'demo/rotation', {
   "Rapidez v y rapidez del borde ωR en función del tiempo para un aro lanzado a +{#} m/s con ω₀R = +{#} m/s sobre μk = {#}. Son iguales desde el inicio: rueda. Ahora t = {#} s. Mostrar la tabla de datos, en el panel, lista los valores.",
 "Energy at t = {#} s, out of {#} J at launch: moving along +{#} J, spinning +{#} J, heat from sliding {#} J. Angular momentum about the floor +{#} kg·m²/s. Show data table in the rail lists the values.":
   "Energía en t = {#} s, de {#} J al lanzar: avance +{#} J, giro +{#} J, calor por deslizamiento {#} J. Momento angular respecto al piso +{#} kg·m²/s. Mostrar la tabla de datos, en el panel, lista los valores.",
+"Side view of one object on a level floor.":
+  "Vista lateral de un objeto sobre un piso horizontal.",
+"Shape:":
+  "Forma:",
+"Mass {#} kg, radius {#} m, friction coefficient μk = {#}.":
+  "Masa {#} kg, radio {#} m, coeficiente de fricción μk = {#}.",
+"Launched at v = +{#} m/s with a rim speed ωR = +{#} m/s.":
+  "Lanzado con v = +{#} m/s y una rapidez del borde ωR = +{#} m/s.",
+"It rolls from the start.":
+  "Rueda desde el inicio.",
+"Heat from sliding friction {#} J.":
+  "Calor por la fricción de deslizamiento {#} J.",
+"Speed v = +{#} m/s, rim speed ωR = +{#} m/s, rolling, time {#} s.":
+  "Rapidez v = +{#} m/s, rapidez del borde ωR = +{#} m/s, rodando, tiempo {#} s.",
 "Thrown forward with strong backspin, ω₀R = −{#} m/s. Friction slows the ball and then sends it back: once v = ωR it rolls back toward you at (v₀ + ⅖ω₀R)/({#} + ⅖). The angular momentum about the floor stays the same throughout. Shown at ¼ speed.":
   "Lanzada hacia adelante con fuerte efecto de retroceso, ω₀R = −{#} m/s. La fricción frena la pelota y luego la manda de regreso: una vez que v = ωR rueda de vuelta hacia ti a (v₀ + ⅖ω₀R)/({#} + ⅖). El momento angular respecto al piso se mantiene igual todo el tiempo. Se muestra a ¼ de velocidad.",
 "top of the rim v + ωR = −{#} m/s":
@@ -716,18 +738,6 @@ VDI18N.add('es', 'demo/rotation', {
   "Rapidez v y rapidez del borde ωR en función del tiempo para una esfera sólida lanzada a +{#} m/s con ω₀R = −{#} m/s sobre μk = {#}. Se igualan en t = {#} s, cuando empieza a rodar a −{#} m/s. Ahora t = {#} s. Mostrar la tabla de datos, en el panel, lista los valores.",
 "Energy at t = {#} s, out of {#} J at launch: moving along +{#} J, spinning +{#} J, heat from sliding {#} J. Angular momentum about the floor −{#} kg·m²/s. Show data table in the rail lists the values.":
   "Energía en t = {#} s, de {#} J al lanzar: avance +{#} J, giro +{#} J, calor por deslizamiento {#} J. Momento angular respecto al piso −{#} kg·m²/s. Mostrar la tabla de datos, en el panel, lista los valores.",
-"Side view of two identical spools let go from the same height H = {#} m: the left one unwinds from a string tied to the beam above, the right one is simply dropped.":
-  "Vista lateral de dos carretes idénticos que se sueltan desde la misma altura H = {#} m: el de la izquierda se desenrolla de un hilo atado a la viga de arriba y el de la derecha simplemente se deja caer.",
-"Spool shape:":
-  "Forma del carrete:",
-"The unwinding one has I/mr² = {#} and falls at a = {#} m/s², which is {#} g.":
-  "El que se desenrolla tiene I/mr² = {#} y cae con a = {#} m/s², que es {#} g.",
-"The string tension is {#} N and the weight is {#} N.":
-  "La tensión del hilo es {#} N y el peso es {#} N.",
-"It lands after {#} s, the dropped one after {#} s.":
-  "Aterriza después de {#} s; el que se dejó caer, después de {#} s.",
-"Time {#} s.":
-  "Tiempo {#} s.",
 "Hold the loose end of a roll of paper and let the roll go, beside a roll that is just dropped. The paper leaves from the outside of the roll, so I/mR² is only a little over ½ and it falls at about {#} g. Shown at ¼ speed.":
   "Sujeta el extremo suelto de un rollo de papel y suelta el rollo, junto a un rollo que simplemente se deja caer. El papel sale por fuera del rollo, así que I/mR² es solo un poco mayor que ½ y cae a unos {#} g. Se muestra a ¼ de velocidad.",
 "Core radius r":
@@ -752,6 +762,14 @@ VDI18N.add('es', 'demo/rotation', {
   "Vista lateral de dos cilindros sólidos soltados desde la misma altura: a la izquierda uno se desenrolla de una cuerda atada a la viga de arriba, a la derecha otro simplemente se suelta. Las flechas muestran el peso mg y la tensión de la cuerda T. Teclas: las flechas arriba y abajo cambian la altura de caída, izquierda y derecha el radio de la cuerda, Intro o espacio suelta ambos.",
 "Distance fallen against time from H = {#} m: the unwinding solid cylinder at a = {#} m/s² lands after {#} s, the dropped one at g after {#} s. Now t = {#} s. Show data table in the rail lists the values.":
   "Distancia caída en función del tiempo desde H = {#} m: el cilindro sólido que se desenrolla, con a = {#} m/s², llega tras {#} s, el soltado, con g, tras {#} s. Ahora t = {#} s. Mostrar la tabla de datos, en el panel, lista los valores.",
+"A skater seen from above, spinning with two masses at radius {#} m.":
+  "Una patinadora vista desde arriba, girando con dos masas a un radio de {#} m.",
+"No outside torque acts, so the angular momentum stays the same while the masses move.":
+  "No actúa ningún torque externo, así que el momento angular se mantiene igual mientras las masas se mueven.",
+"Angular momentum L = {#} kg·m²/s.":
+  "Momento angular L = {#} kg·m²/s.",
+"Angular speed ω = {#} rad/s, {#} rev/s.":
+  "Rapidez angular ω = {#} rad/s, {#} rev/s.",
 "The same clay hits a {#} cm rod {#} cm from the pin, at 2L/{#}: the center of percussion. Now the rod turns about the pin all by itself and the pin does not push at all, so even momentum is kept ({#} kg·m/s before and after). Batters feel this as the sweet spot of a bat: no sting in the hands.":
   "La misma plastilina golpea una varilla de {#} cm a {#} cm del pivote, en 2L/{#}: el centro de percusión. Ahora la varilla gira alrededor del pivote por sí sola y el pivote no empuja en absoluto, así que incluso el momento se conserva ({#} kg·m/s antes y después). Los bateadores lo sienten como el punto dulce de un bate: no les pica en las manos.",
 "the pin's push changes it by {#} N·s":
@@ -856,6 +874,22 @@ VDI18N.add('es', 'demo/rotation', {
   "Anillo delgado, I = mR², con la cuerda enrollada en su borde, así que sale en R.",
 "Table seen from above: a bouncy ball moving up the page toward a rod pinned at its left end, to hit it {#} m from the pin. Pointer: drag the ball sideways to move the hit point, drag the grip at its arrow tip to set its speed. Keys: left and right arrows move the hit point, up and down arrows change the speed, Enter or space goes.":
   "Mesa vista desde arriba: una pelota que rebota sube por la pantalla hacia una varilla con pivote en su extremo izquierdo, para golpearla a {#} m del pivote. Con el puntero: arrastra la pelota hacia los lados para mover el punto de impacto, arrastra el agarre en la punta de su flecha para fijar su rapidez. Teclas: las flechas izquierda y derecha mueven el punto de impacto, arriba y abajo cambian la rapidez, Intro o espacio arranca.",
+"A table seen from above: a bouncy ball of mass {#} kg moves toward a rod of mass {#} kg and length {#} m pinned at its end.":
+  "Una mesa vista desde arriba: una pelota rebotadora de masa {#} kg se mueve hacia una varilla de masa {#} kg y longitud {#} m con pivote en su extremo.",
+"The ball moves at {#} m/s and hits {#} m from the pin.":
+  "La pelota se mueve a {#} m/s y golpea a {#} m del pivote.",
+"The coefficient of restitution is {#}.":
+  "El coeficiente de restitución es {#}.",
+"After the hit the rod turns at ω = +{#} rad/s.":
+  "Después del golpe la varilla gira con ω = +{#} rad/s.",
+"The ball velocity after is −{#} m/s.":
+  "La velocidad de la pelota después es −{#} m/s.",
+"Angular momentum +{#} kg·m²/s before and +{#} after.":
+  "Momento angular +{#} kg·m²/s antes y +{#} después.",
+"Kinetic energy {#} J before and {#} J after.":
+  "Energía cinética {#} J antes y {#} J después.",
+"The pin pushes with an impulse of −{#} N·s.":
+  "El pivote empuja con un impulso de −{#} N·s.",
 "L about the pin = −{#} kg·m²/s, all in the ball, mud":
   "L respecto al pivote = −{#} kg·m²/s, todo en la pelota, mud",
 "Table seen from above: a bouncy ball moving up the page toward a rod pinned at its center, to hit it −{#} m from the pin. Pointer: drag the ball sideways to move the hit point, drag the grip at its arrow tip to set its speed. Keys: left and right arrows move the hit point, up and down arrows change the speed, Enter or space goes.":
@@ -872,24 +906,112 @@ VDI18N.add('es', 'demo/rotation', {
   "Deslizando: torca de fricción {#} N·m, +{#} sobre el disco más lento, −{#} sobre el más rápido",
 "Energy at t = {#} s out of {#} J: bottom disk +{#} J, top disk {#} J, heat +{#} J. Show data table in the rail lists the values.":
   "Energía en t = {#} s de {#} J: disco inferior +{#} J, disco superior {#} J, calor +{#} J. Mostrar la tabla de datos, en el panel, lista los valores.",
-"Running.":
-  "En marcha.",
 "Energy at t = {#} s out of {#} J: bottom disk +{#} J, top disk +{#} J, heat +{#} J. Show data table in the rail lists the values.":
   "Energía en t = {#} s de {#} J: disco inferior +{#} J, disco superior +{#} J, calor +{#} J. Mostrar la tabla de datos, en el panel, lista los valores.",
-"Paused.":
-  "En pausa.",
+"Turning together at ω = +{#} rad/s since t = {#} s":
+  "Girando juntos a ω = +{#} rad/s desde t = {#} s",
 "Spin against time after the top disk lands: the bottom disk from +{#} rad/s and the top one from {#} rad/s turn together at +{#} rad/s after {#} s. Now t = {#} s.":
   "Giro en función del tiempo después de que cae el disco superior: el disco inferior, desde +{#} rad/s, y el superior, desde {#} rad/s, giran juntos a +{#} rad/s tras {#} s. Ahora t = {#} s.",
 "Energy at t = {#} s out of {#} J: bottom disk +{#} J, top disk {#} J, heat {#} J.":
   "Energía en t = {#} s de {#} J: disco inferior +{#} J, disco superior {#} J, calor {#} J.",
 "The force keeps its direction in the room, so θ and the torque change as it turns (RK4 integration). α in the table is at the current angle.":
   "La fuerza mantiene su dirección en el cuarto, así que θ y la torca cambian mientras gira (integración RK4). La α de la tabla es la del ángulo actual.",
+"A wrench seen from above, {#} m long, turning about its bolt.":
+  "Una llave vista desde arriba, de {#} m de largo, girando alrededor de su tornillo.",
+"While it turns, F keeps its direction in the room.":
+  "Mientras gira, F conserva su dirección en el cuarto.",
 "Energy: Hoop, lane {#}":
   "Energía: Aro, carril {#}",
 "Distance down the {#} m ramp against time at β = {#}°, s = ½at², one line per lane: {#}. Hoop reaches the bottom at {#} s, {#}. Cylinder reaches the bottom at {#} s, {#}. Hoop reaches the bottom at {#} s, {#}. Hoop reaches the bottom at {#} s. Now t = {#} s. Show data table in the rail lists the values.":
   "Distancia rampa abajo en la rampa de {#} m en función del tiempo a β = {#}°, s = ½at², una línea por carril: {#}. Aro llega abajo a los {#} s, {#}. Cilindro llega abajo a los {#} s, {#}. Aro llega abajo a los {#} s, {#}. Aro llega abajo a los {#} s. Ahora t = {#} s. Mostrar la tabla de datos, en el panel, lista los valores.",
 "Energy of lane {#}, hoop, at t = {#} s: height lost mgh = {#} J, moving along ½mv² = {#} J, spinning ½Iω² = {#} J. Show data table in the rail lists the values.":
   "Energía del carril {#}, aro, en t = {#} s: altura perdida mgh = {#} J, avance ½mv² = {#} J, giro ½Iω² = {#} J. Mostrar la tabla de datos, en el panel, lista los valores.",
+"Distance down the {#} m ramp against time at β = {#}°, s = ½at², one line per lane: {#}. Hoop reaches the bottom at {#} s, {#}. Cylinder reaches the bottom at {#} s, {#}. Hoop reaches the bottom at {#} s, {#}. Hoop reaches the bottom at {#} s. Now t = {#} s.":
+  "Distancia rampa abajo en la rampa de {#} m en función del tiempo a β = {#}°, s = ½at², una línea por carril: {#}. Aro llega abajo a los {#} s, {#}. Cilindro llega abajo a los {#} s, {#}. Aro llega abajo a los {#} s, {#}. Aro llega abajo a los {#} s. Ahora t = {#} s.",
+"{#}. Hoop s (m)":
+  "{#}. Aro s (m)",
+"{#}. Cylinder s (m)":
+  "{#}. Cilindro s (m)",
+"Energy of lane {#}, hoop, at t = {#} s: height lost mgh = {#} J, moving along ½mv² = {#} J, spinning ½Iω² = {#} J.":
+  "Energía del carril {#}, aro, en t = {#} s: altura perdida mgh = {#} J, movimiento a lo largo ½mv² = {#} J, giro ½Iω² = {#} J.",
+"Energy: unwinding thin ring":
+  "Energía: anillo delgado que se desenrolla",
+"Side view of two thin rings let go from the same height: on the left one unwinds from a string tied to the beam above, on the right one is simply dropped. Arrows show the weight mg and the string tension T. Keys: up and down arrows change the drop height, left and right arrows the string radius, Enter or space lets both go.":
+  "Vista lateral de dos anillos delgados soltados desde la misma altura: a la izquierda uno se desenrolla de una cuerda atada a la viga de arriba, a la derecha otro simplemente se suelta. Las flechas muestran el peso mg y la tensión de la cuerda T. Teclas: las flechas arriba y abajo cambian la altura de caída, izquierda y derecha el radio de la cuerda, Intro o espacio suelta ambos.",
+"Distance fallen against time from H = {#} m: the unwinding thin ring at a = {#} m/s² lands after {#} s, the dropped one at g after {#} s. Now t = {#} s. Show data table in the rail lists the values.":
+  "Distancia caída en función del tiempo desde H = {#} m: el anillo delgado que se desenrolla, con a = {#} m/s², llega tras {#} s, el soltado, con g, tras {#} s. Ahora t = {#} s. Mostrar la tabla de datos, en el panel, lista los valores.",
+"Side view of two identical spools let go from the same height H = {#} m: the left one unwinds from a string tied to the beam above, the right one is simply dropped.":
+  "Vista lateral de dos carretes idénticos que se sueltan desde la misma altura H = {#} m: el de la izquierda se desenrolla de un hilo atado a la viga de arriba y el de la derecha simplemente se deja caer.",
+"Spool shape:":
+  "Forma del carrete:",
+"The unwinding one has I/mr² = {#} and falls at a = {#} m/s², which is {#} g.":
+  "El que se desenrolla tiene I/mr² = {#} y cae con a = {#} m/s², que es {#} g.",
+"The string tension is {#} N and the weight is {#} N.":
+  "La tensión del hilo es {#} N y el peso es {#} N.",
+"It lands after {#} s, the dropped one after {#} s.":
+  "Aterriza después de {#} s; el que se dejó caer, después de {#} s.",
+"Platform model: I₀ for the disk itself, two point masses on frictionless rails. Bearing friction neglected.":
+  "Modelo de plataforma: I₀ para el disco mismo, dos masas puntuales sobre rieles sin fricción. Se desprecia la fricción del cojinete.",
+"Platform seen from above, spinning with two masses at radius {#} m. Pointer: drag a mass in or out. Keys: up and down arrows move the masses out and in, Enter or space plays or pauses. Pull in and Push out in the rail move them smoothly.":
+  "Plataforma vista desde arriba, girando con dos masas a radio {#} m. Con el puntero: arrastra una masa hacia dentro o hacia fuera. Teclas: las flechas arriba y abajo mueven las masas hacia fuera y hacia dentro, Intro o espacio inicia o pausa. Recoger y Extender, en el panel, las mueven suavemente.",
+"Rotational energy: +{#} J at the start, plus +{#} J of work done moving the masses, equals +{#} J now. Show data table in the rail lists the values.":
+  "Energía de rotación: +{#} J al inicio, más +{#} J de trabajo hecho al mover las masas, es igual a +{#} J ahora. Mostrar la tabla de datos, en el panel, lista los valores.",
+"Compared with the start, over the last {#} s: I, ω, kinetic energy and L as ratios. Now I is {#} times, ω {#} times and the kinetic energy {#} times their starting values; L stays at {#}.":
+  "Comparado con el inicio, en los últimos {#} s: I, ω, energía cinética y L como cocientes. Ahora I es {#} veces, ω {#} veces y la energía cinética {#} veces sus valores iniciales; L se mantiene en {#}.",
+"I ratio":
+  "cociente de I",
+"ω ratio":
+  "cociente de ω",
+"KE ratio":
+  "cociente de EC",
+"L ratio":
+  "cociente de L",
+"Rotational energy: +{#} J at the start, plus +{#} J of work done moving the masses, equals +{#} J now.":
+  "Energía de rotación: +{#} J al inicio, más +{#} J de trabajo al mover las masas, es igual a +{#} J ahora.",
+"start + work − now = −{#} J":
+  "inicio + trabajo − ahora = −{#} J",
+"start + work − now = {#}e−{#} J":
+  "inicio + trabajo − ahora = {#}e−{#} J",
+"A platform seen from above, spinning with two masses at radius {#} m.":
+  "Una plataforma vista desde arriba, girando con dos masas a un radio de {#} m.",
+"net τ = {#} N·m, balanced":
+  "τ neta = {#} N·m, equilibrada",
+"stays level":
+  "se mantiene horizontal",
+"Torques about the pivot, counterclockwise positive: block A +{#} N·m, block B −{#} N·m; net {#} N·m. Show data table in the rail lists the values.":
+  "Torcas respecto al pivote, positivo en sentido antihorario: bloque A +{#} N·m, bloque B −{#} N·m; neta {#} N·m. Mostrar la tabla de datos, en el panel, lista los valores.",
+"A beam {#} m long and {#} kg on a center pivot, with blocks on it.":
+  "Una viga de {#} m de largo y {#} kg sobre un pivote central, con bloques encima.",
+"Block A: {#} kg, {#} m left of the pivot.":
+  "Bloque A: {#} kg, a {#} m a la izquierda del pivote.",
+"Block B: {#} kg, {#} m right of the pivot.":
+  "Bloque B: {#} kg, a {#} m a la derecha del pivote.",
+"Block C is not on the beam.":
+  "El bloque C no está en la viga.",
+"Block B is selected for the arrow keys.":
+  "El bloque B está seleccionado para las teclas de flecha.",
+"Net torque {#} N·m.":
+  "Torca neta {#} N·m.",
+"Block B would balance the beam at x = {#} m.":
+  "El bloque B equilibraría la viga en x = {#} m.",
+"The supports hold the beam level.":
+  "Los soportes mantienen la viga horizontal.",
+"It stays level if released.":
+  "Se mantiene horizontal si se suelta.",
+"Beam angle {#}°, time {#} s.":
+  "Ángulo de la viga {#}°, tiempo {#} s.",
+"While it turns, F keeps its angle θ to the wrench.":
+  "Mientras gira, F conserva su ángulo θ con la llave.",
+"Torque against push point r, a straight line through the pivot, for F = {#} N at θ = {#}°; dashed, the largest torque, at θ = {#}°. This push: r = {#} m, τ = +{#} N·m.":
+  "Torca en función del punto de empuje r, una recta que pasa por el pivote, para F = {#} N a θ = {#}°; punteada, la torca máxima, a θ = {#}°. Este empuje: r = {#} m, τ = +{#} N·m.",
+"τ at θ = {#}° (N·m)":
+  "τ a θ = {#}° (N·m)",
+"Door angle φ against time. Press Push to swing. Earlier push, at r = {#} m, turns {#}° in {#} s.":
+  "Ángulo de la puerta φ en función del tiempo. Presiona Empujar para hacerla girar. Empuje anterior, a r = {#} m, gira {#}° en {#} s.",
+"φ this push (°)":
+  "φ este empuje (°)",
+"φ earlier push (°)":
+  "φ empuje anterior (°)",
 "Speed v and rim speed ωR against time for a hoop launched at +{#} m/s with ω₀R = +{#} m/s on μk = {#}. They are equal from the start: it rolls. Now t = {#} s.":
   "Rapidez v y rapidez del borde ωR en función del tiempo para un aro lanzado a +{#} m/s con ω₀R = +{#} m/s sobre μk = {#}. Son iguales desde el inicio: rueda. Ahora t = {#} s.",
 "ωR (m/s)":
@@ -898,46 +1020,20 @@ VDI18N.add('es', 'demo/rotation', {
   "v − ωR (m/s)",
 "Energy at t = {#} s, out of {#} J at launch: moving along +{#} J, spinning +{#} J, heat from sliding {#} J. Angular momentum about the floor +{#} kg·m²/s.":
   "Energía en t = {#} s, de {#} J al lanzar: avance +{#} J, giro +{#} J, calor por deslizamiento {#} J. Momento angular respecto al piso +{#} kg·m²/s.",
-"Energy: unwinding thin ring":
-  "Energía: anillo delgado que se desenrolla",
-"Side view of two thin rings let go from the same height: on the left one unwinds from a string tied to the beam above, on the right one is simply dropped. Arrows show the weight mg and the string tension T. Keys: up and down arrows change the drop height, left and right arrows the string radius, Enter or space lets both go.":
-  "Vista lateral de dos anillos delgados soltados desde la misma altura: a la izquierda uno se desenrolla de una cuerda atada a la viga de arriba, a la derecha otro simplemente se suelta. Las flechas muestran el peso mg y la tensión de la cuerda T. Teclas: las flechas arriba y abajo cambian la altura de caída, izquierda y derecha el radio de la cuerda, Intro o espacio suelta ambos.",
-"Distance fallen against time from H = {#} m: the unwinding thin ring at a = {#} m/s² lands after {#} s, the dropped one at g after {#} s. Now t = {#} s. Show data table in the rail lists the values.":
-  "Distancia caída en función del tiempo desde H = {#} m: el anillo delgado que se desenrolla, con a = {#} m/s², llega tras {#} s, el soltado, con g, tras {#} s. Ahora t = {#} s. Mostrar la tabla de datos, en el panel, lista los valores.",
-"Platform model: I₀ for the disk itself, two point masses on frictionless rails. Bearing friction neglected.":
-  "Modelo de plataforma: I₀ para el disco mismo, dos masas puntuales sobre rieles sin fricción. Se desprecia la fricción del cojinete.",
-"Platform seen from above, spinning with two masses at radius {#} m. Pointer: drag a mass in or out. Keys: up and down arrows move the masses out and in, Enter or space plays or pauses. Pull in and Push out in the rail move them smoothly.":
-  "Plataforma vista desde arriba, girando con dos masas a radio {#} m. Con el puntero: arrastra una masa hacia dentro o hacia fuera. Teclas: las flechas arriba y abajo mueven las masas hacia fuera y hacia dentro, Intro o espacio inicia o pausa. Recoger y Extender, en el panel, las mueven suavemente.",
-"Rotational energy: +{#} J at the start, plus +{#} J of work done moving the masses, equals +{#} J now. Show data table in the rail lists the values.":
-  "Energía de rotación: +{#} J al inicio, más +{#} J de trabajo hecho al mover las masas, es igual a +{#} J ahora. Mostrar la tabla de datos, en el panel, lista los valores.",
-"start + work − now = −{#} J":
-  "inicio + trabajo − ahora = −{#} J",
-"start + work − now = {#}e−{#} J":
-  "inicio + trabajo − ahora = {#}e−{#} J",
-"net τ = {#} N·m, balanced":
-  "τ neta = {#} N·m, equilibrada",
-"stays level":
-  "se mantiene horizontal",
-"Torques about the pivot, counterclockwise positive: block A +{#} N·m, block B −{#} N·m; net {#} N·m. Show data table in the rail lists the values.":
-  "Torcas respecto al pivote, positivo en sentido antihorario: bloque A +{#} N·m, bloque B −{#} N·m; neta {#} N·m. Mostrar la tabla de datos, en el panel, lista los valores.",
-"A ramp {#} m long, tilted {#}°, with {#} lanes and one object at the top of each.":
-  "Una rampa de {#} m de largo, inclinada {#}°, con {#} carriles y un objeto en la parte alta de cada uno.",
-"Lane {#}:":
-  "Carril {#}:",
-"I/mR² = {#}, reaches the bottom in {#} s.":
-  "I/mR² = {#}, llega abajo en {#} s.",
-"Lane {#} is selected: a = {#} m/s², speed at the bottom {#} m/s.":
-  "El carril {#} está seleccionado: a = {#} m/s², rapidez al final {#} m/s.",
-"Ready to race.":
-  "Listo para la carrera.",
-"Distance down the {#} m ramp against time at β = {#}°, s = ½at², one line per lane: {#}. Cylinder reaches the bottom at {#} s, {#}. Cylinder reaches the bottom at {#} s, {#}. Hoop reaches the bottom at {#} s, {#}. Hoop reaches the bottom at {#} s. Now t = {#} s.":
-  "Distancia rampa abajo en la rampa de {#} m en función del tiempo a β = {#}°, s = ½at², una línea por carril: {#}. Cilindro llega abajo a los {#} s, {#}. Cilindro llega abajo a los {#} s, {#}. Aro llega abajo a los {#} s, {#}. Aro llega abajo a los {#} s. Ahora t = {#} s.",
-"{#}. Cylinder s (m)":
-  "{#}. Cilindro s (m)",
-"{#}. Hoop s (m)":
-  "{#}. Aro s (m)",
-"Energy of lane {#}, cylinder, at t = {#} s: height lost mgh = {#} J, moving along ½mv² = {#} J, spinning ½Iω² = {#} J.":
-  "Energía del carril {#}, cilindro, en t = {#} s: altura perdida mgh = {#} J, avance ½mv² = {#} J, giro ½Iω² = {#} J.",
+"Launched at v = +{#} m/s with a rim speed ωR = {#} m/s.":
+  "Lanzado con v = +{#} m/s y una rapidez del borde ωR = {#} m/s.",
+"It slides for {#} s, then rolls at +{#} m/s.":
+  "Se desliza durante {#} s y luego rueda a +{#} m/s.",
+"The slide covers {#} m.":
+  "El deslizamiento recorre {#} m.",
+"Speed v = +{#} m/s, rim speed ωR = {#} m/s, still sliding, time {#} s.":
+  "Rapidez v = +{#} m/s, rapidez del borde ωR = {#} m/s, todavía deslizándose, tiempo {#} s.",
+"Launched at v = +{#} m/s with a rim speed ωR = −{#} m/s.":
+  "Lanzado con v = +{#} m/s y una rapidez del borde ωR = −{#} m/s.",
+"It slides for {#} s, then rolls at −{#} m/s.":
+  "Se desliza durante {#} s y luego rueda a −{#} m/s.",
+"Speed v = +{#} m/s, rim speed ωR = −{#} m/s, still sliding, time {#} s.":
+  "Rapidez v = +{#} m/s, rapidez del borde ωR = −{#} m/s, todavía deslizándose, tiempo {#} s.",
 "Distance fallen against time from H = {#} m: the unwinding yo-yo at a = {#} m/s² lands after {#} s, the dropped one at g after {#} s. Now t = {#} s.":
   "Distancia caída en función del tiempo desde H = {#} m: el yoyo que se desenrolla, con a = {#} m/s², llega tras {#} s, el soltado, con g, tras {#} s. Ahora t = {#} s.",
 "unwinding (m)":
@@ -946,14 +1042,54 @@ VDI18N.add('es', 'demo/rotation', {
   "soltado (m)",
 "Energy of the unwinding spool at t = {#} s: height lost mgh = {#} J, moving down ½mv² = {#} J, spinning ½Iω² = {#} J.":
   "Energía del carrete que se desenrolla en t = {#} s: altura perdida mgh = {#} J, bajada ½mv² = {#} J, giro ½Iω² = {#} J.",
-"A skater seen from above, spinning with two masses at radius {#} m.":
-  "Una patinadora vista desde arriba, girando con dos masas a un radio de {#} m.",
-"No outside torque acts, so the angular momentum stays the same while the masses move.":
-  "No actúa ningún torque externo, así que el momento angular se mantiene igual mientras las masas se mueven.",
-"Angular momentum L = {#} kg·m²/s.":
-  "Momento angular L = {#} kg·m²/s.",
-"Angular speed ω = {#} rad/s, {#} rev/s.":
-  "Rapidez angular ω = {#} rad/s, {#} rev/s.",
+"Rotational energy: +{#} J at the start, plus {#} J of work done moving the masses, equals +{#} J now.":
+  "Energía de rotación: +{#} J al inicio, más {#} J de trabajo al mover las masas, es igual a +{#} J ahora.",
+"Net torque +{#} N·m.":
+  "Torca neta +{#} N·m.",
+"It would tip to the ground in {#} s.":
+  "Caería al suelo en {#} s.",
+"L = +{#} kg·m²/s = mud":
+  "L = +{#} kg·m²/s = mud",
+"A table seen from above: a clay ball of mass {#} kg moves toward a rod of mass {#} kg and length {#} m pinned at its end.":
+  "Una mesa vista desde arriba: una bola de plastilina de masa {#} kg se mueve hacia una varilla de masa {#} kg y longitud {#} m con pivote en su extremo.",
+"The clay moves with the rod at +{#} m/s.":
+  "La plastilina se mueve con la varilla a +{#} m/s.",
+"The pin pushes with an impulse of +{#} N·s.":
+  "El pivote empuja con un impulso de +{#} N·s.",
+"The pin pushes with an impulse of {#} N·s.":
+  "El pivote empuja con un impulso de {#} N·s.",
+"Angular momentum about the rod’s starting center at t = {#} s: ball +{#}, rod {#}, total +{#} kg·m²/s (mud = +{#} before the hit). Momentum along the ball's path +{#} before, +{#} kg·m/s after.":
+  "Momento angular respecto al centro inicial de la varilla en t = {#} s: pelota +{#}, varilla {#}, total +{#} kg·m²/s (plastilina = +{#} antes del golpe). Momento lineal a lo largo de la trayectoria de la pelota +{#} antes, +{#} kg·m/s después.",
+"Part":
+  "Parte",
+"Kinetic energy at t = {#} s out of {#} J: ball +{#} J, rod {#} J.":
+  "Energía cinética en t = {#} s de {#} J: pelota +{#} J, varilla {#} J.",
+"Lost in the hit":
+  "Perdida en el golpe",
+"A table seen from above: a clay ball of mass {#} kg moves toward a rod of mass {#} kg and length {#} m lying free.":
+  "Una mesa vista desde arriba: una bola de plastilina de masa {#} kg se mueve hacia una varilla de masa {#} kg y longitud {#} m que yace libre.",
+"The ball moves at {#} m/s and hits {#} m from the center of the rod.":
+  "La pelota se mueve a {#} m/s y golpea a {#} m del centro de la varilla.",
+"The center of the rod moves at +{#} m/s.":
+  "El centro de la varilla se mueve a +{#} m/s.",
+"A table seen from above: a bouncy ball of mass {#} kg moves toward a rod of mass {#} kg and length {#} m pinned at its center.":
+  "Una mesa vista desde arriba: una pelota rebotadora de masa {#} kg se mueve hacia una varilla de masa {#} kg y longitud {#} m con pivote en su centro.",
+"L = −{#} kg·m²/s = mud":
+  "L = −{#} kg·m²/s = mud",
+"The ball moves at {#} m/s and hits −{#} m from the pin.":
+  "La pelota se mueve a {#} m/s y golpea a −{#} m del pivote.",
+"After the hit the rod turns at ω = −{#} rad/s.":
+  "Después del golpe la varilla gira con ω = −{#} rad/s.",
+"Angular momentum −{#} kg·m²/s before and −{#} after.":
+  "Momento angular −{#} kg·m²/s antes y −{#} después.",
+"A table seen from above: a bouncy ball of mass {#} kg moves toward a rod of mass {#} kg and length {#} m lying free.":
+  "Una mesa vista desde arriba: una pelota rebotadora de masa {#} kg se mueve hacia una varilla de masa {#} kg y longitud {#} m que yace libre.",
+"The ball moves at {#} m/s and hits −{#} m from the center of the rod.":
+  "La pelota se mueve a {#} m/s y golpea a −{#} m del centro de la varilla.",
+"Distance down the {#} m ramp against time at β = {#}°, s = ½at², one line per lane: {#}. Cylinder reaches the bottom at {#} s, {#}. Cylinder reaches the bottom at {#} s, {#}. Hoop reaches the bottom at {#} s, {#}. Hoop reaches the bottom at {#} s. Now t = {#} s.":
+  "Distancia rampa abajo en la rampa de {#} m en función del tiempo a β = {#}°, s = ½at², una línea por carril: {#}. Cilindro llega abajo a los {#} s, {#}. Cilindro llega abajo a los {#} s, {#}. Aro llega abajo a los {#} s, {#}. Aro llega abajo a los {#} s. Ahora t = {#} s.",
+"Energy of lane {#}, cylinder, at t = {#} s: height lost mgh = {#} J, moving along ½mv² = {#} J, spinning ½Iω² = {#} J.":
+  "Energía del carril {#}, cilindro, en t = {#} s: altura perdida mgh = {#} J, avance ½mv² = {#} J, giro ½Iω² = {#} J.",
 "Torques about the pivot, counterclockwise positive: block A +{#} N·m, block B −{#} N·m; net +{#} N·m.":
   "Torcas respecto al pivote, positivo en sentido antihorario: bloque A +{#} N·m, bloque B −{#} N·m; neta +{#} N·m.",
 "Block A":
@@ -962,34 +1098,24 @@ VDI18N.add('es', 'demo/rotation', {
   "Bloque B",
 "Block C":
   "Bloque C",
-"L = +{#} kg·m²/s = mud":
-  "L = +{#} kg·m²/s = mud",
 "Angular momentum about the pin at t = {#} s: ball +{#}, rod {#}, total +{#} kg·m²/s (mud = +{#} before the hit). Momentum along the ball's path +{#} before, −{#} kg·m/s after.":
   "Momento angular respecto al pivote en t = {#} s: pelota +{#}, varilla {#}, total +{#} kg·m²/s (mud = +{#} antes del golpe). Momento a lo largo de la trayectoria de la pelota +{#} antes, −{#} kg·m/s después.",
-"Part":
-  "Parte",
-"Kinetic energy at t = {#} s out of {#} J: ball +{#} J, rod {#} J.":
-  "Energía cinética en t = {#} s de {#} J: pelota +{#} J, varilla {#} J.",
-"Lost in the hit":
-  "Perdida en el golpe",
-"L = −{#} kg·m²/s = mud":
-  "L = −{#} kg·m²/s = mud",
 "Angular momentum about the pin at t = {#} s: ball −{#}, rod {#}, total −{#} kg·m²/s (mud = −{#} before the hit). Momentum along the ball's path +{#} before, −{#} kg·m/s after.":
   "Momento angular respecto al pivote en t = {#} s: pelota −{#}, varilla {#}, total −{#} kg·m²/s (mud = −{#} antes del golpe). Momento a lo largo de la trayectoria de la pelota +{#} antes, −{#} kg·m/s después.",
-"Turning together at ω = +{#} rad/s since t = {#} s":
-  "Girando juntos a ω = +{#} rad/s desde t = {#} s",
-"Compared with the start, over the last {#} s: I, ω, kinetic energy and L as ratios. Now I is {#} times, ω {#} times and the kinetic energy {#} times their starting values; L stays at {#}.":
-  "Comparado con el inicio, en los últimos {#} s: I, ω, energía cinética y L como cocientes. Ahora I es {#} veces, ω {#} veces y la energía cinética {#} veces sus valores iniciales; L se mantiene en {#}.",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
+"Time {#} s.":
+  "Tiempo {#} s.",
+"Running.":
+  "En marcha.",
+"Paused.":
+  "En pausa.",
 "Torque is r⊥F, the force times its lever arm. Tilt the arrow: only the part of F perpendicular to the handle turns the bolt, and a push along the handle does nothing.":
   "La torca es r⊥F, la fuerza por su brazo de palanca. Inclina la flecha: solo la parte de F perpendicular al mango hace girar el perno, y un empuje a lo largo del mango no hace nada.",
 "A heavy, wide cylinder against a light, narrow one, and the same for two hoops. Shape decides the race, through I/mR², and mass and radius cancel out.":
   "Un cilindro pesado y ancho contra uno ligero y angosto, y lo mismo para dos aros. La forma decide la carrera, mediante I/mR², y la masa y el radio se cancelan.",
-"Torque against push point r, a straight line through the pivot, for F = {#} N at θ = {#}°; dashed, the largest torque, at θ = {#}°. This push: r = {#} m, τ = +{#} N·m.":
-  "Torca en función del punto de empuje r, una recta que pasa por el pivote, para F = {#} N a θ = {#}°; punteada, la torca máxima, a θ = {#}°. Este empuje: r = {#} m, τ = +{#} N·m.",
-"φ this push (°)":
-  "φ este empuje (°)",
-"φ earlier push (°)":
-  "φ empuje anterior (°)",
 "Two identical yo-yos let go together from the same height: one unwinds from its string, the other just falls. The string pulls up, and its torque spins the yo-yo up, so it falls at a = g/({#} + I/mr²), here g/{#}.":
   "Dos yoyos idénticos soltados a la vez desde la misma altura: uno se desenrolla de su cuerda, el otro simplemente cae. La cuerda tira hacia arriba, y su torca hace girar al yoyo, así que cae con a = g/({#} + I/mr²), aquí g/{#}.",
 "Thrown forward with strong backspin, ω₀R = −{#} m/s. Friction slows the ball and then sends it back: once v = ωR it rolls back toward you at (v₀ + ⅖ω₀R)/({#} + ⅖). The angular momentum about the floor stays the same throughout.":
@@ -1000,18 +1126,8 @@ VDI18N.add('es', 'demo/rotation', {
   "Un cilindro sólido con la cuerda enrollada en su superficie cae exactamente con ⅔g, sea cual sea su masa y su radio; un anillo delgado cae con ½g.",
 "Close":
   "Cerrar",
-"I ratio":
-  "cociente de I",
-"ω ratio":
-  "cociente de ω",
-"KE ratio":
-  "cociente de EC",
-"L ratio":
-  "cociente de L",
 "dashed: r = {#} m":
   "punteado: r = {#} m",
-"τ at θ = {#}° (N·m)":
-  "τ a θ = {#}° (N·m)",
 "Look":
   "Aspecto"
 });

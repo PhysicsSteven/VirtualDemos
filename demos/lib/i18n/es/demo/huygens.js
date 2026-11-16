@@ -16,20 +16,12 @@ VDI18N.add('es', 'demo/huygens', {
   "salida",
 "finish, {#} m":
   "meta, {#} m",
-"Describe the picture":
-  "Describir la imagen",
 "Huygens's Principle":
   "Principio de Huygens",
 "<a><span>←</span> <span>Electromagnetic Waves</span></a><a><span>Optics Bench</span> <span>→</span></a>":
   "<a><span>←</span> <span>Ondas electromagnéticas</span></a><a><span>Banco óptico</span> <span>→</span></a>",
 "Light is slower in matter, v = c/n. Race light through water, glass and diamond, then use Huygens's wavelets to see why that slowing bends a wave at a boundary, how a mirror reflects it, and how a wave spreads through an opening.":
   "La luz es más lenta en la materia, v = c/n. Haz competir la luz a través del agua, el vidrio y el diamante, y luego usa las ondículas de Huygens para ver por qué ese frenado desvía una onda en una frontera, cómo la refleja un espejo y cómo se dispersa una onda a través de una abertura.",
-"Time controls":
-  "Controles de tiempo",
-"Run for a moment and pause again":
-  "Avanza un momento y vuelve a pausar",
-"Step":
-  "Paso",
 "Depending on the view: light pulses racing along lanes of different materials; a wavefront building the next one from wavelets; a plane wave meeting a boundary with wavelets from the boundary; or a wave passing through an opening in a wall.":
   "Según la vista: pulsos de luz que compiten por carriles de distintos materiales; un frente de onda que construye el siguiente a partir de ondículas; una onda plana que llega a una frontera, con ondículas desde la frontera; o una onda que pasa por una abertura en una pared.",
 "Seven lanes, each {#} m long, with a pulse of light starting in each at the same moment.":
@@ -48,10 +40,6 @@ VDI18N.add('es', 'demo/huygens', {
   "Circón, n = {#}, rapidez de la luz {#} × {#}⁸ m/s, tiempo de cruce {#} ns.",
 "Diamond, n = {#}, light speed {#} × {#}⁸ m/s, crossing time {#} ns.":
   "Diamante, n = {#}, rapidez de la luz {#} × {#}⁸ m/s, tiempo de cruce {#} ns.",
-"Playing.":
-  "En reproducción.",
-"Time {#} s.":
-  "Tiempo {#} s.",
 "{#} of {#} pulses have reached the end.":
   "{#} de {#} pulsos han llegado al final.",
 "Light in matter: a race":
@@ -152,14 +140,8 @@ VDI18N.add('es', 'demo/huygens', {
   "Cada pulso se dibuja como una onda corta, enormemente agrandada: su longitud de onda y su longitud se reducen a {#}/n dentro del material. Los carriles se dibujan de la misma longitud, sea cual sea L. Arrastra para girar.",
 "Medium":
   "Medio",
-"Skip to the picture":
-  "Ir a la imagen",
-"Skip to the controls":
-  "Ir a los controles",
 "Time {#} ps.":
   "Tiempo {#} ps.",
-"Paused.":
-  "En pausa.",
 "a straight front moving to the right":
   "un frente recto que se mueve hacia la derecha",
 "front now":
@@ -186,6 +168,14 @@ VDI18N.add('es', 'demo/huygens', {
   "Medio superior: n₁, v₁",
 "Angle of reflection":
   "Ángulo de reflexión",
+"A plane wave in air, n = {#}, meets a mirror.":
+  "Una onda plana en aire, n = {#}, llega a un espejo.",
+"Angle of incidence {#}°.":
+  "Ángulo de incidencia {#}°.",
+"The angle of reflection is {#}°.":
+  "El ángulo de reflexión es {#}°.",
+"The reflected wave is shown.":
+  "Se muestra la onda reflejada.",
 "In glass the wavelets grow only {#}/{#} as fast, so the part of the front already in the glass falls behind and the front turns: the ray bends toward the normal. This is how Huygens derived Snell’s law (OpenStax Example {#}).":
   "En el vidrio las ondículas crecen solo {#}/{#} de rápido, así que la parte del frente que ya está en el vidrio se queda atrás y el frente gira: el rayo se desvía hacia la normal. Así dedujo Huygens la ley de Snell (Ejemplo {#} de OpenStax).",
 "Lower medium: n₂, v₂":
@@ -230,6 +220,36 @@ VDI18N.add('es', 'demo/huygens', {
   "{#} ondículas salen del frente.",
 "Each wavelet grows at the wave speed, and the next front is the line tangent to them all.":
   "Cada ondícula crece a la rapidez de la onda, y el siguiente frente es la recta tangente a todas.",
+"A plane wave in air, n = {#}, meets crown glass, n = {#}.":
+  "Una onda plana en aire, n = {#}, llega a vidrio crown, n = {#}.",
+"Angle of refraction {#}°.":
+  "Ángulo de refracción {#}°.",
+"There is no critical angle, because light slows down.":
+  "No hay ángulo crítico, porque la luz se hace más lenta.",
+"The reflected wave is not shown.":
+  "No se muestra la onda reflejada.",
+"A plane wave in crown glass, n = {#}, meets air, n = {#}.":
+  "Una onda plana en vidrio crown, n = {#}, llega a aire, n = {#}.",
+"Critical angle {#}°.":
+  "Ángulo crítico {#}°.",
+"Describe the picture":
+  "Describir la imagen",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
+"Playing.":
+  "En reproducción.",
+"Time {#} s.":
+  "Tiempo {#} s.",
+"Skip to the picture":
+  "Ir a la imagen",
+"Skip to the controls":
+  "Ir a los controles",
+"Paused.":
+  "En pausa.",
 "Close":
   "Cerrar"
 });

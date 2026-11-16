@@ -16,8 +16,6 @@ VDI18N.add('es', 'demo/induction-at-work', {
   "— FEM ε",
 "— capacitor":
   "— capacitor",
-"Describe the picture":
-  "Describir la imagen",
 "Induction at Work":
   "La inducción en acción",
 "<a>Induction and inductance</a>":
@@ -42,8 +40,6 @@ VDI18N.add('es', 'demo/induction-at-work', {
   "Energía de tu mano {#} J.",
 "EMF now {#} V.":
   "FEM ahora {#} V.",
-"Time {#} s.":
-  "Tiempo {#} s.",
 "Apparatus controls":
   "Controles del aparato",
 "Shakes per second":
@@ -108,8 +104,6 @@ VDI18N.add('es', 'demo/induction-at-work', {
   "Corriente de carga",
 "Capacitor voltage":
   "Voltaje del capacitor",
-"Light":
-  "Luz",
 "switched off":
   "apagada",
 "Energy from your hand":
@@ -146,10 +140,6 @@ VDI18N.add('es', 'demo/induction-at-work', {
   "Tiempo (s)",
 "EMF (V)":
   "FEM (V)",
-"Skip to the picture":
-  "Ir a la imagen",
-"Skip to the controls":
-  "Ir a los controles",
 "Stop shaking":
   "Dejar de agitar",
 "light on":
@@ -240,18 +230,56 @@ VDI18N.add('es', 'demo/induction-at-work', {
   "los {#} mm de la pista {#} en el cabezal, {#}× a lo largo de la banda",
 "scope":
   "osciloscopio",
+"{#} nJ":
+  "{#} nJ",
+"Shaking {#} times per second, with a stroke of {#} cm.":
+  "Agitando {#} veces por segundo, con una carrera de {#} cm.",
+"Energy from your hand {#} µJ.":
+  "Energía de tu mano {#} µJ.",
+"EMF now -{#} mV.":
+  "FEM ahora -{#} mV.",
 "on, {#} mA, {#} mW":
   "encendida, {#} mA, {#} mW",
 "-{#} mJ":
   "-{#} mJ",
+"The light is switched on.":
+  "La luz está encendida.",
+"The light is lit.":
+  "La luz está prendida.",
 "the pen is not moving (or barely): no change of flux, no EMF":
   "la pluma no se mueve (o apenas): no hay cambio de flujo, no hay FEM",
+"A graphics tablet: a grid of wires under a pen with a tiny magnet in its tip.":
+  "Una tableta gráfica: una malla de alambres bajo una pluma con un imán diminuto en la punta.",
+"The pen is moving in a circle.":
+  "La pluma se mueve en un círculo.",
+"The pen is at ({#}, {#}) mm.":
+  "La pluma está en ({#}, {#}) mm.",
+"Pen speed {#} cm/s.":
+  "Rapidez de la pluma {#} cm/s.",
+"The moving pen gives the wires near it an EMF.":
+  "La pluma en movimiento induce una FEM en los alambres cercanos.",
+"The tablet puts the pen at ({#}, {#}) mm.":
+  "La tableta ubica la pluma en ({#}, {#}) mm.",
+"Drag the pen to move it.":
+  "Arrastra la pluma para moverla.",
+"The pen is not moving, so no wire has an EMF.":
+  "La pluma no se mueve, así que ningún alambre tiene FEM.",
+"The tablet cannot see the pen.":
+  "La tableta no puede ver la pluma.",
 "Swipe speed {#} m/s.":
   "Rapidez del deslizamiento {#} m/s.",
+"Describe the picture":
+  "Describir la imagen",
+"Time {#} s.":
+  "Tiempo {#} s.",
+"Light":
+  "Luz",
+"Skip to the picture":
+  "Ir a la imagen",
+"Skip to the controls":
+  "Ir a los controles",
 "t (s) · fast forward, {#} s = {#} s":
   "t (s) · avance rápido, {#} s = {#} s",
 "Close":
-  "Cerrar",
-"{#} nJ":
-  "{#} nJ"
+  "Cerrar"
 });

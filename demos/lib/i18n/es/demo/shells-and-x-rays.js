@@ -1,7 +1,5 @@
 /* demo/shells-and-x-rays in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/shells-and-x-rays', {
-"Describe the picture":
-  "Describir la imagen",
 "Neon (Z = {#}): 1s² 2s² 2p⁶":
   "Neón (Z = {#}): 1s² 2s² 2p⁶",
 "electrons in each shell (of 2n²)":
@@ -756,10 +754,6 @@ VDI18N.add('es', 'demo/shells-and-x-rays', {
   "kerma en aire K/K₀",
 "TUBE VOLTAGE":
   "TUBE VOLTAGE",
-"Skip to the picture":
-  "Ir a la imagen",
-"Skip to the controls":
-  "Ir a los controles",
 "not to scale: the nucleus is tens of thousands of times smaller than the atom":
   "no está a escala: el núcleo es decenas de miles de veces más pequeño que el átomo",
 "Carbon":
@@ -952,10 +946,6 @@ VDI18N.add('es', 'demo/shells-and-x-rays', {
   "Energía media del fotón",
 "Minimum first HVL, {#} CFR {#}":
   "Primera CHR mínima, {#} CFR {#}",
-"Al (mm)":
-  "Al (mm)",
-"sheets (mm)":
-  "láminas (mm)",
 "The target is Tungsten, Z = {#}.":
   "El blanco es tungsteno, Z = {#}.",
 "The spectrum is plotted against photon energy.":
@@ -968,154 +958,268 @@ VDI18N.add('es', 'demo/shells-and-x-rays', {
   "La segunda capa hemirreductora es de {#} mm de aluminio.",
 "The mean photon energy is {#} keV.":
   "La energía media del fotón es {#} keV.",
+"Al (mm)":
+  "Al (mm)",
+"sheets (mm)":
+  "láminas (mm)",
 "target: aluminum":
   "blanco: aluminio",
 "The target is Aluminum, Z = {#}.":
   "El blanco es aluminio, Z = {#}.",
 "target: silicon":
   "blanco: silicio",
+"The target is Silicon, Z = {#}.":
+  "El blanco es silicio, Z = {#}.",
 "target: sulfur":
   "blanco: azufre",
+"The target is Sulfur, Z = {#}.":
+  "El blanco es azufre, Z = {#}.",
 "target: chlorine":
   "blanco: cloro",
+"The target is Chlorine, Z = {#}.":
+  "El blanco es cloro, Z = {#}.",
 "target: argon":
   "blanco: argón",
+"The target is Argon, Z = {#}.":
+  "El blanco es argón, Z = {#}.",
 "target: potassium":
   "blanco: potasio",
+"The target is Potassium, Z = {#}.":
+  "El blanco es potasio, Z = {#}.",
 "target: calcium":
   "blanco: calcio",
+"The target is Calcium, Z = {#}.":
+  "El blanco es calcio, Z = {#}.",
 "target: scandium":
   "blanco: escandio",
 "The target is Scandium, Z = {#}.":
   "El blanco es escandio, Z = {#}.",
 "target: titanium":
   "blanco: titanio",
+"The target is Titanium, Z = {#}.":
+  "El blanco es titanio, Z = {#}.",
 "target: vanadium":
   "blanco: vanadio",
+"The target is Vanadium, Z = {#}.":
+  "El blanco es vanadio, Z = {#}.",
 "target: chromium":
   "blanco: cromo",
+"The target is Chromium, Z = {#}.":
+  "El blanco es cromo, Z = {#}.",
 "target: manganese":
   "blanco: manganeso",
+"The target is Manganese, Z = {#}.":
+  "El blanco es manganeso, Z = {#}.",
 "target: iron":
   "blanco: hierro",
+"The target is Iron, Z = {#}.":
+  "El blanco es hierro, Z = {#}.",
 "target: cobalt":
   "blanco: cobalto",
+"The target is Cobalt, Z = {#}.":
+  "El blanco es cobalto, Z = {#}.",
 "target: nickel":
   "blanco: níquel",
 "The target is Nickel, Z = {#}.":
   "El blanco es níquel, Z = {#}.",
 "target: zinc":
   "blanco: zinc",
+"The target is Zinc, Z = {#}.":
+  "El blanco es zinc, Z = {#}.",
 "target: gallium":
   "blanco: galio",
+"The target is Gallium, Z = {#}.":
+  "El blanco es galio, Z = {#}.",
 "target: germanium":
   "blanco: germanio",
+"The target is Germanium, Z = {#}.":
+  "El blanco es germanio, Z = {#}.",
 "target: arsenic":
   "blanco: arsénico",
+"The target is Arsenic, Z = {#}.":
+  "El blanco es arsénico, Z = {#}.",
 "target: selenium":
   "blanco: selenio",
 "The target is Selenium, Z = {#}.":
   "El blanco es selenio, Z = {#}.",
 "target: bromine":
   "blanco: bromo",
+"The target is Bromine, Z = {#}.":
+  "El blanco es bromo, Z = {#}.",
 "target: krypton":
   "blanco: kriptón",
+"The target is Krypton, Z = {#}.":
+  "El blanco es kriptón, Z = {#}.",
 "target: rubidium":
   "blanco: rubidio",
+"The target is Rubidium, Z = {#}.":
+  "El blanco es rubidio, Z = {#}.",
 "target: strontium":
   "blanco: estroncio",
+"The target is Strontium, Z = {#}.":
+  "El blanco es estroncio, Z = {#}.",
 "target: yttrium":
   "blanco: itrio",
+"The target is Yttrium, Z = {#}.":
+  "El blanco es itrio, Z = {#}.",
 "target: zirconium":
   "blanco: circonio",
+"The target is Zirconium, Z = {#}.":
+  "El blanco es circonio, Z = {#}.",
 "target: niobium":
   "blanco: niobio",
+"The target is Niobium, Z = {#}.":
+  "El blanco es niobio, Z = {#}.",
 "The target is Molybdenum, Z = {#}.":
   "El blanco es molibdeno, Z = {#}.",
 "target: ruthenium":
   "blanco: rutenio",
+"The target is Ruthenium, Z = {#}.":
+  "El blanco es rutenio, Z = {#}.",
 "target: rhodium":
   "blanco: rodio",
+"The target is Rhodium, Z = {#}.":
+  "El blanco es rodio, Z = {#}.",
 "target: palladium":
   "blanco: paladio",
+"The target is Palladium, Z = {#}.":
+  "El blanco es paladio, Z = {#}.",
 "target: silver":
   "blanco: plata",
+"The target is Silver, Z = {#}.":
+  "El blanco es plata, Z = {#}.",
 "target: cadmium":
   "blanco: cadmio",
+"The target is Cadmium, Z = {#}.":
+  "El blanco es cadmio, Z = {#}.",
 "target: indium":
   "blanco: indio",
+"The target is Indium, Z = {#}.":
+  "El blanco es indio, Z = {#}.",
 "target: tin":
   "blanco: estaño",
 "The target is Tin, Z = {#}.":
   "El blanco es estaño, Z = {#}.",
 "target: antimony":
   "blanco: antimonio",
+"The target is Antimony, Z = {#}.":
+  "El blanco es antimonio, Z = {#}.",
 "target: tellurium":
   "blanco: telurio",
+"The target is Tellurium, Z = {#}.":
+  "El blanco es telurio, Z = {#}.",
 "target: iodine":
   "blanco: yodo",
+"The target is Iodine, Z = {#}.":
+  "El blanco es yodo, Z = {#}.",
 "target: xenon":
   "blanco: xenón",
+"The target is Xenon, Z = {#}.":
+  "El blanco es xenón, Z = {#}.",
 "target: cesium":
   "blanco: cesio",
+"The target is Cesium, Z = {#}.":
+  "El blanco es cesio, Z = {#}.",
 "target: barium":
   "blanco: bario",
 "The target is Barium, Z = {#}.":
   "El blanco es bario, Z = {#}.",
 "target: lanthanum":
   "blanco: lantano",
+"The target is Lanthanum, Z = {#}.":
+  "El blanco es lantano, Z = {#}.",
 "target: cerium":
   "blanco: cerio",
+"The target is Cerium, Z = {#}.":
+  "El blanco es cerio, Z = {#}.",
 "target: praseodymium":
   "blanco: praseodimio",
+"The target is Praseodymium, Z = {#}.":
+  "El blanco es praseodimio, Z = {#}.",
 "target: neodymium":
   "blanco: neodimio",
+"The target is Neodymium, Z = {#}.":
+  "El blanco es neodimio, Z = {#}.",
 "target: samarium":
   "blanco: samario",
+"The target is Samarium, Z = {#}.":
+  "El blanco es samario, Z = {#}.",
 "target: europium":
   "blanco: europio",
+"The target is Europium, Z = {#}.":
+  "El blanco es europio, Z = {#}.",
 "target: gadolinium":
   "blanco: gadolinio",
 "The target is Gadolinium, Z = {#}.":
   "El blanco es gadolinio, Z = {#}.",
 "target: terbium":
   "blanco: terbio",
+"The target is Terbium, Z = {#}.":
+  "El blanco es terbio, Z = {#}.",
 "target: dysprosium":
   "blanco: disprosio",
+"The target is Dysprosium, Z = {#}.":
+  "El blanco es disprosio, Z = {#}.",
 "target: holmium":
   "blanco: holmio",
+"The target is Holmium, Z = {#}.":
+  "El blanco es holmio, Z = {#}.",
 "target: erbium":
   "blanco: erbio",
+"The target is Erbium, Z = {#}.":
+  "El blanco es erbio, Z = {#}.",
 "target: thulium":
   "blanco: tulio",
+"The target is Thulium, Z = {#}.":
+  "El blanco es tulio, Z = {#}.",
 "target: ytterbium":
   "blanco: iterbio",
+"The target is Ytterbium, Z = {#}.":
+  "El blanco es iterbio, Z = {#}.",
 "target: tantalum":
   "blanco: tantalio",
 "The target is Tantalum, Z = {#}.":
   "El blanco es tántalo, Z = {#}.",
 "target: rhenium":
   "blanco: renio",
+"The target is Rhenium, Z = {#}.":
+  "El blanco es renio, Z = {#}.",
 "target: osmium":
   "blanco: osmio",
+"The target is Osmium, Z = {#}.":
+  "El blanco es osmio, Z = {#}.",
 "target: iridium":
   "blanco: iridio",
+"The target is Iridium, Z = {#}.":
+  "El blanco es iridio, Z = {#}.",
 "target: platinum":
   "blanco: platino",
+"The target is Platinum, Z = {#}.":
+  "El blanco es platino, Z = {#}.",
 "target: gold":
   "blanco: oro",
+"The target is Gold, Z = {#}.":
+  "El blanco es oro, Z = {#}.",
+"There are no K lines: the voltage is below the K edge.":
+  "No hay líneas K: el voltaje está por debajo del borde K.",
 "target: mercury":
   "blanco: mercurio",
 "The target is Mercury, Z = {#}.":
   "El blanco es mercurio, Z = {#}.",
-"There are no K lines: the voltage is below the K edge.":
-  "No hay líneas K: el voltaje está por debajo del borde K.",
 "target: thallium":
   "blanco: talio",
+"The target is Thallium, Z = {#}.":
+  "El blanco es talio, Z = {#}.",
 "target: lead":
   "blanco: plomo",
+"The target is Lead, Z = {#}.":
+  "El blanco es plomo, Z = {#}.",
 "target: bismuth":
   "blanco: bismuto",
+"The target is Bismuth, Z = {#}.":
+  "El blanco es bismuto, Z = {#}.",
+"The target is a mystery element.":
+  "El blanco es un elemento misterioso.",
 "¹¹B: stable, {#}% of natural B.":
   "¹¹B: estable, {#}% del B natural.",
 "¹²C⁺: stable, {#}% of natural C.":
@@ -1124,12 +1228,12 @@ VDI18N.add('es', 'demo/shells-and-x-rays', {
   "¹¹C⁺: radiactivo, semivida de {#} minutos.",
 "¹²C²⁺: stable, {#}% of natural C.":
   "¹²C²⁺: estable, {#}% del C natural.",
-"Molybdenum":
-  "Molibdeno",
+"Yttrium":
+  "Itrio",
 "The last mystery target was {el} (Z = {z}).":
   "El último blanco misterioso era {el} (Z = {z}).",
-"The last mystery target was molybdenum (Z = {#}).":
-  "El último blanco misterioso fue molibdeno (Z = {#}).",
+"The last mystery target was yttrium (Z = {#}).":
+  "El último blanco misterioso fue itrio (Z = {#}).",
 "Orbital boxes for every subshell from 1s to 7p, filled for Chromium, Z = {#}.":
   "Casillas orbitales de todas las subcapas, de 1s a 7p, llenas para el cromo, Z = {#}.",
 "The measured configuration is 1s² 2s² 2p⁶ 3s² 3p⁶ 3d⁵ 4s¹.":
@@ -1140,6 +1244,20 @@ VDI18N.add('es', 'demo/shells-and-x-rays', {
   "Electrones por capa: {#}, {#}, {#}, {#}.",
 "The outer shell is n = {#}, with {#} electron.":
   "La capa exterior es n = {#}, con {#} electrón.",
+"A model atom with {#} protons, {#} neutrons and {#} electrons.":
+  "Un átomo modelo con {#} protones, {#} neutrones y {#} electrones.",
+"The element is Carbon.":
+  "El elemento es carbono.",
+"The atom is a positive ion with charge +1e.":
+  "El átomo es un ion positivo con carga +1e.",
+"The mass number is {#}.":
+  "El número de masa es {#}.",
+"The isotope is 12C, stable, {#}% of natural C.":
+  "El isótopo es 12C, estable, {#}% del C natural.",
+"The mass of the neutral atom is {#} u.":
+  "La masa del átomo neutro es {#} u.",
+"The configuration is 1s² 2s² 2p¹.":
+  "La configuración es 1s² 2s² 2p¹.",
 "air kerma chamber":
   "cámara de kerma en aire",
 "filter and sheets to scale":
@@ -1150,6 +1268,16 @@ VDI18N.add('es', 'demo/shells-and-x-rays', {
   "aún no hay láminas",
 "filter and sheets to scale; the reading is the air kerma relative to no sheets":
   "filtro y láminas a escala; la lectura es el kerma en aire relativo a sin láminas",
+"Molybdenum":
+  "Molibdeno",
+"The last mystery target was molybdenum (Z = {#}).":
+  "El último blanco misterioso fue molibdeno (Z = {#}).",
+"Describe the picture":
+  "Describir la imagen",
+"Skip to the picture":
+  "Ir a la imagen",
+"Skip to the controls":
+  "Ir a los controles",
 "Rubidium":
   "Rubidio",
 "The last mystery target was rubidium (Z = {#}).":

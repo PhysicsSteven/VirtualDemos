@@ -12,12 +12,6 @@ VDI18N.add('es', 'demo/quantum-coin', {
   "sol",
 "expected":
   "esperado",
-"Describe the picture":
-  "Describir la imagen",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
 "Quantum Coin Toss":
   "Volado cuántico",
 "<a>Quantum mechanics</a>":
@@ -28,8 +22,6 @@ VDI18N.add('es', 'demo/quantum-coin', {
   "Una moneda lanzada ya muestra águila o sol antes de que la mires. Una moneda cuántica, o el espín de un átomo, en una superposición no: medirla da cada respuesta con probabilidad |amplitud|², y la deja en el estado en que se encontró.",
 "counts":
   "conteos",
-"Time controls":
-  "Controles de tiempo",
 "Toss and measure {#}":
   "Lanzar y medir {#}",
 "What to measure":
@@ -182,16 +174,34 @@ VDI18N.add('es', 'demo/quantum-coin', {
   "Los átomos salen del horno sin polarizar.",
 "Magnet {#} has its axis tilted {#}° from z.":
   "El imán {#} tiene su eje inclinado {#}° respecto de z.",
-"Both beams are let through.":
-  "Se dejan pasar los dos haces.",
+"Only the down beam is let through.":
+  "Solo se deja pasar el haz de abajo.",
+"Only the up beam is let through.":
+  "Solo se deja pasar el haz de arriba.",
 "Expected: {#} up and {#} down at the last magnet, {#} blocked.":
   "Esperado: {#} arriba y {#} abajo en el último imán, {#} bloqueados.",
 "No atoms sent yet.":
   "Todavía no se envía ningún átomo.",
+"Both beams are let through.":
+  "Se dejan pasar los dos haces.",
 "θ = {#}° gives |a|² = cos²({#}°) = {#}: three heads for every tail, the same as the weighted ordinary coin.":
   "θ = {#}° da |a|² = cos²({#}°) = {#}: tres águilas por cada sol, lo mismo que la moneda ordinaria cargada.",
 "The same |a| and |b| with phase φ = {#}°: heads and tails still come out half and half. The phase only shows when you measure something else, such as spin along another axis (try Spin along x, then turn φ).":
   "Los mismos |a| y |b| con fase φ = {#}°: águila y sol siguen saliendo mitad y mitad. La fase solo se nota cuando mides otra cosa, como el espín a lo largo de otro eje (prueba Espín a lo largo de x y luego gira φ).",
+"A Bloch sphere with the spin state drawn as an arrow and the magnet axis as a dashed line, beside a bar chart of up and down.":
+  "Una esfera de Bloch con el estado de espín dibujado como una flecha y el eje del imán como una línea discontinua, junto a una gráfica de barras de arriba y abajo.",
+"The spin state has tilt θ = {#}° from up and turn φ = {#}° about z.":
+  "El estado de espín tiene inclinación θ = {#}° desde arriba y giro φ = {#}° alrededor de z.",
+"The magnet axis is tilted {#}° from z and turned {#}° about z.":
+  "El eje del imán está inclinado {#}° desde z y girado {#}° alrededor de z.",
+"The angle γ between the state and the axis is {#}°.":
+  "El ángulo γ entre el estado y el eje es {#}°.",
+"The expected chance of up is {#}.":
+  "La probabilidad esperada de arriba es {#}.",
+"A fresh atom is prepared for every measurement.":
+  "Se prepara un átomo nuevo para cada medición.",
+"No measurements yet.":
+  "Aún no hay mediciones.",
 "Spin up along z, magnet tilted {#}°: P(up) = cos²({#}°) = {#}. At {#}° it is {#}, at {#}° zero.":
   "Espín hacia arriba a lo largo de z, imán inclinado {#}°: P(arriba) = cos²({#}°) = {#}. A {#}° es {#}, a {#}° es cero.",
 "One atom, measured again and again along z. The first result is random; after that the state is the one found, so every later measurement agrees with it.":
@@ -202,10 +212,20 @@ VDI18N.add('es', 'demo/quantum-coin', {
   "Conserva los átomos hacia arriba a lo largo de z, y luego mide a lo largo de x: mitad arriba, mitad abajo. Saber z no te dice nada sobre x.",
 "Send some atoms through first.":
   "Envía algunos átomos primero.",
-"Only the up beam is let through.":
-  "Solo se deja pasar el haz de arriba.",
 "down":
   "abajo",
+"One Stern–Gerlach magnet.":
+  "Un imán de Stern–Gerlach.",
+"The same atom is measured each time.":
+  "Se mide el mismo átomo cada vez.",
+"Describe the picture":
+  "Describir la imagen",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
+"Time controls":
+  "Controles de tiempo",
 "Close":
   "Cerrar"
 });

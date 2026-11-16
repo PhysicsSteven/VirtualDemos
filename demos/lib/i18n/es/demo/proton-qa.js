@@ -28,8 +28,6 @@ VDI18N.add('es', 'demo/proton-qa', {
   "Mayor error de posición de spot",
 "Spot size − baseline":
   "Tamaño de spot − línea base",
-"Describe the picture":
-  "Describir la imagen",
 "Proton Therapy QA":
   "Control de calidad en protonterapia",
 "<a>{#} · Proton therapy</a>":
@@ -40,8 +38,6 @@ VDI18N.add('es', 'demo/proton-qa', {
   "Haz el control de calidad matutino de una máquina de protones con barrido de haz fino (pencil beam scanning) modelada según la IBA Proteus ONE: salida, alcance, posición de los spots y tamaño de los spots contra sus tolerancias. Luego sigue una máquina mientras deriva a lo largo de semanas, y verifica el plan de un paciente con un arreglo 2D de cámaras y análisis gamma.",
 "E in MeV · R90 in cm · spots in mm":
   "E en MeV · R90 en cm · spots en mm",
-"Time controls":
-  "Controles de tiempo",
 "Run QA":
   "Hacer el control",
 "Which QA":
@@ -112,8 +108,6 @@ VDI18N.add('es', 'demo/proton-qa', {
   "Los spots crecen",
 "Output jumps after a repair":
   "La salida salta después de una reparación",
-"Mystery":
-  "Misterio",
 "Next day":
   "Día siguiente",
 "Next {#} days":
@@ -258,10 +252,6 @@ VDI18N.add('es', 'demo/proton-qa', {
   "ΔR90 (mm)",
 "spot (mm)":
   "spot (mm)",
-"Skip to the picture":
-  "Ir a la imagen",
-"Skip to the controls":
-  "Ir a los controles",
 "day":
   "día",
 "output − baseline (%)":
@@ -380,6 +370,10 @@ VDI18N.add('es', 'demo/proton-qa', {
   "Cada spot cae {#} mm hacia un lado, como si la dirección del haz o el cero del imán de barrido se hubieran desplazado. TG-{#} permite ±{#} mm en la prueba diaria de posición de spot. Los spots conservan sus lugares entre sí ({#} mm relativo), así que solo falla la prueba absoluta.",
 "{#} mm, {#} mm relative to the central spot <span>fail</span>":
   "{#} mm, {#} mm relativo al spot central <span>falla</span>",
+"On the couch is a scintillating screen with a camera, checking the spots.":
+  "Sobre la camilla hay una pantalla centelleante con una cámara, que verifica los puntos.",
+"The spot position check fails.":
+  "La verificación de posición de los puntos falla.",
 "The scanning magnets deflect {#} % too far: the central spot is in place, but the spots {#} cm out land {#} mm too far out. A check of the central spot alone would miss it; the corners show it. TG-{#} also allows only ±{#} mm in the spots' places relative to each other, so a {#} % gain error ({#} mm at {#} cm) already fails that check while passing the ±{#} mm one.":
   "Los imanes de barrido desvían {#} % de más: el spot central está en su lugar, pero los spots a {#} cm caen {#} mm demasiado afuera. Una prueba solo del spot central no lo detectaría; las esquinas lo muestran. TG-{#} también permite solo ±{#} mm en los lugares de los spots entre sí, así que un error de ganancia de {#} % ({#} mm a {#} cm) ya falla esa prueba mientras pasa la de ±{#} mm.",
 "Every spot is {#} % wider than at commissioning, as if something had been left in the beam line or the beam tune had changed. Wider spots blur the edges of every field. The spot size check (±{#} %) catches it; the position check does not.":
@@ -418,24 +412,24 @@ VDI18N.add('es', 'demo/proton-qa', {
   "El haz llega {#} mm más profundo de lo planeado, medido a {#} cm, en el borde distal empinado del pico extendido, donde la dosis planeada es más o menos el {#} % de la dosis en el blanco. Ahí la dosis cambia como {#} % por milímetro, y el plano falla por mucho. Medido a la mitad del blanco ({#} cm), el mismo error es invisible: el pico extendido es plano ahí. La distancia de concordancia de la gamma está en el plano, así que no perdona ningún error a lo largo del haz.",
 "{#} % <span>fail</span>":
   "{#} % <span>falla</span>",
-"The plane fails the {#} % tolerance.":
-  "El plano no cumple la tolerancia de {#} %.",
 "Spots {#} % larger in air, in an L shaped target. At {#} cm the spots have already spread by multiple scattering, so the error in air is diluted, and the plane passes even at {#} %/{#} mm. The daily spot size check catches this fault; patient QA in one plane does not.":
   "Spots {#} % más grandes en aire, en un blanco con forma de L. A {#} cm los spots ya se ensancharon por dispersión múltiple, así que el error en aire se diluye, y el plano pasa incluso a {#} %/{#} mm. La prueba diaria de tamaño de spot detecta esta falla; el control del paciente en un plano no.",
 "Plan: L shape, {#} × {#} cm, {#} to {#} cm deep":
   "Plan: Forma de L, {#} × {#} cm, de {#} a {#} cm de profundidad",
+"The plan is a l shape, {#} × {#} cm target, measured at {#} cm depth.":
+  "El plan es un blanco en forma de L de {#} × {#} cm, medido a {#} cm de profundidad.",
 "measuring":
   "midiendo",
 "Gamma":
   "Gamma",
-"The plan is a l shape, {#} × {#} cm target, measured at {#} cm depth.":
-  "El plan es un blanco en forma de L de {#} × {#} cm, medido a {#} cm de profundidad.",
 "A run is in progress.":
   "Hay una corrida en curso.",
 "The results are being measured.":
   "Se están midiendo los resultados.",
 "Plan: Disc, {#} cm across, {#} to {#} cm deep":
   "Plan: Disco, {#} cm de diámetro, de {#} a {#} cm de profundidad",
+"The plan is a disc, {#} cm across target, measured at {#} cm depth.":
+  "El plan es un disco, blanco de {#} cm de diámetro, medido a {#} cm de profundidad.",
 "patient plan":
   "plan del paciente",
 "Measured":
@@ -448,14 +442,38 @@ VDI18N.add('es', 'demo/proton-qa', {
   "Prueba de salida: haz el control",
 "press Run QA":
   "pulsa Hacer el control",
+"No QA run yet.":
+  "Todavía no hay una corrida de control de calidad.",
+"No QA results yet. Press Run QA.":
+  "Todavía no hay resultados de control de calidad. Presiona Hacer el control.",
+"No mornings run yet. Press Next day.":
+  "Todavía no se ha corrido ninguna mañana. Presiona Día siguiente.",
 "Roughly to scale; beam drawn as a line.":
   "Más o menos a escala; el haz se dibuja como una línea.",
 "Drag to turn.":
   "Arrastra para girar.",
-"On the couch is a scintillating screen with a camera, checking the spots.":
-  "Sobre la camilla hay una pantalla centelleante con una cámara, que verifica los puntos.",
-"The spot position check fails.":
-  "La verificación de posición de los puntos falla.",
+"On the couch is a stack of ion chambers, checking the range.":
+  "Sobre la camilla hay una pila de cámaras de ionización que revisan el alcance.",
+"R90 is {#} cm, +{#} mm from baseline.":
+  "R90 es {#} cm, +{#} mm respecto a la línea base.",
+"The range check fails.":
+  "La revisión del alcance falla.",
+"The spot size changed by −{#} %.":
+  "El tamaño del punto cambió −{#} %.",
+"The spot size check fails.":
+  "La revisión del tamaño del punto falla.",
+"The plane fails the {#} % tolerance.":
+  "El plano no cumple la tolerancia de {#} %.",
+"Describe the picture":
+  "Describir la imagen",
+"Time controls":
+  "Controles de tiempo",
+"Mystery":
+  "Misterio",
+"Skip to the picture":
+  "Ir a la imagen",
+"Skip to the controls":
+  "Ir a los controles",
 "Close":
   "Cerrar"
 });

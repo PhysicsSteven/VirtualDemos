@@ -16,8 +16,6 @@ VDI18N.add('es', 'demo/bose-einstein', {
   "los paquetes se tocan",
 "cooling":
   "enfriando",
-"Describe the picture":
-  "Describir la imagen",
 "Bose–Einstein Condensation":
   "Condensación de Bose–Einstein",
 "<a>The kinetic theory of gases</a>":
@@ -26,12 +24,8 @@ VDI18N.add('es', 'demo/bose-einstein', {
   "<a><span>←</span> <span>Capacidades térmicas de los gases</span></a><a><span>Ciclos de máquinas térmicas</span> <span>→</span></a>",
 "A gas of atoms in a box, cooled toward absolute zero. Hot, each atom is a small wave packet darting about on its own. As the gas cools the packets grow to the thermal de Broglie wavelength, overlap, and the atoms pile into the lowest quantum state: one wavefunction shared by all of them, the condensate. Every occupation here comes from the Bose–Einstein distribution for the box's levels.":
   "Un gas de átomos en una caja, enfriado hacia el cero absoluto. Caliente, cada átomo es un pequeño paquete de ondas que se mueve por su cuenta. Al enfriarse el gas, los paquetes crecen hasta la longitud de onda térmica de de Broglie, se traslapan, y los átomos se acumulan en el estado cuántico más bajo: una sola función de onda compartida por todos, el condensado. Cada ocupación aquí sale de la distribución de Bose–Einstein para los niveles de la caja.",
-"Time controls":
-  "Controles de tiempo",
 "Put the atoms back where they started at the temperature the setup began with":
   "Devuelve los átomos a donde empezaron, a la temperatura con la que comenzó la configuración",
-"<span>Speed</span>":
-  "<span>Velocidad</span>",
 "What to show":
   "Qué mostrar",
 "Atoms in the box":
@@ -188,10 +182,6 @@ VDI18N.add('es', 'demo/bose-einstein', {
   "T (nK)",
 "Nλ²/L²":
   "Nλ²/L²",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
 "velocity, ±{#} mm/s each way":
   "velocidad, ±{#} mm/s hacia cada lado",
 "√(2kT/m) = {#} mm/s":
@@ -208,6 +198,8 @@ VDI18N.add('es', 'demo/bose-einstein', {
   "{#} µK: {#} % ({#} de {#})",
 "Rubidium {#}, N = {#}, L = {#} µm: the exact Bose–Einstein count for this box":
   "Rubidio {#}, N = {#}, L = {#} µm: la cuenta exacta de Bose–Einstein para esta caja",
+"The view plots the condensate fraction against temperature.":
+  "La vista grafica la fracción condensada contra la temperatura.",
 "T_c = ħω√(6N)/πk = {#} nK (many atoms)":
   "T_c = ħω√(6N)/πk = {#} nK (muchos átomos)",
 "Rubidium {#}, N = {#}, f = {#} Hz: the exact Bose–Einstein count for this trap":
@@ -236,6 +228,8 @@ VDI18N.add('es', 'demo/bose-einstein', {
   "A {#} nK unos {#} de los {#} átomos comparten el estado base de la caja. El color muestra la fase de la función de onda: un solo color en todo el condensado, porque una sola onda los describe a todos. Los dos o tres átomos que siguen excitados conservan sus propias franjas, y su fase avanza a otro ritmo. Prueba Calentar.",
 "Sodium atoms are {#} times lighter than rubidium {#}, so at the same temperature their thermal wavelength is √{#} = {#} times longer and the packets touch at {#} times the temperature, {#} nK instead of {#} nK. Press Play and compare where the ladder empties. Sodium condensed at MIT in {#}, months after rubidium at JILA.":
   "Los átomos de sodio son {#} veces más ligeros que el rubidio {#}, así que a la misma temperatura su longitud de onda térmica es √{#} = {#} veces mayor y los paquetes se tocan a {#} veces la temperatura, {#} nK en lugar de {#} nK. Pulsa Iniciar y compara dónde se vacía la escalera. El sodio se condensó en el MIT en {#}, meses después que el rubidio en JILA.",
+"Sodium {#}":
+  "Sodio {#}",
 "Twenty atoms in a box {#} µm across: the spacing is {#} µm, so the packets have to grow much bigger before they touch, and that takes a temperature {#} times lower than with {#} atoms in a {#} µm box ({#} nK). A dilute gas needs to be colder. Press Play.":
   "Veinte átomos en una caja de {#} µm de lado: la separación es de {#} µm, así que los paquetes tienen que crecer mucho más antes de tocarse, y eso requiere una temperatura {#} veces menor que con {#} átomos en una caja de {#} µm ({#} nK). Un gas diluido necesita estar más frío. Pulsa Iniciar.",
 "warming":
@@ -252,24 +246,26 @@ VDI18N.add('es', 'demo/bose-einstein', {
   "trampa de {#} Hz, {#} µm de ancho, vista desde arriba",
 "One hundred rubidium atoms in a round harmonic trap of {#} Hz, the kind of trap every real condensate is made in, at {#} nK. The trap's levels are evenly spaced, ħω/k = {#} nK apart, and each hot atom swings back and forth through a cloud about {#} µm wide (rms), so the hottest ones swing out past the edge of the picture. Press Play: as the gas cools the cloud shrinks, and near T_c = {#} nK a dense bump appears in the middle, the trap's ground state, only {#} µm across (√(ħ/mω)). Unlike in the box, the condensate is much smaller than the thermal cloud, which is how it was first spotted. For many atoms the condensed share would be {#} − (T/T_c)²; compare that with the exact count in the readouts.":
   "Cien átomos de rubidio en una trampa armónica redonda de {#} Hz, el tipo de trampa en que se hace todo condensado real, a {#} nK. Los niveles de la trampa están igualmente espaciados, a ħω/k = {#} nK uno de otro, y cada átomo caliente oscila de un lado a otro por una nube de unos {#} µm de ancho (rms), de modo que los más calientes salen más allá del borde de la imagen. Pulsa Iniciar: al enfriarse el gas la nube se encoge, y cerca de T_c = {#} nK aparece un montículo denso en el centro, el estado base de la trampa, de solo {#} µm de ancho (√(ħ/mω)). A diferencia de la caja, el condensado es mucho más pequeño que la nube térmica, y así fue como se detectó por primera vez. Para muchos átomos la fracción condensada sería {#} − (T/T_c)²; compárala con la cuenta exacta en las lecturas.",
-"Four hundred rubidium atoms in a {#} Hz trap, cooling from {#} nK, seen by velocity, the way the {#} pictures were taken. The thermal atoms spread over a broad hill of speeds (√(kT/m) is {#} mm/s at {#} nK); the condensate's spread is set only by the size of the trap's ground state, ħ/(mℓ) = {#} mm/s. Press Play: below T_c = {#} nK a sharp peak grows out of the middle of the hill. In the real experiment the trap was not round, and the peak came out elongated while the thermal hill stayed round, a sign that it was the ground state of that trap.":
-  "Cuatrocientos átomos de rubidio en una trampa de {#} Hz, enfriándose desde {#} nK, vistos por velocidad, como se tomaron las imágenes de {#}. Los átomos térmicos se reparten en una colina ancha de rapideces (√(kT/m) es {#} mm/s a {#} nK); la dispersión del condensado depende solo del tamaño del estado base de la trampa, ħ/(mℓ) = {#} mm/s. Pulsa Iniciar: por debajo de T_c = {#} nK un pico agudo crece desde el centro de la colina. En el experimento real la trampa no era redonda, y el pico salió alargado mientras la colina térmica se mantuvo redonda, señal de que era el estado base de esa trampa.",
 "A gas of {#} atoms, in a round harmonic trap of {#} Hz.":
   "Un gas de {#} átomos, en una trampa armónica redonda de {#} Hz.",
-"The view shows how many atoms move at each velocity: a broad hill for the thermal gas and a spike for the condensate.":
-  "La vista muestra cuántos átomos se mueven a cada velocidad: una colina ancha para el gas térmico y un pico para el condensado.",
-"Running, and the gas is cooling.":
-  "En marcha, y el gas se enfría.",
 "Temperature {#} nK.":
   "Temperatura de {#} nK.",
 "The transition temperature T_c is {#} nK.":
   "La temperatura de transición T_c es de {#} nK.",
-"Hydrogen":
-  "Hidrógeno",
-"Paused.":
-  "En pausa.",
+"Four hundred rubidium atoms in a {#} Hz trap, cooling from {#} nK, seen by velocity, the way the {#} pictures were taken. The thermal atoms spread over a broad hill of speeds (√(kT/m) is {#} mm/s at {#} nK); the condensate's spread is set only by the size of the trap's ground state, ħ/(mℓ) = {#} mm/s. Press Play: below T_c = {#} nK a sharp peak grows out of the middle of the hill. In the real experiment the trap was not round, and the peak came out elongated while the thermal hill stayed round, a sign that it was the ground state of that trap.":
+  "Cuatrocientos átomos de rubidio en una trampa de {#} Hz, enfriándose desde {#} nK, vistos por velocidad, como se tomaron las imágenes de {#}. Los átomos térmicos se reparten en una colina ancha de rapideces (√(kT/m) es {#} mm/s a {#} nK); la dispersión del condensado depende solo del tamaño del estado base de la trampa, ħ/(mℓ) = {#} mm/s. Pulsa Iniciar: por debajo de T_c = {#} nK un pico agudo crece desde el centro de la colina. En el experimento real la trampa no era redonda, y el pico salió alargado mientras la colina térmica se mantuvo redonda, señal de que era el estado base de esa trampa.",
+"The view shows how many atoms move at each velocity: a broad hill for the thermal gas and a spike for the condensate.":
+  "La vista muestra cuántos átomos se mueven a cada velocidad: una colina ancha para el gas térmico y un pico para el condensado.",
+"Running, and the gas is cooling.":
+  "En marcha, y el gas se enfría.",
 "Thermal wavelength {#} µm.":
   "Longitud de onda térmica de {#} µm.",
+"Lithium {#}":
+  "Litio {#}",
+"Hydrogen":
+  "Hidrógeno",
+"Helium {#} (metastable)":
+  "Helio {#} (metaestable)",
 "atoms at each velocity: hill = thermal gas, spike = condensate":
   "átomos a cada velocidad: colina = gas térmico, pico = condensado",
 "1nK":
@@ -284,14 +280,10 @@ VDI18N.add('es', 'demo/bose-einstein', {
   "E/k (nK)",
 "{#} nK: {#} % ({#} of {#})":
   "{#} nK: {#} % ({#} de {#})",
-"The view plots the condensate fraction against temperature.":
-  "La vista grafica la fracción condensada contra la temperatura.",
 "touch":
   "se tocan",
 "hue: phase of the wavefunction":
   "tono: fase de la función de onda",
-"Sodium {#}":
-  "Sodio {#}",
 "In the ground state":
   "En el estado base",
 "hidden: predict it":
@@ -312,6 +304,18 @@ VDI18N.add('es', 'demo/bose-einstein', {
   "Estas lecturas son de la trampa armónica: expórtalas a la hoja o bórralas primero.",
 "These readings are from the box: export them to the worksheet or clear them first.":
   "Estas lecturas son de la caja: expórtalas a la hoja o bórralas primero.",
+"Describe the picture":
+  "Describir la imagen",
+"Time controls":
+  "Controles de tiempo",
+"<span>Speed</span>":
+  "<span>Velocidad</span>",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
+"Paused.":
+  "En pausa.",
 "Close":
   "Cerrar"
 });

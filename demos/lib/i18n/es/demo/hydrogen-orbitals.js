@@ -1,7 +1,5 @@
 /* demo/hydrogen-orbitals in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/hydrogen-orbitals', {
-"Describe the picture":
-  "Describir la imagen",
 "proton, not to scale":
   "protón, no a escala",
 "Radial probability P(r)":
@@ -336,10 +334,6 @@ VDI18N.add('es', 'demo/hydrogen-orbitals', {
   "El modelo de Bohr pone al electrón en un círculo de radio n²a₀. Aquí el electrón no tiene órbita, solo una nube de probabilidad, y aun así las energías salen −{#} eV/n². Compara con el modelo de Bohr en <a>Explorador de espectros</a>.",
 "orbital":
   "orbital",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
 "A cut through the nucleus. Dashed lines are nodes, where ψ = {#}. Hover to read |ψ|². Try the xy plane for orbitals that vanish in the xz plane.":
   "Un corte que pasa por el núcleo. Las líneas punteadas son nodos, donde ψ = {#}. Pasa el cursor para leer |ψ|². Prueba el plano xy para los orbitales que se anulan en el plano xz.",
 "s along x = y":
@@ -420,6 +414,22 @@ VDI18N.add('es', 'demo/hydrogen-orbitals', {
   "ΔE = {#} eV · sin batido",
 "The two states have the same energy, so nothing moves: the cloud is stationary and does not radiate.":
   "Los dos estados tienen la misma energía, así que nada se mueve: la nube es estacionaria y no emite radiación.",
+"A superposition of 2s and 2pz.":
+  "Una superposición de 2s y 2pz.",
+"{#} radial node, at {#} Bohr radii.":
+  "{#} nodo radial, en {#} radios de Bohr.",
+"No angular nodes.":
+  "No hay nodos angulares.",
+"Energy difference {#} eV.":
+  "Diferencia de energía de {#} eV.",
+"The two states have the same energy, so the cloud does not move.":
+  "Los dos estados tienen la misma energía, así que la nube no se mueve.",
+"Time {#} fs.":
+  "Tiempo: {#} fs.",
+"Radial probability P(r) against r in Bohr radii for 2s.":
+  "Probabilidad radial P(r) contra r en radios de Bohr para 2s.",
+"The curve is zero at {#} radial node, at {#} Bohr radii.":
+  "La curva vale cero en {#} nodo radial, en {#} radios de Bohr.",
 "Pick a state B different from A.":
   "Elige un estado B distinto de A.",
 "B = 3s (same as A)":
@@ -428,6 +438,18 @@ VDI18N.add('es', 'demo/hydrogen-orbitals', {
   "ΔE = −{#} eV · batido {#} fs",
 "Radial nodes at r = {#}, {#} a₀. An s state has no angular nodes.":
   "Nodos radiales en r = {#}, {#} a₀. Un estado s no tiene nodos angulares.",
+"A superposition of 3s and 2pz.":
+  "Una superposición de 3s y 2pz.",
+"{#} radial nodes, at {#}, {#} Bohr radii.":
+  "{#} nodos radiales, en {#}, {#} radios de Bohr.",
+"The cloud oscillates with a beat period of {#} fs, radiating at {#} nm.":
+  "La nube oscila con un periodo de pulsación de {#} fs y radia en {#} nm.",
+"The center of the cloud moves {#} Bohr radii each way, so the atom radiates.":
+  "El centro de la nube se mueve {#} radios de Bohr hacia cada lado, así que el átomo radia.",
+"Radial probability P(r) against r in Bohr radii for 3s.":
+  "Probabilidad radial P(r) contra r en radios de Bohr para 3s.",
+"The curve is zero at {#} radial nodes, at {#}, {#} Bohr radii.":
+  "La curva vale cero en {#} nodos radiales, en {#}, {#} radios de Bohr.",
 "m = -{#}, 3py":
   "m = -{#}, 3py",
 "m = {#}, 3pz":
@@ -456,26 +478,6 @@ VDI18N.add('es', 'demo/hydrogen-orbitals', {
   "Nodos radiales en r = {#}, {#} a₀. Nodos angulares: {#} plano (el plano xy).",
 "A 4pz":
   "A 4pz",
-"A superposition of 4pz and 2pz.":
-  "Una superposición de 4pz y 2pz.",
-"{#} radial nodes, at {#}, {#} Bohr radii.":
-  "{#} nodos radiales, en {#}, {#} radios de Bohr.",
-"{#} angular node.":
-  "{#} nodo angular.",
-"Energy difference {#} eV.":
-  "Diferencia de energía de {#} eV.",
-"The cloud oscillates with a beat period of {#} fs, radiating at {#} nm.":
-  "La nube oscila con un periodo de pulsación de {#} fs y radia en {#} nm.",
-"The center of the cloud stays at the nucleus, so the atom does not radiate as a dipole.":
-  "El centro de la nube se queda en el núcleo, así que el átomo no radia como dipolo.",
-"Paused.":
-  "En pausa.",
-"Time {#} fs.":
-  "Tiempo: {#} fs.",
-"Radial probability P(r) against r in Bohr radii for 4pz.":
-  "Probabilidad radial P(r) contra r en radios de Bohr para 4pz.",
-"The curve is zero at {#} radial nodes, at {#}, {#} Bohr radii.":
-  "La curva vale cero en {#} nodos radiales, en {#}, {#} radios de Bohr.",
 "m = {#}, 4dz²":
   "m = {#}, 4dz²",
 "m = {#}, 4dxz":
@@ -496,6 +498,12 @@ VDI18N.add('es', 'demo/hydrogen-orbitals', {
   "B = 4fz³ (igual que A)",
 "A 4fz³":
   "A 4fz³",
+"A superposition of 4fz³ and 2pz.":
+  "Una superposición de 4fz³ y 2pz.",
+"The center of the cloud stays at the nucleus, so the atom does not radiate as a dipole.":
+  "El centro de la nube se queda en el núcleo, así que el átomo no radia como dipolo.",
+"Radial probability P(r) against r in Bohr radii for 4fz³.":
+  "Probabilidad radial P(r) contra r en radios de Bohr para 4fz³.",
 "B = 5s (same as A)":
   "B = 5s (igual que A)",
 "Radial nodes at r = {#}, {#}, {#}, {#} a₀. An s state has no angular nodes.":
@@ -596,6 +604,14 @@ VDI18N.add('es', 'demo/hydrogen-orbitals', {
   "Nodos radiales en r = {#}, {#}, {#} a₀. Nodos angulares: {#} conos o planos.",
 "A 6dz²":
   "A 6dz²",
+"A superposition of 6dz² and 2pz.":
+  "Una superposición de 6dz² y 2pz.",
+"{#} radial nodes, at {#}, {#}, {#} Bohr radii.":
+  "{#} nodos radiales, en {#}, {#}, {#} radios de Bohr.",
+"Radial probability P(r) against r in Bohr radii for 6dz².":
+  "Probabilidad radial P(r) contra r en radios de Bohr para 6dz².",
+"The curve is zero at {#} radial nodes, at {#}, {#}, {#} Bohr radii.":
+  "La curva vale cero en {#} nodos radiales, en {#}, {#}, {#} radios de Bohr.",
 "m = {#}, 6fz³":
   "m = {#}, 6fz³",
 "m = {#}, 6fxz²":
@@ -654,50 +670,114 @@ VDI18N.add('es', 'demo/hydrogen-orbitals', {
   "Probabilidad radial P(r) contra r en radios de Bohr para 6h m = {#}.",
 "log":
   "log",
-"Playing.":
-  "En marcha.",
+"A superposition of 6h m = {#} and 1s.":
+  "Una superposición de 6h m = {#} y 1s.",
 "A superposition of 6h m = {#} and 2s.":
   "Una superposición de 6h m = {#} y 2s.",
-"A superposition of 6h m = {#} and 3p m = {#}.":
-  "Una superposición de 6h m = {#} y 3p m = {#}.",
+"A superposition of 6h m = {#} and 2p m = −{#}.":
+  "Una superposición de 6h m = {#} y 2p m = −{#}.",
+"A superposition of 6h m = {#} and 2p m = +{#}.":
+  "Una superposición de 6h m = {#} y 2p m = +{#}.",
+"A superposition of 6h m = {#} and 3s.":
+  "Una superposición de 6h m = {#} y 3s.",
 "The cloud oscillates with a beat period of {#} fs, radiating at {#} μm.":
   "La nube oscila con un periodo de pulsación de {#} fs y radia en {#} μm.",
+"A superposition of 6h m = {#} and 3p m = −{#}.":
+  "Una superposición de 6h m = {#} y 3p m = −{#}.",
+"A superposition of 6h m = {#} and 3p m = {#}.":
+  "Una superposición de 6h m = {#} y 3p m = {#}.",
+"A superposition of 6h m = {#} and 3p m = +{#}.":
+  "Una superposición de 6h m = {#} y 3p m = +{#}.",
+"A superposition of 6h m = {#} and 3d m = −{#}.":
+  "Una superposición de 6h m = {#} y 3d m = −{#}.",
+"A superposition of 6h m = {#} and 3d m = {#}.":
+  "Una superposición de 6h m = {#} y 3d m = {#}.",
 "A superposition of 6h m = {#} and 3d m = +{#}.":
   "Una superposición de 6h m = {#} y 3d m = +{#}.",
 "Yes. The center of the electron cloud (gold dot) moves back and forth on a line, so the atom radiates at λ = {#} μm.":
   "Sí. El centro de la nube electrónica (punto dorado) se mueve de un lado a otro sobre una línea, así que el átomo emite a λ = {#} μm.",
+"A superposition of 6h m = {#} and 4s.":
+  "Una superposición de 6h m = {#} y 4s.",
+"A superposition of 6h m = {#} and 4p m = −{#}.":
+  "Una superposición de 6h m = {#} y 4p m = −{#}.",
+"A superposition of 6h m = {#} and 4p m = {#}.":
+  "Una superposición de 6h m = {#} y 4p m = {#}.",
+"A superposition of 6h m = {#} and 4p m = +{#}.":
+  "Una superposición de 6h m = {#} y 4p m = +{#}.",
 "A superposition of 6h m = {#} and 4d m = −{#}.":
   "Una superposición de 6h m = {#} y 4d m = −{#}.",
+"A superposition of 6h m = {#} and 4d m = {#}.":
+  "Una superposición de 6h m = {#} y 4d m = {#}.",
+"A superposition of 6h m = {#} and 4d m = +{#}.":
+  "Una superposición de 6h m = {#} y 4d m = +{#}.",
 "A superposition of 6h m = {#} and 4f m = −{#}.":
   "Una superposición de 6h m = {#} y 4f m = −{#}.",
+"A superposition of 6h m = {#} and 4f m = {#}.":
+  "Una superposición de 6h m = {#} y 4f m = {#}.",
+"A superposition of 6h m = {#} and 4f m = +{#}.":
+  "Una superposición de 6h m = {#} y 4f m = +{#}.",
 "A superposition of 6h m = {#} and 5s.":
   "Una superposición de 6h m = {#} y 5s.",
-"The center of the cloud moves {#} Bohr radii each way, so the atom radiates.":
-  "El centro de la nube se mueve {#} radios de Bohr hacia cada lado, así que el átomo radia.",
+"A superposition of 6h m = {#} and 5p m = −{#}.":
+  "Una superposición de 6h m = {#} y 5p m = −{#}.",
+"A superposition of 6h m = {#} and 5p m = {#}.":
+  "Una superposición de 6h m = {#} y 5p m = {#}.",
+"A superposition of 6h m = {#} and 5p m = +{#}.":
+  "Una superposición de 6h m = {#} y 5p m = +{#}.",
+"A superposition of 6h m = {#} and 5d m = −{#}.":
+  "Una superposición de 6h m = {#} y 5d m = −{#}.",
 "A superposition of 6h m = {#} and 5d m = {#}.":
   "Una superposición de 6h m = {#} y 5d m = {#}.",
+"A superposition of 6h m = {#} and 5d m = +{#}.":
+  "Una superposición de 6h m = {#} y 5d m = +{#}.",
 "A superposition of 6h m = {#} and 5f m = −{#}.":
   "Una superposición de 6h m = {#} y 5f m = −{#}.",
+"A superposition of 6h m = {#} and 5f m = {#}.":
+  "Una superposición de 6h m = {#} y 5f m = {#}.",
+"A superposition of 6h m = {#} and 5f m = +{#}.":
+  "Una superposición de 6h m = {#} y 5f m = +{#}.",
 "A superposition of 6h m = {#} and 5g m = −{#}.":
   "Una superposición de 6h m = {#} y 5g m = −{#}.",
 "Yes. The center of the electron cloud (gold dot) moves around a circle, so the atom radiates at λ = {#} μm.":
   "Sí. El centro de la nube electrónica (punto dorado) se mueve en un círculo, así que el átomo emite a λ = {#} μm.",
+"A superposition of 6h m = {#} and 5g m = {#}.":
+  "Una superposición de 6h m = {#} y 5g m = {#}.",
 "A superposition of 6h m = {#} and 5g m = +{#}.":
   "Una superposición de 6h m = {#} y 5g m = +{#}.",
+"A superposition of 6h m = {#} and 6s.":
+  "Una superposición de 6h m = {#} y 6s.",
 "The two states have the same energy, so nothing moves: the cloud is stationary.":
   "Los dos estados tienen la misma energía, así que nada se mueve: la nube es estacionaria.",
+"A superposition of 6h m = {#} and 6p m = −{#}.":
+  "Una superposición de 6h m = {#} y 6p m = −{#}.",
+"A superposition of 6h m = {#} and 6p m = {#}.":
+  "Una superposición de 6h m = {#} y 6p m = {#}.",
+"A superposition of 6h m = {#} and 6p m = +{#}.":
+  "Una superposición de 6h m = {#} y 6p m = +{#}.",
 "A superposition of 6h m = {#} and 6d m = −{#}.":
   "Una superposición de 6h m = {#} y 6d m = −{#}.",
-"The two states have the same energy, so the cloud does not move.":
-  "Los dos estados tienen la misma energía, así que la nube no se mueve.",
+"A superposition of 6h m = {#} and 6d m = {#}.":
+  "Una superposición de 6h m = {#} y 6d m = {#}.",
+"A superposition of 6h m = {#} and 6d m = +{#}.":
+  "Una superposición de 6h m = {#} y 6d m = +{#}.",
 "A superposition of 6h m = {#} and 6f m = −{#}.":
   "Una superposición de 6h m = {#} y 6f m = −{#}.",
+"A superposition of 6h m = {#} and 6f m = {#}.":
+  "Una superposición de 6h m = {#} y 6f m = {#}.",
 "A superposition of 6h m = {#} and 6f m = +{#}.":
   "Una superposición de 6h m = {#} y 6f m = +{#}.",
+"A superposition of 6h m = {#} and 6g m = −{#}.":
+  "Una superposición de 6h m = {#} y 6g m = −{#}.",
+"A superposition of 6h m = {#} and 6g m = {#}.":
+  "Una superposición de 6h m = {#} y 6g m = {#}.",
 "A superposition of 6h m = {#} and 6g m = +{#}.":
   "Una superposición de 6h m = {#} y 6g m = +{#}.",
 "A superposition of 6h m = {#} and 6h m = −{#}.":
   "Una superposición de 6h m = {#} y 6h m = −{#}.",
+"Hydrogen 6h m = {#} orbital, with n = {#}, l = {#} and m = {#}.":
+  "Orbital 6h m = {#} del hidrógeno, con n = {#}, l = {#} y m = {#}.",
+"Choose a state B different from A.":
+  "Elige un estado B distinto de A.",
 "A superposition of 6h m = {#} and 6h m = +{#}.":
   "Una superposición de 6h m = {#} y 6h m = +{#}.",
 "{#} positions measured":
@@ -706,28 +786,100 @@ VDI18N.add('es', 'demo/hydrogen-orbitals', {
   "{#} posiciones medidas.",
 "= r²|R(r)|², per a₀":
   "= r²|R(r)|², por a₀",
-"A superposition of 1s and 2pz.":
-  "Una superposición de 1s y 2pz.",
-"No angular nodes.":
-  "No hay nodos angulares.",
+"Slice view: the probability density in the xy plane through the nucleus.":
+  "Vista de corte: la densidad de probabilidad en el plano xy que pasa por el núcleo.",
+"Hydrogen 1s orbital, with n = {#}, l = {#} and m = {#}.":
+  "Orbital 1s del hidrógeno, con n = {#}, l = {#} y m = {#}.",
 "Radial probability P(r) against r in Bohr radii for 1s.":
   "Probabilidad radial P(r) contra r en radios de Bohr para 1s.",
+"Hydrogen 2s orbital, with n = {#}, l = {#} and m = {#}.":
+  "Orbital 2s del hidrógeno, con n = {#}, l = {#} y m = {#}.",
+"Hydrogen 2pz orbital, with n = {#}, l = {#} and m = {#}.":
+  "Orbital 2pz del hidrógeno, con n = {#}, l = {#} y m = {#}.",
+"{#} angular node.":
+  "{#} nodo angular.",
+"Radial probability P(r) against r in Bohr radii for 2pz.":
+  "Probabilidad radial P(r) contra r en radios de Bohr para 2pz.",
+"Hydrogen 4fxyz orbital, with n = {#}, l = {#} and m = -{#}.":
+  "Orbital 4fxyz del hidrógeno, con n = {#}, l = {#} y m = -{#}.",
+"Radial probability P(r) against r in Bohr radii for 4fxyz.":
+  "Probabilidad radial P(r) contra r en radios de Bohr para 4fxyz.",
+"A superposition of 1s and 2pz.":
+  "Una superposición de 1s y 2pz.",
+"A superposition of 3pz and 2pz.":
+  "Una superposición de 3pz y 2pz.",
+"Radial probability P(r) against r in Bohr radii for 3pz.":
+  "Probabilidad radial P(r) contra r en radios de Bohr para 3pz.",
 "A superposition of 3dz² and 2pz.":
   "Una superposición de 3dz² y 2pz.",
-"A superposition of 5pz and 2pz.":
-  "Una superposición de 5pz y 2pz.",
-"{#} radial nodes, at {#}, {#}, {#} Bohr radii.":
-  "{#} nodos radiales, en {#}, {#}, {#} radios de Bohr.",
-"Radial probability P(r) against r in Bohr radii for 5pz.":
-  "Probabilidad radial P(r) contra r en radios de Bohr para 5pz.",
-"The curve is zero at {#} radial nodes, at {#}, {#}, {#} Bohr radii.":
-  "La curva vale cero en {#} nodos radiales, en {#}, {#}, {#} radios de Bohr.",
-"A superposition of 6pz and 2pz.":
-  "Una superposición de 6pz y 2pz.",
+"A superposition of 4s and 2pz.":
+  "Una superposición de 4s y 2pz.",
+"Radial probability P(r) against r in Bohr radii for 4s.":
+  "Probabilidad radial P(r) contra r en radios de Bohr para 4s.",
+"A superposition of 4pz and 2pz.":
+  "Una superposición de 4pz y 2pz.",
+"Radial probability P(r) against r in Bohr radii for 4pz.":
+  "Probabilidad radial P(r) contra r en radios de Bohr para 4pz.",
+"A superposition of 4dz² and 2pz.":
+  "Una superposición de 4dz² y 2pz.",
+"Radial probability P(r) against r in Bohr radii for 4dz².":
+  "Probabilidad radial P(r) contra r en radios de Bohr para 4dz².",
+"A superposition of 5s and 2pz.":
+  "Una superposición de 5s y 2pz.",
 "{#} radial nodes, at {#}, {#}, {#}, {#} Bohr radii.":
   "{#} nodos radiales, en {#}, {#}, {#}, {#} radios de Bohr.",
+"Radial probability P(r) against r in Bohr radii for 5s.":
+  "Probabilidad radial P(r) contra r en radios de Bohr para 5s.",
+"The curve is zero at {#} radial nodes, at {#}, {#}, {#}, {#} Bohr radii.":
+  "La curva vale cero en {#} nodos radiales, en {#}, {#}, {#}, {#} radios de Bohr.",
+"A superposition of 5pz and 2pz.":
+  "Una superposición de 5pz y 2pz.",
+"Radial probability P(r) against r in Bohr radii for 5pz.":
+  "Probabilidad radial P(r) contra r en radios de Bohr para 5pz.",
+"A superposition of 5dz² and 2pz.":
+  "Una superposición de 5dz² y 2pz.",
+"Radial probability P(r) against r in Bohr radii for 5dz².":
+  "Probabilidad radial P(r) contra r en radios de Bohr para 5dz².",
+"A superposition of 5fz³ and 2pz.":
+  "Una superposición de 5fz³ y 2pz.",
+"Radial probability P(r) against r in Bohr radii for 5fz³.":
+  "Probabilidad radial P(r) contra r en radios de Bohr para 5fz³.",
+"A superposition of 5gz⁴ and 2pz.":
+  "Una superposición de 5gz⁴ y 2pz.",
+"Radial probability P(r) against r in Bohr radii for 5gz⁴.":
+  "Probabilidad radial P(r) contra r en radios de Bohr para 5gz⁴.",
+"A superposition of 6s and 2pz.":
+  "Una superposición de 6s y 2pz.",
+"{#} radial nodes, at {#}, {#}, {#}, {#}, {#} Bohr radii.":
+  "{#} nodos radiales, en {#}, {#}, {#}, {#}, {#} radios de Bohr.",
+"Radial probability P(r) against r in Bohr radii for 6s.":
+  "Probabilidad radial P(r) contra r en radios de Bohr para 6s.",
+"The curve is zero at {#} radial nodes, at {#}, {#}, {#}, {#}, {#} Bohr radii.":
+  "La curva vale cero en {#} nodos radiales, en {#}, {#}, {#}, {#}, {#} radios de Bohr.",
+"A superposition of 6pz and 2pz.":
+  "Una superposición de 6pz y 2pz.",
 "Radial probability P(r) against r in Bohr radii for 6pz.":
   "Probabilidad radial P(r) contra r en radios de Bohr para 6pz.",
-"The curve is zero at {#} radial nodes, at {#}, {#}, {#}, {#} Bohr radii.":
-  "La curva vale cero en {#} nodos radiales, en {#}, {#}, {#}, {#} radios de Bohr."
+"A superposition of 6fz³ and 2pz.":
+  "Una superposición de 6fz³ y 2pz.",
+"Radial probability P(r) against r in Bohr radii for 6fz³.":
+  "Probabilidad radial P(r) contra r en radios de Bohr para 6fz³.",
+"A superposition of 6gz⁴ and 2pz.":
+  "Una superposición de 6gz⁴ y 2pz.",
+"Radial probability P(r) against r in Bohr radii for 6gz⁴.":
+  "Probabilidad radial P(r) contra r en radios de Bohr para 6gz⁴.",
+"A superposition of 6hz⁵ and 2pz.":
+  "Una superposición de 6hz⁵ y 2pz.",
+"Radial probability P(r) against r in Bohr radii for 6hz⁵.":
+  "Probabilidad radial P(r) contra r en radios de Bohr para 6hz⁵.",
+"Describe the picture":
+  "Describir la imagen",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
+"Paused.":
+  "En pausa.",
+"Playing.":
+  "En marcha."
 });

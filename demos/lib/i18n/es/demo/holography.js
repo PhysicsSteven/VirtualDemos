@@ -36,8 +36,28 @@ VDI18N.add('es', 'demo/holography', {
   "Reconstruir",
 "The recording, seen from above: a reference beam and the light from the object meet on a photographic plate. A magnified view shows the interference fringes at the plate.":
   "El registro, visto desde arriba: un haz de referencia y la luz del objeto se encuentran en una placa fotográfica. Una vista ampliada muestra las franjas de interferencia en la placa.",
+"The recording seen from above: a reference beam and the light from the object meet on a photographic plate {#} mm wide.":
+  "El registro visto desde arriba: un haz de referencia y la luz del objeto se encuentran en una placa fotográfica de {#} mm de ancho.",
+"Laser wavelength {#} nm.":
+  "Longitud de onda del láser {#} nm.",
+"Reference beam at {#}° to the normal of the plate.":
+  "Haz de referencia a {#}° de la normal de la placa.",
+"The object is a plane wave arriving at −{#}°, like a mirror.":
+  "El objeto es una onda plana que llega a −{#}°, como un espejo.",
+"The angle between the beams is {#}°.":
+  "El ángulo entre los haces es {#}°.",
+"Predicted fringe spacing on the plate {#} μm.":
+  "Espaciamiento de franjas previsto en la placa: {#} μm.",
 "The developed plate under a microscope, with two cursors A and B.":
   "La placa revelada bajo un microscopio, con dos cursores A y B.",
+"The field of view is {#} μm wide, centered at {#} μm on the plate.":
+  "El campo de visión mide {#} μm de ancho, centrado en {#} μm de la placa.",
+"Cursor A at −{#} μm and cursor B at {#} μm.":
+  "Cursor A en −{#} μm y cursor B en {#} μm.",
+"The span from A to B is {#} μm.":
+  "La distancia de A a B es {#} μm.",
+"Bright fringes from A to B: {#}.":
+  "Franjas brillantes de A a B: {#}.",
 "The recording":
   "El registro",
 "<span>Recording: a laser beam split into a reference beam and an object beam, meeting on the plate ({#} mm wide)</span>":
@@ -218,6 +238,24 @@ VDI18N.add('es', 'demo/holography', {
   "Imagen conjugada, predicha",
 "z = {#} mm, x = {#} mm (real)":
   "z = {#} mm, x = {#} mm (real)",
+"The developed plate lit again without the object, with a map of the light leaving the plate and the light traced back behind it.":
+  "La placa revelada iluminada de nuevo sin el objeto, con un mapa de la luz que sale de la placa y de la luz trazada hacia atrás, detrás de ella.",
+"The plate holds a hologram recorded at {#} nm with the reference beam at {#}°.":
+  "La placa contiene un holograma registrado a {#} nm con el haz de referencia a {#}°.",
+"The object is one point, {#} mm from the plate.":
+  "El objeto es un punto, a {#} mm de la placa.",
+"It is lit with {#} nm light at {#}°, along the reference beam.":
+  "Se ilumina con luz de {#} nm a {#}°, a lo largo del haz de referencia.",
+"The camera is focused at z = −{#} mm.":
+  "La cámara está enfocada en z = −{#} mm.",
+"Predicted image: z = −{#} mm, x = {#} mm, virtual.":
+  "Imagen prevista: z = −{#} mm, x = {#} mm, virtual.",
+"Predicted conjugate image: z = {#} mm, x = {#} mm, real.":
+  "Imagen conjugada prevista: z = {#} mm, x = {#} mm, real.",
+"The brightest point on the screen is at x = −{#} mm, with {#} times the light on the plate.":
+  "El punto más brillante de la pantalla está en x = −{#} mm, con {#} veces la luz que hay en la placa.",
+"The detector is at {#}° and takes {#} % of the light on the plate.":
+  "El detector está a {#}° y recibe el {#} % de la luz que hay en la placa.",
 "{#} mm (middle point)":
   "{#} mm (punto central)",
 "The plate holds the hologram made in the Record view: {#} nm, reference at {#}°, three points {#} to {#} mm away. Change it there.":
@@ -248,10 +286,20 @@ VDI18N.add('es', 'demo/holography', {
   "El holograma del punto iluminado solo por el haz de referencia (el objeto ya no está). Detrás de la placa la luz se traza hacia atrás: una cámara enfocada {#} mm detrás de la placa ve un punto nítido exactamente donde estaba el objeto. Esa es la imagen virtual. Mueve el enfoque de la cámara y observa cómo se difumina el punto. El haz que pasa derecho y el haz conjugado salen a otros ángulos.",
 "The same hologram lit from the other side of the normal, at −{#}°. Now the conjugate wave is a copy of the object wave run backwards: it converges to a real image {#} mm past the plate, where a screen catches a sharp point. The image beam goes off steeply instead.":
   "El mismo holograma iluminado desde el otro lado de la normal, a −{#}°. Ahora la onda conjugada es una copia de la onda objeto recorrida hacia atrás: converge en una imagen real {#} mm más allá de la placa, donde una pantalla capta un punto nítido. El haz imagen sale en cambio muy inclinado.",
+"It is lit with {#} nm light at −{#}°, from the other side of the normal.":
+  "Se ilumina con luz de {#} nm a −{#}°, desde el otro lado de la normal.",
+"The screen is at z = {#} mm.":
+  "La pantalla está en z = {#} mm.",
+"The brightest point on the screen is at x = {#} mm, with {#} times the light on the plate.":
+  "El punto más brillante de la pantalla está en x = {#} mm, con {#} veces la luz que hay en la placa.",
 "Three points at {#}, {#} and {#} mm recorded at {#} nm, viewed with {#} nm light. The fringes are the same, but each bends the shorter wavelength less, so the images come out farther from the plate (about {#}/{#} times as far) and shifted sideways. A white light source would smear the image into a rainbow, which is why a thin hologram is viewed with the laser it was made with.":
   "Tres puntos a {#}, {#} y {#} mm registrados a {#} nm, vistos con luz de {#} nm. Las franjas son las mismas, pero cada una desvía menos la longitud de onda más corta, así que las imágenes quedan más lejos de la placa (unas {#}/{#} veces más lejos) y desplazadas hacia un lado. Una fuente de luz blanca convertiría la imagen en un arcoíris borroso, por eso un holograma delgado se observa con el láser con el que se hizo.",
 "z = −{#} mm, x = −{#} mm (virtual)":
   "z = −{#} mm, x = −{#} mm (virtual)",
+"The object is three points, from {#} to {#} mm from the plate, the middle one at {#} mm.":
+  "El objeto son tres puntos, de {#} a {#} mm de la placa, el del medio a {#} mm.",
+"Predicted image: z = −{#} mm, x = −{#} mm, virtual.":
+  "Imagen prevista: z = −{#} mm, x = −{#} mm, virtual.",
 "computed on {#} points, {#} nm apart":
   "calculado en {#} puntos, separados {#} nm",
 "traced back":
@@ -266,6 +314,16 @@ VDI18N.add('es', 'demo/holography', {
   "placa revelada (oscura donde cayó más luz)",
 "three points, {#} to {#} mm":
   "tres puntos, de {#} a {#} mm",
+"Beam ratio, reference to object, {#} to {#}.":
+  "Razón de haces, referencia a objeto, {#} a {#}.",
+"The object is a plane wave arriving at {#}°, like a mirror.":
+  "El objeto es una onda plana que llega a {#}°, como un espejo.",
+"The beam straight through leaves at {#}°.":
+  "El haz que pasa derecho sale a {#}°.",
+"The image beam leaves at −{#}° and the conjugate beam at {#}°.":
+  "El haz de la imagen sale a −{#}° y el haz conjugado a {#}°.",
+"The image beam leaves at {#}° and the conjugate beam at {#}°.":
+  "El haz de la imagen sale a {#}° y el haz conjugado a {#}°.",
 "Close":
   "Cerrar"
 });

@@ -24,12 +24,6 @@ VDI18N.add('es', 'demo/solids', {
   "separación r (nm)",
 "U per ion pair (eV)":
   "U por par de iones (eV)",
-"Describe the picture":
-  "Describir la imagen",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
 "Crystals, Bands and Semiconductors":
   "Cristales, bandas y semiconductores",
 "<a>Condensed matter physics</a>":
@@ -538,6 +532,20 @@ VDI18N.add('es', 'demo/solids', {
   "… {#} átomos en total",
 "Forty atoms, two electrons each. The {#} s levels hold exactly {#} electrons, so the s band is full and a gap separates it from the empty p band: an insulator. Squeeze the atoms until the bands overlap and the solid becomes a metal; give each atom one electron and the band is half full.":
   "Cuarenta átomos, dos electrones cada uno. Los {#} niveles s admiten exactamente {#} electrones, así que la banda s está llena y una brecha la separa de la banda p vacía: un aislante. Comprime los átomos hasta que las bandas se traslapen y el sólido se vuelve un metal; dale a cada átomo un electrón y la banda queda a medio llenar.",
+"A chain of model atoms, with the energy levels against the spacing and the levels at this spacing filled with electrons.":
+  "Una cadena de átomos modelo, con los niveles de energía contra el espaciamiento y los niveles a este espaciamiento llenos de electrones.",
+"There are {#} atoms, {#} nm apart, with {#} electrons each.":
+  "Hay {#} átomos, separados {#} nm, con {#} electrones cada uno.",
+"The s band runs from −{#} to −{#} eV.":
+  "La banda s va de −{#} a −{#} eV.",
+"The p band runs from −{#} to −{#} eV.":
+  "La banda p va de −{#} a −{#} eV.",
+"The highest filled level is −{#} eV.":
+  "El nivel lleno más alto es de −{#} eV.",
+"The lowest empty place is −{#} eV.":
+  "El lugar vacío más bajo es de −{#} eV.",
+"A very long chain has a filled band and a gap of {#} eV, so it is an insulator at T = {#}.":
+  "Una cadena muy larga tiene una banda llena y una brecha de {#} eV, así que es un aislante a T = {#}.",
 "ions sit in the wells":
   "los iones están en los pozos",
 "band {#}":
@@ -602,8 +610,6 @@ VDI18N.add('es', 'demo/solids', {
   "Un diodo de silicio a {#} K con una corriente de saturación de {#} pA. Cambia la polarización paso a paso de −{#} V a {#} V y registra la corriente: casi nada fluye en inversa, y la corriente directa crece por un factor e cada {#} mV.",
 "An LED emits light when electrons fall across the band gap, so the photon energy is about E_g. Try each material and read the wavelength; then pick Any band gap and find the gaps that give red, green and blue.":
   "Un LED emite luz cuando los electrones caen a través de la banda prohibida, así que la energía del fotón es aproximadamente E_g. Prueba cada material y lee la longitud de onda; luego elige Cualquier banda prohibida y encuentra las brechas que dan rojo, verde y azul.",
-"The spectrometer reading goes in the LED table of the worksheet: write it down by hand.":
-  "La lectura del espectrómetro va en la tabla de LED de la hoja de trabajo: anótala a mano.",
 "An LED wired to a battery, with the band diagram across the junction.":
   "Un LED conectado a una batería, con el diagrama de bandas a lo largo de la unión.",
 "The LED is GaP, with a band gap of {#} eV.":
@@ -612,6 +618,8 @@ VDI18N.add('es', 'demo/solids', {
   "El pico del espectrómetro está en {#} nm.",
 "The color is green.":
   "El color es verde.",
+"The spectrometer reading goes in the LED table of the worksheet: write it down by hand.":
+  "La lectura del espectrómetro va en la tabla de LED de la hoja de trabajo: anótala a mano.",
 "Germanium and gallium arsenide are pure (intrinsic) here.":
   "Aquí el germanio y el arseniuro de galio son puros (intrínsecos).",
 "peak {#} nm: infrared (invisible)":
@@ -622,46 +630,68 @@ VDI18N.add('es', 'demo/solids', {
   "El LED es de GaAs, con una brecha de banda de {#} eV.",
 "The color is infrared (invisible).":
   "El color es infrarrojo (invisible).",
+"The LED is InP, with a band gap of {#} eV.":
+  "El LED es de InP, con una banda prohibida de {#} eV.",
 "peak {#} nm: ultraviolet (invisible)":
   "pico en {#} nm: ultravioleta (invisible)",
 "ultraviolet (invisible)":
   "ultravioleta (invisible)",
+"The LED is GaN, with a band gap of {#} eV.":
+  "El LED es de GaN, con una banda prohibida de {#} eV.",
+"The color is ultraviolet (invisible).":
+  "El color es ultravioleta (invisible).",
 "peak {#} nm: orange":
   "pico en {#} nm: naranja",
 "any band gap":
   "cualquier banda prohibida",
 "orange":
   "naranja",
+"The band gap is {#} eV, chosen freely.":
+  "La banda prohibida es de {#} eV, elegida libremente.",
+"The color is orange.":
+  "El color es naranja.",
 "photon E ≈ E_g = {#} eV":
   "fotón E ≈ E_g = {#} eV",
 "CsCl: CsCl structure":
   "CsCl: estructura de CsCl",
+"CsCl crystal in the cesium chloride structure, drawn in 3D around one reference ion.":
+  "Cristal de CsCl con la estructura del cloruro de cesio, dibujado en 3D alrededor de un ion de referencia.",
+"The ions are added up in {#} shells of neighbors.":
+  "Los iones se suman en {#} capas de vecinos.",
 "|ψ|², band {#}, k = {#} π/a, E = {#} eV":
   "|ψ|², banda {#}, k = {#} π/a, E = {#} eV",
 "donors (P): E_c − {#} eV":
   "donadores (P): E_c − {#} eV",
+"A cryostat holding a semiconductor sample, beside the band diagram with the electrons, holes, impurity levels and Fermi level.":
+  "Un criostato con una muestra semiconductora, junto al diagrama de bandas con los electrones, los huecos, los niveles de impurezas y el nivel de Fermi.",
+"The sample is Si, P {#} cm⁻³.":
+  "La muestra es de Si, P {#} cm⁻³.",
+"The electron density is {#} × {#}¹⁴ cm⁻³, and the hole density is {#} × {#}⁵ cm⁻³.":
+  "La densidad de electrones es {#} × {#}¹⁴ cm⁻³ y la densidad de huecos es {#} × {#}⁵ cm⁻³.",
+"{#} % of the donors are ionized.":
+  "El {#} % de los donadores está ionizado.",
+"The intrinsic density is {#} × {#}¹⁰ cm⁻³, and the Fermi level is {#} eV above the valence band.":
+  "La densidad intrínseca es {#} × {#}¹⁰ cm⁻³ y el nivel de Fermi está {#} eV por encima de la banda de valencia.",
 "line: I₀(e^(eV/kT) − {#})":
   "línea: I₀(e^(eV/kT) − {#})",
 "NaCl: NaCl structure":
   "NaCl: estructura de NaCl",
 "{#} levels":
   "{#} niveles",
-"A chain of model atoms, with the energy levels against the spacing and the levels at this spacing filled with electrons.":
-  "Una cadena de átomos modelo, con los niveles de energía contra el espaciamiento y los niveles a este espaciamiento llenos de electrones.",
-"There are {#} atoms, {#} nm apart, with {#} electrons each.":
-  "Hay {#} átomos, separados {#} nm, con {#} electrones cada uno.",
-"The s band runs from −{#} to −{#} eV.":
-  "La banda s va de −{#} a −{#} eV.",
-"The p band runs from −{#} to −{#} eV.":
-  "La banda p va de −{#} a −{#} eV.",
-"The highest filled level is −{#} eV.":
-  "El nivel lleno más alto es de −{#} eV.",
-"The lowest empty place is −{#} eV.":
-  "El lugar vacío más bajo es de −{#} eV.",
-"A very long chain has a filled band and a gap of {#} eV, so it is an insulator at T = {#}.":
-  "Una cadena muy larga tiene una banda llena y una brecha de {#} eV, así que es un aislante a T = {#}.",
+"A very long chain has a partly filled band, so it is a metal.":
+  "Una cadena muy larga tiene una banda parcialmente llena, así que es un metal.",
 "Re ψ, band {#}, k = {#} π/a, E = {#} eV":
   "Re ψ, banda {#}, k = {#} π/a, E = {#} eV",
+"The sample is Si, undoped.":
+  "La muestra es de Si, sin dopar.",
+"The electron density is {#} × {#}¹⁰ cm⁻³, and the hole density is {#} × {#}¹⁰ cm⁻³.":
+  "La densidad de electrones es {#} × {#}¹⁰ cm⁻³ y la densidad de huecos es {#} × {#}¹⁰ cm⁻³.",
+"Describe the picture":
+  "Describir la imagen",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "<a>Worksheet {#}: Energy Bands</a>":
   "<a>Hoja de trabajo {#}: Bandas de energía</a>",
 "Close":

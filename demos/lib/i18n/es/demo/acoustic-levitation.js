@@ -4,10 +4,6 @@ VDI18N.add('es', 'demo/acoustic-levitation', {
   "U + Wz a lo largo del eje",
 "width {#} nJ":
   "ancho {#} nJ",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
 "Acoustic Levitation":
   "Levitación acústica",
 "<a>Beyond the textbook</a>":
@@ -18,12 +14,6 @@ VDI18N.add('es', 'demo/acoustic-levitation', {
   "Dos cuencos de bocinas de ultrasonido de {#} kHz producen una onda sonora estacionaria que sostiene cuentas pequeñas justo debajo de sus nodos de presión. Desplaza la fase del cuenco superior y las trampas se deslizan a lo largo del eje, llevando las cuentas.",
 "mm · {#} kHz, λ = {#} mm at {#} °C · kPa":
   "mm · {#} kHz, λ = {#} mm a {#} °C · kPa",
-"Time controls":
-  "Controles de tiempo",
-"Run for a moment and pause again":
-  "Avanza un momento y vuelve a pausar",
-"Step":
-  "Paso",
 "3D field":
   "Campo 3D",
 "Trap pockets":
@@ -58,8 +48,6 @@ VDI18N.add('es', 'demo/acoustic-levitation', {
   "Voltaje de excitación {#} V pico a pico.",
 "Top bowl phase {#}°.":
   "Fase del cuenco superior {#}°.",
-"Running.":
-  "En marcha.",
 "{#} traps on the axis, spaced {#} mm.":
   "{#} trampas en el eje, separadas {#} mm.",
 "F max / W = {#}, the bead holds.":
@@ -90,8 +78,6 @@ VDI18N.add('es', 'demo/acoustic-levitation', {
   "La trampa más baja está en z = −{#} mm.",
 "{#} beads drawn.":
   "{#} esferas dibujadas.",
-"Describe the plot":
-  "Describir la gráfica",
 "Divider between the levitator and the graph":
   "Divisor entre el levitador y la gráfica",
 "Ultrasound driver, {#} kHz":
@@ -214,8 +200,6 @@ VDI18N.add('es', 'demo/acoustic-levitation', {
   "Micrófono: arrástralo; con el sonido encendido escuchas |p| en su cabeza",
 "<span><i></i>Trap pocket: where U is below the chosen level</span> <span><i></i>U + Wz along the axis</span> <span><i></i>Gravity alone, Wz</span>":
   "<span><i></i>Bolsa de trampa: donde U está por debajo del nivel elegido</span> <span><i></i>U + Wz a lo largo del eje</span> <span><i></i>Solo gravedad, Wz</span>",
-"The 3D trap pockets, where U is below {#}% of the deepest U.":
-  "Las bolsas de trampa en 3D, donde U está por debajo de {#} % de la U más profunda.",
 "{#} bead held, {#} moving, {#} fell out.":
   "{#} esfera sostenida, {#} en movimiento, {#} se cayó.",
 "Trap pockets: U below the level":
@@ -226,6 +210,8 @@ VDI18N.add('es', 'demo/acoustic-levitation', {
   "las cuentas se mueven {#} veces más lento que en la realidad",
 "Pressure amplitude |p|":
   "Amplitud de presión |p|",
+"A flat slice through the levitator axis, colored by the pressure amplitude |p|.":
+  "Un corte plano por el eje del levitador, coloreado según la amplitud de presión |p|.",
 "top bowl, phase Δφ":
   "cuenco superior, fase Δφ",
 "bottom bowl, phase {#}":
@@ -236,12 +222,16 @@ VDI18N.add('es', 'demo/acoustic-levitation', {
   "-{#} nJ",
 "+{#} nJ":
   "+{#} nJ",
+"A flat slice through the levitator axis, colored by the trap potential U.":
+  "Un corte plano por el eje del levitador, coloreado según el potencial de la trampa U.",
 "Stop the sweep":
   "Detener el barrido",
 "+{#}°, traps +{#} mm":
   "+{#}°, trampas +{#} mm",
 "Your own setup. Pick a setup above to start again.":
   "Tu propia configuración. Elige una configuración de arriba para empezar de nuevo.",
+"Holds water: push up to {#} × its weight":
+  "Sostiene agua: empuja hacia arriba hasta {#} × su peso",
 "width {#} µJ":
   "ancho {#} µJ",
 "No trap: the bead falls":
@@ -252,14 +242,14 @@ VDI18N.add('es', 'demo/acoustic-levitation', {
   "Cae: el acero necesita {#} V",
 "No traps: weight wins everywhere":
   "Sin trampas: el peso gana en todas partes",
-"A flat slice through the levitator axis, colored by the trap potential U.":
-  "Un corte plano por el eje del levitador, coloreado según el potencial de la trampa U.",
 "Bead: steel, radius {#} mm.":
   "Esfera: acero, radio {#} mm.",
 "No traps: weight wins everywhere.":
   "No hay trampas: el peso gana en todas partes.",
 "F max / W = {#}, the bead falls.":
   "F máx / W = {#}, la esfera cae.",
+"No beads, {#} fell out.":
+  "Sin cuentas, {#} se cayó.",
 "No traps marked.":
   "No hay trampas marcadas.",
 "One foam bead sits just below a pressure node near the center. Lower the drive slowly: it sinks a little in its trap and then drops at about {#} V.":
@@ -270,8 +260,10 @@ VDI18N.add('es', 'demo/acoustic-levitation', {
   "La fase del cuenco superior barre de un lado a otro. Cada {#}° mueve las trampas un espaciado entre trampas, y las cuentas las acompañan: pinzas acústicas.",
 "A water droplet is {#} times denser than foam. It still floats at {#} V, but sits further below its node, and its trap is shallower for its weight.":
   "Una gota de agua es {#} veces más densa que la espuma. Todavía flota a {#} V, pero queda más abajo de su nodo, y su trampa es menos profunda para su peso.",
-"Holds water: push up to {#} × its weight":
-  "Sostiene agua: empuja hacia arriba hasta {#} × su peso",
+"Bead: water, radius {#} mm.":
+  "Cuenta: agua, radio de {#} mm.",
+"{#} bead drawn.":
+  "{#} cuenta dibujada.",
 "With one emitter the phase only shifts the timing of the whole field; the reflected wave shifts with it, so the traps stay put.":
   "Con un solo emisor la fase solo desplaza la sincronía de todo el campo; la onda reflejada se desplaza con ella, así que las trampas no se mueven.",
 "The 3D grid has {#} × {#} × {#} points {#} mm apart, x and y within ±{#} mm, between the reflector and the emitter, outside its near field. Each point holds the full source sum the slice uses, for each bowl at unit drive; drive and phase are applied when drawing, and the colors between points are interpolated linearly. Time runs {#} times slower than real: one {#} µs cycle takes {#} s. Opacity and color strength grow as |p|^{#}, a display choice so the weaker waves near the bowls still show. Trap pockets are the surfaces where Gor'kov's U for this bead equals the level, on a finer grid of {#} × {#} × {#} points {#} mm apart near the axis. Gravity is not part of them: it adds Wz, which pulls each trap below its pocket's center and, when it wins, drops the bead (see the trap table).":
@@ -292,18 +284,16 @@ VDI18N.add('es', 'demo/acoustic-levitation', {
   "{#} pJ",
 "Row {#} recorded: tracked trap at -{#} mm.":
   "Fila {#} registrada: trampa seguida en -{#} mm.",
-"{#} row sent to the worksheet. <a>Open the worksheet</a>":
-  "{#} fila enviada a la hoja de trabajo. <a>Abrir la hoja de trabajo</a>",
-"Readings cleared.":
-  "Lecturas borradas.",
 "One {#} kHz emitter faces a reflector.":
   "Un emisor de {#} kHz mira de frente a un reflector.",
 "The phase has no effect with one emitter.":
   "La fase no tiene efecto con un solo emisor.",
-"Paused.":
-  "En pausa.",
 "The highest trap is at z = −{#} mm.":
   "La trampa más alta está en z = −{#} mm.",
+"{#} row sent to the worksheet. <a>Open the worksheet</a>":
+  "{#} fila enviada a la hoja de trabajo. <a>Abrir la hoja de trabajo</a>",
+"Readings cleared.":
+  "Lecturas borradas.",
 "Change the drive voltage in steps of {#} V":
   "Cambia el voltaje de excitación en pasos de {#} V",
 "U + Wz on the axis":
@@ -312,22 +302,44 @@ VDI18N.add('es', 'demo/acoustic-levitation', {
   "menor ← U → mayor",
 "the envelope of the wave; dark is a node; beads move {#} times slower than real":
   "la envolvente de la onda; lo oscuro es un nodo; las cuentas se mueven {#} veces más lento que en la realidad",
+"The 3D field of the pressure amplitude |p|, with the levitator in the middle.":
+  "El campo 3D de la amplitud de presión |p|, con el levitador en el centro.",
 "-{#} pJ":
   "-{#} pJ",
 "{#}% of the deepest U; gravity not included":
   "{#}% del U más profundo; sin incluir la gravedad",
-"A flat slice through the levitator axis, colored by the pressure amplitude |p|.":
-  "Un corte plano por el eje del levitador, coloreado según la amplitud de presión |p|.",
+"The 3D trap pockets, where U is below {#}% of the deepest U.":
+  "Las bolsas de trampa en 3D, donde U está por debajo de {#} % de la U más profunda.",
+"The levitator in 3D with a slice through its axis colored by the trap potential U.":
+  "El levitador en 3D con un corte a lo largo de su eje coloreado según el potencial de la trampa U.",
 "{#} V, over the {#} V limit":
   "{#} V, por encima del límite de {#} V",
 "Falls: water needs {#} V":
   "Cae: el agua necesita {#} V",
-"The 3D field of the pressure amplitude |p|, with the levitator in the middle.":
-  "El campo 3D de la amplitud de presión |p|, con el levitador en el centro.",
+"Top bowl phase +{#}°, traps shifted +{#} mm.":
+  "Fase del cuenco superior +{#}°, trampas desplazadas +{#} mm.",
+"The phase sweep is running.":
+  "El barrido de fase está en marcha.",
 "blue rarefaction, red compression; wave {#} times slower than real, beads {#} times":
   "azul rarefacción, rojo compresión; onda {#} veces más lenta que la real, cuentas {#} veces",
 "3D needs WebGL and three.js, which did not load; the flat slice shows the same physics.":
   "El 3D necesita WebGL y three.js, que no se cargaron; el corte plano muestra la misma física.",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
+"Running.":
+  "En marcha.",
+"Describe the plot":
+  "Describir la gráfica",
+"Paused.":
+  "En pausa.",
 "the envelope of the wave; dark is a node":
   "la envolvente de la onda; lo oscuro es un nodo",
 "Close":

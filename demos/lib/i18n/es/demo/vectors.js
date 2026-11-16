@@ -1,7 +1,5 @@
 /* demo/vectors in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/vectors', {
-"Describe the picture":
-  "Describir la imagen",
 "{#} square = {#} unit":
   "{#} cuadro = {#} unidad",
 "Vectors and Relative Motion":
@@ -134,10 +132,6 @@ VDI18N.add('es', 'demo/vectors', {
   "Cada cuerda jala el anillo con su tensión, que para una masa colgante en reposo es su peso, F = mg con g = {#} m/s². Los ángulos son en sentido antihorario desde la marca de {#}°. Las cuerdas no tienen masa, el anillo es ligero y se desliza libremente sobre la mesa, y se toma que cada cuerda apunta al perno, ignorando los pocos milímetros de juego del anillo. Los tamaños de la mesa modelo son elegidos: las cuerdas salen de la mesa a {#} cm del centro, el anillo mide {#} cm de diámetro (hasta la mitad de su alambre de {#} mm) y el perno mide {#} mm de diámetro, así que el centro del anillo puede moverse {#} mm antes de que su alambre toque el perno. Un anillo desequilibrado se desliza a lo largo del jalón neto como lo hace sin el perno (abajo); queda en reposo sin tocar el perno cuando ese lugar está a menos de {#} mm del centro, y si no, contra el perno, donde se acomoda en el punto del perno que sostienen los jalones. Sin el perno, el anillo es jalado hacia las poleas por los pesos colgantes y solo puede quedar en reposo donde esos jalones suman cero, la mediana geométrica ponderada de las poleas (el punto que minimiza la suma de cada peso por su distancia, que es donde los portapesas cuelgan más bajo). Se muestra deslizándose lentamente a lo largo del jalón neto y deteniéndose en el primer lugar donde la fricción de las poleas puede sostenerlo; cuando una cuerda pesa más que el resto, el anillo corre hacia el borde y se detiene ahí, como lo haría un anillo real cuando un portapesas llega al suelo. La vista 3D se dibuja a la misma escala en una mesa de {#} cm de diámetro; cada portapesas baja tanto como el anillo se mueve hacia su polea. Un portapesas se dibuja como {#} g con pesas ranuradas de latón (con espesor según su masa y la densidad del latón, {#} kg/m³) que completan el resto; la división es solo ilustrativa, solo importa el total. La fricción de las poleas permite que la tensión de cada cuerda difiera de su peso colgante hasta la cantidad fijada (dada como el peso de esa cantidad de gramos; un valor elegido, no medido), así que el anillo se centra en un pequeño intervalo de masas y ángulos, como en una mesa real. En {#} las poleas son ideales y el anillo se centra solo cuando los pesos se cancelan exactamente.",
 "Blind hides every computed result (components, magnitudes, angles, sums, products, the resultant arrow, the river predictions, and the force table's forces, net force and equilibrant; the ring still shows whether it is centered) and leaves the vectors you set and the grid, so you can work them out and then check.":
   "A ciegas oculta todo resultado calculado (componentes, magnitudes, ángulos, sumas, productos, la flecha resultante, las predicciones del río, y las fuerzas, la fuerza neta y la equilibrante de la mesa de fuerzas; el anillo sigue mostrando si está centrado) y deja los vectores que fijaste y la cuadrícula, para que puedas calcularlos y luego comprobar.",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
 "The force table in 3D. Drag a pulley around the rim to change its angle, click a hanger to choose its string, drag elsewhere to turn the view, scroll or pinch to zoom, double click to reset the view. Keys as on the top view: {#} to {#} picks a string, left and right turn its pulley, up and down change its mass, P pulls or replaces the pin.":
   "La mesa de fuerzas en 3D. Arrastra una polea alrededor del borde para cambiar su ángulo, haz clic en un portapesas para elegir su cuerda, arrastra en otro lugar para girar la vista, desplaza o pellizca para hacer zoom, doble clic para restablecer la vista. Teclas como en la vista superior: {#} a {#} elige una cuerda, izquierda y derecha giran su polea, arriba y abajo cambian su masa, P quita o vuelve a poner el perno.",
 "Put the pin back":
@@ -148,6 +142,14 @@ VDI18N.add('es', 'demo/vectors', {
   "Pon la cola de B en la punta de A: A + B va de la cola de A a la punta de B. Las componentes se suman por separado, R_x = A_x + B_x y R_y = A_y + B_y; las magnitudes no, a menos que los vectores apunten en la misma dirección.",
 "θ of R":
   "θ de R",
+"Vector B has its tip at (−{#}, {#}).":
+  "La punta del vector B está en (−{#}, {#}).",
+"B is drawn head to tail, starting at the head of A.":
+  "B se dibuja de la cabeza a la cola, empezando en la cabeza de A.",
+"The sum A + B is ({#}, {#}), with magnitude {#} at {#}°.":
+  "La suma A + B es ({#}, {#}), con magnitud {#} a {#}°.",
+"The magnitudes alone add to {#}.":
+  "Solo las magnitudes suman {#}.",
 "A − B = A + (−B): flip B and add it. Drawn from the same tail, A − B is the arrow from B's head to A's head. This is how a change in velocity, Δv = v₂ − v₁, is found.":
   "A − B = A + (−B): invierte B y súmalo. Dibujado desde la misma cola, A − B es la flecha de la punta de B a la punta de A. Así se encuentra un cambio de velocidad, Δv = v₂ − v₁.",
 "|A| cos φ = {#}":
@@ -250,10 +252,10 @@ VDI18N.add('es', 'demo/vectors', {
   "ΣF neta",
 "Equilibrant of string {#}: −(the sum of their forces)":
   "Equilibrante de la cuerda {#}: −(la suma de sus fuerzas)",
-"The equilibrant of string {#} is {#} N at {#}°, the weight of {#} kg.":
-  "La equilibrante de la cuerda {#} es {#} N a {#}°, el peso de {#} kg.",
 "<span>{#} g</span><span>{#} g</span><span>{#} g</span><span></span><span></span><span>net ΣF</span>":
   "<span>{#} g</span><span>{#} g</span><span>{#} g</span><span></span><span></span><span>ΣF neta</span>",
+"The equilibrant of string {#} is {#} N at {#}°, the weight of {#} kg.":
+  "La equilibrante de la cuerda {#} es {#} N a {#}°, el peso de {#} kg.",
 "Pin out: the ring slides off center":
   "Sin perno: el anillo se desliza fuera del centro",
 "It comes to rest {#} cm from the center, toward the {#}° mark.":
@@ -296,22 +298,56 @@ VDI18N.add('es', 'demo/vectors', {
   "Centrado: las cuerdas se equilibran dentro de la fricción de las poleas.",
 "<span>Ring centered</span><small>Arrows: the table's radius is {#} N</small>":
   "<span>Anillo centrado</span><small>Flechas: el radio de la mesa es {#} N</small>",
+"The ring is centered: the strings balance within the pulley friction.":
+  "El anillo está centrado: las cuerdas se equilibran dentro de la fricción de las poleas.",
 "{#} kg at {#}°; {#} kg at {#}°; {#} kg at {#}°; {#} kg at {#}°":
   "{#} kg a {#}°; {#} kg a {#}°; {#} kg a {#}°; {#} kg a {#}°",
 "centered":
   "centrado",
 "Setup {#} recorded (ring centered).":
   "Configuración {#} registrada (anillo centrado).",
-"The ring is centered: the strings balance within the pulley friction.":
-  "El anillo está centrado: las cuerdas se equilibran dentro de la fricción de las poleas.",
 "Pin out: the ring stays centered":
   "Sin perno: el anillo se queda centrado",
 "It stays at the center.":
   "Se queda en el centro.",
 "<span>Pin out: the ring stays centered</span><small>Arrows: the table's radius is {#} N</small>":
   "<span>Sin perno: el anillo se queda centrado</span><small>Flechas: el radio de la mesa es {#} N</small>",
+"B is drawn from the origin.":
+  "B se dibuja desde el origen.",
+"Vector B has its tip at ({#}, {#}).":
+  "La punta del vector B está en ({#}, {#}).",
+"The difference A − B is ({#}, −{#}), with magnitude {#}.":
+  "La diferencia A − B es ({#}, −{#}), con magnitud {#}.",
+"B − A is (−{#}, {#}).":
+  "B − A es (−{#}, {#}).",
+"The angle between them is {#}°.":
+  "El ángulo entre ellos es {#}°.",
+"The dot product A · B is {#}.":
+  "El producto punto A · B es {#}.",
+"The cross product A × B points out of the page, with z component {#}.":
+  "El producto cruz A × B apunta hacia afuera de la página, con componente z {#}.",
 "current →":
   "corriente →",
+"A river {#} m wide seen from above, with a boat that sets out from the near bank.":
+  "Un río de {#} m de ancho visto desde arriba, con una lancha que sale de la orilla cercana.",
+"The boat speed relative to the water is {#} m/s, headed {#}° upstream.":
+  "La rapidez de la lancha respecto al agua es {#} m/s, con rumbo {#}° contra la corriente.",
+"The water moves at {#} m/s relative to the shore.":
+  "El agua se mueve a {#} m/s respecto a la orilla.",
+"The boat moves at {#} m/s relative to the shore, {#}° downstream of straight across.":
+  "La lancha se mueve a {#} m/s respecto a la orilla, {#}° corriente abajo de la dirección recta de cruce.",
+"The crossing takes {#} s and the boat lands {#} m downstream.":
+  "El cruce toma {#} s y la lancha llega {#} m corriente abajo.",
+"Heading {#}° upstream lands it straight across.":
+  "Un rumbo de {#}° contra la corriente la lleva directo al otro lado.",
+"The boat is at the bank. Launch it to cross.":
+  "La lancha está en la orilla. Lánzala para cruzar.",
+"Describe the picture":
+  "Describir la imagen",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "<span><i></i>boat relative to the water</span><span><i></i>water relative to the shore</span><span><i></i>boat relative to the shore (the sum)</span><small>Arrows show {#} s of motion</small>":
   "<span><i></i>bote respecto al agua</span><span><i></i>agua respecto a la orilla</span><span><i></i>bote respecto a la orilla (la suma)</span><small>Las flechas muestran {#} s de movimiento</small>",
 "<span><i></i>boat relative to the water</span><span><i></i>water relative to the shore</span><span><i></i>boat relative to the shore (the sum)</span><small>Arrows show {#} s of motion</small><small>Shown in real time</small>":

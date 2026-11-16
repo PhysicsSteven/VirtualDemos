@@ -1,7 +1,5 @@
 /* demo/fluids in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/fluids', {
-"Describe the picture":
-  "Describir la imagen",
 "Water, {#} kg/m³":
   "Agua, {#} kg/m³",
 "Forces on the block (N)":
@@ -28,12 +26,6 @@ VDI18N.add('es', 'demo/fluids', {
   "Unidades SI · P = P₀ + ρgh · F_B = ρ_f V_sub g · P + ½ρv² + ρgy = const",
 "Fluid apparatus. Drag the probe, the block, the spring scale, the water surface, the pipe throat or the hole in the tank. Keys: arrows move or change the selected part, space plays or pauses, R starts again.":
   "Aparato de fluidos. Arrastra la sonda, el bloque, el dinamómetro, la superficie del agua, la garganta del tubo o el orificio del tanque. Teclas: las flechas mueven o cambian la parte elegida, espacio inicia o pausa, R empieza de nuevo.",
-"Time controls":
-  "Controles de tiempo",
-"Run for a moment and pause again":
-  "Avanza un momento y vuelve a pausar",
-"Step":
-  "Paso",
 "Drop again":
   "Soltar de nuevo",
 "<span>Playback rate</span>":
@@ -104,8 +96,6 @@ VDI18N.add('es', 'demo/fluids', {
   "Pino",
 "Ice":
   "Hielo",
-"Mystery":
-  "Misterio",
 "Mystery block":
   "Bloque misterioso",
 "is":
@@ -230,10 +220,6 @@ VDI18N.add('es', 'demo/fluids', {
   "Modelo: un cubo en un tanque de vidrio de {#} cm de ancho y {#} cm de fondo (área del piso {#} m²), así que el nivel sube V_sub/A. El líquido empuja hacia arriba con ρ_f V_sub g. Movimiento solo vertical, con resistencia lineal F = −b v sobre el bloque mojado (b = {#}ζ√(km), k = la fuerza de flotación por metro hundido, así que ζ es la razón de amortiguamiento de oscilaciones pequeñas) y sin masa añadida, así que los bloques reales oscilan un poco más despacio y la resistencia real del agua crece más rápido que v. El piso detiene el bloque en seco. El dinamómetro se lee con el bloque colgando quieto. Los bloques misteriosos son cubos macizos de metales puros, pintados para que su color no revele nada, con densidades cerca de {#} °C del CRC Handbook.",
 "The tank, block and beaker are to scale. Drag to turn, scroll to zoom, double click to go back; drag a grip to change a value.":
   "El tanque, el bloque y el vaso están a escala. Arrastra para girar, desplaza para acercar, doble clic para volver; arrastra un agarre para cambiar un valor.",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
 "The liquid is water, density {#} kg/m³.":
   "El líquido es agua, de densidad {#} kg/m³.",
 "A block of density {#} kg/m³ and edge {#} cm in a tank of liquid.":
@@ -252,10 +238,6 @@ VDI18N.add('es', 'demo/fluids', {
   "La fuerza de flotación es {#} N.",
 "The block is moving.":
   "El bloque se está moviendo.",
-"Time {#} s.":
-  "Tiempo {#} s.",
-"Running.":
-  "En marcha.",
 "Below, a graph for this scene.":
   "Abajo, una gráfica de esta escena.",
 "level up {#} mm = V":
@@ -352,6 +334,16 @@ VDI18N.add('es', 'demo/fluids', {
   "F = ρgh·A = {#} Pa × {#} cm². Las paredes ensanchadas sostienen el líquido extra; las paredes que se angostan empujan hacia abajo sobre él.",
 "Record reading works in the Depth, Buoyancy and Venturi scenes. Rows from every scene stay until Clear, and all of them go into the CSV.":
   "Capturar funciona en las escenas Profundidad, Flotación y Venturi. Las filas de todas las escenas se quedan hasta Borrar, y todas van al CSV.",
+"Four vessels of different shapes, all with the same base, filled to the same height.":
+  "Cuatro recipientes de formas distintas, todos con la misma base, llenos hasta la misma altura.",
+"The liquid stands {#} m deep in each.":
+  "El líquido tiene {#} m de profundidad en cada uno.",
+"The gauge pressure at each base is {#} kPa.":
+  "La presión manométrica en cada base es {#} kPa.",
+"The force on each base is {#} N.":
+  "La fuerza sobre cada base es {#} N.",
+"The liquid weighs {#} N in the straight vessel, {#} N in the flared one, {#} N in the narrowing one and {#} N in the slanted one.":
+  "El líquido pesa {#} N en el recipiente recto, {#} N en el que se ensancha, {#} N en el que se estrecha y {#} N en el inclinado.",
 "vacuum, P ≈ {#}":
   "vacío, P ≈ {#}",
 "air pushes with P":
@@ -464,8 +456,6 @@ VDI18N.add('es', 'demo/fluids', {
   "agua de mar, {#} kg/m³",
 "Ice in seawater floats with {#}/{#} = {#}% of its volume under the surface: only about a tenth of an iceberg shows. The same holds for any shape, not only a cube.":
   "El hielo en agua de mar flota con {#}/{#} = {#}% de su volumen bajo la superficie: solo se ve cerca de una décima de un iceberg. Lo mismo vale para cualquier forma, no solo un cubo.",
-"The liquid is seawater, density {#} kg/m³.":
-  "El líquido es agua de mar, de densidad {#} kg/m³.",
 "scale {#} N":
   "dinamómetro {#} N",
 "displaced water":
@@ -496,6 +486,16 @@ VDI18N.add('es', 'demo/fluids', {
   "Agua en el vaso",
 "Scale reading T = W − F_B = W − ρ_f V_sub g; the beaker gains ρ_f V_sub g.":
   "Lectura del dinamómetro T = W − F_B = W − ρ_f V_sub g; el vaso gana ρ_f V_sub g.",
+"The block hangs from a spring scale.":
+  "El bloque cuelga de un dinamómetro de resorte.",
+"The tank is a full overflow can, with a beaker catching the spill.":
+  "El tanque es una lata de derrame llena, con un vaso que recoge lo que se derrama.",
+"The spring scale reads {#} N.":
+  "El dinamómetro marca {#} N.",
+"The beaker holds {#} cm³ of water.":
+  "El vaso contiene {#} cm³ de agua.",
+"The block is denser than the liquid, so it sinks.":
+  "El bloque es más denso que el líquido, así que se hunde.",
 "Your readings: buoyant force W − T against submerged volume, water":
   "Tus lecturas: fuerza de flotación W − T en función del volumen sumergido, agua",
 "{#} of {#} Buoyancy readings used (this liquid). model: slope ρ_f g = {#} N/m³, through the origin":
@@ -516,8 +516,6 @@ VDI18N.add('es', 'demo/fluids', {
   "A, masa y volumen desconocidos",
 "ρ = m/V: m = W/g from the scale in air; V from the water a block all the way under pushes into the beaker.":
   "ρ = m/V: m = W/g con el dinamómetro en el aire; V a partir del agua que un bloque completamente sumergido empuja al vaso.",
-"vegetable oil, {#} kg/m³":
-  "aceite vegetal, {#} kg/m³",
 "A tank of liquid {#} m deep with a hole in its side.":
   "Un tanque de líquido de {#} m de profundidad con un orificio en un lado.",
 "The hole is {#} m below the surface.":
@@ -528,10 +526,12 @@ VDI18N.add('es', 'demo/fluids', {
   "Rapidez de salida {#} m/s.",
 "The range is largest, {#} m, for a hole {#} m deep.":
   "El alcance es máximo, {#} m, para un orificio a {#} m de profundidad.",
+"vegetable oil, {#} kg/m³":
+  "aceite vegetal, {#} kg/m³",
+"The liquid is mercury, density {#} kg/m³.":
+  "El líquido es mercurio, de densidad {#} kg/m³.",
 "Readings and fits work in the Depth, Buoyancy and Venturi scenes.":
   "Las lecturas y los ajustes funcionan en las escenas Profundidad, Flotación y Venturi.",
-"Paused.":
-  "En pausa.",
 "Choose a metal first.":
   "Primero elige un metal.",
 "Record reading works in the Depth, Buoyancy and Venturi scenes.":
@@ -578,6 +578,16 @@ VDI18N.add('es', 'demo/fluids', {
   "mídela: oculta para el aceite misterioso",
 "At the interface’s level: P_atm + ρ₁gh₁ = P_atm + ρ₂gh₂, so ρ₁ = ρ₂h₂/h₁":
   "Al nivel de la interfaz: P_atm + ρ₁gh₁ = P_atm + ρ₂gh₂, así que ρ₁ = ρ₂h₂/h₁",
+"A U tube holding two liquids that meet at an interface.":
+  "Un tubo en U con dos líquidos que se encuentran en una interfaz.",
+"A mystery oil is poured into the left arm.":
+  "Se vierte un aceite misterioso en la rama izquierda.",
+"The poured liquid stands {#} cm above the interface.":
+  "El líquido vertido está {#} cm por encima de la interfaz.",
+"The other liquid stands {#} cm above the interface.":
+  "El otro líquido está {#} cm por encima de la interfaz.",
+"The density of the mystery oil is hidden.":
+  "La densidad del aceite misterioso está oculta.",
 "Mercury, {#} kg/m³":
   "Mercurio, {#} kg/m³",
 "E, mass and volume unknown":
@@ -588,6 +598,8 @@ VDI18N.add('es', 'demo/fluids', {
   "residuo (N)",
 "Your readings: buoyant force W − T against submerged volume, mercury":
   "Tus lecturas: fuerza de flotación W − T en función del volumen sumergido, mercurio",
+"Mystery block E in a tank of liquid, its mass and volume unknown.":
+  "El bloque misterioso E en un tanque de líquido, con masa y volumen desconocidos.",
 "Δh = {#} cm":
   "Δh = {#} cm",
 "Your readings: standpipe drop h₁ − h₂ against v₁², D₁ = {#} cm, D₂ = {#} cm":
@@ -598,14 +610,52 @@ VDI18N.add('es', 'demo/fluids', {
   "Δh (m)",
 "Your readings: standpipe drop h₁ − h₂ against v₁², D₁ = {#} cm, D₂ = {#} cm. Not enough readings to fit.":
   "Tus lecturas: descenso del tubo vertical h₁ − h₂ en función de v₁², D₁ = {#} cm, D₂ = {#} cm. No hay suficientes lecturas para ajustar.",
+"A horizontal pipe narrows from {#} cm to {#} cm across, with a standpipe at each part.":
+  "Una tubería horizontal se estrecha de {#} cm a {#} cm de diámetro, con un tubo vertical en cada parte.",
+"Inlet speed v₁ = {#} m/s, flow Q = {#} L/s.":
+  "Rapidez de entrada v₁ = {#} m/s, flujo Q = {#} L/s.",
+"The first standpipe stands {#} cm.":
+  "El primer tubo vertical llega a {#} cm.",
+"The second standpipe stands {#} cm.":
+  "El segundo tubo vertical llega a {#} cm.",
+"Throat speed v₂ = {#} m/s.":
+  "Rapidez en la garganta v₂ = {#} m/s.",
+"The standpipe difference Δh is {#} cm.":
+  "La diferencia entre los tubos verticales Δh es {#} cm.",
 "Your readings: buoyant force W − T against submerged volume, water. Not enough readings to fit.":
   "Tus lecturas: fuerza de flotación W − T en función del volumen sumergido, agua. No hay suficientes lecturas para ajustar.",
 "Your readings: buoyant force W − T against submerged volume, seawater":
   "Tus lecturas: fuerza de flotación W − T en función del volumen sumergido, agua de mar",
 "Your readings: buoyant force W − T against submerged volume, seawater. Not enough readings to fit.":
   "Tus lecturas: fuerza de flotación W − T en función del volumen sumergido, agua de mar. No hay suficientes lecturas para ajustar.",
+"The liquid is seawater, density {#} kg/m³.":
+  "El líquido es agua de mar, de densidad {#} kg/m³.",
+"Mystery block A in a tank of liquid, its mass and volume unknown.":
+  "El bloque misterioso A en un tanque de líquido, con masa y volumen desconocidos.",
+"The liquid is oil, density {#} kg/m³.":
+  "El líquido es aceite, de densidad {#} kg/m³.",
 "Range against hole depth, H = {#} m, R = {#}√(h(H − h))":
   "Alcance en función de la profundidad del orificio, H = {#} m, R = {#}√(h(H − h))",
+"Describe the picture":
+  "Describir la imagen",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
+"Mystery":
+  "Misterio",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
+"Time {#} s.":
+  "Tiempo {#} s.",
+"Running.":
+  "En marcha.",
+"Paused.":
+  "En pausa.",
 "Close":
   "Cerrar"
 });

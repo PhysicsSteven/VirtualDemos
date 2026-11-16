@@ -10,8 +10,6 @@ VDI18N.add('es', 'demo/currents-fields', {
   "entra",
 "{r} of the center":
   "{r} del centro",
-"Magnetic Fields of Currents":
-  "Campos magnéticos de corrientes",
 "<a>Magnetic forces and fields</a>":
   "<a>Fuerzas y campos magnéticos</a>",
 "<a><span>←</span> <span>Household Wiring and Electrical Safety</span></a><a><span>Charges in Magnetic Fields</span> <span>→</span></a>":
@@ -30,6 +28,14 @@ VDI18N.add('es', 'demo/currents-fields', {
   "F/L = {#} µN/m <small>atracción</small>",
 "Magnetic field drawing. Straight wires view: wires cross the page, drag a wire, the probe or the Amperian loop. Keys: N selects the next object, arrow keys move it, plus and minus change the selected wire's current, R reverses it, Delete removes it, A shows or hides the Amperian loop. Loop and solenoid view: drag the grips to change the radius and length, drag the probe or click the plot below to place it on the axis; arrow keys move the probe, plus and minus change the number of turns.":
   "Dibujo del campo magnético. Vista de alambres rectos: los alambres atraviesan la página; arrastra un alambre, la sonda o el lazo amperiano. Teclas: N selecciona el siguiente objeto, las flechas lo mueven, más y menos cambian la corriente del alambre seleccionado, R la invierte, Supr lo quita, A muestra u oculta el lazo amperiano. Vista de espira y solenoide: arrastra los controles para cambiar el radio y la longitud, arrastra la sonda o haz clic en la gráfica de abajo para colocarla sobre el eje; las flechas mueven la sonda, más y menos cambian el número de vueltas.",
+"{#} straight wires cross the page.":
+  "{#} alambres rectos cruzan la página.",
+"The probe is at ({#}, {#}) cm.":
+  "La sonda está en ({#}, {#}) cm.",
+"There is no field at the probe.":
+  "No hay campo en la sonda.",
+"Describe the magnetic field drawing":
+  "Describir el dibujo del campo magnético",
 "<a>Worksheet {#}: Magnets and Oersted's Compass</a>":
   "<a>Hoja de trabajo {#}: Imanes y la brújula de Oersted</a>",
 "<a>Worksheet {#}: Fields and Forces of Straight Wires</a>":
@@ -160,14 +166,22 @@ VDI18N.add('es', 'demo/currents-fields', {
   "Con el núcleo de hierro la bobina se convierte en un electroimán. El campo de la bobina magnetiza el hierro, y las diminutas espiras de corriente atómicas del hierro se alinean y suman su propio campo, con la misma forma que el de la bobina y muchas veces más intenso. Cuántas veces depende sobre todo de la forma del núcleo: un núcleo largo y delgado funciona mucho mejor que uno corto y grueso, porque los polos de sus extremos se oponen menos a su magnetización. Con la fuente de CA, la corriente, el campo y cada aguja de brújula se invierten en cada ciclo. La fuente se ralentiza a lo más a {#} Hz para que las agujas puedan seguirla; a {#} Hz una aguja real no puede girar tan rápido y solo vibra. Modelo: el núcleo se magnetiza de manera uniforme, como lo haría un elipsoide de las mismas proporciones (factor de desmagnetización N<sub>d</sub>, Osborn {#}), con μ<sub>r</sub> = {#} (elegido, hierro dulce) y saturación en M<sub>s</sub> = {#} × {#}⁶ A/m (Kittel); se omiten la histéresis y la inductancia de la bobina. El hierro se dibuja dentro de las vueltas; su campo proviene de la corriente superficial M alrededor de su costado, que corre donde están las vueltas.",
 "Magnets and Oersted's compass":
   "Imanes y la brújula de Oersted",
-"Experiment":
-  "Experimento",
 "Two bar magnets":
   "Dos imanes de barra",
 "Oersted's compass":
   "Brújula de Oersted",
 "Two bar magnets with compass needles around them showing the field direction.":
   "Dos imanes de barra con agujas de brújula a su alrededor que muestran la dirección del campo.",
+"Two bar magnets, each {#} cm long, lie end to end with compass needles around them.":
+  "Dos imanes de barra, cada uno de {#} cm de largo, están alineados extremo con extremo, con agujas de brújula a su alrededor.",
+"The gap between them is {#} cm.":
+  "La separación entre ellos es de {#} cm.",
+"The north pole of the left magnet faces the south pole of the right magnet.":
+  "El polo norte del imán izquierdo está frente al polo sur del imán derecho.",
+"The right magnet is attracted toward the left magnet.":
+  "El imán derecho es atraído hacia el imán izquierdo.",
+"Describe the magnets or compass":
+  "Describir los imanes o la brújula",
 "Gap between the magnets":
   "Separación entre los imanes",
 "Turn magnet B around":
@@ -214,6 +228,18 @@ VDI18N.add('es', 'demo/currents-fields', {
   "Apunta tu pulgar derecho en el sentido de la corriente; tus dedos se curvan en el sentido en que B rodea el alambre. En el dibujo: una corriente que sale de la página da círculos antihorarios, una que entra da círculos horarios. Para una espira, curva los dedos en el sentido de la corriente y tu pulgar apunta en la dirección de B a través del centro.",
 "Model: infinitely long, thin, straight wires perpendicular to the page, in vacuum. Each gives B = μ₀I/({#}πr) circling it; the field shown is the sum over the wires. The force on a wire is per meter of its length and comes only from the other wires. ∮B·dl is integrated numerically along the loop with adaptive Gauss–Kronrod quadrature to a tolerance of {#}⁻¹⁰ of μ₀Σ|I|; it never uses Ampère's law. A real wire has a thickness: inside it B falls to zero at the center, which this thin wire model leaves out. Compass needles turn to line up with B; how they swing on the way is for show.":
   "Modelo: alambres rectos, delgados e infinitamente largos, perpendiculares a la página, en el vacío. Cada uno da B = μ₀I/({#}πr) a su alrededor; el campo mostrado es la suma sobre los alambres. La fuerza sobre un alambre es por metro de su longitud y proviene solo de los otros alambres. ∮B·dl se integra numéricamente a lo largo del lazo con cuadratura adaptativa de Gauss–Kronrod con una tolerancia de {#}⁻¹⁰ de μ₀Σ|I|; nunca usa la ley de Ampère. Un alambre real tiene grosor: dentro de él B cae a cero en el centro, lo que este modelo de alambre delgado omite. Las agujas de brújula giran para alinearse con B; cómo oscilan en el camino es solo ilustrativo.",
+"Wire {#} carries {#} A out of the page, at (−{#}, {#}) cm.":
+  "El alambre {#} lleva {#} A hacia afuera de la página, en (−{#}, {#}) cm.",
+"Wire {#} carries {#} A out of the page, at ({#}, {#}) cm.":
+  "El alambre {#} lleva {#} A hacia afuera de la página, en ({#}, {#}) cm.",
+"The wires are {#} cm apart.":
+  "Los alambres están a {#} cm de distancia.",
+"Force per length on each wire {#} µN/m.":
+  "Fuerza por longitud sobre cada alambre: {#} µN/m.",
+"The wires attract.":
+  "Los alambres se atraen.",
+"The field at the probe is {#} µT, {#}° from the plus x direction.":
+  "El campo en la sonda es de {#} µT, a {#}° de la dirección x positiva.",
 "pulled toward A":
   "atraído hacia A",
 "Like poles repel and unlike poles attract. The red end of each compass needle is its north pole, which points along B: away from a north pole, toward a south pole. Cut magnet B and each half has both poles: there is no lone north pole. Model: each magnet is two point poles at its ends (Gilbert's model), good outside long thin magnets; only the field direction and the force ratio are shown, and Earth's field is left out. Ampère's idea that magnets are made of tiny current loops: compare the Solenoid setup above with a bar magnet.":
@@ -278,6 +304,20 @@ VDI18N.add('es', 'demo/currents-fields', {
   "Alrededor de cualquier lazo cerrado, ∮B·dl = μ₀I<sub>enc</sub>. Dos alambres atraviesan este lazo ({#} A saliendo, {#} A entrando). Arrastra el lazo sobre el tercer alambre: B a lo largo del lazo cambia, pero ∮B·dl cambia solo cuando un alambre cruza el lazo.",
 "<span><i></i>Field line</span><span><i></i>|B|, stronger is darker</span><span><i></i>Compass, red end along B</span><span><i></i>Force on a wire, per meter</span><span><i></i><i></i>Loop: B along or against its direction</span><span><i></i>Grip: drag to move or resize</span>":
   "<span><i></i>Línea de campo</span><span><i></i>|B|, más intenso es más oscuro</span><span><i></i>Brújula, extremo rojo a lo largo de B</span><span><i></i>Fuerza sobre un alambre, por metro</span><span><i></i><i></i>Lazo: B a favor o en contra de su sentido</span><span><i></i>Control: arrastra para mover o cambiar el tamaño</span>",
+"Wire {#} carries {#} A into the page, at (−{#}, −{#}) cm.":
+  "El alambre {#} lleva {#} A hacia adentro de la página, en (−{#}, −{#}) cm.",
+"Net force per length on wire {#} {#} µN/m at {#}° from the plus x direction.":
+  "Fuerza neta por longitud sobre el alambre {#}: {#} µN/m, a {#}° de la dirección x positiva.",
+"The probe is at ({#}, −{#}) cm.":
+  "La sonda está en ({#}, −{#}) cm.",
+"An Amperian loop, a circle of radius {#} cm, is drawn counterclockwise.":
+  "Un lazo amperiano, un círculo de {#} cm de radio, se recorre en sentido contrario a las manecillas del reloj.",
+"Current through the loop {#} A.":
+  "Corriente a través del lazo: {#} A.",
+"The line integral of B around the loop is {#} µT·m.":
+  "La integral de línea de B alrededor del lazo es {#} µT·m.",
+"Mu zero times the enclosed current is {#} µT·m.":
+  "Mu cero por la corriente encerrada es {#} µT·m.",
 "<span>Wire {#}</span><span>−{#} A</span><span>(-{#}, -{#}) cm · F/L {#} µN/m</span>":
   "<span>Alambre {#}</span><span>−{#} A</span><span>(-{#}, -{#}) cm · F/L {#} µN/m</span>",
 "Net on wire {#}":
@@ -294,6 +334,16 @@ VDI18N.add('es', 'demo/currents-fields', {
   "∮B·dl = {#} µT·m <small>μ₀I<sub>enc</sub> = {#} µT·m</small>",
 "A circular loop seen edge on: at the top the current comes out of the page, at the bottom it goes in. Every field line threads the loop and closes around the outside. At the center B = μ₀I/(2R).":
   "Una espira circular vista de canto: arriba la corriente sale de la página, abajo entra. Cada línea de campo pasa a través de la espira y se cierra por fuera. En el centro B = μ₀I/(2R).",
+"{#} (one loop)":
+  "{#} (una espira)",
+"With one turn the length L does not matter. Raise N to stack more turns along the length.":
+  "Con una sola vuelta la longitud L no importa. Aumenta N para apilar más vueltas a lo largo de la longitud.",
+"B at the center, exact":
+  "B en el centro, exacto",
+"On the axis at the probe's z: μ₀IR²/({#}(R²+z²)<sup>{#}/{#}</sup>)":
+  "Sobre el eje en la z de la sonda: μ₀IR²/({#}(R²+z²)<sup>{#}/{#}</sup>)",
+"B<sub>center</sub> = {#} µT <small>μ₀I/(2R) = {#} µT</small>":
+  "B<sub>center</sub> = {#} µT <small>μ₀I/(2R) = {#} µT</small>",
 "An electromagnet: {#} turns on a soft iron rod {#} cm long and {#} cm across, on a {#} A battery. The iron makes the field about {#} times what the coil gives alone, and the compasses line up with it like the field of a bar magnet. Take the core out, switch to the AC supply, or make the rod short and fat to see the gain fall.":
   "Un electroimán: {#} vueltas sobre una varilla de hierro dulce de {#} cm de largo y {#} cm de diámetro, con una batería de {#} A. El hierro hace que el campo sea unas {#} veces el que da la bobina sola, y las brújulas se alinean con él como con el campo de un imán de barra. Quita el núcleo, cambia a la fuente de CA, o haz la varilla corta y gruesa para ver cómo baja la ganancia.",
 "on the axis (mT)":
@@ -324,6 +374,26 @@ VDI18N.add('es', 'demo/currents-fields', {
   "rectángulo {#} × {#} cm",
 "−{#} A <span>wire {#} (−{#} A), {#} (+{#} A)</span>":
   "−{#} A <span>alambre {#} (−{#} A), {#} (+{#} A)</span>",
+"A solenoid of {#} turns, {#} cm long and {#} cm in radius.":
+  "Un solenoide de {#} vueltas, de {#} cm de largo y {#} cm de radio.",
+"The coil is drawn as separate rings.":
+  "La bobina se dibuja como anillos separados.",
+"Current {#} A.":
+  "Corriente de {#} A.",
+"An iron core fills the coil.":
+  "Un núcleo de hierro llena la bobina.",
+"The core multiplies the field by {#}.":
+  "El núcleo multiplica el campo por {#}.",
+"Field at the center {#} mT.":
+  "Campo en el centro: {#} mT.",
+"Turns per length {#} per meter.":
+  "Vueltas por longitud: {#} por metro.",
+"The long solenoid value mu zero n I is {#} mT.":
+  "El valor del solenoide largo, mu cero n I, es {#} mT.",
+"The probe is at z = {#} cm, distance {#} cm from the axis.":
+  "La sonda está en z = {#} cm, a {#} cm del eje.",
+"The field at the probe is {#} mT, {#}° from the plus z direction.":
+  "El campo en la sonda es de {#} mT, a {#}° de la dirección z positiva.",
 "Peak current I₀":
   "Corriente pico I₀",
 "AC supply: current now I₀ sin {#}πft":
@@ -358,6 +428,26 @@ VDI18N.add('es', 'demo/currents-fields', {
   "{#}° al oeste",
 "tan θ = B<sub>wire</sub>/B<sub>E</sub>":
   "tan θ = B<sub>wire</sub>/B<sub>E</sub>",
+"The coil is one helix of wire.":
+  "La bobina es una hélice de alambre.",
+"The supply is alternating current at {#} Hz, with a peak of {#} A.":
+  "La fuente es de corriente alterna a {#} Hz, con un valor máximo de {#} A.",
+"The long solenoid value mu zero n I is {#} µT.":
+  "El valor del solenoide largo, mu cero n I, es {#} µT.",
+"Time {#} s, current now {#} A.":
+  "Tiempo {#} s, corriente ahora {#} A.",
+"Top view of a compass under a wire that runs north and south.":
+  "Vista desde arriba de una brújula bajo un alambre que va de norte a sur.",
+"The current is {#} A, northward.":
+  "La corriente es de {#} A, hacia el norte.",
+"The wire is {#} cm above the needle.":
+  "El alambre está {#} cm arriba de la aguja.",
+"Earth's field is {#} µT.":
+  "El campo de la Tierra es de {#} µT.",
+"The wire field at the needle is {#} µT.":
+  "El campo del alambre en la aguja es de {#} µT.",
+"The needle points {#}° from north.":
+  "La aguja apunta a {#}° del norte.",
 "Gap (cm)":
   "Separación (cm)",
 "Angle (°)":
@@ -376,6 +466,12 @@ VDI18N.add('es', 'demo/currents-fields', {
   "-{#} nT <span>anillos: -{#} nT</span>",
 "B<sub>center</sub> = -{#} nT <small>μ₀nI = -{#} nT</small>":
   "B<sub>center</sub> = -{#} nT <small>μ₀nI = -{#} nT</small>",
+"Field at the center -{#} nT.":
+  "Campo en el centro: -{#} nT.",
+"The long solenoid value mu zero n I is -{#} nT.":
+  "El valor del solenoide largo, mu cero n I, es -{#} nT.",
+"The field at the probe is {#} nT, {#}° from the plus z direction.":
+  "El campo en la sonda es de {#} nT, a {#}° de la dirección z positiva.",
 "μ₀nI = -{#} µT":
   "μ₀nI = -{#} µT",
 "N = {#}, L = {#} cm, R = {#} cm, I = −{#} A, iron core":
@@ -390,12 +486,18 @@ VDI18N.add('es', 'demo/currents-fields', {
   "-{#} mT <span>anillos: -{#} mT</span>",
 "B<sub>center</sub> = -{#} mT <small>μ₀nI = -{#} µT</small>":
   "B<sub>center</sub> = -{#} mT <small>μ₀nI = -{#} µT</small>",
+"Field at the center -{#} mT.":
+  "Campo en el centro: -{#} mT.",
+"The long solenoid value mu zero n I is -{#} µT.":
+  "El valor del solenoide largo, mu cero n I, es -{#} µT.",
 "μ₀nI = -{#} mT":
   "μ₀nI = -{#} mT",
 "-{#} mT <span>exact/ideal {#}</span>":
   "-{#} mT <span>exacto/ideal {#}</span>",
 "B<sub>center</sub> = -{#} mT <small>μ₀nI = -{#} mT</small>":
   "B<sub>center</sub> = -{#} mT <small>μ₀nI = -{#} mT</small>",
+"The long solenoid value mu zero n I is -{#} mT.":
+  "El valor de solenoide largo mu cero n I es -{#} mT.",
 "μ₀nI = {#} nT":
   "μ₀nI = {#} nT",
 "{#} nT at z = {#} cm":
@@ -408,138 +510,46 @@ VDI18N.add('es', 'demo/currents-fields', {
   "{#} nT <span>anillos: {#} nT</span>",
 "B<sub>center</sub> = {#} nT <small>μ₀nI = {#} nT</small>":
   "B<sub>center</sub> = {#} nT <small>μ₀nI = {#} nT</small>",
-"{#} µT <span>rings: {#} µT</span>":
-  "{#} µT <span>anillos: {#} µT</span>",
-"{#} (one loop)":
-  "{#} (una espira)",
-"With one turn the length L does not matter. Raise N to stack more turns along the length.":
-  "Con una sola vuelta la longitud L no importa. Aumenta N para apilar más vueltas a lo largo de la longitud.",
-"B at the center, exact":
-  "B en el centro, exacto",
-"On the axis at the probe's z: μ₀IR²/({#}(R²+z²)<sup>{#}/{#}</sup>)":
-  "Sobre el eje en la z de la sonda: μ₀IR²/({#}(R²+z²)<sup>{#}/{#}</sup>)",
-"B<sub>center</sub> = {#} µT <small>μ₀I/(2R) = {#} µT</small>":
-  "B<sub>center</sub> = {#} µT <small>μ₀I/(2R) = {#} µT</small>",
-"Field lines followed through the helix's own field":
-  "Líneas de campo seguidas a través del propio campo de la hélice",
-"Close":
-  "Cerrar",
-"-{#} µT at z = {#} cm":
-  "-{#} µT en z = {#} cm",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
-"{#} straight wires cross the page.":
-  "{#} alambres rectos cruzan la página.",
-"The probe is at ({#}, {#}) cm.":
-  "La sonda está en ({#}, {#}) cm.",
-"There is no field at the probe.":
-  "No hay campo en la sonda.",
-"Describe the magnetic field drawing":
-  "Describir el dibujo del campo magnético",
-"Two bar magnets, each {#} cm long, lie end to end with compass needles around them.":
-  "Dos imanes de barra, cada uno de {#} cm de largo, están alineados extremo con extremo, con agujas de brújula a su alrededor.",
-"The gap between them is {#} cm.":
-  "La separación entre ellos es de {#} cm.",
-"The north pole of the left magnet faces the south pole of the right magnet.":
-  "El polo norte del imán izquierdo está frente al polo sur del imán derecho.",
-"The right magnet is attracted toward the left magnet.":
-  "El imán derecho es atraído hacia el imán izquierdo.",
-"Describe the magnets or compass":
-  "Describir los imanes o la brújula",
-"One straight wire crosses the page.":
-  "Un alambre recto cruza la página.",
-"Wire {#} carries {#} A out of the page, at ({#}, {#}) cm.":
-  "El alambre {#} lleva {#} A hacia afuera de la página, en ({#}, {#}) cm.",
-"The field at the probe is {#} µT, {#}° from the plus x direction.":
-  "El campo en la sonda es de {#} µT, a {#}° de la dirección x positiva.",
-"A solenoid of {#} turns, {#} cm long and {#} cm in radius.":
-  "Un solenoide de {#} vueltas, de {#} cm de largo y {#} cm de radio.",
-"The coil is drawn as separate rings.":
-  "La bobina se dibuja como anillos separados.",
-"Current {#} A.":
-  "Corriente de {#} A.",
-"Field at the center {#} µT.":
-  "Campo en el centro: {#} µT.",
-"Turns per length {#} per meter.":
-  "Vueltas por longitud: {#} por metro.",
-"The long solenoid value mu zero n I is {#} µT.":
-  "El valor del solenoide largo, mu cero n I, es {#} µT.",
-"The probe is at z = {#} cm, distance {#} cm from the axis.":
-  "La sonda está en z = {#} cm, a {#} cm del eje.",
-"The field at the probe is {#} µT, {#}° from the plus z direction.":
-  "El campo en la sonda es de {#} µT, a {#}° de la dirección z positiva.",
-"An iron core fills the coil.":
-  "Un núcleo de hierro llena la bobina.",
-"The core multiplies the field by {#}.":
-  "El núcleo multiplica el campo por {#}.",
-"Field at the center {#} mT.":
-  "Campo en el centro: {#} mT.",
-"The long solenoid value mu zero n I is {#} mT.":
-  "El valor del solenoide largo, mu cero n I, es {#} mT.",
-"The field at the probe is {#} mT, {#}° from the plus z direction.":
-  "El campo en la sonda es de {#} mT, a {#}° de la dirección z positiva.",
-"The coil is one helix of wire.":
-  "La bobina es una hélice de alambre.",
-"The supply is alternating current at {#} Hz, with a peak of {#} A.":
-  "La fuente es de corriente alterna a {#} Hz, con un valor máximo de {#} A.",
-"Time {#} s, current now {#} A.":
-  "Tiempo {#} s, corriente ahora {#} A.",
-"Top view of a compass under a wire that runs north and south.":
-  "Vista desde arriba de una brújula bajo un alambre que va de norte a sur.",
-"The current is {#} A, northward.":
-  "La corriente es de {#} A, hacia el norte.",
-"The wire is {#} cm above the needle.":
-  "El alambre está {#} cm arriba de la aguja.",
-"Earth's field is {#} µT.":
-  "El campo de la Tierra es de {#} µT.",
-"The wire field at the needle is {#} µT.":
-  "El campo del alambre en la aguja es de {#} µT.",
-"The needle points {#}° from north.":
-  "La aguja apunta a {#}° del norte.",
-"Field at the center -{#} nT.":
-  "Campo en el centro: -{#} nT.",
-"The long solenoid value mu zero n I is -{#} nT.":
-  "El valor del solenoide largo, mu cero n I, es -{#} nT.",
-"The field at the probe is {#} nT, {#}° from the plus z direction.":
-  "El campo en la sonda es de {#} nT, a {#}° de la dirección z positiva.",
-"Field at the center -{#} mT.":
-  "Campo en el centro: -{#} mT.",
-"The long solenoid value mu zero n I is -{#} µT.":
-  "El valor del solenoide largo, mu cero n I, es -{#} µT.",
 "Field at the center {#} nT.":
   "Campo en el centro: {#} nT.",
 "The long solenoid value mu zero n I is {#} nT.":
   "El valor del solenoide largo, mu cero n I, es {#} nT.",
-"Wire {#} carries {#} A out of the page, at (−{#}, {#}) cm.":
-  "El alambre {#} lleva {#} A hacia afuera de la página, en (−{#}, {#}) cm.",
-"The wires are {#} cm apart.":
-  "Los alambres están a {#} cm de distancia.",
-"Force per length on each wire {#} µN/m.":
-  "Fuerza por longitud sobre cada alambre: {#} µN/m.",
-"The wires attract.":
-  "Los alambres se atraen.",
+"{#} µT <span>rings: {#} µT</span>":
+  "{#} µT <span>anillos: {#} µT</span>",
+"Field at the center {#} µT.":
+  "Campo en el centro: {#} µT.",
+"The field at the probe is {#} µT, {#}° from the plus z direction.":
+  "El campo en la sonda es de {#} µT, a {#}° de la dirección z positiva.",
+"Field lines followed through the helix's own field":
+  "Líneas de campo seguidas a través del propio campo de la hélice",
+"One straight wire crosses the page.":
+  "Un alambre recto cruza la página.",
 "Wire {#} carries {#} A into the page, at ({#}, {#}) cm.":
   "El alambre {#} lleva {#} A hacia adentro de la página, en ({#}, {#}) cm.",
 "The wires repel.":
   "Los alambres se repelen.",
-"Wire {#} carries {#} A into the page, at (−{#}, −{#}) cm.":
-  "El alambre {#} lleva {#} A hacia adentro de la página, en (−{#}, −{#}) cm.",
-"Net force per length on wire {#} {#} µN/m at {#}° from the plus x direction.":
-  "Fuerza neta por longitud sobre el alambre {#}: {#} µN/m, a {#}° de la dirección x positiva.",
-"The probe is at ({#}, −{#}) cm.":
-  "La sonda está en ({#}, −{#}) cm.",
-"An Amperian loop, a circle of radius {#} cm, is drawn counterclockwise.":
-  "Un lazo amperiano, un círculo de {#} cm de radio, se recorre en sentido contrario a las manecillas del reloj.",
-"Current through the loop {#} A.":
-  "Corriente a través del lazo: {#} A.",
-"The line integral of B around the loop is {#} µT·m.":
-  "La integral de línea de B alrededor del lazo es {#} µT·m.",
-"Mu zero times the enclosed current is {#} µT·m.":
-  "Mu cero por la corriente encerrada es {#} µT·m.",
 "A single circular loop of radius {#} cm.":
   "Una sola espira circular de {#} cm de radio.",
 "Mu zero I over 2R is {#} µT.":
-  "Mu cero I entre 2R es {#} µT."
+  "Mu cero I entre 2R es {#} µT.",
+"-{#} µT at z = {#} cm":
+  "-{#} µT en z = {#} cm",
+"-{#} µT <span>{#} of the center</span>":
+  "-{#} µT <span>{#} del centro</span>",
+"-{#} µT <span>rings: -{#} µT</span>":
+  "-{#} µT <span>anillos: -{#} µT</span>",
+"B<sub>center</sub> = -{#} µT <small>μ₀nI = -{#} µT</small>":
+  "B<sub>centro</sub> = -{#} µT <small>μ₀nI = -{#} µT</small>",
+"Field at the center -{#} µT.":
+  "Campo en el centro -{#} µT.",
+"Magnetic Fields of Currents":
+  "Campos magnéticos de corrientes",
+"Experiment":
+  "Experimento",
+"Close":
+  "Cerrar",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles"
 });

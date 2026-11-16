@@ -1,15 +1,9 @@
 /* demo/quantum-waves in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/quantum-waves', {
-"Describe the picture":
-  "Describir la imagen",
 "Energy (eV)":
   "Energía (eV)",
 "phase of ψ":
   "fase de ψ",
-"Skip to the picture":
-  "Ir a la imagen",
-"Skip to the controls":
-  "Ir a los controles",
 "Quantum Wave Packets":
   "Paquetes de ondas cuánticos",
 "<a>Quantum mechanics</a>":
@@ -54,12 +48,6 @@ VDI18N.add('es', 'demo/quantum-waves', {
   "La transmisión promediada sobre el paquete es {#}%.",
 "Time {#} fs.":
   "Tiempo {#} fs.",
-"Time controls":
-  "Controles de tiempo",
-"Step":
-  "Escalón",
-"<span>Speed</span>":
-  "<span>Rapidez</span>",
 "Wave function: probability density |ψ|² filled and colored by the phase of ψ.":
   "Función de onda: densidad de probabilidad |ψ|² rellena y coloreada según la fase de ψ.",
 "The probability density |ψ|² of the electron against position, filled and colored by the phase of ψ.":
@@ -332,22 +320,6 @@ VDI18N.add('es', 'demo/quantum-waves', {
   "Alto Ly",
 "Hard walls: V = {#} inside, ψ = {#} on the walls.":
   "Paredes rígidas: V = {#} dentro, ψ = {#} en las paredes.",
-"An electron in a box {#} nm wide and {#} nm tall, with hard walls.":
-  "Un electrón en una caja de {#} nm de ancho y {#} nm de alto, con paredes duras.",
-"The electron is a mix of {#} states.":
-  "El electrón es una mezcla de {#} estados.",
-"Running.":
-  "En marcha.",
-"The beat period is {#} fs.":
-  "El periodo de batimiento es {#} fs.",
-"Mean position ⟨x⟩ = {#} nm, ⟨y⟩ = {#} nm.":
-  "Posición media ⟨x⟩ = {#} nm, ⟨y⟩ = {#} nm.",
-"The light is off.":
-  "La luz está apagada.",
-"The energy levels of the well, {#} in all, with the lowest at {#} eV.":
-  "Los niveles de energía del pozo, {#} en total, con el más bajo en {#} eV.",
-"{#} levels are chosen.":
-  "Hay {#} niveles elegidos.",
 "A free packet spreads. Its momentum spread Δp stays the same (until the packet reaches the absorbing edge), but the faster parts run ahead (shorter wavelength, so the colors cycle faster at the front) and Δx keeps growing.":
   "Un paquete libre se dispersa. Su dispersión de momento Δp se mantiene igual (hasta que el paquete llega al borde absorbente), pero las partes más rápidas se adelantan (longitud de onda más corta, así que los colores cambian más rápido al frente) y Δx sigue creciendo.",
 "No potential: V = {#} everywhere. Absorbing layers just beyond the edges of the view swallow the packet as it leaves. Drag the ⟨E⟩ line on the energy diagram to set E₀.":
@@ -356,6 +328,22 @@ VDI18N.add('es', 'demo/quantum-waves', {
   "Δx (nm)",
 "Δp (eV/c)":
   "Δp (eV/c)",
+"There is no potential: a free particle.":
+  "No hay potencial: una partícula libre.",
+"An electron in a box {#} nm wide and {#} nm tall, with hard walls.":
+  "Un electrón en una caja de {#} nm de ancho y {#} nm de alto, con paredes duras.",
+"The electron is a mix of {#} states.":
+  "El electrón es una mezcla de {#} estados.",
+"The beat period is {#} fs.":
+  "El periodo de batimiento es {#} fs.",
+"Mean position ⟨x⟩ = −{#} nm, ⟨y⟩ = {#} nm.":
+  "Posición media ⟨x⟩ = −{#} nm, ⟨y⟩ = {#} nm.",
+"The light is off.":
+  "La luz está apagada.",
+"The energy levels of the well, {#} in all, with the lowest at {#} eV.":
+  "Los niveles de energía del pozo, {#} en total, con el más bajo en {#} eV.",
+"{#} levels are chosen.":
+  "Hay {#} niveles elegidos.",
 "Even with E above the step, part of the packet reflects, which a classical particle never does. Drop E₀ below the step and everything reflects after a brief dip into the step.":
   "Aun con E por encima del escalón, parte del paquete se refleja, lo que una partícula clásica nunca hace. Baja E₀ por debajo del escalón y todo se refleja tras una breve incursión en el escalón.",
 "Step height V₀":
@@ -426,6 +414,8 @@ VDI18N.add('es', 'demo/quantum-waves', {
   "Un electrón en una caja redonda de radio {#} nm.",
 "Angular momentum ⟨Lz⟩ = {#} ħ.":
   "Momento angular ⟨Lz⟩ = {#} ħ.",
+"Mean position ⟨x⟩ = {#} nm, ⟨y⟩ = {#} nm.":
+  "Posición media ⟨x⟩ = {#} nm, ⟨y⟩ = {#} nm.",
 "V = ½mωx²x² + ½mωy²y². E = ħωx(nx + ½) + ħωy(ny + ½): with ωx = ωy the nth level holds n + {#} states. ({#},{#}) with ({#},{#}) swings along x at the oscillator's own frequency.":
   "V = ½mωx²x² + ½mωy²y². E = ħωx(nx + ½) + ħωy(ny + ½): con ωx = ωy el n-ésimo nivel contiene n + {#} estados. ({#},{#}) con ({#},{#}) oscila a lo largo de x con la frecuencia propia del oscilador.",
 "ħωx":
@@ -458,22 +448,48 @@ VDI18N.add('es', 'demo/quantum-waves', {
   "Un electrón en un oscilador bidimensional con ħωx = {#} eV y ħωy = {#} eV.",
 "The electron is in one state, ({#},{#}).":
   "El electrón está en un solo estado, ({#},{#}).",
-"Mean position ⟨x⟩ = −{#} nm, ⟨y⟩ = {#} nm.":
-  "Posición media ⟨x⟩ = −{#} nm, ⟨y⟩ = {#} nm.",
-"The light is on, polarized along x, with photon energy ħω = {#} eV and field strength {#} V/nm.":
-  "La luz está encendida, polarizada a lo largo de x, con energía de fotón ħω = {#} eV e intensidad de campo {#} V/nm.",
-"{#} level is chosen.":
-  "Hay {#} nivel elegido.",
-"Mean position ⟨x⟩ = −{#} nm, ⟨y⟩ = −{#} nm.":
-  "Posición media ⟨x⟩ = −{#} nm, ⟨y⟩ = −{#} nm.",
-"The light is on, polarized along y, with photon energy ħω = {#} eV and field strength {#} V/nm.":
-  "La luz está encendida, polarizada a lo largo de y, con energía de fotón ħω = {#} eV e intensidad de campo {#} V/nm.",
 "Mean position ⟨x⟩ = {#} nm, ⟨y⟩ = −{#} nm.":
   "Posición media ⟨x⟩ = {#} nm, ⟨y⟩ = −{#} nm.",
+"The light is on, polarized along y, with photon energy ħω = {#} eV and field strength {#} V/nm.":
+  "La luz está encendida, polarizada a lo largo de y, con energía de fotón ħω = {#} eV e intensidad de campo {#} V/nm.",
+"{#} level is chosen.":
+  "Hay {#} nivel elegido.",
+"Tuned to the transition ({#},{#}) → ({#},{#}), gap {#} eV.":
+  "Sintonizado a la transición ({#},{#}) → ({#},{#}), brecha {#} eV.",
+"The detuning is {#} eV.":
+  "La desintonía es {#} eV.",
+"The Rabi period is {#} fs.":
+  "El periodo de Rabi es {#} fs.",
+"Mean position ⟨x⟩ = −{#} nm, ⟨y⟩ = −{#} nm.":
+  "Posición media ⟨x⟩ = −{#} nm, ⟨y⟩ = −{#} nm.",
 "|ψ|² as height":
   "|ψ|² como altura",
-"There is no potential: a free particle.":
-  "No hay potencial: una partícula libre.",
+"It moves to the left.":
+  "Se mueve hacia la izquierda.",
+"A potential step of height {#} eV at x = {#}.":
+  "Un escalón de potencial de {#} eV de altura en x = {#}.",
+"A box {#} nm wide with infinite walls.":
+  "Una caja de {#} nm de ancho con paredes infinitas.",
+"A harmonic oscillator with level spacing ħω = {#} eV.":
+  "Un oscilador armónico con separación de niveles ħω = {#} eV.",
+"An electron in a {#} by {#} lattice of wells, with barriers {#} eV high and {#} nm wide.":
+  "Un electrón en una red de pozos de {#} por {#}, con barreras de {#} eV de altura y {#} nm de ancho.",
+"The light is on, polarized along x, with photon energy ħω = {#} eV and field strength {#} V/nm.":
+  "La luz está encendida, polarizada a lo largo de x, con energía de fotón ħω = {#} eV e intensidad de campo {#} V/nm.",
+"Describe the picture":
+  "Describir la imagen",
+"Skip to the picture":
+  "Ir a la imagen",
+"Skip to the controls":
+  "Ir a los controles",
+"Time controls":
+  "Controles de tiempo",
+"Step":
+  "Escalón",
+"<span>Speed</span>":
+  "<span>Rapidez</span>",
+"Running.":
+  "En marcha.",
 "Close":
   "Cerrar"
 });

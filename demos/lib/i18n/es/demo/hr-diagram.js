@@ -1,7 +1,5 @@
 /* demo/hr-diagram in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/hr-diagram', {
-"Describe the picture":
-  "Describir la imagen",
 "Spectral class":
   "Clase espectral",
 "Surface temperature T":
@@ -36,10 +34,6 @@ VDI18N.add('es', 'demo/hr-diagram', {
   "(ESCALA LOGARÍTMICA)",
 "NS":
   "EN",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
 "Stellar Evolution":
   "Evolución estelar",
 "<a>Stars</a>":
@@ -50,14 +44,6 @@ VDI18N.add('es', 'demo/hr-diagram', {
   "Dónde se ubica una estrella en el diagrama de Hertzsprung Russell, y el camino que sigue desde su nacimiento hasta enana blanca o supernova.",
 "L in L<sub>sun</sub> · R in R<sub>sun</sub> · L = {#}πR²σT⁴ · T<sub>sun</sub> = {#} K · R<sub>E</sub> = R<sub>sun</sub>/{#}":
   "L en L<sub>sun</sub> · R en R<sub>sun</sub> · L = {#}πR²σT⁴ · T<sub>sun</sub> = {#} K · R<sub>E</sub> = R<sub>sun</sub>/{#}",
-"Time controls":
-  "Controles de tiempo",
-"Run for a moment and pause again":
-  "Avanza un momento y vuelve a pausar",
-"Step":
-  "Paso",
-"<span>Speed</span>":
-  "<span>Rapidez</span>",
 "{#} Gyr <small>age</small>":
   "{#} mil millones de años <small>edad</small>",
 "· {#} s ≈ {#} Myr":
@@ -70,8 +56,6 @@ VDI18N.add('es', 'demo/hr-diagram', {
   "Una estrella de {#} M<sub>sun</sub>, dibujada como un marcador que se mueve a lo largo de su trayectoria.",
 "The star is in this phase:":
   "La estrella está en esta fase:",
-"Paused.":
-  "En pausa.",
 "Luminosity {#} L<sub>sun</sub>.":
   "Luminosidad de {#} L<sub>sun</sub>.",
 "Surface temperature {#} K.":
@@ -244,8 +228,6 @@ VDI18N.add('es', 'demo/hr-diagram', {
   "Sirio A, de unas {#} M<sub>sun</sub> y unos {#} millones de años de edad. Aquí vive solo unos {#} mil millones de años. Su compañera Sirio B es una enana blanca de {#} M<sub>sun</sub>, que dejó una estrella que empezó más pesada, de unas {#} M<sub>sun</sub>, y por eso murió primero.",
 "Helium ignites":
   "Se enciende el helio",
-"{#} Myr":
-  "{#} millones de años",
 "{#} Myr <small>age</small>":
   "{#} millones de años <small>edad</small>",
 "A {#} M<sub>sun</sub> star lives about {#} Myr, nearly a thousand times shorter than the Sun. It crosses to a red supergiant and ends in a core collapse supernova that leaves a neutron star; it leaves the diagram.":
@@ -262,10 +244,6 @@ VDI18N.add('es', 'demo/hr-diagram', {
   "El Sol como enana blanca. Su radio es fijo, así que se desliza hacia abajo por la línea de radio constante mientras se enfría y se enrojece. Compara su radio con el de la Tierra abajo. Prueba otras masas: las enanas blancas más pesadas son más pequeñas y están en líneas de radio menor.",
 "White dwarf, cooling":
   "Enana blanca, enfriándose",
-"Radius {#} R<sub>E</sub>.":
-  "Radio de {#} R<sub>E</sub>.",
-"The strip draws the star to scale next to the Sun or the Earth. Its radius is {#} R<sub>E</sub>.":
-  "La franja dibuja la estrella a escala junto al Sol o la Tierra. Su radio es de {#} R<sub>E</sub>.",
 "cools forever":
   "se enfría para siempre",
 "D (white dwarf)":
@@ -274,6 +252,10 @@ VDI18N.add('es', 'demo/hr-diagram', {
   "No hay fusión. La enana blanca se sostiene por la presión de degeneración de los electrones, conserva su radio y se enfría para siempre a lo largo de una línea de R constante.",
 "White dwarf":
   "Enana blanca",
+"Radius {#} R<sub>E</sub>.":
+  "Radio de {#} R<sub>E</sub>.",
+"The strip draws the star to scale next to the Sun or the Earth. Its radius is {#} R<sub>E</sub>.":
+  "La franja dibuja la estrella a escala junto al Sol o la Tierra. Su radio es de {#} R<sub>E</sub>.",
 "All {#} stars were born at once. The heaviest burn out first, so stars above the turnoff mass have left the main sequence. Drag the age: the turnoff slides down the main sequence. This is how astronomers date star clusters. The white dwarf sequence grows too.":
   "Las {#} estrellas nacieron a la vez. Las más pesadas se agotan primero, así que las estrellas por encima de la masa de desvío han dejado la secuencia principal. Arrastra la edad: el punto de desvío baja por la secuencia principal. Así es como los astrónomos fechan los cúmulos estelares. La secuencia de enanas blancas también crece.",
 "The age slider is logarithmic, from {#} Myr to {#} Gyr. Tap a star on the diagram to inspect it, or focus the diagram and use":
@@ -314,6 +296,28 @@ VDI18N.add('es', 'demo/hr-diagram', {
   "distancia {#} pc = {#} años luz",
 "Proxima Centauri, M5Ve":
   "Próxima Centauri, M5Ve",
+"{#} real stars in the list, {#} plotted.":
+  "{#} estrellas reales en la lista, {#} graficadas.",
+"{#} are brighter than the Sun and {#} are fainter.":
+  "{#} son más brillantes que el Sol y {#} son más tenues.",
+"Median absolute magnitude {#}.":
+  "Magnitud absoluta mediana de {#}.",
+"The selected star is:":
+  "La estrella seleccionada es:",
+"Its spectral type is:":
+  "Su tipo espectral es:",
+"M5Ve":
+  "M5Ve",
+"Apparent magnitude {#}, absolute magnitude {#}.":
+  "Magnitud aparente de {#}, magnitud absoluta de {#}.",
+"Color index B − V {#}.":
+  "Índice de color B − V de {#}.",
+"Distance {#} pc.":
+  "Distancia de {#} pc.",
+"The card shows this star:":
+  "La tarjeta muestra esta estrella:",
+"It is {#} pc away.":
+  "Está a {#} pc.",
 "Toliman":
   "Toliman",
 "one of the {#} brightest":
@@ -326,32 +330,10 @@ VDI18N.add('es', 'demo/hr-diagram', {
   "anillo: {#} más brillantes",
 "ring: both":
   "anillo: ambas",
-"{#} real stars in the list, {#} plotted.":
-  "{#} estrellas reales en la lista, {#} graficadas.",
-"{#} are brighter than the Sun and {#} are fainter.":
-  "{#} son más brillantes que el Sol y {#} son más tenues.",
-"Median absolute magnitude {#}.":
-  "Magnitud absoluta mediana de {#}.",
-"The selected star is:":
-  "La estrella seleccionada es:",
-"Its spectral type is:":
-  "Su tipo espectral es:",
-"Apparent magnitude {#}, absolute magnitude {#}.":
-  "Magnitud aparente de {#}, magnitud absoluta de {#}.",
-"Color index B − V {#}.":
-  "Índice de color B − V de {#}.",
-"Distance {#} pc.":
-  "Distancia de {#} pc.",
-"The card shows this star:":
-  "La tarjeta muestra esta estrella:",
-"It is {#} pc away.":
-  "Está a {#} pc.",
 "Color B − V, hotter to the left":
   "Color B − V, más caliente hacia la izquierda",
 "Surface temperature (K), hot on the left":
   "Temperatura superficial (K), caliente a la izquierda",
-"<a>Worksheet {#}: Stellar Lives and Cluster Ages</a>":
-  "<a>Hoja de trabajo {#}: Vidas estelares y edades de cúmulos</a>",
 "Age {#} Myr.":
   "Edad de {#} Ma.",
 "Age {#} yr.":
@@ -368,6 +350,26 @@ VDI18N.add('es', 'demo/hr-diagram', {
   "La franja muestra la estrella seleccionada del cúmulo.",
 "Median absolute magnitude −{#}.":
   "Magnitud absoluta mediana de −{#}.",
+"Describe the picture":
+  "Describir la imagen",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
+"<span>Speed</span>":
+  "<span>Rapidez</span>",
+"Paused.":
+  "En pausa.",
+"{#} Myr":
+  "{#} millones de años",
+"<a>Worksheet {#}: Stellar Lives and Cluster Ages</a>":
+  "<a>Hoja de trabajo {#}: Vidas estelares y edades de cúmulos</a>",
 "Close":
   "Cerrar"
 });

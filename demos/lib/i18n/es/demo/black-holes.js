@@ -1,7 +1,5 @@
 /* demo/black-holes in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/black-holes', {
-"Describe the picture":
-  "Describir la imagen",
 "Einstein ring θ":
   "Anillo de Einstein θ",
 "lens; caustic at its center":
@@ -26,10 +24,6 @@ VDI18N.add('es', 'demo/black-holes', {
   "u, en unidades de θ",
 "θ = ±{#}: the Einstein ring":
   "θ = ±{#}: el anillo de Einstein",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
 "Black Holes and Lensing":
   "Agujeros negros y lentes gravitacionales",
 "<a><span>←</span> <span>GPS Clocks and Relativity</span></a><a><span>Lagrange Points</span> <span>→</span></a>":
@@ -38,12 +32,6 @@ VDI18N.add('es', 'demo/black-holes', {
   "La masa curva la luz. Desliza una galaxia de fondo detrás de una lente para formar un anillo de Einstein, observa un evento de microlente, traza rayos alrededor de la sombra de un agujero negro, y mira lo que la gravedad les hace a los relojes, a la luz y a una persona cerca del horizonte.",
 "<span>r<sub>s</sub> = 2GM/c²</span> · <span>θ<sub>E</sub>² = 2r<sub>s</sub> D<sub>LS</sub>/(D<sub>L</sub>D<sub>S</sub>)</span> · <span>M<sub>sun</sub> = {#} × {#}³⁰ kg</span>":
   "<span>r<sub>s</sub> = 2GM/c²</span> · <span>θ<sub>E</sub>² = 2r<sub>s</sub> D<sub>LS</sub>/(D<sub>L</sub>D<sub>S</sub>)</span> · <span>M<sub>sol</sub> = {#} × {#}³⁰ kg</span>",
-"Time controls":
-  "Controles de tiempo",
-"Run for a moment and pause again":
-  "Avanza un momento y vuelve a pausar",
-"Step":
-  "Paso",
 "Lensing":
   "Lente",
 "Ray traced":
@@ -52,10 +40,6 @@ VDI18N.add('es', 'demo/black-holes', {
   "Cerca del agujero",
 "Lensing view: a background sky and source seen through a point mass lens, with a microlensing light curve and the image positions. Drag the true position of the source, its edge to change its size, an image marker, or the time marker on the light curve. Ray traced view: the exact view of a Schwarzschild black hole from a static observer, with light paths on the right; drag the galaxy's true position. Near the hole view: drag the observer along the radial axis or along a plot. Keys: arrows move the source or the observer, Shift for bigger steps, space plays or pauses, V changes the view, G changes the source shape, R resets.":
   "Vista de lente: un cielo de fondo y una fuente vistos a través de una lente de masa puntual, con una curva de luz de microlente y las posiciones de las imágenes. Arrastra la posición real de la fuente, su borde para cambiar su tamaño, un marcador de imagen, o el marcador de tiempo en la curva de luz. Vista de trazado de rayos: la vista exacta de un agujero negro de Schwarzschild desde un observador estático, con las trayectorias de la luz a la derecha; arrastra la posición real de la galaxia. Vista cerca del agujero: arrastra al observador a lo largo del eje radial o a lo largo de una gráfica. Teclas: las flechas mueven la fuente o al observador, Shift para pasos más grandes, espacio inicia o pausa, V cambia la vista, G cambia la forma de la fuente, R reinicia.",
-"<a>Worksheet {#}: Gravitational Lensing</a>":
-  "<a>Hoja de trabajo {#}: Lentes gravitacionales</a>",
-"<a>Worksheet {#}: Near a Black Hole</a>":
-  "<a>Hoja de trabajo {#}: Cerca de un agujero negro</a>",
 "Lensing view: a point mass of {#} solar masses, {#} kpc away, bends the light of a source {#} kpc away.":
   "Vista de lente: una masa puntual de {#} masas solares, a {#} kpc, desvía la luz de una fuente que está a {#} kpc.",
 "The source is a star disk.":
@@ -64,8 +48,6 @@ VDI18N.add('es', 'demo/black-holes', {
   "Radio de la fuente: {#} ángulos de Einstein.",
 "Einstein angle {#} mas, event time scale {#} days.":
   "Ángulo de Einstein: {#} mas; escala de tiempo del evento: {#} días.",
-"Playing.":
-  "En marcha.",
 "Source offset {#} Einstein angles from the lens.":
   "La fuente está desplazada {#} ángulos de Einstein de la lente.",
 "Two images: one {#} Einstein angles from the lens on the side of the source, and one {#} on the opposite side.":
@@ -74,6 +56,10 @@ VDI18N.add('es', 'demo/black-holes', {
   "Las imágenes se amplifican {#} y {#} veces.",
 "Point source brightening {#}.":
   "Aumento de brillo de una fuente puntual: {#}.",
+"<a>Worksheet {#}: Gravitational Lensing</a>":
+  "<a>Hoja de trabajo {#}: Lentes gravitacionales</a>",
+"<a>Worksheet {#}: Near a Black Hole</a>":
+  "<a>Hoja de trabajo {#}: Cerca de un agujero negro</a>",
 "Einstein ring":
   "Anillo de Einstein",
 "Two images":
@@ -360,6 +346,14 @@ VDI18N.add('es', 'demo/black-holes', {
   "{#} rs = {#} UA",
 "ΔA = {#} × {#}⁻⁵ g":
   "ΔA = {#} × {#}⁻⁵ g",
+"Near the hole view: an observer hovers at {#} Schwarzschild radii, a distance of {#} AU, from a black hole of {#} × {#}⁶ solar masses.":
+  "Vista cerca del agujero: un observador flota a {#} radios de Schwarzschild, a una distancia de {#} AU, de un agujero negro de {#} × {#}⁶ masas solares.",
+"Schwarzschild radius {#} AU, photon sphere {#} AU, innermost stable orbit {#} AU.":
+  "Radio de Schwarzschild: {#} UA; esfera de fotones: {#} UA; órbita estable más interna: {#} UA.",
+"Tidal stretch across a {#} m person here is {#} × {#}⁻⁴ m/s² = {#} × {#}⁻⁵ g.":
+  "El estiramiento de marea a lo largo de una persona de {#} m aquí es {#} × {#}⁻⁴ m/s² = {#} × {#}⁻⁵ g.",
+"A person survives the horizon.":
+  "Una persona sobrevive al horizonte.",
 "M87*, {#} billion M<sub>sun</sub> (EHT {#}). In units of r<sub>s</sub> every Schwarzschild black hole looks the same, so this is the view from {#} r<sub>s</sub> of any of them. From Earth the shadow of M87* spans about {#} µas, close to the {#} µas ring the Event Horizon Telescope imaged.":
   "M87*, {#} mil millones de M<sub>sol</sub> (EHT {#}). En unidades de r<sub>s</sub> todos los agujeros negros de Schwarzschild se ven iguales, así que esta es la vista desde {#} r<sub>s</sub> de cualquiera de ellos. Desde la Tierra la sombra de M87* abarca unos {#} µas, cerca del anillo de {#} µas que fotografió el Event Horizon Telescope.",
 "{#} × {#}⁹ M<sub>sun</sub>":
@@ -394,16 +388,42 @@ VDI18N.add('es', 'demo/black-holes', {
   "{#} s = {#} años",
 "= {#} yr at {#} km/s":
   "= {#} años a {#} km/s",
+"Lensing view: a point mass of {#} × {#}⁹ solar masses, {#} kpc away, bends the light of a source {#} kpc away.":
+  "Vista de lente: una masa puntual de {#} × {#}⁹ masas solares, a {#} kpc, curva la luz de una fuente a {#} kpc.",
+"Einstein angle {#}′, event time scale {#} yr.":
+  "Ángulo de Einstein {#}′, escala de tiempo del evento {#} años.",
 "ΔA = {#} × {#}⁻¹¹ g":
   "ΔA = {#} × {#}⁻¹¹ g",
 "Near the hole view: an observer hovers at {#} Schwarzschild radii, a distance of {#} AU, from a black hole of {#} × {#}⁹ solar masses.":
   "Vista cerca del agujero: un observador flota a {#} radios de Schwarzschild, a una distancia de {#} UA, de un agujero negro de {#} × {#}⁹ masas solares.",
-"Schwarzschild radius {#} AU, photon sphere {#} AU, innermost stable orbit {#} AU.":
-  "Radio de Schwarzschild: {#} UA; esfera de fotones: {#} UA; órbita estable más interna: {#} UA.",
 "Tidal stretch across a {#} m person here is {#} × {#}⁻¹⁰ m/s² = {#} × {#}⁻¹¹ g.":
   "El estiramiento de marea sobre una persona de {#} m aquí es {#} × {#}⁻¹⁰ m/s² = {#} × {#}⁻¹¹ g.",
-"A person survives the horizon.":
-  "Una persona sobrevive al horizonte.",
+"Lensing view: a point mass of {#} × {#}¹² solar masses, {#} Gpc away, bends the light of a source {#} Gpc away.":
+  "Vista de lente: una masa puntual de {#} × {#}¹² masas solares, a {#} Gpc, curva la luz de una fuente a {#} Gpc.",
+"The source is a galaxy.":
+  "La fuente es una galaxia.",
+"Einstein angle {#}″, event time scale {#} × {#}⁷ yr.":
+  "Ángulo de Einstein {#}″, escala de tiempo del evento {#} × {#}⁷ años.",
+"The source is straight behind the lens, so the light forms an Einstein ring.":
+  "La fuente está justo detrás de la lente, así que la luz forma un anillo de Einstein.",
+"Point source brightening is infinite.":
+  "El aumento de brillo de una fuente puntual es infinito.",
+"Tidal stretch across a {#} m person here is {#} m/s² = {#} g.":
+  "El estiramiento de marea a lo largo de una persona de {#} m aquí es {#} m/s² = {#} g.",
+"Describe the picture":
+  "Describir la imagen",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
+"Playing.":
+  "En marcha.",
 "Close":
   "Cerrar"
 });

@@ -40,16 +40,12 @@ VDI18N.add('es', 'demo/planet-temperatures', {
   "el agua hierve a {#} atm",
 "this planet's model: with its greenhouse (solid), with none (dashed) · green: habitable zone · ◆ measured":
   "modelo de este planeta: con su efecto invernadero (continua), sin él (punteada) · verde: zona habitable · ◆ medida",
-"Describe the picture":
-  "Describir la imagen",
 "Planet Temperatures and Habitable Zones":
   "Temperaturas planetarias y zonas habitables",
 "<a><span>←</span> <span>Finding Exoplanets</span></a><a><span>Orbital Resonances</span> <span>→</span></a>":
   "<a><span>←</span> <span>Encontrar exoplanetas</span></a><a><span>Resonancias orbitales</span> <span>→</span></a>",
 "Sunlight spreads out as it travels, so a planet's share falls as one over the distance squared. Balance the sunlight a planet absorbs against the heat it radiates to find its temperature, add a greenhouse to match Venus, Earth and Mars, and move the star's habitable zone.":
   "La luz solar se dispersa al viajar, así que la parte que recibe un planeta disminuye como uno sobre la distancia al cuadrado. Equilibra la luz solar que absorbe un planeta con el calor que radia para hallar su temperatura, añade un efecto invernadero para reproducir Venus, la Tierra y Marte, y mueve la zona habitable de la estrella.",
-"Time controls":
-  "Controles de tiempo",
 "Start or stop the planet going round (the picture only: nothing depends on where it is on its orbit)":
   "Inicia o detén el giro del planeta (solo la imagen: nada depende de dónde esté en su órbita)",
 "Scale":
@@ -318,10 +314,6 @@ VDI18N.add('es', 'demo/planet-temperatures', {
   "El factor de {#} entre la rapidez de escape y la rapidez molecular: Freedman, Geller y Kaufmann, Universe, 10.ª ed., Recuadro {#}-{#}.",
 "planet":
   "planeta",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
 "The Milky Way from above (a drawing)":
   "La Vía Láctea desde arriba (un dibujo)",
 "your star: drag it in or out":
@@ -372,6 +364,10 @@ VDI18N.add('es', 'demo/planet-temperatures', {
   "Fracción de todas las estrellas nacidas que podrían tener vida compleja",
 "Of those, older than the Sun":
   "De ellas, más viejas que el Sol",
+"The heat is shared over the day side.":
+  "El calor se reparte sobre el lado diurno.",
+"Below, a chart of gas molecule speeds against temperature, compared with escape speeds.":
+  "Abajo, una gráfica de las rapideces de las moléculas de gas contra la temperatura, comparadas con las rapideces de escape.",
 "Mercury, {#} AU from the Sun, Bond albedo {#}, no air. It turns so slowly (one solar day lasts {#} Earth days) that each spot faces the Sun for weeks, so the setup looks at the spot with the Sun overhead. The fact sheet gives {#} to {#} K on the sunward side; at its mean distance the model gives about {#} K there, and Mercury's orbit takes it from {#} to {#} AU.":
   "Mercurio, a {#} UA del Sol, albedo de Bond {#}, sin aire. Gira tan despacio (un día solar dura {#} días terrestres) que cada punto mira al Sol durante semanas, así que la configuración observa el punto con el Sol justo encima. La hoja de datos da de {#} a {#} K en el lado que mira al Sol; a su distancia media el modelo da allí unos {#} K, y la órbita de Mercurio lo lleva de {#} a {#} UA.",
 "Venus, {#} AU, Bond albedo {#}: its clouds reflect most of the sunlight, so with no greenhouse it would be colder than Earth ({#} K). Its surface is {#} K. The greenhouse setting that matches lets only about {#} % of the ground's heat radiation escape, as if about {#} layers of air each trapped all of it: {#} bar of carbon dioxide.":
@@ -390,10 +386,6 @@ VDI18N.add('es', 'demo/planet-temperatures', {
   "La estrella más cercana al Sol, una enana roja con el {#} % de la luz del Sol (log L = −{#}, {#} K), y su planeta b, a {#} UA, {#} veces más cerca que la Tierra del Sol. Su albedo, su aire y su tamaño son desconocidos: la configuración toma el albedo y la rapidez de escape de la Tierra, sin efecto invernadero.",
 "TRAPPIST-{#}, a red dwarf with {#} % of the Sun's light (log L = −{#}, {#} K), has seven Earth sized planets. Planet e, {#} AU out, has {#} Earth masses and {#} Earth radii, so its escape speed is {#} km/s. Albedo borrowed from Earth, no greenhouse. The star is just below the {#} K where the zone formulas start, so the edges use {#} K.":
   "TRAPPIST-{#}, una enana roja con el {#} % de la luz del Sol (log L = −{#}, {#} K), tiene siete planetas del tamaño de la Tierra. El planeta e, a {#} UA, tiene {#} masas terrestres y {#} radios terrestres, así que su rapidez de escape es {#} km/s. Albedo tomado de la Tierra, sin efecto invernadero. La estrella está justo debajo de los {#} K donde empiezan las fórmulas de la zona, así que los bordes usan {#} K.",
-"The greenhouse is off.":
-  "El efecto invernadero está apagado.",
-"Below, a chart of gas molecule speeds against temperature, compared with escape speeds.":
-  "Abajo, una gráfica de las rapideces de las moléculas de gas contra la temperatura, comparadas con las rapideces de escape.",
 "A star born {#} billion years ago, {#} kpc from the center: plenty of metals, but many more supernovae nearby.":
   "Una estrella nacida hace {#} mil millones de años, a {#} kpc del centro: muchos metales, pero muchas más supernovas cerca.",
 "[Fe/H] = −{#}":
@@ -404,6 +396,8 @@ VDI18N.add('es', 'demo/planet-temperatures', {
   "Una estrella nacida hace mil millones de años cerca del Sol: sus planetas no han tenido el tiempo que le tomó a la vida compleja en la Tierra.",
 "A star born {#} billion years ago near the Sun, when the gas held fewer heavy elements.":
   "Una estrella nacida hace {#} mil millones de años cerca del Sol, cuando el gas tenía menos elementos pesados.",
+"The greenhouse is off.":
+  "El efecto invernadero está apagado.",
 "The orbit is paused.":
   "La órbita está en pausa.",
 "dashed: the zone, {#} to {#} kpc ({#}%)":
@@ -446,6 +440,16 @@ VDI18N.add('es', 'demo/planet-temperatures', {
   "Las fórmulas de la zona valen de {#} a {#} K; los bordes usan {#} K.",
 "The heat is at the spot under the star.":
   "El calor está en el punto bajo la estrella.",
+"The planet is closer than the inner edge of the habitable zone: too hot.":
+  "El planeta está más cerca que el borde interior de la zona habitable: demasiado caliente.",
+"Describe the picture":
+  "Describir la imagen",
+"Time controls":
+  "Controles de tiempo",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "Mars, {#} AU, Bond albedo {#}. With no greenhouse the balance gives {#} K; the average surface is about {#} K. Its thin carbon dioxide air ({#} mbar) adds only about {#} K.":
   "Marte, {#} UA, albedo de Bond {#}. Sin efecto invernadero el balance da {#} K; la superficie promedio está a unos {#} K. Su delgado aire de dióxido de carbono ({#} mbar) añade solo unos {#} K.",
 "sizes not to scale · {#} s = {#} hours":

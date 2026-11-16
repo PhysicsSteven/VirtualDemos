@@ -14,12 +14,6 @@ VDI18N.add('es', 'demo/sound-intensity', {
   "SONÓMETRO",
 "speakers and meter not to scale":
   "bocinas y sonómetro fuera de escala",
-"Describe the picture":
-  "Describir la imagen",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
 "Sound Intensity and Decibels":
   "Intensidad del sonido y decibeles",
 "<a><span>←</span> <span>Ultrasound: Echoes and Blood Flow</span></a><a><span>Room Acoustics and the Anechoic Chamber</span> <span>→</span></a>":
@@ -134,6 +128,8 @@ VDI18N.add('es', 'demo/sound-intensity', {
   "Una fuente de {#} mW y una de {#} mW, {#} dB más débil. Enciende y apaga B: añade solo {#} dB. Una fuente {#} dB por debajo de otra casi no cambia el nivel.",
 "The {#} mW source with a steady {#} dB background. Near the speaker the background does not matter; far away the level falls more slowly toward {#} dB ({#} dB at {#} m, where the source alone gives {#} dB). Find where the {#} dB per doubling rule starts to fail.":
   "La fuente de {#} mW con un fondo constante de {#} dB. Cerca de la bocina el fondo no importa; lejos, el nivel baja más lentamente hacia {#} dB ({#} dB a {#} m, donde la fuente sola da {#} dB). Encuentra dónde empieza a fallar la regla de {#} dB por duplicación.",
+"The background level is {#} dB.":
+  "El nivel de fondo es {#} dB.",
 "A: mystery":
   "A: misteriosa",
 "A source of hidden power. Measure the level at several distances and work out its power P.":
@@ -142,24 +138,30 @@ VDI18N.add('es', 'demo/sound-intensity', {
   "misteriosa",
 "hidden: the source is a mystery":
   "oculta: la fuente es un misterio",
-"A mystery":
-  "A misteriosa",
 "Source A is a mystery: its power is hidden.":
   "La fuente A es un misterio: su potencia está oculta.",
+"A mystery":
+  "A misteriosa",
 "{#} reading is recorded.":
   "Hay {#} lectura registrada.",
 "{#} point is plotted for these sources.":
   "Hay {#} punto graficado para estas fuentes.",
-"Move the meter toward or away from the speaker by {#} m (Shift: {#} m)":
-  "Acerca o aleja el medidor de la bocina {#} m (Shift: {#} m)",
 "{#} readings are recorded.":
   "Hay {#} lecturas registradas.",
 "{#} points are plotted for these sources.":
   "Hay {#} puntos graficados para estas fuentes.",
+"Move the meter toward or away from the speaker by {#} m (Shift: {#} m)":
+  "Acerca o aleja el medidor de la bocina {#} m (Shift: {#} m)",
 "same power, {#}, {#}, {#} squares: I ∝ {#}/r²":
   "misma potencia, {#}, {#}, {#} cuadros: I ∝ {#}/r²",
 "A: mystery background {#} dB":
   "A: misteriosa fondo {#} dB",
+"Describe the picture":
+  "Describir la imagen",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "The sources play independent noise, so their intensities add: I = I_A + I_B + I_background, and β = {#} log(I/I₀). Two loudspeakers playing the same tone would interfere instead (OpenStax section {#}, Interference of Waves). The background is a steady noise of the chosen level, the same everywhere. The meter shows the level to {#} dB, as a real meter does; the pressure amplitude uses ρ = {#} kg/m³ and v = {#} m/s.":
   "Las fuentes emiten ruido independiente, así que sus intensidades se suman: I = I_A + I_B + I_background, y β = {#} log(I/I₀). Dos bocinas que tocan el mismo tono interferirían en cambio (OpenStax sección {#}, Interferencia de ondas). El fondo es un ruido constante del nivel elegido, igual en todas partes. El sonómetro muestra el nivel con precisión de {#} dB, como un sonómetro real; la amplitud de presión usa ρ = {#} kg/m³ y v = {#} m/s.",
 "Close":

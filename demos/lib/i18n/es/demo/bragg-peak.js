@@ -14,8 +14,6 @@ VDI18N.add('es', 'demo/bragg-peak', {
   "profundidad (cm)",
 "protons, {#} MeV, water":
   "protones, {#} MeV, agua",
-"Describe the picture":
-  "Describir la imagen",
 "The Bragg Peak":
   "El pico de Bragg",
 "<a>{#} · Proton therapy</a>":
@@ -26,8 +24,6 @@ VDI18N.add('es', 'demo/bragg-peak', {
   "Un haz de protones deposita la mayor parte de su dosis justo antes de detenerse. Mueve el pico con la energía del haz, míralo en agua, músculo, grasa y hueso, apila capas de energía en un pico de Bragg extendido que cubra un blanco, y compáralo con un haz clínico de fotones de {#} MV.",
 "depth in cm · E in MeV":
   "profundidad en cm · E en MeV",
-"Time controls":
-  "Controles de tiempo",
 "Beam on":
   "Haz encendido",
 "What the picture shows":
@@ -176,10 +172,6 @@ VDI18N.add('es', 'demo/bragg-peak', {
   "medio",
 "dose (%)":
   "dosis (%)",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
 "target":
   "blanco",
 "protons, {#} layers":
@@ -210,14 +202,6 @@ VDI18N.add('es', 'demo/bragg-peak', {
   "{#} cm a {#} cm",
 "{#} % of the target's mean":
   "{#} % de la media del blanco",
-"A spread out peak of {#} proton energy layers in water, with the target from {#} cm to {#} cm deep.":
-  "Un pico extendido de {#} capas de energía de protones en agua, con el blanco de {#} cm a {#} cm de profundidad.",
-"The dose in the target runs from {#} to {#} percent of its mean.":
-  "La dosis en el blanco va de {#} a {#} por ciento de su media.",
-"The entrance dose is {#} percent.":
-  "La dosis de entrada es {#} por ciento.",
-"At the detector, {#} cm deep, the dose is {#} percent of the target's mean.":
-  "En el detector, a {#} cm de profundidad, la dosis es {#} por ciento de la media del blanco.",
 "protons":
   "protones",
 "layers":
@@ -232,6 +216,18 @@ VDI18N.add('es', 'demo/bragg-peak', {
   "Dosis media en {#} cm más allá de él",
 "Photon depth dose there ({#} % at d_max)":
   "Dosis en profundidad de los fotones ahí ({#} % en d_max)",
+"A spread out peak of {#} proton energy layers in water, with the target from {#} cm to {#} cm deep.":
+  "Un pico extendido de {#} capas de energía de protones en agua, con el blanco de {#} cm a {#} cm de profundidad.",
+"The phantom shows the proton beam.":
+  "El maniquí muestra el haz de protones.",
+"The dose in the target runs from {#} to {#} percent of its mean.":
+  "La dosis en el blanco va de {#} a {#} por ciento de su media.",
+"The entrance dose is {#} percent.":
+  "La dosis de entrada es {#} por ciento.",
+"The mean dose in front of the target is {#} percent for protons and {#} percent for photons.":
+  "La dosis media delante del blanco es {#} por ciento para protones y {#} por ciento para fotones.",
+"At the detector, {#} cm deep, protons give {#} percent and photons {#} percent.":
+  "En el detector, a {#} cm de profundidad, los protones dan {#} por ciento y los fotones {#} por ciento.",
 "Magnified: {#} nm of the track; distance from it on a log scale":
   "Ampliado: {#} nm de la trayectoria; distancia a ella en escala logarítmica",
 "reach b_max = {#} nm":
@@ -318,10 +314,10 @@ VDI18N.add('es', 'demo/bragg-peak', {
   "En grasa (tejido adiposo, {#} g/cm³) el mismo haz llega más lejos, unos {#} cm, ya que la grasa tiene menos electrones por cm³ que el agua.",
 "protons, {#} MeV, in adipose tissue (icrp)":
   "protones, {#} MeV, en tejido adiposo (icrp)",
-"A beam of {#} MeV protons enters adipose tissue (icrp), and the graph shows the dose against depth as a percent of the peak.":
-  "Un haz de protones de {#} MeV entra en tejido adiposo (icrp), y la gráfica muestra la dosis contra la profundidad como porcentaje del pico.",
 "A target from {#} to {#} cm deep. One energy covers only a few millimeters, so the machine stacks energy layers, each a little shallower, and weights them so the sum is flat across the target. The deepest layer carries the most weight, since every shallower layer adds its own entrance dose there.":
   "Un blanco de {#} a {#} cm de profundidad. Una sola energía cubre solo unos milímetros, así que la máquina apila capas de energía, cada una un poco menos profunda, y las pondera para que la suma sea plana a lo largo del blanco. La capa más profunda lleva el mayor peso, ya que cada capa menos profunda agrega ahí su propia dosis de entrada.",
+"At the detector, {#} cm deep, the dose is {#} percent of the target's mean.":
+  "En el detector, a {#} cm de profundidad, la dosis es {#} por ciento de la media del blanco.",
 "The same layers all with the same weight: the dose climbs towards the front of the target, because each layer's plateau adds to the peaks of the shallower ones. Flat coverage needs the deep layers weighted more.":
   "Las mismas capas, todas con el mismo peso: la dosis sube hacia el frente del blanco, porque la meseta de cada capa se suma a los picos de las menos profundas. Una cobertura plana necesita dar más peso a las capas profundas.",
 "Layers {#} cm apart in range (the other setups use {#} cm): each peak is only a few millimeters wide at this depth, so the best weights still leave ripples across the target. The layers have to be closer than the width of one peak.":
@@ -330,12 +326,6 @@ VDI18N.add('es', 'demo/bragg-peak', {
   "Un blanco profundo, de {#} a {#} cm: aquí los picos son más anchos (la dispersión de alcance crece con el alcance), así que las capas se funden de forma más suave, y el borde distal cae menos abruptamente.",
 "One proton field and one {#} MV photon field, both scaled to give the target the same mean dose. Photons give their highest dose near the surface and keep going out the far side; protons give less in front of the target and nothing beyond it. Real photon plans use several fields from different directions to spare the entrance.":
   "Un campo de protones y un campo de fotones de {#} MV, ambos escalados para dar al blanco la misma dosis media. Los fotones dan su dosis más alta cerca de la superficie y siguen saliendo por el lado opuesto; los protones dan menos delante del blanco y nada más allá de él. Los planes reales con fotones usan varios campos desde distintas direcciones para proteger la entrada.",
-"The phantom shows the proton beam.":
-  "El maniquí muestra el haz de protones.",
-"The mean dose in front of the target is {#} percent for protons and {#} percent for photons.":
-  "La dosis media delante del blanco es {#} por ciento para protones y {#} por ciento para fotones.",
-"At the detector, {#} cm deep, protons give {#} percent and photons {#} percent.":
-  "En el detector, a {#} cm de profundidad, los protones dan {#} por ciento y los fotones {#} por ciento.",
 "LINAC":
   "LINAC",
 "A {#} MV photon beam, {#} × {#} cm², SSD {#} cm, in water. The dose builds up over the first {#} cm as the electrons set in motion by the photons travel forward, then falls slowly, by about {#} % per cm, through the whole patient.":
@@ -348,26 +338,46 @@ VDI18N.add('es', 'demo/bragg-peak', {
   "El mismo protón cuando le faltan {#} cm. Su rapidez baja rápido aquí, así que cada impulso, y la dosis, sube abruptamente: el pico de Bragg. En los últimos {#} MeV (en menos de {#} mm) el protón empieza a capturar electrones y a perderlos de nuevo, así que su carga promedio baja, y el alcance b_max se reduce hacia la distancia mínima b_min: la pérdida por cm llega a un pico y luego cae, y el protón se detiene como un átomo de hidrógeno.",
 "Go on":
   "Continuar",
-"The proton is moving.":
-  "El protón se mueve.",
 "Depth {#} cm.":
   "Profundidad de {#} cm.",
+"The proton is moving.":
+  "El protón se mueve.",
 "Move the detector depth (Shift for {#} cm steps); in Why it peaks, move along the proton track":
   "Mueve la profundidad del detector (Shift para pasos de {#} cm); en Por qué hay un pico, avanza a lo largo de la trayectoria del protón",
-"Paused.":
-  "En pausa.",
 "{#} MeV into muscle (icrp)":
   "{#} MeV en músculo (icrp)",
+"One proton of {#} MeV enters muscle (icrp) and slows down.":
+  "Un protón de {#} MeV entra al músculo (icrp) y se frena.",
 "{#} MeV into adipose tissue (icrp)":
   "{#} MeV en tejido adiposo (icrp)",
+"One proton of {#} MeV enters adipose tissue (icrp) and slows down.":
+  "Un protón de {#} MeV entra al tejido adiposo (icrp) y se frena.",
 "{#} MeV into compact bone (icru)":
   "{#} MeV en hueso compacto (icru)",
+"One proton of {#} MeV enters compact bone (icru) and slows down.":
+  "Un protón de {#} MeV entra al hueso compacto (icru) y se frena.",
 "energy per kick":
   "energía por impulso",
 "reach":
   "alcance",
 "energy lost per cm":
   "energía perdida por cm",
+"A beam of {#} MeV protons enters compact bone (icru), and the graph shows the dose against depth as a percent of the peak.":
+  "Un haz de protones de {#} MeV entra al hueso compacto (icru), y la gráfica muestra la dosis en función de la profundidad como porcentaje del pico.",
+"A beam of {#} MeV protons enters adipose tissue (icrp), and the graph shows the dose against depth as a percent of the peak.":
+  "Un haz de protones de {#} MeV entra en tejido adiposo (icrp), y la gráfica muestra la dosis contra la profundidad como porcentaje del pico.",
+"The phantom shows the {#} MV photon beam.":
+  "El maniquí muestra el haz de fotones de {#} MV.",
+"Describe the picture":
+  "Describir la imagen",
+"Time controls":
+  "Controles de tiempo",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
+"Paused.":
+  "En pausa.",
 "{#} MV photons (fit)":
   "Fotones de {#} MV (ajuste)",
 "measured (Chowdhury {#})":

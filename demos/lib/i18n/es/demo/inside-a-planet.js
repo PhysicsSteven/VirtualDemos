@@ -48,6 +48,22 @@ VDI18N.add('es', 'demo/inside-a-planet', {
   "Rigidez (viscosidad)",
 "Earth cut in half: a core of radius {#} km inside a mantle.":
   "La Tierra cortada a la mitad: un núcleo de radio {#} km dentro de un manto.",
+"Earth cut in half to show its layers, radius {#} km.":
+  "La Tierra cortada por la mitad para mostrar sus capas, radio {#} km.",
+"The core has radius {#} km and density {#} kg/m³.":
+  "El núcleo tiene radio {#} km y densidad {#} kg/m³.",
+"The mantle has density {#} kg/m³.":
+  "El manto tiene densidad {#} kg/m³.",
+"The model mean density is {#} kg/m³.":
+  "La densidad media del modelo es {#} kg/m³.",
+"The measured mean density is {#} kg/m³.":
+  "La densidad media medida es {#} kg/m³.",
+"The model C/MR² is {#}.":
+  "El C/MR² del modelo es {#}.",
+"The measured C/MR² is {#}.":
+  "El C/MR² medido es {#}.",
+"The core is {#} % of the volume and {#} % of the mass.":
+  "El núcleo es {#} % del volumen y {#} % de la masa.",
 "Set up the planet":
   "Prepara el planeta",
 "The planet's layers. Drag, or use the arrow keys, to move this card; double click to put it back":
@@ -110,6 +126,16 @@ VDI18N.add('es', 'demo/inside-a-planet', {
   "Fondo oceánico: densidad de la corteza: haz clic, o pulsa Enter, para escribir un valor",
 "Graph: density against distance from the center, for the model and the measured mean density.":
   "Gráfica: densidad en función de la distancia al centro, para el modelo y la densidad media medida.",
+"Graph of density in kg/m³ against distance from the center in km, from {#} to {#} km.":
+  "Gráfica de la densidad en kg/m³ en función de la distancia al centro en km, de {#} a {#} km.",
+"The model layers are a step: {#} kg/m³ out to {#} km, then {#} kg/m³ to the surface.":
+  "Las capas del modelo forman un escalón: {#} kg/m³ hasta {#} km, y luego {#} kg/m³ hasta la superficie.",
+"A dashed line marks the model mean density, {#} kg/m³.":
+  "Una línea punteada marca la densidad media del modelo, {#} kg/m³.",
+"A second dashed line marks the measured mean density, {#} kg/m³.":
+  "Una segunda línea punteada marca la densidad media medida, {#} kg/m³.",
+"A curve shows PREM, the density of Earth from seismic waves.":
+  "Una curva muestra PREM, la densidad de la Tierra obtenida con ondas sísmicas.",
 "Divider between the planet and the graph":
   "Divisor entre el planeta y la gráfica",
 "Earth: core and mantle":
@@ -188,10 +214,6 @@ VDI18N.add('es', 'demo/inside-a-planet', {
   "ρ̄ del modelo",
 "C/MR²":
   "C/MR²",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
 "surface temp.":
   "temp. de la superficie",
 "core temp.":
@@ -218,8 +240,6 @@ VDI18N.add('es', 'demo/inside-a-planet', {
   "Modelo: un cálculo de convección real, en 2D. Una franja de manto tan profunda como el manto del planeta y tan ancha como la mitad de su circunferencia, con la base a la temperatura del núcleo y la parte superior a la de la superficie, calentada también desde dentro por desintegración radiactiva (H), con lados aislantes. La roca es un fluido muy rígido (sin inercia, la aproximación de Boussinesq); cada paso resuelve el flujo exactamente a partir de las temperaturas y luego transporta y conduce el calor. La roca fría es más rígida hasta por {#}⁵ (la ley de Arrhenius linealizada), y la tapa se rompe donde el esfuerzo supera su resistencia (un esfuerzo de fluencia, Moresi y Solomatov {#}). Simplificaciones: 2D, no una esfera (la imagen curvada envuelve la franja plana alrededor del núcleo, así que su borde interior se dibuja más corto que en el modelo); {#} celdas de profundidad (unos {#} km cada una para la Tierra), así que las capas calientes y frías más delgadas tienen solo dos o tres celdas de espesor; números de Rayleigh de a lo más {#}⁷, mientras que el manto de la Tierra está entre {#}⁷ y {#}⁹, así que las placas del modelo se mueven unas cuantas veces más despacio que las de la Tierra ({#} a {#} cm/año). El flujo con viscosidad constante coincide con la prueba de referencia de la comunidad (Blankenbach et al. {#}) dentro del {#}% en flujo de calor; con una viscosidad que cambia mil veces con la temperatura (el caso 2a de la prueba) esta malla da cerca de {#}% más flujo de calor del debido, así que los números son una guía de los regímenes, no valores exactos. Los tiempos y las rapideces usan la profundidad del manto (Tierra {#}, Venus {#}, Marte {#} km) y una difusividad térmica de {#}⁻⁶ m²/s (Turcotte y Schubert {#}).",
 "Time in the model":
   "Tiempo en el modelo",
-"{#} Myr":
-  "{#} millones de años",
 "Surface speed":
   "Rapidez de la superficie",
 "{#} cm/yr":
@@ -274,6 +294,20 @@ VDI18N.add('es', 'demo/inside-a-planet', {
   "Raíz de la corteza oceánica debajo",
 "Continent higher by":
   "El continente es más alto por",
+"Side view of a continent and the ocean floor, both floating on the mantle, heights and depths to scale.":
+  "Vista lateral de un continente y el fondo oceánico, ambos flotando sobre el manto, con alturas y profundidades a escala.",
+"The continent is {#} km thick with density {#} kg/m³.":
+  "El continente tiene {#} km de espesor y densidad {#} kg/m³.",
+"The ocean floor is {#} km thick with density {#} kg/m³.":
+  "El fondo oceánico tiene {#} km de espesor y densidad {#} kg/m³.",
+"The continent root reaches {#} km below the mantle level.":
+  "La raíz del continente llega a {#} km por debajo del nivel del manto.",
+"The continent stands {#} km above the mantle level.":
+  "El continente se eleva {#} km sobre el nivel del manto.",
+"The ocean crust root reaches {#} km below the mantle level.":
+  "La raíz de la corteza oceánica llega a {#} km por debajo del nivel del manto.",
+"The ocean floor stands {#} km above the mantle level, so the continent is higher by {#} km.":
+  "El fondo oceánico se eleva {#} km sobre el nivel del manto, así que el continente es más alto por {#} km.",
 "the mantle's level":
   "el nivel del manto",
 "Crust floating on the mantle (side view, heights and depths to scale)":
@@ -286,6 +320,8 @@ VDI18N.add('es', 'demo/inside-a-planet', {
   "Mercurio, con el radio del núcleo obtenido de su campo de gravedad y su giro ({#} ± {#} km, Hauck et al. {#}). El núcleo ocupa el {#}% del radio y contiene cerca de tres cuartas partes de la masa.",
 "Mercury cut in half: a core of radius {#} km inside a mantle.":
   "Mercurio cortado a la mitad: un núcleo de radio {#} km dentro de un manto.",
+"Mercury cut in half to show its layers, radius {#} km.":
+  "Mercurio cortado por la mitad para mostrar sus capas, radio {#} km.",
 "Venus, cut through the middle (drawn to scale)":
   "Venus, cortado por la mitad (dibujado a escala)",
 "Venus, with a core of about {#} km (Margot et al. {#}). Its C/MR² is measured only to ±{#}, so this core radius is uncertain by more than {#} km.":
@@ -322,6 +358,38 @@ VDI18N.add('es', 'demo/inside-a-planet', {
   "Roca igual de fluida caliente o fría: no hay ninguna tapa rígida, así que la parte superior fría se hunde con la misma facilidad con que sube la base caliente, en rollos más o menos tan anchos como profundos, y toda la superficie se mueve.",
 "× {#} (even)":
   "× {#} (uniforme)",
+"Half of the mantle of Earth, cut through the poles, colored by temperature, cold to hot.":
+  "La mitad del manto de la Tierra, cortada por los polos, coloreada por temperatura, de frío a caliente.",
+"The picture is bent round the core.":
+  "La imagen está curvada alrededor del núcleo.",
+"Arrows show the flow.":
+  "Las flechas muestran el flujo.",
+"Rayleigh number {#}⁵.":
+  "Número de Rayleigh {#}⁵.",
+"Cold rock is not stiffer.":
+  "La roca fría no es más rígida.",
+"The cold lid never breaks.":
+  "La tapa fría nunca se rompe.",
+"Radioactive heat inside H = {#}.":
+  "Calor radiactivo interno H = {#}.",
+"The lower mantle is not stiffer.":
+  "El manto inferior no es más rígido.",
+"Held at the start.":
+  "Detenido al inicio.",
+"Time in the model {#} Myr.":
+  "Tiempo en el modelo {#} Ma.",
+"Surface speed {#} cm/yr.":
+  "Rapidez en la superficie {#} cm/año.",
+"Heat out of the top — times a still mantle.":
+  "Calor que sale por arriba — veces el de un manto quieto.",
+"Rising plumes: {#}.":
+  "Plumas ascendentes: {#}.",
+"The lid stands still, one lid.":
+  "La tapa está quieta, una sola tapa.",
+"Graph of surface speed in cm/yr and heat out of the top against the time in the model in millions of years.":
+  "Gráfica de la rapidez en la superficie en cm/año y del calor que sale por arriba en función del tiempo en el modelo en millones de años.",
+"The graph has no history yet.":
+  "La gráfica todavía no tiene historia.",
 "Most of the heat made inside (H = {#}) and even viscosity. Cold sheets sink from the top and spread over the base; the hot rock rises slowly everywhere in between, with few hot plumes from the bottom.":
   "La mayor parte del calor se produce dentro (H = {#}) y la viscosidad es uniforme. Láminas frías se hunden desde arriba y se extienden sobre la base; la roca caliente sube lentamente en todas partes entre ellas, con pocas plumas calientes desde el fondo.",
 "The convection benchmark: Ra = {#}⁴, even viscosity, heated from below (Blankenbach et al. {#}). In a square box the flow settles to one steady roll carrying {#} times the heat a still layer conducts; this model gets {#} there (test_inside-a-planet.cjs). Here the box is wider, so it settles into several steady rolls.":
@@ -330,8 +398,38 @@ VDI18N.add('es', 'demo/inside-a-planet', {
   "Corteza de unos {#} km de espesor, como bajo la meseta del Tíbet. Se eleva el doble sobre el manto, y su raíz llega al doble de profundidad: las montañas altas flotan sobre raíces profundas.",
 "A continent stretched to {#} km thick, as in a rift or a basin. It sinks: stretched continents end up below sea level.":
   "Un continente estirado hasta {#} km de espesor, como en un rift o una cuenca. Se hunde: los continentes estirados terminan por debajo del nivel del mar.",
+"Venus cut in half to show its layers, radius {#} km.":
+  "Venus cortado por la mitad para mostrar sus capas, radio {#} km.",
+"Moon cut in half to show its layers, radius {#} km.":
+  "La Luna cortada por la mitad para mostrar sus capas, radio {#} km.",
+"Mars cut in half to show its layers, radius {#} km.":
+  "Marte cortado por la mitad para mostrar sus capas, radio {#} km.",
 "Your own mantle.":
   "Tu propio manto.",
+"Rayleigh number {#}⁴.":
+  "Número de Rayleigh {#}⁴.",
+"Rayleigh number {#}⁶.":
+  "Número de Rayleigh {#}⁶.",
+"Cold rock is stiffer by {#}⁵.":
+  "La roca fría es más rígida por {#}⁵.",
+"The strength of the cold lid is {#} × {#}³.":
+  "La resistencia de la tapa fría es {#} × {#}³.",
+"Half of the mantle of Venus, cut through the poles, colored by temperature, cold to hot.":
+  "La mitad del manto de Venus, cortada por los polos, coloreada por temperatura, de frío a caliente.",
+"Rayleigh number {#} × {#}⁵.":
+  "Número de Rayleigh {#} × {#}⁵.",
+"Half of the mantle of Mars, cut through the poles, colored by temperature, cold to hot.":
+  "La mitad del manto de Marte, cortada por los polos, coloreada por temperatura, de frío a caliente.",
+"Rayleigh number {#}⁷.":
+  "Número de Rayleigh {#}⁷.",
+"The lower mantle is stiffer by {#}.":
+  "El manto inferior es más rígido por {#}.",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
+"{#} Myr":
+  "{#} millones de años",
 "t = {#} Myr · about {#} Myr per second":
   "t = {#} millones de años · unos {#} millones de años por segundo",
 "Close":

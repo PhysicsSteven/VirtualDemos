@@ -1,7 +1,5 @@
 /* demo/diffraction-grating in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/diffraction-grating', {
-"Describe the picture":
-  "Describir la imagen",
 "I / I₀ across the wall · far field · N = {#} · λ = {#} nm":
   "I / I₀ a lo ancho de la pared · campo lejano · N = {#} · λ = {#} nm",
 "the wall, face on · meter stick in cm":
@@ -14,10 +12,6 @@ VDI18N.add('es', 'demo/diffraction-grating', {
   "no hay m = ±{#} para {#} nm: {#}λ/d = {#} > {#}",
 "N = {#} slits lit":
   "N = {#} rendijas iluminadas",
-"Skip to the picture":
-  "Ir a la imagen",
-"Skip to the controls":
-  "Ir a los controles",
 "Diffraction Grating":
   "Rejilla de difracción",
 "<a><span>←</span> <span>Double Slit, One Particle at a Time</span></a><a><span>Thin Film Interference</span> <span>→</span></a>":
@@ -190,6 +184,10 @@ VDI18N.add('es', 'demo/diffraction-grating', {
   "Un láser de color desconocido. Pon la mordaza A del calibrador en la mancha m = {#} y B en m = {#}, lee L en la regla y calcula λ. Compara el resultado exacto con tan y sin con el de ángulo pequeño.",
 "I / I₀ across the wall · far field · N = {#} · λ = ?":
   "I / I₀ a lo ancho de la pared · campo lejano · N = {#} · λ = ?",
+"m ≥ {#} off view →":
+  "m ≥ {#} fuera de la vista →",
+"← m ≤ −{#} off view":
+  "← m ≤ −{#} fuera de la vista",
 "laser, λ = ?":
   "láser, λ = ?",
 "RGB laser module: three diodes in one beam, typically {#}, {#} and {#} nm.":
@@ -206,10 +204,6 @@ VDI18N.add('es', 'demo/diffraction-grating', {
   "Cada orden es un arcoíris con el violeta más cerca del centro. Los órdenes {#} y {#} se traslapan: {#} × {#} nm = {#} nm es más que {#} × {#} nm = {#} nm, así que el rojo de segundo orden cae más allá del violeta de tercer orden.",
 "orders {#} and {#} overlap":
   "los órdenes {#} y {#} se traslapan",
-"m ≥ {#} off view →":
-  "m ≥ {#} fuera de la vista →",
-"← m ≤ −{#} off view":
-  "← m ≤ −{#} fuera de la vista",
 "White light":
   "Luz blanca",
 "Hydrogen: the visible Balmer lines, {#}, {#}, {#} and {#} nm.":
@@ -228,6 +222,8 @@ VDI18N.add('es', 'demo/diffraction-grating', {
   "Láser de diodo rojo",
 "Your own setup. Pick a preset to start again.":
   "Tu propia configuración. Elige una predefinida para empezar de nuevo.",
+"Light source: Red diode laser.":
+  "Fuente de luz: láser de diodo rojo.",
 "Green laser pointer, {#} nm: an infrared {#} nm laser with its frequency doubled.":
   "Apuntador láser verde, {#} nm: un láser infrarrojo de {#} nm con su frecuencia duplicada.",
 "Green laser":
@@ -236,12 +232,12 @@ VDI18N.add('es', 'demo/diffraction-grating', {
   "Láser de diodo azul: típicamente de {#} a {#} nm; aquí {#} nm.",
 "Blue diode laser":
   "Láser de diodo azul",
+"Light source: Blue diode laser.":
+  "Fuente de luz: láser de diodo azul.",
 "Violet diode laser: typically {#} nm, the Blu-ray wavelength.":
   "Láser de diodo violeta: típicamente {#} nm, la longitud de onda del Blu-ray.",
 "Violet diode laser":
   "Láser de diodo violeta",
-"Light source: Violet diode laser.":
-  "Fuente de luz: láser de diodo violeta.",
 "Argon ion laser on all lines: its two strongest are {#} nm and {#} nm (typical relative power).":
   "Láser de iones de argón en todas sus líneas: las dos más intensas son {#} nm y {#} nm (potencia relativa típica).",
 "I / I₀ across the wall · far field · N = {#} · {#}, {#} nm":
@@ -252,6 +248,10 @@ VDI18N.add('es', 'demo/diffraction-grating', {
   "Helio: una línea amarilla intensa en {#} nm, más líneas rojas, verdes, azules y violetas.",
 "Helium lamp":
   "Lámpara de helio",
+"Light source: Helium lamp.":
+  "Fuente de luz: lámpara de helio.",
+"The orders are worked out for {#} nm.":
+  "Los órdenes se calculan para {#} nm.",
 "Neon: dozens of orange and red lines, which give the familiar neon sign glow.":
   "Neón: decenas de líneas naranjas y rojas, que dan el brillo conocido de los anuncios de neón.",
 "Neon lamp":
@@ -288,6 +288,12 @@ VDI18N.add('es', 'demo/diffraction-grating', {
   "no hay oscura m = ±{#} para {#} nm: {#}λ/a = {#} > {#}",
 "single slit · a = {#} µm":
   "rendija única · a = {#} µm",
+"Light source: Sodium lamp.":
+  "Fuente de luz: lámpara de sodio.",
+"One slit {#} µm wide.":
+  "Una rendija de {#} µm de ancho.",
+"Dark fringe {#} is {#} cm from the center, on each side.":
+  "La franja oscura {#} está a {#} cm del centro, a cada lado.",
 "{#} (DVD) · d = {#} µm":
   "{#} (DVD) · d = {#} µm",
 "Slit width":
@@ -296,26 +302,40 @@ VDI18N.add('es', 'demo/diffraction-grating', {
   "λ a partir de a",
 "a from λ":
   "a a partir de λ",
-"Light source: Sodium lamp.":
-  "Fuente de luz: lámpara de sodio.",
-"The orders are worked out for {#} nm.":
-  "Los órdenes se calculan para {#} nm.",
-"One slit {#} µm wide.":
-  "Una rendija de {#} µm de ancho.",
-"Dark fringe {#} is {#} cm from the center, on each side.":
-  "La franja oscura {#} está a {#} cm del centro, a cada lado.",
 "Measure mode: caliper jaw A is at {#} cm and jaw B at {#} cm, {#} cm apart.":
   "Modo de medición: la mordaza A del calibrador está en {#} cm y la B en {#} cm, a {#} cm una de otra.",
 "I / I₀ zoomed: center to dark fringe {#} · a = {#} µm":
   "I / I₀ ampliada: del centro a la franja oscura {#} · a = {#} µm",
 "Enter L in meters, y in centimeters (both positive) and a whole order number m ≥ {#}.":
   "Escribe L en metros, y en centímetros (ambos positivos) y un número de orden entero m ≥ {#}.",
-"Light source: Red diode laser.":
-  "Fuente de luz: láser de diodo rojo.",
-"Light source: Helium lamp.":
-  "Fuente de luz: lámpara de helio.",
+"Light source: an unknown laser.":
+  "Fuente de luz: un láser desconocido.",
+"Its wavelength is hidden. Measure it.":
+  "Su longitud de onda está oculta. Mídela.",
+"Light source: RGB laser module.":
+  "Fuente de luz: módulo láser RGB.",
+"Light source: White light.":
+  "Fuente de luz: luz blanca.",
+"Light source: Hydrogen lamp.":
+  "Fuente de luz: lámpara de hidrógeno.",
+"Light source: Green laser.":
+  "Fuente de luz: láser verde.",
+"Light source: Violet diode laser.":
+  "Fuente de luz: láser de diodo violeta.",
+"Light source: Argon ion laser.":
+  "Fuente de luz: láser de iones de argón.",
+"Light source: Neon lamp.":
+  "Fuente de luz: lámpara de neón.",
+"Light source: Mercury lamp.":
+  "Fuente de luz: lámpara de mercurio.",
 "The light meter at jaw B reads {#}.":
   "El medidor de luz en la mordaza B marca {#}.",
+"Describe the picture":
+  "Describir la imagen",
+"Skip to the picture":
+  "Ir a la imagen",
+"Skip to the controls":
+  "Ir a los controles",
 "Close":
   "Cerrar"
 });

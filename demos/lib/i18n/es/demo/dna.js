@@ -1,11 +1,5 @@
 /* demo/dna in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/dna', {
-"Describe the picture":
-  "Describir la imagen",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
 "DNA in 3D":
   "ADN en 3D",
 "<a>Chemistry and biology</a>":
@@ -190,10 +184,12 @@ VDI18N.add('es', 'demo/dna', {
   "<b>Aproximaciones.</b> La hélice es uniforme: cada paso tiene la misma subida y el mismo giro, y cada par A·T o G·C la misma forma. El ADN real varía de un paso a otro con la secuencia (alabeo, giro, giro de hélice de los pares, ancho de los surcos), y las estructuras cristalinas del Protein Data Bank, como el dodecámero de Dickerson (PDB 1BNA), difieren de este modelo hasta en unos cuantos ångströms. No se colocan los átomos de hidrógeno, así que los puentes de hidrógeno se muestran entre los átomos donador y aceptor (N u O), y las esferas llenas son solo átomos pesados. No se ofrece el ADN Z: la tabla de fibras que se usa aquí no tiene forma Z. La caricatura es una ayuda visual: un tubo que pasa por los átomos de fósforo y una placa para cada base.",
 "<b>Other numbers.</b> Space filling radii are Bondi's van der Waals radii (J. Phys. Chem. {#}, {#}, {#}): C {#}, N {#}, O {#}, P {#} Å. Molar mass sums the nucleotide residues (dA {#}, dC {#}, dG {#}, dT {#} g/mol) minus {#} g/mol per strand for strands with no {#}′ phosphate, as in this model. T<sub>m</sub> uses the unified nearest neighbor parameters of SantaLucia, PNAS {#}, {#} ({#}), with the salt correction ΔS += {#} (N − {#}) ln[Na<sup>+</sup>], total strand concentration {#} µM, and no magnesium. It is an estimate for a two state transition of short duplexes.":
   "<b>Otros números.</b> Los radios de las esferas llenas son los radios de van der Waals de Bondi (J. Phys. Chem. {#}, {#}, {#}): C {#}, N {#}, O {#}, P {#} Å. La masa molar suma los residuos de nucleótidos (dA {#}, dC {#}, dG {#}, dT {#} g/mol) menos {#} g/mol por hebra para hebras sin fosfato {#}′, como en este modelo. T<sub>m</sub> usa los parámetros unificados de vecinos más cercanos de SantaLucia, PNAS {#}, {#} ({#}), con la corrección por sal ΔS += {#} (N − {#}) ln[Na<sup>+</sup>], concentración total de hebras {#} µM, y sin magnesio. Es una estimación para una transición de dos estados de dúplex cortos.",
+"Drawn as space filling, colored by element.":
+  "Dibujado como modelo de esferas, coloreado por elemento.",
+"Hydrogen bonds are not shown.":
+  "No se muestran los puentes de hidrógeno.",
 "<span><i></i>A</span><span><i></i>T</span><span><i></i>G</span><span><i></i>C</span><span><i></i>hydrogen bond</span>":
   "<span><i></i>A</span><span><i></i>T</span><span><i></i>G</span><span><i></i>C</span><span><i></i>puente de hidrógeno</span>",
-"Drawn as cartoon, colored by element.":
-  "Dibujada en caricatura, coloreada por elemento.",
 "Looking down the helix axis at pair {#}, G·C, with the other pairs cut away. Count the dashed hydrogen bonds: three for G·C, two for A·T (click pair {#} in the strands panel).":
   "Mirando a lo largo del eje de la hélice hacia el par {#}, G·C, con los demás pares recortados. Cuenta los puentes de hidrógeno punteados: tres para G·C, dos para A·T (haz clic en el par {#} del panel de hebras).",
 "<span><i></i>A</span><span><i></i>T</span><span><i></i>G</span><span><i></i>C</span><span><i></i>backbone</span><span><i></i>hydrogen bond</span>":
@@ -248,6 +244,10 @@ VDI18N.add('es', 'demo/dna', {
   "ΔH° = -{#} kcal/mol, ΔS° = -{#} cal/(mol K) con esta sal. Modelo de vecinos más cercanos para un dúplex corto en solución.",
 "B-DNA · {#} bp · GCCTATAAAAGGGCTGCG":
   "ADN B · {#} pb · GCCTATAAAAGGGCTGCG",
+"Strand {#}, from the {#}′ end, is GCCTATAAAAGGGCTGCG.":
+  "La cadena {#}, desde el extremo {#}′, es GCCTATAAAAGGGCTGCG.",
+"The minor and major grooves are marked.":
+  "Los surcos menor y mayor están marcados.",
 "All G·C pairs with three hydrogen bonds each. The melting temperature is far higher than for the same length of A·T. Note: the geometry here is the same uniform helix; only the estimate changes.":
   "Todos son pares G·C con tres puentes de hidrógeno cada uno. La temperatura de fusión es mucho más alta que para la misma longitud de A·T. Nota: la geometría aquí es la misma hélice uniforme; solo cambia la estimación.",
 "B-DNA · {#} bp · GCGGCGCCGCGGCCGCGGCG":
@@ -256,6 +256,8 @@ VDI18N.add('es', 'demo/dna', {
   "La cadena {#}, desde el extremo {#}′, es GCGGCGCCGCGGCCGCGGCG.",
 "A-DNA · {#} bp · GCGGCGCCGCGGCCGCGGCG":
   "ADN A · {#} pb · GCGGCGCCGCGGCCGCGGCG",
+"A A-DNA double helix of {#} base pairs.":
+  "Una doble hélice de ADN A de {#} pares de bases.",
 "B-DNA and A-DNA · {#} bp · GCGGCGCCGCGGCCGCGGCG":
   "ADN B y ADN A · {#} pb · GCGGCGCCGCGGCCGCGGCG",
 "<span><i></i>strand {#}</span><span><i></i>strand {#}</span><span><i></i>hydrogen bond</span>":
@@ -266,22 +268,22 @@ VDI18N.add('es', 'demo/dna', {
   "Tu secuencia",
 "<span><i></i>strand {#}</span><span><i></i>strand {#}</span>":
   "<span><i></i>hebra {#}</span><span><i></i>hebra {#}</span>",
+"Drawn as space filling, colored by strand.":
+  "Dibujada con relleno de espacio, coloreada por cadena.",
 "Drawn as cartoon, colored by strand.":
   "Dibujada en caricatura, coloreada por cadena.",
 "Strand {#}, from the {#}′ end, is CGCGAATTCGCGCGAATTCGCG.":
   "La cadena {#}, desde el extremo {#}′, es CGCGAATTCGCGCGAATTCGCG.",
-"Drawn as space filling, colored by strand.":
-  "Dibujada con relleno de espacio, coloreada por cadena.",
-"Hydrogen bonds are not shown.":
-  "No se muestran los puentes de hidrógeno.",
-"The minor and major grooves are marked.":
-  "Los surcos menor y mayor están marcados.",
-"Strand {#}, from the {#}′ end, is GCCTATAAAAGGGCTGCG.":
-  "La cadena {#}, desde el extremo {#}′, es GCCTATAAAAGGGCTGCG.",
-"A A-DNA double helix of {#} base pairs.":
-  "Una doble hélice de ADN A de {#} pares de bases.",
 "B-DNA and A-DNA · {#} bp · CGCGAATTCGCG":
   "ADN B y ADN A · {#} pb · CGCGAATTCGCG",
+"Drawn as cartoon, colored by element.":
+  "Dibujada en caricatura, coloreada por elemento.",
+"Describe the picture":
+  "Describir la imagen",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "Close":
   "Cerrar"
 });

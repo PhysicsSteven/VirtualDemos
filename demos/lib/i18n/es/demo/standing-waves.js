@@ -18,14 +18,6 @@ VDI18N.add('es', 'demo/standing-waves', {
   "Dos ondas que viajan en direcciones opuestas se suman para formar una onda estacionaria. Encuentra los armónicos de una cuerda de guitarra, llévala a la resonancia, púlsala y escucha batidos.",
 "x in m · f in Hz · v = fλ · string v = √(T/μ)":
   "x en m · f en Hz · v = fλ · cuerda v = √(T/μ)",
-"Time controls":
-  "Controles de tiempo",
-"Run for a moment and pause again":
-  "Avanza un momento y vuelve a pausar",
-"Step":
-  "Paso",
-"<span>Speed</span>":
-  "<span>Rapidez</span>",
 "Two waves":
   "Dos ondas",
 "Beats":
@@ -48,10 +40,6 @@ VDI18N.add('es', 'demo/standing-waves', {
   "La parte estacionaria tiene una amplitud de {#} cm y la parte viajera, {#} cm.",
 "The standing wave ratio is infinite: the nodes reach zero.":
   "La razón de onda estacionaria es infinita: los nodos llegan a cero.",
-"Running.":
-  "En marcha.",
-"Time {#} s.":
-  "Tiempo {#} s.",
 "Describe the waves":
   "Describe las ondas",
 "The two waves":
@@ -214,10 +202,6 @@ VDI18N.add('es', 'demo/standing-waves', {
   "desplazamiento dibujado {#}× más grande que la escala real · longitudes a lo largo de la soga a escala · arrastra para girar",
 "Amplitude (mm)":
   "Amplitud (mm)",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
 "Two waves of the same frequency moving in opposite directions make a standing wave. Change one amplitude or one frequency and see what survives.":
   "Dos ondas de la misma frecuencia que viajan en direcciones opuestas forman una onda estacionaria. Cambia una amplitud o una frecuencia y mira qué sobrevive.",
 "bridge, L = {#} m":
@@ -294,6 +278,12 @@ VDI18N.add('es', 'demo/standing-waves', {
   "La cuerda Mi grave de una guitarra, de {#} m de largo a unos {#} N, suena como E2 a {#} Hz. El armónico n acomoda n medias longitudes de onda entre los extremos fijos, así que fₙ = n v/2L = n f₁. Elige otros armónicos, o arrastra el puente para acortar la cuerda, como hace un traste.",
 "Plays a pure tone at f₃ = {#} Hz. Sound stops when you leave the page.":
   "Reproduce un tono puro en f₃ = {#} Hz. El sonido se detiene cuando sales de la página.",
+"A string {#} m long, fixed at both ends, at a tension of {#} N and a linear density of {#} g/m.":
+  "Una cuerda de {#} m de largo, fija en ambos extremos, con una tensión de {#} N y una densidad lineal de {#} g/m.",
+"The wave speed is {#} m/s and the fundamental frequency f₁ is {#} Hz.":
+  "La rapidez de la onda es {#} m/s y la frecuencia fundamental f₁ es {#} Hz.",
+"The string vibrates in harmonic {#}: frequency {#} Hz, wavelength {#} m, with {#} nodes counting the two ends.":
+  "La cuerda vibra en el armónico {#}: frecuencia {#} Hz, longitud de onda {#} m, con {#} nodos contando los dos extremos.",
 "Driven at f = {#} Hz (f/f₁ = {#})":
   "Forzada a f = {#} Hz (f/f₁ = {#})",
 "dashed: steady state envelope":
@@ -318,8 +308,6 @@ VDI18N.add('es', 'demo/standing-waves', {
   "Reproduce los armónicos de la cuerda pulsada con sus amplitudes bₙ, sostenidos sin decaer. Mueve el punto de pulsación y escucha cómo cambia el timbre. El sonido se detiene cuando sales de la página.",
 "Tones at {#} and {#} Hz drift in and out of step, so the loudness swells and fades {#} times a second: f_beat = |f₁ − f₂|. Musicians tune by ear this way, adjusting until the beats slow down and stop.":
   "Tonos de {#} y {#} Hz entran y salen de fase, así que la sonoridad crece y se desvanece {#} veces por segundo: f_beat = |f₁ − f₂|. Los músicos afinan de oído así, ajustando hasta que los batidos se hacen lentos y se detienen.",
-"Paused.":
-  "En pausa.",
 "Pick harmonic {#} to {#} on the string":
   "Elige un armónico del {#} al {#} en la cuerda",
 "T_beat = {#} ms":
@@ -334,14 +322,46 @@ VDI18N.add('es', 'demo/standing-waves', {
   "Pulso {#}, hacia la izquierda ←",
 "out unchanged":
   "sale sin cambio",
+"Two single pulses on a rope, one moving right and one moving left at {#} m/s, and the rope, which is their sum.":
+  "Dos pulsos individuales en una cuerda, uno que se mueve a la derecha y otro a la izquierda a {#} m/s, y la cuerda, que es su suma.",
+"Pulse {#} is {#} cm high and {#} m wide.":
+  "El pulso {#} tiene {#} cm de alto y {#} m de ancho.",
+"The peaks pass each other at x = {#} m.":
+  "Los picos se cruzan en x = {#} m.",
 "Plucked at d = {#}/{#} of L":
   "Pulsada en d = {#}/{#} de L",
+"The string is plucked {#} m from one end, which is {#} of its length, to a height of {#} mm, and let go.":
+  "La cuerda se jala a {#} m de un extremo, que es {#} de su longitud, hasta una altura de {#} mm, y se suelta.",
 "Wave {#}, moving right →":
   "Onda {#}, hacia la derecha →",
 "Wave {#}, moving left ←":
   "Onda {#}, hacia la izquierda ←",
 "Steady amplitude (log scale)":
   "Amplitud estacionaria (escala logarítmica)",
+"A driver near one end shakes the string at {#} Hz, with a quality factor Q = {#} for mode {#}.":
+  "Un excitador cerca de un extremo agita la cuerda a {#} Hz, con un factor de calidad Q = {#} para el modo {#}.",
+"The steady amplitude is {#} mm.":
+  "La amplitud estacionaria es {#} mm.",
+"The damping time is {#} ms.":
+  "El tiempo de amortiguamiento es {#} ms.",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
+"<span>Speed</span>":
+  "<span>Rapidez</span>",
+"Running.":
+  "En marcha.",
+"Time {#} s.":
+  "Tiempo {#} s.",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
+"Paused.":
+  "En pausa.",
 "Close":
   "Cerrar"
 });

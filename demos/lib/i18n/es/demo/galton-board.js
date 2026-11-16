@@ -1,13 +1,7 @@
 /* demo/galton-board in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/galton-board', {
-"Describe the picture":
-  "Describir la imagen",
 "bin k: number of right bounces":
   "casilla k: número de rebotes a la derecha",
-"Skip to the picture":
-  "Ir a la imagen",
-"Skip to the controls":
-  "Ir a los controles",
 "Galton Board":
   "Tablero de Galton",
 "<a>The second law of thermodynamics</a>":
@@ -18,8 +12,6 @@ VDI18N.add('es', 'demo/galton-board', {
   "Las bolas caen a través de filas de clavos y rebotan a la izquierda o a la derecha en cada uno. Una sola bola es impredecible; miles se acumulan en la distribución binomial y, con muchas filas, en una curva de campana.",
 "counts":
   "conteos",
-"Time controls":
-  "Controles de tiempo",
 "Stream":
   "Flujo continuo",
 "Empty the bins":
@@ -104,10 +96,22 @@ VDI18N.add('es', 'demo/galton-board', {
   "{#} filas: suelta unos cientos y el histograma coincide con la curva normal de media {#} y desviación estándar √{#} = {#}. Las casillas {#} a {#}, dentro de una desviación estándar del centro, deberían contener el {#}% de las bolas; la regla del {#}% es para una variable continua, y aquí las casillas de los bordes cuentan completas.",
 "Drop at least two balls before recording.":
   "Suelta al menos dos bolas antes de registrar.",
+"Balls are falling.":
+  "Las bolas están cayendo.",
 "Stop":
   "Detener",
 "Balls are streaming.":
   "Las bolas caen en flujo continuo.",
+"A board with {#} row of pegs and {#} bins underneath, numbered {#} and {#} from the left.":
+  "Un tablero con {#} fila de clavijas y {#} cajones abajo, numerados {#} y {#} desde la izquierda.",
+"Describe the picture":
+  "Describir la imagen",
+"Skip to the picture":
+  "Ir a la imagen",
+"Skip to the controls":
+  "Ir a los controles",
+"Time controls":
+  "Controles de tiempo",
 "Close":
   "Cerrar"
 });

@@ -12,8 +12,6 @@ VDI18N.add('es', 'demo/induced-electric-field', {
   "E, en sentido antihorario (mV/m)",
 "time slowed down {#} times":
   "tiempo {#} veces más lento",
-"Describe the picture":
-  "Describir la imagen",
 "Induced Electric Fields":
   "Campos eléctricos inducidos",
 "<a>Induction and inductance</a>":
@@ -22,12 +20,6 @@ VDI18N.add('es', 'demo/induced-electric-field', {
   "<a><span>←</span> <span>Inducción en acción</span></a><a><span>Corrientes de Foucault: imán en un tubo</span> <span>→</span></a>",
 "A long solenoid seen end on. While its current changes, the changing magnetic flux makes an electric field that circles the solenoid, inside it and in the empty space outside. Move a closed path around and compare the work per charge around it, ∮E·dl, with −dΦ/dt.":
   "Un solenoide largo visto de punta. Mientras su corriente cambia, el flujo magnético cambiante produce un campo eléctrico que rodea al solenoide, dentro de él y en el espacio vacío de afuera. Mueve una trayectoria cerrada y compara el trabajo por unidad de carga a su alrededor, ∮E·dl, con −dΦ/dt.",
-"Time controls":
-  "Controles de tiempo",
-"Run for a moment and pause again":
-  "Avanza un momento y vuelve a pausar",
-"Step":
-  "Paso",
 "The end of a long solenoid, its magnetic field shown as dots or crosses, arrows for the induced electric field circling it, and a closed path that can be dragged or moved with the arrow keys. Plots of the current against time and of the electric field against distance from the axis.":
   "El extremo de un solenoide largo, con su campo magnético mostrado como puntos o cruces, flechas para el campo eléctrico inducido que lo rodea, y una trayectoria cerrada que se puede arrastrar o mover con las flechas. Gráficas de la corriente en función del tiempo y del campo eléctrico en función de la distancia al eje.",
 "The end of a long solenoid of radius {#} cm with {#} turns per meter, and a circular path of radius {#} cm.":
@@ -36,10 +28,6 @@ VDI18N.add('es', 'demo/induced-electric-field', {
   "La trayectoria está centrada en el solenoide.",
 "The current decays.":
   "La corriente decae.",
-"Playing.":
-  "En marcha.",
-"Time {#} s.":
-  "Tiempo de {#} s.",
 "Current {#} A.":
   "Corriente de {#} A.",
 "Magnetic field inside {#} mT, changing at -{#} T/s.":
@@ -128,10 +116,6 @@ VDI18N.add('es', 'demo/induced-electric-field', {
   "Trayectoria (cm)",
 "−dΦ/dt (V)":
   "−dΦ/dt (V)",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
 "Time {#} ms.":
   "Tiempo de {#} ms.",
 "Magnetic field inside {#} mT, changing at -{#} mT/s.":
@@ -140,8 +124,6 @@ VDI18N.add('es', 'demo/induced-electric-field', {
   "La FEM, −dΦ/dt, es de {#} µV.",
 "The circulation of E around the path is {#} µV.":
   "La circulación de E alrededor de la trayectoria es de {#} µV.",
-"Paused.":
-  "En pausa.",
 "Now the path is inside the solenoid. The flux through it is B times its own area, so E grows in proportion to r inside: E = (r/{#})|dB/dt|.":
   "Ahora la trayectoria está dentro del solenoide. El flujo a través de ella es B por su propia área, así que E crece en proporción a r dentro: E = (r/{#})|dB/dt|.",
 "This path does not go around the solenoid, so no flux passes through it. The field on the path is not zero, but it pushes forward on one side as much as it pushes back on the other: ∮E·dl = {#}.":
@@ -150,6 +132,18 @@ VDI18N.add('es', 'demo/induced-electric-field', {
   "{#} Wb",
 "not the same all around: the path is off center":
   "no es igual en todo el recorrido: la trayectoria está descentrada",
+"The path center is {#} cm from the solenoid axis.":
+  "El centro de la trayectoria está a {#} cm del eje del solenoide.",
+"Time {#} µs.":
+  "Tiempo de {#} µs.",
+"Flux through the path {#} Wb.":
+  "Flujo a través de la trayectoria de {#} Wb.",
+"The EMF, −dΦ/dt, is {#} V.":
+  "La FEM, −dΦ/dt, es de {#} V.",
+"The circulation of E around the path is -{#} V.":
+  "La circulación de E alrededor de la trayectoria es -{#} V.",
+"The field is not the same all around the path, because the path is off center.":
+  "El campo no es igual en toda la trayectoria, porque la trayectoria está descentrada.",
 "This path encloses part of the solenoid. ∮E·dl, added up around the path, still equals −dΦ/dt with Φ the flux through the part it encloses.":
   "Esta trayectoria encierra una parte del solenoide. ∮E·dl, sumado alrededor de la trayectoria, sigue siendo igual a −dΦ/dt con Φ el flujo a través de la parte que encierra.",
 "E, counterclockwise (V/m)":
@@ -176,34 +170,46 @@ VDI18N.add('es', 'demo/induced-electric-field', {
   "I sube de manera uniforme de {#} a I₀ en un tiempo {#}/α, y luego se mantiene",
 "Ramp: α = {#}/(rise time)":
   "Rampa: α = {#}/(tiempo de subida)",
-"The current alternates.":
-  "La corriente es alterna.",
-"Time {#} µs.":
-  "Tiempo de {#} µs.",
-"Current {#} mA.":
-  "Corriente de {#} mA.",
+"The current ramps up and then holds steady.":
+  "La corriente sube de forma lineal y luego se mantiene constante.",
+"Magnetic field inside {#} T, changing at {#} T/s.":
+  "Campo magnético interior de {#} T, cambiando a {#} T/s.",
+"The circulation of E around the path is {#} V.":
+  "La circulación de E alrededor de la trayectoria es de {#} V.",
+"The field on the path is {#} V/m.":
+  "El campo en la trayectoria es de {#} V/m.",
+"The current is steady.":
+  "La corriente es constante.",
 "Magnetic field inside {#} mT, changing at {#} T/s.":
   "Campo magnético interior de {#} mT, cambiando a {#} T/s.",
+"Drag the path; drag elsewhere to turn.":
+  "Arrastra la trayectoria; arrastra en otro lugar para girar.",
+"The current alternates.":
+  "La corriente es alterna.",
+"Current {#} mA.":
+  "Corriente de {#} mA.",
 "The EMF, −dΦ/dt, is -{#} mV.":
   "La FEM, −dΦ/dt, es de -{#} mV.",
 "The circulation of E around the path is -{#} mV.":
   "La circulación de E alrededor de la trayectoria es de -{#} mV.",
 "The field on the path is {#} mV/m, clockwise.":
   "El campo en la trayectoria es de {#} mV/m, en sentido horario.",
-"The current is steady.":
-  "La corriente es constante.",
-"The EMF, −dΦ/dt, is {#} V.":
-  "La FEM, −dΦ/dt, es de {#} V.",
-"The circulation of E around the path is {#} V.":
-  "La circulación de E alrededor de la trayectoria es de {#} V.",
-"The field on the path is {#} V/m.":
-  "El campo en la trayectoria es de {#} V/m.",
-"Drag the path; drag elsewhere to turn.":
-  "Arrastra la trayectoria; arrastra en otro lugar para girar.",
-"The current ramps up and then holds steady.":
-  "La corriente sube de forma lineal y luego se mantiene constante.",
-"Magnetic field inside {#} T, changing at {#} T/s.":
-  "Campo magnético interior de {#} T, cambiando a {#} T/s.",
-"Flux through the path {#} Wb.":
-  "Flujo a través de la trayectoria de {#} Wb."
+"Describe the picture":
+  "Describir la imagen",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
+"Playing.":
+  "En marcha.",
+"Time {#} s.":
+  "Tiempo de {#} s.",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
+"Paused.":
+  "En pausa."
 });

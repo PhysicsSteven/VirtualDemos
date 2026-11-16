@@ -28,8 +28,6 @@ VDI18N.add('es', 'demo/entropy', {
   "fracción del tiempo",
 "dots: C(N, n)/{#}^N":
   "puntos: C(N, n)/{#}^N",
-"Describe the picture":
-  "Describir la imagen",
 "Entropy and the Second Law":
   "Entropía y la segunda ley",
 "<a>The second law of thermodynamics</a>":
@@ -40,14 +38,6 @@ VDI18N.add('es', 'demo/entropy', {
   "Quita la partición y un gas llena la caja, y nunca se vuelve a juntar por sí solo. Deja que dos sólidos compartan energía y el calor fluye de lo caliente a lo frío. Ambas cosas pasan porque hay muchísimas más maneras de estar repartido. Luego pon a prueba motores y refrigeradores frente a la segunda ley.",
 "model gas · the model clock runs {#} s each second":
   "gas modelo · el reloj del modelo avanza {#} s por segundo",
-"Time controls":
-  "Controles de tiempo",
-"Run for a moment and pause again":
-  "Avanza un momento y vuelve a pausar",
-"Step":
-  "Paso",
-"<span>Speed</span>":
-  "<span>Rapidez</span>",
 "Free expansion":
   "Expansión libre",
 "Einstein solids":
@@ -200,10 +190,6 @@ VDI18N.add('es', 'demo/entropy', {
   "depósito frío",
 "Drag to turn, scroll to zoom, double click to go back. The disks move in the plane between the glass front and the back wall; the box is in model units, not to scale.":
   "Arrastra para girar, desplaza para acercar, doble clic para regresar. Los discos se mueven en el plano entre el frente de vidrio y la pared del fondo; la caja está en unidades del modelo, no a escala.",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
 "solid A: {#} quanta":
   "sólido A: {#} cuantos",
 "{#} oscillators":
@@ -326,6 +312,16 @@ VDI18N.add('es', 'demo/entropy', {
   "COP Q_c/W",
 "Carnot COP":
   "COP de Carnot",
+"A refrigerator between a hot reservoir above and a cold reservoir below.":
+  "Un refrigerador entre un depósito caliente arriba y uno frío abajo.",
+"COP {#}.":
+  "COP {#}.",
+"The Carnot COP is {#}.":
+  "El COP de Carnot es {#}.",
+"Entropy change of the universe −{#} J/K.":
+  "Cambio de entropía del universo −{#} J/K.",
+"The device beats Carnot and breaks the second law.":
+  "El dispositivo supera a Carnot y viola la segunda ley.",
 "A hundred molecules. Once the partition is gone the count settles near {#} and only wobbles. The chance of finding all hundred on the left is {#}^−{#}, about {#} × {#}⁻³¹: it never happens, which is why free expansion is irreversible.":
   "Cien moléculas. Una vez que se quita la partición, la cuenta se estabiliza cerca de {#} y solo fluctúa. La probabilidad de encontrar las cien a la izquierda es {#}^−{#}, aproximadamente {#} × {#}⁻³¹: nunca pasa, y por eso la expansión libre es irreversible.",
 "QUANTA IN A":
@@ -342,6 +338,18 @@ VDI18N.add('es', 'demo/entropy', {
   "Dos sólidos diminutos de {#} osciladores cada uno que comparten {#} cuantos, todos en A al principio. Solo hay {#} maneras de acomodarlos, así que puedes comparar la fracción del tiempo en cada q_A con la cuenta de maneras.",
 "Solid A ({#} oscillators) holds all {#} quanta, solid B ({#} oscillators) holds none. Random exchanges carry energy from A to B until q_A settles near the value with the most ways, where the two temperatures match. It never goes back.":
   "El sólido A ({#} osciladores) tiene los {#} cuantos y el sólido B ({#} osciladores) ninguno. Los intercambios al azar llevan energía de A a B hasta que q_A se estabiliza cerca del valor con más maneras, donde las dos temperaturas coinciden. Nunca regresa.",
+"Two Einstein solids share {#} quanta: solid A has {#} oscillators and solid B has {#}.":
+  "Dos sólidos de Einstein comparten {#} cuantos: el sólido A tiene {#} osciladores y el sólido B tiene {#}.",
+"Solid A holds {#} quanta and solid B holds {#}.":
+  "El sólido A tiene {#} cuantos y el sólido B tiene {#}.",
+"{#} exchanges tried.":
+  "{#} intercambios probados.",
+"The most likely q_A is {#}.":
+  "El valor más probable de q_A es {#}.",
+"kT/ε is {#} for A and {#} for B.":
+  "kT/ε es {#} para A y {#} para B.",
+"Below, the energy in solid A over time, and the number of ways to share it.":
+  "Abajo, la energía del sólido A en el tiempo, y el número de maneras de repartirla.",
 "An engine between {#} K and {#} K takes {#} J from the hot reservoir and does {#} J of work. Its efficiency is {#}, below the Carnot limit of {#}, and the entropy of the universe rises.":
   "Un motor entre {#} K y {#} K toma {#} J del depósito caliente y hace {#} J de trabajo. Su eficiencia es {#}, menor que el límite de Carnot de {#}, y la entropía del universo aumenta.",
 "The same reservoirs, but this engine claims {#} J of work from {#} J: an efficiency of {#}, above Carnot. Pair it with a Carnot refrigerator that puts its waste heat back, and see what the pair does.":
@@ -356,18 +364,12 @@ VDI18N.add('es', 'demo/entropy', {
   "viola el enunciado de Clausius",
 "A refrigerator that moves {#} J from a {#} K freezer to a {#} K room with no work at all. The Clausius statement says no such refrigerator exists.":
   "Un refrigerador que mueve {#} J de un congelador a {#} K a una habitación a {#} K sin ningún trabajo. El enunciado de Clausius dice que no existe tal refrigerador.",
-"refrigerator":
-  "refrigerador",
-"A refrigerator between a hot reservoir above and a cold reservoir below.":
-  "Un refrigerador entre un depósito caliente arriba y uno frío abajo.",
 "COP is undefined.":
   "El COP no está definido.",
-"The Carnot COP is {#}.":
-  "El COP de Carnot es {#}.",
-"Entropy change of the universe −{#} J/K.":
-  "Cambio de entropía del universo −{#} J/K.",
 "The device breaks the Clausius statement.":
   "El dispositivo viola el enunciado de Clausius.",
+"refrigerator":
+  "refrigerador",
 "Reset puts the partition back.":
   "Reiniciar vuelve a poner la partición.",
 "ΔS hot":
@@ -378,28 +380,36 @@ VDI18N.add('es', 'demo/entropy', {
   "ΔS dispositivo",
 "partition removed":
   "partición quitada",
+"The partition is removed.":
+  "Se quita la división.",
+"The chance of all on the left is {#}^−N = {#} × {#}⁻³¹.":
+  "La probabilidad de que todas estén a la izquierda es {#}^−N = {#} × {#}⁻³¹.",
 "a column per oscillator, a cube per quantum":
   "una columna por oscilador, un cubo por cuanto",
 "fridge":
   "refrigerador",
 "Drag to turn, double click to go back. Arrow widths in proportion to the energy; not to scale.":
   "Arrastra para girar, doble clic para regresar. Anchos de flecha proporcionales a la energía; no a escala.",
+"The device breaks the Kelvin statement.":
+  "El dispositivo viola el enunciado de Kelvin.",
+"Describe the picture":
+  "Describir la imagen",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
+"<span>Speed</span>":
+  "<span>Rapidez</span>",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "Free expansion: a model gas of N hard disks of equal mass in an insulated box twice as wide as it is tall. The disks bounce off the walls and each other without losing energy, so the total kinetic energy (and the temperature) stays the same. At first a partition keeps them in the left half; removing it lets them spread through the whole box with no work done and no heat in or out (§{#}). The count on the left is sampled every step from the first moment it falls to half or less (so the first rush out of the left half is left out), and the share of that time spent at each count is compared with C(N, n)/{#}^N, the share of all {#}^N left or right arrangements that put n on the left. This is a picture of the idea: the disks are far bigger and fewer than real molecules, and time runs on the model's own clock. For a real gas the entropy rises by ΔS = nR ln(V₂/V₁) (§{#}, Example {#}), which is N k ln {#} for a doubling.":
   "Expansión libre: un gas modelo de N discos duros de igual masa en una caja aislada el doble de ancha que de alta. Los discos rebotan en las paredes y entre sí sin perder energía, así que la energía cinética total (y la temperatura) no cambia. Al principio una partición los mantiene en la mitad izquierda; quitarla los deja repartirse por toda la caja sin trabajo hecho y sin calor que entre o salga (§{#}). La cuenta a la izquierda se muestrea en cada paso desde el primer momento en que baja a la mitad o menos (así se omite la primera salida en masa de la mitad izquierda), y la fracción de ese tiempo pasada en cada cuenta se compara con C(N, n)/{#}^N, la fracción de todos los {#}^N arreglos izquierda o derecha que ponen n a la izquierda. Esto es una imagen de la idea: los discos son mucho más grandes y menos numerosos que las moléculas reales, y el tiempo corre en el reloj propio del modelo. Para un gas real la entropía aumenta en ΔS = nR ln(V₂/V₁) (§{#}, Ejemplo {#}), que es N k ln {#} para una duplicación.",
 "energy in quanta ε · T in ε/k":
   "energía en cuantos ε · T en ε/k",
 "Close":
-  "Cerrar",
-"Two Einstein solids share {#} quanta: solid A has {#} oscillators and solid B has {#}.":
-  "Dos sólidos de Einstein comparten {#} cuantos: el sólido A tiene {#} osciladores y el sólido B tiene {#}.",
-"Solid A holds {#} quanta and solid B holds {#}.":
-  "El sólido A tiene {#} cuantos y el sólido B tiene {#}.",
-"{#} exchanges tried.":
-  "{#} intercambios probados.",
-"The most likely q_A is {#}.":
-  "El valor más probable de q_A es {#}.",
-"kT/ε is {#} for A and {#} for B.":
-  "kT/ε es {#} para A y {#} para B.",
-"Below, the energy in solid A over time, and the number of ways to share it.":
-  "Abajo, la energía del sólido A en el tiempo, y el número de maneras de repartirla."
+  "Cerrar"
 });

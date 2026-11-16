@@ -52,8 +52,6 @@ VDI18N.add('es', 'demo/gps-clocks', {
   "La gráfica muestra la ganancia diaria del segundo reloj en μs contra r, desde el radio de la Tierra hasta {#} km, con curvas para la gravedad, la rapidez y la ganancia neta, y una línea punteada en el r actual.",
 "Describe the orbit and clocks":
   "Describe la órbita y los relojes",
-"Time controls":
-  "Controles de tiempo",
 "Run the clocks":
   "Poner en marcha los relojes",
 "Set both to zero":
@@ -122,10 +120,6 @@ VDI18N.add('es', 'demo/gps-clocks', {
   "Gravedad",
 "Net":
   "Neto",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
 "second clock: {#} h + {#} μs":
   "segundo reloj: {#} h + {#} μs",
 "The clocks are running, one hour per second.":
@@ -142,6 +136,24 @@ VDI18N.add('es', 'demo/gps-clocks', {
   "segundo reloj: {#} h − {#} μs",
 "A clock at rest on a tower {#} km above the ground, seen from above the North Pole.":
   "Un reloj en reposo sobre una torre a {#} km sobre el suelo, visto desde arriba del Polo Norte.",
+"A clock at rest on a tower {#} m above the ground, seen from above the North Pole.":
+  "Un reloj en reposo sobre una torre a {#} m del suelo, visto desde arriba del Polo Norte.",
+"Gravity effect {#} ps per day.":
+  "Efecto de la gravedad {#} ps por día.",
+"Speed effect −{#} ps per day.":
+  "Efecto de la rapidez −{#} ps por día.",
+"Net gain {#} ps per day.":
+  "Ganancia neta {#} ps por día.",
+"The second clock is ahead by −{#} μs.":
+  "El segundo reloj va adelantado por −{#} μs.",
+"Net gain −{#} μs per day.":
+  "Ganancia neta −{#} μs por día.",
+"Time controls":
+  "Controles de tiempo",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "Close":
   "Cerrar"
 });

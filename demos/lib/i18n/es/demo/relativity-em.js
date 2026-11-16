@@ -8,12 +8,6 @@ VDI18N.add('es', 'demo/relativity-em', {
   "Un alambre con corriente es neutro, así que una carga que se mueve a su lado siente solo una fuerza magnética. Viaja junto con la carga y la contracción de la longitud deja el alambre cargado: el mismo empuje ahora es eléctrico.",
 "<span>c = {#} {#} {#} m/s</span> · <span>γ = {#}/√({#} − β²)</span> · <span>μ₀ε₀ = {#}/c²</span> · <span>speeds as β = v/c</span>":
   "<span>c = {#} {#} {#} m/s</span> · <span>γ = {#}/√({#} − β²)</span> · <span>μ₀ε₀ = {#}/c²</span> · <span>rapideces como β = v/c</span>",
-"Time controls":
-  "Controles de tiempo",
-"Run for a moment and pause again":
-  "Avanza un momento y vuelve a pausar",
-"Step":
-  "Paso",
 "Wire":
   "Alambre",
 "Magnet and loop":
@@ -270,10 +264,6 @@ VDI18N.add('es', 'demo/relativity-em', {
   "Modelo: el imán es un cilindro magnetizado uniformemente, lo cual equivale a una lámina de corriente K = M alrededor de su costado. Su campo es el campo exacto de cada espira de corriente (integrales elípticas completas), sumado a lo largo de la longitud por cuadratura de Gauss–Legendre, {#} nodos; el flujo a través del anillo usa la inductancia mutua exacta de espiras coaxiales. Todo se mueve a lo largo del eje con rapidez constante; los campos en el marco de la espira vienen de la transformación de Lorentz exacta, también a rapideces cotidianas. Las FEM son sumas del empuje sobre las cargas en {#} pedazos del anillo; −dΦ′/dt′ es una diferencia central. Se ignora: el campo de la propia corriente inducida (un anillo delgado de alta resistencia). El movimiento en pantalla va más lento, y cerca de c el imán y el espaciamiento se dibujan contraídos por γ.",
 "Model: the exact Lorentz transformation of the fields at one event, for a boost along x. Arrows show E and cB on one scale, so a field of {#} kV/m and one of {#} mT (cB = {#} kV/m) look about the same length.":
   "Modelo: la transformación de Lorentz exacta de los campos en un evento, para una transformación a lo largo de x. Las flechas muestran E y cB en una misma escala, así que un campo de {#} kV/m y uno de {#} mT (cB = {#} kV/m) se ven de casi la misma longitud.",
-"Lab frame: the wire is neutral. Only the <span>magnetic field</span> pushes the moving charge.<small>In the lab the electrons are spaced exactly like the ions: their own spacing (ticks below), contracted.</small><small>Speeds exaggerated: real drift speeds are about {#} mm/s. Spacing drawn ×{#}; every number is exact.</small>":
-  "Marco del laboratorio: el alambre es neutro. Solo el <span>campo magnético</span> empuja a la carga en movimiento.<small>En el laboratorio los electrones están espaciados exactamente como los iones: su propio espaciamiento (marcas de abajo), contraído.</small><small>Rapideces exageradas: las rapideces de deriva reales son de unos {#} mm/s. Espaciamiento dibujado ×{#}; cada número es exacto.</small>",
-"Describe the picture":
-  "Describir la imagen",
 "3D view. Drag to turn, scroll to zoom. Drag the test charge or an arrow tip to change it. Arrow keys change speed and distance, F switches frame, space pauses.":
   "Vista 3D. Arrastra para girar, usa la rueda para hacer zoom. Arrastra la carga de prueba o la punta de una flecha para cambiarla. Las flechas del teclado cambian la rapidez y la distancia, F cambia de marco, espacio pausa.",
 "A long straight wire with ions at rest in the lab and electrons drifting along it, with a test charge {#} cm away.":
@@ -310,10 +300,6 @@ VDI18N.add('es', 'demo/relativity-em', {
   "espaciamiento propio de los electrones (su marco en reposo)",
 "Lab frame: the wire is neutral. Only the <span>magnetic field</span> pushes the moving charge.<small>In the lab the electrons are spaced exactly like the ions: their own spacing (ticks below), contracted.</small><small>Speeds exaggerated: real drift speeds are about {#} mm/s. Spacing drawn ×{#}; every number is exact. Cutaway wire, drawn {#} mm thick; supports drawn with the ions' contraction.</small>":
   "Marco del laboratorio: el alambre es neutro. Solo el <span>campo magnético</span> empuja a la carga en movimiento.<small>En el laboratorio los electrones están espaciados exactamente como los iones: su propio espaciamiento (marcas de abajo), contraído.</small><small>Rapideces exageradas: las rapideces de deriva reales son de unos {#} mm/s. Espaciamiento dibujado ×{#}; cada número es exacto. Alambre en corte, dibujado de {#} mm de grosor; soportes dibujados con la contracción de los iones.</small>",
-"Skip to the picture":
-  "Ir a la imagen",
-"Skip to the controls":
-  "Ir a los controles",
 "Magnet's frame":
   "Marco del imán",
 "Loop's frame":
@@ -432,8 +418,18 @@ VDI18N.add('es', 'demo/relativity-em', {
   "igual en ambos marcos",
 "Exact transformation; arrows show E and cB on one scale":
   "Transformación exacta; las flechas muestran E y cB en una misma escala",
+"Electric and magnetic field arrows in a frame S, and in a frame S′ moving along x.":
+  "Flechas de campo eléctrico y magnético en un marco S y en un marco S′ que se mueve a lo largo de x.",
+"S′ moves along x at +{#}c, so γ = {#}.":
+  "S′ se mueve a lo largo de x a +{#}c, así que γ = {#}.",
+"The electric field is {#} V/m in S and {#} kV/m in S′.":
+  "El campo eléctrico es de {#} V/m en S y de {#} kV/m en S′.",
+"The magnetic field is {#} mT in S and {#} mT in S′.":
+  "El campo magnético es de {#} mT en S y de {#} mT en S′.",
 "electrons +{#}c":
   "electrones +{#}c",
+"Lab frame: the wire is neutral. Only the <span>magnetic field</span> pushes the moving charge.<small>In the lab the electrons are spaced exactly like the ions: their own spacing (ticks below), contracted.</small><small>Speeds exaggerated: real drift speeds are about {#} mm/s. Spacing drawn ×{#}; every number is exact.</small>":
+  "Marco del laboratorio: el alambre es neutro. Solo el <span>campo magnético</span> empuja a la carga en movimiento.<small>En el laboratorio los electrones están espaciados exactamente como los iones: su propio espaciamiento (marcas de abajo), contraído.</small><small>Rapideces exageradas: las rapideces de deriva reales son de unos {#} mm/s. Espaciamiento dibujado ×{#}; cada número es exacto.</small>",
 "Electrons at {#}c, the test electron at {#}c the other way. It is pushed away. Switch frames: the wire's electrons move at {#}c in its frame, not {#}c, so they crowd closer than the ions and the wire turns negative.":
   "Electrones a {#}c, el electrón de prueba a {#}c en sentido contrario. Es repelido. Cambia de marco: los electrones del alambre se mueven a {#}c en su marco, no a {#}c, así que se apiñan más que los iones y el alambre se vuelve negativo.",
 "{#}×{#}⁻¹⁴ N, away from the wire":
@@ -484,16 +480,24 @@ VDI18N.add('es', 'demo/relativity-em', {
   "Una carga que se mueve a {#}c. Su campo sigue apuntando directamente hacia afuera desde donde está ahora, pero se comprime en forma de disco perpendicular al movimiento, y B circula alrededor de la línea de movimiento.",
 "A pure magnetic field in S. Seen from S′, moving across it, there is also an electric field: E′ = γ(v × B). The two invariants do not change.":
   "Un campo puramente magnético en S. Visto desde S′, que se mueve a través de él, también hay un campo eléctrico: E′ = γ(v × B). Los dos invariantes no cambian.",
-"Electric and magnetic field arrows in a frame S, and in a frame S′ moving along x.":
-  "Flechas de campo eléctrico y magnético en un marco S y en un marco S′ que se mueve a lo largo de x.",
-"S′ moves along x at +{#}c, so γ = {#}.":
-  "S′ se mueve a lo largo de x a +{#}c, así que γ = {#}.",
-"The electric field is {#} V/m in S and {#} kV/m in S′.":
-  "El campo eléctrico es de {#} V/m en S y de {#} kV/m en S′.",
-"The magnetic field is {#} mT in S and {#} mT in S′.":
-  "El campo magnético es de {#} mT en S y de {#} mT en S′.",
 "cB′":
   "cB′",
+"A copper wire carrying {#} A, to scale, with a test charge {#} cm away.":
+  "Un alambre de cobre que conduce {#} A, a escala, con una carga de prueba a {#} cm.",
+"The electrons drift at {#} μm/s.":
+  "Los electrones se desplazan a {#} μm/s.",
+"The test charge is positive.":
+  "La carga de prueba es positiva.",
+"The test charge moves at {#} μm/s along the wire in the lab.":
+  "La carga de prueba se mueve a {#} μm/s a lo largo del alambre en el laboratorio.",
+"The electric field at the charge is {#} V/m and the magnetic field is {#} μT.":
+  "El campo eléctrico en la carga es de {#} V/m y el campo magnético es de {#} μT.",
+"The force on the charge is {#}×{#}⁻²⁸ N, toward the wire.":
+  "La fuerza sobre la carga es de {#}×{#}⁻²⁸ N, hacia el alambre.",
+"The ring moves at +{#}c relative to the magnet.":
+  "El anillo se mueve a +{#}c respecto al imán.",
+"The EMF around the ring is −{#} kV.":
+  "La fem alrededor del anillo es −{#} kV.",
 "EMF′ = γ EMF, γ = {#}":
   "EMF′ = γ EMF, γ = {#}",
 "loop +{#}c":
@@ -504,6 +508,14 @@ VDI18N.add('es', 'demo/relativity-em', {
   "−dΦ/dt = −{#} kV en este marco",
 "Speed exaggerated: near c, motion slowed for the screen":
   "Rapidez exagerada: cerca de c, movimiento más lento para la pantalla",
+"A point charge of {#} nC moving in a straight line, with its electric and magnetic field.":
+  "Una carga puntual de {#} nC que se mueve en línea recta, con su campo eléctrico y magnético.",
+"It moves at +{#}c, so γ = {#}.":
+  "Se mueve a +{#}c, así que γ = {#}.",
+"The electric field {#} m ahead is {#} V/m, and {#} m to the side it is {#} V/m.":
+  "El campo eléctrico a {#} m por delante es {#} V/m, y a {#} m de lado es {#} V/m.",
+"The magnetic field {#} m to the side is {#} nT.":
+  "El campo magnético a {#} m de lado es {#} nT.",
 "distance from wire r (cm) against time (ns)":
   "distancia al alambre r (cm) en función del tiempo (ns)",
 "solid: q's own clock τ · dashed: this frame's clock":
@@ -526,8 +538,6 @@ VDI18N.add('es', 'demo/relativity-em', {
   "Cambiando de marco. En medio, el alambre está parcialmente cargado y <span>ambos campos empujan</span>.<small>El reloj propio de la carga se mantiene quieto mientras cambia el marco.</small><small>Rapideces exageradas: las rapideces de deriva reales son de unos {#} mm/s. Espaciamiento dibujado ×{#}; cada número es exacto. Alambre en corte, dibujado de {#} mm de grosor; soportes dibujados con la contracción de los iones.</small>",
 "Electric force qE":
   "Fuerza eléctrica qE",
-"electric force {#}×{#}⁻¹⁴ N":
-  "fuerza eléctrica {#}×{#}⁻¹⁴ N",
 "The view is changing frames.":
   "La vista está cambiando de marco.",
 "In this frame the wire is positively charged, +{#} nC/m.":
@@ -536,14 +546,16 @@ VDI18N.add('es', 'demo/relativity-em', {
   "El campo eléctrico en la carga es de {#} kV/m y el campo magnético es de {#} mT.",
 "The force is {#} % electric and {#} % magnetic.":
   "La fuerza es {#} % eléctrica y {#} % magnética.",
+"electric force {#}×{#}⁻¹⁴ N":
+  "fuerza eléctrica {#}×{#}⁻¹⁴ N",
 "magnetic force {#}×{#}⁻¹⁵ N":
   "fuerza magnética {#}×{#}⁻¹⁵ N",
+"magnetic force {#}×{#}⁻¹⁶ N":
+  "fuerza magnética {#}×{#}⁻¹⁶ N",
 "electrons at rest":
   "electrones en reposo",
 "q starts at rest; moves at +{#}c in the lab":
   "q parte del reposo; se mueve a +{#}c en el laboratorio",
-"magnetic force {#}×{#}⁻¹⁶ N":
-  "fuerza magnética {#}×{#}⁻¹⁶ N",
 "Charge's frame: the wire is positively charged. Only the <span>electric field</span> pushes the charge, which starts at rest here.<small>B is still there, but cannot push a charge at rest. Once the charge picks up speed toward the wire, B adds a small sideways push.</small><small>Speeds exaggerated: real drift speeds are about {#} mm/s. Spacing drawn ×{#}; every number is exact. Cutaway wire, drawn {#} mm thick; supports drawn with the ions' contraction.</small>":
   "Marco de la carga: el alambre tiene carga positiva. Solo el <span>campo eléctrico</span> empuja a la carga, que aquí parte del reposo.<small>B sigue ahí, pero no puede empujar a una carga en reposo. Cuando la carga adquiere rapidez hacia el alambre, B agrega un pequeño empuje lateral.</small><small>Rapideces exageradas: las rapideces de deriva reales son de unos {#} mm/s. Espaciamiento dibujado ×{#}; cada número es exacto. Alambre en corte, dibujado de {#} mm de grosor; soportes dibujados con la contracción de los iones.</small>",
 "The view is in the charge’s frame, where the charge starts at rest.":
@@ -564,16 +576,6 @@ VDI18N.add('es', 'demo/relativity-em', {
   "Marco de la carga: el alambre tiene carga negativa. Solo el <span>campo eléctrico</span> empuja a la carga, que aquí parte del reposo.<small>B sigue ahí, pero no puede empujar a una carga en reposo. Cuando la carga adquiere rapidez hacia el alambre, B agrega un pequeño empuje lateral.</small><small>Rapideces exageradas: las rapideces de deriva reales son de unos {#} mm/s. Espaciamiento dibujado ×{#}; cada número es exacto. Alambre en corte, dibujado de {#} mm de grosor; soportes dibujados con la contracción de los iones.</small>",
 "Lab frame: the wire is neutral. Only the <span>magnetic field</span> pushes the moving charge.<small>In the lab the electrons are spaced exactly like the ions: their own spacing (ticks below), contracted.</small><small>Real speeds: drift {#} μm/s, far too slow to see. Cutaway wire, drawn {#} mm thick.</small>":
   "Marco del laboratorio: el alambre es neutro. Solo el <span>campo magnético</span> empuja a la carga en movimiento.<small>En el laboratorio los electrones están espaciados exactamente como los iones: su propio espaciamiento (marcas de abajo), contraído.</small><small>Rapideces reales: deriva de {#} μm/s, demasiado lenta para verse. Alambre en corte, dibujado de {#} mm de grosor.</small>",
-"A copper wire carrying {#} A, to scale, with a test charge {#} cm away.":
-  "Un alambre de cobre que conduce {#} A, a escala, con una carga de prueba a {#} cm.",
-"The electrons drift at {#} μm/s.":
-  "Los electrones se desplazan a {#} μm/s.",
-"The test charge moves at {#} μm/s along the wire in the lab.":
-  "La carga de prueba se mueve a {#} μm/s a lo largo del alambre en el laboratorio.",
-"The electric field at the charge is {#} V/m and the magnetic field is {#} μT.":
-  "El campo eléctrico en la carga es de {#} V/m y el campo magnético es de {#} μT.",
-"The force on the charge is {#}×{#}⁻²⁸ N, toward the wire.":
-  "La fuerza sobre la carga es de {#}×{#}⁻²⁸ N, hacia el alambre.",
 "electron at rest":
   "electrón en reposo",
 "ions −{#} μm/s":
@@ -604,6 +606,18 @@ VDI18N.add('es', 'demo/relativity-em', {
   "Marco de la carga: el alambre tiene carga negativa. Solo el <span>campo eléctrico</span> empuja a la carga, que aquí parte del reposo.<small>B sigue ahí, pero no puede empujar a una carga en reposo. Cuando la carga adquiere rapidez hacia el alambre, B agrega un pequeño empuje lateral.</small><small>Rapideces exageradas: las rapideces de deriva reales son de unos {#} mm/s. Espaciamiento dibujado ×{#}; cada número es exacto.</small>",
 "Charge's frame: the wire is positively charged. Only the <span>electric field</span> pushes the charge, which starts at rest here.<small>B is still there, but cannot push a charge at rest. Once the charge picks up speed toward the wire, B adds a small sideways push.</small><small>Real speeds: drift {#} μm/s, far too slow to see.</small>":
   "Marco de la carga: el alambre tiene carga positiva. Solo el <span>campo eléctrico</span> empuja a la carga, que aquí parte del reposo.<small>B sigue ahí, pero no puede empujar a una carga en reposo. Cuando la carga adquiere rapidez hacia el alambre, B agrega un pequeño empuje lateral.</small><small>Rapideces reales: deriva de {#} μm/s, demasiado lenta para verse.</small>",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
+"Describe the picture":
+  "Describir la imagen",
+"Skip to the picture":
+  "Ir a la imagen",
+"Skip to the controls":
+  "Ir a los controles",
 "magnetic force {#}×{#}⁻¹⁷ N":
   "fuerza magnética {#}×{#}⁻¹⁷ N",
 "Close":

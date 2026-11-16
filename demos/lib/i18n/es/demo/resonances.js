@@ -16,8 +16,6 @@ VDI18N.add('es', 'demo/resonances', {
   "Esto tarda miles de años: prueba la velocidad de {#} años por s",
 "above this it crosses Mars's orbit":
   "por encima de esto cruza la órbita de Marte",
-"Describe the picture":
-  "Describir la imagen",
 "Orbital Resonances":
   "Resonancias orbitales",
 "<a><span>←</span> <span>Planet Temperatures and Habitable Zones</span></a><a><span>Building a Solar System</span> <span>→</span></a>":
@@ -26,12 +24,6 @@ VDI18N.add('es', 'demo/resonances', {
   "Cuando un asteroide da exactamente tres vueltas alrededor del Sol por cada vuelta de Júpiter, Júpiter lo jala en los mismos lugares una y otra vez y su órbita se alarga hasta cruzar la de Marte. Observa los empujones junto a los conteos reales de asteroides, mira cómo el mismo tipo de sincronía mantiene a Plutón a salvo de Neptuno, y encuentra a Neptuno por su atracción sobre Urano como lo hizo Le Verrier en {#}.",
 "distances in AU · time in years":
   "distancias en UA · tiempo en años",
-"Time controls":
-  "Controles de tiempo",
-"Run for a moment and pause again":
-  "Avanza un momento y vuelve a pausar",
-"Step":
-  "Paso",
 "Put the bodies back where this setup starts them":
   "Regresa los cuerpos a donde los pone esta configuración al inicio",
 "{#} yr per s":
@@ -52,8 +44,6 @@ VDI18N.add('es', 'demo/resonances', {
   "El sistema solar visto desde arriba del plano de los planetas: el Sol, el planeta que jala y los cuerpos pequeños sobre los que jala, con la órbita del cuerpo que se sigue y marcas naranjas donde el planeta lo ha rebasado.",
 "The solar system seen from above: the Sun, Jupiter, and an asteroid that Jupiter pulls on, with its orbit.":
   "El sistema solar visto desde arriba: el Sol, Júpiter y un asteroide sobre el que Júpiter tira, con su órbita.",
-"Paused.":
-  "En pausa.",
 "The time is {#} years.":
   "El tiempo es {#} años.",
 "The body is {#} AU from the Sun, with an eccentricity of {#}.":
@@ -162,10 +152,6 @@ VDI18N.add('es', 'demo/resonances', {
   "e máxima",
 "crossed Mars (yr)":
   "cruzó Marte (años)",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
 "Pluto":
   "Plutón",
 "distance from the Sun a (AU) · real objects per {#} AU":
@@ -240,8 +226,6 @@ VDI18N.add('es', 'demo/resonances', {
   "Neptuno no está dibujado.",
 "There is no planet X.":
   "No hay planeta X.",
-"Running.":
-  "En marcha.",
 "The year is {#}.":
   "El año es {#}.",
 "Uranus is not yet known as a planet.":
@@ -256,6 +240,16 @@ VDI18N.add('es', 'demo/resonances', {
   "Las observaciones antiguas, anteriores a {#}, no se ajustan.",
 "The leftover drift is {#}″ rms, and {#}″ rms with no planet X.":
   "La deriva restante es {#}″ rms, y {#}″ rms sin planeta X.",
+"The solar system seen from above: the Sun, Neptune, and a small body that Neptune pulls on, with its orbit.":
+  "El sistema solar visto desde arriba: el Sol, Neptuno y un cuerpo pequeño sobre el que Neptuno tira, con su órbita.",
+"The period of the body is {#} times the period of Neptune.":
+  "El periodo del cuerpo es {#} veces el periodo de Neptuno.",
+"Bar chart of how many real Kuiper belt objects there are at each distance from the Sun, in AU.":
+  "Gráfica de barras de cuántos objetos reales del cinturón de Kuiper hay a cada distancia del Sol, en UA.",
+"Marks show the places of the resonances with Neptune.":
+  "Las marcas muestran los lugares de las resonancias con Neptuno.",
+"Graph of the distance of the body from Neptune, in AU, against time in years.":
+  "Gráfica de la distancia del cuerpo a Neptuno, en UA, contra el tiempo en años.",
 "Jupiter passed here":
   "Júpiter pasó por aquí",
 "Jupiter last passed it":
@@ -338,26 +332,20 @@ VDI18N.add('es', 'demo/resonances', {
   "lo más cerca hasta ahora {#} UA",
 "Neptune last passed it":
   "Neptuno lo rebasó por última vez",
-"The same orbit as Pluto's, started {#}° further round. Now Neptune comes by when the body is near perihelion, inside Neptune's orbit: it meets Neptune and is scattered after about {#} years. Without the resonance Pluto would not have survived.":
-  "La misma órbita que la de Plutón, empezada {#}° más adelante. Ahora Neptuno pasa cuando el cuerpo está cerca del perihelio, dentro de la órbita de Neptuno: se encuentra con Neptuno y sale dispersado tras unos {#} años. Sin la resonancia Plutón no habría sobrevivido.",
-"The solar system seen from above: the Sun, Neptune, and a small body that Neptune pulls on, with its orbit.":
-  "El sistema solar visto desde arriba: el Sol, Neptuno y un cuerpo pequeño sobre el que Neptuno tira, con su órbita.",
-"The period of the body is {#} times the period of Neptune.":
-  "El periodo del cuerpo es {#} veces el periodo de Neptuno.",
 "The closest approach to Neptune so far is {#} AU.":
   "El acercamiento máximo a Neptuno hasta ahora es {#} UA.",
-"Bar chart of how many real Kuiper belt objects there are at each distance from the Sun, in AU.":
-  "Gráfica de barras de cuántos objetos reales del cinturón de Kuiper hay a cada distancia del Sol, en UA.",
-"Marks show the places of the resonances with Neptune.":
-  "Las marcas muestran los lugares de las resonancias con Neptuno.",
-"Graph of the distance of the body from Neptune, in AU, against time in years.":
-  "Gráfica de la distancia del cuerpo a Neptuno, en UA, contra el tiempo en años.",
+"The same orbit as Pluto's, started {#}° further round. Now Neptune comes by when the body is near perihelion, inside Neptune's orbit: it meets Neptune and is scattered after about {#} years. Without the resonance Pluto would not have survived.":
+  "La misma órbita que la de Plutón, empezada {#}° más adelante. Ahora Neptuno pasa cuando el cuerpo está cerca del perihelio, dentro de la órbita de Neptuno: se encuentra con Neptuno y sale dispersado tras unos {#} años. Sin la resonancia Plutón no habría sobrevivido.",
 "{#} bodies near {#} AU with eccentricities from {#} to {#} and random start angles. Some are caught in the {#}:{#} resonance and stay far from Neptune; the others meet Neptune and are scattered. The real counts show the survivors: the plutinos, piled up at {#} AU.":
   "{#} cuerpos cerca de {#} UA con excentricidades de {#} a {#} y ángulos iniciales al azar. Algunos quedan atrapados en la resonancia {#}:{#} y se mantienen lejos de Neptuno; los demás se encuentran con Neptuno y salen dispersados. Los conteos reales muestran a los sobrevivientes: los plutinos, amontonados en {#} UA.",
 "{#} bodies near {#} AU with eccentricities from {#} to {#} and random start angles.":
   "{#} cuerpos cerca de {#} UA con excentricidades de {#} a {#} y ángulos iniciales al azar.",
 "Scattered by Neptune":
   "Dispersados por Neptuno",
+"The solar system seen from above, with the Sun, Neptune and many small bodies.":
+  "El sistema solar visto desde arriba, con el Sol, Neptuno y muchos cuerpos pequeños.",
+"{#} have been scattered by Neptune.":
+  "Neptuno ha dispersado a {#}.",
 "body":
   "cuerpo",
 "A body at {#} AU on a nearly round orbit, between Neptune's resonances, never comes near Neptune and needs no protection. Most real Kuiper belt objects from {#} to {#} AU are like this.":
@@ -366,10 +354,6 @@ VDI18N.add('es', 'demo/resonances', {
   "{#} cuerpos de {#} a {#} UA con excentricidades de {#} a {#}. Los que tienen órbitas que llegan cerca de Neptuno salen dispersados a menos que una resonancia los proteja, así que tras algunas decenas de miles de años los sobrevivientes con excentricidades grandes están en las resonancias {#}:{#} ({#} UA) y {#}:{#} ({#} UA), como en los conteos reales.",
 "{#} bodies from {#} to {#} AU with eccentricities from {#} to {#}.":
   "{#} cuerpos de {#} a {#} UA con excentricidades de {#} a {#}.",
-"The solar system seen from above, with the Sun, Neptune and many small bodies.":
-  "El sistema solar visto desde arriba, con el Sol, Neptuno y muchos cuerpos pequeños.",
-"{#} have been scattered by Neptune.":
-  "Neptuno ha dispersado a {#}.",
 "Where Uranus is seen minus where its fitted orbit puts it (arcseconds), with planet X":
   "Dónde se ve Urano menos dónde lo pone su órbita ajustada (segundos de arco), con planeta X",
 "open circles: old sightings, not fitted · gray: no planet X":
@@ -380,10 +364,6 @@ VDI18N.add('es', 'demo/resonances', {
   "Así de lejos está el planeta X de la dirección de Neptuno en {#}",
 "{#}° behind":
   "{#}° detrás",
-"Planet X with Neptune's orbit (from this model on {#} Sep {#}) and mass ({#} Earths): nearly all of Uranus's drift goes away, and what is left (under {#}″) comes from treating Neptune as moving on a fixed ellipse.":
-  "Planeta X con la órbita de Neptuno (de este modelo el {#} de septiembre de {#}) y su masa ({#} Tierras): casi toda la deriva de Urano desaparece, y lo que queda (menos de {#}″) viene de tratar a Neptuno como si se moviera en una elipse fija.",
-"Move planet X (its distance, mass and where it is in {#}) to make Uranus's leftover drift as small as you can. The direction comes out well even when the distance is wrong.":
-  "Mueve el planeta X (su distancia, su masa y dónde está en {#}) para hacer la deriva restante de Urano lo más pequeña posible. La dirección sale bien aunque la distancia esté mal.",
 "Planet X is drawn, {#} Earth masses, {#} AU from the Sun.":
   "Se dibuja el planeta X, de {#} masas terrestres, a {#} UA del Sol.",
 "An arrow shows the direction of its pull on Uranus.":
@@ -392,8 +372,30 @@ VDI18N.add('es', 'demo/resonances', {
   "El planeta X está a {#}° de la dirección de Neptuno en {#}.",
 "The fit includes planet X.":
   "El ajuste incluye el planeta X.",
+"Planet X with Neptune's orbit (from this model on {#} Sep {#}) and mass ({#} Earths): nearly all of Uranus's drift goes away, and what is left (under {#}″) comes from treating Neptune as moving on a fixed ellipse.":
+  "Planeta X con la órbita de Neptuno (de este modelo el {#} de septiembre de {#}) y su masa ({#} Tierras): casi toda la deriva de Urano desaparece, y lo que queda (menos de {#}″) viene de tratar a Neptuno como si se moviera en una elipse fija.",
+"The real Neptune is drawn.":
+  "Se dibuja el Neptuno real.",
+"Move planet X (its distance, mass and where it is in {#}) to make Uranus's leftover drift as small as you can. The direction comes out well even when the distance is wrong.":
+  "Mueve el planeta X (su distancia, su masa y dónde está en {#}) para hacer la deriva restante de Urano lo más pequeña posible. La dirección sale bien aunque la distancia esté mal.",
 "The run stops at {#} years. The real gaps took millions of years to empty.":
   "La ejecución se detiene a los {#} años. Los huecos reales tardaron millones de años en vaciarse.",
+"Describe the picture":
+  "Describir la imagen",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
+"Paused.":
+  "En pausa.",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
+"Running.":
+  "En marcha.",
 "Close":
   "Cerrar"
 });

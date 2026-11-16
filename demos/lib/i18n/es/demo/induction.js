@@ -10,12 +10,6 @@ VDI18N.add('es', 'demo/induction', {
   "electrones, {#} punto = {#} nC, ralentizados",
 "Pick a rod (Glass + or Rubber −), or drag a sphere or the wand":
   "Elige Vidrio + o Hule −, o arrastra una esfera o la varilla",
-"Describe the picture":
-  "Describir la imagen",
-"Skip to the picture":
-  "Ir a la imagen",
-"Skip to the controls":
-  "Ir a los controles",
 "Charging by Induction":
   "Carga por inducción",
 "<a>Charge and electric fields</a>":
@@ -376,14 +370,14 @@ VDI18N.add('es', 'demo/induction', {
   "Una esfera de Aislante misterioso: su κ está oculta. Encuéntrala a partir de las lecturas de la balanza.",
 "hidden: measure it":
   "oculta: mídela",
-"ball":
-  "esfera",
-"reading (mg)":
-  "lectura (mg)",
 "Ball material: Mystery insulator.":
   "Material de la bola: aislante misterioso.",
 "The dielectric constant is hidden.":
   "La constante dieléctrica está oculta.",
+"ball":
+  "esfera",
+"reading (mg)":
+  "lectura (mg)",
 "Move the tip of the rod by {#} millimeter (Shift for {#} centimeter)":
   "Mueve la punta de la varilla {#} milímetro (Shift para {#} centímetro)",
 "glass rod +{#} nC":
@@ -400,22 +394,76 @@ VDI18N.add('es', 'demo/induction', {
   "Carga neta de A −{#} nC.",
 "Net charge on B +{#} nC.":
   "Carga neta de B +{#} nC.",
+"A glass rod and a silk cloth, rubbed together.":
+  "Una varilla de vidrio y un paño de seda, frotados entre sí.",
+"Not rubbing.":
+  "Sin frotar.",
+"Strokes so far: {#}.":
+  "Pasadas hasta ahora: {#}.",
+"In the series, glass is above silk.":
+  "En la serie, el vidrio está por encima de la seda.",
+"Charge on the rod {#} nC.":
+  "Carga en la varilla {#} nC.",
+"Charge on the cloth {#} nC.":
+  "Carga en el paño {#} nC.",
+"Field just outside the rod {#} MV/m of {#} MV/m.":
+  "Campo justo afuera de la varilla {#} MV/m de {#} MV/m.",
+"One metal sphere A of radius {#} cm on an insulating stand. Sphere B is far away, out of the picture.":
+  "Una esfera metálica A de radio {#} cm sobre un soporte aislante. La esfera B está lejos, fuera de la imagen.",
+"The spheres are {#} cm apart.":
+  "Las esferas están separadas {#} cm.",
+"Net charge on A +{#} nC.":
+  "Carga neta en A +{#} nC.",
+"A cross section of a long metal conductor shaped like a circle, with an external field of {#} N/C along +x.":
+  "Una sección transversal de un conductor metálico largo con forma de círculo, con un campo externo de {#} N/C a lo largo de +x.",
+"There is no line charge.":
+  "No hay carga lineal.",
+"The net charge on the conductor is {#} nC/m.":
+  "La carga neta del conductor es {#} nC/m.",
+"The probe is at x = {#} cm, y = {#} cm, outside the conductor.":
+  "La sonda está en x = {#} cm, y = {#} cm, fuera del conductor.",
+"The field at the probe is {#} N/C.":
+  "El campo en la sonda es {#} N/C.",
+"Surface charge density runs from −{#} to {#} nC/m².":
+  "La densidad superficial de carga va de −{#} a {#} nC/m².",
+"There is no cavity.":
+  "No hay cavidad.",
+"Graph of the surface charge density in nC/m² against the angle around the center, from −{#}° to {#}°.":
+  "Gráfica de la densidad superficial de carga en nC/m² en función del ángulo alrededor del centro, de −{#}° a {#}°.",
+"The density runs from −{#} to {#} nC/m².":
+  "La densidad va de −{#} a {#} nC/m².",
 "Polystyrene ball, {#} cm radius · molecules drawn huge":
   "Esfera de poliestireno, {#} cm de radio · moléculas dibujadas enormes",
 "Teflon ball, {#} cm radius · molecules drawn huge":
   "Esfera de teflón, {#} cm de radio · moléculas dibujadas enormes",
+"Ball material: Teflon.":
+  "Material de la bola: teflón.",
 "Nylon ball, {#} cm radius · molecules drawn huge":
   "Esfera de nailon, {#} cm de radio · moléculas dibujadas enormes",
+"Ball material: Nylon.":
+  "Material de la bola: nailon.",
 "Pyrex glass ball, {#} cm radius · molecules drawn huge":
   "Esfera de vidrio Pyrex, {#} cm de radio · moléculas dibujadas enormes",
 "Ball material: Pyrex glass.":
   "Material de la bola: vidrio Pyrex.",
 "Strontium titanate ball, {#} cm radius · molecules drawn huge":
   "Esfera de titanato de estroncio, {#} cm de radio · moléculas dibujadas enormes",
+"Ball material: Strontium titanate.":
+  "Material de la bola: titanato de estroncio.",
 "Metal ball, {#} cm radius · molecules drawn huge":
   "Esfera metálica, {#} cm de radio · moléculas dibujadas enormes",
+"Ball material: Metal.":
+  "Material de la bola: metal.",
+"The ball is metal, with free charges.":
+  "La bola es de metal, con cargas libres.",
 "Mystery insulator ball, {#} cm radius · molecules drawn huge":
   "Esfera de aislante misterioso, {#} cm de radio · moléculas dibujadas enormes",
+"Describe the picture":
+  "Describir la imagen",
+"Skip to the picture":
+  "Ir a la imagen",
+"Skip to the controls":
+  "Ir a los controles",
 "Close":
   "Cerrar"
 });

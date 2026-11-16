@@ -1,13 +1,7 @@
 /* demo/coulomb-sandbox in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/coulomb-sandbox', {
-"Describe the picture":
-  "Describir la imagen",
 "s (cm) along y = {#} cm":
   "s (cm) a lo largo de y = {#} cm",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
 "Coulomb Sandbox":
   "Arenero de Coulomb",
 "<a>Charge and electric fields</a>":
@@ -202,12 +196,6 @@ VDI18N.add('es', 'demo/coulomb-sandbox', {
   "Paisaje del potencial en 3D, la altura es V, con {#} cargas puntuales: +{#} nC en (−{#}, {#}) cm; +{#} nC en ({#}, {#}) cm. Arrastra para orbitar, usa la rueda para hacer zoom, arrastra una esfera para mover su carga.",
 "At the probe, s = {#} cm: Eₛ = {#} V/m −ΔV/Δs = {#} V/m (Δs = {#} cm)":
   "En la sonda, s = {#} cm: Eₛ = {#} V/m −ΔV/Δs = {#} V/m (Δs = {#} cm)",
-"A charge of +{#} nC at ({#}, {#}) cm.":
-  "Una carga de +{#} nC en ({#}, {#}) cm.",
-"A charge of −{#} nC at ({#}, −{#}) cm.":
-  "Una carga de −{#} nC en ({#}, −{#}) cm.",
-"Field |E| = {#} V/m.":
-  "Campo |E| = {#} V/m.",
 "Field map on a {#} cm grid with {#} point charges: +{#} nC at (−{#}, {#}) cm; +{#} nC at ({#}, {#}) cm; −{#} nC at ({#}, −{#}) cm.":
   "Mapa del campo en una cuadrícula de {#} cm con {#} cargas puntuales: +{#} nC en (−{#}, {#}) cm; +{#} nC en ({#}, {#}) cm; −{#} nC en ({#}, −{#}) cm.",
 "Potential landscape in 3D, height is V, with {#} point charges: +{#} nC at (−{#}, {#}) cm; +{#} nC at ({#}, {#}) cm; −{#} nC at ({#}, −{#}) cm. Drag to orbit, scroll to zoom, drag a sphere to move its charge.":
@@ -216,6 +204,14 @@ VDI18N.add('es', 'demo/coulomb-sandbox', {
   "Mapa del campo en una cuadrícula de {#} cm con {#} cargas puntuales: +{#} nC en (−{#}, {#}) cm; −{#} nC en ({#}, {#}) cm; +{#} nC en ({#}, −{#}) cm; −{#} nC en (−{#}, −{#}) cm.",
 "Potential landscape in 3D, height is V, with {#} point charges: +{#} nC at (−{#}, {#}) cm; −{#} nC at ({#}, {#}) cm; +{#} nC at ({#}, −{#}) cm; −{#} nC at (−{#}, −{#}) cm. Drag to orbit, scroll to zoom, drag a sphere to move its charge.":
   "Paisaje del potencial en 3D, la altura es V, con {#} cargas puntuales: +{#} nC en (−{#}, {#}) cm; −{#} nC en ({#}, {#}) cm; +{#} nC en ({#}, −{#}) cm; −{#} nC en (−{#}, −{#}) cm. Arrastra para orbitar, usa la rueda para hacer zoom, arrastra una esfera para mover su carga.",
+"A charge of +{#} nC at ({#}, −{#}) cm.":
+  "Una carga de +{#} nC en ({#}, −{#}) cm.",
+"A charge of −{#} nC at (−{#}, −{#}) cm.":
+  "Una carga de −{#} nC en (−{#}, −{#}) cm.",
+"A rod of +{#} nC, {#} cm long, centered at ({#}, {#}) cm, pointing {#}° from +x.":
+  "Una varilla de +{#} nC y {#} cm de largo, centrada en ({#}, {#}) cm, que apunta a {#}° desde +x.",
+"The potential energy is shown for point charges only.":
+  "La energía potencial se muestra solo para cargas puntuales.",
 "Field map on a {#} cm grid with a rod of +{#} nC, {#} cm long, centered at ({#}, {#}) cm, pointing {#}° from +x.":
   "Mapa del campo en una cuadrícula de {#} cm con una varilla de +{#} nC, de {#} cm de largo, centrada en ({#}, {#}) cm, que apunta a {#}° desde +x.",
 "Potential landscape in 3D, height is V, with a rod of +{#} nC, {#} cm long, centered at ({#}, {#}) cm, pointing {#}° from +x. Drag to orbit, scroll to zoom, drag a sphere to move its charge.":
@@ -232,10 +228,6 @@ VDI18N.add('es', 'demo/coulomb-sandbox', {
   "Carga puntual, kQ/r²<small>r desde el centro; el límite lejos</small>",
 "point charges only":
   "solo cargas puntuales",
-"A ring of +{#} nC, radius {#} cm, standing perpendicular to the map, centered at ({#}, {#}) cm, axis {#}° from +x.":
-  "Un anillo de +{#} nC, de radio {#} cm, perpendicular al mapa, centrado en ({#}, {#}) cm, con su eje a {#}° desde +x.",
-"The potential energy is shown for point charges only.":
-  "La energía potencial se muestra solo para cargas puntuales.",
 "Field map on a {#} cm grid with a ring of +{#} nC, radius {#} cm, standing perpendicular to the map, centered at ({#}, {#}) cm, axis {#}° from +x.":
   "Mapa del campo en una cuadrícula de {#} cm con un anillo de +{#} nC, radio {#} cm, perpendicular al mapa, centrado en ({#}, {#}) cm, eje a {#}° desde +x.",
 "Potential landscape in 3D, height is V, with a ring of +{#} nC, radius {#} cm, standing perpendicular to the map, centered at ({#}, {#}) cm, axis {#}° from +x. Drag to orbit, scroll to zoom, drag a sphere to move its charge.":
@@ -270,6 +262,8 @@ VDI18N.add('es', 'demo/coulomb-sandbox', {
   "Arco en su centro, 2kλ sen(θ/{#})/R<small>exacto solo en el centro (θ es el ángulo del arco)</small>",
 "An arc of +{#} nC, radius {#} cm, spanning {#}°, lying in the map, centered at ({#}, {#}) cm, its middle {#}° from +x.":
   "Un arco de +{#} nC, de radio {#} cm, que abarca {#}°, contenido en el mapa, centrado en ({#}, {#}) cm, con su punto medio a {#}° desde +x.",
+"Field |E| = {#} V/m.":
+  "Campo |E| = {#} V/m.",
 "s (cm) along x = {#} cm":
   "s (cm) a lo largo de x = {#} cm",
 "s (cm) along Arc axis":
@@ -294,6 +288,22 @@ VDI18N.add('es', 'demo/coulomb-sandbox', {
   "Cambia la carga seleccionada en {#} nC",
 "Turn the selected rod, ring or disk by {#} degrees (Shift + R turns it the other way)":
   "Gira la varilla, el anillo o el disco seleccionado {#} grados (Shift + R lo gira en el otro sentido)",
+"A charge of +{#} nC at ({#}, {#}) cm.":
+  "Una carga de +{#} nC en ({#}, {#}) cm.",
+"Potential energy of the charges {#} μJ.":
+  "Energía potencial de las cargas {#} μJ.",
+"A charge of −{#} nC at ({#}, −{#}) cm.":
+  "Una carga de −{#} nC en ({#}, −{#}) cm.",
+"A ring of +{#} nC, radius {#} cm, standing perpendicular to the map, centered at ({#}, {#}) cm, axis {#}° from +x.":
+  "Un anillo de +{#} nC, de radio {#} cm, perpendicular al mapa, centrado en ({#}, {#}) cm, con su eje a {#}° desde +x.",
+"A disk of +{#} nC, radius {#} cm, standing perpendicular to the map, centered at ({#}, {#}) cm, axis {#}° from +x.":
+  "Un disco de +{#} nC y radio de {#} cm, perpendicular al mapa, centrado en ({#}, {#}) cm, con su eje a {#}° desde +x.",
 "The 3D view could not load its graphics library. Check your connection and reload the page.":
-  "La vista 3D no pudo cargar su biblioteca de gráficos. Revisa tu conexión y vuelve a cargar la página."
+  "La vista 3D no pudo cargar su biblioteca de gráficos. Revisa tu conexión y vuelve a cargar la página.",
+"Describe the picture":
+  "Describir la imagen",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles"
 });

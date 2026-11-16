@@ -2,8 +2,6 @@
 VDI18N.add('es', 'demo/projectile-drag', {
 "residuals":
   "residuos",
-"Describe the picture":
-  "Describir la imagen",
 "x (m) vs t (s)":
   "x (m) en función de t (s)",
 "height y (m) vs t (s)":
@@ -58,8 +56,6 @@ VDI18N.add('es', 'demo/projectile-drag', {
   "Sin aire el alcance sería de {#} m.",
 "{#} of {#} shots are on the graphs.":
   "{#} de {#} tiros están en las gráficas.",
-"Time controls":
-  "Controles de tiempo",
 "Fly every shot again from the same start time, so they race":
   "Volver a lanzar todos los tiros desde el mismo instante inicial, para que compitan",
 "Replay all":
@@ -98,18 +94,12 @@ VDI18N.add('es', 'demo/projectile-drag', {
   "Rapidez de órbita circular aquí de {#} km/s, rapidez de escape de {#} km/s.",
 "No shots fired yet.":
   "Todavía no se ha disparado ningún tiro.",
-"Paused.":
-  "En pausa.",
 "Run or pause the clock of every shot":
   "Corre o pausa el reloj de todos los disparos",
 "Move every shot one minute further along":
   "Avanza cada disparo un minuto",
-"Step":
-  "Paso",
 "Clear every shot and set the clock back to zero":
   "Borra todos los disparos y regresa el reloj a cero",
-"<span>Speed</span>":
-  "<span>Velocidad</span>",
 "Earth, the mountain and the paths are to scale; the ball, the cannon and the arrows are not.":
   "La Tierra, la montaña y las trayectorias están a escala; la bala, el cañón y las flechas no.",
 "Divider between the flight and the graph":
@@ -432,10 +422,6 @@ VDI18N.add('es', 'demo/projectile-drag', {
   "siguiente {#} m",
 "Distances and heights to scale; balls drawn {#}× their real size":
   "Distancias y alturas a escala; pelotas dibujadas {#}× su tamaño real",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
 "Energy bars, in J: Kinetic {#}, Potential {#}, To drag {#}, Total {#}.":
   "Barras de energía, en J: Cinética {#}, Potencial {#}, Al arrastre {#}, Total {#}.",
 "The best launch angle for range, with this drag, is {#}°.":
@@ -460,6 +446,10 @@ VDI18N.add('es', 'demo/projectile-drag', {
   "Aún no hay disparos. Presiona Disparar.",
 "No shots yet. Press Launch, or pick a Compare set.":
   "Aún no hay tiros. Pulsa Lanzar, o elige un conjunto de Comparar.",
+"No shot is in the air.":
+  "No hay ningún tiro en el aire.",
+"No shots yet.":
+  "Todavía no hay tiros.",
 "Balls {#}× real size; distances to scale":
   "Pelotas {#}× su tamaño real; distancias a escala",
 "<span>Stopwatch<small>No clock in this view</small></span>":
@@ -482,10 +472,6 @@ VDI18N.add('es', 'demo/projectile-drag', {
   "Órbita: cae para siempre y nunca llega al suelo",
 "Faster than a circular orbit: the ball climbs away on an ellipse and comes back to the mountain top once each orbit.":
   "Más rápido que una órbita circular: la bala se aleja en una elipse y regresa a la cima de la montaña una vez en cada órbita.",
-"No shot is in the air.":
-  "No hay ningún tiro en el aire.",
-"No shots yet.":
-  "Todavía no hay tiros.",
 "This shot orbits the Earth and never lands.":
   "Este tiro orbita la Tierra y nunca cae.",
 "{#} of {#} shots are on the picture.":
@@ -518,6 +504,8 @@ VDI18N.add('es', 'demo/projectile-drag', {
   "<span>{#}</span><span><span>Pelota de béisbol</span><span><span><b>{#} g</b></span><span>{#} cm</span><span>Cd {#}</span><span>ρ {#}</span></span><span><span>{#} m/s</span><span>{#}°</span><span>h {#} m</span></span><span><span>R {#} m</span><span>H {#} m</span><span>T {#} s</span></span><span><span>impacto {#} m/s</span><span>vₜ {#} m/s</span></span></span>",
 "Four balls the size of a baseball with ½, {#}, {#} and {#} times its mass. At the same speed they feel the same drag force, but the heavier ones are slowed less.":
   "Cuatro pelotas del tamaño de una de béisbol con ½, {#}, {#} y {#} veces su masa. A la misma rapidez sienten la misma fuerza de arrastre, pero las más pesadas se frenan menos.",
+"This shot escapes and never comes back.":
+  "Este tiro escapa y nunca regresa.",
 "Same mass, different diameter. The drag force grows with the area, so with the diameter squared.":
   "Misma masa, distinto diámetro. La fuerza de arrastre crece con el área, es decir, con el cuadrado del diámetro.",
 "<span>{#}</span><span><span><span>{#} g</span><span><b>{#} cm</b></span><span>Cd {#}</span><span>ρ {#}</span></span><span><span>{#} m/s</span><span>{#}°</span><span>h {#} m</span></span><span><span>R {#} m</span><span>H {#} m</span><span>T {#} s</span></span><span><span>impact {#} m/s</span><span>vₜ {#} m/s</span></span></span>":
@@ -546,16 +534,14 @@ VDI18N.add('es', 'demo/projectile-drag', {
   "Captura el alcance de tiros a dos o más ángulos (tres dan barras de error), con la misma rapidez, desde el suelo, con Resistencia del aire Desactivada.",
 "sin {#}θ":
   "sin {#}θ",
-"This shot escapes and never comes back.":
-  "Este tiro escapa y nunca regresa.",
 "Air resistance is off, so the path is the vacuum parabola, and the mass and size of the ball no longer matter.":
   "La resistencia del aire está desactivada, así que la trayectoria es la parábola en el vacío, y la masa y el tamaño de la pelota ya no importan.",
+"No air drag, so the path is a parabola.":
+  "No hay resistencia del aire, así que la trayectoria es una parábola.",
 "<span>{#}</span><span><span>Baseball</span><span><span>{#} g</span><span>{#} cm</span><span>Cd {#}</span><span><b>ρ {#}</b></span></span><span><span>{#} m/s</span><span><b>{#}°</b></span><span>h {#} m</span></span><span><span>R {#} m</span><span>H {#} m</span><span>T {#} s</span></span><span><span>impact {#} m/s</span><span>vₜ {#} m/s</span></span></span>":
   "<span>{#}</span><span><span>Pelota de béisbol</span><span><span>{#} g</span><span>{#} cm</span><span>Cd {#}</span><span><b>ρ {#}</b></span></span><span><span>{#} m/s</span><span><b>{#}°</b></span><span>h {#} m</span></span><span><span>R {#} m</span><span>H {#} m</span><span>T {#} s</span></span><span><span>impacto {#} m/s</span><span>vₜ {#} m/s</span></span></span>",
 "<span>{#}</span><span><span>Baseball</span><span><span>{#} g</span><span>{#} cm</span><span>Cd {#}</span><span><b>drag off</b></span></span><span><span>{#} m/s</span><span><b>{#}°</b></span><span>h {#} m</span></span><span><span>R {#} m</span><span>H {#} m</span><span>T {#} s</span></span><span><span>impact {#} m/s</span><span>vₜ ∞</span></span></span>":
   "<span>{#}</span><span><span>Pelota de béisbol</span><span><span>{#} g</span><span>{#} cm</span><span>Cd {#}</span><span><b>sin arrastre</b></span></span><span><span>{#} m/s</span><span><b>{#}°</b></span><span>h {#} m</span></span><span><span>R {#} m</span><span>H {#} m</span><span>T {#} s</span></span><span><span>impacto {#} m/s</span><span>vₜ ∞</span></span></span>",
-"No air drag, so the path is a parabola.":
-  "No hay resistencia del aire, así que la trayectoria es una parábola.",
 "Lower or raise the launch angle (Shift for {#} degrees)":
   "Baja o sube el ángulo de lanzamiento (Shift para {#} grados)",
 "Step the time cursor back or forward (Shift for {#} steps)":
@@ -566,14 +552,14 @@ VDI18N.add('es', 'demo/projectile-drag', {
   "Cañón de Newton: sube o baja el ángulo de lanzamiento (Shift para {#} grados)",
 "Newton's cannon: raise or lower the mountain (Shift for {#} km)":
   "Cañón de Newton: sube o baja la montaña (Shift para {#} km)",
-"Newton's cannon: fire":
-  "Cañón de Newton: disparar",
 "<span>{#}</span><span><span><span>v₀ <b>{#} km/s</b></span><span>h {#} km</span></span><span><span>escapes</span></span></span>":
   "<span>{#}</span><span><span><span>v₀ <b>{#} km/s</b></span><span>h {#} km</span></span><span><span>escapa</span></span></span>",
 "Plot of R against sin {#}θ from your readings, {#} points, with a least squares line with slope and intercept, and a strip of residuals underneath. Show data table lists the points.":
   "Gráfica de R en función de sin {#}θ con tus lecturas, {#} puntos, con una recta de mínimos cuadrados con pendiente y ordenada al origen, y una franja de residuos debajo. Mostrar la tabla de datos lista los puntos.",
 "No drag, so the path is the vacuum parabola.":
   "Sin arrastre, así que la trayectoria es la parábola en el vacío.",
+"A {#} kg ball, {#} cm across, launched at {#} m/s and {#}° above level, from {#} m up.":
+  "Una pelota de {#} kg, de {#} cm de diámetro, lanzada a {#} m/s y {#}° sobre la horizontal, desde {#} m de altura.",
 "<span>{#}</span><span><span><span><b>{#} g</b></span><span>{#} cm</span><span>Cd {#}</span><span>ρ {#}</span></span><span><span>{#} m/s</span><span>{#}°</span><span>h {#} m</span></span><span><span>R {#} m</span><span>H {#} m</span><span>T {#} s</span></span><span><span>impact {#} m/s</span><span>vₜ ∞</span></span></span>":
   "<span>{#}</span><span><span><span><b>{#} g</b></span><span>{#} cm</span><span>Cd {#}</span><span>ρ {#}</span></span><span><span>{#} m/s</span><span>{#}°</span><span>h {#} m</span></span><span><span>R {#} m</span><span>H {#} m</span><span>T {#} s</span></span><span><span>impacto {#} m/s</span><span>vₜ ∞</span></span></span>",
 "<span>{#}</span><span><span>Baseball</span><span><span><b>{#} g</b></span><span>{#} cm</span><span>Cd {#}</span><span>ρ {#}</span></span><span><span>{#} m/s</span><span>{#}°</span><span>h {#} m</span></span><span><span>R {#} m</span><span>H {#} m</span><span>T {#} s</span></span><span><span>impact {#} m/s</span><span>vₜ ∞</span></span></span>":
@@ -586,12 +572,12 @@ VDI18N.add('es', 'demo/projectile-drag', {
   "<span>{#}</span><span><span>Pelota de béisbol</span><span><span>{#} g</span><span>{#} cm</span><span><b>Cd {#}</b></span><span>ρ {#}</span></span><span><span>{#} m/s</span><span>{#}°</span><span>h {#} m</span></span><span><span>R {#} m</span><span>H {#} m</span><span>T {#} s</span></span><span><span>impacto {#} m/s</span><span>vₜ ∞</span></span></span>",
 "<span>{#}</span><span><span>Baseball</span><span><span>{#} g</span><span>{#} cm</span><span>Cd {#}</span><span>ρ {#}</span></span><span><span>{#} m/s</span><span><b>{#}°</b></span><span>h {#} m</span></span><span><span>R {#} m</span><span>H {#} m</span><span>T {#} s</span></span><span><span>impact {#} m/s</span><span>vₜ ∞</span></span></span>":
   "<span>{#}</span><span><span>Pelota de béisbol</span><span><span>{#} g</span><span>{#} cm</span><span>Cd {#}</span><span>ρ {#}</span></span><span><span>{#} m/s</span><span><b>{#}°</b></span><span>h {#} m</span></span><span><span>R {#} m</span><span>H {#} m</span><span>T {#} s</span></span><span><span>impacto {#} m/s</span><span>vₜ ∞</span></span></span>",
-"<span>{#}</span><span><span><span>v₀ <b>{#} km/s</b></span><span>h {#} km</span></span><span><span>orbits every {#} min</span></span></span>":
-  "<span>{#}</span><span><span><span>v₀ <b>{#} km/s</b></span><span>h {#} km</span></span><span><span>órbita cada {#} min</span></span></span>",
 "The shot starts inside the air, which slows it.":
   "El tiro empieza dentro del aire, que lo frena.",
-"Playing.":
-  "En marcha.",
+"<span>{#}</span><span><span><span>v₀ <b>{#} km/s</b></span><span>h {#} km</span></span><span><span>orbits every {#} min</span></span></span>":
+  "<span>{#}</span><span><span><span>v₀ <b>{#} km/s</b></span><span>h {#} km</span></span><span><span>órbita cada {#} min</span></span></span>",
+"Shot {#} has flown for {#} h {#} min.":
+  "El tiro {#} ha volado durante {#} h {#} min.",
 "{#} h {#} min ({#} time round)":
   "{#} h {#} min ({#} vuelta)",
 "t = {#} days":
@@ -600,6 +586,24 @@ VDI18N.add('es', 'demo/projectile-drag', {
   "{#} días ({#} vueltas)",
 "Shot {#} has flown for {#} days.":
   "El tiro {#} ha volado durante {#} días.",
+"Describe the picture":
+  "Describir la imagen",
+"Time controls":
+  "Controles de tiempo",
+"Paused.":
+  "En pausa.",
+"Step":
+  "Paso",
+"<span>Speed</span>":
+  "<span>Velocidad</span>",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
+"Newton's cannon: fire":
+  "Cañón de Newton: disparar",
+"Playing.":
+  "En marcha.",
 "Close":
   "Cerrar"
 });

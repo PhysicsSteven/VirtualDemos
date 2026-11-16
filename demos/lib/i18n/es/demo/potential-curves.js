@@ -1,7 +1,5 @@
 /* demo/potential-curves in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/potential-curves', {
-"Describe the picture":
-  "Describir la imagen",
 "of the energy scale":
   "de la escala de energía",
 "Energy (J)":
@@ -22,14 +20,6 @@ VDI18N.add('es', 'demo/potential-curves', {
   "Lee el movimiento en la gráfica de U(x). La distancia entre la línea de energía y la curva es la energía cinética, la partícula da la vuelta donde se encuentran, y la pendiente la empuja cuesta abajo.",
 "x in m · U, E in J · t in s":
   "x en m · U, E en J · t en s",
-"Time controls":
-  "Controles de tiempo",
-"Run for a moment and pause again":
-  "Avanza un momento y vuelve a pausar",
-"Step":
-  "Paso",
-"<span>Speed</span>":
-  "<span>Rapidez</span>",
 "t = {#} s · real time":
   "t = {#} s · tiempo real",
 "The real system in 3D, moving with the simulation.":
@@ -114,8 +104,6 @@ VDI18N.add('es', 'demo/potential-curves', {
   "Puntos de retorno, donde U = E",
 "Bound: the particle moves back and forth between the two turning points.":
   "Ligada: la partícula va y viene entre los dos puntos de retorno.",
-"Period":
-  "Periodo",
 "This orbit, {#}∫dx/v":
   "Esta órbita, {#}∫dx/v",
 "Timed in the simulation":
@@ -178,14 +166,10 @@ VDI18N.add('es', 'demo/potential-curves', {
   "resorte, k = {#} N/m",
 "air supply":
   "suministro de aire",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
-"−{#}×{#}⁻⁸ <span>of the energy scale</span>":
-  "−{#}×{#}⁻⁸ <span>de la escala de energía</span>",
 "glider, m = {#} kg":
   "deslizador, m = {#} kg",
+"−{#}×{#}⁻⁸ <span>of the energy scale</span>":
+  "−{#}×{#}⁻⁸ <span>de la escala de energía</span>",
 "An energy diagram: the potential energy U against position, the total energy E as a dashed line, and the particle below.":
   "Un diagrama de energía: la energía potencial U contra la posición, la energía total E como línea punteada y la partícula abajo.",
 "A mass on a spring.":
@@ -238,8 +222,6 @@ VDI18N.add('es', 'demo/potential-curves', {
   "Energía (kJ)",
 "escapes":
   "escapa",
-"{#}×{#}⁻¹² <span>of the energy scale</span>":
-  "{#}×{#}⁻¹² <span>de la escala de energía</span>",
 "Two stable states with a barrier between them. With E below the barrier top the particle stays in one well; above it, it visits both. Near the barrier energy the period grows without limit: the particle lingers at the top.":
   "Dos estados estables con una barrera entre ellos. Con E por debajo de la cima de la barrera, la partícula se queda en un pozo; por encima, visita ambos. Cerca de la energía de la barrera el periodo crece sin límite: la partícula se demora en la cima.",
 "Barrier height U₀":
@@ -256,6 +238,12 @@ VDI18N.add('es', 'demo/potential-curves', {
   "Espacio fase: v en función de x, una curva por energía, con la separatriz dorada en las energías de las cimas. Con E = {#} J un lazo cerrado entre −{#} m y −{#} m. Mostrar la tabla de datos, en el panel, lista la rapidez en esta órbita.",
 "Period of the orbit against total energy for this well, from E = {#} J to {#} J. The dashed line is the small oscillation period T₀ = {#} s; above E = {#} J the particle escapes. Show data table in the rail lists the points.":
   "Periodo de la órbita en función de la energía total para este pozo, de E = {#} J a {#} J. La línea discontinua es el periodo de oscilaciones pequeñas T₀ = {#} s; por encima de E = {#} J la partícula escapa. Mostrar la tabla de datos, en el panel, lista los puntos.",
+"A particle in a double well.":
+  "Una partícula en un pozo doble.",
+"The particle is at x = −{#} m, where U = {#} J.":
+  "La partícula está en x = −{#} m, donde U = {#} J.",
+"The turning points are x₁ = −{#} m and x₂ = −{#} m.":
+  "Los puntos de retorno son x₁ = −{#} m y x₂ = −{#} m.",
 "Two argon atoms; x is their separation r. With E < {#} they vibrate between turning points: a bound molecule. With E > {#} nothing turns them around, and the molecule breaks apart. The bond length is the minimum at r₀ = {#}^({#}/{#})σ, the dissociation energy is ε.":
   "Dos átomos de argón; x es su separación r. Con E < {#} vibran entre puntos de retorno: una molécula ligada. Con E > {#} nada los hace regresar, y la molécula se disocia. La longitud de enlace es el mínimo en r₀ = {#}^({#}/{#})σ, la energía de disociación es ε.",
 "Release point r":
@@ -314,8 +302,6 @@ VDI18N.add('es', 'demo/potential-curves', {
   "Periodo de la órbita en función de la energía total para este pozo, de E = −{#} J a {#} J. La línea discontinua es el periodo de oscilaciones pequeñas T₀ = {#} s; por encima de E = {#} J la partícula escapa. Mostrar la tabla de datos, en el panel, lista los puntos.",
 "angle θ of the pendulum":
   "ángulo θ del péndulo",
-"dθ/dt":
-  "dθ/dt",
 "Drag the points to shape U(x), then predict the motion before you press Play. Each minimum gets a stable mark and its own small oscillation period.":
   "Arrastra los puntos para dar forma a U(x), luego predice el movimiento antes de pulsar Iniciar. Cada mínimo recibe una marca de estable y su propio periodo de oscilaciones pequeñas.",
 "U(x): a natural cubic spline through the points":
@@ -326,6 +312,8 @@ VDI18N.add('es', 'demo/potential-curves', {
   "Modelo: un spline cúbico natural: suave a través de cada punto, con pendiente y curvatura continuas. Más allá de los puntos de los extremos U continúa como una línea recta, así que si baja hacia afuera la partícula escapa. Pasos de tiempo: Verlet de velocidades con Δt = {#}×{#}⁻⁴ s.",
 "Phase space: v against x, one curve per energy, with the gold separatrix at hilltop energies. At E = {#} J a closed loop between {#} m and {#} m. Show data table in the rail lists the speed on this orbit.":
   "Espacio fase: v en función de x, una curva por energía, con la separatriz dorada en las energías de las cimas. Con E = {#} J un lazo cerrado entre {#} m y {#} m. Mostrar la tabla de datos, en el panel, lista la rapidez en esta órbita.",
+"−{#}×{#}⁻¹⁰ <span>of the energy scale</span>":
+  "−{#}×{#}⁻¹⁰ <span>de la escala de energía</span>",
 "A potential energy curve you draw yourself.":
   "Una curva de energía potencial que dibujas tú.",
 "The turning points are x₁ = {#} m and x₂ = {#} m.":
@@ -338,30 +326,76 @@ VDI18N.add('es', 'demo/potential-curves', {
   "La simulación está en pausa.",
 "{#}×{#}⁻⁹ <span>of the energy scale</span>":
   "{#}×{#}⁻⁹ <span>de la escala de energía</span>",
-"−{#}×{#}⁻¹¹ <span>of the energy scale</span>":
-  "−{#}×{#}⁻¹¹ <span>de la escala de energía</span>",
-"−{#}×{#}⁻¹⁰ <span>of the energy scale</span>":
-  "−{#}×{#}⁻¹⁰ <span>de la escala de energía</span>",
-"ball: illustration only":
-  "esfera: solo ilustración",
 "{#}×{#}⁻¹⁰ <span>of the energy scale</span>":
   "{#}×{#}⁻¹⁰ <span>de la escala de energía</span>",
+"ball: illustration only":
+  "esfera: solo ilustración",
 "Illustration: a ball on a track shaped like U(x), heights in proportion to U, not to scale. The exact motion is the particle on the diagram.":
   "Ilustración: una esfera en un riel con la forma de U(x), alturas en proporción a U, no a escala. El movimiento exacto es el de la partícula en el diagrama.",
-"{#}×{#}⁻¹⁵ <span>of the energy scale</span>":
-  "{#}×{#}⁻¹⁵ <span>de la escala de energía</span>",
+"A roller coaster on a track.":
+  "Una montaña rusa sobre su riel.",
+"The total energy is E = {#} kJ.":
+  "La energía total es E = {#} kJ.",
+"The particle is at x = {#} m, where U = {#} kJ.":
+  "La partícula está en x = {#} m, donde U = {#} kJ.",
+"Its kinetic energy is {#} kJ.":
+  "Su energía cinética es {#} kJ.",
 "−{#}×{#}⁻⁷ <span>of the energy scale</span>":
   "−{#}×{#}⁻⁷ <span>de la escala de energía</span>",
+"Two argon atoms with a Lennard Jones bond.":
+  "Dos átomos de argón con un enlace de Lennard Jones.",
+"The total energy is E = −{#} meV.":
+  "La energía total es E = −{#} meV.",
+"The particle is at r = {#} nm, where U = −{#} meV.":
+  "La partícula está en r = {#} nm, donde U = −{#} meV.",
+"Its kinetic energy is {#} meV.":
+  "Su energía cinética es {#} meV.",
+"The turning points are r₁ = {#} nm and r₂ = {#} nm.":
+  "Los puntos de retorno son r₁ = {#} nm y r₂ = {#} nm.",
+"The period of this orbit is {#} ps.":
+  "El periodo de esta órbita es {#} ps.",
+"The small oscillation period at the bottom of the well is {#} ps.":
+  "El periodo de las oscilaciones pequeñas en el fondo del pozo es {#} ps.",
+"−{#} pN":
+  "−{#} pN",
+"dθ/dt":
+  "dθ/dt",
+"A pendulum that can swing or go over the top.":
+  "Un péndulo que puede oscilar o dar la vuelta completa.",
+"The particle is at θ = {#}° ({#} rad), where U = {#} J.":
+  "La partícula está en θ = {#}° ({#} rad), donde U = {#} J.",
+"The turning points are θ₁ = −{#}° (−{#} rad) and θ₂ = {#}° ({#} rad).":
+  "Los puntos de retorno son θ₁ = −{#}° (−{#} rad) y θ₂ = {#}° ({#} rad).",
 "{#}×{#}⁻¹¹ <span>of the energy scale</span>":
   "{#}×{#}⁻¹¹ <span>de la escala de energía</span>",
+"{#}×{#}⁻¹² <span>of the energy scale</span>":
+  "{#}×{#}⁻¹² <span>de la escala de energía</span>",
+"−{#}×{#}⁻¹¹ <span>of the energy scale</span>":
+  "−{#}×{#}⁻¹¹ <span>de la escala de energía</span>",
+"{#}×{#}⁻¹⁵ <span>of the energy scale</span>":
+  "{#}×{#}⁻¹⁵ <span>de la escala de energía</span>",
+"Describe the picture":
+  "Describir la imagen",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
+"<span>Speed</span>":
+  "<span>Rapidez</span>",
+"Period":
+  "Periodo",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "{#}×{#}⁻⁸ <span>of the energy scale</span>":
   "{#}×{#}⁻⁸ <span>de la escala de energía</span>",
 "−{#}×{#}⁻¹² <span>of the energy scale</span>":
   "−{#}×{#}⁻¹² <span>de la escala de energía</span>",
 "Close":
   "Cerrar",
-"−{#} pN":
-  "−{#} pN",
 "−{#} meV":
   "−{#} meV",
 "{#} meV":

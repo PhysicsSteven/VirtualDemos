@@ -1,15 +1,9 @@
 /* demo/optics-bench in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/optics-bench', {
-"Describe the picture":
-  "Describir la imagen",
 "real image":
   "imagen real",
 "on the screen":
   "en la pantalla",
-"Skip to the picture":
-  "Ir a la imagen",
-"Skip to the controls":
-  "Ir a los controles",
 "<a><span>←</span> <span>Huygens's Principle</span></a><a><span>Rainbows</span> <span>→</span></a>":
   "<a><span>←</span> <span>Principio de Huygens</span></a><a><span>Arcoíris</span> <span>→</span></a>",
 "Drag light sources, lenses, mirrors and glass. Rays bend and bounce live, and images form where rays cross.":
@@ -224,6 +218,26 @@ VDI18N.add('es', 'demo/optics-bench', {
   "Las lentes siguen la regla ideal de la lente delgada. Los espejos usan la superficie esférica exacta, así que los rayos lejos del eje, o de un punto del objeto fuera del eje, enfocan un poco distinto de lo que da la ecuación del espejo. Con n ajustable, la dispersión es varias veces más fuerte que en el vidrio crown ordinario para que el espectro se vea fácilmente; los materiales reales (crown N-BK7, flint F2, sílice fundida, agua, diamante) usan sus fórmulas de Sellmeier publicadas (Schott; Malitson {#}; Daimon y Masumura {#}; Peter {#}), y con luz monocromática toman n a {#} nm. La imagen en la pantalla se construye con rayos trazados en el plano del dibujo, girados alrededor del eje de la lente para el resto del objeto. Una superficie refractora desvía cada rayo exactamente según la ley de Snell, sin dispersión; sus dos medios llenan el banco a cada lado (una superficie curva es el extremo de una varilla larga, con su apertura como un diafragma opaco en la cara), y los demás elementos se trazan como si estuvieran en aire. Las lecturas del microscopio y el telescopio suponen el ojo relajado (imagen final en el infinito) y el punto cercano a {#} cm.",
 "Dispersion in a raindrop, and the bows it makes in the sky: open <a>Rainbows</a>.":
   "La dispersión en una gota de lluvia y los arcos que forma en el cielo: abre <a>Arcoíris</a>.",
+"{#} items on the bench, from left to right.":
+  "{#} elementos en el banco, de izquierda a derecha.",
+"Object arrow {#} cm tall at x = −{#} cm, y = {#} cm.":
+  "Flecha objeto de {#} cm de alto en x = −{#} cm, y = {#} cm.",
+"Converging lens at x = {#} cm, y = {#} cm, focal length {#} cm.":
+  "Lente convergente en x = {#} cm, y = {#} cm, distancia focal {#} cm.",
+"Screen at x = {#} cm, y = {#} cm.":
+  "Pantalla en x = {#} cm, y = {#} cm.",
+"Object distance {#} cm.":
+  "Distancia del objeto {#} cm.",
+"Image distance {#} cm.":
+  "Distancia de la imagen {#} cm.",
+"Magnification −{#}.":
+  "Aumento −{#}.",
+"The image is real.":
+  "La imagen es real.",
+"The image is inverted.":
+  "La imagen está invertida.",
+"The image is reduced.":
+  "La imagen está reducida.",
 "virtual image":
   "imagen virtual",
 "Virtual, upright, enlarged":
@@ -250,6 +264,8 @@ VDI18N.add('es', 'demo/optics-bench', {
   "Dos lentes: las lecturas del Microscopio de abajo siguen la imagen a través de ambas.",
 "At infinity (eye relaxed)":
   "En el infinito (ojo relajado)",
+"Converging lens at x = −{#} cm, y = {#} cm, focal length {#} cm.":
+  "Lente convergente en x = −{#} cm, y = {#} cm, distancia focal {#} cm.",
 "The curved end of a glass rod (n = {#}, R = +{#} cm) with a {#} cm aperture. Shrink the aperture to bring the traced image to the paraxial one.":
   "El extremo curvo de una varilla de vidrio (n = {#}, R = +{#} cm) con una apertura de {#} cm. Reduce la apertura para llevar la imagen trazada a la paraxial.",
 "d<sub>i</sub> from n<sub>{#}</sub>/d<sub>o</sub> + n<sub>{#}</sub>/d<sub>i</sub> = (n<sub>{#}</sub> − n<sub>{#}</sub>)/R":
@@ -274,14 +290,10 @@ VDI18N.add('es', 'demo/optics-bench', {
   "acercamiento al foco",
 "heights × {#}":
   "alturas × {#}",
-"White light on a concave mirror, R = {#} cm, f = {#} cm. Reflection turns every color by the same angle, so all the colors meet at one focus. This is one reason every large modern telescope is a reflector.":
-  "Luz blanca sobre un espejo cóncavo, R = {#} cm, f = {#} cm. La reflexión desvía todos los colores en el mismo ángulo, así que todos los colores se juntan en un solo foco. Esta es una razón por la que todos los telescopios grandes modernos son reflectores.",
-"{#} items on the bench, from left to right.":
-  "{#} elementos en el banco, de izquierda a derecha.",
 "Parallel beam at x = −{#} cm, y = {#} cm.":
   "Haz paralelo en x = −{#} cm, y = {#} cm.",
-"Concave mirror at x = {#} cm, y = {#} cm, focal length {#} cm.":
-  "Espejo cóncavo en x = {#} cm, y = {#} cm, distancia focal {#} cm.",
+"White light on a concave mirror, R = {#} cm, f = {#} cm. Reflection turns every color by the same angle, so all the colors meet at one focus. This is one reason every large modern telescope is a reflector.":
+  "Luz blanca sobre un espejo cóncavo, R = {#} cm, f = {#} cm. La reflexión desvía todos los colores en el mismo ángulo, así que todos los colores se juntan en un solo foco. Esta es una razón por la que todos los telescopios grandes modernos son reflectores.",
 "A house {#} cm tall and {#} cm deep lying on the bench, {#} to {#} cm from an {#} cm lens. Each point of it is imaged on its own: the real image is inverted, and its depth is m₁m₂ times the object depth, not m times. Choose another corner in the editor to see its rays, or move the house toward F and watch the depth stretch.":
   "Una casa de {#} cm de alto y {#} cm de fondo acostada en el banco, de {#} a {#} cm de una lente de {#} cm. Cada punto de ella forma su propia imagen: la imagen real está invertida, y su profundidad es m₁m₂ veces la profundidad del objeto, no m veces. Elige otra esquina en el editor para ver sus rayos, o acerca la casa a F y observa cómo se estira la profundidad.",
 "{#} cm (dₒ {#} to {#} cm)":
@@ -318,6 +330,18 @@ VDI18N.add('es', 'demo/optics-bench', {
   "El camino más rápido toca la línea en",
 "Straight line from A to B":
   "Línea recta de A a B",
+"Fermat's principle: light goes from A at (−{#}, {#}) cm to B at ({#}, −{#}) cm by way of the point P on the line.":
+  "Principio de Fermat: la luz va de A en (−{#}, {#}) cm a B en ({#}, −{#}) cm pasando por el punto P de la línea.",
+"The light crosses a boundary along the line, from medium {#} to medium {#}.":
+  "La luz cruza una frontera a lo largo de la línea, del medio {#} al medio {#}.",
+"P is at x = {#} cm.":
+  "P está en x = {#} cm.",
+"Time on this path {#} ns.":
+  "Tiempo en esta trayectoria {#} ns.",
+"Angles from the normal {#}° and {#}°.":
+  "Ángulos con la normal: {#}° y {#}°.",
+"The quickest path is not shown.":
+  "No se muestra la trayectoria más rápida.",
 "mirror":
   "espejo",
 "no: it does not touch the mirror":
@@ -330,34 +354,48 @@ VDI18N.add('es', 'demo/optics-bench', {
   "Vidrio flint, n₁ = {#}",
 "Diamond, n₁ = {#}":
   "Diamante, n₁ = {#}",
-"The quickest path has no worksheet table yet: the readouts and the graph give the times.":
-  "El camino más rápido aún no tiene tabla en la hoja de trabajo: las lecturas y la gráfica dan los tiempos.",
 "Fermat's principle: light goes from A at (−{#}, {#}) cm to B at ({#}, {#}) cm by way of the point P on the line.":
   "Principio de Fermat: la luz va de A en (−{#}, {#}) cm a B en ({#}, {#}) cm pasando por el punto P de la línea.",
 "The light reflects from a mirror along the line.":
   "La luz se refleja en un espejo a lo largo de la línea.",
-"P is at x = {#} cm.":
-  "P está en x = {#} cm.",
-"Time on this path {#} ns.":
-  "Tiempo en esta trayectoria {#} ns.",
-"Angles from the normal {#}° and {#}°.":
-  "Ángulos con la normal: {#}° y {#}°.",
-"The quickest path is not shown.":
-  "No se muestra la trayectoria más rápida.",
+"The quickest path has no worksheet table yet: the readouts and the graph give the times.":
+  "El camino más rápido aún no tiene tabla en la hoja de trabajo: las lecturas y la gráfica dan los tiempos.",
 "t (ns) against x (cm)":
   "t (ns) contra x (cm)",
+"Image distance −{#} cm.":
+  "Distancia de la imagen −{#} cm.",
+"Magnification {#}.":
+  "Aumento {#}.",
+"The image is virtual.":
+  "La imagen es virtual.",
+"The image is upright.":
+  "La imagen está derecha.",
+"The image is enlarged.":
+  "La imagen está agrandada.",
+"Concave mirror at x = {#} cm, y = {#} cm, focal length {#} cm.":
+  "Espejo cóncavo en x = {#} cm, y = {#} cm, distancia focal {#} cm.",
+"Parallel beam at x = −{#} cm, y = −{#} cm.":
+  "Haz paralelo en x = −{#} cm, y = −{#} cm.",
+"Prism with n = {#} at x = {#} cm, y = {#} cm.":
+  "Prisma con n = {#} en x = {#} cm, y = {#} cm.",
+"Semicircle with n = {#} at x = {#} cm, y = {#} cm.":
+  "Semicírculo con n = {#} en x = {#} cm, y = {#} cm.",
+"Spherical surface at x = {#} cm, y = {#} cm.":
+  "Superficie esférica en x = {#} cm, y = {#} cm.",
+"Flat surface at x = {#} cm, y = {#} cm.":
+  "Superficie plana en x = {#} cm, y = {#} cm.",
+"The image is the same size as the object.":
+  "La imagen tiene el mismo tamaño que el objeto.",
+"Shape at x = −{#} cm, y = {#} cm.":
+  "Figura en x = −{#} cm, y = {#} cm.",
+"Describe the picture":
+  "Describir la imagen",
+"Skip to the picture":
+  "Ir a la imagen",
+"Skip to the controls":
+  "Ir a los controles",
 "<a>Worksheet {#}: Lenses and Optical Instruments</a>":
   "<a>Hoja de trabajo {#}: Lentes e instrumentos ópticos</a>",
-"Object arrow {#} cm tall at x = −{#} cm, y = {#} cm.":
-  "Flecha objeto de {#} cm de alto en x = −{#} cm, y = {#} cm.",
-"Converging lens at x = −{#} cm, y = {#} cm, focal length {#} cm.":
-  "Lente convergente en x = −{#} cm, y = {#} cm, distancia focal {#} cm.",
-"Converging lens at x = {#} cm, y = {#} cm, focal length {#} cm.":
-  "Lente convergente en x = {#} cm, y = {#} cm, distancia focal {#} cm.",
-"Fermat's principle: light goes from A at (−{#}, {#}) cm to B at ({#}, −{#}) cm by way of the point P on the line.":
-  "Principio de Fermat: la luz va de A en (−{#}, {#}) cm a B en ({#}, −{#}) cm pasando por el punto P de la línea.",
-"The light crosses a boundary along the line, from medium {#} to medium {#}.":
-  "La luz cruza una frontera a lo largo de la línea, del medio {#} al medio {#}.",
 "Close":
   "Cerrar"
 });

@@ -38,12 +38,6 @@ VDI18N.add('es', 'demo/em-waves', {
   "vacío: bloqueado por el aire",
 "drag to turn · scroll or pinch to zoom":
   "arrastra para girar · desplaza o pellizca para acercar",
-"Describe the picture":
-  "Describir la imagen",
-"Skip to the picture":
-  "Ir a la imagen",
-"Skip to the controls":
-  "Ir a los controles",
 "Electromagnetic Waves":
   "Ondas electromagnéticas",
 "<a>Maxwell’s equations and electromagnetic waves</a>":
@@ -54,12 +48,6 @@ VDI18N.add('es', 'demo/em-waves', {
   "Campos eléctricos y magnéticos que se sostienen mutuamente y viajan a c. E y B se mantienen en ángulo recto entre sí y con la dirección de propagación, y alcanzan su máximo juntos. Cambia la polarización, lee la energía que transporta una onda y observa cómo una antena dipolar lanza una. En un plano, coloca alambres y metal y observa cómo las ondas se reflejan, interfieren y se dispersan.",
 "SI · c = {#}/√(μ₀ε₀) · B₀ = E₀/c · I = ½cε₀E₀²":
   "SI · c = {#}/√(μ₀ε₀) · B₀ = E₀/c · I = ½cε₀E₀²",
-"Time controls":
-  "Controles de tiempo",
-"Run for a moment and pause again":
-  "Avanza un momento y vuelve a pausar",
-"Step":
-  "Paso",
 "What to show":
   "Qué mostrar",
 "Plane wave":
@@ -96,8 +84,6 @@ VDI18N.add('es', 'demo/em-waves', {
   "Amplitud E₀ {#} V/m.",
 "Intensity {#} W/m².":
   "Intensidad {#} W/m².",
-"Playing.":
-  "En reproducción.",
 "Divider between the wave and the side panel":
   "Divisor entre la onda y el panel lateral",
 "<a>Worksheet {#}: Electromagnetic Waves: Fields, Intensity and Pressure</a>":
@@ -330,6 +316,14 @@ VDI18N.add('es', 'demo/em-waves', {
   "eje",
 "θ = {#}° · I/I_max = {#}":
   "θ = {#}° · I/I_max = {#}",
+"An oscillating dipole antenna with the pattern of its radiation, a donut around the antenna axis.":
+  "Una antena dipolo oscilante con el patrón de su radiación, una dona alrededor del eje de la antena.",
+"Direction {#}° from the dipole axis.":
+  "Dirección {#}° desde el eje del dipolo.",
+"The far field intensity there is {#} of the maximum.":
+  "La intensidad del campo lejano ahí es {#} del máximo.",
+"The near field reaches out to {#} mm.":
+  "El campo cercano llega hasta {#} mm.",
 "probe":
   "sonda",
 "E along the wires, out of or into the page":
@@ -448,6 +442,24 @@ VDI18N.add('es', 'demo/em-waves', {
   "Componentes x e y iguales separadas un cuarto de periodo (ψ = {#}°, δ = −{#}°). En un instante las puntas de E forman una hélice a lo largo de z; en un lugar, E mantiene su longitud y gira en sentido horario cuando miras de frente a la onda: circular derecha. Cambia δ para estados elípticos; δ = {#} o ±{#}° da lineal.",
 "Right circular: clockwise as you face the wave":
   "Circular derecha: sentido horario cuando miras de frente a la onda",
+"Frequency {#} THz.":
+  "Frecuencia {#} THz.",
+"Wavelength {#} nm.":
+  "Longitud de onda {#} nm.",
+"Period {#} fs.":
+  "Periodo {#} fs.",
+"The band is Visible.":
+  "La banda es visible.",
+"The color is green.":
+  "El color es verde.",
+"Does it reach the ground? yes: the optical window.":
+  "¿Llega al suelo? sí: la ventana óptica.",
+"Right circular polarization: clockwise as you face the wave.":
+  "Polarización circular derecha: en el sentido de las manecillas del reloj, visto de frente a la onda.",
+"Amplitude E₀ {#} kV/m.":
+  "Amplitud E₀ {#} kV/m.",
+"Intensity {#} kW/m².":
+  "Intensidad {#} kW/m².",
 "B₀ = E₀/c = {#} pT":
   "B₀ = E₀/c = {#} pT",
 "FM radio at {#} MHz, λ = {#} m. Far from the transmitter the wave is weak, I = {#} µW/m² and E₀ = {#} mV/m, yet a receiver easily detects it. The radio band sits at the far left of the spectrum below.":
@@ -468,18 +480,6 @@ VDI18N.add('es', 'demo/em-waves', {
   "{#} pJ/m³",
 "{#} pPa":
   "{#} pPa",
-"An oscillating dipole antenna with the pattern of its radiation, a donut around the antenna axis.":
-  "Una antena dipolo oscilante con el patrón de su radiación, una dona alrededor del eje de la antena.",
-"Frequency {#} MHz.":
-  "Frecuencia {#} MHz.",
-"Wavelength {#} m.":
-  "Longitud de onda {#} m.",
-"Direction {#}° from the dipole axis.":
-  "Dirección {#}° desde el eje del dipolo.",
-"The far field intensity there is {#} of the maximum.":
-  "La intensidad del campo lejano ahí es {#} del máximo.",
-"The near field reaches out to {#} mm.":
-  "El campo cercano llega hasta {#} mm.",
 "The same guide at {#} GHz, above the {#} GHz cutoff of TE20: two half waves of E across the wide side, pointing opposite ways. At this frequency TE10 travels too; a real guide is used below {#} GHz so only one mode can carry the signal.":
   "La misma guía a {#} GHz, arriba del corte de {#} GHz de TE20: dos medias ondas de E a lo ancho del lado largo, apuntando en sentidos opuestos. A esta frecuencia TE10 también se propaga; una guía real se usa debajo de {#} GHz para que un solo modo lleve la señal.",
 "TE10, TE20":
@@ -536,6 +536,10 @@ VDI18N.add('es', 'demo/em-waves', {
   "TM110",
 "TM110 {#}, TE011 {#}, TE101 {#}, TE111 {#}, TM111 {#}, TM120 {#} GHz":
   "TM110 {#}, TE011 {#}, TE101 {#}, TE111 {#}, TM111 {#}, TM120 {#} GHz",
+"Frequency {#} MHz.":
+  "Frecuencia {#} MHz.",
+"Wavelength {#} m.":
+  "Longitud de onda {#} m.",
 "A cube {#} mm on a side. TE101, TE011 and TM110 all ring at the same {#} GHz: three modes, one frequency. Step through them with m, n and p and the TE | TM switch.":
   "Un cubo de {#} mm de lado. TE101, TE011 y TM110 resuenan todos a los mismos {#} GHz: tres modos, una frecuencia. Recórrelos con m, n y p y el selector TE | TM.",
 "TE012 · {#} GHz":
@@ -586,12 +590,36 @@ VDI18N.add('es', 'demo/em-waves', {
   "Arrastra para borrar metal y alambres.",
 "Tap to put the probe there and read ⟨E²⟩, the field squared averaged over one period.":
   "Toca para poner la sonda ahí y leer ⟨E²⟩, el campo al cuadrado promediado en un periodo.",
-"Paused.":
-  "En pausa.",
 "Left circular (counterclockwise)":
   "Circular izquierda (antihorario)",
+"Period {#} ns.":
+  "Periodo {#} ns.",
+"The band is Radio.":
+  "La banda es radio.",
+"Left circular polarization: counterclockwise as you face the wave.":
+  "Polarización circular izquierda: antihoraria vista de frente a la onda.",
+"Intensity {#} mW/m².":
+  "Intensidad {#} mW/m².",
 "beam":
   "haz",
+"A map of the electric field in a plane around wires and metal, drawn from a wave simulation.":
+  "Un mapa del campo eléctrico en un plano alrededor de alambres y metal, dibujado a partir de una simulación de ondas.",
+"A wide beam meets a wall with a slit a quarter wavelength wide.":
+  "Un haz ancho encuentra una pared con una rendija de un cuarto de longitud de onda de ancho.",
+"The electric field lies in the page.":
+  "El campo eléctrico está en el plano de la página.",
+"No wires.":
+  "Sin alambres.",
+"A wide beam enters from the left.":
+  "Un haz ancho entra desde la izquierda.",
+"The shading shows the average intensity over the last period.":
+  "El sombreado muestra la intensidad promedio durante el último periodo.",
+"The probe has no wire to measure from.":
+  "La sonda no tiene un alambre desde el cual medir.",
+"The probe needs one period to read ⟨E²⟩.":
+  "La sonda necesita un periodo para leer ⟨E²⟩.",
+"{#} periods since the start.":
+  "{#} periodos desde el inicio.",
 "TM111 in a cavity":
   "TM111 en una cavidad",
 "Cross section at z = d/{#}":
@@ -646,22 +674,12 @@ VDI18N.add('es', 'demo/em-waves', {
   "Se muestra el campo E.",
 "The B field is shown.":
   "Se muestra el campo B.",
-"Frequency {#} THz.":
-  "Frecuencia {#} THz.",
-"Wavelength {#} nm.":
-  "Longitud de onda {#} nm.",
-"Period {#} fs.":
-  "Periodo {#} fs.",
-"The band is Visible.":
-  "La banda es visible.",
 "The color is red.":
   "El color es rojo.",
-"Does it reach the ground? yes: the optical window.":
-  "¿Llega al suelo? sí: la ventana óptica.",
-"Amplitude E₀ {#} kV/m.":
-  "Amplitud E₀ {#} kV/m.",
-"Intensity {#} kW/m².":
-  "Intensidad {#} kW/m².",
+"Amplitude E₀ {#} mV/m.":
+  "Amplitud E₀ {#} mV/m.",
+"Intensity {#} µW/m².":
+  "Intensidad {#} µW/m².",
 "no: reflected back to space by the ionosphere":
   "no: la ionosfera la refleja de vuelta al espacio",
 "slowed {#}×{#}⁵ times":
@@ -672,18 +690,10 @@ VDI18N.add('es', 'demo/em-waves', {
   "Longitud de onda {#} km.",
 "Period {#} µs.":
   "Periodo {#} µs.",
-"The band is Radio.":
-  "La banda es radio.",
 "Does it reach the ground? no: reflected back to space by the ionosphere.":
   "¿Llega al suelo? no: la ionosfera la refleja de vuelta al espacio.",
-"Left circular polarization: counterclockwise as you face the wave.":
-  "Polarización circular izquierda: antihoraria vista de frente a la onda.",
-"Intensity {#} mW/m².":
-  "Intensidad {#} mW/m².",
 "slowed {#}×{#}⁶ times":
   "desacelerada {#}×{#}⁶ veces",
-"Period {#} ns.":
-  "Periodo {#} ns.",
 "slowed {#}×{#}⁷ times":
   "desacelerada {#}×{#}⁷ veces",
 "slowed {#}×{#}⁹ times":
@@ -700,20 +710,22 @@ VDI18N.add('es', 'demo/em-waves', {
   "¿Llega al suelo? sí: la ventana de {#} mm.",
 "mostly: the {#} mm window, from high, dry sites":
   "en su mayoría: la ventana de {#} mm, desde sitios altos y secos",
+"Does it reach the ground? mostly: the {#} mm window, from high, dry sites.":
+  "¿Llega al suelo? en su mayoría: la ventana de {#} mm, desde sitios altos y secos.",
 "no: absorbed by water vapor and carbon dioxide":
   "no: la absorben el vapor de agua y el dióxido de carbono",
 "Does it reach the ground? no: absorbed by water vapor and carbon dioxide.":
   "¿Llega al suelo? no: la absorben el vapor de agua y el dióxido de carbono.",
-"Does it reach the ground? mostly: the {#} mm window, from high, dry sites.":
-  "¿Llega al suelo? en su mayoría: la ventana de {#} mm, desde sitios altos y secos.",
 "partly: the {#} µm window, from high, dry sites":
   "en parte: la ventana de {#} µm, desde sitios altos y secos",
-"slowed {#}×{#}¹² times":
-  "desacelerada {#}×{#}¹² veces",
 "Wavelength {#} µm.":
   "Longitud de onda {#} µm.",
 "The band is Infrared.":
   "La banda es infrarrojo.",
+"Does it reach the ground? partly: the {#} µm window, from high, dry sites.":
+  "¿Llega al suelo? en parte: la ventana de {#} µm, desde sitios altos y secos.",
+"slowed {#}×{#}¹² times":
+  "desacelerada {#}×{#}¹² veces",
 "barely: the {#} µm window, from high, dry sites":
   "apenas: la ventana de {#} µm, desde sitios altos y secos",
 "Does it reach the ground? barely: the {#} µm window, from high, dry sites.":
@@ -734,6 +746,8 @@ VDI18N.add('es', 'demo/em-waves', {
   "¿Llega al suelo? en parte: la ventana N.",
 "partly: the N window (ozone absorbs near {#} µm)":
   "en parte: la ventana N (el ozono absorbe cerca de {#} µm)",
+"Does it reach the ground? partly: the N window (ozone absorbs near {#} µm).":
+  "¿Llega al suelo? en parte: la ventana N (el ozono absorbe cerca de {#} µm).",
 "slowed {#}×{#}¹⁴ times":
   "desacelerada {#}×{#}¹⁴ veces",
 "partly: the M window":
@@ -742,6 +756,8 @@ VDI18N.add('es', 'demo/em-waves', {
   "¿Llega al suelo? en parte: la ventana M.",
 "yes: the L window":
   "sí: la ventana L",
+"Does it reach the ground? yes: the L window.":
+  "¿Llega al suelo? sí: la ventana L.",
 "partly: the L window":
   "en parte: la ventana L",
 "Does it reach the ground? partly: the L window.":
@@ -756,12 +772,12 @@ VDI18N.add('es', 'demo/em-waves', {
   "¿Llega al suelo? sí: la ventana H del infrarrojo cercano.",
 "yes: the J window of the near infrared":
   "sí: la ventana J del infrarrojo cercano",
+"Does it reach the ground? yes: the J window of the near infrared.":
+  "¿Llega al suelo? sí: la ventana J del infrarrojo cercano.",
 "Visible (orange)<i></i>":
   "Visible (naranja)<i></i>",
 "Visible (yellow)<i></i>":
   "Visible (amarillo)<i></i>",
-"The color is green.":
-  "El color es verde.",
 "Visible (blue)<i></i>":
   "Visible (azul)<i></i>",
 "Visible (violet)<i></i>":
@@ -770,14 +786,14 @@ VDI18N.add('es', 'demo/em-waves', {
   "La banda es ultravioleta.",
 "no: absorbed by the ozone layer":
   "no: la absorbe la capa de ozono",
-"{#} as":
-  "{#} as",
 "Frequency {#} PHz.":
   "Frecuencia {#} PHz.",
-"Period {#} as.":
-  "Periodo {#} as.",
 "Does it reach the ground? no: absorbed by the ozone layer.":
   "¿Llega al suelo? no: la absorbe la capa de ozono.",
+"{#} as":
+  "{#} as",
+"Period {#} as.":
+  "Periodo {#} as.",
 "no: absorbed by oxygen and nitrogen high in the atmosphere":
   "no: la absorben el oxígeno y el nitrógeno en lo alto de la atmósfera",
 "Does it reach the ground? no: absorbed by oxygen and nitrogen high in the atmosphere.":
@@ -786,6 +802,10 @@ VDI18N.add('es', 'demo/em-waves', {
   "desacelerada {#}×{#}¹⁶ veces",
 "no: absorbed high in the atmosphere":
   "no: se absorbe en lo alto de la atmósfera",
+"The band is X-ray.":
+  "La banda es rayos x.",
+"Does it reach the ground? no: absorbed high in the atmosphere.":
+  "¿Llega al suelo? no: se absorbe en lo alto de la atmósfera.",
 "3D view unavailable: fixed oblique drawing":
   "Vista 3D no disponible: dibujo oblicuo fijo",
 "From above: the middle plane, y = b/{#} (z along the guide, left to right)":
@@ -844,16 +864,12 @@ VDI18N.add('es', 'demo/em-waves', {
   "TM420",
 "TE323":
   "TE323",
-"The band is X-ray.":
-  "La banda es rayos x.",
-"Does it reach the ground? no: absorbed high in the atmosphere.":
-  "¿Llega al suelo? no: se absorbe en lo alto de la atmósfera.",
 "slowed {#}×{#}¹⁷ times":
   "desacelerada {#}×{#}¹⁷ veces",
-"slowed {#}×{#}¹⁸ times":
-  "desacelerada {#}×{#}¹⁸ veces",
 "Wavelength {#} pm.":
   "Longitud de onda {#} pm.",
+"slowed {#}×{#}¹⁸ times":
+  "desacelerada {#}×{#}¹⁸ veces",
 "{#} zs":
   "{#} zs",
 "Frequency {#} EHz.":
@@ -866,10 +882,26 @@ VDI18N.add('es', 'demo/em-waves', {
   "desacelerada {#}×{#}²⁰ veces",
 "The band is Gamma ray.":
   "La banda es rayos gamma.",
-"Wavelength {#} fm.":
-  "Longitud de onda {#} fm.",
 "slowed {#}×{#}²¹ times":
   "desacelerada {#}×{#}²¹ veces",
+"Wavelength {#} fm.":
+  "Longitud de onda {#} fm.",
 "Frequency {#} ZHz.":
-  "Frecuencia {#} ZHz."
+  "Frecuencia {#} ZHz.",
+"Describe the picture":
+  "Describir la imagen",
+"Skip to the picture":
+  "Ir a la imagen",
+"Skip to the controls":
+  "Ir a los controles",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
+"Playing.":
+  "En reproducción.",
+"Paused.":
+  "En pausa."
 });

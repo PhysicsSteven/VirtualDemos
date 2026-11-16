@@ -1,7 +1,5 @@
 /* demo/radioactive-decay in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/radioactive-decay', {
-"Describe the picture":
-  "Describir la imagen",
 "parent {#}":
   "madre {#}",
 "daughter {#}":
@@ -48,12 +46,6 @@ VDI18N.add('es', 'demo/radioactive-decay', {
   "Número de núcleos padre: {#}, esperado {#}.",
 "Number of daughter nuclei: {#}, expected {#}.":
   "Número de núcleos hijo: {#}, esperado {#}.",
-"Time controls":
-  "Controles de tiempo",
-"Step":
-  "Paso",
-"<span>Speed</span>":
-  "<span>Rapidez</span>",
 "Many nuclei":
   "Muchos núcleos",
 "Alpha decay":
@@ -264,14 +256,8 @@ VDI18N.add('es', 'demo/radioactive-decay', {
   "madres",
 "daughters":
   "hijas",
-"Skip to the picture":
-  "Ir a la imagen",
-"Skip to the controls":
-  "Ir a los controles",
 "{#} s = {#} steps":
   "{#} s = {#} pasos",
-"t = {#} step":
-  "t = {#} paso",
 "{#}% <span>of {#}; expected {#}%</span>":
   "{#}% <span>de {#}; esperado {#}%</span>",
 "¹⁴⁶Sm":
@@ -366,20 +352,6 @@ VDI18N.add('es', 'demo/radioactive-decay', {
   "○ modelo de Gamow, r₀ = {#} fm",
 "t = {#} s · {#} s here is {#} ns":
   "t = {#} s · {#} s aquí son {#} ns",
-"The run is paused.":
-  "La corrida está en pausa.",
-"The parents are below the expected number by {#} standard deviations.":
-  "Los padres están por debajo de lo esperado en {#} desviaciones estándar.",
-"Alpha decay of ²¹²Po into ²⁰⁸Pb and an alpha particle, with the potential energy against distance and a Geiger–Nuttall plot.":
-  "Decaimiento alfa del ²¹²Po en ²⁰⁸Pb y una partícula alfa, con la energía potencial contra la distancia y una gráfica de Geiger–Nuttall.",
-"The alpha energy is {#} MeV and the Coulomb barrier tops out at {#} MeV.":
-  "La energía alfa es de {#} MeV y la barrera de Coulomb llega a un máximo de {#} MeV.",
-"The chance of getting out on each hit is about {#} × {#}⁻¹⁵.":
-  "La probabilidad de salir en cada choque es de alrededor de {#} × {#}⁻¹⁵.",
-"The model half life is {#} ns and the measured half life is {#} ns.":
-  "La vida media del modelo es de {#} ns y la vida media medida es de {#} ns.",
-"The nucleus has not started waiting yet.":
-  "El núcleo todavía no empieza a esperar.",
 "One decay":
   "Una desintegración",
 "Carbon {#}, the radiocarbon of dating, gives electrons of at most {#} keV.":
@@ -422,6 +394,22 @@ VDI18N.add('es', 'demo/radioactive-decay', {
   "■ antineutrino",
 "{#} decays":
   "{#} desintegraciones",
+"The run is paused.":
+  "La corrida está en pausa.",
+"The parents are above the expected number by {#} standard deviations.":
+  "Los padres están por encima de lo esperado en {#} desviaciones estándar.",
+"Beta minus decay of ¹⁴C into ¹⁴N, an electron and an antineutrino, with the energy spectrum of the electrons.":
+  "Decaimiento beta menos del ¹⁴C en ¹⁴N, un electrón y un antineutrino, con el espectro de energía de los electrones.",
+"The Q value is {#} keV.":
+  "El valor Q es de {#} keV.",
+"The mean energy of the spectrum is {#} keV.":
+  "La energía media del espectro es de {#} keV.",
+"The neutrino carries off the rest of the energy.":
+  "El neutrino se lleva el resto de la energía.",
+"Decays are paused.":
+  "Los decaimientos están en pausa.",
+"Decays so far: {#}.":
+  "Decaimientos hasta ahora: {#}.",
 "Living things take up carbon {#} from the air. After death it is not replaced, so the fraction left tells the age. Try the dating task below.":
   "Los seres vivos toman carbono {#} del aire. Después de la muerte no se repone, así que la fracción que queda indica la edad. Prueba la tarea de datación de abajo.",
 "t = {#} yr":
@@ -442,6 +430,20 @@ VDI18N.add('es', 'demo/radioactive-decay', {
   "{#} ± {#} años es la evaluación actual (NUBASE2020). Muchos libros de texto todavía dan el valor anterior de {#} años (la vida media de Cambridge); los laboratorios de radiocarbono todavía reportan las edades con los {#} años de Libby por convención y luego las calibran. También puedes arrastrar el marcador de T½ en la gráfica de N(t).",
 "A piece of charcoal has <b>{#}%</b> of the carbon {#} a living sample has. How old is it?":
   "Un trozo de carbón tiene <b>{#}%</b> del carbono {#} que tiene una muestra viva. ¿Qué edad tiene?",
+"Half life of ¹⁴C: {#} yr.":
+  "Vida media del ¹⁴C: {#} año.",
+"Stable end product: ¹⁴N.":
+  "Producto final estable: ¹⁴N.",
+"Time {#} yr.":
+  "Tiempo {#} años.",
+"Number of ¹⁴C nuclei: {#}, expected {#}.":
+  "Número de núcleos de ¹⁴C: {#}, esperado {#}.",
+"Number of ¹⁴N nuclei: {#}, expected {#}.":
+  "Número de núcleos de ¹⁴N: {#}, esperado {#}.",
+"A graph of the number of nuclei of each kind against time on a log vertical scale, with the expected curves dashed and a one sigma band.":
+  "Una gráfica del número de núcleos de cada tipo contra el tiempo en escala vertical logarítmica, con las curvas esperadas punteadas y una banda de una sigma.",
+"Activity of ¹⁴C: {#} decays per yr.":
+  "Actividad del ¹⁴C: {#} decaimientos por año.",
 "Iodine {#} treats thyroid disease and is a fallout product. After {#} half lives, about {#} days, the activity has dropped to {#}/{#} of its start.":
   "El yodo {#} trata enfermedades de la tiroides y es un producto de la lluvia radiactiva. Después de {#} vidas medias, unos {#} días, la actividad ha bajado a {#}/{#} de la inicial.",
 "<i></i>¹³¹Xe":
@@ -572,6 +574,26 @@ VDI18N.add('es', 'demo/radioactive-decay', {
   "⁹⁹Mo: {#} h; ⁹⁹ᵐTc: {#} h (ENSDF {#}). El {#}% de las desintegraciones del ⁹⁹Mo pasan por ⁹⁹ᵐTc (la fracción indicada en la información de prescripción de un generador comercial, Ultra-TechneKow V4; las compilaciones de datos nucleares dan de {#} a {#}%); el resto va directo a ⁹⁹Tc, estable a esta escala. Aquí la elución saca de la columna todos los núcleos de ⁹⁹ᵐTc; una columna real libera cerca del {#}%. También puedes arrastrar el marcador de T½ en la gráfica de N(t).",
 "The daughter lives {#} times shorter than the parent: transient equilibrium. The activity ratio settles at B λ<sub>D</sub>/(λ<sub>D</sub> − λ<sub>P</sub>) = {#}, with only a share B = {#} of the parent decays feeding the daughter, and both then fall with the parent’s half life. The dashed orange line on the N(t) plot marks the daughter peak after the last elution.":
   "La hija vive {#} veces menos que la madre: equilibrio transitorio. El cociente de actividades se estabiliza en B λ<sub>D</sub>/(λ<sub>D</sub> − λ<sub>P</sub>) = {#}, ya que solo una fracción B = {#} de las desintegraciones de la madre alimenta a la hija, y luego ambas bajan con la vida media de la madre. La línea naranja punteada en la gráfica de N(t) marca el máximo de la hija después de la última elución.",
+"Half life of ⁹⁹Mo: {#} h.":
+  "Vida media del ⁹⁹Mo: {#} h.",
+"Half life of ⁹⁹ᵐTc: {#} h.":
+  "Vida media del ⁹⁹ᵐTc: {#} h.",
+"Stable end product: ⁹⁹Tc.":
+  "Producto final estable: ⁹⁹Tc.",
+"The generator has not been eluted yet.":
+  "El generador todavía no se ha eluido.",
+"Time {#} h.":
+  "Tiempo {#} h.",
+"Number of ⁹⁹Mo nuclei: {#}, expected {#}.":
+  "Número de núcleos de ⁹⁹Mo: {#}, esperado {#}.",
+"Number of ⁹⁹ᵐTc nuclei: {#}, expected {#}.":
+  "Número de núcleos de ⁹⁹ᵐTc: {#}, esperado {#}.",
+"Number of ⁹⁹Tc nuclei: {#}, expected {#}.":
+  "Número de núcleos de ⁹⁹Tc: {#}, esperado {#}.",
+"Activity of ⁹⁹Mo: {#} decays per h.":
+  "Actividad del ⁹⁹Mo: {#} decaimientos por h.",
+"Activity of ⁹⁹ᵐTc: {#} decays per h.":
+  "Actividad del ⁹⁹ᵐTc: {#} decaimientos por h.",
 "Potassium {#} dates rocks: a melt lets the argon gas out, and once the rock sets, the argon made by the decay is trapped. The oldest rocks from the lunar highlands set about {#} billion years ago, about {#} half lives: watch how few of the starting potassium {#} nuclei would still be there.":
   "El potasio {#} fecha rocas: al fundirse, la roca deja escapar el gas argón, y una vez que se solidifica, el argón que produce la desintegración queda atrapado. Las rocas más antiguas de las tierras altas lunares se solidificaron hace unos {#} mil millones de años, unas {#} vidas medias: observa qué pocos de los núcleos de potasio {#} iniciales seguirían ahí.",
 "t = {#} Gyr":
@@ -590,36 +612,8 @@ VDI18N.add('es', 'demo/radioactive-decay', {
   "{#} <span>con Δt = {#} Gyr</span>",
 "⁴⁰K: {#} × {#}⁹ yr. {#}% of decays are β⁻ to ⁴⁰Ca and {#}% electron capture to ⁴⁰Ar, both stable; geologists measure the argon, since the calcium is too common in rock to tell apart. The grid shows both together. You can also drag the T½ marker on the N(t) plot.":
   "⁴⁰K: {#} × {#}⁹ años. El {#}% de las desintegraciones son β⁻ a ⁴⁰Ca y el {#}% captura electrónica a ⁴⁰Ar, ambos estables; los geólogos miden el argón, porque el calcio es demasiado común en la roca para distinguirlo. La cuadrícula muestra los dos juntos. También puedes arrastrar la marca T½ en la gráfica de N(t).",
-"Half life of ⁴⁰K: {#} Gyr.":
-  "Vida media del ⁴⁰K: {#} Ga.",
-"Stable end product: ⁴⁰Ca, ⁴⁰Ar.":
-  "Producto final estable: ⁴⁰Ca, ⁴⁰Ar.",
-"Time {#} Gyr.":
-  "Tiempo {#} Ga.",
-"Number of ⁴⁰K nuclei: {#}, expected {#}.":
-  "Número de núcleos de ⁴⁰K: {#}, esperado {#}.",
-"Number of ⁴⁰Ca, ⁴⁰Ar nuclei: {#}, expected {#}.":
-  "Número de núcleos de ⁴⁰Ca, ⁴⁰Ar: {#}, esperado {#}.",
-"A graph of the number of nuclei of each kind against time on a log vertical scale, with the expected curves dashed and a one sigma band.":
-  "Una gráfica del número de núcleos de cada tipo contra el tiempo en escala vertical logarítmica, con las curvas esperadas punteadas y una banda de una sigma.",
-"Activity of ⁴⁰K: {#} decays per Gyr.":
-  "Actividad del ⁴⁰K: {#} decaimientos por Ga.",
-"Beta minus decay of ¹⁴C into ¹⁴N, an electron and an antineutrino, with the energy spectrum of the electrons.":
-  "Decaimiento beta menos del ¹⁴C en ¹⁴N, un electrón y un antineutrino, con el espectro de energía de los electrones.",
-"The Q value is {#} keV.":
-  "El valor Q es de {#} keV.",
-"The mean energy of the spectrum is {#} keV.":
-  "La energía media del espectro es de {#} keV.",
-"The neutrino carries off the rest of the energy.":
-  "El neutrino se lleva el resto de la energía.",
-"Decays are paused.":
-  "Los decaimientos están en pausa.",
-"Decays so far: {#}.":
-  "Decaimientos hasta ahora: {#}.",
 "Aluminum {#} heated the first planetesimals. With a half life under a million years it was nearly gone {#} million years after the solar system formed, so only bodies that grew early got hot enough to melt and let their iron sink to a core (Building a Solar System, Iron cores).":
   "El aluminio {#} calentó los primeros planetesimales. Con una vida media de menos de un millón de años, casi había desaparecido {#} millones de años después de formarse el sistema solar, así que solo los cuerpos que crecieron pronto se calentaron lo suficiente para fundirse y dejar que su hierro se hundiera hasta formar un núcleo (Construir un sistema solar, Núcleos de hierro).",
-"{#} Myr":
-  "{#} Myr",
 "t = {#} Myr":
   "t = {#} Myr",
 "{#} s = {#} Myr":
@@ -648,12 +642,12 @@ VDI18N.add('es', 'demo/radioactive-decay', {
   "Número de núcleos de ²⁶Al: {#}, esperado {#}.",
 "Number of ²⁶Mg nuclei: {#}, expected {#}.":
   "Número de núcleos de ²⁶Mg: {#}, esperado {#}.",
-"The parents are above the expected number by {#} standard deviations.":
-  "Los padres están por encima de lo esperado en {#} desviaciones estándar.",
 "Activity of ²⁶Al: {#} decays per Myr.":
   "Actividad del ²⁶Al: {#} decaimientos por Ma.",
 "Move to a neighboring nucleus once one is picked (Shift for {#} steps)":
   "Pasa a un núcleo vecino una vez que hayas elegido uno (Shift para {#} pasos)",
+"The parents are below the expected number by {#} standard deviations.":
+  "Los padres están por debajo de lo esperado en {#} desviaciones estándar.",
 "²⁶Al {#}":
   "²⁶Al {#}",
 "²⁶Mg {#}":
@@ -666,22 +660,124 @@ VDI18N.add('es', 'demo/radioactive-decay', {
   "intervalo = {#} Myr",
 "Potential energy of the alpha":
   "Energía potencial de la alfa",
+"Alpha decay of ²¹²Po into ²⁰⁸Pb and an alpha particle, with the potential energy against distance and a Geiger–Nuttall plot.":
+  "Decaimiento alfa del ²¹²Po en ²⁰⁸Pb y una partícula alfa, con la energía potencial contra la distancia y una gráfica de Geiger–Nuttall.",
+"The alpha energy is {#} MeV and the Coulomb barrier tops out at {#} MeV.":
+  "La energía alfa es de {#} MeV y la barrera de Coulomb llega a un máximo de {#} MeV.",
+"The chance of getting out on each hit is about {#} × {#}⁻¹⁵.":
+  "La probabilidad de salir en cada choque es de alrededor de {#} × {#}⁻¹⁵.",
+"The model half life is {#} ns and the measured half life is {#} ns.":
+  "La vida media del modelo es de {#} ns y la vida media medida es de {#} ns.",
+"The nucleus has not started waiting yet.":
+  "El núcleo todavía no empieza a esperar.",
+"{#} yr ± {#} yr <span>true age {#} yr</span>":
+  "{#} años ± {#} años <span>edad real {#} años</span>",
+"Half life of ¹³¹I: {#} d.":
+  "Vida media del ¹³¹I: {#} d.",
+"Stable end product: ¹³¹Xe.":
+  "Producto final estable: ¹³¹Xe.",
+"Time {#} d.":
+  "Tiempo {#} d.",
+"Number of ¹³¹I nuclei: {#}, expected {#}.":
+  "Número de núcleos de ¹³¹I: {#}, esperado {#}.",
+"Number of ¹³¹Xe nuclei: {#}, expected {#}.":
+  "Número de núcleos de ¹³¹Xe: {#}, esperado {#}.",
+"Activity of ¹³¹I: {#} decays per d.":
+  "Actividad del ¹³¹I: {#} decaimientos por d.",
+"Half life of ²¹⁰Bi: {#} d.":
+  "Vida media del ²¹⁰Bi: {#} d.",
+"Half life of ²¹⁰Po: {#} d.":
+  "Vida media del ²¹⁰Po: {#} d.",
+"Stable end product: ²⁰⁶Pb.":
+  "Producto final estable: ²⁰⁶Pb.",
+"Number of ²¹⁰Bi nuclei: {#}, expected {#}.":
+  "Número de núcleos de ²¹⁰Bi: {#}, esperado {#}.",
+"Number of ²¹⁰Po nuclei: {#}, expected {#}.":
+  "Número de núcleos de ²¹⁰Po: {#}, esperado {#}.",
+"Number of ²⁰⁶Pb nuclei: {#}, expected {#}.":
+  "Número de núcleos de ²⁰⁶Pb: {#}, esperado {#}.",
+"Activity of ²¹⁰Bi: {#} decays per d.":
+  "Actividad del ²¹⁰Bi: {#} decaimientos por d.",
+"Activity of ²¹⁰Po: {#} decays per d.":
+  "Actividad del ²¹⁰Po: {#} decaimientos por d.",
+"Half life of ¹³²Te: {#} h.":
+  "Vida media del ¹³²Te: {#} h.",
+"Half life of ¹³²I: {#} h.":
+  "Vida media del ¹³²I: {#} h.",
+"Stable end product: ¹³²Xe.":
+  "Producto final estable: ¹³²Xe.",
+"Number of ¹³²Te nuclei: {#}, expected {#}.":
+  "Número de núcleos de ¹³²Te: {#}, esperado {#}.",
+"Number of ¹³²I nuclei: {#}, expected {#}.":
+  "Número de núcleos de ¹³²I: {#}, esperado {#}.",
+"Number of ¹³²Xe nuclei: {#}, expected {#}.":
+  "Número de núcleos de ¹³²Xe: {#}, esperado {#}.",
+"Activity of ¹³²Te: {#} decays per h.":
+  "Actividad del ¹³²Te: {#} decaimientos por h.",
+"Activity of ¹³²I: {#} decays per h.":
+  "Actividad del ¹³²I: {#} decaimientos por h.",
+"Half life of ¹⁸F: {#} min.":
+  "Vida media del ¹⁸F: {#} min.",
+"Stable end product: ¹⁸O.":
+  "Producto final estable: ¹⁸O.",
+"Time {#} min.":
+  "Tiempo {#} min.",
+"Number of ¹⁸F nuclei: {#}, expected {#}.":
+  "Número de núcleos de ¹⁸F: {#}, esperado {#}.",
+"Number of ¹⁸O nuclei: {#}, expected {#}.":
+  "Número de núcleos de ¹⁸O: {#}, esperado {#}.",
+"Activity of ¹⁸F: {#} decays per min.":
+  "Actividad del ¹⁸F: {#} decaimientos por min.",
+"Half life of ¹⁹²Ir: {#} d.":
+  "Vida media del ¹⁹²Ir: {#} d.",
+"Stable end product: ¹⁹²Pt, ¹⁹²Os.":
+  "Producto final estable: ¹⁹²Pt, ¹⁹²Os.",
+"Number of ¹⁹²Ir nuclei: {#}, expected {#}.":
+  "Número de núcleos de ¹⁹²Ir: {#}, esperado {#}.",
+"Number of ¹⁹²Pt, ¹⁹²Os nuclei: {#}, expected {#}.":
+  "Número de núcleos de ¹⁹²Pt, ¹⁹²Os: {#}, esperado {#}.",
+"Activity of ¹⁹²Ir: {#} decays per d.":
+  "Actividad del ¹⁹²Ir: {#} decaimientos por d.",
 "Half life of ⁶⁰Co: {#} yr.":
   "Vida media del ⁶⁰Co: {#} años.",
 "Stable end product: ⁶⁰Ni.":
   "Producto final estable: ⁶⁰Ni.",
-"Time {#} yr.":
-  "Tiempo {#} años.",
 "Number of ⁶⁰Co nuclei: {#}, expected {#}.":
   "Número de núcleos de ⁶⁰Co: {#}, esperado {#}.",
 "Number of ⁶⁰Ni nuclei: {#}, expected {#}.":
   "Número de núcleos de ⁶⁰Ni: {#}, esperado {#}.",
 "Activity of ⁶⁰Co: {#} decays per yr.":
   "Actividad del ⁶⁰Co: {#} decaimientos por año.",
+"Half life of ⁴⁰K: {#} Gyr.":
+  "Vida media del ⁴⁰K: {#} Ga.",
+"Stable end product: ⁴⁰Ca, ⁴⁰Ar.":
+  "Producto final estable: ⁴⁰Ca, ⁴⁰Ar.",
+"Time {#} Gyr.":
+  "Tiempo {#} Ga.",
+"Number of ⁴⁰K nuclei: {#}, expected {#}.":
+  "Número de núcleos de ⁴⁰K: {#}, esperado {#}.",
+"Number of ⁴⁰Ca, ⁴⁰Ar nuclei: {#}, expected {#}.":
+  "Número de núcleos de ⁴⁰Ca, ⁴⁰Ar: {#}, esperado {#}.",
+"Activity of ⁴⁰K: {#} decays per Gyr.":
+  "Actividad del ⁴⁰K: {#} decaimientos por Ga.",
 "parent gone":
   "la madre se acabó",
-"{#} yr ± {#} yr <span>true age {#} yr</span>":
-  "{#} años ± {#} años <span>edad real {#} años</span>",
+"t = {#} step":
+  "t = {#} paso",
+"Describe the picture":
+  "Describir la imagen",
+"Time controls":
+  "Controles de tiempo",
+"Step":
+  "Paso",
+"<span>Speed</span>":
+  "<span>Rapidez</span>",
+"Skip to the picture":
+  "Ir a la imagen",
+"Skip to the controls":
+  "Ir a los controles",
+"{#} Myr":
+  "{#} Myr",
 "ln N falls by λ = {#} per h":
   "ln N baja λ = {#} por h",
 "Close":

@@ -1,7 +1,5 @@
 /* demo/thin-films in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/thin-films', {
-"Describe the picture":
-  "Describir la imagen",
 "{#}, {#}, … weaker":
   "{#}, {#}, … más débiles",
 "{#}: none":
@@ -24,10 +22,6 @@ VDI18N.add('es', 'demo/thin-films', {
   "Reflectancia R(λ), t = {#} nm, θ₁ = {#}°",
 "white light reflects as":
   "la luz blanca se refleja como",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
 "Thin Film Interference":
   "Interferencia en películas delgadas",
 "<a><span>←</span> <span>Diffraction Grating</span></a><a><span>Michelson Interferometer</span> <span>→</span></a>":
@@ -36,12 +30,6 @@ VDI18N.add('es', 'demo/thin-films', {
   "La luz se refleja en ambas superficies de una película delgada. Las dos reflexiones se suman o se cancelan según el camino extra dentro de la película y según qué superficies invierten la onda, y la luz blanca regresa coloreada.",
 "extra path 2n<sub>f</sub>t cos θ<sub>t</sub> · π shift going to higher n · λ in nm":
   "camino extra 2n<sub>f</sub>t cos θ<sub>t</sub> · desfase π al pasar a mayor n · λ en nm",
-"Time controls":
-  "Controles de tiempo",
-"Run for a moment and pause again":
-  "Avanza un momento y vuelve a pausar",
-"Step":
-  "Paso",
 "Rays":
   "Rayos",
 "Soap film":
@@ -186,8 +174,6 @@ VDI18N.add('es', 'demo/thin-films', {
   "Elige Película de jabón, Cuña o Anillos de Newton arriba del dibujo para ver la película en sus propios colores. Cada uno usa los medios y el ángulo fijados arriba.",
 "<span>Light</span>":
   "<span>Luz</span>",
-"Light":
-  "Luz",
 "White (D65)":
   "Blanca (D65)",
 "Only λ₀":
@@ -260,10 +246,6 @@ VDI18N.add('es', 'demo/thin-films', {
   "Anillos de Newton, luz blanca, ganancia {#}×",
 "side view, gap exaggerated":
   "vista lateral, separación exagerada",
-"Rings at r = √(mλ₀R/n_f cos θ_t), m = {#}, {#}, {#}":
-  "Anillos en r = √(mλ₀R/n_f cos θ_t), m = {#}, {#}, {#}",
-"Gap at the probe":
-  "Separación en la sonda",
 "microscope":
   "microscopio",
 "white lamp":
@@ -276,6 +258,10 @@ VDI18N.add('es', 'demo/thin-films', {
   "Curvatura de la lente dibujada {#} veces más profunda; los anillos en la placa están a escala. Arrastra el anillo en la vista del microscopio; arrastra en otro lugar para girar.",
 "Through the microscope, {#} mm across":
   "A través del microscopio, {#} mm de ancho",
+"Rings at r = √(mλ₀R/n_f cos θ_t), m = {#}, {#}, {#}":
+  "Anillos en r = √(mλ₀R/n_f cos θ_t), m = {#}, {#}, {#}",
+"Gap at the probe":
+  "Separación en la sonda",
 "A lens on a flat plate shows rings where the air gap grows.":
   "Una lente sobre una placa plana muestra anillos donde crece la separación de aire.",
 "The film thickness at the probe is {#} nm.":
@@ -284,6 +270,10 @@ VDI18N.add('es', 'demo/thin-films', {
   "La luz es blanca.",
 "A vertical soap film drains: thin at the top, thicker below. Each band is a thickness where some colors add and others cancel. The bands creep down and spread as the film thins, and the black film at the top grows. Where the film is thicker than about {#} µm, many orders overlap and the colors fade to pale pinks and greens.":
   "Una película de jabón vertical escurre: delgada arriba, más gruesa abajo. Cada banda es un espesor donde algunos colores se suman y otros se cancelan. Las bandas bajan lentamente y se separan al adelgazarse la película, y la película negra de arriba crece. Donde la película es más gruesa que unos {#} µm, muchos órdenes se superponen y los colores se desvanecen en rosas y verdes pálidos.",
+"A vertical soap film drains, and its colors show the thickness.":
+  "Una película de jabón vertical se drena, y sus colores muestran el espesor.",
+"The probe is {#}% of the way down the film.":
+  "La sonda está al {#}% del camino hacia abajo de la película.",
 "{#} cycles <span>destructive</span>":
   "{#} ciclos <span>destructiva</span>",
 "none in {#} to {#} nm":
@@ -308,12 +298,6 @@ VDI18N.add('es', 'demo/thin-films', {
   "marcas: franjas oscuras predichas",
 "Reflectance R(λ), t = {#} µm, θ₁ = {#}°":
   "Reflectancia R(λ), t = {#} µm, θ₁ = {#}°",
-"A wedge shaped air film between two glass slides shows fringes.":
-  "Una película de aire en forma de cuña entre dos portaobjetos de vidrio muestra franjas.",
-"The film thickness at the probe is {#} µm.":
-  "El grosor de la película en la sonda es de {#} µm.",
-"The fringe spacing is {#} mm.":
-  "La separación entre franjas es de {#} mm.",
 "A quarter wave of MgF₂ ({#} nm) on glass. Both reflections flip, so only the path counts: half a wave at {#} nm, and they cancel. R drops from {#}% (bare glass, dotted) to {#}% in the green, and rises toward the ends of the spectrum, which is why coated lenses look faintly purple.":
   "Un cuarto de onda de MgF₂ ({#} nm) sobre vidrio. Ambas reflexiones se invierten, así que solo cuenta el camino: media onda a {#} nm, y se cancelan. R baja de {#}% (vidrio desnudo, punteado) a {#}% en el verde, y sube hacia los extremos del espectro, por eso las lentes con recubrimiento se ven ligeramente moradas.",
 "{#} MgF₂":
@@ -350,12 +334,32 @@ VDI18N.add('es', 'demo/thin-films', {
   "-{#} ciclos <span>constructiva</span>",
 "-{#} cycles <span>mostly constructive</span>":
   "-{#} ciclos <span>mayormente constructiva</span>",
+"A wedge shaped air film between two glass slides shows fringes.":
+  "Una película de aire en forma de cuña entre dos portaobjetos de vidrio muestra franjas.",
+"The fringe spacing is {#} mm.":
+  "La separación entre franjas es de {#} mm.",
 "Newton's rings, λ₀ = {#} nm":
   "Anillos de Newton, λ₀ = {#} nm",
 "Curvature drawn {#}× deeper. Drag the ring at the right.":
   "Curvatura dibujada {#}× más profunda. Arrastra el anillo de la derecha.",
 "-{#} cycles <span>destructive</span>":
   "-{#} ciclos <span>destructiva</span>",
+"The film thickness at the probe is {#} µm.":
+  "El grosor de la película en la sonda es de {#} µm.",
+"Describe the picture":
+  "Describir la imagen",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
+"Light":
+  "Luz",
 "Close":
   "Cerrar",
 "Paused.":

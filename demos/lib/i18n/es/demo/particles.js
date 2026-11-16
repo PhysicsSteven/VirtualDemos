@@ -1,11 +1,5 @@
 /* demo/particles in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/particles', {
-"Describe the picture":
-  "Describir la imagen",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
 "Particles, Quarks and Conservation Laws":
   "Partículas, quarks y leyes de conservación",
 "<a>Particle physics and cosmology</a>":
@@ -40,14 +34,8 @@ VDI18N.add('es', 'demo/particles', {
   "Deshacer punto",
 "Clear marks":
   "Borrar marcas",
-"Zoom":
-  "Zoom",
-"Zoom out":
-  "Alejar",
 "Whole picture":
   "Imagen completa",
-"Zoom in":
-  "Acercar",
 "Previous event":
   "Evento anterior",
 "Next event":
@@ -172,8 +160,6 @@ VDI18N.add('es', 'demo/particles', {
   "Partículas y sus propiedades",
 "{#} particles. Mean lives marked ħ/Γ come from the measured width Γ. Neutrino masses: KATRIN's direct limit for the electron antineutrino; oscillations tie the three together. Lepton numbers, baryon number and strangeness as in Table {#}.":
   "{#} partículas. Las vidas medias marcadas ħ/Γ provienen del ancho medido Γ. Masas de los neutrinos: el límite directo de KATRIN para el antineutrino electrónico; las oscilaciones relacionan los tres. Números leptónicos, número bariónico y extrañeza como en la Tabla {#}.",
-"Particle":
-  "Partícula",
 "Symbol":
   "Símbolo",
 "Mass (MeV/c²)":
@@ -622,8 +608,6 @@ VDI18N.add('es', 'demo/particles', {
   "Isospín I₃",
 "Color neutral":
   "Color neutro",
-"yes":
-  "sí",
 "Hadron":
   "Hadrón",
 "p proton":
@@ -880,6 +864,20 @@ VDI18N.add('es', 'demo/particles', {
   "antiverde",
 "antiblue":
   "antiazul",
+"Quarks view: up to three quarks held together by gluons, with the eightfold way chart of hadrons beside them.":
+  "Vista de quarks: hasta tres quarks unidos por gluones, con el diagrama del camino óctuple de los hadrones a un lado.",
+"Quark {#}: strange, red, spin up.":
+  "Quark {#}: extraño, rojo, espín arriba.",
+"Quark {#}: strange, green, spin up.":
+  "Quark {#}: extraño, verde, espín arriba.",
+"Quark {#}: strange, blue, spin up.":
+  "Quark {#}: extraño, azul, espín arriba.",
+"The colors add to a color neutral whole.":
+  "Los colores suman un conjunto neutro de color.",
+"Charge −{#} e, baryon number +{#}, strangeness −{#}, spin {#}/{#}.":
+  "Carga −{#} e, número bariónico +{#}, extrañeza −{#}, espín {#}/{#}.",
+"This is the omega, with a mass of {#} MeV/c².":
+  "Este es el omega, con una masa de {#} MeV/c².",
 "Beam kinetic energy K (e⁺ on e⁻ at rest)":
   "Energía cinética del haz K (e⁺ sobre e⁻ en reposo)",
 "A e⁺ beam with K = {#} GeV on a e⁻ at rest: center of mass energy W = {#} MeV. Threshold for these products: K = {#} TeV.":
@@ -896,6 +894,32 @@ VDI18N.add('es', 'demo/particles', {
   "Tu predicción: débil. ✗ no coincide.",
 "Your prediction: forbidden. ✗ does not match.":
   "Tu predicción: prohibida. ✗ no coincide.",
+"Quark {#}: up, red, spin up.":
+  "Quark {#}: arriba, rojo, espín arriba.",
+"Quark {#}: up, green, spin up.":
+  "Quark {#}: arriba, verde, espín arriba.",
+"Quark {#}: down, blue, spin down.":
+  "Quark {#}: abajo, azul, espín abajo.",
+"Charge +{#} e, baryon number +{#}, strangeness {#}, spin {#}/{#}.":
+  "Carga +{#} e, número bariónico +{#}, extrañeza {#}, espín {#}/{#}.",
+"This is the proton, with a mass of {#} MeV/c².":
+  "Este es el protón, con una masa de {#} MeV/c².",
+"Describe the picture":
+  "Describir la imagen",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
+"Zoom":
+  "Zoom",
+"Zoom out":
+  "Alejar",
+"Zoom in":
+  "Acercar",
+"Particle":
+  "Partícula",
+"yes":
+  "sí",
 "Close":
   "Cerrar"
 });

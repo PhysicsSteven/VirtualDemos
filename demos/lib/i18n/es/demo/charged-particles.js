@@ -16,8 +16,6 @@ VDI18N.add('es', 'demo/charged-particles', {
   "modelo (haz amplio)",
 "from the tracks ({#})":
   "a partir de las trazas ({#})",
-"Describe the picture":
-  "Describir la imagen",
 "Charged Particles in Matter":
   "Partículas cargadas en la materia",
 "<a>{#} · Charged particles in matter</a>":
@@ -28,8 +26,6 @@ VDI18N.add('es', 'demo/charged-particles', {
   "Envía protones, partículas alfa o iones de carbono al agua, pasando antes por una placa de hueso, pulmón, plástico o metal, o por capas de piel, grasa, músculo, hueso, pulmón y cerebro que tú mismo apilas. Observa cómo cada traza se frena, se dispersa y se detiene, mira cómo el pico de Bragg se forma a partir de las trazas, y compara el poder de frenado y el alcance de Bethe con las tablas NIST PSTAR.",
 "depth in cm · E in MeV":
   "profundidad en cm · E en MeV",
-"Time controls":
-  "Controles de tiempo",
 "Rate":
   "Tasa",
 "{#} tracks/s":
@@ -84,8 +80,6 @@ VDI18N.add('es', 'demo/charged-particles', {
   "El haz, la placa y el detector",
 "<span>Beam, slab and detector</span>":
   "<span>Haz, placa y detector</span>",
-"Particle":
-  "Partícula",
 "Alpha particle (⁴He)":
   "Partícula alfa (⁴He)",
 "Carbon {#} ion":
@@ -256,10 +250,6 @@ VDI18N.add('es', 'demo/charged-particles', {
   "dosis (%)",
 "σ ends (cm)":
   "σ finales (cm)",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
 "kinetic energy T (MeV), proton":
   "energía cinética T (MeV), protón",
 "mass stopping power S/ρ (MeV cm²/g)":
@@ -382,24 +372,26 @@ VDI18N.add('es', 'demo/charged-particles', {
   "Grasa, {#} cm",
 "The same anatomy with {#} cm of fat instead of {#} cm. Fat stops protons a little less than water per centimeter ({#} times at {#} MeV), so the peak moves {#} cm deeper, to {#} cm; but the organs are now {#} cm deeper, so the peak falls only {#} cm past the muscle. To reach the same organ as in the slim patient the beam needs about {#} MeV (from the CSDA ranges; try it with the energy slider).":
   "La misma anatomía con {#} cm de grasa en lugar de {#} cm. La grasa frena los protones un poco menos que el agua por centímetro ({#} veces a {#} MeV), así que el pico se mueve {#} cm más adentro, a {#} cm; pero los órganos ahora están {#} cm más adentro, así que el pico cae solo {#} cm después del músculo. Para llegar al mismo órgano que en el paciente delgado, el haz necesita unos {#} MeV (de los alcances CSDA; pruébalo con el control de energía).",
+"The beam first crosses these body layers.":
+  "El haz cruza primero estas capas del cuerpo.",
+"Skin, {#} mm":
+  "Piel, {#} mm",
+"Muscle, {#} cm":
+  "Músculo, {#} cm",
 "Brain, {#} cm":
   "Cerebro, {#} cm",
 "A beam into the head: {#} mm of scalp (skin), {#} mm of skull (cortical bone), then brain. The skull takes out as much energy as {#} cm of water, so the {#} MeV protons, whose CSDA range in water is {#} cm, stop {#} cm in. The brain layer runs past the end of the range, so no water is reached.":
   "Un haz que entra a la cabeza: {#} mm de cuero cabelludo (piel), {#} mm de cráneo (hueso cortical) y luego cerebro. El cráneo quita tanta energía como {#} cm de agua, así que los protones de {#} MeV, cuyo alcance CSDA en agua es {#} cm, se detienen a {#} cm. La capa de cerebro sigue más allá del final del alcance, así que no se llega al agua.",
 "the beam stops in them":
   "el haz se detiene en ellas",
-"The beam first crosses these body layers.":
-  "El haz cruza primero estas capas del cuerpo.",
-"Skin, {#} mm":
-  "Piel, {#} mm",
-"Bone, {#} mm":
-  "Hueso, {#} mm",
 "Alpha particle":
   "Partícula alfa",
 "Alpha particles of {#} MeV per nucleon ({#} MeV) move as fast as {#} MeV protons. Range goes as M/z² at the same speed, and for an alpha M/z² is {#}/{#} of the proton's, so the range is about the same; but the alpha is four times heavier, so its range straggles about half as much compared with its range, and the peak is sharper.":
   "Las partículas alfa de {#} MeV por nucleón ({#} MeV) se mueven tan rápido como protones de {#} MeV. El alcance va como M/z² a la misma rapidez, y para una alfa M/z² es {#}/{#} del del protón, así que el alcance es casi el mismo; pero la alfa es cuatro veces más pesada, así que su alcance fluctúa más o menos la mitad en proporción a su alcance, y el pico es más agudo.",
 "Alpha particle, {#} MeV":
   "Partícula alfa, {#} MeV",
+"An alpha particle beam of {#} MeV enters the water tank from the left.":
+  "Un haz de partículas alfa de {#} MeV entra al tanque de agua por la izquierda.",
 "Carbon ions of {#} MeV per nucleon reach about the same depth as {#} MeV protons. With {#} times the charge squared and {#} times the mass, they straggle and scatter much less, so the peak is narrower and sharper. Real carbon beams fragment and leave a tail past the peak, which this model leaves out.":
   "Los iones de carbono de {#} MeV por nucleón llegan a casi la misma profundidad que protones de {#} MeV. Con {#} veces la carga al cuadrado y {#} veces la masa, fluctúan y se dispersan mucho menos, así que el pico es más angosto y más agudo. Los haces de carbono reales se fragmentan y dejan una cola más allá del pico, que este modelo omite.",
 "Carbon {#} ion, {#} MeV":
@@ -438,6 +430,8 @@ VDI18N.add('es', 'demo/charged-particles', {
   "Protón, agua",
 "Proton in Compact bone (ICRU)":
   "Protón en Hueso compacto (ICRU)",
+"A dashed gray curve shows water for comparison.":
+  "Una curva gris de rayas muestra el agua para comparar.",
 "Proton, Lung tissue (ICRP) (Bethe, CSDA)":
   "Protón, Tejido pulmonar (ICRP) (Bethe, CSDA)",
 "Proton in Lung tissue (ICRP)":
@@ -450,8 +444,6 @@ VDI18N.add('es', 'demo/charged-particles', {
   "Protón, Músculo (ICRP) (Bethe, CSDA)",
 "Proton in Muscle (ICRP)":
   "Protón en Músculo (ICRP)",
-"A dashed gray curve shows water for comparison.":
-  "Una curva gris de rayas muestra el agua para comparar.",
 "Proton, PMMA (acrylic) (Bethe, CSDA)":
   "Protón, PMMA (acrílico) (Bethe, CSDA)",
 "Proton in PMMA (acrylic)":
@@ -484,16 +476,32 @@ VDI18N.add('es', 'demo/charged-particles', {
   "ajuste a PSTAR de {#} a {#} MeV:",
 "tracks ({#})":
   "trazas ({#})",
-"The beam first crosses a slab.":
-  "El haz cruza primero una placa.",
-"Muscle, {#} cm":
-  "Músculo, {#} cm",
 "Graph of the mass stopping power S/ρ, in MeV cm²/g, against the kinetic energy T, in MeV, on log scales.":
   "Gráfica del poder de frenado másico S/ρ, en MeV cm²/g, contra la energía cinética T, en MeV, en escalas logarítmicas.",
 "At that energy the mass stopping power is {#} MeV cm²/g.":
   "A esa energía el poder de frenado másico es {#} MeV cm²/g.",
+"The beam first crosses a slab.":
+  "El haz cruza primero una placa.",
+"Bone, {#} mm":
+  "Hueso, {#} mm",
+"A carbon {#} ion beam of {#} MeV enters the water tank from the left.":
+  "Un haz de iones de carbono {#} de {#} MeV entra al tanque de agua por la izquierda.",
+"Range straggling is off.":
+  "La dispersión del alcance está desactivada.",
+"Nuclear reactions are off.":
+  "Las reacciones nucleares están desactivadas.",
+"Fat, {#} mm":
+  "Grasa, {#} mm",
+"Muscle, {#} mm":
+  "Músculo, {#} mm",
+"Lung, {#} mm":
+  "Pulmón, {#} mm",
 "Lung tissue":
   "Tejido pulmonar",
+"Lung tissue, {#} mm":
+  "Tejido pulmonar, {#} mm",
+"Brain, {#} mm":
+  "Cerebro, {#} mm",
 "{#}, {#} μm in all":
   "{#}, {#} μm en total",
 "all off or {#} cm: only water":
@@ -504,6 +512,16 @@ VDI18N.add('es', 'demo/charged-particles', {
   "Todas las capas del cuerpo están apagadas, así que solo hay agua.",
 "The beam has stopped before the detector.":
   "El haz se detuvo antes del detector.",
+"Describe the picture":
+  "Describir la imagen",
+"Time controls":
+  "Controles de tiempo",
+"Particle":
+  "Partícula",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "Close":
   "Cerrar",
 "Fire":

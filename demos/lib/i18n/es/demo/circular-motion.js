@@ -1,11 +1,7 @@
 /* demo/circular-motion in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/circular-motion', {
-"Describe the picture":
-  "Describir la imagen",
 "View from above":
   "Vista desde arriba",
-"Real time":
-  "Tiempo real",
 "FREE BODY DIAGRAM, FROM ABOVE, CENTER TO THE LEFT":
   "DIAGRAMA DE CUERPO LIBRE, DESDE ARRIBA, CENTRO A LA IZQUIERDA",
 "FREE BODY DIAGRAM,":
@@ -16,10 +12,6 @@ VDI18N.add('es', 'demo/circular-motion', {
   "neta = {#} N",
 "Arrow lengths to scale; the net force is drawn on its own":
   "Longitudes de las flechas a escala; la fuerza neta se dibuja aparte",
-"Skip to the picture":
-  "Ir a la imagen",
-"Skip to the controls":
-  "Ir a los controles",
 "Circular Motion":
   "Movimiento circular",
 "<a>Kinematics</a>":
@@ -34,8 +26,6 @@ VDI18N.add('es', 'demo/circular-motion', {
   "Una pelota atada a una cuerda gira en un círculo sobre una mesa sin fricción.",
 "The radius is {#} m, the speed {#} m/s and the ball's mass {#} kg.":
   "El radio es de {#} m, la rapidez de {#} m/s y la masa de la pelota de {#} kg.",
-"Running.":
-  "En marcha.",
 "The string is holding.":
   "La cuerda resiste.",
 "Acceleration v²/r = {#} m/s².":
@@ -44,12 +34,6 @@ VDI18N.add('es', 'demo/circular-motion', {
   "Tensión {#} N.",
 "Period {#} s.":
   "Periodo {#} s.",
-"Time controls":
-  "Controles de tiempo",
-"Run for a moment and pause again":
-  "Avanza un momento y vuelve a pausar",
-"Step":
-  "Paso",
 "Divider between the motion and the free body diagram":
   "Divisor entre el movimiento y el diagrama de cuerpo libre",
 "Ball on a string":
@@ -82,18 +66,14 @@ VDI18N.add('es', 'demo/circular-motion', {
   "Tensión T = mv²/r",
 "Period {#}πr/v":
   "Periodo {#}πr/v",
-"outcome":
-  "resultado",
 "The loop runs at half speed (slow motion ×{#}) so the motion is easy to follow; everything else runs at real speed. Every number is for real time. Blind hides the force sizes (arrows drawn equal length), a = v²/r, the speed limits and the predictions of what happens, leaving the settings and the motion.":
   "El rizo va a la mitad de la rapidez (cámara lenta ×{#}) para que el movimiento sea fácil de seguir; todo lo demás va a la rapidez real. Todos los números son para el tiempo real. A ciegas oculta los tamaños de las fuerzas (flechas dibujadas de igual longitud), a = v²/r, los límites de rapidez y las predicciones de lo que pasa, y deja los ajustes y el movimiento.",
 "Motion seen from a turning frame, where the Coriolis and centrifugal forces appear: open <a>Rotating Frames</a>.":
   "El movimiento visto desde un marco que gira, donde aparecen las fuerzas de Coriolis y centrífuga: abre <a>Marcos de referencia en rotación</a>.",
+"outcome":
+  "resultado",
 "String cut: no horizontal force, so it moves in a straight line.":
   "Cuerda cortada: no hay fuerza horizontal, así que se mueve en línea recta.",
-"Paused.":
-  "En pausa.",
-"The string is cut and the object moves off in a straight line.":
-  "La cuerda se corta y el objeto sale en línea recta.",
 "FREE BODY DIAGRAM, SEEN FROM BEHIND, CENTER TO THE LEFT":
   "DIAGRAMA DE CUERPO LIBRE, VISTO DESDE ATRÁS, CENTRO A LA IZQUIERDA",
 "SEEN FROM BEHIND, CENTER TO THE LEFT":
@@ -110,8 +90,6 @@ VDI18N.add('es', 'demo/circular-motion', {
   "Fricción máxima μs mg",
 "Top speed √(μs g r)":
   "Rapidez máxima √(μs g r)",
-"The banked road in 3D: drag to turn the view":
-  "El camino peraltado en 3D: arrastra para girar la vista",
 "f (down the slope) = {#} N":
   "f (pendiente abajo) = {#} N",
 "Tilting the road lets the normal force lean toward the center. At the ideal speed √(rg tan θ) no friction is needed at all. Slower, friction points up the slope; faster, it points down. Outside the range, the car slips.":
@@ -240,20 +218,8 @@ VDI18N.add('es', 'demo/circular-motion', {
   "Vista lateral en corte",
 "Friction holds them up.":
   "La fricción los sostiene.",
-"A ball rolls inside a vertical loop.":
-  "Una pelota rueda dentro de un rizo vertical.",
-"The loop has radius {#} m and the ball of {#} kg enters at {#} m/s at the bottom.":
-  "El rizo tiene radio de {#} m y la pelota de {#} kg entra por abajo a {#} m/s.",
-"The ball is on the track.":
-  "La pelota está sobre la pista.",
-"Weight {#} N.":
-  "Peso {#} N.",
-"Least speed at the bottom to keep contact at the top {#} m/s.":
-  "Rapidez mínima abajo para mantener el contacto arriba {#} m/s.",
-"The ball goes round.":
-  "La pelota da la vuelta.",
-"Speed here {#} m/s, normal force {#} N.":
-  "Rapidez aquí {#} m/s, fuerza normal {#} N.",
+"The floor has dropped.":
+  "El piso ha bajado.",
 "A car goes round a flat curve.":
   "Un auto toma una curva plana.",
 "The radius is {#} m, the car's mass {#} kg and μs = {#}.":
@@ -268,6 +234,72 @@ VDI18N.add('es', 'demo/circular-motion', {
   "Rapidez máxima {#} m/s.",
 "Friction is enough to hold the curve.":
   "La fricción basta para tomar la curva.",
+"A car goes round a banked curve.":
+  "Un auto toma una curva peraltada.",
+"The road is banked at {#}°.":
+  "El camino tiene un peralte de {#}°.",
+"Friction needed {#} N down the slope, most friction available {#} N.":
+  "Fricción necesaria {#} N hacia abajo de la pendiente, la fricción máxima disponible es {#} N.",
+"Normal force {#} N.":
+  "Fuerza normal {#} N.",
+"Ideal speed {#} m/s.":
+  "Rapidez ideal {#} m/s.",
+"Allowed speeds {#} to {#} m/s.":
+  "Rapideces permitidas de {#} a {#} m/s.",
+"A car speeds up or brakes on a flat curve.":
+  "Un auto acelera o frena en una curva plana.",
+"It starts at {#} m/s and its speed changes at {#} m/s² along the road.":
+  "Empieza a {#} m/s y su rapidez cambia a {#} m/s² a lo largo del camino.",
+"The car slips at {#} s, at {#} m/s.":
+  "El auto derrapa a los {#} s, a {#} m/s.",
+"Cruising top speed {#} m/s.":
+  "Rapidez máxima de crucero {#} m/s.",
+"Time {#} s, speed {#} m/s, acceleration {#} m/s² at {#}° from the center.":
+  "Tiempo {#} s, rapidez {#} m/s, aceleración {#} m/s² a {#}° del centro.",
+"A ball rolls inside a vertical loop.":
+  "Una pelota rueda dentro de un rizo vertical.",
+"The loop has radius {#} m and the ball of {#} kg enters at {#} m/s at the bottom.":
+  "El rizo tiene radio de {#} m y la pelota de {#} kg entra por abajo a {#} m/s.",
+"The ball is on the track.":
+  "La pelota está sobre la pista.",
+"Weight {#} N.":
+  "Peso {#} N.",
+"Least speed at the bottom to keep contact at the top {#} m/s.":
+  "Rapidez mínima abajo para mantener el contacto arriba {#} m/s.",
+"The ball goes round.":
+  "La pelota da la vuelta.",
+"Speed here {#} m/s, normal force {#} N.":
+  "Rapidez aquí {#} m/s, fuerza normal {#} N.",
+"A bob on a string swings round a horizontal circle, a conical pendulum.":
+  "Una lenteja en una cuerda gira en un círculo horizontal, un péndulo cónico.",
+"The string is {#} m long at {#}° from the vertical, with a {#} kg bob.":
+  "La cuerda mide {#} m a {#}° de la vertical, con una lenteja de {#} kg.",
+"Circle radius {#} m, {#} m below the pivot.":
+  "Radio del círculo {#} m, a {#} m por debajo del pivote.",
+"Speed {#} m/s, tension {#} N.":
+  "Rapidez {#} m/s, tensión {#} N.",
+"The banked road in 3D: drag to turn the view":
+  "El camino peraltado en 3D: arrastra para girar la vista",
+"The string is cut and the object moves off in a straight line.":
+  "La cuerda se corta y el objeto sale en línea recta.",
+"Describe the picture":
+  "Describir la imagen",
+"Real time":
+  "Tiempo real",
+"Skip to the picture":
+  "Ir a la imagen",
+"Skip to the controls":
+  "Ir a los controles",
+"Running.":
+  "En marcha.",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
+"Paused.":
+  "En pausa.",
 "Cut the string":
   "Cortar la cuerda",
 "Close":

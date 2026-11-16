@@ -1,7 +1,5 @@
 /* demo/moon-phases in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/moon-phases', {
-"Describe the picture":
-  "Describir la imagen",
 "Earth's shadow":
   "Sombra de la Tierra",
 "Sunlight":
@@ -50,16 +48,12 @@ VDI18N.add('es', 'demo/moon-phases', {
   "La luz del Sol siempre ilumina la mitad de la Luna. La fase es cuánto de esa mitad iluminada mira hacia la Tierra. Arrastra la Luna alrededor de su órbita.",
 "synodic month {#} d · sidereal {#} d · orbit tilt {#}° · nodes {#} yr":
   "mes sinódico {#} d · sidéreo {#} d · inclinación de la órbita {#}° · nodos {#} años",
-"Time controls":
-  "Controles de tiempo",
 "Back one day":
   "Un día atrás",
 "{#} day":
   "{#} día",
 "Forward one day":
   "Un día adelante",
-"<span>Speed</span>":
-  "<span>Rapidez</span>",
 "Animation speed":
   "Velocidad de la animación",
 "<span>days/s</span>":
@@ -186,10 +180,6 @@ VDI18N.add('es', 'demo/moon-phases', {
   "iluminada (%)",
 "eclipse":
   "eclipse",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
 "Day {#} of {#} · First quarter":
   "Día {#} de {#} · Cuarto creciente",
 "First quarter, {#}% lit":
@@ -198,6 +188,10 @@ VDI18N.add('es', 'demo/moon-phases', {
   "Día {#} de {#} · Gibosa creciente",
 "Waxing gibbous, {#}% lit":
   "Gibosa creciente, {#}% iluminada",
+"Orbit tilt not drawn:":
+  "Sin dibujar la inclinación de la órbita:",
+"most full moons miss Earth's shadow":
+  "casi todas las lunas llenas no tocan la sombra de la Tierra",
 "New moon: the lit half faces away from Earth. The Moon is up with the Sun all day and lost in its glare.":
   "Luna nueva: la mitad iluminada mira en dirección contraria a la Tierra. La Luna está arriba junto con el Sol todo el día y se pierde en su resplandor.",
 "Day {#} of {#} · New moon":
@@ -206,14 +200,16 @@ VDI18N.add('es', 'demo/moon-phases', {
   "Luna nueva, {#}% iluminada",
 "First quarter: {#}° east of the Sun. We see half of the lit half, so {#}% lit, on the right. It rises near noon and is high in the south at sunset.":
   "Cuarto creciente: {#}° al este del Sol. Vemos la mitad de la mitad iluminada, así que está {#}% iluminada, del lado derecho. Sale cerca del mediodía y está alta en el sur a la puesta del Sol.",
+"The Moon is paused.":
+  "La Luna está en pausa.",
+"The phase is first quarter.":
+  "La fase es cuarto creciente.",
+"The clock is paused.":
+  "El reloj está en pausa.",
 "Full moon: opposite the Sun, so the whole lit half faces us. It rises at sunset, is highest at midnight, and sets at sunrise. It usually passes just above or below Earth's shadow.":
   "Luna llena: opuesta al Sol, así que toda la mitad iluminada mira hacia nosotros. Sale a la puesta del Sol, está en lo más alto a medianoche y se pone a la salida del Sol. Por lo general pasa justo por encima o por debajo de la sombra de la Tierra.",
 "Day {#} of {#} · Full moon":
   "Día {#} de {#} · Luna llena",
-"Orbit tilt not drawn:":
-  "Sin dibujar la inclinación de la órbita:",
-"most full moons miss Earth's shadow":
-  "casi todas las lunas llenas no tocan la sombra de la Tierra",
 "Full moon, {#}% lit":
   "Luna llena, {#}% iluminada",
 "Waning crescent: lit on the left (east), the side toward the Sun, which is still below the eastern horizon. It rises around {#} a.m. and is seen before dawn.":
@@ -266,8 +262,8 @@ VDI18N.add('es', 'demo/moon-phases', {
   "Luna bajo el horizonte",
 "The Moon is {#}° west of the Sun.":
   "La Luna está {#}° al oeste del Sol.",
-"The phase is a new moon.":
-  "La fase es luna nueva.",
+"The phase is a waning crescent.":
+  "La fase es menguante.",
 "The lit side is on the left.":
   "El lado iluminado está a la izquierda.",
 "Day {#} of {#} · Waning gibbous":
@@ -278,16 +274,36 @@ VDI18N.add('es', 'demo/moon-phases', {
   "La fase es menguante gibosa.",
 "Change the time of day by {#} minutes (Shift for {#} hour)":
   "Cambia la hora del día en {#} minutos (Shift para {#} hora)",
-"The Moon is paused.":
-  "La Luna está en pausa.",
-"The clock is paused.":
-  "El reloj está en pausa.",
 "N. Hemisphere, facing S":
   "Hemisferio N, mirando al S",
 "below horizon now":
   "bajo el horizonte ahora",
-"The phase is a waning crescent.":
-  "La fase es menguante.",
+"The Moon is {#}° of the Sun.":
+  "La Luna está a {#}° del Sol.",
+"The phase is a new moon.":
+  "La fase es luna nueva.",
+"It is day.":
+  "Es de día.",
+"The phase is a full moon.":
+  "La fase es luna llena.",
+"It is night.":
+  "Es de noche.",
+"The Moon's orbit is tilted {#}° to Earth's orbit.":
+  "La órbita de la Luna está inclinada {#}° respecto a la órbita de la Tierra.",
+"The ascending node is {#}° from the Sun line.":
+  "El nodo ascendente está a {#}° de la línea del Sol.",
+"A solar eclipse is possible.":
+  "Es posible un eclipse solar.",
+"Describe the picture":
+  "Describir la imagen",
+"Time controls":
+  "Controles de tiempo",
+"<span>Speed</span>":
+  "<span>Rapidez</span>",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "Orbit tilt not drawn: most full moons miss Earth's shadow":
   "Sin dibujar la inclinación de la órbita: casi todas las lunas llenas no tocan la sombra de la Tierra",
 "Close":

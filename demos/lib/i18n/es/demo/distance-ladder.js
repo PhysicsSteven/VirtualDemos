@@ -1,7 +1,5 @@
 /* demo/distance-ladder in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/distance-ladder', {
-"Describe the picture":
-  "Describir la imagen",
 "Parallax":
   "Paralaje",
 "Spectroscopic parallax":
@@ -48,12 +46,6 @@ VDI18N.add('es', 'demo/distance-ladder', {
   "Ningún método mide todas las distancias. Cada peldaño llega más lejos, y cada uno se calibra con el peldaño de abajo.",
 "<span>pc</span> · <span>kpc</span> · <span>Mpc</span> · <span>″ and mas</span> · <span>km/s</span> · <span>{#} pc = {#} AU = {#} ly</span>":
   "<span>pc</span> · <span>kpc</span> · <span>Mpc</span> · <span>″ y mas</span> · <span>km/s</span> · <span>{#} pc = {#} UA = {#} a. l.</span>",
-"Time controls":
-  "Controles de tiempo",
-"Run for a moment and pause again":
-  "Avanza un momento y vuelve a pausar",
-"Step":
-  "Paso",
 "Rung of the ladder":
   "Peldaño de la escalera",
 "{#} Parallax":
@@ -346,22 +338,20 @@ VDI18N.add('es', 'demo/distance-ladder', {
   "LA ÓRBITA DE LA TIERRA EN 3D, NO A ESCALA",
 "p (mas)":
   "p (mas)",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
 "early March":
   "principios de marzo",
-"The ruler on the overlaid photos reads {#}″, which gives d = {#} pc.":
-  "La regla sobre las fotos superpuestas marca {#}″, lo que da d = {#} pc.",
 "mid March":
   "mediados de marzo",
+"The ruler on the overlaid photos reads {#}″, which gives d = {#} pc.":
+  "La regla sobre las fotos superpuestas marca {#}″, lo que da d = {#} pc.",
 "Spectroscopic parallax (calibrated by rung {#})":
   "Paralaje espectroscópico (calibrado por el peldaño {#})",
 "A main sequence star's spectral type gives its true brightness M, read from nearby stars of the same type whose parallaxes are known. Its apparent brightness m then gives the distance. Pick a star, work out its distance, then check it against its parallax.":
   "El tipo espectral de una estrella de la secuencia principal da su brillo verdadero M, leído de estrellas cercanas del mismo tipo cuyos paralajes se conocen. Su brillo aparente m da entonces la distancia. Elige una estrella, calcula su distancia y luego compárala con su paralaje.",
 "Real data: every star on the diagram and every target is a Hipparcos star from the HYG database v3.8 (CC BY-SA {#}; distances {#}/parallax, van Leeuwen {#}). The calibration is the mean and spread of M_V of the nearby class V stars of the same half class (for example F5 to F9 V). Extinction is ignored.":
   "Datos reales: cada estrella del diagrama y cada objetivo es una estrella de Hipparcos de la base de datos HYG v3.8 (CC BY-SA {#}; distancias {#}/paralaje, van Leeuwen {#}). La calibración es la media y la dispersión de M_V de las estrellas cercanas de clase V de la misma media clase (por ejemplo, F5 a F9 V). Se ignora la extinción.",
+"late March":
+  "finales de marzo",
 "CALIBRATION: THE {#} HIPPARCOS STARS WITHIN {#} PC (HYG)":
   "CALIBRACIÓN: LAS {#} ESTRELLAS DE HIPPARCOS A MENOS DE {#} PC (HYG)",
 "color B − V (hotter left)":
@@ -552,12 +542,12 @@ VDI18N.add('es', 'demo/distance-ladder', {
   "Cúmulo de Virgo {#} Mpc",
 "Coma cluster {#} Mpc":
   "Cúmulo de Coma {#} Mpc",
+"The whole ladder: a chart of the distance range of each method on a logarithmic axis, with overlaps where one rung calibrates the next.":
+  "La escalera completa: una gráfica del rango de distancias de cada método en un eje logarítmico, con traslapes donde un peldaño calibra el siguiente.",
 "Ground based photographic parallaxes before the 1990s: roughly {#} mas at best, so about {#}% distances out to about {#} pc.":
   "Paralajes fotográficos desde tierra antes de los años noventa: aproximadamente {#} mas en el mejor caso, así que distancias de cerca del {#}% hasta unos {#} pc.",
 "Gaia (Data Release {#}): roughly {#} mas for bright stars, about {#} mas at 20th magnitude. About {#}% distances to a few kpc for bright stars.":
   "Gaia (Data Release {#}): aproximadamente {#} mas para estrellas brillantes, cerca de {#} mas en magnitud 20. Distancias de cerca del {#}% hasta unos pocos kpc para estrellas brillantes.",
-"The whole ladder: a chart of the distance range of each method on a logarithmic axis, with overlaps where one rung calibrates the next.":
-  "La escalera completa: una gráfica del rango de distancias de cada método en un eje logarítmico, con traslapes donde un peldaño calibra el siguiente.",
 "About {#} Mpc away. Hubble found Cepheids here in {#} and showed it lies far outside the Milky Way.":
   "A unos {#} Mpc. Hubble encontró cefeidas aquí en {#} y mostró que está muy fuera de la Vía Láctea.",
 "About {#} Mpc away (Hubble Space Telescope Key Project). Only long period, bright Cepheids can be seen this far.":
@@ -568,14 +558,36 @@ VDI18N.add('es', 'demo/distance-ladder', {
   "estrella cercana",
 "field {#}″ wide · dashed circles: ±σ = {#} µas (Gaia)":
   "campo de {#}″ de ancho · círculos punteados: ±σ = {#} µas (Gaia)",
-"late March":
-  "finales de marzo",
+"The instrument is Gaia, about {#} mas.":
+  "El instrumento es Gaia, de unos {#} mas.",
+"Position uncertainty {#} µas.":
+  "Incertidumbre de posición {#} µas.",
 "K5–K9 V stars: mean M = {#}, spread {#} ({#} stars)":
   "Estrellas K5–K9 V: M media = {#}, dispersión {#} ({#} estrellas)",
 "TARGET: HIP {#}, K5 V (A REAL STAR)":
   "OBJETIVO: HIP {#}, K5 V (UNA ESTRELLA REAL)",
+"Spectroscopic parallax: a diagram of nearby stars, and one target star.":
+  "Paralaje espectroscópico: un diagrama de estrellas cercanas y una estrella objetivo.",
+"The target is HIP {#}, spectral type K5 V, apparent magnitude m = {#}.":
+  "El objetivo es HIP {#}, tipo espectral K5 V, magnitud aparente m = {#}.",
+"Nearby stars of that type have a mean M = {#}, spread {#}.":
+  "Las estrellas cercanas de ese tipo tienen una M media = {#}, dispersión {#}.",
+"That gives m − M = {#} and a distance of {#} pc.":
+  "Eso da m − M = {#} y una distancia de {#} pc.",
+"The parallax distance is hidden.":
+  "La distancia por paralaje está oculta.",
 "MYSTERY CLUSTER (SIMULATED) ON THE NEARBY MAIN SEQUENCE: DRAG THE CLUSTER UP OR DOWN":
   "CÚMULO MISTERIOSO (SIMULADO) SOBRE LA SECUENCIA PRINCIPAL CERCANA: ARRASTRA EL CÚMULO HACIA ARRIBA O HACIA ABAJO",
+"Main sequence fitting: a star cluster is slid up or down onto the main sequence of nearby stars.":
+  "Ajuste a la secuencia principal: un cúmulo estelar se desliza hacia arriba o hacia abajo hasta encajar en la secuencia principal de estrellas cercanas.",
+"Mystery cluster is shown.":
+  "Se muestra el cúmulo misterioso.",
+"The shift is m − M = {#}, which gives d = {#} pc.":
+  "El desplazamiento es m − M = {#}, que da d = {#} pc.",
+"The mean square offset from the main sequence is {#} mag².":
+  "El desvío cuadrático medio respecto a la secuencia principal es {#} mag².",
+"The true distance is hidden.":
+  "La distancia verdadera está oculta.",
 "M100, VIRGO CLUSTER (DRAWING): CLICK A CEPHEID":
   "M100, CÚMULO DE VIRGO (DIBUJO): HAZ CLIC EN UNA CEFEIDA",
 "click a peak":
@@ -588,14 +600,50 @@ VDI18N.add('es', 'demo/distance-ladder', {
   "área ×{#}",
 "flux ×{#} · {#} mag fainter":
   "flujo ×{#} · {#} mag más débil",
+"Rung {#}, Cepheid variables: a galaxy picture, a light curve, and a strip for the inverse square law.":
+  "Peldaño {#}, estrellas variables cefeidas: una imagen de una galaxia, una curva de luz y una franja para la ley del inverso del cuadrado.",
+"The galaxy is M100 in the Virgo cluster.":
+  "La galaxia es M100 en el cúmulo de Virgo.",
+"Cepheid C3 is selected, mean apparent magnitude m = {#}.":
+  "La cefeida C3 está seleccionada, magnitud aparente media m = {#}.",
+"The Cepheid calibration offset is −{#} mag.":
+  "El desfase de calibración de las cefeidas es −{#} mag.",
+"No two peaks chosen on the light curve yet.":
+  "Todavía no se eligen dos picos en la curva de luz.",
+"No Cepheids recorded for this galaxy.":
+  "No hay cefeidas registradas para esta galaxia.",
+"The light curve runs in time.":
+  "La curva de luz transcurre en el tiempo.",
 "YOUR PHOTOMETRY OF C5: RECORDED READINGS":
   "TU FOTOMETRÍA DE C5: LECTURAS REGISTRADAS",
+"Cepheid photometry: a simulated CCD frame with two apertures, one on the Cepheid and one on a comparison star.":
+  "Fotometría de cefeidas: un cuadro CCD simulado con dos aperturas, una sobre la cefeida y otra sobre una estrella de comparación.",
+"Cepheid C5, night {#} of {#}.":
+  "Cefeida C5, noche {#} de {#}.",
+"Seeing {#} px, sky {#} counts per pixel.":
+  "Desenfoque atmosférico {#} px, cielo {#} cuentas por píxel.",
+"The Cepheid aperture holds {#} counts.":
+  "La apertura de la cefeida contiene {#} cuentas.",
+"The other aperture is on comparison star S1, V = {#}.":
+  "La otra apertura está sobre la estrella de comparación S1, V = {#}.",
+"The Cepheid's V magnitude is {#} ± {#} mag.":
+  "La magnitud V de la cefeida es {#} ± {#} mag.",
 "HOST GALAXY OF SN D (DRAWING)":
   "GALAXIA ANFITRIONA DE SN D (DIBUJO)",
 "SN D, {#} d before peak":
   "SN D, {#} d antes del pico",
 "click the peak of the light curve":
   "haz clic en el pico de la curva de luz",
+"Rung {#}, Type Ia supernovae: a host galaxy and a light curve.":
+  "Peldaño {#}, supernovas de tipo Ia: una galaxia anfitriona y una curva de luz.",
+"Supernova SN D, redshift z = {#}.":
+  "Supernova SN D, corrimiento al rojo z = {#}.",
+"The Type Ia calibration is M = −{#}.":
+  "La calibración de las de tipo Ia es M = −{#}.",
+"The peak line is not set.":
+  "La línea del máximo no está fijada.",
+"The supernova is {#} d before peak.":
+  "La supernova está a {#} d antes del máximo.",
 "Rung {#}, Hubble's law: velocity v = cz against distance, one point for each galaxy.":
   "Peldaño {#}, ley de Hubble: velocidad v = cz contra distancia, un punto por cada galaxia.",
 "The diagram shows both Cepheid and Type Ia galaxies.":
@@ -610,12 +658,20 @@ VDI18N.add('es', 'demo/distance-ladder', {
   "El peine de longitudes de onda en reposo está en z = {#}, v = {#} km/s.",
 "calibrates":
   "calibra",
-"The instrument is Gaia, about {#} mas.":
-  "El instrumento es Gaia, de unos {#} mas.",
-"Position uncertainty {#} µas.":
-  "Incertidumbre de posición {#} µas.",
 "early April":
   "principios de abril",
+"Describe the picture":
+  "Describir la imagen",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "Close":
   "Cerrar",
 "Night":

@@ -1,7 +1,5 @@
 /* demo/ideal-gas in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/ideal-gas', {
-"Describe the picture":
-  "Describir la imagen",
 "speed (m/s)":
   "rapidez (m/s)",
 "bin {#} m/s":
@@ -34,22 +32,12 @@ VDI18N.add('es', 'demo/ideal-gas', {
   "Las moléculas son discos de {#} nm de diámetro.",
 "All the walls are insulated.":
   "Todas las paredes están aisladas.",
-"Running.":
-  "En marcha.",
-"Temperature {#} K.":
-  "Temperatura {#} K.",
 "Pressure ideal {#} nN/m.":
   "Presión ideal {#} nN/m.",
 "Mean speed {#} m/s, rms speed {#} m/s.":
   "Rapidez media {#} m/s, rapidez rms {#} m/s.",
 "The left and right arrow keys move the right wall, and Space plays or pauses.":
   "Las flechas izquierda y derecha mueven la pared derecha, y Espacio reproduce o pausa.",
-"Time controls":
-  "Controles de tiempo",
-"Run for a moment and pause again":
-  "Avanza un momento y vuelve a pausar",
-"Step":
-  "Paso",
 "<span>Playback</span>":
   "<span>Reproducción</span>",
 "Fixed rate":
@@ -192,8 +180,6 @@ VDI18N.add('es', 'demo/ideal-gas', {
   "Qué gas",
 "Hydrogen H₂":
   "Hidrógeno H₂",
-"Helium":
-  "Helio",
 "Nitrogen N₂":
   "Nitrógeno N₂",
 "Argon":
@@ -270,24 +256,18 @@ VDI18N.add('es', 'demo/ideal-gas', {
   "TEMPERATURA",
 "from mean kinetic energy":
   "a partir de la energía cinética media",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
 "{#} per ns":
   "{#} por ns",
 "Pressure measured {#} µN/m, ideal {#} µN/m.":
   "Presión medida {#} µN/m, ideal {#} µN/m.",
-"Paused.":
-  "En pausa.",
+"Pressure ideal {#} µN/m.":
+  "Presión ideal {#} µN/m.",
 "Fast molecules ({#} K) start on the left and slow ones ({#} K) on the right. Collisions mix them until the whole box sits at one temperature, near {#} K.":
   "Las moléculas rápidas ({#} K) empiezan a la izquierda y las lentas ({#} K) a la derecha. Los choques las mezclan hasta que toda la caja queda a una sola temperatura, cerca de {#} K.",
 "Drag the right wall inward and watch T rise. Halve the area slowly and T about doubles, since T × A stays constant for a 2D gas. Then pull the wall back out.":
   "Arrastra la pared derecha hacia dentro y observa cómo sube T. Reduce el área a la mitad despacio y T casi se duplica, ya que T × A se mantiene constante para un gas 2D. Luego jala la pared de vuelta hacia fuera.",
 "← drag the wall":
   "← arrastra la pared",
-"+{#} off scale →":
-  "+{#} fuera de escala →",
 "Only {#} molecules. Collisions are rare, so the spike takes much longer to relax, and the measured pressure jumps around more.":
   "Solo {#} moléculas. Los choques son raros, así que el pico tarda mucho más en relajarse, y la presión medida salta más.",
 "The gas at {#} K. The rms speed is about {#} m/s instead of {#} m/s at room temperature, but they never stop: speeds still spread out into a Maxwell-Boltzmann curve, and the walls still feel a pressure. Slow motion follows T is on, so the playback runs about {#} times faster than Fixed rate (the clock says by how much): the gas only looks lively. T stays at {#} K because the collisions conserve energy. Switch to Fixed rate to see how sluggish the gas really is. Classically, motion only stops at exactly {#} K.":
@@ -296,12 +276,12 @@ VDI18N.add('es', 'demo/ideal-gas', {
   "{#} ns por segundo",
 "{#} nN/m":
   "{#} nN/m",
-"{#} zJ":
-  "{#} zJ",
 "— (condenses at {#} atm)":
   "— (se condensa a {#} atm)",
 "t = {#} ps playback {#}× faster than Fixed rate":
   "t = {#} ps reproducción {#}× más rápida que Ritmo fijo",
+"{#} zJ":
+  "{#} zJ",
 "The walls are held at {#} K. Every molecule that hits a wall leaves as if from a gas at {#} K, so the {#} K gas gives heat to the walls and cools until T settles near {#} K; Q counts the heat. Then push the piston: the walls carry off the work you do, and T stays near {#} K (an isothermal squeeze) instead of rising. Switch the walls to Insulated and compare.":
   "Las paredes se mantienen a {#} K. Cada molécula que choca con una pared sale como si viniera de un gas a {#} K, así que el gas a {#} K cede calor a las paredes y se enfría hasta que T se asienta cerca de {#} K; Q cuenta el calor. Luego empuja el pistón: las paredes se llevan el trabajo que haces, y T se mantiene cerca de {#} K (una compresión isotérmica) en lugar de subir. Cambia las paredes a Aislada y compara.",
 "The left wall is held at {#} K and the piston at {#} K; the top and bottom are insulated. The gas never settles to one temperature: molecules carry energy from the hot wall across to the cold one, the left half stays warmer than the right, and once the flow is steady the heat in at the left matches the heat out at the piston, so Q for all the walls stops changing. Pick each wall to read its own Q.":
@@ -338,18 +318,6 @@ VDI18N.add('es', 'demo/ideal-gas', {
   "B a la izquierda",
 "half of each gas":
   "la mitad de cada gas",
-"Helium mass ({#} u) on the left and argon mass ({#} u) on the right, the same size and temperature. Remove the divider: the light molecules move faster and spread faster.":
-  "Masa del helio ({#} u) a la izquierda y masa del argón ({#} u) a la derecha, mismo tamaño y misma temperatura. Quita el divisor: las moléculas ligeras se mueven más rápido y se dispersan más rápido.",
-"mean square displacement (nm²)":
-  "desplazamiento cuadrático medio (nm²)",
-"gas A":
-  "gas A",
-"gas B":
-  "gas B",
-"{#} molecules of helium mass ({#} u) on the left, nothing on the right, and a hole {#} nm wide, smaller than the distance a molecule travels between collisions (about {#} nm here). Open the hole and count how fast the gas leaks through. Then make gas A argon ({#} u) and repeat: Graham's law says the rate goes as {#}/√m.":
-  "{#} moléculas con la masa del helio ({#} u) a la izquierda, nada a la derecha, y un orificio de {#} nm de ancho, más pequeño que la distancia que recorre una molécula entre choques (cerca de {#} nm aquí). Abre el orificio y cuenta qué tan rápido se escapa el gas. Luego haz que el gas A sea argón ({#} u) y repite: la ley de Graham dice que la tasa va como {#}/√m.",
-"Hot argon ({#} K) on the left and cold argon ({#} K) on the right. Remove the divider: the gases mix, and collisions bring both sides to one temperature.":
-  "Argón caliente ({#} K) a la izquierda y argón frío ({#} K) a la derecha. Quita el divisor: los gases se mezclan, y los choques llevan a ambos lados a una sola temperatura.",
 "closed":
   "cerrado",
 "divider closed":
@@ -372,6 +340,18 @@ VDI18N.add('es', 'demo/ideal-gas', {
   "Las líneas de rayas marcan la mitad de cada gas.",
 "The divider has not been opened yet.":
   "Todavía no se ha abierto el divisor.",
+"Helium mass ({#} u) on the left and argon mass ({#} u) on the right, the same size and temperature. Remove the divider: the light molecules move faster and spread faster.":
+  "Masa del helio ({#} u) a la izquierda y masa del argón ({#} u) a la derecha, mismo tamaño y misma temperatura. Quita el divisor: las moléculas ligeras se mueven más rápido y se dispersan más rápido.",
+"mean square displacement (nm²)":
+  "desplazamiento cuadrático medio (nm²)",
+"gas A":
+  "gas A",
+"gas B":
+  "gas B",
+"{#} molecules of helium mass ({#} u) on the left, nothing on the right, and a hole {#} nm wide, smaller than the distance a molecule travels between collisions (about {#} nm here). Open the hole and count how fast the gas leaks through. Then make gas A argon ({#} u) and repeat: Graham's law says the rate goes as {#}/√m.":
+  "{#} moléculas con la masa del helio ({#} u) a la izquierda, nada a la derecha, y un orificio de {#} nm de ancho, más pequeño que la distancia que recorre una molécula entre choques (cerca de {#} nm aquí). Abre el orificio y cuenta qué tan rápido se escapa el gas. Luego haz que el gas A sea argón ({#} u) y repite: la ley de Graham dice que la tasa va como {#}/√m.",
+"Hot argon ({#} K) on the left and cold argon ({#} K) on the right. Remove the divider: the gases mix, and collisions bring both sides to one temperature.":
+  "Argón caliente ({#} K) a la izquierda y argón frío ({#} K) a la derecha. Quita el divisor: los gases se mezclan, y los choques llevan a ambos lados a una sola temperatura.",
 "Q from the piston":
   "Q del pistón",
 "Q from the top":
@@ -384,12 +364,8 @@ VDI18N.add('es', 'demo/ideal-gas', {
   "orificio, {#} nm",
 "time since the divider opened (ps)":
   "tiempo desde que se abrió el divisor (ps)",
-"removed":
-  "quitado",
-"t = {#} ps since opening":
-  "t = {#} ps desde la apertura",
-"The divider is removed.":
-  "El divisor está quitado.",
+"The divider has a hole {#} nm wide.":
+  "El divisor tiene un orificio de {#} nm de ancho.",
 "Time since the divider opened {#} ps.":
   "Tiempo desde que se abrió el divisor: {#} ps.",
 "Mean square displacement of gas A {#} nm².":
@@ -398,18 +374,66 @@ VDI18N.add('es', 'demo/ideal-gas', {
   "Desplazamiento cuadrático medio del gas B: {#} nm².",
 "Now {#} of gas A are on the right and {#} of gas B are on the left.":
   "Ahora hay {#} moléculas del gas A a la derecha y {#} del gas B a la izquierda.",
+"removed":
+  "quitado",
+"t = {#} ps since opening":
+  "t = {#} ps desde la apertura",
+"The divider is removed.":
+  "El divisor está quitado.",
+"Graph of the mean square displacement of each gas, in nm², against the time since the divider opened, in ps.":
+  "Gráfica del desplazamiento cuadrático medio de cada gas, en nm², en función del tiempo desde que se abrió el divisor, en ps.",
+"Now gas A is at {#} nm² and gas B at {#} nm².":
+  "Ahora el gas A está en {#} nm² y el gas B en {#} nm².",
 "A curve at {#} K":
   "Curva de A a {#} K",
 "B curve at {#} K":
   "Curva de B a {#} K",
+"Histogram of the speeds of each gas, in m/s, with the two dimensional Maxwell Boltzmann curve for each at its own temperature.":
+  "Histograma de las rapideces de cada gas, en m/s, con la curva de Maxwell Boltzmann bidimensional de cada uno a su propia temperatura.",
+"Gas A is at {#} K and gas B at {#} K.":
+  "El gas A está a {#} K y el gas B a {#} K.",
 "M-B at {#} K":
   "M-B a {#} K",
-"Pressure ideal {#} µN/m.":
-  "Presión ideal {#} µN/m.",
-"t = {#} ns playback {#}× faster than Fixed rate":
-  "t = {#} ns reproducción {#}× más rápida que Ritmo fijo",
+"The left wall is held at {#} K.":
+  "La pared izquierda se mantiene a {#} K.",
+"The piston wall is held at {#} K.":
+  "La pared del émbolo se mantiene a {#} K.",
+"The bottom wall is held at {#} K.":
+  "La pared inferior se mantiene a {#} K.",
+"The top wall is held at {#} K.":
+  "La pared superior se mantiene a {#} K.",
+"Heat into the gas {#} zJ.":
+  "Calor que entra al gas {#} zJ.",
+"The gas is carbon dioxide.":
+  "El gas es dióxido de carbono.",
+"The molecules are hard disks {#} nm across, the size for this gas.":
+  "Las moléculas son discos duros de {#} nm de diámetro, el tamaño para este gas.",
 "Pressure measured {#} nN/m, ideal {#} nN/m.":
   "Presión medida {#} nN/m, ideal {#} nN/m.",
+"t = {#} ns playback {#}× faster than Fixed rate":
+  "t = {#} ns reproducción {#}× más rápida que Ritmo fijo",
+"+{#} off scale →":
+  "+{#} fuera de escala →",
+"Describe the picture":
+  "Describir la imagen",
+"Running.":
+  "En marcha.",
+"Temperature {#} K.":
+  "Temperatura {#} K.",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
+"Helium":
+  "Helio",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
+"Paused.":
+  "En pausa.",
 "hole {#} nm":
   "orificio {#} nm",
 "Close":

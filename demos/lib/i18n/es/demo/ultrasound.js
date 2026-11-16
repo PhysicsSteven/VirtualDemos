@@ -1,7 +1,5 @@
 /* demo/ultrasound in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/ultrasound', {
-"Describe the picture":
-  "Describir la imagen",
 "fat":
   "grasa",
 "muscle":
@@ -52,8 +50,6 @@ VDI18N.add('es', 'demo/ultrasound', {
   "El eco {#}, de músculo a hueso, viene de {#} cm de profundidad a los {#} μs, con r = {#}.",
 "Echo {#}, from bone to muscle, comes from {#} cm down at {#} μs, with r = −{#}.":
   "El eco {#}, de hueso a músculo, viene de {#} cm de profundidad a los {#} μs, con r = −{#}.",
-"Time controls":
-  "Controles de tiempo",
 "Set up (fades while the scanner runs). Drag, or use the arrow keys, to move this card; double click to put it back":
   "Preparar (se desvanece mientras el ecógrafo funciona). Arrastra, o usa las flechas, para mover esta tarjeta; doble clic la regresa a su lugar",
 "Set up (fades while the scanner runs)":
@@ -156,10 +152,6 @@ VDI18N.add('es', 'demo/ultrasound', {
   "Bloque, transductor y ecógrafo a escala (profundidad en cm en la cara del corte). El pulso y los ecos se muestran {#}× más lentos, con sus crestas separadas al menos {#} mm (en realidad c/f₀ = {#} mm en músculo).",
 "Drag the screen to move the cursor; drag elsewhere to turn.":
   "Arrastra la pantalla para mover el cursor; arrastra en otro lugar para girar.",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
 "echo amplitude (envelope)":
   "amplitud del eco (envolvente)",
 "pulse ↓":
@@ -172,16 +164,18 @@ VDI18N.add('es', 'demo/ultrasound', {
   "pulso y ecos",
 "shown {#}× slower":
   "mostrados {#}× más lentos",
-"The scanner is running.":
-  "El escáner está en marcha.",
 "echo, r = {#}":
   "eco, r = {#}",
+"The scanner is running.":
+  "El escáner está en marcha.",
 "echo pressure (radio frequency trace)":
   "presión del eco (traza de radiofrecuencia)",
 "echo, r = -{#}":
   "eco, r = -{#}",
 "off the top: lower the gain":
   "se sale por arriba: baja la ganancia",
+"The screen is zoomed to {#} μs around the cursor.":
+  "La pantalla está ampliada a {#} μs alrededor del cursor.",
 "water":
   "agua",
 "air":
@@ -198,10 +192,6 @@ VDI18N.add('es', 'demo/ultrasound', {
   "músculo (hay un quiste en alguna parte)",
 "Fat, then muscle with a fluid filled cyst (taken as water) somewhere in it. Find the two weak echoes from the cyst, and use the scanner’s {#} m/s to find how deep it is and how thick. New hidden cyst moves it.":
   "Grasa, y luego músculo con un quiste lleno de líquido (tomado como agua) en alguna parte. Encuentra los dos ecos débiles del quiste, y usa los {#} m/s del ecógrafo para encontrar qué tan profundo está y qué tan grueso es. Nuevo quiste oculto lo mueve.",
-"Under the gel are fat, then muscle with a fluid filled cyst hidden somewhere in it.":
-  "Debajo del gel hay grasa y luego músculo con un quiste lleno de líquido oculto en algún lugar.",
-"The echo times and sizes are hidden: measure them with the cursor.":
-  "Los tiempos y tamaños de los ecos están ocultos: mídelos con el cursor.",
 "muscle to fat: {#} cm, {#} μs, r = -{#}<br>fat to muscle: {#} cm, {#} μs, r = {#}":
   "músculo a grasa: {#} cm, {#} μs, r = -{#}<br>grasa a músculo: {#} cm, {#} μs, r = {#}",
 "A layer of fat {#} mm thick lies {#} cm down in muscle. At {#} MHz its two echoes run together; zoom in and step up the transducer frequency until they separate. A shorter pulse resolves finer detail, but in real tissue it is also absorbed faster.":
@@ -240,14 +230,6 @@ VDI18N.add('es', 'demo/ultrasound', {
   "Una arteria a {#} cm de profundidad, con el haz a {#}° del flujo y la sangre moviéndose a {#} m/s. Enciende el ecógrafo, pon el cursor en el pico del espectro y calcula la rapidez a partir del corrimiento. Luego cambia θ: el corrimiento cambia, la rapidez no. Prueba el flujo suave: el espectro se extiende de {#} al corrimiento de la sangre más rápida.",
 "Cursor shift":
   "Corrimiento en el cursor",
-"blood cells drawn slowed (speed hidden)":
-  "células sanguíneas dibujadas más lentas (rapidez oculta)",
-"hidden":
-  "oculta",
-"The blood speed is hidden. Measure the shift at three or more angles and work out the speed from each; they should agree. New mystery flow picks another.":
-  "La rapidez de la sangre está oculta. Mide el corrimiento a tres o más ángulos y calcula la rapidez con cada uno; deberían coincidir. Nuevo flujo misterioso elige otro.",
-"Start the scanner first.":
-  "Primero enciende el ecógrafo.",
 "On the left, a transducer on the skin above a blood vessel. On the right, the scanner screen: the Doppler spectrum, intensity against frequency shift.":
   "A la izquierda, un transductor sobre la piel encima de un vaso sanguíneo. A la derecha, la pantalla del escáner: el espectro Doppler, intensidad contra corrimiento de frecuencia.",
 "The transducer frequency is {#} MHz and the beam makes an angle of {#}° with the flow.":
@@ -260,10 +242,20 @@ VDI18N.add('es', 'demo/ultrasound', {
   "El escáner está detenido. Inicia el escáner para ver el espectro.",
 "The cursor is at {#} Hz.":
   "El cursor está en {#} Hz.",
-"The blood speed is hidden: measure it.":
-  "La rapidez de la sangre está oculta: mídela.",
+"The blood speed is {#} m/s, and the Doppler shift is {#} Hz.":
+  "La rapidez de la sangre es {#} m/s, y el corrimiento Doppler es {#} Hz.",
 "The speed of sound in blood is {#} m/s.":
   "La rapidez del sonido en la sangre es {#} m/s.",
+"blood cells drawn slowed (speed hidden)":
+  "células sanguíneas dibujadas más lentas (rapidez oculta)",
+"hidden":
+  "oculta",
+"The blood speed is hidden. Measure the shift at three or more angles and work out the speed from each; they should agree. New mystery flow picks another.":
+  "La rapidez de la sangre está oculta. Mide el corrimiento a tres o más ángulos y calcula la rapidez con cada uno; deberían coincidir. Nuevo flujo misterioso elige otro.",
+"The blood speed is hidden: measure it.":
+  "La rapidez de la sangre está oculta: mídela.",
+"Start the scanner first.":
+  "Primero enciende el ecógrafo.",
 "The last cyst's top was {#} cm down. A new one is hidden.":
   "La parte superior del último quiste estaba a {#} cm de profundidad. Hay uno nuevo oculto.",
 "The last mystery flow was {#} m/s. A new one is running.":
@@ -280,10 +272,30 @@ VDI18N.add('es', 'demo/ultrasound', {
   "Corrimiento de la sangre más rápida",
 "The blood flows smoothly, fastest at the center of the vessel.":
   "La sangre fluye con suavidad, más rápido en el centro del vaso.",
-"The screen is zoomed to {#} μs around the cursor.":
-  "La pantalla está ampliada a {#} μs alrededor del cursor.",
+"Layer {#} below the gel is water, {#} cm thick.":
+  "La capa {#} debajo del gel es agua, de {#} cm de grosor.",
+"Layer {#} below the gel is air, {#} cm thick.":
+  "La capa {#} debajo del gel es aire, de {#} cm de grosor.",
+"Echo {#}, from water to air, comes from {#} cm down at {#} μs, with r = −{#}.":
+  "El eco {#}, de agua a aire, viene de {#} cm de profundidad a los {#} μs, con r = −{#}.",
+"Under the gel are fat, then muscle with a fluid filled cyst hidden somewhere in it.":
+  "Debajo del gel hay grasa y luego músculo con un quiste lleno de líquido oculto en algún lugar.",
+"The echo times and sizes are hidden: measure them with the cursor.":
+  "Los tiempos y tamaños de los ecos están ocultos: mídelos con el cursor.",
 "Echo {#}, from muscle to fat, comes from {#} cm down at {#} μs, with r = −{#}.":
   "El eco {#}, de músculo a grasa, viene de {#} cm de profundidad a los {#} μs, con r = −{#}.",
+"Absorption is on.":
+  "La absorción está activada.",
+"The echo level at the cursor is −∞ dB of the pulse sent.":
+  "El nivel del eco en el cursor es −∞ dB del pulso enviado.",
+"Describe the picture":
+  "Describir la imagen",
+"Time controls":
+  "Controles de tiempo",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "Block, transducer and scanner to scale (depth in cm on the cut face). Pulse and echoes shown {#} {#}× slower, their crests at least {#} mm apart (really c/f₀ = {#} mm in muscle).":
   "Bloque, transductor y ecógrafo a escala (profundidad en cm en la cara del corte). El pulso y los ecos se muestran {#} {#}× más lentos, con sus crestas separadas al menos {#} mm (en realidad c/f₀ = {#} mm en músculo).",
 "Record reading":

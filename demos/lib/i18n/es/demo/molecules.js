@@ -1,7 +1,5 @@
 /* demo/molecules in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/molecules', {
-"Describe the picture":
-  "Describir la imagen",
 "Cl⁻":
   "Cl⁻",
 "Na⁺":
@@ -26,10 +24,6 @@ VDI18N.add('es', 'demo/molecules', {
   "Na + Cl (átomos neutros)",
 "dashed: ΔE − ke²/r and A/rⁿ":
   "punteadas: ΔE − ke²/r y A/rⁿ",
-"Skip to the picture":
-  "Ir a la imagen",
-"Skip to the controls":
-  "Ir a los controles",
 "Molecules: Bonds and Spectra":
   "Moléculas: enlaces y espectros",
 "<a>Condensed matter physics</a>":
@@ -160,8 +154,6 @@ VDI18N.add('es', 'demo/molecules', {
   "<span>Una lámpara envía fotones a una molécula. Elige la luz y la molécula; observa si gira, vibra, brilla o se rompe.</span>",
 "<span>Light</span>":
   "<span>Luz</span>",
-"Light":
-  "Luz",
 "Microwave":
   "Microondas",
 "Infrared":
@@ -374,8 +366,6 @@ VDI18N.add('es', 'demo/molecules', {
   "Transición",
 "Allowed?":
   "¿Permitida?",
-"yes":
-  "sí",
 "Photon wavenumber":
   "Número de onda del fotón",
 "hf (n = {#} → {#})":
@@ -488,24 +478,20 @@ VDI18N.add('es', 'demo/molecules', {
   "Un fotón hace vibrar la molécula: una flexión a {#} cm⁻¹.",
 "The electromagnetic spectrum on a log scale of wavelength, from ultraviolet to microwave, marking where the light on the molecule falls.":
   "El espectro electromagnético en escala logarítmica de longitud de onda, del ultravioleta a las microondas, con la marca de dónde cae la luz que incide sobre la molécula.",
-"bend":
-  "flexión",
-"absorbed: the {mode} ({nu} cm⁻¹) starts":
-  "absorbido: empieza {mode} ({nu} cm⁻¹)",
-"it gives a photon back soon, in any direction; the motion slowed":
-  "pronto devuelve un fotón, en cualquier dirección; movimiento en cámara lenta",
 "microwave, on a rotational line":
   "microondas, en una línea rotacional",
 "about {#} meV (at {#} cm)":
   "unos {#} meV (a {#} cm)",
 "passes through (no electric dipole to push on)":
   "pasa (no hay dipolo eléctrico que empujar)",
-"bend":
-  "flexión",
-"absorbed: the {mode} ({nu} cm⁻¹) starts":
-  "absorbido: empieza {mode} ({nu} cm⁻¹)",
-"it gives a photon back soon, in any direction; the motion slowed":
-  "pronto devuelve un fotón, en cualquier dirección; movimiento en cámara lenta",
+"The light is microwave, on a rotational line.":
+  "La luz es de microondas, en una línea rotacional.",
+"One photon passes through: no electric dipole to push on.":
+  "Un fotón pasa de largo: no hay dipolo eléctrico sobre el cual empujar.",
+"no electric dipole to push on":
+  "no hay dipolo eléctrico sobre el cual empujar",
+"passes: {why}":
+  "pasa: {why}",
 "passes through (no electronic absorption at this wavelength)":
   "pasa (no hay absorción electrónica a esta longitud de onda)",
 "ultraviolet":
@@ -524,8 +510,6 @@ VDI18N.add('es', 'demo/molecules', {
   "Un fotón pasa de largo: no hay absorción electrónica en esta longitud de onda.",
 "breaks: NO + O":
   "se rompe: NO + O",
-"NO":
-  "NO",
 "breaks: O₂ + O":
   "se rompe: O₂ + O",
 "below {#} nm and {#} to {#} nm":
@@ -546,50 +530,6 @@ VDI18N.add('es', 'demo/molecules', {
   "espines paralelos: el principio de exclusión mantiene separados los electrones",
 "Two hydrogen atoms whose electrons have parallel spins. The exclusion principle keeps the electrons out of the region between the protons, the protons repel, and there is no bond at any separation.":
   "Dos átomos de hidrógeno cuyos electrones tienen espines paralelos. El principio de exclusión mantiene a los electrones fuera de la región entre los protones, los protones se repelen y no hay enlace a ninguna separación.",
-"H₂⁺: one electron and two protons {#} nm apart, the measured bond length. In the bonding orbital the two atomic waves add, so the electron is more likely to be found between the protons, where it pulls on both. Change R and watch the energy; the LCAO model is simple, so its well is shallower than the measured one.":
-  "H₂⁺: un electrón y dos protones a {#} nm de distancia, la longitud de enlace medida. En el orbital enlazante las dos ondas atómicas se suman, así que es más probable encontrar el electrón entre los protones, donde atrae a ambos. Cambia R y observa la energía; el modelo LCAO es sencillo, así que su pozo es menos profundo que el medido.",
-"nodal plane: ψ = {#}":
-  "plano nodal: ψ = {#}",
-"ψ in the plane through both protons: blue +, orange −":
-  "ψ en el plano que pasa por ambos protones: azul +, naranja −",
-"ψ along the axis; dashed: the two atomic parts":
-  "ψ a lo largo del eje; punteadas: las dos partes atómicas",
-"The same molecule with the electron in the antibonding orbital: the atomic waves subtract, ψ changes sign halfway, and the electron is never found on the plane between the protons. Its energy falls as the protons separate, so there is no bond.":
-  "La misma molécula con el electrón en el orbital antienlazante: las ondas atómicas se restan, ψ cambia de signo a la mitad y el electrón nunca se encuentra en el plano entre los protones. Su energía baja a medida que los protones se separan, así que no hay enlace.",
-"antibonding σu*":
-  "antienlazante σu*",
-"The vibration and rotation levels of HCl in the book's model. A photon of the infrared band raises n by one and changes l by one, up (R branch) or down (P branch). Try Δl = {#} or +{#} and see why they are forbidden.":
-  "Los niveles de vibración y rotación del HCl en el modelo del libro. Un fotón de la banda infrarroja sube n en uno y cambia l en uno, hacia arriba (rama R) o hacia abajo (rama P). Prueba Δl = {#} o +{#} y ve por qué están prohibidas.",
-"The infrared absorption band of HCl gas at room temperature, as a spectrometer with a resolution of {#} cm⁻¹ would record it. The lines come in two branches with a gap at the center, where the missing line would be.":
-  "La banda de absorción infrarroja del gas HCl a temperatura ambiente, como la registraría un espectrómetro con una resolución de {#} cm⁻¹. Las líneas vienen en dos ramas con un hueco en el centro, donde estaría la línea que falta.",
-"Look closely: each line is a pair. Natural chlorine is {#} % ³⁵Cl and {#} % ³⁷Cl, and the heavier isotope gives a slightly larger reduced mass, so its lines sit a little lower. The close up shows one pair.":
-  "Mira de cerca: cada línea es un par. El cloro natural es {#} % ³⁵Cl y {#} % ³⁷Cl, y el isótopo más pesado da una masa reducida un poco mayor, así que sus líneas quedan un poco más abajo. El acercamiento muestra un par.",
-"The same gas at {#} K. More molecules sit in high rotation levels, so the strongest lines move away from the center and the band spreads out. The line positions do not move.":
-  "El mismo gas a {#} K. Más moléculas están en niveles de rotación altos, así que las líneas más intensas se alejan del centro y la banda se ensancha. Las posiciones de las líneas no se mueven.",
-"Infrared at {#} μm, the {#} cm⁻¹ band where CO₂ bends, on a CO₂ molecule. Bending moves the charge off center, so the molecule takes the photon and later sends one out again in any direction: CO₂ in the air returns part of the Earth's infrared glow. Try N₂ and O₂, the bulk of the air: they let it pass.":
-  "Infrarrojo a {#} μm, la banda de {#} cm⁻¹ donde el CO₂ se flexiona, sobre una molécula de CO₂. La flexión desplaza la carga del centro, así que la molécula toma el fotón y más tarde emite otro en cualquier dirección: el CO₂ del aire devuelve parte del brillo infrarrojo de la Tierra. Prueba N₂ y O₂, la mayor parte del aire: lo dejan pasar.",
-"Ultraviolet at {#} nm on ozone. The photon has more energy than the bond, so O₃ breaks into O₂ + O; this is how the ozone layer takes UV out of sunlight. O₂ needs photons below {#} nm to break, so at {#} nm it lets the light through.":
-  "Ultravioleta a {#} nm sobre ozono. El fotón tiene más energía que el enlace, así que el O₃ se rompe en O₂ + O; así es como la capa de ozono quita el UV de la luz del Sol. El O₂ necesita fotones por debajo de {#} nm para romperse, así que a {#} nm deja pasar la luz.",
-"Blue light at {#} nm on NO₂, the brown gas of smog. The photon lifts an electron but has less energy than the {#} eV bond, so the molecule glows instead of breaking. Below {#} nm (switch to ultraviolet) it breaks into NO + O.":
-  "Luz azul a {#} nm sobre NO₂, el gas café del smog. El fotón eleva un electrón pero tiene menos energía que el enlace de {#} eV, así que la molécula brilla en vez de romperse. Por debajo de {#} nm (cambia a ultravioleta) se rompe en NO + O.",
-"an electron is lifted; it glows":
-  "se eleva un electrón; brilla",
-"Light shines on the molecule NO₂.":
-  "La luz incide sobre la molécula de NO₂.",
-"The light is visible at {#} nm.":
-  "La luz es visible, de {#} nm.",
-"One photon lifts an electron, and the molecule glows.":
-  "Un fotón excita un electrón y la molécula brilla.",
-"Molecules and light has nothing to record: it shows what each kind of light does.":
-  "Moléculas y luz no tiene nada que registrar: muestra lo que hace cada tipo de luz.",
-"Change the separation of the atoms in {#} nanometer steps, the level in Energy levels, or the cursor in the HCl spectrum (Shift for bigger steps)":
-  "Cambia la separación de los átomos en pasos de {#} nanómetros, el nivel en Niveles de energía o el cursor en el espectro de HCl (Shift para pasos más grandes)",
-"UV, vis":
-  "UV, vis",
-"electron":
-  "electrón",
-"sizes in proportion to measured radii; the scale gives the separation":
-  "tamaños en proporción a los radios medidos; la escala da la separación",
 "Two atoms sharing electrons, the molecule H₂, on a scale in nanometers.":
   "Dos átomos que comparten electrones, la molécula de H₂, en una escala en nanómetros.",
 "The energy is {#} eV, measured from separated neutral atoms.":
@@ -604,20 +544,88 @@ VDI18N.add('es', 'demo/molecules', {
   "El punto marcado está en r = {#} nm, U = {#} eV.",
 "The well is {#} eV deep.":
   "El pozo tiene {#} eV de profundidad.",
-"turns faster (rotation)":
-  "gira más rápido (rotación)",
-"passes through (no vibration at this wavenumber)":
-  "pasa (no hay vibración a este número de onda)",
-"no dipole":
-  "sin dipolo",
-"no electronic absorption at this wavelength":
-  "no hay absorción electrónica a esta longitud de onda",
-"passes: {why}":
-  "pasa: {why}",
+"H₂⁺: one electron and two protons {#} nm apart, the measured bond length. In the bonding orbital the two atomic waves add, so the electron is more likely to be found between the protons, where it pulls on both. Change R and watch the energy; the LCAO model is simple, so its well is shallower than the measured one.":
+  "H₂⁺: un electrón y dos protones a {#} nm de distancia, la longitud de enlace medida. En el orbital enlazante las dos ondas atómicas se suman, así que es más probable encontrar el electrón entre los protones, donde atrae a ambos. Cambia R y observa la energía; el modelo LCAO es sencillo, así que su pozo es menos profundo que el medido.",
+"nodal plane: ψ = {#}":
+  "plano nodal: ψ = {#}",
+"ψ in the plane through both protons: blue +, orange −":
+  "ψ en el plano que pasa por ambos protones: azul +, naranja −",
+"ψ along the axis; dashed: the two atomic parts":
+  "ψ a lo largo del eje; punteadas: las dos partes atómicas",
+"The same molecule with the electron in the antibonding orbital: the atomic waves subtract, ψ changes sign halfway, and the electron is never found on the plane between the protons. Its energy falls as the protons separate, so there is no bond.":
+  "La misma molécula con el electrón en el orbital antienlazante: las ondas atómicas se restan, ψ cambia de signo a la mitad y el electrón nunca se encuentra en el plano entre los protones. Su energía baja a medida que los protones se separan, así que no hay enlace.",
+"antibonding σu*":
+  "antienlazante σu*",
+"The H₂⁺ molecular orbital: one electron shared by two protons.":
+  "El orbital molecular del H₂⁺: un electrón compartido por dos protones.",
+"The electron is in the antibonding orbital.":
+  "El electrón está en el orbital antienlazante.",
+"The separation is {#} nm, {#} Bohr radii.":
+  "La separación es de {#} nm, {#} radios de Bohr.",
+"The energy is {#} eV.":
+  "La energía es {#} eV.",
+"The overlap is {#}.":
+  "El traslape es {#}.",
+"The probability density at the midpoint is {#} times the two atoms added.":
+  "La densidad de probabilidad en el punto medio es {#} veces la de los dos átomos sumados.",
+"Graph of the energy U in eV against the separation R in nm.":
+  "Gráfica de la energía U en eV contra la separación R en nm.",
+"The marked point is at R = {#} nm, U = {#} eV.":
+  "El punto marcado está en R = {#} nm, U = {#} eV.",
+"The dashed curve is the measured one.":
+  "La curva discontinua es la medida.",
+"The vibration and rotation levels of HCl in the book's model. A photon of the infrared band raises n by one and changes l by one, up (R branch) or down (P branch). Try Δl = {#} or +{#} and see why they are forbidden.":
+  "Los niveles de vibración y rotación del HCl en el modelo del libro. Un fotón de la banda infrarroja sube n en uno y cambia l en uno, hacia arriba (rama R) o hacia abajo (rama P). Prueba Δl = {#} o +{#} y ve por qué están prohibidas.",
+"The infrared absorption band of HCl gas at room temperature, as a spectrometer with a resolution of {#} cm⁻¹ would record it. The lines come in two branches with a gap at the center, where the missing line would be.":
+  "La banda de absorción infrarroja del gas HCl a temperatura ambiente, como la registraría un espectrómetro con una resolución de {#} cm⁻¹. Las líneas vienen en dos ramas con un hueco en el centro, donde estaría la línea que falta.",
+"Look closely: each line is a pair. Natural chlorine is {#} % ³⁵Cl and {#} % ³⁷Cl, and the heavier isotope gives a slightly larger reduced mass, so its lines sit a little lower. The close up shows one pair.":
+  "Mira de cerca: cada línea es un par. El cloro natural es {#} % ³⁵Cl y {#} % ³⁷Cl, y el isótopo más pesado da una masa reducida un poco mayor, así que sus líneas quedan un poco más abajo. El acercamiento muestra un par.",
+"The same gas at {#} K. More molecules sit in high rotation levels, so the strongest lines move away from the center and the band spreads out. The line positions do not move.":
+  "El mismo gas a {#} K. Más moléculas están en niveles de rotación altos, así que las líneas más intensas se alejan del centro y la banda se ensancha. Las posiciones de las líneas no se mueven.",
+"Infrared at {#} μm, the {#} cm⁻¹ band where CO₂ bends, on a CO₂ molecule. Bending moves the charge off center, so the molecule takes the photon and later sends one out again in any direction: CO₂ in the air returns part of the Earth's infrared glow. Try N₂ and O₂, the bulk of the air: they let it pass.":
+  "Infrarrojo a {#} μm, la banda de {#} cm⁻¹ donde el CO₂ se flexiona, sobre una molécula de CO₂. La flexión desplaza la carga del centro, así que la molécula toma el fotón y más tarde emite otro en cualquier dirección: el CO₂ del aire devuelve parte del brillo infrarrojo de la Tierra. Prueba N₂ y O₂, la mayor parte del aire: lo dejan pasar.",
+"Ultraviolet at {#} nm on ozone. The photon has more energy than the bond, so O₃ breaks into O₂ + O; this is how the ozone layer takes UV out of sunlight. O₂ needs photons below {#} nm to break, so at {#} nm it lets the light through.":
+  "Ultravioleta a {#} nm sobre ozono. El fotón tiene más energía que el enlace, así que el O₃ se rompe en O₂ + O; así es como la capa de ozono quita el UV de la luz del Sol. El O₂ necesita fotones por debajo de {#} nm para romperse, así que a {#} nm deja pasar la luz.",
+"Light shines on the molecule O₃.":
+  "La luz incide sobre la molécula O₃.",
+"One photon breaks the molecule into O₂ and O.":
+  "Un fotón rompe la molécula en O₂ y O.",
+"Blue light at {#} nm on NO₂, the brown gas of smog. The photon lifts an electron but has less energy than the {#} eV bond, so the molecule glows instead of breaking. Below {#} nm (switch to ultraviolet) it breaks into NO + O.":
+  "Luz azul a {#} nm sobre NO₂, el gas café del smog. El fotón eleva un electrón pero tiene menos energía que el enlace de {#} eV, así que la molécula brilla en vez de romperse. Por debajo de {#} nm (cambia a ultravioleta) se rompe en NO + O.",
+"an electron is lifted; it glows":
+  "se eleva un electrón; brilla",
+"Light shines on the molecule NO₂.":
+  "La luz incide sobre la molécula de NO₂.",
+"The light is visible at {#} nm.":
+  "La luz es visible, de {#} nm.",
+"One photon lifts an electron, and the molecule glows.":
+  "Un fotón excita un electrón y la molécula brilla.",
+"Molecules and light has nothing to record: it shows what each kind of light does.":
+  "Moléculas y luz no tiene nada que registrar: muestra lo que hace cada tipo de luz.",
+"it gives a photon back soon, in any direction; the motion slowed":
+  "pronto devuelve un fotón, en cualquier dirección; movimiento en cámara lenta",
+"Change the separation of the atoms in {#} nanometer steps, the level in Energy levels, or the cursor in the HCl spectrum (Shift for bigger steps)":
+  "Cambia la separación de los átomos en pasos de {#} nanómetros, el nivel en Niveles de energía o el cursor en el espectro de HCl (Shift para pasos más grandes)",
+"UV, vis":
+  "UV, vis",
+"electron":
+  "electrón",
+"sizes in proportion to measured radii; the scale gives the separation":
+  "tamaños en proporción a los radios medidos; la escala da la separación",
 "The energy of the ion pair is {#} eV, measured from separated neutral atoms.":
   "La energía del par de iones es de {#} eV, medida desde los átomos neutros separados.",
 "The neutral atoms have the lower energy.":
   "Los átomos neutros tienen la menor energía.",
+"The vibration and rotation energy levels of H³⁵Cl.":
+  "Los niveles de energía de vibración y rotación del H³⁵Cl.",
+"The transition is vibration {#} to {#} and rotation {#} to {#}.":
+  "La transición es de vibración {#} a {#} y de rotación {#} a {#}.",
+"The transition is allowed.":
+  "La transición está permitida.",
+"The photon has wavenumber {#} cm⁻¹ and energy {#} meV.":
+  "El fotón tiene número de onda {#} cm⁻¹ y energía {#} meV.",
+"Graph of the relative strength of the absorption lines of H³⁵Cl against photon wavenumber in cm⁻¹.":
+  "Gráfica de la intensidad relativa de las líneas de absorción del H³⁵Cl contra el número de onda del fotón en cm⁻¹.",
 "The infrared absorption band of HCl gas, with a cursor on the spectrum.":
   "La banda de absorción infrarroja del gas HCl, con un cursor sobre el espectro.",
 "The gas is at {#} K and the resolution is {#} cm⁻¹.":
@@ -634,14 +642,58 @@ VDI18N.add('es', 'demo/molecules', {
   "Un acercamiento del espectro alrededor del cursor: absorbancia contra número de onda en cm⁻¹.",
 "The cursor is at {#} cm⁻¹.":
   "El cursor está en {#} cm⁻¹.",
+"turns faster (rotation)":
+  "gira más rápido (rotación)",
+"One photon makes the molecule rotate faster.":
+  "Un fotón hace que la molécula gire más rápido.",
+"passes through (no vibration at this wavenumber)":
+  "pasa (no hay vibración a este número de onda)",
+"One photon passes through: no vibration at this wavenumber.":
+  "Un fotón pasa de largo: no hay vibración con este número de onda.",
+"One photon breaks the molecule into NO and O.":
+  "Un fotón rompe la molécula en NO y O.",
+"no dipole":
+  "sin dipolo",
+"Light shines on the molecule N₂.":
+  "La luz incide sobre la molécula N₂.",
+"no electronic absorption at this wavelength":
+  "no hay absorción electrónica a esta longitud de onda",
+"Light shines on the molecule O₂.":
+  "La luz incide sobre la molécula O₂.",
+"Light shines on the molecule CO.":
+  "La luz incide sobre la molécula CO.",
+"The energy is −{#} eV, measured from separated neutral atoms.":
+  "La energía es −{#} eV, medida desde átomos neutros separados.",
+"The electron spins are opposite, so the bond is bonding.":
+  "Los espines de los electrones son opuestos, así que el enlace es enlazante.",
+"The electron is in the bonding orbital.":
+  "El electrón está en el orbital enlazante.",
+"The energy is −{#} eV.":
+  "La energía es −{#} eV.",
+"The marked point is at R = {#} nm, U = −{#} eV.":
+  "El punto marcado está en R = {#} nm, U = −{#} eV.",
+"bend":
+  "flexión",
+"absorbed: the {mode} ({nu} cm⁻¹) starts":
+  "absorbido: empieza {mode} ({nu} cm⁻¹)",
+"NO":
+  "NO",
+"Describe the picture":
+  "Describir la imagen",
+"Skip to the picture":
+  "Ir a la imagen",
+"Skip to the controls":
+  "Ir a los controles",
+"Light":
+  "Luz",
+"yes":
+  "sí",
 "no vibration at this wavenumber":
   "no hay vibración a este número de onda",
 "<span>Infrared light through a cell of HCl gas: the absorption around {#} μm. Drag the cursor across the band.</span>":
   "<span>Luz infrarroja a través de una celda con gas HCl: la absorción alrededor de {#} μm. Arrastra el cursor a lo largo de la banda.</span>",
 "it gives a photon back soon, in any direction":
   "pronto devuelve un fotón, en cualquier dirección",
-"NO":
-  "NO",
 "Close":
   "Cerrar",
 "{#} meV":

@@ -1,7 +1,5 @@
 /* demo/spin-resonance in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/spin-resonance', {
-"Describe the picture":
-  "Describir la imagen",
 "CELL MOUNT":
   "SOPORTE DE CELDA",
 "FAST":
@@ -72,10 +70,6 @@ VDI18N.add('es', 'demo/spin-resonance', {
   "CH2 V/DIV",
 "TIME/DIV":
   "TIME/DIV",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
 "Spin Resonance":
   "Resonancia de espín",
 "<a>Atomic structure</a>":
@@ -86,14 +80,6 @@ VDI18N.add('es', 'demo/spin-resonance', {
   "Un banco virtual de resonancia de espín electrónico y protónico. Sintoniza la sonda, barre el campo, encuentra el pico de absorción en el osciloscopio, y mide g para el DPPH y las razones giromagnéticas del ¹H y del ¹⁹F.",
 "B in mT · ν in MHz · hν = gμ<sub>B</sub>B · ν = (γ/{#}π)B":
   "B en mT · ν en MHz · hν = gμ<sub>B</sub>B · ν = (γ/{#}π)B",
-"Time controls":
-  "Controles de tiempo",
-"Run for a moment and pause again":
-  "Avanza un momento y vuelve a pausar",
-"Step":
-  "Paso",
-"Experiment":
-  "Experimento",
 "Electron probe between the scan coils with pole face rings":
   "Sonda de electrones entre las bobinas de barrido con anillos en las caras polares",
 "ESR":
@@ -130,8 +116,6 @@ VDI18N.add('es', 'demo/spin-resonance', {
   "La luz del oscilador se está atenuando.",
 "The sweep is FAST, with a ramp of {#} ms, {#} per second.":
   "El barrido es FAST, con una rampa de {#} ms, {#} por segundo.",
-"Running.":
-  "En marcha.",
 "Drag to turn the bench, scroll to zoom. Drag the SENS screw and FREQ knob up or down.":
   "Arrastra para girar el banco, desplaza para acercar. Arrastra el tornillo SENS y la perilla FREQ hacia arriba o abajo.",
 "Dual trace oscilloscope. Channel {#} shows the field ramp, channel {#} the probe signal. Drag cursors A and B or the V cursor, or the channel markers {#} and {#} at the left edge. Keys: A, B or V selects a cursor, {#} or {#} a channel marker; arrows move it, with shift for bigger steps; space pauses.":
@@ -334,6 +318,16 @@ VDI18N.add('es', 'demo/spin-resonance', {
   "Tapa negra: un frasco vacío. Úsalo para mostrar que el pico viene de la muestra.",
 "The magnet gives about {#} mT, so protons need about {#} MHz, and the scan of {#} mT is only a {#}% window. FREQ is already in it here. The total field is the magnet field, from B₂₀ and the thermometer, plus the scan field.":
   "El imán da unos {#} mT, así que los protones necesitan unos {#} MHz, y el barrido de {#} mT es solo una ventana del {#}%. Aquí FREQ ya está dentro de ella. El campo total es el campo del imán, a partir de B₂₀ y del termómetro, más el campo de barrido.",
+"A proton spin resonance bench: the sample in a probe coil in the Zeeman magnet, with a console and an oscilloscope.":
+  "Un banco de resonancia de espín protónico: la muestra en una bobina de prueba dentro del imán Zeeman, con una consola y un osciloscopio.",
+"Glycerine":
+  "Glicerina",
+"The FREQ dial is at {#}.":
+  "El dial FREQ está en {#}.",
+"The sample is at {#} °C, and the Zeeman magnet field is {#} mT.":
+  "La muestra está a {#} °C, y el campo del imán Zeeman es {#} mT.",
+"Record readings for glycerine and PTFE to fit lines.":
+  "Registra lecturas de glicerina y PTFE para ajustar rectas.",
 "Polystyrene is a solid: the fixed neighboring proton dipoles spread the resonance, so the peak is wider and lower than the glycerine trace held on the screen.":
   "El poliestireno es un sólido: los dipolos fijos de los protones vecinos ensanchan la resonancia, así que el pico es más ancho y más bajo que la traza de glicerina retenida en la pantalla.",
 "Green cap: a polystyrene rod. A solid, so the proton line is broadened.":
@@ -344,20 +338,8 @@ VDI18N.add('es', 'demo/spin-resonance', {
   "Tapa azul: una varilla de PTFE. Flúor, sin hidrógeno: la línea queda a una frecuencia más baja.",
 "No peak: the resonance is outside the {#}% sweep. Turn FREQ slowly while you watch CH2 until the peak moves onto the ramp. Then check SENS.":
   "Sin pico: la resonancia está fuera del barrido del {#}%. Gira FREQ lentamente mientras observas CH2 hasta que el pico entre en la rampa. Luego revisa SENS.",
-"A proton spin resonance bench: the sample in a probe coil in the Zeeman magnet, with a console and an oscilloscope.":
-  "Un banco de resonancia de espín protónico: la muestra en una bobina de prueba dentro del imán Zeeman, con una consola y un osciloscopio.",
-"Glycerine":
-  "Glicerina",
-"The FREQ dial is at {#}.":
-  "El dial FREQ está en {#}.",
-"The sample is at {#} °C, and the Zeeman magnet field is {#} mT.":
-  "La muestra está a {#} °C, y el campo del imán Zeeman es {#} mT.",
 "Channel {#} shows no resonance peak in the sweep.":
   "El canal {#} no muestra ningún pico de resonancia en el barrido.",
-"Record readings for glycerine and PTFE to fit lines.":
-  "Registra lecturas de glicerina y PTFE para ajustar rectas.",
-"Paused.":
-  "En pausa.",
 "The V cursor is at {#} V.":
   "El cursor V está en {#} V.",
 "Pick channel marker {#} or {#}":
@@ -370,16 +352,18 @@ VDI18N.add('es', 'demo/spin-resonance', {
   "CH2 {#} V/div DC",
 "Empty reference":
   "Referencia vacía",
-"SLOW <small>{#} of {#} s</small>":
-  "SLOW <small>{#} de {#} s</small>",
-"ramp {#} of {#} s":
-  "rampa {#} de {#} s",
-"SLOW sweep: CH1 rises over {#} s, untriggered":
-  "Barrido SLOW: CH1 sube durante {#} s, sin disparo",
-"The sweep is SLOW, at {#} of {#} s.":
-  "El barrido es SLOW, en {#} de {#} s.",
+"The sweep is SLOW, and stopped.":
+  "El barrido es SLOW, y está detenido.",
 "The ramp is the slow sweep.":
   "La rampa es el barrido lento.",
+"SLOW <small>{#} of {#} s</small>":
+  "SLOW <small>{#} de {#} s</small>",
+"SLOW sweep: CH1 rises over {#} s, untriggered":
+  "Barrido SLOW: CH1 sube durante {#} s, sin disparo",
+"ramp {#} of {#} s":
+  "rampa {#} de {#} s",
+"The sweep is SLOW, at {#} of {#} s.":
+  "El barrido es SLOW, en {#} de {#} s.",
 "The strip holds a record of the last slow run.":
   "La tira contiene el registro de la última corrida lenta.",
 "PSR, MID, SLOW, chart ruler, t = {#} °C, B20 = {#} mT":
@@ -392,12 +376,34 @@ VDI18N.add('es', 'demo/spin-resonance', {
   "Lectura fila {#}, s",
 "You have recorded {#} reading in this experiment.":
   "Has registrado {#} lectura en este experimento.",
-"The Hz selector is on HI.":
-  "El selector de Hz está en HI.",
+"The Hz selector is on LO.":
+  "El selector de Hz está en LO.",
 "The oscillator light is bright.":
   "La luz del oscilador está brillante.",
+"The Hz selector is on HI.":
+  "El selector de Hz está en HI.",
 "Polystyrene":
   "Poliestireno",
+"PTFE":
+  "PTFE",
+"Describe the picture":
+  "Describir la imagen",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
+"Experiment":
+  "Experimento",
+"Running.":
+  "En marcha.",
+"Paused.":
+  "En pausa.",
 "Close":
   "Cerrar"
 });

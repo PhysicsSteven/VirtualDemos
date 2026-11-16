@@ -1,17 +1,11 @@
 /* demo/resonators in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/resonators', {
-"Describe the picture":
-  "Describir la imagen",
 "level (dB)":
   "nivel (dB)",
 "Sound level in the tube against water position":
   "Nivel sonoro en el tubo en función de la posición del agua",
 "ΔL = {#} cm":
   "ΔL = {#} cm",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
 "Resonators":
   "Resonadores",
 "<a><span>←</span> <span>Sound Waves and the Speed of Sound</span></a><a><span>Kundt's Tube</span> <span>→</span></a>":
@@ -20,12 +14,6 @@ VDI18N.add('es', 'demo/resonators', {
   "¿Qué fija el tono de un instrumento? El tamaño de su resonador y la rapidez de la onda dentro de él. Encuentra la rapidez del sonido con un tubo de resonancia, pulsa una cuerda para ver qué armónicos recibe y sopla sobre una botella cuya nota sigue a su volumen, no a su altura.",
 "f in Hz · c in m/s · lengths in cm or m · tension in N · μ in g/m":
   "f en Hz · c en m/s · longitudes en cm o m · tensión en N · μ en g/m",
-"Time controls":
-  "Controles de tiempo",
-"Run for a moment and pause again":
-  "Avanza un momento y vuelve a pausar",
-"Step":
-  "Paso",
 "L = {#} cm <small>level -{#} dB</small>":
   "L = {#} cm <small>nivel -{#} dB</small>",
 "Resonator":
@@ -70,8 +58,6 @@ VDI18N.add('es', 'demo/resonators', {
   "Media longitud de onda es {#} cm.",
 "No readings are captured.":
   "No hay lecturas capturadas.",
-"Running.":
-  "En marcha.",
 "The resonance tube":
   "El tubo de resonancia",
 "<span>The resonance tube and the source</span>":
@@ -298,6 +284,10 @@ VDI18N.add('es', 'demo/resonators', {
   "tubo cerrado {#} Hz",
 "Note against water level: Helmholtz formula and a closed pipe estimate":
   "Nota en función del nivel del agua: fórmula de Helmholtz y estimación de tubo cerrado",
+"none (bowed)":
+  "ninguno (con arco)",
+"Bowed: the bow drags the string along, it slips back, and a single kink runs round the string once per period. Every harmonic is present with bₙ ∝ {#}/n², so the bridge force is a sawtooth with n·bₙ ∝ {#}/n: a bright, buzzy tone that does not decay while you bow.":
+  "Con arco: el arco arrastra la cuerda, esta resbala hacia atrás y un solo quiebre recorre la cuerda una vez por periodo. Todo armónico está presente con bₙ ∝ {#}/n², así que la fuerza en el puente es un diente de sierra con n·bₙ ∝ {#}/n: un tono brillante y zumbante que no decae mientras frotas.",
 "A bottle with a neck, blown across the top.":
   "Una botella con cuello, sobre cuya boca se sopla.",
 "The bottle holds {#} L and is {#}% full of water.":
@@ -310,10 +300,6 @@ VDI18N.add('es', 'demo/resonators', {
   "La frecuencia de Helmholtz es de {#} Hz.",
 "A closed pipe as tall as the air space would sound at {#} Hz.":
   "Un tubo cerrado tan alto como el espacio de aire sonaría a {#} Hz.",
-"none (bowed)":
-  "ninguno (con arco)",
-"Bowed: the bow drags the string along, it slips back, and a single kink runs round the string once per period. Every harmonic is present with bₙ ∝ {#}/n², so the bridge force is a sawtooth with n·bₙ ∝ {#}/n: a bright, buzzy tone that does not decay while you bow.":
-  "Con arco: el arco arrastra la cuerda, esta resbala hacia atrás y un solo quiebre recorre la cuerda una vez por periodo. Todo armónico está presente con bₙ ∝ {#}/n², así que la fuerza en el puente es un diente de sierra con n·bₙ ∝ {#}/n: un tono brillante y zumbante que no decae mientras frotas.",
 "<span><i></i>Displacement ξ: nodes at closed ends</span><span><i></i>Pressure p: nodes at open ends</span><span><i></i>Envelope; dotted lines mark the effective ends</span><span><i></i>Ladder, open pipe</span><span><i></i>Ladder, closed pipe</span>":
   "<span><i></i>Desplazamiento ξ: nodos en los extremos cerrados</span><span><i></i>Presión p: nodos en los extremos abiertos</span><span><i></i>Envolvente; las líneas punteadas marcan los extremos efectivos</span><span><i></i>Escalera, tubo abierto</span><span><i></i>Escalera, tubo cerrado</span>",
 "The same {#} cm pipe with one end closed: only odd harmonics fit, and the lowest note is about an octave below the open pipe's (not exactly, since the end corrections differ). Switch to Open pipe and compare the two rows of the ladder; try All modes to hear the hollow closed pipe.":
@@ -342,6 +328,16 @@ VDI18N.add('es', 'demo/resonators', {
   "los puntos marcan los nodos; las líneas punteadas muestran la envolvente; ΔL más allá de cada extremo abierto",
 "Allowed frequencies: the ladder of modes for this length":
   "Frecuencias permitidas: la escalera de modos para esta longitud",
+"A pipe closed at one end, with the standing wave drawn inside.":
+  "Un tubo cerrado en un extremo, con la onda estacionaria dibujada dentro.",
+"The pipe is {#} cm long and {#} cm across.":
+  "El tubo mide {#} cm de largo y {#} cm de diámetro.",
+"The mode is k = {#}, harmonic number {#}.":
+  "El modo es k = {#}, número armónico {#}.",
+"Its frequency is {#} Hz.":
+  "Su frecuencia es {#} Hz.",
+"The effective length is {#} cm.":
+  "La longitud efectiva es {#} cm.",
 "Plucked at the middle, the string's shape is symmetric about the center, and every even mode has a node there: b₂, b₄, b₆ are exactly zero. Move the pluck point to L/{#} and every third harmonic disappears instead.":
   "Pulsada a la mitad, la forma de la cuerda es simétrica respecto al centro, y cada modo par tiene ahí un nodo: b₂, b₄, b₆ son exactamente cero. Mueve el punto de pulsación a L/{#} y en cambio desaparece cada tercer armónico.",
 "Plucked string, sum of {#} modes: f₁ = {#} Hz, E4":
@@ -364,8 +360,6 @@ VDI18N.add('es', 'demo/resonators', {
   "soplando: {#} Hz, A2 −{#}¢",
 "Water pours in while you blow. The note rises as {#}/√V and climbs steeply near the top; the pipe estimate follows a different curve. Drag the water level or the marker on the plot to stop anywhere.":
   "Se vierte agua mientras soplas. La nota sube como {#}/√V y asciende abruptamente cerca del borde; la estimación del tubo sigue una curva distinta. Arrastra el nivel del agua o el marcador de la gráfica para detenerte en cualquier punto.",
-"Paused.":
-  "En pausa.",
 "blowing: {#} Hz, A2 +{#}¢":
   "soplando: {#} Hz, A2 +{#}¢",
 "blowing: {#} Hz, A♯{#} −{#}¢":
@@ -428,12 +422,14 @@ VDI18N.add('es', 'demo/resonators', {
   "soplando: {#} Hz, C4 −{#}¢",
 "blowing: {#} Hz, C4 +{#}¢":
   "soplando: {#} Hz, C4 +{#}¢",
-"Note against water level":
-  "Nota en función del nivel del agua",
 "blowing: {#} Hz, D4 −{#}¢":
   "soplando: {#} Hz, D4 −{#}¢",
 "blowing: {#} Hz, E4 +{#}¢":
   "soplando: {#} Hz, E4 +{#}¢",
+"blowing: {#} Hz, F4 −{#}¢":
+  "soplando: {#} Hz, F4 −{#}¢",
+"Note against water level":
+  "Nota en función del nivel del agua",
 "{#} s here = {#} ms":
   "{#} s aquí = {#} ms",
 "Closed pipe: n = {#}, {#} Hz":
@@ -448,12 +444,6 @@ VDI18N.add('es', 'demo/resonators', {
   "Fuerza en el puente",
 "dashed {#}/n · × = {#}":
   "punteada {#}/n · × = {#}",
-"Level against water position":
-  "Nivel en función de la posición del agua",
-"ΔL":
-  "ΔL",
-"dashed {#}/n² · × = {#}":
-  "punteada {#}/n² · × = {#}",
 "A stretched string fixed at both ends, with its spectrum drawn below.":
   "Una cuerda tensa fija en ambos extremos, con su espectro dibujado abajo.",
 "The string is {#} cm long, under {#} N, with {#} g/m.":
@@ -466,16 +456,36 @@ VDI18N.add('es', 'demo/resonators', {
   "La cuerda se pulsa a {#} cm del extremo.",
 "The missing harmonics start at n = {#}, {#}, {#}, {#}.":
   "Los armónicos que faltan empiezan en n = {#}, {#}, {#}, {#}.",
-"Level":
-  "Nivel",
+"Level against water position":
+  "Nivel en función de la posición del agua",
+"ΔL":
+  "ΔL",
+"dashed {#}/n² · × = {#}":
+  "punteada {#}/n² · × = {#}",
 "The missing harmonics start at n = {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}.":
   "Los armónicos que faltan empiezan en n = {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}.",
+"Level":
+  "Nivel",
+"Describe the picture":
+  "Describir la imagen",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
+"Running.":
+  "En marcha.",
+"Paused.":
+  "En pausa.",
 "Shape spectrum, {#} s after the pluck":
   "Espectro de la forma, {#} s después de la pulsación",
 "Bridge force spectrum":
   "Espectro de la fuerza en el puente",
 "Close":
-  "Cerrar",
-"blowing: {#} Hz, F4 −{#}¢":
-  "soplando: {#} Hz, F4 −{#}¢"
+  "Cerrar"
 });

@@ -10,8 +10,6 @@ VDI18N.add('es', 'demo/two-speaker', {
   "línea de recorrido",
 "waves slowed about {#} times":
   "ondas desaceleradas unas {#} veces",
-"Describe the picture":
-  "Describir la imagen",
 "Two Speaker Interference":
   "Interferencia de dos bocinas",
 "<a>Waves</a>":
@@ -144,10 +142,6 @@ VDI18N.add('es', 'demo/two-speaker', {
   "<span>A ciegas: ocultar la longitud de onda y las líneas silenciosas</span>",
 "Model: each speaker is a point source that sends sound equally in every direction, and the room is free field: no walls, floor or ceiling reflect, as outdoors or in an anechoic room, and the air absorbs nothing. The pressure from each speaker falls as {#}/r, so at a quiet spot the two do not cancel exactly unless r₁ = r₂: the farther speaker is a little weaker. One speaker gives {#} dB at {#} m (chosen). The speed of sound is {#} m/s √({#} + t/{#} °C), {#} m/s at {#} °C (OpenStax University Physics Vol {#}, §{#}), with t in °C. Positions are measured from the wall the speakers are on (x) and sideways from the point midway between them (y); speaker {#} is at y = +d/{#}. The microphone reads the steady sound level instantly and exactly. The waves on the floor are slowed down about a thousand times so you can see them move. Simulated data, no noise.":
   "Modelo: cada bocina es una fuente puntual que emite sonido por igual en todas direcciones, y la sala es de campo libre: ni paredes, ni piso, ni techo reflejan, como al aire libre o en una cámara anecoica, y el aire no absorbe nada. La presión de cada bocina disminuye como {#}/r, así que en un punto silencioso las dos no se cancelan exactamente a menos que r₁ = r₂: la bocina más lejana es un poco más débil. Una bocina da {#} dB a {#} m (elegido). La rapidez del sonido es {#} m/s √({#} + t/{#} °C), {#} m/s a {#} °C (OpenStax University Physics Vol {#}, §{#}), con t en °C. Las posiciones se miden desde la pared donde están las bocinas (x) y hacia el lado desde el punto medio entre ellas (y); la bocina {#} está en y = +d/{#}. El micrófono lee el nivel sonoro estable al instante y con exactitud. Las ondas en el piso se desaceleran unas mil veces para que las veas moverse. Datos simulados, sin ruido.",
-"Skip to the picture":
-  "Ir a la imagen",
-"Skip to the controls":
-  "Ir a los controles",
 "Stop the walk":
   "Detener el recorrido",
 "Microphone at x {#} m, y -{#} m, {#} dB: drag it, or use the arrow keys to move it {#} cm (Shift, {#} cm)":
@@ -188,12 +182,12 @@ VDI18N.add('es', 'demo/two-speaker', {
   "Generador de funciones, a cada bocina",
 "loudness map: darker is louder ({#} to {#} dB)":
   "mapa de sonoridad: más oscuro es más fuerte ({#} a {#} dB)",
-"The Sandbox is for exploring: pick one of the other setups to record readings for the worksheet.":
-  "La Caja de arena es para explorar: elige una de las otras configuraciones para registrar lecturas para la hoja de trabajo.",
 "{#} speakers stand in the room.":
   "Hay {#} bocinas en el cuarto.",
 "The microphone hears silence here.":
   "El micrófono no oye nada aquí.",
+"The Sandbox is for exploring: pick one of the other setups to record readings for the worksheet.":
+  "La Caja de arena es para explorar: elige una de las otras configuraciones para registrar lecturas para la hoja de trabajo.",
 "Move the microphone {#} cm (Shift: {#} cm)":
   "Mover el micrófono {#} cm (Shift: {#} cm)",
 "Move the picked speaker {#} cm (Shift: {#} cm)":
@@ -212,6 +206,16 @@ VDI18N.add('es', 'demo/two-speaker', {
   "El micrófono está a {#} m de la pared y −{#} m hacia un lado.",
 "r₃, to speaker {#}":
   "r₃, a la bocina {#}",
+"Speaker {#} is at x = {#} m, y = {#} m, in phase.":
+  "La bocina {#} está en x = {#} m, y = {#} m, en fase.",
+"Speaker {#} is at x = {#} m, y = -{#} m, in phase.":
+  "La bocina {#} está en x = {#} m, y = -{#} m, en fase.",
+"Describe the picture":
+  "Describir la imagen",
+"Skip to the picture":
+  "Ir a la imagen",
+"Skip to the controls":
+  "Ir a los controles",
 "Record reading":
   "Registrar esta lectura",
 "Close":

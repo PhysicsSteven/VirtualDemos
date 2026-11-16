@@ -1,7 +1,5 @@
 /* demo/binding-energy in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/binding-energy', {
-"Describe the picture":
-  "Describir la imagen",
 "mass number A":
   "número de masa A",
 "Binding energy per nucleon":
@@ -18,10 +16,6 @@ VDI18N.add('es', 'demo/binding-energy', {
   "⁵⁶Fe",
 "⁶²Ni":
   "⁶²Ni",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
 "Nuclear Binding Energy":
   "Energía de enlace nuclear",
 "<a><span>←</span> <span>Compton Scattering</span></a><a><span>Blackbody Radiation</span> <span>→</span></a>":
@@ -30,12 +24,6 @@ VDI18N.add('es', 'demo/binding-energy', {
   "¿Qué tan fuertemente se mantiene unido cada núcleo? Las masas medidas dan la energía de enlace por nucleón. Tiene su máximo cerca del hierro y el níquel, así que tanto fusionar núcleos ligeros como dividir núcleos pesados libera energía.",
 "masses: AME2020 · energies in MeV · {#} u = {#} MeV/c²":
   "masas: AME2020 · energías en MeV · {#} u = {#} MeV/c²",
-"Time controls":
-  "Controles de tiempo",
-"Run for a moment and pause again":
-  "Avanza un momento y vuelve a pausar",
-"Step":
-  "Paso",
 "Curve":
   "Curva",
 "Liquid drop":
@@ -50,8 +38,6 @@ VDI18N.add('es', 'demo/binding-energy', {
   "Intervalo de A",
 "All A":
   "Todos los A",
-"Light":
-  "Ligeros",
 "Near the peak":
   "Cerca del máximo",
 "Plot against":
@@ -502,18 +488,58 @@ VDI18N.add('es', 'demo/binding-energy', {
   "La vista está ampliada en los núcleos ligeros.",
 "Selected nuclide Pb {#}: Z = {#}, N = {#}, A = {#}.":
   "Nucleido seleccionado Pb {#}: Z = {#}, N = {#}, A = {#}.",
-"Chart of nuclides, colored by half life":
-  "Carta de núclidos, coloreada por semivida",
-"half life; stable in ink":
-  "semivida; estables en tinta",
-"Shell effects: measured binding minus the liquid drop model, against neutron number N.":
-  "Efectos de capas: enlace medido menos el modelo de la gota líquida, contra número de neutrones N.",
-"Measured binding minus the model is {#} MeV.":
-  "El enlace medido menos el modelo es {#} MeV.",
+"Helium burning: three helium {#} nuclei make carbon {#}.":
+  "Quema de helio: tres núcleos de helio {#} forman carbono {#}.",
+"Energy released Q = {#} MeV.":
+  "Energía liberada Q = {#} MeV.",
+"The liquid drop model: the five terms of the semi empirical mass formula stacked as bands of B/A against mass number A.":
+  "El modelo de la gota líquida: los cinco términos de la fórmula semiempírica de masa apilados como bandas de B/A en función del número másico A.",
 "The model fits the measured binding energies with an rms error of {#}%.":
   "El modelo ajusta las energías de enlace medidas con un error rms de {#}%.",
 "Coefficients: volume {#} MeV, surface {#} MeV, Coulomb {#} MeV, asymmetry {#} MeV, pairing {#} MeV.":
   "Coeficientes: volumen {#} MeV, superficie {#} MeV, Coulomb {#} MeV, asimetría {#} MeV, apareamiento {#} MeV.",
+"Shell effects: measured binding minus the liquid drop model, against neutron number N.":
+  "Efectos de capas: enlace medido menos el modelo de la gota líquida, contra número de neutrones N.",
+"Measured binding minus the model is {#} MeV.":
+  "El enlace medido menos el modelo es {#} MeV.",
+"Chart of nuclides, colored by half life":
+  "Carta de núclidos, coloreada por semivida",
+"half life; stable in ink":
+  "semivida; estables en tinta",
+"The chart of nuclides: proton number Z against neutron number N, one cell for each nuclide.":
+  "La carta de nucleidos: número de protones Z en función del número de neutrones N, una celda por nucleido.",
+"Cells are colored by half life.":
+  "Las celdas están coloreadas por vida media.",
+"Selected nuclide He {#}: Z = {#}, N = {#}, A = {#}.":
+  "Nucleido seleccionado He {#}: Z = {#}, N = {#}, A = {#}.",
+"Fusion: deuterium and tritium make helium {#} and a neutron.":
+  "Fusión: deuterio y tritio forman helio {#} y un neutrón.",
+"Selected nuclide U {#}: Z = {#}, N = {#}, A = {#}.":
+  "Nucleido seleccionado U {#}: Z = {#}, N = {#}, A = {#}.",
+"Its half life is {#} million years.":
+  "Su vida media es de {#} millones de años.",
+"It is radioactive but found in nature.":
+  "Es radiactivo pero se encuentra en la naturaleza.",
+"Fission: uranium {#} and a neutron make barium {#}, krypton {#} and three neutrons.":
+  "Fisión: uranio {#} y un neutrón forman bario {#}, kriptón {#} y tres neutrones.",
+"Selected nuclide Sn {#}: Z = {#}, N = {#}, A = {#}.":
+  "Nucleido seleccionado Sn {#}: Z = {#}, N = {#}, A = {#}.",
+"Hydrogen burning: four protons make helium {#}.":
+  "Quema de hidrógeno: cuatro protones forman helio {#}.",
+"Describe the picture":
+  "Describir la imagen",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
+"Light":
+  "Ligeros",
 "e⁺ + ν (or an electron captured)":
   "e⁺ + ν (o un electrón capturado)",
 "Close":

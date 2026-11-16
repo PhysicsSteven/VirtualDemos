@@ -8,8 +8,6 @@ VDI18N.add('es', 'demo/giant-planets', {
   "Tamaños e inclinaciones reales (el ángulo bajo cada nombre es su inclinación axial).",
 "Bands and colors are a painting.":
   "Las bandas y los colores son una pintura.",
-"Describe the picture":
-  "Describir la imagen",
 "Giant Planets, Rings and Moons":
   "Planetas gigantes, anillos y lunas",
 "<a><span>←</span> <span>Building a Solar System</span></a><a><span>Rotation and Torque</span> <span>→</span></a>":
@@ -18,12 +16,6 @@ VDI18N.add('es', 'demo/giant-planets', {
   "Júpiter, Saturno, Urano y Neptuno a escala, con los datos de la NASA. Descubre por qué Saturno flotaría, por qué los anillos están cerca de sus planetas, donde una luna sería despedazada, cómo se cizallan las partículas de los anillos y cómo Ío, Europa y Ganímedes mantienen el paso en un ritmo {#}:{#}:{#} cuyas mareas calientan a Ío.",
 "km · days · g/cm³":
   "km · días · g/cm³",
-"Time controls":
-  "Controles de tiempo",
-"Run for a moment and pause again":
-  "Avanza un momento y vuelve a pausar",
-"Step":
-  "Paso",
 "Put the clock back to the start and the test moon back together":
   "Regresa el reloj al inicio y vuelve a armar la luna de prueba",
 "{#} minutes a second":
@@ -48,10 +40,6 @@ VDI18N.add('es', 'demo/giant-planets', {
   "Mareas de Ío",
 "Clouds":
   "Nubes",
-"Zoom out":
-  "Alejar",
-"Zoom in":
-  "Acercar",
 "The giant planets to scale, their rings and moons. Click a planet or a moon to choose it.":
   "Los planetas gigantes a escala, sus anillos y sus lunas. Haz clic en un planeta o una luna para elegirlo.",
 "The giant planets are drawn to the same scale.":
@@ -244,10 +232,6 @@ VDI18N.add('es', 'demo/giant-planets', {
   "objeto",
 "reading":
   "lectura",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
 "Roche limit, fluid moon ({#} g/cm³)":
   "Límite de Roche, luna fluida ({#} g/cm³)",
 "rigid moon ({#} g/cm³)":
@@ -458,14 +442,26 @@ VDI18N.add('es', 'demo/giant-planets', {
   "Amoniaco profundo",
 "Deep methane":
   "Metano profundo",
-"Helium":
-  "Helio",
 "{#} % · Galileo probe (von Zahn et al. {#})":
   "{#} % · sonda Galileo (von Zahn y colaboradores {#})",
 "Mean molar mass":
   "Masa molar media",
 "parcel at {#} bar":
   "parcela a {#} bar",
+"A side view of the cloud decks in the planet's deep air, with the pressure on the vertical axis.":
+  "Una vista lateral de las capas de nubes en el aire profundo del planeta, con la presión en el eje vertical.",
+"The temperature at {#} bar is {#} K.":
+  "La temperatura a {#} bar es {#} K.",
+"The marked air parcel is at {#} bar and {#} K.":
+  "La parcela de aire marcada está a {#} bar y {#} K.",
+"It is {#} km below the {#} bar level.":
+  "Está {#} km por debajo del nivel de {#} bar.",
+"{#} bar, {#} K, {#} km down.":
+  "{#} bar, {#} K, {#} km abajo.",
+"{#} bar, {#} K, {#} km up.":
+  "{#} bar, {#} K, {#} km arriba.",
+"The up and down arrow keys move the air parcel.":
+  "Las flechas arriba y abajo mueven la parcela de aire.",
 "Saturn has {#} times Earth's mass but {#} times its volume, so its mean density is {#} g/cm³, less than water's {#} g/cm³. It is the only planet that would float, if there were a tub big enough. It also turns in {#} hours, and the fast spin and low density make it the flattest planet: its equator is {#} % wider than its poles.":
   "Saturno tiene {#} veces la masa de la Tierra pero {#} veces su volumen, así que su densidad media es {#} g/cm³, menor que la del agua, {#} g/cm³. Es el único planeta que flotaría, si hubiera una tina lo bastante grande. También gira en {#} horas, y el giro rápido y la baja densidad lo hacen el planeta más achatado: su ecuador es un {#} % más ancho que de polo a polo.",
 "Mimas":
@@ -484,8 +480,6 @@ VDI18N.add('es', 'demo/giant-planets', {
   "Hiperión",
 "Iapetus":
   "Jápeto",
-"yes":
-  "sí",
 "Uranus's axis is tipped {#}° from upright, so it rolls on its side round the Sun. Each pole gets about {#} years of daylight and then {#} years of darkness in its {#} year orbit. Neptune, next door, is tipped {#}°, close to Saturn's {#}°.":
   "El eje de Urano está inclinado {#}° respecto a la vertical, así que rueda de lado alrededor del Sol. Cada polo recibe unos {#} años de luz de día y luego {#} años de oscuridad en su órbita de {#} años. Neptuno, su vecino, está inclinado {#}°, cerca de los {#}° de Saturno.",
 "Miranda":
@@ -520,6 +514,8 @@ VDI18N.add('es', 'demo/giant-planets', {
   "Los anillos de Saturno vistos desde arriba de su polo norte, a escala. El círculo naranja es el límite de Roche para una luna de hielo poroso, {#} g/cm³ como las lunas pequeñas cerca de los anillos (Pan {#}, Prometeo {#}), sin resistencia: dentro de él, a {#} radios de Saturno, la marea del planeta separa los lados cercano y lejano con más fuerza que la que los mantiene unidos la gravedad de la propia luna. Los anillos principales están dentro; las lunas grandes orbitan fuera, la más cercana, Mimas, a {#} radios. La luna de prueba está a {#} radios de Saturno, justo fuera del límite. Pon en marcha el reloj: se mantiene unida.",
 "A moon of solid ice, {#} g/cm³, at {#} Saturn radii, well inside its Roche limit of {#} radii. Within about one orbit the tide stretches it, it comes apart, and the pieces drift ahead and behind it along the orbit, because inner pieces go round faster than outer ones. After many orbits they spread into a ringlet.":
   "Una luna de hielo sólido, {#} g/cm³, a {#} radios de Saturno, muy dentro de su límite de Roche de {#} radios. En cerca de una órbita la marea la estira, se deshace, y los pedazos se adelantan y se atrasan a lo largo de la órbita, porque los pedazos interiores giran más rápido que los exteriores. Tras muchas órbitas se extienden en un anillito.",
+"The clock is running.":
+  "El reloj está en marcha.",
 "A moon of rock, {#} g/cm³, at {#} Saturn radii, deep inside the ice moon's limit. A denser moon holds itself together more tightly, so its Roche limit is closer to the planet: ({#}/{#})^({#}/{#}) = {#} times the ice moon's, {#} radii. At {#} radii it is outside its own limit and survives.":
   "Una luna de roca, {#} g/cm³, a {#} radios de Saturno, muy dentro del límite de la luna de hielo. Una luna más densa se mantiene unida con más fuerza, así que su límite de Roche está más cerca del planeta: ({#}/{#})^({#}/{#}) = {#} veces el de la luna de hielo, {#} radios. A {#} radios está fuera de su propio límite y sobrevive.",
 "A straight line painted across the rings. Each ring particle is a tiny moon on its own orbit, and by Kepler's third law the inner ones go round faster: {#} hours at the inner edge of the faint D ring, {#} hours at the inner edge of the C ring and {#} hours at the outer edge of the A ring. The line winds into a spiral, which is why rings are made of many separate particles and not one solid sheet.":
@@ -530,6 +526,8 @@ VDI18N.add('es', 'demo/giant-planets', {
   "Las lunas pequeñas dan forma a los anillos. Pan orbita en el hueco de Encke y Dafnis en el hueco de Keeler y los mantienen despejados; Prometeo por dentro y Pandora por fuera pastorean el angosto anillo F. Estas lunas pequeñas orbitan dentro del límite de Roche para sus propias densidades bajas y sobreviven, porque son lo bastante pequeñas para que un poco de resistencia las mantenga unidas (Porco y colaboradores {#}). La línea punteada marca dónde una partícula de los anillos da exactamente dos vueltas por cada órbita de Mimas, así que Mimas la jala en el mismo lugar cada dos vueltas: {#} {#} km incluyendo el abultamiento de Saturno, junto al borde exterior del anillo B en {#} {#} km, donde empieza la división de Cassini.",
 "{#} {#} km (Kepler alone {#} {#} km)":
   "{#} {#} km (solo Kepler {#} {#} km)",
+"The Roche limits are not drawn.":
+  "Los límites de Roche no están dibujados.",
 "Jupiter's four big moons, starting where they were at noon on {#} January {#}. Io goes round {#} times for each orbit of Europa, and Europa {#} times for each orbit of Ganymede: a {#}:{#}:{#} rhythm, the Laplace resonance. The lines mark where Io passes Europa and where Europa passes Ganymede; each pair always lines up near the same places. The three can never line up on one side of Jupiter together: λ(Io) − {#}λ(Europa) + {#}λ(Ganymede) stays at {#}°. Kepler's third law with each moon gives Jupiter's mass.":
   "Las cuatro lunas grandes de Júpiter, empezando donde estaban al mediodía del {#} de enero de {#}. Ío da {#} vueltas por cada órbita de Europa, y Europa {#} por cada órbita de Ganímedes: un ritmo {#}:{#}:{#}, la resonancia de Laplace. Las líneas marcan dónde Ío rebasa a Europa y dónde Europa rebasa a Ganímedes; cada par se alinea siempre cerca de los mismos lugares. Las tres nunca pueden alinearse juntas de un mismo lado de Júpiter: λ(Ío) − {#}λ(Europa) + {#}λ(Ganímedes) se mantiene en {#}°. La tercera ley de Kepler con cada luna da la masa de Júpiter.",
 "Io's eccentricity, computed":
@@ -548,22 +546,6 @@ VDI18N.add('es', 'demo/giant-planets', {
   "La mayor hasta ahora",
 "pulling on Io":
   "atrayendo a Ío",
-"The planet and its moons, seen from above.":
-  "El planeta y sus lunas, vistos desde arriba.",
-"The chosen moon is:":
-  "La luna elegida es:",
-"Its period is {#} days.":
-  "Su periodo es {#} días.",
-"The mass worked out from this orbit is {#} × {#}²⁷ kg.":
-  "La masa calculada a partir de esta órbita es {#} × {#}²⁷ kg.",
-"The mass from NASA is {#} × {#}²⁷ kg.":
-  "La masa según la NASA es {#} × {#}²⁷ kg.",
-"Its density is {#} g/cm³.":
-  "Su densidad es {#} g/cm³.",
-"The clock is running.":
-  "El reloj está en marcha.",
-"The left and right arrow keys choose another moon.":
-  "Las flechas izquierda y derecha eligen otra luna.",
 "Saturn and its orbits to scale, seen from above, moons drawn {#} times larger.":
   "Saturno y sus órbitas a escala, vistos desde arriba, con las lunas dibujadas {#} veces más grandes.",
 "Saturn's mid sized moons from noon on {#} January {#}. Enceladus goes round {#} times for each orbit of Dione, and Mimas {#} times for each orbit of Tethys. Dione's regular tugs keep Enceladus's orbit slightly out of round, and the flexing tides warm the ocean under its ice that feeds its geysers. Titan, the big one, holds most of the mass.":
@@ -594,6 +576,20 @@ VDI18N.add('es', 'demo/giant-planets', {
   "Marte y sus órbitas a escala, vistos desde arriba, con las lunas dibujadas {#} veces más grandes.",
 "Mars has two small moons, Phobos and Deimos, about {#} and {#} km across (drawn {#} times larger), probably captured asteroids or pieces thrown up by a giant impact. Phobos goes round in {#} h {#} min, faster than Mars turns ({#} h), so from Mars it rises in the west and sets in the east, twice a day; Mars's tides drag it slowly inward. Kepler's third law with Phobos's orbit gives Mars's mass, {#} × {#}²³ kg, within {#} % of NASA's value. (Starting places spread out for clarity, not taken from a date.)":
   "Marte tiene dos lunas pequeñas, Fobos y Deimos, de unos {#} y {#} km de diámetro (dibujadas {#} veces más grandes), probablemente asteroides capturados o pedazos lanzados por un impacto gigante. Fobos da la vuelta en {#} h {#} min, más rápido de lo que gira Marte ({#} h), así que desde Marte sale por el oeste y se pone por el este, dos veces al día; las mareas de Marte lo arrastran lentamente hacia dentro. La tercera ley de Kepler con la órbita de Fobos da la masa de Marte, {#} × {#}²³ kg, dentro del {#} % del valor de la NASA. (Posiciones iniciales repartidas para mayor claridad, no tomadas de una fecha.)",
+"The planet and its moons, seen from above.":
+  "El planeta y sus lunas, vistos desde arriba.",
+"The chosen moon is:":
+  "La luna elegida es:",
+"Its period is {#} days.":
+  "Su periodo es {#} días.",
+"The mass worked out from this orbit is {#} × {#}²³ kg.":
+  "La masa calculada con esta órbita es {#} × {#}²³ kg.",
+"The mass from NASA is {#} × {#}²³ kg.":
+  "La masa según la NASA es {#} × {#}²³ kg.",
+"Its density is {#} g/cm³.":
+  "Su densidad es {#} g/cm³.",
+"The left and right arrow keys choose another moon.":
+  "Las flechas izquierda y derecha eligen otra luna.",
 "center of mass":
   "centro de masa",
 "Charon":
@@ -654,24 +650,16 @@ VDI18N.add('es', 'demo/giant-planets', {
   "Neptuno es como Urano: {#} K a {#} bar, nubes de hielo de metano a {#} bar, hielo de sulfuro de hidrógeno a {#} bar e hidrosulfuro de amonio cerca de {#} bar. El metano gaseoso absorbe la luz roja, lo que ayuda a dar a ambos gigantes helados su color azul. Las nubes blancas de metano de Neptuno van y vienen con su clima; la sonda Voyager {#} las vio proyectar sombras sobre la capa de abajo.",
 "What if Jupiter held ten times the Sun's share of oxygen? The water cloud base moves down from {#} bar to {#} bar ({#} K), while the ammonia and ammonium hydrosulfide decks barely move. Juno's measured three times the Sun lies between this and the Galileo probe's dry spot. Try the Oxygen (H₂O) control to see how deep the water deck goes.":
   "¿Y si Júpiter tuviera diez veces la proporción solar de oxígeno? La base de la nube de agua baja de {#} bar a {#} bar ({#} K), mientras que las capas de amoniaco y de hidrosulfuro de amonio casi no se mueven. Las tres veces el Sol que midió Juno quedan entre esto y el punto seco de la sonda Galileo. Prueba el control Oxígeno (H₂O) para ver qué tan profunda llega la capa de agua.",
-"A side view of the cloud decks in the planet's deep air, with the pressure on the vertical axis.":
-  "Una vista lateral de las capas de nubes en el aire profundo del planeta, con la presión en el eje vertical.",
-"The temperature at {#} bar is {#} K.":
-  "La temperatura a {#} bar es {#} K.",
-"The marked air parcel is at {#} bar and {#} K.":
-  "La parcela de aire marcada está a {#} bar y {#} K.",
-"It is {#} km below the {#} bar level.":
-  "Está {#} km por debajo del nivel de {#} bar.",
-"{#} bar, {#} K, {#} km down.":
-  "{#} bar, {#} K, {#} km abajo.",
-"{#} bar, {#} K, {#} km up.":
-  "{#} bar, {#} K, {#} km arriba.",
-"The up and down arrow keys move the air parcel.":
-  "Las flechas arriba y abajo mueven la parcela de aire.",
 "NH₄SH":
   "NH₄SH",
 "Colors are a painting; bases and gas curves are computed":
   "Los colores son una pintura; las bases y las curvas de los gases están calculadas",
+"Its mass is {#} × {#}²⁵ kg, which is {#} Earth masses.":
+  "Su masa es {#} × {#}²⁵ kg, es decir, {#} masas terrestres.",
+"{#} Earths would fit inside it.":
+  "Cabrían {#} Tierras dentro de él.",
+"It turns once in {#} h, backward.":
+  "Da una vuelta en {#} h, hacia atrás.",
 "Jupiter from above its north pole, to scale":
   "Júpiter visto desde arriba de su polo norte, a escala",
 "↓ Jupiter → motion":
@@ -682,30 +670,84 @@ VDI18N.add('es', 'demo/giant-planets', {
   "dorado sobre todo roca, café claro roca y hielo, blanco sobre todo hielo",
 "Starting places: noon, {#} January {#}":
   "Posiciones iniciales: mediodía, {#} de enero de {#}",
-"Its mass is {#} × {#}²⁵ kg, which is {#} Earth masses.":
-  "Su masa es {#} × {#}²⁵ kg, es decir, {#} masas terrestres.",
-"{#} Earths would fit inside it.":
-  "Cabrían {#} Tierras dentro de él.",
-"It turns once in {#} h, backward.":
-  "Da una vuelta en {#} h, hacia atrás.",
+"The mass worked out from this orbit is {#} × {#}²⁷ kg.":
+  "La masa calculada a partir de esta órbita es {#} × {#}²⁷ kg.",
+"The mass from NASA is {#} × {#}²⁷ kg.":
+  "La masa según la NASA es {#} × {#}²⁷ kg.",
+"Io on its orbit round Jupiter, with the tide it raises, seen from above.":
+  "Io en su órbita alrededor de Júpiter, con la marea que levanta, vista desde arriba.",
+"Io's eccentricity is e = {#}.":
+  "La excentricidad de Io es e = {#}.",
+"The orbit's shape and Io's stretch are exaggerated.":
+  "La forma de la órbita y el estiramiento de Io están exagerados.",
+"Io is {#} {#} km from Jupiter.":
+  "Io está a {#} {#} km de Júpiter.",
+"The tide swings by ±{#} % and Jupiter's direction rocks by ±{#}°.":
+  "La marea oscila ±{#} % y la dirección de Júpiter se balancea ±{#}°.",
+"The tidal heating is {#} W, which is {#} W/m².":
+  "El calentamiento por marea es {#} W, que es {#} W/m².",
+"The stretch now is {#}, where the average is {#}.":
+  "El estiramiento ahora es {#}, donde el promedio es {#}.",
+"Its mass is {#} × {#}²⁶ kg, which is {#} Earth masses.":
+  "Su masa es {#} × {#}²⁶ kg, que son {#} masas terrestres.",
+"It would float in water.":
+  "Flotaría en agua.",
 "rigid moon":
   "luna rígida",
 "Saturn from above its north pole, to scale":
   "Saturno visto desde arriba de su polo norte, a escala",
 "↓ Saturn → motion":
   "↓ Saturno → movimiento",
+"Europa passes Ganymede":
+  "Europa rebasa a Ganímedes",
 "Computed: the moons pull on each other":
   "Calculado: las lunas se atraen entre sí",
 "Saturn's orbits to scale, moons drawn {#} times larger":
   "Órbitas de Saturno a escala, lunas dibujadas {#} veces más grandes",
+"The mass worked out from this orbit is {#} × {#}²⁶ kg.":
+  "La masa calculada con esta órbita es {#} × {#}²⁶ kg.",
+"The mass from NASA is {#} × {#}²⁶ kg.":
+  "La masa según la NASA es {#} × {#}²⁶ kg.",
+"Its period is {#} times the period of the moon inside it.":
+  "Su periodo es {#} veces el periodo de la luna que tiene por dentro.",
 "Neptune's orbits to scale, moons drawn {#} times larger":
   "Órbitas de Neptuno a escala, lunas dibujadas {#} veces más grandes",
 "Starting places spread out, not from a date":
   "Posiciones iniciales repartidas, no tomadas de una fecha",
+"Its period is {#} days, backward.":
+  "Su periodo es de {#} días, hacia atrás.",
 "Mars's orbits to scale, moons drawn {#} times larger":
   "Órbitas de Marte a escala, lunas dibujadas {#} veces más grandes",
 "Pluto's orbits to scale, moons to scale too":
   "Órbitas de Plutón a escala, lunas también a escala",
+"Pluto":
+  "Plutón",
+"The mass worked out from this orbit is {#} × {#}²² kg.":
+  "La masa calculada con esta órbita es {#} × {#}²² kg.",
+"The mass from NASA is {#} × {#}²² kg.":
+  "La masa según la NASA es {#} × {#}²² kg.",
+"The tidal heating is {#} × {#}¹³ W, which is {#} W/m².":
+  "El calentamiento por marea es {#} × {#}¹³ W, que es {#} W/m².",
+"Describe the picture":
+  "Describir la imagen",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
+"Zoom out":
+  "Alejar",
+"Zoom in":
+  "Acercar",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
+"Helium":
+  "Helio",
+"yes":
+  "sí",
 "True sizes and tilts; bands and colors are a painting":
   "Tamaños e inclinaciones reales; las bandas y los colores son una pintura",
 "Orbits to scale; moons drawn {#} times larger":
@@ -714,8 +756,6 @@ VDI18N.add('es', 'demo/giant-planets', {
   "Órbitas y lunas a escala, alrededor del centro de masa",
 "Planets, moons and rings: NASA's planetary, satellite and ring fact sheets (D. R. Williams, NSSDCA, Goddard Space Flight Center). Where the moons of Jupiter and Saturn start: JPL's mean orbital elements for noon on {#} January {#} (ssd.jpl.nasa.gov). The Roche limit for a fluid moon: S. Chandrasekhar, Ellipsoidal Figures of Equilibrium ({#}). Io's tidal response k₂/Q = {#} ± {#}: V. Lainey and others, Nature {#}, {#} ({#}). Io's heat flow, more than {#} W/m²: G. J. Veeder and others, Journal of Geophysical Research {#}, {#} ({#}). Earth's heat flow, {#} TW: J. H. Davies and D. R. Davies, Solid Earth {#}, {#} ({#}). Tidal heating and resonances: C. D. Murray and S. F. Dermott, Solar System Dynamics ({#}).":
   "Planetas, lunas y anillos: hojas de datos planetarios, de satélites y de anillos de la NASA (D. R. Williams, NSSDCA, Goddard Space Flight Center). Dónde empiezan las lunas de Júpiter y Saturno: elementos orbitales medios del JPL para el mediodía del {#} de enero de {#} (ssd.jpl.nasa.gov). El límite de Roche para una luna fluida: S. Chandrasekhar, Ellipsoidal Figures of Equilibrium ({#}). Respuesta de marea de Ío k₂/Q = {#} ± {#}: V. Lainey y colaboradores, Nature {#}, {#} ({#}). Flujo de calor de Ío, más de {#} W/m²: G. J. Veeder y colaboradores, Journal of Geophysical Research {#}, {#} ({#}). Flujo de calor de la Tierra, {#} TW: J. H. Davies y D. R. Davies, Solid Earth {#}, {#} ({#}). Calentamiento por marea y resonancias: C. D. Murray y S. F. Dermott, Solar System Dynamics ({#}).",
-"Europa passes Ganymede":
-  "Europa rebasa a Ganímedes",
 "Close":
   "Cerrar"
 });

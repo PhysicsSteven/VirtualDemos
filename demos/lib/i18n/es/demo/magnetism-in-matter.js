@@ -110,10 +110,6 @@ VDI18N.add('es', 'demo/magnetism-in-matter', {
   "Alineación de los átomos dibujada exagerada.",
 "Core":
   "Núcleo",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
 "A long solenoid seen from the side in 3D, {#} turns per cm.":
   "Un solenoide largo visto de lado en 3D, {#} vueltas por cm.",
 "Bismuth: diamagnetic, χ = -{#} × {#}⁻⁵":
@@ -160,16 +156,6 @@ VDI18N.add('es', 'demo/magnetism-in-matter', {
   "Barriendo entre +{#} A y −{#} A a {#} A/s",
 "undefined at I = {#}":
   "indefinida en I = {#}",
-"empty: B = B₀":
-  "vacío: B = B₀",
-"Empty coil":
-  "Bobina vacía",
-"B − B₀ against B₀: zero for an empty coil":
-  "B − B₀ en función de B₀: cero para una bobina vacía",
-"Tungsten: paramagnetic, χ = {#} × {#}⁻⁵":
-  "Tungsteno: paramagnético, χ = {#} × {#}⁻⁵",
-"Copper: diamagnetic, χ = -{#} × {#}⁻⁶":
-  "Cobre: diamagnético, χ = -{#} × {#}⁻⁶",
 "The core is iron.":
   "El núcleo es de hierro.",
 "Sweeping the current between +{#} A and −{#} A at {#} A/s.":
@@ -190,6 +176,16 @@ VDI18N.add('es', 'demo/magnetism-in-matter', {
   "Ninguna corriente inversa ha llevado B a cero todavía.",
 "A plot of B against B₀, in tesla, with the trace of the loop so far.":
   "Una gráfica de B contra B₀, en tesla, con la traza del ciclo hasta ahora.",
+"empty: B = B₀":
+  "vacío: B = B₀",
+"Empty coil":
+  "Bobina vacía",
+"B − B₀ against B₀: zero for an empty coil":
+  "B − B₀ en función de B₀: cero para una bobina vacía",
+"Tungsten: paramagnetic, χ = {#} × {#}⁻⁵":
+  "Tungsteno: paramagnético, χ = {#} × {#}⁻⁵",
+"Copper: diamagnetic, χ = -{#} × {#}⁻⁶":
+  "Cobre: diamagnético, χ = -{#} × {#}⁻⁶",
 "coil, B₀":
   "bobina, B₀",
 "core, B":
@@ -208,10 +204,28 @@ VDI18N.add('es', 'demo/magnetism-in-matter', {
   "Para hacerlo flotar, |B dB/dz| = {#} T²/m.",
 "The core is liquid oxygen at {#} K.":
   "El núcleo es de oxígeno líquido a {#} K.",
-"With the core, B = {#} µT.":
-  "Con el núcleo, B = {#} µT.",
+"From the core, B − B₀ = {#} µT.":
+  "Con el núcleo, B − B₀ = {#} µT.",
 "Susceptibility χ = {#} × {#}⁻³.":
   "Susceptibilidad χ = {#} × {#}⁻³.",
+"The core is water.":
+  "El núcleo es agua.",
+"Susceptibility χ = -{#} × {#}⁻⁶.":
+  "Susceptibilidad χ = -{#} × {#}⁻⁶.",
+"Coil alone, B₀ = {#} T.":
+  "Solo la bobina, B₀ = {#} T.",
+"The core is empty.":
+  "El núcleo está vacío.",
+"With the core, B = {#} µT.":
+  "Con el núcleo, B = {#} µT.",
+"The core is tungsten.":
+  "El núcleo es tungsteno.",
+"The core is copper.":
+  "El núcleo es cobre.",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "Induced moments drawn exaggerated.":
   "Momentos inducidos dibujados exagerados.",
 "Close":

@@ -1,7 +1,5 @@
 /* demo/blackbody in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/blackbody', {
-"Describe the picture":
-  "Describir la imagen",
 "visible":
   "visible",
 "Wavelength λ (μm)":
@@ -60,8 +58,6 @@ VDI18N.add('es', 'demo/blackbody', {
   "Gráfica del espectro de Planck. Arrastra el marcador del pico hacia los lados para cambiar la temperatura. Las flechas arriba y abajo cambian la temperatura; izquierda y derecha mueven el pico.",
 "A chart of the radiance of a blackbody against wavelength, the Planck curve.":
   "Una gráfica de la radiancia de un cuerpo negro contra la longitud de onda, la curva de Planck.",
-"Temperature {#} K.":
-  "Temperatura {#} K.",
 "The peak is at {#} nm.":
   "El pico está en {#} nm.",
 "Flux from the surface {#}×{#}⁷ W/m².":
@@ -192,14 +188,20 @@ VDI18N.add('es', 'demo/blackbody', {
   "pico (nm)",
 "flux (W/m²)":
   "flujo (W/m²)",
-"Skip to the picture":
-  "Ir a la imagen",
-"Skip to the controls":
-  "Ir a los controles",
 "{#} Rsun":
   "{#} Rsol",
 "Bλ and the U, B, V filters, each scaled to {#} at its highest":
   "Bλ y los filtros U, B, V, cada uno escalado a {#} en su máximo",
+"A chart of the light through the U, B and V filters for a blackbody.":
+  "Una gráfica de la luz de un cuerpo negro a través de los filtros U, B y V.",
+"Color index B − V = {#}.":
+  "Índice de color B − V = {#}.",
+"Color index U − B = −{#}.":
+  "Índice de color U − B = −{#}.",
+"The wavelength axis is logarithmic.":
+  "El eje de longitud de onda es logarítmico.",
+"The radiance axis is logarithmic.":
+  "El eje de radiancia es logarítmico.",
 "Your skin surface at about {#} K peaks near {#} μm, deep in the infrared. Thermal cameras see this glow; your eyes do not. The visible share readout shows how little reaches the visible band: about {#} × {#}⁻²¹ % of the power, far below even the log axis.":
   "La superficie de tu piel, a unos {#} K, tiene su pico cerca de {#} μm, muy dentro del infrarrojo. Las cámaras térmicas ven este brillo; tus ojos no. La lectura de fracción visible muestra lo poco que llega a la banda visible: cerca de {#} × {#}⁻²¹ % de la potencia, muy por debajo incluso del eje logarítmico.",
 "infrared, no visible glow":
@@ -238,20 +240,12 @@ VDI18N.add('es', 'demo/blackbody', {
   "El fondo cósmico de microondas es el cuerpo negro más perfecto que se conoce, a {#} K. Su pico está cerca de {#} mm, en las microondas. El deslizador se detiene en {#} K, así que esta configuración es un caso especial.",
 "microwaves, no glow":
   "microondas, sin brillo",
-"A chart of the light through the U, B and V filters for a blackbody.":
-  "Una gráfica de la luz de un cuerpo negro a través de los filtros U, B y V.",
 "The peak is at {#} mm.":
   "El pico está en {#} mm.",
-"Color index B − V = {#}.":
-  "Índice de color B − V = {#}.",
 "Color index U − B = {#}.":
   "Índice de color U − B = {#}.",
 "No star radius is set.":
   "No se ha fijado un radio de estrella.",
-"The wavelength axis is logarithmic.":
-  "El eje de longitud de onda es logarítmico.",
-"The radiance axis is logarithmic.":
-  "El eje de radiancia es logarítmico.",
 "The radiometer reads {#}×{#}⁻⁶ W/m².":
   "El radiómetro marca {#}×{#}⁻⁶ W/m².",
 "Bλ and the U, B, V filters":
@@ -268,24 +262,50 @@ VDI18N.add('es', 'demo/blackbody', {
   "Radiancia espectral Bλ, escala logarítmica",
 "λmax {#} mm":
   "λmax {#} mm",
+"Flux from the surface {#}×{#}⁻⁶ W/m².":
+  "Flujo desde la superficie {#}×{#}⁻⁶ W/m².",
+"Visible share about {#}.":
+  "Fracción visible aproximada {#}.",
+"The peak is at {#} μm.":
+  "El pico está en {#} μm.",
+"Ultraviolet share < {#}%.":
+  "Fracción ultravioleta < {#}%.",
+"Visible share < {#}%.":
+  "Fracción visible < {#}%.",
+"The radiometer reads {#} W/m².":
+  "El radiómetro marca {#} W/m².",
 "Spectral class M.":
   "Clase espectral M.",
 "The radiometer reads {#}×{#}⁶ W/m².":
   "El radiómetro marca {#}×{#}⁶ W/m².",
+"Spectral class B.":
+  "Clase espectral B.",
+"The radiometer reads {#}×{#}⁹ W/m².":
+  "El radiómetro marca {#}×{#}⁹ W/m².",
 "Slide T and watch the peak shift as {#}/T while the height of the curve climbs much faster.":
   "Desliza T y observa cómo el pico se desplaza como {#}/T mientras la altura de la curva sube mucho más rápido.",
 "λmax {#} μm":
   "λmax {#} μm",
 "{#}×{#}⁻⁶ L<sub>sun</sub>":
   "{#}×{#}⁻⁶ L<sub>sun</sub>",
+"Flux from the surface {#} W/m².":
+  "Flujo desde la superficie {#} W/m².",
+"Visible share {#}×{#}⁻²²%.":
+  "Fracción visible {#}×{#}⁻²²%.",
 "{#}×{#}⁻⁵ L<sub>sun</sub>":
   "{#}×{#}⁻⁵ L<sub>sun</sub>",
+"Visible share {#}×{#}⁻¹¹%.":
+  "Fracción visible {#}×{#}⁻¹¹%.",
 "{#}×{#}⁻⁴ L<sub>sun</sub>":
   "{#}×{#}⁻⁴ L<sub>sun</sub>",
+"Visible share {#}×{#}⁻⁸%.":
+  "Fracción visible {#}×{#}⁻⁸%.",
 "dull red glow":
   "brillo rojo tenue",
 "dull red":
   "rojo tenue",
+"Visible share {#}×{#}⁻⁵%.":
+  "Fracción visible {#}×{#}⁻⁵%.",
 "#ff4900":
   "#ff4900",
 "deep red":
@@ -296,22 +316,20 @@ VDI18N.add('es', 'demo/blackbody', {
   "#ff5900",
 "#ff6800":
   "#ff6800",
-"#ff7600":
-  "#ff7600",
-"The peak is at {#} μm.":
-  "El pico está en {#} μm.",
 "Flux from the surface {#}×{#}⁵ W/m².":
   "Flujo desde la superficie {#}×{#}⁵ W/m².",
-"Ultraviolet share < {#}%.":
-  "Fracción ultravioleta < {#}%.",
 "The radiometer reads {#}×{#}⁵ W/m².":
   "El radiómetro marca {#}×{#}⁵ W/m².",
+"#ff7600":
+  "#ff7600",
 "#ff8200":
   "#ff8200",
 "#ff8f1c":
   "#ff8f1c",
 "#ff9e3a":
   "#ff9e3a",
+"Flux from the surface {#}×{#}⁶ W/m².":
+  "Flujo desde la superficie {#}×{#}⁶ W/m².",
 "#ffac54":
   "#ffac54",
 "#ffb96e":
@@ -322,6 +340,8 @@ VDI18N.add('es', 'demo/blackbody', {
   "#ffd19f",
 "orange":
   "naranja",
+"Spectral class K.":
+  "Clase espectral K.",
 "#ffdcb8":
   "#ffdcb8",
 "#ffe7d0":
@@ -332,6 +352,8 @@ VDI18N.add('es', 'demo/blackbody', {
   "#fff8fd",
 "yellow white":
   "blanco amarillento",
+"Spectral class F.":
+  "Clase espectral F.",
 "#eeeeff":
   "#eeeeff",
 "#dee4ff":
@@ -340,14 +362,12 @@ VDI18N.add('es', 'demo/blackbody', {
   "blanco",
 "#d1dcff":
   "#d1dcff",
-"Flux from the surface {#}×{#}⁸ W/m².":
-  "Flujo desde la superficie {#}×{#}⁸ W/m².",
-"Spectral class A.":
-  "Clase espectral A.",
-"The radiometer reads {#}×{#}⁸ W/m².":
-  "El radiómetro marca {#}×{#}⁸ W/m².",
 "#c7d5ff":
   "#c7d5ff",
+"Flux from the surface {#}×{#}⁸ W/m².":
+  "Flujo desde la superficie {#}×{#}⁸ W/m².",
+"The radiometer reads {#}×{#}⁸ W/m².":
+  "El radiómetro marca {#}×{#}⁸ W/m².",
 "#bfd0ff":
   "#bfd0ff",
 "#b8cbff":
@@ -356,8 +376,14 @@ VDI18N.add('es', 'demo/blackbody', {
   "#b3c7ff",
 "#aec4ff":
   "#aec4ff",
+"Flux from the surface {#}×{#}⁹ W/m².":
+  "Flujo desde la superficie {#}×{#}⁹ W/m².",
 "#aac1ff":
   "#aac1ff",
+"Flux from the surface {#}×{#}¹⁰ W/m².":
+  "Flujo desde la superficie {#}×{#}¹⁰ W/m².",
+"The radiometer reads {#}×{#}¹⁰ W/m².":
+  "El radiómetro marca {#}×{#}¹⁰ W/m².",
 "#a7bfff":
   "#a7bfff",
 "#a5bdff":
@@ -376,20 +402,22 @@ VDI18N.add('es', 'demo/blackbody', {
   "fuera de escala ▶",
 "#9cb6ff":
   "#9cb6ff",
+"Flux from the surface {#}×{#}¹¹ W/m².":
+  "Flujo desde la superficie {#}×{#}¹¹ W/m².",
+"Spectral class O.":
+  "Clase espectral O.",
+"The radiometer reads {#}×{#}¹¹ W/m².":
+  "El radiómetro marca {#}×{#}¹¹ W/m².",
 "Remove pinned curve at {#} K":
   "Quitar la curva fijada a {#} K",
 "{#} pinned curves.":
   "{#} curvas fijadas.",
-"Visible share < {#}%.":
-  "Fracción visible < {#}%.",
 "π × shaded area = σT⁴ = {#}×{#}⁵ W/m²":
   "π × área sombreada = σT⁴ = {#}×{#}⁵ W/m²",
 "π × shaded area = σT⁴ = {#} W/m²":
   "π × área sombreada = σT⁴ = {#} W/m²",
 "π × shaded area = σT⁴ = {#}×{#}¹¹ W/m²":
   "π × área sombreada = σT⁴ = {#}×{#}¹¹ W/m²",
-"Spectral class K.":
-  "Clase espectral K.",
 "Readings cleared.":
   "Lecturas borradas.",
 "No readings to export.":
@@ -398,6 +426,16 @@ VDI18N.add('es', 'demo/blackbody', {
   "{#} lectura enviada a la hoja de trabajo. <a>Abrir la hoja de trabajo</a>",
 "{#} readings sent to the worksheet. <a>Open the worksheet</a>":
   "{#} lecturas enviadas a la hoja de trabajo. <a>Abrir la hoja de trabajo</a>",
+"Spectral class A.":
+  "Clase espectral A.",
+"Describe the picture":
+  "Describir la imagen",
+"Temperature {#} K.":
+  "Temperatura {#} K.",
+"Skip to the picture":
+  "Ir a la imagen",
+"Skip to the controls":
+  "Ir a los controles",
 "<a><span>←</span> <span>States of Matter</span></a><a><span>Gas in a Box</span> <span>→</span></a>":
   "<a><span>←</span> <span>Estados de la materia</span></a><a><span>Gas en una caja</span> <span>→</span></a>",
 "Wavelength λ (nm)":

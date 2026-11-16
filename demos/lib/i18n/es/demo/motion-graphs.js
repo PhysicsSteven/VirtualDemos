@@ -2,12 +2,6 @@
 VDI18N.add('es', 'demo/motion-graphs', {
 "resid.":
   "resid.",
-"Describe the picture":
-  "Describir la imagen",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
 "Motion Graphs":
   "Gráficas de movimiento",
 "<a>Kinematics</a>":
@@ -30,8 +24,6 @@ VDI18N.add('es', 'demo/motion-graphs', {
   "Etapa {#}: aceleración {#} m/s² durante {#} s.",
 "At the start.":
   "En el inicio.",
-"Time {#} s.":
-  "Tiempo {#} s.",
 "Position x −{#} m.":
   "Posición x −{#} m.",
 "Velocity {#} m/s.":
@@ -40,12 +32,6 @@ VDI18N.add('es', 'demo/motion-graphs', {
   "Aceleración {#} m/s².",
 "Distance traveled {#} m.":
   "Distancia recorrida {#} m.",
-"Time controls":
-  "Controles de tiempo",
-"Run for a moment and pause again":
-  "Avanza un momento y vuelve a pausar",
-"Step":
-  "Paso",
 "Constant velocity":
   "Velocidad constante",
 "Speeding up":
@@ -180,6 +166,8 @@ VDI18N.add('es', 'demo/motion-graphs', {
   "La aceleración es negativa todo el tiempo, y sin embargo el carrito primero avanza. Se detiene en t = {#} s (v = {#}, la cima de la parábola de x) y regresa. a no es cero en el punto de retorno.",
 "Speed up, cruise, slow to a stop. Each stage has its own constant a. x is curved, straight, then curved again; v is a trapezoid, and the area under it is the total distance.":
   "Acelera, avanza a velocidad constante, frena hasta detenerse. Cada etapa tiene su propia a constante. x es curva, recta y luego curva de nuevo; v es un trapecio, y el área bajo él es la distancia total.",
+"Stage {#}: acceleration −{#} m/s² for {#} s.":
+  "Etapa {#}: aceleración −{#} m/s² durante {#} s.",
 "Free fall: thrown up at {#} m/s, the ball has a = −{#} m/s² the whole time, on the way up, at the top and on the way down. At the top v = {#} but a is not. It lands after 2v₀/g = {#} s, back at the height it started. Air resistance is ignored.":
   "Caída libre: lanzada hacia arriba a {#} m/s, la pelota tiene a = −{#} m/s² todo el tiempo, al subir, en la cima y al bajar. En la cima v = {#} pero a no. Cae después de 2v₀/g = {#} s, de vuelta a la altura donde empezó. Se ignora la resistencia del aire.",
 "Height y":
@@ -196,6 +184,14 @@ VDI18N.add('es', 'demo/motion-graphs', {
   "Lado a lado",
 "t = {#} s at x = {#} m":
   "t = {#} s en x = {#} m",
+"Two cars on a track, with graphs of position, velocity and acceleration against time.":
+  "Dos autos en una pista, con gráficas de posición, velocidad y aceleración en función del tiempo.",
+"Car B starts at −{#} m with velocity {#} m/s and acceleration {#} m/s².":
+  "El auto B empieza en −{#} m con velocidad {#} m/s y aceleración {#} m/s².",
+"Car B is at −{#} m, {#} m from car A.":
+  "El auto B está en −{#} m, a {#} m del auto A.",
+"The cars are side by side at {#} s.":
+  "Los autos están lado a lado en {#} s.",
 "hazard seen":
   "peligro visto",
 "Two cars, side by side at x = {#} when their drivers see a hazard ahead: car A (blue) at {#} m/s ({#} km/h), car B (orange) at twice that. Each keeps its speed for the {#} s reaction time, then brakes at {#} m/s² to a stop. Car B's reaction distance is twice car A's, but its braking distance is four times as long, since it goes as v². On the v–t graph each stopping distance is the area under that car's line: a rectangle for the reaction, a triangle for the braking.":
@@ -210,14 +206,6 @@ VDI18N.add('es', 'demo/motion-graphs', {
   "{#}, y (v<sub>B</sub>/v<sub>A</sub>)² = {#}",
 "Brakes on, stopped":
   "Frenos aplicados, detenido",
-"Two cars side by side on a road, with graphs of position, velocity and acceleration against time.":
-  "Dos autos lado a lado en un camino, con gráficas de posición, velocidad y aceleración en función del tiempo.",
-"Car A goes {#} m/s and car B {#} m/s. Each keeps its speed for a {#} s reaction time, then brakes at {#} m/s².":
-  "El auto A va a {#} m/s y el auto B a {#} m/s. Cada uno mantiene su rapidez durante un tiempo de reacción de {#} s y luego frena a {#} m/s².",
-"Position x {#} m.":
-  "Posición x {#} m.",
-"Car B is at {#} m, {#} m from car A.":
-  "El auto B está en {#} m, a {#} m del auto A.",
 "The ball rolls down piece {#}, coasts along the flat, and climbs the steep piece {#} until it stops and comes back. Each piece gives a straight v–t line: its slope is the acceleration along that piece, steeper for a steeper ramp, zero on the flat. With no friction losses the ball comes back to its start height with no speed left and goes again.":
   "La esfera rueda por el tramo {#}, sigue por el tramo plano y sube el tramo empinado {#} hasta detenerse y regresar. Cada tramo da una recta v–t: su pendiente es la aceleración a lo largo de ese tramo, más empinada para una rampa más empinada, cero en el tramo plano. Sin pérdidas por fricción la esfera regresa a su altura inicial sin rapidez y vuelve a empezar.",
 "On the track":
@@ -242,18 +230,50 @@ VDI18N.add('es', 'demo/motion-graphs', {
   "Un carrito sobre una pista, con gráficas de posición, velocidad y aceleración en función del tiempo, una de las cuales tú dibujas.",
 "You draw the acceleration graph; the velocity and position graphs follow from it.":
   "Tú dibujas la gráfica de aceleración; las gráficas de velocidad y posición se obtienen de ella.",
+"Acceleration −{#} m/s².":
+  "Aceleración −{#} m/s².",
+"A ball thrown straight up, with graphs of height, velocity and acceleration against time.":
+  "Una pelota lanzada hacia arriba, con gráficas de altura, velocidad y aceleración contra el tiempo.",
+"The ball starts at {#} m.":
+  "La pelota empieza en {#} m.",
+"Height y {#} m.":
+  "Altura y {#} m.",
+"Two cars side by side on a road, with graphs of position, velocity and acceleration against time.":
+  "Dos autos lado a lado en un camino, con gráficas de posición, velocidad y aceleración en función del tiempo.",
+"Car A goes {#} m/s and car B {#} m/s. Each keeps its speed for a {#} s reaction time, then brakes at {#} m/s².":
+  "El auto A va a {#} m/s y el auto B a {#} m/s. Cada uno mantiene su rapidez durante un tiempo de reacción de {#} s y luego frena a {#} m/s².",
+"Position x {#} m.":
+  "Posición x {#} m.",
+"Car B is at {#} m, {#} m from car A.":
+  "El auto B está en {#} m, a {#} m del auto A.",
+"A ball on three ramp pieces, with graphs of position, velocity and acceleration against time.":
+  "Una pelota sobre tres tramos de rampa, con gráficas de posición, velocidad y aceleración contra el tiempo.",
+"The three ramp pieces slope −{#}°, {#}°, {#}°. The ball starts at {#} m/s.":
+  "Los tres tramos de rampa tienen pendientes de −{#}°, {#}°, {#}°. La pelota empieza a {#} m/s.",
+"A cart on a track, with graphs of position, velocity and acceleration against time, and a dashed target for the position graph.":
+  "Un carrito en un riel, con gráficas de posición, velocidad y aceleración contra el tiempo, y un objetivo discontinuo para la gráfica de posición.",
+"Move the cart so that its position graph follows the dashed target.":
+  "Mueve el carrito para que su gráfica de posición siga el objetivo discontinuo.",
+"You draw the velocity graph; the acceleration graph shows its slope and the position graph its area.":
+  "Tú dibujas la gráfica de velocidad; la gráfica de aceleración muestra su pendiente y la de posición su área.",
+"Describe the picture":
+  "Describir la imagen",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
+"Time {#} s.":
+  "Tiempo {#} s.",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
 "Playing.":
   "Reproduciendo.",
 "Paused.":
   "En pausa.",
-"Two cars on a track, with graphs of position, velocity and acceleration against time.":
-  "Dos autos en una pista, con gráficas de posición, velocidad y aceleración en función del tiempo.",
-"Car B starts at −{#} m with velocity {#} m/s and acceleration {#} m/s².":
-  "El auto B empieza en −{#} m con velocidad {#} m/s y aceleración {#} m/s².",
-"Car B is at −{#} m, {#} m from car A.":
-  "El auto B está en −{#} m, a {#} m del auto A.",
-"The cars are side by side at {#} s.":
-  "Los autos están lado a lado en {#} s.",
 "Close":
   "Cerrar"
 });

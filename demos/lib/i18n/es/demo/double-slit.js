@@ -24,10 +24,6 @@ VDI18N.add('es', 'demo/double-slit', {
   "a lo largo de las rendijas →",
 "Hits per bin":
   "Impactos por intervalo",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
 "Double Slit, One Particle at a Time":
   "Doble rendija, una partícula a la vez",
 "<a><span>←</span> <span>Telescope Aberrations</span></a><a><span>Diffraction Grating</span> <span>→</span></a>":
@@ -36,12 +32,6 @@ VDI18N.add('es', 'demo/double-slit', {
   "Envía fotones, electrones o moléculas de C₆₀ a través de dos rendijas, una a la vez. Cada una llega a un solo punto; solo la acumulación de muchos puntos muestra el patrón de interferencia.",
 "λ = h/p · Δy ≈ λL/d · envelope zero at sin θ = λ/a":
   "λ = h/p · Δy ≈ λL/d · cero de la envolvente en sen θ = λ/a",
-"Time controls":
-  "Controles de tiempo",
-"Run for a moment and pause again":
-  "Avanza un momento y vuelve a pausar",
-"Step":
-  "Paso",
 "Fire {#}":
   "Disparar {#}",
 "Switch between the bench in perspective and the top view":
@@ -72,8 +62,6 @@ VDI18N.add('es', 'demo/double-slit', {
   "Detector de rendija activado",
 "{#} kV electrons, λ = {#} pm, slits {#} µm wide and {#} µm apart. The fringes are under {#} µm apart, so Jönsson magnified them with electron lenses; this screen shows them before magnification. Watch the first few dozen hits: no pattern yet.":
   "Electrones de {#} kV, λ = {#} pm, rendijas de {#} µm de ancho separadas {#} µm. Las franjas quedan a menos de {#} µm entre sí, así que Jönsson las amplificó con lentes electrónicas; esta pantalla las muestra antes de amplificarlas. Observa los primeros impactos, unas cuantas docenas: todavía no hay patrón.",
-"Particle":
-  "Partícula",
 "Photons":
   "Fotones",
 "Electrons":
@@ -186,6 +174,34 @@ VDI18N.add('es', 'demo/double-slit', {
   "Vista 3D: las rendijas son largas, así que cada una emite una onda cilíndrica y las franjas son líneas a lo ancho de la pantalla. Las rendijas mantienen su cociente real entre ancho y separación. Arrastra el banco vacío, o pulsa [ y ], para girarlo; el botón Vista 3D o V cambia a la vista superior.",
 "Model: a monochromatic plane wave falls on two slits, and the screen pattern is the paraxial Fresnel calculation, which matches the formula above in the far field. Each hit is drawn at random from that pattern; its position along the slits is just spread out for display. Slits are drawn enlarged and L is not to scale. Hits count only if they land on the screen shown.":
   "Modelo: una onda plana monocromática incide sobre dos rendijas, y el patrón en la pantalla es el cálculo paraxial de Fresnel, que coincide con la fórmula de arriba en el campo lejano. Cada impacto se sortea al azar a partir de ese patrón; su posición a lo largo de las rendijas solo se reparte para mostrarla. Las rendijas se dibujan agrandadas y L no está a escala. Los impactos cuentan solo si caen en la pantalla mostrada.",
+"An electron gun fires electrons through two slits onto a detector screen.":
+  "Un cañón de electrones dispara electrones a través de dos rendijas hacia una pantalla detectora.",
+"The bench is seen in perspective.":
+  "La mesa se ve en perspectiva.",
+"Accelerating voltage {#} kV.":
+  "Voltaje de aceleración: {#} kV.",
+"de Broglie wavelength {#} pm.":
+  "Longitud de onda de de Broglie: {#} pm.",
+"Slit width a = {#} µm.":
+  "Ancho de la rendija a = {#} µm.",
+"Slit separation d = {#} µm.":
+  "Separación de las rendijas d = {#} µm.",
+"Screen distance L = {#} m.":
+  "Distancia a la pantalla L = {#} m.",
+"Both slits are open.":
+  "Las dos rendijas están abiertas.",
+"No detector marks which slit a particle used.":
+  "Ningún detector marca por cuál rendija pasó una partícula.",
+"Particles are streaming at {#} per second.":
+  "Las partículas llegan a {#} por segundo.",
+"Predicted fringe spacing {#} µm.":
+  "Espaciamiento de franjas predicho: {#} µm.",
+"The central envelope ends {#} µm from the center.":
+  "La envolvente central termina a {#} µm del centro.",
+"{#} bright fringes fit inside the central envelope.":
+  "Caben {#} franjas brillantes dentro de la envolvente central.",
+"{#} particles detected.":
+  "{#} partículas detectadas.",
 "A very faint red laser, one photon at a time. G. I. Taylor did this in {#} with the fringes around a needle’s shadow. Fringes {#} mm apart, nine bright ones inside the central envelope, which ends {#} mm from the center.":
   "Un láser rojo muy tenue, un fotón a la vez. G. I. Taylor hizo esto en {#} con las franjas alrededor de la sombra de una aguja. Franjas separadas {#} mm, nueve brillantes dentro de la envolvente central, que termina a {#} mm del centro.",
 "<span></span>{#} nm <span>red</span>":
@@ -226,38 +242,18 @@ VDI18N.add('es', 'demo/double-slit', {
   "detectores de rendija",
 "Your own setup. Pick a preset to return to a known experiment.":
   "Tu propia configuración. Elige una predefinida para volver a un experimento conocido.",
+"Each particle is recorded at its slit, with efficiency {#}%.":
+  "Cada partícula se registra en su rendija, con una eficiencia de {#}%.",
 "An oven sends C₆₀ molecules through two slits onto a detector screen.":
   "Un horno envía moléculas de C₆₀ a través de dos rendijas hacia una pantalla detectora.",
-"The bench is seen in perspective.":
-  "La mesa se ve en perspectiva.",
 "Molecule speed {#} m/s.":
   "Rapidez de las moléculas: {#} m/s.",
-"de Broglie wavelength {#} pm.":
-  "Longitud de onda de de Broglie: {#} pm.",
 "Slit width a = {#} nm.":
   "Ancho de la rendija a = {#} nm.",
 "Slit separation d = {#} nm.":
   "Separación de las rendijas d = {#} nm.",
-"Screen distance L = {#} m.":
-  "Distancia a la pantalla L = {#} m.",
-"Both slits are open.":
-  "Las dos rendijas están abiertas.",
-"Each particle is recorded at its slit, with efficiency {#}%.":
-  "Cada partícula se registra en su rendija, con una eficiencia de {#}%.",
-"Particles are streaming at {#} per second.":
-  "Las partículas llegan a {#} por segundo.",
-"Predicted fringe spacing {#} µm.":
-  "Espaciamiento de franjas predicho: {#} µm.",
-"The central envelope ends {#} µm from the center.":
-  "La envolvente central termina a {#} µm del centro.",
-"{#} bright fringes fit inside the central envelope.":
-  "Caben {#} franjas brillantes dentro de la envolvente central.",
-"No particles detected yet.":
-  "Todavía no se detecta ninguna partícula.",
 "Turn on the cursors (Measure) and put them on two fringes first.":
   "Activa primero los cursores (Medir) y ponlos sobre dos franjas.",
-"{#} particles detected.":
-  "{#} partículas detectadas.",
 "Close or open slit {#} or slit {#}":
   "Cierra o abre la rendija {#} o la rendija {#}",
 "A laser shines photons through two slits onto a detector screen.":
@@ -268,20 +264,10 @@ VDI18N.add('es', 'demo/double-slit', {
   "Ancho de la rendija a = {#} mm.",
 "Slit separation d = {#} mm.":
   "Separación de las rendijas d = {#} mm.",
-"No detector marks which slit a particle used.":
-  "Ningún detector marca por cuál rendija pasó una partícula.",
 "Predicted fringe spacing {#} mm.":
   "Espaciamiento de franjas predicho: {#} mm.",
 "The central envelope ends {#} mm from the center.":
   "La envolvente central termina a {#} mm del centro.",
-"An electron gun fires electrons through two slits onto a detector screen.":
-  "Un cañón de electrones dispara electrones a través de dos rendijas hacia una pantalla detectora.",
-"Accelerating voltage {#} kV.":
-  "Voltaje de aceleración: {#} kV.",
-"Slit width a = {#} µm.":
-  "Ancho de la rendija a = {#} µm.",
-"Slit separation d = {#} µm.":
-  "Separación de las rendijas d = {#} µm.",
 "Only slit {#} is open.":
   "Solo la rendija {#} está abierta.",
 "Both slits closed":
@@ -292,6 +278,10 @@ VDI18N.add('es', 'demo/double-slit', {
   "{#} <small>detectadas</small>",
 "Both slits are closed.":
   "Las dos rendijas están cerradas.",
+"No particles detected yet.":
+  "Todavía no se detecta ninguna partícula.",
+"{#} particle detected.":
+  "{#} partícula detectada.",
 "Top view (slits enlarged)":
   "Vista desde arriba (rendijas agrandadas)",
 "The apparatus is seen from above.":
@@ -300,6 +290,18 @@ VDI18N.add('es', 'demo/double-slit', {
   "Flujo",
 "The stream is paused.":
   "El flujo está en pausa.",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
+"Particle":
+  "Partícula",
 "<a><span>←</span> <span>Color Vision</span></a><a><span>Diffraction Grating</span> <span>→</span></a>":
   "<a><span>←</span> <span>Visión del color</span></a><a><span>Rejilla de difracción</span> <span>→</span></a>",
 "Close":

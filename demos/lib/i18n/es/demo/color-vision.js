@@ -6,12 +6,6 @@ VDI18N.add('es', 'demo/color-vision', {
   "Luz que llega al ojo (continua) y sensibilidades de los conos (discontinuas)",
 "Cone signals":
   "Señales de los conos",
-"Describe the picture":
-  "Describir la imagen",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
 "Color Vision":
   "Visión del color",
 "<a><span>←</span> <span>Build a Microscope or Telescope</span></a><a><span>Telescope Aberrations</span> <span>→</span></a>":
@@ -284,6 +278,10 @@ VDI18N.add('es', 'demo/color-vision', {
   "#ff00dd",
 "Green and blue: M and S respond. Compare with the pure {#} nm setup.":
   "Verde y azul: M y S responden. Compara con la configuración de {#} nm puro.",
+"One lamp in a dark room shines a single wavelength into a person's eye.":
+  "Una lámpara en un cuarto oscuro envía una sola longitud de onda al ojo de una persona.",
+"Wavelength {#} nm at {#}% power.":
+  "Longitud de onda {#} nm al {#}% de potencia.",
 "Pure {#} nm light. Mix it from the lamps and the match asks for negative red: no positive mix of these three lamps reaches a color this pure, which is why screens cannot show the rainbow's cyan.":
   "Luz pura de {#} nm. Mézclala con las lámparas y la igualación pide rojo negativo: ninguna mezcla positiva de estas tres lámparas alcanza un color tan puro, y por eso las pantallas no pueden mostrar el cian del arcoíris.",
 "Photons slowed enormously; each dot is one photon":
@@ -312,6 +310,16 @@ VDI18N.add('es', 'demo/color-vision', {
   "rojo",
 "A red filter, then a green one. The red filter passes only above {#} nm and the green only {#} to {#} nm; no wavelength passes both, so no photon reaches the eye.":
   "Un filtro rojo y luego uno verde. El filtro rojo deja pasar solo por encima de {#} nm y el verde solo de {#} a {#} nm; ninguna longitud de onda pasa por ambos, así que ningún fotón llega al ojo.",
+"An incandescent bulb shines into a person's eye.":
+  "Un foco incandescente ilumina el ojo de una persona.",
+"No band filter.":
+  "Sin filtro de banda.",
+"A red filter is in the beam.":
+  "Hay un filtro rojo en el haz.",
+"A green filter is in the beam.":
+  "Hay un filtro verde en el haz.",
+"Photons are drawn as dots, slowed enormously.":
+  "Los fotones se dibujan como puntos, enormemente frenados.",
 "Pure {#} nm light through a red filter (it passes only above {#} nm): nothing gets through. Now choose Red + green and put the same red filter in: the red lamp passes. The two yellows look the same to the eye, but a filter tells them apart, because it acts on the spectrum, not on the cone signals.":
   "Luz pura de {#} nm a través de un filtro rojo (deja pasar solo por encima de {#} nm): no pasa nada. Ahora elige Rojo + verde y pon el mismo filtro rojo: la lámpara roja pasa. Los dos amarillos se ven iguales al ojo, pero un filtro los distingue, porque actúa sobre el espectro, no sobre las señales de los conos.",
 "Magenta absorbs the green third and yellow the blue third, so only red is left: Y = {#} and L is the largest cone signal. Magenta and yellow are how a printer makes red.":
@@ -324,14 +332,6 @@ VDI18N.add('es', 'demo/color-vision', {
   "cian {#} : magenta {#}",
 "#543df4":
   "#543df4",
-"A board of mixed paint, lit by daylight.":
-  "Una tabla con pintura mezclada, iluminada por luz del día.",
-"Cyan paint, {#} part.":
-  "Pintura cian, {#} parte.",
-"Magenta paint, {#} part.":
-  "Pintura magenta, {#} parte.",
-"Reflectance at {#}, {#} and {#} nm: {#}, {#}, {#}.":
-  "Reflectancia a {#}, {#} y {#} nm: {#}, {#}, {#}.",
 "All three paints, one part each: every third of the spectrum is absorbed by one of them, and the mix reflects about {#}% everywhere (Y = {#}), a dark muddy gray, not black. Each pigment is only a third of the mix, so each absorbs less than it does alone; real printers add black ink for this reason.":
   "Las tres pinturas, una parte de cada una: cada tercio del espectro es absorbido por una de ellas, y la mezcla refleja alrededor del {#}% en todas partes (Y = {#}), un gris oscuro y turbio, no negro. Cada pigmento es solo un tercio de la mezcla, así que cada uno absorbe menos que solo; por eso las impresoras reales agregan tinta negra.",
 "cyan {#} : magenta {#} : yellow {#}":
@@ -346,6 +346,14 @@ VDI18N.add('es', 'demo/color-vision', {
   "foco, {#} K",
 "Blue paint (cyan + magenta) under an incandescent bulb. The bulb has little blue light, so the paint sends back far less blue: S falls from {#} in daylight to {#}, and the blue looks dull violet. Switch to Daylight to compare. The eye in life adapts to the bulb; here nothing adapts.":
   "Pintura azul (cian + magenta) bajo un foco incandescente. El foco tiene poca luz azul, así que la pintura devuelve mucho menos azul: S baja de {#} con luz de día a {#}, y el azul se ve violeta apagado. Cambia a Luz de día para comparar. En la realidad el ojo se adapta al foco; aquí nada se adapta.",
+"A board of mixed paint, lit by an incandescent bulb.":
+  "Una tabla de pintura mezclada, iluminada por un foco incandescente.",
+"Cyan paint, {#} part.":
+  "Pintura cian, {#} parte.",
+"Magenta paint, {#} part.":
+  "Pintura magenta, {#} parte.",
+"Reflectance at {#}, {#} and {#} nm: {#}, {#}, {#}.":
+  "Reflectancia a {#}, {#} y {#} nm: {#}, {#}, {#}.",
 "Only the red and green lamps: the backdrop is yellow, the red lamp's shadow is green, the green lamp's shadow is red, and where both shadows overlap (the ring) no light arrives, so it is black. Turn the blue lamp on and the overlap turns blue.":
   "Solo las lámparas roja y verde: el telón de fondo es amarillo, la sombra de la lámpara roja es verde, la sombra de la lámpara verde es roja, y donde se traslapan ambas sombras (el anillo) no llega luz, así que es negro. Enciende la lámpara azul y el traslape se vuelve azul.",
 "the white backdrop, lit by no lamp (in the shadow of red and green)":
@@ -372,46 +380,86 @@ VDI18N.add('es', 'demo/color-vision', {
   "Un telón de fondo azul bajo las tres lámparas. La pintura azul refleja solo la luz azul, así que las sombras de las lámparas roja y verde sobre el telón siguen viéndose azules, pero la sombra de la lámpara azul (el anillo) recibe solo luz roja y verde, que la pintura azul absorbe: es casi negra (Y = {#}, la reflectancia del {#}% de la pintura fuera de su banda).",
 "the blue backdrop, lit by red and green (in the shadow of blue)":
   "el telón de fondo azul, iluminado por el rojo y el verde (en la sombra del azul)",
-"stage lamps red {#}%, green {#}%, blue {#}%: the blue backdrop, lit by red and green (in the shadow of blue)":
-  "lámparas del escenario roja {#}%, verde {#}%, azul {#}%: el telón de fondo azul, iluminado por el rojo y el verde (en la sombra del azul)",
 "The backdrop is blue.":
   "El telón de fondo es azul.",
+"stage lamps red {#}%, green {#}%, blue {#}%: the blue backdrop, lit by red and green (in the shadow of blue)":
+  "lámparas del escenario roja {#}%, verde {#}%, azul {#}%: el telón de fondo azul, iluminado por el rojo y el verde (en la sombra del azul)",
+"The performer wears a red costume.":
+  "El artista lleva un traje rojo.",
+"The performer wears a green costume.":
+  "El artista lleva un traje verde.",
+"The performer wears a blue costume.":
+  "El artista lleva un traje azul.",
+"The performer wears a yellow costume.":
+  "El artista lleva un traje amarillo.",
+"The performer wears a cyan costume.":
+  "El artista lleva un traje cian.",
 "The performer wears a magenta costume.":
   "El artista lleva un traje magenta.",
+"The performer wears a black costume.":
+  "El artista lleva un traje negro.",
 "the red backdrop, lit by red and green (in the shadow of blue)":
   "el telón de fondo rojo, iluminado por el rojo y el verde (en la sombra del azul)",
 "#ff002c":
   "#ff002c",
+"The backdrop is red.":
+  "El telón de fondo es rojo.",
 "the green backdrop, lit by red and green (in the shadow of blue)":
   "el telón de fondo verde, iluminado por el rojo y el verde (en la sombra del azul)",
+"The backdrop is green.":
+  "El telón de fondo es verde.",
 "the yellow backdrop, lit by red and green (in the shadow of blue)":
   "el telón de fondo amarillo, iluminado por el rojo y el verde (en la sombra del azul)",
 "#fbe700":
   "#fbe700",
+"The backdrop is yellow.":
+  "El telón de fondo es amarillo.",
 "the cyan backdrop, lit by red and green (in the shadow of blue)":
   "el telón de fondo cian, iluminado por el rojo y el verde (en la sombra del azul)",
 "#00ec7d":
   "#00ec7d",
+"The backdrop is cyan.":
+  "El telón de fondo es cian.",
 "the magenta backdrop, lit by red and green (in the shadow of blue)":
   "el telón de fondo magenta, iluminado por el rojo y el verde (en la sombra del azul)",
 "#ff002b":
   "#ff002b",
+"The backdrop is magenta.":
+  "El telón de fondo es magenta.",
 "the black backdrop, lit by red and green (in the shadow of blue)":
   "el telón de fondo negro, iluminado por el rojo y el verde (en la sombra del azul)",
+"The backdrop is black.":
+  "El telón de fondo es negro.",
 "Performer {#} m from the backdrop; shadows {#} × life size":
   "Actor a {#} m del telón de fondo; sombras de {#} × el tamaño real",
 "Light, cones (dashed), R (dots)":
   "Luz, conos (discontinuas), R (puntos)",
 "Light (solid), cones (dashed)":
   "Luz (continua), conos (discontinuas)",
-"A daylight bulb shines into a person's eye.":
-  "Un foco de luz del día ilumina el ojo de una persona.",
 "A band filter passes {#} to {#} nm.":
   "Un filtro de banda deja pasar de {#} a {#} nm.",
-"Photons are drawn as dots, slowed enormously.":
-  "Los fotones se dibujan como puntos, enormemente frenados.",
+"A board of mixed paint, lit by daylight.":
+  "Una tabla con pintura mezclada, iluminada por luz del día.",
 "Yellow paint, {#} part.":
   "Pintura amarilla, {#} parte.",
+"A daylight bulb shines into a person's eye.":
+  "Un foco de luz del día ilumina el ojo de una persona.",
+"A magenta filter is in the beam.":
+  "Hay un filtro magenta en el haz.",
+"A yellow filter is in the beam.":
+  "Hay un filtro amarillo en el haz.",
+"A cyan filter is in the beam.":
+  "Hay un filtro cian en el haz.",
+"White paint, {#} parts.":
+  "Pintura blanca, {#} partes.",
+"The ring is on the performer.":
+  "El anillo está sobre el artista.",
+"Describe the picture":
+  "Describir la imagen",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "<a><span>←</span> <span>Build a Microscope or Telescope</span></a><a><span>Double Slit, One Particle at a Time</span> <span>→</span></a>":
   "<a><span>←</span> <span>Construye un microscopio o un telescopio</span></a><a><span>Doble rendija, una partícula a la vez</span> <span>→</span></a>",
 "Close":

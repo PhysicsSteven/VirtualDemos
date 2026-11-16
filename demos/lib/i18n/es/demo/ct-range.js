@@ -26,8 +26,6 @@ VDI18N.add('es', 'demo/ct-range', {
   "ajuste de Schneider",
 "HU = {#} (ρₑ − {#})":
   "HU = {#} (ρₑ − {#})",
-"Describe the picture":
-  "Describir la imagen",
 "CT Numbers and Proton Range":
   "Números CT y alcance de protones",
 "<a>{#} · Proton therapy</a>":
@@ -38,8 +36,6 @@ VDI18N.add('es', 'demo/ct-range', {
   "Un plan con protones lee sus poderes de frenado en una tomografía. Calibra un tomógrafo con un maniquí de materiales conocidos, convierte números CT en poderes de frenado como lo hizo Schneider en {#}, pon a prueba la curva con un tejido misterioso en un haz de protones, y ve cómo los errores que quedan fijan los márgenes alrededor de cada blanco.",
 "CT numbers in HU · depths in cm · range errors in mm":
   "Números CT en HU · profundidades en cm · errores de alcance en mm",
-"Time controls":
-  "Controles de tiempo",
 "Which step":
   "Qué paso",
 "Scan the phantom":
@@ -274,10 +270,6 @@ VDI18N.add('es', 'demo/ct-range', {
   "Aproximadamente a escala; el haz se dibuja como una línea.",
 "Drag to turn the view.":
   "Arrastra para girar la vista.",
-"Skip to the picture":
-  "Ir a la imagen",
-"Skip to the controls":
-  "Ir a los controles",
 "Skeletal muscle, {#} cm":
   "Músculo esquelético, {#} cm",
 "water tank":
@@ -364,6 +356,12 @@ VDI18N.add('es', 'demo/ct-range', {
   "+{#} mm <span>cubierto</span>",
 "Range error from: curve, CT numbers, I values":
   "Error de alcance por: curva, números CT, valores I",
+"planned R90 {#} cm":
+  "R90 planeado {#} cm",
+"real R90 {#} cm":
+  "R90 real {#} cm",
+"layers to scale along the beam; {#} cm shown":
+  "capas a escala a lo largo del haz; se muestran {#} cm",
 "Step {#}, range and margins: the beam's path through a patient to the target.":
   "Paso {#}, alcance y márgenes: el camino del haz a través de un paciente hasta el blanco.",
 "Patient: Brain, lateral beam through the skull.":
@@ -390,12 +388,10 @@ VDI18N.add('es', 'demo/ct-range', {
   "Una gráfica de la dosis planeada y entregada a lo largo del haz.",
 "The real range ends +{#} mm past it.":
   "El alcance real termina +{#} mm más allá.",
-"planned R90 {#} cm":
-  "R90 planeado {#} cm",
-"real R90 {#} cm":
-  "R90 real {#} cm",
-"layers to scale along the beam; {#} cm shown":
-  "capas a escala a lo largo del haz; se muestran {#} cm",
+"The plan uses the tissue substitute curve.":
+  "El plan usa la curva de sustitutos de tejido.",
+"The real range is +{#} mm from the planned one.":
+  "El alcance real difiere +{#} mm del planeado.",
 "The same phantom at {#} kV. The lower energy photons are absorbed more by the photoelectric effect, so B-{#} (calcium) and Teflon read much higher than at {#} kV, while water and the plastics barely move. The calibration belongs to one scanner at one tube voltage: change the protocol and it must be redone.":
   "El mismo maniquí a {#} kV. Los fotones de menor energía se absorben más por el efecto fotoeléctrico, así que el B-{#} (calcio) y el teflón marcan mucho más alto que a {#} kV, mientras que el agua y los plásticos apenas se mueven. La calibración pertenece a un tomógrafo con un voltaje de tubo: si cambia el protocolo, hay que rehacerla.",
 "NOZZLE":
@@ -446,10 +442,14 @@ VDI18N.add('es', 'demo/ct-range', {
   "cabeza femoral",
 "The prostate from the side: skin, fat, muscle, {#} cm of femoral head, muscle, then the target, about {#} cm of water equivalent deep. The same {#} % is now more than {#} mm: deep targets carry the largest margins.":
   "La próstata de lado: piel, grasa, músculo, {#} cm de cabeza femoral, músculo y luego el blanco, a unos {#} cm de profundidad equivalente en agua. El mismo {#} % ahora es más de {#} mm: los blancos profundos llevan los márgenes más grandes.",
+"Patient: Prostate, lateral beam through a femoral head.":
+  "Paciente: próstata, haz lateral a través de una cabeza femoral.",
 "lung, inflated":
   "pulmón, inflado",
 "A lung tumor behind the chest wall and {#} cm of inflated lung, with lung beyond it. The margin is set in water equivalent millimeters, but in lung of density {#} each of those is almost {#} mm of real distance: the distal margin here is well over a centimeter of lung.":
   "Un tumor de pulmón detrás de la pared torácica y {#} cm de pulmón inflado, con pulmón más allá. El margen se fija en milímetros equivalentes en agua, pero en pulmón de densidad {#} cada uno de ellos es casi {#} mm de distancia real: aquí el margen distal es bastante más de un centímetro de pulmón.",
+"Patient: Lung tumor, beam through the chest wall.":
+  "Paciente: tumor de pulmón, haz a través de la pared torácica.",
 "The scanner reads every CT number {#} HU high, as after a drift since its calibration. In soft tissue that is about a {#} % error in stopping power; in lung, whose stopping power ratio is only about {#}, the same {#} HU is a {#} % error, and the beam goes several millimeters of lung deeper than planned.":
   "El tomógrafo lee cada número CT {#} HU alto, como tras una deriva desde su calibración. En tejido blando eso es un error de alrededor de {#} % en el poder de frenado; en pulmón, cuya razón de poder de frenado es solo de unos {#}, los mismos {#} HU son un error de {#} %, y el haz llega varios milímetros de pulmón más profundo de lo planeado.",
 "+{#} HU":
@@ -464,24 +464,74 @@ VDI18N.add('es', 'demo/ct-range', {
   "El plan de cerebro sin margen distal: el borde distal se pone exactamente en el lado lejano del blanco. Cualquier error que haga quedarse corto al haz deja ahora parte del blanco con dosis insuficiente. Prueba unos milímetros de error de alcance con los deslizadores.",
 "−{#} mm <span>missed</span>":
   "−{#} mm <span>sin cubrir</span>",
+"The real range ends −{#} mm past the target's far edge.":
+  "El alcance real termina −{#} mm más allá del borde lejano del blanco.",
+"Part of the target is missed.":
+  "Parte del blanco queda sin cubrir.",
+"The real range ends −{#} mm past it.":
+  "El alcance real termina −{#} mm más allá.",
 "Delivery":
   "Entrega",
 "beam on":
   "haz encendido",
 "The beam is on.":
   "El haz está encendido.",
-"The real range ends −{#} mm past it.":
-  "El alcance real termina −{#} mm más allá.",
-"Part of the target is missed.":
-  "Parte del blanco queda sin cubrir.",
-"The real range ends −{#} mm past the target's far edge.":
-  "El alcance real termina −{#} mm más allá del borde lejano del blanco.",
+"Step {#}, the curve: a proton beam passes through a slab of tissue in front of a water tank.":
+  "Paso {#}, la curva: un haz de protones atraviesa una placa de tejido delante de un tanque de agua.",
+"Slab thickness {#} cm.":
+  "Espesor de la placa {#} cm.",
+"CT tube voltage {#} kV.":
+  "Voltaje del tubo del tomógrafo {#} kV.",
+"The slab is mystery tissue number {#}.":
+  "La placa es el tejido misterioso número {#}.",
+"Its identity is hidden.":
+  "Su identidad está oculta.",
+"Its CT number is {#} ± {#} HU.":
+  "Su número CT es {#} ± {#} HU.",
+"The stoichiometric curve says a stopping power ratio of {#}.":
+  "La curva estequiométrica da una razón de poder de frenado de {#}.",
+"The range shift has not been measured yet.":
+  "El corrimiento del alcance aún no se ha medido.",
+"Its real stopping power ratio is hidden.":
+  "Su razón de poder de frenado real está oculta.",
+"A graph of stopping power ratio against CT number, with the calibration curves.":
+  "Gráfica de la razón de poder de frenado contra el número CT, con las curvas de calibración.",
+"The stoichiometric curve is drawn.":
+  "Se dibuja la curva estequiométrica.",
 "Drag to turn.":
   "Arrastra para girar.",
-"Patient: Lung tumor, beam through the chest wall.":
-  "Paciente: tumor de pulmón, haz a través de la pared torácica.",
-"The plan uses the tissue substitute curve.":
-  "El plan usa la curva de sustitutos de tejido.",
-"The real range is +{#} mm from the planned one.":
-  "El alcance real difiere +{#} mm del planeado."
+"The slab is Skeletal muscle (ICRP), CT number {#} HU.":
+  "La placa es músculo esquelético (ICRP), número CT {#} HU.",
+"Its stopping power ratio is {#}.":
+  "Su razón de poder de frenado es {#}.",
+"The stoichiometric curve says {#}, +{#} %.":
+  "La curva estequiométrica da {#}, +{#} %.",
+"The substitute curve says {#}, +{#} %.":
+  "La curva de sustitutos da {#}, +{#} %.",
+"The graph shows both curves.":
+  "La gráfica muestra ambas curvas.",
+"Teflon is in the tissue substitute curve.":
+  "El teflón está en la curva de sustitutos de tejido.",
+"Both curves are drawn.":
+  "Se dibujan ambas curvas.",
+"The slab is Cortical bone (ICRP), CT number {#} HU.":
+  "La placa es hueso cortical (ICRP), número CT {#} HU.",
+"The stoichiometric curve says {#}, −{#} %.":
+  "La curva estequiométrica da {#}, −{#} %.",
+"The substitute curve says {#}, −{#} %.":
+  "La curva de sustitutos da {#}, −{#} %.",
+"Teflon is left out of the tissue substitute curve.":
+  "El teflón se deja fuera de la curva de sustitutos de tejido.",
+"CT number error +{#} HU.":
+  "Error del número CT +{#} HU.",
+"Tissue I values off by −{#} %.":
+  "Valores I del tejido desviados −{#} %.",
+"Describe the picture":
+  "Describir la imagen",
+"Time controls":
+  "Controles de tiempo",
+"Skip to the picture":
+  "Ir a la imagen",
+"Skip to the controls":
+  "Ir a los controles"
 });

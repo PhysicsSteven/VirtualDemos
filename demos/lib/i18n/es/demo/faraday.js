@@ -2,8 +2,6 @@
 VDI18N.add('es', 'demo/faraday', {
 "No change of flux, so no induced EMF and no current.":
   "No hay cambio de flujo, así que no hay EMF inducida ni corriente.",
-"Describe the picture":
-  "Describir la imagen",
 ", flux through one turn (µWb)":
   ", flujo a través de una espira (µWb)",
 "{#} µWb":
@@ -46,26 +44,14 @@ VDI18N.add('es', 'demo/faraday', {
   "El imán se mueve a {#} m/s cuando se empuja o se jala.",
 "The magnet's center is −{#} cm from the coil's center.":
   "El centro del imán está a −{#} cm del centro de la bobina.",
-"Running.":
-  "En marcha.",
-"Time {#} s.":
-  "Tiempo {#} s.",
 "Flux through one turn {#} µWb.":
   "Flujo a través de una espira {#} µWb.",
 "EMF {#} V.":
   "EMF {#} V.",
 "Current {#} A.":
   "Corriente {#} A.",
-"Time controls":
-  "Controles de tiempo",
-"Run for a moment and pause again":
-  "Avanza un momento y vuelve a pausar",
-"Step":
-  "Paso",
 "<span>Playback rate</span>":
   "<span>Ritmo de reproducción</span>",
-"Real time":
-  "Tiempo real",
 "slow motion ×{#}":
   "cámara lenta ×{#}",
 "Push in":
@@ -236,10 +222,14 @@ VDI18N.add('es', 'demo/faraday', {
   "<i></i>Campo de la corriente inducida (solo la forma)",
 "Magnet: a cylinder {#} cm long and {#} cm across, uniformly magnetized along its axis (M = B<sub>r</sub>/μ₀), which is exactly a finite solenoid. Its field and the flux through the coil are computed from the exact field of current rings (complete elliptic integrals) integrated along the magnet; for the flip, the flux of the tilted magnet is ∫M·B<sub>coil</sub> dV/I by reciprocity. All N turns are taken to sit at one place (a short coil). On the drawing the winding is spread over a short former, one drawn loop for every {#} turns (at least one). The coil's self inductance is neglected, which is fine when L/R is much shorter than the move. The magnet moves as you or the buttons move it: the force from the induced current is shown but does not slow your drag. Field lines are drawn at equal steps of flux, {#} µWb apart, so the number threading the coil follows Φ<sub>B</sub>; count the darker lines in the plane of the page. The fainter lines are the same field in two other planes through the axis.":
   "Imán: un cilindro de {#} cm de largo y {#} cm de diámetro, magnetizado uniformemente a lo largo de su eje (M = B<sub>r</sub>/μ₀), lo cual es exactamente un solenoide finito. Su campo y el flujo a través de la bobina se calculan a partir del campo exacto de espiras de corriente (integrales elípticas completas) integrado a lo largo del imán; para la inversión, el flujo del imán inclinado es ∫M·B<sub>bobina</sub> dV/I por reciprocidad. Se toma que las N espiras están en un mismo lugar (una bobina corta). En el dibujo el devanado se reparte sobre un carrete corto, con una espira dibujada por cada {#} espiras (al menos una). Se desprecia la autoinductancia de la bobina, lo cual es razonable cuando L/R es mucho más corto que el movimiento. El imán se mueve como tú o los botones lo muevan: la fuerza de la corriente inducida se muestra pero no frena tu arrastre. Las líneas de campo se dibujan a pasos iguales de flujo, separadas {#} µWb, así que el número que atraviesa la bobina sigue a Φ<sub>B</sub>; cuenta las líneas más oscuras en el plano de la página. Las líneas más tenues son el mismo campo en otros dos planos que pasan por el eje.",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
+"The largest flux in view is {#} µWb, at {#} s.":
+  "El flujo máximo en la vista es {#} µWb, en {#} s.",
+"The largest EMF in view is {#} V, at {#} s.":
+  "La EMF máxima en la vista es {#} V, en {#} s.",
+"The largest current in view is {#} A, at {#} s.":
+  "La corriente máxima en la vista es {#} A, en {#} s.",
+"{#} kept trace is drawn in gray.":
+  "Se dibuja {#} traza guardada en gris.",
 "force on magnet {#} µN":
   "fuerza sobre el imán {#} µN",
 "increasing":
@@ -262,16 +252,18 @@ VDI18N.add('es', 'demo/faraday', {
   "−{#} µWb",
 "{#} nJ":
   "{#} nJ",
+"{#} nW":
+  "{#} nW",
 "Φ<sub>B</sub> is increasing, so the induced current runs clockwise seen from the right and its own field inside the coil points −z, against the change. The coil's left face acts as a north pole, facing the magnet's north pole: it repels the approaching magnet.":
   "Φ<sub>B</sub> está aumentando, así que la corriente inducida circula en sentido horario visto desde la derecha y su propio campo dentro de la bobina apunta hacia −z, en contra del cambio. La cara izquierda de la bobina actúa como un polo norte, frente al polo norte del imán: repele al imán que se acerca.",
-"The largest flux in view is {#} µWb, at {#} s.":
-  "El flujo máximo en la vista es {#} µWb, en {#} s.",
-"The largest EMF in view is {#} V, at {#} s.":
-  "La EMF máxima en la vista es {#} V, en {#} s.",
-"The largest current in view is {#} A, at {#} s.":
-  "La corriente máxima en la vista es {#} A, en {#} s.",
-"{#} kept trace is drawn in gray.":
-  "Se dibuja {#} traza guardada en gris.",
+"EMF −{#} mV.":
+  "FEM −{#} mV.",
+"Current −{#} µA.":
+  "Corriente −{#} µA.",
+"The largest EMF in view is −{#} mV, at {#} s.":
+  "La mayor FEM a la vista es −{#} mV, en {#} s.",
+"The largest current in view is −{#} µA, at {#} s.":
+  "La mayor corriente a la vista es −{#} µA, en {#} s.",
 "The flux rises as the magnet enters and falls as it leaves, so the EMF has two lobes of opposite sign: the coil repels the magnet on the way in and pulls it back on the way out. Starting and ending far away, ΔΦ<sub>B</sub> = {#}, so the net charge is zero.":
   "El flujo sube cuando el imán entra y baja cuando sale, así que la EMF tiene dos lóbulos de signo opuesto: la bobina repele al imán a la entrada y lo jala de regreso a la salida. Empezando y terminando lejos, ΔΦ<sub>B</sub> = {#}, así que la carga neta es cero.",
 "Kept trace (press Keep trace)":
@@ -284,6 +276,10 @@ VDI18N.add('es', 'demo/faraday', {
   "Volteando el imán de extremo a extremo.",
 "turning end over end":
   "volteando de extremo a extremo",
+"turning":
+  "girando",
+"Too close to the coil to turn":
+  "Demasiado cerca de la bobina para girar",
 "The flux is not changing at this instant, so there is no EMF.":
   "El flujo no está cambiando en este instante, así que no hay EMF.",
 "A coil turning in a uniform field has Φ<sub>B</sub> = BA cos ωt, so its EMF is NBAω sin ωt: alternating current. The EMF peaks when the coil is edge on to the field, where the flux is zero but changing fastest. Stop the motor and turn the crank yourself.":
@@ -332,12 +328,26 @@ VDI18N.add('es', 'demo/faraday', {
   "vista superior · θ = {#}°",
 "motor on":
   "motor encendido",
-"decreasing":
-  "disminuyendo",
-"Φ<sub>B</sub> is {change}; the current's own field opposes that, and the force on the coil's sides makes a torque against the rotation. The crank (or motor) must supply power τω = I²R = {P}.":
-  "Φ<sub>B</sub> está {change}; el propio campo de la corriente se opone a eso, y la fuerza sobre los lados de la bobina produce una torca en contra de la rotación. La manivela (o el motor) debe suministrar una potencia τω = I²R = {P}.",
-"Φ<sub>B</sub> is decreasing; the current's own field opposes that, and the force on the coil's sides makes a torque against the rotation. The crank (or motor) must supply power τω = I²R = {#} µW.":
-  "Φ<sub>B</sub> está disminuyendo; el propio campo de la corriente se opone a eso, y la fuerza sobre los lados de la bobina produce un torque contra la rotación. La manivela (o el motor) debe suministrar una potencia τω = I²R = {#} µW.",
+"A coil turning between magnet poles, joined to a resistor, with a crank.":
+  "Una bobina que gira entre los polos de un imán, conectada a una resistencia, con una manivela.",
+"The coil has {#} turns and area {#} cm², in a field of {#} T.":
+  "La bobina tiene {#} espiras y área {#} cm², en un campo de {#} T.",
+"The motor turns the coil at {#} rad/s.":
+  "El motor hace girar la bobina a {#} rad/s.",
+"The coil angle is {#}°.":
+  "El ángulo de la bobina es {#}°.",
+"Flux through one turn {#} mWb.":
+  "Flujo a través de una espira {#} mWb.",
+"EMF {#} mV.":
+  "FEM {#} mV.",
+"Current {#} mA.":
+  "Corriente {#} mA.",
+"The largest flux in view is {#} mWb, at {#} s.":
+  "El mayor flujo a la vista es {#} mWb, en {#} s.",
+"The largest EMF in view is {#} mV, at {#} s.":
+  "La mayor FEM a la vista es {#} mV, en {#} s.",
+"The largest current in view is {#} mA, at {#} s.":
+  "La corriente máxima en la vista es {#} mA, en {#} s.",
 "The bar is not moving, so the flux is steady and no current flows.":
   "La barra no se mueve, así que el flujo es constante y no circula corriente.",
 "Pulling the bar sweeps out area, so the flux grows at the rate BLv. The current in the bar feels a force ILB that opposes the motion: the power you supply, Fv, equals the heat I²R. Push and let go to see the bar braked to rest.":
@@ -542,8 +552,6 @@ VDI18N.add('es', 'demo/faraday', {
   "Dos bobinas coaxiales: el primario es alimentado por una fuente de CA, el secundario está cerrado a través de un interruptor y un resistor de carga. Arrastra el secundario a lo largo del eje, su parte superior para cambiar su radio, el resistor de carga hacia arriba o abajo para cambiar R_L, y haz clic en el interruptor. Ahora: fuente de {#} V a {#} Hz, {#} y {#} espiras, radio del secundario {#} cm, a {#} cm del primario, R_L = {#} mΩ, interruptor cerrado. Teclas: las flechas izquierda y derecha mueven el secundario, las flechas arriba y abajo cambian su radio, más y menos cambian R_L, S abre o cierra el interruptor, G reinicia la fuente, espacio inicia o pausa, R reinicia.",
 ", flux per secondary turn (nWb)":
   ", flujo por espira del secundario (nWb)",
-"{#} pWb":
-  "{#} pWb",
 "dΦ":
   "dΦ",
 "primary":
@@ -554,30 +562,14 @@ VDI18N.add('es', 'demo/faraday', {
   "Primario: N",
 "Secondary: N":
   "Secundario: N",
-"= {#} pWb through each secondary turn":
-  "= {#} pWb a través de cada espira del secundario",
+"= {#} Wb through each secondary turn":
+  "= {#} Wb a través de cada espira del secundario",
 "AC source":
   "Fuente de CA",
 "closed":
   "cerrado",
 "= {#} mΩ":
   "= {#} mΩ",
-"{#} nWb":
-  "{#} nWb",
-"= {#} nWb through each secondary turn":
-  "= {#} nWb a través de cada espira del secundario",
-"Φ<sub>{#}</sub> is {change}, so I<sub>{#}</sub> circulates {sense} seen from the right and its own field inside the secondary points {z}, against the change.":
-  "Φ<sub>{#}</sub> está {change}, así que I<sub>{#}</sub> circula {sense} vista desde la derecha y su propio campo dentro del secundario apunta hacia {z}, en contra del cambio.",
-"I<sub>{#}</sub> and I<sub>{#}</sub> circulate in opposite senses now: the facing ends are like poles and the coils repel.":
-  "I<sub>{#}</sub> e I<sub>{#}</sub> circulan ahora en sentidos opuestos: los extremos enfrentados son polos iguales y las bobinas se repelen.",
-"{#} µN <span>apart</span>":
-  "{#} µN <span>de repulsión</span>",
-"Φ<sub>{#}</sub> is increasing, so I<sub>{#}</sub> circulates clockwise seen from the right and its own field inside the secondary points −z, against the change. I<sub>{#}</sub> and I<sub>{#}</sub> circulate in opposite senses now: the facing ends are like poles and the coils repel.":
-  "Φ<sub>{#}</sub> está aumentando, así que I<sub>{#}</sub> circula en sentido horario vista desde la derecha y su propio campo dentro del secundario apunta hacia −z, en contra del cambio. I<sub>{#}</sub> e I<sub>{#}</sub> circulan ahora en sentidos opuestos: los extremos enfrentados son polos iguales y las bobinas se repelen.",
-"{#} nN":
-  "{#} nN",
-"{#} pJ":
-  "{#} pJ",
 "The current is steady, so the flux NΦ<sub>B</sub> = LI is steady and there is no back EMF. An ideal inductor carries a steady current with no voltage across it.":
   "La corriente es constante, así que el flujo NΦ<sub>B</sub> = LI es constante y no hay fuerza contraelectromotriz. Un inductor ideal lleva una corriente constante sin voltaje entre sus terminales.",
 "A current source drives a coil. While I changes, the coil's own flux NΦ<sub>B</sub> = LI changes, and that induces a back EMF ε = −L dI/dt in the coil itself. It opposes the change in I, not I itself: against the current while it rises, along it while it falls. A steady current, however large, induces nothing. The source does work ½LI² to set up the current, and gets it back on the way down.":
@@ -700,20 +692,12 @@ VDI18N.add('es', 'demo/faraday', {
   "I constante: sin fuerza contraelectromotriz",
 "U = ½LI² = {#} J":
   "U = ½LI² = {#} J",
-"−{#} pV":
-  "−{#} pV",
-"V {#} pV":
-  "V {#} pV",
-"ε = −L dI/dt = −{#} pV":
-  "ε = −L dI/dt = −{#} pV",
 "A solenoid of {#} turns, {#} cm long with radius {#} cm, driven by a current source.":
   "Un solenoide de {#} espiras, de {#} cm de largo y radio {#} cm, alimentado por una fuente de corriente.",
 "The core has relative permeability {#}.":
   "El núcleo tiene permeabilidad relativa {#}.",
 "The waveform is Ramp and hold, with a peak current of {#} A and a ramp time of {#} ms.":
   "La forma de onda es rampa y mantener, con una corriente máxima de {#} A y un tiempo de rampa de {#} ms.",
-"Paused.":
-  "En pausa.",
 "Back EMF {#} V.":
   "Fuerza contraelectromotriz {#} V.",
 "Stored energy {#} J.":
@@ -734,20 +718,28 @@ VDI18N.add('es', 'demo/faraday', {
   "dI/dt > {#}: ε < {#} se opone al aumento",
 "U = ½LI² = {#} nJ":
   "U = ½LI² = {#} nJ",
-"outside: weak, taken as zero":
-  "fuera: débil, tomado como cero",
-"U = ½LI² = {#} µJ":
-  "U = ½LI² = {#} µJ",
 "I is increasing (dI/dt &gt; {#}), so ε = −L dI/dt is negative: the back EMF points against the positive direction and opposes the increase.":
   "I está aumentando (dI/dt &gt; {#}), así que ε = −L dI/dt es negativa: la fuerza contraelectromotriz apunta en contra de la dirección positiva y se opone al aumento.",
 "Here |I| is growing, so ε pushes against the current: the source must work at the rate LI dI/dt = {P}, and the energy goes into the field.":
   "Aquí |I| está creciendo, así que ε empuja en contra de la corriente: la fuente debe trabajar a la tasa LI dI/dt = {P}, y la energía va al campo.",
+"{#} nWb":
+  "{#} nWb",
 "I is increasing (dI/dt > {#}), so ε = −L dI/dt is negative: the back EMF points against the positive direction and opposes the increase. Here |I| is growing, so ε pushes against the current: the source must work at the rate LI dI/dt = {#} µW, and the energy goes into the field.":
   "I está aumentando (dI/dt > {#}), así que ε = −L dI/dt es negativa: la fuerza contraelectromotriz apunta en contra de la dirección positiva y se opone al aumento. Aquí |I| está creciendo, así que ε empuja en contra de la corriente: la fuente debe trabajar a la tasa LI dI/dt = {#} µW, y la energía va al campo.",
+"outside: weak, taken as zero":
+  "fuera: débil, tomado como cero",
+"U = ½LI² = {#} µJ":
+  "U = ½LI² = {#} µJ",
+"Back EMF −{#} mV.":
+  "Fuerza contraelectromotriz −{#} mV.",
+"Stored energy {#} µJ.":
+  "Energía almacenada {#} µJ.",
+"The largest back EMF in view is −{#} mV, at {#} s.":
+  "La fuerza contraelectromotriz máxima en la vista es −{#} mV, en {#} s.",
+"The largest stored energy in view is {#} µJ, at {#} s.":
+  "La energía almacenada máxima en la vista es {#} µJ, en {#} s.",
 "{#} mC":
   "{#} mC",
-"I is increasing (dI/dt > {#}), so ε = −L dI/dt is negative: the back EMF points against the positive direction and opposes the increase. Here |I| is growing, so ε pushes against the current: the source must work at the rate LI dI/dt = {#} µW, and the energy goes into the field.":
-  "I está aumentando (dI/dt > {#}), así que ε = −L dI/dt es negativa: la fuerza contraelectromotriz apunta en contra de la dirección positiva y se opone al aumento. Aquí |I| está creciendo, así que ε empuja en contra de la corriente: la fuente debe trabajar a la tasa LI dI/dt = {#} µW, y la energía va al campo.",
 "I is increasing (dI/dt > {#}), so ε = −L dI/dt is negative: the back EMF points against the positive direction and opposes the increase. Here |I| is growing, so ε pushes against the current: the source must work at the rate LI dI/dt = {#} mW, and the energy goes into the field.":
   "I está aumentando (dI/dt > {#}), así que ε = −L dI/dt es negativa: la fuerza contraelectromotriz apunta en contra de la dirección positiva y se opone al aumento. Aquí |I| está creciendo, así que ε empuja en contra de la corriente: la fuente debe trabajar a la tasa LI dI/dt = {#} mW, y la energía va al campo.",
 "= {#} µWb, B = {#} mT":
@@ -760,34 +752,36 @@ VDI18N.add('es', 'demo/faraday', {
   "−{#} mWb",
 "I, current from the source (A)":
   "I, corriente de la fuente (A)",
-"Current {#} mA.":
-  "Corriente {#} mA.",
-"Back EMF −{#} mV.":
-  "Fuerza contraelectromotriz −{#} mV.",
-"Stored energy {#} µJ.":
-  "Energía almacenada {#} µJ.",
-"The largest current in view is {#} mA, at {#} s.":
-  "La corriente máxima en la vista es {#} mA, en {#} s.",
-"The largest back EMF in view is −{#} mV, at {#} s.":
-  "La fuerza contraelectromotriz máxima en la vista es −{#} mV, en {#} s.",
-"The largest stored energy in view is {#} µJ, at {#} s.":
-  "La energía almacenada máxima en la vista es {#} µJ, en {#} s.",
 "U = ½LI², stored energy (mJ)":
   "U = ½LI², energía almacenada (mJ)",
 "U = ½LI² = {#} mJ":
   "U = ½LI² = {#} mJ",
-"A coil (a solenoid seen from the side, or a toroid seen from above) driven by a current source on the bench. Drag the right end of the solenoid to change its length and the grip on top to change its radius; for the toroid drag its outer or inner edge. Now: solenoid of {#} turns, length {#} cm, radius {#} cm, core relative permeability {#}, waveform Ramp and hold, current {#} A, back EMF −{#} mV. Keys: up arrow ramps the current up, down arrow ramps it down, O switches it on, X switches it off, left and right arrows change the length (toroid: the outer radius), space plays or pauses, R resets.":
-  "Una bobina (un solenoide visto de lado, o un toroide visto desde arriba) alimentada por una fuente de corriente en la mesa. Arrastra el extremo derecho del solenoide para cambiar su longitud y el agarre de arriba para cambiar su radio; para el toroide arrastra su borde exterior o interior. Ahora: solenoide de {#} espiras, longitud {#} cm, radio {#} cm, permeabilidad relativa del núcleo {#}, forma de onda Rampa y mantener, corriente {#} A, fuerza contraelectromotriz −{#} mV. Teclas: la flecha arriba sube la corriente en rampa, la flecha abajo la baja, O la enciende, X la apaga, las flechas izquierda y derecha cambian la longitud (toroide: el radio exterior), espacio inicia o pausa, R reinicia.",
 "Stored energy {#} mJ.":
   "Energía almacenada {#} mJ.",
 "The largest stored energy in view is {#} mJ, at {#} s.":
   "La energía almacenada máxima en la vista es {#} mJ, en {#} s.",
+"A coil (a solenoid seen from the side, or a toroid seen from above) driven by a current source on the bench. Drag the right end of the solenoid to change its length and the grip on top to change its radius; for the toroid drag its outer or inner edge. Now: solenoid of {#} turns, length {#} cm, radius {#} cm, core relative permeability {#}, waveform Ramp and hold, current {#} A, back EMF −{#} mV. Keys: up arrow ramps the current up, down arrow ramps it down, O switches it on, X switches it off, left and right arrows change the length (toroid: the outer radius), space plays or pauses, R resets.":
+  "Una bobina (un solenoide visto de lado, o un toroide visto desde arriba) alimentada por una fuente de corriente en la mesa. Arrastra el extremo derecho del solenoide para cambiar su longitud y el agarre de arriba para cambiar su radio; para el toroide arrastra su borde exterior o interior. Ahora: solenoide de {#} espiras, longitud {#} cm, radio {#} cm, permeabilidad relativa del núcleo {#}, forma de onda Rampa y mantener, corriente {#} A, fuerza contraelectromotriz −{#} mV. Teclas: la flecha arriba sube la corriente en rampa, la flecha abajo la baja, O la enciende, X la apaga, las flechas izquierda y derecha cambian la longitud (toroide: el radio exterior), espacio inicia o pausa, R reinicia.",
 "The current is steady at {I}, so the flux NΦ<sub>B</sub> = LI is steady and there is no back EMF. An ideal inductor carries a steady current with no voltage across it.":
   "La corriente es constante en {I}, así que el flujo NΦ<sub>B</sub> = LI es constante y no hay fuerza contraelectromotriz. Un inductor ideal lleva una corriente constante sin voltaje entre sus terminales.",
 "The current is steady at {#} A, so the flux NΦ<sub>B</sub> = LI is steady and there is no back EMF. An ideal inductor carries a steady current with no voltage across it.":
   "La corriente es constante en {#} A, así que el flujo NΦ<sub>B</sub> = LI es constante y no hay fuerza contraelectromotriz. Un inductor ideal lleva una corriente constante sin voltaje entre sus terminales.",
+"ε = −L dI/dt = {#} mV":
+  "ε = −L dI/dt = {#} mV",
+"dI/dt < {#}: ε > {#} opposes the fall":
+  "dI/dt < {#}: ε > {#} se opone a la disminución",
+"I is decreasing (dI/dt &lt; {#}), so ε = −L dI/dt is positive: the back EMF points along the positive direction and opposes the decrease.":
+  "I está disminuyendo (dI/dt &lt; {#}), así que ε = −L dI/dt es positiva: la fuerza contraelectromotriz apunta en la dirección positiva y se opone a la disminución.",
+"Here |I| is shrinking, so ε pushes along the current, trying to keep it going: the field gives its energy back at {P}.":
+  "Aquí |I| está disminuyendo, así que ε empuja a favor de la corriente, tratando de mantenerla: el campo devuelve su energía a {P}.",
+"I is decreasing (dI/dt < {#}), so ε = −L dI/dt is positive: the back EMF points along the positive direction and opposes the decrease. Here |I| is shrinking, so ε pushes along the current, trying to keep it going: the field gives its energy back at {#} mW.":
+  "I está disminuyendo (dI/dt < {#}), así que ε = −L dI/dt es positiva: la fuerza contraelectromotriz apunta en la dirección positiva y se opone a la disminución. Aquí |I| se reduce, así que ε empuja en el sentido de la corriente, tratando de mantenerla: el campo devuelve su energía a {#} mW.",
+"Back EMF {#} mV.":
+  "Fuerza contraelectromotriz {#} mV.",
 "Advanced {#} steps of {#} ms and paused.":
   "Se avanzaron {#} pasos de {#} ms y se pausó.",
+"A coil (a solenoid seen from the side, or a toroid seen from above) driven by a current source on the bench. Drag the right end of the solenoid to change its length and the grip on top to change its radius; for the toroid drag its outer or inner edge. Now: solenoid of {#} turns, length {#} cm, radius {#} cm, core relative permeability {#}, waveform Ramp and hold, current {#} A, back EMF {#} mV. Keys: up arrow ramps the current up, down arrow ramps it down, O switches it on, X switches it off, left and right arrows change the length (toroid: the outer radius), space plays or pauses, R resets.":
+  "Una bobina (un solenoide visto de lado, o un toroide visto desde arriba) alimentada por una fuente de corriente en la mesa. Arrastra el extremo derecho del solenoide para cambiar su longitud y el agarre de arriba para cambiar su radio; en el toroide, arrastra su borde exterior o interior. Ahora: solenoide de {#} espiras, longitud de {#} cm, radio de {#} cm, permeabilidad relativa del núcleo {#}, forma de onda Rampa y mantener, corriente de {#} A, fuerza contraelectromotriz de {#} mV. Teclas: la flecha arriba sube la corriente en rampa, la flecha abajo la baja, O la enciende, X la apaga, las flechas izquierda y derecha cambian la longitud (toroide: el radio exterior), espacio inicia o pausa, R reinicia.",
 "self":
   "auto",
 "Captured {#} measurements.":
@@ -804,20 +798,6 @@ VDI18N.add('es', 'demo/faraday', {
   "Aún no hay puntos en la ventana visible",
 "{#} points from {#} s to {#} s. EMF and current are interval averages; flux is the value at t. Refreshes twice a second while running.":
   "{#} puntos de {#} s a {#} s. La EMF y la corriente son promedios de intervalo; el flujo es el valor en t. Se actualiza dos veces por segundo mientras corre.",
-"A coil turning between magnet poles, joined to a resistor, with a crank.":
-  "Una bobina que gira entre los polos de un imán, conectada a una resistencia, con una manivela.",
-"The coil has {#} turns and area {#} cm², in a field of {#} T.":
-  "La bobina tiene {#} espiras y área {#} cm², en un campo de {#} T.",
-"The motor turns the coil at {#} rad/s.":
-  "El motor hace girar la bobina a {#} rad/s.",
-"The coil angle is {#}°.":
-  "El ángulo de la bobina es {#}°.",
-"Flux through one turn {#} mWb.":
-  "Flujo a través de una espira {#} mWb.",
-"= {#} Wb through each secondary turn":
-  "= {#} Wb a través de cada espira del secundario",
-"Solenoid: N = {#}, air core":
-  "Solenoide: N = {#}, núcleo de aire",
 "A conducting bar slides on rails in a magnetic field pointing into the page, closed by a resistor.":
   "Una barra conductora se desliza sobre rieles en un campo magnético que entra en la página, cerrada por una resistencia.",
 "The field is {#} T, the rails are {#} cm apart, and the bar has mass {#} g.":
@@ -826,10 +806,6 @@ VDI18N.add('es', 'demo/faraday', {
   "La resistencia es {#} mΩ.",
 "The bar is at {#} cm, moving at {#} m/s.":
   "La barra está en {#} cm y se mueve a {#} m/s.",
-"Φ₂ (Wb)":
-  "Φ₂ (Wb)",
-"EMF₂ (V)":
-  "EMF₂ (V)",
 "Two coaxial coils: the primary is driven by an AC source, and the secondary is closed through a switch and a load resistor.":
   "Dos bobinas coaxiales: el primario se alimenta con una fuente de CA, y el secundario se cierra a través de un interruptor y una resistencia de carga.",
 "The source is {#} V at {#} Hz.":
@@ -854,8 +830,16 @@ VDI18N.add('es', 'demo/faraday', {
   "Corriente del primario {#} A.",
 "Plots of secondary flux, secondary EMF, primary current, secondary current against time, from {#} ms to {#} ms.":
   "Gráficas de el flujo del secundario, la EMF del secundario, la corriente del primario y la corriente del secundario en función del tiempo, de {#} ms a {#} ms.",
+"Solenoid: N = {#}, air core":
+  "Solenoide: N = {#}, núcleo de aire",
+"Φ₂ (Wb)":
+  "Φ₂ (Wb)",
+"EMF₂ (V)":
+  "EMF₂ (V)",
 "{#} points from {#} s to {#} s. ε is an interval average; I and U are values at t. Refreshes twice a second while running.":
   "{#} puntos de {#} s a {#} s. ε es un promedio de intervalo; I y U son valores en t. Se actualiza dos veces por segundo mientras corre.",
+"decreasing":
+  "disminuyendo",
 "counterclockwise":
   "en sentido antihorario",
 "right":
@@ -870,14 +854,14 @@ VDI18N.add('es', 'demo/faraday', {
   "El campo de la bobina trata de mantener el flujo donde estaba, así que se resiste al giro.",
 "The force on the magnet opposes its motion.":
   "La fuerza sobre el imán se opone a su movimiento.",
+"Φ<sub>B</sub> is {change}; the current's own field opposes that, and the force on the coil's sides makes a torque against the rotation. The crank (or motor) must supply power τω = I²R = {P}.":
+  "Φ<sub>B</sub> está {change}; el propio campo de la corriente se opone a eso, y la fuerza sobre los lados de la bobina produce una torca en contra de la rotación. La manivela (o el motor) debe suministrar una potencia τω = I²R = {P}.",
 "I is increasing (dI/dt &gt; 0), so ε = −L dI/dt is negative: the back EMF points against the positive direction and opposes the increase.":
   "I está aumentando (dI/dt &gt; 0), así que ε = −L dI/dt es negativa: la fuerza contraelectromotriz apunta en contra de la dirección positiva y se opone al aumento.",
 "I is decreasing (dI/dt &lt; 0), so ε = −L dI/dt is positive: the back EMF points along the positive direction and opposes the decrease.":
   "I está disminuyendo (dI/dt &lt; 0), así que ε = −L dI/dt es positiva: la fuerza contraelectromotriz apunta en la dirección positiva y se opone a la disminución.",
 "I is passing through zero.":
   "I está pasando por cero.",
-"Here |I| is shrinking, so ε pushes along the current, trying to keep it going: the field gives its energy back at {P}.":
-  "Aquí |I| está disminuyendo, así que ε empuja a favor de la corriente, tratando de mantenerla: el campo devuelve su energía a {P}.",
 "The secondary is open, so no current flows in it and nothing opposes the change: EMF<sub>2</sub> = −M dI<sub>1</sub>/dt = {E} is the bare induced EMF, largest when I<sub>1</sub> passes through zero. The primary current is the same as with no secondary at all.":
   "El secundario está abierto, así que no circula corriente en él y nada se opone al cambio: EMF<sub>2</sub> = −M dI<sub>1</sub>/dt = {E} es la EMF inducida sin carga, máxima cuando I<sub>1</sub> pasa por cero. La corriente del primario es la misma que sin ningún secundario.",
 "I<sub>2</sub> is passing through zero: at this instant Φ<sub>2</sub> is at a turning point.":
@@ -900,24 +884,54 @@ VDI18N.add('es', 'demo/faraday', {
   "La fuerza ILB sobre la barra apunta a la izquierda, en contra de su movimiento.",
 "The force ILB on the bar points right, against its motion.":
   "La fuerza ILB sobre la barra apunta a la derecha, en contra de su movimiento.",
-"{#} nW":
-  "{#} nW",
-"turning":
-  "girando",
-"Too close to the coil to turn":
-  "Demasiado cerca de la bobina para girar",
+"Φ<sub>B</sub> is decreasing; the current's own field opposes that, and the force on the coil's sides makes a torque against the rotation. The crank (or motor) must supply power τω = I²R = {#} µW.":
+  "Φ<sub>B</sub> está disminuyendo; el propio campo de la corriente se opone a eso, y la fuerza sobre los lados de la bobina produce un torque contra la rotación. La manivela (o el motor) debe suministrar una potencia τω = I²R = {#} µW.",
+"{#} pWb":
+  "{#} pWb",
+"= {#} pWb through each secondary turn":
+  "= {#} pWb a través de cada espira del secundario",
+"= {#} nWb through each secondary turn":
+  "= {#} nWb a través de cada espira del secundario",
+"Φ<sub>{#}</sub> is {change}, so I<sub>{#}</sub> circulates {sense} seen from the right and its own field inside the secondary points {z}, against the change.":
+  "Φ<sub>{#}</sub> está {change}, así que I<sub>{#}</sub> circula {sense} vista desde la derecha y su propio campo dentro del secundario apunta hacia {z}, en contra del cambio.",
+"I<sub>{#}</sub> and I<sub>{#}</sub> circulate in opposite senses now: the facing ends are like poles and the coils repel.":
+  "I<sub>{#}</sub> e I<sub>{#}</sub> circulan ahora en sentidos opuestos: los extremos enfrentados son polos iguales y las bobinas se repelen.",
+"{#} µN <span>apart</span>":
+  "{#} µN <span>de repulsión</span>",
+"Φ<sub>{#}</sub> is increasing, so I<sub>{#}</sub> circulates clockwise seen from the right and its own field inside the secondary points −z, against the change. I<sub>{#}</sub> and I<sub>{#}</sub> circulate in opposite senses now: the facing ends are like poles and the coils repel.":
+  "Φ<sub>{#}</sub> está aumentando, así que I<sub>{#}</sub> circula en sentido horario vista desde la derecha y su propio campo dentro del secundario apunta hacia −z, en contra del cambio. I<sub>{#}</sub> e I<sub>{#}</sub> circulan ahora en sentidos opuestos: los extremos enfrentados son polos iguales y las bobinas se repelen.",
+"{#} nN":
+  "{#} nN",
+"{#} pJ":
+  "{#} pJ",
 "−{#} pV":
   "−{#} pV",
 "V {#} pV":
   "V {#} pV",
 "ε = −L dI/dt = −{#} pV":
   "ε = −L dI/dt = −{#} pV",
+"Describe the picture":
+  "Describir la imagen",
+"Running.":
+  "En marcha.",
+"Time {#} s.":
+  "Tiempo {#} s.",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
+"Real time":
+  "Tiempo real",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
+"Paused.":
+  "En pausa.",
 "force on magnet {#} mN":
   "fuerza sobre el imán {#} mN",
-"ε = −L dI/dt = {#} mV":
-  "ε = −L dI/dt = {#} mV",
-"dI/dt < {#}: ε > {#} opposes the fall":
-  "dI/dt < {#}: ε > {#} se opone a la disminución",
 "ind":
   "ind",
 "Close":

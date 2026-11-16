@@ -1,7 +1,5 @@
 /* demo/star-slice in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/star-slice', {
-"Describe the picture":
-  "Describir la imagen",
 "Star Slice":
   "Corte de una estrella",
 "<a>Nuclear physics</a>":
@@ -12,16 +10,12 @@ VDI18N.add('es', 'demo/star-slice', {
   "Una estrella real cortada a la mitad. Composición, temperatura, convección y combustión en cada radio, reproducidas a partir de perfiles de evolución estelar de MESA.",
 "<span>R☉ = {#}×{#}⁵ km</span> · <span>R<sub>E</sub> = R☉/{#}</span> · <span>M☉</span> · <span>L☉</span> · <span>ε in erg g⁻¹ s⁻¹</span>":
   "<span>R☉ = {#}×{#}⁵ km</span> · <span>R<sub>E</sub> = R☉/{#}</span> · <span>M☉</span> · <span>L☉</span> · <span>ε en erg g⁻¹ s⁻¹</span>",
-"Time controls":
-  "Controles de tiempo",
-"Run for a moment and pause again":
-  "Avanza un momento y vuelve a pausar",
-"Step":
-  "Paso",
 "Back to the first saved moment":
   "Volver al primer momento guardado",
-"<span>Speed</span>":
-  "<span>Rapidez</span>",
+"Play steps through the saved MESA moments at this rate; steps where nothing visible changes go ten times faster":
+  "Reproducir avanza por los momentos guardados de MESA a esta tasa; los pasos donde nada visible cambia van diez veces más rápido",
+"· {#} moments/s":
+  "· {#} momentos/s",
 "Color by":
   "Colorear por",
 "Glow":
@@ -96,8 +90,6 @@ VDI18N.add('es', 'demo/star-slice', {
   "Momentos para ver",
 "Found in the data: jump to a moment and a view that shows it well.":
   "Encontrados en los datos: salta a un momento y a una vista que lo muestra bien.",
-"Zoom":
-  "Acercamiento",
 "Cut angle":
   "Ángulo del corte",
 "<span>Size</span>":
@@ -270,10 +262,6 @@ VDI18N.add('es', 'demo/star-slice', {
   "Cámara 3D {#}×",
 "Star radius {#} R☉ · {#}×{#}⁶ km · cut faces: linear radius, to scale":
   "Radio de la estrella {#} R☉ · {#}×{#}⁶ km · caras del corte: radio lineal, a escala",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
 "A cross section of the star from the run {#} Msun.":
   "Un corte transversal de la estrella de la corrida de {#} Msol.",
 "The star is shown in 3D, with a wedge of {#}° cut away to show the inside.":
@@ -284,8 +272,6 @@ VDI18N.add('es', 'demo/star-slice', {
   "El radio está en escala lineal.",
 "Saved moment {#} of {#}.":
   "Momento guardado {#} de {#}.",
-"Paused.":
-  "En pausa.",
 "Stage, inferred from the abundances: Pre main sequence.":
   "Etapa, inferida de las abundancias: pre secuencia principal.",
 "Age {#} yr.":
@@ -302,8 +288,8 @@ VDI18N.add('es', 'demo/star-slice', {
   "No hay núcleo convectivo.",
 "No burning region.":
   "No hay región de combustión.",
-"The star is shown as a flat slice through its center.":
-  "La estrella se muestra como un corte plano por su centro.",
+"· {#} moment/s":
+  "· {#} momento/s",
 "He (⁴He)":
   "He (⁴He)",
 "Ne (²⁰Ne + ²²Ne)":
@@ -312,6 +298,10 @@ VDI18N.add('es', 'demo/star-slice', {
   "Mg (²⁴Mg)",
 "Each zone takes the color of its most abundant element, lightly tinted by the second. Every element also has its own texture, laid over with opacity rising with its MESA mass fraction, so a mixed layer shows both patterns. Thin outlines mark where the most abundant element changes. The texture shapes are illustrative.":
   "Cada zona toma el color de su elemento más abundante, ligeramente teñido por el segundo. Cada elemento también tiene su propia textura, superpuesta con una opacidad que crece con su fracción de masa de MESA, así que una capa mezclada muestra ambos patrones. Contornos delgados marcan dónde cambia el elemento más abundante. Las formas de las texturas son ilustrativas.",
+"The star is shown as a flat slice through its center.":
+  "La estrella se muestra como un corte plano por su centro.",
+"The color shows element.":
+  "El color muestra el elemento.",
 "<span>{#}</span><span>T in K, log scale</span><span>{#}×{#}⁸</span>":
   "<span>{#}</span><span>T en K, escala logarítmica</span><span>{#}×{#}⁸</span>",
 "Color range is fixed over the whole run, so moments compare directly.":
@@ -322,56 +312,12 @@ VDI18N.add('es', 'demo/star-slice', {
   "<span>≤ {#}</span><span>ε_nuc, erg g⁻¹ s⁻¹, log</span><span>{#}×{#}¹¹</span>",
 "<span>{#}×{#}⁻³</span><span>Γ (gam), log</span><span>{#}</span>":
   "<span>{#}×{#}⁻³</span><span>Γ (gam), log</span><span>{#}</span>",
+"The color shows gamma.":
+  "El color muestra gamma.",
 "log r (R☉)":
   "log r (R☉)",
 "unpacking…":
   "desempacando…",
-"Model {#}: R = {#} R☉ ({#}×{#}⁸ km). Nearly all of that volume holds a tiny fraction of the mass.":
-  "Modelo {#}: R = {#} R☉ ({#}×{#}⁸ km). Casi todo ese volumen contiene una fracción diminuta de la masa.",
-"Hydrogen shell burning <small>inferred</small> <small>· MESA stage: to start he core flash</small>":
-  "Combustión de hidrógeno en capa <small>inferida</small> <small>· etapa de MESA: to start he core flash</small>",
-"{#} Gyr <small>age</small>":
-  "{#} mil millones de años <small>edad</small>",
-"H {#} · He {#} · C {#}×{#}⁻⁵ · O {#}×{#}⁻³":
-  "H {#} · He {#} · C {#}×{#}⁻⁵ · O {#}×{#}⁻³",
-"Helium burning shell from m = {#} to {#} M☉, r = {#}×{#}⁻³ R☉ to {#}×{#}⁻³ R☉; peak triple alpha rate {#} erg g⁻¹ s⁻¹ at m = {#} M☉ (too small at this zoom: zoom in or use Log radius)":
-  "Capa de combustión de helio desde m = {#} hasta {#} M☉, r = {#}×{#}⁻³ R☉ a {#}×{#}⁻³ R☉; ritmo máximo de triple alfa {#} erg g⁻¹ s⁻¹ en m = {#} M☉ (demasiado pequeña con este acercamiento: acerca la vista o usa Radio logarítmico)",
-"Hydrogen burning shell from m = {#} to {#} M☉, r = {#} R☉ to {#} R☉; peak pp + CNO rate {#}×{#}⁷ erg g⁻¹ s⁻¹ at m = {#} M☉ (too small at this zoom: zoom in or use Log radius)":
-  "Capa de combustión de hidrógeno desde m = {#} hasta {#} M☉, r = {#} R☉ a {#} R☉; ritmo máximo de pp + CNO {#}×{#}⁷ erg g⁻¹ s⁻¹ en m = {#} M☉ (demasiado pequeña con este acercamiento: acerca la vista o usa Radio logarítmico)",
-"Burning regions are found per reaction family (pp + CNO, triple alpha, carbon, oxygen, other): a zone counts when that family's rate is at least {#}% of the family's own peak at this moment, at least {#} erg g⁻¹ s⁻¹, the largest of the families there, and its fuel (¹H, ⁴He, ¹²C, ¹⁶O) is at least {#}% by mass; inside an iron core (nuclear statistical equilibrium) all burning counts as other reactions.":
-  "Las regiones de combustión se buscan por familia de reacciones (pp + CNO, triple alfa, carbono, oxígeno, otras): una zona cuenta cuando el ritmo de esa familia es al menos el {#}% del pico propio de la familia en este momento, al menos {#} erg g⁻¹ s⁻¹, el mayor de las familias ahí, y su combustible (¹H, ⁴He, ¹²C, ¹⁶O) es al menos el {#}% en masa; dentro de un núcleo de hierro (equilibrio estadístico nuclear) toda combustión cuenta como otras reacciones.",
-"View edge {#} R☉ · {#}×{#}⁸ km · linear radius, to scale":
-  "Borde de la vista {#} R☉ · {#}×{#}⁸ km · radio lineal, a escala",
-"Convection reaches down to m = {#} M☉ and r = {#} R☉: {#}% of the mass is in the convective envelope. Turn on Log radius to see its base.":
-  "La convección llega hasta m = {#} M☉ y r = {#} R☉: el {#}% de la masa está en la envolvente convectiva. Activa Radio logarítmico para ver su base.",
-"The color shows element.":
-  "El color muestra el elemento.",
-"Peak ε_nuc = {#}×{#}¹¹ erg g⁻¹ s⁻¹ at m = {#} M☉, he burning shell (pp+CNO {#}%, {#}α {#}%).":
-  "Pico de ε_nuc = {#}×{#}¹¹ erg g⁻¹ s⁻¹ en m = {#} M☉, capa de combustión de helio (pp+CNO {#}%, {#}α {#}%).",
-"He burning shell":
-  "Capa de combustión de He",
-"Helium flash <small>inferred</small> <small>· MESA stage: to end core he burn</small>":
-  "Destello de helio <small>inferido</small> <small>· etapa de MESA: to end core he burn</small>",
-"Convective zone from m = {#} to {#} M☉":
-  "Zona convectiva de m = {#} a {#} M☉",
-"Helium burning shell from m = {#} to {#} M☉, r = {#}×{#}⁻³ R☉ to {#}×{#}⁻³ R☉; peak triple alpha rate {#}×{#}¹¹ erg g⁻¹ s⁻¹ at m = {#} M☉":
-  "Capa de combustión de helio de m = {#} a {#} M☉, r = {#}×{#}⁻³ R☉ a {#}×{#}⁻³ R☉; tasa pico del triple alfa de {#}×{#}¹¹ erg g⁻¹ s⁻¹ en m = {#} M☉",
-"Hydrogen burning shell from m = {#} to {#} M☉, r = {#} R☉ to {#} R☉; peak pp + CNO rate {#}×{#}⁶ erg g⁻¹ s⁻¹ at m = {#} M☉":
-  "Capa de combustión de hidrógeno de m = {#} a {#} M☉, r = {#} R☉ a {#} R☉; tasa pico de pp + CNO de {#}×{#}⁶ erg g⁻¹ s⁻¹ en m = {#} M☉",
-"Readouts always show the saved moment. The stage label is inferred from the center abundances and the radius. Neighboring moments can show the same age when MESA takes many short steps.":
-  "Las lecturas siempre muestran el momento guardado. La etiqueta de etapa se infiere de las abundancias en el centro y del radio. Momentos vecinos pueden mostrar la misma edad cuando MESA da muchos pasos cortos.",
-"edge {#} R☉ · {#}×{#}⁻⁴ R":
-  "borde {#} R☉ · {#}×{#}⁻⁴ R",
-"View edge {#} R☉ · {#} km · {#} Earth radii · linear radius, to scale":
-  "Borde de la vista {#} R☉ · {#} km · {#} radios terrestres · radio lineal, a escala",
-"The hottest saved moment with R below {#} R☉: Teff = {#} K, R = {#} R☉, about {#} Earth radii.":
-  "El momento guardado más caliente con R menor que {#} R☉: Teff = {#} K, R = {#} R☉, unos {#} radios terrestres.",
-"White dwarf / post AGB <small>inferred</small> <small>· MESA stage: to wd</small>":
-  "Enana blanca / post AGB <small>inferido</small> <small>· etapa de MESA: to wd</small>",
-"H {#}×{#}⁻⁹⁹ · He {#}×{#}⁻²⁵ · C {#} · O {#} · Ne {#}":
-  "H {#}×{#}⁻⁹⁹ · He {#}×{#}⁻²⁵ · C {#} · O {#} · Ne {#}",
-"No burning region (no reaction family reaches {#} erg g⁻¹ s⁻¹); peak ε_nuc {#} erg g⁻¹ s⁻¹":
-  "No hay región de combustión (ninguna familia de reacciones llega a {#} erg g⁻¹ s⁻¹); ε_nuc pico de {#} erg g⁻¹ s⁻¹",
 "Crystallization starts":
   "Empieza la cristalización",
 "Front halfway":
@@ -382,8 +328,8 @@ VDI18N.add('es', 'demo/star-slice', {
   "<b>Fuente</b> LOGS_wd_cool · wd_cool_0.6M.json.gz",
 "<b>Columns</b> mass, logR, radius, logT, logRho, h1, he4, c12, o16, ne20, ne22, mg24, si28, mixing_type, conv_vel (log_conv_vel), eps_nuc, pp, cno, tri_alpha, velocity, phase (eos_phase), eps_phase_sep (eps_phase_separation), gamma (gam), eta, zbar_div_abar, burn_c (c12_c12 + c12_o16), burn_o (o16_o16)":
   "<b>Columnas</b> mass, logR, radius, logT, logRho, h1, he4, c12, o16, ne20, ne22, mg24, si28, mixing_type, conv_vel (log_conv_vel), eps_nuc, pp, cno, tri_alpha, velocity, phase (eos_phase), eps_phase_sep (eps_phase_separation), gamma (gam), eta, zbar_div_abar, burn_c (c12_c12 + c12_o16), burn_o (o16_o16)",
-"<span>{#}</span><span>T in K, log scale</span><span>{#}×{#}⁷</span>":
-  "<span>{#}</span><span>T en K, escala logarítmica</span><span>{#}×{#}⁷</span>",
+"<span>{#}</span><span>Γ (gam), log</span><span>{#}</span>":
+  "<span>{#}</span><span>Γ (gam), log</span><span>{#}</span>",
 "{#} phase separation":
   "{#} separación de fases",
 "mixing code -{#}":
@@ -402,62 +348,124 @@ VDI18N.add('es', 'demo/star-slice', {
   "Si",
 "White dwarf / post AGB <small>inferred</small>":
   "Enana blanca / post AGB <small>inferida</small>",
-"{#} Myr":
-  "{#} Ma",
-"{#} Myr <small>age</small>":
-  "{#} Ma <small>edad</small>",
 "H {#} · He {#}×{#}⁻¹⁷ · C {#} · O {#} · Ne {#}":
   "H {#} · He {#}×{#}⁻¹⁷ · C {#} · O {#} · Ne {#}",
 "Hydrogen burning shell from m = {#} to {#} M☉, r = {#} R☉ to {#} R☉; peak pp + CNO rate {#} erg g⁻¹ s⁻¹ at m = {#} M☉":
   "Capa de combustión de hidrógeno desde m = {#} hasta {#} M☉, r = {#} R☉ a {#} R☉; ritmo máximo de pp + CNO {#} erg g⁻¹ s⁻¹ en m = {#} M☉",
+"Burning regions are found per reaction family (pp + CNO, triple alpha, carbon, oxygen, other): a zone counts when that family's rate is at least {#}% of the family's own peak at this moment, at least {#} erg g⁻¹ s⁻¹, the largest of the families there, and its fuel (¹H, ⁴He, ¹²C, ¹⁶O) is at least {#}% by mass; inside an iron core (nuclear statistical equilibrium) all burning counts as other reactions.":
+  "Las regiones de combustión se buscan por familia de reacciones (pp + CNO, triple alfa, carbono, oxígeno, otras): una zona cuenta cuando el ritmo de esa familia es al menos el {#}% del pico propio de la familia en este momento, al menos {#} erg g⁻¹ s⁻¹, el mayor de las familias ahí, y su combustible (¹H, ⁴He, ¹²C, ¹⁶O) es al menos el {#}% en masa; dentro de un núcleo de hierro (equilibrio estadístico nuclear) toda combustión cuenta como otras reacciones.",
 "No solid zone yet (eos_phase below {#} everywhere)":
   "Aún no hay zona sólida (eos_phase por debajo de {#} en todas partes)",
-"Between saved models {#} and {#} (display blend)":
-  "Entre los modelos guardados {#} y {#} (mezcla de visualización)",
+"View edge {#} R☉ · {#} km · {#} Earth radii · linear radius, to scale":
+  "Borde de la vista {#} R☉ · {#} km · {#} radios terrestres · radio lineal, a escala",
 "A cross section of the star from the run {#} Msun white dwarf cooling.":
   "Un corte transversal de la estrella de la corrida de enfriamiento de la enana blanca de {#} Msol.",
-"The color shows temperature.":
-  "El color muestra la temperatura.",
-"Playing.":
-  "En marcha.",
 "Stage, inferred from the abundances: White dwarf / post AGB.":
   "Etapa, inferida de las abundancias: enana blanca / post AGB.",
-"Age {#} Myr.":
-  "Edad de {#} millones de años.",
 "Center mass fractions: H {#}, He {#}×{#}⁻¹⁷, C {#}, O {#}.":
   "Fracciones de masa en el centro: H {#}, He {#}×{#}⁻¹⁷, C {#}, O {#}.",
 "Burning regions: Hydrogen burning shell.":
   "Regiones de combustión: capa de combustión de hidrógeno.",
-"True size: view radius {#} R":
-  "Tamaño real: radio de la vista {#} R",
-"(size, not distance)":
-  "(tamaño, no distancia)",
-"Star radius {#} R☉ · {#} km · {#} Earth radii · cut faces: linear radius, to scale · true size":
-  "Radio de la estrella {#} R☉ · {#} km · {#} radios terrestres · caras del corte: radio lineal, a escala · tamaño real",
-"Si (²⁸Si)":
-  "Si (²⁸Si)",
-"<span>{#}×{#}⁻⁶</span><span>ρ in g/cm³, log scale</span><span>{#}×{#}⁶</span>":
-  "<span>{#}×{#}⁻⁶</span><span>ρ en g/cm³, escala logarítmica</span><span>{#}×{#}⁶</span>",
-"<span>≤ {#}</span><span>ε_nuc, erg g⁻¹ s⁻¹, log</span><span>{#}</span>":
-  "<span>≤ {#}</span><span>ε_nuc, erg g⁻¹ s⁻¹, log</span><span>{#}</span>",
-"<span>{#} liquid</span><span>eos_phase</span><span>{#} solid</span>":
-  "<span>{#} líquido</span><span>eos_phase</span><span>{#} sólido</span>",
-"<span>{#}</span><span>Γ (gam), log</span><span>{#}</span>":
-  "<span>{#}</span><span>Γ (gam), log</span><span>{#}</span>",
-"The color shows gamma.":
-  "El color muestra gamma.",
 "{#} kyr":
   "{#} mil años",
 "{#} kyr <small>age</small>":
   "{#} mil años <small>edad</small>",
 "Age {#} kyr.":
   "Edad de {#} miles de años.",
-"Play steps through the saved MESA moments at this rate; steps where nothing visible changes go ten times faster":
-  "Reproducir avanza por los momentos guardados de MESA a esta tasa; los pasos donde nada visible cambia van diez veces más rápido",
-"· {#} moments/s":
-  "· {#} momentos/s",
-"· {#} moment/s":
-  "· {#} momento/s",
+"Between saved models {#} and {#} (display blend)":
+  "Entre los modelos guardados {#} y {#} (mezcla de visualización)",
+"True size: view radius {#} R":
+  "Tamaño real: radio de la vista {#} R",
+"Plasma coupling Γ":
+  "Acoplamiento del plasma Γ",
+"(size, not distance)":
+  "(tamaño, no distancia)",
+"Star radius {#} R☉ · {#} km · {#} Earth radii · cut faces: linear radius, to scale · true size":
+  "Radio de la estrella {#} R☉ · {#} km · {#} radios terrestres · caras del corte: radio lineal, a escala · tamaño real",
+"Si (²⁸Si)":
+  "Si (²⁸Si)",
+"<span>{#}</span><span>T in K, log scale</span><span>{#}×{#}⁷</span>":
+  "<span>{#}</span><span>T en K, escala logarítmica</span><span>{#}×{#}⁷</span>",
+"The color shows temperature.":
+  "El color muestra la temperatura.",
+"<span>{#}×{#}⁻⁶</span><span>ρ in g/cm³, log scale</span><span>{#}×{#}⁶</span>":
+  "<span>{#}×{#}⁻⁶</span><span>ρ en g/cm³, escala logarítmica</span><span>{#}×{#}⁶</span>",
+"The color shows density.":
+  "El color muestra la densidad.",
+"<span>≤ {#}</span><span>ε_nuc, erg g⁻¹ s⁻¹, log</span><span>{#}</span>":
+  "<span>≤ {#}</span><span>ε_nuc, erg g⁻¹ s⁻¹, log</span><span>{#}</span>",
+"The color shows burning.":
+  "El color muestra la combustión nuclear.",
+"<span>{#} liquid</span><span>eos_phase</span><span>{#} solid</span>":
+  "<span>{#} líquido</span><span>eos_phase</span><span>{#} sólido</span>",
+"The color shows phase.":
+  "El color muestra la fase.",
+"{#} Myr <small>age</small>":
+  "{#} Ma <small>edad</small>",
 "In 3D the camera cannot zoom in this far, so Log radius is on and the cut faces are not to scale; Flat with Log radius off zooms in to scale.":
-  "En 3D la cámara no puede acercarse tanto, así que Radio logarítmico está activado y las caras del corte no están a escala; Plano con Radio logarítmico desactivado se acerca a escala."
+  "En 3D la cámara no puede acercarse tanto, así que Radio logarítmico está activado y las caras del corte no están a escala; Plano con Radio logarítmico desactivado se acerca a escala.",
+"Model {#}: R = {#} R☉ ({#}×{#}⁸ km). Nearly all of that volume holds a tiny fraction of the mass.":
+  "Modelo {#}: R = {#} R☉ ({#}×{#}⁸ km). Casi todo ese volumen contiene una fracción diminuta de la masa.",
+"Hydrogen shell burning <small>inferred</small> <small>· MESA stage: to start he core flash</small>":
+  "Combustión de hidrógeno en capa <small>inferida</small> <small>· etapa de MESA: to start he core flash</small>",
+"{#} Gyr <small>age</small>":
+  "{#} mil millones de años <small>edad</small>",
+"H {#} · He {#} · C {#}×{#}⁻⁵ · O {#}×{#}⁻³":
+  "H {#} · He {#} · C {#}×{#}⁻⁵ · O {#}×{#}⁻³",
+"Helium burning shell from m = {#} to {#} M☉, r = {#}×{#}⁻³ R☉ to {#}×{#}⁻³ R☉; peak triple alpha rate {#} erg g⁻¹ s⁻¹ at m = {#} M☉ (too small at this zoom: zoom in or use Log radius)":
+  "Capa de combustión de helio desde m = {#} hasta {#} M☉, r = {#}×{#}⁻³ R☉ a {#}×{#}⁻³ R☉; ritmo máximo de triple alfa {#} erg g⁻¹ s⁻¹ en m = {#} M☉ (demasiado pequeña con este acercamiento: acerca la vista o usa Radio logarítmico)",
+"Hydrogen burning shell from m = {#} to {#} M☉, r = {#} R☉ to {#} R☉; peak pp + CNO rate {#}×{#}⁷ erg g⁻¹ s⁻¹ at m = {#} M☉ (too small at this zoom: zoom in or use Log radius)":
+  "Capa de combustión de hidrógeno desde m = {#} hasta {#} M☉, r = {#} R☉ a {#} R☉; ritmo máximo de pp + CNO {#}×{#}⁷ erg g⁻¹ s⁻¹ en m = {#} M☉ (demasiado pequeña con este acercamiento: acerca la vista o usa Radio logarítmico)",
+"View edge {#} R☉ · {#}×{#}⁸ km · linear radius, to scale":
+  "Borde de la vista {#} R☉ · {#}×{#}⁸ km · radio lineal, a escala",
+"Convection reaches down to m = {#} M☉ and r = {#} R☉: {#}% of the mass is in the convective envelope. Turn on Log radius to see its base.":
+  "La convección llega hasta m = {#} M☉ y r = {#} R☉: el {#}% de la masa está en la envolvente convectiva. Activa Radio logarítmico para ver su base.",
+"Peak ε_nuc = {#}×{#}¹¹ erg g⁻¹ s⁻¹ at m = {#} M☉, he burning shell (pp+CNO {#}%, {#}α {#}%).":
+  "Pico de ε_nuc = {#}×{#}¹¹ erg g⁻¹ s⁻¹ en m = {#} M☉, capa de combustión de helio (pp+CNO {#}%, {#}α {#}%).",
+"He burning shell":
+  "Capa de combustión de He",
+"Helium flash <small>inferred</small> <small>· MESA stage: to end core he burn</small>":
+  "Destello de helio <small>inferido</small> <small>· etapa de MESA: to end core he burn</small>",
+"Convective zone from m = {#} to {#} M☉":
+  "Zona convectiva de m = {#} a {#} M☉",
+"Helium burning shell from m = {#} to {#} M☉, r = {#}×{#}⁻³ R☉ to {#}×{#}⁻³ R☉; peak triple alpha rate {#}×{#}¹¹ erg g⁻¹ s⁻¹ at m = {#} M☉":
+  "Capa de combustión de helio de m = {#} a {#} M☉, r = {#}×{#}⁻³ R☉ a {#}×{#}⁻³ R☉; tasa pico del triple alfa de {#}×{#}¹¹ erg g⁻¹ s⁻¹ en m = {#} M☉",
+"Hydrogen burning shell from m = {#} to {#} M☉, r = {#} R☉ to {#} R☉; peak pp + CNO rate {#}×{#}⁶ erg g⁻¹ s⁻¹ at m = {#} M☉":
+  "Capa de combustión de hidrógeno de m = {#} a {#} M☉, r = {#} R☉ a {#} R☉; tasa pico de pp + CNO de {#}×{#}⁶ erg g⁻¹ s⁻¹ en m = {#} M☉",
+"Readouts always show the saved moment. The stage label is inferred from the center abundances and the radius. Neighboring moments can show the same age when MESA takes many short steps.":
+  "Las lecturas siempre muestran el momento guardado. La etiqueta de etapa se infiere de las abundancias en el centro y del radio. Momentos vecinos pueden mostrar la misma edad cuando MESA da muchos pasos cortos.",
+"edge {#} R☉ · {#}×{#}⁻⁴ R":
+  "borde {#} R☉ · {#}×{#}⁻⁴ R",
+"The hottest saved moment with R below {#} R☉: Teff = {#} K, R = {#} R☉, about {#} Earth radii.":
+  "El momento guardado más caliente con R menor que {#} R☉: Teff = {#} K, R = {#} R☉, unos {#} radios terrestres.",
+"White dwarf / post AGB <small>inferred</small> <small>· MESA stage: to wd</small>":
+  "Enana blanca / post AGB <small>inferido</small> <small>· etapa de MESA: to wd</small>",
+"H {#}×{#}⁻⁹⁹ · He {#}×{#}⁻²⁵ · C {#} · O {#} · Ne {#}":
+  "H {#}×{#}⁻⁹⁹ · He {#}×{#}⁻²⁵ · C {#} · O {#} · Ne {#}",
+"No burning region (no reaction family reaches {#} erg g⁻¹ s⁻¹); peak ε_nuc {#} erg g⁻¹ s⁻¹":
+  "No hay región de combustión (ninguna familia de reacciones llega a {#} erg g⁻¹ s⁻¹); ε_nuc pico de {#} erg g⁻¹ s⁻¹",
+"Age {#} Myr.":
+  "Edad de {#} millones de años.",
+"Describe the picture":
+  "Describir la imagen",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
+"<span>Speed</span>":
+  "<span>Rapidez</span>",
+"Zoom":
+  "Acercamiento",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
+"Paused.":
+  "En pausa.",
+"{#} Myr":
+  "{#} Ma",
+"Playing.":
+  "En marcha."
 });

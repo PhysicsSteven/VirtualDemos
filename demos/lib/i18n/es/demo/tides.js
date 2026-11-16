@@ -1,7 +1,5 @@
 /* demo/tides in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/tides', {
-"Describe the picture":
-  "Describir la imagen",
 "d = {#} Earth radii":
   "d = {#} radios terrestres",
 "center: zero":
@@ -200,10 +198,6 @@ VDI18N.add('es', 'demo/tides', {
   "Cercano",
 "Far":
   "Lejano",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
 "{#} RE":
   "{#} RT",
 "move the Moon a day (":
@@ -248,8 +242,6 @@ VDI18N.add('es', 'demo/tides', {
   "Vista del océano: la Tierra con sus abultamientos oceánicos, la Luna en órbita y una ciudad en la costa.",
 "The Sun is not included.":
   "El Sol no está incluido.",
-"Playing.":
-  "En marcha.",
 "The Moon's phase is at day {#} of the month.":
   "La fase de la Luna está en el día {#} del mes.",
 "The city's local time is {#}:{#}.":
@@ -268,6 +260,8 @@ VDI18N.add('es', 'demo/tides', {
   "El marcador de la fase de la Luna está en el día {#}.",
 "in {#} min<small>at {#}:{#}</small>":
   "en {#} min<small>a las {#}:{#}</small>",
+"The water level at the city is −{#} m.":
+  "El nivel del agua en la ciudad es de −{#} m.",
 "Sun ▸":
   "Sol ▸",
 "Every point on Earth is pulled toward the Moon, the near side a little harder ({#}% at today's distance). Switch to Tidal pull: subtracting the pull on Earth's center leaves arrows pointing out on the near and far sides and in around the sides.":
@@ -310,16 +304,26 @@ VDI18N.add('es', 'demo/tides', {
   "Marea muerta: los abultamientos en ángulo recto",
 "Watch the crater on the Moon: it always points at Earth, because the Moon turns once on its axis in each orbit, {#} days. Switch The Moon's spin to Not at all and the crater keeps pointing the same way among the stars; half an orbit later it points away from Earth.":
   "Observa el cráter de la Luna: siempre apunta a la Tierra, porque la Luna gira una vez sobre su eje en cada órbita, {#} días. Cambia El giro de la Luna a Nada y el cráter sigue apuntando en la misma dirección entre las estrellas; media órbita después apunta en sentido contrario a la Tierra.",
-"Paused.":
-  "En pausa.",
 "The Moon is not turning, so its crater keeps its direction among the stars.":
   "La Luna no gira, así que su cráter conserva su dirección entre las estrellas.",
-"The water level at the city is −{#} m.":
-  "El nivel del agua en la ciudad es de −{#} m.",
 "Move the time forward or back {#} minutes":
   "Mover el tiempo {#} minutos hacia delante o hacia atrás",
+"The next high tide comes in {#} min, at {#}:{#}.":
+  "La siguiente marea alta llega en {#} min, a las {#}:{#}.",
+"The arrows show the pull of the Moon at each place on Earth.":
+  "Las flechas muestran la atracción de la Luna en cada lugar de la Tierra.",
 "The Sun is included.":
   "El Sol está incluido.",
+"Describe the picture":
+  "Describir la imagen",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
+"Playing.":
+  "En marcha.",
+"Paused.":
+  "En pausa.",
 "<span><i></i>Ocean, height exaggerated</span> <span><i></i>Moon's bulge alone</span> <span><i></i>Sun's bulge alone</span> <span><i></i>The city on the equator, with its tide mark</span>":
   "<span><i></i>Océano, altura exagerada</span> <span><i></i>Abultamiento de la Luna solo</span> <span><i></i>Abultamiento del Sol solo</span> <span><i></i>La ciudad en el ecuador, con su marca de marea</span>",
 "<span><i></i>Ocean, height exaggerated</span> <span><i></i>Moon's bulge alone</span> <span><i></i>Sun's bulge alone</span> <span><i></i>The city, on the equator</span>":

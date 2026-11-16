@@ -6,8 +6,6 @@ VDI18N.add('es', 'demo/equilibrium', {
   "viga = {#} N",
 "pivot P = {#} N":
   "pivote P = {#} N",
-"Describe the picture":
-  "Describir la imagen",
 "Static Equilibrium":
   "Equilibrio estático",
 "<a>Static equilibrium and elasticity</a>":
@@ -98,10 +96,6 @@ VDI18N.add('es', 'demo/equilibrium', {
   "A ciegas oculta las fuerzas de los soportes, la tensión, la fricción, las torcas y si se mantendrá, y dibuja todas las flechas de la misma longitud. Las masas y las posiciones se quedan. Las vigas y las escaleras son rígidas y uniformes; las cuerdas y los cables no tienen masa; el pivote y la bisagra no tienen fricción.",
 "Arrow lengths are to scale with force. Lengths in meters; people are sized by mass as a guide only. Drag a load to move it; drag elsewhere to turn.":
   "Las longitudes de las flechas están a escala con la fuerza. Longitudes en metros; el tamaño de las personas según su masa es solo orientativo. Arrastra una carga para moverla; arrastra en otro lugar para girar.",
-"Skip to the picture":
-  "Ir a la imagen",
-"Skip to the controls":
-  "Ir a los controles",
 "In equilibrium: both supports push up.":
   "En equilibrio: ambos soportes empujan hacia arriba.",
 "painter = {#} N":
@@ -128,18 +122,6 @@ VDI18N.add('es', 'demo/equilibrium', {
   "Soporte derecho F₂",
 "Total weight":
   "Peso total",
-"A plank {#} m long, mass {#} kg, rests on two supports.":
-  "Una tabla de {#} m de largo y masa {#} kg descansa sobre dos apoyos.",
-"The left support is at {#} m and the right support at {#} m.":
-  "El apoyo izquierdo está en {#} m y el derecho en {#} m.",
-"A painter of {#} kg stands {#} m from the left end.":
-  "Un pintor de {#} kg está de pie a {#} m del extremo izquierdo.",
-"The left support pushes up with {#} N.":
-  "El apoyo izquierdo empuja hacia arriba con {#} N.",
-"The right support pushes up with {#} N.":
-  "El apoyo derecho empuja hacia arriba con {#} N.",
-"Total weight {#} N.":
-  "Peso total {#} N.",
 "Cable at θ = {#}° to the strut":
   "Cable a θ = {#}° del puntal",
 "sign = {#} N":
@@ -228,8 +210,26 @@ VDI18N.add('es', 'demo/equilibrium', {
   "si se suelta: ninguna estable: se inclina con el lado izquierdo hacia abajo",
 "Two posts hold the beam level. Let go to see if it balances.":
   "Dos postes sostienen la viga horizontal. Suéltala para ver si se equilibra.",
+"A beam {#} m long, mass {#} kg, built on a tray of parts.":
+  "Una viga de {#} m de largo y masa {#} kg, armada con piezas de la bandeja.",
+"{#} supports, at {#} m.":
+  "{#} apoyos, en {#} m.",
+"{#} masses on the beam.":
+  "{#} masas sobre la viga.",
+"Two posts hold the beam level.":
+  "Dos postes mantienen la viga nivelada.",
+"The results below are for when the beam is let go.":
+  "Los resultados siguientes son para cuando se suelta la viga.",
+"Total weight {#} N.":
+  "Peso total {#} N.",
+"The center of mass is {#} m from the left end.":
+  "El centro de masa está a {#} m del extremo izquierdo.",
+"The beam tips left side down.":
+  "La viga se inclina con el lado izquierdo hacia abajo.",
 "if let go: {#} N":
   "si se suelta: {#} N",
+"The support pushes up with {#} N, and the beam balances.":
+  "El apoyo empuja hacia arriba con {#} N y la viga queda en equilibrio.",
 "Left support F₁ (at {#} m)":
   "Soporte izquierdo F₁ (en {#} m)",
 "Right support F₂ (at {#} m)":
@@ -248,20 +248,6 @@ VDI18N.add('es', 'demo/equilibrium', {
   "Se quitó la parte seleccionada.",
 "The Sandbox is for exploring: pick one of the other setups to record readings for the worksheet.":
   "La Caja de arena es para explorar: elige una de las otras configuraciones para registrar lecturas para la hoja de trabajo.",
-"A beam {#} m long, mass {#} kg, built on a tray of parts.":
-  "Una viga de {#} m de largo y masa {#} kg, armada con piezas de la bandeja.",
-"{#} supports, at {#} m.":
-  "{#} apoyos, en {#} m.",
-"{#} masses on the beam.":
-  "{#} masas sobre la viga.",
-"Two posts hold the beam level.":
-  "Dos postes mantienen la viga nivelada.",
-"The results below are for when the beam is let go.":
-  "Los resultados siguientes son para cuando se suelta la viga.",
-"The center of mass is {#} m from the left end.":
-  "El centro de masa está a {#} m del extremo izquierdo.",
-"The support pushes up with {#} N, and the beam balances.":
-  "El apoyo empuja hacia arriba con {#} N y la viga queda en equilibrio.",
 "Balanced: the center of mass is right over the support.":
   "Equilibrada: el centro de masa está justo sobre el soporte.",
 "Hold it level again":
@@ -270,8 +256,58 @@ VDI18N.add('es', 'demo/equilibrium', {
   "Soltar.",
 "The beam has been let go.":
   "Se soltó la viga.",
+"A plank {#} m long, mass {#} kg, rests on two supports.":
+  "Una tabla de {#} m de largo y masa {#} kg descansa sobre dos apoyos.",
+"The left support is at {#} m and the right support at {#} m.":
+  "El apoyo izquierdo está en {#} m y el derecho en {#} m.",
+"A painter of {#} kg stands {#} m from the left end.":
+  "Un pintor de {#} kg está de pie a {#} m del extremo izquierdo.",
+"The left support pushes up with {#} N.":
+  "El apoyo izquierdo empuja hacia arriba con {#} N.",
+"The right support pushes up with {#} N.":
+  "El apoyo derecho empuja hacia arriba con {#} N.",
+"A strut {#} m long, mass {#} kg, is hinged to a wall and held level by a cable.":
+  "Un puntal de {#} m de largo y masa de {#} kg está articulado a una pared y se mantiene horizontal con un cable.",
+"A sign of {#} kg hangs {#} m from the wall.":
+  "Un letrero de {#} kg cuelga a {#} m de la pared.",
+"The cable is anchored {#} m above the strut.":
+  "El cable está anclado {#} m por encima del puntal.",
+"The cable makes {#}° with the strut.":
+  "El cable forma {#}° con el puntal.",
+"Cable tension {#} N.":
+  "Tensión del cable {#} N.",
+"The hinge pushes {#} N horizontally and {#} N vertically.":
+  "La articulación empuja con {#} N en horizontal y {#} N en vertical.",
+"A ladder {#} m long, mass {#} kg, leans against a smooth wall at {#}° to the floor.":
+  "Una escalera de {#} m de largo y masa de {#} kg se apoya en una pared lisa a {#}° respecto al piso.",
+"A person of {#} kg stands {#} of the way up.":
+  "Una persona de {#} kg está parada a {#} del camino hacia arriba.",
+"Floor friction coefficient {#}.":
+  "Coeficiente de fricción del piso {#}.",
+"The floor pushes up with {#} N.":
+  "El piso empuja hacia arriba con {#} N.",
+"The wall pushes with {#} N.":
+  "La pared empuja con {#} N.",
+"Friction needed {#} N, most the floor can give {#} N.":
+  "Fricción necesaria {#} N, lo máximo que el piso puede dar es {#} N.",
+"It slips below {#}° with the person here.":
+  "Resbala por debajo de {#}° con la persona aquí.",
+"The ladder holds: static friction is enough.":
+  "La escalera se sostiene: la fricción estática basta.",
+"No supports.":
+  "Sin apoyos.",
+"No masses on the beam.":
+  "Sin masas en la viga.",
+"With no support it falls.":
+  "Sin apoyo, se cae.",
 "{#} supports, at {#} and {#} m.":
   "{#} apoyos, en {#} y {#} m.",
+"Describe the picture":
+  "Describir la imagen",
+"Skip to the picture":
+  "Ir a la imagen",
+"Skip to the controls":
+  "Ir a los controles",
 "Remove the selected part":
   "Quitar la parte seleccionada",
 "Close":

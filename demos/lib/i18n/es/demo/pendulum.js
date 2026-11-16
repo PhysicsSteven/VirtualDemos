@@ -4,8 +4,6 @@ VDI18N.add('es', 'demo/pendulum', {
   "CRONÓMETRO DE FOTOCOMPUERTA",
 "last {#} s":
   "últimos {#} s",
-"Describe the picture":
-  "Describir la imagen",
 "Pendulums":
   "Péndulos",
 "<a>Rotation and angular momentum</a>":
@@ -32,8 +30,6 @@ VDI18N.add('es', 'demo/pendulum', {
   "La fotocompuerta aún no tiene periodo.",
 "No readings recorded.":
   "No hay lecturas registradas.",
-"Time controls":
-  "Controles de tiempo",
 "Hold at release angle":
   "Detener en el ángulo de liberación",
 "<span>Whole </span>pendulum":
@@ -92,10 +88,6 @@ VDI18N.add('es', 'demo/pendulum', {
   "Todavía no hay tasa de caos.",
 "No measured period yet.":
   "Todavía no hay periodo medido.",
-"Run for a moment and pause again":
-  "Avanza un momento y vuelve a pausar",
-"Step":
-  "Paso",
 "Angles θ₁ and θ₂ against time over the last {#} seconds. Show data table in the rail lists the points.":
   "Ángulos θ₁ y θ₂ en función del tiempo durante los últimos {#} segundos. Mostrar la tabla de datos, en el panel, lista los puntos.",
 "Plot of θ₁ and θ₂ against time over the last {#} seconds.":
@@ -122,8 +114,6 @@ VDI18N.add('es', 'demo/pendulum', {
   "Tiempo {#} s, {#} del ciclo completo.",
 "Seen from above, the bobs form waves.":
   "Vistas desde arriba, las pesas forman ondas.",
-"<span>Speed</span>":
-  "<span>Rapidez</span>",
 "The row seen from above: each bob's sideways position against its place in the row.":
   "La fila vista desde arriba: la posición lateral de cada lenteja en función de su lugar en la fila.",
 "Plot of each bob's sideways position in centimeters against its place in the row, {#} bobs.":
@@ -342,10 +332,6 @@ VDI18N.add('es', 'demo/pendulum', {
   "periodo",
 "log δ":
   "log δ",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
 "g and the predicted periods":
   "g y los periodos predichos",
 "hidden: measure them":
@@ -432,6 +418,10 @@ VDI18N.add('es', 'demo/pendulum', {
   "Las dos varillas oscilan juntas a una sola frecuencia, la inferior √{#} veces más lejos: modo normal {#}, ω₁² = ({#} − √{#})g/L para masas y longitudes iguales. La gráfica de θ₂ en función de θ₁ es una recta. Prueba {#} copias: a ángulos pequeños permanecen juntas.",
 "The rods swing opposite ways, the lower one √{#} times as far: normal mode {#}, ω₂² = ({#} + √{#})g/L, faster than mode {#}. Raise the mode amplitude and press Mode {#} again: by about {#}° the motion is clearly no longer a clean mode.":
   "Las varillas oscilan en sentidos opuestos, la inferior √{#} veces más lejos: modo normal {#}, ω₂² = ({#} + √{#})g/L, más rápido que el modo {#}. Aumenta la amplitud del modo y pulsa Modo {#} otra vez: hacia los {#}° el movimiento claramente ya no es un modo limpio.",
+"Started with the upper rod at {#}° and the lower rod at −{#}°.":
+  "Se empezó con la varilla superior a {#}° y la varilla inferior a −{#}°.",
+"Angles now θ₁ = {#}° and θ₂ = −{#}°, time {#} s.":
+  "Ángulos ahora θ₁ = {#}° y θ₂ = −{#}°, tiempo {#} s.",
 "{#} copies start {#}⁻⁶ rad apart, a difference far too small to see. For several seconds they move as one, then they fan out over the whole circle. The separation grows exponentially, a straight line on the log plot with slope λ, until it is as large as the pendulum itself.":
   "{#} copias empiezan separadas {#}⁻⁶ rad, una diferencia demasiado pequeña para verse. Durante varios segundos se mueven como una sola, luego se abren en abanico por todo el círculo. La separación crece exponencialmente, una recta de pendiente λ en la gráfica logarítmica, hasta ser tan grande como el propio péndulo.",
 "Separation d between copies against time on a log scale, with the renormalized nearby orbit; a straight rise means exponential growth with rate λ. Show data table in the rail lists the points.":
@@ -472,8 +462,6 @@ VDI18N.add('es', 'demo/pendulum', {
   "Gráfica",
 "Capture T at several release angles at one length.":
   "Captura T a varios ángulos de liberación con una misma longitud.",
-"Running.":
-  "En marcha.",
 "Lower or raise the release angle by {#} degree":
   "Baja o sube el ángulo de liberación {#} grado",
 "Turn the upper rod by {#} degree and release from rest; with Shift, turn the lower rod (Double pendulum)":
@@ -482,20 +470,14 @@ VDI18N.add('es', 'demo/pendulum', {
   "Baja o sube el ángulo de liberación (Shift para {#} grados)",
 "From above: sideways position (cm)":
   "Desde arriba: posición lateral (cm)",
+"Swinging.":
+  "Oscilando.",
 "going over the top: no release angle":
   "da la vuelta por encima de la cima: sin ángulo de liberación",
-"θ₁ when θ₂ = {#}, ω₂ > {#}":
-  "θ₁ cuando θ₂ = {#}, ω₂ > {#}",
-"Poincaré section at E = {#} J":
-  "Sección de Poincaré a E = {#} J",
-"the pendulum shown":
-  "el péndulo mostrado",
-"other orbits":
-  "otras órbitas",
 "A simple pendulum {#} m long, released from {#}°.":
   "Un péndulo simple de {#} m, soltado desde {#}°.",
-"Exact period {#} s.":
-  "Periodo exacto {#} s.",
+"It goes over the top. One turn takes {#} s.":
+  "Pasa por arriba. Una vuelta tarda {#} s.",
 "Small angle period {#} s.":
   "Periodo de ángulo pequeño {#} s.",
 "The exact period is {#} times the small angle period.":
@@ -508,14 +490,28 @@ VDI18N.add('es', 'demo/pendulum', {
   "Retrato de fase de ω dividida entre ω₀ contra θ.",
 "Closed loops inside the separatrix are swings. Paths outside it go over the top.":
   "Los lazos cerrados dentro de la separatriz son oscilaciones. Las trayectorias fuera de ella pasan por arriba.",
+"θ₁ when θ₂ = {#}, ω₂ > {#}":
+  "θ₁ cuando θ₂ = {#}, ω₂ > {#}",
+"Poincaré section at E = {#} J":
+  "Sección de Poincaré a E = {#} J",
+"the pendulum shown":
+  "el péndulo mostrado",
+"other orbits":
+  "otras órbitas",
+"Exact period {#} s.":
+  "Periodo exacto {#} s.",
+"{#} copies are drawn, each started {#}⁻⁶ rad from the next.":
+  "Se dibujan {#} copias, cada una iniciada a {#}⁻⁶ rad de la siguiente.",
+"Separation between the copies against time, on a log scale.":
+  "Separación entre las copias contra el tiempo, en escala logarítmica.",
+"A straight rise means exponential growth with rate λ.":
+  "Una subida recta significa crecimiento exponencial con tasa λ.",
 "Readings cleared.":
   "Lecturas borradas.",
 "Release the pendulum and let the photogate time a full swing first.":
   "Suelta el péndulo y deja que la fotocompuerta cronometre primero una oscilación completa.",
 "No readings to export.":
   "No hay lecturas para exportar.",
-"Swinging.":
-  "Oscilando.",
 "Angle now −{#}°, time {#} s.":
   "Ángulo actual −{#}°, tiempo {#} s.",
 "Photogate period T = {#} s.":
@@ -540,12 +536,10 @@ VDI18N.add('es', 'demo/pendulum', {
   "{#} capturadas; la curva está oculta.",
 "bob in the beam: LED on":
   "lenteja en el haz: LED encendido",
-"Paused.":
-  "En pausa.",
-"It goes over the top. One turn takes {#} s.":
-  "Pasa por arriba. Una vuelta tarda {#} s.",
 "point mass drawn as a ball · dashed arc: the turning points":
   "masa puntual dibujada como esfera · arco discontinuo: los puntos de retorno",
+"{#} × {#}⁻¹⁴ <span>of E</span>":
+  "{#} × {#}⁻¹⁴ <span>de E</span>",
 "{#} × {#}⁻¹³ <span>of E</span>":
   "{#} × {#}⁻¹³ <span>de E</span>",
 "{#} × {#}⁻¹² <span>of E</span>":
@@ -564,12 +558,12 @@ VDI18N.add('es', 'demo/pendulum', {
   "masas puntuales dibujadas como esferas · estela: la lenteja inferior, últimos {#} s",
 "{#} × {#}⁻¹⁵ <span>of E</span>":
   "{#} × {#}⁻¹⁵ <span>de E</span>",
-"{#} × {#}⁻¹⁴ <span>of E</span>":
-  "{#} × {#}⁻¹⁴ <span>de E</span>",
 "Chaos rate λ = {#} s⁻¹ after {#} s.":
   "Tasa de caos λ = {#} s⁻¹ después de {#} s.",
 "point masses drawn as balls":
   "masas puntuales dibujadas como esferas",
+"Angles now θ₁ = −{#}° and θ₂ = −{#}°, time {#} s.":
+  "Ángulos ahora θ₁ = −{#}° y θ₂ = −{#}°, tiempo {#} s.",
 "Separation d from copy {#} (log scale)":
   "Separación d respecto de la copia {#} (escala logarítmica)",
 "copy {#}":
@@ -578,16 +572,10 @@ VDI18N.add('es', 'demo/pendulum', {
   "copia más lejana",
 "nearby orbit, renormalized":
   "órbita cercana, renormalizada",
+"{#} × {#}⁻¹⁶ <span>of E</span>":
+  "{#} × {#}⁻¹⁶ <span>de E</span>",
 "λ ≈ {#} s⁻¹ (estimate)":
   "λ ≈ {#} s⁻¹ (estimación)",
-"{#} copies are drawn, each started {#}⁻⁶ rad from the next.":
-  "Se dibujan {#} copias, cada una iniciada a {#}⁻⁶ rad de la siguiente.",
-"Separation between the copies against time, on a log scale.":
-  "Separación entre las copias contra el tiempo, en escala logarítmica.",
-"A straight rise means exponential growth with rate λ.":
-  "Una subida recta significa crecimiento exponencial con tasa λ.",
-"Angles now θ₁ = −{#}° and θ₂ = −{#}°, time {#} s.":
-  "Ángulos ahora θ₁ = −{#}° y θ₂ = −{#}°, tiempo {#} s.",
 "<span><i></i>θ₁, upper rod</span><span><i></i>θ₂, lower rod; trail of the lower bob</span><span><i></i>Copies, violet (copy {#}) to red (last)</span><span><i></i>Normal mode directions θ₂ = (shape) θ₁</span>":
   "<span><i></i>θ₁, varilla superior</span><span><i></i>θ₂, varilla inferior; estela de la lenteja inferior</span><span><i></i>Copias, de violeta (copia {#}) a rojo (la última)</span><span><i></i>Direcciones de los modos normales θ₂ = (forma) θ₁</span>",
 "Angles against time over the last {#} s, sampled; now t = {#} s. The angle path in the lower plot is θ₂ against θ₁ from the same samples.":
@@ -616,8 +604,6 @@ VDI18N.add('es', 'demo/pendulum', {
   "avance rápido ×{#}",
 "not periodic":
   "no periódico",
-"Angles now θ₁ = {#}° and θ₂ = −{#}°, time {#} s.":
-  "Ángulos ahora θ₁ = {#}° y θ₂ = −{#}°, tiempo {#} s.",
 "The motion is not periodic.":
   "El movimiento no es periódico.",
 "hidden in Blind: work it out":
@@ -628,8 +614,24 @@ VDI18N.add('es', 'demo/pendulum', {
   "más lento para no atrasarse",
 "moving start":
   "inicio en movimiento",
-"{#} × {#}⁻¹⁶ <span>of E</span>":
-  "{#} × {#}⁻¹⁶ <span>de E</span>",
+"Describe the picture":
+  "Describir la imagen",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
+"<span>Speed</span>":
+  "<span>Rapidez</span>",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
+"Running.":
+  "En marcha.",
+"Paused.":
+  "En pausa.",
 "Hide data table":
   "Ocultar la tabla de datos"
 });

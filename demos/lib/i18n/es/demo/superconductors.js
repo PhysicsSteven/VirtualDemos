@@ -24,8 +24,6 @@ VDI18N.add('es', 'demo/superconductors', {
   "campo crítico Bc",
 "field starts to get in, ({#}/{#})Bc":
   "el campo empieza a entrar, ({#}/{#})Bc",
-"Describe the picture":
-  "Describir la imagen",
 "Superconductors and the Meissner Effect":
   "Superconductores y el efecto Meissner",
 "<a>Condensed matter physics</a>":
@@ -46,8 +44,6 @@ VDI18N.add('es', 'demo/superconductors', {
   "Plomo (Pb)",
 "The sample is a real type I superconductor.":
   "La muestra es un superconductor real de tipo I.",
-"Temperature {#} K.":
-  "Temperatura de {#} K.",
 "Applied field {#} mT.":
   "Campo aplicado de {#} mT.",
 "The sample is in the Meissner state, and the field lines go around it.":
@@ -148,10 +144,6 @@ VDI18N.add('es', 'demo/superconductors', {
   "bobina captadora",
 "equator (mT)":
   "ecuador (mT)",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
 "moment (mA·m²)":
   "momento (mA·m²)",
 "at {#} K":
@@ -164,6 +156,16 @@ VDI18N.add('es', 'demo/superconductors', {
   "no es cero (metal normal)",
 "An imaginary metal with zero resistance and nothing else. Cool it below {#} K in a field: the field it already holds stays trapped. Then lower the applied field to zero: currents in the surface keep the flux inside, so the sphere becomes a magnet. A real superconductor does neither.":
   "Un metal imaginario con resistencia cero y nada más. Enfríalo por debajo de {#} K en un campo: el campo que ya contiene queda atrapado. Luego baja el campo aplicado a cero: las corrientes en la superficie mantienen el flujo dentro, así que la esfera se vuelve un imán. Un superconductor real no hace ninguna de las dos cosas.",
+"The sample is an imaginary perfect conductor, with zero resistance and nothing else.":
+  "La muestra es un conductor perfecto imaginario, con resistencia cero y nada más.",
+"The sample is a normal metal, and the field passes straight through it.":
+  "La muestra es un metal normal, y el campo lo atraviesa directamente.",
+"Its resistance is not zero.":
+  "Su resistencia no es cero.",
+"Magnetic moment {#} mA·m².":
+  "Momento magnético de {#} mA·m².",
+"The graph shows the magnetic moment against the applied field.":
+  "La gráfica muestra el momento magnético contra el campo aplicado.",
 "tin":
   "estaño",
 "A tin sphere at {#} K in zero field. Raise the field slowly: the moment grows in proportion, then falls once the field starts to get in, and reaches zero at the critical field, where tin is a normal metal again. Repeat at other temperatures.":
@@ -176,10 +178,6 @@ VDI18N.add('es', 'demo/superconductors', {
   "Una esfera de uno de los metales de tipo I de la Tabla {#}, a {#} K (un refrigerador de helio {#}). Su nombre está oculto. Encuentra su campo crítico a varias temperaturas, luego su Tc y su Bc({#}), y di qué metal es.",
 "A sphere {#} mm across of a mystery metal, in a cryostat inside a solenoid.":
   "Una esfera de {#} mm de diámetro de un metal misterioso, en un criostato dentro de un solenoide.",
-"Magnetic moment {#} mA·m².":
-  "Momento magnético de {#} mA·m².",
-"The graph shows the magnetic moment against the applied field.":
-  "La gráfica muestra el momento magnético contra el campo aplicado.",
 "indium":
   "indio",
 "mercury":
@@ -188,20 +186,30 @@ VDI18N.add('es', 'demo/superconductors', {
   "aluminio",
 "zero resistance: holding the flux it had":
   "resistencia cero: conserva el flujo que tenía",
-"The sample is an imaginary perfect conductor, with zero resistance and nothing else.":
-  "La muestra es un conductor perfecto imaginario, con resistencia cero y nada más.",
 "The sample holds the field it had when it was cooled, and the field inside does not change.":
   "La muestra conserva el campo que tenía cuando se enfrió, y el campo interior no cambia.",
-"Gallium (Ga)":
-  "Galio (Ga)",
 "The last mystery metal was {metal}.":
   "El último metal misterioso era {metal}.",
-"The last mystery metal was gallium (Ga).":
-  "El último metal misterioso era galio (Ga).",
-"<a><span>←</span> <span>Circuits</span></a><a><span>Gamma Spectroscopy</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Circuitos</span></a><a><span>Espectroscopía gamma</span> <span>→</span></a>",
+"The last mystery metal was tin (Sn).":
+  "El último metal misterioso fue estaño (Sn).",
+"The critical field curve values are hidden.":
+  "Los valores de la curva del campo crítico están ocultos.",
 "Zinc (Zn)":
   "Zinc (Zn)",
+"Gallium (Ga)":
+  "Galio (Ga)",
+"The last mystery metal was gallium (Ga).":
+  "El último metal misterioso era galio (Ga).",
+"Describe the picture":
+  "Describir la imagen",
+"Temperature {#} K.":
+  "Temperatura de {#} K.",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
+"<a><span>←</span> <span>Circuits</span></a><a><span>Gamma Spectroscopy</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Circuitos</span></a><a><span>Espectroscopía gamma</span> <span>→</span></a>",
 "Paused.":
   "En pausa.",
 "Playing.":

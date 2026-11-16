@@ -1,7 +1,5 @@
 /* demo/household-wiring in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/household-wiring', {
-"Describe the picture":
-  "Describir la imagen",
 "PANEL":
   "PANEL",
 "{#} A breaker: on":
@@ -26,10 +24,6 @@ VDI18N.add('es', 'demo/household-wiring', {
   "puntos: cámara lenta ×{#} ({#} Hz dibujados a {#} Hz)",
 "hot {#} mA":
   "fase {#} mA",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
 "Household Wiring and Electrical Safety":
   "Instalación eléctrica doméstica y seguridad eléctrica",
 "<a>DC circuits</a>":
@@ -202,10 +196,8 @@ VDI18N.add('es', 'demo/household-wiring', {
   "La misma falla con la mano mojada: {#} mA, por encima del umbral para poder soltarse, y el interruptor de {#} A sigue sin hacer nada. Activa el GFCI: ve que faltan {#} mA en el neutro y se dispara.",
 "sustained muscle contraction: may not be able to let go ({#} to {#} mA and above)":
   "contracción muscular sostenida: puede que no logre soltarse (de {#} a {#} mA y más)",
-"Space heater":
-  "Calefactor",
-"Plugged in: a lamp, a toaster, a kettle, a space heater.":
-  "Conectados: una lámpara, un tostador, una tetera eléctrica y un calefactor.",
+"Plugged in: a lamp, a toaster.":
+  "Conectados: una lámpara, un tostador.",
 "The hot wire touches the metal case of the toaster.":
   "El cable vivo toca la carcasa metálica del tostador.",
 "The ground wire is broken.":
@@ -218,24 +210,50 @@ VDI18N.add('es', 'demo/household-wiring', {
   "Corriente a través de la persona: {#} mA.",
 "Effect on the person: sustained muscle contraction: may not be able to let go ({#} to {#} mA and above).":
   "Efecto en la persona: contracción muscular sostenida: puede que no logre soltarse ({#} a {#} mA o más).",
+"Space heater":
+  "Calefactor",
+"Plugged in: a lamp, a toaster, a kettle, a space heater.":
+  "Conectados: una lámpara, un tostador, una tetera eléctrica y un calefactor.",
 "Overloaded, not yet tripped.":
   "Sobrecargado, todavía no se dispara.",
+"Current through the person {#} A.":
+  "Corriente a través de la persona: {#} A.",
+"Effect on the person: below the threshold of sensation ({#} mA).":
+  "Efecto en la persona: por debajo del umbral de sensación ({#} mA).",
+"Tripped: breaker (magnetic, at once).":
+  "Disparado: interruptor (magnético, de inmediato).",
 "Power off: breaker (thermal, after {#} s of overload)":
   "Sin energía: interruptor (térmico, después de {#} s de sobrecarga)",
 "tripped: breaker (thermal, after {#} s of overload)":
   "disparado: interruptor (térmico, después de {#} s de sobrecarga)",
+"Tripped: breaker (thermal, after {#} s of overload).":
+  "Disparado: interruptor (térmico, tras {#} s de sobrecarga).",
 "hot − neutral":
   "fase − neutro",
 "worn cord":
   "cable gastado",
 "slow motion ×{#}":
   "cámara lenta ×{#}",
+"Plugged in: a toaster, a kettle.":
+  "Conectados: un tostador, un hervidor.",
+"Worn insulation lets the hot wire touch the neutral.":
+  "El aislante gastado deja que el cable de fase toque el neutro.",
+"Plugged in: a toaster.":
+  "Conectado: un tostador.",
+"A person touches the toaster case, with dry skin.":
+  "Una persona toca la carcasa del tostador, con la piel seca.",
+"Current through the person {#} µA.":
+  "Corriente a través de la persona {#} µA.",
+"Plugged in: a toaster, a lamp.":
+  "Conectados: un tostador, una lámpara.",
 "Plugged in: a lamp, a toaster, a kettle.":
   "Conectados: una lámpara, un tostador y una tetera eléctrica.",
-"Current through the person {#} A.":
-  "Corriente a través de la persona: {#} A.",
-"Effect on the person: below the threshold of sensation ({#} mA).":
-  "Efecto en la persona: por debajo del umbral de sensación ({#} mA).",
+"Describe the picture":
+  "Describir la imagen",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "a shock you feel; sustained muscle contraction starts at {#} to {#} mA":
   "una descarga que se siente; la contracción muscular sostenida empieza entre {#} y {#} mA",
 "painful (pain starts near {#} mA) and the muscles stay locked":

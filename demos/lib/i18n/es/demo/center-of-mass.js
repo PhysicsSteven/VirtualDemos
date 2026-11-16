@@ -1,7 +1,5 @@
 /* demo/center-of-mass in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/center-of-mass', {
-"Describe the picture":
-  "Describir la imagen",
 "CM":
   "CM",
 "Center of Mass":
@@ -80,10 +78,6 @@ VDI18N.add('es', 'demo/center-of-mass', {
   "centro de masa",
 "drag a mass to move it, drag the table to turn":
   "arrastra una masa para moverla, arrastra la mesa para girar",
-"Skip to the picture":
-  "Ir a la imagen",
-"Skip to the controls":
-  "Ir a los controles",
 "slow motion: {#} s = {#} s · t = {#} s":
   "cámara lenta: {#} s = {#} s · t = {#} s",
 "Launch: at the top the firework splits in two. Each piece follows its own parabola, but their center of mass carries on along the original one until a piece lands.":
@@ -106,6 +100,20 @@ VDI18N.add('es', 'demo/center-of-mass', {
   "Punto de caída ponderado por la masa",
 "unexploded x":
   "x sin explotar",
+"A firework launched at {#} m/s and {#}° that splits in two at the top of its path.":
+  "Un cohete de fuegos artificiales lanzado a {#} m/s y {#}° que se divide en dos en lo alto de su trayectoria.",
+"The front piece has {#} of the mass and the explosion gives the pieces {#} m/s relative speed, {#}° above horizontal.":
+  "La pieza delantera tiene {#} de la masa y la explosión da a las piezas una rapidez relativa de {#} m/s, a {#}° sobre la horizontal.",
+"Split at {#} s, {#} m up.":
+  "Se divide a los {#} s, a {#} m de altura.",
+"At the start.":
+  "Al inicio.",
+"Front piece lands at x = {#} m, back piece at x = {#} m.":
+  "La pieza delantera cae en x = {#} m, la trasera en x = {#} m.",
+"Unexploded range {#} m.":
+  "Alcance sin explotar {#} m.",
+"Center of the pieces at x = {#} m, y = {#} m, and the unexploded firework at x = {#} m, y = {#} m.":
+  "Centro de las piezas en x = {#} m, y = {#} m, y el cohete sin explotar en x = {#} m, y = {#} m.",
 "post":
   "poste",
 "The person walks from the back of the boat to the front. No outside horizontal force acts, so the center of mass of person and boat stays put and the boat slides back.":
@@ -124,16 +132,10 @@ VDI18N.add('es', 'demo/center-of-mass', {
   "el bote se movió (m)",
 "A person of {#} kg walks along a boat of {#} kg, {#} m long, beside a fixed post.":
   "Una persona de {#} kg camina a lo largo de un bote de {#} kg y {#} m de largo, junto a un poste fijo.",
-"At the start.":
-  "Al inicio.",
 "The person has walked {#} m along the boat and the boat has moved {#} m.":
   "La persona ha caminado {#} m a lo largo del bote y el bote se ha movido {#} m.",
 "Center of mass at x = −{#} m.":
   "Centro de masa en x = −{#} m.",
-"Time {#} s.":
-  "Tiempo {#} s.",
-"Running.":
-  "En marcha.",
 "The person has walked {#} m along the boat and the boat has moved −{#} m.":
   "La persona ha caminado {#} m a lo largo del bote y el bote se ha movido −{#} m.",
 "real time · t = {#} s":
@@ -148,6 +150,16 @@ VDI18N.add('es', 'demo/center-of-mass', {
   "delantera",
 "back":
   "trasera",
+"Describe the picture":
+  "Describir la imagen",
+"Skip to the picture":
+  "Ir a la imagen",
+"Skip to the controls":
+  "Ir a los controles",
+"Time {#} s.":
+  "Tiempo {#} s.",
+"Running.":
+  "En marcha.",
 "Close":
   "Cerrar"
 });

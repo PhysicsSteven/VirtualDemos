@@ -6,8 +6,6 @@ VDI18N.add('es', 'demo/string-density', {
   "vibrador",
 "up and down motion drawn ×{#}, shown {#} times slower, as by a strobe":
   "movimiento hacia arriba y hacia abajo dibujado ×{#}, mostrado {#} veces más lento, como con un estroboscopio",
-"Describe the picture":
-  "Describir la imagen",
 "Linear Density of a String":
   "Densidad lineal de una cuerda",
 "<a>First lab: waves on a string</a>":
@@ -40,12 +38,6 @@ VDI18N.add('es', 'demo/string-density', {
   "La rapidez de la onda es {#} m/s.",
 "The resonance with {#} loop is at {#} Hz.":
   "La resonancia con {#} lazo está en {#} Hz.",
-"Time controls":
-  "Controles de tiempo",
-"Run for a moment and pause again":
-  "Avanza un momento y vuelve a pausar",
-"Step":
-  "Paso",
 "Drag the vibrator to change L":
   "Arrastra el vibrador para cambiar L",
 "Length L, vibrator to pulley":
@@ -162,10 +154,6 @@ VDI18N.add('es', 'demo/string-density', {
   "Modelo: la cuerda obedece la ecuación de onda con una fuerza de amortiguamiento ligera proporcional a su velocidad, elegida para que cada resonancia tenga {#} Hz de ancho a media potencia. El vibrador mueve su extremo hacia arriba y hacia abajo {#} mm (elegido); el extremo de la polea no se mueve. Se muestra el estado estacionario: se omite el segundo, más o menos, que una cuerda real tarda en crecer o en apagarse. T = mg con g = {#} m/s²: la polea no tiene fricción, la masa colgante está en reposo, y se omiten la cuerda más allá de la polea, su estiramiento y su comba. Las cuerdas A, B y C tienen μ = {#}, {#} y {#} g/m (elegidas); una cuerda desconocida tiene de {#} a {#} g/m. El amortiguamiento baja cada resonancia menos de {#}% por encima de {#} Hz. El dibujo exagera el movimiento hacia arriba y hacia abajo y lo ralentiza, como lo haría un estroboscopio. Datos simulados, sin ruido: tu precisión depende de qué tan bien encuentres cada pico.",
 "masses drawn as {#} cm discs of {#} g/cm³":
   "pesas dibujadas como discos de {#} cm de {#} g/cm³",
-"Skip to the picture":
-  "Ir a la imagen",
-"Skip to the controls":
-  "Ir a los controles",
 "The vibrator is paused.":
   "El vibrador está en pausa.",
 "hanger {#} g = {#} g":
@@ -188,16 +176,16 @@ VDI18N.add('es', 'demo/string-density', {
   "Una cuerda desconocida con {#} g colgando: μ está oculta. Encuentra al menos cuatro resonancias, grafica f contra n y calcula μ a partir de la pendiente. Nueva cuerda desconocida elige otra.",
 "<span>hidden: unknown string</span>":
   "<span>oculta: cuerda desconocida</span>",
+"The string is the unknown string.":
+  "La cuerda es la cuerda desconocida.",
+"The linear density, the wave speed and the predictions are hidden for the unknown string.":
+  "La densidad lineal, la rapidez de la onda y las predicciones están ocultas para la cuerda desconocida.",
 "An unknown string driven at {#} Hz: μ is hidden. Find the mass for as many loop patterns as you can, plot T against {#}/n² and work out μ from the slope.":
   "Una cuerda desconocida excitada a {#} Hz: μ está oculta. Encuentra la masa para tantos patrones de vientres como puedas, grafica T contra {#}/n² y calcula μ a partir de la pendiente.",
 "The unknown string had μ = {#} g/m.":
   "La cuerda desconocida tenía μ = {#} g/m.",
-"The string is the unknown string.":
-  "La cuerda es la cuerda desconocida.",
 "The string shows {#} loops.":
   "La cuerda muestra {#} lazos.",
-"The linear density, the wave speed and the predictions are hidden for the unknown string.":
-  "La densidad lineal, la rapidez de la onda y las predicciones están ocultas para la cuerda desconocida.",
 "A plot of the largest amplitude against hanging mass for the {#} values you have tried.":
   "Una gráfica de la amplitud mayor contra la masa colgante para los {#} valores que has probado.",
 "The largest amplitude so far is {#} mm, at {#} g.":
@@ -216,6 +204,26 @@ VDI18N.add('es', 'demo/string-density', {
   "n, fila {#}",
 "Row {#} recorded. Check n against the loops you see.":
   "Fila {#} registrada. Compara n con los vientres que ves.",
+"The mass for {#} loops at this frequency is {#} g.":
+  "La masa para {#} lazos a esta frecuencia es {#} g.",
+"The resonance with {#} loops is at {#} Hz.":
+  "La resonancia con {#} lazos está en {#} Hz.",
+"The string is String A.":
+  "La cuerda es la cuerda A.",
+"The string is String C.":
+  "La cuerda es la cuerda C.",
+"Describe the picture":
+  "Describir la imagen",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
+"Skip to the picture":
+  "Ir a la imagen",
+"Skip to the controls":
+  "Ir a los controles",
 "Record reading":
   "Registrar esta lectura",
 "Model: the string obeys the wave equation with a light damping force in proportion to its velocity, chosen so every resonance is {#} Hz wide at half power. The vibrator moves its end up and down {#} mm (chosen); the pulley end does not move. Shown is the steady state: the second or so a real string takes to build up or die down is skipped. T = mg with g = {#} m/s²: the pulley has no friction, the hanging mass is at rest, and the string past the pulley, its stretch and its sag are left out. String A, B and C have μ = {#}, {#} and {#} g/m (chosen); an unknown string has {#} to {#} g/m. Damping lowers each resonance by less than {#}% above {#} Hz. The drawing exaggerates the sideways motion and slows it down, as a strobe would. Simulated data, no noise: your precision is how well you find each peak.":

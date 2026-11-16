@@ -24,8 +24,6 @@ VDI18N.add('es', 'demo/compton', {
   "λ′ con corrimiento",
 "intensity":
   "intensidad",
-"Describe the picture":
-  "Describir la imagen",
 "Compton Scattering":
   "Dispersión de Compton",
 "<a><span>←</span> <span>Doppler Effect and Shock Waves</span></a><a><span>Nuclear Binding Energy</span> <span>→</span></a>":
@@ -34,12 +32,6 @@ VDI18N.add('es', 'demo/compton', {
   "Un fotón rebota en un electrón libre y sale con una longitud de onda mayor. El corrimiento depende solo del ángulo, como debe ser si la luz transporta cantidad de movimiento en paquetes, como una partícula.",
 "<span>E = hc/λ</span> · <span>hc = {#} keV·pm</span> · <span>m<sub>e</sub>c² = {#} keV</span> · <span>λ<sub>C</sub> = h/m<sub>e</sub>c = {#} pm</span>":
   "<span>E = hc/λ</span> · <span>hc = {#} keV·pm</span> · <span>m<sub>e</sub>c² = {#} keV</span> · <span>λ<sub>C</sub> = h/m<sub>e</sub>c = {#} pm</span>",
-"Time controls":
-  "Controles de tiempo",
-"Run for a moment and pause again":
-  "Avanza un momento y vuelve a pausar",
-"Step":
-  "Paso",
 "Sample photons":
   "Muestrear fotones",
 "Plot":
@@ -182,10 +174,6 @@ VDI18N.add('es', 'demo/compton', {
   "e⁻ de retroceso, φ = {#}°",
 "X-rays in false color.":
   "Rayos X en color falso.",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
 "Where photons go: dσ/dΩ in rₑ² per sr":
   "Hacia dónde van los fotones: dσ/dΩ en rₑ² por sr",
 "σ = {#} σ_T at E = {#} keV":
@@ -246,6 +234,12 @@ VDI18N.add('es', 'demo/compton', {
   "-{#} × {#}⁻¹⁹ keV <span>redondeo: {#} × {#}⁻¹⁶ de E</span>",
 "A green laser pointer, {#} nm, E = {#} eV: a million times less than m<sub>e</sub>c², so the shift is lost in the width of the line.":
   "Un apuntador láser verde, {#} nm, E = {#} eV: un millón de veces menos que m<sub>e</sub>c², así que el corrimiento se pierde en el ancho de la línea.",
+"A photon of energy {#} eV, wavelength {#} nm, scatters off an electron at rest.":
+  "Un fotón de energía {#} eV y longitud de onda {#} nm se dispersa en un electrón en reposo.",
+"The scattered photon has wavelength λ′ = {#} nm.":
+  "El fotón dispersado tiene longitud de onda λ′ = {#} nm.",
+"The electron gets kinetic energy T = {#} × {#}⁻⁵ eV, {#}% of the photon energy.":
+  "El electrón adquiere energía cinética T = {#} × {#}⁻⁵ eV, {#}% de la energía del fotón.",
 "Energy, to scale":
   "Energía, a escala",
 "A {#} keV gamma ray has λ = {#} pm, shorter than λ<sub>C</sub>. At {#}° the wavelength more than doubles and the photon keeps only {#} keV; the electron leaves with {#} keV at {#} c.":
@@ -290,16 +284,34 @@ VDI18N.add('es', 'demo/compton', {
   "Un fotón de la aniquilación electrón positrón lleva exactamente m<sub>e</sub>c² = {#} keV, así que su longitud de onda es la propia λ<sub>C</sub>.",
 "The electron gets kinetic energy T = {#} keV, {#}% of the photon energy.":
   "El electrón recibe una energía cinética T = {#} keV, el {#}% de la energía del fotón.",
-"Paused.":
-  "En pausa.",
 "{#} photons sampled.":
   "{#} fotones muestreados.",
 "Change the scattering angle by {#} degree (Shift for {#} degrees)":
   "Cambia el ángulo de dispersión {#} grado (Shift para {#} grados)",
+"The plot shows where photons go: Klein–Nishina total cross section {#} σ_T.":
+  "La gráfica muestra hacia dónde van los fotones: sección eficaz total de Klein–Nishina {#} σ_T.",
 "gamma ray source":
   "fuente de rayos gamma",
 "Gamma rays in false color.":
   "Rayos gamma en color falso.",
+"A photon of energy {#} MeV, wavelength {#} pm, scatters off an electron at rest.":
+  "Un fotón de energía {#} MeV y longitud de onda {#} pm se dispersa en un electrón en reposo.",
+"The plot shows the electron energies: the Compton edge is at {#} × {#}⁻⁵ eV.":
+  "La gráfica muestra las energías de los electrones: el borde de Compton está en {#} × {#}⁻⁵ eV.",
+"Describe the picture":
+  "Describir la imagen",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
+"Paused.":
+  "En pausa.",
 "infrared source":
   "fuente infrarroja",
 "light source":

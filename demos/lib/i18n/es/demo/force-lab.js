@@ -4,12 +4,6 @@ VDI18N.add('es', 'demo/force-lab', {
   "La longitud de las flechas crece con log F (no a escala), para que se vean tanto las fuerzas muy pequeñas como las muy grandes.",
 "Record a few distances to plot them.":
   "Registra algunas distancias para graficarlas.",
-"Describe the picture":
-  "Describir la imagen",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
 "Inverse Square Force Lab":
   "Laboratorio de fuerza de inverso del cuadrado",
 "<a><span>←</span> <span>Elevator: Apparent Weight</span></a><a><span>Granular Flow: Sorting and Landslides</span> <span>→</span></a>":
@@ -110,14 +104,24 @@ VDI18N.add('es', 'demo/force-lab', {
   "La fuerza sobre cada cuerpo es {#} × {#}⁻⁸ N, igual en magnitud y de sentido opuesto.",
 "Recorded r = {#} pm.":
   "r registrada = {#} pm.",
-"Arrow lengths grow with log F (not to scale).":
-  "La longitud de las flechas crece con log F (no a escala).",
 "{#} distance recorded.":
   "{#} distancia registrada.",
+"Arrow lengths grow with log F (not to scale).":
+  "La longitud de las flechas crece con log F (no a escala).",
 "Two charges on a ruler {#} cm long: q₁ = +{#} μC at {#} cm, q₂ = −{#} μC at {#} cm.":
   "Dos cargas sobre una regla de {#} cm: q₁ = +{#} μC en {#} cm, q₂ = −{#} μC en {#} cm.",
 "The distance between centers is r = {#} cm.":
   "La distancia entre centros es r = {#} cm.",
 "The force on each body is {#} × {#}¹ N, equal in size and opposite in direction.":
-  "La fuerza sobre cada cuerpo es {#} × {#}¹ N, igual en magnitud y de sentido opuesto."
+  "La fuerza sobre cada cuerpo es {#} × {#}¹ N, igual en magnitud y de sentido opuesto.",
+"Two charges on a ruler {#} cm long: q₁ = +{#} μC at {#} cm, q₂ = +{#} μC at {#} cm.":
+  "Dos cargas en una regla de {#} cm de largo: q₁ = +{#} μC en {#} cm, q₂ = +{#} μC en {#} cm.",
+"The two bodies repel each other.":
+  "Los dos cuerpos se repelen.",
+"Describe the picture":
+  "Describir la imagen",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles"
 });

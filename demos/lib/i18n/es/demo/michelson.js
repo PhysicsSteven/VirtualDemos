@@ -20,12 +20,6 @@ VDI18N.add('es', 'demo/michelson', {
   "dibujado a escala; el recorrido del espejo se dibuja {#} veces más grande y la inclinación {#} veces",
 "fringes counted":
   "franjas contadas",
-"Describe the picture":
-  "Describir la imagen",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
 "Michelson Interferometer":
   "Interferómetro de Michelson",
 "<a><span>←</span> <span>Thin Film Interference</span></a><a><span>Circular Apertures and Resolution</span> <span>→</span></a>":
@@ -126,8 +120,6 @@ VDI18N.add('es', 'demo/michelson', {
   "Doblete del sodio",
 "A red He–Ne laser ({#} nm in standard air). Zero the counter, turn the micrometer, and note the reading each time the counter reaches {#}, {#}, {#}, … fringes. Each fringe is half a wavelength of mirror travel: {#}Δd = Nλ.":
   "Un láser de He–Ne rojo ({#} nm en aire estándar). Pon el contador en cero, gira el micrómetro y anota la lectura cada vez que el contador llegue a {#}, {#}, {#}, … franjas. Cada franja es media longitud de onda de recorrido del espejo: {#}Δd = Nλ.",
-"Light":
-  "Luz",
 "He–Ne laser, red":
   "Láser de He–Ne, rojo",
 "Wavelength in the room's air":
@@ -204,6 +196,26 @@ VDI18N.add('es', 'demo/michelson', {
   "La longitud de onda en el aire del cuarto es {#} nm y {#} nm.",
 "to scale, but mirror travel ×{#}, tilt ×{#}":
   "a escala, pero recorrido del espejo ×{#}, inclinación ×{#}",
+"The light is a green He–Ne laser.":
+  "La luz es un láser verde de He–Ne.",
+"The light is the green line of a mercury lamp.":
+  "La luz es la línea verde de una lámpara de mercurio.",
+"The light is white light.":
+  "La luz es luz blanca.",
+"The fringe counter is not used with white light.":
+  "El contador de franjas no se usa con luz blanca.",
+"A gas cell is in the fixed arm, at {#} kPa.":
+  "Hay una celda de gas en el brazo fijo, a {#} kPa.",
+"The fixed mirror is tilted {#}′ left and right and {#}′ up and down.":
+  "El espejo fijo está inclinado {#}′ a izquierda y derecha y {#}′ arriba y abajo.",
+"Describe the picture":
+  "Describir la imagen",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
+"Light":
+  "Luz",
 "Close":
   "Cerrar"
 });

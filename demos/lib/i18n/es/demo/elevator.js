@@ -1,7 +1,5 @@
 /* demo/elevator in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/elevator', {
-"Describe the picture":
-  "Describir la imagen",
 "scale reading (kg)":
   "lectura de la báscula (kg)",
 "velocity, up + (m/s)":
@@ -34,12 +32,6 @@ VDI18N.add('es', 'demo/elevator', {
   "La fuerza neta N − mg es {#} N, y el peso aparente entre el peso real es {#}.",
 "Two graphs beside the car plot the scale reading in kg and the velocity in m/s against time.":
   "Dos gráficas junto a la cabina muestran la lectura de la báscula en kg y la velocidad en m/s en función del tiempo.",
-"Time controls":
-  "Controles de tiempo",
-"Run for a moment and pause again":
-  "Avanza un momento y vuelve a pausar",
-"Step":
-  "Paso",
 "Cable snaps":
   "Se rompe el cable",
 "Divider between the elevator and the graphs":
@@ -104,22 +96,18 @@ VDI18N.add('es', 'demo/elevator', {
   "etapa",
 "scale (kg)":
   "báscula (kg)",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
 "Floor {#} to floor {#}: {#} s.":
   "Del piso {#} al piso {#}: {#} s.",
 "<span>speeding up going up</span>":
   "<span>acelerando al subir</span>",
-"speeding up going up":
-  "acelerando al subir",
 "The current trip takes {#} s.":
   "El viaje actual dura {#} s.",
 "The car is speeding up going up.":
   "La cabina acelera mientras sube.",
 "The ride is running.":
   "El viaje está en marcha.",
+"speeding up going up":
+  "acelerando al subir",
 "<span>constant speed up</span>":
   "<span>subiendo a velocidad constante</span>",
 "The car moves up at constant speed.":
@@ -132,16 +120,30 @@ VDI18N.add('es', 'demo/elevator', {
   "Altura {#} m, velocidad {#} m/s, aceleración −{#} m/s², todo con hacia arriba positivo.",
 "The net force N − mg is −{#} N, and apparent weight over true weight is {#}.":
   "La fuerza neta N − mg es −{#} N, y el peso aparente entre el peso real es {#}.",
+"Height {#} m, velocity −{#} m/s, acceleration −{#} m/s², all up positive.":
+  "Altura {#} m, velocidad −{#} m/s, aceleración −{#} m/s², con positivo hacia arriba.",
 "<span>safety brakes stopping the car</span>":
   "<span>los frenos de seguridad detienen la cabina</span>",
 "The safety brakes are stopping the car.":
   "Los frenos de seguridad están deteniendo la cabina.",
 "Height {#} m, velocity −{#} m/s, acceleration {#} m/s², all up positive.":
   "Altura {#} m, velocidad −{#} m/s, aceleración {#} m/s², todo con hacia arriba positivo.",
-"Paused.":
-  "En pausa.",
 "The cable snapped and the safety brakes have stopped the car.":
   "El cable se rompió y los frenos de seguridad detuvieron la cabina.",
+"Describe the picture":
+  "Describir la imagen",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
+"Paused.":
+  "En pausa.",
 "Close":
   "Cerrar"
 });

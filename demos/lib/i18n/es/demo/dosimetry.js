@@ -1,7 +1,5 @@
 /* demo/dosimetry in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/dosimetry', {
-"Describe the picture":
-  "Describir la imagen",
 "water":
   "agua",
 "photons":
@@ -28,12 +26,6 @@ VDI18N.add('es', 'demo/dosimetry', {
   "Los fotones entregan su energía a los electrones, y los electrones la llevan más adentro antes de dejarla como dosis: observa cómo la kerma y la dosis absorbida se separan en la acumulación y corren juntas más allá de ella. Luego recolecta los iones en una cámara Farmer y calibra un haz de protones como lo hace una calibración TRS-{#}, una corrección a la vez.",
 "Gy · nC · cm of water":
   "Gy · nC · cm de agua",
-"Time controls":
-  "Controles de tiempo",
-"Run for a moment and pause again":
-  "Avanza un momento y vuelve a pausar",
-"Step":
-  "Paso",
 "Clear the histories and start counting again":
   "Borrar las historias y empezar a contar de nuevo",
 "{#} histories":
@@ -286,10 +278,6 @@ VDI18N.add('es', 'demo/dosimetry', {
   "ajuste",
 "reading":
   "lectura",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
 "central electrode +{#} V":
   "electrodo central +{#} V",
 "air cavity, {#} cm³":
@@ -372,6 +360,14 @@ VDI18N.add('es', 'demo/dosimetry', {
   "El plan",
 "{#} MU, {#} Gy at z_ref":
   "{#} MU, {#} Gy en z_ref",
+"depth in water (g/cm²)":
+  "profundidad en agua (g/cm²)",
+"SCANNING NOZZLE":
+  "BOQUILLA DE BARRIDO",
+"THERMOMETER IN THE WATER":
+  "TERMÓMETRO EN EL AGUA",
+"Scanned layer, {#} cm × {#} cm":
+  "Capa barrida, {#} cm × {#} cm",
 "A chamber in a water phantom in a calibration beam, with a charge meter.":
   "Una cámara en un maniquí de agua en un haz de calibración, con un medidor de carga.",
 "Beam: {#} MeV protons, a {#} cm by {#} cm scanned layer, plan {#} MU.":
@@ -386,16 +382,10 @@ VDI18N.add('es', 'demo/dosimetry', {
   "Todavía no hay lectura.",
 "No readings at this setting yet.":
   "Todavía no hay lecturas con este ajuste.",
-"depth in water (g/cm²)":
-  "profundidad en agua (g/cm²)",
-"SCANNING NOZZLE":
-  "BOQUILLA DE BARRIDO",
-"THERMOMETER IN THE WATER":
-  "TERMÓMETRO EN EL AGUA",
-"Scanned layer, {#} cm × {#} cm":
-  "Capa barrida, {#} cm × {#} cm",
 "Mean at −{#} V":
   "Media a −{#} V",
+"Chamber voltage −{#} V.":
+  "Voltaje de la cámara −{#} V.",
 "Past the buildup the dose and the collision kerma fall together, e^(−μz), with D/K_col fixed a little above {#}: transient charged particle equilibrium. The electrons carry energy from shallower, where the kerma is higher.":
   "Más allá de la acumulación, la dosis y la kerma de colisión bajan juntas, e^(−μz), con D/K_col fijo un poco arriba de {#}: equilibrio transitorio de partículas cargadas. Los electrones traen energía desde menos profundidad, donde la kerma es mayor.",
 "depth z (mm)":
@@ -416,22 +406,22 @@ VDI18N.add('es', 'demo/dosimetry', {
   "Los protones de un sincrociclotrón llegan en pulsos ({#} kHz). Algunos pares de iones creados en un pulso se vuelven a encontrar antes de ser recolectados; cuanto mayor el voltaje, menos. Lee la cámara de {#} V a {#} V.",
 "Eight times the charge per pulse: recombination grows in step (u is proportional to the dose per pulse), so k_s at {#} V is several times further from {#}. {#}/M against {#}/V is close to a straight line, whose intercept is {#}/Q_sat.":
   "Ocho veces la carga por pulso: la recombinación crece al mismo ritmo (u es proporcional a la dosis por pulso), así que k_s a {#} V queda varias veces más lejos de {#}. {#}/M en función de {#}/V es casi una recta, cuya ordenada al origen es {#}/Q_sat.",
-"A continuous beam of {#} Gy/min makes so few ions at once that hardly any recombine: k_s at {#} V is {#}.":
-  "Un haz continuo de {#} Gy/min produce tan pocos iones a la vez que casi ninguno se recombina: k_s a {#} V es {#}.",
-"s_w,air (⁶⁰Co, TRS-{#})":
-  "s_w,air (⁶⁰Co, TRS-{#})",
 "A Farmer ion chamber in a water phantom in the beam, beside a graph of the readings.":
   "Una cámara de ionización Farmer en un maniquí de agua en el haz, junto a una gráfica de las lecturas.",
-"Beam: cobalt {#}, continuous, {#} Gy/min to water.":
-  "Haz: cobalto {#}, continuo, {#} Gy/min al agua.",
-"The graph shows the reading against voltage.":
-  "La gráfica muestra la lectura contra el voltaje.",
+"Beam: proton pencil beam scanning, pulsed, {#} mGy to water per pulse.":
+  "Haz: haz de protones de barrido con lápiz, pulsado, {#} mGy al agua por pulso.",
+"The graph shows {#}/M against {#}/V, the Jaffé plot.":
+  "La gráfica muestra {#}/M en función de {#}/V, la gráfica de Jaffé.",
 "Readings at this setting: {#}.":
   "Lecturas con este ajuste: {#}.",
 "Readings in all: {#}.":
   "Lecturas en total: {#}.",
 "Collection efficiency f = {#}, all the charge Q_sat = {#} nC.":
   "Eficiencia de colección f = {#}, toda la carga Q_sat = {#} nC.",
+"A continuous beam of {#} Gy/min makes so few ions at once that hardly any recombine: k_s at {#} V is {#}.":
+  "Un haz continuo de {#} Gy/min produce tan pocos iones a la vez que casi ninguno se recombina: k_s a {#} V es {#}.",
+"s_w,air (⁶⁰Co, TRS-{#})":
+  "s_w,air (⁶⁰Co, TRS-{#})",
 "A {#} MeV scanned layer: R_p {#} g/cm², z_ref {#} g/cm², R_res {#} g/cm². Work down the steps; each reading has {#} % noise (simulated), so take several.":
   "Una capa barrida de {#} MeV: R_p {#} g/cm², z_ref {#} g/cm², R_res {#} g/cm². Avanza por los pasos; cada lectura tiene {#} % de ruido (simulado), así que toma varias.",
 "At {#} MeV R_res at {#} g/cm² would be under {#} g/cm², so Rev. {#} puts the reference depth at {#} g/cm².":
@@ -472,16 +462,34 @@ VDI18N.add('es', 'demo/dosimetry', {
   "Haz: cobalto {#} en el laboratorio de patrones, {#} cm por {#} cm, irradiado durante {#} min.",
 "Chamber NE {#} at reference depth {#} g/cm².":
   "Cámara NE {#} a la profundidad de referencia {#} g/cm².",
+"Chamber IBA FC65-G at reference depth {#} g/cm².":
+  "Cámara IBA FC65-G a la profundidad de referencia {#} g/cm².",
 "{#} cm × {#} cm, {#} cm from the source":
   "{#} cm × {#} cm, a {#} cm de la fuente",
 "Slowed down, not to scale.":
   "Más lento, no a escala.",
+"Beam: cobalt {#}, continuous, {#} Gy/min to water.":
+  "Haz: cobalto {#}, continuo, {#} Gy/min al agua.",
+"The graph shows the reading against voltage.":
+  "La gráfica muestra la lectura contra el voltaje.",
 "cobalt {#} unit":
   "unidad de cobalto {#}",
 "{#} cm × {#} cm; source drawn nearer than {#} cm.":
   "{#} cm × {#} cm; la fuente se dibuja más cerca que {#} cm.",
-"Chamber voltage −{#} V.":
-  "Voltaje de la cámara −{#} V.",
+"The graph shows depths from {#} to {#} cm.":
+  "La gráfica muestra profundidades de {#} a {#} cm.",
+"Describe the picture":
+  "Describir la imagen",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "Primary photons only (a narrow beam view of a broad field, so scattered photons leave), water of density {#} g/cm³. μ/ρ and μ_en/ρ are NIST's. Each interaction makes a Compton electron with the Klein–Nishina spectrum and angle; it goes straight along its first direction for its ESTAR CSDA range and leaves its collision stopping power along the way. Real electrons scatter and zig zag, so the real buildup has a different shape: the model is a sketch of the mechanism, not a depth dose for planning (⁶⁰Co: d_max {#} mm here; Khan's tables give {#} cm measured). Coherent, photoelectric and pair events are left out of the electron spread ({#} % of the interactions or less from {#} to {#} MeV, {#} % at {#} MeV). The Monte Carlo scores {#} depth bins ({#} cm bins at depth) in batches of {#} histories; the readout at the probe is read linearly between the two nearest bin centers, and so is its uncertainty.":
   "Solo fotones primarios (una vista de haz estrecho de un campo amplio, así que los fotones dispersos salen), agua de densidad {#} g/cm³. μ/ρ y μ_en/ρ son del NIST. Cada interacción produce un electrón Compton con el espectro y el ángulo de Klein–Nishina; este va en línea recta en su primera dirección a lo largo de su alcance CSDA de ESTAR y deja su poder de frenado por colisión en el camino. Los electrones reales se dispersan y zigzaguean, así que la acumulación real tiene otra forma: el modelo es un esbozo del mecanismo, no una dosis en profundidad para planificar (⁶⁰Co: d_max {#} mm aquí; las tablas de Khan dan {#} cm medido). Los eventos coherentes, fotoeléctricos y de pares quedan fuera de la distribución de electrones ({#} % de las interacciones o menos de {#} a {#} MeV, {#} % a {#} MeV). El Monte Carlo registra {#} intervalos de profundidad (intervalos de {#} cm en profundidad) en lotes de {#} historias; la lectura en la sonda se interpola linealmente entre los centros de los dos intervalos más cercanos, y también su incertidumbre."
 });

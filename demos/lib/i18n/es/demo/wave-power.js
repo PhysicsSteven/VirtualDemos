@@ -10,12 +10,6 @@ VDI18N.add('es', 'demo/wave-power', {
   "POWER METER",
 "sideways motion drawn ×{#}, slowed as by a strobe":
   "movimiento lateral dibujado ×{#}, más lento como con un estroboscopio",
-"Describe the picture":
-  "Describir la imagen",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
 "Energy and Power of a Wave":
   "Energía y potencia de una onda",
 "<a>Waves</a>":
@@ -44,8 +38,6 @@ VDI18N.add('es', 'demo/wave-power', {
   "La potencia prevista es {#} mW.",
 "The vibrator is stopped, so the power meter reads zero.":
   "El vibrador está detenido, así que el medidor de potencia marca cero.",
-"Time controls":
-  "Controles de tiempo",
 "Start the vibrator":
   "Encender el vibrador",
 "Send one pulse":
@@ -198,20 +190,26 @@ VDI18N.add('es', 'demo/wave-power', {
   "<span>oculto: cuerda desconocida</span>",
 "amplitude {#}, power {#}":
   "amplitud {#}, potencia {#}",
-"free end":
-  "extremo libre",
-"r = +{#}: comes back upright":
-  "r = +{#}: regresa derecho",
 "The string is the unknown string.":
   "La cuerda es la cuerda desconocida.",
-"The far end is free.":
-  "El extremo lejano está libre.",
+"The absorber is too soft.":
+  "El absorbedor es demasiado blando.",
 "The linear density, the wave speed and the wavelength are hidden.":
   "La densidad lineal, la rapidez de la onda y la longitud de onda están ocultas.",
 "The predicted power is hidden.":
   "La potencia prevista está oculta.",
 "The absorber sends back amplitude {#} of each wave.":
   "El absorbedor devuelve una amplitud {#} de cada onda.",
+"free end":
+  "extremo libre",
+"r = +{#}: comes back upright":
+  "r = +{#}: regresa derecho",
+"{#}: too steep for the linear model, lower A or f":
+  "{#}: demasiado empinada para el modelo lineal, baja A o f",
+"The far end is free.":
+  "El extremo lejano está libre.",
+"The string is too steep for the linear model: lower the amplitude or the frequency.":
+  "La cuerda tiene demasiada pendiente para el modelo lineal: reduce la amplitud o la frecuencia.",
 "fixed end":
   "extremo fijo",
 "r = −{#}: comes back upside down":
@@ -226,18 +224,22 @@ VDI18N.add('es', 'demo/wave-power', {
   "El absorbedor es demasiado blando, así que parte de cada onda regresa y se forma una onda estacionaria encima de la viajera. Cambia L o f y observa cómo el medidor sube y baja; luego vuelve a Acoplado: la potencia ya no depende de L. Un extremo acoplado es lo que hace que la cuerda actúe como si no tuviera fin.",
 "An unknown string with {#} g hanging: μ is hidden. Measure P against A² at one frequency; the slope is ½ μ ω² v = ½ ω² √(Tμ), which gives μ. New unknown string picks another.":
   "Una cuerda desconocida con {#} g colgando: μ está oculta. Mide P en función de A² a una frecuencia; la pendiente es ½ μ ω² v = ½ ω² √(Tμ), que da μ. Nueva cuerda desconocida elige otra.",
+"Graph of the recorded power readings in mW against A squared.":
+  "Gráfica de las lecturas de potencia registradas en mW en función de A al cuadrado.",
 "The blade rises and comes back once, sending a single upward pulse {#} m long (v/f) down the string. Send one pulse with the end clamped (Fixed end): it comes back upside down. Then choose Free end (a ring that slides on a smooth rod): it comes back upright. Too soft and Too stiff send back half as tall a pulse, upright and upside down; Matched sends back nothing. The held blade is a fixed end too, so the pulse flips each time it gets back to the vibrator.":
   "La lámina sube y regresa una vez, enviando un solo pulso hacia arriba de {#} m de largo (v/f) a lo largo de la cuerda. Envía un pulso con el extremo sujeto (Extremo fijo): regresa invertido. Luego elige Extremo libre (un anillo que se desliza en una varilla lisa): regresa derecho. Demasiado blando y Demasiado rígido regresan un pulso de la mitad de altura, derecho e invertido; Acoplado no regresa nada. La lámina detenida también es un extremo fijo, así que el pulso se invierte cada vez que vuelve al vibrador.",
-"With a free or a fixed end nothing takes the energy out, so a steady wave would pile up without limit at a resonance: send one pulse instead, or choose an absorber.":
-  "Con un extremo libre o fijo nada saca la energía, así que una onda continua se acumularía sin límite en una resonancia: envía un pulso en su lugar, o elige un absorbedor.",
 "The far end is fixed.":
   "El extremo lejano está fijo.",
 "Graph of the recorded power readings in mW against the tension T.":
   "Gráfica de las lecturas de potencia registradas en mW contra la tensión T.",
+"With a free or a fixed end nothing takes the energy out, so a steady wave would pile up without limit at a resonance: send one pulse instead, or choose an absorber.":
+  "Con un extremo libre o fijo nada saca la energía, así que una onda continua se acumularía sin límite en una resonancia: envía un pulso en su lugar, o elige un absorbedor.",
 "Lower or raise the driver frequency by {#} Hz (Shift: {#} Hz)":
   "Baja o sube la frecuencia del excitador en {#} Hz (Shift: {#} Hz)",
 "Raise or lower the vibrator amplitude by {#} mm":
   "Sube o baja la amplitud del vibrador en {#} mm",
+"A pulse is traveling along the string.":
+  "Un pulso viaja por la cuerda.",
 "A new unknown string is on the apparatus.":
   "Hay una nueva cuerda desconocida en el aparato.",
 "hanger {#} g + {#} g = {#} g":
@@ -246,12 +248,24 @@ VDI18N.add('es', 'demo/wave-power', {
   "Primero enciende el vibrador: el medidor no lee nada mientras está apagado.",
 "The unknown string had μ = {#} g/m.":
   "La cuerda desconocida tenía μ = {#} g/m.",
-"{#}: too steep for the linear model, lower A or f":
-  "{#}: demasiado empinada para el modelo lineal, baja A o f",
+"The string is String A.":
+  "La cuerda es la cuerda A.",
+"The string is String C.":
+  "La cuerda es la cuerda C.",
+"The absorber is too stiff.":
+  "El absorbedor es demasiado rígido.",
 "Graph of the recorded power readings in mW against the frequency f.":
   "Gráfica de las lecturas de potencia registradas en mW contra la frecuencia f.",
 "Graph of the recorded power readings in mW against f squared.":
   "Gráfica de las lecturas de potencia registradas en mW contra f al cuadrado.",
+"Describe the picture":
+  "Describir la imagen",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
+"Time controls":
+  "Controles de tiempo",
 "Record reading":
   "Registrar esta lectura",
 "Close":

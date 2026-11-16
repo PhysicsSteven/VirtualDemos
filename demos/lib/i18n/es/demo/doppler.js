@@ -12,8 +12,6 @@ VDI18N.add('es', 'demo/doppler', {
   "f/({#} − M) de frente, acercándose",
 "f/({#} + M) head on, receding":
   "f/({#} + M) de frente, alejándose",
-"Describe the picture":
-  "Describir la imagen",
 "Doppler Effect and Shock Waves":
   "Efecto Doppler y ondas de choque",
 "<a><span>←</span> <span>Timbre and Harmonics</span></a><a><span>Chladni Plates</span> <span>→</span></a>":
@@ -22,18 +20,10 @@ VDI18N.add('es', 'demo/doppler', {
   "Una fuente en movimiento apiña sus frentes de onda por delante y los separa por detrás, así que el observador oye un tono distinto. Más rápido que el sonido, los frentes se acumulan en un cono de Mach. Para la luz, la relatividad agrega la dilatación del tiempo.",
 "sound: m, s, Hz, v = {#} m/s · light: light seconds, c = {#} {#} km/s":
   "sonido: m, s, Hz, v = {#} m/s · luz: segundos luz, c = {#} {#} km/s",
-"Time controls":
-  "Controles de tiempo",
-"Run for a moment and pause again":
-  "Avanza un momento y vuelve a pausar",
-"Step":
-  "Paso",
 "Kind of wave":
   "Tipo de onda",
 "Sound":
   "Sonido",
-"Light":
-  "Luz",
 "Whole view":
   "Vista completa",
 "Follow source":
@@ -52,14 +42,10 @@ VDI18N.add('es', 'demo/doppler', {
   "La fuente se mueve a Mach {#}, {#} m/s, en la dirección {#}°.",
 "The observer is at rest.":
   "El observador está en reposo.",
-"Paused.":
-  "En pausa.",
 "The observer hears {#} Hz.":
   "El observador oye {#} Hz.",
 "The ratio f′/f is {#}.":
   "La razón f′/f es {#}.",
-"Time {#} s.":
-  "Tiempo {#} s.",
 "Source and observer":
   "Fuente y observador",
 "<span>Source</span>":
@@ -160,10 +146,6 @@ VDI18N.add('es', 'demo/doppler', {
   "En movimiento",
 "Speed (m/s)":
   "Rapidez (m/s)",
-"Skip to the picture":
-  "Ir a la imagen",
-"Skip to the controls":
-  "Ir a los controles",
 "source":
   "fuente",
 "sees {#} nm":
@@ -198,8 +180,6 @@ VDI18N.add('es', 'demo/doppler', {
   "Frentes de onda de luz salen de una fuente que emite {#} nm, con un observador en reposo.",
 "The source moves at β = {#}, {#} km/s, in direction {#}°.":
   "La fuente se mueve a β = {#}, {#} km/s, en la dirección {#}°.",
-"Playing.":
-  "En reproducción.",
 "The observer sees {#} nm.":
   "El observador ve {#} nm.",
 "The relativistic ratio f′/f is {#}.":
@@ -216,10 +196,6 @@ VDI18N.add('es', 'demo/doppler', {
   "t = {#} s <small>· tiempo ×{#}/{#}</small>",
 "source at rest":
   "fuente en reposo",
-"The source is at rest.":
-  "La fuente está en reposo.",
-"The observer moves at {#} of the speed of sound, {#} m/s, in direction {#}°.":
-  "El observador se mueve a {#} de la velocidad del sonido, {#} m/s, en la dirección {#}°.",
 "crests pile up: Mach {#}":
   "las crestas se acumulan: Mach {#}",
 "silent: no sound yet":
@@ -246,16 +222,20 @@ VDI18N.add('es', 'demo/doppler', {
   "A {#} c, γ = {#}. La luz que salió de la fuente mientras esta se movía perpendicular a la línea de visión (θ = {#}°) llega con f′ = f/γ: λ pasa de {#} a {#} nm solo por la dilatación del tiempo. La física clásica no predice ningún corrimiento ahí.",
 "Received frequency f′ against time":
   "Frecuencia recibida f′ contra el tiempo",
+"The source is at rest.":
+  "La fuente está en reposo.",
+"The observer moves at {#} of the speed of sound, {#} m/s, in direction {#}°.":
+  "El observador se mueve a {#} de la velocidad del sonido, {#} m/s, en la dirección {#}°.",
 "No sound has reached the observer yet.":
   "Aún no ha llegado sonido al observador.",
 "At Mach {#} the sound piles up in a flat wall at {#}°.":
   "A Mach {#} el sonido se acumula en una pared plana a {#}°.",
-"No sound reaches the observer yet: it is outside the Mach cone.":
-  "Aún no llega sonido al observador: está fuera del cono de Mach.",
 "The observer hears silence: outside the Mach cone.":
   "El observador oye silencio: está fuera del cono de Mach.",
 "The Mach cone half angle is {#}°.":
   "El semiángulo del cono de Mach es {#}°.",
+"No sound reaches the observer yet: it is outside the Mach cone.":
+  "Aún no llega sonido al observador: está fuera del cono de Mach.",
 "observer":
   "observador",
 "Readings record sound only. Choose Sound.":
@@ -264,6 +244,12 @@ VDI18N.add('es', 'demo/doppler', {
   "recibida {#} nm · z = +{#}",
 "<span>not receding: this redshift is time dilation, not recession, so Hubble's law does not apply</span>":
   "<span>no se aleja: este corrimiento al rojo es dilatación del tiempo, no alejamiento, así que la ley de Hubble no se aplica</span>",
+"transverse: f′/f ≈ {#}/γ":
+  "transversal: f′/f ≈ {#}/γ",
+"{#}° <span>transverse: f′/f ≈ {#}/γ</span>":
+  "{#}° <span>transversal: f′/f ≈ {#}/γ</span>",
+"<span>z = {#} is too large for d ≈ cz/H₀ (it would give {#} Mpc)</span>":
+  "<span>z = {#} is too large for d ≈ cz/H₀ (it would give {#} Mpc)</span>",
 "jet · {#} m/s":
   "avión · {#} m/s",
 "crests are spheres; circles where they meet the ground · to scale":
@@ -282,6 +268,26 @@ VDI18N.add('es', 'demo/doppler', {
   "aún no llega luz",
 "transverse: f′/f ≈ 1/γ":
   "transversal: f′/f ≈ 1/γ",
+"Describe the picture":
+  "Describir la imagen",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
+"Light":
+  "Luz",
+"Paused.":
+  "En pausa.",
+"Time {#} s.":
+  "Tiempo {#} s.",
+"Skip to the picture":
+  "Ir a la imagen",
+"Skip to the controls":
+  "Ir a los controles",
+"Playing.":
+  "En reproducción.",
 "Close":
   "Cerrar"
 });

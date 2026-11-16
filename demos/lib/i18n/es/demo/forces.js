@@ -52,8 +52,6 @@ VDI18N.add('es', 'demo/forces', {
   "Posición {#} m, rapidez {#} m/s.",
 "Describe the ramp and forces":
   "Describir la rampa y las fuerzas",
-"Time controls":
-  "Controles de tiempo",
 "Put back":
   "Regresar",
 "Release at the top mark":
@@ -202,10 +200,6 @@ VDI18N.add('es', 'demo/forces', {
   "Al deslizarse hacia abajo sin empuje ni masa colgante, a = g sin θ − μk g cos θ, así que a/cos θ = g tan θ − μk g: una recta con pendiente g y ordenada al origen −μk g. El ajuste usa solo filas con F = {#} y m₂ = {#}.",
 "Blind hides every force size, the acceleration, the friction type, the slip angle, the arrows' lengths (all drawn the same size) and μk from the fit. The timer, the settings and the force directions stay.":
   "A ciegas oculta el tamaño de cada fuerza, la aceleración, el tipo de fricción, el ángulo de deslizamiento, las longitudes de las flechas (todas dibujadas del mismo tamaño) y μk del ajuste. El cronómetro, los ajustes y las direcciones de las fuerzas se quedan.",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
 "Hold":
   "Sujetar",
 "Sliding to the right":
@@ -214,8 +208,6 @@ VDI18N.add('es', 'demo/forces', {
   "En reposo: la fricción estática lo sostiene",
 "Timer: {#} s":
   "Cronómetro: {#} s",
-"Released.":
-  "Soltado.",
 "mg sin θ = {#} N":
   "mg sin θ = {#} N",
 "mg cos θ = {#} N":
@@ -228,6 +220,14 @@ VDI18N.add('es', 'demo/forces', {
   "Fricción (estática)",
 "Slips when tan θ > μs, at θ =":
   "Se desliza cuando tan θ > μs, en θ =",
+"A {#} kg block on a ramp tilted {#}°.":
+  "Un bloque de {#} kg sobre una rampa inclinada {#}°.",
+"There is no applied force.":
+  "No hay fuerza aplicada.",
+"Static friction {#} N.":
+  "Fricción estática: {#} N.",
+"The block slips when the angle is above {#}°.":
+  "El bloque se desliza cuando el ángulo es mayor que {#}°.",
 "Pulling upward at an angle lifts some of the weight off the floor, so N is less than mg and so is the friction. Too steep an angle wastes the pull. Find the angle that gives the largest acceleration.":
   "Jalar hacia arriba en ángulo quita parte del peso del piso, así que N es menor que mg y también la fricción. Un ángulo demasiado inclinado desperdicia el jalón. Encuentra el ángulo que da la mayor aceleración.",
 "A hanging mass pulls the block across a table. Both move with the same acceleration a = (m₂g − μk m g)/(m + m₂), and the tension is less than m₂g while they accelerate.":
@@ -298,16 +298,16 @@ VDI18N.add('es', 'demo/forces', {
   "Bloque arriba, rampa abajo. Ralentizado; el brillo y la vibración son ilustrativos.",
 "The second pane shows the two surfaces magnified to the size of atoms (a schematic). Even polished surfaces are bumpy at this scale, and only the tips of the bumps touch. With a {#} N push, under the {#} N that static friction can give, the bumps stay locked and nothing slides: no work, no heat. Turn the push past {#} N: the block slides, the bumps catch and tear past each other, and the atoms at the contact jiggle harder: friction turns work into thermal energy at the rate μk N v.":
   "El segundo panel muestra las dos superficies ampliadas al tamaño de los átomos (un esquema). Incluso las superficies pulidas son irregulares a esta escala, y solo se tocan las puntas de las irregularidades. Con un empuje de {#} N, por debajo de los {#} N que puede dar la fricción estática, las irregularidades se quedan trabadas y nada se desliza: sin trabajo, sin calor. Sube el empuje por encima de {#} N: el bloque se desliza, las irregularidades se enganchan y se arrancan al pasar unas por otras, y los átomos en el contacto vibran más fuerte: la fricción convierte trabajo en energía térmica a razón de μk N v.",
-"Use Release at the top mark first, and let the timer finish.":
-  "Usa primero Soltar en la marca superior, y deja que el cronómetro termine.",
 "The second pane shows the surfaces magnified to the size of atoms.":
   "El segundo panel muestra las superficies ampliadas al tamaño de los átomos.",
-"Static friction {#} N.":
-  "Fricción estática: {#} N.",
+"Use Release at the top mark first, and let the timer finish.":
+  "Usa primero Soltar en la marca superior, y deja que el cronómetro termine.",
+"Released.":
+  "Soltado.",
 "At rest":
   "En reposo",
-"Held still: press Release.":
-  "Sujeto quieto: pulsa Soltar.",
+"Not sliding: the bumps are locked.":
+  "Sin deslizarse: las irregularidades están trabadas.",
 "N, friction, tension, acceleration":
   "N, fricción, tensión, aceleración",
 "hidden in Blind":
@@ -320,22 +320,10 @@ VDI18N.add('es', 'demo/forces', {
   "Los coeficientes de fricción están ocultos.",
 "The normal force, friction, tension and acceleration are hidden while Blind is on.":
   "La fuerza normal, la fricción, la tensión y la aceleración están ocultas mientras A ciegas está activado.",
-"Moving":
-  "En movimiento",
-"Sliding: the bumps catch and tear past each other.":
-  "Deslizándose: las irregularidades se enganchan y se arrancan al pasar unas por otras.",
-"Timer: {#} s for {#} m":
-  "Cronómetro: {#} s para {#} m",
-"{#} s for {#} m":
-  "{#} s para {#} m",
-"A {#} kg block on a ramp tilted {#}°.":
-  "Un bloque de {#} kg sobre una rampa inclinada {#}°.",
-"There is no applied force.":
-  "No hay fuerza aplicada.",
+"Held still: press Release.":
+  "Sujeto quieto: pulsa Soltar.",
 "A {#} kg mass hangs from a string over a pulley.":
   "Una masa de {#} kg cuelga de una cuerda sobre una polea.",
-"Not sliding: the bumps are locked.":
-  "Sin deslizarse: las irregularidades están trabadas.",
 "Blind: arrows show directions only":
   "A ciegas: las flechas muestran solo direcciones",
 "Atwood's machine: a {#} kg mass on the left and a {#} kg mass on the right hang over one pulley.":
@@ -352,20 +340,24 @@ VDI18N.add('es', 'demo/forces', {
   "Jalón sobre la cuerda F = {#} N.",
 "The tension, lift and acceleration are hidden while Blind is on.":
   "La tensión, la fuerza de levantamiento y la aceleración están ocultas mientras A ciegas está activado.",
-"Stopped at the end. Press Put back.":
-  "Detenido en el extremo. Pulsa Regresar.",
-"Stopped at the end of the ramp.":
-  "Detenido en el extremo de la rampa.",
-"Stopped at the end of the ramp":
-  "Detenido en el extremo de la rampa",
+"Moving":
+  "En movimiento",
+"Sliding: the bumps catch and tear past each other.":
+  "Deslizándose: las irregularidades se enganchan y se arrancan al pasar unas por otras.",
+"Held still: the pushes beat the {#} N static friction can give":
+  "Sin moverse: los empujes superan los {#} N que la fricción estática puede dar",
 "Mystery surface off: it was μs = {#}, μk = {#}.":
   "Superficie misteriosa desactivada: era μs = {#}, μk = {#}.",
-"By the stop at the end of the ramp":
-  "Por el tope en el extremo de la rampa",
-"The block slips when the angle is above {#}°.":
-  "El bloque se desliza cuando el ángulo es mayor que {#}°.",
 "Sliding: kinetic friction {#} N":
   "Deslizándose: fricción cinética {#} N",
+"Stopped at the end. Press Put back.":
+  "Detenido en el extremo. Pulsa Regresar.",
+"Stopped at the end of the ramp":
+  "Detenido en el extremo de la rampa",
+"By the stop at the end of the ramp":
+  "Por el tope en el extremo de la rampa",
+"Stopped at the end of the ramp.":
+  "Detenido en el extremo de la rampa.",
 "Tension {#} N.":
   "Tensión: {#} N.",
 "m rising, m₂ falling":
@@ -385,5 +377,15 @@ VDI18N.add('es', 'demo/forces', {
 "Mystery surface: μs and μk are hidden. Blind is on.":
   "Superficie misteriosa: μs y μk están ocultos. A ciegas está activado.",
 "At the stop: the push of the stop is not drawn":
-  "En el tope: no se dibuja el empuje del tope"
+  "En el tope: no se dibuja el empuje del tope",
+"Timer: {#} s for {#} m":
+  "Cronómetro: {#} s para {#} m",
+"{#} s for {#} m":
+  "{#} s para {#} m",
+"Time controls":
+  "Controles de tiempo",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles"
 });

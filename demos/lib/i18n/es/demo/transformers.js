@@ -18,12 +18,6 @@ VDI18N.add('es', 'demo/transformers', {
   "i_P máxima {#} mA",
 "i_S peak {#} A":
   "i_S máxima {#} A",
-"Describe the picture":
-  "Describir la imagen",
-"Skip to the picture":
-  "Ir a la imagen",
-"Skip to the controls":
-  "Ir a los controles",
 "Transformers":
   "Transformadores",
 "<a>Induction and inductance</a>":
@@ -34,12 +28,6 @@ VDI18N.add('es', 'demo/transformers', {
   "Dos bobinas en un mismo núcleo de hierro: la corriente alterna en el primario produce un flujo variable, y el flujo produce un voltaje en el secundario. Cambia las espiras, conéctale una carga, hazlo real, y luego envía potencia por una línea larga.",
 "rms values · SI units":
   "valores rms · unidades SI",
-"Time controls":
-  "Controles de tiempo",
-"Run for a moment and pause again":
-  "Avanza un momento y vuelve a pausar",
-"Step":
-  "Paso",
 "slowed: one cycle of {#} Hz every {#} s":
   "ralentizado: un ciclo de {#} Hz cada {#} s",
 "Transformer":
@@ -214,24 +202,18 @@ VDI18N.add('es', 'demo/transformers', {
   "i_S máxima {#} mA",
 "The same idea backwards: ten times the turns gives ten times the voltage, {#} V, and the primary current is ten times the secondary current. A transformer raises voltage only by lowering current.":
   "La misma idea al revés: diez veces las espiras dan diez veces el voltaje, {#} V, y la corriente del primario es diez veces la del secundario. Un transformador sube el voltaje solo bajando la corriente.",
+"The load resistance is {#} kΩ.":
+  "La resistencia de carga es {#} kΩ.",
+"The primary current is {#} A.":
+  "La corriente primaria es {#} A.",
+"The secondary current is {#} mA.":
+  "La corriente del secundario es {#} mA.",
 "OpenStax Check Your Understanding {#}: line voltage {#} V stepped down to {#} V to deliver {#} A to a doorbell (here {#} and {#} turns and an {#} Ω bell). Find the turns ratio, the primary current and the resistance the {#} V source sees.":
   "Compruebe su comprensión {#} de OpenStax: un voltaje de línea de {#} V se reduce a {#} V para entregar {#} A a un timbre (aquí {#} y {#} espiras y un timbre de {#} Ω). Encuentra la razón de espiras, la corriente del primario y la resistencia que ve la fuente de {#} V.",
 "v_P peak {#} kV":
   "v_P máximo {#} kV",
 "OpenStax Example {#}: a utility pole transformer steps {#} kV down to {#} V ({#} to {#}). A {#} Ω load takes {#} A at {#} V, {#} kW, while the line side carries only {#} A.":
   "Ejemplo {#} de OpenStax: un transformador de poste reduce {#} kV a {#} V ({#} a {#}). Una carga de {#} Ω toma {#} A a {#} V, {#} kW, mientras que el lado de la línea lleva solo {#} A.",
-"The source is {#} kV rms at {#} Hz.":
-  "La fuente es de {#} kV rms a {#} Hz.",
-"The core is the utility pole core.":
-  "El núcleo es el núcleo de poste de servicio.",
-"The primary current is {#} A.":
-  "La corriente primaria es {#} A.",
-"The power in is {#} kW.":
-  "La potencia de entrada es {#} kW.",
-"The power out is {#} kW.":
-  "La potencia de salida es {#} kW.",
-"The peak primary voltage is {#} kV.":
-  "El voltaje primario máximo es {#} kV.",
 "no load (open)":
   "sin carga (abierto)",
 "real model · k = {#}":
@@ -246,8 +228,6 @@ VDI18N.add('es', 'demo/transformers', {
   "R<sub>P</sub> {#} Ω, R<sub>S</sub> {#} mΩ; L<sub>P</sub> {#} H, L<sub>S</sub> {#} mH",
 "OpenStax Example {#} again: {#} kW sent at {#} kV down a {#} Ω line is {#} A and loses ({#} A)²({#} Ω) = {#} W. Send it at {#} V instead and the line would need {#} A and lose {#} MW, more than the power sent. Then try a long line at {#} kV.":
   "Otra vez el Ejemplo {#} de OpenStax: {#} kW enviados a {#} kV por una línea de {#} Ω son {#} A y pierden ({#} A)²({#} Ω) = {#} W. Envíalos a {#} V en cambio y la línea necesitaría {#} A y perdería {#} MW, más que la potencia enviada. Luego prueba una línea larga a {#} kV.",
-"loss (W)":
-  "pérdida (W)",
 "A power line from a {#} kV generator, through a step up transformer, a long line and a step down transformer, to the houses at {#} V.":
   "Una línea de potencia desde un generador de {#} kV, a través de un transformador elevador, una línea larga y un transformador reductor, hasta las casas a {#} V.",
 "The power sent is {#} kW.":
@@ -272,12 +252,42 @@ VDI18N.add('es', 'demo/transformers', {
   "La pérdida decae como {#} sobre V al cuadrado.",
 "The marker is at {#} kV.":
   "El marcador está en {#} kV.",
+"loss (W)":
+  "pérdida (W)",
 "Share lost against V, P = {#} kW, R = {#} Ω":
   "Fracción perdida contra V, P = {#} kW, R = {#} Ω",
 "the loss falls as {#}/V²":
   "la pérdida cae como {#}/V²",
 "two cycles, each trace to its own peak":
   "dos ciclos, cada traza a su propio máximo",
+"No load is connected.":
+  "No hay carga conectada.",
+"The model is the real core and windings, with coupling k = {#}.":
+  "El modelo es el núcleo y los devanados reales, con acoplamiento k = {#}.",
+"The power in is {#} mW.":
+  "La potencia de entrada es {#} mW.",
+"The source is {#} kV rms at {#} Hz.":
+  "La fuente es de {#} kV rms a {#} Hz.",
+"The core is the utility pole core.":
+  "El núcleo es el núcleo de poste de servicio.",
+"The power in is {#} kW.":
+  "La potencia de entrada es {#} kW.",
+"The power out is {#} kW.":
+  "La potencia de salida es {#} kW.",
+"The peak primary voltage is {#} kV.":
+  "El voltaje primario máximo es {#} kV.",
+"Describe the picture":
+  "Describir la imagen",
+"Skip to the picture":
+  "Ir a la imagen",
+"Skip to the controls":
+  "Ir a los controles",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
 "{#} {#} km of a pair of {#} cm wires":
   "{#} {#} km de un par de cables de {#} cm",
 "Close":

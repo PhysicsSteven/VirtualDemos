@@ -1,7 +1,5 @@
 /* demo/displacement-current in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/displacement-current', {
-"Describe the picture":
-  "Describir la imagen",
 "gap drawn wider than scale":
   "hueco dibujado más ancho que a escala",
 "loop, r = {#} cm":
@@ -42,8 +40,6 @@ VDI18N.add('es', 'demo/displacement-current', {
   "El campo magnético sobre la espira es B = {#} pT.",
 "Time {#} s, current I = {#} µA, electric field between the plates {#} V/m.":
   "Tiempo {#} s, corriente I = {#} µA, campo eléctrico entre las placas {#} V/m.",
-"Time controls":
-  "Controles de tiempo",
 "t = {#} µs · τ = RC = {#} µs":
   "t = {#} µs · τ = RC = {#} µs",
 "<span>slow motion: {#} s = {#} µs</span>":
@@ -114,10 +110,8 @@ VDI18N.add('es', 'demo/displacement-current', {
   "Hueco dibujado de {#} cm de ancho (en realidad {#} mm). Anillos verdes: B, más brillantes donde es más intenso. Arrastra la perilla morada; arrastra en otro lugar para girar.",
 "B (pT)":
   "B (pT)",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
+"Time {#} µs, current I = {#} µA, electric field between the plates {#} kV/m.":
+  "Tiempo {#} µs, corriente I = {#} µA, campo eléctrico entre las placas {#} kV/m.",
 "t = {#} s · τ = RC = {#} µs":
   "t = {#} s · τ = RC = {#} µs",
 "The same loop, but stretch its surface into the gap like a bag. No wire crosses the bag, so without displacement current ∮B·dl would be {#} for the same loop. The changing E field through the bag supplies exactly I.":
@@ -130,22 +124,30 @@ VDI18N.add('es', 'demo/displacement-current', {
   "Una espira entre las placas, más ancha que ellas. Aquí no fluye carga, y aun así B es el mismo que alrededor del cable a este r: toda la corriente de desplazamiento pasa por el disco.",
 "between the plates":
   "entre las placas",
-"A loop inside the plates encloses only the share r²/R² of the displacement current, so B grows in proportion to r there, like inside a thick wire.":
-  "Una espira dentro de las placas encierra solo la fracción r²/R² de la corriente de desplazamiento, así que ahí B crece en proporción a r, como dentro de un cable grueso.",
-"Paused.":
-  "En pausa.",
 "A circular Amperian loop of radius {#} cm sits between the plates.":
   "Una espira amperiana circular de radio {#} cm está entre las placas.",
-"Its surface is a bag that reaches into the gap.":
-  "Su superficie es una bolsa que entra en el espacio entre las placas.",
 "Conduction current through the surface {#} A.":
   "Corriente de conducción a través de la superficie: {#} A.",
 "Displacement current through the surface {#} µA.":
   "Corriente de desplazamiento a través de la superficie: {#} µA.",
-"Time {#} µs, current I = {#} µA, electric field between the plates {#} kV/m.":
-  "Tiempo {#} µs, corriente I = {#} µA, campo eléctrico entre las placas {#} kV/m.",
+"A loop inside the plates encloses only the share r²/R² of the displacement current, so B grows in proportion to r there, like inside a thick wire.":
+  "Una espira dentro de las placas encierra solo la fracción r²/R² de la corriente de desplazamiento, así que ahí B crece en proporción a r, como dentro de un cable grueso.",
+"Its surface is a bag that reaches into the gap.":
+  "Su superficie es una bolsa que entra en el espacio entre las placas.",
+"Charging.":
+  "Cargando.",
 "Gap drawn wider than scale. Drag the knob; drag elsewhere to turn.":
   "Hueco dibujado más ancho que a escala. Arrastra la perilla; arrastra en otro lugar para girar.",
+"Describe the picture":
+  "Describir la imagen",
+"Time controls":
+  "Controles de tiempo",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
+"Paused.":
+  "En pausa.",
 "Close":
   "Cerrar"
 });

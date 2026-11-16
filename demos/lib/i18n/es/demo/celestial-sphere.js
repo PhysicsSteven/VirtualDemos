@@ -2,8 +2,6 @@
 VDI18N.add('es', 'demo/celestial-sphere', {
 "{name} there":
   "{name} allá",
-"Describe the picture":
-  "Describir la imagen",
 "SE":
   "SE",
 "SW":
@@ -40,10 +38,6 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "Tú",
 "March equinox ♈":
   "Equinoccio de marzo ♈",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
 "The Sky and the Celestial Sphere":
   "El cielo y la esfera celeste",
 "<a>The sky from Earth</a>":
@@ -54,12 +48,8 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "Las estrellas como una esfera vista desde fuera, cortada por tu horizonte, junto al cielo que ves desde el suelo. Gira la Tierra durante una noche, un mes, un año o miles de años y ve por qué el cielo se mueve como lo hace, o coloca las estrellas de una constelación a sus distancias reales.",
 "RA in hours · angles in degrees · standard time, no daylight saving":
   "AR en horas · ángulos en grados · hora estándar, sin horario de verano",
-"Time controls":
-  "Controles de tiempo",
 "Forward one hour":
   "Una hora adelante",
-"<span>Speed</span>":
-  "<span>Rapidez</span>",
 "One day each second, at the same clock time every night":
   "Un día por segundo, a la misma hora del reloj cada noche",
 "{#} day/s":
@@ -706,8 +696,6 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "Regor",
 "Mirfak":
   "Mirfak",
-"Kaus Australis":
-  "Kaus Australis",
 "Avior":
   "Avior",
 "Peacock":
@@ -724,6 +712,16 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "Albireo",
 "Your meridian":
   "Tu meridiano",
+"The stars of the constellation Ursa Major placed at their distances from the Sun.":
+  "Las estrellas de la constelación Osa Mayor colocadas a sus distancias del Sol.",
+"The view is from the side, with the Sun on the left.":
+  "La vista es de lado, con el Sol a la izquierda.",
+"{#} stars have a measured distance.":
+  "{#} estrellas tienen distancia medida.",
+"They lie from {#} to {#} light years away.":
+  "Están de {#} a {#} años luz de distancia.",
+"A star chart of right ascension and declination, with a dashed line for your meridian.":
+  "Un mapa estelar de ascensión recta y declinación, con una línea discontinua para tu meridiano.",
 "{#}:{#} (UTC+{#})":
   "{#}:{#} (UTC+{#})",
 "Jan {#}, {#}, {#}:{#} <small>UTC+{#}</small>":
@@ -786,28 +784,10 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "Gacrux",
 "Shaula":
   "Shaula",
+"Kaus Australis":
+  "Kaus Australis",
 "Atria":
   "Atria",
-"The observer is in Sydney, Australia.":
-  "El observador está en Sídney, Australia.",
-"Local standard time Apr {#}, {#}, {#}:{#}, UTC+{#}.":
-  "Hora estándar local: abr {#}, {#}, {#}:{#}, UTC+{#}.",
-"The selected object is Acrux.":
-  "El objeto seleccionado es Acrux.",
-"It is in the constellation Crux.":
-  "Está en la constelación Cruz del Sur.",
-"Declination −{#}°, right ascension {#} hours.":
-  "Declinación −{#}°, ascensión recta {#} horas.",
-"The Moon is {#}% lit and below the horizon.":
-  "La Luna está iluminada al {#} % y bajo el horizonte.",
-"The stars of the constellation Ursa Major placed at their distances from the Sun.":
-  "Las estrellas de la constelación Osa Mayor colocadas a sus distancias del Sol.",
-"The view is from the side, with the Sun on the left.":
-  "La vista es de lado, con el Sol a la izquierda.",
-"{#} stars have a measured distance.":
-  "{#} estrellas tienen distancia medida.",
-"They lie from {#} to {#} light years away.":
-  "Están de {#} a {#} años luz de distancia.",
 "Jun {#}":
   "{#} jun",
 "Jun {#}, {#} · {#}:{#}":
@@ -852,6 +832,24 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "Alphecca",
 "Dschubba":
   "Dschubba",
+"The selected object is The Sun.":
+  "El objeto seleccionado es El Sol.",
+"Facing SE, centered {#}° up, {#}° across.":
+  "Mirando al SE, centrado a {#}° de altura, {#}° de lado.",
+"Local standard time Dec {#}, {#}, {#}:{#}, UTC−{#}.":
+  "Hora estándar local: dic {#}, {#}, {#}:{#}, UTC−{#}.",
+"It is in the constellation Sagittarius.":
+  "Está en la constelación Sagitario.",
+"Its altitude is −{#}°, azimuth {#}°.":
+  "Su altura es −{#}°, acimut {#}°.",
+"It is below the horizon.":
+  "Está bajo el horizonte.",
+"Declination −{#}°, right ascension {#} hours.":
+  "Declinación −{#}°, ascensión recta {#} horas.",
+"Highest altitude +{#}°, lowest −{#}°.":
+  "Altura máxima +{#}°, mínima −{#}°.",
+"The Moon is {#}% lit and below the horizon.":
+  "La Luna está iluminada al {#} % y bajo el horizonte.",
 "Mar {#}":
   "{#} mar",
 "Mar {#}, {#} · {#}:{#}":
@@ -952,6 +950,10 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "Polo norte celeste allá",
 "Five hundred years each second, on the same date and clock time. The Earth’s axis sweeps out a cone like a spinning top’s: the celestial pole circles the ecliptic pole once in about {#} {#} years, staying {#}° from it. The pole star changes, and the March equinox point slides west along the zodiac, about {#}° every {#} years, from Taurus through Aries into Pisces.":
   "Quinientos años por segundo, en la misma fecha y hora del reloj. El eje de la Tierra describe un cono como el de un trompo: el polo celeste da una vuelta al polo de la eclíptica una vez cada {#} {#} años, aproximadamente, manteniéndose a {#}° de él. La estrella polar cambia, y el punto del equinoccio de marzo se desliza hacia el oeste a lo largo del zodiaco, cerca de {#}° cada {#} años, de Tauro a Aries y luego a Piscis.",
+"The selected object is North celestial pole.":
+  "El objeto seleccionado es el polo norte celeste.",
+"Local standard time Mar {#}, {#} BC (year −{#}), {#}:{#}, UTC−{#}.":
+  "Hora estándar local: mar {#}, {#} a. C. (año −{#}), {#}:{#}, UTC−{#}.",
 "{#}° <small>WNW</small>":
   "{#}° <small>ONO</small>",
 "Dec {#}, {#}, {#}:{#} <small>UTC+{#}</small>":
@@ -968,16 +970,6 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "Hora estándar local: dic {#}, {#}, {#}:{#}, UTC+{#}.",
 "Time runs at {#} minutes each second.":
   "El tiempo corre a {#} minutos por segundo.",
-"The selected object is The Sun.":
-  "El objeto seleccionado es El Sol.",
-"It is in the constellation Sagittarius.":
-  "Está en la constelación Sagitario.",
-"Its altitude is −{#}°, azimuth {#}°.":
-  "Su altura es −{#}°, acimut {#}°.",
-"It is below the horizon.":
-  "Está bajo el horizonte.",
-"Highest altitude +{#}°, lowest −{#}°.":
-  "Altura máxima +{#}°, mínima −{#}°.",
 "Alioth <small>ε UMa</small>":
   "Alioth <small>ε UMa</small>",
 "{#}° <small>NNE</small>":
@@ -986,6 +978,12 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "Alioth allá",
 "altitude −{#}°, azimuth {#}° <small>NNW</small>":
   "altura −{#}°, azimut {#}° <small>NNO</small>",
+"The view is from the Sun, as the figure looks in the sky.":
+  "La vista es desde el Sol, como se ve la figura en el cielo.",
+"The selected object is Alioth.":
+  "El objeto seleccionado es Alioth.",
+"It is in the constellation Ursa Major.":
+  "Está en la constelación Osa Mayor.",
 "Rigel <small>β Ori</small>":
   "Rigel <small>β Ori</small>",
 "Rigel there":
@@ -1014,6 +1012,12 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "Mintaka · {#} a. l.",
 "λ Ori · {#} ly":
   "λ Ori · {#} a. l.",
+"The selected object is Rigel.":
+  "El objeto seleccionado es Rigel.",
+"It is in the constellation Orion.":
+  "Está en la constelación Orión.",
+"The stars of the constellation Orion placed at their distances from the Sun.":
+  "Las estrellas de la constelación Orión colocadas a sus distancias del Sol.",
 "Schedar <small>α Cas</small>":
   "Schedar <small>α Cas</small>",
 "Schedar there":
@@ -1036,6 +1040,12 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "δ Cas · {#} a. l.",
 "ε Cas · {#} ly":
   "ε Cas · {#} a. l.",
+"The stars of the constellation Cassiopeia placed at their distances from the Sun.":
+  "Las estrellas de la constelación Casiopea colocadas a sus distancias del Sol.",
+"The selected object is Schedar.":
+  "El objeto seleccionado es Schedar.",
+"It is in the constellation Cassiopeia.":
+  "Está en la constelación Casiopea.",
 "Mimosa <small>β Cru</small>":
   "Mimosa <small>β Cru</small>",
 "{#}° <small>SE</small>":
@@ -1058,6 +1068,14 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "Gacrux · {#} a. l.",
 "δ Cru · {#} ly":
   "δ Cru · {#} a. l.",
+"The stars of the constellation Crux placed at their distances from the Sun.":
+  "Las estrellas de la constelación Cruz del Sur colocadas a sus distancias del Sol.",
+"The selected object is Mimosa.":
+  "El objeto seleccionado es Mimosa.",
+"It is in the constellation Crux.":
+  "Está en la constelación Cruz del Sur.",
+"Highest altitude −{#}°, lowest −{#}°.":
+  "Altura máxima −{#}°, mínima −{#}°.",
 "Regulus <small>α Leo</small>":
   "Régulo <small>α Leo</small>",
 "Regulus there":
@@ -1096,6 +1114,12 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "η Leo · {#} a. l.",
 "μ Leo · {#} ly":
   "μ Leo · {#} a. l.",
+"The stars of the constellation Leo placed at their distances from the Sun.":
+  "Las estrellas de la constelación Leo colocadas a sus distancias del Sol.",
+"The selected object is Regulus.":
+  "El objeto seleccionado es Régulo.",
+"It is in the constellation Leo.":
+  "Está en la constelación Leo.",
 "Antares <small>α Sco</small>":
   "Antares <small>α Sco</small>",
 "{#}° <small>NNW</small>":
@@ -1156,6 +1180,12 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "η Sco · {#} a. l.",
 "ζ² Sco · {#} ly":
   "ζ² Sco · {#} a. l.",
+"The stars of the constellation Scorpius placed at their distances from the Sun.":
+  "Las estrellas de la constelación Escorpio colocadas a sus distancias del Sol.",
+"The selected object is Antares.":
+  "El objeto seleccionado es Antares.",
+"It is in the constellation Scorpius.":
+  "Está en la constelación Escorpio.",
 "ζ¹ Lyr":
   "ζ¹ Lyr",
 "Sheliak":
@@ -1176,14 +1206,12 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "δ² Lyr · {#} a. l.",
 "ζ¹ Lyr · {#} ly":
   "ζ¹ Lyr · {#} a. l.",
+"The stars of the constellation Lyra placed at their distances from the Sun.":
+  "Las estrellas de la constelación Lira colocadas a sus distancias del Sol.",
 "The selected object is Vega.":
   "El objeto seleccionado es Vega.",
 "It is in the constellation Lyra.":
   "Está en la constelación Lira.",
-"The stars of the constellation Lyra placed at their distances from the Sun.":
-  "Las estrellas de la constelación Lira colocadas a sus distancias del Sol.",
-"The view is from the Sun, as the figure looks in the sky.":
-  "La vista es desde el Sol, como se ve la figura en el cielo.",
 "Deneb <small>α Cyg</small>":
   "Deneb <small>α Cyg</small>",
 "Deneb there":
@@ -1208,6 +1236,12 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "Albireo · {#} a. l.",
 "η Cyg · {#} ly":
   "η Cyg · {#} a. l.",
+"The selected object is Deneb.":
+  "El objeto seleccionado es Deneb.",
+"It is in the constellation Cygnus.":
+  "Está en la constelación Cisne.",
+"The stars of the constellation Cygnus placed at their distances from the Sun.":
+  "Las estrellas de la constelación Cisne colocadas a sus distancias del Sol.",
 "Aldebaran <small>α Tau</small>":
   "Aldebarán <small>α Tau</small>",
 "Aldebaran there":
@@ -1238,6 +1272,12 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "γ Tau · {#} a. l.",
 "δ¹ Tau · {#} ly":
   "δ¹ Tau · {#} a. l.",
+"The stars of the constellation Taurus placed at their distances from the Sun.":
+  "Las estrellas de la constelación Tauro colocadas a sus distancias del Sol.",
+"The selected object is Aldebaran.":
+  "El objeto seleccionado es Aldebaran.",
+"It is in the constellation Taurus.":
+  "Está en la constelación Tauro.",
 "Sirius <small>α CMa</small>":
   "Sirio <small>α CMa</small>",
 "Sirius there":
@@ -1262,6 +1302,12 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "β CMa · {#} a. l.",
 "η CMa · {#} ly":
   "η CMa · {#} a. l.",
+"The stars of the constellation Canis Major placed at their distances from the Sun.":
+  "Las estrellas de la constelación Can Mayor colocadas a sus distancias del Sol.",
+"The selected object is Sirius.":
+  "El objeto seleccionado es Sirius.",
+"It is in the constellation Canis Major.":
+  "Está en la constelación Can Mayor.",
 "Pollux <small>β Gem</small>":
   "Pólux <small>β Gem</small>",
 "Pollux there":
@@ -1302,6 +1348,12 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "ζ Gem · {#} a. l.",
 "τ Gem · {#} ly":
   "τ Gem · {#} a. l.",
+"The stars of the constellation Gemini placed at their distances from the Sun.":
+  "Las estrellas de la constelación Géminis colocadas a sus distancias del Sol.",
+"The selected object is Pollux.":
+  "El objeto seleccionado es Pollux.",
+"It is in the constellation Gemini.":
+  "Está en la constelación Géminis.",
 "Kaus Australis <small>ε Sgr</small>":
   "Kaus Australis <small>ε Sgr</small>",
 "Kaus Australis there":
@@ -1338,6 +1390,10 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "φ Sgr · {#} a. l.",
 "τ Sgr · {#} ly":
   "τ Sgr · {#} a. l.",
+"The stars of the constellation Sagittarius placed at their distances from the Sun.":
+  "Las estrellas de la constelación Sagitario colocadas a sus distancias del Sol.",
+"The selected object is Kaus Australis.":
+  "El objeto seleccionado es Kaus Australis.",
 "Alpheratz <small>α And</small>":
   "Alpheratz <small>α And</small>",
 "Alpheratz there":
@@ -1366,6 +1422,12 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "ζ Peg · {#} a. l.",
 "θ Peg · {#} ly":
   "θ Peg · {#} a. l.",
+"The stars of the constellation Pegasus placed at their distances from the Sun.":
+  "Las estrellas de la constelación Pegaso colocadas a sus distancias del Sol.",
+"The selected object is Alpheratz.":
+  "El objeto seleccionado es Alpheratz.",
+"It is in the constellation Andromeda.":
+  "Está en la constelación Andrómeda.",
 "δ And":
   "δ And",
 "Andromeda: the {#} stars of the figure lie from {#} to {#} light years away. They only look like a group because they are in nearly the same direction from us. Distances are from parallaxes measured by the Hipparcos satellite; the farther a star, the smaller its parallax, so the farthest distances here are the least certain. M is the absolute magnitude, how bright the star would look from {#} parsecs ({#} light years), with dust left out.":
@@ -1376,10 +1438,6 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "Almach · {#} a. l.",
 "δ And · {#} ly":
   "δ And · {#} a. l.",
-"The selected object is Alpheratz.":
-  "El objeto seleccionado es Alpheratz.",
-"It is in the constellation Andromeda.":
-  "Está en la constelación Andrómeda.",
 "The stars of the constellation Andromeda placed at their distances from the Sun.":
   "Las estrellas de la constelación Andrómeda colocadas a sus distancias del Sol.",
 "One star has no measured distance and is left out of the picture.":
@@ -1418,6 +1476,12 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "β Boo · {#} a. l.",
 "ρ Boo · {#} ly":
   "ρ Boo · {#} a. l.",
+"The stars of the constellation Boötes placed at their distances from the Sun.":
+  "Las estrellas de la constelación Boyero colocadas a sus distancias del Sol.",
+"The selected object is Arcturus.":
+  "El objeto seleccionado es Arcturus.",
+"It is in the constellation Boötes.":
+  "Está en la constelación Boyero.",
 "Altair <small>α Aql</small>":
   "Altair <small>α Aql</small>",
 "Altair there":
@@ -1446,6 +1510,12 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "λ Aql · {#} a. l.",
 "β Aql · {#} ly":
   "β Aql · {#} a. l.",
+"The stars of the constellation Aquila placed at their distances from the Sun.":
+  "Las estrellas de la constelación Águila colocadas a sus distancias del Sol.",
+"The selected object is Altair.":
+  "El objeto seleccionado es Altair.",
+"It is in the constellation Aquila.":
+  "Está en la constelación Águila.",
 "Sadalsuud <small>β Aqr</small>":
   "Sadalsuud <small>β Aqr</small>",
 "Sadalsuud there":
@@ -1486,6 +1556,12 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "η Aqr · {#} a. l.",
 "θ Aqr · {#} ly":
   "θ Aqr · {#} a. l.",
+"The stars of the constellation Aquarius placed at their distances from the Sun.":
+  "Las estrellas de la constelación Acuario colocadas a sus distancias del Sol.",
+"The selected object is Sadalsuud.":
+  "El objeto seleccionado es Sadalsuud.",
+"It is in the constellation Aquarius.":
+  "Está en la constelación Acuario.",
 "Hamal <small>α Ari</small>":
   "Hamal <small>α Ari</small>",
 "Hamal there":
@@ -1502,6 +1578,12 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "Sheratan · {#} a. l.",
 "γ² Ari · {#} ly":
   "γ² Ari · {#} a. l.",
+"The stars of the constellation Aries placed at their distances from the Sun.":
+  "Las estrellas de la constelación Aries colocadas a sus distancias del Sol.",
+"The selected object is Hamal.":
+  "El objeto seleccionado es Hamal.",
+"It is in the constellation Aries.":
+  "Está en la constelación Aries.",
 "Capella <small>α Aur</small>":
   "Capella <small>α Aur</small>",
 "Capella there":
@@ -1522,6 +1604,12 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "θ Aur · {#} a. l.",
 "ι Aur · {#} ly":
   "ι Aur · {#} a. l.",
+"The stars of the constellation Auriga placed at their distances from the Sun.":
+  "Las estrellas de la constelación Auriga colocadas a sus distancias del Sol.",
+"The selected object is Capella.":
+  "El objeto seleccionado es Capella.",
+"It is in the constellation Auriga.":
+  "Está en la constelación Auriga.",
 "β Cnc (clicked)":
   "β Cnc (con clic)",
 "β Cnc":
@@ -1548,6 +1636,12 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "α Cnc · {#} a. l.",
 "γ Cnc · {#} ly":
   "γ Cnc · {#} a. l.",
+"The selected object is β Cnc.":
+  "El objeto seleccionado es β Cnc.",
+"It is in the constellation Cancer.":
+  "Está en la constelación Cáncer.",
+"The stars of the constellation Cancer placed at their distances from the Sun.":
+  "Las estrellas de la constelación Cáncer colocadas a sus distancias del Sol.",
 "Procyon <small>α CMi</small>":
   "Proción <small>α CMi</small>",
 "Procyon there":
@@ -1562,6 +1656,12 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "Proción · {#} a. l.",
 "β CMi · {#} ly":
   "β CMi · {#} a. l.",
+"The stars of the constellation Canis Minor placed at their distances from the Sun.":
+  "Las estrellas de la constelación Can Menor colocadas a sus distancias del Sol.",
+"The selected object is Procyon.":
+  "El objeto seleccionado es Procyon.",
+"It is in the constellation Canis Minor.":
+  "Está en la constelación Can Menor.",
 "Deneb Algedi <small>δ Cap</small>":
   "Deneb Algedi <small>δ Cap</small>",
 "Deneb Algedi there":
@@ -1602,12 +1702,12 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "ω Cap · {#} a. l.",
 "ψ Cap · {#} ly":
   "ψ Cap · {#} a. l.",
+"The stars of the constellation Capricornus placed at their distances from the Sun.":
+  "Las estrellas de la constelación Capricornio colocadas a sus distancias del Sol.",
 "The selected object is Deneb Algedi.":
   "El objeto seleccionado es Deneb Algedi.",
 "It is in the constellation Capricornus.":
   "Está en la constelación Capricornio.",
-"The stars of the constellation Capricornus placed at their distances from the Sun.":
-  "Las estrellas de la constelación Capricornio colocadas a sus distancias del Sol.",
 "Rigil Kentaurus <small>α¹ Cen</small>":
   "Rigil Kentaurus <small>α¹ Cen</small>",
 "Rigil Kentaurus there":
@@ -1620,6 +1720,12 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "Rigil Kentaurus · {#} a. l.",
 "Hadar · {#} ly":
   "Hadar · {#} a. l.",
+"The stars of the constellation Centaurus placed at their distances from the Sun.":
+  "Las estrellas de la constelación Centauro colocadas a sus distancias del Sol.",
+"The selected object is Rigil Kentaurus.":
+  "El objeto seleccionado es Rigil Kentaurus.",
+"It is in the constellation Centaurus.":
+  "Está en la constelación Centauro.",
 "Alderamin <small>α Cep</small>":
   "Alderamin <small>α Cep</small>",
 "Alderamin there":
@@ -1646,6 +1752,12 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "ζ Cep · {#} a. l.",
 "ι Cep · {#} ly":
   "ι Cep · {#} a. l.",
+"The stars of the constellation Cepheus placed at their distances from the Sun.":
+  "Las estrellas de la constelación Cefeo colocadas a sus distancias del Sol.",
+"The selected object is Alderamin.":
+  "El objeto seleccionado es Alderamin.",
+"It is in the constellation Cepheus.":
+  "Está en la constelación Cefeo.",
 "γ Crv (clicked)":
   "γ Crv (con clic)",
 "γ Crv":
@@ -1668,6 +1780,12 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "δ Crv · {#} a. l.",
 "ε Crv · {#} ly":
   "ε Crv · {#} a. l.",
+"The stars of the constellation Corvus placed at their distances from the Sun.":
+  "Las estrellas de la constelación Cuervo colocadas a sus distancias del Sol.",
+"The selected object is γ Crv.":
+  "El objeto seleccionado es γ Crv.",
+"It is in the constellation Corvus.":
+  "Está en la constelación Cuervo.",
 "Eltanin <small>γ Dra</small>":
   "Eltanin <small>γ Dra</small>",
 "Eltanin there":
@@ -1718,6 +1836,12 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "θ Dra · {#} a. l.",
 "ν² Dra · {#} ly":
   "ν² Dra · {#} a. l.",
+"The selected object is Eltanin.":
+  "El objeto seleccionado es Eltanin.",
+"It is in the constellation Draco.":
+  "Está en la constelación Dragón.",
+"The stars of the constellation Draco placed at their distances from the Sun.":
+  "Las estrellas de la constelación Dragón colocadas a sus distancias del Sol.",
 "Zubeneschamali <small>β Lib</small>":
   "Zubeneschamali <small>β Lib</small>",
 "Zubeneschamali there":
@@ -1740,6 +1864,12 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "σ Lib · {#} a. l.",
 "γ Lib · {#} ly":
   "γ Lib · {#} a. l.",
+"The stars of the constellation Libra placed at their distances from the Sun.":
+  "Las estrellas de la constelación Libra colocadas a sus distancias del Sol.",
+"The selected object is Zubeneschamali.":
+  "El objeto seleccionado es Zubeneschamali.",
+"It is in the constellation Libra.":
+  "Está en la constelación Libra.",
 "Rasalhague <small>α Oph</small>":
   "Rasalhague <small>α Oph</small>",
 "Rasalhague there":
@@ -1772,6 +1902,12 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "κ Oph · {#} a. l.",
 "ε Oph · {#} ly":
   "ε Oph · {#} a. l.",
+"The stars of the constellation Ophiucus placed at their distances from the Sun.":
+  "Las estrellas de la constelación Ofiuco colocadas a sus distancias del Sol.",
+"The selected object is Rasalhague.":
+  "El objeto seleccionado es Rasalhague.",
+"It is in the constellation Ophiucus.":
+  "Está en la constelación Ofiuco.",
 "Mirfak <small>α Per</small>":
   "Mirfak <small>α Per</small>",
 "Mirfak there":
@@ -1798,12 +1934,12 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "γ Per · {#} a. l.",
 "δ Per · {#} ly":
   "δ Per · {#} a. l.",
+"The stars of the constellation Perseus placed at their distances from the Sun.":
+  "Las estrellas de la constelación Perseo colocadas a sus distancias del Sol.",
 "The selected object is Mirfak.":
   "El objeto seleccionado es Mirfak.",
 "It is in the constellation Perseus.":
   "Está en la constelación Perseo.",
-"The stars of the constellation Perseus placed at their distances from the Sun.":
-  "Las estrellas de la constelación Perseo colocadas a sus distancias del Sol.",
 "η Psc (clicked)":
   "η Psc (con clic)",
 "η Psc":
@@ -1856,6 +1992,12 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "λ Psc · {#} a. l.",
 "κ Psc · {#} ly":
   "κ Psc · {#} a. l.",
+"The stars of the constellation Pisces placed at their distances from the Sun.":
+  "Las estrellas de la constelación Piscis colocadas a sus distancias del Sol.",
+"The selected object is η Psc.":
+  "El objeto seleccionado es η Psc.",
+"It is in the constellation Pisces.":
+  "Está en la constelación Piscis.",
 "δ UMi":
   "δ UMi",
 "ε UMi":
@@ -1882,6 +2024,8 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "δ UMi · {#} a. l.",
 "η UMi · {#} ly":
   "η UMi · {#} a. l.",
+"The stars of the constellation Ursa Minor placed at their distances from the Sun.":
+  "Las estrellas de la constelación Osa Menor colocadas a sus distancias del Sol.",
 "Spica <small>α Vir</small>":
   "Espiga <small>α Vir</small>",
 "Spica there":
@@ -1910,24 +2054,48 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "γ Vir · {#} a. l.",
 "η Vir · {#} ly":
   "η Vir · {#} a. l.",
+"The selected object is Spica.":
+  "El objeto seleccionado es Spica.",
+"It is in the constellation Virgo.":
+  "Está en la constelación Virgo.",
+"The stars of the constellation Virgo placed at their distances from the Sun.":
+  "Las estrellas de la constelación Virgo colocadas a sus distancias del Sol.",
+"The observer is in Dallas, Texas.":
+  "El observador está en Dallas, Texas.",
 "altitude −{#}°, azimuth {#}° <small>NW</small>":
   "altura −{#}°, azimut {#}° <small>NO</small>",
 "{#}° <small>NE</small>":
   "{#}° <small>NE</small>",
+"The observer is in the North Pole.":
+  "El observador está en el Polo Norte.",
+"The observer is in Quito, Ecuador.":
+  "El observador está en Quito, Ecuador.",
 "Dec {#}, {#}:{#} <small>UTC−{#}</small>":
   "{#} dic, {#}:{#} <small>UTC−{#}</small>",
 "altitude +{#}°, azimuth {#}° <small>NW</small>":
   "altura +{#}°, azimut {#}° <small>NO</small>",
-"The selected object is Alioth.":
-  "El objeto seleccionado es Alioth.",
-"It is in the constellation Ursa Major.":
-  "Está en la constelación Osa Mayor.",
+"The observer is in Sydney, Australia.":
+  "El observador está en Sídney, Australia.",
+"The observer is in Tromsø, Norway.":
+  "El observador está en Tromsø, Noruega.",
+"The observer is in Giza, Egypt.":
+  "El observador está en Guiza, Egipto.",
+"The observer is in the South Pole.":
+  "El observador está en el Polo Sur.",
+"The Sun's altitude is +{#}°.":
+  "La altura del Sol es +{#}°.",
+"The observer is at {#}° N, {#}° W.":
+  "El observador está en {#}° N, {#}° O.",
 "Waxing gibbous, {#}% lit":
   "Gibosa creciente, {#}% iluminada",
+"The selected object is The Moon.":
+  "El objeto seleccionado es la Luna.",
 "South celestial pole there":
   "Polo sur celeste allá",
 "altitude +{#}°, azimuth {#}° <small>S</small>":
   "altura +{#}°, azimut {#}° <small>S</small>",
+"The selected object is South celestial pole.":
+  "El objeto seleccionado es el polo sur celeste.",
 "Achernar <small>α Eri</small>":
   "Achernar <small>α Eri</small>",
 "Eridanus":
@@ -1938,50 +2106,72 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "Achernar allá",
 "altitude +{#}°, azimuth {#}° <small>SSE</small>":
   "altura +{#}°, azimut {#}° <small>SSE</small>",
+"The selected object is Achernar.":
+  "El objeto seleccionado es Achernar.",
+"It is in the constellation Eridanus.":
+  "Está en la constelación Erídano.",
+"The selected object is Acrux.":
+  "El objeto seleccionado es Acrux.",
 "Adhara <small>ε CMa</small>":
   "Adhara <small>ε CMa</small>",
 "Adhara there":
   "Adhara allá",
+"The selected object is Adhara.":
+  "El objeto seleccionado es Adhara.",
 "Albireo <small>β¹ Cyg</small>":
   "Albireo <small>β¹ Cyg</small>",
 "Albireo there":
   "Albireo allá",
 "altitude +{#}°, azimuth {#}° <small>NE</small>":
   "altura +{#}°, azimut {#}° <small>NE</small>",
+"The selected object is Albireo.":
+  "El objeto seleccionado es Albireo.",
 "Alcyone <small>η Tau</small>":
   "Alcyone <small>η Tau</small>",
 "Alcyone there":
   "Alcyone allá",
 "The selected object is Alcyone.":
   "El objeto seleccionado es Alcyone.",
-"It is in the constellation Taurus.":
-  "Está en la constelación Tauro.",
 "Algedi <small>α² Cap</small>":
   "Algedi <small>α² Cap</small>",
 "Algedi there":
   "Algedi allá",
+"The selected object is Algedi.":
+  "El objeto seleccionado es Algedi.",
 "Algenib <small>γ Peg</small>":
   "Algenib <small>γ Peg</small>",
 "Algenib there":
   "Algenib allá",
+"The selected object is Algenib.":
+  "El objeto seleccionado es Algenib.",
+"It is in the constellation Pegasus.":
+  "Está en la constelación Pegaso.",
 "Algieba <small>γ¹ Leo</small>":
   "Algieba <small>γ¹ Leo</small>",
 "Algieba there":
   "Algieba allá",
+"The selected object is Algieba.":
+  "El objeto seleccionado es Algieba.",
 "Algol <small>β Per</small>":
   "Algol <small>β Per</small>",
 "Algol there":
   "Algol allá",
+"The selected object is Algol.":
+  "El objeto seleccionado es Algol.",
 "Alkaid <small>η UMa</small>":
   "Alkaid <small>η UMa</small>",
 "Alkaid there":
   "Alkaid allá",
+"The selected object is Alkaid.":
+  "El objeto seleccionado es Alkaid.",
 "Almach <small>γ¹ And</small>":
   "Almach <small>γ¹ And</small>",
 "Almach there":
   "Almach allá",
 "altitude −{#}°, azimuth {#}° <small>ENE</small>":
   "altura −{#}°, azimut {#}° <small>ENE</small>",
+"The selected object is Almach.":
+  "El objeto seleccionado es Almach.",
 "Alnair <small>α Gru</small>":
   "Alnair <small>α Gru</small>",
 "Grus":
@@ -1992,20 +2182,32 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "Alnair allá",
 "altitude +{#}°, azimuth {#}° <small>SE</small>":
   "altura +{#}°, azimut {#}° <small>SE</small>",
+"The selected object is Alnair.":
+  "El objeto seleccionado es Alnair.",
+"It is in the constellation Grus.":
+  "Está en la constelación Grulla.",
 "Alnilam <small>ε Ori</small>":
   "Alnilam <small>ε Ori</small>",
 "Alnilam there":
   "Alnilam allá",
+"The selected object is Alnilam.":
+  "El objeto seleccionado es Alnilam.",
 "Alnitak <small>ζ Ori</small>":
   "Alnitak <small>ζ Ori</small>",
 "Alnitak there":
   "Alnitak allá",
+"The selected object is Alnitak.":
+  "El objeto seleccionado es Alnitak.",
 "Alphard <small>α Hya</small>":
   "Alphard <small>α Hya</small>",
 "Hydra":
   "Hidra",
 "Alphard there":
   "Alphard allá",
+"The selected object is Alphard.":
+  "El objeto seleccionado es Alphard.",
+"It is in the constellation Hydra.":
+  "Está en la constelación Hidra.",
 "Alphecca <small>α CrB</small>":
   "Alphecca <small>α CrB</small>",
 "Corona Borealis":
@@ -2014,46 +2216,66 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "Alphecca allá",
 "altitude +{#}°, azimuth {#}° <small>N</small>":
   "altura +{#}°, azimut {#}° <small>N</small>",
+"The selected object is Alphecca.":
+  "El objeto seleccionado es Alphecca.",
+"It is in the constellation Corona Borealis.":
+  "Está en la constelación Corona Boreal.",
 "Atria <small>α TrA</small>":
   "Atria <small>α TrA</small>",
 "Triangulum Australe":
   "Triángulo Austral",
 "Atria there":
   "Atria allá",
+"The selected object is Atria.":
+  "El objeto seleccionado es Atria.",
+"It is in the constellation Triangulum Australe.":
+  "Está en la constelación Triángulo Austral.",
 "Avior <small>ε Car</small>":
   "Avior <small>ε Car</small>",
 "Carina":
   "Quilla",
 "Avior there":
   "Avior allá",
+"The selected object is Avior.":
+  "El objeto seleccionado es Avior.",
+"It is in the constellation Carina.":
+  "Está en la constelación Quilla.",
 "Bellatrix <small>γ Ori</small>":
   "Bellatrix <small>γ Ori</small>",
 "Bellatrix there":
   "Bellatrix allá",
+"The selected object is Bellatrix.":
+  "El objeto seleccionado es Bellatrix.",
 "Betelgeuse <small>α Ori</small>":
   "Betelgeuse <small>α Ori</small>",
 "Betelgeuse there":
   "Betelgeuse allá",
 "The selected object is Betelgeuse.":
   "El objeto seleccionado es Betelgeuse.",
-"It is in the constellation Orion.":
-  "Está en la constelación Orión.",
 "Canopus <small>α Car</small>":
   "Canopo <small>α Car</small>",
 "Canopus there":
   "Canopo allá",
+"The selected object is Canopus.":
+  "El objeto seleccionado es Canopus.",
 "Caph <small>β Cas</small>":
   "Caph <small>β Cas</small>",
 "Caph there":
   "Caph allá",
+"The selected object is Caph.":
+  "El objeto seleccionado es Caph.",
 "Castor <small>α Gem</small>":
   "Cástor <small>α Gem</small>",
 "Castor there":
   "Cástor allá",
+"The selected object is Castor.":
+  "El objeto seleccionado es Castor.",
 "Denebola <small>β Leo</small>":
   "Denebola <small>β Leo</small>",
 "Denebola there":
   "Denebola allá",
+"The selected object is Denebola.":
+  "El objeto seleccionado es Denebola.",
 "Diphda <small>β Cet</small>":
   "Diphda <small>β Cet</small>",
 "Cetus":
@@ -2070,22 +2292,32 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "Dschubba <small>δ Sco</small>",
 "Dschubba there":
   "Dschubba allá",
+"The selected object is Dschubba.":
+  "El objeto seleccionado es Dschubba.",
 "Dubhe <small>α UMa</small>":
   "Dubhe <small>α UMa</small>",
 "Dubhe there":
   "Dubhe allá",
+"The selected object is Dubhe.":
+  "El objeto seleccionado es Dubhe.",
 "Elnath <small>β Tau</small>":
   "Elnath <small>β Tau</small>",
 "Elnath there":
   "Elnath allá",
+"The selected object is Elnath.":
+  "El objeto seleccionado es Elnath.",
 "Enif <small>ε Peg</small>":
   "Enif <small>ε Peg</small>",
 "Enif there":
   "Enif allá",
+"The selected object is Enif.":
+  "El objeto seleccionado es Enif.",
 "Errai <small>γ Cep</small>":
   "Errai <small>γ Cep</small>",
 "Errai there":
   "Errai allá",
+"The selected object is Errai.":
+  "El objeto seleccionado es Errai.",
 "Fomalhaut <small>α PsA</small>":
   "Fomalhaut <small>α PsA</small>",
 "Pisces Austrinus":
@@ -2100,48 +2332,66 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "Gacrux <small>γ Cru</small>",
 "Gacrux there":
   "Gacrux allá",
+"The selected object is Gacrux.":
+  "El objeto seleccionado es Gacrux.",
 "Hadar <small>β Cen</small>":
   "Hadar <small>β Cen</small>",
 "Hadar there":
   "Hadar allá",
+"The selected object is Hadar.":
+  "El objeto seleccionado es Hadar.",
 "Izar <small>ε Boo</small>":
   "Izar <small>ε Boo</small>",
 "Izar there":
   "Izar allá",
+"The selected object is Izar.":
+  "El objeto seleccionado es Izar.",
 "Kochab <small>β UMi</small>":
   "Kochab <small>β UMi</small>",
 "Kochab there":
   "Kochab allá",
+"The selected object is Kochab.":
+  "El objeto seleccionado es Kochab.",
 "Markab <small>α Peg</small>":
   "Markab <small>α Peg</small>",
 "Markab there":
   "Markab allá",
 "The selected object is Markab.":
   "El objeto seleccionado es Markab.",
-"It is in the constellation Pegasus.":
-  "Está en la constelación Pegaso.",
 "Megrez <small>δ UMa</small>":
   "Megrez <small>δ UMa</small>",
 "Megrez there":
   "Megrez allá",
+"The selected object is Megrez.":
+  "El objeto seleccionado es Megrez.",
 "Menkalinan <small>β Aur</small>":
   "Menkalinan <small>β Aur</small>",
 "Menkalinan there":
   "Menkalinan allá",
+"The selected object is Menkalinan.":
+  "El objeto seleccionado es Menkalinan.",
 "Menkar <small>α Cet</small>":
   "Menkar <small>α Cet</small>",
 "Menkar there":
   "Menkar allá",
 "altitude −{#}°, azimuth {#}° <small>SSE</small>":
   "altura −{#}°, azimut {#}° <small>SSE</small>",
+"The selected object is Menkar.":
+  "El objeto seleccionado es Menkar.",
 "Merak <small>β UMa</small>":
   "Merak <small>β UMa</small>",
 "Merak there":
   "Merak allá",
+"The selected object is Merak.":
+  "El objeto seleccionado es Merak.",
 "Miaplacidus <small>β Car</small>":
   "Miaplacidus <small>β Car</small>",
 "Miaplacidus there":
   "Miaplacidus allá",
+"The selected object is Miaplacidus.":
+  "El objeto seleccionado es Miaplacidus.",
+"The selected object is Mintaka.":
+  "El objeto seleccionado es Mintaka.",
 "Mirach <small>β And</small>":
   "Mirach <small>β And</small>",
 "Mirach there":
@@ -2152,254 +2402,316 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "Mizar <small>ζ UMa</small>",
 "Mizar there":
   "Mizar allá",
+"The selected object is Mizar.":
+  "El objeto seleccionado es Mizar.",
 "Nunki <small>σ Sgr</small>":
   "Nunki <small>σ Sgr</small>",
 "Nunki there":
   "Nunki allá",
+"The selected object is Nunki.":
+  "El objeto seleccionado es Nunki.",
 "Peacock <small>α Pav</small>":
   "Peacock <small>α Pav</small>",
 "Pavo":
   "Pavo",
 "Peacock there":
   "Peacock allá",
+"The selected object is Peacock.":
+  "El objeto seleccionado es Peacock.",
+"It is in the constellation Pavo.":
+  "Está en la constelación Pavo.",
 "Phact <small>α Col</small>":
   "Phact <small>α Col</small>",
 "Columba":
   "Paloma",
 "Phact there":
   "Phact allá",
+"The selected object is Phact.":
+  "El objeto seleccionado es Phact.",
+"It is in the constellation Columba.":
+  "Está en la constelación Paloma.",
 "Phecda <small>γ UMa</small>":
   "Phecda <small>γ UMa</small>",
 "Phecda there":
   "Phecda allá",
+"The selected object is Phecda.":
+  "El objeto seleccionado es Phecda.",
 "Rastaban <small>β Dra</small>":
   "Rastaban <small>β Dra</small>",
 "Rastaban there":
   "Rastaban allá",
+"The selected object is Rastaban.":
+  "El objeto seleccionado es Rastaban.",
 "Regor <small>γ² Vel</small>":
   "Regor <small>γ² Vel</small>",
 "Vela":
   "Vela",
 "Regor there":
   "Regor allá",
-"The selected object is Rigil Kentaurus.":
-  "El objeto seleccionado es Rigil Kentaurus.",
-"It is in the constellation Centaurus.":
-  "Está en la constelación Centauro.",
-"Highest altitude −{#}°, lowest −{#}°.":
-  "Altura máxima −{#}°, mínima −{#}°.",
+"The selected object is Regor.":
+  "El objeto seleccionado es Regor.",
+"It is in the constellation Vela.":
+  "Está en la constelación Vela.",
 "Sadalmelik <small>α Aqr</small>":
   "Sadalmelik <small>α Aqr</small>",
 "Sadalmelik there":
   "Sadalmelik allá",
+"The selected object is Sadalmelik.":
+  "El objeto seleccionado es Sadalmelik.",
 "Sadr <small>γ Cyg</small>":
   "Sadr <small>γ Cyg</small>",
 "Sadr there":
   "Sadr allá",
+"The selected object is Sadr.":
+  "El objeto seleccionado es Sadr.",
 "Saiph <small>κ Ori</small>":
   "Saiph <small>κ Ori</small>",
 "Saiph there":
   "Saiph allá",
+"The selected object is Saiph.":
+  "El objeto seleccionado es Saiph.",
 "Scheat <small>β Peg</small>":
   "Scheat <small>β Peg</small>",
 "Scheat there":
   "Scheat allá",
+"The selected object is Scheat.":
+  "El objeto seleccionado es Scheat.",
 "Shaula <small>λ Sco</small>":
   "Shaula <small>λ Sco</small>",
 "Shaula there":
   "Shaula allá",
 "The selected object is Shaula.":
   "El objeto seleccionado es Shaula.",
-"It is in the constellation Scorpius.":
-  "Está en la constelación Escorpio.",
 "Sheliak <small>β Lyr</small>":
   "Sheliak <small>β Lyr</small>",
 "Sheliak there":
   "Sheliak allá",
+"The selected object is Sheliak.":
+  "El objeto seleccionado es Sheliak.",
 "Sheratan <small>β Ari</small>":
   "Sheratan <small>β Ari</small>",
 "Sheratan there":
   "Sheratan allá",
+"The selected object is Sheratan.":
+  "El objeto seleccionado es Sheratan.",
 "Sulafat <small>γ Lyr</small>":
   "Sulafat <small>γ Lyr</small>",
 "Sulafat there":
   "Sulafat allá",
+"The selected object is Sulafat.":
+  "El objeto seleccionado es Sulafat.",
+"The selected object is Thuban.":
+  "El objeto seleccionado es Thuban.",
 "Zosma <small>δ Leo</small>":
   "Zosma <small>δ Leo</small>",
 "Zosma there":
   "Zosma allá",
+"The selected object is Zosma.":
+  "El objeto seleccionado es Zosma.",
 "Zubenelgenubi <small>α² Lib</small>":
   "Zubenelgenubi <small>α² Lib</small>",
 "Zubenelgenubi there":
   "Zubenelgenubi allá",
-"A star chart of right ascension and declination, with a dashed line for your meridian.":
-  "Un mapa estelar de ascensión recta y declinación, con una línea discontinua para tu meridiano.",
+"The selected object is Zubenelgenubi.":
+  "El objeto seleccionado es Zubenelgenubi.",
+"Local standard time Jan {#}, {#}, {#}:{#}, UTC+{#}.":
+  "Hora estándar local: ene {#}, {#}, {#}:{#}, UTC+{#}.",
 "Facing E, centered {#}° up, {#}° across.":
   "Mirando al E, centrado a {#}° de altura, {#}° de lado.",
+"Local standard time Apr {#}, {#}, {#}:{#}, UTC+{#}.":
+  "Hora estándar local: abr {#}, {#}, {#}:{#}, UTC+{#}.",
 "Local standard time Jun {#}, {#}, {#}:{#}, UTC−{#}.":
   "Hora estándar local: jun {#}, {#}, {#}:{#}, UTC−{#}.",
-"The observer is in Giza, Egypt.":
-  "El observador está en Guiza, Egipto.",
+"Local standard time Mar {#}, {#}, {#}:{#}, UTC−{#}.":
+  "Hora estándar local: mar {#}, {#}, {#}:{#}, UTC−{#}.",
+"Facing N, centered {#}° up, {#}° across.":
+  "Mirando al N, centrado a {#}° de altura, {#}° de lado.",
+"Local standard time Jun {#}, {#}, {#}:{#}, UTC+{#}.":
+  "Hora estándar local: jun {#}, {#}, {#}:{#}, UTC+{#}.",
+"Local standard time Apr {#}, {#}, {#}:{#}, UTC−{#}.":
+  "Hora estándar local: abr {#}, {#}, {#}:{#}, UTC−{#}.",
 "Local standard time Mar {#}, {#} BC (year −{#}), {#}:{#}, UTC+{#}.":
   "Hora estándar local: mar {#}, {#} a. C. (año −{#}), {#}:{#}, UTC+{#}.",
-"The selected object is Thuban.":
-  "El objeto seleccionado es Thuban.",
-"It is in the constellation Draco.":
-  "Está en la constelación Dragón.",
-"The selected object is Phecda.":
-  "El objeto seleccionado es Phecda.",
 "λ Ori (clicked)":
   "λ Ori (con clic)",
 "λ Ori there":
   "λ Ori allá",
-"The selected object is Bellatrix.":
-  "El objeto seleccionado es Bellatrix.",
-"The stars of the constellation Orion placed at their distances from the Sun.":
-  "Las estrellas de la constelación Orión colocadas a sus distancias del Sol.",
-"The selected object is Rigel.":
-  "El objeto seleccionado es Rigel.",
+"The selected object is λ Ori.":
+  "El objeto seleccionado es λ Ori.",
 "ε Cas (clicked)":
   "ε Cas (con clic)",
 "ε Cas there":
   "ε Cas allá",
+"The selected object is ε Cas.":
+  "El objeto seleccionado es ε Cas.",
 "δ Cas (clicked)":
   "δ Cas (con clic)",
 "δ Cas there":
   "δ Cas allá",
+"The selected object is δ Cas.":
+  "El objeto seleccionado es δ Cas.",
 "γ Cas (clicked)":
   "γ Cas (con clic)",
 "γ Cas there":
   "γ Cas allá",
-"The selected object is Gacrux.":
-  "El objeto seleccionado es Gacrux.",
-"The stars of the constellation Crux placed at their distances from the Sun.":
-  "Las estrellas de la constelación Cruz del Sur colocadas a sus distancias del Sol.",
+"The selected object is γ Cas.":
+  "El objeto seleccionado es γ Cas.",
 "δ Cru (clicked)":
   "δ Cru (con clic)",
 "δ Cru there":
   "δ Cru allá",
+"The selected object is δ Cru.":
+  "El objeto seleccionado es δ Cru.",
 "ε Leo (clicked)":
   "ε Leo (con clic)",
 "ε Leo there":
   "ε Leo allá",
+"The selected object is ε Leo.":
+  "El objeto seleccionado es ε Leo.",
 "μ Leo (clicked)":
   "μ Leo (con clic)",
 "μ Leo there":
   "μ Leo allá",
+"The selected object is μ Leo.":
+  "El objeto seleccionado es μ Leo.",
 "ζ Leo (clicked)":
   "ζ Leo (con clic)",
 "ζ Leo there":
   "ζ Leo allá",
+"The selected object is ζ Leo.":
+  "El objeto seleccionado es ζ Leo.",
 "η Leo (clicked)":
   "η Leo (con clic)",
 "η Leo there":
   "η Leo allá",
-"The selected object is Regulus.":
-  "El objeto seleccionado es Régulo.",
-"It is in the constellation Leo.":
-  "Está en la constelación Leo.",
-"The stars of the constellation Leo placed at their distances from the Sun.":
-  "Las estrellas de la constelación Leo colocadas a sus distancias del Sol.",
+"The selected object is η Leo.":
+  "El objeto seleccionado es η Leo.",
 "θ Leo (clicked)":
   "θ Leo (con clic)",
 "θ Leo there":
   "θ Leo allá",
-"The selected object is Zosma.":
-  "El objeto seleccionado es Zosma.",
+"The selected object is θ Leo.":
+  "El objeto seleccionado es θ Leo.",
 "β¹ Sco (clicked)":
   "β¹ Sco (con clic)",
 "β¹ Sco there":
   "β¹ Sco allá",
+"The selected object is β¹ Sco.":
+  "El objeto seleccionado es β¹ Sco.",
 "π Sco (clicked)":
   "π Sco (con clic)",
 "π Sco there":
   "π Sco allá",
+"The selected object is π Sco.":
+  "El objeto seleccionado es π Sco.",
 "σ Sco (clicked)":
   "σ Sco (con clic)",
 "σ Sco there":
   "σ Sco allá",
+"The selected object is σ Sco.":
+  "El objeto seleccionado es σ Sco.",
 "τ Sco (clicked)":
   "τ Sco (con clic)",
 "τ Sco there":
   "τ Sco allá",
+"The selected object is τ Sco.":
+  "El objeto seleccionado es τ Sco.",
 "ε Sco (clicked)":
   "ε Sco (con clic)",
 "ε Sco there":
   "ε Sco allá",
+"The selected object is ε Sco.":
+  "El objeto seleccionado es ε Sco.",
 "μ¹ Sco (clicked)":
   "μ¹ Sco (con clic)",
 "μ¹ Sco there":
   "μ¹ Sco allá",
+"The selected object is μ¹ Sco.":
+  "El objeto seleccionado es μ¹ Sco.",
 "ζ² Sco (clicked)":
   "ζ² Sco (con clic)",
 "ζ² Sco there":
   "ζ² Sco allá",
+"The selected object is ζ² Sco.":
+  "El objeto seleccionado es ζ² Sco.",
 "η Sco (clicked)":
   "η Sco (con clic)",
 "η Sco there":
   "η Sco allá",
+"The selected object is η Sco.":
+  "El objeto seleccionado es η Sco.",
 "θ Sco (clicked)":
   "θ Sco (con clic)",
 "θ Sco there":
   "θ Sco allá",
+"The selected object is θ Sco.":
+  "El objeto seleccionado es θ Sco.",
 "ι¹ Sco (clicked)":
   "ι¹ Sco (con clic)",
 "ι¹ Sco there":
   "ι¹ Sco allá",
+"The selected object is ι¹ Sco.":
+  "El objeto seleccionado es ι¹ Sco.",
 "κ Sco (clicked)":
   "κ Sco (con clic)",
 "κ Sco there":
   "κ Sco allá",
-"The stars of the constellation Scorpius placed at their distances from the Sun.":
-  "Las estrellas de la constelación Escorpio colocadas a sus distancias del Sol.",
 "The selected object is κ Sco.":
   "El objeto seleccionado es κ Sco.",
 "ζ¹ Lyr (clicked)":
   "ζ¹ Lyr (con clic)",
 "ζ¹ Lyr there":
   "ζ¹ Lyr allá",
+"The selected object is ζ¹ Lyr.":
+  "El objeto seleccionado es ζ¹ Lyr.",
 "δ² Lyr (clicked)":
   "δ² Lyr (con clic)",
 "δ² Lyr there":
   "δ² Lyr allá",
-"The selected object is Deneb.":
-  "El objeto seleccionado es Deneb.",
-"It is in the constellation Cygnus.":
-  "Está en la constelación Cisne.",
-"The stars of the constellation Cygnus placed at their distances from the Sun.":
-  "Las estrellas de la constelación Cisne colocadas a sus distancias del Sol.",
+"The selected object is δ² Lyr.":
+  "El objeto seleccionado es δ² Lyr.",
 "η Cyg (clicked)":
   "η Cyg (con clic)",
 "η Cyg there":
   "η Cyg allá",
+"The selected object is η Cyg.":
+  "El objeto seleccionado es η Cyg.",
 "δ Cyg (clicked)":
   "δ Cyg (con clic)",
 "δ Cyg there":
   "δ Cyg allá",
+"The selected object is δ Cyg.":
+  "El objeto seleccionado es δ Cyg.",
 "ε Cyg (clicked)":
   "ε Cyg (con clic)",
 "ε Cyg there":
   "ε Cyg allá",
+"The selected object is ε Cyg.":
+  "El objeto seleccionado es ε Cyg.",
 "ε Tau (clicked)":
   "ε Tau (con clic)",
 "ε Tau there":
   "ε Tau allá",
 "The selected object is ε Tau.":
   "El objeto seleccionado es ε Tau.",
-"The stars of the constellation Taurus placed at their distances from the Sun.":
-  "Las estrellas de la constelación Tauro colocadas a sus distancias del Sol.",
 "δ¹ Tau (clicked)":
   "δ¹ Tau (con clic)",
 "δ¹ Tau there":
   "δ¹ Tau allá",
+"The selected object is δ¹ Tau.":
+  "El objeto seleccionado es δ¹ Tau.",
 "γ Tau (clicked)":
   "γ Tau (con clic)",
 "γ Tau there":
   "γ Tau allá",
+"The selected object is γ Tau.":
+  "El objeto seleccionado es γ Tau.",
 "θ² Tau (clicked)":
   "θ² Tau (con clic)",
 "θ² Tau there":
   "θ² Tau allá",
+"The selected object is θ² Tau.":
+  "El objeto seleccionado es θ² Tau.",
 "ζ Tau (clicked)":
   "ζ Tau (con clic)",
 "ζ Tau there":
@@ -2410,220 +2722,272 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "β CMa (con clic)",
 "β CMa there":
   "β CMa allá",
+"The selected object is β CMa.":
+  "El objeto seleccionado es β CMa.",
 "δ CMa (clicked)":
   "δ CMa (con clic)",
 "δ CMa there":
   "δ CMa allá",
+"The selected object is δ CMa.":
+  "El objeto seleccionado es δ CMa.",
 "η CMa (clicked)":
   "η CMa (con clic)",
 "η CMa there":
   "η CMa allá",
+"The selected object is η CMa.":
+  "El objeto seleccionado es η CMa.",
 "τ Gem (clicked)":
   "τ Gem (con clic)",
 "τ Gem there":
   "τ Gem allá",
 "The selected object is τ Gem.":
   "El objeto seleccionado es τ Gem.",
-"It is in the constellation Gemini.":
-  "Está en la constelación Géminis.",
-"The stars of the constellation Gemini placed at their distances from the Sun.":
-  "Las estrellas de la constelación Géminis colocadas a sus distancias del Sol.",
 "ε Gem (clicked)":
   "ε Gem (con clic)",
 "ε Gem there":
   "ε Gem allá",
+"The selected object is ε Gem.":
+  "El objeto seleccionado es ε Gem.",
 "μ Gem (clicked)":
   "μ Gem (con clic)",
 "μ Gem there":
   "μ Gem allá",
+"The selected object is μ Gem.":
+  "El objeto seleccionado es μ Gem.",
 "η Gem (clicked)":
   "η Gem (con clic)",
 "η Gem there":
   "η Gem allá",
+"The selected object is η Gem.":
+  "El objeto seleccionado es η Gem.",
 "δ Gem (clicked)":
   "δ Gem (con clic)",
 "δ Gem there":
   "δ Gem allá",
+"The selected object is δ Gem.":
+  "El objeto seleccionado es δ Gem.",
 "ζ Gem (clicked)":
   "ζ Gem (con clic)",
 "ζ Gem there":
   "ζ Gem allá",
+"The selected object is ζ Gem.":
+  "El objeto seleccionado es ζ Gem.",
 "γ Gem (clicked)":
   "γ Gem (con clic)",
 "γ Gem there":
   "γ Gem allá",
-"The selected object is δ Gem.":
-  "El objeto seleccionado es δ Gem.",
+"The selected object is γ Gem.":
+  "El objeto seleccionado es γ Gem.",
 "γ² Sgr (clicked)":
   "γ² Sgr (con clic)",
 "γ² Sgr there":
   "γ² Sgr allá",
+"The selected object is γ² Sgr.":
+  "El objeto seleccionado es γ² Sgr.",
 "δ Sgr (clicked)":
   "δ Sgr (con clic)",
 "δ Sgr there":
   "δ Sgr allá",
+"The selected object is δ Sgr.":
+  "El objeto seleccionado es δ Sgr.",
 "λ Sgr (clicked)":
   "λ Sgr (con clic)",
 "λ Sgr there":
   "λ Sgr allá",
+"The selected object is λ Sgr.":
+  "El objeto seleccionado es λ Sgr.",
 "φ Sgr (clicked)":
   "φ Sgr (con clic)",
 "φ Sgr there":
   "φ Sgr allá",
+"The selected object is φ Sgr.":
+  "El objeto seleccionado es φ Sgr.",
 "τ Sgr (clicked)":
   "τ Sgr (con clic)",
 "τ Sgr there":
   "τ Sgr allá",
+"The selected object is τ Sgr.":
+  "El objeto seleccionado es τ Sgr.",
 "ζ Sgr (clicked)":
   "ζ Sgr (con clic)",
 "ζ Sgr there":
   "ζ Sgr allá",
-"The selected object is Kaus Australis.":
-  "El objeto seleccionado es Kaus Australis.",
-"The stars of the constellation Sagittarius placed at their distances from the Sun.":
-  "Las estrellas de la constelación Sagitario colocadas a sus distancias del Sol.",
+"The selected object is ζ Sgr.":
+  "El objeto seleccionado es ζ Sgr.",
 "ζ Peg (clicked)":
   "ζ Peg (con clic)",
 "ζ Peg there":
   "ζ Peg allá",
+"The selected object is ζ Peg.":
+  "El objeto seleccionado es ζ Peg.",
 "θ Peg (clicked)":
   "θ Peg (con clic)",
 "θ Peg there":
   "θ Peg allá",
-"The stars of the constellation Pegasus placed at their distances from the Sun.":
-  "Las estrellas de la constelación Pegaso colocadas a sus distancias del Sol.",
+"The selected object is θ Peg.":
+  "El objeto seleccionado es θ Peg.",
 "δ And (clicked)":
   "δ And (con clic)",
 "δ And there":
   "δ And allá",
+"The selected object is δ And.":
+  "El objeto seleccionado es δ And.",
 "δ Boo (clicked)":
   "δ Boo (con clic)",
 "δ Boo there":
   "δ Boo allá",
+"The selected object is δ Boo.":
+  "El objeto seleccionado es δ Boo.",
 "β Boo (clicked)":
   "β Boo (con clic)",
 "β Boo there":
   "β Boo allá",
+"The selected object is β Boo.":
+  "El objeto seleccionado es β Boo.",
 "γ Boo (clicked)":
   "γ Boo (con clic)",
 "γ Boo there":
   "γ Boo allá",
+"The selected object is γ Boo.":
+  "El objeto seleccionado es γ Boo.",
 "ρ Boo (clicked)":
   "ρ Boo (con clic)",
 "ρ Boo there":
   "ρ Boo allá",
+"The selected object is ρ Boo.":
+  "El objeto seleccionado es ρ Boo.",
 "η Boo (clicked)":
   "η Boo (con clic)",
 "η Boo there":
   "η Boo allá",
 "The selected object is η Boo.":
   "El objeto seleccionado es η Boo.",
-"It is in the constellation Boötes.":
-  "Está en la constelación Boyero.",
-"The stars of the constellation Boötes placed at their distances from the Sun.":
-  "Las estrellas de la constelación Boyero colocadas a sus distancias del Sol.",
 "γ Aql (clicked)":
   "γ Aql (con clic)",
 "γ Aql there":
   "γ Aql allá",
+"The selected object is γ Aql.":
+  "El objeto seleccionado es γ Aql.",
 "β Aql (clicked)":
   "β Aql (con clic)",
 "β Aql there":
   "β Aql allá",
+"The selected object is β Aql.":
+  "El objeto seleccionado es β Aql.",
 "δ Aql (clicked)":
   "δ Aql (con clic)",
 "δ Aql there":
   "δ Aql allá",
+"The selected object is δ Aql.":
+  "El objeto seleccionado es δ Aql.",
 "λ Aql (clicked)":
   "λ Aql (con clic)",
 "λ Aql there":
   "λ Aql allá",
+"The selected object is λ Aql.":
+  "El objeto seleccionado es λ Aql.",
 "ζ Aql (clicked)":
   "ζ Aql (con clic)",
 "ζ Aql there":
   "ζ Aql allá",
-"The selected object is Sadalsuud.":
-  "El objeto seleccionado es Sadalsuud.",
-"It is in the constellation Aquarius.":
-  "Está en la constelación Acuario.",
-"The stars of the constellation Aquarius placed at their distances from the Sun.":
-  "Las estrellas de la constelación Acuario colocadas a sus distancias del Sol.",
+"The selected object is ζ Aql.":
+  "El objeto seleccionado es ζ Aql.",
 "ε Aqr (clicked)":
   "ε Aqr (con clic)",
 "ε Aqr there":
   "ε Aqr allá",
+"The selected object is ε Aqr.":
+  "El objeto seleccionado es ε Aqr.",
 "γ Aqr (clicked)":
   "γ Aqr (con clic)",
 "γ Aqr there":
   "γ Aqr allá",
+"The selected object is γ Aqr.":
+  "El objeto seleccionado es γ Aqr.",
 "η Aqr (clicked)":
   "η Aqr (con clic)",
 "η Aqr there":
   "η Aqr allá",
+"The selected object is η Aqr.":
+  "El objeto seleccionado es η Aqr.",
 "θ Aqr (clicked)":
   "θ Aqr (con clic)",
 "θ Aqr there":
   "θ Aqr allá",
+"The selected object is θ Aqr.":
+  "El objeto seleccionado es θ Aqr.",
 "λ Aqr (clicked)":
   "λ Aqr (con clic)",
 "λ Aqr there":
   "λ Aqr allá",
+"The selected object is λ Aqr.":
+  "El objeto seleccionado es λ Aqr.",
 "δ Aqr (clicked)":
   "δ Aqr (con clic)",
 "δ Aqr there":
   "δ Aqr allá",
-"The selected object is η Aqr.":
-  "El objeto seleccionado es η Aqr.",
+"The selected object is δ Aqr.":
+  "El objeto seleccionado es δ Aqr.",
 "γ² Ari (clicked)":
   "γ² Ari (con clic)",
 "γ² Ari there":
   "γ² Ari allá",
+"The selected object is γ² Ari.":
+  "El objeto seleccionado es γ² Ari.",
 "θ Aur (clicked)":
   "θ Aur (con clic)",
 "θ Aur there":
   "θ Aur allá",
-"The selected object is Elnath.":
-  "El objeto seleccionado es Elnath.",
-"The stars of the constellation Auriga placed at their distances from the Sun.":
-  "Las estrellas de la constelación Auriga colocadas a sus distancias del Sol.",
+"The selected object is θ Aur.":
+  "El objeto seleccionado es θ Aur.",
 "ι Aur (clicked)":
   "ι Aur (con clic)",
 "ι Aur there":
   "ι Aur allá",
+"The selected object is ι Aur.":
+  "El objeto seleccionado es ι Aur.",
 "ι Cnc (clicked)":
   "ι Cnc (con clic)",
 "ι Cnc there":
   "ι Cnc allá",
+"The selected object is ι Cnc.":
+  "El objeto seleccionado es ι Cnc.",
 "γ Cnc (clicked)":
   "γ Cnc (con clic)",
 "γ Cnc there":
   "γ Cnc allá",
+"The selected object is γ Cnc.":
+  "El objeto seleccionado es γ Cnc.",
 "δ Cnc (clicked)":
   "δ Cnc (con clic)",
 "δ Cnc there":
   "δ Cnc allá",
+"The selected object is δ Cnc.":
+  "El objeto seleccionado es δ Cnc.",
 "α Cnc (clicked)":
   "α Cnc (con clic)",
 "α Cnc there":
   "α Cnc allá",
-"The selected object is ι Cnc.":
-  "El objeto seleccionado es ι Cnc.",
-"It is in the constellation Cancer.":
-  "Está en la constelación Cáncer.",
-"The stars of the constellation Cancer placed at their distances from the Sun.":
-  "Las estrellas de la constelación Cáncer colocadas a sus distancias del Sol.",
+"The selected object is α Cnc.":
+  "El objeto seleccionado es α Cnc.",
 "β CMi (clicked)":
   "β CMi (con clic)",
 "β CMi there":
   "β CMi allá",
+"The selected object is β CMi.":
+  "El objeto seleccionado es β CMi.",
 "β Cap (clicked)":
   "β Cap (con clic)",
 "β Cap there":
   "β Cap allá",
+"The selected object is β Cap.":
+  "El objeto seleccionado es β Cap.",
 "ψ Cap (clicked)":
   "ψ Cap (con clic)",
 "ψ Cap there":
   "ψ Cap allá",
+"The selected object is ψ Cap.":
+  "El objeto seleccionado es ψ Cap.",
 "ω Cap (clicked)":
   "ω Cap (con clic)",
 "ω Cap there":
@@ -2634,250 +2998,316 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "ζ Cap (con clic)",
 "ζ Cap there":
   "ζ Cap allá",
+"The selected object is ζ Cap.":
+  "El objeto seleccionado es ζ Cap.",
 "γ Cap (clicked)":
   "γ Cap (con clic)",
 "γ Cap there":
   "γ Cap allá",
+"The selected object is γ Cap.":
+  "El objeto seleccionado es γ Cap.",
 "θ Cap (clicked)":
   "θ Cap (con clic)",
 "θ Cap there":
   "θ Cap allá",
-"The stars of the constellation Centaurus placed at their distances from the Sun.":
-  "Las estrellas de la constelación Centauro colocadas a sus distancias del Sol.",
+"The selected object is θ Cap.":
+  "El objeto seleccionado es θ Cap.",
 "β Cep (clicked)":
   "β Cep (con clic)",
 "β Cep there":
   "β Cep allá",
+"The selected object is β Cep.":
+  "El objeto seleccionado es β Cep.",
 "ι Cep (clicked)":
   "ι Cep (con clic)",
 "ι Cep there":
   "ι Cep allá",
+"The selected object is ι Cep.":
+  "El objeto seleccionado es ι Cep.",
 "ζ Cep (clicked)":
   "ζ Cep (con clic)",
 "ζ Cep there":
   "ζ Cep allá",
-"The selected object is ι Cep.":
-  "El objeto seleccionado es ι Cep.",
-"It is in the constellation Cepheus.":
-  "Está en la constelación Cefeo.",
-"The stars of the constellation Cepheus placed at their distances from the Sun.":
-  "Las estrellas de la constelación Cefeo colocadas a sus distancias del Sol.",
+"The selected object is ζ Cep.":
+  "El objeto seleccionado es ζ Cep.",
 "δ Crv (clicked)":
   "δ Crv (con clic)",
 "δ Crv there":
   "δ Crv allá",
+"The selected object is δ Crv.":
+  "El objeto seleccionado es δ Crv.",
 "β Crv (clicked)":
   "β Crv (con clic)",
 "β Crv there":
   "β Crv allá",
+"The selected object is β Crv.":
+  "El objeto seleccionado es β Crv.",
 "ε Crv (clicked)":
   "ε Crv (con clic)",
 "ε Crv there":
   "ε Crv allá",
+"The selected object is ε Crv.":
+  "El objeto seleccionado es ε Crv.",
 "λ Dra (clicked)":
   "λ Dra (con clic)",
 "λ Dra there":
   "λ Dra allá",
+"The selected object is λ Dra.":
+  "El objeto seleccionado es λ Dra.",
 "κ Dra (clicked)":
   "κ Dra (con clic)",
 "κ Dra there":
   "κ Dra allá",
-"The stars of the constellation Draco placed at their distances from the Sun.":
-  "Las estrellas de la constelación Dragón colocadas a sus distancias del Sol.",
+"The selected object is κ Dra.":
+  "El objeto seleccionado es κ Dra.",
 "ι Dra (clicked)":
   "ι Dra (con clic)",
 "ι Dra there":
   "ι Dra allá",
+"The selected object is ι Dra.":
+  "El objeto seleccionado es ι Dra.",
 "θ Dra (clicked)":
   "θ Dra (con clic)",
 "θ Dra there":
   "θ Dra allá",
+"The selected object is θ Dra.":
+  "El objeto seleccionado es θ Dra.",
 "η Dra (clicked)":
   "η Dra (con clic)",
 "η Dra there":
   "η Dra allá",
+"The selected object is η Dra.":
+  "El objeto seleccionado es η Dra.",
 "ζ Dra (clicked)":
   "ζ Dra (con clic)",
 "ζ Dra there":
   "ζ Dra allá",
+"The selected object is ζ Dra.":
+  "El objeto seleccionado es ζ Dra.",
 "δ Dra (clicked)":
   "δ Dra (con clic)",
 "δ Dra there":
   "δ Dra allá",
+"The selected object is δ Dra.":
+  "El objeto seleccionado es δ Dra.",
 "ξ Dra (clicked)":
   "ξ Dra (con clic)",
 "ξ Dra there":
   "ξ Dra allá",
+"The selected object is ξ Dra.":
+  "El objeto seleccionado es ξ Dra.",
 "ν² Dra (clicked)":
   "ν² Dra (con clic)",
 "ν² Dra there":
   "ν² Dra allá",
+"The selected object is ν² Dra.":
+  "El objeto seleccionado es ν² Dra.",
 "γ Lib (clicked)":
   "γ Lib (con clic)",
 "γ Lib there":
   "γ Lib allá",
 "The selected object is γ Lib.":
   "El objeto seleccionado es γ Lib.",
-"It is in the constellation Libra.":
-  "Está en la constelación Libra.",
-"The stars of the constellation Libra placed at their distances from the Sun.":
-  "Las estrellas de la constelación Libra colocadas a sus distancias del Sol.",
 "σ Lib (clicked)":
   "σ Lib (con clic)",
 "σ Lib there":
   "σ Lib allá",
+"The selected object is σ Lib.":
+  "El objeto seleccionado es σ Lib.",
 "κ Oph (clicked)":
   "κ Oph (con clic)",
 "κ Oph there":
   "κ Oph allá",
+"The selected object is κ Oph.":
+  "El objeto seleccionado es κ Oph.",
 "δ Oph (clicked)":
   "δ Oph (con clic)",
 "δ Oph there":
   "δ Oph allá",
+"The selected object is δ Oph.":
+  "El objeto seleccionado es δ Oph.",
 "ε Oph (clicked)":
   "ε Oph (con clic)",
 "ε Oph there":
   "ε Oph allá",
+"The selected object is ε Oph.":
+  "El objeto seleccionado es ε Oph.",
 "ζ Oph (clicked)":
   "ζ Oph (con clic)",
 "ζ Oph there":
   "ζ Oph allá",
+"The selected object is ζ Oph.":
+  "El objeto seleccionado es ζ Oph.",
 "η Oph (clicked)":
   "η Oph (con clic)",
 "η Oph there":
   "η Oph allá",
+"The selected object is η Oph.":
+  "El objeto seleccionado es η Oph.",
 "β Oph (clicked)":
   "β Oph (con clic)",
 "β Oph there":
   "β Oph allá",
 "The selected object is β Oph.":
   "El objeto seleccionado es β Oph.",
-"It is in the constellation Ophiucus.":
-  "Está en la constelación Ofiuco.",
-"The stars of the constellation Ophiucus placed at their distances from the Sun.":
-  "Las estrellas de la constelación Ofiuco colocadas a sus distancias del Sol.",
 "γ Per (clicked)":
   "γ Per (con clic)",
 "γ Per there":
   "γ Per allá",
+"The selected object is γ Per.":
+  "El objeto seleccionado es γ Per.",
 "δ Per (clicked)":
   "δ Per (con clic)",
 "δ Per there":
   "δ Per allá",
+"The selected object is δ Per.":
+  "El objeto seleccionado es δ Per.",
 "ε Per (clicked)":
   "ε Per (con clic)",
 "ε Per there":
   "ε Per allá",
+"The selected object is ε Per.":
+  "El objeto seleccionado es ε Per.",
 "ζ Per (clicked)":
   "ζ Per (con clic)",
 "ζ Per there":
   "ζ Per allá",
-"The selected object is Algol.":
-  "El objeto seleccionado es Algol.",
+"The selected object is ζ Per.":
+  "El objeto seleccionado es ζ Per.",
 "ο Psc (clicked)":
   "ο Psc (con clic)",
 "ο Psc there":
   "ο Psc allá",
+"The selected object is ο Psc.":
+  "El objeto seleccionado es ο Psc.",
 "ν Psc (clicked)":
   "ν Psc (con clic)",
 "ν Psc there":
   "ν Psc allá",
+"The selected object is ν Psc.":
+  "El objeto seleccionado es ν Psc.",
 "ε Psc (clicked)":
   "ε Psc (con clic)",
 "ε Psc there":
   "ε Psc allá",
+"The selected object is ε Psc.":
+  "El objeto seleccionado es ε Psc.",
 "δ Psc (clicked)":
   "δ Psc (con clic)",
 "δ Psc there":
   "δ Psc allá",
+"The selected object is δ Psc.":
+  "El objeto seleccionado es δ Psc.",
 "ω Psc (clicked)":
   "ω Psc (con clic)",
 "ω Psc there":
   "ω Psc allá",
+"The selected object is ω Psc.":
+  "El objeto seleccionado es ω Psc.",
 "ι Psc (clicked)":
   "ι Psc (con clic)",
 "ι Psc there":
   "ι Psc allá",
 "The selected object is ι Psc.":
   "El objeto seleccionado es ι Psc.",
-"It is in the constellation Pisces.":
-  "Está en la constelación Piscis.",
-"The stars of the constellation Pisces placed at their distances from the Sun.":
-  "Las estrellas de la constelación Piscis colocadas a sus distancias del Sol.",
 "θ Psc (clicked)":
   "θ Psc (con clic)",
 "θ Psc there":
   "θ Psc allá",
+"The selected object is θ Psc.":
+  "El objeto seleccionado es θ Psc.",
 "γ Psc (clicked)":
   "γ Psc (con clic)",
 "γ Psc there":
   "γ Psc allá",
+"The selected object is γ Psc.":
+  "El objeto seleccionado es γ Psc.",
 "κ Psc (clicked)":
   "κ Psc (con clic)",
 "κ Psc there":
   "κ Psc allá",
+"The selected object is κ Psc.":
+  "El objeto seleccionado es κ Psc.",
 "λ Psc (clicked)":
   "λ Psc (con clic)",
 "λ Psc there":
   "λ Psc allá",
-"The selected object is θ Psc.":
-  "El objeto seleccionado es θ Psc.",
+"The selected object is λ Psc.":
+  "El objeto seleccionado es λ Psc.",
 "δ UMi (clicked)":
   "δ UMi (con clic)",
 "δ UMi there":
   "δ UMi allá",
+"The selected object is δ UMi.":
+  "El objeto seleccionado es δ UMi.",
 "ε UMi (clicked)":
   "ε UMi (con clic)",
 "ε UMi there":
   "ε UMi allá",
+"The selected object is ε UMi.":
+  "El objeto seleccionado es ε UMi.",
 "ζ UMi (clicked)":
   "ζ UMi (con clic)",
 "ζ UMi there":
   "ζ UMi allá",
+"The selected object is ζ UMi.":
+  "El objeto seleccionado es ζ UMi.",
 "γ UMi (clicked)":
   "γ UMi (con clic)",
 "γ UMi there":
   "γ UMi allá",
+"The selected object is γ UMi.":
+  "El objeto seleccionado es γ UMi.",
 "η UMi (clicked)":
   "η UMi (con clic)",
 "η UMi there":
   "η UMi allá",
-"The selected object is ε UMi.":
-  "El objeto seleccionado es ε UMi.",
-"The stars of the constellation Ursa Minor placed at their distances from the Sun.":
-  "Las estrellas de la constelación Osa Menor colocadas a sus distancias del Sol.",
+"The selected object is η UMi.":
+  "El objeto seleccionado es η UMi.",
 "γ Vir (clicked)":
   "γ Vir (con clic)",
 "γ Vir there":
   "γ Vir allá",
+"The selected object is γ Vir.":
+  "El objeto seleccionado es γ Vir.",
 "ε Vir (clicked)":
   "ε Vir (con clic)",
 "ε Vir there":
   "ε Vir allá",
+"The selected object is ε Vir.":
+  "El objeto seleccionado es ε Vir.",
 "δ Vir (clicked)":
   "δ Vir (con clic)",
 "δ Vir there":
   "δ Vir allá",
+"The selected object is δ Vir.":
+  "El objeto seleccionado es δ Vir.",
 "η Vir (clicked)":
   "η Vir (con clic)",
 "η Vir there":
   "η Vir allá",
+"The selected object is η Vir.":
+  "El objeto seleccionado es η Vir.",
 "β Vir (clicked)":
   "β Vir (con clic)",
 "β Vir there":
   "β Vir allá",
-"The selected object is γ Vir.":
-  "El objeto seleccionado es γ Vir.",
-"It is in the constellation Virgo.":
-  "Está en la constelación Virgo.",
-"The stars of the constellation Virgo placed at their distances from the Sun.":
-  "Las estrellas de la constelación Virgo colocadas a sus distancias del Sol.",
+"The selected object is β Vir.":
+  "El objeto seleccionado es β Vir.",
+"Describe the picture":
+  "Describir la imagen",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
+"Time controls":
+  "Controles de tiempo",
+"<span>Speed</span>":
+  "<span>Rapidez</span>",
 "Close":
   "Cerrar",
 "The observer is at {#}° N, {#}° E.":
   "El observador está en {#}° N, {#}° E.",
-"The observer is at {#}° N, {#}° W.":
-  "El observador está en {#}° N, {#}° O.",
 "The observer is at {#}° S, {#}° E.":
   "El observador está en {#}° S, {#}° E.",
 "The observer is at {#}° S, {#}° W.":

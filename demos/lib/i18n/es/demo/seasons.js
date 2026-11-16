@@ -1,7 +1,5 @@
 /* demo/seasons in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/seasons', {
-"Describe the picture":
-  "Describir la imagen",
 "Jan":
   "Ene",
 "Feb":
@@ -78,14 +76,10 @@ VDI18N.add('es', 'demo/seasons', {
   "<a><span>←</span> <span>El cielo y la esfera celeste</span></a><a><span>Fases de la Luna</span> <span>→</span></a>",
 "Seasons come from the tilt of Earth's axis, not from its distance to the Sun. Earth is closest to the Sun in January. The same orbit and tilt make a solar day longer than one turn against the stars, and make a sundial run ahead of or behind a clock.":
   "Las estaciones se deben a la inclinación del eje de la Tierra, no a su distancia al Sol. La Tierra está más cerca del Sol en enero. La misma órbita y la misma inclinación hacen que un día solar dure más que una vuelta respecto a las estrellas, y que un reloj de sol se adelante o se atrase respecto a un reloj.",
-"Time controls":
-  "Controles de tiempo",
 "Next sidereal day":
   "Siguiente día sidéreo",
 "Next solar day":
   "Siguiente día solar",
-"<span>Speed</span>":
-  "<span>Rapidez</span>",
 "Spin speed":
   "Rapidez de giro",
 "Slow":
@@ -328,10 +322,6 @@ VDI18N.add('es', 'demo/seasons', {
   "fecha",
 "noon (°)":
   "mediodía (°)",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
 "Chart through the year at {#}° N: the length of the day in hours and the height of the noon Sun, against the date.":
   "Gráfica a lo largo del año a {#}° N: la duración del día en horas y la altura del Sol del mediodía, contra la fecha.",
 "The day length runs from {#} h {#} m to {#} h {#} m.":
@@ -416,6 +406,26 @@ VDI18N.add('es', 'demo/seasons', {
   "Declinación del Sol",
 "Eccentricity, tilt":
   "Excentricidad, inclinación",
+"The date is paused.":
+  "La fecha está en pausa.",
+"Chart through the year at {#}° N: the daily mean insolation in W/m², against the date, with a dashed curve for a circular orbit.":
+  "Gráfica a lo largo del año a {#}° N: la insolación media diaria en W/m², contra la fecha, con una curva punteada para una órbita circular.",
+"The insolation runs from {#} to {#} W/m².":
+  "La insolación va de {#} a {#} W/m².",
+"The insolation today is {#} W/m², {#}% of the equator at an equinox.":
+  "La insolación de hoy es {#} W/m², {#}% de la del ecuador en un equinoccio.",
+"Charts of the equation of time and the length of the solar day through the year, with a sundial and a clock.":
+  "Gráficas de la ecuación del tiempo y de la duración del día solar a lo largo del año, con un reloj de sol y un reloj.",
+"The date is {#} Feb {#}.":
+  "La fecha es {#} feb {#}.",
+"The orbit eccentricity is {#} and the axial tilt is {#}°.":
+  "La excentricidad de la órbita es {#} y la inclinación del eje es {#}°.",
+"The sundial is {#} min {#} s behind the clock.":
+  "El reloj de sol va {#} min {#} s detrás del reloj.",
+"The solar day is {#} h minus {#} s.":
+  "El día solar dura {#} h menos {#} s.",
+"The Sun's declination is −{#}°.":
+  "La declinación del Sol es −{#}°.",
 "The same {#} hour spin with a year of {#} turns: {#} solar days in a year, each {#} × {#}/{#} = {#} hours. The longer the year compared with the spin, the closer the two days get.":
   "El mismo giro de {#} horas con un año de {#} vueltas: {#} días solares en un año, cada uno de {#} × {#}/{#} = {#} horas. Cuanto más largo es el año comparado con el giro, más se parecen los dos días.",
 "One turn in one orbit: the marked spot always faces the Sun, so the solar day never ends. The Moon does this to Earth, which is why we always see the same side of it.":
@@ -434,20 +444,18 @@ VDI18N.add('es', 'demo/seasons', {
   "Marte gira en {#} h y tarda {#} días terrestres en dar la vuelta al Sol, así que su día solar, el sol, es solo {#} minutos más largo: {#} h.",
 "Mercury turns three times in two of its years ({#} days a turn, {#} days a year). Its solar day is two of its years long, {#} Earth days: Mercury goes round the Sun twice between one noon and the next.":
   "Mercurio gira tres veces en dos de sus años ({#} días por vuelta, {#} días por año). Su día solar dura dos de sus años, {#} días terrestres: Mercurio da dos vueltas al Sol entre un mediodía y el siguiente.",
+"Top view from above the north pole of Mercury spinning while it orbits the Sun, with a line to a distant star and a line to the Sun from a marked spot on the planet.":
+  "Vista superior, desde arriba del polo norte de Mercurio, que gira mientras orbita el Sol, con una línea hacia una estrella lejana y una línea hacia el Sol desde un punto marcado del planeta.",
+"The sidereal day, one turn against the stars, is {#} days.":
+  "El día sidéreo, una vuelta respecto de las estrellas, dura {#} días.",
+"The solar day, noon to noon, is {#} days.":
+  "El día solar, de mediodía a mediodía, dura {#} días.",
 "Venus spins backward, once every {#} days, slower than it orbits ({#} days). Spinning backward, it needs less turning to face the Sun again, so its solar day is shorter than its sidereal day: {#} Earth days.":
   "Venus gira al revés, una vez cada {#} días, más despacio de lo que orbita ({#} días). Al girar al revés, necesita girar menos para volver a quedar de cara al Sol, así que su día solar es más corto que su día sidéreo: {#} días terrestres.",
 "{#} days, backward":
   "{#} días, al revés",
 "Jupiter spins in under {#} hours and takes almost {#} years to orbit, so its two days differ by only {#} seconds.":
   "Júpiter gira en menos de {#} horas y tarda casi {#} años en dar la vuelta al Sol, así que sus dos días difieren solo en {#} segundos.",
-"The date is paused.":
-  "La fecha está en pausa.",
-"Chart through the year at {#}° N: the daily mean insolation in W/m², against the date, with a dashed curve for a circular orbit.":
-  "Gráfica a lo largo del año a {#}° N: la insolación media diaria en W/m², contra la fecha, con una curva punteada para una órbita circular.",
-"The insolation runs from {#} to {#} W/m².":
-  "La insolación va de {#} a {#} W/m².",
-"The insolation today is {#} W/m², {#}% of the equator at an equinox.":
-  "La insolación de hoy es {#} W/m², {#}% de la del ecuador en un equinoccio.",
 "Top view from above the north pole of Jupiter spinning while it orbits the Sun, with a line to a distant star and a line to the Sun from a marked spot on the planet.":
   "Vista desde arriba del polo norte de Júpiter que gira mientras orbita el Sol, con una línea hacia una estrella lejana y una línea hacia el Sol desde un punto marcado del planeta.",
 "A close up of the marked spot is shown.":
@@ -486,6 +494,14 @@ VDI18N.add('es', 'demo/seasons', {
   "{#} mar · día {#}",
 "On Mar {#} Earth is {#} AU from the Sun, so sunlight is +{#}% compared with {#} AU, everywhere on Earth at once.":
   "El {#} de marzo la Tierra está a {#} UA del Sol, así que la luz del Sol es +{#}% comparada con {#} UA, en toda la Tierra a la vez.",
+"The date is Mar {#}, day {#} of the year.":
+  "La fecha es {#} de marzo, día {#} del año.",
+"The Sun's path across the sky of an observer at {#}° N, on Mar {#}.":
+  "La trayectoria del Sol por el cielo de un observador a {#}° N, el {#} de marzo.",
+"The solar day is {#} h plus {#} s.":
+  "El día solar dura {#} h más {#} s.",
+"The two causes, the ellipse and the tilt, are drawn separately.":
+  "Las dos causas, la elipse y la inclinación, se dibujan por separado.",
 "No tilt. The Sun stays over the equator all year and every place gets {#} hour days. Only the small distance effect is left: press Play and watch the chart go flat.":
   "Sin inclinación. El Sol se queda sobre el ecuador todo el año y cada lugar tiene días de {#} horas. Solo queda el pequeño efecto de la distancia: pulsa Iniciar y observa cómo la gráfica se vuelve plana.",
 "A {#}° tilt like Uranus, on Earth's orbit. The tropics and polar circles overlap, and most latitudes get weeks of continuous day followed by weeks of continuous night.":
@@ -494,36 +510,24 @@ VDI18N.add('es', 'demo/seasons', {
   "Verano ártico a {#}° N cerca del solsticio de junio. El Sol nunca se pone, así que el día dura {#} horas, y aun así el Sol del mediodía está bajo. Los días largos compensan el Sol bajo.",
 "{#} h {#} m <small>polar day</small>":
   "{#} h {#} min <small>día polar</small>",
+"The date is Jun {#}, day {#} of the year.":
+  "La fecha es {#} de junio, día {#} del año.",
+"The Sun is directly overhead at latitude +{#}°.":
+  "El Sol está justo arriba en la latitud +{#}°.",
+"The Sun does not set: polar day.":
+  "El Sol no se pone: día polar.",
+"The Sun's path across the sky of an observer at {#}° N, on Jun {#}.":
+  "La trayectoria del Sol por el cielo de un observador a {#}° N, el {#} de junio.",
 "Jul {#} · day {#}":
   "{#} jul · día {#}",
 "On Jul {#} Earth is {#} AU from the Sun, so sunlight is −{#}% compared with {#} AU, everywhere on Earth at once.":
   "El {#} de julio la Tierra está a {#} UA del Sol, así que la luz del Sol es −{#}% comparada con {#} UA, en toda la Tierra a la vez.",
 "The date is Jul {#}, day {#} of the year.":
   "La fecha es {#} de julio, día {#} del año.",
-"The Sun is directly overhead at latitude +{#}°.":
-  "El Sol está justo arriba en la latitud +{#}°.",
-"The Sun does not set: polar day.":
-  "El Sol no se pone: día polar.",
 "The Sun's path across the sky of an observer at {#}° N, on Jul {#}.":
   "La trayectoria del Sol por el cielo de un observador a {#}° N, el {#} de julio.",
-"Charts of the equation of time and the length of the solar day through the year, with a sundial and a clock.":
-  "Gráficas de la ecuación del tiempo y de la duración del día solar a lo largo del año, con un reloj de sol y un reloj.",
-"The date is {#} Feb {#}.":
-  "La fecha es {#} feb {#}.",
-"The orbit eccentricity is {#} and the axial tilt is {#}°.":
-  "La excentricidad de la órbita es {#} y la inclinación del eje es {#}°.",
-"The sundial is {#} min {#} s behind the clock.":
-  "El reloj de sol va {#} min {#} s detrás del reloj.",
-"The solar day is {#} h plus {#} s.":
-  "El día solar dura {#} h más {#} s.",
-"The two causes, the ellipse and the tilt, are drawn separately.":
-  "Las dos causas, la elipse y la inclinación, se dibujan por separado.",
-"The Sun's declination is −{#}°.":
-  "La declinación del Sol es −{#}°.",
 "Raise or lower the observer's latitude by half a degree (Shift: {#} degrees)":
   "Sube o baja la latitud del observador medio grado (Shift: {#} grados)",
-"The solar day is {#} h minus {#} s.":
-  "El día solar dura {#} h menos {#} s.",
 "Jan {#} · day {#}":
   "{#} ene · día {#}",
 "On Jan {#} Earth is {#} AU from the Sun, so sunlight is +{#}% compared with {#} AU, everywhere on Earth at once.":
@@ -536,18 +540,32 @@ VDI18N.add('es', 'demo/seasons', {
   "{#} feb · día {#}",
 "On Feb {#} Earth is {#} AU from the Sun, so sunlight is +{#}% compared with {#} AU, everywhere on Earth at once.":
   "El {#} de febrero la Tierra está a {#} UA del Sol, así que la luz del Sol es +{#}% comparada con {#} UA, en toda la Tierra a la vez.",
-"Feb {#}":
-  "{#} feb",
 "The date is Feb {#}, day {#} of the year.":
   "La fecha es {#} de febrero, día {#} del año.",
 "The Sun's path across the sky of an observer at {#}° N, on Feb {#}.":
   "La trayectoria del Sol por el cielo de un observador a {#}° N, el {#} de febrero.",
+"Feb {#}":
+  "{#} feb",
 "(very far away)":
   "(muy lejos)",
-"The date is Jun {#}, day {#} of the year.":
-  "La fecha es {#} de junio, día {#} del año.",
-"The Sun's path across the sky of an observer at {#}° N, on Jun {#}.":
-  "La trayectoria del Sol por el cielo de un observador a {#}° N, el {#} de junio.",
+"The year, one orbit, is {#} h {#} min {#} s.":
+  "El año, una órbita, dura {#} h {#} min {#} s.",
+"The solar day never ends: the marked spot always faces the Sun.":
+  "El día solar nunca termina: el punto marcado siempre está de cara al Sol.",
+"Top view from above the north pole of Earth spinning while it orbits the Sun, with a line to a distant star and a line to the Sun from a marked spot on the planet.":
+  "Vista superior, desde arriba del polo norte de la Tierra, que gira mientras orbita el Sol, con una línea hacia una estrella lejana y una línea hacia el Sol desde un punto marcado del planeta.",
+"Top view from above the north pole of Mars spinning while it orbits the Sun, with a line to a distant star and a line to the Sun from a marked spot on the planet.":
+  "Vista superior, desde arriba del polo norte de Marte, que gira mientras orbita el Sol, con una línea hacia una estrella lejana y una línea hacia el Sol desde un punto marcado del planeta.",
+"Top view from above the north pole of Venus spinning while it orbits the Sun, with a line to a distant star and a line to the Sun from a marked spot on the planet.":
+  "Vista superior, desde arriba del polo norte de Venus, que gira mientras orbita el Sol, con una línea hacia una estrella lejana y una línea hacia el Sol desde un punto marcado del planeta.",
+"The planet spins backward.":
+  "El planeta gira al revés.",
+"Top view from above the north pole of The Moon spinning while it orbits the Sun, with a line to a distant star and a line to the Sun from a marked spot on the planet.":
+  "Vista desde arriba del polo norte de la Luna que gira mientras orbita el Sol, con una línea hacia una estrella lejana y una línea hacia el Sol desde un punto marcado del planeta.",
+"The Sun's declination is {#}°.":
+  "La declinación del Sol es {#}°.",
+"The Sun is directly overhead at latitude {#}°.":
+  "El Sol está justo arriba en la latitud {#}°.",
 "Jun {#}":
   "{#} jun",
 "Sun overhead at {#}° N":
@@ -562,6 +580,12 @@ VDI18N.add('es', 'demo/seasons', {
   "EL CIELO DESDE {#}° S",
 "Daily mean insolation (W/m²) at {#}° S":
   "Insolación media diaria (W/m²) a {#}° S",
+"The observer is at latitude {#}° S.":
+  "El observador está en la latitud {#}° S.",
+"The Sun's path across the sky of an observer at {#}° S, on Jun {#}.":
+  "La trayectoria del Sol por el cielo de un observador a {#}° S, el {#} de junio.",
+"Chart through the year at {#}° S: the daily mean insolation in W/m², against the date, with a dashed curve for a circular orbit.":
+  "Gráfica a lo largo del año a {#}° S: la insolación media diaria en W/m², contra la fecha, con una curva punteada para una órbita circular.",
 "Day at {#}°: {#} h {#} m":
   "Día a {#}°: {#} h {#} min",
 "you {#}°":
@@ -570,44 +594,48 @@ VDI18N.add('es', 'demo/seasons', {
   "EL CIELO DESDE {#}°",
 "Daily mean insolation (W/m²) at {#}°":
   "Insolación media diaria (W/m²) a {#}°",
+"The observer is at latitude {#}°.":
+  "El observador está en la latitud {#}°.",
+"The Sun's path across the sky of an observer at {#}°, on Jun {#}.":
+  "La trayectoria del Sol por el cielo de un observador a {#}°, el {#} de junio.",
+"Chart through the year at {#}°: the daily mean insolation in W/m², against the date, with a dashed curve for a circular orbit.":
+  "Gráfica a lo largo del año a {#}°: la insolación media diaria en W/m² contra la fecha, con una curva discontinua para una órbita circular.",
+"The Sun's path across the sky of an observer at {#}° S, on Dec {#}.":
+  "La trayectoria del Sol por el cielo de un observador a {#}° S, el {#} de diciembre.",
+"The Sun's path across the sky of an observer at {#}°, on Dec {#}.":
+  "La trayectoria del Sol por el cielo de un observador a {#}°, el {#} de diciembre.",
 "Mar {#}":
   "{#} mar",
 "Sun overhead at {#}°":
   "Sol en el cenit a {#}°",
-"The date is Mar {#}, day {#} of the year.":
-  "La fecha es {#} de marzo, día {#} del año.",
-"The Sun's path across the sky of an observer at {#}° N, on Mar {#}.":
-  "La trayectoria del Sol por el cielo de un observador a {#}° N, el {#} de marzo.",
+"The Sun's path across the sky of an observer at {#}° S, on Mar {#}.":
+  "La trayectoria del Sol por el cielo de un observador a {#}° S, el {#} de marzo.",
+"The Sun's path across the sky of an observer at {#}°, on Mar {#}.":
+  "La trayectoria del Sol por el cielo de un observador a {#}°, el {#} de marzo.",
 "The Sun never sets today":
   "Hoy el Sol no se pone",
 "The Sun never rises today":
   "Hoy el Sol no sale",
 "{#} h {#} m <small>polar night</small>":
   "{#} h {#} min <small>noche polar</small>",
-"The observer is at latitude {#}° S.":
-  "El observador está en la latitud {#}° S.",
 "The Sun does not rise: polar night.":
   "El Sol no sale: noche polar.",
-"The Sun's path across the sky of an observer at {#}° S, on Jun {#}.":
-  "La trayectoria del Sol por el cielo de un observador a {#}° S, el {#} de junio.",
 "The noon Sun is −{#}° above the horizon.":
   "El Sol del mediodía está −{#}° sobre el horizonte.",
-"Chart through the year at {#}° S: the daily mean insolation in W/m², against the date, with a dashed curve for a circular orbit.":
-  "Gráfica a lo largo del año a {#}° S: la insolación media diaria en W/m², contra la fecha, con una curva punteada para una órbita circular.",
+"Describe the picture":
+  "Describir la imagen",
+"Time controls":
+  "Controles de tiempo",
+"<span>Speed</span>":
+  "<span>Rapidez</span>",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "Running.":
   "En marcha.",
 "The sundial is {#} min {#} s behind of the clock.":
   "El reloj de sol va {#} min {#} s detrás del reloj.",
-"Top view from above the north pole of The Moon spinning while it orbits the Sun, with a line to a distant star and a line to the Sun from a marked spot on the planet.":
-  "Vista desde arriba del polo norte de la Luna que gira mientras orbita el Sol, con una línea hacia una estrella lejana y una línea hacia el Sol desde un punto marcado del planeta.",
-"The sidereal day, one turn against the stars, is {#} days.":
-  "El día sidéreo, una vuelta respecto de las estrellas, dura {#} días.",
-"The solar day, noon to noon, is {#} days.":
-  "El día solar, de mediodía a mediodía, dura {#} días.",
-"The Sun is directly overhead at latitude {#}°.":
-  "El Sol está justo arriba en la latitud {#}°.",
-"The Sun's path across the sky of an observer at {#}° S, on Mar {#}.":
-  "La trayectoria del Sol por el cielo de un observador a {#}° S, el {#} de marzo.",
 "Earth's real orbit is an ellipse and its axis is tilted, so the Sun's daily step against the stars is not the same all year. A sundial runs fast or slow against a clock by up to about {#} minutes, and solar days in December are about {#} seconds longer than in September.":
   "La órbita real de la Tierra es una elipse y su eje está inclinado, así que el paso diario del Sol respecto a las estrellas no es igual todo el año. Un reloj de sol se adelanta o se atrasa respecto a un reloj hasta unos {#} minutos, y los días solares de diciembre son unos {#} segundos más largos que los de septiembre.",
 "spinning too fast to draw each turn: Pause to see the spot":

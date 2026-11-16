@@ -14,8 +14,6 @@ VDI18N.add('es', 'demo/millikan', {
   "Cargas calculadas, |q| ({#}⁻¹⁹ C); líneas discontinuas en {#}, {#}, {#} ... × e",
 "Record a drop falling and then with the plates on to put a dot here.":
   "Registra una gota cayendo y luego con las placas encendidas para poner un punto aquí.",
-"Describe the picture":
-  "Describir la imagen",
 "Millikan Oil Drop":
   "Gota de aceite de Millikan",
 "<a>Charge and electric fields</a>":
@@ -24,16 +22,8 @@ VDI18N.add('es', 'demo/millikan', {
   "<a><span>←</span> <span>Carga por inducción</span></a><a><span>Arenero de Coulomb</span> <span>→</span></a>",
 "Spray tiny drops of oil between two charged plates and watch them through a telescope. Time a drop falling with the plates off, then rising or falling with them on: air drag tells you how big it is, and the field tells you its charge. Charge comes in whole numbers of one smallest amount, e.":
   "Rocía gotas diminutas de aceite entre dos placas cargadas y obsérvalas a través de un telescopio. Mide el tiempo de una gota que cae con las placas apagadas, y luego subiendo o cayendo con ellas encendidas: el arrastre del aire te dice qué tan grande es, y el campo te dice su carga. La carga viene en números enteros de una cantidad mínima, e.",
-"Time controls":
-  "Controles de tiempo",
-"Run for a moment and pause again":
-  "Avanza un momento y vuelve a pausar",
-"Step":
-  "Paso",
 "Back to t = {#} with the same drops; settings and readings stay":
   "De vuelta a t = {#} con las mismas gotas; los ajustes y las lecturas se conservan",
-"<span>Speed</span>":
-  "<span>Rapidez</span>",
 "Spray drops":
   "Rociar gotas",
 "Plates":
@@ -54,8 +44,6 @@ VDI18N.add('es', 'demo/millikan', {
   "Las placas están apagadas, así que no hay campo.",
 "The ionizing source is off.":
   "La fuente ionizante está apagada.",
-"Paused.":
-  "En pausa.",
 "{#} drops are in view.":
   "Hay {#} gotas a la vista.",
 "Following drop {#}.":
@@ -166,14 +154,12 @@ VDI18N.add('es', 'demo/millikan', {
   "separación y posición de las gotas a escala; gotas agrandadas",
 "dashed square: the telescope’s view":
   "cuadro punteado: lo que ve el telescopio",
-"Skip to the picture":
-  "Ir a la imagen",
-"Skip to the controls":
-  "Ir a los controles",
 "{#} kV/m down":
   "{#} kV/m hacia abajo",
 "{#} kV/m up":
   "{#} kV/m hacia arriba",
+"The top plate is negative at {#} V, a field of {#} kV/m pointing up.":
+  "La placa superior es negativa a {#} V, con un campo de {#} kV/m que apunta hacia arriba.",
 "Top plate + at {#} V: the field points down, so negatively charged drops are pushed up and the ones with enough charge rise. Positive drops fall faster. Time the followed drop with the plates on; with its fall time too, the table works out its charge.":
   "Placa superior + a {#} V: el campo apunta hacia abajo, así que las gotas con carga negativa son empujadas hacia arriba y las que tienen suficiente carga suben. Las gotas positivas caen más rápido. Mide el tiempo de la gota seguida con las placas encendidas; con su tiempo de caída también, la tabla calcula su carga.",
 "Millikan's balancing method: turn the voltage until the followed drop stays still, then record the hold. Then q = m′g d / V, with the mass from the drop's fall speed. Brownian motion keeps it from ever being perfectly still.":
@@ -182,6 +168,14 @@ VDI18N.add('es', 'demo/millikan', {
   "fuente ionizante encendida",
 "The ionizing source makes ions in the air, and now and then a drop picks one up: its speed with the plates on jumps. Start a new row for the same drop and time it again. The change in charge is always a whole number of e, which is Millikan's strongest evidence.":
   "La fuente ionizante produce iones en el aire, y de vez en cuando una gota atrapa uno: su rapidez con las placas encendidas da un salto. Empieza una fila nueva para la misma gota y vuelve a medir su tiempo. El cambio de carga siempre es un número entero de e, que es la evidencia más fuerte de Millikan.",
+"The top plate is positive at {#} V, a field of {#} kV/m pointing down.":
+  "La placa superior es positiva a {#} V, con un campo de {#} kV/m que apunta hacia abajo.",
+"The ionizing source is on.":
+  "La fuente ionizante está encendida.",
+"It is rising.":
+  "Está subiendo.",
+"It is between the two timing lines.":
+  "Está entre las dos líneas de cronometraje.",
 "Time several drops, each falling and then with the plates on. The dot plot below the telescope gathers their charges: they bunch at {#}, {#}, {#} ... times one value, e = {#} × {#}⁻¹⁹ C.":
   "Mide el tiempo de varias gotas, cada una cayendo y luego con las placas encendidas. El diagrama de puntos debajo del telescopio reúne sus cargas: se agrupan en {#}, {#}, {#} ... veces un valor, e = {#} × {#}⁻¹⁹ C.",
 "At {#} kPa the mean free path of the air is more than twice as long, so the drops slip through it and fall faster than Stokes's law says. Work out the charges with and without the slip correction (Lab) and see which bunch at whole numbers of e.":
@@ -190,12 +184,24 @@ VDI18N.add('es', 'demo/millikan', {
   "Una gota pequeña, de radio {#} µm: cae solo unos {#} µm/s y se sacude cuando las moléculas del aire la golpean (movimiento browniano). Mide su tiempo en {#} mm varias veces y ve cómo se dispersan los tiempos.",
 "{#} drop is in view.":
   "Hay {#} gota a la vista.",
+"Describe the picture":
+  "Describir la imagen",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
+"<span>Speed</span>":
+  "<span>Rapidez</span>",
+"Paused.":
+  "En pausa.",
+"Skip to the picture":
+  "Ir a la imagen",
+"Skip to the controls":
+  "Ir a los controles",
 "Running.":
   "En marcha.",
-"The top plate is negative at {#} V, a field of {#} kV/m pointing up.":
-  "La placa superior es negativa a {#} V, con un campo de {#} kV/m que apunta hacia arriba.",
-"The top plate is positive at {#} V, a field of {#} kV/m pointing down.":
-  "La placa superior es positiva a {#} V, con un campo de {#} kV/m que apunta hacia abajo.",
 "Close":
   "Cerrar",
 "plates off":

@@ -1,7 +1,5 @@
 /* demo/gyroscope in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/gyroscope', {
-"Describe the picture":
-  "Describir la imagen",
 "gate":
   "compuerta",
 "τ = dL/dt":
@@ -28,16 +26,8 @@ VDI18N.add('es', 'demo/gyroscope', {
   "rueda {#} kg, radio {#} cm · g = {#} m/s²",
 "A spinning wheel on a horizontal axle whose far end rests on a pivot at the top of a post, drawn in perspective, with arrows for the angular momentum and the torque, and below it a trace of the axle's tilt against time. Space releases or holds, R puts it back.":
   "Una rueda que gira sobre un eje horizontal cuyo extremo lejano descansa sobre un pivote en lo alto de un poste, dibujada en perspectiva, con flechas para el momento angular y la torca, y debajo una traza de la inclinación del eje en función del tiempo. Espacio suelta o sujeta, R la regresa.",
-"Time controls":
-  "Controles de tiempo",
-"Run for a moment and pause again":
-  "Avanza un momento y vuelve a pausar",
-"Step":
-  "Paso",
 "Put back":
   "Regresar",
-"<span>Speed</span>":
-  "<span>Rapidez</span>",
 "Run the clock at a tenth of real time, so the quick wobble of a fast wheel can be followed by eye":
   "Corre el reloj a una décima del tiempo real, para que el bamboleo rápido de una rueda veloz pueda seguirse a simple vista",
 "Slow motion":
@@ -168,10 +158,6 @@ VDI18N.add('es', 'demo/gyroscope', {
   "rueda {#} vueltas/s: borrosa a la vista (Cámara lenta o Estroboscopio la muestran girar)",
 "level":
   "nivel",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
 "A solid disk of mass {#} kg on a horizontal axle, resting on a pivot at the top of a post, with the wheel center {#} cm from the pivot.":
   "Un disco sólido de masa {#} kg en un eje horizontal, apoyado en un pivote en lo alto de un poste, con el centro de la rueda a {#} cm del pivote.",
 "The wheel is set to spin at {#} rpm.":
@@ -200,6 +186,10 @@ VDI18N.add('es', 'demo/gyroscope', {
   "Presiona Espacio para soltar o sostener, y R para reiniciar.",
 "Hold":
   "Sujetar",
+"Released and moving.":
+  "Soltado y en movimiento.",
+"Spin {#} rad/s, axle tilt −{#}°, time {#} s.":
+  "Giro {#} rad/s, inclinación del eje −{#}°, tiempo {#} s.",
 "slow motion: {#}/{#} of real time":
   "cámara lenta: {#}/{#} del tiempo real",
 "wheel {#} turns/s: a blur to the eye":
@@ -224,26 +214,24 @@ VDI18N.add('es', 'demo/gyroscope', {
   "Torca de fricción respecto al poste",
 "{#} mN·m (hurries the precession)":
   "{#} mN·m (acelera la precesión)",
+"Friction at the pivot is {#} mN·m.":
+  "La fricción en el pivote es {#} mN·m.",
 "The same friction from a still tip (the wheel on bearings): now it drags against the precession, holding it back, and the axle sinks at about {#}° a second until it falls, after about {#} s.":
   "La misma fricción con una punta fija (la rueda sobre cojinetes): ahora arrastra en contra de la precesión, frenándola, y el eje baja unos {#}° por segundo hasta que cae, tras unos {#} s.",
 "{#} mN·m (holds back the precession)":
   "{#} mN·m (frena la precesión)",
-"Release it and let the gate time at least one full turn round the post.":
-  "Suéltala y deja que la compuerta mida al menos una vuelta completa alrededor del poste.",
 "A rim heavy wheel of mass {#} kg on a horizontal axle, resting on a pivot at the top of a post, with the wheel center {#} cm from the pivot.":
   "Una rueda con masa en el borde, de masa {#} kg, en un eje horizontal, apoyada en un pivote en lo alto de un poste, con el centro de la rueda a {#} cm del pivote.",
-"Friction at the pivot is {#} mN·m.":
-  "La fricción en el pivote es {#} mN·m.",
 "The moment of inertia about the axle is {#} × {#}⁻³ kg·m².":
   "El momento de inercia respecto al eje es {#} × {#}⁻³ kg·m².",
+"Release it and let the gate time at least one full turn round the post.":
+  "Suéltala y deja que la compuerta mida al menos una vuelta completa alrededor del poste.",
 "−{#} mN·m (holds back the precession)":
   "−{#} mN·m (frena la precesión)",
-"Released and moving.":
-  "Soltado y en movimiento.",
-"Spin {#} rad/s, axle tilt −{#}°, time {#} s.":
-  "Giro {#} rad/s, inclinación del eje −{#}°, tiempo {#} s.",
 "(Slow motion shows it turn)":
   "(Cámara lenta la muestra girar)",
+"Held.":
+  "Sostenido.",
 "strobe {#} flashes/s · wheel {#} turns/s":
   "estroboscopio {#} destellos/s · rueda {#} vueltas/s",
 "The wheel is not spinning.":
@@ -252,6 +240,20 @@ VDI18N.add('es', 'demo/gyroscope', {
   "Sin giro no hay rapidez de precesión predicha.",
 "The arrows are hidden.":
   "Las flechas están ocultas.",
+"Describe the picture":
+  "Describir la imagen",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
+"<span>Speed</span>":
+  "<span>Rapidez</span>",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "Close":
   "Cerrar"
 });

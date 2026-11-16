@@ -1,7 +1,5 @@
 /* demo/timbre in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/timbre', {
-"Describe the picture":
-  "Describir la imagen",
 "signal (bar units)":
   "señal (unidades de barra)",
 "repeats every T = {#} ms":
@@ -26,12 +24,6 @@ VDI18N.add('es', 'demo/timbre', {
   "Un tono musical estable es una suma de armónicos en múltiplos enteros de su fundamental. Da forma al espectro barra por barra y escúchalo: la mezcla de armónicos fija el color del tono, el periodo de repetición fija la altura, y las fases casi no importan.",
 "f in Hz · T in ms · level in dB = {#} log₁₀(a/a_ref) · A4 = {#} Hz":
   "f en Hz · T en ms · nivel en dB = {#} log₁₀(a/a_ref) · A4 = {#} Hz",
-"Time controls":
-  "Controles de tiempo",
-"Run for a moment and pause again":
-  "Avanza un momento y vuelve a pausar",
-"Step":
-  "Paso",
 "Ladder shows":
   "La escalera muestra",
 "Open pipe":
@@ -298,10 +290,6 @@ VDI18N.add('es', 'demo/timbre', {
   "Las barras de abajo fijan los armónicos: el instrumento se mueve como su suma, el micrófono alimenta ambas pantallas",
 "displacement magnified, slowed so f₁ is drawn at {#} Hz · not to scale · drag to turn":
   "desplazamiento ampliado, ralentizado para que f₁ se dibuje a {#} Hz · no a escala · arrastra para girar",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
 "<span><i></i>Waveform: the sum, what you hear</span><span><i></i>Harmonic colors, n = {#} (amber) to {#} (teal)</span><span><i></i>Ideal shape (infinitely many harmonics)</span><span><i></i>Repetition period and f₁</span><span><i></i>Above {#} kHz, played {#} dB quieter</span><span><i></i>Ladder: air displacement, pipe open at both ends</span>":
   "<span><i></i>Forma de onda: la suma, lo que oyes</span><span><i></i>Colores de los armónicos, n = {#} (ámbar) a {#} (verde azulado)</span><span><i></i>Forma ideal (infinitos armónicos)</span><span><i></i>Periodo de repetición y f₁</span><span><i></i>Arriba de {#} kHz, tocado {#} dB más bajo</span><span><i></i>Escalera: desplazamiento del aire, tubo abierto en ambos extremos</span>",
 "pipe open at both ends":
@@ -374,6 +362,10 @@ VDI18N.add('es', 'demo/timbre', {
   "se repite cada λ = {#} m",
 "Wave in space, moving right: the sum of {#} harmonics":
   "Onda en el espacio, moviéndose a la derecha: la suma de {#} armónicos",
+"A wave packet: harmonics with Gaussian amplitudes, plotted against position.":
+  "Un paquete de ondas: armónicos con amplitudes gaussianas, graficados contra la posición.",
+"The packet has Δx {#} m and Δk {#} rad/m, a product of {#}.":
+  "El paquete tiene Δx {#} m y Δk {#} rad/m, con un producto de {#}.",
 "A voice: a buzz at A3 ({#} Hz, near the average pitch of a woman's voice) whose harmonics pass through the three resonances of the vocal tract, the formants. Pick a vowel and the formants move; change the pitch and the harmonics slide under the same envelope, so the vowel stays the same. Formants from Peterson and Barney ({#}), averages for women.":
   "Una voz: un zumbido en A3 ({#} Hz, cerca de la altura promedio de la voz de una mujer) cuyos armónicos pasan por las tres resonancias del tracto vocal, las formantes. Elige una vocal y las formantes se mueven; cambia la altura y los armónicos se deslizan bajo la misma envolvente, así que la vocal se mantiene. Formantes de Peterson y Barney ({#}), promedios para mujeres.",
 "The Vowels preset is not one of these instruments. Move the slider or pick an instrument name to return to the instruments. Illustrative spectra, not recordings; all play at the same f₁ with the current phases, so only the mix of harmonics changes.":
@@ -400,12 +392,10 @@ VDI18N.add('es', 'demo/timbre', {
   "La escalera está en pausa.",
 "Turn the picked harmonic's phase {#} degrees one way or the other":
   "Gira la fase del armónico elegido {#} grados hacia un lado o hacia el otro",
+"The harmonics present are {#}.":
+  "Los armónicos presentes son {#}.",
 "Run {#} recorded (Wave packet): {#} rows so far.":
   "Corrida {#} registrada (Paquete de ondas): {#} filas hasta ahora.",
-"A wave packet: harmonics with Gaussian amplitudes, plotted against position.":
-  "Un paquete de ondas: armónicos con amplitudes gaussianas, graficados contra la posición.",
-"The packet has Δx {#} m and Δk {#} rad/m, a product of {#}.":
-  "El paquete tiene Δx {#} m y Δk {#} rad/m, con un producto de {#}.",
 "Packet: bar or particle":
   "Paquete: barra o partícula",
 "Ladder: closed pipe, odd only, slowed":
@@ -430,10 +420,34 @@ VDI18N.add('es', 'demo/timbre', {
   "Onda en el espacio, moviéndose a la derecha",
 "The harmonics present are {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}.":
   "Los armónicos presentes son {#}, {#}, {#}, {#}, {#}, {#}, {#}, {#}.",
+"The fundamental is {#} Hz, D3.":
+  "La fundamental es {#} Hz, D3.",
+"The waveform repeats every {#} ms, so the pitch is {#} Hz, D3.":
+  "La forma de onda se repite cada {#} ms, así que el tono es {#} Hz, D3.",
+"The fundamental is {#} Hz, A4.":
+  "La fundamental es {#} Hz, A4.",
+"The harmonics present are {#}, {#}, {#}, {#}, {#}.":
+  "Los armónicos presentes son {#}, {#}, {#}, {#}, {#}.",
+"The waveform repeats every {#} ms, so the pitch is {#} Hz, A4.":
+  "La forma de onda se repite cada {#} ms, así que el tono es {#} Hz, A4.",
+"Harmonic {#} is removed.":
+  "Se quita el armónico {#}.",
 "Packet: deep water":
   "Paquete: agua profunda",
 "Packet: ripples":
   "Paquete: ondas capilares",
+"Describe the picture":
+  "Describir la imagen",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "Ladder: closed pipe, odd only":
   "Escalera: tubo cerrado, solo impares",
 "Wave in space, moving right: the sum of {#} harmonic":

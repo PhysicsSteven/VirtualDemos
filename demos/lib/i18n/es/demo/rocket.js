@@ -1,7 +1,5 @@
 /* demo/rocket in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/rocket', {
-"Describe the picture":
-  "Describir la imagen",
 "fuel":
   "combustible",
 "Ready":
@@ -40,12 +38,8 @@ VDI18N.add('es', 'demo/rocket', {
   "El cohete todavía no despega.",
 "Mass now {#} kg, speed {#} m/s, height {#} m.":
   "Masa ahora {#} kg, rapidez {#} m/s, altura {#} m.",
-"Time {#} s.":
-  "Tiempo {#} s.",
 "The rocket equation gives {#} m/s, and the speed at burnout is {#} m/s.":
   "La ecuación del cohete da {#} m/s, y la rapidez al agotarse el combustible es {#} m/s.",
-"Time controls":
-  "Controles de tiempo",
 "Divider between the rocket and the graphs":
   "Divisor entre el cohete y las gráficas",
 "Set up the rocket. Drag, or use the arrow keys, to move this card; double click to put it back":
@@ -118,10 +112,6 @@ VDI18N.add('es', 'demo/rocket', {
   "combustión (kg/s)",
 "v cutoff (m/s)":
   "v al apagar (m/s)",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
 "Engine on":
   "Motor encendido",
 "The same rocket from the ground. Thrust {#} kN against a {#} kN weight. Gravity takes g × (burn time) off the speed: compare the burnout speed with u ln(m₀/m).":
@@ -138,6 +128,10 @@ VDI18N.add('es', 'demo/rocket', {
   "El doble de combustible pero una combustión lenta: el empuje de {#} kN es menor que el peso al lanzar de {#} kN. El motor se enciende pero el cohete se queda en la plataforma, quemando combustible hasta que es lo bastante ligero para subir. Ese combustible se desperdicia: nunca ayudó a mover el cohete.",
 "Time waiting on the pad":
   "Tiempo de espera en la plataforma",
+"Gravity is on, launching from the ground.":
+  "La gravedad está activada, con despegue desde el suelo.",
+"The rocket waits {#} s on the pad before it lifts.":
+  "El cohete espera {#} s en la plataforma antes de despegar.",
 "Same fuel and exhaust speed as Launch from the ground, burned over {#} s instead of {#} s. The rocket equation gives the same Δv, but gravity pulls for longer, so it ends up slower and lower. Rockets burn fast for this reason.":
   "El mismo combustible y la misma rapidez de escape que en Lanzamiento desde el suelo, quemados en {#} s en vez de {#} s. La ecuación del cohete da el mismo Δv, pero la gravedad tira durante más tiempo, así que termina más lento y más bajo. Por eso los cohetes queman rápido.",
 "t (s) · dashed vertical lines: separation, burnout":
@@ -156,18 +150,28 @@ VDI18N.add('es', 'demo/rocket', {
   "a los {#} s, {#} m/s",
 "Rocket equation, both stages":
   "Ecuación del cohete, ambas etapas",
-"Readings are for a one stage rocket, as in the worksheet: switch off Two stages to record.":
-  "Las lecturas son para un cohete de una etapa, como en la hoja de trabajo: desactiva Dos etapas para registrar.",
 "A two stage rocket, with graphs of its speed and mass against time.":
   "Un cohete de dos etapas, con gráficas de su rapidez y su masa contra el tiempo.",
 "The first stage has a {#} kg casing and {#} kg of fuel.":
   "La primera etapa tiene una carcasa de {#} kg y {#} kg de combustible.",
-"Gravity is on, launching from the ground.":
-  "La gravedad está activada, con despegue desde el suelo.",
+"Readings are for a one stage rocket, as in the worksheet: switch off Two stages to record.":
+  "Las lecturas son para un cohete de una etapa, como en la hoja de trabajo: desactiva Dos etapas para registrar.",
+"The rocket is burning.":
+  "El cohete está en combustión.",
 "Separation (flight log)":
   "Separación (registro de vuelo)",
 "Speed at burnout (flight log)":
   "Rapidez al fin de la combustión (registro de vuelo)",
+"Describe the picture":
+  "Describir la imagen",
+"Time {#} s.":
+  "Tiempo {#} s.",
+"Time controls":
+  "Controles de tiempo",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "Close":
   "Cerrar"
 });

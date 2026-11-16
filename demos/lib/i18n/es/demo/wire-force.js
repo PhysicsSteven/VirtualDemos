@@ -1,7 +1,5 @@
 /* demo/wire-force in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/wire-force', {
-"Describe the picture":
-  "Describir la imagen",
 "Seen from above. B points from N to S (to the right).":
   "Visto desde arriba. B apunta de N a S (hacia la derecha).",
 "F on the wire = {#} mN, down (into the page)":
@@ -110,10 +108,6 @@ VDI18N.add('es', 'demo/wire-force', {
   "balanza, en cero con I = {#}",
 "Lines across the gap show the uniform field; the dots move with the current to show its direction, not its speed. Drag to turn the view.":
   "Las líneas a través del entrehierro muestran el campo uniforme; los puntos se mueven con la corriente para mostrar su sentido, no su rapidez. Arrastra para girar la vista.",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
 "Hold the loop":
   "Detener la espira",
 "Only the part of the wire across the field counts: F = ILB sin θ. At θ = {#} the current runs along B and there is no force at all.":
@@ -144,12 +138,6 @@ VDI18N.add('es', 'demo/wire-force', {
   "Un conmutador invierte la corriente cada vez que μ se alinea con B (el plano de la espira perpendicular al campo), así que la torca mantiene el mismo sentido y la espira sigue girando: un motor de CD. La torca no es constante; es máxima cuando el plano de la espira está a lo largo de B.",
 "−{#} mJ":
   "−{#} mJ",
-"I, row {#}":
-  "I, fila {#}",
-"reading, row {#}":
-  "lectura, fila {#}",
-"Row {#} captured.":
-  "Fila {#} capturada.",
 "A square coil of {#} turns, seen from above between the poles, with the forces on its sides and its magnetic moment.":
   "Una bobina cuadrada de {#} vueltas, vista desde arriba entre los polos, con las fuerzas sobre sus lados y su momento magnético.",
 "A commutator reverses the current each half turn, so this is a motor.":
@@ -164,6 +152,12 @@ VDI18N.add('es', 'demo/wire-force', {
   "El momento está a {#}° del campo.",
 "The loop turns at {#} rev/s.":
   "La espira gira a {#} rev/s.",
+"I, row {#}":
+  "I, fila {#}",
+"reading, row {#}":
+  "lectura, fila {#}",
+"Row {#} captured.":
+  "Fila {#} capturada.",
 "The loop is released.":
   "La espira está suelta.",
 "{#} turns, {#} cm square":
@@ -172,6 +166,16 @@ VDI18N.add('es', 'demo/wire-force', {
   "conmutador y escobillas",
 "{#} readings captured.":
   "{#} lecturas capturadas.",
+"There is no commutator.":
+  "No hay conmutador.",
+"The torque now is −{#} mN·m.":
+  "La torca ahora es −{#} mN·m.",
+"Describe the picture":
+  "Describir la imagen",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "Close":
   "Cerrar",
 "Paused.":
