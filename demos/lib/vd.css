@@ -275,7 +275,11 @@ dialog.vd-prefs::backdrop { background: rgba(0, 0, 0, 0.45); }
 /* Screen reader layer (Steve unparked the screen reader pass, 2026-11-16; vd.js VD.say, VD.describe, VD.a11y). Always on: nothing here
    shows unless a keyboard user reaches it. .vd-sr hides text from the eye only; the skip links and the Describe button show while focused. */
 .vd-sr { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; border: 0; }
-.vd-skip, .vd-sr-btn { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+/* Unfocused, they shrink to 1 px whatever padding, border or min size a demo gives its buttons (a padded button in a clipped stage
+   counted as cut off). */
+.vd-skip:not(:focus), .vd-sr-btn:not(:focus) { position: absolute !important; width: 1px !important; height: 1px !important; min-width: 0 !important;
+  min-height: 0 !important; padding: 0 !important; margin: -1px !important; border: 0 !important; overflow: hidden !important; clip: rect(0 0 0 0);
+  clip-path: inset(50%); white-space: nowrap; }
 .vd-skip:focus, .vd-sr-btn:focus { position: fixed; z-index: 1000; top: 8px; left: 8px; width: auto; height: auto; overflow: visible; clip: auto; clip-path: none;
   padding: 8px 14px; border-radius: 8px; background: var(--surface, #fff); color: var(--ink, #111); border: 2px solid var(--accent, #8f5000);
   font: 600 0.95rem/1.2 system-ui, sans-serif; text-decoration: none; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3); outline: 2px solid var(--accent, #8f5000); outline-offset: 2px; }
