@@ -1020,7 +1020,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       { text: 'Now in the beaker', bold: true },
       { text: `x  HBrO₂   ${sci(BK.y[0], 3)}`, color: T.equi },
       { text: `y  Br⁻     ${sci(BK.y[1], 3)}`, color: T.brInk },
-      { text: `z  catalyst, oxidized  ${sci(z, 3)}`, color: T.neg }
+      { text: `${typeof VDI18N === 'object' ? VDI18N.t('z  catalyst, oxidized') : 'z  catalyst, oxidized'}  ${sci(z, 3)}`, color: T.neg }   /* the words on their own: the power of ten after them changes the key */
     ], bar: { s: sZ, l0: 'red ferroin', l1: 'blue ferriin', cols: solution } });
     // time series of the three scaled concentrations, log scale
     const b = { L: 50 * s, R: W - 16 * s, T: blk.bottom + 18 * s, B: H - 34 * s };
@@ -1130,7 +1130,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     axis('y  Br⁻', T.brInk, yp, [ys * 1.42, 0, -1.12], [0, 0]);
     axis('z  catalyst', T.neg, zp, [ys * 1.12, -xs * 1.12, 1.18], [0, 0]);
     const fq = project(to3(BK.fixed[0], BK.fixed[1], BK.fixed[2]));
-    ctx.font = mono(k, 10); halo(ctx, bkStable() ? 'steady state, stable' : 'steady state, unstable', fq[0] + 9 * s, fq[1] - 10 * s, T.muted, 'left');
+    ctx.font = mono(k, 10); halo(ctx, typeof VDI18N === 'object' ? (bkStable() ? VDI18N.t('steady state, stable') : VDI18N.t('steady state, unstable')) : bkStable() ? 'steady state, stable' : 'steady state, unstable', fq[0] + 9 * s, fq[1] - 10 * s, T.muted, 'left');
   }
   function draw2DPortrait() {
     // fallback when three.js is not available: log z against log x
@@ -1152,7 +1152,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const b = { L: 50 * s, R: W - 16 * s, T: 54 * s, B: H - 34 * s };
     if (b.B - b.T < 40) return;
     const xr = [0.3, 3.0], yr = [-4.2, 0.2];
-    const sub = BD.done ? '● highest and lowest z on the cycle · line: steady state, dashed where unstable' : `computing the cycle at f = ${BD.fs[BD.k].toFixed(2)} (${BD.k + 1} of ${BD.fs.length})`;
+    const sub = BD.done ? (typeof VDI18N === 'object' ? VDI18N.t('● highest and lowest z on the cycle · line: steady state, dashed where unstable') : '● highest and lowest z on the cycle · line: steady state, dashed where unstable') : `computing the cycle at f = ${BD.fs[BD.k].toFixed(2)} (${BD.k + 1} of ${BD.fs.length})`;
     const { X, Y } = axes(ctx, k, b, xr, yr, { xt: niceTicks(0.5, 3, 5), yt: [-4, -3, -2, -1, 0], xf: (v) => v.toFixed(1), yf: dec, xl: 'f', title: 'Oxidized catalyst z against f', sub });
     geoC = { b, X, xr, kind: 'f' };
     ctx.save(); ctx.beginPath(); ctx.rect(b.L, b.T, b.R - b.L, b.B - b.T); ctx.clip();

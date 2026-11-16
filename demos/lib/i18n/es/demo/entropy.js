@@ -312,16 +312,6 @@ VDI18N.add('es', 'demo/entropy', {
   "COP Q_c/W",
 "Carnot COP":
   "COP de Carnot",
-"A refrigerator between a hot reservoir above and a cold reservoir below.":
-  "Un refrigerador entre un depósito caliente arriba y uno frío abajo.",
-"COP {#}.":
-  "COP {#}.",
-"The Carnot COP is {#}.":
-  "El COP de Carnot es {#}.",
-"Entropy change of the universe −{#} J/K.":
-  "Cambio de entropía del universo −{#} J/K.",
-"The device beats Carnot and breaks the second law.":
-  "El dispositivo supera a Carnot y viola la segunda ley.",
 "A hundred molecules. Once the partition is gone the count settles near {#} and only wobbles. The chance of finding all hundred on the left is {#}^−{#}, about {#} × {#}⁻³¹: it never happens, which is why free expansion is irreversible.":
   "Cien moléculas. Una vez que se quita la partición, la cuenta se estabiliza cerca de {#} y solo fluctúa. La probabilidad de encontrar las cien a la izquierda es {#}^−{#}, aproximadamente {#} × {#}⁻³¹: nunca pasa, y por eso la expansión libre es irreversible.",
 "QUANTA IN A":
@@ -354,6 +344,10 @@ VDI18N.add('es', 'demo/entropy', {
   "Un motor entre {#} K y {#} K toma {#} J del depósito caliente y hace {#} J de trabajo. Su eficiencia es {#}, menor que el límite de Carnot de {#}, y la entropía del universo aumenta.",
 "The same reservoirs, but this engine claims {#} J of work from {#} J: an efficiency of {#}, above Carnot. Pair it with a Carnot refrigerator that puts its waste heat back, and see what the pair does.":
   "Los mismos depósitos, pero este motor dice dar {#} J de trabajo a partir de {#} J: una eficiencia de {#}, mayor que la de Carnot. Combínalo con un refrigerador de Carnot que devuelva su calor de desecho y mira lo que hace el par.",
+"Entropy change of the universe −{#} J/K.":
+  "Cambio de entropía del universo −{#} J/K.",
+"The device beats Carnot and breaks the second law.":
+  "El dispositivo supera a Carnot y viola la segunda ley.",
 "breaks the Kelvin statement":
   "viola el enunciado de Kelvin",
 "An engine that turns all {#} J from the hot reservoir into work and gives nothing to the cold one. The Kelvin statement says no such engine exists.":
@@ -364,8 +358,12 @@ VDI18N.add('es', 'demo/entropy', {
   "viola el enunciado de Clausius",
 "A refrigerator that moves {#} J from a {#} K freezer to a {#} K room with no work at all. The Clausius statement says no such refrigerator exists.":
   "Un refrigerador que mueve {#} J de un congelador a {#} K a una habitación a {#} K sin ningún trabajo. El enunciado de Clausius dice que no existe tal refrigerador.",
+"A refrigerator between a hot reservoir above and a cold reservoir below.":
+  "Un refrigerador entre un depósito caliente arriba y uno frío abajo.",
 "COP is undefined.":
   "El COP no está definido.",
+"The Carnot COP is {#}.":
+  "El COP de Carnot es {#}.",
 "The device breaks the Clausius statement.":
   "El dispositivo viola el enunciado de Clausius.",
 "refrigerator":
@@ -392,6 +390,26 @@ VDI18N.add('es', 'demo/entropy', {
   "Arrastra para girar, doble clic para regresar. Anchos de flecha proporcionales a la energía; no a escala.",
 "The device breaks the Kelvin statement.":
   "El dispositivo viola el enunciado de Kelvin.",
+"CARNOT":
+  "CARNOT",
+"with the Carnot refrigerator":
+  "con el refrigerador de Carnot",
+"net heat from hot: {#} J":
+  "calor neto del foco caliente: {#} J",
+"net heat to cold: {#} J":
+  "calor neto al foco frío: {#} J",
+"net work out: {#} J":
+  "trabajo neto entregado: {#} J",
+"Pair: net heat from hot":
+  "Par: calor neto del foco caliente",
+"Pair: net heat to cold":
+  "Par: calor neto al foco frío",
+"Pair: net work out":
+  "Par: trabajo neto entregado",
+"Paired with a Carnot device: net heat from hot {#} J, net heat to cold {#} J, net work out {#} J.":
+  "Combinado con un dispositivo de Carnot: calor neto del foco caliente {#} J, calor neto al foco frío {#} J, trabajo neto entregado {#} J.",
+"COP {#}.":
+  "COP {#}.",
 "Describe the picture":
   "Describir la imagen",
 "Time controls":

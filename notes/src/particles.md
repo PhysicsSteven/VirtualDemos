@@ -18,7 +18,7 @@ Students should have read §§11.1 to 11.3 and know relativistic energy and mome
 
 1. **Standard Model.** Ask which particles feel the strong force (quarks and hadrons, not leptons) and which are fermions. Point out the two values the book gives for the weak force's relative strength (10⁻⁶ in §11.1, 10⁻¹⁰ in Table 11.6) and why only the order matters (Q1).
 2. **Neutron decay** with Blind on: students check each line, then remove the antineutrino (Q2).
-3. **Making strange particles**: π⁻ + p → K⁰ + Λ⁰ is strong and keeps S = 0. Swap the K⁰ for a π⁰ and it fails (Q3). Use Set to threshold.
+3. **Making strange particles**: π⁻ + p → K⁰ + Λ⁰ is strong and keeps S = 0. Swap the K⁰ for a π⁰: strangeness changes, so the strong interaction cannot do it, and the checker allows it only through the weak interaction (Q3). Use Set to threshold.
 4. **Making an upsilon** (Example 11.7): each beam needs 5.29 GeV. Then ask what a fixed target would need (Q4).
 5. **A proton from quarks** and **Omega minus**: flip one spin of uud to get the Δ⁺; try uuu with spin ½ (Q5).
 6. **A Λ decay (practice)**: fit circles to the two tracks and measure the angle; the invariant mass comes out near 1116 MeV/c² (Q6).
@@ -30,7 +30,7 @@ Students should have read §§11.1 to 11.3 and know relativistic energy and mome
 
 **Q2.** Check n → p + e⁻ + ν̄_e for charge, baryon number and electron lepton number. What goes wrong without the antineutrino?
 
-**Q3.** Why is π⁻ + p → K⁰ + Λ⁰ allowed but π⁻ + p → π⁰ + Λ⁰ forbidden? Which interaction would the second one need, and could it do it?
+**Q3.** Why can the strong interaction make π⁻ + p → K⁰ + Λ⁰ but not π⁻ + p → π⁰ + Λ⁰? Which interaction would the second one need, and could it compete?
 
 **Q4.** Two 5.29 GeV beams make an ϒ(4S) (10.58 GeV/c²). How much kinetic energy would an electron beam need to make it on a positron at rest?
 

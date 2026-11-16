@@ -93,8 +93,6 @@ VDI18N.add('en', 'demo/gyroscope', [
 "{#} readings recorded.",
 "Press Space to release or hold, and R to reset.",
 "Hold",
-"Released and moving.",
-"Spin {#} rad/s, axle tilt −{#}°, time {#} s.",
 "slow motion: {#}/{#} of real time",
 "wheel {#} turns/s: a blur to the eye",
 "slow motion: wheel {#} turns/s, shown at {#}",
@@ -114,10 +112,14 @@ VDI18N.add('en', 'demo/gyroscope', [
 "The moment of inertia about the axle is {#} × {#}⁻³ kg·m².",
 "Release it and let the gate time at least one full turn round the post.",
 "−{#} mN·m (holds back the precession)",
+"Released and moving.",
+"Spin {#} rad/s, axle tilt −{#}°, time {#} s.",
 "(Slow motion shows it turn)",
 "Held.",
 "strobe {#} flashes/s · wheel {#} turns/s",
 "The wheel is not spinning.",
 "There is no predicted precession rate without spin.",
-"The arrows are hidden."
+"The arrows are hidden.",
+"It stood up.",
+"It fell."
 ]);

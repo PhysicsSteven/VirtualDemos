@@ -638,6 +638,10 @@ table.rows button:hover { color: var(--pos); }
   }
   const kPa = (v, d) => `${fx(v / 1000, d === undefined ? 2 : d)} kPa`;
   const fN = (v) => `${sig(v, 3)} N`;
+  /* a difference of two forces shown to 3 figures: below the last digit those forces are shown to, it reads 0 at that precision
+     (a floating block settles to W = F_B; the leftover is roundoff, not a force to show to nine places) */
+  const fNet = (a, b) => { const m = Math.max(Math.abs(a), Math.abs(b)), d = m > 1e-12 ? clamp(2 - Math.floor(Math.log10(m) + 1e-12), 0, 9) : 3;
+    return Math.abs(a - b) < 0.5 * Math.pow(10, -d) ? `${fx(0, d)} N` : fN(a - b); };
   const lenStr = (m) => (Math.abs(m) < 1 ? `${fx(m * 100, 1)} cm` : `${fx(m, 2)} m`);
   function nice(raw) { const p = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p; return (m < 1.5 ? 1 : m < 3 ? 2 : m < 7 ? 5 : 10) * p; }
   const fmtRate = (r) => (r === 1 ? 'real time' : `slow motion ×${+(1 / r).toFixed(1)}`);
@@ -1715,7 +1719,7 @@ table.rows button:hover { color: var(--pos); }
       rows = [[b.q.scale ? 'Scale reading in air (weight W)' : 'Weight W', `${I.W} N`, 'c-w'],
         b.q.scale ? ['Spring scale T', `${I.T} N`, 'c-t'] : ['Floor pushes N', fN(b.N), 'c-t', false, true],
         ['Depth ruler: block bottom below surface', `${I.d} cm`, '', true],
-        ['Buoyant force F_B', fN(b.FB), 'c-b', false, true], ['W − F_B', fN(b.W - b.FB), '', false, true],
+        ['Buoyant force F_B', fN(b.FB), 'c-b', false, true], ['W − F_B', fNet(b.W, b.FB), '', false, true],
         ['Fraction under now', `${fx(fr * 100, 1)}%`, '', false, true], ['ρ_obj/ρ_fluid', fe < 1 ? `${fx(fe * 100, 1)}% (floats)` : `${fx(fe, 2)} (sinks)`, '', false, true],
         ['Submerged volume', `${fx(Vs * 1e6, 0)} cm³`, '', false, true],
         b.q.over ? ['Water in beaker', `${I.Vb} cm³, ${fN(rhoF() * G * bs.caught)}`, 'c-p', true] : ['Level rise V_sub/A', `${fx(Vs / p.A * 1000, 2)} mm`, '', false, true]];
@@ -2111,7 +2115,7 @@ table.rows button:hover { color: var(--pos); }
           : `<td>${k === 'mode' ? r.mode : k === 'Vs' ? fx(dv.Vs, 1) : k === 'FB' ? fx(dv.FB, 2) : ''}</td>`).join('')}<td><button type="button" data-del="${i}" aria-label="Delete row ${j + 1}">×</button></td></tr>`;
       }).join('');
     }
-    $('readHint').textContent = READ_HINT[kind || 'none'] + (kind && others ? ` ${others} reading${others > 1 ? 's' : ''} from other scenes are kept for the CSV.` : '');
+    $('readHint').textContent = READ_HINT[kind || 'none'] + (kind && others ? ` ${others} reading${others > 1 ? 's' : ''} from other scenes ${others > 1 ? 'are' : 'is'} kept for the CSV.` : '');
   }
   const READ_HINT = {
     depth: 'Record reading stores the depth ruler and the pressure gauge as displayed, in the mode shown. The fit uses the readings for the present liquid and pressure mode: P = intercept + slope·h.',

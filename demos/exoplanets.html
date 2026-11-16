@@ -921,6 +921,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const minus = (s) => s.replace(/-/g, '−');
   const sig = (x, n = 3) => { if (x === 0) return '0'; const s = x.toPrecision(n); return s.includes('e') ? (+s).toString() : s; };
   const comma = (x) => Math.round(x).toLocaleString('en-US');
+  const sig4c = (x) => { const s = sig(x, 4); return Math.abs(+s) >= 1000 ? (+s).toLocaleString('en-US') : s; };   /* 4 figures, with commas from 1,000 h */
   function fmtPeriod(sec) {
     const d = sec / DAY;
     if (d < 1) return sig(d * 24) + ' h';
@@ -1442,7 +1443,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const f = flux(nowT());
     $('rFnow').textContent = f === 1 ? '1' : minus('−' + fmtPpm((1 - f) * 1e6));
     $('insideWarn').hidden = BIN || !D.inside; $('touchWarn').hidden = !BIN || !D.inside;
-    const now = nowT(), m = meas(now), hrs = (x) => minus(sig(Math.abs(x) < 1e-6 ? 0 : x / 3600, 4)) + ' h';   /* rounding noise at mid transit (1e−11 s) would show as 4e−15 h */
+    const now = nowT(), m = meas(now), hrs = (x) => minus(sig4c(Math.abs(x) < 1e-6 ? 0 : x / 3600)) + ' h';   /* rounding noise at mid transit (1e−11 s) would show as 4e−15 h */
     $('rTnow').textContent = hrs(now);
     if (P.noise > 0) {   /* with noise the readouts give the measurements nearest the cursor, as Record reading stores them */
       $('rFnow').textContent = minus(sig((1 - m.f) * 1e6, 4)) + ' ppm drop';
@@ -1973,7 +1974,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   /* what each picture shows now, for a screen reader (VD.describe): the orbit, the telescope's view, the light curve, the velocity curve */
   if (window.VD && VD.describe) {
-    const hrsT = (x) => minus(sig(Math.abs(x) < 1e-6 ? 0 : x / 3600, 4)) + ' h';
+    const hrsT = (x) => minus(sig4c(Math.abs(x) < 1e-6 ? 0 : x / 3600)) + ' h';
     const massT = (m) => (m < 30 ? sig(m) + ' Earth masses' : sig(m / MJ) + ' Jupiter masses');
     const radT = (r) => (r < 4 ? sig(r) + ' Earth radii' : sig(r / RJ) + ' Jupiter radii');
     const run = () => (playing ? 'Playing.' : 'Paused.');

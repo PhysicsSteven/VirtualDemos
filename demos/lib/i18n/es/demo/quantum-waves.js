@@ -4,10 +4,6 @@ VDI18N.add('es', 'demo/quantum-waves', {
   "Energía (eV)",
 "phase of ψ":
   "fase de ψ",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
 "Quantum Wave Packets":
   "Paquetes de ondas cuánticos",
 "<a>Quantum mechanics</a>":
@@ -406,6 +402,12 @@ VDI18N.add('es', 'demo/quantum-waves', {
   "Distancia entre mínimos",
 "V = V₀[(x/b)² − {#}]², with minima at ±b. Hard walls at the edges of the view. You can also drag the edges of the potential on the energy diagram.":
   "V = V₀[(x/b)² − {#}]², con mínimos en ±b. Paredes rígidas en los bordes de la vista. También puedes arrastrar los bordes del potencial en el diagrama de energía.",
+"A double well with a central barrier of {#} eV and minima {#} nm apart.":
+  "Un pozo doble con una barrera central de {#} eV y mínimos separados {#} nm.",
+"The electron is in a mix of {#} energy levels.":
+  "El electrón está en una mezcla de {#} niveles de energía.",
+"Level n = {#} has energy {#} eV.":
+  "El nivel n = {#} tiene energía {#} eV.",
 "Make the box longer than it is wide and the pairs that matched in the square, like ({#},{#}) and ({#},{#}), move apart. Three states with three energies: the motion never quite repeats.":
   "Haz la caja más larga que ancha y los pares que coincidían en el cuadrado, como ({#},{#}) y ({#},{#}), se separan. Tres estados con tres energías: el movimiento nunca se repite del todo.",
 "levels (m, k)":
@@ -414,18 +416,10 @@ VDI18N.add('es', 'demo/quantum-waves', {
   "Una caja redonda de radio R. Los estados (m, k) son J_m(j r/R) e^(imφ), con j el k-ésimo cero de la función de Bessel J_m y E = ħ²j²/2mR². Cada estado lleva momento angular mħ; m y −m comparten una energía. Mezclar m = {#} con m = {#} hace girar el bulto alrededor del círculo.",
 "Hard wall at r = R.":
   "Pared rígida en r = R.",
-"A double well with a central barrier of {#} eV and minima {#} nm apart.":
-  "Un pozo doble con una barrera central de {#} eV y mínimos separados {#} nm.",
-"The electron is in a mix of {#} energy levels.":
-  "El electrón está en una mezcla de {#} niveles de energía.",
-"Level n = {#} has energy {#} eV.":
-  "El nivel n = {#} tiene energía {#} eV.",
 "An electron in a round box of radius {#} nm.":
   "Un electrón en una caja redonda de radio {#} nm.",
 "Angular momentum ⟨Lz⟩ = {#} ħ.":
   "Momento angular ⟨Lz⟩ = {#} ħ.",
-"Mean position ⟨x⟩ = {#} nm, ⟨y⟩ = {#} nm.":
-  "Posición media ⟨x⟩ = {#} nm, ⟨y⟩ = {#} nm.",
 "V = ½mωx²x² + ½mωy²y². E = ħωx(nx + ½) + ħωy(ny + ½): with ωx = ωy the nth level holds n + {#} states. ({#},{#}) with ({#},{#}) swings along x at the oscillator's own frequency.":
   "V = ½mωx²x² + ½mωy²y². E = ħωx(nx + ½) + ħωy(ny + ½): con ωx = ωy el n-ésimo nivel contiene n + {#} estados. ({#},{#}) con ({#},{#}) oscila a lo largo de x con la frecuencia propia del oscilador.",
 "ħωx":
@@ -446,6 +440,8 @@ VDI18N.add('es', 'demo/quantum-waves', {
   "Pozos por lado",
 "V = V(x) + V(y), each a row of wells {#} nm wide between barriers, with hard walls outside. Where barriers cross, V is 2V₀. Each state is a product of two states of the row, found on a {#} nm grid.":
   "V = V(x) + V(y), cada uno una fila de pozos de {#} nm de ancho entre barreras, con paredes rígidas afuera. Donde se cruzan las barreras, V es 2V₀. Cada estado es un producto de dos estados de la fila, obtenidos en una malla de {#} nm.",
+"An electron in a {#} by {#} lattice of wells, with barriers {#} eV high and {#} nm wide.":
+  "Un electrón en una red de pozos de {#} por {#}, con barreras de {#} eV de altura y {#} nm de ancho.",
 "field ℰ":
   "campo ℰ",
 "ħω":
@@ -458,18 +454,20 @@ VDI18N.add('es', 'demo/quantum-waves', {
   "Un electrón en un oscilador bidimensional con ħωx = {#} eV y ħωy = {#} eV.",
 "The electron is in one state, ({#},{#}).":
   "El electrón está en un solo estado, ({#},{#}).",
-"Mean position ⟨x⟩ = {#} nm, ⟨y⟩ = −{#} nm.":
-  "Posición media ⟨x⟩ = {#} nm, ⟨y⟩ = −{#} nm.",
 "The light is on, polarized along y, with photon energy ħω = {#} eV and field strength {#} V/nm.":
   "La luz está encendida, polarizada a lo largo de y, con energía de fotón ħω = {#} eV e intensidad de campo {#} V/nm.",
 "{#} level is chosen.":
   "Hay {#} nivel elegido.",
+"Mean position ⟨x⟩ = {#} nm, ⟨y⟩ = −{#} nm.":
+  "Posición media ⟨x⟩ = {#} nm, ⟨y⟩ = −{#} nm.",
 "Tuned to the transition ({#},{#}) → ({#},{#}), gap {#} eV.":
   "Sintonizado a la transición ({#},{#}) → ({#},{#}), brecha {#} eV.",
 "The detuning is {#} eV.":
   "La desintonía es {#} eV.",
 "The Rabi period is {#} fs.":
   "El periodo de Rabi es {#} fs.",
+"Mean position ⟨x⟩ = {#} nm, ⟨y⟩ = {#} nm.":
+  "Posición media ⟨x⟩ = {#} nm, ⟨y⟩ = {#} nm.",
 "Mean position ⟨x⟩ = −{#} nm, ⟨y⟩ = −{#} nm.":
   "Posición media ⟨x⟩ = −{#} nm, ⟨y⟩ = −{#} nm.",
 "|ψ|² as height":
@@ -482,16 +480,18 @@ VDI18N.add('es', 'demo/quantum-waves', {
   "Una caja de {#} nm de ancho con paredes infinitas.",
 "A harmonic oscillator with level spacing ħω = {#} eV.":
   "Un oscilador armónico con separación de niveles ħω = {#} eV.",
-"An electron in a {#} by {#} lattice of wells, with barriers {#} eV high and {#} nm wide.":
-  "Un electrón en una red de pozos de {#} por {#}, con barreras de {#} eV de altura y {#} nm de ancho.",
 "The light is on, polarized along x, with photon energy ħω = {#} eV and field strength {#} V/nm.":
   "La luz está encendida, polarizada a lo largo de x, con energía de fotón ħω = {#} eV e intensidad de campo {#} V/nm.",
-"Describe the picture":
-  "Describir la imagen",
+"Phase period h/E":
+  "Periodo de fase h/E",
+"|ψ|² stays still":
+  "|ψ|² no cambia",
 "Skip to the picture":
   "Ir a la imagen",
 "Skip to the controls":
   "Ir a los controles",
+"Describe the picture":
+  "Describir la imagen",
 "Time controls":
   "Controles de tiempo",
 "Step":

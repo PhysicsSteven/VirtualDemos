@@ -188,8 +188,8 @@ VDI18N.add('es', 'demo/optics-bench', {
   "M = −f<sub>obj</sub>/f<sub>eye</sub>",
 "Lens separation (f<sub>obj</sub> + f<sub>eye</sub>)":
   "Separación de las lentes (f<sub>obj</sub> + f<sub>eye</sub>)",
-"Beam leaving the eyepiece":
-  "Haz que sale del ocular",
+"Final image (beam leaving the eyepiece)":
+  "Imagen final (haz que sale del ocular)",
 "θ<sub>in</sub> and θ<sub>out</sub> are the beam's angles to the axis going into the objective and out of the eyepiece (as tan θ). M &lt; {#}: the view is inverted. M = −f<sub>obj</sub>/f<sub>eye</sub> needs the lenses f<sub>obj</sub> + f<sub>eye</sub> apart, so a parallel beam leaves parallel.":
   "θ<sub>in</sub> y θ<sub>out</sub> son los ángulos del haz respecto al eje al entrar al objetivo y al salir del ocular (como tan θ). M &lt; {#}: la vista está invertida. M = −f<sub>obj</sub>/f<sub>eye</sub> requiere las lentes separadas f<sub>obj</sub> + f<sub>eye</sub>, para que un haz paralelo salga paralelo.",
 "Refraction":
@@ -248,8 +248,8 @@ VDI18N.add('es', 'demo/optics-bench', {
   "objetivo",
 "eyepiece":
   "ocular",
-"Parallel, at −{#}° (in at {#}°)":
-  "Paralelo, a −{#}° (entra a {#}°)",
+"At infinity, rays out at −{#}° (in at {#}°)":
+  "En el infinito, rayos de salida a −{#}° (de entrada a {#}°)",
 "Click the prism and choose a real material to see its true dispersion; the editor lists n from {#} to {#} nm and the spread of colors at minimum deviation.":
   "Haz clic en el prisma y elige un material real para ver su dispersión verdadera; el editor lista n de {#} a {#} nm y la separación de colores en la desviación mínima.",
 "Refracts out":
@@ -280,6 +280,18 @@ VDI18N.add('es', 'demo/optics-bench', {
   "∞ (plana)",
 "Virtual, upright, same size":
   "Virtual, derecha, del mismo tamaño",
+"Flat surface at x = {#} cm, y = {#} cm.":
+  "Superficie plana en x = {#} cm, y = {#} cm.",
+"Image distance −{#} cm.":
+  "Distancia de la imagen −{#} cm.",
+"Magnification {#}.":
+  "Aumento {#}.",
+"The image is virtual.":
+  "La imagen es virtual.",
+"The image is upright.":
+  "La imagen está derecha.",
+"The image is the same size as the object.":
+  "La imagen tiene el mismo tamaño que el objeto.",
 "White light through a flint glass lens, f = {#} cm at {#} nm. The glass bends violet more than red, so violet ({#} nm) focuses {#} cm nearer the lens than red ({#} nm): chromatic aberration. The spot on the screen has a colored fringe. Click the lens to switch to crown glass or an ideal lens.":
   "Luz blanca a través de una lente de vidrio flint, f = {#} cm a {#} nm. El vidrio desvía el violeta más que el rojo, así que el violeta ({#} nm) enfoca {#} cm más cerca de la lente que el rojo ({#} nm): aberración cromática. La mancha en la pantalla tiene un borde de color. Haz clic en la lente para cambiar a vidrio crown o a una lente ideal.",
 "on the screen, × {#}":
@@ -290,8 +302,6 @@ VDI18N.add('es', 'demo/optics-bench', {
   "acercamiento al foco",
 "heights × {#}":
   "alturas × {#}",
-"Parallel beam at x = −{#} cm, y = {#} cm.":
-  "Haz paralelo en x = −{#} cm, y = {#} cm.",
 "White light on a concave mirror, R = {#} cm, f = {#} cm. Reflection turns every color by the same angle, so all the colors meet at one focus. This is one reason every large modern telescope is a reflector.":
   "Luz blanca sobre un espejo cóncavo, R = {#} cm, f = {#} cm. La reflexión desvía todos los colores en el mismo ángulo, así que todos los colores se juntan en un solo foco. Esta es una razón por la que todos los telescopios grandes modernos son reflectores.",
 "A house {#} cm tall and {#} cm deep lying on the bench, {#} to {#} cm from an {#} cm lens. Each point of it is imaged on its own: the real image is inverted, and its depth is m₁m₂ times the object depth, not m times. Choose another corner in the editor to see its rays, or move the house toward F and watch the depth stretch.":
@@ -362,18 +372,12 @@ VDI18N.add('es', 'demo/optics-bench', {
   "El camino más rápido aún no tiene tabla en la hoja de trabajo: las lecturas y la gráfica dan los tiempos.",
 "t (ns) against x (cm)":
   "t (ns) contra x (cm)",
-"Image distance −{#} cm.":
-  "Distancia de la imagen −{#} cm.",
-"Magnification {#}.":
-  "Aumento {#}.",
-"The image is virtual.":
-  "La imagen es virtual.",
-"The image is upright.":
-  "La imagen está derecha.",
 "The image is enlarged.":
   "La imagen está agrandada.",
 "Concave mirror at x = {#} cm, y = {#} cm, focal length {#} cm.":
   "Espejo cóncavo en x = {#} cm, y = {#} cm, distancia focal {#} cm.",
+"Parallel beam at x = −{#} cm, y = {#} cm.":
+  "Haz paralelo en x = −{#} cm, y = {#} cm.",
 "Parallel beam at x = −{#} cm, y = −{#} cm.":
   "Haz paralelo en x = −{#} cm, y = −{#} cm.",
 "Prism with n = {#} at x = {#} cm, y = {#} cm.":
@@ -382,12 +386,138 @@ VDI18N.add('es', 'demo/optics-bench', {
   "Semicírculo con n = {#} en x = {#} cm, y = {#} cm.",
 "Spherical surface at x = {#} cm, y = {#} cm.":
   "Superficie esférica en x = {#} cm, y = {#} cm.",
-"Flat surface at x = {#} cm, y = {#} cm.":
-  "Superficie plana en x = {#} cm, y = {#} cm.",
-"The image is the same size as the object.":
-  "La imagen tiene el mismo tamaño que el objeto.",
 "Shape at x = −{#} cm, y = {#} cm.":
   "Figura en x = −{#} cm, y = {#} cm.",
+"Drag the tip of the arrow to change its height. The knob aims the rays. Arrow keys nudge it, [ and ] rotate it, + and − resize it, Delete removes it.":
+  "Arrastra la punta de la flecha para cambiar su altura. La perilla apunta los rayos. Las flechas del teclado la mueven un poco, [ y ] la giran, + y − cambian su tamaño, Supr la quita.",
+"Height":
+  "Altura",
+"Ray count":
+  "Número de rayos",
+"Fan half angle":
+  "Semiángulo del abanico",
+"Aim":
+  "Dirección",
+"White light":
+  "Luz blanca",
+"Object arrow":
+  "Flecha objeto",
+"Selected: Object arrow.":
+  "Seleccionado: Flecha objeto.",
+"Drag F or F′ along the axis to change f. Pull one through the lens to switch between converging and diverging. The grip at the top sets the height. Turn the round knob to rotate it. Arrow keys nudge it, [ and ] rotate it, + and − resize it, Delete removes it.":
+  "Arrastra F o F′ a lo largo del eje para cambiar f. Pasa uno al otro lado de la lente para cambiar entre convergente y divergente. El agarre de arriba fija la altura. Gira la perilla redonda para rotarla. Las flechas del teclado la mueven un poco, [ y ] la giran, + y − cambian su tamaño, Supr la quita.",
+"Converging":
+  "Convergente",
+"Diverging":
+  "Divergente",
+"Focal length":
+  "Distancia focal",
+"Ideal":
+  "Ideal",
+"Ideal: the same focal length for every color.":
+  "Ideal: la misma distancia focal para todos los colores.",
+"Aperture height":
+  "Altura de la apertura",
+"Rotate":
+  "Rotar",
+"Selected: Converging lens.":
+  "Seleccionado: Lente convergente.",
+"Slide it along the bench: the image is sharp only where the rays from each point of the object meet. The grip at the top sets the height. Arrow keys nudge it, + and − resize it, Delete removes it.":
+  "Deslízala a lo largo del banco: la imagen es nítida solo donde se juntan los rayos de cada punto del objeto. El agarre de arriba fija la altura. Las flechas del teclado la mueven un poco, + y − cambian su tamaño, Supr la quita.",
+"Screen":
+  "Pantalla",
+"Selected: Screen.":
+  "Seleccionado: Pantalla.",
+"Drag F or C along the axis to change the curvature (f = R/{#}). Pull one through the mirror to switch concave and convex. The grip at the top sets the height. Turn the round knob to rotate it. Arrow keys nudge it, [ and ] rotate it, + and − resize it, Delete removes it.":
+  "Arrastra F o C a lo largo del eje para cambiar la curvatura (f = R/{#}). Pasa uno al otro lado del espejo para cambiar entre cóncavo y convexo. El agarre de arriba fija la altura. Gira la perilla redonda para rotarlo. Las flechas del teclado lo mueven un poco, [ y ] lo giran, + y − cambian su tamaño, Supr lo quita.",
+"Concave":
+  "Cóncavo",
+"Convex":
+  "Convexo",
+"Plane":
+  "Plano",
+"Selected: Concave mirror.":
+  "Seleccionado: Espejo cóncavo.",
+"Drag either end of the beam to change its width. Arrow keys nudge it, [ and ] rotate it, + and − resize it, Delete removes it.":
+  "Arrastra cualquier extremo del haz para cambiar su ancho. Las flechas del teclado lo mueven un poco, [ y ] lo giran, + y − cambian su tamaño, Supr lo quita.",
+"Width":
+  "Ancho",
+"Angle":
+  "Ángulo",
+"Parallel beam":
+  "Haz paralelo",
+"Selected: Parallel beam.":
+  "Seleccionado: Haz paralelo.",
+"Drag the corner grip to change the side length. Turn the round knob to rotate it. Arrow keys nudge it, [ and ] rotate it, + and − resize it, Delete removes it.":
+  "Arrastra el agarre de la esquina para cambiar la longitud del lado. Gira la perilla redonda para rotarlo. Las flechas del teclado lo mueven un poco, [ y ] lo giran, + y − cambian su tamaño, Supr lo quita.",
+"Adjustable n":
+  "n ajustable",
+"Crown":
+  "Crown",
+"Flint":
+  "Flint",
+"Fused silica":
+  "Sílice fundida",
+"Adjustable n, dispersion exaggerated: n = {#} at {#} nm, {#} at {#} nm. At minimum deviation this {#}° prism turns {#} nm light by {#}° and {#} nm light by {#}°, a spread of {#}°.":
+  "n ajustable, dispersión exagerada: n = {#} a {#} nm, {#} a {#} nm. En la desviación mínima este prisma de {#}° desvía la luz de {#} nm {#}° y la de {#} nm {#}°, una separación de {#}°.",
+"Refractive index n":
+  "Índice de refracción n",
+"Side length":
+  "Longitud del lado",
+"Selected: Prism.":
+  "Seleccionado: Prisma.",
+"Angle (pivots on the glass)":
+  "Ángulo (gira sobre el vidrio)",
+"Drag the grip on the flat face to change the radius. Turn the round knob to rotate it. Arrow keys nudge it, [ and ] rotate it, + and − resize it, Delete removes it.":
+  "Arrastra el agarre de la cara plana para cambiar el radio. Gira la perilla redonda para rotarlo. Las flechas del teclado lo mueven un poco, [ y ] lo giran, + y − cambian su tamaño, Supr lo quita.",
+"Adjustable n, dispersion exaggerated: n = {#} at {#} nm, {#} at {#} nm.":
+  "n ajustable, dispersión exagerada: n = {#} a {#} nm, {#} a {#} nm.",
+"Radius":
+  "Radio",
+"Semicircle":
+  "Semicírculo",
+"Selected: Semicircle.":
+  "Seleccionado: Semicírculo.",
+"Drag C along the axis to change R; pull it through the surface to change the sign. The grip sets the aperture, an opaque stop on the face. Turn the round knob to rotate it. Arrow keys nudge it, [ and ] rotate it, + and − resize it, Delete removes it.":
+  "Arrastra C a lo largo del eje para cambiar R; pásalo al otro lado de la superficie para cambiar el signo. El agarre fija la apertura, un diafragma opaco sobre la cara. Gira la perilla redonda para rotarla. Las flechas del teclado la mueven un poco, [ y ] la giran, + y − cambian su tamaño, Supr la quita.",
+"Radius |R|":
+  "Radio |R|",
+"Index n₁ (object side)":
+  "Índice n₁ (lado del objeto)",
+"Index n₂ (far side)":
+  "Índice n₂ (lado opuesto)",
+"Spherical surface":
+  "Superficie esférica",
+"Selected: Spherical surface.":
+  "Seleccionado: Superficie esférica.",
+"A flat surface: R is infinite and n₂/d_i = −n₁/d_o. Turn the round knob to rotate it. Arrow keys nudge it, [ and ] rotate it, + and − resize it, Delete removes it.":
+  "Una superficie plana: R es infinito y n₂/d_i = −n₁/d_o. Gira la perilla redonda para rotarla. Las flechas del teclado la mueven un poco, [ y ] la giran, + y − cambian su tamaño, Supr la quita.",
+"Flat surface":
+  "Superficie plana",
+"Selected: Flat surface.":
+  "Seleccionado: Superficie plana.",
+"f = +{#} cm at {#} nm":
+  "f = +{#} cm a {#} nm",
+"Flint glass (F2): f = {#} cm at {#} nm, {#} cm at {#} nm, {#} cm at {#} nm. Turn on White light at the source to see the colors focus apart.":
+  "Vidrio flint (F2): f = {#} cm a {#} nm, {#} cm a {#} nm, {#} cm a {#} nm. Activa Luz blanca en la fuente para ver que los colores enfocan por separado.",
+"A flat shape lying in the bench plane. Drag the grip at the top to change its size; the knob aims the rays from the chosen corner. Arrow keys nudge it, [ and ] rotate it, + and − resize it, Delete removes it.":
+  "Una figura plana en el plano del banco. Arrastra el agarre de arriba para cambiar su tamaño; la perilla apunta los rayos desde la esquina elegida. Las flechas del teclado la mueven un poco, [ y ] la giran, + y − cambian su tamaño, Supr la quita.",
+"House":
+  "Casa",
+"Letter F":
+  "Letra F",
+"Square":
+  "Cuadrado",
+"Rays from corner":
+  "Rayos desde la esquina",
+"Selected: Shape.":
+  "Seleccionado: Figura.",
+"Real, inverted, enlarged":
+  "Real, invertida, aumentada",
+"Beam leaving the eyepiece":
+  "Haz que sale del ocular",
+"Parallel, at −{#}° (in at {#}°)":
+  "Paralelo, a −{#}° (entra a {#}°)",
 "Describe the picture":
   "Describir la imagen",
 "Skip to the picture":
@@ -397,9 +527,5 @@ VDI18N.add('es', 'demo/optics-bench', {
 "<a>Worksheet {#}: Lenses and Optical Instruments</a>":
   "<a>Hoja de trabajo {#}: Lentes e instrumentos ópticos</a>",
 "Close":
-  "Cerrar",
-"Final image (beam leaving the eyepiece)":
-  "Imagen final (haz que sale del ocular)",
-"At infinity, rays out at −{#}° (in at {#}°)":
-  "En el infinito, rayos de salida a −{#}° (de entrada a {#}°)"
+  "Cerrar"
 });

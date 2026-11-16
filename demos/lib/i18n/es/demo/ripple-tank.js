@@ -1,23 +1,17 @@
 /* demo/ripple-tank in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/ripple-tank', {
+"height along A → B (solid), amplitude (dashed) · L = {#} mm":
+  "altura a lo largo de A → B (continua), amplitud (punteada) · L = {#} mm",
 "distance along the line from A (mm)":
   "distancia a lo largo de la línea desde A (mm)",
 "height (mm)":
   "altura (mm)",
-"height along A → B (solid), amplitude (dashed) · L = {#} mm":
-  "altura a lo largo de A → B (continua), amplitud (punteada) · L = {#} mm",
 "bar":
   "barra",
 "{#} mm · tank {#} × {#} mm, beaches {#} mm wide":
   "{#} mm · tanque de {#} × {#} mm, playas de {#} mm de ancho",
 "water height along A → B now (solid) and the amplitude, averaged over the last two periods (dashed) · L = {#} mm":
   "altura del agua a lo largo de A → B ahora (continua) y la amplitud, promediada en los últimos dos periodos (punteada) · L = {#} mm",
-"Describe the picture":
-  "Describir la imagen",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
 "Ripple Tank":
   "Tanque de ondas",
 "<a><span>←</span> <span>Rainbows</span></a><a><span>Polarization</span> <span>→</span></a>":
@@ -26,12 +20,6 @@ VDI18N.add('es', 'demo/ripple-tank', {
   "Haz ondas en un tanque de agua poco profunda con un punzón, dos punzones o una barra recta. Dibuja tus propias paredes y placas poco profundas, y observa cómo las ondas se dispersan a través de rendijas, interfieren, se reflejan, se desvían y se enfocan, y mide su longitud de onda, su rapidez y sus ángulos.",
 "lengths in mm · f in Hz":
   "longitudes en mm · f en Hz",
-"Time controls":
-  "Controles de tiempo",
-"Run for a moment and pause again":
-  "Avanza un momento y vuelve a pausar",
-"Step":
-  "Paso",
 "Still water: start the waves again from the beginning":
   "Agua quieta: empieza las ondas de nuevo desde el principio",
 "Still the water":
@@ -66,8 +54,6 @@ VDI18N.add('es', 'demo/ripple-tank', {
   "La amplitud en B es {#} mm.",
 "The waves are running.":
   "Las ondas están corriendo.",
-"Time {#} s.":
-  "Tiempo {#} s.",
 "Drawing in the tank":
   "Dibujar en el tanque",
 "<span>Draw</span>":
@@ -176,8 +162,6 @@ VDI18N.add('es', 'demo/ripple-tank', {
   "Bajo una onda: agua poco profunda",
 "Plane waves reach a barrier with two narrow slits {#} mm apart: each slit becomes a source, like two dippers in step. A is at the middle of the barrier, between the slits. Show the Amplitude, drag B onto a quiet line far from the slits, and check d sin θ = (m + ½)λ.":
   "Las ondas planas llegan a una barrera con dos rendijas angostas separadas {#} mm: cada rendija se vuelve una fuente, como dos punzones en fase. A está en el centro de la barrera, entre las rendijas. Muestra la Amplitud, arrastra B a una línea quieta lejos de las rendijas y comprueba d sen θ = (m + ½)λ.",
-"Period":
-  "Periodo",
 "Water {#} mm deep: λ":
   "Agua de {#} mm de profundidad: λ",
 "wave speed c = fλ":
@@ -274,6 +258,10 @@ VDI18N.add('es', 'demo/ripple-tank', {
   "{#} mm, en una pared",
 "A dipper {#} mm from a straight wall. The reflected waves are circles centered on a point {#} mm behind the wall, the image of the dipper, so the pattern in front of the wall is that of two dippers {#} mm apart moving together.":
   "Un punzón a {#} mm de una pared recta. Las ondas reflejadas son círculos centrados en un punto {#} mm detrás de la pared, la imagen del punzón, así que el patrón frente a la pared es el de dos punzones separados {#} mm que se mueven juntos.",
+"A ripple tank seen from above, with one dipper making circular waves.":
+  "Un tanque de ondas visto desde arriba, con un punzón que produce ondas circulares.",
+"A straight wall stands {#} mm from the dipper.":
+  "Una pared recta está a {#} mm del punzón.",
 "The right part of the tank has a glass plate under the water, leaving it {#} mm deep. The frequency is the same on both sides (each crest makes one crest), but the waves are slower in shallow water, so the wavelength is shorter. Measure λ on each side.":
   "La parte derecha del tanque tiene una placa de vidrio bajo el agua, que la deja con {#} mm de profundidad. La frecuencia es la misma a ambos lados (cada cresta produce una cresta), pero las ondas son más lentas en agua poco profunda, así que la longitud de onda es más corta. Mide λ a cada lado.",
 "Over the plate, {#} mm deep: λ":
@@ -318,22 +306,20 @@ VDI18N.add('es', 'demo/ripple-tank', {
   "Longitud de batido de los modos {#} y {#}, {#}π/(k₀ − k₁)",
 "A slice through the tank from the side, under the bar's plane waves: each dot is a bit of water. {#} Hz waves on water {#} mm deep: the depth is more than half a wavelength, so this is deep water. Every bit of water goes round a circle, forward under a crest and back under a trough, and the circles shrink fast with depth (to e^(−ks) of the surface's): half a wavelength down the water is almost still. The wave moves on; the water does not.":
   "Un corte lateral del tanque, bajo las ondas planas de la barra: cada punto es una porción de agua. Ondas de {#} Hz en agua de {#} mm de profundidad: la profundidad es mayor que media longitud de onda, así que esto es agua profunda. Cada porción de agua recorre un círculo, hacia adelante bajo una cresta y hacia atrás bajo un valle, y los círculos se encogen rápido con la profundidad (a e^(−ks) de los de la superficie): a media longitud de onda de profundidad el agua está casi quieta. La onda avanza; el agua no.",
-"A slice through the tank from the side under plane waves of frequency {#} Hz, in water {#} mm deep.":
-  "Un corte del tanque visto de lado, bajo ondas planas de frecuencia {#} Hz, en agua de {#} mm de profundidad.",
-"Each dot is a bit of water going round its own path. The followed particle, {#} mm down, has half width a = {#} mm and half height b = {#} mm.":
-  "Cada punto es un poco de agua que recorre su propia trayectoria. La partícula que se sigue, {#} mm hacia abajo, tiene semiancho a = {#} mm y semialtura b = {#} mm.",
-"The wavelength is {#} mm, so this is deep water.":
-  "La longitud de onda es {#} mm, así que es agua profunda.",
-"Graph of the half width and half height of the water paths against depth.":
-  "Gráfica del semiancho y la semialtura de las trayectorias del agua contra la profundidad.",
-"The followed particle is {#} mm down.":
-  "La partícula que se sigue está {#} mm hacia abajo.",
 "{#} Hz waves on water only {#} mm deep, a tenth of a wavelength (the usual rule calls water shallow below a twentieth, so this is on the way there). The circles are squashed into flat ellipses that reach all the way to the floor: the bits of water at the floor slide back and forth without rising at all, and the side to side motion hardly changes with depth. Change the depth and the frequency and watch the ellipses round out as kd grows.":
   "Ondas de {#} Hz en agua de solo {#} mm de profundidad, una décima de longitud de onda (la regla usual llama poco profunda al agua de menos de una vigésima, así que va en camino). Los círculos se aplastan en elipses planas que llegan hasta el fondo: las porciones de agua del fondo se deslizan de un lado a otro sin subir nada, y el movimiento de lado a lado casi no cambia con la profundidad. Cambia la profundidad y la frecuencia y observa cómo las elipses se redondean conforme crece kd.",
 "in between (λ/{#} < d < λ/{#})":
   "intermedia (λ/{#} < d < λ/{#})",
+"A slice through the tank from the side under plane waves of frequency {#} Hz, in water {#} mm deep.":
+  "Un corte del tanque visto de lado, bajo ondas planas de frecuencia {#} Hz, en agua de {#} mm de profundidad.",
+"Each dot is a bit of water going round its own path. The followed particle, {#} mm down, has half width a = {#} mm and half height b = {#} mm.":
+  "Cada punto es un poco de agua que recorre su propia trayectoria. La partícula que se sigue, {#} mm hacia abajo, tiene semiancho a = {#} mm y semialtura b = {#} mm.",
 "The wavelength is {#} mm, so this is between deep and shallow water.":
   "La longitud de onda es {#} mm, así que está entre agua profunda y poco profunda.",
+"Graph of the half width and half height of the water paths against depth.":
+  "Gráfica del semiancho y la semialtura de las trayectorias del agua contra la profundidad.",
+"The followed particle is {#} mm down.":
+  "La partícula que se sigue está {#} mm hacia abajo.",
 "The waves are paused.":
   "Las ondas están en pausa.",
 "Move the chosen end of the measuring line (Shift: {#} mm)":
@@ -348,22 +334,38 @@ VDI18N.add('es', 'demo/ripple-tank', {
   "el movimiento del agua dibujado {#} veces más grande",
 "wave height 2A = {#} mm":
   "altura de la onda 2A = {#} mm",
-"A ripple tank seen from above, with one dipper making circular waves.":
-  "Un tanque de ondas visto desde arriba, con un punzón que produce ondas circulares.",
+"A barrier with one slit {#} mm wide crosses the tank.":
+  "Una barrera con una rendija de {#} mm de ancho cruza el tanque.",
 "A straight wall stands at {#}° to the waves.":
   "Una pared recta forma {#}° con las ondas.",
 "A curved wall shaped like a parabola reflects the waves toward its focus.":
   "Una pared curva con forma de parábola refleja las ondas hacia su foco.",
-"Close":
-  "Cerrar",
-"A barrier with one slit {#} mm wide crosses the tank.":
-  "Una barrera con una rendija de {#} mm de ancho cruza el tanque.",
-"Two walls {#} mm apart make a channel.":
-  "Dos paredes separadas {#} mm forman un canal.",
-"A straight wall stands {#} mm from the dipper.":
-  "Una pared recta está a {#} mm del punzón.",
 "A shallow plate shaped like a lens sits under the water.":
   "Una placa poco profunda con forma de lente está bajo el agua.",
+"Two walls {#} mm apart make a channel.":
+  "Dos paredes separadas {#} mm forman un canal.",
+"The wavelength is {#} mm, so this is deep water.":
+  "La longitud de onda es {#} mm, así que es agua profunda.",
+"none: λ is wider than the slit":
+  "ninguna: λ es más ancha que la rendija",
+"Describe the picture":
+  "Describir la imagen",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
+"Time {#} s.":
+  "Tiempo {#} s.",
+"Period":
+  "Periodo",
+"Close":
+  "Cerrar",
 "You have drawn {#} shapes in the tank.":
   "Has dibujado {#} formas en el tanque.",
 "The wavelength and the wave speed are hidden.":

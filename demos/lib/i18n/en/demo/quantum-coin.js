@@ -108,5 +108,10 @@ VDI18N.add('en', 'demo/quantum-coin', [
 "Send some atoms through first.",
 "down",
 "One Stern–Gerlach magnet.",
-"The same atom is measured each time."
+"The same atom is measured each time.",
+"it was this before you looked",
+"measured: now in this state",
+"Spread expected in the fraction √(P({#} − P)/N)",
+"Ordinary coin: heads {#}, tails {#}, heads fraction {#}.",
+"Quantum coin: heads {#}, tails {#}, heads fraction {#}."
 ]);

@@ -46,6 +46,10 @@ VDI18N.add('es', 'demo/radioactive-decay', {
   "Número de núcleos padre: {#}, esperado {#}.",
 "Number of daughter nuclei: {#}, expected {#}.":
   "Número de núcleos hijo: {#}, esperado {#}.",
+"Take {#} steps at once (each still decided step by step)":
+  "Dar {#} pasos a la vez (cada uno se sigue decidiendo paso por paso)",
+"{#} steps":
+  "{#} pasos",
 "Many nuclei":
   "Muchos núcleos",
 "Alpha decay":
@@ -142,8 +146,6 @@ VDI18N.add('es', 'demo/radioactive-decay', {
   "λ = ln {#} / T½ (paso⁻¹)",
 "Mean life τ = {#}/λ":
   "Vida promedio τ = {#}/λ",
-"{#} steps":
-  "{#} pasos",
 "Decay chance per step, p = {#} − e<sup>−λΔt</sup>":
   "Probabilidad de desintegración por paso, p = {#} − e<sup>−λΔt</sup>",
 "{#} <span>with Δt = {#} step</span>":
@@ -258,6 +260,8 @@ VDI18N.add('es', 'demo/radioactive-decay', {
   "hijas",
 "{#} s = {#} steps":
   "{#} s = {#} pasos",
+"t = {#} step":
+  "t = {#} paso",
 "{#}% <span>of {#}; expected {#}%</span>":
   "{#}% <span>de {#}; esperado {#}%</span>",
 "¹⁴⁶Sm":
@@ -396,8 +400,8 @@ VDI18N.add('es', 'demo/radioactive-decay', {
   "{#} desintegraciones",
 "The run is paused.":
   "La corrida está en pausa.",
-"The parents are above the expected number by {#} standard deviations.":
-  "Los padres están por encima de lo esperado en {#} desviaciones estándar.",
+"The parents are below the expected number by {#} standard deviations.":
+  "Los padres están por debajo de lo esperado en {#} desviaciones estándar.",
 "Beta minus decay of ¹⁴C into ¹⁴N, an electron and an antineutrino, with the energy spectrum of the electrons.":
   "Decaimiento beta menos del ¹⁴C en ¹⁴N, un electrón y un antineutrino, con el espectro de energía de los electrones.",
 "The Q value is {#} keV.":
@@ -612,6 +616,18 @@ VDI18N.add('es', 'demo/radioactive-decay', {
   "{#} <span>con Δt = {#} Gyr</span>",
 "⁴⁰K: {#} × {#}⁹ yr. {#}% of decays are β⁻ to ⁴⁰Ca and {#}% electron capture to ⁴⁰Ar, both stable; geologists measure the argon, since the calcium is too common in rock to tell apart. The grid shows both together. You can also drag the T½ marker on the N(t) plot.":
   "⁴⁰K: {#} × {#}⁹ años. El {#}% de las desintegraciones son β⁻ a ⁴⁰Ca y el {#}% captura electrónica a ⁴⁰Ar, ambos estables; los geólogos miden el argón, porque el calcio es demasiado común en la roca para distinguirlo. La cuadrícula muestra los dos juntos. También puedes arrastrar la marca T½ en la gráfica de N(t).",
+"Half life of ⁴⁰K: {#} Gyr.":
+  "Vida media del ⁴⁰K: {#} Ga.",
+"Stable end product: ⁴⁰Ca, ⁴⁰Ar.":
+  "Producto final estable: ⁴⁰Ca, ⁴⁰Ar.",
+"Time {#} Gyr.":
+  "Tiempo {#} Ga.",
+"Number of ⁴⁰K nuclei: {#}, expected {#}.":
+  "Número de núcleos de ⁴⁰K: {#}, esperado {#}.",
+"Number of ⁴⁰Ca, ⁴⁰Ar nuclei: {#}, expected {#}.":
+  "Número de núcleos de ⁴⁰Ca, ⁴⁰Ar: {#}, esperado {#}.",
+"Activity of ⁴⁰K: {#} decays per Gyr.":
+  "Actividad del ⁴⁰K: {#} decaimientos por Ga.",
 "Aluminum {#} heated the first planetesimals. With a half life under a million years it was nearly gone {#} million years after the solar system formed, so only bodies that grew early got hot enough to melt and let their iron sink to a core (Building a Solar System, Iron cores).":
   "El aluminio {#} calentó los primeros planetesimales. Con una vida media de menos de un millón de años, casi había desaparecido {#} millones de años después de formarse el sistema solar, así que solo los cuerpos que crecieron pronto se calentaron lo suficiente para fundirse y dejar que su hierro se hundiera hasta formar un núcleo (Construir un sistema solar, Núcleos de hierro).",
 "t = {#} Myr":
@@ -644,10 +660,10 @@ VDI18N.add('es', 'demo/radioactive-decay', {
   "Número de núcleos de ²⁶Mg: {#}, esperado {#}.",
 "Activity of ²⁶Al: {#} decays per Myr.":
   "Actividad del ²⁶Al: {#} decaimientos por Ma.",
+"The parents are above the expected number by {#} standard deviations.":
+  "Los padres están por encima de lo esperado en {#} desviaciones estándar.",
 "Move to a neighboring nucleus once one is picked (Shift for {#} steps)":
   "Pasa a un núcleo vecino una vez que hayas elegido uno (Shift para {#} pasos)",
-"The parents are below the expected number by {#} standard deviations.":
-  "Los padres están por debajo de lo esperado en {#} desviaciones estándar.",
 "²⁶Al {#}":
   "²⁶Al {#}",
 "²⁶Mg {#}":
@@ -748,22 +764,364 @@ VDI18N.add('es', 'demo/radioactive-decay', {
   "Número de núcleos de ⁶⁰Ni: {#}, esperado {#}.",
 "Activity of ⁶⁰Co: {#} decays per yr.":
   "Actividad del ⁶⁰Co: {#} decaimientos por año.",
-"Half life of ⁴⁰K: {#} Gyr.":
-  "Vida media del ⁴⁰K: {#} Ga.",
-"Stable end product: ⁴⁰Ca, ⁴⁰Ar.":
-  "Producto final estable: ⁴⁰Ca, ⁴⁰Ar.",
-"Time {#} Gyr.":
-  "Tiempo {#} Ga.",
-"Number of ⁴⁰K nuclei: {#}, expected {#}.":
-  "Número de núcleos de ⁴⁰K: {#}, esperado {#}.",
-"Number of ⁴⁰Ca, ⁴⁰Ar nuclei: {#}, expected {#}.":
-  "Número de núcleos de ⁴⁰Ca, ⁴⁰Ar: {#}, esperado {#}.",
-"Activity of ⁴⁰K: {#} decays per Gyr.":
-  "Actividad del ⁴⁰K: {#} decaimientos por Ga.",
+"parent: a straight line, ln N falls by λ = {#} per step":
+  "madre: una línea recta, ln N baja λ = {#} por paso",
+"Time {#} step.":
+  "Tiempo {#} paso.",
+"t (yr)":
+  "t (años)",
+"¹⁴C: a straight line, ln N falls by λ = {#} × {#}⁻⁴ per yr":
+  "¹⁴C: una línea recta, ln N baja λ = {#} × {#}⁻⁴ por año",
+"bin = {#} yr":
+  "intervalo = {#} años",
+"¹³¹Xe {#}":
+  "¹³¹Xe {#}",
+"¹³¹I: a straight line, ln N falls by λ = {#} per d":
+  "¹³¹I: una línea recta, ln N baja λ = {#} por d",
+"bin = {#} d":
+  "intervalo = {#} d",
+"²¹⁰Bi {#}":
+  "²¹⁰Bi {#}",
+"²¹⁰Po {#}":
+  "²¹⁰Po {#}",
+"²⁰⁶Pb {#}":
+  "²⁰⁶Pb {#}",
+"T½ ²¹⁰Bi":
+  "T½ ²¹⁰Bi",
+"T½ ²¹⁰Po":
+  "T½ ²¹⁰Po",
+"²¹⁰Bi: a straight line, ln N falls by λ = {#} per d":
+  "²¹⁰Bi: una línea recta, ln N baja λ = {#} por d",
+"²¹⁰Bi decays":
+  "desintegraciones de ²¹⁰Bi",
+"²¹⁰Po decays":
+  "desintegraciones de ²¹⁰Po",
+"¹³²Te {#}":
+  "¹³²Te {#}",
+"¹³²Xe {#}":
+  "¹³²Xe {#}",
+"T½ ¹³²Te":
+  "T½ ¹³²Te",
+"¹³²Te: a straight line, ln N falls by λ = {#} × {#}⁻³ per h":
+  "¹³²Te: una línea recta, ln N baja λ = {#} × {#}⁻³ por h",
+"bin = {#} h":
+  "intervalo = {#} h",
+"¹³²Te decays":
+  "desintegraciones de ¹³²Te",
+"¹³²I decays":
+  "desintegraciones de ¹³²I",
+"⁹⁹ᵐTc {#}":
+  "⁹⁹ᵐTc {#}",
+"⁹⁹Tc {#}":
+  "⁹⁹Tc {#}",
+"⁹⁹ᵐTc: a straight line, ln N falls by λ = {#} per h":
+  "⁹⁹ᵐTc: una línea recta, ln N baja λ = {#} por h",
+"¹⁸F: a straight line, ln N falls by λ = {#} × {#}⁻³ per min":
+  "¹⁸F: una línea recta, ln N baja λ = {#} × {#}⁻³ por min",
+"bin = {#} min":
+  "intervalo = {#} min",
+"¹⁹²Ir {#}":
+  "¹⁹²Ir {#}",
+"¹⁹²Pt, ¹⁹²Os {#}":
+  "¹⁹²Pt, ¹⁹²Os {#}",
+"¹⁹²Ir: a straight line, ln N falls by λ = {#} × {#}⁻³ per d":
+  "¹⁹²Ir: una línea recta, ln N baja λ = {#} × {#}⁻³ por d",
+"⁶⁰Co {#}":
+  "⁶⁰Co {#}",
+"⁶⁰Ni {#}":
+  "⁶⁰Ni {#}",
+"⁶⁰Co: a straight line, ln N falls by λ = {#} per yr":
+  "⁶⁰Co: una línea recta, ln N baja λ = {#} por año",
+"⁹⁹Mo {#}":
+  "⁹⁹Mo {#}",
+"T½ ⁹⁹Mo":
+  "T½ ⁹⁹Mo",
+"T½ ⁹⁹ᵐTc":
+  "T½ ⁹⁹ᵐTc",
+"⁹⁹Mo: a straight line, ln N falls by λ = {#} per h":
+  "⁹⁹Mo: una línea recta, ln N baja λ = {#} por h",
+"⁹⁹Mo decays":
+  "desintegraciones de ⁹⁹Mo",
+"⁹⁹ᵐTc decays":
+  "desintegraciones de ⁹⁹ᵐTc",
+"⁴⁰Ca, ⁴⁰Ar {#}":
+  "⁴⁰Ca, ⁴⁰Ar {#}",
+"t (Gyr)":
+  "t (Gyr)",
+"⁴⁰K: a straight line, ln N falls by λ = {#} per Gyr":
+  "⁴⁰K: una línea recta, ln N baja λ = {#} por Ga",
+"bin = {#} Gyr":
+  "intervalo = {#} Gyr",
+"²⁶Al: a straight line, ln N falls by λ = {#} per Myr":
+  "²⁶Al: una línea recta, ln N baja λ = {#} por Ma",
+"The alpha hits the wall {#} × {#}²⁰ times a second":
+  "La alfa golpea la pared {#} × {#}²⁰ veces por segundo",
+"and gets out on a hit with chance about {#}⁻³⁶":
+  "y sale en un golpe con probabilidad de cerca de {#}⁻³⁶",
+"ψ is a sketch: outside it is really {#}⁻¹⁸ as big":
+  "ψ es un esquema: afuera en realidad es {#}⁻¹⁸ veces más pequeña",
+"¹⁴⁶Sm is an even–even nucleus that decays mostly from ground state to ground state, the case the simple model describes best.":
+  "El ¹⁴⁶Sm es un núcleo par–par que se desintegra sobre todo del estado base al estado base, el caso que el modelo simple describe mejor.",
+"¹⁴⁶Sm → ¹⁴²Nd + α":
+  "¹⁴⁶Sm → ¹⁴²Nd + α",
+"{#} (+{#} decades)":
+  "{#} (+{#} décadas)",
+"t = {#} s · {#} s here is {#} Myr":
+  "t = {#} s · {#} s aquí son {#} Ma",
+"Alpha decay of ¹⁴⁶Sm into ¹⁴²Nd and an alpha particle, with the potential energy against distance and a Geiger–Nuttall plot.":
+  "Decaimiento alfa del ¹⁴⁶Sm en ¹⁴²Nd y una partícula alfa, con la energía potencial contra la distancia y una gráfica de Geiger–Nuttall.",
+"The chance of getting out on each hit is about {#} × {#}⁻³⁷.":
+  "La probabilidad de salir en cada choque es de alrededor de {#} × {#}⁻³⁷.",
+"The model half life is {#} Myr and the measured half life is {#} Myr.":
+  "La vida media del modelo es de {#} Ma y la vida media medida es de {#} Ma.",
+"and gets out on a hit with chance about {#}⁻³⁰":
+  "y sale en un golpe con probabilidad de cerca de {#}⁻³⁰",
+"ψ is a sketch: outside it is really {#}⁻¹⁵ as big":
+  "ψ es un esquema: afuera en realidad es {#}⁻¹⁵ veces más pequeña",
+"¹⁴⁸Gd is an even–even nucleus that decays mostly from ground state to ground state, the case the simple model describes best.":
+  "El ¹⁴⁸Gd es un núcleo par–par que se desintegra sobre todo del estado base al estado base, el caso que el modelo simple describe mejor.",
+"¹⁴⁸Gd → ¹⁴⁴Sm + α":
+  "¹⁴⁸Gd → ¹⁴⁴Sm + α",
+"t = {#} s · {#} s here is {#} yr":
+  "t = {#} s · {#} s aquí son {#} años",
+"Alpha decay of ¹⁴⁸Gd into ¹⁴⁴Sm and an alpha particle, with the potential energy against distance and a Geiger–Nuttall plot.":
+  "Decaimiento alfa del ¹⁴⁸Gd en ¹⁴⁴Sm y una partícula alfa, con la energía potencial contra la distancia y una gráfica de Geiger–Nuttall.",
+"The chance of getting out on each hit is about {#} × {#}⁻³¹.":
+  "La probabilidad de salir en cada choque es de alrededor de {#} × {#}⁻³¹.",
+"The model half life is {#} yr and the measured half life is {#} yr.":
+  "La vida media del modelo es de {#} años y la vida media medida es de {#} años.",
+"and gets out on a hit with chance about {#}⁻³⁹":
+  "y sale en un golpe con probabilidad de cerca de {#}⁻³⁹",
+"ψ is a sketch: outside it is really {#}⁻²⁰ as big":
+  "ψ es un esquema: afuera en realidad es {#}⁻²⁰ veces más pequeña",
+"¹⁹⁰Pt is an even–even nucleus that decays mostly from ground state to ground state, the case the simple model describes best.":
+  "El ¹⁹⁰Pt es un núcleo par–par que se desintegra sobre todo del estado base al estado base, el caso que el modelo simple describe mejor.",
+"¹⁹⁰Pt → ¹⁸⁶Os + α":
+  "¹⁹⁰Pt → ¹⁸⁶Os + α",
+"t = {#} s · {#} s here is {#} Gyr":
+  "t = {#} s · {#} s aquí son {#} Ga",
+"Alpha decay of ¹⁹⁰Pt into ¹⁸⁶Os and an alpha particle, with the potential energy against distance and a Geiger–Nuttall plot.":
+  "Decaimiento alfa del ¹⁹⁰Pt en ¹⁸⁶Os y una partícula alfa, con la energía potencial contra la distancia y una gráfica de Geiger–Nuttall.",
+"The chance of getting out on each hit is about {#} × {#}⁻⁴⁰.":
+  "La probabilidad de salir en cada choque es de alrededor de {#} × {#}⁻⁴⁰.",
+"The model half life is {#} Gyr and the measured half life is {#} Gyr.":
+  "La vida media del modelo es de {#} Ga y la vida media medida es de {#} Ga.",
+"and gets out on a hit with chance about {#}⁻²⁷":
+  "y sale en un golpe con probabilidad de cerca de {#}⁻²⁷",
+"ψ is a sketch: outside it is really {#}⁻¹³ as big":
+  "ψ es un esquema: afuera en realidad es {#}⁻¹³ veces más pequeña",
+"Polonium {#} sits just above the closed shell of {#} neutrons in lead {#}. It lives about {#} times longer than the simple model says: the shell closure makes it harder to form an alpha at the surface, which the model leaves out.":
+  "El polonio {#} está justo arriba de la capa cerrada de {#} neutrones del plomo {#}. Vive cerca de {#} veces más de lo que dice el modelo simple: el cierre de capa hace más difícil que se forme una alfa en la superficie, algo que el modelo deja fuera.",
+"²¹⁰Po → ²⁰⁶Pb + α":
+  "²¹⁰Po → ²⁰⁶Pb + α",
+"t = {#} s · {#} s here is {#} d":
+  "t = {#} s · {#} s aquí son {#} d",
+"Alpha decay of ²¹⁰Po into ²⁰⁶Pb and an alpha particle, with the potential energy against distance and a Geiger–Nuttall plot.":
+  "Decaimiento alfa del ²¹⁰Po en ²⁰⁶Pb y una partícula alfa, con la energía potencial contra la distancia y una gráfica de Geiger–Nuttall.",
+"The chance of getting out on each hit is about {#} × {#}⁻²⁷.":
+  "La probabilidad de salir en cada choque es de alrededor de {#} × {#}⁻²⁷.",
+"The model half life is {#} d and the measured half life is {#} d.":
+  "La vida media del modelo es de {#} d y la vida media medida es de {#} d.",
+"and gets out on a hit with chance about {#}⁻¹⁷":
+  "y sale en un golpe con probabilidad de cerca de {#}⁻¹⁷",
+"ψ is a sketch: outside it is really {#}⁻⁸ as big":
+  "ψ es un esquema: afuera en realidad es {#}⁻⁸ veces más pequeña",
+"²¹⁴Po is an even–even nucleus that decays mostly from ground state to ground state, the case the simple model describes best.":
+  "El ²¹⁴Po es un núcleo par–par que se desintegra sobre todo del estado base al estado base, el caso que el modelo simple describe mejor.",
+"²¹⁴Po → ²¹⁰Pb + α":
+  "²¹⁴Po → ²¹⁰Pb + α",
+"t = {#} s · {#} s here is {#} μs":
+  "t = {#} s · {#} s aquí son {#} μs",
+"Alpha decay of ²¹⁴Po into ²¹⁰Pb and an alpha particle, with the potential energy against distance and a Geiger–Nuttall plot.":
+  "Decaimiento alfa del ²¹⁴Po en ²¹⁰Pb y una partícula alfa, con la energía potencial contra la distancia y una gráfica de Geiger–Nuttall.",
+"The chance of getting out on each hit is about {#} × {#}⁻¹⁷.":
+  "La probabilidad de salir en cada choque es de alrededor de {#} × {#}⁻¹⁷.",
+"The model half life is {#} μs and the measured half life is {#} μs.":
+  "La vida media del modelo es de {#} μs y la vida media medida es de {#} μs.",
+"and gets out on a hit with chance about {#}⁻²⁰":
+  "y sale en un golpe con probabilidad de cerca de {#}⁻²⁰",
+"ψ is a sketch: outside it is really {#}⁻¹⁰ as big":
+  "ψ es un esquema: afuera en realidad es {#}⁻¹⁰ veces más pequeña",
+"²¹⁶Po is an even–even nucleus that decays mostly from ground state to ground state, the case the simple model describes best.":
+  "El ²¹⁶Po es un núcleo par–par que se desintegra sobre todo del estado base al estado base, el caso que el modelo simple describe mejor.",
+"²¹⁶Po → ²¹²Pb + α":
+  "²¹⁶Po → ²¹²Pb + α",
+"t = {#} s · {#} s here is {#} ms":
+  "t = {#} s · {#} s aquí son {#} ms",
+"Alpha decay of ²¹⁶Po into ²¹²Pb and an alpha particle, with the potential energy against distance and a Geiger–Nuttall plot.":
+  "Decaimiento alfa del ²¹⁶Po en ²¹²Pb y una partícula alfa, con la energía potencial contra la distancia y una gráfica de Geiger–Nuttall.",
+"The chance of getting out on each hit is about {#} × {#}⁻²⁰.":
+  "La probabilidad de salir en cada choque es de alrededor de {#} × {#}⁻²⁰.",
+"The model half life is {#} ms and the measured half life is {#} ms.":
+  "La vida media del modelo es de {#} ms y la vida media medida es de {#} ms.",
+"and gets out on a hit with chance about {#}⁻²³":
+  "y sale en un golpe con probabilidad de cerca de {#}⁻²³",
+"ψ is a sketch: outside it is really {#}⁻¹² as big":
+  "ψ es un esquema: afuera en realidad es {#}⁻¹² veces más pequeña",
+"²¹⁸Po is an even–even nucleus that decays mostly from ground state to ground state, the case the simple model describes best.":
+  "El ²¹⁸Po es un núcleo par–par que se desintegra sobre todo del estado base al estado base, el caso que el modelo simple describe mejor.",
+"²¹⁸Po → ²¹⁴Pb + α":
+  "²¹⁸Po → ²¹⁴Pb + α",
+"t = {#} s · {#} s here is {#} min":
+  "t = {#} s · {#} s aquí son {#} min",
+"Alpha decay of ²¹⁸Po into ²¹⁴Pb and an alpha particle, with the potential energy against distance and a Geiger–Nuttall plot.":
+  "Decaimiento alfa del ²¹⁸Po en ²¹⁴Pb y una partícula alfa, con la energía potencial contra la distancia y una gráfica de Geiger–Nuttall.",
+"The chance of getting out on each hit is about {#} × {#}⁻²⁴.":
+  "La probabilidad de salir en cada choque es de alrededor de {#} × {#}⁻²⁴.",
+"The model half life is {#} min and the measured half life is {#} min.":
+  "La vida media del modelo es de {#} min y la vida media medida es de {#} min.",
+"ψ is a sketch: outside it is really {#}⁻¹¹ as big":
+  "ψ es un esquema: afuera en realidad es {#}⁻¹¹ veces más pequeña",
+"²²⁰Rn is an even–even nucleus that decays mostly from ground state to ground state, the case the simple model describes best.":
+  "El ²²⁰Rn es un núcleo par–par que se desintegra sobre todo del estado base al estado base, el caso que el modelo simple describe mejor.",
+"²²⁰Rn → ²¹⁶Po + α":
+  "²²⁰Rn → ²¹⁶Po + α",
+"t = {#} s · {#} s here is {#} s":
+  "t = {#} s · {#} s aquí son {#} s",
+"Alpha decay of ²²⁰Rn into ²¹⁶Po and an alpha particle, with the potential energy against distance and a Geiger–Nuttall plot.":
+  "Decaimiento alfa del ²²⁰Rn en ²¹⁶Po y una partícula alfa, con la energía potencial contra la distancia y una gráfica de Geiger–Nuttall.",
+"The chance of getting out on each hit is about {#} × {#}⁻²³.":
+  "La probabilidad de salir en cada choque es de alrededor de {#} × {#}⁻²³.",
+"The model half life is {#} s and the measured half life is {#} s.":
+  "La vida media del modelo es de {#} s y la vida media medida es de {#} s.",
+"and gets out on a hit with chance about {#}⁻²⁶":
+  "y sale en un golpe con probabilidad de cerca de {#}⁻²⁶",
+"Radon {#}, a gas, seeps out of the ground from the uranium series; its {#} day half life is long enough to reach a basement.":
+  "El radón {#}, un gas, se filtra del suelo desde la serie del uranio; su vida media de {#} días es suficientemente larga para llegar a un sótano.",
+"²²²Rn → ²¹⁸Po + α":
+  "²²²Rn → ²¹⁸Po + α",
+"Alpha decay of ²²²Rn into ²¹⁸Po and an alpha particle, with the potential energy against distance and a Geiger–Nuttall plot.":
+  "Decaimiento alfa del ²²²Rn en ²¹⁸Po y una partícula alfa, con la energía potencial contra la distancia y una gráfica de Geiger–Nuttall.",
+"²²⁴Ra is an even–even nucleus that decays mostly from ground state to ground state, the case the simple model describes best.":
+  "El ²²⁴Ra es un núcleo par–par que se desintegra sobre todo del estado base al estado base, el caso que el modelo simple describe mejor.",
+"²²⁴Ra → ²²⁰Rn + α":
+  "²²⁴Ra → ²²⁰Rn + α",
+"Alpha decay of ²²⁴Ra into ²²⁰Rn and an alpha particle, with the potential energy against distance and a Geiger–Nuttall plot.":
+  "Decaimiento alfa del ²²⁴Ra en ²²⁰Rn y una partícula alfa, con la energía potencial contra la distancia y una gráfica de Geiger–Nuttall.",
+"and gets out on a hit with chance about {#}⁻³²":
+  "y sale en un golpe con probabilidad de cerca de {#}⁻³²",
+"ψ is a sketch: outside it is really {#}⁻¹⁶ as big":
+  "ψ es un esquema: afuera en realidad es {#}⁻¹⁶ veces más pequeña",
+"Radium {#}, {#} years, is the radium of the Curies, in the uranium {#} series.":
+  "El radio {#}, {#} años, es el radio de los Curie, en la serie del uranio {#}.",
+"²²⁶Ra → ²²²Rn + α":
+  "²²⁶Ra → ²²²Rn + α",
+"Alpha decay of ²²⁶Ra into ²²²Rn and an alpha particle, with the potential energy against distance and a Geiger–Nuttall plot.":
+  "Decaimiento alfa del ²²⁶Ra en ²²²Rn y una partícula alfa, con la energía potencial contra la distancia y una gráfica de Geiger–Nuttall.",
+"The chance of getting out on each hit is about {#} × {#}⁻³².":
+  "La probabilidad de salir en cada choque es de alrededor de {#} × {#}⁻³².",
+"The model half life is {#} kyr and the measured half life is {#} kyr.":
+  "La vida media del modelo es de {#} ka y la vida media medida es de {#} ka.",
+"and gets out on a hit with chance about {#}⁻²⁹":
+  "y sale en un golpe con probabilidad de cerca de {#}⁻²⁹",
+"ψ is a sketch: outside it is really {#}⁻¹⁴ as big":
+  "ψ es un esquema: afuera en realidad es {#}⁻¹⁴ veces más pequeña",
+"²²⁸Th is an even–even nucleus that decays mostly from ground state to ground state, the case the simple model describes best.":
+  "El ²²⁸Th es un núcleo par–par que se desintegra sobre todo del estado base al estado base, el caso que el modelo simple describe mejor.",
+"²²⁸Th → ²²⁴Ra + α":
+  "²²⁸Th → ²²⁴Ra + α",
+"Alpha decay of ²²⁸Th into ²²⁴Ra and an alpha particle, with the potential energy against distance and a Geiger–Nuttall plot.":
+  "Decaimiento alfa del ²²⁸Th en ²²⁴Ra y una partícula alfa, con la energía potencial contra la distancia y una gráfica de Geiger–Nuttall.",
+"The chance of getting out on each hit is about {#} × {#}⁻²⁹.":
+  "La probabilidad de salir en cada choque es de alrededor de {#} × {#}⁻²⁹.",
+"and gets out on a hit with chance about {#}⁻³³":
+  "y sale en un golpe con probabilidad de cerca de {#}⁻³³",
+"ψ is a sketch: outside it is really {#}⁻¹⁷ as big":
+  "ψ es un esquema: afuera en realidad es {#}⁻¹⁷ veces más pequeña",
+"²³⁰Th is an even–even nucleus that decays mostly from ground state to ground state, the case the simple model describes best.":
+  "El ²³⁰Th es un núcleo par–par que se desintegra sobre todo del estado base al estado base, el caso que el modelo simple describe mejor.",
+"²³⁰Th → ²²⁶Ra + α":
+  "²³⁰Th → ²²⁶Ra + α",
+"t = {#} s · {#} s here is {#} kyr":
+  "t = {#} s · {#} s aquí son {#} ka",
+"Alpha decay of ²³⁰Th into ²²⁶Ra and an alpha particle, with the potential energy against distance and a Geiger–Nuttall plot.":
+  "Decaimiento alfa del ²³⁰Th en ²²⁶Ra y una partícula alfa, con la energía potencial contra la distancia y una gráfica de Geiger–Nuttall.",
+"The chance of getting out on each hit is about {#} × {#}⁻³⁴.":
+  "La probabilidad de salir en cada choque es de alrededor de {#} × {#}⁻³⁴.",
+"ψ is a sketch: outside it is really {#}⁻¹⁹ as big":
+  "ψ es un esquema: afuera en realidad es {#}⁻¹⁹ veces más pequeña",
+"Thorium {#}, {#} billion years, is the longest lived member of the thorium series and keeps the Earth warm with uranium {#} and potassium {#}.":
+  "El torio {#}, {#} mil millones de años, es el miembro de vida más larga de la serie del torio y mantiene caliente a la Tierra junto con el uranio {#} y el potasio {#}.",
+"²³²Th → ²²⁸Ra + α":
+  "²³²Th → ²²⁸Ra + α",
+"Alpha decay of ²³²Th into ²²⁸Ra and an alpha particle, with the potential energy against distance and a Geiger–Nuttall plot.":
+  "Decaimiento alfa del ²³²Th en ²²⁸Ra y una partícula alfa, con la energía potencial contra la distancia y una gráfica de Geiger–Nuttall.",
+"The chance of getting out on each hit is about {#} × {#}⁻³⁹.":
+  "La probabilidad de salir en cada choque es de alrededor de {#} × {#}⁻³⁹.",
+"and gets out on a hit with chance about {#}⁻³⁴":
+  "y sale en un golpe con probabilidad de cerca de {#}⁻³⁴",
+"²³⁴U is an even–even nucleus that decays mostly from ground state to ground state, the case the simple model describes best.":
+  "El ²³⁴U es un núcleo par–par que se desintegra sobre todo del estado base al estado base, el caso que el modelo simple describe mejor.",
+"²³⁴U → ²³⁰Th + α":
+  "²³⁴U → ²³⁰Th + α",
+"Alpha decay of ²³⁴U into ²³⁰Th and an alpha particle, with the potential energy against distance and a Geiger–Nuttall plot.":
+  "Decaimiento alfa del ²³⁴U en ²³⁰Th y una partícula alfa, con la energía potencial contra la distancia y una gráfica de Geiger–Nuttall.",
+"and gets out on a hit with chance about {#}⁻³⁸":
+  "y sale en un golpe con probabilidad de cerca de {#}⁻³⁸",
+"Uranium {#} has Q = {#} MeV, only half that of polonium {#}, yet its half life of {#} billion years is about {#} × {#}²³ times as long. The barrier is wider when Q is lower, and the tunneling chance falls off exponentially with the width.":
+  "El uranio {#} tiene Q = {#} MeV, solo la mitad que el polonio {#}, y sin embargo su vida media de {#} mil millones de años es cerca de {#} × {#}²³ veces más larga. La barrera es más ancha cuando Q es menor, y la probabilidad de efecto túnel cae exponencialmente con el ancho.",
+"²³⁸U → ²³⁴Th + α":
+  "²³⁸U → ²³⁴Th + α",
+"Alpha decay of ²³⁸U into ²³⁴Th and an alpha particle, with the potential energy against distance and a Geiger–Nuttall plot.":
+  "Decaimiento alfa del ²³⁸U en ²³⁴Th y una partícula alfa, con la energía potencial contra la distancia y una gráfica de Geiger–Nuttall.",
+"Plutonium {#} powers the thermoelectric generators of deep space probes, warmed by its alphas.":
+  "El plutonio {#} alimenta los generadores termoeléctricos de las sondas del espacio profundo, calentados por sus alfas.",
+"²³⁸Pu → ²³⁴U + α":
+  "²³⁸Pu → ²³⁴U + α",
+"Alpha decay of ²³⁸Pu into ²³⁴U and an alpha particle, with the potential energy against distance and a Geiger–Nuttall plot.":
+  "Decaimiento alfa del ²³⁸Pu en ²³⁴U y una partícula alfa, con la energía potencial contra la distancia y una gráfica de Geiger–Nuttall.",
+"²⁴⁴Cm is an even–even nucleus that decays mostly from ground state to ground state, the case the simple model describes best.":
+  "El ²⁴⁴Cm es un núcleo par–par que se desintegra sobre todo del estado base al estado base, el caso que el modelo simple describe mejor.",
+"²⁴⁴Cm → ²⁴⁰Pu + α":
+  "²⁴⁴Cm → ²⁴⁰Pu + α",
+"Alpha decay of ²⁴⁴Cm into ²⁴⁰Pu and an alpha particle, with the potential energy against distance and a Geiger–Nuttall plot.":
+  "Decaimiento alfa del ²⁴⁴Cm en ²⁴⁰Pu y una partícula alfa, con la energía potencial contra la distancia y una gráfica de Geiger–Nuttall.",
+"The chance of getting out on each hit is about {#} × {#}⁻³⁰.":
+  "La probabilidad de salir en cada choque es de alrededor de {#} × {#}⁻³⁰.",
+"Californium {#} also splits by itself in {#}% of its decays, so its partial alpha half life is a little longer than its half life.":
+  "El californio {#} también se fisiona solo en el {#}% de sus desintegraciones, así que su vida media parcial alfa es un poco más larga que su vida media.",
+"²⁵²Cf → ²⁴⁸Cm + α":
+  "²⁵²Cf → ²⁴⁸Cm + α",
+"{#} yr (α {#}%)":
+  "{#} años (α {#}%)",
+"Alpha decay of ²⁵²Cf into ²⁴⁸Cm and an alpha particle, with the potential energy against distance and a Geiger–Nuttall plot.":
+  "Decaimiento alfa del ²⁵²Cf en ²⁴⁸Cm y una partícula alfa, con la energía potencial contra la distancia y una gráfica de Geiger–Nuttall.",
+"The model half life is {#} d and the measured half life is {#} yr.":
+  "La vida media del modelo es de {#} d y la vida media medida es de {#} años.",
+"kinetic energy T (MeV)":
+  "energía cinética T (MeV)",
+"A free neutron has a half life of {#} minutes (a mean life of {#} minutes) before it becomes a proton, an electron and an antineutrino. Q = (m_n − m_H)c² = {#} MeV.":
+  "Un neutrón libre tiene una vida media de {#} minutos (una vida promedio de {#} minutos) antes de convertirse en un protón, un electrón y un antineutrino. Q = (m_n − m_H)c² = {#} MeV.",
+"Beta minus decay of n into p, an electron and an antineutrino, with the energy spectrum of the electrons.":
+  "Decaimiento beta menos del n en p, un electrón y un antineutrino, con el espectro de energía de los electrones.",
+"³H → ³He + e⁻ + ν̄":
+  "³H → ³He + e⁻ + ν̄",
+"Tritium has one of the smallest Q values of any beta emitter, {#} keV. The KATRIN experiment measures the very top of its spectrum, near T = Q, to weigh the neutrino.":
+  "El tritio tiene uno de los valores Q más pequeños de cualquier emisor beta, {#} keV. El experimento KATRIN mide la parte más alta de su espectro, cerca de T = Q, para pesar el neutrino.",
+"Beta minus decay of ³H into ³He, an electron and an antineutrino, with the energy spectrum of the electrons.":
+  "Decaimiento beta menos del ³H en ³He, un electrón y un antineutrino, con el espectro de energía de los electrones.",
+"Phosphorus {#} is a pure beta emitter used in labs and in medicine; its electrons reach {#} MeV.":
+  "El fósforo {#} es un emisor beta puro que se usa en laboratorios y en medicina; sus electrones llegan a {#} MeV.",
+"Beta minus decay of ³²P into ³²S, an electron and an antineutrino, with the energy spectrum of the electrons.":
+  "Decaimiento beta menos del ³²P en ³²S, un electrón y un antineutrino, con el espectro de energía de los electrones.",
+"The Q value is {#} MeV.":
+  "El valor Q es de {#} MeV.",
+"Positron kinetic energies, {#} decays":
+  "Energías cinéticas de los positrones, {#} desintegraciones",
+"positron {#}%, mean {#} keV":
+  "positrón {#}%, media {#} keV",
+"■ positron":
+  "■ positrón",
+"■ neutrino":
+  "■ neutrino",
+"Fluorine {#}, the PET isotope: a proton becomes a neutron, a positron and a neutrino. {#}% of decays are positrons, the rest electron capture (left out here). The Coulomb push on the positron moves its spectrum up.":
+  "Flúor {#}, el isótopo de la PET: un protón se convierte en un neutrón, un positrón y un neutrino. El {#}% de las desintegraciones son positrones, el resto captura electrónica (que aquí se deja fuera). El empuje de Coulomb sobre el positrón sube su espectro.",
+"Mean positron energy, spectrum":
+  "Energía media del positrón, espectro",
+"Beta plus decay of ¹⁸F into ¹⁸O, a positron and a neutrino, with the energy spectrum of the positrons.":
+  "Decaimiento beta más del ¹⁸F en ¹⁸O, un positrón y un neutrino, con el espectro de energía de los positrones.",
 "parent gone":
   "la madre se acabó",
-"t = {#} step":
-  "t = {#} paso",
 "Describe the picture":
   "Describir la imagen",
 "Time controls":
@@ -781,21 +1139,5 @@ VDI18N.add('es', 'demo/radioactive-decay', {
 "ln N falls by λ = {#} per h":
   "ln N baja λ = {#} por h",
 "Close":
-  "Cerrar",
-"⁹⁹Mo {#}":
-  "⁹⁹Mo {#}",
-"⁹⁹ᵐTc {#}":
-  "⁹⁹ᵐTc {#}",
-"⁹⁹Tc {#}":
-  "⁹⁹Tc {#}",
-"T½ ⁹⁹Mo":
-  "T½ ⁹⁹Mo",
-"T½ ⁹⁹ᵐTc":
-  "T½ ⁹⁹ᵐTc",
-"bin = {#} h":
-  "intervalo = {#} h",
-"⁹⁹Mo decays":
-  "desintegraciones de ⁹⁹Mo",
-"Take {#} steps at once (each still decided step by step)":
-  "Dar {#} pasos a la vez (cada uno se sigue decidiendo paso por paso)"
+  "Cerrar"
 });

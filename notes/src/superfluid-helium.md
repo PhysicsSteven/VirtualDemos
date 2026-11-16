@@ -32,7 +32,7 @@ Students should know latent heat, vapor pressure and entropy. The demo has five 
 
 **Q4.** The film carries 7.5 × 10⁻⁵ cm³/s for each centimeter of rim. How fast does the level fall in a beaker 10 mm in inside radius, and how long does it take to drop 25 mm?
 
-**Q5.** The helium between the disks has 1.048 times the bare disks' moment of inertia. If only the normal fluid turns with the disks, find ρn/ρ at 1.30 K from the period 20.47 s (bare disks 20.00 s), and predict the period above the lambda point.
+**Q5.** The helium between the disks has 1.048 times the bare disks' moment of inertia at 1.00 K (0.7 % more at 2.2 K, where the liquid is denser). If only the normal fluid turns with the disks, find ρn/ρ at 1.30 K from the period 20.47 s (bare disks 20.00 s), and predict the period above the lambda point.
 
 **Q6.** Liquid helium 3 near its melting pressure has entropy S = γT with γ = 4.48R per kelvin; the solid's disordered nuclear spins have S = R ln 2. What share of the liquid must freeze, with no heat leak, to cool the rest from 20 mK to the superfluid transition at 2.444 mK?
 

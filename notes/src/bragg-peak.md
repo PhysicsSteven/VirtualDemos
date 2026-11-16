@@ -17,12 +17,12 @@ Three views. **One energy**: a single proton energy from 70 to 230 MeV in water,
 
 ## Running it in class
 
-1. **150 MeV in water.** Ask Q1. The peak is at 15.62 cm, R80 at 15.77 cm (PSTAR range 15.77 cm), and the peak is 5.1 times the entrance dose.
+1. **150 MeV in water.** Ask Q1. The peak is at 15.63 cm, R80 at 15.77 cm (PSTAR range 15.77 cm), and the peak is 5.1 times the entrance dose.
 2. **70 MeV, lowest**, then **230 MeV, highest.** The peak to entrance ratio falls from 6.5 to 3.8, and the 80 % to 20 % falloff widens from 0.6 mm to 4.5 mm.
-3. **150 MeV in bone**, then **in fat.** Ask Q2. R80 is 9.16 cm in bone, 15.32 cm in muscle and 16.65 cm in fat.
-4. **Spread out peak, 10 to 15 cm.** Ask Q3. It takes 18 layers, 146.7 down to 116.2 MeV. The deepest carries 30 % of the weight, and the entrance dose is 62 % of the target dose.
+3. **150 MeV in bone**, then **in fat.** Ask Q2. R80 is 9.17 cm in bone, 15.33 cm in muscle and 16.67 cm in fat.
+4. **Spread out peak, 10 to 15 cm.** Ask Q3. It takes 18 layers, 146.7 down to 116.2 MeV. The deepest carries 28.5 % of the weight, and the entrance dose is 61.1 % of the target dose.
 5. **Equal weights**, then **Layers too far apart.** The dose tilts toward the front, then ripples between 80 % and 137 %.
-6. **Protons against photons.** Ask Q4. Before the target the mean dose is 71 % for protons against 145 % for photons. In the 5 cm past it, it's 5 % against 75 %.
+6. **Protons against photons.** Ask Q4. Before the target the mean dose is 70.3 % for protons against 144.6 % for photons. In the 5 cm past it, it's 5 % against 75 %.
 
 ## Questions
 

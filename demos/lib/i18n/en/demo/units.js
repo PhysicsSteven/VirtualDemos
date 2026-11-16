@@ -228,6 +228,8 @@ VDI18N.add('en', 'demo/units', [
 "power of h (height)",
 "h (height)",
 "t = C √(h/g), and C = √{#}: the mass drops out (no air drag).",
+"They match.",
+"Its power is −{#}.",
 "Calculator: {#} → keep {#} decimal place → <span>{#}</span>",
 "<span>{#} decimal place, the least precise</span>",
 "<span>{#} decimal places</span>",

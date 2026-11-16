@@ -516,6 +516,12 @@ VDI18N.add('es', 'demo/fluids', {
   "A, masa y volumen desconocidos",
 "ρ = m/V: m = W/g from the scale in air; V from the water a block all the way under pushes into the beaker.":
   "ρ = m/V: m = W/g con el dinamómetro en el aire; V a partir del agua que un bloque completamente sumergido empuja al vaso.",
+"Mystery block A in a tank of liquid, its mass and volume unknown.":
+  "El bloque misterioso A en un tanque de líquido, con masa y volumen desconocidos.",
+"vegetable oil, {#} kg/m³":
+  "aceite vegetal, {#} kg/m³",
+"The liquid is mercury, density {#} kg/m³.":
+  "El líquido es mercurio, de densidad {#} kg/m³.",
 "A tank of liquid {#} m deep with a hole in its side.":
   "Un tanque de líquido de {#} m de profundidad con un orificio en un lado.",
 "The hole is {#} m below the surface.":
@@ -526,10 +532,6 @@ VDI18N.add('es', 'demo/fluids', {
   "Rapidez de salida {#} m/s.",
 "The range is largest, {#} m, for a hole {#} m deep.":
   "El alcance es máximo, {#} m, para un orificio a {#} m de profundidad.",
-"vegetable oil, {#} kg/m³":
-  "aceite vegetal, {#} kg/m³",
-"The liquid is mercury, density {#} kg/m³.":
-  "El líquido es mercurio, de densidad {#} kg/m³.",
 "Readings and fits work in the Depth, Buoyancy and Venturi scenes.":
   "Las lecturas y los ajustes funcionan en las escenas Profundidad, Flotación y Venturi.",
 "Choose a metal first.":
@@ -630,12 +632,72 @@ VDI18N.add('es', 'demo/fluids', {
   "Tus lecturas: fuerza de flotación W − T en función del volumen sumergido, agua de mar. No hay suficientes lecturas para ajustar.",
 "The liquid is seawater, density {#} kg/m³.":
   "El líquido es agua de mar, de densidad {#} kg/m³.",
-"Mystery block A in a tank of liquid, its mass and volume unknown.":
-  "El bloque misterioso A en un tanque de líquido, con masa y volumen desconocidos.",
 "The liquid is oil, density {#} kg/m³.":
   "El líquido es aceite, de densidad {#} kg/m³.",
 "Range against hole depth, H = {#} m, R = {#}√(h(H − h))":
   "Alcance en función de la profundidad del orificio, H = {#} m, R = {#}√(h(H − h))",
+"Your readings: absolute pressure against depth, water":
+  "Tus lecturas: presión absoluta en función de la profundidad, agua",
+"{#} of {#} Depth readings used (this liquid and pressure mode). model: slope ρg = {#} kPa/m, intercept {#} kPa":
+  "{#} de {#} lecturas de Profundidad usadas (este líquido y este modo de presión). modelo: pendiente ρg = {#} kPa/m, ordenada al origen {#} kPa",
+"{#} of {#} Depth readings used (this liquid and pressure mode)":
+  "{#} de {#} lecturas de Profundidad usadas (este líquido y este modo de presión)",
+"Move the probe down in steps. At each depth capture the pressure gauge and the depth ruler, then plot P against depth and find the slope.":
+  "Baja la sonda por pasos. En cada profundidad captura el manómetro y la regla de profundidad; luego grafica P en función de la profundidad y encuentra la pendiente.",
+"Blind on: predictions and answers are hidden.":
+  "A ciegas activado: las predicciones y las respuestas están ocultas.",
+"{#} of {#} Depth reading used (this liquid and pressure mode)":
+  "{#} de {#} lectura de Profundidad usada (este líquido y este modo de presión)",
+"Record another reading to fit a line.":
+  "Registra otra lectura para ajustar una recta.",
+"Water, Pressure grows with depth":
+  "Agua, La presión crece con la profundidad",
+"depth h in m, row {#}":
+  "profundidad h en m, fila {#}",
+"pressure P in kPa, row {#}":
+  "presión P en kPa, fila {#}",
+"abs":
+  "abs",
+"Reading {#} captured: h = {#} m, P = {#} kPa.":
+  "Lectura {#} capturada: h = {#} m, P = {#} kPa.",
+"{#} of {#} Depth reading used (this liquid and pressure mode). model: slope ρg = {#} kPa/m, intercept {#} kPa":
+  "{#} de {#} lectura de Profundidad usada (este líquido y este modo de presión). modelo: pendiente ρg = {#} kPa/m, ordenada al origen {#} kPa",
+"Blind off: predictions and answers are shown.":
+  "A ciegas desactivado: las predicciones y las respuestas se muestran.",
+"{#} of {#} Buoyancy readings used (this liquid)":
+  "{#} de {#} lecturas de Flotación usadas (este líquido)",
+"{#} of {#} Buoyancy reading used (this liquid)":
+  "{#} de {#} lectura de Flotación usada (este líquido)",
+"Water, Mystery block E":
+  "Agua, Bloque misterioso E",
+"depth d in cm, row {#}":
+  "profundidad d en cm, fila {#}",
+"scale reading T in N, row {#}":
+  "lectura del dinamómetro T en N, fila {#}",
+"Reading {#} captured: d = −{#} cm, T = {#} N.":
+  "Lectura {#} capturada: d = −{#} cm, T = {#} N.",
+"{#} of {#} Buoyancy reading used (this liquid). model: slope ρ_f g = {#} N/m³, through the origin":
+  "{#} de {#} lectura de Flotación usada (este líquido). modelo: pendiente ρ_f g = {#} N/m³, por el origen",
+"{#} of {#} Venturi readings used (this pipe and throat)":
+  "{#} de {#} lecturas de Venturi usadas (este tubo y esta garganta)",
+"Record reading stores v₁, the flow meter and both standpipes. Keep D₁ and D₂ fixed: the fit uses the readings with the present pipe and throat, Δh = h₁ − h₂ against v₁², with intercept. {#} readings from other scenes are kept for the CSV.":
+  "Registrar lectura guarda v₁, el flujómetro y ambos tubos verticales. Mantén D₁ y D₂ fijos: el ajuste usa las lecturas con el tubo y la garganta actuales, Δh = h₁ − h₂ en función de v₁², con ordenada al origen. Se guardan {#} lecturas de otras escenas para el CSV.",
+"Change the inlet speed v₁ and capture the flow meter and both standpipes each time, keeping the pipe and the throat fixed. Plot the drop h₁ − h₂ against v₁².":
+  "Cambia la rapidez de entrada v₁ y captura el flujómetro y ambos tubos verticales cada vez, sin cambiar el tubo ni la garganta. Grafica la caída h₁ − h₂ en función de v₁².",
+"{#} of {#} Venturi reading used (this pipe and throat)":
+  "{#} de {#} lectura de Venturi usada (este tubo y esta garganta)",
+"Water, Venturi tube":
+  "Agua, Tubo de Venturi",
+"inlet speed in m/s, row {#}":
+  "rapidez de entrada en m/s, fila {#}",
+"flow meter in L/s, row {#}":
+  "flujómetro en L/s, fila {#}",
+"standpipe {#} in cm, row {#}":
+  "tubo vertical {#} en cm, fila {#}",
+"Reading {#} captured: v₁ = {#} m/s, h₁ = {#} cm, h₂ = {#} cm.":
+  "Lectura {#} capturada: v₁ = {#} m/s, h₁ = {#} cm, h₂ = {#} cm.",
+"{#} of {#} Venturi reading used (this pipe and throat). model: slope ((A₁/A₂)² − {#})/(2g) = {#} s²/m":
+  "{#} de {#} lectura de Venturi usada (este tubo y esta garganta). modelo: pendiente ((A₁/A₂)² − {#})/(2g) = {#} s²/m",
 "Describe the picture":
   "Describir la imagen",
 "Time controls":
@@ -657,5 +719,7 @@ VDI18N.add('es', 'demo/fluids', {
 "Paused.":
   "En pausa.",
 "Close":
-  "Cerrar"
+  "Cerrar",
+"Turn on Spring scale. Record reading stores the depth ruler d, the spring scale T and the scale reading in air W. The table works out V_sub = L²·d (at most L³) and F_B = W − T; the fit is F_B = intercept + slope·V_sub. {#} reading from other scenes is kept for the CSV.":
+  "Activa Dinamómetro. Registrar lectura guarda la regla de profundidad d, el dinamómetro T y la lectura del dinamómetro en el aire W. La tabla calcula V_sub = L²·d (como máximo L³) y F_B = W − T; el ajuste es F_B = ordenada al origen + pendiente·V_sub. Se guarda {#} lectura de otra escena para el CSV."
 });

@@ -611,6 +611,13 @@ table.rows input:focus { border-color: var(--accent); }
   $('viewSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-view]'); if (b) setView(b.dataset.view); });
   // ---------- drawing ----------
   /* a pane's title in 11 px capitals, made smaller to fit the pane: the Spanish one was cut off at the canvas edge (student view calls, 2026-11-15) */
+  /* the top of a side pane's title: below the strip of buttons over the ramp when that strip reaches into the pane (a longer
+     language makes it wider), else y0 */
+  function paneTop(x0, y0) {
+    const vb = document.querySelector('#scene .viewbar'); if (!vb || x0 <= 0) return y0;
+    const r = vb.getBoundingClientRect(), c = can.getBoundingClientRect();
+    return r.right - c.left > x0 + 4 ? Math.max(y0, r.bottom - c.top + 2) : y0;
+  }
   function paneTitle(t, x, y, maxW) {
     const p = ps(); ctx.font = `700 ${11 * p}px ${T.ui}`; const tw = ctx.measureText(t).width;
     if (tw > maxW && maxW > 0) ctx.font = `700 ${Math.max(8 * p, 11 * p * maxW / tw)}px ${T.ui}`;
@@ -793,8 +800,8 @@ table.rows input:focus { border-color: var(--accent); }
   function drawTackleFBD(x0, y0, w, h) {
     const p = ps(), P = S.p, tk = tackle(P.m, P.n, P.F, S.s <= 1e-12 && S.v <= 1e-12), bl = S.blind;
     ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.beginPath(); if (x0 > 0) { ctx.moveTo(x0, 12 * p); ctx.lineTo(x0, H - 12 * p); } else { ctx.moveTo(12 * p, y0); ctx.lineTo(W - 12 * p, y0); } ctx.stroke();
-    ctx.fillStyle = T.muted; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; paneTitle('FREE BODY DIAGRAM OF THE LOAD', x0 + 14 * p, y0 + 12 * p, w - 28 * p);
-    ctx.fillText('AND THE LOWER BLOCK', x0 + 14 * p, y0 + 26 * p);
+    ctx.fillStyle = T.muted; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; const ty = paneTop(x0, y0); paneTitle('FREE BODY DIAGRAM OF THE LOAD', x0 + 14 * p, ty + 12 * p, w - 28 * p);
+    ctx.fillText('AND THE LOWER BLOCK', x0 + 14 * p, ty + 26 * p);
     const cx = x0 + w / 2, cy = y0 + h * 0.42 + 14 * p, Rm = Math.min(w, h) * 0.26, big = Math.max(tk.W, tk.up, tk.N, 1e-9), k = Rm / big;
     const L = (F) => (bl ? Rm * 0.45 : F * k);
     // one arrow T for each strand, side by side; the weight down; the floor's push if it carries some of the load
@@ -920,9 +927,9 @@ table.rows input:focus { border-color: var(--accent); }
   function drawFBD(x0, y0, w, h) {
     const p = ps(), P = S.p, th = P.th * Math.PI / 180, fz = forces(S.p, S.v), bl = S.blind;
     ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.beginPath(); if (x0 > 0) { ctx.moveTo(x0, 12 * p); ctx.lineTo(x0, H - 12 * p); } else { ctx.moveTo(12 * p, y0); ctx.lineTo(W - 12 * p, y0); } ctx.stroke();
-    ctx.fillStyle = T.muted; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; paneTitle(S.atwood ? 'FREE BODY DIAGRAM OF MASS m' : 'FREE BODY DIAGRAM OF THE BLOCK', x0 + 14 * p, y0 + 12 * p, w - 28 * p);
+    ctx.fillStyle = T.muted; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; const ty = paneTop(x0, y0); paneTitle(S.atwood ? 'FREE BODY DIAGRAM OF MASS m' : 'FREE BODY DIAGRAM OF THE BLOCK', x0 + 14 * p, ty + 12 * p, w - 28 * p);
     /* held or stopped, the diagram shows a net force on a body that is not moving: say why (student view, 2026-11-15) */
-    if (!S.run && Math.abs(fz.net) > 1e-6) { ctx.font = `${11 * p}px ${T.ui}`; ctx.fillText(trS(atStop() ? 'stopFbd' : 'held'), x0 + 14 * p, y0 + 28 * p); }
+    if (!S.run && Math.abs(fz.net) > 1e-6) { ctx.font = `${11 * p}px ${T.ui}`; ctx.fillText(trS(atStop() ? 'stopFbd' : 'held'), x0 + 14 * p, ty + 28 * p); }
     const cx = x0 + w / 2, cy = y0 + h / 2 + 10 * p, Rm = Math.max(20 * p, Math.min(Math.min(w, h) * (S.atwood ? 0.3 : 0.36), h / 2 - 50 * p));   /* a short pane (a phone): vertical arrows and their labels clear the title and the note */   /* Atwood: both arrows vertical, so a little shorter to clear the title and the note */
     const items = [['W = mg', T.w, 0, -fz.W], ['N', T.n, -Math.sin(th) * fz.N, Math.cos(th) * fz.N]];
     const up = [Math.cos(th), Math.sin(th)];

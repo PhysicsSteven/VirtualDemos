@@ -20,8 +20,8 @@ Students should know Newton's law of gravity and that an acceleration is a vecto
 2. **Moon closer (1/d³).** At 40 R_E the readouts show the pull at × 2.28 today's value but the tide at × 3.43. Drag the Moon in and out and compare the two curves on the plot.
 3. **Two bulges.** This opens the **Ocean bulges** view. The bulges sit under the Moon and opposite it; Earth turns under them.
 4. **A day at the beach.** Follow the city's water level on the plot: two highs and two lows a day. Read **Next high tide**, let it play, and note that each high arrives later each day. Ask why (Q6).
-5. **Spring and neap.** Now with **Include the Sun's tide** on. A month goes by at 48 hours per second; watch the daily range on the plot swell at new and full moon and shrink at the quarters.
-6. **Sun vs Moon.** Paused at first quarter, with each body's bulge outlined. The Sun's bulge (0.164 m) is at right angles to the Moon's (0.357 m). Point at the two ratios in the rail: 179× the pull, 0.460× the tide.
+5. **Spring and neap.** Now with **Include the Sun's tide** on. A month goes by at 24 hours per second; watch the daily range on the plot swell at new and full moon and shrink at the quarters.
+6. **Sun vs Moon.** Paused at first quarter, with each body's bulge outlined. The Sun's bulge (0.164 m) is at right angles to the Moon's (0.357 m). Point at the two ratios in the rail: 179× the pull, 0.459× the tide.
 
 ## Questions
 

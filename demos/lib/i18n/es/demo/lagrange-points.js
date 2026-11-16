@@ -407,7 +407,7 @@ VDI18N.add('es', 'demo/lagrange-points', {
 "after {#} P = {#} yr":
   "después de {#} P = {#} años",
 "t = {#} <small>P</small> · {#} yr":
-  "t = {#} <small>P</small> · {#} yr",
+  "t = {#} <small>P</small> · {#} años",
 "{#} <span>after {#} P = {#} yr</span>":
   "{#} <span>después de {#} P = {#} años</span>",
 "{#} × {#}⁻¹⁶ <span>after {#} P</span>":

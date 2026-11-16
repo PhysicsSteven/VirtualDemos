@@ -120,16 +120,16 @@ VDI18N.add('es', 'demo/energy-track', {
   "E<sub>th</sub> crece en μN Δs mientras se desliza",
 "Model: the skater is a point mass that slides (no rolling, no air drag). The track is a smooth curve through its points (a natural cubic spline). On the track the motion is found in steps of {#} ms (fourth order Runge–Kutta) and the speed is then set from the energy balance, so K + U + E<sub>th</sub> equals the starting total at every step. Kinetic friction is μN against the motion; at rest the same μ holds the skater on a slope where tanθ ≤ μ. The track pushes but cannot pull: where it would have to pull (N &lt; {#}) the skater leaves it, unless Stick to the track is on. In the air the path is the exact parabola. Landing on the track keeps the speed along the track and turns the speed across it into thermal energy (a perfectly inelastic bump); landing on the ground does the same with the downward speed, and the walls stop the skater. g: Earth {#} m/s², and the Moon {#}, Mars {#} and Jupiter {#} m/s² from the NASA Planetary Fact Sheet.":
   "Modelo: el patinador es una masa puntual que se desliza (sin rodar, sin arrastre del aire). La pista es una curva suave que pasa por sus puntos (un spline cúbico natural). Sobre la pista, el movimiento se calcula en pasos de {#} ms (Runge–Kutta de cuarto orden) y luego la rapidez se fija a partir del balance de energía, así que K + U + E<sub>th</sub> es igual al total inicial en cada paso. La fricción cinética es μN en contra del movimiento; en reposo, la misma μ sostiene al patinador en una pendiente donde tanθ ≤ μ. La pista empuja pero no puede jalar: donde tendría que jalar (N &lt; {#}) el patinador se sale, a menos que Pegado a la pista esté activado. En el aire la trayectoria es la parábola exacta. Al caer sobre la pista se conserva la rapidez a lo largo de la pista y la rapidez perpendicular a ella se convierte en energía térmica (un golpe perfectamente inelástico); al caer al suelo pasa lo mismo con la rapidez hacia abajo, y las paredes detienen al patinador. g: Tierra {#} m/s², y Luna {#}, Marte {#} y Júpiter {#} m/s² según la NASA Planetary Fact Sheet.",
-"The same valley with μ = {#}. Each swing turns some energy into thermal energy (μN on every meter slid), so the turning points come lower each time and the skater settles near the bottom. The total bar does not change.":
-  "El mismo valle con μ = {#}. Cada oscilación convierte algo de energía en energía térmica (μN por cada metro deslizado), así que los puntos de retorno quedan más bajos cada vez y el patinador se asienta cerca del fondo. La barra del total no cambia.",
 "Energy bars, in J: Kinetic {#}, Potential {#}, Thermal {#}, Total {#}.":
   "Barras de energía, en J: Cinética {#}, Potencial {#}, Térmica {#}, Total {#}.",
+"The same valley with μ = {#}. Each swing turns some energy into thermal energy (μN on every meter slid), so the turning points come lower each time and the skater settles near the bottom. The total bar does not change.":
+  "El mismo valle con μ = {#}. Cada oscilación convierte algo de energía en energía térmica (μN por cada metro deslizado), así que los puntos de retorno quedan más bajos cada vez y el patinador se asienta cerca del fondo. La barra del total no cambia.",
 "Two wells with a hill between, its top {#} m up. Started at {#} m the skater crosses the hill and back; drag it lower than the hilltop and it stays in one well. The hill only lets through a skater whose total energy is above U at the top.":
   "Dos pozos con una colina entre ellos, cuya cima está a {#} m de altura. Si empieza a {#} m, el patinador cruza la colina y regresa; arrástralo más abajo de la cima y se queda en un pozo. La colina solo deja pasar a un patinador cuya energía total sea mayor que U en la cima.",
 "A loop the loop. At the top of the loop the track can only push down, so the skater needs v² ≥ gR there (R the radius of the track at the top). Started from this height it makes it round, back up the far ramp, and through the loop again backwards.":
   "Un rizo completo. En la parte superior del rizo la pista solo puede empujar hacia abajo, así que el patinador necesita ahí v² ≥ gR (R el radio de la pista en la parte superior). Si empieza desde esta altura, da la vuelta completa, sube la rampa del otro lado y vuelve a pasar por el rizo hacia atrás.",
-"The same loop, started lower. Near the top the track would have to pull the skater in, which it cannot, so the skater leaves the track and falls across the loop as a projectile. Turn on Stick to the track and it goes round.":
-  "El mismo rizo, empezando más abajo. Cerca de la parte superior la pista tendría que jalar al patinador hacia adentro, lo que no puede hacer, así que el patinador se sale de la pista y cae a través del rizo como un proyectil. Activa Pegado a la pista y da la vuelta completa.",
+"The same loop, started lower. Near the top the track would have to pull the skater in, which it cannot, so the skater leaves the track and falls across the loop as a projectile. Stick to the track does not save it: the start is below the top of the loop, so on the rails the skater runs out of speed before the top and rolls back.":
+  "El mismo rizo, empezando más abajo. Cerca de la parte superior la pista tendría que jalar al patinador hacia adentro, lo que no puede hacer, así que el patinador se sale de la pista y cae a través del rizo como un proyectil. Pegado a la pista no lo salva: el inicio está más abajo que la parte superior del rizo, así que sobre los rieles el patinador se queda sin rapidez antes de llegar arriba y regresa.",
 "A ramp that ends in a kicker. Off the end the skater flies as a projectile: K and U still add to the total in the air. It lands on the ground about a second later, and the downward speed goes into thermal energy, so the bars show the bump. With no friction it then slides on until the wall at the right edge stops it.":
   "Una rampa que termina en un trampolín. Al salir del extremo el patinador vuela como un proyectil: K y U siguen sumando el total en el aire. Aterriza en el suelo como un segundo después, y la rapidez hacia abajo se convierte en energía térmica, así que las barras muestran el golpe. Sin fricción, luego sigue deslizándose hasta que la pared del lado derecho lo detiene.",
 "A hump with a tight top. Coming up to the top the track curves away faster than the skater can follow (N would drop below zero), so the skater leaves the track, flies over the top and lands on the far ramp.":
@@ -146,12 +146,24 @@ VDI18N.add('es', 'demo/energy-track', {
   "Fricción μ = {#}.",
 "The skater is held on the track, like a roller coaster car on rails.":
   "El patinador está sujeto a la pista, como un carrito de montaña rusa sobre rieles.",
+"Left the track: the track would have had to pull (N < {#}).":
+  "Se salió de la pista: la pista habría tenido que jalar (N < {#}).",
+"in the air":
+  "en el aire",
+"{#} (in the air)":
+  "{#} (en el aire)",
+"The skater is in the air.":
+  "El patinador está en el aire.",
+"The normal force is {#} in the air.":
+  "La fuerza normal es {#} en el aire.",
+"Energy bars, in J: Kinetic {#}, Potential {#}, Thermal {#}×{#}^-{#}, Total {#}.":
+  "Barras de energía, en J: Cinética {#}, Potencial {#}, Térmica {#}×{#}^-{#}, Total {#}.",
+"Landed on the track: the speed across it went into thermal energy.":
+  "Aterrizó en la pista: la rapidez perpendicular a ella se convirtió en energía térmica.",
 "Left the track: the track would have had to pull (N < 0).":
   "Se salió de la pista: la pista habría tenido que jalar (N < 0).",
 "Off the end of the track.":
   "Salió por el extremo de la pista.",
-"Landed on the track: the speed across it went into thermal energy.":
-  "Aterrizó en la pista: la rapidez perpendicular a ella se convirtió en energía térmica.",
 "Landed on the ground: the downward speed went into thermal energy.":
   "Aterrizó en el suelo: la rapidez hacia abajo se convirtió en energía térmica.",
 "Stopped by the wall.":

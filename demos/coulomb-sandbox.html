@@ -685,9 +685,10 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     if (e >= 1e3) return (r / 1e3).toFixed(1) + ' kV/m';
     return r + ' V/m';
   }
-  // direction of E in whole degrees counterclockwise from +x, or null where E = 0
+  // direction of E in whole degrees counterclockwise from +x, or null where |E| reads 0 V/m (at the center of a ring the
+  // rounding residue of the exact sum otherwise gave a direction for a field that is zero)
   function dirDeg(ex, ey) {
-    if (!(Math.hypot(ex, ey) > 0)) return null;
+    if (!(roundE(Math.hypot(ex, ey)) > 0)) return null;
     let d = Math.atan2(ey, ex) * 180 / Math.PI; if (d < 0) d += 360;
     return Math.round(d) % 360;
   }

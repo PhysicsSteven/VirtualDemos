@@ -184,11 +184,11 @@ VDI18N.add('en', 'demo/charged-particles', [
 "Water beyond",
 "Carried away (neutrons, gammas)",
 "A slim patient: {#} mm of skin, {#} cm of fat and {#} cm of muscle, then water for the organs beyond. The {#} MeV peak sits at {#} cm, {#} cm past the muscle. Compare the Large patient setup.",
-"Fat, {#} cm",
-"The same anatomy with {#} cm of fat instead of {#} cm. Fat stops protons a little less than water per centimeter ({#} times at {#} MeV), so the peak moves {#} cm deeper, to {#} cm; but the organs are now {#} cm deeper, so the peak falls only {#} cm past the muscle. To reach the same organ as in the slim patient the beam needs about {#} MeV (from the CSDA ranges; try it with the energy slider).",
 "The beam first crosses these body layers.",
 "Skin, {#} mm",
+"Fat, {#} cm",
 "Muscle, {#} cm",
+"The same anatomy with {#} cm of fat instead of {#} cm. Fat stops protons a little less than water per centimeter ({#} times at {#} MeV), so the peak moves {#} cm deeper, to {#} cm; but the organs are now {#} cm deeper, so the peak falls only {#} cm past the muscle. To reach the same organ as in the slim patient the beam needs about {#} MeV (from the CSDA ranges; try it with the energy slider).",
 "Brain, {#} cm",
 "A beam into the head: {#} mm of scalp (skin), {#} mm of skull (cortical bone), then brain. The skull takes out as much energy as {#} cm of water, so the {#} MeV protons, whose CSDA range in water is {#} cm, stop {#} cm in. The brain layer runs past the end of the range, so no water is reached.",
 "the beam stops in them",
@@ -255,5 +255,9 @@ VDI18N.add('en', 'demo/charged-particles', [
 "all off or {#} cm: only water",
 "stopped",
 "The body layers are all off, so there is only water.",
-"The beam has stopped before the detector."
+"The beam has stopped before the detector.",
+"Depth on the rule; tracks drawn to the same scale; the {#} cm chamber drawn smaller.",
+"nozzle: alpha particle beam",
+"nozzle: carbon {#} ion beam",
+"Depth on the rule; tracks stretched sideways ×{#}; the {#} cm chamber to the rule's scale."
 ]);

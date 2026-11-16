@@ -1395,7 +1395,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const C = CL.C, q = parcel(C), n = cloudCounts(C), rd = Rd();
       h += dd('Cloud radius r₀', `${grp(S.r0)} AU`) + dd('Cloud turns once every', S.spin ? `${sig(S.P0, 3)} million yr` : 'never (no spin)')
         + dd('Time since the collapse began', yrs(C.t)) + dd('Free fall time from the edge', yrs(fallTime(S.r0)))
-        + dd('Tracked parcel: distance from the axis', q.gone ? 'fell onto the Sun' : fmtAU(q.s)) + dd('Tracked parcel goes around once every', q.gone || !isFinite(q.period) ? '—' : q.period > 1e6 ? `${sig(q.period / 1e6, 3)} million yr` : `${sig(q.period, 3)} yr`)
+        + dd('Tracked parcel: distance from the axis', q.gone ? 'fell onto the Sun' : fmtAU(q.s)) + dd('Tracked parcel goes around once every', q.gone || !isFinite(q.period) ? '—' : q.period > 1e6 ? `${sig(q.period / 1e6, 3)} million yr` : `${q.period >= 1000 ? grp(q.period) : sig(q.period, 3)} yr`)
         + dd('Tracked parcel', q.gone ? 'on the Sun' : q.settled ? 'settled in the disk' : q.landed ? 'in the disk, settling' : 'falling')
         + dd('Parcels falling, in the disk, on the Sun', `${n.fall}, ${n.disk}, ${n.sun} (${Math.round(100 * n.sun / C.n)} % on the Sun)`, 'wide')
         + dd('Predicted disk radius R<sub>d</sub> = Ω₀²r₀⁴/GM', B ? hide : S.spin ? fmtAU(rd) : 'no disk') + dd('Predicted spin up (r₀/R<sub>d</sub>)²', B ? hide : S.spin ? `${grp(spinUp(S.r0, S.P0))} times` : '—');

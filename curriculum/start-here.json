@@ -352,8 +352,8 @@
    "setup": "",
    "do": "Watch Proxima Centauri, the nearest star, jump between its January and July photos, and read <b>Parallax p</b>. Decide how the shift will change for a star farther away, then press <b>Sirius</b> and <b>Vega</b> and read <b>Parallax p</b> and <b>d = 1/p</b> for each.",
    "do_es": "Observa cómo Próxima Centauri, la estrella más cercana, salta entre sus fotos de enero y julio, y lee <b>Paralaje p</b>. Decide cómo cambiará el desplazamiento para una estrella más lejana, luego presiona <b>Sirio</b> y <b>Vega</b> y lee <b>Paralaje p</b> y <b>d = 1/p</b> para cada una.",
-   "see": "The parallax falls from 0.768″ for Proxima Centauri to 0.379″ for Sirius and 0.130″ for Vega, at 1.3, 2.64 and 7.69 pc. The baseline is Earth's orbit, so a star twice as far shifts half as much: d (pc) = 1/p (arcseconds). Even the nearest star shifts less than 1″.",
-   "see_es": "El paralaje baja de 0.768″ para Próxima Centauri a 0.379″ para Sirio y 0.130″ para Vega, a 1.3, 2.64 y 7.69 pc. La línea de base es la órbita de la Tierra, así que una estrella al doble de distancia se desplaza la mitad: d (pc) = 1/p (segundos de arco). Hasta la estrella más cercana se desplaza menos de 1″.",
+   "see": "The parallax falls from 0.768″ for Proxima Centauri to 0.379″ for Sirius and 0.130″ for Vega, at 1.30, 2.64 and 7.69 pc. The baseline is Earth's orbit, so a star twice as far shifts half as much: d (pc) = 1/p (arcseconds). Even the nearest star shifts less than 1″.",
+   "see_es": "El paralaje baja de 0.768″ para Próxima Centauri a 0.379″ para Sirio y 0.130″ para Vega, a 1.30, 2.64 y 7.69 pc. La línea de base es la órbita de la Tierra, así que una estrella al doble de distancia se desplaza la mitad: d (pc) = 1/p (segundos de arco). Hasta la estrella más cercana se desplaza menos de 1″.",
    "explore": [
     {
      "setup": "set=dist~3!g%3AstarChips~custom",
@@ -574,8 +574,8 @@
    "q": "Does a faster proton take longer to go once around its circle?",
    "q_es": "¿Un protón más rápido tarda más en dar una vuelta a su círculo?",
    "setup": "set=lv~5!ang~0!par~0!hand~0!lb~-1!rulerOn~0!turns~1!hB~0.3!hT~1!labBlind~0!pb~0!g%3Acmps~2v!g%3AsecLaunch.View~%23vTop",
-   "do": "A proton at 1.00 × 10⁵ m/s circles in a 100 mT field, and a second proton (dashed) starts from the same point at twice the speed. Under View pick <b>Along B</b> and press <b>Reset view</b> to see both circles. Decide which one gets back to the start first, then press <b>Reset</b> and watch them.",
-   "do_es": "Un protón a 1.00 × 10⁵ m/s gira en un campo de 100 mT, y un segundo protón (punteado) sale del mismo punto con el doble de rapidez. En Vista elige <b>A lo largo de B</b> y presiona <b>Restablecer vista</b> para ver los dos círculos. Decide cuál regresa primero al inicio, luego presiona <b>Reiniciar</b> y obsérvalos.",
+   "do": "A proton at 1.00 × 10⁵ m/s circles in a 100 mT field, and a second proton (dashed) starts from the same point at twice the speed. Under View pick <b>Along B</b> to see both circles. Decide which one gets back to the start first, then press <b>Reset</b> and watch them.",
+   "do_es": "Un protón a 1.00 × 10⁵ m/s gira en un campo de 100 mT, y un segundo protón (punteado) sale del mismo punto con el doble de rapidez. En Vista elige <b>A lo largo de B</b> para ver los dos círculos. Decide cuál regresa primero al inicio, luego presiona <b>Reiniciar</b> y obsérvalos.",
    "see": "They get back together, every 656 ns. The fast one's circle is twice as big, r = mv/(qB) = 2.09 cm against 1.04 cm, so it covers twice the distance at twice the speed. The period T = 2πm/(qB) has no v in it.",
    "see_es": "Regresan juntos, cada 656 ns. El círculo del rápido es el doble de grande, r = mv/(qB) = 2.09 cm contra 1.04 cm, así que recorre el doble de distancia al doble de rapidez. El periodo T = 2πm/(qB) no depende de v.",
    "explore": [
@@ -660,7 +660,7 @@
     {
      "setup": "set=sT~0.1!selStart~2000!selPlot~lid!labBlind~0!g%3AmodeSeg~cool!g%3Apresets4~young",
      "do": "<b>Just formed</b> in <b>Cooling</b>: a Moon, a Mars and an Earth that start equally hot, made of the same rock. Predict which will have the thickest cold lid after 4.5 Gyr, then press <b>Run</b> and watch the <b>cold lid km</b> column.",
-     "do_es": "<b>Recién formados</b> en <b>Enfriamiento</b>: una Luna, un Marte y una Tierra que empiezan igual de calientes, hechos de la misma roca. Predice cuál tendrá la tapa fría más gruesa después de 4.5 mil millones de años, luego presiona <b>Corrida</b> y observa la columna <b>tapa fría km</b>.",
+     "do_es": "<b>Recién formados</b> en <b>Enfriamiento</b>: una Luna, un Marte y una Tierra que empiezan igual de calientes, hechos de la misma roca. Predice cuál tendrá la tapa fría más gruesa después de 4.5 mil millones de años, luego presiona <b>Correr</b> y observa la columna <b>tapa fría km</b>.",
      "see": "At 4.50 Gyr the Moon's lid is 415 km thick, Mars's 249 km and Earth's 103 km. A small world has more surface for each km³ of mantle (1.74 km² per 1000 km³ for the Moon, 0.56 for Earth), so it loses its heat faster. That is why the Moon went quiet long ago while Earth is still active.",
      "see_es": "A los 4.50 mil millones de años la tapa de la Luna mide 415 km, la de Marte 249 km y la de la Tierra 103 km. Un mundo pequeño tiene más superficie por cada km³ de manto (1.74 km² por cada 1000 km³ en la Luna, 0.56 en la Tierra), así que pierde su calor más rápido. Por eso la Luna se apagó hace mucho mientras la Tierra sigue activa."
     }
@@ -813,7 +813,7 @@
     {
      "setup": "set=tPrincipal~1!tImage~1!tFaint~1!tGrid~1!g%3Apresets~tir",
      "do": "<b>Total internal reflection</b>: a beam inside a glass half disc (n = 1.50) meets the flat face at 30.0°. Decide at what angle the light will stop getting out, then click the beam and raise <b>Angle (pivots on the glass)</b> step by step, reading <b>Angle inside, at exit face</b> and <b>Result</b>.",
-     "do_es": "<b>Reflexión total interna</b>: un haz dentro de un medio disco de vidrio (n = 1.50) llega a la cara plana a 30.0°. Decide a qué ángulo la luz dejará de salir, luego haz clic en el haz y sube <b>Angle (pivots on the glass)</b> paso a paso, leyendo <b>Ángulo dentro, en la cara de salida</b> y <b>Resultado</b>.",
+     "do_es": "<b>Reflexión total interna</b>: un haz dentro de un medio disco de vidrio (n = 1.50) llega a la cara plana a 30.0°. Decide a qué ángulo la luz dejará de salir, luego haz clic en el haz y sube <b>Ángulo (gira sobre el vidrio)</b> paso a paso, leyendo <b>Ángulo dentro, en la cara de salida</b> y <b>Resultado</b>.",
      "see": "At 41.5° the result still reads Refracts out; at 42.0° it reads Total internal reflection and the outgoing ray is gone. The critical angle is arcsin(1/1.50) = 41.8°: past it, Snell's law would need a sine larger than 1 in the air.",
      "see_es": "A 41.5° el resultado todavía dice Sale refractada; a 42.0° dice Reflexión total interna y el rayo de salida desaparece. El ángulo crítico es arcsen(1/1.50) = 41.8°: más allá, la ley de Snell pediría un seno mayor que 1 en el aire."
     },
@@ -1343,7 +1343,7 @@
    "q_es": "Dos rayos caen en los extremos de un tren en movimiento al mismo tiempo para el andén. ¿Son simultáneos para un pasajero?",
    "setup": "set=beta~0.5!blind~0!wHome~1!wRocket~1!wTwin~0!wRod~0!tend~9!lCones~0!lHyper~0!lSimul~1!lTicks~1!lPrime~1!lTwinLines~1!lRead~1!g%3AreadSeg~P!g%3Apresets~simul",
    "do": "A and B are the two strikes, 8 ly apart and both at ct = 0 in the platform frame S; the train, frame S′, moves right at β = 0.5. Decide whether the strikes are simultaneous on the train, and if not, which comes first. Then read <b>In S′: cΔt′, Δx′</b> for the pair A to B under Selected.",
-   "do_es": "A y B son los dos rayos, a 8 años luz uno del otro y los dos en ct = 0 en el marco del andén S; el tren, marco S′, se mueve a la derecha con β = 0.5. Decide si los rayos son simultáneos en el tren y, si no, cuál ocurre primero. Luego lee <b>In S′: cΔt′, Δx′</b> para el par de A a B en Seleccionado.",
+   "do_es": "A y B son los dos rayos, a 8 años luz uno del otro y los dos en ct = 0 en el marco del andén S; el tren, marco S′, se mueve a la derecha con β = 0.5. Decide si los rayos son simultáneos en el tren y, si no, cuál ocurre primero. Luego lee <b>En S′: cΔt′, Δx′</b> para el par de A a B en Seleccionado.",
    "see": "cΔt′ = −4.62 yr: on the train B, at the front, happens 4.62 years before A. Each strike's train time is t′ = γ(t − βx) with γ = 1.155, so +2.31 yr for A at x = −4 ly and −2.31 yr for B at x = +4 ly; the red dashed lines of simultaneity through A and B, parallel to the x′ axis and labeled ct′ = 2.31 and ct′ = −2.31, show the same thing. Neither observer is wrong: \"at the same time\" depends on who is asking.",
    "see_es": "cΔt′ = −4.62 años: en el tren B, en el frente, ocurre 4.62 años antes que A. El tiempo de cada rayo en el tren es t′ = γ(t − βx) con γ = 1.155, así que +2.31 años para A en x = −4 años luz y −2.31 años para B en x = +4 años luz; las líneas rojas punteadas de simultaneidad por A y B, paralelas al eje x′ y marcadas ct′ = 2.31 y ct′ = −2.31, muestran lo mismo. Ningún observador se equivoca: \"al mismo tiempo\" depende de quién lo pregunta.",
    "explore": [
@@ -1364,7 +1364,7 @@
     {
      "setup": "set=beta~0.5!blind~0!wHome~0!wRocket~0!wTwin~0!wRod~0!tend~10!lCones~1!lHyper~0!lSimul~1!lTicks~1!lPrime~1!lTwinLines~1!lRead~1!g%3AreadSeg~P!g%3Apresets~cause",
      "do": "<b>Causality</b>: in S, A at (ct, x) = (1, −2) comes before B at (2, 2). At β = 0.50 read <b>In S′: cΔt′, Δx′</b> for A to B. Decide whether any observer could see C, at (5, −1), before A; then click the A chip and the C chip under Events and slide <b>Speed β = v/c</b> from −0.95 to 0.95, watching cΔt′.",
-     "do_es": "<b>Causalidad</b>: en S, A en (ct, x) = (1, −2) ocurre antes que B en (2, 2). Con β = 0.50 lee <b>In S′: cΔt′, Δx′</b> para A a B. Decide si algún observador podría ver C, en (5, −1), antes que A; luego haz clic en el chip A y en el chip C en Eventos y mueve <b>Rapidez β = v/c</b> de −0.95 a 0.95, observando cΔt′.",
+     "do_es": "<b>Causalidad</b>: en S, A en (ct, x) = (1, −2) ocurre antes que B en (2, 2). Con β = 0.50 lee <b>En S′: cΔt′, Δx′</b> para A a B. Decide si algún observador podría ver C, en (5, −1), antes que A; luego haz clic en el chip A y en el chip C en Eventos y mueve <b>Rapidez β = v/c</b> de −0.95 a 0.95, observando cΔt′.",
      "see": "For A to B, cΔt′ = −1.15 yr: in S′ B comes first. Their Δs² is −15.00, spacelike, too far apart in space for any signal to link them, so their order depends on the observer and flips at β = 0.25. A to C has Δs² = 15.00, timelike: cΔt′ stays positive for every β, from 15.85 yr at −0.95 to 9.77 yr at 0.95, so everyone agrees A comes first, and A can cause C.",
      "see_es": "Para A a B, cΔt′ = −1.15 años: en S′ B ocurre primero. Su Δs² es −15.00, de tipo espacio, demasiado lejos en el espacio para que una señal los una, así que su orden depende del observador y se invierte en β = 0.25. A a C tiene Δs² = 15.00, de tipo tiempo: cΔt′ sigue positivo para toda β, de 15.85 años en −0.95 a 9.77 años en 0.95, así que todos coinciden en que A ocurre primero, y A puede causar C."
     }

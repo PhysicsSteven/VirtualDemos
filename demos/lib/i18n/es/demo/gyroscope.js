@@ -186,10 +186,6 @@ VDI18N.add('es', 'demo/gyroscope', {
   "Presiona Espacio para soltar o sostener, y R para reiniciar.",
 "Hold":
   "Sujetar",
-"Released and moving.":
-  "Soltado y en movimiento.",
-"Spin {#} rad/s, axle tilt −{#}°, time {#} s.":
-  "Giro {#} rad/s, inclinación del eje −{#}°, tiempo {#} s.",
 "slow motion: {#}/{#} of real time":
   "cámara lenta: {#}/{#} del tiempo real",
 "wheel {#} turns/s: a blur to the eye":
@@ -228,6 +224,10 @@ VDI18N.add('es', 'demo/gyroscope', {
   "Suéltala y deja que la compuerta mida al menos una vuelta completa alrededor del poste.",
 "−{#} mN·m (holds back the precession)":
   "−{#} mN·m (frena la precesión)",
+"Released and moving.":
+  "Soltado y en movimiento.",
+"Spin {#} rad/s, axle tilt −{#}°, time {#} s.":
+  "Giro {#} rad/s, inclinación del eje −{#}°, tiempo {#} s.",
 "(Slow motion shows it turn)":
   "(Cámara lenta la muestra girar)",
 "Held.":
@@ -240,6 +240,10 @@ VDI18N.add('es', 'demo/gyroscope', {
   "Sin giro no hay rapidez de precesión predicha.",
 "The arrows are hidden.":
   "Las flechas están ocultas.",
+"It stood up.":
+  "Se enderezó.",
+"It fell.":
+  "Se cayó.",
 "Describe the picture":
   "Describir la imagen",
 "Time controls":

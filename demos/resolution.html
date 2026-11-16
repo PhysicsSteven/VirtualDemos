@@ -265,7 +265,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const $ = (id) => document.getElementById(id);
   const VG = window.VDGear;
   const f = (v, d = 2) => (!isFinite(v) ? '—' : v.toFixed(d).replace('-', '−'));
-  const g3 = (v) => (!isFinite(v) ? '—' : Math.abs(v) >= 100 ? v.toFixed(0).replace('-', '−') : (+v).toPrecision(3).replace('-', '−'));
+  const g3 = (v) => (!isFinite(v) ? '—' : Math.abs(v) >= 100 ? Math.round(v).toLocaleString('en-US').replace('-', '−') : (+v).toPrecision(3).replace('-', '−'));
   const g6 = (v) => +(+v).toPrecision(6);
   const proj = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.25 : 1);
   const dark = () => (VG ? VG.dark() : matchMedia('(prefers-color-scheme: dark)').matches);

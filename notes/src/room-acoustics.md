@@ -17,10 +17,10 @@ Students should know β = 10 log(I/I₀) and that intensity falls as 1/r² from 
 
 ## Running it in class
 
-1. **Bare room.** A 9 m × 7 m × 3 m room (189 m³) with painted brick walls and a concrete floor. Ask Q1, then clap. At 500 Hz the measured T is 4.75 s; Sabine gives 4.81 s. Switch to 125 Hz: 13.66 s, and at 1 kHz 6.79 s.
-2. **Add absorbing panels.** Twenty foam panels (14.4 m²) cut T at 500 Hz to 1.62 s (Sabine 1.69 s). Record T for 0, 5, 10, 20, 30 and 40 panels and plot T against 1/A (Q2, Q3). At 125 Hz the same panels barely help: 8.01 s (Q4).
+1. **Bare room.** A 9 m × 7 m × 3 m room (189 m³) with painted brick walls and a concrete floor. Ask Q1, then clap. At 500 Hz the measured T is 4.75 s; Sabine gives 4.81 s. Switch to 125 Hz: 13.69 s, and at 1 kHz 6.79 s.
+2. **Add absorbing panels.** Twenty foam panels (14.4 m²) cut T at 500 Hz to 1.62 s (Sabine 1.69 s). Record T for 0, 5, 10, 20, 30 and 40 panels and plot T against 1/A (Q2, Q3). At 125 Hz the same panels barely help: 7.86 s (Q4).
 3. **Room with an audience.** A 12 m × 9 m × 4 m hall whose floor is an audience on wooden chairs. T at 500 Hz is 0.65 s, against 6.32 s with a bare concrete floor (Q5).
-4. **Anechoic chamber.** Wedges 0.3 m deep on all six surfaces. Switch to **Level against distance** and record 0.5, 1, 2 and 4 m at 500 Hz: 95.2, 89.1, 83.1, 77.1 dB, a clean 6.0 dB per doubling. Clap: only the direct sound arrives (Q6).
+4. **Anechoic chamber.** Wedges 0.3 m deep on all six surfaces. Switch to **Level against distance** and record 0.5, 1, 2 and 4 m at 500 Hz: 95.2, 89.2, 83.1, 77.1 dB, a clean 6.0 dB per doubling. Clap: only the direct sound arrives (Q6).
 5. **Below the cutoff.** The same chamber at 125 Hz, where λ = 2.75 m is more than four times the wedge depth (cutoff c/4d = 286 Hz). The readings are 95.3, 89.7, 84.7 and 80.4 dB: only 5.6, 5.0 and 4.3 dB per doubling (Q7).
 6. **Mystery panels.** Twenty panels of a hidden material. Measure T with and without them and find their α in each band (Q8).
 
@@ -32,7 +32,7 @@ Students should know β = 10 log(I/I₀) and that intensity falls as 1/r² from 
 
 **Q3.** Twenty foam panels, 0.72 m² each with α = 0.83 at 500 Hz, replace painted brick with α = 0.02. By how much do they raise A? Predict T with Sabine, then measure it. If you plot T against 1/A for 0 to 40 panels, what should the graph look like, and what is its slope?
 
-**Q4.** The same twenty panels give T = 1.62 s at 500 Hz but 8.01 s at 125 Hz. Explain with the absorption coefficients. Why is it hard to stop a room from booming at low frequency?
+**Q4.** The same twenty panels give T = 1.62 s at 500 Hz but 7.86 s at 125 Hz. Explain with the absorption coefficients. Why is it hard to stop a room from booming at low frequency?
 
 **Q5.** An audience on wooden chairs covers the 108 m² floor of the 12 m × 9 m × 4 m hall. Find A and Sabine's T at 500 Hz. The demo measures 0.65 s. Why do concert halls sound different full and empty, and why are their seats upholstered?
 

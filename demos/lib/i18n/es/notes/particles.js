@@ -22,8 +22,8 @@ VDI18N.add('es', 'notes/particles', {
   "<strong>Modelo Estándar.</strong> Pregunta qué partículas sienten la fuerza fuerte (quarks y hadrones, no leptones) y cuáles son fermiones. Señala los dos valores que da el libro para la intensidad relativa de la fuerza débil ({#}⁻⁶ en la §{#}, {#}⁻¹⁰ en la Tabla {#}) y por qué solo importa el orden de magnitud (P1).",
 "<strong>Neutron decay</strong> with Blind on: students check each line, then remove the antineutrino (Q2).":
   "<strong>Decaimiento del neutrón</strong> con A ciegas activado: los estudiantes comprueban cada renglón, luego quitan el antineutrino (P2).",
-"<strong>Making strange particles</strong>: π⁻ + p → K⁰ + Λ⁰ is strong and keeps S = {#}. Swap the K⁰ for a π⁰ and it fails (Q3). Use Set to threshold.":
-  "<strong>Producción de partículas extrañas</strong>: π⁻ + p → K⁰ + Λ⁰ es fuerte y conserva S = {#}. Cambia el K⁰ por un π⁰ y falla (P3). Usa Fijar en el umbral.",
+"<strong>Making strange particles</strong>: π⁻ + p → K⁰ + Λ⁰ is strong and keeps S = {#}. Swap the K⁰ for a π⁰: strangeness changes, so the strong interaction cannot do it, and the checker allows it only through the weak interaction (Q3). Use Set to threshold.":
+  "<strong>Producción de partículas extrañas</strong>: π⁻ + p → K⁰ + Λ⁰ es fuerte y conserva S = {#}. Cambia el K⁰ por un π⁰: la extrañeza cambia, así que la interacción fuerte no puede producirla, y el verificador solo la permite a través de la interacción débil (P3). Usa Fijar en el umbral.",
 "<strong>Making an upsilon</strong> (Example {#}): each beam needs {#} GeV. Then ask what a fixed target would need (Q4).":
   "<strong>Producción de un ípsilon</strong> (Ejemplo {#}): cada haz necesita {#} GeV. Luego pregunta qué necesitaría un blanco fijo (P4).",
 "<strong>A proton from quarks</strong> and <strong>Omega minus</strong>: flip one spin of uud to get the Δ⁺; try uuu with spin ½ (Q5).":
@@ -36,8 +36,8 @@ VDI18N.add('es', 'notes/particles', {
   "<strong>P1.</strong> Ordena las cuatro fuerzas por intensidad y alcance. ¿Por qué la gravedad, la más débil, es la que más notamos en la vida diaria, y por qué la fuerza débil tiene un alcance tan corto?",
 "<strong>Q2.</strong> Check n → p + e⁻ + ν̄_e for charge, baryon number and electron lepton number. What goes wrong without the antineutrino?":
   "<strong>P2.</strong> Comprueba n → p + e⁻ + ν̄_e para la carga, el número bariónico y el número leptónico electrónico. ¿Qué sale mal sin el antineutrino?",
-"<strong>Q3.</strong> Why is π⁻ + p → K⁰ + Λ⁰ allowed but π⁻ + p → π⁰ + Λ⁰ forbidden? Which interaction would the second one need, and could it do it?":
-  "<strong>P3.</strong> ¿Por qué π⁻ + p → K⁰ + Λ⁰ está permitida pero π⁻ + p → π⁰ + Λ⁰ está prohibida? ¿Qué interacción necesitaría la segunda, y podría producirla?",
+"<strong>Q3.</strong> Why can the strong interaction make π⁻ + p → K⁰ + Λ⁰ but not π⁻ + p → π⁰ + Λ⁰? Which interaction would the second one need, and could it compete?":
+  "<strong>P3.</strong> ¿Por qué la interacción fuerte puede producir π⁻ + p → K⁰ + Λ⁰ pero no π⁻ + p → π⁰ + Λ⁰? ¿Qué interacción necesitaría la segunda, y podría competir?",
 "<strong>Q4.</strong> Two {#} GeV beams make an ϒ(4S) ({#} GeV/c²). How much kinetic energy would an electron beam need to make it on a positron at rest?":
   "<strong>P4.</strong> Dos haces de {#} GeV producen un ϒ(4S) ({#} GeV/c²). ¿Cuánta energía cinética necesitaría un haz de electrones para producirlo sobre un positrón en reposo?",
 "<strong>Q5.</strong> The proton (uud) and the Δ⁺ (uud) have the same quarks. How do they differ, and why is there a Δ⁺⁺ (uuu) but no uuu baryon with spin ½?":

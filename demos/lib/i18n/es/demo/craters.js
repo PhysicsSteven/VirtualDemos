@@ -519,5 +519,7 @@ VDI18N.add('es', 'demo/craters', {
 "bright ejecta drawn, not computed":
   "eyección clara dibujada, no calculada",
 "Close":
-  "Cerrar"
+  "Cerrar",
+"Run":
+  "Correr"
 });

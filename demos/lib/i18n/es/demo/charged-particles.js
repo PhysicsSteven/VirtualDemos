@@ -368,16 +368,16 @@ VDI18N.add('es', 'demo/charged-particles', {
   "Se lleva fuera (neutrones, gammas)",
 "A slim patient: {#} mm of skin, {#} cm of fat and {#} cm of muscle, then water for the organs beyond. The {#} MeV peak sits at {#} cm, {#} cm past the muscle. Compare the Large patient setup.":
   "Un paciente delgado: {#} mm de piel, {#} cm de grasa y {#} cm de músculo, y luego agua para los órganos que siguen. El pico de {#} MeV queda a {#} cm, {#} cm después del músculo. Compáralo con la configuración Paciente corpulento.",
-"Fat, {#} cm":
-  "Grasa, {#} cm",
-"The same anatomy with {#} cm of fat instead of {#} cm. Fat stops protons a little less than water per centimeter ({#} times at {#} MeV), so the peak moves {#} cm deeper, to {#} cm; but the organs are now {#} cm deeper, so the peak falls only {#} cm past the muscle. To reach the same organ as in the slim patient the beam needs about {#} MeV (from the CSDA ranges; try it with the energy slider).":
-  "La misma anatomía con {#} cm de grasa en lugar de {#} cm. La grasa frena los protones un poco menos que el agua por centímetro ({#} veces a {#} MeV), así que el pico se mueve {#} cm más adentro, a {#} cm; pero los órganos ahora están {#} cm más adentro, así que el pico cae solo {#} cm después del músculo. Para llegar al mismo órgano que en el paciente delgado, el haz necesita unos {#} MeV (de los alcances CSDA; pruébalo con el control de energía).",
 "The beam first crosses these body layers.":
   "El haz cruza primero estas capas del cuerpo.",
 "Skin, {#} mm":
   "Piel, {#} mm",
+"Fat, {#} cm":
+  "Grasa, {#} cm",
 "Muscle, {#} cm":
   "Músculo, {#} cm",
+"The same anatomy with {#} cm of fat instead of {#} cm. Fat stops protons a little less than water per centimeter ({#} times at {#} MeV), so the peak moves {#} cm deeper, to {#} cm; but the organs are now {#} cm deeper, so the peak falls only {#} cm past the muscle. To reach the same organ as in the slim patient the beam needs about {#} MeV (from the CSDA ranges; try it with the energy slider).":
+  "La misma anatomía con {#} cm de grasa en lugar de {#} cm. La grasa frena los protones un poco menos que el agua por centímetro ({#} veces a {#} MeV), así que el pico se mueve {#} cm más adentro, a {#} cm; pero los órganos ahora están {#} cm más adentro, así que el pico cae solo {#} cm después del músculo. Para llegar al mismo órgano que en el paciente delgado, el haz necesita unos {#} MeV (de los alcances CSDA; pruébalo con el control de energía).",
 "Brain, {#} cm":
   "Cerebro, {#} cm",
 "A beam into the head: {#} mm of scalp (skin), {#} mm of skull (cortical bone), then brain. The skull takes out as much energy as {#} cm of water, so the {#} MeV protons, whose CSDA range in water is {#} cm, stop {#} cm in. The brain layer runs past the end of the range, so no water is reached.":
@@ -512,6 +512,14 @@ VDI18N.add('es', 'demo/charged-particles', {
   "Todas las capas del cuerpo están apagadas, así que solo hay agua.",
 "The beam has stopped before the detector.":
   "El haz se detuvo antes del detector.",
+"Depth on the rule; tracks drawn to the same scale; the {#} cm chamber drawn smaller.":
+  "Profundidad en la regla; las trazas se dibujan a la misma escala; la cámara de {#} cm se dibuja más pequeña.",
+"nozzle: alpha particle beam":
+  "boquilla: haz de partículas alfa",
+"nozzle: carbon {#} ion beam":
+  "boquilla: haz de iones de carbono {#}",
+"Depth on the rule; tracks stretched sideways ×{#}; the {#} cm chamber to the rule's scale.":
+  "Profundidad en la regla; trazas estiradas hacia los lados ×{#}; la cámara de {#} cm a la escala de la regla.",
 "Describe the picture":
   "Describir la imagen",
 "Time controls":

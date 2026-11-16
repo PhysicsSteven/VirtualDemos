@@ -1,9 +1,5 @@
 /* demo/particles in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/particles', {
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
 "Particles, Quarks and Conservation Laws":
   "Partículas, quarks y leyes de conservación",
 "<a>Particle physics and cosmology</a>":
@@ -400,8 +396,8 @@ VDI18N.add('es', 'demo/particles', {
   "Agregar antikaon K⁻",
 "Add neutral kaon K⁰":
   "Agregar kaon neutro K⁰",
-"Add antineutral kaon K̄⁰":
-  "Agregar antikaon neutro K̄⁰",
+"Add neutral antikaon K̄⁰":
+  "Agregar antikaón neutro K̄⁰",
 "Add eta η":
   "Agregar eta η",
 "Add J/psi J/ψ":
@@ -736,8 +732,8 @@ VDI18N.add('es', 'demo/particles', {
   "Energía de cada haz E (energía en reposo más cinética)",
 "Two beams of {#} GeV each, head on: center of mass energy W = {#} MeV. Threshold for these products: E = {#} GeV.":
   "Dos haces de {#} GeV cada uno, de frente: energía del centro de masa W = {#} MeV. Umbral para estos productos: E = {#} GeV.",
-"Net quarks (quarks minus antiquarks) before → after: . Strong and electromagnetic interactions keep every count; only the weak interaction changes a flavor.":
-  "Quarks netos (quarks menos antiquarks) antes → después: . Las interacciones fuerte y electromagnética conservan cada cuenta; solo la interacción débil cambia un sabor.",
+"No quarks on either side, so no quark flavor can change.":
+  "No hay quarks en ningún lado, así que ningún sabor de quark puede cambiar.",
 "<b>Allowed: the electromagnetic interaction can do it</b>":
   "<b>Permitida: la interacción electromagnética puede producirla</b>",
 "Why electromagnetic: charged leptons take part, and leptons do not feel the strong force. Electromagnetic decays take roughly {#}⁻²⁰ to {#}⁻¹⁶ s.":
@@ -860,8 +856,8 @@ VDI18N.add('es', 'demo/particles', {
   "Por qué débil: participa un bosón W o Z. Los decaimientos débiles son los más lentos, de {#}⁻¹³ s o más (el neutrón libre vive {#} s).",
 "Beam kinetic energy K (ν_μ on n at rest)":
   "Energía cinética del haz K (ν_μ sobre n en reposo)",
-"A ν_μ beam with K = {#} GeV on a n at rest: center of mass energy W = {#} MeV. Threshold for these products: K = {#} MeV.":
-  "Un haz de ν_μ con K = {#} GeV sobre un n en reposo: energía del centro de masa W = {#} MeV. Umbral para estos productos: K = {#} MeV.",
+"A ν_μ beam with K = {#} GeV on an n at rest: center of mass energy W = {#} MeV. Threshold for these products: K = {#} MeV.":
+  "Un haz de ν_μ con K = {#} GeV sobre un n en reposo: energía en el centro de masa W = {#} MeV. Umbral para estos productos: K = {#} MeV.",
 "antired":
   "antirrojo",
 "antigreen":
@@ -884,8 +880,8 @@ VDI18N.add('es', 'demo/particles', {
   "Este es el omega, con una masa de {#} MeV/c².",
 "Beam kinetic energy K (e⁺ on e⁻ at rest)":
   "Energía cinética del haz K (e⁺ sobre e⁻ en reposo)",
-"A e⁺ beam with K = {#} GeV on a e⁻ at rest: center of mass energy W = {#} MeV. Threshold for these products: K = {#} TeV.":
-  "Un haz de e⁺ con K = {#} GeV sobre un e⁻ en reposo: energía del centro de masa W = {#} MeV. Umbral para estos productos: K = {#} TeV.",
+"An e⁺ beam with K = {#} GeV on an e⁻ at rest: center of mass energy W = {#} MeV. Threshold for these products: K = {#} TeV.":
+  "Un haz de e⁺ con K = {#} GeV sobre un e⁻ en reposo: energía en el centro de masa W = {#} MeV. Umbral para estos productos: K = {#} TeV.",
 "<span>✗ not at the resonance</span>":
   "<span>✗ fuera de la resonancia</span>",
 "Making one particle needs W equal to its mass energy, within its width (W = {#} MeV, mc² = {#} MeV).":
@@ -908,12 +904,12 @@ VDI18N.add('es', 'demo/particles', {
   "Carga +{#} e, número bariónico +{#}, extrañeza {#}, espín {#}/{#}.",
 "This is the proton, with a mass of {#} MeV/c².":
   "Este es el protón, con una masa de {#} MeV/c².",
-"Describe the picture":
-  "Describir la imagen",
 "Skip to the picture":
   "Saltar a la imagen",
 "Skip to the controls":
   "Saltar a los controles",
+"Describe the picture":
+  "Describir la imagen",
 "Zoom":
   "Zoom",
 "Zoom out":

@@ -288,8 +288,8 @@ VDI18N.add('es', 'demo/collisions', {
   "Modelo: discos lisos y duros sobre una mesa de aire sin fricción. El impulso de contacto va a lo largo de la línea de centros en el momento del contacto, así que las componentes de la velocidad a lo largo de la tangente de contacto no cambian; e actúa sobre las componentes a lo largo de la línea de centros. Sin giro, sin bordes de la mesa.",
 "Equal masses, elastic, target at rest: the pucks always leave at {#}° to each other, whatever the impact parameter. In the momentum diagram p₁′ + p₂′ = p₁, and with equal masses energy conservation says p₁′² + p₂′² = p₁², so the triangle has a right angle.":
   "Masas iguales, elástica, blanco en reposo: los discos siempre salen a {#}° entre sí, sea cual sea el parámetro de impacto. En el diagrama de momentos p₁′ + p₂′ = p₁, y con masas iguales la conservación de la energía dice que p₁′² + p₂′² = p₁², así que el triángulo tiene un ángulo recto.",
-"{#} m/s at -{#}°":
-  "{#} m/s a -{#}°",
+"{#} m/s at −{#}°":
+  "{#} m/s a −{#}°",
 "{#} m/s at {#}°":
   "{#} m/s a {#}°",
 "Angle between outgoing paths":
@@ -412,24 +412,6 @@ VDI18N.add('es', 'demo/collisions', {
   "Modelo: un riel de aire sin fricción de −{#} m a {#} m con un tope en cada extremo; los carritos son rígidos y chocan en un instante. Dos carritos que se encuentran conservan su momento total y se separan con v₂′ − v₁′ = −e(v₂ − v₁), con el mismo e para cada amortiguador; un carrito con velcro se pega al carrito que encuentra (e = {#}), y entonces los dos se mueven como uno. En un tope v′ = −e v. Los tiempos de contacto se calculan de forma exacta (los carritos se mueven a velocidad constante entre colisiones); cuando varios carritos se tocan a la vez, las colisiones se toman un par a la vez, y a los carritos que se siguen acercando a menos de {#} µm/s se les da su velocidad común.",
 "<span><i></i>Cart {#}</span> <span><i></i>Cart {#}</span> <span><i></i>Center of mass, or the total</span> <span><i></i>Bar outline: before <i></i>Filled: after</span>":
   "<span><i></i>Carrito {#}</span> <span><i></i>Carrito {#}</span> <span><i></i>Centro de masa, o el total</span> <span><i></i>Contorno de la barra: antes <i></i>Rellena: después</span>",
-"A row of {#} carts on an air track with an end stop at each end.":
-  "Una fila de {#} carritos sobre un riel de aire con un tope en cada extremo.",
-"Bumpers e = {#}.":
-  "Amortiguadores e = {#}.",
-"Collisions so far: {#}.":
-  "Colisiones hasta ahora: {#}.",
-"Cart {#}, {#} kg, at x = −{#} m.":
-  "Carrito {#}, {#} kg, en x = −{#} m.",
-"Cart {#}, {#} kg, at x = {#} m.":
-  "Carrito {#}, {#} kg, en x = {#} m.",
-"Total momentum {#} kg·m/s now and {#} kg·m/s at the start.":
-  "Momento total: {#} kg·m/s ahora y {#} kg·m/s al inicio.",
-"Kinetic energy {#} J now and {#} J at the start.":
-  "Energía cinética: {#} J ahora y {#} J al inicio.",
-"Bars of momentum and kinetic energy now, against the start.":
-  "Barras de momento y energía cinética ahora, comparadas con el inicio.",
-"Graph of the position of each cart against time, over the last {#} s, with the two end stops.":
-  "Gráfica de la posición de cada carrito contra el tiempo, durante los últimos {#} s, con los dos topes de los extremos.",
 "side view, to scale (bullet drawn larger)":
   "vista lateral, a escala (bala dibujada más grande)",
 "bullet":
@@ -512,12 +494,6 @@ VDI18N.add('es', 'demo/collisions', {
   "da la vuelta",
 "V = mu/(m + M) = {#} m/s, V² = {#} m²/s² ≥ 4gL = {#} m²/s², so it goes over the top.":
   "V = mu/(m + M) = {#} m/s, V² = {#} m²/s² ≥ 4gL = {#} m²/s², así que pasa por arriba.",
-"Five equal carts touching in a row and one coming in: one goes out at the far end, as in Newton's cradle. Drop a second cart on the left to send two in.":
-  "Cinco carritos iguales que se tocan en fila y uno que llega: sale uno por el otro extremo, como en el péndulo de Newton. Suelta un segundo carrito a la izquierda para enviar dos.",
-"A heavy cart drives a light one against the end stop. The light cart rattles back and forth many times, each bounce taking a little of the heavy cart's momentum, until the heavy one turns back. Count the collisions.":
-  "Un carrito pesado empuja uno ligero contra el tope. El carrito ligero rebota de un lado a otro muchas veces, y cada rebote quita un poco del momento del carrito pesado, hasta que el pesado se regresa. Cuenta las colisiones.",
-"Every cart has velcro, so each collision is perfectly inelastic: the carts stick and the train slows from {#} to {#}/{#} to {#}/{#} m/s. Momentum stays, but each joining loses kinetic energy (the bars show where).":
-  "Cada carrito tiene velcro, así que cada colisión es perfectamente inelástica: los carritos se pegan y el tren se frena de {#} a {#}/{#} a {#}/{#} m/s. El momento se conserva, pero cada unión pierde energía cinética (las barras muestran dónde).",
 "A bullet fires into a block that hangs from two rods.":
   "Una bala se dispara contra un bloque que cuelga de dos varillas.",
 "Bullet mass {#} g.":
@@ -536,8 +512,16 @@ VDI18N.add('es', 'demo/collisions', {
   "El bloque pasa por encima del punto más alto.",
 "Kinetic energy {#} J before and {#} J just after.":
   "Energía cinética: {#} J antes y {#} J justo después.",
+"Bars of momentum and kinetic energy now, against the start.":
+  "Barras de momento y energía cinética ahora, comparadas con el inicio.",
 "Graph of the block swinging, with the highest point marked.":
   "Gráfica del bloque al balancearse, con el punto más alto marcado.",
+"Five equal carts touching in a row and one coming in: one goes out at the far end, as in Newton's cradle. Drop a second cart on the left to send two in.":
+  "Cinco carritos iguales que se tocan en fila y uno que llega: sale uno por el otro extremo, como en el péndulo de Newton. Suelta un segundo carrito a la izquierda para enviar dos.",
+"A heavy cart drives a light one against the end stop. The light cart rattles back and forth many times, each bounce taking a little of the heavy cart's momentum, until the heavy one turns back. Count the collisions.":
+  "Un carrito pesado empuja uno ligero contra el tope. El carrito ligero rebota de un lado a otro muchas veces, y cada rebote quita un poco del momento del carrito pesado, hasta que el pesado se regresa. Cuenta las colisiones.",
+"Every cart has velcro, so each collision is perfectly inelastic: the carts stick and the train slows from {#} to {#}/{#} to {#}/{#} m/s. Momentum stays, but each joining loses kinetic energy (the bars show where).":
+  "Cada carrito tiene velcro, así que cada colisión es perfectamente inelástica: los carritos se pegan y el tren se frena de {#} a {#}/{#} a {#}/{#} m/s. El momento se conserva, pero cada unión pierde energía cinética (las barras muestran dónde).",
 "One cart between the end stops with e = {#}: each bounce keeps {#}% of the speed and {#}% of the kinetic energy. Drag the e grip to compare.":
   "Un carrito entre los topes con e = {#}: cada rebote conserva el {#}% de la rapidez y el {#}% de la energía cinética. Arrastra el control e para comparar.",
 "Drag carts from the tray onto the track, drag the round grip on each arrow to set its velocity, and press Play.":
@@ -594,6 +578,18 @@ VDI18N.add('es', 'demo/collisions', {
   "Arrastra un carrito de la bandeja al riel.",
 "No carts yet.":
   "Aún no hay carritos.",
+"A row of {#} carts on an air track with an end stop at each end.":
+  "Una fila de {#} carritos sobre un riel de aire con un tope en cada extremo.",
+"Bumpers e = {#}.":
+  "Amortiguadores e = {#}.",
+"Collisions so far: {#}.":
+  "Colisiones hasta ahora: {#}.",
+"Total momentum {#} kg·m/s now and {#} kg·m/s at the start.":
+  "Momento total: {#} kg·m/s ahora y {#} kg·m/s al inicio.",
+"Kinetic energy {#} J now and {#} J at the start.":
+  "Energía cinética: {#} J ahora y {#} J al inicio.",
+"Graph of the position of each cart against time, over the last {#} s, with the two end stops.":
+  "Gráfica de la posición de cada carrito contra el tiempo, durante los últimos {#} s, con los dos topes de los extremos.",
 "Kinetic energy loses {#} J.":
   "La energía cinética pierde {#} J.",
 "The block rises {#} cm.":
@@ -632,10 +628,10 @@ VDI18N.add('es', 'demo/collisions', {
   "El hilo está cortado y el resorte separó los carritos.",
 "Balls, strings and frame to scale: {#} cm balls on {#} cm strings, each hung from two strings so it swings in one plane. Drag to turn, scroll to zoom, double click to go back; drag a grip to change a value.":
   "Esferas, cuerdas y marco a escala: esferas de {#} cm en cuerdas de {#} cm, cada una colgada de dos cuerdas para que se balancee en un plano. Arrastra para girar, desplaza para acercar, haz doble clic para volver; arrastra un control para cambiar un valor.",
-"{#} in → {#} out":
-  "{#} entran → {#} salen",
 "Last collision: {#} in, {#} out, at {#} m/s.":
   "Última colisión: {#} entran, {#} salen, a {#} m/s.",
+"{#} in → {#} out":
+  "{#} entran → {#} salen",
 "Total momentum now: −{#} kg·m/s":
   "Momento total ahora: −{#} kg·m/s",
 "Possible outcomes: hidden while Blind is on.":
@@ -652,6 +648,12 @@ VDI18N.add('es', 'demo/collisions', {
   "La rapidez de la bala está oculta.",
 "The results are hidden while Blind is on. Read the rise from the scale beside the block.":
   "Los resultados están ocultos mientras A ciegas está activado. Lee el ascenso en la escala junto al bloque.",
+"{#} m/s at -{#}°":
+  "{#} m/s a -{#}°",
+"Cart {#}, {#} kg, at x = −{#} m.":
+  "Carrito {#}, {#} kg, en x = −{#} m.",
+"Cart {#}, {#} kg, at x = {#} m.":
+  "Carrito {#}, {#} kg, en x = {#} m.",
 "Running.":
   "En marcha.",
 "Time {#} s.":

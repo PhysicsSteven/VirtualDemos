@@ -108,8 +108,8 @@ VDI18N.add('es', 'demo/blackbody', {
   "Rigel",
 "Cosmic background":
   "Fondo cósmico",
-"The Sun at {#} K peaks near {#} nm, right in the visible band, and about {#}% of its power is visible light. Its color is close to white, not yellow.":
-  "El Sol, a {#} K, tiene su pico cerca de {#} nm, justo en la banda visible, y cerca del {#}% de su potencia es luz visible. Su color es casi blanco, no amarillo.",
+"The Sun at {#} K peaks near {#} nm, right in the visible band, and about {#}% of its power is visible light. Its light is close to white; yellow in the Traditional color readout is the name traditionally given to its class, G, not the color the eye sees.":
+  "El Sol, a {#} K, tiene su pico cerca de {#} nm, justo en la banda visible, y cerca del {#}% de su potencia es luz visible. Su luz es casi blanca; el amarillo de la lectura Color tradicional es el nombre que tradicionalmente se le da a su clase, G, no el color que ve el ojo.",
 "Temperature and size":
   "Temperatura y tamaño",
 "Star radius R":
@@ -298,8 +298,6 @@ VDI18N.add('es', 'demo/blackbody', {
   "Fracción visible {#}×{#}⁻¹¹%.",
 "{#}×{#}⁻⁴ L<sub>sun</sub>":
   "{#}×{#}⁻⁴ L<sub>sun</sub>",
-"Visible share {#}×{#}⁻⁸%.":
-  "Fracción visible {#}×{#}⁻⁸%.",
 "dull red glow":
   "brillo rojo tenue",
 "dull red":
@@ -354,6 +352,10 @@ VDI18N.add('es', 'demo/blackbody', {
   "blanco amarillento",
 "Spectral class F.":
   "Clase espectral F.",
+"Flux from the surface {#}×{#}⁸ W/m².":
+  "Flujo desde la superficie {#}×{#}⁸ W/m².",
+"The radiometer reads {#}×{#}⁸ W/m².":
+  "El radiómetro marca {#}×{#}⁸ W/m².",
 "#eeeeff":
   "#eeeeff",
 "#dee4ff":
@@ -364,10 +366,6 @@ VDI18N.add('es', 'demo/blackbody', {
   "#d1dcff",
 "#c7d5ff":
   "#c7d5ff",
-"Flux from the surface {#}×{#}⁸ W/m².":
-  "Flujo desde la superficie {#}×{#}⁸ W/m².",
-"The radiometer reads {#}×{#}⁸ W/m².":
-  "El radiómetro marca {#}×{#}⁸ W/m².",
 "#bfd0ff":
   "#bfd0ff",
 "#b8cbff":
@@ -380,34 +378,34 @@ VDI18N.add('es', 'demo/blackbody', {
   "Flujo desde la superficie {#}×{#}⁹ W/m².",
 "#aac1ff":
   "#aac1ff",
-"Flux from the surface {#}×{#}¹⁰ W/m².":
-  "Flujo desde la superficie {#}×{#}¹⁰ W/m².",
-"The radiometer reads {#}×{#}¹⁰ W/m².":
-  "El radiómetro marca {#}×{#}¹⁰ W/m².",
 "#a7bfff":
   "#a7bfff",
 "#a5bdff":
   "#a5bdff",
 "#a2bbff":
   "#a2bbff",
+"Flux from the surface {#}×{#}¹⁰ W/m².":
+  "Flujo desde la superficie {#}×{#}¹⁰ W/m².",
+"The radiometer reads {#}×{#}¹⁰ W/m².":
+  "El radiómetro marca {#}×{#}¹⁰ W/m².",
 "#a0baff":
   "#a0baff",
 "blue":
   "azul",
 "#9fb8ff":
   "#9fb8ff",
-"#9db7ff":
-  "#9db7ff",
-"off scale ▶":
-  "fuera de escala ▶",
-"#9cb6ff":
-  "#9cb6ff",
 "Flux from the surface {#}×{#}¹¹ W/m².":
   "Flujo desde la superficie {#}×{#}¹¹ W/m².",
 "Spectral class O.":
   "Clase espectral O.",
 "The radiometer reads {#}×{#}¹¹ W/m².":
   "El radiómetro marca {#}×{#}¹¹ W/m².",
+"#9db7ff":
+  "#9db7ff",
+"off scale ▶":
+  "fuera de escala ▶",
+"#9cb6ff":
+  "#9cb6ff",
 "Remove pinned curve at {#} K":
   "Quitar la curva fijada a {#} K",
 "{#} pinned curves.":
@@ -426,6 +424,8 @@ VDI18N.add('es', 'demo/blackbody', {
   "{#} lectura enviada a la hoja de trabajo. <a>Abrir la hoja de trabajo</a>",
 "{#} readings sent to the worksheet. <a>Open the worksheet</a>":
   "{#} lecturas enviadas a la hoja de trabajo. <a>Abrir la hoja de trabajo</a>",
+"Visible share {#}×{#}⁻⁸%.":
+  "Fracción visible {#}×{#}⁻⁸%.",
 "Spectral class A.":
   "Clase espectral A.",
 "Describe the picture":

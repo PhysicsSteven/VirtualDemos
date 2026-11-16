@@ -290,6 +290,7 @@
   function he3Advance(dt) {   /* steps of at most 1 s, Heun's method */
     const H = S.he3; let n = Math.ceil(dt / 1); const h = dt / n;
     while (n-- > 0) {
+      if (H.T <= HE3_TMIN + 1e-12) break;   /* the model stops at its floor: no more squeezing, time or warming */
       const xd = H.x < HE3_XMAX ? H.rate / 100 / 3600 : 0, a = he3Rate(H.T, H.x, xd, H.leak * 1e-9, HE3_N), T1 = Math.max(HE3_TMIN, H.T + a * h), b = he3Rate(T1, H.x + xd * h, xd, H.leak * 1e-9, HE3_N);
       const Tn = Math.min(0.3, Math.max(HE3_TMIN, H.T + (a + b) / 2 * h));
       if (H.tA == null && Tn < HE3_A.T) H.tA = H.t; if (H.tB == null && Tn < HE3_AB.T) H.tB = H.t;
@@ -523,12 +524,12 @@
     else if (S.x === 'film') { const F = S.film, q = filmRate();
       h = dd('Beaker radius', `${f(F.rb, 1)} mm`) + dd('Rim perimeter', `${f(2 * Math.PI * F.rb / 10, 2)} cm`) + dd('Transfer rate', `${f(q * 1e6 * 1e3, 3)} mm³/s`)
         + dd('Level speed', `${f(q / (Math.PI * (F.rb / 1000) ** 2) * 1e6, 2)} µm/s`) + dd('Inside level', `${f(F.lev * 1000, 3)} mm`) + dd('Time', `${f(F.t / 60, 2)} min`); }
-    else if (S.x === 'he3') { const Hh = S.he3, xd = Hh.x < HE3_XMAX ? Hh.rate / 100 / 3600 : 0, Sl = GAMMA3 * Hh.T;
+    else if (S.x === 'he3') { const Hh = S.he3, xd = Hh.x < HE3_XMAX && Hh.T > HE3_TMIN + 1e-9 ? Hh.rate / 100 / 3600 : 0, Sl = GAMMA3 * Hh.T;
       h = dd('Temperature', `${f(Hh.T * 1000, 3)} mK${Hh.T <= HE3_TMIN + 1e-9 ? ' (the model stops here)' : ''}`) + dd('Pressure', `${f(meltP(Hh.T) / 1e6, 5)} MPa`) + dd('Solid', `${f(Hh.x * 100, 2)} %`) + dd('Liquid', S.blind ? 'hidden' : Hh.T < HE3_A.T ? `superfluid, ${he3Phase(Hh.T)} phase` : 'normal')
         + dd('Entropy S/R: solid, liquid', `${f(Math.LN2, 3)}, ${f(Sl, 4)}`) + dd('Cooling power of freezing', `${f(HE3_N * R_GAS * (Math.LN2 - Sl) * Hh.T * xd * 1e9, 2)} nW`) + dd('Heat leaking in', `${f(Hh.leak, 0)} nW`)
         + dd('Superfluid at', Hh.tA == null ? 'not yet' : `${f(Hh.tA / 60, 1)} min`) + dd('Time', `${f(Hh.t / 60, 1)} min`); }
     else { const t = S.torsion;
-      h = dd('Temperature', `${f(t.Tt, 3)} K`) + dd('Period', `${f(period(t.Tt), 3)} s`) + dd('Bare disks', `${f(P0, 3)} s`) + dd('Helium between disks, I_He/I_disks', f(IHE / I0, 4))
+      h = dd('Temperature', `${f(t.Tt, 3)} K`) + dd('Period', `${f(period(t.Tt), 3)} s`) + dd('Bare disks', `${f(P0, 3)} s`) + dd('Helium between disks at 1.00 K, I_He/I_disks', f(IHE / I0, 4))
         + (S.blind ? dd('Normal fluid fraction (table)', 'hidden') : dd('Normal fluid fraction (table)', f(rhonFrac(t.Tt), 3))) + dd('Recorded', `${t.rec.length}`); }
     $('out').innerHTML = h;
   }

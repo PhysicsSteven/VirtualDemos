@@ -380,6 +380,16 @@ VDI18N.add('es', 'demo/resonances', {
   "Mueve el planeta X (su distancia, su masa y dónde está en {#}) para hacer la deriva restante de Urano lo más pequeña posible. La dirección sale bien aunque la distancia esté mal.",
 "The run stops at {#} years. The real gaps took millions of years to empty.":
   "La ejecución se detiene a los {#} años. Los huecos reales tardaron millones de años en vaciarse.",
+"Status":
+  "Estado",
+"crossed Mars's orbit at {t} yr":
+  "cruzó la órbita de Marte a los {t} años",
+"scattered by Neptune at {t} yr":
+  "dispersado por Neptuno a los {t} años",
+"scattered by Jupiter at {t} yr":
+  "dispersado por Júpiter a los {t} años",
+"escaped":
+  "escapó",
 "Describe the picture":
   "Describir la imagen",
 "Time controls":

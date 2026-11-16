@@ -316,14 +316,6 @@ VDI18N.add('es', 'demo/em-waves', {
   "eje",
 "θ = {#}° · I/I_max = {#}":
   "θ = {#}° · I/I_max = {#}",
-"An oscillating dipole antenna with the pattern of its radiation, a donut around the antenna axis.":
-  "Una antena dipolo oscilante con el patrón de su radiación, una dona alrededor del eje de la antena.",
-"Direction {#}° from the dipole axis.":
-  "Dirección {#}° desde el eje del dipolo.",
-"The far field intensity there is {#} of the maximum.":
-  "La intensidad del campo lejano ahí es {#} del máximo.",
-"The near field reaches out to {#} mm.":
-  "El campo cercano llega hasta {#} mm.",
 "probe":
   "sonda",
 "E along the wires, out of or into the page":
@@ -420,6 +412,26 @@ VDI18N.add('es', 'demo/em-waves', {
   "Comprobación: v<sub>p</sub> v<sub>g</sub>/c²",
 "Modes that travel at this f":
   "Modos que se propagan a esta f",
+"A rectangular waveguide carrying the TE10 mode.":
+  "Una guía de onda rectangular que lleva el modo TE10.",
+"Width a {#} mm.":
+  "Ancho a {#} mm.",
+"Height b {#} mm.":
+  "Alto b {#} mm.",
+"Cutoff frequency {#} GHz.":
+  "Frecuencia de corte {#} GHz.",
+"Free space wavelength {#} mm.":
+  "Longitud de onda en el espacio libre {#} mm.",
+"The wave travels with guide wavelength {#} mm.":
+  "La onda viaja con una longitud de onda en la guía de {#} mm.",
+"Phase speed {#} c.":
+  "Rapidez de fase {#} c.",
+"Group speed {#} c.":
+  "Rapidez de grupo {#} c.",
+"The E field is shown.":
+  "Se muestra el campo E.",
+"The B field is shown.":
+  "Se muestra el campo B.",
 "A red laser pointer, {#} nm. Its {#} mW squeezed into a {#} mm wide beam gives I = {#} kW/m², nearly five times sunlight, so E₀ = {#} kV/m. The wave oscillates {#}×{#}¹⁴ times a second.":
   "Un apuntador láser rojo, {#} nm. Sus {#} mW concentrados en un haz de {#} mm de ancho dan I = {#} kW/m², casi cinco veces la luz solar, así que E₀ = {#} kV/m. La onda oscila {#}×{#}¹⁴ veces por segundo.",
 "yes: the optical window":
@@ -536,10 +548,18 @@ VDI18N.add('es', 'demo/em-waves', {
   "TM110",
 "TM110 {#}, TE011 {#}, TE101 {#}, TE111 {#}, TM111 {#}, TM120 {#} GHz":
   "TM110 {#}, TE011 {#}, TE101 {#}, TE111 {#}, TM111 {#}, TM120 {#} GHz",
+"An oscillating dipole antenna with the pattern of its radiation, a donut around the antenna axis.":
+  "Una antena dipolo oscilante con el patrón de su radiación, una dona alrededor del eje de la antena.",
 "Frequency {#} MHz.":
   "Frecuencia {#} MHz.",
 "Wavelength {#} m.":
   "Longitud de onda {#} m.",
+"Direction {#}° from the dipole axis.":
+  "Dirección {#}° desde el eje del dipolo.",
+"The far field intensity there is {#} of the maximum.":
+  "La intensidad del campo lejano ahí es {#} del máximo.",
+"The near field reaches out to {#} mm.":
+  "El campo cercano llega hasta {#} mm.",
 "A cube {#} mm on a side. TE101, TE011 and TM110 all ring at the same {#} GHz: three modes, one frequency. Step through them with m, n and p and the TE | TM switch.":
   "Un cubo de {#} mm de lado. TE101, TE011 y TM110 resuenan todos a los mismos {#} GHz: tres modos, una frecuencia. Recórrelos con m, n y p y el selector TE | TM.",
 "TE012 · {#} GHz":
@@ -660,20 +680,10 @@ VDI18N.add('es', 'demo/em-waves', {
   "resonancias",
 "A rectangular metal cavity in the TM111 mode.":
   "Una cavidad metálica rectangular en el modo TM111.",
-"Width a {#} mm.":
-  "Ancho a {#} mm.",
-"Height b {#} mm.":
-  "Alto b {#} mm.",
 "Length d {#} mm.":
   "Largo d {#} mm.",
 "Resonant frequency {#} GHz.":
   "Frecuencia de resonancia {#} GHz.",
-"Free space wavelength {#} mm.":
-  "Longitud de onda en el espacio libre {#} mm.",
-"The E field is shown.":
-  "Se muestra el campo E.",
-"The B field is shown.":
-  "Se muestra el campo B.",
 "The color is red.":
   "El color es rojo.",
 "Amplitude E₀ {#} mV/m.":
@@ -782,12 +792,14 @@ VDI18N.add('es', 'demo/em-waves', {
   "Visible (azul)<i></i>",
 "Visible (violet)<i></i>":
   "Visible (violeta)<i></i>",
-"The band is Ultraviolet.":
-  "La banda es ultravioleta.",
+"The color is violet.":
+  "El color es violeta.",
 "no: absorbed by the ozone layer":
   "no: la absorbe la capa de ozono",
 "Frequency {#} PHz.":
   "Frecuencia {#} PHz.",
+"The band is Ultraviolet.":
+  "La banda es ultravioleta.",
 "Does it reach the ground? no: absorbed by the ozone layer.":
   "¿Llega al suelo? no: la absorbe la capa de ozono.",
 "{#} as":
@@ -878,16 +890,20 @@ VDI18N.add('es', 'demo/em-waves', {
   "Periodo {#} zs.",
 "slowed {#}×{#}¹⁹ times":
   "desacelerada {#}×{#}¹⁹ veces",
-"slowed {#}×{#}²⁰ times":
-  "desacelerada {#}×{#}²⁰ veces",
 "The band is Gamma ray.":
   "La banda es rayos gamma.",
-"slowed {#}×{#}²¹ times":
-  "desacelerada {#}×{#}²¹ veces",
+"slowed {#}×{#}²⁰ times":
+  "desacelerada {#}×{#}²⁰ veces",
 "Wavelength {#} fm.":
   "Longitud de onda {#} fm.",
+"slowed {#}×{#}²¹ times":
+  "desacelerada {#}×{#}²¹ veces",
 "Frequency {#} ZHz.":
   "Frecuencia {#} ZHz.",
+"polarizer":
+  "polarizador",
+"through the polarizer: I/I₀ = {v}":
+  "a través del polarizador: I/I₀ = {v}",
 "Describe the picture":
   "Describir la imagen",
 "Skip to the picture":

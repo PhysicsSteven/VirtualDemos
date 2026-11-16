@@ -151,6 +151,10 @@ VDI18N.add('en', 'demo/spacetime', [
 "Traveler",
 "Home twin {#} yr",
 "Traveler {#} yr",
+"Event T at ct = {#}, x = {#}.",
+"Selected: event T.",
+"The Home twin clock reads {#} years.",
+"The Traveler clock reads {#} years.",
 "B is outside A's light cone: the pair is spacelike. In S, A happens first. For any observer moving right faster than {#}c, B happens first. Slide β through {#} and watch the red simultaneity line through A sweep past B. Then select A and C: C is inside A's future cone, and no β can flip that order.",
 "No signal can connect A and B; observers disagree on their order. In S A happens first; in S′ B happens first. They are simultaneous for an observer moving at β = {#}.",
 "future of A",
@@ -182,9 +186,5 @@ VDI18N.add('en', 'demo/spacetime', [
 "Selected: event R.",
 "The Home clock reads {#} years.",
 "The Rocket clock reads {#} years.",
-"Event T at ct = {#}, x = {#}.",
-"Selected: event T.",
-"The Home twin clock reads {#} years.",
-"The Traveler clock reads {#} years.",
 "now, ct = {#} yr"
 ]);

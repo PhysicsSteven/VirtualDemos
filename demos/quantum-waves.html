@@ -1811,8 +1811,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       $('beatLab').textContent = 'Beat period h/ΔE';
       $('rBeat').textContent = `${fmtT(HPL / dE)}  (ΔE = ${dE.toFixed(4)} eV)`;
     } else if (S.mode === 'levels' && S.sel.length === 1) {
-      $('beatLab').textContent = 'Phase period h/E';
-      $('rBeat').textContent = `${fmtT(HPL / eig.vals[S.sel[0]])}  (|ψ|² stays still)`;
+      $('beatLab').textContent = window.VDI18N ? VDI18N.t('Phase period h/E') : 'Phase period h/E';   /* VDI18N.t so the harvest finds it: one level picked is a state it does not reach */
+      $('rBeat').textContent = `${fmtT(HPL / eig.vals[S.sel[0]])}  (${window.VDI18N ? VDI18N.t('|ψ|² stays still') : '|ψ|² stays still'})`;
     } else if (S.mode === 'levels') {
       $('beatLab').textContent = 'Beat periods';
       $('rBeat').textContent = 'several, one for each pair';
@@ -1863,7 +1863,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       seg.dataset.group = GROUP[S.preset]; seg.textContent = '';
       for (const [key, lab] of g[1]) {
         const b = document.createElement('button'); b.type = 'button'; b.dataset.v = key; b.textContent = lab;
-        b.addEventListener('click', () => { if (S.preset !== key) applyPreset(key); });
+        /* isConnected: a Copy link reopening Square well pressed Square well (which rebuilds this switch), then released the old,
+           detached Barrier button, which reopened Barrier (2026-11-16) */
+        b.addEventListener('click', () => { if (b.isConnected && S.preset !== key) applyPreset(key); });
         seg.append(b);
       }
     }

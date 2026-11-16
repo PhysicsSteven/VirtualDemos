@@ -188,7 +188,5 @@ VDI18N.add('en', 'demo/forces', [
 "The pull that just holds the load is {#} N.",
 "Load acceleration {#} m/s², up is positive.",
 "Mystery surface: μs and μk are hidden. Blind is on.",
-"At the stop: the push of the stop is not drawn",
-"Timer: {#} s for {#} m",
-"{#} s for {#} m"
+"At the stop: the push of the stop is not drawn"
 ]);

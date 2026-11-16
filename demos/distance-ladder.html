@@ -681,12 +681,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // ---------- formatting ----------
   const sig = (v, n = 3) => Number(v).toLocaleString('en-US', { maximumSignificantDigits: n });
   const grp = (v, d = 0) => Number(v).toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d });
+  /* distances keep their trailing zeros (1.30 pc beside 2.64 pc), so n figures always show */
+  const sigz = (v, n = 3) => Number(v).toLocaleString('en-US', { minimumSignificantDigits: n, maximumSignificantDigits: n });
   function fmtDist(pc, n = 3) {
     if (!isFinite(pc)) return '—';
-    if (pc < 1e3) return sig(pc, n) + ' pc';
-    if (pc < 1e6) return sig(pc / 1e3, n) + ' kpc';
-    if (pc < 1e9) return sig(pc / 1e6, n) + ' Mpc';
-    return sig(pc / 1e9, n) + ' Gpc';
+    if (pc < 1e3) return sigz(pc, n) + ' pc';
+    if (pc < 1e6) return sigz(pc / 1e3, n) + ' kpc';
+    if (pc < 1e9) return sigz(pc / 1e6, n) + ' Mpc';
+    return sigz(pc / 1e9, n) + ' Gpc';
   }
   function fmtAng(as) {
     if (!isFinite(as)) return '—';
@@ -2042,7 +2044,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('distOut').textContent = fmtDist(S.par.d);
     $('instHint').textContent = INST[S.par.inst].hint;
     $('pP').textContent = fmtAng(p);
-    $('pD').textContent = `${fmtDist(S.par.d)} = ${sig(S.par.d * LY_PER_PC, 3)} ly`;
+    $('pD').textContent = `${fmtDist(S.par.d)} = ${sigz(S.par.d * LY_PER_PC, 3)} light years`;   /* words, not ly: a unit symbol is never harvested, so Spanish showed ly */
     $('pShift').textContent = fmtAng(2 * p);
     const frac = sg / p;
     $('pFrac').textContent = frac < 10 ? `${sig(frac * 100, 2)}%` : `${sig(frac, 2)}×`;

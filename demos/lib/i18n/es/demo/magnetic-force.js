@@ -14,8 +14,6 @@ VDI18N.add('es', 'demo/magnetic-force', {
   "Mirando {#}° hacia abajo sobre la página. Arrastra para girar la vista.",
 "residuals":
   "residuos",
-"Describe the picture":
-  "Describir la imagen",
 "Charges in Magnetic Fields":
   "Cargas en campos magnéticos",
 "<a>Magnetic forces and fields</a>":
@@ -26,12 +24,6 @@ VDI18N.add('es', 'demo/magnetic-force', {
   "La fuerza magnética sobre una carga en movimiento siempre es perpendicular a su velocidad, así que desvía la carga sin acelerarla. Agrega un campo eléctrico y construye un selector de velocidades, un espectrómetro de masas y un ciclotrón, atrapa protones en una botella magnética y observa cómo se forma el voltaje Hall en una tira.",
 "SI units · e = {#} × {#}⁻¹⁹ C · ⊗ into the page, ⊙ out of the page":
   "Unidades SI · e = {#} × {#}⁻¹⁹ C · ⊗ hacia dentro de la página, ⊙ hacia fuera de la página",
-"Time controls":
-  "Controles de tiempo",
-"Run for a moment and pause again":
-  "Avanza un momento y vuelve a pausar",
-"Step":
-  "Paso",
 "Reset view":
   "Restablecer vista",
 "Fire {#}":
@@ -60,8 +52,6 @@ VDI18N.add('es', 'demo/magnetic-force', {
   "Radio {#} cm.",
 "Period {#} ns.":
   "Periodo {#} ns.",
-"Playing.":
-  "En reproducción.",
 "Time {#} s, speed {#} × {#}⁵ m/s.":
   "Tiempo {#} s, rapidez {#} × {#}⁵ m/s.",
 "With the free setups, the arrow keys first turn the launch velocity (left and right) and change its speed (up and down). Press S for the next item and Shift+S for the one before: the launch ring, ruler end A, ruler end B, each edge of the field rectangle and the E direction dial. Arrow keys move the selected item one screen pixel, Shift+arrow ten. M shows or hides the ruler, T starts or stops the timer, C captures a reading. In the velocity selector, mass spectrometer and cyclotron, up and down change the slit, the spread or the frequency, F fires {#} particles and C clears.":
@@ -88,8 +78,6 @@ VDI18N.add('es', 'demo/magnetic-force', {
   "Efecto Hall",
 "A proton at {#} × {#}⁵ m/s in a {#} T field moves in a circle {#} cm across. Drag the arrow tip to change the speed: the circle grows in proportion, but the period stays {#} µs. The force arrow always points to the center.":
   "Un protón a {#} × {#}⁵ m/s en un campo de {#} T se mueve en un círculo de {#} cm de diámetro. Arrastra la punta de la flecha para cambiar la rapidez: el círculo crece en proporción, pero el periodo se queda en {#} µs. La flecha de la fuerza siempre apunta al centro.",
-"Particle":
-  "Partícula",
 "Proton":
   "Protón",
 "Electron":
@@ -390,10 +378,6 @@ VDI18N.add('es', 'demo/magnetic-force', {
   "No relativista, con campos uniformes: B perpendicular a la página y E en la página. La trayectoria es la solución exacta, un círculo con B solo y una cicloide o trocoide con E también, evaluada en cada cuadro, así que |v| con B solo se mantiene fija salvo errores de redondeo. En el modo rectángulo los bordes del campo son nítidos; los imanes reales tienen campos de borde. La partícula no radia.",
 "<span><i></i>Positive charge path (dashed: where it goes next)</span><span><i></i>Negative charge path</span><span><i></i>Velocity v</span><span><i></i>Force F, shown as the change in v over {#}/({#}ω)</span><span><i></i>Electric field E</span><span><i>⊗</i>B into the page, ⊙ out of the page</span><span><i></i>B in the 3D view, inside a solenoid</span>":
   "<span><i></i>Trayectoria de la carga positiva (punteada: hacia dónde va después)</span><span><i></i>Trayectoria de la carga negativa</span><span><i></i>Velocidad v</span><span><i></i>Fuerza F, mostrada como el cambio de v en {#}/({#}ω)</span><span><i></i>Campo eléctrico E</span><span><i>⊗</i>B hacia dentro de la página, ⊙ hacia fuera de la página</span><span><i></i>B en la vista 3D, dentro de un solenoide</span>",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
 "Time {#} ns, speed {#} × {#}⁵ m/s.":
   "Tiempo {#} ns, rapidez {#} × {#}⁵ m/s.",
 "I = {#} mA (conventional)":
@@ -406,12 +390,16 @@ VDI18N.add('es', 'demo/magnetic-force', {
   "qE",
 "V_top − V_bottom":
   "V_top − V_bottom",
+"({r} × the first particle's period)":
+  "({r} × el periodo de la primera partícula)",
 "electron, r = {#} cm, {#} turns per second here":
   "electrón, r = {#} cm, {#} vueltas por segundo aquí",
 "A proton and an electron with the same kinetic energy, {#} eV, in {#} mT. They curl in opposite directions. The electron circle is {#} times smaller (r ∝ √(mK) at equal K) and the electron goes around {#} times for each proton turn (T ∝ m).":
   "Un protón y un electrón con la misma energía cinética, {#} eV, en {#} mT. Se curvan en sentidos opuestos. El círculo del electrón es {#} veces más pequeño (r ∝ √(mK) con igual K) y el electrón da {#} vueltas por cada vuelta del protón (T ∝ m).",
 "×{#} · {#} s here = {#} µs":
   "×{#} · {#} s aquí = {#} µs",
+"v = {#} × {#}⁶ m/s, K = {#} eV<br>r = {#} cm, T = {#} ns <span>({#} × the first particle's period)</span>":
+  "v = {#} × {#}⁶ m/s, K = {#} eV<br>r = {#} cm, T = {#} ns <span>({#} × el periodo de la primera partícula)</span>",
 "{#} s here = {#} µs":
   "{#} s aquí = {#} µs",
 "center drifts at E/B":
@@ -430,18 +418,6 @@ VDI18N.add('es', 'demo/magnetic-force', {
   "E está en la página y B es perpendicular a ella, así que el centro guía deriva a E/B a lo largo de E × B. Una carga positiva y una negativa derivan en el mismo sentido.",
 "Change in K since launch = work done by E":
   "Cambio de K desde el lanzamiento = trabajo hecho por E",
-"The view is from above.":
-  "La vista es desde arriba.",
-"The electric field is {#} kV/m, at {#}° in the page.":
-  "El campo eléctrico es de {#} kV/m, a {#}° en el plano de la página.",
-"The particle is released at rest.":
-  "La partícula se suelta desde el reposo.",
-"Radius {#} m.":
-  "Radio {#} m.",
-"The guiding center drifts at E/B = {#} × {#}⁵ m/s.":
-  "El centro de guía se desplaza a E/B = {#} × {#}⁵ m/s.",
-"Time {#} ns, speed {#} × {#}⁴ m/s.":
-  "Tiempo {#} ns, rapidez {#} × {#}⁴ m/s.",
 "S pole face behind":
   "Cara del polo S detrás",
 "source":
@@ -586,10 +562,12 @@ VDI18N.add('es', 'demo/magnetic-force', {
   "La tira mide {#} mm de ancho y {#} mm de espesor, y lleva una corriente de {#} mA.",
 "The strip is made of n-type germanium.":
   "La tira es de germanio tipo n.",
-"The Hall voltage reads −{#} mV.":
-  "El voltaje de Hall marca −{#} mV.",
+"The Hall voltage reads {#} V.":
+  "El voltaje de Hall marca {#} V.",
 "Time {#} τ.":
   "Tiempo {#} τ.",
+"The Hall voltage reads −{#} mV.":
+  "El voltaje de Hall marca −{#} mV.",
 "Your own setup. Pick a setup above to return to a known one.":
   "Tu propia configuración. Elige una configuración de arriba para volver a una conocida.",
 "Copper strip, {#} mm wide, {#} mm thick":
@@ -614,8 +592,6 @@ VDI18N.add('es', 'demo/magnetic-force', {
   "Registra dos o más lecturas con valores del cronómetro, cambiando la rapidez.",
 "The magnetic field is {#} mT, out of the page.":
   "El campo magnético es de {#} mT, hacia fuera de la página.",
-"Paused.":
-  "En pausa.",
 "Fire {#} particles, or fit the view":
   "Disparar {#} partículas, o ajustar la vista",
 "{#} τ, steady":
@@ -632,26 +608,46 @@ VDI18N.add('es', 'demo/magnetic-force', {
   "Gráfica de T en función de v⊥ con tus lecturas, {#} puntos, con una recta de mínimos cuadrados con ordenada al origen y una franja de residuos debajo. Mostrar la tabla de datos lista los puntos.",
 "B out of the page, {#} mT":
   "B hacia fuera de la página, {#} mT",
+"The view is from above.":
+  "La vista es desde arriba.",
 "timer {#} µs":
   "cronómetro {#} µs",
+"Radius {#} m.":
+  "Radio {#} m.",
+"Period {#} µs.":
+  "Periodo {#} µs.",
+"Time {#} µs, speed {#} × {#}⁵ m/s.":
+  "Tiempo {#} µs, rapidez {#} × {#}⁵ m/s.",
+"The electric field is {#} kV/m, at {#}° in the page.":
+  "El campo eléctrico es de {#} kV/m, a {#}° en el plano de la página.",
+"The particle is released at rest.":
+  "La partícula se suelta desde el reposo.",
+"The guiding center drifts at E/B = {#} × {#}⁵ m/s.":
+  "El centro de guía se desplaza a E/B = {#} × {#}⁵ m/s.",
+"Time {#} ns, speed {#} × {#}⁴ m/s.":
+  "Tiempo {#} ns, rapidez {#} × {#}⁴ m/s.",
 "{#} × {#}⁵ to {#} × {#}⁵ m/s <span>±{#}% about E/B</span>":
   "{#} × {#}⁵ a {#} × {#}⁵ m/s <span>±{#}% alrededor de E/B</span>",
-"B₀ = {#} mT · coils {#} cm apart":
-  "B₀ = {#} mT · bobinas a {#} cm entre sí",
-"A magnetic bottle: two coils {#} cm apart make a field of {#} mT at the center, growing toward each coil.":
-  "Una botella magnética: dos bobinas separadas {#} cm producen en el centro un campo de {#} mT que crece hacia cada bobina.",
-"It starts at {#} × {#}⁵ m/s, at {#}° to the field.":
-  "Empieza a {#} × {#}⁵ m/s, a {#}° del campo.",
-"The particle is trapped and bounces between the coils.":
-  "La partícula queda atrapada y rebota entre las bobinas.",
-"Time {#} ns, {#} turning points so far.":
-  "Tiempo {#} ns, {#} puntos de retorno hasta ahora.",
-"n-type germanium, {#} mm thick":
-  "Germanio tipo n, {#} mm de grosor",
-"The Hall voltage reads {#} V.":
-  "El voltaje de Hall marca {#} V.",
-"Copper, {#} mm thick":
-  "Cobre, {#} mm de grosor",
+"A velocity selector: particles fly between plates at {#} V with a {#} mT field, toward a slit {#} mm wide.":
+  "Un selector de velocidad: las partículas vuelan entre placas a {#} V con un campo de {#} mT, hacia una rendija de {#} mm de ancho.",
+"The electric field is {#} kV/m.":
+  "El campo eléctrico es de {#} kV/m.",
+"Only particles at v = E/B = {#} × {#}⁵ m/s go straight through.":
+  "Solo las partículas con v = E/B = {#} × {#}⁵ m/s pasan en línea recta.",
+"{#} particles fired, {#} through the slit.":
+  "{#} partículas disparadas, {#} pasaron por la rendija.",
+"A mass spectrometer: neon ions are accelerated through {#} V and turn a half circle in a {#} mT field.":
+  "Un espectrómetro de masas: los iones de neón se aceleran a través de {#} V y describen media circunferencia en un campo de {#} mT.",
+"²⁰Ne⁺ has mass {#} u and lands {#} cm from the slit.":
+  "²⁰Ne⁺ tiene masa {#} u y cae a {#} cm de la rendija.",
+"²¹Ne⁺ has mass {#} u and lands {#} cm from the slit.":
+  "²¹Ne⁺ tiene masa {#} u y cae a {#} cm de la rendija.",
+"²²Ne⁺ has mass {#} u and lands {#} cm from the slit.":
+  "²²Ne⁺ tiene masa {#} u y cae a {#} cm de la rendija.",
+"Ions are being fired.":
+  "Se están disparando iones.",
+"{#} ions counted.":
+  "{#} iones contados.",
 "A cyclotron: a particle spirals outward in a {#} T field, gaining energy at the gap between the dees.":
   "Un ciclotrón: una partícula describe una espiral hacia afuera en un campo de {#} T y gana energía en el espacio entre las des.",
 "The gap voltage is {#} kV, and the dees have radius {#} cm.":
@@ -664,10 +660,46 @@ VDI18N.add('es', 'demo/magnetic-force', {
   "Tiempo {#} ns, energía cinética {#} keV.",
 "{#} keV <span>from the source to the gap edge: {#} qV</span>":
   "{#} keV <span>de la fuente al borde del hueco: {#} qV</span>",
+"B₀ = {#} mT · coils {#} cm apart":
+  "B₀ = {#} mT · bobinas a {#} cm entre sí",
+"A magnetic bottle: two coils {#} cm apart make a field of {#} mT at the center, growing toward each coil.":
+  "Una botella magnética: dos bobinas separadas {#} cm producen en el centro un campo de {#} mT que crece hacia cada bobina.",
+"It starts at {#} × {#}⁵ m/s, at {#}° to the field.":
+  "Empieza a {#} × {#}⁵ m/s, a {#}° del campo.",
+"The particle is trapped and bounces between the coils.":
+  "La partícula queda atrapada y rebota entre las bobinas.",
+"Time {#} ns, {#} turning points so far.":
+  "Tiempo {#} ns, {#} puntos de retorno hasta ahora.",
+"n-type germanium, {#} mm thick":
+  "Germanio tipo n, {#} mm de grosor",
+"Copper, {#} mm thick":
+  "Cobre, {#} mm de grosor",
+"The strip is made of Copper.":
+  "La tira es de cobre.",
+"The Hall voltage reads −{#} pV.":
+  "El voltaje de Hall marca −{#} pV.",
 "{#} keV <span>= {#} qV</span>":
   "{#} keV <span>= {#} qV</span>",
 "Time {#} µs, {#} turning points so far.":
   "Tiempo {#} µs, {#} puntos de retorno hasta ahora.",
+"Describe the picture":
+  "Describir la imagen",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
+"Playing.":
+  "En reproducción.",
+"Particle":
+  "Partícula",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
+"Paused.":
+  "En pausa.",
 "Record reading stores what you read: the particle, the settings as displayed (q, m, v, B, E), your ruler reading and your timer reading divided by the turns timed. It never stores the model's r or T. Cells can be edited; rows stay through setup changes until Clear.":
   "Registrar lectura guarda lo que lees: la partícula, la configuración tal como se muestra (q, m, v, B, E), tu lectura de la regla y tu lectura del cronómetro dividida entre las vueltas cronometradas. Nunca guarda la r ni el T del modelo. Las celdas se pueden editar; las filas se mantienen al cambiar de configuración hasta Borrar.",
 "Side view: the plane through the axis.":
@@ -782,8 +814,6 @@ VDI18N.add('es', 'demo/magnetic-force', {
   "El campo eléctrico es de {#} V/m, a {#}° en el plano de la página.",
 "The electric field is {#} V/m.":
   "El campo eléctrico es de {#} V/m.",
-"The electric field is {#} kV/m.":
-  "El campo eléctrico es de {#} kV/m.",
 "The launch speed is {#} m/s, at {#}° to the x axis.":
   "La rapidez de lanzamiento es {#} m/s, a {#}° del eje x.",
 "The launch speed is {#} × {#}² m/s, at {#}° to the x axis.":
@@ -820,8 +850,6 @@ VDI18N.add('es', 'demo/magnetic-force', {
   "Radio {#} km.",
 "Period {#} ps.":
   "Periodo {#} ps.",
-"Period {#} µs.":
-  "Periodo {#} µs.",
 "Period {#} ms.":
   "Periodo {#} ms.",
 "Period {#} s.":
@@ -902,8 +930,6 @@ VDI18N.add('es', 'demo/magnetic-force', {
   "Tiempo {#} µs, rapidez {#} × {#}³ m/s.",
 "Time {#} µs, speed {#} × {#}⁴ m/s.":
   "Tiempo {#} µs, rapidez {#} × {#}⁴ m/s.",
-"Time {#} µs, speed {#} × {#}⁵ m/s.":
-  "Tiempo {#} µs, rapidez {#} × {#}⁵ m/s.",
 "Time {#} µs, speed {#} × {#}⁶ m/s.":
   "Tiempo {#} µs, rapidez {#} × {#}⁶ m/s.",
 "Time {#} µs, speed {#} × {#}⁷ m/s.":
@@ -970,8 +996,6 @@ VDI18N.add('es', 'demo/magnetic-force', {
   "Un selector de velocidad: las partículas vuelan entre placas a {#} V con un campo de {#} nT, hacia una rendija de {#} mm de ancho.",
 "A velocity selector: particles fly between plates at {#} V with a {#} µT field, toward a slit {#} mm wide.":
   "Un selector de velocidad: las partículas vuelan entre placas a {#} V con un campo de {#} µT, hacia una rendija de {#} mm de ancho.",
-"A velocity selector: particles fly between plates at {#} V with a {#} mT field, toward a slit {#} mm wide.":
-  "Un selector de velocidad: las partículas vuelan entre placas a {#} V con un campo de {#} mT, hacia una rendija de {#} mm de ancho.",
 "A velocity selector: particles fly between plates at {#} V with a {#} T field, toward a slit {#} mm wide.":
   "Un selector de velocidad: las partículas vuelan entre placas a {#} V con un campo de {#} T, hacia una rendija de {#} mm de ancho.",
 "The selected speed is hidden.":
@@ -984,8 +1008,6 @@ VDI18N.add('es', 'demo/magnetic-force', {
   "Solo las partículas con v = E/B = {#} × {#}³ m/s pasan en línea recta.",
 "Only particles at v = E/B = {#} × {#}⁴ m/s go straight through.":
   "Solo las partículas con v = E/B = {#} × {#}⁴ m/s pasan en línea recta.",
-"Only particles at v = E/B = {#} × {#}⁵ m/s go straight through.":
-  "Solo las partículas con v = E/B = {#} × {#}⁵ m/s pasan en línea recta.",
 "Only particles at v = E/B = {#} × {#}⁶ m/s go straight through.":
   "Solo las partículas con v = E/B = {#} × {#}⁶ m/s pasan en línea recta.",
 "Only particles at v = E/B = {#} × {#}⁷ m/s go straight through.":
@@ -1000,16 +1022,12 @@ VDI18N.add('es', 'demo/magnetic-force', {
   "Solo las partículas con v = E/B = {#} × {#}⁻² m/s pasan en línea recta.",
 "Only particles at v = E/B = {#} × {#}⁻³ m/s go straight through.":
   "Solo las partículas con v = E/B = {#} × {#}⁻³ m/s pasan en línea recta.",
-"{#} particles fired, {#} through the slit.":
-  "{#} partículas disparadas, {#} pasaron por la rendija.",
 "A mass spectrometer: neon ions are accelerated through {#} V and turn a half circle in a {#} pT field.":
   "Un espectrómetro de masas: los iones de neón se aceleran a través de {#} V y describen media circunferencia en un campo de {#} pT.",
 "A mass spectrometer: neon ions are accelerated through {#} V and turn a half circle in a {#} nT field.":
   "Un espectrómetro de masas: los iones de neón se aceleran a través de {#} V y describen media circunferencia en un campo de {#} nT.",
 "A mass spectrometer: neon ions are accelerated through {#} V and turn a half circle in a {#} µT field.":
   "Un espectrómetro de masas: los iones de neón se aceleran a través de {#} V y describen media circunferencia en un campo de {#} µT.",
-"A mass spectrometer: neon ions are accelerated through {#} V and turn a half circle in a {#} mT field.":
-  "Un espectrómetro de masas: los iones de neón se aceleran a través de {#} V y describen media circunferencia en un campo de {#} mT.",
 "A mass spectrometer: neon ions are accelerated through {#} V and turn a half circle in a {#} T field.":
   "Un espectrómetro de masas: los iones de neón se aceleran a través de {#} V y describen media circunferencia en un campo de {#} T.",
 "A mass spectrometer: carbon ions are accelerated through {#} V and turn a half circle in a {#} pT field.":
@@ -1030,8 +1048,6 @@ VDI18N.add('es', 'demo/magnetic-force', {
   "²⁰Ne⁺ tiene masa {#} u y cae a {#} µm de la rendija.",
 "²⁰Ne⁺ has mass {#} u and lands {#} mm from the slit.":
   "²⁰Ne⁺ tiene masa {#} u y cae a {#} mm de la rendija.",
-"²⁰Ne⁺ has mass {#} u and lands {#} cm from the slit.":
-  "²⁰Ne⁺ tiene masa {#} u y cae a {#} cm de la rendija.",
 "²⁰Ne⁺ has mass {#} u and lands {#} m from the slit.":
   "²⁰Ne⁺ tiene masa {#} u y cae a {#} m de la rendija.",
 "²⁰Ne⁺ has mass {#} u and lands {#} km from the slit.":
@@ -1044,8 +1060,6 @@ VDI18N.add('es', 'demo/magnetic-force', {
   "²¹Ne⁺ tiene masa {#} u y cae a {#} µm de la rendija.",
 "²¹Ne⁺ has mass {#} u and lands {#} mm from the slit.":
   "²¹Ne⁺ tiene masa {#} u y cae a {#} mm de la rendija.",
-"²¹Ne⁺ has mass {#} u and lands {#} cm from the slit.":
-  "²¹Ne⁺ tiene masa {#} u y cae a {#} cm de la rendija.",
 "²¹Ne⁺ has mass {#} u and lands {#} m from the slit.":
   "²¹Ne⁺ tiene masa {#} u y cae a {#} m de la rendija.",
 "²¹Ne⁺ has mass {#} u and lands {#} km from the slit.":
@@ -1058,8 +1072,6 @@ VDI18N.add('es', 'demo/magnetic-force', {
   "²²Ne⁺ tiene masa {#} u y cae a {#} µm de la rendija.",
 "²²Ne⁺ has mass {#} u and lands {#} mm from the slit.":
   "²²Ne⁺ tiene masa {#} u y cae a {#} mm de la rendija.",
-"²²Ne⁺ has mass {#} u and lands {#} cm from the slit.":
-  "²²Ne⁺ tiene masa {#} u y cae a {#} cm de la rendija.",
 "²²Ne⁺ has mass {#} u and lands {#} m from the slit.":
   "²²Ne⁺ tiene masa {#} u y cae a {#} m de la rendija.",
 "²²Ne⁺ has mass {#} u and lands {#} km from the slit.":
@@ -1092,10 +1104,6 @@ VDI18N.add('es', 'demo/magnetic-force', {
   "¹³C⁺ tiene masa {#} u y cae a {#} m de la rendija.",
 "¹³C⁺ has mass {#} u and lands {#} km from the slit.":
   "¹³C⁺ tiene masa {#} u y cae a {#} km de la rendija.",
-"Ions are being fired.":
-  "Se están disparando iones.",
-"{#} ions counted.":
-  "{#} iones contados.",
 "A magnetic bottle: two coils {#} cm apart make a field of {#} pT at the center, growing toward each coil.":
   "Una botella magnética: dos bobinas separadas {#} cm producen en el centro un campo de {#} pT que crece hacia cada bobina.",
 "A magnetic bottle: two coils {#} cm apart make a field of {#} nT at the center, growing toward each coil.":
@@ -1194,8 +1202,6 @@ VDI18N.add('es', 'demo/magnetic-force', {
   "La tira mide {#} mm de ancho y {#} km de espesor, y lleva una corriente de {#} mA.",
 "The strip is {#} mm wide and {#} km thick, and it carries a current of {#} A.":
   "La tira mide {#} mm de ancho y {#} km de espesor, y lleva una corriente de {#} A.",
-"The strip is made of Copper.":
-  "La tira es de cobre.",
 "The strip is made of Sample A.":
   "La tira es de la muestra A.",
 "The strip is made of Sample B.":
@@ -1204,8 +1210,6 @@ VDI18N.add('es', 'demo/magnetic-force', {
   "La tira es de la muestra C.",
 "The Hall voltage reads {#} pV.":
   "El voltaje de Hall marca {#} pV.",
-"The Hall voltage reads −{#} pV.":
-  "El voltaje de Hall marca −{#} pV.",
 "The Hall voltage reads {#} nV.":
   "El voltaje de Hall marca {#} nV.",
 "The Hall voltage reads −{#} nV.":

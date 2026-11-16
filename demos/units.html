@@ -639,7 +639,9 @@ window.VD_EARTH = { day: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wB
     if (!T || !W || S.tab !== 'scale') return;
     if (S.view === 'zoom') { ctx.setTransform(dpr, 0, 0, dpr, 0, 0); drawZoom(); return; }
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh); const p = ps(), vert = W < 640;
-    const x0 = vert ? 40 * p : 30 * p, x1 = vert ? x0 : W - 130 * p, y0 = vert ? 40 * p : Hh * 0.5, y1 = vert ? Hh - 30 * p : y0; geom = { vert, x0, x1, y0, y1 };
+    /* the Zoom through/Ruler switch sits over the top left corner: the cursor readout starts below it */
+    const zb = $('zoomBar'), ty = zb && !zb.hidden ? Math.max(14 * p, zb.getBoundingClientRect().bottom - can.getBoundingClientRect().top + 8 * p) : 14 * p;
+    const x0 = vert ? 40 * p : 30 * p, x1 = vert ? x0 : W - 130 * p, y0 = vert ? Math.max(40 * p, ty + 30 * p) : Hh * 0.5, y1 = vert ? Hh - 30 * p : y0; geom = { vert, x0, x1, y0, y1 };
     const P = (e) => vert ? [x0, y1 - (y1 - y0) * (e + 15) / 42] : [x0 + (x1 - x0) * (e + 15) / 42, y0];
     ctx.strokeStyle = T.ink; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(...P(-15)); ctx.lineTo(...P(27)); ctx.stroke();
     ctx.font = `${10 * p}px ${T.mono}`; ctx.fillStyle = T.muted;
@@ -652,8 +654,8 @@ window.VD_EARTH = { day: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wB
     const [cx, cy] = P(S.cursor); ctx.strokeStyle = T.hl; ctx.lineWidth = 2 * p; ctx.beginPath(); vert ? (ctx.moveTo(cx - 18 * p, cy), ctx.lineTo(cx + 18 * p, cy)) : (ctx.moveTo(cx, cy - 18 * p), ctx.lineTo(cx, cy + 18 * p)); ctx.stroke();
     const val = 10 ** S.cursor, near = SIZES.reduce((b, s) => (Math.abs(Math.log10(s[1]) - S.cursor) < Math.abs(Math.log10(b[1]) - S.cursor) ? s : b));
     ctx.fillStyle = T.hl; ctx.font = `700 ${13 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
-    ctx.fillText(`cursor: ${sci(val, 2)} m${S.blind ? '' : `   nearest: ${near[0]}`}`, 14 * p, 14 * p);
-    if (!vert) { ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.fillText('one tick per power of ten; drag to read a size', 14 * p, 34 * p); }
+    ctx.fillText(`cursor: ${sci(val, 2)} m${S.blind ? '' : `   nearest: ${near[0]}`}`, 14 * p, ty);
+    if (!vert) { ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.fillText('one tick per power of ten; drag to read a size', 14 * p, ty + 20 * p); }
   }
 
   // ---------- zoom ----------
@@ -1233,6 +1235,8 @@ window.VD_EARTH = { day: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wB
   $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; $('blindTag').hidden = !S.blind; render(); });
   window.vdReadings = () => 0;   /* nothing here is recorded, so Reset all never warns about readings */
   function init() { convUI(); dimsUI(); fermiUI(); setTab('scale'); }
+  /* the tabs are role="tab" (aria-selected), which Copy link does not read by itself: the open tab rides in the link this way */
+  if (window.VD && VD.share && VD.share.picture) VD.share.picture('tab', { get: () => S.tab, set: (v) => { if (['scale', 'convert', 'dims', 'sig', 'fermi'].includes(v) && v !== S.tab) setTab(v); } });
   function resize() { dpr = window.devicePixelRatio || 1; const r = stage.getBoundingClientRect(); W = r.width; Hh = r.height; can.width = Math.round(W * dpr); can.height = Math.round(Hh * dpr); can.style.width = W + 'px'; can.style.height = Hh + 'px'; render(); }
   const retheme = () => { tokens(); render(); };
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}

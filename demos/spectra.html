@@ -201,6 +201,7 @@ table.lines tr:focus-visible { outline: 2px solid var(--accent); outline-offset:
 .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
 .readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
 .readout div { min-width: 0; }
+.readout div.full { grid-column: 1 / -1; } /* Region: "far ultraviolet" is wider than half of the 220 px column */
 .readout dt { font-size: 0.78rem; color: var(--muted); }
 .readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1rem; font-weight: 600; overflow-wrap: anywhere; }
 .glow { display: flex; align-items: center; gap: 10px; }
@@ -314,7 +315,7 @@ table.lines tr.on td { background: color-mix(in srgb, var(--accent) 16%, transpa
               <div><dt>Transition</dt><dd id="hTr">3 → 2</dd></div>
               <div><dt>Photon energy</dt><dd id="hE">—</dd></div>
               <div><dt>Wavelength</dt><dd id="hL">—</dd></div>
-              <div><dt>Region</dt><dd id="hReg">—</dd></div>
+              <div class="full"><dt>Region</dt><dd id="hReg">—</dd></div>
             </dl>
             <label class="hint" style="display:flex;align-items:center;gap:7px;cursor:pointer"><input type="checkbox" id="blind" style="margin:0"> Blind: hide the photon energy and wavelength the model predicts</label>
             <p class="hint" id="hHint">An electron can only sit on certain energy levels, E = −13.6 eV / n². When it drops from a higher level to a lower one, it emits a photon carrying exactly the energy difference. Click an arrow.</p>

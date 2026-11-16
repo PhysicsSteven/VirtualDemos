@@ -21,7 +21,7 @@ Students need the thin lens equation with its signs. The views at the bottom of 
 2. **Compound microscope.** Read the chain: the objective makes a real, inverted image 10 times the object at the eyepiece's focal point (image 1 sits in the field stop). The eyepiece adds 25/2.50 = 10: M = −100. Compare the two views: without the microscope the 0.5 mm letter is a speck.
 3. **Exit pupil.** Drag the eye away from the exit pupil (or press the button to put it back) and watch the view through the microscope shrink to a small circle: the eye is now cutting off the edge of the field.
 4. **Keplerian telescope.** The Moon fills 0.518° to the eye; through the telescope it is 10 times bigger and upside down. Show both bundles of rays: they leave the eyepiece parallel, at a steeper angle.
-5. **Galilean telescope.** M = +5, upright and short, but the exit pupil is virtual (eye relief −8.00 cm) so the eye cannot get to it: the apparent field is only 6.1° against 25.5° for the Keplerian telescope.
+5. **Galilean telescope.** M = +5, upright and short, but the exit pupil is virtual (eye relief −8.00 cm) so the eye cannot get to it: the apparent field is only 6.1° against 25.0° for the Keplerian telescope.
 6. **Terrestrial telescope.** The erecting lens turns the image over (m₂ = −1) and costs 20 cm of tube.
 7. **Start from scratch.** Have students build an instrument to a specification (below), then switch to Camera to photograph through it.
 

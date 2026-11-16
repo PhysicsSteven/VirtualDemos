@@ -808,14 +808,14 @@ VDI18N.add('es', 'demo/spectra', {
   "ULTRAVIOLETA",
 "INFRARED":
   "INFRARROJO",
-"The strip shows a continuous spectrum from the lamp alone.":
-  "La franja muestra un espectro continuo de la lámpara sola.",
-"There are no lines.":
-  "No hay líneas.",
 "No visible lines to give a color":
   "No hay líneas visibles que den un color",
 "No lines in this range.":
   "No hay líneas en este intervalo.",
+"The strip shows a continuous spectrum from the lamp alone.":
+  "La franja muestra un espectro continuo de la lámpara sola.",
+"There are no lines.":
+  "No hay líneas.",
 "{#} nm (vacuum)":
   "{#} nm (vacío)",
 "far ultraviolet":
@@ -876,14 +876,14 @@ VDI18N.add('es', 'demo/spectra', {
   "máximo {#} nm, infrarrojo →",
 "← peak {#} nm, ultraviolet":
   "← máximo {#} nm, ultravioleta",
-"Six models of the hydrogen atom under one photon beam at {#} nm. Billiard ball: a hard, solid sphere; Plum pudding: rings at {#} nm; Classical orbit: t = {#} ps of {#}; Bohr: n = {#}, E = -{#} eV; de Broglie: n = {#}, E = -{#} eV; Schrödinger: 1s, lives stable.":
-  "Seis modelos del átomo de hidrógeno bajo un mismo haz de fotones a {#} nm. Bola de billar: una esfera dura y sólida; Budín de pasas: oscila a {#} nm; Órbita clásica: t = {#} ps de {#}; Bohr: n = {#}, E = -{#} eV; de Broglie: n = {#}, E = -{#} eV; Schrödinger: 1s, estable.",
 "The ratio of atoms excited to n = {#} against n = {#} is {#}.":
   "La razón de átomos excitados al nivel n = {#} contra n = {#} es de {#}.",
 "The ratio of ionized to neutral hydrogen is {#} × {#}⁴.":
   "La razón de hidrógeno ionizado a neutro es de {#} × {#}⁴.",
 "The share of all hydrogen in n = {#} is {#} × {#}⁻⁷.":
   "La fracción de todo el hidrógeno en n = {#} es de {#} × {#}⁻⁷.",
+"Six models of the hydrogen atom under one photon beam at {#} nm. Billiard ball: a hard, solid sphere; Plum pudding: rings at {#} nm; Classical orbit: t = {#} ps of {#}; Bohr: n = {#}, E = -{#} eV; de Broglie: n = {#}, E = -{#} eV; Schrödinger: 1s, lives stable.":
+  "Seis modelos del átomo de hidrógeno bajo un mismo haz de fotones a {#} nm. Bola de billar: una esfera dura y sólida; Budín de pasas: oscila a {#} nm; Órbita clásica: t = {#} ps de {#}; Bohr: n = {#}, E = -{#} eV; de Broglie: n = {#}, E = -{#} eV; Schrödinger: 1s, estable.",
 "2p, lives {#} ns":
   "2p, vive {#} ns",
 "Six models of the hydrogen atom under one photon beam at {#} nm. Billiard ball: a hard, solid sphere; Plum pudding: rings at {#} nm; Classical orbit: t = {#} ps of {#}; Bohr: n = {#}, E = -{#} eV; de Broglie: n = {#}, E = -{#} eV; Schrödinger: 2p, lives {#} ns.":
@@ -894,10 +894,12 @@ VDI18N.add('es', 'demo/spectra', {
   "protón desnudo",
 "ionized from n = {#}":
   "ionizado desde n = {#}",
-"Six models of the hydrogen atom under one photon beam at {#} nm. Billiard ball: a hard, solid sphere; Plum pudding: rings at {#} nm; Classical orbit: t = {#} ps of {#}; Bohr: n = {#}, E = -{#} eV; de Broglie: ionized from n = {#}; Schrödinger: ionized from n = {#}.":
-  "Seis modelos del átomo de hidrógeno bajo un haz de fotones de {#} nm. Bola de billar: una esfera dura y sólida; Pudín de pasas: anillos a {#} nm; Órbita clásica: t = {#} ps de {#}; Bohr: n = {#}, E = -{#} eV; de Broglie: ionizado desde n = {#}; Schrödinger: ionizado desde n = {#}.",
+"Six models of the hydrogen atom under one photon beam at {#} nm. Billiard ball: a hard, solid sphere; Plum pudding: rings at {#} nm; Classical orbit: t = {#} ps of {#}; Bohr: ionized from n = {#}; de Broglie: n = {#}, E = -{#} eV; Schrödinger: ionized from n = {#}.":
+  "Seis modelos del átomo de hidrógeno bajo un mismo haz de fotones a {#} nm. Bola de billar: una esfera dura y sólida; Budín de pasas: oscila a {#} nm; Órbita clásica: t = {#} ps de {#}; Bohr: ionizado desde n = {#}; de Broglie: n = {#}, E = -{#} eV; Schrödinger: ionizado desde n = {#}.",
 "Neon":
   "Neón",
+"collapsed; a fresh atom next":
+  "colapsó; sigue un átomo nuevo",
 "<b>{#} correct</b>. {#} more to find: some lines still have no match.":
   "<b>{#} correctos</b>. Faltan {#} por encontrar: algunas líneas aún no tienen pareja.",
 "The answer: <b>Hydrogen, Sodium, Magnesium, Calcium, Iron</b>. A real stellar spectrum has thousands more lines, mostly from iron, but these five make the strongest features in sunlight. The letters on the strip are the names Fraunhofer gave the darkest solar lines.":
@@ -954,6 +956,8 @@ VDI18N.add('es', 'demo/spectra', {
   "La razón de hidrógeno ionizado a neutro es de {#}.",
 "The share of all hydrogen in n = {#} is {#} × {#}⁻⁶.":
   "La fracción de todo el hidrógeno en n = {#} es de {#} × {#}⁻⁶.",
+"Six models of the hydrogen atom under one photon beam at {#} nm. Billiard ball: a hard, solid sphere; Plum pudding: rings at {#} nm; Classical orbit: t = {#} ps of {#}; Bohr: n = {#}, E = -{#} eV; de Broglie: ionized from n = {#}; Schrödinger: ionized from n = {#}.":
+  "Seis modelos del átomo de hidrógeno bajo un haz de fotones de {#} nm. Bola de billar: una esfera dura y sólida; Pudín de pasas: anillos a {#} nm; Órbita clásica: t = {#} ps de {#}; Bohr: n = {#}, E = -{#} eV; de Broglie: ionizado desde n = {#}; Schrödinger: ionizado desde n = {#}.",
 "3d, lives {#} ns":
   "3d, vive {#} ns",
 "Six models of the hydrogen atom under one photon beam at {#} nm. Billiard ball: a hard, solid sphere; Plum pudding: rings at {#} nm; Classical orbit: t = {#} ps of {#}; Bohr: n = {#}, E = -{#} eV; de Broglie: n = {#}, E = -{#} eV; Schrödinger: ionized from n = {#}.":
@@ -976,8 +980,6 @@ VDI18N.add('es', 'demo/spectra', {
   "En pausa.",
 "Six models of the hydrogen atom under one photon beam at {#} nm. Billiard ball: a hard, solid sphere; Plum pudding: rings at {#} nm; Classical orbit: t = {#} ps of {#}; Bohr: n = {#}, E = -{#} eV; de Broglie: ionized from n = {#}; Schrödinger: 4d, lives {#} ns.":
   "Seis modelos del átomo de hidrógeno bajo un mismo haz de fotones a {#} nm. Bola de billar: una esfera dura y sólida; Budín de pasas: oscila a {#} nm; Órbita clásica: t = {#} ps de {#}; Bohr: n = {#}, E = -{#} eV; de Broglie: ionizado desde n = {#}; Schrödinger: 4d, vive {#} ns.",
-"Six models of the hydrogen atom under one photon beam at {#} nm. Billiard ball: a hard, solid sphere; Plum pudding: rings at {#} nm; Classical orbit: t = {#} ps of {#}; Bohr: ionized from n = {#}; de Broglie: n = {#}, E = -{#} eV; Schrödinger: ionized from n = {#}.":
-  "Seis modelos del átomo de hidrógeno bajo un mismo haz de fotones a {#} nm. Bola de billar: una esfera dura y sólida; Budín de pasas: oscila a {#} nm; Órbita clásica: t = {#} ps de {#}; Bohr: ionizado desde n = {#}; de Broglie: n = {#}, E = -{#} eV; Schrödinger: ionizado desde n = {#}.",
 "<span><i></i>hydrogen's lines (NIST, matched by the Rydberg formula)</span><span><i></i>light this atom gave off, each bar in its own color</span><span>strip from {#} to {#} nm, log scale; the rainbow band is visible light</span>":
   "<span><i></i>líneas del hidrógeno (NIST, reproducidas por la fórmula de Rydberg)</span><span><i></i>luz que emitió este átomo, cada barra en su propio color</span><span>franja de {#} a {#} nm, escala logarítmica; la banda de arcoíris es la luz visible</span>",
 "ionized, electron gone":

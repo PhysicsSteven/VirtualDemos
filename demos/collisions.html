@@ -837,7 +837,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     return fx(v, d);
   }
   const fp = (v) => `${fx(v, 2)} kg·m/s`, fK = (v) => `${fx(v, 3)} J`, fv = (v) => `${fx(v, 2)} m/s`;
-  const deg = (r) => `${(r * 180 / Math.PI).toFixed(1)}°`;
+  const deg = (r) => { const v = +(r * 180 / Math.PI).toFixed(1); return `${MIN((v === 0 ? 0 : v).toFixed(1))}°`; };   /* a true minus, as in the status line */
   function nice(raw) { const p = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p; return (m < 1.5 ? 1 : m < 3 ? 2 : m < 7 ? 5 : 10) * p; }
   const fmtRate = (r) => (r === 1 ? 'real time' : `slow motion ×${+(1 / r).toFixed(1)}`);
 

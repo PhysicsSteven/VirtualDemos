@@ -349,23 +349,23 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   def({ id: 'pi0', html: 'π<sup>0</sup>', txt: 'π⁰', name: 'neutral pion', cls: 'meson', m: 134.9768, quarks: '(uū − dd̄)/√2', tau: 8.43e-17, self: true, decay: 'γ γ (98.8%)' });
   def({ id: 'eta', html: 'η', txt: 'η', name: 'eta', cls: 'meson', m: 547.862, quarks: 'mix of uū, dd̄, ss̄', tau: HBAR / 1.31e-3, width: 1.31e-3, self: true, decay: 'γ γ (39.4%), 3π⁰ (32.6%), π⁺ π⁻ π⁰ (23.0%)' });
   def({ id: 'K+', html: 'K<sup>+</sup>', txt: 'K⁺', name: 'kaon', cls: 'meson', m: 493.677, Q: 1, n: { u: 1, s: -1 }, quarks: 'u s̄', tau: 1.2380e-8, anti: 'K-', ahtml: 'K<sup>−</sup>', atxt: 'K⁻', aquarks: 'ū s', decay: 'μ⁺ ν_μ (63.6%), π⁺ π⁰ (20.7%), π⁺ π⁺ π⁻ (5.6%)' });
-  def({ id: 'K0', html: 'K<sup>0</sup>', txt: 'K⁰', name: 'neutral kaon', cls: 'meson', m: 497.611, n: { d: 1, s: -1 }, quarks: 'd s̄', tau: null, tauNote: 'seen as K⁰_S (8.954 × 10⁻¹¹ s) and K⁰_L (5.116 × 10⁻⁸ s)', anti: 'K0bar', ahtml: 'K̄<sup>0</sup>', atxt: 'K̄⁰', aquarks: 'd̄ s', decay: 'K⁰_S → π⁺ π⁻ (69.2%), π⁰ π⁰ (30.7%)' });
+  def({ id: 'K0', html: 'K<sup>0</sup>', txt: 'K⁰', name: 'neutral kaon', aname: 'neutral antikaon', cls: 'meson', m: 497.611, n: { d: 1, s: -1 }, quarks: 'd s̄', tau: null, tauNote: 'seen as K⁰_S (8.954 × 10⁻¹¹ s) and K⁰_L (5.116 × 10⁻⁸ s)', anti: 'K0bar', ahtml: 'K̄<sup>0</sup>', atxt: 'K̄⁰', aquarks: 'd̄ s', decay: 'K⁰_S → π⁺ π⁻ (69.2%), π⁰ π⁰ (30.7%)' });
   def({ id: 'rho+', html: 'ρ<sup>+</sup>', txt: 'ρ⁺', name: 'rho', cls: 'meson', m: 775.11, Q: 1, spin: 1, n: { u: 1, d: -1 }, quarks: 'u d̄', tau: HBAR / 149.1, width: 149.1, anti: 'rho-', ahtml: 'ρ<sup>−</sup>', atxt: 'ρ⁻', aquarks: 'ū d', decay: 'π⁺ π⁰ (≈ 100%)', table: false });
   def({ id: 'rho0', html: 'ρ<sup>0</sup>', txt: 'ρ⁰', name: 'neutral rho', cls: 'meson', m: 775.26, spin: 1, quarks: '(uū − dd̄)/√2', tau: HBAR / 147.4, width: 147.4, self: true, decay: 'π⁺ π⁻ (≈ 100%)', table: false });
   def({ id: 'omega', html: 'ω', txt: 'ω', name: 'omega meson', cls: 'meson', m: 782.66, spin: 1, quarks: '(uū + dd̄)/√2', tau: HBAR / 8.68, width: 8.68, self: true, decay: 'π⁺ π⁻ π⁰ (89.2%)', table: false });
   def({ id: 'Kst+', html: 'K*<sup>+</sup>', txt: 'K*⁺', name: 'K star', cls: 'meson', m: 891.67, Q: 1, spin: 1, n: { u: 1, s: -1 }, quarks: 'u s̄', tau: HBAR / 51.4, width: 51.4, anti: 'Kst-', ahtml: 'K*<sup>−</sup>', atxt: 'K*⁻', aquarks: 'ū s', decay: 'K π (≈ 100%)', table: false });
-  def({ id: 'Kst0', html: 'K*<sup>0</sup>', txt: 'K*⁰', name: 'neutral K star', cls: 'meson', m: 895.55, spin: 1, n: { d: 1, s: -1 }, quarks: 'd s̄', tau: HBAR / 47.3, width: 47.3, anti: 'Kst0bar', ahtml: 'K̄*<sup>0</sup>', atxt: 'K̄*⁰', aquarks: 'd̄ s', decay: 'K π (≈ 100%)', table: false });
+  def({ id: 'Kst0', html: 'K*<sup>0</sup>', txt: 'K*⁰', name: 'neutral K star', aname: 'neutral anti K star', cls: 'meson', m: 895.55, spin: 1, n: { d: 1, s: -1 }, quarks: 'd s̄', tau: HBAR / 47.3, width: 47.3, anti: 'Kst0bar', ahtml: 'K̄*<sup>0</sup>', atxt: 'K̄*⁰', aquarks: 'd̄ s', decay: 'K π (≈ 100%)', table: false });
   def({ id: 'etap', html: 'η′', txt: 'η′', name: 'eta prime', cls: 'meson', m: 957.78, quarks: 'mix of uū, dd̄, ss̄', tau: HBAR / 0.188, width: 0.188, self: true, decay: 'π⁺ π⁻ η (42.5%)', table: false });
   def({ id: 'phi', html: 'φ', txt: 'φ', name: 'phi', cls: 'meson', m: 1019.461, spin: 1, quarks: 's s̄', tau: HBAR / 4.249, width: 4.249, self: true, decay: 'K⁺ K⁻ (49.1%), K⁰_L K⁰_S (33.9%)', table: false });
   def({ id: 'D0', html: 'D<sup>0</sup>', txt: 'D⁰', name: 'D meson', cls: 'meson', m: 1864.84, n: { c: 1, u: -1 }, quarks: 'c ū', tau: 4.103e-13, anti: 'D0bar', ahtml: 'D̄<sup>0</sup>', atxt: 'D̄⁰', aquarks: 'c̄ u', decay: 'K⁻ + anything (54.7%)' });
-  def({ id: 'D+', html: 'D<sup>+</sup>', txt: 'D⁺', name: 'charged D meson', cls: 'meson', m: 1869.66, Q: 1, n: { c: 1, d: -1 }, quarks: 'c d̄', tau: 1.033e-12, anti: 'D-', ahtml: 'D<sup>−</sup>', atxt: 'D⁻', aquarks: 'c̄ d', decay: 'K⁻ + anything (25.7%)', table: false });
+  def({ id: 'D+', html: 'D<sup>+</sup>', txt: 'D⁺', name: 'charged D meson', aname: 'negative D meson', cls: 'meson', m: 1869.66, Q: 1, n: { c: 1, d: -1 }, quarks: 'c d̄', tau: 1.033e-12, anti: 'D-', ahtml: 'D<sup>−</sup>', atxt: 'D⁻', aquarks: 'c̄ d', decay: 'K⁻ + anything (25.7%)', table: false });
   def({ id: 'Ds+', html: 'D<sub>s</sub><sup>+</sup>', txt: 'D_s⁺', name: 'strange D meson', cls: 'meson', m: 1968.35, Q: 1, n: { c: 1, s: -1 }, quarks: 'c s̄', tau: 5.04e-13, anti: 'Ds-', ahtml: 'D<sub>s</sub><sup>−</sup>', atxt: 'D_s⁻', aquarks: 'c̄ s', decay: 'many', table: false });
   def({ id: 'Dst0', html: 'D*<sup>0</sup>', txt: 'D*⁰', name: 'D star', cls: 'meson', m: 2006.85, spin: 1, n: { c: 1, u: -1 }, quarks: 'c ū', tau: null, anti: 'Dst0bar', ahtml: 'D̄*<sup>0</sup>', atxt: 'D̄*⁰', aquarks: 'c̄ u', decay: 'D⁰ π⁰ (64.7%), D⁰ γ (35.3%)', table: false });
-  def({ id: 'Dst+', html: 'D*<sup>+</sup>', txt: 'D*⁺', name: 'charged D star', cls: 'meson', m: 2010.26, Q: 1, spin: 1, n: { c: 1, d: -1 }, quarks: 'c d̄', tau: HBAR / 0.0834, width: 0.0834, anti: 'Dst-', ahtml: 'D*<sup>−</sup>', atxt: 'D*⁻', aquarks: 'c̄ d', decay: 'D⁰ π⁺ (67.7%)', table: false });
+  def({ id: 'Dst+', html: 'D*<sup>+</sup>', txt: 'D*⁺', name: 'charged D star', aname: 'negative D star', cls: 'meson', m: 2010.26, Q: 1, spin: 1, n: { c: 1, d: -1 }, quarks: 'c d̄', tau: HBAR / 0.0834, width: 0.0834, anti: 'Dst-', ahtml: 'D*<sup>−</sup>', atxt: 'D*⁻', aquarks: 'c̄ d', decay: 'D⁰ π⁺ (67.7%)', table: false });
   def({ id: 'etac', html: 'η<sub>c</sub>', txt: 'η_c', name: 'charmed eta', cls: 'meson', m: 2984.1, quarks: 'c c̄', tau: HBAR / 30.5, width: 30.5, self: true, decay: 'hadrons', table: false });
   def({ id: 'Jpsi', html: 'J/ψ', txt: 'J/ψ', name: 'J/psi', cls: 'meson', m: 3096.900, spin: 1, quarks: 'c c̄', tau: HBAR / 0.0926, width: 0.0926, self: true, decay: 'hadrons (87.7%), e⁺e⁻ (5.97%), μ⁺μ⁻ (5.96%)' });
   def({ id: 'B+', html: 'B<sup>+</sup>', txt: 'B⁺', name: 'B meson', cls: 'meson', m: 5279.41, Q: 1, n: { u: 1, b: -1 }, quarks: 'u b̄', tau: 1.638e-12, anti: 'B-', ahtml: 'B<sup>−</sup>', atxt: 'B⁻', aquarks: 'ū b', decay: 'D̄⁰ + anything (79%)', table: false });
-  def({ id: 'B0', html: 'B<sup>0</sup>', txt: 'B⁰', name: 'neutral B meson', cls: 'meson', m: 5279.72, n: { d: 1, b: -1 }, quarks: 'd b̄', tau: 1.517e-12, anti: 'B0bar', ahtml: 'B̄<sup>0</sup>', atxt: 'B̄⁰', aquarks: 'd̄ b', decay: 'D⁻ + anything (37%)' });
+  def({ id: 'B0', html: 'B<sup>0</sup>', txt: 'B⁰', name: 'neutral B meson', aname: 'neutral anti B meson', cls: 'meson', m: 5279.72, n: { d: 1, b: -1 }, quarks: 'd b̄', tau: 1.517e-12, anti: 'B0bar', ahtml: 'B̄<sup>0</sup>', atxt: 'B̄⁰', aquarks: 'd̄ b', decay: 'D⁻ + anything (37%)' });
   def({ id: 'Bs0', html: 'B<sub>s</sub><sup>0</sup>', txt: 'B_s⁰', name: 'strange B meson', cls: 'meson', m: 5366.93, n: { s: 1, b: -1 }, quarks: 's b̄', tau: 1.520e-12, anti: 'Bs0bar', ahtml: 'B̄<sub>s</sub><sup>0</sup>', atxt: 'B̄_s⁰', aquarks: 's̄ b', decay: 'D_s⁻ + anything (93%)', table: false });
   def({ id: 'Bc+', html: 'B<sub>c</sub><sup>+</sup>', txt: 'B_c⁺', name: 'charmed B meson', cls: 'meson', m: 6274.47, Q: 1, n: { c: 1, b: -1 }, quarks: 'c b̄', tau: 5.10e-13, anti: 'Bc-', ahtml: 'B<sub>c</sub><sup>−</sup>', atxt: 'B_c⁻', aquarks: 'c̄ b', decay: 'many', table: false });
   def({ id: 'etab', html: 'η<sub>b</sub>', txt: 'η_b', name: 'bottom eta', cls: 'meson', m: 9398.7, quarks: 'b b̄', tau: HBAR / 10, width: 10, self: true, decay: 'hadrons', table: false });
@@ -376,7 +376,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   def({ id: 'n', html: 'n', txt: 'n', name: 'neutron', cls: 'baryon', m: 939.56542194, spin: 0.5, B: 1, n: { u: 1, d: 2 }, quarks: 'udd', tau: 878.4, anti: 'nbar', ahtml: 'n̄', atxt: 'n̄', aname: 'antineutron', decay: 'p e⁻ ν̄_e (100%)' });
   def({ id: 'Lambda', html: 'Λ<sup>0</sup>', txt: 'Λ⁰', name: 'lambda', cls: 'baryon', m: 1115.683, spin: 0.5, B: 1, n: { u: 1, d: 1, s: 1 }, quarks: 'uds', tau: 2.617e-10, anti: 'Lambdabar', ahtml: 'Λ̄<sup>0</sup>', atxt: 'Λ̄⁰', decay: 'p π⁻ (64.1%), n π⁰ (35.9%)' });
   def({ id: 'Sigma+', html: 'Σ<sup>+</sup>', txt: 'Σ⁺', name: 'sigma', cls: 'baryon', m: 1189.37, Q: 1, spin: 0.5, B: 1, n: { u: 2, s: 1 }, quarks: 'uus', tau: 8.018e-11, anti: 'Sigma+bar', ahtml: 'Σ̄<sup>−</sup>', atxt: 'Σ̄⁻', decay: 'p π⁰ (51.6%), n π⁺ (48.3%)' });
-  def({ id: 'Sigma0', html: 'Σ<sup>0</sup>', txt: 'Σ⁰', name: 'neutral sigma', cls: 'baryon', m: 1192.642, spin: 0.5, B: 1, n: { u: 1, d: 1, s: 1 }, quarks: 'uds', tau: 7.4e-20, anti: 'Sigma0bar', ahtml: 'Σ̄<sup>0</sup>', atxt: 'Σ̄⁰', decay: 'Λ γ (100%)' });
+  def({ id: 'Sigma0', html: 'Σ<sup>0</sup>', txt: 'Σ⁰', name: 'neutral sigma', aname: 'neutral antisigma', cls: 'baryon', m: 1192.642, spin: 0.5, B: 1, n: { u: 1, d: 1, s: 1 }, quarks: 'uds', tau: 7.4e-20, anti: 'Sigma0bar', ahtml: 'Σ̄<sup>0</sup>', atxt: 'Σ̄⁰', decay: 'Λ γ (100%)' });
   def({ id: 'Sigma-', html: 'Σ<sup>−</sup>', txt: 'Σ⁻', name: 'negative sigma', cls: 'baryon', m: 1197.449, Q: -1, spin: 0.5, B: 1, n: { d: 2, s: 1 }, quarks: 'dds', tau: 1.479e-10, anti: 'Sigma-bar', ahtml: 'Σ̄<sup>+</sup>', atxt: 'Σ̄⁺', decay: 'n π⁻ (99.85%)' });
   def({ id: 'Xi0', html: 'Ξ<sup>0</sup>', txt: 'Ξ⁰', name: 'xi', cls: 'baryon', m: 1314.86, spin: 0.5, B: 1, n: { u: 1, s: 2 }, quarks: 'uss', tau: 2.90e-10, anti: 'Xi0bar', ahtml: 'Ξ̄<sup>0</sup>', atxt: 'Ξ̄⁰', decay: 'Λ π⁰ (99.5%)' });
   def({ id: 'Xi-', html: 'Ξ<sup>−</sup>', txt: 'Ξ⁻', name: 'negative xi', cls: 'baryon', m: 1321.71, Q: -1, spin: 0.5, B: 1, n: { d: 1, s: 2 }, quarks: 'dss', tau: 1.639e-10, anti: 'Xi-bar', ahtml: 'Ξ̄<sup>+</sup>', atxt: 'Ξ̄⁺', decay: 'Λ π⁻ (99.9%)' });
@@ -798,7 +798,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     let el = '';
     if (!r.a.length) el = 'Put one particle (a decay at rest) or two (a collision) on the Before side.';
     else if (r.a.length === 1) el = `A decay at rest: the energy available is the parent's rest energy, W = ${f(c.W, 3)} MeV.`;
-    else el = (r.mode === 'fixed' ? `A ${BY[r.a[0]].txt} beam with K = ${enTxt(r.en)} on a ${BY[r.a[1]].txt} at rest` : `Two beams of ${enTxt(r.en)} each, head on`) + `: center of mass energy W = ${f(c.W, 1)} MeV.` + (c.threshold != null && r.b.length ? (bl ? ' Threshold: hidden (Blind).' : ` Threshold for these products: ${r.mode === 'fixed' ? 'K' : 'E'} = ${enTxt(c.threshold)}.`) : '');
+    else el = (r.mode === 'fixed' ? `${art(BY[r.a[0]].txt, true)} ${BY[r.a[0]].txt} beam with K = ${enTxt(r.en)} on ${art(BY[r.a[1]].txt)} ${BY[r.a[1]].txt} at rest` : `Two beams of ${enTxt(r.en)} each, head on`) + `: center of mass energy W = ${f(c.W, 1)} MeV.` + (c.threshold != null && r.b.length ? (bl ? ' Threshold: hidden (Blind).' : ` Threshold for these products: ${r.mode === 'fixed' ? 'K' : 'E'} = ${enTxt(c.threshold)}.`) : '');
     $('rxEnergyLine').textContent = el;
     const ta = c.ta, tb = c.tb, row = (nm, x, y, ok, note) => `<tr><td>${nm}</td><td class="num">${bl ? '?' : x}</td><td class="num">${bl ? '?' : y}</td><td>${bl ? '' : `<span class="mark ${ok ? 'y' : 'n'}">${ok ? '✓ conserved' : '✗ ' + (note || 'changes')}</span>`}</td></tr>`;
     const eqv = (a, b) => Math.abs(a - b) < 1e-9, done = r.a.length && r.b.length;
@@ -812,7 +812,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         + row('Energy: W against total rest energy after (MeV)', f(c.W, 1), f(c.need, 1), !(c.reasons.some((x) => /energy|one particle|one other/.test(x))), c.res ? 'not at the resonance' : 'not enough');
     } else h += '<tr><td colspan="4">Build a reaction to check it.</td></tr>';
     $('ckTable').innerHTML = h + '</tbody>';
-    if (done && !bl) { const fa = ta.n, fb = tb.n; $('rxFlav').textContent = 'Net quarks (quarks minus antiquarks) before → after: ' + ['u', 'd', 's', 'c', 'b'].filter((q) => fa[q] || fb[q]).map((q) => `${q} ${sgn(fa[q])} → ${sgn(fb[q])}`).join(', ') + '. Strong and electromagnetic interactions keep every count; only the weak interaction changes a flavor.'; }
+    if (done && !bl) { const fa = ta.n, fb = tb.n; const fl = ['u', 'd', 's', 'c', 'b'].filter((q) => fa[q] || fb[q]);
+      $('rxFlav').textContent = fl.length ? 'Net quarks (quarks minus antiquarks) before → after: ' + fl.map((q) => `${q} ${sgn(fa[q])} → ${sgn(fb[q])}`).join(', ') + '. Strong and electromagnetic interactions keep every count; only the weak interaction changes a flavor.' : 'No quarks on either side, so no quark flavor can change.'; }
     else $('rxFlav').textContent = done ? 'Quark flavor counts: hidden (Blind).' : '';
     const v = $('rxVerdict'), pred = r.pred ? `Your prediction: ${r.pred}.` : 'Make a prediction under My prediction.';
     if (!done) { v.className = 'verdict'; v.innerHTML = '<b>Build a reaction</b><p>Choose Before or After, then add particles. Or pick one of the book\'s examples.</p>'; }
@@ -822,8 +823,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       v.innerHTML = `<b>Allowed: the ${c.force} interaction can do it</b><p>Why ${c.force}: ${esc(c.why)}. ${TIMES[c.force]}</p><p>${esc(pred + match)}</p>`; }
     else { const match = r.pred ? (r.pred === 'forbidden' ? ' ✓ matches.' : ' ✗ does not match.') : ''; v.className = 'verdict n';
       v.innerHTML = `<b>Forbidden</b><p>${esc(c.reasons.map((x) => x[0].toUpperCase() + x.slice(1)).join('. '))}.</p><p>${esc(pred + match)}</p>`; }
+    readouts();   /* the rail readouts follow every change to the reaction, as the table and the verdict do */
   }
   const TIMES = { strong: 'Strong decays are the fastest, with mean lives near 10⁻²³ s.', electromagnetic: 'Electromagnetic decays take roughly 10⁻²⁰ to 10⁻¹⁶ s.', weak: 'Weak decays are the slowest, 10⁻¹³ s and longer (the free neutron lives 878 s).' };
+  /* the article before a particle symbol, by how it is read: an e⁺ (ee), an n (en), an η (eta), an Ω (omega), an ϒ (upsilon), an H⁰ (aitch) */
+  const art = (t, cap) => (/^[enHηΩωϒ]/.test(t) ? (cap ? 'An' : 'an') : (cap ? 'A' : 'a'));
   const enTxt = (v) => (v >= 1e6 ? `${+(v / 1e6).toPrecision(4)} TeV` : v >= 1000 ? `${+(v / 1000).toPrecision(5)} GeV` : `${+v.toPrecision(5)} MeV`);
   function loadExample(k) { const e = EXAMPLES.find((x) => x.k === k); if (!e) return; S.rx.a = e.a.slice(); S.rx.b = e.b.slice(); S.rx.mode = e.mode || 'fixed'; S.rx.ex = k; S.rx.pred = '';
     if (e.a.length === 2) { if (e.en === 'thr') { S.rx.en = threshold(e.a, e.b.length === 1 ? BY[e.b[0]].m : totals(e.b).m, S.rx.mode); } else S.rx.en = e.en; }
@@ -1073,7 +1077,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     } else if (S.view === 'rx') {
       const c = rxCheck(), bl = S.blind;
       if (!(S.rx.a.length && S.rx.b.length)) o = dd('Reaction', 'not built yet', true);
-      else { o = dd('Reaction', esc(reactionTxt()), true) + dd('W (MeV)', f(c.W, 2)) + dd('Rest energy after (MeV)', f(c.need, 2)) + dd('Energy to spare (MeV)', bl ? hide : f(c.spare, 2))
+      else { o = dd('Reaction', esc(reactionTxt()), true) + dd('W (MeV)', f(c.W, 2)) + dd('Rest energy after (MeV)', f(c.need, 2)) + dd('Energy to spare (MeV)', bl ? hide : f(Math.abs(c.spare) < 0.005 ? 0 : c.spare, 2))
         + (c.threshold != null ? dd('Threshold', bl ? hide : enTxt(c.threshold)) : '') + dd('My prediction', S.rx.pred || '—')
         + dd('Verdict', bl ? hide : c.ok ? `allowed: ${c.force}` : c.verdict, true); }
     } else if (S.view === 'qk') {

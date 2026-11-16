@@ -1,23 +1,17 @@
 /* demo/chladni in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/chladni', {
-"Describe the picture":
-  "Describir la imagen",
 "drive frequency f (Hz)":
   "frecuencia de excitación f (Hz)",
 "RMS acceleration of the plate (g)":
   "aceleración RMS de la placa (g)",
-"3D: displacement exaggerated about {#}×, motion slowed from {#} Hz to one cycle per second.":
-  "3D: desplazamiento exagerado unas {#}×, movimiento ralentizado de {#} Hz a un ciclo por segundo.",
 "{#} Hz, mostly mode {#} (free plate mode at {#} Hz; the driver's {#} g moving mass on the post shifts it).":
   "{#} Hz, sobre todo el modo {#} (modo de placa libre en {#} Hz; la masa móvil de {#} g del excitador sobre el poste lo desplaza).",
 "Detuned by +{#} Hz; width f/Q = {#} Hz.":
   "Desafinado en +{#} Hz; ancho f/Q = {#} Hz.",
 "It is symmetric about both center lines and both diagonals.":
   "Es simétrico respecto a ambas líneas centrales y ambas diagonales.",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
+"3D: displacement exaggerated about {#}×, motion slowed from {#} Hz to one cycle per second.":
+  "3D: desplazamiento exagerado unas {#}×, movimiento ralentizado de {#} Hz a un ciclo por segundo.",
 "Chladni Plates":
   "Placas de Chladni",
 "<a>Beyond the textbook</a>":
@@ -28,12 +22,6 @@ VDI18N.add('es', 'demo/chladni', {
   "Excita una placa metálica delgada en una de sus frecuencias de resonancia y la arena espolvoreada sobre ella salta de las partes que se mueven y se asienta en las líneas que se quedan quietas. Barre la excitación, observa el pico de la respuesta en cada modo y compara una placa cuadrada con una circular. Cambia a un parche y escucha por qué un tambor no tiene una altura clara.",
 "f in Hz · λ² = ω ℓ² √(ρh/D) · |a| in g = {#} m/s²":
   "f en Hz · λ² = ω ℓ² √(ρh/D) · |a| en g = {#} m/s²",
-"Time controls":
-  "Controles de tiempo",
-"Run for a moment and pause again":
-  "Avanza un momento y vuelve a pausar",
-"Step":
-  "Paso",
 "Sand":
   "Arena",
 "Chladni plate seen from above with sand, and the frequency response below or beside it. Left and right arrows change the drive frequency by one cent (with Shift by ten), up and down jump to the next or previous resonance, S sprinkles fresh sand, Space pauses. Drag the brass drive post to move the drive point, and drag the red line on the response plot to set the frequency.":
@@ -46,8 +34,6 @@ VDI18N.add('es', 'demo/chladni', {
   "Excitada en el centro.",
 "The 3D view shows the surface moving.":
   "La vista 3D muestra la superficie en movimiento.",
-"Running.":
-  "En marcha.",
 "Drive frequency f = {#} Hz.":
   "Frecuencia de excitación f = {#} Hz.",
 "No resonance is near the drive.":
@@ -242,8 +228,6 @@ VDI18N.add('es', 'demo/chladni', {
   "modo {#}, en resonancia",
 "peak |a| = {#} g":
   "|a| pico = {#} g",
-"The top view shows sand collecting on the nodal lines.":
-  "La vista desde arriba muestra la arena juntándose en las líneas nodales.",
 "A loudspeaker under the head pushes on all of it at once with a uniform pressure p₀ (total force F₀ = p₀A). A mode answers only if the head moves on average in it: on a circle only the ({#}, m) modes, on a square only (odd, odd). Q = {#} gives each peak a width f/Q.":
   "Una bocina bajo el parche lo empuja todo a la vez con una presión uniforme p₀ (fuerza total F₀ = p₀A). Un modo responde solo si en él el parche se mueve en promedio: en un círculo solo los modos ({#}, m), en un cuadrado solo (impar, impar). Q = {#} da a cada pico un ancho f/Q.",
 "Set up the drumhead and drive":
@@ -268,12 +252,6 @@ VDI18N.add('es', 'demo/chladni', {
   "({#}, {#}) en {#} Hz, f/f₁ = {#} (√(m² + n²) = {#}). Desafinado en +{#} Hz; ancho f/Q = {#} Hz. {#} líneas nodales en un sentido y {#} en el otro, además del aro.",
 "A drumhead, square, {#} cm on a side: Mylar film {#} mm thick (chosen, a common head thickness; polyester film density {#} kg/m³), so σ = {#} g/m². Every frequency goes as √(T/σ) over the size, and the ratios between modes never change: √(m² + n²): √{#}, √{#}, √{#}, √{#}, …":
   "Un parche cuadrado de {#} cm de lado: película de Mylar de {#} mm de espesor (elegido, un espesor común de parche; densidad de la película de poliéster {#} kg/m³), así que σ = {#} g/m². Toda frecuencia va como √(T/σ) entre el tamaño, y las razones entre modos nunca cambian: √(m² + n²): √{#}, √{#}, √{#}, √{#}, …",
-"A square drumhead of Mylar film, tension {#} N/m.":
-  "Un parche cuadrado de película de Mylar, con tensión de {#} N/m.",
-"Driven by a loudspeaker under the head.":
-  "Excitado por una bocina debajo del parche.",
-"Nearest resonance ({#}, {#}) at {#} Hz.":
-  "Resonancia más cercana: ({#}, {#}) en {#} Hz.",
 "({#}, {#}) at {#} Hz, f/f₁ = {#} (j = {#}, a zero of J₀).":
   "({#}, {#}) en {#} Hz, f/f₁ = {#} (j = {#}, un cero de J₀).",
 "Detuned by −{#} Hz; width f/Q = {#} Hz.":
@@ -284,6 +262,14 @@ VDI18N.add('es', 'demo/chladni', {
   "({#}, {#}) en {#} Hz, f/f₁ = {#} (j = {#}, un cero de J₀). Desafinado en −{#} Hz; ancho f/Q = {#} Hz. {#} diámetros nodales y {#} círculos nodales además del aro.",
 "A drumhead, circle, {#} cm across: Mylar film {#} mm thick (chosen, a common head thickness; polyester film density {#} kg/m³), so σ = {#} g/m². Every frequency goes as √(T/σ) over the size, and the ratios between modes never change: the zeros j of the Bessel functions, {#}, {#}, {#}, {#}, …":
   "Un parche circular de {#} cm de diámetro: película de Mylar de {#} mm de espesor (elegido, un espesor común de parche; densidad de la película de poliéster {#} kg/m³), así que σ = {#} g/m². Toda frecuencia va como √(T/σ) entre el tamaño, y las razones entre modos nunca cambian: los ceros j de las funciones de Bessel, {#}, {#}, {#}, {#}, …",
+"A circular drumhead of Mylar film, tension {#} N/m.":
+  "Un parche circular de película de Mylar, con tensión de {#} N/m.",
+"Driven by a loudspeaker under the head.":
+  "Excitado por una bocina debajo del parche.",
+"Nearest resonance ({#}, {#}) at {#} Hz.":
+  "Resonancia más cercana: ({#}, {#}) en {#} Hz.",
+"The drive is outside the resonance width.":
+  "La frecuencia de excitación está fuera del ancho de la resonancia.",
 "({#}, {#}) at {#} Hz, f/f₁ = {#} (√(m² + n²) = {#}). Detuned by −{#} Hz; width f/Q = {#} Hz. {#} nodal diameters and {#} nodal circles besides the hoop.":
   "({#}, {#}) en {#} Hz, f/f₁ = {#} (√(m² + n²) = {#}). Desafinado en −{#} Hz; ancho f/Q = {#} Hz. {#} diámetros nodales y {#} círculos nodales además del aro.",
 "A drumhead, circle, {#} cm across: Mylar film {#} mm thick (chosen, a common head thickness; polyester film density {#} kg/m³), so σ = {#} g/m². Every frequency goes as √(T/σ) over the size, and the ratios between modes never change: √(m² + n²): √{#}, √{#}, √{#}, √{#}, …":
@@ -332,10 +318,6 @@ VDI18N.add('es', 'demo/chladni', {
   "{#} Hz, sobre todo el modo {#} (modo de placa libre en {#} Hz; la masa móvil de {#} g del excitador sobre el poste lo desplaza). Desafinado en −{#} Hz; ancho f/Q = {#} Hz. Es simétrico respecto a ambas líneas centrales y ambas diagonales.",
 "A higher resonance of the center driven square: nodal lines cross on the diagonals and loop around the corners. Patterns like this fill the plates in Chladni’s {#} book.":
   "Una resonancia más alta del cuadrado excitado en el centro: las líneas nodales se cruzan en las diagonales y forman lazos alrededor de las esquinas. Patrones como este llenan las láminas del libro de Chladni de {#}.",
-"{#} kHz, mostly mode {#} (free plate mode at {#} kHz; the driver's {#} g moving mass on the post shifts it).":
-  "{#} kHz, sobre todo el modo {#} (modo de placa libre en {#} kHz; la masa móvil de {#} g del excitador sobre el poste lo desplaza).",
-"{#} kHz, mostly mode {#} (free plate mode at {#} kHz; the driver's {#} g moving mass on the post shifts it). Detuned by +{#} Hz; width f/Q = {#} Hz. It is symmetric about both center lines and both diagonals.":
-  "{#} kHz, sobre todo el modo {#} (modo de placa libre en {#} kHz; la masa móvil de {#} g del excitador sobre el poste lo desplaza). Desafinado en +{#} Hz; ancho f/Q = {#} Hz. Es simétrico respecto a ambas líneas centrales y ambas diagonales.",
 "An ideal point force on a free plate. A mode is excited only if the drive point moves in it: a drive on a nodal line of a mode cannot pump it. Between resonances a free plate moves little, so the sand mostly stays put. Q = {#} gives each peak a width f/Q.":
   "Una fuerza puntual ideal sobre una placa libre. Un modo se excita solo si el punto de excitación se mueve en él: una excitación sobre una línea nodal de un modo no puede bombearlo. Entre resonancias una placa libre se mueve poco, así que la arena casi no se mueve. Q = {#} da a cada pico un ancho f/Q.",
 "Driven at the rim, the way Chladni bowed his plates: four nodal diameters and two nodal circles, at Q = {#} so that neighboring modes stay out. The drive point sits on an antinode at the rim, so no nodal diameter can pass through it.":
@@ -348,18 +330,10 @@ VDI18N.add('es', 'demo/chladni', {
   "Un parche de Mylar de {#} cm de diámetro, sujeto en su aro a {#} N/m, con una bocina debajo que empuja todo el parche a la vez. Solo los modos sin diámetros nodales, ({#}, m), se mueven en promedio, así que solo ellos responden, y la arena se junta en anillos. El borde mismo es un nodo. Las frecuencias van como los ceros de la función de Bessel J₀: {#}, {#}, {#}, …, no como {#}, {#}, {#}.",
 "({#}, {#}) at {#} Hz, f/f₁ = {#} (j = {#}, a zero of J₀). Detuned by +{#} Hz; width f/Q = {#} Hz. {#} nodal diameters and {#} nodal circles besides the hoop.":
   "({#}, {#}) en {#} Hz, f/f₁ = {#} (j = {#}, un cero de J₀). Desafinado en +{#} Hz; ancho f/Q = {#} Hz. {#} diámetros nodales y {#} círculos nodales además del aro.",
-"A circular drumhead of Mylar film, tension {#} N/m.":
-  "Un parche circular de película de Mylar, con tensión de {#} N/m.",
 "A pad {#} cm across pushes on the head with F₀ cos({#}πft), spread over the pad. A mode answers if the pad is not on one of its nodal lines. Q = {#} gives each peak a width f/Q.":
   "Un cojinete de {#} cm de ancho empuja el parche con F₀ cos({#}πft), repartida sobre el cojinete. Un modo responde si el cojinete no está sobre una de sus líneas nodales. Q = {#} da a cada pico un ancho f/Q.",
 "The same drumhead, now pushed by a small pad halfway out. Modes with nodal diameters answer too. Step through them with Next resonance and read f/f₁ for each: {#}, {#}, {#}, {#}, … An ideal membrane is not harmonic, which is why most drums give no clear pitch. (A timpani gets close to harmonic ratios for its ({#}, m) modes because the air in its kettle and around the head loads the membrane; that air is left out here.)":
   "El mismo parche, ahora empujado por un cojinete pequeño a medio camino hacia el borde. Los modos con diámetros nodales también responden. Recórrelos con Resonancia siguiente y lee f/f₁ para cada uno: {#}, {#}, {#}, {#}, … Una membrana ideal no es armónica, por eso la mayoría de los tambores no da una altura clara. (Un timbal se acerca a razones armónicas para sus modos ({#}, m) porque el aire de su caldera y alrededor del parche carga la membrana; ese aire se omite aquí.)",
-"({#}, {#}) at {#} Hz, f/f₁ = {#} (j = {#}, a zero of J₁).":
-  "({#}, {#}) en {#} Hz, f/f₁ = {#} (j = {#}, un cero de J₁).",
-"{#} nodal diameter and {#} nodal circles besides the hoop.":
-  "{#} diámetro nodal y {#} círculos nodales además del aro.",
-"({#}, {#}) at {#} Hz, f/f₁ = {#} (j = {#}, a zero of J₁). Detuned by +{#} Hz; width f/Q = {#} Hz. {#} nodal diameter and {#} nodal circles besides the hoop.":
-  "({#}, {#}) en {#} Hz, f/f₁ = {#} (j = {#}, un cero de J₁). Desafinado en +{#} Hz; ancho f/Q = {#} Hz. {#} diámetro nodal y {#} círculos nodales además del aro.",
 "A steel bar {#} cm long, {#} cm wide and {#} mm thick, free at both ends, tapped at one end with a point force. Its lowest bending mode has two nodes, {#}% of the length in from each end: that is where a xylophone bar rests on its cords. Step up with Next resonance: the overtones sit at {#}, {#} and {#} times the lowest, not at {#}, {#}, {#}, which is why a bar sounds like a bell and not like a string.":
   "Una barra de acero de {#} cm de largo, {#} cm de ancho y {#} mm de espesor, libre en ambos extremos, golpeada en un extremo con una fuerza puntual. Su modo de flexión más bajo tiene dos nodos, al {#}% de la longitud desde cada extremo: ahí es donde una barra de xilófono descansa sobre sus cuerdas. Sube con Resonancia siguiente: los sobretonos están en {#}, {#} y {#} veces el más bajo, no en {#}, {#}, {#}, por eso una barra suena como una campana y no como una cuerda.",
 "mode {#} at {#} Hz, λ² = {#}.":
@@ -380,32 +354,70 @@ VDI18N.add('es', 'demo/chladni', {
   "{#} Hz, sobre todo el modo {#} (modo de barra libre en {#} Hz; la masa móvil de {#} g del excitador sobre el poste lo desplaza). Desafinado en +{#} Hz; ancho f/Q = {#} Hz. {#} nodos a lo largo de la barra; f/f₁ = {#}, βL = {#}; simétrico respecto al centro.",
 "A bar, {#} mm thick.":
   "Una barra de {#} mm de espesor.",
-"Paused.":
-  "En pausa.",
 "Bar, {#} × {#} cm · steel {#} mm · free ends":
   "Barra, {#} × {#} cm · acero {#} mm · extremos libres",
+"The top view shows sand collecting on the nodal lines.":
+  "La vista desde arriba muestra la arena juntándose en las líneas nodales.",
+"A square drumhead of Mylar film, tension {#} N/m.":
+  "Un parche cuadrado de película de Mylar, con tensión de {#} N/m.",
 "Drive frequency f = {#} kHz.":
   "Frecuencia de excitación f = {#} kHz.",
-"The drive is outside the resonance width.":
-  "La frecuencia de excitación está fuera del ancho de la resonancia.",
+"Nearest resonance ({#}, {#}) at {#} kHz.":
+  "Resonancia más cercana: ({#}, {#}) en {#} kHz.",
+"The frequency is sweeping up.":
+  "La frecuencia está subiendo en barrido.",
+"{#} kHz, mostly mode {#} (free plate mode at {#} kHz; the driver's {#} g moving mass on the post shifts it).":
+  "{#} kHz, sobre todo el modo {#} (modo de placa libre en {#} kHz; la masa móvil de {#} g del excitador sobre el poste lo desplaza).",
+"{#} kHz, mostly mode {#} (free plate mode at {#} kHz; the driver's {#} g moving mass on the post shifts it). Detuned by +{#} Hz; width f/Q = {#} Hz. It is symmetric about both center lines and both diagonals.":
+  "{#} kHz, sobre todo el modo {#} (modo de placa libre en {#} kHz; la masa móvil de {#} g del excitador sobre el poste lo desplaza). Desafinado en +{#} Hz; ancho f/Q = {#} Hz. Es simétrico respecto a ambas líneas centrales y ambas diagonales.",
+"Nearest resonance mode {#} at {#} kHz.":
+  "Resonancia más cercana: modo {#} en {#} kHz.",
 "Driven at the edge.":
   "Excitada en el borde.",
+"({#}, {#}) at {#} Hz, f/f₁ = {#} (j = {#}, a zero of J₁).":
+  "({#}, {#}) en {#} Hz, f/f₁ = {#} (j = {#}, un cero de J₁).",
+"{#} nodal diameter and {#} nodal circles besides the hoop.":
+  "{#} diámetro nodal y {#} círculos nodales además del aro.",
+"({#}, {#}) at {#} Hz, f/f₁ = {#} (j = {#}, a zero of J₁). Detuned by +{#} Hz; width f/Q = {#} Hz. {#} nodal diameter and {#} nodal circles besides the hoop.":
+  "({#}, {#}) en {#} Hz, f/f₁ = {#} (j = {#}, un cero de J₁). Desafinado en +{#} Hz; ancho f/Q = {#} Hz. {#} diámetro nodal y {#} círculos nodales además del aro.",
 "Drumhead · T = {#} N/m":
   "Parche · T = {#} N/m",
+"{#} nodes along the bar; f/f₁ = {#}, βL = {#}; antisymmetric about the middle.":
+  "{#} nodos a lo largo de la barra; f/f₁ = {#}, βL = {#}; antisimétrico respecto al centro.",
+"mode {#} at {#} Hz, λ² = {#}. Detuned by +{#} Hz; width f/Q = {#} Hz. {#} nodes along the bar; f/f₁ = {#}, βL = {#}; antisymmetric about the middle.":
+  "modo {#} en {#} Hz, λ² = {#}. Desafinado en +{#} Hz; ancho f/Q = {#} Hz. {#} nodos a lo largo de la barra; f/f₁ = {#}, βL = {#}; antisimétrico respecto al centro.",
+"mode {#} at {#} kHz, λ² = {#}.":
+  "modo {#} en {#} kHz, λ² = {#}.",
+"mode {#} at {#} kHz, λ² = {#}. Detuned by +{#} Hz; width f/Q = {#} Hz. {#} nodes along the bar; f/f₁ = {#}, βL = {#}; symmetric about the middle.":
+  "modo {#} en {#} kHz, λ² = {#}. Desafinado en +{#} Hz; ancho f/Q = {#} Hz. {#} nodos a lo largo de la barra; f/f₁ = {#}, βL = {#}; simétrico respecto al centro.",
+"{#} kHz, mostly mode {#} (free bar mode at {#} kHz; the driver's {#} g moving mass on the post shifts it).":
+  "{#} kHz, sobre todo el modo {#} (modo de barra libre en {#} kHz; la masa móvil de {#} g del excitador sobre el poste lo desplaza).",
+"{#} kHz, mostly mode {#} (free bar mode at {#} kHz; the driver's {#} g moving mass on the post shifts it). Detuned by +{#} Hz; width f/Q = {#} Hz. {#} nodes along the bar; f/f₁ = {#}, βL = {#}; symmetric about the middle.":
+  "{#} kHz, sobre todo el modo {#} (modo de barra libre en {#} kHz; la masa móvil de {#} g del excitador sobre el poste lo desplaza). Desafinado en +{#} Hz; ancho f/Q = {#} Hz. {#} nodos a lo largo de la barra; f/f₁ = {#}, βL = {#}; simétrico respecto al centro.",
+"Describe the picture":
+  "Describir la imagen",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
+"Time controls":
+  "Controles de tiempo",
+"Run for a moment and pause again":
+  "Avanza un momento y vuelve a pausar",
+"Step":
+  "Paso",
+"Running.":
+  "En marcha.",
+"Paused.":
+  "En pausa.",
 "Sprinkle fresh sand":
   "Espolvorear arena nueva",
 "Close":
   "Cerrar",
 "Playing.":
   "En reproducción.",
-"Nearest resonance mode {#} at {#} kHz.":
-  "Resonancia más cercana: modo {#} en {#} kHz.",
-"Nearest resonance ({#}, {#}) at {#} kHz.":
-  "Resonancia más cercana: ({#}, {#}) en {#} kHz.",
 "Lowest mode at {#} kHz.":
   "Modo más bajo en {#} kHz.",
 "The material is aluminum.":
-  "El material es aluminio.",
-"The frequency is sweeping up.":
-  "La frecuencia está subiendo en barrido."
+  "El material es aluminio."
 });

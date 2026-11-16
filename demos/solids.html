@@ -532,7 +532,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         if (I && I.raw) I.raw(two); else two();
       } else lab(c, foot, 14 * p, H - 14 * p, { s: fs }); }
     if (!narrow) { const mx = W - 162 * p, mw = 130 * p, mh = 28 * p;
-      lcdBox(c, mx, 26 * p, mw, mh, f(crAlphaNow(), 4), crMethod() === 'cube' ? `alpha summed, m = ${S.cr.m}` : `alpha summed, ${S.cr.K} shells`);
+      lcdBox(c, mx, 26 * p, mw, mh, f(crAlphaNow(), 4), crMethod() === 'cube' ? `alpha summed, m = ${S.cr.m}` : `alpha summed, ${S.cr.K} shell${S.cr.K === 1 ? '' : 's'}`);
       lcdBox(c, mx, 92 * p, mw, mh, `${f(s.r0, 4)} nm`, 'nearest neighbor r0');
       lcdBox(c, mx, 158 * p, mw, mh, `${s.n}`, 'Born exponent n');
       lab(c, 'drag to turn · scroll to zoom', mx + mw / 2, 230 * p, { a: 'center', s: 9.5 * p }); }
@@ -682,7 +682,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // ---------- Doping ----------
   const dpND = () => (S.dp.mat === 'Si' && S.dp.nd > 11 ? Math.pow(10, S.dp.nd) : 0), dpNA = () => (S.dp.mat === 'Si' && S.dp.na > 11 ? Math.pow(10, S.dp.na) : 0);
   const dpRun = (TT) => carriers(S.dp.mat, TT == null ? S.dp.T : TT, dpND(), dpNA(), DONORS[S.dp.don], ACCEPTORS[S.dp.acc]);
-  const dpSample = () => { const nd = dpND(), na = dpNA(); return [S.dp.mat, nd ? `${S.dp.don} ${ex(nd, 2)} cm⁻³` : '', na ? `${S.dp.acc} ${ex(na, 2)} cm⁻³` : ''].filter(Boolean).join(', ') + (nd || na ? '' : ', undoped'); };
+  const dpSample = () => { const nd = dpND(), na = dpNA(); return [S.dp.mat, nd ? `${S.dp.don} ${sci(nd, 2)} cm⁻³` : '', na ? `${S.dp.acc} ${sci(na, 2)} cm⁻³` : ''].filter(Boolean).join(', ') + (nd || na ? '' : ', undoped'); };
   function drawDp() {
     const c = ctx, p = proj(), narrow = W < 560, r = dpRun(), nd = dpND(), na = dpNA();
     const by = Math.round(H * 0.9);
@@ -875,7 +875,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     let o = '';
     if (S.view === 'cr') { const s = crSalt(), a = ALPHA[s.st], U = latticeU(a, s.r0, s.n);
       o = dd('Salt', `${s.name}, ${s.st === 'rs' ? 'NaCl' : 'CsCl'} structure`) + dd('Nearest neighbor distance r₀', `${f(s.r0, 4)} nm`) + dd('Born exponent n', `${s.n} (${ION[s.cat]} and ${ION[s.an]} cores)`)
-        + dd(crMethod() === 'cube' ? `α summed, cube m = ${S.cr.m}` : `α summed, ${S.cr.K} shells`, f(crAlphaNow(), 4)) + dd('Madelung constant α (Ewald sum)', f(a, 4))
+        + dd(crMethod() === 'cube' ? `α summed, cube m = ${S.cr.m}` : `α summed, ${S.cr.K} shell${S.cr.K === 1 ? '' : 's'}`, f(crAlphaNow(), 4)) + dd('Madelung constant α (Ewald sum)', f(a, 4))
         + dd('Lattice energy, Table 9.2', `${s.U} kJ/mol = ${f(s.U / KJMOL_PER_EV, 3)} eV per ion pair`)
         + dd('Calculated α ke²/r₀ (1 − 1/n)', S.blind ? hide : `${f(U, 3)} eV = ${f(U * KJMOL_PER_EV, 0)} kJ/mol`) + dd('Calculated against table', S.blind ? hide : `${f(100 * (U * KJMOL_PER_EV / s.U - 1), 1)} %`); }
     else if (S.view === 'bd' && S.bd.model === 'kp') { const K = kpNow(), { k, B, a, E } = K, bd = B[k.n - 1], nx = B[k.n], kk = k.s * Math.PI / a;

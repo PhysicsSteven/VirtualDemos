@@ -717,7 +717,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (air) {
       const fmtG = (q) => `${q[0]} ${typeof q[1] === 'number' ? q[1].toLocaleString('en-US') : q[1]} ${q[2]}`;
       h += dd(`${S.body}'s air (NASA)`, `${air.p >= 1 ? `${sig(air.p, 3)} bar` : `${sig(air.p * 1000, 3)} mbar`} at the surface: ${air.gases.map(fmtG).join(', ')}`, 'wide note')
-        + dd('CO₂ above each square meter', `${Math.round(co2Column(S.body === 'Earth' && S.co2On ? Object.assign({}, air, { co2: S.co2 * 1e-6 }) : air)).toLocaleString('en-US')} kg (Earth today: ${fx(co2Column(AIR.Earth), 1)} kg)`, 'wide note');
+        + dd('CO₂ above each square meter', `${((c) => (c < 100 ? fx(c, 1) : Math.round(c).toLocaleString('en-US')))(co2Column(S.body === 'Earth' && S.co2On ? Object.assign({}, air, { co2: S.co2 * 1e-6 }) : air))} kg (Earth today: ${fx(co2Column(AIR.Earth), 1)} kg)`, 'wide note');
     }
     if (S.body === 'Earth' && S.gh && S.co2On) {
       const F = co2Forcing(S.co2, CO2_NOW), dT = st.ts - tSurf(S.L, S.d, S.a, eEarth(), S.sp);

@@ -269,6 +269,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       photon: g('--photon'), layer: g('--layer'), det: g('--det'), target: g('--target'), grid: g('--grid'), mono: g('--font-mono'), ui: g('--font-ui') }; }
   const dark = () => window.VDGear.dark();
   const M = () => V.mat(S.m);
+  /* a medium's name inside a sentence: lowercase its first letter only, so "Compact bone (ICRU)" reads "compact bone (ICRU)" and PMMA stays PMMA */
+  const lcName = (s) => (/^[A-Z][a-z]/.test(s) ? s[0].toLowerCase() + s.slice(1) : s);
   const lay = () => (S.m === 'water' ? [] : [{ m: S.m, t: 60 }]);
   /* the deepest and shallowest depths a target can have in this medium: the Proteus ONE energies, 70 to 230 MeV */
   const rLo = () => V.range(70, S.m) / M().rho, rHi = () => V.range(230, S.m) / M().rho;
@@ -284,7 +286,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       if (S.view === 'compare') S.m = 'water';
       S.zp = Math.max(rLo(), Math.min(S.zp, S.zd - 1)); S.zd = Math.min(rHi() - 0.5, Math.max(S.zd, S.zp + 1));
       S.zmax = S.view === 'compare' ? Math.min(40, Math.max(25, Math.ceil(S.zd * 1.45))) : Math.max(8, Math.ceil(S.zd * 1.25 + 1));
-      const list = layerList(V, { m: S.m, zp: S.zp, zd: S.zd, step: S.step }), dz = S.zmax / 600;
+      /* the same depth grid in both views, so one target gives the same weights and readouts in Spread out peak and Protons and photons */
+      const list = layerList(V, { m: S.m, zp: S.zp, zd: S.zd, step: S.step }), dz = Math.max(8, Math.ceil(S.zd * 1.25 + 1)) / 600;
       const C = list.map((l) => V.dose({ T: l.E, layers: lay(), spread: S.sp / 100, dz, zmax: S.zmax, ns: 64 }));
       const z = C[0].z, sw = sobpWeights(C.map((c) => c.d), z, S.zp, S.zd, S.wmode, 3000);
       S.L = list.map((l, k) => ({ R: l.R, E: l.E, w: sw.w[k], d: C[k].d }));
@@ -447,11 +450,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     pctx.textAlign = 'left'; pctx.textBaseline = 'middle'; pctx.font = `${11 * p}px ${T.ui}`; let lx = L + 6 * p; const ly = top - 13 * p;
     /* the setup card can hang over the graph's top right on a wide screen: the legend stops short of it, with the short names when the long ones do not fit (student view, 2026-11-15) */
     const cr = $('setupCard').getBoundingClientRect(), gr = $('plot').getBoundingClientRect(), over = innerWidth > 820 && cr.height > 0 && cr.bottom > gr.top + ly && cr.left < gr.right, lim = over ? cr.left - gr.left - 6 * p : PW;
-    const fullTxt = S.view === 'pristine' ? [`protons, ${sig(S.e, 4)} MeV, ${M().name.toLowerCase()}`] : [`protons, ${S.L.length} energy layers`].concat(S.layers ? ['each layer, weighted'] : [], S.view === 'compare' ? ['6 MV photons (fit)', 'measured (Chowdhury 2024)'] : []);
+    const fullTxt = S.view === 'pristine' ? [`protons, ${sig(S.e, 4)} MeV, ${lcName(M().name)}`] : [`protons, ${S.L.length} energy layers`].concat(S.layers ? ['each layer, weighted'] : [], S.view === 'compare' ? ['6 MV photons (fit)', 'measured (Chowdhury 2024)'] : []);
     const narrow = PW < 560 || lx + fullTxt.reduce((a, t) => a + 36 * p + pctx.measureText(t).width, 0) > lim;
     const key = (col, dash, txt, dot) => { if (lx + 60 * p > lim) return; pctx.strokeStyle = col; pctx.lineWidth = 2 * p; pctx.setLineDash(dash || []); pctx.beginPath(); pctx.moveTo(lx, ly); pctx.lineTo(lx + 18 * p, ly); pctx.stroke(); pctx.setLineDash([]);
       if (dot) { pctx.fillStyle = col; pctx.beginPath(); pctx.arc(lx + 9 * p, ly, 3.5 * p, 0, 7); pctx.fill(); } pctx.fillStyle = T.ink; pctx.fillText(txt, lx + 22 * p, ly); lx += 22 * p + pctx.measureText(txt).width + 14 * p; };
-    key(T.proton, null, S.view === 'pristine' ? (narrow ? 'protons' : `protons, ${sig(S.e, 4)} MeV, ${M().name.toLowerCase()}`) : (narrow ? 'protons' : `protons, ${S.L.length} energy layers`));
+    key(T.proton, null, S.view === 'pristine' ? (narrow ? 'protons' : `protons, ${sig(S.e, 4)} MeV, ${lcName(M().name)}`) : (narrow ? 'protons' : `protons, ${S.L.length} energy layers`));
     if (S.view !== 'pristine' && S.layers) key(T.layer, null, narrow ? 'layers' : 'each layer, weighted');
     if (S.view === 'compare') { key(T.photon, [7 * p, 4 * p], narrow ? '6 MV' : '6 MV photons (fit)'); key(T.photon, null, narrow ? 'measured' : 'measured (Chowdhury 2024)', true); }
   }
@@ -473,7 +476,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     let h = '';
     if (S.view === 'why') {
       const q = W3.st, w = q.w, k = kickAt(0.3, w.beta, 1), k0 = kickAt(0.3, q.b0, 1);
-      h += dd('Proton', `${sig(S.e, 4)} MeV into ${M().name.toLowerCase()}`, true);
+      h += dd('Proton', `${sig(S.e, 4)} MeV into ${lcName(M().name)}`, true);
       h += dd('Depth', lenTxt(q.z)) + dd('Energy left', q.end ? `${f(q.T * 1000, 0)} keV` : `${sig(q.T, 4)} MeV`);
       h += dd('Speed v/c', f(w.beta, w.beta < 0.1 ? 4 : 3)) + dd('Reach b_max = γv/ω', `${sig(w.bmax, 3)} nm`);
       h += dd('Kick on an electron 0.3 nm away', `${sig(k.dpc * 1e6, 3)} eV/c, ${f(k.dpc / k0.dpc, 1)} × the entrance's`, true);
@@ -482,7 +485,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         : dd('Energy lost per cm (Bethe)', `${sig(w.Sl, 4)} MeV/cm`) + dd('Bethe\'s log L', f(w.L, 2));
     } else if (S.view === 'pristine') {
       const q = pristineFacts(), Mm = M();
-      h += dd('Beam', `protons, ${sig(S.e, 4)} MeV, in ${Mm.name.toLowerCase()}`, true);
+      h += dd('Beam', `protons, ${sig(S.e, 4)} MeV, in ${lcName(Mm.name)}`, true);
       h += B('CSDA range', lenTxt(V.range(S.e, S.m) / Mm.rho)) + B('Depth of 80 % (distal), R80', lenTxt(q.R80));
       h += B('Peak depth', lenTxt(q.peak)) + B('Peak to entrance dose', f(q.pe, 2));
       h += B('Distal falloff, R80 − R20', lenTxt(q.R20 - q.R80)) + B('Water equivalent depth of R80', lenTxt(q.R80 * V.range(S.e, 'water') / (V.range(S.e, S.m) / Mm.rho)));
@@ -838,7 +841,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const Mm = M(), out = [];
     if (S.view === 'why') {
       const q = W3.st, w = q.w;
-      out.push(`One proton of ${sig(S.e, 4)} MeV enters ${Mm.name.toLowerCase()} and slows down.`);
+      out.push(`One proton of ${sig(S.e, 4)} MeV enters ${lcName(Mm.name)} and slows down.`);
       out.push(S.run ? 'The proton is moving.' : S.wu >= 1 ? 'The proton has stopped.' : S.wu > 0 ? 'Paused.' : 'No proton sent yet.');
       out.push(`Depth ${lenTxt(q.z)}.`);
       out.push(`Energy left ${q.end ? f(q.T * 1000, 0) + ' keV' : sig(q.T, 4) + ' MeV'}.`);
@@ -847,13 +850,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     if (S.view === 'pristine') {
       const q = pristineFacts();
-      out.push(`A beam of ${sig(S.e, 4)} MeV protons enters ${Mm.name.toLowerCase()}, and the graph shows the dose against depth as a percent of the peak.`);
+      out.push(`A beam of ${sig(S.e, 4)} MeV protons enters ${lcName(Mm.name)}, and the graph shows the dose against depth as a percent of the peak.`);
       out.push(S.blind ? 'The range, peak depth and falloff are hidden.' : `The dose peaks at a depth of ${lenTxt(q.peak)}, and falls to 80 percent at ${lenTxt(q.R80)}.`);
       if (!S.blind) out.push(`The peak is ${f(q.pe, 2)} times the entrance dose.`);
       out.push(S.blind ? 'The dose at the detector is hidden.' : `At the detector, ${lenTxt(S.z)} deep, the dose is ${f(detDose(S.D), 1)} percent of the peak.`);
     } else {
       const q = sobpFacts(), cmp = S.view === 'compare';
-      out.push(`A spread out peak of ${S.L.length} proton energy layers in ${Mm.name.toLowerCase()}, with the target from ${lenTxt(S.zp)} to ${lenTxt(S.zd)} deep.`);
+      out.push(`A spread out peak of ${S.L.length} proton energy layers in ${lcName(Mm.name)}, with the target from ${lenTxt(S.zp)} to ${lenTxt(S.zd)} deep.`);
       if (cmp) out.push(S.show === 'photons' ? 'The phantom shows the 6 MV photon beam.' : 'The phantom shows the proton beam.');
       out.push(S.blind ? 'The dose values are hidden.' : `The dose in the target runs from ${f(100 * q.mn, 1)} to ${f(100 * q.mx, 1)} percent of its mean.`);
       if (!S.blind) out.push(`The entrance dose is ${f(100 * q.ent, 1)} percent.`);

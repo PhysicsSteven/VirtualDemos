@@ -606,7 +606,7 @@
       else {
         h += dd('Spin about the vertical, Ω sin λ', S.spin ? `${f(Fo.Oz, 5)} rad/s` : `${(Fo.Oz * 1e5).toFixed(5).replace('-', '−')} × 10⁻⁵ rad/s`);
         h += dd('The plane turns', Math.abs(Math.sin(lat)) < 1e-9 ? 'not at all' : `${f(Math.abs(rfDegPerHour(lat, sp)), 2)}° per hour, ${S.lat > 0 ? 'clockwise' : 'counterclockwise'}`);
-        h += dd('Once round in', isFinite(tt) ? `${fmtT(tt)} (${f(tt / 3600, 2)} h)` : 'never');
+        h += dd('Once round in', isFinite(tt) ? (tt >= 7200 && tt < 86400 * 3 ? fmtT(tt) : `${fmtT(tt)} (${f(tt / 3600, 2)} h)`) : 'never');   /* no hours in brackets when fmtT already gives hours */
       }
       h += dd('Time elapsed', fmtT(S.t)) + dd('Swings so far', f(S.t / Fo.period, 0));
       if (!S.blind) h += dd('Plane turned, measured', `${f(Math.abs(turned) / DEG, 2)}°`);

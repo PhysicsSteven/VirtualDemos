@@ -296,6 +296,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   let W = 0, H = 0, PW = 0, PH = 0, dpr = 1, T = null;
   const f = (v, d = 3) => (!isFinite(v) ? '—' : v.toFixed(d).replace('-', '−'));
   const sig = (v, n = 3) => { if (!isFinite(v)) return '—'; if (v === 0) return '0'; const a = Math.abs(v); if (a >= 1e5 || a < 1e-3) { const e = Math.floor(Math.log10(a)), m = v / Math.pow(10, e); return `${(+m.toPrecision(n)).toString()} × 10${String(e).replace('-', '⁻').replace(/\d/g, (c) => '⁰¹²³⁴⁵⁶⁷⁸⁹'[c])}`; } return (+v.toPrecision(n)).toString(); };
+  /* sig for the page's own text: keeps trailing zeros (3.60, not 3.6) and writes thousands with commas (4,120); readings keep sig */
+  const sigd = (v, n = 3) => { const s = sig(v, n); if (!/^-?\d+(\.\d+)?$/.test(s) || +s === 0) return s; const a = Math.abs(+s), d = Math.max(0, n - 1 - Math.floor(Math.log10(a)));
+    const t = (+s).toFixed(d).split('.'); return t[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',') + (t[1] ? '.' + t[1] : ''); };
   function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
     T = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), accent: g('--accent'), ray: g('--ray'), pass: g('--pass'), fail: g('--fail'),
       lead: g('--lead'), concrete: g('--conc'), steel: g('--steel'), gypsum: g('--gyp'), bpe: g('--bpe'), grid: g('--grid'), mono: g('--font-mono'), ui: g('--font-ui') }; }
@@ -389,7 +392,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   function labelText() {
     if (!R) return '';
-    if (S.view === 'linac' && S.bar === 'door') return `door: ${f(S.bpe, 1)} cm polyethylene + ${f(S.pb, 1)} cm lead → ${sig(R.H * 1000, 3)} µSv/week (goal ${sig(R.goal * 1000, 3)})`;
+    if (S.view === 'linac' && S.bar === 'door') return `door: ${f(S.bpe, 1)} cm polyethylene + ${f(S.pb, 1)} cm lead → ${sigd(R.H * 1000, 3)} µSv/week (goal ${sigd(R.goal * 1000, 3)})`;
     const m = S.view === 'proton' ? 'concrete' : S.mat, x = thick(m), u = S.view === 'ct' ? 'mm' : 'cm';
     return `${MAT_NAME[m]}: ${x >= 100 && u === 'cm' ? `${f(x / 100, 2)} m` : `${f(x, S.view === 'ct' ? 2 : 1)} ${u}`}`;
   }
@@ -501,7 +504,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     c.save(); c.translate(L - 44 * p, (top + bot) / 2); c.rotate(-Math.PI / 2); c.textBaseline = 'middle'; c.fillText('transmission', 0, 0); c.restore();
     /* the transmission the wall needs */
     c.strokeStyle = T.fail; c.setLineDash([6 * p, 4 * p]); c.lineWidth = 1.5 * p; c.beginPath(); c.moveTo(L, Y(R.B)); c.lineTo(Rr, Y(R.B)); c.stroke(); c.setLineDash([]);
-    c.fillStyle = T.fail; c.textAlign = 'right'; c.textBaseline = 'bottom'; c.font = `${10.5 * p}px ${T.ui}`; c.fillText(`needed: B = ${sig(R.B, 3)}`, Rr, Y(R.B) - 3 * p);
+    c.fillStyle = T.fail; c.textAlign = 'right'; c.textBaseline = 'bottom'; c.font = `${10.5 * p}px ${T.ui}`; c.fillText(`needed: B = ${sigd(R.B, 3)}`, Rr, Y(R.B) - 3 * p);
     for (const m of shown) { c.strokeStyle = MATC(m); c.lineWidth = (m === S.mat ? 3 : 2) * p; c.beginPath(); let first = true;
       for (let i = 0; i <= 200; i++) { const xv = xmax * i / 200, th = byMass ? xv / (RHO[m] * (unit === 'mm' ? 1 : 10)) : xv, b = trans(m, th); if (!(b > 0)) break; const yy = Y(Math.max(b, Math.pow(10, ylo))); if (first) { c.moveTo(X(xv), yy); first = false; } else c.lineTo(X(xv), yy); if (b < Math.pow(10, ylo)) break; }
       c.stroke(); const xr = byMass ? toM(m, thick(m)) : thick(m); if (isFinite(xr)) { c.fillStyle = MATC(m); c.beginPath(); c.arc(X(xr), Y(R.B), 5 * p, 0, 7); c.fill(); } }
@@ -524,7 +527,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const line = (k, col, dash) => { c.strokeStyle = col; c.lineWidth = 2.5 * p; c.setLineDash(dash || []); c.beginPath(); pts.forEach((q, i) => { const y = Y(Math.max(q[k], Math.pow(10, ylo))); i ? c.lineTo(X(q[0]), y) : c.moveTo(X(q[0]), y); }); c.stroke(); c.setLineDash([]); };
     line(1, T.bpe); line(2, T.ray);
     c.strokeStyle = T.fail; c.setLineDash([6 * p, 4 * p]); c.lineWidth = 1.5 * p; c.beginPath(); c.moveTo(L, Y(goal)); c.lineTo(Rr, Y(goal)); c.stroke(); c.setLineDash([]);
-    c.fillStyle = T.fail; c.textAlign = 'right'; c.textBaseline = 'bottom'; c.font = `${10.5 * p}px ${T.ui}`; c.fillText(`goal P/T = ${sig(goal, 3)} mSv`, Rr, Y(goal) - 3 * p);
+    c.fillStyle = T.fail; c.textAlign = 'right'; c.textBaseline = 'bottom'; c.font = `${10.5 * p}px ${T.ui}`; c.fillText(`goal P/T = ${sigd(goal, 3)} mSv`, Rr, Y(goal) - 3 * p);
     c.strokeStyle = T.muted; c.setLineDash([3 * p, 3 * p]); c.beginPath(); c.moveTo(X(S.d2), top); c.lineTo(X(S.d2), bot); c.stroke(); c.setLineDash([]);
     c.fillStyle = T.ink; c.textAlign = 'left'; c.textBaseline = 'middle'; c.font = `${10.5 * p}px ${T.ui}`;
     c.fillStyle = T.bpe; c.fillRect(L + 8 * p, top - 16 * p, 14 * p, 4 * p); c.fillStyle = T.ink; c.fillText('neutrons, no door', L + 26 * p, top - 14 * p);
@@ -536,31 +539,31 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   /* ---------- readouts ---------- */
   const pf = (ok) => `<span class="${ok ? 'pass' : 'fail'}">${ok ? 'meets the goal' : 'over the goal'}</span>`;
   function thickTxt(m) { const x = thick(m), u = S.view === 'ct' ? 'mm' : 'cm'; if (!isFinite(x)) return '—'; const kg = RHO[m] ? RHO[m] * x * (u === 'mm' ? 1 : 10) : NaN;
-    return `${u === 'mm' ? f(x, 2) : f(x, 1)} ${u}` + (isFinite(kg) ? ` (${sig(kg, 3)} kg/m²)` : ''); }
+    return `${u === 'mm' ? f(x, 2) : f(x, 1)} ${u}` + (isFinite(kg) ? ` (${sigd(kg, 3)} kg/m²)` : ''); }
   function readouts() {
     const dd = (a, b, wide) => `<div${wide ? ' class="wide"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`; let h = '';
     if (!R) { $('out').innerHTML = ''; return; }
     if (S.view === 'ct') {
       h += dd('Scatter air kerma at 1 m, a week', `${f(R.K1, 1)} mGy (body ${f(R.Kbody, 1)}, head ${f(R.Khead, 1)})`, true);
-      h += dd(`At the point (${f(R.d, 2)} m), no wall`, `${f(R.K, 2)} mGy a week`) + dd('Goal P/T', `${sig(S.P / S.T, 3)} mGy a week`);
-      h += dd('Transmission needed, B', sig(R.B, 3), true);
+      h += dd(`At the point (${f(R.d, 2)} m), no wall`, `${f(R.K, 2)} mGy a week`) + dd('Goal P/T', `${sigd(S.P / S.T, 3)} mGy a week`);
+      h += dd('Transmission needed, B', sigd(R.B, 3), true);
       for (const m of ROOM_MATS.ct) h += dd(`Thickness of ${MAT_NAME[m]}`, thickTxt(m), true);
     } else if (S.view === 'proton') {
-      h += dd('Protons a week at the patient', `${sig(R.N, 3)} (0.49 nA)`, true);
-      h += dd(`Forward dose at ${f(R.r, 2)} m, fit at zero wall`, `${sig(R.H, 3)} mSv a week`, true) + dd('Goal P/T', `${sig(S.P / S.T, 3)} mSv a week`) + dd('Transmission, B', sig(R.B, 3));
+      h += dd('Protons a week at the patient', `${sigd(R.N, 3)} (0.49 nA)`, true);
+      h += dd(`Forward dose at ${f(R.r, 2)} m, fit at zero wall`, `${sigd(R.H, 3)} mSv a week`, true) + dd('Goal P/T', `${sigd(S.P / S.T, 3)} mSv a week`) + dd('Transmission, B', sigd(R.B, 3));
       h += dd('Concrete needed', thickTxt('concrete'), true);
       h += dd('Lost before the room, mostly in the degrader', `${f(R.lost * 1e9, 2)} nA, ${f(R.lost / PRO.I, 0)} times the treatment beam`, true);
     } else if (S.bar === 'door') {
       if (S.mv !== 18) h += dd('Maze door', 'neutrons are made above 10 MV; this demo computes the door at 18 MV only (choose 18 MV)', true);
-      else { h += dd('Neutron fluence at the maze entrance', `${sig(R.phi, 3)} per m² per Gy`, true);
-        h += dd('At the door, no shielding', `neutrons ${sig(R.Hn, 3)}, capture gammas ${sig(R.Hg, 3)} mSv a week`, true);
-        h += dd('Behind the door', `neutrons ${sig(R.Hn1, 3)}, capture gammas ${sig(R.Hg1, 3)} mSv a week`, true);
-        h += dd('Total, against the goal', `${sig(R.H, 3)} mSv, goal ${sig(R.goal, 3)} mSv ${pf(R.ok)}`, true);
+      else { h += dd('Neutron fluence at the maze entrance', `${sigd(R.phi, 3)} per m² per Gy`, true);
+        h += dd('At the door, no shielding', `neutrons ${sigd(R.Hn, 3)}, capture gammas ${sigd(R.Hg, 3)} mSv a week`, true);
+        h += dd('Behind the door', `neutrons ${sigd(R.Hn1, 3)}, capture gammas ${sigd(R.Hg1, 3)} mSv a week`, true);
+        h += dd('Total, against the goal', `${sigd(R.H, 3)} mSv, goal ${sigd(R.goal, 3)} mSv ${pf(R.ok)}`, true);
         h += dd('With no maze, a secondary wall in its place (head leakage)', `${f(R.wall.x.concrete, 1)} cm of concrete, or ${f(R.wall.x.lead, 1)} cm of lead`, true); }
     } else {
-      h += dd(S.bar === 'pri' ? `Primary beam at ${f(R.d, 2)} m, no wall` : `Head leakage at ${f(R.d, 2)} m, no wall`, `${sig(R.H, 3)} mSv a week`, true);
-      if (S.bar === 'sec') h += dd('Leakage workload (IMRT counted)', `${f(R.WL, 0)} Gy a week`, true);
-      h += dd('Goal P/T', `${sig(S.P / S.T, 3)} mSv a week`) + dd('Transmission, B', sig(R.B, 3));
+      h += dd(S.bar === 'pri' ? `Primary beam at ${f(R.d, 2)} m, no wall` : `Head leakage at ${f(R.d, 2)} m, no wall`, `${sigd(R.H, 3)} mSv a week`, true);
+      if (S.bar === 'sec') h += dd('Leakage workload (IMRT counted)', `${f(R.WL, 0).replace(/\B(?=(\d{3})+(?!\d))/g, ',')} Gy a week`, true);
+      h += dd('Goal P/T', `${sigd(S.P / S.T, 3)} mSv a week`) + dd('Transmission, B', sigd(R.B, 3));
       for (const m of ROOM_MATS.linac) h += dd(`Thickness of ${MAT_NAME[m]}`, thickTxt(m), true);
     }
     $('out').innerHTML = h;
@@ -568,8 +571,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function sync() {
     const v = S.view, lin = v === 'linac', door = lin && S.bar === 'door';
     const set = (id, val, txt) => { $('s' + id).value = val; $('o' + id).textContent = txt; };
-    set('Nb', S.nBody, String(S.nBody)); set('Nh', S.nHead, String(S.nHead)); set('Db', S.dlpBody, `${S.dlpBody} mGy cm`); set('Dh', S.dlpHead, `${S.dlpHead} mGy cm`); set('Cf', S.contrast * 100, `${f(S.contrast * 100, 0)} %`);
-    set('W', S.W, `${S.W} Gy/week`); set('Fi', S.fI * 100, `${f(S.fI * 100, 0)} %`); set('U', S.U, f(S.U, 2)); set('D2', S.d2, `${f(S.d2, 1)} m`); set('Bp', S.bpe, `${f(S.bpe, 1)} cm`); set('Pb', S.pb, `${f(S.pb, 1)} cm`);
+    set('Nb', S.nBody, String(S.nBody)); set('Nh', S.nHead, String(S.nHead)); set('Db', S.dlpBody, `${String(S.dlpBody).replace(/\B(?=(\d{3})+(?!\d))/g, ',')} mGy cm`); set('Dh', S.dlpHead, `${String(S.dlpHead).replace(/\B(?=(\d{3})+(?!\d))/g, ',')} mGy cm`); set('Cf', S.contrast * 100, `${f(S.contrast * 100, 0)} %`);
+    set('W', S.W, `${String(S.W).replace(/\B(?=(\d{3})+(?!\d))/g, ',')} Gy/week`); set('Fi', S.fI * 100, `${f(S.fI * 100, 0)} %`); set('U', S.U, f(S.U, 2)); set('D2', S.d2, `${f(S.d2, 1)} m`); set('Bp', S.bpe, `${f(S.bpe, 1)} cm`); set('Pb', S.pb, `${f(S.pb, 1)} cm`);
     set('Np', S.np, String(S.np)); set('Tb', S.tb, `${f(S.tb, 1)} min`); set('Up', S.Up, f(S.Up, 2)); set('A', S.a, `${f(S.a, 1)} m`);
     $('selT').value = String(S.T);
     $('ctBox').hidden = v !== 'ct'; $('linBox').hidden = !lin; $('proBox').hidden = v !== 'proton'; $('uBox').hidden = !lin || S.bar !== 'pri'; $('mazeBox').hidden = !door;
@@ -653,16 +656,16 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         out.push(`${S.np} patients a day, ${f(S.tb, 1)} minutes of beam on time each, and the beam points at this wall for ${f(S.Up, 2)} of that time.`);
       } else {
         out.push(use3() ? `A ${S.mv} MV linac vault seen from above in 3D.` : `A ${S.mv} MV linac vault seen from above.`, S.bar === 'pri' ? 'The wall in question is the primary barrier.' : S.bar === 'sec' ? 'The wall in question is a secondary wall.' : 'The wall in question is the maze door.', `A person stands beyond it, ${f(S.a, 1)} m from the isocenter.`);
-        out.push(`Workload ${S.W} Gy a week at the isocenter, ${f(S.fI * 100, 0)} % of it given as IMRT.`);
+        out.push(`Workload ${String(S.W).replace(/\B(?=(\d{3})+(?!\d))/g, ',')} Gy a week at the isocenter, ${f(S.fI * 100, 0)} % of it given as IMRT.`);
         if (S.bar === 'pri') out.push(`The beam points at this wall for ${f(S.U, 2)} of the time.`);
       }
-      out.push(pub ? `Beyond the wall is a public area with an occupancy factor of ${S.T}.` : `Beyond the wall is an area for radiation workers with an occupancy factor of ${S.T}.`, S.view === 'ct' ? `The goal P/T is ${sig(S.P / S.T, 3)} mGy a week.` : `The goal P/T is ${sig(S.P / S.T, 3)} mSv a week.`);
-      if (S.view === 'ct') out.push(`Without a wall the scatter at the person is ${f(R.K, 2)} mGy a week, so the transmission needed is B = ${sig(R.B, 3)}.`);
-      else if (S.view === 'proton') out.push(`Without a wall the forward dose at the person is ${sig(R.H, 3)} mSv a week, so the transmission needed is B = ${sig(R.B, 3)}.`);
+      out.push(pub ? `Beyond the wall is a public area with an occupancy factor of ${S.T}.` : `Beyond the wall is an area for radiation workers with an occupancy factor of ${S.T}.`, S.view === 'ct' ? `The goal P/T is ${sigd(S.P / S.T, 3)} mGy a week.` : `The goal P/T is ${sigd(S.P / S.T, 3)} mSv a week.`);
+      if (S.view === 'ct') out.push(`Without a wall the scatter at the person is ${f(R.K, 2)} mGy a week, so the transmission needed is B = ${sigd(R.B, 3)}.`);
+      else if (S.view === 'proton') out.push(`Without a wall the forward dose at the person is ${sigd(R.H, 3)} mSv a week, so the transmission needed is B = ${sigd(R.B, 3)}.`);
       else if (door) {
         if (S.mv !== 18) out.push('The maze door is computed at 18 MV only: choose 18 MV.');
-        else out.push(`The maze is ${f(S.d2, 1)} m long, and the door has ${f(S.bpe, 1)} cm of borated polyethylene and ${f(S.pb, 1)} cm of lead.`, `Behind the door the neutrons give ${sig(R.Hn1, 3)} mSv a week and the capture gammas ${sig(R.Hg1, 3)} mSv a week.`, `The total is ${sig(R.H, 3)} mSv against the goal of ${sig(R.goal, 3)} mSv: it ${R.ok ? 'meets the goal' : 'is over the goal'}.`);
-      } else out.push(S.bar === 'pri' ? `Without a wall the primary beam at the person gives ${sig(R.H, 3)} mSv a week, so the transmission needed is B = ${sig(R.B, 3)}.` : `Without a wall the head leakage at the person gives ${sig(R.H, 3)} mSv a week, so the transmission needed is B = ${sig(R.B, 3)}.`);
+        else out.push(`The maze is ${f(S.d2, 1)} m long, and the door has ${f(S.bpe, 1)} cm of borated polyethylene and ${f(S.pb, 1)} cm of lead.`, `Behind the door the neutrons give ${sigd(R.Hn1, 3)} mSv a week and the capture gammas ${sigd(R.Hg1, 3)} mSv a week.`, `The total is ${sigd(R.H, 3)} mSv against the goal of ${sigd(R.goal, 3)} mSv: it ${R.ok ? 'meets the goal' : 'is over the goal'}.`);
+      } else out.push(S.bar === 'pri' ? `Without a wall the primary beam at the person gives ${sigd(R.H, 3)} mSv a week, so the transmission needed is B = ${sigd(R.B, 3)}.` : `Without a wall the head leakage at the person gives ${sigd(R.H, 3)} mSv a week, so the transmission needed is B = ${sigd(R.B, 3)}.`);
       if (!door) ROOM_MATS[S.view].forEach((m) => out.push(thickSay(m)));
       if (!door) out.push({ lead: 'The walls in the picture are drawn in lead.', steel: 'The walls in the picture are drawn in steel.', concrete: 'The walls in the picture are drawn in concrete.', gypsum: 'The walls in the picture are drawn in gypsum wallboard.' }[S.mat]);
       return out;
@@ -670,7 +673,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     VD.describe(plot, () => {
       if (!R) return [];
       if (S.view === 'linac' && S.bar === 'door') return ['A plot of the neutron and capture gamma doses at the door against the maze length, with no door shielding, and the goal drawn across.', S.mv !== 18 ? 'The maze door is computed at 18 MV only.' : `The maze is ${f(S.d2, 1)} m long.`];
-      const out = [S.ax === 'm' ? 'A plot of the transmission of each wall material against its mass per area in kg/m², on a log scale.' : S.view === 'ct' ? 'A plot of the transmission of each wall material against its thickness in mm, on a log scale.' : 'A plot of the transmission of each wall material against its thickness in cm, on a log scale.', `The transmission the wall needs, B = ${sig(R.B, 3)}, is drawn across, with each material's required thickness marked.`];
+      const out = [S.ax === 'm' ? 'A plot of the transmission of each wall material against its mass per area in kg/m², on a log scale.' : S.view === 'ct' ? 'A plot of the transmission of each wall material against its thickness in mm, on a log scale.' : 'A plot of the transmission of each wall material against its thickness in cm, on a log scale.', `The transmission the wall needs, B = ${sigd(R.B, 3)}, is drawn across, with each material's required thickness marked.`];
       return out;
     }, { label: 'Describe the plot' });
   }

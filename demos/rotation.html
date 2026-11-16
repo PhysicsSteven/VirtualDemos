@@ -2775,8 +2775,10 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     });
     const st0 = Q(P(0, -0.7, 0.03)), fin = Q(P(D, -0.7, 0.03));
     label(ctx, 'start', st0[0], st0[1], T.muted, 'center', 'bottom', 10.5); label(ctx, 'finish', fin[0], fin[1], T.muted, 'center', 'bottom', 10.5);
-    const foot = Q(new THREE.Vector3(D * cb, -0.6 * wl, 0)); label(ctx, 'β = ' + fx(RO.beta, 1) + '°, D = ' + fx(D, 1) + ' m, drop h = D sin β = ' + fx(D * sb, 2) + ' m', 16 * ps, H - 18 * ps, T.muted, 'left', 'middle', 10.5);
-    if (W >= 600) label(ctx, 'drag to turn, wheel to zoom', W - 12 * ps, H - 18 * ps, T.muted, 'right', 'middle', 10);
+    const foot = Q(new THREE.Vector3(D * cb, -0.6 * wl, 0)); /* through VDI18N.t, so the harvest finds them: the 3D view is not drawn while it harvests, and Spanish showed them in English */
+    const v3 = { b: fx(RO.beta, 1), d: fx(D, 1), h: fx(D * sb, 2) };
+    label(ctx, window.VDI18N ? VDI18N.t('β = {b}°, D = {d} m, drop h = D sin β = {h} m', v3) : `β = ${v3.b}°, D = ${v3.d} m, drop h = D sin β = ${v3.h} m`, 16 * ps, H - 18 * ps, T.muted, 'left', 'middle', 10.5);
+    if (W >= 600) label(ctx, window.VDI18N ? VDI18N.t('drag to turn, wheel to zoom') : 'drag to turn, wheel to zoom', W - 12 * ps, H - 18 * ps, T.muted, 'right', 'middle', 10);
     void foot;
   }
   /* ---------- 3D torque, spin and seesaw scenes ----------

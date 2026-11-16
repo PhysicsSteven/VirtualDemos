@@ -2062,7 +2062,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (stB) {
       const d = dE(), T = beatT();
       out.push(`Energy difference ${Math.abs(d).toFixed(3)} eV.`);
-      out.push(isFinite(T) ? `The cloud oscillates with a beat period of ${T.toFixed(3)} fs, radiating at ${fmtLam(HC / Math.abs(d))}.` : 'The two states have the same energy, so the cloud does not move.');
+      out.push(isFinite(T) ? (dip && dip.amp > 1e-3 ? `The cloud oscillates with a beat period of ${T.toFixed(3)} fs, radiating at ${fmtLam(HC / Math.abs(d))}.` : `The cloud oscillates with a beat period of ${T.toFixed(3)} fs.`) : 'The two states have the same energy, so the cloud does not move.');
       if (isFinite(T)) out.push(dip && dip.amp > 1e-3 ? `The center of the cloud moves ${dip.amp.toFixed(3)} Bohr radii each way, so the atom radiates.` : 'The center of the cloud stays at the nucleus, so the atom does not radiate as a dipole.');
     } else if (S.mix) out.push('Choose a state B different from A.');
     return out;

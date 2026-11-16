@@ -100,8 +100,6 @@ VDI18N.add('es', 'demo/radiobiology', {
   "Dosis del ensayo (Gy): haz clic, o pulsa Enter, para escribir un valor",
 "Cells seeded per flask":
   "Células sembradas por frasco",
-"Experiment":
-  "Experimento",
 "New experiment":
   "Nuevo experimento",
 "Clear plates":
@@ -264,10 +262,6 @@ VDI18N.add('es', 'demo/radiobiology', {
   "vista",
 "result":
   "resultado",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
 "Flask {#}":
   "Frasco {#}",
 "not plated yet":
@@ -390,16 +384,6 @@ VDI18N.add('es', 'demo/radiobiology', {
   "SF2",
 "D₁₀, {#} % survive":
   "D₁₀, sobrevive el {#} %",
-"Charts of the surviving fraction against dose on a log scale.":
-  "Gráficas de la fracción sobreviviente contra la dosis en escala logarítmica.",
-"Your own cells.":
-  "Tus propias células.",
-"α = {#} per Gy, β = {#} per Gy².":
-  "α = {#} por Gy, β = {#} por Gy².",
-"Surviving fraction {#}.":
-  "Fracción sobreviviente {#}.",
-"SF2 = {#}.":
-  "SF2 = {#}.",
 "{#} colonies":
   "{#} colonias",
 "Surviving fraction, plating efficiency {#} from the {#} Gy flasks":
@@ -468,10 +452,20 @@ VDI18N.add('es', 'demo/radiobiology', {
   "RBE {#}",
 "RBE against LET_d, {#} Gy":
   "RBE en función de LET_d, {#} Gy",
+"Charts of the surviving fraction against dose on a log scale.":
+  "Gráficas de la fracción sobreviviente contra la dosis en escala logarítmica.",
+"Your own cells.":
+  "Tus propias células.",
+"α = {#} per Gy, β = {#} per Gy².":
+  "α = {#} por Gy, β = {#} por Gy².",
+"Surviving fraction {#}.":
+  "Fracción sobreviviente {#}.",
+"SF2 = {#}.":
+  "SF2 = {#}.",
 "{#} Gy, {#} cells per flask":
   "{#} Gy, {#} células por frasco",
-"Surviving fraction, PE {#}":
-  "Fracción de supervivencia, PE {#}",
+"Plate the {#} Gy flasks first":
+  "Siembra primero los frascos de {#} Gy",
 "Three culture dishes with the colonies that grew from the seeded cells, and the measured surviving fraction against dose with counting error bars. The counts are simulated.":
   "Tres cajas de cultivo con las colonias que crecieron de las células sembradas, y la fracción sobreviviente medida contra la dosis con barras de error de conteo. Los conteos son simulados.",
 "Cells:":
@@ -480,6 +474,16 @@ VDI18N.add('es', 'demo/radiobiology', {
   "{#} células sembradas por frasco.",
 "Experiment {#}.":
   "Experimento {#}.",
+"No flasks plated at this dose and seed count: press Plate and count.":
+  "No hay frascos sembrados con esta dosis y este número de células: presiona Sembrar y contar.",
+"{#} × {#} Gy = {#} Gy, {#} weeks":
+  "{#} × {#} Gy = {#} Gy, {#} semanas",
+"Effect of oxygen at {#} Gy":
+  "Efecto del oxígeno a {#} Gy",
+"Surviving fraction at {#} mmHg {#}.":
+  "Fracción sobreviviente a {#} mmHg: {#}.",
+"Surviving fraction, PE {#}":
+  "Fracción de supervivencia, PE {#}",
 "Colonies in the three flasks: {#}, {#}, {#}.":
   "Colonias en los tres frascos: {#}, {#}, {#}.",
 "Mean {#} colonies.":
@@ -494,16 +498,16 @@ VDI18N.add('es', 'demo/radiobiology', {
   "La más baja es {#} Gy.",
 "The highest is {#} Gy.":
   "La más alta es {#} Gy.",
-"{#} × {#} Gy = {#} Gy, {#} weeks":
-  "{#} × {#} Gy = {#} Gy, {#} semanas",
-"Effect of oxygen at {#} Gy":
-  "Efecto del oxígeno a {#} Gy",
-"Surviving fraction at {#} mmHg {#}.":
-  "Fracción sobreviviente a {#} mmHg: {#}.",
 "{#} × {#} Gy = {#} Gy, {#} week":
   "{#} × {#} Gy = {#} Gy, {#} semana",
 "The difference is −{#} %.":
   "La diferencia es −{#} %.",
+"Experiment":
+  "Experimento",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "Close":
   "Cerrar"
 });

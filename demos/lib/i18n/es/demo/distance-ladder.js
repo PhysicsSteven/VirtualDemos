@@ -110,6 +110,8 @@ VDI18N.add('es', 'demo/distance-ladder', {
   "Satélite Hipparcos ({#} a {#}): aproximadamente {#} mas, así que distancias de cerca del {#}% hasta unos {#} pc.",
 "Parallax p":
   "Paralaje p",
+"{#} pc = {#} light years":
+  "{#} pc = {#} años luz",
 "January to July shift, 2p":
   "Desplazamiento de enero a julio, 2p",
 "Distance uncertainty σ<sub>d</sub>/d = σ<sub>p</sub>/p":
@@ -338,14 +340,10 @@ VDI18N.add('es', 'demo/distance-ladder', {
   "arrastra la Tierra a lo largo de su órbita; arrastra en otro lugar para girar",
 "EARTH’S ORBIT IN 3D, NOT TO SCALE":
   "LA ÓRBITA DE LA TIERRA EN 3D, NO A ESCALA",
-"early March":
-  "principios de marzo",
 "p (mas)":
   "p (mas)",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
+"early March":
+  "principios de marzo",
 "mid March":
   "mediados de marzo",
 "The ruler on the overlaid photos reads {#}″, which gives d = {#} pc.":
@@ -666,6 +664,10 @@ VDI18N.add('es', 'demo/distance-ladder', {
   "calibra",
 "early April":
   "principios de abril",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "Describe the picture":
   "Describir la imagen",
 "Time controls":
@@ -674,10 +676,6 @@ VDI18N.add('es', 'demo/distance-ladder', {
   "Avanza un momento y vuelve a pausar",
 "Step":
   "Paso",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
 "Close":
   "Cerrar",
 "Night":

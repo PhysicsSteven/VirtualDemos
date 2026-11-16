@@ -1075,10 +1075,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     // labels last
     label(c, 'x', g.cx + g.R + 4 * ps, g.cy, T.muted, 'left', 'middle', true);
     label(c, 'y', g.cx, g.cy - g.R - 4 * ps, T.muted, 'center', 'bottom', true);
-    if (S.pol) { const lx = g.cx - Math.cos(S.phi * DEG) * g.R * 0.8, ly = g.cy + Math.sin(S.phi * DEG) * g.R * 0.8; label(c, 'polarizer', lx + (lx < g.cx ? -6 : 6) * ps, ly, T.accent, lx < g.cx ? 'right' : 'left', 'middle', false, 10); }
+    if (S.pol) { const lx = g.cx - Math.cos(S.phi * DEG) * g.R * 0.8, ly = g.cy + Math.sin(S.phi * DEG) * g.R * 0.8; label(c, typeof VDI18N === 'object' ? VDI18N.t('polarizer') : 'polarizer', lx + (lx < g.cx ? -6 : 6) * ps, ly, T.accent, lx < g.cx ? 'right' : 'left', 'middle', false, 10); }
     const yb = g.s.y + g.s.h - (S.pol ? 32 : 14) * ps;
     label(c, stateShort(st), g.cx, yb, T.ink, 'center', 'middle', true);
-    if (tr !== null) label(c, `through the polarizer: I/I₀ = ${tr.toFixed(3)}`, g.cx, yb + 17 * ps, T.accent, 'center', 'middle');
+    if (tr !== null) label(c, typeof VDI18N === 'object' ? VDI18N.t('through the polarizer: I/I₀ = {v}', { v: tr.toFixed(3) }) : `through the polarizer: I/I₀ = ${tr.toFixed(3)}`, g.cx, yb + 17 * ps, T.accent, 'center', 'middle');
     c.restore();
   }
   function stateShort(st) {

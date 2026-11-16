@@ -172,6 +172,10 @@ VDI18N.add('en', 'demo/proton-qa', [
 "The energy is {#} % higher than it should be, as if the energy selection had drifted. At {#} MeV that puts R90 about {#} mm deeper, past the {#} mm tolerance. The output at {#} cm hardly changes: the plateau is nearly flat.",
 "{#} cm, +{#} mm <span>fail</span>",
 "{#} × {#} mm, −{#} % <span>pass</span>",
+"On the couch is a stack of ion chambers, checking the range.",
+"R90 is {#} cm, +{#} mm from baseline.",
+"The range check fails.",
+"The spot size changed by −{#} %.",
 "The same {#} % energy error checked at {#} MeV: the range moves by only about {#} mm and passes. A range error from an energy error grows with the range (R ∝ E^{#}), which is why the range is checked at more than one energy.",
 "{#} cm, +{#} mm <span>pass</span>",
 "SCREEN AND CAMERA",
@@ -206,6 +210,7 @@ VDI18N.add('en', 'demo/proton-qa', [
 "FAIL (< {#} %)",
 "The beam goes {#} mm deeper than planned, measured at {#} cm, on the steep distal edge of the spread out peak, where the planned dose is about {#} % of the dose in the target. There the dose changes by about {#} % per millimeter, and the plane fails badly. Measured in the middle of the target ({#} cm) the same error is invisible: the spread out peak is flat there. Gamma's distance to agreement is in the plane, so it forgives no error along the beam.",
 "{#} % <span>fail</span>",
+"The plane fails the {#} % tolerance.",
 "Spots {#} % larger in air, in an L shaped target. At {#} cm the spots have already spread by multiple scattering, so the error in air is diluted, and the plane passes even at {#} %/{#} mm. The daily spot size check catches this fault; patient QA in one plane does not.",
 "Plan: L shape, {#} × {#} cm, {#} to {#} cm deep",
 "The plan is a l shape, {#} × {#} cm target, measured at {#} cm depth.",
@@ -226,10 +231,5 @@ VDI18N.add('en', 'demo/proton-qa', [
 "No mornings run yet. Press Next day.",
 "Roughly to scale; beam drawn as a line.",
 "Drag to turn.",
-"On the couch is a stack of ion chambers, checking the range.",
-"R90 is {#} cm, +{#} mm from baseline.",
-"The range check fails.",
-"The spot size changed by −{#} %.",
-"The spot size check fails.",
-"The plane fails the {#} % tolerance."
+"The spot size check fails."
 ]);

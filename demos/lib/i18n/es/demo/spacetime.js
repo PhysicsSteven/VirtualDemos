@@ -129,9 +129,9 @@ VDI18N.add('es', 'demo/spacetime', {
 "timelike":
   "temporaloide",
 "In S: cΔt, Δx":
-  "In S: cΔt, Δx",
+  "En S: cΔt, Δx",
 "In S′: cΔt′, Δx′":
-  "In S′: cΔt′, Δx′",
+  "En S′: cΔt′, Δx′",
 "Proper time, a clock going from one to the other":
   "Tiempo propio, un reloj que va de uno al otro",
 "A is in O's future light cone: O can influence A. Every observer agrees O comes first.":
@@ -302,6 +302,14 @@ VDI18N.add('es', 'demo/spacetime', {
   "Gemelo en casa {#} años",
 "Traveler {#} yr":
   "Viajero {#} años",
+"Event T at ct = {#}, x = {#}.":
+  "Evento T en ct = {#}, x = {#}.",
+"Selected: event T.":
+  "Seleccionado: evento T.",
+"The Home twin clock reads {#} years.":
+  "El reloj del gemelo en Casa marca {#} años.",
+"The Traveler clock reads {#} years.":
+  "El reloj del viajero marca {#} años.",
 "B is outside A's light cone: the pair is spacelike. In S, A happens first. For any observer moving right faster than {#}c, B happens first. Slide β through {#} and watch the red simultaneity line through A sweep past B. Then select A and C: C is inside A's future cone, and no β can flip that order.":
   "B está fuera del cono de luz de A: el par es espacialoide. En S, A ocurre primero. Para cualquier observador que se mueva hacia la derecha más rápido que {#}c, B ocurre primero. Desliza β más allá de {#} y observa cómo la línea roja de simultaneidad que pasa por A barre más allá de B. Luego selecciona A y C: C está dentro del cono futuro de A, y ningún β puede invertir ese orden.",
 "No signal can connect A and B; observers disagree on their order. In S A happens first; in S′ B happens first. They are simultaneous for an observer moving at β = {#}.":
@@ -364,14 +372,6 @@ VDI18N.add('es', 'demo/spacetime', {
   "El reloj de Casa marca {#} años.",
 "The Rocket clock reads {#} years.":
   "El reloj del cohete marca {#} años.",
-"Event T at ct = {#}, x = {#}.":
-  "Evento T en ct = {#}, x = {#}.",
-"Selected: event T.":
-  "Seleccionado: evento T.",
-"The Home twin clock reads {#} years.":
-  "El reloj del gemelo en Casa marca {#} años.",
-"The Traveler clock reads {#} years.":
-  "El reloj del viajero marca {#} años.",
 "now, ct = {#} yr":
   "ahora, ct = {#} años",
 "Describe the picture":

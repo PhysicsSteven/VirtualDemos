@@ -36,6 +36,8 @@ VDI18N.add('es', 'demo/springs', {
   "Aún no hay lecturas cronometradas",
 "E₀ − E − ∫bv² dt = {#} × {#}⁻¹⁷ J":
   "E₀ − E − ∫bv² dt = {#} × {#}⁻¹⁷ J",
+"E₀ − E − ∫bv² dt = −{#} × {#}⁻¹⁷ J":
+  "E₀ − E − ∫bv² dt = −{#} × {#}⁻¹⁷ J",
 "Springs and Oscillations":
   "Resortes y oscilaciones",
 "<a>Oscillations</a>":
@@ -352,6 +354,10 @@ VDI18N.add('es', 'demo/springs', {
   "Traza conservada",
 "Model: ideal massless springs that obey Hooke's law, a frictionless track, a damping force −bv on each block, g = {#} m/s². The curves are the exact solution of the linear equation of motion, not a step by step integration; two coupled blocks (equal masses; outer springs k₁ and k₂, middle spring k_c, the same damping b on each) move as the sum of their two normal modes, found exactly from the {#} × {#} stiffness matrix. Positions are drawn to scale; the block's size grows with its mass but is not to scale. The drawing never shows a spring pressed solid, and the model has no such limit.":
   "Modelo: resortes ideales sin masa que obedecen la ley de Hooke, un riel sin fricción, una fuerza de amortiguamiento −bv en cada bloque, g = {#} m/s². Las curvas son la solución exacta de la ecuación de movimiento lineal, no una integración paso a paso; dos bloques acoplados (masas iguales; resortes exteriores k₁ y k₂, resorte del medio k_c, el mismo amortiguamiento b en cada uno) se mueven como la suma de sus dos modos normales, hallados exactamente a partir de la matriz de rigidez de {#} × {#}. Las posiciones se dibujan a escala; el tamaño del bloque crece con su masa pero no está a escala. El dibujo nunca muestra un resorte comprimido por completo, y el modelo no tiene ese límite.",
+"E₀ − E − ∫bv² dt = −{#} × {#}⁻¹⁶ J":
+  "E₀ − E − ∫bv² dt = −{#} × {#}⁻¹⁶ J",
+"E₀ − E − ∫bv² dt = {#} × {#}⁻¹⁶ J":
+  "E₀ − E − ∫bv² dt = {#} × {#}⁻¹⁶ J",
 "no oil":
   "sin aceite",
 "Chart: x against time":
@@ -366,12 +372,6 @@ VDI18N.add('es', 'demo/springs', {
   "El bloque está a x = −{#} cm del equilibrio, con velocidad v = −{#} m/s.",
 "Kinetic energy {#} mJ.":
   "Energía cinética {#} mJ.",
-"E₀ − E − ∫bv² dt = {#} × {#}⁻¹⁶ J":
-  "E₀ − E − ∫bv² dt = {#} × {#}⁻¹⁶ J",
-"E₀ − E − ∫bv² dt = −{#} × {#}⁻¹⁶ J":
-  "E₀ − E − ∫bv² dt = −{#} × {#}⁻¹⁶ J",
-"The block is at x = {#} cm from equilibrium, moving at v = −{#} m/s.":
-  "El bloque está a x = {#} cm del equilibrio, con velocidad v = −{#} m/s.",
 "Energy bars":
   "Barras de energía",
 "Normal modes of the rig: each mode's frequency, its shape (how far and which way each block moves), and its amplitude in the motion now. Click a mode, or press its number ({#} for mode {#}), to start the rig in that mode alone.":
@@ -410,10 +410,6 @@ VDI18N.add('es', 'demo/springs', {
   "t + φ, el radio se reduce como e^(−bt/2m)",
 "Lost to the oil, ∫bv² dt":
   "Perdida en el aceite, ∫bv² dt",
-"E₀ − E − ∫bv² dt = −{#} × {#}⁻¹⁸ J":
-  "E₀ − E − ∫bv² dt = −{#} × {#}⁻¹⁸ J",
-"E₀ − E − ∫bv² dt = −{#} × {#}⁻¹⁷ J":
-  "E₀ − E − ∫bv² dt = −{#} × {#}⁻¹⁷ J",
 "The moving wall drives the block. The transient dies away and the block settles at the drive frequency, with the amplitude on the resonance curve below. Drag the ω marker on the curve, or press Sweep ω to trace the whole curve.":
   "La pared en movimiento impulsa al bloque. El transitorio se desvanece y el bloque se asienta en la frecuencia impulsora, con la amplitud sobre la curva de resonancia de abajo. Arrastra el marcador ω sobre la curva, o pulsa Barrer ω para trazar la curva completa.",
 "x = transient + A cos(ωt − δ); the transient dies away as e<sup>−bt/2m</sup>.":
@@ -692,10 +688,10 @@ VDI18N.add('es', 'demo/springs', {
   "Aún no hay lecturas con fuerza impulsora",
 "dashed: predicted A(ω), current settings":
   "discontinua: A(ω) predicha, valores actuales",
+"The block is at x = {#} cm from equilibrium, moving at v = −{#} m/s.":
+  "El bloque está a x = {#} cm del equilibrio, con velocidad v = −{#} m/s.",
 "A block hanging from a spring.":
   "Un bloque colgado de un resorte.",
-"Phase plot of v (m/s) against x (m). Now {#}, −{#}.":
-  "Gráfica de fase de v (m/s) en función de x (m). Ahora {#}, −{#}.",
 "Two blocks and three springs between two walls, on a track.":
   "Dos bloques y tres resortes entre dos paredes, sobre un riel.",
 "Both blocks have mass {#} kg.":
@@ -706,6 +702,8 @@ VDI18N.add('es', 'demo/springs', {
   "Los dos modos tienen ω₁ = {#} rad/s y ω₂ = {#} rad/s.",
 "Block {#} is at x₁ = {#} cm and block {#} at x₂ = {#} cm from equilibrium.":
   "El bloque {#} está en x₁ = {#} cm y el bloque {#} en x₂ = {#} cm del equilibrio.",
+"Phase plot of v (m/s) against x (m). Now {#}, −{#}.":
+  "Gráfica de fase de v (m/s) en función de x (m). Ahora {#}, −{#}.",
 "Below rest (cm) against time (s)":
   "Bajo el reposo (cm) contra el tiempo (s)",
 "Energy now, from the rig at rest":
@@ -728,6 +726,28 @@ VDI18N.add('es', 'demo/springs', {
   "N, fila {#}",
 "t s, row {#}":
   "t s, fila {#}",
+"The block is at x = −{#} cm from equilibrium, moving at v = {#} m/s.":
+  "El bloque está en x = −{#} cm del equilibrio, moviéndose a v = {#} m/s.",
+"Phase plot of v (m/s) against x (m). Now {#}, {#}.":
+  "Diagrama de fase de v (m/s) contra x (m). Ahora {#}, {#}.",
+"Landed at":
+  "Cayó en",
+"Mass m → m + m<sub>d</sub>":
+  "Masa m → m + m<sub>d</sub>",
+"Velocity v → v′ = m v/(m + m<sub>d</sub>)":
+  "Velocidad v → v′ = m v/(m + m<sub>d</sub>)",
+"Period {#}π√(m/k) before → after":
+  "Periodo {#}π√(m/k) antes → después",
+"Amplitude √(x² + (v/ω₀)²) before → after":
+  "Amplitud √(x² + (v/ω₀)²) antes → después",
+"Kinetic energy lost in the landing":
+  "Energía cinética perdida al caer",
+"A {#} kg block landed and stuck: velocity {#} to {#} m/s.":
+  "Un bloque de {#} kg cayó y se quedó pegado: velocidad de {#} a {#} m/s.",
+"A block of {#} kg sits on top, included in that mass.":
+  "Un bloque de {#} kg está encima, incluido en esa masa.",
+"E₀ − E − ∫bv² dt = −{#} × {#}⁻¹⁸ J":
+  "E₀ − E − ∫bv² dt = −{#} × {#}⁻¹⁸ J",
 "E₀ − E − ∫bv² dt = {#} × {#}⁻¹⁸ J":
   "E₀ − E − ∫bv² dt = {#} × {#}⁻¹⁸ J",
 "Describe the picture":

@@ -376,10 +376,10 @@ VDI18N.add('es', 'demo/retrograde-motion', {
   "Fecha {#} ene {#}.",
 "Among the stars of Ophiuchus.":
   "Entre las estrellas de Ofiuco.",
-"Mercury through a telescope.":
-  "Mercurio visto por un telescopio.",
 "Mercury is at longitude {#}° and latitude {#}°.":
   "Mercurio está en longitud {#}° y latitud {#}°.",
+"Mercury through a telescope.":
+  "Mercurio visto por un telescopio.",
 "OPHIUCHUS":
   "OFIUCO",
 "VIRGO":
@@ -408,10 +408,6 @@ VDI18N.add('es', 'demo/retrograde-motion', {
   "Copérnico puso el Sol en el centro ({#}). Con círculos simples a rapidez constante, los rizos ocurren más o menos en los momentos correctos y con la forma correcta, pero cerca de esta oposición cercana de {#} Marte queda hasta {#}° de donde realmente está, y la oposición llega {#} días antes (hasta {#}° de diferencia entre {#} y {#}): la órbita de Marte es una elipse (e = {#}). Copérnico agregó pequeños epiciclos para corregirlo; Kepler ({#}) reemplazó los círculos por elipses.",
 "{#} Jun {#} · Copernicus's circles":
   "{#} jun {#} · círculos de Copérnico",
-"Date {#} Jun {#}.":
-  "Fecha {#} jun {#}.",
-"Among the stars of Aquarius.":
-  "Entre las estrellas de Acuario.",
 "Venus: {#}% lit, gibbous":
   "Venus: {#}% iluminada, gibosa",
 "Venus through {#}. In the evening sky in January it shows a half disk; by March it is a thin crescent and {#}″ across as it passes between Earth and the Sun (inferior conjunction {#} March); then it moves into the morning sky, shrinks and fills out, nearly full and only {#}″ across as it goes behind the Sun in January {#}. Galileo saw this cycle in {#}.":
@@ -452,14 +448,20 @@ VDI18N.add('es', 'demo/retrograde-motion', {
   "Venus está en la longitud {#}° y la latitud −{#}°.",
 "Earth at rest. Ptolemy's distances: Mercury out to":
   "La Tierra en reposo. Distancias de Ptolomeo: Mercurio hasta",
+"inferior conj. Oct {#}":
+  "conj. inferior {#} oct",
 "greatest elong. Nov {#}":
   "máx. elongación {#} nov",
 "inferior conj. Dec {#}":
   "conj. inferior {#} dic",
 "Mercury: {#}% lit, crescent":
   "Mercurio: {#}% iluminado, creciente",
+"Scorpius":
+  "Escorpio",
 "Mercury seen with Ptolemy's epicycles.":
   "Mercurio visto con los epiciclos de Ptolomeo.",
+"Among the stars of Scorpius.":
+  "Entre las estrellas de Escorpio.",
 "Mercury is at longitude {#}° and latitude −{#}°.":
   "Mercurio está en longitud {#}° y latitud −{#}°.",
 "CANIS MINOR":
@@ -500,6 +502,8 @@ VDI18N.add('es', 'demo/retrograde-motion', {
   "La Tierra en reposo. Distancias de Ptolomeo: Saturno hasta",
 "Saturn seen with Ptolemy's epicycles.":
   "Saturno visto con los epiciclos de Ptolomeo.",
+"Among the stars of Aquarius.":
+  "Entre las estrellas de Acuario.",
 "Saturn through a telescope.":
   "Saturno visto por un telescopio.",
 "Saturn is at longitude {#}° and latitude −{#}°.":
@@ -516,6 +520,8 @@ VDI18N.add('es', 'demo/retrograde-motion', {
   "Venus visto con los círculos de Copérnico.",
 "TRIANGULUM":
   "TRIÁNGULO",
+"Date {#} Jun {#}.":
+  "Fecha {#} jun {#}.",
 "Jupiter seen with Kepler (real sky).":
   "Júpiter visto con Kepler (cielo real).",
 "Among the stars of Aries.":
@@ -538,8 +544,58 @@ VDI18N.add('es', 'demo/retrograde-motion', {
   "La imagen es desde arriba del polo norte, con la Tierra fija.",
 "Among the stars of Sagittarius.":
   "Entre las estrellas de Sagitario.",
-"Scorpius":
-  "Escorpio",
+"greatest elong. Jan {#}":
+  "máx. elongación {#} ene",
+"stationary Mar {#}":
+  "estacionario {#} mar",
+"inferior conj. Mar {#}":
+  "conj. inferior {#} mar",
+"stationary Apr {#}":
+  "estacionario {#} abr",
+"greatest elong. May {#}":
+  "máx. elongación {#} may",
+"too near the Sun to see":
+  "demasiado cerca del Sol para verse",
+"{#} Mar {#}":
+  "{#} mar {#}",
+"Pegasus":
+  "Pegaso",
+"{#} Mar {#} · Ptolemy's epicycles":
+  "{#} mar {#} · epiciclos de Ptolomeo",
+"Inferior conjunction: {#} Mar {#}, {#}:{#} UTC, elongation {#}°.":
+  "Conjunción inferior: {#} mar {#}, {#}:{#} UTC, elongación {#}°.",
+"Date {#} Mar {#}.":
+  "Fecha {#} mar {#}.",
+"Among the stars of Pegasus.":
+  "Entre las estrellas de Pegaso.",
+"Venus is at longitude {#}° and latitude {#}°.":
+  "Venus está en la longitud {#}° y la latitud {#}°.",
+"No such event between {#} and {#} in that direction.":
+  "No hay un evento así entre {#} y {#} en esa dirección.",
+"{#} May {#}":
+  "{#} may {#}",
+"{#} May {#} · Ptolemy's epicycles":
+  "{#} may {#} · epiciclos de Ptolomeo",
+"Greatest elongation: {#} May {#}, {#}:{#} UTC, elongation {#}°.":
+  "Máxima elongación: {#} may {#}, {#}:{#} UTC, elongación {#}°.",
+"Date {#} May {#}.":
+  "Fecha {#} may {#}.",
+"Among the stars of Pisces.":
+  "Entre las estrellas de Piscis.",
+"greatest elong. Aug {#}":
+  "máx. elongación {#} ago",
+"{#} Oct {#}":
+  "{#} oct {#}",
+"at a stationary point, {#}°/day":
+  "en un punto estacionario, {#}°/día",
+"{#} Oct {#} · Ptolemy's epicycles":
+  "{#} oct {#} · epiciclos de Ptolomeo",
+"Stationary point: {#} Oct {#}, {#}:{#} UTC, elongation {#}°.":
+  "Punto estacionario: {#} oct {#}, {#}:{#} UTC, elongación {#}°.",
+"Date {#} Oct {#}.":
+  "Fecha {#} oct {#}.",
+"The planet is stationary against the stars.":
+  "El planeta está estacionario respecto a las estrellas.",
 "MICROSCOPIUM":
   "MICROSCOPIO",
 "PISCIS AUSTRINUS":
@@ -572,8 +628,6 @@ VDI18N.add('es', 'demo/retrograde-motion', {
   "Ir a los controles",
 "Running.":
   "En marcha.",
-"inferior conj. Oct {#}":
-  "conj. inferior {#} oct",
 "Close":
   "Cerrar",
 "PERSEUS":

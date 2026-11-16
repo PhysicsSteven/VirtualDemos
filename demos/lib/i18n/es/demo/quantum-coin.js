@@ -218,6 +218,16 @@ VDI18N.add('es', 'demo/quantum-coin', {
   "Un imán de Stern–Gerlach.",
 "The same atom is measured each time.":
   "Se mide el mismo átomo cada vez.",
+"it was this before you looked":
+  "era así antes de que miraras",
+"measured: now in this state":
+  "medido: ahora en este estado",
+"Spread expected in the fraction √(P({#} − P)/N)":
+  "Dispersión esperada en la fracción √(P({#} − P)/N)",
+"Ordinary coin: heads {#}, tails {#}, heads fraction {#}.":
+  "Moneda ordinaria: águila {#}, sol {#}, fracción de águilas {#}.",
+"Quantum coin: heads {#}, tails {#}, heads fraction {#}.":
+  "Moneda cuántica: águila {#}, sol {#}, fracción de águilas {#}.",
 "Describe the picture":
   "Describir la imagen",
 "Skip to the picture":

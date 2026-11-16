@@ -452,7 +452,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <span><i class="swatch second"></i>Second planet</span>
           <span><i class="swatch law"></i>P² = a³/M on the chart</span>
         </div>
-        <details class="more"><summary>More about this</summary><p class="hint">The star is held fixed and the planet's mass is neglected, so P² = a³/M exactly (a in AU, P in years, M in solar masses). Two planets do not pull on each other. The motion is integrated with velocity Verlet using a time symmetric step that shrinks near the star. A planet that comes within 0.005 AU (one solar radius) hits the star.</p></details>
+        <details class="more"><summary>More about this</summary><p class="hint">The star is held fixed and the planet's mass is neglected, so P² = a³/M exactly (a in AU, P in years, M in solar masses). Two planets do not pull on each other. The motion is integrated with velocity Verlet using a time symmetric step that shrinks near the star. A planet that comes within 0.005 AU (one solar radius) hits the star. The total energy is shown as 0 when it is less than a millionth of GM/r at the launch, the size of the integrator's error.</p></details>
         </div></details>
       </section>
     </aside>
@@ -1565,7 +1565,8 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     else { R.rVaLabel.textContent = 'Speed far away v∞'; R.rVa.textContent = kms(el.vinf); }
     R.rVesc.textContent = kms(el.vesc);
     R.rT.textContent = fmtT(A.t);
-    R.rEps.innerHTML = sig(el.eps, 4) + ' AU²/yr² <small>' + sig(el.eps * KMS * KMS, 4) + ' km²/s²</small>';
+    const epsS = epsShown(el.eps, S.A);
+    R.rEps.innerHTML = sig(epsS, 4) + ' AU²/yr² <small>' + sig(epsS * KMS * KMS, 4) + ' km²/s²</small>';
     const denom = Math.max(Math.abs(A.E0), 1e-3 * mu() / A.r0);
     R.rDrift.textContent = A.t > 0 ? sci(Math.abs(el.eps - A.E0) / denom) : '0';
 
@@ -2304,6 +2305,9 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     const e0 = energyParts(S.launch, m), vq2 = 2 * (e0.E + m / q);
     return Math.max(e0.K, -e0.U, m / q, 0.5 * vq2) * 1.08 || 1;
   }
+  /* The total energy is shown as 0 when |E| is under a millionth of GM/r at the launch: the parabola launch has E = 0 exactly,
+     and what is left (about 1e-7 of GM/r) is the integrator's error, which the drift readout reports. */
+  function epsShown(e, A) { return Math.abs(e) < 1e-6 * mu() / A.r0 ? 0 : e; }
   function energyWords(el) {
     if (el.parabolic) return ['E = 0: a parabola, it just escapes', 'equi'];
     if (el.bound) return ['E < 0: bound, the path closes', 'neg'];
@@ -2320,7 +2324,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     text(cctx, T, words, two ? 10 * ps : CW - 10 * ps, (two ? 25 : 8) * ps, two ? 'left' : 'right', 'top', T[wc], 11 * ps, 700);
     if (bot - top < 40) return;
     // bars
-    const bars = [['K', now.K, T.accent], ['U', now.U, T.neg], [narrow ? 'E' : 'E = K + U', now.E, T.ink]], gap = 8 * ps, n = 3;
+    const bars = [['K', now.K, T.accent], ['U', now.U, T.neg], [narrow ? 'E' : 'E = K + U', epsShown(now.E, A), T.ink]], gap = 8 * ps, n = 3;
     const w = Math.min(46 * ps, (bw - 30 * ps - gap * (n + 1)) / n), x0 = 34 * ps, z = Yb(0);
     ctx.strokeStyle = T.muted; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(x0 - 6 * ps, z + 0.5); ctx.lineTo(x0 + n * (w + gap), z + 0.5); ctx.stroke();
     text(cctx, T, '0', x0 - 10 * ps, z, 'right', 'middle', T.muted, fs, 400);

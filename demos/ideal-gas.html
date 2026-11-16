@@ -1563,7 +1563,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   playBtn.addEventListener('click', () => setRunning(!running));
   /* the shared control panel (demos/lib/vdpanel.js): the time controls in one group at the left of the strip */
   if (window.VD && VD.panel) VD.panel({ speed: '#playSeg', speedOut: '#rateOut', speedLabel: 'Playback', step: true });
-  $('reset').addEventListener('click', () => { if (two) { resetTwo(); return; } Tset = VD.nice(tFromSlider(+tIn.value)); resetGas(); });
+  /* Reset starts again at the temperature the gas was started at (Tset: the preset's, or the slider's when a student set it),
+     not at the slider, which follows the gas as it warms or cools (Cold walls reset to 100 K, 2026-11-16) */
+  $('reset').addEventListener('click', () => { if (two) { resetTwo(); return; } resetGas(); });
+  /* the same for Copy link: just before vd.js reads the slider, put it at the starting temperature (the next frame shows the gas's again) */
+  document.addEventListener('click', (e) => { if (!two && e.target.closest && e.target.closest('#vdShare')) tIn.value = sliderFromT(Tset); }, true);
 
   const PRESETS = {
     relax:    { N: 150, T: 300, W: 50, mode: 'equal',

@@ -189,5 +189,10 @@ VDI18N.add('en', 'demo/resonances', [
 "Planet X with Neptune's orbit (from this model on {#} Sep {#}) and mass ({#} Earths): nearly all of Uranus's drift goes away, and what is left (under {#}″) comes from treating Neptune as moving on a fixed ellipse.",
 "The real Neptune is drawn.",
 "Move planet X (its distance, mass and where it is in {#}) to make Uranus's leftover drift as small as you can. The direction comes out well even when the distance is wrong.",
-"The run stops at {#} years. The real gaps took millions of years to empty."
+"The run stops at {#} years. The real gaps took millions of years to empty.",
+"Status",
+"crossed Mars's orbit at {t} yr",
+"scattered by Neptune at {t} yr",
+"scattered by Jupiter at {t} yr",
+"escaped"
 ]);

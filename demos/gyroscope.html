@@ -405,7 +405,7 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
     ctx.strokeStyle = T.accent; ctx.lineWidth = 1.6 * p; ctx.beginPath(); let first = true; for (const [t, v] of S.trace) { if (S.t - t > span) continue; const x = X(t), y = Y(v); first ? ctx.moveTo(x, y) : ctx.lineTo(x, y); first = false; } ctx.stroke();
     // timer
     ctx.fillStyle = T.ink; ctx.font = `700 ${14 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
-    ctx.fillText(S.fell ? (S.fell === 'up' ? 'It stood up.' : 'It fell.') : `gate: ${S.lastP ? `${S.lastP.toFixed(2)} s per turn` : S.gate != null ? 'timing a full turn…' : '—'}`, 14 * p, 50 * p);
+    ctx.fillText(S.fell ? fellText() : `gate: ${S.lastP ? `${S.lastP.toFixed(2)} s per turn` : S.gate != null ? 'timing a full turn…' : '—'}`, 14 * p, 50 * p);
   }
   /* the 3D view's strip: the same trace, steady tilt line and change marks as the flat one, on a panel with a scale in degrees, the
      level line, a small triangle at each pass of the gate and the tilt now; the gate timer sits on a chip over the scene */
@@ -446,7 +446,7 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
     const yN = Math.max(sy0 + 6 * p, Math.min(sy1 - 6 * p, Y(now))); ctx.fillStyle = T.accent; ctx.beginPath(); ctx.arc(sx1, Y(now), 3.5 * p, 0, 7); ctx.fill();
     ctx.font = `600 ${10.5 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillStyle = T.ink; ctx.fillText(nowTxt, sx1 + 7 * p, yN);
     // the gate timer chip, as in the flat view, over the scene
-    const gt = S.fell ? (S.fell === 'up' ? 'It stood up.' : 'It fell.') : `gate: ${S.lastP ? `${S.lastP.toFixed(2)} s per turn` : S.gate != null ? 'timing a full turn…' : '—'}`;
+    const gt = S.fell ? fellText() : `gate: ${S.lastP ? `${S.lastP.toFixed(2)} s per turn` : S.gate != null ? 'timing a full turn…' : '—'}`;
     ctx.font = `700 ${14 * p}px ${T.mono}`; const gw = ctx.measureText(gt).width, vb = stage.querySelector('.viewbar'), vr = vb.offsetLeft + vb.offsetWidth + 8, row = vr + gw + 40 < W - 10;   /* beside the buttons where it fits, else under them */
     const gx = row ? vr : 10, gy = row ? vb.offsetTop + (vb.offsetHeight - 22 * p) / 2 : vb.offsetTop + vb.offsetHeight + 6;
     ctx.fillStyle = T.surface; ctx.globalAlpha = 0.92; ctx.beginPath(); ctx.roundRect(gx, gy, gw + 30, 22 * p, 6); ctx.fill(); ctx.globalAlpha = 1; ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.stroke();
@@ -455,10 +455,13 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
   }
   const cross = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
   const norm = (a) => { const L = Math.hypot(...a); return a.map((x) => x / L); };
+  /* shown only once a run ends standing up or fallen, a state the harvest does not reach: the literals are read from here */
+  function fellText() { return typeof VDI18N === 'object' ? (S.fell === 'up' ? VDI18N.t('It stood up.') : VDI18N.t('It fell.')) : S.fell === 'up' ? 'It stood up.' : 'It fell.'; }
   function readouts() {
     const { c, s } = S.sim, dd = (a, b, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`, tilt = (Math.PI / 2 - s.th) * 180 / Math.PI;
     let h = dd('Spin ω_s', `${f(c.w3, 1)} rad/s`) + dd('Axle tilt now', `${f(tilt, 2)}°`);
-    h += dd('Gate: last full turn', S.lastP ? `${S.lastP.toFixed(2)} s` : '—') + dd('Torque Mgd sin θ', `${f(c.Mgd * Math.sin(s.th) * 1000, 1)} mN·m`);
+    h += dd('Gate: last full turn', S.lastP && S.fell !== 'up' ? `${S.lastP.toFixed(2)} s` : '—')   /* once it stands up, φ' = (p_φ − I_s ω_s cos θ)/(I₁ sin²θ) races near the top: its last turns are not a precession period */
+       + dd('Torque Mgd sin θ', `${f(c.Mgd * Math.sin(s.th) * 1000, 1)} mN·m`);
     if (c.tf) { const tq = pivotTorque(c, s.th, phidot(c, s.th)) * 1000; h += dd('Friction torque about the post', `${f(tq, 1)} mN·m (${tq > 0 ? 'hurries' : 'holds back'} the precession)`, true); }
     if (hiddenI()) h += `<div class="wide"><dt>I, L and the predicted rate</dt><dd class="ok">${S.mystK != null && !S.blind ? 'Mystery wheel: hidden. Find I_s from your timings.' : 'hidden in Blind'}</dd></div>`;
     else {
@@ -466,7 +469,7 @@ const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, se
       h += dd('I_s about the axle', `${sci(c.Is)} kg·m²`) + dd('Spin L = I_s ω_s', `${sci(c.Is * c.w3)} kg·m²/s`);
       h += dd('Predicted Ω = Mgd/(I_s ω_s)', isFinite(ft) ? `${f(ft, 3)} rad/s` : '—') + dd('Predicted period 2π/Ω', isFinite(ft) ? `${f(2 * Math.PI / ft, 2)} s` : '—');
       const st = S.fell ? NaN : (Math.PI / 2 - steadyTilt(c)) * 180 / Math.PI;
-      h += dd('Precession rate now φ\'', `${f(phidot(c, s.th), 3)} rad/s`) + dd('Steady tilt for this L', isFinite(st) ? `${f(st, 2)}°` : '—');
+      h += dd('Precession rate now φ\'', S.fell === 'up' ? '—' : `${f(phidot(c, s.th), 3)} rad/s`) + dd('Steady tilt for this L', isFinite(st) ? `${f(st, 2)}°` : '—');
     }
     $('out').innerHTML = h;
   }

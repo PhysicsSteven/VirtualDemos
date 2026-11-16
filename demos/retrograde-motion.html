@@ -432,7 +432,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       hint: 'Saturn loops every 378 days, a little more than a year, in a loop smaller still. Opposition 8 September 2024. In the telescope its rings are nearly edge on: Earth crossed the ring plane in March 2025.' },
     mercury: { k: 'mercury', m: 'kepler', fr: 'sun', t0: D(2025, 1, 1), t1: D(2025, 12, 31), step: 30, speed: 30, follow: true,
       hint: 'Mercury goes around the Sun in 88 days and Earth catches it every 116 days, so Mercury goes retrograde three times a year, each time near inferior conjunction, when it passes between Earth and the Sun. It never gets farther than 28° from the Sun.' },
-    synodic: { k: 'mars', m: 'kepler', fr: 'sun', t0: D(2016, 1, 1), t1: D(2033, 6, 1), marks: 'opposition', speed: 120, whole: true, trail: 780,
+    synodic: { k: 'mars', m: 'kepler', fr: 'sun', t0: D(2016, 1, 1), t1: D(2033, 7, 15), marks: 'opposition', speed: 120, whole: true, trail: 780,
       hint: 'Every opposition of Mars from 2016 to 2033, numbered. They come every 780 days on average (the synodic period), so Earth goes around the Sun a little more than twice between them, and each opposition happens about 49° farther east, in the next constellation or two. Close oppositions (2018, 2020, 2033) come where Mars is near perihelion.' },
     tycho: { k: 'mars', m: 'kepler', fr: 'earth', t0: D(2024, 1, 1), t1: D(2026, 3, 1), step: 60, speed: 30,
       hint: 'The same orbits with Earth held still: the Sun circles Earth, and Mars circles the Sun. This is Tycho Brahe\'s system (1588). Seen this way Mars traces a loop around Earth once per synodic period, exactly the loop Ptolemy\'s epicycle makes. Every line of sight and every phase is the same as in the Sun centered picture: only what is held still has changed.' },
@@ -793,10 +793,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function readouts() {
     const k = S.planet, q = look(S.model, k, S.jd), rt = rate(S.model, k, S.jd), cn = constellationAt(q.lam, q.beta);
     const dd = (a, b, cls) => `<div${cls ? ` class="${cls}"` : ''}><dt>${a}</dt><dd>${b}</dd></div>`;
-    const dir = Math.abs(rt) < 0.004 ? 'stationary' : rt > 0 ? 'eastward (direct)' : 'westward (retrograde)';
+    const dir = Math.abs(rt) < 0.004 ? 'at a stationary point' : rt > 0 ? 'eastward (direct)' : 'westward (retrograde)';
     const side = Math.abs(q.elong) > 179.5 ? 'opposite the Sun (up all night)' : q.elong >= 0 ? 'east of the Sun (evening sky)' : 'west of the Sun (morning sky)';
     let h = dd('Date', nice(S.jd), 'wide big') + dd('Among the stars', `${cn || '—'}`, 'wide') + dd('Ecliptic longitude λ', `${f(q.lam, 2)}°`) + dd('Ecliptic latitude β', `${f(q.beta, 2)}°`)
-      + dd('Moving', `${dir}, ${f(rt, 3)}°/day`, 'wide') + dd('Elongation', `${f(Math.abs(q.elong), 1)}° ${side}`, 'wide')
+      + dd('Moving', `${dir}, ${f(rt, 3).replace(/^−(0\.0+)$/, '$1')}°/day`, 'wide') /* a rate that rounds to zero shows 0.000, not −0.000 */ + dd('Elongation', `${f(Math.abs(q.elong), 1)}° ${side}`, 'wide')
       + dd('Distance from Earth', q.d != null ? `${f(q.d, 3)} AU` : `${f(q.rel, 2)}× nearer than its farthest`) + dd('Lit', `${f(q.lit * 100, 0)}%, ${phaseName(q.lit, q.alpha)}`)
       + dd('Angular size', q.size != null ? `${f(q.size, 1)}″` : '— (only relative)');
     if (S.blind) h += '<div class="wide"><dt>Periods</dt><dd class="ok">hidden: measure them</dd></div>';
@@ -1001,7 +1001,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const ev = S.lastEv && Math.abs(S.lastEv.jd - S.jd) < 1e-6 ? KIND_NAME[S.lastEv.kind].toLowerCase() : '';
     const real = S.model !== 'kepler' ? Math.abs(wrap(q.lam - look('kepler', k, S.jd).lam)) : 0;
     return { date: iso(S.jd), days: (S.jd - first).toFixed(1), planet: EL[k].name, model: MODEL_NAME[S.model], lambda_deg: q.lam.toFixed(2), beta_deg: q.beta.toFixed(2),
-      motion: Math.abs(rt) < 0.004 ? 'stationary' : rt > 0 ? 'east (direct)' : 'west (retrograde)', rate_deg_day: rt.toFixed(3), elong_deg: (q.elong <= -179.95 ? 180 : q.elong).toFixed(1), /* opposition reads +180.0, not −180.0 */
+      motion: Math.abs(rt) < 0.004 ? 'stationary' : rt > 0 ? 'east (direct)' : 'west (retrograde)', rate_deg_day: (Math.abs(rt) < 0.0005 ? 0 : rt).toFixed(3), elong_deg: (q.elong <= -179.95 ? 180 : q.elong).toFixed(1), /* opposition reads +180.0, not −180.0 */
       dist_AU: q.d != null ? q.d.toFixed(3) : '', lit_pct: (q.lit * 100).toFixed(1), size_arcsec: q.size != null ? q.size.toFixed(1) : '', size_rel: q.rel.toFixed(2),
       phase: phaseName(q.lit, q.alpha), event: ev, constellation: constellationAt(q.lam, q.beta), off_real_deg: S.model !== 'kepler' ? real.toFixed(2) : '', jd: S.jd.toFixed(4) };
   };

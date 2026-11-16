@@ -389,7 +389,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       h += dd('Quantum: heads fraction', Nq ? f(S.qc[0] / Nq) : '—') + dd('Expected |a|²', S.blind ? hid : f(am.a ** 2));
       if (Nq) h += dd('Spread expected in the fraction √(P(1 − P)/N)', S.blind ? hid : f(Math.sqrt(am.a ** 2 * (1 - am.a ** 2) / Nq)), 'wide');
     } else if (S.mode === 'spin') {
-      const s = qcVec(S.ts, S.fs), n = axis(), g = Math.acos(Math.max(-1, Math.min(1, s[0] * n[0] + s[1] * n[1] + s[2] * n[2]))) / QC_D, N = S.sp[0] + S.sp[1];
+      const s = S.fresh || !S.cur ? qcVec(S.ts, S.fs) : S.cur, n = axis(), g = Math.acos(Math.max(-1, Math.min(1, s[0] * n[0] + s[1] * n[1] + s[2] * n[2]))) / QC_D, N = S.sp[0] + S.sp[1];   /* the state the next measurement meets, as in measure() */
       h += dd('Angle γ between state and axis', `${g.toFixed(1)}°`) + dd('Up fraction', N ? f(S.sp[0] / N) : '—');
       h += dd('Expected cos²(γ/2)', S.blind ? hid : f(qcPUp(s, n))) + dd('Measurements N', String(N));
     } else {
@@ -498,7 +498,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       out.push(Nc ? `Ordinary coin: heads ${S.cc[0]}, tails ${S.cc[1]}, heads fraction ${f(S.cc[0] / Nc)}.` : 'No ordinary coins tossed yet.');
       out.push(Nq ? `Quantum coin: heads ${S.qc[0]}, tails ${S.qc[1]}, heads fraction ${f(S.qc[0] / Nq)}.` : 'No quantum coins measured yet.');
     } else if (S.mode === 'spin') {
-      const s = qcVec(S.ts, S.fs), n = axis(), N = S.sp[0] + S.sp[1], g = Math.acos(Math.max(-1, Math.min(1, s[0] * n[0] + s[1] * n[1] + s[2] * n[2]))) / QC_D;
+      const s = S.fresh || !S.cur ? qcVec(S.ts, S.fs) : S.cur, n = axis(), N = S.sp[0] + S.sp[1], g = Math.acos(Math.max(-1, Math.min(1, s[0] * n[0] + s[1] * n[1] + s[2] * n[2]))) / QC_D;
       out.push('A Bloch sphere with the spin state drawn as an arrow and the magnet axis as a dashed line, beside a bar chart of up and down.');
       out.push(`The spin state has tilt θ = ${S.ts}° from up and turn φ = ${S.fs}° about z.`);
       out.push(`The magnet axis is tilted ${S.ta}° from z and turned ${S.fa}° about z.`);

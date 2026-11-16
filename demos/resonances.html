@@ -1001,7 +1001,9 @@ onmessage = (e) => { const d = e.data;
         h += dd('Largest e so far', fx(sys.emax[0], 3)) + dd(`Closest to ${sc.pname}`, `${fx(sys.dmin[0], 2)} AU`);
         if (el) h += dd('Perihelion q', `${fx(el.q, 2)} AU`);
         const cj = sys.conj[0]; if (cj.length) { const f = deg(cj[cj.length - 1].f), fr = f > 180 ? 360 - f : f; h += dd(`${sc.pname} last passed it`, `${fx(fr, 0)}° from its perihelion${fr > 135 ? ' (near aphelion)' : fr < 45 ? ' (near perihelion)' : ''}`, true); }
-        if (g) h += dd('Status', g.why === 'mars' ? `crossed Mars's orbit at ${fint(g.t)} yr` : g.why === 'planet' ? `scattered by ${sc.pname} at ${fint(g.t)} yr` : 'escaped', true);
+        if (g) { const v = { t: fint(g.t) }, I = typeof VDI18N === 'object', sub = (en) => en.replace('{t}', v.t);   /* reached only after a loss, so the harvest reads these from the source */
+          h += dd(I ? VDI18N.t('Status') : 'Status', g.why === 'mars' ? (I ? VDI18N.t('crossed Mars\'s orbit at {t} yr', v) : sub('crossed Mars\'s orbit at {t} yr'))
+            : g.why === 'planet' ? (sc.pname === 'Neptune' ? (I ? VDI18N.t('scattered by Neptune at {t} yr', v) : sub('scattered by Neptune at {t} yr')) : (I ? VDI18N.t('scattered by Jupiter at {t} yr', v) : sub('scattered by Jupiter at {t} yr'))) : I ? VDI18N.t('escaped') : 'escaped', true); }
       }
     }
     $('out').innerHTML = h;

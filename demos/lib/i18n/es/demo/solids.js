@@ -456,8 +456,6 @@ VDI18N.add('es', 'demo/solids', {
   "Dopaje N_A, N_D",
 "Shell by shell, as in the book's series {#} − {#}/√{#} + {#}/√{#} − ...":
   "Capa por capa, como en la serie del libro {#} − {#}/√{#} + {#}/√{#} − ...",
-"An electron in a row of square wells and barriers: the Kronig–Penney model":
-  "Un electrón en una fila de pozos y barreras cuadrados: el modelo de Kronig–Penney",
 "A silicon pn junction wired to a battery and a meter, with the depletion region at its middle and the band diagram across it.":
   "Una unión pn de silicio conectada a una batería y a un medidor, con la región de agotamiento en el centro y el diagrama de bandas a lo largo de ella.",
 "The bias is {#} V, forward.":
@@ -472,6 +470,8 @@ VDI18N.add('es', 'demo/solids', {
   "El ancho de agotamiento es de {#} μm.",
 "The built in potential is {#} V.":
   "El potencial interno es de {#} V.",
+"An electron in a row of square wells and barriers: the Kronig–Penney model":
+  "Un electrón en una fila de pozos y barreras cuadrados: el modelo de Kronig–Penney",
 "depletion region":
   "región de agotamiento",
 "forward biased":
@@ -502,6 +502,14 @@ VDI18N.add('es', 'demo/solids', {
   "Color",
 "green":
   "verde",
+"An LED wired to a battery, with the band diagram across the junction.":
+  "Un LED conectado a una batería, con el diagrama de bandas a lo largo de la unión.",
+"The LED is GaP, with a band gap of {#} eV.":
+  "El LED es de GaP, con una brecha de banda de {#} eV.",
+"The spectrometer peak is {#} nm.":
+  "El pico del espectrómetro está en {#} nm.",
+"The color is green.":
+  "El color es verde.",
 "CsCl: cesium chloride structure (two interleaved simple cubic lattices)":
   "CsCl: estructura del cloruro de cesio (dos redes cúbicas simples entrelazadas)",
 "Cs⁺ (positive ion); ring: the reference ion":
@@ -578,18 +586,6 @@ VDI18N.add('es', 'demo/solids', {
   "Electrón libre, misma k (zona extendida)",
 "Bands below V₀":
   "Bandas por debajo de V₀",
-"An electron in a row of square wells and barriers, with the allowed energy bands and gaps drawn.":
-  "Un electrón en una fila de pozos y barreras cuadrados, con las bandas de energía permitidas y las brechas dibujadas.",
-"The period is {#} nm, and the barriers are {#} eV high and {#} nm wide.":
-  "El periodo es de {#} nm, y las barreras tienen {#} eV de alto y {#} nm de ancho.",
-"Band {#} runs from {#} to {#} eV.":
-  "La banda {#} va de {#} a {#} eV.",
-"The gap above band {#} is {#} eV.":
-  "La brecha sobre la banda {#} es de {#} eV.",
-"At wave number {#} π/a the state energy is {#} eV.":
-  "Con número de onda {#} π/a, la energía del estado es de {#} eV.",
-"The bands below the barrier height number {#}.":
-  "Las bandas por debajo de la altura de la barrera son {#}.",
 "|ψ|² of band {#} at k = {#} π/a, drawn on its energy E = {#} eV; shaded: allowed bands":
   "|ψ|² de la banda {#} en k = {#} π/a, dibujada sobre su energía E = {#} eV; sombreado: bandas permitidas",
 "Higher, wider barriers: the electron can hardly tunnel from one well to the next, so each band shrinks toward a single level of one well, the tight binding picture of the chain of atoms. Lower V₀ to {#} and the gaps close: a free electron.":
@@ -602,22 +598,14 @@ VDI18N.add('es', 'demo/solids', {
   "nivel donador (P): E_c − {#} eV; un punto es un electrón ligado",
 "Silicon with {#}¹⁵ phosphorus atoms per cm³ (one per {#} million silicon atoms). At room temperature nearly every donor has given up its electron, so n ≈ N_D. Cool it to see freeze out; heat it to see the intrinsic carriers take over.":
   "Silicio con {#}¹⁵ átomos de fósforo por cm³ (uno por cada {#} millones de átomos de silicio). A temperatura ambiente casi todos los donadores han cedido su electrón, así que n ≈ N_D. Enfríalo para ver el congelamiento de portadores; caliéntalo para ver cómo dominan los portadores intrínsecos.",
-"Si, P {#} cm⁻³":
-  "Si, P {#} cm⁻³",
+"Si, P {#} × {#}¹⁵ cm⁻³":
+  "Si, P {#} × {#}¹⁵ cm⁻³",
 "extrinsic":
   "extrínseco",
 "A silicon diode at {#} K with a saturation current of {#} pA. Step the bias from −{#} V to {#} V and record the current: almost nothing flows in reverse, and the forward current grows by a factor e for every {#} mV.":
   "Un diodo de silicio a {#} K con una corriente de saturación de {#} pA. Cambia la polarización paso a paso de −{#} V a {#} V y registra la corriente: casi nada fluye en inversa, y la corriente directa crece por un factor e cada {#} mV.",
 "An LED emits light when electrons fall across the band gap, so the photon energy is about E_g. Try each material and read the wavelength; then pick Any band gap and find the gaps that give red, green and blue.":
   "Un LED emite luz cuando los electrones caen a través de la banda prohibida, así que la energía del fotón es aproximadamente E_g. Prueba cada material y lee la longitud de onda; luego elige Cualquier banda prohibida y encuentra las brechas que dan rojo, verde y azul.",
-"An LED wired to a battery, with the band diagram across the junction.":
-  "Un LED conectado a una batería, con el diagrama de bandas a lo largo de la unión.",
-"The LED is GaP, with a band gap of {#} eV.":
-  "El LED es de GaP, con una brecha de banda de {#} eV.",
-"The spectrometer peak is {#} nm.":
-  "El pico del espectrómetro está en {#} nm.",
-"The color is green.":
-  "El color es verde.",
 "The spectrometer reading goes in the LED table of the worksheet: write it down by hand.":
   "La lectura del espectrómetro va en la tabla de LED de la hoja de trabajo: anótala a mano.",
 "Germanium and gallium arsenide are pure (intrinsic) here.":
@@ -660,12 +648,24 @@ VDI18N.add('es', 'demo/solids', {
   "Los iones se suman en {#} capas de vecinos.",
 "|ψ|², band {#}, k = {#} π/a, E = {#} eV":
   "|ψ|², banda {#}, k = {#} π/a, E = {#} eV",
+"An electron in a row of square wells and barriers, with the allowed energy bands and gaps drawn.":
+  "Un electrón en una fila de pozos y barreras cuadrados, con las bandas de energía permitidas y las brechas dibujadas.",
+"The period is {#} nm, and the barriers are {#} eV high and {#} nm wide.":
+  "El periodo es de {#} nm, y las barreras tienen {#} eV de alto y {#} nm de ancho.",
+"Band {#} runs from {#} to {#} eV.":
+  "La banda {#} va de {#} a {#} eV.",
+"The gap above band {#} is {#} eV.":
+  "La brecha sobre la banda {#} es de {#} eV.",
+"At wave number {#} π/a the state energy is {#} eV.":
+  "Con número de onda {#} π/a, la energía del estado es de {#} eV.",
+"The bands below the barrier height number {#}.":
+  "Las bandas por debajo de la altura de la barrera son {#}.",
 "donors (P): E_c − {#} eV":
   "donadores (P): E_c − {#} eV",
 "A cryostat holding a semiconductor sample, beside the band diagram with the electrons, holes, impurity levels and Fermi level.":
   "Un criostato con una muestra semiconductora, junto al diagrama de bandas con los electrones, los huecos, los niveles de impurezas y el nivel de Fermi.",
-"The sample is Si, P {#} cm⁻³.":
-  "La muestra es de Si, P {#} cm⁻³.",
+"The sample is Si, P {#} × {#}¹⁵ cm⁻³.":
+  "La muestra es de Si, P {#} × {#}¹⁵ cm⁻³.",
 "The electron density is {#} × {#}¹⁴ cm⁻³, and the hole density is {#} × {#}⁵ cm⁻³.":
   "La densidad de electrones es {#} × {#}¹⁴ cm⁻³ y la densidad de huecos es {#} × {#}⁵ cm⁻³.",
 "{#} % of the donors are ionized.":
@@ -686,6 +686,24 @@ VDI18N.add('es', 'demo/solids', {
   "La muestra es de Si, sin dopar.",
 "The electron density is {#} × {#}¹⁰ cm⁻³, and the hole density is {#} × {#}¹⁰ cm⁻³.":
   "La densidad de electrones es {#} × {#}¹⁰ cm⁻³ y la densidad de huecos es {#} × {#}¹⁰ cm⁻³.",
+"each dot: {#}¹² cm⁻³ ({#} electrons, {#} holes drawn)":
+  "cada punto: {#}¹² cm⁻³ ({#} electrones, {#} huecos dibujados)",
+"freeze out":
+  "congelamiento de portadores",
+"The electron density is {#} × {#}¹³ cm⁻³, and the hole density is {#} × {#}⁻¹¹⁹ cm⁻³.":
+  "La densidad de electrones es {#} × {#}¹³ cm⁻³ y la densidad de huecos es {#} × {#}⁻¹¹⁹ cm⁻³.",
+"The intrinsic density is {#} × {#}⁻⁵³ cm⁻³, and the Fermi level is {#} eV above the valence band.":
+  "La densidad intrínseca es {#} × {#}⁻⁵³ cm⁻³ y el nivel de Fermi está {#} eV por encima de la banda de valencia.",
+"each dot: {#}¹⁵ cm⁻³ ({#} electrons, {#} holes drawn)":
+  "cada punto: {#}¹⁵ cm⁻³ ({#} electrones, {#} huecos dibujados)",
+"The electron density is {#} × {#}¹⁶ cm⁻³, and the hole density is {#} × {#}¹⁶ cm⁻³.":
+  "La densidad de electrones es {#} × {#}¹⁶ cm⁻³ y la densidad de huecos es {#} × {#}¹⁶ cm⁻³.",
+"The intrinsic density is {#} × {#}¹⁶ cm⁻³, and the Fermi level is {#} eV above the valence band.":
+  "La densidad intrínseca es {#} × {#}¹⁶ cm⁻³ y el nivel de Fermi está {#} eV por encima de la banda de valencia.",
+"ALPHA SUMMED, {#} SHELL":
+  "ALFA SUMADA, {#} CAPA",
+"α summed, {#} shell":
+  "α sumada, {#} capa",
 "Describe the picture":
   "Describir la imagen",
 "Skip to the picture":

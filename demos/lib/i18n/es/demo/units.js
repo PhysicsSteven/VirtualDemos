@@ -18,6 +18,10 @@ VDI18N.add('es', 'demo/units', {
   "ancho de la vista: {#} m ({#}⁰·⁶)",
 "Units, Scales and Estimates":
   "Unidades, escalas y estimaciones",
+"<a>Measurements and vectors</a>":
+  "<a>Mediciones y vectores</a>",
+"<span><a><span>Vectors and Relative Motion</span> <span>→</span></a></span>":
+  "<span><a><span>Vectores y movimiento relativo</span> <span>→</span></a></span>",
 "The toolkit for the first week of physics: how big things are, converting units with exact factors, checking and finding formulas by dimensions, carrying the right number of significant figures, and making Fermi estimates.":
   "Las herramientas para la primera semana de física: qué tan grandes son las cosas, convertir unidades con factores exactos, comprobar y encontrar fórmulas por sus dimensiones, conservar el número correcto de cifras significativas y hacer estimaciones de Fermi.",
 "Scale of things":
@@ -160,8 +164,6 @@ VDI18N.add('es', 'demo/units', {
   "<a>Hoja de trabajo {#}: Estimaciones e incertidumbre</a>",
 "<a>Worksheet {#}: How Big Is the Solar System? (Astro {#})</a>":
   "<a>Hoja de trabajo {#}: ¿Qué tan grande es el sistema solar? (Astro {#})</a>",
-"Zoom":
-  "Acercamiento",
 "Width of the view":
   "Ancho de la vista",
 "Go to":
@@ -254,14 +256,6 @@ VDI18N.add('es', 'demo/units', {
   "A ciegas oculta los resultados (el valor convertido, la comprobación de dimensiones, la respuesta redondeada, la estimación y los nombres de los objetos en la regla y en el recorrido) para que los estudiantes trabajen primero.",
 "Sizes on the ruler are typical or approximate values; ranges in nature are wide (a human hair is {#} to {#} μm). Conversion factors are the exact legal definitions ({#} in = {#} cm, {#} lb = {#} kg, {#} cal = {#} J), except where marked.":
   "Los tamaños en la regla son valores típicos o aproximados; en la naturaleza los intervalos son amplios (un cabello humano mide de {#} a {#} μm). Los factores de conversión son las definiciones legales exactas ({#} in = {#} cm, {#} lb = {#} kg, {#} cal = {#} J), salvo donde se indica.",
-"<a>Measurements and vectors</a>":
-  "<a>Mediciones y vectores</a>",
-"<span><a><span>Vectors and Relative Motion</span> <span>→</span></a></span>":
-  "<span><a><span>Vectores y movimiento relativo</span> <span>→</span></a></span>",
-"Skip to the picture":
-  "Saltar a la imagen",
-"Skip to the controls":
-  "Saltar a los controles",
 "Same amount, two rulers: a bigger unit fits fewer times, so its number is smaller.":
   "La misma cantidad, dos reglas: una unidad más grande cabe menos veces, así que su número es menor.",
 "One of each unit, to the same scale:":
@@ -462,6 +456,10 @@ VDI18N.add('es', 'demo/units', {
   "h (altura)",
 "t = C √(h/g), and C = √{#}: the mass drops out (no air drag).":
   "t = C √(h/g), y C = √{#}: la masa no interviene (sin resistencia del aire).",
+"They match.":
+  "Coinciden.",
+"Its power is −{#}.":
+  "Su potencia es −{#}.",
 "Calculator: {#} → keep {#} decimal place → <span>{#}</span>":
   "Calculadora: {#} → conservar {#} decimal → <span>{#}</span>",
 "<span>{#} decimal place, the least precise</span>":
@@ -534,6 +532,12 @@ VDI18N.add('es', 'demo/units', {
   "universo observable (diámetro)",
 "one tick per power of ten; drag to read a size":
   "una marca por potencia de diez; arrastra para leer un tamaño",
+"Zoom":
+  "Acercamiento",
+"Skip to the picture":
+  "Saltar a la imagen",
+"Skip to the controls":
+  "Saltar a los controles",
 "Enter a number.":
   "Escribe un número.",
 "Enter positive numbers.":

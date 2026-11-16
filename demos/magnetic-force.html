@@ -1143,7 +1143,8 @@ details.hall[open] > summary { margin-bottom: 8px; }
       for (const q of pts) { xs.push(q[0]); ys.push(q[1]); }
     }
     let x0 = Math.min(...xs), x1 = Math.max(...xs), y0 = Math.min(...ys), y1 = Math.max(...ys);
-    if (S.f.cmp !== 'none' && cmp && Tp && !S.f.region) {
+    /* judged from the chosen comparison, not from cmp: rebuild() fits the view before buildFree() makes the new cmp */
+    if (cmpPart() && Tp && !S.f.region) {
       const q = cmpPart(), Tq = freePeriod(q), k = cmpSpeedFactor(p, q);
       const tq = makeTraj(mdl, q, launchState(k), 0, 0);
       const qs = tq.sample(0, (S.f.eon ? 2.4 : 1) * Tq, Math.max(vPerp() * k * Tq, 1e-6) / 400, 3000);
@@ -2765,7 +2766,7 @@ details.hall[open] > summary { margin-bottom: 8px; }
       if (cmp) {
         const q = cmp.part, Tq = freePeriod(q), vq = vPerp() * cmp.speedFactor;
         $('rCmpLab').textContent = q.name;
-        $('rCmp').innerHTML = Tq && LAB.blind ? `v = ${fmtV(vq)}, K = ${fmtK(0.5 * q.m * vq * vq)}` : Tq ? `v = ${fmtV(vq)}, K = ${fmtK(0.5 * q.m * vq * vq)}<br>r = ${fmtLen(radius(q.m, vq, q.q, B))}, T = ${si(Tq, 's')} <span class="ok">(${trim((Tq / Tp).toPrecision(4))} T)</span>` : `v = ${fmtV(vq)}`;
+        $('rCmp').innerHTML = Tq && LAB.blind ? `v = ${fmtV(vq)}, K = ${fmtK(0.5 * q.m * vq * vq)}` : Tq ? `v = ${fmtV(vq)}, K = ${fmtK(0.5 * q.m * vq * vq)}<br>r = ${fmtLen(radius(q.m, vq, q.q, B))}, T = ${si(Tq, 's')} <span class="ok">${((r) => (window.VDI18N ? VDI18N.t('({r} × the first particle\'s period)', { r }) : `(${r} × the first particle's period)`))(trim((Tq / Tp).toPrecision(4)))}</span>` : `v = ${fmtV(vq)}`;
       }
       $('fieldHint').textContent = !B ? 'With B off there is no magnetic force. With only E on, the charge moves on a parabola like a ball thrown in gravity.'
         : Emag() ? 'E is in the page and B is at right angles to it, so the guiding center drifts at E/B along E × B. A positive and a negative charge drift the same way.'

@@ -624,62 +624,6 @@ VDI18N.add('es', 'demo/rotation', {
   "<span><i></i>Bola de plastilina, aplastada al pegarse</span><span><i></i>Pelota que rebota</span><span><i></i>Empuje del pivote durante el golpe</span><span><i></i>Trayectoria del centro de masa de una varilla libre y la plastilina</span><span><i></i>Marca del disco inferior</span><span><i></i>Marca del disco superior</span>",
 "A {#} g lump of clay at {#} m/s sticks to a {#} kg, {#} m rod pinned at one end, {#} cm from the pin. Angular momentum about the pin, mud = {#} kg·m²/s, is the same after the hit, so ω = mud/(ML²/{#} + md²) = {#} rad/s. Only {#}% of the kinetic energy is left, and the pin gives the rod a push of {#} N·s: momentum is not kept.":
   "Una bola de plastilina de {#} g a {#} m/s se pega a una varilla de {#} kg y {#} m con pivote en un extremo, a {#} cm del pivote. El momento angular respecto al pivote, mud = {#} kg·m²/s, es el mismo después del golpe, así que ω = mud/(ML²/{#} + md²) = {#} rad/s. Solo queda el {#}% de la energía cinética, y el pivote da a la varilla un empuje de {#} N·s: el momento no se conserva.",
-"L about the pin = +{#} kg·m²/s, all in the ball, mud":
-  "L respecto al pivote = +{#} kg·m²/s, todo en la pelota, mud",
-"top view, to scale, frictionless table":
-  "vista superior, a escala, mesa sin fricción",
-"Angular momentum about the pin, kg·m²/s":
-  "Momento angular respecto al pivote, kg·m²/s",
-"Clay, m(r × v)":
-  "Plastilina, m(r × v)",
-"Total":
-  "Total",
-"p before +{#}, after +{#} kg·m/s":
-  "p antes +{#}, después +{#} kg·m/s",
-"the pin's push changes it by +{#} N·s":
-  "el empuje del pivote lo cambia en +{#} N·s",
-"Kinetic energy, {#} J before the hit":
-  "Energía cinética, {#} J antes del golpe",
-"Clay":
-  "Plastilina",
-"Rod, ½MV² + ½I_cω²":
-  "Varilla, ½MV² + ½I_cω²",
-"Lost in the hit (heat, sound)":
-  "Perdida en el golpe (calor, sonido)",
-"kept {#}% with e = {#}":
-  "se conserva {#}% con e = {#}",
-"I of the rod about the pin, ML²/{#}":
-  "I de la varilla respecto al pivote, ML²/{#}",
-"ω after the hit":
-  "ω después del golpe",
-"Clay speed after (with the rod)":
-  "Rapidez de la plastilina después (con la varilla)",
-"L before, mud":
-  "L antes, mud",
-"L after":
-  "L después",
-"p before":
-  "p antes",
-"p after":
-  "p después",
-"Push from the pin":
-  "Empuje del pivote",
-"K before":
-  "K antes",
-"K after":
-  "K después",
-"The pin holds the rod in place, so during the hit it pushes: momentum is not kept. Its push acts at the pin, though, so it has no torque about the pin, and the angular momentum about the pin is kept: mud = (what the ball keeps) + I_pin ω. Hit a rod pinned at its end 2L/{#} from the pin (the center of percussion, or sweet spot) and the pin does not need to push at all.":
-  "El pivote mantiene la varilla en su lugar, así que durante el golpe empuja: el momento no se conserva. Pero su empuje actúa en el pivote, así que no tiene torca respecto al pivote, y el momento angular respecto al pivote se conserva: mud = (lo que conserva la pelota) + I_pin ω. Golpea una varilla con pivote en su extremo a 2L/{#} del pivote (el centro de percusión, o punto dulce) y el pivote no necesita empujar en absoluto.",
-"Model: a thin uniform rod on a frictionless table, a small clay ball that stops dead against the rod and stays stuck to it as a point mass on the rod’s line (a perfectly inelastic hit, e = {#}). The hit takes no time.":
-  "Modelo: una varilla delgada uniforme sobre una mesa sin fricción, una bolita de plastilina que se detiene en seco contra la varilla y queda pegada a ella como masa puntual sobre la línea de la varilla (un golpe perfectamente inelástico, e = {#}). El golpe no dura nada.",
-"Go":
-  "Ir",
-"Table seen from above: a clay ball moving up the page toward a rod pinned at its left end, to hit it {#} m from the pin. Pointer: drag the ball sideways to move the hit point, drag the grip at its arrow tip to set its speed. Keys: left and right arrows move the hit point, up and down arrows change the speed, Enter or space goes.":
-  "Mesa vista desde arriba: una bola de plastilina que sube por la pantalla hacia una varilla con pivote en su extremo izquierdo, para golpearla a {#} m del pivote. Con el puntero: arrastra la pelota hacia los lados para mover el punto de impacto, arrastra el agarre en la punta de su flecha para fijar su rapidez. Teclas: las flechas izquierda y derecha mueven el punto de impacto, arriba y abajo cambian la rapidez, Intro o espacio arranca.",
-"Angular momentum about the pin at t = {#} s: ball +{#}, rod {#}, total +{#} kg·m²/s (mud = +{#} before the hit). Momentum along the ball's path +{#} before, +{#} kg·m/s after. Show data table in the rail lists the values.":
-  "Momento angular respecto al pivote en t = {#} s: pelota +{#}, varilla {#}, total +{#} kg·m²/s (mud = +{#} antes del golpe). Momento a lo largo de la trayectoria de la pelota +{#} antes, +{#} kg·m/s después. Mostrar la tabla de datos, en el panel, lista los valores.",
-"Kinetic energy at t = {#} s out of {#} J: ball +{#} J, rod {#} J. Show data table in the rail lists the values.":
-  "Energía cinética en t = {#} s de {#} J: pelota +{#} J, varilla {#} J. Mostrar la tabla de datos, en el panel, lista los valores.",
 "Torque is r⊥F, the force times its lever arm. Tilt the arrow: only the part of F perpendicular to the handle turns the bolt, and a push along the handle does nothing. Shown at {#}/{#} speed.":
   "La torca es r⊥F, la fuerza por su brazo de palanca. Inclina la flecha: solo la parte de F perpendicular al mango gira el perno, y un empujón a lo largo del mango no hace nada. Se muestra a {#}/{#} de velocidad.",
 "Wrench modeled as a thin uniform rod turning about the bolt, I = mL²/{#}. The bolt turns freely here; a real bolt adds friction. The run ends after a quarter turn.":
@@ -770,6 +714,62 @@ VDI18N.add('es', 'demo/rotation', {
   "Momento angular L = {#} kg·m²/s.",
 "Angular speed ω = {#} rad/s, {#} rev/s.":
   "Rapidez angular ω = {#} rad/s, {#} rev/s.",
+"L about the pin = +{#} kg·m²/s, all in the ball, mud":
+  "L respecto al pivote = +{#} kg·m²/s, todo en la pelota, mud",
+"top view, to scale, frictionless table":
+  "vista superior, a escala, mesa sin fricción",
+"Angular momentum about the pin, kg·m²/s":
+  "Momento angular respecto al pivote, kg·m²/s",
+"Clay, m(r × v)":
+  "Plastilina, m(r × v)",
+"Total":
+  "Total",
+"p before +{#}, after +{#} kg·m/s":
+  "p antes +{#}, después +{#} kg·m/s",
+"the pin's push changes it by +{#} N·s":
+  "el empuje del pivote lo cambia en +{#} N·s",
+"Kinetic energy, {#} J before the hit":
+  "Energía cinética, {#} J antes del golpe",
+"Clay":
+  "Plastilina",
+"Rod, ½MV² + ½I_cω²":
+  "Varilla, ½MV² + ½I_cω²",
+"Lost in the hit (heat, sound)":
+  "Perdida en el golpe (calor, sonido)",
+"kept {#}% with e = {#}":
+  "se conserva {#}% con e = {#}",
+"I of the rod about the pin, ML²/{#}":
+  "I de la varilla respecto al pivote, ML²/{#}",
+"ω after the hit":
+  "ω después del golpe",
+"Clay speed after (with the rod)":
+  "Rapidez de la plastilina después (con la varilla)",
+"L before, mud":
+  "L antes, mud",
+"L after":
+  "L después",
+"p before":
+  "p antes",
+"p after":
+  "p después",
+"Push from the pin":
+  "Empuje del pivote",
+"K before":
+  "K antes",
+"K after":
+  "K después",
+"The pin holds the rod in place, so during the hit it pushes: momentum is not kept. Its push acts at the pin, though, so it has no torque about the pin, and the angular momentum about the pin is kept: mud = (what the ball keeps) + I_pin ω. Hit a rod pinned at its end 2L/{#} from the pin (the center of percussion, or sweet spot) and the pin does not need to push at all.":
+  "El pivote mantiene la varilla en su lugar, así que durante el golpe empuja: el momento no se conserva. Pero su empuje actúa en el pivote, así que no tiene torca respecto al pivote, y el momento angular respecto al pivote se conserva: mud = (lo que conserva la pelota) + I_pin ω. Golpea una varilla con pivote en su extremo a 2L/{#} del pivote (el centro de percusión, o punto dulce) y el pivote no necesita empujar en absoluto.",
+"Model: a thin uniform rod on a frictionless table, a small clay ball that stops dead against the rod and stays stuck to it as a point mass on the rod’s line (a perfectly inelastic hit, e = {#}). The hit takes no time.":
+  "Modelo: una varilla delgada uniforme sobre una mesa sin fricción, una bolita de plastilina que se detiene en seco contra la varilla y queda pegada a ella como masa puntual sobre la línea de la varilla (un golpe perfectamente inelástico, e = {#}). El golpe no dura nada.",
+"Go":
+  "Ir",
+"Table seen from above: a clay ball moving up the page toward a rod pinned at its left end, to hit it {#} m from the pin. Pointer: drag the ball sideways to move the hit point, drag the grip at its arrow tip to set its speed. Keys: left and right arrows move the hit point, up and down arrows change the speed, Enter or space goes.":
+  "Mesa vista desde arriba: una bola de plastilina que sube por la pantalla hacia una varilla con pivote en su extremo izquierdo, para golpearla a {#} m del pivote. Con el puntero: arrastra la pelota hacia los lados para mover el punto de impacto, arrastra el agarre en la punta de su flecha para fijar su rapidez. Teclas: las flechas izquierda y derecha mueven el punto de impacto, arriba y abajo cambian la rapidez, Intro o espacio arranca.",
+"Angular momentum about the pin at t = {#} s: ball +{#}, rod {#}, total +{#} kg·m²/s (mud = +{#} before the hit). Momentum along the ball's path +{#} before, +{#} kg·m/s after. Show data table in the rail lists the values.":
+  "Momento angular respecto al pivote en t = {#} s: pelota +{#}, varilla {#}, total +{#} kg·m²/s (mud = +{#} antes del golpe). Momento a lo largo de la trayectoria de la pelota +{#} antes, +{#} kg·m/s después. Mostrar la tabla de datos, en el panel, lista los valores.",
+"Kinetic energy at t = {#} s out of {#} J: ball +{#} J, rod {#} J. Show data table in the rail lists the values.":
+  "Energía cinética en t = {#} s de {#} J: pelota +{#} J, varilla {#} J. Mostrar la tabla de datos, en el panel, lista los valores.",
 "The same clay hits a {#} cm rod {#} cm from the pin, at 2L/{#}: the center of percussion. Now the rod turns about the pin all by itself and the pin does not push at all, so even momentum is kept ({#} kg·m/s before and after). Batters feel this as the sweet spot of a bat: no sting in the hands.":
   "La misma plastilina golpea una varilla de {#} cm a {#} cm del pivote, en 2L/{#}: el centro de percusión. Ahora la varilla gira alrededor del pivote por sí sola y el pivote no empuja en absoluto, así que incluso el momento se conserva ({#} kg·m/s antes y después). Los bateadores lo sienten como el punto dulce de un bate: no les pica en las manos.",
 "the pin's push changes it by {#} N·s":
@@ -970,8 +970,6 @@ VDI18N.add('es', 'demo/rotation', {
   "Energía de rotación: +{#} J al inicio, más +{#} J de trabajo al mover las masas, es igual a +{#} J ahora.",
 "start + work − now = −{#} J":
   "inicio + trabajo − ahora = −{#} J",
-"start + work − now = {#}e−{#} J":
-  "inicio + trabajo − ahora = {#}e−{#} J",
 "A platform seen from above, spinning with two masses at radius {#} m.":
   "Una plataforma vista desde arriba, girando con dos masas a un radio de {#} m.",
 "net τ = {#} N·m, balanced":
@@ -1000,18 +998,18 @@ VDI18N.add('es', 'demo/rotation', {
   "Se mantiene horizontal si se suelta.",
 "Beam angle {#}°, time {#} s.":
   "Ángulo de la viga {#}°, tiempo {#} s.",
-"While it turns, F keeps its angle θ to the wrench.":
-  "Mientras gira, F conserva su ángulo θ con la llave.",
 "Torque against push point r, a straight line through the pivot, for F = {#} N at θ = {#}°; dashed, the largest torque, at θ = {#}°. This push: r = {#} m, τ = +{#} N·m.":
   "Torca en función del punto de empuje r, una recta que pasa por el pivote, para F = {#} N a θ = {#}°; punteada, la torca máxima, a θ = {#}°. Este empuje: r = {#} m, τ = +{#} N·m.",
 "τ at θ = {#}° (N·m)":
   "τ a θ = {#}° (N·m)",
-"Door angle φ against time. Press Push to swing. Earlier push, at r = {#} m, turns {#}° in {#} s.":
-  "Ángulo de la puerta φ en función del tiempo. Presiona Empujar para hacerla girar. Empuje anterior, a r = {#} m, gira {#}° en {#} s.",
+"Wrench angle φ against time. Press Push to swing.":
+  "Ángulo φ de la llave en función del tiempo. Pulsa Empujar para que gire.",
 "φ this push (°)":
   "φ este empuje (°)",
 "φ earlier push (°)":
   "φ empuje anterior (°)",
+"While it turns, F keeps its angle θ to the wrench.":
+  "Mientras gira, F conserva su ángulo θ con la llave.",
 "Speed v and rim speed ωR against time for a hoop launched at +{#} m/s with ω₀R = +{#} m/s on μk = {#}. They are equal from the start: it rolls. Now t = {#} s.":
   "Rapidez v y rapidez del borde ωR en función del tiempo para un aro lanzado a +{#} m/s con ω₀R = +{#} m/s sobre μk = {#}. Son iguales desde el inicio: rueda. Ahora t = {#} s.",
 "ωR (m/s)":
@@ -1086,6 +1084,14 @@ VDI18N.add('es', 'demo/rotation', {
   "Una mesa vista desde arriba: una pelota rebotadora de masa {#} kg se mueve hacia una varilla de masa {#} kg y longitud {#} m que yace libre.",
 "The ball moves at {#} m/s and hits −{#} m from the center of the rod.":
   "La pelota se mueve a {#} m/s y golpea a −{#} m del centro de la varilla.",
+"β = {b}°, D = {d} m, drop h = D sin β = {h} m":
+  "β = {b}°, D = {d} m, caída h = D sen β = {h} m",
+"drag to turn, wheel to zoom":
+  "arrastra para girar, rueda para acercar",
+"start + work − now = {#}e−{#} J":
+  "inicio + trabajo − ahora = {#}e−{#} J",
+"Door angle φ against time. Press Push to swing. Earlier push, at r = {#} m, turns {#}° in {#} s.":
+  "Ángulo de la puerta φ en función del tiempo. Presiona Empujar para hacerla girar. Empuje anterior, a r = {#} m, gira {#}° en {#} s.",
 "Distance down the {#} m ramp against time at β = {#}°, s = ½at², one line per lane: {#}. Cylinder reaches the bottom at {#} s, {#}. Cylinder reaches the bottom at {#} s, {#}. Hoop reaches the bottom at {#} s, {#}. Hoop reaches the bottom at {#} s. Now t = {#} s.":
   "Distancia rampa abajo en la rampa de {#} m en función del tiempo a β = {#}°, s = ½at², una línea por carril: {#}. Cilindro llega abajo a los {#} s, {#}. Cilindro llega abajo a los {#} s, {#}. Aro llega abajo a los {#} s, {#}. Aro llega abajo a los {#} s. Ahora t = {#} s.",
 "Energy of lane {#}, cylinder, at t = {#} s: height lost mgh = {#} J, moving along ½mv² = {#} J, spinning ½Iω² = {#} J.":
@@ -1129,5 +1135,7 @@ VDI18N.add('es', 'demo/rotation', {
 "dashed: r = {#} m":
   "punteado: r = {#} m",
 "Look":
-  "Aspecto"
+  "Aspecto",
+"Distance fallen against time from H = {#} m: the unwinding paper roll at a = {#} m/s² lands after {#} s, the dropped one at g after {#} s. Now t = {#} s.":
+  "Distancia caída en función del tiempo desde H = {#} m: el rollo de papel que se desenrolla, con a = {#} m/s², llega tras {#} s, el soltado, con g, tras {#} s. Ahora t = {#} s."
 });
